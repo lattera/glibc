@@ -1,3 +1,11 @@
+2010-03-15  Ulrich Drepper  <drepper@redhat.com>
+
+	* Makerules: Add rule for libc-abis.h.
+	* csu/version.c: Use LIBC_ABIS_STRING string if available.
+	* elf/dl-load.c (VALID_ELF_ABIVERSION): Check using LIBC_ABI_MAX.
+	(open_verify): Only check EI_ABIVERSION bytes using VALID_ELF_HEADER.
+	Add extra call to VALID_ELF_ABIVERSION.
+
 2010-03-12  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/sys/mount.h (UMOUNT_NOFOLLOW): Define.

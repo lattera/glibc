@@ -1569,7 +1569,7 @@ open_verify (const char *name, struct filebuf *fbp, struct link_map *loader,
 #ifndef VALID_ELF_HEADER
 # define VALID_ELF_HEADER(hdr,exp,size)	(memcmp (hdr, exp, size) == 0)
 # define VALID_ELF_OSABI(osabi)		(osabi == ELFOSABI_SYSV)
-# define VALID_ELF_ABIVERSION(ver)	(ver == 0)
+# define VALID_ELF_ABIVERSION(ver)	(ver < LIBC_ABI_MAX)
 #elif defined MORE_ELF_HEADER_DATA
   MORE_ELF_HEADER_DATA;
 #endif
@@ -1655,7 +1655,9 @@ open_verify (const char *name, struct filebuf *fbp, struct link_map *loader,
 
       /* See whether the ELF header is what we expect.  */
       if (__builtin_expect (! VALID_ELF_HEADER (ehdr->e_ident, expected,
-						EI_PAD), 0))
+						EI_ABIVERSION)
+			    || !VALID_ELF_ABIVERSION (ehdr->e_ident[EI_ABIVERSION]),
+			    0))
 	{
 	  /* Something is wrong.  */
 	  const Elf32_Word *magp = (const void *) ehdr->e_ident;

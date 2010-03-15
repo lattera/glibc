@@ -1,4 +1,4 @@
-# Copyright (C) 1991-2006,2007,2008,2009 Free Software Foundation, Inc.
+# Copyright (C) 1991-2006,2007,2008,2009,2010 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -108,6 +108,18 @@ $(common-objpfx)%.latest: $(common-objpfx)abi-versions.h
 	mv -f $@T $@
 endif # avoid-generated
 endif # $(versioning) = yes
+
+ifndef avoid-generated
+before-compile := $(common-objpfx)libc-abis.h $(before-compile)
+libc-abis := $(firstword $(wildcard $(foreach D,$(add-ons), $(..)libc-abis)) \
+			 libc-abis)
+$(common-objpfx)libc-abis.h: $(..)scripts/gen-libc-abis $(libc-abis)
+	$(SHELL) $(..)scripts/gen-libc-abis \
+		 $(base-machine)-$(config-vendor)-$(config-os) \
+		 < $(libc-abis) > $@T
+	$(move-if-change) $@T $@
+common-generated += $(common-objpfx)libc-abis.h
+endif # avoid-generated
 
 # Make sure the subdirectory for object files gets created.
 ifdef objpfx
@@ -1395,7 +1407,7 @@ $(objpfx)stubs: $(objs-for-stubs)
 ifneq (,$(strip $(objs-for-stubs)))
 	(cd $(objpfx).; $(OBJDUMP) -h $(patsubst $(objpfx)%,%,$^)) | \
 	$(AWK) '/\.gnu\.glibc-stub\./ { \
-	          sub(/\.gnu\.glibc-stub\./, "", $$2); \
+		  sub(/\.gnu\.glibc-stub\./, "", $$2); \
 		  stubs[$$2] = 1; } \
 		END { for (s in stubs) print "#define __stub_" s }' > $@T
 	mv -f $@T $@
