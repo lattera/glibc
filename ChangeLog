@@ -1,3 +1,8 @@
+2010-03-16  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/ldsodefs.h (VALID_ELF_ABIVERSION): Update
+	definition to follow generic code.
+
 2010-03-15  Ulrich Drepper  <drepper@redhat.com>
 
 	* posix/getconf.c: Update copyright year.

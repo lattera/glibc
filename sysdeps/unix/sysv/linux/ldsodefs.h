@@ -58,7 +58,7 @@ extern void _dl_non_dynamic_init (void) internal_function;
 					 || memcmp (hdr, expected2, size) == 0)
 #define VALID_ELF_OSABI(osabi)		(osabi == ELFOSABI_SYSV \
 					 || osabi == ELFOSABI_LINUX)
-#define VALID_ELF_ABIVERSION(ver)	(ver == 0)
+#define VALID_ELF_ABIVERSION(ver)	(ver < LIBC_ABI_MAX)
 #define MORE_ELF_HEADER_DATA \
   static const unsigned char expected2[EI_PAD] =	\
   {							\
