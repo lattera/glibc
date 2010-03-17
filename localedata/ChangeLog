@@ -1,3 +1,7 @@
+2010-02-16  Paul Pluzhnikov  <ppluzhnikov@google.com>
+
+	* Makefile: Add missing gconv-modules dependency.
+
 2010-02-03  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #10414]

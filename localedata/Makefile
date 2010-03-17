@@ -107,6 +107,8 @@ install-others := $(addprefix $(inst_i18ndir)/, \
 			      $(addsuffix .gz, $(charmaps)) \
 			      $(locales))
 
+tests: $(objdir)/iconvdata/gconv-modules
+
 include ../Rules
 
 # Install the charmap files in gzipped format.
@@ -298,3 +300,6 @@ tst-leaks-ENV = MALLOC_TRACE=$(objpfx)tst-leaks.mtrace \
 		LOCPATH=$(common-objpfx)localedata
 $(objpfx)mtrace-tst-leaks: $(objpfx)tst-leaks.out
 	$(common-objpfx)malloc/mtrace $(objpfx)tst-leaks.mtrace > $@
+
+$(objdir)/iconvdata/gconv-modules:
+	$(MAKE) -C ../iconvdata subdir=iconvdata $@
