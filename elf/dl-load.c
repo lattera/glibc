@@ -1569,7 +1569,7 @@ open_verify (const char *name, struct filebuf *fbp, struct link_map *loader,
 #ifndef VALID_ELF_HEADER
 # define VALID_ELF_HEADER(hdr,exp,size)	(memcmp (hdr, exp, size) == 0)
 # define VALID_ELF_OSABI(osabi)		(osabi == ELFOSABI_SYSV)
-# define VALID_ELF_ABIVERSION(ver)	(ver < LIBC_ABI_MAX)
+# define VALID_ELF_ABIVERSION(osabi,ver) (ver == 0)
 #elif defined MORE_ELF_HEADER_DATA
   MORE_ELF_HEADER_DATA;
 #endif
@@ -1656,7 +1656,8 @@ open_verify (const char *name, struct filebuf *fbp, struct link_map *loader,
       /* See whether the ELF header is what we expect.  */
       if (__builtin_expect (! VALID_ELF_HEADER (ehdr->e_ident, expected,
 						EI_ABIVERSION)
-			    || !VALID_ELF_ABIVERSION (ehdr->e_ident[EI_ABIVERSION]),
+			    || !VALID_ELF_ABIVERSION (ehdr->e_ident[EI_OSABI],
+						      ehdr->e_ident[EI_ABIVERSION]),
 			    0))
 	{
 	  /* Something is wrong.  */
@@ -1697,7 +1698,8 @@ open_verify (const char *name, struct filebuf *fbp, struct link_map *loader,
 	     allowed here.  */
 	  else if (!VALID_ELF_OSABI (ehdr->e_ident[EI_OSABI]))
 	    errstring = N_("ELF file OS ABI invalid");
-	  else if (!VALID_ELF_ABIVERSION (ehdr->e_ident[EI_ABIVERSION]))
+	  else if (!VALID_ELF_ABIVERSION (ehdr->e_ident[EI_OSABI],
+					  ehdr->e_ident[EI_ABIVERSION]))
 	    errstring = N_("ELF file ABI version invalid");
 	  else
 	    /* Otherwise we don't know what went wrong.  */

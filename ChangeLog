@@ -1,5 +1,15 @@
 2010-03-16  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/dl-load.c (VALID_ELF_ABIVERSION): Add additional osabi parameter.
+	Not used here.
+	(open_verify): Modify for extended VALID_ELF_ABIVERSION macro
+	interface.
+	* sysdeps/unix/sysv/linux/ldsodefs.h (VALID_ELF_ABIVERSION): Add
+	additional osabi parameter.  Only acceept nonzero ABI versions if osabi
+	is Linux.
+	Fix includes.
+	(expected2): Don't explicitly initialize EI_ABIVERSION byte.
+
 	* sysdeps/unix/sysv/linux/ldsodefs.h (VALID_ELF_ABIVERSION): Update
 	definition to follow generic code.
 
