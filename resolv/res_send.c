@@ -535,7 +535,10 @@ __libc_res_nsend(res_state statp, const u_char *buf, int buflen,
 
 		Dprint(statp->options & RES_DEBUG,
 		       (stdout, ";; Querying server (# %d) address = %s\n",
-			ns + 1, inet_ntop(AF_INET6, &nsap->sin6_addr,
+			ns + 1, inet_ntop(nsap->sin6_family,
+					  (nsap->sin6_family == AF_INET6
+					   ? &nsap->sin6_addr
+					   : &((struct sockaddr_in *) nsap)->sin_addr),
 					  tmpbuf, sizeof (tmpbuf))));
 
 		if (__builtin_expect (v_circuit, 0)) {
@@ -1201,7 +1204,7 @@ send_dg(res_state statp,
 			DprintQ((statp->options & RES_DEBUG) ||
 				(statp->pfcode & RES_PRF_REPLY),
 				(stdout, ";; old answer:\n"),
-				thisansp,
+				*thisansp,
 				(*thisresplenp > *thisanssizp)
 				? *thisanssizp : *thisresplenp);
 			goto wait;
@@ -1216,7 +1219,7 @@ send_dg(res_state statp,
 			DprintQ((statp->options & RES_DEBUG) ||
 				(statp->pfcode & RES_PRF_REPLY),
 				(stdout, ";; not our server:\n"),
-				thisansp,
+				*thisansp,
 				(*thisresplenp > *thisanssizp)
 				? *thisanssizp : *thisresplenp);
 			goto wait;
@@ -1233,7 +1236,7 @@ send_dg(res_state statp,
 			DprintQ(statp->options & RES_DEBUG,
 				(stdout,
 				 "server rejected query with EDNS0:\n"),
-				thisansp,
+				*thisansp,
 				(*thisresplenp > *thisanssizp)
 				? *thisanssizp : *thisresplenp);
 			/* record the error */
@@ -1258,7 +1261,7 @@ send_dg(res_state statp,
 			DprintQ((statp->options & RES_DEBUG) ||
 				(statp->pfcode & RES_PRF_REPLY),
 				(stdout, ";; wrong query name:\n"),
-				thisansp,
+				*thisansp,
 				(*thisresplenp > *thisanssizp)
 				? *thisanssizp : *thisresplenp);
 			goto wait;
@@ -1268,7 +1271,7 @@ send_dg(res_state statp,
 		    anhp->rcode == REFUSED) {
 			DprintQ(statp->options & RES_DEBUG,
 				(stdout, "server rejected query:\n"),
-				thisansp,
+				*thisansp,
 				(*thisresplenp > *thisanssizp)
 				? *thisanssizp : *thisresplenp);
 
@@ -1295,7 +1298,7 @@ send_dg(res_state statp,
 		    && anhp->aa == 0 && anhp->ra == 0 && anhp->arcount == 0) {
 			DprintQ(statp->options & RES_DEBUG,
 				(stdout, "referred query:\n"),
-				thisansp,
+				*thisansp,
 				(*thisresplenp > *thisanssizp)
 				? *thisanssizp : *thisresplenp);
 			goto next_ns;

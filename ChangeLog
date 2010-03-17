@@ -1,3 +1,9 @@
+2010-03-16  Andreas Schwab  <schwab@redhat.com>
+
+	* resolv/res_send.c (__libc_res_nsend): Fix printing of server
+	address in debug statement.
+	(send_dg): Pass correct buffer pointer to DprintQ.
+
 2010-03-17  Ulrich Drepper  <drepper@redhat.com>
 
 	* libc-abis: Add a few more entries.
