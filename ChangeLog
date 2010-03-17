@@ -1,3 +1,7 @@
+2010-03-17  Ulrich Drepper  <drepper@redhat.com>
+
+	* libc-abis: Add a few more entries.
+
 2010-03-16  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/dl-load.c (VALID_ELF_ABIVERSION): Add additional osabi parameter.

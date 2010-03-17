@@ -42,3 +42,7 @@ UNIQUE
 # Indirect PLT relocations.  Architecture dependent.
 IFUNC		x86_64-*-linux*
 IFUNC		i?86-*-linux*
+IFUNC		powerpc64-*-linux*
+IFUNC		powerpc-*-linux*
+IFUNC		sparc64-*-linux*
+IFUNC		sparc-*-linux*
