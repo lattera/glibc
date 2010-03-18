@@ -1573,7 +1573,7 @@ open_verify (const char *name, struct filebuf *fbp, struct link_map *loader,
 #elif defined MORE_ELF_HEADER_DATA
   MORE_ELF_HEADER_DATA;
 #endif
-  static const unsigned char expected[EI_PAD] =
+  static const unsigned char expected[EI_NIDENT] =
   {
     [EI_MAG0] = ELFMAG0,
     [EI_MAG1] = ELFMAG1,
@@ -1657,7 +1657,10 @@ open_verify (const char *name, struct filebuf *fbp, struct link_map *loader,
       if (__builtin_expect (! VALID_ELF_HEADER (ehdr->e_ident, expected,
 						EI_ABIVERSION)
 			    || !VALID_ELF_ABIVERSION (ehdr->e_ident[EI_OSABI],
-						      ehdr->e_ident[EI_ABIVERSION]),
+						      ehdr->e_ident[EI_ABIVERSION])
+			    || memcmp (&ehdr->e_ident[EI_PAD],
+				       &expected[EI_PAD],
+				       EI_NIDENT - EI_PAD) != 0,
 			    0))
 	{
 	  /* Something is wrong.  */
@@ -1701,6 +1704,9 @@ open_verify (const char *name, struct filebuf *fbp, struct link_map *loader,
 	  else if (!VALID_ELF_ABIVERSION (ehdr->e_ident[EI_OSABI],
 					  ehdr->e_ident[EI_ABIVERSION]))
 	    errstring = N_("ELF file ABI version invalid");
+	  else if (memcmp (&ehdr->e_ident[EI_PAD], &expected[EI_PAD],
+			   EI_NIDENT - EI_PAD) != 0)
+	    errstring = N_("nonzero padding in e_ident");
 	  else
 	    /* Otherwise we don't know what went wrong.  */
 	    errstring = N_("internal error");

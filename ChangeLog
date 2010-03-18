@@ -1,3 +1,9 @@
+2010-03-18  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/dl-load.c (open_verify): Extend expected to the full size of the
+	e_ident array.  When loading, check that the fields in e_ident we don't
+	know are zero to allow future extensions.
+
 2010-03-18  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/i386/i686/multiarch/memcmp-ssse3.S: Update %xmm3
