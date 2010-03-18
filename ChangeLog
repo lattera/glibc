@@ -1,3 +1,8 @@
+2010-03-18  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/i386/i686/multiarch/memcmp-ssse3.S: Update %xmm3
+	when exit from loop.
+
 2010-03-16  Andreas Schwab  <schwab@redhat.com>
 
 	* resolv/res_send.c (__libc_res_nsend): Fix printing of server

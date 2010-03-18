@@ -269,6 +269,7 @@ L(shr_1_gobble_loop):
 
 	lea	32(%edi), %edi
 	jz	L(shr_1_gobble_loop)
+	pand	%xmm0, %xmm3
 
 	cmp	$0, %ecx
 	jge	L(shr_1_gobble_next)
@@ -352,6 +353,7 @@ L(shr_2_gobble_loop):
 
 	lea	32(%edi), %edi
 	jz	L(shr_2_gobble_loop)
+	pand	%xmm0, %xmm3
 
 	cmp	$0, %ecx
 	jge	L(shr_2_gobble_next)
@@ -434,6 +436,7 @@ L(shr_3_gobble_loop):
 
 	lea	32(%edi), %edi
 	jz	L(shr_3_gobble_loop)
+	pand	%xmm0, %xmm3
 
 	cmp	$0, %ecx
 	jge	L(shr_3_gobble_next)
@@ -516,6 +519,7 @@ L(shr_4_gobble_loop):
 
 	lea	32(%edi), %edi
 	jz	L(shr_4_gobble_loop)
+	pand	%xmm0, %xmm3
 
 	cmp	$0, %ecx
 	jge	L(shr_4_gobble_next)
@@ -598,6 +602,7 @@ L(shr_5_gobble_loop):
 
 	lea	32(%edi), %edi
 	jz	L(shr_5_gobble_loop)
+	pand	%xmm0, %xmm3
 
 	cmp	$0, %ecx
 	jge	L(shr_5_gobble_next)
@@ -680,6 +685,7 @@ L(shr_6_gobble_loop):
 
 	lea	32(%edi), %edi
 	jz	L(shr_6_gobble_loop)
+	pand	%xmm0, %xmm3
 
 	cmp	$0, %ecx
 	jge	L(shr_6_gobble_next)
@@ -762,6 +768,7 @@ L(shr_7_gobble_loop):
 
 	lea	32(%edi), %edi
 	jz	L(shr_7_gobble_loop)
+	pand	%xmm0, %xmm3
 
 	cmp	$0, %ecx
 	jge	L(shr_7_gobble_next)
@@ -844,6 +851,7 @@ L(shr_8_gobble_loop):
 
 	lea	32(%edi), %edi
 	jz	L(shr_8_gobble_loop)
+	pand	%xmm0, %xmm3
 
 	cmp	$0, %ecx
 	jge	L(shr_8_gobble_next)
@@ -926,6 +934,7 @@ L(shr_9_gobble_loop):
 
 	lea	32(%edi), %edi
 	jz	L(shr_9_gobble_loop)
+	pand	%xmm0, %xmm3
 
 	cmp	$0, %ecx
 	jge	L(shr_9_gobble_next)
@@ -1008,6 +1017,7 @@ L(shr_10_gobble_loop):
 
 	lea	32(%edi), %edi
 	jz	L(shr_10_gobble_loop)
+	pand	%xmm0, %xmm3
 
 	cmp	$0, %ecx
 	jge	L(shr_10_gobble_next)
@@ -1090,6 +1100,7 @@ L(shr_11_gobble_loop):
 
 	lea	32(%edi), %edi
 	jz	L(shr_11_gobble_loop)
+	pand	%xmm0, %xmm3
 
 	cmp	$0, %ecx
 	jge	L(shr_11_gobble_next)
@@ -1172,6 +1183,7 @@ L(shr_12_gobble_loop):
 
 	lea	32(%edi), %edi
 	jz	L(shr_12_gobble_loop)
+	pand	%xmm0, %xmm3
 
 	cmp	$0, %ecx
 	jge	L(shr_12_gobble_next)
@@ -1254,6 +1266,7 @@ L(shr_13_gobble_loop):
 
 	lea	32(%edi), %edi
 	jz	L(shr_13_gobble_loop)
+	pand	%xmm0, %xmm3
 
 	cmp	$0, %ecx
 	jge	L(shr_13_gobble_next)
@@ -1336,6 +1349,7 @@ L(shr_14_gobble_loop):
 
 	lea	32(%edi), %edi
 	jz	L(shr_14_gobble_loop)
+	pand	%xmm0, %xmm3
 
 	cmp	$0, %ecx
 	jge	L(shr_14_gobble_next)
@@ -1418,6 +1432,7 @@ L(shr_15_gobble_loop):
 
 	lea	32(%edi), %edi
 	jz	L(shr_15_gobble_loop)
+	pand	%xmm0, %xmm3
 
 	cmp	$0, %ecx
 	jge	L(shr_15_gobble_next)
