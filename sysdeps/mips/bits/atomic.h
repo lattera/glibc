@@ -69,16 +69,16 @@ typedef uintmax_t uatomic_max_t;
      MIPS_PUSH_MIPS2							      \
      rel	"\n"							      \
      "1:\t"								      \
-     "ll	%0,%4\n\t"						      \
+     "ll	%0,%5\n\t"						      \
      "move	%1,$0\n\t"						      \
-     "bne	%0,%2,2f\n\t"						      \
-     "move	%1,%3\n\t"						      \
-     "sc	%1,%4\n\t"						      \
+     "bne	%0,%3,2f\n\t"						      \
+     "move	%1,%4\n\t"						      \
+     "sc	%1,%2\n\t"						      \
      "beqz	%1,1b\n"						      \
      acq	"\n\t"							      \
      ".set	pop\n"							      \
      "2:\n\t"								      \
-	      : "=&r" (__prev), "=&r" (__cmp)				      \
+	      : "=&r" (__prev), "=&r" (__cmp), "=m" (*mem)		      \
 	      : "r" (oldval), "r" (newval), "m" (*mem)			      \
 	      : "memory")
 
@@ -93,16 +93,16 @@ typedef uintmax_t uatomic_max_t;
      MIPS_PUSH_MIPS2							      \
      rel	"\n"							      \
      "1:\t"								      \
-     "lld	%0,%4\n\t"						      \
+     "lld	%0,%5\n\t"						      \
      "move	%1,$0\n\t"						      \
-     "bne	%0,%2,2f\n\t"						      \
-     "move	%1,%3\n\t"						      \
-     "scd	%1,%4\n\t"						      \
+     "bne	%0,%3,2f\n\t"						      \
+     "move	%1,%4\n\t"						      \
+     "scd	%1,%2\n\t"						      \
      "beqz	%1,1b\n"						      \
      acq	"\n\t"							      \
      ".set	pop\n"							      \
      "2:\n\t"								      \
-	      : "=&r" (__prev), "=&r" (__cmp)				      \
+	      : "=&r" (__prev), "=&r" (__cmp), "=m" (*mem)		      \
 	      : "r" (oldval), "r" (newval), "m" (*mem)			      \
 	      : "memory")
 #endif
@@ -189,14 +189,14 @@ typedef uintmax_t uatomic_max_t;
      MIPS_PUSH_MIPS2							      \
      rel	"\n"							      \
      "1:\t"								      \
-     "ll	%0,%3\n\t"						      \
-     "move	%1,%2\n\t"						      \
-     "sc	%1,%3\n\t"						      \
+     "ll	%0,%4\n\t"						      \
+     "move	%1,%3\n\t"						      \
+     "sc	%1,%2\n\t"						      \
      "beqz	%1,1b\n"						      \
      acq	"\n\t"							      \
      ".set	pop\n"							      \
      "2:\n\t"								      \
-	      : "=&r" (__prev), "=&r" (__cmp)				      \
+	      : "=&r" (__prev), "=&r" (__cmp), "=m" (*mem)		      \
 	      : "r" (newval), "m" (*mem)				      \
 	      : "memory");						      \
   __prev; })
@@ -213,14 +213,14 @@ typedef uintmax_t uatomic_max_t;
      MIPS_PUSH_MIPS2							      \
      rel	"\n"							      \
      "1:\n"								      \
-     "lld	%0,%3\n\t"						      \
-     "move	%1,%2\n\t"						      \
-     "scd	%1,%3\n\t"						      \
+     "lld	%0,%4\n\t"						      \
+     "move	%1,%3\n\t"						      \
+     "scd	%1,%2\n\t"						      \
      "beqz	%1,1b\n"						      \
      acq	"\n\t"							      \
      ".set	pop\n"							      \
      "2:\n\t"								      \
-	      : "=&r" (__prev), "=&r" (__cmp)				      \
+	      : "=&r" (__prev), "=&r" (__cmp), "=m" (*mem)		      \
 	      : "r" (newval), "m" (*mem)				      \
 	      : "memory");						      \
   __prev; })
@@ -248,14 +248,14 @@ typedef uintmax_t uatomic_max_t;
      MIPS_PUSH_MIPS2							      \
      rel	"\n"							      \
      "1:\t"								      \
-     "ll	%0,%3\n\t"						      \
-     "addu	%1,%0,%2\n\t"						      \
-     "sc	%1,%3\n\t"						      \
+     "ll	%0,%4\n\t"						      \
+     "addu	%1,%0,%3\n\t"						      \
+     "sc	%1,%2\n\t"						      \
      "beqz	%1,1b\n"						      \
      acq	"\n\t"							      \
      ".set	pop\n"							      \
      "2:\n\t"								      \
-	      : "=&r" (__prev), "=&r" (__cmp)				      \
+	      : "=&r" (__prev), "=&r" (__cmp), "=m" (*mem)		      \
 	      : "r" (value), "m" (*mem)					      \
 	      : "memory");						      \
   __prev; })
@@ -272,14 +272,14 @@ typedef uintmax_t uatomic_max_t;
      MIPS_PUSH_MIPS2							      \
      rel	"\n"							      \
      "1:\t"								      \
-     "lld	%0,%3\n\t"						      \
-     "daddu	%1,%0,%2\n\t"						      \
-     "scd	%1,%3\n\t"						      \
+     "lld	%0,%4\n\t"						      \
+     "daddu	%1,%0,%3\n\t"						      \
+     "scd	%1,%2\n\t"						      \
      "beqz	%1,1b\n"						      \
      acq	"\n\t"							      \
      ".set	pop\n"							      \
      "2:\n\t"								      \
-	      : "=&r" (__prev), "=&r" (__cmp)				      \
+	      : "=&r" (__prev), "=&r" (__cmp), "=m" (*mem)		      \
 	      : "r" (value), "m" (*mem)					      \
 	      : "memory");						      \
   __prev; })

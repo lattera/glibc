@@ -1,3 +1,13 @@
+2010-03-23  Mischa Jonker  <mischa.jonker@viragelogic.com>
+
+	[BZ #11291]
+	* sysdeps/mips/bits/atomic.h
+	(__arch_compare_and_exchange_xxx_32_int,
+	__arch_compare_and_exchange_xxx_64_int,
+	__arch_exchange_xxx_32_int, __arch_exchange_xxx_64_int,
+	__arch_exchange_and_add_32_int, __arch_exchange_and_add_64_int):
+	Specify *mem as asm output as well as input.
+
 2010-02-10  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/mips/fpu/fegetenv.c: Add hidden alias.
