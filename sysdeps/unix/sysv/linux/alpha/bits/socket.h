@@ -1,5 +1,5 @@
 /* System-specific socket constants and types.  Linux version.
-   Copyright (C) 1991, 1992, 1994-2001, 2004, 2006, 2007, 2008, 2009
+   Copyright (C) 1991, 1992, 1994-2001, 2004, 2006, 2007, 2008, 2009, 2010
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -65,7 +65,6 @@ enum __socket_type
   SOCK_CLOEXEC = 010000000,	/* Atomically set close-on-exec flag for the
 				   new descriptor(s).  */
 #define SOCK_CLOEXEC SOCK_CLOEXEC
-#undef SOCK_NONBLOCK
   SOCK_NONBLOCK = 0x40000000	/* Atomically mark descriptor(s) as
 				   non-blocking.  */
 #define SOCK_NONBLOCK SOCK_NONBLOCK
@@ -235,8 +234,8 @@ enum
 #define	MSG_MORE	MSG_MORE
 
     MSG_CMSG_CLOEXEC	= 0x40000000	/* Set close_on_exit for file
-                                           descriptor received through
-                                           SCM_RIGHTS.  */
+					   descriptor received through
+					   SCM_RIGHTS.  */
 #define MSG_CMSG_CLOEXEC MSG_CMSG_CLOEXEC
   };
 
@@ -259,6 +258,15 @@ struct msghdr
 
     int msg_flags;		/* Flags on received message.  */
   };
+
+#ifdef __USE_GNU
+/* For `recvmmsg'.  */
+struct mmsghdr
+  {
+    struct msghdr msg_hdr;	/* Actual message header.  */
+    unsigned int msg_len;	/* Number of received bytes for the entry.  */
+  };
+#endif
 
 /* Structure used for storage of ancillary data object information.  */
 struct cmsghdr
@@ -403,5 +411,19 @@ struct linger
     int l_onoff;		/* Nonzero to linger on close.  */
     int l_linger;		/* Time to linger.  */
   };
+
+
+__BEGIN_DECLS
+
+/* Receive a message as described by MESSAGE from socket FD.
+   Returns the number of bytes read or -1 for errors.
+
+   This function is a cancellation point and therefore not marked with
+   __THROW.  */
+extern int recvmmsg (int __fd, struct mmsghdr *__vmessages,
+		     unsigned int __vlen, int __flags,
+		     __const struct timespec *__tmo);
+
+__END_DECLS
 
 #endif	/* bits/socket.h */
