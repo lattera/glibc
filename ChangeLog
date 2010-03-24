@@ -1,5 +1,10 @@
 2010-03-24  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #11397]
+	* sysdeps/posix/cuserid.c (cuserid): Make sure the returned string
+	is NUL terminated.
+	Patch by Jonathan Geisler <jgeisler@cse.taylor.edu>.
+
 	* sysdeps/unix/sysv/linux/mmap64.c: Allow variable shift values.
 
 2010-03-24  H.J. Lu  <hongjiu.lu@intel.com>
