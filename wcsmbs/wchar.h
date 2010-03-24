@@ -1,4 +1,4 @@
-/* Copyright (C) 1995-2008, 2009 Free Software Foundation, Inc.
+/* Copyright (C) 1995-2008, 2009, 2010 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -51,11 +51,6 @@
 # define __need_wint_t
 # include <stddef.h>
 
-/* Tell the caller that we provide correct C++ prototypes.  */
-#if defined __cplusplus && __GNUC_PREREQ (4, 4)
-# define __CORRECT_ISO_CPP_WCHAR_H_PROTO
-#endif
-
 /* We try to get wint_t from <stddef.h>, but not all GCC versions define it
    there.  So define it ourselves if it remains undefined.  */
 # ifndef _WINT_T
@@ -74,6 +69,11 @@ __BEGIN_NAMESPACE_STD
 typedef __WINT_TYPE__ wint_t;
 __END_NAMESPACE_STD
 #  endif
+# endif
+
+/* Tell the caller that we provide correct C++ prototypes.  */
+# if defined __cplusplus && __GNUC_PREREQ (4, 4)
+#  define __CORRECT_ISO_CPP_WCHAR_H_PROTO
 # endif
 #endif
 
@@ -219,7 +219,7 @@ __BEGIN_NAMESPACE_STD
 extern "C++" wchar_t *wcschr (wchar_t *__wcs, wchar_t __wc)
      __THROW __asm ("wcschr") __attribute_pure__;
 extern "C++" __const wchar_t *wcschr (__const wchar_t *__wcs, wchar_t __wc)
-     __THROW __asm ("wcschr")  __attribute_pure__;
+     __THROW __asm ("wcschr") __attribute_pure__;
 #else
 extern wchar_t *wcschr (__const wchar_t *__wcs, wchar_t __wc)
      __THROW __attribute_pure__;
@@ -892,7 +892,7 @@ __END_DECLS
 
 #endif /* wchar.h  */
 
-/* Undefined all __need_* constants in case we are included to get those
+/* Undefine all __need_* constants in case we are included to get those
    constants but the whole file was already read.  */
 #undef __need_mbstate_t
 #undef __need_wint_t

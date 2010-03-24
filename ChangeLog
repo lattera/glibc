@@ -1,3 +1,11 @@
+2010-03-24  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #11410]
+	* wctype/wctype.h: Use <wchar.h> to get the wint_t definition.
+
+	* wcsmbs/wchar.h: Correct preprocessor directive indentation.  Move
+	C++ prototype handling to a better place.
+
 2010-03-18  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/dl-load.c (open_verify): Extend expected to the full size of the
