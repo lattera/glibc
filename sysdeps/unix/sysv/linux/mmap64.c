@@ -1,4 +1,4 @@
-/* Copyright (C) 1999,2000,2001,2002,2006 Free Software Foundation, Inc.
+/* Copyright (C) 1999,2000,2001,2002,2006,2010 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jakub@redhat.com>, 1999.
 
@@ -30,8 +30,13 @@
 #ifdef __NR_mmap2
 
 /* This is always 12, even on architectures where PAGE_SHIFT != 12.  */
-# ifndef MMAP2_PAGE_SHIFT
-#  define MMAP2_PAGE_SHIFT 12
+# if MMAP2_PAGE_SHIFT == -1
+static int page_shift;
+# else
+#  ifndef MMAP2_PAGE_SHIFT
+#   define MMAP2_PAGE_SHIFT 12
+#  endif
+# define page_shift MMAP2_PAGE_SHIFT
 # endif
 
 # ifndef __ASSUME_MMAP2_SYSCALL
@@ -44,7 +49,15 @@ void *
 __mmap64 (void *addr, size_t len, int prot, int flags, int fd, off64_t offset)
 {
 #ifdef __NR_mmap2
-  if (offset & ((1 << MMAP2_PAGE_SHIFT) - 1))
+# ifdef MMAP2_PAGE_SHIFT == -1
+  if (page_shift == 0)
+    {
+      int page_size = getpagesize ();
+      while ((1 << ++page_shift) != page_size)
+	;
+    }
+# endif
+  if (offset & ((1 << page_shift) - 1))
     {
       __set_errno (EINVAL);
       return MAP_FAILED;
