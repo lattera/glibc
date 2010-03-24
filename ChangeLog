@@ -1,3 +1,8 @@
+2010-03-24  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/x86_64/multiarch/strpbrk-c.c: Define only if SHARED
+	is defined.
+
 2010-03-22  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* string/test-memcmp.c (check_result): New function.
