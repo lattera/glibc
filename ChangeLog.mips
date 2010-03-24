@@ -1,3 +1,7 @@
+2010-03-24  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/mips/dl-lookup.c: Update from generic version.
+
 2010-03-23  Mischa Jonker  <mischa.jonker@viragelogic.com>
 
 	[BZ #11291]
