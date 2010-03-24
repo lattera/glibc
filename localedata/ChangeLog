@@ -1,3 +1,9 @@
+2010-03-24  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #10554]
+	* locales/et_EE: Change first_weekday and first_workday.
+	Patch by Priit Laes <plaes@plaes.org>.
+
 2010-02-16  Paul Pluzhnikov  <ppluzhnikov@google.com>
 
 	* Makefile: Add missing gconv-modules dependency.
