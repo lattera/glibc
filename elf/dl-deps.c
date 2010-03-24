@@ -1,5 +1,5 @@
 /* Load the dependencies of a mapped object.
-   Copyright (C) 1996-2003, 2004, 2005, 2006, 2007
+   Copyright (C) 1996-2003, 2004, 2005, 2006, 2007, 2010
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -554,7 +554,12 @@ Filters not supported with LD_TRACE_PRELINKING"));
 	  cnt = _dl_build_local_scope (l_initfini, l);
 	  assert (cnt <= nlist);
 	  for (j = 0; j < cnt; j++)
-	    l_initfini[j]->l_reserved = 0;
+	    {
+	      l_initfini[j]->l_reserved = 0;
+	      if (j && __builtin_expect (l_initfini[j]->l_info[DT_SYMBOLIC]
+					 != NULL, 0))
+		l->l_symbolic_in_local_scope = true;
+	    }
 
 	  l->l_local_scope[0] =
 	    (struct r_scope_elem *) malloc (sizeof (struct r_scope_elem)

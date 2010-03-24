@@ -1,3 +1,18 @@
+2010-03-23  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/dl-lookup.c (do_lookup_x): If tab->entries is NULL,
+	but tab->size != 0, just unlock and goto success, without
+	allocating anything or entering anything into the hash table.
+	(_dl_debug_bindings): Temporarily set tab->entries to NULL
+	around do_lookup_x in undef_map->l_local_scope[0].  If
+	undef_map->l_symbolic_in_local_scope, lookup also in
+	symbolic_searchlist of following libraries in l_local_scope
+	that have DT_SYMBOLIC set.
+	* elf/dl-deps.c (_dl_map_object_deps): Compute
+	l_symbolic_in_local_scope.
+	* include/link.h (struct link_map): Add l_symbolic_in_local_scope
+	bitfield.
+
 2010-03-24  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #11410]

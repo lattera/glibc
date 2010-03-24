@@ -1,5 +1,6 @@
 /* Look up a symbol in the loaded objects.
-   Copyright (C) 1995-2005, 2006, 2007, 2009 Free Software Foundation, Inc.
+   Copyright (C) 1995-2005, 2006, 2007, 2009, 2010
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -412,6 +413,20 @@ do_lookup_x (const char *undef_name, uint_fast32_t new_hash,
 #ifdef RTLD_CHECK_FOREIGN_CALL
 		  /* This must not happen during runtime relocations.  */
 		  assert (!RTLD_CHECK_FOREIGN_CALL);
+#endif
+
+#ifdef SHARED
+		  /* If tab->entries is NULL, but tab->size is not, it means
+		     this is the second, conflict finding, lookup for
+		     LD_TRACE_PRELINKING in _dl_debug_bindings.  Don't
+		     allocate anything and don't enter anything into the
+		     hash table.  */
+		  if (__builtin_expect (tab->size, 0))
+		    {
+		      assert (GLRO(dl_debug_mask) & DL_DEBUG_PRELINK);
+		      __rtld_lock_unlock_recursive (tab->lock);
+		      goto success;
+		    }
 #endif
 
 #define INITIAL_NUNIQUE_SYM_TABLE 31
@@ -917,13 +932,48 @@ _dl_debug_bindings (const char *undef_name, struct link_map *undef_map,
 	{
 	  const uint_fast32_t new_hash = dl_new_hash (undef_name);
 	  unsigned long int old_hash = 0xffffffff;
+	  struct unique_sym *saved_entries
+	    = GL(dl_ns)[LM_ID_BASE]._ns_unique_sym_table.entries;
 
+	  GL(dl_ns)[LM_ID_BASE]._ns_unique_sym_table.entries = NULL;
 	  do_lookup_x (undef_name, new_hash, &old_hash, *ref, &val,
 		       undef_map->l_local_scope[0], 0, version, 0, NULL,
 		       type_class, undef_map);
-
 	  if (val.s != value->s || val.m != value->m)
 	    conflict = 1;
+	  else if (__builtin_expect (undef_map->l_symbolic_in_local_scope, 0)
+		   && val.s
+		   && __builtin_expect (ELFW(ST_BIND) (val.s->st_info),
+					STB_GLOBAL) == STB_GNU_UNIQUE)
+	    {
+	      /* If it is STB_GNU_UNIQUE and undef_map's l_local_scope
+		 contains any DT_SYMBOLIC libraries, unfortunately there
+		 can be conflicts even if the above is equal.  As symbol
+		 resolution goes from the last library to the first and
+		 if a STB_GNU_UNIQUE symbol is found in some late DT_SYMBOLIC
+		 library, it would be the one that is looked up.  */
+	      struct sym_val val2 = { NULL, NULL };
+	      size_t n;
+	      struct r_scope_elem *scope = undef_map->l_local_scope[0];
+
+	      for (n = 0; n < scope->r_nlist; n++)
+		if (scope->r_list[n] == val.m)
+		  break;
+
+	      for (n++; n < scope->r_nlist; n++)
+		if (scope->r_list[n]->l_info[DT_SYMBOLIC] != NULL
+		    && do_lookup_x (undef_name, new_hash, &old_hash, *ref,
+				    &val2,
+				    &scope->r_list[n]->l_symbolic_searchlist,
+				    0, version, 0, NULL, type_class,
+				    undef_map) > 0)
+		  {
+		    conflict = 1;
+		    val = val2;
+		    break;
+		  }
+	    }
+	  GL(dl_ns)[LM_ID_BASE]._ns_unique_sym_table.entries = saved_entries;
 	}
 
       if (value->s)
