@@ -1,3 +1,10 @@
+2010-03-23  Luis Machado  <luisgpm@br.ibm.com>
+
+	* pthread_cond_timedwait.c: Add check for
+	HAVE_CLOCK_GETTIME_VSYSCALL to use VDSO whenever possible.
+	(pthread_cond_timedwait): Use INTERNAL_VSYSCALL instead of
+	INTERNAL_SYSCALL.
+
 2010-03-09  Ulrich Drepper  <drepper@redhat.com>
 
 	* pthread_create.c (__pthread_create_2_1): If priorities are incorrect
