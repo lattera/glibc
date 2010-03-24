@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-2002, 2003, 2004, 2005, 2006, 2007, 2008
+/* Copyright (C) 1991-2002, 2003, 2004, 2005, 2006, 2007, 2008, 2010
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -418,6 +418,24 @@ glob (pattern, flags, errfunc, pglob)
 	}
     }
 
+  if (!(flags & GLOB_APPEND))
+    {
+      pglob->gl_pathc = 0;
+      if (!(flags & GLOB_DOOFFS))
+	pglob->gl_pathv = NULL;
+      else
+	{
+	  size_t i;
+	  pglob->gl_pathv = (char **) malloc ((pglob->gl_offs + 1)
+					      * sizeof (char *));
+	  if (pglob->gl_pathv == NULL)
+	    return GLOB_NOSPACE;
+
+	  for (i = 0; i <= pglob->gl_offs; ++i)
+	    pglob->gl_pathv[i] = NULL;
+	}
+    }
+
   /* Find the filename.  */
   filename = strrchr (pattern, '/');
 #if defined __MSDOS__ || defined WINDOWS32
@@ -445,6 +463,12 @@ glob (pattern, flags, errfunc, pglob)
 	}
       else
 	{
+	  if (__builtin_expect (pattern[0] == '\0', 0))
+	    {
+	      dirs.gl_pathv = NULL;
+	      goto no_matches;
+	    }
+
 	  filename = pattern;
 #ifdef _AMIGA
 	  dirname = "";
@@ -492,7 +516,7 @@ glob (pattern, flags, errfunc, pglob)
 
       if (filename[0] == '\0'
 #if defined __MSDOS__ || defined WINDOWS32
-          && dirname[dirlen - 1] != ':'
+	  && dirname[dirlen - 1] != ':'
 	  && (dirlen < 3 || dirname[dirlen - 2] != ':'
 	      || dirname[dirlen - 1] != '/')
 #endif
@@ -529,24 +553,6 @@ glob (pattern, flags, errfunc, pglob)
 	}
     }
 
-  if (!(flags & GLOB_APPEND))
-    {
-      pglob->gl_pathc = 0;
-      if (!(flags & GLOB_DOOFFS))
-        pglob->gl_pathv = NULL;
-      else
-	{
-	  size_t i;
-	  pglob->gl_pathv = (char **) malloc ((pglob->gl_offs + 1)
-					      * sizeof (char *));
-	  if (pglob->gl_pathv == NULL)
-	    return GLOB_NOSPACE;
-
-	  for (i = 0; i <= pglob->gl_offs; ++i)
-	    pglob->gl_pathv[i] = NULL;
-	}
-    }
-
   oldcount = pglob->gl_pathc + pglob->gl_offs;
 
 #ifndef VMS
@@ -564,7 +570,7 @@ glob (pattern, flags, errfunc, pglob)
 # else
 #  ifdef WINDOWS32
 	  if (home_dir == NULL || home_dir[0] == '\0')
-            home_dir = "c:/users/default"; /* poor default */
+	    home_dir = "c:/users/default"; /* poor default */
 #  else
 	  if (home_dir == NULL || home_dir[0] == '\0')
 	    {

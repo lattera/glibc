@@ -1,6 +1,6 @@
 /* Test the GNU extensions in glob which allow the user to provide callbacks
    for the filesystem access functions.
-   Copyright (C) 2001-2002, 2007 Free Software Foundation, Inc.
+   Copyright (C) 2001-2002, 2007, 2010 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2001.
 
@@ -61,9 +61,9 @@ static struct
       { "..", 3, DT_DIR },
       { ".foo", 3, DT_REG },
       { "dir1lev3", 3, DT_DIR },
-        { ".", 4, DT_DIR },
-        { "..", 4, DT_DIR },
-        { "file1lev4", 4, DT_REG },
+	{ ".", 4, DT_DIR },
+	{ "..", 4, DT_DIR },
+	{ "file1lev4", 4, DT_REG },
       { "file1lev3", 3, DT_REG },
       { "file2lev3", 3, DT_REG },
     { "file2lev2", 2, DT_REG },
@@ -81,9 +81,9 @@ static struct
       { "..", 3, DT_DIR },
       { ".foo", 3, DT_REG },
       { ".dir", 3, DT_DIR },
-        { ".", 4, DT_DIR },
-        { "..", 4, DT_DIR },
-        { "hidden", 4, DT_REG }
+	{ ".", 4, DT_DIR },
+	{ "..", 4, DT_DIR },
+	{ "hidden", 4, DT_REG }
 };
 #define nfiles (sizeof (filesystem) / sizeof (filesystem[0]))
 
@@ -283,7 +283,7 @@ static const char *glob_errstring[] =
 static const char *
 flagstr (int flags)
 {
-  const char *strs[] =
+  static const char *const strs[] =
   {
     "GLOB_ERR", "GLOB_MARK", "GLOB_NOSORT", "GLOB_DOOFSS", "GLOB_NOCHECK",
     "GLOB_APPEND", "GLOB_NOESCAPE", "GLOB_PERIOD", "GLOB_MAGCHAR",
@@ -312,6 +312,29 @@ flagstr (int flags)
     }
 
   return buf;
+#undef nstrs
+}
+
+
+static const char *
+errstr (int val)
+{
+  static const char *const strs[] =
+    {
+      [GLOB_NOSPACE] = "GLOB_NOSPACE",
+      [GLOB_ABORTED] = "GLOB_ABORTED",
+      [GLOB_NOMATCH] = "GLOB_NOMATCH",
+      [GLOB_NOSYS] = "GLOB_NOSYS"
+    };
+#define nstrs (sizeof (strs) / sizeof (strs[0]))
+  static char buf[100];
+  if (val < 0 || val >= nstrs || strs[val] == NULL)
+    {
+      snprintf (buf, sizeof (buf), "GLOB_??? (%d)", val);
+      return buf;
+    }
+  return strs[val];
+#undef nstrs
 }
 
 
@@ -376,28 +399,34 @@ main (void)
   gl.gl_lstat = my_stat;
   gl.gl_stat = my_stat;
 
-#define test(a, b, c...) \
+#define test(a, b, r, c...) \
   fmt = a;								      \
-  flags = b;								      \
+  flags = GLOB_ALTDIRFUNC | b;						      \
   errval = glob (fmt, flags, NULL, &gl);				      \
-  if (errval != 0)							      \
+  if (errval != r)							      \
     {									      \
-      printf ("glob (\"%s\", %s) failed: %s\n", fmt, flagstr (flags),	      \
-	      errval >= 0 && errval < nglob_errstring			      \
-	      ? glob_errstring[errval] : "???");			      \
+      if (r == 0)							      \
+	printf ("glob (\"%s\", %s) failed: %s\n", fmt, flagstr (flags),	      \
+		errval >= 0 && errval < nglob_errstring			      \
+		? glob_errstring[errval] : "???");			      \
+      else								      \
+	printf ("glob (\"%s\", %s) did not fail\n", fmt, flagstr (flags));    \
       result = 1;							      \
     }									      \
+  else if (r == 0)							      \
+    result |= test_result (fmt, flags, &gl, (const char *[]) { c, NULL });    \
   else									      \
-    result |= test_result (fmt, flags, &gl, (const char *[]) { c, NULL })
+    printf ("result for glob (\"%s\", %s) = %s\n\n", fmt, flagstr (flags),    \
+	    errstr (errval))
 
-  test ("*/*/*", GLOB_ALTDIRFUNC,
+  test ("*/*/*", 0, 0,
 	"dir1lev1/dir2lev2/dir1lev3",
 	"dir1lev1/dir2lev2/file1lev3",
 	"dir1lev1/dir2lev2/file2lev3",
 	"dir1lev1/dir3lev2/file3lev3",
 	"dir1lev1/dir3lev2/file4lev3");
 
-  test ("*/*/*", GLOB_ALTDIRFUNC | GLOB_PERIOD,
+  test ("*/*/*", GLOB_PERIOD, 0,
 	"dir1lev1/dir1lev2/.",
 	"dir1lev1/dir1lev2/..",
 	"dir1lev1/dir2lev2/.",
@@ -415,7 +444,7 @@ main (void)
 	"dir2lev1/dir1lev2/.dir",
 	"dir2lev1/dir1lev2/.foo");
 
-  test ("*/*/.*", GLOB_ALTDIRFUNC,
+  test ("*/*/.*", 0, 0,
 	"dir1lev1/dir1lev2/.",
 	"dir1lev1/dir1lev2/..",
 	"dir1lev1/dir2lev2/.",
@@ -428,7 +457,7 @@ main (void)
 	"dir2lev1/dir1lev2/.dir",
 	"dir2lev1/dir1lev2/.foo");
 
-  test ("*1*/*2*/.*", GLOB_ALTDIRFUNC,
+  test ("*1*/*2*/.*", 0, 0,
 	"dir1lev1/dir1lev2/.",
 	"dir1lev1/dir1lev2/..",
 	"dir1lev1/dir2lev2/.",
@@ -441,7 +470,7 @@ main (void)
 	"dir2lev1/dir1lev2/.dir",
 	"dir2lev1/dir1lev2/.foo");
 
-  test ("*1*/*1*/.*", GLOB_ALTDIRFUNC,
+  test ("*1*/*1*/.*", 0, 0,
 	"dir1lev1/dir1lev2/.",
 	"dir1lev1/dir1lev2/..",
 	"dir2lev1/dir1lev2/.",
@@ -449,11 +478,15 @@ main (void)
 	"dir2lev1/dir1lev2/.dir",
 	"dir2lev1/dir1lev2/.foo");
 
-  test ("\\/*", GLOB_ALTDIRFUNC,
+  test ("\\/*", 0, 0,
 	"/dir1lev1",
 	"/dir2lev1",
 	"/file1lev1",
 	"/file2lev1");
+
+  test ("", 0, GLOB_NOMATCH, NULL);
+
+  test ("", GLOB_NOCHECK, 0, "");
 
   globfree (&gl);
 

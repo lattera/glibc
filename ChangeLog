@@ -1,3 +1,9 @@
+2010-03-24  Ulrich Drepper  <drepper@redhat.com>
+	    Andreas Schwab  <andreas@redhat.com>
+
+	* posix/glob.c (glob): Clean up gl_pathc and gl_pathv earlier.
+	If pattern is "" bail out early
+
 2010-03-23  Jakub Jelinek  <jakub@redhat.com>
 
 	* elf/dl-lookup.c (do_lookup_x): If tab->entries is NULL,
