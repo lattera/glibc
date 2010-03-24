@@ -1,3 +1,10 @@
+2010-03-22  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* string/test-memcmp.c (check_result): New function.
+	(do_one_test): Use it.
+	(check1): New function.
+	(test_main): Use it.
+
 2010-03-24  Ulrich Drepper  <drepper@redhat.com>
 
 	* posix/tst-gnuglob.c: Add tests with empty patterns.  For this
