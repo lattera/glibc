@@ -1,4 +1,12 @@
 2010-03-24  Ulrich Drepper  <drepper@redhat.com>
+
+	* posix/tst-gnuglob.c: Add tests with empty patterns.  For this
+	rewrite the tests to add support for failing glob calls.
+	Some other minor cleanups.
+	* posix/bug-glob3.c: New file.
+	* posix/Makefile (tests): Add bug-glob3.
+
+2010-03-24  Ulrich Drepper  <drepper@redhat.com>
 	    Andreas Schwab  <andreas@redhat.com>
 
 	* posix/glob.c (glob): Clean up gl_pathc and gl_pathv earlier.

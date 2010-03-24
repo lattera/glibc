@@ -1,4 +1,4 @@
-# Copyright (C) 1991-1999, 2000-2006, 2007, 2009 Free Software Foundation, Inc.
+# Copyright (C) 1991-1999, 2000-2007, 2009, 2010 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -86,7 +86,7 @@ tests		:= tstgetopt testfnm runtests runptests	     \
 		   tst-nice tst-nanosleep tst-regex2 \
 		   transbug tst-rxspencer tst-pcre tst-boost \
 		   bug-ga1 tst-vfork1 tst-vfork2 tst-vfork3 tst-waitid \
-		   tst-getaddrinfo2 bug-glob1 bug-glob2 tst-sysconf \
+		   tst-getaddrinfo2 bug-glob1 bug-glob2 bug-glob3 tst-sysconf \
 		   tst-execvp1 tst-execvp2 tst-execlp1 tst-execlp2 \
 		   tst-execv1 tst-execv2 tst-execl1 tst-execl2 \
 		   tst-execve1 tst-execve2 tst-execle1 tst-execle2 \
