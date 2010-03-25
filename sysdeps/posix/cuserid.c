@@ -44,6 +44,6 @@ cuserid (s)
 
   if (s == NULL)
     s = name;
-  s[L_userid - 1] = '\0';
+  s[L_cuserid - 1] = '\0';
   return strncpy (s, pwptr->pw_name, L_cuserid - 1);
 }

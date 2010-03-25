@@ -1,3 +1,7 @@
+2010-03-25  Andreas Schwab  <schwab@redhat.com>
+
+	* sysdeps/posix/cuserid.c: Fix typo.
+
 2010-03-16  Chris Demetriou  <cgd@google.com>
 
 	* locale/programs/simple-hash.c: Include inttypes.h.
