@@ -19,6 +19,7 @@
 #ifndef _SIMPLE_HASH_H
 #define _SIMPLE_HASH_H
 
+#include <inttypes.h>
 #include <obstack.h>
 
 typedef struct hash_table
@@ -45,7 +46,7 @@ extern int iterate_table (const hash_table *htab, void **ptr,
 			  const void **key, size_t *keylen, void **data)
      __THROW;
 
-extern unsigned long int compute_hashval (const void *key, size_t keylen)
+extern uint32_t compute_hashval (const void *key, size_t keylen)
      __THROW;
 extern unsigned long int next_prime (unsigned long int seed) __THROW;
 

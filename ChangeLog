@@ -1,3 +1,10 @@
+2010-03-16  Chris Demetriou  <cgd@google.com>
+
+	* locale/programs/simple-hash.c: Include inttypes.h.
+	(hashval_t): Defined to be uint32_t.
+	* locale/programs/simple_hash.h: Include inttypes.h.
+	(compute_hashval): Change return type to uint32_t.
+
 2010-03-24  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/getlogin_r.c: New file.

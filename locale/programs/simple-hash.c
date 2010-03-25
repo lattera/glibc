@@ -21,6 +21,7 @@
 # include <config.h>
 #endif
 
+#include <inttypes.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -49,6 +50,7 @@
 # define bcopy(s, d, n)	memcpy ((d), (s), (n))
 #endif
 
+#define hashval_t uint32_t
 #include "hashval.h"
 
 extern void *xmalloc (size_t __n);
