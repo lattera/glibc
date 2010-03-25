@@ -1,5 +1,5 @@
 /* System-dependent timing definitions.  Generic version.
-   Copyright (C) 1996,1997,1999-2002,2003 Free Software Foundation, Inc.
+   Copyright (C) 1996,1997,1999-2002,2003,2010 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -50,6 +50,12 @@ extern long int __sysconf (int);
 #   define CLOCK_PROCESS_CPUTIME_ID	2
 /* Thread-specific CPU-time clock.  */
 #   define CLOCK_THREAD_CPUTIME_ID	3
+/* Monotonic system-wide clock, not adjusted for frequency scaling.  */
+#   define CLOCK_MONOTONIC_RAW		4
+/* Identifier for system-wide realtime clock, updated only on ticks.  */
+#   define CLOCK_REALTIME_COARSE	5
+/* Monotonic system-wide clock, updated only on ticks.  */
+#   define CLOCK_MONOTONIC_COARSE	6
 
 /* Flag to indicate time is absolute.  */
 #   define TIMER_ABSTIME		1

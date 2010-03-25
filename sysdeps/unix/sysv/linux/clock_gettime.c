@@ -1,5 +1,5 @@
 /* clock_gettime -- Get current time from a POSIX clockid_t.  Linux version.
-   Copyright (C) 2003,2004,2005,2006,2007 Free Software Foundation, Inc.
+   Copyright (C) 2003,2004,2005,2006,2007,2010 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -80,6 +80,9 @@ maybe_syscall_gettime (clockid_t clock_id, struct timespec *tp)
   SYSDEP_GETTIME_CPUTIME						      \
   case CLOCK_REALTIME:							      \
   case CLOCK_MONOTONIC:							      \
+  case CLOCK_MONOTONIC_RAW:						      \
+  case CLOCK_REALTIME_COARSE:						      \
+  case CLOCK_MONOTONIC_COARSE:						      \
     retval = maybe_syscall_gettime (clock_id, tp);			      \
     if (retval == 0)							      \
       break;								      \

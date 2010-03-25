@@ -1,4 +1,4 @@
-/* Copyright (C) 2003, 2004, 2006 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2004, 2006, 2010 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -45,7 +45,7 @@ maybe_syscall_settime_cpu (clockid_t clock_id, const struct timespec *tp)
       INTERNAL_SYSCALL_DECL (err);
       int r = INTERNAL_SYSCALL (clock_settime, err, 2, clock_id, tp);
       if (!INTERNAL_SYSCALL_ERROR_P (r, err))
-        return 0;
+	return 0;
 
       e = INTERNAL_SYSCALL_ERRNO (r, err);
 # ifndef __ASSUME_POSIX_TIMERS
@@ -90,6 +90,7 @@ extern int __libc_missing_posix_timers attribute_hidden;
 /* The REALTIME clock might be available.  Try the syscall first.  */
 # define SYSDEP_SETTIME \
   case CLOCK_REALTIME:							      \
+  case CLOCK_REALTIME_COARSE:						      \
     {									      \
       int e = EINVAL;							      \
 									      \

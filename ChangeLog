@@ -1,5 +1,16 @@
+2010-03-24  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #11389]
+	* bits/time.h: Define CLOCK_MONOTONIC_RAW, CLOCK_REALTIME_COARSE, and
+	CLOCK_MONOTONIC_COARSE.
+	* sysdeps/unix/sysv/linux/clock_getres.c: Handle CLOCK_MONOTONIC_RAW,
+	CLOCK_REALTIME_COARSE, and CLOCK_MONOTONIC_COARSE.
+	* sysdeps/unix/sysv/linux/clock_gettime.c: Likewise.
+	* sysdeps/unix/sysv/linux/clock_settime.c: Likewise.
+
 2010-03-16  Chris Demetriou  <cgd@google.com>
 
+	[BZ #11394]
 	* locale/programs/simple-hash.c: Include inttypes.h.
 	(hashval_t): Defined to be uint32_t.
 	* locale/programs/simple_hash.h: Include inttypes.h.
