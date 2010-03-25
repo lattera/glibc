@@ -1,5 +1,12 @@
 2010-03-24  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/getlogin_r.c: New file.
+	* sysdeps/unix/sysv/linux/getlogin.c: New file.
+	* sysdeps/unix/getlogin_r.c: Allow compiling getlogin as static
+	function.
+	* sysdeps/unix/getlogin.c: Likewise.  Move name variable to toplevel.
+	* include/unistd.h: Declare __getlogin_r_loginuid.
+
 	[BZ #11397]
 	* sysdeps/posix/cuserid.c (cuserid): Make sure the returned string
 	is NUL terminated.

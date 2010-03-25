@@ -176,6 +176,9 @@ extern int __have_sock_cloexec;
    unless it is really necessary.  */
 #define __have_pipe2 __have_sock_cloexec
 
+extern int __getlogin_r_loginuid (char *name, size_t namesize)
+     attribute_hidden;
+
 __END_DECLS
 
 #endif
