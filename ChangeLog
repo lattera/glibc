@@ -1,3 +1,8 @@
+2010-03-26  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/posix/getaddrinfo.c (gaih_inet): Don't assume success always
+	means aborting the loop over the NSS methods.
+
 2010-03-25  Andreas Schwab  <schwab@redhat.com>
 
 	* sysdeps/posix/getaddrinfo.c (gaih_inet): Reset no_data before

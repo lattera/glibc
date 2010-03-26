@@ -817,17 +817,17 @@ gaih_inet (const char *name, const struct gaih_service *service,
 				    canon = name;
 				}
 			    }
-
-			  break;
 			}
-
-		      /* We can have different states for AF_INET and
-			 AF_INET6.  Try to find a useful one for both.  */
-		      if (inet6_status == NSS_STATUS_TRYAGAIN)
-			status = NSS_STATUS_TRYAGAIN;
-		      else if (status == NSS_STATUS_UNAVAIL
-			       && inet6_status != NSS_STATUS_UNAVAIL)
-			status = inet6_status;
+		      else
+			{
+			  /* We can have different states for AF_INET and
+			     AF_INET6.  Try to find a useful one for both.  */
+			  if (inet6_status == NSS_STATUS_TRYAGAIN)
+			    status = NSS_STATUS_TRYAGAIN;
+			  else if (status == NSS_STATUS_UNAVAIL
+				   && inet6_status != NSS_STATUS_UNAVAIL)
+			    status = inet6_status;
+			}
 		    }
 		  else
 		    status = NSS_STATUS_UNAVAIL;
