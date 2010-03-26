@@ -23,7 +23,6 @@
    only. Don't read too much into it. Don't use it for anything other
    than gdb/strace unless you know what you are doing. */
 
-#include <asm/page.h>
 #include <asm/reg.h>
 
 struct user
@@ -41,6 +40,9 @@ struct user
   char u_comm[32];				/* user command name */
 };
 
+#define PAGE_SHIFT		13
+#define PAGE_SIZE		(1UL << PAGE_SHIFT)
+#define PAGE_MASK		(~(PAGE_SIZE-1))
 #define NBPG			PAGE_SIZE
 #define UPAGES			1
 #define HOST_TEXT_START_ADDR	(u.start_code)
