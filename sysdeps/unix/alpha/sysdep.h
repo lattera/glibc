@@ -430,10 +430,20 @@ extern uintptr_t __pointer_chk_guard_local attribute_relro attribute_hidden;
 #  define PTR_DEMANGLE(dst, tmp)   PTR_MANGLE(dst, dst, tmp)
 #  define PTR_DEMANGLE2(dst, tmp)  PTR_MANGLE2(dst, dst, tmp)
 # else
-extern uintptr_t __pointer_chk_guard attribute_relro;
+extern const uintptr_t __pointer_chk_guard attribute_relro;
 #  define PTR_MANGLE(var)	\
-	(var) = (void *) ((uintptr_t) (var) ^ __pointer_chk_guard)
+	(var) = (__typeof(var)) ((uintptr_t) (var) ^ __pointer_chk_guard)
 #  define PTR_DEMANGLE(var)  PTR_MANGLE(var)
+# endif
+#else
+/* There exists generic C code that assumes that PTR_MANGLE is always
+   defined.  When generating code for the static libc, we don't have
+   __pointer_chk_guard defined.  Nor is there any place that would
+   initialize it if it were defined, so there's little point in doing
+   anything more than nothing.  */
+# ifndef __ASSEMBLER__
+#  define PTR_MANGLE(var)
+#  define PTR_DEMANGLE(var)
 # endif
 #endif
 
