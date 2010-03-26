@@ -702,6 +702,7 @@ gaih_inet (const char *name, const struct gaih_service *service,
 
 	  while (!no_more)
 	    {
+	      no_data = 0;
 	      nss_gethostbyname4_r fct4
 		= __nss_lookup_function (nip, "gethostbyname4_r");
 	      if (fct4 != NULL)
