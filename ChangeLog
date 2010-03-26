@@ -1,5 +1,10 @@
 2010-03-26  Richard Henderson  <rth@redhat.com>
 
+	* stdio-common/psiginfo.c (psiginfo): Fix printf format
+	warning for si_band.
+
+2010-03-26  Richard Henderson  <rth@redhat.com>
+
 	* locale/setlocale.c (free_category): Finish renaming
 	struct locale_data to __locale_data.
 
