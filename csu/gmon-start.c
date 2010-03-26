@@ -31,9 +31,9 @@
 #ifdef ENTRY_POINT_DECL
 ENTRY_POINT_DECL(extern)
 #else
-extern void ENTRY_POINT;
+extern char ENTRY_POINT[];
 #endif
-extern void etext;
+extern char etext[];
 
 #ifndef TEXT_START
 # ifdef ENTRY_POINT_DECL

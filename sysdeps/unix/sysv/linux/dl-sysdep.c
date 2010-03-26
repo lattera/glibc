@@ -47,12 +47,12 @@ frob_brk (void)
      Later Linux kernels have changed this behavior so that the initial
      break value is rounded up to the page boundary before we start.  */
 
-  extern void *__curbrk attribute_hidden;
-  extern void _end attribute_hidden;
-  void *const endpage = (void *) 0 + (((__curbrk - (void *) 0)
+  extern char *__curbrk attribute_hidden;
+  extern char _end[] attribute_hidden;
+  char *const endpage = (void *) 0 + (((__curbrk - (char *) 0)
 				       + GLRO(dl_pagesize) - 1)
 				      & -GLRO(dl_pagesize));
-  if (__builtin_expect (__curbrk >= &_end && __curbrk < endpage, 0))
+  if (__builtin_expect (__curbrk >= _end && __curbrk < endpage, 0))
     __brk (endpage);
 #endif
 }

@@ -47,7 +47,7 @@
 #endif
 
 extern char **_environ attribute_hidden;
-extern void _end attribute_hidden;
+extern char _end[] attribute_hidden;
 
 /* Protect SUID program against misuse of file descriptors.  */
 extern void __libc_check_standard_fds (void);
@@ -226,14 +226,14 @@ _dl_sysdep_start (void **start_argptr,
   if (GLRO(dl_platform) != NULL)
     GLRO(dl_platformlen) = strlen (GLRO(dl_platform));
 
-  if (__sbrk (0) == &_end)
+  if (__sbrk (0) == _end)
     /* The dynamic linker was run as a program, and so the initial break
        starts just after our bss, at &_end.  The malloc in dl-minimal.c
        will consume the rest of this page, so tell the kernel to move the
        break up that far.  When the user program examines its break, it
        will see this new value and not clobber our data.  */
     __sbrk (GLRO(dl_pagesize)
-	    - ((&_end - (void *) 0) & (GLRO(dl_pagesize) - 1)));
+	    - ((_end - (char *) 0) & (GLRO(dl_pagesize) - 1)));
 
   /* If this is a SUID program we make sure that FDs 0, 1, and 2 are
      allocated.  If necessary we are doing it ourself.  If it is not
