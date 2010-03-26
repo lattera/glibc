@@ -748,7 +748,7 @@ extern int _dl_starting_up_internal attribute_hidden;
 #endif
 
 /* Random data provided by the kernel.  */
-extern void *_dl_random attribute_hidden;
+extern void *_dl_random attribute_hidden attribute_relro;
 
 /* OS-dependent function to open the zero-fill device.  */
 extern int _dl_sysdep_open_zero_fill (void); /* dl-sysdep.c */
