@@ -465,7 +465,7 @@ libc_hidden_def (setlocale)
 
 static void __libc_freeres_fn_section
 free_category (int category,
-	       struct __locale_data *here, struct locale_data *c_data)
+	       struct __locale_data *here, struct __locale_data *c_data)
 {
   struct loaded_l10nfile *runp = _nl_locale_file_list[category];
 
@@ -481,7 +481,7 @@ free_category (int category,
   while (runp != NULL)
     {
       struct loaded_l10nfile *curr = runp;
-      struct __locale_data *data = (struct locale_data *) runp->data;
+      struct __locale_data *data = (struct __locale_data *) runp->data;
 
       if (data != NULL && data != c_data)
 	_nl_unload_locale (data);
