@@ -817,6 +817,7 @@ gaih_inet (const char *name, const struct gaih_service *service,
 				    canon = name;
 				}
 			    }
+			  status = NSS_STATUS_SUCCESS;
 			}
 		      else
 			{
