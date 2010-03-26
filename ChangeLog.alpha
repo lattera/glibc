@@ -1,5 +1,9 @@
 2010-03-26  Richard Henderson  <rth@redhat.com>
 
+	* sysdep/unix/sysv/linux/alpha/creat.c: New.
+
+2010-03-26  Richard Henderson  <rth@redhat.com>
+
 	* sysdep/alpha/elf/configure.in (libc_cv_alpha_hidden_gprel)
 	Adjust the test for gcc 4.5.
 	* sysdep/alpha/elf/configure: Rebuild.
