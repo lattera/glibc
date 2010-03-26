@@ -8,6 +8,10 @@
 	* sysdeps/unix/sysv/linux/clock_gettime.c: Likewise.
 	* sysdeps/unix/sysv/linux/clock_settime.c: Likewise.
 
+2010-03-25  Andreas Schwab  <schwab@redhat.com>
+
+	* sysdeps/posix/cuserid.c: Fix typo.
+
 2010-03-16  Chris Demetriou  <cgd@google.com>
 
 	[BZ #11394]

@@ -4852,7 +4852,8 @@ _int_free(mstate av, mchunkptr p)
       free_perturb (chunk2mem(p), size - SIZE_SZ);
 
     set_fastchunks(av);
-    fb = &fastbin (av, fastbin_index(size));
+    unsigned int idx = fastbin_index(size);
+    fb = &fastbin (av, idx);
 
 #ifdef ATOMIC_FASTBINS
     mchunkptr fd;
@@ -4866,6 +4867,12 @@ _int_free(mstate av, mchunkptr p)
 	    errstr = "double free or corruption (fasttop)";
 	    goto errout;
 	  }
+	if (old != NULL
+	    && __builtin_expect (fastbin_index(chunksize(old)) != idx, 0))
+	  {
+	    errstr = "invalid fastbin entry (free)";
+	    goto errout;
+	  }
 	p->fd = fd = old;
       }
     while ((old = catomic_compare_and_exchange_val_rel (fb, p, fd)) != fd);
@@ -4875,6 +4882,12 @@ _int_free(mstate av, mchunkptr p)
     if (__builtin_expect (*fb == p, 0))
       {
 	errstr = "double free or corruption (fasttop)";
+	goto errout;
+      }
+    if (*fb != NULL
+	&& __builtin_expect (fastbin_index(chunksize(*fb)) != idx, 0))
+      {
+	errstr = "invalid fastbin entry (free)";
 	goto errout;
       }
 
