@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1995, 1996, 2000, 2003, 2004, 2006
+/* Copyright (C) 1992, 1995, 1996, 2000, 2003, 2004, 2006, 2010
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Brendan Kehoe (brendan@zen.org).
@@ -191,8 +191,10 @@ __LABEL(name)						\
 })
 
 #define INTERNAL_SYSCALL_DECL(err)		long int err
-#define INTERNAL_SYSCALL_ERROR_P(val, err)	err
-#define INTERNAL_SYSCALL_ERRNO(val, err)	val
+/* Make sure and "use" the variable that we're not returning,
+   in order to suppress unused variable warnings.  */
+#define INTERNAL_SYSCALL_ERROR_P(val, err)	((void)val, err)
+#define INTERNAL_SYSCALL_ERRNO(val, err)	((void)err, val)
 
 #define inline_syscall_clobbers				\
 	"$1", "$2", "$3", "$4", "$5", "$6", "$7", "$8",	\

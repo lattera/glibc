@@ -1,5 +1,10 @@
 2010-03-26  Richard Henderson  <rth@redhat.com>
 
+	* sysdeps/unix/alpha/sysdep.h (INTERNAL_SYSCALL_ERROR_P,
+	INTERNAL_SYSCALL_ERRNO): "Use" the "other" variable in each macro.
+
+2010-03-26  Richard Henderson  <rth@redhat.com>
+
 	* sysdep/unix/sysv/linux/alpha/creat.c: New.
 
 2010-03-26  Richard Henderson  <rth@redhat.com>
