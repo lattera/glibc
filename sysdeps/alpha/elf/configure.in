@@ -53,13 +53,9 @@ fi
 
 AC_CACHE_CHECK(for GP relative module local relocs, libc_cv_alpha_hidden_gprel, [dnl
 cat > conftest.c <<\EOF
-static int bar;
+static volatile int bar;
 int baz __attribute__((visibility("hidden")));
-
-int foo (void)
-{
-  return bar + baz;
-}
+int f(void) { return bar + baz; }
 EOF
 dnl
 
