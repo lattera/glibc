@@ -1,5 +1,5 @@
 /* Implementation of profiling support.  ARM EABI version.
-   Copyright (C) 2008, 2009 Free Software Foundation, Inc.
+   Copyright (C) 2008, 2009, 2010 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -46,10 +46,22 @@ func:
 
 ENTRY(__gnu_mcount_nc)
 	push {r0, r1, r2, r3, lr}
+	cfi_adjust_cfa_offset (20)
+	cfi_rel_offset (r0, 0)
+	cfi_rel_offset (r1, 4)
+	cfi_rel_offset (r2, 8)
+	cfi_rel_offset (r3, 12)
+	cfi_rel_offset (lr, 16)
 	bic r1, lr, #1
 	ldr r0, [sp, #20]
 	bl __mcount_internal
 	pop {r0, r1, r2, r3, ip, lr}
+	cfi_adjust_cfa_offset (-24)
+	cfi_restore (r0)
+	cfi_restore (r1)
+	cfi_restore (r2)
+	cfi_restore (r3)
+	cfi_register (lr, ip)
 	bx ip
 END(__gnu_mcount_nc)
 
@@ -59,6 +71,13 @@ END(__gnu_mcount_nc)
 
 ENTRY(_mcount)
 	stmdb sp!, {r0, r1, r2, r3, fp, lr}
+	cfi_adjust_cfa_offset (24)
+	cfi_rel_offset (r0, 0)
+	cfi_rel_offset (r1, 4)
+	cfi_rel_offset (r2, 8)
+	cfi_rel_offset (r3, 12)
+	cfi_rel_offset (fp, 16)
+	cfi_rel_offset (lr, 20)
 #ifdef __thumb2__
 	movs r0, fp
 	ittt ne
@@ -73,6 +92,13 @@ ENTRY(_mcount)
 	ldmia sp!, {r0, r1, r2, r3, fp, pc}
 #else
 	ldmia sp!, {r0, r1, r2, r3, fp, lr}
+	cfi_adjust_cfa_offset (-24)
+	cfi_restore (r0)
+	cfi_restore (r1)
+	cfi_restore (r2)
+	cfi_restore (r3)
+	cfi_restore (fp)
+	cfi_restore (lr)
 	bx lr
 #endif
 END(_mcount)

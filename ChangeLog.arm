@@ -1,3 +1,53 @@
+2010-03-26  Thomas Schwinge  <thomas@codesourcery.com>
+
+	* sysdeps/arm/configure.in: New file.
+	* sysdeps/arm/configure: Generate.
+	* sysdeps/arm/sysdep.h (ENTRY, END): Add CFI statements.
+	* sysdeps/unix/arm/sysdep.S (__syscall_error): Likewise.
+	* sysdeps/unix/sysv/linux/arm/eabi/nptl/sysdep-cancel.h
+	(PSEUDO, DOCARGS_0, RESTORE_LR_0, DOCARGS_1, UNDOCARGS_1, DOCARGS_2)
+	(UNDOCARGS_2, DOCARGS_3, UNDOCARGS_3, DOCARGS_4, UNDOCARGS_4)
+	(DOCARGS_5, UNDOCARGS_5, RESTORE_LR_5, DOCARGS_6, UNDOCARGS_6):
+	Likewise.
+	[__ASSEMBLER__] (SINGLE_THREAD_P): Likewise.
+	* sysdeps/unix/sysv/linux/arm/eabi/sysdep.h (DO_CALL): Likewise.
+	* sysdeps/unix/sysv/linux/arm/sysdep.h
+	(POP_PC, SYSCALL_ERROR_HANDLER (__local_syscall_error))
+	(DOARGS_5, UNDOARGS_5, DOARGS_6, UNDOARGS_6, DOARGS_7, UNDOARGS_7):
+	Likewise.
+	* sysdeps/unix/sysv/linux/arm/eabi/sigrestorer.S
+	(__default_sa_restorer_v1, __default_sa_restorer_v2)
+	(__default_rt_sa_restorer_v1, __default_rt_sa_restorer_v2): Add END
+	statements.
+	* sysdeps/unix/sysv/linux/arm/eabi/syscall.S (syscall): Add CFI
+	statements.
+	* sysdeps/arm/memcpy.S (memcpy): Add CFI statements.
+	* sysdeps/arm/memmove.S (memmove): Likewise.
+	* sysdeps/unix/sysv/linux/arm/eabi/mmap64.S (__mmap64): Add CFI
+	statements.
+	* sysdeps/unix/sysv/linux/arm/mmap.S (__mmap): Likewise.
+	* sysdeps/arm/eabi/arm-mcount.S (__gnu_mcount_nc, _mcount): Add CFI
+	statements.
+	* sysdeps/arm/sysdep.h (CALL_MCOUNT): Likewise.
+	* sysdeps/unix/sysv/linux/arm/eabi/nptl/unwind-forcedunwind.c
+	(_Unwind_Resume): Add CFI statements.
+	* sysdeps/unix/sysv/linux/arm/eabi/nptl/unwind-resume.c
+	(_Unwind_Resume): Likewise.
+	* sysdeps/arm/dl-trampoline.S (_dl_runtime_resolve)
+	(_dl_runtime_profile) <CFI>: Only emit .debug_frame.
+	* sysdeps/arm/eabi/__longjmp.S (__longjmp): Add CFI statements.
+	* sysdeps/unix/sysv/linux/arm/eabi/____longjmp_chk.S (CALL_FAIL)
+	(CHECK_SP): Likewise
+	* sysdeps/unix/sysv/linux/arm/nptl/pt-vfork.S (SAVE_PID): Add CFI
+	statements.
+	* sysdeps/unix/sysv/linux/arm/nptl/vfork.S (SAVE_PID): Likewise.
+	* sysdeps/unix/sysv/linux/arm/clone.S (__clone): Add CFI statements.
+	* sysdeps/unix/sysv/linux/arm/eabi/sigrestorer.S (cfi_startproc):
+	Redefine for signal frames.
+	(__default_sa_restorer_v1, __default_sa_restorer_v2)
+	(__default_rt_sa_restorer_v1, __default_rt_sa_restorer_v2): Add CFI
+	statements.
+
 2010-02-10  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/arm/eabi/fegetenv.c, sysdeps/arm/fpu/fegetenv.c: Add

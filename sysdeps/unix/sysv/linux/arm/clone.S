@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998, 1999, 2002, 2005, 2008, 2009
+/* Copyright (C) 1996, 1997, 1998, 1999, 2002, 2005, 2008, 2009, 2010
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Pat Beirne <patb@corelcomputer.com>
@@ -52,8 +52,13 @@ ENTRY(__clone)
 	@ new sp is already in r1
 #ifdef __ARM_EABI__
 	stmfd	sp!, {r4, r7}
+	cfi_adjust_cfa_offset (8)
+	cfi_rel_offset (r4, 0)
+	cfi_rel_offset (r7, 4)
 #else
 	str	r4, [sp, #-8]!
+	cfi_adjust_cfa_offset (8)
+	cfi_rel_offset (r4, 0)
 #endif
 	ldr	r2, [sp, #8]
 	ldr	r3, [sp, #12]
@@ -64,6 +69,7 @@ ENTRY(__clone)
 #else
 	swi	SYS_ify(clone)
 #endif
+	cfi_endproc
 	cmp	r0, #0
 	beq	1f
 #ifdef __ARM_EABI__
@@ -74,6 +80,8 @@ ENTRY(__clone)
 	blt	PLTJMP(C_SYMBOL_NAME(__syscall_error))
 	RETINSTR(, lr)
 
+	cfi_startproc
+	cfi_undefined (lr)
 1:
 #ifdef RESET_PID
 	tst	ip, #CLONE_THREAD

@@ -84,7 +84,7 @@
 
 #undef	PSEUDO_END
 #define	PSEUDO_END(name)						      \
-  SYSCALL_ERROR_HANDLER							      \
+  SYSCALL_ERROR_HANDLER;						      \
   END (name)
 
 #undef	PSEUDO_NOERRNO
@@ -129,17 +129,26 @@ __local_syscall_error:						\
        DO_RET(lr);						\
 1:     .word C_SYMBOL_NAME(rtld_errno) - 0b - 8;
 # else
-#if defined(__ARM_ARCH_4T__) && defined(__THUMB_INTERWORK__)
-#define POP_PC  ldr     lr, [sp], #4; bx lr
-#else
-#define POP_PC  ldr     pc, [sp], #4
-#endif
+#  if defined(__ARM_ARCH_4T__) && defined(__THUMB_INTERWORK__)
+#   define POP_PC \
+  ldr lr, [sp], #4; \
+  cfi_adjust_cfa_offset (-4); \
+  cfi_restore (lr); \
+  bx lr
+#  else
+#   define POP_PC  \
+  ldr pc, [sp], #4
+#  endif
 #  define SYSCALL_ERROR_HANDLER					\
 __local_syscall_error:						\
 	str	lr, [sp, #-4]!;					\
+	cfi_adjust_cfa_offset (4);				\
+	cfi_rel_offset (lr, 0);					\
 	str	r0, [sp, #-4]!;					\
+	cfi_adjust_cfa_offset (4);				\
 	bl	PLTJMP(C_SYMBOL_NAME(__errno_location)); 	\
 	ldr	r1, [sp], #4;					\
+	cfi_adjust_cfa_offset (-4);				\
 	rsb	r1, r1, #0;					\
 	str	r1, [r0];					\
 	mvn	r0, #0;						\
@@ -179,7 +188,7 @@ __local_syscall_error:						\
 
 #undef	DO_CALL
 #define DO_CALL(syscall_name, args)		\
-    DOARGS_##args				\
+    DOARGS_##args;				\
     swi SYS_ify (syscall_name); 		\
     UNDOARGS_##args
 
@@ -188,18 +197,47 @@ __local_syscall_error:						\
 #define DOARGS_2 /* nothing */
 #define DOARGS_3 /* nothing */
 #define DOARGS_4 /* nothing */
-#define DOARGS_5 str r4, [sp, $-4]!; ldr r4, [sp, $4];
-#define DOARGS_6 mov ip, sp; stmfd sp!, {r4, r5}; ldmia ip, {r4, r5};
-#define DOARGS_7 mov ip, sp; stmfd sp!, {r4, r5, r6}; ldmia ip, {r4, r5, r6};
+#define DOARGS_5 \
+  str r4, [sp, $-4]!; \
+  cfi_adjust_cfa_offset (4); \
+  cfi_rel_offset (r4, 0); \
+  ldr r4, [sp, $4]
+#define DOARGS_6 \
+  mov ip, sp; \
+  stmfd sp!, {r4, r5}; \
+  cfi_adjust_cfa_offset (8); \
+  cfi_rel_offset (r4, 0); \
+  cfi_rel_offset (r5, 4); \
+  ldmia ip, {r4, r5}
+#define DOARGS_7 \
+  mov ip, sp; \
+  stmfd sp!, {r4, r5, r6}; \
+  cfi_adjust_cfa_offset (12); \
+  cfi_rel_offset (r4, 0); \
+  cfi_rel_offset (r5, 4); \
+  cfi_rel_offset (r6, 8); \
+  ldmia ip, {r4, r5, r6}
 
 #define UNDOARGS_0 /* nothing */
 #define UNDOARGS_1 /* nothing */
 #define UNDOARGS_2 /* nothing */
 #define UNDOARGS_3 /* nothing */
 #define UNDOARGS_4 /* nothing */
-#define UNDOARGS_5 ldr r4, [sp], $4;
-#define UNDOARGS_6 ldmfd sp!, {r4, r5};
-#define UNDOARGS_7 ldmfd sp!, {r4, r5, r6};
+#define UNDOARGS_5 \
+  ldr r4, [sp], $4; \
+  cfi_adjust_cfa_offset (-4); \
+  cfi_restore (r4)
+#define UNDOARGS_6 \
+  ldmfd sp!, {r4, r5}; \
+  cfi_adjust_cfa_offset (-8); \
+  cfi_restore (r4); \
+  cfi_restore (r5)
+#define UNDOARGS_7 \
+  ldmfd sp!, {r4, r5, r6}; \
+  cfi_adjust_cfa_offset (-12); \
+  cfi_restore (r4); \
+  cfi_restore (r5); \
+  cfi_restore (r6)
 
 #else /* not __ASSEMBLER__ */
 

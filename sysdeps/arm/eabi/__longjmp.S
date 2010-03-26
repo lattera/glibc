@@ -1,5 +1,6 @@
 /* longjmp for ARM.
-   Copyright (C) 1997, 1998, 2005, 2006, 2009 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 2005, 2006, 2009, 2010
+     Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -31,10 +32,21 @@ ENTRY (__longjmp)
 	moveq	r0, #1		/* can't let setjmp() return zero! */
 
 #ifdef CHECK_SP
-	ldr	r4, [ip, #32]
+	ldr	r4, [ip, #32]	/* jmpbuf's sp */
+	cfi_undefined (r4)
 	CHECK_SP (r4)
 #endif
 	LOADREGS(ia, ip!, {v1-v6, sl, fp, sp, lr})
+	cfi_restore (v1)
+	cfi_restore (v2)
+	cfi_restore (v3)
+	cfi_restore (v4)
+	cfi_restore (v5)
+	cfi_restore (v6)
+	cfi_restore (sl)
+	cfi_restore (fp)
+	cfi_restore (sp)
+	cfi_restore (lr)
 
 #ifdef IS_IN_rtld
   	ldr	a2, 1f

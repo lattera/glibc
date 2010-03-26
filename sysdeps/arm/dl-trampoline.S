@@ -1,5 +1,5 @@
 /* PLT trampolines.  ARM version.
-   Copyright (C) 2005 Free Software Foundation, Inc.
+   Copyright (C) 2005, 2010 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -29,6 +29,7 @@
 	.text
 	.globl _dl_runtime_resolve
 	.type _dl_runtime_resolve, #function
+	.cfi_sections .debug_frame
 	cfi_startproc
 	.align 2
 _dl_runtime_resolve:
@@ -77,6 +78,7 @@ _dl_runtime_resolve:
 #ifndef PROF
 	.globl _dl_runtime_profile
 	.type _dl_runtime_profile, #function
+	.cfi_sections .debug_frame
 	cfi_startproc
 	.align 2
 _dl_runtime_profile:

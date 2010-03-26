@@ -1,4 +1,4 @@
-/* Copyright (C) 2000, 2003, 2005 Free Software Foundation, Inc.
+/* Copyright (C) 2000, 2003, 2005, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -34,8 +34,13 @@
 ENTRY (__mmap64)
 	ldr	ip, [sp, $LOW_OFFSET]
 	str	r5, [sp, #-4]!
+	cfi_adjust_cfa_offset (4)
+	cfi_rel_offset (r5, 0)
 	ldr	r5, [sp, $HIGH_OFFSET]
 	str	r4, [sp, #-4]!
+	cfi_adjust_cfa_offset (4)
+	cfi_rel_offset (r4, 0)
+	cfi_remember_state
 	movs	r4, ip, lsl $20		@ check that offset is page-aligned
 	mov	ip, ip, lsr $12
 	moveqs	r4, r5, lsr $12		@ check for overflow
@@ -45,11 +50,19 @@ ENTRY (__mmap64)
 	DO_CALL (mmap2, 0)
 	cmn	r0, $4096
 	ldmfd	sp!, {r4, r5}
+	cfi_adjust_cfa_offset (-8)
+	cfi_restore (r4)
+	cfi_restore (r5)
 	RETINSTR(cc, lr)
 	b	PLTJMP(syscall_error)
+
+	cfi_restore_state
 .Linval:
 	mov	r0, $-EINVAL
 	ldmfd	sp!, {r4, r5}
+	cfi_adjust_cfa_offset (-8)
+	cfi_restore (r4)
+	cfi_restore (r5)
 	b	PLTJMP(syscall_error)
 PSEUDO_END (__mmap64)
 

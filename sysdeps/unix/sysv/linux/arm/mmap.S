@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 2000, 2003, 2005 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 2000, 2003, 2005, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -33,8 +33,13 @@ ENTRY (__mmap)
 
 	/* shuffle args */
 	str	r5, [sp, #-4]!
+	cfi_adjust_cfa_offset (4)
+	cfi_rel_offset (r5, 0)
 	ldr	r5, [sp, #8]
 	str	r4, [sp, #-4]!
+	cfi_adjust_cfa_offset (4)
+	cfi_rel_offset (r4, 0)
+	cfi_remember_state
 	ldr	r4, [sp, #8]
 
 	/* convert offset to pages */
@@ -48,12 +53,17 @@ ENTRY (__mmap)
 	/* restore registers */
 2:
 	ldr	r4, [sp], #4
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (r4)
 	ldr	r5, [sp], #4
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (r5)
 
 	cmn	r0, $4096
 	RETINSTR(cc, lr)
 	b	PLTJMP(syscall_error)
 
+	cfi_restore_state
 .Linval:
 	mov	r0, #-EINVAL
 	b	2b
@@ -74,6 +84,7 @@ ENTRY (__mmap)
 
 	/* store args on the stack */
 	stmdb	sp!, {a1-a4}
+	cfi_adjust_cfa_offset (16)
 
 	/* do the syscall */
 	mov	a1, sp
@@ -81,6 +92,7 @@ ENTRY (__mmap)
 
 	/* pop args off the stack. */
 	add	sp, sp, #16
+	cfi_adjust_cfa_offset (-16)
 
 	cmn	r0, $4096
 	RETINSTR(cc, lr)

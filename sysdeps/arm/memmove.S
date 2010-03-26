@@ -73,6 +73,12 @@ ENTRY(memmove)
 #endif
 
 		stmfd	sp!, {r0, r4, lr}
+		cfi_adjust_cfa_offset (12)
+		cfi_rel_offset (r4, 4)
+		cfi_rel_offset (lr, 8)
+
+		cfi_remember_state
+
 		add	r1, r1, r2
 		add	r0, r0, r2
 		subs	r2, r2, #4
@@ -85,6 +91,11 @@ ENTRY(memmove)
 
 1:		subs	r2, r2, #(28)
 		stmfd	sp!, {r5 - r8}
+		cfi_adjust_cfa_offset (16)
+		cfi_rel_offset (r5, 0)
+		cfi_rel_offset (r6, 4)
+		cfi_rel_offset (r7, 8)
+		cfi_rel_offset (r8, 12)
 		blt	5f
 
 	CALGN(	ands	ip, r1, #31		)
@@ -136,6 +147,11 @@ ENTRY(memmove)
 	CALGN(	bcs	2b			)
 
 7:		ldmfd	sp!, {r5 - r8}
+		cfi_adjust_cfa_offset (-16)
+		cfi_restore (r5)
+		cfi_restore (r6)
+		cfi_restore (r7)
+		cfi_restore (r8)
 
 8:		movs	r2, r2, lsl #31
 		ldrneb	r3, [r1, #-1]!
@@ -144,12 +160,18 @@ ENTRY(memmove)
 		strneb	r3, [r0, #-1]!
 		strcsb	r4, [r0, #-1]!
 		strcsb	ip, [r0, #-1]
+
 #if defined (__ARM_ARCH_4T__) && defined (__THUMB_INTERWORK__)
 		ldmfd	sp!, {r0, r4, lr}
+		cfi_adjust_cfa_offset (-12)
+		cfi_restore (r4)
+		cfi_restore (lr)
 		bx      lr
 #else
 		ldmfd	sp!, {r0, r4, pc}
 #endif
+
+		cfi_restore_state
 
 9:		cmp	ip, #2
 		ldrgtb	r3, [r1, #-1]!
@@ -182,6 +204,12 @@ ENTRY(memmove)
 	CALGN(	bcc	15f			)
 
 11:		stmfd	sp!, {r5 - r9}
+		cfi_adjust_cfa_offset (20)
+		cfi_rel_offset (r5, 0)
+		cfi_rel_offset (r6, 4)
+		cfi_rel_offset (r7, 8)
+		cfi_rel_offset (r8, 12)
+		cfi_rel_offset (r9, 16)
 
 	PLD(	pld	[r1, #-4]		)
 	PLD(	subs	r2, r2, #96		)
@@ -216,6 +244,12 @@ ENTRY(memmove)
 	PLD(	bge	13b			)
 
 		ldmfd	sp!, {r5 - r9}
+		cfi_adjust_cfa_offset (-20)
+		cfi_restore (r5)
+		cfi_restore (r6)
+		cfi_restore (r7)
+		cfi_restore (r8)
+		cfi_restore (r9)
 
 14:		ands	ip, r2, #28
 		beq	16f

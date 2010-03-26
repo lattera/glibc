@@ -1,4 +1,4 @@
-/* Copyright (C) 2003, 2005, 2007, 2009 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2005, 2007, 2009, 2010 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jakub@redhat.com>.
 
@@ -89,7 +89,15 @@ asm (
 "	.globl	_Unwind_Resume\n"
 "	.type	_Unwind_Resume, %function\n"
 "_Unwind_Resume:\n"
+"	.cfi_sections .debug_frame\n"
+"	" CFI_STARTPROC "\n"
 "	stmfd	sp!, {r4, r5, r6, lr}\n"
+"	" CFI_ADJUST_CFA_OFFSET (16)" \n"
+"	" CFI_REL_OFFSET (r4, 0) "\n"
+"	" CFI_REL_OFFSET (r5, 4) "\n"
+"	" CFI_REL_OFFSET (r6, 8) "\n"
+"	" CFI_REL_OFFSET (lr, 12) "\n"
+"	" CFI_REMEMBER_STATE "\n"
 "	ldr	r4, 1f\n"
 "	ldr	r5, 2f\n"
 "3:	add	r4, pc, r4\n"
@@ -99,10 +107,17 @@ asm (
 "	beq	4f\n"
 "5:	mov	r0, r6\n"
 "	ldmfd	sp!, {r4, r5, r6, lr}\n"
+"	" CFI_ADJUST_CFA_OFFSET (-16) "\n"
+"	" CFI_RESTORE (r4) "\n"
+"	" CFI_RESTORE (r5) "\n"
+"	" CFI_RESTORE (r6) "\n"
+"	" CFI_RESTORE (lr) "\n"
 "	bx	r3\n"
+"	" CFI_RESTORE_STATE "\n"
 "4:	bl	pthread_cancel_init\n"
 "	ldr	r3, [r4, r5]\n"
 "	b	5b\n"
+"	" CFI_ENDPROC "\n"
 "	.align 2\n"
 #ifdef __thumb2__
 "1:	.word	_GLOBAL_OFFSET_TABLE_ - 3b - 4\n"

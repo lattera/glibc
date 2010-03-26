@@ -1,0 +1,20 @@
+GLIBC_PROVIDES dnl See aclocal.m4 in the top level source directory.
+# Local configure fragment for sysdeps/arm.
+
+AC_CACHE_CHECK([whether the CFI directive .cfi_sections is supported],
+  [libc_cv_asm_cfi_directive_sections],
+  [cat > conftest.s <<EOF
+	.text
+	.cfi_sections .debug_frame, .eh_frame
+	.cfi_startproc
+	.cfi_endproc
+EOF
+  if AC_TRY_COMMAND(${CC-cc} $ASFLAGS -c conftest.s 1>&AS_MESSAGE_LOG_FD); then
+    libc_cv_asm_cfi_directive_sections=yes
+  else
+    libc_cv_asm_cfi_directive_sections=no
+  fi
+  rm -f conftest*])
+if test $libc_cv_asm_cfi_directive_sections != yes; then
+  AC_MSG_ERROR([need .cfi_sections in this configuration])
+fi

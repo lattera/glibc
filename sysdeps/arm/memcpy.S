@@ -58,6 +58,11 @@
 ENTRY(memcpy)
 
 		stmfd	sp!, {r0, r4, lr}
+		cfi_adjust_cfa_offset (12)
+		cfi_rel_offset (r4, 4)
+		cfi_rel_offset (lr, 8)
+
+		cfi_remember_state
 
 		subs	r2, r2, #4
 		blt	8f
@@ -69,6 +74,11 @@ ENTRY(memcpy)
 
 1:		subs	r2, r2, #(28)
 		stmfd	sp!, {r5 - r8}
+		cfi_adjust_cfa_offset (16)
+		cfi_rel_offset (r5, 0)
+		cfi_rel_offset (r6, 4)
+		cfi_rel_offset (r7, 8)
+		cfi_rel_offset (r8, 12)
 		blt	5f
 
 	CALGN(	ands	ip, r1, #31		)
@@ -121,6 +131,11 @@ ENTRY(memcpy)
 	CALGN(	bcs	2b			)
 
 7:		ldmfd	sp!, {r5 - r8}
+		cfi_adjust_cfa_offset (-16)
+		cfi_restore (r5)
+		cfi_restore (r6)
+		cfi_restore (r7)
+		cfi_restore (r8)
 
 8:		movs	r2, r2, lsl #31
 		ldrneb	r3, [r1], #1
@@ -132,10 +147,15 @@ ENTRY(memcpy)
 
 #if defined (__ARM_ARCH_4T__) && defined(__THUMB_INTERWORK__)
 		ldmfd	sp!, {r0, r4, lr}
+		cfi_adjust_cfa_offset (-12)
+		cfi_restore (r4)
+		cfi_restore (lr)
 		bx      lr
 #else
 		ldmfd	sp!, {r0, r4, pc}
 #endif
+
+		cfi_restore_state
 
 9:		rsb	ip, ip, #4
 		cmp	ip, #2
@@ -169,6 +189,12 @@ ENTRY(memcpy)
 	CALGN(	bcc	15f			)
 
 11:		stmfd	sp!, {r5 - r9}
+		cfi_adjust_cfa_offset (20)
+		cfi_rel_offset (r5, 0)
+		cfi_rel_offset (r6, 4)
+		cfi_rel_offset (r7, 8)
+		cfi_rel_offset (r8, 12)
+		cfi_rel_offset (r9, 16)
 
 	PLD(	pld	[r1, #0]		)
 	PLD(	subs	r2, r2, #96		)
@@ -203,6 +229,12 @@ ENTRY(memcpy)
 	PLD(	bge	13b			)
 
 		ldmfd	sp!, {r5 - r9}
+		cfi_adjust_cfa_offset (-20)
+		cfi_restore (r5)
+		cfi_restore (r6)
+		cfi_restore (r7)
+		cfi_restore (r8)
+		cfi_restore (r9)
 
 14:		ands	ip, r2, #28
 		beq	16f

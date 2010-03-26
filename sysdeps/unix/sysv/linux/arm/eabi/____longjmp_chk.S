@@ -30,6 +30,7 @@ longjmp_msg:
 #ifdef PIC
 # define CALL_FAIL						\
 	ldr	sl, .L_GOT;					\
+	cfi_undefined (sl);					\
 .L_GOT_OFF:							\
 	add	sl, pc, sl;					\
 	ldr	r0, .Lstr;					\
@@ -48,12 +49,17 @@ longjmp_msg:
 #endif
 
 #define CHECK_SP(reg)				\
+	cfi_remember_state;			\
 	cmp	sp, reg;			\
 	bls	.Lok;				\
 	mov	r5, r0;				\
+	cfi_undefined (r5);			\
 	mov	r7, #SYS_ify(sigaltstack);	\
+	cfi_undefined (r7);			\
 	mov	r0, #0;				\
-	sub	sp, sp, #16;			\
+	sub	sp, sp, #16; /* >= sizeof (stack_t) */ \
+	cfi_adjust_cfa_offset (16);		\
+	cfi_remember_state;			\
 	mov	r1, sp;				\
 	swi	#0;				\
 	cmp	r0, #0;				\
@@ -69,8 +75,10 @@ longjmp_msg:
 	bhi	.Lok2;				\
 .Lfail:						\
 	CALL_FAIL				\
+	cfi_restore_state;			\
 .Lok2:						\
 	mov	r0, r5;				\
+	cfi_restore_state;			\
 .Lok:
 
 #include <__longjmp.S>

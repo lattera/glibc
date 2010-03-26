@@ -1,5 +1,5 @@
 /* Copyright (C) 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 2002, 2003,
-   2004, 2005
+   2004, 2005, 2009
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -44,6 +44,7 @@ syscall_error:
 
 #if USE___THREAD
 	mov ip, lr
+	cfi_register (lr, ip)
 	mov r1, r0
 
 	mov r0, #0xffff0fff
@@ -66,9 +67,13 @@ syscall_error:
 1:	.word C_SYMBOL_NAME(rtld_errno) - 0b - 8
 #elif defined(_LIBC_REENTRANT)
 	str lr, [sp, #-4]!
+	cfi_adjust_cfa_offset (4)
+	cfi_rel_offset (lr, 0)
 	str r0, [sp, #-4]!
+	cfi_adjust_cfa_offset (4)
 	bl PLTJMP(C_SYMBOL_NAME(__errno_location))
 	ldr r1, [sp], #4
+	cfi_adjust_cfa_offset (-4)
 	str r1, [r0]
 	mvn r0, $0
 	ldr pc, [sp], #4	

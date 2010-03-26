@@ -1,4 +1,4 @@
-/* Copyright (C) 2005, 2006, 2007
+/* Copyright (C) 2005, 2006, 2007, 2009
    Free Software Foundation, Inc.
 
    This file is part of the GNU C Library.
@@ -50,6 +50,7 @@
    For the moment the LOAD_ARGS_7 is sacrificed.
    We can't use push/pop inside the asm because that breaks
    unwinding (ie. thread cancellation).  */
+/* FIXME: the str / ldr of r7 are not covered by CFI information.  */
 #undef LOAD_ARGS_7
 #undef INTERNAL_SYSCALL_RAW
 #define INTERNAL_SYSCALL_RAW(name, err, nr, args...)		\
@@ -100,11 +101,13 @@
 
 #undef	DO_CALL
 #define DO_CALL(syscall_name, args)		\
-    DOARGS_##args				\
+    DOARGS_##args;				\
     mov ip, r7;					\
+    cfi_register (r7, ip);			\
     ldr r7, =SYS_ify (syscall_name);		\
     swi 0x0;					\
     mov r7, ip;					\
+    cfi_restore (r7);				\
     UNDOARGS_##args
 
 #endif /* _LINUX_ARM_EABI_SYSDEP_H */
