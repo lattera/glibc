@@ -1,4 +1,4 @@
-/* Copyright (C) 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2010 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -221,7 +221,7 @@ typedef uintmax_t uatomic_max_t;
 
 #define __arch_exchange_8_int(mem, value, mb1, mb2)			\
 ({									\
-  unsigned long __ret, __tmp, __addr64, __sval;				\
+  unsigned long __tmp, __addr64, __sval; __typeof(*mem) __ret;		\
   __asm__ __volatile__ (						\
 		mb1							\
 	"	andnot	%[__addr8],7,%[__addr64]\n"			\
@@ -244,7 +244,7 @@ typedef uintmax_t uatomic_max_t;
 
 #define __arch_exchange_16_int(mem, value, mb1, mb2)			\
 ({									\
-  unsigned long __ret, __tmp, __addr64, __sval;				\
+  unsigned long __tmp, __addr64, __sval; __typeof(*mem) __ret;		\
   __asm__ __volatile__ (						\
 		mb1							\
 	"	andnot	%[__addr16],7,%[__addr64]\n"			\
@@ -267,7 +267,7 @@ typedef uintmax_t uatomic_max_t;
 
 #define __arch_exchange_32_int(mem, value, mb1, mb2)			\
 ({									\
-  signed int __ret, __tmp;						\
+  signed int __tmp; __typeof(*mem) __ret;				\
   __asm__ __volatile__ (						\
 		mb1							\
 	"1:	ldl_l	%[__ret],%[__mem]\n"				\
@@ -284,7 +284,7 @@ typedef uintmax_t uatomic_max_t;
 
 #define __arch_exchange_64_int(mem, value, mb1, mb2)			\
 ({									\
-  unsigned long __ret, __tmp;						\
+  unsigned long __tmp; __typeof(*mem) __ret;				\
   __asm__ __volatile__ (						\
 		mb1							\
 	"1:	ldq_l	%[__ret],%[__mem]\n"				\
@@ -316,7 +316,7 @@ typedef uintmax_t uatomic_max_t;
 
 #define __arch_exchange_and_add_32_int(mem, value, mb1, mb2)		\
 ({									\
-  signed int __ret, __tmp;						\
+  signed int __tmp; __typeof(*mem) __ret;				\
   __asm__ __volatile__ (						\
 		mb1							\
 	"1:	ldl_l	%[__ret],%[__mem]\n"				\
@@ -333,7 +333,7 @@ typedef uintmax_t uatomic_max_t;
 
 #define __arch_exchange_and_add_64_int(mem, value, mb1, mb2)		\
 ({									\
-  unsigned long __ret, __tmp;						\
+  unsigned long __tmp; __typeof(*mem) __ret;				\
   __asm__ __volatile__ (						\
 		mb1							\
 	"1:	ldq_l	%[__ret],%[__mem]\n"				\
