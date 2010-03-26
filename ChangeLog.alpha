@@ -1,5 +1,11 @@
 2010-03-26  Richard Henderson  <rth@redhat.com>
 
+	* sysdeps/unix/sysv/linux/alpha/dl-auxv.h (__libc_alpha_cache_shape):
+	Define extern here; move definition...
+	* sysdeps/unix/sysv/linux/alpha/dl-sysdep.c: ... here.
+
+2010-03-26  Richard Henderson  <rth@redhat.com>
+
 	* sysdeps/unix/sysv/linux/alpha/sys/user.h: Don't include asm/page.h.
 	(PAGE_SHIFT, PAGE_SIZE, PAGE_MASK): Define.
 

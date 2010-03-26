@@ -19,7 +19,7 @@
 
 /* Scan the Aux Vector for the cache shape entries.  */
 
-long __libc_alpha_cache_shape[4] = { -2, -2, -2, -2 };
+extern long __libc_alpha_cache_shape[4];
 
 #define DL_PLATFORM_AUXV				\
       case AT_L1I_CACHESHAPE:				\
