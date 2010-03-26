@@ -51,7 +51,6 @@ main (void)
 
   for (i=0; i<100; ++i)
     {
-printf("round %li\n", i);
       save_state = malloc_get_state ();
       if (save_state == NULL)
 	{
@@ -65,18 +64,13 @@ printf("round %li\n", i);
 	merror ("realloc (i*4) failed.");
       free (save_state);
     }
-puts("done");
 
   p1 = realloc (p1, 40);
-puts("after realloc");
   free (p2);
-puts("after free 1");
   p2 = malloc (10);
-puts("after malloc");
   if (p2 == NULL)
     merror ("malloc (10) failed.");
   free (p1);
-puts("after free 2");
 
   return errors != 0;
 }
