@@ -148,8 +148,7 @@
   Thread-safety: thread-safe unless NO_THREADS is defined
 
   Compliance: I believe it is compliant with the 1997 Single Unix Specification
-       (See http://www.opennc.org). Also SVID/XPG, ANSI C, and probably
-       others as well.
+       Also SVID/XPG, ANSI C, and probably others as well.
 
 * Synopsis of compile-time options:
 
