@@ -1,3 +1,7 @@
+2010-03-27  Ulrich Drepper  <drepper@redhat.com>
+
+	* posix/glob.c (glob): Initialize oldcount early, too.
+
 2010-03-26  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/i386/fcntl.c: Define miss_F_GETOWN_EX

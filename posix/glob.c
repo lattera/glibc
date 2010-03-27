@@ -436,6 +436,8 @@ glob (pattern, flags, errfunc, pglob)
 	}
     }
 
+  oldcount = pglob->gl_pathc + pglob->gl_offs;
+
   /* Find the filename.  */
   filename = strrchr (pattern, '/');
 #if defined __MSDOS__ || defined WINDOWS32
@@ -552,8 +554,6 @@ glob (pattern, flags, errfunc, pglob)
 	  return val;
 	}
     }
-
-  oldcount = pglob->gl_pathc + pglob->gl_offs;
 
 #ifndef VMS
   if ((flags & (GLOB_TILDE|GLOB_TILDE_CHECK)) && dirname[0] == '~')
