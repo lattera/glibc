@@ -195,3 +195,8 @@ extern size_t __mbsrtowcs_l (wchar_t *dst, const char **src, size_t len,
 
 # endif
 #endif
+
+/* Undefine all __need_* constants in case we are included to get those
+   constants but the whole file was already read.  */
+#undef __need_mbstate_t
+#undef __need_wint_t

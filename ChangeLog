@@ -1,5 +1,8 @@
 2010-03-27  Ulrich Drepper  <drepper@redhat.com>
 
+	* include/wchar.h: Undefine __need_mbstate_t and __need_wint_t
+	unconditionally in the end.
+
 	* posix/glob.c (glob): Initialize oldcount early, too.
 
 2010-03-26  Ulrich Drepper  <drepper@redhat.com>
