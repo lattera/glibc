@@ -1,6 +1,6 @@
 /* Set flags signalling availability of kernel features based on given
    kernel version number.
-   Copyright (C) 1999-2006, 2007, 2008, 2009 Free Software Foundation, Inc.
+   Copyright (C) 1999-2009, 2010 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -65,7 +65,7 @@
 # define __ASSUME_LCHOWN_SYSCALL	1
 #endif
 
-/* When did the `setresuid' sysall became available?  */
+/* When did the `setresuid' syscall became available?  */
 #if __LINUX_KERNEL_VERSION >= 131584 && !defined __sparc__
 # define __ASSUME_SETRESUID_SYSCALL	1
 #endif
@@ -126,7 +126,7 @@
 #endif
 
 /* I know for sure that these are in 2.3.35 on powerpc. But PowerPC64 does not
-   support separate 64-bit syscalls, already 64-bit */
+   support separate 64-bit syscalls, already 64-bit.  */
 #if __LINUX_KERNEL_VERSION >= 131875 && defined __powerpc__ \
     && !defined __powerpc64__
 # define __ASSUME_TRUNCATE64_SYSCALL	1
@@ -158,8 +158,8 @@
 # define __ASSUME_LDT_WORKS		1
 #endif
 
-/* Linux 2.4.0 on PPC introduced a correct IPC64. But PowerPC64 does not
-   support a separate 64-bit sys call, already 64-bit */
+/* Linux 2.4.0 on PPC introduced a correct IPC64.  But PowerPC64 does not
+   support a separate 64-bit syscall, already 64-bit.  */
 #if __LINUX_KERNEL_VERSION >= 132096 && defined __powerpc__ \
     && !defined __powerpc64__
 # define __ASSUME_IPC64			1
@@ -208,7 +208,7 @@
 # define __ASSUME_GETDENTS64_SYSCALL	1
 #endif
 
-/* When did O_DIRECTORY became available?  Early in 2.3 but when?
+/* When did O_DIRECTORY become available?  Early in 2.3 but when?
    Be safe, use 2.3.99.  */
 #if __LINUX_KERNEL_VERSION >= 131939
 # define __ASSUME_O_DIRECTORY		1
@@ -412,7 +412,7 @@
 
 /* Starting with version 2.6.9, SSI_IEEE_RAISE_EXCEPTION exists.  */
 #if __LINUX_KERNEL_VERSION >= 0x020609 && defined __alpha__
-#define __ASSUME_IEEE_RAISE_EXCEPTION	1
+# define __ASSUME_IEEE_RAISE_EXCEPTION	1
 #endif
 
 /* On sparc64 stat64/lstat64/fstat64 syscalls were introduced in 2.6.12.  */
