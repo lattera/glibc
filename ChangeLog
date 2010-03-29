@@ -1,3 +1,10 @@
+2010-03-28  Thomas Schwinge  <thomas@schwinge.name>
+
+	* sysdeps/mach/hurd/dl-sysdep.c (_dl_sysdep_start): Adapt to auxv
+	changes in the generic code.
+	* elf/rtld.c (dl_main): Conditionalize the code that dereferences auxv
+	to [HAVE_AUX_VECTOR].
+
 2010-03-27  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/getpagesize.c (__getpagesize): If

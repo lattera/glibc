@@ -928,8 +928,6 @@ dl_main (const ElfW(Phdr) *phdr,
 
   if (*user_entry == (ElfW(Addr)) ENTRY_POINT)
     {
-      ElfW(auxv_t) *av;
-
       /* Ho ho.  We are not the program interpreter!  We are the program
 	 itself!  This means someone ran ld.so as a command.  Well, that
 	 might be convenient to do sometimes.  We support it by
@@ -1086,9 +1084,10 @@ of this helper program; chances are you did not intend to run this program.\n\
       main_map->l_name = (char *) "";
       *user_entry = main_map->l_entry;
 
+#ifdef HAVE_AUX_VECTOR
       /* Adjust the on-stack auxiliary vector so that it looks like the
 	 binary was executed directly.  */
-      for (av = auxv; av->a_type != AT_NULL; av++)
+      for (ElfW(auxv_t) *av = auxv; av->a_type != AT_NULL; av++)
 	switch (av->a_type)
 	  {
 	  case AT_PHDR:
@@ -1101,6 +1100,7 @@ of this helper program; chances are you did not intend to run this program.\n\
 	    av->a_un.a_val = *user_entry;
 	    break;
 	  }
+#endif
     }
   else
     {
