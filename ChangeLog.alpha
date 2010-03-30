@@ -1,3 +1,7 @@
+2010-03-30  Richard Henderson  <rth@redhat.com>
+
+	* sysdeps/unix/sysv/linux/alpha/bits/socket.h (MSG_WAITFORONE): New.
+
 2010-03-30  Matt Turner  <mattst88@gmail.com>
 
 	* sysdeps/unix/sysv/linux/alpha/kernel-features.h: New.
