@@ -1,6 +1,6 @@
 /* System-specific socket constants and types.  Linux/MIPS version.
    Copyright (C) 1991, 92, 1994-1999, 2000, 2001, 2004, 2005, 2006, 2007, 2008,
-   2009 Free Software Foundation, Inc.
+   2009, 2010 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -232,6 +232,8 @@ enum
 #define	MSG_NOSIGNAL	MSG_NOSIGNAL
     MSG_MORE		= 0x8000,  /* Sender will send more.  */
 #define	MSG_MORE	MSG_MORE
+    MSG_WAITFORONE	= 0x10000, /* Wait for at least one packet to return.*/
+#define MSG_WAITFORONE	MSG_WAITFORONE
 
     MSG_CMSG_CLOEXEC	= 0x40000000	/* Set close_on_exit for file
 					   descriptor received through
