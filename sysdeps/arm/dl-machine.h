@@ -1,6 +1,6 @@
 /* Machine-dependent ELF dynamic relocation inline functions.  ARM version.
-   Copyright (C) 1995,1996,1997,1998,1999,2000,2001,2002,2003,2004,2005
-	Free Software Foundation, Inc.
+   Copyright (C) 1995,1996,1997,1998,1999,2000,2001,2002,2003,2004,2005,
+	2006, 2009, 2010 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -25,14 +25,6 @@
 
 #include <sys/param.h>
 #include <tls.h>
-
-#define VALID_ELF_ABIVERSION(ver)	(ver == 0)
-#define VALID_ELF_OSABI(osabi) \
-  (osabi == ELFOSABI_SYSV || osabi == ELFOSABI_ARM)
-#define VALID_ELF_HEADER(hdr,exp,size) \
-  memcmp (hdr,exp,size-2) == 0 \
-  && VALID_ELF_OSABI (hdr[EI_OSABI]) \
-  && VALID_ELF_ABIVERSION (hdr[EI_ABIVERSION])
 
 #define CLEAR_CACHE(BEG,END)						\
   INTERNAL_SYSCALL_ARM (cacheflush, , 3, (BEG), (END), 0)

@@ -1,3 +1,9 @@
+2010-03-30  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/arm/dl-machine.h (VALID_ELF_ABIVERSION, VALID_ELF_OSABI,
+	VALID_ELF_HEADER): Remove.
+	* sysdeps/unix/sysv/linux/arm/ldsodefs.h: New.
+
 2010-03-26  Thomas Schwinge  <thomas@codesourcery.com>
 
 	* sysdeps/arm/configure.in: New file.
