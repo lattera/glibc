@@ -49,7 +49,7 @@ void *
 __mmap64 (void *addr, size_t len, int prot, int flags, int fd, off64_t offset)
 {
 #ifdef __NR_mmap2
-# ifdef MMAP2_PAGE_SHIFT == -1
+# if MMAP2_PAGE_SHIFT == -1
   if (page_shift == 0)
     {
       int page_size = getpagesize ();
