@@ -233,6 +233,8 @@ enum
 #define	MSG_NOSIGNAL	MSG_NOSIGNAL
     MSG_MORE		= 0x8000,  /* Sender will send more.  */
 #define	MSG_MORE	MSG_MORE
+    MSG_WAITFORONE     = 0x10000, /* Wait for at least one packet to return.*/
+#define MSG_WAITFORONE MSG_WAITFORONE
 
     MSG_CMSG_CLOEXEC	= 0x40000000	/* Set close_on_exit for file
                                            descriptor received through
