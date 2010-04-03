@@ -1,5 +1,7 @@
 2010-04-03  Ulrich Drepper  <drepper@redhat.com>
 
+	* malloc/malloc.c (_int_free): Add one more sanity check for fastbins.
+
 	* malloc/malloc.c (set_max_fast): Fix computation of the value.
 
 2010-03-30  David S. Miller  <davem@davemloft.net>
