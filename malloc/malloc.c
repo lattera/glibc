@@ -2350,7 +2350,8 @@ typedef struct malloc_chunk* mfastbinptr;
 */
 
 #define set_max_fast(s) \
-  global_max_fast = ((s) == 0)? SMALLBIN_WIDTH: request2size(s)
+  global_max_fast = (((s) == 0)						      \
+		     ? SMALLBIN_WIDTH: ((s + SIZE_SZ) & ~MALLOC_ALIGN_MASK))
 #define get_max_fast() global_max_fast
 
 

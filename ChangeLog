@@ -1,3 +1,7 @@
+2010-04-03  Ulrich Drepper  <drepper@redhat.com>
+
+	* malloc/malloc.c (set_max_fast): Fix computation of the value.
+
 2010-03-30  David S. Miller  <davem@davemloft.net>
 
 	* sysdeps/unix/sysv/linux/mmap64.c (__mmap64): Fix
