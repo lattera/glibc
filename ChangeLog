@@ -1,5 +1,9 @@
 2010-04-03  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #11438]
+	* posix/gai.conf: Document problems with IPv4 site-local addresses and
+	NATs.
+
 	[BZ #11449]
 	* crypt/crypt_util.c (__init_des_r): Add memory barrier before setting
 	small_tables_initialized.
