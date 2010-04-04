@@ -1,5 +1,11 @@
 2010-04-04  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #11276]
+	* sysdeps/posix/remove.c (IS_NO_DIRECTORY_ERROR): Define.
+	(remove): Use IS_NO_DIRECTORY_ERROR to check for file being no
+	directory.
+	* sysdeps/unix/sysv/linux/remove.c: New file.
+
 	* conform/data/sys/stat.h-data: Fix testing of S_IS* macros.
 
 	[BZ #11279]

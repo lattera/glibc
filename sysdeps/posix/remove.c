@@ -1,5 +1,5 @@
 /* ANSI C `remove' function to delete a file or directory.  POSIX.1 version.
-   Copyright (C) 1995,96,97,2002,2003 Free Software Foundation, Inc.
+   Copyright (C) 1995,96,97,2002,2003,2010 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,6 +21,12 @@
 #include <stdio.h>
 #include <unistd.h>
 
+
+#ifndef IS_NO_DIRECTORY_ERROR
+# define IS_NO_DIRECTORY_ERROR errno != EPERM
+#endif
+
+
 int
 remove (file)
      const char *file;
@@ -28,7 +34,7 @@ remove (file)
   /* First try to unlink since this is more frequently the necessary action. */
   if (__unlink (file) != 0
       /* If it is indeed a directory...  */
-      && (errno != EISDIR
+      && (IS_NO_DIRECTORY_ERROR
 	  /* ...try to remove it.  */
 	  || __rmdir (file) != 0))
     /* Cannot remove the object for whatever reason.  */
