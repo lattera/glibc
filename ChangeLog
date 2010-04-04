@@ -1,5 +1,10 @@
 2010-04-04  Ulrich Drepper  <drepper@redhat.com>
 
+	* conform/data/sys/stat.h-data: Fix testing of S_IS* macros.
+
+	[BZ #11279]
+	* io/sys/stat.h: Always define S_ISSOCK for XPG6 and up.
+
 	[BZ #11287]
 	* csu/Makefile ($(objpfx)version-info.h): Handle newer kernel headers
 	which don't define UTS_RELEASE.

@@ -66,15 +66,14 @@ constant S_ISGID
 constant S_ISVTX
 #endif
 
-#if !defined POSIX && !defined POSIX2008
-macro S_IFMT
+#if !defined POSIX
 macro S_ISBLK
 macro S_ISCHR
 macro S_ISDIR
 macro S_ISFIFO
 macro S_ISREG
 macro S_ISLNK
-macro S_IFSOCK
+macro S_ISSOCK
 #endif
 
 // How to represent optional tests?

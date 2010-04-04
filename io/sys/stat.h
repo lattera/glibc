@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1995-2004, 2005, 2006, 2007, 2009
+/* Copyright (C) 1991, 1992, 1995-2004, 2005, 2006, 2007, 2009, 2010
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -143,9 +143,11 @@ __BEGIN_DECLS
 # define S_ISLNK(mode)  0
 #endif
 
-#if (defined __USE_BSD || defined __USE_UNIX98) \
+#if (defined __USE_BSD || defined __USE_UNIX98 || defined __USE_XOPEN2K) \
     && defined __S_IFSOCK
 # define S_ISSOCK(mode) __S_ISTYPE((mode), __S_IFSOCK)
+#elif defined __USE_XOPEN2K
+# define S_ISSOCK(mode) 0
 #endif
 
 /* These are from POSIX.1b.  If the objects are not implemented using separate
