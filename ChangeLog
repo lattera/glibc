@@ -1,5 +1,11 @@
 2010-04-03  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #11333]
+	* sysdeps/unix/readdir_r.c (__READDIR_R): Add support for platforms
+	which include unnecessary padding in d_reclen.
+	* sysdeps/unix/sysv/linux/i386/readdir64_r.c: Select work-around for
+	unnecessary padding.
+
 	[BZ #11387]
 	* sysdeps/unix/sysv/linux/ifaddrs.c (map_newlin): Don't abort on
 	unknown interface, return -1.
