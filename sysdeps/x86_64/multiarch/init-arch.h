@@ -1,5 +1,5 @@
 /* This file is part of the GNU C Library.
-   Copyright (C) 2008, 2009 Free Software Foundation, Inc.
+   Copyright (C) 2008, 2009, 2010 Free Software Foundation, Inc.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -52,7 +52,7 @@ enum
 
 extern struct cpu_features
 {
-  enum
+  enum cpu_features_kind
     {
       arch_kind_unknown = 0,
       arch_kind_intel,
