@@ -1,5 +1,5 @@
 /* Determine various system internal values, Linux version.
-   Copyright (C) 1996-2003, 2006, 2007, 2009 Free Software Foundation, Inc.
+   Copyright (C) 1996-2003,2006,2007,2009,2010 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -116,18 +116,6 @@ next_line (int fd, char *const buffer, char **cp, char **re,
 
       if (nl == NULL)
 	nl = *re - 1;
-    }
-  else if (nl + 5 >= *re)
-    {
-      memmove (buffer, nl, *re - nl);
-      *re = buffer + (*re - nl);
-      nl = *cp = buffer;
-
-      ssize_t n = read_not_cancel (fd, *re, buffer_end - *re);
-      if (n < 0)
-	return NULL;
-
-      *re += n;
     }
 
   *cp = nl + 1;

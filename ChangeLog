@@ -1,3 +1,9 @@
+2010-03-25  Ryan S. Arnold  <rsa@us.ibm.com>
+
+	* sysdeps/unix/sysv/linux/getsysstats.c (next_line): Remove
+	redundant and incorrect else block which overwrites current line
+	with the partial next line.
+
 2010-04-03  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #11438]
