@@ -1,3 +1,13 @@
+2010-04-03  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #11387]
+	* sysdeps/unix/sysv/linux/ifaddrs.c (map_newlin): Don't abort on
+	unknown interface, return -1.
+	(getifaddrs_internal): Rename from getifaddrs.  Handle errors in
+	map_newlink be returning -EAGAIN.
+	(getifaddrs): If -EAGAIN is returned from getifaddrs_internal try
+	again.
+
 2010-03-25  Ryan S. Arnold  <rsa@us.ibm.com>
 
 	* sysdeps/unix/sysv/linux/getsysstats.c (next_line): Remove
