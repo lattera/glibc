@@ -1,3 +1,9 @@
+2010-01-28  Marcelo E. Magallon  <marcelo.magallon@gmail.com>
+
+	[BZ #11258]
+	* locales/es_CR: Update for LC_MONETARY, LC_NUMERIC, LC_PAPER,
+	LC_TELEPHONE and LC_NAME and LC_ADDRESS.
+
 2010-04-04  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #11272]

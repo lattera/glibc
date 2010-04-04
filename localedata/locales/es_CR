@@ -21,8 +21,8 @@ tel        ""
 fax        ""
 language   "Spanish"
 territory  "Costa Rica"
-revision   "1.0"
-date       "2000-08-21"
+revision   "1.1"
+date       "2009-12-23"
 %
 category  "es_CR:2000";LC_IDENTIFICATION
 category  "es_CR:2000";LC_CTYPE
@@ -53,9 +53,10 @@ END LC_MESSAGES
 
 LC_MONETARY
 int_curr_symbol      "<U0043><U0052><U0043><U0020>"
-currency_symbol      "<U0043>"
-mon_decimal_point    "<U002E>"
-mon_thousands_sep    "<U002C>"
+currency_symbol      "<U20A1>"
+% Decreto Ejecutivo 29660
+mon_decimal_point    "<U002C>"
+mon_thousands_sep    "<U0020>"
 mon_grouping         3;3
 positive_sign        ""
 negative_sign        "<U002D>"
@@ -70,9 +71,10 @@ n_sign_posn          1
 END LC_MONETARY
 
 LC_NUMERIC
-decimal_point        "<U002E>"
-thousands_sep        ""
-grouping             0;0
+% Decreto Ejecutivo 29660
+decimal_point        "<U002C>"
+thousands_sep        "<U0020>"
+grouping             3;3
 END LC_NUMERIC
 
 LC_TIME
@@ -106,39 +108,42 @@ mon     "<U0065><U006E><U0065><U0072><U006F>";/
         "<U006E><U006F><U0076><U0069><U0065><U006D><U0062><U0072><U0065>";/
         "<U0064><U0069><U0063><U0069><U0065><U006D><U0062><U0072><U0065>"
 d_t_fmt "<U0025><U0061><U0020><U0025><U0064><U0020><U0025><U0062><U0020><U0025><U0059><U0020><U0025><U0054><U0020><U0025><U005A>"
-d_fmt   "<U0025><U0064><U002F><U0025><U006D><U002F><U0025><U0079>"
+d_fmt   "<U0025><U0064><U002F><U0025><U006D><U002F><U0025><U0059>"
 t_fmt   "<U0025><U0054>"
 am_pm   "<U0061><U002E><U006D><U002E>";"<U0070><U002E><U006D><U002E>"
 t_fmt_ampm "<U0025><U0049><U003A><U0025><U004D><U003A><U0025><U0053><U0020><U0025><U0070>"
-date_fmt	"<U0025><U0061><U0020><U0025><U0062><U0020><U0025><U0065>/
+date_fmt	"<U0025><U0061><U0020><U0025><U0065><U0020><U0025><U0062>/
 <U0020><U0025><U0048><U003A><U0025><U004D><U003A><U0025><U0053><U0020>/
 <U0025><U005A><U0020><U0025><U0059>"
-first_weekday 1
+first_weekday 2
 first_workday 2
 END LC_TIME
 
 LC_PAPER
-% FIXME
-height   297
-% FIXME
-width    210
+height   279
+width    216
 END LC_PAPER
 
 LC_TELEPHONE
-tel_int_fmt    "<U002B><U0025><U0063><U0020><U0025><U0061><U0020><U0025>/
-<U006C>"
+tel_int_fmt "<U002B><U0025><U0063><U0020><U0025><U0061><U0020>/
+<U0025><U006C>"
+tel_dom_fmt "<U0025><U006C>"
 int_prefix     "<U0035><U0030><U0036>"
 int_select     "<U0030><U0030>"
 END LC_TELEPHONE
 
 LC_MEASUREMENT
-% FIXME
 measurement    1
 END LC_MEASUREMENT
 
 LC_NAME
 name_fmt    "<U0025><U0064><U0025><U0074><U0025><U0067><U0025><U0074>/
 <U0025><U006D><U0025><U0074><U0025><U0066>"
+name_gen    "<U0053><U0072><U002E><U002F><U0053><U0072><U0061><U002E>"
+name_miss   "<U0053><U0072><U0074><U0061><U002E>"
+name_mr     "<U0053><U0072><U002E>"
+name_mrs    "<U0053><U0072><U0061><U002E>"
+name_ms     "<U0053><U0072><U0061><U002E>"
 END LC_NAME
 
 LC_ADDRESS
@@ -147,6 +152,13 @@ postal_fmt    "<U0025><U0066><U0025><U004E><U0025><U0061><U0025><U004E>/
 <U0020><U0025><U0068><U0020><U0025><U0065><U0020><U0025><U0072><U0025>/
 <U004E><U0025><U007A><U0020><U0025><U0054><U0025>/
 <U004E><U0025><U0063><U0025><U004E>"
+country_name  "<U0043><U006F><U0073><U0074><U0061><U0020><U0052><U0069><U0063><U0061>"
+country_post  "<U0043><U0052>"
+country_car   "<U0043><U0052>"
+country_isbn  "9930,9977,9968"
+lang_name     "<U0045><U0073><U0070><U0061><U00F1><U006F><U006C>"
+lang_ab       "<0065><0073>"
+lang_term     "<U0073><U0070><U0061>"
 country_ab2   "<U0043><U0052>"
 country_ab3   "<U0043><U0052><U0049>"
 country_num   188
