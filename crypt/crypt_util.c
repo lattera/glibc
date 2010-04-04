@@ -27,6 +27,7 @@
 #ifdef DEBUG
 #include <stdio.h>
 #endif
+#include <atomic.h>
 #include <string.h>
 
 #ifndef STATIC
