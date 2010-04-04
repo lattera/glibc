@@ -1,5 +1,5 @@
 /* Hierarchial argument parsing, layered over getopt
-   Copyright (C) 1995-2000, 2002, 2003, 2004 Free Software Foundation, Inc.
+   Copyright (C) 1995-2000, 2002, 2003, 2004, 2010 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Miles Bader <miles@gnu.ai.mit.edu>.
 
@@ -99,7 +99,7 @@ static volatile int _argp_hang;
 
 static const struct argp_option argp_default_options[] =
 {
-  {"help",	  '?',    	0, 0,  N_("Give this help list"), -1},
+  {"help",	  '?',	  	0, 0,  N_("Give this help list"), -1},
   {"usage",	  OPT_USAGE,	0, 0,  N_("Give a short usage message")},
   {"program-name",OPT_PROGNAME,"NAME", OPTION_HIDDEN, N_("Set the program name")},
   {"HANG",	  OPT_HANG,    "SECS", OPTION_ARG_OPTIONAL | OPTION_HIDDEN,
@@ -164,7 +164,7 @@ static const struct argp argp_default_argp =
 
 static const struct argp_option argp_version_options[] =
 {
-  {"version",	  'V',    	0, 0,  N_("Print program version"), -1},
+  {"version",	  'V',	  	0, 0,  N_("Print program version"), -1},
   {0, 0}
 };
 
@@ -364,7 +364,7 @@ convert_options (const struct argp *argp,
 		       values (the sign of the lower bits is preserved
 		       however)...  */
 		    cvt->long_end->val =
-		      ((opt->key | real->key) & USER_MASK)
+		      ((opt->key ? opt->key : real->key) & USER_MASK)
 		      + (((group - cvt->parser->groups) + 1) << USER_BITS);
 
 		    /* Keep the LONG_OPTS list terminated.  */
@@ -385,7 +385,7 @@ convert_options (const struct argp *argp,
 
       if (children)
 	/* Assign GROUP's CHILD_INPUTS field some space from
-           CVT->child_inputs_end.*/
+	   CVT->child_inputs_end.*/
 	{
 	  unsigned num_children = 0;
 	  while (children[num_children].argp)
@@ -823,7 +823,7 @@ parser_parse_next (struct parser *parser, int *arg_ebadkey)
 	  parser->try_getopt = 0;
 	  if (parser->state.next > 1
 	      && strcmp (parser->state.argv[parser->state.next - 1], QUOTE)
-	           == 0)
+		   == 0)
 	    /* Not only is this the end of the options, but it's a
 	       `quoted' region, which may have args that *look* like
 	       options, so we definitely shouldn't try to use getopt past
