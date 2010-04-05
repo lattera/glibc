@@ -1,3 +1,8 @@
+2010-04-05  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #11007]
+	* locales/pt_BR: Define thousands_sep and grouping.
+
 2010-01-28  Marcelo E. Magallon  <marcelo.magallon@gmail.com>
 
 	[BZ #11258]
