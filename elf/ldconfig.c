@@ -1305,11 +1305,9 @@ main (int argc, char **argv)
 				  p ? (*p = '\0', cache_file) : "/");
 
       if (canon == NULL)
-	{
-	  error (EXIT_FAILURE, errno,
-		 _("Can't open cache file directory %s\n"),
-		 p ? cache_file : "/");
-	}
+	error (EXIT_FAILURE, errno,
+	       _("Can't open cache file directory %s\n"),
+	       p ? cache_file : "/");
 
       if (p)
 	++p;
@@ -1346,8 +1344,17 @@ main (int argc, char **argv)
 	add_system_dir (LIBDIR);
     }
 
+  char *aux_cache_file = _PATH_LDCONFIG_AUX_CACHE;
+  if (opt_chroot)
+    {
+      aux_cache_file = chroot_canon (opt_chroot, aux_cache_file);
+      if (aux_cache_file == NULL)
+	error (EXIT_FAILURE, errno, _("Can't open cache file %s\n"),
+	       _PATH_LDCONFIG_AUX_CACHE);
+    }
+
   if (! opt_ignore_aux_cache)
-    load_aux_cache (_PATH_LDCONFIG_AUX_CACHE);
+    load_aux_cache (aux_cache_file);
   else
     init_aux_cache ();
 
@@ -1356,7 +1363,7 @@ main (int argc, char **argv)
   if (opt_build_cache)
     {
       save_cache (cache_file);
-      save_aux_cache (_PATH_LDCONFIG_AUX_CACHE);
+      save_aux_cache (aux_cache_file);
     }
 
   return 0;

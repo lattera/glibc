@@ -1,3 +1,9 @@
+2010-04-05  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #11149]
+	* elf/ldconfig.c (main): Respect chroot setting when looking for
+	the aux cache.
+
 2010-04-04  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #11043]
