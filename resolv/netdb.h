@@ -518,6 +518,30 @@ extern int ruserok_af (__const char *__rhost, int __suser,
 		       __const char *__remuser, __const char *__locuser,
 		       sa_family_t __af);
 
+/* Check whether user REMUSER on system indicated by IPv4 address
+   RADDR is allowed to login as LOCUSER.  Non-IPv4 (e.g., IPv6) are
+   not supported.  If SUSER is not zero the user tries to become
+   superuser.  Return 0 if it is possible.
+
+   This function is not part of POSIX and therefore no official
+   cancellation point.  But due to similarity with an POSIX interface
+   or due to the implementation it is a cancellation point and
+   therefore not marked with __THROW.  */
+extern int iruserok (uint32_t __raddr, int __suser,
+		     __const char *__remuser, __const char *__locuser);
+
+/* This is the equivalent function where the pfamiliy if the address
+   pointed to by RADDR is determined by the value of AF.  It therefore
+   can be used for IPv6
+
+   This function is not part of POSIX and therefore no official
+   cancellation point.  But due to similarity with an POSIX interface
+   or due to the implementation it is a cancellation point and
+   therefore not marked with __THROW.  */
+extern int iruserok_af (__const void *__raddr, int __suser,
+			__const char *__remuser, __const char *__locuser,
+			sa_family_t __af);
+
 /* Try to allocate reserved port, returning a descriptor for a socket opened
    at this port or -1 if unsuccessful.  The search for an available port
    will start at ALPORT and continues with lower numbers.
