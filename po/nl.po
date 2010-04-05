@@ -1,31 +1,33 @@
 # Dutch translations for libc.
-# Copyright (C) 2009 Free Software Foundation, Inc.
+# Copyright (C) 2010 Free Software Foundation, Inc.
 # This file is distributed under the same license as the glibc package.
 #
 # Elros Cyriatan <cyriatan@fastmail.fm>, 2004.
-# Benno Schulenberg <benno@vertaalt.nl>, 2006, 2007, 2008.
+# Erwin Poeze <erwin.poeze@gmail.com>, 2009.
+# Benno Schulenberg <benno@vertaalt.nl>, 2006, 2007, 2008, 2010.
 msgid ""
 msgstr ""
-"Project-Id-Version: libc-2.9.90\n"
+"Project-Id-Version: libc-2.11\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2009-02-06 12:40-0800\n"
-"PO-Revision-Date: 2009-03-04 11:41+0100\n"
-"Last-Translator: Erwin Poeze <erwin.poeze@gmail.com>\n"
+"PO-Revision-Date: 2010-04-05 16:30+0200\n"
+"Last-Translator: Benno Schulenberg <benno@vertaalt.nl>\n"
 "Language-Team: Dutch <vertaling@vrijschrift.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Lokalize 1.0\n"
 
 #: argp/argp-help.c:228
 #, c-format
 msgid "%.*s: ARGP_HELP_FMT parameter requires a value"
-msgstr "%.*s: parameter in ARGP_HELP_FMT vereist een waarde"
+msgstr "%.*s: Parameter in ARGP_HELP_FMT vereist een waarde"
 
 #: argp/argp-help.c:238
 #, c-format
 msgid "%.*s: Unknown ARGP_HELP_FMT parameter"
-msgstr "%.*s: onbekende parameter in ARGP_HELP_FMT"
+msgstr "%.*s: Onbekende parameter in ARGP_HELP_FMT"
 
 #: argp/argp-help.c:251
 #, c-format
@@ -80,7 +82,7 @@ msgstr "dit aantal seconden pauzeren (standaard 3600)"
 
 #: argp/argp-parse.c:167
 msgid "Print program version"
-msgstr "programmaversie tonen"
+msgstr "de programmaversie tonen"
 
 #: argp/argp-parse.c:183
 msgid "(PROGRAM ERROR) No version known!?"
@@ -328,9 +330,7 @@ msgstr ""
 "\n"
 "  -?,--help          deze hulptekst tonen\n"
 "     --usage         een korte gebruikssamenvatting tonen\n"
-"  -V,--version       programmaversie tonen\n"
-"\n"
-"Argumenten die verplicht zijn voor lange opties, zijn ook verplicht voor de overeenkomstige korte opties.\n"
+"  -V,--version       de programmaversie tonen\n"
 "\n"
 
 #: debug/xtrace.sh:127
@@ -703,7 +703,7 @@ msgstr "inhoud van de cache weergeven"
 
 #: elf/ldconfig.c:142
 msgid "Generate verbose messages"
-msgstr "breedsprakige uitvoer"
+msgstr "gedetailleerde uitvoer produceren"
 
 #: elf/ldconfig.c:143
 msgid "Don't build cache"
@@ -934,12 +934,15 @@ msgid ""
 "  -v, --verbose           print all information\n"
 msgstr ""
 "Gebruik:  ldd [OPTIE]... BESTAND...\n"
+"\n"
+"Bibliotheekafhankelijkheden weergeven.\n"
+"\n"
 "      --help              deze hulptekst tonen\n"
-"      --version           programmaversie tonen\n"
+"      --version           de programmaversie tonen\n"
 "  -d, --data-relocs       dataverplaatsingen verwerken\n"
 "  -r, --function-relocs   data- en functieverplaatsingen verwerken\n"
 "  -u, --unused            ongebruikte directe afhankelijkheden tonen\n"
-"  -v, --verbose           breedsprakige uitvoer\n"
+"  -v, --verbose           gedetailleerde uitvoer produceren\n"
 
 #: elf/ldd.bash.in:82
 msgid "ldd: option \\`$1' is ambiguous"
@@ -1045,7 +1048,7 @@ msgid ""
 "Usage: sln src dest|file\n"
 "\n"
 msgstr ""
-"Gebruik: sln src dest|bestand\n"
+"Gebruik:  sln BRON BESTEMMING|BESTAND\n"
 "\n"
 
 #: elf/sln.c:110
@@ -1066,7 +1069,7 @@ msgstr "%s: bestemming kan geen map zijn\n"
 #: elf/sln.c:185
 #, c-format
 msgid "%s: failed to remove the old destination\n"
-msgstr "%s: de oude bestemming verwijderen is mislukt\n"
+msgstr "%s: verwijderen van oude bestemming is mislukt\n"
 
 #: elf/sln.c:193
 #, c-format
@@ -1096,7 +1099,7 @@ msgstr "een aanroepengrafiek genereren"
 
 #: elf/sprof.c:89
 msgid "Read and display shared object profiling data."
-msgstr "Profielgegevens gedeeld object lezen en weergeven."
+msgstr "Profiling-gegevens van gedeeld object lezen en tonen."
 
 #: elf/sprof.c:94
 msgid "SHOBJ [PROFDATA]"
@@ -1111,7 +1114,7 @@ msgstr "laden van gedeeld object '%s' is mislukt"
 #: elf/sprof.c:429
 #, c-format
 msgid "cannot create internal descriptors"
-msgstr "kan interne descriptor niet aanmaken"
+msgstr "kan geen interne descriptors aanmaken"
 
 #: elf/sprof.c:548
 #, c-format
@@ -1756,7 +1759,7 @@ msgstr "'%.*s' is al gedefinieerd in tekensetdefinitie"
 #: locale/programs/ld-collate.c:426
 #, c-format
 msgid "`%.*s' already defined in repertoire"
-msgstr "`%.*s' is al gedefinieerd in repertoire"
+msgstr "'%.*s' is al gedefinieerd in repertoire"
 
 #: locale/programs/ld-collate.c:433
 #, c-format
@@ -2118,6 +2121,9 @@ msgstr "eindwaarde is kleiner dan beginwaarde"
 msgid "premature end of `translit_ignore' definition"
 msgstr "voortijdig einde van definitie van 'translit_ignore'"
 
+#
+# This error message is issued when yacc finds an error at parse time.
+#
 #: locale/programs/ld-ctype.c:2076 locale/programs/ld-ctype.c:2127
 #: locale/programs/ld-ctype.c:2169
 msgid "syntax error"
@@ -2437,11 +2443,11 @@ msgstr "namen van de geselecteerde sleutelwoorden tonen"
 
 #: locale/programs/locale.c:82
 msgid "Print more information"
-msgstr "uitgebreide uitvoer produceren"
+msgstr "gedetailleerde uitvoer produceren"
 
 #: locale/programs/locale.c:87
 msgid "Get locale-specific information."
-msgstr "Informatie over taalregio ophalen."
+msgstr "Informatie over taalregios tonen."
 
 #: locale/programs/locale.c:90
 msgid ""
@@ -2514,7 +2520,7 @@ msgstr "waarschuwingen en meldingen onderdrukken"
 
 #: locale/programs/localedef.c:135
 msgid "Print more messages"
-msgstr "breedsprakige uitvoer"
+msgstr "gedetailleerde uitvoer produceren"
 
 #: locale/programs/localedef.c:136
 msgid "Archive control:"
@@ -2759,7 +2765,7 @@ msgstr "kan uitvoerbestand '%s' niet aanmaken voor categorie '%s'"
 
 #: locale/programs/locfile.c:782
 msgid "expecting string argument for `copy'"
-msgstr "argument van `copy' dient een tekenreeks te zijn"
+msgstr "argument van 'copy' dient een tekenreeks te zijn"
 
 #: locale/programs/locfile.c:786
 msgid "locale name should consist only of portable characters"
@@ -2884,6 +2890,7 @@ msgid ""
 "\n"
 msgstr ""
 "Gebruik:  memusage [OPTIE]... PROGRAMMA [PROGRAMMA-OPTIE]...\n"
+"\n"
 "Het geheugengebruik van PROGRAMMA bijhouden.\n"
 "\n"
 "  -n,--progname=NAAM     te observeren programma\n"
@@ -2896,7 +2903,7 @@ msgstr ""
 "\n"
 "  -?,--help              deze hulptekst tonen\n"
 "     --usage             een korte gebruikssamenvatting tonen\n"
-"  -V,--version           programmaversie tonen\n"
+"  -V,--version           de programmaversie tonen\n"
 "\n"
 " De volgende opties zijn alleen bij grafische uitvoer van toepassing:\n"
 "  -t,--time-based        de grafiek lineair in de tijd maken\n"
@@ -3647,7 +3654,7 @@ msgstr "ongeldig persistent gegevensbestand '%s': %s"
 
 #: nscd/connections.c:578
 msgid "uninitialized header"
-msgstr "niet-geïnitialiseerde header"
+msgstr "ongeïnitialiseerde header"
 
 #: nscd/connections.c:583
 msgid "header size does not match"
@@ -3674,12 +3681,14 @@ msgstr "kan geen alleen-lezen-descriptor voor '%s' aanmaken; geen mmap()"
 #: nscd/connections.c:651
 #, c-format
 msgid "cannot access '%s'"
-msgstr "kan '%s' niet openen"
+msgstr "kan geen toegang tot '%s' verkrijgen"
 
 #: nscd/connections.c:699
 #, c-format
 msgid "database for %s corrupted or simultaneously used; remove %s manually if necessary and restart"
-msgstr "gegevensbestand voor %s is beschadigd of wordt al gebruikt; verwijder %s zo nodig handmatig en herstart"
+msgstr ""
+"gegevensbestand voor %s is beschadigd of wordt al gebruikt;\n"
+"verwijder %s zo nodig handmatig en herstart"
 
 #: nscd/connections.c:706
 #, c-format
@@ -3818,7 +3827,7 @@ msgstr "handle_request(): verzoek ontvangen (versie = %d)"
 #: nscd/connections.c:1903 nscd/connections.c:2101
 #, c-format
 msgid "disabled inotify after read error %d"
-msgstr "inotify uitgeschakeld na leesfout %d"
+msgstr "'inotify' is  uitgeschakeld na leesfout %d"
 
 #: nscd/connections.c:2230
 msgid "could not initialize conditional variable"
@@ -3826,11 +3835,11 @@ msgstr "kan conditionele variabele niet initialiseren"
 
 #: nscd/connections.c:2238
 msgid "could not start clean-up thread; terminating"
-msgstr "kan opschoon-thread niet starten; gestopt"
+msgstr "kan opschoon-thread niet starten -- gestopt"
 
 #: nscd/connections.c:2252
 msgid "could not start any worker thread; terminating"
-msgstr "kan geen worker-thread starten; gestopt"
+msgstr "kan geen enkele werk-thread starten -- gestopt"
 
 #: nscd/connections.c:2303 nscd/connections.c:2304 nscd/connections.c:2321
 #: nscd/connections.c:2330 nscd/connections.c:2348 nscd/connections.c:2359
@@ -3878,7 +3887,7 @@ msgstr "Ongeldig numeriek GID '%s'!"
 #: nscd/mem.c:457
 #, c-format
 msgid "freed %zu bytes in %s cache"
-msgstr "%zu bytes in cache %s vrijgegeven"
+msgstr "%zu bytes in cache %s zijn vrijgegeven"
 
 #: nscd/mem.c:594
 #, c-format
@@ -3968,7 +3977,7 @@ msgstr "Alleen root mag deze optie gebruiken!"
 #: nscd/nscd.c:345
 #, c-format
 msgid "'%s' is not a known database"
-msgstr "'%s' is geen bekende database"
+msgstr "'%s' is geen bekende gegevensbank"
 
 #: nscd/nscd.c:370 nscd/nscd_stat.c:191
 #, c-format
@@ -4248,7 +4257,7 @@ msgstr "Kan uit de context geen SID verkrijgen"
 
 #: nscd/selinux.c:374
 msgid "compile-time support for database policy missing"
-msgstr "ondersteuning compileertijd voor databasebeleid ontbreekt"
+msgstr "ondersteuning voor gegevensbankbeleid is niet meegecompileerd"
 
 #: nscd/selinux.c:407
 #, c-format
@@ -4297,7 +4306,7 @@ msgstr "te gebruiken configuratie"
 
 #: nss/getent.c:62
 msgid "Get entries from administrative database."
-msgstr "Haal items uit administratieve database."
+msgstr "Items uit administratieve gegevensbank ophalen."
 
 #: nss/getent.c:143 nss/getent.c:408
 #, c-format
@@ -4398,12 +4407,12 @@ msgid ""
 "environment SPEC.\n"
 "\n"
 msgstr ""
-"Gebruik: getconf [-v SPEC] VAR\n"
-"  of:    getconf [-v SPEC] PAD_VAR PAD\n"
+"Gebruik:  getconf [-v SPEC] VAR\n"
+"     of:  getconf [-v SPEC] PADVAR PAD\n"
 "\n"
-"De configuratiewaarde voor variabele VAR ophalen, of variabele PAD_VAR\n"
-"voor pad PAD. Als SPEC opgegeven wordt, gelden de waarden voor de\n"
-"compilatieomgeving.\n"
+"De configuratiewaarde van variabele VAR tonen, of van variabele PADVAR\n"
+"voor pad PAD.  Als SPEC gegeven is, de waarden uit compilatieomgeving\n"
+"SPEC weergeven.\n"
 "\n"
 
 #: posix/getconf.c:1081
@@ -4459,7 +4468,7 @@ msgstr "%s: onbekende optie '%c%s'\n"
 #: posix/getopt.c:800 posix/getopt.c:803
 #, c-format
 msgid "%s: invalid option -- '%c'\n"
-msgstr "%s: ongeldige optie -- %c\n"
+msgstr "%s: ongeldige optie -- '%c'\n"
 
 #: posix/getopt.c:853 posix/getopt.c:870 posix/getopt.c:1073
 #: posix/getopt.c:1091
@@ -4485,6 +4494,7 @@ msgstr "Geen overeenkomsten"
 msgid "Invalid regular expression"
 msgstr "Ongeldige reguliere expressie"
 
+# Zie http://mailman.vrijschrift.org/pipermail/vertaling/2005-August/004670.html
 #: posix/regcomp.c:142
 msgid "Invalid collation character"
 msgstr "Ongeldig samengesteld teken"
@@ -4919,122 +4929,122 @@ msgstr "          %s [-n netid]* [-o uitvoerbestand] [invoerbestand]\n"
 #: sunrpc/rpc_main.c:1469
 #, c-format
 msgid "options:\n"
-msgstr "opties:\n"
+msgstr "Opties:\n"
 
 #: sunrpc/rpc_main.c:1470
 #, c-format
 msgid "-a\t\tgenerate all files, including samples\n"
-msgstr "-a\t\talle bestanden genereren, inclusief voorbeelden\n"
+msgstr "-a               alle bestanden genereren, inclusief voorbeelden\n"
 
 #: sunrpc/rpc_main.c:1471
 #, c-format
 msgid "-b\t\tbackward compatibility mode (generates code for SunOS 4.1)\n"
-msgstr "-b\t\tterugwaardse compatibiliteitsmodus (maakt code voor SunOS 4.1 aan)\n"
+msgstr "-b               terugwaartse compatibiliteitsmodus (genereert SunOS 4.1-code)\n"
 
 #: sunrpc/rpc_main.c:1472
 #, c-format
 msgid "-c\t\tgenerate XDR routines\n"
-msgstr "-c\t\tXDR-routines genereren\n"
+msgstr "-c               XDR-routines genereren\n"
 
 #: sunrpc/rpc_main.c:1473
 #, c-format
 msgid "-C\t\tANSI C mode\n"
-msgstr "-C\t\tANSI C-modus\n"
+msgstr "-C               ANSI C-modus\n"
 
 #: sunrpc/rpc_main.c:1474
 #, c-format
 msgid "-Dname[=value]\tdefine a symbol (same as #define)\n"
-msgstr "-Dname[=waarde]\tdefineert een symbool (gelijk aan #define)\n"
+msgstr "-Dname[=WAARDE]  een symbool definiëren (hetzelfde als #define)\n"
 
 #: sunrpc/rpc_main.c:1475
 #, c-format
 msgid "-h\t\tgenerate header file\n"
-msgstr "-h\t\tgenereert headerbestand\n"
+msgstr "-h               headerbestand genereren\n"
 
 #: sunrpc/rpc_main.c:1476
 #, c-format
 msgid "-i size\t\tsize at which to start generating inline code\n"
-msgstr "-i grootte\t\tbij overschrijden grootte wordt inline-code aangemaakt\n"
+msgstr "-i GROOTTE       na overschrijden van GROOTTE wordt inline-code gegenereerd\n"
 
 #: sunrpc/rpc_main.c:1477
 #, c-format
 msgid "-I\t\tgenerate code for inetd support in server (for SunOS 4.1)\n"
-msgstr "-I\t\tgenereert code voor inetd-ondersteuning in server (voor SunOS 4.1)\n"
+msgstr "-I               code genereren voor inetd-serverondersteuning (voor SunOS 4.1)\n"
 
 #: sunrpc/rpc_main.c:1478
 #, c-format
 msgid "-K seconds\tserver exits after K seconds of inactivity\n"
-msgstr "-K seconden\tserver stopt na K seconden van inactiviteit\n"
+msgstr "-K SECONDEN      server stopt na dit aantal seconden van inactiviteit\n"
 
 #: sunrpc/rpc_main.c:1479
 #, c-format
 msgid "-l\t\tgenerate client side stubs\n"
-msgstr "-l\t\tgenereert client-side stubs\n"
+msgstr "-l               client-side stubs genereren\n"
 
 #: sunrpc/rpc_main.c:1480
 #, c-format
 msgid "-L\t\tserver errors will be printed to syslog\n"
-msgstr "-L\t\tserverfouten worden weggeschreven naar syslog\n"
+msgstr "-L               serverfouten worden naar syslog geschreven\n"
 
 #: sunrpc/rpc_main.c:1481
 #, c-format
 msgid "-m\t\tgenerate server side stubs\n"
-msgstr "-m\t\tgenereert server-side stubs\n"
+msgstr "-m               server-side stubs genereren\n"
 
 #: sunrpc/rpc_main.c:1482
 #, c-format
 msgid "-M\t\tgenerate MT-safe code\n"
-msgstr "-M\t\tgenereert MT-safe-code\n"
+msgstr "-M               MT-safe-code genereren\n"
 
 #: sunrpc/rpc_main.c:1483
 #, c-format
 msgid "-n netid\tgenerate server code that supports named netid\n"
-msgstr "-n netid\tgenereert servercode die benoemde netid ondersteund\n"
+msgstr "-n NETID         servercode genereren die deze NETID ondersteunt\n"
 
 #: sunrpc/rpc_main.c:1484
 #, c-format
 msgid "-N\t\tsupports multiple arguments and call-by-value\n"
-msgstr "-N\t\tondersteunt meervoudige argumenten en call-by-value\n"
+msgstr "-N               meervoudige argumenten en call-by-value ondersteunen\n"
 
 #: sunrpc/rpc_main.c:1485
 #, c-format
 msgid "-o outfile\tname of the output file\n"
-msgstr "-o uitvoer\tnaam van het uitvoerbestand\n"
+msgstr "-o UITBESTAND    naam van het uitvoerbestand\n"
 
 #: sunrpc/rpc_main.c:1486
 #, c-format
 msgid "-s nettype\tgenerate server code that supports named nettype\n"
-msgstr "-s nettype\tgenereert servercode dat benoemde nettype ondersteund\n"
+msgstr "-s NETTYPE       servercode generen die dit NETTYPE ondersteunt\n"
 
 #: sunrpc/rpc_main.c:1487
 #, c-format
 msgid "-Sc\t\tgenerate sample client code that uses remote procedures\n"
-msgstr "-Sc\t\tgenereert voorbeeld-clientcode die remote-procedures ondersteunt\n"
+msgstr "-Sc              voorbeeld-cliëntcode genereren die remote-procedures gebruikt\n"
 
 #: sunrpc/rpc_main.c:1488
 #, c-format
 msgid "-Ss\t\tgenerate sample server code that defines remote procedures\n"
-msgstr "-Ss\t\tgenereert voorbeeld-servercode die remote-procedures definieert\n"
+msgstr "-Ss              voorbeeld-servercode genereren die remote-procedures definieert\n"
 
 #: sunrpc/rpc_main.c:1489
 #, c-format
 msgid "-Sm \t\tgenerate makefile template \n"
-msgstr "-Sm \t\tgenereert makefilesjabloon \n"
+msgstr "-Sm              'makefile'-sjabloon genereren\n"
 
 #: sunrpc/rpc_main.c:1490
 #, c-format
 msgid "-t\t\tgenerate RPC dispatch table\n"
-msgstr "-t\t\tgenereert RPC-dispatchtabel\n"
+msgstr "-t               RPC-dispatch-tabel genereren\n"
 
 #: sunrpc/rpc_main.c:1491
 #, c-format
 msgid "-T\t\tgenerate code to support RPC dispatch tables\n"
-msgstr "-T\t\tgenereert code om RPC-dispatchtabellen te ondersteunen\n"
+msgstr "-T               code genereren om RPC-dispatch-tabellen te ondersteunen\n"
 
 #: sunrpc/rpc_main.c:1492
 #, c-format
 msgid "-Y path\t\tdirectory name to find C preprocessor (cpp)\n"
-msgstr "-Y pad\t\tmapnaam om C-voorverwerker (CPP) te vinden\n"
+msgstr "-Y PAD           naam van map waarin C-voorverwerker 'cpp' is te vinden\n"
 
 #: sunrpc/rpc_scan.c:114
 msgid "constant or identifier expected"
@@ -5225,17 +5235,20 @@ msgstr "svc_unix.c: probleem bij aanmaken van AF_UNIX-socket"
 msgid "svc_unix.c - cannot getsockname or listen"
 msgstr "svc_unix.c: getsockname() en listen() zijn mislukt"
 
+# Vroeger ging dit over het afsluiten van een modemverbinding,
+# tegenwoordig over het afsluiten van een pseudoterminal.
 #: sysdeps/generic/siglist.h:29 sysdeps/unix/siglist.c:27
 msgid "Hangup"
-msgstr "Ophangen"
+msgstr "Opgehangen"
 
 #: sysdeps/generic/siglist.h:30 sysdeps/unix/siglist.c:28
 msgid "Interrupt"
-msgstr "Onderbreken"
+msgstr "Onderbroken"
 
+# Verleden tijd, "Afgesloten", net als de andere actiesignaalnamen.
 #: sysdeps/generic/siglist.h:31 sysdeps/unix/siglist.c:29
 msgid "Quit"
-msgstr "Afsluiten"
+msgstr "Afgesloten"
 
 #: sysdeps/generic/siglist.h:32 sysdeps/unix/siglist.c:30
 msgid "Illegal instruction"
@@ -5251,7 +5264,7 @@ msgstr "Afgebroken"
 
 #: sysdeps/generic/siglist.h:35 sysdeps/unix/siglist.c:34
 msgid "Floating point exception"
-msgstr "Drijvende-komma-berekeningsfout"
+msgstr "Drijvendekomma-berekeningsfout"
 
 #: sysdeps/generic/siglist.h:36 sysdeps/unix/siglist.c:35
 msgid "Killed"
@@ -5277,23 +5290,23 @@ msgstr "Gebroken pijp"
 
 #: sysdeps/generic/siglist.h:40 sysdeps/unix/siglist.c:40
 msgid "Alarm clock"
-msgstr "Alarmklok"
+msgstr "Wekker"
 
 #: sysdeps/generic/siglist.h:41 sysdeps/unix/siglist.c:41
 msgid "Terminated"
-msgstr "Afgesloten"
+msgstr "Beëindigd"
 
 #: sysdeps/generic/siglist.h:42 sysdeps/unix/siglist.c:42
 msgid "Urgent I/O condition"
-msgstr "Spoedeisende I/O-toestand"
+msgstr "Urgente in-/uitvoertoestand"
 
 #: sysdeps/generic/siglist.h:43 sysdeps/unix/siglist.c:43
 msgid "Stopped (signal)"
-msgstr "Gestopt (signaal)"
+msgstr "Gepauzeerd (signaal)"
 
 #: sysdeps/generic/siglist.h:44 sysdeps/unix/siglist.c:44
 msgid "Stopped"
-msgstr "Gestopt"
+msgstr "Gepauzeerd"
 
 #: sysdeps/generic/siglist.h:45 sysdeps/unix/siglist.c:45
 msgid "Continued"
@@ -5301,19 +5314,19 @@ msgstr "Doorgegaan"
 
 #: sysdeps/generic/siglist.h:46 sysdeps/unix/siglist.c:46
 msgid "Child exited"
-msgstr "Kind is afgesloten"
+msgstr "Dochter is afgesloten"
 
 #: sysdeps/generic/siglist.h:47 sysdeps/unix/siglist.c:47
 msgid "Stopped (tty input)"
-msgstr "Gestopt (tty-invoer)"
+msgstr "Gepauzeerd (terminalinvoer)"
 
 #: sysdeps/generic/siglist.h:48 sysdeps/unix/siglist.c:48
 msgid "Stopped (tty output)"
-msgstr "Gestopt (tty-uitvoer)"
+msgstr "Gepauzeerd (terminaluitvoer)"
 
 #: sysdeps/generic/siglist.h:49 sysdeps/unix/siglist.c:49
 msgid "I/O possible"
-msgstr "I/O is mogelijk"
+msgstr "In-/uitvoer is mogelijk"
 
 #: sysdeps/generic/siglist.h:50 sysdeps/unix/siglist.c:50
 msgid "CPU time limit exceeded"
@@ -5337,11 +5350,11 @@ msgstr "Venster is veranderd"
 
 #: sysdeps/generic/siglist.h:55 sysdeps/unix/siglist.c:56
 msgid "User defined signal 1"
-msgstr "Eerste door gebruiker gedefinieerd signaal"
+msgstr "Gebruikergedefinieerd signaal 1"
 
 #: sysdeps/generic/siglist.h:56 sysdeps/unix/siglist.c:57
 msgid "User defined signal 2"
-msgstr "Tweede door gebruiker gedefinieerd signaal"
+msgstr "Gebruikergedefinieerd signaal 2"
 
 #: sysdeps/generic/siglist.h:60 sysdeps/unix/siglist.c:33
 msgid "EMT trap"
@@ -5353,7 +5366,7 @@ msgstr "Onjuiste systeemaanroep"
 
 #: sysdeps/generic/siglist.h:66
 msgid "Stack fault"
-msgstr "Stackfout"
+msgstr "Stack-fout"
 
 #: sysdeps/generic/siglist.h:69
 msgid "Information request"
@@ -5940,7 +5953,7 @@ msgstr "Ongepaste bewerking voor achtergrondproces"
 #. TRANS up, before it has connected to the file.
 #: sysdeps/gnu/errlist.c:955
 msgid "Translator died"
-msgstr "Vertaler bestaat niet meer"
+msgstr "Vertaalprogramma is gecrasht"
 
 #. TRANS The experienced user will know what is wrong.
 #. TRANS @c This error code is a joke.  Its perror text is part of the joke.
@@ -6206,7 +6219,7 @@ msgstr "Adresfamilie voor hostnaam wordt niet ondersteund"
 
 #: sysdeps/posix/gai_strerror-strs.h:2
 msgid "Temporary failure in name resolution"
-msgstr "Tijdelijke storing in naamsherleiding"
+msgstr "Tijdelijk probleem in naamsherleiding"
 
 #: sysdeps/posix/gai_strerror-strs.h:3
 msgid "Bad value for ai_flags"
@@ -6214,7 +6227,7 @@ msgstr "Ongeldige waarde voor 'ai_flags'"
 
 #: sysdeps/posix/gai_strerror-strs.h:4
 msgid "Non-recoverable failure in name resolution"
-msgstr "Onherstelbare mislukking in naamsherleiding"
+msgstr "Onherstelbaar probleem in naamsherleiding"
 
 #: sysdeps/posix/gai_strerror-strs.h:5
 msgid "ai_family not supported"
@@ -6292,7 +6305,7 @@ msgid ""
 "Usage: lddlibc4 FILE\n"
 "\n"
 msgstr ""
-"Gebruik: lddlibc4 BESTAND\n"
+"Gebruik:  lddlibc4 BESTAND\n"
 "\n"
 
 #: sysdeps/unix/sysv/linux/lddlibc4.c:82
@@ -6431,6 +6444,10 @@ msgstr "onhandelbare zone"
 msgid "%s in ruleless zone"
 msgstr "%s in voorschriftloze zone"
 
+#
+# This is the name of the program's standard input.  The place input
+# from getchar (et al) comes from.
+#
 #: timezone/zic.c:816
 msgid "standard input"
 msgstr "standaardinvoer"
@@ -6677,7 +6694,9 @@ msgstr "'29-2' gebruikt in een niet-schrikkeljaar"
 
 #: timezone/zic.c:2577
 msgid "rule goes past start/end of month--will not work with pre-2004 versions of zic"
-msgstr "voorschrift gaat voorbij begin of einde van maand -- dit werkt niet met versies van 'zic' van voor 2004"
+msgstr ""
+"voorschrift gaat voorbij begin of einde van maand --\n"
+"dit werkt niet met versies van 'zic' van voor 2004"
 
 #: timezone/zic.c:2609
 msgid "time zone abbreviation lacks alphabetic at start"
@@ -6708,78 +6727,3 @@ msgstr "%s: Kan map %s niet aanmaken: %s\n"
 #, c-format
 msgid "%s: %d did not sign extend correctly\n"
 msgstr "%s: %d is niet correct omgezet naar een grotere precisie\n"
-
-#~ msgid "cannot create searchlist"
-#~ msgstr "kan zoeklijst niet aanmaken"
-
-#~ msgid ""
-#~ "Read and display shared object profiling data.\vFor bug reporting instructions, please see:\n"
-#~ "<http://www.gnu.org/software/libc/bugs.html>.\n"
-#~ msgstr ""
-#~ "  \n"
-#~ "Gegevens van prestatie-analyse inlezen en afbeelden.\vVoor het rapporteren van fouten, zie:\n"
-#~ "  <http://www.gnu.org/software/libc/bugs.html>.\n"
-
-#~ msgid "%s: stopping date is invalid in string %Zd in `era' field"
-#~ msgstr "%s: einddatum is ongeldig in tekenreeks %Zd in het veld 'era'"
-
-#~ msgid ""
-#~ "Get locale-specific information.\vFor bug reporting instructions, please see:\n"
-#~ "<http://www.gnu.org/software/libc/bugs.html>.\n"
-#~ msgstr ""
-#~ "  \n"
-#~ "Informatie over taalregio-instellingen weergeven.\vVoor het rapporteren van fouten, zie:\n"
-#~ "  <http://www.gnu.org/software/libc/bugs.html>.\n"
-
-#~ msgid ""
-#~ "Get entries from administrative database.\vFor bug reporting instructions, please see:\n"
-#~ "<http://www.gnu.org/software/libc/bugs.html>.\n"
-#~ msgstr ""
-#~ "  \n"
-#~ "Items uit een gegevensbank weergeven.\vVoor het rapporteren van fouten, zie:\n"
-#~ "  <http://www.gnu.org/software/libc/bugs.html>.\n"
-
-#~ msgid "%s: illegal option -- %c\n"
-#~ msgstr "%s: ongeldige optie -- %c\n"
-
-#~ msgid "authunix_create: out of memory\n"
-#~ msgstr "authunix_create(): onvoldoende geheugen\n"
-
-#~ msgid "clnttcp_create: out of memory\n"
-#~ msgstr "clnttcp_create(): onvoldoende geheugen\n"
-
-#~ msgid "clntudp_create: out of memory\n"
-#~ msgstr "clntudp_create(): onvoldoende geheugen\n"
-
-#~ msgid "clntunix_create: out of memory\n"
-#~ msgstr "clntunix_create(): onvoldoende geheugen\n"
-
-#~ msgid "svctcp_create: out of memory\n"
-#~ msgstr "svctcp_create(): onvoldoende geheugen\n"
-
-#~ msgid "svc_tcp: makefd_xprt: out of memory\n"
-#~ msgstr "svc_tcp.c: makefd_xprt(): onvoldoende geheugen\n"
-
-#~ msgid "svcudp_create: out of memory\n"
-#~ msgstr "svcudp_create(): onvoldoende geheugen\n"
-
-#~ msgid "svcunix_create: out of memory\n"
-#~ msgstr "svcunix_create(): onvoldoende geheugen\n"
-
-#~ msgid "svc_unix: makefd_xprt: out of memory\n"
-#~ msgstr "svc_unix.c: makefd_xprt(): onvoldoende geheugen\n"
-
-#~ msgid "xdr_bytes: out of memory\n"
-#~ msgstr "xdr_bytes(): onvoldoende geheugen\n"
-
-#~ msgid "xdr_string: out of memory\n"
-#~ msgstr "xdr_string(): onvoldoende geheugen\n"
-
-#~ msgid "xdr_array: out of memory\n"
-#~ msgstr "xdr_array(): onvoldoende geheugen\n"
-
-#~ msgid "xdrrec_create: out of memory\n"
-#~ msgstr "xdrrec_create(): onvoldoende geheugen\n"
-
-#~ msgid "xdr_reference: out of memory\n"
-#~ msgstr "xdr_reference(): onvoldoende geheugen\n"
