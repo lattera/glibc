@@ -1,5 +1,9 @@
 2010-04-04  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #11043]
+	* posix/getopt.c (_getopt_internal_r): Fix arguments printed in error
+	messages.
+
 	[BZ #11070]
 	* resolv/netdb.h: Declare iruserok and iruserok_af.
 

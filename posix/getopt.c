@@ -2,7 +2,8 @@
    NOTE: getopt is part of the C library, so if you don't know what
    "Keep this file name-space clean" means, talk to drepper@gnu.org
    before changing it!
-   Copyright (C) 1987-1996,1998-2004,2008,2009 Free Software Foundation, Inc.
+   Copyright (C) 1987-1996,1998-2004,2008,2009,2010
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -679,8 +680,8 @@ _getopt_internal_r (int argc, char *const *argv, const char *optstring,
 		      char *buf;
 
 		      if (__asprintf (&buf, _("\
-%s: option '%s' requires an argument\n"),
-				      argv[0], argv[d->optind - 1]) >= 0)
+%s: option '--%s' requires an argument\n"),
+				      argv[0], pfound->name) >= 0)
 			{
 			  _IO_flockfile (stderr);
 
@@ -697,8 +698,8 @@ _getopt_internal_r (int argc, char *const *argv, const char *optstring,
 			}
 #else
 		      fprintf (stderr,
-			       _("%s: option '%s' requires an argument\n"),
-			       argv[0], argv[d->optind - 1]);
+			       _("%s: option '--%s' requires an argument\n"),
+			       argv[0], pfound->name);
 #endif
 		    }
 		  d->__nextchar += strlen (d->__nextchar);
@@ -922,7 +923,7 @@ _getopt_internal_r (int argc, char *const *argv, const char *optstring,
 		char *buf;
 
 		if (__asprintf (&buf, _("%s: option '-W %s' is ambiguous\n"),
-				argv[0], argv[d->optind]) >= 0)
+				argv[0], d->optarg) >= 0)
 		  {
 		    _IO_flockfile (stderr);
 
@@ -938,7 +939,7 @@ _getopt_internal_r (int argc, char *const *argv, const char *optstring,
 		  }
 #else
 		fprintf (stderr, _("%s: option '-W %s' is ambiguous\n"),
-			 argv[0], argv[d->optind]);
+			 argv[0], d->optarg);
 #endif
 	      }
 	    d->__nextchar += strlen (d->__nextchar);
@@ -1001,8 +1002,8 @@ _getopt_internal_r (int argc, char *const *argv, const char *optstring,
 			char *buf;
 
 			if (__asprintf (&buf, _("\
-%s: option '%s' requires an argument\n"),
-					argv[0], argv[d->optind - 1]) >= 0)
+%s: option '-W %s' requires an argument\n"),
+					argv[0], pfound->name) >= 0)
 			  {
 			    _IO_flockfile (stderr);
 
@@ -1018,9 +1019,9 @@ _getopt_internal_r (int argc, char *const *argv, const char *optstring,
 			    free (buf);
 			  }
 #else
-			fprintf (stderr,
-				 _("%s: option '%s' requires an argument\n"),
-				 argv[0], argv[d->optind - 1]);
+			fprintf (stderr, _("\
+%s: option '-W %s' requires an argument\n"),
+				 argv[0], pfound->name);
 #endif
 		      }
 		    d->__nextchar += strlen (d->__nextchar);
