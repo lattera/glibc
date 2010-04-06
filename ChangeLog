@@ -9,6 +9,10 @@
 
 	* elf/rtld.c (dl_main) [HAVE_AUX_VECTOR]: Add a cast.
 
+2010-03-30  Paul Pluzhnikov  <ppluzhnikov@google.com>
+
+	* Makeconfig: Propagate -fdebug-prefix-map from CFLAGS to ASFLAGS.
+
 2010-03-30  Joseph Myers  <joseph@codesourcery.com>
 
 	* elf/elf.h (ELFOSABI_ARM_AEABI): Define.
