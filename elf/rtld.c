@@ -1091,7 +1091,7 @@ of this helper program; chances are you did not intend to run this program.\n\
 	switch (av->a_type)
 	  {
 	  case AT_PHDR:
-	    av->a_un.a_val = phdr;
+	    av->a_un.a_val = (uintptr_t) phdr;
 	    break;
 	  case AT_PHNUM:
 	    av->a_un.a_val = phnum;
