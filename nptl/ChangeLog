@@ -1,3 +1,10 @@
+2010-04-05  Thomas Schwinge  <thomas@schwinge.name>
+
+	* sysdeps/pthread/unwind-resume.c: Moved to main tree sysdeps/gnu/.
+	* sysdeps/pthread/rt-unwind-resume.c: Likewise.
+	* sysdeps/pthread/Makefile: Remove csu section and rt section's
+	unwind-resume bits, now in main tree sysdeps/gnu/Makefile instead.
+
 2010-03-23  Luis Machado  <luisgpm@br.ibm.com>
 
 	* pthread_cond_timedwait.c: Add check for

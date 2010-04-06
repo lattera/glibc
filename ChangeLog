@@ -1,3 +1,10 @@
+2010-04-05  Thomas Schwinge  <thomas@schwinge.name>
+
+	* sysdeps/gnu/unwind-resume.c: New, moved from nptl/sysdeps/pthread/.
+	* sysdeps/gnu/rt-unwind-resume.c: Likewise.
+	* sysdeps/gnu/Makefile: Add sections for csu and rt subdirs to
+	build unwind-resume code, previously in nptl/sysdeps/pthread/Makefile.
+
 2010-04-05  Roland McGrath  <roland@redhat.com>
 
 	* elf/rtld.c (dl_main) [HAVE_AUX_VECTOR]: Add a cast.
