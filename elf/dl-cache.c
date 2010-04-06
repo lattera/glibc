@@ -1,5 +1,6 @@
 /* Support for reading /etc/ld.so.cache files written by Linux ldconfig.
-   Copyright (C) 1996-2002, 2003, 2004, 2006 Free Software Foundation, Inc.
+   Copyright (C) 1996-2002,2003,2004,2006,2010
+	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -255,17 +256,19 @@ _dl_load_cache_lookup (const char *name)
       if (platform != (uint64_t) -1)
 	platform = 1ULL << platform;
 
-      /* Only accept hwcap if it's for the right platform.  */
 #define _DL_HWCAP_TLS_MASK (1LL << 63)
+      uint64_t hwcap_exclude = ~((GLRO(dl_hwcap) & GLRO(dl_hwcap_mask))
+				 | _DL_HWCAP_PLATFORM | _DL_HWCAP_TLS_MASK);
+
+      /* Only accept hwcap if it's for the right platform.  */
 #define HWCAP_CHECK \
+      if (lib->hwcap & hwcap_exclude)					      \
+	continue;							      \
       if (GLRO(dl_osversion) && lib->osversion > GLRO(dl_osversion))	      \
 	continue;							      \
       if (_DL_PLATFORMS_COUNT						      \
 	  && (lib->hwcap & _DL_HWCAP_PLATFORM) != 0			      \
 	  && (lib->hwcap & _DL_HWCAP_PLATFORM) != platform)		      \
-	continue;							      \
-      if (lib->hwcap							      \
-	  & ~(GLRO(dl_hwcap) | _DL_HWCAP_PLATFORM | _DL_HWCAP_TLS_MASK))      \
 	continue
       SEARCH_CACHE (cache_new);
     }
