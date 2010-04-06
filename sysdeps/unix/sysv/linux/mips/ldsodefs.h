@@ -30,4 +30,12 @@ extern void _dl_static_init (struct link_map *map);
 #undef DL_STATIC_INIT
 #define DL_STATIC_INIT(map) _dl_static_init (map)
 
+/* Allow ABIVERSION == 1, meaning PLTs and copy relocations are
+   required, with ELFOSABI_SYSV.  */
+#undef VALID_ELF_ABIVERSION
+#define VALID_ELF_ABIVERSION(osabi,ver)			\
+  (ver == 0						\
+   || (osabi == ELFOSABI_SYSV && ver < 2)		\
+   || (osabi == ELFOSABI_LINUX && ver < LIBC_ABI_MAX))
+
 #endif /* ldsodefs.h */

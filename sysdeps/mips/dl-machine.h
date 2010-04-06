@@ -75,15 +75,6 @@ do { if ((l)->l_info[DT_MIPS (RLD_MAP)]) \
        (ElfW(Addr)) (r); \
    } while (0)
 
-/* Allow ABIVERSION == 1, meaning PLTs and copy relocations are
-   required.  */
-#define VALID_ELF_ABIVERSION(ver)	(ver == 0 || ver == 2)
-#define VALID_ELF_OSABI(osabi)		(osabi == ELFOSABI_SYSV)
-#define VALID_ELF_HEADER(hdr,exp,size) \
-  memcmp (hdr,exp,size-2) == 0 \
-  && VALID_ELF_OSABI (hdr[EI_OSABI]) \
-  && VALID_ELF_ABIVERSION (hdr[EI_ABIVERSION])
-
 /* Return nonzero iff ELF header is compatible with the running host.  */
 static inline int __attribute_used__
 elf_machine_matches_host (const ElfW(Ehdr) *ehdr)

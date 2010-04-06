@@ -1,3 +1,7 @@
+2010-04-06  Joseph Myers  <joseph@codesourcery.com>
+
+	* libc-abis: New.
+
 2006-03-06  Roland McGrath  <roland@redhat.com>
 
 	* Makefile (%.bz2, %.gz): New pattern rules.
