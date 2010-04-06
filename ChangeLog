@@ -9,6 +9,10 @@
 
 	* elf/rtld.c (dl_main) [HAVE_AUX_VECTOR]: Add a cast.
 
+2010-03-30  Joseph Myers  <joseph@codesourcery.com>
+
+	* elf/elf.h (ELFOSABI_ARM_AEABI): Define.
+
 2010-04-05  Ulrich Drepper  <drepper@redhat.com>
 
 	* po/nl.po: Update from translation team.
