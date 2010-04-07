@@ -1,4 +1,4 @@
-/* Copyright (C) 2005, 2006 Free Software Foundation, Inc.
+/* Copyright (C) 2005, 2006, 2010 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,6 +21,7 @@
 #define NSS_FLAG_NETID_AUTHORITATIVE	1
 #define NSS_FLAG_SERVICES_AUTHORITATIVE	2
 #define NSS_FLAG_SETENT_BATCH_READ	4
+#define NSS_FLAG_ADJUNCT_AS_SHADOW	8
 
 
 /* Get current set of default flags.  */

@@ -1,4 +1,5 @@
-/* Copyright (C) 1996-1998,2001-2003,2006,2009 Free Software Foundation, Inc.
+/* Copyright (C) 1996-1998,2001-2003,2006,2009,2010
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1996.
 
@@ -39,7 +40,7 @@
 /* Protect global state against multiple changers */
 __libc_lock_define_initialized (static, lock)
 
-static bool_t new_start = 1;
+static bool new_start = true;
 static char *oldkey;
 static int oldkeylen;
 static intern_t intern;
@@ -108,13 +109,10 @@ _nis_saveit (int instatus, char *inkey, int inkeylen, char *inval,
 static void
 internal_nis_endpwent (void)
 {
-  new_start = 1;
-  if (oldkey != NULL)
-    {
-      free (oldkey);
-      oldkey = NULL;
-      oldkeylen = 0;
-    }
+  new_start = true;
+  free (oldkey);
+  oldkey = NULL;
+  oldkeylen = 0;
 
   struct response_t *curr = intern.start;
 
@@ -264,18 +262,21 @@ internal_nis_getpwent_r (struct passwd *pwd, char *buffer, size_t buflen,
 	}
 
       /* Check for adjunct style secret passwords.  They can be
-	 recognized by a password starting with "##".  */
+	 recognized by a password starting with "##".  We do not use
+	 it if the passwd.adjunct.byname table is supposed to be used
+	 as a shadow.byname replacement.  */
       char *p = strchr (result, ':');
       size_t namelen;
       char *result2;
       int len2;
-      if (p != NULL	/* This better should be true in all cases.  */
+      if ((_nsl_default_nss () & NSS_FLAG_ADJUNCT_AS_SHADOW) == 0
+	  && p != NULL	/* This better should be true in all cases.  */
 	  && p[1] == '#' && p[2] == '#'
 	  && (namelen = p - result,
 	      yp_match (domain, "passwd.adjunct.byname", result, namelen,
 			&result2, &len2)) == YPERR_SUCCESS)
 	{
-	  /* We found a passwd.adjunct entry.  Merge encrypted
+	  /* We found a passwd.adjunct.byname entry.  Merge encrypted
 	     password therein into original result.  */
 	  char *encrypted = strchr (result2, ':');
 	  char *endp;
@@ -325,7 +326,7 @@ internal_nis_getpwent_r (struct passwd *pwd, char *buffer, size_t buflen,
 	}
 
       while (isspace (*p))
-        ++p;
+	++p;
       if (!batch_read)
 	free (result);
 
@@ -346,7 +347,7 @@ internal_nis_getpwent_r (struct passwd *pwd, char *buffer, size_t buflen,
 	  free (oldkey);
 	  oldkey = outkey;
 	  oldkeylen = keylen;
-	  new_start = 0;
+	  new_start = false;
 	}
     }
   while (parse_res < 1);
@@ -399,16 +400,19 @@ _nss_nis_getpwnam_r (const char *name, struct passwd *pwd,
     }
 
   /* Check for adjunct style secret passwords.  They can be recognized
-     by a password starting with "##".  */
+     by a password starting with "##". We do not use it if the
+     passwd.adjunct.byname table is supposed to be used as a shadow.byname
+     replacement.  */
   char *result2;
   int len2;
   char *p = strchr (result, ':');
-  if (p != NULL	/* This better should be true in all cases.  */
+  if ((_nsl_default_nss () & NSS_FLAG_ADJUNCT_AS_SHADOW) == 0
+      && p != NULL	/* This better should be true in all cases.  */
       && p[1] == '#' && p[2] == '#'
       && yp_match (domain, "passwd.adjunct.byname", name, namelen,
 		   &result2, &len2) == YPERR_SUCCESS)
     {
-      /* We found a passwd.adjunct entry.  Merge encrypted password
+      /* We found a passwd.adjunct.byname entry.  Merge encrypted password
 	 therein into original result.  */
       char *encrypted = strchr (result2, ':');
       char *endp;
@@ -465,7 +469,7 @@ _nss_nis_getpwnam_r (const char *name, struct passwd *pwd,
   if (__builtin_expect (parse_res < 1, 0))
     {
       if (parse_res == -1)
-        return NSS_STATUS_TRYAGAIN;
+	return NSS_STATUS_TRYAGAIN;
       else
 	return NSS_STATUS_NOTFOUND;
     }
@@ -498,18 +502,21 @@ _nss_nis_getpwuid_r (uid_t uid, struct passwd *pwd,
     }
 
   /* Check for adjunct style secret passwords.  They can be recognized
-     by a password starting with "##".  */
+     by a password starting with "##".  We do not use it if the
+     passwd.adjunct.byname table is supposed to be used as a shadow.byname
+     replacement.  */
   char *result2;
   int len2;
   size_t namelen;
   char *p = strchr (result, ':');
-  if (p != NULL	/* This better should be true in all cases.  */
+  if ((_nsl_default_nss () & NSS_FLAG_ADJUNCT_AS_SHADOW) == 0
+      && p != NULL	/* This better should be true in all cases.  */
       && p[1] == '#' && p[2] == '#'
       && (namelen = p - result,
 	  yp_match (domain, "passwd.adjunct.byname", result, namelen,
 		    &result2, &len2)) == YPERR_SUCCESS)
     {
-      /* We found a passwd.adjunct entry.  Merge encrypted password
+      /* We found a passwd.adjunct.byname entry.  Merge encrypted password
 	 therein into original result.  */
       char *encrypted = strchr (result2, ':');
       char *endp;
@@ -567,7 +574,7 @@ _nss_nis_getpwuid_r (uid_t uid, struct passwd *pwd,
   if (__builtin_expect (parse_res < 1, 0))
     {
       if (parse_res == -1)
-        return NSS_STATUS_TRYAGAIN;
+	return NSS_STATUS_TRYAGAIN;
      else
        return NSS_STATUS_NOTFOUND;
     }

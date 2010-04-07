@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 2001, 2004, 2006, 2007 Free Software Foundation, Inc.
+/* Copyright (C) 1996,2001,2004,2006,2007,2010 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -47,7 +47,8 @@ static const struct
 #define STRNLEN(s) s, sizeof (s) - 1
     { STRNLEN ("NETID_AUTHORITATIVE"), NSS_FLAG_NETID_AUTHORITATIVE },
     { STRNLEN ("SERVICES_AUTHORITATIVE"), NSS_FLAG_SERVICES_AUTHORITATIVE },
-    { STRNLEN ("SETENT_BATCH_READ"), NSS_FLAG_SETENT_BATCH_READ }
+    { STRNLEN ("SETENT_BATCH_READ"), NSS_FLAG_SETENT_BATCH_READ },
+    { STRNLEN ("ADJUNCT_AS_SHADOW"), NSS_FLAG_ADJUNCT_AS_SHADOW },
   };
 #define nvars (sizeof (vars) / sizeof (vars[0]))
 

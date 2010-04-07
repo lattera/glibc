@@ -1,3 +1,25 @@
+2010-04-07  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #11134]
+	* nis/libnsl.h (NSS_FLAG_ADJUNCT_AS_SHADOW): Define.
+	* nis/nss: Document new ADJUNCT_AS_SHADOW variable.
+	* nis/nss-default.c: Handle ADJUNCT_AS_SHADOW variable.
+	* nis/nss_nis/nis-pwd.c (internal_nis_endpwent): Minor cleanups.
+	(internal_nis_getpwent_r): Don't fill in password from adjunct table
+	if NSS_FLAG_ADJUNCT_AS_SHADOW is set.
+	(_nss_nis_getpwnam_r): Likewise.
+	(_nss_nis_getpwuid_r): Likewise.
+	* nis/nss_nis/nis-spwd.c (ent_adjunct_used): Nee global variable.
+	(_nss_nis_setspent): Also reset ent_adjunct_used.
+	(internal_nis_getspent_r): If new_start is set and shadow.byname table
+	does not exist and NSS_FLAG_ADJUNCT_AS_SHADOW is set, try to get
+	passwd.adjunct.byname table.  If new_start is not set get next entry
+	from the initially used table.  Synthesize shadow.byname table if
+	necessary by adding two empty fields.
+	(_nss_nis_getspnam_r): If shadow.byname table does not exist and
+	NSS_FLAG_ADJUNCT_AS_SHADOW is set, try to get passwd.adjunct.byname
+	table and synthesize shadow.byname table.
+
 2010-04-06  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* Makerules (libc-abis): Add $(..) to libc-abis.
