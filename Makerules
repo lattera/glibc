@@ -111,7 +111,8 @@ endif # $(versioning) = yes
 
 ifndef avoid-generated
 before-compile := $(common-objpfx)libc-abis.h $(before-compile)
-libc-abis := $(firstword $(wildcard $(foreach D,$(add-ons), $(..)libc-abis)) \
+libc-abis := $(firstword $(wildcard $(foreach D,$(add-ons), \
+				    $(..)$D/libc-abis)) \
 			 libc-abis)
 $(common-objpfx)libc-abis.h: $(..)scripts/gen-libc-abis $(libc-abis)
 	$(SHELL) $(..)scripts/gen-libc-abis \
