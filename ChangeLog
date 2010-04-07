@@ -1,3 +1,7 @@
+2010-04-06  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* Makerules (libc-abis): Add $(..) to libc-abis.
+
 2010-04-06  Joseph Myers  <joseph@codesourcery.com>
 
 	* Makerules (libc-abis): Fix search for libc-abis in add-ons.
