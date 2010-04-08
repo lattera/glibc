@@ -1,3 +1,11 @@
+2010-04-08  Ulrich Drepper  <drepper@redhat.com>
+
+	* SUPPORTED (SUPPORTED-LOCALES): Add sq_MK.
+
+	[BZ #11470]
+	* locales/sq_MK: New file.
+	Contributed by Agron Selimaj <linuxmaster@verizon.net>.
+
 2010-04-07  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #11471]

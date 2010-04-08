@@ -1,4 +1,4 @@
-GNU C Library NEWS -- history of user-visible changes.  2010-4-7
+GNU C Library NEWS -- history of user-visible changes.  2010-4-8
 Copyright (C) 1992-2009, 2010 Free Software Foundation, Inc.
 See the end for copying conditions.
 
@@ -14,6 +14,8 @@ Version 2.12
   Instead it is used to synthesize the shadow.byname table, should it be
   missing.  This is a useful mode in some installations involving Solaris.
   Implemented by Ulrich Drepper.
+
+* New locale: sq_MK
 
 
 Version 2.11
