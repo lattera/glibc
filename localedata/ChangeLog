@@ -1,6 +1,6 @@
 2010-04-08  Ulrich Drepper  <drepper@redhat.com>
 
-	* SUPPORTED (SUPPORTED-LOCALES): Add sq_MK.
+	* SUPPORTED (SUPPORTED-LOCALES): Add kok_IN and sq_MK.
 
 	[BZ #11470]
 	* locales/sq_MK: New file.
