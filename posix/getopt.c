@@ -911,7 +911,10 @@ _getopt_internal_r (int argc, char *const *argv, const char *optstring,
 		  pfound = p;
 		  indfound = option_index;
 		}
-	      else
+	      else if (long_only
+		       || pfound->has_arg != p->has_arg
+		       || pfound->flag != p->flag
+		       || pfound->val != p->val)
 		/* Second or later nonexact match found.  */
 		ambig = 1;
 	    }
@@ -1028,6 +1031,8 @@ _getopt_internal_r (int argc, char *const *argv, const char *optstring,
 		    return optstring[0] == ':' ? ':' : '?';
 		  }
 	      }
+	    else
+	      d->optarg = NULL;
 	    d->__nextchar += strlen (d->__nextchar);
 	    if (longind != NULL)
 	      *longind = option_index;
