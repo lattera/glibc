@@ -670,9 +670,10 @@ endif	# $(+cflags) == ""
 # library source directory, in the include directory, and in the
 # current directory.
 +sysdep-includes = $(addprefix -I,$(+sysdep_dirs))
++common-includes = $(+sysdep-includes) $(includes) $(sysincludes)
 +includes = -I$(..)include $(if $(subdir),$(objpfx:%/=-I%)) \
-	    $(+sysdep-includes) $(includes) \
-	    $(patsubst %/,-I%,$(..)) $(libio-include) -I. $(sysincludes)
+	    @$(common-objpfx)includes \
+	    $(patsubst %/,-I%,$(..)) $(libio-include) -I.
 
 # Since libio has several internal header files, we use a -I instead
 # of many little headers in the include directory.

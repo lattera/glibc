@@ -1,3 +1,11 @@
+2010-03-30  Daniel Jacobowitz  <dan@codesourcery.com>
+
+	* Makeconfig (+common-includes): Define.
+	(+includes): Use @$(common-objpfx)includes.
+	* Makefile (postclean): Remove includes and includes.mk.
+	* Makerules ($(common-objpfx)includes.mk): Include and create
+	includes.mk.  Create includes.
+
 2010-04-07  Andreas Schwab  <schwab@redhat.com>
 
 	* sysdeps/unix/sysv/linux/i386/fallocate.c: Set errno on error.
