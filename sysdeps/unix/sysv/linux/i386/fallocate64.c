@@ -30,7 +30,13 @@ int
 fallocate64 (int fd, int mode, __off64_t offset, __off64_t len)
 {
 #ifdef __NR_fallocate
-  return __call_fallocate (fd, mode, offset, len);
+  int err = __call_fallocate (fd, mode, offset, len);
+  if (__builtin_expect (err, 0))
+    {
+      __set_errno (err);
+      err = -1;
+    }
+  return err;
 #else
   __set_errno (ENOSYS);
   return -1;
