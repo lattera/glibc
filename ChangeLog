@@ -1,3 +1,13 @@
+2010-04-08  Andreas Jaeger  <aj@suse.de>
+
+	[BZ #10401]
+	* math/s_cprojl.c (__cprojl): Fix implementation to follow C99
+	standard.
+	* math/s_cprojf.c (__cprojf): Likewise.
+	* math/s_cproj.c (__cproj): Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_cprojl.c (__cprojl): Likewise.
+	* math/libm-test.inc (cproj_test): Fix test.
+
 2010-04-07  Ulrich Drepper  <drepper@redhat.com>
 
 	* posix/bug-getopt1.c: New file.

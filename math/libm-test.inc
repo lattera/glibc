@@ -1,4 +1,4 @@
-/* Copyright (C) 1997-2006, 2007, 2009 Free Software Foundation, Inc.
+/* Copyright (C) 1997-2006, 2007, 2009, 2010 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Andreas Jaeger <aj@suse.de>, 1997.
 
@@ -2087,7 +2087,7 @@ cproj_test (void)
   TEST_c_c (cproj, minus_infty, minus_infty, plus_infty, minus_zero);
 
   TEST_c_c (cproj, 1.0, 0.0, 1.0, 0.0);
-  TEST_c_c (cproj, 2.0, 3.0, 0.2857142857142857142857142857142857L, 0.42857142857142857142857142857142855L);
+  TEST_c_c (cproj, 2.0, 3.0, 2.0, 3.0);
 
   END (cproj, complex);
 }
