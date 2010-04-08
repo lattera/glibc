@@ -33,7 +33,7 @@ __cproj (__complex__ double x)
 
       __real__ res = INFINITY;
       __imag__ res = __copysign (0.0, __imag__ x);
-      
+
       return res;
     }
 
