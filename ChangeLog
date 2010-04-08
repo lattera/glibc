@@ -1,3 +1,10 @@
+2010-04-08  Roland McGrath  <roland@redhat.com>
+
+	* Makerules (libc-abis): Variable removed.
+	($(common-objpfx)libc-abis.h): Depend on Makerules too.
+	Use automatic variables in commands.
+	Depend on first libc-abis from $(sysdirs) or $(..).
+
 2010-04-07  Ulrich Drepper  <drepper@redhat.com>
 
 	* posix/bug-getopt1.c: New file.
