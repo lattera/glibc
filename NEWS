@@ -9,13 +9,19 @@ Version 2.12
 
 * New Linux interface: recvmmsg
 
+* STT_GNU_IFUNC implemented for Sparc by David Miller.
+
+* The dynamic linker now recognizes supported ABI versions from the
+  EI_ABIVERSION field in the ELF header.
+  Implemented by Ulrich Drepper.
+
 * New NIS mode selector ADJUNCT_AS_SHADOW.  The passwd.adjunct.byname table
   will not be used to fill in password fields in the passwd.byname replies.
   Instead it is used to synthesize the shadow.byname table, should it be
   missing.  This is a useful mode in some installations involving Solaris.
   Implemented by Ulrich Drepper.
 
-* New locale: sq_MK
+* New locales: kok_IN, sq_MK
 
 
 Version 2.11
