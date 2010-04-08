@@ -1,5 +1,9 @@
 2009-12-01  Eric Blake  <ebb9@byu.net>
 
+	[BZ #11039]
+	* posix/getopt.c (_getopt_internal_r): Skip optional - or + before
+	checking lead byte of optstring for :.
+
 	[BZ #11040]
 	* posix/getopt.c (_getopt_internal_r): Reject '-;' as short
 	option, since it conflicts with "W;" optstring extension.

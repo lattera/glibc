@@ -395,8 +395,6 @@ _getopt_internal_r (int argc, char *const *argv, const char *optstring,
 		    int long_only, struct _getopt_data *d, int posixly_correct)
 {
   int print_errors = d->opterr;
-  if (optstring[0] == ':')
-    print_errors = 0;
 
   if (argc < 1)
     return -1;
@@ -411,6 +409,10 @@ _getopt_internal_r (int argc, char *const *argv, const char *optstring,
 				      posixly_correct);
       d->__initialized = 1;
     }
+  else if (optstring[0] == '-' || optstring[0] == '+')
+    optstring++;
+  if (optstring[0] == ':')
+    print_errors = 0;
 
   /* Test whether ARGV[optind] points to a non-option argument.
      Either it does not have option syntax, or there is an environment flag
