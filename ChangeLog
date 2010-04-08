@@ -1,4 +1,10 @@
-2009-12-02  Eric Blake	<ebb9@byu.net>
+2009-12-01  Eric Blake  <ebb9@byu.net>
+
+	[BZ #11040]
+	* posix/getopt.c (_getopt_internal_r): Reject '-;' as short
+	option, since it conflicts with "W;" optstring extension.
+
+2009-12-02  Eric Blake  <ebb9@byu.net>
 
 	[BZ #11041]
 	* posix/getopt.c (_getopt_internal_r): Handle '-Wfoo' identically

@@ -789,7 +789,7 @@ _getopt_internal_r (int argc, char *const *argv, const char *optstring,
     if (*d->__nextchar == '\0')
       ++d->optind;
 
-    if (temp == NULL || c == ':')
+    if (temp == NULL || c == ':' || c == ';')
       {
 	if (print_errors)
 	  {
