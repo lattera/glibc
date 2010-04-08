@@ -44,30 +44,34 @@
    argument; otherwise the (optional) compatibility code for APCS binaries
    may be invoked.  */
 
-#ifdef __thumb__
-/* Hide the use of r7 from the compiler, this would be a lot
-   easier but for the fact that the syscalls can exceed 255.
-   For the moment the LOAD_ARGS_7 is sacrificed.
+#if defined(__thumb__)
+/* We can not expose the use of r7 to the compiler.  GCC (as
+   of 4.5) uses r7 as the hard frame pointer for Thumb - although
+   for Thumb-2 it isn't obviously a better choice than r11.
+   And GCC does not support asms that conflict with the frame
+   pointer.
+
+   This would be easier if syscall numbers never exceeded 255,
+   but they do.  For the moment the LOAD_ARGS_7 is sacrificed.
    We can't use push/pop inside the asm because that breaks
-   unwinding (ie. thread cancellation).  */
-/* FIXME: the str / ldr of r7 are not covered by CFI information.  */
+   unwinding (i.e. thread cancellation) for this frame.  We can't
+   locally save and restore r7, because we do not know if this
+   function uses r7 or if it is our caller's r7; if it is our caller's,
+   then unwinding will fail higher up the stack.  So we move the
+   syscall out of line and provide its own unwind information.  */
 #undef LOAD_ARGS_7
 #undef INTERNAL_SYSCALL_RAW
 #define INTERNAL_SYSCALL_RAW(name, err, nr, args...)		\
   ({								\
-      int _sys_buf[2];						\
       register int _a1 asm ("a1");				\
-      register int *_r6 asm ("r6") = _sys_buf;			\
-      *_r6 = name;						\
+      int _nametmp = name;					\
       LOAD_ARGS_##nr (args)					\
-      asm volatile ("str        r7, [r6, #4]\n\t"		\
-                    "ldr      r7, [r6]\n\t"			\
-                    "swi      0       @ syscall " #name "\n\t"	\
-                    "ldr      r7, [r6, #4]"			\
-                   : "=r" (_a1)					\
-                    : "r" (_r6) ASM_ARGS_##nr			\
-                    : "memory");				\
-       _a1; })
+      register int _name asm ("ip") = _nametmp;			\
+      asm volatile ("bl      __libc_do_syscall"			\
+                    : "=r" (_a1)				\
+                    : "r" (_name) ASM_ARGS_##nr			\
+                    : "memory", "lr");				\
+      _a1; })
 #else /* ARM */
 #undef INTERNAL_SYSCALL_RAW
 #define INTERNAL_SYSCALL_RAW(name, err, nr, args...)		\

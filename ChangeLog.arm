@@ -1,3 +1,12 @@
+2010-04-08  Daniel Jacobowitz  <dan@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/arm/eabi/libc-do-syscall.S: New file.
+	* sysdeps/unix/sysv/linux/arm/eabi/sysdep.h [__thumb__]
+	(INTERNAL_SYSCALL_RAW): Rewrite to use __libc_do_syscall.
+	* sysdeps/unix/sysv/linux/arm/eabi/Makefile: Add libc-do-syscall
+	to libraries and tests that require it.
+	* sysdeps/unix/sysv/linux/arm/eabi/nptl/aio_misc.h: Delete.
+
 2010-03-30  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/arm/dl-machine.h (VALID_ELF_ABIVERSION, VALID_ELF_OSABI,
