@@ -1,5 +1,5 @@
 /* Support for dynamic linking code in static libc.
-   Copyright (C) 1996-2008, 2009 Free Software Foundation, Inc.
+   Copyright (C) 1996-2008,2009,2010 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -125,6 +125,14 @@ int _dl_correct_cache_id = _DL_CACHE_DEFAULT_ID;
 ElfW(Phdr) *_dl_phdr;
 size_t _dl_phnum;
 uint64_t _dl_hwcap __attribute__ ((nocommon));
+
+/* This is not initialized to HWCAP_IMPORTANT, matching the definition
+   of _dl_important_hwcaps, below, where no hwcap strings are ever
+   used.  This mask is still used to mediate the lookups in the cache
+   file.  Since there is no way to set this nonzero (we don't grok the
+   LD_HWCAP_MASK environment variable here), there is no real point in
+   setting _dl_hwcap nonzero below, but we do anyway.  */
+uint64_t _dl_hwcap_mask __attribute__ ((nocommon));
 
 /* Prevailing state of the stack, PF_X indicating it's executable.  */
 ElfW(Word) _dl_stack_flags = PF_R|PF_W|PF_X;

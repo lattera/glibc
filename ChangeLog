@@ -83,6 +83,10 @@
 
 2010-04-05  Roland McGrath  <roland@redhat.com>
 
+	* elf/dl-cache.c (_dl_load_cache_lookup): Obey dl_hwcap_mask.
+
+	* elf/dl-support.c (_dl_hwcap_mask): New variable.
+
 	* elf/rtld.c (dl_main) [HAVE_AUX_VECTOR]: Add a cast.
 
 2010-03-30  Paul Pluzhnikov  <ppluzhnikov@google.com>
