@@ -1,5 +1,8 @@
 2010-04-08  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #10936]
+	* locales/es_GT: Change paper size to letter.
+
 	* SUPPORTED (SUPPORTED-LOCALES): Add kok_IN and sq_MK.
 
 	[BZ #11470]
