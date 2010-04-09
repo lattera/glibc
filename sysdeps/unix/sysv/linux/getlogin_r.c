@@ -37,13 +37,20 @@ __getlogin_r_loginuid (name, namesize)
   if (fd == -1)
     return 1;
 
-  ssize_t n = TEMP_FAILURE_RETRY (read_not_cancel (fd, name, namesize));
+  /* We are reading a 32-bit number.  12 bytes are enough for the text
+     representation.  If not, something is wrong.  */
+  char uidbuf[12];
+  ssize_t n = TEMP_FAILURE_RETRY (read_not_cancel (fd, uidbuf,
+						   sizeof (uidbuf)));
   close_not_cancel_no_status (fd);
 
   uid_t uid;
   char *endp;
   if (n <= 0
-      || (uid = strtoul (name, &endp, 10), endp == name || *endp != '\0'))
+      || n == sizeof (uidbuf)
+      || (uidbuf[n] = '\0',
+	  uid = strtoul (uidbuf, &endp, 10),
+	  endp == uidbuf || *endp != '\0'))
     return 1;
 
   size_t buflen = 1024;
@@ -84,8 +91,9 @@ __getlogin_r_loginuid (name, namesize)
 }
 
 
-/* Return the login name of the user, or NULL if it can't be determined.
-   The returned pointer, if not NULL, is good only until the next call.  */
+/* Return at most NAME_LEN characters of the login name of the user in NAME.
+   If it cannot be determined or some other error occurred, return the error
+   code.  Otherwise return 0.  */
 
 int
 getlogin_r (name, namesize)

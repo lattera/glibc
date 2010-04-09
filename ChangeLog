@@ -1,5 +1,9 @@
 2010-04-08  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/getlogin_r.c (__getlogin_r_loginuid): When
+	reading the loginuid file use a buffer which is always large enough.
+	NUL-terminate the string.
+
 	* malloc/malloc.c (_int_malloc): Return NULL if printing error message
 	returns.
 
