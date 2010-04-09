@@ -111,14 +111,16 @@ endif # $(versioning) = yes
 
 ifndef avoid-generated
 before-compile := $(common-objpfx)libc-abis.h $(before-compile)
-$(common-objpfx)libc-abis.h: $(..)scripts/gen-libc-abis \
+$(common-objpfx)libc-abis.h: $(common-objpfx)libc-abis.stamp; @:
+$(common-objpfx)libc-abis.stamp: $(..)scripts/gen-libc-abis \
 			     $(firstword $(wildcard $(sysdirs:=/libc-abis)) \
 					 $(..)libc-abis) \
 			     $(..)Makerules
 	$(SHELL) $< \
 		 $(base-machine)-$(config-vendor)-$(config-os) \
-		 < $(word 2,$^) > $@T
-	$(move-if-change) $@T $@
+		 < $(word 2,$^) > $(@:.stamp=.h)T
+	$(move-if-change) $(@:.stamp=.h)T $(@:.stamp=.h)
+	touch $@
 common-generated += $(common-objpfx)libc-abis.h
 endif # avoid-generated
 
