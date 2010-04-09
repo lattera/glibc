@@ -1,5 +1,11 @@
 2010-04-08  Ulrich Drepper  <drepper@redhat.com>
 
+	* SUPPORTED (SUPPORTED-LOCALES): Add cv_RU.
+
+	[BZ #10824]
+	* locales/cv_RU: New file.
+	Contributed by Adi Roiban <adi@roiban.ro>.
+
 	[BZ #10936]
 	* locales/es_GT: Change paper size to letter.
 
