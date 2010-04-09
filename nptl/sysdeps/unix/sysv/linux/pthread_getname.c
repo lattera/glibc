@@ -43,7 +43,7 @@ pthread_getname_np (th, buf, len)
     return ERANGE;
 
   if (th == THREAD_SELF)
-    return prctl (PR_SET_NAME, buf) ? errno : 0;
+    return prctl (PR_GET_NAME, buf) ? errno : 0;
 
 #define FMT "/proc/self/task/%u/comm"
   char fname[sizeof (FMT) + 8];
