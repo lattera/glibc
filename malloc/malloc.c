@@ -4306,6 +4306,7 @@ _int_malloc(mstate av, size_t bytes)
 	  errstr = "malloc(): memory corruption (fast)";
 	errout:
 	  malloc_printerr (check_action, errstr, chunk2mem (victim));
+	  return NULL;
 	}
 #ifndef ATOMIC_FASTBINS
       *fb = victim->fd;
