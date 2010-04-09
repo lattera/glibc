@@ -7,6 +7,17 @@ using `glibc' in the "product" field.
 
 Version 2.12
 
+* The following bugs are resolved with this release:
+
+  3662, 4457, 5553, 10162, 10401, 10414, 10554, 10824, 10864, 10915, 10918,
+  10936, 10939, 10958, 10968, 10969, 10972, 10992, 11000, 11007, 11010,
+  11027, 11039, 11040, 11041, 11043, 11046, 11056, 11070, 11093, 11115,
+  11120, 11125, 11126, 11127, 11134, 11141, 11149, 11183, 11184, 11185,
+  11186, 11187, 11188, 11189, 11190, 11191, 11192, 11193, 11194, 11200,
+  11230, 11235, 11242, 11254, 11258, 11271, 11272, 11276, 11279, 11287,
+  11292, 11319, 11332, 11333, 11387, 11389, 11394, 11397, 11410, 11438,
+  11449, 11470, 11471
+
 * New Linux interface: recvmmsg
 
 * STT_GNU_IFUNC implemented for Sparc by David Miller.
@@ -21,10 +32,18 @@ Version 2.12
   missing.  This is a useful mode in some installations involving Solaris.
   Implemented by Ulrich Drepper.
 
-* New locales: kok_IN, sq_MK
-
+* New locales: kok_IN, sq_MK, cv_RU
 
 Version 2.11
+
+* The following bugs are resolved with this release:
+
+  3270, 7094, 9924, 9986, 10011, 10085, 10107, 10159, 10162, 10166, 10183,
+  10195, 10196, 10200, 10203, 10207, 10211, 10213, 10217, 10221, 10229,
+  10262, 10286, 10312, 10315, 10319, 10349, 10360, 10391, 10402, 10416,
+  10418, 10422, 10425, 10446, 10448, 10452, 10540, 10553, 10560, 10564,
+  10609, 10643, 10692, 10713, 10717, 10730, 10731, 10742, 10780, 10784,
+  10789, 10817, 10823, 10840, 10847
 
 * New interfaces: execvpe, pthread_sigqueue, mkstemps, mkstemps64, mkostemps,
   mkostemps64
@@ -78,9 +97,16 @@ Version 2.11
   Implemented by Ulrich Drepper.
 
 * New locales: ps_AF, my_MM
-
 
 Version 2.10
+
+* The following bugs are resolved with this release:
+
+  697, 5381, 5807, 6411, 6545, 7040, 7058, 7067, 7080, 7083, 7095, 7098,
+  9677, 9694, 9697, 9701, 9704, 9705, 9706, 9720, 9726, 9730, 9733, 9736,
+  9741, 9750, 9753, 9759, 9781, 9791, 9793, 9823, 9833, 9844, 9880, 9881,
+  9891, 9893, 9895, 9913, 9916, 9920, 9948, 9955, 9957, 9963, 9985, 10052,
+  10069, 10086, 10087, 10090, 10092, 10093, 10100, 10118, 10128
 
 * New interfaces: preadv, preadv64, pwritev, pwritev64, malloc_info
   Implemented by Ulrich Drepper.
@@ -128,9 +154,16 @@ Version 2.10
   in case of a broken server.  To avoid it, users can run nscd or put
   'options single-request' in /etc/resolv.conf.
   Implemented by Ulrich Drepper.
-
 
 Version 2.9
+
+* The following bugs are resolved with this release:
+
+  3406, 5209, 5210, 5381, 5794, 5814, 5911, 6428, 6438, 6442, 6447, 6461,
+  6472, 6505, 6544, 6589, 6612, 6634, 6653, 6654, 6657, 6698, 6712, 6713,
+  6719, 6723, 6724, 6740, 6763, 6771, 6790, 6791, 6817, 6824, 6839, 6843,
+  6845, 6856, 6857, 6860, 6867, 6875, 6919, 6920, 6942, 6947, 6955, 6966,
+  6968, 6974, 6980, 6995, 7008, 7009, 7029
 
 * Unified lookup for getaddrinfo: IPv4 and IPv6 addresses are now looked
   up at the same time.  Implemented by Ulrich Drepper.
@@ -169,6 +202,16 @@ Version 2.9
 
 Version 2.8
 
+* The following bugs are resolved with this release:
+
+  2549, 3112, 4314, 4407, 4997, 5012, 5040, 5112, 5204, 5208, 5209, 5220,
+  5222, 5224, 5225, 5237, 5238, 5240, 5245, 5277, 5346, 5375, 5378, 5382,
+  5424, 5427, 5428, 5435, 5436, 5439, 5441, 5442, 5443, 5451, 5452, 5454,
+  5455, 5463, 5464, 5465, 5475, 5477, 5478, 5520, 5541, 5545, 5553, 5600,
+  5602, 5607, 5614, 5627, 5628, 5736, 5737, 5741, 5753, 5760, 5762, 5768,
+  5774, 5777, 5778, 5779, 5786, 5790, 5818, 5854, 5857, 5903, 5939, 5979,
+  5983, 5995, 5998, 6004, 6007, 6020, 6021, 6024, 6040, 6042
+
 * New locales: bo_CN, bo_IN, shs_CA.
 
 * New encoding: HP-ROMAN9, HP-GREEK8, HP-THAI8, HP-TURKISH8.
@@ -201,6 +244,14 @@ Version 2.8
   Implemented by Stephen Munroe.
 
 Version 2.7
+
+* The following bugs are resolved with this release:
+
+  4125, 4126, 4178, 4359, 4407, 4512, 4514, 4525, 4554, 4556, 4557, 4566,
+  4582, 4586, 4588, 4599, 4610, 4647, 4702, 4705, 4726, 4745, 4772, 4773,
+  4775, 4776, 4792, 4813, 4814, 4816, 4833, 4858, 4860, 4896, 4905, 4925,
+  4936, 4937, 4938, 4941, 4946, 4963, 4972, 5010, 5028, 5043, 5058, 5063,
+  5071, 5103, 5104, 5112, 5113, 5184, 5186
 
 * More checking functions: fread, fread_unlocked, open*, mq_open.
   Implemented by Jakub Jelinek and Ulrich Drepper.
@@ -242,14 +293,36 @@ Version 2.7
 
 Version 2.6
 
+* The following bugs are resolved with this release:
+
+  3156, 3213, 3285, 3291, 3306, 3313, 3320, 3322, 3325, 3326, 3334, 3348,
+  3352, 3363, 3369, 3426, 3427, 3429, 3451, 3458, 3465, 3480, 3483, 3493,
+  3514, 3515, 3559, 3632, 3664, 3673, 3674, 3745, 3747, 3818, 3840, 3842,
+  3851, 3855, 3884, 3885, 3902, 3905, 3919, 3944, 3954, 3955, 3957, 3991,
+  3995, 3996, 4024, 4040, 4069, 4070, 4074, 4076, 4096, 4101, 4102, 4114,
+  4130, 4131, 4181, 4276, 4306, 4342, 4344, 4349, 4364, 4368, 4381, 4392,
+  4403, 4405, 4406, 4411, 4438, 4439, 4455, 4456, 4465, 4512, 4514, 4586,
+  4702, 4858
+
 * New Linux interfaces: epoll_pwait, sched_getcpu.
 
 * New generic interfaces: strerror_l.
 
 * nscd can now cache the services database.   Implemented by Ulrich Drepper.
-
 
 Version 2.5
+
+* The following bugs are resolved with this release:
+
+  39, 68, 192, 352, 388, 531, 935, 1006, 1201, 1203, 1386, 1782, 1783, 1784,
+  1785, 1786, 1787, 1951, 1974, 1996, 2072, 2098, 2125, 2134, 2158, 2182,
+  2349, 2376, 2386, 2389, 2415, 2418, 2420, 2423, 2450, 2451, 2466, 2472,
+  2473, 2477, 2498, 2499, 2501, 2502, 2505, 2507, 2508, 2509, 2517, 2526,
+  2569, 2571, 2592, 2611, 2625, 2632, 2644, 2662, 2680, 2683, 2684, 2693,
+  2695, 2703, 2734, 2751, 2764, 2766, 2775, 2792, 2821, 2823, 2832, 2841,
+  2843, 2883, 2892, 2908, 2914, 2926, 2961, 2978, 2980, 2987, 2997, 2998,
+  3013, 3018, 3034, 3040, 3044, 3123, 3124, 3137, 3138, 3143, 3155, 3189,
+  3225, 3251, 3252, 3253, 3273
 
 * For Linux, the sorting of addresses returned by getaddrinfo now also
   handles rules 3, 4, and 7 from RFC 3484.  I.e., all rules are handled.
