@@ -1052,6 +1052,7 @@
 	re_node_set_insert failure; return REG_ESPACE.
 	Patch by Paul Eggert.
 
+	[BZ #10864]
 	* bits/confname.h: Make pre-C99-safe.
 
 2010-01-14  Ryan S. Arnold  <rsa@us.ibm.com>
