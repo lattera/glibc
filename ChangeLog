@@ -1,5 +1,10 @@
 2010-04-08  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #10915]
+	* nscd/nscd_stat.c (struct statdata): Add reload_count field.
+	(send_stats): Fill in reload_count.
+	(receive_print_stats): Print reload_count.
+
 	* sysdeps/unix/sysv/linux/getlogin_r.c (__getlogin_r_loginuid): When
 	reading the loginuid file use a buffer which is always large enough.
 	NUL-terminate the string.
