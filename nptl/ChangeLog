@@ -1,3 +1,14 @@
+2010-04-09  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #11390]
+	* sysdeps/unix/sysv/linux/pthread_getname.c: New file.
+	* sysdeps/unix/sysv/linux/pthread_setname.c: New file.
+	* nptl/sysdeps/pthread/pthread.h: Declare pthread_getname and
+	pthread_setname.
+	* Makefile (libpthread-routines): Add pthread_getname and
+	pthread_setname.
+	* Versions: Export pthread_getname and pthread_setname for GLIBC_2.12.
+
 2010-04-05  Thomas Schwinge  <thomas@schwinge.name>
 
 	* sysdeps/pthread/unwind-resume.c: Moved to main tree sysdeps/gnu/.
