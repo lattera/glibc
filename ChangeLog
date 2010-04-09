@@ -1,3 +1,7 @@
+2010-04-09  Roland McGrath  <roland@redhat.com>
+
+	* posix/Makefile (tst-chmod-ARGS): Pass $(objdir), not `pwd`.
+
 2010-04-08  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #10915]
