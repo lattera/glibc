@@ -48,7 +48,7 @@ END LC_COLLATE
 
 LC_MONETARY
 % This is the POSIX Locale definition the LC_MONETARY category.
-% These are generated based on XML base Locale difintion file
+% These are generated based on XML base Locale definition file
 % for IBM Class for Unicode/Java
 %
 int_curr_symbol       "<U0045><U0047><U0050><U0020>"
@@ -82,7 +82,7 @@ END LC_NUMERIC
 
 LC_TIME
 % This is the POSIX Locale definition for the LC_TIME category.
-% These are generated based on XML base Locale difintion file
+% These are generated based on XML base Locale definition file
 % for IBM Class for Unicode/Java
 %
 % Abbreviated weekday names (%a)

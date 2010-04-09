@@ -1,5 +1,51 @@
 2010-04-08  Ulrich Drepper  <drepper@redhat.com>
 
+	* locales/ar_AE: Fix typo.
+	* locales/ar_BH: Likewise.
+	* locales/ar_DZ: Likewise.
+	* locales/ar_EG: Likewise.
+	* locales/ar_IQ: Likewise.
+	* locales/ar_JO: Likewise.
+	* locales/ar_KW: Likewise.
+	* locales/ar_LB: Likewise.
+	* locales/ar_LY: Likewise.
+	* locales/ar_MA: Likewise.
+	* locales/ar_OM: Likewise.
+	* locales/ar_QA: Likewise.
+	* locales/ar_SD: Likewise.
+	* locales/ar_SY: Likewise.
+	* locales/ar_TN: Likewise.
+	* locales/ar_YE: Likewise.
+	* locales/ber_DZ: Likewise.
+	* locales/ber_MA: Likewise.
+	* locales/bn_IN: Likewise.
+	* locales/en_HK: Likewise.
+	* locales/en_IN: Likewise.
+	* locales/en_PH: Likewise.
+	* locales/en_SG: Likewise.
+	* locales/gu_IN: Likewise.
+	* locales/hi_IN: Likewise.
+	* locales/hne_IN: Likewise.
+	* locales/kn_IN: Likewise.
+	* locales/kok_IN: Likewise.
+	* locales/ks_IN@devanagari: Likewise.
+	* locales/ml_IN: Likewise.
+	* locales/mr_IN: Likewise.
+	* locales/ms_MY: Likewise.
+	* locales/mt_MT: Likewise.
+	* locales/my_MM: Likewise.
+	* locales/ne_NP: Likewise.
+	* locales/nn_NO: Likewise.
+	* locales/pa_IN: Likewise.
+	* locales/sa_IN: Likewise.
+	* locales/sd_IN@devanagari: Likewise.
+	* locales/sq_AL: Likewise.
+	* locales/sq_MK: Likewise.
+	* locales/ta_IN: Likewise.
+	* locales/te_IN: Likewise.
+	* locales/zh_HK: Likewise.
+	* locales/zh_SG: Likewise.
+
 	* SUPPORTED (SUPPORTED-LOCALES): Add cv_RU.
 
 	[BZ #10824]

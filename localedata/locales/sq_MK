@@ -40,7 +40,7 @@ END LC_COLLATE
 
 LC_MONETARY
 % This is the POSIX Locale definition the LC_MONETARY category.
-% These are generated based on XML base Locale difintion file
+% These are generated based on XML base Locale definition file
 % for IBM Class for Unicode/Java
 %
 int_curr_symbol           "<U004D><U004B><U0044><U0020>"
