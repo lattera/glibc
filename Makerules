@@ -267,20 +267,6 @@ ifndef sysd-rules-done
 no_deps=t
 endif
 
--include $(common-objpfx)includes.mk
-ifneq ($(+common-includes),$(saved-includes))
-# Recreate includes.mk (and includes).
-includes-force = FORCE
-FORCE:
-endif
-$(common-objpfx)includes.mk: $(includes-force)
-	-@rm -f $@T $(common-objpfx)includesT
-	for inc in $(+common-includes); do echo "$$inc"; done \
-	  > $(common-objpfx)includesT
-	mv -f $(common-objpfx)includesT $(common-objpfx)includes
-	echo 'saved-includes := $(+common-includes)' > $@T
-	mv -f $@T $@
-
 define o-iterator-doit
 $(objpfx)%$o: %.S $(before-compile); $$(compile-command.S)
 endef
