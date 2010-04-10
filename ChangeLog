@@ -1,3 +1,11 @@
+2010-04-09  Ulrich Drepper  <drepper@redhat.com>
+
+	* nscd/aicache.c (addhstaiX): Correct passing memory to address
+	list to gethostbyname4_r functions.
+
+	* resolv/nss_dns/dns-host.c (gaih_getanswer_slice): Optimize
+	copying of h_name.
+
 2010-04-09  Roland McGrath  <roland@redhat.com>
 
 	* Makerules ($(common-objpfx)libc-abis.h): Depend on libc-abis.stamp.

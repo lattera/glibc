@@ -1050,7 +1050,7 @@ gaih_getanswer_slice (const querybuf *answer, int anslen, const char *qname,
 	  ++had_error;
 	  continue;
 	}
-      if (*firstp)
+      if (*firstp && canon == NULL)
 	{
 	  h_name = buffer;
 	  buffer += h_namelen;
@@ -1166,19 +1166,7 @@ gaih_getanswer_slice (const querybuf *answer, int anslen, const char *qname,
 	  if (ttl != 0 && ttlp != NULL)
 	    *ttlp = ttl;
 
-	  if (canon != NULL)
-	    {
-	      (*pat)->name = canon;
-
-	      /* Reclaim buffer space.  */
-	      if (h_name + h_namelen == buffer)
-		{
-		  buffer = h_name;
-		  buflen += h_namelen;
-		}
-	    }
-	  else
-	    (*pat)->name = h_name;
+	  (*pat)->name = canon ?: h_name;
 
 	  *firstp = 0;
 	}
