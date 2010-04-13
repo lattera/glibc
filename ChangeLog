@@ -1,3 +1,7 @@
+2010-04-10  Matt Fleming  <matt@console-pimps.org>
+
+	* elf/elf.h: Add SH specific ELF header flags.
+
 2010-04-13  Andreas Schwab  <schwab@redhat.com>
 
 	* sysdeps/unix/sysv/linux/s390/s390-32/makecontext.c: Fix setup of

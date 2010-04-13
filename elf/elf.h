@@ -2477,6 +2477,30 @@ typedef Elf32_Addr Elf32_Conflict;
 
 /* SH specific declarations */
 
+/* Processor specific flags for the ELF header e_flags field.  */
+#define EF_SH_MACH_MASK		0x1f
+#define EF_SH_UNKNOWN		0x0
+#define EF_SH1			0x1
+#define EF_SH2			0x2
+#define EF_SH3			0x3
+#define EF_SH_DSP		0x4
+#define EF_SH3_DSP		0x5
+#define EF_SH4AL_DSP		0x6
+#define EF_SH3E			0x8
+#define EF_SH4			0x9
+#define EF_SH2E			0xb
+#define EF_SH4A			0xc
+#define EF_SH2A			0xd
+#define EF_SH4_NOFPU		0x10
+#define EF_SH4A_NOFPU		0x11
+#define EF_SH4_NOMMU_NOFPU	0x12
+#define EF_SH2A_NOFPU		0x13
+#define EF_SH3_NOMMU		0x14
+#define EF_SH2A_SH4_NOFPU	0x15
+#define EF_SH2A_SH3_NOFPU	0x16
+#define EF_SH2A_SH4		0x17
+#define EF_SH2A_SH3E		0x18
+
 /* SH relocs.  */
 #define	R_SH_NONE		0
 #define	R_SH_DIR32		1
