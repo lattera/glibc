@@ -136,38 +136,42 @@ main (void)
       exit (1);
     }
 
-  ctx[1] = ctx[0];
+  if (getcontext (&ctx[1]) != 0)
+    {
+      printf ("%s: getcontext: %m\n", __FUNCTION__);
+      exit (1);
+    }
+
   ctx[1].uc_stack.ss_sp = st1;
   ctx[1].uc_stack.ss_size = sizeof st1;
   ctx[1].uc_link = &ctx[0];
-  {
-    ucontext_t tempctx = ctx[1];
-    makecontext (&ctx[1], (void (*) (void)) f1, 33,
-		 0x00000001 << flag, 0x00000004 << flag,
-		 0x00000012 << flag, 0x00000048 << flag,
-		 0x00000123 << flag, 0x0000048d << flag,
-		 0x00001234 << flag, 0x000048d1 << flag,
-		 0x00012345 << flag, 0x00048d15 << flag,
-		 0x00123456 << flag, 0x0048d159 << flag,
-		 0x01234567 << flag, 0x048d159e << flag,
-		 0x12345678 << flag, 0x48d159e2 << flag,
-		 0x23456789 << flag, 0x8d159e26 << flag,
-		 0x3456789a << flag, 0xd159e26a << flag,
-		 0x456789ab << flag, 0x159e26af << flag,
-		 0x56789abc << flag, 0x59e26af3 << flag,
-		 0x6789abcd << flag, 0x9e26af37 << flag,
-		 0x789abcde << flag, 0xe26af37b << flag,
-		 0x89abcdef << flag, 0x26af37bc << flag,
-		 0x9abcdef0 << flag, 0x6af37bc3 << flag,
-		 0xabcdef0f << flag);
+  errno = 0;
+  makecontext (&ctx[1], (void (*) (void)) f1, 33,
+	       0x00000001 << flag, 0x00000004 << flag,
+	       0x00000012 << flag, 0x00000048 << flag,
+	       0x00000123 << flag, 0x0000048d << flag,
+	       0x00001234 << flag, 0x000048d1 << flag,
+	       0x00012345 << flag, 0x00048d15 << flag,
+	       0x00123456 << flag, 0x0048d159 << flag,
+	       0x01234567 << flag, 0x048d159e << flag,
+	       0x12345678 << flag, 0x48d159e2 << flag,
+	       0x23456789 << flag, 0x8d159e26 << flag,
+	       0x3456789a << flag, 0xd159e26a << flag,
+	       0x456789ab << flag, 0x159e26af << flag,
+	       0x56789abc << flag, 0x59e26af3 << flag,
+	       0x6789abcd << flag, 0x9e26af37 << flag,
+	       0x789abcde << flag, 0xe26af37b << flag,
+	       0x89abcdef << flag, 0x26af37bc << flag,
+	       0x9abcdef0 << flag, 0x6af37bc3 << flag,
+	       0xabcdef0f << flag);
 
-    /* Without this check, a stub makecontext can make us spin forever.  */
-    if (memcmp (&tempctx, &ctx[1], sizeof ctx[1]) == 0)
-      {
-	puts ("makecontext was a no-op, presuming not implemented");
-	return 0;
-      }
-  }
+  /* Without this check, a stub makecontext can make us spin forever.  */
+  if (errno == ENOSYS)
+    {
+      puts ("makecontext not implemented");
+      back_in_main = 1;
+      return 0;
+    }
 
   /* Play some tricks with this context.  */
   if (++global == 1)
