@@ -1,3 +1,9 @@
+2010-04-13  Andreas Schwab  <schwab@redhat.com>
+
+	* sysdeps/unix/sysv/linux/s390/s390-32/makecontext.c: Fix setup of
+	overflow area.
+	* sysdeps/unix/sysv/linux/s390/s390-64/makecontext.c: Likewise.
+
 2010-04-12  Andreas Schwab  <schwab@redhat.com>
 
 	* stdlib/tst-makecontext3.c (main): Initialize ucontext_t objects

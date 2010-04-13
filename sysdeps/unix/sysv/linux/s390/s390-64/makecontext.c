@@ -1,4 +1,4 @@
-/* Copyright (C) 2001 Free Software Foundation, Inc.
+/* Copyright (C) 2001, 2010 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Martin Schwidefsky (schwidefsky@de.ibm.com).
 
@@ -29,14 +29,14 @@
    won't work.
    makecontext sets up a stack and the registers for the
    user context. The stack looks like this:
-           size                         offset
+	   size                         offset
     %r15 ->    +-----------------------+
-             8 | back chain (zero)     |  0
-             8 | reserved              |  8
-           144 | save area for (*func) | 16
-               +-----------------------+
-             n | overflow parameters   | 160
-               +-----------------------+
+	     8 | back chain (zero)     |  0
+	     8 | reserved              |  8
+	   144 | save area for (*func) | 16
+	       +-----------------------+
+	     n | overflow parameters   | 160
+	       +-----------------------+
    The registers are set up like this:
      %r2-%r6: parameters 1 to 5
      %r7    : (*func) pointer
@@ -54,27 +54,27 @@ void
 __makecontext (ucontext_t *ucp, void (*func) (void), int argc, ...)
 {
   extern void __makecontext_ret (void);
-  unsigned long *sp;
+  unsigned long int *sp;
   va_list ap;
-  int i;
 
-  sp = (unsigned long *) (((unsigned long) ucp->uc_stack.ss_sp
-			   + ucp->uc_stack.ss_size) & -8L);
+  sp = (unsigned long int *) (((unsigned long int) ucp->uc_stack.ss_sp
+			       + ucp->uc_stack.ss_size) & -8L);
 
   /* Set the return address to trampoline.  */
-  ucp->uc_mcontext.gregs[14] = (long) __makecontext_ret;
+  ucp->uc_mcontext.gregs[14] = (long int) __makecontext_ret;
 
   /* Set register parameters.  */
   va_start (ap, argc);
-  for (i = 0; (i < argc) && (i < 5); i++)
-    ucp->uc_mcontext.gregs[2+i] = va_arg (ap, long);
+  for (int i = 0; i < argc && i < 5; ++i)
+    ucp->uc_mcontext.gregs[2 + i] = va_arg (ap, long int);
 
   /* The remaining arguments go to the overflow area.  */
-  if (argc > 5) {
-    sp -= argc - 5;
-    for (i = 5; i < argc; i++)
-      sp[i] = va_arg(ap, long);
-  }
+  if (argc > 5)
+    {
+      sp -= argc - 5;
+      for (int i = 5; i < argc; ++i)
+	sp[i - 5] = va_arg (ap, long int);
+    }
   va_end (ap);
 
   /* Make room for the save area and set the backchain.  */
@@ -82,24 +82,24 @@ __makecontext (ucontext_t *ucp, void (*func) (void), int argc, ...)
   *sp = 0;
 
   /* Pass (*func) to __start_context in %r7.  */
-  ucp->uc_mcontext.gregs[7] = (long) func;
+  ucp->uc_mcontext.gregs[7] = (long int) func;
 
   /* Pass ucp->uc_link to __start_context in %r8.  */
-  ucp->uc_mcontext.gregs[8] = (long) ucp->uc_link;
+  ucp->uc_mcontext.gregs[8] = (long int) ucp->uc_link;
 
   /* Pass address of setcontext in %r9.  */
-  ucp->uc_mcontext.gregs[9] = (long) &setcontext;
+  ucp->uc_mcontext.gregs[9] = (long int) &setcontext;
 
   /* Set stack pointer.  */
-  ucp->uc_mcontext.gregs[15] = (long) sp;
+  ucp->uc_mcontext.gregs[15] = (long int) sp;
 }
 
-asm(".text\n"
-    ".type __makecontext_ret,@function\n"
-    "__makecontext_ret:\n"
-    "      basr  %r14,%r7\n"
-    "      lgr   %r2,%r8\n"
-    "      br    %r9\n"
-    ".size __makecontext_ret, .-__makecontext_ret");
+asm (".text\n"
+     ".type __makecontext_ret,@function\n"
+     "__makecontext_ret:\n"
+     "      basr  %r14,%r7\n"
+     "      lgr   %r2,%r8\n"
+     "      br    %r9\n"
+     ".size __makecontext_ret, .-__makecontext_ret");
 
 weak_alias (__makecontext, makecontext)
