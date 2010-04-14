@@ -20,21 +20,23 @@
 
 #ifdef	__ASSEMBLER__
 
-#include <ifunc-defines.h>
+# include <ifunc-defines.h>
 
-#define bit_SSE2	(1 << 26)
-#define bit_SSSE3	(1 << 9)
-#define bit_SSE4_2	(1 << 20)
+# define bit_SSE2	(1 << 26)
+# define bit_SSSE3	(1 << 9)
+# define bit_SSE4_1	(1 << 19)
+# define bit_SSE4_2	(1 << 20)
 
-#define index_SSE2	COMMON_CPUID_INDEX_1*CPUID_SIZE+CPUID_EDX_OFFSET
-#define index_SSSE3	COMMON_CPUID_INDEX_1*CPUID_SIZE+CPUID_ECX_OFFSET
-#define index_SSE4_2	COMMON_CPUID_INDEX_1*CPUID_SIZE+CPUID_ECX_OFFSET
+# define index_SSE2	COMMON_CPUID_INDEX_1*CPUID_SIZE+CPUID_EDX_OFFSET
+# define index_SSSE3	COMMON_CPUID_INDEX_1*CPUID_SIZE+CPUID_ECX_OFFSET
+# define index_SSE4_1	COMMON_CPUID_INDEX_1*CPUID_SIZE+CPUID_ECX_OFFSET
+# define index_SSE4_2	COMMON_CPUID_INDEX_1*CPUID_SIZE+CPUID_ECX_OFFSET
 
 #define index_Fast_Rep_String	FEATURE_INDEX_1*FEATURE_SIZE
 
 #else	/* __ASSEMBLER__ */
 
-#include <sys/param.h>
+# include <sys/param.h>
 
 enum
   {
@@ -84,20 +86,22 @@ extern void __init_cpu_features (void) attribute_hidden;
 extern const struct cpu_features *__get_cpu_features (void)
      __attribute__ ((const));
 
-#ifndef NOT_IN_libc
-# define __get_cpu_features()	(&__cpu_features)
-#endif
+# ifndef NOT_IN_libc
+#  define __get_cpu_features()	(&__cpu_features)
+# endif
 
-#define HAS_CPU_FEATURE(idx, reg, bit) \
+# define HAS_CPU_FEATURE(idx, reg, bit) \
   ((__get_cpu_features ()->cpuid[idx].reg & (1 << (bit))) != 0)
 
 /* Following are the feature tests used throughout libc.  */
 
-#define HAS_SSE2	HAS_CPU_FEATURE (COMMON_CPUID_INDEX_1, edx, 26)
-#define HAS_POPCOUNT	HAS_CPU_FEATURE (COMMON_CPUID_INDEX_1, ecx, 23)
-#define HAS_SSE4_2	HAS_CPU_FEATURE (COMMON_CPUID_INDEX_1, ecx, 20)
-#define HAS_FMA		HAS_CPU_FEATURE (COMMON_CPUID_INDEX_1, ecx, 12)
+# define HAS_SSE2	HAS_CPU_FEATURE (COMMON_CPUID_INDEX_1, edx, 26)
+# define HAS_POPCOUNT	HAS_CPU_FEATURE (COMMON_CPUID_INDEX_1, ecx, 23)
+# define HAS_SSSE3	HAS_CPU_FEATURE (COMMON_CPUID_INDEX_1, ecx, 9)
+# define HAS_SSE4_1	HAS_CPU_FEATURE (COMMON_CPUID_INDEX_1, ecx, 19)
+# define HAS_SSE4_2	HAS_CPU_FEATURE (COMMON_CPUID_INDEX_1, ecx, 20)
+# define HAS_FMA	HAS_CPU_FEATURE (COMMON_CPUID_INDEX_1, ecx, 12)
 
-#define index_Fast_Rep_String	FEATURE_INDEX_1
+# define index_Fast_Rep_String	FEATURE_INDEX_1
 
 #endif	/* __ASSEMBLER__ */

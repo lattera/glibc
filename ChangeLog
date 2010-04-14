@@ -1,3 +1,8 @@
+2010-04-13  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/x86_64/multiarch/init-arch.h: Pretty printing.
+	Add SSE 4.1 macros.
+
 2010-04-10  Matt Fleming  <matt@console-pimps.org>
 
 	* elf/elf.h: Add SH specific ELF header flags.
