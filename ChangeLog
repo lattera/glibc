@@ -1,3 +1,11 @@
+2010-04-12  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/x86_64/multiarch/Makefile (sysdep_routines): Add
+	memcmp-sse4.
+	* sysdeps/x86_64/multiarch/memcmp-sse4.S: New file.
+	* sysdeps/x86_64/multiarch/memcmp.S: New file.
+	* sysdeps/x86_64/multiarch/rtld-memcmp.c: New file.
+
 2010-04-13  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/x86_64/multiarch/init-arch.h: Pretty printing.
