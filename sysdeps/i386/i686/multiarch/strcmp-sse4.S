@@ -223,8 +223,8 @@ L(crosspage):
 	inc	%edx
 	cmp	$15, %edx
 	jle	L(crosspage)
-	add	$16, %edi
-	add	$16, %esi
+	add	%edx, %edi
+	add	%edx, %esi
 	jmp	L(check_offset)
 
 	.p2align 4

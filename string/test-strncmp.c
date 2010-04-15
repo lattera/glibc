@@ -1,5 +1,5 @@
 /* Test and measure strncmp functions.
-   Copyright (C) 1999, 2002, 2003 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2002, 2003, 2010 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Jakub Jelinek <jakub@redhat.com>, 1999.
 
@@ -51,8 +51,8 @@ stupid_strncmp (const char *s1, const char *s2, size_t n)
   return ret;
 }
 
-static void
-do_one_test (impl_t *impl, const char *s1, const char *s2, size_t n,
+static int
+check_result (impl_t *impl, const char *s1, const char *s2, size_t n,
 	     int exp_result)
 {
   int result = CALL (impl, s1, s2, n);
@@ -63,8 +63,18 @@ do_one_test (impl_t *impl, const char *s1, const char *s2, size_t n,
       error (0, 0, "Wrong result in function %s %d %d", impl->name,
 	     result, exp_result);
       ret = 1;
-      return;
+      return -1;
     }
+
+  return 0;
+}
+
+static void
+do_one_test (impl_t *impl, const char *s1, const char *s2, size_t n,
+	     int exp_result)
+{
+  if (check_result (impl, s1, s2, n, exp_result) < 0)
+    return;
 
   if (HP_TIMING_AVAIL)
     {
@@ -283,12 +293,33 @@ do_random_tests (void)
     }
 }
 
+static void
+check1 (void)
+{
+  char *s1 = (char *)(buf1 + 0xb2c);
+  char *s2 = (char *)(buf1 + 0xfd8);
+  size_t i;
+  int exp_result;
+
+  strcpy(s1, "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrs");
+  strcpy(s2, "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijkLMNOPQRSTUV");
+
+  for (i = 0; i < 80; i++)
+    {
+      exp_result = simple_strncmp (s1, s2, i);
+      FOR_EACH_IMPL (impl, 0)
+	 check_result (impl, s1, s2, i, exp_result);
+    }
+}
+
 int
 test_main (void)
 {
   size_t i;
 
   test_init ();
+
+  check1 ();
 
   printf ("%23s", "");
   FOR_EACH_IMPL (impl, 0)

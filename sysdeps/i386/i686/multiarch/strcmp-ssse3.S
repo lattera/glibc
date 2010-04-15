@@ -1484,17 +1484,18 @@ L(gobble_ashr_12):
 	sub	$0xffff, %esi
 	jnz	L(exit)
 
+#ifdef USE_AS_STRNCMP
+	cmp	$16, %ebp
+	lea	-16(%ebp), %ebp
+	jbe	L(more8byteseq)
+#endif
+
 	add	$16, %ecx
 	movdqa	%xmm4, %xmm3
 
 	add	$16, %edi
 	jg	L(nibble_ashr_12)
 
-#ifdef USE_AS_STRNCMP
-	cmp	$16, %ebp
-	lea	-16(%ebp), %ebp
-	jbe	L(more8byteseq)
-#endif
 	movdqa	(%eax, %ecx), %xmm1
 	movdqa	(%edx, %ecx), %xmm2
 	movdqa	%xmm2, %xmm4
