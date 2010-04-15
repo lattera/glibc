@@ -55,3 +55,14 @@ if AC_TRY_COMMAND([${CC-cc} -Wa,-mtune=i686 -xc /dev/null -S -o /dev/null]); the
 else
   libc_cv_as_i686=no
 fi])
+
+dnl Check if -mavx works.
+AC_CACHE_CHECK(for AVX support, libc_cv_cc_avx, [dnl
+if AC_TRY_COMMAND([${CC-cc} -mavx -xc /dev/null -S -o /dev/null]); then
+  libc_cv_cc_avx=yes
+else
+  libc_cv_cc_avx=no
+fi])
+if test $libc_cv_cc_avx = yes; then
+  AC_DEFINE(HAVE_AVX_SUPPORT)
+fi

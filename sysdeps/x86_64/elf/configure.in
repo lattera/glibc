@@ -32,14 +32,3 @@ fi
 dnl It is always possible to access static and hidden symbols in an
 dnl position independent way.
 AC_DEFINE(PI_STATIC_AND_HIDDEN)
-
-dnl Check if -mavx works.
-AC_CACHE_CHECK(for AVX support, libc_cv_cc_avx, [dnl
-if AC_TRY_COMMAND([${CC-cc} -mavx -xc /dev/null -S -o /dev/null]); then
-  libc_cv_cc_avx=yes
-else
-  libc_cv_cc_avx=no
-fi])
-if test $libc_cv_cc_avx = yes; then
-  AC_DEFINE(HAVE_AVX_SUPPORT)
-fi

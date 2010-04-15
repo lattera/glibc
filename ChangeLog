@@ -1,5 +1,16 @@
 2010-04-14  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* sysdeps/x86_64/elf/configure.in: Move AVX test to ....
+	* sysdeps/i386/configure.in: ...here.
+	* sysdeps/i386/i686/multiarch/Makefile (libm-sysdep_routines): Define.
+	(CFLAGS-s_fma-fma.c): Define.
+	(CFLAGS-s_fmaf-fma.c): Define.
+	* sysdeps/i386/i686/multiarch/Versions: New file.
+	* sysdeps/i386/i686/multiarch/s_fma-fma.c: New file.
+	* sysdeps/i386/i686/multiarch/s_fma.c: New file.
+	* sysdeps/i386/i686/multiarch/s_fmaf-fma.c: New file.
+	* sysdeps/i386/i686/multiarch/s_fmaf.c: New file.
+
 	* sysdeps/x86_64/multiarch/memcmp-sse4.S: Check
 	DATA_CACHE_SIZE_HALF instead of SHARED_CACHE_SIZE_HALF.
 

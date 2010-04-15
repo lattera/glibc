@@ -19,3 +19,9 @@ CFLAGS-strstr.c += -msse4
 CFLAGS-strcasestr.c += -msse4
 endif
 endif
+
+ifeq (mathyes,$(subdir)$(config-cflags-avx))
+libm-sysdep_routines += s_fma-fma s_fmaf-fma
+CFLAGS-s_fma-fma.c += -mavx -mfpmath=sse
+CFLAGS-s_fmaf-fma.c += -mavx -mfpmath=sse
+endif
