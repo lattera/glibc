@@ -322,10 +322,14 @@ _dl_check_map_versions (struct link_map *map, int verbose, int trace_mode)
 	      while (1)
 		{
 		  ElfW(Half) ndx = aux->vna_other & 0x7fff;
-		  map->l_versions[ndx].hash = aux->vna_hash;
-		  map->l_versions[ndx].hidden = aux->vna_other & 0x8000;
-		  map->l_versions[ndx].name = &strtab[aux->vna_name];
-		  map->l_versions[ndx].filename = &strtab[ent->vn_file];
+		  /* In trace mode, dependencies may be missing.  */
+		  if (__builtin_expect (ndx < map->l_nversions, 1))
+		    {
+		      map->l_versions[ndx].hash = aux->vna_hash;
+		      map->l_versions[ndx].hidden = aux->vna_other & 0x8000;
+		      map->l_versions[ndx].name = &strtab[aux->vna_name];
+		      map->l_versions[ndx].filename = &strtab[ent->vn_file];
+		    }
 
 		  if (aux->vna_next == 0)
 		    /* No more symbols.  */
