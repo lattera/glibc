@@ -72,6 +72,8 @@ L(79bytesormore):
 
 	sub	%rcx, %rdi
 	add	%rcx, %rdx
+	test	$0xf, %rdi
+	jz	L(2aligned)
 
 	cmp	$128, %rdx
 	ja	L(128bytesormore)
@@ -120,8 +122,10 @@ L(less32bytesin64):
 	BRANCH_TO_JMPTBL_ENTRY(L(table_64bytes), %rdx, 4)
 
 L(128bytesormore):
+	cmp	$512, %rdx
+	ja	L(512bytesormore)
 	cmp	$256, %rdx
-	ja	L(256bytesormore)
+	ja	L(less512bytes)
 L(less256bytes):
 	sub	$128, %rdx
 
@@ -191,9 +195,6 @@ L(less32bytesin128):
 	add	%rdx, %rdi
 	BRANCH_TO_JMPTBL_ENTRY(L(table_64bytes), %rdx, 4)
 
-L(256bytesormore):
-	cmp	$512, %rdx
-	ja	L(512bytesormore)
 L(less512bytes):
 	sub	$256, %rdx
 	movdqu	(%rdi), %xmm2
@@ -307,7 +308,18 @@ L(less32bytesin256):
 
 	ALIGN (4)
 L(512bytesormore):
+#ifdef DATA_CACHE_SIZE_HALF
+	mov	$DATA_CACHE_SIZE_HALF, %r8
+#else
+	mov	__x86_64_data_cache_size_half(%rip), %r8
+#endif
+	mov	%r8, %r9
+	shr	$1, %r8
+	add	%r9, %r8
+	cmp	%r8, %rdx
+	ja	L(L2_L3_cache_unaglined)
 	sub	$64, %rdx
+	ALIGN (4)
 L(64bytesormore_loop):
 	movdqu	(%rdi), %xmm2
 	pxor	(%rsi), %xmm2
@@ -336,6 +348,357 @@ L(64bytesormore_loop):
 	add	%rdx, %rsi
 	add	%rdx, %rdi
 	BRANCH_TO_JMPTBL_ENTRY(L(table_64bytes), %rdx, 4)
+
+L(L2_L3_cache_unaglined):
+	sub	$64, %rdx
+	ALIGN (4)
+L(L2_L3_unaligned_128bytes_loop):
+	prefetchnta 0x1c0(%rdi)
+	prefetchnta 0x1c0(%rsi)
+	movdqu	(%rdi), %xmm2
+	pxor	(%rsi), %xmm2
+	movdqa	%xmm2, %xmm1
+
+	movdqu	16(%rdi), %xmm3
+	pxor	16(%rsi), %xmm3
+	por	%xmm3, %xmm1
+
+	movdqu	32(%rdi), %xmm4
+	pxor	32(%rsi), %xmm4
+	por	%xmm4, %xmm1
+
+	movdqu	48(%rdi), %xmm5
+	pxor	48(%rsi), %xmm5
+	por	%xmm5, %xmm1
+
+	ptest	%xmm1, %xmm0
+	jnc	L(64bytesormore_loop_end)
+	add	$64, %rsi
+	add	$64, %rdi
+	sub	$64, %rdx
+	jae	L(L2_L3_unaligned_128bytes_loop)
+
+	add	$64, %rdx
+	add	%rdx, %rsi
+	add	%rdx, %rdi
+	BRANCH_TO_JMPTBL_ENTRY(L(table_64bytes), %rdx, 4)
+
+/*
+ * This case is for machines which are sensitive for unaligned instructions.
+ */
+	ALIGN (4)
+L(2aligned):
+	cmp	$128, %rdx
+	ja	L(128bytesormorein2aligned)
+L(less128bytesin2aligned):
+	sub	$64, %rdx
+
+	movdqa	(%rdi), %xmm2
+	pxor	(%rsi), %xmm2
+	ptest	%xmm2, %xmm0
+	jnc	L(16bytesin256)
+
+	movdqa	16(%rdi), %xmm2
+	pxor	16(%rsi), %xmm2
+	ptest	%xmm2, %xmm0
+	jnc	L(32bytesin256)
+
+	movdqa	32(%rdi), %xmm2
+	pxor	32(%rsi), %xmm2
+	ptest	%xmm2, %xmm0
+	jnc	L(48bytesin256)
+
+	movdqa	48(%rdi), %xmm2
+	pxor	48(%rsi), %xmm2
+	ptest	%xmm2, %xmm0
+	jnc	L(64bytesin256)
+	cmp	$32, %rdx
+	jb	L(less32bytesin64in2alinged)
+
+	movdqa	64(%rdi), %xmm2
+	pxor	64(%rsi), %xmm2
+	ptest	%xmm2, %xmm0
+	jnc	L(80bytesin256)
+
+	movdqa	80(%rdi), %xmm2
+	pxor	80(%rsi), %xmm2
+	ptest	%xmm2, %xmm0
+	jnc	L(96bytesin256)
+	sub	$32, %rdx
+	add	$32, %rdi
+	add	$32, %rsi
+L(less32bytesin64in2alinged):
+	add	$64, %rdi
+	add	$64, %rsi
+	add	%rdx, %rsi
+	add	%rdx, %rdi
+	BRANCH_TO_JMPTBL_ENTRY(L(table_64bytes), %rdx, 4)
+
+	ALIGN (4)
+L(128bytesormorein2aligned):
+	cmp	$512, %rdx
+	ja	L(512bytesormorein2aligned)
+	cmp	$256, %rdx
+	ja	L(256bytesormorein2aligned)
+L(less256bytesin2alinged):
+	sub	$128, %rdx
+
+	movdqa	(%rdi), %xmm2
+	pxor	(%rsi), %xmm2
+	ptest	%xmm2, %xmm0
+	jnc	L(16bytesin256)
+
+	movdqa	16(%rdi), %xmm2
+	pxor	16(%rsi), %xmm2
+	ptest	%xmm2, %xmm0
+	jnc	L(32bytesin256)
+
+	movdqa	32(%rdi), %xmm2
+	pxor	32(%rsi), %xmm2
+	ptest	%xmm2, %xmm0
+	jnc	L(48bytesin256)
+
+	movdqa	48(%rdi), %xmm2
+	pxor	48(%rsi), %xmm2
+	ptest	%xmm2, %xmm0
+	jnc	L(64bytesin256)
+
+	movdqa	64(%rdi), %xmm2
+	pxor	64(%rsi), %xmm2
+	ptest	%xmm2, %xmm0
+	jnc	L(80bytesin256)
+
+	movdqa	80(%rdi), %xmm2
+	pxor	80(%rsi), %xmm2
+	ptest	%xmm2, %xmm0
+	jnc	L(96bytesin256)
+
+	movdqa	96(%rdi), %xmm2
+	pxor	96(%rsi), %xmm2
+	ptest	%xmm2, %xmm0
+	jnc	L(112bytesin256)
+
+	movdqa	112(%rdi), %xmm2
+	pxor	112(%rsi), %xmm2
+	ptest	%xmm2, %xmm0
+	jnc	L(128bytesin256)
+
+	add	$128, %rsi
+	add	$128, %rdi
+
+	cmp	$64, %rdx
+	jae	L(less128bytesin2aligned)
+
+	cmp	$32, %rdx
+	jb	L(less32bytesin128in2aligned)
+
+	movdqu	(%rdi), %xmm2
+	pxor	(%rsi), %xmm2
+	ptest	%xmm2, %xmm0
+	jnc	L(16bytesin256)
+
+	movdqu	16(%rdi), %xmm2
+	pxor	16(%rsi), %xmm2
+	ptest	%xmm2, %xmm0
+	jnc	L(32bytesin256)
+	sub	$32, %rdx
+	add	$32, %rdi
+	add	$32, %rsi
+L(less32bytesin128in2aligned):
+	add	%rdx, %rsi
+	add	%rdx, %rdi
+	BRANCH_TO_JMPTBL_ENTRY(L(table_64bytes), %rdx, 4)
+
+	ALIGN (4)
+L(256bytesormorein2aligned):
+
+	sub	$256, %rdx
+	movdqa	(%rdi), %xmm2
+	pxor	(%rsi), %xmm2
+	ptest	%xmm2, %xmm0
+	jnc	L(16bytesin256)
+
+	movdqa	16(%rdi), %xmm2
+	pxor	16(%rsi), %xmm2
+	ptest	%xmm2, %xmm0
+	jnc	L(32bytesin256)
+
+	movdqa	32(%rdi), %xmm2
+	pxor	32(%rsi), %xmm2
+	ptest	%xmm2, %xmm0
+	jnc	L(48bytesin256)
+
+	movdqa	48(%rdi), %xmm2
+	pxor	48(%rsi), %xmm2
+	ptest	%xmm2, %xmm0
+	jnc	L(64bytesin256)
+
+	movdqa	64(%rdi), %xmm2
+	pxor	64(%rsi), %xmm2
+	ptest	%xmm2, %xmm0
+	jnc	L(80bytesin256)
+
+	movdqa	80(%rdi), %xmm2
+	pxor	80(%rsi), %xmm2
+	ptest	%xmm2, %xmm0
+	jnc	L(96bytesin256)
+
+	movdqa	96(%rdi), %xmm2
+	pxor	96(%rsi), %xmm2
+	ptest	%xmm2, %xmm0
+	jnc	L(112bytesin256)
+
+	movdqa	112(%rdi), %xmm2
+	pxor	112(%rsi), %xmm2
+	ptest	%xmm2, %xmm0
+	jnc	L(128bytesin256)
+
+	movdqa	128(%rdi), %xmm2
+	pxor	128(%rsi), %xmm2
+	ptest	%xmm2, %xmm0
+	jnc	L(144bytesin256)
+
+	movdqa	144(%rdi), %xmm2
+	pxor	144(%rsi), %xmm2
+	ptest	%xmm2, %xmm0
+	jnc	L(160bytesin256)
+
+	movdqa	160(%rdi), %xmm2
+	pxor	160(%rsi), %xmm2
+	ptest	%xmm2, %xmm0
+	jnc	L(176bytesin256)
+
+	movdqa	176(%rdi), %xmm2
+	pxor	176(%rsi), %xmm2
+	ptest	%xmm2, %xmm0
+	jnc	L(192bytesin256)
+
+	movdqa	192(%rdi), %xmm2
+	pxor	192(%rsi), %xmm2
+	ptest	%xmm2, %xmm0
+	jnc	L(208bytesin256)
+
+	movdqa	208(%rdi), %xmm2
+	pxor	208(%rsi), %xmm2
+	ptest	%xmm2, %xmm0
+	jnc	L(224bytesin256)
+
+	movdqa	224(%rdi), %xmm2
+	pxor	224(%rsi), %xmm2
+	ptest	%xmm2, %xmm0
+	jnc	L(240bytesin256)
+
+	movdqa	240(%rdi), %xmm2
+	pxor	240(%rsi), %xmm2
+	ptest	%xmm2, %xmm0
+	jnc	L(256bytesin256)
+
+	add	$256, %rsi
+	add	$256, %rdi
+
+	cmp	$128, %rdx
+	jae	L(less256bytesin2alinged)
+
+	cmp	$64, %rdx
+	jae	L(less128bytesin2aligned)
+
+	cmp	$32, %rdx
+	jb	L(less32bytesin256in2alinged)
+
+	movdqa	(%rdi), %xmm2
+	pxor	(%rsi), %xmm2
+	ptest	%xmm2, %xmm0
+	jnc	L(16bytesin256)
+
+	movdqa	16(%rdi), %xmm2
+	pxor	16(%rsi), %xmm2
+	ptest	%xmm2, %xmm0
+	jnc	L(32bytesin256)
+	sub	$32, %rdx
+	add	$32, %rdi
+	add	$32, %rsi
+L(less32bytesin256in2alinged):
+	add	%rdx, %rsi
+	add	%rdx, %rdi
+	BRANCH_TO_JMPTBL_ENTRY(L(table_64bytes), %rdx, 4)
+
+	ALIGN (4)
+L(512bytesormorein2aligned):
+#ifdef SHARED_CACHE_SIZE_HALF
+	mov	$DATA_CACHE_SIZE_HALF, %r8
+#else
+	mov	__x86_64_data_cache_size_half(%rip), %r8
+#endif
+	mov	%r8, %r9
+	shr	$1, %r8
+	add	%r9, %r8
+	cmp	%r8, %rdx
+	ja	L(L2_L3_cache_aglined)
+
+	sub	$64, %rdx
+	ALIGN (4)
+L(64bytesormore_loopin2aligned):
+	movdqa	(%rdi), %xmm2
+	pxor	(%rsi), %xmm2
+	movdqa	%xmm2, %xmm1
+
+	movdqa	16(%rdi), %xmm3
+	pxor	16(%rsi), %xmm3
+	por	%xmm3, %xmm1
+
+	movdqa	32(%rdi), %xmm4
+	pxor	32(%rsi), %xmm4
+	por	%xmm4, %xmm1
+
+	movdqa	48(%rdi), %xmm5
+	pxor	48(%rsi), %xmm5
+	por	%xmm5, %xmm1
+
+	ptest	%xmm1, %xmm0
+	jnc	L(64bytesormore_loop_end)
+	add	$64, %rsi
+	add	$64, %rdi
+	sub	$64, %rdx
+	jae	L(64bytesormore_loopin2aligned)
+
+	add	$64, %rdx
+	add	%rdx, %rsi
+	add	%rdx, %rdi
+	BRANCH_TO_JMPTBL_ENTRY(L(table_64bytes), %rdx, 4)
+L(L2_L3_cache_aglined):
+	sub	$64, %rdx
+	ALIGN (4)
+L(L2_L3_aligned_128bytes_loop):
+	prefetchnta 0x1c0(%rdi)
+	prefetchnta 0x1c0(%rsi)
+	movdqa	(%rdi), %xmm2
+	pxor	(%rsi), %xmm2
+	movdqa	%xmm2, %xmm1
+
+	movdqa	16(%rdi), %xmm3
+	pxor	16(%rsi), %xmm3
+	por	%xmm3, %xmm1
+
+	movdqa	32(%rdi), %xmm4
+	pxor	32(%rsi), %xmm4
+	por	%xmm4, %xmm1
+
+	movdqa	48(%rdi), %xmm5
+	pxor	48(%rsi), %xmm5
+	por	%xmm5, %xmm1
+
+	ptest	%xmm1, %xmm0
+	jnc	L(64bytesormore_loop_end)
+	add	$64, %rsi
+	add	$64, %rdi
+	sub	$64, %rdx
+	jae	L(L2_L3_aligned_128bytes_loop)
+
+	add	$64, %rdx
+	add	%rdx, %rsi
+	add	%rdx, %rdi
+	BRANCH_TO_JMPTBL_ENTRY(L(table_64bytes), %rdx, 4)
+
 
 	ALIGN (4)
 L(64bytesormore_loop_end):
@@ -1147,7 +1510,10 @@ L(32bytes):
 	xor	%eax, %eax
 	ret
 
-	ALIGN (4)
+/*
+ * Aligned 8 bytes to avoid 2 branch "taken" in one 16 alinged code block.
+ */
+	ALIGN (3)
 L(less16bytes):
 	movsbq	%dl, %rdx
 	mov	(%rsi, %rdx), %rcx
@@ -1166,7 +1532,6 @@ L(diffin4bytes):
 	jne	L(diffin2bytes)
 	shr	$16, %ecx
 	shr	$16, %eax
-	xor	%rdx, %rdx
 L(diffin2bytes):
 	cmp	%cl, %al
 	jne	L(end)

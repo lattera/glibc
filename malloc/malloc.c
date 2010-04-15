@@ -3168,6 +3168,10 @@ static Void_t* sYSMALLOc(nb, av) INTERNAL_SIZE_T nb; mstate av;
 
   size = nb + mp_.top_pad + MINSIZE;
 
+#define TWOM (2*1024*1024)
+  char *cur = (char*)MORECORE(0);
+  size = (char*)((size_t)(cur + size + TWOM - 1)&~(TWOM-1))-cur;
+
   /*
     If contiguous, we can subtract out existing space that we hope to
     combine with new space. We add it back later only if
