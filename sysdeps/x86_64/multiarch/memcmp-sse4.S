@@ -34,7 +34,7 @@
 #define JMPTBL(I, B)	(I - B)
 
 #define BRANCH_TO_JMPTBL_ENTRY(TABLE, INDEX, SCALE)		\
-  lea     	TABLE(%rip), %r11;				\
+  lea		TABLE(%rip), %r11;				\
   movslq	(%r11, INDEX, SCALE), %rcx;			\
   add		%r11, %rcx;					\
   jmp		*%rcx;						\
@@ -624,7 +624,7 @@ L(less32bytesin256in2alinged):
 
 	ALIGN (4)
 L(512bytesormorein2aligned):
-#ifdef SHARED_CACHE_SIZE_HALF
+#ifdef DATA_CACHE_SIZE_HALF
 	mov	$DATA_CACHE_SIZE_HALF, %r8
 #else
 	mov	__x86_64_data_cache_size_half(%rip), %r8
