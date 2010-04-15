@@ -1,3 +1,14 @@
+2010-04-15  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* string/test-strncmp.c (check_result): New function.
+	(do_one_test): Use it.
+	(check1): New function.
+	(test_main): Use it.
+	* sysdeps/i386/i686/multiarch/strcmp-sse4.S (crosspage): Properly
+	update source and destination.
+	* sysdeps/i386/i686/multiarch/strcmp-ssse3.S (gobble_ashr_12):
+	Properly check and update counter.
+
 2010-04-14  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/x86_64/elf/configure.in: Move AVX test to ....
