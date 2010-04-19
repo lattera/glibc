@@ -1,3 +1,8 @@
+2010-04-19  Roland McGrath  <roland@redhat.com>
+
+	* stdio-common/tst-fmemopen.c (TEST_FILE): Macro removed.
+	(main): Take arguments.  Construct test file name from ARGV[0].
+
 2010-04-15  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* string/test-strncmp.c (check_result): New function.
