@@ -1,4 +1,4 @@
-# Copyright (C) 1995-2007, 2008, 2009 Free Software Foundation, Inc.
+# Copyright (C) 1995-2007,2008,2009,2010 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -654,7 +654,7 @@ $(objpfx)vismain: $(addprefix $(objpfx),vismod1.so vismod2.so)
 $(objpfx)vismain.out: $(addprefix $(objpfx),vismod3.so)
 vismain-ENV = LD_PRELOAD=$(addprefix $(objpfx),vismod3.so)
 
-$(objpfx)noload: $(objpfx)testobj1.so
+$(objpfx)noload: $(objpfx)testobj1.so $(common-objpfx)dlfcn/libdl.so
 LDFLAGS-noload = -rdynamic
 $(objpfx)noload.out: $(objpfx)testobj5.so
 

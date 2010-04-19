@@ -1,5 +1,7 @@
 2010-04-19  Roland McGrath  <roland@redhat.com>
 
+	* elf/Makefile ($(objpfx)noload): Depend on libdl.so.
+
 	* Makeconfig (as-needed, no-as-needed): New variables.
 	(link-libc): Add ld.so inside --as-needed.
 
