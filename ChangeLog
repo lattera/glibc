@@ -1,5 +1,8 @@
 2010-04-19  Roland McGrath  <roland@redhat.com>
 
+	* Makeconfig (as-needed, no-as-needed): New variables.
+	(link-libc): Add ld.so inside --as-needed.
+
 	* stdio-common/tst-fmemopen.c (TEST_FILE): Macro removed.
 	(main): Take arguments.  Construct test file name from ARGV[0].
 

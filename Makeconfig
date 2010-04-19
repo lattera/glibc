@@ -387,6 +387,14 @@ ifeq ($(elf),yes)
 have-initfini = yes
 endif
 
+ifeq ($(have-as-needed),yes)
+as-needed := -Wl,--as-needed
+no-as-needed := -Wl,--no-as-needed
+else
+as-needed :=
+no-as-needed :=
+endif
+
 # Installed name of the startup code.
 ifneq ($(have-initfini),yes)
 # When not having init/fini, there is just one startfile, called crt0.o.
@@ -484,7 +492,8 @@ ifeq ($(elf),yes)
 # run the linked programs.
 link-libc = -Wl,-rpath-link=$(rpath-link) \
 	    $(common-objpfx)libc.so$(libc.so-version) \
-	    $(common-objpfx)$(patsubst %,$(libtype.oS),c) $(gnulib)
+	    $(common-objpfx)$(patsubst %,$(libtype.oS),c) \
+	    $(as-needed) $(common-objpfx)elf/ld.so $(no-as-needed) $(gnulib)
 # This is how to find at build-time things that will be installed there.
 rpath-dirs = math elf dlfcn nss nis rt resolv crypt
 endif
