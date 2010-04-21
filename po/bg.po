@@ -6,9 +6,9 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: libc 2.10.1\n"
+"Project-Id-Version: libc 2.11.1\n"
 "POT-Creation-Date: 2009-02-06 12:40-0800\n"
-"PO-Revision-Date: 2009-06-23 01:27+0300\n"
+"PO-Revision-Date: 2010-04-21 22:47+0300\n"
 "Last-Translator: Roumen Petrov <transl@roumenpetrov.info>\n"
 "Language-Team: Bulgarian <dict@fsa-bg.org>\n"
 "MIME-Version: 1.0\n"
@@ -1467,7 +1467,7 @@ msgstr "не е намерен файлът по подразбиране за �
 #: locale/programs/charmap.c:258
 #, c-format
 msgid "character map `%s' is not ASCII compatible, locale not ISO C compliant\n"
-msgstr "изображението на знаците \"%s\" не е съвместимо с ASCII, локалът не е съобразно ISO C\n"
+msgstr "изображението на знаците \"%s\" не е съвместимо с ASCII, езиковата настройка не е съобразно ИСО Си\n"
 
 #: locale/programs/charmap.c:337
 #, c-format
@@ -2185,7 +2185,7 @@ msgstr "в изображението на знаците не са опреде
 #: locale/programs/ld-ctype.c:3780
 #, c-format
 msgid "%s: transliteration data from locale `%s' not available"
-msgstr "%s: не са налични данни за транслитерация от локал \"%s\""
+msgstr "%s: не са налични данни за транслитерация от езикова настройка \"%s\""
 
 #: locale/programs/ld-ctype.c:3881
 #, c-format
@@ -2363,7 +2363,7 @@ msgstr "боклук в края на числото"
 
 #: locale/programs/linereader.c:410
 msgid "garbage at end of character code specification"
-msgstr "боклук в края при уточняване на кода на знака"
+msgstr "боклук в края, при уточняване на кода на знака"
 
 #: locale/programs/linereader.c:496
 msgid "unterminated symbolic name"
@@ -2397,7 +2397,7 @@ msgstr "Системна информация:"
 
 #: locale/programs/locale.c:76
 msgid "Write names of available locales"
-msgstr "Извеждане на имената на наличните локали"
+msgstr "Извеждане на имената на наличните езикови настройки"
 
 #: locale/programs/locale.c:78
 msgid "Write names of available charmaps"
@@ -2421,7 +2421,7 @@ msgstr "Извеждане на подробна информация"
 
 #: locale/programs/locale.c:87
 msgid "Get locale-specific information."
-msgstr "Получаване на информация специфична за локала."
+msgstr "Получаване на информация характерна за езикова настройка."
 
 #: locale/programs/locale.c:90
 msgid ""
@@ -2434,22 +2434,22 @@ msgstr ""
 #: locale/programs/locale.c:194
 #, c-format
 msgid "Cannot set LC_CTYPE to default locale"
-msgstr "За LC_CTYPE не може да се зададе локал по подразбиране"
+msgstr "За LC_CTYPE не може да се зададе езикова настройка по подразбиране"
 
 #: locale/programs/locale.c:196
 #, c-format
 msgid "Cannot set LC_MESSAGES to default locale"
-msgstr "За LC_MESSAGES не може да се зададе локал по подразбиране"
+msgstr "За LC_MESSAGES не може да се зададе езикова настройка по подразбиране"
 
 #: locale/programs/locale.c:209
 #, c-format
 msgid "Cannot set LC_COLLATE to default locale"
-msgstr "За LC_COLLATE не може да се зададе локал по подразбиране"
+msgstr "За LC_COLLATE не може да се зададе езикова настройка по подразбиране"
 
 #: locale/programs/locale.c:225
 #, c-format
 msgid "Cannot set LC_ALL to default locale"
-msgstr "За LC_ALL не може да се зададе локал по подразбиране"
+msgstr "За LC_ALL не може да се зададе езикова настройка по подразбиране"
 
 #: locale/programs/locale.c:518
 #, c-format
@@ -2506,7 +2506,7 @@ msgstr "Да не се добавят нови данни към архива"
 
 #: locale/programs/localedef.c:140
 msgid "Add locales named by parameters to archive"
-msgstr "Добавяне на локалите, указани от параметрите, към архива"
+msgstr "Добавяне, към архива, на езиковите настройки указани от параметрите"
 
 #: locale/programs/localedef.c:141
 msgid "Replace existing archive content"
@@ -2514,7 +2514,7 @@ msgstr "Заместване на съществуващото съдържан�
 
 #: locale/programs/localedef.c:143
 msgid "Remove locales named by parameters from archive"
-msgstr "Премахване на локалите, указани от параметрите, от архива"
+msgstr "Премахване, от архива, на езиковите настройки указани от параметрите"
 
 #: locale/programs/localedef.c:144
 msgid "List content of archive"
@@ -2526,7 +2526,7 @@ msgstr "locale.alias файл, който да се вземе предвид, �
 
 #: locale/programs/localedef.c:151
 msgid "Compile locale specification"
-msgstr "Компилира спецификация за локал"
+msgstr "Компилира указания за езикова настройка"
 
 #: locale/programs/localedef.c:154
 msgid ""
@@ -2552,7 +2552,7 @@ msgstr "ПАГУБНО: системата не определя \"_POSIX2_LOCAL
 #: locale/programs/localedef.c:599 locale/programs/localedef.c:619
 #, c-format
 msgid "cannot open locale definition file `%s'"
-msgstr "не е възможно да се отвори файл \"%s\" с определения за локал"
+msgstr "не е възможно да се отвори файл \"%s\" с определения за езикова настройка"
 
 #: locale/programs/localedef.c:285
 #, c-format
@@ -2569,18 +2569,18 @@ msgid ""
 msgstr ""
 "Системна директория за изображения на знаци: %s\n"
 "                       изображения на набор: %s\n"
-"                       път за локал        : %s\n"
+"                       път за език. настр. : %s\n"
 "%s"
 
 #: locale/programs/localedef.c:567
 #, c-format
 msgid "circular dependencies between locale definitions"
-msgstr "циклични зависимости между определения за локал"
+msgstr "циклични зависимости между определения за езикова настройка"
 
 #: locale/programs/localedef.c:573
 #, c-format
 msgid "cannot add already read locale `%s' a second time"
-msgstr "не може да се добави, повторно, вече прочетения локал\"%s\""
+msgstr "не може да се добави, повторно, вече прочетена езикова настройка\"%s\""
 
 #: locale/programs/locarchive.c:88 locale/programs/locarchive.c:261
 #, c-format
@@ -2606,7 +2606,7 @@ msgstr "не може да се изобрази(в паметта) заглав
 #: locale/programs/locarchive.c:156
 #, c-format
 msgid "failed to create new locale archive"
-msgstr "пропадна създаването на нов архив за локал"
+msgstr "пропадна създаването на нов архив за езикова настройка"
 
 #: locale/programs/locarchive.c:168
 #, c-format
@@ -2616,7 +2616,7 @@ msgstr "не може да се променят правата за достъ�
 #: locale/programs/locarchive.c:255
 #, c-format
 msgid "cannot map locale archive file"
-msgstr "не може да се изобрази(в паметта) архивния файл за локал"
+msgstr "не може да се изобрази(в паметта) архивния файл за езикова настройка"
 
 #: locale/programs/locarchive.c:331
 #, c-format
@@ -2626,12 +2626,12 @@ msgstr "не е възможно да се заключи новия архив"
 #: locale/programs/locarchive.c:396
 #, c-format
 msgid "cannot extend locale archive file"
-msgstr "не е възможно да се разшири архивния файл за локал"
+msgstr "не е възможно да се разшири архивния файл за езикова настройка"
 
 #: locale/programs/locarchive.c:405
 #, c-format
 msgid "cannot change mode of resized locale archive"
-msgstr "не може да се променят правата за достъп на преоразмерения архивен файл за локал"
+msgstr "не може да се променят правата за достъп на преоразмерения архивен файл за езикова настройка"
 
 #: locale/programs/locarchive.c:413
 #, c-format
@@ -2641,17 +2641,17 @@ msgstr "не може да се преименува новият архив"
 #: locale/programs/locarchive.c:466
 #, c-format
 msgid "cannot open locale archive \"%s\""
-msgstr "не може да се отвори архива за локал \"%s\""
+msgstr "не може да се отвори архива за езикова настройка \"%s\""
 
 #: locale/programs/locarchive.c:471
 #, c-format
 msgid "cannot stat locale archive \"%s\""
-msgstr "не може да се определят атрибутите на архива за локал \"%s\""
+msgstr "не може да се определят атрибутите на архива за езикова настройка \"%s\""
 
 #: locale/programs/locarchive.c:490
 #, c-format
 msgid "cannot lock locale archive \"%s\""
-msgstr "не може да се заключи архива за локал \"%s\""
+msgstr "не може да се заключи архива за езикова настройка \"%s\""
 
 #: locale/programs/locarchive.c:513
 #, c-format
@@ -2661,19 +2661,19 @@ msgstr "не може да се прочете заглавието на арх�
 #: locale/programs/locarchive.c:573
 #, c-format
 msgid "locale '%s' already exists"
-msgstr "локалът \"%s\" вече съществува"
+msgstr "езиковата настройка \"%s\" вече съществува"
 
 #: locale/programs/locarchive.c:804 locale/programs/locarchive.c:819
 #: locale/programs/locarchive.c:831 locale/programs/locarchive.c:843
 #: locale/programs/locfile.c:344
 #, c-format
 msgid "cannot add to locale archive"
-msgstr "не може да се добави към архива за локал"
+msgstr "не може да се добави към архива за езикова настройка"
 
 #: locale/programs/locarchive.c:998
 #, c-format
 msgid "locale alias file `%s' not found"
-msgstr "не е намерен файлът с псевдоними за локал \"%s\""
+msgstr "не е намерен файлът с псевдоними за езикови настройки \"%s\""
 
 #: locale/programs/locarchive.c:1142
 #, c-format
@@ -2698,7 +2698,7 @@ msgstr "не може да се отвори директорията \"%s\": %s
 #: locale/programs/locarchive.c:1233
 #, c-format
 msgid "incomplete set of locale files in \"%s\""
-msgstr "непълно множество от файлове за локал в \"%s\""
+msgstr "непълно множество от файлове за езикови настройки в \"%s\""
 
 #: locale/programs/locarchive.c:1297
 #, c-format
@@ -2708,7 +2708,7 @@ msgstr "не може да се прочетат всички файлове в 
 #: locale/programs/locarchive.c:1367
 #, c-format
 msgid "locale \"%s\" not in archive"
-msgstr "локалът \"%s\" не е в архива"
+msgstr "езиковата настройка \"%s\" не е в архива"
 
 #: locale/programs/locfile.c:132
 #, c-format
@@ -2717,7 +2717,7 @@ msgstr "аргументът на \"%s\" трябва да бъде единич
 
 #: locale/programs/locfile.c:252
 msgid "syntax error: not inside a locale definition section"
-msgstr "синтактична грешка: извън секция за определяне на локал"
+msgstr "синтактична грешка: извън секция за определяне на езикова настройка"
 
 #: locale/programs/locfile.c:626
 #, c-format
@@ -2740,7 +2740,7 @@ msgstr "очаква се аргумент от тип низ за 'copy'"
 
 #: locale/programs/locfile.c:786
 msgid "locale name should consist only of portable characters"
-msgstr "името на локал трябва да съдържа само преносими знаци"
+msgstr "името на езикова настройка трябва да съдържа само преносими знаци"
 
 #: locale/programs/locfile.c:805
 msgid "no other keyword shall be specified when `copy' is used"
@@ -6356,7 +6356,7 @@ msgid ""
 "%s: usage is %s [ --version ] [ -v ] [ -l localtime ] [ -p posixrules ] \\\n"
 "\t[ -d directory ] [ -L leapseconds ] [ -y yearistype ] [ filename ... ]\n"
 msgstr ""
-"%s: употребата е %s [ --version ] [ -v ] [ -l локалновреме ] [ -p posix_правило ] \\\n"
+"%s: употребата е %s [ --version ] [ -v ] [ -l местновреме ] [ -p posix_правило ] \\\n"
 "\t[ -d директория ] [ -L високоснисекунди ] [ -y типнагодина ] [ именафайл ... ]\n"
 
 #: timezone/zic.c:494
@@ -6627,7 +6627,7 @@ msgstr "вътрешна грешка - addtype е извикан с непра�
 
 #: timezone/zic.c:2264
 msgid "too many local time types"
-msgstr "твърде много типове за локално време"
+msgstr "твърде много типове за местно време"
 
 #: timezone/zic.c:2268
 msgid "UTC offset out of range"
