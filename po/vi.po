@@ -1,14 +1,14 @@
 # Vietnamese translation for LibC.
-# Copyright © 2009 Free Software Foundation, Inc.
+# Copyright © 2010 Free Software Foundation, Inc.
 # This file is distributed under the same license as the glibc package.
-# Clytie Siddall <clytie@riverland.net.au>, 2008-2009.
+# Clytie Siddall <clytie@riverland.net.au>, 2008-2010.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: libc 2.10.1\n"
+"Project-Id-Version: libc 2.11.1\n"
 "Report-Msgid-Bugs-To: http://www.gnu.org/software/libc/bugs.html\n"
 "POT-Creation-Date: 2009-02-06 12:40-0800\n"
-"PO-Revision-Date: 2009-09-19 18:50+0930\n"
+"PO-Revision-Date: 2010-04-22 23:22+0930\n"
 "Last-Translator: Clytie Siddall <clytie@riverland.net.au>\n"
 "Language-Team: Vietnamese <vi-VN@googlegroups.com>\n"
 "MIME-Version: 1.0\n"
@@ -20,7 +20,7 @@ msgstr ""
 #: argp/argp-help.c:228
 #, c-format
 msgid "%.*s: ARGP_HELP_FMT parameter requires a value"
-msgstr "%.*s: tham số « ARGP_HELP_FMT » cần thiết giá trị"
+msgstr "%.*s: tham số « ARGP_HELP_FMT » yêu cầu một giá trị"
 
 #: argp/argp-help.c:238
 #, c-format
