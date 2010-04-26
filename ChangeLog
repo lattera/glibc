@@ -1,3 +1,9 @@
+2010-04-25  Bruno Haible  <bruno@clisp.org>
+
+	[BZ #11537]
+	* sysdeps/mach/hurd/ttyname_r.c (__ttyname_r): Upon failure, return
+	errno, not -1.
+
 2010-04-24  Emilio Pozuelo Monfort  <pochu27@gmail.com>
 
 	* hurd/lookup-at.c (__file_name_lookup_at): Fix error return value.
