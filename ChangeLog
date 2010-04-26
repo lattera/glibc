@@ -1,3 +1,7 @@
+2010-04-24  Emilio Pozuelo Monfort  <pochu27@gmail.com>
+
+	* hurd/lookup-at.c (__file_name_lookup_at): Fix error return value.
+
 2010-04-22  Ulrich Drepper  <drepper@redhat.com>
 
 	* po/vi.po: Update from translation team.
