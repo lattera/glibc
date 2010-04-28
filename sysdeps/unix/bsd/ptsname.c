@@ -1,4 +1,4 @@
-/* Copyright (C) 1998,2002 Free Software Foundation, Inc.
+/* Copyright (C) 1998,2002,2010 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -44,6 +44,7 @@ int
 __ptsname_r (int fd, char *buf, size_t buflen)
 {
   int save_errno = errno;
+  int err;
   struct stat st;
 
   if (buf == NULL)
@@ -62,8 +63,12 @@ __ptsname_r (int fd, char *buf, size_t buflen)
       return ERANGE;
     }
 
-  if (__ttyname_r (fd, buf, buflen) != 0)
-    return errno;
+  err = __ttyname_r (fd, buf, buflen);
+  if (err != 0)
+    {
+      __set_errno (err);
+      return errno;
+    }
 
   buf[sizeof (_PATH_DEV) - 1] = 't';
 

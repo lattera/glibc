@@ -38,6 +38,7 @@ getlogin (void)
 {
   char tty_pathname[2 + 2 * NAME_MAX];
   char *real_tty_path = tty_pathname;
+  int err;
   char *result = NULL;
   struct utmp *ut, line, buffer;
 
@@ -50,8 +51,12 @@ getlogin (void)
      thing to do.  Note that ttyname(open("/dev/tty")) on those
      systems returns /dev/tty, so that is not a possible solution for
      getlogin().  */
-  if (__ttyname_r (0, real_tty_path, sizeof (tty_pathname)) != 0)
-    return NULL;
+  err = __ttyname_r (0, real_tty_path, sizeof (tty_pathname));
+  if (err != 0)
+    {
+      __set_errno (err);
+      return NULL;
+    }
 
   real_tty_path += 5;		/* Remove "/dev/".  */
 

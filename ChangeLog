@@ -1,5 +1,10 @@
 2010-04-25  Bruno Haible  <bruno@clisp.org>
 
+	[BZ #11538]
+	* sysdeps/unix/bsd/ptsname.c (__ptsname_r): Use __ttyname_r's return
+	value instead of errno.
+	* sysdeps/unix/getlogin.c (getlogin): Likewise.
+
 	[BZ #11537]
 	* sysdeps/mach/hurd/ttyname_r.c (__ttyname_r): Upon failure, return
 	errno, not -1.
