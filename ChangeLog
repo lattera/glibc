@@ -1,3 +1,9 @@
+2010-05-02  Ulrich Drepper  <drepper@redhat.com>
+
+	* misc/mntent_r.c (encode_name): The slow loop handles newlines so we
+	should recognize them as an abort condition.
+	Patch by Jan Lieskovsky <jlieskov@redhat.com>.
+
 2010-04-25  Bruno Haible  <bruno@clisp.org>
 
 	[BZ #11538]

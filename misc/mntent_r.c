@@ -1,5 +1,5 @@
 /* Utilities for reading/writing fstab, mtab, etc.
-   Copyright (C) 1995-2000, 2001, 2002, 2003, 2006
+   Copyright (C) 1995-2000, 2001, 2002, 2003, 2006, 2010
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -194,7 +194,7 @@ weak_alias (__getmntent_r, getmntent_r)
     const char *rp = name;						      \
 									      \
     while (*rp != '\0')							      \
-      if (*rp == ' ' || *rp == '\t' || *rp == '\\')			      \
+      if (*rp == ' ' || *rp == '\t' || *rp == '\n' || *rp == '\\')	      \
 	break;								      \
       else								      \
 	++rp;								      \
@@ -202,7 +202,7 @@ weak_alias (__getmntent_r, getmntent_r)
     if (*rp != '\0')							      \
       {									      \
 	/* In the worst case the length of the string can increase to	      \
-	   founr times the current length.  */				      \
+	   four times the current length.  */				      \
 	char *wp;							      \
 									      \
 	rp = name;							      \
