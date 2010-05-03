@@ -803,6 +803,8 @@ lose (int code, int fd, const char *name, char *realname, struct link_map *l,
     (void) __close (fd);
   if (l != NULL)
     {
+      /* We modify the list of loaded objects.  */
+      __rtld_lock_lock_recursive (GL(dl_load_write_lock));
       /* Remove the stillborn object from the list and free it.  */
       assert (l->l_next == NULL);
       if (l->l_prev == NULL)
@@ -813,6 +815,7 @@ lose (int code, int fd, const char *name, char *realname, struct link_map *l,
 	l->l_prev->l_next = NULL;
       --GL(dl_ns)[l->l_ns]._ns_nloaded;
       free (l);
+      __rtld_lock_unlock_recursive (GL(dl_load_write_lock));
     }
   free (realname);
 

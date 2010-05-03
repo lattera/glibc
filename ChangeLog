@@ -1,3 +1,16 @@
+2010-02-02  Andreas Schwab  <schwab@redhat.com>
+
+	* sysdeps/generic/ldsodefs.h (struct rtld_global): Add
+	_dl_load_write_lock.
+	* elf/rtld.c (_rtld_global): Initialize it.
+	* elf/dl-support.c (_dl_load_write_lock): Define .
+	* elf/dl-close.c (_dl_close_worker): Lock GL(dl_load_write_lock)
+	when modifying the list of loaded objects.
+	* elf/dl-load.c (lose): Likewise.
+	* elf/dl-object.c (_dl_new_object): Likewise.
+	* elf/dl-iteratephdr.c (__dl_iterate_phdr): Lock
+	GL(dl_load_write_lock) instead of GL(dl_load_lock).
+
 2010-05-03  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/dl-iteratephdr.c (__dl_iterate_phdr): Remove unnecessary

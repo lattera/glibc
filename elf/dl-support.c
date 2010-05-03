@@ -166,6 +166,10 @@ const ElfW(Ehdr) *_dl_sysinfo_dso;
    the loaded object might as well require a call to this function.
    At this time it is not anymore a problem to modify the tables.  */
 __rtld_lock_define_initialized_recursive (, _dl_load_lock)
+/* This lock is used to keep __dl_iterate_phdr from inspecting the
+   list of loaded objects while an object is added to or removed from
+   that list.  */
+__rtld_lock_define_initialized_recursive (, _dl_load_write_lock)
 
 
 #ifdef HAVE_AUX_VECTOR

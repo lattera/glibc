@@ -507,6 +507,9 @@ _dl_close_worker (struct link_map *map)
   size_t tls_free_end;
   tls_free_start = tls_free_end = NO_TLS_OFFSET;
 
+  /* We modify the list of loaded objects.  */
+  __rtld_lock_lock_recursive (GL(dl_load_write_lock));
+
   /* Check each element of the search list to see if all references to
      it are gone.  */
   for (unsigned int i = first_loaded; i < nloaded; ++i)
@@ -664,6 +667,8 @@ _dl_close_worker (struct link_map *map)
 	  free (imap);
 	}
     }
+
+  __rtld_lock_unlock_recursive (GL(dl_load_write_lock));
 
   /* If we removed any object which uses TLS bump the generation counter.  */
   if (any_tls)

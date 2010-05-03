@@ -93,6 +93,9 @@ _dl_new_object (char *realname, const char *libname, int type,
   new->l_scope = new->l_scope_mem;
   new->l_scope_max = sizeof (new->l_scope_mem) / sizeof (new->l_scope_mem[0]);
 
+  /* We modify the list of loaded objects.  */
+  __rtld_lock_lock_recursive (GL(dl_load_write_lock));
+
   /* Counter for the scopes we have to handle.  */
   idx = 0;
 
@@ -113,6 +116,8 @@ _dl_new_object (char *realname, const char *libname, int type,
   ++GL(dl_ns)[nsid]._ns_nloaded;
   new->l_serial = GL(dl_load_adds);
   ++GL(dl_load_adds);
+
+  __rtld_lock_unlock_recursive (GL(dl_load_write_lock));
 
   /* If we have no loader the new object acts as it.  */
   if (loader == NULL)

@@ -26,7 +26,7 @@
 static void
 cancel_handler (void *arg __attribute__((unused)))
 {
-  __rtld_lock_unlock_recursive (GL(dl_load_lock));
+  __rtld_lock_unlock_recursive (GL(dl_load_write_lock));
 }
 
 hidden_proto (__dl_iterate_phdr)
@@ -38,8 +38,8 @@ __dl_iterate_phdr (int (*callback) (struct dl_phdr_info *info,
   struct dl_phdr_info info;
   int ret = 0;
 
-  /* Make sure we are alone.  */
-  __rtld_lock_lock_recursive (GL(dl_load_lock));
+  /* Make sure nobody modifies the list of loaded objects.  */
+  __rtld_lock_lock_recursive (GL(dl_load_write_lock));
   __libc_cleanup_push (cancel_handler, 0);
 
   /* We have to determine the namespace of the caller since this determines
@@ -79,7 +79,7 @@ __dl_iterate_phdr (int (*callback) (struct dl_phdr_info *info,
 
   /* Release the lock.  */
   __libc_cleanup_pop (0);
-  __rtld_lock_unlock_recursive (GL(dl_load_lock));
+  __rtld_lock_unlock_recursive (GL(dl_load_write_lock));
 
   return ret;
 }
