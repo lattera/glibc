@@ -1,3 +1,8 @@
+2010-05-03  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/ldconfig.c (parse_conf_include): Don't fall back to
+	directories named in config file outside the chroot.
+
 2010-02-02  Andreas Schwab  <schwab@redhat.com>
 
 	* sysdeps/generic/ldsodefs.h (struct rtld_global): Add

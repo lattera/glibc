@@ -1174,7 +1174,9 @@ parse_conf_include (const char *config_file, unsigned int lineno,
   if (do_chroot && opt_chroot)
     {
       char *canon = chroot_canon (opt_chroot, pattern);
-      result = glob64 (canon ?: pattern, 0, NULL, &gl);
+      if (canon == NULL)
+	return;
+      result = glob64 (canon, 0, NULL, &gl);
       free (canon);
     }
   else
