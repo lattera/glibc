@@ -1,3 +1,8 @@
+2010-05-03  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/dl-iteratephdr.c (__dl_iterate_phdr): Remove unnecessary
+	assignment.
+
 2010-05-02  Ulrich Drepper  <drepper@redhat.com>
 
 	* misc/mntent_r.c (encode_name): The slow loop handles newlines so we
