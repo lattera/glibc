@@ -1,3 +1,8 @@
+2010-05-03  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #11520]
+	* locales/de_CH: Define week, first_weekday, and first_workday.
+
 2010-04-08  Ulrich Drepper  <drepper@redhat.com>
 
 	* locales/ar_AE: Fix typo.
