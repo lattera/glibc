@@ -1,5 +1,7 @@
 2010-05-03  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/chroot_canon.c (chroot_canon): Use xmalloc and xrealloc.
+
 	* elf/ldconfig.c (parse_conf_include): Don't fall back to
 	directories named in config file outside the chroot.
 
