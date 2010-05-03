@@ -1,5 +1,8 @@
 2010-05-03  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #11149]
+	* elf/ldconfig.c (search_dir): Fix handling of symlinks in chroot.
+
 	* elf/chroot_canon.c (chroot_canon): Use xmalloc and xrealloc.
 
 	* elf/ldconfig.c (parse_conf_include): Don't fall back to
