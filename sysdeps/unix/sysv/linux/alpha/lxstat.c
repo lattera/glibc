@@ -35,27 +35,39 @@ int
 __lxstat (int vers, const char *name, struct stat *buf)
 {
   INTERNAL_SYSCALL_DECL (err);
-  int result, errno_out;
+  int result;
   struct kernel_stat kbuf;
 
+#if __ASSUME_STAT64_SYSCALL > 0
+  if (vers == _STAT_VER_KERNEL64)
+    {
+      result = INTERNAL_SYSCALL (lstat64, err, 2, name, buf);
+      if (__builtin_expect (!INTERNAL_SYSCALL_ERROR_P (result, err), 1))
+	return result;
+      __set_errno (INTERNAL_SYSCALL_ERRNO (result, err));
+      return -1;
+    }
+#elif defined __NR_lstat64
   if (vers == _STAT_VER_KERNEL64 && !__libc_missing_axp_stat64)
     {
+      int errno_out;
       result = INTERNAL_SYSCALL (lstat64, err, 2, name, buf);
       if (__builtin_expect (!INTERNAL_SYSCALL_ERROR_P (result, err), 1))
 	return result;
       errno_out = INTERNAL_SYSCALL_ERRNO (result, err);
       if (errno_out != ENOSYS)
-	goto fail;
+	{
+	  __set_errno (errno_out);
+	  return -1;
+	}
       __libc_missing_axp_stat64 = 1;
     }
+#endif
 
   result = INTERNAL_SYSCALL (lstat, err, 2, name, &kbuf);
   if (__builtin_expect (!INTERNAL_SYSCALL_ERROR_P (result, err), 1))
     return __xstat_conv (vers, &kbuf, buf);
-  errno_out = INTERNAL_SYSCALL_ERRNO (result, err);
-  
- fail:
-  __set_errno (errno_out);
+  __set_errno (INTERNAL_SYSCALL_ERRNO (result, err));
   return -1;
 }
 hidden_def (__lxstat)

@@ -18,7 +18,12 @@
    02111-1307 USA.  */
 
 #include <kernel-features.h>
+#include <sys/syscall.h>
 
+#ifdef __NR_stat64
+# if __ASSUME_STAT64_SYSCALL == 0
 extern int __libc_missing_axp_stat64 attribute_hidden;
+# endif
+#endif
 extern int __xstat_conv (int vers, struct kernel_stat *kbuf, void *ubuf)
   attribute_hidden;

@@ -1,3 +1,16 @@
+2010-05-03  GOTO Masanori  <gotom@debian.or.jp>
+
+	* sysdeps/unix/sysv/linux/alpha/kernel-features.h: Define
+	__ASSUME_STAT64_SYSCALL.
+	* sysdeps/unix/sysv/linux/alpha/fxstat.c: Check
+	__ASSUME_STAT64_SYSCALL.
+	* sysdeps/unix/sysv/linux/alpha/fxstatat.c: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/lxstat.c: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/xstat.c: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/xstatconv.c: Don't define
+	__libc_missing_axp_stat64 when it's not	needed.
+	* sysdeps/unix/sysv/linux/alpha/xstatconv.h: Likewise.
+
 2010-03-30  Richard Henderson  <rth@redhat.com>
 
 	* sysdeps/unix/sysv/linux/alpha/bits/socket.h (MSG_WAITFORONE): New.

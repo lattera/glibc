@@ -29,6 +29,11 @@
 # define __ASSUME_TGKILL	1
 #endif
 
+/* Starting with version 2.6.4, the stat64 syscalls are available.  */
+#if __LINUX_KERNEL_VERSION >= 0x020604 && defined __alpha__
+# define __ASSUME_STAT64_SYSCALL   1
+#endif
+
 #define __ASSUME_UTIMES	1
 
 /* Starting with version 2.6.9, SSI_IEEE_RAISE_EXCEPTION exists.  */

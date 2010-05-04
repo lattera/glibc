@@ -22,9 +22,14 @@
 #include <sys/stat.h>
 #include <kernel_stat.h>
 #include <xstatconv.h>
+#include <sys/syscall.h>
 
 
+#ifdef __NR_stat64
+# if __ASSUME_STAT64_SYSCALL == 0
 int __libc_missing_axp_stat64;
+# endif
+#endif
 
 int
 __xstat_conv (int vers, struct kernel_stat *kbuf, void *ubuf)

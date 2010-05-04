@@ -71,6 +71,20 @@ __fxstatat (int vers, int fd, const char *file, struct stat *st, int flag)
   int result, errno_out;
   struct kernel_stat kst;
 
+#if __ASSUME_STAT64_SYSCALL > 0
+  if (vers == _STAT_VER_KERNEL64)
+    {
+      if (flag & AT_SYMLINK_NOFOLLOW)
+	result = INTERNAL_SYSCALL (lstat64, err, 2, file, st);
+      else
+	result = INTERNAL_SYSCALL (stat64, err, 2, file, st);
+
+      if (__builtin_expect (!INTERNAL_SYSCALL_ERROR_P (result, err), 1))
+	return result;
+      errno_out = INTERNAL_SYSCALL_ERRNO (result, err);
+      goto fail;
+    }
+#elif defined __NR_stat64
   if (vers == _STAT_VER_KERNEL64 && !__libc_missing_axp_stat64)
     {
       if (flag & AT_SYMLINK_NOFOLLOW)
@@ -85,6 +99,7 @@ __fxstatat (int vers, int fd, const char *file, struct stat *st, int flag)
 	goto fail;
       __libc_missing_axp_stat64 = 1;
     }
+#endif
 
   if (flag & AT_SYMLINK_NOFOLLOW)
     result = INTERNAL_SYSCALL (lstat, err, 2, file, &kst);
