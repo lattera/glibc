@@ -127,7 +127,7 @@ $first_quad:
         cmpbge  $31, $1, $2	# E :
         bne     $2, $found_it	# U :
 	# At least one byte left to process.
-	ldq	$1, 8($0)	# L :
+	ldq	$31, 8($0)	# L :
 	subq	$5, 1, $18	# E : U L U L
 
 	addq	$0, 8, $0	# E :
@@ -143,38 +143,38 @@ $first_quad:
 	and	$4, 8, $4	# E : odd number of quads?
 	bne	$4, $odd_quad_count # U :
 	# At least three quads remain to be accessed
-	mov	$1, $4		# E : L U L U : move prefetched value to correct reg
+	nop			# E : L U L U : move prefetched value to correct reg
 
 	.align	4
 $unrolled_loop:
-	ldq	$1, 8($0)	# L : prefetch $1
-	xor	$17, $4, $2	# E :
-	cmpbge	$31, $2, $2	# E :
-	bne	$2, $found_it	# U : U L U L
+	ldq	$1, 0($0)	# L : load quad
+	xor	$17, $1, $2	# E :
+	ldq	$31, 8($0)	# L : prefetch next quad
+	cmpbge	$31, $2, $2	# E : U L U L
 
+	bne	$2, $found_it	# U :
 	addq	$0, 8, $0	# E :
-	nop			# E :
 	nop			# E :
 	nop			# E :
 
 $odd_quad_count:
+	ldq	$1, 0($0)	# L : load quad
 	xor	$17, $1, $2	# E :
-	ldq	$4, 8($0)	# L : prefetch $4
+	ldq	$31, 8($0)	# L : prefetch $4
 	cmpbge	$31, $2, $2	# E :
-	addq	$0, 8, $6	# E :
 
+	addq	$0, 8, $6	# E :
 	bne	$2, $found_it	# U :
 	cmpult	$6, $18, $6	# E :
 	addq	$0, 8, $0	# E :
-	nop			# E :
 
 	bne	$6, $unrolled_loop # U :
-	mov	$4, $1		# E : move prefetched value into $1
+	nop			# E :
 	nop			# E :
 	nop			# E :
 
-$final:	subq	$5, $0, $18	# E : $18 <- number of bytes left to do
-	nop			# E :
+$final:	ldq	$1, 0($0)	# L : load last quad
+	subq	$5, $0, $18	# E : $18 <- number of bytes left to do
 	nop			# E :
 	bne	$18, $last_quad	# U :
 

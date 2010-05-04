@@ -1,4 +1,9 @@
 2010-05-03  Aurelien Jarno  <aurelien@aurel32.net>
+ 
+	* sysdeps/alpha/memchr.S: Use prefetch load.
+	* sysdeps/alpha/alphaev6/memchr.S: Likewise.
+
+2010-05-03  Aurelien Jarno  <aurelien@aurel32.net>
 
 	* sysdeps/alpha/dl-machine.h: Add dl-procinfo support.
 	* sysdeps/alpha/dl-procinfo.c: New.

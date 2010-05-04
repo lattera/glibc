@@ -119,7 +119,7 @@ $first_quad:
 
 	# At least one byte left to process.
 
-	ldq	t0, 8(v0)	# e0	:
+	ldq	zero, 8(v0)	# e0	: prefetch next quad
 	subq	t4, 1, a2	# .. e1 :
 	addq	v0, 8, v0	#-e0	:
 
@@ -138,19 +138,19 @@ $first_quad:
 
 	# At least three quads remain to be accessed
 
-	mov	t0, t3		# e0	: move prefetched value to correct reg
-
 	.align	4
 $unrolled_loop:
-	ldq	t0, 8(v0)	#-e0	: prefetch t0
-	xor	a1, t3, t1	# .. e1 :
-	cmpbge	zero, t1, t1	# e0	:
-	bne	t1, $found_it	# .. e1 :
-
-	addq	v0, 8, v0	#-e0	:
-$odd_quad_count:
+	ldq	t0, 0(v0)	# e0	: load quad
 	xor	a1, t0, t1	# .. e1 :
-	ldq	t3, 8(v0)	# e0	: prefetch t3
+	ldq	zero, 8(v0)	# e0	: prefetch next quad
+	cmpbge	zero, t1, t1	# .. e1:
+	bne	t1, $found_it	# e0    :
+
+	addq	v0, 8, v0	#    e1	:
+$odd_quad_count:
+	ldq	t0, 0(v0)	# e0	: load quad
+	xor	a1, t0, t1	# .. e1 :
+	ldq	zero, 8(v0)	# e0	: prefetch next quad
 	cmpbge	zero, t1, t1	# .. e1 :
 	addq	v0, 8, t5	#-e0	:
 	bne	t1, $found_it	# .. e1	:
@@ -159,8 +159,8 @@ $odd_quad_count:
 	addq	v0, 8, v0	# .. e1 :
 	bne	t5, $unrolled_loop #-e1 :
 
-	mov	t3, t0		# e0	: move prefetched value into t0
-$final:	subq	t4, v0, a2	# .. e1	: a2 <- number of bytes left to do
+$final:	ldq	t0, 0(v0)	# e0	: load last quad
+	subq	t4, v0, a2	# .. e1	: a2 <- number of bytes left to do
 	bne	a2, $last_quad	# e1	:
 
 $not_found:
