@@ -1,7 +1,7 @@
 2010-05-03  Ulrich Drepper  <drepper@redhat.com>
 
-	* version.h (VERSION): Bump for 2.11 release.
-	* include/features.h (__GLIBC_MINOR__): Bump to 11.
+	* version.h (VERSION): Bump for 2.12 release.
+	* include/features.h (__GLIBC_MINOR__): Bump to 12.
 
 	[BZ #11149]
 	* elf/ldconfig.c (search_dir): Fix handling of symlinks in chroot.
@@ -1694,7 +1694,7 @@
 	argv argument as non-NULL.
 	(execle, execl, execlp): Mark the first ARG argument as non-NULL.
 
--2009-12-08  Ulrich Drepper  <drepper@redhat.com>
+2009-12-08  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/bits/socket.h: Define mmsghdr and declare
 	recvmmsg.
