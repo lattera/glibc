@@ -249,6 +249,18 @@ $fixup_stack:							\n\
 /* The alpha never uses Elf64_Rel relocations.  */
 #define ELF_MACHINE_NO_REL 1
 
+/* We define an initialization functions.  This is called very early in
+ *    _dl_sysdep_start.  */
+#define DL_PLATFORM_INIT dl_platform_init ()
+
+static inline void __attribute__ ((unused))
+dl_platform_init (void)
+{
+	if (GLRO(dl_platform) != NULL && *GLRO(dl_platform) == '\0')
+	/* Avoid an empty string which would disturb us.  */
+		GLRO(dl_platform) = NULL;
+}
+
 /* Fix up the instructions of a PLT entry to invoke the function
    rather than the dynamic linker.  */
 static inline Elf64_Addr

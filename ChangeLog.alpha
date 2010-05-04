@@ -1,5 +1,11 @@
 2010-05-03  Aurelien Jarno  <aurelien@aurel32.net>
 
+	* sysdeps/alpha/dl-machine.h: Add dl-procinfo support.
+	* sysdeps/alpha/dl-procinfo.c: New.
+	* sysdeps/alpha/dl-procinfo.h: New.
+
+2010-05-03  Aurelien Jarno  <aurelien@aurel32.net>
+
 	* sysdeps/alpha/fpu/s_ceil.c: Fix corner cases.
 	* sysdeps/alpha/fpu/s_ceilf.c: Likewise.
 	* sysdeps/alpha/fpu/s_floor.c: Likewise.
