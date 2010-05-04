@@ -1,4 +1,4 @@
-GNU C Library NEWS -- history of user-visible changes.  2010-4-9
+GNU C Library NEWS -- history of user-visible changes.  2010-5-4
 Copyright (C) 1992-2009, 2010 Free Software Foundation, Inc.
 See the end for copying conditions.
 
@@ -16,7 +16,7 @@ Version 2.12
   11185, 11186, 11187, 11188, 11189, 11190, 11191, 11192, 11193, 11194,
   11200, 11230, 11235, 11242, 11254, 11258, 11271, 11272, 11276, 11279,
   11287, 11292, 11319, 11332, 11333, 11387, 11389, 11390, 11394, 11397,
-  11410, 11438, 11449, 11470, 11471
+  11410, 11438, 11449, 11470, 11471, 11520, 11537, 11538
 
 * New interfaces: pthread_getname_np, pthread_setname_np
 
