@@ -24,15 +24,24 @@
 double
 __rint (double x)
 {
-  double two52 = copysign (0x1.0p52, x);
-  double r;
-  
-  r = x + two52;
-  r = r - two52;
+  if (isless (fabs (x), 9007199254740992.0))	/* 1 << DBL_MANT_DIG */
+    {
+      double tmp1, new_x;
+      __asm (
+#ifdef _IEEE_FP_INEXACT
+	     "cvttq/svid %2,%1\n\t"
+#else
+	     "cvttq/svd %2,%1\n\t"
+#endif
+	     "cvtqt/d %1,%0\n\t"
+	     : "=f"(new_x), "=&f"(tmp1)
+	     : "f"(x));
 
-  /* rint(-0.1) == -0, and in general we'll always have the same sign
-     as our input.  */
-  return copysign (r, x);
+      /* rint(-0.1) == -0, and in general we'll always have the same
+	 sign as our input.  */
+      x = copysign(new_x, x);
+    }
+  return x;
 }
 
 weak_alias (__rint, rint)

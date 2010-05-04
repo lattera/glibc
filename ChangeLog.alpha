@@ -1,3 +1,12 @@
+2010-05-03  Aurelien Jarno  <aurelien@aurel32.net>
+
+	* sysdeps/alpha/fpu/s_ceil.c: Fix corner cases.
+	* sysdeps/alpha/fpu/s_ceilf.c: Likewise.
+	* sysdeps/alpha/fpu/s_floor.c: Likewise.
+	* sysdeps/alpha/fpu/s_floorf.c: Likewise.
+	* sysdeps/alpha/fpu/s_rint.c: Likewise.
+	* sysdeps/alpha/fpu/s_rintf.c: Likewise.
+
 2010-05-03  GOTO Masanori  <gotom@debian.or.jp>
 
 	* sysdeps/unix/sysv/linux/alpha/kernel-features.h: Define

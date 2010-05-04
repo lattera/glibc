@@ -21,26 +21,32 @@
 #include <math_ldbl_opt.h>
 
 
-/* Use the -inf rounding mode conversion instructions to implement floor.  */
+/* Use the -inf rounding mode conversion instructions to implement
+   floor.  We note when the exponent is large enough that the value
+   must be integral, as this avoids unpleasant integer overflows.  */
 
 double
 __floor (double x)
 {
-  double two52 = copysign (0x1.0p52, x);
-  double r, tmp;
-  
-  __asm (
-#ifdef _IEEE_FP_INEXACT
-	 "addt/suim %2, %3, %1\n\tsubt/suim %1, %3, %0"
-#else
-	 "addt/sum %2, %3, %1\n\tsubt/sum %1, %3, %0"
-#endif
-	 : "=&f"(r), "=&f"(tmp)
-	 : "f"(x), "f"(two52));
+  if (isless (fabs (x), 9007199254740992.0))	/* 1 << DBL_MANT_DIG */
+    {
+      double tmp1, new_x;
 
-  /* floor(-0) == -0, and in general we'll always have the same
-     sign as our input.  */
-  return copysign (r, x);
+      __asm (
+#ifdef _IEEE_FP_INEXACT
+	     "cvttq/svim %2,%1\n\t"
+#else
+	     "cvttq/svm %2,%1\n\t"
+#endif
+	     "cvtqt/m %1,%0\n\t"
+	     : "=f"(new_x), "=&f"(tmp1)
+	     : "f"(x));
+
+      /* floor(-0) == -0, and in general we'll always have the same
+	 sign as our input.  */
+      x = copysign(new_x, x);
+    }
+  return x;
 }
 
 weak_alias (__floor, floor)

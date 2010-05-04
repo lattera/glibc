@@ -27,20 +27,25 @@
 double
 __ceil (double x)
 {
-  double two52 = copysign (0x1.0p52, x);
-  double r, tmp;
-  
-  __asm (
-#ifdef _IEEE_FP_INEXACT
-	 "addt/suim %2, %3, %1\n\tsubt/suim %1, %3, %0"
-#else
-	 "addt/sum %2, %3, %1\n\tsubt/sum %1, %3, %0"
-#endif
-	 : "=&f"(r), "=&f"(tmp)
-	 : "f"(-x), "f"(-two52));
+  if (isless (fabs (x), 9007199254740992.0))	/* 1 << DBL_MANT_DIG */
+    {
+      double tmp1, new_x;
 
-  /* Fix up the negation we did above, as well as handling -0 properly. */
-  return copysign (r, x);
+      new_x = -x;
+      __asm (
+#ifdef _IEEE_FP_INEXACT
+	     "cvttq/svim %2,%1\n\t"
+#else
+	     "cvttq/svm %2,%1\n\t"
+#endif
+	     "cvtqt/m %1,%0\n\t"
+	     : "=f"(new_x), "=&f"(tmp1)
+	     : "f"(new_x));
+
+      /* Fix up the negation we did above, as well as handling -0 properly. */
+      x = copysign(new_x, x);
+    }
+  return x;
 }
 
 weak_alias (__ceil, ceil)
