@@ -1,3 +1,7 @@
+2010-05-05  Andreas Schwab  <schwab@redhat.com>
+
+	* INSTALL: Regenerate.
+
 2010-05-05  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #11571]
