@@ -176,7 +176,7 @@
    distinguish this version from other 2.4.0 releases.  Therefore play
    save and assume it available is for 2.4.1 and up.  However, SH is lame,
    and still does not have a 64-bit inode field.  */
-#if __LINUX_KERNEL_VERSION >= 132097 && !defined __alpha__ && !defined __sh__
+#if __LINUX_KERNEL_VERSION >= 132097 && !defined __sh__
 # define __ASSUME_ST_INO_64_BIT		1
 #endif
 
@@ -270,11 +270,6 @@
 # define __ASSUME_VFORK_SYSCALL		1
 #endif
 
-/* Alpha switched to a 64-bit timeval sometime before 2.2.0.  */
-#if __LINUX_KERNEL_VERSION >= 131584 && defined __alpha__
-# define __ASSUME_TIMEVAL64		1
-#endif
-
 /* The late 2.5 kernels saw a lot of new CLONE_* flags.  Summarize
    their availability with one define.  The changes were made first
    for i386 and the have to be done separately for the other archs.
@@ -327,12 +322,9 @@
 # define __ASSUME_CORRECT_SI_PID	1
 #endif
 
-/* The tgkill syscall was instroduced for i386 in 2.5.75.  For Alpha
-   it was introduced in 2.6.0-test1 which unfortunately cannot be
-   distinguished from 2.6.0.  On x86-64, ppc, and ppc64 it was
-   introduced in 2.6.0-test3. */
+/* The tgkill syscall was instroduced for i386 in 2.5.75.  On x86-64,
+   ppc, and ppc64 it was introduced in 2.6.0-test3. */
 #if (__LINUX_KERNEL_VERSION >= 132427 && defined __i386__) \
-    || (__LINUX_KERNEL_VERSION >= 132609 && defined __alpha__) \
     || (__LINUX_KERNEL_VERSION >= 132609 && defined __x86_64__) \
     || (__LINUX_KERNEL_VERSION >= 132609 && defined __powerpc__) \
     || (__LINUX_KERNEL_VERSION >= 132609 && defined __sh__)
@@ -342,8 +334,7 @@
 /* The utimes syscall has been available for some architectures
    forever.  For x86 it was introduced after 2.5.75, for x86-64,
    ppc, and ppc64 it was introduced in 2.6.0-test3.  */
-#if defined __alpha__ || defined __ia64__ \
-    || defined __sparc__ \
+#if defined __ia64__ || defined __sparc__ \
     || (__LINUX_KERNEL_VERSION > 132427 && defined __i386__) \
     || (__LINUX_KERNEL_VERSION > 132609 && defined __x86_64__) \
     || (__LINUX_KERNEL_VERSION >= 132609 && defined __powerpc__) \
@@ -410,11 +401,6 @@
 # define __ASSUME_WAITID_SYSCALL	1
 #endif
 
-/* Starting with version 2.6.9, SSI_IEEE_RAISE_EXCEPTION exists.  */
-#if __LINUX_KERNEL_VERSION >= 0x020609 && defined __alpha__
-# define __ASSUME_IEEE_RAISE_EXCEPTION	1
-#endif
-
 /* On sparc64 stat64/lstat64/fstat64 syscalls were introduced in 2.6.12.  */
 #if __LINUX_KERNEL_VERSION >= 0x02060c && defined __sparc__ \
     && defined __arch64__
@@ -431,34 +417,28 @@
 /* pselect/ppoll were introduced just after 2.6.16-rc1.  Due to the way
    the kernel versions are advertised we can only rely on 2.6.17 to have
    the code.  On x86_64 and SH this appeared first in 2.6.19-rc1,
-   on ia64 in 2.6.22-rc1 and on alpha just after 2.6.22-rc1.  */
+   on ia64 in 2.6.22-rc1.  */
 #if __LINUX_KERNEL_VERSION >= 0x020611 \
-    && ((!defined __x86_64__ && !defined __sh__ && !defined __ia64__ \
-	 && !defined __alpha__) \
+    && ((!defined __x86_64__ && !defined __sh__ && !defined __ia64__) \
 	|| (__LINUX_KERNEL_VERSION >= 0x020613 \
 	    && (defined __x86_64__ || defined __sh__)) \
-	|| (__LINUX_KERNEL_VERSION >= 0x020616 && defined __ia64__) \
-	|| (__LINUX_KERNEL_VERSION >= 0x020617 && defined __alpha__))
+	|| (__LINUX_KERNEL_VERSION >= 0x020616 && defined __ia64__))
 # define __ASSUME_PSELECT	1
 # define __ASSUME_PPOLL		1
 #endif
 
 /* The *at syscalls were introduced just after 2.6.16-rc1.  Due to the way the
    kernel versions are advertised we can only rely on 2.6.17 to have
-   the code.  On PPC they were introduced in 2.6.17-rc1, on SH in 2.6.19-rc1
-   and on Alpha just after 2.6.22-rc1.  */
+   the code.  On PPC they were introduced in 2.6.17-rc1,
+   on SH in 2.6.19-rc1.  */
 #if __LINUX_KERNEL_VERSION >= 0x020611 \
-    && ((!defined __sh__ && !defined __alpha__) \
-	|| (__LINUX_KERNEL_VERSION >= 0x020613 && defined __sh__) \
-	|| (__LINUX_KERNEL_VERSION >= 0x020617 && defined __alpha__))
+    && (!defined __sh__ || __LINUX_KERNEL_VERSION >= 0x020613)
 # define __ASSUME_ATFCTS	1
 #endif
 
 /* Support for inter-process robust mutexes was added in 2.6.17.  */
 #if __LINUX_KERNEL_VERSION >= 0x020611 \
-    && ((!defined __sh__ && !defined __alpha__) \
-	|| (__LINUX_KERNEL_VERSION >= 0x020613 && defined __sh__) \
-	|| (__LINUX_KERNEL_VERSION >= 0x020617 && defined __alpha__))
+    && (!defined __sh__ || __LINUX_KERNEL_VERSION >= 0x020613)
 # define __ASSUME_SET_ROBUST_LIST	1
 #endif
 
@@ -474,11 +454,10 @@
 # define __ASSUME_FUTEX_LOCK_PI	1
 #endif
 
-/* Support for utimensat syscall was added in 2.6.22, on alpha and s390
+/* Support for utimensat syscall was added in 2.6.22, on SH
    only after 2.6.22-rc1.  */
 #if __LINUX_KERNEL_VERSION >= 0x020616 \
-    && ((!defined __sh__ && !defined __alpha__) \
-	|| __LINUX_KERNEL_VERSION >= 0x020617)
+    && (!defined __sh__ || __LINUX_KERNEL_VERSION >= 0x020617)
 # define __ASSUME_UTIMENSAT	1
 #endif
 
@@ -490,8 +469,7 @@
 /* Support for fallocate was added in 2.6.23, on s390
    only after 2.6.23-rc1.  */
 #if __LINUX_KERNEL_VERSION >= 0x020617 \
-    && ((!defined __s390__ && !defined __alpha__) \
-	|| (__LINUX_KERNEL_VERSION >= 0x020618 && defined __s390__))
+    && (!defined __s390__ || __LINUX_KERNEL_VERSION >= 0x020618)
 # define __ASSUME_FALLOCATE	1
 #endif
 

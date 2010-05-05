@@ -1,3 +1,9 @@
+2010-05-05  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/kernel-features.h: Alpha doesn't have to be
+	handled here anymore.
+	Patch mostly by Matt Turner <mattst88@gmail.com>.
+
 2010-05-03  Ulrich Drepper  <drepper@redhat.com>
 
 	* version.h (VERSION): Bump for 2.12 release.
