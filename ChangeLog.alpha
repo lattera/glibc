@@ -1,3 +1,16 @@
+2010-05-05  Richard Henderson  <rth@redhat.com>
+
+	[BZ #1864]
+	* sysdeps/unix/sysv/linux/alpha/fstatfs64.c: New.
+	* sysdeps/unix/sysv/linux/alpha/fstatvfs.c: New.
+	* sysdeps/unix/sysv/linux/alpha/fstatvfs64.c: New.
+	* sysdeps/unix/sysv/linux/alpha/internal_statvfs64.c: New.
+	* sysdeps/unix/sysv/linux/alpha/statfs64.c: New.
+	* sysdeps/unix/sysv/linux/alpha/statvfs.c: New.
+	* sysdeps/unix/sysv/linux/alpha/statvfs64.c: New.
+	* sysdeps/unix/sysv/linux/alpha/syscalls.list (fstatfs, statfs):
+	Define without 64-bit aliases.
+
 2010-05-03  Aurelien Jarno  <aurelien@aurel32.net>
  
 	* sysdeps/alpha/memchr.S: Use prefetch load.
