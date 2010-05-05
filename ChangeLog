@@ -1,5 +1,9 @@
 2010-05-05  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #11571]
+	* sysdeps/unix/sysv/linux/getlogin_r.c (__getlogin_r_loginuid): Handle
+	too small buffers according to the standard.
+
 	* sysdeps/unix/sysv/linux/kernel-features.h: Alpha doesn't have to be
 	handled here anymore.
 	Patch mostly by Matt Turner <mattst88@gmail.com>.

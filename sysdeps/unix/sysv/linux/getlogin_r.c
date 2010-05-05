@@ -81,13 +81,22 @@ __getlogin_r_loginuid (name, namesize)
   if (tpwd == NULL)
     goto fail;
 
-  strncpy (name, pwd.pw_name, namesize - 1);
-  name[namesize - 1] = '\0';
+  int result = 0;
+  size_t needed = strlen (pwd.pw_name) + 1;
+  if (needed > namesize)
+    {
+      __set_errno (ERANGE);
+      result = ERANGE;
+      goto out;
+    }
 
+  memcpy (name, pwd.pw_name, needed);
+
+ out:
   if (use_malloc)
     free (buf);
 
-  return 0;
+  return result;
 }
 
 
