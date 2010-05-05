@@ -1,3 +1,8 @@
+2010-05-04  Andreas Schwab  <schwab@redhat.com>
+
+	* SUPPORTED (SUPPORTED-LOCALES): Fix name of tt_RU.UTF-8@iqtelif
+	locale.
+
 2010-05-03  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #11520]
