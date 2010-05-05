@@ -1,6 +1,7 @@
-2010-05-05  Andreas Schwab  <schwab@redhat.com>
+2010-05-04  Andreas Schwab  <schwab@redhat.com>
 
-	* INSTALL: Regenerate.
+	* posix/regexec.c (find_collation_sequence_value): Fix skipping
+	the wide char sequence of the collating element.
 
 2010-05-05  Ulrich Drepper  <drepper@redhat.com>
 

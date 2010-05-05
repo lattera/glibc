@@ -4031,7 +4031,7 @@ find_collation_sequence_value (const unsigned char *mbs, size_t mbs_len)
 	  /* Skip the collation sequence value.  */
 	  idx += sizeof (uint32_t);
 	  /* Skip the wide char sequence of the collating element.  */
-	  idx = idx + sizeof (uint32_t) * (extra[idx] + 1);
+	  idx = idx + sizeof (uint32_t) * (*(int32_t *) (extra + idx) + 1);
 	  /* If we found the entry, return the sequence value.  */
 	  if (found)
 	    return *(uint32_t *) (extra + idx);
