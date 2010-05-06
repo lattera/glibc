@@ -4859,6 +4859,7 @@ _int_free(mstate av, mchunkptr p)
 #ifdef ATOMIC_FASTBINS
     mchunkptr fd;
     mchunkptr old = *fb;
+    unsigned int old_idx = ~0u;
     do
       {
 	/* Another simple check: make sure the top of the bin is not the
@@ -4868,15 +4869,17 @@ _int_free(mstate av, mchunkptr p)
 	    errstr = "double free or corruption (fasttop)";
 	    goto errout;
 	  }
-	if (old != NULL
-	    && __builtin_expect (fastbin_index(chunksize(old)) != idx, 0))
-	  {
-	    errstr = "invalid fastbin entry (free)";
-	    goto errout;
-	  }
+	if (old != NULL)
+	  old_idx = fastbin_index(chunksize(old));
 	p->fd = fd = old;
       }
     while ((old = catomic_compare_and_exchange_val_rel (fb, p, fd)) != fd);
+
+    if (fd != NULL && __builtin_expect (old_idx != idx, 0))
+      {
+	errstr = "invalid fastbin entry (free)";
+	goto errout;
+      }
 #else
     /* Another simple check: make sure the top of the bin is not the
        record we are going to add (i.e., double free).  */
