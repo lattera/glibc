@@ -7578,7 +7578,7 @@ d2009-10-30  Ulrich Drepper  <drepper@redhat.com>
 	[BZ #5857]
 	* sysdeps/ieee754/dbl-64/s_rint.c (__rint): Handle j0==18.
 	* sysdeps/ieee754/dbl-64/s_nearbyint.c (__nearbyint): Likewise.
-  	Patch by Mark Elliott <mark.h.elliott@lmco.com>.
+	Patch by Mark Elliott <mark.h.elliott@lmco.com>.
 
 	* math/libm-test.inc (nearbyint_test): Add new test cases from #5857.
 	(rint_test): Likewise.
