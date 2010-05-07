@@ -8,3 +8,5 @@
 	* malloc/malloc.c (_int_free): Possible race in the most recently
 	added check.  Only act on the data if no current modification
 	happened.
+
+See ChangeLog.17 for earlier changes.
