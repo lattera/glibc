@@ -1,5 +1,10 @@
 2010-05-06  Ulrich Drepper  <drepper@redhat.com>
 
+	* nss/getent.c (idn_flags): Default to AI_IDN|AI_CANONIDN.
+	(args_options): Add no-idn option.
+	(ahosts_keys_int): Add idn_flags to ai_flags.
+	(parse_option): Handle 'i' option to clear idn_flags.
+
 	* malloc/malloc.c (_int_free): Possible race in the most recently
 	added check.  Only act on the data if no current modification
 	happened.

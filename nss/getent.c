@@ -31,6 +31,7 @@
 #include <netdb.h>
 #include <pwd.h>
 #include <shadow.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -56,6 +57,7 @@ static const char args_doc[] = N_("database [key ...]");
 static const struct argp_option args_options[] =
   {
     { "service", 's', "CONFIG", 0, N_("Service configuration to be used") },
+    { "no-idn", 'i', NULL, 0, N_("disable IDN encoding") },
     { NULL, 0, NULL, 0, NULL },
   };
 
@@ -73,6 +75,9 @@ static struct argp argp =
   {
     args_options, parse_option, args_doc, doc, NULL, more_help
   };
+
+/* Additional getaddrinfo flags for IDN encoding.  */
+static int idn_flags = AI_IDN | AI_CANONIDN;
 
 /* Print the version information.  */
 static void
@@ -377,7 +382,8 @@ ahosts_keys_int (int af, int xflags, int number, char *key[])
 
   struct addrinfo hint;
   memset (&hint, '\0', sizeof (hint));
-  hint.ai_flags = AI_V4MAPPED | AI_ADDRCONFIG | AI_CANONNAME | xflags;
+  hint.ai_flags = (AI_V4MAPPED | AI_ADDRCONFIG | AI_CANONNAME
+		   | idn_flags | xflags);
   hint.ai_family = af;
 
   for (i = 0; i < number; ++i)
@@ -859,6 +865,10 @@ parse_option (int key, char *arg, struct argp_state *state)
 	  if (databases[i].name == NULL)
 	    error (EXIT_FAILURE, 0, gettext ("Unknown database name"));
 	}
+      break;
+
+    case 'i':
+      idn_flags = 0;
       break;
 
     default:
