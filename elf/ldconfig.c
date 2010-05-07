@@ -1357,7 +1357,7 @@ main (int argc, char **argv)
 	add_system_dir (LIBDIR);
     }
 
-  char *aux_cache_file = _PATH_LDCONFIG_AUX_CACHE;
+  const char *aux_cache_file = _PATH_LDCONFIG_AUX_CACHE;
   if (opt_chroot)
     {
       aux_cache_file = chroot_canon (opt_chroot, aux_cache_file);

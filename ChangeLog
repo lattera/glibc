@@ -1,3 +1,7 @@
+2010-05-07  Roland McGrath  <roland@redhat.com>
+
+	* elf/ldconfig.c (main): Add a const.
+
 2010-05-06  Ulrich Drepper  <drepper@redhat.com>
 
 	* nss/getent.c (idn_flags): Default to AI_IDN|AI_CANONIDN.
