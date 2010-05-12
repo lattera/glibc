@@ -1,3 +1,8 @@
+2010-05-12  Andrew Stubbs  <ams@codesourcery.com>
+
+	* sysdeps/sh/sh4/fpu/feholdexcpt.c (feholdexcept): Really disable all
+	exceptions.  Return 0.
+
 2010-05-07  Roland McGrath  <roland@redhat.com>
 
 	* elf/ldconfig.c (main): Add a const.
