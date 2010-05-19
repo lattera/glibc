@@ -1,3 +1,7 @@
+2010-05-17  Andreas Schwab  <schwab@redhat.com>
+
+	* locales/es_CR (LC_ADDRESS): Fix character names in lang_ab.
+
 2010-05-04  Andreas Schwab  <schwab@redhat.com>
 
 	* SUPPORTED (SUPPORTED-LOCALES): Fix name of tt_RU.UTF-8@iqtelif
