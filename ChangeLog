@@ -1,3 +1,7 @@
+2010-05-19  Ulrich Drepper  <drepper@redhat.com>
+
+	* version.h: Update for 2.13 development version.
+
 2010-05-12  Andrew Stubbs  <ams@codesourcery.com>
 
 	* sysdeps/sh/sh4/fpu/feholdexcpt.c (feholdexcept): Really disable all
