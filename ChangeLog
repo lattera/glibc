@@ -1,3 +1,9 @@
+2010-05-17  Luis Machado  <luisgpm@br.ibm.com>
+
+	POWER7 optimizations.
+	* sysdeps/powerpc/powerpc64/power7/memset.S: New file.
+	* sysdeps/powerpc/powerpc32/power7/memset.S: New file.
+
 2010-05-19  Ulrich Drepper  <drepper@redhat.com>
 
 	* version.h: Update for 2.13 development version.
