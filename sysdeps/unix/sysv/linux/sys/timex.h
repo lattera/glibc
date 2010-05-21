@@ -140,9 +140,9 @@ __BEGIN_DECLS
 extern int __adjtimex (struct timex *__ntx) __THROW;
 extern int adjtimex (struct timex *__ntx) __THROW;
 
-#if defined __GNUC__ && __GNUC__ >= 2
-extern int ntp_gettime (struct ntptimeval *__ntv)
-     __asm__ ("ntp_gettimex") __THROW;
+#ifdef __REDIRECT_NTH
+extern int __REDIRECT_NTH (ntp_gettime, (struct ntptimeval *__ntv),
+			   ntp_gettimex);
 #else
 extern int ntp_gettimex (struct ntptimeval *__ntv) __THROW;
 # define ntp_gettime ntp_gettimex

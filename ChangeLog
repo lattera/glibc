@@ -1,3 +1,7 @@
+2010-05-20  Andreas Schwab  <schwab@redhat.com>
+
+	* sysdeps/unix/sysv/linux/sys/timex.h: Use __REDIRECT_NTH.
+
 2010-05-17  Luis Machado  <luisgpm@br.ibm.com>
 
 	POWER7 optimizations.
