@@ -1,5 +1,5 @@
 /* On-demand PLT fixup for shared objects.
-   Copyright (C) 1995-2006, 2007, 2008, 2009 Free Software Foundation, Inc.
+   Copyright (C) 1995-2009, 2010 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -144,7 +144,8 @@ _dl_fixup (
   /* And now perhaps the relocation addend.  */
   value = elf_machine_plt_value (l, reloc, value);
 
-  if (__builtin_expect (ELFW(ST_TYPE) (sym->st_info) == STT_GNU_IFUNC, 0))
+  if (sym != NULL
+      && __builtin_expect (ELFW(ST_TYPE) (sym->st_info) == STT_GNU_IFUNC, 0))
     value = ((DL_FIXUP_VALUE_TYPE (*) (void)) DL_FIXUP_VALUE_ADDR (value)) ();
 
   /* Finally, fix up the plt itself.  */
@@ -369,7 +370,7 @@ _dl_profile_fixup (
       struct audit_ifaces *afct = GLRO(dl_audit);
       for (unsigned int cnt = 0; cnt < GLRO(dl_naudit); ++cnt)
 	{
- 	  if (afct->ARCH_LA_PLTENTER != NULL
+	  if (afct->ARCH_LA_PLTENTER != NULL
 	      && (reloc_result->enterexit
 		  & (LA_SYMB_NOPLTENTER << (2 * (cnt + 1)))) == 0)
 	    {

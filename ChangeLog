@@ -1,3 +1,8 @@
+2010-05-19  Andreas Schwab  <schwab@redhat.com>
+
+	* elf/dl-runtime.c (_dl_fixup): Don't crash on unresolved weak
+	symbol reference.
+
 2010-05-21  Andreas Schwab  <schwab@redhat.com>
 
 	* sysdeps/unix/sysv/linux/Makefile (sysdep_routines): Add recvmmsg
