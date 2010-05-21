@@ -53,7 +53,6 @@ prctl		EXTRA	prctl		i:iiiii	__prctl		prctl
 putpmsg		-	putpmsg		i:ippii	putpmsg
 query_module	EXTRA	query_module	i:sipip	query_module
 quotactl	EXTRA	quotactl	i:isip	quotactl
-recvmmsg	EXTRA	recvmmsg	Ci:ipiip	recvmmsg
 remap_file_pages -	remap_file_pages i:piiii	__remap_file_pages remap_file_pages
 sched_getp	-	sched_getparam	i:ip	__sched_getparam	sched_getparam
 sched_gets	-	sched_getscheduler	i:i	__sched_getscheduler	sched_getscheduler

@@ -1,5 +1,12 @@
 2010-05-21  Andreas Schwab  <schwab@redhat.com>
 
+	* sysdeps/unix/sysv/linux/Makefile (sysdep_routines): Add recvmmsg
+	and internal_recvmmsg.
+	* sysdeps/unix/sysv/linux/recvmmsg.c: New file.
+	* sysdeps/unix/sysv/linux/internal_recvmmsg.S: New file.
+	* sysdeps/unix/sysv/linux/socketcall.h (SOCKOP_recvmmsg): Define.
+	* sysdeps/unix/sysv/linux/syscalls.list (recvmmsg): Remove.
+
 	* sunrpc/clnt_tcp.c (clnttcp_control): Add missing break.
 	* sunrpc/clnt_udp.c (clntudp_control): Likewise.
 	* sunrpc/clnt_unix.c (clntunix_control): Likewise.

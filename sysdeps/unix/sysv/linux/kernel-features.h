@@ -525,3 +525,8 @@
 #if __LINUX_KERNEL_VERSION >= 0x020620
 # define __ASSUME_F_GETOWN_EX	1
 #endif
+
+/* Support for the recvmmsg syscall was added in 2.6.33.  */
+#if __LINUX_KERNEL_VERSION >= 0x020621
+# define __ASSUME_RECVMMSG	1
+#endif
