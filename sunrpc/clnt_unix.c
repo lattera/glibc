@@ -376,6 +376,7 @@ clntunix_control (CLIENT *cl, int request, char *info)
       /* This will set the xid of the NEXT call */
       *(u_long *) ct->ct_mcall =  htonl (*(u_long *)info - 1);
       /* decrement by 1 as clntunix_call() increments once */
+      break;
     case CLGET_VERS:
       /*
        * This RELIES on the information that, in the call body,
