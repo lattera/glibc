@@ -1,3 +1,8 @@
+2010-05-22  Andreas Schwab  <schwab@linux-m68k.org>
+
+	* data/c++-types-m68k-linux-gnu.data: New file.
+	* data/localplt-m68k-linux-gnu.data: New file.
+
 2010-03-13  Andreas Schwab  <schwab@linux-m68k.org>
 
 	* sysdeps/m68k/m680x0/fpu/s_ccosh.c: Use signbit macro.
