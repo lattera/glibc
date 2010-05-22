@@ -232,8 +232,9 @@ _dl_profile_fixup (
 				       ? LOOKUP_VALUE_ADDRESS (result)
 					 + defsym->st_value : 0);
 
-	  if (__builtin_expect (ELFW(ST_TYPE) (defsym->st_info)
-				== STT_GNU_IFUNC, 0))
+	  if (defsym != NULL
+	      && __builtin_expect (ELFW(ST_TYPE) (defsym->st_info)
+				   == STT_GNU_IFUNC, 0))
 	    value = ((DL_FIXUP_VALUE_TYPE (*) (void))
 		     DL_FIXUP_VALUE_ADDR (value)) ();
 	}
