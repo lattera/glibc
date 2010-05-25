@@ -1,3 +1,7 @@
+2010-05-24  Luis Machado  <luisgpm@br.ibm.com>
+
+	* sysdeps/powerpc/powerpc32/power7/memset.S: POWER7 32-bit memset fix.
+
 2010-05-21  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/dl-runtime.c (_dl_profile_fixup): Don't crash on unresolved weak

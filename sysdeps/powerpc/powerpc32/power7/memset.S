@@ -155,7 +155,6 @@ L(big_loop):
 	/* Now that we're probably past the LHS window, use the VSX to
 	   speed up the loop.  */
 L(big_loop_fast_setup):
-	li	0,0
 	li	11,24
 	li	6,16
 	lxvdsx	4,1,11
@@ -163,12 +162,12 @@ L(big_loop_fast_setup):
 	.align	4
 L(big_loop_fast):
 	addi	12,10,32
-	stxvd2x	4,10,0
+	stxvd2x	4,0,10
 	stxvd2x	4,10,6
 	bdz	L(tail_bytes)
 
 	addi	10,10,64
-	stxvd2x	4,12,0
+	stxvd2x	4,0,12
 	stxvd2x	4,12,6
 	bdnz	L(big_loop_fast)
 
