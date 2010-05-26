@@ -1,5 +1,5 @@
 /* Dump registers.
-   Copyright (C) 1999, 2000, 2009 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2000, 2009, 2010 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -58,7 +58,7 @@ register_dump (int fd, struct sigcontext *ctx)
 {
   char regs[22][8];
   char fpregs[34][8];
-  struct iovec iov[112];
+  struct iovec iov[22 * 2 + 34 * 2 + 2];
   size_t nr = 0;
 
 #define ADD_STRING(str) \
