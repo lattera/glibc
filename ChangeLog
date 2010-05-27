@@ -1,3 +1,9 @@
+2010-05-26  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #11640]
+	* sysdeps/x86_64/multiarch/init-arch.c (__init_cpu_features):
+	Properly check family and model.
+
 2010-05-26  Takashi Yoshii  <takashi.yoshii.zj@renesas.com>
 
 	* sysdeps/unix/sysv/linux/sh/sh4/register-dump.h: Fix iov[] size.

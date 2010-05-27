@@ -62,15 +62,15 @@ __init_cpu_features (void)
       unsigned int eax = __cpu_features.cpuid[COMMON_CPUID_INDEX_1].eax;
       unsigned int extended_family = (eax >> 20) & 0xff;
       unsigned int extended_model = (eax >> 12) & 0xf0;
-      if (__cpu_features.family == 0x0f)
+      if (family == 0x0f)
 	{
 	  family += extended_family;
 	  model += extended_model;
 	}
-      else if (__cpu_features.family == 0x06)
+      else if (family == 0x06)
 	{
 	  model += extended_model;
-	  switch (__cpu_features.model)
+	  switch (model)
 	    {
 	    case 0x1a:
 	    case 0x1e:
