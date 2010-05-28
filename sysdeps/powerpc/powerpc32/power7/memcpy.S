@@ -365,7 +365,7 @@ L(copy_GE_32_unaligned):
 	addi    3,3,8
 0:
 	clrlwi  10,12,28      /* Check alignment of SRC.  */
-	srdi    9,31,4	      /* Number of full quadwords remaining.  */
+	srwi    9,31,4	      /* Number of full quadwords remaining.  */
 
 	/* The proper alignment is present, it is OK to copy the bytes now.  */
 L(copy_GE_32_unaligned_cont):
@@ -375,7 +375,7 @@ L(copy_GE_32_unaligned_cont):
 	li      6,16	      /* Index for 16-bytes offsets.  */
 	li	7,32	      /* Index for 32-bytes offsets.  */
 	cmplwi  cr1,11,0
-	srdi    8,31,5	      /* Setup the loop counter.  */
+	srwi    8,31,5	      /* Setup the loop counter.  */
 	mr      10,3
 	mr      11,12
 	mtcrf   0x01,9

@@ -1,3 +1,7 @@
+2010-05-28  Luis Machado  <luisgpm@br.ibm.com>
+
+	* sysdeps/powerpc/powerpc32/power7/memcpy.S: Exchange srdi for srwi.
+
 2010-05-26  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #11640]
