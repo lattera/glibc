@@ -254,8 +254,9 @@ extern int _hurd_select (int nfds, struct pollfd *pollfds,
 			 const sigset_t *sigmask);
 
 /* Variant of file_name_lookup used in *at function implementations.
-   AT_FLAGS should contain only AT_SYMLINK_NOFOLLOW; other bits
-   cause EINVAL.  */
+   AT_FLAGS may only contain AT_SYMLINK_FOLLOW or AT_SYMLINK_NOFOLLOW,
+   which will remove and add O_NOLINK from FLAGS respectively.
+   Other bits cause EINVAL.  */
 extern file_t __file_name_lookup_at (int fd, int at_flags,
 				     const char *file_name,
 				     int flags, mode_t mode);

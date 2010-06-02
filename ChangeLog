@@ -1,3 +1,12 @@
+2010-06-02  Emilio Pozuelo Monfort  <pochu27@gmail.com>
+
+	* hurd/lookup-at.c (__file_name_lookup_at): Accept
+	AT_SYMLINK_FOLLOW in AT_FLAGS.  Fail with EINVAL if both
+	AT_SYMLINK_FOLLOW and AT_SYMLINK_NOFOLLOW are present
+	in AT_FLAGS.
+	* hurd/hurd/fd.h (__file_name_lookup_at): Update comment.
+	* sysdeps/mach/hurd/linkat.c (linkat): Pass O_NOLINK in FLAGS.
+
 2010-05-28  Luis Machado  <luisgpm@br.ibm.com>
 
 	* sysdeps/powerpc/powerpc32/power7/memcpy.S: Exchange srdi for srwi.
