@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009
+/* Copyright (C) 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -25,8 +25,6 @@
 #include <sched.h>
 #include <time.h>
 
-#define __need_sigset_t
-#include <signal.h>
 #include <bits/pthreadtypes.h>
 #include <bits/setjmp.h>
 #include <bits/wordsize.h>
@@ -49,7 +47,7 @@ enum
   PTHREAD_MUTEX_RECURSIVE_NP,
   PTHREAD_MUTEX_ERRORCHECK_NP,
   PTHREAD_MUTEX_ADAPTIVE_NP
-#ifdef __USE_UNIX98
+#if defined __USE_UNIX98 || defined __USE_XOPEN2K8
   ,
   PTHREAD_MUTEX_NORMAL = PTHREAD_MUTEX_TIMED_NP,
   PTHREAD_MUTEX_RECURSIVE = PTHREAD_MUTEX_RECURSIVE_NP,
@@ -427,6 +425,18 @@ extern int pthread_setschedprio (pthread_t __target_thread, int __prio)
      __THROW;
 
 
+#ifdef __USE_GNU
+/* Get thread name visible in the kernel and its interfaces.  */
+extern int pthread_getname_np (pthread_t __target_thread, char *__buf,
+			       size_t __buflen)
+     __THROW __nonnull ((2));
+
+/* Set thread name visible in the kernel and its interfaces.  */
+extern int pthread_setname_np (pthread_t __target_thread, __const char *__name)
+     __THROW __nonnull ((2));
+#endif
+
+
 #ifdef __USE_UNIX98
 /* Determine level of concurrency.  */
 extern int pthread_getconcurrency (void) __THROW;
@@ -739,8 +749,8 @@ extern int pthread_mutex_lock (pthread_mutex_t *__mutex)
 #ifdef __USE_XOPEN2K
 /* Wait until lock becomes available, or specified time passes. */
 extern int pthread_mutex_timedlock (pthread_mutex_t *__restrict __mutex,
-                                    __const struct timespec *__restrict
-                                    __abstime) __THROW __nonnull ((1, 2));
+				    __const struct timespec *__restrict
+				    __abstime) __THROW __nonnull ((1, 2));
 #endif
 
 /* Unlock a mutex.  */
@@ -748,7 +758,6 @@ extern int pthread_mutex_unlock (pthread_mutex_t *__mutex)
      __THROW __nonnull ((1));
 
 
-#ifdef __USE_UNIX98
 /* Get the priority ceiling of MUTEX.  */
 extern int pthread_mutex_getprioceiling (__const pthread_mutex_t *
 					 __restrict __mutex,
@@ -761,12 +770,11 @@ extern int pthread_mutex_setprioceiling (pthread_mutex_t *__restrict __mutex,
 					 int __prioceiling,
 					 int *__restrict __old_ceiling)
      __THROW __nonnull ((1, 3));
-#endif
 
 
 #ifdef __USE_XOPEN2K8
 /* Declare the state protected by MUTEX as consistent.  */
-extern int pthread_mutex_consistent_np (pthread_mutex_t *__mutex)
+extern int pthread_mutex_consistent (pthread_mutex_t *__mutex)
      __THROW __nonnull ((1));
 # ifdef __USE_GNU
 extern int pthread_mutex_consistent_np (pthread_mutex_t *__mutex)
@@ -797,7 +805,7 @@ extern int pthread_mutexattr_setpshared (pthread_mutexattr_t *__attr,
 					 int __pshared)
      __THROW __nonnull ((1));
 
-#ifdef __USE_UNIX98
+#if defined __USE_UNIX98 || defined __USE_XOPEN2K8
 /* Return in *KIND the mutex kind attribute in *ATTR.  */
 extern int pthread_mutexattr_gettype (__const pthread_mutexattr_t *__restrict
 				      __attr, int *__restrict __kind)
@@ -808,6 +816,7 @@ extern int pthread_mutexattr_gettype (__const pthread_mutexattr_t *__restrict
    PTHREAD_MUTEX_DEFAULT).  */
 extern int pthread_mutexattr_settype (pthread_mutexattr_t *__attr, int __kind)
      __THROW __nonnull ((1));
+#endif
 
 /* Return in *PROTOCOL the mutex protocol attribute in *ATTR.  */
 extern int pthread_mutexattr_getprotocol (__const pthread_mutexattr_t *
@@ -831,7 +840,6 @@ extern int pthread_mutexattr_getprioceiling (__const pthread_mutexattr_t *
 extern int pthread_mutexattr_setprioceiling (pthread_mutexattr_t *__attr,
 					     int __prioceiling)
      __THROW __nonnull ((1));
-#endif
 
 #ifdef __USE_XOPEN2K
 /* Get the robustness flag of the mutex attribute ATTR.  */
@@ -990,13 +998,13 @@ extern int pthread_condattr_destroy (pthread_condattr_t *__attr)
 
 /* Get the process-shared flag of the condition variable attribute ATTR.  */
 extern int pthread_condattr_getpshared (__const pthread_condattr_t *
-                                        __restrict __attr,
-                                        int *__restrict __pshared)
+					__restrict __attr,
+					int *__restrict __pshared)
      __THROW __nonnull ((1, 2));
 
 /* Set the process-shared flag of the condition variable attribute ATTR.  */
 extern int pthread_condattr_setpshared (pthread_condattr_t *__attr,
-                                        int __pshared) __THROW __nonnull ((1));
+					int __pshared) __THROW __nonnull ((1));
 
 #ifdef __USE_XOPEN2K
 /* Get the clock selected for the conditon variable attribute ATTR.  */
@@ -1071,7 +1079,7 @@ extern int pthread_barrierattr_getpshared (__const pthread_barrierattr_t *
 
 /* Set the process-shared flag of the barrier attribute ATTR.  */
 extern int pthread_barrierattr_setpshared (pthread_barrierattr_t *__attr,
-                                           int __pshared)
+					   int __pshared)
      __THROW __nonnull ((1));
 #endif
 
@@ -1136,11 +1144,11 @@ __END_DECLS
 
 #endif	/* pthread.h */
 
-#ifndef _PTHREAD_H_HPPA_ 
+#ifndef _PTHREAD_H_HPPA_
 #define _PTHREAD_H_HPPA_ 1
 
 /* The pthread_cond_t initializer is compatible only with NPTL. We do not
-   want to be forwards compatible, we eventually want to drop the code 
+   want to be forwards compatible, we eventually want to drop the code
    that has to clear the old LT initializer.  */
 #undef PTHREAD_COND_INITIALIZER
 #define PTHREAD_COND_INITIALIZER { { 0, 0, 0, (void *) 0, 0, 0, 0, 0, 0 } }
@@ -1173,6 +1181,5 @@ __END_DECLS
   { { { 0, 0, 0, 0 }, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, PTHREAD_RWLOCK_PREFER_WRITER_NONRECURSIVE_NP,\
       0, 0, 0 } }
 #endif  /* Unix98 or XOpen2K */
- 
-#endif
 
+#endif
