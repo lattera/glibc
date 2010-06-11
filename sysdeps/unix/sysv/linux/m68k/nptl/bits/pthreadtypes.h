@@ -57,7 +57,7 @@ typedef union
 {
   struct __pthread_mutex_s
   {
-    int __lock;
+    int __lock __attribute__ ((__aligned__ (4)));
     unsigned int __count;
     int __owner;
     /* KIND must stay at this position in the structure to maintain
@@ -87,7 +87,7 @@ typedef union
 {
   struct
   {
-    int __lock;
+    int __lock __attribute__ ((__aligned__ (4)));
     unsigned int __futex;
     __extension__ unsigned long long int __total_seq;
     __extension__ unsigned long long int __wakeup_seq;
@@ -112,7 +112,7 @@ typedef unsigned int pthread_key_t;
 
 
 /* Once-only execution */
-typedef int pthread_once_t;
+typedef int __attribute__ ((__aligned__ (4))) pthread_once_t;
 
 
 #if defined __USE_UNIX98 || defined __USE_XOPEN2K
@@ -122,7 +122,7 @@ typedef union
 {
   struct
   {
-    int __lock;
+    int __lock __attribute__ ((__aligned__ (4)));
     unsigned int __nr_readers;
     unsigned int __readers_wakeup;
     unsigned int __writer_wakeup;
@@ -158,7 +158,7 @@ typedef volatile int pthread_spinlock_t;
 typedef union
 {
   char __size[__SIZEOF_PTHREAD_BARRIER_T];
-  long int __align;
+  long int __align __attribute__ ((__aligned__ (4)));
 } pthread_barrier_t;
 
 typedef union
