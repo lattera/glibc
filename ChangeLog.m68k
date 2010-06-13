@@ -1,5 +1,8 @@
 2010-06-13  Andreas Schwab  <schwab@linux-m68k.org>
 
+	* sysdeps/m68k/m680x0/fpu/bits/mathinline.h: Mark all functions as
+	non-throwing.
+
 	* sysdeps/unix/sysv/linux/m68k/sys/user.h (NBPG, UPAGES)
 	(HOST_TEXT_START_ADDR, HOST_STACK_END_ADDR): Define.
 

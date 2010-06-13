@@ -126,7 +126,7 @@ __NTH (__signbitl (long double __x))
 /* Define a const math function.  */
 #define __m81_defun(rettype, func, args)				      \
   __m81_inline rettype __attribute__((__const__))			      \
-  __m81_u(func) args
+  __NTH (__m81_u(func) args)
 
 /* Define the three variants of a math function that has a direct
    implementation in the m68k fpu.  FUNC is the name for C (which will be
@@ -329,8 +329,8 @@ __m81_defun (long int, __CONCAT(__lrint,s), (float_type __x))		  \
 }									  \
 									  \
 __m81_inline float_type							  \
-__m81_u(__CONCAT(__fma,s))(float_type __x, float_type __y,		  \
-			   float_type __z)				  \
+__NTH (__m81_u(__CONCAT(__fma,s))(float_type __x, float_type __y,	  \
+				  float_type __z))			  \
 {									  \
   return (__x * __y) + __z;						  \
 }
@@ -346,8 +346,8 @@ __inline_functions (long double,l)
 
 # define __inline_functions(float_type, s)				\
 __m81_inline void							\
-__m81_u(__CONCAT(__sincos,s))(float_type __x, float_type *__sinx,	\
-			      float_type *__cosx)			\
+__NTH (__m81_u(__CONCAT(__sincos,s))(float_type __x, float_type *__sinx, \
+				     float_type *__cosx))		\
 {									\
   __asm ("fsincos%.x %2,%1:%0"						\
 	 : "=f" (*__sinx), "=f" (*__cosx) : "f" (__x));			\
@@ -368,13 +368,13 @@ __inline_functions (long double,l)
    NAME, to make token pasting work correctly with -traditional.  */
 # define __inline_forward_c(rettype, name, args1, args2)	\
 __MATH_INLINE rettype __attribute__((__const__))		\
-  name args1							\
+__NTH (name args1)						\
 {								\
   return __CONCAT(__,name) args2;				\
 }
 
 # define __inline_forward(rettype, name, args1, args2)	\
-__MATH_INLINE rettype name args1			\
+__MATH_INLINE rettype __NTH (name args1)		\
 {							\
   return __CONCAT(__,name) args2;			\
 }
