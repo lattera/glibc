@@ -1,4 +1,4 @@
-/* Copyright (C) 2008 Free Software Foundation, Inc.
+/* Copyright (C) 2008, 2010 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -57,5 +57,10 @@ struct user {
 	unsigned long magic;
 	char u_comm[32];
 };
+
+#define NBPG 4096
+#define UPAGES 1
+#define HOST_TEXT_START_ADDR u.start_code
+#define HOST_STACK_END_ADDR (u.start_stack + u.u_ssize * NBPG)
 
 #endif
