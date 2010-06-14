@@ -139,7 +139,7 @@ get_uid (const char *user, uid_t *uidp)
       if (r != ERANGE)
 	break;
 
-      extend_alloca (buf, buflen, 2 * buflen);
+      buf = extend_alloca (buf, buflen, 2 * buflen);
     }
 
   return 1;
