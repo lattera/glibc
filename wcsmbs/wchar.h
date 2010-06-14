@@ -658,10 +658,10 @@ extern int __REDIRECT (fwscanf, (__FILE *__restrict __stream,
 extern int __REDIRECT (wscanf, (__const wchar_t *__restrict __format, ...),
 		       __isoc99_wscanf)
      /* __attribute__ ((__format__ (__wscanf__, 1, 2))) */;
-extern int __REDIRECT (swscanf, (__const wchar_t *__restrict __s,
-				 __const wchar_t *__restrict __format, ...),
-		       __isoc99_swscanf)
-     __THROW /* __attribute__ ((__format__ (__wscanf__, 2, 3))) */;
+extern int __REDIRECT_NTH (swscanf, (__const wchar_t *__restrict __s,
+				     __const wchar_t *__restrict __format,
+				     ...), __isoc99_swscanf)
+     /* __attribute__ ((__format__ (__wscanf__, 2, 3))) */;
 #  else
 extern int __isoc99_fwscanf (__FILE *__restrict __stream,
 			     __const wchar_t *__restrict __format, ...);
@@ -712,10 +712,10 @@ extern int __REDIRECT (vfwscanf, (__FILE *__restrict __s,
 extern int __REDIRECT (vwscanf, (__const wchar_t *__restrict __format,
 				 __gnuc_va_list __arg), __isoc99_vwscanf)
      /* __attribute__ ((__format__ (__wscanf__, 1, 0))) */;
-extern int __REDIRECT (vswscanf, (__const wchar_t *__restrict __s,
-				  __const wchar_t *__restrict __format,
-				  __gnuc_va_list __arg), __isoc99_vswscanf)
-     __THROW /* __attribute__ ((__format__ (__wscanf__, 2, 0))) */;
+extern int __REDIRECT_NTH (vswscanf, (__const wchar_t *__restrict __s,
+				      __const wchar_t *__restrict __format,
+				      __gnuc_va_list __arg), __isoc99_vswscanf)
+     /* __attribute__ ((__format__ (__wscanf__, 2, 0))) */;
 #  else
 extern int __isoc99_vfwscanf (__FILE *__restrict __s,
 			      __const wchar_t *__restrict __format,
