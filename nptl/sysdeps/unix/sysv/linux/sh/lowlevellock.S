@@ -1,4 +1,4 @@
-/* Copyright (C) 2003, 2004, 2005, 2007, 2008, 2009
+/* Copyright (C) 2003, 2004, 2005, 2007, 2008, 2009, 2010
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -282,6 +282,7 @@ __lll_timedlock_wait:
 	rts
 	 mov.l	@r15+, r12
 
+# ifndef __ASSUME_FUTEX_CLOCK_REALTIME
 	.align	2
 # ifdef PIC
 .Lgot:
@@ -293,7 +294,6 @@ __lll_timedlock_wait:
 	.long	__have_futex_clock_realtime
 # endif
 
-# ifndef __ASSUME_FUTEX_CLOCK_REALTIME
 .Lreltmo:
 	/* Check for a valid timeout value.  */
 	mov.l	@(4,r6), r1

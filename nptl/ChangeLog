@@ -1,3 +1,8 @@
+2010-06-01  Takashi Yoshii  <takashi.yoshii.zj@renesas.com>
+
+	* sysdeps/unix/sysv/linux/sh/lowlevellock.S: Fix incorrect
+	location of ifndef __ASSUME_FUTEX_CLOCK_REALTIME.
+
 2010-04-09  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #11390]
