@@ -1,3 +1,8 @@
+2010-06-14  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/arm/bits/fcntl.h (F_SETPIPE_SZ,
+	F_GETPIPE_SZ): Define.
+
 2010-05-21  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/arm/eabi/internal_recvmmsg.S: New.
