@@ -9,6 +9,10 @@
 	* sysdeps/unix/sysv/linux/sh/bits/fcntl.h: Likewise.
 	* sysdeps/unix/sysv/linux/ia64/bits/fcntl.h: Likewise
 
+2010-06-14  Roland McGrath  <roland@redhat.com>
+
+	* manual/libc.texinfo (@copying): Change to GFDL v1.3.
+
 2010-06-07  Jakub Jelinek  <jakub@redhat.com>
 
 	* libio/stdio.h (sscanf, vsscanf): Use __REDIRECT_NTH instead of
