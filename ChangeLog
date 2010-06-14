@@ -1,3 +1,14 @@
+2010-06-14  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/bits/fcntl.h: Define F_SETPIPE_SZ
+	and F_GETPIPE_SZ.
+	* sysdeps/unix/sysv/linux/i386/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/sh/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/bits/fcntl.h: Likewise
+
 2010-06-07  Jakub Jelinek  <jakub@redhat.com>
 
 	* libio/stdio.h (sscanf, vsscanf): Use __REDIRECT_NTH instead of

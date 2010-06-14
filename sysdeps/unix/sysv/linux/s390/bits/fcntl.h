@@ -118,6 +118,8 @@
 # define F_SETLEASE	1024	/* Set a lease.	 */
 # define F_GETLEASE	1025	/* Enquire what lease is active.  */
 # define F_NOTIFY	1026	/* Request notfications on a directory.	 */
+# define F_SETPIPE_SZ	1031	/* Set pipe page size array.  */
+# define F_GETPIPE_SZ	1032	/* Set pipe page size array.  */
 #endif
 #ifdef __USE_XOPEN2K8
 # define F_DUPFD_CLOEXEC 1030	/* Duplicate file descriptor with
