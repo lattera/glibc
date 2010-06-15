@@ -1,5 +1,5 @@
 /* Relocate a shared object and resolve its references to other loaded objects.
-   Copyright (C) 1995-2006, 2008, 2009 Free Software Foundation, Inc.
+   Copyright (C) 1995-2006, 2008, 2009, 2010 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -306,6 +306,10 @@ _dl_relocate_object (struct link_map *l, struct r_scope_elem *scope[],
 	  errstring = N_("cannot restore segment prot after reloc");
 	  goto call_error;
 	}
+
+#ifdef CLEAR_CACHE
+      CLEAR_CACHE (textrels->start, textrels->start + textrels->len);
+#endif
 
       textrels = textrels->next;
     }
