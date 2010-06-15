@@ -35,7 +35,7 @@ EALIGN (BP_SYM(memcmp),4,0)
 #define rSTR2	r4	/* second string arg */
 #define rN	r5	/* max string length */
 /* Note:  The Bounded pointer support in this code is broken.  This code
-   was inherited from PPC32 and and that support was never completed.  
+   was inherited from PPC32 and and that support was never completed.
    Current PPC gcc does not support -fbounds-check or -fbounded-pointers.  */
 #define rWORD1	r6	/* current word in s1 */
 #define rWORD2	r7	/* current word in s2 */
@@ -67,9 +67,9 @@ EALIGN (BP_SYM(memcmp),4,0)
 /* At this point we know both strings have the same alignment and the
    compare length is at least 8 bytes.  rBITDIF containes the low order
    3 bits of rSTR1 and cr5 contains the result of the logical compare
-   of rBITDIF to 0.  If rBITDIF == 0 then we are already double word 
+   of rBITDIF to 0.  If rBITDIF == 0 then we are already double word
    aligned and can perform the DWaligned loop.
-  
+
    Otherwise we know the two strings have the same alignment (but not
    yet DW).  So we can force the string addresses to the next lower DW
    boundary and special case this first DW word using shift left to
@@ -158,7 +158,7 @@ L(dP1):
    (8-15 byte compare), we want to use only volitile registers.  This
    means we can avoid restoring non-volitile registers since we did not
    change any on the early exit path.  The key here is the non-early
-   exit path only cares about the condition code (cr5), not about which 
+   exit path only cares about the condition code (cr5), not about which
    register pair was used.  */
 	ld	rWORD5,0(rSTR1)
 	ld	rWORD6,0(rSTR2)
@@ -335,7 +335,7 @@ L(d24):
 	bne	cr6,L(dLcr6)
 L(d14):
 	sldi.	r12,rN,3
-	bne	cr5,L(dLcr5) 
+	bne	cr5,L(dLcr5)
 L(d04):
 	ld	rWORD8,-8(r1)
 	ld	rWORD7,-16(r1)
@@ -343,10 +343,10 @@ L(d04):
 	beq	L(zeroLength)
 /* At this point we have a remainder of 1 to 7 bytes to compare.  Since
    we are aligned it is safe to load the whole double word, and use
-   shift right double to elliminate bits beyond the compare length.  */ 
+   shift right double to elliminate bits beyond the compare length.  */
 L(d00):
 	ld	rWORD1,8(rSTR1)
-	ld	rWORD2,8(rSTR2) 
+	ld	rWORD2,8(rSTR2)
 	srd	rWORD1,rWORD1,rN
 	srd	rWORD2,rWORD2,rN
 	cmpld	cr5,rWORD1,rWORD2
@@ -393,15 +393,15 @@ L(bytealigned):
 	beq	cr6,L(zeroLength)
 
 /* We need to prime this loop.  This loop is swing modulo scheduled
-   to avoid pipe delays.  The dependent instruction latencies (load to 
+   to avoid pipe delays.  The dependent instruction latencies (load to
    compare to conditional branch) is 2 to 3 cycles.  In this loop each
    dispatch group ends in a branch and takes 1 cycle.  Effectively
-   the first iteration of the loop only serves to load operands and 
-   branches based on compares are delayed until the next loop. 
+   the first iteration of the loop only serves to load operands and
+   branches based on compares are delayed until the next loop.
 
    So we must precondition some registers and condition codes so that
    we don't exit the loop early on the first iteration.  */
-   
+
 	lbz	rWORD1,0(rSTR1)
 	lbz	rWORD2,0(rSTR2)
 	bdz	L(b11)
@@ -438,7 +438,7 @@ L(bLoop):
 
 /* We speculatively loading bytes before we have tested the previous
    bytes.  But we must avoid overrunning the length (in the ctr) to
-   prevent these speculative loads from causing a segfault.  In this 
+   prevent these speculative loads from causing a segfault.  In this
    case the loop will exit early (before the all pending bytes are
    tested.  In this case we must complete the pending operations
    before returning.  */
@@ -489,7 +489,7 @@ L(b11):
 L(bx12):
 	sub	rRTN,rWORD1,rWORD2
 	blr
-	.align	4 
+	.align	4
 L(zeroLengthReturn):
 	ld	rWORD8,-8(r1)
 	ld	rWORD7,-16(r1)
@@ -501,9 +501,9 @@ L(zeroLength):
 /* At this point we know the strings have different alignment and the
    compare length is at least 8 bytes.  rBITDIF containes the low order
    3 bits of rSTR1 and cr5 contains the result of the logical compare
-   of rBITDIF to 0.  If rBITDIF == 0 then rStr1 is double word 
+   of rBITDIF to 0.  If rBITDIF == 0 then rStr1 is double word
    aligned and can perform the DWunaligned loop.
-  
+
    Otherwise we know that rSTR1 is not aready DW aligned yet.
    So we can force the string addresses to the next lower DW
    boundary and special case this first DW word using shift left to
@@ -541,7 +541,7 @@ L(unaligned):
 	std	r26,-48(r1)
 	cfi_offset(r26,-48)
 /* Compute the leaft/right shift counts for the unalign rSTR2,
-   compensating for the logical (DW aligned) start of rSTR1.  */ 
+   compensating for the logical (DW aligned) start of rSTR1.  */
 	clrldi	rSHL,r27,61
 	clrrdi	rSTR1,rSTR1,3
 	std	r25,-56(r1)
@@ -879,11 +879,11 @@ L(du14):
 	sldi.	rN,rN,3
 	bne	cr5,L(duLcr5)
 /* At this point we have a remainder of 1 to 7 bytes to compare.  We use
-   shift right double to elliminate bits beyond the compare length. 
+   shift right double to elliminate bits beyond the compare length.
    This allows the use of double word subtract to compute the final
    result.
 
-   However it may not be safe to load rWORD2 which may be beyond the 
+   However it may not be safe to load rWORD2 which may be beyond the
    string length. So we compare the bit length of the remainder to
    the right shift count (rSHR). If the bit count is less than or equal
    we do not need to load rWORD2 (all significant bits are already in
@@ -898,7 +898,7 @@ L(du14):
 L(dutrim):
 	ld	rWORD1,8(rSTR1)
 	ld	rWORD8,-8(r1)
-	subfic	rN,rN,64	/* Shift count is 64 - (rN * 8).  */ 
+	subfic	rN,rN,64	/* Shift count is 64 - (rN * 8).  */
 	or	rWORD2,rA,rB
 	ld	rWORD7,-16(r1)
 	ld	r29,-24(r1)

@@ -68,7 +68,7 @@ EALIGN (BP_SYM(memcmp),4,0)
 /* At this point we know both strings have the same alignment and the
    compare length is at least 8 bytes.  rBITDIF contains the low order
    2 bits of rSTR1 and cr5 contains the result of the logical compare
-   of rBITDIF to 0.  If rBITDIF == 0 then we are already word 
+   of rBITDIF to 0.  If rBITDIF == 0 then we are already word
    aligned and can perform the word aligned loop.
 
    Otherwise we know the two strings have the same alignment (but not
@@ -159,7 +159,7 @@ L(dP1):
    (8-15 byte compare), we want to use only volatile registers.  This
    means we can avoid restoring non-volatile registers since we did not
    change any on the early exit path.  The key here is the non-early
-   exit path only cares about the condition code (cr5), not about which 
+   exit path only cares about the condition code (cr5), not about which
    register pair was used.  */
 	lwz	rWORD5,0(rSTR1)
 	lwz	rWORD6,0(rSTR2)
@@ -339,7 +339,7 @@ L(d24):
 	bne	cr6,L(dLcr6)
 L(d14):
 	slwi.	r12,rN,3
-	bne	cr5,L(dLcr5) 
+	bne	cr5,L(dLcr5)
 L(d04):
 	lwz	r30,44(1)
 	lwz	r31,48(1)
@@ -348,10 +348,10 @@ L(d04):
 	beq	L(zeroLength)
 /* At this point we have a remainder of 1 to 3 bytes to compare.  Since
    we are aligned it is safe to load the whole word, and use
-   shift right to eliminate bits beyond the compare length. */ 
+   shift right to eliminate bits beyond the compare length. */
 L(d00):
 	lwz	rWORD1,4(rSTR1)
-	lwz	rWORD2,4(rSTR2) 
+	lwz	rWORD2,4(rSTR2)
 	srw	rWORD1,rWORD1,rN
 	srw	rWORD2,rWORD2,rN
 	cmplw	rWORD1,rWORD2
@@ -406,11 +406,11 @@ L(bytealigned):
 	mtctr	rN
 
 /* We need to prime this loop.  This loop is swing modulo scheduled
-   to avoid pipe delays.  The dependent instruction latencies (load to 
+   to avoid pipe delays.  The dependent instruction latencies (load to
    compare to conditional branch) is 2 to 3 cycles.  In this loop each
    dispatch group ends in a branch and takes 1 cycle.  Effectively
-   the first iteration of the loop only serves to load operands and 
-   branches based on compares are delayed until the next loop. 
+   the first iteration of the loop only serves to load operands and
+   branches based on compares are delayed until the next loop.
 
    So we must precondition some registers and condition codes so that
    we don't exit the loop early on the first iteration.  */
@@ -450,7 +450,7 @@ L(bLoop):
 
 /* We speculatively loading bytes before we have tested the previous
    bytes.  But we must avoid overrunning the length (in the ctr) to
-   prevent these speculative loads from causing a segfault.  In this 
+   prevent these speculative loads from causing a segfault.  In this
    case the loop will exit early (before the all pending bytes are
    tested.  In this case we must complete the pending operations
    before returning.  */
@@ -503,7 +503,7 @@ L(bx12):
 	sub	rRTN,rWORD1,rWORD2
 	blr
 
-	.align	4 
+	.align	4
 L(zeroLengthReturn):
 
 L(zeroLength):
@@ -515,9 +515,9 @@ L(zeroLength):
 /* At this point we know the strings have different alignment and the
    compare length is at least 8 bytes.  rBITDIF contains the low order
    2 bits of rSTR1 and cr5 contains the result of the logical compare
-   of rBITDIF to 0.  If rBITDIF == 0 then rStr1 is word aligned and can 
+   of rBITDIF to 0.  If rBITDIF == 0 then rStr1 is word aligned and can
    perform the Wunaligned loop.
-  
+
    Otherwise we know that rSTR1 is not aready word aligned yet.
    So we can force the string addresses to the next lower word
    boundary and special case this first word using shift left to
@@ -554,7 +554,7 @@ L(unaligned):
 	stw	r26,28(r1)
 	cfi_offset(r26,(28-64))
 /* Compute the left/right shift counts for the unalign rSTR2,
-   compensating for the logical (W aligned) start of rSTR1.  */ 
+   compensating for the logical (W aligned) start of rSTR1.  */
 	clrlwi	rSHL,r27,30
 	clrrwi	rSTR1,rSTR1,2
 	stw	r25,24(r1)
@@ -892,9 +892,9 @@ L(du14):
 	slwi.	rN,rN,3
 	bne	cr5,L(duLcr5)
 /* At this point we have a remainder of 1 to 3 bytes to compare.  We use
-   shift right to eliminate bits beyond the compare length. 
+   shift right to eliminate bits beyond the compare length.
 
-   However it may not be safe to load rWORD2 which may be beyond the 
+   However it may not be safe to load rWORD2 which may be beyond the
    string length. So we compare the bit length of the remainder to
    the right shift count (rSHR). If the bit count is less than or equal
    we do not need to load rWORD2 (all significant bits are already in
@@ -909,7 +909,7 @@ L(du14):
 L(dutrim):
 	lwz	rWORD1,4(rSTR1)
 	lwz	r31,48(1)
-	subfic	rN,rN,32	/* Shift count is 32 - (rN * 8).  */ 
+	subfic	rN,rN,32	/* Shift count is 32 - (rN * 8).  */
 	or	rWORD2,rA,rB
 	lwz	r30,44(1)
 	lwz	r29,40(r1)
