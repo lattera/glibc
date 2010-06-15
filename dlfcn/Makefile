@@ -1,4 +1,4 @@
-# Copyright (C) 1995-2002, 2003, 2004, 2005, 2006 Free Software Foundation, Inc.
+# Copyright (C) 1995-2006, 2010 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -89,9 +89,9 @@ LDFLAGS-glreflib3.so = -Wl,-rpath,:
 
 LDFLAGS-default = $(LDFLAGS-rdynamic)
 $(objpfx)default: $(libdl) $(objpfx)defaultmod1.so $(objpfx)defaultmod2.so
-$(objpfx)defaultmod1.so: $(libdl) $(common-objpfx)libc_nonshared.a
+$(objpfx)defaultmod1.so: $(libdl)
 LDFLAGS-defaultmod2.so = $(LDFLAGS-Bsymbolic)
-$(objpfx)defaultmod2.so: $(libdl) $(common-objpfx)libc_nonshared.a
+$(objpfx)defaultmod2.so: $(libdl)
 
 $(objpfx)errmsg1: $(libdl)
 $(objpfx)errmsg1.out: $(objpfx)errmsg1 $(objpfx)errmsg1mod.so
@@ -102,8 +102,6 @@ $(objpfx)tstatexit.out: $(objpfx)tstatexit $(objpfx)modatexit.so
 $(objpfx)tstcxaatexit: $(libdl)
 $(objpfx)tstcxaatexit.out: $(objpfx)tstcxaatexit $(objpfx)modcxaatexit.so
 
-$(objpfx)modatexit.so: $(common-objpfx)libc.so $(common-objpfx)libc_nonshared.a
-
 $(objpfx)tststatic: $(objpfx)libdl.a
 $(objpfx)tststatic.out: $(objpfx)tststatic $(objpfx)modstatic.so
 
@@ -111,36 +109,24 @@ $(objpfx)tststatic2: $(objpfx)libdl.a
 $(objpfx)tststatic2.out: $(objpfx)tststatic2 $(objpfx)modstatic.so \
 			 $(objpfx)modstatic2.so
 
-$(objpfx)modstatic2.so: $(libdl) $(common-objpfx)libc.so \
-			$(common-objpfx)libc_nonshared.a
+$(objpfx)modstatic2.so: $(libdl)
 
 $(objpfx)bug-dlopen1: $(libdl)
 
 $(objpfx)bug-dlsym1: $(libdl) $(objpfx)bug-dlsym1-lib2.so
 $(objpfx)bug-dlsym1.out: $(objpfx)bug-dlsym1-lib1.so \
 			 $(objpfx)bug-dlsym1-lib2.so
-$(objpfx)bug-dlsym1-lib1.so: $(objpfx)bug-dlsym1-lib2.so \
-			     $(common-objpfx)libc.so \
-			     $(common-objpfx)libc_nonshared.a
-$(objpfx)bug-dlsym1-lib2.so: $(common-objpfx)libc.so \
-			     $(common-objpfx)libc_nonshared.a
+$(objpfx)bug-dlsym1-lib1.so: $(objpfx)bug-dlsym1-lib2.so
 
 $(objpfx)bug-atexit1: $(libdl)
 $(objpfx)bug-atexit1.out: $(objpfx)bug-atexit1-lib.so
-$(objpfx)bug-atexit1-lib.so: $(common-objpfx)libc.so \
-			     $(common-objpfx)libc_nonshared.a
 
 $(objpfx)bug-atexit2: $(libdl)
 $(objpfx)bug-atexit2.out: $(objpfx)bug-atexit2-lib.so
-$(objpfx)bug-atexit2-lib.so: $(common-objpfx)libc.so \
-			     $(common-objpfx)libc_nonshared.a
 
-LDLIBS-bug-atexit3-lib.so = -lstdc++ -lgcc_eh $(common-objpfx)elf/ld.so \
-			    $(common-objpfx)libc_nonshared.a
+LDLIBS-bug-atexit3-lib.so = -lstdc++ -lgcc_eh
 $(objpfx)bug-atexit3: $(libdl)
 $(objpfx)bug-atexit3.out: $(objpfx)bug-atexit3-lib.so
-$(objpfx)bug-atexit3-lib.so: $(common-objpfx)libc.so \
-			     $(common-objpfx)libc_nonshared.a
 
 
 # Depend on libc.so so a DT_NEEDED is generated in the shared objects.
