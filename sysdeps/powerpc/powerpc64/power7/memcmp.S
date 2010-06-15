@@ -350,7 +350,7 @@ L(d00):
 	srd	rWORD1,rWORD1,rN
 	srd	rWORD2,rWORD2,rN
 	cmpld	cr5,rWORD1,rWORD2
- 	bne	cr5,L(dLcr5x)
+	bne	cr5,L(dLcr5x)
 	li	rRTN,0
 	blr
 	.align	4
@@ -910,7 +910,7 @@ L(dutrim):
 	cmpld	cr0,rWORD1,rWORD2
 	ld	r26,-48(r1)
 	ld	r25,-56(r1)
- 	beq	cr0,L(dureturn24)
+	beq	cr0,L(dureturn24)
 	li	rRTN,1
 	ld	r24,-64(r1)
 	bgtlr	cr0
