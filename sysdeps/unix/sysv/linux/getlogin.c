@@ -32,8 +32,9 @@
 char *
 getlogin (void)
 {
-  if (__getlogin_r_loginuid (name, sizeof (name)) == 0)
-    return name;
+  int res = __getlogin_r_loginuid (name, sizeof (name));
+  if (res >= 0)
+    return res == 0 ? name : NULL;
 
   return getlogin_fd0 ();
 }

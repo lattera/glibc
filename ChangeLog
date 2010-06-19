@@ -1,3 +1,12 @@
+2010-06-19  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/getlogin_r.c (__getlogin_r_loginuid): Handle
+	OOM in getpwuid_r correctly.  Return error number when the caller
+	should return, otherwise -1.
+	(getlogin_r): Adjust to return also for result of __getlogin_r_loginuid
+	call returning > 0 value.
+	* sysdeps/unix/sysv/linux/getlogin.c (getlogin): Likewise.
+
 2010-06-07  Andreas Schwab  <schwab@redhat.com>
 
 	* dlfcn/Makefile: Remove explicit dependencies on libc.so and

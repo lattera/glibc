@@ -58,30 +58,31 @@ __getlogin_r_loginuid (name, namesize)
   bool use_malloc = false;
   struct passwd pwd;
   struct passwd *tpwd;
+  int result = 0;
   int res;
 
-  while ((res = __getpwuid_r (uid, &pwd, buf, buflen, &tpwd)) != 0)
+  while ((res = __getpwuid_r (uid, &pwd, buf, buflen, &tpwd)) == ERANGE)
     if (__libc_use_alloca (2 * buflen))
-      extend_alloca (buf, buflen, 2 * buflen);
+      buf = extend_alloca (buf, buflen, 2 * buflen);
     else
       {
 	buflen *= 2;
 	char *newp = realloc (use_malloc ? buf : NULL, buflen);
 	if (newp == NULL)
 	  {
-	  fail:
-	    if (use_malloc)
-	      free (buf);
-	    return 1;
+	    result = ENOMEM;
+	    goto out;
 	  }
 	buf = newp;
 	use_malloc = true;
       }
 
-  if (tpwd == NULL)
-    goto fail;
+  if (res != 0)
+    {
+      result = -1;
+      goto out;
+    }
 
-  int result = 0;
   size_t needed = strlen (pwd.pw_name) + 1;
   if (needed > namesize)
     {
@@ -109,8 +110,9 @@ getlogin_r (name, namesize)
      char *name;
      size_t namesize;
 {
-  if (__getlogin_r_loginuid (name, namesize) == 0)
-    return 0;
+  int res = __getlogin_r_loginuid (name, namesize);
+  if (res >= 0)
+    return res;
 
   return getlogin_r_fd0 (name, namesize);
 }
