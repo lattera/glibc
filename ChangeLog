@@ -1,5 +1,8 @@
 2010-06-19  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #11701]
+	* posix/group_member.c (__group_member): Correct checking loop.
+
 	* sysdeps/unix/sysv/linux/getlogin_r.c (__getlogin_r_loginuid): Handle
 	OOM in getpwuid_r correctly.  Return error number when the caller
 	should return, otherwise -1.
