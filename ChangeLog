@@ -1,3 +1,8 @@
+2010-06-21  Andreas Schwab <schwab@redhat.com>
+
+	* sysdeps/unix/sysv/linux/getlogin_r.c (__getlogin_r_loginuid):
+	Restore proper fallback handling.
+
 2010-06-19  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #11701]

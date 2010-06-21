@@ -27,6 +27,10 @@ static int getlogin_r_fd0 (char *name, size_t namesize);
 #undef getlogin_r
 
 
+/* Try to determine login name from /proc/self/loginuid and return 0
+   if successful.  If /proc/self/loginuid cannot be read return -1.
+   Otherwise return the error number.  */
+
 int
 attribute_hidden
 __getlogin_r_loginuid (name, namesize)
@@ -35,7 +39,7 @@ __getlogin_r_loginuid (name, namesize)
 {
   int fd = open_not_cancel_2 ("/proc/self/loginuid", O_RDONLY);
   if (fd == -1)
-    return 1;
+    return -1;
 
   /* We are reading a 32-bit number.  12 bytes are enough for the text
      representation.  If not, something is wrong.  */
@@ -51,7 +55,7 @@ __getlogin_r_loginuid (name, namesize)
       || (uidbuf[n] = '\0',
 	  uid = strtoul (uidbuf, &endp, 10),
 	  endp == uidbuf || *endp != '\0'))
-    return 1;
+    return -1;
 
   size_t buflen = 1024;
   char *buf = alloca (buflen);
