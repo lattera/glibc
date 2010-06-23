@@ -26,26 +26,57 @@
 #include <ucontext.h>
 
 /* POSIX only supports integer arguments.  */
+
+/* Stack must be 64-byte aligned at all times.  */
 #define STACK_ALIGN 64
-#define FRAME_SIZE 8
+/* Size of frame marker in unsigned long words.  */
+#define FRAME_SIZE_UL 8 
+/* Size of frame marker in bytes.  */
+#define FRAME_SIZE_BYTES (8 * sizeof(unsigned long)) 
+/* Size of X arguments in bytes.  */
+#define ARGS(x) (x * sizeof(unsigned long))
 
 void
 __makecontext (ucontext_t *ucp, void (*func) (void), int argc, ...)
 {
-  unsigned long *sp;
+  unsigned long *sp, *osp;
   va_list ap;
   int i;
 
-  /* Get stack pointer (64-byte aligned).  */
-  sp = (unsigned long *)((((unsigned long) ucp->uc_stack.ss_sp) 
-			 + FRAME_SIZE + argc + STACK_ALIGN) 
-		        & ~(STACK_ALIGN - 1));
+  /* Create a 64-byte aligned frame to store args. Use ss_sp if 
+     it is available, otherwise be robust and use the currently
+     saved stack pointer.  */
+  if (ucp->uc_stack.ss_sp && ucp->uc_stack.ss_size)
+    osp = (unsigned long *)ucp->uc_stack.ss_sp;
+  else
+    osp = (unsigned long *)ucp->uc_mcontext.sc_gr[30];
+
+  sp = (unsigned long *)((((unsigned long) osp) 
+			   + FRAME_SIZE_BYTES + ARGS(argc) + STACK_ALIGN) 
+			 & ~(STACK_ALIGN - 1));
+
+  /* Use new frame.  */
+  ucp->uc_mcontext.sc_gr[30] = ((unsigned long) sp);
+
+  /* Finish frame setup.  */
+  if (ucp->uc_link)
+    {
+      /* Returning to the next context and next frame.  */
+      sp[-4/sizeof(unsigned long)] = ucp->uc_link->uc_mcontext.sc_gr[30];
+      sp[-20/sizeof(unsigned long)] = ucp->uc_link->uc_mcontext.sc_gr[2];
+    }
+  else
+    {
+      /* This is the main context. No frame marker, and no return address.  */
+      sp[-4/sizeof(unsigned long)] = 0x0;
+      sp[-20/sizeof(unsigned long)] = 0x0;
+    }
 
   /* Store address to jump to.  */
   ucp->uc_mcontext.sc_gr[2] = (unsigned long) func;
 
+  /* Process arguments.  */
   va_start (ap, argc);
-  /* Handle arguments.  */
   for (i = 0; i < argc; ++i)
     {
       if (i < 4)
@@ -62,13 +93,9 @@ __makecontext (ucontext_t *ucp, void (*func) (void), int argc, ...)
 	} 
 
       /* All other arguments go on the stack.  */
-      sp[-1 * (FRAME_SIZE + 1 + i)] = va_arg (ap, int);
+      sp[-1 * (FRAME_SIZE_UL + 1 + i)] = va_arg (ap, int);
     }
   va_end (ap); 
-
-  /* Adjust the stack pointer to last used argument.  */
-  ucp->uc_mcontext.sc_gr[30] = (unsigned long) sp;
 }
-
-
 weak_alias(__makecontext, makecontext)
+

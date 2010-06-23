@@ -25,9 +25,9 @@
 
 ENTRY(__setcontext)
 	/* Prologue */
-	stwm	%r3, 64(%r30)
+	stwm	%r3, 64(%sp)
 #ifdef PIC
-	stw	%r19, -32(%r30)
+	stw	%r19, -32(%sp)
 #endif
 
 	/* Save ucp.  */
@@ -78,7 +78,7 @@ ENTRY(__setcontext)
 	ldw	oR27(%r3), %r27
 	ldw	oR28(%r3), %r28
 	ldw	oR29(%r3), %r29
-	ldw	oR30(%r3), %r30
+	ldw	oR30(%r3), %sp
 	/* ldw	oR31(%r3), %r31 - dyncall scratch register */
 
 	/* Restore floating-point registers.  */
@@ -116,9 +116,13 @@ ENTRY(__setcontext)
 	fldds,mb -8(%r22), %fr1
 	fldds,mb -8(%r22), %fr0
 
-	/* Calculate new stack pointer.  */
-	ldw	oSS_SP(%r3), %sp
-	ldo	64(%sp), %sp
+	/* Do not load oSS_SP into %sp. The value of oSS_SP indicates
+	   the start of the user allocated stack, but not the sp that
+	   should be used by the new context. In fact makecontext 
+	   will create a frame, and adjust sp as required. We do not
+	   support calling getcontext and modifying ss_sp without
+	   a call to makecontext to synchronize ss_sp into the machine
+	   context.  */
 
 	/* Call external function.  */
 	copy	%r2, %r22

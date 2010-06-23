@@ -23,17 +23,21 @@
 #include "ucontext_i.h"
 
 
-	/* Trampoline function.  */
+	/* Trampoline function. Non-standard calling ABI.  */
 	/* Can not use ENTRY(__getcontext_ret) here.  */
 	.type	__getcontext_ret, @function
 	.hidden	__getcontext_ret
 __getcontext_ret:
 	.proc
 	.callinfo FRAME=0,NO_CALLS
+	/* r26-r23 contain original r3-r6, but because setcontext
+	   does not reload r3-r6 (it's using them as temporaries)
+	   we must save them elsewhere and swap them back in.  */
 	copy	%r23, %r3
 	copy	%r24, %r4
 	copy	%r25, %r5
 	copy	%r26, %r6
+	/* r20 contains original return pointer.  */
 	bv	0(%r20)
 	copy	%r0, %ret0
 	.procend
@@ -72,13 +76,12 @@ ENTRY(__getcontext)
 	stw	%r27, oR27(%r26)
 	stw	%r28, oR28(%r26)
 	stw	%r29, oR29(%r26)
-	ldo	-64(%sp), %r1	/* Calculate %sp in %r1.  */
-	stw	%r1, oR30(%r26)	/* Save new %sp.  */
+	stw	%sp, oR30(%r26)
 	stw	%r31, oR31(%r26)
 
 	stw	%r0, oUC_FLAGS(%r26)
 	/* stw	%r0, oUC_LINK(%r26) - Do not overwrite.  */
-	stw	%r1, oSS_SP(%r26)
+	stw	%sp, oSS_SP(%r26)
 	stw	%r0, oSS_FLAGS(%r26)
 	stw	%r0, oSS_SIZE(%r26)
 
@@ -127,9 +130,9 @@ ENTRY(__getcontext)
 	fstds	 %fr31, 0(%r1)
 
 	/* Prologue */
-	stwm	%r4, 64(%r30)
+	stwm	%r4, 64(%sp)
 #ifdef PIC
-	stw	%r19, -32(%r30)
+	stw	%r19, -32(%sp)
 #endif
 
 	/* Set up the trampoline registers.
@@ -152,12 +155,12 @@ ENTRY(__getcontext)
 	ldi	SIG_BLOCK, %r26
 
 	/* Epilogue */
-	ldw	-84(%r30), %r2
+	ldw	-84(%sp), %r2
 #ifdef PIC
-	ldw	-96(%r30), %r19
+	ldw	-96(%sp), %r19
 #endif
 	bv	%r0(%r2)
-	ldwm	-64(%r30), %r4
+	ldwm	-64(%sp), %r4
 END(__getcontext)
 
 weak_alias (__getcontext, getcontext)
