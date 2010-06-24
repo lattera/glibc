@@ -1,3 +1,9 @@
+2010-06-24  Carlos O'Donell  <carlos@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/hppa/nptl/pt-vfork.S: Only create stack 
+	frame around call to SYSCALL_ERROR_HANDLER. Do not restore %rp 
+	from the stack frame on successfull return.
+
 2010-06-23  Carlos O'Donell  <carlos@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/hppa/getcontext.S (__getcontext_ret):

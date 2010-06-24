@@ -1,4 +1,4 @@
-/* Copyright (C) 2005 Free Software Foundation, Inc.
+/* Copyright (C) 2005, 2010 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -50,10 +50,9 @@
 
 	/* r26, r25, r24, r23 are free since vfork has no arguments */
 ENTRY(__vfork)
-	/* Prologue */
-	stwm	%r3, 64(%sp)
-	stw	%sp, -4(%sp)
-	stw	%r19, -32(%sp)
+	/* We must not create a frame. When the child unwinds to call 
+	   exec it will clobber the same frame that the parent
+	   needs to unwind.  */
 
 	/* Save the PIC register. */
 #ifdef PIC
@@ -75,12 +74,20 @@ ENTRY(__vfork)
 	comclr,>>= %r1,%ret0,%r0        /* Note: unsigned compare. */
 	b,n	.Lerror
 
-	/* Return, no need to restore the PIC register. */
-	ldw	-84(%sp), %rp
-	bv	%r0(%rp)
-	ldwm	-64(%sp), %r3
+	/* Return, and DO NOT restore rp. The child may have called
+	   functions that updated the frame's rp. This works because
+	   the kernel ensures rp is preserved across the vfork 
+	   syscall.  */
+	bv,n	%r0(%rp)
 
 .Lerror:
+	/* Now we need a stack to call a function. We are assured
+	   that there is no child now, so it's safe to create
+	   a frame.  */
+	stw	%rp, -20(%sp)
+	stwm	%r3, 64(%sp)
+	stw	%sp, -4(%sp)
+
 	sub	%r0,%ret0,%r3
 	SYSCALL_ERROR_HANDLER
 	/* Restore the PIC register (in delay slot) on error */
