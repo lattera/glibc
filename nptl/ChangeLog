@@ -1,3 +1,8 @@
+2011-08-31  Andreas Schwab  <schwab@redhat.com>
+
+	* allocatestack.c (setxid_mark_thread): Ensure that the exiting
+	thread is woken up.
+
 2011-08-20  David S. Miller  <davem@davemloft.net>
 
 	* Makefile (tst-cleanup0.out): Fix typo in output redirection.
