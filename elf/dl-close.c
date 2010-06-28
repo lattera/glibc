@@ -1,5 +1,5 @@
 /* Close a shared object opened by `_dl_open'.
-   Copyright (C) 1996-2007, 2009 Free Software Foundation, Inc.
+   Copyright (C) 1996-2007, 2009, 2010 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -274,7 +274,7 @@ _dl_close_worker (struct link_map *map)
 	    }
 
 #ifdef SHARED
-	  /* Auditing checkpoint: we have a new object.  */
+	  /* Auditing checkpoint: we remove an object.  */
 	  if (__builtin_expect (do_audit, 0))
 	    {
 	      struct audit_ifaces *afct = GLRO(dl_audit);
@@ -420,6 +420,13 @@ _dl_close_worker (struct link_map *map)
 		scope_mem_left = true;
 
 	      imap->l_scope_max = new_size;
+	    }
+	  else if (new_list != NULL)
+	    {
+	      /* We didn't change the scope array, so reset the search
+		 list.  */
+	      imap->l_searchlist.r_list = NULL;
+	      imap->l_searchlist.r_nlist = 0;
 	    }
 
 	  /* The loader is gone, so mark the object as not having one.

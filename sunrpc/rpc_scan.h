@@ -31,11 +31,11 @@
 /*      @(#)rpc_scan.h  1.3  90/08/29  (C) 1987 SMI   */
 
 /*
- * rpc_scan.h, Definitions for the RPCL scanner 
+ * rpc_scan.h, Definitions for the RPCL scanner
  */
 
 /*
- * kinds of tokens 
+ * kinds of tokens
  */
 enum tok_kind {
 	TOK_IDENT,
@@ -81,7 +81,7 @@ enum tok_kind {
 typedef enum tok_kind tok_kind;
 
 /*
- * a token 
+ * a token
  */
 struct token {
 	tok_kind kind;
@@ -91,7 +91,7 @@ typedef struct token token;
 
 
 /*
- * routine interface 
+ * routine interface
  */
 void scan(tok_kind expect, token *tokp);
 void scan2(tok_kind expect1, tok_kind expect2, token *tokp);
@@ -104,4 +104,3 @@ void expected1(tok_kind exp1) __attribute__ ((noreturn));
 void expected2(tok_kind exp1, tok_kind exp2)  __attribute__ ((noreturn));
 void expected3(tok_kind exp1, tok_kind exp2, tok_kind exp3)
      __attribute__ ((noreturn));
-
