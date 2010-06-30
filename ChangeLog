@@ -1,3 +1,54 @@
+2010-06-21  Luis Machado  <luisgpm@br.ibm.com>
+
+	* sysdeps/powerpc/powerpc32/970/fpu/Implies: Remove.
+	* sysdeps/powerpc/powerpc32/power5/fpu/Implies: Remove.
+	* sysdeps/powerpc/powerpc32/power5+/fpu/Implies: Remove.
+	* sysdeps/powerpc/powerpc32/power6x/fpu/Implies: Remove.
+	* sysdeps/powerpc/powerpc64/970/fpu/Implies: Remove.
+	* sysdeps/powerpc/powerpc64/power5/fpu/Implies: Remove.
+	* sysdeps/powerpc/powerpc64/power5+/fpu/Implies: Remove.
+	* sysdeps/powerpc/powerpc64/power6x/fpu/Implies: Remove.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/970/fpu/Implies: Remove.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/power4/fpu/Implies: Remove.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/power5/fpu/Implies: Remove.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/power5+/fpu/Implies: Remove.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/power6/fpu/Implies: Remove.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/power6x/fpu/Implies: Remove.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/power7/fpu/Implies: Remove.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/970/fpu/Implies: Remove.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/power4/fpu/Implies: Remove.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/power5/fpu/Implies: Remove.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/power5+/fpu/Implies: Remove.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/power6/fpu/Implies: Remove.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/power6x/fpu/Implies: Remove.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/power7/fpu/Implies: Remove.
+	* sysdeps/powerpc/powerpc32/970/Implies: Point to power4.
+	* sysdeps/powerpc/powerpc32/power5/Implies: Point to power4.
+	* sysdeps/powerpc/powerpc32/power5+/Implies: Point to power5.
+	* sysdeps/powerpc/powerpc32/power6/Implies: Point to power5+.
+	* sysdeps/powerpc/powerpc32/power6x/Implies: Point to power6.
+	* sysdeps/powerpc/powerpc64/970/Implies: Point to power4.
+	* sysdeps/powerpc/powerpc64/power5/Implies: Point to power4.
+	* sysdeps/powerpc/powerpc64/power5+/Implies: Point to power5.
+	* sysdeps/powerpc/powerpc64/power6/Implies: Point to power5+.
+	* sysdeps/powerpc/powerpc64/power6x/Implies: Point to power6.
+	* sysdeps/powerpc/powerpc32/power7/Implies: New file.
+	* sysdeps/powerpc/powerpc64/power7/Implies: New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/970/Implies: New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/cell/Implies: New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/power4/Implies: New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/power5/Implies: New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/power6/Implies: New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/power6x/Implies: New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/power7/Implies: New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/970/Implies: New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/cell/Implies: New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/power4/Implies: New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/power5/Implies: New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/power6/Implies: New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/power6x/Implies: New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/power7/Implies: New file.
+
 2010-06-25  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* debug/memmove_chk.c (__memmove_chk): Renamed to ...
