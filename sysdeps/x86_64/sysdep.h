@@ -58,6 +58,9 @@
   cfi_endproc;								      \
   ASM_SIZE_DIRECTIVE(name)
 
+#define ENTRY_CHK(name) ENTRY (name)
+#define END_CHK(name) END (name)
+
 /* If compiled for profiling, call `mcount' at the start of each function.  */
 #ifdef	PROF
 /* The mcount code relies on a normal frame pointer being on the stack

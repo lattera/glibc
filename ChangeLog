@@ -1,3 +1,35 @@
+2010-06-25  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* debug/memmove_chk.c (__memmove_chk): Renamed to ...
+	(MEMMOVE_CHK): ...this.  Default to __memmove_chk.
+	* string/memmove.c (memmove): Renamed to ...
+	(MEMMOVE): ...this.  Default to memmove.
+	* sysdeps/x86_64/memcpy.S: Use ENTRY_CHK and END_CHK.
+	* sysdeps/x86_64/sysdep.h (ENTRY_CHK): Define.
+	(END_CHK): Define.
+	* sysdeps/x86_64/multiarch/Makefile (sysdep_routines): Add
+	memcpy-ssse3 mempcpy-ssse3 memmove-ssse3 memcpy-ssse3-back
+	mempcpy-ssse3-back memmove-ssse3-back.
+	* sysdeps/x86_64/multiarch/bcopy.S: New file .
+	* sysdeps/x86_64/multiarch/memcpy-ssse3-back.S: New file.
+	* sysdeps/x86_64/multiarch/memcpy-ssse3.S: New file.
+	* sysdeps/x86_64/multiarch/memcpy.S: New file.
+	* sysdeps/x86_64/multiarch/memcpy_chk.S: New file.
+	* sysdeps/x86_64/multiarch/memmove-ssse3-back.S: New file.
+	* sysdeps/x86_64/multiarch/memmove-ssse3.S: New file.
+	* sysdeps/x86_64/multiarch/memmove.c: New file.
+	* sysdeps/x86_64/multiarch/memmove_chk.c: New file.
+	* sysdeps/x86_64/multiarch/mempcpy-ssse3-back.S: New file.
+	* sysdeps/x86_64/multiarch/mempcpy-ssse3.S: New file.
+	* sysdeps/x86_64/multiarch/mempcpy.S: New file.
+	* sysdeps/x86_64/multiarch/mempcpy_chk.S: New file.
+	* sysdeps/x86_64/multiarch/init-arch.h (bit_Fast_Copy_Backward):
+	Define.
+	(index_Fast_Copy_Backward): Define.
+	(HAS_ARCH_FEATURE): Define.
+	(HAS_FAST_REP_STRING): Define.
+	(HAS_FAST_COPY_BACKWARD): Define.
+
 2010-06-21  Andreas Schwab  <schwab@redhat.com>
 
 	* sysdeps/unix/sysv/linux/getlogin_r.c (__getlogin_r_loginuid):

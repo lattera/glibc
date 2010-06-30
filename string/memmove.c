@@ -37,9 +37,12 @@
 #define	rettype		void *
 #endif
 
+#ifndef MEMMOVE
+#define MEMMOVE memmove
+#endif
 
 rettype
-memmove (a1, a2, len)
+MEMMOVE (a1, a2, len)
      a1const void *a1;
      a2const void *a2;
      size_t len;

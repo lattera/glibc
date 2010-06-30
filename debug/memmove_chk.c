@@ -23,8 +23,12 @@
 #include <memcopy.h>
 #include <pagecopy.h>
 
+#ifndef MEMMOVE_CHK
+# define MEMMOVE_CHK __memmove_chk
+#endif
+
 void *
-__memmove_chk (dest, src, len, destlen)
+MEMMOVE_CHK (dest, src, len, destlen)
      void *dest;
      const void *src;
      size_t len;
