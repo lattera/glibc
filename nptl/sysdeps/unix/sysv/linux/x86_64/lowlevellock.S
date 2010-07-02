@@ -1,4 +1,4 @@
-/* Copyright (C) 2002-2006, 2007, 2009 Free Software Foundation, Inc.
+/* Copyright (C) 2002-2006, 2007, 2009, 2010 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -169,9 +169,13 @@ __lll_timedlock_wait:
 	je	.Lreltmo
 # endif
 
+	cmpq	$0, (%rdx)
+	js	5f
+
 	pushq	%r9
 	cfi_adjust_cfa_offset(8)
 	cfi_rel_offset(%r9, 0)
+
 	movq	%rdx, %r10
 	movl	$0xffffffff, %r9d
 	LOAD_FUTEX_WAIT_ABS (%esi)
@@ -200,6 +204,9 @@ __lll_timedlock_wait:
 	popq	%r9
 	cfi_adjust_cfa_offset(-8)
 	cfi_restore(%r9)
+	retq
+
+5:	movl	$ETIMEDOUT, %eax
 	retq
 
 # ifndef __ASSUME_FUTEX_CLOCK_REALTIME

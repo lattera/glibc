@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2005, 2007, 2009 Free Software Foundation, Inc.
+/* Copyright (C) 2002,2003,2005,2007,2009,2010 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -76,6 +76,9 @@ sem_timedwait:
 #  endif
 	je	.Lreltmo
 #endif
+
+	cmpq	$0, (%rsi)
+	js	16f
 
 	/* This push is only needed to store the sem_t pointer for the
 	   exception handler.  */
@@ -163,6 +166,19 @@ sem_timedwait:
 #else
 	callq	__errno_location@plt
 	movl	$EINVAL, (%rax)
+#endif
+
+	orl	$-1, %eax
+
+	retq
+
+16:
+#if USE___THREAD
+	movq	errno@gottpoff(%rip), %rdx
+	movl	$ETIMEDOUT, %fs:(%rdx)
+#else
+	callq	__errno_location@plt
+	movl	$ETIMEDOUT, (%rax)
 #endif
 
 	orl	$-1, %eax

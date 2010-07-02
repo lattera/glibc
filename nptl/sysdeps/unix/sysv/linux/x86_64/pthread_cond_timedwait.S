@@ -1,4 +1,4 @@
-/* Copyright (C) 2002-2005, 2007, 2009 Free Software Foundation, Inc.
+/* Copyright (C) 2002-2005, 2007, 2009, 2010 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -143,6 +143,10 @@ __pthread_cond_timedwait:
 	movl	broadcast_seq(%rdi), %edx
 	movq	%r9, 24(%rsp)
 	movl	%edx, 4(%rsp)
+
+	cmpq	$0, (%r13)
+	movq	$-ETIMEDOUT, %r14
+	js	36f
 
 38:	movl	cond_futex(%rdi), %r12d
 

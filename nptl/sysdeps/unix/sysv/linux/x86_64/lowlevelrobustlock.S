@@ -1,5 +1,4 @@
-/* Copyright (C) 2002, 2003, 2004, 2005, 2006, 2007, 2009
-   Free Software Foundation, Inc.
+/* Copyright (C) 2002=2007, 2009, 2010 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -125,6 +124,9 @@ __lll_robust_timedlock_wait:
 	je	.Lreltmo
 # endif
 
+	cmpq	$0, (%rdx)
+	js	7f
+
 	pushq	%r9
 	cfi_adjust_cfa_offset(8)
 	cfi_rel_offset(%r9, 0)
@@ -179,6 +181,9 @@ __lll_robust_timedlock_wait:
 	jmp	3b
 	cfi_adjust_cfa_offset(-8)
 	cfi_restore(%r9)
+
+7:	movl	$ETIMEDOUT, %eax
+	retq
 
 
 # ifndef __ASSUME_FUTEX_CLOCK_REALTIME

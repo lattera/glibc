@@ -1,4 +1,4 @@
-/* Copyright (C) 2002-2005, 2007, 2009 Free Software Foundation, Inc.
+/* Copyright (C) 2002-2005, 2007, 2009, 2010 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -101,6 +101,9 @@ pthread_rwlock_timedrdlock:
 #  endif
 	je	.Lreltmo
 #endif
+
+	cmpq	$0, (%r13)
+	js	16f		/* Time is already up.  */
 
 	movl	$FUTEX_PRIVATE_FLAG|FUTEX_WAIT_BITSET|FUTEX_CLOCK_REALTIME, %esi
 	xorl	PSHARED(%r12), %esi
