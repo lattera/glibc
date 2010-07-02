@@ -17,37 +17,61 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <assert.h>
 #include <errno.h>
 #include <pthread.h>
+#include <semaphore.h>
+#include <stdio.h>
 
-pthread_cond_t c = PTHREAD_COND_INITIALIZER;
-pthread_mutex_t m1 = PTHREAD_MUTEX_INITIALIZER;
-pthread_mutex_t m2 = PTHREAD_MUTEX_INITIALIZER;
-pthread_rwlock_t rw1 = PTHREAD_RWLOCK_INITIALIZER;
-pthread_rwlock_t rw2 = PTHREAD_RWLOCK_INITIALIZER;
+static pthread_cond_t c = PTHREAD_COND_INITIALIZER;
+static pthread_mutex_t m1 = PTHREAD_MUTEX_INITIALIZER;
+static pthread_mutex_t m2 = PTHREAD_MUTEX_INITIALIZER;
+static pthread_rwlock_t rw1 = PTHREAD_RWLOCK_INITIALIZER;
+static pthread_rwlock_t rw2 = PTHREAD_RWLOCK_INITIALIZER;
+static sem_t sem;
 
 static void *
 th (void *arg)
 {
+  long int res = 0;
   int r;
   struct timespec t = { -2, 0 };
 
   r = pthread_mutex_timedlock (&m1, &t);
-  assert (r == ETIMEDOUT);
+  if (r != ETIMEDOUT)
+    {
+      puts ("pthread_mutex_timedlock did not return ETIMEDOUT");
+      res = 1;
+    }
   r = pthread_rwlock_timedrdlock (&rw1, &t);
-  assert (r == ETIMEDOUT);
+  if (r != ETIMEDOUT)
+    {
+      puts ("pthread_rwlock_timedrdlock did not return ETIMEDOUT");
+      res = 1;
+    }
   r = pthread_rwlock_timedwrlock (&rw2, &t);
-  assert (r == ETIMEDOUT);
-  return 0;
+  if (r != ETIMEDOUT)
+    {
+      puts ("pthread_rwlock_timedwrlock did not return ETIMEDOUT");
+      res = 1;
+    }
+  return (void *) res;
 }
 
-int
+static int
 do_test (void)
 {
+  int res = 0;
   int r;
   struct timespec t = { -2, 0 };
   pthread_t pth;
+
+  sem_init (&sem, 0, 0);
+  r = sem_timedwait (&sem, &t);
+  if (r != -1 || errno != ETIMEDOUT)
+    {
+      puts ("sem_timedwait did not fail with ETIMEDOUT");
+      res = 1;
+    }
 
   pthread_mutex_lock (&m1);
   pthread_rwlock_wrlock (&rw1);
@@ -55,9 +79,14 @@ do_test (void)
   pthread_mutex_lock (&m2);
   pthread_create (&pth, 0, th, 0);
   r = pthread_cond_timedwait (&c, &m2, &t);
-  assert (r == ETIMEDOUT);
-  pthread_join (pth, 0);
-  return 0;
+  if (r != ETIMEDOUT)
+    {
+      puts ("pthread_cond_timedwait did not return ETIMEDOUT");
+      res = 1;
+    }
+  void *thres;
+  pthread_join (pth, &thres);
+  return res | (thres != NULL);
 }
 
 

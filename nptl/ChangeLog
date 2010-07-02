@@ -1,3 +1,7 @@
+2010-07-02  Ulrich Drepper  <drepper@redhat.com>
+
+	* tst-abstime.c: Correct testing and add test for sem_timedwait.
+
 2010-07-01  Andreas Schwab  <schwab@redhat.com>
 	    Ulrich Drepper  <drepper@redhat.com>
 
