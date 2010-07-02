@@ -1,3 +1,7 @@
+2010-07-01  Ulrich Drepper  <drepper@redhat.com>
+
+	* Makefile (tst-_res1): Add tst-_res1mod1 to dependency list.
+
 2010-06-01  Takashi Yoshii  <takashi.yoshii.zj@renesas.com>
 
 	* sysdeps/unix/sysv/linux/sh/lowlevellock.S: Fix incorrect

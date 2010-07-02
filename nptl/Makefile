@@ -491,7 +491,8 @@ $(objpfx)tst-rwlock14: $(common-objpfx)rt/librt.so
 $(objpfx)tst-_res1mod2.so: $(objpfx)tst-_res1mod1.so
 LDFLAGS-tst-_res1mod1.so = -Wl,-soname,tst-_res1mod1.so
 LDFLAGS-tst-_res1mod2.so = -Wl,-soname,tst-_res1mod2.so
-$(objpfx)tst-_res1: $(objpfx)tst-_res1mod2.so $(shared-thread-library)
+$(objpfx)tst-_res1: $(objpfx)tst-_res1mod1.so $(objpfx)tst-_res1mod2.so \
+		    $(shared-thread-library)
 else
 $(objpfx)tst-cond11: $(common-objpfx)rt/librt.a
 $(objpfx)tst-cond19: $(common-objpfx)rt/librt.a
