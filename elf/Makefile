@@ -759,11 +759,11 @@ $(objpfx)tst-tls8.out: $(objpfx)tst-tlsmod3.so $(objpfx)tst-tlsmod4.so
 $(objpfx)tst-tls9: $(libdl)
 $(objpfx)tst-tls9.out: $(objpfx)tst-tlsmod5.so $(objpfx)tst-tlsmod6.so
 
-$(objpfx)tst-tls10: $(objpfx)tst-tlsmod8.so
+$(objpfx)tst-tls10: $(objpfx)tst-tlsmod8.so $(objpfx)tst-tlsmod7.so
 
-$(objpfx)tst-tls11: $(objpfx)tst-tlsmod10.so
+$(objpfx)tst-tls11: $(objpfx)tst-tlsmod10.so $(objpfx)tst-tlsmod9.so
 
-$(objpfx)tst-tls12: $(objpfx)tst-tlsmod12.so
+$(objpfx)tst-tls12: $(objpfx)tst-tlsmod12.so $(objpfx)tst-tlsmod11.so
 
 $(objpfx)tst-tls13: $(libdl)
 $(objpfx)tst-tls13.out: $(objpfx)tst-tlsmod13a.so
