@@ -1,3 +1,8 @@
+2010-06-30  Andreas Schwab  <schwab@redhat.com>
+
+	* dlfcn/Makefile (LDLIBS-bug-atexit3-lib.so): Readd
+	$(common-objpfx)libc_nonshared.a.
+
 2010-06-21  Luis Machado  <luisgpm@br.ibm.com>
 
 	* sysdeps/powerpc/powerpc32/970/fpu/Implies: Remove.
