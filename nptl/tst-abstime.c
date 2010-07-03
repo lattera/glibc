@@ -77,7 +77,11 @@ do_test (void)
   pthread_rwlock_wrlock (&rw1);
   pthread_rwlock_rdlock (&rw2);
   pthread_mutex_lock (&m2);
-  pthread_create (&pth, 0, th, 0);
+  if (pthread_create (&pth, 0, th, 0) != 0)
+    {
+      puts ("cannot create thread");
+      return 1;
+    }
   r = pthread_cond_timedwait (&c, &m2, &t);
   if (r != ETIMEDOUT)
     {
