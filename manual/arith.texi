@@ -1407,7 +1407,8 @@ do not raise the inexact exception if @var{x} is not an integer.
 @comment ISO
 @deftypefunx {long double} roundl (long double @var{x})
 These functions are similar to @code{rint}, but they round halfway
-cases away from zero instead of to the nearest even integer.
+cases away from zero instead of to the nearest integer (or other
+current rounding mode).
 @end deftypefun
 
 @comment math.h
