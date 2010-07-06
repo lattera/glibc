@@ -1,3 +1,8 @@
+2010-07-05  Roland McGrath  <roland@redhat.com>
+
+	* manual/arith.texi (Rounding Functions): Fix rint description
+	implicit in round description.
+
 2010-07-02  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/Makefile: Fix linking for a few tests to make recent linker
