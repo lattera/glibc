@@ -1,3 +1,8 @@
+2010-07-06  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/fpathconf.c (__fpathconf): Implement
+	_PC_PIPE_BUF using F_GETPIPE_SZ.
+
 2010-07-02  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/Makefile: Fix linking for a few tests to make recent linker
