@@ -1,3 +1,8 @@
+2010-07-06  Andreas Schwab  <schwab@redhat.com>
+
+	* elf/dl-version.c (match_symbol): Don't pass NULL occation to
+	dl_signal_cerror.
+
 2010-07-06  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/fpathconf.c (__fpathconf): Implement

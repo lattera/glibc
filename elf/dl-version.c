@@ -169,7 +169,7 @@ no version information available (required by ", name, ")");
   result = 1;
  call_cerror:
   _dl_signal_cerror (0, map->l_name[0] ? map->l_name : rtld_progname,
-		     NULL, errstring);
+		     N_("version lookup error"), errstring);
   return result;
 }
 
