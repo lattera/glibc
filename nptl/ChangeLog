@@ -1,3 +1,8 @@
+2010-07-06  Andreas Schwab  <schwab@redhat.com>
+
+	* sysdeps/unix/sysv/linux/pthread_getname.c (pthread_getname_np):
+	Fix type mismatch.
+
 2010-07-03  Ulrich Drepper  <drepper@redhat.com>
 
 	* tst-abstime.c (do_test): Some more cleanups
