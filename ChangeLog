@@ -1,3 +1,8 @@
+2010-07-09  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/fpathconf.c (__fpathconf): Use __fcntl not
+	fcntl.
+
 2010-07-06  Andreas Schwab  <schwab@redhat.com>
 
 	* elf/dl-version.c (match_symbol): Don't pass NULL occation to

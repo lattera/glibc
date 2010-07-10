@@ -52,7 +52,7 @@ __fpathconf (fd, name)
       return __statfs_chown_restricted (__fstatfs (fd, &fsbuf), &fsbuf);
 
     case _PC_PIPE_BUF:
-      r = fcntl (fd, F_GETPIPE_SZ);
+      r = __fcntl (fd, F_GETPIPE_SZ);
       if (r > 0)
 	return r;
       /* FALLTHROUGH */
