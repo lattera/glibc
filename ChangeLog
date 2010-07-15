@@ -1,3 +1,10 @@
+2010-06-15  Luis Machado  <luisgpm@br.ibm.com>
+
+	* sysdeps/powerpc/powerpc32/power6/fpu/s_copysign.S: New file.
+	* sysdeps/powerpc/powerpc32/power6/fpu/s_copysignf.S: New file.
+	* sysdeps/powerpc/powerpc64/power6/fpu/s_copysign.S: New file.
+	* sysdeps/powerpc/powerpc64/power6/fpu/s_copysignf.S: New file.
+
 2010-07-09  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/fpathconf.c (__fpathconf): Use __fcntl not
