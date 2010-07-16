@@ -240,9 +240,11 @@ STRSTR_SSE42 (const unsigned char *s1, const unsigned char *s2)
 #endif
 
 #ifdef USE_AS_STRCASESTR
+# ifndef STRCASESTR_NONASCII
   if (__builtin_expect (_NL_CURRENT_WORD (LC_CTYPE, _NL_CTYPE_NONASCII_CASE)
 			!= 0, 0))
     return __strcasestr_sse42_nonascii (s1, s2);
+# endif
 
 # define strloadu __m128i_strloadu_tolower
 #else
