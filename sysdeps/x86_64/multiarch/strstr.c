@@ -1,5 +1,5 @@
 /* strstr with SSE4.2 intrinsics
-   Copyright (C) 2009 Free Software Foundation, Inc.
+   Copyright (C) 2009, 2010 Free Software Foundation, Inc.
    Contributed by Intel Corporation.
    This file is part of the GNU C Library.
 
@@ -67,10 +67,10 @@
 
    case		ECX	CFlag	ZFlag	SFlag
     3		 X	  1	  0	  0/1
-    4a		 0  	  1	  0	  0
-    4b		 0  	  1	  0	  1
-    4c		0 < X  	  1	  0	  0/1
-    5		16 	  0	  1	  0
+    4a		 0	  1	  0	  0
+    4b		 0	  1	  0	  1
+    4c		0 < X	  1	  0	  0/1
+    5		16	  0	  1	  0
 
    3. An initial ordered-comparison fragment match, we fix up to do
       subsequent string comparison
@@ -147,8 +147,7 @@ __m128i_shift_right (__m128i value, int offset)
    If EOS occurs within less than 16B before 4KB boundary, we don't
    cross to next page.  */
 
-static __m128i
-__attribute__ ((section (".text.sse4.2")))
+static inline __m128i
 __m128i_strloadu (const unsigned char * p)
 {
   int offset = ((size_t) p & (16 - 1));
@@ -164,14 +163,12 @@ __m128i_strloadu (const unsigned char * p)
   return _mm_loadu_si128 ((__m128i *) p);
 }
 
-#ifdef USE_AS_STRCASESTR
+#if defined USE_AS_STRCASESTR && !defined STRCASESTR_NONASCII
 
 /* Similar to __m128i_strloadu.  Convert to lower case for POSIX/C
    locale.  */
-
-static __m128i
-__attribute__ ((section (".text.sse4.2")))
-__m128i_strloadu_tolower_posix (const unsigned char * p)
+static inline __m128i
+__m128i_strloadu_tolower (const unsigned char * p)
 {
   __m128i frag = __m128i_strloadu (p);
 
@@ -184,39 +181,13 @@ __m128i_strloadu_tolower_posix (const unsigned char * p)
   return  _mm_blendv_epi8 (frag, mask2, mask1);
 }
 
-/* Similar to __m128i_strloadu.  Convert to lower case for none-POSIX/C
-   locale.  */
-
-static __m128i
-__attribute__ ((section (".text.sse4.2")))
-__m128i_strloadu_tolower (const unsigned char * p)
-{
-  union
-    {
-      char b[16];
-      __m128i x;
-    } u;
-
-  for (int i = 0; i < 16; i++)
-    if (p[i] == 0)
-      {
-	u.b[i] = 0;
-	break;
-      }
-    else
-      u.b[i] = tolower (p[i]);
-
-  return u.x;
-}
 #endif
 
 /* Calculate Knuth-Morris-Pratt string searching algorithm (or KMP
    algorithm) overlap for a fully populated 16B vector.
    Input parameter: 1st 16Byte loaded from the reference string of a
 		    strstr function.
-   We don't use KMP algorithm if reference string is less than 16B.
- */
-
+   We don't use KMP algorithm if reference string is less than 16B.  */
 static int
 __inline__ __attribute__ ((__always_inline__,))
 KMP16Bovrlap (__m128i s2)
@@ -236,7 +207,7 @@ KMP16Bovrlap (__m128i s2)
     return 1;
   else if (!k1)
     {
-      /* There are al least two ditinct char in s2.  If byte 0 and 1 are
+      /* There are al least two distinct chars in s2.  If byte 0 and 1 are
 	 idential and the distinct value lies farther down, we can deduce
 	 the next byte offset to restart full compare is least no earlier
 	 than byte 3.  */
@@ -256,23 +227,24 @@ STRSTR_SSE42 (const unsigned char *s1, const unsigned char *s2)
 #define p1 s1
   const unsigned char *p2 = s2;
 
-  if (p2[0] == '\0')
+#ifndef STRCASESTR_NONASCII
+  if (__builtin_expect (p2[0] == '\0', 0))
     return (char *) p1;
 
-  if (p1[0] == '\0')
+  if (__builtin_expect (p1[0] == '\0', 0))
     return NULL;
 
   /* Check if p1 length is 1 byte long.  */
-  if (p1[1] == '\0')
+  if (__builtin_expect (p1[1] == '\0', 0))
     return p2[1] == '\0' && CMPBYTE (p1[0], p2[0]) ? (char *) p1 : NULL;
+#endif
 
 #ifdef USE_AS_STRCASESTR
-  __m128i (*strloadu) (const unsigned char *);
+  if (__builtin_expect (_NL_CURRENT_WORD (LC_CTYPE, _NL_CTYPE_NONASCII_CASE)
+			!= 0, 0))
+    return __strcasestr_sse42_nonascii (s1, s2);
 
-  if (_NL_CURRENT_WORD (LC_CTYPE, _NL_CTYPE_NONASCII_CASE) == 0)
-    strloadu = __m128i_strloadu_tolower_posix;
-  else
-    strloadu = __m128i_strloadu_tolower;
+# define strloadu __m128i_strloadu_tolower
 #else
 # define strloadu __m128i_strloadu
 #endif

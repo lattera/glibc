@@ -1,3 +1,13 @@
+2010-07-16  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/x86_64/multiarch/strstr.c: Rewrite to avoid indirect function
+	call in strcasestr.
+	* sysdeps/x86_64/multiarch/strcasestr.c: Declare
+	__strcasestr_sse42_nonascii.
+	* sysdeps/x86_64/multiarch/Makefile: Add rules to build
+	strcasestr-nonascii.c.
+	* sysdeps/x86_64/multiarch/strcasestr-nonascii.c: New file.
+
 2010-06-15  Luis Machado  <luisgpm@br.ibm.com>
 
 	* sysdeps/powerpc/powerpc32/power6/fpu/s_copysign.S: New file.
