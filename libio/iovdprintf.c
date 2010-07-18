@@ -53,10 +53,10 @@ _IO_vdprintf (d, format, arg)
       INTUSE(_IO_un_link) (&tmpfil);
       return EOF;
     }
-  tmpfil.file._IO_file_flags =
-    (_IO_mask_flags (&tmpfil.file, _IO_NO_READS,
-		     _IO_NO_READS+_IO_NO_WRITES+_IO_IS_APPENDING)
-     | _IO_DELETE_DONT_CLOSE);
+  tmpfil.file._flags |= _IO_DELETE_DONT_CLOSE;
+
+  _IO_mask_flags (&tmpfil.file, _IO_NO_READS,
+		  _IO_NO_READS+_IO_NO_WRITES+_IO_IS_APPENDING);
 
   done = INTUSE(_IO_vfprintf) (&tmpfil.file, format, arg);
 

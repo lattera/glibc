@@ -1,6 +1,6 @@
 /* Machine-dependent ELF dynamic relocation inline functions.
    PowerPC64 version.
-   Copyright 1995-2005, 2006, 2008 Free Software Foundation, Inc.
+   Copyright 1995-2005, 2006, 2008, 2010 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -641,16 +641,14 @@ elf_machine_rela (struct link_map *map,
       value = elf_machine_tprel (map, sym_map, sym, reloc);
       if (dont_expect ((value & 3) != 0))
         _dl_reloc_overflow (map, "R_PPC64_TPREL16_LO_DS", reloc_addr, refsym);
-      *(Elf64_Half *) reloc_addr = BIT_INSERT (*(Elf64_Half *) reloc_addr,
-					       value, 0xfffc);
+      BIT_INSERT (*(Elf64_Half *) reloc_addr, value, 0xfffc);
       break;
 
     case R_PPC64_TPREL16_DS:
       value = elf_machine_tprel (map, sym_map, sym, reloc);
       if (dont_expect ((value + 0x8000) >= 0x10000 || (value & 3) != 0))
         _dl_reloc_overflow (map, "R_PPC64_TPREL16_DS", reloc_addr, refsym);
-      *(Elf64_Half *) reloc_addr = BIT_INSERT (*(Elf64_Half *) reloc_addr,
-					       value, 0xfffc);
+      BIT_INSERT (*(Elf64_Half *) reloc_addr, value, 0xfffc);
       break;
 
     case R_PPC64_TPREL16:

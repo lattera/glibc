@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1997-2000, 2001, 2002, 2003, 2006, 2008
+/* Copyright (C) 1995, 1997-2000, 2001, 2002, 2003, 2006, 2008, 2010
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -50,10 +50,10 @@ __vdprintf_chk (int d, int flags, const char *format, va_list arg)
       INTUSE(_IO_un_link) (&tmpfil);
       return EOF;
     }
-  tmpfil.file._IO_file_flags =
-    (_IO_mask_flags (&tmpfil.file, _IO_NO_READS,
-		     _IO_NO_READS+_IO_NO_WRITES+_IO_IS_APPENDING)
-     | _IO_DELETE_DONT_CLOSE);
+  tmpfil.file._flags |= _IO_DELETE_DONT_CLOSE;
+
+  _IO_mask_flags (&tmpfil.file, _IO_NO_READS,
+		  _IO_NO_READS+_IO_NO_WRITES+_IO_IS_APPENDING);
 
   /* For flags > 0 (i.e. __USE_FORTIFY_LEVEL > 1) request that %n
      can only come from read-only format strings.  */

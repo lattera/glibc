@@ -1,4 +1,4 @@
-/* Copyright (C) 1993,95,97,99,2000,2002,2004, 2005
+/* Copyright (C) 1993,95,97,99,2000,2002,2004, 2005, 2010
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -154,9 +154,8 @@ _IO_cookie_init (struct _IO_cookie_file *cfile, int read_write,
 
   INTUSE(_IO_file_init) (&cfile->__fp);
 
-  cfile->__fp.file._IO_file_flags =
-    _IO_mask_flags (&cfile->__fp.file, read_write,
-		    _IO_NO_READS+_IO_NO_WRITES+_IO_IS_APPENDING);
+  _IO_mask_flags (&cfile->__fp.file, read_write,
+		  _IO_NO_READS+_IO_NO_WRITES+_IO_IS_APPENDING);
 
   /* We use a negative number different from -1 for _fileno to mark that
      this special stream is not associated with a real file, but still has

@@ -130,9 +130,8 @@ _IO_old_fdopen (fd, mode)
     }
   new_f->fp.file._file._flags &= ~_IO_DELETE_DONT_CLOSE;
 
-  new_f->fp.file._file._IO_file_flags =
-    _IO_mask_flags (&new_f->fp.file._file, read_write,
-		    _IO_NO_READS+_IO_NO_WRITES+_IO_IS_APPENDING);
+  _IO_mask_flags (&new_f->fp.file._file, read_write,
+		  _IO_NO_READS+_IO_NO_WRITES+_IO_IS_APPENDING);
 
   return (_IO_FILE *) &new_f->fp;
 }

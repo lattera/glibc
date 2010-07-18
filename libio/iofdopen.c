@@ -1,4 +1,4 @@
-/* Copyright (C) 1993,1994,1997,1998,1999,2000,2002,2003
+/* Copyright (C) 1993,1994,1997,1998,1999,2000,2002,2003,2010
 	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -172,9 +172,8 @@ _IO_new_fdopen (fd, mode)
     }
   new_f->fp.file._flags &= ~_IO_DELETE_DONT_CLOSE;
 
-  new_f->fp.file._IO_file_flags =
-    _IO_mask_flags (&new_f->fp.file, read_write,
-		    _IO_NO_READS+_IO_NO_WRITES+_IO_IS_APPENDING);
+  _IO_mask_flags (&new_f->fp.file, read_write,
+		  _IO_NO_READS+_IO_NO_WRITES+_IO_IS_APPENDING);
 
   return &new_f->fp.file;
 }
