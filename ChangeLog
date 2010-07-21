@@ -1,3 +1,12 @@
+2010-07-21  Andreas Schwab  <schwab@redhat.com>
+
+	* sysdeps/i386/i686/multiarch/Makefile (sysdep_routines): Add
+	strcasestr-nonascii.
+	(CFLAGS-strcasestr-nonascii.c): Define.
+	* sysdeps/i386/i686/multiarch/strcasestr-nonascii.c: New file.
+	* sysdeps/x86_64/multiarch/strcasestr-nonascii.c (STRSTR_SSE42):
+	Remove unused attribute.
+
 2010-07-20  Roland McGrath  <roland@redhat.com>
 
 	* elf/dl-sysdep.c (_dl_important_hwcaps): Add dsocaps mask to

@@ -23,7 +23,7 @@
 /* Similar to __m128i_strloadu.  Convert to lower case for none-POSIX/C
    locale.  */
 static inline __m128i
-__m128i_strloadu_tolower (const unsigned char * p)
+__m128i_strloadu_tolower (const unsigned char *p)
 {
   union
     {
@@ -46,5 +46,5 @@ __m128i_strloadu_tolower (const unsigned char * p)
 
 #define STRCASESTR_NONASCII
 #define USE_AS_STRCASESTR
-#define STRSTR_SSE42 attribute_hidden __strcasestr_sse42_nonascii
+#define STRSTR_SSE42 __strcasestr_sse42_nonascii
 #include "strstr.c"

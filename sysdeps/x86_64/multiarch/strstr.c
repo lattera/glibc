@@ -168,13 +168,12 @@ __m128i_strloadu (const unsigned char * p)
 /* Similar to __m128i_strloadu.  Convert to lower case for POSIX/C
    locale.  */
 static inline __m128i
-__m128i_strloadu_tolower (const unsigned char * p)
+__m128i_strloadu_tolower (const unsigned char *p, __m128i rangeuc,
+			  __m128i u2ldelta)
 {
   __m128i frag = __m128i_strloadu (p);
 
   /* Convert frag to lower case for POSIX/C locale.  */
-  __m128i rangeuc = _mm_set_epi64x (0x0, 0x5a41);
-  __m128i u2ldelta = _mm_set1_epi64x (0xe0e0e0e0e0e0e0e0);
   __m128i mask1 = _mm_cmpistrm (rangeuc, frag, 0x44);
   __m128i mask2 = _mm_blendv_epi8 (u2ldelta, frag, mask1);
   mask2 = _mm_sub_epi8 (mask2, u2ldelta);
@@ -244,9 +243,13 @@ STRSTR_SSE42 (const unsigned char *s1, const unsigned char *s2)
   if (__builtin_expect (_NL_CURRENT_WORD (LC_CTYPE, _NL_CTYPE_NONASCII_CASE)
 			!= 0, 0))
     return __strcasestr_sse42_nonascii (s1, s2);
-# endif
 
-# define strloadu __m128i_strloadu_tolower
+  const __m128i rangeuc = _mm_set_epi64x (0x0, 0x5a41);
+  const __m128i u2ldelta = _mm_set1_epi64x (0xe0e0e0e0e0e0e0e0);
+#  define strloadu(p) __m128i_strloadu_tolower (p, rangeuc, u2ldelta)
+# else
+#  define strloadu __m128i_strloadu_tolower
+# endif
 #else
 # define strloadu __m128i_strloadu
 #endif
