@@ -1,3 +1,10 @@
+2010-07-20  Roland McGrath  <roland@redhat.com>
+
+	* elf/dl-sysdep.c (_dl_important_hwcaps): Add dsocaps mask to
+	dl_hwcap_mask as well as dl_hwcap.  Without this, dsocaps matching in
+	ld.so.cache was broken.  With it, there is no way to disable dsocaps
+	like LD_HWCAP_MASK can disable hwcaps.
+
 2010-07-16  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/x86_64/multiarch/strstr.c: Rewrite to avoid indirect function

@@ -425,6 +425,11 @@ _dl_important_hwcaps (const char *platform, size_t platform_len, size_t *sz,
     {
       const ElfW(Word) mask = ((const ElfW(Word) *) dsocaps)[-1];
       GLRO(dl_hwcap) |= (uint64_t) mask << _DL_FIRST_EXTRA;
+      /* Note that we add the dsocaps to the set already chosen by the
+	 LD_HWCAP_MASK environment variable (or default HWCAP_IMPORTANT).
+	 So there is no way to request ignoring an OS-supplied dsocap
+	 string and bit like you can ignore an OS-supplied HWCAP bit.  */
+      GLRO(dl_hwcap_mask) |= (uint64_t) mask << _DL_FIRST_EXTRA;
       size_t len;
       for (const char *p = dsocaps; p < dsocaps + dsocapslen; p += len + 1)
 	{
