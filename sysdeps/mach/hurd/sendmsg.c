@@ -109,14 +109,22 @@ __libc_sendmsg (int fd, const struct msghdr *message, int flags)
 	     and talk to it with the ifsock protocol.  */
 	  file_t file = __file_name_lookup (addr->sun_path, 0, 0);
 	  if (file == MACH_PORT_NULL)
-	    return -1;
+	    {
+	      if (dealloc)
+		__vm_deallocate (__mach_task_self (), data.addr, len);
+	      return -1;
+	    }
 	  err = __ifsock_getsockaddr (file, &aport);
 	  __mach_port_deallocate (__mach_task_self (), file);
 	  if (err == MIG_BAD_ID || err == EOPNOTSUPP)
 	    /* The file did not grok the ifsock protocol.  */
 	    err = ENOTSOCK;
 	  if (err)
-	    return __hurd_fail (err);
+	    {
+	      if (dealloc)
+		__vm_deallocate (__mach_task_self (), data.addr, len);
+	      return __hurd_fail (err);
+	    }
 	}
       else
 	err = EIEIO;

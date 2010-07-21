@@ -5,6 +5,10 @@
 	ld.so.cache was broken.  With it, there is no way to disable dsocaps
 	like LD_HWCAP_MASK can disable hwcaps.
 
+2010-06-02  Emilio Pozuelo Monfort  <pochu27@gmail.com>
+
+	* sysdeps/mach/hurd/sendmsg.c (__libc_sendmsg): Fix memory leaks.
+
 2010-07-16  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/x86_64/multiarch/strstr.c: Rewrite to avoid indirect function
