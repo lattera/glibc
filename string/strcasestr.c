@@ -1,5 +1,5 @@
 /* Return the offset of one string within another.
-   Copyright (C) 1994, 1996-2000, 2004, 2008, 2009
+   Copyright (C) 1994, 1996-2000, 2004, 2008, 2009, 2010
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -103,4 +103,6 @@ STRCASESTR (const char *haystack_start, const char *needle_start)
 
 #undef LONG_NEEDLE_THRESHOLD
 
+#ifndef NO_ALIAS
 weak_alias (__strcasestr, strcasestr)
+#endif

@@ -1,5 +1,5 @@
 /* Byte-wise substring search, using the Two-Way algorithm.
-   Copyright (C) 2008 Free Software Foundation, Inc.
+   Copyright (C) 2008, 2010 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Eric Blake <ebb9@byu.net>, 2008.
 
@@ -426,5 +426,4 @@ two_way_long_needle (const unsigned char *haystack, size_t haystack_len,
 #undef AVAILABLE
 #undef CANON_ELEMENT
 #undef CMP_FUNC
-#undef MAX
 #undef RETURN_TYPE

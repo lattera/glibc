@@ -1,3 +1,11 @@
+2010-07-23  Ulrich Drepper  <drepper@redhat.com>
+
+	* string/test-strcasestr.c: New file.
+	* string/test-strstr.c: New file.
+	* string/Makefile (strop-tests): Add strstr and strcasestr.
+	* string/str-two-way.h: Don't undefine MAX.
+	* string/strcasestr.c: Don't define alias if NO_ALIAS is defined.
+
 2010-07-21  Andreas Schwab  <schwab@redhat.com>
 
 	* sysdeps/i386/i686/multiarch/Makefile (sysdep_routines): Add
