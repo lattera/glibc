@@ -173,11 +173,17 @@ __m128i_strloadu_tolower (const unsigned char *p, __m128i rangeuc,
 {
   __m128i frag = __m128i_strloadu (p);
 
-  /* Convert frag to lower case for POSIX/C locale.  */
-  __m128i mask1 = _mm_cmpistrm (rangeuc, frag, 0x44);
-  __m128i mask2 = _mm_blendv_epi8 (u2ldelta, frag, mask1);
-  mask2 = _mm_sub_epi8 (mask2, u2ldelta);
-  return  _mm_blendv_epi8 (frag, mask2, mask1);
+#define UCLOW 0x4040404040404040ULL
+#define UCHIGH 0x5a5a5a5a5a5a5a5aULL
+#define LCQWORD 0x2020202020202020ULL
+  /* Compare if 'Z' > bytes. Inverted way to get a mask for byte <= 'Z'.  */
+  __m128i r2 = _mm_cmpgt_epi8 (_mm_set1_epi64x (UCHIGH), frag);
+  /* Compare if bytes are > 'A' - 1.  */
+  __m128i r1 = _mm_cmpgt_epi8 (frag, _mm_set1_epi64x (UCLOW));
+  /* Mask byte == ff if byte(r2) <= 'Z' and byte(r1) > 'A' - 1.  */
+  __m128i mask = _mm_and_si128 (r2, r1);
+  /* Apply lowercase bit 6 mask for above mask bytes == ff.  */
+  return _mm_or_si128 (frag, _mm_and_si128 (mask, _mm_set1_epi64x (LCQWORD)));
 }
 
 #endif
