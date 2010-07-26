@@ -1,4 +1,4 @@
-GNU C Library NEWS -- history of user-visible changes.  2010-6-19
+GNU C Library NEWS -- history of user-visible changes.  2010-7-26
 Copyright (C) 1992-2009, 2010 Free Software Foundation, Inc.
 See the end for copying conditions.
 
@@ -12,6 +12,9 @@ Version 2.13
   11640, 11701
 
 * POWER7 optimizations: memset, memcmp, strncmp
+
+* New optimized string functions for x86-64: strnlen
+  Implemented by Ulrich Drepper.
 
 Version 2.12
 
