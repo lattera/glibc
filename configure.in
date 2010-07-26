@@ -1803,11 +1803,11 @@ else
 fi
 rm -f conftest*])
 if test $libc_cv_gnu89_inline = yes; then
-  libc_cv_gnu89_inline=-fgnu89-inline
+  gnu89_inline=-fgnu89-inline
 else
-  libc_cv_gnu89_inline=
+  gnu89_inline=
 fi
-AC_SUBST(libc_cv_gnu89_inline)
+AC_SUBST(gnu89_inline)
 
 if test $elf != yes; then
   AC_CACHE_CHECK(for .init and .fini sections, libc_cv_have_initfini,

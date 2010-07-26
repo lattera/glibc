@@ -1,3 +1,11 @@
+2010-07-26  Roland McGrath  <roland@redhat.com>
+
+	[BZ #11840]
+	* configure.in (-fgnu89-inline check): Set and substitute
+	gnu89_inline, not libc_cv_gnu89_inline.
+	* configure: Regenerated.
+	* config.make.in (gnu89-inline-CFLAGS): Use @gnu89_inline@.
+
 2010-07-26  Ulrich Drepper  <drepper@redhat.com>
 
 	* string/test-strnlen.c: New file.

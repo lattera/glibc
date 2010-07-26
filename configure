@@ -638,7 +638,7 @@ libc_cv_cc_submachine
 exceptions
 no_whole_archive
 libc_cv_have_initfini
-libc_cv_gnu89_inline
+gnu89_inline
 libc_cv_ssp
 fno_unit_at_a_time
 libc_cv_hashstyle
@@ -6704,9 +6704,9 @@ fi
 { $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_gnu89_inline" >&5
 $as_echo "$libc_cv_gnu89_inline" >&6; }
 if test $libc_cv_gnu89_inline = yes; then
-  libc_cv_gnu89_inline=-fgnu89-inline
+  gnu89_inline=-fgnu89-inline
 else
-  libc_cv_gnu89_inline=
+  gnu89_inline=
 fi
 
 
