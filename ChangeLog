@@ -1,3 +1,12 @@
+2010-07-26  Ulrich Drepper  <drepper@redhat.com>
+
+	* string/test-strnlen.c: New file.
+	* string/Makefile (strop-tests): Add strnlen.
+	* string/tester.c (test_strnlen): Add a few more test cases.
+	* string/tst-strlen.c: Better error reporting.
+
+	* sysdeps/x86_64/strnlen.S: New file.
+
 2010-07-24  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/x86_64/multiarch/strstr.c (__m128i_strloadu_tolower): Use

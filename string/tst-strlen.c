@@ -31,11 +31,21 @@ main(int argc, char *argv[])
 	      buf[words * 4 + 3] = (last & 8) != 0 ? 'e' : '\0';
 	      buf[words * 4 + 4] = '\0';
 
-	      if (strlen (buf) != words * 4 + lens[last]
-		  || strnlen (buf, -1) != words * 4 + lens[last])
+	      if (strlen (buf) != words * 4 + lens[last])
 		{
-		  printf ("failed for base=%Zu, words=%Zu, and last=%Zu\n",
-			  base, words, last);
+		  printf ("\
+strlen failed for base=%Zu, words=%Zu, and last=%Zu (is %zd, expected %zd)\n",
+			  base, words, last,
+			  strlen (buf), words * 4 + lens[last]);
+		  return 1;
+		}
+
+	      if (strnlen (buf, -1) != words * 4 + lens[last])
+		{
+		  printf ("\
+strnlen failed for base=%Zu, words=%Zu, and last=%Zu (is %zd, expected %zd)\n",
+			  base, words, last,
+			  strnlen (buf, -1), words * 4 + lens[last]);
 		  return 1;
 		}
 	    }

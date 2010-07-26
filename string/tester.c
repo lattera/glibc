@@ -1,5 +1,5 @@
 /* Tester for string functions.
-   Copyright (C) 1995-2001, 2003, 2005, 2008 Free Software Foundation, Inc.
+   Copyright (C) 1995-2001, 2003, 2005, 2008, 2010 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -441,20 +441,21 @@ test_strnlen (void)
   check (strnlen ("", 10) == 0, 1);		/* Empty. */
   check (strnlen ("a", 10) == 1, 2);		/* Single char. */
   check (strnlen ("abcd", 10) == 4, 3);		/* Multiple chars. */
-  check (strnlen ("foo", (size_t)-1) == 3, 4);	/* limits of n. */
+  check (strnlen ("foo", (size_t) -1) == 3, 4);	/* limits of n. */
+  check (strnlen ("abcd", 0) == 0, 5);		/* Restricted. */
+  check (strnlen ("abcd", 1) == 1, 6);		/* Restricted. */
+  check (strnlen ("abcd", 2) == 2, 7);		/* Restricted. */
+  check (strnlen ("abcd", 3) == 3, 8);		/* Restricted. */
+  check (strnlen ("abcd", 4) == 4, 9);		/* Restricted. */
 
-  {
-    char buf[4096];
-    int i;
-    char *p;
-    for (i=0; i < 0x100; i++)
-      {
-	p = (char *) ((unsigned long int)(buf + 0xff) & ~0xff) + i;
-	strcpy (p, "OK");
-	strcpy (p+3, "BAD/WRONG");
-	check (strnlen (p, 100) == 2, 5+i);
-      }
-   }
+  char buf[4096];
+  for (int i = 0; i < 0x100; ++i)
+    {
+      char *p = (char *) ((unsigned long int)(buf + 0xff) & ~0xff) + i;
+      strcpy (p, "OK");
+      strcpy (p + 3, "BAD/WRONG");
+      check (strnlen (p, 100) == 2, 10 + i);
+    }
 }
 
 static void
@@ -988,7 +989,7 @@ test_memcmp (void)
   int cnt = 1;
   char one[21];
   char two[21];
-  
+
   it = "memcmp";
   check(memcmp("a", "a", 1) == 0, cnt++);	/* Identity. */
   check(memcmp("abc", "abc", 3) == 0, cnt++);	/* Multicharacter. */
