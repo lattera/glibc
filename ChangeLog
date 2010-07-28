@@ -3,6 +3,11 @@
 	* sysdeps/x86_64/multiarch/strcmp-ssse3.S: Avoid compiling the file
 	for ld.so.
 
+2010-07-27  Andreas Schwab  <schwab@redhat.com>
+
+	* manual/memory.texi (Malloc Tunable Parameters): Document
+	M_PERTURB.
+
 2010-07-26  Roland McGrath  <roland@redhat.com>
 
 	[BZ #11840]

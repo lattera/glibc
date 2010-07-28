@@ -702,6 +702,11 @@ be allocated via @code{mmap}.
 @item M_MMAP_MAX
 The maximum number of chunks to allocate with @code{mmap}.  Setting this
 to zero disables all use of @code{mmap}.
+@item M_PERTURB
+If non-zero, memory blocks are filled with values depending on some
+low order bits of this parameter when they are allocated (except when
+allocated by @code{calloc}) and freed.  This can be used to debug the
+use of uninitialized or freed heap memory.
 @end table
 
 @end deftypefun
