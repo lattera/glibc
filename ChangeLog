@@ -1,6 +1,6 @@
 2010-07-29  Roland McGrath  <roland@redhat.com>
 
-	[BZ 11856]
+	[BZ #11856]
 	* manual/locale.texi (Yes-or-No Questions): Fix example code.
 
 2010-07-27  Ulrich Drepper  <drepper@redhat.com>
