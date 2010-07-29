@@ -1,3 +1,8 @@
+2010-07-29  Roland McGrath  <roland@redhat.com>
+
+	[BZ 11856]
+	* manual/locale.texi (Yes-or-No Questions): Fix example code.
+
 2010-07-27  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/x86_64/multiarch/strcmp-ssse3.S: Avoid compiling the file

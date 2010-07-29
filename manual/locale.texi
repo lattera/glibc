@@ -1210,7 +1210,7 @@ This function would normally be used like this:
   /* @r{Prepare the @code{getline} call.}  */
   line = NULL;
   len = 0;
-  while (getline (&line, &len, stdout) >= 0)
+  while (getline (&line, &len, stdin) >= 0)
     @{
       /* @r{Check the response.}  */
       int res = rpmatch (line);
