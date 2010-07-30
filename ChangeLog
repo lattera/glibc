@@ -1,5 +1,7 @@
 2010-07-30  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/x86_64/multiarch/strcmp.S: Pretty printing.
+
 	* string/Makefile (strop-tests): Add strcasecmp.
 	* sysdeps/x86_64/Makefile [subdir=string] (sysdep_routines): Add
 	strcasecmp_l-nonascii.

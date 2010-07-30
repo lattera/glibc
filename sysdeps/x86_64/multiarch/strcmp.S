@@ -1,5 +1,5 @@
 /* strcmp with SSE4.2
-   Copyright (C) 2009 Free Software Foundation, Inc.
+   Copyright (C) 2009, 2010 Free Software Foundation, Inc.
    Contributed by Intel Corporation.
    This file is part of the GNU C Library.
 
@@ -24,7 +24,7 @@
 #ifdef USE_AS_STRNCMP
 /* Since the counter, %r11, is unsigned, we branch to strcmp_exitz
    if the new counter > the old one or is 0.  */
-#define UPDATE_STRNCMP_COUNTER				\
+# define UPDATE_STRNCMP_COUNTER				\
 	/* calculate left number to compare */		\
 	lea	-16(%rcx, %r11), %r9;			\
 	cmp	%r9, %r11;				\
@@ -33,23 +33,23 @@
 	je	LABEL(strcmp_exitz_sse4_2);		\
 	mov	%r9, %r11
 
-#define STRCMP_SSE42	__strncmp_sse42
-#define STRCMP_SSSE3	__strncmp_ssse3
-#define STRCMP_SSE2	__strncmp_sse2
-#define __GI_STRCMP	__GI_strncmp
+# define STRCMP_SSE42	__strncmp_sse42
+# define STRCMP_SSSE3	__strncmp_ssse3
+# define STRCMP_SSE2	__strncmp_sse2
+# define __GI_STRCMP	__GI_strncmp
 #else
-#define UPDATE_STRNCMP_COUNTER
-#ifndef STRCMP
-#define STRCMP		strcmp
-#define STRCMP_SSE42	__strcmp_sse42
-#define STRCMP_SSSE3	__strcmp_ssse3
-#define STRCMP_SSE2	__strcmp_sse2
-#define __GI_STRCMP	__GI_strcmp
-#endif
+# define UPDATE_STRNCMP_COUNTER
+# ifndef STRCMP
+#  define STRCMP	strcmp
+#  define STRCMP_SSE42	__strcmp_sse42
+#  define STRCMP_SSSE3	__strcmp_ssse3
+#  define STRCMP_SSE2	__strcmp_sse2
+#  define __GI_STRCMP	__GI_strcmp
+# endif
 #endif
 
 #ifndef LABEL
-#define LABEL(l) L(l)
+# define LABEL(l) L(l)
 #endif
 
 /* Define multiple versions only for the definition in libc.  Don't
@@ -101,7 +101,7 @@ END(STRCMP)
 
 	/* Put all SSE 4.2 functions together.  */
 	.section .text.sse4.2,"ax",@progbits
-	.align 	16
+	.align	16
 	.type	STRCMP_SSE42, @function
 STRCMP_SSE42:
 	cfi_startproc
@@ -241,7 +241,7 @@ LABEL(ashr_0_use_sse4_2_exit):
 
 /*
  * The following cases will be handled by ashr_1
- * rcx(offset of rsi)  rax(offset of rdi)   relative offset   	corresponding case
+ * rcx(offset of rsi)  rax(offset of rdi)   relative offset	corresponding case
  *        n(15)            n -15            0(15 +(n-15) - n)         ashr_1
  */
 	.p2align 4
@@ -320,7 +320,7 @@ LABEL(nibble_ashr_1_use_sse4_2):
 
 /*
  * The following cases will be handled by ashr_2
- * rcx(offset of rsi)  rax(offset of rdi)   relative offset   	corresponding case
+ * rcx(offset of rsi)  rax(offset of rdi)   relative offset	corresponding case
  *        n(14~15)            n -14         1(15 +(n-14) - n)         ashr_2
  */
 	.p2align 4
@@ -559,7 +559,7 @@ LABEL(nibble_ashr_4_use_sse4_2):
 /*
  * The following cases will be handled by ashr_5
  *  rcx(offset of rsi)  rax(offset of rdi)        relative offset      corresponding case
- *        n(11~15)          n - 11      	  4(15 +(n-11) - n)         ashr_5
+ *        n(11~15)          n - 11		  4(15 +(n-11) - n)         ashr_5
  */
 	.p2align 4
 LABEL(ashr_5_sse4_2):
@@ -640,7 +640,7 @@ LABEL(nibble_ashr_5_use_sse4_2):
 /*
  * The following cases will be handled by ashr_6
  *  rcx(offset of rsi)  rax(offset of rdi)        relative offset      corresponding case
- *        n(10~15)          n - 10      	  5(15 +(n-10) - n)         ashr_6
+ *        n(10~15)          n - 10		  5(15 +(n-10) - n)         ashr_6
  */
 	.p2align 4
 LABEL(ashr_6_sse4_2):
@@ -720,7 +720,7 @@ LABEL(nibble_ashr_6_use_sse4_2):
 /*
  * The following cases will be handled by ashr_7
  *  rcx(offset of rsi)  rax(offset of rdi)        relative offset      corresponding case
- *        n(9~15)          n - 9      	        6(15 +(n - 9) - n)         ashr_7
+ *        n(9~15)          n - 9		  6(15 +(n - 9) - n)         ashr_7
  */
 	.p2align 4
 LABEL(ashr_7_sse4_2):
@@ -800,7 +800,7 @@ LABEL(nibble_ashr_7_use_sse4_2):
 /*
  *  The following cases will be handled by ashr_8
  *  rcx(offset of rsi)  rax(offset of rdi)        relative offset	 corresponding case
- *        n(8~15)          n - 8      	        7(15 +(n - 8) - n)         ashr_8
+ *        n(8~15)          n - 8		  7(15 +(n - 8) - n)         ashr_8
  */
 	.p2align 4
 LABEL(ashr_8_sse4_2):
@@ -880,7 +880,7 @@ LABEL(nibble_ashr_8_use_sse4_2):
 /*
  *  The following cases will be handled by ashr_9
  *  rcx(offset of rsi)  rax(offset of rdi)        relative offset	 corresponding case
- *        n(7~15)          n - 7      	        8(15 +(n - 7) - n)         ashr_9
+ *        n(7~15)          n - 7		  8(15 +(n - 7) - n)         ashr_9
  */
 	.p2align 4
 LABEL(ashr_9_sse4_2):
@@ -961,7 +961,7 @@ LABEL(nibble_ashr_9_use_sse4_2):
 /*
  *  The following cases will be handled by ashr_10
  *  rcx(offset of rsi)  rax(offset of rdi)        relative offset	 corresponding case
- *        n(6~15)          n - 6      	        9(15 +(n - 6) - n)         ashr_10
+ *        n(6~15)          n - 6		  9(15 +(n - 6) - n)         ashr_10
  */
 	.p2align 4
 LABEL(ashr_10_sse4_2):
@@ -1041,7 +1041,7 @@ LABEL(nibble_ashr_10_use_sse4_2):
 /*
  *  The following cases will be handled by ashr_11
  *  rcx(offset of rsi)  rax(offset of rdi)        relative offset	 corresponding case
- *        n(5~15)          n - 5      	        10(15 +(n - 5) - n)         ashr_11
+ *        n(5~15)          n - 5		  10(15 +(n - 5) - n)         ashr_11
  */
 	.p2align 4
 LABEL(ashr_11_sse4_2):
@@ -1121,7 +1121,7 @@ LABEL(nibble_ashr_11_use_sse4_2):
 /*
  *  The following cases will be handled by ashr_12
  *  rcx(offset of rsi)  rax(offset of rdi)        relative offset	 corresponding case
- *        n(4~15)          n - 4      	        11(15 +(n - 4) - n)         ashr_12
+ *        n(4~15)          n - 4		  11(15 +(n - 4) - n)         ashr_12
  */
 	.p2align 4
 LABEL(ashr_12_sse4_2):
@@ -1201,7 +1201,7 @@ LABEL(nibble_ashr_12_use_sse4_2):
 /*
  *  The following cases will be handled by ashr_13
  *  rcx(offset of rsi)  rax(offset of rdi)        relative offset	 corresponding case
- *        n(3~15)          n - 3      	        12(15 +(n - 3) - n)         ashr_13
+ *        n(3~15)          n - 3		  12(15 +(n - 3) - n)         ashr_13
  */
 	.p2align 4
 LABEL(ashr_13_sse4_2):
@@ -1282,7 +1282,7 @@ LABEL(nibble_ashr_13_use_sse4_2):
 /*
  *  The following cases will be handled by ashr_14
  *  rcx(offset of rsi)  rax(offset of rdi)        relative offset	 corresponding case
- *        n(2~15)          n - 2      	        13(15 +(n - 2) - n)         ashr_14
+ *        n(2~15)          n - 2		  13(15 +(n - 2) - n)         ashr_14
  */
 	.p2align 4
 LABEL(ashr_14_sse4_2):
@@ -1363,7 +1363,7 @@ LABEL(nibble_ashr_14_use_sse4_2):
 /*
  *  The following cases will be handled by ashr_15
  *  rcx(offset of rsi)  rax(offset of rdi)        relative offset	 corresponding case
- *        n(1~15)          n - 1      	        14(15 +(n - 1) - n)         ashr_15
+ *        n(1~15)          n - 1		  14(15 +(n - 1) - n)         ashr_15
  */
 	.p2align 4
 LABEL(ashr_15_sse4_2):
