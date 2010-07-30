@@ -174,7 +174,7 @@ __m128i_strloadu_tolower (const unsigned char *p, __m128i rangeuc,
   __m128i frag = __m128i_strloadu (p);
 
 #define UCLOW 0x4040404040404040ULL
-#define UCHIGH 0x5a5a5a5a5a5a5a5aULL
+#define UCHIGH 0x5b5b5b5b5b5b5b5bULL
 #define LCQWORD 0x2020202020202020ULL
   /* Compare if 'Z' > bytes. Inverted way to get a mask for byte <= 'Z'.  */
   __m128i r2 = _mm_cmpgt_epi8 (_mm_set1_epi64x (UCHIGH), frag);

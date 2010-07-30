@@ -97,7 +97,7 @@ do_test (size_t align1, size_t align2, size_t len1, size_t len2,
   char *s1 = (char *) (buf1 + align1);
   char *s2 = (char *) (buf2 + align2);
 
-  static const char d[] = "1234567890abcdef";
+  static const char d[] = "1234567890abcxyz";
 #define dl (sizeof (d) - 1)
   char *ss2 = s2;
   for (size_t l = len2; l > 0; l = l > dl ? l - dl : 0)
