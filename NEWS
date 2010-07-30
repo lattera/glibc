@@ -13,7 +13,7 @@ Version 2.13
 
 * POWER7 optimizations: memset, memcmp, strncmp
 
-* New optimized string functions for x86-64: strnlen
+* New optimized string functions for x86-64: strnlen, strcasecmp
   Implemented by Ulrich Drepper.
 
 Version 2.12

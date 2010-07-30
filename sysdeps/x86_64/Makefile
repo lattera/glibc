@@ -12,7 +12,8 @@ sysdep_routines += _mcount
 endif
 
 ifeq ($(subdir),string)
-sysdep_routines += cacheinfo
+sysdep_routines += cacheinfo strcasecmp_l-nonascii
+gen-as-const-headers += locale-defines.sym
 endif
 
 ifeq ($(subdir),elf)

@@ -1,5 +1,16 @@
 2010-07-30  Ulrich Drepper  <drepper@redhat.com>
 
+	* string/Makefile (strop-tests): Add strcasecmp.
+	* sysdeps/x86_64/Makefile [subdir=string] (sysdep_routines): Add
+	strcasecmp_l-nonascii.
+	(gen-as-const-headers): Add locale-defines.sym.
+	* sysdeps/x86_64/strcmp.S: Add support for strcasecmp implementation.
+	* sysdeps/x86_64/strcasecmp.S: New file.
+	* sysdeps/x86_64/strcasecmp_l.S: New file.
+	* sysdeps/x86_64/strcasecmp_l-nonascii.c: New file.
+	* sysdeps/x86_64/locale-defines.sym: New file.
+	* string/test-strcasecmp.c: New file.
+
 	* string/test-strcasestr.c: Test both ends of the range of characters.
 	* sysdeps/x86_64/multiarch/strstr.c: Fix UCHIGH definition.
 

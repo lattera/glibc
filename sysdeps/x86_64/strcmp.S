@@ -51,6 +51,15 @@
 	je	LABEL(strcmp_exitz);			\
 	mov	%r9, %r11
 
+#elif defined USE_AS_STRCASECMP_L
+# include "locale-defines.h"
+
+/* No support for strcasecmp outside libc so far since it is not needed.  */
+# ifdef NOT_IN_lib
+#  error "strcasecmp_l not implemented so far"
+# endif
+
+# define UPDATE_STRNCMP_COUNTER
 #else
 # define UPDATE_STRNCMP_COUNTER
 # ifndef STRCMP
@@ -62,6 +71,19 @@
 	.text
 #else
 	.section .text.ssse3,"ax",@progbits
+#endif
+
+#ifdef USE_AS_STRCASECMP_L
+ENTRY (__strcasecmp)
+	movq	__libc_tsd_LOCALE@gottpoff(%rip),%rax
+	movq	%fs:(%rax),%rdx
+
+	/* 5-byte NOP.  */
+	.byte	0x0f,0x1f,0x44,0x00,0x00
+END (__strcasecmp)
+weak_alias (__strcasecmp, strcasecmp)
+libc_hidden_def (__strcasecmp)
+	/* FALLTHROUGH to strcasecmp_l.  */
 #endif
 
 ENTRY (BP_SYM (STRCMP))
@@ -84,6 +106,18 @@ L(neq):	movl	$1, %eax
 	ret
 END (BP_SYM (STRCMP))
 #else	/* NOT_IN_libc */
+# ifdef USE_AS_STRCASECMP_L
+	/* We have to fall back on the C implementation for locales
+	   with encodings not matching ASCII for single bytes.  */
+#  if LOCALE_T___LOCALES != 0 || LC_CTYPE != 0
+	movq	LOCALE_T___LOCALES+LC_CTYPE*8(%rdx), %rax
+#  else
+	movq	(%rdx), %rax
+#  endif
+	testl	$0, LOCALE_DATA_VALUES+_NL_CTYPE_NONASCII_CASE*SIZEOF_VALUES(%rax)
+	jne	__strcasecmp_l_nonascii
+# endif
+
 /*
  * This implementation uses SSE to compare up to 16 bytes at a time.
  */
@@ -99,6 +133,26 @@ END (BP_SYM (STRCMP))
 /* Use 64bit AND here to avoid long NOP padding.  */
 	and	$0x3f, %rcx		/* rsi alignment in cache line */
 	and	$0x3f, %rax		/* rdi alignment in cache line */
+# ifdef USE_AS_STRCASECMP_L
+	.section .rodata.cst16,"aM",@progbits,16
+	.align 16
+.Lbelowupper:
+	.quad	0x4040404040404040
+	.quad	0x4040404040404040
+.Ltopupper:
+	.quad	0x5b5b5b5b5b5b5b5b
+	.quad	0x5b5b5b5b5b5b5b5b
+.Ltouppermask:
+	.quad	0x2020202020202020
+	.quad	0x2020202020202020
+	.previous
+	movdqa	.Lbelowupper(%rip), %xmm5
+# define UCLOW_reg %xmm5
+	movdqa	.Ltopupper(%rip), %xmm6
+# define UCHIGH_reg %xmm6
+	movdqa	.Ltouppermask(%rip), %xmm7
+# define LCQWORD_reg %xmm7
+# endif
 	cmp	$0x30, %ecx
 	ja	LABEL(crosscache)	/* rsi: 16-byte load will cross cache line */
 	cmp	$0x30, %eax
@@ -107,6 +161,26 @@ END (BP_SYM (STRCMP))
 	movlpd	(%rsi), %xmm2
 	movhpd	8(%rdi), %xmm1
 	movhpd	8(%rsi), %xmm2
+# ifdef USE_AS_STRCASECMP_L
+#  define TOLOWER(reg1, reg2) \
+	movdqa	reg1, %xmm8;					\
+	movdqa	UCHIGH_reg, %xmm9;				\
+	movdqa	reg2, %xmm10;					\
+	movdqa	UCHIGH_reg, %xmm11;				\
+	pcmpgtb	UCLOW_reg, %xmm8;				\
+	pcmpgtb	reg1, %xmm9;					\
+	pcmpgtb	UCLOW_reg, %xmm10;				\
+	pcmpgtb	reg2, %xmm11;					\
+	pand	%xmm9, %xmm8;					\
+	pand	%xmm11, %xmm10;					\
+	pand	LCQWORD_reg, %xmm8;				\
+	pand	LCQWORD_reg, %xmm10;				\
+	por	%xmm8, reg1;					\
+	por	%xmm10, reg2
+	TOLOWER (%xmm1, %xmm2)
+# else
+#  define TOLOWER(reg1, reg2)
+# endif
 	pxor	%xmm0, %xmm0		/* clear %xmm0 for null char checks */
 	pcmpeqb	%xmm1, %xmm0		/* Any null chars? */
 	pcmpeqb	%xmm2, %xmm1		/* compare first 16 bytes for equality */
@@ -159,7 +233,13 @@ LABEL(ashr_0):
 	movdqa	(%rsi), %xmm1
 	pxor	%xmm0, %xmm0			/* clear %xmm0 for null char check */
 	pcmpeqb	%xmm1, %xmm0			/* Any null chars? */
+# ifndef USE_AS_STRCASECMP_L
 	pcmpeqb	(%rdi), %xmm1			/* compare 16 bytes for equality */
+# else
+	movdqa	(%rdi), %xmm2
+	TOLOWER (%xmm1, %xmm2)
+	pcmpeqb	%xmm2, %xmm1			/* compare 16 bytes for equality */
+# endif
 	psubb	%xmm0, %xmm1			/* packed sub of comparison results*/
 	pmovmskb %xmm1, %r9d
 	shr	%cl, %edx			/* adjust 0xffff for offset */
@@ -183,6 +263,7 @@ LABEL(ashr_0):
 LABEL(loop_ashr_0):
 	movdqa	(%rsi, %rcx), %xmm1
 	movdqa	(%rdi, %rcx), %xmm2
+	TOLOWER (%xmm1, %xmm2)
 
 	pcmpeqb	%xmm1, %xmm0
 	pcmpeqb	%xmm2, %xmm1
@@ -198,6 +279,7 @@ LABEL(loop_ashr_0):
 	add	$16, %rcx
 	movdqa	(%rsi, %rcx), %xmm1
 	movdqa	(%rdi, %rcx), %xmm2
+	TOLOWER (%xmm1, %xmm2)
 
 	pcmpeqb	%xmm1, %xmm0
 	pcmpeqb	%xmm2, %xmm1
@@ -214,7 +296,7 @@ LABEL(loop_ashr_0):
 
 /*
  * The following cases will be handled by ashr_1
- * rcx(offset of rsi)  rax(offset of rdi)   relative offset   	corresponding case
+ * rcx(offset of rsi)  rax(offset of rdi)   relative offset	corresponding case
  *        n(15)            n -15            0(15 +(n-15) - n)         ashr_1
  */
 	.p2align 4
@@ -224,6 +306,7 @@ LABEL(ashr_1):
 	movdqa	(%rsi), %xmm1
 	pcmpeqb	%xmm1, %xmm0		/* Any null chars? */
 	pslldq	$15, %xmm2		/* shift first string to align with second */
+	TOLOWER (%xmm1, %xmm2)
 	pcmpeqb	%xmm1, %xmm2		/* compare 16 bytes for equality */
 	psubb	%xmm0, %xmm2		/* packed sub of comparison results*/
 	pmovmskb %xmm2, %r9d
@@ -263,6 +346,7 @@ LABEL(gobble_ashr_1):
 # else
 	palignr	$1, %xmm3, %xmm2	/* merge into one 16byte value */
 # endif
+	TOLOWER (%xmm1, %xmm2)
 
 	pcmpeqb	%xmm1, %xmm0
 	pcmpeqb	%xmm2, %xmm1
@@ -292,6 +376,7 @@ LABEL(gobble_ashr_1):
 # else
 	palignr	$1, %xmm3, %xmm2	/* merge into one 16byte value */
 # endif
+	TOLOWER (%xmm1, %xmm2)
 
 	pcmpeqb	%xmm1, %xmm0
 	pcmpeqb	%xmm2, %xmm1
@@ -351,6 +436,7 @@ LABEL(ashr_2):
 	movdqa	(%rsi), %xmm1
 	pcmpeqb	%xmm1, %xmm0
 	pslldq	$14, %xmm2
+	TOLOWER (%xmm1, %xmm2)
 	pcmpeqb	%xmm1, %xmm2
 	psubb	%xmm0, %xmm2
 	pmovmskb %xmm2, %r9d
@@ -390,6 +476,7 @@ LABEL(gobble_ashr_2):
 # else
 	palignr	$2, %xmm3, %xmm2	/* merge into one 16byte value */
 # endif
+	TOLOWER (%xmm1, %xmm2)
 
 	pcmpeqb	%xmm1, %xmm0
 	pcmpeqb	%xmm2, %xmm1
@@ -420,6 +507,7 @@ LABEL(gobble_ashr_2):
 # else
 	palignr	$2, %xmm3, %xmm2	/* merge into one 16byte value */
 # endif
+	TOLOWER (%xmm1, %xmm2)
 
 	pcmpeqb	%xmm1, %xmm0
 	pcmpeqb	%xmm2, %xmm1
@@ -472,6 +560,7 @@ LABEL(ashr_3):
 	movdqa	(%rsi), %xmm1
 	pcmpeqb	%xmm1, %xmm0
 	pslldq	$13, %xmm2
+	TOLOWER (%xmm1, %xmm2)
 	pcmpeqb	%xmm1, %xmm2
 	psubb	%xmm0, %xmm2
 	pmovmskb %xmm2, %r9d
@@ -512,6 +601,7 @@ LABEL(gobble_ashr_3):
 # else
 	palignr	$3, %xmm3, %xmm2	/* merge into one 16byte value */
 # endif
+	TOLOWER (%xmm1, %xmm2)
 
 	pcmpeqb	%xmm1, %xmm0
 	pcmpeqb	%xmm2, %xmm1
@@ -542,6 +632,7 @@ LABEL(gobble_ashr_3):
 # else
 	palignr	$3, %xmm3, %xmm2	/* merge into one 16byte value */
 # endif
+	TOLOWER (%xmm1, %xmm2)
 
 	pcmpeqb	%xmm1, %xmm0
 	pcmpeqb	%xmm2, %xmm1
@@ -594,6 +685,7 @@ LABEL(ashr_4):
 	movdqa	(%rsi), %xmm1
 	pcmpeqb	%xmm1, %xmm0
 	pslldq	$12, %xmm2
+	TOLOWER (%xmm1, %xmm2)
 	pcmpeqb	%xmm1, %xmm2
 	psubb	%xmm0, %xmm2
 	pmovmskb %xmm2, %r9d
@@ -634,6 +726,7 @@ LABEL(gobble_ashr_4):
 # else
 	palignr	$4, %xmm3, %xmm2	/* merge into one 16byte value */
 # endif
+	TOLOWER (%xmm1, %xmm2)
 
 	pcmpeqb	%xmm1, %xmm0
 	pcmpeqb	%xmm2, %xmm1
@@ -664,6 +757,7 @@ LABEL(gobble_ashr_4):
 # else
 	palignr	$4, %xmm3, %xmm2	/* merge into one 16byte value */
 # endif
+	TOLOWER (%xmm1, %xmm2)
 
 	pcmpeqb	%xmm1, %xmm0
 	pcmpeqb	%xmm2, %xmm1
@@ -716,6 +810,7 @@ LABEL(ashr_5):
 	movdqa	(%rsi), %xmm1
 	pcmpeqb	%xmm1, %xmm0
 	pslldq	$11, %xmm2
+	TOLOWER (%xmm1, %xmm2)
 	pcmpeqb	%xmm1, %xmm2
 	psubb	%xmm0, %xmm2
 	pmovmskb %xmm2, %r9d
@@ -756,6 +851,7 @@ LABEL(gobble_ashr_5):
 # else
 	palignr	$5, %xmm3, %xmm2	/* merge into one 16byte value */
 # endif
+	TOLOWER (%xmm1, %xmm2)
 
 	pcmpeqb	%xmm1, %xmm0
 	pcmpeqb	%xmm2, %xmm1
@@ -786,6 +882,7 @@ LABEL(gobble_ashr_5):
 # else
 	palignr	$5, %xmm3, %xmm2	/* merge into one 16byte value */
 # endif
+	TOLOWER (%xmm1, %xmm2)
 
 	pcmpeqb	%xmm1, %xmm0
 	pcmpeqb	%xmm2, %xmm1
@@ -838,6 +935,7 @@ LABEL(ashr_6):
 	movdqa	(%rsi), %xmm1
 	pcmpeqb	%xmm1, %xmm0
 	pslldq	$10, %xmm2
+	TOLOWER (%xmm1, %xmm2)
 	pcmpeqb	%xmm1, %xmm2
 	psubb	%xmm0, %xmm2
 	pmovmskb %xmm2, %r9d
@@ -878,6 +976,7 @@ LABEL(gobble_ashr_6):
 # else
 	palignr	$6, %xmm3, %xmm2	/* merge into one 16byte value */
 # endif
+	TOLOWER (%xmm1, %xmm2)
 
 	pcmpeqb	%xmm1, %xmm0
 	pcmpeqb	%xmm2, %xmm1
@@ -908,6 +1007,7 @@ LABEL(gobble_ashr_6):
 # else
 	palignr	$6, %xmm3, %xmm2	/* merge into one 16byte value */
 # endif
+	TOLOWER (%xmm1, %xmm2)
 
 	pcmpeqb	%xmm1, %xmm0
 	pcmpeqb	%xmm2, %xmm1
@@ -960,6 +1060,7 @@ LABEL(ashr_7):
 	movdqa	(%rsi), %xmm1
 	pcmpeqb	%xmm1, %xmm0
 	pslldq	$9, %xmm2
+	TOLOWER (%xmm1, %xmm2)
 	pcmpeqb	%xmm1, %xmm2
 	psubb	%xmm0, %xmm2
 	pmovmskb %xmm2, %r9d
@@ -1000,6 +1101,7 @@ LABEL(gobble_ashr_7):
 # else
 	palignr	$7, %xmm3, %xmm2	/* merge into one 16byte value */
 # endif
+	TOLOWER (%xmm1, %xmm2)
 
 	pcmpeqb	%xmm1, %xmm0
 	pcmpeqb	%xmm2, %xmm1
@@ -1030,6 +1132,7 @@ LABEL(gobble_ashr_7):
 # else
 	palignr	$7, %xmm3, %xmm2	/* merge into one 16byte value */
 # endif
+	TOLOWER (%xmm1, %xmm2)
 
 	pcmpeqb	%xmm1, %xmm0
 	pcmpeqb	%xmm2, %xmm1
@@ -1082,6 +1185,7 @@ LABEL(ashr_8):
 	movdqa	(%rsi), %xmm1
 	pcmpeqb	%xmm1, %xmm0
 	pslldq	$8, %xmm2
+	TOLOWER (%xmm1, %xmm2)
 	pcmpeqb	%xmm1, %xmm2
 	psubb	%xmm0, %xmm2
 	pmovmskb %xmm2, %r9d
@@ -1122,6 +1226,7 @@ LABEL(gobble_ashr_8):
 # else
 	palignr	$8, %xmm3, %xmm2	/* merge into one 16byte value */
 # endif
+	TOLOWER (%xmm1, %xmm2)
 
 	pcmpeqb	%xmm1, %xmm0
 	pcmpeqb	%xmm2, %xmm1
@@ -1152,6 +1257,7 @@ LABEL(gobble_ashr_8):
 # else
 	palignr	$8, %xmm3, %xmm2	/* merge into one 16byte value */
 # endif
+	TOLOWER (%xmm1, %xmm2)
 
 	pcmpeqb	%xmm1, %xmm0
 	pcmpeqb	%xmm2, %xmm1
@@ -1204,6 +1310,7 @@ LABEL(ashr_9):
 	movdqa	(%rsi), %xmm1
 	pcmpeqb	%xmm1, %xmm0
 	pslldq	$7, %xmm2
+	TOLOWER (%xmm1, %xmm2)
 	pcmpeqb	%xmm1, %xmm2
 	psubb	%xmm0, %xmm2
 	pmovmskb %xmm2, %r9d
@@ -1244,6 +1351,7 @@ LABEL(gobble_ashr_9):
 # else
 	palignr	$9, %xmm3, %xmm2	/* merge into one 16byte value */
 # endif
+	TOLOWER (%xmm1, %xmm2)
 
 	pcmpeqb	%xmm1, %xmm0
 	pcmpeqb	%xmm2, %xmm1
@@ -1274,6 +1382,7 @@ LABEL(gobble_ashr_9):
 # else
 	palignr	$9, %xmm3, %xmm2	/* merge into one 16byte value */
 # endif
+	TOLOWER (%xmm1, %xmm2)
 
 	pcmpeqb	%xmm1, %xmm0
 	pcmpeqb	%xmm2, %xmm1
@@ -1326,6 +1435,7 @@ LABEL(ashr_10):
 	movdqa	(%rsi), %xmm1
 	pcmpeqb	%xmm1, %xmm0
 	pslldq	$6, %xmm2
+	TOLOWER (%xmm1, %xmm2)
 	pcmpeqb	%xmm1, %xmm2
 	psubb	%xmm0, %xmm2
 	pmovmskb %xmm2, %r9d
@@ -1366,6 +1476,7 @@ LABEL(gobble_ashr_10):
 # else
 	palignr	$10, %xmm3, %xmm2	/* merge into one 16byte value */
 # endif
+	TOLOWER (%xmm1, %xmm2)
 
 	pcmpeqb	%xmm1, %xmm0
 	pcmpeqb	%xmm2, %xmm1
@@ -1396,6 +1507,7 @@ LABEL(gobble_ashr_10):
 # else
 	palignr	$10, %xmm3, %xmm2	/* merge into one 16byte value */
 # endif
+	TOLOWER (%xmm1, %xmm2)
 
 	pcmpeqb	%xmm1, %xmm0
 	pcmpeqb	%xmm2, %xmm1
@@ -1448,6 +1560,7 @@ LABEL(ashr_11):
 	movdqa	(%rsi), %xmm1
 	pcmpeqb	%xmm1, %xmm0
 	pslldq	$5, %xmm2
+	TOLOWER (%xmm1, %xmm2)
 	pcmpeqb	%xmm1, %xmm2
 	psubb	%xmm0, %xmm2
 	pmovmskb %xmm2, %r9d
@@ -1488,6 +1601,7 @@ LABEL(gobble_ashr_11):
 # else
 	palignr	$11, %xmm3, %xmm2	/* merge into one 16byte value */
 # endif
+	TOLOWER (%xmm1, %xmm2)
 
 	pcmpeqb	%xmm1, %xmm0
 	pcmpeqb	%xmm2, %xmm1
@@ -1518,6 +1632,7 @@ LABEL(gobble_ashr_11):
 # else
 	palignr	$11, %xmm3, %xmm2	/* merge into one 16byte value */
 # endif
+	TOLOWER (%xmm1, %xmm2)
 
 	pcmpeqb	%xmm1, %xmm0
 	pcmpeqb	%xmm2, %xmm1
@@ -1570,6 +1685,7 @@ LABEL(ashr_12):
 	movdqa	(%rsi), %xmm1
 	pcmpeqb	%xmm1, %xmm0
 	pslldq	$4, %xmm2
+	TOLOWER (%xmm1, %xmm2)
 	pcmpeqb	%xmm1, %xmm2
 	psubb	%xmm0, %xmm2
 	pmovmskb %xmm2, %r9d
@@ -1610,6 +1726,7 @@ LABEL(gobble_ashr_12):
 # else
 	palignr	$12, %xmm3, %xmm2	/* merge into one 16byte value */
 # endif
+	TOLOWER (%xmm1, %xmm2)
 
 	pcmpeqb	%xmm1, %xmm0
 	pcmpeqb	%xmm2, %xmm1
@@ -1640,6 +1757,7 @@ LABEL(gobble_ashr_12):
 # else
 	palignr	$12, %xmm3, %xmm2	/* merge into one 16byte value */
 # endif
+	TOLOWER (%xmm1, %xmm2)
 
 	pcmpeqb	%xmm1, %xmm0
 	pcmpeqb	%xmm2, %xmm1
@@ -1692,6 +1810,7 @@ LABEL(ashr_13):
 	movdqa	(%rsi), %xmm1
 	pcmpeqb	%xmm1, %xmm0
 	pslldq	$3, %xmm2
+	TOLOWER (%xmm1, %xmm2)
 	pcmpeqb	%xmm1, %xmm2
 	psubb	%xmm0, %xmm2
 	pmovmskb %xmm2, %r9d
@@ -1732,6 +1851,7 @@ LABEL(gobble_ashr_13):
 # else
 	palignr	$13, %xmm3, %xmm2	/* merge into one 16byte value */
 # endif
+	TOLOWER (%xmm1, %xmm2)
 
 	pcmpeqb	%xmm1, %xmm0
 	pcmpeqb	%xmm2, %xmm1
@@ -1762,6 +1882,7 @@ LABEL(gobble_ashr_13):
 # else
 	palignr	$13, %xmm3, %xmm2	/* merge into one 16byte value */
 # endif
+	TOLOWER (%xmm1, %xmm2)
 
 	pcmpeqb	%xmm1, %xmm0
 	pcmpeqb	%xmm2, %xmm1
@@ -1814,6 +1935,7 @@ LABEL(ashr_14):
 	movdqa	(%rsi), %xmm1
 	pcmpeqb	%xmm1, %xmm0
 	pslldq  $2, %xmm2
+	TOLOWER (%xmm1, %xmm2)
 	pcmpeqb	%xmm1, %xmm2
 	psubb	%xmm0, %xmm2
 	pmovmskb %xmm2, %r9d
@@ -1854,6 +1976,7 @@ LABEL(gobble_ashr_14):
 # else
 	palignr	$14, %xmm3, %xmm2	/* merge into one 16byte value */
 # endif
+	TOLOWER (%xmm1, %xmm2)
 
 	pcmpeqb	%xmm1, %xmm0
 	pcmpeqb	%xmm2, %xmm1
@@ -1884,6 +2007,7 @@ LABEL(gobble_ashr_14):
 # else
 	palignr	$14, %xmm3, %xmm2	/* merge into one 16byte value */
 # endif
+	TOLOWER (%xmm1, %xmm2)
 
 	pcmpeqb	%xmm1, %xmm0
 	pcmpeqb	%xmm2, %xmm1
@@ -1936,6 +2060,7 @@ LABEL(ashr_15):
 	movdqa	(%rsi), %xmm1
 	pcmpeqb	%xmm1, %xmm0
 	pslldq	$1, %xmm2
+	TOLOWER (%xmm1, %xmm2)
 	pcmpeqb	%xmm1, %xmm2
 	psubb	%xmm0, %xmm2
 	pmovmskb %xmm2, %r9d
@@ -1978,6 +2103,7 @@ LABEL(gobble_ashr_15):
 # else
 	palignr	$15, %xmm3, %xmm2	/* merge into one 16byte value */
 # endif
+	TOLOWER (%xmm1, %xmm2)
 
 	pcmpeqb	%xmm1, %xmm0
 	pcmpeqb	%xmm2, %xmm1
@@ -2008,6 +2134,7 @@ LABEL(gobble_ashr_15):
 # else
 	palignr	$15, %xmm3, %xmm2	/* merge into one 16byte value */
 # endif
+	TOLOWER (%xmm1, %xmm2)
 
 	pcmpeqb	%xmm1, %xmm0
 	pcmpeqb	%xmm2, %xmm1
@@ -2049,6 +2176,7 @@ LABEL(ashr_15_exittail):
 
 	.p2align 4
 LABEL(aftertail):
+	TOLOWER (%xmm1, %xmm3)
 	pcmpeqb	%xmm3, %xmm1
 	psubb	%xmm0, %xmm1
 	pmovmskb %xmm1, %edx
@@ -2075,6 +2203,12 @@ LABEL(less16bytes):
 # endif
 	movzbl	(%rsi, %rdx), %ecx
 	movzbl	(%rdi, %rdx), %eax
+
+# ifdef USE_AS_STRCASECMP_L
+	leaq	_nl_C_LC_CTYPE_tolower+128*4(%rip), %rdx
+	movl	(%rdx,%rcx,4), %ecx
+	movl	(%rdx,%rax,4), %eax
+# endif
 
 	sub	%ecx, %eax
 	ret
