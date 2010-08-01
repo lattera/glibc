@@ -74,15 +74,24 @@
 #endif
 
 #ifdef USE_AS_STRCASECMP_L
-ENTRY (__strcasecmp)
+# ifndef ENTRY2
+#  define ENTRY2(name) ENTRY (name)
+#  define END2(name) END (name)
+#  define NO_NOLOCALE_ALIAS
+# endif
+
+	ENTRY2 (__strcasecmp)
 	movq	__libc_tsd_LOCALE@gottpoff(%rip),%rax
 	movq	%fs:(%rax),%rdx
 
+	// XXX 5 byte should be before the function
 	/* 5-byte NOP.  */
 	.byte	0x0f,0x1f,0x44,0x00,0x00
-END (__strcasecmp)
+END2 (__strcasecmp)
+# ifndef NO_NOLOCALE_ALIAS
 weak_alias (__strcasecmp, strcasecmp)
 libc_hidden_def (__strcasecmp)
+# endif
 	/* FALLTHROUGH to strcasecmp_l.  */
 #endif
 

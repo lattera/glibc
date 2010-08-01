@@ -1,3 +1,13 @@
+2010-07-31  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/x86_64/multiarch/Makefile [subdir=string] (sysdep_routines):
+	Add strcasecmp_l-ssse3.
+	* sysdeps/x86_64/multiarch/strcmp.S: Add support to compile for
+	strcasecmp.
+	* sysdeps/x86_64/strcmp.S: Allow more flexible compiling of strcasecmp.
+	* sysdeps/x86_64/multiarch/strcasecmp_l.S: New file.
+	* sysdeps/x86_64/multiarch/strcasecmp_l-ssse3.S: New file.
+
 2010-07-30  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/x86_64/multiarch/strcmp.S: Pretty printing.

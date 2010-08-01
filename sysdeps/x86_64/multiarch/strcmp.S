@@ -37,6 +37,15 @@
 # define STRCMP_SSSE3	__strncmp_ssse3
 # define STRCMP_SSE2	__strncmp_sse2
 # define __GI_STRCMP	__GI_strncmp
+#elif defined USE_AS_STRCASECMP_L
+# include "locale-defines.h"
+
+# define UPDATE_STRNCMP_COUNTER
+
+# define STRCMP_SSE42	__strcasecmp_l_sse42
+# define STRCMP_SSSE3	__strcasecmp_l_ssse3
+# define STRCMP_SSE2	__strcasecmp_l_sse2
+# define __GI_STRCMP	__GI___strcasecmp_l
 #else
 # define UPDATE_STRNCMP_COUNTER
 # ifndef STRCMP
@@ -73,6 +82,25 @@ ENTRY(STRCMP)
 2:	ret
 END(STRCMP)
 
+# ifdef USE_AS_STRCASECMP_L
+ENTRY(__strcasecmp)
+	.type	__strcasecmp, @gnu_indirect_function
+	cmpl	$0, __cpu_features+KIND_OFFSET(%rip)
+	jne	1f
+	call	__init_cpu_features
+1:
+	leaq	__strcasecmp_sse42(%rip), %rax
+	testl	$bit_SSE4_2, __cpu_features+CPUID_OFFSET+index_SSE4_2(%rip)
+	jnz	2f
+	leaq	__strcasecmp_ssse3(%rip), %rax
+	testl	$bit_SSSE3, __cpu_features+CPUID_OFFSET+index_SSSE3(%rip)
+	jnz	2f
+	leaq	__strcasecmp_sse2(%rip), %rax
+2:	ret
+END(__strcasecmp)
+weak_alias (__strcasecmp, strcasecmp)
+# endif
+
 /* We use 0x1a:
 	_SIDD_SBYTE_OPS
 	| _SIDD_CMP_EQUAL_EACH
@@ -103,6 +131,16 @@ END(STRCMP)
 	.section .text.sse4.2,"ax",@progbits
 	.align	16
 	.type	STRCMP_SSE42, @function
+#ifdef USE_AS_STRCASECMP_L
+	/* 5-byte NOP.  */
+	.byte	0x0f,0x1f,0x44,0x00,0x00
+ENTRY (__strcasecmp_sse42)
+	movq	__libc_tsd_LOCALE@gottpoff(%rip),%rax
+	movq	%fs:(%rax),%rdx
+END (__strcasecmp_sse42)
+	/* FALLTHROUGH to strcasecmp_l.  */
+#endif
+
 STRCMP_SSE42:
 	cfi_startproc
 	CALL_MCOUNT
@@ -110,6 +148,18 @@ STRCMP_SSE42:
 /*
  * This implementation uses SSE to compare up to 16 bytes at a time.
  */
+#ifdef USE_AS_STRCASECMP_L
+	/* We have to fall back on the C implementation for locales
+	   with encodings not matching ASCII for single bytes.  */
+# if LOCALE_T___LOCALES != 0 || LC_CTYPE != 0
+	movq	LOCALE_T___LOCALES+LC_CTYPE*8(%rdx), %rax
+# else
+	movq	(%rdx), %rax
+# endif
+	testl	$0, LOCALE_DATA_VALUES+_NL_CTYPE_NONASCII_CASE*SIZEOF_VALUES(%rax)
+	jne	__strcasecmp_l_nonascii
+#endif
+
 #ifdef USE_AS_STRNCMP
 	test	%rdx, %rdx
 	je	LABEL(strcmp_exitz_sse4_2)
@@ -122,12 +172,52 @@ STRCMP_SSE42:
 /* Use 64bit AND here to avoid long NOP padding.  */
 	and	$0x3f, %rcx		/* rsi alignment in cache line */
 	and	$0x3f, %rax		/* rdi alignment in cache line */
+#ifdef USE_AS_STRCASECMP_L
+	.section .rodata.cst16,"aM",@progbits,16
+	.align 16
+.Lbelowupper_sse4:
+	.quad	0x4040404040404040
+	.quad	0x4040404040404040
+.Ltopupper_sse4:
+	.quad	0x5b5b5b5b5b5b5b5b
+	.quad	0x5b5b5b5b5b5b5b5b
+.Ltouppermask_sse4:
+	.quad	0x2020202020202020
+	.quad	0x2020202020202020
+	.previous
+	movdqa	.Lbelowupper_sse4(%rip), %xmm4
+# define UCLOW_reg %xmm4
+	movdqa	.Ltopupper_sse4(%rip), %xmm5
+# define UCHIGH_reg %xmm5
+	movdqa	.Ltouppermask_sse4(%rip), %xmm6
+# define LCQWORD_reg %xmm6
+#endif
 	cmp	$0x30, %ecx
 	ja	LABEL(crosscache_sse4_2)/* rsi: 16-byte load will cross cache line */
 	cmp	$0x30, %eax
 	ja	LABEL(crosscache_sse4_2)/* rdi: 16-byte load will cross cache line */
 	movdqu	(%rdi), %xmm1
 	movdqu	(%rsi), %xmm2
+# ifdef USE_AS_STRCASECMP_L
+#  define TOLOWER(reg1, reg2) \
+	movdqa	reg1, %xmm7;					\
+	movdqa	UCHIGH_reg, %xmm8;				\
+	movdqa	reg2, %xmm9;					\
+	movdqa	UCHIGH_reg, %xmm10;				\
+	pcmpgtb	UCLOW_reg, %xmm7;				\
+	pcmpgtb	reg1, %xmm8;					\
+	pcmpgtb	UCLOW_reg, %xmm9;				\
+	pcmpgtb	reg2, %xmm10;					\
+	pand	%xmm8, %xmm7;					\
+	pand	%xmm10, %xmm9;					\
+	pand	LCQWORD_reg, %xmm7;				\
+	pand	LCQWORD_reg, %xmm9;				\
+	por	%xmm7, reg1;					\
+	por	%xmm9, reg2
+	TOLOWER (%xmm1, %xmm2)
+# else
+#  define TOLOWER(reg1, reg2)
+# endif
 	pxor	%xmm0, %xmm0		/* clear %xmm0 for null char checks */
 	pcmpeqb	%xmm1, %xmm0		/* Any null chars? */
 	pcmpeqb	%xmm2, %xmm1		/* compare first 16 bytes for equality */
@@ -180,7 +270,13 @@ LABEL(ashr_0_sse4_2):
 	movdqa	(%rsi), %xmm1
 	pxor	%xmm0, %xmm0			/* clear %xmm0 for null char check */
 	pcmpeqb	%xmm1, %xmm0			/* Any null chars? */
+#ifndef USE_AS_STRCASECMP_L
 	pcmpeqb	(%rdi), %xmm1			/* compare 16 bytes for equality */
+#else
+	movdqa	(%rdi), %xmm2
+	TOLOWER (%xmm1, %xmm2)
+	pcmpeqb	%xmm2, %xmm1			/* compare 16 bytes for equality */
+#endif
 	psubb	%xmm0, %xmm1			/* packed sub of comparison results*/
 	pmovmskb %xmm1, %r9d
 	shr	%cl, %edx			/* adjust 0xffff for offset */
@@ -204,7 +300,13 @@ LABEL(ashr_0_sse4_2):
 	.p2align 4
 LABEL(ashr_0_use_sse4_2):
 	movdqa	(%rdi,%rdx), %xmm0
+#ifndef USE_AS_STRCASECMP_L
 	pcmpistri      $0x1a,(%rsi,%rdx), %xmm0
+#else
+	movdqa	(%rsi,%rdx), %xmm1
+	TOLOWER (%xmm0, %xmm1)
+	pcmpistri $0x1a, %xmm1, %xmm0
+#endif
 	lea	16(%rdx), %rdx
 	jbe	LABEL(ashr_0_use_sse4_2_exit)
 #ifdef USE_AS_STRNCMP
@@ -213,7 +315,13 @@ LABEL(ashr_0_use_sse4_2):
 #endif
 
 	movdqa	(%rdi,%rdx), %xmm0
+#ifndef USE_AS_STRCASECMP_L
 	pcmpistri      $0x1a,(%rsi,%rdx), %xmm0
+#else
+	movdqa	(%rsi,%rdx), %xmm1
+	TOLOWER (%xmm0, %xmm1)
+	pcmpistri $0x1a, %xmm1, %xmm0
+#endif
 	lea	16(%rdx), %rdx
 	jbe	LABEL(ashr_0_use_sse4_2_exit)
 #ifdef USE_AS_STRNCMP
@@ -233,9 +341,13 @@ LABEL(ashr_0_use_sse4_2_exit):
 	lea	-16(%rdx, %rcx), %rcx
 	movzbl	(%rdi, %rcx), %eax
 	movzbl	(%rsi, %rcx), %edx
+# ifdef USE_AS_STRCASECMP_L
+	leaq	_nl_C_LC_CTYPE_tolower+128*4(%rip), %rcx
+	movl	(%rcx,%rax,4), %eax
+	movl	(%rcx,%rdx,4), %edx
+# endif
 	sub	%edx, %eax
 	ret
-
 
 
 
@@ -251,6 +363,7 @@ LABEL(ashr_1_sse4_2):
 	movdqa	(%rsi), %xmm1
 	pcmpeqb	%xmm1, %xmm0		/* Any null chars? */
 	pslldq	$15, %xmm2		/* shift first string to align with second */
+	TOLOWER (%xmm1, %xmm2)
 	pcmpeqb	%xmm1, %xmm2		/* compare 16 bytes for equality */
 	psubb	%xmm0, %xmm2		/* packed sub of comparison results*/
 	pmovmskb %xmm2, %r9d
@@ -281,7 +394,13 @@ LABEL(loop_ashr_1_use_sse4_2):
 
 	movdqa	(%rdi, %rdx), %xmm0
 	palignr $1, -16(%rdi, %rdx), %xmm0
+#ifndef USE_AS_STRCASECMP_L
 	pcmpistri	$0x1a,(%rsi,%rdx), %xmm0
+#else
+	movdqa	(%rsi,%rdx), %xmm1
+	TOLOWER (%xmm0, %xmm1)
+	pcmpistri $0x1a, %xmm1, %xmm0
+#endif
 	jbe	LABEL(use_sse4_2_exit)
 #ifdef USE_AS_STRNCMP
 	sub	$16, %r11
@@ -294,7 +413,13 @@ LABEL(loop_ashr_1_use_sse4_2):
 
 	movdqa	(%rdi, %rdx), %xmm0
 	palignr $1, -16(%rdi, %rdx), %xmm0
+#ifndef USE_AS_STRCASECMP_L
 	pcmpistri	$0x1a,(%rsi,%rdx), %xmm0
+#else
+	movdqa	(%rsi,%rdx), %xmm1
+	TOLOWER (%xmm0, %xmm1)
+	pcmpistri $0x1a, %xmm1, %xmm0
+#endif
 	jbe	LABEL(use_sse4_2_exit)
 #ifdef USE_AS_STRNCMP
 	sub	$16, %r11
@@ -330,6 +455,7 @@ LABEL(ashr_2_sse4_2):
 	movdqa	(%rsi), %xmm1
 	pcmpeqb	%xmm1, %xmm0
 	pslldq	$14, %xmm2
+	TOLOWER (%xmm1, %xmm2)
 	pcmpeqb	%xmm1, %xmm2
 	psubb	%xmm0, %xmm2
 	pmovmskb %xmm2, %r9d
@@ -360,7 +486,13 @@ LABEL(loop_ashr_2_use_sse4_2):
 
 	movdqa	(%rdi, %rdx), %xmm0
 	palignr $2, -16(%rdi, %rdx), %xmm0
+#ifndef USE_AS_STRCASECMP_L
 	pcmpistri	$0x1a,(%rsi,%rdx), %xmm0
+#else
+	movdqa	(%rsi,%rdx), %xmm1
+	TOLOWER (%xmm0, %xmm1)
+	pcmpistri $0x1a, %xmm1, %xmm0
+#endif
 	jbe	LABEL(use_sse4_2_exit)
 #ifdef USE_AS_STRNCMP
 	sub	$16, %r11
@@ -373,7 +505,13 @@ LABEL(loop_ashr_2_use_sse4_2):
 
 	movdqa	(%rdi, %rdx), %xmm0
 	palignr $2, -16(%rdi, %rdx), %xmm0
+#ifndef USE_AS_STRCASECMP_L
 	pcmpistri	$0x1a,(%rsi,%rdx), %xmm0
+#else
+	movdqa	(%rsi,%rdx), %xmm1
+	TOLOWER (%xmm0, %xmm1)
+	pcmpistri $0x1a, %xmm1, %xmm0
+#endif
 	jbe	LABEL(use_sse4_2_exit)
 #ifdef USE_AS_STRNCMP
 	sub	$16, %r11
@@ -409,6 +547,7 @@ LABEL(ashr_3_sse4_2):
 	movdqa	(%rsi), %xmm1
 	pcmpeqb	%xmm1, %xmm0
 	pslldq	$13, %xmm2
+	TOLOWER (%xmm1, %xmm2)
 	pcmpeqb	%xmm1, %xmm2
 	psubb	%xmm0, %xmm2
 	pmovmskb %xmm2, %r9d
@@ -439,7 +578,13 @@ LABEL(loop_ashr_3_use_sse4_2):
 
 	movdqa	(%rdi, %rdx), %xmm0
 	palignr $3, -16(%rdi, %rdx), %xmm0
+#ifndef USE_AS_STRCASECMP_L
 	pcmpistri	$0x1a,(%rsi,%rdx), %xmm0
+#else
+	movdqa	(%rsi,%rdx), %xmm1
+	TOLOWER (%xmm0, %xmm1)
+	pcmpistri $0x1a, %xmm1, %xmm0
+#endif
 	jbe	LABEL(use_sse4_2_exit)
 #ifdef USE_AS_STRNCMP
 	sub	$16, %r11
@@ -452,7 +597,13 @@ LABEL(loop_ashr_3_use_sse4_2):
 
 	movdqa	(%rdi, %rdx), %xmm0
 	palignr $3, -16(%rdi, %rdx), %xmm0
+#ifndef USE_AS_STRCASECMP_L
 	pcmpistri	$0x1a,(%rsi,%rdx), %xmm0
+#else
+	movdqa	(%rsi,%rdx), %xmm1
+	TOLOWER (%xmm0, %xmm1)
+	pcmpistri $0x1a, %xmm1, %xmm0
+#endif
 	jbe	LABEL(use_sse4_2_exit)
 #ifdef USE_AS_STRNCMP
 	sub	$16, %r11
@@ -488,6 +639,7 @@ LABEL(ashr_4_sse4_2):
 	movdqa	(%rsi), %xmm1
 	pcmpeqb	%xmm1, %xmm0
 	pslldq	$12, %xmm2
+	TOLOWER (%xmm1, %xmm2)
 	pcmpeqb	%xmm1, %xmm2
 	psubb	%xmm0, %xmm2
 	pmovmskb %xmm2, %r9d
@@ -519,7 +671,13 @@ LABEL(loop_ashr_4_use_sse4_2):
 
 	movdqa	(%rdi, %rdx), %xmm0
 	palignr $4, -16(%rdi, %rdx), %xmm0
+#ifndef USE_AS_STRCASECMP_L
 	pcmpistri	$0x1a,(%rsi,%rdx), %xmm0
+#else
+	movdqa	(%rsi,%rdx), %xmm1
+	TOLOWER (%xmm0, %xmm1)
+	pcmpistri $0x1a, %xmm1, %xmm0
+#endif
 	jbe	LABEL(use_sse4_2_exit)
 #ifdef USE_AS_STRNCMP
 	sub	$16, %r11
@@ -532,7 +690,13 @@ LABEL(loop_ashr_4_use_sse4_2):
 
 	movdqa	(%rdi, %rdx), %xmm0
 	palignr $4, -16(%rdi, %rdx), %xmm0
+#ifndef USE_AS_STRCASECMP_L
 	pcmpistri	$0x1a,(%rsi,%rdx), %xmm0
+#else
+	movdqa	(%rsi,%rdx), %xmm1
+	TOLOWER (%xmm0, %xmm1)
+	pcmpistri $0x1a, %xmm1, %xmm0
+#endif
 	jbe	LABEL(use_sse4_2_exit)
 #ifdef USE_AS_STRNCMP
 	sub	$16, %r11
@@ -568,6 +732,7 @@ LABEL(ashr_5_sse4_2):
 	movdqa	(%rsi), %xmm1
 	pcmpeqb	%xmm1, %xmm0
 	pslldq	$11, %xmm2
+	TOLOWER (%xmm1, %xmm2)
 	pcmpeqb	%xmm1, %xmm2
 	psubb	%xmm0, %xmm2
 	pmovmskb %xmm2, %r9d
@@ -599,7 +764,13 @@ LABEL(loop_ashr_5_use_sse4_2):
 
 	movdqa	(%rdi, %rdx), %xmm0
 	palignr $5, -16(%rdi, %rdx), %xmm0
+#ifndef USE_AS_STRCASECMP_L
 	pcmpistri	$0x1a,(%rsi,%rdx), %xmm0
+#else
+	movdqa	(%rsi,%rdx), %xmm1
+	TOLOWER (%xmm0, %xmm1)
+	pcmpistri $0x1a, %xmm1, %xmm0
+#endif
 	jbe	LABEL(use_sse4_2_exit)
 #ifdef USE_AS_STRNCMP
 	sub	$16, %r11
@@ -613,7 +784,13 @@ LABEL(loop_ashr_5_use_sse4_2):
 	movdqa	(%rdi, %rdx), %xmm0
 
 	palignr $5, -16(%rdi, %rdx), %xmm0
+#ifndef USE_AS_STRCASECMP_L
 	pcmpistri	$0x1a,(%rsi,%rdx), %xmm0
+#else
+	movdqa	(%rsi,%rdx), %xmm1
+	TOLOWER (%xmm0, %xmm1)
+	pcmpistri $0x1a, %xmm1, %xmm0
+#endif
 	jbe	LABEL(use_sse4_2_exit)
 #ifdef USE_AS_STRNCMP
 	sub	$16, %r11
@@ -649,6 +826,7 @@ LABEL(ashr_6_sse4_2):
 	movdqa	(%rsi), %xmm1
 	pcmpeqb	%xmm1, %xmm0
 	pslldq	$10, %xmm2
+	TOLOWER (%xmm1, %xmm2)
 	pcmpeqb	%xmm1, %xmm2
 	psubb	%xmm0, %xmm2
 	pmovmskb %xmm2, %r9d
@@ -680,7 +858,13 @@ LABEL(loop_ashr_6_use_sse4_2):
 
 	movdqa	(%rdi, %rdx), %xmm0
 	palignr $6, -16(%rdi, %rdx), %xmm0
-	pcmpistri	$0x1a,(%rsi,%rdx), %xmm0
+#ifndef USE_AS_STRCASECMP_L
+	pcmpistri $0x1a,(%rsi,%rdx), %xmm0
+#else
+	movdqa	(%rsi,%rdx), %xmm1
+	TOLOWER (%xmm0, %xmm1)
+	pcmpistri $0x1a, %xmm1, %xmm0
+#endif
 	jbe	LABEL(use_sse4_2_exit)
 #ifdef USE_AS_STRNCMP
 	sub	$16, %r11
@@ -693,7 +877,13 @@ LABEL(loop_ashr_6_use_sse4_2):
 
 	movdqa	(%rdi, %rdx), %xmm0
 	palignr $6, -16(%rdi, %rdx), %xmm0
-	pcmpistri	$0x1a,(%rsi,%rdx), %xmm0
+#ifndef USE_AS_STRCASECMP_L
+	pcmpistri $0x1a,(%rsi,%rdx), %xmm0
+#else
+	movdqa	(%rsi,%rdx), %xmm1
+	TOLOWER (%xmm0, %xmm1)
+	pcmpistri $0x1a, %xmm1, %xmm0
+#endif
 	jbe	LABEL(use_sse4_2_exit)
 #ifdef USE_AS_STRNCMP
 	sub	$16, %r11
@@ -729,6 +919,7 @@ LABEL(ashr_7_sse4_2):
 	movdqa	(%rsi), %xmm1
 	pcmpeqb	%xmm1, %xmm0
 	pslldq	$9, %xmm2
+	TOLOWER (%xmm1, %xmm2)
 	pcmpeqb	%xmm1, %xmm2
 	psubb	%xmm0, %xmm2
 	pmovmskb %xmm2, %r9d
@@ -760,7 +951,13 @@ LABEL(loop_ashr_7_use_sse4_2):
 
 	movdqa	(%rdi, %rdx), %xmm0
 	palignr $7, -16(%rdi, %rdx), %xmm0
+#ifndef USE_AS_STRCASECMP_L
 	pcmpistri	$0x1a,(%rsi,%rdx), %xmm0
+#else
+	movdqa	(%rsi,%rdx), %xmm1
+	TOLOWER (%xmm0, %xmm1)
+	pcmpistri $0x1a, %xmm1, %xmm0
+#endif
 	jbe	LABEL(use_sse4_2_exit)
 #ifdef USE_AS_STRNCMP
 	sub	$16, %r11
@@ -773,7 +970,13 @@ LABEL(loop_ashr_7_use_sse4_2):
 
 	movdqa	(%rdi, %rdx), %xmm0
 	palignr $7, -16(%rdi, %rdx), %xmm0
+#ifndef USE_AS_STRCASECMP_L
 	pcmpistri	$0x1a,(%rsi,%rdx), %xmm0
+#else
+	movdqa	(%rsi,%rdx), %xmm1
+	TOLOWER (%xmm0, %xmm1)
+	pcmpistri $0x1a, %xmm1, %xmm0
+#endif
 	jbe	LABEL(use_sse4_2_exit)
 #ifdef USE_AS_STRNCMP
 	sub	$16, %r11
@@ -809,6 +1012,7 @@ LABEL(ashr_8_sse4_2):
 	movdqa	(%rsi), %xmm1
 	pcmpeqb	%xmm1, %xmm0
 	pslldq	$8, %xmm2
+	TOLOWER (%xmm1, %xmm2)
 	pcmpeqb	%xmm1, %xmm2
 	psubb	%xmm0, %xmm2
 	pmovmskb %xmm2, %r9d
@@ -840,7 +1044,13 @@ LABEL(loop_ashr_8_use_sse4_2):
 
 	movdqa	(%rdi, %rdx), %xmm0
 	palignr $8, -16(%rdi, %rdx), %xmm0
-	pcmpistri	$0x1a,(%rsi,%rdx), %xmm0
+#ifndef USE_AS_STRCASECMP_L
+	pcmpistri $0x1a, (%rsi,%rdx), %xmm0
+#else
+	movdqa	(%rsi,%rdx), %xmm1
+	TOLOWER (%xmm0, %xmm1)
+	pcmpistri $0x1a, %xmm1, %xmm0
+#endif
 	jbe	LABEL(use_sse4_2_exit)
 #ifdef USE_AS_STRNCMP
 	sub	$16, %r11
@@ -853,7 +1063,13 @@ LABEL(loop_ashr_8_use_sse4_2):
 
 	movdqa	(%rdi, %rdx), %xmm0
 	palignr $8, -16(%rdi, %rdx), %xmm0
-	pcmpistri	$0x1a,(%rsi,%rdx), %xmm0
+#ifndef USE_AS_STRCASECMP_L
+	pcmpistri $0x1a, (%rsi,%rdx), %xmm0
+#else
+	movdqa	(%rsi,%rdx), %xmm1
+	TOLOWER (%xmm0, %xmm1)
+	pcmpistri $0x1a, %xmm1, %xmm0
+#endif
 	jbe	LABEL(use_sse4_2_exit)
 #ifdef USE_AS_STRNCMP
 	sub	$16, %r11
@@ -889,6 +1105,7 @@ LABEL(ashr_9_sse4_2):
 	movdqa	(%rsi), %xmm1
 	pcmpeqb	%xmm1, %xmm0
 	pslldq	$7, %xmm2
+	TOLOWER (%xmm1, %xmm2)
 	pcmpeqb	%xmm1, %xmm2
 	psubb	%xmm0, %xmm2
 	pmovmskb %xmm2, %r9d
@@ -921,7 +1138,13 @@ LABEL(loop_ashr_9_use_sse4_2):
 	movdqa	(%rdi, %rdx), %xmm0
 
 	palignr $9, -16(%rdi, %rdx), %xmm0
-	pcmpistri	$0x1a,(%rsi,%rdx), %xmm0
+#ifndef USE_AS_STRCASECMP_L
+	pcmpistri $0x1a, (%rsi,%rdx), %xmm0
+#else
+	movdqa	(%rsi,%rdx), %xmm1
+	TOLOWER (%xmm0, %xmm1)
+	pcmpistri $0x1a, %xmm1, %xmm0
+#endif
 	jbe	LABEL(use_sse4_2_exit)
 #ifdef USE_AS_STRNCMP
 	sub	$16, %r11
@@ -934,7 +1157,13 @@ LABEL(loop_ashr_9_use_sse4_2):
 
 	movdqa	(%rdi, %rdx), %xmm0
 	palignr $9, -16(%rdi, %rdx), %xmm0
-	pcmpistri	$0x1a,(%rsi,%rdx), %xmm0
+#ifndef USE_AS_STRCASECMP_L
+	pcmpistri $0x1a, (%rsi,%rdx), %xmm0
+#else
+	movdqa	(%rsi,%rdx), %xmm1
+	TOLOWER (%xmm0, %xmm1)
+	pcmpistri $0x1a, %xmm1, %xmm0
+#endif
 	jbe	LABEL(use_sse4_2_exit)
 #ifdef USE_AS_STRNCMP
 	sub	$16, %r11
@@ -970,6 +1199,7 @@ LABEL(ashr_10_sse4_2):
 	movdqa	(%rsi), %xmm1
 	pcmpeqb	%xmm1, %xmm0
 	pslldq	$6, %xmm2
+	TOLOWER (%xmm1, %xmm2)
 	pcmpeqb	%xmm1, %xmm2
 	psubb	%xmm0, %xmm2
 	pmovmskb %xmm2, %r9d
@@ -1001,7 +1231,13 @@ LABEL(loop_ashr_10_use_sse4_2):
 
 	movdqa	(%rdi, %rdx), %xmm0
 	palignr $10, -16(%rdi, %rdx), %xmm0
-	pcmpistri	$0x1a,(%rsi,%rdx), %xmm0
+#ifndef USE_AS_STRCASECMP_L
+	pcmpistri $0x1a, (%rsi,%rdx), %xmm0
+#else
+	movdqa	(%rsi,%rdx), %xmm1
+	TOLOWER (%xmm0, %xmm1)
+	pcmpistri $0x1a, %xmm1, %xmm0
+#endif
 	jbe	LABEL(use_sse4_2_exit)
 #ifdef USE_AS_STRNCMP
 	sub	$16, %r11
@@ -1014,7 +1250,13 @@ LABEL(loop_ashr_10_use_sse4_2):
 
 	movdqa	(%rdi, %rdx), %xmm0
 	palignr $10, -16(%rdi, %rdx), %xmm0
-	pcmpistri	$0x1a,(%rsi,%rdx), %xmm0
+#ifndef USE_AS_STRCASECMP_L
+	pcmpistri $0x1a, (%rsi,%rdx), %xmm0
+#else
+	movdqa	(%rsi,%rdx), %xmm1
+	TOLOWER (%xmm0, %xmm1)
+	pcmpistri $0x1a, %xmm1, %xmm0
+#endif
 	jbe	LABEL(use_sse4_2_exit)
 #ifdef USE_AS_STRNCMP
 	sub	$16, %r11
@@ -1050,6 +1292,7 @@ LABEL(ashr_11_sse4_2):
 	movdqa	(%rsi), %xmm1
 	pcmpeqb	%xmm1, %xmm0
 	pslldq	$5, %xmm2
+	TOLOWER (%xmm1, %xmm2)
 	pcmpeqb	%xmm1, %xmm2
 	psubb	%xmm0, %xmm2
 	pmovmskb %xmm2, %r9d
@@ -1081,7 +1324,13 @@ LABEL(loop_ashr_11_use_sse4_2):
 
 	movdqa	(%rdi, %rdx), %xmm0
 	palignr $11, -16(%rdi, %rdx), %xmm0
-	pcmpistri	$0x1a,(%rsi,%rdx), %xmm0
+#ifndef USE_AS_STRCASECMP_L
+	pcmpistri $0x1a, (%rsi,%rdx), %xmm0
+#else
+	movdqa	(%rsi,%rdx), %xmm1
+	TOLOWER (%xmm0, %xmm1)
+	pcmpistri $0x1a, %xmm1, %xmm0
+#endif
 	jbe	LABEL(use_sse4_2_exit)
 #ifdef USE_AS_STRNCMP
 	sub	$16, %r11
@@ -1094,7 +1343,13 @@ LABEL(loop_ashr_11_use_sse4_2):
 
 	movdqa	(%rdi, %rdx), %xmm0
 	palignr $11, -16(%rdi, %rdx), %xmm0
-	pcmpistri	$0x1a,(%rsi,%rdx), %xmm0
+#ifndef USE_AS_STRCASECMP_L
+	pcmpistri $0x1a, (%rsi,%rdx), %xmm0
+#else
+	movdqa	(%rsi,%rdx), %xmm1
+	TOLOWER (%xmm0, %xmm1)
+	pcmpistri $0x1a, %xmm1, %xmm0
+#endif
 	jbe	LABEL(use_sse4_2_exit)
 #ifdef USE_AS_STRNCMP
 	sub	$16, %r11
@@ -1130,6 +1385,7 @@ LABEL(ashr_12_sse4_2):
 	movdqa	(%rsi), %xmm1
 	pcmpeqb	%xmm1, %xmm0
 	pslldq	$4, %xmm2
+	TOLOWER (%xmm1, %xmm2)
 	pcmpeqb	%xmm1, %xmm2
 	psubb	%xmm0, %xmm2
 	pmovmskb %xmm2, %r9d
@@ -1161,7 +1417,13 @@ LABEL(loop_ashr_12_use_sse4_2):
 
 	movdqa	(%rdi, %rdx), %xmm0
 	palignr $12, -16(%rdi, %rdx), %xmm0
-	pcmpistri	$0x1a,(%rsi,%rdx), %xmm0
+#ifndef USE_AS_STRCASECMP_L
+	pcmpistri $0x1a, (%rsi,%rdx), %xmm0
+#else
+	movdqa	(%rsi,%rdx), %xmm1
+	TOLOWER (%xmm0, %xmm1)
+	pcmpistri $0x1a, %xmm1, %xmm0
+#endif
 	jbe	LABEL(use_sse4_2_exit)
 #ifdef USE_AS_STRNCMP
 	sub	$16, %r11
@@ -1174,7 +1436,13 @@ LABEL(loop_ashr_12_use_sse4_2):
 
 	movdqa	(%rdi, %rdx), %xmm0
 	palignr $12, -16(%rdi, %rdx), %xmm0
-	pcmpistri	$0x1a,(%rsi,%rdx), %xmm0
+#ifndef USE_AS_STRCASECMP_L
+	pcmpistri $0x1a, (%rsi,%rdx), %xmm0
+#else
+	movdqa	(%rsi,%rdx), %xmm1
+	TOLOWER (%xmm0, %xmm1)
+	pcmpistri $0x1a, %xmm1, %xmm0
+#endif
 	jbe	LABEL(use_sse4_2_exit)
 #ifdef USE_AS_STRNCMP
 	sub	$16, %r11
@@ -1210,6 +1478,7 @@ LABEL(ashr_13_sse4_2):
 	movdqa	(%rsi), %xmm1
 	pcmpeqb	%xmm1, %xmm0
 	pslldq	$3, %xmm2
+	TOLOWER (%xmm1, %xmm2)
 	pcmpeqb	%xmm1, %xmm2
 	psubb	%xmm0, %xmm2
 	pmovmskb %xmm2, %r9d
@@ -1242,7 +1511,13 @@ LABEL(loop_ashr_13_use_sse4_2):
 
 	movdqa	(%rdi, %rdx), %xmm0
 	palignr $13, -16(%rdi, %rdx), %xmm0
-	pcmpistri	$0x1a,(%rsi,%rdx), %xmm0
+#ifndef USE_AS_STRCASECMP_L
+	pcmpistri $0x1a, (%rsi,%rdx), %xmm0
+#else
+	movdqa	(%rsi,%rdx), %xmm1
+	TOLOWER (%xmm0, %xmm1)
+	pcmpistri $0x1a, %xmm1, %xmm0
+#endif
 	jbe	LABEL(use_sse4_2_exit)
 #ifdef USE_AS_STRNCMP
 	sub	$16, %r11
@@ -1255,7 +1530,13 @@ LABEL(loop_ashr_13_use_sse4_2):
 
 	movdqa	(%rdi, %rdx), %xmm0
 	palignr $13, -16(%rdi, %rdx), %xmm0
-	pcmpistri	$0x1a,(%rsi,%rdx), %xmm0
+#ifndef USE_AS_STRCASECMP_L
+	pcmpistri $0x1a, (%rsi,%rdx), %xmm0
+#else
+	movdqa	(%rsi,%rdx), %xmm1
+	TOLOWER (%xmm0, %xmm1)
+	pcmpistri $0x1a, %xmm1, %xmm0
+#endif
 	jbe	LABEL(use_sse4_2_exit)
 #ifdef USE_AS_STRNCMP
 	sub	$16, %r11
@@ -1291,6 +1572,7 @@ LABEL(ashr_14_sse4_2):
 	movdqa	(%rsi), %xmm1
 	pcmpeqb	%xmm1, %xmm0
 	pslldq  $2, %xmm2
+	TOLOWER (%xmm1, %xmm2)
 	pcmpeqb	%xmm1, %xmm2
 	psubb	%xmm0, %xmm2
 	pmovmskb %xmm2, %r9d
@@ -1323,7 +1605,13 @@ LABEL(loop_ashr_14_use_sse4_2):
 
 	movdqa	(%rdi, %rdx), %xmm0
 	palignr $14, -16(%rdi, %rdx), %xmm0
-	pcmpistri	$0x1a,(%rsi,%rdx), %xmm0
+#ifndef USE_AS_STRCASECMP_L
+	pcmpistri $0x1a, (%rsi,%rdx), %xmm0
+#else
+	movdqa	(%rsi,%rdx), %xmm1
+	TOLOWER (%xmm0, %xmm1)
+	pcmpistri $0x1a, %xmm1, %xmm0
+#endif
 	jbe	LABEL(use_sse4_2_exit)
 #ifdef USE_AS_STRNCMP
 	sub	$16, %r11
@@ -1336,7 +1624,13 @@ LABEL(loop_ashr_14_use_sse4_2):
 
 	movdqa	(%rdi, %rdx), %xmm0
 	palignr $14, -16(%rdi, %rdx), %xmm0
-	pcmpistri	$0x1a,(%rsi,%rdx), %xmm0
+#ifndef USE_AS_STRCASECMP_L
+	pcmpistri $0x1a, (%rsi,%rdx), %xmm0
+#else
+	movdqa	(%rsi,%rdx), %xmm1
+	TOLOWER (%xmm0, %xmm1)
+	pcmpistri $0x1a, %xmm1, %xmm0
+#endif
 	jbe	LABEL(use_sse4_2_exit)
 #ifdef USE_AS_STRNCMP
 	sub	$16, %r11
@@ -1372,6 +1666,7 @@ LABEL(ashr_15_sse4_2):
 	movdqa	(%rsi), %xmm1
 	pcmpeqb	%xmm1, %xmm0
 	pslldq	$1, %xmm2
+	TOLOWER (%xmm1, %xmm2)
 	pcmpeqb	%xmm1, %xmm2
 	psubb	%xmm0, %xmm2
 	pmovmskb %xmm2, %r9d
@@ -1406,7 +1701,13 @@ LABEL(loop_ashr_15_use_sse4_2):
 
 	movdqa	(%rdi, %rdx), %xmm0
 	palignr $15, -16(%rdi, %rdx), %xmm0
-	pcmpistri      $0x1a,(%rsi,%rdx), %xmm0
+#ifndef USE_AS_STRCASECMP_L
+	pcmpistri $0x1a, (%rsi,%rdx), %xmm0
+#else
+	movdqa	(%rsi,%rdx), %xmm1
+	TOLOWER (%xmm0, %xmm1)
+	pcmpistri $0x1a, %xmm1, %xmm0
+#endif
 	jbe	LABEL(use_sse4_2_exit)
 #ifdef USE_AS_STRNCMP
 	sub	$16, %r11
@@ -1419,7 +1720,13 @@ LABEL(loop_ashr_15_use_sse4_2):
 
 	movdqa	(%rdi, %rdx), %xmm0
 	palignr $15, -16(%rdi, %rdx), %xmm0
-	pcmpistri      $0x1a,(%rsi,%rdx), %xmm0
+#ifndef USE_AS_STRCASECMP_L
+	pcmpistri $0x1a, (%rsi,%rdx), %xmm0
+#else
+	movdqa	(%rsi,%rdx), %xmm1
+	TOLOWER (%xmm0, %xmm1)
+	pcmpistri $0x1a, %xmm1, %xmm0
+#endif
 	jbe	LABEL(use_sse4_2_exit)
 #ifdef USE_AS_STRNCMP
 	sub	$16, %r11
@@ -1458,6 +1765,12 @@ LABEL(use_sse4_2_exit):
 	jz	LABEL(use_sse4_2_ret_sse4_2)
 	xchg	%eax, %edx
 LABEL(use_sse4_2_ret_sse4_2):
+# ifdef USE_AS_STRCASECMP_L
+	leaq	_nl_C_LC_CTYPE_tolower+128*4(%rip), %rcx
+	movl	(%rcx,%rdx,4), %edx
+	movl	(%rcx,%rax,4), %eax
+# endif
+
 	sub	%edx, %eax
 	ret
 
@@ -1480,6 +1793,12 @@ LABEL(less16bytes_sse4_2):
 	movzbl	(%rsi, %rdx), %ecx
 	movzbl	(%rdi, %rdx), %eax
 
+# ifdef USE_AS_STRCASECMP_L
+	leaq	_nl_C_LC_CTYPE_tolower+128*4(%rip), %rdx
+	movl	(%rdx,%rcx,4), %ecx
+	movl	(%rdx,%rax,4), %eax
+# endif
+
 	sub	%ecx, %eax
 	ret
 
@@ -1488,14 +1807,26 @@ LABEL(strcmp_exitz_sse4_2):
 	ret
 
 	.p2align 4
+	// XXX Same as code above
 LABEL(Byte0_sse4_2):
 	movzx	(%rsi), %ecx
 	movzx	(%rdi), %eax
+
+# ifdef USE_AS_STRCASECMP_L
+	leaq	_nl_C_LC_CTYPE_tolower+128*4(%rip), %rdx
+	movl	(%rdx,%rcx,4), %ecx
+	movl	(%rdx,%rax,4), %eax
+# endif
 
 	sub	%ecx, %eax
 	ret
 	cfi_endproc
 	.size	STRCMP_SSE42, .-STRCMP_SSE42
+
+# undef UCLOW_reg
+# undef UCHIGH_reg
+# undef LCQWORD_reg
+# undef TOLOWER
 
 	/* Put all SSE 4.2 functions together.  */
 	.section .rodata.sse4.2,"a",@progbits
@@ -1528,6 +1859,17 @@ LABEL(unaligned_table_sse4_2):
 # undef END
 # define END(name) \
 	cfi_endproc; .size STRCMP_SSE2, .-STRCMP_SSE2
+
+# ifdef USE_AS_STRCASECMP_L
+#  define ENTRY2(name) \
+	.type __strcasecmp_sse2, @function; \
+	.align 16; \
+	__strcasecmp_sse2: cfi_startproc; \
+	CALL_MCOUNT
+#  define END2(name) \
+	cfi_endproc; .size __strcasecmp_sse2, .-__strcasecmp_sse2
+# endif
+
 # undef libc_hidden_builtin_def
 /* It doesn't make sense to send libc-internal strcmp calls through a PLT.
    The speedup we get from using SSE4.2 instruction is likely eaten away
