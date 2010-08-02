@@ -52,7 +52,7 @@ _hurd_select (int nfds,
   int firstfd, lastfd;
   mach_msg_timeout_t to = (timeout != NULL ?
 			   (timeout->tv_sec * 1000 +
-			    timeout->tv_nsec / 1000000) :
+			    (timeout->tv_nsec + 999999) / 1000000) :
 			   0);
   struct
     {

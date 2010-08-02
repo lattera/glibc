@@ -1,3 +1,8 @@
+2010-07-31  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	* hurd/hurdselect.c (_hurd_select): Round timeout up instead of down
+	when converting to ms.
+
 2010-07-31  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/x86_64/multiarch/Makefile [subdir=string] (sysdep_routines):
