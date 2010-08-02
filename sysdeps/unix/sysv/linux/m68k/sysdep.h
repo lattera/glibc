@@ -117,7 +117,7 @@ SYSCALL_ERROR_LABEL:							      \
     neg.l %d0;								      \
     move.l %d0, -(%sp);							      \
     jbsr __m68k_read_tp@PLTPC;						      \
-    lea (_GLOBAL_OFFSET_TABLE_@GOTPC, %pc), %a1;			      \
+    SYSCALL_ERROR_LOAD_GOT (%a1);					      \
     add.l (SYSCALL_ERROR_ERRNO@TLSIE, %a1), %a0;			      \
     move.l (%sp)+, (%a0);						      \
     move.l &-1, %d0;							      \

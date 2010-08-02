@@ -6,9 +6,13 @@
 	(PCREL_OP): Define.
 	* sysdeps/m68k/sysdep.h (PCREL_OP): Don't define here.
 	* sysdeps/unix/sysv/linux/m68k/coldfire/sysdep.h: New file.
+	(SYSCALL_ERROR_LOAD_GOT): Define.
 	* sysdeps/unix/sysv/linux/m68k/m680x0/sysdep.h: New file.
+	(SYSCALL_ERROR_LOAD_GOT): Define.
 	* sysdeps/unix/sysv/linux/m68k/sysdep.h: Don't include subordinate
 	sysdep files.
+	(SYSCALL_ERROR_HANDLER) [PIC && USE___THREAD]: Use
+	SYSCALL_ERROR_LOAD_GOT.
 
 2010-06-24  Joseph Myers  <joseph@codesourcery.com>
 
