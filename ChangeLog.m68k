@@ -1,3 +1,15 @@
+2010-08-02  Andreas Schwab  <schwab@linux-m68k.org>
+
+	* sysdeps/m68k/coldfire/sysdep.h: New file.
+	(PCREL_OP): Define.
+	* sysdeps/m68k/m680x0/sysdep.h: New file.
+	(PCREL_OP): Define.
+	* sysdeps/m68k/sysdep.h (PCREL_OP): Don't define here.
+	* sysdeps/unix/sysv/linux/m68k/coldfire/sysdep.h: New file.
+	* sysdeps/unix/sysv/linux/m68k/m680x0/sysdep.h: New file.
+	* sysdeps/unix/sysv/linux/m68k/sysdep.h: Don't include subordinate
+	sysdep files.
+
 2010-06-24  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/m68k/bits/fcntl.h (F_SETPIPE_SZ,
