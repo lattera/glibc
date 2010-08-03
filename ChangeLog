@@ -3,6 +3,13 @@
 	* hurd/hurdselect.c (_hurd_select): Round timeout up instead of down
 	when converting to ms.
 
+2010-06-06  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	* sysdeps/mach/hurd/ttyname.c (ttyname): Replace MIG_BAD_ID and
+	EOPNOTSUPP errors with ENOTTY.
+	* sysdeps/mach/hurd/ttyname_r.c (__ttyname_r): Replace MIG_BAD_ID and
+	EOPNOTSUPP errors with ENOTTY.
+
 2010-07-31  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/x86_64/multiarch/Makefile [subdir=string] (sysdep_routines):

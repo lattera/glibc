@@ -34,7 +34,11 @@ __ttyname_r (int fd, char *buf, size_t buflen)
 
   nodename[0] = '\0';
   if (err = HURD_DPORT_USE (fd, __term_get_nodename (port, nodename)))
-    return __hurd_dfail (fd, err), errno;
+    {
+      if (err == MIG_BAD_ID || err == EOPNOTSUPP)
+        err = ENOTTY;
+      return __hurd_dfail (fd, err), errno;
+    }
 
   len = strlen (nodename) + 1;
   if (len > buflen)
