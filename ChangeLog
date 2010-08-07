@@ -1,3 +1,8 @@
+2010-08-06  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/getlogin_r.c (__getlogin_r_loginuid):
+	Also fail if tpwd after pwuid call is NULL.
+
 2010-07-31  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
 	* hurd/hurdselect.c (_hurd_select): Round timeout up instead of down
