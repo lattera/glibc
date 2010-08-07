@@ -81,7 +81,7 @@ __getlogin_r_loginuid (name, namesize)
 	use_malloc = true;
       }
 
-  if (res != 0)
+  if (res != 0 || tpwd == NULL)
     {
       result = -1;
       goto out;
