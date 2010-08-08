@@ -65,3 +65,41 @@ C_LABEL(_mcount)
 
 #undef mcount
 weak_alias (_mcount, mcount)
+
+	ASM_GLOBAL_DIRECTIVE C_SYMBOL_NAME(__fentry__)
+	ASM_TYPE_DIRECTIVE(C_SYMBOL_NAME(__fentry__), @function)
+	.align ALIGNARG(4)
+C_LABEL(__fentry__)
+	/* Allocate space for 7 registers.  */
+	subq	$64,%rsp
+	movq	%rax,(%rsp)
+	movq	%rcx,8(%rsp)
+	movq	%rdx,16(%rsp)
+	movq	%rsi,24(%rsp)
+	movq	%rdi,32(%rsp)
+	movq	%r8,40(%rsp)
+	movq	%r9,48(%rsp)
+
+	/* Setup parameter for __mcount_internal.  */
+	/* selfpc is the return address on the stack.  */
+	movq	64(%rsp),%rsi
+	/* caller is the return address above it */
+	movq	72(%rsp),%rdi
+#ifdef PIC
+	call C_SYMBOL_NAME(__mcount_internal)@PLT
+#else
+	call C_SYMBOL_NAME(__mcount_internal)
+#endif
+	/* Pop the saved registers.  Please note that `__fentry__' has no
+	   return value.  */
+	movq	48(%rsp),%r9
+	movq	40(%rsp),%r8
+	movq	32(%rsp),%rdi
+	movq	24(%rsp),%rsi
+	movq	16(%rsp),%rdx
+	movq	8(%rsp),%rcx
+	movq	(%rsp),%rax
+	addq	$64,%rsp
+	ret
+
+	ASM_SIZE_DIRECTIVE(C_SYMBOL_NAME(__fentry__))

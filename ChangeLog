@@ -1,3 +1,10 @@
+2010-07-17  Andi Kleen  <ak@linux.intel.com>
+
+	* sysdeps/i386/i386-mcount.S (__fentry__): Define.
+	* sysdeps/x86_64/_mcount.S (__fentry__): Define.
+	* stdlib/Versions (__fentry__): Add for GLIBC 2.13
+	* Versions.def [GLIBC_2.13]: Add.
+
 2010-08-06  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/getlogin_r.c (__getlogin_r_loginuid):

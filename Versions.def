@@ -29,6 +29,7 @@ libc {
   GLIBC_2.10
   GLIBC_2.11
   GLIBC_2.12
+  GLIBC_2.13
 %ifdef USE_IN_LIBIO
   HURD_CTHREADS_0.3
 %endif

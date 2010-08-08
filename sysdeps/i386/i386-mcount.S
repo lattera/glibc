@@ -53,3 +53,28 @@ C_LABEL(_mcount)
 
 #undef mcount
 weak_alias (_mcount, mcount)
+
+	/* Same as above, but doesn't require a frame pointer */
+	ASM_GLOBAL_DIRECTIVE C_SYMBOL_NAME(__fentry__)
+	ASM_TYPE_DIRECTIVE(C_SYMBOL_NAME(__fentry__), @function)
+	.align ALIGNARG(4)
+C_LABEL(__fentry__)
+	/* Save the caller-clobbered registers.  */
+	pushl %eax
+	pushl %ecx
+	pushl %edx
+
+	movl 12(%esp), %edx
+	movl 16(%esp), %eax
+
+	/* No need to access the PLT or GOT, __mcount_internal is an
+	   internal function and we can make a relative call.  */
+	call C_SYMBOL_NAME(__mcount_internal)
+
+	/* Pop the saved registers.  Please note that `__fentry__' has no
+	   return value.  */
+	popl %edx
+	popl %ecx
+	popl %eax
+	ret
+	ASM_SIZE_DIRECTIVE(C_SYMBOL_NAME(__fentry__))
