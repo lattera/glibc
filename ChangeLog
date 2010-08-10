@@ -1,3 +1,9 @@
+2010-08-09  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #11883]
+	* posix/fnmatch.c: Keep track of alloca use and fall back on malloc.
+	* posix/fnmatch_loop.c: Likewise.
+
 2010-07-17  Andi Kleen  <ak@linux.intel.com>
 
 	* sysdeps/i386/i386-mcount.S (__fentry__): Define.
