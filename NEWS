@@ -11,7 +11,7 @@ Version 2.13
 
   11640, 11701, 11840, 11856, 11883, 11903
 
-* New Linux interfaces: prlimit, prlimit64
+* New Linux interfaces: prlimit, prlimit64, fanotify_init, fanotify_mark
 
 * POWER7 optimizations: memset, memcmp, strncmp
 

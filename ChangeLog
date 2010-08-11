@@ -1,5 +1,14 @@
 2010-08-11  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/Makefile [subdir=misc] (sysdep_headers):
+	Add sys/fanotify.h.
+	* sysdeps/unix/sysv/linux/Versions [libc]: Export fanotify_init and
+	fanotify_mask for GLIBC_2.13.
+	* sysdeps/unix/sysv/linux/i386/syscalls.list: Add entries for
+	fanotify_init and fanotify_mark.
+	* sysdeps/unix/sysv/linux/wordsize-64/syscalls.list: Likewise.
+	* sysdeps/unix/sysv/linux/sys/fanotify.h: New file.
+
 	* sysdeps/unix/sysv/linux/Makefile [subdir=misc] (sysdep_routines):
 	Add prlimit.
 	* sysdeps/unix/sysv/linux/Versions [libc]: Export prlimit and

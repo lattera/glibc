@@ -8,3 +8,6 @@ oldsetrlimit	EXTRA	setrlimit	i:ip	__old_setrlimit	setrlimit@GLIBC_2.0
 waitpid		-	waitpid		Ci:ipi	__waitpid	waitpid	__libc_waitpid
 
 prlimit64	EXTRA	prlimit64	i:iipp	prlimit64
+
+fanotify_init	EXTRA	fanotify_init	i:iii	fanotify_init
+fanotify_mark	EXTRA	fanotify_mark	i:iiiiis	fanotify_mark
