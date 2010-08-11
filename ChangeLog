@@ -1,5 +1,7 @@
 2010-08-11  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/sys/inotify.h (IN_EXCL_UNLINK): Define.
+
 	* sysdeps/unix/sysv/linux/Makefile [subdir=misc] (sysdep_headers):
 	Add sys/fanotify.h.
 	* sysdeps/unix/sysv/linux/Versions [libc]: Export fanotify_init and

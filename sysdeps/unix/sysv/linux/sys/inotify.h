@@ -1,4 +1,4 @@
-/* Copyright (C) 2005, 2006, 2008, 2009 Free Software Foundation, Inc.
+/* Copyright (C) 2005, 2006, 2008, 2009, 2010 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -72,6 +72,8 @@ struct inotify_event
 #define IN_ONLYDIR	 0x01000000	/* Only watch the path if it is a
 					   directory.  */
 #define IN_DONT_FOLLOW	 0x02000000	/* Do not follow a sym link.  */
+#define IN_EXCL_UNLINK	 0x04000000	/* Exclude events on unlinked
+					   objects.  */
 #define IN_MASK_ADD	 0x20000000	/* Add to the mask of an already
 					   existing watch.  */
 #define IN_ISDIR	 0x40000000	/* Event occurred against dir.  */
