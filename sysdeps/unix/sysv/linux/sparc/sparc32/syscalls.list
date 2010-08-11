@@ -4,3 +4,5 @@ setrlimit	-	setrlimit	2	__setrlimit	setrlimit
 getrlimit	-	getrlimit	2	__getrlimit	getrlimit
 getresuid	-	getresuid32	3	getresuid
 getresgid	-	getresgid32	3	getresgid
+
+prlimit64	EXTRA	prlimit64	i:iipp	prlimit64

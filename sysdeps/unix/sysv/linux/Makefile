@@ -18,7 +18,7 @@ endif
 ifeq ($(subdir),misc)
 sysdep_routines += sysctl clone llseek umount umount2 readahead \
 		   setfsuid setfsgid makedev epoll_pwait signalfd \
-		   eventfd eventfd_read eventfd_write
+		   eventfd eventfd_read eventfd_write prlimit
 
 CFLAGS-gethostid.c = -fexceptions
 

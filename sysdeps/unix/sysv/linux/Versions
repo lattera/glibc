@@ -149,6 +149,9 @@ libc {
 
     recvmmsg;
   }
+  GLIBC_2.13 {
+    prlimit; prlimit64;
+  }
   GLIBC_PRIVATE {
     # functions used in other libraries
     __syscall_rt_sigqueueinfo;

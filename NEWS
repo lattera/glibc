@@ -11,6 +11,8 @@ Version 2.13
 
   11640, 11701, 11840, 11856, 11883, 11903
 
+* New Linux interfaces: prlimit, prlimit64
+
 * POWER7 optimizations: memset, memcmp, strncmp
 
 * New optimized string functions for x86-64: strnlen, strcasecmp

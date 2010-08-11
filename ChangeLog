@@ -1,5 +1,21 @@
 2010-08-11  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/Makefile [subdir=misc] (sysdep_routines):
+	Add prlimit.
+	* sysdeps/unix/sysv/linux/Versions [libc]: Export prlimit and
+	prlimit64 for GLIBC_2.13.
+	* sysdeps/unix/sysv/linux/bits/resource.h: Declare prlimit and
+	prlimit64.
+	* sysdeps/unix/sysv/linux/i386/syscalls.list: Add entry for prlimit64
+	syscall.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/syscalls.list: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/syscalls.list: Likewise.
+	* sysdeps/unix/sysv/linux/sh/syscalls.list: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/syscalls.lis: Likewise.
+	* sysdeps/unix/sysv/linux/wordsize-64/syscalls.list: Likewise.  Also
+	add prlimit alias.
+	* sysdeps/unix/sysv/linux/prlimit.c: New file.
+
 	[BZ #11903]
 	* sysdeps/generic/netinet/ip.h (IPTOS_CLASS): Fix definition.
 	Patch by Evgeni Bikov <bikovevg@iitp.ru>.

@@ -6,3 +6,5 @@ vm86		-	vm86		i:ip	__vm86		vm86@@GLIBC_2.3.4
 oldgetrlimit	EXTRA	getrlimit	i:ip	__old_getrlimit	getrlimit@GLIBC_2.0
 oldsetrlimit	EXTRA	setrlimit	i:ip	__old_setrlimit	setrlimit@GLIBC_2.0
 waitpid		-	waitpid		Ci:ipi	__waitpid	waitpid	__libc_waitpid
+
+prlimit64	EXTRA	prlimit64	i:iipp	prlimit64
