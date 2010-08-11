@@ -1,3 +1,23 @@
+2010-08-11  Ulrich Drepper  <drepper@redhat.com>
+
+	* nss/Makefile: Add rules to build and run tst-nss-test1.
+	* shlib-versions: Add entry for libnss_test1.
+	* nss/nss_test1.c: New file.
+	* nss/tst-nss-test1.c: New file.
+
+	* nss/nsswitch.c (__nss_database_custom): Define new variable.
+	(__nss_configure_lookup): Set appropriate entry in
+	__nss_configure_lookup to true.
+	* nss/nsswitch.h: Define enum with indeces of databases in
+	databases and __nss_database_custom arrays.  Declare
+	__nss_database_custom.
+	* grp/initgroups.c (internal_getgrouplist): Use __nss_database_custom
+	to avoid using nscd when custom rules are installed.
+	* nss/getXXbyYY_r.c: Likewise.
+	* sysdeps/posix/getaddrinfo.c (gaih_inet): Likewise.
+
+	* nss/nss_files/files-parse.c: Whitespace fixes.
+
 2010-08-09  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #11883]

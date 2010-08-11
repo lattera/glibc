@@ -1,5 +1,5 @@
 /* Common code for file-based database parsers in nss_files module.
-   Copyright (C) 1996-2000, 2003, 2004, 2009 Free Software Foundation, Inc.
+   Copyright (C) 1996-2000,2003,2004,2009,2010 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -29,7 +29,7 @@
    DATABASE -- string of the database file's name ("hosts", "passwd").
 
    ENTDATA -- if defined, `struct ENTDATA' is used by the parser to store
-              things pointed to by the resultant `struct STRUCTURE'.
+	      things pointed to by the resultant `struct STRUCTURE'.
 
    NEED_H_ERRNO - defined iff an arg `int *herrnop' is used.
 
@@ -229,7 +229,7 @@ strtou32 (const char *nptr, char **endptr, int base)
   char **list = parse_list (&line, buf_start, buf_end, '\0', errnop);	      \
   if (list)								      \
     result->TRAILING_LIST_MEMBER = list;				      \
-  else 									      \
+  else									      \
     return -1;		/* -1 indicates we ran out of space.  */	      \
 }
 

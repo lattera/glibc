@@ -1,4 +1,4 @@
-/* Copyright (C) 1996-1999, 2001-2007, 2009 Free Software Foundation, Inc.
+/* Copyright (C) 1996-1999,2001-2007,2009,2010 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -70,6 +70,9 @@ static const struct
 #undef DEFINE_DATABASE
 };
 #define ndatabases (sizeof (databases) / sizeof (databases[0]))
+
+/* Flags whether custom rules for database is set.  */
+bool __nss_database_custom[NSS_DBSIDX_max];
 
 
 __libc_lock_define_initialized (static, lock)
@@ -265,6 +268,7 @@ __nss_configure_lookup (const char *dbname, const char *service_line)
 
   /* Install new rules.  */
   *databases[cnt].dbp = new_db;
+  __nss_database_custom[cnt] = true;
 
   __libc_lock_unlock (lock);
 

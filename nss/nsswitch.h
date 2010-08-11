@@ -1,4 +1,4 @@
-/* Copyright (C) 1996-1999,2001,2002,2003,2004,2007
+/* Copyright (C) 1996-1999,2001,2002,2003,2004,2007,2010
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -28,6 +28,7 @@
 #include <resolv.h>
 #include <search.h>
 #include <dlfcn.h>
+#include <stdbool.h>
 
 /* Actions performed after lookup finished.  */
 typedef enum
@@ -94,6 +95,19 @@ typedef struct name_database
   /* List of libraries with service implementation.  */
   service_library *library;
 } name_database;
+
+
+/* Indices into DATABASES in nsswitch.c and __NSS_DATABASE_CUSTOM.  */
+enum
+  {
+#define DEFINE_DATABASE(arg) NSS_DBSIDX_##arg,
+#include "databases.def"
+#undef DEFINE_DATABASE
+    NSS_DBSIDX_max
+  };
+
+/* Flags whether custom rules for database is set.  */
+extern bool __nss_database_custom[NSS_DBSIDX_max];
 
 
 /* Interface functions for NSS.  */

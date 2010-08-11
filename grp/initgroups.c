@@ -1,4 +1,4 @@
-/* Copyright (C) 1989,91,93,1996-2005,2006,2008 Free Software Foundation, Inc.
+/* Copyright (C) 1989,91,93,1996-2006,2008,2010 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -56,7 +56,8 @@ internal_getgrouplist (const char *user, gid_t group, long int *size,
   if (__nss_not_use_nscd_group > 0
       && ++__nss_not_use_nscd_group > NSS_NSCD_RETRY)
     __nss_not_use_nscd_group = 0;
-  if (!__nss_not_use_nscd_group)
+  if (!__nss_not_use_nscd_group
+      && !__nss_database_custom[NSS_DBSIDX_group])
     {
       int n = __nscd_getgrouplist (user, group, size, groupsp, limit);
       if (n >= 0)

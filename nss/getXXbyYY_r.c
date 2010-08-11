@@ -1,4 +1,4 @@
-/* Copyright (C) 1996-2004, 2006, 2007, 2009 Free Software Foundation, Inc.
+/* Copyright (C) 1996-2004,2006,2007,2009,2010 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -87,6 +87,8 @@
 # define NOT_USENSCD_NAME ADD_NOT_NSCDUSE (DATABASE_NAME)
 # define ADD_NOT_NSCDUSE(name) ADD_NOT_NSCDUSE1 (name)
 # define ADD_NOT_NSCDUSE1(name) __nss_not_use_nscd_##name
+# define CONCAT2(arg1, arg2) CONCAT2_2 (arg1, arg2)
+# define CONCAT2_2(arg1, arg2) arg1##arg2
 #endif
 
 #define FUNCTION_NAME_STRING STRINGIZE (FUNCTION_NAME)
@@ -186,7 +188,8 @@ INTERNAL (REENTRANT_NAME) (ADD_PARAMS, LOOKUP_TYPE *resbuf, char *buffer,
   if (NOT_USENSCD_NAME > 0 && ++NOT_USENSCD_NAME > NSS_NSCD_RETRY)
     NOT_USENSCD_NAME = 0;
 
-  if (!NOT_USENSCD_NAME)
+  if (!NOT_USENSCD_NAME
+      && !__nss_database_custom[CONCAT2 (NSS_DBSIDX_, DATABASE_NAME)])
     {
       nscd_status = NSCD_NAME (ADD_VARIABLES, resbuf, buffer, buflen, result
 			       H_ERRNO_VAR);
