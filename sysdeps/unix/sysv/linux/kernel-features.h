@@ -530,3 +530,8 @@
 #if __LINUX_KERNEL_VERSION >= 0x020621
 # define __ASSUME_RECVMMSG	1
 #endif
+
+/* statfs fills in f_flags since 2.6.36.  */
+#if __LINUX_KERNEL_VERSION >= 0x020624
+# define __ASSUME_STATFS_F_FLAGS	1
+#endif

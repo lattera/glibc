@@ -29,6 +29,11 @@
 #include <sys/statfs.h>
 #include <sys/statvfs.h>
 #include "linux_fsinfo.h"
+#include "kernel-features.h"
+
+
+/* Special internal-only bit value.  */
+#define ST_VALID 0x0020
 
 
 #ifndef STATFS
@@ -37,6 +42,7 @@
 # define INTERNAL_STATVFS __internal_statvfs
 
 
+# ifndef __ASSUME_STATFS_F_FLAGS
 int
 __statvfs_getflags (const char *name, int fstype, struct stat64 *st)
 {
@@ -200,6 +206,7 @@ __statvfs_getflags (const char *name, int fstype, struct stat64 *st)
 
   return result;
 }
+# endif
 #else
 extern int __statvfs_getflags (const char *name, int fstype,
 			       struct stat64 *st);
@@ -240,9 +247,14 @@ INTERNAL_STATVFS (const char *name, struct STATVFS *buf,
   /* XXX I have no idea how to compute f_favail.  Any idea???  */
   buf->f_favail = buf->f_ffree;
 
-  /* Determining the flags is tricky.  We have to read /proc/mounts or
-     the /etc/mtab file and search for the entry which matches the given
-     file.  The way we can test for matching filesystem is using the
-     device number.  */
-  buf->f_flag = __statvfs_getflags (name, fsbuf->f_type, st);
+#ifndef __ASSUME_STATFS_F_FLAGS
+  if ((fsbuf->f_flags & ST_VALID) == 0)
+    /* Determining the flags is tricky.  We have to read /proc/mounts or
+       the /etc/mtab file and search for the entry which matches the given
+       file.  The way we can test for matching filesystem is using the
+       device number.  */
+    buf->f_flag = __statvfs_getflags (name, fsbuf->f_type, st);
+  else
+#endif
+    buf->f_flag = fsbuf->f_flags ^ ST_VALID;
 }

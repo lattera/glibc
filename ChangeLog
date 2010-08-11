@@ -1,5 +1,18 @@
 2010-08-11  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/bits/statfs.h (struct statfs): Add f_flags
+	field.
+	(struct statfs64): Likewise.
+	(_STATFS_F_FLAGS): Define.
+	* sysdeps/unix/sysv/linux/s390/bits/statfs.h: Likewise.
+	* sysdeps/unix/sysv/linux/internal_statvfs.c (__statvfs_getflags):
+	Don't define if __ASSUME_STATFS_F_FLAGS is defined.
+	(ST_VALID): Define locally.
+	(INTERNAL_STATVFS): If f_flags has ST_VALID set don't call
+	__statvfs_getflags, use the provided value.
+	* sysdeps/unix/sysv/linux/kernel-features.h: Define
+	__ASSUME_STATFS_F_FLAGS.
+
 	* sysdeps/unix/sysv/linux/sys/inotify.h (IN_EXCL_UNLINK): Define.
 
 	* sysdeps/unix/sysv/linux/Makefile [subdir=misc] (sysdep_headers):
