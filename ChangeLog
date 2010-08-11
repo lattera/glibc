@@ -1,5 +1,9 @@
 2010-08-11  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #11903]
+	* sysdeps/generic/netinet/ip.h (IPTOS_CLASS): Fix definition.
+	Patch by Evgeni Bikov <bikovevg@iitp.ru>.
+
 	* nss/Makefile: Add rules to build and run tst-nss-test1.
 	* shlib-versions: Add entry for libnss_test1.
 	* nss/nss_test1.c: New file.

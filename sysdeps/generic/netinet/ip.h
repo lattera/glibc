@@ -1,5 +1,4 @@
-/* Copyright (C) 1991,92,93,95,96,97,98,99,2000,2009 Free Software
-   Foundation, Inc.
+/* Copyright (C) 1991-1993,1995-2000,2009,2010 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -194,7 +193,7 @@ struct ip_timestamp
  */
 
 #define	IPTOS_CLASS_MASK		0xe0
-#define	IPTOS_CLASS(class)		((tos) & IPTOS_CLASS_MASK)
+#define	IPTOS_CLASS(class)		((class) & IPTOS_CLASS_MASK)
 #define	IPTOS_CLASS_CS0			0x00
 #define	IPTOS_CLASS_CS1			0x20
 #define	IPTOS_CLASS_CS2			0x40
