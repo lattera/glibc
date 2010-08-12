@@ -1,5 +1,10 @@
 2010-08-12  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/unix/sysv/linux/mips/sys/inotify.h (IN_EXCL_UNLINK):
+	Define.
+
+2010-08-12  Joseph Myers  <joseph@codesourcery.com>
+
 	* sysdeps/unix/sysv/linux/mips/bits/resource.h: Declare prlimit
 	and prlimit64.
 	* sysdeps/unix/sysv/linux/mips/mips32/syscalls.list,
