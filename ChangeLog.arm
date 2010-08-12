@@ -1,3 +1,8 @@
+2010-08-12  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/arm/syscalls.list: Add entry for
+	prlimit64 syscall.
+
 2010-06-14  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/arm/bits/fcntl.h (F_SETPIPE_SZ,
