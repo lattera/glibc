@@ -27,14 +27,28 @@
 	.macro SAVE_ARG NARG
 	.if \NARG
 	SAVE_ARG \NARG-1
-	std	2+\NARG,-72+8*(\NARG)(1)
+	std	2+\NARG,40+8*(\NARG)(1)
 	.endif
 	.endm
 
 	.macro REST_ARG NARG
 	.if \NARG
 	REST_ARG \NARG-1
-	ld	2+\NARG,40+8*(\NARG)(1)
+	ld	2+\NARG,112+40+8*(\NARG)(1)
+	.endif
+	.endm
+
+	.macro CFI_SAVE_ARG NARG
+	.if \NARG
+	CFI_SAVE_ARG \NARG-1
+	cfi_offset(2+\NARG,40+8*(\NARG))
+	.endif
+	.endm
+
+	.macro CFI_REST_ARG NARG
+	.if \NARG
+	CFI_REST_ARG \NARG-1
+	cfi_restore(2+\NARG)
 	.endif
 	.endm
 
@@ -46,11 +60,20 @@
 	SAVE_ARG \NARG
 	std	r0,16(r1)
 	stdu	r1,-112(r1)
+	cfi_adjust_cfa_offset(112)
+	cfi_offset(lr,16)
+	CFI_SAVE_ARG \NARG
 	bl	JUMPTARGET (_mcount)
+#ifndef SHARED
+	nop
+#endif
 	ld	r0,128(r1)
 	REST_ARG \NARG
-	addi	r1,r1,112
 	mtlr	r0
+	addi	r1,r1,112
+	cfi_adjust_cfa_offset(-112)
+	cfi_restore(lr)
+	CFI_REST_ARG \NARG
 #endif
 	.endm
 
@@ -198,9 +221,37 @@ LT_LABELSUFFIX(name,_name_end): ; \
   ENTRY (name) \
   DO_CALL (SYS_ify (syscall_name));
 
+#ifdef SHARED
+#define TAIL_CALL_SYSCALL_ERROR \
+    b JUMPTARGET(__syscall_error)
+#else
+/* Static version might be linked into a large app with a toc exceeding
+   64k.  We can't put a toc adjusting stub on a plain branch, so can't
+   tail call __syscall_error.  */
+#define TAIL_CALL_SYSCALL_ERROR \
+    .ifdef .Local_syscall_error; \
+    b .Local_syscall_error; \
+    .else; \
+.Local_syscall_error: \
+    mflr 0; \
+    std 0,16(1); \
+    stdu 1,-112(1); \
+    cfi_adjust_cfa_offset(112); \
+    cfi_offset(lr,16); \
+    bl JUMPTARGET(__syscall_error); \
+    nop; \
+    ld 0,112+16(1); \
+    addi 1,1,112; \
+    cfi_adjust_cfa_offset(-112); \
+    mtlr 0; \
+    cfi_restore(lr); \
+    blr; \
+    .endif
+#endif
+
 #define PSEUDO_RET \
     bnslr+; \
-    b JUMPTARGET(__syscall_error)
+    TAIL_CALL_SYSCALL_ERROR
 
 #define ret PSEUDO_RET
 

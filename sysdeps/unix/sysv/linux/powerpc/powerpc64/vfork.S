@@ -39,7 +39,7 @@ ENTRY (__vfork)
 	bnslr+
 	/* Check if vfork syscall is known at all.  */
 	cmpdi	r3,ENOSYS
-	bne	JUMPTARGET(__syscall_error)
+	bne	.Local_syscall_error
 
 # endif
 #endif

@@ -1,3 +1,14 @@
+2010-05-01  Alan Modra  <amodra@gmail.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/sysdep-cancel.h
+	(PSEUDO): Use correct cr save.  Don't use wrong parm save area
+	to save temps.  Correct cfi for possible later frame manipulation.
+	(DOCARGS_1, UNDOCARGS_1): Use the correct parm save area.
+	(DOCARGS_2, UNDOCARGS_2, DOCARGS_3, UNDOCARGS_3): Likewise.
+	(DOCARGS_4, UNDOCARGS_4, DOCARGS_5, UNDOCARGS_5): Likewise.
+	(DOCARGS_6, UNDOCARGS_6): Likewise.
+	(CENABLE, CDISABLE): Add nops for non-shared calls.
+
 2010-07-06  Andreas Schwab  <schwab@redhat.com>
 
 	* sysdeps/unix/sysv/linux/pthread_getname.c (pthread_getname_np):

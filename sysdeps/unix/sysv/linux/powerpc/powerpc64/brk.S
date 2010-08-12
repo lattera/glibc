@@ -32,19 +32,16 @@ ENTRY (BP_SYM (__brk))
 	CALL_MCOUNT 1
 	DISCARD_BOUNDS (r3)	/* the bounds are meaningless, so toss 'em.  */
 
-	stdu    r1,-64(r1)
-	cfi_adjust_cfa_offset (64)
 	std	r3,48(r1)
 	DO_CALL(SYS_ify(brk))
-	ld     r6,48(r1)
+	ld	r6,48(r1)
 	ld	r5,.LC__curbrk@toc(r2)
 	std     r3,0(r5)
 	cmpld   r6,r3
-	addi    r1,r1,64
 	li	r3,0
 	blelr+
 	li      r3,ENOMEM
-	b	JUMPTARGET(__syscall_error)
+	TAIL_CALL_SYSCALL_ERROR
 END (BP_SYM (__brk))
 
 weak_alias (BP_SYM (__brk), BP_SYM (brk))

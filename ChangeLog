@@ -1,3 +1,40 @@
+2010-05-01  Alan Modra  <amodra@gmail.com>
+
+	* sysdeps/powerpc/powerpc32/power4/memcmp.S: Correct cfi for r24.
+	* sysdeps/powerpc/powerpc64/bsd-_setjmp.S: Move contents..
+	* sysdeps/powerpc/powerpc64/bsd-setjmp.S: ..and these too..
+	* sysdeps/powerpc/powerpc64/setjmp.S: ..to here..
+	* sysdeps/powerpc/powerpc64/setjmp-common.S: ..and here, with some
+	tidying.  Don't tail-call __sigjmp_save for static lib.
+	* sysdeps/powerpc/powerpc64/sysdep.h (SAVE_ARG, REST_ARG): Correct
+	save location.
+	(CFI_SAVE_ARG, CFI_REST_ARG): New macros.
+	(CALL_MCOUNT): Add eh info, and nop after bl.
+	(TAIL_CALL_SYSCALL_ERROR): New macro.
+	(PSEUDO_RET): Use it.
+	* sysdeps/powerpc/powerpc64/dl-trampoline.S (_dl_runtime_resolve):
+	Correct save location of integer regs and cr.
+	(_dl_profile_resolve): Correct cr save location.  Delete nops
+	after bl when SHARED.  Reduce cfi size a little by better
+	placement of cfi directives.
+	* sysdeps/powerpc/powerpc64/fpu/s_copysign.S (__copysign): Don't
+	make a stack frame.  Instead use parm save area as a temp.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/brk.S (__brk): Don't
+	make a stack frame.  Use TAIL_CALL_SYSCALL_ERROR.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/clone.S (__clone):
+	Don't make a stack frame for parent, use parm save area.
+	Increase child stack frame to 112 bytes.  Don't save unused reg,
+	and adjust reg usage.  Set up cfi on error recovery and
+	epilogue of parent, and use TAIL_CALL_SYSCALL_ERROR, PSEUDO_RET.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/makecontext.S
+	(__makecontext): Add dummy nop after jump to exit.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/socket.S (__socket):
+	Use correct parm save area and cr save, reduce stack frame.
+	Correct cfi for possible PSEUDO_RET frame setup.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/vfork.S (__vfork):
+	Branch to local label emitted by PSEUDO_RET rather than
+	__syscall_error.
+
 2010-08-12  Andreas Schwab  <schwab@redhat.com>
 
 	[BZ #11904]

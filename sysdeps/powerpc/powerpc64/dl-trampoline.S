@@ -27,42 +27,50 @@
    parm1 (r3) and the index (r0) need to be converted to an offset
    (index * 24) in parm2 (r4).  */
 
-EALIGN(_dl_runtime_resolve, 4, 0)
+#define FRAME_SIZE 176
 /* We need to save the registers used to pass parameters, ie. r3 thru
-   r10; the registers are saved in a stack frame.  */
-	stdu	r1,-128(r1)
-	cfi_adjust_cfa_offset (128)
-	std	r3,48(r1)
+   r10;  Use local var space rather than the parameter save area,
+   because gcc as of 2010/05 doesn't allocate a proper stack frame for
+   a function that makes no calls except for __tls_get_addr and we
+   might be here resolving the __tls_get_addr call.  */
+#define INT_PARMS 112
+EALIGN(_dl_runtime_resolve, 4, 0)
+	stdu	r1,-FRAME_SIZE(r1)
+	cfi_adjust_cfa_offset (FRAME_SIZE)
+	std	r3,INT_PARMS+0(r1)
 	mr	r3,r11
-	std	r4,56(r1)
+	std	r4,INT_PARMS+8(r1)
 	sldi	r4,r0,1
-	std	r5,64(r1)
+	std	r5,INT_PARMS+16(r1)
 	add	r4,r4,r0
-	std	r6,72(r1)
+	std	r6,INT_PARMS+24(r1)
 	sldi	r4,r4,3
-	std	r7,80(r1)
+	std	r7,INT_PARMS+32(r1)
 	mflr	r0
-	std	r8,88(r1)
-/* Store the LR in the LR Save area of the previous frame.  */
-	std	r0,128+16(r1)
+	std	r8,INT_PARMS+40(r1)
+/* Store the LR in the LR Save area.  */
+	std	r0,FRAME_SIZE+16(r1)
 	cfi_offset (lr, 16)
 	mfcr	r0
-	std	r9,96(r1)
-	std	r10,104(r1)
+	std	r9,INT_PARMS+48(r1)
+	std	r10,INT_PARMS+56(r1)
 /* I'm almost certain we don't have to save cr...  be safe.  */
-	std	r0,8(r1)
+	std	r0,FRAME_SIZE+8(r1)
 	bl	JUMPTARGET(_dl_fixup)
+#ifndef SHARED
+	nop
+#endif
 /* Put the registers back.  */
-	ld	r0,128+16(r1)
-	ld	r10,104(r1)
-	ld	r9,96(r1)
-	ld	r8,88(r1)
-	ld	r7,80(r1)
+	ld	r0,FRAME_SIZE+16(r1)
+	ld	r10,INT_PARMS+56(r1)
+	ld	r9,INT_PARMS+48(r1)
+	ld	r8,INT_PARMS+40(r1)
+	ld	r7,INT_PARMS+32(r1)
 	mtlr	r0
-	ld	r0,8(r1)
-	ld	r6,72(r1)
-	ld	r5,64(r1)
-	ld	r4,56(r1)
+	ld	r0,FRAME_SIZE+8(r1)
+	ld	r6,INT_PARMS+24(r1)
+	ld	r5,INT_PARMS+16(r1)
+	ld	r4,INT_PARMS+8(r1)
 	mtcrf	0xFF,r0
 /* Load the target address, toc and static chain reg from the function
    descriptor returned by fixup.  */
@@ -70,11 +78,13 @@ EALIGN(_dl_runtime_resolve, 4, 0)
 	ld	r2,8(r3)
 	mtctr	r0
 	ld	r11,16(r3)
-	ld	r3,48(r1)
+	ld	r3,INT_PARMS+0(r1)
 /* Unwind the stack frame, and jump.  */
-	addi	r1,r1,128
+	addi	r1,r1,FRAME_SIZE
 	bctr
 END(_dl_runtime_resolve)
+#undef FRAME_SIZE
+#undef INT_PARMS
 
 	/* Stack layout:
 	  +592   previous backchain
@@ -176,13 +186,13 @@ EALIGN(_dl_profile_resolve, 4, 0)
 /* Spill r30, r31 to preserve the link_map* and reloc_addr, in case we
    need to call _dl_call_pltexit.  */
 	std	r31,-8(r1)
-	cfi_offset(r31,-8)
 	std	r30,-16(r1)
-	cfi_offset(r30,-16)
 /* We need to save the registers used to pass parameters, ie. r3 thru
    r10; the registers are saved in a stack frame.  */
 	stdu	r1,-FRAME_SIZE(r1)
 	cfi_adjust_cfa_offset (FRAME_SIZE)
+	cfi_offset(r31,-8)
+	cfi_offset(r30,-16)
 	std	r3,INT_PARMS+0(r1)
 	mr	r3,r11
 	std	r4,INT_PARMS+8(r1)
@@ -205,7 +215,7 @@ EALIGN(_dl_profile_resolve, 4, 0)
 	std	r10,INT_PARMS+56(r1)
 	std	r8,CALLING_SP(r1)
 /* I'm almost certain we don't have to save cr...  be safe.  */
-	std	r0,8(r1)
+	std	r0,FRAME_SIZE+8(r1)
 	ld	r12,.LC__dl_hwcap@toc(r2)
 #ifdef SHARED
 	/* Load _rtld-global._dl_hwcap.  */
@@ -265,7 +275,9 @@ L(saveFP):
 	mr	r30,r4
 	std	r0,0(r7)
 	bl	JUMPTARGET(_dl_profile_fixup)
+#ifndef SHARED
 	nop
+#endif
 /* Test *framesizep > 0 to see if need to do pltexit processing.  */
 	ld	r0,STACK_FRAME(r1)
 /* Put the registers back.  */
@@ -306,7 +318,7 @@ L(restoreFXR):
 	ld	r8,INT_PARMS+40(r1)
 	ld	r7,INT_PARMS+32(r1)
 	mtlr	r0
-	ld	r0,8(r1)
+	ld	r0,FRAME_SIZE+8(r1)
 	ld	r6,INT_PARMS+24(r1)
 	ld	r5,INT_PARMS+16(r1)
 	ld	r4,INT_PARMS+8(r1)
@@ -370,7 +382,7 @@ L(restoreFXR2):
 	ld	r8,INT_PARMS+40(r1)
 	ld	r7,INT_PARMS+32(r1)
 	mtlr	r0
-	ld	r0,8(r1)
+	ld	r0,FRAME_SIZE+8(r1)
 	ld	r6,INT_PARMS+24(r1)
 	ld	r5,INT_PARMS+16(r1)
 	ld	r4,INT_PARMS+8(r1)
@@ -418,7 +430,9 @@ L(callpltexit):
 	addi	r5,r1,INT_PARMS
 	addi	r6,r1,INT_RTN
 	bl	JUMPTARGET(_dl_call_pltexit)
+#ifndef SHARED
 	nop
+#endif
 /* Restore the return values from target function.  */
 	lwz	r12,VR_VRSAVE(r1)
 	ld	r3,INT_RTN(r1)

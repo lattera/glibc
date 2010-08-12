@@ -154,6 +154,7 @@ L(BADSTATUS):
   b     JUMPTARGET(__GI_exit);
 #else
   b     JUMPTARGET(exit);
+  nop
 #endif
 
   /* The address of the exit code is in the link register.  Store the lr

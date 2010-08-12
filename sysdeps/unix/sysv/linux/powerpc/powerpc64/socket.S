@@ -39,8 +39,6 @@
 #define NARGS 3
 #endif
 
-#define stackblock 80 /* offset to socket parm area.  */
-
 #ifndef __socket
 # ifndef NO_WEAK_ALIAS
 #  define __socket P(__,socket)
@@ -49,11 +47,14 @@
 # endif
 #endif
 
+#define FRAMESIZE 128
+#define stackblock FRAMESIZE+48 /* offset to parm save area.  */
+
 	.text
 ENTRY(__socket)
 	CALL_MCOUNT NARGS
-	stdu r1,-144(r1)
-	cfi_adjust_cfa_offset(144)
+	stdu r1,-FRAMESIZE(r1)
+	cfi_adjust_cfa_offset(FRAMESIZE)
 #if NARGS >= 1
 	std  r3,stackblock(r1)
 #endif
@@ -87,33 +88,39 @@ ENTRY(__socket)
 	bne-	.Lsocket_cancel
 #endif
 
-	li    r3,P(SOCKOP_,socket)
+	li	r3,P(SOCKOP_,socket)
 	addi	r4,r1,stackblock
 	DO_CALL(SYS_ify(socketcall))
-	addi	r1,r1,144
+	addi	r1,r1,FRAMESIZE
+	cfi_adjust_cfa_offset(-FRAMESIZE)
 	PSEUDO_RET
 
 #if defined NEED_CANCELLATION && defined CENABLE
 .Lsocket_cancel:
+	cfi_adjust_cfa_offset(FRAMESIZE)
 	mflr	r9
-	std   r9,144+16(r1)
+	std	r9,FRAMESIZE+16(r1)
 	cfi_offset (lr, 16)
 	CENABLE
-	std  	r3,72(r1)
-	li	  r3,P(SOCKOP_,socket)
+	std	r3,120(r1)
+	li	r3,P(SOCKOP_,socket)
 	addi	r4,r1,stackblock
 	DO_CALL(SYS_ify(socketcall))
 	mfcr	r0
-	std   r3,64(r1)
-	std   r0,8(r1)
-	ld  	r3,72(r1)
+	std	r3,112(r1)
+	std	r0,FRAMESIZE+8(r1)
+	cfi_offset (cr, 8)
+	ld  	r3,120(r1)
 	CDISABLE
-	ld    r4,144+16(r1)
-	ld    r0,8(r1)
-	ld    r3,64(r1)
+	ld	r4,FRAMESIZE+16(r1)
+	ld	r0,FRAMESIZE+8(r1)
+	ld	r3,112(r1)
 	mtlr	r4
 	mtcr	r0
-	addi	r1,r1,144
+	addi	r1,r1,FRAMESIZE
+	cfi_adjust_cfa_offset(-FRAMESIZE)
+	cfi_restore(lr)
+	cfi_restore(cr)
 	PSEUDO_RET
 #endif
 PSEUDO_END (__socket)

@@ -646,7 +646,7 @@ L(Wunaligned):
 	cfi_offset(r25,(24-64))
 	andi.	rBITDIF, rN, 12  /* Get the W remainder */
         stw     r24,20(r1)	
-	cfi_offset(r24,(24-64))
+	cfi_offset(r24,(20-64))
 	slwi	rSHL, rSHL, 3
 	lwz	rWORD6, 0(rSTR2)
 	lwzu	rWORD8, 4(rSTR2)
