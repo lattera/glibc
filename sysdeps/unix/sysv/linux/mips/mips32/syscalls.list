@@ -1,0 +1,3 @@
+# File name	Caller	Syscall name	# args	Strong name	Weak names
+
+prlimit64	EXTRA	prlimit64	i:iipp	prlimit64

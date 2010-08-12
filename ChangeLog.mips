@@ -1,3 +1,12 @@
+2010-08-12  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/mips/bits/resource.h: Declare prlimit
+	and prlimit64.
+	* sysdeps/unix/sysv/linux/mips/mips32/syscalls.list,
+	sysdeps/unix/sysv/linux/mips/mips64/n64/syscalls.list: New files.
+	* sysdeps/unix/sysv/linux/mips/n32/syscalls.list: Add entry for
+	prlimit64 syscall.
+
 2010-06-14  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/mips/bits/fcntl.h (F_SETPIPE_SZ,
