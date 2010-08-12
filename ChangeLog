@@ -1,3 +1,9 @@
+2010-08-12  Andreas Schwab  <schwab@redhat.com>
+
+	[BZ #11904]
+	* locale/programs/locale.c (print_assignment): New function.
+	(show_locale_vars): Use it.
+
 2010-08-11  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/bits/statfs.h (struct statfs): Add f_flags
