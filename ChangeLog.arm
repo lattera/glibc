@@ -1,3 +1,14 @@
+2010-08-13  Alexander Kanevskiy  <kad@kad.name>
+
+	* sysdeps/unix/sysv/linux/arm/dl-procinfo.c (_dl_arm_cap_flags):
+	Change "fast-mult" to "fastmult".  Add new HWCAP names.
+	* sysdeps/unix/sysv/linux/arm/dl-procinfo.h (_DL_HWCAP_COUNT):
+	Change to 15.
+	(HWCAP_IMPORTANT): Change to (HWCAP_ARM_VFP | HWCAP_ARM_NEON).
+	* sysdeps/unix/sysv/linux/arm/sysdep.h (HWCAP_ARM_CRUNCH,
+	HWCAP_ARM_THUMBEE, HWCAP_ARM_NEON, HWCAP_ARM_VFPv3,
+	HWCAP_ARM_VFPv3D16): Define.
+
 2010-08-12  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/arm/syscalls.list: Add entry for

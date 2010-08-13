@@ -24,7 +24,7 @@
 #include <ldsodefs.h>
 #include <sysdep.h>
 
-#define _DL_HWCAP_COUNT 10
+#define _DL_HWCAP_COUNT 15
 
 /* The kernel provides platform data but it is not interesting.  */
 #define _DL_HWCAP_PLATFORM 	0
@@ -54,7 +54,7 @@ _dl_hwcap_string (int idx)
   return GLRO(dl_arm_cap_flags)[idx];
 };
 
-#define HWCAP_IMPORTANT		(HWCAP_ARM_HALF | HWCAP_ARM_FAST_MULT)
+#define HWCAP_IMPORTANT		(HWCAP_ARM_VFP | HWCAP_ARM_NEON)
 
 static inline int
 __attribute__ ((unused))
