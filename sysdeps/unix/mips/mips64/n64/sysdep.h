@@ -45,6 +45,7 @@ L(syse1):
   .set noreorder;							      \
   .align 2;								      \
   99: j __syscall_error;						      \
+  nop;                                                                        \
   ENTRY(name)								      \
   .set noreorder;							      \
   li v0, SYS_ify(syscall_name);						      \

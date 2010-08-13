@@ -1,3 +1,9 @@
+2010-08-13  Chandrakala Chavva  <cchavva@caviumnetworks.com>
+
+	* sysdeps/unix/mips/mips64/n64/sysdep.h (PSEUDO): Add 'nop' in
+	jump delay slot.
+	* sysdeps/unix/mips/mips64/n32/sysdep.h (PSEUDO): Ditto.
+
 2010-08-13  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/mips/bits/termios.h (EXTPROC): Define.
