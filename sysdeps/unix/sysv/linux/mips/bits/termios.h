@@ -1,5 +1,5 @@
 /* termios type and macro definitions.  Linux/MIPS version.
-   Copyright (C) 1993, 94, 95, 96, 97, 99 Free Software Foundation, Inc.
+   Copyright (C) 1993, 94, 95, 96, 97, 99, 2010 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -194,6 +194,9 @@ struct termios
 #endif
 #define TOSTOP	0100000		/* Send SIGTTOU for background output.  */
 #define ITOSTOP	TOSTOP
+#ifdef __USE_BSD
+# define EXTPROC 0200000
+#endif
 
 /* ioctl (fd, TIOCSERGETLSR, &result) where result may be as below */
 #define TIOCSER_TEMT    0x01	/* Transmitter physically empty */

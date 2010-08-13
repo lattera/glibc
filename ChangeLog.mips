@@ -1,3 +1,7 @@
+2010-08-13  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/mips/bits/termios.h (EXTPROC): Define.
+
 2010-08-12  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/mips/bits/statfs.h (struct statfs,
