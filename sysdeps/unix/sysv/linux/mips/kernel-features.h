@@ -37,4 +37,10 @@
 # define __ASSUME_SIGNALFD4	1
 #endif
 
+/* The n32 syscall ABI did not have a getdents64 syscall until
+   2.6.35.  */
+#if _MIPS_SIM == _ABIN32 && __LINUX_KERNEL_VERSION < 0x020623
+# undef __ASSUME_GETDENTS64_SYSCALL
+#endif
+
 #include_next <kernel-features.h>

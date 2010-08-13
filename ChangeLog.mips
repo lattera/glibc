@@ -1,3 +1,8 @@
+2010-08-13  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/mips/kernel-features.h
+	(__ASSUME_GETDENTS64_SYSCALL): Undefine for n32 ABI before 2.6.35.
+
 2010-08-13  Chandrakala Chavva  <cchavva@caviumnetworks.com>
 
 	* sysdeps/unix/mips/mips64/n64/sysdep.h (PSEUDO): Add 'nop' in
