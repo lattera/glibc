@@ -1,6 +1,5 @@
 /* termios type and macro definitions.  Linux version.
-   Copyright (C) 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2003, 2005
-	Free Software Foundation, Inc.
+   Copyright (C) 1993-1999, 2003, 2005, 2010 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -196,6 +195,9 @@ struct termios
 # define PENDIN	 0040000
 #endif
 #define IEXTEN	0100000
+#ifdef __USE_BSD
+# define EXTPROC 0200000
+#endif
 
 /* tcflow() and TCXONC use these */
 #define	TCOOFF		0

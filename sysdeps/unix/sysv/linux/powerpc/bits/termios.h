@@ -1,4 +1,4 @@
-/* Copyright (C) 1997,1999,2001,2003,2004,2005 Free Software Foundation, Inc.
+/* Copyright (C) 1997,1999,2001,2003-2005,2010 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -203,6 +203,9 @@ struct termios {
 # define PENDIN	0x20000000
 #endif
 #define IEXTEN	0x00000400
+#ifdef __USE_BSD
+# define EXTPROC 0x10000000
+#endif
 
 /* Values for the ACTION argument to `tcflow'.  */
 #define	TCOOFF		0

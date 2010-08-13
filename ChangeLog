@@ -1,3 +1,9 @@
+2010-08-12  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/bits/termios.h: Define EXTPROC.
+	* sysdeps/unix/sysv/linux/powerpc/bits/termios.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/termios.h: Likewise.
+
 2010-05-01  Alan Modra  <amodra@gmail.com>
 
 	* sysdeps/powerpc/powerpc32/power4/memcmp.S: Correct cfi for r24.
