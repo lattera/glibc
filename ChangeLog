@@ -1,3 +1,8 @@
+2010-08-31  Andreas Schwab  <schwab@linux-m68k.org>
+
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/syscalls.list: Add
+	fanotify_mark.
+
 2010-08-27  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/i386/i686/multiarch/Makefile
