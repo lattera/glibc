@@ -1,3 +1,8 @@
+2010-08-14  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/x86_64/strcmp.S: Move definition of NO_NOLOCALE_ALIAS to...
+	* sysdeps/x86_64/multiarch/strcasecmp_l-ssse3.S: ... here.
+
 2010-08-14  Andreas Schwab  <schwab@linux-m68k.org>
 
 	* sysdeps/unix/sysv/linux/prlimit.c: Make it compile.

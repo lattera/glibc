@@ -77,7 +77,6 @@
 # ifndef ENTRY2
 #  define ENTRY2(name) ENTRY (name)
 #  define END2(name) END (name)
-#  define NO_NOLOCALE_ALIAS
 # endif
 
 	ENTRY2 (__strcasecmp)
