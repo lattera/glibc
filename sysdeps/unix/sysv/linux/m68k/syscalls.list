@@ -2,5 +2,4 @@
 
 cacheflush	EXTRA	cacheflush	i:iiii	__cacheflush	cacheflush
 prlimit64	EXTRA	prlimit64	i:iipp	prlimit64
-fanotify_init	EXTRA	fanotify_init	i:iii	fanotify_init
 fanotify_mark	EXTRA	fanotify_mark	i:iiiiis	fanotify_mark
