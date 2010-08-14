@@ -1,3 +1,7 @@
+2010-08-14  Andreas Schwab  <schwab@linux-m68k.org>
+
+	* sysdeps/unix/sysv/linux/prlimit.c: Make it compile.
+
 2010-08-12  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/bits/termios.h: Define EXTPROC.

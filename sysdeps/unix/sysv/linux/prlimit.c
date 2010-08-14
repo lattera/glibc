@@ -24,12 +24,12 @@
 #ifdef __NR_prlimit64
 int
 prlimit (__pid_t pid, enum __rlimit_resource resource,
-	 __const struct rlimit *new_limit, struct rlimit *old_limit)
+	 __const struct rlimit *new_rlimit, struct rlimit *old_rlimit)
 {
   struct rlimit64 new_rlimit64_mem;
   struct rlimit64 *new_rlimit64 = NULL;
   struct rlimit64 old_rlimit64_mem;
-  struct rlimit64 *old_rlimit64 = (old_rlimiit != NULL
+  struct rlimit64 *old_rlimit64 = (old_rlimit != NULL
 				   ? &old_rlimit64_mem : NULL);
 
   if (new_rlimit != NULL)
@@ -39,7 +39,7 @@ prlimit (__pid_t pid, enum __rlimit_resource resource,
       else
 	new_rlimit64_mem.rlim_cur = new_rlimit->rlim_cur;
       if (new_rlimit->rlim_max == RLIM_INFINITY)
-	new_rlimit64_mem.rlim_max =  = RLIM64_INFINITY;
+	new_rlimit64_mem.rlim_max = RLIM64_INFINITY;
       else
 	new_rlimit64_mem.rlim_max = new_rlimit->rlim_max;
       new_rlimit64 = &new_rlimit64_mem;
@@ -48,7 +48,7 @@ prlimit (__pid_t pid, enum __rlimit_resource resource,
   int res = INLINE_SYSCALL (prlimit64, 4, pid, resource, new_rlimit64,
 			    old_rlimit64);
 
-  if (res == 0 && old_limit != NULL)
+  if (res == 0 && old_rlimit != NULL)
     {
       /* The prlimit64 syscall is ill-designed for 32-bit machines.
 	 We have to provide a 32-bit variant since otherwise the LFS
@@ -59,7 +59,7 @@ prlimit (__pid_t pid, enum __rlimit_resource resource,
       old_rlimit->rlim_cur = old_rlimit64_mem.rlim_cur;
       if (old_rlimit->rlim_cur != old_rlimit64_mem.rlim_cur)
 	{
-	  if (new_limit == NULL)
+	  if (new_rlimit == NULL)
 	    {
 	      __set_errno (EOVERFLOW);
 	      return -1;
@@ -69,7 +69,7 @@ prlimit (__pid_t pid, enum __rlimit_resource resource,
       old_rlimit->rlim_max = old_rlimit64_mem.rlim_max;
       if (old_rlimit->rlim_max != old_rlimit64_mem.rlim_max)
 	{
-	  if (new_limit == NULL)
+	  if (new_rlimit == NULL)
 	    {
 	      __set_errno (EOVERFLOW);
 	      return -1;
@@ -83,7 +83,7 @@ prlimit (__pid_t pid, enum __rlimit_resource resource,
 #else
 int
 prlimit (__pid_t pid, enum __rlimit_resource resource,
-	 __const struct rlimit *new_limit, struct rlimit *old_limit)
+	 __const struct rlimit *new_rlimit, struct rlimit *old_rlimit)
 {
   __set_errno (ENOSYS);
   return -1;
