@@ -1,3 +1,8 @@
+2010-08-14  Andreas Schwab  <schwab@linux-m68k.org>
+
+	* sysdeps/unix/sysv/linux/m68k/syscalls.list: Add prlimit64,
+	fanotify_init, fanotify_mask.
+
 2010-08-02  Andreas Schwab  <schwab@linux-m68k.org>
 
 	* sysdeps/m68k/coldfire/sysdep.h: New file.
