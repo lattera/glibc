@@ -1,5 +1,22 @@
 2010-08-14  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/x86_64/Makefile [subdir=string] (sysdep_routines): Add
+	strncase_l-nonascii.
+	* sysdeps/x86_64/multiarch/Makefile [subdir=string] (sysdep_routines):
+	Add strncase_l-ssse3.
+	* sysdeps/x86_64/multiarch/strcmp.S: Prepare for use as strncasecmp.
+	* sysdeps/x86_64/strcmp.S: Likewise.
+	* sysdeps/x86_64/multiarch/strncase_l-ssse3.S: New file.
+	* sysdeps/x86_64/multiarch/strncase_l.S: New file.
+	* sysdeps/x86_64/strncase.S: New file.
+	* sysdeps/x86_64/strncase_l-nonascii.c: New file.
+	* sysdeps/x86_64/strncase_l.S: New file.
+	* string/Makefile (strop-tests): Add strncasecmp.
+	* string/test-strncasecmp.c: New file.
+
+	* sysdeps/x86_64/strcasecmp_l-nonascii.c: Add prototype to avoid
+	warning.
+
 	* sysdeps/x86_64/strcmp.S: Move definition of NO_NOLOCALE_ALIAS to...
 	* sysdeps/x86_64/multiarch/strcasecmp_l-ssse3.S: ... here.
 
