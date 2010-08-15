@@ -79,7 +79,7 @@
 #else
 # define UPDATE_STRNCMP_COUNTER
 # ifndef STRCMP
-#  define STRCMP strncasecmp
+#  define STRCMP strcmp
 # endif
 #endif
 
