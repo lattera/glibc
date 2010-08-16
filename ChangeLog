@@ -1,3 +1,8 @@
+2010-08-15  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/x86_64/strcmp.S: Use correct register for fourth parameter
+	of strncasecmp_l.
+
 2010-08-14  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/x86_64/Makefile [subdir=string] (sysdep_routines): Add
