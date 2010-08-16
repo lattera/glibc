@@ -101,3 +101,5 @@ mq_setattr	-	mq_getsetattr	i:ipp	__GI_mq_setattr	mq_setattr
 timerfd_create	EXTRA	timerfd_create	i:ii	timerfd_create
 timerfd_settime	EXTRA	timerfd_settime	i:iipp	timerfd_settime
 timerfd_gettime	EXTRA	timerfd_gettime	i:ip	timerfd_gettime
+
+fanotify_init	EXTRA	fanotify_init	i:ii	fanotify_init
