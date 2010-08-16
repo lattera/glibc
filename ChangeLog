@@ -1,3 +1,10 @@
+2010-08-14  Andreas Schwab  <schwab@linux-m68k.org>
+
+	* sysdeps/unix/sysv/linux/sys/fanotify.h: Remove third argument
+	from fanotify_init.
+	* sysdeps/unix/sysv/linux/i386/syscalls.list: Likewise.
+	* sysdeps/unix/sysv/linux/wordsize-64/syscalls.list: Likewise.
+
 2010-08-15  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/x86_64/strcmp.S: Use correct register for fourth parameter

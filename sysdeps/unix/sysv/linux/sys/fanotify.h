@@ -26,8 +26,8 @@
 __BEGIN_DECLS
 
 /* Create and initialize fanotify group.  */
-extern int fanotify_init (unsigned int __flags, unsigned int __event_f_flags,
-			  int __priority) __THROW;
+extern int fanotify_init (unsigned int __flags, unsigned int __event_f_flags)
+  __THROW;
 
 /* Add, remove, or modify an fanotify mark on a filesystem object.  */
 extern int fanotify_mark (int __fanotify_fd, unsigned int __flags,
