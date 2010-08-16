@@ -13,6 +13,7 @@
 
 	* sysdeps/x86_64/strcmp.S: Use correct register for fourth parameter
 	of strncasecmp_l.
+	* sysdeps/multiarch/strcmp.S: Likewise.
 
 2010-08-14  Ulrich Drepper  <drepper@redhat.com>
 
