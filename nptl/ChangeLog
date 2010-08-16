@@ -1,3 +1,7 @@
+2010-08-12  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* nptl/sysdeps/unix/sysv/linux/i386/Makefile: New file.
+
 2010-05-01  Alan Modra  <amodra@gmail.com>
 
 	* sysdeps/unix/sysv/linux/powerpc/powerpc64/sysdep-cancel.h
