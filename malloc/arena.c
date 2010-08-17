@@ -1,5 +1,5 @@
 /* Malloc implementation for multiple threads without lock contention.
-   Copyright (C) 2001,2002,2003,2004,2005,2006,2007,2009
+   Copyright (C) 2001,2002,2003,2004,2005,2006,2007,2009,2010
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Wolfram Gloger <wg@malloc.de>, 2001.
@@ -206,7 +206,7 @@ malloc_atfork(size_t sz, const Void_t *caller)
       return _int_malloc(&main_arena, sz);
     } else {
       if(top_check()<0)
-        return 0;
+	return 0;
       victim = _int_malloc(&main_arena, sz+1);
       return mem2mem_check(victim, sz);
     }
@@ -633,7 +633,7 @@ ptmalloc_init (void)
 /* There are platforms (e.g. Hurd) with a link-time hook mechanism. */
 #ifdef thread_atfork_static
 thread_atfork_static(ptmalloc_lock_all, ptmalloc_unlock_all, \
-                     ptmalloc_unlock_all2)
+		     ptmalloc_unlock_all2)
 #endif
 
 
@@ -660,7 +660,7 @@ dump_heap(heap) heap_info *heap;
   ptr = (heap->ar_ptr != (mstate)(heap+1)) ?
     (char*)(heap + 1) : (char*)(heap + 1) + sizeof(struct malloc_state);
   p = (mchunkptr)(((unsigned long)ptr + MALLOC_ALIGN_MASK) &
-                  ~MALLOC_ALIGN_MASK);
+		  ~MALLOC_ALIGN_MASK);
   for(;;) {
     fprintf(stderr, "chunk %p size %10lx", p, (long)p->size);
     if(p == top(heap->ar_ptr)) {
@@ -879,7 +879,7 @@ heap_trim(heap, pad) heap_info *heap; size_t pad;
     /*check_chunk(ar_ptr, top_chunk);*/
   }
   top_size = chunksize(top_chunk);
-  extra = ((top_size - pad - MINSIZE + (pagesz-1))/pagesz - 1) * pagesz;
+  extra = (top_size - pad - MINSIZE - 1) & ~(pagesz - 1);
   if(extra < (long)pagesz)
     return 0;
   /* Try to shrink. */

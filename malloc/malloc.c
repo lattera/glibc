@@ -3466,7 +3466,7 @@ static int sYSTRIm(pad, av) size_t pad; mstate av;
   top_size = chunksize(av->top);
 
   /* Release in pagesize units, keeping at least one page */
-  extra = ((top_size - pad - MINSIZE + (pagesz-1)) / pagesz - 1) * pagesz;
+  extra = (top_size - pad - MINSIZE - 1) & ~(pagesz - 1);
 
   if (extra > 0) {
 

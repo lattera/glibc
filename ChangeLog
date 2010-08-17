@@ -1,3 +1,8 @@
+2010-07-26  Anton Blanchard  <anton@samba.org>
+
+	* malloc/malloc.c (sYSTRIm): Replace divide and multiply with mask.
+	* malloc/arena.c (heap_trim): Likewise.
+
 2010-08-16  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/syscalls.list: Add entry for fanotify_init
