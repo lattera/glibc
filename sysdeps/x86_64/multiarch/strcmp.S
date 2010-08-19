@@ -824,7 +824,7 @@ LABEL(loop_ashr_5_use_sse4_2):
 
 	movdqa	(%rdi, %rdx), %xmm0
 	palignr $5, -16(%rdi, %rdx), %xmm0
-# if !defined USE_AS_STRCASECMP_L || !defined USE_AS_STRNCASECMP_L
+# if !defined USE_AS_STRCASECMP_L && !defined USE_AS_STRNCASECMP_L
 	pcmpistri	$0x1a,(%rsi,%rdx), %xmm0
 # else
 	movdqa	(%rsi,%rdx), %xmm1
@@ -1112,7 +1112,7 @@ LABEL(loop_ashr_8_use_sse4_2):
 	pcmpistri $0x1a, %xmm1, %xmm0
 # endif
 	jbe	LABEL(use_sse4_2_exit)
-# if defined USE_AS_STRNCMP || defined USE_AS_STRCASECMP_L
+# if defined USE_AS_STRNCMP || defined USE_AS_STRNCASECMP_L
 	sub	$16, %r11
 	jbe	LABEL(strcmp_exitz_sse4_2)
 # endif
