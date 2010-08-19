@@ -1,4 +1,4 @@
-/* Copyright (C) 2002,2003,2004,2005,2007,2009 Free Software Foundation, Inc.
+/* Copyright (C) 2002-2005,2007,2009,2010 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -163,7 +163,6 @@ __pthread_cond_signal:
 #endif
 	orl	$FUTEX_WAKE, %ecx
 
-	xorl	$(FUTEX_WAKE ^ FUTEX_WAKE_OP), %ecx
 	movl	$SYS_futex, %eax
 	/* %edx should be 1 already from $FUTEX_WAKE_OP syscall.
 	movl	$1, %edx  */

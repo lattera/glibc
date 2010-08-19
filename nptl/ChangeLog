@@ -1,3 +1,9 @@
+2010-08-10  Dinakar Guniguntala  <dino@in.ibm.com>
+	    Stefan Hajnoczi  <stefanha@linux.vnet.ibm.com>
+
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_cond_signal.S: If
+	FUTEX_WAKE_OP fails make sure to call FUTEX_WAKE instead.
+
 2010-08-12  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/unix/sysv/linux/i386/Makefile: New file.
