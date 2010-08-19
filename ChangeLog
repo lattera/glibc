@@ -1,3 +1,20 @@
+2010-08-19  Luis Machado  <luisgpm@br.ibm.com>
+
+	* sysdeps/powerpc/powerpc32/power7/memchr.S: New file.
+	* sysdeps/powerpc/powerpc32/power7/memrchr.S: New file.
+	* sysdeps/powerpc/powerpc32/power7/rawmemchr.S: New file.
+	* sysdeps/powerpc/powerpc32/power7/strchr.S: New file.
+	* sysdeps/powerpc/powerpc32/power7/strchrnul.S: New file.
+	* sysdeps/powerpc/powerpc32/power7/strlen.S: New file.
+	* sysdeps/powerpc/powerpc32/power7/strnlen.S: New file.
+	* sysdeps/powerpc/powerpc64/power7/memchr.S: New file.
+	* sysdeps/powerpc/powerpc64/power7/memrchr.S: New file.
+	* sysdeps/powerpc/powerpc64/power7/rawmemchr.S: New file.
+	* sysdeps/powerpc/powerpc64/power7/strchr.S: New file.
+	* sysdeps/powerpc/powerpc64/power7/strchrnul.S: New file.
+	* sysdeps/powerpc/powerpc64/power7/strlen.S: New file.
+	* sysdeps/powerpc/powerpc64/power7/strnlen.S: New file.
+
 2010-07-26  Anton Blanchard  <anton@samba.org>
 
 	* malloc/malloc.c (sYSTRIm): Replace divide and multiply with mask.
