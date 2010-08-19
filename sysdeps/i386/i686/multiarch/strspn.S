@@ -1,5 +1,5 @@
 /* Multiple versions of strspn
-   Copyright (C) 2009 Free Software Foundation, Inc.
+   Copyright (C) 2009,2010 Free Software Foundation, Inc.
    Contributed by Intel Corporation.
    This file is part of the GNU C Library.
 
@@ -65,7 +65,7 @@ ENTRY(strspn)
 	jne	1f
 	call	__init_cpu_features
 1:	leal	__strspn_ia32, %eax
-	testl	$index_SSE2, CPUID_OFFSET+index_SSE4_2+__cpu_features
+	testl	$bit_SSE4_2, CPUID_OFFSET+index_SSE4_2+__cpu_features
 	jz	2f
 	leal	__strspn_sse42, %eax
 2:	ret

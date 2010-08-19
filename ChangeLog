@@ -1,3 +1,7 @@
+2010-08-19  Andreas Schwab  <schwab@redhat.com>
+
+	* sysdeps/i386/i686/multiarch/strspn.S [!SHARED]: Fix SSE4.2 check.
+
 2010-08-19  Luis Machado  <luisgpm@br.ibm.com>
 
 	* sysdeps/powerpc/powerpc32/power7/memchr.S: New file.
