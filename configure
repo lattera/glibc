@@ -3752,9 +3752,6 @@ else
   multi_arch=default
 fi
 
-if test x"$multi_arch" != xno; then
-  multi_arch_d=/multiarch
-fi
 
 # Check whether --enable-experimental-malloc was given.
 if test "${enable_experimental_malloc+set}" = set; then :
@@ -4105,6 +4102,136 @@ if test "$base_machine" = "i386"; then
 
 fi
 
+# For the multi-arch option we need support in the assembler.
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for assembler gnu_indirect_function symbol type support" >&5
+$as_echo_n "checking for assembler gnu_indirect_function symbol type support... " >&6; }
+if test "${libc_cv_asm_gnu_indirect_function+set}" = set; then :
+  $as_echo_n "(cached) " >&6
+else
+  cat > conftest.s <<EOF
+.type foo,%gnu_indirect_function
+EOF
+if ${CC-cc} -c $ASFLAGS conftest.s 1>&5 2>&5;
+then
+  libc_cv_asm_gnu_indirect_function=yes
+else
+  libc_cv_asm_gnu_indirect_function=no
+fi
+rm -f conftest*
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_asm_gnu_indirect_function" >&5
+$as_echo "$libc_cv_asm_gnu_indirect_function" >&6; }
+
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether .text pseudo-op must be used" >&5
+$as_echo_n "checking whether .text pseudo-op must be used... " >&6; }
+if test "${libc_cv_dot_text+set}" = set; then :
+  $as_echo_n "(cached) " >&6
+else
+  cat > conftest.s <<EOF
+.text
+EOF
+libc_cv_dot_text=
+if { ac_try='${CC-cc} $ASFLAGS -c conftest.s 1>&5'
+  { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; }; then
+  libc_cv_dot_text=.text
+fi
+rm -f conftest*
+fi
+
+if test -z "$libc_cv_dot_text"; then
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+else
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+$as_echo "yes" >&6; }
+fi
+
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for assembler global-symbol directive" >&5
+$as_echo_n "checking for assembler global-symbol directive... " >&6; }
+if test "${libc_cv_asm_global_directive+set}" = set; then :
+  $as_echo_n "(cached) " >&6
+else
+  libc_cv_asm_global_directive=UNKNOWN
+for ac_globl in .globl .global .EXPORT; do
+  cat > conftest.s <<EOF
+	${libc_cv_dot_text}
+	${ac_globl} foo
+foo:
+EOF
+  if { ac_try='${CC-cc} $ASFLAGS -c conftest.s 1>&5'
+  { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; }; then
+    libc_cv_asm_global_directive=${ac_globl}
+  fi
+  rm -f conftest*
+  test $libc_cv_asm_global_directive != UNKNOWN && break
+done
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_asm_global_directive" >&5
+$as_echo "$libc_cv_asm_global_directive" >&6; }
+if test $libc_cv_asm_global_directive = UNKNOWN; then
+  as_fn_error "cannot determine asm global directive" "$LINENO" 5
+else
+  cat >>confdefs.h <<_ACEOF
+#define ASM_GLOBAL_DIRECTIVE ${libc_cv_asm_global_directive}
+_ACEOF
+
+fi
+
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for assembler .type directive prefix" >&5
+$as_echo_n "checking for assembler .type directive prefix... " >&6; }
+if test "${libc_cv_asm_type_prefix+set}" = set; then :
+  $as_echo_n "(cached) " >&6
+else
+  libc_cv_asm_type_prefix=no
+for ac_try_prefix in '@' '%' '#'; do
+  cat > conftest.s <<EOF
+	${libc_cv_dot_text}
+	${libc_cv_asm_global_directive} foo
+	.type foo, ${ac_try_prefix}object
+	.size foo, 1
+foo:
+	.byte 1
+EOF
+  if { ac_try='${CC-cc} $ASFLAGS -c conftest.s 1>&5'
+  { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; }; then
+    libc_cv_asm_type_prefix=${ac_try_prefix}
+  fi
+  rm -f conftest*
+  test "x$libc_cv_asm_type_prefix" != xno && break
+done
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_asm_type_prefix" >&5
+$as_echo "$libc_cv_asm_type_prefix" >&6; }
+if test "x$libc_cv_asm_type_prefix" != xno; then
+  cat >>confdefs.h <<_ACEOF
+#define ASM_TYPE_DIRECTIVE_PREFIX ${libc_cv_asm_type_prefix}
+_ACEOF
+
+fi
+
+if test x"$libc_cv_asm_gnu_indirect_function" != xyes -a x"$libc_cv_asm_type_prefix" = xno; then
+  if test x"$multi_arch" = xyes; then
+    as_fn_error "--enable-multi-arch support requires assembler and linker support" "$LINENO" 5
+  else
+    multi_arch=no
+  fi
+fi
+if test x"$multi_arch" != xno; then
+  multi_arch_d=/multiarch
+fi
+
 # Compute the list of sysdep directories for this configuration.
 # This can take a while to compute.
 sysdep_dir=$srcdir/sysdeps
@@ -4221,35 +4348,14 @@ done
 
 # If the assembler supports gnu_indirect_function symbol type and the
 # architecture supports multi-arch, we enable multi-arch by default.
-if test "$multi_arch" = default; then
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for assembler gnu_indirect_function symbol type support" >&5
-$as_echo_n "checking for assembler gnu_indirect_function symbol type support... " >&6; }
-if test "${libc_cv_asm_gnu_indirect_function+set}" = set; then :
-  $as_echo_n "(cached) " >&6
-else
-  cat > conftest.s <<EOF
-.type foo,%gnu_indirect_function
-EOF
-if ${CC-cc} -c $ASFLAGS conftest.s 1>&5 2>&5;
-then
-  libc_cv_asm_gnu_indirect_function=yes
-else
-  libc_cv_asm_gnu_indirect_function=no
-fi
-rm -f conftest*
-fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_asm_gnu_indirect_function" >&5
-$as_echo "$libc_cv_asm_gnu_indirect_function" >&6; }
+case $sysnames_add_ons$sysnames in
+*"$multi_arch_d"*)
+  ;;
+*)
   multi_arch=no
-  if test "$libc_cv_asm_gnu_indirect_function" = yes; then
-    case $sysnames_add_ons$sysnames in
-    *"$multi_arch_d"*)
-       multi_arch=yes
-      ;;
-    esac
-  fi
-fi
-if test x"$multi_arch" = xyes; then
+  ;;
+esac
+if test x"$multi_arch" != xno; then
   $as_echo "#define USE_MULTIARCH 1" >>confdefs.h
 
 fi
@@ -5734,69 +5840,6 @@ if test $libc_cv_need_minus_P = yes; then
 asm-CPPFLAGS = -P # The assembler can't grok cpp's # line directives."
 fi
 
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether .text pseudo-op must be used" >&5
-$as_echo_n "checking whether .text pseudo-op must be used... " >&6; }
-if test "${libc_cv_dot_text+set}" = set; then :
-  $as_echo_n "(cached) " >&6
-else
-  cat > conftest.s <<EOF
-.text
-EOF
-libc_cv_dot_text=
-if { ac_try='${CC-cc} $ASFLAGS -c conftest.s 1>&5'
-  { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
-  (eval $ac_try) 2>&5
-  ac_status=$?
-  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
-  test $ac_status = 0; }; }; then
-  libc_cv_dot_text=.text
-fi
-rm -f conftest*
-fi
-
-if test -z "$libc_cv_dot_text"; then
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
-else
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
-$as_echo "yes" >&6; }
-fi
-
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for assembler global-symbol directive" >&5
-$as_echo_n "checking for assembler global-symbol directive... " >&6; }
-if test "${libc_cv_asm_global_directive+set}" = set; then :
-  $as_echo_n "(cached) " >&6
-else
-  libc_cv_asm_global_directive=UNKNOWN
-for ac_globl in .globl .global .EXPORT; do
-  cat > conftest.s <<EOF
-	${libc_cv_dot_text}
-	${ac_globl} foo
-foo:
-EOF
-  if { ac_try='${CC-cc} $ASFLAGS -c conftest.s 1>&5'
-  { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
-  (eval $ac_try) 2>&5
-  ac_status=$?
-  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
-  test $ac_status = 0; }; }; then
-    libc_cv_asm_global_directive=${ac_globl}
-  fi
-  rm -f conftest*
-  test $libc_cv_asm_global_directive != UNKNOWN && break
-done
-fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_asm_global_directive" >&5
-$as_echo "$libc_cv_asm_global_directive" >&6; }
-if test $libc_cv_asm_global_directive = UNKNOWN; then
-  as_fn_error "cannot determine asm global directive" "$LINENO" 5
-else
-  cat >>confdefs.h <<_ACEOF
-#define ASM_GLOBAL_DIRECTIVE ${libc_cv_asm_global_directive}
-_ACEOF
-
-fi
-
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for .set assembler directive" >&5
 $as_echo_n "checking for .set assembler directive... " >&6; }
 if test "${libc_cv_asm_set_directive+set}" = set; then :
@@ -5830,42 +5873,6 @@ if test $libc_cv_asm_set_directive = yes; then
 
 fi
 
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for assembler .type directive prefix" >&5
-$as_echo_n "checking for assembler .type directive prefix... " >&6; }
-if test "${libc_cv_asm_type_prefix+set}" = set; then :
-  $as_echo_n "(cached) " >&6
-else
-  libc_cv_asm_type_prefix=no
-for ac_try_prefix in '@' '%' '#'; do
-  cat > conftest.s <<EOF
-	${libc_cv_dot_text}
-	${libc_cv_asm_global_directive} foo
-	.type foo, ${ac_try_prefix}object
-	.size foo, 1
-foo:
-	.byte 1
-EOF
-  if { ac_try='${CC-cc} $ASFLAGS -c conftest.s 1>&5'
-  { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
-  (eval $ac_try) 2>&5
-  ac_status=$?
-  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
-  test $ac_status = 0; }; }; then
-    libc_cv_asm_type_prefix=${ac_try_prefix}
-  fi
-  rm -f conftest*
-  test "x$libc_cv_asm_type_prefix" != xno && break
-done
-fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_asm_type_prefix" >&5
-$as_echo "$libc_cv_asm_type_prefix" >&6; }
-if test "x$libc_cv_asm_type_prefix" != xno; then
-  cat >>confdefs.h <<_ACEOF
-#define ASM_TYPE_DIRECTIVE_PREFIX ${libc_cv_asm_type_prefix}
-_ACEOF
-
-fi
-
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for assembler gnu_unique_object symbol type" >&5
 $as_echo_n "checking for assembler gnu_unique_object symbol type... " >&6; }
 if test "${libc_cv_asm_unique_object+set}" = set; then :
@@ -5888,35 +5895,6 @@ $as_echo "$libc_cv_asm_unique_object" >&6; }
 if test $libc_cv_asm_unique_object = yes; then
   $as_echo "#define HAVE_ASM_UNIQUE_OBJECT 1" >>confdefs.h
 
-fi
-
-# For the multi-arch option we need support in the assembler.
-if test "$multi_arch" = yes; then
-  if test "x$libc_cv_asm_type_prefix" != xno; then
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for assembler gnu_indirect_function symbol type support" >&5
-$as_echo_n "checking for assembler gnu_indirect_function symbol type support... " >&6; }
-if test "${libc_cv_asm_gnu_indirect_function+set}" = set; then :
-  $as_echo_n "(cached) " >&6
-else
-  cat > conftest.s <<EOF
-.type foo,%gnu_indirect_function
-EOF
-if ${CC-cc} -c $ASFLAGS conftest.s 1>&5 2>&5;
-then
-  libc_cv_asm_gnu_indirect_function=yes
-else
-  libc_cv_asm_gnu_indirect_function=no
-fi
-rm -f conftest*
-fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_asm_gnu_indirect_function" >&5
-$as_echo "$libc_cv_asm_gnu_indirect_function" >&6; }
-  else
-    libc_cv_asm_gnu_indirect_function=no
-  fi
-  if test x"$libc_cv_asm_gnu_indirect_function" != xyes; then
-    as_fn_error "--enable-multi-arch support requires assembler and linker support" "$LINENO" 5
-  fi
 fi
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for .symver assembler directive" >&5

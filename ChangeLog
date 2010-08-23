@@ -1,3 +1,7 @@
+2010-08-21  Mike Frysinger  <vapier@gentoo.org>
+
+	* configure.in: Move assembler checks to before sysdep dir checking.
+
 2010-08-20  Petr Baudis  <pasky@suse.cz>
 
 	* LICENSES: Sync the sunrpc license.

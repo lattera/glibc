@@ -273,9 +273,6 @@ AC_ARG_ENABLE([multi-arch],
 			     [enable single DSO with optimizations for multiple architectures]),
 	      [multi_arch=$enableval],
 	      [multi_arch=default])
-if test x"$multi_arch" != xno; then
-  multi_arch_d=/multiarch
-fi
 
 AC_ARG_ENABLE([experimental-malloc],
 	      AC_HELP_STRING([--enable-experimental-malloc],
@@ -603,6 +600,90 @@ if test "$base_machine" = "i386"; then
   AC_DEFINE(USE_REGPARMS)
 fi
 
+# For the multi-arch option we need support in the assembler.
+AC_CACHE_CHECK([for assembler gnu_indirect_function symbol type support],
+               libc_cv_asm_gnu_indirect_function, [dnl
+cat > conftest.s <<EOF
+.type foo,%gnu_indirect_function
+EOF
+if ${CC-cc} -c $ASFLAGS conftest.s 1>&AS_MESSAGE_LOG_FD 2>&AS_MESSAGE_LOG_FD;
+then
+  libc_cv_asm_gnu_indirect_function=yes
+else
+  libc_cv_asm_gnu_indirect_function=no
+fi
+rm -f conftest*])
+
+AC_MSG_CHECKING(whether .text pseudo-op must be used)
+AC_CACHE_VAL(libc_cv_dot_text, [dnl
+cat > conftest.s <<EOF
+.text
+EOF
+libc_cv_dot_text=
+if AC_TRY_COMMAND(${CC-cc} $ASFLAGS -c conftest.s 1>&AS_MESSAGE_LOG_FD); then
+  libc_cv_dot_text=.text
+fi
+rm -f conftest*])
+if test -z "$libc_cv_dot_text"; then
+  AC_MSG_RESULT(no)
+else
+  AC_MSG_RESULT(yes)
+fi
+
+AC_CACHE_CHECK(for assembler global-symbol directive,
+	       libc_cv_asm_global_directive, [dnl
+libc_cv_asm_global_directive=UNKNOWN
+for ac_globl in .globl .global .EXPORT; do
+  cat > conftest.s <<EOF
+	${libc_cv_dot_text}
+	${ac_globl} foo
+foo:
+EOF
+  if AC_TRY_COMMAND(${CC-cc} $ASFLAGS -c conftest.s 1>&AS_MESSAGE_LOG_FD); then
+    libc_cv_asm_global_directive=${ac_globl}
+  fi
+  rm -f conftest*
+  test $libc_cv_asm_global_directive != UNKNOWN && break
+done])
+if test $libc_cv_asm_global_directive = UNKNOWN; then
+  AC_MSG_ERROR(cannot determine asm global directive)
+else
+  AC_DEFINE_UNQUOTED(ASM_GLOBAL_DIRECTIVE, ${libc_cv_asm_global_directive})
+fi
+
+AC_CACHE_CHECK(for assembler .type directive prefix,
+	       libc_cv_asm_type_prefix, [dnl
+libc_cv_asm_type_prefix=no
+for ac_try_prefix in '@' '%' '#'; do
+  cat > conftest.s <<EOF
+	${libc_cv_dot_text}
+	${libc_cv_asm_global_directive} foo
+	.type foo, ${ac_try_prefix}object
+	.size foo, 1
+foo:
+	.byte 1
+EOF
+  if AC_TRY_COMMAND(${CC-cc} $ASFLAGS -c conftest.s 1>&AS_MESSAGE_LOG_FD); then
+    libc_cv_asm_type_prefix=${ac_try_prefix}
+  fi
+  rm -f conftest*
+  test "x$libc_cv_asm_type_prefix" != xno && break
+done])
+if test "x$libc_cv_asm_type_prefix" != xno; then
+  AC_DEFINE_UNQUOTED(ASM_TYPE_DIRECTIVE_PREFIX, ${libc_cv_asm_type_prefix})
+fi
+
+if test x"$libc_cv_asm_gnu_indirect_function" != xyes -a x"$libc_cv_asm_type_prefix" = xno; then
+  if test x"$multi_arch" = xyes; then
+    AC_MSG_ERROR([--enable-multi-arch support requires assembler and linker support])
+  else
+    multi_arch=no
+  fi
+fi
+if test x"$multi_arch" != xno; then
+  multi_arch_d=/multiarch
+fi
+
 # Compute the list of sysdep directories for this configuration.
 # This can take a while to compute.
 sysdep_dir=$srcdir/sysdeps
@@ -722,29 +803,14 @@ done
 
 # If the assembler supports gnu_indirect_function symbol type and the
 # architecture supports multi-arch, we enable multi-arch by default.
-if test "$multi_arch" = default; then
-AC_CACHE_CHECK([for assembler gnu_indirect_function symbol type support],
-               libc_cv_asm_gnu_indirect_function, [dnl
-cat > conftest.s <<EOF
-.type foo,%gnu_indirect_function
-EOF
-if ${CC-cc} -c $ASFLAGS conftest.s 1>&AS_MESSAGE_LOG_FD 2>&AS_MESSAGE_LOG_FD;
-then
-  libc_cv_asm_gnu_indirect_function=yes
-else
-  libc_cv_asm_gnu_indirect_function=no
-fi
-rm -f conftest*])
+case $sysnames_add_ons$sysnames in
+*"$multi_arch_d"*)
+  ;;
+*)
   multi_arch=no
-  if test "$libc_cv_asm_gnu_indirect_function" = yes; then
-    case $sysnames_add_ons$sysnames in
-    *"$multi_arch_d"*)
-       multi_arch=yes
-      ;;
-    esac
-  fi
-fi
-if test x"$multi_arch" = xyes; then
+  ;;
+esac
+if test x"$multi_arch" != xno; then
   AC_DEFINE(USE_MULTIARCH)
 fi
 AC_SUBST(multi_arch)
@@ -1172,43 +1238,6 @@ if test $libc_cv_need_minus_P = yes; then
 asm-CPPFLAGS = -P # The assembler can't grok cpp's # line directives."
 fi
 
-AC_MSG_CHECKING(whether .text pseudo-op must be used)
-AC_CACHE_VAL(libc_cv_dot_text, [dnl
-cat > conftest.s <<EOF
-.text
-EOF
-libc_cv_dot_text=
-if AC_TRY_COMMAND(${CC-cc} $ASFLAGS -c conftest.s 1>&AS_MESSAGE_LOG_FD); then
-  libc_cv_dot_text=.text
-fi
-rm -f conftest*])
-if test -z "$libc_cv_dot_text"; then
-  AC_MSG_RESULT(no)
-else
-  AC_MSG_RESULT(yes)
-fi
-
-AC_CACHE_CHECK(for assembler global-symbol directive,
-	       libc_cv_asm_global_directive, [dnl
-libc_cv_asm_global_directive=UNKNOWN
-for ac_globl in .globl .global .EXPORT; do
-  cat > conftest.s <<EOF
-	${libc_cv_dot_text}
-	${ac_globl} foo
-foo:
-EOF
-  if AC_TRY_COMMAND(${CC-cc} $ASFLAGS -c conftest.s 1>&AS_MESSAGE_LOG_FD); then
-    libc_cv_asm_global_directive=${ac_globl}
-  fi
-  rm -f conftest*
-  test $libc_cv_asm_global_directive != UNKNOWN && break
-done])
-if test $libc_cv_asm_global_directive = UNKNOWN; then
-  AC_MSG_ERROR(cannot determine asm global directive)
-else
-  AC_DEFINE_UNQUOTED(ASM_GLOBAL_DIRECTIVE, ${libc_cv_asm_global_directive})
-fi
-
 AC_CACHE_CHECK(for .set assembler directive, libc_cv_asm_set_directive, [dnl
 cat > conftest.s <<EOF
 ${libc_cv_dot_text}
@@ -1234,28 +1263,6 @@ if test $libc_cv_asm_set_directive = yes; then
   AC_DEFINE(HAVE_ASM_SET_DIRECTIVE)
 fi
 
-AC_CACHE_CHECK(for assembler .type directive prefix,
-	       libc_cv_asm_type_prefix, [dnl
-libc_cv_asm_type_prefix=no
-for ac_try_prefix in '@' '%' '#'; do
-  cat > conftest.s <<EOF
-	${libc_cv_dot_text}
-	${libc_cv_asm_global_directive} foo
-	.type foo, ${ac_try_prefix}object
-	.size foo, 1
-foo:
-	.byte 1
-EOF
-  if AC_TRY_COMMAND(${CC-cc} $ASFLAGS -c conftest.s 1>&AS_MESSAGE_LOG_FD); then
-    libc_cv_asm_type_prefix=${ac_try_prefix}
-  fi
-  rm -f conftest*
-  test "x$libc_cv_asm_type_prefix" != xno && break
-done])
-if test "x$libc_cv_asm_type_prefix" != xno; then
-  AC_DEFINE_UNQUOTED(ASM_TYPE_DIRECTIVE_PREFIX, ${libc_cv_asm_type_prefix})
-fi
-
 AC_CACHE_CHECK(for assembler gnu_unique_object symbol type,
 	       libc_cv_asm_unique_object, [dnl
 cat > conftest.s <<EOF
@@ -1271,29 +1278,6 @@ fi
 rm -f conftest*])
 if test $libc_cv_asm_unique_object = yes; then
   AC_DEFINE(HAVE_ASM_UNIQUE_OBJECT)
-fi
-
-# For the multi-arch option we need support in the assembler.
-if test "$multi_arch" = yes; then
-  if test "x$libc_cv_asm_type_prefix" != xno; then
-AC_CACHE_CHECK([for assembler gnu_indirect_function symbol type support],
-               libc_cv_asm_gnu_indirect_function, [dnl
-cat > conftest.s <<EOF
-.type foo,%gnu_indirect_function
-EOF
-if ${CC-cc} -c $ASFLAGS conftest.s 1>&AS_MESSAGE_LOG_FD 2>&AS_MESSAGE_LOG_FD;
-then
-  libc_cv_asm_gnu_indirect_function=yes
-else
-  libc_cv_asm_gnu_indirect_function=no
-fi
-rm -f conftest*])
-  else
-    libc_cv_asm_gnu_indirect_function=no
-  fi
-  if test x"$libc_cv_asm_gnu_indirect_function" != xyes; then
-    AC_MSG_ERROR([--enable-multi-arch support requires assembler and linker support])
-  fi
 fi
 
 AC_CACHE_CHECK(for .symver assembler directive, libc_cv_asm_symver_directive,
