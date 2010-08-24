@@ -139,6 +139,14 @@ $(objpfx)wordexp-tst.out: wordexp-tst.sh $(objpfx)wordexp-test
 endif
 endif
 
+# If we will use the generic uname implementation, we must figure out what
+# it will say by examining the system, and write the results in config-name.h.
+uname.c: $(objpfx)config-name.h
+$(objpfx)config-name.h: $(..)scripts/config-uname.sh $(common-objpfx)config.make
+	$< '$(config-os)' '$(config-release)' \
+	   '$(config-machine)-$(config-vendor)' > $@.new
+	mv -f $@.new $@
+
 CFLAGS-regex.c = -Wno-strict-prototypes
 CFLAGS-getaddrinfo.c = -DRESOLVER -fexceptions -DUSE_NSCD
 CFLAGS-pread.c = -fexceptions -fasynchronous-unwind-tables

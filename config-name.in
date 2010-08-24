@@ -1,9 +1,0 @@
-/* @configure_input@ -*- C -*-
-
-   This is used only by the generic `uname' function for systems with no real
-   `uname' call.  If this data is not correct, it does not matter much.  */
-
-#define UNAME_SYSNAME "@uname_sysname@"
-#define UNAME_RELEASE "@uname_release@"
-#define UNAME_VERSION "@uname_version@"
-#define UNAME_MACHINE "@host_cpu@-@host_vendor@"

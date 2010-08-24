@@ -2192,8 +2192,7 @@ libc_cv_gcc_unwind_find_fde=no
 libc_cv_idn=no
 
 # Iterate over all the sysdep directories we will use, running their
-# configure fragments, and looking for a uname implementation.
-uname=
+# configure fragments.
 for dir in $sysnames; do
   case $dir in
     /*) dest=$dir ;;
@@ -2203,80 +2202,12 @@ for dir in $sysnames; do
     AC_MSG_RESULT(running configure fragment for $dir)
     . $dest/configure
   fi
-[
-  if test -z "$uname"; then
-    if test -r $dest/uname.c ||
-       test -r $dest/uname.S ||
-       { test -r $dest/syscalls.list &&
-	 grep '^uname[ 	]' $dest/syscalls.list >/dev/null; }; then
-      uname=$dir
-    fi
-  fi
-]dnl
 done
 
 if test x$libc_cv_gcc_unwind_find_fde = xyes; then
   AC_DEFINE(EXPORT_UNWIND_FIND_FDE)
 fi
 AC_SUBST(libc_cv_gcc_unwind_find_fde)
-
-# If we will use the generic uname implementation, we must figure out what
-# it will say by examining the system, and write the results in config-name.h.
-if test "$uname" = "sysdeps/generic"; then
-
-changequote(,)dnl
-  uname_sysname=`echo $config_os | sed 's/[0-9.]*$//'`
-changequote([,])dnl
-  if test $uname_sysname != $config_os; then
-    config_release=`echo $config_os | sed s/$uname_sysname//`
-  fi
-dnl
-AC_DEFUN(LIBC_KERNEL_ID, [dnl
-    if test -r /vmunix; then
-      kernel_id=`strings /vmunix | grep UNIX`
-    elif test -r /dynix; then
-      kernel_id=`strings /dynix | grep DYNIX`
-    else
-      kernel_id=
-    fi
-])dnl
-
-  AC_CACHE_CHECK(OS release for uname, libc_cv_uname_release, [dnl
-LIBC_KERNEL_ID
-changequote(,)dnl
-  kernel_release=`echo "$kernel_id" | sed 's/^[^0-9.]*\([0-9.]*\).*$/\1/'`
-changequote([,])dnl
-  if test x`echo "$config_release" | sed "s/^$kernel_release//"` \
-	 != x$config_release; then
-    # The configuration release is a substring of the kernel release.
-    libc_cv_uname_release=$kernel_release
-  elif test x$config_release != x; then
-    libc_cv_uname_release=$config_release
-  elif test x$kernel_release != x; then
-    libc_cv_uname_release=$kernel_release
-  else
-    libc_cv_uname_release=unknown
-  fi])
-  uname_release="$libc_cv_uname_release"
-
-  AC_CACHE_CHECK(OS version for uname, libc_cv_uname_version, [dnl
-LIBC_KERNEL_ID
-changequote(,)dnl
-  kernel_version=`echo "$kernel_id" | sed 's/^[^#]*#\([0-9]*\).*$/\1/'`
-changequote([,])dnl
-  if test -n "$kernel_version"; then
-    libc_cv_uname_version="$kernel_version"
-  else
-    libc_cv_uname_version=unknown
-  fi])
-  uname_version="$libc_cv_uname_version"
-
-AC_SUBST(uname_sysname) AC_SUBST(uname_release) AC_SUBST(uname_version)dnl
-  config_uname=config-name.h:config-name.in
-else
-  # For non-generic uname, we don't need to create config-name.h at all.
-  config_uname=
-fi
 
 dnl This is tested by existing code and it's simpler to avoid changing it.
 AC_DEFINE(USE_IN_LIBIO)
@@ -2361,7 +2292,7 @@ RELEASE=`sed -n -e 's/^#define RELEASE "\([^"]*\)"/\1/p' < $srcdir/version.h`
 AC_SUBST(VERSION)
 AC_SUBST(RELEASE)
 
-AC_CONFIG_FILES([config.make ${config_makefile} ${config_uname}])
+AC_CONFIG_FILES([config.make ${config_makefile}])
 AC_CONFIG_COMMANDS([default],[[
 case $CONFIG_FILES in *config.make*)
 echo "$config_vars" >> config.make;;

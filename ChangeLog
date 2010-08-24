@@ -1,5 +1,12 @@
 2010-08-24  Roland McGrath  <roland@redhat.com>
 
+	* configure.in: Remove config-name.h generation.
+	* configure: Regenerated.
+	* config-name.in: File removed.
+	* scripts/config-uname.sh: New file.
+	* posix/Makefile (uname.c): Depend on $(objdir)config-name.h.
+	($(objdir)config-name.h): New target.
+
 	* sunrpc/rpc_parse.h: Avoid nested comment.
 
 2010-08-24  Richard Henderson  <rth@redhat.com>

@@ -623,9 +623,6 @@ libc_cv_sysconfdir
 libc_cv_localedir
 libc_cv_slibdir
 old_glibc_headers
-uname_version
-uname_release
-uname_sysname
 libc_cv_gcc_unwind_find_fde
 sizeof_long_double
 EGREP
@@ -7746,8 +7743,7 @@ libc_cv_gcc_unwind_find_fde=no
 libc_cv_idn=no
 
 # Iterate over all the sysdep directories we will use, running their
-# configure fragments, and looking for a uname implementation.
-uname=
+# configure fragments.
 for dir in $sysnames; do
   case $dir in
     /*) dest=$dir ;;
@@ -7758,15 +7754,6 @@ for dir in $sysnames; do
 $as_echo "running configure fragment for $dir" >&6; }
     . $dest/configure
   fi
-
-  if test -z "$uname"; then
-    if test -r $dest/uname.c ||
-       test -r $dest/uname.S ||
-       { test -r $dest/syscalls.list &&
-	 grep '^uname[ 	]' $dest/syscalls.list >/dev/null; }; then
-      uname=$dir
-    fi
-  fi
 done
 
 if test x$libc_cv_gcc_unwind_find_fde = xyes; then
@@ -7774,75 +7761,6 @@ if test x$libc_cv_gcc_unwind_find_fde = xyes; then
 
 fi
 
-
-# If we will use the generic uname implementation, we must figure out what
-# it will say by examining the system, and write the results in config-name.h.
-if test "$uname" = "sysdeps/generic"; then
-
-  uname_sysname=`echo $config_os | sed 's/[0-9.]*$//'`
-  if test $uname_sysname != $config_os; then
-    config_release=`echo $config_os | sed s/$uname_sysname//`
-  fi
-
-  { $as_echo "$as_me:${as_lineno-$LINENO}: checking OS release for uname" >&5
-$as_echo_n "checking OS release for uname... " >&6; }
-if test "${libc_cv_uname_release+set}" = set; then :
-  $as_echo_n "(cached) " >&6
-else
-      if test -r /vmunix; then
-      kernel_id=`strings /vmunix | grep UNIX`
-    elif test -r /dynix; then
-      kernel_id=`strings /dynix | grep DYNIX`
-    else
-      kernel_id=
-    fi
-
-  kernel_release=`echo "$kernel_id" | sed 's/^[^0-9.]*\([0-9.]*\).*$/\1/'`
-  if test x`echo "$config_release" | sed "s/^$kernel_release//"` \
-	 != x$config_release; then
-    # The configuration release is a substring of the kernel release.
-    libc_cv_uname_release=$kernel_release
-  elif test x$config_release != x; then
-    libc_cv_uname_release=$config_release
-  elif test x$kernel_release != x; then
-    libc_cv_uname_release=$kernel_release
-  else
-    libc_cv_uname_release=unknown
-  fi
-fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_uname_release" >&5
-$as_echo "$libc_cv_uname_release" >&6; }
-  uname_release="$libc_cv_uname_release"
-
-  { $as_echo "$as_me:${as_lineno-$LINENO}: checking OS version for uname" >&5
-$as_echo_n "checking OS version for uname... " >&6; }
-if test "${libc_cv_uname_version+set}" = set; then :
-  $as_echo_n "(cached) " >&6
-else
-      if test -r /vmunix; then
-      kernel_id=`strings /vmunix | grep UNIX`
-    elif test -r /dynix; then
-      kernel_id=`strings /dynix | grep DYNIX`
-    else
-      kernel_id=
-    fi
-
-  kernel_version=`echo "$kernel_id" | sed 's/^[^#]*#\([0-9]*\).*$/\1/'`
-  if test -n "$kernel_version"; then
-    libc_cv_uname_version="$kernel_version"
-  else
-    libc_cv_uname_version=unknown
-  fi
-fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_uname_version" >&5
-$as_echo "$libc_cv_uname_version" >&6; }
-  uname_version="$libc_cv_uname_version"
-
-    config_uname=config-name.h:config-name.in
-else
-  # For non-generic uname, we don't need to create config-name.h at all.
-  config_uname=
-fi
 
 $as_echo "#define USE_IN_LIBIO 1" >>confdefs.h
 
@@ -7938,7 +7856,7 @@ RELEASE=`sed -n -e 's/^#define RELEASE "\([^"]*\)"/\1/p' < $srcdir/version.h`
 
 
 
-ac_config_files="$ac_config_files config.make ${config_makefile} ${config_uname}"
+ac_config_files="$ac_config_files config.make ${config_makefile}"
 
 ac_config_commands="$ac_config_commands default"
 
@@ -8640,7 +8558,6 @@ do
     "config.h") CONFIG_HEADERS="$CONFIG_HEADERS config.h" ;;
     "config.make") CONFIG_FILES="$CONFIG_FILES config.make" ;;
     "${config_makefile}") CONFIG_FILES="$CONFIG_FILES ${config_makefile}" ;;
-    "${config_uname}") CONFIG_FILES="$CONFIG_FILES ${config_uname}" ;;
     "default") CONFIG_COMMANDS="$CONFIG_COMMANDS default" ;;
 
   *) as_fn_error "invalid argument: \`$ac_config_target'" "$LINENO" 5;;
