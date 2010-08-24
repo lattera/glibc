@@ -1,3 +1,7 @@
+2010-08-24  Roland McGrath  <roland@redhat.com>
+
+	* sunrpc/rpc_parse.h: Avoid nested comment.
+
 2010-08-24  Richard Henderson  <rth@redhat.com>
 	    Ulrich Drepper  <drepper@redhat.com>
 	    H.J. Lu  <hongjiu.lu@intel.com>
