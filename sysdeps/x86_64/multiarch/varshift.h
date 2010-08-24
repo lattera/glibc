@@ -18,7 +18,7 @@
    02111-1307 USA.  */
 
 
-extern char ___m128i_shift_right[31] __attribute__((visibility("hidden")));
+extern char ___m128i_shift_right[31] __attribute__ ((visibility ("hidden")));
 
 static __inline__ __m128i
 __m128i_shift_right (__m128i value, unsigned long offset)
