@@ -1,3 +1,20 @@
+2010-08-24  Richard Henderson  <rth@redhat.com>
+	    Ulrich Drepper  <drepper@redhat.com>
+	    H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/i386/i686/multiarch/Makefile (sysdep_routines): Add varshift.
+	* sysdeps/x86_64/multiarch/Makefile (sysdep_routines): Likewise.
+	* sysdeps/x86_64/multiarch/strcspn-c.c: Include "varshift.h".
+	Replace _mm_srli_si128 with __m128i_shift_right.  Replace
+	_mm_alignr_epi8 with _mm_loadu_si128.
+	* sysdeps/x86_64/multiarch/strspn-c.c: Likewise.
+	* sysdeps/x86_64/multiarch/strstr.c: Include "varshift.h".
+	(__m128i_shift_right): Removed.
+	* sysdeps/i386/i686/multiarch/varshift.h: New file.
+	* sysdeps/i386/i686/multiarch/varshift.S: New file.
+	* sysdeps/x86_64/multiarch/varshift.h: New file.
+	* sysdeps/x86_64/multiarch/varshift.S: New file.
+
 2010-08-21  Mike Frysinger  <vapier@gentoo.org>
 
 	* configure.in: Move assembler checks to before sysdep dir checking.

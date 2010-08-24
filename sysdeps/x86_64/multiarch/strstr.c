@@ -19,6 +19,7 @@
    02111-1307 USA.  */
 
 #include <nmmintrin.h>
+#include "varshift.h"
 
 #ifndef STRSTR_SSE42
 # define STRSTR_SSE42 __strstr_sse42
@@ -81,67 +82,6 @@
        scanning
    5.  failed string compare, go back to scanning
  */
-
-/* Fix-up of removal of unneeded data due to 16B aligned load
-   parameters:
-     value: 16B data loaded from 16B aligned address.
-     offset: Offset of target data address relative to 16B aligned load
-	     address.
- */
-
-static __inline__ __m128i
-__m128i_shift_right (__m128i value, int offset)
-{
-  switch (offset)
-    {
-    case 1:
-      value = _mm_srli_si128 (value, 1);
-      break;
-    case 2:
-      value = _mm_srli_si128 (value, 2);
-      break;
-    case 3:
-      value = _mm_srli_si128 (value, 3);
-      break;
-    case 4:
-      value = _mm_srli_si128 (value, 4);
-      break;
-    case 5:
-      value = _mm_srli_si128 (value, 5);
-      break;
-    case 6:
-      value = _mm_srli_si128 (value, 6);
-      break;
-    case 7:
-      value = _mm_srli_si128 (value, 7);
-      break;
-    case 8:
-      value = _mm_srli_si128 (value, 8);
-      break;
-    case 9:
-      value = _mm_srli_si128 (value, 9);
-      break;
-    case 10:
-      value = _mm_srli_si128 (value, 10);
-      break;
-    case 11:
-      value = _mm_srli_si128 (value, 11);
-      break;
-    case 12:
-      value = _mm_srli_si128 (value, 12);
-      break;
-    case 13:
-      value = _mm_srli_si128 (value, 13);
-      break;
-    case 14:
-      value = _mm_srli_si128 (value, 14);
-      break;
-    case 15:
-      value = _mm_srli_si128 (value, 15);
-      break;
-    }
-  return value;
-}
 
 /* Simple replacement of movdqu to address 4KB boundary cross issue.
    If EOS occurs within less than 16B before 4KB boundary, we don't

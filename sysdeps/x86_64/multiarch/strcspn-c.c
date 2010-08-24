@@ -20,6 +20,7 @@
 
 #include <nmmintrin.h>
 #include <string.h>
+#include "varshift.h"
 
 /* We use 0x2:
 	_SIDD_SBYTE_OPS
@@ -86,8 +87,6 @@ STRCSPN_SSE42 (const char *s, const char *a)
 
   const char *aligned;
   __m128i mask;
-  /* Fake initialization.  gcc otherwise will warn.  */
-  asm ("" : "=xm" (mask));
   int offset = (int) ((size_t) a & 15);
   if (offset != 0)
     {
@@ -95,54 +94,7 @@ STRCSPN_SSE42 (const char *s, const char *a)
       aligned = (const char *) ((size_t) a & -16L);
       __m128i mask0 = _mm_load_si128 ((__m128i *) aligned);
 
-      switch (offset)
-	{
-	case 1:
-	  mask = _mm_srli_si128 (mask0, 1);
-	  break;
-	case 2:
-	  mask = _mm_srli_si128 (mask0, 2);
-	  break;
-	case 3:
-	  mask = _mm_srli_si128 (mask0, 3);
-	  break;
-	case 4:
-	  mask = _mm_srli_si128 (mask0, 4);
-	  break;
-	case 5:
-	  mask = _mm_srli_si128 (mask0, 5);
-	  break;
-	case 6:
-	  mask = _mm_srli_si128 (mask0, 6);
-	  break;
-	case 7:
-	  mask = _mm_srli_si128 (mask0, 7);
-	  break;
-	case 8:
-	  mask = _mm_srli_si128 (mask0, 8);
-	  break;
-	case 9:
-	  mask = _mm_srli_si128 (mask0, 9);
-	  break;
-	case 10:
-	  mask = _mm_srli_si128 (mask0, 10);
-	  break;
-	case 11:
-	  mask = _mm_srli_si128 (mask0, 11);
-	  break;
-	case 12:
-	  mask = _mm_srli_si128 (mask0, 12);
-	  break;
-	case 13:
-	  mask = _mm_srli_si128 (mask0, 13);
-	  break;
-	case 14:
-	  mask = _mm_srli_si128 (mask0, 14);
-	  break;
-	case 15:
-	  mask = _mm_srli_si128 (mask0, 15);
-	  break;
-	}
+      mask = __m128i_shift_right (mask0, offset);
 
       /* Find where the NULL terminator is.  */
       int length = _mm_cmpistri (mask, mask, 0x3a);
@@ -159,55 +111,10 @@ STRCSPN_SSE42 (const char *s, const char *a)
 
 	  if (index != 0)
 	    {
-	      /* Combine mask0 and mask1.  */
-	      switch (offset)
-		{
-		case 1:
-		  mask = _mm_alignr_epi8 (mask1, mask0, 1);
-		  break;
-		case 2:
-		  mask = _mm_alignr_epi8 (mask1, mask0, 2);
-		  break;
-		case 3:
-		  mask = _mm_alignr_epi8 (mask1, mask0, 3);
-		  break;
-		case 4:
-		  mask = _mm_alignr_epi8 (mask1, mask0, 4);
-		  break;
-		case 5:
-		  mask = _mm_alignr_epi8 (mask1, mask0, 5);
-		  break;
-		case 6:
-		  mask = _mm_alignr_epi8 (mask1, mask0, 6);
-		  break;
-		case 7:
-		  mask = _mm_alignr_epi8 (mask1, mask0, 7);
-		  break;
-		case 8:
-		  mask = _mm_alignr_epi8 (mask1, mask0, 8);
-		  break;
-		case 9:
-		  mask = _mm_alignr_epi8 (mask1, mask0, 9);
-		  break;
-		case 10:
-		  mask = _mm_alignr_epi8 (mask1, mask0, 10);
-		  break;
-		case 11:
-		  mask = _mm_alignr_epi8 (mask1, mask0, 11);
-		  break;
-		case 12:
-		  mask = _mm_alignr_epi8 (mask1, mask0, 12);
-		  break;
-		case 13:
-		  mask = _mm_alignr_epi8 (mask1, mask0, 13);
-		  break;
-		case 14:
-		  mask = _mm_alignr_epi8 (mask1, mask0, 14);
-		  break;
-		case 15:
-		  mask = _mm_alignr_epi8 (mask1, mask0, 15);
-		  break;
-		}
+	      /* Combine mask0 and mask1.  We could play games with
+		 palignr, but frankly this data should be in L1 now
+		 so do the merge via an unaligned load.  */
+	      mask = _mm_loadu_si128 ((__m128i *) a);
 	    }
 	}
     }
@@ -234,54 +141,7 @@ STRCSPN_SSE42 (const char *s, const char *a)
       aligned = (const char *) ((size_t) s & -16L);
       __m128i value = _mm_load_si128 ((__m128i *) aligned);
 
-      switch (offset)
-	{
-	case 1:
-	  value = _mm_srli_si128 (value, 1);
-	  break;
-	case 2:
-	  value = _mm_srli_si128 (value, 2);
-	  break;
-	case 3:
-	  value = _mm_srli_si128 (value, 3);
-	  break;
-	case 4:
-	  value = _mm_srli_si128 (value, 4);
-	  break;
-	case 5:
-	  value = _mm_srli_si128 (value, 5);
-	  break;
-	case 6:
-	  value = _mm_srli_si128 (value, 6);
-	  break;
-	case 7:
-	  value = _mm_srli_si128 (value, 7);
-	  break;
-	case 8:
-	  value = _mm_srli_si128 (value, 8);
-	  break;
-	case 9:
-	  value = _mm_srli_si128 (value, 9);
-	  break;
-	case 10:
-	  value = _mm_srli_si128 (value, 10);
-	  break;
-	case 11:
-	  value = _mm_srli_si128 (value, 11);
-	  break;
-	case 12:
-	  value = _mm_srli_si128 (value, 12);
-	  break;
-	case 13:
-	  value = _mm_srli_si128 (value, 13);
-	  break;
-	case 14:
-	  value = _mm_srli_si128 (value, 14);
-	  break;
-	case 15:
-	  value = _mm_srli_si128 (value, 15);
-	  break;
-	}
+      value = __m128i_shift_right (value, offset);
 
       int length = _mm_cmpistri (mask, value, 0x2);
       /* No need to check ZFlag since ZFlag is always 1.  */

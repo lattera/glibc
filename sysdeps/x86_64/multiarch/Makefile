@@ -10,7 +10,7 @@ sysdep_routines += stpncpy-c strncpy-c strcmp-ssse3 strncmp-ssse3 \
 		   memmove-ssse3-back strcasestr-nonascii strcasecmp_l-ssse3 \
 		   strncase_l-ssse3
 ifeq (yes,$(config-cflags-sse4))
-sysdep_routines += strcspn-c strpbrk-c strspn-c strstr-c strcasestr-c
+sysdep_routines += strcspn-c strpbrk-c strspn-c strstr-c strcasestr-c varshift
 CFLAGS-strcspn-c.c += -msse4
 CFLAGS-strpbrk-c.c += -msse4
 CFLAGS-strspn-c.c += -msse4
