@@ -24,7 +24,7 @@
 #include <sysdeps/unix/sysv/linux/m68k/sysdep.h>
 
 #define SYSCALL_ERROR_LOAD_GOT(reg)					      \
-    move.l #_GLOBAL_OFFSET_TABLE_@GOTPC, reg;				      \
+    move.l &_GLOBAL_OFFSET_TABLE_@GOTPC, reg;				      \
     lea (-6, %pc, reg), reg
 
 #endif
