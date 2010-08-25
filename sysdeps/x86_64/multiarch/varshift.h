@@ -17,11 +17,15 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <stdint.h>
+#include <tmmintrin.h>
 
-extern char ___m128i_shift_right[31] __attribute__ ((visibility ("hidden")));
+extern const int8_t ___m128i_shift_right[31] attribute_hidden;
 
 static __inline__ __m128i
-__m128i_shift_right (__m128i value, unsigned long offset)
+__m128i_shift_right (__m128i value, unsigned long int offset)
 {
-  return _mm_shuffle_epi8 (value, _mm_loadu_si128 ((__m128 *) (___m128i_shift_right + offset)));
+  return _mm_shuffle_epi8 (value,
+			   _mm_loadu_si128 ((__m128i *) (___m128i_shift_right
+							 + offset)));
 }

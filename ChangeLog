@@ -1,3 +1,12 @@
+2010-08-25  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/x86_64/multiarch/varshift.S: File removed.
+	* sysdeps/x86_64/multiarch/varshift.c: New file.
+	* sysdeps/x86_64/multiarch/Makefile (CFLAGS-varshift.c): New variable.
+	* sysdeps/x86_64/multiarch/varshift.h: Clean up decls, fix a cast.
+	* sysdeps/x86_64/multiarch/memmove.c: Move decls around.
+	* sysdeps/x86_64/multiarch/memmove_chk.c: Likewise.
+
 2010-08-25  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/i386/i686/multiarch/Makefile (sysdep_routines): Add

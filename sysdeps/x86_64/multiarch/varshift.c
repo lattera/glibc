@@ -17,14 +17,10 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <sysdep.h>
+#include "varshift.h"
 
-
-	.section .rodata
-	.hidden	___m128i_shift_right
-	.globl	___m128i_shift_right
-	.size	___m128i_shift_right, 31
-
-___m128i_shift_right:
-	.byte	  0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15
-	.byte	 -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1
+const int8_t ___m128i_shift_right[31] attribute_hidden =
+  {
+    0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15
+    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1
+  };

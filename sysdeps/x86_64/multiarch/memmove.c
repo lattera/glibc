@@ -1,3 +1,24 @@
+/* Multiple versions of memmove.
+   Copyright (C) 2010 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
+
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
+
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, write to the Free
+   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
+   02111-1307 USA.  */
+
+#include <string.h>
+
 #ifndef NOT_IN_libc
 #include "init-arch.h"
 
@@ -9,13 +30,13 @@
 #endif
 #endif
 
+extern __typeof (memmove) __memmove_sse2 attribute_hidden;
+extern __typeof (memmove) __memmove_ssse3 attribute_hidden;
+extern __typeof (memmove) __memmove_ssse3_back attribute_hidden;
+
 #include "string/memmove.c"
 
 #ifndef NOT_IN_libc
-extern __typeof (__memmove_sse2) __memmove_sse2 attribute_hidden;
-extern __typeof (__memmove_sse2) __memmove_ssse3 attribute_hidden;
-extern __typeof (__memmove_sse2) __memmove_ssse3_back attribute_hidden;
-
 libc_ifunc (memmove,
 	    HAS_SSSE3
 	    ? (HAS_FAST_COPY_BACKWARD
