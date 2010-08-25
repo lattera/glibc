@@ -1,4 +1,4 @@
-GNU C Library NEWS -- history of user-visible changes.  2010-8-14
+GNU C Library NEWS -- history of user-visible changes.  2010-8-25
 Copyright (C) 1992-2009, 2010 Free Software Foundation, Inc.
 See the end for copying conditions.
 
@@ -9,7 +9,7 @@ Version 2.13
 
 * The following bugs are resolved with this release:
 
-  11640, 11701, 11840, 11856, 11883, 11903, 11904
+  10851, 11640, 11701, 11840, 11856, 11883, 11903, 11904
 
 * New Linux interfaces: prlimit, prlimit64, fanotify_init, fanotify_mark
 
