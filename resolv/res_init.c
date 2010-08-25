@@ -176,13 +176,6 @@ __res_vinit(res_state statp, int preinit) {
 		statp->id = res_randomid();
 	}
 
-#ifdef USELOOPBACK
-	statp->nsaddr.sin_addr = inet_makeaddr(IN_LOOPBACKNET, 1);
-#else
-	statp->nsaddr.sin_addr.s_addr = INADDR_ANY;
-#endif
-	statp->nsaddr.sin_family = AF_INET;
-	statp->nsaddr.sin_port = htons(NAMESERVER_PORT);
 	statp->nscount = 0;
 	statp->ndots = 1;
 	statp->pfcode = 0;
@@ -321,24 +314,24 @@ __res_vinit(res_state statp, int preinit) {
 			nserv++;
 #ifdef _LIBC
 			nservall++;
-                    } else {
-                        struct in6_addr a6;
-                        char *el;
+		    } else {
+			struct in6_addr a6;
+			char *el;
 
-                        if ((el = strchr(cp, '\n')) != NULL)
-                            *el = '\0';
+			if ((el = strchr(cp, '\n')) != NULL)
+			    *el = '\0';
 			if ((el = strchr(cp, SCOPE_DELIMITER)) != NULL)
 			    *el = '\0';
-                        if ((*cp != '\0') &&
-                            (inet_pton(AF_INET6, cp, &a6) > 0)) {
-                            struct sockaddr_in6 *sa6;
+			if ((*cp != '\0') &&
+			    (inet_pton(AF_INET6, cp, &a6) > 0)) {
+			    struct sockaddr_in6 *sa6;
 
-                            sa6 = malloc(sizeof(*sa6));
-                            if (sa6 != NULL) {
-                                sa6->sin6_family = AF_INET6;
-                                sa6->sin6_port = htons(NAMESERVER_PORT);
+			    sa6 = malloc(sizeof(*sa6));
+			    if (sa6 != NULL) {
+				sa6->sin6_family = AF_INET6;
+				sa6->sin6_port = htons(NAMESERVER_PORT);
 				sa6->sin6_flowinfo = 0;
-                                sa6->sin6_addr = a6;
+				sa6->sin6_addr = a6;
 
 				if (__builtin_expect (el == NULL, 1))
 				    sa6->sin6_scope_id = 0;
@@ -365,9 +358,9 @@ __res_vinit(res_state statp, int preinit) {
 				statp->_u._ext.nsaddrs[nservall] = sa6;
 				statp->_u._ext.nssocks[nservall] = -1;
 				statp->_u._ext.nsmap[nservall] = MAXNS + 1;
-                                nservall++;
-                            }
-                        }
+				nservall++;
+			    }
+			}
 #endif
 		    }
 		    continue;
@@ -432,6 +425,11 @@ __res_vinit(res_state statp, int preinit) {
 	    statp->nsort = nsort;
 #endif
 	    (void) fclose(fp);
+	}
+	if (__builtin_expect(statp->nscount == 0, 0)) {
+	    statp->nsaddr.sin_addr = inet_makeaddr(IN_LOOPBACKNET, 1);
+	    statp->nsaddr.sin_family = AF_INET;
+	    statp->nsaddr.sin_port = htons(NAMESERVER_PORT);
 	}
 	if (statp->defdname[0] == 0 &&
 	    __gethostname(buf, sizeof(statp->defdname) - 1) == 0 &&
@@ -538,12 +536,12 @@ res_setoptions(res_state statp, const char *options, const char *source) {
 		} else if (!strncmp(cp, "no-check-names",
 				    sizeof("no-check-names") - 1)) {
 			statp->options |= RES_NOCHECKNAME;
-                } else if (!strncmp(cp, "edns0", sizeof("edns0") - 1)) {
+		} else if (!strncmp(cp, "edns0", sizeof("edns0") - 1)) {
 			statp->options |= RES_USE_EDNS0;
-                } else if (!strncmp(cp, "single-request-reopen",
+		} else if (!strncmp(cp, "single-request-reopen",
 				    sizeof("single-request-reopen") - 1)) {
 			statp->options |= RES_SNGLKUPREOP;
-                } else if (!strncmp(cp, "single-request",
+		} else if (!strncmp(cp, "single-request",
 				    sizeof("single-request") - 1)) {
 			statp->options |= RES_SNGLKUP;
 		} else {

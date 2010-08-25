@@ -1,3 +1,9 @@
+2010-08-25  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #10851]
+	* resolv/res_init.c (__res_vinit): When no server address at all
+	is given default to loopback.
+
 2010-08-24  Roland McGrath  <roland@redhat.com>
 
 	* configure.in: Remove config-name.h generation.
