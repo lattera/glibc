@@ -18,6 +18,7 @@
 
 #define bit_Fast_Rep_String	(1 << 0)
 #define bit_Fast_Copy_Backward	(1 << 1)
+#define bit_Slow_BSF		(1 << 2)
 
 #ifdef	__ASSEMBLER__
 
@@ -35,6 +36,7 @@
 
 # define index_Fast_Rep_String		FEATURE_INDEX_1*FEATURE_SIZE
 # define index_Fast_Copy_Backward	FEATURE_INDEX_1*FEATURE_SIZE
+# define index_Slow_BSF			FEATURE_INDEX_1*FEATURE_SIZE
 
 #else	/* __ASSEMBLER__ */
 
@@ -106,6 +108,7 @@ extern const struct cpu_features *__get_cpu_features (void)
 
 # define index_Fast_Rep_String		FEATURE_INDEX_1
 # define index_Fast_Copy_Backward	FEATURE_INDEX_1
+# define index_Slow_BSF			FEATURE_INDEX_1
 
 #define HAS_ARCH_FEATURE(idx, bit) \
   ((__get_cpu_features ()->feature[idx] & (bit)) != 0)
@@ -115,5 +118,8 @@ extern const struct cpu_features *__get_cpu_features (void)
 
 #define HAS_FAST_COPY_BACKWARD \
   HAS_ARCH_FEATURE (index_Fast_Copy_Backward, bit_Fast_Copy_Backward)
+
+#define HAS_SLOW_BSF \
+  HAS_ARCH_FEATURE (index_Slow_BSF, bit_Slow_BSF)
 
 #endif	/* __ASSEMBLER__ */

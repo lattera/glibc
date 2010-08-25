@@ -1,3 +1,18 @@
+2010-08-25  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/i386/i686/multiarch/Makefile (sysdep_routines): Add
+	strlen-sse2 strlen-sse2-bsf.
+	* sysdeps/i386/i686/multiarch/strlen.S (strlen): Return
+	__strlen_sse2_bsf if bit_Slow_BSF is unset.
+	(__strlen_sse2): Removed.
+	* sysdeps/i386/i686/multiarch/strlen-sse2-bsf.S: New file.
+	* sysdeps/i386/i686/multiarch/strlen-sse2.S: New file.
+	* sysdeps/x86_64/multiarch/init-arch.c (__init_cpu_features): Set
+	bit_Slow_BSF for Atom.
+	* sysdeps/x86_64/multiarch/init-arch.h (bit_Slow_BSF): Define.
+	(index_Slow_BSF): Define.
+	(HAS_SLOW_BSF): Define.
+
 2010-08-25  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #10851]

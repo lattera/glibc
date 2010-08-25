@@ -1,5 +1,5 @@
 /* Multiple versions of strlen
-   Copyright (C) 2009 Free Software Foundation, Inc.
+   Copyright (C) 2009, 2010 Free Software Foundation, Inc.
    Contributed by Intel Corporation.
    This file is part of the GNU C Library.
 
@@ -48,90 +48,15 @@ ENTRY(strlen)
 1:	leal	__strlen_ia32@GOTOFF(%ebx), %eax
 	testl	$bit_SSE2, CPUID_OFFSET+index_SSE2+__cpu_features@GOTOFF(%ebx)
 	jz	2f
+	leal	__strlen_sse2_bsf@GOTOFF(%ebx), %eax
+	testl	$bit_Slow_BSF, FEATURE_OFFSET+index_Slow_BSF+__cpu_features@GOTOFF(%ebx)
+	jz	2f
 	leal	__strlen_sse2@GOTOFF(%ebx), %eax
 2:	popl	%ebx
 	cfi_adjust_cfa_offset (-4);
 	cfi_restore (ebx)
 	ret
 END(strlen)
-
-#define CFI_POP(REG)						\
-  cfi_adjust_cfa_offset (-4);					\
-  cfi_restore (REG)
-
-#define RETURN		popl %esi; CFI_POP (esi); ret
-
-	.text
-ENTRY (__strlen_sse2)
-/*
- * This implementation uses SSE instructions to compare up to 16 bytes
- * at a time looking for the end of string (null char).
- */
-	pushl	%esi
-	cfi_adjust_cfa_offset (4)
-	cfi_rel_offset (%esi, 0)
-	mov	8(%esp), %eax
-	mov	%eax, %ecx
-	pxor	%xmm0, %xmm0		/* 16 null chars */
-	mov	%eax, %esi
-	and	$15, %ecx
-	jz	1f			/* string is 16 byte aligned */
-
-	/*
-	* Unaligned case. Round down to 16-byte boundary before comparing
-	* 16 bytes for a null char. The code then compensates for any extra chars
-	* preceding the start of the string.
-	*/
-	and	$-16, %esi
-
-	pcmpeqb	(%esi), %xmm0
-	lea	16(%eax), %esi
-	pmovmskb %xmm0, %edx
-
-	shr	%cl, %edx		/* Compensate for bytes preceding the string */
-	test	%edx, %edx
-	jnz	2f
-	sub	%ecx, %esi		/* no null, adjust to next 16-byte boundary */
-	pxor	%xmm0, %xmm0		/* clear xmm0, may have been changed... */
-
-	.p2align 4
-1:					/* 16 byte aligned */
-	pcmpeqb	(%esi), %xmm0		/* look for null bytes */
-	pmovmskb %xmm0, %edx		/* move each byte mask of %xmm0 to edx */
-
-	add	$16, %esi		/* prepare to search next 16 bytes */
-	test	%edx, %edx		/* if no null byte, %edx must be 0 */
-	jnz	2f			/* found a null */
-
-	pcmpeqb	(%esi), %xmm0
-	pmovmskb %xmm0, %edx
-	add	$16, %esi
-	test	%edx, %edx
-	jnz	2f
-
-	pcmpeqb	(%esi), %xmm0
-	pmovmskb %xmm0, %edx
-	add	$16, %esi
-	test	%edx, %edx
-	jnz	2f
-
-	pcmpeqb	(%esi), %xmm0
-	pmovmskb %xmm0, %edx
-	add	$16, %esi
-	test	%edx, %edx
-	jz	1b
-
-2:
-	neg	%eax
-	lea	-16(%eax, %esi), %eax	/* calculate exact offset */
-	bsf	%edx, %ecx		/* Least significant 1 bit is index of null */
-	add	%ecx, %eax
-	popl	%esi
-	cfi_adjust_cfa_offset (-4)
-	cfi_restore (%esi)
-	ret
-
-END (__strlen_sse2)
 
 # undef ENTRY
 # define ENTRY(name) \

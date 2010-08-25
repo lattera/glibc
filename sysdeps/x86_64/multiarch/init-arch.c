@@ -72,6 +72,12 @@ __init_cpu_features (void)
 	  model += extended_model;
 	  switch (model)
 	    {
+	    case 0x1c:
+	    case 0x26:
+	      /* BSF is slow on Atom.  */
+	      __cpu_features.feature[index_Slow_BSF] |= bit_Slow_BSF;
+	      break;
+
 	    case 0x1a:
 	    case 0x1e:
 	    case 0x1f:
