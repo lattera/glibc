@@ -1,5 +1,8 @@
 2010-08-27  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/i386/i686/multiarch/varshift.S: File removed.
+	* sysdeps/i386/i686/multiarch/varshift.c: New file.
+
 	* sysdeps/x86_64/multiarch/strlen-no-bsf.S: Move to .text.slow section.
 
 	* sysdeps/x86_64/strlen.S: Minimal code improvement.
