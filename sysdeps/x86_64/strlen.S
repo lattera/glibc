@@ -1,7 +1,6 @@
 /* strlen(str) -- determine the length of the string STR.
    Copyright (C) 2009, 2010 Free Software Foundation, Inc.
    Contributed by Ulrich Drepper <drepper@redhat.com>.
-   Modified by Intel Corporation.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -85,22 +84,19 @@ L(exit_less16):
 L(exit16):
 	sub	%rdi, %rax
 	bsf	%rdx, %rdx
-	add	%rdx, %rax
-	add	$16, %rax
+	lea	16(%rdx), %rax
 	ret
 	.p2align 4
 L(exit32):
 	sub	%rdi, %rax
 	bsf	%rdx, %rdx
-	add	%rdx, %rax
-	add	$32, %rax
+	lea	32(%rdx), %rax
 	ret
 	.p2align 4
 L(exit48):
 	sub	%rdi, %rax
 	bsf	%rdx, %rdx
-	add	%rdx, %rax
-	add	$48, %rax
+	lea	48(%rdx), %rax
 	ret
 END(strlen)
 libc_hidden_builtin_def (strlen)
