@@ -84,19 +84,19 @@ L(exit_less16):
 L(exit16):
 	sub	%rdi, %rax
 	bsf	%rdx, %rdx
-	lea	16(%rdx), %rax
+	lea	16(%rdx,%rax), %rax
 	ret
 	.p2align 4
 L(exit32):
 	sub	%rdi, %rax
 	bsf	%rdx, %rdx
-	lea	32(%rdx), %rax
+	lea	32(%rdx,%rax), %rax
 	ret
 	.p2align 4
 L(exit48):
 	sub	%rdi, %rax
 	bsf	%rdx, %rdx
-	lea	48(%rdx), %rax
+	lea	48(%rdx,%rax), %rax
 	ret
 END(strlen)
 libc_hidden_builtin_def (strlen)
