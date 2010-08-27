@@ -22,7 +22,7 @@
 
 #include <sysdep.h>
 
-	.text
+	.section .text.slow,"ax",@progbits
 ENTRY (__strlen_no_bsf)
 	xor	%eax, %eax
 	cmpb	$0, (%rdi)

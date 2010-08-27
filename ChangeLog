@@ -1,3 +1,9 @@
+2010-08-27  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/x86_64/multiarch/strlen-no-bsf.S: Move to .text.slow section.
+
+	* sysdeps/x86_64/strlen.S: Minimal code improvement.
+
 2010-08-26  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/x86_64/strlen.S: Unroll the loop.
