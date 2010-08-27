@@ -1,6 +1,7 @@
 /* strlen(str) -- determine the length of the string STR.
-   Copyright (C) 2009 Free Software Foundation, Inc.
+   Copyright (C) 2009, 2010 Free Software Foundation, Inc.
    Contributed by Ulrich Drepper <drepper@redhat.com>.
+   Modified by Intel Corporation.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -23,29 +24,83 @@
 
 	.text
 ENTRY(strlen)
-	pxor	%xmm2, %xmm2
-	movq	%rdi, %rcx
-	movq	%rdi, %r8
-	andq	$~15, %rdi
-	movdqa	%xmm2, %xmm1
-	pcmpeqb	(%rdi), %xmm2
-	orl	$0xffffffff, %esi
-	subq	%rdi, %rcx
-	shll	%cl, %esi
-	pmovmskb %xmm2, %edx
-	andl	%esi, %edx
-	jnz	1f
-
-2:	movdqa	16(%rdi), %xmm0
-	leaq	16(%rdi), %rdi
+	xor	%rax, %rax
+	mov	%edi, %ecx
+	and	$0x3f, %ecx
+	pxor	%xmm0, %xmm0
+	cmp	$0x30, %ecx
+	ja	L(next)
+	movdqu	(%rdi), %xmm1
 	pcmpeqb	%xmm1, %xmm0
 	pmovmskb %xmm0, %edx
-	testl	%edx, %edx
-	jz	2b
+	test	%edx, %edx
+	jnz	L(exit_less16)
+	mov	%rdi, %rax
+	and	$-16, %rax
+	jmp	L(align16_start)
+L(next):
+	mov	%rdi, %rax
+	and	$-16, %rax
+	pcmpeqb	(%rax), %xmm0
+	mov	$-1, %esi
+	sub	%rax, %rcx
+	shl	%cl, %esi
+	pmovmskb %xmm0, %edx
+	and	%esi, %edx
+	jnz	L(exit)
+L(align16_start):
+	pxor	%xmm0, %xmm0
+	pxor	%xmm1, %xmm1
+	pxor	%xmm2, %xmm2
+	pxor	%xmm3, %xmm3
+	.p2align 4
+L(align16_loop):
+	pcmpeqb	16(%rax), %xmm0
+	pmovmskb %xmm0, %edx
+	test	%edx, %edx
+	jnz	L(exit16)
 
-1:	subq	%r8, %rdi
-	bsfl	%edx, %eax
-	addq	%rdi, %rax
+	pcmpeqb	32(%rax), %xmm1
+	pmovmskb %xmm1, %edx
+	test	%edx, %edx
+	jnz	L(exit32)
+
+	pcmpeqb	48(%rax), %xmm2
+	pmovmskb %xmm2, %edx
+	test	%edx, %edx
+	jnz	L(exit48)
+
+	pcmpeqb	64(%rax), %xmm3
+	pmovmskb %xmm3, %edx
+	lea	64(%rax), %rax
+	test	%edx, %edx
+	jz	L(align16_loop)
+L(exit):
+	sub	%rdi, %rax
+L(exit_less16):
+	bsf	%rdx, %rdx
+	add	%rdx, %rax
+	ret
+	.p2align 4
+L(exit16):
+	sub	%rdi, %rax
+	bsf	%rdx, %rdx
+	add	%rdx, %rax
+	add	$16, %rax
+	ret
+	.p2align 4
+L(exit32):
+	sub	%rdi, %rax
+	bsf	%rdx, %rdx
+	add	%rdx, %rax
+	add	$32, %rax
+	ret
+	.p2align 4
+L(exit48):
+	sub	%rdi, %rax
+	bsf	%rdx, %rdx
+	add	%rdx, %rax
+	add	$48, %rax
 	ret
 END(strlen)
 libc_hidden_builtin_def (strlen)

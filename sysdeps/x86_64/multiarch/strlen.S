@@ -1,5 +1,5 @@
 /* strlen(str) -- determine the length of the string STR.
-   Copyright (C) 2009 Free Software Foundation, Inc.
+   Copyright (C) 2009, 2010 Free Software Foundation, Inc.
    Contributed by Ulrich Drepper <drepper@redhat.com>.
    This file is part of the GNU C Library.
 
@@ -36,74 +36,12 @@ ENTRY(strlen)
 	testl	$bit_SSE4_2, __cpu_features+CPUID_OFFSET+index_SSE4_2(%rip)
 	jz	2f
 	leaq	__strlen_sse42(%rip), %rax
-2:	ret
+	ret
+2:	testl	$bit_Slow_BSF, __cpu_features+FEATURE_OFFSET+index_Slow_BSF(%rip)
+	jz	3f
+	leaq    __strlen_no_bsf(%rip), %rax
+3:	ret
 END(strlen)
-
-
-	.section .text.sse4.2,"ax",@progbits
-	.align 	16
-	.type	__strlen_sse42, @function
-__strlen_sse42:
-	cfi_startproc
-	CALL_MCOUNT
-	pxor	%xmm1, %xmm1
-	movl	%edi, %ecx
-	movq	%rdi, %r8
-	andq	$~15, %rdi
-	xor	%edi, %ecx
-	pcmpeqb	(%rdi), %xmm1
-	pmovmskb %xmm1, %edx
-	shrl	%cl, %edx
-	shll	%cl, %edx
-	andl	%edx, %edx
-	jnz	L(less16bytes)
-	pxor	%xmm1, %xmm1
-
-	.p2align 4
-L(more64bytes_loop):
-	pcmpistri $0x08, 16(%rdi), %xmm1
-	jz	L(more32bytes)
-
-	pcmpistri $0x08, 32(%rdi), %xmm1
-	jz	L(more48bytes)
-
-	pcmpistri $0x08, 48(%rdi), %xmm1
-	jz	L(more64bytes)
-
-	add	$64, %rdi
-	pcmpistri $0x08, (%rdi), %xmm1
-	jnz	L(more64bytes_loop)
-	leaq	(%rdi,%rcx), %rax
-	subq	%r8, %rax
-	ret
-
-	.p2align 4
-L(more32bytes):
-	leaq	16(%rdi,%rcx, 1), %rax
-	subq	%r8, %rax
-	ret
-
-	.p2align 4
-L(more48bytes):
-	leaq	32(%rdi,%rcx, 1), %rax
-	subq	%r8, %rax
-	ret
-
-	.p2align 4
-L(more64bytes):
-	leaq	48(%rdi,%rcx, 1), %rax
-	subq	%r8, %rax
-	ret
-
-	.p2align 4
-L(less16bytes):
-	subq	%r8, %rdi
-	bsfl	%edx, %eax
-	addq	%rdi, %rax
-	ret
-	cfi_endproc
-	.size	__strlen_sse42, .-__strlen_sse42
-
 
 # undef ENTRY
 # define ENTRY(name) \

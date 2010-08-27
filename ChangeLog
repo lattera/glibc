@@ -1,3 +1,14 @@
+2010-08-26  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/x86_64/strlen.S: Unroll the loop.
+	* sysdeps/x86_64/multiarch/Makefile (sysdep_routines): Add
+	strlen-sse2 strlen-sse2-bsf.
+	* sysdeps/x86_64/multiarch/strlen.S ((strlen): Return
+	__strlen_no_bsf if bit_Slow_BSF is set.
+	(__strlen_sse42): Removed.
+	* sysdeps/x86_64/multiarch/strlen-no-bsf.S: New file.
+	* sysdeps/x86_64/multiarch/strlen-sse4.S: New file.
+
 2010-08-25  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/x86_64/multiarch/varshift.S: File removed.
