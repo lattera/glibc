@@ -13,6 +13,7 @@ sysdep_routines += bzero-sse2 memset-sse2 memcpy-ssse3 mempcpy-ssse3 \
 		   strlen-sse2 strlen-sse2-bsf
 ifeq (yes,$(config-cflags-sse4))
 sysdep_routines += strcspn-c strpbrk-c strspn-c strstr-c strcasestr-c
+CFLAGS-varshift.c += -msse4
 CFLAGS-strcspn-c.c += -msse4
 CFLAGS-strpbrk-c.c += -msse4
 CFLAGS-strspn-c.c += -msse4
