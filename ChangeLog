@@ -1,5 +1,17 @@
 2010-09-01  Ulrich Drepper  <drepper@redhat.com>
 
+	* nis/rpcsvc/nis.h: Update copyright notice.
+	* nis/rpcsvc/nis.x: Likewise.
+	* nis/rpcsvc/nis_callback.h: Likewise.
+	* nis/rpcsvc/nis_callback.x: Likewise.
+	* nis/rpcsvc/nis_object.x: Likewise.
+	* nis/rpcsvc/nis_tags.h: Likewise.
+	* nis/rpcsvc/yp.h: Likewise.
+	* nis/rpcsvc/yp.x: Likewise.
+	* nis/rpcsvc/ypupd.h: Likewise.
+	* nis/yp_xdr.c: Likewise.
+	* nis/ypupdate_xdr.c: Likewise.
+
 	* sunrpc/pm_getport.c (__libc_rpc_getport): New function.  This is
 	mainly the body of pmap_getport.  Add parameters to specify timeouts.
 	(pmap_getport): Use __libc_rpc_getport.

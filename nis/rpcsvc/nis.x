@@ -1,31 +1,32 @@
 %/*
-% * Sun RPC is a product of Sun Microsystems, Inc. and is provided for
-% * unrestricted use provided that this legend is included on all tape
-% * media and as a part of the software program in whole or part.  Users
-% * may copy or modify Sun RPC without charge, but are not authorized
-% * to license or distribute it to anyone else except as part of a product or
-% * program developed by the user or with the express written consent of
-% * Sun Microsystems, Inc.
+% * Copyright (c) 2010, Oracle America, Inc.
 % *
-% * SUN RPC IS PROVIDED AS IS WITH NO WARRANTIES OF ANY KIND INCLUDING THE
-% * WARRANTIES OF DESIGN, MERCHANTIBILITY AND FITNESS FOR A PARTICULAR
-% * PURPOSE, OR ARISING FROM A COURSE OF DEALING, USAGE OR TRADE PRACTICE.
+% * Redistribution and use in source and binary forms, with or without
+% * modification, are permitted provided that the following conditions are
+% * met:
 % *
-% * Sun RPC is provided with no support and without any obligation on the
-% * part of Sun Microsystems, Inc. to assist in its use, correction,
-% * modification or enhancement.
+% *     * Redistributions of source code must retain the above copyright
+% *       notice, this list of conditions and the following disclaimer.
+% *     * Redistributions in binary form must reproduce the above
+% *       copyright notice, this list of conditions and the following
+% *       disclaimer in the documentation and/or other materials
+% *       provided with the distribution.
+% *     * Neither the name of the "Oracle America, Inc." nor the names of its
+% *       contributors may be used to endorse or promote products derived
+% *       from this software without specific prior written permission.
 % *
-% * SUN MICROSYSTEMS, INC. SHALL HAVE NO LIABILITY WITH RESPECT TO THE
-% * INFRINGEMENT OF COPYRIGHTS, TRADE SECRETS OR ANY PATENTS BY SUN RPC
-% * OR ANY PART THEREOF.
-% *
-% * In no event will Sun Microsystems, Inc. be liable for any lost revenue
-% * or profits or other special, indirect and consequential damages, even if
-% * Sun has been advised of the possibility of such damages.
-% *
-% * Sun Microsystems, Inc.
-% * 2550 Garcia Avenue
-% * Mountain View, California  94043
+% *   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+% *   "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+% *   LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+% *   FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+% *   COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+% *   INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+% *   DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE
+% *   GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+% *   INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+% *   WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+% *   NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+% *   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 % */
 
 #ifdef RPC_HDR
@@ -34,7 +35,7 @@
 % *
 % *	This file is the main include file for NIS clients. It contains
 % *	both the client library function defines and the various data
-% * 	structures used by the NIS service. It includes the file nis_tags.h
+% *	structures used by the NIS service. It includes the file nis_tags.h
 % *	which defines the tag values. This allows the tags to change without
 % *	having to change the nis.x file.
 % *
@@ -57,10 +58,10 @@
 
 /* Errors  that can be returned by the service */
 enum nis_error {
-	NIS_SUCCESS = 0,	/* A-ok, let's rock n roll 	*/
-	NIS_S_SUCCESS = 1,	/* Name found (maybe)	   	*/
-	NIS_NOTFOUND = 2,	/* Name definitely not found 	*/
-	NIS_S_NOTFOUND = 3,	/* Name maybe not found 	*/
+	NIS_SUCCESS = 0,	/* A-ok, let's rock n roll	*/
+	NIS_S_SUCCESS = 1,	/* Name found (maybe)		*/
+	NIS_NOTFOUND = 2,	/* Name definitely not found	*/
+	NIS_S_NOTFOUND = 3,	/* Name maybe not found		*/
 	NIS_CACHEEXPIRED = 4,	/* Name exists but cache out of date */
 	NIS_NAMEUNREACHABLE = 5, /* Can't get there from here */
 	NIS_UNKNOWNOBJ = 6,	/* Object type is bogus */
@@ -81,7 +82,7 @@ enum nis_error {
 	NIS_NOTUNIQUE = 21,	/* Value is not uniques (entry) */
 	NIS_IBMODERROR = 22,	/* Inf. Base. Modify error. */
 	NIS_NOSUCHTABLE = 23,	/* Name for table was wrong */
-	NIS_TYPEMISMATCH = 24, 	/* Entry and table type mismatch */
+	NIS_TYPEMISMATCH = 24,	/* Entry and table type mismatch */
 	NIS_LINKNAMEERROR = 25,	/* Link points to bogus name */
 	NIS_PARTIAL = 26,	/* Partial success, found table */
 	NIS_TOOMANYATTRS = 27,	/* Too many attributes */
@@ -118,9 +119,9 @@ enum nis_error {
 
 struct nis_result {
 	nis_error	status;		/* Status of the response */
-	nis_object	objects<>;	/* objects found 	  */
-	netobj		cookie;		/* Cookie Data 		  */
-	uint32_t	zticks;		/* server ticks	 	  */
+	nis_object	objects<>;	/* objects found	  */
+	netobj		cookie;		/* Cookie Data		  */
+	uint32_t	zticks;		/* server ticks		  */
 	uint32_t	dticks;		/* DBM ticks.		  */
 	uint32_t	aticks;		/* Cache (accel) ticks	  */
 	uint32_t	cticks;		/* Client ticks		  */
@@ -148,9 +149,9 @@ struct ns_request {
  */
 
 struct ib_request {
-	nis_name  	ibr_name;	/* The name of the Table 	*/
-	nis_attr  	ibr_srch<>; 	/* The search critereia 	*/
-	uint32_t	ibr_flags;	/* Optional flags 		*/
+	nis_name	ibr_name;	/* The name of the Table	*/
+	nis_attr	ibr_srch<>;	/* The search critereia		*/
+	uint32_t	ibr_flags;	/* Optional flags		*/
 	nis_object	ibr_obj<1>;	/* optional object (add/modify) */
 	nis_server	ibr_cbhost<1>;	/* Optional callback info	*/
 	u_int		ibr_bufsize;	/* Optional first/next bufsize	*/
@@ -177,11 +178,11 @@ struct ping_args {
  */
 enum log_entry_t {
 	LOG_NOP = 0,
-	ADD_NAME = 1,		/* Name Added to name space 		  */
-	REM_NAME = 2,		/* Name removed from name space 	  */
-	MOD_NAME_OLD = 3,	/* Name was modified in the name space 	  */
-	MOD_NAME_NEW = 4,	/* Name was modified in the name space 	  */
-	ADD_IBASE = 5,		/* Entry added to information base 	  */
+	ADD_NAME = 1,		/* Name Added to name space		  */
+	REM_NAME = 2,		/* Name removed from name space		  */
+	MOD_NAME_OLD = 3,	/* Name was modified in the name space	  */
+	MOD_NAME_NEW = 4,	/* Name was modified in the name space	  */
+	ADD_IBASE = 5,		/* Entry added to information base	  */
 	REM_IBASE = 6,		/* Entry removed from information base    */
 	MOD_IBASE = 7,		/* Entry was modified in information base */
 	UPD_STAMP = 8		/* Update timestamp (used as fenceposts)  */
@@ -195,24 +196,24 @@ enum log_entry_t {
  * 'name'.
  */
 struct log_entry {
-	uint32_t	le_time;	/* Time in seconds 		*/
-	log_entry_t	le_type;	/* Type of log entry 		*/
+	uint32_t	le_time;	/* Time in seconds		*/
+	log_entry_t	le_type;	/* Type of log entry		*/
 	nis_name	le_princp;	/* Principal making the change	*/
-	nis_name	le_name;	/* Name of table/dir involved 	*/
+	nis_name	le_name;	/* Name of table/dir involved	*/
 	nis_attr	le_attrs<>;	/* List of AV pairs.		*/
-	nis_object	le_object;	/* Actual object value 		*/
+	nis_object	le_object;	/* Actual object value		*/
 };
 
 struct log_result {
-	nis_error 	lr_status;	/* The status itself 	 	*/
+	nis_error	lr_status;	/* The status itself		*/
 	netobj		lr_cookie;	/* Used by the dump callback	*/
-	log_entry	lr_entries<>;	/* zero or more entries 	*/
+	log_entry	lr_entries<>;	/* zero or more entries	*/
 };
 
 struct cp_result {
-	nis_error	cp_status;	/* Status of the checkpoint 	*/
-	uint32_t	cp_zticks;	/* Service 'ticks' 	    	*/
-	uint32_t	cp_dticks;	/* Database 'ticks'	    	*/
+	nis_error	cp_status;	/* Status of the checkpoint	*/
+	uint32_t	cp_zticks;	/* Service 'ticks'		*/
+	uint32_t	cp_dticks;	/* Database 'ticks'		*/
 };
 
 /*
@@ -222,7 +223,7 @@ struct cp_result {
  * and to set or reset state variables.
  */
 struct nis_tag {
-	uint32_t	tag_type;	/* Statistic tag (may vary) 	 */
+	uint32_t	tag_type;	/* Statistic tag (may vary)	 */
 	string		tag_val<>;	/* Statistic value may also vary */
 };
 
@@ -231,7 +232,7 @@ struct nis_taglist {
 };
 
 struct dump_args {
-	nis_name	da_dir;		/* Directory to dump 	*/
+	nis_name	da_dir;		/* Directory to dump	*/
 	uint32_t	da_time;	/* From this timestamp	*/
 	nis_server	da_cbhost<1>;	/* Callback to use.	*/
 };
@@ -243,9 +244,9 @@ struct fd_args {
 
 struct fd_result {
 	nis_error	status;		/* Status returned by function	*/
-	nis_name	source;		/* Source of this answer   	*/
-	opaque		dir_data<>;	/* Directory Data (XDR'ed) 	*/
-	opaque		signature<>;	/* Signature of the source 	*/
+	nis_name	source;		/* Source of this answer	*/
+	opaque		dir_data<>;	/* Directory Data (XDR'ed)	*/
+	opaque		signature<>;	/* Signature of the source	*/
 };
 
 %/*
@@ -372,7 +373,7 @@ program  NIS_PROG {
 %
 %/* Structure for storing dynamically allocated static data */
 %struct nis_sdata {
-%	void	*buf;	/* Memory allocation pointer 	*/
+%	void	*buf;	/* Memory allocation pointer	*/
 %	u_int	size;	/* Buffer size			*/
 %};
 %

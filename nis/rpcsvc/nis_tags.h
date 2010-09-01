@@ -1,5 +1,32 @@
 /*
- * Copyright (c) 1991, Sun Microsystems Inc.
+ * Copyright (c) 2010, Oracle America, Inc.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are
+ * met:
+ *
+ *     * Redistributions of source code must retain the above copyright
+ *       notice, this list of conditions and the following disclaimer.
+ *     * Redistributions in binary form must reproduce the above
+ *       copyright notice, this list of conditions and the following
+ *       disclaimer in the documentation and/or other materials
+ *       provided with the distribution.
+ *     * Neither the name of the "Oracle America, Inc." nor the names of its
+ *       contributors may be used to endorse or promote products derived
+ *       from this software without specific prior written permission.
+ *
+ *   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ *   "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ *   LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+ *   FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+ *   COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+ *   INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ *   DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE
+ *   GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ *   INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ *   WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+ *   NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ *   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
 /*
@@ -13,9 +40,9 @@
 #define	_RPCSVC_NIS_TAGS_H
 
 #if 0
-#pragma ident	"@(#)nis_tags.h	1.16	96/10/25 SMI"
+#pragma ident	"@(#)nis_tags.h	1.16	96/10/25"
 #endif
-/* from file: zns_tags.h	1.7 Copyright (c) 1990 Sun Microsystems */
+/* from file: zns_tags.h	1.7 */
 
 #ifdef	__cplusplus
 extern "C" {
@@ -25,11 +52,11 @@ extern "C" {
 #define	NIS_DIR	"data"
 
 /* Lookup and List function flags */
-#define	FOLLOW_LINKS	(1<<0)	/* Follow link objects 			*/
-#define	FOLLOW_PATH	(1<<1)	/* Follow the path in a table 		*/
-#define	HARD_LOOKUP	(1<<2)	/* Block until successful 		*/
-#define	ALL_RESULTS	(1<<3)	/* Retrieve all results 		*/
-#define	NO_CACHE	(1<<4)	/* Do not return 'cached' results 	*/
+#define	FOLLOW_LINKS	(1<<0)	/* Follow link objects			*/
+#define	FOLLOW_PATH	(1<<1)	/* Follow the path in a table		*/
+#define	HARD_LOOKUP	(1<<2)	/* Block until successful		*/
+#define	ALL_RESULTS	(1<<3)	/* Retrieve all results			*/
+#define	NO_CACHE	(1<<4)	/* Do not return 'cached' results	*/
 #define	MASTER_ONLY	(1<<5)	/* Get value only from master server	*/
 #define	EXPAND_NAME	(1<<6)	/* Expand partitially qualified names	*/
 
@@ -46,7 +73,7 @@ extern "C" {
 #define	SOFT_LOOKUP	(1<<14)	/* The "old default" return on failure  */
 
 /* Transport specific modifications to the operation */
-#define	USE_DGRAM	(1<<16) /* Use a datagram transport 		*/
+#define	USE_DGRAM	(1<<16) /* Use a datagram transport		*/
 #define	NO_AUTHINFO	(1<<17) /* Don't bother attaching auth info	*/
 
 /*
@@ -55,14 +82,14 @@ extern "C" {
  * Statistic tags have values		2048 - 65535
  * User Tags have values		>2^16
  */
-#define	TAG_DEBUG	1	/* set debug level 		*/
-#define	TAG_STATS	2	/* Enable/disable statistics 	*/
+#define	TAG_DEBUG	1	/* set debug level		*/
+#define	TAG_STATS	2	/* Enable/disable statistics	*/
 #define	TAG_GCACHE	3	/* Flush the Group Cache	*/
 #define	TAG_GCACHE_ALL	TAG_GCACHE
 #define	TAG_DCACHE	4	/* Flush the directory cache	*/
 #define	TAG_DCACHE_ONE	TAG_DCACHE
 #define	TAG_OCACHE	5	/* Flush the Object Cache	*/
-#define	TAG_SECURE	6	/* Set the security level 	*/
+#define	TAG_SECURE	6	/* Set the security level	*/
 #define	TAG_TCACHE_ONE	7	/* Flush the table cache	*/
 #define	TAG_DCACHE_ALL	8	/* Flush entire directory cache	*/
 #define	TAG_TCACHE_ALL	9	/* Flush entire table cache	*/
@@ -91,8 +118,8 @@ extern "C" {
  * Declarations for the Group object flags. Currently
  * there are only 3.
  */
-#define	IMPMEM_GROUPS  1	/* Implicit Membership allowed 	*/
-#define	RECURS_GROUPS  2	/* Recursive Groups allowed 	*/
+#define	IMPMEM_GROUPS  1	/* Implicit Membership allowed	*/
+#define	RECURS_GROUPS  2	/* Recursive Groups allowed	*/
 #define	NEGMEM_GROUPS  4	/* Negative Groups allowed	*/
 
 #ifdef	__cplusplus

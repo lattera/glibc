@@ -1,11 +1,37 @@
 /*
  *	nis_object.x
  *
- *	Copyright (c) 1988-1992 Sun Microsystems Inc
- *	All Rights Reserved.
+ * Copyright (c) 2010, Oracle America, Inc.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are
+ * met:
+ *
+ *     * Redistributions of source code must retain the above copyright
+ *       notice, this list of conditions and the following disclaimer.
+ *     * Redistributions in binary form must reproduce the above
+ *       copyright notice, this list of conditions and the following
+ *       disclaimer in the documentation and/or other materials
+ *       provided with the distribution.
+ *     * Neither the name of the "Oracle America, Inc." nor the names of its
+ *       contributors may be used to endorse or promote products derived
+ *       from this software without specific prior written permission.
+ *
+ *   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ *   "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ *   LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+ *   FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+ *   COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+ *   INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ *   DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE
+ *   GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ *   INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ *   WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+ *   NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ *   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-%#pragma ident	"@(#)nis_object.x	1.12	97/11/19 SMI"
+%#pragma ident	"@(#)nis_object.x	1.12	97/11/19"
 
 #if RPC_HDR
 %
@@ -14,7 +40,7 @@
 %
 #endif
 /*
- * 	This file defines the format for a NIS object in RPC language.
+ *	This file defines the format for a NIS object in RPC language.
  * It is included by the main .x file and the database access protocol
  * file. It is common because both of them need to deal with the same
  * type of object. Generating the actual code though is a bit messy because
@@ -54,8 +80,8 @@ const NIS_PK_DHEXT     = 4;	/* Extended Diffie-Hellman for RPC-GSS */
  * optional set of attribute/value pairs.
  */
 struct nis_attr {
-	string	zattr_ndx<>;	/* name of the index 		*/
-	opaque	zattr_val<>;	/* Value for the attribute. 	*/
+	string	zattr_ndx<>;	/* name of the index		*/
+	opaque	zattr_val<>;	/* Value for the attribute.	*/
 };
 
 typedef string nis_name<>;	/* The NIS name itself. */
@@ -63,7 +89,7 @@ typedef string nis_name<>;	/* The NIS name itself. */
 /* NIS object types are defined by the following enumeration. The numbers
  * they use are based on the following scheme :
  *		     0 - 1023 are reserved for Sun,
- * 		1024 - 2047 are defined to be private to a particular tree.
+ *		1024 - 2047 are defined to be private to a particular tree.
  *		2048 - 4095 are defined to be user defined.
  *		4096 - ...  are reserved for future use.
  *
@@ -74,22 +100,22 @@ typedef string nis_name<>;	/* The NIS name itself. */
 
 enum zotypes {
 
-	BOGUS_OBJ  	= 0,	/* Uninitialized object structure 	*/
-	NO_OBJ   	= 1,	/* NULL object (no data)	 	*/
-	DIRECTORY_OBJ 	= 2,	/* Directory object describing domain 	*/
-	GROUP_OBJ  	= 3,	/* Group object (a list of names) 	*/
-	TABLE_OBJ  	= 4,	/* Table object (a database schema) 	*/
-	ENTRY_OBJ  	= 5,	/* Entry object (a database record) 	*/
-	LINK_OBJ   	= 6, 	/* A name link.				*/
-	PRIVATE_OBJ  	= 7, 	/* Private object (all opaque data) 	*/
+	BOGUS_OBJ	= 0,	/* Uninitialized object structure	*/
+	NO_OBJ		= 1,	/* NULL object (no data)		*/
+	DIRECTORY_OBJ	= 2,	/* Directory object describing domain	*/
+	GROUP_OBJ	= 3,	/* Group object (a list of names)	*/
+	TABLE_OBJ	= 4,	/* Table object (a database schema)	*/
+	ENTRY_OBJ	= 5,	/* Entry object (a database record)	*/
+	LINK_OBJ	= 6,	/* A name link.				*/
+	PRIVATE_OBJ	= 7,	/* Private object (all opaque data)	*/
 
-	NIS_BOGUS_OBJ  	= 0,	/* Uninitialized object structure 	*/
-	NIS_NO_OBJ   	= 1,	/* NULL object (no data)	 	*/
-	NIS_DIRECTORY_OBJ = 2, /* Directory object describing domain 	*/
-	NIS_GROUP_OBJ  	= 3,	/* Group object (a list of names) 	*/
-	NIS_TABLE_OBJ  	= 4,	/* Table object (a database schema) 	*/
-	NIS_ENTRY_OBJ  	= 5,	/* Entry object (a database record) 	*/
-	NIS_LINK_OBJ	= 6, 	/* A name link.				*/
+	NIS_BOGUS_OBJ	= 0,	/* Uninitialized object structure	*/
+	NIS_NO_OBJ	= 1,	/* NULL object (no data)		*/
+	NIS_DIRECTORY_OBJ = 2, /* Directory object describing domain	*/
+	NIS_GROUP_OBJ	= 3,	/* Group object (a list of names)	*/
+	NIS_TABLE_OBJ	= 4,	/* Table object (a database schema)	*/
+	NIS_ENTRY_OBJ	= 5,	/* Entry object (a database record)	*/
+	NIS_LINK_OBJ	= 6,	/* A name link.				*/
 	NIS_PRIVATE_OBJ  = 7 /* Private object (all opaque data) */
 };
 
@@ -124,8 +150,8 @@ enum nstype {
  * administrator's approval.
  */
 struct oar_mask {
-	uint32_t	oa_rights;	/* Access rights mask 	*/
-	zotypes		oa_otype;	/* Object type 		*/
+	uint32_t	oa_rights;	/* Access rights mask	*/
+	zotypes		oa_otype;	/* Object type		*/
 };
 
 struct endpoint {
@@ -140,17 +166,17 @@ struct endpoint {
  * the expected lifetime of this service.
  */
 struct nis_server {
-	nis_name	name; 	 	/* Principal name of the server  */
-	endpoint	ep<>;  		/* Universal addr(s) for server  */
+	nis_name	name;		/* Principal name of the server  */
+	endpoint	ep<>;		/* Universal addr(s) for server  */
 	uint32_t	key_type;	/* Public key type		 */
-	netobj		pkey;		/* server's public key  	 */
+	netobj		pkey;		/* server's public key		 */
 };
 
 struct directory_obj {
 	nis_name   do_name;	 /* Name of the directory being served   */
-	nstype	   do_type;	 /* one of NIS, DNS, IVY, YP, or X.500 	 */
-	nis_server do_servers<>; /* <0> == Primary name server     	 */
-	uint32_t   do_ttl;	 /* Time To Live (for caches) 		 */
+	nstype	   do_type;	 /* one of NIS, DNS, IVY, YP, or X.500	 */
+	nis_server do_servers<>; /* <0> == Primary name server		 */
+	uint32_t   do_ttl;	 /* Time To Live (for caches)		 */
 	oar_mask   do_armask<>;  /* Create/Destroy rights by object type */
 };
 
@@ -163,10 +189,10 @@ struct directory_obj {
  * entry but got to it through a LINK rather than directly.
  * If the entry is a "standalone" entry then this field is void.
  */
-const EN_BINARY   = 1;	/* Indicates value is binary data 	*/
+const EN_BINARY   = 1;	/* Indicates value is binary data	*/
 const EN_CRYPT    = 2;	/* Indicates the value is encrypted	*/
 const EN_XDR      = 4;	/* Indicates the value is XDR encoded	*/
-const EN_MODIFIED = 8;	/* Indicates entry is modified. 	*/
+const EN_MODIFIED = 8;	/* Indicates entry is modified.	*/
 const EN_ASN1     = 64;	/* Means contents use ASN.1 encoding    */
 
 struct entry_col {
@@ -175,7 +201,7 @@ struct entry_col {
 };
 
 struct entry_obj {
-	string 	en_type<>;	/* Type of entry such as "passwd" */
+	string	en_type<>;	/* Type of entry such as "passwd" */
 	entry_col en_cols<>;	/* Value for the entry		  */
 };
 
@@ -187,7 +213,7 @@ struct entry_obj {
  */
 struct group_obj {
 	uint32_t	gr_flags;	/* Flags controlling group	*/
-	nis_name	gr_members<>;  	/* List of names in group 	*/
+	nis_name	gr_members<>;	/* List of names in group	*/
 };
 
 /*
@@ -200,7 +226,7 @@ struct group_obj {
 struct link_obj {
 	zotypes	 li_rtype;	/* Real type of the object	*/
 	nis_attr li_attrs<>;	/* Attribute/Values for tables	*/
-	nis_name li_name; 	/* The object's real NIS name	*/
+	nis_name li_name;	/* The object's real NIS name	*/
 };
 
 /*
@@ -219,8 +245,8 @@ struct link_obj {
  * column value.
  */
 
-const TA_BINARY     = 1;	/* Means table data is binary 		*/
-const TA_CRYPT      = 2;	/* Means value should be encrypted 	*/
+const TA_BINARY     = 1;	/* Means table data is binary		*/
+const TA_CRYPT      = 2;	/* Means value should be encrypted	*/
 const TA_XDR        = 4;	/* Means value is XDR encoded		*/
 const TA_SEARCHABLE = 8;	/* Means this column is searchable	*/
 const TA_CASE       = 16;	/* Means this column is Case Sensitive	*/
@@ -228,16 +254,16 @@ const TA_MODIFIED   = 32;	/* Means this columns attrs are modified*/
 const TA_ASN1       = 64;	/* Means contents use ASN.1 encoding     */
 
 struct table_col {
-	string		tc_name<64>;	/* Column Name 	 	   */
+	string		tc_name<64>;	/* Column Name		   */
 	uint32_t	tc_flags;	/* control flags	   */
 	uint32_t	tc_rights;	/* Access rights mask	   */
 };
 
 struct table_obj {
-	string 	  ta_type<64>;	 /* Table type such as "passwd"	*/
+	string	  ta_type<64>;	 /* Table type such as "passwd"	*/
 	int	  ta_maxcol;	 /* Total number of columns	*/
-	u_char	  ta_sep;	 /* Separator character 	*/
-	table_col ta_cols<>; 	 /* The number of table indexes */
+	u_char	  ta_sep;	 /* Separator character		*/
+	table_col ta_cols<>;	 /* The number of table indexes */
 	string	  ta_path<>;	 /* A search path for this table */
 };
 
@@ -245,24 +271,24 @@ struct table_obj {
  * This union joins together all of the currently known objects.
  */
 union objdata switch (zotypes zo_type) {
-        case NIS_DIRECTORY_OBJ :
-                struct directory_obj di_data;
-        case NIS_GROUP_OBJ :
-                struct group_obj gr_data;
-        case NIS_TABLE_OBJ :
-                struct table_obj ta_data;
-        case NIS_ENTRY_OBJ:
-                struct entry_obj en_data;
-        case NIS_LINK_OBJ :
-                struct link_obj li_data;
-        case NIS_PRIVATE_OBJ :
-                opaque	po_data<>;
+	case NIS_DIRECTORY_OBJ :
+		struct directory_obj di_data;
+	case NIS_GROUP_OBJ :
+		struct group_obj gr_data;
+	case NIS_TABLE_OBJ :
+		struct table_obj ta_data;
+	case NIS_ENTRY_OBJ:
+		struct entry_obj en_data;
+	case NIS_LINK_OBJ :
+		struct link_obj li_data;
+	case NIS_PRIVATE_OBJ :
+		opaque	po_data<>;
 	case NIS_NO_OBJ :
 		void;
-        case NIS_BOGUS_OBJ :
+	case NIS_BOGUS_OBJ :
 		void;
-        default :
-                void;
+	default :
+		void;
 };
 
 /*
@@ -281,7 +307,7 @@ union objdata switch (zotypes zo_type) {
  * new position and calculate the size.
  */
 struct nis_oid {
-	uint32_t ctime;		/* Time of objects creation 	*/
+	uint32_t ctime;		/* Time of objects creation	*/
 	uint32_t mtime;		/* Time of objects modification */
 };
 
@@ -293,7 +319,7 @@ struct nis_object {
 	nis_name zo_domain;	/* The administrator for the object	*/
 	uint32_t zo_access;	/* Access rights (owner, group, world)	*/
 	uint32_t zo_ttl;	/* Object's time to live in seconds.	*/
-	objdata	 zo_data;	/* Data structure for this type 	*/
+	objdata	 zo_data;	/* Data structure for this type		*/
 };
 #if RPC_HDR
 %
