@@ -39,11 +39,6 @@
 #include <rpc/pmap_clnt.h>
 #include <sys/socket.h>
 
-static const struct timeval timeout =
-{5, 0};
-static const struct timeval tottimeout =
-{60, 0};
-
 /*
  * Create a socket that is locally bound to a non-reserve port. For
  * any failures, -1 is returned which will cause the RPC code to
@@ -81,16 +76,24 @@ __get_socket (struct sockaddr_in *saddr)
 
 /*
  * Find the mapped port for program,version.
+ * Internal version with additional parameters.
  * Calls the pmap service remotely to do the lookup.
  * Returns 0 if no map exists.
  */
 u_short
-pmap_getport (address, program, version, protocol)
+internal_function
+__libc_rpc_getport (address, program, version, protocol, timeout_sec,
+		    tottimeout_sec)
      struct sockaddr_in *address;
      u_long program;
      u_long version;
      u_int protocol;
+     time_t timeout_sec;
+     time_t tottimeout_sec;
 {
+  const struct timeval timeout = {timeout_sec, 0};
+  const struct timeval tottimeout = {tottimeout_sec, 0};
+
   u_short port = 0;
   int socket = -1;
   CLIENT *client;
@@ -136,5 +139,22 @@ pmap_getport (address, program, version, protocol)
     (void) __close (socket);
   address->sin_port = 0;
   return port;
+}
+libc_hidden_def (__libc_rpc_getport)
+
+
+/*
+ * Find the mapped port for program,version.
+ * Calls the pmap service remotely to do the lookup.
+ * Returns 0 if no map exists.
+ */
+u_short
+pmap_getport (address, program, version, protocol)
+     struct sockaddr_in *address;
+     u_long program;
+     u_long version;
+     u_int protocol;
+{
+  return __libc_rpc_getport (address, program, version, protocol, 5, 60);
 }
 libc_hidden_def (pmap_getport)

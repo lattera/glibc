@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998, 2000, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 2000, 2001, 2010 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1997.
 
@@ -47,15 +47,6 @@ struct cu_data
   };
 
 
-/* The following is the original routine from sunrpc/pm_getport.c.
-   The only change is the much shorter timeout. */
-/*
- * pmap_getport.c
- * Client interface to pmap rpc service.
- *
- * Copyright (C) 1984, Sun Microsystems, Inc.
- */
-
 /*
  * Find the mapped port for program,version.
  * Calls the pmap service remotely to do the lookup.
@@ -65,39 +56,7 @@ u_short
 __pmap_getnisport (struct sockaddr_in *address, u_long program,
 		   u_long version, u_int protocol)
 {
-  const struct timeval timeout = {1, 0};
-  const struct timeval tottimeout = {1, 0};
-  u_short port = 0;
-  int socket = -1;
-  CLIENT *client;
-  struct pmap parms;
-
-  address->sin_port = htons (PMAPPORT);
-  client = clntudp_bufcreate (address, PMAPPROG, PMAPVERS, timeout, &socket,
-			      RPCSMALLMSGSIZE, RPCSMALLMSGSIZE);
-  if (client != (CLIENT *) NULL)
-    {
-      parms.pm_prog = program;
-      parms.pm_vers = version;
-      parms.pm_prot = protocol;
-      parms.pm_port = 0;	/* not needed or used */
-      if (CLNT_CALL (client, PMAPPROC_GETPORT, (xdrproc_t) xdr_pmap,
-		     (caddr_t) & parms, (xdrproc_t) xdr_u_short,
-		     (caddr_t) & port, tottimeout) != RPC_SUCCESS)
-	{
-	  rpc_createerr.cf_stat = RPC_PMAPFAILURE;
-	  clnt_geterr (client, &rpc_createerr.cf_error);
-	}
-      else
-	{
-	  if (port == 0)
-	    rpc_createerr.cf_stat = RPC_PROGNOTREGISTERED;
-	}
-      CLNT_DESTROY (client);
-    }
-  /* (void)close(socket); CLNT_DESTROY already closed it */
-  address->sin_port = 0;
-  return port;
+  return __libc_rpc_getport (address, program, version, protocol, 1, 1);
 }
 
 /* This is now the public function, which should find the fastest server */

@@ -8,5 +8,10 @@ libc_hidden_proto (pmap_unset)
 /* Defined in pm_getport.c.  */
 extern int __get_socket (struct sockaddr_in *saddr)
      attribute_hidden internal_function;
+extern u_short __libc_rpc_getport (struct sockaddr_in *address, u_long program,
+				   u_long version, u_int protocol,
+				   time_t timeout_sec, time_t tottimeout_sec)
+     internal_function;
+libc_hidden_proto (__libc_rpc_getport)
 
 #endif

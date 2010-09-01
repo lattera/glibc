@@ -1,3 +1,12 @@
+2010-09-01  Ulrich Drepper  <drepper@redhat.com>
+
+	* sunrpc/pm_getport.c (__libc_rpc_getport): New function.  This is
+	mainly the body of pmap_getport.  Add parameters to specify timeouts.
+	(pmap_getport): Use __libc_rpc_getport.
+	* sunrpc/Versions: Export __libc_rpc_getport with GLIBC_PRIVATE.
+	* include/rpc/pmap_clnt.h: Declare __libc_rpc_getport.
+	* nis/nis_findserv.c: Remove pmap_getport copy. Use __libc_rpc_getport.
+
 2010-08-31  Andreas Schwab  <schwab@linux-m68k.org>
 
 	* sysdeps/unix/sysv/linux/powerpc/powerpc32/syscalls.list: Add
