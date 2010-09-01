@@ -1,3 +1,7 @@
+2010-08-31  Mike Frysinger  <vapier@gentoo.org>
+
+	* sysdeps/unix/sysv/linux/x86_64/sys/epoll.h: Fix typo.
+
 2010-08-31  Andreas Schwab  <schwab@redhat.com>
 
 	[BZ #7066]
