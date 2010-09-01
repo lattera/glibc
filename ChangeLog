@@ -1,3 +1,9 @@
+2010-08-31  Andreas Schwab  <schwab@redhat.com>
+
+	[BZ #7066]
+	* stdlib/strtod_l.c (____STRTOF_INTERNAL): Fix array overflow when
+	shifting retval into place.
+
 2010-09-01  Ulrich Drepper  <drepper@redhat.com>
 
 	* nis/rpcsvc/nis.h: Update copyright notice.

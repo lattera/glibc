@@ -9,7 +9,7 @@ Version 2.13
 
 * The following bugs are resolved with this release:
 
-  10851, 11640, 11701, 11840, 11856, 11883, 11903, 11904
+  7066, 10851, 11640, 11701, 11840, 11856, 11883, 11903, 11904
 
 * New Linux interfaces: prlimit, prlimit64, fanotify_init, fanotify_mark
 
