@@ -18,6 +18,8 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#ifndef __need_schedparam
+
 #ifndef _SCHED_H
 # error "Never include <bits/sched.h> directly; use <sched.h> instead."
 #endif
@@ -33,6 +35,19 @@ struct sched_param
 {
   int __sched_priority;
 };
+
+#endif	/* need schedparam */
+
+#if !defined __defined_schedparam \
+    && (defined __need_schedparam || defined _SCHED_H)
+# define __defined_schedparam	1
+/* Data structure to describe a process' schedulability.  */
+struct __sched_param
+  {
+    int __sched_priority;
+  };
+# undef __need_schedparam
+#endif
 
 
 #if defined _SCHED_H && !defined __cpu_set_t_defined
