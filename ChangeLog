@@ -1,12 +1,22 @@
+2010-09-02  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/x86_64/add_n.S: Update from GMP 5.0.1.
+	* sysdeps/x86_64/addmul_1.S: Likewise.
+	* sysdeps/x86_64/lshift.S: Likewise.
+	* sysdeps/x86_64/mul_1.S: Likewise.
+	* sysdeps/x86_64/rshift.S: Likewise.
+	* sysdeps/x86_64/sub_n.S: Likewise.
+	* sysdeps/x86_64/submul_1.S: Likewise.
+
 2010-09-01  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
-        This aligns bits/sched.h onto sysdeps/unix/sysv/linux/bits/sched.h:
-        Define __sched_param instead of SCHED_* and sched_param when
+	This aligns bits/sched.h onto sysdeps/unix/sysv/linux/bits/sched.h:
+	Define __sched_param instead of SCHED_* and sched_param when
 	<bits/sched.h> is included with __need_schedparam defined.
-        * bits/sched.h [__need_schedparam]
+	* bits/sched.h [__need_schedparam]
 	(SCHED_OTHER, SCHED_FIFO, SCHED_RR, sched_param): Do not define.
-        [!__defined_schedparam && (__need_schedparam || _SCHED_H)]
-        (__defined_schedparam): Define to 1.
+	[!__defined_schedparam && (__need_schedparam || _SCHED_H)]
+	(__defined_schedparam): Define to 1.
 	(__sched_param): New structure, identical to sched_param.
 	(__need_schedparam): Undefine.
 

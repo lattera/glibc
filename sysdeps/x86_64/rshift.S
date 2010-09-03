@@ -1,5 +1,5 @@
-/* AMD64 __mpn_rshift --
-   Copyright (C) 2004, 2006 Free Software Foundation, Inc.
+/* x86-64 __mpn_rshift --
+   Copyright (C) 2007, 2009 Free Software Foundation, Inc.
    This file is part of the GNU MP Library.
 
    The GNU MP Library is free software; you can redistribute it and/or modify
@@ -20,43 +20,96 @@
 #include "sysdep.h"
 #include "asm-syntax.h"
 
+#define rp	%rdi
+#define up	%rsi
+#define n	%rdx
+#define cnt	%cl
+
 	.text
 ENTRY (__mpn_rshift)
-	movq	(%rsi), %mm7
-	movd	%ecx, %mm1
-	movl	$64, %eax
-	subl	%ecx, %eax
-	movd	%eax, %mm0
-	movq	%mm7, %mm3
-	psllq	%mm0, %mm7
-	movd	%mm7, %rax
-	leaq	(%rsi,%rdx,8), %rsi
-	leaq	(%rdi,%rdx,8), %rdi
-	negq	%rdx
-	addq	$2, %rdx
-	jg	L(endo)
-	.p2align 2
-L(loop):
-	movq	-8(%rsi,%rdx,8), %mm6
-	movq	%mm6, %mm2
-	psllq	%mm0, %mm6
-	psrlq	%mm1, %mm3
-	por	%mm6, %mm3
-	movq	%mm3, -16(%rdi,%rdx,8)
-	je	L(ende)
-	movq	(%rsi,%rdx,8), %mm7
-	movq	%mm7, %mm3
-	psllq	%mm0, %mm7
-	psrlq	%mm1, %mm2
-	por	%mm7, %mm2
-	movq	%mm2, -8(%rdi,%rdx,8)
-	addq	$2, %rdx
-	jle	L(loop)
-L(endo):
-	movq	%mm3, %mm2
-L(ende):
-	psrlq	%mm1, %mm2
-	movq	%mm2, -8(%rdi)
-	emms
+	mov	%edx, %eax
+	and	$3, %eax
+	jne	L(nb00)
+L(b00):	/* n = 4, 8, 12, ... */
+	mov	(up), %r10
+	mov	8(up), %r11
+	xor	%eax, %eax
+	shrd	%cl, %r10, %rax
+	mov	16(up), %r8
+	lea	8(up), up
+	lea	-24(rp), rp
+	sub	$4, n
+	jmp	L(00)
+
+L(nb00):/* n = 1, 5, 9, ... */
+	cmp	$2, %eax
+	jae	L(nb01)
+L(b01):	mov	(up), %r9
+	xor	%eax, %eax
+	shrd	%cl, %r9, %rax
+	sub	$2, n
+	jb	L(le1)
+	mov	8(up), %r10
+	mov	16(up), %r11
+	lea	16(up), up
+	lea	-16(rp), rp
+	jmp	L(01)
+L(le1): shr	%cl, %r9
+	mov	%r9, (rp)
+	ret
+
+L(nb01):/* n = 2, 6, 10, ... */
+	jne	L(b11)
+L(b10):	mov	(up), %r8
+	mov	8(up), %r9
+	xor	%eax, %eax
+	shrd	%cl, %r8, %rax
+	sub	$3, n
+	jb	L(le2)
+	mov	16(up), %r10
+	lea	24(up), up
+	lea	-8(rp), rp
+	jmp	L(10)
+L(le2): shrd	%cl, %r9, %r8
+	mov	%r8, (rp)
+	shr	%cl, %r9
+	mov	%r9, 8(rp)
+	ret
+
+	.p2align 4
+L(b11):	/* n = 3, 7, 11, ... */
+	mov	(up), %r11
+	mov	8(up), %r8
+	xor	%eax, %eax
+	shrd	%cl, %r11, %rax
+	mov	16(up), %r9
+	lea	32(up), up
+	sub	$4, n
+	jb	L(end)
+
+	.p2align 4
+L(top):	shrd	%cl, %r8, %r11
+	mov	-8(up), %r10
+	mov	%r11, (rp)
+L(10):	shrd	%cl, %r9, %r8
+	mov	(up), %r11
+	mov	%r8, 8(rp)
+L(01):	shrd	%cl, %r10, %r9
+	mov	8(up), %r8
+	mov	%r9, 16(rp)
+L(00):	shrd	%cl, %r11, %r10
+	mov	16(up), %r9
+	mov	%r10, 24(rp)
+	add	$32, up
+	lea	32(rp), rp
+	sub	$4, n
+	jnc	L(top)
+
+L(end):	shrd	%cl, %r8, %r11
+	mov	%r11, (rp)
+	shrd	%cl, %r9, %r8
+	mov	%r8, 8(rp)
+	shr	%cl, %r9
+	mov	%r9, 16(rp)
 	ret
 END (__mpn_rshift)

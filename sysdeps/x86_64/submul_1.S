@@ -1,6 +1,6 @@
-/* AMD64 __mpn_submul_1 -- Multiply a limb vector with a limb and subtract
+/* x86-64 __mpn_submul_1 -- Multiply a limb vector with a limb and subtract
    the result from a second limb vector.
-   Copyright (C) 2004 Free Software Foundation, Inc.
+   Copyright (C) 2003,2004,2005,2007,2008,2009 Free Software Foundation, Inc.
    This file is part of the GNU MP Library.
 
    The GNU MP Library is free software; you can redistribute it and/or modify
@@ -18,29 +18,7 @@
    the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
    MA 02111-1307, USA. */
 
-#include "sysdep.h"
-#include "asm-syntax.h"
+#define func __mpn_submul_1
+#define ADDSUB sub
 
-	.text
-ENTRY (__mpn_submul_1)
-	movq	%rdx, %r11
-	leaq	(%rsi,%r11,8), %rsi
-	leaq	(%rdi,%r11,8), %rdi
-	negq	%r11
-	xorl	%r8d, %r8d
-	.p2align 3
-L(loop):
-	movq	(%rsi,%r11,8), %rax
-	movq	(%rdi,%r11,8), %r10
-	mulq	%rcx
-	subq	%r8, %r10
-	movl	$0, %r8d
-	adcl	%r8d, %r8d
-	subq	%rax, %r10
-	adcq	%rdx, %r8
-	movq	%r10, (%rdi,%r11,8)
-	incq	%r11
-	jne	L(loop)
-	movq	%r8, %rax
-	ret
-END (__mpn_submul_1)
+#include "addmul_1.S"

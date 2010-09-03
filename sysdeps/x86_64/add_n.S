@@ -1,6 +1,6 @@
-/* Add two limb vectors of the same length > 0 and store sum in a third
-   limb vector.
-   Copyright (C) 2004 Free Software Foundation, Inc.
+/* x86-64 __mpn_add_n -- Add two limb vectors of the same length > 0 and store
+   sum in a third limb vector.
+   Copyright (C) 2006, 2007 Free Software Foundation, Inc.
    This file is part of the GNU MP Library.
 
    The GNU MP Library is free software; you can redistribute it and/or modify
@@ -21,22 +21,81 @@
 #include "sysdep.h"
 #include "asm-syntax.h"
 
+#define rp	%rdi
+#define up	%rsi
+#define vp	%rdx
+#define n	%rcx
+#define cy	%r8
+
+#ifndef func
+# define func __mpn_add_n
+# define ADCSBB adc
+#endif
+
 	.text
-ENTRY (__mpn_add_n)
-	leaq	(%rsi,%rcx,8), %rsi
-	leaq	(%rdi,%rcx,8), %rdi
-	leaq	(%rdx,%rcx,8), %rdx
-	negq	%rcx
-	xorl	%eax, %eax			# clear cy
-	.p2align 2
-L(loop):
-	movq	(%rsi,%rcx,8), %rax
-	movq	(%rdx,%rcx,8), %r10
-	adcq	%r10, %rax
-	movq	%rax, (%rdi,%rcx,8)
-	incq	%rcx
-	jne	L(loop)
-	movq	%rcx, %rax			# zero %rax
-	adcq	%rax, %rax
+ENTRY (func)
+	xor	%r8, %r8
+	mov	(up), %r10
+	mov	(vp), %r11
+
+	lea	-8(up,n,8), up
+	lea	-8(vp,n,8), vp
+	lea	-16(rp,n,8), rp
+	mov	%ecx, %eax
+	neg	n
+	and	$3, %eax
+	je	L(b00)
+	add	%rax, n		/* clear low rcx bits for jrcxz */
+	cmp	$2, %eax
+	jl	L(b01)
+	je	L(b10)
+
+L(b11):	shr	%r8		/* set cy */
+	jmp	L(e11)
+
+L(b00):	shr	%r8		/* set cy */
+	mov	%r10, %r8
+	mov	%r11, %r9
+	lea	4(n), n
+	jmp	L(e00)
+
+L(b01):	shr	%r8		/* set cy */
+	jmp	L(e01)
+
+L(b10):	shr	%r8		/* set cy */
+	mov	%r10, %r8
+	mov	%r11, %r9
+	jmp	L(e10)
+
+L(end):	ADCSBB	%r11, %r10
+	mov	%r10, 8(rp)
+	mov	%ecx, %eax	/* clear eax, ecx contains 0 */
+	adc	%eax, %eax
 	ret
-END (__mpn_add_n)
+
+	.p2align 4
+L(top):
+	mov	-24(up,n,8), %r8
+	mov	-24(vp,n,8), %r9
+	ADCSBB	%r11, %r10
+	mov	%r10, -24(rp,n,8)
+L(e00):
+	mov	-16(up,n,8), %r10
+	mov	-16(vp,n,8), %r11
+	ADCSBB	%r9, %r8
+	mov	%r8, -16(rp,n,8)
+L(e11):
+	mov	-8(up,n,8), %r8
+	mov	-8(vp,n,8), %r9
+	ADCSBB	%r11, %r10
+	mov	%r10, -8(rp,n,8)
+L(e10):
+	mov	(up,n,8), %r10
+	mov	(vp,n,8), %r11
+	ADCSBB	%r9, %r8
+	mov	%r8, (rp,n,8)
+L(e01):
+	jrcxz	L(end)
+	lea	4(n), n
+	jmp	L(top)
+END (func)

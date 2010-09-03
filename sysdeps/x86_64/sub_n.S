@@ -1,6 +1,6 @@
-/* AMD64 __mpn_sub_n -- Add two limb vectors of the same length > 0 and store
+/* x86-64 __mpn_sub_n -- Add two limb vectors of the same length > 0 and store
    sum in a third limb vector.
-   Copyright (C) 2004 Free Software Foundation, Inc.
+   Copyright (C) 2006, 2007 Free Software Foundation, Inc.
    This file is part of the GNU MP Library.
 
    The GNU MP Library is free software; you can redistribute it and/or modify
@@ -18,25 +18,7 @@
    the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
    MA 02111-1307, USA. */
 
-#include "sysdep.h"
-#include "asm-syntax.h"
+#define func __mpn_sub_n
+#define ADCSBB sbb
 
-	.text
-ENTRY (__mpn_sub_n)
-	leaq	(%rsi,%rcx,8), %rsi
-	leaq	(%rdi,%rcx,8), %rdi
-	leaq	(%rdx,%rcx,8), %rdx
-	negq	%rcx
-	xorl	%eax, %eax		# clear cy
-	.p2align 2
-L(loop):
-	movq	(%rsi,%rcx,8), %rax
-	movq	(%rdx,%rcx,8), %r10
-	sbbq	%r10, %rax
-	movq	%rax, (%rdi,%rcx,8)
-	incq	%rcx
-	jne	L(loop)
-	movq	%rcx, %rax		# zero %rax
-	adcq	%rax, %rax
-	ret
-END (__mpn_sub_n)
+#include "add_n.S"
