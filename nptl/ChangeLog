@@ -1,3 +1,8 @@
+2010-09-03  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/pthread/allocalim.h (__libc_use_alloca): Expect blocks are
+	small.
+
 2010-08-10  Dinakar Guniguntala  <dino@in.ibm.com>
 	    Stefan Hajnoczi  <stefanha@linux.vnet.ibm.com>
 
