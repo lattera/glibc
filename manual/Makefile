@@ -232,7 +232,10 @@ ifdef objpfx
 .PHONY: stubs
 stubs: $(objpfx)stubs
 endif
-$(objpfx)stubs ../po/manual.pot $(objpfx)stamp%:
+$(objpfx)stubs ../po/manual.pot:
+	$(make-target-directory)
+	touch $@
+$(objpfx)stamp%:
 	$(make-target-directory)
 	touch $@
 
