@@ -3079,7 +3079,7 @@
 
 	* charmaps/ISO-8859-16: Swap 0xa5 and 0xab entries.
 
-2001-11-15  BÃ¸rre Gaup  <boerre.gaup@pc.nu>
+2001-11-15  Børre Gaup  <boerre.gaup@pc.nu>
 
 	* locales/se_NO: New file.
 
