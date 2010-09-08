@@ -1,4 +1,4 @@
-/* Copyright (C) 2001,2004,2005,2006,2009 Free Software Foundation, Inc.
+/* Copyright (C) 2001,2004,2005,2006,2009,2010 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -49,9 +49,9 @@ longjmp_msg:
 	.text
 ENTRY(____longjmp_chk)
 	/* Restore registers.  */
-	movq	(JB_RSP*8)(%rdi),%r8
-	movq	(JB_RBP*8)(%rdi),%r9
-	movq	(JB_PC*8)(%rdi),%rdx
+	movq	(JB_RSP*8)(%rdi), %r8
+	movq	(JB_RBP*8)(%rdi), %r9
+	movq	(JB_PC*8)(%rdi), %rdx
 #ifdef PTR_DEMANGLE
 	PTR_DEMANGLE (%r8)
 	PTR_DEMANGLE (%r9)
@@ -63,7 +63,9 @@ ENTRY(____longjmp_chk)
 
 	/* Save function parameters.  */
 	movq	%rdi, %r10
-	movl	%esi, %ecx
+	cfi_register (%rdi, %r10)
+	movl	%esi, %ebx
+	cfi_register (%rsi, %rbx)
 
 	xorl	%edi, %edi
 	leaq	-24(%rsp), %rsi
@@ -84,7 +86,9 @@ ENTRY(____longjmp_chk)
 .Lfail:	CALL_FAIL
 
 .Lok2:	movq	%r10, %rdi
-	movl	%ecx, %esi
+	cfi_restore (%rdi)
+	movl	%ebx, %esi
+	cfi_restore (%rsi)
 
 .Lok:	/* We add unwind information for the target here.  */
 	cfi_def_cfa(%rdi, 0)
@@ -96,11 +100,11 @@ ENTRY(____longjmp_chk)
 	cfi_offset(%r13,JB_R13*8)
 	cfi_offset(%r14,JB_R14*8)
 	cfi_offset(%r15,JB_R15*8)
-	movq	(JB_RBX*8)(%rdi),%rbx
-	movq	(JB_R12*8)(%rdi),%r12
-	movq	(JB_R13*8)(%rdi),%r13
-	movq	(JB_R14*8)(%rdi),%r14
-	movq	(JB_R15*8)(%rdi),%r15
+	movq	(JB_RBX*8)(%rdi), %rbx
+	movq	(JB_R12*8)(%rdi), %r12
+	movq	(JB_R13*8)(%rdi), %r13
+	movq	(JB_R14*8)(%rdi), %r14
+	movq	(JB_R15*8)(%rdi), %r15
 	/* Set return value for setjmp.  */
 	movl	%esi, %eax
 	movq	%r8,%rsp

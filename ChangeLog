@@ -1,3 +1,11 @@
+2010-09-08  Chung-Lin Tang  <cltang@codesourcery.com>
+	    Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #11968]
+	* sysdeps/unix/sysv/linux/x86_64/____longjmp_chk.S
+	(____longjmp_chk): Use %ebx for saving value across system call.
+	Add unwind info.
+
 2010-09-06  Andreas Schwab  <schwab@redhat.com>
 
 	* manual/Makefile: Don't mix pattern rules with normal rules.
