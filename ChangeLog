@@ -1,3 +1,8 @@
+2015-09-18  David Lamparter  <equinox-gentoo@diac24.net>
+
+	* sysdeps/arm/setjmp.S: Change PIC to SHARED.
+	* sysdeps/arm/__longjmp.S: Likewise
+
 2015-09-18  Wilco Dijkstra  <wdijkstr@arm.com>
 
 	* sysdeps/ieee754/dbl-64/s_signbit.c (__signbit):

@@ -81,7 +81,7 @@ ENTRY (__longjmp)
 		    C_SYMBOL_NAME(_rtld_local_ro) \
 		    + RTLD_GLOBAL_RO_DL_HWCAP_OFFSET)
 # else
-#  ifdef PIC
+#  ifdef SHARED
 	LDR_GLOBAL (a4, a3, C_SYMBOL_NAME(_rtld_global_ro), \
 		    RTLD_GLOBAL_RO_DL_HWCAP_OFFSET)
 #  else

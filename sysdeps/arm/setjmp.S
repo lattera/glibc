@@ -62,7 +62,7 @@ ENTRY (__sigsetjmp)
 		    C_SYMBOL_NAME(_rtld_local_ro) \
 		    + RTLD_GLOBAL_RO_DL_HWCAP_OFFSET)
 # else
-#  ifdef PIC
+#  ifdef SHARED
 	LDR_GLOBAL (a3, a4, C_SYMBOL_NAME(_rtld_global_ro), \
 		    RTLD_GLOBAL_RO_DL_HWCAP_OFFSET)
 #  else
