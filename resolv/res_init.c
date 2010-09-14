@@ -430,6 +430,7 @@ __res_vinit(res_state statp, int preinit) {
 	    statp->nsaddr.sin_addr = inet_makeaddr(IN_LOOPBACKNET, 1);
 	    statp->nsaddr.sin_family = AF_INET;
 	    statp->nsaddr.sin_port = htons(NAMESERVER_PORT);
+	    statp->nscount = 1;
 	}
 	if (statp->defdname[0] == 0 &&
 	    __gethostname(buf, sizeof(statp->defdname) - 1) == 0 &&
