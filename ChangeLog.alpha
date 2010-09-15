@@ -1,4 +1,11 @@
-2010-05-05  Richard Henderson  <rth@redhat.com>
+2010-09-23  Richard Henderson  <rth@redhat.com>
+
+	[BZ #12019]
+	* sysdeps/alpha/alphaev6/memchr.S: Remove.
+	* sysdeps/alpha/memchr.S: Remove.
+	* sysdeps/alpha/memchr.c: New.
+
+2010-09-23  Richard Henderson  <rth@redhat.com>
 
 	[BZ #1864]
 	* sysdeps/unix/sysv/linux/alpha/fstatfs64.c: New.
