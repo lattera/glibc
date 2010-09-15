@@ -264,6 +264,9 @@ _dl_non_dynamic_init (void)
      objects.  */
   _dl_init_paths (getenv ("LD_LIBRARY_PATH"));
 
+  /* Remember the last search directory added at startup.  */
+  _dl_init_all_dirs = GL(dl_all_dirs);
+
   _dl_lazy = *(getenv ("LD_BIND_NOW") ?: "") == '\0';
 
   _dl_bind_not = *(getenv ("LD_BIND_NOT") ?: "") != '\0';

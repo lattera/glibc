@@ -787,9 +787,6 @@ _dl_init_paths (const char *llp)
     }
   else
     env_path_list.dirs = (void *) -1;
-
-  /* Remember the last search directory added at startup.  */
-  GLRO(dl_init_all_dirs) = GL(dl_all_dirs);
 }
 
 

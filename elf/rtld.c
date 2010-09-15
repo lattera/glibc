@@ -2291,6 +2291,10 @@ ERROR: ld.so: object '%s' cannot be loaded as audit interface: %s; ignored.\n",
 			  lossage);
     }
 
+  /* Remember the last search directory added at startup, now that
+     malloc will no longer be the one from dl-minimal.c.  */
+  GLRO(dl_init_all_dirs) = GL(dl_all_dirs);
+
   if (! prelinked && rtld_multiple_ref)
     {
       /* There was an explicit ref to the dynamic linker as a shared lib.

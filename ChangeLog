@@ -1,3 +1,13 @@
+2010-09-13  Andreas Schwab  <schwab@redhat.com>
+	    Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/rtld.c (dl_main): Set GLRO(dl_init_all_dirs) just before
+	re-relocationg ld.so.
+	* elf/dl-support.c (_dl_non_dynamic_init): And here after the
+	_dl_init_paths call.
+	* elf/dl-load.c (_dl_init_paths).  Don't set GLRO(dl_init_all_dirs)
+	here anymore.
+
 2010-09-14  Ulrich Drepper  <drepper@redhat.com>
 
 	* resolv/res_init.c (__res_vinit): Count the default server we added.
