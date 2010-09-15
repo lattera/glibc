@@ -1,4 +1,4 @@
-/* Copyright (C) 2001, 2005, 2009 Free Software Foundation, Inc.
+/* Copyright (C) 2001, 2005, 2009, 2010 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Martin Schwidefsky (schwidefsky@de.ibm.com).
 
@@ -29,15 +29,18 @@
 void
 __longjmp (__jmp_buf env, int val)
 {
-  register long int r2 __asm ("%r2") = val == 0 ? 1 : val;
 #ifdef PTR_DEMANGLE
-  register uintptr_t r3 __asm ("%r3") = THREAD_GET_POINTER_GUARD ();
-  register void *r1 __asm ("%r1") = (void *) env;
+  uintptr_t guard = THREAD_GET_POINTER_GUARD ();
 # ifdef CHECK_SP
-  CHECK_SP (env, r3);
+  CHECK_SP (env, guard);
 # endif
 #elif defined CHECK_SP
   CHECK_SP (env, 0);
+#endif
+  register long int r2 __asm ("%r2") = val == 0 ? 1 : val;
+#ifdef PTR_DEMANGLE
+  register uintptr_t r3 __asm ("%r3") = guard;
+  register void *r1 __asm ("%r1") = (void *) env;
 #endif
   /* Restore registers and jump back.  */
   asm volatile ("ld   %%f7,104(%1)\n\t"
