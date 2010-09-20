@@ -6,3 +6,4 @@ getresuid	-	getresuid32	3	getresuid
 getresgid	-	getresgid32	3	getresgid
 
 prlimit64	EXTRA	prlimit64	i:iipp	prlimit64
+fanotify_mark	EXTRA	fanotify_mark	i:iiiiis	fanotify_mark

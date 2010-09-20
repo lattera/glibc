@@ -5,3 +5,4 @@ oldsetrlimit	EXTRA	setrlimit	i:ip	__old_setrlimit	setrlimit@GLIBC_2.0
 vfork		-	vfork		0	__vfork		vfork
 
 prlimit64	EXTRA	prlimit64	i:iipp	prlimit64
+fanotify_mark	EXTRA	fanotify_mark	i:iiiiis	fanotify_mark
