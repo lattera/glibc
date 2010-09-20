@@ -913,7 +913,7 @@ LABEL(gobble_ashr_5):
 	sub	$0xffff, %edx
 	jnz	LABEL(exit)
 
-# if defined USE_AS_STRNCMP || defined USE_AS_STRCASECMP_L
+# if defined USE_AS_STRNCMP || defined USE_AS_STRNCASECMP_L
 	sub	$16, %r11
 	jbe	LABEL(strcmp_exitz)
 # endif

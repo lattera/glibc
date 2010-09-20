@@ -1,3 +1,8 @@
+2010-09-20  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/x86_64/strcmp.S: Fix another type in strncasecmp limit
+	detection.
+
 2010-09-20  Andreas Schwab  <schwab@redhat.com>
 
 	* sysdeps/unix/sysv/linux/sparc/sparc32/syscalls.list: Add
