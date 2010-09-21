@@ -299,7 +299,7 @@ libc_freeres_fn (free_mem)
 
 	  /* Now free the old map.  */
 	  free (old);
-	}      
+	}
     }
 
   if (USE___THREAD || GL(dl_tls_dtv_slotinfo_list) != NULL)
