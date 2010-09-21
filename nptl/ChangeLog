@@ -1,3 +1,9 @@
+2010-09-21  Andreas Schwab  <schwab@redhat.com>
+
+	* sysdeps/pthread/pthread.h (pthread_cleanup_push)
+	[!__EXCEPTIONS]: Mangle local variable not_first_call.
+	(pthread_cleanup_push_defer_np): Likewise.
+
 2010-09-03  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/pthread/allocalim.h (__libc_use_alloca): Expect blocks are

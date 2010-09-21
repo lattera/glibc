@@ -650,9 +650,9 @@ __pthread_cleanup_routine (struct __pthread_cleanup_frame *__frame)
     __pthread_unwind_buf_t __cancel_buf;				      \
     void (*__cancel_routine) (void *) = (routine);			      \
     void *__cancel_arg = (arg);						      \
-    int not_first_call = __sigsetjmp ((struct __jmp_buf_tag *) (void *)	      \
-				      __cancel_buf.__cancel_jmp_buf, 0);      \
-    if (__builtin_expect (not_first_call, 0))				      \
+    int __not_first_call = __sigsetjmp ((struct __jmp_buf_tag *) (void *)     \
+					__cancel_buf.__cancel_jmp_buf, 0);    \
+    if (__builtin_expect (__not_first_call, 0))				      \
       {									      \
 	__cancel_routine (__cancel_arg);				      \
 	__pthread_unwind_next (&__cancel_buf);				      \
@@ -685,9 +685,9 @@ extern void __pthread_unregister_cancel (__pthread_unwind_buf_t *__buf)
     __pthread_unwind_buf_t __cancel_buf;				      \
     void (*__cancel_routine) (void *) = (routine);			      \
     void *__cancel_arg = (arg);						      \
-    int not_first_call = __sigsetjmp ((struct __jmp_buf_tag *) (void *)	      \
-				      __cancel_buf.__cancel_jmp_buf, 0);      \
-    if (__builtin_expect (not_first_call, 0))				      \
+    int __not_first_call = __sigsetjmp ((struct __jmp_buf_tag *) (void *)     \
+					__cancel_buf.__cancel_jmp_buf, 0);    \
+    if (__builtin_expect (__not_first_call, 0))				      \
       {									      \
 	__cancel_routine (__cancel_arg);				      \
 	__pthread_unwind_next (&__cancel_buf);				      \
