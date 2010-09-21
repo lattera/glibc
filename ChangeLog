@@ -1,3 +1,8 @@
+2010-09-16  Andreas Schwab  <schwab@redhat.com>
+
+	* elf/dl-close.c (free_slotinfo, free_mem): Move to...
+	* elf/dl-libc.c (free_slotinfo, free_mem): ... here.
+
 2010-09-21  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #12037]

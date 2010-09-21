@@ -1,5 +1,5 @@
 /* Handle loading and unloading shared objects for internal libc purposes.
-   Copyright (C) 1999-2002,2004,2005,2006,2009 Free Software Foundation, Inc.
+   Copyright (C) 1999-2002,2004-2006,2009,2010 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Zack Weinberg <zack@rabi.columbia.edu>, 1999.
 
@@ -221,6 +221,34 @@ __libc_dlclose (void *map)
 libc_hidden_def (__libc_dlclose)
 
 
+static bool __libc_freeres_fn_section
+free_slotinfo (struct dtv_slotinfo_list **elemp)
+{
+  size_t cnt;
+
+  if (*elemp == NULL)
+    /* Nothing here, all is removed (or there never was anything).  */
+    return true;
+
+  if (!free_slotinfo (&(*elemp)->next))
+    /* We cannot free the entry.  */
+    return false;
+
+  /* That cleared our next pointer for us.  */
+
+  for (cnt = 0; cnt < (*elemp)->len; ++cnt)
+    if ((*elemp)->slotinfo[cnt].map != NULL)
+      /* Still used.  */
+      return false;
+
+  /* We can remove the list element.  */
+  free (*elemp);
+  *elemp = NULL;
+
+  return true;
+}
+
+
 libc_freeres_fn (free_mem)
 {
   struct link_map *l;
@@ -235,20 +263,63 @@ libc_freeres_fn (free_mem)
       free (old);
     }
 
-  /* Remove all additional names added to the objects.  */
   for (Lmid_t ns = 0; ns < GL(dl_nns); ++ns)
-    for (l = GL(dl_ns)[ns]._ns_loaded; l != NULL; l = l->l_next)
-      {
-	struct libname_list *lnp = l->l_libname->next;
+    {
+      /* Remove all additional names added to the objects.  */
+      for (l = GL(dl_ns)[ns]._ns_loaded; l != NULL; l = l->l_next)
+	{
+	  struct libname_list *lnp = l->l_libname->next;
 
-	l->l_libname->next = NULL;
+	  l->l_libname->next = NULL;
 
-	while (lnp != NULL)
-	  {
-	    struct libname_list *old = lnp;
-	    lnp = lnp->next;
-	    if (! old->dont_free)
-	    free (old);
-	  }
-      }
+	  while (lnp != NULL)
+	    {
+	      struct libname_list *old = lnp;
+	      lnp = lnp->next;
+	      if (! old->dont_free)
+		free (old);
+	    }
+	}
+
+      if (__builtin_expect (GL(dl_ns)[ns]._ns_global_scope_alloc, 0) != 0
+	  && (GL(dl_ns)[ns]._ns_main_searchlist->r_nlist
+	      // XXX Check whether we need NS-specific initial_searchlist
+	      == GLRO(dl_initial_searchlist).r_nlist))
+	{
+	  /* All object dynamically loaded by the program are unloaded.  Free
+	     the memory allocated for the global scope variable.  */
+	  struct link_map **old = GL(dl_ns)[ns]._ns_main_searchlist->r_list;
+
+	  /* Put the old map in.  */
+	  GL(dl_ns)[ns]._ns_main_searchlist->r_list
+	    // XXX Check whether we need NS-specific initial_searchlist
+	    = GLRO(dl_initial_searchlist).r_list;
+	  /* Signal that the original map is used.  */
+	  GL(dl_ns)[ns]._ns_global_scope_alloc = 0;
+
+	  /* Now free the old map.  */
+	  free (old);
+	}      
+    }
+
+  if (USE___THREAD || GL(dl_tls_dtv_slotinfo_list) != NULL)
+    {
+      /* Free the memory allocated for the dtv slotinfo array.  We can do
+	 this only if all modules which used this memory are unloaded.  */
+#ifdef SHARED
+      if (GL(dl_initial_dtv) == NULL)
+	/* There was no initial TLS setup, it was set up later when
+	   it used the normal malloc.  */
+	free_slotinfo (&GL(dl_tls_dtv_slotinfo_list));
+      else
+#endif
+	/* The first element of the list does not have to be deallocated.
+	   It was allocated in the dynamic linker (i.e., with a different
+	   malloc), and in the static library it's in .bss space.  */
+	free_slotinfo (&GL(dl_tls_dtv_slotinfo_list)->next);
+    }
+
+  void *scope_free_list = GL(dl_scope_free_list);
+  GL(dl_scope_free_list) = NULL;
+  free (scope_free_list);
 }
