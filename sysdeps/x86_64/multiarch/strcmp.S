@@ -125,14 +125,12 @@ ENTRY(__strncasecmp)
 	jne	1f
 	call	__init_cpu_features
 1:
-#if 0
 	leaq	__strncasecmp_sse42(%rip), %rax
 	testl	$bit_SSE4_2, __cpu_features+CPUID_OFFSET+index_SSE4_2(%rip)
 	jnz	2f
 	leaq	__strncasecmp_ssse3(%rip), %rax
 	testl	$bit_SSSE3, __cpu_features+CPUID_OFFSET+index_SSSE3(%rip)
 	jnz	2f
-#endif
 	leaq	__strncasecmp_sse2(%rip), %rax
 2:	ret
 END(__strncasecmp)
