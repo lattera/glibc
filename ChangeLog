@@ -1,3 +1,9 @@
+2010-09-21  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #12037]
+	* posix/unistd.h: Undo change of feature selection for ftruncate from
+	2010-01-11.
+
 2010-09-20  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/x86_64/strcmp.S: Fix another typo in x86-64 strncasecmp limit

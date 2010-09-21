@@ -1020,6 +1020,9 @@ extern int truncate64 (__const char *__file, __off64_t __length)
      __THROW __nonnull ((1)) __wur;
 # endif
 
+#endif /* Use BSD || X/Open Unix || POSIX 2008.  */
+
+#if defined __USE_BSD || defined __USE_XOPEN_EXTENDED || defined __USE_XOPEN2K
 
 /* Truncate the file FD is open on to LENGTH bytes.  */
 # ifndef __USE_FILE_OFFSET64
