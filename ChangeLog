@@ -1,6 +1,6 @@
 2010-09-20  Ulrich Drepper  <drepper@redhat.com>
 
-	* sysdeps/x86_64/strcmp.S: Fix another type in strncasecmp limit
+	* sysdeps/x86_64/strcmp.S: Fix another typo in x86-64 strncasecmp limit
 	detection.
 
 2010-09-20  Andreas Schwab  <schwab@redhat.com>
