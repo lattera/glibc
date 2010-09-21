@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1995-2003, 2004, 2006, 2007
+/* Copyright (C) 1993, 1995-2004, 2006, 2007, 2010
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -285,7 +285,11 @@ __GETDENTS (int fd, char *buf, size_t nbytes)
 	DIRENT_SET_DP_INO(dp, kdp->d_ino);
 	dp->d_off = kdp->d_off;
 	dp->d_reclen = new_reclen;
+#ifdef __ASSUME_GETDENTS32_D_TYPE
+	dp->d_type = *((char *) kdp + kdp->d_reclen - 1);
+#else
 	dp->d_type = DT_UNKNOWN;
+#endif
 	memcpy (dp->d_name, kdp->d_name,
 		kdp->d_reclen - offsetof (struct kernel_dirent, d_name));
 

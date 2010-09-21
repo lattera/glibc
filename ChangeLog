@@ -1,3 +1,9 @@
+2010-09-15  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/getdents.c (__GETDENTS): When
+	implementing getdents64 using getdents syscall, set d_type if
+	__ASSUME_GETDENTS32_D_TYPE.
+
 2010-09-16  Andreas Schwab  <schwab@redhat.com>
 
 	* elf/dl-close.c (free_slotinfo, free_mem): Move to...
