@@ -53,3 +53,8 @@ osf_setitimer	-	osf_setitimer	3	__setitimer_tv32  setitimer@GLIBC_2.0
 osf_utimes	-	osf_utimes	2	__utimes_tv32  utimes@GLIBC_2.0
 osf_getrusage	-	osf_getrusage	2	__getrusage_tv32  getrusage@GLIBC_2.0
 osf_wait4	-	osf_wait4	2	__wait4_tv32  wait4@GLIBC_2.0
+
+# avoid 64-bit aliases on 32-bit statfs syscalls
+fstatfs		-	fstatfs		i:ip	__fstatfs	fstatfs
+statfs		-	statfs		i:sp	__statfs	statfs
+
