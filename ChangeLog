@@ -1,3 +1,8 @@
+2010-09-24  Petr Baudis <pasky@suse.cz>
+
+	* debug/stack_chk_fail_local.c: Add missing licence exception.
+	* debug/warning-nop.c: Likewise.
+
 2010-09-15  Michael B. Brutman  <brutman@us.ibm.com>
 
 	* sysdeps/powerpc/powerpc32/ppca2/memcpy.S: New file.
