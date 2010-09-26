@@ -1,3 +1,8 @@
+2010-09-26  Michael Cree  <mcree@orcon.net.nz>
+
+	* sysdeps/alpha/memchr.c: Include <bp-sym.h>
+	(__memchr): Add casts for integer arithmetic on pointers.
+
 2010-09-23  Richard Henderson  <rth@redhat.com>
 
 	[BZ #12019]
