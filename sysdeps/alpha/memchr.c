@@ -17,6 +17,7 @@
    02111-1307 USA.  */
 
 #include <string.h>
+#include <bp-sym.h>
 
 typedef unsigned long word;
 
@@ -53,11 +54,11 @@ __memchr (const void *s, int xc, size_t n)
 
   /* Align the source, and decrement the count by the number
      of bytes searched in the first word.  */
-  s_align = (const word *)(s & -8);
-  n += (s & 7);
+  s_align = (const word *)((word)s & -8);
+  n += ((word)s & 7);
 
   /* Deal with misalignment in the first word for the comparison.  */
-  mask = (1ul << (s & 7)) - 1;
+  mask = (1ul << ((word)s & 7)) - 1;
 
   /* If the entire string fits within one word, we may need masking
      at both the front and the back of the string.  */
