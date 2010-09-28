@@ -228,7 +228,8 @@ INTERNAL_STATVFS (const char *name, struct STATVFS *buf,
   buf->f_files = fsbuf->f_files;
   buf->f_ffree = fsbuf->f_ffree;
   if (sizeof (buf->f_fsid) == sizeof (fsbuf->f_fsid))
-    buf->f_fsid = (fsbuf->f_fsid.__val[0]
+    buf->f_fsid = ((fsbuf->f_fsid.__val[0]
+		    & ((1UL << (8 * sizeof (fsbuf->f_fsid.__val[0]))) - 1))
 		   | ((unsigned long int) fsbuf->f_fsid.__val[1]
 		      << (8 * (sizeof (buf->f_fsid)
 			       - sizeof (fsbuf->f_fsid.__val[0])))));

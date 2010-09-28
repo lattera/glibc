@@ -1,3 +1,9 @@
+2010-09-27  Andreas Schwab  <schwab@redhat.com>
+
+	[BZ #11611]
+	* sysdeps/unix/sysv/linux/internal_statvfs.c (INTERNAL_STATVFS):
+	Mask out sign-bit copies when constructing f_fsid.
+
 2010-09-24  Petr Baudis <pasky@suse.cz>
 
 	* debug/stack_chk_fail_local.c: Add missing licence exception.
