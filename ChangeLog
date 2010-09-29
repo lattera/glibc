@@ -1,3 +1,9 @@
+2010-09-29  Andreas Krebbel  <Andreas.Krebbel@de.ibm.com>
+
+	[BZ #12067]
+	* sysdeps/s390/s390-32/elf/start.S: Fix address calculation when
+	trying to locate the ELF header.
+
 2010-09-27  Andreas Schwab  <schwab@redhat.com>
 
 	[BZ #11611]

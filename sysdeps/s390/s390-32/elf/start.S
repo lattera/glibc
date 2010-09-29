@@ -108,7 +108,7 @@ _start:
 	jne	.L20
 	cl	%r8,4(%r4)     /* p_offset == 0? */
 	jne	.L20
-	l	%r9,8(%r4)     /* r9 = p_vaddr <- ELF header address  */
+	l	%r9,8(%r4)     /* r9 = PT_LOAD.p_vaddr <- ELF header address  */
 	j	.L24
 .L20:	alr	%r4,%r0        /* r4 += AT_PHENT value */
 	brct	%r12,.L19
@@ -124,16 +124,12 @@ _start:
 .L22:	alr	%r4,%r0        /* r4 += AT_PHENT value */
 	brct	%r12,.L23
 
-	ltr	%r9,%r9        /* Load address == 0? */
-	jz	.L14           /* No checking for PIE without PT_PHDR.  */
-	j	.L21
+	j	.L14	       /* No PT_PHDR found - skip checking.  */
 
-.L25:	clr	%r3,%r11       /* PT_PHDR p_vaddr == AT_PHDR? */
-	je	.L21
-	lr	%r9,%r11
-	slr	%r9,%r3        /* elf_header_addr = AT_PHDR - PT_PHDR.p_vaddr */
+.L25:	slr	%r11,%r3       /* AT_PHDR - PT_PHDR.p_vaddr (relocation offset)*/
+	alr	%r9,%r11       /* PT_LOAD.p_vaddr += relocation offset */
 
-.L21:	l	%r5,36(%r9)    /* Load the e_flags field.  */
+	l	%r5,36(%r9)    /* Load the e_flags field.  */
 	tml	%r5,1
 	jz	.L14	       /* Binary does not require highgprs facility.  */
 
