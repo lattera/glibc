@@ -1,3 +1,8 @@
+2010-09-28  Nobuhiro Iwamatsu  <iwamatsu@nigauri.org>
+
+	* sysdeps/sh/sh4/fpu/fpu_control.h: Add 'extern "C"' protection to
+	__set_fpscr.
+
 2010-09-30  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux_fsinfo.h (BTRFS_SUPER_MAGIC): Define.
