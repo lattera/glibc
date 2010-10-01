@@ -35,13 +35,13 @@
 #define AUTOFS_SUPER_MAGIC	0x187
 
 /* Constant that identifies the `bfs' filesystem.  */
-#define BFS_MAGIC		0x1BADFACE
+#define BFS_MAGIC		0x1badface
 
 /* Constant that identifies the `btrfs' filesystem.  */
-#define BTRFS_SUPER_MAGIC	0x1BADFACE
+#define BTRFS_SUPER_MAGIC	0x9123683e
 
 /* Constant that identifies the `cgroup' filesystem.  */
-#define CGROUP_SUPER_MAGIC	0x1BADFACE
+#define CGROUP_SUPER_MAGIC	0x27e0eb
 
 /* Constant that identifies the `coda' filesystem.  */
 #define CODA_SUPER_MAGIC	0x73757245
@@ -59,7 +59,7 @@
 #define DEVPTS_SUPER_MAGIC	0x1cd1
 
 /* Constants that identifies the `efs' filesystem.  */
-#define EFS_SUPER_MAGIC		0x414A53
+#define EFS_SUPER_MAGIC		0x414a53
 #define EFS_MAGIC		0x072959
 
 /* Constant that identifies the `ext2' and `ext3' filesystems.  */
@@ -80,7 +80,7 @@
 /* Constant that identifies the `jfs' filesystem.  */
 #define JFS_SUPER_MAGIC		0x3153464a
 
-/* Constant that identifies the `logfs´ filesystem.  */
+/* Constant that identifies the `logfs' filesystem.  */
 #define LOGFS_MAGIC_U32		0xc97e8168u
 
 /* Constants that identify the `minix2' filesystem.  */
@@ -124,7 +124,7 @@
 /* Constant that identifies the `smb' filesystem.  */
 #define SMB_SUPER_MAGIC		0x517b
 
-/* Constant that identifies the `sysfs´ filesystem.  */
+/* Constant that identifies the `sysfs' filesystem.  */
 #define SYSFS_MAGIC		0x62656572
 
 /* Constants that identify the `sysV' filesystem.  */
