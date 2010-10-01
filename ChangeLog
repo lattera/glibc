@@ -1,3 +1,12 @@
+2010-09-30  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux_fsinfo.h (BTRFS_SUPER_MAGIC): Define.
+	(CGROUP_SUPER_MAGIC): Define.
+	* sysdeps/unix/sysv/linux/internal_statvfs.c (__statvfs_getflags):
+	Handle btrfs and cgroup file systems.
+	* sysdeps/unix/sysv/linux/pathconf.c (__statfs_filesize_max):
+	Likewise.
+
 2010-09-27  Luis Machado  <luisgpm@br.ibm.com>
 
 	* sysdeps/powerpc/powerpc32/rtld-memset.c: New file.

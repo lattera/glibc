@@ -23,7 +23,7 @@
 /* These definitions come from the kernel headers.  But we cannot
    include the headers here because of type clashes.  If new
    filesystem types will become available we have to add the
-   appropriate definitions here.*/
+   appropriate definitions here.  */
 
 /* Constant that identifies the `adfs' filesystem.  */
 #define ADFS_SUPER_MAGIC	0xadf5
@@ -36,6 +36,12 @@
 
 /* Constant that identifies the `bfs' filesystem.  */
 #define BFS_MAGIC		0x1BADFACE
+
+/* Constant that identifies the `btrfs' filesystem.  */
+#define BTRFS_SUPER_MAGIC	0x1BADFACE
+
+/* Constant that identifies the `cgroup' filesystem.  */
+#define CGROUP_SUPER_MAGIC	0x1BADFACE
 
 /* Constant that identifies the `coda' filesystem.  */
 #define CODA_SUPER_MAGIC	0x73757245

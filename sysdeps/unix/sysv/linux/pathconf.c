@@ -1,5 +1,5 @@
 /* Get file-specific information about a file.  Linux version.
-   Copyright (C) 1991,1995,1996,1998-2003,2008 Free Software Foundation, Inc.
+   Copyright (C) 1991,1995,1996,1998-2003,2008,2010 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -126,6 +126,9 @@ __statfs_filesize_max (int result, const struct statfs *fsbuf)
 
   switch (fsbuf->f_type)
     {
+    case BTRFS_SUPER_MAGIC:
+      return 255;
+
     case EXT2_SUPER_MAGIC:
     case UFS_MAGIC:
     case UFS_CIGAM:
@@ -136,6 +139,7 @@ __statfs_filesize_max (int result, const struct statfs *fsbuf)
     case UDF_SUPER_MAGIC:
     case JFS_SUPER_MAGIC:
     case VXFS_SUPER_MAGIC:
+    case CGROUP_SUPER_MAGIC:
       return 64;
 
     case MSDOS_SUPER_MAGIC:

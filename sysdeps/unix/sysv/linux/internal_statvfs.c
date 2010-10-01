@@ -109,6 +109,12 @@ __statvfs_getflags (const char *name, int fstype, struct stat64 *st)
     case LOGFS_MAGIC_U32:
       fsname = "logfs";
       break;
+    case BTRFS_SUPER_MAGIC:
+      fsname = "btrfs";
+      break;
+    case CGROUP_SUPER_MAGIC:
+      fsname = "cgroup";
+      break;
     }
 
   FILE *mtab = __setmntent ("/proc/mounts", "r");
