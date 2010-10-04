@@ -1,5 +1,8 @@
 2010-10-03  Ulrich Drepper  <drepper@gmail.com>
 
+	[BZ #12005]
+	* malloc/mcheck.c: Handle large requests.
+
 	[BZ #12077]
 	* sysdeps/x86_64/strcmp.S: Fix handling of remaining bytes in buffer
 	for strncmp and strncasecmp.
