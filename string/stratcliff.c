@@ -1,5 +1,6 @@
 /* Test for string function add boundaries of usable memory.
-   Copyright (C) 1996,1997,1999-2003,2007, 2009 Free Software Foundation, Inc.
+   Copyright (C) 1996,1997,1999-2003,2007,2009,2010
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -47,6 +48,8 @@
 # define MEMCPY memcpy
 # define MEMPCPY mempcpy
 # define MEMCHR memchr
+# define STRCMP strcmp
+# define STRNCMP strncmp
 #endif
 
 
@@ -70,12 +73,12 @@ do_test (void)
   if (adr == MAP_FAILED || dest == MAP_FAILED)
     {
       if (errno == ENOSYS)
-        puts ("No test, mmap not available.");
+	puts ("No test, mmap not available.");
       else
-        {
-          printf ("mmap failed: %m");
-          result = 1;
-        }
+	{
+	  printf ("mmap failed: %m");
+	  result = 1;
+	}
     }
   else
     {
@@ -93,8 +96,8 @@ do_test (void)
 
       /* strlen/wcslen test */
       for (outer = nchars - 1; outer >= MAX (0, nchars - 128); --outer)
-        {
-          for (inner = MAX (outer, nchars - 64); inner < nchars; ++inner)
+	{
+	  for (inner = MAX (outer, nchars - 64); inner < nchars; ++inner)
 	    {
 	      adr[inner] = L('\0');
 
@@ -107,12 +110,12 @@ do_test (void)
 
 	      adr[inner] = L('T');
 	    }
-        }
+	}
 
       /* strnlen/wcsnlen test */
       for (outer = nchars; outer >= MAX (0, nchars - 128); --outer)
-        {
-          for (inner = MAX (outer, nchars - 64); inner < nchars; ++inner)
+	{
+	  for (inner = MAX (outer, nchars - 64); inner < nchars; ++inner)
 	    {
 	      adr[inner] = L('\0');
 
@@ -126,9 +129,9 @@ do_test (void)
 
 	      adr[inner] = L('T');
 	    }
-        }
+	}
       for (outer = nchars; outer >= MAX (0, nchars - 128); --outer)
-        {
+	{
 	  for (inner = MAX (outer, nchars - 64); inner <= nchars; ++inner)
 	    {
 	      if (STRNLEN (&adr[outer], inner - outer)
@@ -139,11 +142,11 @@ do_test (void)
 		  result = 1;
 		}
 	    }
-        }
+	}
 
       /* strchr/wcschr test */
       for (outer = nchars - 1; outer >= MAX (0, nchars - 128); --outer)
-        {
+	{
 	  for (middle = MAX (outer, nchars - 64); middle < nchars; ++middle)
 	    {
 	      for (inner = middle; inner < nchars; ++inner)
@@ -167,7 +170,7 @@ do_test (void)
 		  adr[middle] = L('T');
 		}
 	    }
-        }
+	}
 
       /* Special test.  */
       adr[nchars - 1] = L('\0');
@@ -180,7 +183,7 @@ do_test (void)
 
       /* strrchr/wcsrchr test */
       for (outer = nchars - 1; outer >= MAX (0, nchars - 128); --outer)
-        {
+	{
 	  for (middle = MAX (outer, nchars - 64); middle < nchars; ++middle)
 	    {
 	      for (inner = middle; inner < nchars; ++inner)
@@ -204,11 +207,11 @@ do_test (void)
 		  adr[middle] = L('T');
 		}
 	    }
-        }
+	}
 
       /* memchr test */
       for (outer = nchars - 1; outer >= MAX (0, nchars - 128); --outer)
-        {
+	{
 	  for (middle = MAX (outer, nchars - 64); middle < nchars; ++middle)
 	    {
 	      adr[middle] = L('V');
@@ -224,9 +227,9 @@ do_test (void)
 
 	      adr[middle] = L('T');
 	    }
-        }
+	}
       for (outer = nchars; outer >= MAX (0, nchars - 128); --outer)
-        {
+	{
 	  CHAR *cp = MEMCHR (&adr[outer], L('V'), nchars - outer);
 
 	  if (cp != NULL)
@@ -235,13 +238,13 @@ do_test (void)
 		      STRINGIFY (MEMCHR), outer);
 	      result = 1;
 	    }
-        }
+	}
 
       /* This function only exists for single-byte characters.  */
 #ifndef WCSTEST
       /* rawmemchr test */
       for (outer = nchars - 1; outer >= MAX (0, nchars - 128); --outer)
-        {
+	{
 	  for (middle = MAX (outer, nchars - 64); middle < nchars; ++middle)
 	    {
 	      adr[middle] = L('V');
@@ -257,13 +260,13 @@ do_test (void)
 
 	      adr[middle] = L('T');
 	    }
-        }
+	}
 #endif
 
       /* strcpy/wcscpy test */
       for (outer = nchars - 1; outer >= MAX (0, nchars - 128); --outer)
-        {
-          for (inner = MAX (outer, nchars - 64); inner < nchars; ++inner)
+	{
+	  for (inner = MAX (outer, nchars - 64); inner < nchars; ++inner)
 	    {
 	      adr[inner] = L('\0');
 
@@ -277,7 +280,74 @@ do_test (void)
 
 	      adr[inner] = L('T');
 	    }
-        }
+	}
+
+      /* strcmp/wcscmp tests */
+      for (outer = 1; outer < 32; ++outer)
+	for (middle = 0; middle < 16; ++middle)
+	  {
+	    MEMSET (adr + middle, L('T'), 256);
+	    adr[256] = L('\0');
+	    MEMSET (dest + nchars - outer, L('T'), outer - 1);
+	    dest[nchars - 1] = L('\0');
+
+	    if (STRCMP (adr + middle, dest + nchars - outer) <= 0)
+	      {
+		printf ("%s 1 flunked for outer = %d, middle = %d\n",
+			STRINGIFY (STRCMP), outer, middle);
+		result = 1;
+	      }
+
+	    if (STRCMP (dest + nchars - outer, adr + middle) >= 0)
+	      {
+		printf ("%s 2 flunked for outer = %d, middle = %d\n",
+			STRINGIFY (STRCMP), outer, middle);
+		result = 1;
+	      }
+	  }
+
+      /* strncmp/wcsncmp tests */
+      for (outer = 1; outer < 32; ++outer)
+	for (middle = 0; middle < 16; ++middle)
+	  {
+	    MEMSET (adr + middle, L('T'), 256);
+	    adr[256] = L('\0');
+	    MEMSET (dest + nchars - outer, L('T'), outer - 1);
+	    dest[nchars - 1] = L('U');
+
+	    for (inner = 0; inner < outer; ++inner)
+	      {
+		if (STRNCMP (adr + middle, dest + nchars - outer, inner) != 0)
+		  {
+		    printf ("%s 1 flunked for outer = %d, middle = %d, "
+			    "inner = %d\n",
+			    STRINGIFY (STRNCMP), outer, middle, inner);
+		    result = 1;
+		  }
+
+		if (STRNCMP (dest + nchars - outer, adr + middle, inner) != 0)
+		  {
+		    printf ("%s 2 flunked for outer = %d, middle = %d, "
+			    "inner = %d\n",
+			    STRINGIFY (STRNCMP), outer, middle, inner);
+		    result = 1;
+		  }
+	      }
+
+	    if (STRNCMP (adr + middle, dest + nchars - outer, outer) >= 0)
+	      {
+		printf ("%s 1 flunked for outer = %d, middle = %d, full\n",
+			STRINGIFY (STRNCMP), outer, middle);
+		result = 1;
+	      }
+
+	    if (STRNCMP (dest + nchars - outer, adr + middle, outer) <= 0)
+	      {
+		printf ("%s 2 flunked for outer = %d, middle = %d, full\n",
+			STRINGIFY (STRNCMP), outer, middle);
+		result = 1;
+	      }
+	  }
 
       /* strncpy/wcsncpy tests */
       adr[nchars - 1] = L('T');
@@ -295,12 +365,12 @@ do_test (void)
 		  result = 1;
 		}
 	    }
-        }
+	}
       adr[nchars - 1] = L('\0');
 
       for (outer = nchars - 1; outer >= MAX (0, nchars - 128); --outer)
-        {
-          for (inner = MAX (outer, nchars - 64); inner < nchars; ++inner)
+	{
+	  for (inner = MAX (outer, nchars - 64); inner < nchars; ++inner)
 	    {
 	      size_t len;
 
@@ -334,12 +404,12 @@ do_test (void)
 
 	      adr[inner] = L('T');
 	    }
-        }
+	}
 
       /* stpcpy/wcpcpy test */
       for (outer = nchars - 1; outer >= MAX (0, nchars - 128); --outer)
-        {
-          for (inner = MAX (outer, nchars - 64); inner < nchars; ++inner)
+	{
+	  for (inner = MAX (outer, nchars - 64); inner < nchars; ++inner)
 	    {
 	      adr[inner] = L('\0');
 
@@ -352,7 +422,7 @@ do_test (void)
 
 	      adr[inner] = L('T');
 	    }
-        }
+	}
 
       /* stpncpy/wcpncpy test */
       adr[nchars - 1] = L('T');
@@ -374,8 +444,8 @@ do_test (void)
       adr[nchars - 1] = L('\0');
 
       for (outer = nchars - 1; outer >= MAX (0, nchars - 128); --outer)
-        {
-          for (middle = MAX (outer, nchars - 64); middle < nchars; ++middle)
+	{
+	  for (middle = MAX (outer, nchars - 64); middle < nchars; ++middle)
 	    {
 	      adr[middle] = L('\0');
 
@@ -393,7 +463,7 @@ do_test (void)
 
 	      adr[middle] = L('T');
 	    }
-        }
+	}
 
       /* memcpy/wmemcpy test */
       for (outer = nchars; outer >= MAX (0, nchars - 128); --outer)

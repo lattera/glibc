@@ -458,7 +458,7 @@ LABEL(nibble_ashr_1):
 	jnz	LABEL(ashr_1_exittail)	/* find null char*/
 
 # if defined USE_AS_STRNCMP || defined USE_AS_STRNCASECMP_L
-	cmp	$14, %r11
+	cmp	$15, %r11
 	jbe	LABEL(ashr_1_exittail)
 # endif
 
@@ -586,7 +586,7 @@ LABEL(nibble_ashr_2):
 	jnz	LABEL(ashr_2_exittail)
 
 # if defined USE_AS_STRNCMP || defined USE_AS_STRNCASECMP_L
-	cmp	$13, %r11
+	cmp	$14, %r11
 	jbe	LABEL(ashr_2_exittail)
 # endif
 
@@ -711,7 +711,7 @@ LABEL(nibble_ashr_3):
 	jnz	LABEL(ashr_3_exittail)
 
 # if defined USE_AS_STRNCMP || defined USE_AS_STRNCASECMP_L
-	cmp	$12, %r11
+	cmp	$13, %r11
 	jbe	LABEL(ashr_3_exittail)
 # endif
 
@@ -836,7 +836,7 @@ LABEL(nibble_ashr_4):
 	jnz	LABEL(ashr_4_exittail)
 
 # if defined USE_AS_STRNCMP || defined USE_AS_STRNCASECMP_L
-	cmp	$11, %r11
+	cmp	$12, %r11
 	jbe	LABEL(ashr_4_exittail)
 # endif
 
@@ -961,7 +961,7 @@ LABEL(nibble_ashr_5):
 	jnz	LABEL(ashr_5_exittail)
 
 # if defined USE_AS_STRNCMP || defined USE_AS_STRNCASECMP_L
-	cmp	$10, %r11
+	cmp	$11, %r11
 	jbe	LABEL(ashr_5_exittail)
 # endif
 
@@ -1086,7 +1086,7 @@ LABEL(nibble_ashr_6):
 	jnz	LABEL(ashr_6_exittail)
 
 # if defined USE_AS_STRNCMP || defined USE_AS_STRNCASECMP_L
-	cmp	$9, %r11
+	cmp	$10, %r11
 	jbe	LABEL(ashr_6_exittail)
 # endif
 
@@ -1211,7 +1211,7 @@ LABEL(nibble_ashr_7):
 	jnz	LABEL(ashr_7_exittail)
 
 # if defined USE_AS_STRNCMP || defined USE_AS_STRNCASECMP_L
-	cmp	$8, %r11
+	cmp	$9, %r11
 	jbe	LABEL(ashr_7_exittail)
 # endif
 
@@ -1336,7 +1336,7 @@ LABEL(nibble_ashr_8):
 	jnz	LABEL(ashr_8_exittail)
 
 # if defined USE_AS_STRNCMP || defined USE_AS_STRNCASECMP_L
-	cmp	$7, %r11
+	cmp	$8, %r11
 	jbe	LABEL(ashr_8_exittail)
 # endif
 
@@ -1461,7 +1461,7 @@ LABEL(nibble_ashr_9):
 	jnz	LABEL(ashr_9_exittail)
 
 # if defined USE_AS_STRNCMP || defined USE_AS_STRNCASECMP_L
-	cmp	$6, %r11
+	cmp	$7, %r11
 	jbe	LABEL(ashr_9_exittail)
 # endif
 
@@ -1586,7 +1586,7 @@ LABEL(nibble_ashr_10):
 	jnz	LABEL(ashr_10_exittail)
 
 # if defined USE_AS_STRNCMP || defined USE_AS_STRNCASECMP_L
-	cmp	$5, %r11
+	cmp	$6, %r11
 	jbe	LABEL(ashr_10_exittail)
 # endif
 
@@ -1711,7 +1711,7 @@ LABEL(nibble_ashr_11):
 	jnz	LABEL(ashr_11_exittail)
 
 # if defined USE_AS_STRNCMP || defined USE_AS_STRNCASECMP_L
-	cmp	$4, %r11
+	cmp	$5, %r11
 	jbe	LABEL(ashr_11_exittail)
 # endif
 
@@ -1836,7 +1836,7 @@ LABEL(nibble_ashr_12):
 	jnz	LABEL(ashr_12_exittail)
 
 # if defined USE_AS_STRNCMP || defined USE_AS_STRNCASECMP_L
-	cmp	$3, %r11
+	cmp	$4, %r11
 	jbe	LABEL(ashr_12_exittail)
 # endif
 
@@ -1961,7 +1961,7 @@ LABEL(nibble_ashr_13):
 	jnz	LABEL(ashr_13_exittail)
 
 # if defined USE_AS_STRNCMP || defined USE_AS_STRNCASECMP_L
-	cmp	$2, %r11
+	cmp	$3, %r11
 	jbe	LABEL(ashr_13_exittail)
 # endif
 
@@ -2086,7 +2086,7 @@ LABEL(nibble_ashr_14):
 	jnz	LABEL(ashr_14_exittail)
 
 # if defined USE_AS_STRNCMP || defined USE_AS_STRNCASECMP_L
-	cmp	$1, %r11
+	cmp	$2, %r11
 	jbe	LABEL(ashr_14_exittail)
 # endif
 
@@ -2213,8 +2213,8 @@ LABEL(nibble_ashr_15):
 	jnz	LABEL(ashr_15_exittail)
 
 # if defined USE_AS_STRNCMP || defined USE_AS_STRNCASECMP_L
-	test	%r11, %r11
-	je	LABEL(ashr_15_exittail)
+	cmpq	$1, %r11
+	jbe	LABEL(ashr_15_exittail)
 # endif
 
 	pxor	%xmm0, %xmm0
