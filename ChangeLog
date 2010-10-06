@@ -1,3 +1,9 @@
+2010-10-05  Eric Blake  <eblake@redhat.com>
+
+	[BZ #12092]
+	* string/str-two-way.h (two_way_long_needle): Always clear memory
+	when skipping input due to the shift table.
+
 2010-10-03  Ulrich Drepper  <drepper@gmail.com>
 
 	[BZ #12005]
