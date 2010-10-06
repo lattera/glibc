@@ -1,3 +1,8 @@
+2010-10-06  Ulrich Drepper  <drepper@gmail.com>
+
+	* string/bug-strstr1.c: New file.
+	* string/Makefile: Add rules to build and run bug-strstr1.
+
 2010-10-05  Eric Blake  <eblake@redhat.com>
 
 	[BZ #12092]

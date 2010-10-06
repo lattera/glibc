@@ -55,7 +55,8 @@ tests		:= tester inl-tester noinl-tester testcopy test-ffs	\
 		   bug-strncat1 bug-strspn1 bug-strpbrk1 tst-bswap	\
 		   tst-strtok tst-strxfrm bug-strcoll1 tst-strfry	\
 		   bug-strtok1 $(addprefix test-,$(strop-tests))	\
-		   bug-envz1 tst-strxfrm2 tst-endian tst-svc2
+		   bug-envz1 tst-strxfrm2 tst-endian tst-svc2		\
+		   bug-strstr1
 distribute	:= memcopy.h pagecopy.h tst-svc.expect test-string.h	\
 		   str-two-way.h
 
@@ -74,6 +75,7 @@ CFLAGS-tst-strlen.c = -fno-builtin
 CFLAGS-stratcliff.c = -fno-builtin
 CFLAGS-test-ffs.c = -fno-builtin
 CFLAGS-tst-inlcall.c = -fno-builtin
+CFLAGS-bug-strstr1.c = -fno-builtin
 
 ifeq ($(cross-compiling),no)
 tests: $(objpfx)tst-svc.out
