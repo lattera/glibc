@@ -33,4 +33,4 @@ weak_alias (__fmaf, fmaf)
 # define __fmaf __fmaf_ia32
 #endif
 
-#include <math/s_fmaf.c>
+#include <sysdeps/ieee754/dbl-64/s_fmaf.c>

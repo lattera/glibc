@@ -1,3 +1,28 @@
+2010-10-07  Jakub Jelinek  <jakub@redhat.com>
+
+	[BZ #3268]
+	* math/libm-test.inc (fma_test): Add 2 fmaf tests.
+	* sysdeps/ieee754/dbl-64/s_fmaf.c: New file.
+	* sysdeps/i386/i686/multiarch/s_fmaf.c: Include
+	sysdeps/ieee754/dbl-64/s_fmaf.c instead of math/s_fmaf.c.
+	* sysdeps/x86_64/multiarch/s_fmaf.c: Likewise.
+	* include/fenv.h (feupdateenv, fetestexcept): Add libm_hidden_proto.
+	* math/feupdateenv.c (feupdateenv): Add libm_hidden_ver.
+	* sysdeps/i386/fpu/feupdateenv.c (feupdateenv): Likewise.
+	* sysdeps/powerpc/fpu/feupdateenv.c (feupdateenv): Likewise.
+	* sysdeps/x86_64/fpu/feupdateenv.c (feupdateenv): Likewise.
+	* sysdeps/sparc/fpu/feupdateenv.c (feupdateenv): Likewise.
+	* sysdeps/ia64/fpu/feupdateenv.c (feupdateenv): Add libm_hidden_def.
+	* sysdeps/s390/fpu/feupdateenv.c (feupdateenv): Likewise.
+	* math/ftestexcept.c (fetestexcept): Likewise.
+	* sysdeps/ia64/fpu/ftestexcept.c (fetestexcept): Likewise.
+	* sysdeps/i386/fpu/ftestexcept.c (fetestexcept): Likewise.
+	* sysdeps/s390/fpu/ftestexcept.c (fetestexcept): Likewise.
+	* sysdeps/powerpc/fpu/ftestexcept.c (fetestexcept): Likewise.
+	* sysdeps/x86_64/fpu/ftestexcept.c (fetestexcept): Likewise.
+	* sysdeps/sparc/fpu/ftestexcept.c (fetestexcept): Likewise.
+	* sysdeps/sh/sh4/fpu/ftestexcept.c (fetestexcept): Likewise.
+
 2010-10-11  Ulrich Drepper  <drepper@gmail.com>
 
 	[BZ #12107]

@@ -2789,6 +2789,10 @@ fma_test (void)
   TEST_fff_f (fma, minus_infty, minus_infty, minus_infty, nan_value, INVALID_EXCEPTION);
 
   TEST_fff_f (fma, 1.25L, 0.75L, 0.0625L, 1.0L);
+#ifdef TEST_FLOAT
+  TEST_fff_f (fma, 0x1.7ff8p+13, 0x1.000002p+0, 0x1.ffffp-24, 0x1.7ff802p+13);
+  TEST_fff_f (fma, 0x1.fffp+0, 0x1.00001p+0, -0x1.fffp+0, 0x1.fffp-20);
+#endif
 
   END (fma);
 }

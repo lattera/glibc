@@ -1,5 +1,5 @@
 /* Test exception in current environment.
-   Copyright (C) 1997, 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1999, 2000, 2010 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Christian Boissat <Christian.Boissat@cern.ch>, 1999.
 
@@ -30,3 +30,4 @@ fetestexcept (int excepts)
 
   return (fpsr >> 13) & excepts & FE_ALL_EXCEPT;
 }
+libm_hidden_def (fetestexcept)

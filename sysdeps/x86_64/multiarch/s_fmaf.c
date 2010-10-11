@@ -1,5 +1,5 @@
 /* FMA version of fmaf.
-   Copyright (C) 2009 Free Software Foundation, Inc.
+   Copyright (C) 2009, 2010 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -39,4 +39,4 @@ weak_alias (__fmaf, fmaf)
 # define __fmaf __fmaf_sse2
 #endif
 
-#include <math/s_fmaf.c>
+#include <sysdeps/ieee754/dbl-64/s_fmaf.c>
