@@ -1,5 +1,5 @@
 /* Test floating-point exceptions (soft-float edition).
-   Copyright (C) 2002 Free Software Foundation, Inc.
+   Copyright (C) 2002, 2010 Free Software Foundation, Inc.
    Contributed by Aldy Hernandez <aldyh@redhat.com>, 2002.
    This file is part of the GNU C Library.
 
@@ -26,3 +26,4 @@ fetestexcept (int x)
 {
   return __sim_exceptions & x;
 }
+libm_hidden_def (fetestexcept)

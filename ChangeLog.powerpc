@@ -1,3 +1,10 @@
+2010-10-11  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/powerpc/nofpu/feupdateenv.c (feupdateenv): Add
+	libm_hidden_ver.
+	* sysdeps/powerpc/nofpu/ftestexcept.c (fetestexcept): Add
+	libm_hidden_def.
+
 2010-02-10  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/powerpc/nofpu/fegetenv.c: Add hidden alias.

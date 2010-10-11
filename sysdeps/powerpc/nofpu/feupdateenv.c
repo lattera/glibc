@@ -1,6 +1,6 @@
 /* Install given floating-point environment and raise exceptions
    (soft-float edition).
-   Copyright (C) 2002 Free Software Foundation, Inc.
+   Copyright (C) 2002, 2010 Free Software Foundation, Inc.
    Contributed by Aldy Hernandez <aldyh@redhat.com>, 2002.
    This file is part of the GNU C Library.
 
@@ -49,4 +49,5 @@ strong_alias (__feupdateenv, __old_feupdateenv)
 compat_symbol (libm, BP_SYM (__old_feupdateenv), BP_SYM (feupdateenv), GLIBC_2_1);
 #endif
 
+libm_hidden_ver (__feupdateenv, feupdateenv)
 versioned_symbol (libm, BP_SYM (__feupdateenv), BP_SYM (feupdateenv), GLIBC_2_2);
