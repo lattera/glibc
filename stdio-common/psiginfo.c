@@ -85,9 +85,28 @@ psiginfo (const siginfo_t *pinfo, const char *s)
 
   const char *desc;
   if (pinfo->si_signo >= 0 && pinfo->si_signo < NSIG
-      && (desc = INTUSE(_sys_siglist)[pinfo->si_signo]) != NULL)
+      && ((desc = INTUSE(_sys_siglist)[pinfo->si_signo]) != NULL
+	  || (pinfo->si_signo >= SIGRTMIN && pinfo->si_signo < SIGRTMAX)))
     {
-      fprintf (fp, "%s (", _(desc));
+      if (desc == NULL)
+	{
+	  if (pinfo->si_signo - SIGRTMIN < SIGRTMAX - pinfo->si_signo)
+	    {
+	      if (pinfo->si_signo == SIGRTMIN)
+		fprintf (fp, "SIGRTMIN (");
+	      else
+		fprintf (fp, "SIGRTMIN+%d (", pinfo->si_signo - SIGRTMIN);
+	    }
+	  else
+	    {
+	      if (pinfo->si_signo == SIGRTMAX)
+		fprintf (fp, "SIGRTMAX (");
+	      else
+		fprintf (fp, "SIGRTMAX-%d (", SIGRTMAX - pinfo->si_signo);
+	    }
+	}
+      else
+	fprintf (fp, "%s (", _(desc));
 
       const char *base = NULL;
       const uint8_t *offarr = NULL;

@@ -1,5 +1,9 @@
 2010-10-11  Ulrich Drepper  <drepper@gmail.com>
 
+	[BZ #12108]
+	* stdio-common/psiginfo.c (psiginfo): Don't expext SIGRTMIN..SIGRTMAX
+	to have entries in sys_siglist.
+
 	[BZ #12093]
 	* sysdeps/unix/sysv/linux/check_pf.c (__check_pf): ->ifa_addr might
 	be NULL.
