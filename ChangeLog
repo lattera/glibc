@@ -1,6 +1,6 @@
 2010-10-11  Ulrich Drepper  <drepper@gmail.com>
 
-	[BZ #12108]
+	[BZ #12107]
 	* stdio-common/psiginfo.c (psiginfo): Terminate all strings with
 	newline.
 
