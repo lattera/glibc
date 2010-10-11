@@ -1,5 +1,8 @@
 2010-10-11  Ulrich Drepper  <drepper@gmail.com>
 
+	* posix/bug-regex31.c: New file.
+	* posix/Makefile: Add rules to build and run bug-regex31.
+
 	* posix/regcomp.c (parse_bracket_exp): Add missing re_free calls.
 
 	[BZ #12078]

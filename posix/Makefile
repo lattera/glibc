@@ -82,7 +82,7 @@ tests		:= tstgetopt testfnm runtests runptests	     \
 		   bug-regex17 bug-regex18 bug-regex19 bug-regex20 \
 		   bug-regex21 bug-regex22 bug-regex23 bug-regex24 \
 		   bug-regex25 bug-regex26 bug-regex27 bug-regex28 \
-		   bug-regex29 bug-regex30 \
+		   bug-regex29 bug-regex30 bug-regex31 \
 		   tst-nice tst-nanosleep tst-regex2 \
 		   transbug tst-rxspencer tst-pcre tst-boost \
 		   bug-ga1 tst-vfork1 tst-vfork2 tst-vfork3 tst-waitid \
@@ -111,6 +111,7 @@ generated := $(addprefix wordexp-test-result, 1 2 3 4 5 6 7 8 9 10) \
 	     annexc annexc.out wordexp-tst.out bug-regex2-mem \
 	     bug-regex2.mtrace bug-regex14-mem bug-regex14.mtrace \
 	     bug-regex21-mem bug-regex21.mtrace \
+	     bug-regex31-mem bug-regex31.mtrace \
 	     tst-rxspencer-mem tst-rxspencer.mtrace tst-getconf.out \
 	     tst-pcre-mem tst-pcre.mtrace tst-boost-mem tst-boost.mtrace \
 	     bug-ga2.mtrace bug-ga2-mem bug-glob2.mtrace bug-glob2-mem \
@@ -232,7 +233,7 @@ endif
 tests: $(objpfx)annexc.out
 ifeq (no,$(cross-compiling))
 tests: $(objpfx)bug-regex2-mem $(objpfx)bug-regex14-mem \
-  $(objpfx)bug-regex21-mem $(objpfx)tst-rxspencer-mem \
+  $(objpfx)bug-regex21-mem $(objpfx)bug-regex31-mem $(objpfx)tst-rxspencer-mem\
   $(objpfx)tst-pcre-mem $(objpfx)tst-boost-mem $(objpfx)tst-getconf.out \
   $(objpfx)bug-glob2-mem $(objpfx)tst-vfork3-mem
 xtests: $(objpfx)bug-ga2-mem
@@ -260,6 +261,11 @@ bug-regex21-ENV = MALLOC_TRACE=$(objpfx)bug-regex21.mtrace
 
 $(objpfx)bug-regex21-mem: $(objpfx)bug-regex21.out
 	$(common-objpfx)malloc/mtrace $(objpfx)bug-regex21.mtrace > $@
+
+bug-regex31-ENV = MALLOC_TRACE=$(objpfx)bug-regex31.mtrace
+
+$(objpfx)bug-regex31-mem: $(objpfx)bug-regex31.out
+	$(common-objpfx)malloc/mtrace $(objpfx)bug-regex31.mtrace > $@
 
 tst-vfork3-ENV = MALLOC_TRACE=$(objpfx)tst-vfork3.mtrace
 
