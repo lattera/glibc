@@ -1,5 +1,5 @@
 /* Determine protocol families for which interfaces exist.  Linux version.
-   Copyright (C) 2003, 2006, 2007, 2008 Free Software Foundation, Inc.
+   Copyright (C) 2003, 2006, 2007, 2008, 2010 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -304,10 +304,13 @@ __check_pf (bool *seen_ipv4, bool *seen_ipv6,
 
   struct ifaddrs *runp;
   for (runp = ifa; runp != NULL; runp = runp->ifa_next)
-    if (runp->ifa_addr->sa_family == PF_INET)
-      *seen_ipv4 = true;
-    else if (runp->ifa_addr->sa_family == PF_INET6)
-      *seen_ipv6 = true;
+    if (runp->ifa_addr != NULL)
+      {
+	if (runp->ifa_addr->sa_family == PF_INET)
+	  *seen_ipv4 = true;
+	else if (runp->ifa_addr->sa_family == PF_INET6)
+	  *seen_ipv6 = true;
+      }
 
   (void) freeifaddrs (ifa);
 #endif

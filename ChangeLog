@@ -1,3 +1,9 @@
+2010-10-11  Ulrich Drepper  <drepper@gmail.com>
+
+	[BZ #12093]
+	* sysdeps/unix/sysv/linux/check_pf.c (__check_pf): ->ifa_addr might
+	be NULL.
+
 2010-10-07  Jakub Jelinek  <jakub@redhat.com>
 
 	[BZ #3268]
