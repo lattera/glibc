@@ -2418,7 +2418,11 @@ parse_sub_exp (re_string_t *regexp, regex_t *preg, re_token_t *token,
     {
       tree = parse_reg_exp (regexp, preg, token, syntax, nest, err);
       if (BE (*err == REG_NOERROR && token->type != OP_CLOSE_SUBEXP, 0))
-	*err = REG_EPAREN;
+	{
+	  if (tree != NULL)
+	    free_tree (NULL, tree);
+	  *err = REG_EPAREN;
+	}
       if (BE (*err != REG_NOERROR, 0))
 	return NULL;
     }
@@ -3028,6 +3032,10 @@ parse_bracket_exp (re_string_t *regexp, re_dfa_t *dfa, re_token_t *token,
   if (BE (sbcset == NULL, 0))
 #endif /* RE_ENABLE_I18N */
     {
+      re_free (sbcset);
+#ifdef RE_ENABLE_I18N
+      re_free (mbcset);
+#endif
       *err = REG_ESPACE;
       return NULL;
     }

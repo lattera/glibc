@@ -1,5 +1,10 @@
 2010-10-11  Ulrich Drepper  <drepper@gmail.com>
 
+	* posix/regcomp.c (parse_bracket_exp): Add missing re_free calls.
+
+	[BZ #12078]
+	* posix/regcomp.c (parse_sub_exp): Free tree data when it is not used.
+
 	[BZ #12108]
 	* stdio-common/psiginfo.c (psiginfo): Don't expext SIGRTMIN..SIGRTMAX
 	to have entries in sys_siglist.
