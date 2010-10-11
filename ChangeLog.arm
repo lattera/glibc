@@ -1,3 +1,11 @@
+2010-10-11  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/arm/eabi/feupdateenv.c (feupdateenv): Add
+	libm_hidden_ver.
+	* sysdeps/arm/eabi/ftestexcept.c (fetestexcept): Add
+	libm_hidden_def.
+	* sysdeps/arm/fpu/ftestexcept.c (fetestexcept): Likewise.
+
 2010-09-30  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/arm/syscalls.list: Add entry for
