@@ -1,5 +1,5 @@
 /* Install given floating-point environment and raise exceptions.
-   Copyright (C) 1997,99,2000,01 Free Software Foundation, Inc.
+   Copyright (C) 1997,1999-2001,2010 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Andreas Schwab <schwab@issan.informatik.uni-dortmund.de>
 
@@ -47,4 +47,5 @@ strong_alias (__feupdateenv, __old_feupdateenv)
 compat_symbol (libm, __old_feupdateenv, feupdateenv, GLIBC_2_1);
 #endif
 
+libm_hidden_ver (__feupdateenv, feupdateenv)
 versioned_symbol (libm, __feupdateenv, feupdateenv, GLIBC_2_2);
