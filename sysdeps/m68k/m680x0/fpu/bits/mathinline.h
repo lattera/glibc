@@ -326,13 +326,6 @@ __m81_defun (long int, __CONCAT(__lrint,s), (float_type __x))		  \
   long int __result;							  \
   __asm ("fmove%.l %1, %0" : "=dm" (__result) : "f" (__x));		  \
   return __result;							  \
-}									  \
-									  \
-__m81_inline float_type							  \
-__NTH (__m81_u(__CONCAT(__fma,s))(float_type __x, float_type __y,	  \
-				  float_type __z))			  \
-{									  \
-  return (__x * __y) + __z;						  \
 }
 
 __inline_functions (double,)
@@ -397,8 +390,6 @@ __inline_forward_c(int,isnan, (double __value), (__value))
 __inline_forward_c(double,scalbln, (double __x, long int __n), (__x, __n))
 __inline_forward_c(double,nearbyint, (double __value), (__value))
 __inline_forward_c(long int,lrint, (double __value), (__value))
-__inline_forward_c(double,fma, (double __x, double __y, double __z),
-		   (__x, __y, __z))
 # endif
 # ifdef __USE_GNU
 __inline_forward(void,sincos, (double __x, double *__sinx, double *__cosx),
@@ -419,8 +410,6 @@ __inline_forward_c(int,isnanf, (float __value), (__value))
 __inline_forward_c(float,scalblnf, (float __x, long int __n), (__x, __n))
 __inline_forward_c(float,nearbyintf, (float __value), (__value))
 __inline_forward_c(long int,lrintf, (float __value), (__value))
-__inline_forward_c(float,fmaf, (float __x, float __y, float __z),
-		   (__x, __y, __z))
 # endif
 # ifdef __USE_GNU
 __inline_forward(void,sincosf, (float __x, float *__sinx, float *__cosx),
@@ -440,9 +429,6 @@ __inline_forward_c(long double,scalblnl, (long double __x, long int __n),
 		   (__x, __n))
 __inline_forward_c(long double,nearbyintl, (long double __value), (__value))
 __inline_forward_c(long int,lrintl, (long double __value), (__value))
-__inline_forward_c(long double,fmal,
-		   (long double __x, long double __y, long double __z),
-		   (__x, __y, __z))
 # endif
 # ifdef __USE_GNU
 __inline_forward(void,sincosl,

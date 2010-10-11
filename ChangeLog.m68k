@@ -1,5 +1,7 @@
 2010-10-11  Andreas Schwab  <schwab@linux-m68k.org>
 
+	* sysdeps/m68k/m680x0/fpu/bits/mathinline.h: Remove fma inlines.
+
 	* sysdeps/m68k/fpu/feupdateenv.c (feupdateenv): Add
 	libm_hidden_ver.
 	* sysdeps/m68k/fpu/ftestexcept.c (feupdateenv): Add
