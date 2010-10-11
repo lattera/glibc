@@ -1,3 +1,9 @@
+2010-10-11  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/mips/fpu/feupdateenv.c (feupdateenv): Add
+	libm_hidden_def.
+	* sysdeps/mips/fpu/ftestexcept.c (fetestexcept): Likewise.
+
 2010-08-13  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/mips/kernel-features.h
