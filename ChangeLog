@@ -1,3 +1,9 @@
+2010-10-11  Ulrich Drepper  <drepper@gmail.com>
+
+	[BZ #12108]
+	* stdio-common/psiginfo.c (psiginfo): Terminate all strings with
+	newline.
+
 2010-10-06  Ulrich Drepper  <drepper@gmail.com>
 
 	* string/bug-strstr1.c: New file.
