@@ -2160,6 +2160,8 @@ parse_branch (re_string_t *regexp, regex_t *preg, re_token_t *token,
       exp = parse_expression (regexp, preg, token, syntax, nest, err);
       if (BE (*err != REG_NOERROR && exp == NULL, 0))
 	{
+	  if (tree != NULL)
+	    postorder (tree, free_tree, NULL);
 	  return NULL;
 	}
       if (tree != NULL && exp != NULL)

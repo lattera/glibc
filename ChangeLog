@@ -1,3 +1,9 @@
+2010-10-12  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #12078]
+	* posix/regcomp.c (parse_branch): One more memory leak plugged.
+	* posix/bug-regex31.input: Add test case.
+
 2010-10-11  Ulrich Drepper  <drepper@gmail.com>
 
 	* posix/bug-regex31.c: Rewrite to run multiple tests from stdin.
