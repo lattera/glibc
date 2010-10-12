@@ -2164,12 +2164,15 @@ parse_branch (re_string_t *regexp, regex_t *preg, re_token_t *token,
 	}
       if (tree != NULL && exp != NULL)
 	{
-	  tree = create_tree (dfa, tree, exp, CONCAT);
-	  if (tree == NULL)
+	  bin_tree_t *newtree = create_tree (dfa, tree, exp, CONCAT);
+	  if (newtree == NULL)
 	    {
+	      postorder (exp, free_tree, NULL);
+	      postorder (tree, free_tree, NULL);
 	      *err = REG_ESPACE;
 	      return NULL;
 	    }
+	  tree = newtree;
 	}
       else if (tree == NULL)
 	tree = exp;
@@ -2420,7 +2423,7 @@ parse_sub_exp (re_string_t *regexp, regex_t *preg, re_token_t *token,
       if (BE (*err == REG_NOERROR && token->type != OP_CLOSE_SUBEXP, 0))
 	{
 	  if (tree != NULL)
-	    free_tree (NULL, tree);
+	    postorder (tree, free_tree, NULL);
 	  *err = REG_EPAREN;
 	}
       if (BE (*err != REG_NOERROR, 0))

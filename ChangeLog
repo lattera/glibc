@@ -1,5 +1,12 @@
 2010-10-11  Ulrich Drepper  <drepper@gmail.com>
 
+	* posix/bug-regex31.c: Rewrite to run multiple tests from stdin.
+	* posix/bug-regex31.input: New file.
+
+	[BZ #12078]
+	* posix/regcomp.c (parse_branch): Free memory when allocation failed.
+	(parse_sub_exp): Fix last change, use postorder.
+
 	* posix/bug-regex31.c: New file.
 	* posix/Makefile: Add rules to build and run bug-regex31.
 
