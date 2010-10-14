@@ -22,29 +22,29 @@
 #include <fenv.h>
 #include <ieee754.h>
 
-/* This implementation relies on double being more than twice as
-   precise as float and uses rounding to odd in order to avoid problems
+/* This implementation relies on long double being more than twice as
+   precise as double and uses rounding to odd in order to avoid problems
    with double rounding.
    See a paper by Boldo and Melquiond:
    http://www.lri.fr/~melquion/doc/08-tc.pdf  */
 
-float
-__fmaf (float x, float y, float z)
+double
+__fma (double x, double y, double z)
 {
   fenv_t env;
   /* Multiplication is always exact.  */
-  double temp = (double) x * (double) y;
-  union ieee754_double u;
+  long double temp = (long double) x * (long double) y;
+  union ieee854_long_double u;
   feholdexcept (&env);
   fesetround (FE_TOWARDZERO);
   /* Perform addition with round to odd.  */
-  u.d = temp + (double) z;
-  if ((u.ieee.mantissa1 & 1) == 0 && u.ieee.exponent != 0x7ff)
-    u.ieee.mantissa1 |= fetestexcept (FE_INEXACT) != 0;
+  u.d = temp + (long double) z;
+  if ((u.ieee.mantissa3 & 1) == 0 && u.ieee.exponent != 0x7fff)
+    u.ieee.mantissa3 |= fetestexcept (FE_INEXACT) != 0;
   feupdateenv (&env);
   /* And finally truncation with round to nearest.  */
-  return (float) u.d;
+  return (double) u.d;
 }
-#ifndef __fmaf
-weak_alias (__fmaf, fmaf)
+#ifndef __fma
+weak_alias (__fma, fma)
 #endif

@@ -1,6 +1,6 @@
 /* Inline math functions for i387.
-   Copyright (C) 1995,1996,1997,1998,1999,2000,2001,2003,2004,2006,2007,2009
-   Free Software Foundation, Inc.
+   Copyright (C) 1995,1996,1997,1998,1999,2000,2001,2003,2004,2006,2007,2009,
+   2010 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by John C. Bowman <bowman@math.ualberta.ca>, 1995.
 
@@ -656,8 +656,6 @@ __NTH (ldexpl (long double __x, int __y))
 {
   __ldexp_code;
 }
-
-__inline_mathcodeNP3 (fma, __x, __y, __z, return (__x * __y) + __z)
 
 __inline_mathopNP (rint, "frndint")
 # endif /* __FAST_MATH__ */

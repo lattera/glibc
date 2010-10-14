@@ -1,5 +1,5 @@
 /* FMA version of fma.
-   Copyright (C) 2009 Free Software Foundation, Inc.
+   Copyright (C) 2009, 2010 Free Software Foundation, Inc.
    Contributed by Intel Corporation.
    This file is part of the GNU C Library.
 
@@ -40,4 +40,4 @@ weak_alias (__fma, fma)
 # define __fma __fma_sse2
 #endif
 
-#include <math/s_fma.c>
+#include <sysdeps/ieee754/dbl-64/s_fma.c>

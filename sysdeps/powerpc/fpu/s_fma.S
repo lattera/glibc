@@ -1,6 +1,5 @@
-/* Multiple versions of fma.
+/* Compute x * y + z as ternary operation.  PowerPC version.
    Copyright (C) 2010 Free Software Foundation, Inc.
-   Contributed by Intel Corporation.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -10,27 +9,25 @@
 
    The GNU C Library is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
    Lesser General Public License for more details.
 
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, write to the Free
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
-   02111-1307 USA. */
+   02111-1307 USA.  */
 
-#include <config.h>
+#include <sysdep.h>
 
-#ifdef HAVE_AVX_SUPPORT
-#include <math.h>
-#include <init-arch.h>
+ENTRY(__fma)
+/* double [f1] fma (double [f1] x, double [f2] y, double [f3] z); */
+	fmadd	fp1,fp1,fp2,fp3
+	blr
+END(__fma)
 
-extern double __fma_ia32 (double x, double y, double z) attribute_hidden;
-extern double __fma_fma (double x, double y, double z) attribute_hidden;
+weak_alias (__fma,fma)
 
-libm_ifunc (__fma, HAS_FMA ? __fma_fma : __fma_ia32);
-weak_alias (__fma, fma)
-
-# define __fma __fma_ia32
+#ifdef NO_LONG_DOUBLE
+weak_alias (__fma,__fmal)
+weak_alias (__fma,fmal)
 #endif
-
-#include <sysdeps/ieee754/ldbl-96/s_fma.c>
