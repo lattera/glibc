@@ -27,8 +27,9 @@
 /* Minimal stack size after allocating thread descriptor and guard size.  */
 #define MINIMAL_REST_STACK	2048
 
-/* Alignment requirement for TCB.  */
-#define TCB_ALIGNMENT		16
+/* Alignment requirement for TCB.  Need to store post-AVX vector registers
+   in the TCB and we want the storage to be aligned at 32-byte.  */
+#define TCB_ALIGNMENT		32
 
 
 /* Location of current stack frame.  The frame pointer is not usable.  */

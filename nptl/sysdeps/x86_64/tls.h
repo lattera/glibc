@@ -117,12 +117,7 @@ typedef struct
 # define TLS_TCB_SIZE sizeof (struct pthread)
 
 /* Alignment requirements for the TCB.  */
-//# define TLS_TCB_ALIGN __alignof__ (struct pthread)
-// Normally the above would be correct  But we have to store post-AVX
-// vector registers in the TCB and we want the storage to be aligned.
-// unfortunately there isn't yet a type for these values and hence no
-// 32-byte alignment requirement.  Make this explicit, for now.
-# define TLS_TCB_ALIGN 32
+# define TLS_TCB_ALIGN __alignof__ (struct pthread)
 
 /* The TCB can have any size and the memory following the address the
    thread pointer points to is unspecified.  Allocate the TCB there.  */

@@ -1,3 +1,10 @@
+2010-10-13  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #12113]
+	* sysdeps/x86_64/pthreaddef.h (TCB_ALIGNMENT): Changed to 32.
+	* sysdeps/x86_64/tls.h (TLS_TCB_ALIGN): Defined with alignment
+	of "struct pthread".
+
 2010-09-21  Andreas Schwab  <schwab@redhat.com>
 
 	* sysdeps/pthread/pthread.h (pthread_cleanup_push)
