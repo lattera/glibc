@@ -39,15 +39,20 @@ __fma (double x, double y, double z)
 			>= 0x7ff + IEEE754_DOUBLE_BIAS - DBL_MANT_DIG, 0)
       || __builtin_expect (u.ieee.exponent >= 0x7ff - DBL_MANT_DIG, 0)
       || __builtin_expect (v.ieee.exponent >= 0x7ff - DBL_MANT_DIG, 0)
-      || __builtin_expect (w.ieee.exponent >= 0x7ff - DBL_MANT_DIG, 0))
+      || __builtin_expect (w.ieee.exponent >= 0x7ff - DBL_MANT_DIG, 0)
+      || __builtin_expect (u.ieee.exponent + v.ieee.exponent
+			   <= IEEE754_DOUBLE_BIAS + DBL_MANT_DIG, 0))
     {
-      /* If x or y or z is Inf/NaN or if fma will certainly overflow,
+      /* If x or y or z is Inf/NaN, or if fma will certainly overflow,
+	 or if x * y is less than half of DBL_DENORM_MIN,
 	 compute as x * y + z.  */
       if (u.ieee.exponent == 0x7ff
 	  || v.ieee.exponent == 0x7ff
 	  || w.ieee.exponent == 0x7ff
 	  || u.ieee.exponent + v.ieee.exponent
-	     > 0x7ff + IEEE754_DOUBLE_BIAS)
+	     > 0x7ff + IEEE754_DOUBLE_BIAS
+	  || u.ieee.exponent + v.ieee.exponent
+	     < IEEE754_DOUBLE_BIAS - DBL_MANT_DIG - 2)
 	return x * y + z;
       if (u.ieee.exponent + v.ieee.exponent
 	  >= 0x7ff + IEEE754_DOUBLE_BIAS - DBL_MANT_DIG)
@@ -87,13 +92,31 @@ __fma (double x, double y, double z)
 	  else
 	    v.d *= 0x1p53;
 	}
-      else
+      else if (v.ieee.exponent >= 0x7ff - DBL_MANT_DIG)
 	{
 	  v.ieee.exponent -= DBL_MANT_DIG;
 	  if (u.ieee.exponent)
 	    u.ieee.exponent += DBL_MANT_DIG;
 	  else
 	    u.d *= 0x1p53;
+	}
+      else /* if (u.ieee.exponent + v.ieee.exponent
+		  <= IEEE754_DOUBLE_BIAS + DBL_MANT_DIG) */
+	{
+	  if (u.ieee.exponent > v.ieee.exponent)
+	    u.ieee.exponent += 2 * DBL_MANT_DIG;
+	  else
+	    v.ieee.exponent += 2 * DBL_MANT_DIG;
+	  if (w.ieee.exponent <= 4 * DBL_MANT_DIG + 4)
+	    {
+	      if (w.ieee.exponent)
+		w.ieee.exponent += 2 * DBL_MANT_DIG;
+	      else
+		w.d *= 0x1p106;
+	      adjust = -1;
+	    }
+	  /* Otherwise x * y should just affect inexact
+	     and nothing else.  */
 	}
       x = u.d;
       y = v.d;
@@ -123,18 +146,68 @@ __fma (double x, double y, double z)
   fesetround (FE_TOWARDZERO);
   /* Perform m2 + a2 addition with round to odd.  */
   u.d = a2 + m2;
-  if ((u.ieee.mantissa1 & 1) == 0 && u.ieee.exponent != 0x7ff)
-    u.ieee.mantissa1 |= fetestexcept (FE_INEXACT) != 0;
-  feupdateenv (&env);
 
-  /* Add that to a1.  */
-  a1 = a1 + u.d;
-
-  /* And adjust exponent if needed.  */
-  if (__builtin_expect (adjust, 0))
-    a1 *= 0x1p53;
-
-  return a1;
+  if (__builtin_expect (adjust == 0, 1))
+    {
+      if ((u.ieee.mantissa1 & 1) == 0 && u.ieee.exponent != 0x7ff)
+	u.ieee.mantissa1 |= fetestexcept (FE_INEXACT) != 0;
+      feupdateenv (&env);
+      /* Result is a1 + u.d.  */
+      return a1 + u.d;
+    }
+  else if (__builtin_expect (adjust > 0, 1))
+    {
+      if ((u.ieee.mantissa1 & 1) == 0 && u.ieee.exponent != 0x7ff)
+	u.ieee.mantissa1 |= fetestexcept (FE_INEXACT) != 0;
+      feupdateenv (&env);
+      /* Result is a1 + u.d, scaled up.  */
+      return (a1 + u.d) * 0x1p53;
+    }
+  else
+    {
+      v.d = a1 + u.d;
+      int j = fetestexcept (FE_INEXACT) != 0;
+      feupdateenv (&env);
+      /* Ensure the following computations are performed in default rounding
+	 mode instead of just reusing the round to zero computation.  */
+      asm volatile ("" : "=m" (u) : "m" (u));
+      /* If a1 + u.d is exact, the only rounding happens during
+	 scaling down.  */
+      if (j == 0)
+	return v.d * 0x1p-106;
+      /* If result rounded to zero is not subnormal, no double
+	 rounding will occur.  */
+      if (v.ieee.exponent > 106)
+	return (a1 + u.d) * 0x1p-106;
+      /* If v.d * 0x1p-106 with round to zero is a subnormal above
+	 or equal to DBL_MIN / 2, then v.d * 0x1p-106 shifts mantissa
+	 down just by 1 bit, which means v.ieee.mantissa1 |= j would
+	 change the round bit, not sticky or guard bit.
+	 v.d * 0x1p-106 never normalizes by shifting up,
+	 so round bit plus sticky bit should be already enough
+	 for proper rounding.  */
+      if (v.ieee.exponent == 106)
+	{
+	  /* v.ieee.mantissa1 & 2 is LSB bit of the result before rounding,
+	     v.ieee.mantissa1 & 1 is the round bit and j is our sticky
+	     bit.  In round-to-nearest 001 rounds down like 00,
+	     011 rounds up, even though 01 rounds down (thus we need
+	     to adjust), 101 rounds down like 10 and 111 rounds up
+	     like 11.  */
+	  if ((v.ieee.mantissa1 & 3) == 1)
+	    {
+	      v.d *= 0x1p-106;
+	      if (v.ieee.negative)
+		return v.d - 0x1p-1074 /* __DBL_DENORM_MIN__ */;
+	      else
+		return v.d + 0x1p-1074 /* __DBL_DENORM_MIN__ */;
+	    }
+	  else
+	    return v.d * 0x1p-106;
+	}
+      v.ieee.mantissa1 |= j;
+      return v.d * 0x1p-106;
+    }
 }
 #ifndef __fma
 weak_alias (__fma, fma)

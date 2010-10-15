@@ -1,3 +1,10 @@
+2010-10-14  Jakub Jelinek  <jakub@redhat.com>
+
+	[BZ #3268]
+	* math/libm-test.inc (fma_test): Add some more tests.
+	* sysdeps/ieee754/dbl-64/s_fma.c (__fma): Handle underflows
+	correctly.
+
 2010-10-15  Andreas Schwab  <schwab@redhat.com>
 
 	* scripts/data/localplt-s390-linux-gnu.data: New file.
