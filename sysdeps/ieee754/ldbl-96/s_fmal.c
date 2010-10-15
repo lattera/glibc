@@ -27,98 +27,99 @@
    double rounding.  See a paper by Boldo and Melquiond:
    http://www.lri.fr/~melquion/doc/08-tc.pdf  */
 
-double
-__fma (double x, double y, double z)
+long double
+__fmal (long double x, long double y, long double z)
 {
-  union ieee754_double u, v, w;
+  union ieee854_long_double u, v, w;
   int adjust = 0;
   u.d = x;
   v.d = y;
   w.d = z;
   if (__builtin_expect (u.ieee.exponent + v.ieee.exponent
-			>= 0x7ff + IEEE754_DOUBLE_BIAS - DBL_MANT_DIG, 0)
-      || __builtin_expect (u.ieee.exponent >= 0x7ff - DBL_MANT_DIG, 0)
-      || __builtin_expect (v.ieee.exponent >= 0x7ff - DBL_MANT_DIG, 0)
-      || __builtin_expect (w.ieee.exponent >= 0x7ff - DBL_MANT_DIG, 0)
+			>= 0x7fff + IEEE854_LONG_DOUBLE_BIAS
+			   - LDBL_MANT_DIG, 0)
+      || __builtin_expect (u.ieee.exponent >= 0x7fff - LDBL_MANT_DIG, 0)
+      || __builtin_expect (v.ieee.exponent >= 0x7fff - LDBL_MANT_DIG, 0)
+      || __builtin_expect (w.ieee.exponent >= 0x7fff - LDBL_MANT_DIG, 0)
       || __builtin_expect (u.ieee.exponent + v.ieee.exponent
-			   <= IEEE754_DOUBLE_BIAS + DBL_MANT_DIG, 0))
+			   <= IEEE854_LONG_DOUBLE_BIAS + LDBL_MANT_DIG, 0))
     {
       /* If z is Inf, but x and y are finite, the result should be
 	 z rather than NaN.  */
-      if (w.ieee.exponent == 0x7ff
-	  && u.ieee.exponent != 0x7ff
-          && v.ieee.exponent != 0x7ff)
+      if (w.ieee.exponent == 0x7fff
+	  && u.ieee.exponent != 0x7fff
+          && v.ieee.exponent != 0x7fff)
 	return (z + x) + y;
       /* If x or y or z is Inf/NaN, or if fma will certainly overflow,
-	 or if x * y is less than half of DBL_DENORM_MIN,
+	 or if x * y is less than half of LDBL_DENORM_MIN,
 	 compute as x * y + z.  */
-      if (u.ieee.exponent == 0x7ff
-	  || v.ieee.exponent == 0x7ff
-	  || w.ieee.exponent == 0x7ff
+      if (u.ieee.exponent == 0x7fff
+	  || v.ieee.exponent == 0x7fff
+	  || w.ieee.exponent == 0x7fff
 	  || u.ieee.exponent + v.ieee.exponent
-	     > 0x7ff + IEEE754_DOUBLE_BIAS
+	     > 0x7fff + IEEE854_LONG_DOUBLE_BIAS
 	  || u.ieee.exponent + v.ieee.exponent
-	     < IEEE754_DOUBLE_BIAS - DBL_MANT_DIG - 2)
+	     < IEEE854_LONG_DOUBLE_BIAS - LDBL_MANT_DIG - 2)
 	return x * y + z;
       if (u.ieee.exponent + v.ieee.exponent
-	  >= 0x7ff + IEEE754_DOUBLE_BIAS - DBL_MANT_DIG)
+	  >= 0x7fff + IEEE854_LONG_DOUBLE_BIAS - LDBL_MANT_DIG)
 	{
-	  /* Compute 1p-53 times smaller result and multiply
+	  /* Compute 1p-64 times smaller result and multiply
 	     at the end.  */
 	  if (u.ieee.exponent > v.ieee.exponent)
-	    u.ieee.exponent -= DBL_MANT_DIG;
+	    u.ieee.exponent -= LDBL_MANT_DIG;
 	  else
-	    v.ieee.exponent -= DBL_MANT_DIG;
+	    v.ieee.exponent -= LDBL_MANT_DIG;
 	  /* If x + y exponent is very large and z exponent is very small,
 	     it doesn't matter if we don't adjust it.  */
-	  if (w.ieee.exponent > DBL_MANT_DIG)
-	    w.ieee.exponent -= DBL_MANT_DIG;
+	  if (w.ieee.exponent > LDBL_MANT_DIG)
+	    w.ieee.exponent -= LDBL_MANT_DIG;
 	  adjust = 1;
 	}
-      else if (w.ieee.exponent >= 0x7ff - DBL_MANT_DIG)
+      else if (w.ieee.exponent >= 0x7fff - LDBL_MANT_DIG)
 	{
 	  /* Similarly.
 	     If z exponent is very large and x and y exponents are
 	     very small, it doesn't matter if we don't adjust it.  */
 	  if (u.ieee.exponent > v.ieee.exponent)
 	    {
-	      if (u.ieee.exponent > DBL_MANT_DIG)
-		u.ieee.exponent -= DBL_MANT_DIG;
+	      if (u.ieee.exponent > LDBL_MANT_DIG)
+		u.ieee.exponent -= LDBL_MANT_DIG;
 	    }
-	  else if (v.ieee.exponent > DBL_MANT_DIG)
-	    v.ieee.exponent -= DBL_MANT_DIG;
-	  w.ieee.exponent -= DBL_MANT_DIG;
+	  else if (v.ieee.exponent > LDBL_MANT_DIG)
+	    v.ieee.exponent -= LDBL_MANT_DIG;
+	  w.ieee.exponent -= LDBL_MANT_DIG;
 	  adjust = 1;
 	}
-      else if (u.ieee.exponent >= 0x7ff - DBL_MANT_DIG)
+      else if (u.ieee.exponent >= 0x7fff - LDBL_MANT_DIG)
 	{
-	  u.ieee.exponent -= DBL_MANT_DIG;
+	  u.ieee.exponent -= LDBL_MANT_DIG;
 	  if (v.ieee.exponent)
-	    v.ieee.exponent += DBL_MANT_DIG;
+	    v.ieee.exponent += LDBL_MANT_DIG;
 	  else
-	    v.d *= 0x1p53;
+	    v.d *= 0x1p64L;
 	}
-      else if (v.ieee.exponent >= 0x7ff - DBL_MANT_DIG)
+      else if (v.ieee.exponent >= 0x7fff - LDBL_MANT_DIG)
 	{
-	  v.ieee.exponent -= DBL_MANT_DIG;
+	  v.ieee.exponent -= LDBL_MANT_DIG;
 	  if (u.ieee.exponent)
-	    u.ieee.exponent += DBL_MANT_DIG;
+	    u.ieee.exponent += LDBL_MANT_DIG;
 	  else
-	    u.d *= 0x1p53;
+	    u.d *= 0x1p64L;
 	}
       else /* if (u.ieee.exponent + v.ieee.exponent
-		  <= IEEE754_DOUBLE_BIAS + DBL_MANT_DIG) */
+		  <= IEEE854_LONG_DOUBLE_BIAS + LDBL_MANT_DIG) */
 	{
 	  if (u.ieee.exponent > v.ieee.exponent)
-	    u.ieee.exponent += 2 * DBL_MANT_DIG;
+	    u.ieee.exponent += 2 * LDBL_MANT_DIG;
 	  else
-	    v.ieee.exponent += 2 * DBL_MANT_DIG;
-	  if (w.ieee.exponent <= 4 * DBL_MANT_DIG + 4)
+	    v.ieee.exponent += 2 * LDBL_MANT_DIG;
+	  if (w.ieee.exponent <= 4 * LDBL_MANT_DIG + 4)
 	    {
 	      if (w.ieee.exponent)
-		w.ieee.exponent += 2 * DBL_MANT_DIG;
+		w.ieee.exponent += 2 * LDBL_MANT_DIG;
 	      else
-		w.d *= 0x1p106;
+		w.d *= 0x1p128L;
 	      adjust = -1;
 	    }
 	  /* Otherwise x * y should just affect inexact
@@ -129,23 +130,23 @@ __fma (double x, double y, double z)
       z = w.d;
     }
   /* Multiplication m1 + m2 = x * y using Dekker's algorithm.  */
-#define C ((1 << (DBL_MANT_DIG + 1) / 2) + 1)
-  double x1 = x * C;
-  double y1 = y * C;
-  double m1 = x * y;
+#define C ((1LL << (LDBL_MANT_DIG + 1) / 2) + 1)
+  long double x1 = x * C;
+  long double y1 = y * C;
+  long double m1 = x * y;
   x1 = (x - x1) + x1;
   y1 = (y - y1) + y1;
-  double x2 = x - x1;
-  double y2 = y - y1;
-  double m2 = (((x1 * y1 - m1) + x1 * y2) + x2 * y1) + x2 * y2;
+  long double x2 = x - x1;
+  long double y2 = y - y1;
+  long double m2 = (((x1 * y1 - m1) + x1 * y2) + x2 * y1) + x2 * y2;
 
   /* Addition a1 + a2 = z + m1 using Knuth's algorithm.  */
-  double a1 = z + m1;
-  double t1 = a1 - z;
-  double t2 = a1 - t1;
+  long double a1 = z + m1;
+  long double t1 = a1 - z;
+  long double t2 = a1 - t1;
   t1 = m1 - t1;
   t2 = z - t2;
-  double a2 = t1 + t2;
+  long double a2 = t1 + t2;
 
   fenv_t env;
   feholdexcept (&env);
@@ -155,7 +156,7 @@ __fma (double x, double y, double z)
 
   if (__builtin_expect (adjust == 0, 1))
     {
-      if ((u.ieee.mantissa1 & 1) == 0 && u.ieee.exponent != 0x7ff)
+      if ((u.ieee.mantissa1 & 1) == 0 && u.ieee.exponent != 0x7fff)
 	u.ieee.mantissa1 |= fetestexcept (FE_INEXACT) != 0;
       feupdateenv (&env);
       /* Result is a1 + u.d.  */
@@ -163,11 +164,11 @@ __fma (double x, double y, double z)
     }
   else if (__builtin_expect (adjust > 0, 1))
     {
-      if ((u.ieee.mantissa1 & 1) == 0 && u.ieee.exponent != 0x7ff)
+      if ((u.ieee.mantissa1 & 1) == 0 && u.ieee.exponent != 0x7fff)
 	u.ieee.mantissa1 |= fetestexcept (FE_INEXACT) != 0;
       feupdateenv (&env);
       /* Result is a1 + u.d, scaled up.  */
-      return (a1 + u.d) * 0x1p53;
+      return (a1 + u.d) * 0x1p64L;
     }
   else
     {
@@ -182,19 +183,19 @@ __fma (double x, double y, double z)
       /* If a1 + u.d is exact, the only rounding happens during
 	 scaling down.  */
       if (j == 0)
-	return v.d * 0x1p-106;
+	return v.d * 0x1p-128L;
       /* If result rounded to zero is not subnormal, no double
 	 rounding will occur.  */
-      if (v.ieee.exponent > 106)
-	return (a1 + u.d) * 0x1p-106;
-      /* If v.d * 0x1p-106 with round to zero is a subnormal above
-	 or equal to DBL_MIN / 2, then v.d * 0x1p-106 shifts mantissa
+      if (v.ieee.exponent > 128)
+	return (a1 + u.d) * 0x1p-128L;
+      /* If v.d * 0x1p-128L with round to zero is a subnormal above
+	 or equal to LDBL_MIN / 2, then v.d * 0x1p-128L shifts mantissa
 	 down just by 1 bit, which means v.ieee.mantissa1 |= j would
 	 change the round bit, not sticky or guard bit.
-	 v.d * 0x1p-106 never normalizes by shifting up,
+	 v.d * 0x1p-128L never normalizes by shifting up,
 	 so round bit plus sticky bit should be already enough
 	 for proper rounding.  */
-      if (v.ieee.exponent == 106)
+      if (v.ieee.exponent == 128)
 	{
 	  /* v.ieee.mantissa1 & 2 is LSB bit of the result before rounding,
 	     v.ieee.mantissa1 & 1 is the round bit and j is our sticky
@@ -204,24 +205,17 @@ __fma (double x, double y, double z)
 	     like 11.  */
 	  if ((v.ieee.mantissa1 & 3) == 1)
 	    {
-	      v.d *= 0x1p-106;
+	      v.d *= 0x1p-128L;
 	      if (v.ieee.negative)
-		return v.d - 0x1p-1074 /* __DBL_DENORM_MIN__ */;
+		return v.d - 0x1p-16445L /* __LDBL_DENORM_MIN__ */;
 	      else
-		return v.d + 0x1p-1074 /* __DBL_DENORM_MIN__ */;
+		return v.d + 0x1p-16445L /* __LDBL_DENORM_MIN__ */;
 	    }
 	  else
-	    return v.d * 0x1p-106;
+	    return v.d * 0x1p-128L;
 	}
       v.ieee.mantissa1 |= j;
-      return v.d * 0x1p-106;
+      return v.d * 0x1p-128L;
     }
 }
-#ifndef __fma
-weak_alias (__fma, fma)
-#endif
-
-#ifdef NO_LONG_DOUBLE
-strong_alias (__fma, __fmal)
 weak_alias (__fmal, fmal)
-#endif

@@ -30,11 +30,20 @@
 double
 __fma (double x, double y, double z)
 {
+  if (__builtin_expect (isinf (z), 0))
+    {
+      /* If z is Inf, but x and y are finite, the result should be
+	 z rather than NaN.  */
+      if (finite (x) && finite (y))
+	return (z + x) + y;
+      return (x * y) + z;
+    }
+
   /* Multiplication m1 + m2 = x * y using Dekker's algorithm.  */
 #define C ((1ULL << (LDBL_MANT_DIG + 1) / 2) + 1)
-  long double x1 = x * C;
-  long double y1 = y * C;
-  long double m1 = x * y;
+  long double x1 = (long double) x * C;
+  long double y1 = (long double) y * C;
+  long double m1 = (long double) x * y;
   x1 = (x - x1) + x1;
   y1 = (y - y1) + y1;
   long double x2 = x - x1;

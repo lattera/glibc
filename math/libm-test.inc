@@ -2787,8 +2787,24 @@ fma_test (void)
   TEST_fff_f (fma, minus_infty, plus_infty, plus_infty, nan_value, INVALID_EXCEPTION);
   TEST_fff_f (fma, plus_infty, minus_infty, plus_infty, nan_value, INVALID_EXCEPTION);
   TEST_fff_f (fma, minus_infty, minus_infty, minus_infty, nan_value, INVALID_EXCEPTION);
+  TEST_fff_f (fma, plus_infty, 3.5L, minus_infty, nan_value, INVALID_EXCEPTION);
+  TEST_fff_f (fma, minus_infty, -7.5L, minus_infty, nan_value, INVALID_EXCEPTION);
+  TEST_fff_f (fma, -13.5L, plus_infty, plus_infty, nan_value, INVALID_EXCEPTION);
+  TEST_fff_f (fma, minus_infty, 7.5L, plus_infty, nan_value, INVALID_EXCEPTION);
 
   TEST_fff_f (fma, 1.25L, 0.75L, 0.0625L, 1.0L);
+
+  FLOAT fltmax = CHOOSE (LDBL_MAX, DBL_MAX, FLT_MAX,
+			 LDBL_MAX, DBL_MAX, FLT_MAX);
+  TEST_fff_f (fma, -fltmax, -fltmax, minus_infty, minus_infty);
+  TEST_fff_f (fma, fltmax / 2, fltmax / 2, minus_infty, minus_infty);
+  TEST_fff_f (fma, -fltmax, fltmax, plus_infty, plus_infty);
+  TEST_fff_f (fma, fltmax / 2, -fltmax / 4, plus_infty, plus_infty);
+  TEST_fff_f (fma, plus_infty, 4, plus_infty, plus_infty);
+  TEST_fff_f (fma, 2, minus_infty, minus_infty, minus_infty);
+  TEST_fff_f (fma, minus_infty, minus_infty, plus_infty, plus_infty);
+  TEST_fff_f (fma, plus_infty, minus_infty, minus_infty, minus_infty);
+
 #if defined (TEST_FLOAT) && FLT_MANT_DIG == 24
   TEST_fff_f (fma, 0x1.7ff8p+13, 0x1.000002p+0, 0x1.ffffp-24, 0x1.7ff802p+13);
   TEST_fff_f (fma, 0x1.fffp+0, 0x1.00001p+0, -0x1.fffp+0, 0x1.fffp-20);
@@ -2818,6 +2834,15 @@ fma_test (void)
   TEST_fff_f (fma, -0x1.19cab66d73e17p-959, 0x1.c7108a8c5ff51p-107, -0x0.80b0ad65d9b64p-1022, -0x0.80b0ad65d9d59p-1022);
   TEST_fff_f (fma, -0x1.d2eaed6e8e9d3p-979, -0x1.4e066c62ac9ddp-63, -0x0.9245e6b003454p-1022, -0x0.9245c09c5fb5dp-1022);
   TEST_fff_f (fma, 0x1.153d650bb9f06p-907, 0x1.2d01230d48407p-125, -0x0.b278d5acfc3cp-1022, -0x0.b22757123bbe9p-1022);
+  TEST_fff_f (fma, -0x1.fffffffffffffp-711, 0x1.fffffffffffffp-275, 0x1.fffffe00007ffp-983, 0x1.7ffffe00007ffp-983);
+#endif
+#if defined (TEST_LDOUBLE) && LDBL_MANT_DIG == 64
+  TEST_fff_f (fma, -0x8.03fcp+3696L, 0xf.fffffffffffffffp-6140L, 0x8.3ffffffffffffffp-2450L, -0x8.01ecp-2440L);
+  TEST_fff_f (fma, 0x9.fcp+2033L, -0x8.000e1f000ff800fp-3613L, -0xf.fffffffffffc0ffp-1579L, -0xd.fc119fb093ed092p-1577L);
+  TEST_fff_f (fma, 0xc.7fc000003ffffffp-1194L, 0x8.1e0003fffffffffp+15327L, -0x8.fffep+14072L, 0xc.ae9f164020effffp+14136L);
+  TEST_fff_f (fma, -0x8.0001fc000000003p+1798L, 0xcp-2230L, 0x8.f7e000000000007p-468L, -0xc.0002f9ffee10404p-429L);
+  TEST_fff_f (fma, 0xc.0000000000007ffp+10130L, -0x8.000000000000001p+4430L, 0xc.07000000001ffffp+14513L, -0xb.fffffffffffd7e4p+14563L);
+  TEST_fff_f (fma, 0xb.ffffp-4777L, 0x8.000000fffffffffp-11612L, -0x0.3800fff8p-16385L, 0x5.c7fe80c7ffeffffp-16385L);
 #endif
 
   END (fma);
