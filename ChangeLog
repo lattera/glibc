@@ -1,3 +1,18 @@
+2010-10-15  Jakub Jelinek  <jakub@redhat.com>
+
+	[BZ #3268]
+	* math/libm-test.inc (fma_test): Some new testcases.
+	* sysdeps/ieee754/ldbl-128/s_fmal.c: New file.
+	* sysdeps/ieee754/ldbl-96/s_fma.c (__fma): Fix fma with finite x and
+	y and infinite z.  Do multiplication by C already in long double.
+	* sysdeps/ieee754/ldbl-96/s_fmal.c: New file.
+	* sysdeps/ieee754/dbl-64/s_fma.c (__fma): Fix fma with finite x and
+	y and infinite z.  Do bitwise or of inexact bit into u.d.
+	* sysdeps/ieee754/ldbl-64-128/s_fmal.c: New file.
+	* sysdeps/i386/fpu/s_fmaf.S: Removed.
+	* sysdeps/i386/fpu/s_fma.S: Removed.
+	* sysdeps/i386/fpu/s_fmal.S: Removed.
+
 2010-10-14  Jakub Jelinek  <jakub@redhat.com>
 
 	[BZ #3268]
