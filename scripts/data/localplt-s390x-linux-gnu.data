@@ -1,0 +1,7 @@
+libc.so: _Unwind_Find_FDE
+libc.so: calloc
+libc.so: free
+libc.so: malloc
+libc.so: memalign
+libc.so: realloc
+libm.so: matherr

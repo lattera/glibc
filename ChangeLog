@@ -1,3 +1,8 @@
+2010-10-15  Andreas Schwab  <schwab@redhat.com>
+
+	* scripts/data/localplt-s390-linux-gnu.data: New file.
+	* scripts/data/localplt-s390x-linux-gnu.data: New file.
+
 2010-10-13  Jakub Jelinek  <jakub@redhat.com>
 
 	[BZ #3268]
