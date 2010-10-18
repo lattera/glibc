@@ -175,6 +175,8 @@ __fmal (long double x, long double y, long double z)
       if ((u.ieee.mantissa3 & 1) == 0)
 	u.ieee.mantissa3 |= fetestexcept (FE_INEXACT) != 0;
       v.d = a1 + u.d;
+      /* Ensure the addition is not scheduled after fetestexcept call.  */
+      asm volatile ("" : "m" (v));
       int j = fetestexcept (FE_INEXACT) != 0;
       feupdateenv (&env);
       /* Ensure the following computations are performed in default rounding
@@ -207,9 +209,9 @@ __fmal (long double x, long double y, long double z)
 	    {
 	      v.d *= 0x1p-226L;
 	      if (v.ieee.negative)
-		return v.d - 0x1p-16493L /* __LDBL_DENORM_MIN__ */;
+		return v.d - 0x1p-16494L /* __LDBL_DENORM_MIN__ */;
 	      else
-		return v.d + 0x1p-16493L /* __LDBL_DENORM_MIN__ */;
+		return v.d + 0x1p-16494L /* __LDBL_DENORM_MIN__ */;
 	    }
 	  else
 	    return v.d * 0x1p-226L;

@@ -1,3 +1,11 @@
+2010-10-16  Jakub Jelinek  <jakub@redhat.com>
+
+	[BZ #3268]
+	* math/libm-test.inc (fma_test): Add IEEE quad long double fmal tests.
+	* sysdeps/ieee754/ldbl-128/s_fmal.c (__fmal): Ensure a1 + u.d
+	computation is not scheduled after fetestexcept.  Fix value
+	of minimum denormal long double.
+
 2010-10-14  Jakub Jelinek  <jakub@redhat.com>
 
 	[BZ #3268]
