@@ -1,3 +1,14 @@
+2010-10-19  Ulrich Drepper  <drepper@gmail.com>
+
+	* sysdeps/i386/bits/mathdef.h (FP_FAST_FMA): If the GCC 4.6 port has
+	fast fma builtins, define the macros in the C99 standard.
+	(FP_FAST_FMAF): Likewise.
+	(FP_FAST_FMAL): Likewise.
+	* sysdeps/x86_64/bits/mathdef.h: Likewise.
+
+	* bits/mathdef.h: Update copyright year.
+	* sysdeps/powerpc/bits/mathdef.h: Likewise.
+
 2010-10-19  Michael Meissner  <meissner@linux.vnet.ibm.com>
 
 	* bits/mathdef.h (FP_FAST_FMA): If the GCC 4.6 port has fast fma
