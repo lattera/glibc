@@ -1,3 +1,10 @@
+2010-10-21  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/mips/mips32/syscalls.list,
+	sysdeps/unix/sysv/linux/mips/mips64/n32/syscalls.list,
+	sysdeps/unix/sysv/linux/mips/mips64/n64/syscalls.list: Add entries
+	for fanotify_mark.
+
 2010-10-11  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/mips/fpu/feupdateenv.c (feupdateenv): Add
