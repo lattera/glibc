@@ -1,3 +1,13 @@
+2010-10-20  Michael B. Brutman  <brutman@us.ibm.com>
+
+	* sysdeps/powerpc/dl-procinfo.c: Add support for ppca2 platform
+	* sysdeps/powerpc/dl-procinfo.h: Add support for ppca2 platform
+	* sysdeps/powerpc/powerpc32/a2/memcpy.S: New file.
+	* sysdeps/powerpc/powerpc64/a2/memcpy.S: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/a2/Implies: New
+	submachine.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/a2/Implies: Likewise.
+
 2010-10-22  Andreas Schwab  <schwab@redhat.com>
 
 	* include/dlfcn.h (__RTLD_SECURE): Define.

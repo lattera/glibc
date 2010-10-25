@@ -68,7 +68,7 @@ PROCINFO_CLASS const char _dl_powerpc_cap_flags[25][10]
 #if !defined PROCINFO_DECL && defined SHARED
   ._dl_powerpc_platforms
 #else
-PROCINFO_CLASS const char _dl_powerpc_platforms[8][12]
+PROCINFO_CLASS const char _dl_powerpc_platforms[9][12]
 #endif
 #ifndef PROCINFO_DECL
 = {
@@ -79,7 +79,8 @@ PROCINFO_CLASS const char _dl_powerpc_platforms[8][12]
     [PPC_PLATFORM_POWER6] = "power6",
     [PPC_PLATFORM_CELL_BE] = "ppc-cell-be",
     [PPC_PLATFORM_POWER6X] = "power6x",
-    [PPC_PLATFORM_POWER7] = "power7"
+    [PPC_PLATFORM_POWER7] = "power7",
+    [PPC_PLATFORM_PPCA2] = "ppca2"
   }
 #endif
 #if !defined SHARED || defined PROCINFO_DECL
