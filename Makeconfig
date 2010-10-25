@@ -695,7 +695,7 @@ CPPFLAGS = $($(subdir)-CPPFLAGS) $(+includes) $(defines) \
 	   -include $(..)include/libc-symbols.h $(sysdep-CPPFLAGS) \
 	   $(CPPFLAGS-$(suffix $@)) \
 	   $(foreach lib,$(libof-$(basename $(@F))) \
-		         $(libof-$(<F)) $(libof-$(@F)),$(CPPFLAGS-$(lib))) \
+			 $(libof-$(<F)) $(libof-$(@F)),$(CPPFLAGS-$(lib))) \
 	   $(CPPFLAGS-$(<F)) $(CPPFLAGS-$(@F)) $(CPPFLAGS-$(basename $(@F)))
 override CFLAGS	= -std=gnu99 $(gnu89-inline-CFLAGS) \
 		  $(filter-out %frame-pointer,$(+cflags)) $(+gccwarn-c) \
@@ -966,7 +966,7 @@ endif
 # emitted into sysd-rules.  A sysdeps Makeconfig fragment can
 # add its own special object file prefix to this list with e.g. foo-%:%
 # to have foo-*.? compiled from *.? using $(foo-CPPFLAGS).
-sysd-rules-patterns := %:% rtld-%:% m_%:s_%
+sysd-rules-patterns := %:% rtld-%:rtld-% rtld-%:% m_%:s_%
 
 # Let sysdeps/ subdirs contain a Makeconfig fragment for us to include here.
 sysdep-makeconfigs := $(wildcard $(+sysdep_dirs:=/Makeconfig))
@@ -975,8 +975,8 @@ include $(sysdep-makeconfigs)
 endif
 
 # Compute just the target patterns.  Makeconfig has set sysd-rules-patterns.
-sysd-rules-targets := $(foreach p,$(sysd-rules-patterns),\
-		      		$(firstword $(subst :, ,$p)))
+sysd-rules-targets := $(sort $(foreach p,$(sysd-rules-patterns),\
+					 $(firstword $(subst :, ,$p))))
 
 endif # Makeconfig not yet included
 
