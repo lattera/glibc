@@ -223,7 +223,7 @@ dl_open_worker (void *a)
 
   /* Load the named object.  */
   struct link_map *new;
-  args->map = new = _dl_map_object (call_map, file, 0, lt_loaded, 0,
+  args->map = new = _dl_map_object (call_map, file, lt_loaded, 0,
 				    mode | __RTLD_CALLMAP, args->nsid);
 
   /* If the pointer returned is NULL this means the RTLD_NOLOAD flag is

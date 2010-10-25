@@ -1,3 +1,18 @@
+2010-10-22  Andreas Schwab  <schwab@redhat.com>
+
+	* include/dlfcn.h (__RTLD_SECURE): Define.
+	* elf/dl-load.c (_dl_map_object): Remove preloaded parameter.  Use
+	mode & __RTLD_SECURE instead.
+	(open_path): Rename preloaded parameter to secure.
+	* sysdeps/generic/ldsodefs.h (_dl_map_object): Adjust declaration.
+	* elf/dl-open.c (dl_open_worker): Adjust call to _dl_map_object.
+	* elf/dl-deps.c (openaux): Likewise.
+	* elf/rtld.c (struct map_args): Remove is_preloaded.
+	(map_doit): Don't use it.
+	(dl_main): Likewise.
+	(do_preload): Use __RTLD_SECURE instead of is_preloaded.
+	(dlmopen_doit): Add __RTLD_SECURE to mode bits.
+
 2010-09-09  Andreas Schwab  <schwab@redhat.com>
 
 	* Makeconfig (sysd-rules-patterns): Add rtld-%:rtld-%.

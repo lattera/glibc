@@ -9,6 +9,7 @@
 #define __RTLD_OPENEXEC	0x20000000
 #define __RTLD_CALLMAP	0x10000000
 #define __RTLD_AUDIT	0x08000000
+#define __RTLD_SECURE	0x04000000 /* Apply additional security checks.  */
 
 #define __LM_ID_CALLER	-2
 
