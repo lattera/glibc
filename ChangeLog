@@ -1,3 +1,10 @@
+2010-10-25  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #12159]
+	* sysdeps/x86_64/multiarch/strchr.S: Fix propagation of search byte
+	into all bytes of SSE register.
+	Patch by Richard Li <richardpku@gmail.com>.
+
 2010-10-24  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #12140]

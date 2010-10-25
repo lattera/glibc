@@ -1,5 +1,5 @@
 /* strchr with SSE4.2
-   Copyright (C) 2009 Free Software Foundation, Inc.
+   Copyright (C) 2009, 2010 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -87,13 +87,13 @@ __strchr_sse42:
 	pxor	%xmm2, %xmm2
 	movd	%esi, %xmm1
 	movl	%edi, %ecx
+	pshufb  %xmm2, %xmm1
 	andl	$15, %ecx
 	movq	%rdi, %r8
 	je	L(aligned_start)
 
 /* Handle unaligned string.  */
 	andq	$-16, %r8
-	pshufb  %xmm2, %xmm1
 	movdqa	(%r8), %xmm0
 	pcmpeqb	 %xmm0, %xmm2
 	pcmpeqb	 %xmm1, %xmm0
