@@ -1,3 +1,8 @@
+2010-10-18  Andreas Schwab  <schwab@redhat.com>
+
+	* elf/dl-open.c (dl_open_worker): Don't expand DST here, let
+	_dl_map_object do it.
+
 2010-10-19  Ulrich Drepper  <drepper@gmail.com>
 
 	* sysdeps/i386/bits/mathdef.h (FP_FAST_FMA): If the GCC 4.6 port has

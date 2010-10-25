@@ -221,35 +221,6 @@ dl_open_worker (void *a)
 
   assert (_dl_debug_initialize (0, args->nsid)->r_state == RT_CONSISTENT);
 
-  /* Maybe we have to expand a DST.  */
-  if (__builtin_expect (dst != NULL, 0))
-    {
-      size_t len = strlen (file);
-
-      /* Determine how much space we need.  We have to allocate the
-	 memory locally.  */
-      size_t required = DL_DST_REQUIRED (call_map, file, len,
-					 _dl_dst_count (dst, 0));
-
-      /* Get space for the new file name.  */
-      char *new_file = (char *) alloca (required + 1);
-
-      /* Generate the new file name.  */
-      _dl_dst_substitute (call_map, file, new_file, 0);
-
-      /* If the substitution failed don't try to load.  */
-      if (*new_file == '\0')
-	_dl_signal_error (0, "dlopen", NULL,
-			  N_("empty dynamic string token substitution"));
-
-      /* Now we have a new file name.  */
-      file = new_file;
-
-      /* It does not matter whether call_map is set even if we
-	 computed it only because of the DST.  Since the path contains
-	 a slash the value is not used.  See dl-load.c.  */
-    }
-
   /* Load the named object.  */
   struct link_map *new;
   args->map = new = _dl_map_object (call_map, file, 0, lt_loaded, 0,
