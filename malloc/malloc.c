@@ -4850,7 +4850,7 @@ _int_free(mstate av, mchunkptr p)
       }
 
     if (__builtin_expect (perturb_byte, 0))
-      free_perturb (chunk2mem(p), size - SIZE_SZ);
+      free_perturb (chunk2mem(p), size - 2 * SIZE_SZ);
 
     set_fastchunks(av);
     unsigned int idx = fastbin_index(size);
@@ -4954,7 +4954,7 @@ _int_free(mstate av, mchunkptr p)
       }
 
     if (__builtin_expect (perturb_byte, 0))
-      free_perturb (chunk2mem(p), size - SIZE_SZ);
+      free_perturb (chunk2mem(p), size - 2 * SIZE_SZ);
 
     /* consolidate backward */
     if (!prev_inuse(p)) {
