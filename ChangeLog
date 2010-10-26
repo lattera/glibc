@@ -1,11 +1,23 @@
-2010-10-25  Ulrich Drepper  <drepper@redhat.com>
+2010-10-20  Andreas Krebbel  <Andreas.Krebbel@de.ibm.com>
+	    Ulrich Drepper  <drepper@gmail.com>
+
+	* elf/dl-object.c (_dl_new_object): Don't append the new object to
+	the global list here.  Move code to...
+	(_dl_add_to_namespace_list): ...here.  New function.
+	* elf/rtld.c (dl_main): Invoke _dl_add_to_namespace_list.
+	* sysdeps/generic/ldsodefs.h (_dl_add_to_namespace_list): Declare.
+	* elf/dl-load.c (lose): Don't remove the element from the list.
+	(_dl_map_object_from_fd): Invoke _dl_add_to_namespace_list.
+	(_dl_map_object): Likewise.
+
+2010-10-25  Ulrich Drepper  <drepper@gmail.com>
 
 	[BZ #12159]
 	* sysdeps/x86_64/multiarch/strchr.S: Fix propagation of search byte
 	into all bytes of SSE register.
 	Patch by Richard Li <richardpku@gmail.com>.
 
-2010-10-24  Ulrich Drepper  <drepper@redhat.com>
+2010-10-24  Ulrich Drepper  <drepper@gmail.com>
 
 	[BZ #12140]
 	* malloc/malloc.c (_int_free): Fill correct number of bytes when

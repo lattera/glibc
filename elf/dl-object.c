@@ -1,5 +1,5 @@
 /* Storage management for the chain of loaded shared objects.
-   Copyright (C) 1995-2002,2004,2006-2008,2009 Free Software Foundation, Inc.
+   Copyright (C) 1995-2002,2004,2006-2009,2010 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -26,16 +26,41 @@
 #include <assert.h>
 
 
+/* Add the new link_map NEW to the end of the namespace list.  */
+void
+internal_function
+_dl_add_to_namespace_list (struct link_map *new, Lmid_t nsid)
+{
+  /* We modify the list of loaded objects.  */
+  __rtld_lock_lock_recursive (GL(dl_load_write_lock));
+
+  if (GL(dl_ns)[nsid]._ns_loaded != NULL)
+    {
+      struct link_map *l = GL(dl_ns)[nsid]._ns_loaded;
+      while (l->l_next != NULL)
+	l = l->l_next;
+      new->l_prev = l;
+      /* new->l_next = NULL;   Would be necessary but we use calloc.  */
+      l->l_next = new;
+    }
+  else
+    GL(dl_ns)[nsid]._ns_loaded = new;
+  ++GL(dl_ns)[nsid]._ns_nloaded;
+  new->l_serial = GL(dl_load_adds);
+  ++GL(dl_load_adds);
+
+  __rtld_lock_unlock_recursive (GL(dl_load_write_lock));
+}
+
+
 /* Allocate a `struct link_map' for a new object being loaded,
    and enter it into the _dl_loaded list.  */
-
 struct link_map *
 internal_function
 _dl_new_object (char *realname, const char *libname, int type,
 		struct link_map *loader, int mode, Lmid_t nsid)
 {
   struct link_map *l;
-  int idx;
   size_t libname_len = strlen (libname) + 1;
   struct link_map *new;
   struct libname_list *newname;
@@ -93,31 +118,12 @@ _dl_new_object (char *realname, const char *libname, int type,
   new->l_scope = new->l_scope_mem;
   new->l_scope_max = sizeof (new->l_scope_mem) / sizeof (new->l_scope_mem[0]);
 
-  /* We modify the list of loaded objects.  */
-  __rtld_lock_lock_recursive (GL(dl_load_write_lock));
-
   /* Counter for the scopes we have to handle.  */
-  idx = 0;
+  int idx = 0;
 
   if (GL(dl_ns)[nsid]._ns_loaded != NULL)
-    {
-      l = GL(dl_ns)[nsid]._ns_loaded;
-      while (l->l_next != NULL)
-	l = l->l_next;
-      new->l_prev = l;
-      /* new->l_next = NULL;	Would be necessary but we use calloc.  */
-      l->l_next = new;
-
-      /* Add the global scope.  */
-      new->l_scope[idx++] = &GL(dl_ns)[nsid]._ns_loaded->l_searchlist;
-    }
-  else
-    GL(dl_ns)[nsid]._ns_loaded = new;
-  ++GL(dl_ns)[nsid]._ns_nloaded;
-  new->l_serial = GL(dl_load_adds);
-  ++GL(dl_load_adds);
-
-  __rtld_lock_unlock_recursive (GL(dl_load_write_lock));
+    /* Add the global scope.  */
+    new->l_scope[idx++] = &GL(dl_ns)[nsid]._ns_loaded->l_searchlist;
 
   /* If we have no loader the new object acts as it.  */
   if (loader == NULL)

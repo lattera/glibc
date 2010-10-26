@@ -798,22 +798,7 @@ lose (int code, int fd, const char *name, char *realname, struct link_map *l,
   /* The file might already be closed.  */
   if (fd != -1)
     (void) __close (fd);
-  if (l != NULL)
-    {
-      /* We modify the list of loaded objects.  */
-      __rtld_lock_lock_recursive (GL(dl_load_write_lock));
-      /* Remove the stillborn object from the list and free it.  */
-      assert (l->l_next == NULL);
-      if (l->l_prev == NULL)
-	/* No other module loaded. This happens only in the static library,
-	   or in rtld under --verify.  */
-	GL(dl_ns)[l->l_ns]._ns_loaded = NULL;
-      else
-	l->l_prev->l_next = NULL;
-      --GL(dl_ns)[l->l_ns]._ns_nloaded;
-      free (l);
-      __rtld_lock_unlock_recursive (GL(dl_load_write_lock));
-    }
+  free (l);
   free (realname);
 
   if (r != NULL)
@@ -897,6 +882,9 @@ _dl_map_object_from_fd (const char *name, int fd, struct filebuf *fbp,
       /* No need to bump the refcount of the real object, ld.so will
 	 never be unloaded.  */
       __close (fd);
+
+      /* Add the map for the mirrored object to the object list.  */
+      _dl_add_to_namespace_list (l, nsid);
 
       return l;
     }
@@ -1491,6 +1479,9 @@ cannot enable executable stack as shared object requires");
       && l->l_info[DT_SONAME] != NULL)
     add_name_to_object (l, ((const char *) D_PTR (l, l_info[DT_STRTAB])
 			    + l->l_info[DT_SONAME]->d_un.d_val));
+
+  /* Now that the object is fully initialized add it to the object list.  */
+  _dl_add_to_namespace_list (l, nsid);
 
 #ifdef SHARED
   /* Auditing checkpoint: we have a new object.  */
@@ -2216,7 +2207,7 @@ _dl_map_object (struct link_map *loader, const char *name,
 	     have.  */
 	  static const Elf_Symndx dummy_bucket = STN_UNDEF;
 
-	  /* Enter the new object in the list of loaded objects.  */
+	  /* Allocate a new object map.  */
 	  if ((name_copy = local_strdup (name)) == NULL
 	      || (l = _dl_new_object (name_copy, name, type, loader,
 				      mode, nsid)) == NULL)
@@ -2233,6 +2224,9 @@ _dl_map_object (struct link_map *loader, const char *name,
 	  l->l_buckets = &dummy_bucket;
 	  l->l_nbuckets = 1;
 	  l->l_relocated = 1;
+
+	  /* Enter the object in the object list.  */
+	  _dl_add_to_namespace_list (l, nsid);
 
 	  return l;
 	}
