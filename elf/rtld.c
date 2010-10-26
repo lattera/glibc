@@ -1108,7 +1108,6 @@ of this helper program; chances are you did not intend to run this program.\n\
       main_map = _dl_new_object ((char *) "", "", lt_executable, NULL,
 				 __RTLD_OPENEXEC, LM_ID_BASE);
       assert (main_map != NULL);
-      assert (main_map == GL(dl_ns)[LM_ID_BASE]._ns_loaded);
       main_map->l_phdr = phdr;
       main_map->l_phnum = phnum;
       main_map->l_entry = *user_entry;
@@ -1116,6 +1115,7 @@ of this helper program; chances are you did not intend to run this program.\n\
       /* Even though the link map is not yet fully initialized we can add
 	 it to the map list since there are no possible users running yet.  */
       _dl_add_to_namespace_list (main_map, LM_ID_BASE);
+      assert (main_map == GL(dl_ns)[LM_ID_BASE]._ns_loaded);
 
       /* At this point we are in a bit of trouble.  We would have to
 	 fill in the values for l_dev and l_ino.  But in general we
