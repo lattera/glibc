@@ -1,15 +1,14 @@
-# translation of libc-2.9.90.po to Danish
 # Danish messages for GNU libc.
 # Copyright (C) 1996, 2009 Free Software Foundation, Inc.
 # This file is distributed under the same license as the glibc package.
 #
-# Keld Simonsen <keld@dkuug.dk>, 2000-2002, 2009.
+# Keld Simonsen <keld@keldix.com>, 2000-2002, 2009-2010.
 msgid ""
 msgstr ""
-"Project-Id-Version: libc-2.9.90\n"
+"Project-Id-Version: libc-2.11.1\n"
 "POT-Creation-Date: 2009-02-06 12:40-0800\n"
-"PO-Revision-Date: 2009-05-20 11:37+0200\n"
-"Last-Translator: Keld Simonsen <keld@dkuug.dk>\n"
+"PO-Revision-Date: 2010-11-01 10:37+0100\n"
+"Last-Translator: Keld Simonsen <keld@keldix.com>\n"
 "Language-Team: Danish <dansk@dansk-gruppen.dk>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=ISO-8859-1\n"
@@ -122,7 +121,7 @@ msgid ""
 "Generate message catalog.\vIf INPUT-FILE is -, input is read from standard input.  If OUTPUT-FILE\n"
 "is -, output is written to standard output.\n"
 msgstr ""
-"Generér meddelelseskatalog.\\vHvis INDFIL er '-' læses inddata fra standard ind.\n"
+"Generér meddelelseskatalog.\vHvis INDFIL er '-' læses inddata fra standard ind.\n"
 "Hvis UDFIL er '-' skrives uddata til standard ud.\n"
 
 #: catgets/gencat.c:124
