@@ -261,7 +261,7 @@ enum
       ? __isnan (x) : __isnanl (x))
 # endif
 
-/* Return nonzero value is X is positive or negative infinity.  */
+/* Return nonzero value if X is positive or negative infinity.  */
 # ifdef __NO_LONG_DOUBLE_MATH
 #  define isinf(x) \
      (sizeof (x) == sizeof (float) ? __isinff (x) : __isinf (x))

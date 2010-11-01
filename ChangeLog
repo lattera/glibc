@@ -1,3 +1,7 @@
+2010-10-28  Erich Ritz  <erichritz@gmail.com>
+
+	* math/math.h (isinf): Fix typo in comment.
+
 2010-11-01  Ulrich Drepper  <drepper@gmail.com>
 
 	* po/da.po: Update from translation team.
