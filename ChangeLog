@@ -1,3 +1,11 @@
+2010-11-03  Ulrich Drepper  <drepper@gmail.com>
+
+	[BZ #12167]
+	* sysdeps/unix/sysv/linux/ttyname.c (ttyname): Recognize new mangling
+	of inacessible symlinks.  Verify result of symlink before returning it.
+	* sysdeps/unix/sysv/linux/ttyname_r.c (__ttyname_r): Likewise.
+	Patch mostly by Miklos Szeredi <miklos@szeredi.hu>.
+
 2010-10-28  Erich Ritz  <erichritz@gmail.com>
 
 	* math/math.h (isinf): Fix typo in comment.

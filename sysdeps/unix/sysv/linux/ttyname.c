@@ -1,4 +1,5 @@
-/* Copyright (C) 1991,92,93,1996-2002,2006,2009 Free Software Foundation, Inc.
+/* Copyright (C) 1991-1993,1996-2002,2006,2009,2010
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -131,6 +132,9 @@ ttyname (int fd)
   if (__builtin_expect (__tcgetattr (fd, &term) < 0, 0))
     return NULL;
 
+  if (__fxstat64 (_STAT_VER, fd, &st) < 0)
+    return NULL;
+
   /* We try using the /proc filesystem.  */
   *_fitoa_word (fd, __stpcpy (procname, "/proc/self/fd/"), 10, 0) = '\0';
 
@@ -161,13 +165,32 @@ ttyname (int fd)
     {
       if ((size_t) len >= buflen)
 	return NULL;
+
+#define UNREACHABLE_LEN strlen ("(unreachable)")
+      if (len > UNREACHABLE_LEN
+	  && memcmp (ttyname_buf, "(unreachable)", UNREACHABLE_LEN) == 0)
+	{
+	  memmove (ttyname_buf, ttyname_buf + UNREACHABLE_LEN,
+		   len - UNREACHABLE_LEN);
+	  len -= UNREACHABLE_LEN;
+	}
+
       /* readlink need not terminate the string.  */
       ttyname_buf[len] = '\0';
-      return ttyname_buf;
-    }
 
-  if (__fxstat64 (_STAT_VER, fd, &st) < 0)
-    return NULL;
+      /* Verify readlink result, fall back on iterating through devices.  */
+      if (ttyname_buf[0] == '/'
+	  && __xstat64 (_STAT_VER, ttyname_buf, &st1) == 0
+#ifdef _STATBUF_ST_RDEV
+	  && S_ISCHR (st1.st_mode)
+	  && st1.st_rdev == st.st_rdev
+#else
+	  && st1.st_ino == st.st_ino
+	  && st1.st_dev == st.st_dev
+#endif
+	  )
+	return ttyname_buf;
+    }
 
   if (__xstat64 (_STAT_VER, "/dev/pts", &st1) == 0 && S_ISDIR (st1.st_mode))
     {
