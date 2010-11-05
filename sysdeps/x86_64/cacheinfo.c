@@ -455,13 +455,21 @@ __cache_sysconf (int name)
 
 
 /* Data cache size for use in memory and string routines, typically
-   L1 size.  */
+   L1 size, rounded to multiple of 256 bytes.  */
 long int __x86_64_data_cache_size_half attribute_hidden = 32 * 1024 / 2;
 long int __x86_64_data_cache_size attribute_hidden = 32 * 1024;
+/* Similar to __x86_64_data_cache_size_half, but not rounded.  */
+long int __x86_64_raw_data_cache_size_half attribute_hidden = 32 * 1024 / 2;
+/* Similar to __x86_64_data_cache_size, but not rounded.  */
+long int __x86_64_raw_data_cache_size attribute_hidden = 32 * 1024;
 /* Shared cache size for use in memory and string routines, typically
-   L2 or L3 size.  */
+   L2 or L3 size, rounded to multiple of 256 bytes.  */
 long int __x86_64_shared_cache_size_half attribute_hidden = 1024 * 1024 / 2;
 long int __x86_64_shared_cache_size attribute_hidden = 1024 * 1024;
+/* Similar to __x86_64_shared_cache_size_half, but not rounded.  */
+long int __x86_64_raw_shared_cache_size_half attribute_hidden = 1024 * 1024 / 2;
+/* Similar to __x86_64_shared_cache_size, but not rounded.  */
+long int __x86_64_raw_shared_cache_size attribute_hidden = 1024 * 1024;
 
 #ifndef DISABLE_PREFETCHW
 /* PREFETCHW support flag for use in memory and string routines.  */
@@ -661,12 +669,20 @@ init_cacheinfo (void)
 
   if (data > 0)
     {
+      __x86_64_raw_data_cache_size_half = data / 2;
+      __x86_64_raw_data_cache_size = data;
+      /* Round data cache size to multiple of 256 bytes.  */
+      data = data & ~255L;
       __x86_64_data_cache_size_half = data / 2;
       __x86_64_data_cache_size = data;
     }
 
   if (shared > 0)
     {
+      __x86_64_raw_shared_cache_size_half = shared / 2;
+      __x86_64_raw_shared_cache_size = shared;
+      /* Round shared cache size to multiple of 256 bytes.  */
+      shared = shared & ~255L;
       __x86_64_shared_cache_size_half = shared / 2;
       __x86_64_shared_cache_size = shared;
     }

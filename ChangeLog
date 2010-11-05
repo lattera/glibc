@@ -1,3 +1,22 @@
+2010-11-03  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #12191]
+	* sysdeps/i386/i686/cacheinfo.c (__x86_64_raw_data_cache_size): New.
+	(__x86_64_raw_data_cache_size_half): Likewise.
+	(__x86_64_raw_shared_cache_size): Likewise.
+	(__x86_64_raw_shared_cache_size_half): Likewise.
+
+	* sysdeps/x86_64/cacheinfo.c (__x86_64_raw_data_cache_size): New.
+	(__x86_64_raw_data_cache_size_half): Likewise.
+	(__x86_64_raw_shared_cache_size): Likewise.
+	(__x86_64_raw_shared_cache_size_half): Likewise.
+	(init_cacheinfo): Set __x86_64_raw_data_cache_size,
+	__x86_64_raw_data_cache_size_half, __x86_64_raw_shared_cache_size
+	and __x86_64_raw_shared_cache_size_half.  Round
+	__x86_64_data_cache_size_half, __x86_64_data_cache_size
+	__x86_64_shared_cache_size_half and __x86_64_shared_cache_size,
+	to multiple of 256 bytes.
+
 2010-11-03  Ulrich Drepper  <drepper@gmail.com>
 
 	[BZ #12167]
