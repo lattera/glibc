@@ -16,9 +16,10 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#define bit_Fast_Rep_String	(1 << 0)
-#define bit_Fast_Copy_Backward	(1 << 1)
-#define bit_Slow_BSF		(1 << 2)
+#define bit_Fast_Rep_String		(1 << 0)
+#define bit_Fast_Copy_Backward		(1 << 1)
+#define bit_Slow_BSF			(1 << 2)
+#define bit_Prefer_SSE_for_memop	(1 << 3)
 
 #ifdef	__ASSEMBLER__
 
@@ -37,6 +38,7 @@
 # define index_Fast_Rep_String		FEATURE_INDEX_1*FEATURE_SIZE
 # define index_Fast_Copy_Backward	FEATURE_INDEX_1*FEATURE_SIZE
 # define index_Slow_BSF			FEATURE_INDEX_1*FEATURE_SIZE
+# define index_Prefer_SSE_for_memop	FEATURE_INDEX_1*FEATURE_SIZE
 
 #else	/* __ASSEMBLER__ */
 
@@ -109,6 +111,7 @@ extern const struct cpu_features *__get_cpu_features (void)
 # define index_Fast_Rep_String		FEATURE_INDEX_1
 # define index_Fast_Copy_Backward	FEATURE_INDEX_1
 # define index_Slow_BSF			FEATURE_INDEX_1
+# define index_Prefer_SSE_for_memop	FEATURE_INDEX_1
 
 #define HAS_ARCH_FEATURE(idx, bit) \
   ((__get_cpu_features ()->feature[idx] & (bit)) != 0)
@@ -121,5 +124,8 @@ extern const struct cpu_features *__get_cpu_features (void)
 
 #define HAS_SLOW_BSF \
   HAS_ARCH_FEATURE (index_Slow_BSF, bit_Slow_BSF)
+
+#define HAS_PREFER_SSE_FOR_MEMOP \
+  HAS_ARCH_FEATURE (index_Prefer_SSE_for_memop, bit_Prefer_SSE_for_memop)
 
 #endif	/* __ASSEMBLER__ */

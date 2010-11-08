@@ -1,3 +1,21 @@
+2010-11-07  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/x86_64/memset.S: Check USE_MULTIARCH and USE_SSE2 for
+	IFUNC support.
+	* sysdeps/x86_64/multiarch/Makefile (sysdep_routines): Add
+	memset-x86-64.
+	* sysdeps/x86_64/multiarch/bzero.S: New file.
+	* sysdeps/x86_64/multiarch/cacheinfo.c: New file.
+	* sysdeps/x86_64/multiarch/memset-x86-64.S: New file.
+	* sysdeps/x86_64/multiarch/memset.S: New file.
+	* sysdeps/x86_64/multiarch/memset_chk.S: New file.
+	* sysdeps/x86_64/multiarch/init-arch.c (__init_cpu_features):
+	Set bit_Prefer_SSE_for_memop for Intel processors.
+	* sysdeps/x86_64/multiarch/init-arch.h (bit_Prefer_SSE_for_memop):
+	Define.
+	(index_Prefer_SSE_for_memop): Define.
+	(HAS_PREFER_SSE_FOR_MEMOP): Define.
+
 2010-11-04  Luis Machado  <luisgpm@br.ibm.com>
 
 	* sysdeps/powerpc/powerpc32/power7/mempcpy.S: New file.

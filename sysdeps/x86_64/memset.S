@@ -24,7 +24,7 @@
 #define __STOS_UPPER_BOUNDARY	$65536
 
         .text
-#ifndef NOT_IN_libc
+#if !defined NOT_IN_libc && !defined USE_MULTIARCH
 ENTRY(__bzero)
 	mov	%rsi,%rdx	/* Adjust parameter.  */
 	xorl	%esi,%esi	/* Fill with 0s.  */
@@ -34,10 +34,10 @@ weak_alias (__bzero, bzero)
 #endif
 
 #if defined PIC && !defined NOT_IN_libc
-ENTRY (__memset_chk)
+ENTRY_CHK (__memset_chk)
 	cmpq	%rdx, %rcx
 	jb	HIDDEN_JUMPTARGET (__chk_fail)
-END (__memset_chk)
+END_CHK (__memset_chk)
 #endif
 ENTRY (memset)
 L(memset_entry):
@@ -591,157 +591,13 @@ L(A6Q1):    mov    %dx,-0xe(%rdi)
 L(A7Q0):    mov    %dl,-0x7(%rdi)
 L(A6Q0):    mov    %dx,-0x6(%rdi)
 	mov    %edx,-0x4(%rdi)
+
+#ifndef USE_MULTIARCH
 	jmp    L(aligned_now)
 
-	.balign     16
-L(aligned_now):
-
-	 cmpl   $0x1,__x86_64_preferred_memory_instruction(%rip)
-	 jg     L(SSE_pre)
-
-L(8byte_move_try):
-	cmpq	__STOS_LOWER_BOUNDARY,%r8
-	jae	L(8byte_stos_try)
-
-	.balign     16
-L(8byte_move):
-	movq	%r8,%rcx
-	shrq	$7,%rcx
-	jz	L(8byte_move_skip)
-
-	.p2align 4
-
-L(8byte_move_loop):
-	decq	%rcx
-
-	movq	%rdx,    (%rdi)
-	movq	%rdx,  8 (%rdi)
-	movq	%rdx, 16 (%rdi)
-	movq	%rdx, 24 (%rdi)
-	movq	%rdx, 32 (%rdi)
-	movq	%rdx, 40 (%rdi)
-	movq	%rdx, 48 (%rdi)
-	movq	%rdx, 56 (%rdi)
-	movq	%rdx, 64 (%rdi)
-	movq	%rdx, 72 (%rdi)
-	movq	%rdx, 80 (%rdi)
-	movq	%rdx, 88 (%rdi)
-	movq	%rdx, 96 (%rdi)
-	movq	%rdx, 104 (%rdi)
-	movq	%rdx, 112 (%rdi)
-	movq	%rdx, 120 (%rdi)
-
-	leaq	128 (%rdi),%rdi
-
-	jnz     L(8byte_move_loop)
-
-L(8byte_move_skip):
-	andl	$127,%r8d
-	lea    	(%rdi,%r8,1),%rdi
-
-#ifndef PIC
-	lea    	L(setPxQx)(%rip),%r11
-	jmpq   	*(%r11,%r8,8) # old scheme remained for nonPIC
-#else
-	lea    	L(Got0)(%rip),%r11
-	lea	L(setPxQx)(%rip),%rcx
-	movswq	(%rcx,%r8,2),%rcx
-	lea    	(%rcx,%r11,1),%r11
-	jmpq   	*%r11
-#endif
-
-	.balign     16
-L(8byte_stos_try):
-	mov    __x86_64_shared_cache_size(%rip),%r9d // ck largest cache size
-	cmpq	%r8,%r9		// calculate the lesser of remaining
-	cmovaq	%r8,%r9		// bytes and largest cache size
-	jbe	L(8byte_stos)
-
-L(8byte_move_reuse_try):
-	cmp	__STOS_UPPER_BOUNDARY,%r8
-	jae	L(8byte_move)
-
-	.balign     16
-L(8byte_stos):
-	movq	%r9,%rcx
-	andq	$-8,%r9
-
-	shrq	$3,%rcx
-	jz	L(8byte_stos_skip)
-
-	xchgq	%rax,%rdx
-
-	rep
-	stosq
-
-	xchgq	%rax,%rdx
-
-L(8byte_stos_skip):
-	subq	%r9,%r8
-	ja	L(8byte_nt_move)
-
-	andl	$7,%r8d
-	lea    	(%rdi,%r8,1),%rdi
-#ifndef PIC
-	lea    	L(setPxQx)(%rip),%r11
-	jmpq   	*(%r11,%r8,8) # old scheme remained for nonPIC
-#else
-	lea    	L(Got0)(%rip),%r11
-	lea     L(setPxQx)(%rip),%rcx
-	movswq	(%rcx,%r8,2),%rcx
-	lea	(%rcx,%r11,1),%r11
-	jmpq   	*%r11
-#endif
-
-	.balign     16
-L(8byte_nt_move):
-	movq	%r8,%rcx
-	shrq	$7,%rcx
-	jz      L(8byte_nt_move_skip)
-
-	.balign     16
-L(8byte_nt_move_loop):
-	decq	%rcx
-
-	movntiq	%rdx,     (%rdi)
-	movntiq	%rdx,   8 (%rdi)
-	movntiq	%rdx,  16 (%rdi)
-	movntiq	%rdx,  24 (%rdi)
-	movntiq	%rdx,  32 (%rdi)
-	movntiq	%rdx,  40 (%rdi)
-	movntiq	%rdx,  48 (%rdi)
-	movntiq	%rdx,  56 (%rdi)
-	movntiq	%rdx,  64 (%rdi)
-	movntiq	%rdx,  72 (%rdi)
-	movntiq	%rdx,  80 (%rdi)
-	movntiq	%rdx,  88 (%rdi)
-	movntiq	%rdx,  96 (%rdi)
-	movntiq	%rdx, 104 (%rdi)
-	movntiq	%rdx, 112 (%rdi)
-	movntiq	%rdx, 120 (%rdi)
-
-	leaq	128 (%rdi),%rdi
-
-	jnz     L(8byte_nt_move_loop)
-
-	sfence
-
-L(8byte_nt_move_skip):
-	andl	$127,%r8d
-
-	lea    	(%rdi,%r8,1),%rdi
-#ifndef PIC
-	lea    	L(setPxQx)(%rip),%r11
-	jmpq   	*(%r11,%r8,8) # old scheme remained for nonPIC
-#else
-	lea    	L(Got0)(%rip),%r11
-	lea     L(setPxQx)(%rip),%rcx
-	movswq	(%rcx,%r8,2),%rcx
-	lea    	(%rcx,%r11,1),%r11
-	jmpq   	*%r11
-#endif
-
 L(SSE_pre):
+#endif
+#if !defined USE_MULTIARCH || defined USE_SSE2
 	 # fill RegXMM0 with the pattern
 	 movd   %rdx,%xmm0
 	 punpcklqdq %xmm0,%xmm0
@@ -1342,11 +1198,162 @@ L(SSExDx):
 	.short     L(SSE15QB)-L(SSE0Q0)
 #endif
 	.popsection
+#endif /* !defined USE_MULTIARCH || defined USE_SSE2  */
+
+	.balign     16
+L(aligned_now):
+
+#ifndef USE_MULTIARCH
+	 cmpl   $0x1,__x86_64_preferred_memory_instruction(%rip)
+	 jg     L(SSE_pre)
+#endif /* USE_MULTIARCH */
+
+L(8byte_move_try):
+	cmpq	__STOS_LOWER_BOUNDARY,%r8
+	jae	L(8byte_stos_try)
+
+	.balign     16
+L(8byte_move):
+	movq	%r8,%rcx
+	shrq	$7,%rcx
+	jz	L(8byte_move_skip)
+
+	.p2align 4
+
+L(8byte_move_loop):
+	decq	%rcx
+
+	movq	%rdx,    (%rdi)
+	movq	%rdx,  8 (%rdi)
+	movq	%rdx, 16 (%rdi)
+	movq	%rdx, 24 (%rdi)
+	movq	%rdx, 32 (%rdi)
+	movq	%rdx, 40 (%rdi)
+	movq	%rdx, 48 (%rdi)
+	movq	%rdx, 56 (%rdi)
+	movq	%rdx, 64 (%rdi)
+	movq	%rdx, 72 (%rdi)
+	movq	%rdx, 80 (%rdi)
+	movq	%rdx, 88 (%rdi)
+	movq	%rdx, 96 (%rdi)
+	movq	%rdx, 104 (%rdi)
+	movq	%rdx, 112 (%rdi)
+	movq	%rdx, 120 (%rdi)
+
+	leaq	128 (%rdi),%rdi
+
+	jnz     L(8byte_move_loop)
+
+L(8byte_move_skip):
+	andl	$127,%r8d
+	lea    	(%rdi,%r8,1),%rdi
+
+#ifndef PIC
+	lea    	L(setPxQx)(%rip),%r11
+	jmpq   	*(%r11,%r8,8) # old scheme remained for nonPIC
+#else
+	lea    	L(Got0)(%rip),%r11
+	lea	L(setPxQx)(%rip),%rcx
+	movswq	(%rcx,%r8,2),%rcx
+	lea    	(%rcx,%r11,1),%r11
+	jmpq   	*%r11
+#endif
+
+	.balign     16
+L(8byte_stos_try):
+	mov    __x86_64_shared_cache_size(%rip),%r9d // ck largest cache size
+	cmpq	%r8,%r9		// calculate the lesser of remaining
+	cmovaq	%r8,%r9		// bytes and largest cache size
+	jbe	L(8byte_stos)
+
+L(8byte_move_reuse_try):
+	cmp	__STOS_UPPER_BOUNDARY,%r8
+	jae	L(8byte_move)
+
+	.balign     16
+L(8byte_stos):
+	movq	%r9,%rcx
+	andq	$-8,%r9
+
+	shrq	$3,%rcx
+	jz	L(8byte_stos_skip)
+
+	xchgq	%rax,%rdx
+
+	rep
+	stosq
+
+	xchgq	%rax,%rdx
+
+L(8byte_stos_skip):
+	subq	%r9,%r8
+	ja	L(8byte_nt_move)
+
+	andl	$7,%r8d
+	lea    	(%rdi,%r8,1),%rdi
+#ifndef PIC
+	lea    	L(setPxQx)(%rip),%r11
+	jmpq   	*(%r11,%r8,8) # old scheme remained for nonPIC
+#else
+	lea    	L(Got0)(%rip),%r11
+	lea     L(setPxQx)(%rip),%rcx
+	movswq	(%rcx,%r8,2),%rcx
+	lea	(%rcx,%r11,1),%r11
+	jmpq   	*%r11
+#endif
+
+	.balign     16
+L(8byte_nt_move):
+	movq	%r8,%rcx
+	shrq	$7,%rcx
+	jz      L(8byte_nt_move_skip)
+
+	.balign     16
+L(8byte_nt_move_loop):
+	decq	%rcx
+
+	movntiq	%rdx,     (%rdi)
+	movntiq	%rdx,   8 (%rdi)
+	movntiq	%rdx,  16 (%rdi)
+	movntiq	%rdx,  24 (%rdi)
+	movntiq	%rdx,  32 (%rdi)
+	movntiq	%rdx,  40 (%rdi)
+	movntiq	%rdx,  48 (%rdi)
+	movntiq	%rdx,  56 (%rdi)
+	movntiq	%rdx,  64 (%rdi)
+	movntiq	%rdx,  72 (%rdi)
+	movntiq	%rdx,  80 (%rdi)
+	movntiq	%rdx,  88 (%rdi)
+	movntiq	%rdx,  96 (%rdi)
+	movntiq	%rdx, 104 (%rdi)
+	movntiq	%rdx, 112 (%rdi)
+	movntiq	%rdx, 120 (%rdi)
+
+	leaq	128 (%rdi),%rdi
+
+	jnz     L(8byte_nt_move_loop)
+
+	sfence
+
+L(8byte_nt_move_skip):
+	andl	$127,%r8d
+
+	lea    	(%rdi,%r8,1),%rdi
+#ifndef PIC
+	lea    	L(setPxQx)(%rip),%r11
+	jmpq   	*(%r11,%r8,8) # old scheme remained for nonPIC
+#else
+	lea    	L(Got0)(%rip),%r11
+	lea     L(setPxQx)(%rip),%rcx
+	movswq	(%rcx,%r8,2),%rcx
+	lea    	(%rcx,%r11,1),%r11
+	jmpq   	*%r11
+#endif
 
 END (memset)
 libc_hidden_builtin_def (memset)
 
-#if defined PIC && !defined NOT_IN_libc
+#if defined PIC && !defined NOT_IN_libc && !defined USE_MULTIARCH
 strong_alias (__memset_chk, __memset_zero_constant_len_parameter)
 	.section .gnu.warning.__memset_zero_constant_len_parameter
 	.string "memset used with constant zero length parameter; this could be due to transposed parameters"
