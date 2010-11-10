@@ -1,3 +1,9 @@
+2010-11-08  Ulrich Drepper  <drepper@gmail.com>
+
+	[BZ #12194]
+	* sysdeps/i386/bits/byteswap.h: Avoid warning in __bswap_16.
+	* sysdeps/x86_64/bits/byteswap.h: Likewise.
+
 2010-11-07  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/x86_64/memset.S: Check USE_MULTIARCH and USE_SSE2 for

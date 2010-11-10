@@ -1,5 +1,5 @@
 /* Macros to swap the order of bytes in integer values.
-   Copyright (C) 1997, 1998, 2000, 2002, 2003, 2007, 2008
+   Copyright (C) 1997, 1998, 2000, 2002, 2003, 2007, 2008, 2010
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -29,12 +29,12 @@
 
 /* Swap bytes in 16 bit value.  */
 #define __bswap_constant_16(x) \
-     ((((x) >> 8) & 0xff) | (((x) & 0xff) << 8))
+     ((unsigned short int) ((((x) >> 8) & 0xff) | (((x) & 0xff) << 8)))
 
 #if defined __GNUC__ && __GNUC__ >= 2
 # define __bswap_16(x) \
      (__extension__							      \
-      ({ register unsigned short int __v, __x = (x);			      \
+      ({ register unsigned short int __v, __x = (unsigned short int) (x);     \
 	 if (__builtin_constant_p (__x))				      \
 	   __v = __bswap_constant_16 (__x);				      \
 	 else								      \
@@ -47,7 +47,8 @@
 /* This is better than nothing.  */
 # define __bswap_16(x) \
      (__extension__							      \
-      ({ register unsigned short int __x = (x); __bswap_constant_16 (__x); }))
+      ({ register unsigned short int __x = (unsigned short int) (x);          \
+	 __bswap_constant_16 (__x); }))
 #endif
 
 
@@ -120,16 +121,16 @@
 #  define __bswap_64(x) \
      (__extension__                                                           \
       ({ union { __extension__ unsigned long long int __ll;                   \
-                 unsigned int __l[2]; } __w, __r;                             \
-         if (__builtin_constant_p (x))                                        \
-           __r.__ll = __bswap_constant_64 (x);                                \
-         else                                                                 \
-           {                                                                  \
-             __w.__ll = (x);                                                  \
-             __r.__l[0] = __bswap_32 (__w.__l[1]);                            \
-             __r.__l[1] = __bswap_32 (__w.__l[0]);                            \
-           }                                                                  \
-         __r.__ll; }))
+		 unsigned int __l[2]; } __w, __r;                             \
+	 if (__builtin_constant_p (x))                                        \
+	   __r.__ll = __bswap_constant_64 (x);                                \
+	 else                                                                 \
+	   {                                                                  \
+	     __w.__ll = (x);                                                  \
+	     __r.__l[0] = __bswap_32 (__w.__l[1]);                            \
+	     __r.__l[1] = __bswap_32 (__w.__l[0]);                            \
+	   }                                                                  \
+	 __r.__ll; }))
 # endif
 #endif
 

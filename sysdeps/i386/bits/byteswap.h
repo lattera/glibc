@@ -1,5 +1,5 @@
 /* Macros to swap the order of bytes in integer values.
-   Copyright (C) 1997, 1998, 2000, 2002, 2003, 2006, 2007, 2008
+   Copyright (C) 1997, 1998, 2000, 2002, 2003, 2006, 2007, 2008, 2010
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -27,26 +27,27 @@
 
 /* Swap bytes in 16 bit value.  */
 #define __bswap_constant_16(x) \
-     ((((x) >> 8) & 0xff) | (((x) & 0xff) << 8))
+     ((unsigned short int) ((((x) >> 8) & 0xff) | (((x) & 0xff) << 8)))
 
 #ifdef __GNUC__
 # if __GNUC__ >= 2
 #  define __bswap_16(x) \
      (__extension__							      \
-      ({ register unsigned short int __v, __x = (x);			      \
+      ({ register unsigned short int __v, __x = (unsigned short int) (x);     \
 	 if (__builtin_constant_p (__x))				      \
 	   __v = __bswap_constant_16 (__x);				      \
 	 else								      \
 	   __asm__ ("rorw $8, %w0"					      \
 		    : "=r" (__v)					      \
- 		    : "0" (__x)						      \
- 		    : "cc");						      \
+		    : "0" (__x)						      \
+		    : "cc");						      \
 	 __v; }))
 # else
 /* This is better than nothing.  */
 #  define __bswap_16(x) \
      (__extension__							      \
-      ({ register unsigned short int __x = (x); __bswap_constant_16 (__x); }))
+      ({ register unsigned short int __x = (unsigned short int) (x);	      \
+	 __bswap_constant_16 (__x); }))
 # endif
 #else
 static __inline unsigned short int
@@ -122,7 +123,7 @@ __bswap_32 (unsigned int __bsx)
      (__extension__							      \
       ({ union { __extension__ unsigned long long int __ll;		      \
 		 unsigned long int __l[2]; } __w, __r;			      \
-         if (__builtin_constant_p (x))					      \
+	 if (__builtin_constant_p (x))					      \
 	   __r.__ll = __bswap_constant_64 (x);				      \
 	 else								      \
 	   {								      \
