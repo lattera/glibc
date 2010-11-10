@@ -70,9 +70,9 @@ stupid_strncasecmp (const char *s1, const char *s2, size_t max)
   return ret;
 }
 
-static void
-do_one_test (impl_t *impl, const char *s1, const char *s2, size_t n,
-	     int exp_result)
+static int
+check_result (impl_t *impl, const char *s1, const char *s2, size_t n,
+	      int exp_result)
 {
   int result = CALL (impl, s1, s2, n);
   if ((exp_result == 0 && result != 0)
@@ -82,8 +82,18 @@ do_one_test (impl_t *impl, const char *s1, const char *s2, size_t n,
       error (0, 0, "Wrong result in function %s %d %d", impl->name,
 	     result, exp_result);
       ret = 1;
-      return;
+      return -1;
     }
+
+  return 0;
+}
+
+static void
+do_one_test (impl_t *impl, const char *s1, const char *s2, size_t n,
+	     int exp_result)
+{
+  if (check_result (impl, s1, s2, n, exp_result) < 0)
+    return;
 
   if (HP_TIMING_AVAIL)
     {
@@ -242,12 +252,33 @@ do_random_tests (void)
     }
 }
 
+
+static void
+check1 (void)
+{
+  static char cp [4096+16] __attribute__ ((aligned(4096)));
+  static char gotrel[4096] __attribute__ ((aligned(4096)));
+  char *s1 = cp + 0xffa;
+  char *s2 = gotrel + 0xcbe;
+  int exp_result;
+  size_t n = 6;
+
+  strcpy (s1, "gottpoff");
+  strcpy (s2, "GOTPLT");
+
+  exp_result = simple_strncasecmp (s1, s2, n);
+  FOR_EACH_IMPL (impl, 0)
+    check_result (impl, s1, s2, n, exp_result);
+}
+
 int
 test_main (void)
 {
   size_t i;
 
   test_init ();
+
+  check1 ();
 
   printf ("%23s", "");
   FOR_EACH_IMPL (impl, 0)

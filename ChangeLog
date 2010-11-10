@@ -1,3 +1,13 @@
+2010-11-09  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #12205]
+	* string/test-strncasecmp.c (check_result): New function.
+	(do_one_test): Use it.
+	(check1): New function.
+	(test_main): Use it.
+	* sysdeps/i386/i686/multiarch/strcmp.S (nibble_ashr_use_sse4_2_exit):
+	Support strcasecmp and strncasecmp.
+
 2010-11-08  Ulrich Drepper  <drepper@gmail.com>
 
 	[BZ #12194]

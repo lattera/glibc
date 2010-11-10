@@ -1809,7 +1809,13 @@ LABEL(nibble_ashr_15_use_sse4_2):
 	ja	LABEL(loop_ashr_15_use_sse4_2)
 
 LABEL(nibble_ashr_use_sse4_2_exit):
+# if !defined USE_AS_STRCASECMP_L && !defined USE_AS_STRNCASECMP_L
 	pcmpistri      $0x1a,(%rsi,%rdx), %xmm0
+# else
+	movdqa	(%rsi,%rdx), %xmm1
+	TOLOWER (%xmm0, %xmm1)
+	pcmpistri $0x1a, %xmm1, %xmm0
+# endif
 	.p2align 4
 LABEL(use_sse4_2_exit):
 	jnc	LABEL(strcmp_exitz_sse4_2)
