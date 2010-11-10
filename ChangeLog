@@ -1,3 +1,8 @@
+2010-11-10  Luis Machado  <luisgpm@br.ibm.com>
+
+	* sysdeps/ieee754/ldbl-128ibm/e_sqrtl.c (__ieee754_sqrtl): Force
+	  signed comparison.
+
 2010-11-09  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #12205]

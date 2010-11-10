@@ -73,9 +73,9 @@ long double __ieee754_sqrtl(long double x)
 	m = ((a.i[2] >> 20) & 0x7ff) - 54;
       }
       m += n;
-      if (m > 0)
+      if ((int) m > 0)
 	a.i[2] = (a.i[2] & 0x800fffff) | (m << 20);
-      else if (m <= -54) {
+      else if ((int) m <= -54) {
 	a.i[2] &= 0x80000000;
 	a.i[3] = 0;
       } else {
