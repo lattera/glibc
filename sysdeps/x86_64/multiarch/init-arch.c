@@ -87,6 +87,7 @@ __init_cpu_features (void)
 	    case 0x1e:
 	    case 0x1f:
 	    case 0x25:
+	    case 0x2c:
 	    case 0x2e:
 	    case 0x2f:
 	      /* Rep string instructions and copy backward are fast on

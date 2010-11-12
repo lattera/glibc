@@ -1,3 +1,8 @@
+2010-11-11  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/x86_64/multiarch/init-arch.c (__init_cpu_features):
+	Support Intel processor model 6 and model 0x2c.
+
 2010-11-10  Luis Machado  <luisgpm@br.ibm.com>
 
 	* sysdeps/ieee754/ldbl-128ibm/e_sqrtl.c (__ieee754_sqrtl): Force
