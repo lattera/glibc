@@ -115,7 +115,8 @@ generated := $(addprefix wordexp-test-result, 1 2 3 4 5 6 7 8 9 10) \
 	     tst-rxspencer-mem tst-rxspencer.mtrace tst-getconf.out \
 	     tst-pcre-mem tst-pcre.mtrace tst-boost-mem tst-boost.mtrace \
 	     bug-ga2.mtrace bug-ga2-mem bug-glob2.mtrace bug-glob2-mem \
-	     tst-vfork3-mem tst-vfork3.mtrace getconf.speclist
+	     tst-vfork3-mem tst-vfork3.mtrace getconf.speclist \
+	     tst-fnmatch-mem tst-fnmatch.mtrace
 
 include ../Rules
 
@@ -235,7 +236,7 @@ ifeq (no,$(cross-compiling))
 tests: $(objpfx)bug-regex2-mem $(objpfx)bug-regex14-mem \
   $(objpfx)bug-regex21-mem $(objpfx)bug-regex31-mem $(objpfx)tst-rxspencer-mem\
   $(objpfx)tst-pcre-mem $(objpfx)tst-boost-mem $(objpfx)tst-getconf.out \
-  $(objpfx)bug-glob2-mem $(objpfx)tst-vfork3-mem
+  $(objpfx)bug-glob2-mem $(objpfx)tst-vfork3-mem $(objpfx)tst-fnmatch-mem
 xtests: $(objpfx)bug-ga2-mem
 endif
 
@@ -246,6 +247,11 @@ $(objpfx)annexc.out: $(objpfx)annexc
 annexc-CFLAGS = -O
 $(objpfx)annexc: annexc.c
 	$(native-compile)
+
+tst-fnmatch-ENV += MALLOC_TRACE=$(objpfx)tst-fnmatch.mtrace
+
+$(objpfx)tst-fnmatch-mem: $(objpfx)tst-fnmatch.out
+	$(common-objpfx)malloc/mtrace $(objpfx)tst-fnmatch.mtrace > $@
 
 bug-regex2-ENV = MALLOC_TRACE=$(objpfx)bug-regex2.mtrace
 

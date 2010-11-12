@@ -1,3 +1,12 @@
+2010-11-11  Andreas Schwab  <schwab@redhat.com>
+
+	* posix/fnmatch_loop.c (NEW_PATTERN): Fix use of alloca.
+	* posix/Makefile (tests): Add $(objpfx)tst-fnmatch-mem.
+	(tst-fnmatch-ENV): Set MALLOC_TRACE.
+	($(objpfx)tst-fnmatch-mem): New rule.
+	(generated): Add tst-fnmatch-mem and tst-fnmatch.mtrace.
+	* posix/tst-fnmatch.c (main): Call mtrace.
+
 2010-11-11  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/x86_64/multiarch/init-arch.c (__init_cpu_features):

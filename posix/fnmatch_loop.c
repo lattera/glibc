@@ -1114,18 +1114,16 @@ EXT (INT opt, const CHAR *pattern, const CHAR *string, const CHAR *string_end,
 	    int malloced = ! __libc_use_alloca (alloca_used + slen);	      \
 	    if (__builtin_expect (malloced, 0))				      \
 	      {								      \
-		newp = alloca_account (slen, alloca_used);		      \
-		any_malloced = 1;					      \
-	      }								      \
-	    else							      \
-	      {								      \
 		newp = malloc (slen);					      \
 		if (newp == NULL)					      \
 		  {							      \
 		    retval = -2;					      \
 		    goto out;						      \
 		  }							      \
+		any_malloced = 1;					      \
 	      }								      \
+	    else							      \
+	      newp = alloca_account (slen, alloca_used);		      \
 	    newp->next = NULL;						      \
 	    newp->malloced = malloced;					      \
 	    *((CHAR *) MEMPCPY (newp->str, startp, p - startp)) = L('\0');    \
