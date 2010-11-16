@@ -1,3 +1,7 @@
+2010-11-16  Ulrich Drepper  <drepper@gmail.com>
+
+	* sysdeps/unix/sysv/linux/sys/swap.h (SWAP_FLAG_DISCARD): Define.
+
 2010-11-11  Andreas Schwab  <schwab@redhat.com>
 
 	* posix/fnmatch_loop.c (NEW_PATTERN): Fix use of alloca.
