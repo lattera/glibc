@@ -1,3 +1,8 @@
+2010-11-22  Andreas Schwab  <schwab@redhat.com>
+
+	* sysdeps/arm/preconfigure: Only modify CFLAGS when configuring
+	for arm-linux*eabi.
+
 2010-10-19  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/arm/bits/mathdef.h (FP_FAST_FMA, FP_FAST_FMAF,

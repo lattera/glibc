@@ -4,6 +4,10 @@ arm*)
 	case $config_os in
 	linux-gnueabi)
 		machine=arm/eabi/$machine
+		if [ "${CFLAGS+set}" != "set" ]; then
+		  CFLAGS="-g -O2"
+		fi
+		CFLAGS="$CFLAGS -fno-unwind-tables"
 		;;
 	*)
 		machine=arm/$machine
@@ -11,7 +15,3 @@ arm*)
 	esac
 	;;
 esac
-if [ "${CFLAGS+set}" != "set" ]; then
-  CFLAGS="-g -O2"
-fi
-CFLAGS="$CFLAGS -fno-unwind-tables"
