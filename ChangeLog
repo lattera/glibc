@@ -1,3 +1,9 @@
+2010-05-31  Petr Baudis  <pasky@suse.cz>
+
+	[BZ #11149]
+	* elf/ldconfig.c (main): Allow aux_cache_file open()ing to fail
+	silently even in the chroot mode.
+
 2010-11-22  Ulrich Drepper  <drepper@gmail.com>
 
 	* nis/nss_compat/compat-initgroups.c (internal_getgrent_r): Optimize
