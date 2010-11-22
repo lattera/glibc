@@ -1,3 +1,9 @@
+2010-05-31  Petr Baudis <pasky@suse.cz>
+
+	[BZ #10085]
+	* nis/nss_compat/compat-initgroups.c (internal_getgrent_r): Fix
+	initialization of skip_initgroups_dyn.
+
 2010-11-19  Ulrich Drepper  <drepper@gmail.com>
 
 	* sysdeps/unix/sysv/linux/i386/bits/mman.h: Define MAP_HUGETLB.

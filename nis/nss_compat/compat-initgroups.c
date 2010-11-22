@@ -474,17 +474,20 @@ internal_getgrent_r (ent_t *ent, char *buffer, size_t buflen, const char *user,
 	  /* If the selected module does not support getgrent_r or
 	     initgroups_dyn, abort. We cannot find the needed group
 	     entries.  */
-	  if (nss_getgrent_r == NULL && nss_initgroups_dyn == NULL)
+	  if (nss_initgroups_dyn == NULL || nss_getgrgid_r == NULL)
+	    {
+	      if (nss_setgrent != NULL)
+	        {
+		  nss_setgrent (1);
+		  ent->need_endgrent = true;
+		}
+	      ent->skip_initgroups_dyn = true;
+	    }
+
+	  if (ent->skip_initgroups_dyn && nss_getgrent_r == NULL)
 	    return NSS_STATUS_UNAVAIL;
 
 	  ent->files = false;
-
-	  if (nss_initgroups_dyn == NULL && nss_setgrent != NULL)
-	    {
-	      nss_setgrent (1);
-	      ent->need_endgrent = true;
-	    }
-	  ent->skip_initgroups_dyn = true;
 
 	  return getgrent_next_nss (ent, buffer, buflen, user, group,
 				    start, size, groupsp, limit, errnop);
