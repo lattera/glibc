@@ -1,3 +1,8 @@
+2010-11-22  Ulrich Drepper  <drepper@gmail.com>
+
+	* nis/nss_compat/compat-initgroups.c (internal_getgrent_r): Optimize
+	last patch a bit.  Pretty printing
+
 2010-05-31  Petr Baudis <pasky@suse.cz>
 
 	[BZ #10085]

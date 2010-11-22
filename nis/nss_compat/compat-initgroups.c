@@ -1,4 +1,4 @@
-/* Copyright (C) 1998-2004, 2006, 2007, 2009 Free Software Foundation, Inc.
+/* Copyright (C) 1998-2004,2006,2007,2009,2010 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@suse.de>, 1998.
 
@@ -288,12 +288,12 @@ getgrent_next_nss (ent_t *ent, char *buffer, size_t buflen, const char *user,
 	return NSS_STATUS_TRYAGAIN;
 
       /* For every gid in the list we get from the NSS module,
-         get the whole group entry. We need to do this, since we
-         need the group name to check if it is in the blacklist.
-         In worst case, this is as twice as slow as stepping with
-         getgrent_r through the whole group database. But for large
-         group databases this is faster, since the user can only be
-         in a limited number of groups.  */
+	 get the whole group entry. We need to do this, since we
+	 need the group name to check if it is in the blacklist.
+	 In worst case, this is as twice as slow as stepping with
+	 getgrent_r through the whole group database. But for large
+	 group databases this is faster, since the user can only be
+	 in a limited number of groups.  */
       if (nss_initgroups_dyn (user, group, &mystart, &mysize, &mygroups,
 			      limit, errnop) == NSS_STATUS_SUCCESS)
 	{
@@ -426,7 +426,7 @@ internal_getgrent_r (ent_t *ent, char *buffer, size_t buflen, const char *user,
 	}
       while (*p == '\0' || *p == '#' ||	/* Ignore empty and comment lines. */
 	     /* Parse the line.  If it is invalid, loop to
-	        get the next line of the file to parse.  */
+		get the next line of the file to parse.  */
 	     !(parse_res = _nss_files_parse_grent (p, &grpbuf, data, buflen,
 						   errnop)));
 
@@ -477,15 +477,15 @@ internal_getgrent_r (ent_t *ent, char *buffer, size_t buflen, const char *user,
 	  if (nss_initgroups_dyn == NULL || nss_getgrgid_r == NULL)
 	    {
 	      if (nss_setgrent != NULL)
-	        {
+		{
 		  nss_setgrent (1);
 		  ent->need_endgrent = true;
 		}
 	      ent->skip_initgroups_dyn = true;
-	    }
 
-	  if (ent->skip_initgroups_dyn && nss_getgrent_r == NULL)
-	    return NSS_STATUS_UNAVAIL;
+	      if (nss_getgrent_r == NULL)
+		return NSS_STATUS_UNAVAIL;
+	    }
 
 	  ent->files = false;
 
