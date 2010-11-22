@@ -1,3 +1,7 @@
+2010-10-20  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/ieee754/ldbl-128/s_fmal.c (__fmal): Fix up inline asm.
+
 2010-05-31  Petr Baudis  <pasky@suse.cz>
 
 	[BZ #11149]
