@@ -1,3 +1,9 @@
+2010-11-24  Ken Werner  <ken.werner@de.ibm.com>
+
+	* sysdeps/unix/sysv/linux/arm/nptl/bits/atomic.h (atomic_full_barrier,
+	__arch_compare_and_exchange_val_32_acq): Use the atomic builtins
+	provided by GCC if __GCC_HAVE_SYNC_COMPARE_AND_SWAP_4 is defined.
+
 2010-11-22  Andreas Schwab  <schwab@redhat.com>
 
 	* sysdeps/arm/preconfigure: Only modify CFLAGS when configuring
