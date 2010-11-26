@@ -599,7 +599,6 @@ getanswer_r (const querybuf *answer, int anslen, const char *qname, int qtype,
   int (*name_ok) (const char *);
   u_char packtmp[NS_MAXCDNAME];
   int have_to_map = 0;
-  int32_t ttl = 0;
   uintptr_t pad = -(uintptr_t) buffer % __alignof__ (struct host_data);
   buffer += pad;
   if (__builtin_expect (buflen < sizeof (struct host_data) + pad, 0))
@@ -733,7 +732,7 @@ getanswer_r (const querybuf *answer, int anslen, const char *qname, int qtype,
       cp += INT16SZ;			/* type */
       class = __ns_get16 (cp);
       cp += INT16SZ;			/* class */
-      ttl = __ns_get32 (cp);
+      int32_t ttl = __ns_get32 (cp);
       cp += INT32SZ;			/* TTL */
       n = __ns_get16 (cp);
       cp += INT16SZ;			/* len */
@@ -907,7 +906,7 @@ getanswer_r (const querybuf *answer, int anslen, const char *qname, int qtype,
 	    {
 	      register int nn;
 
-	      if (ttlp != NULL && ttl != 0)
+	      if (ttlp != NULL)
 		*ttlp = ttl;
 	      if (canonp != NULL)
 		*canonp = bp;
@@ -1163,7 +1162,7 @@ gaih_getanswer_slice (const querybuf *answer, int anslen, const char *qname,
 
       if (*firstp)
 	{
-	  if (ttl != 0 && ttlp != NULL)
+	  if (ttlp != NULL)
 	    *ttlp = ttl;
 
 	  (*pat)->name = canon ?: h_name;

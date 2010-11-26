@@ -1,3 +1,9 @@
+2010-11-24  Andreas Schwab  <schwab@redhat.com>
+
+	* resolv/nss_dns/dns-host.c (getanswer_r): Don't handle ttl == 0
+	specially.
+	(gaih_getanswer_slice): Likewise.
+
 2010-10-20  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/ieee754/ldbl-128/s_fmal.c (__fmal): Fix up inline asm.
