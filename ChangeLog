@@ -1,3 +1,7 @@
+2010-11-30  Ulrich Drepper  <drepper@gmail.com>
+
+	* sysdeps/i386/fpu/libm-test-ulps: Relax ynf(10,0.75) test expectations.
+
 2010-11-24  Andreas Schwab  <schwab@redhat.com>
 
 	* resolv/nss_dns/dns-host.c (getanswer_r): Don't handle ttl == 0

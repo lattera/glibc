@@ -857,8 +857,8 @@ ifloat: 1
 ildouble: 2
 ldouble: 2
 Test "yn (10, 0.75) == -2133501638.90573424452445412893839236":
-float: 1
-ifloat: 1
+float: 2
+ifloat: 2
 ildouble: 4
 ldouble: 4
 Test "yn (10, 1.0) == -121618014.278689189288130426667971145":
