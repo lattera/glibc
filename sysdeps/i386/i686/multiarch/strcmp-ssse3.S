@@ -70,9 +70,7 @@ ENTRY (STRCMP)
 	movl	CNT(%esp), %ebp
 	cmp	$16, %ebp
 	jb	L(less16bytes_sncmp)
-	jmp	L(more16bytes)
-#endif
-
+#else
 	movzbl	(%eax), %ecx
 	cmpb	%cl, (%edx)
 	jne	L(neq)
@@ -123,11 +121,6 @@ ENTRY (STRCMP)
 
 	add	$8, %edx
 	add	$8, %eax
-#ifdef USE_AS_STRNCMP
-	cmp	$8, %ebp
-	lea	-8(%ebp), %ebp
-	je	L(eq)
-L(more16bytes):
 #endif
 	movl	%edx, %ecx
 	and	$0xfff, %ecx
