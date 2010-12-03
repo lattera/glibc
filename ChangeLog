@@ -1,3 +1,7 @@
+2010-12-03  Ulrich Drepper  <drepper@gmail.com>
+
+	* po/it.po: Update from translation team.
+
 2010-11-24  Andreas Schwab  <schwab@redhat.com>
 
 	* resolv/nss_dns/dns-host.c (getanswer_r): Don't handle ttl == 0
