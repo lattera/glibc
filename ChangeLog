@@ -2,6 +2,15 @@
 
 	* po/it.po: Update from translation team.
 
+2010-12-01  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/i386/i686/multiarch/strcmp-ssse3.S (STRCMP): Remove
+	unused codes.
+
+2010-11-30  Ulrich Drepper  <drepper@gmail.com>
+
+	* sysdeps/i386/fpu/libm-test-ulps: Relax ynf(10,0.75) test expectations.
+
 2010-11-24  Andreas Schwab  <schwab@redhat.com>
 
 	* resolv/nss_dns/dns-host.c (getanswer_r): Don't handle ttl == 0
