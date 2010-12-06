@@ -1,3 +1,9 @@
+2010-12-06  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/mips/configure.in (arch_minimum_kernel):
+	Change to 2.4.1.
+	* sysdeps/unix/sysv/linux/mips/configure: Regenerate.
+
 2010-10-21  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/mips/mips32/syscalls.list,
