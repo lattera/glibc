@@ -25,6 +25,7 @@
 #include <unistd.h>
 #include <memcopy.h>
 #include <errno.h>
+#include <atomic.h>
 
 struct msort_param
 {
@@ -182,7 +183,7 @@ qsort_r (void *b, size_t n, size_t s, __compar_d_fn_t cmp, void *arg)
       static long int phys_pages;
       static int pagesize;
 
-      if (phys_pages == 0)
+      if (pagesize == 0)
 	{
 	  phys_pages = __sysconf (_SC_PHYS_PAGES);
 
@@ -196,6 +197,9 @@ qsort_r (void *b, size_t n, size_t s, __compar_d_fn_t cmp, void *arg)
 	  /* The following determines that we will never use more than
 	     a quarter of the physical memory.  */
 	  phys_pages /= 4;
+
+	  /* Make sure phys_pages is written to memory.  */
+	  atomic_write_barrier ();
 
 	  pagesize = __sysconf (_SC_PAGESIZE);
 	}

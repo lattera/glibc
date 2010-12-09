@@ -1,3 +1,9 @@
+2010-12-09  Ulrich Drepper  <drepper@gmail.com>
+
+	[BZ #11655]
+	* stdlib/msort.c (qsort_r): Make sure both phys_pages and pagesize
+	are initialized.
+
 2010-12-09  Jakub Jelinek  <jakub@redhat.com>
 
 	* string/bits/string3.h (memmove, bcopy): Remove __restrict.
