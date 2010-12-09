@@ -1,4 +1,4 @@
-/* Copyright (C) 2004, 2005, 2007, 2009 Free Software Foundation, Inc.
+/* Copyright (C) 2004, 2005, 2007, 2009, 2010 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -53,8 +53,7 @@ __NTH (memcpy (void *__restrict __dest, __const void *__restrict __src,
 }
 
 __extern_always_inline void *
-__NTH (memmove (void *__restrict __dest, __const void *__restrict __src,
-		size_t __len))
+__NTH (memmove (void *__dest, __const void *__src, size_t __len))
 {
   return __builtin___memmove_chk (__dest, __src, __len, __bos0 (__dest));
 }
@@ -88,8 +87,7 @@ __NTH (memset (void *__dest, int __ch, size_t __len))
 
 #ifdef __USE_BSD
 __extern_always_inline void
-__NTH (bcopy (__const void *__restrict __src, void *__restrict __dest,
-	      size_t __len))
+__NTH (bcopy (__const void *__src, void *__dest, size_t __len))
 {
   (void) __builtin___memmove_chk (__dest, __src, __len, __bos0 (__dest));
 }
