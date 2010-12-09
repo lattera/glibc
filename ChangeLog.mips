@@ -1,3 +1,7 @@
+2010-12-06  Matt Turner  <mattst88@gmail.com>
+
+	* sysdeps/unix/sysv/linux/mips/getpagesize.c: Delete file.
+
 2010-12-06  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/mips/configure.in (arch_minimum_kernel):
