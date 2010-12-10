@@ -1,5 +1,8 @@
 2010-12-10  Andreas Schwab  <schwab@redhat.com>
 
+	* wcsmbs/wchar.h (wcpcpy, wcpncpy): Only declare under
+	_GNU_SOURCE.
+
 	* wcsmbs/wchar.h (wcpcpy, wcpncpy): Add __restrict.
 	* wcsmbs/bits/wchar2.h (__wmemmove_chk_warn, wmemmove, wmemset):
 	Remove __restrict.
