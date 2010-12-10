@@ -1,5 +1,5 @@
 /* Checking macros for wchar functions.
-   Copyright (C) 2005, 2006, 2007 Free Software Foundation, Inc.
+   Copyright (C) 2005, 2006, 2007, 2010 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -60,15 +60,13 @@ extern wchar_t *__REDIRECT_NTH (__wmemmove_alias, (wchar_t *__s1,
 						   __const wchar_t *__s2,
 						   size_t __n), wmemmove);
 extern wchar_t *__REDIRECT_NTH (__wmemmove_chk_warn,
-				(wchar_t *__restrict __s1,
-				 __const wchar_t *__restrict __s2, size_t __n,
-				 size_t __ns1), __wmemmove_chk)
+				(wchar_t *__s1, __const wchar_t *__s2,
+				 size_t __n, size_t __ns1), __wmemmove_chk)
      __warnattr ("wmemmove called with length bigger than size of destination "
 		 "buffer");
 
 __extern_always_inline wchar_t *
-__NTH (wmemmove (wchar_t *__restrict __s1, __const wchar_t *__restrict __s2,
-		 size_t __n))
+__NTH (wmemmove (wchar_t *__s1, __const wchar_t *__s2, size_t __n))
 {
   if (__bos0 (__s1) != (size_t) -1)
     {
@@ -129,7 +127,7 @@ extern wchar_t *__REDIRECT_NTH (__wmemset_chk_warn,
 		 "buffer");
 
 __extern_always_inline wchar_t *
-__NTH (wmemset (wchar_t *__restrict __s, wchar_t __c, size_t __n))
+__NTH (wmemset (wchar_t *__s, wchar_t __c, size_t __n))
 {
   if (__bos0 (__s) != (size_t) -1)
     {
@@ -152,7 +150,7 @@ extern wchar_t *__REDIRECT_NTH (__wcscpy_alias,
 				 __const wchar_t *__restrict __src), wcscpy);
 
 __extern_always_inline wchar_t *
-__NTH (wcscpy (wchar_t *__dest, __const wchar_t *__src))
+__NTH (wcscpy (wchar_t *__restrict __dest, __const wchar_t *__restrict __src))
 {
   if (__bos (__dest) != (size_t) -1)
     return __wcscpy_chk (__dest, __src, __bos (__dest) / sizeof (wchar_t));
@@ -160,14 +158,15 @@ __NTH (wcscpy (wchar_t *__dest, __const wchar_t *__src))
 }
 
 
-extern wchar_t *__wcpcpy_chk (wchar_t *__dest, __const wchar_t *__src,
+extern wchar_t *__wcpcpy_chk (wchar_t *__restrict __dest,
+			      __const wchar_t *__restrict __src,
 			      size_t __destlen) __THROW;
-extern wchar_t *__REDIRECT_NTH (__wcpcpy_alias, (wchar_t *__dest,
-						 __const wchar_t *__src),
-				wcpcpy);
+extern wchar_t *__REDIRECT_NTH (__wcpcpy_alias,
+				(wchar_t *__restrict __dest,
+				 __const wchar_t *__restrict __src), wcpcpy);
 
 __extern_always_inline wchar_t *
-__NTH (wcpcpy (wchar_t *__dest, __const wchar_t *__src))
+__NTH (wcpcpy (wchar_t *__restrict __dest, __const wchar_t *__restrict __src))
 {
   if (__bos (__dest) != (size_t) -1)
     return __wcpcpy_chk (__dest, __src, __bos (__dest) / sizeof (wchar_t));
@@ -190,7 +189,8 @@ extern wchar_t *__REDIRECT_NTH (__wcsncpy_chk_warn,
 		 "buffer");
 
 __extern_always_inline wchar_t *
-__NTH (wcsncpy (wchar_t *__dest, __const wchar_t *__src, size_t __n))
+__NTH (wcsncpy (wchar_t *__restrict __dest, __const wchar_t *__restrict __src,
+		size_t __n))
 {
   if (__bos (__dest) != (size_t) -1)
     {
@@ -220,7 +220,8 @@ extern wchar_t *__REDIRECT_NTH (__wcpncpy_chk_warn,
 		 "buffer");
 
 __extern_always_inline wchar_t *
-__NTH (wcpncpy (wchar_t *__dest, __const wchar_t *__src, size_t __n))
+__NTH (wcpncpy (wchar_t *__restrict __dest, __const wchar_t *__restrict __src,
+		size_t __n))
 {
   if (__bos (__dest) != (size_t) -1)
     {
@@ -243,7 +244,7 @@ extern wchar_t *__REDIRECT_NTH (__wcscat_alias,
 				 __const wchar_t *__restrict __src), wcscat);
 
 __extern_always_inline wchar_t *
-__NTH (wcscat (wchar_t *__dest, __const wchar_t *__src))
+__NTH (wcscat (wchar_t *__restrict __dest, __const wchar_t *__restrict __src))
 {
   if (__bos (__dest) != (size_t) -1)
     return __wcscat_chk (__dest, __src, __bos (__dest) / sizeof (wchar_t));
@@ -260,7 +261,8 @@ extern wchar_t *__REDIRECT_NTH (__wcsncat_alias,
 				 size_t __n), wcsncat);
 
 __extern_always_inline wchar_t *
-__NTH (wcsncat (wchar_t *__dest, __const wchar_t *__src, size_t __n))
+__NTH (wcsncat (wchar_t *__restrict __dest, __const wchar_t *__restrict __src,
+		size_t __n))
 {
   if (__bos (__dest) != (size_t) -1)
     return __wcsncat_chk (__dest, __src, __n,
@@ -428,14 +430,16 @@ fgetws_unlocked (wchar_t *__restrict __s, int __n, __FILE *__restrict __stream)
 #endif
 
 
-extern size_t __wcrtomb_chk (char *__s, wchar_t __wchar, mbstate_t *__p,
-			  size_t __buflen) __THROW __wur;
+extern size_t __wcrtomb_chk (char *__restrict __s, wchar_t __wchar,
+			     mbstate_t *__restrict __p,
+			     size_t __buflen) __THROW __wur;
 extern size_t __REDIRECT_NTH (__wcrtomb_alias,
 			      (char *__restrict __s, wchar_t __wchar,
 			       mbstate_t *__restrict __ps), wcrtomb) __wur;
 
 __extern_always_inline __wur size_t
-__NTH (wcrtomb (char *__s, wchar_t __wchar, mbstate_t *__ps))
+__NTH (wcrtomb (char *__restrict __s, wchar_t __wchar,
+		mbstate_t *__restrict __ps))
 {
   /* We would have to include <limits.h> to get a definition of MB_LEN_MAX.
      But this would only disturb the namespace.  So we define our own
