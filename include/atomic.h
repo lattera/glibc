@@ -33,7 +33,7 @@
      the multi-thread case.  The interfaces have the prefix
      "catomic_".
 
-   - support functions like barriers.  They also have the preifx
+   - support functions like barriers.  They also have the prefix
      "atomic_".
 
    Architectures must provide a few lowlevel macros (the compare
