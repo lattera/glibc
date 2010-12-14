@@ -1,3 +1,7 @@
+2010-12-14  Ulrich Drepper  <dreper@gmail.com>
+
+	* sysdeps/i386/i686/multiarch/strcmp.S: Undo accident checkin.
+
 2010-12-10  Andreas Schwab  <schwab@redhat.com>
 
 	* wcsmbs/wchar.h (wcpcpy, wcpncpy): Only declare under
