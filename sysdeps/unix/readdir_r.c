@@ -117,7 +117,8 @@ __READDIR_R (DIR *dirp, DIRENT_TYPE *entry, DIRENT_TYPE **result)
 #ifdef GETDENTS_64BIT_ALIGNED
       /* The d_reclen value might include padding which is not part of
 	 the DIRENT_TYPE data structure.  */
-      reclen = MIN (reclen, sizeof (DIRENT_TYPE));
+      reclen = MIN (reclen,
+		    offsetof (DIRENT_TYPE, d_name) + sizeof (dp->d_name));
 #endif
       *result = memcpy (entry, dp, reclen);
 #ifdef GETDENTS_64BIT_ALIGNED
