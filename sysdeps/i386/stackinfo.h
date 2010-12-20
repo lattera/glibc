@@ -1,4 +1,4 @@
-/* Copyright (C) 1999, 2009 Free Software Foundation, Inc.
+/* Copyright (C) 1999, 2009, 2010 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -22,8 +22,14 @@
 #ifndef _STACKINFO_H
 #define _STACKINFO_H	1
 
+#include <elf.h>
+
 /* On x86 the stack grows down.  */
 #define _STACK_GROWS_DOWN	1
+
+/* Default to an executable stack.  PF_X can be overridden if PT_GNU_STACK is
+ * present, but it is presumed absent.  */
+#define DEFAULT_STACK_PERMS (PF_R|PF_W|PF_X)
 
 /* Access to the stack pointer.  The macros are used in alloca_account
    for which they need to act as barriers as well, hence the additional

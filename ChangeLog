@@ -1,3 +1,25 @@
+2010-12-15  Ryan S. Arnold  <rsa@us.ibm.com>
+
+	* elf/Makefile: (check-execstack): Replace $(native-compile) with a
+	similar rule which adds the sysdep directories to the header search in
+	order to pick up the correct platform stackinfo.h.
+	* elf/check-execstack.c (main): Check DEFAULT_STACK_PERMS for PF_X and
+	perform test if it is, otherwise return successfully without testing.
+	* elf/dl-load.c (_dl_map_object_from_fd): Source stack_flags from
+	DEFAULT_STACK_PERMS define in stackinfo.h.
+	* elf/dl-support.c (_dl_stack_flags): Source from DEFAULT_STACK_PERMS
+	defined in stackinfo.h.
+	* elf/rtld.c (_dl_starting_up): Source ._dl_stack_flags from
+	DEFAULT_STACK_PERMS defined in stackinfo.h.
+	* sysdeps/i386/stackinfo.h: Define DEFAULT_STACK_PERMS with PF_X.
+	* sysdeps/ia64/stackinfo.h: Likewise.
+	* sysdeps/s390/stackinfo.h: Likewise.
+	* sysdeps/sh/stackinfo.h: Likewise.
+	* sysdeps/sparc/stackinfo.h: Likewise.
+	* sysdeps/x86_64/stackinfo.h: Likewise.
+	* sysdeps/powerpc/stackinfo.h: Define DEFAULT_STACK_PERMS without
+	PF_X for powerpc64.  Retain PF_X for powerpc32.
+
 2010-12-19  Ulrich Drepper  <drepper@gmail.com>
 
 	* sysdeps/unix/readdir_r.c (__READDIR_R): Compute reclen more accurate.

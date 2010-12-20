@@ -1,5 +1,5 @@
 /* Check for executable stacks in DSOs.
-   Copyright (C) 2009 Free Software Foundation, Inc.
+   Copyright (C) 2009, 2010 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contribute by Ulrich Drepper <drepper@redhat.com>. 2009.
 
@@ -26,6 +26,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <stackinfo.h>
 
 
 #ifdef BITS
@@ -150,9 +151,13 @@ main (int argc, char *argv[])
   int cnt;
   int result = 0;
 
-  for (cnt = 1; cnt < argc; ++cnt)
-    result |= handle_file (argv[cnt]);
-
+  /* We can return successfully, i.e., not fail, if PF_X isn't present.  If it
+   * is present then check for the GNU_STACK header.  */
+  if (DEFAULT_STACK_PERMS & PF_X)
+    {
+      for (cnt = 1; cnt < argc; ++cnt)
+	result |= handle_file (argv[cnt]);
+     }
   return result;
 }
 #endif

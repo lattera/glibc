@@ -1,4 +1,4 @@
-/* Copyright (C) 2000 Free Software Foundation, Inc.
+/* Copyright (C) 2000, 2010 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -22,7 +22,13 @@
 #ifndef _STACKINFO_H
 #define _STACKINFO_H	1
 
+#include <elf.h>
+
 /* On s390 the stack grows down.  */
 #define _STACK_GROWS_DOWN	1
+
+/* Default to an executable stack.  PF_X can be overridden if PT_GNU_STACK is
+ * present, but it is presumed absent.  */
+#define DEFAULT_STACK_PERMS (PF_R|PF_W|PF_X)
 
 #endif	/* stackinfo.h */

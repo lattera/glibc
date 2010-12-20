@@ -984,8 +984,10 @@ _dl_map_object_from_fd (const char *name, int fd, struct filebuf *fbp,
 	}
     }
 
-  /* Presumed absent PT_GNU_STACK.  */
-  uint_fast16_t stack_flags = PF_R|PF_W|PF_X;
+   /* On most platforms presume that PT_GNU_STACK is absent and the stack is
+    * executable.  Other platforms default to a nonexecutable stack and don't
+    * need PT_GNU_STACK to do so.  */
+   uint_fast16_t stack_flags = DEFAULT_STACK_PERMS;
 
   {
     /* Scan the program header table, collecting its load commands.  */

@@ -40,6 +40,7 @@
 #include <dl-osinfo.h>
 #include <dl-procinfo.h>
 #include <tls.h>
+#include <stackinfo.h>
 
 #include <assert.h>
 
@@ -122,8 +123,9 @@ INTVARDEF(_dl_starting_up)
    (except those which cannot be added for some reason).  */
 struct rtld_global _rtld_global =
   {
-    /* Default presumption without further information is executable stack.  */
-    ._dl_stack_flags = PF_R|PF_W|PF_X,
+    /* Generally the default presumption without further information is an
+     * executable stack but this is not true for all platforms.  */
+    ._dl_stack_flags = DEFAULT_STACK_PERMS,
 #ifdef _LIBC_REENTRANT
     ._dl_load_lock = _RTLD_LOCK_RECURSIVE_INITIALIZER,
     ._dl_load_write_lock = _RTLD_LOCK_RECURSIVE_INITIALIZER,
