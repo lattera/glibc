@@ -22,13 +22,14 @@
 
 2010-12-19  Ulrich Drepper  <drepper@gmail.com>
 
-	* sysdeps/unix/readdir_r.c (__READDIR_R): Compute reclen more accurate.
+	* sysdeps/unix/readdir_r.c (__READDIR_R): Compute reclen more
+	accurately.
 	* sysdeps/unix/sysv/linux/wordsize-64/readdir_r.c: Define
 	GETDENTS_64BIT_ALIGNED.
 
 2010-12-14  Ulrich Drepper  <dreper@gmail.com>
 
-	* sysdeps/i386/i686/multiarch/strcmp.S: Undo accident checkin.
+	* sysdeps/i386/i686/multiarch/strcmp.S: Undo accidental checkin.
 
 2010-12-10  Andreas Schwab  <schwab@redhat.com>
 
