@@ -1,3 +1,7 @@
+2010-12-21  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/arm/stackinfo.h: Define DEFAULT_STACK_PERMS with PF_X.
+
 2010-11-24  Ken Werner  <ken.werner@de.ibm.com>
 
 	* sysdeps/unix/sysv/linux/arm/nptl/bits/atomic.h (atomic_full_barrier,
