@@ -1,3 +1,8 @@
+2011-08-22  Andreas Schwab  <schwab@redhat.com>
+
+	* dlfcn/Makefile (LDLIBS-bug-atexit3-lib.so): Readd
+	$(elfobjdir)/ld.so.
+
 2011-08-21  Ulrich Drepper  <drepper@gmail.com>
 
 	* sysdeps/unix/sysv/linux/x86_64/gettimeofday.S: Removed.
