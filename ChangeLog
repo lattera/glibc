@@ -1,5 +1,8 @@
 2010-12-25  Ulrich Drepper  <drepper@gmail.com>
 
+	[BZ #12207]
+	* malloc/malloc.c (do_check_malloc_state): Use fastbin macro.
+
 	[BZ #12204]
 	* string/xpg-strerror.c (__xpg_strerror_r): Return error code, not -1.
 	* sysdeps/mach/xpg-strerror.c (__xpg_strerror_r): Likewise.

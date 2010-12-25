@@ -2831,7 +2831,7 @@ static void do_check_malloc_state(mstate av)
   max_fast_bin = fastbin_index(get_max_fast ());
 
   for (i = 0; i < NFASTBINS; ++i) {
-    p = av->fastbins[i];
+    p = fastbin (av, i);
 
     /* The following test can only be performed for the main arena.
        While mallopt calls malloc_consolidate to get rid of all fast
