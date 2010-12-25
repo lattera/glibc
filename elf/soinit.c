@@ -3,6 +3,7 @@
    the `.ctors' and `.dtors' sections so the lists are terminated, and
    calling those lists of functions.  */
 
+#ifndef NO_CTORS_DTORS_SECTIONS
 #include <libc-internal.h>
 #include <stdlib.h>
 
@@ -40,3 +41,4 @@ __libc_fini (void)
 
 void (*_fini_ptr) (void) __attribute__ ((section (".fini_array")))
      = &__libc_fini;
+#endif

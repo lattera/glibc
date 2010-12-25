@@ -1,3 +1,18 @@
+2010-12-15  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* config.h.in (NO_CTORS_DTORS_SECTIONS): Define.
+	* configure.in: Define NO_CTORS_DTORS_SECTIONS if linker
+	script has SORT_BY_INIT_PRIORITY.
+	* elf/sofini.c: Remove `.ctors' and `.dtors' sections if
+	NO_CTORS_DTORS_SECTIONS is defined.
+	* elf/soinit.c: Likewise.
+	* sysdeps/i386/init-first.c: Don't call __libc_global_ctors if
+	NO_CTORS_DTORS_SECTIONS is defined.
+	* sysdeps/mach/hurd/i386/init-first.c: Likewise.
+	* sysdeps/mach/hurd/powerpc/init-first.c: Likewise.
+	* sysdeps/sh/init-first.c: Likewise.
+	* sysdeps/unix/sysv/linux/init-first.c: Likewise.
+
 2010-12-24  Ulrich Drepper  <drepper@gmail.com>
 
 	* stdio-common/vfprintf.c (vfprintf): If printf handlers are installed

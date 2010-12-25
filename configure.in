@@ -1497,6 +1497,8 @@ EOF
   rm -f conftest*])
   if test $libc_cv_initfini_array != yes; then
     AC_MSG_ERROR([Need linker with .init_array/.fini_array support.])
+  elif AC_TRY_COMMAND([${CC-cc} -Wl,--verbose 2>&1|grep SORT_BY_INIT_PRIORITY 1>&AS_MESSAGE_LOG_FD]); then
+    AC_DEFINE(NO_CTORS_DTORS_SECTIONS)
   fi
 
   AC_CACHE_CHECK(for libunwind-support in compiler,

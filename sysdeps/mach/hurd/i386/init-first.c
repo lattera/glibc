@@ -92,7 +92,7 @@ posixland_init (int argc, char **argv, char **envp)
   __getopt_clean_environment (envp);
 #endif
 
-#ifdef SHARED
+#if defined SHARED && !defined NO_CTORS_DTORS_SECTIONS
   __libc_global_ctors ();
 #endif
 }

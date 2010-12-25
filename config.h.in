@@ -201,6 +201,9 @@
 /* Define if multi-arch DSOs should be generated.  */
 #undef USE_MULTIARCH
 
+/* Define if `.ctors' and `.dtors' sections shouldn't be used.  */
+#undef	NO_CTORS_DTORS_SECTIONS
+
 /*
  */
 

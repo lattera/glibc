@@ -59,7 +59,9 @@ _init (int argc, ...)
 {
   init (&argc);
 
+#ifndef NO_CTORS_DTORS_SECTIONS
   __libc_global_ctors ();
+#endif
 }
 #endif
 
