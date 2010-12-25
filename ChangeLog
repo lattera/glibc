@@ -1,3 +1,9 @@
+2010-12-25  Ulrich Drepper  <drepper@gmail.com>
+
+	[BZ #12204]
+	* string/xpg-strerror.c (__xpg_strerror_r): Return error code, not -1.
+	* sysdeps/mach/xpg-strerror.c (__xpg_strerror_r): Likewise.
+
 2010-12-15  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* config.h.in (NO_CTORS_DTORS_SECTIONS): Define.

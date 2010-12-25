@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1993, 1995, 1996, 1997, 1998, 2000, 2002, 2004
+/* Copyright (C) 1991, 1993, 1995, 1996, 1997, 1998, 2000, 2002, 2004, 2010
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -39,18 +39,13 @@ __xpg_strerror_r (int errnum, char *buf, size_t buflen)
 {
   if (errnum < 0 || errnum >= _sys_nerr_internal
       || _sys_errlist_internal[errnum] == NULL)
-    {
-      __set_errno (EINVAL);
-      return -1;
-    }
+    return EINVAL;
+
   const char *estr = (const char *) _(_sys_errlist_internal[errnum]);
   size_t estrlen = strlen (estr) + 1;
 
   if (buflen < estrlen)
-    {
-      __set_errno (ERANGE);
-      return -1;
-    }
+    return ERANGE;
 
   memcpy (buf, estr, estrlen);
   return 0;

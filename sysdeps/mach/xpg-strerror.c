@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1995, 1996, 1997, 1998, 2000, 2002, 2004
+/* Copyright (C) 1993, 1995, 1996, 1997, 1998, 2000, 2002, 2004, 2010
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -53,30 +53,21 @@ __xpg_strerror_r (int errnum, char *buf, size_t buflen)
   code = err_get_code (errnum);
 
   if (system > err_max_system || ! __mach_error_systems[system].bad_sub)
-    {
-      __set_errno (EINVAL);
-      return -1;
-    }
+    return EINVAL;
 
   es = &__mach_error_systems[system];
 
   if (sub >= es->max_sub)
     estr = (const char *) es->bad_sub;
   else if (code >= es->subsystem[sub].max_code)
-    {
-      __set_errno (EINVAL);
-      return -1;
-    }
+    return EINVAL;
   else
     estr = (const char *) _(es->subsystem[sub].codes[code]);
 
   size_t estrlen = strlen (estr) + 1;
 
   if (buflen < estrlen)
-    {
-      __set_errno (ERANGE);
-      return -1;
-    }
+    return ERANGE;
 
   memcpy (buf, estr, estrlen);
   return 0;
