@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-2008, 2009   Free Software Foundation, Inc.
+/* Copyright (C) 1991-2008, 2009, 2010   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -329,7 +329,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
       REF (form_floathex),	/* for 'A', 'a' */			      \
       REF (mod_ptrdiff_t),      /* for 't' */				      \
       REF (mod_intmax_t),       /* for 'j' */				      \
-      REF (flag_i18n),	        /* for 'I' */				      \
+      REF (flag_i18n),		/* for 'I' */				      \
     };									      \
     /* Step 1: after processing width.  */				      \
     static JUMP_TABLE_TYPE step1_jumps[30] =				      \
@@ -540,7 +540,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 	      if (is_long_num)						      \
 		signed_number = va_arg (ap, long int);			      \
 	      else if (is_char)						      \
-	        signed_number = (signed char) va_arg (ap, unsigned int);      \
+		signed_number = (signed char) va_arg (ap, unsigned int);      \
 	      else if (!is_short)					      \
 		signed_number = va_arg (ap, int);			      \
 	      else							      \
@@ -636,7 +636,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 	      if (is_long_num)						      \
 		number.word = va_arg (ap, unsigned long int);		      \
 	      else if (is_char)						      \
-	        number.word = (unsigned char) va_arg (ap, unsigned int);      \
+		number.word = (unsigned char) va_arg (ap, unsigned int);      \
 	      else if (!is_short)					      \
 		number.word = va_arg (ap, unsigned int);		      \
 	      else							      \
@@ -830,7 +830,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 									      \
     LABEL (form_floathex):						      \
       {									      \
-        /* Floating point number printed as hexadecimal number.  */	      \
+	/* Floating point number printed as hexadecimal number.  */	      \
 	const void *ptr;						      \
 	int function_done;						      \
 									      \
@@ -987,7 +987,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 	--width;							      \
 	if (!left)							      \
 	  PAD (L' ');							      \
-        if (fspec == NULL)						      \
+	if (fspec == NULL)						      \
 	  outchar (va_arg (ap, wchar_t));				      \
 	else								      \
 	  outchar (args_value[fspec->data_arg].pa_wchar);		      \
@@ -1241,7 +1241,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 									      \
 	    if (len == (size_t) -1)					      \
 	      {								      \
-	        /* Illegal wide-character string.  */			      \
+		/* Illegal wide-character string.  */			      \
 		done = -1;						      \
 		goto all_done;						      \
 	      }								      \
@@ -1317,6 +1317,12 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
   /* If we only have to print a simple string, return now.  */
   if (*f == L_('\0'))
     goto all_done;
+
+  /* Use the slow path in case any printf handler is registered.  */
+  if (__builtin_expect (__printf_function_table != NULL
+			|| __printf_modifier_table != NULL
+			|| __printf_va_arg_table != NULL, 0))
+    goto do_positional;
 
   /* Process whole format string.  */
   do

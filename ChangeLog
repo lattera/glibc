@@ -1,3 +1,8 @@
+2010-12-24  Ulrich Drepper  <drepper@gmail.com>
+
+	* stdio-common/vfprintf.c (vfprintf): If printf handlers are installed
+	always use the slow path.
+
 2010-12-15  Ryan S. Arnold  <rsa@us.ibm.com>
 
 	* elf/Makefile: (check-execstack): Replace $(native-compile) with a
