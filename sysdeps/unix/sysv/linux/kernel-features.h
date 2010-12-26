@@ -535,3 +535,8 @@
 #if __LINUX_KERNEL_VERSION >= 0x020624
 # define __ASSUME_STATFS_F_FLAGS	1
 #endif
+
+/* prlimit64 is available in 2.6.36.  */
+#if __LINUX_KERNEL_VERSION >= 0x020624
+# define __ASSUME_PRLIMIT64	1
+#endif

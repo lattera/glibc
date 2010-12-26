@@ -1,5 +1,11 @@
 2010-12-25  Ulrich Drepper  <drepper@gmail.com>
 
+	[BZ #12201]
+	* sysdeps/unix/sysv/linux/getrlimit64.c: New file.
+	* sysdeps/unix/sysv/linux/setrlimit64.c: New file.
+	* sysdeps/unix/sysv/linux/i386/getrlimit64.c: Use ../getrlimit64.c.
+	* sysdeps/unix/sysv/linux/kernel-features.h: Define __ASSUME_PRLIMIT64.
+
 	[BZ #12207]
 	* malloc/malloc.c (do_check_malloc_state): Use fastbin macro.
 
