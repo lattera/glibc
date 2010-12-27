@@ -1,3 +1,9 @@
+2010-12-27  Jim Meyering  <meyering@redhat.com>
+
+	[BZ #12348]
+	* posix/regexec.c (build_trtable): Return failure indication upon
+	calloc failure.  Otherwise, re_search_internal could infloop on OOM.
+
 2010-12-25  Ulrich Drepper  <drepper@gmail.com>
 
 	[BZ #12201]

@@ -3373,6 +3373,8 @@ build_trtable (const re_dfa_t *dfa, re_dfastate_t *state)
 	{
 	  state->trtable = (re_dfastate_t **)
 	    calloc (sizeof (re_dfastate_t *), SBC_MAX);
+	  if (BE (state->trtable == NULL, 0))
+	    return 0;
 	  return 1;
 	}
       return 0;
