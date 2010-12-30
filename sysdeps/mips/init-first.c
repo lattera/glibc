@@ -1,5 +1,5 @@
 /* Initialization code run first thing by the ELF startup code.  For mips/Unix.
-   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 2010 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -50,7 +50,9 @@ _init (int argc, ...)
 {
   init (&argc);
 
+#ifndef NO_CTORS_DTORS_SECTIONS
   __libc_global_ctors ();
+#endif
 }
 #endif
 

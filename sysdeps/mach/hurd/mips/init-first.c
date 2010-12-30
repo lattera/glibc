@@ -1,5 +1,5 @@
 /* Initialization code run first thing by the ELF startup code.  For Mips/Hurd.
-   Copyright (C) 1996,1997,1998,2000,01,02,03 Free Software Foundation, Inc.
+   Copyright (C) 1996,1997,1998,2000,01,02,03,10 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -119,7 +119,7 @@ init1 (int argc, char *arg0, ...)
   __getopt_clean_environment (envp);
 #endif
 
-#ifdef SHARED
+#if defined SHARED && !defined NO_CTORS_DTORS_SECTIONS
   __libc_global_ctors ();
 #endif
 

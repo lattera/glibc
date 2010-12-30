@@ -1,3 +1,9 @@
+2010-12-30  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/mips/init-first.c: Don't call __libc_global_ctors if
+	NO_CTORS_DTORS_SECTIONS is defined.
+	* sysdeps/mach/hurd/mips/init-first.c: Likewise.
+
 2010-12-21  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/mips/stackinfo.h: Define DEFAULT_STACK_PERMS with PF_X.
