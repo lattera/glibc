@@ -1,3 +1,8 @@
+2011-01-10  Andreas Schwab  <schwab@linux-m68k.org>
+
+	* sysdeps/unix/sysv/linux/m68k/nptl/bits/semaphore.h (sem_t):
+	Force alignment.
+
 2010-12-26  Andreas Schwab  <schwab@linux-m68k.org>
 
 	* sysdeps/m68k/stackinfo.h (DEFAULT_STACK_PERMS): Define.

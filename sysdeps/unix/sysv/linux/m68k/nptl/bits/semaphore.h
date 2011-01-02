@@ -1,4 +1,4 @@
-/* Copyright (C) 2010 Free Software Foundation, Inc.
+/* Copyright (C) 2010, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Maxim Kuvyrkov <maxim@codesourcery.com>, 2010.
 
@@ -32,5 +32,5 @@
 typedef union
 {
   char __size[__SIZEOF_SEM_T];
-  long int __align;
+  long int __align __attribute__ ((aligned (4)));
 } sem_t;
