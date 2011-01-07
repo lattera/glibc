@@ -1,3 +1,10 @@
+2011-01-07  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/arm/eabi/fclrexcpt.c (__feclearexcept): Return zero if
+	unsupported but nothing needs to be done.
+	* sysdeps/arm/eabi/fraiseexcpt.c (feraiseexcept): Likewise.
+	* sysdeps/arm/eabi/fsetexcptflg.c (__fesetexceptflag): Likewise.
+
 2010-12-21  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/arm/stackinfo.h: Define DEFAULT_STACK_PERMS with PF_X.

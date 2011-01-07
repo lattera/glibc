@@ -1,5 +1,5 @@
 /* Raise given exceptions.
-   Copyright (C) 2004, 2005 Free Software Foundation, Inc.
+   Copyright (C) 2004, 2005, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -103,8 +103,8 @@ feraiseexcept (int excepts)
       return 0;
     }
 
-  /* Unsupported, so fail.  */
-  return 1;
+  /* Unsupported, so fail unless nothing needs to be done.  */
+  return (excepts != 0);
 }
 
 libm_hidden_def (feraiseexcept)
