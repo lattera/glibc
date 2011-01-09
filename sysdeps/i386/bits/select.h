@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998, 1999, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 1999, 2001, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -22,7 +22,6 @@
 
 
 #if defined __GNUC__ && __GNUC__ >= 2
-
 # define __FD_ZERO(fdsp) \
   do {									      \
     int __d0, __d1;							      \
@@ -33,26 +32,6 @@
 			    "1" (&__FDS_BITS (fdsp)[0])			      \
 			  : "memory");					      \
   } while (0)
-
-# define __FD_SET(fd, fdsp) \
-  __asm__ __volatile__ ("btsl %1,%0"					      \
-			: "=m" (__FDS_BITS (fdsp)[__FDELT (fd)])	      \
-			: "r" (((int) (fd)) % __NFDBITS)		      \
-			: "cc","memory")
-# define __FD_CLR(fd, fdsp) \
-  __asm__ __volatile__ ("btrl %1,%0"					      \
-			: "=m" (__FDS_BITS (fdsp)[__FDELT (fd)])	      \
-			: "r" (((int) (fd)) % __NFDBITS)		      \
-			: "cc","memory")
-# define __FD_ISSET(fd, fdsp) \
-  (__extension__							      \
-   ({register char __result;						      \
-     __asm__ __volatile__ ("btl %1,%2 ; setcb %b0"			      \
-			   : "=q" (__result)				      \
-			   : "r" (((int) (fd)) % __NFDBITS),		      \
-			     "m" (__FDS_BITS (fdsp)[__FDELT (fd)])	      \
-			   : "cc");					      \
-     __result; }))
 
 #else	/* ! GNU CC */
 
@@ -65,8 +44,12 @@
     for (__i = 0; __i < sizeof (fd_set) / sizeof (__fd_mask); ++__i)	      \
       __FDS_BITS (__arr)[__i] = 0;					      \
   } while (0)
-# define __FD_SET(d, set)    (__FDS_BITS (set)[__FDELT (d)] |= __FDMASK (d))
-# define __FD_CLR(d, set)    (__FDS_BITS (set)[__FDELT (d)] &= ~__FDMASK (d))
-# define __FD_ISSET(d, set)  (__FDS_BITS (set)[__FDELT (d)] & __FDMASK (d))
 
 #endif	/* GNU CC */
+
+#define __FD_SET(d, set) \
+  ((void) (__FDS_BITS (set)[__FDELT (d)] |= __FDMASK (d)))
+#define __FD_CLR(d, set) \
+  ((void) (__FDS_BITS (set)[__FDELT (d)] &= ~__FDMASK (d)))
+#define __FD_ISSET(d, set) \
+  ((__FDS_BITS (set)[__FDELT (d)] & __FDMASK (d)) != 0)
