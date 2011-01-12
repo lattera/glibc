@@ -1,3 +1,23 @@
+2010-09-03  Luis Machado  <luisgpm@br.ibm.com>
+
+	* sysdeps/powerpc/dl-procinfo.c: New file.
+	* sysdeps/powerpc/dl-procinfo.h: New file.
+	* sysdeps/powerpc/powerpc32/405/memcmp.S: New file.
+	* sysdeps/powerpc/powerpc32/405/memcpy.S: New file.
+	* sysdeps/powerpc/powerpc32/405/memset.S: New file.
+	* sysdeps/powerpc/powerpc32/405/strcmp.S: New file.
+	* sysdeps/powerpc/powerpc32/405/strcpy.S: New file.
+	* sysdeps/powerpc/powerpc32/405/strlen.S: New file.
+	* sysdeps/powerpc/powerpc32/405/strncmp.S: New file.
+	* sysdeps/powerpc/powerpc32/440/Implies: New file.
+	* sysdeps/powerpc/powerpc32/464/Implies: New file.
+	* sysdeps/powerpc/powerpc32/476/Implies: New file.
+	* sysdeps/powerpc/powerpc32/Makefile: New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/405/Implies: New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/440/Implies: New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/464/Implies: New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/476/Implies: New file.
+
 2010-04-14  Joseph Myers  <joseph@codesourcery.com>
 
 	* libc-abis: Remove.
