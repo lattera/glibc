@@ -1,4 +1,4 @@
-# Copyright (C) 1991-2006, 2007, 2008, 2009 Free Software Foundation, Inc.
+# Copyright (C) 1991-2009, 2011 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -60,7 +60,7 @@ tests := tstscanf test_rdwr test-popen tstgetln test-fseek \
 	 tst-popen tst-unlockedio tst-fmemopen2 tst-put-error tst-fgets \
 	 tst-fwrite bug16 bug17 tst-swscanf tst-sprintf2 bug18 bug18a \
 	 bug19 bug19a tst-popen2 scanf13 scanf14 scanf15 bug20 bug21 bug22 \
-	 scanf16 scanf17 tst-setvbuf1
+	 scanf16 scanf17 tst-setvbuf1 tst-grouping
 
 test-srcs = tst-unbputc tst-printf
 
@@ -128,6 +128,7 @@ test-vfprintf-ENV = LOCPATH=$(common-objpfx)localedata
 scanf13-ENV = LOCPATH=$(common-objpfx)localedata
 bug14-ENV = LOCPATH=$(common-objpfx)localedata
 bug15-ENV = LOCPATH=$(common-objpfx)localedata
+tst-grouping-ENV = LOCPATH=$(common-objpfx)localedata
 
 ifneq (,$(filter %REENTRANT, $(defines)))
 CPPFLAGS += -D_IO_MTSAFE_IO

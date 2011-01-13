@@ -1,5 +1,5 @@
 /* Floating point output for `printf'.
-   Copyright (C) 1995-2003, 2006, 2007, 2008 Free Software Foundation, Inc.
+   Copyright (C) 1995-2003, 2006-2008, 2011 Free Software Foundation, Inc.
 
    This file is part of the GNU C Library.
    Written by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1995.
@@ -884,7 +884,9 @@ ___printf_fp (FILE *fp,
 	/* Guess the number of groups we will make, and thus how
 	   many spaces we need for separator characters.  */
 	ngroups = __guess_grouping (intdig_max, grouping);
-	chars_needed += ngroups;
+	/* Allocate one more character in case rounding increases the
+	   number of groups.  */
+	chars_needed += ngroups + 1;
       }
 
     /* Allocate buffer for output.  We need two more because while rounding
@@ -1088,9 +1090,16 @@ ___printf_fp (FILE *fp,
       --wcp;
 
     if (grouping)
-      /* Add in separator characters, overwriting the same buffer.  */
-      wcp = group_number (wstartp, wcp, intdig_no, grouping, thousands_sepwc,
-			  ngroups);
+      {
+	/* Rounding might have changed the number of groups.  We allocated
+	   enough memory but we need here the correct number of groups.  */
+	if (intdig_no != intdig_max)
+	  ngroups = __guess_grouping (intdig_no, grouping);
+
+	/* Add in separator characters, overwriting the same buffer.  */
+	wcp = group_number (wstartp, wcp, intdig_no, grouping, thousands_sepwc,
+			    ngroups);
+      }
 
     /* Write the exponent if it is needed.  */
     if (type != 'f')
@@ -1210,7 +1219,7 @@ ___printf_fp (FILE *fp,
 
       tmpptr = buffer;
       if (__builtin_expect (info->i18n, 0))
-        {
+	{
 #ifdef COMPILE_WPRINTF
 	  wstartp = _i18n_number_rewrite (wstartp, wcp,
 					  wbuffer + wbuffer_to_alloc);
@@ -1224,7 +1233,7 @@ ___printf_fp (FILE *fp,
 	  assert ((uintptr_t) buffer <= (uintptr_t) tmpptr);
 	  assert ((uintptr_t) tmpptr < (uintptr_t) buffer_end);
 #endif
-        }
+	}
 
       PRINT (tmpptr, wstartp, wide ? wcp - wstartp : cp - tmpptr);
 
