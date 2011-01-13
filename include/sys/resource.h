@@ -3,6 +3,7 @@
 
 libc_hidden_proto (getpriority)
 libc_hidden_proto (setpriority)
+libc_hidden_proto (getrlimit64)
 
 /* Now define the internal interfaces.  */
 extern int __getrlimit (enum __rlimit_resource __resource,

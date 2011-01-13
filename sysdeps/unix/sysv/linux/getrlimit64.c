@@ -1,4 +1,4 @@
-/* Copyright (C) 2010 Free Software Foundation, Inc.
+/* Copyright (C) 2010, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -52,3 +52,4 @@ getrlimit64 (enum __rlimit_resource resource, struct rlimit64 *rlimits)
   return 0;
 #endif
 }
+libc_hidden_def (getrlimit64)

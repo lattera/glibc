@@ -2,6 +2,9 @@
 
 	* sysdeps/posix/spawni.c (__spawni): Don't fail if close file action
 	in child fails because the descriptor is already closed.
+	* include/sys/resource.h: Add libc_hidden_proto for getrlimit64.
+	* sysdeps/unix/sysv/linux/getrlimit64.c: Add libc_hidden_def.
+	* sysdeps/unix/sysv/linux/i386/getrlimit64.c: Likewise.
 
 	[BZ #12397]
 	* sysdeps/unix/sysv/linux/mkdirat.c (mkdirat): Fix handling of missing
