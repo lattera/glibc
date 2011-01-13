@@ -10,6 +10,7 @@
 	[BZ #10484]
 	* nss/nss_files/files-hosts.c (HOST_DB_LOOKUP): Handle overflows of
 	temporary buffer used to handle multi lookups locally.
+	* include/alloca.h: Add libc_hidden_proto for __libc_alloca_cutoff.
 
 2011-01-12  Ulrich Drepper  <drepper@gmail.com>
 

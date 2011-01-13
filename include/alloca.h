@@ -14,6 +14,7 @@ extern void *__alloca (size_t __size);
 
 extern int __libc_use_alloca (size_t size) __attribute__ ((const));
 extern int __libc_alloca_cutoff (size_t size) __attribute__ ((const));
+libc_hidden_proto (__libc_alloca_cutoff)
 
 #define __MAX_ALLOCA_CUTOFF	65536
 

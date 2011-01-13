@@ -2,6 +2,7 @@
 
 	[BZ #10484]
 	* Versions [libc] (GLIBC_PRIVATE): Export __libc_alloca_cutoff.
+	* alloca_cutoff.c: Add libc_hidden_def.
 
 2010-10-13  H.J. Lu  <hongjiu.lu@intel.com>
 
