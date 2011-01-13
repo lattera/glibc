@@ -1,5 +1,5 @@
 /* Guts of POSIX spawn interface.  Generic POSIX.1 version.
-   Copyright (C) 2000-2005, 2006 Free Software Foundation, Inc.
+   Copyright (C) 2000-2005, 2006, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -24,6 +24,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <sys/resource.h>
 #include "spawn_int.h"
 #include <not-cancel.h>
 #include <local-setxid.h>
@@ -164,6 +165,8 @@ __spawni (pid_t *pid, const char *file,
   if (file_actions != NULL)
     {
       int cnt;
+      struct rlimit64 fdlimit;
+      bool have_fdlimit = false;
 
       for (cnt = 0; cnt < file_actions->__used; ++cnt)
 	{
@@ -173,8 +176,19 @@ __spawni (pid_t *pid, const char *file,
 	    {
 	    case spawn_do_close:
 	      if (close_not_cancel (action->action.close_action.fd) != 0)
-		/* Signal the error.  */
-		_exit (SPAWN_ERROR);
+		{
+		  if (! have_fdlimit)
+		    {
+		      getrlimit64 (RLIMIT_NOFILE, &fdlimit);
+		      have_fdlimit = true;
+		    }
+
+		  /* Only signal errors for file descriptors out of range.  */
+		  if (action->action.close_action.fd < 0
+		      || action->action.close_action.fd >= fdlimit.rlim_cur)
+		    /* Signal the error.  */
+		    _exit (SPAWN_ERROR);
+		}
 	      break;
 
 	    case spawn_do_open:
