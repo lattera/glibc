@@ -47,6 +47,7 @@ endif
 # And a couple of other routines
 ifeq ($(subdir),stdlib)
 CFLAGS-exit.c += -mpreferred-stack-boundary=4
+CFLAGS-cxa_finalize.c += -mpreferred-stack-boundary=4
 endif
 ifeq ($(subdir),elf)
 CFLAGS-dl-init.c += -mpreferred-stack-boundary=4
