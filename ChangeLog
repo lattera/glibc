@@ -1,3 +1,12 @@
+2011-01-12  Ulrich Drepper  <drepper@gmail.com>
+
+	[BZ #12394]
+	* stdio-common/printf_fp.c (__printf_fp): Add more room for grouping
+	characters.  When rounding increased number of integer digits recompute
+	number of groups.
+	* stdio-common/tst-grouping.c: New file.
+	* stdio-common/Makefile: Add rules to build and run tst-grouping.
+
 2011-01-09  Ulrich Drepper  <drepper@gmail.com>
 
 	* sysdeps/i386/bits/select.h: Don't use asm code for __FD_SET,
