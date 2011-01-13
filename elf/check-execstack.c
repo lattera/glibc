@@ -26,7 +26,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-#include <stackinfo.h>
+#include "check-execstack.h"
 
 
 #ifdef BITS
@@ -92,8 +92,13 @@ AB(handle_file) (const char *fname, int fd)
 	return 0;
       }
 
-  printf ("%s: no PT_GNU_STACK entry\n", fname);
-  return 1;
+  if (DEFAULT_STACK_PERMS & PF_X)
+    {
+      printf ("%s: no PT_GNU_STACK entry\n", fname);
+      return 1;
+    }
+
+  return 0;
 }
 
 # undef BITS
@@ -151,13 +156,8 @@ main (int argc, char *argv[])
   int cnt;
   int result = 0;
 
-  /* We can return successfully, i.e., not fail, if PF_X isn't present.  If it
-   * is present then check for the GNU_STACK header.  */
-  if (DEFAULT_STACK_PERMS & PF_X)
-    {
-      for (cnt = 1; cnt < argc; ++cnt)
-	result |= handle_file (argv[cnt]);
-     }
+  for (cnt = 1; cnt < argc; ++cnt)
+    result |= handle_file (argv[cnt]);
   return result;
 }
 #endif

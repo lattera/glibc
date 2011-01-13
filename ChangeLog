@@ -1,3 +1,14 @@
+2010-12-28  Andreas Schwab  <schwab@linux-m68k.org>
+
+	* elf/Makefile (check-execstack): Revert last change.  Depend on
+	check-execstack.h.
+	(check-execstack.h): New target.
+	(generated): Add check-execstack.h.
+	* elf/check-execstack.c: Include "check-execstack.h".
+	(main): Revert last change.
+	(handle_file): Return zero if GNU_STACK is absent and
+	DEFAULT_STACK_PERMS doesn't include PF_X.
+
 2011-01-13  Ulrich Drepper  <drepper@gmail.com>
 
 	* sysdeps/posix/spawni.c (__spawni): Don't fail if close file action

@@ -898,15 +898,17 @@ check-textrel-CFLAGS = -O -Wall -D_XOPEN_SOURCE=600 -D_BSD_SOURCE
 $(objpfx)check-textrel: check-textrel.c
 	$(native-compile)
 
-check-execstack-CFLAGS = -O -Wall -D_XOPEN_SOURCE=600 -D_BSD_SOURCE -std=gnu99
-# Perform the same operation as $(native-compile) but add the sysdeps
-# directories as header search locations.
-$(objpfx)check-execstack: check-execstack.c
+check-execstack-CFLAGS = -O -Wall -D_XOPEN_SOURCE=600 -D_BSD_SOURCE -std=gnu99 \
+			 $(objpfx:%/=-I%)
+$(objpfx)check-execstack: check-execstack.c $(objpfx)check-execstack.h
+	$(native-compile)
+$(objpfx)check-execstack.h: $(first-word $(wildcard $(sysdirs:%=%/stackinfo.h)))
 	$(make-target-directory)
-	$(patsubst %/,cd % &&,$(objpfx)) \
-	$(BUILD_CC) $($(basename $(<F))-CFLAGS) $(ALL_BUILD_CFLAGS) \
-	$(addprefix -I$(shell pwd)/,$(sysdirs)) -I$(shell pwd) \
-	$(firstword $(filter /%,$< $(shell pwd)/$<)) -o $(@F)
+	{ echo '#include <stackinfo.h>'; echo '@@@DEFAULT_STACK_PERMS@@@'; } | \
+	$(CC) $(CFLAGS) $(CPPFLAGS) -E -x c-header - | \
+	sed -n -e 's/^@@@\(.*\)@@@/#define DEFAULT_STACK_PERMS \1/p' > $@T
+	mv -f $@T $@
+generated += check-execstack.h
 
 check-localplt-CFLAGS = -O -Wall -D_GNU_SOURCE -std=gnu99
 $(objpfx)check-localplt: check-localplt.c
