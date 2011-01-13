@@ -1,4 +1,4 @@
-/* Copyright (C) 2005, 2006, 2009 Free Software Foundation, Inc.
+/* Copyright (C) 2005, 2006, 2009, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -43,7 +43,7 @@ mkdirat (fd, file, mode)
     {
       res = INLINE_SYSCALL (mkdirat, 3, fd, file, mode);
 # ifndef __ASSUME_ATFCTS
-      if (res == -1 && res == ENOSYS)
+      if (res == -1 && errno == ENOSYS)
 	__have_atfcts = -1;
       else
 # endif

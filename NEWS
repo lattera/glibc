@@ -10,9 +10,9 @@ Version 2.13
 * The following bugs are resolved with this release:
 
   3268, 7066, 10085, 10484, 10851, 11149, 11155, 11611, 11640, 11655, 11701,
-  11840, 11856, 11883, 11903, 11904, 11968, 11979, 12005, 12037,
-  12067, 12077, 12078, 12092, 12093, 12107, 12108, 12113, 12140,
-  12159, 12167, 12191, 12194, 12201, 12204, 12205, 12207, 12348, 12394
+  11840, 11856, 11883, 11903, 11904, 11968, 11979, 12005, 12037, 12067,
+  12077, 12078, 12092, 12093, 12107, 12108, 12113, 12140, 12159, 12167,
+  12191, 12194, 12201, 12204, 12205, 12207, 12348, 12394, 12397
 
 * New Linux interfaces: prlimit, prlimit64, fanotify_init, fanotify_mark
 
@@ -1924,8 +1924,7 @@ Version 1.04
 ----------------------------------------------------------------------
 Copyright information:
 
-Copyright (C) 1992-1999,2000,2001,2002,2003,2004,2005,2006
-	Free Software Foundation, Inc.
+Copyright (C) 1992-2009, 2010, 2011 Free Software Foundation, Inc.
 
    Permission is granted to anyone to make or distribute verbatim copies
    of this document as received, in any medium, provided that the
@@ -1939,4 +1938,5 @@ Copyright (C) 1992-1999,2000,2001,2002,2003,2004,2005,2006
 
 Local variables:
 version-control: never
+fill-column: 76
 End:

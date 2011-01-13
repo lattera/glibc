@@ -1,5 +1,9 @@
 2011-01-13  Ulrich Drepper  <drepper@gmail.com>
 
+	[BZ #12397]
+	* sysdeps/unix/sysv/linux/mkdirat.c (mkdirat): Fix handling of missing
+	syscall.
+
 	[BZ #10484]
 	* nss/nss_files/files-hosts.c (HOST_DB_LOOKUP): Handle overflows of
 	temporary buffer used to handle multi lookups locally.
