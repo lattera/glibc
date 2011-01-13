@@ -1,3 +1,8 @@
+2011-01-13  Ulrich Drepper  <drepper@gmail.com>
+
+	[BZ #10484]
+	* Versions [libc] (GLIBC_PRIVATE): Export __libc_alloca_cutoff.
+
 2010-10-13  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #12113]

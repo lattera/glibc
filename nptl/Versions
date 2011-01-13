@@ -27,6 +27,7 @@ libc {
     pthread_cond_broadcast; pthread_cond_timedwait;
   }
   GLIBC_PRIVATE {
+    __libc_alloca_cutoff;
     # Internal libc interface to libpthread
     __libc_dl_error_tsd;
   }
