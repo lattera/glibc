@@ -722,21 +722,24 @@ ${elf_objpfx}${rtld_installed_name} --library-path ${library_path} \
 ${common_objpfx}posix/globtest -c "$testdir" \
 'dir3\*/file1' 'dir3\*/file2' 'dir1/file\1_1' 'dir1/file\1_9' \
 'dir2\/' 'nondir\/' 'dir4[a/fil*1' 'di*r4[a/file2' 'dir5[ab]/file[12]' \
-'dir6/fil*[a' 'dir*6/file1[a' 'dir6/fi*l[ab]' 'dir*6/file1[ab]' |
+'dir6/fil*[a' 'dir*6/file1[a' 'dir6/fi*l[ab]' 'dir*6/file1[ab]' \
+'dir6/file1[[.a.]*' |
 sort > $testout
 cat <<"EOF" | $CMP - $testout >> $logfile || failed=1
-`di*r4[a/file2'
-`dir*6/file1[a'
 `dir*6/file1[ab]'
 `dir1/file1_1'
 `dir1/file\1_9'
 `dir2/'
 `dir3*/file1'
 `dir3\*/file2'
-`dir4[a/fil*1'
+`dir4[a/file1'
+`dir4[a/file2'
 `dir5[ab]/file[12]'
 `dir6/fi*l[ab]'
-`dir6/fil*[a'
+`dir6/file1[a'
+`dir6/file1[a'
+`dir6/file1[a'
+`dir6/file1[ab]'
 `nondir\/'
 EOF
 HOME="$testdir" \

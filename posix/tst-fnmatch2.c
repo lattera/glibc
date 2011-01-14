@@ -28,6 +28,11 @@ do_test (void)
       puts ("Fourth fnmatch didn't return 0");
       return 1;
     }
+  if (fnmatch ("[", "[", 0) != 0)
+    {
+      puts ("Fifth fnmatch didn't return 0");
+      return 1;
+    }
   return 0;
 }
 

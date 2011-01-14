@@ -1,5 +1,5 @@
 # Tests for fnmatch.
-# Copyright (C) 2000, 2001, 2004 Free Software Foundation, Inc.
+# Copyright (C) 2000, 2001, 2004, 2011 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 # Contributes by Ulrich Drepper <drepper@redhat.com>.
 #
@@ -65,10 +65,10 @@ C		 "a"			"[!abc]"	       NOMATCH
 C		 "]"			"[][abc]"	       0
 C		 "abc]"			"[][abc]"	       NOMATCH
 C		 "[]abc"		"[][]abc"	       NOMATCH
-C		 "]"		        "[!]]"		       NOMATCH
+C		 "]"			"[!]]"		       NOMATCH
 C		 "aa]"			"[!]a]"		       NOMATCH
-C		 "]"		        "[!a]"		       0
-C		 "]]"		        "[!a]]"		       0
+C		 "]"			"[!a]"		       0
+C		 "]]"			"[!a]]"		       0
 
 # B.6 012(C)
 C		 "a"			"[[.a.]]"	       0
@@ -340,7 +340,8 @@ C		 "/.a/.b"		"/*b"		       NOMATCH PATHNAME
 # B.6 031(C)
 C		 "/$"			"\\/\\$"	       0
 C		 "/["			"\\/\\["	       0
-C		 "/["			"\\/["		       NOMATCH
+C		 "/["			"\\/["		       0
+C		 "/[]"			"\\/\\[]"	       0
 
 # B.6 032(C)
 C		 "/$"			"\\/\\$"	       NOMATCH NOESCAPE

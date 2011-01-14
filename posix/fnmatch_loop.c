@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-1993,1996-2001,2003-2005,2007,2010
+/* Copyright (C) 1991-1993,1996-2001,2003-2005,2007,2010,2011
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -235,6 +235,8 @@ FCT (pattern, string, string_end, no_leading_period, flags, ends, alloca_used)
 	case L('['):
 	  {
 	    /* Nonzero if the sense of the character class is inverted.  */
+	    CHAR *p_init = p;
+	    CHAR *n_init = n;
 	    register int not;
 	    CHAR cold;
 	    UCHAR fn;
@@ -445,8 +447,13 @@ FCT (pattern, string, string_end, no_leading_period, flags, ends, alloca_used)
 		  }
 #endif
 		else if (c == L('\0'))
-		  /* [ (unterminated) loses.  */
-		  return FNM_NOMATCH;
+		  {
+		    /* [ unterminated, treat as normal character.  */
+		    p = p_init;
+		    n = n_init;
+		    c = L('[');
+		    goto normal_match;
+		  }
 		else
 		  {
 		    int is_range = 0;
