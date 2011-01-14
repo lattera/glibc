@@ -1,4 +1,5 @@
-/* Copyright (C) 1997,1998,2000,2002,2004,2006 Free Software Foundation, Inc.
+/* Copyright (C) 1997,1998,2000,2002,2004,2006,2011
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -25,6 +26,7 @@
 #include <sys/syscall.h>
 #include <bp-checks.h>
 
+#include <setxid.h>
 #include <linux/posix_types.h>
 #include <kernel-features.h>
 
@@ -44,7 +46,7 @@ int
 setgroups (size_t n, const gid_t *groups)
 {
 #if __ASSUME_32BITUIDS > 0
-  return INLINE_SYSCALL (setgroups32, 2, n, CHECK_N (groups, n));
+  return INLINE_SETXID_SYSCALL (setgroups32, 2, n, CHECK_N (groups, n));
 #else
   if (n > (size_t) __sysconf (_SC_NGROUPS_MAX))
     {
@@ -62,7 +64,8 @@ setgroups (size_t n, const gid_t *groups)
 	  int result;
 	  int saved_errno = errno;
 
-	  result = INLINE_SYSCALL (setgroups32, 2, n, CHECK_N (groups, n));
+	  result = INLINE_SETXID_SYSCALL (setgroups32, 2, n,
+					  CHECK_N (groups, n));
 	  if (result == 0 || errno != ENOSYS)
 	    return result;
 
@@ -80,7 +83,8 @@ setgroups (size_t n, const gid_t *groups)
 	    }
 	}
 
-      return INLINE_SYSCALL (setgroups, 2, n, CHECK_N (kernel_groups, n));
+      return INLINE_SETXID_SYSCALL (setgroups, 2, n,
+				    CHECK_N (kernel_groups, n));
     }
 #endif
 }

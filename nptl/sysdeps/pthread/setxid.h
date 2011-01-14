@@ -1,4 +1,4 @@
-/* Copyright (C) 2004, 2007 Free Software Foundation, Inc.
+/* Copyright (C) 2004, 2007, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,11 +20,11 @@
 #include <sysdep.h>
 
 #define __SETXID_1(cmd, arg1) \
-  cmd.id[0] = arg1
+  cmd.id[0] = (long int) arg1
 #define __SETXID_2(cmd, arg1, arg2) \
-  __SETXID_1 (cmd, arg1); cmd.id[1] = arg2
+  __SETXID_1 (cmd, arg1); cmd.id[1] = (long int) arg2
 #define __SETXID_3(cmd, arg1, arg2, arg3) \
-  __SETXID_2 (cmd, arg1, arg2); cmd.id[2] = arg3
+  __SETXID_2 (cmd, arg1, arg2); cmd.id[2] = (long int) arg3
 
 #ifdef SINGLE_THREAD
 # define INLINE_SETXID_SYSCALL(name, nr, args...) \

@@ -1,3 +1,10 @@
+2011-01-14  Ulrich Drepper  <drepper@gmail.com>
+
+	[BZ #10563]
+	* sysdeps/pthread/setxid.h (__SETXID_1): Add cast to assignment.
+	(__SETXID_2): Likewise.
+	(__SETXID_3): Likewise.
+
 2011-01-13  Ulrich Drepper  <drepper@gmail.com>
 
 	[BZ #10484]

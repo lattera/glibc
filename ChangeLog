@@ -1,5 +1,10 @@
 2011-01-14  Ulrich Drepper  <drepper@gmail.com>
 
+	[BZ #10563]
+	* sysdeps/unix/sysv/linux/i386/setgroups.c: Use INLINE_SETXID_SYSCALL
+	to make the syscall.
+	* sysdeps/unix/sysv/linux/setgroups.c: New file.
+
 	[BZ #12378]
 	* posix/fnmatch_loop.c (FCT): When matching '[' keep track of beginning
 	and fall back to matching as normal character if the string ends before
