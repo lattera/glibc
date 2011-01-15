@@ -1,3 +1,11 @@
+2011-01-15  Ulrich Drepper  <drepper@gmail.com>
+
+	[BZ #6812]
+	* nscd/hstcache.c (tryagain): Define.
+	(cache_addhst): Return tryagain not notfound for temporary errors.
+	(addhstbyX): Also set h_errno to TRY_AGAIN when memory allocation
+	failed.
+
 2011-01-14  Ulrich Drepper  <drepper@gmail.com>
 
 	[BZ #10563]

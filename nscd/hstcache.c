@@ -1,5 +1,5 @@
 /* Cache handling for host lookup.
-   Copyright (C) 1998-2008, 2009 Free Software Foundation, Inc.
+   Copyright (C) 1998-2008, 2009, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -77,6 +77,20 @@ static const hst_response_header notfound =
 };
 
 
+/* This is the standard reply in case there are temporary problems.  */
+static const hst_response_header tryagain =
+{
+  .version = NSCD_VERSION,
+  .found = 0,
+  .h_name_len = 0,
+  .h_aliases_cnt = 0,
+  .h_addrtype = -1,
+  .h_length = -1,
+  .h_addr_list_cnt = 0,
+  .error = TRY_AGAIN
+};
+
+
 static void
 cache_addhst (struct database_dyn *db, int fd, request_header *req,
 	      const void *key, struct hostent *hst, uid_t owner,
@@ -111,11 +125,15 @@ cache_addhst (struct database_dyn *db, int fd, request_header *req,
       else
 	{
 	  /* We have no data.  This means we send the standard reply for this
-	     case.  */
+	     case.  Possibly this is only temporary.  */
 	  ssize_t total = sizeof (notfound);
+	  assert (sizeof (notfound) == sizeof (tryagain));
+
+	  const hst_response_header *resp = (errval == EAGAIN
+					     ? &tryagain : &notfound);
 
 	  if (fd != -1 &&
-	      TEMP_FAILURE_RETRY (send (fd, &notfound, total,
+	      TEMP_FAILURE_RETRY (send (fd, resp, total,
 					MSG_NOSIGNAL)) != total)
 	    all_written = false;
 
@@ -135,7 +153,7 @@ cache_addhst (struct database_dyn *db, int fd, request_header *req,
 					   ? db->negtimeout : ttl);
 
 	      /* This is the reply.  */
-	      memcpy (&dataset->resp, &notfound, total);
+	      memcpy (&dataset->resp, resp, total);
 
 	      /* Copy the key data.  */
 	      memcpy (dataset->strdata, key, req->key_len);
@@ -490,6 +508,7 @@ addhstbyX (struct database_dyn *db, int fd, request_header *req,
 	      /* We set the error to indicate this is (possibly) a
 		 temporary error and that it does not mean the entry
 		 is not available at all.  */
+	      h_errno = TRY_AGAIN;
 	      errval = EAGAIN;
 	      break;
 	    }
