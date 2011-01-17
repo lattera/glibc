@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,1992,1994-2001,2003,2004,2005,2006,2007,2009,2010
+/* Copyright (C) 1991,1992,1994-2001,2003,2004,2005,2006,2007,2009,2010,2011
 	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -110,6 +110,8 @@ __BEGIN_DECLS
 # define AT_REMOVEDIR		0x200	/* Remove directory instead of
 					   unlinking file.  */
 # define AT_SYMLINK_FOLLOW	0x400	/* Follow symbolic links.  */
+# define AT_NO_AUTOMOUNT	0x800	/* Suppress terminal automount
+					   traversal.  */
 # define AT_EACCESS		0x200	/* Test access permitted for
 					   effective IDs, not real IDs.  */
 #endif
