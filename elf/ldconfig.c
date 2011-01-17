@@ -1,4 +1,4 @@
-/* Copyright (C) 1999-2008, 2009, 2010 Free Software Foundation, Inc.
+/* Copyright (C) 1999-2008, 2009, 2010, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Andreas Jaeger <aj@suse.de>, 1999.
 
@@ -317,7 +317,7 @@ print_version (FILE *stream, struct argp_state *state)
 Copyright (C) %s Free Software Foundation, Inc.\n\
 This is free software; see the source for copying conditions.  There is NO\n\
 warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\
-"), "2010");
+"), "2011");
   fprintf (stream, gettext ("Written by %s.\n"),
 	   "Andreas Jaeger");
 }
@@ -1372,7 +1372,7 @@ main (int argc, char **argv)
     {
       save_cache (cache_file);
       if (aux_cache_file)
-        save_aux_cache (aux_cache_file);
+	save_aux_cache (aux_cache_file);
     }
 
   return 0;

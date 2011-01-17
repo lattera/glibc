@@ -1,5 +1,22 @@
 2011-01-17  Ulrich Drepper  <drepper@gmail.com>
 
+	* posix/getconf.c: Update copyright year.
+	* catgets/gencat.c: Likewise.
+	* csu/version.c: Likewise.
+	* debug/catchsegv.sh: Likewise.
+	* debug/xtrace.sh: Likewise.
+	* elf/ldconfig.c: Likewise.
+	* elf/ldd.bash.in: Likewise.
+	* elf/sprof.c (print_version): Likewise.
+	* iconv/iconv_prog.c: Likewise.
+	* iconv/iconvconfig.c: Likewise.
+	* locale/programs/locale.c: Likewise.
+	* locale/programs/localedef.c: Likewise.
+	* malloc/memusage.sh: Likewise.
+	* malloc/mtrace.pl: Likewise.
+	* nscd/nscd.c (print_version): Likewise.
+	* nss/getent.c: Likewise.
+
 	* sysdeps/unix/sysv/linux/bits/socket.h: Define AF_CAIF, AF_ALG,
 	PF_CAIF, and PF_ALG.
 	* sysdeps/unix/sysv/linux/sparc/bits/socket.h: Likewise.
