@@ -1,5 +1,17 @@
 2011-01-16  Andreas Schwab  <schwab@linux-m68k.org>
 
+	* elf/Makefile (tlsmod17a-modules, tlsmod18a-modules): Define.
+	(modules-names): Use them.
+	(ifunc-test-modules, ifunc-pie-tests): Define.
+	(extra-test-objs): Add tlsmod17a-modules, tlsmod18a-modules,
+	tst-pie1, ifunc-test-modules and ifunc-pie-tests objects.
+	(test-extras): Likewise.
+	($(patsubst %,$(objpfx)%.os,$(tlsmod17a-modules))): Use
+	$(compile-command.c).
+	($(patsubst %,$(objpfx)%.os,$(tlsmod18a-modules))): Likewise.
+	(all-built-dso): Define.
+	(check-textrel.out, check-execstack.out): Depend on it.
+
 	* configure.in: Don't override --enable-multi-arch.
 
 2011-01-15  Ulrich Drepper  <drepper@gmail.com>

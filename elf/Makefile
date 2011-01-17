@@ -212,6 +212,10 @@ endif
 tests: $(objpfx)tst-leaks1-mem
 tlsmod17a-suffixes = 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19
 tlsmod18a-suffixes = 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19
+tlsmod17a-modules = $(addprefix tst-tlsmod17a, $(tlsmod17a-suffixes))
+tlsmod18a-modules = $(addprefix tst-tlsmod18a, $(tlsmod17a-suffixes))
+extra-test-objs += $(tlsmod17a-modules:=.os) $(tlsmod18a-modules:=.os)
+test-extras += tst-tlsmod17a tst-tlsmod18a
 modules-names = testobj1 testobj2 testobj3 testobj4 testobj5 testobj6 \
 		testobj1_1 failobj constload2 constload3 unloadmod \
 		dep1 dep2 dep3 dep4 vismod1 vismod2 vismod3 \
@@ -231,9 +235,7 @@ modules-names = testobj1 testobj2 testobj3 testobj4 testobj5 testobj6 \
 		tst-tlsmod9 tst-tlsmod10 tst-tlsmod11 tst-tlsmod12 \
 		tst-tlsmod13 tst-tlsmod13a tst-tlsmod14a tst-tlsmod14b \
 		tst-tlsmod15a tst-tlsmod15b tst-tlsmod16a tst-tlsmod16b \
-		$(patsubst %,tst-tlsmod17a%,$(tlsmod17a-suffixes)) \
-		tst-tlsmod17b \
-		$(patsubst %,tst-tlsmod18a%,$(tlsmod18a-suffixes)) \
+		$(tlsmod17a-modules) tst-tlsmod17b $(tlsmod18a-modules) \
 		circlemod1 circlemod1a circlemod2 circlemod2a \
 		circlemod3 circlemod3a \
 		reldep8mod1 reldep8mod2 reldep8mod3 \
@@ -254,6 +256,8 @@ modules-names += tst-array2dep tst-array5dep
 endif
 ifeq (yesyes,$(have-fpie)$(build-shared))
 modules-names += tst-piemod1
+extra-test-objs += tst-pie1.o
+test-extras += tst-pie1
 endif
 ifeq (x86_64,$(config-machine))
 modules-names += tst-auditmod3a tst-auditmod3b \
@@ -283,10 +287,16 @@ tests += ifuncmain1 ifuncmain1pic ifuncmain1vis ifuncmain1vispic \
 	 ifuncmain2 ifuncmain2pic ifuncmain3 ifuncmain4 \
 	 ifuncmain5 ifuncmain5pic ifuncmain5staticpic \
 	 ifuncmain7 ifuncmain7pic
+ifunc-test-modules = ifuncdep1 ifuncdep1pic ifuncdep2 ifuncdep2pic \
+		     ifuncdep5 ifuncdep5pic
+extra-test-objs += $(ifunc-test-modules:=.o)
+test-extras += $(ifunc-test-modules)
 ifeq (yes,$(have-fpie))
-tests: $(objpfx)ifuncmain1pie.out $(objpfx)ifuncmain1vispie.out \
-	$(objpfx)ifuncmain1staticpie.out $(objpfx)ifuncmain5pie.out \
-	$(objpfx)ifuncmain6pie.out $(objpfx)ifuncmain7pie.out
+ifunc-pie-tests = ifuncmain1pie ifuncmain1vispie ifuncmain1staticpie \
+		  ifuncmain5pie ifuncmain6pie ifuncmain7pie
+tests: $(patsubst %,$(objpfx)%.out, $(ifunc-pie-tests))
+extra-test-objs += $(ifunc-pie-tests:=.o)
+test-extras += $(ifunc-pie-tests)
 endif
 modules-names += ifuncmod1 ifuncmod3 ifuncmod5 ifuncmod6
 endif
@@ -784,16 +794,16 @@ $(objpfx)tst-tls16.out: $(objpfx)tst-tlsmod16a.so $(objpfx)tst-tlsmod16b.so
 
 $(objpfx)tst-tls17: $(libdl)
 $(objpfx)tst-tls17.out: $(objpfx)tst-tlsmod17b.so
-$(patsubst %,$(objpfx)tst-tlsmod17a%.os,$(tlsmod17a-suffixes)): $(objpfx)tst-tlsmod17a%.os : tst-tlsmod17a.c
-	$(CC) $(CFLAGS) $(CPPFLAGS) -c -o $@ -DN=$* -DNOT_IN_libc=1 $<
-$(patsubst %,$(objpfx)tst-tlsmod17a%.so,$(tlsmod17a-suffixes)): $(objpfx)tst-tlsmod17a%.so: $(objpfx)ld.so
-$(objpfx)tst-tlsmod17b.so: $(patsubst %,$(objpfx)tst-tlsmod17a%.so,$(tlsmod17a-suffixes))
+$(patsubst %,$(objpfx)%.os,$(tlsmod17a-modules)): $(objpfx)tst-tlsmod17a%.os: tst-tlsmod17a.c
+	$(compile-command.c) -DN=$*
+$(patsubst %,$(objpfx)%.so,$(tlsmod17a-modules)): $(objpfx)tst-tlsmod17a%.so: $(objpfx)ld.so
+$(objpfx)tst-tlsmod17b.so: $(patsubst %,$(objpfx)%.so,$(tlsmod17a-modules))
 
 $(objpfx)tst-tls18: $(libdl)
-$(objpfx)tst-tls18.out: $(patsubst %,$(objpfx)tst-tlsmod18a%.so,$(tlsmod18a-suffixes))
-$(patsubst %,$(objpfx)tst-tlsmod18a%.os,$(tlsmod18a-suffixes)): $(objpfx)tst-tlsmod18a%.os : tst-tlsmod18a.c
-	$(CC) $(CFLAGS) $(CPPFLAGS) -c -o $@ -DN=$* -DNOT_IN_libc=1 $<
-$(patsubst %,$(objpfx)tst-tlsmod18a%.so,$(tlsmod18a-suffixes)): $(objpfx)tst-tlsmod18a%.so: $(objpfx)ld.so
+$(objpfx)tst-tls18.out: $(patsubst %,$(objpfx)%.so,$(tlsmod18a-modules))
+$(patsubst %,$(objpfx)%.os,$(tlsmod18a-modules)): $(objpfx)tst-tlsmod18a%.os : tst-tlsmod18a.c
+	$(compile-command.c) -DN=$*
+$(patsubst %,$(objpfx)%.so,$(tlsmod18a-modules)): $(objpfx)tst-tlsmod18a%.so: $(objpfx)ld.so
 
 CFLAGS-tst-align.c = $(stack-align-test-flags)
 CFLAGS-tst-align2.c = $(stack-align-test-flags)
@@ -917,16 +927,16 @@ $(objpfx)check-localplt: check-localplt.c
 ifeq (yes,$(build-shared))
 tests: $(objpfx)check-textrel.out $(objpfx)check-execstack.out
 
-$(objpfx)check-textrel.out: $(objpfx)check-textrel
-	$(dir $<)$(notdir $<) $(common-objpfx)libc.so \
-	  $(sort $(wildcard $(common-objpfx)*/lib*.so \
-			    $(common-objpfx)iconvdata/*.so)) > $@
+all-built-dso = $(common-objpfx)libc.so \
+		$(sort $(wildcard $(common-objpfx)*/lib*.so \
+				  $(common-objpfx)iconvdata/*.so))
+
+$(objpfx)check-textrel.out: $(objpfx)check-textrel $(all-built-dso)
+	$(dir $<)$(notdir $<) $(filter-out $<, $^) > $@
 generated += check-textrel check-textrel.out
 
-$(objpfx)check-execstack.out: $(objpfx)check-execstack
-	$(dir $<)$(notdir $<) $(common-objpfx)libc.so \
-	  $(sort $(wildcard $(common-objpfx)*/lib*.so \
-			    $(common-objpfx)iconvdata/*.so)) > $@
+$(objpfx)check-execstack.out: $(objpfx)check-execstack $(all-built-dso)
+	$(dir $<)$(notdir $<) $(filter-out $<, $^) > $@
 generated += check-execstack check-execstack.out
 
 $(objpfx)tst-dlmodcount: $(libdl)

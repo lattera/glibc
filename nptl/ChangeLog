@@ -1,3 +1,7 @@
+2011-01-16  Andreas Schwab  <schwab@linux-m68k.org>
+
+	* Makefile (test-extras): Add tst-cleanup4aux.
+
 2011-01-14  Ulrich Drepper  <drepper@gmail.com>
 
 	[BZ #10563]
