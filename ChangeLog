@@ -1,3 +1,9 @@
+2011-01-17  Ulrich Drepper  <drepper@gmail.com>
+
+	* sysdeps/unix/sysv/linux/bits/socket.h: Define AF_CAIF, AF_ALG,
+	PF_CAIF, and PF_ALG.
+	* sysdeps/unix/sysv/linux/sparc/bits/socket.h: Likewise.
+
 2011-01-16  Andreas Schwab  <schwab@linux-m68k.org>
 
 	* elf/Makefile (tlsmod17a-modules, tlsmod18a-modules): Define.

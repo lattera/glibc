@@ -1,5 +1,5 @@
 /* System-specific socket constants and types.  Linux version.
-   Copyright (C) 1991, 1992, 1994-2001, 2004, 2006, 2007, 2008, 2009, 2010
+   Copyright (C) 1991, 1992, 1994-2001, 2004, 2006-2010, 2011
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -109,7 +109,9 @@ enum __socket_type
 #define PF_ISDN		34	/* mISDN sockets.  */
 #define PF_PHONET	35	/* Phonet sockets.  */
 #define PF_IEEE802154	36	/* IEEE 802.15.4 sockets.  */
-#define	PF_MAX		37	/* For now..  */
+#define PF_CAIF		37	/* CAIF sockets.  */
+#define PF_ALG		38	/* Algorithm sockets.  */
+#define	PF_MAX		39	/* For now..  */
 
 /* Address families.  */
 #define	AF_UNSPEC	PF_UNSPEC
@@ -150,6 +152,8 @@ enum __socket_type
 #define AF_ISDN		PF_ISDN
 #define AF_PHONET	PF_PHONET
 #define AF_IEEE802154	PF_IEEE802154
+#define AF_CAIF		PF_CAIF
+#define AF_ALG		PF_ALG
 #define	AF_MAX		PF_MAX
 
 /* Socket level values.  Others are defined in the appropriate headers.
