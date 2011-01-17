@@ -3951,7 +3951,7 @@ if test x"$add_ons" != x; then
       ;;
     *)
       test -d "$srcdir/$libc_add_on" || {
-        if test -d "$libc_add_on"; then
+	if test -d "$libc_add_on"; then
 	  libc_add_on="`pwd`/$libc_add_on"
 	else
 	  as_fn_error $? "add-on directory \"$libc_add_on\" does not exist" "$LINENO" 5
@@ -3971,7 +3971,7 @@ $as_echo "$as_me: running configure fragment for add-on $libc_add_on" >&6;}
       libc_add_on_subdirs=
       . "$libc_add_on_frag"
       test -z "$libc_add_on" || {
-        configured_add_ons="$configured_add_ons $libc_add_on"
+	configured_add_ons="$configured_add_ons $libc_add_on"
 	if test "x$libc_add_on_canonical" = xunknown; then
 	  as_fn_error $? "fragment must set \$libc_add_on_canonical" "$LINENO" 5
 	fi
@@ -4320,8 +4320,8 @@ for b in $base ''; do
 	  for d in $add_ons_pfx ''; do
 	    for a in $add_ons_sfx ''; do
 	      if test -n "$m0$m0sub$b$v$o$m$msub"; then
-	        try_srcdir="${srcdir}/"
-	        case "$d" in
+		try_srcdir="${srcdir}/"
+		case "$d" in
 		/*) try_srcdir= ;;
 		esac
 		try="${d}sysdeps$m0$m0sub$b$v$o$m$msub$a"
@@ -4356,7 +4356,7 @@ case $sysnames_add_ons$sysnames in
 *"$multi_arch_d"*)
   ;;
 *)
-  multi_arch=no
+  test x"$multi_arch" = xdefault && multi_arch=no
   ;;
 esac
 if test x"$multi_arch" != xno; then
@@ -4451,7 +4451,7 @@ while test $# -gt 0; do
 	fi
       done
       if test $found = no; then
-        { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: $name/Implies specifies nonexistent $x" >&5
+	{ $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: $name/Implies specifies nonexistent $x" >&5
 $as_echo "$as_me: WARNING: $name/Implies specifies nonexistent $x" >&2;}
       fi
     done
@@ -4528,7 +4528,7 @@ $as_echo "$as_me: WARNING: add-on $add_on contributed no sysdeps directories" >&
 	 done
 	 ;;
        *)
-         test -d "$f" || { test -e "$f" && exit 88; }
+	 test -d "$f" || { test -e "$f" && exit 88; }
 	 ;;
        esac
      done)
@@ -5937,7 +5937,7 @@ VERS_1 {
 };
 
 VERS_2 {
-        global: sym;
+	global: sym;
 } VERS_1;
 EOF
   if ${CC-cc} -c $ASFLAGS conftest.s 1>&5 2>&5; then
@@ -6367,7 +6367,7 @@ fi
 { $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_z_relro" >&5
 $as_echo "$libc_cv_z_relro" >&6; }
       if test "$libc_cv_z_relro" = no; then
-        as_fn_error $? "linker with -z relro support required" "$LINENO" 5
+	as_fn_error $? "linker with -z relro support required" "$LINENO" 5
       fi
       ;;
     *) ;;
@@ -6918,13 +6918,13 @@ else
   *) cfi_offset=0;;
 esac
 cat > conftest.s <<EOF
-        .text
-        .type   func,%function
+	.text
+	.type   func,%function
 func:
-        .cfi_startproc
+	.cfi_startproc
 	.cfi_remember_state
 	.cfi_rel_offset 1, $cfi_offset
-        .cfi_endproc
+	.cfi_endproc
 EOF
 if { ac_try='${CC-cc} $ASFLAGS -c conftest.s 1>&5'
   { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
