@@ -1,6 +1,7 @@
 2011-01-17  Ulrich Drepper  <drepper@gmail.com>
 
-	* sysdeps/unix/sysv/linux/i386/bits/mman.h: Define MADV_HUGEPAGE.
+	* sysdeps/unix/sysv/linux/i386/bits/mman.h: Define MADV_HUGEPAGE and
+	MADV_NOHUGEPAGE.
 	* sysdeps/unix/sysv/linux/ia64/bits/mman.h: Likewise.
 	* sysdeps/unix/sysv/linux/powerpc/bits/mman.h: Likewise.
 	* sysdeps/unix/sysv/linux/s390/bits/mman.h: Likewise.
