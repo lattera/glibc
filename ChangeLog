@@ -1,5 +1,13 @@
 2011-01-17  Ulrich Drepper  <drepper@gmail.com>
 
+	* sysdeps/unix/sysv/linux/i386/bits/mman.h: Define MADV_HUGEPAGE.
+	* sysdeps/unix/sysv/linux/ia64/bits/mman.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/bits/mman.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/bits/mman.h: Likewise.
+	* sysdeps/unix/sysv/linux/sh/bits/mman.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/mman.h: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/bits/mman.h: Likewise.
+
 	* posix/getconf.c: Update copyright year.
 	* catgets/gencat.c: Likewise.
 	* csu/version.c: Likewise.

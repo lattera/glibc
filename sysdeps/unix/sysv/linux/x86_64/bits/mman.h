@@ -1,5 +1,6 @@
 /* Definitions for POSIX memory map interface.  Linux/x86_64 version.
-   Copyright (C) 2001,2003,2005,2006,2009,2010 Free Software Foundation, Inc.
+   Copyright (C) 2001,2003,2005,2006,2009,2010,2011
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -96,6 +97,7 @@
 # define MADV_DOFORK	  11	/* Do inherit across fork.  */
 # define MADV_MERGEABLE	  12	/* KSM may merge identical pages.  */
 # define MADV_UNMERGEABLE 13	/* KSM may not merge identical pages.  */
+# define MADV_HUGEPAGE	  14	/* Worth backing with hugepages.  */
 # define MADV_HWPOISON	  100	/* Poison a page for testing.  */
 #endif
 
