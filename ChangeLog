@@ -1,3 +1,7 @@
+2011-01-18  Ulrich Drepper  <drepper@gmail.com>
+
+	* elf/Makefile: Build IFUNC tests unless multi-arch = no.
+
 2011-01-17  Ulrich Drepper  <drepper@gmail.com>
 
 	* version.h (RELEASE): Bump for 2.13 release.

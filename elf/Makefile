@@ -1,4 +1,4 @@
-# Copyright (C) 1995-2007,2008,2009,2010 Free Software Foundation, Inc.
+# Copyright (C) 1995-2007,2008,2009,2010,2011 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -274,7 +274,7 @@ test-extras += $(modules-names)
 # filtmod1.so has a special rule
 modules-names-nobuild := filtmod1
 
-ifeq (yes,$(multi-arch))
+ifneq (no,$(multi-arch))
 tests-static += ifuncmain1static ifuncmain1picstatic \
 		ifuncmain2static ifuncmain2picstatic \
 		ifuncmain4static ifuncmain4picstatic \
