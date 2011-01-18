@@ -1,5 +1,8 @@
 2011-01-17  Ulrich Drepper  <drepper@gmail.com>
 
+	* version.h (RELEASE): Bump for 2.13 release.
+	* include/features.h: (__GLIBC_MINOR__): Bump to 13.
+
 	* io/fcntl.h: Define AT_NO_AUTOMOUNT.
 
 	* sysdeps/unix/sysv/linux/i386/bits/mman.h: Define MADV_HUGEPAGE and
