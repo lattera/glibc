@@ -1,5 +1,6 @@
 2011-01-19  Ulrich Drepper  <drepper@gmail.com>
 
+	[BZ #11724]
 	* elf/dl-deps.c (_dl_map_object_deps): Rewrite sorting determining order
 	of constructors.
 	* elf/dl-fini.c (_dl_sort_fini): Rewrite sorting determining order
