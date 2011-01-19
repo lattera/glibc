@@ -118,7 +118,10 @@ distribute	:= rtld-Rules \
 		   ifuncmain7.c ifuncmain7pic.c ifuncmain7picstatic.c \
 		   ifuncmain7pie.c ifuncmain7static.c \
 		   tst-unique1.c tst-unique1mod1.c tst-unique1mod2.c \
-		   tst-unique2.c tst-unique2mod1.c tst-unique2mod2.c
+		   tst-unique2.c tst-unique2mod1.c tst-unique2mod2.c \
+			 tst-initordera1.c tst-initordera2.c tst-initorderb1.c \
+			 tst-initorderb2.c tst-initordera3.c tst-initordera4.c \
+			 tst-initorder.c
 
 CFLAGS-dl-runtime.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-dl-lookup.c = -fexceptions -fasynchronous-unwind-tables
@@ -198,7 +201,8 @@ tests += loadtest restest1 preloadtest loadfail multiload origtest resolvfail \
 	 unload3 unload4 unload5 unload6 unload7 tst-global1 order2 \
 	 tst-audit1 tst-audit2 \
 	 tst-stackguard1 tst-addr1 tst-thrlock \
-	 tst-unique1 tst-unique2
+	 tst-unique1 tst-unique2 \
+	 tst-initorder
 #	 reldep9
 test-srcs = tst-pathopt
 tests-execstack-yes = tst-execstack tst-execstack-needed tst-execstack-prog
@@ -250,7 +254,10 @@ modules-names = testobj1 testobj2 testobj3 testobj4 testobj5 testobj6 \
 		unload7mod1 unload7mod2 \
 		order2mod1 order2mod2 order2mod3 order2mod4 \
 		tst-unique1mod1 tst-unique1mod2 \
-		tst-unique2mod1 tst-unique2mod2
+		tst-unique2mod1 tst-unique2mod2 \
+		tst-initordera1 tst-initorderb1 \
+		tst-initordera2 tst-initorderb2 \
+		tst-initordera3 tst-initordera4
 ifeq (yes,$(have-initfini-array))
 modules-names += tst-array2dep tst-array5dep
 endif
@@ -531,6 +538,11 @@ $(objpfx)unload6mod2.so: $(libdl)
 $(objpfx)unload6mod3.so: $(libdl)
 $(objpfx)unload7mod1.so: $(libdl)
 $(objpfx)unload7mod2.so: $(objpfx)unload7mod1.so
+$(objpfx)tst-initordera2.so: $(objpfx)tst-initordera1.so
+$(objpfx)tst-initorderb2.so: $(objpfx)tst-initorderb1.so $(objpfx)tst-initordera2.so
+$(objpfx)tst-initordera3.so: $(objpfx)tst-initorderb2.so $(objpfx)tst-initorderb1.so
+$(objpfx)tst-initordera4.so: $(objpfx)tst-initordera3.so
+$(objpfx)tst-initorder: $(objpfx)tst-initordera4.so $(objpfx)tst-initordera1.so $(objpfx)tst-initorderb2.so
 
 LDFLAGS-tst-tlsmod5.so = -nostdlib
 LDFLAGS-tst-tlsmod6.so = -nostdlib
@@ -1161,6 +1173,12 @@ $(objpfx)tst-unique1.out: $(objpfx)tst-unique1mod1.so \
 
 $(objpfx)tst-unique2: $(libdl) $(objpfx)tst-unique2mod1.so
 $(objpfx)tst-unique2.out: $(objpfx)tst-unique2mod2.so
+
+$(objpfx)tst-initorder.out: $(objpfx)tst-initorder
+	$(elf-objpfx)${rtld-installed-name} \
+	  --library-path $(rpath-link)$(patsubst %,:%,$(sysdep-library-path)) \
+	  $< > $@
+	cmp $@ tst-initorder.exp > /dev/null
 
 ifeq (yes,$(config-cflags-avx))
 CFLAGS-tst-audit4.c += -mavx

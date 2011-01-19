@@ -1,5 +1,5 @@
 /* Load the dependencies of a mapped object.
-   Copyright (C) 1996-2003, 2004, 2005, 2006, 2007, 2010
+   Copyright (C) 1996-2003, 2004, 2005, 2006, 2007, 2010, 2011
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -591,7 +591,7 @@ Filters not supported with LD_TRACE_PRELINKING"));
 	    /* Need to allocate new array of relocation dependencies.  */
 	    struct link_map_reldeps *l_reldeps;
 	    l_reldeps = malloc (sizeof (*l_reldeps)
-	    			+ map->l_reldepsmax
+				+ map->l_reldepsmax
 				  * sizeof (struct link_map *));
 	    if (l_reldeps == NULL)
 	      /* Bad luck, keep the reldeps duplicated between
@@ -616,48 +616,60 @@ Filters not supported with LD_TRACE_PRELINKING"));
   /* Now determine the order in which the initialization has to happen.  */
   memcpy (l_initfini, map->l_searchlist.r_list,
 	  nlist * sizeof (struct link_map *));
+
   /* We can skip looking for the binary itself which is at the front
-     of the search list.  Look through the list backward so that circular
-     dependencies are not changing the order.  */
-  for (i = 1; i < nlist; ++i)
+     of the search list.  */
+  assert (nlist > 1);
+  i = 1;
+  bool seen[nlist];
+  memset (seen, false, nlist * sizeof (seen[0]));
+  while (1)
     {
-      struct link_map *l = map->l_searchlist.r_list[i];
-      unsigned int j;
-      unsigned int k;
+      /* Keep track of which object we looked at this round.  */
+      seen[i] = true;
+      struct link_map *thisp = l_initfini[i];
 
-      /* Find the place in the initfini list where the map is currently
-	 located.  */
-      for (j = 1; l_initfini[j] != l; ++j)
-	;
-
-      /* Find all object for which the current one is a dependency and
-	 move the found object (if necessary) in front.  */
-      for (k = j + 1; k < nlist; ++k)
+      /* Find the last object in the list for which the current one is
+	 a dependency and move the current object behind the object
+	 with the dependency.  */
+      unsigned int k = nlist - 1;
+      while (k > i)
 	{
-	  struct link_map **runp;
-
-	  runp = l_initfini[k]->l_initfini;
+	  struct link_map **runp = l_initfini[k]->l_initfini;
 	  if (runp != NULL)
-	    {
-	      while (*runp != NULL)
-		if (__builtin_expect (*runp++ == l, 0))
-		  {
-		    struct link_map *here = l_initfini[k];
+	    /* Look through the dependencies of the object.  */
+	    while (*runp != NULL)
+	      if (__builtin_expect (*runp++ == thisp, 0))
+		{
+		  /* Move the current object to the back past the last
+		     object with it as the dependency.  */
+		  memmove (&l_initfini[i], &l_initfini[i + 1],
+			   (k - i) * sizeof (l_initfini[0]));
+		  l_initfini[k] = thisp;
 
-		    /* Move it now.  */
-		    memmove (&l_initfini[j] + 1, &l_initfini[j],
-			     (k - j) * sizeof (struct link_map *));
-		    l_initfini[j] = here;
+		  if (seen[i + 1])
+		    {
+		      ++i;
+		      goto next_clear;
+		    }
 
-		    /* Don't insert further matches before the last
-		       entry moved to the front.  */
-		    ++j;
+		  memmove (&seen[i], &seen[i + 1], (k - i) * sizeof (seen[0]));
+		  seen[k] = true;
 
-		    break;
-		  }
-	    }
+		  goto next;
+		}
+
+	  --k;
 	}
+
+      if (++i == nlist)
+	break;
+    next_clear:
+      memset (&seen[i], false, (nlist - i) * sizeof (seen[0]));
+
+    next:;
     }
+
   /* Terminate the list of dependencies.  */
   l_initfini[nlist] = NULL;
   atomic_write_barrier ();

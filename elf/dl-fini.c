@@ -1,5 +1,6 @@
 /* Call the termination functions of loaded shared objects.
-   Copyright (C) 1995,96,1998-2002,2004-2005,2009 Free Software Foundation, Inc.
+   Copyright (C) 1995,96,1998-2002,2004-2005,2009,2011
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -32,86 +33,84 @@ internal_function
 _dl_sort_fini (struct link_map *l, struct link_map **maps, size_t nmaps,
 	       char *used, Lmid_t ns)
 {
-  if (ns == LM_ID_BASE)
-    /* The main executable always comes first.  */
-    l = l->l_next;
+  /* We can skip looking for the binary itself which is at the front
+     of the search list for the main namespace.  */
+  assert (nmaps > 1);
+  unsigned int i = ns == LM_ID_BASE;
+  bool seen[nmaps];
+  memset (seen, false, nmaps * sizeof (seen[0]));
+  while (1)
+    {
+      /* Keep track of which object we looked at this round.  */
+      seen[i] = true;
+      struct link_map *thisp = maps[i];
 
-  for (; l != NULL; l = l->l_next)
-    /* Do not handle ld.so in secondary namespaces and object which
-       are not removed.  */
-    if (l == l->l_real && l->l_idx != -1)
-      {
-	/* Find the place in the 'maps' array.  */
-	unsigned int j;
-	for (j = ns == LM_ID_BASE ? 1 : 0; maps[j] != l; ++j)
-	  assert (j < nmaps);
+      /* Do not handle ld.so in secondary namespaces and object which
+	 are not removed.  */
+      if (thisp != thisp->l_real || thisp->l_idx == -1)
+	goto skip;
 
-	/* Find all object for which the current one is a dependency
-	   and move the found object (if necessary) in front.  */
-	for (unsigned int k = j + 1; k < nmaps; ++k)
-	  {
-	    struct link_map **runp = maps[k]->l_initfini;
-	    if (runp != NULL)
-	      {
-		while (*runp != NULL)
-		  if (*runp == l)
+      /* Find the last object in the list for which the current one is
+	 a dependency and move the current object behind the object
+	 with the dependency.  */
+      unsigned int k = nmaps - 1;
+      while (k > i)
+	{
+	  struct link_map **runp = maps[k]->l_initfini;
+	  if (runp != NULL)
+	    /* Look through the dependencies of the object.  */
+	    while (*runp != NULL)
+	      if (__builtin_expect (*runp++ == thisp, 0))
+		{
+		move:
+		  /* Move the current object to the back past the last
+		     object with it as the dependency.  */
+		  memmove (&maps[i], &maps[i + 1],
+			   (k - i) * sizeof (maps[0]));
+		  maps[k] = thisp;
+
+		  if (used != NULL)
 		    {
-		      struct link_map *here = maps[k];
-
-		      /* Move it now.  */
-		      memmove (&maps[j] + 1,
-			       &maps[j], (k - j) * sizeof (struct link_map *));
-		      maps[j] = here;
-
-		      if (used != NULL)
-			{
-			  char here_used = used[k];
-
-			  memmove (&used[j] + 1,
-				   &used[j], (k - j) * sizeof (char));
-			  used[j] = here_used;
-			}
-
-		      ++j;
-
-		      break;
+		      char here_used = used[i];
+		      memmove (&used[i], &used[i + 1],
+			       (k - i) * sizeof (used[0]));
+		      used[k] = here_used;
 		    }
-		  else
-		    ++runp;
-	      }
 
-	    if (__builtin_expect (maps[k]->l_reldeps != NULL, 0))
-	      {
-		unsigned int m = maps[k]->l_reldeps->act;
-		struct link_map **relmaps = &maps[k]->l_reldeps->list[0];
+		  if (seen[i + 1])
+		    {
+		      ++i;
+		      goto next_clear;
+		    }
 
-		while (m-- > 0)
-		  {
-		    if (relmaps[m] == l)
-		      {
-			struct link_map *here = maps[k];
+		  memmove (&seen[i], &seen[i + 1], (k - i) * sizeof (seen[0]));
+		  seen[k] = true;
 
-			/* Move it now.  */
-			memmove (&maps[j] + 1,
-				 &maps[j],
-				 (k - j) * sizeof (struct link_map *));
-			maps[j] = here;
+		  goto next;
+		}
 
-			if (used != NULL)
-			  {
-			    char here_used = used[k];
+	  if (__builtin_expect (maps[k]->l_reldeps != NULL, 0))
+	    {
+	      unsigned int m = maps[k]->l_reldeps->act;
+	      struct link_map **relmaps = &maps[k]->l_reldeps->list[0];
 
-			    memmove (&used[j] + 1,
-				     &used[j], (k - j) * sizeof (char));
-			    used[j] = here_used;
-			  }
+	    /* Look through the relocation dependencies of the object.  */
+	      while (m-- > 0)
+		if (__builtin_expect (relmaps[m] == thisp, 0))
+		  goto move;
+	    }
 
-			break;
-		      }
-		  }
-	      }
-	  }
-      }
+	  --k;
+	}
+
+    skip:
+      if (++i == nmaps)
+	break;
+    next_clear:
+      memset (&seen[i], false, (nmaps - i) * sizeof (seen[0]));
+
+    next:;
+    }
 }
 
 
@@ -196,7 +195,7 @@ _dl_fini (void)
       assert (ns == LM_ID_BASE || i == nloaded || i == nloaded - 1);
       nmaps = i;
 
-      if (nmaps != 0)
+      if (nmaps > 1)
 	/* Now we have to do the sorting.  */
 	_dl_sort_fini (GL(dl_ns)[ns]._ns_loaded, maps, nmaps, NULL, ns);
 
