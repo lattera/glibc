@@ -1,3 +1,8 @@
+2010-10-01  Andreas Schwab  <schwab@redhat.com>
+
+	* sysdeps/posix/getaddrinfo.c (gaih_inet): Don't discard result of
+	decoding ACE if AI_CANONIDN.
+
 2011-01-18  Ulrich Drepper  <drepper@gmail.com>
 
 	* elf/Makefile: Build IFUNC tests unless multi-arch = no.

@@ -965,6 +965,7 @@ gaih_inet (const char *name, const struct gaih_service *service,
 		   make a copy.  */
 		if (out == canon)
 		  goto make_copy;
+		canon = out;
 	      }
 	    else
 #endif
