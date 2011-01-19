@@ -1,4 +1,4 @@
-/* Copyright (C) 2003, 2004, 2007 Free Software Foundation, Inc.
+/* Copyright (C) 2003,2004,2007,2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Martin Schwidefsky <schwidefsky@de.ibm.com>, 2003.
 
@@ -32,7 +32,7 @@ pthread_rwlock_timedrdlock (rwlock, abstime)
 {
   int result = 0;
 
-  /* Make sure we are along.  */
+  /* Make sure we are alone.  */
   lll_lock(rwlock->__data.__lock, rwlock->__data.__shared);
 
   while (1)

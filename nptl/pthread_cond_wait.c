@@ -1,4 +1,4 @@
-/* Copyright (C) 2003, 2004, 2006, 2007 Free Software Foundation, Inc.
+/* Copyright (C) 2003,2004,2006,2007,2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Martin Schwidefsky <schwidefsky@de.ibm.com>, 2003.
 
@@ -101,7 +101,7 @@ __pthread_cond_wait (cond, mutex)
   int pshared = (cond->__data.__mutex == (void *) ~0l)
   		? LLL_SHARED : LLL_PRIVATE;
 
-  /* Make sure we are along.  */
+  /* Make sure we are alone.  */
   lll_lock (cond->__data.__lock, pshared);
 
   /* Now we can release the mutex.  */

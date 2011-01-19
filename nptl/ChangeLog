@@ -1,3 +1,12 @@
+2011-01-19  Roland McGrath  <roland@redhat.com>
+
+	* pthread_cond_wait.c (__pthread_cond_wait): Fix comment typo.
+	* pthread_cond_timedwait.c (__pthread_cond_timedwait): Likewise.
+	* pthread_rwlock_rdlock.c (__pthread_rwlock_rdlock): Likewise.
+	* pthread_rwlock_wrlock.c (__pthread_rwlock_wrlock): Likewise.
+	* pthread_rwlock_timedrdlock.c (pthread_rwlock_timedrdlock): Likewise.
+	* pthread_rwlock_timedwrlock.c (pthread_rwlock_timedwrlock): Likewise.
+
 2011-01-16  Andreas Schwab  <schwab@linux-m68k.org>
 
 	* Makefile (test-extras): Add tst-cleanup4aux.
