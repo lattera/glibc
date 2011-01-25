@@ -1,3 +1,8 @@
+2011-01-25  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/mips/bits/socket.h (AF_CAIF, AF_ALG,
+	PF_CAIF, PF_ALG): Define.
+
 2010-12-30  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/mips/init-first.c: Don't call __libc_global_ctors if
