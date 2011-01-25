@@ -1,3 +1,8 @@
+2011-01-25  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/arm/bits/mman.h (MADV_HUGEPAGE,
+	MADV_NOHUGEPAGE): Define.
+
 2011-01-07  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/arm/eabi/fclrexcpt.c (__feclearexcept): Return zero if
