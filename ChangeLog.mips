@@ -1,5 +1,10 @@
 2011-01-25  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/unix/sysv/linux/mips/bits/mman.h (MADV_HUGEPAGE,
+	MADV_NOHUGEPAGE): Define.
+
+2011-01-25  Joseph Myers  <joseph@codesourcery.com>
+
 	* sysdeps/unix/sysv/linux/mips/bits/socket.h (AF_CAIF, AF_ALG,
 	PF_CAIF, PF_ALG): Define.
 
