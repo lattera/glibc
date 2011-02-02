@@ -1,3 +1,8 @@
+2011-02-02  Andreas Schwab  <schwab@redhat.com>
+
+	* shadow/sgetspent.c: Check return value of __sgetspent_r instead
+	of errno.
+
 2011-01-19  Ulrich Drepper  <drepper@gmail.com>
 
 	[BZ #11724]
