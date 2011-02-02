@@ -1,3 +1,9 @@
+2011-02-02  Ulrich Drepper  <drepper@gmail.com>
+
+	* elf/dl-runtime.c (_dl_call_pltexit): Pass correct address of the
+	function to the callback.
+	Patch partly by Jiri Olsa <jolsa@redhat.com>.
+
 2011-02-02  Andreas Schwab  <schwab@redhat.com>
 
 	* shadow/sgetspent.c: Check return value of __sgetspent_r instead

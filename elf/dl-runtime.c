@@ -1,5 +1,5 @@
 /* On-demand PLT fixup for shared objects.
-   Copyright (C) 1995-2009, 2010 Free Software Foundation, Inc.
+   Copyright (C) 1995-2009, 2010, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -446,6 +446,7 @@ _dl_call_pltexit (struct link_map *l, ElfW(Word) reloc_arg,
 
   /* Set up the sym parameter.  */
   ElfW(Sym) sym = *defsym;
+  sym.st_value = DL_FIXUP_VALUE_ADDR (reloc_result->addr);
 
   /* Get the symbol name.  */
   const char *strtab = (const void *) D_PTR (reloc_result->bound,
