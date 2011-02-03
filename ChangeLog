@@ -1,3 +1,17 @@
+2011-02-02  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #12460]
+	* config.make.in (config-cflags-novzeroupper): Define.
+	* configure.in: Substitute libc_cv_cc_novzeroupper.
+	* elf/Makefile (AVX-CFLAGS): Define.
+	(CFLAGS-tst-audit4.c): Replace -mavx with $(AVX-CFLAGS).
+	(CFLAGS-tst-auditmod4a.c): Likewise.
+	(CFLAGS-tst-auditmod4b.c): Likewise.
+	(CFLAGS-tst-auditmod6b.c): Likewise.
+	(CFLAGS-tst-auditmod6c.c): Likewise.
+	(CFLAGS-tst-auditmod7b.c): Likewise.
+	* sysdeps/i386/configure.in: Check -mno-vzeroupper.
+
 2011-02-02  Ulrich Drepper  <drepper@gmail.com>
 
 	* elf/dl-runtime.c (_dl_call_pltexit): Pass correct address of the
