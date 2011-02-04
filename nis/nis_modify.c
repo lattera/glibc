@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 1997,1998,2004,2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@uni-paderborn.de>, 1997.
 
@@ -65,7 +65,7 @@ nis_modify (const_nis_name name, const nis_object *obj2)
 			 (caddr_t) & req, (xdrproc_t) _xdr_nis_result,
 			 (caddr_t) res, MASTER_ONLY,
 			 NULL);
-  if (status != RPC_SUCCESS)
+  if (status != NIS_SUCCESS)
     NIS_RES_STATUS (res) = status;
 
   nis_destroy_object (req.ns_object.ns_object_val);

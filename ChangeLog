@@ -1,3 +1,17 @@
+2011-02-04  Roland McGrath  <roland@redhat.com>
+
+	* nis/nis_server.c (nis_servstate): Use the right name for 0.
+	(nis_stats): Likewise.
+	* nis/nis_modify.c (nis_modify): Likewise.
+	* nis/nis_remove.c (nis_remove): Likewise.
+	* nis/nis_add.c (nis_add): Likewise.
+
+	* elf/dl-object.c (_dl_new_object): Remove unused variable L.
+
+	* posix/fnmatch_loop.c: Add some consts.
+
+	* sysdeps/x86_64/multiarch/memset-x86-64.S: Add an #undef.
+
 2011-02-02  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #12460]

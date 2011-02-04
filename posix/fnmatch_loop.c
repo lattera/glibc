@@ -235,8 +235,8 @@ FCT (pattern, string, string_end, no_leading_period, flags, ends, alloca_used)
 	case L('['):
 	  {
 	    /* Nonzero if the sense of the character class is inverted.  */
-	    CHAR *p_init = p;
-	    CHAR *n_init = n;
+	    const CHAR *p_init = p;
+	    const CHAR *n_init = n;
 	    register int not;
 	    CHAR cold;
 	    UCHAR fn;
