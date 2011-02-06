@@ -1,5 +1,5 @@
 /* Cache handling for services lookup.
-   Copyright (C) 2007, 2008, 2009 Free Software Foundation, Inc.
+   Copyright (C) 2007, 2008, 2009, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@drepper.com>, 2007.
 
@@ -61,7 +61,7 @@ static const serv_response_header notfound =
 };
 
 
-static void
+static time_t
 cache_addserv (struct database_dyn *db, int fd, request_header *req,
 	       const void *key, struct servent *serv, uid_t owner,
 	       struct hashentry *const he, struct datahead *dh, int errval)
@@ -81,6 +81,7 @@ cache_addserv (struct database_dyn *db, int fd, request_header *req,
 
   assert (offsetof (struct dataset, resp) == offsetof (struct datahead, data));
 
+  time_t timeout = MAX_TIMEOUT_VALUE;
   if (serv == NULL)
     {
       if (he != NULL && errval == EAGAIN)
@@ -91,6 +92,9 @@ cache_addserv (struct database_dyn *db, int fd, request_header *req,
 	  if (reload_count != UINT_MAX)
 	    /* Do not reset the value if we never not reload the record.  */
 	    dh->nreloads = reload_count - 1;
+
+	  /* Reload with the same time-to-live value.  */
+	  timeout = dh->timeout = t + db->postimeout;
 
 	  written = total = 0;
 	}
@@ -115,7 +119,7 @@ cache_addserv (struct database_dyn *db, int fd, request_header *req,
 	      dataset->head.usable = true;
 
 	      /* Compute the timeout time.  */
-	      dataset->head.timeout = t + db->negtimeout;
+	      timeout = dataset->head.timeout = t + db->negtimeout;
 
 	      /* This is the reply.  */
 	      memcpy (&dataset->resp, &notfound, total);
@@ -203,7 +207,7 @@ cache_addserv (struct database_dyn *db, int fd, request_header *req,
       dataset->head.usable = true;
 
       /* Compute the timeout time.  */
-      dataset->head.timeout = t + db->postimeout;
+      timeout = dataset->head.timeout = t + db->postimeout;
 
       dataset->resp.version = NSCD_VERSION;
       dataset->resp.found = 1;
@@ -328,6 +332,8 @@ cache_addserv (struct database_dyn *db, int fd, request_header *req,
       dbg_log (_("short write in %s: %s"),  __FUNCTION__,
 	       strerror_r (errno, buf, sizeof (buf)));
     }
+
+  return timeout;
 }
 
 
@@ -354,7 +360,7 @@ lookup (int type, char *key, struct servent *resultbufp, char *buffer,
 }
 
 
-static void
+static time_t
 addservbyX (struct database_dyn *db, int fd, request_header *req,
 	    char *key, uid_t uid, struct hashentry *he, struct datahead *dh)
 {
@@ -409,10 +415,12 @@ addservbyX (struct database_dyn *db, int fd, request_header *req,
 	buffer = (char *) extend_alloca (buffer, buflen, 2 * buflen);
     }
 
-  cache_addserv (db, fd, req, key, serv, uid, he, dh, errval);
+  time_t timeout = cache_addserv (db, fd, req, key, serv, uid, he, dh, errval);
 
   if (use_malloc)
     free (buffer);
+
+  return timeout;
 }
 
 
@@ -424,7 +432,7 @@ addservbyname (struct database_dyn *db, int fd, request_header *req,
 }
 
 
-void
+time_t
 readdservbyname (struct database_dyn *db, struct hashentry *he,
 		 struct datahead *dh)
 {
@@ -434,7 +442,7 @@ readdservbyname (struct database_dyn *db, struct hashentry *he,
       .key_len = he->len
     };
 
-  addservbyX (db, -1, &req, db->data + he->key, he->owner, he, dh);
+  return addservbyX (db, -1, &req, db->data + he->key, he->owner, he, dh);
 }
 
 
@@ -446,7 +454,7 @@ addservbyport (struct database_dyn *db, int fd, request_header *req,
 }
 
 
-void
+time_t
 readdservbyport (struct database_dyn *db, struct hashentry *he,
 		 struct datahead *dh)
 {
@@ -456,5 +464,5 @@ readdservbyport (struct database_dyn *db, struct hashentry *he,
       .key_len = he->len
     };
 
-  addservbyX (db, -1, &req, db->data + he->key, he->owner, he, dh);
+  return addservbyX (db, -1, &req, db->data + he->key, he->owner, he, dh);
 }

@@ -1,5 +1,5 @@
 /* Inner loops of cache daemon.
-   Copyright (C) 1998-2007, 2008, 2009 Free Software Foundation, Inc.
+   Copyright (C) 1998-2007, 2008, 2009, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -1533,10 +1533,7 @@ nscd_run_prune (void *p)
 	     pruning we want to know about it.  Therefore set the
 	     timeout to the maximum.  It will be descreased when adding
 	     new entries to the cache, if necessary.  */
-	  if (sizeof (time_t) == sizeof (long int))
-	    dbs[my_number].wakeup_time = LONG_MAX;
-	  else
-	    dbs[my_number].wakeup_time = INT_MAX;
+	  dbs[my_number].wakeup_time = MAX_TIMEOUT_VALUE;
 
 	  /* Unconditionally reset the flag.  */
 	  time_t prune_now = dbs[my_number].clear_cache ? LONG_MAX : now;

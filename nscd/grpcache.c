@@ -1,5 +1,5 @@
 /* Cache handling for group lookup.
-   Copyright (C) 1998-2008, 2009 Free Software Foundation, Inc.
+   Copyright (C) 1998-2008, 2009, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -71,7 +71,7 @@ static const gr_response_header notfound =
 };
 
 
-static void
+static time_t
 cache_addgr (struct database_dyn *db, int fd, request_header *req,
 	     const void *key, struct group *grp, uid_t owner,
 	     struct hashentry *const he, struct datahead *dh, int errval)
@@ -91,6 +91,7 @@ cache_addgr (struct database_dyn *db, int fd, request_header *req,
 
   assert (offsetof (struct dataset, resp) == offsetof (struct datahead, data));
 
+  time_t timeout = MAX_TIMEOUT_VALUE;
   if (grp == NULL)
     {
       if (he != NULL && errval == EAGAIN)
@@ -101,6 +102,9 @@ cache_addgr (struct database_dyn *db, int fd, request_header *req,
 	  if (reload_count != UINT_MAX)
 	    /* Do not reset the value if we never not reload the record.  */
 	    dh->nreloads = reload_count - 1;
+
+	  /* Reload with the same time-to-live value.  */
+	  timeout = dh->timeout = t + db->postimeout;
 
 	  written = total = 0;
 	}
@@ -125,7 +129,7 @@ cache_addgr (struct database_dyn *db, int fd, request_header *req,
 	      dataset->head.usable = true;
 
 	      /* Compute the timeout time.  */
-	      dataset->head.timeout = t + db->negtimeout;
+	      timeout = dataset->head.timeout = t + db->negtimeout;
 
 	      /* This is the reply.  */
 	      memcpy (&dataset->resp, &notfound, total);
@@ -217,7 +221,7 @@ cache_addgr (struct database_dyn *db, int fd, request_header *req,
       dataset->head.usable = true;
 
       /* Compute the timeout time.  */
-      dataset->head.timeout = t + db->postimeout;
+      timeout = dataset->head.timeout = t + db->postimeout;
 
       dataset->resp.version = NSCD_VERSION;
       dataset->resp.found = 1;
@@ -379,6 +383,8 @@ cache_addgr (struct database_dyn *db, int fd, request_header *req,
       dbg_log (_("short write in %s: %s"),  __FUNCTION__,
 	       strerror_r (errno, buf, sizeof (buf)));
     }
+
+  return timeout;
 }
 
 
@@ -400,7 +406,7 @@ lookup (int type, union keytype key, struct group *resultbufp, char *buffer,
 }
 
 
-static void
+static time_t
 addgrbyX (struct database_dyn *db, int fd, request_header *req,
 	  union keytype key, const char *keystr, uid_t uid,
 	  struct hashentry *he, struct datahead *dh)
@@ -456,10 +462,12 @@ addgrbyX (struct database_dyn *db, int fd, request_header *req,
 	buffer = (char *) extend_alloca (buffer, buflen, 2 * buflen);
     }
 
-  cache_addgr (db, fd, req, keystr, grp, uid, he, dh, errval);
+  time_t timeout = cache_addgr (db, fd, req, keystr, grp, uid, he, dh, errval);
 
   if (use_malloc)
     free (buffer);
+
+  return timeout;
 }
 
 
@@ -473,7 +481,7 @@ addgrbyname (struct database_dyn *db, int fd, request_header *req,
 }
 
 
-void
+time_t
 readdgrbyname (struct database_dyn *db, struct hashentry *he,
 	       struct datahead *dh)
 {
@@ -484,7 +492,7 @@ readdgrbyname (struct database_dyn *db, struct hashentry *he,
     };
   union keytype u = { .v = db->data + he->key };
 
-  addgrbyX (db, -1, &req, u, db->data + he->key, he->owner, he, dh);
+  return addgrbyX (db, -1, &req, u, db->data + he->key, he->owner, he, dh);
 }
 
 
@@ -498,7 +506,7 @@ addgrbygid (struct database_dyn *db, int fd, request_header *req,
   if (*(char *) key == '\0' || *ep != '\0')  /* invalid numeric uid */
     {
       if (debug_level > 0)
-        dbg_log (_("Invalid numeric gid \"%s\"!"), (char *) key);
+	dbg_log (_("Invalid numeric gid \"%s\"!"), (char *) key);
 
       errno = EINVAL;
       return;
@@ -510,7 +518,7 @@ addgrbygid (struct database_dyn *db, int fd, request_header *req,
 }
 
 
-void
+time_t
 readdgrbygid (struct database_dyn *db, struct hashentry *he,
 	      struct datahead *dh)
 {
@@ -527,5 +535,5 @@ readdgrbygid (struct database_dyn *db, struct hashentry *he,
     };
   union keytype u = { .g = gid };
 
-  addgrbyX (db, -1, &req, u, db->data + he->key, he->owner, he, dh);
+  return addgrbyX (db, -1, &req, u, db->data + he->key, he->owner, he, dh);
 }

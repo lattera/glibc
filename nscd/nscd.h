@@ -1,4 +1,4 @@
-/* Copyright (c) 1998-2001, 2003-2008, 2009 Free Software Foundation, Inc.
+/* Copyright (c) 1998-2001, 2003-2009, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@suse.de>, 1998.
 
@@ -217,20 +217,20 @@ extern void addpwbyname (struct database_dyn *db, int fd, request_header *req,
 			 void *key, uid_t uid);
 extern void addpwbyuid (struct database_dyn *db, int fd, request_header *req,
 			void *key, uid_t uid);
-extern void readdpwbyname (struct database_dyn *db, struct hashentry *he,
-			   struct datahead *dh);
-extern void readdpwbyuid (struct database_dyn *db, struct hashentry *he,
-			  struct datahead *dh);
+extern time_t readdpwbyname (struct database_dyn *db, struct hashentry *he,
+			     struct datahead *dh);
+extern time_t readdpwbyuid (struct database_dyn *db, struct hashentry *he,
+			    struct datahead *dh);
 
 /* grpcache.c */
 extern void addgrbyname (struct database_dyn *db, int fd, request_header *req,
 			 void *key, uid_t uid);
 extern void addgrbygid (struct database_dyn *db, int fd, request_header *req,
 			void *key, uid_t uid);
-extern void readdgrbyname (struct database_dyn *db, struct hashentry *he,
-			   struct datahead *dh);
-extern void readdgrbygid (struct database_dyn *db, struct hashentry *he,
-			  struct datahead *dh);
+extern time_t readdgrbyname (struct database_dyn *db, struct hashentry *he,
+			     struct datahead *dh);
+extern time_t readdgrbygid (struct database_dyn *db, struct hashentry *he,
+			    struct datahead *dh);
 
 /* hstcache.c */
 extern void addhstbyname (struct database_dyn *db, int fd, request_header *req,
@@ -241,37 +241,37 @@ extern void addhstbynamev6 (struct database_dyn *db, int fd,
 			    request_header *req, void *key, uid_t uid);
 extern void addhstbyaddrv6 (struct database_dyn *db, int fd,
 			    request_header *req, void *key, uid_t uid);
-extern void readdhstbyname (struct database_dyn *db, struct hashentry *he,
-			    struct datahead *dh);
-extern void readdhstbyaddr (struct database_dyn *db, struct hashentry *he,
-			    struct datahead *dh);
-extern void readdhstbynamev6 (struct database_dyn *db, struct hashentry *he,
+extern time_t readdhstbyname (struct database_dyn *db, struct hashentry *he,
 			      struct datahead *dh);
-extern void readdhstbyaddrv6 (struct database_dyn *db, struct hashentry *he,
+extern time_t readdhstbyaddr (struct database_dyn *db, struct hashentry *he,
 			      struct datahead *dh);
+extern time_t readdhstbynamev6 (struct database_dyn *db, struct hashentry *he,
+				struct datahead *dh);
+extern time_t readdhstbyaddrv6 (struct database_dyn *db, struct hashentry *he,
+				struct datahead *dh);
 
 /* aicache.c */
 extern void addhstai (struct database_dyn *db, int fd, request_header *req,
 		      void *key, uid_t uid);
-extern void readdhstai (struct database_dyn *db, struct hashentry *he,
-			struct datahead *dh);
+extern time_t readdhstai (struct database_dyn *db, struct hashentry *he,
+			  struct datahead *dh);
 
 
 /* initgrcache.c */
 extern void addinitgroups (struct database_dyn *db, int fd,
 			   request_header *req, void *key, uid_t uid);
-extern void readdinitgroups (struct database_dyn *db, struct hashentry *he,
-			     struct datahead *dh);
+extern time_t readdinitgroups (struct database_dyn *db, struct hashentry *he,
+			       struct datahead *dh);
 
 /* servicecache.c */
 extern void addservbyname (struct database_dyn *db, int fd,
 			   request_header *req, void *key, uid_t uid);
-extern void readdservbyname (struct database_dyn *db, struct hashentry *he,
-			     struct datahead *dh);
+extern time_t readdservbyname (struct database_dyn *db, struct hashentry *he,
+			       struct datahead *dh);
 extern void addservbyport (struct database_dyn *db, int fd,
 			   request_header *req, void *key, uid_t uid);
-extern void readdservbyport (struct database_dyn *db, struct hashentry *he,
-			     struct datahead *dh);
+extern time_t readdservbyport (struct database_dyn *db, struct hashentry *he,
+			       struct datahead *dh);
 
 /* mem.c */
 extern void *mempool_alloc (struct database_dyn *db, size_t len,

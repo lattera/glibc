@@ -1,4 +1,4 @@
-/* Copyright (c) 1998, 1999, 2000, 2003, 2004, 2005, 2006, 2007, 2009
+/* Copyright (c) 1998, 1999, 2000, 2003, 2004, 2005, 2006, 2007, 2009, 2011
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@suse.de>, 1998.
@@ -179,6 +179,10 @@ typedef uint32_t ref_t;
 /* Timestamp type.  */
 typedef uint64_t nscd_time_t;
 
+/* Maximum timestamp.  */
+#define MAX_TIMEOUT_VALUE \
+  (sizeof (time_t) == sizeof (long int) ? LONG_MAX : INT_MAX)
+
 /* Alignment requirement of the beginning of the data region.  */
 #define ALIGN 16
 
@@ -192,7 +196,8 @@ struct datahead
   uint8_t notfound;		/* Nonzero if data has not been found.  */
   uint8_t nreloads;		/* Reloads without use.  */
   uint8_t usable;		/* False if the entry must be ignored.  */
-  uint64_t :40;			/* Alignment.  */
+  uint8_t unused;		/* Unused.  */
+  uint32_t ttl;			/* TTL value used.  */
 
   /* We need to have the following element aligned for the response
      header data types and their use in the 'struct dataset' types

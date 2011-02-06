@@ -1,5 +1,5 @@
 /* Cache handling for host lookup.
-   Copyright (C) 2004-2008, 2009, 2010 Free Software Foundation, Inc.
+   Copyright (C) 2004-2008, 2009, 2010, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2004.
 
@@ -58,7 +58,7 @@ static const ai_response_header notfound =
 };
 
 
-static void
+static time_t
 addhstaiX (struct database_dyn *db, int fd, request_header *req,
 	   void *key, uid_t uid, struct hashentry *const he,
 	   struct datahead *dh)
@@ -119,6 +119,7 @@ addhstaiX (struct database_dyn *db, int fd, request_header *req,
   ssize_t total = 0;
   char *key_copy = NULL;
   bool alloca_used = false;
+  time_t timeout = MAX_TIMEOUT_VALUE;
 
   while (!no_more)
     {
@@ -388,8 +389,8 @@ addhstaiX (struct database_dyn *db, int fd, request_header *req,
       dataset->head.usable = true;
 
       /* Compute the timeout time.  */
-      dataset->head.timeout = time (NULL) + (ttl == INT32_MAX
-					     ? db->postimeout : ttl);
+      dataset->head.ttl = ttl == INT32_MAX ? db->postimeout : ttl;
+      timeout = dataset->head.timeout = time (NULL) + dataset->head.ttl;
 
       dataset->resp.version = NSCD_VERSION;
       dataset->resp.found = 1;
@@ -421,6 +422,7 @@ addhstaiX (struct database_dyn *db, int fd, request_header *req,
 		 timeout value.  Note that the new record has been
 		 allocated on the stack and need not be freed.  */
 	      dh->timeout = dataset->head.timeout;
+	      dh->ttl = dataset->head.ttl;
 	      ++dh->nreloads;
 	    }
 	  else
@@ -496,6 +498,9 @@ next_nip:
       if (reload_count != UINT_MAX && dh->nreloads == reload_count)
 	/* Do not reset the value if we never not reload the record.  */
 	dh->nreloads = reload_count - 1;
+
+      /* Reload with the same time-to-live value.  */
+      timeout = dh->timeout = time (NULL) + dh->ttl;
     }
   else
     {
@@ -517,7 +522,8 @@ next_nip:
 	  dataset->head.usable = true;
 
 	  /* Compute the timeout time.  */
-	  dataset->head.timeout = time (NULL) + db->negtimeout;
+	  timeout = dataset->head.timeout = time (NULL) + db->negtimeout;
+	  dataset->head.ttl = db->negtimeout;
 
 	  /* This is the reply.  */
 	  memcpy (&dataset->resp, &notfound, total);
@@ -551,6 +557,8 @@ next_nip:
       if (dh != NULL)
 	dh->usable = false;
     }
+
+  return timeout;
 }
 
 
@@ -562,7 +570,7 @@ addhstai (struct database_dyn *db, int fd, request_header *req, void *key,
 }
 
 
-void
+time_t
 readdhstai (struct database_dyn *db, struct hashentry *he, struct datahead *dh)
 {
   request_header req =
@@ -571,5 +579,5 @@ readdhstai (struct database_dyn *db, struct hashentry *he, struct datahead *dh)
       .key_len = he->len
     };
 
-  addhstaiX (db, -1, &req, db->data + he->key, he->owner, he, dh);
+  return addhstaiX (db, -1, &req, db->data + he->key, he->owner, he, dh);
 }

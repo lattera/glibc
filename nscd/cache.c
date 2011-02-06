@@ -1,4 +1,4 @@
-/* Copyright (c) 1998, 1999, 2003-2008, 2009 Free Software Foundation, Inc.
+/* Copyright (c) 1998, 1999, 2003-2009, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -45,9 +45,9 @@ extern void *xcalloc (size_t n, size_t s);
 unsigned int reload_count = DEFAULT_RELOAD_LIMIT;
 
 
-static void (*const readdfcts[LASTREQ]) (struct database_dyn *,
-					 struct hashentry *,
-					 struct datahead *) =
+static time_t (*const readdfcts[LASTREQ]) (struct database_dyn *,
+					   struct hashentry *,
+					   struct datahead *) =
 {
   [GETPWBYNAME] = readdpwbyname,
   [GETPWBYUID] = readdpwbyuid,
@@ -272,7 +272,7 @@ prune_cache (struct database_dyn *table, time_t now, int fd)
 	{
 	  char buf[128];
 	  /* We cannot stat() the file, disable file checking if the
-             file does not exist.  */
+	     file does not exist.  */
 	  dbg_log (_("cannot stat() file `%s': %s"),
 		   table->filename, strerror_r (errno, buf, sizeof (buf)));
 	  if (errno == ENOENT)
@@ -389,7 +389,8 @@ prune_cache (struct database_dyn *table, time_t now, int fd)
 		      assert (runp->type < LASTREQ
 			      && readdfcts[runp->type] != NULL);
 
-		      readdfcts[runp->type] (table, runp, dh);
+		      time_t timeout = readdfcts[runp->type] (table, runp, dh);
+		      next_timeout = MIN (next_timeout, timeout);
 
 		      /* If the entry has been replaced, we might need
 			 cleanup.  */

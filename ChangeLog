@@ -1,3 +1,34 @@
+2011-02-05  Ulrich Drepper  <drepper@gmail.com>
+
+	* nscd/nscd-client.h: Define MAX_TIMEOUT_VALUE.
+	(struct datahead): Reuse 32 bits of the alignment for a TTL field.
+	* nscd/aicache.c (addhstaiX): Return timeout of added value.
+	(readdhstai): Return value of addhstaiX call.
+	* nscd/grpcache.c (cache_addgr): Return timeout of added value.
+	(addgrbyX): Return value returned by cache_addgr.
+	(readdgrbyname): Return value returned by addgrbyX.
+	(readdgrbygid): Likewise.
+	* nscd/pwdcache.c (cache_addpw): Return timeout of added value.
+	(addpwbyX): Return value returned by cache_addpw.
+	(readdpwbyname): Return value returned by addhstbyX.
+	(readdpwbyuid): Likewise.
+	* nscd/servicescache.c (cache_addserv): Return timeout of added value.
+	(addservbyX): Return value returned by cache_addserv.
+	(readdservbyname): Return value returned by addservbyX:
+	(readdservbyport): Likewise.
+	* nscd/hstcache.c (cache_addhst): Return timeout of added value.
+	(addhstbyX): Return value returned by cache_addhst.
+	(readdhstbyname): Return value returned by addhstbyX.
+	(readdhstbyaddr): Likewise.
+	(readdhstbynamev6): Likewise.
+	(readdhstbyaddrv6): Likewise.
+	* nscd/initgrcache.c (addinitgroupsX): Return timeout of added value.
+	(readdinitgroups): Return value returned by addinitgroupsX.
+	* nscd/cache.c (readdfcts): Change return value of functions to time_t.
+	(prune_cache): Keep track of timeout value of re-added entries.
+	* nscd/connections.c (nscd_run_prune): Use MAX_TIMEOUT_VALUE.
+	* nscd/nscd.h: Adjust prototypes of readd* functions.
+
 2011-02-04  Roland McGrath  <roland@redhat.com>
 
 	* nis/nis_server.c (nis_servstate): Use the right name for 0.

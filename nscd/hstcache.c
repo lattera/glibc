@@ -91,7 +91,7 @@ static const hst_response_header tryagain =
 };
 
 
-static void
+static time_t
 cache_addhst (struct database_dyn *db, int fd, request_header *req,
 	      const void *key, struct hostent *hst, uid_t owner,
 	      struct hashentry *const he, struct datahead *dh, int errval,
@@ -111,6 +111,7 @@ cache_addhst (struct database_dyn *db, int fd, request_header *req,
 
   assert (offsetof (struct dataset, resp) == offsetof (struct datahead, data));
 
+  time_t timeout = MAX_TIMEOUT_VALUE;
   if (hst == NULL)
     {
       if (he != NULL && errval == EAGAIN)
@@ -121,6 +122,9 @@ cache_addhst (struct database_dyn *db, int fd, request_header *req,
 	  if (reload_count != UINT_MAX)
 	    /* Do not reset the value if we never not reload the record.  */
 	    dh->nreloads = reload_count - 1;
+
+	  /* Reload with the same time-to-live value.  */
+	  timeout = dh->timeout = t + dh->ttl;
 	}
       else
 	{
@@ -149,8 +153,8 @@ cache_addhst (struct database_dyn *db, int fd, request_header *req,
 	      dataset->head.usable = true;
 
 	      /* Compute the timeout time.  */
-	      dataset->head.timeout = t + (ttl == INT32_MAX
-					   ? db->negtimeout : ttl);
+	      dataset->head.ttl = ttl == INT32_MAX ? db->negtimeout : ttl;
+	      timeout = dataset->head.timeout = t + dataset->head.ttl;
 
 	      /* This is the reply.  */
 	      memcpy (&dataset->resp, resp, total);
@@ -214,7 +218,7 @@ cache_addhst (struct database_dyn *db, int fd, request_header *req,
 
       if (h_addr_list_cnt == 0)
 	/* Invalid entry.  */
-	return;
+	return MAX_TIMEOUT_VALUE;
 
       total += (sizeof (struct dataset)
 		+ h_name_len
@@ -255,7 +259,8 @@ cache_addhst (struct database_dyn *db, int fd, request_header *req,
       dataset->head.usable = true;
 
       /* Compute the timeout time.  */
-      dataset->head.timeout = t + (ttl == INT32_MAX ? db->postimeout : ttl);
+      dataset->head.ttl = ttl == INT32_MAX ? db->postimeout : ttl;
+      timeout = dataset->head.timeout = t + dataset->head.ttl;
 
       dataset->resp.version = NSCD_VERSION;
       dataset->resp.found = 1;
@@ -312,6 +317,7 @@ cache_addhst (struct database_dyn *db, int fd, request_header *req,
 		 timeout value.  Note that the new record has been
 		 allocated on the stack and need not be freed.  */
 	      assert (h_addr_list_cnt == 1);
+	      dh->ttl = dataset->head.ttl;
 	      dh->timeout = dataset->head.timeout;
 	      ++dh->nreloads;
 	    }
@@ -433,6 +439,8 @@ cache_addhst (struct database_dyn *db, int fd, request_header *req,
       dbg_log (_("short write in %s: %s"),  __FUNCTION__,
 	       strerror_r (errno, buf, sizeof (buf)));
     }
+
+  return timeout;
 }
 
 
@@ -454,7 +462,7 @@ lookup (int type, void *key, struct hostent *resultbufp, char *buffer,
 }
 
 
-static void
+static time_t
 addhstbyX (struct database_dyn *db, int fd, request_header *req,
 	   void *key, uid_t uid, struct hashentry *he, struct datahead *dh)
 {
@@ -520,11 +528,13 @@ addhstbyX (struct database_dyn *db, int fd, request_header *req,
 	buffer = (char *) extend_alloca (buffer, buflen, 2 * buflen);
     }
 
-  cache_addhst (db, fd, req, key, hst, uid, he, dh,
-		h_errno == TRY_AGAIN ? errval : 0, ttl);
+  time_t timeout = cache_addhst (db, fd, req, key, hst, uid, he, dh,
+				 h_errno == TRY_AGAIN ? errval : 0, ttl);
 
   if (use_malloc)
     free (buffer);
+
+  return timeout;
 }
 
 
@@ -536,7 +546,7 @@ addhstbyname (struct database_dyn *db, int fd, request_header *req,
 }
 
 
-void
+time_t
 readdhstbyname (struct database_dyn *db, struct hashentry *he,
 		struct datahead *dh)
 {
@@ -546,7 +556,7 @@ readdhstbyname (struct database_dyn *db, struct hashentry *he,
       .key_len = he->len
     };
 
-  addhstbyX (db, -1, &req, db->data + he->key, he->owner, he, dh);
+  return addhstbyX (db, -1, &req, db->data + he->key, he->owner, he, dh);
 }
 
 
@@ -558,7 +568,7 @@ addhstbyaddr (struct database_dyn *db, int fd, request_header *req,
 }
 
 
-void
+time_t
 readdhstbyaddr (struct database_dyn *db, struct hashentry *he,
 		struct datahead *dh)
 {
@@ -568,7 +578,7 @@ readdhstbyaddr (struct database_dyn *db, struct hashentry *he,
       .key_len = he->len
     };
 
-  addhstbyX (db, -1, &req, db->data + he->key, he->owner, he, dh);
+  return addhstbyX (db, -1, &req, db->data + he->key, he->owner, he, dh);
 }
 
 
@@ -580,7 +590,7 @@ addhstbynamev6 (struct database_dyn *db, int fd, request_header *req,
 }
 
 
-void
+time_t
 readdhstbynamev6 (struct database_dyn *db, struct hashentry *he,
 		  struct datahead *dh)
 {
@@ -590,7 +600,7 @@ readdhstbynamev6 (struct database_dyn *db, struct hashentry *he,
       .key_len = he->len
     };
 
-  addhstbyX (db, -1, &req, db->data + he->key, he->owner, he, dh);
+  return addhstbyX (db, -1, &req, db->data + he->key, he->owner, he, dh);
 }
 
 
@@ -602,7 +612,7 @@ addhstbyaddrv6 (struct database_dyn *db, int fd, request_header *req,
 }
 
 
-void
+time_t
 readdhstbyaddrv6 (struct database_dyn *db, struct hashentry *he,
 		  struct datahead *dh)
 {
@@ -612,5 +622,5 @@ readdhstbyaddrv6 (struct database_dyn *db, struct hashentry *he,
       .key_len = he->len
     };
 
-  addhstbyX (db, -1, &req, db->data + he->key, he->owner, he, dh);
+  return addhstbyX (db, -1, &req, db->data + he->key, he->owner, he, dh);
 }

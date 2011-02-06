@@ -1,5 +1,5 @@
 /* Cache handling for passwd lookup.
-   Copyright (C) 1998-2008, 2009 Free Software Foundation, Inc.
+   Copyright (C) 1998-2008, 2009, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -77,7 +77,7 @@ static const pw_response_header notfound =
 };
 
 
-static void
+static time_t
 cache_addpw (struct database_dyn *db, int fd, request_header *req,
 	     const void *key, struct passwd *pwd, uid_t owner,
 	     struct hashentry *const he, struct datahead *dh, int errval)
@@ -97,6 +97,7 @@ cache_addpw (struct database_dyn *db, int fd, request_header *req,
 
   assert (offsetof (struct dataset, resp) == offsetof (struct datahead, data));
 
+  time_t timeout = MAX_TIMEOUT_VALUE;
   if (pwd == NULL)
     {
       if (he != NULL && errval == EAGAIN)
@@ -107,6 +108,9 @@ cache_addpw (struct database_dyn *db, int fd, request_header *req,
 	  if (reload_count != UINT_MAX && dh->nreloads == reload_count)
 	    /* Do not reset the value if we never not reload the record.  */
 	    dh->nreloads = reload_count - 1;
+
+	  /* Reload with the same time-to-live value.  */
+	  timeout = dh->timeout = t + db->postimeout;
 
 	  written = total = 0;
 	}
@@ -132,7 +136,7 @@ cache_addpw (struct database_dyn *db, int fd, request_header *req,
 	      dataset->head.usable = true;
 
 	      /* Compute the timeout time.  */
-	      dataset->head.timeout = t + db->negtimeout;
+	      timeout = dataset->head.timeout = t + db->negtimeout;
 
 	      /* This is the reply.  */
 	      memcpy (&dataset->resp, &notfound, total);
@@ -212,7 +216,7 @@ cache_addpw (struct database_dyn *db, int fd, request_header *req,
       dataset->head.usable = true;
 
       /* Compute the timeout time.  */
-      dataset->head.timeout = t + db->postimeout;
+      timeout = dataset->head.timeout = t + db->postimeout;
 
       dataset->resp.version = NSCD_VERSION;
       dataset->resp.found = 1;
@@ -293,8 +297,8 @@ cache_addpw (struct database_dyn *db, int fd, request_header *req,
 	      assert ((char *) dataset - (char *) db->head
 		      + total
 		      <= (sizeof (struct database_pers_head)
-                          + db->head->module * sizeof (ref_t)
-                          + db->head->data_size));
+			  + db->head->module * sizeof (ref_t)
+			  + db->head->data_size));
 	      written = sendfileall (fd, db->wr_fd,
 				     (char *) &dataset->resp
 				     - (char *) db->head, dataset->head.recsize );
@@ -374,6 +378,8 @@ cache_addpw (struct database_dyn *db, int fd, request_header *req,
       dbg_log (_("short write in %s: %s"),  __FUNCTION__,
 	       strerror_r (errno, buf, sizeof (buf)));
     }
+
+  return timeout;
 }
 
 
@@ -395,7 +401,7 @@ lookup (int type, union keytype key, struct passwd *resultbufp, char *buffer,
 }
 
 
-static void
+static time_t
 addpwbyX (struct database_dyn *db, int fd, request_header *req,
 	  union keytype key, const char *keystr, uid_t c_uid,
 	  struct hashentry *he, struct datahead *dh)
@@ -452,10 +458,13 @@ addpwbyX (struct database_dyn *db, int fd, request_header *req,
     }
 
   /* Add the entry to the cache.  */
-  cache_addpw (db, fd, req, keystr, pwd, c_uid, he, dh, errval);
+  time_t timeout = cache_addpw (db, fd, req, keystr, pwd, c_uid, he, dh,
+				errval);
 
   if (use_malloc)
     free (buffer);
+
+  return timeout;
 }
 
 
@@ -469,7 +478,7 @@ addpwbyname (struct database_dyn *db, int fd, request_header *req,
 }
 
 
-void
+time_t
 readdpwbyname (struct database_dyn *db, struct hashentry *he,
 	       struct datahead *dh)
 {
@@ -480,7 +489,7 @@ readdpwbyname (struct database_dyn *db, struct hashentry *he,
     };
   union keytype u = { .v = db->data + he->key };
 
-  addpwbyX (db, -1, &req, u, db->data + he->key, he->owner, he, dh);
+  return addpwbyX (db, -1, &req, u, db->data + he->key, he->owner, he, dh);
 }
 
 
@@ -494,7 +503,7 @@ addpwbyuid (struct database_dyn *db, int fd, request_header *req,
   if (*(char *) key == '\0' || *ep != '\0')  /* invalid numeric uid */
     {
       if (debug_level > 0)
-        dbg_log (_("Invalid numeric uid \"%s\"!"), (char *) key);
+	dbg_log (_("Invalid numeric uid \"%s\"!"), (char *) key);
 
       errno = EINVAL;
       return;
@@ -506,7 +515,7 @@ addpwbyuid (struct database_dyn *db, int fd, request_header *req,
 }
 
 
-void
+time_t
 readdpwbyuid (struct database_dyn *db, struct hashentry *he,
 	      struct datahead *dh)
 {
@@ -523,5 +532,5 @@ readdpwbyuid (struct database_dyn *db, struct hashentry *he,
     };
   union keytype u = { .u = uid };
 
-  addpwbyX (db, -1, &req, u, db->data + he->key, he->owner, he, dh);
+  return addpwbyX (db, -1, &req, u, db->data + he->key, he->owner, he, dh);
 }

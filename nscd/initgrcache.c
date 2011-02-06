@@ -1,5 +1,5 @@
 /* Cache handling for host lookup.
-   Copyright (C) 2004, 2005, 2006, 2008, 2009 Free Software Foundation, Inc.
+   Copyright (C) 2004, 2005, 2006, 2008, 2009, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2004.
 
@@ -52,7 +52,7 @@ static const initgr_response_header notfound =
 #include "../grp/compat-initgroups.c"
 
 
-static void
+static time_t
 addinitgroupsX (struct database_dyn *db, int fd, request_header *req,
 		void *key, uid_t uid, struct hashentry *const he,
 		struct datahead *dh)
@@ -174,7 +174,9 @@ addinitgroupsX (struct database_dyn *db, int fd, request_header *req,
 
   ssize_t total;
   ssize_t written;
+  time_t timeout;
  out:
+  timeout = MAX_TIMEOUT_VALUE;
   if (!any_success)
     {
       /* Nothing found.  Create a negative result record.  */
@@ -188,6 +190,9 @@ addinitgroupsX (struct database_dyn *db, int fd, request_header *req,
 	  if (reload_count != UINT_MAX && dh->nreloads == reload_count)
 	    /* Do not reset the value if we never not reload the record.  */
 	    dh->nreloads = reload_count - 1;
+
+	  /* Reload with the same time-to-live value.  */
+	  timeout = dh->timeout = time (NULL) + db->postimeout;
 	}
       else
 	{
@@ -209,7 +214,7 @@ addinitgroupsX (struct database_dyn *db, int fd, request_header *req,
 	      dataset->head.usable = true;
 
 	      /* Compute the timeout time.  */
-	      dataset->head.timeout = time (NULL) + db->negtimeout;
+	      timeout = dataset->head.timeout = time (NULL) + db->negtimeout;
 
 	      /* This is the reply.  */
 	      memcpy (&dataset->resp, &notfound, total);
@@ -273,7 +278,7 @@ addinitgroupsX (struct database_dyn *db, int fd, request_header *req,
       dataset->head.usable = true;
 
       /* Compute the timeout time.  */
-      dataset->head.timeout = time (NULL) + db->postimeout;
+      timeout = dataset->head.timeout = time (NULL) + db->postimeout;
 
       dataset->resp.version = NSCD_VERSION;
       dataset->resp.found = 1;
@@ -401,6 +406,8 @@ addinitgroupsX (struct database_dyn *db, int fd, request_header *req,
       dbg_log (_("short write in %s: %s"), __FUNCTION__,
 	       strerror_r (errno, buf, sizeof (buf)));
     }
+
+  return timeout;
 }
 
 
@@ -412,7 +419,7 @@ addinitgroups (struct database_dyn *db, int fd, request_header *req, void *key,
 }
 
 
-void
+time_t
 readdinitgroups (struct database_dyn *db, struct hashentry *he,
 		 struct datahead *dh)
 {
@@ -422,5 +429,5 @@ readdinitgroups (struct database_dyn *db, struct hashentry *he,
       .key_len = he->len
     };
 
-  addinitgroupsX (db, -1, &req, db->data + he->key, he->owner, he, dh);
+  return addinitgroupsX (db, -1, &req, db->data + he->key, he->owner, he, dh);
 }
