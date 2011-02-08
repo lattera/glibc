@@ -1,12 +1,15 @@
+2011-02-03  Andreas Schwab  <schwab@redhat.com>
+
+	* sysdeps/unix/sysv/linux/sparc/bits/socket.h: Sync with
+	sysdeps/unix/sysv/linux/bits/socket.h.
+
 2011-01-30  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
-        This brings the variable-size cpu_set_t manipulation macros from
-        ./sysdeps/unix/sysv/linux/bits/sched.h
-        * bits/sched.h (__CPU_ZERO, __CPU_SET, __CPU_CLR, __CPU_ISSET,
-        __CPU_COUNT): Remove old macros.
-        (__CPU_ZERO_S, __CPU_SET_S, __CPU_CLR_S, __CPU_ISSET_S,
-        __CPU_COUNT, __CPU_EQUAL_S, __CPU_OP_S, __CPU_ALLOC_SIZE,
-        __CPU_ALLOC, __CPU_FREE): Add macros.
+	* bits/sched.h (__CPU_ZERO, __CPU_SET, __CPU_CLR, __CPU_ISSET)
+	(__CPU_COUNT): Remove old macros.
+	(__CPU_ZERO_S, __CPU_SET_S, __CPU_CLR_S, __CPU_ISSET_S)
+	(__CPU_COUNT, __CPU_EQUAL_S, __CPU_OP_S, __CPU_ALLOC_SIZE)
+	(__CPU_ALLOC, __CPU_FREE): Add macros.
 	(__sched_cpualloc, __sched_cpufree): Add declarations.
 
 2011-02-05  Ulrich Drepper  <drepper@gmail.com>

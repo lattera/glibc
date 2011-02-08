@@ -59,7 +59,8 @@ enum __socket_type
 				   other similar things on the user level. */
 #define SOCK_PACKET SOCK_PACKET
 
-  /* Flags to be ORed into the type parameter of socket and socketpair.  */
+  /* Flags to be ORed into the type parameter of socket and socketpair and
+     used for the flags parameter of paccept.  */
 
   SOCK_CLOEXEC = 0x400000,	/* Atomically set close-on-exec flag for the
 				   new descriptor(s).  */
@@ -235,6 +236,8 @@ enum
 #define	MSG_NOSIGNAL	MSG_NOSIGNAL
     MSG_MORE		= 0x8000,  /* Sender will send more.  */
 #define	MSG_MORE	MSG_MORE
+    MSG_WAITFORONE	= 0x10000, /* Wait for at least one packet to return.*/
+#define MSG_WAITFORONE	MSG_WAITFORONE
 
     MSG_CMSG_CLOEXEC	= 0x40000000	/* Set close_on_exit for file
 					   descriptor received through
@@ -261,6 +264,15 @@ struct msghdr
 
     int msg_flags;		/* Flags on received message.  */
   };
+
+#ifdef __USE_GNU
+/* For `recvmmsg'.  */
+struct mmsghdr
+  {
+    struct msghdr msg_hdr;	/* Actual message header.  */
+    unsigned int msg_len;	/* Number of received bytes for the entry.  */
+  };
+#endif
 
 /* Structure used for storage of ancillary data object information.  */
 struct cmsghdr
@@ -324,7 +336,7 @@ enum
   {
     SCM_RIGHTS = 0x01		/* Transfer file descriptors.  */
 #define SCM_RIGHTS SCM_RIGHTS
-#ifdef __USE_BSD
+#ifdef __USE_GNU
     , SCM_CREDENTIALS = 0x02	/* Credentials passing.  */
 # define SCM_CREDENTIALS SCM_CREDENTIALS
 #endif
@@ -405,5 +417,19 @@ struct linger
     int l_onoff;		/* Nonzero to linger on close.  */
     int l_linger;		/* Time to linger.  */
   };
+
+
+__BEGIN_DECLS
+
+/* Receive a message as described by MESSAGE from socket FD.
+   Returns the number of bytes read or -1 for errors.
+
+   This function is a cancellation point and therefore not marked with
+   __THROW.  */
+extern int recvmmsg (int __fd, struct mmsghdr *__vmessages,
+		     unsigned int __vlen, int __flags,
+		     __const struct timespec *__tmo);
+
+__END_DECLS
 
 #endif	/* bits/socket.h */
