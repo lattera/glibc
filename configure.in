@@ -1095,26 +1095,8 @@ fi
 AC_SUBST(SYSINCLUDES)
 AC_SUBST(CXX_SYSINCLUDES)
 
-# check if ranlib is necessary
-AC_CACHE_CHECK(whether ranlib is necessary, libc_cv_ranlib_necessary, [dnl
-cat > conftest.c <<EOF
-int a;
-char b;
-void c(void) {}
-EOF
-$CC $CFLAGS $CPPFLAGS -c conftest.c
-$AR cr conftest.a conftest.o
-cp conftest.a conftest2.a
-$RANLIB conftest.a
-if cmp -s conftest.a conftest2.a; then
-  libc_cv_ranlib_necessary=no
-else
-  libc_cv_ranlib_necessary=yes
-fi
-rm -rf conftest*])
-if test "$libc_cv_ranlib_necessary" = no; then
- RANLIB=:
-fi
+# ranlib is never necessary on Linux and Hurd systems
+RANLIB=:
 
 # Test if LD_LIBRARY_PATH contains the notation for the current directory
 # since this would lead to problems installing/building glibc.

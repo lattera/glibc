@@ -1,4 +1,4 @@
-# Copyright (C) 1991-2006,2007,2008,2009,2010 Free Software Foundation, Inc.
+# Copyright (C) 1991-2010, 2011 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -805,7 +805,6 @@ endef
 define do-makelib
 cd $(common-objdir) && \
 $(AR) $(CREATE_ARFLAGS) $(@F) `cat $(patsubst $(common-objpfx)%,%,$^)`
-$(RANLIB) $@
 endef
 subdirs-stamps := $(foreach d,$(subdirs),$(common-objpfx)$d/stamp%)
 subdirs-stamp-o = $(subst %,$o,$(subdirs-stamps))
@@ -827,7 +826,6 @@ define build-extra-lib
 $(patsubst %/,cd % &&,$(objpfx)) \
 $(AR) $(CREATE_ARFLAGS) $(@:$(objpfx)%=%) \
       $(patsubst $(objpfx)%,%,$^)
-$(RANLIB) $@
 endef
 
 # Installation.
@@ -872,9 +870,6 @@ install: $(installed-libcs)
 $(installed-libcs): $(inst_libdir)/lib$(libprefix)%: lib $(+force)
 	$(make-target-directory)
 	$(INSTALL_DATA) $(common-objpfx)lib$(*:$(libc-name)%=c%) $@
-# Running ranlib after installing makes the __.SYMDEF time stamp up to
-# date, which avoids messages from some linkers.
-	$(RANLIB) $@
 
 define do-install-program
 $(make-target-directory)
@@ -1108,7 +1103,6 @@ ifdef install-lib.a
 $(install-lib.a:lib%.a=$(inst_libdir)/lib$(libprefix)%.a): \
   $(inst_libdir)/lib$(libprefix)%.a: $(objpfx)lib%.a $(+force)
 	$(do-install)
-	$(patsubst %,$(RANLIB) $@,$(filter-out $(non-lib.a),$(<F)))
 endif
 endif
 ifdef install-data

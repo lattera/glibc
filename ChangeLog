@@ -1,3 +1,12 @@
+2011-02-15  Ulrich Drepper  <drepper@gmail.com>
+
+	[BZ #12469]
+	* Makeconfig: Remove RANLIB definition.
+	* Makerules: Don't use RANLIB.
+	* aclocal.m4: Remove ranlib test.
+	* configure.in: No need to check for ranlib.
+	* elf/rtld-Rules: Don't use RANLIB.
+
 2011-02-11  Jakub Jelinek  <jakub@redhat.com>
 
 	* stdio-common/printf-parsemb.c (__parse_one_specmb): Handle

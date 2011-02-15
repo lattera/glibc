@@ -4,7 +4,5 @@ libc_add_on_canonical=
 libc_add_on_subdirs=.
 
 # Get this defined in config.h for main source code to test.
-cat >>confdefs.h <<\_ACEOF
-#define HAVE_LIBIDN 1
-_ACEOF
+$as_echo "#define HAVE_LIBIDN 1" >>confdefs.h
 

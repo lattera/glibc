@@ -57,7 +57,7 @@ else
   AC_MSG_CHECKING([version of [$]$1])
 changequote(<<,>>)dnl
   ac_prog_version=`<<$>>$1 $3 2>&1 ifelse(<<$4>>,,,
-                   <<| sed -n 's/^.*patsubst(<<$4>>,/,\/).*$/\1/p'>>)`
+		   <<| sed -n 's/^.*patsubst(<<$4>>,/,\/).*$/\1/p'>>)`
   case $ac_prog_version in
     '') ac_prog_version="v. ?.??, bad"; ac_verc_fail=yes;;
     <<$5>>)
@@ -101,17 +101,6 @@ AR=`$CC -print-prog-name=ar`
 AC_SUBST(AR)
 OBJDUMP=`$CC -print-prog-name=objdump`
 AC_SUBST(OBJDUMP)
-
-# ranlib has to be treated a bit differently since it might not exist at all.
-ac_ranlib=`$CC -print-prog-name=ranlib`
-if test "x$ac_ranlib" = xranlib; then
-# This extra check has to happen since gcc simply echos the parameter in
-# case it cannot find the value in its own directories.
-AC_CHECK_TOOL(RANLIB, ranlib, :)
-else
-  RANLIB=$ac_ranlib
-fi
-AC_SUBST(RANLIB)
 
 # Determine whether we are using GNU binutils.
 AC_CACHE_CHECK(whether $AS is GNU as, libc_cv_prog_as_gnu,

@@ -228,8 +228,8 @@ important to use this same @code{CC} value when running
 @code{configure}, like this: @samp{CC=@var{target}-gcc configure
 @var{target}}.  Set @code{BUILD_CC} to the compiler to use for programs
 run on the build system as part of compiling the library.  You may need to
-set @code{AR} and @code{RANLIB} to cross-compiling versions of @code{ar}
-and @code{ranlib} if the native tools are not configured to work with
+set @code{AR} to cross-compiling versions of @code{ar}
+if the native tools are not configured to work with
 object files for the target you configured for.
 
 

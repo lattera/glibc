@@ -1,3 +1,102 @@
+
+# as_fn_set_status STATUS
+# -----------------------
+# Set $? to STATUS, without forking.
+as_fn_set_status ()
+{
+  return $1
+} # as_fn_set_status
+
+# as_fn_exit STATUS
+# -----------------
+# Exit the shell with STATUS, even in a "trap 0" or "set -e" context.
+as_fn_exit ()
+{
+  set +e
+  as_fn_set_status $1
+  exit $1
+} # as_fn_exit
+# as_fn_arith ARG...
+# ------------------
+# Perform arithmetic evaluation on the ARGs, and store the result in the
+# global $as_val. Take advantage of shells that can avoid forks. The arguments
+# must be portable across $(()) and expr.
+if (eval "test \$(( 1 + 1 )) = 2") 2>/dev/null; then :
+  eval 'as_fn_arith ()
+  {
+    as_val=$(( $* ))
+  }'
+else
+  as_fn_arith ()
+  {
+    as_val=`expr "$@" || test $? -eq 1`
+  }
+fi # as_fn_arith
+
+if expr a : '\(a\)' >/dev/null 2>&1 &&
+   test "X`expr 00001 : '.*\(...\)'`" = X001; then
+  as_expr=expr
+else
+  as_expr=false
+fi
+
+if (basename -- /) >/dev/null 2>&1 && test "X`basename -- / 2>&1`" = "X/"; then
+  as_basename=basename
+else
+  as_basename=false
+fi
+
+as_me=`$as_basename -- "$0" ||
+$as_expr X/"$0" : '.*/\([^/][^/]*\)/*$' \| \
+	 X"$0" : 'X\(//\)$' \| \
+	 X"$0" : 'X\(/\)' \| . 2>/dev/null ||
+$as_echo X/"$0" |
+    sed '/^.*\/\([^/][^/]*\)\/*$/{
+	    s//\1/
+	    q
+	  }
+	  /^X\/\(\/\/\)$/{
+	    s//\1/
+	    q
+	  }
+	  /^X\/\(\/\).*/{
+	    s//\1/
+	    q
+	  }
+	  s/.*/./; q'`
+
+
+  as_lineno_1=$LINENO as_lineno_1a=$LINENO
+  as_lineno_2=$LINENO as_lineno_2a=$LINENO
+  eval 'test "x$as_lineno_1'$as_run'" != "x$as_lineno_2'$as_run'" &&
+  test "x`expr $as_lineno_1'$as_run' + 1`" = "x$as_lineno_2'$as_run'"' || {
+  # Blame Lee E. McMahon (1931-1989) for sed's syntax.  :-)
+  sed -n '
+    p
+    /[$]LINENO/=
+  ' <$as_myself |
+    sed '
+      s/[$]LINENO.*/&-/
+      t lineno
+      b
+      :lineno
+      N
+      :loop
+      s/[$]LINENO\([^'$as_cr_alnum'_].*\n\)\(.*\)/\2\1\2/
+      t loop
+      s/-\n.*//
+    ' >$as_me.lineno &&
+  chmod +x "$as_me.lineno" ||
+    { $as_echo "$as_me: error: cannot create $as_me.lineno; rerun with a POSIX shell" >&2; as_fn_exit 1; }
+
+  # Don't try to exec as it changes $[0], causing all sort of problems
+  # (the dirname of $[0] is not the place where we might find the
+  # original and so on.  Autoconf is especially sensitive to this).
+  . "./$as_me.lineno"
+  # Exit status is that of the last command.
+  exit
+}
+
 # This file is generated from configure.in by Autoconf.  DO NOT EDIT!
  # Local configure fragment for sysdeps/unix/sysv/linux.
 
@@ -11,9 +110,9 @@ if test -n "$sysheaders"; then
 fi
 
 
-{ $as_echo "$as_me:$LINENO: checking for grep that handles long lines and -e" >&5
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for grep that handles long lines and -e" >&5
 $as_echo_n "checking for grep that handles long lines and -e... " >&6; }
-if test "${ac_cv_path_GREP+set}" = set; then
+if test "${ac_cv_path_GREP+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
   if test -z "$GREP"; then
@@ -24,7 +123,7 @@ for as_dir in $PATH$PATH_SEPARATOR/usr/xpg4/bin
 do
   IFS=$as_save_IFS
   test -z "$as_dir" && as_dir=.
-  for ac_prog in grep ggrep; do
+    for ac_prog in grep ggrep; do
     for ac_exec_ext in '' $ac_executable_extensions; do
       ac_path_GREP="$as_dir/$ac_prog$ac_exec_ext"
       { test -f "$ac_path_GREP" && $as_test_x "$ac_path_GREP"; } || continue
@@ -44,7 +143,7 @@ case `"$ac_path_GREP" --version 2>&1` in
     $as_echo 'GREP' >> "conftest.nl"
     "$ac_path_GREP" -e 'GREP$' -e '-(cannot match)-' < "conftest.nl" >"conftest.out" 2>/dev/null || break
     diff "conftest.out" "conftest.nl" >/dev/null 2>&1 || break
-    ac_count=`expr $ac_count + 1`
+    as_fn_arith $ac_count + 1 && ac_count=$as_val
     if test $ac_count -gt ${ac_path_GREP_max-0}; then
       # Best one so far, save it but keep looking for a better one
       ac_cv_path_GREP="$ac_path_GREP"
@@ -59,26 +158,24 @@ esac
       $ac_path_GREP_found && break 3
     done
   done
-done
+  done
 IFS=$as_save_IFS
   if test -z "$ac_cv_path_GREP"; then
-    { { $as_echo "$as_me:$LINENO: error: no acceptable grep could be found in $PATH$PATH_SEPARATOR/usr/xpg4/bin" >&5
-$as_echo "$as_me: error: no acceptable grep could be found in $PATH$PATH_SEPARATOR/usr/xpg4/bin" >&2;}
-   { (exit 1); exit 1; }; }
+    as_fn_error $? "no acceptable grep could be found in $PATH$PATH_SEPARATOR/usr/xpg4/bin" "$LINENO" 5
   fi
 else
   ac_cv_path_GREP=$GREP
 fi
 
 fi
-{ $as_echo "$as_me:$LINENO: result: $ac_cv_path_GREP" >&5
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_path_GREP" >&5
 $as_echo "$ac_cv_path_GREP" >&6; }
  GREP="$ac_cv_path_GREP"
 
 
-{ $as_echo "$as_me:$LINENO: checking for egrep" >&5
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for egrep" >&5
 $as_echo_n "checking for egrep... " >&6; }
-if test "${ac_cv_path_EGREP+set}" = set; then
+if test "${ac_cv_path_EGREP+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
   if echo a | $GREP -E '(a|b)' >/dev/null 2>&1
@@ -92,7 +189,7 @@ for as_dir in $PATH$PATH_SEPARATOR/usr/xpg4/bin
 do
   IFS=$as_save_IFS
   test -z "$as_dir" && as_dir=.
-  for ac_prog in egrep; do
+    for ac_prog in egrep; do
     for ac_exec_ext in '' $ac_executable_extensions; do
       ac_path_EGREP="$as_dir/$ac_prog$ac_exec_ext"
       { test -f "$ac_path_EGREP" && $as_test_x "$ac_path_EGREP"; } || continue
@@ -112,7 +209,7 @@ case `"$ac_path_EGREP" --version 2>&1` in
     $as_echo 'EGREP' >> "conftest.nl"
     "$ac_path_EGREP" 'EGREP$' < "conftest.nl" >"conftest.out" 2>/dev/null || break
     diff "conftest.out" "conftest.nl" >/dev/null 2>&1 || break
-    ac_count=`expr $ac_count + 1`
+    as_fn_arith $ac_count + 1 && ac_count=$as_val
     if test $ac_count -gt ${ac_path_EGREP_max-0}; then
       # Best one so far, save it but keep looking for a better one
       ac_cv_path_EGREP="$ac_path_EGREP"
@@ -127,12 +224,10 @@ esac
       $ac_path_EGREP_found && break 3
     done
   done
-done
+  done
 IFS=$as_save_IFS
   if test -z "$ac_cv_path_EGREP"; then
-    { { $as_echo "$as_me:$LINENO: error: no acceptable egrep could be found in $PATH$PATH_SEPARATOR/usr/xpg4/bin" >&5
-$as_echo "$as_me: error: no acceptable egrep could be found in $PATH$PATH_SEPARATOR/usr/xpg4/bin" >&2;}
-   { (exit 1); exit 1; }; }
+    as_fn_error $? "no acceptable egrep could be found in $PATH$PATH_SEPARATOR/usr/xpg4/bin" "$LINENO" 5
   fi
 else
   ac_cv_path_EGREP=$EGREP
@@ -140,21 +235,17 @@ fi
 
    fi
 fi
-{ $as_echo "$as_me:$LINENO: result: $ac_cv_path_EGREP" >&5
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_path_EGREP" >&5
 $as_echo "$ac_cv_path_EGREP" >&6; }
  EGREP="$ac_cv_path_EGREP"
 
 
-{ $as_echo "$as_me:$LINENO: checking installed Linux kernel header files" >&5
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking installed Linux kernel header files" >&5
 $as_echo_n "checking installed Linux kernel header files... " >&6; }
-if test "${libc_cv_linux2010+set}" = set; then
+if test "${libc_cv_linux2010+set}" = set; then :
   $as_echo_n "(cached) " >&6
 else
-  cat >conftest.$ac_ext <<_ACEOF
-/* confdefs.h.  */
-_ACEOF
-cat confdefs.h >>conftest.$ac_ext
-cat >>conftest.$ac_ext <<_ACEOF
+  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
 #include <linux/version.h>
 #if !defined LINUX_VERSION_CODE || LINUX_VERSION_CODE <  (2 *65536+ 0 *256+ 10) /* 2.0.10 */
@@ -162,7 +253,7 @@ eat flaming death
 #endif
 _ACEOF
 if (eval "$ac_cpp conftest.$ac_ext") 2>&5 |
-  $EGREP "eat flaming death" >/dev/null 2>&1; then
+  $EGREP "eat flaming death" >/dev/null 2>&1; then :
   libc_cv_linux2010='TOO OLD!'
 else
   libc_cv_linux2010='2.0.10 or later'
@@ -170,26 +261,17 @@ fi
 rm -f conftest*
 
 fi
-{ $as_echo "$as_me:$LINENO: result: $libc_cv_linux2010" >&5
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_linux2010" >&5
 $as_echo "$libc_cv_linux2010" >&6; }
 if test "$libc_cv_linux2010" != '2.0.10 or later'; then
-  { { $as_echo "$as_me:$LINENO: error: GNU libc requires kernel header files from
+  as_fn_error $? "GNU libc requires kernel header files from
 Linux 2.0.10 or later to be installed before configuring.
 The kernel header files are found usually in /usr/include/asm and
 /usr/include/linux; make sure these directories use files from
 Linux 2.0.10 or later.  This check uses <linux/version.h>, so
 make sure that file was built correctly when installing the kernel header
 files.  To use kernel headers not from /usr/include/linux, use the
-configure option --with-headers." >&5
-$as_echo "$as_me: error: GNU libc requires kernel header files from
-Linux 2.0.10 or later to be installed before configuring.
-The kernel header files are found usually in /usr/include/asm and
-/usr/include/linux; make sure these directories use files from
-Linux 2.0.10 or later.  This check uses <linux/version.h>, so
-make sure that file was built correctly when installing the kernel header
-files.  To use kernel headers not from /usr/include/linux, use the
-configure option --with-headers." >&2;}
-   { (exit 1); exit 1; }; }
+configure option --with-headers." "$LINENO" 5
 fi
 
 # If the user gave a minimal version number test whether the available
@@ -263,7 +345,7 @@ if test -n "$minimum_kernel"; then
   arch_version=$((`echo "$arch_minimum_kernel.0.0.0" | sed 's/\([0-9]*\)\.\([0-9]*\)\.\([0-9]*\).*/\1 \* 65536 + \2 \* 256 + \3/'`))
 
   if test $user_version -lt $arch_version; then
-    { $as_echo "$as_me:$LINENO: WARNING: minimum kernel version reset to $arch_minimum_kernel" >&5
+    { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: minimum kernel version reset to $arch_minimum_kernel" >&5
 $as_echo "$as_me: WARNING: minimum kernel version reset to $arch_minimum_kernel" >&2;}
     minimum_kernel=$arch_minimum_kernel
   fi
@@ -274,15 +356,11 @@ else
 fi
 
 if test -n "$minimum_kernel"; then
-  { $as_echo "$as_me:$LINENO: checking for kernel header at least $minimum_kernel" >&5
+  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for kernel header at least $minimum_kernel" >&5
 $as_echo_n "checking for kernel header at least $minimum_kernel... " >&6; }
   decnum=`echo "$minimum_kernel.0.0.0" | sed 's/\([0-9]*\)\.\([0-9]*\)\.\([0-9]*\).*/(\1 * 65536 + \2 * 256 + \3)/'`;
   abinum=`echo "$minimum_kernel.0.0.0" | sed 's/\([0-9]*\)\.\([0-9]*\)\.\([0-9]*\).*/\1,\2,\3/'`;
-  cat >conftest.$ac_ext <<_ACEOF
-/* confdefs.h.  */
-_ACEOF
-cat confdefs.h >>conftest.$ac_ext
-cat >>conftest.$ac_ext <<_ACEOF
+  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
 #include <linux/version.h>
 #if LINUX_VERSION_CODE < $decnum
@@ -290,14 +368,14 @@ eat flaming death
 #endif
 _ACEOF
 if (eval "$ac_cpp conftest.$ac_ext") 2>&5 |
-  $EGREP "eat flaming death" >/dev/null 2>&1; then
+  $EGREP "eat flaming death" >/dev/null 2>&1; then :
   libc_minimum_kernel='too old!'
 else
   libc_minimum_kernel=ok
 fi
 rm -f conftest*
 
-  { $as_echo "$as_me:$LINENO: result: $libc_minimum_kernel" >&5
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_minimum_kernel" >&5
 $as_echo "$libc_minimum_kernel" >&6; }
   if test "$libc_minimum_kernel" = ok; then
     cat >>confdefs.h <<_ACEOF
@@ -309,11 +387,8 @@ _ACEOF
 _ACEOF
 
   else
-    { { $as_echo "$as_me:$LINENO: error: *** The available kernel headers are older than the requested
-*** compatible kernel version" >&5
-$as_echo "$as_me: error: *** The available kernel headers are older than the requested
-*** compatible kernel version" >&2;}
-   { (exit 1); exit 1; }; }
+    as_fn_error $? "*** The available kernel headers are older than the requested
+*** compatible kernel version" "$LINENO" 5
   fi
 fi
 
@@ -441,7 +516,7 @@ if test $host = $build; then
   else
     ac_prefix=$ac_default_prefix
   fi
-  { $as_echo "$as_me:$LINENO: checking for symlinks in ${ac_prefix}/include" >&5
+  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for symlinks in ${ac_prefix}/include" >&5
 $as_echo_n "checking for symlinks in ${ac_prefix}/include... " >&6; }
   ac_message=
   if test -L ${ac_prefix}/include/net; then
@@ -453,23 +528,16 @@ $as_echo_n "checking for symlinks in ${ac_prefix}/include... " >&6; }
    ${ac_prefix}/include/scsi is a symlink"
   fi
   if test -n "$ac_message"; then
-    { { $as_echo "$as_me:$LINENO: error: $ac_message
+    as_fn_error $? "$ac_message
 \`make install' will destroy the target of the link(s).
 Delete the links and re-run configure, or better still, move the entire
-${ac_prefix}/include directory out of the way." >&5
-$as_echo "$as_me: error: $ac_message
-\`make install' will destroy the target of the link(s).
-Delete the links and re-run configure, or better still, move the entire
-${ac_prefix}/include directory out of the way." >&2;}
-   { (exit 1); exit 1; }; }
+${ac_prefix}/include directory out of the way." "$LINENO" 5
   else
-    { $as_echo "$as_me:$LINENO: result: ok" >&5
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
   fi
 fi
 
 # We have inlined syscalls.
-cat >>confdefs.h <<\_ACEOF
-#define HAVE_INLINED_SYSCALLS 1
-_ACEOF
+$as_echo "#define HAVE_INLINED_SYSCALLS 1" >>confdefs.h
 
