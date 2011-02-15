@@ -30,8 +30,8 @@ _i18n_number_rewrite (CHAR_T *w, CHAR_T *rear_ptr, CHAR_T *end)
 # define decimal NULL
 # define thousands NULL
 #else
-  char decimal[MB_LEN_MAX];
-  char thousands[MB_LEN_MAX];
+  char decimal[MB_LEN_MAX + 1];
+  char thousands[MB_LEN_MAX + 1];
 #endif
 
   /* "to_outpunct" is a map from ASCII decimal point and thousands-sep
@@ -47,13 +47,19 @@ _i18n_number_rewrite (CHAR_T *w, CHAR_T *rear_ptr, CHAR_T *end)
       mbstate_t state;
       memset (&state, '\0', sizeof (state));
 
-      if (__wcrtomb (decimal, wdecimal, &state) == (size_t) -1)
+      size_t n = __wcrtomb (decimal, wdecimal, &state);
+      if (n == (size_t) -1)
 	memcpy (decimal, ".", 2);
+      else
+	decimal[n] = '\0';
 
       memset (&state, '\0', sizeof (state));
 
-      if (__wcrtomb (thousands, wthousands, &state) == (size_t) -1)
+      n = __wcrtomb (thousands, wthousands, &state);
+      if (n == (size_t) -1)
 	memcpy (thousands, ",", 2);
+      else
+	thousands[n] = '\0';
     }
 #endif
 

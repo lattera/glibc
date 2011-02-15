@@ -295,9 +295,9 @@ __parse_one_specmb (const UCHAR_T *format, size_t posn,
       /* We don't try to get the types for all arguments if the format
 	 uses more than one.  The normal case is covered though.  If
 	 the call returns -1 we continue with the normal specifiers.  */
-      || (spec->ndata_args = (*__printf_arginfo_table[spec->info.spec])
-	  (&spec->info, 1, &spec->data_arg_type,
-	   &spec->size)) < 0)
+      || (int) (spec->ndata_args = (*__printf_arginfo_table[spec->info.spec])
+				   (&spec->info, 1, &spec->data_arg_type,
+				    &spec->size)) < 0)
     {
       /* Find the data argument types of a built-in spec.  */
       spec->ndata_args = 1;
