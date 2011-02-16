@@ -18,6 +18,9 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#ifndef _MACH_I386_SYSDEP_H
+#define _MACH_I386_SYSDEP_H 1
+
 /* Defines RTLD_PRIVATE_ERRNO and USE_DL_SYSINFO.  */
 #include <dl-sysdep.h>
 #include <tls.h>
@@ -64,3 +67,5 @@
 #undef ENTRY
 #undef ALIGN
 #include <sysdeps/unix/i386/sysdep.h>
+
+#endif /* mach/i386/sysdep.h */
