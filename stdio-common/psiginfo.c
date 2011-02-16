@@ -86,8 +86,12 @@ psiginfo (const siginfo_t *pinfo, const char *s)
   const char *desc;
   if (pinfo->si_signo >= 0 && pinfo->si_signo < NSIG
       && ((desc = INTUSE(_sys_siglist)[pinfo->si_signo]) != NULL
-	  || (pinfo->si_signo >= SIGRTMIN && pinfo->si_signo < SIGRTMAX)))
+#ifdef SIGRTMIN
+	  || (pinfo->si_signo >= SIGRTMIN && pinfo->si_signo < SIGRTMAX)
+#endif
+	 ))
     {
+#ifdef SIGRTMIN
       if (desc == NULL)
 	{
 	  if (pinfo->si_signo - SIGRTMIN < SIGRTMAX - pinfo->si_signo)
@@ -106,6 +110,7 @@ psiginfo (const siginfo_t *pinfo, const char *s)
 	    }
 	}
       else
+#endif
 	fprintf (fp, "%s (", _(desc));
 
       const char *base = NULL;
