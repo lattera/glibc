@@ -1,3 +1,10 @@
+2011-02-16  Manjunath Matti  <manjunath81@gmail.com>
+
+	* sysdeps/arm/sysdep.h (CALL_MCOUNT): Use __gnu_mcount_nc
+	interface for EABI with GCC 4.4 or later.
+	(mcount): Define to __gnu_mcount_nc for EABI with GCC 4.4 or
+	later.
+
 2011-01-25  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/arm/bits/mman.h (MADV_HUGEPAGE,
