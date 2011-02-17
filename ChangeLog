@@ -1,3 +1,12 @@
+2011-02-16  Ryan S. Arnold  <rsa@us.ibm.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/sysdep.h:
+	(INTERNAL_VSYSCALL_NCS INTERNAL_SYSCALL_NCS): Remove erroneous (int)
+	cast from r3.
+	* sysdeps/wordsize-64/Makefile: New file.  Add tst-writev to
+	'tests' variable.
+	* sysdeps/wordsize-64/tst-writev.c: New file.
+
 2011-02-15  Ryan S. Arnold  <rsa@us.ibm.com>
 
 	* sysdeps/powerpc/powerpc64/power7/Makefile: New file which adds

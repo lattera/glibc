@@ -172,7 +172,7 @@
        : "r9", "r10", "r11", "r12",					\
          "cr0", "ctr", "lr", "memory");					\
 	  err = (long int) r0;						\
-    (int) r3;								\
+    r3;								\
   })
 
 #undef INLINE_SYSCALL
@@ -219,7 +219,7 @@
        : "r9", "r10", "r11", "r12",					\
          "cr0", "ctr", "memory");					\
 	  err = r0;  \
-    (int) r3;  \
+    r3;  \
   })
 #define INTERNAL_SYSCALL(name, err, nr, args...)			\
   INTERNAL_SYSCALL_NCS (__NR_##name, err, nr, args)
