@@ -17,6 +17,9 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#ifndef _MACH_I386_THREAD_STATE_H
+#define _MACH_I386_THREAD_STATE_H 1
+
 #include <mach/machine/thread_status.h>
 
 #define MACHINE_THREAD_STATE_FLAVOR	i386_THREAD_STATE
@@ -36,3 +39,5 @@ struct machine_thread_all_state
   };
 
 #include <sysdeps/mach/thread_state.h>
+
+#endif /* mach/i386/thread_state.h */

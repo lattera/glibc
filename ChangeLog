@@ -23,6 +23,17 @@
 	* configure.in: No need to check for ranlib.
 	* elf/rtld-Rules: Don't use RANLIB.
 
+2011-02-16  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	* sysdeps/mach/i386/sysdep.h: Add _MACH_I386_SYSDEP_H inclusion
+	protection macro.
+	* sysdeps/mach/i386/thread_state.h: Add _MACH_I386_THREAD_STATE_H
+	inclusion protection macro.
+
+	* stdio-common/psiginfo.c (psiginfo): Check pinfo->si_signo against
+	SIGRTMIN and SIGRTMAX and print information in that case only when
+	SIGRTMIN is defined.
+
 2011-02-11  Jakub Jelinek  <jakub@redhat.com>
 
 	* stdio-common/printf-parsemb.c (__parse_one_specmb): Handle
