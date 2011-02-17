@@ -125,3 +125,4 @@ fi
 
 $as_echo "#define PI_STATIC_AND_HIDDEN 1" >>confdefs.h
 
+# work around problem with autoconf and empty lines at the end of files
