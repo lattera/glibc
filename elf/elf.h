@@ -2318,7 +2318,8 @@ typedef Elf32_Addr Elf32_Conflict;
 #define R_ARM_THM_PC22		10
 #define R_ARM_THM_PC8		11
 #define R_ARM_AMP_VCALL9	12
-#define R_ARM_SWI24		13
+#define R_ARM_SWI24		13	/* Obsolete static relocation.  */
+#define R_ARM_TLS_DESC		13      /* Dynamic relocation.  */
 #define R_ARM_THM_SWI8		14
 #define R_ARM_XPC25		15
 #define R_ARM_THM_XPC22		16
@@ -2339,6 +2340,10 @@ typedef Elf32_Addr Elf32_Conflict;
 #define R_ARM_LDR_SBREL_11_0	35
 #define R_ARM_ALU_SBREL_19_12	36
 #define R_ARM_ALU_SBREL_27_20	37
+#define R_ARM_TLS_GOTDESC	90
+#define R_ARM_TLS_CALL		91
+#define R_ARM_TLS_DESCSEQ	92
+#define R_ARM_THM_TLS_CALL	93
 #define R_ARM_GNU_VTENTRY	100
 #define R_ARM_GNU_VTINHERIT	101
 #define R_ARM_THM_PC11		102	/* thumb unconditional branch */
@@ -2353,6 +2358,7 @@ typedef Elf32_Addr Elf32_Conflict;
 					   static TLS block offset */
 #define R_ARM_TLS_LE32		108	/* 32 bit offset relative to static
 					   TLS block */
+#define	R_ARM_THM_TLS_DESCSEQ	129
 #define R_ARM_RXPC25		249
 #define R_ARM_RSBREL32		250
 #define R_ARM_THM_RPC22		251

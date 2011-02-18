@@ -1,3 +1,8 @@
+2011-02-17  Nathan Sidwell  <nathan@codesourcery.com>
+	    Glauber de Oliveira Costa  <glommer@gmail.com>
+
+	* elf/elf.h: Add new ARM TLS relocs.
+
 2011-02-16  Ryan S. Arnold  <rsa@us.ibm.com>
 
 	* sysdeps/unix/sysv/linux/powerpc/powerpc64/sysdep.h:
