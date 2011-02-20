@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-2008, 2009, 2010   Free Software Foundation, Inc.
+/* Copyright (C) 1991-2008, 2009, 2010, 2011   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -1682,7 +1682,8 @@ do_positional:
 	  {
 	    /* Extend the array of format specifiers.  */
 	    struct printf_spec *old = specs;
-	    specs = extend_alloca (specs, nspecs_max, 2 * nspecs_max);
+	    specs = extend_alloca (specs, nspecs_max,
+				   2 * nspecs_max * sizeof (*specs));
 
 	    /* Copy the old array's elements to the new space.  */
 	    memmove (specs, old, nspecs * sizeof (struct printf_spec));
