@@ -1,3 +1,11 @@
+2010-09-28  Andreas Schwab  <schwab@redhat.com>
+	    Ulrich Drepper  <drepper@gmail.com>
+
+	[BZ #12489]
+	* elf/rtld.c (dl_main): Move setting of GLRO(dl_init_all_dirs)
+	before performing relro protection.  At old place add assertion
+	to make sure nothing changed.
+
 2011-02-17  Nathan Sidwell  <nathan@codesourcery.com>
 	    Glauber de Oliveira Costa  <glommer@gmail.com>
 
