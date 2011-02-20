@@ -1,6 +1,7 @@
 2011-01-27  Petr Baudis  <pasky@suse.cz>
 	    Ulrich Drepper  <drepper@gmail.com>
 
+	[BZ 12445]#
 	* stdio-common/vfprintf.c (vfprintf): Pass correct newlen
 	to extend_alloca().
 	* stdio-common/bug23.c: New file.
