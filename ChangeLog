@@ -1,3 +1,9 @@
+2011-02-22  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+        Fix __if_freereq crash: Unlike the generic version which uses free,
+	Hurd needs munmap.
+	* sysdeps/mach/hurd/ifreq.h: New file.
+
 2011-01-27  Petr Baudis  <pasky@suse.cz>
 	    Ulrich Drepper  <drepper@gmail.com>
 
