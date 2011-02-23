@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2007 Free Software Foundation, Inc.
+/* Copyright (C) 2002-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -22,6 +22,7 @@
 #include <pthread-errnos.h>
 #include <kernel-features.h>
 
+#include <stap-probe.h>
 
 	.text
 
@@ -39,6 +40,8 @@ __pthread_rwlock_wrlock:
 
 	xorl	%esi, %esi
 	movl	12(%esp), %ebx
+
+	LIBC_PROBE (wrlock_entry, 1, %ebx)
 
 	/* Get the lock.  */
 	movl	$1, %edx

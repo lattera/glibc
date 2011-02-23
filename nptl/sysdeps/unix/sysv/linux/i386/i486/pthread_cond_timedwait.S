@@ -1,4 +1,4 @@
-/* Copyright (C) 2002-2004,2006-2007,2009,2010 Free Software Foundation, Inc.
+/* Copyright (C) 2002-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -23,7 +23,7 @@
 #include <pthread-errnos.h>
 #include <pthread-pi-defines.h>
 #include <kernel-features.h>
-
+#include <stap-probe.h>
 
 	.text
 
@@ -59,6 +59,8 @@ __pthread_cond_timedwait:
 
 	movl	20(%esp), %ebx
 	movl	28(%esp), %ebp
+
+	LIBC_PROBE (cond_timedwait, 3, %ebx, 24(%esp), %ebp)
 
 	cmpl	$1000000000, 4(%ebp)
 	movl	$EINVAL, %eax

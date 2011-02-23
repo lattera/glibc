@@ -1,4 +1,17 @@
 2012-05-25  Rayson Ho  <rho@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/lowlevellock.h: Low-level SystemTap
+	probes for i386.
+	* sysdeps/unix/sysv/linux/i386/i486/lowlevellock.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/i486/lowlevellock.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_cond_broadcast.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_cond_signal.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_cond_timedwait.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_cond_wait.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_rwlock_rdlock.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_rwlock_wrlock.S: Likewise.
+
+2012-05-25  Rayson Ho  <rho@redhat.com>
 	    Roland McGrath  <roland@hack.frob.com>
 
 	* DESIGN-systemtap-probes.txt: New file.

@@ -1,4 +1,4 @@
-/* Copyright (C) 2002-2005,2007,2009,2010 Free Software Foundation, Inc.
+/* Copyright (C) 2002-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -23,7 +23,7 @@
 #include <kernel-features.h>
 #include <pthread-pi-defines.h>
 #include <pthread-errnos.h>
-
+#include <stap-probe.h>
 
 	.text
 
@@ -43,6 +43,8 @@ __pthread_cond_signal:
 	cfi_remember_state
 
 	movl	12(%esp), %edi
+
+	LIBC_PROBE (cond_signal, 1, %edi)
 
 	/* Get internal lock.  */
 	movl	$1, %edx

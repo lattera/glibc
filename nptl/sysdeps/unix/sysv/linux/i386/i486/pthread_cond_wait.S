@@ -1,5 +1,4 @@
-/* Copyright (C) 2002-2004,2006-2007,2009,2010,2012
-   Free Software Foundation, Inc.
+/* Copyright (C) 2002-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -25,6 +24,7 @@
 #include <pthread-errnos.h>
 #include <pthread-pi-defines.h>
 #include <kernel-features.h>
+#include <stap-probe.h>
 
 
 	.text
@@ -60,6 +60,8 @@ __pthread_cond_wait:
 
 	xorl	%esi, %esi
 	movl	20(%esp), %ebx
+
+	LIBC_PROBE (cond_wait, 2, 24(%esp), %ebx)
 
 	/* Get internal lock.  */
 	movl	$1, %edx
