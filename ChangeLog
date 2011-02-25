@@ -1,6 +1,12 @@
+2011-02-17  Andreas Schwab  <schwab@redhat.com>
+
+	[BZ #12454]
+	* elf/dl-deps.c (_dl_map_object_deps): Signal error early when
+	dependencies are missing.
+
 2011-02-22  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
-        Fix __if_freereq crash: Unlike the generic version which uses free,
+	Fix __if_freereq crash: Unlike the generic version which uses free,
 	Hurd needs munmap.
 	* sysdeps/mach/hurd/ifreq.h: New file.
 
