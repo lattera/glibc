@@ -1,6 +1,6 @@
 /* Data structure for communication from the run-time dynamic linker for
    loaded ELF shared objects.
-   Copyright (C) 1995-2006, 2007, 2009, 2010 Free Software Foundation, Inc.
+   Copyright (C) 1995-2006, 2007, 2009, 2010, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -240,6 +240,9 @@ struct link_map
 
     /* List of object in order of the init and fini calls.  */
     struct link_map **l_initfini;
+    /* The init and fini list generated at startup, saved when the
+       object is also loaded dynamically.  */
+    struct link_map **l_orig_initfini;
 
     /* List of the dependencies introduced through symbol binding.  */
     struct link_map_reldeps

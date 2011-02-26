@@ -1,20 +1,28 @@
 #include <dlfcn.h>
 #include <stdio.h>
+#include <mcheck.h>
 
 int
 main (void)
 {
   int result = 0;
+  void *p;
+
+  mtrace ();
 
   /* First try to load an object which is a dependency.  This should
      succeed.  */
-  if (dlopen ("testobj1.so", RTLD_LAZY | RTLD_NOLOAD) == NULL)
+  p = dlopen ("testobj1.so", RTLD_LAZY | RTLD_NOLOAD);
+  if (p == NULL)
     {
       printf ("cannot open \"testobj1.so\": %s\n", dlerror ());
       result = 1;
     }
   else
-    puts ("loading \"testobj1.so\" succeeded, OK");
+    {
+      puts ("loading \"testobj1.so\" succeeded, OK");
+      dlclose (p);
+    }
 
   /* Now try loading an object which is not already loaded.  */
   if (dlopen ("testobj5.so", RTLD_LAZY | RTLD_NOLOAD) != NULL)
@@ -25,8 +33,6 @@ main (void)
   else
     {
       /* Load the object and run the same test again.  */
-      void *p;
-
       puts ("\"testobj5.so\" wasn't loaded and RTLD_NOLOAD prevented it, OK");
 
       p = dlopen ("testobj5.so", RTLD_LAZY);
@@ -41,13 +47,17 @@ main (void)
 	{
 	  puts ("loading \"testobj5.so\" succeeded, OK");
 
-	  if (dlopen ("testobj5.so", RTLD_LAZY | RTLD_NOLOAD) == NULL)
+	  void *q = dlopen ("testobj5.so", RTLD_LAZY | RTLD_NOLOAD);
+	  if (q == NULL)
 	    {
 	      printf ("cannot open \"testobj5.so\": %s\n", dlerror ());
 	      result = 1;
 	    }
 	  else
-	    puts ("loading \"testobj5.so\" with RTLD_NOLOAD succeeded, OK");
+	    {
+	      puts ("loading \"testobj5.so\" with RTLD_NOLOAD succeeded, OK");
+	      dlclose (q);
+	    }
 
 	  if (dlclose (p) != 0)
 	    {

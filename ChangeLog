@@ -1,3 +1,21 @@
+2011-02-23  Andreas Schwab  <schwab@redhat.com>
+	    Ulrich Drepper  <drepper@gmail.com>
+
+	[BZ #12509]
+	* include/link.h (struct link_map): Add l_orig_initfini.
+	* elf/dl-load.c (_dl_map_object_from_fd): Free realname before
+	returning unsuccessfully.
+	* elf/dl-close.c (_dl_close_worker): If this is the last explicit
+	close of a file loaded at startup, restore the original l_initfini
+	list.
+	* elf/dl-deps.c (_dl_map_object_deps): Don't free old l_initfini
+	list, store the pointer.
+	* elf/Makefile ($(objpfx)noload-mem): New rule.
+	(noload-ENV): Define.
+	(tests): Add $(objpfx)noload-mem.
+	* elf/noload.c: Include <memcheck.h>.
+	(main): Call mtrace.  Close all opened handles.
+
 2011-02-17  Andreas Schwab  <schwab@redhat.com>
 
 	[BZ #12454]
