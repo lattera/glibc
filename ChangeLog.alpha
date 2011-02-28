@@ -1,3 +1,8 @@
+2011-02-28  Aurelien Jarno  <aurelien@aurel32.net>
+
+	* sysdeps/unix/sysv/linux/alpha/bits/fcntl.h (F_SETPIPE_SZ,
+	F_GETPIPE_SZ): Define.
+
 2010-09-26  Michael Cree  <mcree@orcon.net.nz>
 
 	* sysdeps/alpha/memchr.c: Include <bp-sym.h>
