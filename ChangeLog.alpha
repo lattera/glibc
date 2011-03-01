@@ -1,3 +1,8 @@
+2011-03-01  Aurelien Jarno  <aurelien@aurel32.net>
+
+	* sysdeps/alpha/fpu/feupdateenv.c (feupdateenv): Add libm_hidden_def.
+	* sysdeps/alpha/fpu/ftestexcept.c (fetestexcept): Likewise.
+
 2011-02-28  Aurelien Jarno  <aurelien@aurel32.net>
 
 	* sysdeps/unix/sysv/linux/alpha/bits/statfs.h (struct statfs,
