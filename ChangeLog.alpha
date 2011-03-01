@@ -1,5 +1,9 @@
 2011-02-28  Aurelien Jarno  <aurelien@aurel32.net>
 
+	* sysdeps/alpha/stackinfo.h: Define DEFAULT_STACK_PERMS with PF_X.
+
+2011-02-28  Aurelien Jarno  <aurelien@aurel32.net>
+
 	* sysdeps/unix/sysv/linux/alpha/bits/fcntl.h (F_SETPIPE_SZ,
 	F_GETPIPE_SZ): Define.
 
