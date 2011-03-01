@@ -30,3 +30,4 @@ fetestexcept (int excepts)
 
   return tmp & excepts & SWCR_STATUS_MASK;
 }
+libm_hidden_def (fetestexcept)
