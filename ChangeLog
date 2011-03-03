@@ -1,3 +1,8 @@
+2011-02-28  Aurelien Jarno  <aurelien@aurel32.net>
+
+	* sysdeps/sparc/sparc64/multiarch/memset.S(__bzero): call
+	__bzero_ultra1 instead of __memset_ultra1.
+
 2011-02-23  Andreas Schwab  <schwab@redhat.com>
 	    Ulrich Drepper  <drepper@gmail.com>
 

@@ -114,8 +114,8 @@ ENTRY(__bzero)
 	 nop
 9:
 # ifdef SHARED
-	sethi	%gdop_hix22(__memset_ultra1), %o1
-	xor	%o1, %gdop_lox10(__memset_ultra1), %o1
+	sethi	%gdop_hix22(__bzero_ultra1), %o1
+	xor	%o1, %gdop_lox10(__bzero_ultra1), %o1
 # else
 	set	__bzero_ultra1, %o1
 # endif
