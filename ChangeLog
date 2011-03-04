@@ -1,3 +1,7 @@
+2011-03-04  Ulrich Drepper  <drepper@gmail.com>
+
+	* libio/fmemopen.c (fmemopen): Optimize a bit.
+
 2011-03-03  Andreas Schwab  <schwab@redhat.com>
 
 	* libio/fmemopen.c (fmemopen): Don't read past end of buffer.

@@ -226,6 +226,7 @@ fmemopen (void *buf, size_t len, const char *mode)
 	  return NULL;
 	}
       c->buffer[0] = '\0';
+      c->maxpos = 0;
     }
   else
     {
@@ -236,14 +237,14 @@ fmemopen (void *buf, size_t len, const char *mode)
 	}
 
       c->buffer = buf;
+
+      if (mode[0] == 'w')
+	c->buffer[0] = '\0';
+
+      c->maxpos = strnlen (c->buffer, len);
     }
 
   c->size = len;
-
-  if (mode[0] == 'w')
-    c->buffer[0] = '\0';
-
-  c->maxpos = strnlen (c->buffer, len);
 
   if (mode[0] == 'a')
     c->pos = c->maxpos;
