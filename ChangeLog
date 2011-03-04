@@ -1,3 +1,7 @@
+2011-03-03  Andreas Schwab  <schwab@redhat.com>
+
+	* libio/fmemopen.c (fmemopen): Don't read past end of buffer.
+
 2011-03-03  Roland McGrath  <roland@redhat.com>
 
 	* setjmp/bits/setjmp2.h: Canonicalize comment formatting.

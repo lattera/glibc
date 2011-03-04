@@ -1,5 +1,5 @@
 /* Fmemopen implementation.
-   Copyright (C) 2000, 2002, 2005, 2006, 2008, 2009
+   Copyright (C) 2000, 2002, 2005, 2006, 2008, 2009, 2011
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Hanno Mueller, kontakt@hanno.de, 2000.
@@ -243,7 +243,7 @@ fmemopen (void *buf, size_t len, const char *mode)
   if (mode[0] == 'w')
     c->buffer[0] = '\0';
 
-  c->maxpos = strlen (c->buffer);
+  c->maxpos = strnlen (c->buffer, len);
 
   if (mode[0] == 'a')
     c->pos = c->maxpos;
