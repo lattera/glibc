@@ -1,5 +1,5 @@
 /* x86_64 cache info.
-   Copyright (C) 2003, 2004, 2006, 2007, 2009 Free Software Foundation, Inc.
+   Copyright (C) 2003,2004,2006,2007,2009,2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -352,11 +352,11 @@ handle_amd (int name)
 
     case _SC_LEVEL2_CACHE_ASSOC:
       switch ((ecx >> 12) & 0xf)
-        {
-        case 0:
-        case 1:
-        case 2:
-        case 4:
+	{
+	case 0:
+	case 1:
+	case 2:
+	case 4:
 	  return (ecx >> 12) & 0xf;
 	case 6:
 	  return 8;
@@ -376,7 +376,7 @@ handle_amd (int name)
 	  return ((ecx >> 6) & 0x3fffc00) / (ecx & 0xff);
 	default:
 	  return 0;
-        }
+	}
       /* NOTREACHED */
 
     case _SC_LEVEL2_CACHE_LINESIZE:
@@ -521,10 +521,10 @@ init_cacheinfo (void)
       shared = handle_intel (_SC_LEVEL3_CACHE_SIZE, max_cpuid);
 
       if (shared <= 0)
-        {
+	{
 	  /* Try L2 otherwise.  */
-          level  = 2;
-          shared = handle_intel (_SC_LEVEL2_CACHE_SIZE, max_cpuid);
+	  level  = 2;
+	  shared = handle_intel (_SC_LEVEL2_CACHE_SIZE, max_cpuid);
 	}
 
       unsigned int ebx_1;
@@ -540,7 +540,7 @@ init_cacheinfo (void)
 
 #ifndef DISABLE_PREFERRED_MEMORY_INSTRUCTION
       /* Intel prefers SSSE3 instructions for memory/string routines
-	 if they are avaiable.  */
+	 if they are available.  */
       if ((ecx & 0x200))
 	__x86_64_preferred_memory_instruction = 3;
       else
@@ -550,7 +550,7 @@ init_cacheinfo (void)
       /* Figure out the number of logical threads that share the
 	 highest cache level.  */
       if (max_cpuid >= 4)
-        {
+	{
 	  int i = 0;
 
 	  /* Query until desired cache level is enumerated.  */
@@ -565,7 +565,7 @@ init_cacheinfo (void)
 	      if ((eax & 0x1f) == 0)
 		goto intel_bug_no_cache_info;
 	    }
-          while (((eax >> 5) & 0x7) != level);
+	  while (((eax >> 5) & 0x7) != level);
 
 	  threads = (eax >> 14) & 0x3ff;
 
@@ -602,7 +602,7 @@ init_cacheinfo (void)
 	  threads += 1;
 	}
       else
-        {
+	{
 	intel_bug_no_cache_info:
 	  /* Assume that all logical threads share the highest cache level.  */
 
@@ -612,7 +612,7 @@ init_cacheinfo (void)
       /* Cap usage of highest cache level to the number of supported
 	 threads.  */
       if (shared > 0 && threads > 0)
-        shared /= threads;
+	shared /= threads;
     }
   /* This spells out "AuthenticAMD".  */
   else if (is_amd)
@@ -620,6 +620,25 @@ init_cacheinfo (void)
       data   = handle_amd (_SC_LEVEL1_DCACHE_SIZE);
       long int core = handle_amd (_SC_LEVEL2_CACHE_SIZE);
       shared = handle_amd (_SC_LEVEL3_CACHE_SIZE);
+
+#ifndef DISABLE_PREFERRED_MEMORY_INSTRUCTION
+# ifdef USE_MULTIARCH
+      eax = __cpu_features.cpuid[COMMON_CPUID_INDEX_1].eax;
+      ebx = __cpu_features.cpuid[COMMON_CPUID_INDEX_1].ebx;
+      ecx = __cpu_features.cpuid[COMMON_CPUID_INDEX_1].ecx;
+      edx = __cpu_features.cpuid[COMMON_CPUID_INDEX_1].edx;
+# else
+      __cpuid (1, eax, ebx, ecx, edx);
+# endif
+
+      /* AMD prefers SSSE3 instructions for memory/string routines
+	 if they are avaiable, otherwise it prefers integer
+	 instructions.  */
+      if ((ecx & 0x200))
+	__x86_64_preferred_memory_instruction = 3;
+      else
+	__x86_64_preferred_memory_instruction = 0;
+#endif
 
       /* Get maximum extended function. */
       __cpuid (0x80000000, max_cpuid_ex, ebx, ecx, edx);

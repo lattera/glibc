@@ -1,6 +1,6 @@
 /* Initialize CPU feature data.
    This file is part of the GNU C Library.
-   Copyright (C) 2008, 2009, 2010 Free Software Foundation, Inc.
+   Copyright (C) 2008, 2009, 2010, 2011 Free Software Foundation, Inc.
    Contributed by Ulrich Drepper <drepper@redhat.com>.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -60,7 +60,7 @@ __init_cpu_features (void)
       get_common_indeces (&family, &model);
 
       /* Intel processors prefer SSE instruction for memory/string
-	 routines if they are avaiable.  */
+	 routines if they are available.  */
       __cpu_features.feature[index_Prefer_SSE_for_memop]
 	|= bit_Prefer_SSE_for_memop;
 
@@ -107,6 +107,14 @@ __init_cpu_features (void)
       kind = arch_kind_amd;
 
       get_common_indeces (&family, &model);
+
+      unsigned int ecx = __cpu_features.cpuid[COMMON_CPUID_INDEX_1].ecx;
+
+      /* AMD processors prefer SSE instructions for memory/string routines
+	 if they are available, otherwise they prefer integer instructions.  */
+      if ((ecx & 0x200))
+	__cpu_features.feature[index_Prefer_SSE_for_memop]
+	  |= bit_Prefer_SSE_for_memop;
     }
   else
     kind = arch_kind_other;

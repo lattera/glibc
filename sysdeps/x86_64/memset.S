@@ -1,6 +1,6 @@
 /* memset/bzero -- set memory area to CH/0
    Optimized version for x86-64.
-   Copyright (C) 2002-2005, 2007, 2008 Free Software Foundation, Inc.
+   Copyright (C) 2002-2005, 2007, 2008, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -23,7 +23,7 @@
 #define __STOS_LOWER_BOUNDARY	$8192
 #define __STOS_UPPER_BOUNDARY	$65536
 
-        .text
+	.text
 #if !defined NOT_IN_libc && !defined USE_MULTIARCH
 ENTRY(__bzero)
 	mov	%rsi,%rdx	/* Adjust parameter.  */
@@ -417,7 +417,7 @@ L(P4Q0): mov    %edx,-0x4(%rdi)
 		retq
 
 	.balign     16
-#if defined(USE_EXTRA_TABLE)
+#ifdef USE_EXTRA_TABLE
 L(P5QI): mov    %rdx,-0x95(%rdi)
 #endif
 L(P5QH): mov    %rdx,-0x8d(%rdi)
@@ -596,6 +596,8 @@ L(A6Q0):    mov    %dx,-0x6(%rdi)
 	jmp    L(aligned_now)
 
 L(SSE_pre):
+#else
+L(aligned_now):
 #endif
 #if !defined USE_MULTIARCH || defined USE_SSE2
 	 # fill RegXMM0 with the pattern
@@ -606,16 +608,16 @@ L(SSE_pre):
 	 jge    L(byte32sse2_pre)
 
 	 add    %r8,%rdi
-#ifndef PIC
+# ifndef PIC
 	 lea    L(SSExDx)(%rip),%r9
 	 jmpq   *(%r9,%r8,8)
-#else
+# else
 	 lea    L(SSE0Q0)(%rip),%r9
 	 lea    L(SSExDx)(%rip),%rcx
 	 movswq (%rcx,%r8,2),%rcx
 	 lea    (%rcx,%r9,1),%r9
 	 jmpq   *%r9
-#endif
+# endif
 
 L(SSE0QB):  movdqa %xmm0,-0xb0(%rdi)
 L(SSE0QA):  movdqa %xmm0,-0xa0(%rdi)
@@ -881,16 +883,16 @@ L(byte32sse2):
 	lea    0x80(%rdi),%rdi
 	jge    L(byte32sse2)
 	add    %r8,%rdi
-#ifndef PIC
+# ifndef PIC
 	lea    L(SSExDx)(%rip),%r11
 	jmpq   *(%r11,%r8,8)
-#else
+# else
 	lea    L(SSE0Q0)(%rip),%r11
 	lea    L(SSExDx)(%rip),%rcx
 	movswq (%rcx,%r8,2),%rcx
 	lea    (%rcx,%r11,1),%r11
 	jmpq   *%r11
-#endif
+# endif
 
 	.balign     16
 L(sse2_nt_move_pre):
@@ -916,20 +918,20 @@ L(sse2_nt_move):
 	jge    L(sse2_nt_move)
 	sfence
 	add    %r8,%rdi
-#ifndef PIC
+# ifndef PIC
 	lea    L(SSExDx)(%rip),%r11
 	jmpq   *(%r11,%r8,8)
-#else
+# else
 	lea    L(SSE0Q0)(%rip),%r11
 	lea    L(SSExDx)(%rip),%rcx
 	movswq (%rcx,%r8,2),%rcx
 	lea   (%rcx,%r11,1),%r11
 	jmpq   *%r11
-#endif
+# endif
 
 	.pushsection .rodata
 	.balign     16
-#ifndef PIC
+# ifndef PIC
 L(SSExDx):
 	.quad       L(SSE0Q0), L(SSE1Q0), L(SSE2Q0), L(SSE3Q0)
 	.quad       L(SSE4Q0), L(SSE5Q0), L(SSE6Q0), L(SSE7Q0)
@@ -979,7 +981,7 @@ L(SSExDx):
 	.quad       L(SSE4QB), L(SSE5QB), L(SSE6QB), L(SSE7QB)
 	.quad       L(SSE8QB), L(SSE9QB), L(SSE10QB), L(SSE11QB)
 	.quad       L(SSE12QB), L(SSE13QB), L(SSE14QB), L(SSE15QB)
-#else
+# else
 L(SSExDx):
 	.short     L(SSE0Q0) -L(SSE0Q0)
 	.short     L(SSE1Q0) -L(SSE0Q0)
@@ -1196,14 +1198,14 @@ L(SSExDx):
 	.short     L(SSE13QB)-L(SSE0Q0)
 	.short     L(SSE14QB)-L(SSE0Q0)
 	.short     L(SSE15QB)-L(SSE0Q0)
-#endif
+# endif
 	.popsection
 #endif /* !defined USE_MULTIARCH || defined USE_SSE2  */
 
 	.balign     16
+#ifndef USE_MULTIARCH
 L(aligned_now):
 
-#ifndef USE_MULTIARCH
 	 cmpl   $0x1,__x86_64_preferred_memory_instruction(%rip)
 	 jg     L(SSE_pre)
 #endif /* USE_MULTIARCH */
@@ -1246,17 +1248,17 @@ L(8byte_move_loop):
 
 L(8byte_move_skip):
 	andl	$127,%r8d
-	lea    	(%rdi,%r8,1),%rdi
+	lea	(%rdi,%r8,1),%rdi
 
 #ifndef PIC
-	lea    	L(setPxQx)(%rip),%r11
-	jmpq   	*(%r11,%r8,8) # old scheme remained for nonPIC
+	lea	L(setPxQx)(%rip),%r11
+	jmpq	*(%r11,%r8,8) # old scheme remained for nonPIC
 #else
-	lea    	L(Got0)(%rip),%r11
+	lea	L(Got0)(%rip),%r11
 	lea	L(setPxQx)(%rip),%rcx
 	movswq	(%rcx,%r8,2),%rcx
-	lea    	(%rcx,%r11,1),%r11
-	jmpq   	*%r11
+	lea	(%rcx,%r11,1),%r11
+	jmpq	*%r11
 #endif
 
 	.balign     16
@@ -1290,16 +1292,16 @@ L(8byte_stos_skip):
 	ja	L(8byte_nt_move)
 
 	andl	$7,%r8d
-	lea    	(%rdi,%r8,1),%rdi
+	lea	(%rdi,%r8,1),%rdi
 #ifndef PIC
-	lea    	L(setPxQx)(%rip),%r11
-	jmpq   	*(%r11,%r8,8) # old scheme remained for nonPIC
+	lea	L(setPxQx)(%rip),%r11
+	jmpq	*(%r11,%r8,8) # old scheme remained for nonPIC
 #else
-	lea    	L(Got0)(%rip),%r11
+	lea	L(Got0)(%rip),%r11
 	lea     L(setPxQx)(%rip),%rcx
 	movswq	(%rcx,%r8,2),%rcx
 	lea	(%rcx,%r11,1),%r11
-	jmpq   	*%r11
+	jmpq	*%r11
 #endif
 
 	.balign     16
@@ -1338,16 +1340,16 @@ L(8byte_nt_move_loop):
 L(8byte_nt_move_skip):
 	andl	$127,%r8d
 
-	lea    	(%rdi,%r8,1),%rdi
+	lea	(%rdi,%r8,1),%rdi
 #ifndef PIC
-	lea    	L(setPxQx)(%rip),%r11
-	jmpq   	*(%r11,%r8,8) # old scheme remained for nonPIC
+	lea	L(setPxQx)(%rip),%r11
+	jmpq	*(%r11,%r8,8) # old scheme remained for nonPIC
 #else
-	lea    	L(Got0)(%rip),%r11
+	lea	L(Got0)(%rip),%r11
 	lea     L(setPxQx)(%rip),%rcx
 	movswq	(%rcx,%r8,2),%rcx
-	lea    	(%rcx,%r11,1),%r11
-	jmpq   	*%r11
+	lea	(%rcx,%r11,1),%r11
+	jmpq	*%r11
 #endif
 
 END (memset)

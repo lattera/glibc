@@ -1,3 +1,17 @@
+2011-03-02  Harsha Jagasia  <harsha.jagasia@amd.com>
+	    Ulrich Drepper  <drepper@gmail.com>
+
+	* sysdeps/x86_64/memset.S: After aligning destination, code
+	branches to different locations depending on the value of
+	misalignment, when multiarch is enabled. Fix this.
+
+2011-03-02  Harsha Jagasia  <harsha.jagasia@amd.com>
+
+	* sysdeps/x86_64/cacheinfo.c (init_cacheinfo):
+	Set _x86_64_preferred_memory_instruction for AMD processsors.
+	* sysdeps/x86_64/multiarch/init-arch.c (__init_cpu_features):
+	Set bit_Prefer_SSE_for_memop for AMD processors.
+
 2011-03-04  Ulrich Drepper  <drepper@gmail.com>
 
 	* libio/fmemopen.c (fmemopen): Optimize a bit.
@@ -12,7 +26,7 @@
 
 2011-02-28  Aurelien Jarno  <aurelien@aurel32.net>
 
-	* sysdeps/sparc/sparc64/multiarch/memset.S(__bzero): call
+	* sysdeps/sparc/sparc64/multiarch/memset.S(__bzero): Call
 	__bzero_ultra1 instead of __memset_ultra1.
 
 2011-02-23  Andreas Schwab  <schwab@redhat.com>
