@@ -1,3 +1,23 @@
+2011-03-05  Nathan Sidwell  <nathan@codesourcery.com>
+	    Glauber de Oliveira Costa  <glommer@gmail.com>
+
+	* sysdeps/arm/dl-tlsdesc.h: New.
+	* sysdeps/arm/dl-tls.h (struct dl_tls_index): Make non-anonymous.
+	* sysdeps/arm/Makefile: Add tlsdesc, dl-tlsdesc for elf
+	subdirectory.
+	* sysdeps/arm/tlsdesc.c: New.
+	* sysdeps/arm/dl-machine.h: #include sysdeps and dl-tlsdesc.h.
+	(elf_machine_runtime_setup): Record dl_tlsdesc_lazy_resolver
+	address.
+	(elf_machine_type_class): Check R_ARM_TLS_DESC.
+	(elf_machine_rel): Add R_ARM_TLS_DESC case.
+	(elf_machine_lazy_rel): Likewise.
+	* sysdeps/arm/dl-tlsdesc.S: New.
+	* sysdeps/arm/bits/linkmap.h (struct link_map_machine): Add
+	tlsdesc_table field.
+	* sysdeps/arm/tlsdesc.sym: New.
+	* sysdeps/arm/dl-lookupcfg.h: New.
+
 2011-02-16  Manjunath Matti  <manjunath81@gmail.com>
 
 	* sysdeps/arm/sysdep.h (CALL_MCOUNT): Use __gnu_mcount_nc

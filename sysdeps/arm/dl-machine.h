@@ -25,6 +25,7 @@
 
 #include <sys/param.h>
 #include <tls.h>
+#include <dl-tlsdesc.h>
 
 #define CLEAR_CACHE(BEG,END)						\
   INTERNAL_SYSCALL_ARM (cacheflush, , 3, (BEG), (END), 0)
@@ -127,6 +128,11 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 	   the offset on the stack, and then jump to the resolved address.  */
 	got[2] = (Elf32_Addr) &_dl_runtime_resolve;
     }
+
+  if (l->l_info[ADDRIDX (DT_TLSDESC_GOT)] && lazy)
+    *(Elf32_Addr*)(D_PTR (l, l_info[ADDRIDX (DT_TLSDESC_GOT)]) + l->l_addr)
+      = (Elf32_Addr) &_dl_tlsdesc_lazy_resolver;
+
   return lazy;
 }
 
@@ -239,7 +245,8 @@ _dl_start_user:\n\
 #if defined USE_TLS && (!defined RTLD_BOOTSTRAP || USE___THREAD)
 # define elf_machine_type_class(type) \
   ((((type) == R_ARM_JUMP_SLOT || (type) == R_ARM_TLS_DTPMOD32		\
-     || (type) == R_ARM_TLS_DTPOFF32 || (type) == R_ARM_TLS_TPOFF32)	\
+     || (type) == R_ARM_TLS_DTPOFF32 || (type) == R_ARM_TLS_TPOFF32	\
+     || (type) == R_ARM_TLS_DESC)					\
     * ELF_RTYPE_CLASS_PLT)						\
    | (((type) == R_ARM_COPY) * ELF_RTYPE_CLASS_COPY))
 #else
@@ -421,6 +428,39 @@ elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
 	    *reloc_addr += value;
 	    break;
 	  }
+	case R_ARM_TLS_DESC:
+	  {
+            struct tlsdesc volatile *td =
+	      (struct tlsdesc volatile *)reloc_addr;
+
+# ifndef RTLD_BOOTSTRAP
+	    if (! sym)
+	      td->entry = _dl_tlsdesc_undefweak;
+	    else
+# endif
+	      {
+		value = sym->st_value + td->argument.value;
+
+# ifndef RTLD_BOOTSTRAP
+#  ifndef SHARED
+		CHECK_STATIC_TLS (map, sym_map);
+#  else
+		if (!TRY_STATIC_TLS (map, sym_map))
+		  {
+		    td->argument.pointer
+		      = _dl_make_tlsdesc_dynamic (sym_map, value);
+		    td->entry = _dl_tlsdesc_dynamic;
+		  }
+		else
+#  endif
+# endif
+	        {
+		  td->argument.value = value + sym_map->l_tls_offset;
+		  td->entry = _dl_tlsdesc_return;
+	        }
+	      }
+	    }
+	    break;
 	case R_ARM_PC24:
 	  {
 	     Elf32_Sword addend;
@@ -612,6 +652,20 @@ elf_machine_lazy_rel (struct link_map *map,
       else
 	*reloc_addr = map->l_mach.plt;
     }
+#ifdef USE_TLS
+  else if (__builtin_expect (r_type == R_ARM_TLS_DESC, 1))
+    {
+      struct tlsdesc volatile *td =
+	(struct tlsdesc volatile *)reloc_addr;
+
+      /* The linker must have given us the parameter we need in the
+         first GOT entry, and left the second one empty. We fill the
+         last with the resolver address */
+      assert (td->entry == 0);
+      td->entry = (void*)(D_PTR (map, l_info[ADDRIDX (DT_TLSDESC_PLT)])
+			  + map->l_addr);
+    }
+#endif
   else
     _dl_reloc_bad_type (map, r_type, 1);
 }
