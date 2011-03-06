@@ -1,5 +1,5 @@
 /* Macros to swap the order of bytes in integer values.  m68k version.
-   Copyright (C) 1997, 2002, 2008 Free Software Foundation, Inc.
+   Copyright (C) 1997, 2002, 2008, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -30,36 +30,29 @@
 #define __bswap_constant_16(x) \
      ((((x) >> 8) & 0xffu) | (((x) & 0xffu) << 8))
 
-#ifdef __GNUC__
-# define __bswap_16(x) \
-    (__extension__							      \
-     ({ unsigned short int __bsx = (x); __bswap_constant_16 (__bsx); }))
-#else
 static __inline unsigned short int
 __bswap_16 (unsigned short int __bsx)
 {
   return __bswap_constant_16 (__bsx);
 }
-#endif
 
 /* Swap bytes in 32 bit value.  */
 #define __bswap_constant_32(x) \
      ((((x) & 0xff000000u) >> 24) | (((x) & 0x00ff0000u) >>  8) |	      \
       (((x) & 0x0000ff00u) <<  8) | (((x) & 0x000000ffu) << 24))
 
-#if defined __GNUC__ && __GNUC__ >= 2 && !defined(__mcoldfire__)
-# define __bswap_32(x) \
-  __extension__							\
-  ({ unsigned int __bswap_32_v;					\
-     if (__builtin_constant_p (x))				\
-       __bswap_32_v = __bswap_constant_32 (x);			\
-     else							\
-       __asm__ __volatile__ ("ror%.w %#8, %0;"			\
-			     "swap %0;"				\
-			     "ror%.w %#8, %0"			\
-			     : "=d" (__bswap_32_v)		\
-			     : "0" ((unsigned int) (x)));	\
-     __bswap_32_v; })
+#if !defined(__mcoldfire__)
+static __inline unsigned int
+__bswap_32 (unsigned int __bsx)
+{
+  if (__builtin_constant_p (__bsx))
+    return __bswap_constant_32 (__bsx);
+  __asm__ __volatile__ ("ror%.w %#8, %0;"
+			"swap %0;"
+			"ror%.w %#8, %0"
+			: "+d" (__bsx));
+  return __bsx;
+}
 #else
 static __inline unsigned int
 __bswap_32 (unsigned int __bsx)
@@ -81,19 +74,14 @@ __bswap_32 (unsigned int __bsx)
       | (((x) & 0x00000000000000ffull) << 56))
 
 /* Swap bytes in 64 bit value.  */
-# define __bswap_64(x) \
-  __extension__								\
-  ({ union { unsigned long long int __ll;				\
-	     unsigned long int __l[2]; } __bswap_64_v, __bswap_64_r;	\
-     if (__builtin_constant_p (x))					\
-       __bswap_64_r.__ll = __bswap_constant_64 (x);			\
-     else								\
-       {								\
-	 __bswap_64_v.__ll = (x);					\
-	 __bswap_64_r.__l[0] = __bswap_32 (__bswap_64_v.__l[1]);	\
-	 __bswap_64_r.__l[1] = __bswap_32 (__bswap_64_v.__l[0]);	\
-       }								\
-     __bswap_64_r.__ll; })
+static __inline unsigned long long
+__bswap_64 (unsigned long long __bsx)
+{
+  if (__builtin_constant_p (__bsx))
+    return __bswap_constant_64 (__bsx);
+  return (__bswap_32 (__bsx >> 32)
+	  | ((unsigned long long) __bswap_32 (__bsx) << 32));
+}
 #endif
 
 #endif /* _BITS_BYTESWAP_H */
