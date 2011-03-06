@@ -1,3 +1,8 @@
+2011-03-06  Ulrich Drepper  <drepper@gmail.com>
+
+	* elf/dl-load.c (_dl_map_object): If we are looking for the first
+	to-be-loaded object along a path to loader is ld.so.
+
 2011-03-02  Harsha Jagasia  <harsha.jagasia@amd.com>
 	    Ulrich Drepper  <drepper@gmail.com>
 

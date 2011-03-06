@@ -2111,7 +2111,9 @@ _dl_map_object (struct link_map *loader, const char *name,
 	    {
 #ifdef SHARED
 	      // XXX Correct to unconditionally default to namespace 0?
-	      l = loader ?: GL(dl_ns)[LM_ID_BASE]._ns_loaded;
+	      l = (loader
+		   ?: GL(dl_ns)[LM_ID_BASE]._ns_loaded
+		   ?: &GL(dl_rtld_map));
 #else
 	      l = loader;
 #endif
