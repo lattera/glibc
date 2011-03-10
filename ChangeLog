@@ -1,3 +1,7 @@
+2011-03-10  Ulrich Drepper  <drepper@gmail.com>
+
+	* elf/Makefile: Don't run tst-execstack* tests of SELinux is enabled.
+
 2011-03-06  Ulrich Drepper  <drepper@gmail.com>
 
 	* elf/dl-load.c (_dl_map_object): If we are looking for the first
