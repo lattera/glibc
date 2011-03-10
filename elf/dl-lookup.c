@@ -1,6 +1,5 @@
 /* Look up a symbol in the loaded objects.
-   Copyright (C) 1995-2005, 2006, 2007, 2009, 2010
-   Free Software Foundation, Inc.
+   Copyright (C) 1995-2007, 2009, 2010, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -364,8 +363,19 @@ do_lookup_x (const char *undef_name, uint_fast32_t new_hash,
 		      if (entries[idx].hashval == new_hash
 			  && strcmp (entries[idx].name, undef_name) == 0)
 			{
-			  result->s = entries[idx].sym;
-			  result->m = (struct link_map *) entries[idx].map;
+			  if ((type_class & ELF_RTYPE_CLASS_COPY) != 0)
+			    {
+			      /* We possibly have to initialize the central
+				 copy from the copy addressed through the
+				 relocation.  */
+			      result->s = sym;
+			      result->m = (struct link_map *) map;
+			    }
+			  else
+			    {
+			      result->s = entries[idx].sym;
+			      result->m = (struct link_map *) entries[idx].map;
+			    }
 			  __rtld_lock_unlock_recursive (tab->lock);
 			  return 1;
 			}

@@ -258,7 +258,7 @@ modules-names = testobj1 testobj2 testobj3 testobj4 testobj5 testobj6 \
 		order2mod1 order2mod2 order2mod3 order2mod4 \
 		tst-unique1mod1 tst-unique1mod2 \
 		tst-unique2mod1 tst-unique2mod2 \
-		tst-unique3lib \
+		tst-unique3lib tst-unique3lib2 \
 		tst-initordera1 tst-initorderb1 \
 		tst-initordera2 tst-initorderb2 \
 		tst-initordera3 tst-initordera4
@@ -1182,7 +1182,8 @@ $(objpfx)tst-unique1.out: $(objpfx)tst-unique1mod1.so \
 $(objpfx)tst-unique2: $(libdl) $(objpfx)tst-unique2mod1.so
 $(objpfx)tst-unique2.out: $(objpfx)tst-unique2mod2.so
 
-$(objpfx)tst-unique3: $(objpfx)tst-unique3lib.so
+$(objpfx)tst-unique3: $(libdl) $(objpfx)tst-unique3lib.so
+$(objpfx)tst-unique3.out: $(objpfx)tst-unique3lib2.so
 
 $(objpfx)tst-initorder.out: $(objpfx)tst-initorder
 	$(elf-objpfx)${rtld-installed-name} \
