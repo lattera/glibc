@@ -13,8 +13,8 @@ foo:	.word	1
 	.globl bar
 bar:	.skip	4
 	.text
-	.globl main
-main:	sethi	%tgd_hi22(foo), %l1
+	.globl _start
+_start:	sethi	%tgd_hi22(foo), %l1
 	add	%l1, %tgd_lo10(foo), %l1
 	add	%l7, %l1, %o0, %tgd_add(foo)
 	call	__tls_get_addr, %tgd_call(foo)
@@ -34,7 +34,7 @@ main:	sethi	%tgd_hi22(foo), %l1
 EOF
 changequote([,])dnl
 dnl
-if AC_TRY_COMMAND(${CC-cc} -o conftest.bin $CFLAGS conftest.s 1>&AS_MESSAGE_LOG_FD); then
+if AC_TRY_COMMAND(${CC-cc} -o conftest.bin $CFLAGS $LDFLAGS conftest.s -nostdlib -nostartfiles 1>&AS_MESSAGE_LOG_FD); then
   libc_cv_sparc64_tls=yes
 else
   libc_cv_sparc64_tls=no

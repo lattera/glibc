@@ -14,6 +14,12 @@
 
 	* elf/Makefile: Don't run tst-execstack* tests of SELinux is enabled.
 
+2011-03-10  Mike Frysinger  <vapier@gentoo.org>
+
+	* sysdeps/sparc/sparc64/elf/configure.in (libc_cv_sparc64_tls): Add
+	$LDFLAGS and -nostdlib -nostartfiles to linking step.  Change main
+	to _start.
+
 2011-03-06  Ulrich Drepper  <drepper@gmail.com>
 
 	* elf/dl-load.c (_dl_map_object): If we are looking for the first

@@ -16,8 +16,8 @@ foo:	.word	1
 	.globl bar
 bar:	.skip	4
 	.text
-	.globl main
-main:	sethi	%tgd_hi22(foo), %l1
+	.globl _start
+_start:	sethi	%tgd_hi22(foo), %l1
 	add	%l1, %tgd_lo10(foo), %l1
 	add	%l7, %l1, %o0, %tgd_add(foo)
 	call	__tls_get_addr, %tgd_call(foo)
@@ -35,7 +35,7 @@ main:	sethi	%tgd_hi22(foo), %l1
 	sethi	%tle_hix22(foo), %l1
 	xor	%l1, %tle_lox10(foo), %l1
 EOF
-if { ac_try='${CC-cc} -o conftest.bin $CFLAGS conftest.s 1>&5'
+if { ac_try='${CC-cc} -o conftest.bin $CFLAGS $LDFLAGS conftest.s -nostdlib -nostartfiles 1>&5'
   { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
   (eval $ac_try) 2>&5
   ac_status=$?
