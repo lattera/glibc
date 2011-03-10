@@ -1,3 +1,7 @@
+2011-03-10  Jakub Jelinek  <jakub@redhat.com>
+
+	* wcsmbs/wchar.h (wmemcmp): Remove __restrict qualifiers.
+
 2011-03-10  Ulrich Drepper  <drepper@gmail.com>
 
 	[BZ #12510]

@@ -319,8 +319,7 @@ extern wchar_t *wmemchr (__const wchar_t *__s, wchar_t __c, size_t __n)
 #endif
 
 /* Compare N wide characters of S1 and S2.  */
-extern int wmemcmp (__const wchar_t *__restrict __s1,
-		    __const wchar_t *__restrict __s2, size_t __n)
+extern int wmemcmp (__const wchar_t *__s1, __const wchar_t *__s2, size_t __n)
      __THROW __attribute_pure__;
 
 /* Copy N wide characters of SRC to DEST.  */
