@@ -1,5 +1,6 @@
 2011-03-18  Ulrich Drepper  <drepper@gmail.com>
 
+	[BZ #12583]
 	* posix/fnmatch.c (fnmatch): Check size of pattern in wide
 	character representation.
 	Partly based on a patch by Tomas Hoger <thoger@redhat.com>.
