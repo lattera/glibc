@@ -1,3 +1,9 @@
+2011-03-18  Ulrich Drepper  <drepper@gmail.com>
+
+	* posix/fnmatch.c (fnmatch): Check size of pattern in wide
+	character representation.
+	Partly based on a patch by Tomas Hoger <thoger@redhat.com>.
+
 2011-03-16  Ryan S. Arnold  <rsa@us.ibm.com>
 
 	* sysdeps/powerpc/powerpc32/power6/fpu/s_isnanf.S (isnanf): Fix

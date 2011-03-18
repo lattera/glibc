@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,1992,1993,1996,1997,1998,1999,2000,2001,2002,2003,2007,2010
+/* Copyright (C) 1991,1992,1993,1996,1997,1998,1999,2000,2001,2002,2003,2007,2010,2011
 	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -375,6 +375,11 @@ fnmatch (pattern, string, flags)
 	       XXX Do we have to set `errno' to something which mbsrtows hasn't
 	       already done?  */
 	    return -1;
+	  if (__builtin_expect (n >= (size_t) -1 / sizeof (wchar_t), 0))
+	    {
+	      __set_errno (ENOMEM);
+	      return -2;
+	    }
 	  wpattern_malloc = wpattern
 	    = (wchar_t *) malloc ((n + 1) * sizeof (wchar_t));
 	  assert (mbsinit (&ps));
@@ -419,6 +424,12 @@ fnmatch (pattern, string, flags)
 	       XXX Do we have to set `errno' to something which mbsrtows hasn't
 	       already done?  */
 	    goto free_return;
+	  if (__builtin_expect (n >= (size_t) -1 / sizeof (wchar_t), 0))
+	    {
+	      free (wpattern_malloc);
+	      __set_errno (ENOMEM);
+	      return -2;
+	    }
 
 	  wstring_malloc = wstring
 	    = (wchar_t *) malloc ((n + 1) * sizeof (wchar_t));
