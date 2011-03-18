@@ -1,3 +1,9 @@
+2011-03-16  Ryan S. Arnold  <rsa@us.ibm.com>
+
+	* sysdeps/powerpc/powerpc32/power6/fpu/s_isnanf.S (isnanf): Fix
+	END(__isnan) to END(__isnanf) to match function entry point/label
+	EALIGN(__isnanf,...).
+
 2011-03-10  Jakub Jelinek  <jakub@redhat.com>
 
 	* wcsmbs/wchar.h (wmemcmp): Remove __restrict qualifiers.
