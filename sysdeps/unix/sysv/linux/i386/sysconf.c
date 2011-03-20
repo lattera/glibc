@@ -1,5 +1,5 @@
 /* Get file-specific information about a file.  Linux version.
-   Copyright (C) 2003, 2004, 2006, 2007, 2009 Free Software Foundation, Inc.
+   Copyright (C) 2003, 2004, 2006, 2007, 2009, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -186,6 +186,55 @@ intel_check_word (int name, unsigned int value, bool *has_level_2,
 	    /* No need to look further.  */
 	    break;
 	}
+      else if (byte == 0xff)
+	{
+	  /* CPUID leaf 0x4 contains all the information.  We need to
+	     iterate over it.  */
+	  unsigned int eax;
+	  unsigned int ebx;
+	  unsigned int ecx;
+	  unsigned int edx;
+
+	  unsigned int round = 0;
+	  while (1)
+	    {
+	      asm volatile ("xchgl %%ebx, %1; cpuid; xchgl %%ebx, %1"
+			    : "=a" (eax), "=r" (ebx), "=c" (ecx), "=d" (edx)
+			    : "0" (4), "2" (round));
+
+	      enum { null = 0, data = 1, inst = 2, uni = 3 } type = eax & 0x1f;
+	      if (type == null)
+		/* That was the end.  */
+		break;
+
+	      unsigned int level = (eax >> 5) & 0x7;
+
+	      if ((level == 1 && type == data
+		   && folded_rel_name == M(_SC_LEVEL1_DCACHE_SIZE))
+		  || (level == 1 && type == inst
+		      && folded_rel_name == M(_SC_LEVEL1_ICACHE_SIZE))
+		  || (level == 2 && folded_rel_name == M(_SC_LEVEL2_CACHE_SIZE))
+		  || (level == 3 && folded_rel_name == M(_SC_LEVEL3_CACHE_SIZE))
+		  || (level == 4 && folded_rel_name == M(_SC_LEVEL4_CACHE_SIZE)))
+		{
+		  unsigned int offset = M(name) - folded_rel_name;
+
+		  if (offset == 0)
+		    /* Cache size.  */
+		    return (((ebx >> 22) + 1)
+			    * (((ebx >> 12) & 0x3ff) + 1)
+			    * ((ebx & 0xfff) + 1)
+			    * (ecx + 1));
+		  if (offset == 1)
+		    return (ebx >> 22) + 1;
+
+		  assert (offset == 2);
+		  return (ebx & 0xfff) + 1;
+		}
+	    }
+	  /* There is no other cache information anywhere else.  */
+	  break;
+	}
       else
 	{
 	  if (byte == 0x49 && folded_rel_name == M(_SC_LEVEL3_CACHE_SIZE))
@@ -358,11 +407,11 @@ handle_amd (int name)
     case _SC_LEVEL2_CACHE_ASSOC:
       ecx >>= 12;
       switch (ecx & 0xf)
-        {
-        case 0:
-        case 1:
-        case 2:
-        case 4:
+	{
+	case 0:
+	case 1:
+	case 2:
+	case 4:
 	  return ecx & 0xf;
 	case 6:
 	  return 8;
@@ -372,7 +421,7 @@ handle_amd (int name)
 	  return (ecx << 6) & 0x3fffc00;
 	default:
 	  return 0;
-        }
+	}
     case _SC_LEVEL2_CACHE_LINESIZE:
       return (ecx & 0xf000) == 0 ? 0 : ecx & 0xff;
     default:

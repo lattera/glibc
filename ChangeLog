@@ -1,3 +1,10 @@
+2011-03-20  Ulrich Drepper  <drepper@gmail.com>
+
+	[BZ #12587]
+	* sysdeps/unix/sysv/linux/i386/sysconf.c (intel_check_word):
+	Handle cache information in CPU leaf 4.
+	* sysdeps/x86_64/cacheinfo.c (intel_check_word): Likewise.
+
 2011-03-18  Ulrich Drepper  <drepper@gmail.com>
 
 	[BZ #12583]
