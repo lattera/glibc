@@ -1,3 +1,11 @@
+2011-03-20  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #12597]
+	* string/test-strncmp.c (do_page_test): New function.
+	(check2): Likewise.
+	(test_main): Call check2.
+	* sysdeps/x86_64/multiarch/strcmp.S: Properly cross page boundary.
+
 2011-03-20  Ulrich Drepper  <drepper@gmail.com>
 
 	[BZ #12587]

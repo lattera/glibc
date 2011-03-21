@@ -452,6 +452,7 @@ LABEL(loop_ashr_1_use_sse4_2):
 	add	$16, %r10
 	jg	LABEL(nibble_ashr_1_use_sse4_2)
 
+LABEL(nibble_ashr_1_use_sse4_2_restart):
 	movdqa	(%rdi, %rdx), %xmm0
 	palignr $1, -16(%rdi, %rdx), %xmm0
 # if !defined USE_AS_STRCASECMP_L && !defined USE_AS_STRNCASECMP_L
@@ -499,7 +500,7 @@ LABEL(nibble_ashr_1_use_sse4_2):
 	jae	LABEL(nibble_ashr_use_sse4_2_exit)
 # endif
 	cmp	$14, %ecx
-	ja	LABEL(loop_ashr_1_use_sse4_2)
+	ja	LABEL(nibble_ashr_1_use_sse4_2_restart)
 
 	jmp	LABEL(nibble_ashr_use_sse4_2_exit)
 
@@ -544,6 +545,7 @@ LABEL(loop_ashr_2_use_sse4_2):
 	add	$16, %r10
 	jg	LABEL(nibble_ashr_2_use_sse4_2)
 
+LABEL(nibble_ashr_2_use_sse4_2_restart):
 	movdqa	(%rdi, %rdx), %xmm0
 	palignr $2, -16(%rdi, %rdx), %xmm0
 # if !defined USE_AS_STRCASECMP_L && !defined USE_AS_STRNCASECMP_L
@@ -591,7 +593,7 @@ LABEL(nibble_ashr_2_use_sse4_2):
 	jae	LABEL(nibble_ashr_use_sse4_2_exit)
 # endif
 	cmp	$13, %ecx
-	ja	LABEL(loop_ashr_2_use_sse4_2)
+	ja	LABEL(nibble_ashr_2_use_sse4_2_restart)
 
 	jmp	LABEL(nibble_ashr_use_sse4_2_exit)
 
@@ -636,6 +638,7 @@ LABEL(loop_ashr_3_use_sse4_2):
 	add	$16, %r10
 	jg	LABEL(nibble_ashr_3_use_sse4_2)
 
+LABEL(nibble_ashr_3_use_sse4_2_restart):
 	movdqa	(%rdi, %rdx), %xmm0
 	palignr $3, -16(%rdi, %rdx), %xmm0
 # if !defined USE_AS_STRCASECMP_L && !defined USE_AS_STRNCASECMP_L
@@ -683,7 +686,7 @@ LABEL(nibble_ashr_3_use_sse4_2):
 	jae	LABEL(nibble_ashr_use_sse4_2_exit)
 # endif
 	cmp	$12, %ecx
-	ja	LABEL(loop_ashr_3_use_sse4_2)
+	ja	LABEL(nibble_ashr_3_use_sse4_2_restart)
 
 	jmp	LABEL(nibble_ashr_use_sse4_2_exit)
 
@@ -729,6 +732,7 @@ LABEL(loop_ashr_4_use_sse4_2):
 	add	$16, %r10
 	jg	LABEL(nibble_ashr_4_use_sse4_2)
 
+LABEL(nibble_ashr_4_use_sse4_2_restart):
 	movdqa	(%rdi, %rdx), %xmm0
 	palignr $4, -16(%rdi, %rdx), %xmm0
 # if !defined USE_AS_STRCASECMP_L && !defined USE_AS_STRNCASECMP_L
@@ -776,7 +780,7 @@ LABEL(nibble_ashr_4_use_sse4_2):
 	jae	LABEL(nibble_ashr_use_sse4_2_exit)
 # endif
 	cmp	$11, %ecx
-	ja	LABEL(loop_ashr_4_use_sse4_2)
+	ja	LABEL(nibble_ashr_4_use_sse4_2_restart)
 
 	jmp	LABEL(nibble_ashr_use_sse4_2_exit)
 
@@ -822,6 +826,7 @@ LABEL(loop_ashr_5_use_sse4_2):
 	add	$16, %r10
 	jg	LABEL(nibble_ashr_5_use_sse4_2)
 
+LABEL(nibble_ashr_5_use_sse4_2_restart):
 	movdqa	(%rdi, %rdx), %xmm0
 	palignr $5, -16(%rdi, %rdx), %xmm0
 # if !defined USE_AS_STRCASECMP_L && !defined USE_AS_STRNCASECMP_L
@@ -870,7 +875,7 @@ LABEL(nibble_ashr_5_use_sse4_2):
 	jae	LABEL(nibble_ashr_use_sse4_2_exit)
 # endif
 	cmp	$10, %ecx
-	ja	LABEL(loop_ashr_5_use_sse4_2)
+	ja	LABEL(nibble_ashr_5_use_sse4_2_restart)
 
 	jmp	LABEL(nibble_ashr_use_sse4_2_exit)
 
@@ -916,6 +921,7 @@ LABEL(loop_ashr_6_use_sse4_2):
 	add	$16, %r10
 	jg	LABEL(nibble_ashr_6_use_sse4_2)
 
+LABEL(nibble_ashr_6_use_sse4_2_restart):
 	movdqa	(%rdi, %rdx), %xmm0
 	palignr $6, -16(%rdi, %rdx), %xmm0
 # if !defined USE_AS_STRCASECMP_L && !defined USE_AS_STRNCASECMP_L
@@ -963,7 +969,7 @@ LABEL(nibble_ashr_6_use_sse4_2):
 	jae	LABEL(nibble_ashr_use_sse4_2_exit)
 # endif
 	cmp	$9, %ecx
-	ja	LABEL(loop_ashr_6_use_sse4_2)
+	ja	LABEL(nibble_ashr_6_use_sse4_2_restart)
 
 	jmp	LABEL(nibble_ashr_use_sse4_2_exit)
 
@@ -1009,6 +1015,7 @@ LABEL(loop_ashr_7_use_sse4_2):
 	add	$16, %r10
 	jg	LABEL(nibble_ashr_7_use_sse4_2)
 
+LABEL(nibble_ashr_7_use_sse4_2_restart):
 	movdqa	(%rdi, %rdx), %xmm0
 	palignr $7, -16(%rdi, %rdx), %xmm0
 # if !defined USE_AS_STRCASECMP_L && !defined USE_AS_STRNCASECMP_L
@@ -1056,7 +1063,7 @@ LABEL(nibble_ashr_7_use_sse4_2):
 	jae	LABEL(nibble_ashr_use_sse4_2_exit)
 # endif
 	cmp	$8, %ecx
-	ja	LABEL(loop_ashr_7_use_sse4_2)
+	ja	LABEL(nibble_ashr_7_use_sse4_2_restart)
 
 	jmp	LABEL(nibble_ashr_use_sse4_2_exit)
 
@@ -1102,6 +1109,7 @@ LABEL(loop_ashr_8_use_sse4_2):
 	add	$16, %r10
 	jg	LABEL(nibble_ashr_8_use_sse4_2)
 
+LABEL(nibble_ashr_8_use_sse4_2_restart):
 	movdqa	(%rdi, %rdx), %xmm0
 	palignr $8, -16(%rdi, %rdx), %xmm0
 # if !defined USE_AS_STRCASECMP_L && !defined USE_AS_STRNCASECMP_L
@@ -1149,7 +1157,7 @@ LABEL(nibble_ashr_8_use_sse4_2):
 	jae	LABEL(nibble_ashr_use_sse4_2_exit)
 # endif
 	cmp	$7, %ecx
-	ja	LABEL(loop_ashr_8_use_sse4_2)
+	ja	LABEL(nibble_ashr_8_use_sse4_2_restart)
 
 	jmp	LABEL(nibble_ashr_use_sse4_2_exit)
 
@@ -1195,6 +1203,7 @@ LABEL(loop_ashr_9_use_sse4_2):
 	add	$16, %r10
 	jg	LABEL(nibble_ashr_9_use_sse4_2)
 
+LABEL(nibble_ashr_9_use_sse4_2_restart):
 	movdqa	(%rdi, %rdx), %xmm0
 
 	palignr $9, -16(%rdi, %rdx), %xmm0
@@ -1243,7 +1252,7 @@ LABEL(nibble_ashr_9_use_sse4_2):
 	jae	LABEL(nibble_ashr_use_sse4_2_exit)
 # endif
 	cmp	$6, %ecx
-	ja	LABEL(loop_ashr_9_use_sse4_2)
+	ja	LABEL(nibble_ashr_9_use_sse4_2_restart)
 
 	jmp	LABEL(nibble_ashr_use_sse4_2_exit)
 
@@ -1289,6 +1298,7 @@ LABEL(loop_ashr_10_use_sse4_2):
 	add	$16, %r10
 	jg	LABEL(nibble_ashr_10_use_sse4_2)
 
+LABEL(nibble_ashr_10_use_sse4_2_restart):
 	movdqa	(%rdi, %rdx), %xmm0
 	palignr $10, -16(%rdi, %rdx), %xmm0
 # if !defined USE_AS_STRCASECMP_L && !defined USE_AS_STRNCASECMP_L
@@ -1336,7 +1346,7 @@ LABEL(nibble_ashr_10_use_sse4_2):
 	jae	LABEL(nibble_ashr_use_sse4_2_exit)
 # endif
 	cmp	$5, %ecx
-	ja	LABEL(loop_ashr_10_use_sse4_2)
+	ja	LABEL(nibble_ashr_10_use_sse4_2_restart)
 
 	jmp	LABEL(nibble_ashr_use_sse4_2_exit)
 
@@ -1382,6 +1392,7 @@ LABEL(loop_ashr_11_use_sse4_2):
 	add	$16, %r10
 	jg	LABEL(nibble_ashr_11_use_sse4_2)
 
+LABEL(nibble_ashr_11_use_sse4_2_restart):
 	movdqa	(%rdi, %rdx), %xmm0
 	palignr $11, -16(%rdi, %rdx), %xmm0
 # if !defined USE_AS_STRCASECMP_L && !defined USE_AS_STRNCASECMP_L
@@ -1429,7 +1440,7 @@ LABEL(nibble_ashr_11_use_sse4_2):
 	jae	LABEL(nibble_ashr_use_sse4_2_exit)
 # endif
 	cmp	$4, %ecx
-	ja	LABEL(loop_ashr_11_use_sse4_2)
+	ja	LABEL(nibble_ashr_11_use_sse4_2_restart)
 
 	jmp	LABEL(nibble_ashr_use_sse4_2_exit)
 
@@ -1475,6 +1486,7 @@ LABEL(loop_ashr_12_use_sse4_2):
 	add	$16, %r10
 	jg	LABEL(nibble_ashr_12_use_sse4_2)
 
+LABEL(nibble_ashr_12_use_sse4_2_restart):
 	movdqa	(%rdi, %rdx), %xmm0
 	palignr $12, -16(%rdi, %rdx), %xmm0
 # if !defined USE_AS_STRCASECMP_L && !defined USE_AS_STRNCASECMP_L
@@ -1522,7 +1534,7 @@ LABEL(nibble_ashr_12_use_sse4_2):
 	jae	LABEL(nibble_ashr_use_sse4_2_exit)
 # endif
 	cmp	$3, %ecx
-	ja	LABEL(loop_ashr_12_use_sse4_2)
+	ja	LABEL(nibble_ashr_12_use_sse4_2_restart)
 
 	jmp	LABEL(nibble_ashr_use_sse4_2_exit)
 
@@ -1569,6 +1581,7 @@ LABEL(loop_ashr_13_use_sse4_2):
 	add	$16, %r10
 	jg	LABEL(nibble_ashr_13_use_sse4_2)
 
+LABEL(nibble_ashr_13_use_sse4_2_restart):
 	movdqa	(%rdi, %rdx), %xmm0
 	palignr $13, -16(%rdi, %rdx), %xmm0
 # if !defined USE_AS_STRCASECMP_L && !defined USE_AS_STRNCASECMP_L
@@ -1616,7 +1629,7 @@ LABEL(nibble_ashr_13_use_sse4_2):
 	jae	LABEL(nibble_ashr_use_sse4_2_exit)
 # endif
 	cmp	$2, %ecx
-	ja	LABEL(loop_ashr_13_use_sse4_2)
+	ja	LABEL(nibble_ashr_13_use_sse4_2_restart)
 
 	jmp	LABEL(nibble_ashr_use_sse4_2_exit)
 
@@ -1663,6 +1676,7 @@ LABEL(loop_ashr_14_use_sse4_2):
 	add	$16, %r10
 	jg	LABEL(nibble_ashr_14_use_sse4_2)
 
+LABEL(nibble_ashr_14_use_sse4_2_restart):
 	movdqa	(%rdi, %rdx), %xmm0
 	palignr $14, -16(%rdi, %rdx), %xmm0
 # if !defined USE_AS_STRCASECMP_L && !defined USE_AS_STRNCASECMP_L
@@ -1710,7 +1724,7 @@ LABEL(nibble_ashr_14_use_sse4_2):
 	jae	LABEL(nibble_ashr_use_sse4_2_exit)
 # endif
 	cmp	$1, %ecx
-	ja	LABEL(loop_ashr_14_use_sse4_2)
+	ja	LABEL(nibble_ashr_14_use_sse4_2_restart)
 
 	jmp	LABEL(nibble_ashr_use_sse4_2_exit)
 
@@ -1759,6 +1773,7 @@ LABEL(loop_ashr_15_use_sse4_2):
 	add	$16, %r10
 	jg	LABEL(nibble_ashr_15_use_sse4_2)
 
+LABEL(nibble_ashr_15_use_sse4_2_restart):
 	movdqa	(%rdi, %rdx), %xmm0
 	palignr $15, -16(%rdi, %rdx), %xmm0
 # if !defined USE_AS_STRCASECMP_L && !defined USE_AS_STRNCASECMP_L
@@ -1806,7 +1821,7 @@ LABEL(nibble_ashr_15_use_sse4_2):
 	jae	LABEL(nibble_ashr_use_sse4_2_exit)
 # endif
 	cmp	$0, %ecx
-	ja	LABEL(loop_ashr_15_use_sse4_2)
+	ja	LABEL(nibble_ashr_15_use_sse4_2_restart)
 
 LABEL(nibble_ashr_use_sse4_2_exit):
 # if !defined USE_AS_STRCASECMP_L && !defined USE_AS_STRNCASECMP_L

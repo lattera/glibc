@@ -200,6 +200,27 @@ do_test (size_t align1, size_t align2, size_t len, size_t n, int max_char,
 }
 
 static void
+do_page_test (size_t offset1, size_t offset2, char *s2)
+{
+  char *s1;
+  int exp_result;
+
+  if (offset1 >= page_size || offset2 >= page_size)
+    return;
+
+  s1 = (char *) (buf1 + offset1);
+  s2 += offset2;
+
+  exp_result= *s1;
+  
+  FOR_EACH_IMPL (impl, 0)
+    {
+      check_result (impl, s1, s2, page_size, -exp_result);
+      check_result (impl, s2, s1, page_size, exp_result);
+    }
+}
+
+static void
 do_random_tests (void)
 {
   size_t i, j, n, align1, align2, pos, len1, len2, size;
@@ -312,6 +333,25 @@ check1 (void)
     }
 }
 
+static void
+check2 (void)
+{
+  size_t i;
+  char *s1, *s2;
+
+  s1 = (char *) buf1;
+  for (i = 0; i < page_size - 1; i++)
+    s1[i] = 23;
+  s1[i] = 0;
+
+  s2 = strdup (s1);
+
+  for (i = 0; i < 64; ++i)
+    do_page_test (3990 + i, 2635, s2);
+
+  free (s2);
+}
+
 int
 test_main (void)
 {
@@ -320,6 +360,7 @@ test_main (void)
   test_init ();
 
   check1 ();
+  check2 ();
 
   printf ("%23s", "");
   FOR_EACH_IMPL (impl, 0)
