@@ -1,5 +1,11 @@
 2011-03-21  Ulrich Weigand  <ulrich.weigand@linaro.org>
 
+	* sysdeps/arm/linuxthreads: Remove directory.
+	* sysdeps/unix/sysv/linux/arm/linuxthreads: Likewise.
+	* sysdeps/unix/sysv/linux/arm/eabi/linuxthreads: Likewise.
+
+2011-03-21  Ulrich Weigand  <ulrich.weigand@linaro.org>
+
 	* sysdeps/unix/sysv/linux/arm/eabi/nptl/sysdep-cancel.h (PSEUDO): Add
 	missing "cmn r0, $4096" for _nocancel system call stubs.
 
