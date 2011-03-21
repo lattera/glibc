@@ -39,6 +39,7 @@
     .cfi_sections .debug_frame;						\
     cfi_startproc;							\
     DO_CALL (syscall_name, args);					\
+    cmn r0, $4096;							\
     PSEUDO_RET;								\
     cfi_endproc;							\
   .size __##syscall_name##_nocancel,.-__##syscall_name##_nocancel;	\

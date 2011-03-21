@@ -1,5 +1,10 @@
 2011-03-21  Ulrich Weigand  <ulrich.weigand@linaro.org>
 
+	* sysdeps/unix/sysv/linux/arm/eabi/nptl/sysdep-cancel.h (PSEUDO): Add
+	missing "cmn r0, $4096" for _nocancel system call stubs.
+
+2011-03-21  Ulrich Weigand  <ulrich.weigand@linaro.org>
+
 	* sysdeps/unix/sysv/arm/eabi/sysdep.h (DO_CALL): Do not save/restore
 	r7 into IP.
 	(DOARGS_0, UNDOARGS_0): Redefine to save/restore r7 to the stack.
