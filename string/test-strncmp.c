@@ -1,5 +1,5 @@
 /* Test and measure strncmp functions.
-   Copyright (C) 1999, 2002, 2003, 2010 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2002, 2003, 2010, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Jakub Jelinek <jakub@redhat.com>, 1999.
 
@@ -108,13 +108,13 @@ do_test_limit (size_t align1, size_t align2, size_t len, size_t n, int max_char,
       s2 = (char*)(buf2 + page_size);
       if (HP_TIMING_AVAIL)
 	printf ("Length %4zd/%4zd:", len, n);
-	
+
       FOR_EACH_IMPL (impl, 0)
 	do_one_test (impl, s1, s2, n, 0);
 
       if (HP_TIMING_AVAIL)
 	putchar ('\n');
-	
+
       return;
     }
 
@@ -124,13 +124,13 @@ do_test_limit (size_t align1, size_t align2, size_t len, size_t n, int max_char,
 
   s1 = (char*)(buf1 + page_size - n);
   s2 = (char*)(buf2 + page_size - n);
-  
+
   if (align1 < align_n)
     s1 -= (align_n - align1);
-    
+
   if (align2 < align_n)
     s2 -= (align_n - align2);
-    
+
   for (i = 0; i < n; i++)
     s1[i] = s2[i] = 1 + 23 * i % max_char;
 
@@ -212,7 +212,7 @@ do_page_test (size_t offset1, size_t offset2, char *s2)
   s2 += offset2;
 
   exp_result= *s1;
-  
+
   FOR_EACH_IMPL (impl, 0)
     {
       check_result (impl, s1, s2, page_size, -exp_result);
@@ -402,7 +402,7 @@ test_main (void)
       do_test (2 * i, i, 8 << i, 16 << i, 255, 0);
       do_test (2 * i, i, 8 << i, 16 << i, 255, 1);
     }
-    
+
   do_test_limit (0, 0, 0, 0, 127, 0);
   do_test_limit (4, 0, 21, 20, 127, 0);
   do_test_limit (0, 4, 21, 20, 127, 0);
