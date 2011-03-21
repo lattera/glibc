@@ -1,3 +1,30 @@
+2011-03-21  Ulrich Weigand  <ulrich.weigand@linaro.org>
+
+	* sysdeps/unix/sysv/arm/eabi/sysdep.h (DO_CALL): Do not save/restore
+	r7 into IP.
+	(DOARGS_0, UNDOARGS_0): Redefine to save/restore r7 to the stack.
+	Create appropriate ARM unwind record.
+	(DOARGS_1, UNDOARGS_1): Likewise.
+	(DOARGS_2, UNDOARGS_2): Likewise.
+	(DOARGS_3, UNDOARGS_3): Likewise.
+	(DOARGS_4, UNDOARGS_4): Likewise.
+	(DOARGS_5, UNDOARGS_5): Likewise.
+	(DOARGS_6, UNDOARGS_6): Likewise.
+	(DOARGS_7, UNDOARGS_7): Likewise.
+	* sysdeps/unix/sysv/arm/eabi/nptl/sysdep-cancel.h (PSEUDO): Adapt to
+	DO_CALL/DOARGS_xxx/UNDOARGS_xxx changes.
+	(RESTART_UNWIND): Likewise.
+	(DOCARGS_0, RESTORE_LR_0): Likewise.
+	(DOCARGS_1): Likewise.
+	(DOCARGS_2): Likewise.
+	(DOCARGS_3): Likewise.
+	(DOCARGS_4): Likewise.
+	(DOCARGS_5, UNDOCARGS_5, RESTORE_LR_5): Likewise.
+	(DOCARGS_6, UNDOCARGS_6): Likewise.
+	* sysdeps/unix/sysv/linux/arm/vfork.S (__vfork): Do no use DO_CALL to
+	call vfork.  In the __ARM_EABI__ case, save r7 both to IP (to restore
+	from) and the stack (to create an ARM unwind record).
+
 2011-03-21  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/arm/eabi/__longjmp.S, sysdeps/arm/eabi/bits/fenv.h,

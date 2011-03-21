@@ -106,12 +106,95 @@
 #undef	DO_CALL
 #define DO_CALL(syscall_name, args)		\
     DOARGS_##args;				\
-    mov ip, r7;					\
-    cfi_register (r7, ip);			\
     ldr r7, =SYS_ify (syscall_name);		\
     swi 0x0;					\
-    mov r7, ip;					\
-    cfi_restore (r7);				\
     UNDOARGS_##args
+
+#undef  DOARGS_0
+#define DOARGS_0 \
+  .fnstart; \
+  str r7, [sp, #-4]!; \
+  cfi_adjust_cfa_offset (4); \
+  cfi_rel_offset (r7, 0); \
+  .save { r7 }
+#undef  DOARGS_1
+#define DOARGS_1 DOARGS_0
+#undef  DOARGS_2
+#define DOARGS_2 DOARGS_0
+#undef  DOARGS_3
+#define DOARGS_3 DOARGS_0
+#undef  DOARGS_4
+#define DOARGS_4 DOARGS_0
+#undef  DOARGS_5
+#define DOARGS_5 \
+  .fnstart; \
+  stmfd sp!, {r4, r7}; \
+  cfi_adjust_cfa_offset (8); \
+  cfi_rel_offset (r4, 0); \
+  cfi_rel_offset (r7, 4); \
+  .save { r4, r7 }; \
+  ldr r4, [sp, #8]
+#undef  DOARGS_6
+#define DOARGS_6 \
+  .fnstart; \
+  mov ip, sp; \
+  stmfd sp!, {r4, r5, r7}; \
+  cfi_adjust_cfa_offset (12); \
+  cfi_rel_offset (r4, 0); \
+  cfi_rel_offset (r5, 4); \
+  cfi_rel_offset (r7, 8); \
+  .save { r4, r5, r7 }; \
+  ldmia ip, {r4, r5}
+#undef  DOARGS_7
+#define DOARGS_7 \
+  .fnstart; \
+  mov ip, sp; \
+  stmfd sp!, {r4, r5, r6, r7}; \
+  cfi_adjust_cfa_offset (16); \
+  cfi_rel_offset (r4, 0); \
+  cfi_rel_offset (r5, 4); \
+  cfi_rel_offset (r6, 8); \
+  cfi_rel_offset (r7, 12); \
+  .save { r4, r5, r6, r7 }; \
+  ldmia ip, {r4, r5, r6}
+
+#undef  UNDOARGS_0
+#define UNDOARGS_0 \
+  ldr r7, [sp], #4; \
+  cfi_adjust_cfa_offset (-4); \
+  cfi_restore (r7); \
+  .fnend
+#undef  UNDOARGS_1
+#define UNDOARGS_1 UNDOARGS_0
+#undef  UNDOARGS_2
+#define UNDOARGS_2 UNDOARGS_0
+#undef  UNDOARGS_3
+#define UNDOARGS_3 UNDOARGS_0
+#undef  UNDOARGS_4
+#define UNDOARGS_4 UNDOARGS_0
+#undef  UNDOARGS_5
+#define UNDOARGS_5 \
+  ldmfd sp!, {r4, r7}; \
+  cfi_adjust_cfa_offset (-8); \
+  cfi_restore (r4); \
+  cfi_restore (r7); \
+  .fnend
+#undef  UNDOARGS_6
+#define UNDOARGS_6 \
+  ldmfd sp!, {r4, r5, r7}; \
+  cfi_adjust_cfa_offset (-12); \
+  cfi_restore (r4); \
+  cfi_restore (r5); \
+  cfi_restore (r7); \
+  .fnend
+#undef  UNDOARGS_7
+#define UNDOARGS_7 \
+  ldmfd sp!, {r4, r5, r6, r7}; \
+  cfi_adjust_cfa_offset (-16); \
+  cfi_restore (r4); \
+  cfi_restore (r5); \
+  cfi_restore (r6); \
+  cfi_restore (r7); \
+  .fnend
 
 #endif /* _LINUX_ARM_EABI_SYSDEP_H */

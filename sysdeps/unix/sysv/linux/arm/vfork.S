@@ -33,7 +33,28 @@ ENTRY (__vfork)
 #ifdef SAVE_PID
 	SAVE_PID
 #endif
-	DO_CALL (vfork, 0)
+#ifdef __ARM_EABI__
+	/* The DO_CALL macro saves r7 on the stack, to enable generation
+	   of ARM unwind info.  Since the stack is initially shared between
+	   parent and child of vfork, that saved value could be corrupted.
+	   To avoid this problem, we save r7 into ip as well, and restore
+	   from there.  */
+	mov	ip, r7
+	cfi_register (r7, ip)
+	.fnstart
+	str r7, [sp, #-4]!
+	cfi_adjust_cfa_offset (4)
+	.save { r7 }
+	ldr	r7, =SYS_ify (vfork)
+	swi	0x0
+	.fnend
+	add	sp, sp, #4
+	cfi_adjust_cfa_offset (-4)
+	mov	r7, ip
+	cfi_restore (r7);
+#else
+	swi	SYS_ify(vfork)
+#endif
 #ifdef RESTORE_PID
 	RESTORE_PID
 #endif
