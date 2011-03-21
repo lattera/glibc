@@ -1,3 +1,17 @@
+2011-03-21  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/arm/eabi/__longjmp.S, sysdeps/arm/eabi/bits/fenv.h,
+	sysdeps/arm/eabi/fclrexcpt.c, sysdeps/arm/eabi/fedisblxcpt.c,
+	sysdeps/arm/eabi/feenablxcpt.c, sysdeps/arm/eabi/fegetenv.c,
+	sysdeps/arm/eabi/fegetexcept.c, sysdeps/arm/eabi/fegetround.c,
+	sysdeps/arm/eabi/feholdexcpt.c, sysdeps/arm/eabi/fesetenv.c,
+	sysdeps/arm/eabi/fesetround.c, sysdeps/arm/eabi/fpu_control.h,
+	sysdeps/arm/eabi/fraiseexcpt.c, sysdeps/arm/eabi/fsetexcptflg.c,
+	sysdeps/arm/eabi/ftestexcept.c, sysdeps/arm/eabi/setjmp.S,
+	sysdeps/unix/sysv/linux/arm/____longjmp_chk.S,
+	sysdeps/unix/sysv/linux/arm/eabi/____longjmp_chk.S: Correct
+	license reference in last paragraph of license notice.
+
 2011-03-05  Nathan Sidwell  <nathan@codesourcery.com>
 	    Glauber de Oliveira Costa  <glommer@gmail.com>
 
