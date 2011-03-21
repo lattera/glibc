@@ -1,5 +1,8 @@
 2011-08-22  Andreas Schwab  <schwab@redhat.com>
 
+	* elf/dl-deps.c (_dl_map_object_deps): Move check for missing
+	dependencies back to end of function.
+
 	* dlfcn/Makefile (LDLIBS-bug-atexit3-lib.so): Readd
 	$(elfobjdir)/ld.so.
 
