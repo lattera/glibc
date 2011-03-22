@@ -231,6 +231,8 @@ intel_check_word (int name, unsigned int value, bool *has_level_2,
 		  assert (offset == 2);
 		  return (ebx & 0xfff) + 1;
 		}
+
+	      ++round;
 	    }
 	  /* There is no other cache information anywhere else.  */
 	  break;
