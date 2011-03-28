@@ -1,3 +1,8 @@
+2011-03-28  Aurelien Jarno  <aurelien@aurel32.net>
+
+	* sysdeps/unix/sysv/linux/alpha/____longjmp_chk.S(____longjmp_chk):
+	Fix wrong register in stack pointer comparison.
+
 2011-03-01  Aurelien Jarno  <aurelien@aurel32.net>
 
 	* sysdeps/alpha/fpu/feupdateenv.c (feupdateenv): Add libm_hidden_def.

@@ -1,4 +1,5 @@
-/* Copyright (C) 1992, 1994, 1997, 2006, 2010 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1994, 1997, 2006, 2010, 2011
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -58,11 +59,17 @@ ____longjmp_chk:
 	PTR_DEMANGLE2(s3, t1)
 	PTR_DEMANGLE2(fp, t1)
 #endif
-	cmpule	t0, sp, t1
-	bne	t1, .Lfail
+	/* ??? While this is a proper test for detecting a longjmp to an
+	   invalid frame within any given stack, the main thread stack is
+	   located *below* almost everything in the address space.  Which
+	   means that the test at Lfail vs the signal stack will almost
+	   certainly never pass.  We ought bounds check top and bottom of
+	   the current thread's stack.  */
+	cmpule	s3, sp, t1
+	bne	t1, $Lfail
 
 	.align	4
-.Lok:
+$Lok:
 	mov	s0, a0
 	mov	s1, v0
 	mov	s3, t0
@@ -103,7 +110,7 @@ ____longjmp_chk:
 	ret
 
 	.align	4
-.Lfail:
+$Lfail:
 	cfi_restore_state
 	lda	v0, __NR_sigaltstack
 	lda	a0, 0
@@ -118,13 +125,13 @@ ____longjmp_chk:
 	cfi_adjust_cfa_offset(-32)
 
 	/* Without working sigaltstack we cannot perform the test.  */
-	bne	a3, .Lok
+	bne	a3, $Lok
 
 	addq	t0, t2, t0	/* t0 = ss_sp + ss_size */
 	subq	t0, s3, t0	/* t0 = (ss_sp + ss_size) - new_sp */
 	cmpule	t2, t0, t0	/* t0 = (t0 >= ss_size) */
 	and	t0, t1, t0	/* t0 = (t0 >= ss_size) & (ss_flags & SS_ONSTACK) */
-	bne	t0, .Lok
+	bne	t0, $Lok
 
 	ldah	a0, longjmp_msg(gp)	!gprelhigh
 	lda	a0, longjmp_msg(a0)	!gprellow
