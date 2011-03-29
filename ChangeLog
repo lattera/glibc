@@ -1,3 +1,8 @@
+2011-04-05  Andreas Schwab  <schwab@redhat.com>
+
+	* string/test-strncmp.c (do_page_test): Limit length to size of
+	object.
+
 2011-04-03  Ulrich Drepper  <drepper@gmail.com>
 
 	* sysdeps/x86_64/cacheinfo.c (intel_02_known): Fix typo in table.
