@@ -4,6 +4,7 @@ adjtimex	adjtime	adjtimex	i:p	__adjtimex	adjtimex ntp_adjtime __adjtimex_interna
 bdflush		EXTRA	bdflush		i:ii	bdflush
 capget		EXTRA	capget		i:pp	capget
 capset		EXTRA	capset		i:pp	capset
+clock_adjtime	EXTRA	clock_adjtime	i:ip	clock_adjtime
 creat		-	creat		Ci:si	__libc_creat creat
 create_module	EXTRA	create_module	3	create_module
 delete_module	EXTRA	delete_module	3	delete_module

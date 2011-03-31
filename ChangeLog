@@ -1,3 +1,11 @@
+2011-03-30  Ulrich Drepper  <drepper@gmail.com>
+
+	* sysdeps/unix/sysv/linux/syscalls.list: Add clock_adjtime.
+	* sysdeps/unix/sysv/linux/bits/time.h: New file.
+	* sysdeps/unix/sysv/linux/sys/timex.h: Move struct timex definition
+	to...
+	* sysdeps/unix/sysv/linux/bits/timex.h: ...here.  New file.
+
 2011-03-22  Ulrich Drepper  <drepper@gmail.com>
 
 	* sysdeps/unix/sysv/linux/i386/sysconf.c (intel_check_word): Increment
