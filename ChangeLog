@@ -5,6 +5,9 @@
 	* sysdeps/unix/sysv/linux/sys/timex.h: Move struct timex definition
 	to...
 	* sysdeps/unix/sysv/linux/bits/timex.h: ...here.  New file.
+	* Versions.def: Add GLIBC_2.14.
+	* sysdeps/unix/sysv/linux/Versions [GLIBC_2.14] (clock_adjtime):
+	Export.
 
 2011-03-22  Ulrich Drepper  <drepper@gmail.com>
 

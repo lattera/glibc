@@ -154,6 +154,9 @@ libc {
 
     fanotify_init; fanotify_mark;
   }
+  GLIBC_2.14 {
+    clock_adjtime;
+  }
   GLIBC_PRIVATE {
     # functions used in other libraries
     __syscall_rt_sigqueueinfo;
