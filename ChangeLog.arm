@@ -1,5 +1,9 @@
 2011-04-01  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/unix/sysv/linux/arm/bits/fcntl.h (O_PATH): Define.
+
+2011-04-01  Joseph Myers  <joseph@codesourcery.com>
+
 	* sysdeps/unix/sysv/linux/arm/bits/fcntl.h: Define struct
 	file_handle and MAX_HANDLE_SZ.  Declare name_to_handle_at and
 	open_by_handle.  Augment a few comments.
