@@ -1,5 +1,16 @@
 2011-04-01  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/unix/sysv/linux/mips/mips32/sync_file_range.c: Make
+	cancelable.
+	* sysdeps/unix/sysv/linux/mips/mips64/n32/fallocate.c: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n32/fallocate64.c: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n32/syscalls.list: Mark
+	sync_file_range as cancellation point.
+	* sysdeps/unix/sysv/linux/mips/mips64/n64/syscalls.list: Mark
+	sync_file_range as cancellation point.
+
+2011-04-01  Joseph Myers  <joseph@codesourcery.com>
+
 	* sysdeps/unix/sysv/linux/mips/mips64/n64/syscalls.list: Add
 	sync_file_range.
 
