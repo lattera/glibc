@@ -1,3 +1,8 @@
+2011-04-01  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/arm/bits/fcntl.h: Rename open_by_handle
+	to open_by_handle_at.
+
 2011-04-01  Ryosei Takagi  <ryosei@sm.sony.co.jp>
 
 	* sysdeps/unix/sysv/linux/arm/eabi/____longjmp_chk.S:
