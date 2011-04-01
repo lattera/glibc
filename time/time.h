@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-2003,2006,2009 Free Software Foundation, Inc.
+/* Copyright (C) 1991-2003,2006,2009,2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -385,7 +385,7 @@ extern int timer_getoverrun (timer_t __timerid) __THROW;
      6  memory allication failed (not enough memory available),
      7  there is no line in the template that matches the input,
      8  invalid input specification Example: February 31 or a time is
-        specified that can not be represented in a time_t (representing
+	specified that can not be represented in a time_t (representing
 	the time in seconds since 00:00:00 UTC, January 1, 1970) */
 extern int getdate_err;
 
@@ -394,7 +394,7 @@ extern int getdate_err;
    the environment variable DATEMSK are used.  In case of an error
    `getdate_err' is set.
 
-   This function is a possible cancellation points and therefore not
+   This function is a possible cancellation point and therefore not
    marked with __THROW.  */
 extern struct tm *getdate (__const char *__string);
 # endif

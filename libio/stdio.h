@@ -1,5 +1,5 @@
 /* Define ISO C stdio on top of C++ iostreams.
-   Copyright (C) 1991, 1994-2008, 2009, 2010 Free Software Foundation, Inc.
+   Copyright (C) 1991, 1994-2010, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -186,7 +186,7 @@ extern int renameat (int __oldfd, __const char *__old, int __newfd,
 __BEGIN_NAMESPACE_STD
 /* Create a temporary file and open it read/write.
 
-   This function is a possible cancellation points and therefore not
+   This function is a possible cancellation point and therefore not
    marked with __THROW.  */
 #ifndef __USE_FILE_OFFSET64
 extern FILE *tmpfile (void) __wur;
@@ -677,33 +677,33 @@ extern _IO_ssize_t getline (char **__restrict __lineptr,
 __BEGIN_NAMESPACE_STD
 /* Write a string to STREAM.
 
-   This function is a possible cancellation points and therefore not
+   This function is a possible cancellation point and therefore not
    marked with __THROW.  */
 extern int fputs (__const char *__restrict __s, FILE *__restrict __stream);
 
 /* Write a string, followed by a newline, to stdout.
 
-   This function is a possible cancellation points and therefore not
+   This function is a possible cancellation point and therefore not
    marked with __THROW.  */
 extern int puts (__const char *__s);
 
 
 /* Push a character back onto the input buffer of STREAM.
 
-   This function is a possible cancellation points and therefore not
+   This function is a possible cancellation point and therefore not
    marked with __THROW.  */
 extern int ungetc (int __c, FILE *__stream);
 
 
 /* Read chunks of generic data from STREAM.
 
-   This function is a possible cancellation points and therefore not
+   This function is a possible cancellation point and therefore not
    marked with __THROW.  */
 extern size_t fread (void *__restrict __ptr, size_t __size,
 		     size_t __n, FILE *__restrict __stream) __wur;
 /* Write chunks of generic data to STREAM.
 
-   This function is a possible cancellation points and therefore not
+   This function is a possible cancellation point and therefore not
    marked with __THROW.  */
 extern size_t fwrite (__const void *__restrict __ptr, size_t __size,
 		      size_t __n, FILE *__restrict __s) __wur;

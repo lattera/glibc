@@ -1,5 +1,14 @@
 2011-04-01  Ulrich Drepper  <drepper@gmail.com>
 
+	* iconv/iconv.h: Fix typo in comment.
+	* io/fcntl.h: Likewise.
+	* libio/stdio.h: Likewise.
+	* posix/spawn.h: Likewise.
+	* posix/unistd.h: Likewise.
+	* stdlib/stdlib.h: Likewise.
+	* time/time.h: Likewise.
+	* wcsmbs/wchar.h: Likewise.
+
 	* sysdeps/unix/sysv/linux/Versions [GLIBC_2.14] (name_to_handle_at,
 	open_by_handle): Add.
 	* sysdeps/unix/sysv/linux/i386/bits/fcntl.h: Define struct file_handle

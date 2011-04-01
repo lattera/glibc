@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-2009, 2010 Free Software Foundation, Inc.
+/* Copyright (C) 1991-2009, 2010, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -863,7 +863,7 @@ extern int tcsetpgrp (int __fd, __pid_t __pgrp_id) __THROW;
 
 /* Return the login name of the user.
 
-   This function is a possible cancellation points and therefore not
+   This function is a possible cancellation point and therefore not
    marked with __THROW.  */
 extern char *getlogin (void);
 #if defined __USE_REENTRANT || defined __USE_POSIX199506
@@ -871,7 +871,7 @@ extern char *getlogin (void);
    If it cannot be determined or some other error occurred, return the error
    code.  Otherwise return 0.
 
-   This function is a possible cancellation points and therefore not
+   This function is a possible cancellation point and therefore not
    marked with __THROW.  */
 extern int getlogin_r (char *__name, size_t __name_len) __nonnull ((1));
 #endif

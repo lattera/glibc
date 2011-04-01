@@ -1,5 +1,5 @@
 /* Definitions for POSIX spawn interface.
-   Copyright (C) 2000, 2003, 2004, 2009 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2003, 2004, 2009, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -67,7 +67,7 @@ __BEGIN_DECLS
 /* Spawn a new process executing PATH with the attributes describes in *ATTRP.
    Before running the process perform the actions described in FILE-ACTIONS.
 
-   This function is a possible cancellation points and therefore not
+   This function is a possible cancellation point and therefore not
    marked with __THROW. */
 extern int posix_spawn (pid_t *__restrict __pid,
 			__const char *__restrict __path,
@@ -79,7 +79,7 @@ extern int posix_spawn (pid_t *__restrict __pid,
 
 /* Similar to `posix_spawn' but search for FILE in the PATH.
 
-   This function is a possible cancellation points and therefore not
+   This function is a possible cancellation point and therefore not
    marked with __THROW.  */
 extern int posix_spawnp (pid_t *__pid, __const char *__file,
 			 __const posix_spawn_file_actions_t *__file_actions,

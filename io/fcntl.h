@@ -242,7 +242,7 @@ extern int posix_fadvise64 (int __fd, __off64_t __offset, __off64_t __len,
 
 /* Reserve storage for the data of the file associated with FD.
 
-   This function is a possible cancellation points and therefore not
+   This function is a possible cancellation point and therefore not
    marked with __THROW.  */
 # ifndef __USE_FILE_OFFSET64
 extern int posix_fallocate (int __fd, __off_t __offset, __off_t __len);

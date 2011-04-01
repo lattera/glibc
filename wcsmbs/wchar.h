@@ -1,4 +1,4 @@
-/* Copyright (C) 1995-2008, 2009, 2010 Free Software Foundation, Inc.
+/* Copyright (C) 1995-2008, 2009, 2010, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -758,7 +758,7 @@ extern wint_t putwc (wchar_t __wc, __FILE *__stream);
 
 /* Write a character to stdout.
 
-   This function is a possible cancellation points and therefore not
+   This function is a possible cancellation point and therefore not
    marked with __THROW.  */
 extern wint_t putwchar (wchar_t __wc);
 
@@ -766,14 +766,14 @@ extern wint_t putwchar (wchar_t __wc);
 /* Get a newline-terminated wide character string of finite length
    from STREAM.
 
-   This function is a possible cancellation points and therefore not
+   This function is a possible cancellation point and therefore not
    marked with __THROW.  */
 extern wchar_t *fgetws (wchar_t *__restrict __ws, int __n,
 			__FILE *__restrict __stream);
 
 /* Write a string to STREAM.
 
-   This function is a possible cancellation points and therefore not
+   This function is a possible cancellation point and therefore not
    marked with __THROW.  */
 extern int fputws (__const wchar_t *__restrict __ws,
 		   __FILE *__restrict __stream);
@@ -781,7 +781,7 @@ extern int fputws (__const wchar_t *__restrict __ws,
 
 /* Push a character back onto the input buffer of STREAM.
 
-   This function is a possible cancellation points and therefore not
+   This function is a possible cancellation point and therefore not
    marked with __THROW.  */
 extern wint_t ungetwc (wint_t __wc, __FILE *__stream);
 __END_NAMESPACE_STD

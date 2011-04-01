@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-2007, 2009, 2010 Free Software Foundation, Inc.
+/* Copyright (C) 1991-2007, 2009, 2010, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -668,7 +668,7 @@ extern char *mkdtemp (char *__template) __THROW __nonnull ((1)) __wur;
    mkstemp.  But allow the caller to pass additional flags which are
    used in the open call to create the file..
 
-   This function is a possible cancellation points and therefore not
+   This function is a possible cancellation point and therefore not
    marked with __THROW.  */
 # ifndef __USE_FILE_OFFSET64
 extern int mkostemp (char *__template, int __flags) __nonnull ((1)) __wur;
