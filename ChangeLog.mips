@@ -1,5 +1,11 @@
 2011-04-01  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/unix/sysv/linux/mips/bits/fcntl.h: Define struct
+	file_handle and MAX_HANDLE_SZ.  Declare name_to_handle_at and
+	open_by_handle.  Augment a few comments.
+
+2011-04-01  Joseph Myers  <joseph@codesourcery.com>
+
 	* sysdeps/unix/sysv/linux/mips/mips32/sync_file_range.c: Make
 	cancelable.
 	* sysdeps/unix/sysv/linux/mips/mips64/n32/fallocate.c: Likewise.
