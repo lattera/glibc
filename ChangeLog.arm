@@ -1,3 +1,8 @@
+2011-04-01  Ryosei Takagi  <ryosei@sm.sony.co.jp>
+
+	* sysdeps/unix/sysv/linux/arm/eabi/____longjmp_chk.S:
+	Save and restore r7, and also adjust sp.
+
 2011-04-01  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/arm/bits/fcntl.h (O_PATH): Define.

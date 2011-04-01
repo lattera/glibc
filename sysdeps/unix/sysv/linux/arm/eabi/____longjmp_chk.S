@@ -52,13 +52,15 @@ longjmp_msg:
 	cfi_remember_state;			\
 	cmp	sp, reg;			\
 	bls	.Lok;				\
+	str	r7, [sp, #-4]!;			\
+	cfi_adjust_cfa_offset (4);		\
+	cfi_rel_offset (r7, 0);			\
 	mov	r5, r0;				\
 	cfi_undefined (r5);			\
 	mov	r7, #SYS_ify(sigaltstack);	\
-	cfi_undefined (r7);			\
 	mov	r0, #0;				\
-	sub	sp, sp, #16; /* >= sizeof (stack_t) */ \
-	cfi_adjust_cfa_offset (16);		\
+	sub	sp, sp, #12; /* == sizeof (stack_t) */ \
+	cfi_adjust_cfa_offset (12);		\
 	cfi_remember_state;			\
 	mov	r1, sp;				\
 	swi	#0;				\
@@ -74,6 +76,11 @@ longjmp_msg:
 	cmp	r2, r3;				\
 	bhi	.Lok2;				\
 .Lfail:						\
+	add	sp, sp, #12;			\
+	cfi_adjust_cfa_offset (-12);		\
+	ldr	r7, [sp], #4;			\
+	cfi_adjust_cfa_offset (-4);		\
+	cfi_restore (r7);			\
 	CALL_FAIL				\
 	cfi_restore_state;			\
 .Lok2:						\
