@@ -1,5 +1,18 @@
 2011-04-01  Ulrich Drepper  <drepper@gmail.com>
 
+	* sysdeps/unix/sysv/linux/Versions [GLIBC_2.14] (name_to_handle_at,
+	open_by_handle): Add.
+	* sysdeps/unix/sysv/linux/i386/bits/fcntl.h: Define struct file_handle
+	and MAX_HANDLE_SZ.  Declare name_to_handle_at and open_by_handle.
+	Augment a few comments.
+	* sysdeps/unix/sysv/linux/ia64/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/sh/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/syscalls.list: Add name_to_handle_at and
+	open_by_handle.
+
 	* io/fcntl.h (AT_EMPTY_PATH): Define.
 
 2011-03-30  Ulrich Drepper  <drepper@gmail.com>
