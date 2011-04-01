@@ -1,3 +1,8 @@
+2011-04-01  Ulrich Drepper  <drepper@gmail.com>
+
+	[BZ #12631]
+	* wcsmbs/wchar.h: Make wcpcpy and wcpncpy visible for __USE_XOPEN2K8.
+
 2011-03-30  Andreas Schwab  <schwab@redhat.com>
 
 	* misc/syncfs.c: New file.

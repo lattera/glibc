@@ -554,8 +554,10 @@ extern float wcstof_l (__const wchar_t *__restrict __nptr,
 extern long double wcstold_l (__const wchar_t *__restrict __nptr,
 			      wchar_t **__restrict __endptr,
 			      __locale_t __loc) __THROW;
+#endif	/* use GNU */
 
 
+#ifdef __USE_XOPEN2K8
 /* Copy SRC to DEST, returning the address of the terminating L'\0' in
    DEST.  */
 extern wchar_t *wcpcpy (wchar_t *__restrict __dest,
@@ -566,12 +568,10 @@ extern wchar_t *wcpcpy (wchar_t *__restrict __dest,
 extern wchar_t *wcpncpy (wchar_t *__restrict __dest,
 			 __const wchar_t *__restrict __src, size_t __n)
      __THROW;
-#endif	/* use GNU */
 
 
 /* Wide character I/O functions.  */
 
-#ifdef	__USE_XOPEN2K8
 /* Like OPEN_MEMSTREAM, but the stream is wide oriented and produces
    a wide character string.  */
 extern __FILE *open_wmemstream (wchar_t **__bufloc, size_t *__sizeloc) __THROW;
