@@ -338,8 +338,8 @@ extern int name_to_handle_at (int __dfd, const char *__name,
 
    This function is a possible cancellation point and therefore not
    marked with __THROW.  */
-extern int open_by_handle (int __mountdirfd, struct file_handle *__handle,
-			   int __flags);
+extern int open_by_handle_at (int __mountdirfd, struct file_handle *__handle,
+			      int __flags);
 
 #endif
 

@@ -7,7 +7,7 @@ using `glibc' in the "product" field.
 
 Version 2.14
 
-* New Linux interfaces: clock_adjtime, name_to_handle_at, open_by_handle
+* New Linux interfaces: clock_adjtime, name_to_handle_at, open_by_handle_at
 
 * The following bugs are resolved with this release:
 
