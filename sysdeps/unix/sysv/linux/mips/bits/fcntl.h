@@ -54,6 +54,7 @@
 #ifdef __USE_GNU
 # define O_DIRECT	0x8000	/* Direct disk access hint.  */
 # define O_NOATIME	0x40000	/* Do not set atime.  */
+# define O_PATH	      010000000 /* Resolve pathname but do not open file.  */
 #endif
 
 /* For now Linux has no synchronisity options for data and read operations.
