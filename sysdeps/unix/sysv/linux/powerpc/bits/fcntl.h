@@ -1,5 +1,5 @@
 /* O_*, F_*, FD_* bit values for Linux/PowerPC.
-   Copyright (C) 1995-1998, 2000, 2003, 2004, 2006, 2007, 2009, 2010
+   Copyright (C) 1995-1998, 2000, 2003, 2004, 2006, 2007, 2009, 2010, 2011
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -53,6 +53,7 @@
 #ifdef __USE_GNU
 # define O_DIRECT	0400000	/* Direct disk access.	*/
 # define O_NOATIME	01000000 /* Do not set atime.  */
+# define O_PATH		010000000 /* Resolve pathname but do not open file.  */
 #endif
 
 #ifdef __USE_LARGEFILE64

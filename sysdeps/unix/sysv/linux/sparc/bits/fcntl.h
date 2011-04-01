@@ -52,6 +52,7 @@
 #ifdef __USE_GNU
 # define O_DIRECT	0x100000 /* direct disk access hint */
 # define O_NOATIME	0x200000 /* Do not set atime.  */
+# define O_PATH		0x1000000 /* Resolve pathname but do not open file.  */
 #endif
 
 #ifdef __USE_LARGEFILE64

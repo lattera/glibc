@@ -1,5 +1,13 @@
 2011-04-01  Ulrich Drepper  <drepper@gmail.com>
 
+	* sysdeps/unix/sysv/linux/i386/bits/fcntl.h: Define O_PATH.
+	* sysdeps/unix/sysv/linux/ia64/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/sh/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/bits/fcntl.h: Likewise.
+
 	* io/Makefile: Compile fallocate.c, fallocate64.c, and
 	sync_file_range.c with -fexceptions.
 	* sysdeps/unix/sysv/linux/fallocate.c: Make cancelable.
