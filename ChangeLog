@@ -1,3 +1,7 @@
+2011-04-01  Ulrich Drepper  <drepper@gmail.com>
+
+	* io/fcntl.h (AT_EMPTY_PATH): Define.
+
 2011-03-30  Ulrich Drepper  <drepper@gmail.com>
 
 	* sysdeps/unix/sysv/linux/syscalls.list: Add clock_adjtime.
