@@ -1,5 +1,5 @@
 /* Selective file content synch'ing.
-   Copyright (C) 2006, 2007 Free Software Foundation, Inc.
+   Copyright (C) 2006, 2007, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -23,7 +23,7 @@
 
 
 	.text
-ENTRY (sync_file_range)
+ENTRY (__call_sync_file_range)
 #ifdef __NR_sync_file_range
 	pushl	%ebx
 	cfi_adjust_cfa_offset (4)
@@ -69,4 +69,4 @@ ENTRY (sync_file_range)
 #endif
 L(pseudo_end):
 	ret
-PSEUDO_END (sync_file_range)
+PSEUDO_END (__call_sync_file_range)

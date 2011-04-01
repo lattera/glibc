@@ -6,7 +6,10 @@ endif
 ifeq ($(subdir),elf)
 sysdep-others += lddlibc4
 install-bin += lddlibc4
+endif
 
+ifeq ($(subdir),io)
+sysdep_routines += call_sync_file_range
 endif
 
 ifeq ($(subdir),resource)

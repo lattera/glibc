@@ -9,7 +9,14 @@
 	* sysdeps/unix/sysv/linux/wordsize-64/fallocate.c: Likewise.
 	* sysdeps/unix/sysv/linux/sync_file_range.c: Likewise.
 	* sysdeps/unix/sysv/linux/wordsize-64/syscalls.list: Mark
-	sync_file_range as cancellation point.
+	sync_file_range as cancellation point
+	* sysdeps/unix/sysv/linux/i386/sync_file_range.c: New file.  This is
+	now a wrapper around __call_sync_file_range with cancellation handling.
+	* sysdeps/unix/sysv/linux/i386/sync_file_range.S: Renamed to ...
+	* sysdeps/unix/sysv/linux/i386/call_sync_file_range.S: ...this.  Change
+	function name to __call_sync_file_range.
+	* sysdeps/unix/sysv/linux/i386/Makefile [subdir=io] (sysdep_routines):
+	Add call_sync_file_range.
 
 2011-04-01  Andreas Schwab  <schwab@redhat.com>
 
