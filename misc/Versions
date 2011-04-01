@@ -143,4 +143,7 @@ libc {
   GLIBC_2.11 {
     mkstemps; mkstemps64; mkostemps; mkostemps64;
   }
+  GLIBC_2.14 {
+    syncfs;
+  }
 }

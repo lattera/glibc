@@ -1,3 +1,10 @@
+2011-03-30  Andreas Schwab  <schwab@redhat.com>
+
+	* misc/syncfs.c: New file.
+	* misc/Makefile (routines): Add syncfs.
+	* posix/unistd.h: Declare syncfs.
+	* sysdeps/unix/syscalls.list: Add syncfs.
+
 2011-04-01  Andreas Schwab  <schwab@redhat.com>
 
 	* sysdeps/unix/sysv/linux/Versions: Rename open_by_handle to

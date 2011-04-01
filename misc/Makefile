@@ -1,4 +1,4 @@
-# Copyright (C) 1991-2006, 2007, 2009 Free Software Foundation, Inc.
+# Copyright (C) 1991-2006, 2007, 2009, 2011 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -41,7 +41,7 @@ routines := brk sbrk sstk ioctl \
 	    getdtsz \
 	    gethostname sethostname getdomain setdomain \
 	    select pselect \
-	    acct chroot fsync sync fdatasync reboot \
+	    acct chroot fsync sync fdatasync syncfs reboot \
 	    gethostid sethostid \
 	    revoke vhangup \
 	    swapon swapoff mktemp mkstemp mkstemp64 mkdtemp \
