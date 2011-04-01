@@ -1,3 +1,8 @@
+2011-04-01  Andreas Schwab  <schwab@redhat.com>
+
+	* sysdeps/unix/sysv/linux/Makefile (sysdep_headers): Add
+	bits/timex.h
+
 2011-04-01  Ulrich Drepper  <drepper@gmail.com>
 
 	* iconv/iconv.h: Fix typo in comment.
