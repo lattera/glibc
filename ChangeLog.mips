@@ -1,5 +1,10 @@
 2011-04-01  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/unix/sysv/linux/mips/bits/fcntl.h: Rename open_by_handle
+	to open_by_handle_at.
+
+2011-04-01  Joseph Myers  <joseph@codesourcery.com>
+
 	* sysdeps/unix/sysv/linux/mips/bits/fcntl.h (O_PATH): Define.
 
 2011-04-01  Joseph Myers  <joseph@codesourcery.com>
