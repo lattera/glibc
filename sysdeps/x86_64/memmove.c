@@ -1,6 +1,4 @@
-/* Multiple versions of memmove.
-   Copyright (C) 2010, 2011
-   Free Software Foundation, Inc.
+/* Copyright (C) 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -18,32 +16,10 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <string.h>
-
-#ifndef NOT_IN_libc
-#include <shlib-compat.h>
-#include "init-arch.h"
-
-#define MEMMOVE __memmove_sse2
-#ifdef SHARED
-# undef libc_hidden_builtin_def
-# define libc_hidden_builtin_def(name) \
-  __hidden_ver1 (__memmove_sse2, __GI_memmove, __memmove_sse2);
-#endif
-#endif
-
-extern __typeof (memmove) __memmove_sse2 attribute_hidden;
-extern __typeof (memmove) __memmove_ssse3 attribute_hidden;
-extern __typeof (memmove) __memmove_ssse3_back attribute_hidden;
-
 #include "string/memmove.c"
 
-#ifndef NOT_IN_libc
-libc_ifunc (memmove,
-	    HAS_SSSE3
-	    ? (HAS_FAST_COPY_BACKWARD
-	       ? __memmove_ssse3_back : __memmove_ssse3)
-	    : __memmove_sse2);
+#if !defined memmove && !defined NOT_IN_libc
+#include <shlib-compat.h>
 
 #if SHLIB_COMPAT (libc, GLIBC_2_2_5, GLIBC_2_14)
 compat_symbol (libc, memmove, memcpy, GLIBC_2_2_5);

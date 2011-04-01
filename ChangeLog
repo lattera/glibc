@@ -1,3 +1,16 @@
+2011-03-26  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #12518]
+	* sysdeps/x86_64/Versions: Add memcpy to GLIBC_2.14.
+	* sysdeps/x86_64/memcpy.S: Provide GLIBC_2_14 memcpy.
+	* sysdeps/x86_64/memmove.c: New file.
+	* sysdeps/x86_64/multiarch/memcpy.S: Include <shlib-compat.h>.
+	(memcpy): Renamed to ...
+	(__new_memcpy): This.
+	(memcpy): Provide GLIBC_2_14 memcpy.
+	* sysdeps/x86_64/multiarch/memmove.c: Include <shlib-compat.h>.
+	(memcpy): Provide GLIBC_2_2_5 memcpy.
+
 2011-04-01  Ulrich Drepper  <drepper@gmail.com>
 
 	[BZ #12631]

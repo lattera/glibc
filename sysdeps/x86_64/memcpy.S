@@ -31,6 +31,12 @@
 #  define RETVAL	(0)
 #else
 #  define RETVAL	(-8)
+#  if defined SHARED && !defined USE_MULTIARCH && !defined NOT_IN_libc
+#    define memcpy	__memcpy
+#    undef libc_hidden_builtin_def
+#    define libc_hidden_builtin_def(name) \
+	.globl __GI_memcpy; __GI_memcpy = __memcpy
+#  endif
 #endif
 #define SAVE0	(RETVAL - 8)
 #define SAVE1	(SAVE0	- 8)
@@ -571,4 +577,9 @@ END(memcpy)
 
 #ifndef USE_AS_MEMPCPY
 libc_hidden_builtin_def (memcpy)
+# if defined SHARED && !defined USE_MULTIARCH && !defined NOT_IN_libc
+#  undef memcpy
+#  include <shlib-compat.h>
+versioned_symbol (libc, __memcpy, memcpy, GLIBC_2_14);
+# endif
 #endif

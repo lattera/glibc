@@ -1,5 +1,6 @@
 /* Multiple versions of memcpy
-   Copyright (C) 2010 Free Software Foundation, Inc.
+   Copyright (C) 2010, 2011
+   Free Software Foundation, Inc.
    Contributed by Intel Corporation.
    This file is part of the GNU C Library.
 
@@ -19,6 +20,7 @@
    02111-1307 USA.  */
 
 #include <sysdep.h>
+#include <shlib-compat.h>
 #include <init-arch.h>
 
 /* Define multiple versions only for the definition in lib and for
@@ -26,8 +28,8 @@
    happened.  */
 #if defined SHARED && !defined NOT_IN_libc
 	.text
-ENTRY(memcpy)
-	.type	memcpy, @gnu_indirect_function
+ENTRY(__new_memcpy)
+	.type	__new_memcpy, @gnu_indirect_function
 	cmpl	$0, KIND_OFFSET+__cpu_features(%rip)
 	jne	1f
 	call	__init_cpu_features
@@ -39,7 +41,7 @@ ENTRY(memcpy)
 	jz	2f
 	leaq	__memcpy_ssse3_back(%rip), %rax
 2:	ret
-END(memcpy)
+END(__new_memcpy)
 
 # undef ENTRY
 # define ENTRY(name) \
@@ -68,6 +70,8 @@ END(memcpy)
    by the indirect call in the PLT.  */
 # define libc_hidden_builtin_def(name) \
 	.globl __GI_memcpy; __GI_memcpy = __memcpy_sse2
+
+versioned_symbol (libc, __new_memcpy, memcpy, GLIBC_2_14);
 #endif
 
 #include "../memcpy.S"
