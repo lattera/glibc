@@ -1,4 +1,4 @@
-/* Copyright (C) 2007, 2009 Free Software Foundation, Inc.
+/* Copyright (C) 2007, 2009, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -18,7 +18,7 @@
 
 #include <errno.h>
 #include <fcntl.h>
-#include <sysdep.h>
+#include <sysdep-cancel.h>
 
 
 /* Reserve storage for the data of the file associated with FD.  */
@@ -26,7 +26,17 @@ int
 fallocate (int fd, int mode, __off_t offset, __off_t len)
 {
 #ifdef __NR_fallocate
-  return INLINE_SYSCALL (fallocate, 4, fd, mode, offset, len);
+  if (SINGLE_THREAD_P)
+    return INLINE_SYSCALL (fallocate, 4, fd, mode, offset, len);
+
+  int result;
+  int oldtype = LIBC_CANCEL_ASYNC ();
+
+  result = INLINE_SYSCALL (fallocate, 4, fd, mode, offset, len);
+
+  LIBC_CANCEL_RESET (oldtype);
+
+  return result;
 #else
   __set_errno (ENOSYS);
   return -1;

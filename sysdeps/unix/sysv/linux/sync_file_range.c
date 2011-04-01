@@ -1,5 +1,5 @@
 /* Selective file content synch'ing.
-   Copyright (C) 2006, 2007, 2009 Free Software Foundation, Inc.
+   Copyright (C) 2006, 2007, 2009, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,7 +21,7 @@
 #include <fcntl.h>
 #include <sys/types.h>
 
-#include <sysdep.h>
+#include <sysdep-cancel.h>
 #include <sys/syscall.h>
 
 
@@ -29,18 +29,43 @@
 int
 sync_file_range (int fd, __off64_t from, __off64_t to, unsigned int flags)
 {
-  return INLINE_SYSCALL (sync_file_range, 6, fd,
-			 __LONG_LONG_PAIR ((long) (from >> 32), (long) from),
-			 __LONG_LONG_PAIR ((long) (to >> 32), (long) to),
-			 flags);
+  if (SINGLE_THREAD_P)
+    return INLINE_SYSCALL (sync_file_range, 6, fd,
+			   __LONG_LONG_PAIR ((long) (from >> 32), (long) from),
+			   __LONG_LONG_PAIR ((long) (to >> 32), (long) to),
+			   flags);
+
+  int result;
+  int oldtype = LIBC_CANCEL_ASYNC ();
+
+  result = INLINE_SYSCALL (sync_file_range, 6, fd,
+			   __LONG_LONG_PAIR ((long) (from >> 32), (long) from),
+			   __LONG_LONG_PAIR ((long) (to >> 32), (long) to),
+			   flags);
+
+  LIBC_CANCEL_RESET (oldtype);
+
+  return result;
 }
 #elif defined __NR_sync_file_range2
 int
 sync_file_range (int fd, __off64_t from, __off64_t to, unsigned int flags)
 {
-  return INLINE_SYSCALL (sync_file_range2, 6, fd, flags,
-			 __LONG_LONG_PAIR ((long) (from >> 32), (long) from),
-			 __LONG_LONG_PAIR ((long) (to >> 32), (long) to));
+  if (SINGLE_THREAD_P)
+    return INLINE_SYSCALL (sync_file_range2, 6, fd, flags,
+			   __LONG_LONG_PAIR ((long) (from >> 32), (long) from),
+			   __LONG_LONG_PAIR ((long) (to >> 32), (long) to));
+
+  int result;
+  int oldtype = LIBC_CANCEL_ASYNC ();
+
+  result = INLINE_SYSCALL (sync_file_range2, 6, fd, flags,
+			   __LONG_LONG_PAIR ((long) (from >> 32), (long) from),
+			   __LONG_LONG_PAIR ((long) (to >> 32), (long) to));
+
+  LIBC_CANCEL_RESET (oldtype);
+
+  return result;
 }
 #else
 int

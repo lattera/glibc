@@ -1,4 +1,4 @@
-# Copyright (C) 1992-2003,2005,2006,2007,2008 Free Software Foundation, Inc.
+# Copyright (C) 1992-2003,2005-2008,2011 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -90,6 +90,9 @@ CFLAGS-ftw64.c = $(uses-callbacks) -fexceptions
 CFLAGS-lockf.c = -fexceptions
 CFLAGS-posix_fallocate.c = -fexceptions
 CFLAGS-posix_fallocate64.c = -fexceptions
+CFLAGS-fallocate.c = -fexceptions
+CFLAGS-fallocate64.c = -fexceptions
+CFLAGS-sync_file_range.c = -fexceptions
 
 CFLAGS-test-stat.c = -D_FILE_OFFSET_BITS=64 -D_LARGEFILE64_SOURCE
 CFLAGS-test-lfs.c = -D_LARGEFILE64_SOURCE

@@ -1,7 +1,20 @@
+2011-04-01  Ulrich Drepper  <drepper@gmail.com>
+
+	* io/Makefile: Compile fallocate.c, fallocate64.c, and
+	sync_file_range.c with -fexceptions.
+	* sysdeps/unix/sysv/linux/fallocate.c: Make cancelable.
+	* sysdeps/unix/sysv/linux/fallocate64.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/fallocate.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/fallocate64.c: Likewise.
+	* sysdeps/unix/sysv/linux/wordsize-64/fallocate.c: Likewise.
+	* sysdeps/unix/sysv/linux/sync_file_range.c: Likewise.
+	* sysdeps/unix/sysv/linux/wordsize-64/syscalls.list: Mark
+	sync_file_range as cancellation point.
+
 2011-04-01  Andreas Schwab  <schwab@redhat.com>
 
 	* sysdeps/unix/sysv/linux/Makefile (sysdep_headers): Add
-	bits/timex.h
+	bits/timex.h.
 
 2011-04-01  Ulrich Drepper  <drepper@gmail.com>
 

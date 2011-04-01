@@ -1,4 +1,4 @@
-/* Copyright (C) 2007, 2009 Free Software Foundation, Inc.
+/* Copyright (C) 2007, 2009, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -18,7 +18,7 @@
 
 #include <errno.h>
 #include <fcntl.h>
-#include <sysdep.h>
+#include <sysdep-cancel.h>
 
 
 /* Reserve storage for the data of the file associated with FD.  */
@@ -26,11 +26,25 @@ int
 fallocate64 (int fd, int mode, __off64_t offset, __off64_t len)
 {
 #ifdef __NR_fallocate
-  return INLINE_SYSCALL (fallocate, 6, fd, mode,
-			 __LONG_LONG_PAIR ((long int) (offset >> 32),
-					   (long int) offset),
-			 __LONG_LONG_PAIR ((long int) (len >> 32),
-					   (long int) len));
+  if (SINGLE_THREAD_P)
+    return INLINE_SYSCALL (fallocate, 6, fd, mode,
+			   __LONG_LONG_PAIR ((long int) (offset >> 32),
+					     (long int) offset),
+			   __LONG_LONG_PAIR ((long int) (len >> 32),
+					     (long int) len));
+
+  int result;
+  int oldtype = LIBC_CANCEL_ASYNC ();
+
+  result = INLINE_SYSCALL (fallocate, 6, fd, mode,
+			   __LONG_LONG_PAIR ((long int) (offset >> 32),
+					     (long int) offset),
+			   __LONG_LONG_PAIR ((long int) (len >> 32),
+					     (long int) len));
+
+  LIBC_CANCEL_RESET (oldtype);
+
+  return result;
 #else
   __set_errno (ENOSYS);
   return -1;

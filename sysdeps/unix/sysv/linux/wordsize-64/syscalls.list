@@ -14,7 +14,7 @@ getrlimit	-	getrlimit	i:ip	__getrlimit	getrlimit getrlimit64
 setrlimit	-	setrlimit	i:ip	__setrlimit	setrlimit setrlimit64
 readahead	-	readahead	i:iii	__readahead	readahead
 sendfile	-	sendfile	i:iipi	sendfile	sendfile64
-sync_file_range	-	sync_file_range	i:iiii	sync_file_range
+sync_file_range	-	sync_file_range	Ci:iiii	sync_file_range
 creat		-	creat		Ci:si	__libc_creat	creat creat64
 open		-	open		Ci:siv	__libc_open	__open open __open64 open64
 prlimit		EXTRA	prlimit64	i:iipp	prlimit		prlimit64
