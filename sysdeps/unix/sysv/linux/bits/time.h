@@ -71,6 +71,8 @@ extern long int __sysconf (int);
 #   define CLOCK_REALTIME_COARSE	5
 /* Monotonic system-wide clock, updated only on ticks.  */
 #   define CLOCK_MONOTONIC_COARSE	6
+/* Monotonic system-wide clock that includes time spent in suspension.  */
+#   define CLOCK_BOOTTIME		7
 
 /* Flag to indicate time is absolute.  */
 #   define TIMER_ABSTIME		1

@@ -1,3 +1,7 @@
+2011-04-02  Ulrich Drepper  <drepper@gmail.com>
+
+	* sysdeps/unix/sysv/linux/bits/time.h (CLOCK_BOOTTIME): Define.
+
 2011-03-26  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #12518]
