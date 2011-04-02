@@ -2,6 +2,8 @@
 
 	* sysdeps/unix/sysv/linux/bits/time.h (CLOCK_BOOTTIME): Define.
 
+	* include/features.h: Mention __USW_XOPEN2K8 in comment.
+
 2011-03-26  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #12518]
