@@ -1,3 +1,7 @@
+2011-04-02  Ulrich Drepper  <drepper@gmail.com>
+
+	* include/features.h: Mention __USW_XOPEN2K8 in comment.
+
 2011-03-26  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #12518]

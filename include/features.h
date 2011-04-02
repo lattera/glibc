@@ -68,6 +68,7 @@
    __USE_UNIX98		Define Single Unix V2 things.
    __USE_XOPEN2K        Define XPG6 things.
    __USE_XOPEN2KXSI     Define XPG6 XSI things.
+   __USE_XOPEN2K8       Define XPG7 things.
    __USE_XOPEN2K8XSI    Define XPG7 XSI things.
    __USE_LARGEFILE	Define correct standard I/O things.
    __USE_LARGEFILE64	Define LFS things with separate names.
