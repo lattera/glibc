@@ -1,6 +1,7 @@
 2011-04-03  Andreas Schwab  <schwab@linux-m68k.org>
 
 	* sysdeps/unix/sysv/linux/m68k/bits/fcntl.h: Update comments.
+	(O_PATH): Define.
 
 2011-03-06  Andreas Schwab  <schwab@linux-m68k.org>
 
