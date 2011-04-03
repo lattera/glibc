@@ -2,6 +2,8 @@
 
 	* sysdeps/unix/sysv/linux/m68k/bits/fcntl.h: Update comments.
 	(O_PATH): Define.
+	(struct file_handle, MAX_HANDLE_SZ): Define.
+	(name_to_handle_at, open_by_handle_at): Declare.
 
 2011-03-06  Andreas Schwab  <schwab@linux-m68k.org>
 

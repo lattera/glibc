@@ -232,6 +232,19 @@ struct f_owner_ex
 					   we splice from/to).  */
 # define SPLICE_F_MORE		4	/* Expect more data.  */
 # define SPLICE_F_GIFT		8	/* Pages passed in are a gift.  */
+
+
+/* File handle structure.  */
+struct file_handle
+{
+  unsigned int handle_bytes;
+  int handle_type;
+  /* File identifier.  */
+  unsigned char f_handle[0];
+};
+
+/* Maximum handle size (for now).  */
+# define MAX_HANDLE_SZ	128
 #endif
 
 __BEGIN_DECLS
@@ -289,6 +302,19 @@ extern int __REDIRECT (fallocate, (int __fd, int __mode, __off64_t __offset,
 extern int fallocate64 (int __fd, int __mode, __off64_t __offset,
 			__off64_t __len);
 # endif
+
+
+/* Map file name to file handle.  */
+extern int name_to_handle_at (int __dfd, const char *__name,
+			      struct file_handle *__handle, int *__mnt_id,
+			      int __flags) __THROW;
+
+/* Open file using the file handle.
+
+   This function is a possible cancellation point and therefore not
+   marked with __THROW.  */
+extern int open_by_handle_at (int __mountdirfd, struct file_handle *__handle,
+			      int __flags);
 
 #endif
 
