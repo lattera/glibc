@@ -1,5 +1,5 @@
 /* O_*, F_*, FD_* bit values for Linux.
-   Copyright (C) 2000, 2004, 2008, 2009, 2010 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2004, 2008, 2009, 2010, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -28,7 +28,7 @@
 
 
 /* open/fcntl - O_SYNC is only implemented on blocks devices and on files
-   located on an ext2 file system */
+   located on a few file systems.  */
 #define O_ACCMODE	   0003
 #define O_RDONLY	     00
 #define O_WRONLY	     01
@@ -247,20 +247,32 @@ extern int sync_file_range (int __fd, __off64_t __offset, __off64_t __count,
 			    unsigned int __flags);
 
 
-/* Splice address range into a pipe.  */
+/* Splice address range into a pipe.
+
+   This function is a possible cancellation point and therefore not
+   marked with __THROW.  */
 extern ssize_t vmsplice (int __fdout, const struct iovec *__iov,
 			 size_t __count, unsigned int __flags);
 
-/* Splice two files together.  */
+/* Splice two files together.
+
+   This function is a possible cancellation point and therefore not
+   marked with __THROW.  */
 extern ssize_t splice (int __fdin, __off64_t *__offin, int __fdout,
 		       __off64_t *__offout, size_t __len,
 		       unsigned int __flags);
 
-/* In-kernel implementation of tee for pipe buffers.  */
+/* In-kernel implementation of tee for pipe buffers.
+
+   This function is a possible cancellation point and therefore not
+   marked with __THROW.  */
 extern ssize_t tee (int __fdin, int __fdout, size_t __len,
 		    unsigned int __flags);
 
-/* Reserve storage for the data of the file associated with FD.  */
+/* Reserve storage for the data of the file associated with FD.
+
+   This function is a possible cancellation point and therefore not
+   marked with __THROW.  */
 # ifndef __USE_FILE_OFFSET64
 extern int fallocate (int __fd, int __mode, __off_t __offset, __off_t __len);
 # else
