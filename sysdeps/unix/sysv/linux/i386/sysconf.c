@@ -135,7 +135,7 @@ static const struct intel_02_cache_info
     { 0xdc, 12, 64, M(_SC_LEVEL3_CACHE_SIZE),  2097152 },
     { 0xdd, 12, 64, M(_SC_LEVEL3_CACHE_SIZE),  4194304 },
     { 0xde, 12, 64, M(_SC_LEVEL3_CACHE_SIZE),  8388608 },
-    { 0xe3, 16, 64, M(_SC_LEVEL3_CACHE_SIZE),  2097152 },
+    { 0xe2, 16, 64, M(_SC_LEVEL3_CACHE_SIZE),  2097152 },
     { 0xe3, 16, 64, M(_SC_LEVEL3_CACHE_SIZE),  4194304 },
     { 0xe4, 16, 64, M(_SC_LEVEL3_CACHE_SIZE),  8388608 },
     { 0xea, 24, 64, M(_SC_LEVEL3_CACHE_SIZE), 12582912 },
