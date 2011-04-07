@@ -204,7 +204,6 @@ do_page_test (size_t offset1, size_t offset2, char *s2)
 {
   char *s1;
   int exp_result;
-  size_t max_offset = offset1 > offset2 ? offset1 : offset2;
 
   if (offset1 >= page_size || offset2 >= page_size)
     return;
@@ -212,12 +211,12 @@ do_page_test (size_t offset1, size_t offset2, char *s2)
   s1 = (char *) (buf1 + offset1);
   s2 += offset2;
 
-  exp_result = *s1;
+  exp_result= *s1;
 
   FOR_EACH_IMPL (impl, 0)
     {
-      check_result (impl, s1, s2, page_size - max_offset, -exp_result);
-      check_result (impl, s2, s1, page_size - max_offset, exp_result);
+      check_result (impl, s1, s2, page_size, -exp_result);
+      check_result (impl, s2, s1, page_size, exp_result);
     }
 }
 
