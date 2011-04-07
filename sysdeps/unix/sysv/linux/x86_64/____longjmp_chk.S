@@ -1,4 +1,4 @@
-/* Copyright (C) 2001,2004,2005,2006,2009,2010 Free Software Foundation, Inc.
+/* Copyright (C) 2001,2004,2005,2006,2009,2010,2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -30,18 +30,22 @@ longjmp_msg:
 //#define __longjmp ____longjmp_chk
 
 #ifdef PIC
-# define CALL_FAIL	leaq	longjmp_msg(%rip), %rdi;		      \
-			call	__GI___fortify_fail
+# define CALL_FAIL	subq	$8, %rsp;				      \
+			cfi_remember_state;				      \
+			cfi_def_cfa_offset(16);				      \
+			leaq	longjmp_msg(%rip), %rdi;		      \
+			call	__GI___fortify_fail;			      \
+			nop;						      \
+			cfi_restore_state
 #else
-# define CALL_FAIL	movq	$longjmp_msg, %rdi;			      \
-			call	__fortify_fail
+# define CALL_FAIL	subq	$8, %rsp;				      \
+			cfi_remember_state;				      \
+			cfi_def_cfa_offset(16);				      \
+			movq	$longjmp_msg, %rdi;			      \
+			call	__fortify_fail;				      \
+			nop;						      \
+			cfi_restore_state
 #endif
-
-#define CHECK_RSP(reg) \
-	cmpq	reg, %rsp;						      \
-	jbe	.Lok;							      \
-	CALL_FAIL;							      \
-.Lok:
 
 /* Jump to the position specified by ENV, causing the
    setjmp call there to return VAL, or 1 if VAL is 0.

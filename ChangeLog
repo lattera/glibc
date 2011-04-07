@@ -1,3 +1,9 @@
+2011-04-07  Andreas Schwab  <schwab@redhat.com>
+
+	* sysdeps/unix/sysv/linux/x86_64/____longjmp_chk.S (CALL_FAIL):
+	Maintain aligned stack.
+	(CHECK_RSP): Remove unused macro.
+
 2011-04-03  Ulrich Drepper  <drepper@gmail.com>
 
 	* sysdeps/x86_64/cacheinfo.c (intel_02_known): Fix typo in table.
