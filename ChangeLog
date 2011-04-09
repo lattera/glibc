@@ -1,3 +1,14 @@
+2011-03-14  Andreas Schwab  <schwab@redhat.com>
+
+	* elf/dl-load.c (_dl_dst_substitute): When skipping the first
+	rpath element also skip the following colon.
+	(expand_dynamic_string_token): Add is_path parameter and pass
+	down to DL_DST_REQUIRED and _dl_dst_substitute.
+	(decompose_rpath): Call expand_dynamic_string_token with
+	non-zero is_path.  Ignore empty rpaths.
+	(_dl_map_object_from_fd): Call expand_dynamic_string_token
+	with zero is_path.
+
 2011-04-08  Andreas Schwab  <schwab@linux-m68k.org>
 
 	* sysdeps/unix/sysv/linux/powerpc/powerpc64/sync_file_range.c:

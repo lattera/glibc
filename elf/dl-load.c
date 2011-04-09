@@ -1,5 +1,5 @@
 /* Map in a shared object's segments from the file.
-   Copyright (C) 1995-2005, 2006, 2007, 2009, 2010 Free Software Foundation, Inc.
+   Copyright (C) 1995-2005, 2006, 2007, 2009, 2010, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -284,6 +284,10 @@ _dl_dst_substitute (struct link_map *l, const char *name, char *result,
 	      name += len;
 	      while (*name != '\0' && (!is_path || *name != ':'))
 		++name;
+	      /* Also skip following colon if this is the first rpath
+		 element, but keep an empty element at the end.  */
+	      if (wp == result && is_path && *name == ':' && name[1] != '\0')
+		++name;
 	    }
 	  else
 	    /* No DST we recognize.  */
@@ -310,7 +314,7 @@ _dl_dst_substitute (struct link_map *l, const char *name, char *result,
    belonging to the map is loaded.  In this case the path element
    containing $ORIGIN is left out.  */
 static char *
-expand_dynamic_string_token (struct link_map *l, const char *s)
+expand_dynamic_string_token (struct link_map *l, const char *s, int is_path)
 {
   /* We make two runs over the string.  First we determine how large the
      resulting string is and then we copy it over.  Since this is no
@@ -321,7 +325,7 @@ expand_dynamic_string_token (struct link_map *l, const char *s)
   char *result;
 
   /* Determine the number of DST elements.  */
-  cnt = DL_DST_COUNT (s, 1);
+  cnt = DL_DST_COUNT (s, is_path);
 
   /* If we do not have to replace anything simply copy the string.  */
   if (__builtin_expect (cnt, 0) == 0)
@@ -335,7 +339,7 @@ expand_dynamic_string_token (struct link_map *l, const char *s)
   if (result == NULL)
     return NULL;
 
-  return _dl_dst_substitute (l, s, result, 1);
+  return _dl_dst_substitute (l, s, result, is_path);
 }
 
 
@@ -551,11 +555,19 @@ decompose_rpath (struct r_search_path_struct *sps,
 
   /* Make a writable copy.  At the same time expand possible dynamic
      string tokens.  */
-  copy = expand_dynamic_string_token (l, rpath);
+  copy = expand_dynamic_string_token (l, rpath, 1);
   if (copy == NULL)
     {
       errstring = N_("cannot create RUNPATH/RPATH copy");
       goto signal_error;
+    }
+
+  /* Ignore empty rpaths.  */
+  if (*copy == 0)
+    {
+      free (copy);
+      sps->dirs = (char *) -1;
+      return false;
     }
 
   /* Count the number of necessary elements in the result array.  */
@@ -2179,7 +2191,7 @@ _dl_map_object (struct link_map *loader, const char *name,
     {
       /* The path may contain dynamic string tokens.  */
       realname = (loader
-		  ? expand_dynamic_string_token (loader, name)
+		  ? expand_dynamic_string_token (loader, name, 0)
 		  : local_strdup (name));
       if (realname == NULL)
 	fd = -1;
