@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1996, 1997, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -19,7 +19,7 @@
 #ifndef _SYSCALL_H
 #define _SYSCALL_H	1
 
-/* This file should list the numbers of the system the system knows.
+/* This file should list the numbers of the system calls the system knows.
    But instead of duplicating this we use the information available
    from the kernel sources.  */
 #include <asm/unistd.h>

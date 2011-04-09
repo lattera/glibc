@@ -1,3 +1,9 @@
+2011-04-09  Ulrich Drepper  <drepper@gmail.com>
+
+	[BZ #12655]
+	* sysdeps/unix/sysv/linux/sys/syscall.h: Fix comment.
+	Patch by Filipe David Manana <fdmanana@apache.org>.
+
 2011-04-07  Andreas Schwab  <schwab@redhat.com>
 
 	* sysdeps/unix/sysv/linux/x86_64/____longjmp_chk.S (CALL_FAIL):
