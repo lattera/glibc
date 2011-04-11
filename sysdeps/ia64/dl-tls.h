@@ -1,5 +1,5 @@
 /* Thread-local storage handling in the ELF dynamic linker.  IA-64 version.
-   Copyright (C) 2002, 2003 Free Software Foundation, Inc.
+   Copyright (C) 2002, 2003, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -28,3 +28,6 @@
 #define DONT_USE_TLS_INDEX	1
 
 extern void *__tls_get_addr (size_t m, size_t offset);
+
+/* Value used for dtv entries for which the allocation is delayed.  */
+#define TLS_DTV_UNALLOCATED	((void *) -1l)

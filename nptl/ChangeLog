@@ -1,3 +1,10 @@
+2011-04-10  Ulrich Drepper  <drepper@gmail.com>
+
+	[BZ #12650]
+	* allocatestack.c (get_cached_stack): Deallocate DTV entries before
+	clearing memory.
+	Patch partly by Robert Rex <robert.rex@exasol.com>.
+
 2011-01-19  Roland McGrath  <roland@redhat.com>
 
 	* pthread_cond_wait.c (__pthread_cond_wait): Fix comment typo.

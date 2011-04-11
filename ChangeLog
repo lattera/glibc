@@ -1,3 +1,15 @@
+2011-04-10  Ulrich Drepper  <drepper@gmail.com>
+
+	[BZ #12650]
+	* sysdeps/i386/dl-tls.h: Define TLS_DTV_UNALLOCATED.
+	* sysdeps/ia64/dl-tls.h: Likewise.
+	* sysdeps/powerpc/dl-tls.h: Likewise.
+	* sysdeps/s390/dl-tls.h: Likewise.
+	* sysdeps/sh/dl-tls.h: Likewise.
+	* sysdeps/sparc/dl-tls.h: Likewise.
+	* sysdeps/x86_64/dl-tls.h: Likewise.
+	* elf/dl-tls.c: Don't define TLS_DTV_UNALLOCATED here.
+
 2011-03-14  Andreas Schwab  <schwab@redhat.com>
 
 	* elf/dl-load.c (_dl_dst_substitute): When skipping the first

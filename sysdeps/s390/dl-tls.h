@@ -1,5 +1,5 @@
 /* Thread-local storage handling in the ELF dynamic linker.  s390 version.
-   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+   Copyright (C) 2003, 2004, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -72,6 +72,9 @@ __tls_get_offset:\n\
 # define __TLS_GET_ADDR(__ti) \
   ({ extern char _GLOBAL_OFFSET_TABLE_[] attribute_hidden;		  \
      (void *) __tls_get_offset ((char *) (__ti) - _GLOBAL_OFFSET_TABLE_)  \
-     + (unsigned long) __builtin_thread_pointer (); }) 
+     + (unsigned long) __builtin_thread_pointer (); })
 
 #endif
+
+/* Value used for dtv entries for which the allocation is delayed.  */
+#define TLS_DTV_UNALLOCATED	((void *) -1l)

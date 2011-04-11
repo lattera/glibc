@@ -1,5 +1,5 @@
 /* Thread-local storage handling in the ELF dynamic linker.  Generic version.
-   Copyright (C) 2002,2003,2004,2005,2006,2008 Free Software Foundation, Inc.
+   Copyright (C) 2002-2006,2008,2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -32,9 +32,6 @@
 /* Amount of excess space to allocate in the static TLS area
    to allow dynamic loading of modules defining IE-model TLS data.  */
 #define TLS_STATIC_SURPLUS	64 + DL_NNS * 100
-
-/* Value used for dtv entries for which the allocation is delayed.  */
-#define TLS_DTV_UNALLOCATED	((void *) -1l)
 
 
 /* Out-of-memory handler.  */
