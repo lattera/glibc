@@ -1,5 +1,5 @@
 /* Thread-local storage handling in the ELF dynamic linker.  MIPS version.
-   Copyright (C) 2005 Free Software Foundation, Inc.
+   Copyright (C) 2005, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -44,3 +44,6 @@ extern void *__tls_get_addr (tls_index *ti);
 
 # define GET_ADDR_OFFSET	(ti->ti_offset + TLS_DTV_OFFSET)
 # define __TLS_GET_ADDR(__ti)	(__tls_get_addr (__ti) - TLS_DTV_OFFSET)
+
+/* Value used for dtv entries for which the allocation is delayed.  */
+#define TLS_DTV_UNALLOCATED	((void *) -1l)
