@@ -1,3 +1,7 @@
+2011-04-11  Andreas Schwab  <schwab@linux-m68k.org>
+
+	* sysdeps/m68k/dl-tls.h (TLS_DTV_UNALLOCATED): Define.
+
 2011-04-03  Andreas Schwab  <schwab@linux-m68k.org>
 
 	* sysdeps/unix/sysv/linux/m68k/bits/fcntl.h: Update comments.
