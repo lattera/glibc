@@ -81,10 +81,10 @@ authnone_create_once (void)
   ap->no_client.ah_cred = ap->no_client.ah_verf = _null_auth;
   ap->no_client.ah_ops = (struct auth_ops *) &ops;
   xdrs = &xdr_stream;
-  INTUSE(xdrmem_create) (xdrs, ap->marshalled_client,
-			 (u_int) MAX_MARSHAL_SIZE, XDR_ENCODE);
-  (void) INTUSE(xdr_opaque_auth) (xdrs, &ap->no_client.ah_cred);
-  (void) INTUSE(xdr_opaque_auth) (xdrs, &ap->no_client.ah_verf);
+  xdrmem_create (xdrs, ap->marshalled_client,
+		 (u_int) MAX_MARSHAL_SIZE, XDR_ENCODE);
+  (void) xdr_opaque_auth (xdrs, &ap->no_client.ah_cred);
+  (void) xdr_opaque_auth (xdrs, &ap->no_client.ah_verf);
   ap->mcnt = XDR_GETPOS (xdrs);
   XDR_DESTROY (xdrs);
 }
@@ -95,7 +95,7 @@ authnone_create (void)
   __libc_once (authnone_private_guard, authnone_create_once);
   return &authnone_private.no_client;
 }
-INTDEF (authnone_create)
+libc_hidden_nolink (authnone_create, GLIBC_2_0)
 
 static bool_t
 authnone_marshal (AUTH *client, XDR *xdrs)

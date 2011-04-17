@@ -192,7 +192,7 @@ xdrrec_create (XDR *xdrs, u_int sendsize,
   rstrm->fbtbc = 0;
   rstrm->last_frag = TRUE;
 }
-INTDEF(xdrrec_create)
+libc_hidden_nolink (xdrrec_create, GLIBC_2_0)
 
 
 /*
@@ -480,7 +480,7 @@ xdrrec_skiprecord (XDR *xdrs)
   rstrm->last_frag = FALSE;
   return TRUE;
 }
-INTDEF(xdrrec_skiprecord)
+libc_hidden_nolink (xdrrec_skiprecord, GLIBC_2_0)
 
 /*
  * Lookahead function.
@@ -504,7 +504,7 @@ xdrrec_eof (XDR *xdrs)
     return TRUE;
   return FALSE;
 }
-INTDEF(xdrrec_eof)
+libc_hidden_nolink (xdrrec_eof, GLIBC_2_0)
 
 /*
  * The client must tell the package when an end-of-record has occurred.
@@ -531,7 +531,7 @@ xdrrec_endofrecord (XDR *xdrs, bool_t sendnow)
   rstrm->out_finger += BYTES_PER_XDR_UNIT;
   return TRUE;
 }
-INTDEF(xdrrec_endofrecord)
+libc_hidden_nolink (xdrrec_endofrecord, GLIBC_2_0)
 
 
 /*

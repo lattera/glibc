@@ -46,6 +46,7 @@ svc_exit (void)
   svc_pollfd = NULL;
   svc_max_pollfd = 0;
 }
+libc_hidden_nolink (svc_exit, GLIBC_2_0)
 
 void
 svc_run (void)
@@ -92,7 +93,7 @@ svc_run (void)
 	case 0:
 	  continue;
 	default:
-	  INTUSE(svc_getreq_poll) (my_pollfd, i);
+	  svc_getreq_poll (my_pollfd, i);
 	  continue;
 	}
       break;
@@ -100,3 +101,4 @@ svc_run (void)
 
   free (my_pollfd);
 }
+libc_hidden_nolink (svc_run, GLIBC_2_0)

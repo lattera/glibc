@@ -28,73 +28,73 @@
  *   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "rpc/key_prot.h"
+#include <rpc/key_prot.h>
 
 bool_t
 xdr_keystatus (XDR * xdrs, keystatus * objp)
 {
-  if (!INTUSE(xdr_enum) (xdrs, (enum_t *) objp))
+  if (!xdr_enum (xdrs, (enum_t *) objp))
     return FALSE;
 
   return TRUE;
 }
-INTDEF(xdr_keystatus)
+libc_hidden_nolink (xdr_keystatus, GLIBC_2_0)
 
 bool_t
 xdr_keybuf (XDR * xdrs, keybuf objp)
 {
-  if (!INTUSE(xdr_opaque) (xdrs, objp, HEXKEYBYTES))
+  if (!xdr_opaque (xdrs, objp, HEXKEYBYTES))
     return FALSE;
 
   return TRUE;
 }
-INTDEF(xdr_keybuf)
+libc_hidden_nolink (xdr_keybuf, GLIBC_2_0)
 
 bool_t
 xdr_netnamestr (XDR * xdrs, netnamestr * objp)
 {
-  if (!INTUSE(xdr_string) (xdrs, objp, MAXNETNAMELEN))
+  if (!xdr_string (xdrs, objp, MAXNETNAMELEN))
     return FALSE;
 
   return TRUE;
 }
-INTDEF(xdr_netnamestr)
+libc_hidden_nolink (xdr_netnamestr, GLIBC_2_1)
 
 bool_t
 xdr_cryptkeyarg (XDR * xdrs, cryptkeyarg * objp)
 {
-  if (!INTUSE(xdr_netnamestr) (xdrs, &objp->remotename))
+  if (!xdr_netnamestr (xdrs, &objp->remotename))
     return FALSE;
 
-  if (!INTUSE(xdr_des_block) (xdrs, &objp->deskey))
+  if (!xdr_des_block (xdrs, &objp->deskey))
     return FALSE;
 
   return TRUE;
 }
-INTDEF(xdr_cryptkeyarg)
+libc_hidden_nolink (xdr_cryptkeyarg, GLIBC_2_0)
 
 bool_t
 xdr_cryptkeyarg2 (XDR * xdrs, cryptkeyarg2 * objp)
 {
-  if (!INTUSE(xdr_netnamestr) (xdrs, &objp->remotename))
+  if (!xdr_netnamestr (xdrs, &objp->remotename))
     return FALSE;
-  if (!INTUSE(xdr_netobj) (xdrs, &objp->remotekey))
+  if (!xdr_netobj (xdrs, &objp->remotekey))
     return FALSE;
-  if (!INTUSE(xdr_des_block) (xdrs, &objp->deskey))
+  if (!xdr_des_block (xdrs, &objp->deskey))
     return FALSE;
   return TRUE;
 }
-INTDEF(xdr_cryptkeyarg2)
+libc_hidden_nolink (xdr_cryptkeyarg2, GLIBC_2_0)
 
 bool_t
 xdr_cryptkeyres (XDR * xdrs, cryptkeyres * objp)
 {
-  if (!INTUSE(xdr_keystatus) (xdrs, &objp->status))
+  if (!xdr_keystatus (xdrs, &objp->status))
     return FALSE;
   switch (objp->status)
     {
     case KEY_SUCCESS:
-      if (!INTUSE(xdr_des_block) (xdrs, &objp->cryptkeyres_u.deskey))
+      if (!xdr_des_block (xdrs, &objp->cryptkeyres_u.deskey))
 	return FALSE;
       break;
     default:
@@ -102,32 +102,32 @@ xdr_cryptkeyres (XDR * xdrs, cryptkeyres * objp)
     }
   return TRUE;
 }
-INTDEF(xdr_cryptkeyres)
+libc_hidden_nolink (xdr_cryptkeyres, GLIBC_2_0)
 
 bool_t
 xdr_unixcred (XDR * xdrs, unixcred * objp)
 {
-  if (!INTUSE(xdr_u_int) (xdrs, &objp->uid))
+  if (!xdr_u_int (xdrs, &objp->uid))
     return FALSE;
-  if (!INTUSE(xdr_u_int) (xdrs, &objp->gid))
+  if (!xdr_u_int (xdrs, &objp->gid))
     return FALSE;
-  if (!INTUSE(xdr_array) (xdrs, (void *) &objp->gids.gids_val,
-			  (u_int *) & objp->gids.gids_len, MAXGIDS,
-			  sizeof (u_int), (xdrproc_t) INTUSE(xdr_u_int)))
+  if (!xdr_array (xdrs, (void *) &objp->gids.gids_val,
+		  (u_int *) & objp->gids.gids_len, MAXGIDS,
+		  sizeof (u_int), (xdrproc_t) xdr_u_int))
     return FALSE;
   return TRUE;
 }
-INTDEF(xdr_unixcred)
+libc_hidden_nolink (xdr_unixcred, GLIBC_2_1)
 
 bool_t
 xdr_getcredres (XDR * xdrs, getcredres * objp)
 {
-  if (!INTUSE(xdr_keystatus) (xdrs, &objp->status))
+  if (!xdr_keystatus (xdrs, &objp->status))
     return FALSE;
   switch (objp->status)
     {
     case KEY_SUCCESS:
-      if (!INTUSE(xdr_unixcred) (xdrs, &objp->getcredres_u.cred))
+      if (!xdr_unixcred (xdrs, &objp->getcredres_u.cred))
 	return FALSE;
       break;
     default:
@@ -135,29 +135,30 @@ xdr_getcredres (XDR * xdrs, getcredres * objp)
     }
   return TRUE;
 }
+libc_hidden_nolink (xdr_getcredres, GLIBC_2_1)
 
 bool_t
 xdr_key_netstarg (XDR * xdrs, key_netstarg * objp)
 {
-  if (!INTUSE(xdr_keybuf) (xdrs, objp->st_priv_key))
+  if (!xdr_keybuf (xdrs, objp->st_priv_key))
     return FALSE;
-  if (!INTUSE(xdr_keybuf) (xdrs, objp->st_pub_key))
+  if (!xdr_keybuf (xdrs, objp->st_pub_key))
     return FALSE;
-  if (!INTUSE(xdr_netnamestr) (xdrs, &objp->st_netname))
+  if (!xdr_netnamestr (xdrs, &objp->st_netname))
     return FALSE;
   return TRUE;
 }
-INTDEF(xdr_key_netstarg)
+libc_hidden_nolink (xdr_key_netstarg, GLIBC_2_0)
 
 bool_t
 xdr_key_netstres (XDR * xdrs, key_netstres * objp)
 {
-  if (!INTUSE(xdr_keystatus) (xdrs, &objp->status))
+  if (!xdr_keystatus (xdrs, &objp->status))
     return FALSE;
   switch (objp->status)
     {
     case KEY_SUCCESS:
-      if (!INTUSE(xdr_key_netstarg) (xdrs, &objp->key_netstres_u.knet))
+      if (!xdr_key_netstarg (xdrs, &objp->key_netstres_u.knet))
 	return FALSE;
       break;
     default:
@@ -165,4 +166,4 @@ xdr_key_netstres (XDR * xdrs, key_netstres * objp)
     }
   return TRUE;
 }
-INTDEF(xdr_key_netstres)
+libc_hidden_nolink (xdr_key_netstres, GLIBC_2_0)

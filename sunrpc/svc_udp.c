@@ -152,8 +152,7 @@ svcudp_bufcreate (sock, sendsz, recvsz)
     }
   su->su_iosz = ((MAX (sendsz, recvsz) + 3) / 4) * 4;
   rpc_buffer (xprt) = buf;
-  INTUSE(xdrmem_create) (&(su->su_xdrs), rpc_buffer (xprt), su->su_iosz,
-			 XDR_DECODE);
+  xdrmem_create (&(su->su_xdrs), rpc_buffer (xprt), su->su_iosz, XDR_DECODE);
   su->su_cache = NULL;
   xprt->xp_p2 = (caddr_t) su;
   xprt->xp_verf.oa_base = su->su_verfbody;
@@ -184,15 +183,19 @@ svcudp_create: xp_pad is too small for IP_PKTINFO\n"));
   xprt_register (xprt);
   return xprt;
 }
-INTDEF (svcudp_bufcreate)
+#ifdef EXPORT_RPC_SYMBOLS
+libc_hidden_def (svcudp_bufcreate)
+#else
+libc_hidden_nolink (svcudp_bufcreate, GLIBC_2_0)
+#endif
 
 SVCXPRT *
 svcudp_create (sock)
      int sock;
 {
-  return INTUSE(svcudp_bufcreate) (sock, UDPMSGSIZE, UDPMSGSIZE);
+  return svcudp_bufcreate (sock, UDPMSGSIZE, UDPMSGSIZE);
 }
-INTDEF (svcudp_create)
+libc_hidden_nolink (svcudp_create, GLIBC_2_0)
 
 static enum xprt_stat
 svcudp_stat (xprt)
@@ -278,7 +281,7 @@ again:
     return FALSE;
   xdrs->x_op = XDR_DECODE;
   XDR_SETPOS (xdrs, 0);
-  if (!INTUSE(xdr_callmsg) (xdrs, msg))
+  if (!xdr_callmsg (xdrs, msg))
     return FALSE;
   su->su_xid = msg->rm_xid;
   if (su->su_cache != NULL)
@@ -319,7 +322,7 @@ svcudp_reply (xprt, msg)
   xdrs->x_op = XDR_ENCODE;
   XDR_SETPOS (xdrs, 0);
   msg->rm_xid = su->su_xid;
-  if (INTUSE(xdr_replymsg) (xdrs, msg))
+  if (xdr_replymsg (xdrs, msg))
     {
       slen = (int) XDR_GETPOS (xdrs);
 #ifdef IP_PKTINFO
@@ -495,6 +498,7 @@ svcudp_enablecache (SVCXPRT *transp, u_long size)
   su->su_cache = (char *) uc;
   return 1;
 }
+libc_hidden_nolink (svcudp_enablecache, GLIBC_2_0)
 
 
 /*
@@ -553,8 +557,7 @@ cache_set (SVCXPRT *xprt, u_long replylen)
   victim->cache_replylen = replylen;
   victim->cache_reply = rpc_buffer (xprt);
   rpc_buffer (xprt) = newbuf;
-  INTUSE(xdrmem_create) (&(su->su_xdrs), rpc_buffer (xprt), su->su_iosz,
-			 XDR_ENCODE);
+  xdrmem_create (&(su->su_xdrs), rpc_buffer (xprt), su->su_iosz, XDR_ENCODE);
   victim->cache_xid = su->su_xid;
   victim->cache_proc = uc->uc_proc;
   victim->cache_vers = uc->uc_vers;

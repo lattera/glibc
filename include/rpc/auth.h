@@ -13,7 +13,7 @@ extern int key_setnet (struct key_netstarg *arg);
 
 #define DECLARE_NSS_PROTOTYPES(service)					\
 extern enum nss_status _nss_ ##service ## _netname2user			\
-                       (char netname[MAXNETNAMELEN + 1], uid_t *uidp,	\
+		       (char netname[MAXNETNAMELEN + 1], uid_t *uidp,	\
 			gid_t *gidp, int *gidlenp, gid_t *gidlist,	\
 			int *errnop);
 
@@ -22,23 +22,23 @@ DECLARE_NSS_PROTOTYPES (nisplus)
 
 #undef DECLARE_NSS_PROTOTYPES
 
-extern bool_t xdr_des_block_internal (XDR *__xdrs, des_block *__blkp)
-  attribute_hidden;
-extern bool_t xdr_opaque_auth_internal (XDR *, struct opaque_auth *)
-  attribute_hidden;
-
-extern AUTH *authunix_create_internal (char *__machname, __uid_t __uid,
-				       __gid_t __gid, int __len,
-				       __gid_t *__aup_gids) attribute_hidden;
-extern AUTH *authunix_create_default_internal (void) attribute_hidden;
-extern AUTH *authnone_create_internal (void) attribute_hidden;
-extern AUTH *authdes_pk_create_internal (const char *, netobj *, u_int,
-					 struct sockaddr *,
-					 des_block *) attribute_hidden;
-
 libc_hidden_proto (key_encryptsession_pk)
 libc_hidden_proto (key_decryptsession_pk)
 
 libc_hidden_proto (_null_auth)
+libc_hidden_proto (authnone_create)
+libc_hidden_proto (authunix_create)
+libc_hidden_proto (authunix_create_default)
+libc_hidden_proto (xdr_des_block)
+libc_hidden_proto (xdr_opaque_auth)
+libc_hidden_proto (authdes_create)
+libc_hidden_proto (authdes_pk_create)
+libc_hidden_proto (key_decryptsession)
+libc_hidden_proto (key_encryptsession)
+libc_hidden_proto (key_get_conv)
+libc_hidden_proto (key_secretkey_is_set)
+libc_hidden_proto (key_setnet)
+libc_hidden_proto (key_setsecret)
+libc_hidden_proto (netname2host)
 
 #endif

@@ -70,8 +70,8 @@ key_setsecret (char *secretkey)
 {
   keystatus status;
 
-  if (!key_call ((u_long) KEY_SET, (xdrproc_t) INTUSE(xdr_keybuf), secretkey,
-		 (xdrproc_t) INTUSE(xdr_keystatus), (char *) &status))
+  if (!key_call ((u_long) KEY_SET, (xdrproc_t) xdr_keybuf, secretkey,
+		 (xdrproc_t) xdr_keystatus, (char *) &status))
     return -1;
   if (status != KEY_SUCCESS)
     {
@@ -80,6 +80,7 @@ key_setsecret (char *secretkey)
     }
   return 0;
 }
+libc_hidden_nolink (key_setsecret, GLIBC_2_1)
 
 /* key_secretkey_is_set() returns 1 if the keyserver has a secret key
  * stored for the caller's effective uid; it returns 0 otherwise
@@ -93,8 +94,8 @@ key_secretkey_is_set (void)
   struct key_netstres kres;
 
   memset (&kres, 0, sizeof (kres));
-  if (key_call ((u_long) KEY_NET_GET, (xdrproc_t) INTUSE(xdr_void),
-		(char *) NULL, (xdrproc_t) INTUSE(xdr_key_netstres),
+  if (key_call ((u_long) KEY_NET_GET, (xdrproc_t) xdr_void,
+		(char *) NULL, (xdrproc_t) xdr_key_netstres,
 		(char *) &kres) &&
       (kres.status == KEY_SUCCESS) &&
       (kres.key_netstres_u.knet.st_priv_key[0] != 0))
@@ -105,6 +106,11 @@ key_secretkey_is_set (void)
     }
   return 0;
 }
+#ifdef EXPORT_RPC_SYMBOLS
+libc_hidden_def (key_secretkey_is_set)
+#else
+libc_hidden_nolink (key_secretkey_is_set, GLIBC_2_1)
+#endif
 
 int
 key_encryptsession (char *remotename, des_block *deskey)
@@ -114,8 +120,8 @@ key_encryptsession (char *remotename, des_block *deskey)
 
   arg.remotename = remotename;
   arg.deskey = *deskey;
-  if (!key_call ((u_long) KEY_ENCRYPT, (xdrproc_t) INTUSE(xdr_cryptkeyarg),
-		 (char *) &arg, (xdrproc_t) INTUSE(xdr_cryptkeyres),
+  if (!key_call ((u_long) KEY_ENCRYPT, (xdrproc_t) xdr_cryptkeyarg,
+		 (char *) &arg, (xdrproc_t) xdr_cryptkeyres,
 		 (char *) &res))
     return -1;
 
@@ -127,6 +133,7 @@ key_encryptsession (char *remotename, des_block *deskey)
   *deskey = res.cryptkeyres_u.deskey;
   return 0;
 }
+libc_hidden_nolink (key_encryptsession, GLIBC_2_1)
 
 int
 key_decryptsession (char *remotename, des_block *deskey)
@@ -136,8 +143,8 @@ key_decryptsession (char *remotename, des_block *deskey)
 
   arg.remotename = remotename;
   arg.deskey = *deskey;
-  if (!key_call ((u_long) KEY_DECRYPT, (xdrproc_t) INTUSE(xdr_cryptkeyarg),
-		 (char *) &arg, (xdrproc_t) INTUSE(xdr_cryptkeyres),
+  if (!key_call ((u_long) KEY_DECRYPT, (xdrproc_t) xdr_cryptkeyarg,
+		 (char *) &arg, (xdrproc_t) xdr_cryptkeyres,
 		 (char *) &res))
     return -1;
   if (res.status != KEY_SUCCESS)
@@ -148,6 +155,7 @@ key_decryptsession (char *remotename, des_block *deskey)
   *deskey = res.cryptkeyres_u.deskey;
   return 0;
 }
+libc_hidden_nolink (key_decryptsession, GLIBC_2_1)
 
 int
 key_encryptsession_pk (char *remotename, netobj *remotekey,
@@ -159,8 +167,8 @@ key_encryptsession_pk (char *remotename, netobj *remotekey,
   arg.remotename = remotename;
   arg.remotekey = *remotekey;
   arg.deskey = *deskey;
-  if (!key_call ((u_long) KEY_ENCRYPT_PK, (xdrproc_t) INTUSE(xdr_cryptkeyarg2),
-		 (char *) &arg, (xdrproc_t) INTUSE(xdr_cryptkeyres),
+  if (!key_call ((u_long) KEY_ENCRYPT_PK, (xdrproc_t) xdr_cryptkeyarg2,
+		 (char *) &arg, (xdrproc_t) xdr_cryptkeyres,
 		 (char *) &res))
     return -1;
 
@@ -172,7 +180,7 @@ key_encryptsession_pk (char *remotename, netobj *remotekey,
   *deskey = res.cryptkeyres_u.deskey;
   return 0;
 }
-libc_hidden_def (key_encryptsession_pk)
+libc_hidden_nolink (key_encryptsession_pk, GLIBC_2_1)
 
 int
 key_decryptsession_pk (char *remotename, netobj *remotekey,
@@ -184,8 +192,8 @@ key_decryptsession_pk (char *remotename, netobj *remotekey,
   arg.remotename = remotename;
   arg.remotekey = *remotekey;
   arg.deskey = *deskey;
-  if (!key_call ((u_long) KEY_DECRYPT_PK, (xdrproc_t) INTUSE(xdr_cryptkeyarg2),
-		 (char *) &arg, (xdrproc_t) INTUSE(xdr_cryptkeyres),
+  if (!key_call ((u_long) KEY_DECRYPT_PK, (xdrproc_t) xdr_cryptkeyarg2,
+		 (char *) &arg, (xdrproc_t) xdr_cryptkeyres,
 		 (char *) &res))
     return -1;
 
@@ -197,7 +205,7 @@ key_decryptsession_pk (char *remotename, netobj *remotekey,
   *deskey = res.cryptkeyres_u.deskey;
   return 0;
 }
-libc_hidden_def (key_decryptsession_pk)
+libc_hidden_nolink (key_decryptsession_pk, GLIBC_2_1)
 
 int
 key_gendes (des_block *key)
@@ -212,14 +220,14 @@ key_gendes (des_block *key)
   sin.sin_addr.s_addr = htonl (INADDR_LOOPBACK);
   __bzero (sin.sin_zero, sizeof (sin.sin_zero));
   socket = RPC_ANYSOCK;
-  client = INTUSE(clntudp_bufcreate) (&sin, (u_long) KEY_PROG,
-				      (u_long) KEY_VERS, trytimeout, &socket,
-				      RPCSMALLMSGSIZE, RPCSMALLMSGSIZE);
+  client = clntudp_bufcreate (&sin, (u_long) KEY_PROG, (u_long) KEY_VERS,
+			      trytimeout, &socket, RPCSMALLMSGSIZE,
+			      RPCSMALLMSGSIZE);
   if (client == NULL)
     return -1;
 
-  stat = clnt_call (client, KEY_GEN, (xdrproc_t) INTUSE(xdr_void), NULL,
-		    (xdrproc_t) INTUSE(xdr_des_block), (caddr_t) key,
+  stat = clnt_call (client, KEY_GEN, (xdrproc_t) xdr_void, NULL,
+		    (xdrproc_t) xdr_des_block, (caddr_t) key,
 		    tottimeout);
   clnt_destroy (client);
   __close (socket);
@@ -228,15 +236,19 @@ key_gendes (des_block *key)
 
   return 0;
 }
+#ifdef EXPORT_RPC_SYMBOLS
 libc_hidden_def (key_gendes)
+#else
+libc_hidden_nolink (key_gendes, GLIBC_2_1)
+#endif
 
 int
 key_setnet (struct key_netstarg *arg)
 {
   keystatus status;
 
-  if (!key_call ((u_long) KEY_NET_PUT, (xdrproc_t) INTUSE(xdr_key_netstarg),
-		 (char *) arg,(xdrproc_t) INTUSE(xdr_keystatus),
+  if (!key_call ((u_long) KEY_NET_PUT, (xdrproc_t) xdr_key_netstarg,
+		 (char *) arg,(xdrproc_t) xdr_keystatus,
 		 (char *) &status))
     return -1;
 
@@ -247,14 +259,15 @@ key_setnet (struct key_netstarg *arg)
     }
   return 1;
 }
+libc_hidden_nolink (key_setnet, GLIBC_2_1)
 
 int
 key_get_conv (char *pkey, des_block *deskey)
 {
   cryptkeyres res;
 
-  if (!key_call ((u_long) KEY_GET_CONV, (xdrproc_t) INTUSE(xdr_keybuf), pkey,
-		 (xdrproc_t) INTUSE(xdr_cryptkeyres), (char *) &res))
+  if (!key_call ((u_long) KEY_GET_CONV, (xdrproc_t) xdr_keybuf, pkey,
+		 (xdrproc_t) xdr_cryptkeyres, (char *) &res))
     return -1;
 
   if (res.status != KEY_SUCCESS)
@@ -265,6 +278,7 @@ key_get_conv (char *pkey, des_block *deskey)
   *deskey = res.cryptkeyres_u.deskey;
   return 0;
 }
+libc_hidden_nolink (key_get_conv, GLIBC_2_1)
 
 /*
  * Hack to allow the keyserver to use AUTH_DES (for authenticated
@@ -322,7 +336,7 @@ key_call_keyenvoy (u_long proc, xdrproc_t xdr_arg, char *arg,
   xdrstdio_create (&xdrargs, fargs, XDR_ENCODE);
   xdrstdio_create (&xdrrslt, frslt, XDR_DECODE);
 
-  if (!INTUSE(xdr_u_long) (&xdrargs, &proc) || !(*xdr_arg) (&xdrargs, arg))
+  if (!xdr_u_long (&xdrargs, &proc) || !(*xdr_arg) (&xdrargs, arg))
     {
       debug ("xdr args");
       success = 0;
@@ -421,16 +435,16 @@ getkeyserv_handle (int vers)
       /* if uid has changed, build client handle again */
       if (kcp->uid != __geteuid ())
 	{
-        kcp->uid = __geteuid ();
-        auth_destroy (kcp->client->cl_auth);
-        kcp->client->cl_auth =
-          INTUSE(authunix_create) ((char *)"", kcp->uid, 0, 0, NULL);
-        if (kcp->client->cl_auth == NULL)
-          {
-            clnt_destroy (kcp->client);
-            kcp->client = NULL;
-            return ((CLIENT *) NULL);
-          }
+	kcp->uid = __geteuid ();
+	auth_destroy (kcp->client->cl_auth);
+	kcp->client->cl_auth =
+	  authunix_create ((char *)"", kcp->uid, 0, 0, NULL);
+	if (kcp->client->cl_auth == NULL)
+	  {
+	    clnt_destroy (kcp->client);
+	    kcp->client = NULL;
+	    return ((CLIENT *) NULL);
+	  }
 	}
       /* Change the version number to the new one */
       clnt_control (kcp->client, CLSET_VERS, (void *)&vers);
@@ -439,16 +453,14 @@ getkeyserv_handle (int vers)
 
   if ((kcp->client == (CLIENT *) NULL))
     /* Use the AF_UNIX transport */
-    kcp->client = INTUSE(clnt_create) ("/var/run/keyservsock", KEY_PROG, vers,
-				       "unix");
+    kcp->client = clnt_create ("/var/run/keyservsock", KEY_PROG, vers, "unix");
 
   if (kcp->client == (CLIENT *) NULL)
     return (CLIENT *) NULL;
 
   kcp->uid = __geteuid ();
   kcp->pid = __getpid ();
-  kcp->client->cl_auth = INTUSE(authunix_create) ((char *)"", kcp->uid, 0, 0,
-						  NULL);
+  kcp->client->cl_auth = authunix_create ((char *)"", kcp->uid, 0, 0, NULL);
   if (kcp->client->cl_auth == NULL)
     {
       clnt_destroy (kcp->client);
@@ -470,7 +482,7 @@ getkeyserv_handle (int vers)
 static int
 internal_function
 key_call_socket (u_long proc, xdrproc_t xdr_arg, char *arg,
-               xdrproc_t xdr_rslt, char *rslt)
+	       xdrproc_t xdr_rslt, char *rslt)
 {
   CLIENT *clnt;
   struct timeval wait_time;

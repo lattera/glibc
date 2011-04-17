@@ -43,6 +43,7 @@
 #include <errno.h>
 #include <libintl.h>
 #include <unistd.h>
+#include <not-cancel.h>
 
 
 /*
@@ -66,12 +67,11 @@ pmap_getmaps (struct sockaddr_in *address)
   if (socket != -1)
     closeit = true;
 
-  client = INTUSE(clnttcp_create) (address, PMAPPROG,
-				   PMAPVERS, &socket, 50, 500);
+  client = clnttcp_create (address, PMAPPROG, PMAPVERS, &socket, 50, 500);
   if (client != (CLIENT *) NULL)
     {
-      if (CLNT_CALL (client, PMAPPROC_DUMP, (xdrproc_t)INTUSE(xdr_void), NULL,
-		     (xdrproc_t)INTUSE(xdr_pmaplist), (caddr_t)&head,
+      if (CLNT_CALL (client, PMAPPROC_DUMP, (xdrproc_t)xdr_void, NULL,
+		     (xdrproc_t)xdr_pmaplist, (caddr_t)&head,
 		     minutetimeout) != RPC_SUCCESS)
 	{
 	  clnt_perror (client, _("pmap_getmaps.c: rpc problem"));
@@ -80,7 +80,8 @@ pmap_getmaps (struct sockaddr_in *address)
     }
   /* We only need to close the socket here if we opened  it.  */
   if (closeit)
-    (void) __close (socket);
+    close_not_cancel (socket);
   address->sin_port = 0;
   return head;
 }
+libc_hidden_nolink (pmap_getmaps, GLIBC_2_0)

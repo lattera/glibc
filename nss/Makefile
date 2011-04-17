@@ -1,4 +1,4 @@
-# Copyright (C) 1996-1998,2000-2002,2007,2009,2010
+# Copyright (C) 1996-1998,2000-2002,2007,2009,2010,2011
 # Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
@@ -83,7 +83,8 @@ endif
 # Depend on libc.so so a DT_NEEDED is generated in the shared objects.
 # This ensures they will load libc.so for needed symbols if loaded by
 # a statically-linked program that hasn't already loaded it.
-$(services:%=$(objpfx)libnss_%.so): $(common-objpfx)libc.so \
+libnss-libc = $(common-objpfx)linkobj/libc.so
+$(services:%=$(objpfx)libnss_%.so): $(libnss-libc) \
 				    $(common-objpfx)libc_nonshared.a
 
 

@@ -46,4 +46,4 @@ _rpc_dtablesize (void)
 
   return size;
 }
-libc_hidden_def (_rpc_dtablesize)
+libc_hidden_nolink (_rpc_dtablesize, GLIBC_2_0)

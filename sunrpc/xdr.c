@@ -71,6 +71,11 @@ xdr_free (xdrproc_t proc, char *objp)
   x.x_op = XDR_FREE;
   (*proc) (&x, objp);
 }
+#ifdef EXPORT_RPC_SYMBOLS
+libc_hidden_def (xdr_free)
+#else
+libc_hidden_nolink (xdr_free, GLIBC_2_0)
+#endif
 
 /*
  * XDR nothing
@@ -80,7 +85,11 @@ xdr_void (void)
 {
   return TRUE;
 }
-INTDEF(xdr_void)
+#ifdef EXPORT_RPC_SYMBOLS
+libc_hidden_def (xdr_void)
+#else
+libc_hidden_nolink (xdr_void, GLIBC_2_0)
+#endif
 
 /*
  * XDR integers
@@ -109,14 +118,18 @@ xdr_int (XDR *xdrs, int *ip)
     }
   return FALSE;
 #elif INT_MAX == LONG_MAX
-  return INTUSE(xdr_long) (xdrs, (long *) ip);
+  return xdr_long (xdrs, (long *) ip);
 #elif INT_MAX == SHRT_MAX
-  return INTUSE(xdr_short) (xdrs, (short *) ip);
+  return xdr_short (xdrs, (short *) ip);
 #else
 #error unexpected integer sizes in_xdr_int()
 #endif
 }
-INTDEF(xdr_int)
+#ifdef EXPORT_RPC_SYMBOLS
+libc_hidden_def (xdr_int)
+#else
+libc_hidden_nolink (xdr_int, GLIBC_2_0)
+#endif
 
 /*
  * XDR unsigned integers
@@ -144,14 +157,18 @@ xdr_u_int (XDR *xdrs, u_int *up)
     }
   return FALSE;
 #elif UINT_MAX == ULONG_MAX
-  return INTUSE(xdr_u_long) (xdrs, (u_long *) up);
+  return xdr_u_long (xdrs, (u_long *) up);
 #elif UINT_MAX == USHRT_MAX
-  return INTUSE(xdr_short) (xdrs, (short *) up);
+  return xdr_short (xdrs, (short *) up);
 #else
 #error unexpected integer sizes in_xdr_u_int()
 #endif
 }
-INTDEF(xdr_u_int)
+#ifdef EXPORT_RPC_SYMBOLS
+libc_hidden_def (xdr_u_int)
+#else
+libc_hidden_nolink (xdr_u_int, GLIBC_2_0)
+#endif
 
 /*
  * XDR long integers
@@ -175,7 +192,11 @@ xdr_long (XDR *xdrs, long *lp)
 
   return FALSE;
 }
-INTDEF(xdr_long)
+#ifdef EXPORT_RPC_SYMBOLS
+libc_hidden_def (xdr_long)
+#else
+libc_hidden_nolink (xdr_long, GLIBC_2_0)
+#endif
 
 /*
  * XDR unsigned long integers
@@ -210,7 +231,11 @@ xdr_u_long (XDR *xdrs, u_long *ulp)
     }
   return FALSE;
 }
-INTDEF(xdr_u_long)
+#ifdef EXPORT_RPC_SYMBOLS
+libc_hidden_def (xdr_u_long)
+#else
+libc_hidden_nolink (xdr_u_long, GLIBC_2_0)
+#endif
 
 /*
  * XDR hyper integers
@@ -242,8 +267,11 @@ xdr_hyper (XDR *xdrs, quad_t *llp)
 
   return FALSE;
 }
-INTDEF(xdr_hyper)
-
+#ifdef EXPORT_RPC_SYMBOLS
+libc_hidden_def (xdr_hyper)
+#else
+libc_hidden_nolink (xdr_hyper, GLIBC_2_1_1)
+#endif
 
 /*
  * XDR hyper integers
@@ -275,19 +303,33 @@ xdr_u_hyper (XDR *xdrs, u_quad_t *ullp)
 
   return FALSE;
 }
-INTDEF(xdr_u_hyper)
+#ifdef EXPORT_RPC_SYMBOLS
+libc_hidden_def (xdr_u_hyper)
+#else
+libc_hidden_nolink (xdr_u_hyper, GLIBC_2_1_1)
+#endif
 
 bool_t
 xdr_longlong_t (XDR *xdrs, quad_t *llp)
 {
-  return INTUSE(xdr_hyper) (xdrs, llp);
+  return xdr_hyper (xdrs, llp);
 }
+#ifdef EXPORT_RPC_SYMBOLS
+libc_hidden_def (xdr_longlong_t)
+#else
+libc_hidden_nolink (xdr_longlong_t, GLIBC_2_1_1)
+#endif
 
 bool_t
 xdr_u_longlong_t (XDR *xdrs, u_quad_t *ullp)
 {
-  return INTUSE(xdr_u_hyper) (xdrs, ullp);
+  return xdr_u_hyper (xdrs, ullp);
 }
+#ifdef EXPORT_RPC_SYMBOLS
+libc_hidden_def (xdr_u_longlong_t)
+#else
+libc_hidden_nolink (xdr_u_longlong_t, GLIBC_2_1_1)
+#endif
 
 /*
  * XDR short integers
@@ -316,7 +358,11 @@ xdr_short (XDR *xdrs, short *sp)
     }
   return FALSE;
 }
-INTDEF(xdr_short)
+#ifdef EXPORT_RPC_SYMBOLS
+libc_hidden_def (xdr_short)
+#else
+libc_hidden_nolink (xdr_short, GLIBC_2_0)
+#endif
 
 /*
  * XDR unsigned short integers
@@ -345,7 +391,11 @@ xdr_u_short (XDR *xdrs, u_short *usp)
     }
   return FALSE;
 }
-INTDEF(xdr_u_short)
+#ifdef EXPORT_RPC_SYMBOLS
+libc_hidden_def (xdr_u_short)
+#else
+libc_hidden_nolink (xdr_u_short, GLIBC_2_0)
+#endif
 
 
 /*
@@ -357,13 +407,18 @@ xdr_char (XDR *xdrs, char *cp)
   int i;
 
   i = (*cp);
-  if (!INTUSE(xdr_int) (xdrs, &i))
+  if (!xdr_int (xdrs, &i))
     {
       return FALSE;
     }
   *cp = i;
   return TRUE;
 }
+#ifdef EXPORT_RPC_SYMBOLS
+libc_hidden_def (xdr_char)
+#else
+libc_hidden_nolink (xdr_char, GLIBC_2_0)
+#endif
 
 /*
  * XDR an unsigned char
@@ -374,13 +429,18 @@ xdr_u_char (XDR *xdrs, u_char *cp)
   u_int u;
 
   u = (*cp);
-  if (!INTUSE(xdr_u_int) (xdrs, &u))
+  if (!xdr_u_int (xdrs, &u))
     {
       return FALSE;
     }
   *cp = u;
   return TRUE;
 }
+#ifdef EXPORT_RPC_SYMBOLS
+libc_hidden_def (xdr_u_char)
+#else
+libc_hidden_nolink (xdr_u_char, GLIBC_2_0)
+#endif
 
 /*
  * XDR booleans
@@ -409,7 +469,11 @@ xdr_bool (XDR *xdrs, bool_t *bp)
     }
   return FALSE;
 }
-INTDEF(xdr_bool)
+#ifdef EXPORT_RPC_SYMBOLS
+libc_hidden_def (xdr_bool)
+#else
+libc_hidden_nolink (xdr_bool, GLIBC_2_0)
+#endif
 
 /*
  * XDR enumerations
@@ -448,19 +512,23 @@ xdr_enum (XDR *xdrs, enum_t *ep)
 	}
       return FALSE;
 #else
-      return INTUSE(xdr_long) (xdrs, (long *) ep);
+      return xdr_long (xdrs, (long *) ep);
 #endif
     }
   else if (sizeof (enum sizecheck) == sizeof (short))
     {
-      return INTUSE(xdr_short) (xdrs, (short *) ep);
+      return xdr_short (xdrs, (short *) ep);
     }
   else
     {
       return FALSE;
     }
 }
-INTDEF(xdr_enum)
+#ifdef EXPORT_RPC_SYMBOLS
+libc_hidden_def (xdr_enum)
+#else
+libc_hidden_nolink (xdr_enum, GLIBC_2_0)
+#endif
 
 /*
  * XDR opaque data
@@ -511,7 +579,11 @@ xdr_opaque (XDR *xdrs, caddr_t cp, u_int cnt)
     }
   return FALSE;
 }
-INTDEF(xdr_opaque)
+#ifdef EXPORT_RPC_SYMBOLS
+libc_hidden_def (xdr_opaque)
+#else
+libc_hidden_nolink (xdr_opaque, GLIBC_2_0)
+#endif
 
 /*
  * XDR counted bytes
@@ -531,7 +603,7 @@ xdr_bytes (xdrs, cpp, sizep, maxsize)
   /*
    * first deal with the length since xdr bytes are counted
    */
-  if (!INTUSE(xdr_u_int) (xdrs, sizep))
+  if (!xdr_u_int (xdrs, sizep))
     {
       return FALSE;
     }
@@ -563,7 +635,7 @@ xdr_bytes (xdrs, cpp, sizep, maxsize)
       /* fall into ... */
 
     case XDR_ENCODE:
-      return INTUSE(xdr_opaque) (xdrs, sp, nodesize);
+      return xdr_opaque (xdrs, sp, nodesize);
 
     case XDR_FREE:
       if (sp != NULL)
@@ -575,7 +647,11 @@ xdr_bytes (xdrs, cpp, sizep, maxsize)
     }
   return FALSE;
 }
-INTDEF(xdr_bytes)
+#ifdef EXPORT_RPC_SYMBOLS
+libc_hidden_def (xdr_bytes)
+#else
+libc_hidden_nolink (xdr_bytes, GLIBC_2_0)
+#endif
 
 /*
  * Implemented here due to commonality of the object.
@@ -586,9 +662,13 @@ xdr_netobj (xdrs, np)
      struct netobj *np;
 {
 
-  return INTUSE(xdr_bytes) (xdrs, &np->n_bytes, &np->n_len, MAX_NETOBJ_SZ);
+  return xdr_bytes (xdrs, &np->n_bytes, &np->n_len, MAX_NETOBJ_SZ);
 }
-INTDEF(xdr_netobj)
+#ifdef EXPORT_RPC_SYMBOLS
+libc_hidden_def (xdr_netobj)
+#else
+libc_hidden_nolink (xdr_netobj, GLIBC_2_0)
+#endif
 
 /*
  * XDR a discriminated union
@@ -614,7 +694,7 @@ xdr_union (xdrs, dscmp, unp, choices, dfault)
   /*
    * we deal with the discriminator;  it's an enum
    */
-  if (!INTUSE(xdr_enum) (xdrs, dscmp))
+  if (!xdr_enum (xdrs, dscmp))
     {
       return FALSE;
     }
@@ -636,7 +716,7 @@ xdr_union (xdrs, dscmp, unp, choices, dfault)
   return ((dfault == NULL_xdrproc_t) ? FALSE :
 	  (*dfault) (xdrs, unp, LASTUNSIGNED));
 }
-INTDEF(xdr_union)
+libc_hidden_nolink (xdr_union, GLIBC_2_0)
 
 
 /*
@@ -682,7 +762,7 @@ xdr_string (xdrs, cpp, maxsize)
     case XDR_DECODE:
       break;
     }
-  if (!INTUSE(xdr_u_int) (xdrs, &size))
+  if (!xdr_u_int (xdrs, &size))
     {
       return FALSE;
     }
@@ -716,7 +796,7 @@ xdr_string (xdrs, cpp, maxsize)
       /* fall into ... */
 
     case XDR_ENCODE:
-      return INTUSE(xdr_opaque) (xdrs, sp, size);
+      return xdr_opaque (xdrs, sp, size);
 
     case XDR_FREE:
       mem_free (sp, nodesize);
@@ -725,7 +805,11 @@ xdr_string (xdrs, cpp, maxsize)
     }
   return FALSE;
 }
-INTDEF(xdr_string)
+#ifdef EXPORT_RPC_SYMBOLS
+libc_hidden_def (xdr_string)
+#else
+libc_hidden_nolink (xdr_string, GLIBC_2_0)
+#endif
 
 /*
  * Wrapper for xdr_string that can be called directly from
@@ -736,9 +820,14 @@ xdr_wrapstring (xdrs, cpp)
      XDR *xdrs;
      char **cpp;
 {
-  if (INTUSE(xdr_string) (xdrs, cpp, LASTUNSIGNED))
+  if (xdr_string (xdrs, cpp, LASTUNSIGNED))
     {
       return TRUE;
     }
   return FALSE;
 }
+#ifdef EXPORT_RPC_SYMBOLS
+libc_hidden_def (xdr_wrapstring)
+#else
+libc_hidden_nolink (xdr_wrapstring, GLIBC_2_0)
+#endif

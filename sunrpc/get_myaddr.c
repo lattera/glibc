@@ -96,3 +96,8 @@ get_myaddress (struct sockaddr_in *addr)
      if no interface is up.  Probably this won't happen (at least
      loopback is there) but still...  */
 }
+#ifdef EXPORT_RPC_SYMBOLS
+libc_hidden_def (get_myaddress)
+#else
+libc_hidden_nolink (get_myaddress, GLIBC_2_0)
+#endif

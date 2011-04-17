@@ -14,4 +14,8 @@ extern u_short __libc_rpc_getport (struct sockaddr_in *address, u_long program,
      internal_function;
 libc_hidden_proto (__libc_rpc_getport)
 
+libc_hidden_proto (clnt_broadcast)
+libc_hidden_proto (pmap_getmaps)
+libc_hidden_proto (pmap_rmtcall)
+
 #endif

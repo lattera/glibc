@@ -52,12 +52,12 @@ bool_t
 xdr_opaque_auth (XDR *xdrs, struct opaque_auth *ap)
 {
 
-  if (INTUSE(xdr_enum) (xdrs, &(ap->oa_flavor)))
-    return INTUSE(xdr_bytes) (xdrs, &ap->oa_base,
+  if (xdr_enum (xdrs, &(ap->oa_flavor)))
+    return xdr_bytes (xdrs, &ap->oa_base,
 		      &ap->oa_length, MAX_AUTH_BYTES);
   return FALSE;
 }
-INTDEF(xdr_opaque_auth)
+libc_hidden_nolink (xdr_opaque_auth, GLIBC_2_0)
 
 /*
  * XDR a DES block
@@ -65,9 +65,9 @@ INTDEF(xdr_opaque_auth)
 bool_t
 xdr_des_block (XDR *xdrs, des_block *blkp)
 {
-  return INTUSE(xdr_opaque) (xdrs, (caddr_t) blkp, sizeof (des_block));
+  return xdr_opaque (xdrs, (caddr_t) blkp, sizeof (des_block));
 }
-INTDEF(xdr_des_block)
+libc_hidden_nolink (xdr_des_block, GLIBC_2_0)
 
 /* * * * * * * * * * * * * * XDR RPC MESSAGE * * * * * * * * * * * * * * * */
 
@@ -78,24 +78,24 @@ bool_t
 xdr_accepted_reply (XDR *xdrs, struct accepted_reply *ar)
 {
   /* personalized union, rather than calling xdr_union */
-  if (!INTUSE(xdr_opaque_auth) (xdrs, &(ar->ar_verf)))
+  if (!xdr_opaque_auth (xdrs, &(ar->ar_verf)))
     return FALSE;
-  if (!INTUSE(xdr_enum) (xdrs, (enum_t *) & (ar->ar_stat)))
+  if (!xdr_enum (xdrs, (enum_t *) & (ar->ar_stat)))
     return FALSE;
   switch (ar->ar_stat)
     {
     case SUCCESS:
       return ((*(ar->ar_results.proc)) (xdrs, ar->ar_results.where));
     case PROG_MISMATCH:
-      if (!INTUSE(xdr_u_long) (xdrs, &(ar->ar_vers.low)))
+      if (!xdr_u_long (xdrs, &(ar->ar_vers.low)))
 	return FALSE;
-      return (INTUSE(xdr_u_long) (xdrs, &(ar->ar_vers.high)));
+      return (xdr_u_long (xdrs, &(ar->ar_vers.high)));
     default:
       return TRUE;
     }
   return TRUE;		/* TRUE => open ended set of problems */
 }
-INTDEF(xdr_accepted_reply)
+libc_hidden_nolink (xdr_accepted_reply, GLIBC_2_0)
 
 /*
  * XDR the MSG_DENIED part of a reply message union
@@ -104,26 +104,26 @@ bool_t
 xdr_rejected_reply (XDR *xdrs, struct rejected_reply *rr)
 {
   /* personalized union, rather than calling xdr_union */
-  if (!INTUSE(xdr_enum) (xdrs, (enum_t *) & (rr->rj_stat)))
+  if (!xdr_enum (xdrs, (enum_t *) & (rr->rj_stat)))
     return FALSE;
   switch (rr->rj_stat)
     {
     case RPC_MISMATCH:
-      if (!INTUSE(xdr_u_long) (xdrs, &(rr->rj_vers.low)))
+      if (!xdr_u_long (xdrs, &(rr->rj_vers.low)))
 	return FALSE;
-      return INTUSE(xdr_u_long) (xdrs, &(rr->rj_vers.high));
+      return xdr_u_long (xdrs, &(rr->rj_vers.high));
 
     case AUTH_ERROR:
-      return INTUSE(xdr_enum) (xdrs, (enum_t *) & (rr->rj_why));
+      return xdr_enum (xdrs, (enum_t *) & (rr->rj_why));
     }
   return FALSE;
 }
-INTDEF(xdr_rejected_reply)
+libc_hidden_nolink (xdr_rejected_reply, GLIBC_2_0)
 
 static const struct xdr_discrim reply_dscrm[3] =
 {
-  {(int) MSG_ACCEPTED, (xdrproc_t) INTUSE(xdr_accepted_reply)},
-  {(int) MSG_DENIED, (xdrproc_t) INTUSE(xdr_rejected_reply)},
+  {(int) MSG_ACCEPTED, (xdrproc_t) xdr_accepted_reply},
+  {(int) MSG_DENIED, (xdrproc_t) xdr_rejected_reply},
   {__dontcare__, NULL_xdrproc_t}};
 
 /*
@@ -134,15 +134,15 @@ xdr_replymsg (xdrs, rmsg)
      XDR *xdrs;
      struct rpc_msg *rmsg;
 {
-  if (INTUSE(xdr_u_long) (xdrs, &(rmsg->rm_xid)) &&
-      INTUSE(xdr_enum) (xdrs, (enum_t *) & (rmsg->rm_direction)) &&
+  if (xdr_u_long (xdrs, &(rmsg->rm_xid)) &&
+      xdr_enum (xdrs, (enum_t *) & (rmsg->rm_direction)) &&
       (rmsg->rm_direction == REPLY))
-    return INTUSE(xdr_union) (xdrs, (enum_t *) & (rmsg->rm_reply.rp_stat),
-			      (caddr_t) & (rmsg->rm_reply.ru), reply_dscrm,
-			      NULL_xdrproc_t);
+    return xdr_union (xdrs, (enum_t *) & (rmsg->rm_reply.rp_stat),
+		      (caddr_t) & (rmsg->rm_reply.ru), reply_dscrm,
+		      NULL_xdrproc_t);
   return FALSE;
 }
-INTDEF(xdr_replymsg)
+libc_hidden_nolink (xdr_replymsg, GLIBC_2_0)
 
 
 /*
@@ -160,14 +160,14 @@ xdr_callhdr (xdrs, cmsg)
   cmsg->rm_call.cb_rpcvers = RPC_MSG_VERSION;
   if (
        (xdrs->x_op == XDR_ENCODE) &&
-       INTUSE(xdr_u_long) (xdrs, &(cmsg->rm_xid)) &&
-       INTUSE(xdr_enum) (xdrs, (enum_t *) & (cmsg->rm_direction)) &&
-       INTUSE(xdr_u_long) (xdrs, &(cmsg->rm_call.cb_rpcvers)) &&
-       INTUSE(xdr_u_long) (xdrs, &(cmsg->rm_call.cb_prog)))
-    return INTUSE(xdr_u_long) (xdrs, &(cmsg->rm_call.cb_vers));
+       xdr_u_long (xdrs, &(cmsg->rm_xid)) &&
+       xdr_enum (xdrs, (enum_t *) & (cmsg->rm_direction)) &&
+       xdr_u_long (xdrs, &(cmsg->rm_call.cb_rpcvers)) &&
+       xdr_u_long (xdrs, &(cmsg->rm_call.cb_prog)))
+    return xdr_u_long (xdrs, &(cmsg->rm_call.cb_vers));
   return FALSE;
 }
-INTDEF(xdr_callhdr)
+libc_hidden_nolink (xdr_callhdr, GLIBC_2_0)
 
 /* ************************** Client utility routine ************* */
 
@@ -277,4 +277,4 @@ _seterr_reply (struct rpc_msg *msg,
       break;
     }
 }
-libc_hidden_def (_seterr_reply)
+libc_hidden_nolink (_seterr_reply, GLIBC_2_0)

@@ -28,6 +28,7 @@
  *   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 #include <rpc/rpc.h>
+#include <shlib-compat.h>
 
 #ifdef _RPC_THREAD_SAFE_
 #undef svc_fdset
@@ -44,7 +45,7 @@
    section but we cannot add const to the type because this isn't how
    the variable is declared.  So we use the section attribute.  */
 struct opaque_auth _null_auth __attribute__ ((nocommon));
-libc_hidden_def (_null_auth)
+libc_hidden_nolink (_null_auth, GLIBC_2_0)
 fd_set svc_fdset;
 struct rpc_createerr rpc_createerr;
 struct pollfd *svc_pollfd;

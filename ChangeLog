@@ -1,3 +1,77 @@
+2011-04-16  Ulrich Drepper  <drepper@gmail.com>
+
+	* Makefile: Add rules to build linkobj/libc.so.
+	* include/libc-symbols.h: Define libc_hidden_nolink.
+	* include/rpc/auth.h: Mark functions which are to be hidden.
+	* include/rpc/auth_des.h: Likewise.
+	* include/rpc/auth_unix.h: Likewise.
+	* include/rpc/clnt.h: Likewise.
+	* include/rpc/des_crypt.h: Likewise.
+	* include/rpc/key_prot.h: Likewise.
+	* include/rpc/pmap_clnt.h: Likewise.
+	* include/rpc/pmap_prot.h: Likewise.
+	* include/rpc/pmap_rmt.h: Likewise.
+	* include/rpc/rpc_msg.h: Likewise.
+	* include/rpc/svc.h: Likewise.
+	* include/rpc/svc_auth.h: Likewise.
+	* include/rpc/xdr.h: Likewise.
+	* nis/Makefile: Link all DSOs against linkobj/libc.so.
+	* nss/Makefile: Likewise.
+	* sunrpc/Makefile: Don't install headers.  Build library with normal
+	entry points.  Don't build rpcinfo.  Link RPC tests appropriately.
+	* sunrpc/auth_des.c: Hide exported symbols by default, export some
+	for the compat linking library.  Remove use of INTDEF/INTUSE.
+	* sunrpc/auth_none.c: Likewise.
+	* sunrpc/auth_unix.c: Likewise.
+	* sunrpc/authdes_prot.c: Likewise.
+	* sunrpc/authuxprot.c: Likewise.
+	* sunrpc/clnt_gen.c: Likewise.
+	* sunrpc/clnt_perr.c: Likewise.
+	* sunrpc/clnt_raw.c: Likewise.
+	* sunrpc/clnt_simp.c: Likewise.
+	* sunrpc/clnt_tcp.c: Likewise.
+	* sunrpc/clnt_udp.c: Likewise.
+	* sunrpc/clnt_unix.c: Likewise.
+	* sunrpc/des_crypt.c: Likewise.
+	* sunrpc/des_soft.c: Likewise.
+	* sunrpc/get_myaddr.c: Likewise.
+	* sunrpc/key_call.c: Likewise.
+	* sunrpc/key_prot.c: Likewise.
+	* sunrpc/netname.c: Likewise.
+	* sunrpc/pm_getmaps.c: Likewise.
+	* sunrpc/pm_getport.c: Likewise.
+	* sunrpc/pmap_clnt.c: Likewise.
+	* sunrpc/pmap_prot.c: Likewise.
+	* sunrpc/pmap_prot2.c: Likewise.
+	* sunrpc/pmap_rmt.c: Likewise.
+	* sunrpc/publickey.c: Likewise.
+	* sunrpc/rpc_cmsg.c: Likewise.
+	* sunrpc/rpc_common.c: Likewise.
+	* sunrpc/rpc_dtable.c: Likewise.
+	* sunrpc/rpc_prot.c: Likewise.
+	* sunrpc/rpc_thread.c: Likewise.
+	* sunrpc/rtime.c: Likewise.
+	* sunrpc/svc.c: Likewise.
+	* sunrpc/svc_auth.c: Likewise.
+	* sunrpc/svc_authux.c: Likewise.
+	* sunrpc/svc_raw.c: Likewise.
+	* sunrpc/svc_run.c: Likewise.
+	* sunrpc/svc_simple.c: Likewise.
+	* sunrpc/svc_tcp.c: Likewise.
+	* sunrpc/svc_udp.c: Likewise.
+	* sunrpc/svc_unix.c: Likewise.
+	* sunrpc/svcauth_des.c: Likewise.
+	* sunrpc/xcrypt.c: Likewise.
+	* sunrpc/xdr.c: Likewise.
+	* sunrpc/xdr_array.c: Likewise.
+	* sunrpc/xdr_float.c: Likewise.
+	* sunrpc/xdr_intXX_t.c: Likewise.
+	* sunrpc/xdr_mem.c: Likewise.
+	* sunrpc/xdr_rec.c: Likewise.
+	* sunrpc/xdr_ref.c: Likewise.
+	* sunrpc/xdr_sizeof.c: Likewise.
+	* sunrpc/xdr_stdio.c: Likewise.
+
 2011-04-10  Ulrich Drepper  <drepper@gmail.com>
 
 	[BZ #12650]

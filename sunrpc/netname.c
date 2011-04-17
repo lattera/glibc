@@ -55,7 +55,7 @@ user2netname (char netname[MAXNETNAMELEN + 1], const uid_t uid,
     netname[i - 1] = '\0';
   return 1;
 }
-libc_hidden_def (user2netname)
+libc_hidden_nolink (user2netname, GLIBC_2_1)
 
 int
 host2netname (char netname[MAXNETNAMELEN + 1], const char *host,
@@ -116,7 +116,11 @@ host2netname (char netname[MAXNETNAMELEN + 1], const char *host,
   sprintf (netname, "%s.%s@%s", OPSYS, hostname, domainname);
   return 1;
 }
+#ifdef EXPORT_RPC_SYMBOLS
 libc_hidden_def (host2netname)
+#else
+libc_hidden_nolink (host2netname, GLIBC_2_1)
+#endif
 
 int
 getnetname (char name[MAXNETNAMELEN + 1])
@@ -131,7 +135,7 @@ getnetname (char name[MAXNETNAMELEN + 1])
     dummy = user2netname (name, uid, NULL);
   return (dummy);
 }
-libc_hidden_def (getnetname)
+libc_hidden_nolink (getnetname, GLIBC_2_1)
 
 /* Type of the lookup function for netname2user.  */
 typedef int (*netname2user_function) (const char netname[MAXNETNAMELEN + 1],
@@ -181,7 +185,11 @@ netname2user (const char netname[MAXNETNAMELEN + 1], uid_t * uidp, gid_t * gidp,
 
   return status == NSS_STATUS_SUCCESS;
 }
+#ifdef EXPORT_RPC_SYMBOLS
 libc_hidden_def (netname2user)
+#else
+libc_hidden_nolink (netname2user, GLIBC_2_1)
+#endif
 
 int
 netname2host (const char netname[MAXNETNAMELEN + 1], char *hostname,
@@ -208,3 +216,4 @@ netname2host (const char netname[MAXNETNAMELEN + 1], char *hostname,
 
   return 1;
 }
+libc_hidden_nolink (netname2host, GLIBC_2_1)

@@ -115,7 +115,7 @@ xprt_register (SVCXPRT *xprt)
 					       POLLRDNORM | POLLRDBAND);
     }
 }
-libc_hidden_def (xprt_register)
+libc_hidden_nolink (xprt_register, GLIBC_2_0)
 
 /* De-activate a transport handle. */
 void
@@ -136,7 +136,11 @@ xprt_unregister (SVCXPRT *xprt)
 	  svc_pollfd[i].fd = -1;
     }
 }
+#ifdef EXPORT_RPC_SYMBOLS
 libc_hidden_def (xprt_unregister)
+#else
+libc_hidden_nolink (xprt_unregister, GLIBC_2_0)
+#endif
 
 
 /* ********************** CALLOUT list related stuff ************* */
@@ -211,7 +215,11 @@ pmap_it:
 
   return TRUE;
 }
+#ifdef EXPORT_RPC_SYMBOLS
 libc_hidden_def (svc_register)
+#else
+libc_hidden_nolink (svc_register, GLIBC_2_0)
+#endif
 
 /* Remove a service program from the callout list. */
 void
@@ -234,7 +242,7 @@ svc_unregister (rpcprog_t prog, rpcvers_t vers)
   if (! svc_is_mapped (prog, vers))
     pmap_unset (prog, vers);
 }
-libc_hidden_def (svc_unregister)
+libc_hidden_nolink (svc_unregister, GLIBC_2_0)
 
 /* ******************* REPLY GENERATION ROUTINES  ************ */
 
@@ -253,7 +261,11 @@ svc_sendreply (register SVCXPRT *xprt, xdrproc_t xdr_results,
   rply.acpted_rply.ar_results.proc = xdr_results;
   return SVC_REPLY (xprt, &rply);
 }
-INTDEF (svc_sendreply)
+#ifdef EXPORT_RPC_SYMBOLS
+libc_hidden_def (svc_sendreply)
+#else
+libc_hidden_nolink (svc_sendreply, GLIBC_2_0)
+#endif
 
 /* No procedure error reply */
 void
@@ -267,6 +279,11 @@ svcerr_noproc (register SVCXPRT *xprt)
   rply.acpted_rply.ar_stat = PROC_UNAVAIL;
   SVC_REPLY (xprt, &rply);
 }
+#ifdef EXPORT_RPC_SYMBOLS
+libc_hidden_def (svcerr_noproc)
+#else
+libc_hidden_nolink (svcerr_noproc, GLIBC_2_0)
+#endif
 
 /* Can't decode args error reply */
 void
@@ -280,7 +297,11 @@ svcerr_decode (register SVCXPRT *xprt)
   rply.acpted_rply.ar_stat = GARBAGE_ARGS;
   SVC_REPLY (xprt, &rply);
 }
-INTDEF (svcerr_decode)
+#ifdef EXPORT_RPC_SYMBOLS
+libc_hidden_def (svcerr_decode)
+#else
+libc_hidden_nolink (svcerr_decode, GLIBC_2_0)
+#endif
 
 /* Some system error */
 void
@@ -294,6 +315,11 @@ svcerr_systemerr (register SVCXPRT *xprt)
   rply.acpted_rply.ar_stat = SYSTEM_ERR;
   SVC_REPLY (xprt, &rply);
 }
+#ifdef EXPORT_RPC_SYMBOLS
+libc_hidden_def (svcerr_systemerr)
+#else
+libc_hidden_nolink (svcerr_systemerr, GLIBC_2_0)
+#endif
 
 /* Authentication error reply */
 void
@@ -307,7 +333,7 @@ svcerr_auth (SVCXPRT *xprt, enum auth_stat why)
   rply.rjcted_rply.rj_why = why;
   SVC_REPLY (xprt, &rply);
 }
-libc_hidden_def (svcerr_auth)
+libc_hidden_nolink (svcerr_auth, GLIBC_2_0)
 
 /* Auth too weak error reply */
 void
@@ -315,6 +341,7 @@ svcerr_weakauth (SVCXPRT *xprt)
 {
   svcerr_auth (xprt, AUTH_TOOWEAK);
 }
+libc_hidden_nolink (svcerr_weakauth, GLIBC_2_0)
 
 /* Program unavailable error reply */
 void
@@ -328,7 +355,7 @@ svcerr_noprog (register SVCXPRT *xprt)
   rply.acpted_rply.ar_stat = PROG_UNAVAIL;
   SVC_REPLY (xprt, &rply);
 }
-libc_hidden_def (svcerr_noprog)
+libc_hidden_nolink (svcerr_noprog, GLIBC_2_0)
 
 /* Program version mismatch error reply */
 void
@@ -345,7 +372,7 @@ svcerr_progvers (register SVCXPRT *xprt, rpcvers_t low_vers,
   rply.acpted_rply.ar_vers.high = high_vers;
   SVC_REPLY (xprt, &rply);
 }
-libc_hidden_def (svcerr_progvers)
+libc_hidden_nolink (svcerr_progvers, GLIBC_2_0)
 
 /* ******************* SERVER INPUT STUFF ******************* */
 
@@ -372,9 +399,9 @@ svc_getreq (int rdfds)
 
   FD_ZERO (&readfds);
   readfds.fds_bits[0] = rdfds;
-  INTUSE(svc_getreqset) (&readfds);
+  svc_getreqset (&readfds);
 }
-INTDEF (svc_getreq)
+libc_hidden_nolink (svc_getreq, GLIBC_2_0)
 
 void
 svc_getreqset (fd_set *readfds)
@@ -391,9 +418,9 @@ svc_getreqset (fd_set *readfds)
   maskp = readfds->fds_bits;
   for (sock = 0; sock < setsize; sock += NFDBITS)
     for (mask = *maskp++; (bit = ffsl (mask)); mask ^= (1L << (bit - 1)))
-      INTUSE(svc_getreq_common) (sock + bit - 1);
+      svc_getreq_common (sock + bit - 1);
 }
-INTDEF (svc_getreqset)
+libc_hidden_nolink (svc_getreqset, GLIBC_2_0)
 
 void
 svc_getreq_poll (struct pollfd *pfdp, int pollretval)
@@ -412,14 +439,18 @@ svc_getreq_poll (struct pollfd *pfdp, int pollretval)
 	  if (p->revents & POLLNVAL)
 	    xprt_unregister (xports[p->fd]);
 	  else
-	    INTUSE(svc_getreq_common) (p->fd);
+	    svc_getreq_common (p->fd);
 
 	  if (++fds_found >= pollretval)
 	    break;
 	}
     }
 }
-INTDEF (svc_getreq_poll)
+#ifdef EXPORT_RPC_SYMBOLS
+libc_hidden_def (svc_getreq_poll)
+#else
+libc_hidden_nolink (svc_getreq_poll, GLIBC_2_2)
+#endif
 
 
 void
@@ -465,7 +496,7 @@ svc_getreq_common (const int fd)
 	      r.rq_xprt->xp_verf.oa_flavor = _null_auth.oa_flavor;
 	      r.rq_xprt->xp_verf.oa_length = 0;
 	    }
-	  else if ((why = INTUSE(_authenticate) (&r, &msg)) != AUTH_OK)
+	  else if ((why = _authenticate (&r, &msg)) != AUTH_OK)
 	    {
 	      svcerr_auth (xprt, why);
 	      goto call_done;
@@ -511,7 +542,7 @@ svc_getreq_common (const int fd)
     }
   while (stat == XPRT_MOREREQS);
 }
-INTDEF (svc_getreq_common)
+libc_hidden_nolink (svc_getreq_common, GLIBC_2_2)
 
 #ifdef _RPC_THREAD_SAFE_
 

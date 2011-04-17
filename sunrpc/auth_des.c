@@ -51,8 +51,6 @@
 
 #define debug(msg)		/* printf("%s\n", msg) */
 
-extern bool_t INTUSE(xdr_authdes_cred) (XDR *, struct authdes_cred *);
-extern bool_t INTUSE(xdr_authdes_verf) (XDR *, struct authdes_verf *);
 
 /*
  * DES authenticator operations vector
@@ -79,8 +77,8 @@ static const struct auth_ops authdes_ops = {
  */
 struct ad_private {
   char *ad_fullname;		/* client's full name */
-  u_int ad_fullnamelen;	        /* length of name, rounded up */
-  char *ad_servername;	        /* server's full name */
+  u_int ad_fullnamelen;		/* length of name, rounded up */
+  char *ad_servername;		/* server's full name */
   u_int ad_servernamelen;	/* length of name, rounded up */
   uint32_t ad_window;		/* client specified window */
   bool_t ad_dosync;		/* synchronize? */
@@ -91,7 +89,7 @@ struct ad_private {
   struct authdes_verf ad_verf;	/* storage for verifier */
   struct rpc_timeval ad_timestamp;	/* timestamp sent */
   des_block ad_xkey;		/* encrypted conversation key */
-  u_char ad_pkey[1024];	        /* Servers actual public key */
+  u_char ad_pkey[1024];		/* Servers actual public key */
 };
 
 
@@ -114,8 +112,13 @@ authdes_create (const char *servername, u_int window,
 
   pkey.n_bytes = pkey_data;
   pkey.n_len = strlen (pkey_data) + 1;
-  return INTUSE(authdes_pk_create) (servername, &pkey, window, syncaddr, ckey);
+  return authdes_pk_create (servername, &pkey, window, syncaddr, ckey);
 }
+#ifdef EXPORT_RPC_SYMBOLS
+libc_hidden_def (authdes_create)
+#else
+libc_hidden_nolink (authdes_create, GLIBC_2_1)
+#endif
 
 AUTH *
 authdes_pk_create (const char *servername, netobj *pkey, u_int window,
@@ -205,7 +208,11 @@ failed:
     }
   return NULL;
 }
-INTDEF(authdes_pk_create)
+#ifdef EXPORT_RPC_SYMBOLS
+libc_hidden_def (authdes_pk_create)
+#else
+libc_hidden_nolink (authdes_pk_create, GLIBC_2_1)
+#endif
 
 /*
  * Implement the five authentication operations
@@ -309,7 +316,7 @@ authdes_marshal (AUTH *auth, XDR *xdrs)
       ATTEMPT (xdr_putint32 (xdrs, &auth->ah_cred.oa_flavor));
       ATTEMPT (xdr_putint32 (xdrs, &len));
     }
-  ATTEMPT (INTUSE(xdr_authdes_cred) (xdrs, cred));
+  ATTEMPT (xdr_authdes_cred (xdrs, cred));
 
   len = (2 + 1) * BYTES_PER_XDR_UNIT;
   if ((ixdr = xdr_inline (xdrs, 2 * BYTES_PER_XDR_UNIT)) != NULL)
@@ -322,7 +329,7 @@ authdes_marshal (AUTH *auth, XDR *xdrs)
       ATTEMPT (xdr_putint32 (xdrs, &auth->ah_verf.oa_flavor));
       ATTEMPT (xdr_putint32 (xdrs, &len));
     }
-  ATTEMPT (INTUSE(xdr_authdes_verf) (xdrs, verf));
+  ATTEMPT (xdr_authdes_verf (xdrs, verf));
 
   return TRUE;
 }

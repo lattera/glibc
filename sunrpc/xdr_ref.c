@@ -93,7 +93,7 @@ xdr_reference (xdrs, pp, size, proc)
     }
   return stat;
 }
-INTDEF(xdr_reference)
+libc_hidden_nolink (xdr_reference, GLIBC_2_0)
 
 
 /*
@@ -126,7 +126,7 @@ xdr_pointer (xdrs, objpp, obj_size, xdr_obj)
   bool_t more_data;
 
   more_data = (*objpp != NULL);
-  if (!INTUSE(xdr_bool) (xdrs, &more_data))
+  if (!xdr_bool (xdrs, &more_data))
     {
       return FALSE;
     }
@@ -135,5 +135,10 @@ xdr_pointer (xdrs, objpp, obj_size, xdr_obj)
       *objpp = NULL;
       return TRUE;
     }
-  return INTUSE(xdr_reference) (xdrs, objpp, obj_size, xdr_obj);
+  return xdr_reference (xdrs, objpp, obj_size, xdr_obj);
 }
+#ifdef EXPORT_RPC_SYMBOLS
+libc_hidden_def (xdr_pointer)
+#else
+libc_hidden_nolink (xdr_pointer, GLIBC_2_0)
+#endif

@@ -109,9 +109,8 @@ clntraw_create (u_long prog, u_long vers)
   call_msg.rm_call.cb_rpcvers = RPC_MSG_VERSION;
   call_msg.rm_call.cb_prog = prog;
   call_msg.rm_call.cb_vers = vers;
-  INTUSE(xdrmem_create) (xdrs, clp->mashl_callmsg.msg, MCALL_MSG_SIZE,
-			 XDR_ENCODE);
-  if (!INTUSE(xdr_callhdr) (xdrs, &call_msg))
+  xdrmem_create (xdrs, clp->mashl_callmsg.msg, MCALL_MSG_SIZE, XDR_ENCODE);
+  if (!xdr_callhdr (xdrs, &call_msg))
     {
       perror (_ ("clnt_raw.c: fatal header serialization error"));
     }
@@ -121,15 +120,16 @@ clntraw_create (u_long prog, u_long vers)
   /*
    * Set xdrmem for client/server shared buffer
    */
-  INTUSE(xdrmem_create) (xdrs, clp->_raw_buf, UDPMSGSIZE, XDR_FREE);
+  xdrmem_create (xdrs, clp->_raw_buf, UDPMSGSIZE, XDR_FREE);
 
   /*
    * create client handle
    */
   client->cl_ops = (struct clnt_ops *) &client_ops;
-  client->cl_auth = INTUSE(authnone_create) ();
+  client->cl_auth = authnone_create ();
   return client;
 }
+libc_hidden_nolink (clntraw_create, GLIBC_2_0)
 
 static enum clnt_stat
 clntraw_call (h, proc, xargs, argsp, xresults, resultsp, timeout)
@@ -172,7 +172,7 @@ call_again:
    * We have to call server input routine here because this is
    * all going on in one process. Yuk.
    */
-  INTUSE(svc_getreq) (1);
+  svc_getreq (1);
 
   /*
    * get results
@@ -182,7 +182,7 @@ call_again:
   msg.acpted_rply.ar_verf = _null_auth;
   msg.acpted_rply.ar_results.where = resultsp;
   msg.acpted_rply.ar_results.proc = xresults;
-  if (!INTUSE(xdr_replymsg) (xdrs, &msg))
+  if (!xdr_replymsg (xdrs, &msg))
     return RPC_CANTDECODERES;
   _seterr_reply (&msg, &error);
   status = error.re_status;
@@ -209,7 +209,7 @@ call_again:
       if (msg.acpted_rply.ar_verf.oa_base != NULL)
 	{
 	  xdrs->x_op = XDR_FREE;
-	  (void) INTUSE(xdr_opaque_auth) (xdrs, &(msg.acpted_rply.ar_verf));
+	  (void) xdr_opaque_auth (xdrs, &(msg.acpted_rply.ar_verf));
 	}
     }
 

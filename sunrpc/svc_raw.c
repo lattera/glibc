@@ -85,10 +85,10 @@ svcraw_create (void)
   srp->server.xp_port = 0;
   srp->server.xp_ops = (struct xp_ops *) &server_ops;
   srp->server.xp_verf.oa_base = srp->verf_body;
-  INTUSE(xdrmem_create) (&srp->xdr_stream, srp->_raw_buf, UDPMSGSIZE,
-			 XDR_FREE);
+  xdrmem_create (&srp->xdr_stream, srp->_raw_buf, UDPMSGSIZE, XDR_FREE);
   return &srp->server;
 }
+libc_hidden_nolink (svcraw_create, GLIBC_2_0)
 
 static enum xprt_stat
 svcraw_stat (SVCXPRT *xprt)
@@ -109,7 +109,7 @@ svcraw_recv (xprt, msg)
   xdrs = &srp->xdr_stream;
   xdrs->x_op = XDR_DECODE;
   XDR_SETPOS (xdrs, 0);
-  if (!INTUSE(xdr_callmsg) (xdrs, msg))
+  if (!xdr_callmsg (xdrs, msg))
     return FALSE;
   return TRUE;
 }
@@ -125,7 +125,7 @@ svcraw_reply (SVCXPRT *xprt, struct rpc_msg *msg)
   xdrs = &srp->xdr_stream;
   xdrs->x_op = XDR_ENCODE;
   XDR_SETPOS (xdrs, 0);
-  if (!INTUSE(xdr_replymsg) (xdrs, msg))
+  if (!xdr_replymsg (xdrs, msg))
     return FALSE;
   (void) XDR_GETPOS (xdrs);	/* called just for overhead */
   return TRUE;

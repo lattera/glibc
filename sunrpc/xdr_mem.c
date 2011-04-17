@@ -78,7 +78,11 @@ xdrmem_create (XDR *xdrs, const caddr_t addr, u_int size, enum xdr_op op)
   xdrs->x_private = xdrs->x_base = addr;
   xdrs->x_handy = size;
 }
-INTDEF(xdrmem_create)
+#ifdef EXPORT_RPC_SYMBOLS
+libc_hidden_def (xdrmem_create)
+#else
+libc_hidden_nolink (xdrmem_create, GLIBC_2_0)
+#endif
 
 /*
  * Nothing needs to be done for the memory case.  The argument is clearly

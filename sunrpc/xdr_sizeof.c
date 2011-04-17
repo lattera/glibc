@@ -158,3 +158,8 @@ xdr_sizeof (xdrproc_t func, void *data)
   free (x.x_private);
   return stat == TRUE ? x.x_handy : 0;
 }
+#ifdef EXPORT_RPC_SYMBOLS
+libc_hidden_def (xdr_sizeof)
+#else
+libc_hidden_nolink (xdr_sizeof, GLIBC_2_1)
+#endif

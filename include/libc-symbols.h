@@ -1,6 +1,7 @@
 /* Support macros for making weak and strong aliases for symbols,
    and for using symbol sets and linker warnings with GNU ld.
-   Copyright (C) 1995-1998,2000-2006,2008,2009 Free Software Foundation, Inc.
+   Copyright (C) 1995-1998,2000-2006,2008,2009,2011
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -266,7 +267,7 @@
 # else
 #  define link_warning(symbol, msg)		\
      asm (".stabs \"" msg "\",30,0,0,0\n\t"	\
-          ".stabs \"" __SYMBOL_PREFIX #symbol "\",1,0,0,0\n");
+	  ".stabs \"" __SYMBOL_PREFIX #symbol "\",1,0,0,0\n");
 # endif /* XCOFF */
 # define libc_freeres_ptr(decl) decl
 # define __libc_freeres_fn_section
@@ -585,6 +586,15 @@ for linking")
 #  define hidden_weak(name) \
 	__hidden_ver1(__GI_##name, name, name) __attribute__((weak));
 #  define hidden_data_weak(name)	hidden_weak(name)
+#  define hidden_nolink(name, lib, version) \
+  __hidden_nolink1 (__GI_##name, __EI_##name, name, VERSION_##lib##_##version)
+#  define __hidden_nolink1(local, internal, name, version) \
+  __hidden_nolink2 (local, internal, name, version)
+#  define __hidden_nolink2(local, internal, name, version) \
+  extern __typeof (name) internal __attribute__ ((alias (#local))); \
+  __hidden_nolink3 (local, internal, #name "@" #version)
+#  define __hidden_nolink3(local, internal, vername) \
+  __asm__ (".symver " #internal ", " vername);
 # else
 /* For assembly, we need to do the opposite of what we do in C:
    in assembly gcc __REDIRECT stuff is not in place, so functions
@@ -625,6 +635,7 @@ for linking")
 # define libc_hidden_proto(name, attrs...) hidden_proto (name, ##attrs)
 # define libc_hidden_def(name) hidden_def (name)
 # define libc_hidden_weak(name) hidden_weak (name)
+# define libc_hidden_nolink(name, version) hidden_nolink (name, libc, version)
 # define libc_hidden_ver(local, name) hidden_ver (local, name)
 # define libc_hidden_data_def(name) hidden_data_def (name)
 # define libc_hidden_data_weak(name) hidden_data_weak (name)

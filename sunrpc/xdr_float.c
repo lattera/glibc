@@ -158,6 +158,7 @@ xdr_float(xdrs, fp)
 	}
 	return (FALSE);
 }
+libc_hidden_nolink (xdr_float, GLIBC_2_0)
 
 /*
  * This routine works on Suns (Sky / 68000's) and Vaxen.
@@ -299,3 +300,4 @@ xdr_double(xdrs, dp)
 	}
 	return (FALSE);
 }
+libc_hidden_nolink (xdr_double, GLIBC_2_0)

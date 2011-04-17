@@ -1,54 +1,47 @@
 #include <sunrpc/rpc/xdr.h>
 
-extern bool_t xdr_void_internal (void) attribute_hidden;
-extern bool_t xdr_bool_internal (XDR *__xdrs, bool_t *__bp) attribute_hidden;
-extern bool_t xdr_u_hyper_internal (XDR *__xdrs, u_quad_t *__ullp)
-  attribute_hidden;
-extern bool_t xdr_u_long_internal (XDR *__xdrs, u_long *__ulp)
-  attribute_hidden;
-extern bool_t xdr_u_int_internal (XDR *__xdrs, u_int *__up)
-  attribute_hidden;
-extern bool_t xdr_u_short_internal (XDR *__xdrs, u_short *__usp)
-  attribute_hidden;
-extern bool_t xdr_hyper_internal (XDR *__xdrs, quad_t *__ullp)
-  attribute_hidden;
-extern bool_t xdr_long_internal (XDR *__xdrs, long *__ulp)
-  attribute_hidden;
-extern bool_t xdr_int_internal (XDR *__xdrs, int *__up)
-  attribute_hidden;
-extern bool_t xdr_short_internal (XDR *__xdrs, short *__usp)
-  attribute_hidden;
-extern bool_t xdr_enum_internal (XDR *__xdrs, enum_t *__ep)
-  attribute_hidden;
-extern bool_t xdr_union_internal (XDR *__xdrs, enum_t *__dscmp, char *__unp,
-				  const struct xdr_discrim *choices,
-				  xdrproc_t dfault) attribute_hidden;
-extern bool_t xdr_string_internal (XDR *__xdrs, char **__cpp, u_int __maxsize);
-extern bool_t xdr_array_internal (XDR * _xdrs, caddr_t *__addrp,
-				  u_int *__sizep, u_int __maxsize,
-				  u_int __elsize, xdrproc_t __elproc)
-  attribute_hidden;
-extern bool_t xdr_reference_internal (XDR *__xdrs, caddr_t *__xpp,
-				      u_int __size, xdrproc_t __proc)
-  attribute_hidden;
-extern bool_t xdr_bytes_internal (XDR *xdrs, char **cpp, u_int *sizep,
-				  u_int maxsize) attribute_hidden;
-extern bool_t xdr_netobj_internal (XDR *__xdrs, struct netobj *__np)
-  attribute_hidden;
-extern bool_t xdr_opaque_internal (XDR *__xdrs, caddr_t __cp, u_int __cnt)
-  attribute_hidden;
-extern void xdrrec_create_internal (XDR *__xdrs, u_int __sendsize,
-				    u_int __recvsize, caddr_t __tcp_handle,
-				    int (*__readit) (char *, char *, int),
-				    int (*__writeit) (char *, char *, int))
-  attribute_hidden;
-extern void xdrmem_create_internal (XDR *, const caddr_t, u_int, enum xdr_op)
-  attribute_hidden;
-extern bool_t xdrrec_endofrecord_internal (XDR *__xdrs, bool_t __sendnow)
-  attribute_hidden;
-extern bool_t xdrrec_skiprecord_internal (XDR *__xdrs)
-  attribute_hidden;
-extern bool_t xdrrec_eof_internal (XDR *__xdrs)
-  attribute_hidden;
-
 libc_hidden_proto (xdrstdio_create)
+libc_hidden_proto (xdr_array)
+libc_hidden_proto (xdr_bool)
+libc_hidden_proto (xdr_bytes)
+libc_hidden_proto (xdr_char)
+libc_hidden_proto (xdr_double)
+libc_hidden_proto (xdr_enum)
+libc_hidden_proto (xdr_float)
+libc_hidden_proto (xdr_free)
+libc_hidden_proto (xdr_int)
+libc_hidden_proto (xdr_long)
+libc_hidden_proto (xdr_netobj)
+libc_hidden_proto (xdr_opaque)
+libc_hidden_proto (xdr_pointer)
+libc_hidden_proto (xdr_reference)
+libc_hidden_proto (xdr_short)
+libc_hidden_proto (xdr_string)
+libc_hidden_proto (xdr_u_char)
+libc_hidden_proto (xdr_u_int)
+libc_hidden_proto (xdr_u_long)
+libc_hidden_proto (xdr_u_short)
+libc_hidden_proto (xdr_union)
+libc_hidden_proto (xdr_vector)
+libc_hidden_proto (xdr_void)
+libc_hidden_proto (xdr_wrapstring)
+libc_hidden_proto (xdrmem_create)
+libc_hidden_proto (xdrrec_create)
+libc_hidden_proto (xdrrec_endofrecord)
+libc_hidden_proto (xdrrec_eof)
+libc_hidden_proto (xdrrec_skiprecord)
+libc_hidden_proto (xdr_int16_t)
+libc_hidden_proto (xdr_int32_t)
+libc_hidden_proto (xdr_int8_t)
+libc_hidden_proto (xdr_sizeof)
+libc_hidden_proto (xdr_uint16_t)
+libc_hidden_proto (xdr_uint32_t)
+libc_hidden_proto (xdr_uint8_t)
+libc_hidden_proto (xdr_hyper)
+libc_hidden_proto (xdr_u_hyper)
+libc_hidden_proto (xdr_longlong_t)
+libc_hidden_proto (xdr_u_longlong_t)
+libc_hidden_proto (xdr_int64_t)
+libc_hidden_proto (xdr_uint64_t)
+libc_hidden_proto (xdr_quad_t)
+libc_hidden_proto (xdr_u_quad_t)

@@ -107,13 +107,12 @@ __libc_rpc_getport (address, program, version, protocol, timeout_sec,
       socket = __get_socket(address);
       if (socket != -1)
 	closeit = true;
-      client = INTUSE(clnttcp_create) (address, PMAPPROG, PMAPVERS, &socket,
-				       RPCSMALLMSGSIZE, RPCSMALLMSGSIZE);
+      client = clnttcp_create (address, PMAPPROG, PMAPVERS, &socket,
+			       RPCSMALLMSGSIZE, RPCSMALLMSGSIZE);
     }
   else
-    client = INTUSE(clntudp_bufcreate) (address, PMAPPROG, PMAPVERS, timeout,
-					&socket, RPCSMALLMSGSIZE,
-					RPCSMALLMSGSIZE);
+    client = clntudp_bufcreate (address, PMAPPROG, PMAPVERS, timeout,
+				&socket, RPCSMALLMSGSIZE, RPCSMALLMSGSIZE);
   if (client != (CLIENT *) NULL)
     {
       struct rpc_createerr *ce = &get_rpc_createerr ();
@@ -121,8 +120,8 @@ __libc_rpc_getport (address, program, version, protocol, timeout_sec,
       parms.pm_vers = version;
       parms.pm_prot = protocol;
       parms.pm_port = 0;	/* not needed or used */
-      if (CLNT_CALL (client, PMAPPROC_GETPORT, (xdrproc_t)INTUSE(xdr_pmap),
-		     (caddr_t)&parms, (xdrproc_t)INTUSE(xdr_u_short),
+      if (CLNT_CALL (client, PMAPPROC_GETPORT, (xdrproc_t)xdr_pmap,
+		     (caddr_t)&parms, (xdrproc_t)xdr_u_short,
 		     (caddr_t)&port, tottimeout) != RPC_SUCCESS)
 	{
 	  ce->cf_stat = RPC_PMAPFAILURE;
@@ -140,7 +139,11 @@ __libc_rpc_getport (address, program, version, protocol, timeout_sec,
   address->sin_port = 0;
   return port;
 }
+#ifdef EXPORT_RPC_SYMBOLS
 libc_hidden_def (__libc_rpc_getport)
+#else
+libc_hidden_nolink (__libc_rpc_getport, GLIBC_PRIVATE)
+#endif
 
 
 /*
@@ -157,4 +160,4 @@ pmap_getport (address, program, version, protocol)
 {
   return __libc_rpc_getport (address, program, version, protocol, 5, 60);
 }
-libc_hidden_def (pmap_getport)
+libc_hidden_nolink (pmap_getport, GLIBC_2_0)

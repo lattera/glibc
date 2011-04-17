@@ -130,14 +130,18 @@ clnt_sperror (CLIENT * rpch, const char *msg)
 
   return str;
 }
-libc_hidden_def (clnt_sperror)
+libc_hidden_nolink (clnt_sperror, GLIBC_2_0)
 
 void
 clnt_perror (CLIENT * rpch, const char *msg)
 {
   (void) __fxprintf (NULL, "%s", clnt_sperror (rpch, msg));
 }
+#ifdef EXPORT_RPC_SYMBOLS
 libc_hidden_def (clnt_perror)
+#else
+libc_hidden_nolink (clnt_perror, GLIBC_2_0)
+#endif
 
 
 struct rpc_errtab
@@ -266,7 +270,7 @@ clnt_perrno (enum clnt_stat num)
 {
   (void) __fxprintf (NULL, "%s", clnt_sperrno (num));
 }
-
+libc_hidden_nolink (clnt_perrno, GLIBC_2_0)
 
 char *
 clnt_spcreateerror (const char *msg)
@@ -303,13 +307,18 @@ clnt_spcreateerror (const char *msg)
 
   return str;
 }
-libc_hidden_def (clnt_spcreateerror)
+libc_hidden_nolink (clnt_spcreateerror, GLIBC_2_0)
 
 void
 clnt_pcreateerror (const char *msg)
 {
   (void) __fxprintf (NULL, "%s", clnt_spcreateerror (msg));
 }
+#ifdef EXPORT_RPC_SYMBOLS
+libc_hidden_def (clnt_pcreateerror)
+#else
+libc_hidden_nolink (clnt_pcreateerror, GLIBC_2_0)
+#endif
 
 struct auth_errtab
 {

@@ -64,7 +64,7 @@ clnt_create (const char *hostname, u_long prog, u_long vers,
       sun.sun_family = AF_UNIX;
       strcpy (sun.sun_path, hostname);
       sock = RPC_ANYSOCK;
-      client = INTUSE(clntunix_create) (&sun, prog, vers, &sock, 0, 0);
+      client = clntunix_create (&sun, prog, vers, &sock, 0, 0);
       if (client == NULL)
 	return NULL;
 #if 0
@@ -134,7 +134,7 @@ clnt_create (const char *hostname, u_long prog, u_long vers,
     case IPPROTO_UDP:
       tv.tv_sec = 5;
       tv.tv_usec = 0;
-      client = INTUSE(clntudp_create) (&sin, prog, vers, tv, &sock);
+      client = clntudp_create (&sin, prog, vers, tv, &sock);
       if (client == NULL)
 	{
 	  return NULL;
@@ -148,7 +148,7 @@ clnt_create (const char *hostname, u_long prog, u_long vers,
 #endif
       break;
     case IPPROTO_TCP:
-      client = INTUSE(clnttcp_create) (&sin, prog, vers, &sock, 0, 0);
+      client = clnttcp_create (&sin, prog, vers, &sock, 0, 0);
       if (client == NULL)
 	{
 	  return NULL;
@@ -172,4 +172,8 @@ clnt_create (const char *hostname, u_long prog, u_long vers,
     }
   return client;
 }
-INTDEF (clnt_create)
+#ifdef EXPORT_RPC_SYMBOLS
+libc_hidden_def (clnt_create)
+#else
+libc_hidden_nolink (clnt_create, GLIBC_2_0)
+#endif

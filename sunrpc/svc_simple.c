@@ -69,8 +69,8 @@ static SVCXPRT *transp;
 #endif
 
 int
-registerrpc (u_long prognum, u_long versnum, u_long procnum,
-	     char *(*progname) (char *), xdrproc_t inproc, xdrproc_t outproc)
+__registerrpc (u_long prognum, u_long versnum, u_long procnum,
+	       char *(*progname) (char *), xdrproc_t inproc, xdrproc_t outproc)
 {
   struct proglst_ *pl;
   char *buf;
@@ -85,7 +85,7 @@ registerrpc (u_long prognum, u_long versnum, u_long procnum,
     }
   if (transp == 0)
     {
-      transp = INTUSE(svcudp_create) (RPC_ANYSOCK);
+      transp = svcudp_create (RPC_ANYSOCK);
       if (transp == NULL)
 	{
 	  buf = strdup (_("couldn't create an rpc server\n"));
@@ -123,6 +123,7 @@ registerrpc (u_long prognum, u_long versnum, u_long procnum,
   free (buf);
   return -1;
 }
+compat_symbol (libc, __registerrpc, registerrpc, GLIBC_2_0);
 
 static void
 universal (struct svc_req *rqstp, SVCXPRT *transp_l)
@@ -138,8 +139,8 @@ universal (struct svc_req *rqstp, SVCXPRT *transp_l)
    */
   if (rqstp->rq_proc == NULLPROC)
     {
-      if (INTUSE(svc_sendreply) (transp_l, (xdrproc_t)INTUSE(xdr_void),
-				 (char *) NULL) == FALSE)
+      if (svc_sendreply (transp_l, (xdrproc_t)xdr_void,
+			 (char *) NULL) == FALSE)
 	{
 	  __write (STDERR_FILENO, "xxx\n", 4);
 	  exit (1);
@@ -155,14 +156,14 @@ universal (struct svc_req *rqstp, SVCXPRT *transp_l)
 	__bzero (xdrbuf, sizeof (xdrbuf));	/* required ! */
 	if (!svc_getargs (transp_l, pl->p_inproc, xdrbuf))
 	  {
-	    INTUSE(svcerr_decode) (transp_l);
+	    svcerr_decode (transp_l);
 	    return;
 	  }
 	outdata = (*(pl->p_progname)) (xdrbuf);
-	if (outdata == NULL && pl->p_outproc != (xdrproc_t)INTUSE(xdr_void))
+	if (outdata == NULL && pl->p_outproc != (xdrproc_t)xdr_void)
 	  /* there was an error */
 	  return;
-	if (!INTUSE(svc_sendreply) (transp_l, pl->p_outproc, outdata))
+	if (!svc_sendreply (transp_l, pl->p_outproc, outdata))
 	  {
 	    if (__asprintf (&buf, _("trouble replying to prog %d\n"),
 			    pl->p_prognum) < 0)

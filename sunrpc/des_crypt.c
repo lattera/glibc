@@ -32,6 +32,7 @@
 
 #include <sys/types.h>
 #include <rpc/des_crypt.h>
+#include <abi-versions.h>
 #include "des.h"
 
 extern int _des_crypt (char *, unsigned, struct desparams *);
@@ -101,7 +102,7 @@ cbc_crypt (char *key, char *buf, unsigned int len, unsigned int mode,
   COPY8 (dp.des_ivec, ivec);
   return err;
 }
-libc_hidden_def (cbc_crypt)
+libc_hidden_nolink (cbc_crypt, GLIBC_2_1)
 
 /*
  * ECB mode encryption
@@ -114,4 +115,4 @@ ecb_crypt (char *key, char *buf, unsigned int len, unsigned int mode)
   dp.des_mode = ECB;
   return common_crypt (key, buf, len, mode, &dp);
 }
-libc_hidden_def (ecb_crypt)
+libc_hidden_nolink (ecb_crypt, GLIBC_2_1)

@@ -89,7 +89,7 @@ passwd2des_internal (char *pw, char *key)
 
 #ifdef _LIBC
 libc_hidden_def (passwd2des_internal)
-strong_alias (passwd2des_internal, passwd2des)
+compat_symbol (libc, passwd2des_internal, passwd2des, GLIBC_2_1);
 #else
 void passwd2des (char *pw, char *key)
 {
@@ -127,6 +127,7 @@ xencrypt (char *secret, char *passwd)
   free (buf);
   return 1;
 }
+libc_hidden_nolink (xencrypt, GLIBC_2_0)
 
 /*
  * Decrypt secret key using passwd
@@ -159,6 +160,11 @@ xdecrypt (char *secret, char *passwd)
   free (buf);
   return 1;
 }
+#ifdef EXPORT_RPC_SYMBOLS
+libc_hidden_def (xdecrypt)
+#else
+libc_hidden_nolink (xdecrypt, GLIBC_2_1)
+#endif
 
 /*
  * Hex to binary conversion

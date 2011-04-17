@@ -1,4 +1,4 @@
-# Copyright (C) 1991-2002,2003,2004,2005,2006,2008,2009
+# Copyright (C) 1991-2002,2003,2004,2005,2006,2008,2009,2011
 #	Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
@@ -63,8 +63,8 @@ endif # $(AUTOCONF) = no
 +subdir_targets	:= subdir_lib objects objs others subdir_mostlyclean	\
 		   subdir_clean subdir_distclean subdir_realclean	\
 		   tests xtests subdir_lint.out				\
-		   subdir_update-abi subdir_check-abi 			\
-		   subdir_echo-headers 					\
+		   subdir_update-abi subdir_check-abi			\
+		   subdir_echo-headers					\
 		   subdir_install					\
 		   subdir_objs subdir_stubs subdir_testclean		\
 		   $(addprefix install-, no-libc.a bin lib data headers others)
@@ -135,6 +135,20 @@ lib-noranlib: subdir_lib
 ifeq (yes,$(build-shared))
 # Build the shared object from the PIC object library.
 lib: $(common-objpfx)libc.so
+
+lib: $(common-objpfx)linkobj/libc.so
+
+$(common-objpfx)linkobj/libc.so: $(elfobjdir)/soinit.os $(common-objpfx)linkobj/libc_pic.a $(elfobjdir)/sofini.os $(elfobjdir)/interp.os $(elfobjdir)/ld.so $(common-objpfx)shlib.lds $(common-objpfx)elf/ld.so
+	$(build-shlib)
+
+$(common-objpfx)linkobj/libc_pic.a: $(common-objpfx)libc_pic.a $(common-objpfx)sunrpc/librpc_compat_pic.a
+	$(..)./scripts/mkinstalldirs $(common-objpfx)linkobj
+	(cd $(common-objpfx)linkobj; \
+	 $(AR) x ../libc_pic.a; \
+	 rm $$($(AR) t ../sunrpc/librpc_compat_pic.a | sed 's/^compat-//'); \
+	 $(AR) x ../sunrpc/librpc_compat_pic.a; \
+	 $(AR) cr libc_pic.a *.os; \
+	 rm *.os)
 endif
 
 
@@ -247,11 +261,11 @@ tests-clean:
 tests: $(objpfx)c++-types-check.out $(objpfx)check-local-headers.out
 ifneq ($(CXX),no)
 check-data := $(firstword $(wildcard \
-	        $(foreach D,$(add-ons) scripts,\
-	        	  $(patsubst %,$D/data/c++-types-%.data,\
-			   	     $(abi-name) \
-			   	     $(addsuffix -$(config-os),\
-				     		 $(config-machine) \
+		$(foreach D,$(add-ons) scripts,\
+			  $(patsubst %,$D/data/c++-types-%.data,\
+				     $(abi-name) \
+				     $(addsuffix -$(config-os),\
+						 $(config-machine) \
 						 $(base-machine))))))
 ifneq (,$(check-data))
 $(objpfx)c++-types-check.out: $(check-data) scripts/check-c++-types.sh
@@ -408,18 +422,18 @@ install: remove-old-headers
 endif
 endif
 
-headers2_0 := 	__math.h bytesex.h confname.h direntry.h elfclass.h  	\
-		errnos.h fcntlbits.h huge_val.h ioctl-types.h 		\
-		ioctls.h iovec.h jmp_buf.h libc-lock.h local_lim.h 	\
-		mathcalls.h mpool.h nan.h ndbm.h posix1_lim.h  		\
-		posix2_lim.h posix_opt.h resourcebits.h schedbits.h 	\
-		selectbits.h semaphorebits.h sigaction.h sigcontext.h 	\
-		signum.h sigset.h sockaddrcom.h socketbits.h stab.def 	\
-		statbuf.h statfsbuf.h stdio-lock.h stdio_lim.h 		\
-		syscall-list.h termbits.h timebits.h ustatbits.h 	\
-		utmpbits.h utsnamelen.h waitflags.h waitstatus.h 	\
-		xopen_lim.h gnu/types.h sys/ipc_buf.h 			\
-		sys/kernel_termios.h sys/msq_buf.h sys/sem_buf.h 	\
+headers2_0 :=	__math.h bytesex.h confname.h direntry.h elfclass.h	\
+		errnos.h fcntlbits.h huge_val.h ioctl-types.h		\
+		ioctls.h iovec.h jmp_buf.h libc-lock.h local_lim.h	\
+		mathcalls.h mpool.h nan.h ndbm.h posix1_lim.h		\
+		posix2_lim.h posix_opt.h resourcebits.h schedbits.h	\
+		selectbits.h semaphorebits.h sigaction.h sigcontext.h	\
+		signum.h sigset.h sockaddrcom.h socketbits.h stab.def	\
+		statbuf.h statfsbuf.h stdio-lock.h stdio_lim.h		\
+		syscall-list.h termbits.h timebits.h ustatbits.h	\
+		utmpbits.h utsnamelen.h waitflags.h waitstatus.h	\
+		xopen_lim.h gnu/types.h sys/ipc_buf.h			\
+		sys/kernel_termios.h sys/msq_buf.h sys/sem_buf.h	\
 		sys/shm_buf.h sys/socketcall.h sigstack.h
 
 .PHONY: remove-old-headers

@@ -57,7 +57,6 @@
 
 #include <kernel-features.h>
 
-extern bool_t xdr_opaque_auth (XDR *, struct opaque_auth *);
 extern u_long _create_xid (void);
 
 /*
@@ -165,8 +164,8 @@ __libc_clntudp_bufcreate (struct sockaddr_in *raddr, u_long program,
   call_msg.rm_call.cb_rpcvers = RPC_MSG_VERSION;
   call_msg.rm_call.cb_prog = program;
   call_msg.rm_call.cb_vers = version;
-  INTUSE(xdrmem_create) (&(cu->cu_outxdrs), cu->cu_outbuf, sendsz, XDR_ENCODE);
-  if (!INTUSE(xdr_callhdr) (&(cu->cu_outxdrs), &call_msg))
+  xdrmem_create (&(cu->cu_outxdrs), cu->cu_outbuf, sendsz, XDR_ENCODE);
+  if (!xdr_callhdr (&(cu->cu_outxdrs), &call_msg))
     {
       goto fooy;
     }
@@ -229,7 +228,7 @@ __libc_clntudp_bufcreate (struct sockaddr_in *raddr, u_long program,
       cu->cu_closeit = FALSE;
     }
   cu->cu_sock = *sockp;
-  cl->cl_auth = INTUSE(authnone_create) ();
+  cl->cl_auth = authnone_create ();
   return cl;
 fooy:
   if (cu)
@@ -238,17 +237,21 @@ fooy:
     mem_free ((caddr_t) cl, sizeof (CLIENT));
   return (CLIENT *) NULL;
 }
-INTDEF (__libc_clntudp_bufcreate)
+#ifdef EXPORT_RPC_SYMBOLS
+libc_hidden_def (__libc_clntudp_bufcreate)
+#else
+libc_hidden_nolink (__libc_clntudp_bufcreate, GLIBC_PRIVATE)
+#endif
 
 CLIENT *
 clntudp_bufcreate (struct sockaddr_in *raddr, u_long program, u_long version,
 		   struct timeval wait, int *sockp, u_int sendsz,
 		   u_int recvsz)
 {
-  return INTUSE(__libc_clntudp_bufcreate) (raddr, program, version, wait,
-					   sockp, sendsz, recvsz, 0);
+  return __libc_clntudp_bufcreate (raddr, program, version, wait,
+				   sockp, sendsz, recvsz, 0);
 }
-INTDEF (clntudp_bufcreate)
+libc_hidden_nolink (clntudp_bufcreate, GLIBC_2_0)
 
 CLIENT *
 clntudp_create (raddr, program, version, wait, sockp)
@@ -258,10 +261,14 @@ clntudp_create (raddr, program, version, wait, sockp)
      struct timeval wait;
      int *sockp;
 {
-  return INTUSE(__libc_clntudp_bufcreate) (raddr, program, version, wait,
-					   sockp, UDPMSGSIZE, UDPMSGSIZE, 0);
+  return __libc_clntudp_bufcreate (raddr, program, version, wait,
+				   sockp, UDPMSGSIZE, UDPMSGSIZE, 0);
 }
-INTDEF (clntudp_create)
+#ifdef EXPORT_RPC_SYMBOLS
+libc_hidden_def (clntudp_create)
+#else
+libc_hidden_nolink (clntudp_create, GLIBC_2_0)
+#endif
 
 static int
 is_network_up (int sock)
@@ -465,7 +472,7 @@ send_again:
 	continue;
 
       /* see if reply transaction id matches sent id.
-        Don't do this if we only wait for a replay */
+	Don't do this if we only wait for a replay */
       if (xargs != NULL
 	  && (*((u_int32_t *) (cu->cu_inbuf))
 	      != *((u_int32_t *) (cu->cu_outbuf))))
@@ -477,8 +484,8 @@ send_again:
   /*
    * now decode and validate the response
    */
-  INTUSE(xdrmem_create) (&reply_xdrs, cu->cu_inbuf, (u_int) inlen, XDR_DECODE);
-  ok = INTUSE(xdr_replymsg) (&reply_xdrs, &reply_msg);
+  xdrmem_create (&reply_xdrs, cu->cu_inbuf, (u_int) inlen, XDR_DECODE);
+  ok = xdr_replymsg (&reply_xdrs, &reply_msg);
   /* XDR_DESTROY(&reply_xdrs);  save a few cycles on noop destroy */
   if (ok)
     {
@@ -494,8 +501,7 @@ send_again:
 	  if (reply_msg.acpted_rply.ar_verf.oa_base != NULL)
 	    {
 	      xdrs->x_op = XDR_FREE;
-	      (void) INTUSE(xdr_opaque_auth) (xdrs,
-					      &(reply_msg.acpted_rply.ar_verf));
+	      (void) xdr_opaque_auth (xdrs, &(reply_msg.acpted_rply.ar_verf));
 	    }
 	}			/* end successful completion */
       else

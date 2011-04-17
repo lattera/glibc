@@ -79,7 +79,7 @@ pmap_rmtcall (addr, prog, vers, proc, xdrargs, argsp, xdrres, resp, tout, port_p
   enum clnt_stat stat;
 
   addr->sin_port = htons (PMAPPORT);
-  client = INTUSE(clntudp_create) (addr, PMAPPROG, PMAPVERS, timeout, &socket);
+  client = clntudp_create (addr, PMAPPROG, PMAPVERS, timeout, &socket);
   if (client != (CLIENT *) NULL)
     {
       a.prog = prog;
@@ -91,8 +91,8 @@ pmap_rmtcall (addr, prog, vers, proc, xdrargs, argsp, xdrres, resp, tout, port_p
       r.results_ptr = resp;
       r.xdr_results = xdrres;
       stat = CLNT_CALL (client, PMAPPROC_CALLIT,
-			(xdrproc_t)INTUSE(xdr_rmtcall_args),
-			(caddr_t)&a, (xdrproc_t)INTUSE(xdr_rmtcallres),
+			(xdrproc_t)xdr_rmtcall_args,
+			(caddr_t)&a, (xdrproc_t)xdr_rmtcallres,
 			(caddr_t)&r, tout);
       CLNT_DESTROY (client);
     }
@@ -104,6 +104,7 @@ pmap_rmtcall (addr, prog, vers, proc, xdrargs, argsp, xdrres, resp, tout, port_p
   addr->sin_port = 0;
   return stat;
 }
+libc_hidden_nolink (pmap_rmtcall, GLIBC_2_0)
 
 
 /*
@@ -115,13 +116,13 @@ xdr_rmtcall_args (XDR *xdrs, struct rmtcallargs *cap)
 {
   u_int lenposition, argposition, position;
 
-  if (INTUSE(xdr_u_long) (xdrs, &(cap->prog)) &&
-      INTUSE(xdr_u_long) (xdrs, &(cap->vers)) &&
-      INTUSE(xdr_u_long) (xdrs, &(cap->proc)))
+  if (xdr_u_long (xdrs, &(cap->prog)) &&
+      xdr_u_long (xdrs, &(cap->vers)) &&
+      xdr_u_long (xdrs, &(cap->proc)))
     {
       u_long dummy_arglen = 0;
       lenposition = XDR_GETPOS (xdrs);
-      if (!INTUSE(xdr_u_long) (xdrs, &dummy_arglen))
+      if (!xdr_u_long (xdrs, &dummy_arglen))
 	return FALSE;
       argposition = XDR_GETPOS (xdrs);
       if (!(*(cap->xdr_args)) (xdrs, cap->args_ptr))
@@ -129,14 +130,14 @@ xdr_rmtcall_args (XDR *xdrs, struct rmtcallargs *cap)
       position = XDR_GETPOS (xdrs);
       cap->arglen = (u_long) position - (u_long) argposition;
       XDR_SETPOS (xdrs, lenposition);
-      if (!INTUSE(xdr_u_long) (xdrs, &(cap->arglen)))
+      if (!xdr_u_long (xdrs, &(cap->arglen)))
 	return FALSE;
       XDR_SETPOS (xdrs, position);
       return TRUE;
     }
   return FALSE;
 }
-INTDEF(xdr_rmtcall_args)
+libc_hidden_nolink (xdr_rmtcall_args, GLIBC_2_0)
 
 /*
  * XDR remote call results
@@ -150,16 +151,16 @@ xdr_rmtcallres (xdrs, crp)
   caddr_t port_ptr;
 
   port_ptr = (caddr_t) crp->port_ptr;
-  if (INTUSE(xdr_reference) (xdrs, &port_ptr, sizeof (u_long),
-			     (xdrproc_t) INTUSE(xdr_u_long))
-      && INTUSE(xdr_u_long) (xdrs, &crp->resultslen))
+  if (xdr_reference (xdrs, &port_ptr, sizeof (u_long),
+		     (xdrproc_t) xdr_u_long)
+      && xdr_u_long (xdrs, &crp->resultslen))
     {
       crp->port_ptr = (u_long *) port_ptr;
       return (*(crp->xdr_results)) (xdrs, crp->results_ptr);
     }
   return FALSE;
 }
-INTDEF(xdr_rmtcallres)
+libc_hidden_nolink (xdr_rmtcallres, GLIBC_2_0)
 
 
 /*
@@ -212,7 +213,7 @@ clnt_broadcast (prog, vers, proc, xargs, argsp, xresults, resultsp, eachresult)
      resultproc_t eachresult;	/* call with each result obtained */
 {
   enum clnt_stat stat = RPC_FAILED;
-  AUTH *unix_auth = INTUSE(authunix_create_default) ();
+  AUTH *unix_auth = authunix_create_default ();
   XDR xdr_stream;
   XDR *xdrs = &xdr_stream;
   struct timeval t;
@@ -276,9 +277,9 @@ clnt_broadcast (prog, vers, proc, xargs, argsp, xresults, resultsp, eachresult)
   r.port_ptr = &port;
   r.xdr_results = xresults;
   r.results_ptr = resultsp;
-  INTUSE(xdrmem_create) (xdrs, outbuf, MAX_BROADCAST_SIZE, XDR_ENCODE);
-  if ((!INTUSE(xdr_callmsg) (xdrs, &msg))
-      || (!INTUSE(xdr_rmtcall_args) (xdrs, &a)))
+  xdrmem_create (xdrs, outbuf, MAX_BROADCAST_SIZE, XDR_ENCODE);
+  if ((!xdr_callmsg (xdrs, &msg))
+      || (!xdr_rmtcall_args (xdrs, &a)))
     {
       stat = RPC_CANTENCODEARGS;
       goto done_broad;
@@ -311,7 +312,7 @@ clnt_broadcast (prog, vers, proc, xargs, argsp, xresults, resultsp, eachresult)
     recv_again:
       msg.acpted_rply.ar_verf = _null_auth;
       msg.acpted_rply.ar_results.where = (caddr_t) & r;
-      msg.acpted_rply.ar_results.proc = (xdrproc_t) INTUSE(xdr_rmtcallres);
+      msg.acpted_rply.ar_results.proc = (xdrproc_t) xdr_rmtcallres;
       milliseconds = t.tv_sec * 1000 + t.tv_usec / 1000;
       switch (__poll(&fd, 1, milliseconds))
 	{
@@ -346,8 +347,8 @@ clnt_broadcast (prog, vers, proc, xargs, argsp, xresults, resultsp, eachresult)
        * see if reply transaction id matches sent id.
        * If so, decode the results.
        */
-      INTUSE(xdrmem_create) (xdrs, inbuf, (u_int) inlen, XDR_DECODE);
-      if (INTUSE(xdr_replymsg) (xdrs, &msg))
+      xdrmem_create (xdrs, inbuf, (u_int) inlen, XDR_DECODE);
+      if (xdr_replymsg (xdrs, &msg))
 	{
 	  if (((u_int32_t) msg.rm_xid == (u_int32_t) xid) &&
 	      (msg.rm_reply.rp_stat == MSG_ACCEPTED) &&
@@ -368,8 +369,8 @@ clnt_broadcast (prog, vers, proc, xargs, argsp, xresults, resultsp, eachresult)
 #endif
 	}
       xdrs->x_op = XDR_FREE;
-      msg.acpted_rply.ar_results.proc = (xdrproc_t)INTUSE(xdr_void);
-      (void) INTUSE(xdr_replymsg) (xdrs, &msg);
+      msg.acpted_rply.ar_results.proc = (xdrproc_t)xdr_void;
+      (void) xdr_replymsg (xdrs, &msg);
       (void) (*xresults) (xdrs, resultsp);
       xdr_destroy (xdrs);
       if (done)
@@ -387,3 +388,4 @@ done_broad:
   AUTH_DESTROY (unix_auth);
   return stat;
 }
+libc_hidden_nolink (clnt_broadcast, GLIBC_2_0)

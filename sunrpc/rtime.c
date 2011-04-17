@@ -140,4 +140,4 @@ rtime (struct sockaddr_in *addrp, struct rpc_timeval *timep,
   timep->tv_usec = 0;
   return 0;
 }
-libc_hidden_def (rtime)
+libc_hidden_nolink (rtime, GLIBC_2_1)

@@ -119,7 +119,7 @@ callrpc (const char *host, u_long prognum, u_long versnum, u_long procnum,
       memcpy ((char *) &server_addr.sin_addr, hp->h_addr, hp->h_length);
       server_addr.sin_family = AF_INET;
       server_addr.sin_port = 0;
-      if ((crp->client = INTUSE(clntudp_create) (&server_addr, (u_long) prognum,
+      if ((crp->client = clntudp_create (&server_addr, (u_long) prognum,
 			  (u_long) versnum, timeout, &crp->socket)) == NULL)
 	return (int) get_rpc_createerr().cf_stat;
       crp->valid = 1;
@@ -139,6 +139,7 @@ callrpc (const char *host, u_long prognum, u_long versnum, u_long procnum,
     crp->valid = 0;
   return (int) clnt_stat;
 }
+libc_hidden_nolink (callrpc, GLIBC_2_0)
 
 #ifdef _RPC_THREAD_SAFE_
 void
