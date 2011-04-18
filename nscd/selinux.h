@@ -45,7 +45,7 @@ extern void nscd_avc_cache_stats (struct avc_cache_stats *cstats);
 extern void nscd_avc_print_stats (struct avc_cache_stats *cstats);
 
 # ifdef HAVE_LIBCAP
-/* Preserve capabilities to connect to connnect to the audit daemon.  */
+/* Preserve capabilities to connect to the audit daemon. */
 extern cap_t preserve_capabilities (void);
 /* Install final capabilities.  */
 extern void install_real_capabilities (cap_t new_caps);
