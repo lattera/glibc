@@ -139,7 +139,7 @@
 // Case exp_small:
 //
 //   Here, exp(X) and exp(X) - 1 can all be 
-//   appproximated by a relatively simple polynomial.
+//   approximated by a relatively simple polynomial.
 //
 //   This polynomial resembles the truncated Taylor series
 //
