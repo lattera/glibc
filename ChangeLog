@@ -1,3 +1,11 @@
+2011-04-17  Ulrich Drepper  <drepper@gmail.com>
+
+	[BZ #12420]
+	* sysdeps/unix/sysv/linux/x86_64/getcontext.S: Reload context after
+	storing it.
+	* stdlib/bug-getcontext.c: New file.
+	* stdlib/Makefile: Add rules to build and run bug-getcontext.
+
 2011-04-13  Andreas Krebbel  <Andreas.Krebbel@de.ibm.com>
 
 	* sysdeps/s390/s390-64/utf16-utf32-z9.c: Wrap the z9-109

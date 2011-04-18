@@ -1,5 +1,5 @@
 /* Save current context.
-   Copyright (C) 2002, 2005 Free Software Foundation, Inc.
+   Copyright (C) 2002, 2005, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Andreas Jaeger <aj@suse.de>, 2002.
 
@@ -62,6 +62,7 @@ ENTRY(__getcontext)
 	movq	%rcx, oFPREGS(%rdi)
 	/* Save the floating-point environment.  */
 	fnstenv	(%rcx)
+	fldenv	(%rcx)
 	stmxcsr oMXCSR(%rdi)
 
 	/* Save the current signal mask with
