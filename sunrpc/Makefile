@@ -123,7 +123,7 @@ rpc-compat-routines.os = $(addprefix $(objpfx), \
 subdir_lib: $(objpfx)librpc_compat_pic.a
 $(objpfx)librpc_compat_pic.a: $(rpc-compat-routines.os)
 	$(AR) cr$(verbose) $@ $^
-$(rpc-compat-routines.os): $(objpfx)compat-%.os: %.c
+$(rpc-compat-routines.os): $(objpfx)compat-%.os: %.c $(before-compile)
 	$(compile-command.c) -DEXPORT_RPC_SYMBOLS
 endif
 

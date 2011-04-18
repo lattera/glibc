@@ -1,3 +1,8 @@
+2011-04-17  Ulrich Drepper  <drepper@gmail.com>
+
+	* sunrpc/Makefile ($(rpc-compat-routines.os)): Add before-compile to
+	dependencies.
+
 2011-02-06  Mike Frysinger  <vapier@gentoo.org>
 
 	[BZ #12653]
