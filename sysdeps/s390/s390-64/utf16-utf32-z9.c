@@ -169,7 +169,10 @@ gconv_end (struct __gconv_step *data)
     register unsigned long long outlen asm("11") = outend - outptr;	\
     uint64_t cc = 0;							\
 									\
-    asm volatile ("0: " INSTRUCTION "  \n\t"				\
+    asm volatile (".machine push       \n\t"				\
+                  ".machine \"z9-109\" \n\t"				\
+		  "0: " INSTRUCTION "  \n\t"				\
+                  ".machine pop        \n\t"				\
                   "   jo     0b        \n\t"				\
 		  "   ipm    %2        \n"			        \
 		  : "+a" (pOutput), "+a" (pInput), "+d" (cc),		\
