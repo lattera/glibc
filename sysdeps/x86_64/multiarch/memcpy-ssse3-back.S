@@ -49,7 +49,7 @@
   ud2
 
 	.section .text.ssse3,"ax",@progbits
-#if defined SHARED && !defined NOT_IN_libc
+#if !defined USE_AS_BCOPY
 ENTRY (MEMCPY_CHK)
 	cmpq	%rdx, %rcx
 	jb	HIDDEN_JUMPTARGET (__chk_fail)

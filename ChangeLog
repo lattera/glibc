@@ -1,3 +1,12 @@
+2011-02-06  Mike Frysinger  <vapier@gentoo.org>
+
+	[BZ #12653]
+	* sysdeps/i386/i686/multiarch/memcpy-ssse3-rep.S: Only protect
+	MEMCPY_CHK with USE_AS_BCOPY ifdef check.
+	* sysdeps/i386/i686/multiarch/memcpy-ssse3.S: Likewise.
+	* sysdeps/x86_64/multiarch/memcpy-ssse3.S: Likewise.
+	* sysdeps/x86_64/multiarch/memcpy-ssse3-back.S: Likewise.
+
 2011-03-28  Andreas Schwab  <schwab@linux-m68k.org>
 
 	* sysdeps/powerpc/powerpc32/power4/strncmp.S: Don't read past

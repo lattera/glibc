@@ -110,7 +110,7 @@ __i686.get_pc_thunk.bx:
 #endif
 
 	.section .text.ssse3,"ax",@progbits
-#if defined SHARED && !defined NOT_IN_libc && !defined USE_AS_BCOPY
+#if !defined USE_AS_BCOPY
 ENTRY (MEMCPY_CHK)
 	movl	12(%esp), %eax
 	cmpl	%eax, 16(%esp)
