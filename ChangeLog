@@ -1,3 +1,8 @@
+2011-04-11  Andreas Krebbel  <Andreas.Krebbel@de.ibm.com>
+
+	* sysdeps/s390/s390-32/elf/start.S (_start): Skip extra zeroes
+	between environment variables and auxiliary vector.
+
 2011-04-16  Ulrich Drepper  <drepper@gmail.com>
 
 	* Makefile: Add rules to build linkobj/libc.so.

@@ -75,6 +75,18 @@ _start:
 	ltr	%r5,%r5
 	jne	.L12
 
+	/* Usually the auxiliary vector can be expected directly after
+	   the environment variables.  But we have to skip extra zeros
+	   because the loader might have removed unsecure variables for
+	   setuid programs.  */
+
+.L26:	l	%r5,0(%r6)
+	la	%r6,4(%r6)
+	ltr	%r5,%r5
+	jz	.L26
+
+	ahi	%r6,-4
+
 	/* Obtain the needed values from the auxiliary vector.  */
 
 	lhi	%r7,16	       /* AT_HWCAP */
