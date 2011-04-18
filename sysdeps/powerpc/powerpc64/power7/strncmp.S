@@ -1,5 +1,5 @@
 /* Optimized strcmp implementation for POWER7/PowerPC64.
-   Copyright (C) 2010 Free Software Foundation, Inc.
+   Copyright (C) 2010, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -145,30 +145,31 @@ L(u1):
 	bdz	L(u4)
 	cmpd	rWORD1,rWORD2
 	beq	cr1,L(u4)
+	bne	L(u4)
 	lbzu	rWORD3,1(rSTR1)
 	lbzu	rWORD4,1(rSTR2)
-	bne	L(u4)
 	cmpdi	cr1,rWORD3,0
 	bdz	L(u3)
 	cmpd	rWORD3,rWORD4
 	beq	cr1,L(u3)
+	bne	L(u3)
 	lbzu	rWORD1,1(rSTR1)
 	lbzu	rWORD2,1(rSTR2)
-	bne	L(u3)
 	cmpdi	cr1,rWORD1,0
 	bdz	L(u4)
 	cmpd	rWORD1,rWORD2
 	beq	cr1,L(u4)
+	bne	L(u4)
 	lbzu	rWORD3,1(rSTR1)
 	lbzu	rWORD4,1(rSTR2)
-	bne	L(u4)
 	cmpdi	cr1,rWORD3,0
 	bdz	L(u3)
 	cmpd	rWORD3,rWORD4
 	beq	cr1,L(u3)
+	bne	L(u3)
 	lbzu	rWORD1,1(rSTR1)
 	lbzu	rWORD2,1(rSTR2)
-	beq	L(u1)
+	b	L(u1)
 
 L(u3):  sub	rRTN,rWORD3,rWORD4
 	blr

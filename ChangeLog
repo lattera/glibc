@@ -1,3 +1,11 @@
+2011-03-28  Andreas Schwab  <schwab@linux-m68k.org>
+
+	* sysdeps/powerpc/powerpc32/power4/strncmp.S: Don't read past
+	differing bytes.
+	* sysdeps/powerpc/powerpc64/power4/strncmp.S: Likewise.
+	* sysdeps/powerpc/powerpc32/power7/strncmp.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power7/strncmp.S: Likewise.
+
 2011-04-17  Ulrich Drepper  <drepper@gmail.com>
 
 	[BZ #12420]
