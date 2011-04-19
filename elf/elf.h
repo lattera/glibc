@@ -1,5 +1,5 @@
 /* This file defines standard ELF types, structures, and macros.
-   Copyright (C) 1995-2003,2004,2005,2006,2007,2008,2009,2010
+   Copyright (C) 1995-2003,2004,2005,2006,2007,2008,2009,2010,2011
 	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -2359,6 +2359,7 @@ typedef Elf32_Addr Elf32_Conflict;
 #define R_ARM_TLS_LE32		108	/* 32 bit offset relative to static
 					   TLS block */
 #define	R_ARM_THM_TLS_DESCSEQ	129
+#define R_ARM_IRELATIVE		160
 #define R_ARM_RXPC25		249
 #define R_ARM_RSBREL32		250
 #define R_ARM_THM_RPC22		251

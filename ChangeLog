@@ -1,3 +1,7 @@
+2011-03-31  Richard Sandiford  <richard.sandiford@linaro.org>
+
+	* elf/elf.h (R_ARM_IRELATIVE): Define.
+
 2011-04-19  Ulrich Drepper  <drepper@gmail.com>
 
 	* po/ru.po: Update from translation team.
