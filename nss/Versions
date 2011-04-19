@@ -95,5 +95,7 @@ libnss_files {
     _nss_netgroup_parseline;
     _nss_files_getpublickey;
     _nss_files_getsecretkey;
+
+    _nss_files_initgroups_dyn;
   }
 }

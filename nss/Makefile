@@ -64,7 +64,7 @@ vpath %.c $(subdir-dirs)
 
 
 libnss_files-routines	:= $(addprefix files-,$(databases)) \
-			   files-have_o_cloexec
+			   files-initgroups files-have_o_cloexec
 distribute		+= files-XXX.c files-parse.c
 
 
