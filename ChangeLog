@@ -1,3 +1,7 @@
+2011-04-19  Ulrich Drepper  <drepper@gmail.com>
+
+	* po/ru.po: Update from translation team.
+
 2011-04-17  Ulrich Drepper  <drepper@gmail.com>
 
 	* sunrpc/Makefile ($(rpc-compat-routines.os)): Add before-compile to
