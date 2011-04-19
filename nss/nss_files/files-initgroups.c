@@ -63,7 +63,9 @@ _nss_files_initgroups_dyn (const char *user, gid_t group, long int *start,
 	}
 
       struct group grp;
-      while (_nss_files_parse_grent (line, &grp, buffer, buflen, errnop) == -1)
+      int res;
+      while ((res = _nss_files_parse_grent (line, &grp, buffer, buflen,
+					    errnop)) == -1)
 	{
 	  size_t newbuflen = 2 * buflen;
 	  if (buffer_use_malloc || ! __libc_use_alloca (buflen + newbuflen))
@@ -83,7 +85,7 @@ _nss_files_initgroups_dyn (const char *user, gid_t group, long int *start,
 	    buffer = extend_alloca (buffer, buflen, newbuflen);
 	}
 
-      if (grp.gr_gid != group)
+      if (res > 0 && grp.gr_gid != group)
 	for (char **m = grp.gr_mem; *m != NULL; ++m)
 	  if (strcmp (*m, user) == 0)
 	    {
