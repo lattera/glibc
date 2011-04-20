@@ -116,6 +116,8 @@ librpcsvc-inhibit-o = .os # Build no shared rpcsvc library.
 omit-deps = $(librpcsvc-routines)
 endif
 
+include ../Rules
+
 ifeq (yes,$(build-shared))
 rpc-compat-routines = $(addprefix compat-,$(need-export-routines))
 rpc-compat-routines.os = $(addprefix $(objpfx), \
@@ -147,8 +149,6 @@ CFLAGS-clnt_perr.c = -fexceptions
 CFLAGS-openchild.c = -fexceptions
 
 CPPFLAGS += -D_RPC_THREAD_SAFE_
-
-include ../Rules
 
 $(objpfx)tst-getmyaddr: $(common-objpfx)linkobj/libc.so
 $(objpfx)tst-xdrmem: $(common-objpfx)linkobj/libc.so

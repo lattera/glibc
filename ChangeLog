@@ -1,3 +1,7 @@
+2011-04-20  Ulrich Drepper  <drepper@gmail.com>
+
+	* sunrpc/Makefile: Move inclusion of Rules.
+
 2011-04-19  Ulrich Drepper  <drepper@gmail.com>
 
 	* nss/nss_files/files-initgroups.c: New file.
