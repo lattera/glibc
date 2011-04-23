@@ -1,3 +1,10 @@
+2011-04-22  Ulrich Drepper  <drepper@gmail.com>
+
+	[BZ #12685]
+	* libio/fileops.c (_IO_new_file_fopen): Scan up to 7 bytes of the
+	mode string.
+	Patch by Eric Blake <eblake@redhat.com>.
+
 2011-04-20  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sunrpc/Makefile (need-export-routines): Add svc_run.
