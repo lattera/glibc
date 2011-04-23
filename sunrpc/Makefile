@@ -64,12 +64,13 @@ ifeq ($(versioning),yes)
 need-export-routines := auth_des auth_unix clnt_gen clnt_perr clnt_tcp \
 			clnt_udp get_myaddr key_call netname pm_getport \
 			rpc_thread svc svc_tcp svc_udp xcrypt xdr_array xdr \
-			xdr_intXX_t xdr_mem xdr_ref xdr_sizeof xdr_stdio
+			xdr_intXX_t xdr_mem xdr_ref xdr_sizeof xdr_stdio \
+			svc_run
 
 routines := auth_none authuxprot bindrsvprt clnt_raw clnt_simp \
 	    rpc_dtable getrpcport pmap_clnt pm_getmaps pmap_prot pmap_prot2 \
 	    pmap_rmt rpc_prot rpc_common rpc_cmsg svc_auth svc_authux svc_raw \
-	    svc_run svc_simple xdr_float xdr_rec publickey authdes_prot \
+	    svc_simple xdr_float xdr_rec publickey authdes_prot \
 	    des_crypt des_impl des_soft key_prot openchild rtime svcauth_des \
 	    clnt_unix svc_unix create_xid $(need-export-routines)
 # We only add the RPC for compatibility to libc.so.
@@ -212,4 +213,4 @@ ifneq ($(no_deps),t)
 endif
 endif
 
-$(objpfx)thrsvc: $(shared-thread-library)
+$(objpfx)thrsvc: $(common-objpfx)linkobj/libc.so $(shared-thread-library)

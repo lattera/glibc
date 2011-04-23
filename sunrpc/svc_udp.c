@@ -195,7 +195,11 @@ svcudp_create (sock)
 {
   return svcudp_bufcreate (sock, UDPMSGSIZE, UDPMSGSIZE);
 }
+#ifdef EXPORT_RPC_SYMBOLS
+libc_hidden_def (svcudp_create)
+#else
 libc_hidden_nolink (svcudp_create, GLIBC_2_0)
+#endif
 
 static enum xprt_stat
 svcudp_stat (xprt)

@@ -270,7 +270,11 @@ clnt_perrno (enum clnt_stat num)
 {
   (void) __fxprintf (NULL, "%s", clnt_sperrno (num));
 }
+#ifdef EXPORT_RPC_SYMBOLS
+libc_hidden_def (clnt_perrno)
+#else
 libc_hidden_nolink (clnt_perrno, GLIBC_2_0)
+#endif
 
 char *
 clnt_spcreateerror (const char *msg)

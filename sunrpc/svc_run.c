@@ -101,4 +101,8 @@ svc_run (void)
 
   free (my_pollfd);
 }
+#ifdef EXPORT_RPC_SYMBOLS
+libc_hidden_def (svc_run)
+#else
 libc_hidden_nolink (svc_run, GLIBC_2_0)
+#endif

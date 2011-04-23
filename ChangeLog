@@ -1,3 +1,12 @@
+2011-04-20  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sunrpc/Makefile (need-export-routines): Add svc_run.
+	(routines): Remove svc_run.
+	($(objpfx)thrsvc): Add $(common-objpfx)linkobj/libc.so.
+	* sunrpc/clnt_perr.c (clnt_perrno): Export.
+	* sunrpc/svc_run.c (svc_run): Likewise.
+	* sunrpc/svc_udp.c (svcudp_create): Likewise.
+
 2011-04-21  Ulrich Drepper  <drepper@gmail.com>
 
 	* nss/nss_files/files-initgroups.c (_nss_files_initgroups_dyn): Fix
