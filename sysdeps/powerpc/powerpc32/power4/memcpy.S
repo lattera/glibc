@@ -24,10 +24,10 @@
 /* __ptr_t [r3] memcpy (__ptr_t dst [r3], __ptr_t src [r4], size_t len [r5]);
    Returns 'dst'.
 
-   Memcpy handles short copies (< 32-bytes) using a binary move blocks 
-   (no loops) of lwz/stw.  The tail (remaining 1-3) bytes is handled 
-   with the appropriate combination of byte and halfword load/stores. 
-   There is minimal effort to optimize the alignment of short moves.  
+   Memcpy handles short copies (< 32-bytes) using a binary move blocks
+   (no loops) of lwz/stw.  The tail (remaining 1-3) bytes is handled
+   with the appropriate combination of byte and halfword load/stores.
+   There is minimal effort to optimize the alignment of short moves.
 
    Longer moves (>= 32-bytes) justify the effort to get at least the
    destination word (4-byte) aligned.  Further optimization is
@@ -43,7 +43,7 @@ EALIGN (BP_SYM (memcpy), 5, 0)
     stw   30,20(1)
     cfi_offset(30,(20-32))
     mr    30,3
-    cmplwi cr1,5,31     
+    cmplwi cr1,5,31
     stw   31,24(1)
     cfi_offset(31,(24-32))
     neg   0,3
@@ -52,13 +52,13 @@ EALIGN (BP_SYM (memcpy), 5, 0)
     clrlwi 10,4,30	/* check alignment of src.  */
     cmplwi cr6,5,8
     ble-  cr1,.L2	/* If move < 32 bytes use short move code.  */
-    cmplw cr6,10,11  
+    cmplw cr6,10,11
     mr    12,4
     srwi  9,5,2		/* Number of full words remaining.  */
     mtcrf 0x01,0
     mr    31,5
     beq   .L0
-  
+
     subf  31,0,5
   /* Move 0-3 bytes as needed to get the destination word aligned.  */
 1:  bf    31,2f
@@ -72,17 +72,17 @@ EALIGN (BP_SYM (memcpy), 5, 0)
     sth   6,0(3)
     addi  3,3,2
 0:
-    clrlwi 10,12,30	/* check alignment of src again.  */     
+    clrlwi 10,12,30	/* check alignment of src again.  */
     srwi  9,31,2	/* Number of full words remaining.  */
-    
-  /* Copy words from source to destination, assuming the destination is 
+
+  /* Copy words from source to destination, assuming the destination is
      aligned on a word boundary.
 
      At this point we know there are at least 25 bytes left (32-7) to copy.
-     The next step is to determine if the source is also word aligned. 
+     The next step is to determine if the source is also word aligned.
      If not branch to the unaligned move code at .L6. which uses
      a load, shift, store strategy.
-     
+
      Otherwise source and destination are word aligned, and we can use
      the optimized word copy loop.  */
 .L0:
@@ -92,16 +92,16 @@ EALIGN (BP_SYM (memcpy), 5, 0)
 
   /* Move words where destination and source are word aligned.
      Use an unrolled loop to copy 4 words (16-bytes) per iteration.
-     If the copy is not an exact multiple of 16 bytes, 1-3 
+     If the copy is not an exact multiple of 16 bytes, 1-3
      words are copied as needed to set up the main loop.  After
-     the main loop exits there may be a tail of 1-3 bytes. These bytes are 
+     the main loop exits there may be a tail of 1-3 bytes. These bytes are
      copied a halfword/byte at a time as needed to preserve alignment.  */
 
     srwi  8,31,4    /* calculate the 16 byte loop count */
     cmplwi	cr1,9,4
     cmplwi	cr6,11,0
     mr    11,12
-    
+
     bf    30,1f
     lwz   6,0(12)
     lwz   7,4(12)
@@ -112,7 +112,7 @@ EALIGN (BP_SYM (memcpy), 5, 0)
     addi  10,3,8
     bf    31,4f
     lwz   0,8(12)
-    stw   0,8(3)    
+    stw   0,8(3)
     blt   cr1,3f
     addi  11,12,12
     addi  10,3,12
@@ -126,7 +126,7 @@ EALIGN (BP_SYM (memcpy), 5, 0)
     addi  11,12,4
     stw   6,0(3)
     addi  10,3,4
-    
+
     .align  4
 4:
     lwz   6,0(11)
@@ -140,14 +140,14 @@ EALIGN (BP_SYM (memcpy), 5, 0)
     addi  11,11,16
     addi  10,10,16
     bdnz  4b
-3:  
+3:
     clrrwi 0,31,2
     mtcrf 0x01,31
     beq   cr6,0f
 .L9:
     add   3,3,0
     add   12,12,0
-    
+
 /*  At this point we have a tail of 0-3 bytes and we know that the
     destination is word aligned.  */
 2:  bf    30,1f
@@ -165,27 +165,27 @@ EALIGN (BP_SYM (memcpy), 5, 0)
     lwz 31,24(1)
     addi 1,1,32
     blr
-       
-/* Copy up to 31 bytes.  This is divided into two cases 0-8 bytes and 
-   9-31 bytes.  Each case is handled without loops, using binary 
-   (1,2,4,8) tests.  
-   
+
+/* Copy up to 31 bytes.  This is divided into two cases 0-8 bytes and
+   9-31 bytes.  Each case is handled without loops, using binary
+   (1,2,4,8) tests.
+
    In the short (0-8 byte) case no attempt is made to force alignment
-   of either source or destination.  The hardware will handle the 
-   unaligned load/stores with small delays for crossing 32- 64-byte, and 
+   of either source or destination.  The hardware will handle the
+   unaligned load/stores with small delays for crossing 32- 64-byte, and
    4096-byte boundaries. Since these short moves are unlikely to be
-   unaligned or cross these boundaries, the overhead to force 
+   unaligned or cross these boundaries, the overhead to force
    alignment is not justified.
-   
+
    The longer (9-31 byte) move is more likely to cross 32- or 64-byte
    boundaries.  Since only loads are sensitive to the 32-/64-byte
-   boundaries it is more important to align the source than the 
+   boundaries it is more important to align the source than the
    destination.  If the source is not already word aligned, we first
-   move 1-3 bytes as needed.  While the destination and stores may 
+   move 1-3 bytes as needed.  While the destination and stores may
    still be unaligned, this is only an issue for page (4096 byte
-   boundary) crossing, which should be rare for these short moves.  
-   The hardware handles this case automatically with a small delay.  */ 
-   
+   boundary) crossing, which should be rare for these short moves.
+   The hardware handles this case automatically with a small delay.  */
+
     .align  4
 .L2:
     mtcrf 0x01,5
@@ -248,11 +248,11 @@ EALIGN (BP_SYM (memcpy), 5, 0)
     lwz   6,0(12)
     addi  12,12,4
     stw   6,0(3)
-    addi  3,3,4    
+    addi  3,3,4
 2:  /* Move 2-3 bytes.  */
     bf    30,1f
     lhz   6,0(12)
-    sth   6,0(3) 
+    sth   6,0(3)
     bf    31,0f
     lbz   7,2(12)
     stb   7,2(3)
@@ -292,7 +292,7 @@ EALIGN (BP_SYM (memcpy), 5, 0)
 6:
     bf    30,5f
     lhz   7,4(4)
-    sth   7,4(3) 
+    sth   7,4(3)
     bf    31,0f
     lbz   8,6(4)
     stb   8,6(3)
@@ -301,7 +301,7 @@ EALIGN (BP_SYM (memcpy), 5, 0)
     addi  1,1,32
     blr
     .align  4
-5:  
+5:
     bf    31,0f
     lbz   6,4(4)
     stb   6,4(3)
@@ -318,15 +318,15 @@ EALIGN (BP_SYM (memcpy), 5, 0)
 
   /* Copy words where the destination is aligned but the source is
      not.  Use aligned word loads from the source, shifted to realign
-     the data, to allow aligned destination stores.  
+     the data, to allow aligned destination stores.
      Use an unrolled loop to copy 4 words (16-bytes) per iteration.
      A single word is retained for storing at loop exit to avoid walking
      off the end of a page within the loop.
-     If the copy is not an exact multiple of 16 bytes, 1-3 
+     If the copy is not an exact multiple of 16 bytes, 1-3
      words are copied as needed to set up the main loop.  After
-     the main loop exits there may be a tail of 1-3 bytes. These bytes are 
+     the main loop exits there may be a tail of 1-3 bytes. These bytes are
      copied a halfword/byte at a time as needed to preserve alignment.  */
-    
+
 
     cmplwi  cr6,11,0  /* are there tail bytes left ? */
     subf    5,10,12   /* back up src pointer to prev word alignment */
@@ -381,8 +381,8 @@ EALIGN (BP_SYM (memcpy), 5, 0)
     .align  4
 4:
     /* copy 16 bytes at a time */
-    slw   0,6,10 
-    srw   8,7,9 
+    slw   0,6,10
+    srw   8,7,9
     or    0,0,8
     lwz   6,0(5)
     stw   0,0(4)
@@ -391,13 +391,13 @@ EALIGN (BP_SYM (memcpy), 5, 0)
     or    0,0,8
     lwz   7,4(5)
     stw   0,4(4)
-    slw   0,6,10 
-    srw   8,7,9 
+    slw   0,6,10
+    srw   8,7,9
     or    0,0,8
     lwz   6,8(5)
     stw   0,8(4)
     slw   0,7,10
-    srw   8,6,9 
+    srw   8,6,9
     or    0,0,8
     lwz   7,12(5)
     stw   0,12(4)
@@ -406,8 +406,8 @@ EALIGN (BP_SYM (memcpy), 5, 0)
     bdnz+ 4b
 8:
     /* calculate and store the final word */
-    slw   0,6,10 
-    srw   8,7,9 
+    slw   0,6,10
+    srw   8,7,9
     or    0,0,8
     stw   0,0(4)
 3:

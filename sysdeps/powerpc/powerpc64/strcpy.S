@@ -31,7 +31,7 @@ EALIGN (BP_SYM (strcpy), 4, 0)
 #define rTMP	r0
 #define rRTN	r3	/* incoming DEST arg preserved as result */
 /* Note.  The Bounded pointer support in this code is broken.  This code
-   was inherited from PPC32 and that support was never completed.  
+   was inherited from PPC32 and that support was never completed.
    Current PPC gcc does not support -fbounds-check or -fbounded-pointers.
    These artifacts are left in the code as a reminder in case we need
    bounded pointer support in the future.  */

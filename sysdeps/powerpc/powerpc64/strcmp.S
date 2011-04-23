@@ -33,7 +33,7 @@ EALIGN (BP_SYM(strcmp), 4, 0)
 #define rSTR1	r3	/* first string arg */
 #define rSTR2	r4	/* second string arg */
 /* Note:  The Bounded pointer support in this code is broken.  This code
-   was inherited from PPC32 and that support was never completed.  
+   was inherited from PPC32 and that support was never completed.
    Current PPC gcc does not support -fbounds-check or -fbounded-pointers.
    These artifacts are left in the code as a reminder in case we need
    bounded pointer support in the future.  */
