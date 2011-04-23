@@ -1,6 +1,6 @@
 /* Optimized version of the standard strcpy() function.
    This file is part of the GNU C Library.
-   Copyright (C) 2000, 2001, 2003 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2001, 2003, 2011 Free Software Foundation, Inc.
    Contributed by Dan Pop <Dan.Pop@cern.ch>.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -24,7 +24,7 @@
         in0:    dest
         in1:    src
 
-   In this form, it assumes little endian mode.  For big endian mode, the
+   In this form, it assumes little endian mode.  For big endian mode,
    the two shifts in .l2 must be inverted:
 
 	shl   	value = r[1], sh1   	// value = w0 << sh1

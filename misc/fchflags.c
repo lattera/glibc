@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1995, 1996, 1997, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1995, 1996, 1997, 2004, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,7 +20,7 @@
 #include <stddef.h>
 #include <sys/stat.h>
 
-/* Change the flags of the file FD refers to to FLAGS.  */
+/* Change the flags of the file referenced by FD to FLAGS.  */
 
 int fchflags (int fd, int flags) __THROW;
 

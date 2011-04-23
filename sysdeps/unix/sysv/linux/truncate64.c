@@ -1,4 +1,4 @@
-/* Copyright (C) 1997-2000,2003,2004,2005,2006
+/* Copyright (C) 1997-2000,2003,2004,2005,2006,2011
 	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -34,7 +34,7 @@
 int __have_no_truncate64;
 #endif
 
-/* Truncate the file FD refers to to LENGTH bytes.  */
+/* Truncate the file referenced by FD to LENGTH bytes.  */
 int
 truncate64 (const char *path, off64_t length)
 {

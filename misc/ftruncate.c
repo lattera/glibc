@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1995, 1996, 1997, 1998, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,7 +20,7 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-/* Truncate the file FD refers to to LENGTH bytes.  */
+/* Truncate the file referenced by FD to LENGTH bytes.  */
 int
 __ftruncate (fd, length)
      int fd;

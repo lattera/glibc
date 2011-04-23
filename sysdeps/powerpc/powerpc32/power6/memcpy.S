@@ -1,5 +1,5 @@
 /* Optimized memcpy implementation for PowerPC32 on POWER6.
-   Copyright (C) 2003, 2006, 2009 Free Software Foundation, Inc.
+   Copyright (C) 2003, 2006, 2009, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -100,7 +100,7 @@ EALIGN (BP_SYM (memcpy), 5, 0)
 
   /* Move words where destination and source are word aligned.
      Use an unrolled loop to copy 4 words (16-bytes) per iteration.
-     If the the copy is not an exact multiple of 16 bytes, 1-3
+     If the copy is not an exact multiple of 16 bytes, 1-3
      words are copied as needed to set up the main loop.  After
      the main loop exits there may be a tail of 1-3 bytes. These bytes are
      copied a halfword/byte at a time as needed to preserve alignment.  */

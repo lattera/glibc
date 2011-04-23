@@ -1,7 +1,7 @@
 /* copy no more then N bytes from SRC to DEST, returning the address of
    the terminating '\0' in DEST.
    For Intel 80x86, x>=3.
-   Copyright (C) 1994-1997,2000,2002,2005 Free Software Foundation, Inc.
+   Copyright (C) 1994-1997,2000,2002,2005,2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>
    Some bug fixes by Alan Modra <Alan@SPRI.Levels.UniSA.Edu.Au>
@@ -56,7 +56,7 @@ ENTRY (BP_SYM (__stpncpy))
 	ALIGN(4)
 
 	/* Four times unfolded loop with two loop counters.  We get the
-	   the third value (the source address) by using the index+base
+	   third value (the source address) by using the index+base
 	   addressing mode.  */
 L(2):	movb (%eax,%esi), %dl	/* load current char */
 	movb %dl, (%eax)	/* and store it */

@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2004, 2006 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2004, 2006, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -45,7 +45,7 @@ __pthread_kill (threadid, signo)
     /* Not a valid thread handle.  */
     return ESRCH;
 
-  /* Disallow sending the signal we use for cancellation, timers, for
+  /* Disallow sending the signal we use for cancellation, timers,
      for the setxid implementation.  */
   if (signo == SIGCANCEL || signo == SIGTIMER || signo == SIGSETXID)
     return EINVAL;

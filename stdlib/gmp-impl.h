@@ -1,6 +1,6 @@
 /* Include file for internal GNU MP types and definitions.
 
-Copyright (C) 1991, 1993, 1994, 1995, 1996 Free Software Foundation, Inc.
+Copyright (C) 1991, 1993, 1994, 1995, 1996, 2011 Free Software Foundation, Inc.
 
 This file is part of the GNU MP Library.
 
@@ -241,7 +241,7 @@ extern mp_size_t __gmp_default_fp_limb_precision;
     (r) = _r;								\
     (q) = _q;								\
   } while (0)
-/* Like udiv_qrnnd_preinv, but for for any value D.  DNORM is D shifted left
+/* Like udiv_qrnnd_preinv, but for any value D.  DNORM is D shifted left
    so that its most significant bit is set.  LGUP is ceil(log2(D)).  */
 #define udiv_qrnnd_preinv2gen(q, r, nh, nl, d, di, dnorm, lgup) \
   do {									\

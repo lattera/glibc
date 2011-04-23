@@ -1,5 +1,5 @@
 /* Optimized strlen implementation for PowerPC64.
-   Copyright (C) 1997, 1999, 2000, 2002, 2003 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1999, 2000, 2002, 2003, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -96,7 +96,7 @@ ENTRY (BP_SYM (strlen))
 #define rTMP4	r12
 
 /* Note:  The Bounded pointer support in this code is broken.  This code
-   was inherited from PPC32 and and that support was never completed.  
+   was inherited from PPC32 and that support was never completed.
    Current PPC gcc does not support -fbounds-check or -fbounded-pointers.
    These artifacts are left in the code as a reminder in case we need
    bounded pointer support in the future.  */

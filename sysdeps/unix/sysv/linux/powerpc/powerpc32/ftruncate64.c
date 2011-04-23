@@ -1,4 +1,4 @@
-/* Copyright (C) 1997-2002,2005,2006 Free Software Foundation, Inc.
+/* Copyright (C) 1997-2002,2005,2006,2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -32,7 +32,7 @@ extern int __have_no_truncate64;
 #endif
 
 
-/* Truncate the file FD refers to to LENGTH bytes.  */
+/* Truncate the file referenced by FD to LENGTH bytes.  */
 int
 __ftruncate64 (fd, length)
      int fd;

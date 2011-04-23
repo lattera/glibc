@@ -1,4 +1,4 @@
-/* Copyright (C) 2003, 2006 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2006, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2003.
 
@@ -67,7 +67,7 @@ do_test (void)
 
   /* The following only works because we assume here something about
      the implementation.  Namely, that the memory allocated for the
-     thread descriptor is not going away, that the the TID field is
+     thread descriptor is not going away, that the TID field is
      cleared and therefore the signal is sent to process 0, and that
      we can savely assume there is no other process with this ID at
      that time.  */

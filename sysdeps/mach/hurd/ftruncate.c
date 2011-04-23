@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 93, 94, 95, 97, 98 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 93, 94, 95, 97, 98, 11 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -22,7 +22,7 @@
 #include <hurd.h>
 #include <hurd/fd.h>
 
-/* Truncate the file FD refers to to LENGTH bytes.  */
+/* Truncate the file referenced by FD to LENGTH bytes.  */
 int
 __ftruncate (fd, length)
      int fd;

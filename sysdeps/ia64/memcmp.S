@@ -1,6 +1,6 @@
 /* Optimized version of the standard memcmp() function.
    This file is part of the GNU C Library.
-   Copyright (C) 2000, 2001, 2004 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2001, 2004, 2011 Free Software Foundation, Inc.
    Contributed by Dan Pop <Dan.Pop@cern.ch>.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -25,7 +25,7 @@
         in1:    src  (aka s2)
         in2:    byte count
 
-   In this form, it assumes little endian mode.  For big endian mode, the
+   In this form, it assumes little endian mode.  For big endian mode,
    the two shifts in .l2 must be inverted:
 
 	shl   	tmp1[0] = r[1 + MEMLAT], sh1   // tmp1 = w0 << sh1

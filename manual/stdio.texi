@@ -4329,7 +4329,7 @@ the same file position.
 @item
 In a call to @code{fseek} or @code{fseeko} on a text stream, either the
 @var{offset} must be zero, or @var{whence} must be @code{SEEK_SET} and
-and the @var{offset} must be the result of an earlier call to @code{ftell}
+the @var{offset} must be the result of an earlier call to @code{ftell}
 on the same stream.
 
 @item

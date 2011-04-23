@@ -1583,7 +1583,7 @@ nscd_run_prune (void *p)
 
 
 /* This is the main loop.  It is replicated in different threads but
-   the the use of the ready list makes sure only one thread handles an
+   the use of the ready list makes sure only one thread handles an
    incoming connection.  */
 static void *
 __attribute__ ((__noreturn__))

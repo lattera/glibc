@@ -1,5 +1,5 @@
 /* Machine-dependent ELF dynamic relocation functions.  PowerPC version.
-   Copyright (C) 1995-2006, 2008 Free Software Foundation, Inc.
+   Copyright (C) 1995-2006, 2008, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -204,7 +204,7 @@ __elf_preferred_address (struct link_map *loader, size_t maplength,
    (1) and (3), this is obvious because only one instruction is
    changed and the PPC architecture guarantees that aligned stores are
    atomic.  For (5), this is more tricky.  When changing (4) to (5),
-   the `b' instruction is first changed to to `mtctr'; this is safe
+   the `b' instruction is first changed to `mtctr'; this is safe
    and is why the `lwzu' instruction is not just a simple `addi'.
    Once this is done, and is visible to all processors, the `lwzu' can
    safely be changed to a `lwz'.  */

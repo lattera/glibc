@@ -1,4 +1,4 @@
-/* Copyright (C) 1993,1995,1997-2004,2006,2009 Free Software Foundation, Inc.
+/* Copyright (C) 1993,1995,1997-2004,2006,2009,2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Ulrich Drepper <drepper@cygnus.com>.
    Based on the single byte version by Per Bothner <bothner@cygnus.com>.
@@ -759,7 +759,7 @@ resync:
   /* We need to do it since it is possible that the file offset in
      the kernel may be changed behind our back. It may happen when
      we fopen a file and then do a fork. One process may access the
-     the file and the kernel file offset will be changed. */
+     file and the kernel file offset will be changed. */
   if (fp->_offset >= 0)
     _IO_SYSSEEK (fp, fp->_offset, 0);
 

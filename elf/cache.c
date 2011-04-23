@@ -1,4 +1,4 @@
-/* Copyright (C) 1999-2003,2005,2006,2007 Free Software Foundation, Inc.
+/* Copyright (C) 1999-2003,2005,2006,2007,2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Andreas Jaeger <aj@suse.de>, 1999.
 
@@ -361,7 +361,7 @@ save_cache (const char *cache_name)
 	{
 	  /* We could subtract file_entries_new_size from str_offset -
 	     not doing so makes the code easier, the string table
-	     always begins at the beginning of the the new cache
+	     always begins at the beginning of the new cache
 	     struct.  */
 	  file_entries_new->libs[idx_new].flags = entry->flags;
 	  file_entries_new->libs[idx_new].osversion = entry->osversion;

@@ -194,7 +194,7 @@ do_lookup_x (const char *undef_name, uint_fast32_t new_hash,
 	       might exist in more than one form
 
 	       If the library does not provide symbol version information
-	       there is no problem at at: we simply use the symbol if it
+	       there is no problem at all: we simply use the symbol if it
 	       is defined.
 
 	       These two lookups need to be handled differently if the

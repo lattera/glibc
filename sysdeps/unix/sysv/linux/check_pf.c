@@ -1,5 +1,5 @@
 /* Determine protocol families for which interfaces exist.  Linux version.
-   Copyright (C) 2003, 2006, 2007, 2008, 2010 Free Software Foundation, Inc.
+   Copyright (C) 2003, 2006, 2007, 2008, 2010, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -240,7 +240,7 @@ out_fail:
 }
 
 
-/* We don't know if we have NETLINK support compiled in in our
+/* We don't know if we have NETLINK support compiled into our
    Kernel.  */
 #if __ASSUME_NETLINK_SUPPORT == 0
 /* Define in ifaddrs.h.  */

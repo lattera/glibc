@@ -1,4 +1,4 @@
-/* Copyright (C) 1995-2003, 2005-2008, 2009 Free Software Foundation, Inc.
+/* Copyright (C) 1995-2003, 2005-2008, 2009, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.org>, 1995.
 
@@ -2565,7 +2565,7 @@ collate_output (struct localedef_t *locale, const struct charmap_t *charmap,
  	  elem_table[idx * 2] = hash;
 	  elem_table[idx * 2 + 1] = obstack_object_size (&extrapool);
 
-	  /* The the string itself including length.  */
+	  /* The string itself including length.  */
 	  obstack_1grow (&extrapool, namelen);
 	  obstack_grow (&extrapool, runp->name, namelen);
 

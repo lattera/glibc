@@ -1,5 +1,5 @@
 /* Optimized strcmp implementation for PowerPC64.
-   Copyright (C) 2003 Free Software Foundation, Inc.
+   Copyright (C) 2003, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -34,7 +34,7 @@ EALIGN (BP_SYM(strncmp), 4, 0)
 #define rSTR2	r4	/* second string arg */
 #define rN	r5	/* max string length */
 /* Note:  The Bounded pointer support in this code is broken.  This code
-   was inherited from PPC32 and and that support was never completed.  
+   was inherited from PPC32 and that support was never completed.
    Current PPC gcc does not support -fbounds-check or -fbounded-pointers.  */
 #define rWORD1	r6	/* current word in s1 */
 #define rWORD2	r7	/* current word in s2 */

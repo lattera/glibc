@@ -1,4 +1,4 @@
-/* Copyright (C) 2000, 2002, 2004, 2007 Free Software Foundation, Inc.
+/* Copyright (C) 2000, 2002, 2004, 2007, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -164,7 +164,7 @@ __nss_getent_r (const char *getent_func_name,
       status = DL_CALL_FCT (fct.f,
 			    (resbuf, buffer, buflen, &errno, &h_errno));
 
-      /* The the status is NSS_STATUS_TRYAGAIN and errno is ERANGE the
+      /* The status is NSS_STATUS_TRYAGAIN and errno is ERANGE the
 	 provided buffer is too small.  In this case we should give
 	 the user the possibility to enlarge the buffer and we should
 	 not simply go on with the next service (even if the TRYAGAIN

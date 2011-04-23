@@ -1,5 +1,5 @@
 /* getifaddrs -- get names and addresses of all network interfaces
-   Copyright (C) 2003-2008, 2009, 2010 Free Software Foundation, Inc.
+   Copyright (C) 2003-2008, 2009, 2010, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -38,7 +38,7 @@
 #include "netlinkaccess.h"
 
 
-/* We don't know if we have NETLINK support compiled in in our
+/* We don't know if we have NETLINK support compiled into our
    Kernel, so include the old implementation as fallback.  */
 #if __ASSUME_NETLINK_SUPPORT == 0
 int __no_netlink_support attribute_hidden;

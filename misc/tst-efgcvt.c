@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 1999, 2000, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 1999, 2000, 2004, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -184,7 +184,7 @@ special (void)
   (void) ecvt (123.456, 10000, &decpt, &sign);
   (void) fcvt (123.456, 10000, &decpt, &sign);
 
-  /* Some tests for for the reentrant functions.  */
+  /* Some tests for the reentrant functions.  */
   /* Use a too small buffer.  */
   res = ecvt_r (123.456, 10, &decpt, &sign, buf, 1);
   if (res == 0)

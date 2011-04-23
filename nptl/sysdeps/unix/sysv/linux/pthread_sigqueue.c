@@ -1,4 +1,4 @@
-/* Copyright (C) 2009 Free Software Foundation, Inc.
+/* Copyright (C) 2009, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2009.
 
@@ -49,7 +49,7 @@ pthread_sigqueue (threadid, signo, value)
     /* Not a valid thread handle.  */
     return ESRCH;
 
-  /* Disallow sending the signal we use for cancellation, timers, for
+  /* Disallow sending the signal we use for cancellation, timers,
      for the setxid implementation.  */
   if (signo == SIGCANCEL || signo == SIGTIMER || signo == SIGSETXID)
     return EINVAL;

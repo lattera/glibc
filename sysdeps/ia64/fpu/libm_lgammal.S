@@ -7463,7 +7463,7 @@ lgammal_spec:
 { .mfb
       nop.m              0
       nop.f              0
-      // branch out if if x is natval, nan, +inf
+      // branch out if x is natval, nan, +inf
 (p6)  br.cond.spnt       lgammal_nan_pinf
 };;
 { .mfb

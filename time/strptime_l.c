@@ -1,4 +1,4 @@
-/* Copyright (C) 2002,2004,2005,2007,2008,2010 Free Software Foundation, Inc.
+/* Copyright (C) 2002,2004,2005,2007,2008,2010,2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -213,7 +213,7 @@ static void
 day_of_the_week (struct tm *tm)
 {
   /* We know that January 1st 1970 was a Thursday (= 4).  Compute the
-     the difference between this data in the one on TM and so determine
+     difference between this data in the one on TM and so determine
      the weekday.  */
   int corr_year = 1900 + tm->tm_year - (tm->tm_mon < 2);
   int wday = (-473

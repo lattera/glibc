@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1995, 1996, 1997, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,7 +21,7 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 
-/* Change the protections of the file FD refers to to MODE.  */
+/* Change the permissions of the file referenced by FD to MODE.  */
 int
 __fchmod (fd, mode)
      int fd;
