@@ -29,6 +29,9 @@
 	.syntax unified
 	.hidden __libc_do_syscall
 
+#undef CALL_MCOUNT
+#define CALL_MCOUNT
+
 ENTRY (__libc_do_syscall)
 	.fnstart
 	push	{r7, lr}

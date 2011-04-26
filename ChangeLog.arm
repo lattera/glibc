@@ -1,3 +1,8 @@
+2011-04-26  Manjunath Matti  <manjunath81@gmail.com>
+
+	* sysdeps/unix/sysv/linux/arm/eabi/libc-do-syscall.S
+	(CALL_MCOUNT): Redefine to empty.
+
 2011-04-26  Richard Sandiford  <richard.sandiford@linaro.org>
 
 	* sysdeps/arm/dl-machine.h (elf_machine_rel): Handle STT_GNU_IFUNC
