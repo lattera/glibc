@@ -374,6 +374,12 @@ elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
       struct link_map *sym_map = RESOLVE_MAP (&sym, version, r_type);
       Elf32_Addr value = sym_map == NULL ? 0 : sym_map->l_addr + sym->st_value;
 
+      if (sym != NULL
+	  && __builtin_expect (ELFW(ST_TYPE) (sym->st_info) == STT_GNU_IFUNC,
+			       0)
+	  && __builtin_expect (sym->st_shndx != SHN_UNDEF, 1))
+	value = ((Elf32_Addr (*) (void)) value) ();
+
       switch (r_type)
 	{
 	case R_ARM_COPY:
@@ -487,7 +493,8 @@ elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
 	     *reloc_addr = value;
 	  }
 	  break;
-#if defined USE_TLS && !defined RTLD_BOOTSTRAP
+#if !defined RTLD_BOOTSTRAP
+#if defined USE_TLS
 	case R_ARM_TLS_DTPMOD32:
 	  /* Get the information from the link map returned by the
 	     resolv function.  */
@@ -506,6 +513,12 @@ elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
 	      CHECK_STATIC_TLS (map, sym_map);
 	      *reloc_addr += sym->st_value + sym_map->l_tls_offset;
 	    }
+	  break;
+#endif
+	case R_ARM_IRELATIVE:
+	  value = map->l_addr + *reloc_addr;
+	  value = ((Elf32_Addr (*) (void)) value) ();
+	  *reloc_addr = value;
 	  break;
 #endif
 	default:
@@ -536,6 +549,12 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 # endif
       struct link_map *sym_map = RESOLVE_MAP (&sym, version, r_type);
       Elf32_Addr value = sym_map == NULL ? 0 : sym_map->l_addr + sym->st_value;
+
+      if (sym != NULL
+	  && __builtin_expect (ELFW(ST_TYPE) (sym->st_info) == STT_GNU_IFUNC,
+			       0)
+	  && __builtin_expect (sym->st_shndx != SHN_UNDEF, 1))
+	value = ((Elf32_Addr (*) (void)) value) ();
 
       switch (r_type)
 	{
@@ -588,7 +607,8 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 	     *reloc_addr = value;
 	  }
 	  break;
-#if defined USE_TLS && !defined RTLD_BOOTSTRAP
+#if !defined RTLD_BOOTSTRAP
+#if defined USE_TLS
 	case R_ARM_TLS_DTPMOD32:
 	  /* Get the information from the link map returned by the
 	     resolv function.  */
@@ -607,6 +627,12 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 	      *reloc_addr = (sym->st_value + sym_map->l_tls_offset
 			     + reloc->r_addend);
 	    }
+	  break;
+#endif
+	case R_ARM_IRELATIVE:
+	  value = map->l_addr + *reloc_addr;
+	  value = ((Elf32_Addr (*) (void)) value) ();
+	  *reloc_addr = value;
 	  break;
 #endif
 	default:

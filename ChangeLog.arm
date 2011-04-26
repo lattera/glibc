@@ -1,3 +1,10 @@
+2011-04-26  Richard Sandiford  <richard.sandiford@linaro.org>
+
+	* sysdeps/arm/dl-machine.h (elf_machine_rel): Handle STT_GNU_IFUNC
+	and R_ARM_IRELATIVE.
+	(elf_machine_rela): Likewise.
+	* sysdeps/arm/dl-irel.h: New file.
+
 2011-04-11  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/arm/dl-tls.h (TLS_DTV_UNALLOCATED): Define.
