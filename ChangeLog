@@ -1,3 +1,9 @@
+2011-04-29  Ulrich Drepper  <drepper@gmail.com>
+
+	* grp/initgroups.c (internal_getgrouplist): Prefer initgroups setting
+	to groups setting in database lookup.
+	* nss/nsswitch.conf: Add initgroups entry.
+
 2011-04-22  Ulrich Drepper  <drepper@gmail.com>
 
 	[BZ #12685]

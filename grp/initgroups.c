@@ -1,4 +1,5 @@
-/* Copyright (C) 1989,91,93,1996-2006,2008,2010 Free Software Foundation, Inc.
+/* Copyright (C) 1989,1991,1993,1996-2006,2008,2010,2011
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -85,7 +86,7 @@ internal_getgrouplist (const char *user, gid_t group, long int *size,
       nip = __nss_group_database;
     }
   else
-    no_more = __nss_database_lookup ("group", NULL,
+    no_more = __nss_database_lookup ("initgroups", "group",
 				     "compat [NOTFOUND=return] files", &nip);
 
   while (! no_more)
