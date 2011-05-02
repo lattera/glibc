@@ -1,3 +1,11 @@
+2011-04-30  Bruno Haible  <bruno@clisp.org>
+
+	[BZ #12717]
+	* conform/data/netdb.h-data (getnameinfo): Make POSIX compliant.
+	* resolv/netdb.h (getnameinfo): Change type of flags parameter
+	to 'int'.
+	* inet/getnameinfo.c (getnameinfo): Likewise.
+
 2011-04-29  Ulrich Drepper  <drepper@gmail.com>
 
 	* grp/initgroups.c (internal_getgrouplist): Prefer initgroups setting

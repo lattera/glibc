@@ -1,4 +1,4 @@
-  /* Copyright (C) 1996-2004, 2009, 2010 Free Software Foundation, Inc.
+  /* Copyright (C) 1996-2004, 2009, 2010, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -679,7 +679,7 @@ extern __const char *gai_strerror (int __ecode) __THROW;
 extern int getnameinfo (__const struct sockaddr *__restrict __sa,
 			socklen_t __salen, char *__restrict __host,
 			socklen_t __hostlen, char *__restrict __serv,
-			socklen_t __servlen, unsigned int __flags);
+			socklen_t __servlen, int __flags);
 #endif	/* POSIX */
 
 #ifdef __USE_GNU

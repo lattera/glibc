@@ -159,7 +159,7 @@ nrl_domainname (void)
 int
 getnameinfo (const struct sockaddr *sa, socklen_t addrlen, char *host,
 	     socklen_t hostlen, char *serv, socklen_t servlen,
-	     unsigned int flags)
+	     int flags)
 {
   int serrno = errno;
   int tmpbuflen = 1024;
@@ -385,7 +385,7 @@ getnameinfo (const struct sockaddr *sa, socklen_t addrlen, char *host,
 	break;
 
       default:
-        return EAI_FAMILY;
+	return EAI_FAMILY;
     }
 
   if (serv && (servlen > 0))
