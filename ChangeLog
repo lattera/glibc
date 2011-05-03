@@ -1,3 +1,9 @@
+2011-04-28  Maciej Babinski  <mbabinski@google.com>
+
+	[BZ #12714]
+	* sysdeps/posix/getaddrinfo.c (gaih_inet): Don't bypass
+	gethostbyname4_r when IPv6 results are possible.
+
 2011-05-02  Ulrich Drepper  <drepper@gmail.com>
 
 	[BZ #12723]

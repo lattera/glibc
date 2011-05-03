@@ -510,12 +510,10 @@ gaih_inet (const char *name, const struct gaih_service *service,
 	  int no_more;
 	  int old_res_options;
 
-	  /* If we do not have to look for IPv4 and IPv6 together, use
-	     the simple, old functions.  */
-	  if (req->ai_family == AF_INET
-	      || (req->ai_family == AF_INET6
-		  && ((req->ai_flags & AI_V4MAPPED) == 0
-		      || (req->ai_flags & AI_ALL) == 0)))
+	  /* If we do not have to look for IPv6 addresses, use
+	     the simple, old functions, which do not support
+	     IPv6 scope ids. */
+	  if (req->ai_family == AF_INET)
 	    {
 	      int family = req->ai_family;
 	      size_t tmpbuflen = 512;
@@ -525,7 +523,6 @@ gaih_inet (const char *name, const struct gaih_service *service,
 	      struct hostent *h;
 	      int herrno;
 
-	    simple_again:
 	      while (1)
 		{
 		  rc = __gethostbyname2_r (name, family, &th, tmpbuf,
@@ -537,44 +534,30 @@ gaih_inet (const char *name, const struct gaih_service *service,
 
 	      if (rc == 0)
 		{
-		  if (h == NULL)
-		    {
-		      if (req->ai_family == AF_INET6
-			  && (req->ai_flags & AI_V4MAPPED)
-			  && family == AF_INET6)
-			{
-			  /* Try again, this time looking for IPv4
-			     addresses.  */
-			  family = AF_INET;
-			  goto simple_again;
-			}
-		    }
-		  else
-		    {
-		      /* We found data, now convert it into the list.  */
-		      for (int i = 0; h->h_addr_list[i]; ++i)
-			{
-			  if (*pat == NULL)
-			    {
-			      *pat = __alloca (sizeof (struct gaih_addrtuple));
-			      (*pat)->scopeid = 0;
-			    }
-			  (*pat)->next = NULL;
-			  (*pat)->family = req->ai_family;
-			  if (family == req->ai_family)
-			    memcpy ((*pat)->addr, h->h_addr_list[i],
-				    h->h_length);
-			  else
-			    {
-			      uint32_t *addr = (uint32_t *) (*pat)->addr;
-			      addr[3] = *(uint32_t *) h->h_addr_list[i];
-			      addr[2] = htonl (0xffff);
-			      addr[1] = 0;
-			      addr[0] = 0;
-			    }
-			  pat = &((*pat)->next);
-			}
-		    }
+		  if (h != NULL)
+		    /* We found data, now convert it into the list.  */
+		    for (int i = 0; h->h_addr_list[i]; ++i)
+		      {
+			if (*pat == NULL)
+			  {
+			    *pat = __alloca (sizeof (struct gaih_addrtuple));
+			    (*pat)->scopeid = 0;
+			  }
+			(*pat)->next = NULL;
+			(*pat)->family = req->ai_family;
+			if (family == req->ai_family)
+			  memcpy ((*pat)->addr, h->h_addr_list[i],
+				  h->h_length);
+			else
+			  {
+			    uint32_t *addr = (uint32_t *) (*pat)->addr;
+			    addr[3] = *(uint32_t *) h->h_addr_list[i];
+			    addr[2] = htonl (0xffff);
+			    addr[1] = 0;
+			    addr[0] = 0;
+			  }
+			pat = &((*pat)->next);
+		      }
 		}
 	      else
 		{
