@@ -1,3 +1,9 @@
+2011-05-02  Ulrich Drepper  <drepper@gmail.com>
+
+	[BZ #12723]
+	* sysdeps/unix/sysv/linux/pathconf.c (__pathconf): Implement
+	_PC_PIPE_BUF handling.
+
 2011-04-30  Bruno Haible  <bruno@clisp.org>
 
 	[BZ #12717]
