@@ -1,3 +1,7 @@
+2011-05-03  Andreas Schwab  <schwab@redhat.com>
+
+	* elf/ldconfig.c (add_dir): Don't crash on empty path.
+
 2011-04-28  Maciej Babinski  <mbabinski@google.com>
 
 	[BZ #12714]

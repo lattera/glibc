@@ -384,14 +384,17 @@ add_dir (const char *line)
     }
 
   /* Canonify path: for now only remove leading and trailing
-     whitespace and the trailing slashes slashes.  */
-  i = strlen (entry->path) - 1;
+     whitespace and the trailing slashes.  */
+  i = strlen (entry->path);
 
-  while (isspace (entry->path[i]) && i > 0)
-    entry->path[i--] = '\0';
+  while (i > 0 && isspace (entry->path[i - 1]))
+    entry->path[--i] = '\0';
 
-  while (entry->path[i] == '/' && i > 0)
-    entry->path[i--] = '\0';
+  while (i > 0 && entry->path[i - 1] == '/')
+    entry->path[--i] = '\0';
+
+  if (i == 0)
+    return;
 
   char *path = entry->path;
   if (opt_chroot)
