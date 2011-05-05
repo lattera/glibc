@@ -531,7 +531,7 @@ endif
 
 # The static libraries.
 ifeq (yes,$(build-static))
-link-libc-static = $(common-objpfx)libc.a $(static-gnulib) $(common-objpfx)libc.a
+link-libc-static = -Wl,--start-group $(common-objpfx)libc.a $(static-gnulib) -Wl,--end-group
 else
 ifeq (yes,$(build-shared))
 # We can try to link the programs with lib*_pic.a...

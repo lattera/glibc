@@ -1,3 +1,8 @@
+2011-05-05  Paul Pluzhnikov  <ppluzhnikov@google.com>
+
+	* Makeconfig (link-libc-static): Use --{start,end}-group to handle
+	circular dependency between libgcc.a and libc.a.
+
 2011-05-05  Andreas Schwab  <schwab@redhat.com>
 
 	* resolv/netdb.h: Don't include <rpc/netdb.h>.
