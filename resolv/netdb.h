@@ -27,11 +27,6 @@
 
 #include <netinet/in.h>
 #include <stdint.h>
-#ifdef __USE_MISC
-/* This is necessary to make this include file properly replace the
-   Sun version.  */
-# include <rpc/netdb.h>
-#endif
 
 #ifdef __USE_GNU
 # define __need_sigevent_t

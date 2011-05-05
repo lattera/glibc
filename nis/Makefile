@@ -23,9 +23,9 @@ subdir	:= nis
 
 aux			:= nis_hash
 
-headers			:= $(wildcard rpcsvc/*.[hx])
 distribute		:= nss-nis.h nss-nisplus.h nis_intern.h Banner \
-			   nisplus-parser.h nis_xdr.h nss
+			   nisplus-parser.h nis_xdr.h nss \
+			   $(wildcard rpcsvc/*.[hx])
 
 # These are the databases available for the nis (and perhaps later nisplus)
 # service.  This must be a superset of the services in nss.

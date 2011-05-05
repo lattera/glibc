@@ -1,3 +1,11 @@
+2011-05-05  Andreas Schwab  <schwab@redhat.com>
+
+	* resolv/netdb.h: Don't include <rpc/netdb.h>.
+	* nis/Makefile: Don't install rpcsvc/*.
+	* inet/protocols/timed.h: Include <sys/types.h> and <sys/time.h>
+	instead of <rpc/types.h>.
+	(MAXHOSTNAMELEN): Define.
+
 2011-05-03  Andreas Schwab  <schwab@redhat.com>
 
 	* elf/ldconfig.c (add_dir): Don't crash on empty path.

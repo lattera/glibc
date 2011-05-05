@@ -32,7 +32,8 @@
 #ifndef	_PROTOCOLS_TIMED_H
 #define	_PROTOCOLS_TIMED_H 1
 
-#include <rpc/types.h>
+#include <sys/types.h>
+#include <sys/time.h>
 
 /*
  * Time Synchronization Protocol
@@ -40,6 +41,7 @@
 
 #define	TSPVERSION	1
 #define ANYADDR 	NULL
+#define MAXHOSTNAMELEN	64
 
 struct tsp {
 	u_char	tsp_type;
