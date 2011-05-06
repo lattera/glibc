@@ -13,9 +13,8 @@ Version 2.14
   The TI-RPC implemtation is IPv6 enabled and there are other benefits.
 
   Visible changes of this change include (obviously) the inability to link
-  programs using RPC functions without referencing the TI-RPC library, the
-  removal of the RPC headers from the glibc headers, and the lack of
-  symbols defined in <rpc/netdb.h> when <netdb.h> is installed.
+  programs using RPC functions without referencing the TI-RPC library and the
+  removal of the RPC headers from the glibc headers.
   Implemented by Ulrich Drepper.
 
 * New Linux interfaces: clock_adjtime, name_to_handle_at, open_by_handle_at,
