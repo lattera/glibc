@@ -1,3 +1,9 @@
+2011-05-05  Andreas Schwab  <schwab@redhat.com>
+
+	* sunrpc/Makefile (headers): Add rpc/netdb.h.
+	(headers-not-in-tirpc): Remove rpc/netdb.h
+	* resolv/netdb.h: Revert last change.
+
 2011-05-05  Paul Pluzhnikov  <ppluzhnikov@google.com>
 
 	* Makeconfig (link-libc-static): Use --{start,end}-group to handle

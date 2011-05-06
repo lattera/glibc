@@ -47,12 +47,13 @@ subdir	:= sunrpc
 rpcsvc = bootparam_prot.x nlm_prot.x rstat.x \
 	 yppasswd.x klm_prot.x rex.x sm_inter.x mount.x \
 	 rusers.x spray.x nfs_prot.x rquota.x key_prot.x
-headers_in_tirpc = $(addprefix rpc/,auth.h auth_unix.h clnt.h pmap_clnt.h \
+headers-in-tirpc = $(addprefix rpc/,auth.h auth_unix.h clnt.h pmap_clnt.h \
 				    pmap_prot.h pmap_rmt.h rpc.h rpc_msg.h \
 				    svc.h svc_auth.h types.h xdr.h auth_des.h \
 				    des_crypt.h)
-headers_not_in_tirpc = $(addprefix rpc/,netdb.h key_prot.h rpc_des.h) \
+headers-not-in-tirpc = $(addprefix rpc/,key_prot.h rpc_des.h) \
 		       $(rpcsvc:%=rpcsvc/%) rpcsvc/bootparam.h
+headers = rpc/netdb.h
 install-others = $(inst_sysconfdir)/rpc
 generated = $(rpcsvc:%.x=rpcsvc/%.h) $(rpcsvc:%.x=x%.c) $(rpcsvc:%.x=x%.stmp) \
 	    $(rpcsvc:%.x=rpcsvc/%.stmp) rpcgen
@@ -87,7 +88,7 @@ rpcgen-objs = rpc_main.o rpc_hout.o rpc_cout.o rpc_parse.o \
 	      rpc_tblout.o rpc_sample.o
 # These headers are part of rpcgen.
 distribute := proto.h rpc_util.h rpc_parse.h rpc_scan.h \
-	      $(headers_in_tirpc) $(headers_not_in_tirpc) \
+	      $(headers-in-tirpc) $(headers-not-in-tirpc) \
 	      $(rpcgen-objs:.o=.c) etc.rpc \
 	      errqueue.h
 extra-objs = $(rpcgen-objs)
