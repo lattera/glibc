@@ -43,6 +43,7 @@ _nss_files_initgroups_dyn (const char *user, gid_t group, long int *start,
   char *line = NULL;
   size_t linelen = 0;
   enum nss_status status = NSS_STATUS_SUCCESS;
+  bool any = false;
 
   size_t buflen = 1024;
   void *buffer = alloca (buflen);
@@ -118,6 +119,7 @@ _nss_files_initgroups_dyn (const char *user, gid_t group, long int *start,
 
 	      groups[*start] = grp.gr_gid;
 	      *start += 1;
+	      any = true;
 
 	      break;
 	    }
@@ -131,5 +133,5 @@ _nss_files_initgroups_dyn (const char *user, gid_t group, long int *start,
 
   fclose (stream);
 
-  return status;
+  return status == NSS_STATUS_SUCCESS && !any ? NSS_STATUS_NOTFOUND : status;
 }

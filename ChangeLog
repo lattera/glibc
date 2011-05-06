@@ -1,3 +1,8 @@
+2011-05-06  Ulrich Drepper  <drepper@gmail.com>
+
+	* nss/nss_files/files-initgroups.c (_nss_files_initgroups_dyn): Return
+	NSS_STATUS_NOTFOUND if no record was found.
+
 2011-05-05  Andreas Schwab  <schwab@redhat.com>
 
 	* sunrpc/Makefile (headers): Add rpc/netdb.h.
