@@ -102,7 +102,7 @@ typedef res_sendhookact (*res_send_rhook) (const struct sockaddr_in *__ns,
 # define RES_MAXTIME		65535	/* Infinity, in milliseconds. */
 
 struct __res_state {
-	int	retrans;	 	/* retransmition time interval */
+	int	retrans;		/* retransmition time interval */
 	int	retry;			/* number of times to retransmit */
 	u_long	options;		/* option flags - see below. */
 	int	nscount;		/* number of name servers */
@@ -219,6 +219,8 @@ struct res_sym {
 #define RES_SNGLKUPREOP	0x00400000	/* -"-, but open new socket for each
 					   request */
 #define RES_USE_DNSSEC	0x00800000	/* use DNSSEC using OK bit in OPT */
+#define RES_NOTLDQUERY	0x01000000	/* Do not look up unqualified name
+					   as a TLD.  */
 
 #define RES_DEFAULT	(RES_RECURSE|RES_DEFNAMES|RES_DNSRCH|RES_NOIP6DOTINT)
 

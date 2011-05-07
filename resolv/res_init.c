@@ -545,6 +545,11 @@ res_setoptions(res_state statp, const char *options, const char *source) {
 		} else if (!strncmp(cp, "single-request",
 				    sizeof("single-request") - 1)) {
 			statp->options |= RES_SNGLKUP;
+		} else if (!strncmp(cp, "no_tld_query",
+				    sizeof("no_tld_query") - 1) ||
+			   !strncmp(cp, "no-tld-query",
+				    sizeof("no-tld-query") - 1)) {
+			statp->options |= RES_NOTLDQUERY;
 		} else {
 			/* XXX - print a warning here? */
 		}

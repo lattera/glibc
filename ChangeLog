@@ -1,3 +1,13 @@
+2011-05-07  Ulrich Drepper  <drepper@gmail.com>
+
+	[BZ #12734]
+	* resolv/resolv.h: Define RES_NOTLDQUERY.
+	* resolv/res_init.c (res_setoptions): Recognize no_tld_query and
+	no-tld-query and set RES_NOTLDQUERY.
+	* resolv/res_debug.c (p_option): Handle RES_NOTLDQUERY.
+	* resolv/res_query.c (__libc_res_nsearch): Backport changes from
+	modern BIND to search name as TLD unless forbidden.
+
 2011-05-07  Petr Baudis  <pasky@suse.cz>
 	    Ulrich Drepper  <drepper@gmail.com>
 
