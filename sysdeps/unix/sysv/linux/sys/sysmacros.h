@@ -60,10 +60,8 @@ __NTH (gnu_dev_makedev (unsigned int __major, unsigned int __minor))
 	  | (((unsigned long long int) (__minor & ~0xff)) << 12)
 	  | (((unsigned long long int) (__major & ~0xfff)) << 32));
 }
-
-__END_DECLS
 # endif
-
+__END_DECLS
 
 /* Access the functions with their traditional names.  */
 # define major(dev) gnu_dev_major (dev)
