@@ -1,3 +1,9 @@
+2011-03-05  Jonathan Nieder  <jrnieder@gmail.com>
+
+	* sysdeps/unix/sysv/linux/sys/param.h: Fix an #ifndef __undef_ARG_MAX
+	where #ifdef was intended.  The intent is to prevent ARG_MAX from
+	being defined by the kernel headers.
+
 2011-05-07  Ulrich Drepper  <drepper@gmail.com>
 
 	[BZ #12734]
