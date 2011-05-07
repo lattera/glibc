@@ -1,3 +1,8 @@
+2011-05-06  Paul Pluzhnikov  <ppluzhnikov@google.com>
+
+	* sysdeps/unix/sysv/linux/sys/sysmacros.h: Add missing
+	__BEGIN/__END_DECLS.
+
 2011-05-06  Ulrich Drepper  <drepper@gmail.com>
 
 	* nss/nss_files/files-initgroups.c (_nss_files_initgroups_dyn): Return

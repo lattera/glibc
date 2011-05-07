@@ -1,5 +1,5 @@
 /* Definitions of macros to access `dev_t' values.
-   Copyright (C) 1996, 1997, 1999, 2003, 2004, 2007
+   Copyright (C) 1996, 1997, 1999, 2003, 2004, 2007, 2011
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -27,6 +27,8 @@
    not going to hack weird hacks to support the dev_t representation
    they need.  */
 #ifdef __GLIBC_HAVE_LONG_LONG
+__BEGIN_DECLS
+
 __extension__
 extern unsigned int gnu_dev_major (unsigned long long int __dev)
      __THROW;
@@ -58,6 +60,8 @@ __NTH (gnu_dev_makedev (unsigned int __major, unsigned int __minor))
 	  | (((unsigned long long int) (__minor & ~0xff)) << 12)
 	  | (((unsigned long long int) (__major & ~0xfff)) << 32));
 }
+
+__END_DECLS
 # endif
 
 
