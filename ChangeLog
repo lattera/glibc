@@ -20,9 +20,9 @@
 	[BZ #12393]
 	* elf/dl-load.c (fillin_rpath): Move trusted path check...
 	(is_trusted_path): ...to here.
-	(is_norm_trusted_path): Add wrapper for /../ and /./ normalization.
+	(is_trusted_path_normalize): Wrapper for /../ and /./ normalization.
 	(_dl_dst_substitute): Verify expanded $ORIGIN path elements
-	using is_norm_trusted_path() in setuid scripts.
+	using is_trusted_path_normalize() in setuid scripts.
 
 2011-05-06  Paul Pluzhnikov  <ppluzhnikov@google.com>
 
