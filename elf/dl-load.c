@@ -1,5 +1,5 @@
 /* Map in a shared object's segments from the file.
-   Copyright (C) 1995-2005, 2006, 2007, 2009, 2010, 2011 Free Software Foundation, Inc.
+   Copyright (C) 1995-2007, 2009, 2010, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -168,6 +168,71 @@ local_strdup (const char *s)
 }
 
 
+static bool
+is_trusted_path (const char *path, size_t len)
+{
+  /* All trusted directories must be complete names.  */
+  if (path[0] != '/')
+    return false;
+
+  const char *trun = system_dirs;
+
+  for (size_t idx = 0; idx < nsystem_dirs_len; ++idx)
+    {
+      if (len == system_dirs_len[idx] && memcmp (trun, path, len) == 0)
+	/* Found it.  */
+	return true;
+
+      trun += system_dirs_len[idx] + 1;
+    }
+
+  return false;
+}
+
+
+static bool
+is_trusted_path_normalize (const char *path, size_t len)
+{
+  char *npath = (char *) alloca (len + 2);
+  char *wnp = npath;
+
+  while (*path != '\0')
+    {
+      if (path[0] == '/')
+	{
+	  if (path[1] == '.')
+	    {
+	      if (path[2] == '.' && (path[3] == '/' || path[3] == '\0'))
+		{
+		  while (wnp > npath && *--wnp != '/')
+		    ;
+		  path += 3;
+		  continue;
+		}
+	      else if (path[2] == '/' || path[2] == '\0')
+		{
+		  path += 2;
+		  continue;
+		}
+	    }
+
+	  if (wnp > npath && wnp[-1] == '/')
+	    {
+	      ++path;
+	      continue;
+	    }
+	}
+
+      *wnp++ = *path++;
+    }
+  if (wnp > npath && wnp[-1] != '/')
+    *wnp++ = '/';
+  *wnp = '\0';
+
+  return is_trusted_path (npath, wnp - npath);
+}
+
+
 static size_t
 is_dst (const char *start, const char *name, const char *str,
 	int is_path, int secure)
@@ -240,13 +305,14 @@ _dl_dst_substitute (struct link_map *l, const char *name, char *result,
 		    int is_path)
 {
   const char *const start = name;
-  char *last_elem, *wp;
 
   /* Now fill the result path.  While copying over the string we keep
      track of the start of the last path element.  When we come accross
      a DST we copy over the value or (if the value is not available)
      leave the entire path element out.  */
-  last_elem = wp = result;
+  char *wp = result;
+  char *last_elem = result;
+  bool check_for_trusted = false;
 
   do
     {
@@ -265,6 +331,9 @@ _dl_dst_substitute (struct link_map *l, const char *name, char *result,
 	      else
 #endif
 		repl = l->l_origin;
+
+	      check_for_trusted = (INTUSE(__libc_enable_secure)
+				   && l->l_type == lt_executable);
 	    }
 	  else if ((len = is_dst (start, name, "PLATFORM", is_path, 0)) != 0)
 	    repl = GLRO(dl_platform);
@@ -297,10 +366,28 @@ _dl_dst_substitute (struct link_map *l, const char *name, char *result,
 	{
 	  *wp++ = *name++;
 	  if (is_path && *name == ':')
-	    last_elem = wp;
+	    {
+	      /* In SUID/SGID programs, after $ORIGIN expansion the
+		 normalized path must be rooted in one of the trusted
+		 directories.  */
+	      if (__builtin_expect (check_for_trusted, false)
+		  && is_trusted_path_normalize (last_elem, wp - last_elem))
+		{
+		  wp = last_elem;
+		  check_for_trusted = false;
+		}
+	      else
+		last_elem = wp;
+	    }
 	}
     }
   while (*name != '\0');
+
+  /* In SUID/SGID programs, after $ORIGIN expansion the normalized
+     path must be rooted in one of the trusted directories.  */
+  if (__builtin_expect (check_for_trusted, false)
+      && is_trusted_path_normalize (last_elem, wp - last_elem))
+    wp = last_elem;
 
   *wp = '\0';
 
@@ -411,33 +498,8 @@ fillin_rpath (char *rpath, struct r_search_path_elem **result, const char *sep,
 	cp[len++] = '/';
 
       /* Make sure we don't use untrusted directories if we run SUID.  */
-      if (__builtin_expect (check_trusted, 0))
-	{
-	  const char *trun = system_dirs;
-	  size_t idx;
-	  int unsecure = 1;
-
-	  /* All trusted directories must be complete names.  */
-	  if (cp[0] == '/')
-	    {
-	      for (idx = 0; idx < nsystem_dirs_len; ++idx)
-		{
-		  if (len == system_dirs_len[idx]
-		      && memcmp (trun, cp, len) == 0)
-		    {
-		      /* Found it.  */
-		      unsecure = 0;
-		      break;
-		    }
-
-		  trun += system_dirs_len[idx] + 1;
-		}
-	    }
-
-	  if (unsecure)
-	    /* Simply drop this directory.  */
-	    continue;
-	}
+      if (__builtin_expect (check_trusted, 0) && !is_trusted_path (cp, len))
+	continue;
 
       /* See if this directory is already known.  */
       for (dirp = GL(dl_all_dirs); dirp != NULL; dirp = dirp->next)
