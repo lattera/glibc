@@ -32,4 +32,6 @@ extern DIR *__alloc_dir (int fd, bool close_fd, int flags,
 			 const struct stat64 *statp)
      internal_function;
 
+libc_hidden_proto (rewinddir)
+
 #endif

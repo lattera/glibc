@@ -1,4 +1,4 @@
-/* Copyright (C) 1994, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1994, 1997, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -22,10 +22,10 @@
 #include <unistd.h>
 
 /* Rewind DIRP to the beginning of the directory.  */
-/* XXX should be __rewinddir ? */
 void
 rewinddir (dirp)
      DIR *dirp;
 {
   seekdir (dirp, (off_t) 0L);
 }
+libc_hidden_def (rewinddir)

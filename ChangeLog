@@ -1,5 +1,18 @@
 2011-05-08  Ulrich Drepper  <drepper@gmail.com>
 
+	[BZ #12713]
+	* sysdeps/unix/sysv/linux/getcwd.c: If getcwd syscall report
+	ENAMETOOLONG use generic getcwd.
+	* sysdeps/posix/getcwd.c: Add support to use openat.
+	* sysdeps/unix/sysv/linux/Makefile [subdir=elf] (sysdep-rtld-routines):
+	Add dl-getcwd.
+	* sysdeps/unix/sysv/linux/dl-getcwd.c: New file.
+	* include/sys/stat.h: Define __fstatat macro.
+	* include/dirent.h: Add libc_hidden_proto for rewinddir.
+	* dirent/rewinddir.c: Add libc_hidden_def.
+	* sysdeps/mach/hurd/rewinddir.c: Likewise.
+	* sysdeps/unix/rewinddir.c: Likewise.
+
 	* include/dirent.h (__alloc_dir): Add flags parameter.
 	* sysdeps/unix/fdopendir.c (__fdopendir): Pass flags to __alloc_dir.
 	* sysdeps/unix/opendir.c (__opendir): Pass 0 in new parameter to

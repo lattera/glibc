@@ -48,4 +48,6 @@ libc_hidden_proto (__fxstatat64)
 #define fstat64(fd, buf) __fxstat64 (_STAT_VER, fd, buf)
 #define fstat(fd, buf) __fxstat (_STAT_VER, fd, buf)
 #define __fstat(fd, buf) __fxstat (_STAT_VER, fd, buf)
+#define __fstatat(dfd, fname, buf, flag) \
+  __fxstatat (_STAT_VER, dfd, fname, buf, flag)
 #endif

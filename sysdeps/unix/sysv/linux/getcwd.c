@@ -1,5 +1,5 @@
 /* Determine current working directory.  Linux version.
-   Copyright (C) 1997,1998,1999,2000,2002,2003,2006
+   Copyright (C) 1997,1998,1999,2000,2002,2003,2006,2011
 	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
@@ -45,20 +45,13 @@
    compiling under 2.1.92+ the libc still runs under older kernels. */
 # define no_syscall_getcwd 0
 # define have_new_dcache 1
-/* This is a trick since we don't define generic_getcwd.  */
-# define generic_getcwd getcwd
 #else
-/* The "proc" filesystem provides an easy method to retrieve the value.
-   For each process, the corresponding directory contains a symbolic link
-   named `cwd'.  Reading the content of this link immediate gives us the
-   information.  But we have to take care for systems which do not have
-   the proc filesystem mounted.  Use the POSIX implementation in this case.  */
-static char *generic_getcwd (char *buf, size_t size) internal_function;
-
 # if __NR_getcwd
 /* Kernel 2.1.92 introduced a third way to get the current working
    directory: a syscall.  We've got to be careful that even when
-   compiling under 2.1.92+ the libc still runs under older kernels. */
+   compiling under 2.1.92+ the libc still runs under older kernels.
+   An additional problem is that the system call does not return
+   the path of directories longer than one page.  */
 static int no_syscall_getcwd;
 static int have_new_dcache;
 # else
@@ -66,6 +59,13 @@ static int have_new_dcache;
 static int have_new_dcache = 1;
 # endif
 #endif
+
+/* The "proc" filesystem provides an easy method to retrieve the value.
+   For each process, the corresponding directory contains a symbolic link
+   named `cwd'.  Reading the content of this link immediate gives us the
+   information.  But we have to take care for systems which do not have
+   the proc filesystem mounted.  Use the POSIX implementation in this case.  */
+static char *generic_getcwd (char *buf, size_t size) internal_function;
 
 char *
 __getcwd (char *buf, size_t size)
@@ -123,6 +123,33 @@ __getcwd (char *buf, size_t size)
 
 	  return buf;
 	}
+
+      // XXX This should not be necessary but the full getcwd implementation
+      // drags in too much for the current build proces of ld.so to handle
+#ifndef NOT_IN_libc
+      /* The system call cannot handle paths longer than a page.
+	 Neither can the magic symlink in /proc/self.  Just use the
+	 generic implementation right away.  */
+      if (errno == ENAMETOOLONG)
+	{
+# ifndef NO_ALLOCATION
+	  if (buf == NULL && size == 0)
+	    {
+	      free (path);
+	      path = NULL;
+	    }
+# endif
+
+	  result = generic_getcwd (path, size);
+
+# ifndef NO_ALLOCATION
+	  if (result == NULL && buf == NULL && size != 0)
+	    free (path);
+# endif
+
+	  return result;
+	}
+#endif
 
 # if __ASSUME_GETCWD_SYSCALL
       /* It should never happen that the `getcwd' syscall failed because
@@ -196,7 +223,7 @@ __getcwd (char *buf, size_t size)
 
 #ifndef NO_ALLOCATION
   /* Don't put restrictions on the length of the path unless the user does.  */
-  if (size == 0)
+  if (buf == NULL && size == 0)
     {
       free (path);
       path = NULL;
@@ -214,9 +241,11 @@ __getcwd (char *buf, size_t size)
 }
 weak_alias (__getcwd, getcwd)
 
-#if __ASSUME_GETCWD_SYSCALL == 0
+      // XXX This should not be necessary but the full getcwd implementation
+      // drags in too much for the current build proces of ld.so to handle
+#ifndef NOT_IN_libc
 /* Get the code for the generic version.  */
-# define GETCWD_RETURN_TYPE	static char * internal_function
-# define __getcwd		generic_getcwd
-# include <sysdeps/posix/getcwd.c>
+#define GETCWD_RETURN_TYPE	static char * internal_function
+#define __getcwd		generic_getcwd
+#include <sysdeps/posix/getcwd.c>
 #endif

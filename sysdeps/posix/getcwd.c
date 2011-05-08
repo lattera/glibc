@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,92,93,94,95,96,97,98,99 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,93,94,95,96,97,98,99,11 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -35,6 +35,7 @@
 #endif
 
 #include <errno.h>
+#include <fcntl.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 
@@ -171,6 +172,13 @@ extern char *alloca ();
 # include <sys/param.h>
 #endif
 
+#if defined _LIBC && !defined NOT_IN_libc
+# include <not-cancel.h>
+#else
+# define openat_not_cancel_3(dfd, name, mode) openat (dfd, name, mode)
+# define close_not_cancel_no_status(fd) close (fd)
+#endif
+
 #ifndef PATH_MAX
 # ifdef	MAXPATHLEN
 #  define PATH_MAX MAXPATHLEN
@@ -200,6 +208,12 @@ extern char *alloca ();
 # define GETCWD_RETURN_TYPE char *
 #endif
 
+#ifdef __ASSUME_ATFCTS
+# define have_openat 1
+#else
+static int have_openat = 0;
+#endif
+
 /* Get the pathname of the current working directory, and put it in SIZE
    bytes of BUF.  Returns NULL if the directory couldn't be determined or
    SIZE was too small.  If successful, returns BUF.  In GNU, if BUF is
@@ -211,6 +225,7 @@ __getcwd (buf, size)
      char *buf;
      size_t size;
 {
+#ifndef __ASSUME_ATFCTS
   static const char dots[]
     = "../../../../../../../../../../../../../../../../../../../../../../../\
 ../../../../../../../../../../../../../../../../../../../../../../../../../../\
@@ -218,14 +233,15 @@ __getcwd (buf, size)
   const char *dotp = &dots[sizeof (dots)];
   const char *dotlist = dots;
   size_t dotsize = sizeof (dots) - 1;
-  dev_t rootdev, thisdev;
-  ino_t rootino, thisino;
-  char *path;
-  register char *pathp;
-  struct stat st;
+#endif
   int prev_errno = errno;
-  size_t allocated = size;
+  DIR *dirstream = NULL;
+  bool fd_needs_closing = false;
+  int fd = AT_FDCWD;
 
+  char *path;
+#ifndef NO_ALLOCATION
+  size_t allocated = size;
   if (size == 0)
     {
       if (buf != NULL)
@@ -237,189 +253,285 @@ __getcwd (buf, size)
       allocated = PATH_MAX + 1;
     }
 
-  if (buf != NULL)
-    path = buf;
-  else
+  if (buf == NULL)
     {
       path = malloc (allocated);
       if (path == NULL)
 	return NULL;
     }
+  else
+#else
+# define allocated size
+#endif
+    path = buf;
 
-  pathp = path + allocated;
+  char *pathp = path + allocated;
   *--pathp = '\0';
 
+  struct stat st;
   if (__lstat (".", &st) < 0)
-    goto lose2;
-  thisdev = st.st_dev;
-  thisino = st.st_ino;
+    goto lose;
+  dev_t thisdev = st.st_dev;
+  ino_t thisino = st.st_ino;
 
   if (__lstat ("/", &st) < 0)
-    goto lose2;
-  rootdev = st.st_dev;
-  rootino = st.st_ino;
+    goto lose;
+  dev_t rootdev = st.st_dev;
+  ino_t rootino = st.st_ino;
 
   while (!(thisdev == rootdev && thisino == rootino))
     {
-      register DIR *dirstream;
-      struct dirent *d;
-      dev_t dotdev;
-      ino_t dotino;
-      char mount_point;
-
-      /* Look at the parent directory.  */
-      if (dotp == dotlist)
+      if (have_openat >= 0)
 	{
-	  /* My, what a deep directory tree you have, Grandma.  */
-	  char *new;
-	  if (dotlist == dots)
-	    {
-	      new = malloc (dotsize * 2 + 1);
-	      if (new == NULL)
-		goto lose;
-#ifdef HAVE_MEMPCPY
-	      dotp = mempcpy (new, dots, dotsize);
-#else
-	      memcpy (new, dots, dotsize);
-	      dotp = &new[dotsize];
+	  int mode = O_RDONLY;
+#ifdef O_CLOEXEC
+	  mode |= O_CLOEXEC;
 #endif
-	    }
-	  else
-	    {
-	      new = realloc ((__ptr_t) dotlist, dotsize * 2 + 1);
-	      if (new == NULL)
-		goto lose;
-	      dotp = &new[dotsize];
-	    }
-#ifdef HAVE_MEMPCPY
-	  *((char *) mempcpy ((char *) dotp, new, dotsize)) = '\0';
-	  dotsize *= 2;
-#else
-	  memcpy ((char *) dotp, new, dotsize);
-	  dotsize *= 2;
-	  new[dotsize] = '\0';
-#endif
-	  dotlist = new;
+	  fd = openat_not_cancel_3 (fd, "..", mode);
 	}
+      else
+	fd = -1;
+      if (fd >= 0)
+	{
+	  fd_needs_closing = true;
+	  if (__fstat (fd, &st) < 0)
+	    goto lose;
+	}
+#ifndef __ASSUME_ATFCTS
+      else if (errno == ENOSYS)
+	{
+	  have_openat = -1;
 
-      dotp -= 3;
+	  /* Look at the parent directory.  */
+	  if (dotp == dotlist)
+	    {
+# ifdef NO_ALLOCATION
+	      __set_errno (ENOMEM);
+	      goto lose;
+# else
+	      /* My, what a deep directory tree you have, Grandma.  */
+	      char *new;
+	      if (dotlist == dots)
+		{
+		  new = malloc (dotsize * 2 + 1);
+		  if (new == NULL)
+		    goto lose;
+#  ifdef HAVE_MEMPCPY
+		  dotp = mempcpy (new, dots, dotsize);
+#  else
+		  memcpy (new, dots, dotsize);
+		  dotp = &new[dotsize];
+#  endif
+		}
+	      else
+		{
+		  new = realloc ((__ptr_t) dotlist, dotsize * 2 + 1);
+		  if (new == NULL)
+		    goto lose;
+		  dotp = &new[dotsize];
+		}
+#  ifdef HAVE_MEMPCPY
+	      *((char *) mempcpy ((char *) dotp, new, dotsize)) = '\0';
+	      dotsize *= 2;
+#  else
+	      memcpy ((char *) dotp, new, dotsize);
+	      dotsize *= 2;
+	      new[dotsize] = '\0';
+#  endif
+	      dotlist = new;
+# endif
+	    }
 
-      /* Figure out if this directory is a mount point.  */
-      if (__lstat (dotp, &st) < 0)
+	  dotp -= 3;
+
+	  /* Figure out if this directory is a mount point.  */
+	  if (__lstat (dotp, &st) < 0)
+	    goto lose;
+	}
+#endif
+      else
 	goto lose;
-      dotdev = st.st_dev;
-      dotino = st.st_ino;
-      mount_point = dotdev != thisdev;
+
+      if (dirstream && __closedir (dirstream) != 0)
+	{
+	  dirstream = NULL;
+	  goto lose;
+       }
+
+      dev_t dotdev = st.st_dev;
+      ino_t dotino = st.st_ino;
+      bool mount_point = dotdev != thisdev;
 
       /* Search for the last directory.  */
-      dirstream = __opendir (dotp);
+      if (have_openat >= 0)
+	dirstream = __fdopendir (fd);
+#ifndef __ASSUME_ATFCTS
+      else
+	dirstream = __opendir (dotp);
+#endif
       if (dirstream == NULL)
 	goto lose;
-      /* Clear errno to distinguish EOF from error if readdir returns
-	 NULL.  */
-      __set_errno (0);
-      while ((d = __readdir (dirstream)) != NULL)
+      fd_needs_closing = false;
+
+      struct dirent *d;
+      bool use_d_ino = true;
+      while (1)
 	{
-	  if (d->d_name[0] == '.' &&
-	      (d->d_name[1] == '\0' ||
-	       (d->d_name[1] == '.' && d->d_name[2] == '\0')))
-	    continue;
-	  if (mount_point || (ino_t) d->d_ino == thisino)
+	  /* Clear errno to distinguish EOF from error if readdir returns
+	     NULL.  */
+	  __set_errno (0);
+	  d = __readdir (dirstream);
+	  if (d == NULL)
 	    {
-	      char name[dotlist + dotsize - dotp + 1 + _D_ALLOC_NAMLEN (d)];
-#ifdef HAVE_MEMPCPY
-	      char *tmp = mempcpy (name, dotp, dotlist + dotsize - dotp);
-	      *tmp++ = '/';
-	      strcpy (tmp, d->d_name);
-#else
-	      memcpy (name, dotp, dotlist + dotsize - dotp);
-	      name[dotlist + dotsize - dotp] = '/';
-	      strcpy (&name[dotlist + dotsize - dotp + 1], d->d_name);
-#endif
+	      if (errno == 0)
+		{
+		  /* When we've iterated through all directory entries
+		     without finding one with a matching d_ino, rewind the
+		     stream and consider each name again, but this time, using
+		     lstat.  This is necessary in a chroot on at least one
+		     system.  */
+		  if (use_d_ino)
+		    {
+		      use_d_ino = false;
+		      rewinddir (dirstream);
+		      continue;
+		    }
+
+		  /* EOF on dirstream, which means that the current directory
+		     has been removed.  */
+		  __set_errno (ENOENT);
+		}
+	      goto lose;
+	    }
+
+	  if (d->d_type != DT_DIR && d->d_type != DT_UNKNOWN)
+	    continue;
+	  if (d->d_name[0] == '.'
+	      && (d->d_name[1] == '\0'
+		  || (d->d_name[1] == '.' && d->d_name[2] == '\0')))
+	    continue;
+	  if (use_d_ino && !mount_point && (ino_t) d->d_ino != thisino)
+	    continue;
+
+	  if (have_openat >= 0)
+	    {
 	      /* We don't fail here if we cannot stat() a directory entry.
 		 This can happen when (network) filesystems fail.  If this
 		 entry is in fact the one we are looking for we will find
 		 out soon as we reach the end of the directory without
 		 having found anything.  */
-	      if (__lstat (name, &st) >= 0
-		  && st.st_dev == thisdev && st.st_ino == thisino)
-		break;
+	      if (__fstatat (fd, d->d_name, &st, AT_SYMLINK_NOFOLLOW) < 0)
+		continue;
 	    }
-	}
-      if (d == NULL)
-	{
-	  int save = errno;
-	  (void) __closedir (dirstream);
-	  if (save == 0)
-	    /* EOF on dirstream, which means that the current directory
-	       has been removed.  */
-	    save = ENOENT;
-	  __set_errno (save);
-	  goto lose;
-	}
-      else
-	{
-	  size_t namlen = _D_EXACT_NAMLEN (d);
-
-	  if ((size_t) (pathp - path) <= namlen)
+#ifndef __ASSUME_ATFCTS
+	  else
 	    {
-	      if (size != 0)
-		{
-		  (void) __closedir (dirstream);
-		  __set_errno (ERANGE);
-		  goto lose;
-		}
-	      else
-		{
-		  char *tmp;
-		  size_t oldsize = allocated;
-
-		  allocated = 2 * MAX (allocated, namlen);
-		  tmp = realloc (path, allocated);
-		  if (tmp == NULL)
-		    {
-		      (void) __closedir (dirstream);
-		      __set_errno (ENOMEM);/* closedir might have changed it.*/
-		      goto lose;
-		    }
-
-		  /* Move current contents up to the end of the buffer.
-		     This is guaranteed to be non-overlapping.  */
-		  pathp = memcpy (tmp + allocated - (path + oldsize - pathp),
-				  tmp + (pathp - path),
-				  path + oldsize - pathp);
-		  path = tmp;
-		}
+	      char name[dotlist + dotsize - dotp + 1 + _D_ALLOC_NAMLEN (d)];
+# ifdef HAVE_MEMPCPY
+	      char *tmp = mempcpy (name, dotp, dotlist + dotsize - dotp);
+	      *tmp++ = '/';
+	      strcpy (tmp, d->d_name);
+# else
+	      memcpy (name, dotp, dotlist + dotsize - dotp);
+	      name[dotlist + dotsize - dotp] = '/';
+	      strcpy (&name[dotlist + dotsize - dotp + 1], d->d_name);
+# endif
+	      /* We don't fail here if we cannot stat() a directory entry.
+		 This can happen when (network) filesystems fail.  If this
+		 entry is in fact the one we are looking for we will find
+		 out soon as we reach the end of the directory without
+		 having found anything.  */
+	      if (__lstat (name, &st) < 0)
+		continue;
 	    }
-	  pathp -= namlen;
-	  (void) memcpy (pathp, d->d_name, namlen);
-	  *--pathp = '/';
-	  (void) __closedir (dirstream);
+#endif
+	  if (S_ISDIR (st.st_mode)
+	      && st.st_dev == thisdev && st.st_ino == thisino)
+	    break;
 	}
+
+      size_t namlen = _D_EXACT_NAMLEN (d);
+
+      if ((size_t) (pathp - path) <= namlen)
+	{
+#ifndef NO_ALLOCATION
+	  if (size == 0)
+	    {
+	      size_t oldsize = allocated;
+
+	      allocated = 2 * MAX (allocated, namlen);
+	      char *tmp = realloc (path, allocated);
+	      if (tmp == NULL)
+		goto lose;
+
+	      /* Move current contents up to the end of the buffer.
+		 This is guaranteed to be non-overlapping.  */
+	      pathp = memcpy (tmp + allocated - (path + oldsize - pathp),
+			      tmp + (pathp - path),
+			      path + oldsize - pathp);
+	      path = tmp;
+	    }
+	  else
+#endif
+	    {
+	      __set_errno (ERANGE);
+	      goto lose;
+	    }
+	}
+      pathp -= namlen;
+      (void) memcpy (pathp, d->d_name, namlen);
+      *--pathp = '/';
 
       thisdev = dotdev;
       thisino = dotino;
     }
 
+  if (dirstream != NULL && __closedir (dirstream) != 0)
+    {
+      dirstream = NULL;
+      goto lose;
+    }
+
   if (pathp == &path[allocated - 1])
     *--pathp = '/';
 
+#ifndef __ASSUME_ATFCTS
   if (dotlist != dots)
     free ((__ptr_t) dotlist);
+#endif
 
-  memmove (path, pathp, path + allocated - pathp);
+  size_t used = path + allocated - pathp;
+  memmove (path, pathp, used);
+
+  if (size == 0)
+    /* Ensure that the buffer is only as large as necessary.  */
+    buf = realloc (path, used);
+
+  if (buf == NULL)
+    /* Either buf was NULL all along, or `realloc' failed but
+       we still have the original string.  */
+    buf = path;
 
   /* Restore errno on successful return.  */
   __set_errno (prev_errno);
 
-  return path;
+  return buf;
 
- lose:
+ lose:;
+  int save_errno = errno;
+#ifndef __ASSUME_ATFCTS
   if (dotlist != dots)
     free ((__ptr_t) dotlist);
- lose2:
+#endif
+  if (dirstream != NULL)
+    __closedir (dirstream);
+  if (fd_needs_closing)
+    close_not_cancel_no_status (fd);
+#ifndef NO_ALLOCATION
   if (buf == NULL)
     free (path);
+#endif
+  __set_errno (save_errno);
   return NULL;
 }
 
