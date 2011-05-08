@@ -1,3 +1,11 @@
+2011-03-15  Alan Modra  <amodra@gmail.com>
+
+	* elf/dl-reloc.c (_dl_try_allocate_static_tls <TLS_DTV_AT_TP>): Handle
+	l_tls_firstbyte_offset non-zero.  Save padding offset in
+	l_tls_firstbyte_offset for later use.
+	* elf/dl-close.c (_dl_close_worker <TLS_DTV_AT_TP>): Correct code
+	freeing static tls block.
+
 2011-03-05  Jonathan Nieder  <jrnieder@gmail.com>
 
 	* sysdeps/unix/sysv/linux/sys/param.h: Fix an #ifndef __undef_ARG_MAX

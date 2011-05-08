@@ -591,21 +591,37 @@ _dl_close_worker (struct link_map *map)
 			}
 		    }
 #elif TLS_DTV_AT_TP
-		  if ((size_t) imap->l_tls_offset == tls_free_end)
+		  if (tls_free_start == NO_TLS_OFFSET)
+		    {
+		      tls_free_start = imap->l_tls_firstbyte_offset;
+		      tls_free_end = (imap->l_tls_offset
+				      + imap->l_tls_blocksize);
+		    }
+		  else if (imap->l_tls_firstbyte_offset == tls_free_end)
 		    /* Extend the contiguous chunk being reclaimed.  */
-		    tls_free_end -= imap->l_tls_blocksize;
+		    tls_free_end = imap->l_tls_offset + imap->l_tls_blocksize;
 		  else if (imap->l_tls_offset + imap->l_tls_blocksize
 			   == tls_free_start)
 		    /* Extend the chunk backwards.  */
-		    tls_free_start = imap->l_tls_offset;
-		  else
+		    tls_free_start = imap->l_tls_firstbyte_offset;
+		  /* This isn't contiguous with the last chunk freed.
+		     One of them will be leaked unless we can free
+		     one block right away.  */
+		  else if (imap->l_tls_offset + imap->l_tls_blocksize
+			   == GL(dl_tls_static_used))
+		    GL(dl_tls_static_used) = imap->l_tls_firstbyte_offset;
+		  else if (tls_free_end == GL(dl_tls_static_used))
 		    {
-		      /* This isn't contiguous with the last chunk freed.
-			 One of them will be leaked.  */
-		      if (tls_free_end == GL(dl_tls_static_used))
-			GL(dl_tls_static_used) = tls_free_start;
-		      tls_free_start = imap->l_tls_offset;
-		      tls_free_end = tls_free_start + imap->l_tls_blocksize;
+		      GL(dl_tls_static_used) = tls_free_start;
+		      tls_free_start = imap->l_tls_firstbyte_offset;
+		      tls_free_end = imap->l_tls_offset + imap->l_tls_blocksize;
+		    }
+		  else if (tls_free_end < imap->l_tls_firstbyte_offset)
+		    {
+		      /* We pick the later block.  It has a chance to
+			 be freed.  */
+		      tls_free_start = imap->l_tls_firstbyte_offset;
+		      tls_free_end = imap->l_tls_offset + imap->l_tls_blocksize;
 		    }
 #else
 # error "Either TLS_TCB_AT_TP or TLS_DTV_AT_TP must be defined"

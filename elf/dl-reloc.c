@@ -1,5 +1,5 @@
 /* Relocate a shared object and resolve its references to other loaded objects.
-   Copyright (C) 1995-2006, 2008, 2009, 2010 Free Software Foundation, Inc.
+   Copyright (C) 1995-2006, 2008-2010, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -57,38 +57,34 @@ _dl_try_allocate_static_tls (struct link_map *map)
     }
 
 #if TLS_TCB_AT_TP
-  size_t freebytes;
-  size_t n;
-  size_t blsize;
-
-  freebytes = GL(dl_tls_static_size) - GL(dl_tls_static_used);
+  size_t freebytes = GL(dl_tls_static_size) - GL(dl_tls_static_used);
   if (freebytes < TLS_TCB_SIZE)
     goto fail;
   freebytes -= TLS_TCB_SIZE;
 
-  blsize = map->l_tls_blocksize + map->l_tls_firstbyte_offset;
+  size_t blsize = map->l_tls_blocksize + map->l_tls_firstbyte_offset;
   if (freebytes < blsize)
     goto fail;
 
-  n = (freebytes - blsize) / map->l_tls_align;
+  size_t n = (freebytes - blsize) / map->l_tls_align;
 
   size_t offset = GL(dl_tls_static_used) + (freebytes - n * map->l_tls_align
 					    - map->l_tls_firstbyte_offset);
 
   map->l_tls_offset = GL(dl_tls_static_used) = offset;
 #elif TLS_DTV_AT_TP
-  size_t used;
-  size_t check;
-
-  size_t offset = roundup (GL(dl_tls_static_used), map->l_tls_align);
-  used = offset + map->l_tls_blocksize;
-  check = used;
   /* dl_tls_static_used includes the TCB at the beginning.  */
+  size_t offset = (((GL(dl_tls_static_used)
+		     - map->l_tls_firstbyte_offset
+		     + map->l_tls_align - 1) & -map->l_tls_align)
+		   + map->l_tls_firstbyte_offset);
+  size_t used = offset + map->l_tls_blocksize;
 
-  if (check > GL(dl_tls_static_size))
+  if (used > GL(dl_tls_static_size))
     goto fail;
 
   map->l_tls_offset = offset;
+  map->l_tls_firstbyte_offset = GL(dl_tls_static_used);
   GL(dl_tls_static_used) = used;
 #else
 # error "Either TLS_TCB_AT_TP or TLS_DTV_AT_TP must be defined"
