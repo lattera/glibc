@@ -1,3 +1,12 @@
+2011-05-08  Ulrich Drepper  <drepper@gmail.com>
+
+	* include/dirent.h (__alloc_dir): Add flags parameter.
+	* sysdeps/unix/fdopendir.c (__fdopendir): Pass flags to __alloc_dir.
+	* sysdeps/unix/opendir.c (__opendir): Pass 0 in new parameter to
+	__alloc_dir.
+	(__alloc_dir): Take new parameter.  Don't call fcntl for invocations
+	from fdopendir if O_CLOEXEC is already set.
+
 2011-03-15  Alan Modra  <amodra@gmail.com>
 
 	* elf/dl-reloc.c (_dl_try_allocate_static_tls <TLS_DTV_AT_TP>): Handle

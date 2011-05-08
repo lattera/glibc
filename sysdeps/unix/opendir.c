@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-1996,98,2000-2003,2005,2007,2009
+/* Copyright (C) 1991-1996,98,2000-2003,2005,2007,2009,2011
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -138,7 +138,7 @@ __opendir (const char *name)
       statp = &statbuf;
     }
 
-  return __alloc_dir (fd, true, statp);
+  return __alloc_dir (fd, true, 0, statp);
 }
 weak_alias (__opendir, opendir)
 
@@ -158,13 +158,14 @@ check_have_o_cloexec (int fd)
 
 DIR *
 internal_function
-__alloc_dir (int fd, bool close_fd, const struct stat64 *statp)
+__alloc_dir (int fd, bool close_fd, int flags, const struct stat64 *statp)
 {
   /* We always have to set the close-on-exit flag if the user provided
      the file descriptor.  Otherwise only if we have no working
      O_CLOEXEC support.  */
 #ifdef O_CLOEXEC
-  if (! close_fd || ! check_have_o_cloexec (fd))
+  if ((! close_fd && (flags & O_CLOEXEC) == 0)
+      || ! check_have_o_cloexec (fd))
 #endif
     {
       if (__builtin_expect (__fcntl (fd, F_SETFD, FD_CLOEXEC), 0) < 0)
