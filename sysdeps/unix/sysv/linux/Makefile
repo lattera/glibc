@@ -147,7 +147,8 @@ sysdep_routines += xstatconv internal_statvfs internal_statvfs64 \
 endif
 
 ifeq ($(subdir),elf)
-sysdep-rtld-routines += dl-brk dl-sbrk dl-getcwd
+sysdep-rtld-routines += dl-brk dl-sbrk dl-getcwd dl-openat64 dl-opendir \
+			dl-fxstatat64
 
 CPPFLAGS-lddlibc4 += -DNOT_IN_libc
 endif

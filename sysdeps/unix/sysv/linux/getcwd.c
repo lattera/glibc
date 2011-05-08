@@ -124,9 +124,6 @@ __getcwd (char *buf, size_t size)
 	  return buf;
 	}
 
-      // XXX This should not be necessary but the full getcwd implementation
-      // drags in too much for the current build proces of ld.so to handle
-#ifndef NOT_IN_libc
       /* The system call cannot handle paths longer than a page.
 	 Neither can the magic symlink in /proc/self.  Just use the
 	 generic implementation right away.  */
@@ -149,7 +146,6 @@ __getcwd (char *buf, size_t size)
 
 	  return result;
 	}
-#endif
 
 # if __ASSUME_GETCWD_SYSCALL
       /* It should never happen that the `getcwd' syscall failed because
@@ -241,11 +237,7 @@ __getcwd (char *buf, size_t size)
 }
 weak_alias (__getcwd, getcwd)
 
-      // XXX This should not be necessary but the full getcwd implementation
-      // drags in too much for the current build proces of ld.so to handle
-#ifndef NOT_IN_libc
 /* Get the code for the generic version.  */
 #define GETCWD_RETURN_TYPE	static char * internal_function
 #define __getcwd		generic_getcwd
 #include <sysdeps/posix/getcwd.c>
-#endif

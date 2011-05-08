@@ -172,10 +172,10 @@ extern char *alloca ();
 # include <sys/param.h>
 #endif
 
-#if defined _LIBC && !defined NOT_IN_libc
+#if defined _LIBC
 # include <not-cancel.h>
 #else
-# define openat_not_cancel_3(dfd, name, mode) openat (dfd, name, mode)
+# define openat64_not_cancel_3(dfd, name, mode) openat64 (dfd, name, mode)
 # define close_not_cancel_no_status(fd) close (fd)
 #endif
 
@@ -197,7 +197,7 @@ extern char *alloca ();
 #endif
 
 #ifndef __GNU_LIBRARY__
-# define __lstat	stat
+# define __lstat64	stat64
 #endif
 
 #ifndef _LIBC
@@ -209,9 +209,10 @@ extern char *alloca ();
 #endif
 
 #ifdef __ASSUME_ATFCTS
-# define have_openat 1
-#else
-static int have_openat = 0;
+# define __have_atfcts 1
+#elif defined NOT_IN_libc && defined IS_IN_rtld
+static int __rtld_have_atfcts;
+# define __have_atfcts __rtld_have_atfcts
 #endif
 
 /* Get the pathname of the current working directory, and put it in SIZE
@@ -268,39 +269,39 @@ __getcwd (buf, size)
   char *pathp = path + allocated;
   *--pathp = '\0';
 
-  struct stat st;
-  if (__lstat (".", &st) < 0)
+  struct stat64 st;
+  if (__lstat64 (".", &st) < 0)
     goto lose;
   dev_t thisdev = st.st_dev;
   ino_t thisino = st.st_ino;
 
-  if (__lstat ("/", &st) < 0)
+  if (__lstat64 ("/", &st) < 0)
     goto lose;
   dev_t rootdev = st.st_dev;
   ino_t rootino = st.st_ino;
 
   while (!(thisdev == rootdev && thisino == rootino))
     {
-      if (have_openat >= 0)
+      if (__have_atfcts >= 0)
 	{
 	  int mode = O_RDONLY;
 #ifdef O_CLOEXEC
 	  mode |= O_CLOEXEC;
 #endif
-	  fd = openat_not_cancel_3 (fd, "..", mode);
+	  fd = openat64_not_cancel_3 (fd, "..", mode);
 	}
       else
 	fd = -1;
       if (fd >= 0)
 	{
 	  fd_needs_closing = true;
-	  if (__fstat (fd, &st) < 0)
+	  if (__fstat64 (fd, &st) < 0)
 	    goto lose;
 	}
 #ifndef __ASSUME_ATFCTS
       else if (errno == ENOSYS)
 	{
-	  have_openat = -1;
+	  __have_atfcts = -1;
 
 	  /* Look at the parent directory.  */
 	  if (dotp == dotlist)
@@ -345,7 +346,7 @@ __getcwd (buf, size)
 	  dotp -= 3;
 
 	  /* Figure out if this directory is a mount point.  */
-	  if (__lstat (dotp, &st) < 0)
+	  if (__lstat64 (dotp, &st) < 0)
 	    goto lose;
 	}
 #endif
@@ -363,7 +364,7 @@ __getcwd (buf, size)
       bool mount_point = dotdev != thisdev;
 
       /* Search for the last directory.  */
-      if (have_openat >= 0)
+      if (__have_atfcts >= 0)
 	dirstream = __fdopendir (fd);
 #ifndef __ASSUME_ATFCTS
       else
@@ -388,7 +389,7 @@ __getcwd (buf, size)
 		  /* When we've iterated through all directory entries
 		     without finding one with a matching d_ino, rewind the
 		     stream and consider each name again, but this time, using
-		     lstat.  This is necessary in a chroot on at least one
+		     lstat64.  This is necessary in a chroot on at least one
 		     system.  */
 		  if (use_d_ino)
 		    {
@@ -413,14 +414,14 @@ __getcwd (buf, size)
 	  if (use_d_ino && !mount_point && (ino_t) d->d_ino != thisino)
 	    continue;
 
-	  if (have_openat >= 0)
+	  if (__have_atfcts >= 0)
 	    {
-	      /* We don't fail here if we cannot stat() a directory entry.
+	      /* We don't fail here if we cannot stat64() a directory entry.
 		 This can happen when (network) filesystems fail.  If this
 		 entry is in fact the one we are looking for we will find
 		 out soon as we reach the end of the directory without
 		 having found anything.  */
-	      if (__fstatat (fd, d->d_name, &st, AT_SYMLINK_NOFOLLOW) < 0)
+	      if (__fstatat64 (fd, d->d_name, &st, AT_SYMLINK_NOFOLLOW) < 0)
 		continue;
 	    }
 #ifndef __ASSUME_ATFCTS
@@ -436,12 +437,12 @@ __getcwd (buf, size)
 	      name[dotlist + dotsize - dotp] = '/';
 	      strcpy (&name[dotlist + dotsize - dotp + 1], d->d_name);
 # endif
-	      /* We don't fail here if we cannot stat() a directory entry.
+	      /* We don't fail here if we cannot stat64() a directory entry.
 		 This can happen when (network) filesystems fail.  If this
 		 entry is in fact the one we are looking for we will find
 		 out soon as we reach the end of the directory without
 		 having found anything.  */
-	      if (__lstat (name, &st) < 0)
+	      if (__lstat64 (name, &st) < 0)
 		continue;
 	    }
 #endif

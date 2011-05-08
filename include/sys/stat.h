@@ -44,10 +44,14 @@ libc_hidden_proto (__fxstatat64)
 #define lstat(fname, buf)  __lxstat (_STAT_VER, fname, buf)
 #define __lstat(fname, buf)  __lxstat (_STAT_VER, fname, buf)
 #define lstat64(fname, buf)  __lxstat64 (_STAT_VER, fname, buf)
+#define __lstat64(fname, buf)  __lxstat64 (_STAT_VER, fname, buf)
 #define stat64(fname, buf) __xstat64 (_STAT_VER, fname, buf)
 #define fstat64(fd, buf) __fxstat64 (_STAT_VER, fd, buf)
+#define __fstat64(fd, buf) __fxstat64 (_STAT_VER, fd, buf)
 #define fstat(fd, buf) __fxstat (_STAT_VER, fd, buf)
 #define __fstat(fd, buf) __fxstat (_STAT_VER, fd, buf)
 #define __fstatat(dfd, fname, buf, flag) \
   __fxstatat (_STAT_VER, dfd, fname, buf, flag)
+#define __fstatat64(dfd, fname, buf, flag) \
+  __fxstatat64 (_STAT_VER, dfd, fname, buf, flag)
 #endif
