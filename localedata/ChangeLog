@@ -1,5 +1,9 @@
 2011-05-09  Ulrich Drepper  <drepper@gmail.com>
 
+	[BZ #12346]
+	* locales/et_EE (LC_MONETARY): Change to Euro.
+	Patch by Priit Laes <plaes@plaes.org>.
+
 	[BZ #12449]
 	* locales/lb_LU: New file.
 	* SUPPORTED (SUPPORTED-LOCALES): Add appropriate entry.
