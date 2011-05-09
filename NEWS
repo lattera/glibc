@@ -9,10 +9,10 @@ Version 2.14
 
 * The following bugs are resolved with this release:
 
-  11724, 12178, 12200, 12346, 12393, 12420, 12445, 12449, 12454, 12460,
-  12469, 12489, 12509, 12510, 12518, 12541, 12545, 12551, 12583, 12587,
-  12597, 12611, 12631, 12650, 12653, 12655, 12660, 12681, 12685, 12711,
-  12713, 12714, 12717, 12723, 12734, 12738
+  11724, 12158, 12178, 12200, 12346, 12393, 12420, 12445, 12449, 12454,
+  12460, 12469, 12489, 12509, 12510, 12518, 12541, 12545, 12551, 12583,
+  12587, 12597, 12611, 12631, 12650, 12653, 12655, 12660, 12681, 12685,
+  12711, 12713, 12714, 12717, 12723, 12734, 12738
 
 * The RPC implementation in libc is obsoleted.  Old programs keep working
   but new programs cannot be linked with the routines in libc anymore.
@@ -28,7 +28,7 @@ Version 2.14
   syncfs
 
 * New locales: os_RU, bem_ZA, en_ZA, ff_SN, sw_KE, sw_TZ, lb_LU, wae_CH,
-  yue_HK
+  yue_HK, lij_IT
 
 Version 2.13
 

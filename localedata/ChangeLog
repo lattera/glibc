@@ -1,5 +1,9 @@
 2011-05-09  Ulrich Drepper  <drepper@gmail.com>
 
+	[BZ #12158]
+	* locales/lij_IT: New file.
+	* SUPPORTED (SUPPORTED-LOCALES): Add appropriate entry.
+
 	[BZ #12200]
 	* locales/yue_HK: New file.
 	* SUPPORTED (SUPPORTED-LOCALES): Add appropriate entry.
