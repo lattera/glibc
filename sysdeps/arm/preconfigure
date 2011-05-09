@@ -2,7 +2,7 @@ case "$machine" in
 arm*)
 	base_machine=arm
 	case $config_os in
-	linux-gnueabi)
+	linux-gnueabi*)
 		machine=arm/eabi/$machine
 		if [ "${CFLAGS+set}" != "set" ]; then
 		  CFLAGS="-g -O2"

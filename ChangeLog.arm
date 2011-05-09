@@ -1,3 +1,8 @@
+2011-05-07  Konstantinos Margaritis  <markos@genesi-usa.com>
+
+	* sysdeps/arm/preconfigure: Detect arm-linux-gnueabi* as ARM EABI.
+	* sysdeps/arm/shlib-versions: Ditto.
+
 2011-04-26  Manjunath Matti  <manjunath81@gmail.com>
 
 	* sysdeps/unix/sysv/linux/arm/eabi/libc-do-syscall.S
