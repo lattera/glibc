@@ -52,7 +52,7 @@ LC_MONETARY
 % for IBM Class for Unicode/Java
 %
 int_curr_symbol       "<U0049><U004E><U0052><U0020>"
-currency_symbol       "<U0930><U0942>"
+currency_symbol       "<U20B9>"
 mon_decimal_point     "<U002E>"
 mon_thousands_sep     "<U002C>"
 mon_grouping          3

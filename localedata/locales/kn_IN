@@ -71,8 +71,7 @@ LC_MONETARY
 % for IBM Class for Unicode/Java
 %
 int_curr_symbol       "<U0049><U004E><U0052><U0020>"
-% *** Change this to reflect Kannada , in Dev it is RA with VS U attached
-currency_symbol       "<U0CB0><U0CC2>"
+currency_symbol       "<U20B9>"
 mon_decimal_point     "<U002E>"
 mon_thousands_sep     "<U002C>"
 mon_grouping          3

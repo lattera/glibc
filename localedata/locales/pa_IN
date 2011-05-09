@@ -66,7 +66,7 @@ END LC_COLLATE
 LC_MONETARY
 % This is the POSIX Locale definition the LC_MONETARY category.
 int_curr_symbol       "<U0049><U004E><U0052><U0020>"
-currency_symbol       "<U0A30><U0A41><U0A2A><U0A0F>"
+currency_symbol       "<U20B9>"
 mon_decimal_point     "<U002E>"
 mon_thousands_sep     "<U002C>"
 mon_grouping          3

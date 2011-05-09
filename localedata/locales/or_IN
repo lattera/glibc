@@ -607,7 +607,7 @@ END LC_NUMERIC
 %%%%%%%%%%%%%
 LC_MONETARY
 int_curr_symbol       "<U0049><U004E><U0052><U0020>"
-currency_symbol       "<U003D><U0030><U0023><U0052><U0073><U002E><U007C><U0031><U0023><U0052><U0065><U002E><U007C><U0031><U003C><U0052><U0073><U002E>"
+currency_symbol       "<U20B9>"
 mon_decimal_point     "<U002E>"
 mon_thousands_sep     "<U002C>"
 mon_grouping          3;2

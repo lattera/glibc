@@ -1,5 +1,25 @@
 2011-05-09  Ulrich Drepper  <drepper@gmail.com>
 
+	[BZ #12541]
+	* locales/ar_IN: Update currency_symbol.
+	* locales/as_IN: Likewise.
+	* locales/bn_IN: Likewise.
+	* locales/en_IN: Likewise.
+	* locales/gu_IN: Likewise.
+	* locales/hi_IN: Likewise.
+	* locales/kn_IN: Likewise.
+	* locales/kok_IN: Likewise.
+	* locales/ks_IN: Likewise.
+	* locales/ml_IN: Likewise.
+	* locales/mr_IN: Likewise.
+	* locales/or_IN: Likewise.
+	* locales/pa_IN: Likewise.
+	* locales/sa_IN: Likewise.
+	* locales/sd_IN: Likewise.
+	* locales/ta_IN: Likewise.
+	* locales/te_IN: Likewise.
+	Patch by pravin.d.s@gmail.com.
+
 	[BZ #12711]
 	* charmaps/UTF-8: Update from reason Unidata.txt file.
 
