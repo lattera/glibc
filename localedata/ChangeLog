@@ -1,3 +1,8 @@
+2010-12-02  Andreas Schwab  <schwab@redhat.com>
+
+	* SUPPORTED: Remove .UTF-8 suffix from az_AZ, as_IN, tt_RU locale
+	names.
+
 2010-05-17  Andreas Schwab  <schwab@redhat.com>
 
 	* locales/es_CR (LC_ADDRESS): Fix character names in lang_ab.
