@@ -118,9 +118,9 @@ END LC_TIME
 
 LC_PAPER
 % FIXME
-height   297
+height   279
 % FIXME
-width    210
+width    216
 END LC_PAPER
 
 LC_TELEPHONE

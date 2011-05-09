@@ -1,5 +1,8 @@
 2011-05-09  Ulrich Drepper  <drepper@gmail.com>
 
+	[BZ #11668]
+	* locales/es_NI: Change paper format to letter.
+
 	[BZ #11945]
 	* locales/ru_RU [LC_TIME]: Lowercase month names.
 	Patch by Alexey Balmashnov  <a.balmashnov@gmail.com>.
