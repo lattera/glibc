@@ -97,7 +97,7 @@ d_fmt    "<U0025><U0064><U002F><U0025><U006D><U002F><U0025><U0059>"
 t_fmt    "<U0025><U0052>"
 % subaka, kikiiɗe
 am_pm    "<U0073><U0075><U0062><U0061><U006B><U0061>";/
-         "<U006B><U0069><U006B><U0069><U0069><U0257><U0065>"
+	 "<U006B><U0069><U006B><U0069><U0069><U0257><U0065>"
 END LC_TIME
 
 LC_NUMERIC
@@ -111,7 +111,7 @@ END LC_NUMERIC
 LC_MONETARY
 % CFA
 currency_symbol  "<U0043><U0046><U0041>"
-% XOF 
+% XOF
 int_curr_symbol  "<U0058><U004F><U0046><U0020>"
 % .
 mon_decimal_point  "<U002E>"
@@ -193,4 +193,3 @@ int_select   "<U0030><U0030>"
 % 221
 int_prefix   "<U0032><U0032><U0031>"
 END LC_TELEPHONE
-
