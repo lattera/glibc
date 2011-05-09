@@ -1,0 +1,162 @@
+comment_char %
+escape_char  /
+%
+% Meadow Mari Language Locale
+% Source: PeshSajSoft Ltd.
+% Address: 112, Komsomolskaya Street
+%    Yoshkar-Ola, Mari El Republic, Russia
+% Contact: Vyacheslav Kileev
+% Email: slavakileev@yandex.ru
+% Tel: +7 - 8362 351344
+% Language: mhr
+% Territory: RU
+% Revision: 0.2
+% Date: 2011-04-18
+% Application: general
+% Users: general
+% Charset: UTF-8
+% Distribution and use is free, also
+% for commercial purposes.
+
+LC_IDENTIFICATION
+title      "Mari locale for Russia"
+source     "PeshSajSoft Ltd."
+address    "112, Komsomolskaya Street, Yoshkar-Ola, Mari El Republic, Russia"
+contact    "Vyacheslav Kileev"
+email      "slavakileev@yandex.ru"
+tel        "+7 - 8362 351344"
+language   "Meadow Mari"
+territory  "Russia"
+revision   "0.2"
+date       "2011-04-18"
+%
+category  "mhr_RU:2000";LC_IDENTIFICATION
+category  "mhr_RU:2000";LC_CTYPE
+category  "mhr_RU:2000";LC_COLLATE
+category  "mhr_RU:2000";LC_TIME
+category  "mhr_RU:2000";LC_NUMERIC
+category  "mhr_RU:2000";LC_MONETARY
+category  "mhr_RU:2000";LC_MESSAGES
+category  "mhr_RU:2000";LC_PAPER
+category  "mhr_RU:2000";LC_NAME
+category  "mhr_RU:2000";LC_ADDRESS
+category  "mhr_RU:2000";LC_TELEPHONE
+
+END LC_IDENTIFICATION
+
+LC_COLLATE
+copy "iso14651_t1" % Additional Mari letters already fine sorted in this iso standart
+
+END LC_COLLATE
+
+LC_CTYPE
+copy "i18n"
+
+translit_start
+include  "translit_combining";""
+translit_end
+END LC_CTYPE
+
+LC_MESSAGES
+yesexpr "<U005E><U005B><U0422><U0442><U0059><U0079><U005D><U002E><U002A>"
+noexpr  "<U005E><U005B><U0423><U0443><U004E><U006E><U005D><U002E><U002A>"
+END LC_MESSAGES
+
+LC_MONETARY
+int_curr_symbol           "<U0052><U0055><U0042><U0020>"
+currency_symbol           "<U0422><U0415><U04A4>"
+mon_decimal_point         "<U002E>"
+mon_thousands_sep         "<U00A0>"
+mon_grouping              3;3
+positive_sign             ""
+negative_sign             "<U002D>"
+int_frac_digits           2
+frac_digits               2
+p_cs_precedes             0
+p_sep_by_space            1
+n_cs_precedes             0
+n_sep_by_space            1
+p_sign_posn               1
+n_sign_posn               1
+END LC_MONETARY
+
+LC_NUMERIC
+copy "ru_RU"
+END LC_NUMERIC
+
+LC_TIME
+day     "<U0420><U0443><U0448><U0430><U0440><U043D><U044F>";/
+	"<U0428><U043E><U0447><U043C><U043E>";/
+	"<U041A><U0443><U0448><U043A><U044B><U0436><U043C><U043E>";/
+	"<U0412><U04F1><U0440><U0433><U0435><U0447><U0435>";/
+	"<U0418><U0437><U0430><U0440><U043D><U044F>";/
+	"<U041A><U0443><U0433><U0430><U0440><U043D><U044F>";/
+	"<U0428><U0443><U043C><U0430><U0442><U043A><U0435><U0447><U0435>"
+abday   "<U0420><U0448><U0440>";/
+	"<U0428><U0447><U043C>";/
+	"<U041A><U0436><U043C>";/
+	"<U0412><U0433><U0447>";/
+	"<U0418><U0437><U0440>";/
+	"<U041A><U0433><U0440>";/
+	"<U0428><U043C><U0442>"
+mon     "<U0428><U043E><U0440><U044B><U043A><U0439><U043E><U043B>";/
+	"<U041F><U0443><U0440><U0433><U044B><U0436>";/
+	"<U04F0><U044F><U0440><U043D><U044F>";/
+	"<U0412><U04F1><U0434><U0448><U043E><U0440>";/
+	"<U0410><U0433><U0430>";/
+	"<U041F><U0435><U043B><U0435><U0434><U044B><U0448>";/
+	"<U0421><U04F1><U0440><U0435><U043C>";/
+	"<U0421><U043E><U0440><U043B><U0430>";/
+	"<U0418><U0434><U044B><U043C>";/
+	"<U0428><U044B><U0436><U0430>";/
+	"<U041A><U044B><U043B><U043C><U0435>";/
+	"<U0422><U0435><U043B><U0435>"
+abmon   "<U0428><U0440><U043A>";/
+	"<U041F><U0433><U0436>";/
+	"<U04F0><U0440><U043D>";/
+	"<U0412><U0448><U0440>";/
+	"<U0410><U0433><U0430>";/
+	"<U041F><U0434><U0448>";/
+	"<U0421><U0440><U043C>";/
+	"<U0421><U0440><U043B>";/
+	"<U0418><U0434><U043C>";/
+	"<U0428><U044B><U0436>";/
+	"<U041A><U043B><U043C>";/
+	"<U0422><U0435><U043B>"
+d_t_fmt "<U0025><U0041><U0020><U0025><U0059><U0020><U0025><U0042><U0020><U0025><U0064><U0020><U0025><U0054>"
+d_fmt     "<U0025><U0059><U002E><U0025><U006D><U002E><U0025><U0064>"
+t_fmt     "<U0025><U0054>"
+am_pm     "";""
+t_fmt_ampm ""
+date_fmt       "<U0025><U0041><U0020><U0025><U0059><U0020><U0025><U0042><U0020><U0025><U0064><U0020><U0025><U0048><U003A><U0025><U004D><U003A><U0025><U0053><U0020><U0025><U005A>"
+first_weekday 2
+first_workday 2
+END LC_TIME
+
+LC_PAPER
+copy "ru_RU"
+END LC_PAPER
+
+LC_TELEPHONE
+copy "ru_RU"
+END LC_TELEPHONE
+
+LC_MEASUREMENT
+copy "ru_RU"
+END LC_MEASUREMENT
+
+LC_NAME
+name_fmt    "<U0025><U0064><U0025><U0074><U0025><U0067><U0025><U0074>/
+<U0025><U006D><U0025><U0074><U0025><U0066>"
+END LC_NAME
+
+LC_ADDRESS
+postal_fmt    "<U0025><U0066><U0025><U004E><U0025><U0061><U0025><U004E>/
+<U0025><U0064><U0025><U004E><U0025><U0062><U0025><U004E><U0025><U0073>/
+<U0020><U0025><U0068><U0020><U0025><U0065><U0020><U0025><U0072><U0025>/
+<U004E><U0025><U007A><U0020><U0025><U0054><U0025>/
+<U004E><U0025><U0063><U0025><U004E>"
+country_ab2 "<U0052><U0055>"
+country_ab3 "<U0052><U0055><U0053>"
+country_num 643
+END LC_ADDRESS
