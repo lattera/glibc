@@ -1,5 +1,10 @@
 2011-05-09  Ulrich Drepper  <drepper@gmail.com>
 
+	[BZ #12200]
+	* locales/yue_HK: New file.
+	* SUPPORTED (SUPPORTED-LOCALES): Add appropriate entry.
+	Contributed by Chunshek Chan <chunshek@gmail.com>.
+
 	[BZ #12178]
 	* locales/wae_CH: New file.
 	* SUPPORTED (SUPPORTED-LOCALES): Add appropriate entry.

@@ -1,0 +1,166 @@
+comment_char    %
+escape_char     /
+% Yue Chinese (Cantonese) language locale for Hong Kong.
+% Maintained by Chunshek Chan <chunshek@gmail.com>
+% Based on Chinese locale by Kentaroh Noji <knoji@jp.ibm.com> and
+% Tetsuji Orita <orita@jp.ibm.com>.
+
+LC_IDENTIFICATION
+title      "Yue Chinese (Cantonese) language locale for Hong Kong"
+source     ""
+address    ""
+contact    ""
+email      "bug-glibc-locales@gnu.org"
+tel        ""
+fax        ""
+language   "Yue Chinese"
+territory  "Hong Kong"
+revision   "1.0"
+date       "2010-11-07"
+%
+category  "yue_HK:2010";LC_IDENTIFICATION
+category  "yue_HK:2010";LC_CTYPE
+category  "yue_HK:2010";LC_COLLATE
+category  "yue_HK:2010";LC_TIME
+category  "yue_HK:2010";LC_NUMERIC
+category  "yue_HK:2010";LC_MONETARY
+category  "yue_HK:2010";LC_MESSAGES
+category  "yue_HK:2010";LC_PAPER
+category  "yue_HK:2010";LC_NAME
+category  "yue_HK:2010";LC_ADDRESS
+category  "yue_HK:2010";LC_TELEPHONE
+
+END LC_IDENTIFICATION
+
+
+LC_CTYPE
+copy "zh_CN"
+END LC_CTYPE
+
+
+LC_COLLATE
+% Copy the template from ISO/IEC 14651
+copy "iso14651_t1"
+END LC_COLLATE
+
+
+LC_MONETARY
+copy "zh_HK"
+END LC_MONETARY
+
+
+LC_NUMERIC
+copy "zh_HK"
+END LC_NUMERIC
+
+
+LC_TIME
+% This is the POSIX Locale definition for the LC_TIME category.
+% These are generated based on XML base Locale difintion file
+% for IBM Class for Unicode/Java
+abday       "<U65E5>";"<U4E00>";/
+            "<U4E8C>";"<U4E09>";/
+            "<U56DB>";"<U4E94>";/
+            "<U516D>"
+%
+% Full weekday names (%A)
+day         "<U661F><U671F><U65E5>";"<U661F><U671F><U4E00>";/
+            "<U661F><U671F><U4E8C>";"<U661F><U671F><U4E09>";/
+            "<U661F><U671F><U56DB>";"<U661F><U671F><U4E94>";/
+            "<U661F><U671F><U516D>"
+%
+% Abbreviated month names (%b)
+abmon       "<U0031><U6708>";"<U0032><U6708>";/
+            "<U0033><U6708>";"<U0034><U6708>";/
+            "<U0035><U6708>";"<U0036><U6708>";/
+            "<U0037><U6708>";"<U0038><U6708>";/
+            "<U0039><U6708>";"<U0031><U0030><U6708>";/
+            "<U0031><U0031><U6708>";"<U0031><U0032><U6708>"
+%
+% Full month names (%B)
+mon         "<U4E00><U6708>";"<U4E8C><U6708>";/
+            "<U4E09><U6708>";"<U56DB><U6708>";/
+            "<U4E94><U6708>";"<U516D><U6708>";/
+            "<U4E03><U6708>";"<U516B><U6708>";/
+            "<U4E5D><U6708>";"<U5341><U6708>";/
+            "<U5341><U4E00><U6708>";"<U5341><U4E8C><U6708>"
+%
+% Equivalent of AM PM
+% 上午;下午
+am_pm       "<U4E0A><U5348>";"<U4E0B><U5348>"
+%
+% Appropriate date and time representation
+% %Y年%m月%d日 %A %H點%M分%S秒
+d_t_fmt     "<U0025><U0059><U5E74><U0025><U006D><U6708><U0025><U0064>/
+<U65E5><U0020><U0025><U0041><U0020><U0025><U0048><U9EDE><U0025><U004D>/
+<U5206><U0025><U0053><U79D2>"
+%
+% Appropriate date representation
+% %Y年%m月%d日 %A
+d_fmt       "<U0025><U0059><U5E74><U0025><U006D><U6708><U0025><U0064>/
+<U65E5><U0020><U0025><U0041>"
+%
+% Appropriate time representation
+% %H點%M分%S秒
+t_fmt       "<U0025><U0048><U9EDE><U0025><U004D><U5206><U0025><U0053>/
+<U79D2>"
+%
+% Appropriate 12 h time representation
+% %p%I點%M分%S秒
+t_fmt_ampm  "<U0025><U0070><U0025><U0049><U9EDE><U0025><U004D><U5206>/
+<U0025><U0053><U79D2>"
+%
+% Appropriate date representation (date(1))
+% %Y年 %b %e日 %A %H:%M:%S %Z
+date_fmt       "<U0025><U0059><U5E74><U0020><U0025><U0062><U0020>/
+<U0025><U0065><U65E5><U0020><U0025><U0041><U0020><U0025><U0048>/
+<U003A><U0025><U004D><U003A><U0025><U0053><U0020><U0025><U005A>"
+%  FIXME: found in CLDR
+first_weekday 1
+END LC_TIME
+
+
+LC_MESSAGES
+% yesexpr     "^[<y><Y>]"
+% noexpr      "^[<n><N>]"
+yesexpr "<U005E><U005B><U0079><U0059><U005D>"
+noexpr  "<U005E><U005B><U006E><U004E><U005D>"
+END LC_MESSAGES
+
+
+LC_PAPER
+copy "zh_HK"
+END LC_PAPER
+
+
+LC_NAME
+copy "zh_TW"
+END LC_NAME
+
+
+LC_ADDRESS
+% This is the ISO_IEC TR14652 Locale definition for the
+% LC_ADDRESS
+% postal_fmt: "%c%T%s%h%N%b%e%r%N%f%N%d%N%a"
+postal_fmt  "<U0025><U0063><U0025><U0054><U0025><U0073><U0025><U0068>/
+<U0025><U004E><U0025><U0062><U0025><U0065><U0025><U0072><U0025><U004E>/
+<U0025><U0066><U0025><U004E><U0025><U0064><U0025><U004E><U0025><U0061>"
+country_name "<U9999><U6E2F>"
+country_ab2 "<U0048><U004B>"
+country_ab3 "<U0048><U004B><U0047>"
+country_num 344
+country_isbn "<U0039><U0036><U0032>"
+lang_name "<U7CB5><U8A9E>"
+END LC_ADDRESS
+
+
+LC_TELEPHONE
+copy "zh_HK"
+END LC_TELEPHONE
+
+
+LC_MEASUREMENT
+% This is the ISO_IEC TR14652 Locale definition for the
+%
+measurement 1
+END LC_MEASUREMENT
