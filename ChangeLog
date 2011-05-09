@@ -1,5 +1,9 @@
 2011-05-09  Ulrich Drepper  <drepper@gmail.com>
 
+	[BZ #12545]
+	* locale/programs/localedef.c (construct_output_path): Use ssize_t
+	for n.
+
 	[BZ #12711]
 	* locale/C-translit.h.in: Add entry for U20B9.
 	Patch by pravin.d.s@gmail.com.
