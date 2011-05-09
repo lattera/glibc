@@ -2,13 +2,13 @@ comment_char %
 escape_char  /
 %
 % Turkmen Language Locale for Turkmenistan (latin)
-% Source: Gurban M. Tewekgeli
-% Contact: Pablo Saratxaga & Gurban M. Tewekgeli
-% Email: <pablo@mandriva.com & gmtavakkoli@yahoo.com>
+% Source: Ghorban M. Tavakoly
+% Contact: Pablo Saratxaga & Ghorban M. Tavakoly
+% Email: <pablo@walon.org & gmt314@yahoo.com>
 % Language: tk
 % Territory: TM
-% Revision: 0.4
-% Date: 2004-06-10
+% Revision: 0.5
+% Date: 2011-04-09
 % Application: general
 % Users: general
 % Charset: UTF-8
@@ -22,29 +22,29 @@ escape_char  /
 LC_IDENTIFICATION
 
 title     "Turkmen locale for Turkmenistan"
-source    "Gurban M. Tewekgeli"
+source    "Ghorban M. Tavakoly"
 address   ""
-contact   "Pablo Saratxaga & Gurban M. Tewekgeli"
-email     "pablo@mandriva.com & gmtavakkoli@yahoo.com"
+contact   "Pablo Saratxaga & Ghorban M. Tavakoly"
+email     "pablo@walon.org & gmt314@yahoo.com"
 tel       ""
 fax       ""
 language  "Turkmen"
 territory "Turkmenistan"
-revision  "0.3"
-date      "2004-06-08"
+revision  "0.5"
+date      "2011-04-09"
 
-category "tk_TM:2004";LC_IDENTIFICATION
-category "tk_TM:2004";LC_CTYPE
-category "tk_TM:2004";LC_COLLATE
-category "tk_TM:2004";LC_TIME
-category "tk_TM:2004";LC_NUMERIC
-category "tk_TM:2004";LC_MONETARY
-category "tk_TM:2004";LC_MEASUREMENT
-category "tk_TM:2004";LC_MESSAGES
-category "tk_TM:2004";LC_PAPER
-category "tk_TM:2004";LC_NAME
-category "tk_TM:2004";LC_ADDRESS
-category "tk_TM:2004";LC_TELEPHONE
+category "tk_TM:2011";LC_IDENTIFICATION
+category "tk_TM:2011";LC_CTYPE
+category "tk_TM:2011";LC_COLLATE
+category "tk_TM:2011";LC_TIME
+category "tk_TM:2011";LC_NUMERIC
+category "tk_TM:2011";LC_MONETARY
+category "tk_TM:2011";LC_MEASUREMENT
+category "tk_TM:2011";LC_MESSAGES
+category "tk_TM:2011";LC_PAPER
+category "tk_TM:2011";LC_NAME
+category "tk_TM:2011";LC_ADDRESS
+category "tk_TM:2011";LC_TELEPHONE
 
 END LC_IDENTIFICATION
 
@@ -292,59 +292,65 @@ END LC_COLLATE
 LC_TIME
 
 % Turkmen days are
-% Monday    => Baş Gün
-% Tuesday   => Yaş Gün
-% Wednesday => Hoş Gün
-% Thursday  => Sogap Gün
-% Friday    => Anna Gün
-% Saturday  => Ruh Gün
-% Sunday    => Dynç Gün
+% Monday    => Duşenbe
+% Tuesday   => Sişenbe
+% Wednesday => Çarşenbe
+% Thursday  => Penşenbe
+% Friday    => Anna
+% Saturday  => Şenbe
+% Sunday    => Ýekşenbe
 
-day     "<U0044><U0079><U006E><U00E7><U0020><U0047><U00FC><U006E>";/
-        "<U0042><U0061><U015F><U0020><U0047><U00FC><U006E>";/
-        "<U0059><U0061><U015F><U0020><U0047><U00FC><U006E>";/
-        "<U0048><U006F><U015F><U0020><U0047><U00FC><U006E>";/
-        "<U0053><U006F><U0067><U0061><U0070><U0020><U0047><U00FC><U006E>";/
-        "<U0041><U006E><U006E><U0061><U0020><U0047><U00FC><U006E>";/
-        "<U0052><U0075><U0068><U0020><U0047><U00FC><U006E>"
+day     "<U0044><U0075><U015F><U0065><U006E><U0062><U0065>";/
+        "<U0053><U0069><U015F><U0065><U006E><U0062><U0065>";/
+        "<U00C7><U0061><U0072><U015F><U0065><U006E><U0062><U0065>";/
+        "<U0050><U0065><U006E><U015F><U0065><U006E><U0062><U0065>";/
+        "<U0041><U006E><U006E><U0061>";/
+        "<U015E><U0065><U006E><U0062><U0065>";/
+        "<U00DD><U0065><U006B><U015F><U0065><U006E><U0062><U0065>"
+
 abday   "<U0044><U0079><U006E>";"<U0042><U0061><U015F>";/
         "<U0059><U0061><U015F>";"<U0048><U006F><U015F>";/
         "<U0053><U006F><U0067>";"<U0041><U006E><U006E>";/
         "<U0052><U0075><U0068>"
+abday   "<U0044><U0075><U015F>";"<U0053><U0069><U015F>";/
+        "<U00C7><U0061><U0072>";"<U0050><U0065><U006E>";/
+        "<U0041><U006E><U006E>";"<U015E><U0065><U006E>";/
+        "<U00DD><U0065><U006B>"
 
 % Turkmen monthes are
-% January   => Türkmenbaşy
-% February  => Baýdak
-% March     => Nowruz
-% April     => Gurbansoltan Eje
-% May       => Magtymguly
-% June      => Oguz
-% July      => Gorkut
-% August    => Alp Arslan
-% September => Ruhnama
-% October   => Garaşsyzlyk
-% November  => Sanjar
-% December  => Bitaraplyk
+% January   => Ýanwar
+% February  => Fewral
+% March     => Mart
+% April     => Aprel
+% May       => Maý
+% June      => Iýun
+% July      => Iýul
+% August    => Awgust
+% September => Sentýabr
+% October   => Oktýabr
+% November  => Noýabr
+% December  => Dekabr
 
-mon     "<U0054><U00FC><U0072><U006B><U006D><U0065><U006E><U0062><U0061><U015F><U0079>";/
-        "<U0042><U0061><U00FD><U0064><U0061><U006B>";/
-        "<U004E><U006F><U0077><U0072><U0075><U007A>";/
-        "U0047><U0075><U0072><U0062><U0061><U006E><U0073><U006F>/
-<U006C><U0074><U0061><U006E><U0020><U0045><U006A><U0065>";/
-        "<U004D><U0061><U0067><U0074><U0079><U006D><U0067><U0075><U006C><U0079>";/
-        "<U004F><U0067><U0075><U007A>";/
-        "<U0047><U006F><U0072><U006B><U0075><U0074>";/
-        "<U0041><U006C><U0070><U0020><U0041><U0072><U0073><U006C><U0061><U006E>";/
-        "<U0052><U0075><U0068><U006E><U0061><U006D><U0061>";/
-        "<U0047><U0061><U0072><U0061><U015F><U0073><U0079><U007A><U006C><U0079><U006B>";/
-        "<U0053><U0061><U006E><U006A><U0061><U0072>";/
-        "<U0042><U0069><U0074><U0061><U0072><U0061><U0070><U006C><U0079><U006B>"
-abmon   "<U0054><U00FC><U0072>";"<U0042><U0061><U00FD>";/
-        "<U004E><U006F><U0077>";"<U0047><U0075><U0072>";/
-        "<U004D><U0061><U0067>";"<U004F><U0067><U0075>";/
-        "<U0047><U006F><U0072>";"<U0041><U006C><U0070>";/
-        "<U0052><U0075><U0068>";"<U0047><U0061><U0072>";/
-        "<U0053><U0061><U006E>";"<U0042><U0069><U0074>"
+mon     "<U00DD><U0061><U006E><U0077><U0061><U0072>";/
+        "<U0046><U0065><U0077><U0072><U0061><U006C>";/
+        "<U004D><U0061><U0072><U0074>";/
+        "<U0041><U0070><U0072><U0065><U006C>";/
+        "<U004D><U0061><U00FD>";/
+        "<U0049><U00FD><U0075><U006E>";/
+        "<U0049><U00FD><U0075><U006C>";/
+        "<U0041><U0077><U0067><U0075><U0073><U0074>";/
+        "<U0053><U0065><U006E><U0074><U00FD><U0061><U0062><U0072>";/
+        "<U004F><U006B><U0074><U00FD><U0061><U0062><U0072>";/
+        "<U004E><U006F><U00FD><U0061><U0062><U0072>";/
+        "<U0044><U0065><U006B><U0061><U0062><U0072>"
+
+abmon   "<U00DD><U0061><U006E>";"<U0046><U0065><U0077>";/
+        "<U004D><U0061><U0072>";"<U0041><U0070><U0072>";/
+        "<U004D><U0061><U00FD>";"<U0049><U00FD><U006E>";/
+        "<U0049><U00FD><U006C>";"<U0041><U0077><U0067>";/
+        "<U0053><U0065><U006E>";"<U004F><U006B><U0074>";/
+        "<U004E><U006F><U00FD>";"<U0044><U0065><U006B>"
+
 %
 % Turkmen date and time format
 % date  dd.mm.yyyy %d.%m.%Y %T

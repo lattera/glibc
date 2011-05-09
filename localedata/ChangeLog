@@ -1,5 +1,9 @@
 2011-05-09  Ulrich Drepper  <drepper@gmail.com>
 
+	[BZ #12660]
+	* locales/tk_TM: Change day and month names back after edict.
+	Patch by Ghorban M. Tavakoly <gmt314@yahoo.com>.
+
 	[BZ #12681]
 	* locales/bem_ZA: New file.
 	* locales/en_ZA: New file.
