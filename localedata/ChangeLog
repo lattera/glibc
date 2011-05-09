@@ -1,5 +1,7 @@
 2011-05-09  Ulrich Drepper  <drepper@gmail.com>
 
+	* charmaps/UTF-8: Update from reason Unidata.txt file.
+
 	[BZ #12738]
 	* locales/os_RU: New file.
 	Contributed by Soslan Khubulov <soslanx@gmail.com>.
