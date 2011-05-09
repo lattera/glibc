@@ -1,5 +1,10 @@
 2011-05-09  Ulrich Drepper  <drepper@gmail.com>
 
+	[BZ #12178]
+	* locales/wae_CH: New file.
+	* SUPPORTED (SUPPORTED-LOCALES): Add appropriate entry.
+	Patch mostly by Kevin Bortis <bortis@translate-wae.ch>.
+
 	[BZ #12346]
 	* locales/et_EE (LC_MONETARY): Change to Euro.
 	Patch by Priit Laes <plaes@plaes.org>.

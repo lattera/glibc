@@ -1,0 +1,240 @@
+escape_char  /
+comment_char  %
+
+% Charset: UTF-8
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% ChangeLog
+%	0.1		2010-10-25 Kevin Bortis <bortis@translate-wae.ch>
+%				- First version of wae_CH locale file
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+LC_IDENTIFICATION
+title      "Walser locale for Switzerland"
+source     ""
+address    ""
+contact    "Walser Translation Team"
+email      "ml@translate-wae.ch"
+tel        ""
+fax        ""
+language   "Walser"
+territory  "Switzerland"
+revision   "0.1"
+date       "2010-10-25"
+%
+category  "wae_CH:2000";LC_IDENTIFICATION
+category  "wae_CH:2000";LC_CTYPE
+category  "wae_CH:2000";LC_COLLATE
+category  "wae_CH:2000";LC_TIME
+category  "wae_CH:2000";LC_NUMERIC
+category  "wae_CH:2000";LC_MONETARY
+category  "wae_CH:2000";LC_MESSAGES
+category  "wae_CH:2000";LC_MEASUREMENT
+category  "wae_CH:2000";LC_PAPER
+category  "wae_CH:2000";LC_NAME
+category  "wae_CH:2000";LC_ADDRESS
+category  "wae_CH:2000";LC_TELEPHONE
+%
+END LC_IDENTIFICATION
+
+LC_CTYPE
+% Using same characters as in German language (Switzerland)
+copy "de_CH"
+END LC_CTYPE
+
+LC_COLLATE
+% Copy the template from ISO/IEC 14651
+copy "iso14651_t1"
+END LC_COLLATE
+
+LC_TIME
+% abday - The abbreviations for the week days:
+% - Sun, Män, Zis, Mit, Fro, Fri, Sam
+abday	"<U0053><U0075><U006E>";/
+	"<U004D><U00E4><U006E>";/
+	"<U005A><U0069><U0073>";/
+	"<U004D><U0069><U0074>";/
+	"<U0046><U0072><U006F>";/
+	"<U0046><U0072><U0069>";/
+	"<U0053><U0061><U006D>"
+
+% day - The full names of the week days:
+% - Suntag, Mäntag, Zischtag, Mittwuch, Frontag, Fritag, Samschtag
+day         "<U0053><U0075><U006E><U0074><U0061><U0067>";/
+            "<U004D><U00E4><U006E><U0074><U0061><U0067>";/
+            "<U005A><U0069><U0073><U0063><U0068><U0074><U0061><U0067>";/
+            "<U004D><U0069><U0074><U0074><U0077><U0075><U0063><U0068>";/
+            "<U0046><U0072><U006F><U006E><U0074><U0061><U0067>";/
+            "<U0046><U0072><U0069><U0074><U0061><U0067>";/
+            "<U0053><U0061><U006D><U0073><U0063><U0068><U0074><U0061><U0067>"
+
+% abmon - The abbreviations for the months
+% - Jen, Hor, Mär, Abr, Mei, Brá, Hei, Öig, Her, Wím, Win, Chr
+abmon       	"<U004A><U0065><U006E>";/
+		"<U0048><U006F><U0072>";/
+		"<U004D><U00E4><U0072>";/
+		"<U0041><U0062><U0072>";/
+		"<U004D><U0065><U0069>";/
+		"<U0042><U0072><U00E1>";/
+		"<U0048><U0065><U0069>";/
+		"<U00D6><U0069><U0067>";/
+		"<U0048><U0065><U0072>";/
+		"<U0057><U00ED><U006D>";/
+		"<U0057><U0069><U006E>";/
+		"<U0043><U0068><U0072>"
+
+% mon - The full names of the months -
+% - Jener, Hornig, Märze, Abrille, Meije, Braachet, Heiwet,
+%    Öigschte, Herbschtmaanet, Wiimaanet, Wintermaanet, Chrischtmaanet
+mon         	"<U004A><U0065><U006E><U0065><U0072>";/
+		"<U0048><U006F><U0072><U006E><U0069><U0067>";/
+		"<U004D><U00E4><U0072><U007A><U0065>";/
+		"<U0041><U0062><U0072><U0069><U006C><U006C><U0065>";/
+		"<U004D><U0065><U0069><U006A><U0065>";/
+		"<U0042><U0072><U00E1><U0063><U0068><U0065><U0074>";/
+		"<U0048><U0065><U0069><U0077><U0065><U0074>";/
+		"<U00D6><U0069><U0067><U0073><U0063><U0068><U0074><U0065>";/
+		"<U0048><U0065><U0072><U0062><U0073><U0063><U0068><U0074><U006D><U00E1><U006E><U0065><U0074>";/
+		"<U0057><U00ED><U006D><U00E1><U006E><U0065><U0074>";/
+		"<U0057><U0069><U006E><U0074><U0065><U0072><U006D><U00E1><U006E><U0065><U0074>";/
+		"<U0043><U0068><U0072><U0069><U0073><U0063><U0068><U0074><U006D><U00E1><U006E><U0065><U0074>"
+
+% Abreviated date and time representation to be referenced by the "%c" field descriptor -
+d_t_fmt "<U0025><U0061><U0020><U0025><U0064><U002E><U0020><U0025><U0062><U0020><U0025><U0059><U0020><U0025><U0054><U0020><U0025><U005A>"
+%
+% "%a" (short weekday name),
+% "%d" (day of month as a decimal number),
+% "%b" (short month name),
+% "%Y" (year with century as a decimal number),
+% "%T" (24-hour clock time in format HH:MM:SS),
+% "%Z" (Time zone name)
+
+% Date representation to be referenced by the "%x" field descriptor -
+% "%Y-%m-%d", year.month.day as decimal numbers (2000-12-01).
+d_fmt   "<U0025><U0059><U002D><U0025><U006D><U002D><U0025><U0064>"
+
+% Time representation to be referenced by the "%X" field descriptor -
+% "%T" (24-hour clock time in format HH:MM:SS)
+t_fmt   "<U0025><U0054>"
+
+% Define representation of ante meridiem and post meridiem strings -
+% The ""s mean default to "AM" and "PM".
+am_pm       "";""
+
+% Define time representation in 12-hour format with "am_pm", to be referenced by the "%r"
+% field descriptor -
+% The "" means that this format is not supported.
+t_fmt_ampm  ""
+
+% Date representation not described in ISO/IEC 14652. Comes out as -
+% "%a %b %e %H:%M:%S %Z %Y"
+
+date_fmt	"<U0025><U0061><U0020><U0025><U002D><U0064><U0020>/
+<U0025><U0062><U0020><U0025><U0048><U003A><U0025><U004D><U003A><U0025><U0053>/
+<U0020><U0025><U005A><U0020><U0025><U0059>"
+% which is
+% %a - abbreviated weekday name,
+% %b - abreviated month name,
+% %e - day of month as a decimal number with leading space (1 to 31),
+% %H - hour (24-hour clock) as a decimal number (00 to 23),
+% %M - minute as a decimal number (00 to 59),
+% %S - seconds as a decimal number (00 to 59),
+% %Z - time-zone name,
+% %Y - year with century as a decimal number,e.g. 2001.
+
+week    7;19971130;4
+first_weekday 2
+first_workday 2
+END LC_TIME
+
+LC_MONETARY
+copy "de_CH"
+END LC_MONETARY
+
+LC_NUMERIC
+copy "de_CH"
+END LC_NUMERIC
+
+LC_MESSAGES
+% jJyY, nN, Ja, Nei
+yesexpr "<U005E><U005B><U006A><U004A><U0079><U0059><U005D><U002E><U002A>"
+noexpr  "<U005E><U005B><U006E><U004E><U005D><U002E><U002A>"
+yesstr  "<U004A><U0061>"
+nostr   "<U004E><U0065><U0069>"
+END LC_MESSAGES
+
+LC_PAPER
+copy "de_CH"
+END LC_PAPER
+
+LC_TELEPHONE
+copy "de_CH"
+END LC_TELEPHONE
+
+LC_MEASUREMENT
+copy "de_CH"
+END LC_MEASUREMENT
+
+LC_NAME
+name_fmt    "<U0025><U0064><U0025><U0074><U0025><U0067><U0025><U0074>/
+<U0025><U006D><U0025><U0074><U0025><U0066>"
+% Format for addressing a person.
+% "%d%t%g%t%m%t%f"
+% "Salutation",
+% "Empty string, or <Space>",
+% "First given name",
+% "Empty string, or <Space>",
+% "Middle names",
+% "Empty string, or <Space>",
+% "Clan names"
+%
+name_miss   "<U0046><U0072><U00F6><U006C><U0065><U0069><U006E>"
+% Salutation for unmarried females - "Frölein"
+%
+name_mr     "<U0048><U0065><U0072><U0072>"
+% Salutation for males - "Herr"
+%
+name_mrs    "<U0046><U0072><U00F6><U0069><U0077>"
+% Salutation for married females - "Fröiw"
+%
+name_ms     "<U0046><U0072><U00F6><U0069><U0077>"
+% Salutation valid for all females - "Fröiw"
+END LC_NAME
+
+LC_ADDRESS
+country_name "<U0053><U0077><U0069><U0074><U007A><U0065><U0072><U006C>/
+<U0061><U006E><U0064>"
+% Country name "Switzerland"
+%
+country_post "<U0044><U0048>"
+% Abbreviated country postal name - "CH"
+%
+lang_name "<U0057><U0061><U006C><U0073><U0065><U0072>"
+% Language name - "Walser"
+
+% UN Geneve 1949:68 Distinguishing signs of vehicles in international traffic
+% "CH"
+country_car   "<U0044><U0048>"
+
+% ISO 639 two and three letter language names
+% see http://www.loc.gov/standards/iso639-2/englangn.html
+% "", "wae", "wae"
+lang_ab       ""
+lang_term     "<U0077><U0061><U0065>"
+lang_lib      "<U0077><U0061><U0065>"
+
+postal_fmt    "<U0025><U0066><U0025><U004E><U0025><U0061><U0025><U004E>/
+<U0025><U0064><U0025><U004E><U0025><U0062><U0025><U004E><U0025><U0073>/
+<U0020><U0025><U0068><U0020><U0025><U0065><U0020><U0025><U0072><U0025>/
+<U004E><U0025><U007A><U0020><U0025><U0054><U0025>/
+<U004E><U0025><U0063><U0025><U004E>"
+
+% ISO 3166 country number and 2 and 3 letter abreviations
+% http://www.unicode.org/onlinedat/countries.html
+% "CH", "CHE"
+country_ab2   "<U0043><U0048>"
+country_ab3   "<U0043><U0048><U0045>"
+country_num   756
+country_isbn  3
+
+END LC_ADDRESS

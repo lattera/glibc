@@ -1,5 +1,9 @@
 2011-05-09  Ulrich Drepper  <drepper@gmail.com>
 
+	[BZ #12178]
+	* locale/iso-639.def: Add wae entry.
+	Patch by Kevin Bortis <bortis@translate-wae.ch>.
+
 	[BZ #12545]
 	* locale/programs/localedef.c (construct_output_path): Use ssize_t
 	for n.
