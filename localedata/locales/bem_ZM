@@ -1,0 +1,195 @@
+comment_char %
+escape_char /
+% Charset: UTF-8
+% Authors:
+% 2011-04-18, Anthony Musaluke <goof2092@gmail.com>
+% 2011-04-18, info@2xlibre.net
+% Distribution and use is free, also
+% for commercial purposes.
+
+LC_IDENTIFICATION
+title     "Bemba locale for Zambia"
+source	  "ANLoc"
+contact   "Martin Benjamin"
+email     "locales@africanlocalization.net"
+language  "Bemba"
+territory "Zambia"
+revision  "1.0"
+date      "2011-04-18"
+%
+category  "bem_ZM:2000";LC_IDENTIFICATION
+category  "bem_ZM:2000";LC_CTYPE
+category  "bem_ZM:2000";LC_COLLATE
+category  "bem_ZM:2000";LC_TIME
+category  "bem_ZM:2000";LC_NUMERIC
+category  "bem_ZM:2000";LC_MONETARY
+category  "bem_ZM:2000";LC_PAPER
+category  "bem_ZM:2000";LC_MEASUREMENT
+category  "bem_ZM:2000";LC_MESSAGES
+category  "bem_ZM:2000";LC_NAME
+category  "bem_ZM:2000";LC_ADDRESS
+category  "bem_ZM:2000";LC_TELEPHONE
+END LC_IDENTIFICATION
+
+LC_CTYPE
+copy "i18n"
+
+translit_start
+include "translit_combining";""
+translit_end
+END LC_CTYPE
+
+LC_COLLATE
+copy "iso14651_t1"
+END LC_COLLATE
+
+LC_TIME
+% Januari, Februari, Machi, Epreo, Mei, Juni, Julai, Ogasti, Septemba, Oktoba, Novemba, Disemba
+mon  "<U004A><U0061><U006E><U0075><U0061><U0072><U0069>";/
+     "<U0046><U0065><U0062><U0072><U0075><U0061><U0072><U0069>";/
+     "<U004D><U0061><U0063><U0068><U0069>";/
+     "<U0045><U0070><U0072><U0065><U006F>";/
+     "<U004D><U0065><U0069>";/
+     "<U004A><U0075><U006E><U0069>";/
+     "<U004A><U0075><U006C><U0061><U0069>";/
+     "<U004F><U0067><U0061><U0073><U0074><U0069>";/
+     "<U0053><U0065><U0070><U0074><U0065><U006D><U0062><U0061>";/
+     "<U004F><U006B><U0074><U006F><U0062><U0061>";/
+     "<U004E><U006F><U0076><U0065><U006D><U0062><U0061>";/
+     "<U0044><U0069><U0073><U0065><U006D><U0062><U0061>"
+% Jan, Feb, Mar, Apr, May, Jun, July, Aug, Sep, Oct, Nov, Dec
+abmon  "<U004A><U0061><U006E>";/
+       "<U0046><U0065><U0062>";/
+       "<U004D><U0061><U0072>";/
+       "<U0041><U0070><U0072>";/
+       "<U004D><U0061><U0079>";/
+       "<U004A><U0075><U006E>";/
+       "<U004A><U0075><U006C><U0079>";/
+       "<U0041><U0075><U0067>";/
+       "<U0053><U0065><U0070>";/
+       "<U004F><U0063><U0074>";/
+       "<U004E><U006F><U0076>";/
+       "<U0044><U0065><U0063>"
+% Pa Mulungu, Palichimo, Palichibuli, Palichitatu, Palichine, Palichisano, Pachibelushi
+day  "<U0050><U0061><U0020><U004D><U0075><U006C><U0075><U006E><U0067><U0075>";/
+     "<U0050><U0061><U006C><U0069><U0063><U0068><U0069><U006D><U006F>";/
+     "<U0050><U0061><U006C><U0069><U0063><U0068><U0069><U0062><U0075><U006C><U0069>";/
+     "<U0050><U0061><U006C><U0069><U0063><U0068><U0069><U0074><U0061><U0074><U0075>";/
+     "<U0050><U0061><U006C><U0069><U0063><U0068><U0069><U006E><U0065>";/
+     "<U0050><U0061><U006C><U0069><U0063><U0068><U0069><U0073><U0061><U006E><U006F>";/
+     "<U0050><U0061><U0063><U0068><U0069><U0062><U0065><U006C><U0075><U0073><U0068><U0069>"
+% Sun, Mon, Tue, Wed, Thu, Fri, Sat
+abday  "<U0053><U0075><U006E>";/
+       "<U004D><U006F><U006E>";/
+       "<U0054><U0075><U0065>";/
+       "<U0057><U0065><U0064>";/
+       "<U0054><U0068><U0075>";/
+       "<U0046><U0072><U0069>";/
+       "<U0053><U0061><U0074>"
+week   7;19971130;4
+first_weekday  1
+first_workday  2
+% %a %d %b %Y %R %Z
+d_t_fmt  "<U0025><U0061><U0020><U0025><U0064><U0020><U0025><U0062><U0020><U0025><U0059><U0020>/
+<U0025><U0052><U0020><U0025><U005A>"
+% %m/%d/%Y
+d_fmt  "<U0025><U006D><U002F><U0025><U0064><U002F><U0025><U0059>"
+% %T (HH:MM:SS)
+t_fmt  "<U0025><U0054>"
+% uluchelo, akasuba
+am_pm  "<U0075><U006C><U0075><U0063><U0068><U0065><U006C><U006F>";/
+       "<U0061><U006B><U0061><U0073><U0075><U0062><U0061>"
+% %I:%M:%S %p
+t_fmt_ampm  "<U0025><U0049><U003A><U0025><U004D><U003A><U0025><U0053><U0020><U0025><U0070>"
+END LC_TIME
+
+LC_NUMERIC
+% .
+decimal_point  "<U002E>"
+% ,
+thousands_sep  "<U002C>"
+grouping  3
+END LC_NUMERIC
+
+LC_MONETARY
+% K
+currency_symbol  "<U004B>"
+% ZMK
+int_curr_symbol  "<U005A><U004D><U004B><U0020>"
+% .
+mon_decimal_point  "<U002E>"
+% ,
+mon_thousands_sep  "<U002C>"
+mon_grouping  3
+positive_sign  ""
+% -
+negative_sign  "<U002D>"
+frac_digits      2
+int_frac_digits  2
+p_cs_precedes   1
+p_sep_by_space  0
+n_cs_precedes   1
+n_sep_by_space  0
+p_sign_posn     1
+n_sign_posn     1
+END LC_MONETARY
+
+LC_PAPER
+height  297
+width  210
+END LC_PAPER
+
+LC_MEASUREMENT
+measurement  1
+END LC_MEASUREMENT
+
+LC_MESSAGES
+% ^[yYeE].*
+yesexpr  "<U005E><U005B><U0079><U0059><U0065><U0045><U005D><U002E><U002A>"
+% ^[nNaA].*
+noexpr  "<U005E><U005B><U006E><U004E><U0061><U0041><U005D><U002E><U002A>"
+END LC_MESSAGES
+
+LC_NAME
+% %p%t%d1%g%t%M%f
+name_fmt  "<U0025><U0070><U0025><U0074><U0025><U0064><U0031><U0025><U0067><U0025><U0074><U0025><U004D><U0025><U0066>"
+% Ba
+name_gen  "<U0042><U0061>"
+% Ba
+name_miss "<U0042><U0061>"
+% Ba
+name_mr   "<U0042><U0061>"
+% Bana
+name_mrs  "<U0042><U0061><U006E><U0061>"
+% Ba
+name_ms   "<U0042><U0061>"
+END LC_NAME
+
+LC_ADDRESS
+% %a%N%f%N%e %h%N%b %s%N%z%N%T%N%c%N
+postal_fmt  "<U0025><U0061><U0025><U004E><U0025><U0066><U0025><U004E><U0025><U0065><U0020>/
+<U0025><U0068><U0025><U004E><U0025><U0062><U0020><U0025><U0073><U0025><U004E><U0025><U007A>/
+<U0025><U004E><U0025><U0054><U0025><U004E><U0025><U0063><U0025><U004E>"
+% Zambia
+country_name  "<U005A><U0061><U006D><U0062><U0069><U0061>"
+% ZM
+country_post  "<U005A><U004D>"
+% ZM
+country_ab2   "<U005A><U004D>"
+% ZMB
+country_ab3   "<U005A><U004D><U0042>"
+country_num   894
+lang_name     "<U0069><U0063><U0069><U0042><U0065><U006D><U0062><U0061>"
+lang_term     "<U0062><U0065><U006D>"
+END LC_ADDRESS
+
+LC_TELEPHONE
+% +%c %A %l
+tel_int_fmt  "<U002B><U0025><U0063><U0020><U0025><U0041><U0020><U0025><U006C>"
+% %A %l
+tel_dom_fmt  "<U0025><U0041><U0020><U0025><U006C>"
+% 00
+int_select  "<U0030><U0030>"
+% 260
+int_prefix  "<U0032><U0036><U0030>"
+END LC_TELEPHONE

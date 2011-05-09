@@ -1,0 +1,92 @@
+comment_char %
+escape_char /
+% Charset: UTF-8
+% Authors:
+% 2011-04-18, Anthony Musaluke <goof2092@gmail.com>
+% 2011-04-18, info@2xlibre.net
+% Distribution and use is free, also
+% for commercial purposes.
+
+LC_IDENTIFICATION
+title     "English locale for Zambia"
+source	  "ANLoc"
+contact   "Martin Benjamin"
+email     "locales@africanlocalization.net"
+language  "English"
+territory "Zambia"
+revision  "1.0"
+date      "2011-04-18"
+%
+category  "en_ZM:2000";LC_IDENTIFICATION
+category  "en_ZM:2000";LC_CTYPE
+category  "en_ZM:2000";LC_COLLATE
+category  "en_ZM:2000";LC_TIME
+category  "en_ZM:2000";LC_NUMERIC
+category  "en_ZM:2000";LC_MONETARY
+category  "en_ZM:2000";LC_PAPER
+category  "en_ZM:2000";LC_MEASUREMENT
+category  "en_ZM:2000";LC_MESSAGES
+category  "en_ZM:2000";LC_NAME
+category  "en_ZM:2000";LC_ADDRESS
+category  "en_ZM:2000";LC_TELEPHONE
+END LC_IDENTIFICATION
+
+LC_CTYPE
+copy "i18n"
+
+translit_start
+include "translit_combining";""
+translit_end
+END LC_CTYPE
+
+LC_COLLATE
+copy "iso14651_t1"
+END LC_COLLATE
+
+LC_TIME
+copy "en_GB"
+END LC_TIME
+
+LC_NUMERIC
+copy "en_GB"
+END LC_NUMERIC
+
+LC_MONETARY
+copy "bem_ZM"
+END LC_MONETARY
+
+LC_PAPER
+copy "bem_ZM"
+END LC_PAPER
+
+LC_MEASUREMENT
+copy "bem_ZM"
+END LC_MEASUREMENT
+
+LC_MESSAGES
+copy "bem_ZM"
+END LC_MESSAGES
+
+LC_NAME
+copy "en_GB"
+END LC_NAME
+
+LC_ADDRESS
+% %a%N%f%N%e %h%N%b %s%N%z%N%T%N%c%N
+postal_fmt  "<U0025><U0061><U0025><U004E><U0025><U0066><U0025><U004E><U0025><U0065><U0020>/
+<U0025><U0068><U0025><U004E><U0025><U0062><U0020><U0025><U0073><U0025><U004E><U0025><U007A>/
+<U0025><U004E><U0025><U0054><U0025><U004E><U0025><U0063><U0025><U004E>"
+% Zambia
+country_name  "<U005A><U0061><U006D><U0062><U0069><U0061>"
+% ZM
+country_post  "<U005A><U004D>"
+% ZM
+country_ab2   "<U005A><U004D>"
+% ZMB
+country_ab3   "<U005A><U004D><U0042>"
+country_num   894
+END LC_ADDRESS
+
+LC_TELEPHONE
+copy "bem_ZM"
+END LC_TELEPHONE
