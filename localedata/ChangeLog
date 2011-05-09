@@ -1,3 +1,10 @@
+2011-05-09  Ulrich Drepper  <drepper@gmail.com>
+
+	[BZ #12738]
+	* locales/os_RU: New file.
+	Contributed by Soslan Khubulov <soslanx@gmail.com>.
+	* SUPPORTED: Add entry for os_RU.
+
 2010-05-17  Andreas Schwab  <schwab@redhat.com>
 
 	* locales/es_CR (LC_ADDRESS): Fix character names in lang_ab.
