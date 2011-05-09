@@ -1,0 +1,170 @@
+comment_char %
+escape_char /
+% Charset: UTF-8
+% Authors:
+% 2011-03-07, locales@kamusi.org
+% 2011-03-07, info@2xlibre.net
+% Distribution and use is free, also
+% for commercial purposes.
+
+LC_IDENTIFICATION
+title      "Swahili locale for Kenya"
+source     "Kamusi Project"
+contact    "Martin Benjamin"
+email      "locales@kamusi.org"
+tel        ""
+fax        ""
+language   "sw"
+territory  "Kenya"
+revision   "1.0"
+date       "2011-03-07"
+%
+category  "sw_KE:2000";LC_IDENTIFICATION
+category  "sw_KE:2000";LC_CTYPE
+category  "sw_KE:2000";LC_COLLATE
+category  "sw_KE:2000";LC_TIME
+category  "sw_KE:2000";LC_NUMERIC
+category  "sw_KE:2000";LC_MONETARY
+category  "sw_KE:2000";LC_PAPER
+category  "sw_KE:2000";LC_MEASUREMENT
+category  "sw_KE:2000";LC_MESSAGES
+category  "sw_KE:2000";LC_NAME
+category  "sw_KE:2000";LC_ADDRESS
+category  "sw_KE:2000";LC_TELEPHONE
+END LC_IDENTIFICATION
+
+LC_CTYPE
+copy "i18n"
+
+translit_start
+include "translit_combining";""
+translit_end
+END LC_CTYPE
+
+LC_COLLATE
+copy "iso14651_t1"
+END LC_COLLATE
+
+LC_TIME
+% Januari, Februari, Machi, Aprili, Mei, Juni, Julai, Agosti, Septemba, Oktoba, Novemba, Desemba
+mon  "<U004A><U0061><U006E><U0075><U0061><U0072><U0069>";/
+     "<U0046><U0065><U0062><U0072><U0075><U0061><U0072><U0069>";/
+     "<U004D><U0061><U0063><U0068><U0069>";/
+     "<U0041><U0070><U0072><U0069><U006C><U0069>";/
+     "<U004D><U0065><U0069>";/
+     "<U004A><U0075><U006E><U0069>";/
+     "<U004A><U0075><U006C><U0061><U0069>";/
+     "<U0041><U0067><U006F><U0073><U0074><U0069>";/
+     "<U0053><U0065><U0070><U0074><U0065><U006D><U0062><U0061>";/
+     "<U004F><U006B><U0074><U006F><U0062><U0061>";/
+     "<U004E><U006F><U0076><U0065><U006D><U0062><U0061>";/
+     "<U0044><U0065><U0073><U0065><U006D><U0062><U0061>"
+% Jan, Feb, Mac, Apr, Mei, Jun, Jul, Ago, Sep, Okt, Nov, Des
+abmon  "<U004A><U0061><U006E>";/
+       "<U0046><U0065><U0062>";/
+       "<U004D><U0061><U0063>";/
+       "<U0041><U0070><U0072>";/
+       "<U004D><U0065><U0069>";/
+       "<U004A><U0075><U006E>";/
+       "<U004A><U0075><U006C>";/
+       "<U0041><U0067><U006F>";/
+       "<U0053><U0065><U0070>";/
+       "<U004F><U006B><U0074>";/
+       "<U004E><U006F><U0076>";/
+       "<U0044><U0065><U0073>"
+% Jumapili, Jumatatu, Jumanne, Jumatano, Alhamisi, Ijumaa, Jumamosi
+day  "<U004A><U0075><U006D><U0061><U0070><U0069><U006C><U0069>";/
+     "<U004A><U0075><U006D><U0061><U0074><U0061><U0074><U0075>";/
+     "<U004A><U0075><U006D><U0061><U006E><U006E><U0065>";/
+     "<U004A><U0075><U006D><U0061><U0074><U0061><U006E><U006F>";/
+     "<U0041><U006C><U0068><U0061><U006D><U0069><U0073><U0069>";/
+     "<U0049><U006A><U0075><U006D><U0061><U0061>";/
+     "<U004A><U0075><U006D><U0061><U006D><U006F><U0073><U0069>"
+% J2, J3, J4, J5, Alh, Ij, J1
+abday  "<U004A><U0032>";/
+       "<U004A><U0033>";/
+       "<U004A><U0034>";/
+       "<U004A><U0035>";/
+       "<U0041><U006C><U0068>";/
+       "<U0049><U006A>";/
+       "<U004A><U0031>"
+week    7;19971130;4
+first_weekday 2
+first_workday 2
+% %e %B %Y %I:%M:%S %p %Z
+d_t_fmt  "<U0025><U0065><U0020><U0025><U0042><U0020><U0025><U0059><U0020><U0025><U0049>/
+<U003A><U0025><U004D><U003A><U0025><U0053><U0020><U0025><U0070><U0020><U0025><U005A>"
+% %d/%m/%Y
+d_fmt  "<U0025><U0064><U002F><U0025><U006D><U002F><U0025><U0059>"
+% %I:%M:%S %p
+t_fmt  "<U0025><U0049><U003A><U0025><U004D><U003A><U0025><U0053><U0020><U0025><U0070>"
+% asubuhi, alasiri
+am_pm  "<U0061><U0073><U0075><U0062><U0075><U0068><U0069>";/
+       "<U0061><U006C><U0061><U0073><U0069><U0072><U0069>"
+% %I:%M:%S %p
+t_fmt_ampm  "<U0025><U0049><U003A><U0025><U004D><U003A><U0025><U0053><U0020><U0025><U0070>"
+END LC_TIME
+
+LC_NUMERIC
+copy "om_KE"
+END LC_NUMERIC
+
+LC_MONETARY
+copy "om_KE"
+END LC_MONETARY
+
+LC_PAPER
+copy "om_KE"
+END LC_PAPER
+
+LC_MEASUREMENT
+copy "om_KE"
+END LC_MEASUREMENT
+
+LC_MESSAGES
+% ^[nNyY].*
+yesexpr  "<U005E><U005B><U006E><U004E><U0079><U0059><U005D><U002E><U002A>"
+% ^[hHlL].*
+noexpr  "<U005E><U005B><U0068><U0048><U006C><U004C><U005D><U002E><U002A>"
+END LC_MESSAGES
+
+LC_NAME
+% %p%t%g%m%t%f
+name_fmt  "<U0025><U0070><U0025><U0074><U0025><U0067><U0025><U006D><U0025><U0074><U0025><U0066>"
+% Bw.
+name_mr  "<U0042><U0077><U002E>"
+% Bi.
+name_ms  "<U0042><U0069><U002E>"
+END LC_NAME
+
+LC_ADDRESS
+% %a%N%f%N%d%N%b%N%h %s %e %r%N%T, %S %z%N%c%N
+postal_fmt  "<U0025><U0061><U0025><U004E><U0025><U0066><U0025><U004E><U0025><U0064><U0025><U004E>/
+<U0025><U0062><U0025><U004E><U0025><U0068><U0020><U0025><U0073><U0020><U0025><U0065><U0020><U0025>/
+<U0072><U0025><U004E><U0025><U0054><U002C><U0020><U0025><U0053><U0020><U0025><U007A><U0025><U004E>/
+<U0025><U0063><U0025><U004E>"
+% Kenya
+country_name  "<U004B><U0065><U006E><U0079><U0061>"
+% KE
+country_post  "<U004B><U0045>"
+% KE
+country_ab2   "<U004B><U0045>"
+% KEN
+country_ab3   "<U004B><U0045><U004E>"
+country_num   404
+% Kiswahili
+lang_name     "<U004B><U0069><U0073><U0077><U0061><U0068><U0069><U006C><U0069>"
+% sw
+lang_ab       "<U0073><U0077>"
+END LC_ADDRESS
+
+LC_TELEPHONE
+% %c %a %l
+tel_int_fmt  "<U0025><U0063><U0020><U0025><U0061><U0020><U0025><U006C>"
+% %A %l
+tel_dom_fmt  "<U0025><U0041><U0020><U0025><U006C>"
+% 000
+int_select   "<U0030><U0030><U0030>"
+% 254
+int_prefix   "<U0032><U0035><U0034>"
+END LC_TELEPHONE

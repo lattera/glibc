@@ -371,6 +371,8 @@ sv_FI/ISO-8859-1 \
 sv_FI@euro/ISO-8859-15 \
 sv_SE.UTF-8/UTF-8 \
 sv_SE/ISO-8859-1 \
+sw_KE/UTF-8 \
+sw_TZ/UTF-8 \
 ta_IN/UTF-8 \
 te_IN/UTF-8 \
 tg_TJ.UTF-8/UTF-8 \

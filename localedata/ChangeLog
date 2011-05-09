@@ -1,5 +1,10 @@
 2011-05-09  Ulrich Drepper  <drepper@gmail.com>
 
+	[BZ #12551]
+	* locales/sw_KE: New file.
+	* locales/sw_TZ: New file.
+	* SUPPORTED (SUPPORTED-LOCALES): Add appropriate entries.
+
 	[BZ #12611]
 	* locales/ff_SN: New file.
 	* SUPPORTED (SUPPORTED-LOCALES): Add appropriate entry.
