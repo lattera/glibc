@@ -1,0 +1,196 @@
+comment_char %
+escape_char /
+% Charset: UTF-8
+% Authors:
+% 2011-03-28, admin@pulaar-fulfulde.org
+% 2011-03-28, info@2xlibre.net
+% Distribution and use is free, also
+% for commercial purposes.
+
+LC_IDENTIFICATION
+title      "Fulah locale for Senegal"
+source     "Pular-Fulfulde.org"
+contact    "Ibrahima Sarr"
+email      "admin@pulaar-fulfulde.org"
+language   "ff"
+territory  "Senegal"
+revision   "1.0"
+date       "2011-03-28"
+%
+category  "ff_SN:2000";LC_IDENTIFICATION
+category  "ff_SN:2000";LC_CTYPE
+category  "ff_SN:2000";LC_COLLATE
+category  "ff_SN:2000";LC_TIME
+category  "ff_SN:2000";LC_NUMERIC
+category  "ff_SN:2000";LC_MONETARY
+category  "ff_SN:2000";LC_PAPER
+category  "ff_SN:2000";LC_MEASUREMENT
+category  "ff_SN:2000";LC_MESSAGES
+category  "ff_SN:2000";LC_NAME
+category  "ff_SN:2000";LC_ADDRESS
+category  "ff_SN:2000";LC_TELEPHONE
+END LC_IDENTIFICATION
+
+LC_CTYPE
+copy "i18n"
+
+translit_start
+include "translit_combining";""
+translit_end
+END LC_CTYPE
+
+LC_COLLATE
+copy "iso14651_t1"
+END LC_COLLATE
+
+LC_TIME
+% siilo, colte, mbooy, seeɗto, duujal, korse, morso, juko, siilto, yarkomaa, jolal, bowte
+mon  "<U0073><U0069><U0069><U006C><U006F>";/
+     "<U0063><U006F><U006C><U0074><U0065>";/
+     "<U006D><U0062><U006F><U006F><U0079>";/
+     "<U0073><U0065><U0065><U0257><U0074><U006F>";/
+     "<U0064><U0075><U0075><U006A><U0061><U006C>";/
+     "<U006B><U006F><U0072><U0073><U0065>";/
+     "<U006D><U006F><U0072><U0073><U006F>";/
+     "<U006A><U0075><U006B><U006F>";/
+     "<U0073><U0069><U0069><U006C><U0074><U006F>";/
+     "<U0079><U0061><U0072><U006B><U006F><U006D><U0061><U0061>";/
+     "<U006A><U006F><U006C><U0061><U006C>";/
+     "<U0062><U006F><U0077><U0074><U0065>"
+% sii, col, mbo, see, duu, kor, mor, juk, slt, yar, jol, bow
+abmon  "<U0073><U0069><U0069>";/
+       "<U0063><U006F><U006C>";/
+       "<U006D><U0062><U006F>";/
+       "<U0073><U0065><U0065>";/
+       "<U0064><U0075><U0075>";/
+       "<U006B><U006F><U0072>";/
+       "<U006D><U006F><U0072>";/
+       "<U006A><U0075><U006B>";/
+       "<U0073><U006C><U0074>";/
+       "<U0079><U0061><U0072>";/
+       "<U006A><U006F><U006C>";/
+       "<U0062><U006F><U0077>"
+% dewo, aaɓnde, mawbaare, njeslaare, naasaande, mawnde, hoore-biir
+day  "<U0064><U0065><U0077><U006F>";/
+     "<U0061><U0061><U0253><U006E><U0064><U0065>";/
+     "<U006D><U0061><U0077><U0062><U0061><U0061><U0072><U0065>";/
+     "<U006E><U006A><U0065><U0073><U006C><U0061><U0061><U0072><U0065>";/
+     "<U006E><U0061><U0061><U0073><U0061><U0061><U006E><U0064><U0065>";/
+     "<U006D><U0061><U0077><U006E><U0064><U0065>";/
+     "<U0068><U006F><U006F><U0072><U0065><U002D><U0062><U0069><U0069><U0072>"
+% dew, aaɓ, maw, nje, naa, mwd, hbi
+abday  "<U0064><U0065><U0077>";/
+       "<U0061><U0061><U0253>";/
+       "<U006D><U0061><U0077>";/
+       "<U006E><U006A><U0065>";/
+       "<U006E><U0061><U0061>";/
+       "<U006D><U0077><U0064>";/
+       "<U0068><U0062><U0069>"
+week   7;19971129;1
+first_weekday  1
+% %a %d %b %Y %R %Z
+d_t_fmt  "<U0025><U0061><U0020><U0025><U0064><U0020><U0025><U0062><U0020><U0025>/
+<U0059><U0020><U0025><U0052><U0020><U0025><U005A>"
+% %d/%m/%Y
+d_fmt    "<U0025><U0064><U002F><U0025><U006D><U002F><U0025><U0059>"
+% %R
+t_fmt    "<U0025><U0052>"
+% subaka, kikiiɗe
+am_pm    "<U0073><U0075><U0062><U0061><U006B><U0061>";/
+         "<U006B><U0069><U006B><U0069><U0069><U0257><U0065>"
+END LC_TIME
+
+LC_NUMERIC
+% ,
+decimal_point  "<U002C>"
+% .
+thousands_sep  "<U002E>"
+grouping       3
+END LC_NUMERIC
+
+LC_MONETARY
+% CFA
+currency_symbol  "<U0043><U0046><U0041>"
+% XOF 
+int_curr_symbol  "<U0058><U004F><U0046><U0020>"
+% .
+mon_decimal_point  "<U002E>"
+% ,
+mon_thousands_sep  "<U002C>"
+mon_grouping  3
+positive_sign  ""
+% -
+negative_sign  "<U002D>"
+frac_digits     2
+int_frac_digits 2
+p_cs_precedes   0
+p_sep_by_space  1
+n_cs_precedes   0
+n_sep_by_space  1
+p_sign_posn     1
+n_sign_posn     1
+END LC_MONETARY
+
+LC_PAPER
+height  297
+width   210
+END LC_PAPER
+
+LC_MEASUREMENT
+measurement  1
+END LC_MEASUREMENT
+
+LC_MESSAGES
+% ^[yYeE].*
+yesexpr  "<U005E><U005B><U0079><U0059><U0065><U0045><U005D><U002E><U002A>"
+% ^[nNaA].*
+noexpr   "<U005E><U005B><U006E><U004E><U0061><U0041><U005D><U002E><U002A>"
+END LC_MESSAGES
+
+LC_NAME
+% %p%t%g%m%t%f
+name_fmt  "<U0025><U0070><U0025><U0074><U0025><U0067><U0025><U006D><U0025><U0074><U0025><U0066>"
+% kaddol
+name_gen  "<U006B><U0061><U0064><U0064><U006F><U006C>"
+% sokna
+name_miss "<U0073><U006F><U006B><U006E><U0061>"
+% ceerno
+name_mr   "<U0063><U0065><U0065><U0072><U006E><U006F>"
+% sokna
+name_mrs  "<U0073><U006F><U006B><U006E><U0061>"
+% sokna
+name_ms   "<U0073><U006F><U006B><U006E><U0061>"
+END LC_NAME
+
+LC_ADDRESS
+% %a%N%f%N%d%N%b%N%h %s %e %r%N%T, %S %z%N%c%N
+postal_fmt  "<U0025><U0061><U0025><U004E><U0025><U0066><U0025><U004E><U0025><U0064><U0025>/
+<U004E><U0025><U0062><U0025><U004E><U0025><U0068><U0020><U0025><U0073><U0020><U0025>/
+<U0065><U0020><U0025><U0072><U0025><U004E><U0025><U0054><U002C><U0020><U0025>/
+<U0053><U0020><U0025><U007A><U0025><U004E><U0025><U0063><U0025><U004E>"
+% Senegaal
+country_name  "<U0053><U0065><U006E><U0065><U0067><U0061><U0061><U006C>"
+% SN
+country_post  "<U0053><U004E>"
+% SN
+country_ab2  "<U0053><U004E>"
+% SEN
+country_ab3  "<U0053><U0045><U004E>"
+country_num  686
+% Pulaar
+lang_name    "<U0050><U0075><U006C><U0061><U0061><U0072>"
+% ff
+lang_ab      "<U0066><U0066>"
+END LC_ADDRESS
+
+LC_TELEPHONE
+% %c %a %l
+tel_int_fmt  "<U0025><U0063><U0020><U0025><U0061><U0020><U0025><U006C>"
+% %a %l
+tel_dom_fmt  "<U0025><U0061><U0020><U0025><U006C>"
+% 00
+int_select   "<U0030><U0030>"
+% 221
+int_prefix   "<U0032><U0032><U0031>"
+END LC_TELEPHONE
+
