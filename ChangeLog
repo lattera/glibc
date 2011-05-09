@@ -1,5 +1,7 @@
 2011-05-09  Ulrich Drepper  <drepper@gmail.com>
 
+	* locale/C-translit.h.in: Add U20A1 transliteration.
+
 	[BZ #12178]
 	* locale/iso-639.def: Add wae entry.
 	Patch by Kevin Bortis <bortis@translate-wae.ch>.

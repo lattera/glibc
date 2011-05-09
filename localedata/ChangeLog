@@ -1,5 +1,8 @@
 2011-05-09  Ulrich Drepper  <drepper@gmail.com>
 
+	* locales/translit_neutral: Add entry for U20A1.
+	* locales/es_SV (currency_symbol): Change to U20A1.
+
 	[BZ #12158]
 	* locales/lij_IT: New file.
 	* SUPPORTED (SUPPORTED-LOCALES): Add appropriate entry.
