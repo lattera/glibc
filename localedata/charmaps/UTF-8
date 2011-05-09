@@ -34530,12 +34530,6 @@ CHARMAP
 <U0001F771> /xf0/x9f/x9d/xb1 ALCHEMICAL SYMBOL FOR MONTH
 <U0001F772> /xf0/x9f/x9d/xb2 ALCHEMICAL SYMBOL FOR HALF DRAM
 <U0001F773> /xf0/x9f/x9d/xb3 ALCHEMICAL SYMBOL FOR HALF OUNCE
-<U00020000> /xf0/xa0/x80/x80 <CJK Ideograph Extension B, First>
-<U0002A6D6> /xf0/xaa/x9b/x96 <CJK Ideograph Extension B, Last>
-<U0002A700> /xf0/xaa/x9c/x80 <CJK Ideograph Extension C, First>
-<U0002B734> /xf0/xab/x9c/xb4 <CJK Ideograph Extension C, Last>
-<U0002B740> /xf0/xab/x9d/x80 <CJK Ideograph Extension D, First>
-<U0002B81D> /xf0/xab/xa0/x9d <CJK Ideograph Extension D, Last>
 <U00020000>..<U0002003F> /xf0/xa0/x80/x80 <CJK>
 <U00020040>..<U0002007F> /xf0/xa0/x81/x80 <CJK>
 <U00020080>..<U000200BF> /xf0/xa0/x82/x80 <CJK>
