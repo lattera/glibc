@@ -1,5 +1,10 @@
 2011-05-09  Ulrich Drepper  <drepper@gmail.com>
 
+	[BZ #11578]
+	* locales/es_PA: Change paper format to letter.
+	* locales/es_SV: Likewise.
+	Patch by Caolán McNamara <caolanm@redhat.com>.
+
 	[BZ #11653]
 	* locales/es_NI: Fix currency_symbol.
 
