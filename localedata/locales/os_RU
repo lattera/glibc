@@ -20,8 +20,8 @@ escape_char  /
 
 LC_IDENTIFICATION
 title      "Ossetian locale for Russia"
-source     "RAP"
-address    "Sankt Jorgens Alle 8, DK-1615 Kobenhavn V, Danmark"
+source     ""
+address    ""
 contact    ""
 email      "bug-glibc-locales@gnu.org"
 tel        ""
