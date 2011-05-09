@@ -1,5 +1,6 @@
 2011-05-09  Ulrich Drepper  <drepper@gmail.com>
 
+	[BZ #12711]
 	* charmaps/UTF-8: Update from reason Unidata.txt file.
 
 	[BZ #12738]

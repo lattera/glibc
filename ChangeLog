@@ -1,3 +1,9 @@
+2011-05-09  Ulrich Drepper  <drepper@gmail.com>
+
+	[BZ #12711]
+	* locale/C-translit.h.in: Add entry for U20B9.
+	Patch by pravin.d.s@gmail.com.
+
 2011-05-08  Ulrich Drepper  <drepper@gmail.com>
 
 	[BZ #12713]
