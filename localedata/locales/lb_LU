@@ -1,0 +1,196 @@
+escape_char /
+comment_char %
+% Locale for Luxembourgish locale in Luxembourg
+% Contributed by Pit Wenkin <pit@wenkin.lu>, 2011
+% Charset UTF-8
+
+LC_IDENTIFICATION
+title      "Luxembourgish locale for Luxembourg"
+source     ""
+address    ""
+contact    "Pit Wenkin"
+email      "pit@wenkin.lu"
+tel        ""
+fax        ""
+language   "Luxembourgish"
+territory  "Luxembourg"
+revision   "0.2"
+date       "2011-01-28"
+%
+category  "lb_LU:2011";LC_IDENTIFICATION
+category  "lb_LU:2011";LC_CTYPE
+category  "lb_LU:2011";LC_COLLATE
+category  "lb_LU:2011";LC_MONETARY
+category  "lb_LU:2011";LC_NUMERIC
+category  "lb_LU:2011";LC_TIME
+category  "lb_LU:2011";LC_MESSAGES
+category  "lb_LU:2011";LC_PAPER
+category  "lb_LU:2011";LC_NAME
+category  "lb_LU:2011";LC_ADDRESS
+category  "lb_LU:2011";LC_TELEPHONE
+category  "lb_LU:2011";LC_MEASUREMENT
+
+END LC_IDENTIFICATION
+
+LC_CTYPE
+copy "i18n"
+
+translit_start
+
+include "translit_combining";""
+
+% German umlauts
+% LATIN CAPITAL LETTER A WITH DIAERESIS
+<U00C4> "<U0041><U0308>";"<U0041><U0045>"
+% LATIN CAPITAL LETTER O WITH DIAERESIS
+<U00D6> "<U004F><U0308>";"<U004F><U0045>"
+% LATIN CAPITAL LETTER U WITH DIAERESIS
+<U00DC> "<U0055><U0308>";"<U0055><U0045>"
+% LATIN CAPITAL LETTER E WITH DIAERESIS
+<U00CB> "<U0045><U0308>";"<U0045><U0045>"
+% LATIN SMALL LETTER A WITH DIAERESIS
+<U00E4> "<U0061><U0308>";"<U0061><U0045>"
+% LATIN SMALL LETTER O WITH DIAERESIS
+<U00F6> "<U006F><U0308>";"<U006F><U0045>"
+% LATIN SMALL LETTER U WITH DIAERESIS
+<U00FC> "<U0075><U0308>";"<U0075><U0045>"
+% LATIN SMALL LETTER E WITH DIAERESIS
+<U00EB> "<U0065><U0308>";"<U0065><U0045>"
+
+% French
+% LATIN CAPITAL LETTER E WITH ACUTE ACCENT
+<U00C9> "<U0045><U00B4>"
+% LATIN CAPITAL LETTER E WITH GRAVE ACCENT
+<U00C8> "<U0045><U0060>"
+% LATIN CAPITAL LETTER E WITH CIRCUMFLEX
+<U00CA> "<U0045><U005E>"
+% LATIN SMALL LETTER E WITH ACUTE ACCENT
+<U00E9> "<U0065><U00B4>"
+% LATIN SMALL LETTER E WITH GRAVE ACCENT
+<U00E8> "<U0065><U0060>"
+% LATIN SMALL LETTER E WITH CIRCUMFLEX
+<U00EA> "<U0065><U005E>"
+
+translit_end
+
+END LC_CTYPE
+
+LC_COLLATE
+
+define DIACRIT_FORWARD
+
+% Copy the template from ISO/IEC 14651
+copy "iso14651_t1"
+
+END LC_COLLATE
+
+LC_MONETARY
+copy "de_DE"
+END LC_MONETARY
+
+LC_NUMERIC
+copy "de_DE"
+END LC_NUMERIC
+
+LC_TIME
+abday   "<U0053><U006F>";"<U004D><U00E9>";/
+        "<U0044><U00EB>";"<U004D><U00EB>";/
+        "<U0044><U006F>";"<U0046><U0072>";/
+        "<U0053><U0061>"
+day     "<U0053><U006F><U006E><U006E><U0064><U0065><U0067>";/
+        "<U004D><U00E9><U0069><U006E><U0064><U0065><U0067>";/
+        "<U0044><U00EB><U006E><U0073><U0063><U0068><U0064><U0065><U0067>";/
+        "<U004D><U00EB><U0074><U0074><U0077><U006F><U0063><U0068>";/
+        "<U0044><U006F><U006E><U006E><U0065><U0073><U0063><U0068><U0064><U0065><U0067>";/
+        "<U0046><U0072><U0065><U0069><U0064><U0065><U0067>";/
+        "<U0053><U0061><U006D><U0073><U0063><U0068><U0064><U0065><U0067>"
+abmon   "<U004A><U0061><U006E>";"<U0046><U0065><U0062>";/
+        "<U004D><U00E4><U0065>";"<U0041><U0062><U0072>";/
+        "<U004D><U0065><U0065>";"<U004A><U0075><U006E>";/
+        "<U004A><U0075><U006C>";"<U0041><U0075><U0067>";/
+        "<U0053><U0065><U0070>";"<U004F><U006B><U0074>";/
+        "<U004E><U006F><U0076>";"<U0044><U0065><U007A>"
+mon     "<U004A><U0061><U006E><U0075><U0061><U0072>";/
+        "<U0046><U0065><U0062><U0072><U0075><U0061><U0072>";/
+        "<U004D><U00E4><U0065><U0072><U007A>";/
+        "<U0041><U0062><U0072><U00EB><U006C><U006C>";/
+        "<U004D><U0065><U0065>";/
+        "<U004A><U0075><U006E><U0069>";/
+        "<U004A><U0075><U006C><U0069>";/
+        "<U0041><U0075><U0067><U0075><U0073><U0074>";/
+        "<U0053><U0065><U0070><U0074><U0065><U006D><U0062><U0065><U0072>";/
+        "<U004F><U006B><U0074><U006F><U0062><U0065><U0072>";/
+        "<U004E><U006F><U0076><U0065><U006D><U0062><U0065><U0072>";/
+        "<U0044><U0065><U007A><U0065><U006D><U0062><U0065><U0072>"
+am_pm   "";""
+
+% Appropriate date and time representation (%c)
+%	"%a %d. %b %Y %T"
+d_t_fmt "<U0025><U0061><U0020><U0025><U0064><U002E><U0020><U0025><U0062><U0020><U0025><U0059><U0020><U0025><U0054>"
+%
+% Appropriate date representation (%x)
+%	"%d.%m.%Y"
+d_fmt   "<U0025><U0064><U002E><U0025><U006D><U002E><U0025><U0059>"
+%
+% Appropriate time representation (%X)
+%	"%T"
+t_fmt   "<U0025><U0054>"
+t_fmt_ampm ""
+date_fmt	"<U0025><U0061><U0020><U0025><U002D><U0064><U002E><U0020>/
+<U0025><U0062><U0020><U0025><U0048><U003A><U0025><U004D><U003A><U0025><U0053>/
+<U0020><U0025><U005A><U0020><U0025><U0059>"
+
+week    7;19971130;4
+first_weekday 2
+first_workday 2
+END LC_TIME
+
+LC_MESSAGES
+copy "de_DE"
+END LC_MESSAGES
+
+LC_PAPER
+copy "de_DE"
+END LC_PAPER
+
+LC_NAME
+name_fmt  "<U0025><U0064><U0025><U0074><U0025><U0067><U0025><U0074>/
+<U0025><U006D><U0025><U0074><U0025><U0066>"
+name_miss "<U004A><U006F><U0066><U0066><U0065><U0072>"
+name_mr   "<U0048><U00E4><U0072>"
+name_mrs  "<U004D><U0061><U0064><U0061><U006D><U0065>"
+name_ms   "<U004D><U0061><U0064><U0061><U006D><U0065>"
+END LC_NAME
+
+LC_ADDRESS
+postal_fmt    "<U0025><U0066><U0025><U004E><U0025><U0061><U0025><U004E>/
+<U0025><U0064><U0025><U004E><U0025><U0062><U0025><U004E><U0025><U0073>/
+<U0020><U0025><U0068><U0020><U0025><U0065><U0020><U0025><U0072><U0025>/
+<U004E><U0025><U007A><U0020><U0025><U0054><U0025>/
+<U004E><U0025><U0063><U0025><U004E>"
+country_name  "<U004C><U00EB><U0074><U007A><U0065><U0062><U0075><U0065>/
+<U0072><U0067>"
+country_post  "<U004C>"
+country_ab2   "<U004C><U0055>"
+country_ab3   "<U004C><U0055><U0058>"
+country_num   442
+country_car   "<U004C>"
+country_isbn  2
+lang_name     "<U004C><U00EB><U0074><U007A><U0065><U0062><U0075><U0065>/
+<U0072><U0067><U0065><U0073><U0063><U0068>"
+lang_ab       "<U006C><U0062>"
+lang_term     "<U006C><U0074><U007A>"
+lang_lib      "<U006C><U0075><U0078>"
+END LC_ADDRESS
+
+LC_TELEPHONE
+tel_int_fmt   "<U002B><U0025><U0063><U0020><U0025><U0061><U0020><U0025>/
+<U006C>"
+tel_dom_fmt   "<U0025><U0041><U0020><U0025><U006C>"
+int_prefix    "<U0033><U0035><U0032>"
+int_select    "<U0030><U0030>"
+END LC_TELEPHONE
+
+LC_MEASUREMENT
+measurement 1
+END LC_MEASUREMENT
