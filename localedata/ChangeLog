@@ -1,5 +1,12 @@
 2011-05-09  Ulrich Drepper  <drepper@gmail.com>
 
+	[BZ #11532]
+	* localedata/charmaps/CP770: New file.
+	* localedata/charmaps/CP771: New file.
+	* localedata/charmaps/CP772: New file.
+	* localedata/charmaps/CP773: New file.
+	* localedata/charmaps/CP774: New file.
+
 	[BZ #11578]
 	* locales/es_PA: Change paper format to letter.
 	* locales/es_SV: Likewise.

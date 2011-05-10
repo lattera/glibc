@@ -1,5 +1,32 @@
 2011-05-09  Ulrich Drepper  <drepper@gmail.com>
 
+	[BZ #11532]
+	* iconvdata/Makefile: Add rules to build CP770, CP771, CP772, CP773,
+	and CP774 modules.
+	* iconvdata/gconv-modules: Add entries for CP770, CP771, CP772, CP773,
+	and CP774 modules.
+	* iconvdata/tst-tables.sh: Likewise.
+	* iconvdata/cp770.c: New file.
+	* iconvdata/cp771.c: New file.
+	* iconvdata/cp772.c: New file.
+	* iconvdata/cp773.c: New file.
+	* iconvdata/cp774.c: New file.
+	* iconvdata/testdata/CP770: New file.
+	* iconvdata/testdata/CP770..UTF8: New file.
+	* iconvdata/testdata/CP771: New file.
+	* iconvdata/testdata/CP771..UTF8: New file.
+	* iconvdata/testdata/CP772: New file.
+	* iconvdata/testdata/CP772..UTF8: New file.
+	* iconvdata/testdata/CP773: New file.
+	* iconvdata/testdata/CP773..UTF8: New file.
+	* iconvdata/testdata/CP774: New file.
+	* iconvdata/testdata/CP774..UTF8: New file.
+
+	* iconvdata/gen-8bit-gap-1.sh: End reading of charmap file at
+	END CHARMAP line.
+	* iconvdata/gen-8bit-gap.sh: Likewise.
+	* iconvdata/gen-8bit.sh: Likewise.
+
 	* locale/iso-639.def: Add ary entry.
 
 	* locale/C-translit.h.in: Add U20A1 transliteration.

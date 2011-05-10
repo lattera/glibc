@@ -1,4 +1,4 @@
-# Copyright (C) 1997-2004,2005,2006,2007,2008 Free Software Foundation, Inc.
+# Copyright (C) 1997-2008, 2011 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -53,13 +53,14 @@ modules	:= ISO8859-1 ISO8859-2 ISO8859-3 ISO8859-4 ISO8859-5		 \
 	   TCVN5712-1 libJISX0213 EUC-JISX0213 SHIFT_JISX0213		 \
 	   ISO-2022-JP-3 TSCII IBM866NAV CP932 EUC-JP-MS PT154 RK1048	 \
 	   IBM1025 IBM1122 IBM1137 IBM1153 IBM1154 IBM1155 IBM1156	 \
-	   IBM1157 IBM1158 IBM803 IBM901 IBM902 IBM921 IBM1008 		 \
-	   IBM1008_420 IBM1097 IBM1112 IBM1123 IBM1130 IBM1140 IBM1141 	 \
-	   IBM1142 IBM1143 IBM1144 IBM1145 IBM1146 IBM1147 IBM1148 	 \
-	   IBM1149 IBM1166 IBM1167 IBM4517 IBM4899 IBM4909 IBM4971 	 \
+	   IBM1157 IBM1158 IBM803 IBM901 IBM902 IBM921 IBM1008		 \
+	   IBM1008_420 IBM1097 IBM1112 IBM1123 IBM1130 IBM1140 IBM1141	 \
+	   IBM1142 IBM1143 IBM1144 IBM1145 IBM1146 IBM1147 IBM1148	 \
+	   IBM1149 IBM1166 IBM1167 IBM4517 IBM4899 IBM4909 IBM4971	 \
 	   IBM5347 IBM9030 IBM9066 IBM9448 IBM12712 IBM16804             \
 	   IBM1364 IBM1371 IBM1388 IBM1390 IBM1399 ISO_11548-1 MIK BRF	 \
-	   MAC-CENTRALEUROPE KOI8-RU ISO8859-9E
+	   MAC-CENTRALEUROPE KOI8-RU ISO8859-9E				 \
+	   CP770 CP771 CP772 CP773 CP774
 
 modules.so := $(addsuffix .so, $(modules))
 
@@ -202,7 +203,7 @@ distribute := gconv-modules extra-module.mk gap.awk gaptab.awk gconv.map    \
 	      ibm1364.c ibm1364.h ibm1371.c ibm1371.h ibm1388.c ibm1388.h   \
 	      ibm1390.c ibm1390.h ibm1399.c ibm1399.h iso_11548-1.c mik.c   \
 	      brf.c mac-centraleurope.c hp-roman9.c hp-turkish8.c	    \
-	      hp-thai8.c hp-greek8.c
+	      hp-thai8.c hp-greek8.c cp770.c cp771.c cp772.c cp773.c cp774.c
 
 # We build the transformation modules only when we build shared libs.
 ifeq (yes,$(build-shared))
@@ -225,7 +226,7 @@ gen-8bit-modules := iso8859-2 iso8859-3 iso8859-4 iso8859-6 iso8859-9 koi-8 \
 		    ebcdic-dk-no-a ebcdic-es-s ebcdic-fi-se ebcdic-fi-se-a  \
 		    ebcdic-fr ebcdic-it ebcdic-pt ebcdic-us \
 		    ibm037 ibm038 ibm274 ibm275 ibm423 ibm500 ibm870 ibm871 \
-		    ibm891 ibm903 ibm904 ibm905 ibm1047   \
+		    ibm891 ibm903 ibm904 ibm905 ibm1047
 
 gen-8bit-gap-modules := koi8-r latin-greek latin-greek-1 ibm256 ibm273	   \
 			ibm277 ibm278 ibm280 ibm281 ibm284 ibm285 ibm290   \
@@ -246,7 +247,8 @@ gen-8bit-gap-modules := koi8-r latin-greek latin-greek-1 ibm256 ibm273	   \
 			mac-centraleurope koi8-ru hp-roman8 hp-roman9	   \
 			ebcdic-es ebcdic-es-a ebcdic-is-friss ebcdic-uk    \
 			iso8859-16 viscii iso8859-9e hp-turkish8	   \
-			hp-thai8 hp-greek8
+			hp-thai8 hp-greek8 cp770 cp771 cp772 cp773 cp774
+
 
 gen-special-modules := iso8859-7jp
 

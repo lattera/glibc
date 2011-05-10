@@ -1,5 +1,5 @@
 # GNU libc iconv configuration.
-# Copyright (C) 1997-2004, 2005, 2007, 2008 Free Software Foundation, Inc.
+# Copyright (C) 1997-2005, 2007, 2008, 2011 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -1222,6 +1222,26 @@ module	INTERNAL		IBM874//		IBM874		1
 #	from			to			module		cost
 module	CP737//			INTERNAL		CP737		1
 module	INTERNAL		CP737//			CP737		1
+
+#	from			to			module		cost
+module	CP770//			INTERNAL		CP770		1
+module	INTERNAL		CP770//			CP770		1
+
+#	from			to			module		cost
+module	CP771//			INTERNAL		CP771		1
+module	INTERNAL		CP771//			CP771		1
+
+#	from			to			module		cost
+module	CP772//			INTERNAL		CP772		1
+module	INTERNAL		CP772//			CP772		1
+
+#	from			to			module		cost
+module	CP773//			INTERNAL		CP773		1
+module	INTERNAL		CP773//			CP773		1
+
+#	from			to			module		cost
+module	CP774//			INTERNAL		CP774		1
+module	INTERNAL		CP774//			CP774		1
 
 #	from			to			module		cost
 alias	IBM775//		CP775//
