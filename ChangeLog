@@ -1,3 +1,13 @@
+2011-05-10  Ulrich Drepper  <drepper@gmail.com>
+
+	[BZ #11257]
+	* grp/initgroups.c (internal_getgrouplist): When we found the service
+	list through the initgroups entry in nsswitch.conf do not always
+	continue on a successful lookup.  Don't always use the
+	__nss_group_data-ase value if it is set.
+	* nss/nsswitch.conf (initgroups): Change action for successful db
+	lookup to continue for compatibility.
+
 2011-05-09  Ulrich Drepper  <drepper@gmail.com>
 
 	[BZ #11532]

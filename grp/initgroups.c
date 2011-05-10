@@ -44,6 +44,8 @@ extern int __nss_group_lookup (service_user **nip, const char *name,
 extern void *__nss_lookup_function (service_user *ni, const char *fct_name);
 
 extern service_user *__nss_group_database attribute_hidden;
+static service_user *initgroups_database;
+static bool use_initgroups_entry;
 
 
 #include "compat-initgroups.c"
@@ -69,32 +71,41 @@ internal_getgrouplist (const char *user, gid_t group, long int *size,
     }
 #endif
 
-  service_user *nip = NULL;
-  initgroups_dyn_function fct;
   enum nss_status status = NSS_STATUS_UNAVAIL;
-  int no_more;
-  /* Start is one, because we have the first group as parameter.  */
-  long int start = 1;
+  int no_more = 0;
 
   /* Never store more than the starting *SIZE number of elements.  */
   assert (*size > 0);
   (*groupsp)[0] = group;
+  /* Start is one, because we have the first group as parameter.  */
+  long int start = 1;
 
-  if (__nss_group_database != NULL)
+  if (initgroups_database == NULL)
     {
-      no_more = 0;
-      nip = __nss_group_database;
-    }
-  else
-    no_more = __nss_database_lookup ("initgroups", "group",
-				     "compat [NOTFOUND=return] files", &nip);
+      no_more = __nss_database_lookup ("initgroups", NULL, "",
+				       &initgroups_database);
+      if (no_more == 0 && initgroups_database == NULL)
+	{
+	  if (__nss_group_database == NULL)
+	    no_more = __nss_database_lookup ("group", NULL, "compat files",
+					     &__nss_group_database);
 
+	  initgroups_database = __nss_group_database;
+	}
+      else if (initgroups_database != NULL)
+	{
+	  assert (no_more == 0);
+	  use_initgroups_entry = true;
+	}
+    }
+
+  service_user *nip = initgroups_database;
   while (! no_more)
     {
       long int prev_start = start;
 
-      fct = __nss_lookup_function (nip, "initgroups_dyn");
-
+      initgroups_dyn_function fct = __nss_lookup_function (nip,
+							   "initgroups_dyn");
       if (fct == NULL)
 	status = compat_call (nip, user, group, &start, size, groupsp,
 			      limit, &errno);
@@ -121,7 +132,13 @@ internal_getgrouplist (const char *user, gid_t group, long int *size,
       if (NSS_STATUS_TRYAGAIN > status || status > NSS_STATUS_RETURN)
 	__libc_fatal ("illegal status in internal_getgrouplist");
 
-      if (status != NSS_STATUS_SUCCESS
+      /* For compatibility reason we will continue to look for more
+	 entries using the next service even though data has already
+	 been found if the nsswitch.conf file contained only a 'groups'
+	 line and no 'initgroups' line.  If the latter is available
+	 we always respect the status.  This means that the default
+	 for successful lookups is to return.  */
+      if ((use_initgroups_entry || status != NSS_STATUS_SUCCESS)
 	  && nss_next_action (nip, status) == NSS_ACTION_RETURN)
 	 break;
 
