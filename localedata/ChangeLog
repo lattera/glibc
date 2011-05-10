@@ -1,5 +1,9 @@
 2011-05-09  Ulrich Drepper  <drepper@gmail.com>
 
+	[BZ #11487]
+	* locales/sq_AL (yesexpr): Recognize pP as well.
+	(noexpr): Recognize jJ as well.
+
 	[BZ #11532]
 	* localedata/charmaps/CP770: New file.
 	* localedata/charmaps/CP771: New file.
