@@ -30,6 +30,8 @@ Version 2.14
 
 * New locales: os_RU, bem_ZA, en_ZA, ff_SN, sw_KE, sw_TZ, lb_LU, wae_CH,
   yue_HK, lij_IT, mhr_RU
+
+* New encodings: CP770, CP771, CP772, CP773, CP774
 
 Version 2.13
 
