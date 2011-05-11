@@ -171,10 +171,6 @@ local_strdup (const char *s)
 static bool
 is_trusted_path (const char *path, size_t len)
 {
-  /* All trusted directories must be complete names.  */
-  if (path[0] != '/')
-    return false;
-
   const char *trun = system_dirs;
 
   for (size_t idx = 0; idx < nsystem_dirs_len; ++idx)
@@ -193,9 +189,17 @@ is_trusted_path (const char *path, size_t len)
 static bool
 is_trusted_path_normalize (const char *path, size_t len)
 {
+  if (len == 0)
+    return false;
+
+  if (*path == ':')
+    {
+      ++path;
+      --len;
+    }
+
   char *npath = (char *) alloca (len + 2);
   char *wnp = npath;
-
   while (*path != '\0')
     {
       if (path[0] == '/')
@@ -225,11 +229,23 @@ is_trusted_path_normalize (const char *path, size_t len)
 
       *wnp++ = *path++;
     }
-  if (wnp > npath && wnp[-1] != '/')
-    *wnp++ = '/';
-  *wnp = '\0';
 
-  return is_trusted_path (npath, wnp - npath);
+  if (wnp == npath || wnp[-1] != '/')
+    *wnp++ = '/';
+
+  const char *trun = system_dirs;
+
+  for (size_t idx = 0; idx < nsystem_dirs_len; ++idx)
+    {
+      if (wnp - npath >= system_dirs_len[idx]
+	  && memcmp (trun, npath, system_dirs_len[idx]) == 0)
+	/* Found it.  */
+	return true;
+
+      trun += system_dirs_len[idx] + 1;
+    }
+
+  return false;
 }
 
 
@@ -265,7 +281,8 @@ is_dst (const char *start, const char *name, const char *str,
     return 0;
 
   if (__builtin_expect (secure, 0)
-      && ((name[len] != '\0' && (!is_path || name[len] != ':'))
+      && ((name[len] != '\0' && name[len] != '/'
+	   && (!is_path || name[len] != ':'))
 	  || (name != start + 1 && (!is_path || name[-2] != ':'))))
     return 0;
 
@@ -371,13 +388,12 @@ _dl_dst_substitute (struct link_map *l, const char *name, char *result,
 		 normalized path must be rooted in one of the trusted
 		 directories.  */
 	      if (__builtin_expect (check_for_trusted, false)
-		  && is_trusted_path_normalize (last_elem, wp - last_elem))
-		{
-		  wp = last_elem;
-		  check_for_trusted = false;
-		}
+		  && !is_trusted_path_normalize (last_elem, wp - last_elem))
+		wp = last_elem;
 	      else
 		last_elem = wp;
+
+	      check_for_trusted = false;
 	    }
 	}
     }
@@ -386,7 +402,7 @@ _dl_dst_substitute (struct link_map *l, const char *name, char *result,
   /* In SUID/SGID programs, after $ORIGIN expansion the normalized
      path must be rooted in one of the trusted directories.  */
   if (__builtin_expect (check_for_trusted, false)
-      && is_trusted_path_normalize (last_elem, wp - last_elem))
+      && !is_trusted_path_normalize (last_elem, wp - last_elem))
     wp = last_elem;
 
   *wp = '\0';
@@ -628,7 +644,7 @@ decompose_rpath (struct r_search_path_struct *sps,
   if (*copy == 0)
     {
       free (copy);
-      sps->dirs = (char *) -1;
+      sps->dirs = (struct r_search_path_elem **) -1;
       return false;
     }
 

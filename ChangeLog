@@ -1,3 +1,15 @@
+2011-05-11  Ulrich Drepper  <drepper@gmail.com>
+
+	[BZ #12393]
+	* elf/dl-load.c (is_trusted_path): Remove unnecessary test.
+	(is_trusted_path_normalize): Skip initial colon.  Append slash
+	to empty buffer.  Duplicate is_trusted_path code but allow
+	constructed patch to be prefix.
+	(is_dst): Allow $ORIGIN followed by /.
+	(_dl_dst_substitute): Correct clearing of check_for_trusted.
+	Correct testing of result of is_trusted_path_normalize
+	(decompose_rpath): Fix warning.
+
 2011-05-10  Ulrich Drepper  <drepper@gmail.com>
 
 	[BZ #11257]
