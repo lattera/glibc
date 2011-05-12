@@ -143,9 +143,7 @@ __spawni (pid_t *pid, const char *file,
     }
   else if ((flags & POSIX_SPAWN_SETSCHEDULER) != 0)
     {
-      if (__sched_setscheduler (0, attrp->__policy,
-				(flags & POSIX_SPAWN_SETSCHEDPARAM) != 0
-				? &attrp->__sp : NULL) == -1)
+      if (__sched_setscheduler (0, attrp->__policy, &attrp->__sp) == -1)
 	_exit (SPAWN_ERROR);
     }
 #endif

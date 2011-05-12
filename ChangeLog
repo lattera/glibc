@@ -1,5 +1,8 @@
 2011-05-11  Ulrich Drepper  <drepper@gmail.com>
 
+	[BZ #12052]
+	* sysdeps/posix/spawni.c (__spawni): Fix sched_setscheduler call.
+
 	[BZ #12625]
 	* misc/mntent_r.c (addmntent): Flush the stream after the output
 
