@@ -14,7 +14,7 @@ representing a communications channel to a file, device, or process.
 @menu
 * Streams::                     About the data type representing a stream.
 * Standard Streams::            Streams to the standard input and output
-                                 devices are created for you.
+				 devices are created for you.
 * Opening Streams::             How to create a stream to talk to a file.
 * Closing Streams::             Close a stream when you are finished with it.
 * Streams and Threads::         Issues with streams in threaded programs.
@@ -26,17 +26,17 @@ representing a communications channel to a file, device, or process.
 * Block Input/Output::          Input and output operations on blocks of data.
 * Formatted Output::            @code{printf} and related functions.
 * Customizing Printf::          You can define new conversion specifiers for
-                                 @code{printf} and friends.
+				 @code{printf} and friends.
 * Formatted Input::             @code{scanf} and related functions.
 * EOF and Errors::              How you can tell if an I/O error happens.
 * Error Recovery::		What you can do about errors.
 * Binary Streams::              Some systems distinguish between text files
-                                 and binary files.
+				 and binary files.
 * File Positioning::            About random-access streams.
 * Portable Positioning::        Random access on peculiar ISO C systems.
 * Stream Buffering::            How to control buffering of streams.
 * Other Kinds of Streams::      Streams that do not necessarily correspond
-                                 to an open file.
+				 to an open file.
 * Formatted Messages::          Print strictly formatted messages.
 @end menu
 
@@ -186,13 +186,11 @@ but output is always appended to the end of the file.
 @end table
 
 As you can see, @samp{+} requests a stream that can do both input and
-output.  The ISO standard says that when using such a stream, you must
-call @code{fflush} (@pxref{Stream Buffering}) or a file positioning
-function such as @code{fseek} (@pxref{File Positioning}) when switching
-from reading to writing or vice versa.  Otherwise, internal buffers
-might not be emptied properly.  The GNU C library does not have this
-limitation; you can do arbitrary reading and writing operations on a
-stream in whatever order.
+output.  When using such a stream, you must call @code{fflush}
+(@pxref{Stream Buffering}) or a file positioning function such as
+@code{fseek} (@pxref{File Positioning}) when switching from reading
+to writing or vice versa.  Otherwise, internal buffers might not be
+emptied properly.
 
 Additional characters may appear after these to specify flags for the
 call.  Always put the mode (@samp{r}, @samp{w+}, etc.) first; that is
@@ -1109,17 +1107,17 @@ y_or_n_p (const char *question)
       /* @r{Write a space to separate answer from question.} */
       fputc (' ', stdout);
       /* @r{Read the first character of the line.}
-         @r{This should be the answer character, but might not be.} */
+	 @r{This should be the answer character, but might not be.} */
       c = tolower (fgetc (stdin));
       answer = c;
       /* @r{Discard rest of input line.} */
       while (c != '\n' && c != EOF)
-        c = fgetc (stdin);
+	c = fgetc (stdin);
       /* @r{Obey the answer if it was valid.} */
       if (answer == 'y')
-        return 1;
+	return 1;
       if (answer == 'n')
-        return 0;
+	return 0;
       /* @r{Answer was invalid: ask for valid answer.} */
       fputs ("Please answer y or n:", stdout);
     @}
@@ -1328,7 +1326,7 @@ situation looks like this:
 
 @smallexample
 f  o  o  b  a  r
-         ^
+	 ^
 @end smallexample
 
 @noindent
@@ -1340,7 +1338,7 @@ situation like this:
 
 @smallexample
 f  o  o  b  a  r
-         |
+	 |
       o--
       ^
 @end smallexample
@@ -1354,7 +1352,7 @@ If you unread @samp{9} instead of @samp{o}, you get this situation:
 
 @smallexample
 f  o  o  b  a  r
-         |
+	 |
       9--
       ^
 @end smallexample
@@ -1527,19 +1525,19 @@ useful for printing error messages, tables of data, and the like.
 @menu
 * Formatted Output Basics::     Some examples to get you started.
 * Output Conversion Syntax::    General syntax of conversion
-                                 specifications.
+				 specifications.
 * Table of Output Conversions:: Summary of output conversions and
-                                 what they do.
+				 what they do.
 * Integer Conversions::         Details about formatting of integers.
 * Floating-Point Conversions::  Details about formatting of
-                                 floating-point numbers.
+				 floating-point numbers.
 * Other Output Conversions::    Details about formatting of strings,
-                                 characters, pointers, and the like.
+				 characters, pointers, and the like.
 * Formatted Output Functions::  Descriptions of the actual functions.
 * Dynamic Output::		Functions that allocate memory for the output.
 * Variable Arguments Output::   @code{vprintf} and friends.
 * Parsing a Template String::   What kinds of args does a given template
-                                 call for?
+				 call for?
 * Example of Parsing::          Sample program using @code{parse_printf_format}.
 @end menu
 
@@ -1561,7 +1559,7 @@ formatted and written to the output stream.  For example,
 int pct = 37;
 char filename[] = "foo.txt";
 printf ("Processing of `%s' is %d%% finished.\nPlease be patient.\n",
-        filename, pct);
+	filename, pct);
 @end smallexample
 
 @noindent
@@ -2350,20 +2348,20 @@ make_message (char *name, char *value)
 
  /* @r{Try to print in the allocated space.} */
   nchars = snprintf (buffer, size, "value of %s is %s",
-                     name, value);
+		     name, value);
 @end group
 @group
   if (nchars >= size)
     @{
       /* @r{Reallocate buffer now that we know
-         how much space is needed.} */
+	 how much space is needed.} */
       size = nchars + 1;
       buffer = (char *) xrealloc (buffer, size);
 
       if (buffer != NULL)
-        /* @r{Try again.} */
-        snprintf (buffer, size, "value of %s is %s",
-                  name, value);
+	/* @r{Try again.} */
+	snprintf (buffer, size, "value of %s is %s",
+		  name, value);
     @}
   /* @r{The last call worked, return the string.} */
   return buffer;
@@ -2452,7 +2450,7 @@ For example:
 
 @smallexample
 #define myprintf(a, b, c, d, e, rest...) \
-            printf (mytemplate , ## rest)
+	    printf (mytemplate , ## rest)
 @end smallexample
 
 @noindent
@@ -2594,7 +2592,7 @@ For example, take this declaration of @code{eprintf}:
 
 @smallexample
 void eprintf (const char *template, ...)
-        __attribute__ ((format (printf, 1, 2)));
+	__attribute__ ((format (printf, 1, 2)));
 @end smallexample
 
 @noindent
@@ -2781,30 +2779,30 @@ validate_args (char *format, int nargs, OBJECT *args)
       int wanted;
 
       if (argtypes[i] & PA_FLAG_PTR)
-        wanted = STRUCTURE;
+	wanted = STRUCTURE;
       else
-        switch (argtypes[i] & ~PA_FLAG_MASK)
-          @{
-          case PA_INT:
-          case PA_FLOAT:
-          case PA_DOUBLE:
-            wanted = NUMBER;
-            break;
-          case PA_CHAR:
-            wanted = CHAR;
-            break;
-          case PA_STRING:
-            wanted = STRING;
-            break;
-          case PA_POINTER:
-            wanted = STRUCTURE;
-            break;
-          @}
+	switch (argtypes[i] & ~PA_FLAG_MASK)
+	  @{
+	  case PA_INT:
+	  case PA_FLOAT:
+	  case PA_DOUBLE:
+	    wanted = NUMBER;
+	    break;
+	  case PA_CHAR:
+	    wanted = CHAR;
+	    break;
+	  case PA_STRING:
+	    wanted = STRING;
+	    break;
+	  case PA_POINTER:
+	    wanted = STRUCTURE;
+	    break;
+	  @}
       if (TYPE (args[i]) != wanted)
-        @{
-          error ("type mismatch for arg number %d", i);
-          return 0;
-        @}
+	@{
+	  error ("type mismatch for arg number %d", i);
+	  return 0;
+	@}
     @}
   return 1;
 @}
@@ -2835,15 +2833,15 @@ The facilities of this section are declared in the header file
 
 @menu
 * Registering New Conversions::         Using @code{register_printf_function}
-                                         to register a new output conversion.
+					 to register a new output conversion.
 * Conversion Specifier Options::        The handler must be able to get
-                                         the options specified in the
-                                         template when it is called.
+					 the options specified in the
+					 template when it is called.
 * Defining the Output Handler::         Defining the handler and arginfo
-                                         functions that are passed as arguments
-                                         to @code{register_printf_function}.
+					 functions that are passed as arguments
+					 to @code{register_printf_function}.
 * Printf Extension Example::            How to define a @code{printf}
-                                         handler function.
+					 handler function.
 * Predefined Printf Handlers::          Predefined @code{printf} handlers.
 @end menu
 
@@ -3010,7 +3008,7 @@ You should define your handler functions with a prototype like:
 
 @smallexample
 int @var{function} (FILE *stream, const struct printf_info *info,
-                    const void *const *args)
+		    const void *const *args)
 @end smallexample
 
 The @var{stream} argument passed to the handler function is the stream to
@@ -3058,7 +3056,7 @@ You have to define these functions with a prototype like:
 
 @smallexample
 int @var{function} (const struct printf_info *info,
-                    size_t n, int *argtypes)
+		    size_t n, int *argtypes)
 @end smallexample
 
 The return value from the function should be the number of arguments the
@@ -3728,7 +3726,7 @@ conversion specification to read a ``variable assignment'' of the form
   char *variable, *value;
 
   if (2 > scanf ("%a[a-zA-Z0-9] = %a[^\n]\n",
-                 &variable, &value))
+		 &variable, &value))
     @{
       invalid_input_error ();
       return 0;
@@ -4781,10 +4779,10 @@ provide equivalent functionality.
 
 @menu
 * String Streams::              Streams that get data from or put data in
-                                 a string or memory buffer.
+				 a string or memory buffer.
 * Obstack Streams::		Streams that store data in an obstack.
 * Custom Streams::              Defining your own streams with an arbitrary
-                                 input data source and/or output data sink.
+				 input data source and/or output data sink.
 @end menu
 
 @node String Streams
@@ -4958,9 +4956,9 @@ and types described here are all GNU extensions.
 
 @menu
 * Streams and Cookies::         The @dfn{cookie} records where to fetch or
-                                 store data that is read or written.
+				 store data that is read or written.
 * Hook Functions::              How you should define the four @dfn{hook
-                                 functions} that a custom stream needs.
+				 functions} that a custom stream needs.
 @end menu
 
 @node Streams and Cookies
