@@ -201,7 +201,7 @@ tests += loadtest restest1 preloadtest loadfail multiload origtest resolvfail \
 	 unload3 unload4 unload5 unload6 unload7 tst-global1 order2 \
 	 tst-audit1 tst-audit2 \
 	 tst-stackguard1 tst-addr1 tst-thrlock \
-	 tst-unique1 tst-unique2 tst-unique3 \
+	 tst-unique1 tst-unique2 tst-unique3 tst-unique4 \
 	 tst-initorder
 #	 reldep9
 test-srcs = tst-pathopt
@@ -259,6 +259,7 @@ modules-names = testobj1 testobj2 testobj3 testobj4 testobj5 testobj6 \
 		tst-unique1mod1 tst-unique1mod2 \
 		tst-unique2mod1 tst-unique2mod2 \
 		tst-unique3lib tst-unique3lib2 \
+		tst-unique4lib \
 		tst-initordera1 tst-initorderb1 \
 		tst-initordera2 tst-initorderb2 \
 		tst-initordera3 tst-initordera4
@@ -1184,6 +1185,8 @@ $(objpfx)tst-unique2.out: $(objpfx)tst-unique2mod2.so
 
 $(objpfx)tst-unique3: $(libdl) $(objpfx)tst-unique3lib.so
 $(objpfx)tst-unique3.out: $(objpfx)tst-unique3lib2.so
+
+$(objpfx)tst-unique4: $(objpfx)tst-unique4lib.so
 
 $(objpfx)tst-initorder.out: $(objpfx)tst-initorder
 	$(elf-objpfx)${rtld-installed-name} \

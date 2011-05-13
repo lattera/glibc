@@ -1,3 +1,16 @@
+2011-05-12  Ulrich Drepper  <drepper@gmail.com>
+
+	[BZ #12511]
+	* elf/dl-lookup.c (enter): Don't test for copy relocation here and
+	don't set DF_1_NODELETE here.
+	(do_lookup_x): When entering new entry test for copy relocation
+	and if necessary set DF_1_NODELETE flag.
+	* elf/tst-unique4.cc: New file.
+	* elf/tst-unique4.h: New file.
+	* elf/tst-unique4lib.cc: New file.
+	* elf/Makefile: Add rules to build and run tst-unique4.
+	Patch by Piotr Bury <pbury@goahead.com>.
+
 2011-05-11  Ulrich Drepper  <drepper@gmail.com>
 
 	[BZ #12052]

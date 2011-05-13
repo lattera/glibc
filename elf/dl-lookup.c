@@ -312,39 +312,21 @@ do_lookup_x (const char *undef_name, uint_fast32_t new_hash,
 		 definition we have to use it.  */
 	      void enter (struct unique_sym *table, size_t size,
 			  unsigned int hash, const char *name,
-			  const ElfW(Sym) *sym, struct link_map *map)
+			  const ElfW(Sym) *sym, const struct link_map *map)
 	      {
 		size_t idx = hash % size;
 		size_t hash2 = 1 + hash % (size - 2);
-		while (1)
+		while (table[idx].name != NULL)
 		  {
-		    if (table[idx].name == NULL)
-		      {
-			table[idx].hashval = hash;
-			table[idx].name = name;
-			if ((type_class & ELF_RTYPE_CLASS_COPY) != 0)
-			  {
-			    table[idx].sym = ref;
-			    table[idx].map = undef_map;
-			  }
-			else
-			  {
-			    table[idx].sym = sym;
-			    table[idx].map = map;
-
-			    if (map->l_type == lt_loaded)
-			      /* Make sure we don't unload this object by
-				 setting the appropriate flag.  */
-			      map->l_flags_1 |= DF_1_NODELETE;
-			  }
-
-			return;
-		      }
-
 		    idx += hash2;
 		    if (idx >= size)
 		      idx -= size;
 		  }
+
+		table[idx].hashval = hash;
+		table[idx].name = name;
+		table[idx].sym = sym;
+		table[idx].map = map;
 	      }
 
 	      struct unique_sym_table *tab
@@ -450,8 +432,19 @@ do_lookup_x (const char *undef_name, uint_fast32_t new_hash,
 		  tab->free = free;
 		}
 
-	      enter (entries, size, new_hash, strtab + sym->st_name, sym,
-		     (struct link_map *) map);
+	      if ((type_class & ELF_RTYPE_CLASS_COPY) != 0)
+		enter (entries, size, new_hash, strtab + sym->st_name, ref,
+		       undef_map);
+	      else
+		{
+		  enter (entries, size, new_hash, strtab + sym->st_name, sym,
+			 map);
+
+		  if (map->l_type == lt_loaded)
+		    /* Make sure we don't unload this object by
+		       setting the appropriate flag.  */
+		    ((struct link_map *) map)->l_flags_1 |= DF_1_NODELETE;
+		}
 	      ++tab->n_elements;
 
 	      __rtld_lock_unlock_recursive (tab->lock);
