@@ -1,5 +1,5 @@
 /* Write formatted list with names for addresses in backtrace to a file.
-   Copyright (C) 1998,2000,2003,2005,2009 Free Software Foundation, Inc.
+   Copyright (C) 1998,2000,2003,2005,2009,2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -45,6 +45,7 @@ __backtrace_symbols_fd (array, size, fd)
   for (cnt = 0; cnt < size; ++cnt)
     {
       char buf[WORD_WIDTH];
+      char buf2[WORD_WIDTH];
       Dl_info info;
       struct link_map *map;
       size_t last = 0;
@@ -59,7 +60,6 @@ __backtrace_symbols_fd (array, size, fd)
 
 	  if (info.dli_sname != NULL || map->l_addr != 0)
 	    {
-	      char buf2[WORD_WIDTH];
 	      size_t diff;
 
 	      iov[last].iov_base = (void *) "(";
