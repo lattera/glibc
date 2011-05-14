@@ -1,5 +1,9 @@
 2011-05-14  Ulrich Drepper  <drepper@gmail.com>
 
+	[BZ #12083]
+	* sysdeps/pthread/aio_misc.c (__aio_init): Compute optim.aio_num
+	correctly.
+
 	[BZ #12601]
 	* iconvdata/cp932.c (BODY to UCS4): Fix incrementing inptr in case of
 	two-byte sequence errors.

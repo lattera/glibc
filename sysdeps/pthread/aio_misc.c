@@ -1,5 +1,5 @@
 /* Handle general operations.
-   Copyright (C) 1997, 1998, 1999, 2000, 2001, 2003, 2004, 2006, 2007, 2009
+   Copyright (C) 1997-2001, 2003, 2004, 2006, 2007, 2009, 2011
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
@@ -26,6 +26,7 @@
 #include <pthread.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <sys/param.h>
 #include <sys/stat.h>
 #include <sys/time.h>
 #include <aio_misc.h>
@@ -87,7 +88,7 @@ static int idle_thread_count;
 static struct aioinit optim =
 {
   20,	/* int aio_threads;	Maximal number of threads.  */
-  64,	/* int aio_num;		Number of expected simultanious requests. */
+  64,	/* int aio_num;		Number of expected simultaneous requests. */
   0,
   0,
   0,
@@ -282,9 +283,10 @@ __aio_init (const struct aioinit *init)
   if (pool == NULL)
     {
       optim.aio_threads = init->aio_threads < 1 ? 1 : init->aio_threads;
+      assert (powerof2 (ENTRIES_PER_ROW));
       optim.aio_num = (init->aio_num < ENTRIES_PER_ROW
 		       ? ENTRIES_PER_ROW
-		       : init->aio_num & ~ENTRIES_PER_ROW);
+		       : init->aio_num & ~(ENTRIES_PER_ROW - 1));
     }
 
   if (init->aio_idle_time != 0)
