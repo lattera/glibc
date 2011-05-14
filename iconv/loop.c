@@ -395,7 +395,8 @@ SINGLE(LOOPFCT) (struct __gconv_step *step,
 #endif
 
   /* Are there enough bytes in the input buffer?  */
-  if (__builtin_expect (inptr + (MIN_NEEDED_INPUT - inlen) > inend, 0))
+  if (MIN_NEEDED_INPUT > 1
+      && __builtin_expect (inptr + (MIN_NEEDED_INPUT - inlen) > inend, 0))
     {
       *inptrp = inend;
 #ifdef STORE_REST

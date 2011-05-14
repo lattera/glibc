@@ -1,7 +1,8 @@
 2011-05-14  Ulrich Drepper  <drepper@gmail.com>
 
 	* iconv/loop.c (SINGLE) [STORE_REST]: Add input bytes to bytebuf before
-	storing incomplete byte sequence in state object.
+	storing incomplete byte sequence in state object.  Avoid testing for
+	guaranteed too small input if we know there is enough data available.
 
 2011-05-11  Andreas Schwab  <schwab@redhat.com>
 
