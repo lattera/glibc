@@ -1,5 +1,7 @@
 2011-05-13  Ulrich Drepper  <drepper@gmail.com>
 
+	* libio/tst_putwc.c: Fix error messages.
+
 	[BZ #12724]
 	* libio/fileops.c (_IO_new_file_close_it): Always flush when
 	currently writing and seek to current position when not.
