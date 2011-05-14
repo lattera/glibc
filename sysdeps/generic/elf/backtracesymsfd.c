@@ -28,7 +28,7 @@
 #if __ELF_NATIVE_CLASS == 32
 # define WORD_WIDTH 8
 #else
-/* We assyme 64bits.  */
+/* We assume 64bits.  */
 # define WORD_WIDTH 16
 #endif
 
