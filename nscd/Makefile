@@ -1,4 +1,4 @@
-# Copyright (C) 1998,2000,2002-2009 Free Software Foundation, Inc.
+# Copyright (C) 1998,2000,2002-2009,2011 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -38,9 +38,8 @@ nscd-modules := nscd connections pwdcache getpwnam_r getpwuid_r grpcache \
 
 ifeq ($(have-thread-library),yes)
 
-ifneq (yesyes,$(have-fpie)$(build-shared))
 others += nscd
-endif
+others-pie += nscd
 install-sbin := nscd
 
 extra-objs := $(nscd-modules:=.o)
@@ -124,10 +123,7 @@ CFLAGS-getsrvbypt_r.c += $(nscd-cflags)
 CFLAGS-res_hconf.c += $(nscd-cflags)
 
 ifeq (yesyes,$(have-fpie)$(build-shared))
-relro-LDFLAGS += -Wl,-z,now
-
-$(objpfx)nscd: $(addprefix $(objpfx),$(nscd-modules:=.o))
-	$(+link-pie)
+LDFLAGS-nscd = -Wl,-z,now
 endif
 
 # This makes sure -DNOT_IN_libc is passed for all these modules.

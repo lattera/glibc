@@ -213,9 +213,6 @@ ifeq (x86_64,$(config-machine))
 tests += tst-audit3 tst-audit4 tst-audit5 tst-audit6 tst-audit7
 endif
 endif
-ifeq (yesyes,$(have-fpie)$(build-shared))
-tests: $(objpfx)tst-pie1.out
-endif
 tests: $(objpfx)tst-leaks1-mem $(objpfx)noload-mem
 tlsmod17a-suffixes = 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19
 tlsmod18a-suffixes = 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19
@@ -268,8 +265,8 @@ modules-names += tst-array2dep tst-array5dep
 endif
 ifeq (yesyes,$(have-fpie)$(build-shared))
 modules-names += tst-piemod1
-extra-test-objs += tst-pie1.o
-test-extras += tst-pie1
+tests += tst-pie1
+tests-pie += tst-pie1
 endif
 ifeq (x86_64,$(config-machine))
 modules-names += tst-auditmod3a tst-auditmod3b \
@@ -306,9 +303,8 @@ test-extras += $(ifunc-test-modules)
 ifeq (yes,$(have-fpie))
 ifunc-pie-tests = ifuncmain1pie ifuncmain1vispie ifuncmain1staticpie \
 		  ifuncmain5pie ifuncmain6pie ifuncmain7pie
-tests: $(patsubst %,$(objpfx)%.out, $(ifunc-pie-tests))
-extra-test-objs += $(ifunc-pie-tests:=.o)
-test-extras += $(ifunc-pie-tests)
+tests += $(ifunc-pie-tests)
+tests-pie += $(ifunc-pie-tests)
 endif
 modules-names += ifuncmod1 ifuncmod3 ifuncmod5 ifuncmod6
 endif
@@ -911,19 +907,9 @@ $(objpfx)tst-array5-static.out: $(objpfx)tst-array5-static
 	$(objpfx)tst-array5-static > $@
 	cmp $@ tst-array5-static.exp > /dev/null
 
-ifeq (yesyes,$(have-fpie)$(build-shared))
 CFLAGS-tst-pie1.c += $(pie-ccflag)
 
-$(objpfx)tst-pie1.out: $(objpfx)tst-pie1
-	$(elf-objpfx)$(rtld-installed-name) \
-	  --library-path $(rpath-link)$(patsubst %,:%,$(sysdep-library-path)) \
-	  $< > $@
-
-$(objpfx)tst-pie1: $(objpfx)tst-pie1.o $(objpfx)tst-piemod1.so
-	$(+link-pie)
-
-generated += tst-pie1 tst-pie1.out tst-pie1.o
-endif
+$(objpfx)tst-pie1: $(objpfx)tst-piemod1.so
 
 check-textrel-CFLAGS = -O -Wall -D_XOPEN_SOURCE=600 -D_BSD_SOURCE
 $(objpfx)check-textrel: check-textrel.c
@@ -1086,7 +1072,6 @@ CFLAGS-ifuncmain7picstatic.c += $(pic-ccflag)
 
 LDFLAGS-ifuncmain3 = -Wl,-export-dynamic
 
-ifeq (yesyes,$(have-fpie)$(build-shared))
 CFLAGS-ifuncmain1pie.c += $(pie-ccflag)
 CFLAGS-ifuncmain1vispie.c += $(pie-ccflag)
 CFLAGS-ifuncmain1staticpie.c += $(pie-ccflag)
@@ -1094,66 +1079,11 @@ CFLAGS-ifuncmain5pie.c += $(pie-ccflag)
 CFLAGS-ifuncmain6pie.c += $(pie-ccflag)
 CFLAGS-ifuncmain7pie.c += $(pie-ccflag)
 
-$(objpfx)ifuncmain1pie.out: $(objpfx)ifuncmain1pie
-	$(elf-objpfx)$(rtld-installed-name) \
-	  --library-path $(rpath-link)$(patsubst %,:%,$(sysdep-library-path)) \
-	  $< > $@
-
-$(objpfx)ifuncmain1pie: $(objpfx)ifuncmain1pie.o $(objpfx)ifuncmod1.so
-	$(+link-pie)
-
-generated += ifuncmain1pie ifuncmain1pie.out
-
-$(objpfx)ifuncmain1staticpie.out: $(objpfx)ifuncmain1staticpie
-	$(elf-objpfx)$(rtld-installed-name) \
-	  --library-path $(rpath-link)$(patsubst %,:%,$(sysdep-library-path)) \
-	  $< > $@
-
-$(objpfx)ifuncmain1staticpie: $(objpfx)ifuncmain1staticpie.o $(objpfx)ifuncdep1pic.o
-	$(+link-pie)
-
-generated += ifuncmain1staticpie ifuncmain1staticpie.out
-
-$(objpfx)ifuncmain1vispie.out: $(objpfx)ifuncmain1vispie
-	$(elf-objpfx)$(rtld-installed-name) \
-	  --library-path $(rpath-link)$(patsubst %,:%,$(sysdep-library-path)) \
-	  $< > $@
-
-$(objpfx)ifuncmain1vispie: $(objpfx)ifuncmain1vispie.o $(objpfx)ifuncmod1.so
-	$(+link-pie)
-
-generated += ifuncmain1vispie ifuncmain1vispie.out
-
-$(objpfx)ifuncmain5pie.out: $(objpfx)ifuncmain5pie
-	$(elf-objpfx)$(rtld-installed-name) \
-	  --library-path $(rpath-link)$(patsubst %,:%,$(sysdep-library-path)) \
-	  $< > $@
-
-$(objpfx)ifuncmain5pie: $(objpfx)ifuncmain5pie.o $(objpfx)ifuncmod5.so
-	$(+link-pie)
-
-generated += ifuncmain5pie ifuncmain5pie.out
-
-$(objpfx)ifuncmain6pie.out: $(objpfx)ifuncmain6pie
-	$(elf-objpfx)$(rtld-installed-name) \
-	  --library-path $(rpath-link)$(patsubst %,:%,$(sysdep-library-path)) \
-	  $< > $@
-
-$(objpfx)ifuncmain6pie: $(objpfx)ifuncmain6pie.o $(objpfx)ifuncmod6.so
-	$(+link-pie)
-
-generated += ifuncmain6pie ifuncmain6pie.out
-
-$(objpfx)ifuncmain7pie.out: $(objpfx)ifuncmain7pie
-	$(elf-objpfx)$(rtld-installed-name) \
-	  --library-path $(rpath-link)$(patsubst %,:%,$(sysdep-library-path)) \
-	  $< > $@
-
-$(objpfx)ifuncmain7pie: $(objpfx)ifuncmain7pie.o
-	$(+link-pie)
-
-generated += ifuncmain7pie ifuncmain7pie.out
-endif
+$(objpfx)ifuncmain1pie: $(objpfx)ifuncmod1.so
+$(objpfx)ifuncmain1staticpie: $(objpfx)ifuncdep1pic.o
+$(objpfx)ifuncmain1vispie: $(objpfx)ifuncmod1.so
+$(objpfx)ifuncmain5pie: $(objpfx)ifuncmod5.so
+$(objpfx)ifuncmain6pie: $(objpfx)ifuncmod6.so
 
 $(objpfx)ifuncmain1: $(addprefix $(objpfx),ifuncmod1.so)
 $(objpfx)ifuncmain1pic: $(addprefix $(objpfx),ifuncmod1.so)

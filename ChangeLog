@@ -1,3 +1,18 @@
+2011-05-11  Andreas Schwab  <schwab@redhat.com>
+
+	* Makeconfig (+link-pie): Indent.
+	* Rules (binaries-pie): Define if $(have-fpie) and
+	$(build-shared).
+	(binaries-shared): Also filter out $(binaries-pie).
+	($(addprefix $(objpfx),$(binaries-pie))): New rule.
+	* nscd/Makefile (others-pie): Add nscd.
+	(LDFLAGS-nscd): Set this instead of relro-LDFLAGS.
+	($(objpfx)nscd): Remove command override.
+	* login/Makefile (others-pie): Add pt_chown.
+	($(objpfx)pt_chown): Remove command override.
+	* elf/Makefile: Add PIE tests to tests and tests-pie variables and
+	remove command overrides.
+
 2011-05-13  Ulrich Drepper  <drepper@gmail.com>
 
 	* libio/tst_putwc.c: Fix error messages.

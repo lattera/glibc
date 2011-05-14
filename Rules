@@ -1,4 +1,4 @@
-# Copyright (C) 1991-2000,2002,2003,2004,2005,2006
+# Copyright (C) 1991-2000,2002,2003,2004,2005,2006,2011
 #	Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
@@ -106,18 +106,32 @@ endif
 ifeq ($(build-programs),yes)
 binaries-all = $(others) $(sysdep-others) $(tests) $(xtests) $(test-srcs)
 binaries-static = $(others-static) $(tests-static) $(xtests-static)
+ifeq (yesyes,$(have-fpie)$(build-shared))
+binaries-pie = $(others-pie) $(tests-pie) $(xtests-pie)
+else
+binaries-pie =
+endif
 else
 binaries-all = $(tests) $(xtests) $(test-srcs)
 binaries-static =
+binaries-pie =
 endif
 
-binaries-shared = $(filter-out $(binaries-static), $(binaries-all))
+binaries-shared = $(filter-out $(binaries-pie) $(binaries-static), \
+			       $(binaries-all))
 
 ifneq "$(strip $(binaries-shared))" ""
 $(addprefix $(objpfx),$(binaries-shared)): %: %.o \
   $(sort $(filter $(common-objpfx)lib%,$(link-libc))) \
   $(addprefix $(csu-objpfx),start.o) $(+preinit) $(+postinit)
 	$(+link)
+endif
+
+ifneq "$(strip $(binaries-pie))" ""
+$(addprefix $(objpfx),$(binaries-pie)): %: %.o \
+  $(sort $(filter $(common-objpfx)lib%,$(link-libc))) \
+  $(addprefix $(csu-objpfx),start.o) $(+preinit) $(+postinit)
+	$(+link-pie)
 endif
 
 ifneq "$(strip $(binaries-static))" ""

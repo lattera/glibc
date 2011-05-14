@@ -450,9 +450,9 @@ ifndef +link-pie
 	     $(addprefix $(csu-objpfx),S$(start-installed-name)) \
 	     $(+preinit) $(+prectorS) \
 	     $(filter-out $(addprefix $(csu-objpfx),start.o \
-	     S$(start-installed-name))\
-	     $(+preinit) $(link-extra-libs) \
-	     $(common-objpfx)libc% $(+postinit),$^) \
+						    S$(start-installed-name))\
+			  $(+preinit) $(link-extra-libs) \
+			  $(common-objpfx)libc% $(+postinit),$^) \
 	     $(link-extra-libs) $(link-libc) $(+postctorS) $(+postinit)
 endif
 # Command for statically linking programs with the C library.
