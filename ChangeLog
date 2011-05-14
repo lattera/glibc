@@ -1,5 +1,12 @@
 2011-05-14  Ulrich Drepper  <drepper@gmail.com>
 
+	[BZ #12432]
+	* sysdeps/ia64/backtrace.c (struct trace_reg): Add cfa element.
+	(dummy_getcfa): New function.
+	(init): Get _Unwind_GetCFA address, use dummy if not found.
+	(backtrace_helper): In recursion check, also check whether CFA changes.
+	(__backtrace): Completely initialize arg.
+
 	* iconv/loop.c (SINGLE) [STORE_REST]: Add input bytes to bytebuf before
 	storing incomplete byte sequence in state object.  Avoid testing for
 	guaranteed too small input if we know there is enough data available.

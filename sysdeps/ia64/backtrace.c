@@ -1,5 +1,5 @@
 /* Return backtrace of current program state.
-   Copyright (C) 2003, 2004, 2005, 2007, 2009 Free Software Foundation, Inc.
+   Copyright (C) 2003-2005, 2007, 2009, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jakub@redhat.com>, 2003.
 
@@ -27,13 +27,25 @@
 struct trace_arg
 {
   void **array;
-  int cnt, size;
+  _Unwind_Word cfa;
+  int cnt;
+  int size;
 };
 
 #ifdef SHARED
 static _Unwind_Reason_Code (*unwind_backtrace) (_Unwind_Trace_Fn, void *);
 static _Unwind_Ptr (*unwind_getip) (struct _Unwind_Context *);
+static _Unwind_Word (*unwind_getcfa) (struct _Unwind_Context *);
 static void *libgcc_handle;
+
+
+/* Dummy version in case libgcc_s does not contain the real code.  */
+static _Unwind_Word
+dummy_getcfa (struct _Unwind_Context *ctx __attribute__ ((unused)))
+{
+  return 0;
+}
+
 
 static void
 init (void)
@@ -47,10 +59,13 @@ init (void)
   unwind_getip = __libc_dlsym (libgcc_handle, "_Unwind_GetIP");
   if (unwind_getip == NULL)
     unwind_backtrace = NULL;
+  unwind_getcfa = (__libc_dlsym (libgcc_handle, "_Unwind_GetCFA")
+		   ?: dummy_getcfa);
 }
 #else
 # define unwind_backtrace _Unwind_Backtrace
 # define unwind_getip _Unwind_GetIP
+# define unwind_getcfa _Unwind_GetCFA
 #endif
 
 static _Unwind_Reason_Code
@@ -65,8 +80,12 @@ backtrace_helper (struct _Unwind_Context *ctx, void *a)
       arg->array[arg->cnt] = (void *) unwind_getip (ctx);
 
       /* Check whether we make any progress.  */
-      if (arg->cnt > 0 && arg->array[arg->cnt - 1] == arg->array[arg->cnt])
+      _Unwind_Word cfa = unwind_getcfa (ctx);
+
+      if (arg->cnt > 0 && arg->array[arg->cnt - 1] == arg->array[arg->cnt]
+	  && cfa == arg->cfa)
 	return _URC_END_OF_STACK;
+      arg->cfa = cfa;
     }
   if (++arg->cnt == arg->size)
     return _URC_END_OF_STACK;
@@ -78,7 +97,7 @@ __backtrace (array, size)
      void **array;
      int size;
 {
-  struct trace_arg arg = { .array = array, .size = size, .cnt = -1 };
+  struct trace_arg arg = { .array = array, .cfa = 0, .size = size, .cnt = -1 };
 #ifdef SHARED
   __libc_once_define (static, once);
 
