@@ -117,19 +117,20 @@ mon         "<U004A><U0061><U006E><U0075><U0061><U0072><U0079>";"<U0046><U0065><
 am_pm       "<U0041><U004D>";"<U0050><U004D>"
 %
 % Appropriate date and time representation
-% %A %d,%B,%Y %I:%M:%S  %Z
-d_t_fmt     "<U0025><U0041><U0020><U0025><U0064><U002C><U0025><U0042><U002C><U0025><U0059><U0020><U0025><U0049><U003A><U0025><U004D><U003A><U0025><U0053><U0020><U0025><U0070><U0020><U0025><U005A>"
+% %a %d %b %Y %r
+d_t_fmt     "<U0025><U0061><U0020><U0025><U0064><U0020><U0025><U0062><U0020><U0025><U0059><U0020><U0025><U0072>"
 %
 % Appropriate date representation
-% %A %d,%B,%Y
-d_fmt       "<U0025><U0041><U0020><U0025><U0064><U002C><U0025><U0042><U002C><U0025><U0059>"
+% %d/%m/%Y
+d_fmt       "<U0025><U0064><U002F><U0025><U006D><U002F><U0025><U0059>"
 %
 % Appropriate time representation
-% %I:%M:%S  %Z
-t_fmt       "<U0025><U0049><U003A><U0025><U004D><U003A><U0025><U0053><U0020><U0020><U0025><U005A>"
+% %T
+t_fmt       "<U0025><U0054>"
 %
 % Appropriate 12 h time representation (%r)
-t_fmt_ampm  "<U0025><U0049><U003A><U0025><U004D><U003A><U0025><U0053><U0020><U0025><U0070><U0020><U0025><U005A>"
+% %I:%M:%S %p
+t_fmt_ampm  "<U0025><U0049><U003A><U0025><U004D><U003A><U0025><U0053><U0020><U0025><U0070>"
 %
 END LC_TIME
 

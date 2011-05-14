@@ -1,3 +1,9 @@
+2011-05-14  Ulrich Drepper  <drepper@gmail.com>
+
+	[BZ #12582]
+	* localedata/charmaps/en_SG (LC_TIME): Fix time formats.
+	Patch by KH Teo <b3virq3b@gmail.com>.
+
 2011-05-09  Ulrich Drepper  <drepper@gmail.com>
 
 	[BZ #11487]
