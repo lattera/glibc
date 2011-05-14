@@ -175,6 +175,8 @@ _IO_new_file_close_it (fp)
       else
 	write_status = _IO_SYSSEEK (fp, o, SEEK_SET) < 0 ? EOF : 0;
     }
+  else
+    write_status = 0;
 
   INTUSE(_IO_unsave_markers) (fp);
 

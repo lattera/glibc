@@ -1,5 +1,7 @@
 2011-05-14  Ulrich Drepper  <drepper@gmail.com>
 
+	* libio/fileops.c (_IO_new_file_close_it): Initialize write_status.
+
 	[BZ #12432]
 	* sysdeps/ia64/backtrace.c (struct trace_reg): Add cfa element.
 	(dummy_getcfa): New function.
