@@ -1,5 +1,11 @@
 2011-05-14  Ulrich Drepper  <drepper@gmail.com>
 
+	[BZ #12601]
+	* iconvdata/cp932.c (BODY to UCS4): Fix incrementing inptr in case of
+	two-byte sequence errors.
+	* iconvdata/Makefile (tests): Add bug-iconv8.
+	* iconvdata/bug-iconv8.c: New file.
+
 	[BZ #12626]
 	* sysdeps/generic/elf/backtracesymsfd.c (__backtrace_symbols_fd): Move
 	buf2 definition.

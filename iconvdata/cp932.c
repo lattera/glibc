@@ -1,5 +1,5 @@
 /* Mapping tables for CP932 handling.
-   Copyright (C) 1997,1998,1999,2000,2001,2003 Free Software Foundation, Inc.
+   Copyright (C) 1997-2001,2003,2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by MORIYAMA Masayuki <msyk@mtg.biglobe.ne.jp>, 2003.
 
@@ -4549,8 +4549,8 @@ static const char from_ucs4_extra[229][2] =
       ++inptr;								      \
     else if (ch >= 0xa1 && ch <= 0xdf)                                        \
       {                                                                       \
-        ch += 0xfec0;                                                         \
-        ++inptr;                                                              \
+	ch += 0xfec0;                                                         \
+	++inptr;                                                              \
       }									      \
     else if (__builtin_expect (ch, 0) == 0xa0				      \
 	     || __builtin_expect (ch <= 0x80, 0)			      \
@@ -4588,65 +4588,63 @@ static const char from_ucs4_extra[229][2] =
 	if (__builtin_expect (ch2 < 0x40, 0)				      \
 	    || __builtin_expect (ch2 > 0xfc, 0)				      \
 	    || __builtin_expect (ch2 == 0x7f, 0)			      \
-	    || (__builtin_expect (idx > 0x84be, 0) && idx < 0x8740)      \
-	    || (__builtin_expect (idx > 0x879c, 0) && idx < 0x889f)      \
-	    || (__builtin_expect (idx > 0x88fc, 0) && idx < 0x8940)      \
-	    || (__builtin_expect (idx > 0x9ffc, 0) && idx < 0xe040)      \
-	    || (__builtin_expect (idx > 0xeaa4, 0) && idx < 0xed40)      \
-	    || (__builtin_expect (idx > 0xeefc, 0) && idx < 0xf040)      \
+	    || (__builtin_expect (idx > 0x84be, 0) && idx < 0x8740)	      \
+	    || (__builtin_expect (idx > 0x879c, 0) && idx < 0x889f)	      \
+	    || (__builtin_expect (idx > 0x88fc, 0) && idx < 0x8940)	      \
+	    || (__builtin_expect (idx > 0x9ffc, 0) && idx < 0xe040)	      \
+	    || (__builtin_expect (idx > 0xeaa4, 0) && idx < 0xed40)	      \
+	    || (__builtin_expect (idx > 0xeefc, 0) && idx < 0xf040)	      \
 	    || __builtin_expect (idx > 0xfc4b, 0))			      \
 	  {								      \
 	    /* This is illegal.  */					      \
 	    if (! ignore_errors_p ())					      \
 	      {								      \
-	        /* This is an illegal character.  */			      \
-	        result = __GCONV_ILLEGAL_INPUT;				      \
-	        break;							      \
+		/* This is an illegal character.  */			      \
+		result = __GCONV_ILLEGAL_INPUT;				      \
+		break;							      \
 	      }								      \
 									      \
 	    ++inptr;							      \
 	    ++*irreversible;						      \
 	    continue;							      \
 	  }								      \
-	else								      \
-	  {								      \
-	    /* We could pack the data a bit more dense.  The second	      \
-	       byte will never be 0x7f and it will also be never	      \
-	       >0xfc.  But this would mean yet more `if's.  */		      \
-	    if (idx <= 0x84be)						      \
-	      ch = cjk_block1[(ch - 0x81) * 192 + ch2 - 0x40];		      \
-	    else if (idx <= 0x879c)					      \
-	      ch = cjk_block2[(ch - 0x87) * 192 + ch2 - 0x40];		      \
-	    else if (idx <= 0x88fc)					      \
-	      ch = cjk_block3[(ch - 0x88) * 192 + ch2 - 0x9f];		      \
-	    else if (idx <= 0x9ffc)					      \
-	      ch = cjk_block4[(ch - 0x89) * 192 + ch2 - 0x40];		      \
-	    else if (idx <= 0xeaa4)					      \
-	      ch = cjk_block5[(ch - 0xe0) * 192 + ch2 - 0x40];		      \
-	    else if (idx <= 0xeefc)					      \
-	      ch = cjk_block6[(ch - 0xed) * 192 + ch2 - 0x40];		      \
-	    else if (idx <= 0xf9fc)					      \
-	      ch = (ch-0xf0)*188 + ch2-((ch2<0x7f)?0x40:0x41) + 0xe000;	      \
-	    else							      \
-	      ch = cjk_block7[(ch - 0xfa) * 192 + ch2 - 0x40];		      \
 									      \
-	    inptr += 2;							      \
-	  }								      \
+	/* We could pack the data a bit more dense.  The second		      \
+	   byte will never be 0x7f and it will also be never		      \
+	   >0xfc.  But this would mean yet more `if's.  */		      \
+	if (idx <= 0x84be)						      \
+	  ch = cjk_block1[(ch - 0x81) * 192 + ch2 - 0x40];		      \
+	else if (idx <= 0x879c)						      \
+	  ch = cjk_block2[(ch - 0x87) * 192 + ch2 - 0x40];		      \
+	else if (idx <= 0x88fc)						      \
+	  ch = cjk_block3[(ch - 0x88) * 192 + ch2 - 0x9f];		      \
+	else if (idx <= 0x9ffc)						      \
+	  ch = cjk_block4[(ch - 0x89) * 192 + ch2 - 0x40];		      \
+	else if (idx <= 0xeaa4)						      \
+	  ch = cjk_block5[(ch - 0xe0) * 192 + ch2 - 0x40];		      \
+	else if (idx <= 0xeefc)						      \
+	  ch = cjk_block6[(ch - 0xed) * 192 + ch2 - 0x40];		      \
+	else if (idx <= 0xf9fc)						      \
+	  ch = (ch-0xf0)*188 + ch2-((ch2<0x7f)?0x40:0x41) + 0xe000;	      \
+	else								      \
+	  ch = cjk_block7[(ch - 0xfa) * 192 + ch2 - 0x40];		      \
 									      \
 	if (__builtin_expect (ch, 1) == 0)				      \
 	  {								      \
 	    /* This is an illegal character.  */			      \
 	    if (! ignore_errors_p ())					      \
 	      {								      \
-	        /* This is an illegal character.  */			      \
-	        result = __GCONV_ILLEGAL_INPUT;				      \
-	        break;							      \
+		/* This is an illegal character.  */			      \
+		result = __GCONV_ILLEGAL_INPUT;				      \
+		break;							      \
 	      }								      \
 									      \
 	    inptr += 2;							      \
 	    ++*irreversible;						      \
 	    continue;							      \
 	  }								      \
+									      \
+	inptr += 2;							      \
       }									      \
 									      \
     put32 (outptr, ch);							      \
@@ -4674,7 +4672,7 @@ static const char from_ucs4_extra[229][2] =
 	else if (ch >= 0x2010 && ch <= 0x9fa0)				      \
 	  cp = from_ucs4_cjk[ch - 0x2010];				      \
 	else if (ch >= 0xe000 && ch <= 0xe757)				      \
-          {								      \
+	  {								      \
 	    pua[0] = (ch - 0xe000) / 188 + 0xf0;			      \
 	    pua[1] = (ch - 0xe000) % 188 + 0x40;			      \
 	    if (pua[1] > 0x7e)						      \
