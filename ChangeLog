@@ -1,5 +1,8 @@
 2011-05-15  Ulrich Drepper  <drepper@gmail.com>
 
+	[BZ #4357]
+	* locale/iso-639.def: Add entry for Sorani.
+
 	[BZ #11901]
 	* include/stdlib.h: Move include protection to the right place.
 	Define abort_msg_s.  Declare __abort_msg with it.
