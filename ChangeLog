@@ -1,5 +1,11 @@
 2011-05-15  Ulrich Drepper  <drepper@gmail.com>
 
+	[BZ #7101]
+	* posix/getopt.c (_getopt_internal_r): List all ambigious possibilities
+	when an incomplete long option is used.
+	* posix/tst-getopt_long1.c: New file.
+	* posix/Makefile (tests): Add tst-getopt_long1.
+
 	[BZ #10138]
 	* scripts/config.guess: Update from autoconf-2.68.
 	* scripts/config.sub: Likewise.
