@@ -1,5 +1,9 @@
 2011-05-15  Ulrich Drepper  <drepper@gmail.com>
 
+	[BZ #9732]
+	* locales/dz_BT: Move collations rules to...
+	* locales/iso14651_t1_common: ...here.
+
 	[BZ #9730]
 	* locales/sv_FI (LC_TIME): Fix d_t_fmt and add first_weekday and
 	first_workday.

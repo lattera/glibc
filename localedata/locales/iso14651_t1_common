@@ -70,6 +70,7 @@ script <SINHALA>
 script <MALAYALAM>
 script <BENGALI>
 script <MYANMAR>
+script <TIBETAN>
 
 # Déclaration des symboles internes / Declaration of internal symbols
 #
@@ -2805,11 +2806,664 @@ collating-symbol  <MMALT>
 collating-symbol  <MMKILLED>
 collating-symbol  <MMSTACK>
 
+#
+# TIBETAN
+#
+# Third level
+
+# Nominal, subjoined or variant forms
+collating-symbol <NOM>
+collating-symbol <SUB>
+collating-symbol <REV>
+collating-symbol <VAR>
+collating-symbol <VARR>
+# Tibetan signs
+collating-symbol <TIB-SIGN-RJES-SU-NGA-RO>
+collating-symbol <TIB-SIGN-NYI-ZLA-NAA-DA>
+collating-symbol <TIB-SIGN-SNA-LDAN>
+
+# Second level
+collating-symbol <TIB-SIGN-MCHU-CAN>
+collating-symbol <TIB-SIGN-MCHU-CAN-FF>
+collating-symbol <LCE-TSA-CAN>
+
+# Primary level
+collating-symbol <TIB-TSHEG>
+
+# 30 base letters
+collating-symbol <TIB-KA>
+collating-symbol <TIB-KHA>
+collating-symbol <TIB-GA>
+collating-symbol <TIB-NGA>
+collating-symbol <TIB-CA>
+collating-symbol <TIB-CHA>
+collating-symbol <TIB-JA>
+collating-symbol <TIB-NYA>
+collating-symbol <TIB-TA>
+collating-symbol <TIB-THA>
+collating-symbol <TIB-DA>
+collating-symbol <TIB-NA>
+collating-symbol <TIB-PA>
+collating-symbol <TIB-PHA>
+collating-symbol <TIB-BA>
+collating-symbol <TIB-MA>
+collating-symbol <TIB-TSA>
+collating-symbol <TIB-TSHA>
+collating-symbol <TIB-DZA>
+collating-symbol <TIB-WA>
+collating-symbol <TIB-ZHA>
+collating-symbol <TIB-ZA>
+collating-symbol <TIB--A>
+collating-symbol <TIB-YA>
+collating-symbol <TIB-RA>
+collating-symbol <TIB-LA>
+collating-symbol <TIB-SHA>
+collating-symbol <TIB-SA>
+collating-symbol <TIB-HA>
+collating-symbol <TIB-A>
+
+# 4 explicit vowels
+collating-symbol <TIB-I>
+collating-symbol <TIB-U>
+collating-symbol <TIB-E>
+collating-symbol <TIB-O>
+
+collating-symbol <TIB+G>
+collating-symbol <TIB+NG>
+collating-symbol <TIB+D>
+collating-symbol <TIB+N>
+collating-symbol <TIB+B>
+collating-symbol <TIB+M>
+collating-symbol <TIB+M2>
+collating-symbol <TIB+W>
+collating-symbol <TIB+A>
+collating-symbol <TIB+R>
+collating-symbol <TIB+L>
+collating-symbol <TIB+S>
+collating-symbol <TIB+subWA>
+collating-symbol <TIB+subYA>
+collating-symbol <TIB+subRA>
+collating-symbol <TIB+subLA>
+collating-symbol <TIB+BR>
+collating-symbol <TIB+BL>
+collating-symbol <TIB+BS>
+collating-symbol <TIB+I>
+collating-symbol <TIB+E>
+collating-symbol <TIB+U>
+collating-symbol <TIB+O>
+
+# <TIB-KA>
+collating-symbol <TIB-rad-KA>
+collating-element <TIB-LCE-TSA-CAN-KA> from "<U0F88><U0F90>"
+collating-element <TIB-DKA> from "<U0F51><U0F40>"
+collating-element <TIB-BKA> from "<U0F56><U0F40>"
+collating-element <TIB-RKA> from "<U0F62><U0F90>"
+collating-element <TIB-LKA> from "<U0F63><U0F90>"
+collating-element <TIB-SKA> from "<U0F66><U0F90>"
+collating-element <TIB-BRKA> from "<U0F56><U0F62><U0F90>"
+collating-element <TIB-BLKA> from "<U0F56><U0F63><U0F90>"
+collating-element <TIB-BSKA> from "<U0F56><U0F66><U0F90>"
+# <TIB-KHA>
+collating-symbol <TIB-rad-KHA>
+collating-element <TIB-LCE-TSA-CAN-KHA> from "<U0F88><U0F91>"
+collating-element <TIB-MKHA> from "<U0F58><U0F41>"
+collating-element <TIB--KHA> from "<U0F60><U0F41>"
+# <TIB-GA>
+collating-symbol <TIB-rad-GA>
+collating-element <TIB-GAD> from "<U0F42><U0F51>"
+collating-element <TIB-GAN> from "<U0F42><U0F53>"
+collating-element <TIB-GAS> from "<U0F42><U0F66>"
+collating-element <TIB-DGAG> from "<U0F51><U0F42><U0F42>"
+collating-element <TIB-DGANG> from "<U0F51><U0F42><U0F44>"
+collating-element <TIB-DGAD> from "<U0F51><U0F42><U0F51>"
+collating-element <TIB-DGAN> from "<U0F51><U0F42><U0F53>"
+collating-element <TIB-DGAB> from "<U0F51><U0F42><U0F56>"
+collating-element <TIB-DGAM> from "<U0F51><U0F42><U0F58>"
+#%% Not in Fynn's chart
+collating-element <TIB-DGAW> from "<U0F51><U0F42><U0F5D>"
+collating-element <TIB-DGA-> from "<U0F51><U0F42><U0F60>"
+collating-element <TIB-DGAR> from "<U0F51><U0F42><U0F62>"
+collating-element <TIB-DGAL> from "<U0F51><U0F42><U0F63>"
+collating-element <TIB-DGAS> from "<U0F51><U0F42><U0F66>"
+collating-element <TIB-DGAI> from "<U0F51><U0F42><U0F72>"
+collating-element <TIB-DGU> from "<U0F51><U0F42><U0F74>"
+collating-element <TIB-DGE> from "<U0F51><U0F42><U0F7A>"
+collating-element <TIB-DGEE> from "<U0F51><U0F42><U0F7B>"
+collating-element <TIB-DGO> from "<U0F51><U0F42><U0F7C>"
+collating-element <TIB-DGOO> from "<U0F51><U0F42><U0F7D>"
+collating-element <TIB-DGsubWA> from "<U0F51><U0F42><U0FAD>"
+collating-element <TIB-DGsubYA> from "<U0F51><U0F42><U0FB1>"
+collating-element <TIB-DGsubRA> from "<U0F51><U0F42><U0FB2>"
+collating-element <TIB-BGAG> from "<U0F56><U0F42><U0F42>"
+collating-element <TIB-BGANG> from "<U0F56><U0F42><U0F44>"
+collating-element <TIB-BGAD> from "<U0F56><U0F42><U0F51>"
+collating-element <TIB-BGAN> from "<U0F56><U0F42><U0F53>"
+collating-element <TIB-BGAB> from "<U0F56><U0F42><U0F56>"
+collating-element <TIB-BGAM> from "<U0F56><U0F42><U0F58>"
+#%% Not in Fynn's chart
+collating-element <TIB-BGAM2> from "<U0F56><U0F42><U0F7E>"
+#%% Not in Fynn's chart
+collating-element <TIB-BGAW> from "<U0F56><U0F42><U0F5D>"
+collating-element <TIB-BGA-> from "<U0F56><U0F42><U0F60>"
+collating-element <TIB-BGAR> from "<U0F56><U0F42><U0F62>"
+collating-element <TIB-BGAL> from "<U0F56><U0F42><U0F63>"
+collating-element <TIB-BGAI> from "<U0F56><U0F42><U0F72>"
+collating-element <TIB-BGAII> from "<U0F56><U0F42><U0F72><U0F72>"
+collating-element <TIB-BGU> from "<U0F56><U0F42><U0F74>"
+collating-element <TIB-BGE> from "<U0F56><U0F42><U0F7A>"
+collating-element <TIB-BGEE> from "<U0F56><U0F42><U0F7B>"
+collating-element <TIB-BGO> from "<U0F56><U0F42><U0F7C>"
+collating-element <TIB-BGOO> from "<U0F56><U0F42><U0F7D>"
+collating-element <TIB-BGsubWA> from "<U0F56><U0F42><U0FAD>"
+collating-element <TIB-BGsubYA> from "<U0F56><U0F42><U0FB1>"
+collating-element <TIB-BGsubRA> from "<U0F56><U0F42><U0FB2>"
+collating-element <TIB-BGsubLA> from "<U0F56><U0F42><U0FB3>"
+collating-element <TIB-MGAG> from "<U0F58><U0F42><U0F42>"
+collating-element <TIB-MGANG> from "<U0F58><U0F42><U0F44>"
+collating-element <TIB-MGAD> from "<U0F58><U0F42><U0F51>"
+collating-element <TIB-MGAN> from "<U0F58><U0F42><U0F53>"
+collating-element <TIB-MAGABA> from "<U0F58><U0F42><U0F56>"
+collating-element <TIB-MAGAMA> from "<U0F58><U0F42><U0F58>"
+collating-element <TIB-MAGA-A> from "<U0F58><U0F42><U0F60>"
+collating-element <TIB-MAGARA> from "<U0F58><U0F42><U0F62>"
+collating-element <TIB-MAGALA> from "<U0F58><U0F42><U0F63>"
+collating-element <TIB-MAGAI> from "<U0F58><U0F42><U0F72>"
+collating-element <TIB-MAGAII> from "<U0F58><U0F42><U0F72><U0F72>"
+collating-element <TIB-MAGAU> from "<U0F58><U0F42><U0F74>"
+collating-element <TIB-MAGAE> from "<U0F58><U0F42><U0F7A>"
+collating-element <TIB-MAGAEE> from "<U0F58><U0F42><U0F7B>"
+collating-element <TIB-MAGAO> from "<U0F58><U0F42><U0F7C>"
+collating-element <TIB-MAGAOO> from "<U0F58><U0F42><U0F7D>"
+collating-element <TIB-MAGAsubWA> from "<U0F58><U0F42><U0FAD>"
+collating-element <TIB-MAGAsubYA> from "<U0F58><U0F42><U0FB1>"
+collating-element <TIB-MAGAsubRA> from "<U0F58><U0F42><U0FB2>"
+collating-element <TIB--AGAGA> from "<U0F60><U0F42><U0F42>"
+collating-element <TIB--AGANGA> from "<U0F60><U0F42><U0F44>"
+collating-element <TIB--AGADA> from "<U0F60><U0F42><U0F51>"
+collating-element <TIB--AGANA> from "<U0F60><U0F42><U0F53>"
+collating-element <TIB--AGABA> from "<U0F60><U0F42><U0F56>"
+collating-element <TIB--AGAMA> from "<U0F60><U0F42><U0F58>"
+#%% Not in Fynn's chart
+collating-element <TIB--AGAMA2> from "<U0F60><U0F42><U0F7E>"
+collating-element <TIB--AGA-A> from "<U0F60><U0F42><U0F60>"
+collating-element <TIB--AGARA> from "<U0F60><U0F42><U0F62>"
+collating-element <TIB--AGALA> from "<U0F60><U0F42><U0F63>"
+collating-element <TIB--AGASA> from "<U0F60><U0F42><U0F66>"
+collating-element <TIB--AGAI> from "<U0F60><U0F42><U0F72>"
+collating-element <TIB--AGAII> from "<U0F60><U0F42><U0F72><U0F72>"
+collating-element <TIB--AGAU> from "<U0F60><U0F42><U0F74>"
+collating-element <TIB--AGAE> from "<U0F60><U0F42><U0F7A>"
+collating-element <TIB--AGAEE> from "<U0F60><U0F42><U0F7B>"
+collating-element <TIB--AGAO> from "<U0F60><U0F42><U0F7C>"
+collating-element <TIB--AGAOO> from "<U0F60><U0F42><U0F7D>"
+collating-element <TIB--AGAsubWA> from "<U0F60><U0F42><U0FAD>"
+collating-element <TIB--AGAsubYA> from "<U0F60><U0F42><U0FB1>"
+collating-element <TIB--AGAsubRA> from "<U0F60><U0F42><U0FB2>"
+collating-element <TIB-RAGA> from "<U0F62><U0F92>"
+collating-element <TIB-LAGA> from "<U0F63><U0F92>"
+collating-element <TIB-SAGA> from "<U0F66><U0F92>"
+collating-element <TIB-BARAsubGA> from "<U0F56><U0F62><U0F92>"
+collating-element <TIB-BALAsubGA> from "<U0F56><U0F63><U0F92>"
+collating-element <TIB-BASAsubGA> from "<U0F56><U0F66><U0F92>"
+# <TIB-NGA>
+collating-symbol <TIB-rad-NGA>
+collating-element <TIB-DANGAGA> from "<U0F51><U0F44><U0F42>"
+collating-element <TIB-DANGANGA> from "<U0F51><U0F44><U0F44>"
+collating-element <TIB-DANGADA> from "<U0F51><U0F44><U0F51>"
+collating-element <TIB-DANGANA> from "<U0F51><U0F44><U0F53>"
+collating-element <TIB-DANGABA> from "<U0F51><U0F44><U0F56>"
+collating-element <TIB-DANGAMA> from "<U0F51><U0F44><U0F58>"
+collating-element <TIB-DANGA-A> from "<U0F51><U0F44><U0F60>"
+collating-element <TIB-DANGARA> from "<U0F51><U0F44><U0F62>"
+collating-element <TIB-DANGALA> from "<U0F51><U0F44><U0F63>"
+collating-element <TIB-DANGASA> from "<U0F51><U0F44><U0F66>"
+collating-element <TIB-DANGAI> from "<U0F51><U0F44><U0F72>"
+collating-element <TIB-DANGAII> from "<U0F51><U0F44><U0F72><U0F72>"
+collating-element <TIB-DANGAU> from "<U0F51><U0F44><U0F74>"
+collating-element <TIB-DANGAE> from "<U0F51><U0F44><U0F7A>"
+collating-element <TIB-DANGAEE> from "<U0F51><U0F44><U0F7B>"
+collating-element <TIB-DANGAO> from "<U0F51><U0F44><U0F7C>"
+collating-element <TIB-DANGAOO> from "<U0F51><U0F44><U0F7D>"
+collating-element <TIB-DANGAsubWA> from "<U0F51><U0F44><U0FAD>"
+collating-element <TIB-MANGAGA> from "<U0F58><U0F44><U0F42>"
+collating-element <TIB-MANGANGA> from "<U0F58><U0F44><U0F44>"
+collating-element <TIB-MANGADA> from "<U0F58><U0F44><U0F51>"
+collating-element <TIB-MANGANA> from "<U0F58><U0F44><U0F53>"
+collating-element <TIB-MANGABA> from "<U0F58><U0F44><U0F56>"
+collating-element <TIB-MANGAMA> from "<U0F58><U0F44><U0F58>"
+collating-element <TIB-MANGA-A> from "<U0F58><U0F44><U0F60>"
+collating-element <TIB-MANGARA> from "<U0F58><U0F44><U0F62>"
+collating-element <TIB-MANGALA> from "<U0F58><U0F44><U0F63>"
+collating-element <TIB-MANGAI> from "<U0F58><U0F44><U0F72>"
+collating-element <TIB-MANGAII> from "<U0F58><U0F44><U0F72><U0F72>"
+collating-element <TIB-MANGAU> from "<U0F58><U0F44><U0F74>"
+collating-element <TIB-MANGAE> from "<U0F58><U0F44><U0F7A>"
+collating-element <TIB-MANGAEE> from "<U0F58><U0F44><U0F7B>"
+collating-element <TIB-MANGAO> from "<U0F58><U0F44><U0F7C>"
+collating-element <TIB-MANGAOO> from "<U0F58><U0F44><U0F7D>"
+collating-element <TIB-MANGAsubWA> from "<U0F58><U0F44><U0FAD>"
+collating-element <TIB-RAsubNGA> from "<U0F62><U0F94>"
+collating-element <TIB-LAsubNGA> from "<U0F63><U0F94>"
+collating-element <TIB-SAsubNGA> from "<U0F66><U0F94>"
+collating-element <TIB-BARAsubNGA> from "<U0F56><U0F62><U0F94>"
+collating-element <TIB-BALAsubNGA> from "<U0F56><U0F63><U0F94>"
+collating-element <TIB-BASAsubNGA> from "<U0F56><U0F66><U0F94>"
+# <TIB-CA>
+collating-symbol <TIB-rad-CA>
+collating-element <TIB-GACA> from "<U0F42><U0F45>"
+collating-element <TIB-BACA> from "<U0F56><U0F45>"
+collating-element <TIB-LACA> from "<U0F63><U0F95>"
+collating-element <TIB-BALAsubCA> from "<U0F56><U0F63><U0F95>"
+# <TIB-CHA>
+collating-symbol <TIB-rad-CHA>
+collating-element <TIB-MACHA> from "<U0F58><U0F46>"
+collating-element <TIB--ACHA> from "<U0F60><U0F46>"
+# <TIB-JA>
+collating-symbol <TIB-rad-JA>
+collating-element <TIB-MAJA> from "<U0F58><U0F47>"
+collating-element <TIB--AJA> from "<U0F60><U0F47>"
+collating-element <TIB-RAJA> from "<U0F62><U0F97>"
+collating-element <TIB-LAJA> from "<U0F63><U0F97>"
+collating-element <TIB-BARAsubJA> from "<U0F56><U0F62><U0F97>"
+collating-element <TIB-BALAsubJA> from "<U0F56><U0F63><U0F97>"
+# <TIB-NYA>
+collating-symbol <TIB-rad-NYA>
+collating-element <TIB-GANYA> from "<U0F42><U0F49>"
+collating-element <TIB-MANYA> from "<U0F58><U0F49>"
+collating-element <TIB-RANYA> from "<U0F62><U0F99>"
+collating-element <TIB-SANYA> from "<U0F66><U0F99>"
+collating-element <TIB-BARAsubNYA> from "<U0F56><U0F62><U0F99>"
+collating-element <TIB-BASAsubNYA> from "<U0F56><U0F66><U0F99>"
+# <TIB-TA>
+collating-symbol <TIB-rad-TA>
+collating-symbol <TIB-TTA>
+collating-element <TIB-GATA> from "<U0F42><U0F4F>"
+collating-element <TIB-BATA> from "<U0F56><U0F4F>"
+collating-element <TIB-RATA> from "<U0F62><U0F9F>"
+collating-element <TIB-LATA> from "<U0F63><U0F9F>"
+collating-element <TIB-SATA> from "<U0F66><U0F9F>"
+collating-element <TIB-BARAsubTA> from "<U0F56><U0F62><U0F9F>"
+collating-element <TIB-BALAsubTA> from "<U0F56><U0F63><U0F9F>"
+collating-element <TIB-BASAsubTA> from "<U0F56><U0F66><U0F9F>"
+# <TIB-THA>
+collating-symbol <TIB-rad-THA>
+collating-symbol <TIB-TTHA>
+collating-element <TIB-MATHA> from "<U0F58><U0F50>"
+collating-element <TIB--ATHA> from "<U0F60><U0F50>"
+# <TIB-DA>
+collating-symbol <TIB-rad-DA>
+collating-symbol <TIB-DDA>
+collating-element <TIB-DAGA> from "<U0F51><U0F42>"
+collating-element <TIB-DANGA> from "<U0F51><U0F44>"
+collating-element <TIB-DABA> from "<U0F51><U0F56>"
+collating-element <TIB-DAMA> from "<U0F51><U0F58>"
+collating-element <TIB-GADAGA> from "<U0F42><U0F51><U0F42>"
+collating-element <TIB-GADANGA> from "<U0F42><U0F51><U0F44>"
+collating-element <TIB-GADADA> from "<U0F42><U0F51><U0F51>"
+collating-element <TIB-GADANA> from "<U0F42><U0F51><U0F53>"
+collating-element <TIB-GADABA> from "<U0F42><U0F51><U0F56>"
+collating-element <TIB-GADAMA> from "<U0F42><U0F51><U0F58>"
+#%% Not in Fynn's chart
+collating-element <TIB-GADAMA2> from "<U0F42><U0F51><U0F7E>"
+collating-element <TIB-GADA-A> from "<U0F42><U0F51><U0F60>"
+collating-element <TIB-GADARA> from "<U0F42><U0F51><U0F62>"
+collating-element <TIB-GADALA> from "<U0F42><U0F51><U0F63>"
+collating-element <TIB-GADASA> from "<U0F42><U0F51><U0F66>"
+collating-element <TIB-GADAI> from "<U0F42><U0F51><U0F72>"
+collating-element <TIB-GADAII> from "<U0F42><U0F51><U0F72><U0F72>"
+collating-element <TIB-GADAU> from "<U0F42><U0F51><U0F74>"
+collating-element <TIB-GADAE> from "<U0F42><U0F51><U0F7A>"
+collating-element <TIB-GADAEE> from "<U0F42><U0F51><U0F7B>"
+collating-element <TIB-GADAO> from "<U0F42><U0F51><U0F7C>"
+collating-element <TIB-GADAOO> from "<U0F42><U0F51><U0F7D>"
+collating-element <TIB-GADAsubWA> from "<U0F42><U0F51><U0FAD>"
+collating-element <TIB-BADAGA> from "<U0F56><U0F51><U0F42>"
+collating-element <TIB-BADANGA> from "<U0F56><U0F51><U0F44>"
+collating-element <TIB-BADADA> from "<U0F56><U0F51><U0F51>"
+collating-element <TIB-BADANA> from "<U0F56><U0F51><U0F53>"
+collating-element <TIB-BADABA> from "<U0F56><U0F51><U0F56>"
+collating-element <TIB-BADAMA> from "<U0F56><U0F51><U0F58>"
+#%% Not in Fynn's chart
+collating-element <TIB-BADAMA2> from "<U0F56><U0F51><U0F7E>"
+collating-element <TIB-BADA-A> from "<U0F56><U0F51><U0F60>"
+collating-element <TIB-BADARA> from "<U0F56><U0F51><U0F62>"
+collating-element <TIB-BADALA> from "<U0F56><U0F51><U0F63>"
+collating-element <TIB-BADASA> from "<U0F56><U0F51><U0F66>"
+collating-element <TIB-BADAI> from "<U0F56><U0F51><U0F72>"
+collating-element <TIB-BADAII> from "<U0F56><U0F51><U0F72><U0F72>"
+collating-element <TIB-BADAU> from "<U0F56><U0F51><U0F74>"
+collating-element <TIB-BADAE> from "<U0F56><U0F51><U0F7A>"
+collating-element <TIB-BADAEE> from "<U0F56><U0F51><U0F7B>"
+collating-element <TIB-BADAO> from "<U0F56><U0F51><U0F7C>"
+collating-element <TIB-BADAOO> from "<U0F56><U0F51><U0F7D>"
+collating-element <TIB-BADAsubWA> from "<U0F56><U0F51><U0FAD>"
+collating-element <TIB-MADAGA> from "<U0F58><U0F51><U0F42>"
+collating-element <TIB-MADANGA> from "<U0F58><U0F51><U0F44>"
+collating-element <TIB-MADADA> from "<U0F58><U0F51><U0F51>"
+collating-element <TIB-MADANA> from "<U0F58><U0F51><U0F53>"
+collating-element <TIB-MADABA> from "<U0F58><U0F51><U0F56>"
+collating-element <TIB-MADAMA> from "<U0F58><U0F51><U0F58>"
+collating-element <TIB-MADA-A> from "<U0F58><U0F51><U0F60>"
+collating-element <TIB-MADARA> from "<U0F58><U0F51><U0F62>"
+collating-element <TIB-MADALA> from "<U0F58><U0F51><U0F63>"
+collating-element <TIB-MADASA> from "<U0F58><U0F51><U0F66>"
+collating-element <TIB-MADAI> from "<U0F58><U0F51><U0F72>"
+collating-element <TIB-MADAII> from "<U0F58><U0F51><U0F72><U0F72>"
+collating-element <TIB-MADAU> from "<U0F58><U0F51><U0F74>"
+collating-element <TIB-MADAE> from "<U0F58><U0F51><U0F7A>"
+collating-element <TIB-MADAEE> from "<U0F58><U0F51><U0F7B>"
+collating-element <TIB-MADAO> from "<U0F58><U0F51><U0F7C>"
+collating-element <TIB-MADAOO> from "<U0F58><U0F51><U0F7D>"
+collating-element <TIB-MADAsubWA> from "<U0F58><U0F51><U0FAD>"
+collating-element <TIB--ADAGA> from "<U0F60><U0F51><U0F42>"
+collating-element <TIB--ADANGA> from "<U0F60><U0F51><U0F44>"
+collating-element <TIB--ADADA> from "<U0F60><U0F51><U0F51>"
+collating-element <TIB--ADANA> from "<U0F60><U0F51><U0F53>"
+collating-element <TIB--ADABA> from "<U0F60><U0F51><U0F56>"
+collating-element <TIB--ADAMA> from "<U0F60><U0F51><U0F58>"
+#%% Not in Fynn's chart
+collating-element <TIB--ADAMA2> from "<U0F60><U0F51><U0F7E>"
+#%% Not in Fynn's chart
+collating-element <TIB--ADAWA> from "<U0F60><U0F51><U0F5D>"
+collating-element <TIB--ADA-A> from "<U0F60><U0F51><U0F60>"
+collating-element <TIB--ADARA> from "<U0F60><U0F51><U0F62>"
+collating-element <TIB--ADALA> from "<U0F60><U0F51><U0F63>"
+collating-element <TIB--ADASA> from "<U0F60><U0F51><U0F66>"
+collating-element <TIB--ADAI> from "<U0F60><U0F51><U0F72>"
+collating-element <TIB--ADAII> from "<U0F60><U0F51><U0F72><U0F72>"
+collating-element <TIB--ADAU> from "<U0F60><U0F51><U0F74>"
+collating-element <TIB--ADAE> from "<U0F60><U0F51><U0F7A>"
+collating-element <TIB--ADAEE> from "<U0F60><U0F51><U0F7B>"
+collating-element <TIB--ADAO> from "<U0F60><U0F51><U0F7C>"
+collating-element <TIB--ADAOO> from "<U0F60><U0F51><U0F7D>"
+collating-element <TIB--ADAsubWA> from "<U0F60><U0F51><U0FAD>"
+collating-element <TIB--ADAsubRA> from "<U0F60><U0F51><U0FB2>"
+collating-element <TIB-RADA> from "<U0F62><U0FA1>"
+collating-element <TIB-LADA> from "<U0F63><U0FA1>"
+collating-element <TIB-SADA> from "<U0F66><U0FA1>"
+collating-element <TIB-BARAsubDA> from "<U0F56><U0F62><U0FA1>"
+collating-element <TIB-BALAsubDA> from "<U0F56><U0F63><U0FA1>"
+collating-element <TIB-BASAsubDA> from "<U0F56><U0F66><U0FA1>"
+# <TIB-NA>
+collating-symbol <TIB-rad-NA>
+collating-element <TIB-GANAGA> from "<U0F42><U0F53><U0F42>"
+collating-element <TIB-GANANGA> from "<U0F42><U0F53><U0F44>"
+collating-element <TIB-GANADA> from "<U0F42><U0F53><U0F51>"
+collating-element <TIB-GANANA> from "<U0F42><U0F53><U0F53>"
+collating-element <TIB-GANABA> from "<U0F42><U0F53><U0F56>"
+collating-element <TIB-GANAMA> from "<U0F42><U0F53><U0F58>"
+#%% Not in Fynn's chart
+collating-element <TIB-GANAMA2> from "<U0F42><U0F53><U0F7E>"
+#%% Not in Fynn's chart
+collating-element <TIB-GANAWA> from "<U0F42><U0F53><U0F5D>"
+collating-element <TIB-GANA-A> from "<U0F42><U0F53><U0F60>"
+collating-element <TIB-GANARA> from "<U0F42><U0F53><U0F62>"
+collating-element <TIB-GANALA> from "<U0F42><U0F53><U0F63>"
+collating-element <TIB-GANASA> from "<U0F42><U0F53><U0F66>"
+collating-element <TIB-GANAI> from "<U0F42><U0F53><U0F72>"
+collating-element <TIB-GANAII> from "<U0F42><U0F53><U0F72><U0F72>"
+collating-element <TIB-GANAU> from "<U0F42><U0F53><U0F74>"
+collating-element <TIB-GANAE> from "<U0F42><U0F53><U0F7A>"
+collating-element <TIB-GANAEE> from "<U0F42><U0F53><U0F7B>"
+collating-element <TIB-GANAO> from "<U0F42><U0F53><U0F7C>"
+collating-element <TIB-GANAOO> from "<U0F42><U0F53><U0F7D>"
+collating-element <TIB-GANAsubWA> from "<U0F42><U0F53><U0FAD>"
+collating-element <TIB-MANAGA> from "<U0F58><U0F53><U0F42>"
+collating-element <TIB-MANANGA> from "<U0F58><U0F53><U0F44>"
+collating-element <TIB-MANADA> from "<U0F58><U0F53><U0F51>"
+collating-element <TIB-MANANA> from "<U0F58><U0F53><U0F53>"
+collating-element <TIB-MANABA> from "<U0F58><U0F53><U0F56>"
+collating-element <TIB-MANAMA> from "<U0F58><U0F53><U0F58>"
+#%% Not in Fynn's chart
+collating-element <TIB-MANAMA2> from "<U0F58><U0F53><U0F7E>"
+collating-element <TIB-MANA-A> from "<U0F58><U0F53><U0F60>"
+collating-element <TIB-MANARA> from "<U0F58><U0F53><U0F62>"
+collating-element <TIB-MANALA> from "<U0F58><U0F53><U0F63>"
+collating-element <TIB-MANASA> from "<U0F58><U0F53><U0F66>"
+collating-element <TIB-MANAI> from "<U0F58><U0F53><U0F72>"
+collating-element <TIB-MANAII> from "<U0F58><U0F53><U0F72><U0F72>"
+collating-element <TIB-MANAU> from "<U0F58><U0F53><U0F74>"
+collating-element <TIB-MANAE> from "<U0F58><U0F53><U0F7A>"
+collating-element <TIB-MANAEE> from "<U0F58><U0F53><U0F7B>"
+collating-element <TIB-MANAO> from "<U0F58><U0F53><U0F7C>"
+collating-element <TIB-MANAOO> from "<U0F58><U0F53><U0F7D>"
+collating-element <TIB-MANAsubWA> from "<U0F58><U0F53><U0FAD>"
+collating-element <TIB-RANA> from "<U0F62><U0FA3>"
+collating-element <TIB-SANA> from "<U0F66><U0FA3>"
+collating-element <TIB-BARAsubNA> from "<U0F56><U0F62><U0FA3>"
+collating-element <TIB-BASAsubNA> from "<U0F56><U0F66><U0FA3>"
+# <TIB-PA>
+collating-symbol <TIB-rad-PA>
+collating-element <TIB-MCHU-CAN-subPA> from "<U0F89><U0FA4>"
+collating-element <TIB-DAPA> from "<U0F51><U0F54>"
+collating-element <TIB-LAPA> from "<U0F63><U0FA4>"
+collating-element <TIB-SAPA> from "<U0F66><U0FA4>"
+# <TIB-PHA>
+collating-symbol <TIB-rad-PHA>
+collating-element <TIB-MCHU-CAN-subPHA> from "<U0F89><U0FA5>"
+collating-element <TIB--APHA> from "<U0F60><U0F55>"
+# <TIB-BA>
+collating-symbol <TIB-rad-BA>
+collating-element <TIB-BAGA> from "<U0F56><U0F42>"
+collating-element <TIB-BADA> from "<U0F56><U0F51>"
+collating-element <TIB-BARA> from "<U0F56><U0F62>"
+collating-element <TIB-BASA> from "<U0F56><U0F66>"
+collating-element <TIB-DABAGA> from "<U0F51><U0F56><U0F42>"
+collating-element <TIB-DABANGA> from "<U0F51><U0F56><U0F44>"
+collating-element <TIB-DABADA> from "<U0F51><U0F56><U0F51>"
+collating-element <TIB-DABANA> from "<U0F51><U0F56><U0F53>"
+collating-element <TIB-DABABA> from "<U0F51><U0F56><U0F56>"
+collating-element <TIB-DABAMA> from "<U0F51><U0F56><U0F58>"
+collating-element <TIB-DABA-A> from "<U0F51><U0F56><U0F60>"
+collating-element <TIB-DABARA> from "<U0F51><U0F56><U0F62>"
+collating-element <TIB-DABALA> from "<U0F51><U0F56><U0F63>"
+collating-element <TIB-DABASA> from "<U0F51><U0F56><U0F66>"
+collating-element <TIB-DABAI> from "<U0F51><U0F56><U0F72>"
+collating-element <TIB-DABAII> from "<U0F51><U0F56><U0F72><U0F72>"
+collating-element <TIB-DABAU> from "<U0F51><U0F56><U0F74>"
+collating-element <TIB-DABAE> from "<U0F51><U0F56><U0F7A>"
+collating-element <TIB-DABAEE> from "<U0F51><U0F56><U0F7B>"
+collating-element <TIB-DABAO> from "<U0F51><U0F56><U0F7C>"
+collating-element <TIB-DABAOI> from "<U0F51><U0F56><U0F7D>"
+collating-element <TIB-DABAsubWA> from "<U0F51><U0F56><U0FAD>"
+collating-element <TIB-DABAsubYA> from "<U0F51><U0F56><U0FB1>"
+collating-element <TIB-DABAsubRA> from "<U0F51><U0F56><U0FB2>"
+collating-element <TIB--ABAGA> from "<U0F60><U0F56><U0F42>"
+collating-element <TIB--ABANGA> from "<U0F60><U0F56><U0F44>"
+collating-element <TIB--ABADA> from "<U0F60><U0F56><U0F51>"
+collating-element <TIB--ABANA> from "<U0F60><U0F56><U0F53>"
+collating-element <TIB--ABABA> from "<U0F60><U0F56><U0F56>"
+collating-element <TIB--ABAMA> from "<U0F60><U0F56><U0F58>"
+#%% Not in Fynn's chart
+collating-element <TIB--ABAMA2> from "<U0F60><U0F56><U0F7E>"
+collating-element <TIB--ABA-A> from "<U0F60><U0F56><U0F60>"
+collating-element <TIB--ABARA> from "<U0F60><U0F56><U0F62>"
+collating-element <TIB--ABALA> from "<U0F60><U0F56><U0F63>"
+collating-element <TIB--ABASA> from "<U0F60><U0F56><U0F66>"
+collating-element <TIB--ABAI> from "<U0F60><U0F56><U0F72>"
+collating-element <TIB--ABAII> from "<U0F60><U0F56><U0F72><U0F72>"
+collating-element <TIB--ABAU> from "<U0F60><U0F56><U0F74>"
+collating-element <TIB--ABAE> from "<U0F60><U0F56><U0F7A>"
+collating-element <TIB--ABAEE> from "<U0F60><U0F56><U0F7B>"
+collating-element <TIB--ABAO> from "<U0F60><U0F56><U0F7C>"
+collating-element <TIB--ABAOO> from "<U0F60><U0F56><U0F7D>"
+collating-element <TIB--ABAsubWA> from "<U0F60><U0F56><U0FAD>"
+collating-element <TIB--ABAsubYA> from "<U0F60><U0F56><U0FB1>"
+collating-element <TIB--ABAsubRA> from "<U0F60><U0F56><U0FB2>"
+collating-element <TIB-RABA> from "<U0F62><U0FA6>"
+collating-element <TIB-LABA> from "<U0F63><U0FA6>"
+collating-element <TIB-SABA> from "<U0F66><U0FA6>"
+# <TIB-MA>
+collating-symbol <TIB-rad-MA>
+collating-element <TIB-MAGA> from "<U0F58><U0F42>"
+collating-element <TIB-MANGA> from "<U0F58><U0F44>"
+collating-element <TIB-MADA> from "<U0F58><U0F51>"
+collating-element <TIB-MANA> from "<U0F58><U0F53>"
+collating-element <TIB-DAMAGA> from "<U0F51><U0F58><U0F42>"
+collating-element <TIB-DAMANGA> from "<U0F51><U0F58><U0F44>"
+collating-element <TIB-DAMADA> from "<U0F51><U0F58><U0F51>"
+collating-element <TIB-DAMANA> from "<U0F51><U0F58><U0F53>"
+collating-element <TIB-DAMABA> from "<U0F51><U0F58><U0F56>"
+collating-element <TIB-DAMAMA> from "<U0F51><U0F58><U0F58>"
+#%% Not in Fynn's chart
+collating-element <TIB-DAMAWA> from "<U0F51><U0F58><U0F5D>"
+collating-element <TIB-DAMA-A> from "<U0F51><U0F58><U0F60>"
+collating-element <TIB-DAMARA> from "<U0F51><U0F58><U0F62>"
+collating-element <TIB-DAMALA> from "<U0F51><U0F58><U0F63>"
+collating-element <TIB-DAMASA> from "<U0F51><U0F58><U0F66>"
+collating-element <TIB-DAMAI> from "<U0F51><U0F58><U0F72>"
+collating-element <TIB-DAMAII> from "<U0F51><U0F58><U0F72><U0F72>"
+collating-element <TIB-DAMAU> from "<U0F51><U0F58><U0F74>"
+collating-element <TIB-DAMAE> from "<U0F51><U0F58><U0F7A>"
+collating-element <TIB-DAMAEE> from "<U0F51><U0F58><U0F7B>"
+collating-element <TIB-DAMAO> from "<U0F51><U0F58><U0F7C>"
+collating-element <TIB-DAMAOO> from "<U0F51><U0F58><U0F7D>"
+collating-element <TIB-DAMAsubWA> from "<U0F51><U0F58><U0FAD>"
+collating-element <TIB-DAMAsubYA> from "<U0F51><U0F58><U0FB1>"
+collating-element <TIB-RAMA> from "<U0F62><U0FA8>"
+collating-element <TIB-SAMA> from "<U0F66><U0FA8>"
+# <TIB-TSA>
+collating-symbol <TIB-rad-TSA>
+collating-element <TIB-GATSA> from "<U0F42><U0F59>"
+collating-element <TIB-BATSA> from "<U0F56><U0F59>"
+collating-element <TIB-RATSA> from "<U0F62><U0FA9>"
+collating-element <TIB-SATSA> from "<U0F66><U0FA9>"
+collating-element <TIB-BARAsubTSA> from "<U0F56><U0F62><U0FA9>"
+collating-element <TIB-BASAsubTSA> from "<U0F56><U0F66><U0FA9>"
+# <TIB-TSHA>
+collating-symbol <TIB-rad-TSHA>
+collating-element <TIB-MATSHA> from "<U0F58><U0F5A>"
+collating-element <TIB--ATSHA> from "<U0F60><U0F5A>"
+# <TIB-DZA>
+collating-symbol <TIB-rad-DZA>
+collating-element <TIB-MADZA> from "<U0F58><U0F5B>"
+collating-element <TIB--ADZA> from "<U0F60><U0F5B>"
+collating-element <TIB-RADZA> from "<U0F62><U0FAB>"
+collating-element <TIB-BARAsubDZA> from "<U0F56><U0F62><U0FAB>"
+# <TIB-WA>
+collating-symbol <TIB-rad-WA>
+collating-element <TIB-MCHU-CAN-subWA> from "<U0F89><U0FAD>"
+collating-element <TIB-MCHU-CAN-subFFWA> from "<U0F89><U0FBA>"
+# <TIB-ZHA>
+collating-symbol <TIB-rad-ZHA>
+collating-element <TIB-GAZHA> from "<U0F42><U0F5E>"
+collating-element <TIB-BAZHA> from "<U0F56><U0F5E>"
+# <TIB-ZA>
+collating-symbol <TIB-rad-ZA>
+collating-element <TIB-GAZA> from "<U0F42><U0F5F>"
+collating-element <TIB-BAZA> from "<U0F56><U0F5F>"
+# <TIB--A>
+collating-symbol <TIB-rad--A>
+collating-element <TIB--AGA> from "<U0F60><U0F42>"
+collating-element <TIB--ADA> from "<U0F60><U0F51>"
+collating-element <TIB--ABA> from "<U0F60><U0F56>"
+# <TIB-YA>
+collating-symbol <TIB-rad-YA>
+collating-element <TIB-GAYA> from "<U0F42><U0F61>"
+# <TIB-RA>
+collating-symbol <TIB-rad-RA>
+# <TIB-LA>
+collating-symbol <TIB-rad-LA>
+# <TIB-SHA>
+collating-symbol <TIB-rad-SHA>
+collating-element <TIB-GASHA> from "<U0F42><U0F64>"
+collating-element <TIB-BASHA> from "<U0F56><U0F64>"
+# <TIB-SA>
+collating-symbol <TIB-rad-SA>
+collating-element <TIB-GASAGA> from "<U0F42><U0F66><U0F42>"
+collating-element <TIB-GASANGA> from "<U0F42><U0F66><U0F44>"
+collating-element <TIB-GASADA> from "<U0F42><U0F66><U0F51>"
+collating-element <TIB-GASANA> from "<U0F42><U0F66><U0F53>"
+collating-element <TIB-GASABA> from "<U0F42><U0F66><U0F56>"
+collating-element <TIB-GASAMA> from "<U0F42><U0F66><U0F58>"
+collating-element <TIB-GASA-A> from "<U0F42><U0F66><U0F60>"
+collating-element <TIB-GASARA> from "<U0F42><U0F66><U0F62>"
+collating-element <TIB-GASALA> from "<U0F42><U0F66><U0F63>"
+collating-element <TIB-GASASA> from "<U0F42><U0F66><U0F66>"
+collating-element <TIB-GASAI> from "<U0F42><U0F66><U0F72>"
+collating-element <TIB-GASAII> from "<U0F42><U0F66><U0F72><U0F72>"
+collating-element <TIB-GASAU> from "<U0F42><U0F66><U0F74>"
+collating-element <TIB-GASAE> from "<U0F42><U0F66><U0F7A>"
+collating-element <TIB-GASAEE> from "<U0F42><U0F66><U0F7B>"
+collating-element <TIB-GASAO> from "<U0F42><U0F66><U0F7C>"
+collating-element <TIB-GASAOO> from "<U0F42><U0F66><U0F7D>"
+collating-element <TIB-GASAsubWA> from "<U0F42><U0F66><U0FAD>"
+collating-element <TIB-BASAGA> from "<U0F56><U0F66><U0F42>"
+collating-element <TIB-BASANGA> from "<U0F56><U0F66><U0F44>"
+collating-element <TIB-BASADA> from "<U0F56><U0F66><U0F51>"
+collating-element <TIB-BASANA> from "<U0F56><U0F66><U0F53>"
+collating-element <TIB-BASABA> from "<U0F56><U0F66><U0F56>"
+collating-element <TIB-BASAMA> from "<U0F56><U0F66><U0F58>"
+#%% Not in Fynn's chart
+collating-element <TIB-BASAMA2> from "<U0F56><U0F66><U0F7E>"
+collating-element <TIB-BASA-A> from "<U0F56><U0F66><U0F60>"
+collating-element <TIB-BASARA> from "<U0F56><U0F66><U0F62>"
+collating-element <TIB-BASALA> from "<U0F56><U0F66><U0F63>"
+collating-element <TIB-BASASA> from "<U0F56><U0F66><U0F66>"
+collating-element <TIB-BASAI> from "<U0F56><U0F66><U0F72>"
+collating-element <TIB-BASAII> from "<U0F56><U0F66><U0F72><U0F72>"
+collating-element <TIB-BASAU> from "<U0F56><U0F66><U0F74>"
+collating-element <TIB-BASAE> from "<U0F56><U0F66><U0F7A>"
+collating-element <TIB-BASAEE> from "<U0F56><U0F66><U0F7B>"
+collating-element <TIB-BASAO> from "<U0F56><U0F66><U0F7C>"
+collating-element <TIB-BASAOO> from "<U0F56><U0F66><U0F7D>"
+collating-element <TIB-BASAsubWA> from "<U0F56><U0F66><U0FAD>"
+collating-element <TIB-BSRA> from "<U0F56><U0F66><U0FB2>"
+collating-element <TIB-BSLA> from "<U0F56><U0F66><U0FB3>"
+# <TIB-HA>
+collating-symbol <TIB-rad-HA>
+collating-element <TIB-LHA> from "<U0F63><U0FB7>"
+# <TIB-A>
+collating-symbol <TIB-rad-A>
+collating-symbol <TIB-srog-med>
+collating-symbol <TIB-AA>
+collating-element <TIB-'I> from "<U0F71><U0F72>"
+collating-element <TIB-'II> from "<U0F71><U0F80>"
+collating-element <TIB-'UU> from "<U0F71><U0F74>"
+collating-symbol <TIB-subKA>
+collating-symbol <TIB-subKHA>
+collating-symbol <TIB-subGA>
+collating-symbol <TIB-subNGA>
+collating-symbol <TIB-subCA>
+collating-symbol <TIB-subCHA>
+collating-symbol <TIB-subJA>
+collating-symbol <TIB-subNYA>
+collating-symbol <TIB-subTA>
+collating-symbol <TIB-subTHA>
+collating-symbol <TIB-subDA>
+collating-symbol <TIB-subNA>
+collating-symbol <TIB-subPA>
+collating-symbol <TIB-subPHA>
+collating-symbol <TIB-subBA>
+collating-symbol <TIB-subMA>
+collating-symbol <TIB-subTSA>
+collating-symbol <TIB-subTSHA>
+collating-symbol <TIB-subDZA>
+collating-symbol <TIB-subWA>
+collating-symbol <TIB-subZHA>
+collating-symbol <TIB-subZA>
+collating-symbol <TIB-sub-A>
+collating-symbol <TIB-subYA>
+collating-symbol <TIB-subRA>
+collating-symbol <TIB-subLA>
+collating-symbol <TIB-subSHA>
+collating-symbol <TIB-subSA>
+collating-symbol <TIB-subHA>
+collating-symbol <TIB-subA>
+
 # Ordre des symboles internes / Order of internal symbols
 #
 # SYMB. N°
 #
 <RES-1>
+<NOM>
+<SUB>
+<REV>
+<VAR>
+<VARR>
+<TIB-SIGN-RJES-SU-NGA-RO>
+<TIB-SIGN-NYI-ZLA-NAA-DA>
+<TIB-SIGN-SNA-LDAN>
 <MIN>
 # forme de base (bas de casse, arabe intrinsèque,
 # hébreu intrinsèque, etc.
@@ -2850,6 +3504,8 @@ collating-symbol  <MMSTACK>
 #
 <BAS> # 15
 #
+<LCE-TSA-CAN>
+#
 <ACA> # 18
 <GRA> # 19
 <BRE> # 20
@@ -2885,6 +3541,11 @@ collating-symbol  <MMSTACK>
 <TNS> # accent aigu/tonos/acute accent
 <DLT> # tr<e'>ma/dialytica/diaeresis
 <DTT> # dialytika tonos
+#
+# TIBETAN
+#
+<TIB-SIGN-MCHU-CAN>
+<TIB-SIGN-MCHU-CAN-FF>
 #
 <0> # 48
 <1> # 49
@@ -3133,6 +3794,134 @@ collating-symbol  <MMSTACK>
 <CYR-E>
 <CYR-YOU>
 <CYR-YA>
+#
+# TIBETAN
+#
+<TIB-TSHEG>
+<TIB-KA>
+<TIB-rad-KA>
+<TIB-KHA> 
+<TIB-rad-KHA>
+<TIB-GA>
+<TIB-rad-GA>
+<TIB-NGA>
+<TIB-rad-NGA>
+<TIB-CA>
+<TIB-rad-CA>
+<TIB-CHA>
+<TIB-rad-CHA>
+<TIB-JA>
+<TIB-rad-JA>
+<TIB-NYA>
+<TIB-rad-NYA>
+<TIB-TA>
+<TIB-rad-TA>
+<TIB-THA>
+<TIB-rad-THA>
+<TIB-DA>
+<TIB-rad-DA>
+<TIB-NA>
+<TIB-rad-NA>
+<TIB-PA>
+<TIB-rad-PA>
+<TIB-PHA>
+<TIB-rad-PHA>
+<TIB-BA>
+<TIB-rad-BA>
+<TIB-MA>
+<TIB-rad-MA>
+<TIB-TSA>
+<TIB-rad-TSA>
+<TIB-TSHA>
+<TIB-rad-TSHA>
+<TIB-DZA>
+<TIB-rad-DZA>
+<TIB-WA>
+<TIB-rad-WA>
+<TIB-ZHA>
+<TIB-rad-ZHA>
+<TIB-ZA>
+<TIB-rad-ZA>
+<TIB--A>
+<TIB-rad--A>
+<TIB-YA>
+<TIB-rad-YA>
+<TIB-RA>
+<TIB-rad-RA>
+<TIB-LA>
+<TIB-rad-LA>
+<TIB-SHA>
+<TIB-rad-SHA>
+<TIB-SA>
+<TIB-rad-SA>
+<TIB-HA>
+<TIB-rad-HA>
+<TIB-A>
+<TIB-rad-A>
+
+<TIB-I>
+<TIB-U>
+<TIB-E>
+<TIB-O>
+
+<TIB-AA>
+
+<TIB+G>
+<TIB+NG>
+<TIB+D>
+<TIB+N>
+<TIB+B>
+<TIB+M>
+<TIB+M2>
+<TIB+W>
+<TIB+A>
+<TIB+R>
+<TIB+L>
+<TIB+S>
+<TIB+subWA>
+<TIB+subYA>
+<TIB+subRA>
+<TIB+subLA>
+<TIB+BR>
+<TIB+BL>
+<TIB+BS>
+<TIB+I>
+<TIB+E>
+<TIB+U>
+<TIB+O>
+
+<TIB-srog-med>
+<TIB-subKA>
+<TIB-subKHA>
+<TIB-subGA>
+<TIB-subNGA>
+<TIB-subCA>
+<TIB-subCHA>
+<TIB-subJA>
+<TIB-subNYA>
+<TIB-subTA>
+<TIB-subTHA>
+<TIB-subDA>
+<TIB-subNA>
+<TIB-subPA>
+<TIB-subPHA>
+<TIB-subBA>
+<TIB-subMA>
+<TIB-subTSA>
+<TIB-subTSHA>
+<TIB-subDZA>
+<TIB-subWA>
+<TIB-subZHA>
+<TIB-subZA>
+<TIB-sub-A>
+<TIB-subYA>
+<TIB-subRA>
+<TIB-subLA>
+<TIB-subSHA>
+<TIB-subSA>
+<TIB-subHA>
+<TIB-subA>
+
 #
 # ARMENIAN
 #
@@ -8129,6 +8918,600 @@ order_start <MYANMAR>;forward;forward;forward;forward,position
 <U104E> "<CSMMC101C><CSMMCK100A><MMT1038><CSMMC1000><CSMMCK1004><CSMMV1031102C><MMT1038>";<MMALT>;IGNORE;IGNORE
 <U104F> "<CSMMC1021><CSMMV102D>";<MMALT>;IGNORE;IGNORE
 
+order_start <TIBETAN>;forward;forward;forward;forward,position
+<U0F20>      <0>;<BAS>;IGNORE;IGNORE
+<U0F33>      <0>;<VAR>;IGNORE;IGNORE
+<U0F21>      <1>;<BAS>;IGNORE;IGNORE
+<U0F2A>      <1>;<VAR>;IGNORE;IGNORE
+<U0F22>      <2>;<BAS>;IGNORE;IGNORE
+<U0F2B>      <2>;<VAR>;IGNORE;IGNORE
+<U0F23>      <3>;<BAS>;IGNORE;IGNORE
+<U0F2C>      <3>;<VAR>;IGNORE;IGNORE
+<U0F24>      <4>;<BAS>;IGNORE;IGNORE
+<U0F2D>      <4>;<VAR>;IGNORE;IGNORE
+<U0F25>      <5>;<BAS>;IGNORE;IGNORE
+<U0F2E>      <5>;<VAR>;IGNORE;IGNORE
+<U0F26>      <6>;<BAS>;IGNORE;IGNORE
+<U0F2F>      <6>;<VAR>;IGNORE;IGNORE
+<U0F27>      <7>;<BAS>;IGNORE;IGNORE
+<U0F30>      <7>;<VAR>;IGNORE;IGNORE
+<U0F28>      <8>;<BAS>;IGNORE;IGNORE
+<U0F31>      <8>;<VAR>;IGNORE;IGNORE
+<U0F29>      <9>;<BAS>;IGNORE;IGNORE
+<U0F32>      <9>;<VAR>;IGNORE;IGNORE
+
+<U0F0B> <TIB-TSHEG>;IGNORE;IGNORE;IGNORE
+<U0F40> <TIB-KA>;<BAS>;<NOM>;IGNORE
+<TIB-LCE-TSA-CAN-KA> <TIB-KA>;<LCE-TSA-CAN>;<NOM>;IGNORE
+<TIB-DKA> "<TIB-rad-KA><TIB+D>";"<BAS><BAS>";"<NOM><NOM>";IGNORE
+<TIB-BKA> "<TIB-rad-KA><TIB+B>";"<BAS><BAS>";"<NOM><NOM>";IGNORE
+<TIB-RKA> "<TIB-rad-KA><TIB+R>";"<BAS><BAS>";"<NOM><NOM>";IGNORE
+<TIB-LKA> "<TIB-rad-KA><TIB+L>";"<BAS><BAS>";"<NOM><NOM>";IGNORE
+<TIB-SKA> "<TIB-rad-KA><TIB+S>";"<BAS><BAS>";"<NOM><NOM>";IGNORE
+<TIB-BRKA> "<TIB-rad-KA><TIB+BR>";"<BAS><BAS>";"<NOM><NOM>";IGNORE
+<TIB-BLKA> "<TIB-rad-KA><TIB+BL>";"<BAS><BAS>";"<NOM><NOM>";IGNORE
+<TIB-BSKA> "<TIB-rad-KA><TIB+BS>";"<BAS><BAS>";"<NOM><NOM>";IGNORE
+
+<U0F41> <TIB-KHA>;<BAS>;<NOM>;IGNORE
+<TIB-LCE-TSA-CAN-KHA> <TIB-KHA>;<LCE-TSA-CAN>;<NOM>;IGNORE
+<TIB-MKHA> "<TIB-rad-KHA><TIB+M>";"<BAS><BAS>";"<NOM><NOM>";IGNORE
+<TIB--KHA> "<TIB-rad-KHA><TIB+A>";"<BAS><BAS>";"<NOM><NOM>";IGNORE
+
+<U0F42> <TIB-GA>;<BAS>;<NOM>;IGNORE
+<TIB-GAD> "<TIB-GA><TIB-DA>";"<LIG><LIG>";"<NOM><NOM>";IGNORE
+<TIB-GAN> "<TIB-GA><TIB-NA>";"<LIG><LIG>";"<NOM><NOM>";IGNORE
+<TIB-GAS> "<TIB-GA><TIB-SA>";"<LIG><LIG>";"<NOM><NOM>";IGNORE
+<TIB-DGAG> "<TIB-rad-GA><TIB+D><TIB+G>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-DGANG> "<TIB-rad-GA><TIB+D><TIB+NG>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-DGAD> "<TIB-rad-GA><TIB+D><TIB+D>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-DGAN> "<TIB-rad-GA><TIB+D><TIB+N>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-DGAB> "<TIB-rad-GA><TIB+D><TIB+B>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-DGAM> "<TIB-rad-GA><TIB+D><TIB+M>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-DGAW> "<TIB-rad-GA><TIB+D><TIB+W>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-DGA-> "<TIB-rad-GA><TIB+D><TIB+A>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-DGAR> "<TIB-rad-GA><TIB+D><TIB+R>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-DGAL> "<TIB-rad-GA><TIB+D><TIB+L>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-DGAS> "<TIB-rad-GA><TIB+D><TIB+S>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-DGAI> "<TIB-rad-GA><TIB+D><TIB+I>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-DGU> "<TIB-rad-GA><TIB+D><TIB+U>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-DGE> "<TIB-rad-GA><TIB+D><TIB+E>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-DGEE> "<TIB-rad-GA><TIB+D><TIB+E>";"<BAS><BAS><BAS>";"<VAR><VAR><VAR>";IGNORE
+<TIB-DGO> "<TIB-rad-GA><TIB+D><TIB+O>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-DGOO> "<TIB-rad-GA><TIB+D><TIB+O>";"<BAS><BAS><BAS>";"<VAR><VAR><VAR>";IGNORE
+<TIB-DGsubWA> "<TIB-rad-GA><TIB+D><TIB+subWA>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-DGsubYA> "<TIB-rad-GA><TIB+D><TIB+subYA>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-DGsubRA> "<TIB-rad-GA><TIB+D><TIB+subRA>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-BGAG> "<TIB-rad-GA><TIB+B><TIB+G>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-BGANG> "<TIB-rad-GA><TIB+B><TIB+NG>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-BGAD> "<TIB-rad-GA><TIB+B><TIB+D>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-BGAN> "<TIB-rad-GA><TIB+B><TIB+N>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-BGAB> "<TIB-rad-GA><TIB+B><TIB+B>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-BGAM> "<TIB-rad-GA><TIB+B><TIB+M>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-BGAM2> "<TIB-rad-GA><TIB+B><TIB+M2>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-BGAW> "<TIB-rad-GA><TIB+B><TIB+W>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-BGA-> "<TIB-rad-GA><TIB+B><TIB+A>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-BGAR> "<TIB-rad-GA><TIB+B><TIB+R>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-BGAL> "<TIB-rad-GA><TIB+B><TIB+L>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-BGAI> "<TIB-rad-GA><TIB+B><TIB+I>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-BGAII> "<TIB-rad-GA><TIB+B><TIB+I>";"<BAS><BAS><BAS>";"<VAR><VAR><VAR>";IGNORE
+<TIB-BGU> "<TIB-rad-GA><TIB+B><TIB+U>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-BGE> "<TIB-rad-GA><TIB+B><TIB+E>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-BGEE> "<TIB-rad-GA><TIB+B><TIB+E>";"<BAS><BAS><BAS>";"<VAR><VAR><VAR>";IGNORE
+<TIB-BGO> "<TIB-rad-GA><TIB+B><TIB+O>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-BGOO> "<TIB-rad-GA><TIB+B><TIB+O>";"<BAS><BAS><BAS>";"<VAR><VAR><VAR>";IGNORE
+<TIB-BGsubWA> "<TIB-rad-GA><TIB+B><TIB+subWA>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-BGsubYA> "<TIB-rad-GA><TIB+B><TIB+subYA>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-BGsubRA> "<TIB-rad-GA><TIB+B><TIB+subRA>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-BGsubLA> "<TIB-rad-GA><TIB+B><TIB+subLA>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-MGAG> "<TIB-rad-GA><TIB+M><TIB+G>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-MGANG> "<TIB-rad-GA><TIB+M><TIB+NG>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-MGAD> "<TIB-rad-GA><TIB+M><TIB+D>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-MGAN> "<TIB-rad-GA><TIB+M><TIB+N>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-MAGABA> "<TIB-rad-GA><TIB+M><TIB+B>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-MAGAMA> "<TIB-rad-GA><TIB+M><TIB+M>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-MAGA-A> "<TIB-rad-GA><TIB+M><TIB+A>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-MAGARA> "<TIB-rad-GA><TIB+M><TIB+R>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-MAGALA> "<TIB-rad-GA><TIB+M><TIB+L>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-MAGAI> "<TIB-rad-GA><TIB+M><TIB+I>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-MAGAII> "<TIB-rad-GA><TIB+M><TIB+I>";"<BAS><BAS><BAS>";"<VAR><VAR><VAR>";IGNORE
+<TIB-MAGAU> "<TIB-rad-GA><TIB+M><TIB+U>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-MAGAE> "<TIB-rad-GA><TIB+M><TIB+E>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-MAGAEE> "<TIB-rad-GA><TIB+M><TIB+E>";"<BAS><BAS><BAS>";"<VAR><VAR><VAR>";IGNORE
+<TIB-MAGAO> "<TIB-rad-GA><TIB+M><TIB+O>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-MAGAOO> "<TIB-rad-GA><TIB+M><TIB+O>";"<BAS><BAS><BAS>";"<VAR><VAR><VAR>";IGNORE
+<TIB-MAGAsubWA> "<TIB-rad-GA><TIB+M><TIB+subWA>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-MAGAsubYA> "<TIB-rad-GA><TIB+M><TIB+subYA>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-MAGAsubRA> "<TIB-rad-GA><TIB+M><TIB+subRA>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB--AGAGA> "<TIB-rad-GA><TIB+A><TIB+G>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB--AGANGA> "<TIB-rad-GA><TIB+A><TIB+NG>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB--AGADA> "<TIB-rad-GA><TIB+A><TIB+D>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB--AGANA> "<TIB-rad-GA><TIB+A><TIB+N>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB--AGABA> "<TIB-rad-GA><TIB+A><TIB+B>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB--AGAMA> "<TIB-rad-GA><TIB+A><TIB+M>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB--AGAMA2> "<TIB-rad-GA><TIB+A><TIB+M2>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB--AGA-A> "<TIB-rad-GA><TIB+A><TIB+A>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB--AGARA> "<TIB-rad-GA><TIB+A><TIB+R>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB--AGALA> "<TIB-rad-GA><TIB+A><TIB+L>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB--AGASA> "<TIB-rad-GA><TIB+A><TIB+S>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB--AGAI> "<TIB-rad-GA><TIB+A><TIB+I>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB--AGAII> "<TIB-rad-GA><TIB+A><TIB+I>";"<BAS><BAS><BAS>";"<VAR><VAR><VAR>";IGNORE
+<TIB--AGAU> "<TIB-rad-GA><TIB+A><TIB+U>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB--AGAE> "<TIB-rad-GA><TIB+A><TIB+E>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB--AGAEE> "<TIB-rad-GA><TIB+A><TIB+E>";"<BAS><BAS><BAS>";"<VAR><VAR><VAR>";IGNORE
+<TIB--AGAO> "<TIB-rad-GA><TIB+A><TIB+O>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB--AGAOO> "<TIB-rad-GA><TIB+A><TIB+O>";"<BAS><BAS><BAS>";"<VAR><VAR><VAR>";IGNORE
+<TIB--AGAsubWA> "<TIB-rad-GA><TIB+A><TIB+subWA>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB--AGAsubYA> "<TIB-rad-GA><TIB+A><TIB+subYA>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB--AGAsubRA> "<TIB-rad-GA><TIB+A><TIB+subRA>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-RAGA> "<TIB-rad-GA><TIB+R>";"<BAS><BAS>";"<NOM><NOM>";IGNORE
+<TIB-LAGA> "<TIB-rad-GA><TIB+L>";"<BAS><BAS>";"<NOM><NOM>";IGNORE
+<TIB-SAGA> "<TIB-rad-GA><TIB+S>";"<BAS><BAS>";"<NOM><NOM>";IGNORE
+<TIB-BARAsubGA> "<TIB-rad-GA><TIB+B><TIB+R>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-BALAsubGA> "<TIB-rad-GA><TIB+B><TIB+L>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-BASAsubGA> "<TIB-rad-GA><TIB+B><TIB+S>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+
+<U0F44> <TIB-NGA>;<BAS>;<NOM>;IGNORE
+<TIB-DANGAGA> "<TIB-rad-NGA><TIB+D><TIB+G>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-DANGANGA> "<TIB-rad-NGA><TIB+D><TIB+NG>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-DANGADA> "<TIB-rad-NGA><TIB+D><TIB+D>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-DANGANA> "<TIB-rad-NGA><TIB+D><TIB+N>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-DANGABA> "<TIB-rad-NGA><TIB+D><TIB+B>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-DANGAMA> "<TIB-rad-NGA><TIB+D><TIB+M>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-DANGA-A> "<TIB-rad-NGA><TIB+D><TIB+A>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-DANGARA> "<TIB-rad-NGA><TIB+D><TIB+R>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-DANGALA> "<TIB-rad-NGA><TIB+D><TIB+L>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-DANGASA> "<TIB-rad-NGA><TIB+D><TIB+S>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-DANGAI> "<TIB-rad-NGA><TIB+D><TIB+I>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-DANGAII> "<TIB-rad-NGA><TIB+D><TIB+I>";"<BAS><BAS><BAS>";"<VAR><VAR><VAR>";IGNORE
+<TIB-DANGAU> "<TIB-rad-NGA><TIB+D><TIB+U>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-DANGAE> "<TIB-rad-NGA><TIB+D><TIB+E>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-DANGAEE> "<TIB-rad-NGA><TIB+D><TIB+E>";"<BAS><BAS><BAS>";"<VAR><VAR><VAR>";IGNORE
+<TIB-DANGAO> "<TIB-rad-NGA><TIB+D><TIB+O>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-DANGAOO> "<TIB-rad-NGA><TIB+D><TIB+O>";"<BAS><BAS><BAS>";"<VAR><VAR><VAR>";IGNORE
+<TIB-DANGAsubWA> "<TIB-rad-NGA><TIB+D><TIB+subWA>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-MANGAGA> "<TIB-rad-NGA><TIB+M><TIB+G>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-MANGANGA> "<TIB-rad-NGA><TIB+M><TIB+NG>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-MANGADA> "<TIB-rad-NGA><TIB+M><TIB+D>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-MANGANA> "<TIB-rad-NGA><TIB+M><TIB+N>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-MANGABA> "<TIB-rad-NGA><TIB+M><TIB+B>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-MANGAMA> "<TIB-rad-NGA><TIB+M><TIB+M>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-MANGA-A> "<TIB-rad-NGA><TIB+M><TIB+A>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-MANGARA> "<TIB-rad-NGA><TIB+M><TIB+R>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-MANGALA> "<TIB-rad-NGA><TIB+M><TIB+L>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-MANGAI> "<TIB-rad-NGA><TIB+M><TIB+I>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-MANGAII> "<TIB-rad-NGA><TIB+M><TIB+I>";"<BAS><BAS><BAS>";"<VAR><VAR><VAR>";IGNORE
+<TIB-MANGAU> "<TIB-rad-NGA><TIB+M><TIB+U>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-MANGAE> "<TIB-rad-NGA><TIB+M><TIB+E>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-MANGAEE> "<TIB-rad-NGA><TIB+M><TIB+E>";"<BAS><BAS><BAS>";"<VAR><VAR><VAR>";IGNORE
+<TIB-MANGAO> "<TIB-rad-NGA><TIB+M><TIB+O>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-MANGAOO> "<TIB-rad-NGA><TIB+M><TIB+O>";"<BAS><BAS><BAS>";"<VAR><VAR><VAR>";IGNORE
+<TIB-MANGAsubWA> "<TIB-rad-NGA><TIB+M><TIB+subWA>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-RAsubNGA> "<TIB-rad-NGA><TIB+R>";"<BAS><BAS>";"<NOM><NOM>";IGNORE
+<TIB-LAsubNGA> "<TIB-rad-NGA><TIB+L>";"<BAS><BAS>";"<NOM><NOM>";IGNORE
+<TIB-SAsubNGA> "<TIB-rad-NGA><TIB+S>";"<BAS><BAS>";"<NOM><NOM>";IGNORE
+<TIB-BARAsubNGA> "<TIB-rad-NGA><TIB+B><TIB+R>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-BALAsubNGA> "<TIB-rad-NGA><TIB+B><TIB+L>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-BASAsubNGA> "<TIB-rad-NGA><TIB+B><TIB+S>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+
+<U0F45> <TIB-CA>;<BAS>;<NOM>;IGNORE
+<TIB-GACA> "<TIB-rad-CA><TIB+G>";"<BAS><BAS>";"<NOM><NOM>";IGNORE
+<TIB-BACA> "<TIB-rad-CA><TIB+B>";"<BAS><BAS>";"<NOM><NOM>";IGNORE
+<TIB-LACA> "<TIB-rad-CA><TIB+L>";"<BAS><BAS>";"<NOM><NOM>";IGNORE
+<TIB-BALAsubCA> "<TIB-rad-CA><TIB+B><TIB+L>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+
+<U0F46> <TIB-CHA>;<BAS>;<NOM>;IGNORE
+<TIB-MACHA> "<TIB-rad-CHA><TIB+M>";"<BAS><BAS>";"<NOM><NOM>";IGNORE
+<TIB--ACHA> "<TIB-rad-CHA><TIB+A>";"<BAS><BAS>";"<NOM><NOM>";IGNORE
+
+<U0F47> <TIB-JA>;<BAS>;<NOM>;IGNORE
+<TIB-MAJA> "<TIB-rad-JA><TIB+M>";"<BAS><BAS>";"<NOM><NOM>";IGNORE
+<TIB--AJA> "<TIB-rad-JA><TIB+A>";"<BAS><BAS>";"<NOM><NOM>";IGNORE
+<TIB-RAJA> "<TIB-rad-JA><TIB+R>";"<BAS><BAS>";"<NOM><NOM>";IGNORE
+<TIB-LAJA> "<TIB-rad-JA><TIB+L>";"<BAS><BAS>";"<NOM><NOM>";IGNORE
+<TIB-BARAsubJA> "<TIB-rad-JA><TIB+B><TIB+R>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-BALAsubJA> "<TIB-rad-JA><TIB+B><TIB+L>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+
+<U0F49> <TIB-NYA>;<BAS>;<NOM>;IGNORE
+<TIB-GANYA> "<TIB-rad-NYA><TIB+G>";"<BAS><BAS>";"<NOM><NOM>";IGNORE
+<TIB-MANYA> "<TIB-rad-NYA><TIB+M>";"<BAS><BAS>";"<NOM><NOM>";IGNORE
+<TIB-RANYA> "<TIB-rad-NYA><TIB+R>";"<BAS><BAS>";"<NOM><NOM>";IGNORE
+<TIB-SANYA> "<TIB-rad-NYA><TIB+S>";"<BAS><BAS>";"<NOM><NOM>";IGNORE
+<TIB-BARAsubNYA> "<TIB-rad-NYA><TIB+B><TIB+R>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-BASAsubNYA> "<TIB-rad-NYA><TIB+B><TIB+S>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+
+<U0F4F> <TIB-TA>;<BAS>;<NOM>;IGNORE
+<U0F4A> <TIB-TA>;<BAS>;<VAR>;IGNORE
+<TIB-GATA> "<TIB-rad-TA><TIB+G>";"<BAS><BAS>";"<NOM><NOM>";IGNORE
+<TIB-BATA> "<TIB-rad-TA><TIB+B>";"<BAS><BAS>";"<NOM><NOM>";IGNORE
+<TIB-RATA> "<TIB-rad-TA><TIB+R>";"<BAS><BAS>";"<NOM><NOM>";IGNORE
+<TIB-LATA> "<TIB-rad-TA><TIB+L>";"<BAS><BAS>";"<NOM><NOM>";IGNORE
+<TIB-SATA> "<TIB-rad-TA><TIB+S>";"<BAS><BAS>";"<NOM><NOM>";IGNORE
+<TIB-BARAsubTA> "<TIB-rad-TA><TIB+B><TIB+R>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-BALAsubTA> "<TIB-rad-TA><TIB+B><TIB+L>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-BASAsubTA> "<TIB-rad-TA><TIB+B><TIB+S>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+
+<U0F50> <TIB-THA>;<BAS>;<NOM>;IGNORE
+<U0F4B> <TIB-THA>;<BAS>;<VAR>;IGNORE
+<TIB-MATHA> "<TIB-rad-THA><TIB+M>";"<BAS><BAS>";"<NOM><NOM>";IGNORE
+<TIB--ATHA> "<TIB-rad-THA><TIB+A>";"<BAS><BAS>";"<NOM><NOM>";IGNORE
+
+<U0F51> <TIB-DA>;<BAS>;<NOM>;IGNORE
+<U0F4C> <TIB-DA>;<BAS>;<VAR>;IGNORE
+<TIB-DAGA> "<TIB-DA><TIB-GA>";"<LIG><LIG>";"<NOM><NOM>";IGNORE
+<TIB-DANGA> "<TIB-DA><TIB-NGA>";"<LIG><LIG>";"<NOM><NOM>";IGNORE
+<TIB-DABA> "<TIB-DA><TIB-BA>";"<LIG><LIG>";"<NOM><NOM>";IGNORE
+<TIB-DAMA> "<TIB-DA><TIB-MA>";"<LIG><LIG>";"<NOM><NOM>";IGNORE
+<TIB-GADAGA> "<TIB-rad-DA><TIB+G><TIB+G>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-GADANGA> "<TIB-rad-DA><TIB+G><TIB+NG>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-GADADA> "<TIB-rad-DA><TIB+G><TIB+D>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-GADANA> "<TIB-rad-DA><TIB+G><TIB+N>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-GADABA> "<TIB-rad-DA><TIB+G><TIB+B>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-GADAMA> "<TIB-rad-DA><TIB+G><TIB+M>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-GADAMA2> "<TIB-rad-DA><TIB+G><TIB+M2>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-GADA-A> "<TIB-rad-DA><TIB+G><TIB+A>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-GADARA> "<TIB-rad-DA><TIB+G><TIB+R>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-GADALA> "<TIB-rad-DA><TIB+G><TIB+L>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-GADASA> "<TIB-rad-DA><TIB+G><TIB+S>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-GADAI> "<TIB-rad-DA><TIB+G><TIB+I>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-GADAII> "<TIB-rad-DA><TIB+G><TIB+I>";"<BAS><BAS><BAS>";"<VAR><VAR><VAR>";IGNORE
+<TIB-GADAU> "<TIB-rad-DA><TIB+G><TIB+U>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-GADAE> "<TIB-rad-DA><TIB+G><TIB+E>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-GADAEE> "<TIB-rad-DA><TIB+G><TIB+E>";"<BAS><BAS><BAS>";"<VAR><VAR><VAR>";IGNORE
+<TIB-GADAO> "<TIB-rad-DA><TIB+G><TIB+O>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-GADAOO> "<TIB-rad-DA><TIB+G><TIB+O>";"<BAS><BAS><BAS>";"<VAR><VAR><VAR>";IGNORE
+<TIB-GADAsubWA> "<TIB-rad-DA><TIB+G><TIB+subWA>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-BADAGA> "<TIB-rad-DA><TIB+B><TIB+G>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-BADANGA> "<TIB-rad-DA><TIB+B><TIB+NG>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-BADADA> "<TIB-rad-DA><TIB+B><TIB+D>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-BADANA> "<TIB-rad-DA><TIB+B><TIB+N>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-BADABA> "<TIB-rad-DA><TIB+B><TIB+B>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-BADAMA> "<TIB-rad-DA><TIB+B><TIB+M>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-BADAMA2> "<TIB-rad-DA><TIB+B><TIB+M2>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-BADA-A> "<TIB-rad-DA><TIB+B><TIB+A>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-BADARA> "<TIB-rad-DA><TIB+B><TIB+R>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-BADALA> "<TIB-rad-DA><TIB+B><TIB+L>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-BADASA> "<TIB-rad-DA><TIB+B><TIB+S>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-BADAI> "<TIB-rad-DA><TIB+B><TIB+I>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-BADAII> "<TIB-rad-DA><TIB+B><TIB+I>";"<BAS><BAS><BAS>";"<VAR><VAR><VAR>";IGNORE
+<TIB-BADAU> "<TIB-rad-DA><TIB+B><TIB+U>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-BADAE> "<TIB-rad-DA><TIB+B><TIB+E>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-BADAEE> "<TIB-rad-DA><TIB+B><TIB+E>";"<BAS><BAS><BAS>";"<VAR><VAR><VAR>";IGNORE
+<TIB-BADAO> "<TIB-rad-DA><TIB+B><TIB+O>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-BADAOO> "<TIB-rad-DA><TIB+B><TIB+O>";"<BAS><BAS><BAS>";"<VAR><VAR><VAR>";IGNORE
+<TIB-BADAsubWA> "<TIB-rad-DA><TIB+B><TIB+subWA>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-MADAGA> "<TIB-rad-DA><TIB+M><TIB+G>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-MADANGA> "<TIB-rad-DA><TIB+M><TIB+NG>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-MADADA> "<TIB-rad-DA><TIB+M><TIB+D>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-MADANA> "<TIB-rad-DA><TIB+M><TIB+N>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-MADABA> "<TIB-rad-DA><TIB+M><TIB+B>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-MADAMA> "<TIB-rad-DA><TIB+M><TIB+M>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-MADA-A> "<TIB-rad-DA><TIB+M><TIB+A>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-MADARA> "<TIB-rad-DA><TIB+M><TIB+R>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-MADALA> "<TIB-rad-DA><TIB+M><TIB+L>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-MADASA> "<TIB-rad-DA><TIB+M><TIB+S>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-MADAI> "<TIB-rad-DA><TIB+M><TIB+I>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-MADAII> "<TIB-rad-DA><TIB+M><TIB+I>";"<BAS><BAS><BAS>";"<VAR><VAR><VAR>";IGNORE
+<TIB-MADAU> "<TIB-rad-DA><TIB+M><TIB+U>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-MADAE> "<TIB-rad-DA><TIB+M><TIB+E>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-MADAEE> "<TIB-rad-DA><TIB+M><TIB+E>";"<BAS><BAS><BAS>";"<VAR><VAR><VAR>";IGNORE
+<TIB-MADAO> "<TIB-rad-DA><TIB+M><TIB+O>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-MADAOO> "<TIB-rad-DA><TIB+M><TIB+O>";"<BAS><BAS><BAS>";"<VAR><VAR><VAR>";IGNORE
+<TIB-MADAsubWA> "<TIB-rad-DA><TIB+M><TIB+subWA>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB--ADAGA> "<TIB-rad-DA><TIB+A><TIB+G>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB--ADANGA> "<TIB-rad-DA><TIB+A><TIB+NG>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB--ADADA> "<TIB-rad-DA><TIB+A><TIB+D>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB--ADANA> "<TIB-rad-DA><TIB+A><TIB+N>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB--ADABA> "<TIB-rad-DA><TIB+A><TIB+B>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB--ADAMA> "<TIB-rad-DA><TIB+A><TIB+M>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB--ADAMA2> "<TIB-rad-DA><TIB+A><TIB+M2>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB--ADAWA> "<TIB-rad-DA><TIB+A><TIB+W>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB--ADA-A> "<TIB-rad-DA><TIB+A><TIB+A>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB--ADARA> "<TIB-rad-DA><TIB+A><TIB+R>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB--ADALA> "<TIB-rad-DA><TIB+A><TIB+L>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB--ADASA> "<TIB-rad-DA><TIB+A><TIB+S>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB--ADAI> "<TIB-rad-DA><TIB+A><TIB+I>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB--ADAII> "<TIB-rad-DA><TIB+A><TIB+I>";"<BAS><BAS><BAS>";"<VAR><VAR><VAR>";IGNORE
+<TIB--ADAU> "<TIB-rad-DA><TIB+A><TIB+U>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB--ADAE> "<TIB-rad-DA><TIB+A><TIB+E>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB--ADAEE> "<TIB-rad-DA><TIB+A><TIB+E>";"<BAS><BAS><BAS>";"<VAR><VAR><VAR>";IGNORE
+<TIB--ADAO> "<TIB-rad-DA><TIB+A><TIB+O>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB--ADAOO> "<TIB-rad-DA><TIB+A><TIB+O>";"<BAS><BAS><BAS>";"<VAR><VAR><VAR>";IGNORE
+<TIB--ADAsubWA> "<TIB-rad-DA><TIB+A><TIB+subWA>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB--ADAsubRA> "<TIB-rad-DA><TIB+A><TIB+subRA>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-RADA> "<TIB-rad-DA><TIB+R>";"<BAS><BAS>";"<NOM><NOM>";IGNORE
+<TIB-LADA> "<TIB-rad-DA><TIB+L>";"<BAS><BAS>";"<NOM><NOM>";IGNORE
+<TIB-SADA> "<TIB-rad-DA><TIB+S>";"<BAS><BAS>";"<NOM><NOM>";IGNORE
+<TIB-BARAsubDA> "<TIB-rad-DA><TIB+B><TIB+R>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-BALAsubDA> "<TIB-rad-DA><TIB+B><TIB+L>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-BASAsubDA> "<TIB-rad-DA><TIB+B><TIB+S>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+
+<U0F53> <TIB-NA>;<BAS>;<NOM>;IGNORE
+<U0F4E> <TIB-NA>;<BAS>;<VAR>;IGNORE
+<TIB-GANAGA> "<TIB-rad-NA><TIB+G><TIB+G>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-GANANGA> "<TIB-rad-NA><TIB+G><TIB+NG>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-GANADA> "<TIB-rad-NA><TIB+G><TIB+D>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-GANANA> "<TIB-rad-NA><TIB+G><TIB+N>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-GANABA> "<TIB-rad-NA><TIB+G><TIB+B>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-GANAMA> "<TIB-rad-NA><TIB+G><TIB+M>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-GANAMA2> "<TIB-rad-NA><TIB+G><TIB+M2>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-GANAWA> "<TIB-rad-NA><TIB+G><TIB+W>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-GANA-A> "<TIB-rad-NA><TIB+G><TIB+A>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-GANARA> "<TIB-rad-NA><TIB+G><TIB+R>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-GANALA> "<TIB-rad-NA><TIB+G><TIB+L>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-GANASA> "<TIB-rad-NA><TIB+G><TIB+S>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-GANAI> "<TIB-rad-NA><TIB+G><TIB+I>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-GANAII> "<TIB-rad-NA><TIB+G><TIB+I>";"<BAS><BAS><BAS>";"<VAR><VAR><VAR>";IGNORE
+<TIB-GANAU> "<TIB-rad-NA><TIB+G><TIB+U>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-GANAE> "<TIB-rad-NA><TIB+G><TIB+E>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-GANAEE> "<TIB-rad-NA><TIB+G><TIB+E>";"<BAS><BAS><BAS>";"<VAR><VAR><VAR>";IGNORE
+<TIB-GANAO> "<TIB-rad-NA><TIB+G><TIB+O>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-GANAOO> "<TIB-rad-NA><TIB+G><TIB+O>";"<BAS><BAS><BAS>";"<VAR><VAR><VAR>";IGNORE
+<TIB-GANAsubWA> "<TIB-rad-NA><TIB+G><TIB+subWA>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-MANAGA> "<TIB-rad-NA><TIB+M><TIB+G>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-MANANGA> "<TIB-rad-NA><TIB+M><TIB+NG>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-MANADA> "<TIB-rad-NA><TIB+M><TIB+D>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-MANANA> "<TIB-rad-NA><TIB+M><TIB+N>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-MANABA> "<TIB-rad-NA><TIB+M><TIB+B>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-MANAMA> "<TIB-rad-NA><TIB+M><TIB+M>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-MANAMA2> "<TIB-rad-NA><TIB+M><TIB+M2>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-MANA-A> "<TIB-rad-NA><TIB+M><TIB+A>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-MANARA> "<TIB-rad-NA><TIB+M><TIB+R>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-MANALA> "<TIB-rad-NA><TIB+M><TIB+L>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-MANASA> "<TIB-rad-NA><TIB+M><TIB+S>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-MANAI> "<TIB-rad-NA><TIB+M><TIB+I>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-MANAII> "<TIB-rad-NA><TIB+M><TIB+I>";"<BAS><BAS><BAS>";"<VAR><VAR><VAR>";IGNORE
+<TIB-MANAU> "<TIB-rad-NA><TIB+M><TIB+U>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-MANAE> "<TIB-rad-NA><TIB+M><TIB+E>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-MANAEE> "<TIB-rad-NA><TIB+M><TIB+E>";"<BAS><BAS><BAS>";"<VAR><VAR><VAR>";IGNORE
+<TIB-MANAO> "<TIB-rad-NA><TIB+M><TIB+O>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-MANAOO> "<TIB-rad-NA><TIB+M><TIB+O>";"<BAS><BAS><BAS>";"<VAR><VAR><VAR>";IGNORE
+<TIB-MANAsubWA> "<TIB-rad-NA><TIB+M><TIB+subWA>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-RANA> "<TIB-rad-NA><TIB+R>";"<BAS><BAS>";"<NOM><NOM>";IGNORE
+<TIB-SANA> "<TIB-rad-NA><TIB+S>";"<BAS><BAS>";"<NOM><NOM>";IGNORE
+<TIB-BARAsubNA> "<TIB-rad-NA><TIB+B><TIB+R>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-BASAsubNA> "<TIB-rad-NA><TIB+B><TIB+S>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+
+<U0F54> <TIB-PA>;<BAS>;<NOM>;IGNORE
+<TIB-MCHU-CAN-subPA> <TIB-PA>;<TIB-SIGN-MCHU-CAN>;<NOM>;IGNORE
+<TIB-DAPA> "<TIB-rad-PA><TIB+D>";"<BAS><BAS>";"<NOM><NOM>";IGNORE
+<TIB-LAPA> "<TIB-rad-PA><TIB+L>";"<BAS><BAS>";"<NOM><NOM>";IGNORE
+<TIB-SAPA> "<TIB-rad-PA><TIB+S>";"<BAS><BAS>";"<NOM><NOM>";IGNORE
+
+<U0F55> <TIB-PHA>;<BAS>;<NOM>;IGNORE
+<TIB-MCHU-CAN-subPHA> <TIB-PHA>;<TIB-SIGN-MCHU-CAN>;<NOM>;IGNORE
+<TIB--APHA> "<TIB-rad-PHA><TIB+A>";"<BAS><BAS>";"<NOM><NOM>";IGNORE
+
+<U0F56> <TIB-BA>;<BAS>;<NOM>;IGNORE
+<TIB-BAGA> "<TIB-BA><TIB-GA>";"<LIG><LIG>";"<NOM><NOM>";IGNORE
+<TIB-BADA> "<TIB-BA><TIB-DA>";"<LIG><LIG>";"<NOM><NOM>";IGNORE
+<TIB-BARA> "<TIB-BA><TIB-RA>";"<LIG><LIG>";"<NOM><NOM>";IGNORE
+<TIB-BASA> "<TIB-BA><TIB-SA>";"<LIG><LIG>";"<NOM><NOM>";IGNORE
+<TIB-DABAGA> "<TIB-rad-BA><TIB+D><TIB+G>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-DABANGA> "<TIB-rad-BA><TIB+D><TIB+NG>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-DABADA> "<TIB-rad-BA><TIB+D><TIB+D>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-DABANA> "<TIB-rad-BA><TIB+D><TIB+N>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-DABABA> "<TIB-rad-BA><TIB+D><TIB+B>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-DABAMA> "<TIB-rad-BA><TIB+D><TIB+M>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-DABA-A> "<TIB-rad-BA><TIB+D><TIB+A>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-DABARA> "<TIB-rad-BA><TIB+D><TIB+R>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-DABALA> "<TIB-rad-BA><TIB+D><TIB+L>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-DABASA> "<TIB-rad-BA><TIB+D><TIB+S>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-DABAI> "<TIB-rad-BA><TIB+D><TIB+I>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-DABAII> "<TIB-rad-BA><TIB+D><TIB+I>";"<BAS><BAS><BAS>";"<VAR><VAR><VAR>";IGNORE
+<TIB-DABAU> "<TIB-rad-BA><TIB+D><TIB+U>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-DABAE> "<TIB-rad-BA><TIB+D><TIB+E>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-DABAEE> "<TIB-rad-BA><TIB+D><TIB+E>";"<BAS><BAS><BAS>";"<VAR><VAR><VAR>";IGNORE
+<TIB-DABAO> "<TIB-rad-BA><TIB+D><TIB+O>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-DABAOI> "<TIB-rad-BA><TIB+D><TIB+O>";"<BAS><BAS><BAS>";"<VAR><VAR><VAR>";IGNORE
+<TIB-DABAsubWA> "<TIB-rad-BA><TIB+D><TIB+subWA>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-DABAsubYA> "<TIB-rad-BA><TIB+D><TIB+subYA>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-DABAsubRA> "<TIB-rad-BA><TIB+D><TIB+subRA>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB--ABAGA> "<TIB-rad-BA><TIB+A><TIB+G>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB--ABANGA> "<TIB-rad-BA><TIB+A><TIB+NG>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB--ABADA> "<TIB-rad-BA><TIB+A><TIB+D>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB--ABANA> "<TIB-rad-BA><TIB+A><TIB+N>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB--ABABA> "<TIB-rad-BA><TIB+A><TIB+B>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB--ABAMA> "<TIB-rad-BA><TIB+A><TIB+M>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB--ABAMA2> "<TIB-rad-BA><TIB+A><TIB+M2>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB--ABA-A> "<TIB-rad-BA><TIB+A><TIB+A>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB--ABARA> "<TIB-rad-BA><TIB+A><TIB+R>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB--ABALA> "<TIB-rad-BA><TIB+A><TIB+L>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB--ABASA> "<TIB-rad-BA><TIB+A><TIB+S>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB--ABAI> "<TIB-rad-BA><TIB+A><TIB+I>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB--ABAII> "<TIB-rad-BA><TIB+A><TIB+I>";"<BAS><BAS><BAS>";"<VAR><VAR><VAR>";IGNORE
+<TIB--ABAU> "<TIB-rad-BA><TIB+A><TIB+U>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB--ABAE> "<TIB-rad-BA><TIB+A><TIB+E>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB--ABAEE> "<TIB-rad-BA><TIB+A><TIB+E>";"<BAS><BAS><BAS>";"<VAR><VAR><VAR>";IGNORE
+<TIB--ABAO> "<TIB-rad-BA><TIB+A><TIB+O>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB--ABAOO> "<TIB-rad-BA><TIB+A><TIB+O>";"<BAS><BAS><BAS>";"<VAR><VAR><VAR>";IGNORE
+<TIB--ABAsubWA> "<TIB-rad-BA><TIB+A><TIB+subWA>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB--ABAsubYA> "<TIB-rad-BA><TIB+A><TIB+subYA>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB--ABAsubRA> "<TIB-rad-BA><TIB+A><TIB+subRA>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-RABA> "<TIB-rad-BA><TIB+R>";"<BAS><BAS>";"<NOM><NOM>";IGNORE
+<TIB-LABA> "<TIB-rad-BA><TIB+L>";"<BAS><BAS>";"<NOM><NOM>";IGNORE
+<TIB-SABA> "<TIB-rad-BA><TIB+S>";"<BAS><BAS>";"<NOM><NOM>";IGNORE
+
+<U0F58> <TIB-MA>;<BAS>;<NOM>;IGNORE
+<U0F7E> <TIB-MA>;<BAS>;<TIB-SIGN-RJES-SU-NGA-RO>;IGNORE
+<U0F82> <TIB-MA>;<BAS>;<TIB-SIGN-NYI-ZLA-NAA-DA>;IGNORE
+<U0F83> <TIB-MA>;<BAS>;<TIB-SIGN-SNA-LDAN>;IGNORE
+<TIB-MAGA> "<TIB-MA><TIB-GA>";"<LIG><LIG>";"<NOM><NOM>";IGNORE
+<TIB-MANGA> "<TIB-MA><TIB-NGA>";"<LIG><LIG>";"<NOM><NOM>";IGNORE
+<TIB-MADA> "<TIB-MA><TIB-DA>";"<LIG><LIG>";"<NOM><NOM>";IGNORE
+<TIB-MANA> "<TIB-MA><TIB-NA>";"<LIG><LIG>";"<NOM><NOM>";IGNORE
+<TIB-DAMAGA> "<TIB-rad-MA><TIB+D><TIB+G>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-DAMANGA> "<TIB-rad-MA><TIB+D><TIB+NG>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-DAMADA> "<TIB-rad-MA><TIB+D><TIB+D>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-DAMANA> "<TIB-rad-MA><TIB+D><TIB+N>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-DAMABA> "<TIB-rad-MA><TIB+D><TIB+B>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-DAMAMA> "<TIB-rad-MA><TIB+D><TIB+M>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-DAMAWA> "<TIB-rad-MA><TIB+D><TIB+W>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-DAMA-A> "<TIB-rad-MA><TIB+D><TIB+A>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-DAMARA> "<TIB-rad-MA><TIB+D><TIB+R>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-DAMALA> "<TIB-rad-MA><TIB+D><TIB+L>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-DAMASA> "<TIB-rad-MA><TIB+D><TIB+S>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-DAMAI> "<TIB-rad-MA><TIB+D><TIB+I>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-DAMAII> "<TIB-rad-MA><TIB+D><TIB+I>";"<BAS><BAS><BAS>";"<VAR><VAR><VAR>";IGNORE
+<TIB-DAMAU> "<TIB-rad-MA><TIB+D><TIB+U>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-DAMAE> "<TIB-rad-MA><TIB+D><TIB+E>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-DAMAEE> "<TIB-rad-MA><TIB+D><TIB+E>";"<BAS><BAS><BAS>";"<VAR><VAR><VAR>";IGNORE
+<TIB-DAMAO> "<TIB-rad-MA><TIB+D><TIB+O>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-DAMAOO> "<TIB-rad-MA><TIB+D><TIB+O>";"<BAS><BAS><BAS>";"<VAR><VAR><VAR>";IGNORE
+<TIB-DAMAsubWA> "<TIB-rad-MA><TIB+D><TIB+subWA>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-DAMAsubYA> "<TIB-rad-MA><TIB+D><TIB+subYA>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-RAMA> "<TIB-rad-MA><TIB+R>";"<BAS><BAS>";"<NOM><NOM>";IGNORE
+<TIB-SAMA> "<TIB-rad-MA><TIB+S>";"<BAS><BAS>";"<NOM><NOM>";IGNORE
+
+<U0F59> <TIB-TSA>;<BAS>;<NOM>;IGNORE
+<TIB-GATSA> "<TIB-rad-TSA><TIB+G>";"<BAS><BAS>";"<NOM><NOM>";IGNORE
+<TIB-BATSA> "<TIB-rad-TSA><TIB+B>";"<BAS><BAS>";"<NOM><NOM>";IGNORE
+<TIB-RATSA> "<TIB-rad-TSA><TIB+R>";"<BAS><BAS>";"<NOM><NOM>";IGNORE
+<TIB-SATSA> "<TIB-rad-TSA><TIB+S>";"<BAS><BAS>";"<NOM><NOM>";IGNORE
+<TIB-BARAsubTSA> "<TIB-rad-TSA><TIB+B><TIB+R>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-BASAsubTSA> "<TIB-rad-TSA><TIB+B><TIB+S>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+
+<U0F5A> <TIB-TSHA>;<BAS>;<NOM>;IGNORE
+<TIB-MATSHA> "<TIB-rad-TSHA><TIB+M>";"<BAS><BAS>";"<NOM><NOM>";IGNORE
+<TIB--ATSHA> "<TIB-rad-TSHA><TIB+A>";"<BAS><BAS>";"<NOM><NOM>";IGNORE
+
+<U0F5B> <TIB-DZA>;<BAS>;<NOM>;IGNORE
+<TIB-MADZA> "<TIB-rad-DZA><TIB+M>";"<BAS><BAS>";"<NOM><NOM>";IGNORE
+<TIB--ADZA> "<TIB-rad-DZA><TIB+A>";"<BAS><BAS>";"<NOM><NOM>";IGNORE
+<TIB-RADZA> "<TIB-rad-DZA><TIB+R>";"<BAS><BAS>";"<NOM><NOM>";IGNORE
+<TIB-BARAsubDZA> "<TIB-rad-DZA><TIB+B><TIB+R>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+
+<U0F5D> <TIB-WA>;<BAS>;<NOM>;IGNORE
+<TIB-MCHU-CAN-subWA> <TIB-WA>;<TIB-SIGN-MCHU-CAN>;<NOM>;IGNORE
+<TIB-MCHU-CAN-subFFWA> <TIB-WA>;<TIB-SIGN-MCHU-CAN-FF>;<NOM>;IGNORE
+
+<U0F5E> <TIB-ZHA>;<BAS>;<NOM>;IGNORE
+<TIB-GAZHA> "<TIB-rad-ZHA><TIB+G>";"<BAS><BAS>";"<NOM><NOM>";IGNORE
+<TIB-BAZHA> "<TIB-rad-ZHA><TIB+B>";"<BAS><BAS>";"<NOM><NOM>";IGNORE
+
+<U0F5F> <TIB-ZA>;<BAS>;<NOM>;IGNORE
+<TIB-GAZA> "<TIB-rad-ZA><TIB+G>";"<BAS><BAS>";"<NOM><NOM>";IGNORE
+<TIB-BAZA> "<TIB-rad-ZA><TIB+B>";"<BAS><BAS>";"<NOM><NOM>";IGNORE
+
+<U0F60> <TIB--A>;<BAS>;<NOM>;IGNORE
+<TIB--AGA> "<TIB--A><TIB-GA>";"<LIG><LIG>";"<NOM><NOM>";IGNORE
+<TIB--ADA> "<TIB--A><TIB-DA>";"<LIG><LIG>";"<NOM><NOM>";IGNORE
+<TIB--ABA> "<TIB--A><TIB-BA>";"<LIG><LIG>";"<NOM><NOM>";IGNORE
+
+<U0F61> <TIB-YA>;<BAS>;<NOM>;IGNORE
+<TIB-GAYA> "<TIB-rad-YA><TIB+G>";"<BAS><BAS>";"<NOM><NOM>";IGNORE
+
+<U0F62> <TIB-RA>;<BAS>;<NOM>;IGNORE
+<U0F6A> <TIB-RA>;<BAS>;<VAR>;IGNORE
+
+<U0F63> <TIB-LA>;<BAS>;<NOM>;IGNORE
+
+<U0F64> <TIB-SHA>;<BAS>;<NOM>;IGNORE
+<U0F65> <TIB-SHA>;<BAS>;<VAR>;IGNORE
+<TIB-GASHA> "<TIB-rad-SHA><TIB+G>";"<BAS><BAS>";"<NOM><NOM>";IGNORE
+<TIB-BASHA> "<TIB-rad-SHA><TIB+B>";"<BAS><BAS>";"<NOM><NOM>";IGNORE
+
+<U0F66> <TIB-SA>;<BAS>;<NOM>;IGNORE
+<TIB-GASAGA> "<TIB-rad-SA><TIB+G><TIB+G>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-GASANGA> "<TIB-rad-SA><TIB+G><TIB+NG>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-GASADA> "<TIB-rad-SA><TIB+G><TIB+D>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-GASANA> "<TIB-rad-SA><TIB+G><TIB+N>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-GASABA> "<TIB-rad-SA><TIB+G><TIB+B>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-GASAMA> "<TIB-rad-SA><TIB+G><TIB+M>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-GASA-A> "<TIB-rad-SA><TIB+G><TIB+A>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-GASARA> "<TIB-rad-SA><TIB+G><TIB+R>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-GASALA> "<TIB-rad-SA><TIB+G><TIB+L>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-GASASA> "<TIB-rad-SA><TIB+G><TIB+S>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-GASAI> "<TIB-rad-SA><TIB+G><TIB+I>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-GASAII> "<TIB-rad-SA><TIB+G><TIB+I>";"<BAS><BAS><BAS>";"<VAR><VAR><VAR>";IGNORE
+<TIB-GASAU> "<TIB-rad-SA><TIB+G><TIB+U>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-GASAE> "<TIB-rad-SA><TIB+G><TIB+E>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-GASAEE> "<TIB-rad-SA><TIB+G><TIB+E>";"<BAS><BAS><BAS>";"<VAR><VAR><VAR>";IGNORE
+<TIB-GASAO> "<TIB-rad-SA><TIB+G><TIB+O>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-GASAOO> "<TIB-rad-SA><TIB+G><TIB+O>";"<BAS><BAS><BAS>";"<VAR><VAR><VAR>";IGNORE
+<TIB-GASAsubWA> "<TIB-rad-SA><TIB+G><TIB+subWA>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-BASAGA> "<TIB-rad-SA><TIB+B><TIB+G>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-BASANGA> "<TIB-rad-SA><TIB+B><TIB+NG>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-BASADA> "<TIB-rad-SA><TIB+B><TIB+D>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-BASANA> "<TIB-rad-SA><TIB+B><TIB+N>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-BASABA> "<TIB-rad-SA><TIB+B><TIB+B>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-BASAMA> "<TIB-rad-SA><TIB+B><TIB+M>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-BASAMA2> "<TIB-rad-SA><TIB+B><TIB+M2>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-BASA-A> "<TIB-rad-SA><TIB+B><TIB+A>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-BASARA> "<TIB-rad-SA><TIB+B><TIB+R>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-BASALA> "<TIB-rad-SA><TIB+B><TIB+L>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-BASASA> "<TIB-rad-SA><TIB+B><TIB+S>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-BASAI> "<TIB-rad-SA><TIB+B><TIB+I>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-BASAII> "<TIB-rad-SA><TIB+B><TIB+I>";"<BAS><BAS><BAS>";"<VAR><VAR><VAR>";IGNORE
+<TIB-BASAU> "<TIB-rad-SA><TIB+B><TIB+U>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-BASAE> "<TIB-rad-SA><TIB+B><TIB+E>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-BASAEE> "<TIB-rad-SA><TIB+B><TIB+E>";"<BAS><BAS><BAS>";"<VAR><VAR><VAR>";IGNORE
+<TIB-BASAO> "<TIB-rad-SA><TIB+B><TIB+O>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-BASAOO> "<TIB-rad-SA><TIB+B><TIB+O>";"<BAS><BAS><BAS>";"<VAR><VAR><VAR>";IGNORE
+<TIB-BASAsubWA> "<TIB-rad-SA><TIB+B><TIB+subWA>";"<BAS><BAS><BAS>";"<NOM><NOM><NOM>";IGNORE
+<TIB-BSRA> "<TIB-rad-SA><TIB+BR>";"<BAS><BAS>";"<NOM><NOM>";IGNORE
+<TIB-BSLA> "<TIB-rad-SA><TIB+BL>";"<BAS><BAS>";"<NOM><NOM>";IGNORE
+
+<U0F67> <TIB-HA>;<BAS>;<NOM>;IGNORE
+<TIB-LHA> "<TIB-rad-HA><TIB+L>";"<BAS><BAS>";"<NOM><NOM>";IGNORE
+
+<U0F68> <TIB-A>;<BAS>;<NOM>;IGNORE
+
+<U0F84> <TIB-srog-med>;<BAS>;<NOM>;IGNORE
+
+<U0F71> <TIB-AA>;<BAS>;<NOM>;IGNORE
+
+<U0F72> <TIB-I>;<BAS>;<NOM>;IGNORE
+<U0F80> <TIB-I>;<BAS>;<REV>;IGNORE
+<TIB-'I> <TIB-I>;<BAS>;<VAR>;IGNORE
+<TIB-'II> <TIB-I>;<BAS>;<VARR>;IGNORE
+
+<U0F74> <TIB-U>;<BAS>;<NOM>;IGNORE
+<TIB-'UU> <TIB-U>;<BAS>;<VARR>;IGNORE
+
+<U0F7A> <TIB-E>;<BAS>;<NOM>;IGNORE
+<U0F7B> <TIB-E>;<BAS>;<VAR>;IGNORE
+
+<U0F7C> <TIB-O>;<BAS>;<NOM>;IGNORE
+<U0F7D> <TIB-O>;<BAS>;<VAR>;IGNORE
+
+<U0F90>        <TIB-subKA>;<BAS>;<NOM>;IGNORE
+<U0F91>        <TIB-subKHA>;<BAS>;<NOM>;IGNORE
+<U0F92>        <TIB-subGA>;<BAS>;<NOM>;IGNORE
+<U0F94>        <TIB-subNGA>;<BAS>;<NOM>;IGNORE
+<U0F95>        <TIB-subCA>;<BAS>;<NOM>;IGNORE
+<U0F96>        <TIB-subCHA>;<BAS>;<NOM>;IGNORE
+<U0F97>        <TIB-subJA>;<BAS>;<NOM>;IGNORE
+<U0F99>        <TIB-subNYA>;<BAS>;<NOM>;IGNORE
+<U0F9F>        <TIB-subTA>;<BAS>;<NOM>;IGNORE
+<U0F9A>        <TIB-subTA>;<BAS>;<REV>;IGNORE
+<U0FA0>        <TIB-subTHA>;<BAS>;<NOM>;IGNORE
+<U0F9B>        <TIB-subTHA>;<BAS>;<REV>;IGNORE
+<U0FA1>        <TIB-subDA>;<BAS>;<NOM>;IGNORE
+<U0F9C>        <TIB-subDA>;<BAS>;<REV>;IGNORE
+<U0FA3>        <TIB-subNA>;<BAS>;<NOM>;IGNORE
+<U0F9E>        <TIB-subNA>;<BAS>;<REV>;IGNORE
+<U0FA4>        <TIB-subPA>;<BAS>;<NOM>;IGNORE
+<U0FA5>        <TIB-subPHA>;<BAS>;<NOM>;IGNORE
+<U0FA6>        <TIB-subBA>;<BAS>;<NOM>;IGNORE
+<U0FA8>        <TIB-subMA>;<BAS>;<NOM>;IGNORE
+<U0FA9>        <TIB-subTSA>;<BAS>;<NOM>;IGNORE
+<U0FAA>        <TIB-subTSHA>;<BAS>;<NOM>;IGNORE
+<U0FAB>        <TIB-subDZA>;<BAS>;<NOM>;IGNORE
+<U0FAD>        <TIB-subWA>;<BAS>;<NOM>;IGNORE
+<U0FBA>        <TIB-subWA>;<BAS>;<VAR>;IGNORE
+<U0FAE>        <TIB-subZHA>;<BAS>;<NOM>;IGNORE
+<U0FAF>        <TIB-subTA>;<BAS>;<NOM>;IGNORE
+<U0FB0>        <TIB-sub-A>;<BAS>;<NOM>;IGNORE
+<U0FB1>        <TIB-subYA>;<BAS>;<NOM>;IGNORE
+<U0FBB>        <TIB-subYA>;<BAS>;<VAR>;IGNORE
+<U0FB2>        <TIB-subRA>;<BAS>;<NOM>;IGNORE
+<U0FBC>        <TIB-subRA>;<BAS>;<VAR>;IGNORE
+<U0FB3>        <TIB-subLA>;<BAS>;<NOM>;IGNORE
+<U0FB4>        <TIB-subSHA>;<BAS>;<NOM>;IGNORE
+<U0FB5>        <TIB-subSHA>;<BAS>;<VAR>;IGNORE
+<U0FB6>        <TIB-subSA>;<BAS>;<NOM>;IGNORE
+<U0FB7>        <TIB-subHA>;<BAS>;<NOM>;IGNORE
+<U0FB8>        <TIB-subA>;<BAS>;<NOM>;IGNORE
 order_end
 
 END LC_COLLATE
