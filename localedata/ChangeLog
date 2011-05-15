@@ -1,3 +1,10 @@
+2011-05-15  Ulrich Drepper  <drepper@gmail.com>
+
+	[BZ #9730]
+	* locales/sv_FI (LC_TIME): Fix d_t_fmt and add first_weekday and
+	first_workday.
+	Patch by Johan Heikkila <johan.heikkila@gmail.com>.
+
 2011-05-14  Ulrich Drepper  <drepper@gmail.com>
 
 	[BZ #12582]
