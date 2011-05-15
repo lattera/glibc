@@ -1,5 +1,5 @@
 /* Operating system specific code for generic dynamic loader functions.  Linux.
-   Copyright (C) 2000-2002,2004-2008, 2009 Free Software Foundation, Inc.
+   Copyright (C) 2000-2002,2004-2009,2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,6 +21,7 @@
 #include <dl-sysdep.h>
 #include <fcntl.h>
 #include <stdint.h>
+#include <not-cancel.h>
 
 #ifndef MIN
 # define MIN(a,b) (((a)<(b))?(a):(b))
@@ -67,11 +68,11 @@ _dl_setup_stack_chk_guard (void *dl_random)
   if (__builtin_expect (dl_random == NULL, 0))
     {
 # ifdef ENABLE_STACKGUARD_RANDOMIZE
-      int fd = __open ("/dev/urandom", O_RDONLY);
+      int fd = open_not_cancel_2 ("/dev/urandom", O_RDONLY);
       if (fd >= 0)
 	{
-	  ssize_t reslen = __read (fd, &ret, sizeof (ret));
-	  __close (fd);
+	  ssize_t reslen = read_not_cancel (fd, &ret, sizeof (ret));
+	  close_not_cancel_no_status (fd);
 	  if (reslen == (ssize_t) sizeof (ret))
 	    return ret;
 	}
