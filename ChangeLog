@@ -1,5 +1,9 @@
 2011-05-15  Ulrich Drepper  <drepper@gmail.com>
 
+	[BZ #10138]
+	* scripts/config.guess: Update from autoconf-2.68.
+	* scripts/config.sub: Likewise.
+
 	[BZ #10157]
 	* sysdeps/unix/sysv/linux/sysconf.c (__sysconf): Split out CPUTIME
 	tests into ...
