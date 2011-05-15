@@ -1,4 +1,4 @@
-/* Copyright (C) 1993,1995,1996,1997,1998,2000,2001,2002, 2003, 2008
+/* Copyright (C) 1993,1995,1996,1997,1998,2000,2001,2002, 2003, 2008, 2011
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -28,7 +28,9 @@
 
 #include "libioP.h"
 #include "stdio.h"
+#include <fcntl.h>
 #include <stdlib.h>
+#include <unistd.h>
 
 #include <fd_to_filename.h>
 
@@ -40,32 +42,63 @@ freopen64 (filename, mode, fp)
 {
 #ifdef _G_OPEN64
   FILE *result;
-  int fd = -1;
   CHECK_FILE (fp, NULL);
   if (!(fp->_flags & _IO_IS_FILEBUF))
     return NULL;
   _IO_acquire_lock (fp);
-  if (filename == NULL && _IO_fileno (fp) >= 0)
-    {
-      fd = __dup (_IO_fileno (fp));
-      if (fd != -1)
-	filename = fd_to_filename (fd);
-    }
+  int fd = _IO_fileno (fp);
+  const char *gfilename = (filename == NULL && fd >= 0
+			   ? fd_to_filename (fd) : filename);
+  fp->_flags2 |= _IO_FLAGS2_NOCLOSE;
   INTUSE(_IO_file_close_it) (fp);
   _IO_JUMPS ((struct _IO_FILE_plus *) fp) = &_IO_file_jumps;
   if (_IO_vtable_offset (fp) == 0 && fp->_wide_data != NULL)
     fp->_wide_data->_wide_vtable = &_IO_wfile_jumps;
-  result = INTUSE(_IO_file_fopen) (fp, filename, mode, 0);
+  result = INTUSE(_IO_file_fopen) (fp, gfilename, mode, 0);
+  fp->_flags2 &= ~_IO_FLAGS2_NOCLOSE;
   if (result != NULL)
     result = __fopen_maybe_mmap (result);
   if (result != NULL)
-    /* unbound stream orientation */
-    result->_mode = 0;
-  if (fd != -1)
     {
-      __close (fd);
-      free ((char *) filename);
+      /* unbound stream orientation */
+      result->_mode = 0;
+
+      if (fd != -1)
+	{
+#ifdef O_CLOEXEC
+# ifndef __ASSUME_DUP3
+	  int newfd;
+	  if (__have_dup3 < 0)
+	    newfd = -1;
+	  else
+	    newfd =
+# endif
+	      dup3 (_IO_fileno (result), fd,
+		    (result->_flags2 & _IO_FLAGS2_CLOEXEC) != 0
+		    ? O_CLOEXEC : 0);
+#else
+# define newfd 1
+#endif
+
+#ifndef __ASSUME_DUP3
+	  if (newfd < 0)
+	    {
+	      if (errno == ENOSYS)
+		__have_dup3 = -1;
+
+	      dup2 (_IO_fileno (result), fd);
+	      if ((result->_flags2 & _IO_FLAGS2_CLOEXEC) != 0)
+		__fcntl (fd, F_SETFD, FD_CLOEXEC);
+	    }
+#endif
+	  __close (_IO_fileno (result));
+	  _IO_fileno (result) = fd;
+	}
     }
+  else if (fd != -1)
+    __close (fd);
+  if (filename == NULL)
+    free ((char *) gfilename);
   _IO_release_lock (fp);
   return result;
 #else

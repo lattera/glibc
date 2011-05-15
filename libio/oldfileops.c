@@ -155,7 +155,8 @@ _IO_old_file_close_it (fp)
 
   INTUSE(_IO_unsave_markers) (fp);
 
-  close_status = _IO_SYSCLOSE (fp);
+  close_status = ((fp->_flags2 & _IO_FLAGS2_NOCLOSE) == 0
+		  ? _IO_SYSCLOSE (fp) : 0);
 
   /* Free buffer. */
   INTUSE(_IO_setb) (fp, NULL, NULL, 0);
@@ -676,7 +677,7 @@ _IO_old_file_write (f, data, n)
 	{
 	  f->_flags |= _IO_ERR_SEEN;
 	  break;
-        }
+	}
       to_do -= count;
       data = (void *) ((char *) data + count);
     }
@@ -763,12 +764,12 @@ _IO_old_file_xsputn (f, data, n)
       do_write = to_do - (block_size >= 128 ? to_do % block_size : 0);
 
       if (do_write)
-        {
+	{
 	  count = old_do_write (f, s, do_write);
 	  to_do -= count;
 	  if (count < do_write)
 	    return n - to_do;
-        }
+	}
 
       /* Now write out the remainder.  Normally, this will fit in the
 	 buffer, but it's somewhat messier for line-buffered files,

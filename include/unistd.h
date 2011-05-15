@@ -79,6 +79,7 @@ char *__canonicalize_directory_name_internal (__const char *__thisdir,
 extern int __dup (int __fd);
 extern int __dup2 (int __fd, int __fd2);
 libc_hidden_proto (__dup2)
+libc_hidden_proto (dup3)
 extern int __execve (__const char *__path, char *__const __argv[],
 		     char *__const __envp[]);
 extern long int __pathconf (__const char *__path, int __name);
@@ -175,6 +176,7 @@ extern int __have_sock_cloexec;
    SOCK_CLOEXEC.  Avoid defining separate variables for all of them
    unless it is really necessary.  */
 #define __have_pipe2 __have_sock_cloexec
+#define __have_dup3 __have_sock_cloexec
 
 extern int __getlogin_r_loginuid (char *name, size_t namesize)
      attribute_hidden;

@@ -180,7 +180,8 @@ _IO_new_file_close_it (fp)
 
   INTUSE(_IO_unsave_markers) (fp);
 
-  int close_status = _IO_SYSCLOSE (fp);
+  int close_status = ((fp->_flags2 & _IO_FLAGS2_NOCLOSE) == 0
+		      ? _IO_SYSCLOSE (fp) : 0);
 
   /* Free buffer. */
 #if defined _LIBC || defined _GLIBCPP_USE_WCHAR_T
@@ -328,11 +329,12 @@ _IO_new_file_fopen (fp, filename, mode, is32not64)
 	case 'c':
 	  fp->_flags2 |= _IO_FLAGS2_NOTCANCEL;
 	  continue;
-#ifdef O_CLOEXEC
 	case 'e':
+#ifdef O_CLOEXEC
 	  oflags |= O_CLOEXEC;
-	  continue;
 #endif
+	  fp->_flags2 |= _IO_FLAGS2_CLOEXEC;
+	  continue;
 	default:
 	  /* Ignore.  */
 	  continue;
@@ -343,6 +345,18 @@ _IO_new_file_fopen (fp, filename, mode, is32not64)
   result = _IO_file_open (fp, filename, omode|oflags, oprot, read_write,
 			  is32not64);
 
+#ifndef __ASSUME_O_CLOEXEC
+  if ((fp->_flags2 & _IO_FLAGS2_CLOEXEC) != 0 && __have_o_cloexec <= 0)
+    {
+      if (__have_o_cloexec == 0)
+	{
+	  int flags = __fcntl (fd, F_GETFD);
+	  __have_o_cloexec = (flags & FD_CLOEXEC) == 0 ? -1 : 1;
+	}
+      if (__have_o_cloexec < 0)
+	__fcntl (fd, F_SETFD, FD_CLOEXEC);
+    }
+#endif
 
 #ifdef _LIBC
   if (result != NULL)

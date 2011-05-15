@@ -1,4 +1,4 @@
-/* Copyright (C) 2008 Free Software Foundation, Inc.
+/* Copyright (C) 2008, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -43,6 +43,7 @@ dup3 (fd, fd2, flags)
   __set_errno (ENOSYS);
   return -1;
 }
+libc_hidden_def (dup3)
 stub_warning (dup3)
 
 #include <stub-tag.h>

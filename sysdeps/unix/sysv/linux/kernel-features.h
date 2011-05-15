@@ -1,6 +1,6 @@
 /* Set flags signalling availability of kernel features based on given
    kernel version number.
-   Copyright (C) 1999-2009, 2010 Free Software Foundation, Inc.
+   Copyright (C) 1999-2009, 2010, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -496,6 +496,7 @@
 # define __ASSUME_PIPE2		1
 # define __ASSUME_EVENTFD2	1
 # define __ASSUME_SIGNALFD4	1
+# define __ASSUME_DUP3		1
 #endif
 
 /* Support for the accept4 syscall was added in 2.6.28.  */
