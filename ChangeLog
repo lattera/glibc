@@ -1,6 +1,6 @@
 2011-05-15  Ulrich Drepper  <drepper@gmail.com>
 
-	[BZ #4357]
+	[BZ #9809]
 	* locale/iso-639.def: Add entry for Sorani.
 
 	[BZ #11901]
