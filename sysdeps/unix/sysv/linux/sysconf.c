@@ -1,5 +1,5 @@
 /* Get file-specific information about a file.  Linux version.
-   Copyright (C) 2003, 2004, 2006, 2008, 2009 Free Software Foundation, Inc.
+   Copyright (C) 2003,2004,2006 2008,2009,2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -35,6 +35,34 @@
 static long int posix_sysconf (int name);
 
 
+#ifndef HAS_CPUCLOCK
+static long int
+has_cpuclock (void)
+{
+# if defined __NR_clock_getres || HP_TIMING_AVAIL
+  /* If we have HP_TIMING, we will fall back on that if the system
+     call does not work, so we support it either way.  */
+#  if !HP_TIMING_AVAIL
+  /* Check using the clock_getres system call.  */
+  struct timespec ts;
+  INTERNAL_SYSCALL_DECL (err);
+  int r = INTERNAL_SYSCALL (clock_getres, err, 2,
+			    (name == _SC_CPUTIME
+			     ? CLOCK_PROCESS_CPUTIME_ID
+			     : CLOCK_THREAD_CPUTIME_ID),
+			    &ts);
+  if (INTERNAL_SYSCALL_ERROR_P (r, err))
+    return -1;
+#  endif
+  return _POSIX_VERSION;
+# else
+  return -1;
+# endif
+}
+# define HAS_CPUCLOCK() has_cpuclock ()
+#endif
+
+
 /* Get the value of the system variable NAME.  */
 long int
 __sysconf (int name)
@@ -56,27 +84,9 @@ __sysconf (int name)
       }
 #endif
 
-#if defined __NR_clock_getres || HP_TIMING_AVAIL
     case _SC_CPUTIME:
     case _SC_THREAD_CPUTIME:
-      {
-	/* If we have HP_TIMING, we will fall back on that if the system
-	   call does not work, so we support it either way.  */
-# if !HP_TIMING_AVAIL
-	/* Check using the clock_getres system call.  */
-	struct timespec ts;
-	INTERNAL_SYSCALL_DECL (err);
-	int r = INTERNAL_SYSCALL (clock_getres, err, 2,
-				  (name == _SC_CPUTIME
-				   ? CLOCK_PROCESS_CPUTIME_ID
-				   : CLOCK_THREAD_CPUTIME_ID),
-				  &ts);
-	if (INTERNAL_SYSCALL_ERROR_P (r, err))
-	  return -1;
-# endif
-	return _POSIX_VERSION;
-      }
-#endif
+      return HAS_CPUCLOCK ();
 
     case _SC_ARG_MAX:
 #if __LINUX_KERNEL_VERSION < 0x020617

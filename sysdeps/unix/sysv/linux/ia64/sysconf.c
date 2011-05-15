@@ -1,5 +1,5 @@
-/* Get file-specific information about a file.  Linux version.
-   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+/* Get file-specific information about a file.  Linux/ia64 version.
+   Copyright (C) 2003, 2004, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -24,22 +24,8 @@
 
 
 #include "has_cpuclock.c"
+#define HAS_CPUCLOCK() (has_cpuclock () ? _POSIX_VERSION : -1)
 
-static long int linux_sysconf (int name);
-
-
-/* Get the value of the system variable NAME.  */
-long int
-__sysconf (int name)
-{
-  if (name == _SC_CPUTIME || name == _SC_THREAD_CPUTIME)
-    return has_cpuclock () ? 200112L : -1;
-
-  /* Everything else is handled by the more general code.  */
-  return linux_sysconf (name);
-}
 
 /* Now the generic Linux version.  */
-#undef __sysconf
-#define __sysconf static linux_sysconf
 #include "../sysconf.c"
