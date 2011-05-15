@@ -1,5 +1,5 @@
 /* Operating system specific code for generic dynamic loader functions.
-   Copyright (C) 2009 Free Software Foundation, Inc.
+   Copyright (C) 2009, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,23 +17,35 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <endian.h>
 #include <stdint.h>
 
 static inline uintptr_t __attribute__ ((always_inline))
 _dl_setup_stack_chk_guard (void *dl_random)
 {
-  uintptr_t ret;
+  union
+  {
+    uintptr_t num;
+    unsigned char bytes[sizeof (uintptr_t)];
+  } ret = { 0 };
+
   if (dl_random == NULL)
     {
-      ret = 0;
-      unsigned char *p = (unsigned char *) &ret;
-      p[sizeof (ret) - 1] = 255;
-      p[sizeof (ret) - 2] = '\n';
-      p[0] = 0;
+      ret.bytes[sizeof (ret) - 2] = 255;
+      ret.bytes[sizeof (ret) - 3] = '\n';
     }
   else
-    memcpy (&ret, dl_random, sizeof (ret));
-  return ret;
+    {
+      memcpy (ret.bytes, dl_random, sizeof (ret));
+#if BYTE_ORDER == LITTLE_ENDIAN
+      ret.num &= ~0xff;
+#elif BYTE_ORDER == BIG_ENDIAN
+      ret.num &= ~(0xff << (8 * (sizeof (ret) - 1)));
+#else
+# error "BYTE_ORDER unknown"
+#endif
+    }
+  return ret.num;
 }
 
 static inline uintptr_t __attribute__ ((always_inline))

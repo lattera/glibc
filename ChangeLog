@@ -1,5 +1,10 @@
 2011-05-15  Ulrich Drepper  <drepper@gmail.com>
 
+	[BZ #10149]
+	* sysdeps/unix/sysv/linux/dl-osinfo.h (_dl_setup_stack_chk_guard):
+	First byte (not low byte) is now always NUL.
+	* sysdeps/generic/dl-osinfo.h (_dl_setup_stack_chk_guard): Likewise.
+
 	* sysdeps/unix/sysv/linux/dl-osinfo.h (_dl_setup_stack_chk_guard):
 	Use non-cancelable interfaces.
 

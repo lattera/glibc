@@ -19,6 +19,7 @@
 
 #include <kernel-features.h>
 #include <dl-sysdep.h>
+#include <endian.h>
 #include <fcntl.h>
 #include <stdint.h>
 #include <not-cancel.h>
@@ -63,32 +64,46 @@ dl_fatal (const char *str)
 static inline uintptr_t __attribute__ ((always_inline))
 _dl_setup_stack_chk_guard (void *dl_random)
 {
-  uintptr_t ret;
+  union
+  {
+    uintptr_t num;
+    unsigned char bytes[sizeof (uintptr_t)];
+  } ret;
+
 #ifndef __ASSUME_AT_RANDOM
   if (__builtin_expect (dl_random == NULL, 0))
     {
+      const size_t filllen = sizeof (ret.bytes) - 1;
+      ret.num = 0;
 # ifdef ENABLE_STACKGUARD_RANDOMIZE
       int fd = open_not_cancel_2 ("/dev/urandom", O_RDONLY);
       if (fd >= 0)
 	{
-	  ssize_t reslen = read_not_cancel (fd, &ret, sizeof (ret));
+	  ssize_t reslen = read_not_cancel (fd, ret.bytes + 1, filllen);
 	  close_not_cancel_no_status (fd);
-	  if (reslen == (ssize_t) sizeof (ret))
-	    return ret;
+	  if (reslen == (ssize_) filllen)
+	    return ret.num;
 	}
 # endif
-      ret = 0;
-      unsigned char *p = (unsigned char *) &ret;
-      p[sizeof (ret) - 1] = 255;
-      p[sizeof (ret) - 2] = '\n';
+      ret.bytes[filllen - 2] = 255;
+      ret.bytes[filllen - 3] = '\n';
     }
   else
 #endif
-    /* We need in the moment only 8 bytes on 32-bit platforms and 16
-       bytes on 64-bit platforms.  Therefore we can use the data
-       directly and not use the kernel-provided data to seed a PRNG.  */
-    memcpy (&ret, dl_random, sizeof (ret));
-  return ret;
+    {
+      /* We need in the moment only 8 bytes on 32-bit platforms and 16
+	 bytes on 64-bit platforms.  Therefore we can use the data
+	 directly and not use the kernel-provided data to seed a PRNG.  */
+      memcpy (ret.bytes, dl_random, sizeof (ret));
+#if BYTE_ORDER == LITTLE_ENDIAN
+      ret.num &= ~0xff;
+#elif BYTE_ORDER == BIG_ENDIAN
+      ret.num &= ~(0xff << (8 * (sizeof (ret) - 1)));
+#else
+# error "BYTE_ORDER unknown"
+#endif
+    }
+  return ret.num;
 }
 
 static inline uintptr_t __attribute__ ((always_inline))
