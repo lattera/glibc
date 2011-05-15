@@ -1,5 +1,23 @@
+2011-05-15  Ulrich Drepper  <drepper@gmail.com>
+
+	[BZ #11901]
+	* include/stdlib.h: Move include protection to the right place.
+	Define abort_msg_s.  Declare __abort_msg with it.
+	* stdlib/abort.c (__abort_msg): Adjust type.
+	* assert/assert.c (__assert_fail_base): New function.  Majority
+	of code from __assert_fail.  Allocate memory for __abort_msg with
+	mmap.
+	(__assert_fail): Now call __assert_fail_base.
+	* assert/assert-perr.c: Remove bulk of implementation.  Use
+	__assert_fail_base.
+	* include/assert.hL Declare __assert_fail_base.
+	* sysdeps/posix/libc_fatal.c: Allocate memory for __abort_msg with
+	mmap.
+	* sysdeps/unix/sysv/linux/libc_fatal.c: Likewise.
+
 2011-05-14  Ulrich Drepper  <drepper@gmail.com>
 
+	[BZ #11952]
 	[BZ #12453]
 	* elf/dl-open.c (dl_open_worker): Delay calls to _dl_update_slotinfo
 	until all modules are registered in the DTV.

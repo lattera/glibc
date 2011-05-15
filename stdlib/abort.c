@@ -1,4 +1,5 @@
-/* Copyright (C) 1991,93,1995-1998,2001,02,2009 Free Software Foundation, Inc.
+/* Copyright (C) 1991,1993,1995-1998,2001,2002,2009,2011
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -37,7 +38,7 @@
 #endif
 
 /* Exported variable to locate abort message in core files etc.  */
-char *__abort_msg __attribute__ ((nocommon));
+struct abort_msg_s *__abort_msg __attribute__ ((nocommon));
 libc_hidden_def (__abort_msg)
 
 /* We must avoid to run in circles.  Therefore we remember how far we

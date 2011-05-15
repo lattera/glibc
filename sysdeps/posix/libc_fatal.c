@@ -1,4 +1,4 @@
-/* Copyright (C) 1993-1995,1997,2000,2004,2005,2009
+/* Copyright (C) 1993-1995,1997,2000,2004,2005,2009,2011
 	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -20,6 +20,7 @@
 #include <atomic.h>
 #include <errno.h>
 #include <fcntl.h>
+#include <ldsodefs.h>
 #include <paths.h>
 #include <stdarg.h>
 #include <stdbool.h>
@@ -125,18 +126,28 @@ __libc_message (int do_abort, const char *fmt, ...)
       if (TEMP_FAILURE_RETRY (__writev (fd, iov, nlist)) == total)
 	written = true;
 
-      char *buf = do_abort ? malloc (total + 1) : NULL;
-      if (buf != NULL)
+      if (do_abort)
 	{
-	  char *wp = buf;
-	  for (int cnt = 0; cnt < nlist; ++cnt)
-	    wp = mempcpy (wp, iov[cnt].iov_base, iov[cnt].iov_len);
-	  *wp = '\0';
+	  total = ((total + 1 + GLRO(dl_pagesize) - 1)
+		   & ~(GLRO(dl_pagesize) - 1));
+	  struct abort_msg_s *buf = __mmap (NULL, total,
+					    PROT_READ | PROT_WRITE,
+					    MAP_ANON | MAP_PRIVATE, -1, 0);
+	  if (buf != MAP_FAILED)
+	    {
+	      buf->size = total;
+	      char *wp = buf->msg;
+	      for (int cnt = 0; cnt < nlist; ++cnt)
+		wp = mempcpy (wp, iov[cnt].iov_base, iov[cnt].iov_len);
+	      *wp = '\0';
 
-	  /* We have to free the old buffer since the application might
-	     catch the SIGABRT signal.  */
-	  char *old = atomic_exchange_acq (&__abort_msg, buf);
-	  free (old);
+	      /* We have to free the old buffer since the application might
+		 catch the SIGABRT signal.  */
+	      struct abort_msg_s *old = atomic_exchange_acq (&__abort_msg,
+							     buf);
+	      if (old != NULL)
+		__munmap (old, old->size);
+	    }
 	}
     }
 

@@ -5,13 +5,19 @@
    so it has to be repeated here.  */
 extern void __assert_fail (__const char *__assertion, __const char *__file,
 			   unsigned int __line, __const char *__function)
-  __THROW __attribute__ ((__noreturn__));
+     __THROW __attribute__ ((__noreturn__));
 
 /* Likewise, but prints the error text for ERRNUM.  */
 extern void __assert_perror_fail (int __errnum, __const char *__file,
 				  unsigned int __line,
 				  __const char *__function)
      __THROW __attribute__ ((__noreturn__));
+
+/* The real implementation of the two functions above.  */
+extern void __assert_fail_base (const char *fmt, const char *assertion,
+				const char *file, unsigned int line,
+				const char *function)
+     __THROW  __attribute__ ((__noreturn__));
 
 #if !defined NOT_IN_libc || defined IS_IN_rtld
 hidden_proto (__assert_fail)

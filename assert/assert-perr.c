@@ -1,4 +1,5 @@
-/* Copyright (C) 1994-1998,2001,2002,2005,2009 Free Software Foundation, Inc.
+/* Copyright (C) 1994-1998,2001,2002,2005,2009,2011
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,66 +18,23 @@
    02111-1307 USA.  */
 
 #include <assert.h>
-#include <atomic.h>
 #include <libintl.h>
-#include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
-#include <sysdep.h>
-#include <unistd.h>
 
-
-extern const char *__progname;
-
-#ifdef USE_IN_LIBIO
-# include <wchar.h>
-# include <libio/iolibio.h>
-# define fflush(s) INTUSE(_IO_fflush) (s)
-#endif
 
 /* This function, when passed an error number, a filename, and a line
    number, prints a message on the standard error stream of the form:
-   	a.c:10: foobar: Unexpected error: Computer bought the farm
+	a.c:10: foobar: Unexpected error: Computer bought the farm
    It then aborts program execution via a call to `abort'.  */
-
-#ifdef FATAL_PREPARE_INCLUDE
-# include FATAL_PREPARE_INCLUDE
-#endif
-
 void
 __assert_perror_fail (int errnum,
 		      const char *file, unsigned int line,
 		      const char *function)
 {
   char errbuf[1024];
-  char *buf;
 
-#ifdef FATAL_PREPARE
-  FATAL_PREPARE;
-#endif
-
-  if (__asprintf (&buf, _("%s%s%s:%u: %s%sUnexpected error: %s.\n"),
-		  __progname, __progname[0] ? ": " : "",
-		  file, line,
-		  function ? function : "", function ? ": " : "",
-		  __strerror_r (errnum, errbuf, sizeof errbuf)) >= 0)
-    {
-      /* Print the message.  */
-      (void) __fxprintf (NULL, "%s", buf);
-      (void) fflush (stderr);
-
-      /* We have to free the old buffer since the application might
-	 catch the SIGABRT signal.  */
-      char *old = atomic_exchange_acq (&__abort_msg, buf);
-      free (old);
-    }
-  else
-    {
-      /* At least print a minimal message.  */
-      static const char errstr[] = "Unexpected error.\n";
-      __libc_write (STDERR_FILENO, errstr, sizeof (errstr) - 1);
-    }
-
-  abort ();
+  char *e = __strerror_r (errnum, errbuf, sizeof errbuf);
+  __assert_fail_base (_("%s%s%s:%u: %s%sUnexpected error: %s.\n"),
+		      e, file, line, function);
 }
 libc_hidden_def (__assert_perror_fail)

@@ -223,15 +223,20 @@ extern int __qfcvt_r (long double __value, int __ndigit,
 # define __cxa_atexit(func, arg, d) INTUSE(__cxa_atexit) (func, arg, d)
 # endif
 
-#endif
-
 extern void *__default_morecore (ptrdiff_t) __THROW;
 libc_hidden_proto (__default_morecore)
 
-extern char *__abort_msg;
+struct abort_msg_s
+{
+  unsigned int size;
+  char msg[0];
+};
+extern struct abort_msg_s *__abort_msg;
 libc_hidden_proto (__abort_msg)
 
 __END_DECLS
+
+#endif
 
 #undef __Need_M_And_C
 
