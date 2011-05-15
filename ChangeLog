@@ -1,5 +1,15 @@
 2011-05-14  Ulrich Drepper  <drepper@gmail.com>
 
+	[BZ #12453]
+	* elf/dl-open.c (dl_open_worker): Delay calls to _dl_update_slotinfo
+	until all modules are registered in the DTV.
+	* elf/Makefile: Add rules to build and run tst-tls19.
+	* elf/tst-tls19.c: New file.
+	* elf/tst-tls19mod1.c: New file.
+	* elf/tst-tls19mod2.c: New file.
+	* elf/tst-tls19mod3.c: New file.
+	Patch mostly by Martin von Gagern <Martin.vGagern@gmx.net>.
+
 	[BZ #12083]
 	* sysdeps/pthread/aio_misc.c (__aio_init): Compute optim.aio_num
 	correctly.

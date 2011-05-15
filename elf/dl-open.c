@@ -1,5 +1,5 @@
 /* Load a shared object at runtime, relocate it, and run its initializer.
-   Copyright (C) 1996-2007, 2009, 2010 Free Software Foundation, Inc.
+   Copyright (C) 1996-2007, 2009, 2010, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -347,6 +347,7 @@ dl_open_worker (void *a)
   /* If the file is not loaded now as a dependency, add the search
      list of the newly loaded object to the scope.  */
   bool any_tls = false;
+  unsigned int first_static_tls = new->l_searchlist.r_nlist;
   for (unsigned int i = 0; i < new->l_searchlist.r_nlist; ++i)
     {
       struct link_map *imap = new->l_searchlist.r_list[i];
@@ -425,30 +426,9 @@ dl_open_worker (void *a)
 	     might have to increase its size.  */
 	  _dl_add_to_slotinfo (imap);
 
-	  if (imap->l_need_tls_init)
-	    {
-	      /* For static TLS we have to allocate the memory here
-		 and now.  This includes allocating memory in the DTV.
-		 But we cannot change any DTV other than our own. So,
-		 if we cannot guarantee that there is room in the DTV
-		 we don't even try it and fail the load.
-
-		 XXX We could track the minimum DTV slots allocated in
-		 all threads.  */
-	      if (! RTLD_SINGLE_THREAD_P && imap->l_tls_modid > DTV_SURPLUS)
-		_dl_signal_error (0, "dlopen", NULL, N_("\
-cannot load any more object with static TLS"));
-
-	      imap->l_need_tls_init = 0;
-#ifdef SHARED
-	      /* Update the slot information data for at least the
-		 generation of the DSO we are allocating data for.  */
-	      _dl_update_slotinfo (imap->l_tls_modid);
-#endif
-
-	      GL(dl_init_static_tls) (imap);
-	      assert (imap->l_need_tls_init == 0);
-	    }
+	  if (imap->l_need_tls_init
+	      && first_static_tls == new->l_searchlist.r_nlist)
+	    first_static_tls = i;
 
 	  /* We have to bump the generation counter.  */
 	  any_tls = true;
@@ -459,6 +439,40 @@ cannot load any more object with static TLS"));
   if (any_tls && __builtin_expect (++GL(dl_tls_generation) == 0, 0))
     _dl_fatal_printf (N_("\
 TLS generation counter wrapped!  Please report this."));
+
+  /* We need a second pass for static tls data, because _dl_update_slotinfo
+     must not be run while calls to _dl_add_to_slotinfo are still pending. */
+  for (unsigned int i = first_static_tls; i < new->l_searchlist.r_nlist; ++i)
+    {
+      struct link_map *imap = new->l_searchlist.r_list[i];
+
+      if (imap->l_need_tls_init
+	  && ! imap->l_init_called
+	  && imap->l_tls_blocksize > 0)
+	{
+	  /* For static TLS we have to allocate the memory here and
+	     now.  This includes allocating memory in the DTV.  But we
+	     cannot change any DTV other than our own. So, if we
+	     cannot guarantee that there is room in the DTV we don't
+	     even try it and fail the load.
+
+	     XXX We could track the minimum DTV slots allocated in
+	     all threads.  */
+	  if (! RTLD_SINGLE_THREAD_P && imap->l_tls_modid > DTV_SURPLUS)
+	    _dl_signal_error (0, "dlopen", NULL, N_("\
+cannot load any more object with static TLS"));
+
+	  imap->l_need_tls_init = 0;
+#ifdef SHARED
+	  /* Update the slot information data for at least the
+	     generation of the DSO we are allocating data for.  */
+	  _dl_update_slotinfo (imap->l_tls_modid);
+#endif
+
+	  GL(dl_init_static_tls) (imap);
+	  assert (imap->l_need_tls_init == 0);
+	}
+    }
 
   /* Run the initializer functions of new objects.  */
   _dl_init (new, args->argc, args->argv, args->env);

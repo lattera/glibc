@@ -76,6 +76,7 @@ distribute	:= rtld-Rules \
 		   tst-tlsmod12.c tst-tls10.h tst-alignmod.c tst-alignmod2.c \
 		   circlemod1.c circlemod1a.c circlemod2.c circlemod2a.c \
 		   circlemod3.c circlemod3a.c nodlopenmod2.c \
+		   tst-tls19mod1.c tst-tls19mod2.c tst-tls19mod3.c \
 		   tls-macros.h \
 		   reldep8mod1.c reldep8mod2.c reldep8mod3.c \
 		   nodel2mod1.c nodel2mod2.c nodel2mod3.c \
@@ -194,7 +195,7 @@ tests += loadtest restest1 preloadtest loadfail multiload origtest resolvfail \
 	 restest2 next dblload dblunload reldep5 reldep6 reldep7 reldep8 \
 	 circleload1 tst-tls3 tst-tls4 tst-tls5 tst-tls6 tst-tls7 tst-tls8 \
 	 tst-tls10 tst-tls11 tst-tls12 tst-tls13 tst-tls14 tst-tls15 \
-	 tst-tls16 tst-tls17 tst-tls18 tst-tls-dlinfo \
+	 tst-tls16 tst-tls17 tst-tls18 tst-tls19 tst-tls-dlinfo \
 	 tst-align tst-align2 $(tests-execstack-$(have-z-execstack)) \
 	 tst-dlmodcount tst-dlopenrpath tst-deep1 \
 	 tst-dlmopen1 tst-dlmopen2 tst-dlmopen3 \
@@ -240,6 +241,7 @@ modules-names = testobj1 testobj2 testobj3 testobj4 testobj5 testobj6 \
 		tst-tlsmod13 tst-tlsmod13a tst-tlsmod14a tst-tlsmod14b \
 		tst-tlsmod15a tst-tlsmod15b tst-tlsmod16a tst-tlsmod16b \
 		$(tlsmod17a-modules) tst-tlsmod17b $(tlsmod18a-modules) \
+		tst-tls19mod1 tst-tls19mod2 tst-tls19mod3 \
 		circlemod1 circlemod1a circlemod2 circlemod2a \
 		circlemod3 circlemod3a \
 		reldep8mod1 reldep8mod2 reldep8mod3 \
@@ -525,6 +527,8 @@ $(objpfx)tst-tlsmod13a.so: $(objpfx)tst-tlsmod13.so
 # For tst-tls9-static, make sure the modules it dlopens have libc.so in DT_NEEDED
 $(objpfx)tst-tlsmod5.so: $(common-objpfx)libc.so
 $(objpfx)tst-tlsmod6.so: $(common-objpfx)libc.so
+$(objpfx)tst-tls19mod1.so: $(objpfx)tst-tls19mod2.so $(objpfx)tst-tls19mod3.so
+$(objpfx)tst-tls19mod3.so: $(objpfx)ld.so
 $(objpfx)reldep8mod3.so: $(objpfx)reldep8mod1.so $(objpfx)reldep8mod2.so
 $(objpfx)nodel2mod3.so: $(objpfx)nodel2mod1.so $(objpfx)nodel2mod2.so
 $(objpfx)reldep9mod2.so: $(objpfx)reldep9mod1.so
@@ -821,6 +825,9 @@ $(objpfx)tst-tls18.out: $(patsubst %,$(objpfx)%.so,$(tlsmod18a-modules))
 $(patsubst %,$(objpfx)%.os,$(tlsmod18a-modules)): $(objpfx)tst-tlsmod18a%.os : tst-tlsmod18a.c
 	$(compile-command.c) -DN=$*
 $(patsubst %,$(objpfx)%.so,$(tlsmod18a-modules)): $(objpfx)tst-tlsmod18a%.so: $(objpfx)ld.so
+
+$(objpfx)tst-tls19: $(libdl)
+$(objpfx)tst-tls19.out: $(objpfx)tst-tls19mod1.so
 
 CFLAGS-tst-align.c = $(stack-align-test-flags)
 CFLAGS-tst-align2.c = $(stack-align-test-flags)
