@@ -1,5 +1,9 @@
 2011-05-16  Ulrich Drepper  <drepper@gmail.com>
 
+	[BZ #11892]
+	* stdlib/putenv.c (putenv): Don't always create copy of the variable
+	on the stack.
+
 	[BZ #11895]
 	* misc/pselect.c (__pselect): Handle timeout value errors hidden
 	through underflows.
