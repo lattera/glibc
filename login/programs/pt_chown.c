@@ -64,7 +64,7 @@ print_version (FILE *stream, struct argp_state *state)
 Copyright (C) %s Free Software Foundation, Inc.\n\
 This is free software; see the source for copying conditions.  There is NO\n\
 warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\
-"), "1999");
+"), "2011");
 }
 
 static char *
@@ -123,7 +123,7 @@ do_pt_chown (void)
 
   /* Set the owner to the real user ID, and the group to that special
      group ID.  */
-  if (st.st_gid != gid && chown (pty, getuid (), gid) < 0)
+  if (chown (pty, getuid (), gid) < 0)
     return FAIL_EACCES;
 
   /* Set the permission mode to readable and writable by the owner,
