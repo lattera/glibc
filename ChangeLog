@@ -1,5 +1,9 @@
 2011-05-16  Ulrich Drepper  <drepper@gmail.com>
 
+	[BZ #11895]
+	* misc/pselect.c (__pselect): Handle timeout value errors hidden
+	through underflows.
+
 	[BZ #12766]
 	* misc/error.c (error_at_line): Ensure file_name and old_file_name
 	point to strings before performing equality test for error_one_per_line
