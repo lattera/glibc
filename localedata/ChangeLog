@@ -1,3 +1,9 @@
+2011-05-16  Ulrich Drepper  <drepper@gmail.com>
+
+	[BZ #11987]
+	* locales/sl_SI (LC_TIME): Add first_weekday and first_workday.
+	Patch by SaÅ¡o Å½ivanovic <saso.zivanovic@guest.arnes.si>.
+
 2011-05-15  Ulrich Drepper  <drepper@gmail.com>
 
 	[BZ #9732]
@@ -31,7 +37,7 @@
 	[BZ #11578]
 	* locales/es_PA: Change paper format to letter.
 	* locales/es_SV: Likewise.
-	Patch by Caolán McNamara <caolanm@redhat.com>.
+	Patch by CaolÃ¡n McNamara <caolanm@redhat.com>.
 
 	[BZ #11653]
 	* locales/es_NI: Fix currency_symbol.
@@ -301,7 +307,7 @@
 	Patch by Petr Machata <pmachata@redhat.com>.
 
 	* locales/crh_UA: Fix first day of week and a few spellings.
-	Patch by Reþat SABIQ <tilde.birlik@gmail.com>.
+	Patch by ReÃ¾at SABIQ <tilde.birlik@gmail.com>.
 
 2009-10-15  Ulrich Drepper  <drepper@redhat.com>
 
@@ -2060,11 +2066,11 @@
 	make it more like the structure of the POSIX locale values.
 	* locales/tr_TR: Correct numeric decimal point to use comma, and
 	correct grouping.
-	Based on patches from Deniz Akkus Kanca and Nilgün Belma Bugüner.
+	Based on patches from Deniz Akkus Kanca and NilgÃ¼n Belma BugÃ¼ner.
 
 	[BZ #421]
 	* locales/tr_TR: Update with new currency symbol valid from
-	2005-01-01.  Patch from Nilgün Belma Bugüner.
+	2005-01-01.  Patch from NilgÃ¼n Belma BugÃ¼ner.
 	* locales/tr_TR: Convert UTF-8 comment to <U#> notation.
 
 2004-10-11  Ulrich Drepper  <drepper@redhat.com>
@@ -2137,7 +2143,7 @@
 2004-05-02  Petter Reinholdtsen  <pere@hungry.com>
 
 	* locales/nn_NO: Use the same sorting order in Norwegian Nynorsk
-	(nn_NO) as in Norwegian Bokmål (nb_NO). [BZ #74]
+	(nn_NO) as in Norwegian BokmÃ¥l (nb_NO). [BZ #74]
 
 2004-05-03  Ulrich Drepper  <drepper@redhat.com>
 
@@ -2631,11 +2637,11 @@
 2003-06-15  Petter Reinholdtsen  <pere@hungry.com>
 
 	* locales/fi_FI [LC_TIME]: Correct month names to make the dates
-	gramatically correct.  Patch from Eero Häkkinen. [PR libc/5013].
+	gramatically correct.  Patch from Eero HÃ¤kkinen. [PR libc/5013].
 
 2003-06-16  Ulrich Drepper  <drepper@redhat.com>
 
-	* locales/an_ES: New file.  Contributed by Jordi Mallach Péez.
+	* locales/an_ES: New file.  Contributed by Jordi Mallach PÃ©ez.
 
 2003-06-15  Petter Reinholdtsen  <pere@hungry.com>
 
@@ -2656,9 +2662,9 @@
 	Finland
 	* locales/fi_FI [LC_MONETARY]: Correct mon_thousands_sep from
 	period (U002E) to non-break space (U00A0).
-	suggestion from Eero Häkkinen.
+	suggestion from Eero HÃ¤kkinen.
 	[LC_NUMERIC]: Correct thousands_sep from period (U002E) to
-	non-break space (U00A0).  Based on suggestion from Eero Häkkinen.
+	non-break space (U00A0).  Based on suggestion from Eero HÃ¤kkinen.
 
 2003-06-11  Ulrich Drepper  <drepper@redhat.com>
 
@@ -3160,7 +3166,7 @@
 2002-01-07  Ulrich Drepper  <drepper@redhat.com>
 
 	* locales/hu_HU: New version with corrected collation.
-	Patch by Nagy Péter <chichken@interbase.hu>.
+	Patch by Nagy PÃ©ter <chichken@interbase.hu>.
 
 2001-12-28  Ulrich Drepper  <drepper@redhat.com>
 
@@ -3205,7 +3211,7 @@
 
 	* charmaps/ISO-8859-16: Swap 0xa5 and 0xab entries.
 
-2001-11-15  Børre Gaup  <boerre.gaup@pc.nu>
+2001-11-15  BÃ¸rre Gaup  <boerre.gaup@pc.nu>
 
 	* locales/se_NO: New file.
 
@@ -3397,7 +3403,7 @@
 2001-05-26  Ulrich Drepper  <drepper@redhat.com>
 
 	* locales/ro_RO: Correct abday, day, abmon, and mon info.
-	Patch by Ionel Mugurel Ciobîcã <tgakic@bambam.chem.tue.nl>.
+	Patch by Ionel Mugurel CiobÃ®cÃ£ <tgakic@bambam.chem.tue.nl>.
 
 2001-05-21  Bruno Haible  <haible@clisp.cons.org>
 
@@ -5315,7 +5321,7 @@
 2000-05-04  Ulrich Drepper  <drepper@redhat.com>
 
 	* charmaps/ISO-8859-15: Remove incorrect definitions of <So> and <OR>.
-	Reported by Gaël Quéri <gqueri@mail.dotcom.fr> [PR libc/1718].
+	Reported by GaÃ«l QuÃ©ri <gqueri@mail.dotcom.fr> [PR libc/1718].
 
 	* tst-fmon.c (main): Print the locale name as well in the error
 	message.
@@ -5464,7 +5470,7 @@
 
 	* locale/en_BW: New file.
 	* locale/en_ZW: New file.
-	Contributed by Schalk W. Cronjé <schalkc@ntaba.co.za>.
+	Contributed by Schalk W. CronjÃ© <schalkc@ntaba.co.za>.
 
 1999-12-21  Ulrich Drepper  <drepper@cygnus.com>
 
@@ -5474,7 +5480,7 @@
 1999-12-20  Ulrich Drepper  <drepper@cygnus.com>
 
 	* locales/af_ZA: New file.
-	Contributed by Schalk W. Cronjé <schalkc@ntaba.co.za>.
+	Contributed by Schalk W. CronjÃ© <schalkc@ntaba.co.za>.
 
 1999-12-19  Ulrich Drepper  <drepper@cygnus.com>
 
