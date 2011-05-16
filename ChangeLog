@@ -1,5 +1,9 @@
 2011-05-16  Ulrich Drepper  <drepper@gmail.com>
 
+	[BZ #11820]
+	* sysdeps/unix/sysv/linux/x86_64/sys/user.h
+	(struct user_fpregs_struct): Avoid __uint*_t types.
+
 	[BZ #6420]
 	* malloc/mtrace.c (tr_where): Add additional parameter to point to
 	symbol info.  Use it instead of calling _dl_addr locally.
