@@ -1,5 +1,15 @@
 2011-05-16  Ulrich Drepper  <drepper@gmail.com>
 
+	[BZ #6420]
+	* malloc/mtrace.c (tr_where): Add additional parameter to point to
+	symbol info.  Use it instead of calling _dl_addr locally.
+	(lock_and_info): New function.
+	(tr_freehook): Call lock_and_info and pass symbol info as additional
+	parameter to tr_where.
+	(tr_mallochook): Likewise.
+	(tr_reallochook): Likewise.
+	(tr_memalignhook): Likewise.
+
 	* malloc/mtrace.c: Remove support for USE_MTRACE_FILE.  It is not
 	used and couldn't be at all thread-safe.
 

@@ -79,45 +79,58 @@ tr_break ()
 }
 libc_hidden_def (tr_break)
 
-static void tr_where (const __ptr_t) __THROW internal_function;
+static void tr_where (const __ptr_t, Dl_info *) __THROW internal_function;
 static void
 internal_function
-tr_where (caller)
+tr_where (caller, info)
      const __ptr_t caller;
+     Dl_info *info;
 {
   if (caller != NULL)
     {
-#ifdef HAVE_ELF
-      Dl_info info;
-      if (_dl_addr (caller, &info, NULL, NULL))
+      if (info != NULL)
 	{
 	  char *buf = (char *) "";
-	  if (info.dli_sname != NULL)
+	  if (info->dli_sname != NULL)
 	    {
-	      size_t len = strlen (info.dli_sname);
+	      size_t len = strlen (info->dli_sname);
 	      buf = alloca (len + 6 + 2 * sizeof (void *));
 
 	      buf[0] = '(';
-	      __stpcpy (_fitoa (caller >= (const __ptr_t) info.dli_saddr
-				? caller - (const __ptr_t) info.dli_saddr
-				: (const __ptr_t) info.dli_saddr - caller,
-				__stpcpy (__mempcpy (buf + 1, info.dli_sname,
+	      __stpcpy (_fitoa (caller >= (const __ptr_t) info->dli_saddr
+				? caller - (const __ptr_t) info->dli_saddr
+				: (const __ptr_t) info->dli_saddr - caller,
+				__stpcpy (__mempcpy (buf + 1, info->dli_sname,
 						     len),
-					  caller >= (__ptr_t) info.dli_saddr
+					  caller >= (__ptr_t) info->dli_saddr
 					  ? "+0x" : "-0x"),
 				16, 0),
 			")");
 	    }
 
 	  fprintf (mallstream, "@ %s%s%s[%p] ",
-		   info.dli_fname ?: "", info.dli_fname ? ":" : "",
+		   info->dli_fname ?: "", info->dli_fname ? ":" : "",
 		   buf, caller);
 	}
       else
-#endif
 	fprintf (mallstream, "@ [%p] ", caller);
     }
 }
+
+
+static Dl_info *
+lock_and_info (const __ptr_t caller, Dl_info *mem)
+{
+  if (caller == NULL)
+    return NULL;
+
+  Dl_info *res = _dl_addr (caller, mem, NULL, NULL) ? mem : NULL;
+
+  __libc_lock_lock (lock);
+
+  return res;
+}
+
 
 static void tr_freehook (__ptr_t, const __ptr_t) __THROW;
 static void
@@ -127,8 +140,10 @@ tr_freehook (ptr, caller)
 {
   if (ptr == NULL)
     return;
-  __libc_lock_lock (lock);
-  tr_where (caller);
+
+  Dl_info mem;
+  Dl_info *info = lock_and_info (caller, &mem);
+  tr_where (caller, info);
   /* Be sure to print it first.  */
   fprintf (mallstream, "- %p\n", ptr);
   __libc_lock_unlock (lock);
@@ -152,7 +167,8 @@ tr_mallochook (size, caller)
 {
   __ptr_t hdr;
 
-  __libc_lock_lock (lock);
+  Dl_info mem;
+  Dl_info *info = lock_and_info (caller, &mem);
 
   __malloc_hook = tr_old_malloc_hook;
   if (tr_old_malloc_hook != NULL)
@@ -161,7 +177,7 @@ tr_mallochook (size, caller)
     hdr = (__ptr_t) malloc (size);
   __malloc_hook = tr_mallochook;
 
-  tr_where (caller);
+  tr_where (caller, info);
   /* We could be printing a NULL here; that's OK.  */
   fprintf (mallstream, "+ %p %#lx\n", hdr, (unsigned long int) size);
 
@@ -186,7 +202,8 @@ tr_reallochook (ptr, size, caller)
   if (ptr == mallwatch)
     tr_break ();
 
-  __libc_lock_lock (lock);
+  Dl_info mem;
+  Dl_info *info = lock_and_info (caller, &mem);
 
   __free_hook = tr_old_free_hook;
   __malloc_hook = tr_old_malloc_hook;
@@ -199,7 +216,7 @@ tr_reallochook (ptr, size, caller)
   __malloc_hook = tr_mallochook;
   __realloc_hook = tr_reallochook;
 
-  tr_where (caller);
+  tr_where (caller, info);
   if (hdr == NULL)
     /* Failed realloc.  */
     fprintf (mallstream, "! %p %#lx\n", ptr, (unsigned long int) size);
@@ -208,7 +225,7 @@ tr_reallochook (ptr, size, caller)
   else
     {
       fprintf (mallstream, "< %p\n", ptr);
-      tr_where (caller);
+      tr_where (caller, info);
       fprintf (mallstream, "> %p %#lx\n", hdr, (unsigned long int) size);
     }
 
@@ -229,7 +246,8 @@ tr_memalignhook (alignment, size, caller)
 {
   __ptr_t hdr;
 
-  __libc_lock_lock (lock);
+  Dl_info mem;
+  Dl_info *info = lock_and_info (caller, &mem);
 
   __memalign_hook = tr_old_memalign_hook;
   __malloc_hook = tr_old_malloc_hook;
@@ -240,7 +258,7 @@ tr_memalignhook (alignment, size, caller)
   __memalign_hook = tr_memalignhook;
   __malloc_hook = tr_mallochook;
 
-  tr_where (caller);
+  tr_where (caller, info);
   /* We could be printing a NULL here; that's OK.  */
   fprintf (mallstream, "+ %p %#lx\n", hdr, (unsigned long int) size);
 
