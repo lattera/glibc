@@ -1,6 +1,6 @@
 /* Definitions for data structures and routines for the regular
    expression library.
-   Copyright (C) 1985,1989-93,1995-98,2000,2001,2002,2003,2005,2006,2008
+   Copyright (C) 1985,1989-93,1995-98,2000,2001,2002,2003,2005,2006,2008,2011
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -62,10 +62,10 @@ typedef unsigned long int reg_syntax_t;
 /* If this bit is set, then ^ and $ are always anchors (outside bracket
      expressions, of course).
    If this bit is not set, then it depends:
-        ^  is an anchor if it is at the beginning of a regular
-           expression or after an open-group or an alternation operator;
-        $  is an anchor if it is at the end of a regular expression, or
-           before a close-group or an alternation operator.
+	^  is an anchor if it is at the beginning of a regular
+	   expression or after an open-group or an alternation operator;
+	$  is an anchor if it is at the end of a regular expression, or
+	   before a close-group or an alternation operator.
 
    This bit could be (re)combined with RE_CONTEXT_INDEP_OPS, because
    POSIX draft 11.2 says that * etc. in leading positions is undefined.
@@ -194,16 +194,19 @@ extern reg_syntax_t re_syntax_options;
    | RE_NO_BK_PARENS              | RE_NO_BK_REFS			\
    | RE_NO_BK_VBAR                | RE_NO_EMPTY_RANGES			\
    | RE_DOT_NEWLINE		  | RE_CONTEXT_INDEP_ANCHORS		\
+   | RE_CHAR_CLASSES							\
    | RE_UNMATCHED_RIGHT_PAREN_ORD | RE_NO_GNU_OPS)
 
 #define RE_SYNTAX_GNU_AWK						\
-  ((RE_SYNTAX_POSIX_EXTENDED | RE_BACKSLASH_ESCAPE_IN_LISTS | RE_DEBUG)	\
-   & ~(RE_DOT_NOT_NULL | RE_INTERVALS | RE_CONTEXT_INDEP_OPS		\
-       | RE_CONTEXT_INVALID_OPS ))
+  ((RE_SYNTAX_POSIX_EXTENDED | RE_BACKSLASH_ESCAPE_IN_LISTS		\
+    | RE_INVALID_INTERVAL_ORD)						\
+   & ~(RE_DOT_NOT_NULL | RE_CONTEXT_INDEP_OPS				\
+      | RE_CONTEXT_INVALID_OPS ))
 
 #define RE_SYNTAX_POSIX_AWK						\
   (RE_SYNTAX_POSIX_EXTENDED | RE_BACKSLASH_ESCAPE_IN_LISTS		\
-   | RE_INTERVALS	    | RE_NO_GNU_OPS)
+   | RE_INTERVALS	    | RE_NO_GNU_OPS				\
+   | RE_INVALID_INTERVAL_ORD)
 
 #define RE_SYNTAX_GREP							\
   (RE_BK_PLUS_QM              | RE_CHAR_CLASSES				\
