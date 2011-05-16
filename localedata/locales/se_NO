@@ -3,7 +3,7 @@ escape_char  /
 %
 % Northern Saami Language Locale for Norway
 % Source: http://www.hum.uit.no/a/trond/loc.html
-% Contact: B¯rre Gaup
+% Contact: B√∏rre Gaup
 % Email: boerre.gaup@pc.nu
 % Language: se
 % Territory: NO
@@ -19,7 +19,7 @@ LC_IDENTIFICATION
 title "Northern Saami language locale for Norway"
 source "http://www.hum.uit.no/a/trond/loc.html"
 address ""
-contact "B¯rre Gaup"
+contact "B√∏rre Gaup"
 email "boerre.gaup@pc.nu"
 tel ""
 fax ""
@@ -113,23 +113,23 @@ reorder-after <th>
 <oumlaut>
 
 reorder-after <U0061>
-<U00E0> <agrave>;<GRA>;<MIN>;IGNORE % 201 ‡
-<U00E1> <aacute>;<ACA>;<MIN>;IGNORE % 200 ·
-<U00E2> <acircumflex>;<CIR>;<MIN>;IGNORE % 202 ‚
-<U00E3> <atilde>;<TIL>;<MIN>;IGNORE % 203 „
+<U00E0> <agrave>;<GRA>;<MIN>;IGNORE % 201 √†
+<U00E1> <aacute>;<ACA>;<MIN>;IGNORE % 200 √°
+<U00E2> <acircumflex>;<CIR>;<MIN>;IGNORE % 202 √¢
+<U00E3> <atilde>;<TIL>;<MIN>;IGNORE % 203 √£
 
 reorder-after <U0041>
-<U00C0> <agrave>;<GRA>;<CAP>;IGNORE % 321 ¿
-<U00C1> <aacute>;<ACA>;<CAP>;IGNORE % 320 ¡
-<U00C2> <acircumflex>;<CIR>;<CAP>;IGNORE % 322 ¬
-<U00C3> <atilde>;<TIL>;<CAP>;IGNORE % 323 √
+<U00C0> <agrave>;<GRA>;<CAP>;IGNORE % 321 √Ä
+<U00C1> <aacute>;<ACA>;<CAP>;IGNORE % 320 √Å
+<U00C2> <acircumflex>;<CIR>;<CAP>;IGNORE % 322 √Ç
+<U00C3> <atilde>;<TIL>;<CAP>;IGNORE % 323 √É
 
 reorder-after <U0063>
-<U00E7> <ccedilla>;<CDI>;<MIN>;IGNORE % 212 Á
+<U00E7> <ccedilla>;<CDI>;<MIN>;IGNORE % 212 √ß
 <U010D> <ccaron>;<CAR>;<MIN>;IGNORE % 215 <c<>
 
 reorder-after <U0043>
-<U00C7> <ccedilla>;<CDI>;<CAP>;IGNORE % 332 «
+<U00C7> <ccedilla>;<CDI>;<CAP>;IGNORE % 332 √á
 <U010C> <ccaron>;<CAR>;<CAP>;IGNORE % 335 <C<>
 
 reorder-after <U010B>
@@ -141,11 +141,11 @@ reorder-after <U010A>
 <U01EE> <ezhcaron>;<CAR>;<CAP>;IGNORE % EZH caron
 
 reorder-after <U0064>
-<U00F0> <eth>;<PCL>;<MIN>;IGNORE % 218 
+<U00F0> <eth>;<PCL>;<MIN>;IGNORE % 218 √∞
 <U0111> <dstroke>;<OBL>;<MIN>;IGNORE % 220 <d//>
 
 reorder-after <U0044>
-<U00D0> <eth>;<PCL>;<CAP>;IGNORE % 338 –
+<U00D0> <eth>;<PCL>;<CAP>;IGNORE % 338 √ê
 <U0110> <dstroke>;<OBL>;<CAP>;IGNORE % 340 <D//>
 
 reorder-after <U0066>
@@ -165,32 +165,32 @@ reorder-after <U0136>
 <U01E8> <kcaron>;<CAR>;<CAP>;IGNORE % Kcaron
 
 reorder-after <U0053>
-<U00DF> <ssharp>;"<LIG><LIG>";"<MIN><MIN>";IGNORE % ﬂ
+<U00DF> <ssharp>;"<LIG><LIG>";"<MIN><MIN>";IGNORE % √ü
 <U0161> <scaron>;<CAR>;<MIN>;IGNORE % 288 <s<>
 <U0160> <scaron>;<CAR>;<CAP>;IGNORE % 405 <S<>
 
 
 reorder-after <U00E3>
-<U00E4> <svae>;<REU>;<MIN>;IGNORE % ‰
-<U00E5> <aring>;<RNE>;<MIN>;IGNORE % Â
-<U00E6> <noae>;<LIG>;<MIN>;IGNORE % Ê
+<U00E4> <svae>;<REU>;<MIN>;IGNORE % √§
+<U00E5> <aring>;<RNE>;<MIN>;IGNORE % √•
+<U00E6> <noae>;<LIG>;<MIN>;IGNORE % √¶
 reorder-after <U00F5>
-<U00F6> <oumlaut>;<REU>;<MIN>;IGNORE % ˆ
-<U00F8> <oslash>;<OBL>;<MIN>;IGNORE % ¯
+<U00F6> <oumlaut>;<REU>;<MIN>;IGNORE % √∂
+<U00F8> <oslash>;<OBL>;<MIN>;IGNORE % √∏
 
 reorder-after <U00C3>
-<U00C4> <svae>;<REU>;<CAP>;IGNORE % ƒ
-<U00C5> <aring>;<RNE>;<CAP>;IGNORE % ≈
-<U00C6> <noae>;<LIG>;<CAP>;IGNORE % ∆
+<U00C4> <svae>;<REU>;<CAP>;IGNORE % √Ñ
+<U00C5> <aring>;<RNE>;<CAP>;IGNORE % √Ö
+<U00C6> <noae>;<LIG>;<CAP>;IGNORE % √Ü
 reorder-after <U00D5>
-<U00D6> <oumlaut>;<REU>;<CAP>;IGNORE % ÷
-<U00D8> <oslash>;<OBL>;<CAP>;IGNORE % ÿ
+<U00D6> <oumlaut>;<REU>;<CAP>;IGNORE % √ñ
+<U00D8> <oslash>;<OBL>;<CAP>;IGNORE % √ò
 
-% ¸/‹ is treated like y/Y but is sorted after the latter
+% √º/√ú is treated like y/Y but is sorted after the latter
 reorder-after <U00FB>
-<U00FC> <y>;<REU>;<MIN>;IGNORE % ¸
+<U00FC> <y>;<REU>;<MIN>;IGNORE % √º
 reorder-after <U00DB>
-<U00DC> <y>;<REU>;<CAP>;IGNORE % ‹
+<U00DC> <y>;<REU>;<CAP>;IGNORE % √ú
 reorder-end
 
 END LC_COLLATE
@@ -275,7 +275,7 @@ date_fmt       "<U0025><U0041><U002C><U0020><U0025><U0042><U0020><U0025><U0064><
 <U0020><U0062><U002E><U0020><U0025><U0059><U0020><U0025><U0048><U003A><U0025><U004D><U003A><U0025><U0053>/
 <U0020><U0025><U005A>"
 
-% %a %b-%e %H:%M:%S %Z %Y s¯n jan-31 21:15:11 CET 2001
+% %a %b-%e %H:%M:%S %Z %Y s√∏n jan-31 21:15:11 CET 2001
 END LC_TIME
 
 LC_MESSAGES
