@@ -1,5 +1,5 @@
 /* More debugging hooks for `malloc'.
-   Copyright (C) 1991-1994,1996-2004, 2008 Free Software Foundation, Inc.
+   Copyright (C) 1991-1994,1996-2004, 2008, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 		 Written April 2, 1991 by John Gilmore of Cygnus Support.
 		 Based on mcheck.c by Mike Haertel.
@@ -57,13 +57,6 @@ __libc_lock_define_initialized (static, lock);
 /* Address to breakpoint on accesses to... */
 __ptr_t mallwatch;
 
-#ifdef USE_MTRACE_FILE
-/* File name and line number information, for callers that had
-   the foresight to call through a macro.  */
-char *_mtrace_file;
-int _mtrace_line;
-#endif
-
 /* Old hook values.  */
 static void (*tr_old_free_hook) (__ptr_t ptr, const __ptr_t);
 static __ptr_t (*tr_old_malloc_hook) (__malloc_size_t size, const __ptr_t);
@@ -92,15 +85,7 @@ internal_function
 tr_where (caller)
      const __ptr_t caller;
 {
-#ifdef USE_MTRACE_FILE
-  if (_mtrace_file)
-    {
-      fprintf (mallstream, "@ %s:%d ", _mtrace_file, _mtrace_line);
-      _mtrace_file = NULL;
-    }
-  else
-#endif
-    if (caller != NULL)
+  if (caller != NULL)
     {
 #ifdef HAVE_ELF
       Dl_info info;
