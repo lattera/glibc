@@ -1,5 +1,5 @@
 /* Error handler for noninteractive utilities
-   Copyright (C) 1990-1998, 2000-2005, 2006 Free Software Foundation, Inc.
+   Copyright (C) 1990-1998, 2000-2006, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -272,7 +272,9 @@ error_at_line (int status, int errnum, const char *file_name,
 
       if (old_line_number == line_number
 	  && (file_name == old_file_name
-	      || strcmp (old_file_name, file_name) == 0))
+	      || (old_file_name != NULL
+		  && file_name != NULL
+		  && strcmp (old_file_name, file_name) == 0)))
 	/* Simply return and print nothing.  */
 	return;
 

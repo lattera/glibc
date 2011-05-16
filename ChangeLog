@@ -1,5 +1,10 @@
 2011-05-16  Ulrich Drepper  <drepper@gmail.com>
 
+	[BZ #12766]
+	* misc/error.c (error_at_line): Ensure file_name and old_file_name
+	point to strings before performing equality test for error_one_per_line
+	mode.
+
 	[BZ #11697]
 	* login/programs/pt_chown.c (do_pt_chown): Always call chown.
 
