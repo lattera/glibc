@@ -1,3 +1,8 @@
+2011-05-17  Ulrich Drepper  <drepper@gmail.com>
+
+	[BZ #11837]
+	* iconvdata/gb18030.c: Update to GB18020-2005.
+
 2011-05-16  Ulrich Drepper  <drepper@gmail.com>
 
 	* posix/regex.h (RE_SYNTAX_AWK, RE_SYNTAX_GNU_AWK,
