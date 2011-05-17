@@ -1,3 +1,7 @@
+2011-05-16  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* fileops.c (_IO_new_file_fopen): Get fd from _IO_fileno.
+
 2011-05-17  Ulrich Drepper  <drepper@gmail.com>
 
 	[BZ #11837]

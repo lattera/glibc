@@ -348,6 +348,7 @@ _IO_new_file_fopen (fp, filename, mode, is32not64)
 #ifndef __ASSUME_O_CLOEXEC
   if ((fp->_flags2 & _IO_FLAGS2_CLOEXEC) != 0 && __have_o_cloexec <= 0)
     {
+      int fd = _IO_fileno (fp);
       if (__have_o_cloexec == 0)
 	{
 	  int flags = __fcntl (fd, F_GETFD);
