@@ -1,5 +1,5 @@
 /* ix87 specific implementation of pow function.
-   Copyright (C) 1996, 1997, 1998, 1999, 2001, 2004, 2007
+   Copyright (C) 1996, 1997, 1998, 1999, 2001, 2004, 2007, 2011
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
@@ -154,7 +154,7 @@ ENTRY(__ieee754_powl)
 	fucompp			// 1.0 : x : y
 	fnstsw
 	fxch			// x : 1.0 : y
-	test	$4500,%eax
+	test	$0x4500,%eax
 	jz	7f
 	fsub	%st(1)		// x-1 : 1.0 : y
 	fyl2xp1			// log2(x) : y
