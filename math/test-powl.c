@@ -38,7 +38,7 @@ main (void)
       u.ieee.negative = 0;
       (void) powl (0.2, u.d);
       x = powl (x, 1.5);
-      if (fabsl (x - 1e-30) > 1e-10) 
+      if (fabsl (x - 1e-30) > 1e-10)
 	{
 	  printf ("powl (1e-20, 1.5): wrong result: %Lg\n", x);
 	  result = 1;
