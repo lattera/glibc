@@ -12,7 +12,10 @@ endif
 
 # These flags prevent FPU or Altivec registers from being used,
 # for code called in contexts that is not allowed to touch those registers.
-# Stupid GCC requires us to pass all these ridiculous switches.
+# Stupid GCC requires us to pass all these ridiculous switches.  We need to
+# pass the -mno-* switches as well to prevent the compiler from attempting
+# to emit altivec or vsx instructions, especially when the registers aren't
+# available.
 no-special-regs := $(sort $(foreach n,40 41 50 51 60 61 62 63 \
 				      $(foreach m,2 3 4 5 6 7 8 9, \
 						  3$m 4$m 5$m),\
@@ -20,7 +23,7 @@ no-special-regs := $(sort $(foreach n,40 41 50 51 60 61 62 63 \
 		   $(sort $(foreach n,$(foreach m,0 1 2 3 4 5 6 7 8 9,\
 						$m 1$m 2$m) 30 31,\
 				    -ffixed-v$n)) \
-		   -ffixed-vrsave -ffixed-vscr
+		   -ffixed-vrsave -ffixed-vscr -mno-altivec -mno-vsx
 
 ifeq ($(subdir),csu)
 sysdep_routines += hp-timing

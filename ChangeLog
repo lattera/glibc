@@ -1,3 +1,9 @@
+2011-05-18  Ryan S. Arnold  <rsa@us.ibm.com>
+
+	* sysdeps/powerpc/powerpc64/Makefile (no-special-regs): Add -mno-vsx
+	and -mno-altivec to prevent the compiler from using Altivec and/or
+	VSX instructions when the corresponding registers are not available.
+
 2011-05-19  Andreas Schwab  <schwab@redhat.com>
 
 	* grp/compat-initgroups.c (__libc_use_alloca): Don't define.
