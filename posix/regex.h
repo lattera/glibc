@@ -339,9 +339,9 @@ typedef enum
 
 /* This data structure represents a compiled pattern.  Before calling
    the pattern compiler, the fields `buffer', `allocated', `fastmap',
-   `translate', and `no_sub' can be set.  After the pattern has been
-   compiled, the `re_nsub' field is available.  All other fields are
-   private to the regex routines.  */
+   and `translate' can be set.  After the pattern has been compiled,
+   the fields `re_nsub', `not_bol' and `not_eol' are available.  All
+   other fields are private to the regex routines.  */
 
 #ifndef RE_TRANSLATE_TYPE
 # define __RE_TRANSLATE_TYPE unsigned char *
@@ -466,7 +466,12 @@ extern reg_syntax_t re_set_syntax (reg_syntax_t __syntax);
 
 /* Compile the regular expression PATTERN, with length LENGTH
    and syntax given by the global `re_syntax_options', into the buffer
-   BUFFER.  Return NULL if successful, and an error string if not.  */
+   BUFFER.  Return NULL if successful, and an error string if not.
+
+   To free the allocated storage, you must call `regfree' on BUFFER.
+   Note that the translate table must either have been initialised by
+   `regcomp', with a malloc'ed value, or set to NULL before calling
+   `regfree'.  */
 extern const char *re_compile_pattern (const char *__pattern, size_t __length,
 				       struct re_pattern_buffer *__buffer);
 

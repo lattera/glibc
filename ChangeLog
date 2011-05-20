@@ -1,3 +1,11 @@
+2011-05-20  Ulrich Drepper  <drepper@gmail.com>
+
+	[BZ #11857]
+	* posix/regex.h: Fix comments with documentation of user-accessible
+	fields after compilation and describe correct free'ing of pattern
+	after re_compile_pattern.
+	Patch by Reuben Thomas <rrt@sc3d.org>.
+
 2011-05-18  Ryan S. Arnold  <rsa@us.ibm.com>
 
 	* sysdeps/powerpc/powerpc64/Makefile (no-special-regs): Add -mno-vsx
