@@ -8,12 +8,6 @@ typedef enum nss_status (*end_function) (void);
 typedef enum nss_status (*get_function) (struct group *, char *,
 					 size_t, int *);
 
-/* This file is also used in nscd where __libc_alloca_cutoff is not
-   available.  */
-#ifdef NOT_IN_libc
-# define __libc_use_alloca(size) ((size) < __MAX_ALLOCA_CUTOFF * 4)
-#endif
-
 
 static enum nss_status
 compat_call (service_user *nip, const char *user, gid_t group, long int *start,
