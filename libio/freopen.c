@@ -102,7 +102,7 @@ freopen (filename, mode, fp)
 	      if (errno == ENOSYS)
 		__have_dup3 = -1;
 
-	      dup2 (_IO_fileno (result), fd);
+	      __dup2 (_IO_fileno (result), fd);
 	      if ((result->_flags2 & _IO_FLAGS2_CLOEXEC) != 0)
 		__fcntl (fd, F_SETFD, FD_CLOEXEC);
 	    }
