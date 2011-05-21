@@ -1,5 +1,8 @@
 2011-05-21  Ulrich Drepper  <drepper@gmail.com>
 
+	* configure.in: Fix typo in redirection and correct removal of test
+	files in two cases.
+
 	[BZ #12788]
 	* locale/setlocale.c (new_composite_name): Fix test to check for
 	identical name of all categories.

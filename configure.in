@@ -1388,7 +1388,7 @@ EOF
 		      fi
 		    fi
 		  fi
-		  rm -f conftest.[cs]
+		  rm -f conftest.{c,s}
 		 ])
     if test $libc_cv_visibility_attribute != yes; then
       AC_MSG_ERROR(compiler support for visibility attribute is required)
@@ -1404,7 +1404,7 @@ EOF
 		  int bar (int x) { return x; }
 EOF
 		  libc_cv_broken_visibility_attribute=yes
-		  if AC_TRY_COMMAND(${CC-cc} -Werror -S conftest.c -o conftest.s1>&AS_MESSAGE_LOG_FD); then
+		  if AC_TRY_COMMAND(${CC-cc} -Werror -S conftest.c -o conftest.s 1>&AS_MESSAGE_LOG_FD); then
 changequote(,)dnl
 		    if grep '\.hidden[ 	_]foo' conftest.s >/dev/null; then
 changequote([,])dnl
@@ -1806,7 +1806,7 @@ EOF
 		  else
 		    libc_cv_have_section_quotes=unknown
 		  fi
-		  rm -f conftest.[cs]
+		  rm -f conftest.{c,s}
 		 ])
   if test $libc_cv_have_section_quotes = yes; then
     AC_DEFINE(HAVE_SECTION_QUOTES)
@@ -2080,7 +2080,7 @@ fi
 
 if test -n "$submachine"; then
   AC_CACHE_CHECK([for compiler option for CPU variant],
-  		 libc_cv_cc_submachine, [dnl
+		 libc_cv_cc_submachine, [dnl
   libc_cv_cc_submachine=no
   for opt in "-march=$submachine" "-mcpu=$submachine"; do
     if AC_TRY_COMMAND([${CC-cc} $opt -xc /dev/null -S -o /dev/null]); then
