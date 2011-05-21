@@ -278,6 +278,7 @@ gaih_inet (const char *name, const struct gaih_service *service,
   bool got_ipv6 = false;
   const char *canon = NULL;
   const char *orig_name = name;
+  size_t alloca_used = 0;
 
   if (req->ai_protocol || req->ai_socktype)
     {
@@ -310,7 +311,7 @@ gaih_inet (const char *name, const struct gaih_service *service,
 	  if (tp->name[0])
 	    {
 	      st = (struct gaih_servtuple *)
-		__alloca (sizeof (struct gaih_servtuple));
+		alloca_account (sizeof (struct gaih_servtuple), alloca_used);
 
 	      if ((rc = gaih_inet_serv (service->name, tp, req, st)))
 		return rc;
@@ -334,7 +335,8 @@ gaih_inet (const char *name, const struct gaih_service *service,
 		    continue;
 
 		  newp = (struct gaih_servtuple *)
-		    __alloca (sizeof (struct gaih_servtuple));
+		    alloca_account (sizeof (struct gaih_servtuple),
+				    alloca_used);
 
 		  if ((rc = gaih_inet_serv (service->name, tp, req, newp)))
 		    {
@@ -362,7 +364,7 @@ gaih_inet (const char *name, const struct gaih_service *service,
 
       if (req->ai_socktype || req->ai_protocol)
 	{
-	  st = __alloca (sizeof (struct gaih_servtuple));
+	  st = alloca_account (sizeof (struct gaih_servtuple), alloca_used);
 	  st->next = NULL;
 	  st->socktype = tp->socktype;
 	  st->protocol = ((tp->protoflag & GAI_PROTO_PROTOANY)
@@ -379,7 +381,8 @@ gaih_inet (const char *name, const struct gaih_service *service,
 	      {
 		struct gaih_servtuple *newp;
 
-		newp = __alloca (sizeof (struct gaih_servtuple));
+		newp = alloca_account (sizeof (struct gaih_servtuple),
+				       alloca_used);
 		newp->next = NULL;
 		newp->socktype = tp->socktype;
 		newp->protocol = tp->protocol;
@@ -391,10 +394,17 @@ gaih_inet (const char *name, const struct gaih_service *service,
 	}
     }
 
+  bool malloc_name = false;
+  bool malloc_addrmem = false;
+  struct gaih_addrtuple *addrmem = NULL;
+  bool malloc_canonbuf = false;
+  char *canonbuf = NULL;
+  bool malloc_tmpbuf = false;
+  char *tmpbuf = NULL;
+  int result = 0;
   if (name != NULL)
     {
-      at = __alloca (sizeof (struct gaih_addrtuple));
-
+      at = alloca_account (sizeof (struct gaih_addrtuple), alloca_used);
       at->family = AF_UNSPEC;
       at->scopeid = 0;
       at->next = NULL;
@@ -412,6 +422,7 @@ gaih_inet (const char *name, const struct gaih_service *service,
 	  rc = __idna_to_ascii_lz (name, &p, idn_flags);
 	  if (rc != IDNA_SUCCESS)
 	    {
+	      /* No need to jump to free_and_return here.  */
 	      if (rc == IDNA_MALLOC_ERROR)
 		return -EAI_MEMORY;
 	      if (rc == IDNA_DLOPEN_ERROR)
@@ -421,10 +432,7 @@ gaih_inet (const char *name, const struct gaih_service *service,
 	  /* In case the output string is the same as the input string
 	     no new string has been allocated.  */
 	  if (p != name)
-	    {
-	      name = strdupa (p);
-	      free (p);
-	    }
+	    malloc_name = true;
 	}
 #endif
 
@@ -441,23 +449,59 @@ gaih_inet (const char *name, const struct gaih_service *service,
 	      at->family = AF_INET6;
 	    }
 	  else
-	    return -EAI_ADDRFAMILY;
+	    {
+	      result = -EAI_ADDRFAMILY;
+	      goto free_and_return;
+	    }
 
 	  if (req->ai_flags & AI_CANONNAME)
 	    canon = name;
 	}
       else if (at->family == AF_UNSPEC)
 	{
-	  char *namebuf = (char *) name;
 	  char *scope_delim = strchr (name, SCOPE_DELIMITER);
+	  int e;
 
-	  if (__builtin_expect (scope_delim != NULL, 0))
-	    {
-	      namebuf = alloca (scope_delim - name + 1);
-	      *((char *) __mempcpy (namebuf, name, scope_delim - name)) = '\0';
-	    }
+	  {
+	    bool malloc_namebuf = false;
+	    char *namebuf = (char *) name;
 
-	  if (inet_pton (AF_INET6, namebuf, at->addr) > 0)
+	    if (__builtin_expect (scope_delim != NULL, 0))
+	      {
+		if (malloc_name)
+		  *scope_delim = '\0';
+		else
+		  {
+		    if (__libc_use_alloca (alloca_used
+					   + scope_delim - name + 1))
+		      {
+			namebuf = alloca_account (scope_delim - name + 1,
+						  alloca_used);
+			*((char *) __mempcpy (namebuf, name,
+					      scope_delim - name)) = '\0';
+		      }
+		    else
+		      {
+			namebuf = strndup (name, scope_delim - name);
+			if (namebuf == NULL)
+			  {
+			    assert (!malloc_name);
+			    return -EAI_MEMORY;
+			  }
+			malloc_namebuf = true;
+		      }
+		  }
+	      }
+
+	    e = inet_pton (AF_INET6, namebuf, at->addr);
+
+	    if (malloc_namebuf)
+	      free (namebuf);
+	    else if (scope_delim != NULL && malloc_name)
+	      /* Undo what we did above.  */
+	      *scope_delim = SCOPE_DELIMITER;
+	  }
+	  if (e > 0)
 	    {
 	      if (req->ai_family == AF_UNSPEC || req->ai_family == AF_INET6)
 		at->family = AF_INET6;
@@ -468,7 +512,10 @@ gaih_inet (const char *name, const struct gaih_service *service,
 		  at->family = AF_INET;
 		}
 	      else
-		return -EAI_ADDRFAMILY;
+		{
+		  result = -EAI_ADDRFAMILY;
+		  goto free_and_return;
+		}
 
 	      if (scope_delim != NULL)
 		{
@@ -490,7 +537,10 @@ gaih_inet (const char *name, const struct gaih_service *service,
 		      at->scopeid = (uint32_t) strtoul (scope_delim + 1, &end,
 							10);
 		      if (*end != '\0')
-			return GAIH_OKIFUNSPEC | -EAI_NONAME;
+			{
+			  result = GAIH_OKIFUNSPEC | -EAI_NONAME;
+			  goto free_and_return;
+			}
 		    }
 		}
 
@@ -517,7 +567,8 @@ gaih_inet (const char *name, const struct gaih_service *service,
 	    {
 	      int family = req->ai_family;
 	      size_t tmpbuflen = 512;
-	      char *tmpbuf = alloca (tmpbuflen);
+	      assert (tmpbuf == NULL);
+	      tmpbuf = alloca_account (tmpbuflen, alloca_used);
 	      int rc;
 	      struct hostent th;
 	      struct hostent *h;
@@ -529,50 +580,95 @@ gaih_inet (const char *name, const struct gaih_service *service,
 					   tmpbuflen, &h, &herrno);
 		  if (rc != ERANGE || herrno != NETDB_INTERNAL)
 		    break;
-		  tmpbuf = extend_alloca (tmpbuf, tmpbuflen, 2 * tmpbuflen);
+
+		  if (!malloc_tmpbuf
+		      && __libc_use_alloca (alloca_used + 2 * tmpbuflen))
+		    tmpbuf = extend_alloca_account (tmpbuf, tmpbuflen,
+						    2 * tmpbuflen,
+						    alloca_used);
+		  else
+		    {
+		      char *newp = realloc (malloc_tmpbuf ? tmpbuf : NULL,
+					    2 * tmpbuflen);
+		      if (newp == NULL)
+			{
+			  result = -EAI_MEMORY;
+			  goto free_and_return;
+			}
+		      tmpbuf = newp;
+		      malloc_tmpbuf = true;
+		      tmpbuflen = 2 * tmpbuflen;
+		    }
 		}
 
 	      if (rc == 0)
 		{
 		  if (h != NULL)
-		    /* We found data, now convert it into the list.  */
-		    for (int i = 0; h->h_addr_list[i]; ++i)
-		      {
-			if (*pat == NULL)
-			  {
-			    *pat = __alloca (sizeof (struct gaih_addrtuple));
-			    (*pat)->scopeid = 0;
-			  }
-			(*pat)->next = NULL;
-			(*pat)->family = req->ai_family;
-			if (family == req->ai_family)
-			  memcpy ((*pat)->addr, h->h_addr_list[i],
-				  h->h_length);
-			else
-			  {
-			    uint32_t *addr = (uint32_t *) (*pat)->addr;
-			    addr[3] = *(uint32_t *) h->h_addr_list[i];
-			    addr[2] = htonl (0xffff);
-			    addr[1] = 0;
-			    addr[0] = 0;
-			  }
-			pat = &((*pat)->next);
-		      }
+		    {
+		      int i;
+		      /* We found data, count the number of addresses.  */
+		      for (i = 0; h->h_addr_list[i]; ++i)
+			;
+		      if (i > 0 && *pat != NULL)
+			--i;
+
+		      if (__libc_use_alloca (alloca_used
+					     + i * sizeof (struct gaih_addrtuple)))
+			addrmem = alloca_account (i * sizeof (struct gaih_addrtuple),
+						  alloca_used);
+		      else
+			{
+			  addrmem = malloc (i
+					    * sizeof (struct gaih_addrtuple));
+			  if (addrmem == NULL)
+			    {
+			      result = -EAI_MEMORY;
+			      goto free_and_return;
+			    }
+			  malloc_addrmem = true;
+			}
+
+		      /* Now convert it into the list.  */
+		      struct gaih_addrtuple *addrfree = addrmem;
+		      for (i = 0; h->h_addr_list[i]; ++i)
+			{
+			  if (*pat == NULL)
+			    {
+			      *pat = addrfree++;
+			      (*pat)->scopeid = 0;
+			    }
+			  (*pat)->next = NULL;
+			  (*pat)->family = req->ai_family;
+			  if (family == req->ai_family)
+			    memcpy ((*pat)->addr, h->h_addr_list[i],
+				    h->h_length);
+			  else
+			    {
+			      uint32_t *addr = (uint32_t *) (*pat)->addr;
+			      addr[3] = *(uint32_t *) h->h_addr_list[i];
+			      addr[2] = htonl (0xffff);
+			      addr[1] = 0;
+			      addr[0] = 0;
+			    }
+			  pat = &((*pat)->next);
+			}
+		    }
 		}
 	      else
 		{
 		  if (herrno == NETDB_INTERNAL)
 		    {
 		      __set_h_errno (herrno);
-		      return -EAI_SYSTEM;
+		      result = -EAI_SYSTEM;
 		    }
-		  if (herrno == TRY_AGAIN)
-		    {
-		      return -EAI_AGAIN;
-		    }
-		  /* We made requests but they turned out no data.
-		     The name is known, though.  */
-		  return GAIH_OKIFUNSPEC | -EAI_NODATA;
+		  else if (herrno == TRY_AGAIN)
+		    result = -EAI_AGAIN;
+		  else
+		    /* We made requests but they turned out no data.
+		       The name is known, though.  */
+		    result = GAIH_OKIFUNSPEC | -EAI_NODATA;
+
+		  goto free_and_return;
 		}
 
 	      goto process_list;
@@ -596,21 +692,56 @@ gaih_inet (const char *name, const struct gaih_service *service,
 		  bool added_canon = (req->ai_flags & AI_CANONNAME) == 0;
 		  char *addrs = air->addrs;
 
+		  if (__libc_use_alloca (alloca_used
+					 + air->naddrs * sizeof (struct gaih_addrtuple)))
+		    addrmem = alloca_account (air->naddrs
+					      * sizeof (struct gaih_addrtuple),
+					      alloca_used);
+		  else
+		    {
+		      addrmem = malloc (air->naddrs
+					* sizeof (struct gaih_addrtuple));
+		      if (addrmem == NULL)
+			{
+			  result = -EAI_MEMORY;
+			  goto free_and_return;
+			}
+		      malloc_addrmem = true;
+		    }
+
+		  struct gaih_addrtuple *addrfree = addrmem;
 		  for (int i = 0; i < air->naddrs; ++i)
 		    {
 		      socklen_t size = (air->family[i] == AF_INET
 					? INADDRSZ : IN6ADDRSZ);
 		      if (*pat == NULL)
 			{
-			  *pat = __alloca (sizeof (struct gaih_addrtuple));
+			  *pat = addrfree++;
 			  (*pat)->scopeid = 0;
 			}
 		      uint32_t *pataddr = (*pat)->addr;
 		      (*pat)->next = NULL;
 		      if (added_canon || air->canon == NULL)
 			(*pat)->name = NULL;
-		      else
-			canon = (*pat)->name = strdupa (air->canon);
+		      else if (canonbuf == NULL)
+			{
+			  size_t canonlen = strlen (air->canon) + 1;
+			  if ((req->ai_flags & AI_CANONIDN) != 0
+			      && __libc_use_alloca (alloca_used + canonlen))
+			    canonbuf = alloca_account (canonlen, alloca_used);
+			  else
+			    {
+			      canonbuf = malloc (canonlen);
+			      if (canonbuf == NULL)
+				{
+				  result = -EAI_MEMORY;
+				  goto free_and_return;
+				}
+			      malloc_canonbuf = true;
+			    }
+			  canon = (*pat)->name = memcpy (canonbuf, air->canon,
+							 canonlen);
+			}
 
 		      if (air->family[i] == AF_INET
 			  && req->ai_family == AF_INET6
@@ -640,20 +771,26 @@ gaih_inet (const char *name, const struct gaih_service *service,
 		  free (air);
 
 		  if (at->family == AF_UNSPEC)
-		    return GAIH_OKIFUNSPEC | -EAI_NONAME;
+		    {
+		      result = GAIH_OKIFUNSPEC | -EAI_NONAME;
+		      goto free_and_return;
+		    }
 
 		  goto process_list;
 		}
 	      else if (err == 0)
 		/* The database contains a negative entry.  */
-		return 0;
+		goto free_and_return;
 	      else if (__nss_not_use_nscd_hosts == 0)
 		{
 		  if (herrno == NETDB_INTERNAL && errno == ENOMEM)
-		    return -EAI_MEMORY;
-		  if (herrno == TRY_AGAIN)
-		    return -EAI_AGAIN;
-		  return -EAI_SYSTEM;
+		    result = -EAI_MEMORY;
+		  else if (herrno == TRY_AGAIN)
+		    result = -EAI_AGAIN;
+		  else
+		    result = -EAI_SYSTEM;
+
+		  goto free_and_return;
 		}
 	    }
 #endif
@@ -682,7 +819,19 @@ gaih_inet (const char *name, const struct gaih_service *service,
 	  _res.options &= ~RES_USE_INET6;
 
 	  size_t tmpbuflen = 1024;
-	  char *tmpbuf = alloca (tmpbuflen);
+	  malloc_tmpbuf = !__libc_use_alloca (alloca_used + tmpbuflen);
+	  assert (tmpbuf == NULL);
+	  if (malloc_tmpbuf)
+	    tmpbuf = alloca_account (tmpbuflen, alloca_used);
+	  else
+	    {
+	      tmpbuf = malloc (tmpbuflen);
+	      if (tmpbuf == NULL)
+		{
+		  result = -EAI_MEMORY;
+		  goto free_and_return;
+		}
+	    }
 
 	  while (!no_more)
 	    {
@@ -711,8 +860,25 @@ gaih_inet (const char *name, const struct gaih_service *service,
 			    no_data = herrno == NO_DATA;
 			  break;
 			}
-		      tmpbuf = extend_alloca (tmpbuf,
-					      tmpbuflen, 2 * tmpbuflen);
+
+		      if (!malloc_tmpbuf
+			  && __libc_use_alloca (alloca_used + 2 * tmpbuflen))
+			tmpbuf = extend_alloca_account (tmpbuf, tmpbuflen,
+							2 * tmpbuflen,
+							alloca_used);
+		      else
+			{
+			  char *newp = realloc (malloc_tmpbuf ? tmpbuf : NULL,
+						2 * tmpbuflen);
+			  if (newp == NULL)
+			    {
+			      result = -EAI_MEMORY;
+			      goto free_and_return;
+			    }
+			  tmpbuf = newp;
+			  malloc_tmpbuf = true;
+			  tmpbuflen = 2 * tmpbuflen;
+			}
 		    }
 
 		  no_inet6_data = no_data;
@@ -787,18 +953,40 @@ gaih_inet (const char *name, const struct gaih_service *service,
 			      if (cfct != NULL)
 				{
 				  const size_t max_fqdn_len = 256;
-				  char *buf = alloca (max_fqdn_len);
+				  if ((req->ai_flags & AI_CANONIDN) != 0
+				      && __libc_use_alloca (alloca_used
+							    + max_fqdn_len))
+				    canonbuf = alloca_account (max_fqdn_len,
+							       alloca_used);
+				  else
+				    {
+				      canonbuf = malloc (max_fqdn_len);
+				      if (canonbuf == NULL)
+					{
+					  result = -EAI_MEMORY;
+					  goto free_and_return;
+					}
+				      malloc_canonbuf = true;
+				    }
 				  char *s;
 
 				  if (DL_CALL_FCT (cfct, (at->name ?: name,
-							  buf, max_fqdn_len,
+							  canonbuf,
+							  max_fqdn_len,
 							  &s, &rc, &herrno))
 				      == NSS_STATUS_SUCCESS)
 				    canon = s;
 				  else
-				    /* Set to name now to avoid using
-				       gethostbyaddr.  */
-				    canon = name;
+				    {
+				      /* Set to name now to avoid using
+					 gethostbyaddr.  */
+				      if (malloc_canonbuf)
+					{
+					  free (canonbuf);
+					  malloc_canonbuf = false;
+					}
+				      canon = name;
+				    }
 				}
 			    }
 			  status = NSS_STATUS_SUCCESS;
@@ -833,22 +1021,27 @@ gaih_inet (const char *name, const struct gaih_service *service,
 	    {
 	      /* If both requests timed out report this.  */
 	      if (no_data == EAI_AGAIN && no_inet6_data == EAI_AGAIN)
-		return -EAI_AGAIN;
+		result = -EAI_AGAIN;
+	      else
+		/* We made requests but they turned out no data.  The name
+		   is known, though.  */
+		result = GAIH_OKIFUNSPEC | -EAI_NODATA;
 
-	      /* We made requests but they turned out no data.  The name
-		 is known, though.  */
-	      return GAIH_OKIFUNSPEC | -EAI_NODATA;
+	      goto free_and_return;
 	    }
 	}
 
     process_list:
       if (at->family == AF_UNSPEC)
-	return GAIH_OKIFUNSPEC | -EAI_NONAME;
+	{
+	  result = GAIH_OKIFUNSPEC | -EAI_NONAME;
+	  goto free_and_return;
+	}
     }
   else
     {
       struct gaih_addrtuple *atr;
-      atr = at = __alloca (sizeof (struct gaih_addrtuple));
+      atr = at = alloca_account (sizeof (struct gaih_addrtuple), alloca_used);
       memset (at, '\0', sizeof (struct gaih_addrtuple));
 
       if (req->ai_family == AF_UNSPEC)
@@ -887,30 +1080,56 @@ gaih_inet (const char *name, const struct gaih_service *service,
 	/* Only the first entry gets the canonical name.  */
 	if (at2 == at && (req->ai_flags & AI_CANONNAME) != 0)
 	  {
+	    char *tmpbuf2 = NULL;
+	    bool malloc_tmpbuf2 = false;
+
 	    if (canon == NULL)
 	      {
 		struct hostent *h = NULL;
 		int herrno;
 		struct hostent th;
-		size_t tmpbuflen = 512;
-		char *tmpbuf = NULL;
+		size_t tmpbuf2len = 512;
 
 		do
 		  {
-		    tmpbuf = extend_alloca (tmpbuf, tmpbuflen, tmpbuflen * 2);
+		    if (__libc_use_alloca (alloca_used + 2 * tmpbuf2len))
+		      tmpbuf2 = extend_alloca_account (tmpbuf2, tmpbuf2len,
+						       tmpbuf2len * 2,
+						       alloca_used);
+		    else
+		      {
+			char *newp = realloc (malloc_tmpbuf2 ? tmpbuf2 : NULL,
+					      2 * tmpbuf2len);
+			if (newp == NULL)
+			  {
+			    if (malloc_tmpbuf2)
+			      free (tmpbuf2);
+			    result = -EAI_MEMORY;
+			    goto free_and_return;
+			  }
+
+			tmpbuf2 = newp;
+			tmpbuf2len = 2 * tmpbuf2len;
+			malloc_tmpbuf2 = true;
+		      }
+
 		    rc = __gethostbyaddr_r (at2->addr,
 					    ((at2->family == AF_INET6)
 					     ? sizeof (struct in6_addr)
 					     : sizeof (struct in_addr)),
-					    at2->family, &th, tmpbuf,
-					    tmpbuflen, &h, &herrno);
+					    at2->family, &th, tmpbuf2,
+					    tmpbuf2len, &h, &herrno);
 		  }
 		while (rc == ERANGE && herrno == NETDB_INTERNAL);
 
 		if (rc != 0 && herrno == NETDB_INTERNAL)
 		  {
+		    if (malloc_tmpbuf2)
+		      free (tmpbuf2);
+
 		    __set_h_errno (herrno);
-		    return -EAI_SYSTEM;
+		    result = -EAI_SYSTEM;
+		    goto free_and_return;
 		  }
 
 		if (h != NULL)
@@ -937,11 +1156,16 @@ gaih_inet (const char *name, const struct gaih_service *service,
 		int rc = __idna_to_unicode_lzlz (canon, &out, idn_flags);
 		if (rc != IDNA_SUCCESS)
 		  {
+		    if (malloc_tmpbuf2)
+		      free (tmpbuf2);
+
 		    if (rc == IDNA_MALLOC_ERROR)
-		      return -EAI_MEMORY;
-		    if (rc == IDNA_DLOPEN_ERROR)
-		      return -EAI_SYSTEM;
-		    return -EAI_IDN_ENCODE;
+		      result = -EAI_MEMORY;
+		    else if (rc == IDNA_DLOPEN_ERROR)
+		      result = -EAI_SYSTEM;
+		    else
+		      result = -EAI_IDN_ENCODE;
+		    goto free_and_return;
 		  }
 		/* In case the output string is the same as the input
 		   string no new string has been allocated and we
@@ -956,10 +1180,25 @@ gaih_inet (const char *name, const struct gaih_service *service,
 #ifdef HAVE_LIBIDN
 	      make_copy:
 #endif
-		canon = strdup (canon);
-		if (canon == NULL)
-		  return -EAI_MEMORY;
+		if (malloc_canonbuf)
+		  /* We already allocated the string using malloc.  */
+		  malloc_canonbuf = false;
+		else
+		  {
+		    canon = strdup (canon);
+		    if (canon == NULL)
+		      {
+			if (malloc_tmpbuf2)
+			  free (tmpbuf2);
+
+			result = -EAI_MEMORY;
+			goto free_and_return;
+		      }
+		  }
 	      }
+
+	    if (malloc_tmpbuf2)
+	      free (tmpbuf2);
 	  }
 
 	family = at2->family;
@@ -985,7 +1224,8 @@ gaih_inet (const char *name, const struct gaih_service *service,
 	    if (ai == NULL)
 	      {
 		free ((char *) canon);
-		return -EAI_MEMORY;
+		result = -EAI_MEMORY;
+		goto free_and_return;
 	      }
 
 	    ai->ai_flags = req->ai_flags;
@@ -1038,7 +1278,18 @@ gaih_inet (const char *name, const struct gaih_service *service,
 	at2 = at2->next;
       }
   }
-  return 0;
+
+ free_and_return:
+  if (malloc_name)
+    free ((char *) name);
+  if (malloc_addrmem)
+    free (addrmem);
+  if (malloc_canonbuf)
+    free (canonbuf);
+  if (malloc_tmpbuf)
+    free (tmpbuf);
+
+  return result;
 }
 
 

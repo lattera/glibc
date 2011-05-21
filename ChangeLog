@@ -1,5 +1,10 @@
 2011-05-20  Ulrich Drepper  <drepper@gmail.com>
 
+	[BZ #11869]
+	* sysdeps/posix/getaddrinfo.c (gaih_inet): Don't unconditionally use
+	alloca.
+	* include/alloca.h (extend_alloca_account): Define.
+
 	[BZ #11857]
 	* posix/regex.h: Fix comments with documentation of user-accessible
 	fields after compilation and describe correct free'ing of pattern
