@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1993, 1995, 1996, 1997, 1998, 2000, 2002, 2004, 2010
+/* Copyright (C) 1991, 1993, 1995-1998, 2000, 2002, 2004, 2010, 2011
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -17,6 +17,7 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <assert.h>
 #include <errno.h>
 #include <libintl.h>
 #include <stdio.h>
@@ -37,16 +38,16 @@
 int
 __xpg_strerror_r (int errnum, char *buf, size_t buflen)
 {
+  const char *estr = __strerror_r (errnum, buf, buflen);
+  size_t estrlen = strlen (estr);
+
   if (errnum < 0 || errnum >= _sys_nerr_internal
       || _sys_errlist_internal[errnum] == NULL)
     return EINVAL;
 
-  const char *estr = (const char *) _(_sys_errlist_internal[errnum]);
-  size_t estrlen = strlen (estr) + 1;
+  assert (estr != buf);
+/* Terminate the string in any case.  */
+  *((char *) __mempcpy (buf, estr, MIN (buflen - 1, estrlen))) = '\0';
 
-  if (buflen < estrlen)
-    return ERANGE;
-
-  memcpy (buf, estr, estrlen);
-  return 0;
+  return buflen <= estrlen ? ERANGE : 0;
 }

@@ -1,5 +1,9 @@
 2011-05-21  Ulrich Drepper  <drepper@gmail.com>
 
+	[BZ #12782]
+	* string/xpg-strerror.c (__xpg_strerror_r): Fill buffer even if error
+	is returned.
+
 	* string/_strerror.c (__strerror_r): Print negative errors as signed
 	numbers.
 
