@@ -1,5 +1,10 @@
 2011-05-21  Ulrich Drepper  <drepper@gmail.com>
 
+	[BZ #12777]
+	* iconvdata/cp1258.c (comp_table_data): Remove entry 0x00A5 0xEC.
+	(decomp_table): Change U0385 entry to emit 0xA5 0xEC.
+	* iconvdata/CP1258.irreversible: Adjust entry 0xA8EC.
+
 	* configure.in: Fix typo in redirection and correct removal of test
 	files in two cases.
 
