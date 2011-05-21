@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1995-2000, 2002, 2003, 2004, 2006, 2008, 2010
+/* Copyright (C) 1991, 1992, 1995-2000, 2002, 2003, 2004, 2006, 2008, 2010, 2011
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -155,7 +155,7 @@ new_composite_name (int category, const char *newnames[__LC_LAST])
 			    _nl_global_locale.__names[i]);
 	last_len = strlen (name);
 	cumlen += _nl_category_name_sizes[i] + 1 + last_len + 1;
-	if (i > 0 && same && strcmp (name, newnames[0]) != 0)
+	if (same && name != newnames[0] && strcmp (name, newnames[0]) != 0)
 	  same = 0;
       }
 

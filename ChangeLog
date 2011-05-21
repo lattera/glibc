@@ -1,5 +1,9 @@
 2011-05-21  Ulrich Drepper  <drepper@gmail.com>
 
+	[BZ #12788]
+	* locale/setlocale.c (new_composite_name): Fix test to check for
+	identical name of all categories.
+
 	[BZ #12792]
 	* libio/filedoalloc.c (local_isatty): New function.
 	(_IO_file_doallocate): Use local_isatty.

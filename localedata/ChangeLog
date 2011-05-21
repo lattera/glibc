@@ -1,3 +1,9 @@
+2011-05-21  Ulrich Drepper  <drepper@gmail.com>
+
+	[BZ #12788]
+	* bug-setlocale1.c: New file.
+	* Makefile: Add rules to build and run bug-setlocale1.
+
 2011-05-17  Ulrich Drepper  <drepper@gmail.com>
 
 	[BZ #11837]
