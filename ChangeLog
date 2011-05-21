@@ -1,5 +1,8 @@
 2011-05-21  Ulrich Drepper  <drepper@gmail.com>
 
+	* sysdeps/unix/sysv/linux/bits/time.h: Define CLOCK_REALTIME_ALARM
+	and CLOCK_BOOTTIME_ALARM.
+
 	[BZ #12782]
 	* string/xpg-strerror.c (__xpg_strerror_r): Fill buffer even if error
 	is returned.
