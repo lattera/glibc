@@ -1,5 +1,8 @@
 2011-05-21  Ulrich Drepper  <drepper@gmail.com>
 
+	* string/_strerror.c (__strerror_r): Print negative errors as signed
+	numbers.
+
 	[BZ #12777]
 	* iconvdata/cp1258.c (comp_table_data): Remove entry 0x00A5 0xEC.
 	(decomp_table): Change U0385 entry to emit 0xA5 0xEC.
