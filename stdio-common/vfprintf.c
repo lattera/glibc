@@ -52,6 +52,7 @@
       CHECK_FILE (S, -1);						      \
       if (S->_flags & _IO_NO_WRITES)					      \
 	{								      \
+	  S->_flags |= _IO_ERR_SEEN;					      \
 	  __set_errno (EBADF);						      \
 	  return -1;							      \
 	}								      \

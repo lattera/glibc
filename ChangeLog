@@ -1,3 +1,13 @@
+2011-05-21  Ulrich Drepper  <drepper@gmail.com>
+
+	[BZ #12792]
+	* libio/filedoalloc.c (local_isatty): New function.
+	(_IO_file_doallocate): Use local_isatty.
+	* stdio-common/perror.c (perror): In case a new stream is used
+	forward the stream error.
+	* stdio-common/vfprintf.c (ARGCHECK): For read-only streams also set
+	error flag.
+
 2011-05-20  Ulrich Drepper  <drepper@gmail.com>
 
 	[BZ #11869]

@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1997, 2001, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1997, 2001, 2002, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -41,7 +41,7 @@
    4. Neither the name of the University nor the names of its contributors
       may be used to endorse or promote products derived from this software
       without specific prior written permission.
-   
+
    THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND
    ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -73,6 +73,17 @@
 
 # include <device-nrs.h>
 #endif
+
+
+static int
+local_isatty (int fd)
+{
+  int save_errno = errno;
+  int res = isatty (fd);
+  __set_errno (save_errno);
+  return res;
+}
+
 
 /*
  * Allocate a file buffer, or switch to unbuffered I/O.
@@ -109,7 +120,7 @@ _IO_file_doallocate (fp)
 #ifdef DEV_TTY_P
 	      DEV_TTY_P (&st) ||
 #endif
-	      isatty (fp->_fileno))
+	      local_isatty (fp->_fileno))
 	    fp->_flags |= _IO_LINE_BUF;
 	}
 #if _IO_HAVE_ST_BLKSIZE

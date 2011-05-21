@@ -1,4 +1,5 @@
-/* Copyright (C) 1991-1993,1997,1998,2000-2005 Free Software Foundation, Inc.
+/* Copyright (C) 1991-1993,1997,1998,2000-2005,2011
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -73,6 +74,10 @@ perror (const char *s)
 	 position.  Since the stderr stream wasn't used so far we just
 	 write to the descriptor.  */
       perror_internal (fp, s, errnum);
+
+      if (_IO_ferror_unlocked (fp))
+	stderr->_flags |= _IO_ERR_SEEN;
+
       /* Close the stream.  */
       fclose (fp);
     }
