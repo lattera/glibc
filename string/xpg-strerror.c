@@ -19,20 +19,10 @@
 
 #include <assert.h>
 #include <errno.h>
-#include <libintl.h>
 #include <stdio.h>
 #include <string.h>
 #include <sys/param.h>
-#include <stdio-common/_itoa.h>
 
-/* It is critical here that we always use the `dcgettext' function for
-   the message translation.  Since <libintl.h> only defines the macro
-   `dgettext' to use `dcgettext' for optimizing programs this is not
-   always guaranteed.  */
-#ifndef dgettext
-# include <locale.h>		/* We need LC_MESSAGES.  */
-# define dgettext(domainname, msgid) dcgettext (domainname, msgid, LC_MESSAGES)
-#endif
 
 /* Fill buf with a string describing the errno code in ERRNUM.  */
 int
@@ -41,13 +31,18 @@ __xpg_strerror_r (int errnum, char *buf, size_t buflen)
   const char *estr = __strerror_r (errnum, buf, buflen);
   size_t estrlen = strlen (estr);
 
-  if (errnum < 0 || errnum >= _sys_nerr_internal
-      || _sys_errlist_internal[errnum] == NULL)
-    return EINVAL;
+  if (estr == buf)
+    {
+      assert (errnum < 0 || errnum >= _sys_nerr_internal
+	      || _sys_errlist_internal[errnum] == NULL);
+      return EINVAL;
+    }
+  assert (errnum >= 0 && errnum < _sys_nerr_internal
+	  && _sys_errlist_internal[errnum] != NULL);
 
-  assert (estr != buf);
-/* Terminate the string in any case.  */
-  *((char *) __mempcpy (buf, estr, MIN (buflen - 1, estrlen))) = '\0';
+  /* Terminate the string in any case.  */
+  if (buflen > 0)
+    *((char *) __mempcpy (buf, estr, MIN (buflen - 1, estrlen))) = '\0';
 
   return buflen <= estrlen ? ERANGE : 0;
 }
