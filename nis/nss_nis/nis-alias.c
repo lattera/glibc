@@ -1,4 +1,4 @@
-/* Copyright (C) 1996-2002, 2003, 2006 Free Software Foundation, Inc.
+/* Copyright (C) 1996-2002, 2003, 2006, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1996.
 
@@ -142,10 +142,10 @@ internal_nis_getaliasent_r (struct aliasent *alias, char *buffer,
       int yperr;
 
       if (new_start)
-        yperr = yp_first (domain, "mail.aliases", &outkey, &keylen, &result,
+	yperr = yp_first (domain, "mail.aliases", &outkey, &keylen, &result,
 			  &len);
       else
-        yperr = yp_next (domain, "mail.aliases", oldkey, oldkeylen, &outkey,
+	yperr = yp_next (domain, "mail.aliases", oldkey, oldkeylen, &outkey,
 			 &keylen, &result, &len);
 
       if (__builtin_expect (yperr != YPERR_SUCCESS, 0))
@@ -153,20 +153,20 @@ internal_nis_getaliasent_r (struct aliasent *alias, char *buffer,
 	  enum nss_status retval = yperr2nss (yperr);
 
 	  if (retval == NSS_STATUS_TRYAGAIN)
-            *errnop = errno;
-          return retval;
-        }
+	    *errnop = errno;
+	  return retval;
+	}
 
       if (__builtin_expect ((size_t) (len + 1) > buflen, 0))
-        {
+	{
 	  free (result);
-          *errnop = ERANGE;
-          return NSS_STATUS_TRYAGAIN;
-        }
+	  *errnop = ERANGE;
+	  return NSS_STATUS_TRYAGAIN;
+	}
       char *p = strncpy (buffer, result, len);
       buffer[len] = '\0';
       while (isspace (*p))
-        ++p;
+	++p;
       free (result);
 
       parse_res = _nss_nis_parse_aliasent (outkey, p, alias, buffer,
@@ -213,12 +213,24 @@ _nss_nis_getaliasbyname_r (const char *name, struct aliasent *alias,
       return NSS_STATUS_UNAVAIL;
     }
 
-  size_t namlen = strlen (name);
-  char name2[namlen + 1];
-
   char *domain;
   if (__builtin_expect (yp_get_default_domain (&domain), 0))
     return NSS_STATUS_UNAVAIL;
+
+  size_t namlen = strlen (name);
+  char *name2;
+  int use_alloca = __libc_use_alloca (namlen + 1);
+  if (use_alloca)
+    name2 = __alloca (namlen + 1);
+  else
+    {
+      name2 = malloc (namlen + 1);
+      if (name2 == NULL)
+	{
+	  *errnop = ENOMEM;
+	  return NSS_STATUS_TRYAGAIN;
+	}
+    }
 
   /* Convert name to lowercase.  */
   size_t i;
@@ -229,6 +241,9 @@ _nss_nis_getaliasbyname_r (const char *name, struct aliasent *alias,
   char *result;
   int len;
   int yperr = yp_match (domain, "mail.aliases", name2, namlen, &result, &len);
+
+  if (!use_alloca)
+    free (name2);
 
   if (__builtin_expect (yperr != YPERR_SUCCESS, 0))
     {

@@ -1,5 +1,13 @@
 2011-05-22  Ulrich Drepper  <drepper@gmail.com>
 
+	[BZ #12671]
+	* nis/nss_nis/nis-alias.c (_nss_nis_getaliasbyname_r): Use malloc in
+	some situations.
+	* nscd/nscd_getserv_r.c (nscd_getserv_r): Likewise.
+	* posix/glob.c (glob_in_dir): Take additional parameter alloca_used.
+	add in in __libc_use_alloca calls.  Adjust callers.
+	(glob): Use malloc in some situations.
+
 	* elf/dl-runtime.c (_dl_profile_fixup): Also store LA_SYMB_NOPLTENTER
 	and LA_SYMB_NOPLTEXIT in flags which are passed to pltenter and
 	pltexit.
