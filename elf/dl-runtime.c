@@ -271,7 +271,7 @@ _dl_profile_fixup (
 	     interested in auditing.  */
 	  if ((l->l_audit_any_plt | result->l_audit_any_plt) != 0)
 	    {
-	      unsigned int altvalue = 0;
+	      unsigned int flags = 0;
 	      struct audit_ifaces *afct = GLRO(dl_audit);
 	      /* Synthesize a symbol record where the st_value field is
 		 the result.  */
@@ -294,7 +294,6 @@ _dl_profile_fixup (
 		  if ((l->l_audit[cnt].bindflags & LA_FLG_BINDFROM) != 0
 		      && (result->l_audit[cnt].bindflags & LA_FLG_BINDTO) != 0)
 		    {
-		      unsigned int flags = altvalue;
 		      if (afct->symbind != NULL)
 			{
 			  uintptr_t new_value
@@ -305,7 +304,7 @@ _dl_profile_fixup (
 					     strtab2 + defsym->st_name);
 			  if (new_value != (uintptr_t) sym.st_value)
 			    {
-			      altvalue = LA_SYMB_ALTVALUE;
+			      flags |= LA_SYMB_ALTVALUE;
 			      sym.st_value = new_value;
 			    }
 			}
@@ -328,7 +327,7 @@ _dl_profile_fixup (
 		  afct = afct->next;
 		}
 
-	      reloc_result->flags = altvalue;
+	      reloc_result->flags = flags;
 	      value = DL_FIXUP_ADDR_VALUE (sym.st_value);
 	    }
 	  else
@@ -366,7 +365,7 @@ _dl_profile_fixup (
       const char *symname = strtab + sym.st_name;
 
       /* Keep track of overwritten addresses.  */
-      unsigned int altvalue = reloc_result->flags;
+      unsigned int flags = reloc_result->flags;
 
       struct audit_ifaces *afct = GLRO(dl_audit);
       for (unsigned int cnt = 0; cnt < GLRO(dl_naudit); ++cnt)
@@ -375,7 +374,6 @@ _dl_profile_fixup (
 	      && (reloc_result->enterexit
 		  & (LA_SYMB_NOPLTENTER << (2 * (cnt + 1)))) == 0)
 	    {
-	      unsigned int flags = altvalue;
 	      long int new_framesize = -1;
 	      uintptr_t new_value
 		= afct->ARCH_LA_PLTENTER (&sym, reloc_result->boundndx,
@@ -385,7 +383,7 @@ _dl_profile_fixup (
 					  &new_framesize);
 	      if (new_value != (uintptr_t) sym.st_value)
 		{
-		  altvalue = LA_SYMB_ALTVALUE;
+		  flags |= LA_SYMB_ALTVALUE;
 		  sym.st_value = new_value;
 		}
 

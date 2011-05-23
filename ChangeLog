@@ -1,3 +1,9 @@
+2011-05-22  Ulrich Drepper  <drepper@gmail.com>
+
+	* elf/dl-runtime.c (_dl_profile_fixup): Also store LA_SYMB_NOPLTENTER
+	and LA_SYMB_NOPLTEXIT in flags which are passed to pltenter and
+	pltexit.
+
 2011-05-21  Ulrich Drepper  <drepper@gmail.com>
 
 	* sysdeps/unix/sysv/linux/bits/time.h: Define CLOCK_REALTIME_ALARM
