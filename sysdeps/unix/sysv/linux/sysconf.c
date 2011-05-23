@@ -37,7 +37,7 @@ static long int posix_sysconf (int name);
 
 #ifndef HAS_CPUCLOCK
 static long int
-has_cpuclock (void)
+has_cpuclock (int name)
 {
 # if defined __NR_clock_getres || HP_TIMING_AVAIL
   /* If we have HP_TIMING, we will fall back on that if the system
@@ -59,7 +59,7 @@ has_cpuclock (void)
   return -1;
 # endif
 }
-# define HAS_CPUCLOCK() has_cpuclock ()
+# define HAS_CPUCLOCK(name) has_cpuclock (name)
 #endif
 
 
@@ -86,7 +86,7 @@ __sysconf (int name)
 
     case _SC_CPUTIME:
     case _SC_THREAD_CPUTIME:
-      return HAS_CPUCLOCK ();
+      return HAS_CPUCLOCK (name);
 
     case _SC_ARG_MAX:
 #if __LINUX_KERNEL_VERSION < 0x020617

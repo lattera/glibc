@@ -1,3 +1,11 @@
+2011-05-23  Andreas Schwab  <schwab@redhat.com>
+
+	* sysdeps/unix/sysv/linux/ia64/sysconf.c (HAS_CPUCLOCK): Add
+	parameter name.
+	* sysdeps/unix/sysv/linux/sysconf.c (has_cpuclock, HAS_CPUCLOCK):
+	Add parameter name.
+	(__sysconf): Pass it down.
+
 2011-05-22  Ulrich Drepper  <drepper@gmail.com>
 
 	[BZ #12671]

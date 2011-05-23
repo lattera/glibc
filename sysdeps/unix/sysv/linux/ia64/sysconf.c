@@ -24,7 +24,7 @@
 
 
 #include "has_cpuclock.c"
-#define HAS_CPUCLOCK() (has_cpuclock () ? _POSIX_VERSION : -1)
+#define HAS_CPUCLOCK(name) (has_cpuclock () ? _POSIX_VERSION : -1)
 
 
 /* Now the generic Linux version.  */
