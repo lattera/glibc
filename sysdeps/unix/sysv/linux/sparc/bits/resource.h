@@ -1,5 +1,5 @@
 /* Bit values & structures for resource limits.  Linux/SPARC version.
-   Copyright (C) 1994, 1996, 1997, 1998, 1999, 2000, 2004, 2005, 2008, 2009
+   Copyright (C) 1994, 1996-2000, 2004, 2005, 2008, 2009, 2011
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -100,7 +100,13 @@ enum __rlimit_resource
   __RLIMIT_RTPRIO = 14,
 #define RLIMIT_RTPRIO __RLIMIT_RTPRIO
 
-  __RLIMIT_NLIMITS = 15,
+  /* Maximum CPU time in µs that a process scheduled under a real-time
+     scheduling policy may consume without making a blocking system
+     call before being forcibly descheduled.  */
+  __RLIMIT_RTTIME = 15,
+#define RLIMIT_RTTIME __RLIMIT_RTTIME
+
+  __RLIMIT_NLIMITS = 16,
   __RLIM_NLIMITS = __RLIMIT_NLIMITS
 #define RLIMIT_NLIMITS __RLIMIT_NLIMITS
 #define RLIM_NLIMITS __RLIM_NLIMITS

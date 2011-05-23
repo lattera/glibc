@@ -1,3 +1,9 @@
+2011-05-23  Ulrich Drepper  <drepper@gmail.com>
+
+	[BZ #12795]
+	* sysdeps/unix/sysv/linux/bits/resource.h (RLIMIT_RTTIME): Define.
+	* sysdeps/unix/sysv/linux/sparc/bits/resource.h: Likewise.
+
 2011-05-20  Andreas Schwab  <schwab@redhat.com>
 
 	* stdlib/longlong.h: Update from GCC.
