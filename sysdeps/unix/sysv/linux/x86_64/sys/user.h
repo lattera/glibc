@@ -61,7 +61,7 @@ struct user_regs_struct
   unsigned long int rdi;
   unsigned long int orig_rax;
   unsigned long int rip;
-  unsigned long int intcs;
+  unsigned long int cs;
   unsigned long int eflags;
   unsigned long int rsp;
   unsigned long int ss;

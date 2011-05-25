@@ -1,3 +1,8 @@
+2011-05-25  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/x86_64/sys/user.h
+	(struct user_regs_struct): Change intcs field back to cs.
+
 2011-05-25  Ulrich Drepper  <drepper@gmail.com>
 
 	* po/ja.po: Update from translation team.
