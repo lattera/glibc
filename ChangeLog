@@ -9,6 +9,21 @@
 	[BZ #12814]
 	* iconvdata/iso-2022-jp.c (BODY): Fix invalid variable shadowing.
 
+2011-05-25  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/x86_64/sys/user.h
+	(struct user_regs_struct): Change intcs field back to cs.
+
+2011-05-25  Ulrich Drepper  <drepper@gmail.com>
+
+	* po/ja.po: Update from translation team.
+
+2011-05-23  Ulrich Drepper  <drepper@gmail.com>
+
+	[BZ #12795]
+	* sysdeps/unix/sysv/linux/bits/resource.h (RLIMIT_RTTIME): Define.
+	* sysdeps/unix/sysv/linux/sparc/bits/resource.h: Likewise.
+
 2011-05-20  Andreas Schwab  <schwab@redhat.com>
 
 	* stdlib/longlong.h: Update from GCC.

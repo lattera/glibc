@@ -7,9 +7,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libc 2.11.1\n"
 "POT-Creation-Date: 2009-02-06 12:40-0800\n"
-"PO-Revision-Date: 2011-01-08 15:24+0900\n"
+"PO-Revision-Date: 2011-05-25 09:59+0900\n"
 "Last-Translator: Yasuaki Taniguchi <yasuakit@gmail.com>\n"
 "Language-Team: Japanese <translation-team-ja@lists.sourceforge.net>\n"
+"Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -3679,9 +3680,9 @@ msgid "cannot change socket to nonblocking mode: %s"
 msgstr "ソケットを非ブロッキングモードに変更できません: %s"
 
 #: nscd/connections.c:930
-#, fuzzy, c-format
+#, c-format
 msgid "cannot set socket to close on exec: %s"
-msgstr "接続を受け付けるソケットを有効にできません: %s"
+msgstr ""
 
 #: nscd/connections.c:943
 #, c-format
@@ -4131,7 +4132,7 @@ msgid "Haven't found \"%s\" in password cache!"
 msgstr "パスワードキャッシュ内に \"%s\" が見つかりません!"
 
 #: nscd/pwdcache.c:445
-#, fuzzy, c-format
+#, c-format
 msgid "Reloading \"%s\" in password cache!"
 msgstr "パスワードキャッシュ内の \"%s\" を再ロードしています!"
 
@@ -4596,24 +4597,23 @@ msgid "out of memory\n"
 msgstr "メモリが足りなくなりました\n"
 
 #: sunrpc/auth_unix.c:350
-#, fuzzy
 msgid "auth_unix.c: Fatal marshalling problem"
-msgstr "auth_none.c - 致命的な整列の問題"
+msgstr ""
 
 #: sunrpc/clnt_perr.c:105 sunrpc/clnt_perr.c:121
-#, fuzzy, c-format
+#, c-format
 msgid "%s: %s; low version = %lu, high version = %lu"
-msgstr "; low バージョン = %lu, high バージョン = %lu"
+msgstr "%s: %s; low バージョン = %lu、high バージョン = %lu"
 
 #: sunrpc/clnt_perr.c:112
-#, fuzzy, c-format
+#, c-format
 msgid "%s: %s; why = %s\n"
-msgstr "; 理由 = "
+msgstr "%s: %s; 理由 = %s\n"
 
 #: sunrpc/clnt_perr.c:114
-#, fuzzy, c-format
+#, c-format
 msgid "%s: %s; why = (unknown authentication error - %d)\n"
-msgstr "(不明な認証エラー - %d)"
+msgstr "%s: %s; 理由 = (不明な認証エラーです - %d)\n"
 
 #: sunrpc/clnt_perr.c:159
 msgid "RPC: Success"
@@ -4724,14 +4724,12 @@ msgid "Failed (unspecified error)"
 msgstr "失敗しました(原因不特定のエラー)"
 
 #: sunrpc/clnt_raw.c:117
-#, fuzzy
 msgid "clnt_raw.c: fatal header serialization error"
-msgstr "clnt_raw.c - ヘッダの直列化で致命的エラー."
+msgstr ""
 
 #: sunrpc/pm_getmaps.c:83
-#, fuzzy
 msgid "pmap_getmaps.c: rpc problem"
-msgstr "pmap_getmaps rpc が問題です"
+msgstr "pmap_getmaps.c: rpc 問題が発生しました"
 
 #: sunrpc/pmap_clnt.c:129
 msgid "Cannot register service"
@@ -4792,9 +4790,9 @@ msgid "%s: C preprocessor failed with exit code %d\n"
 msgstr "%s: C プリプロセッサは終了コード %d で失敗しました\n"
 
 #: sunrpc/rpc_main.c:464
-#, fuzzy, c-format
+#, c-format
 msgid "illegal nettype: `%s'\n"
-msgstr "不正な nettype です:`%s'\n"
+msgstr "不正な nettype です: `%s'\n"
 
 #: sunrpc/rpc_main.c:1130
 #, c-format
@@ -4954,9 +4952,9 @@ msgid "-N\t\tsupports multiple arguments and call-by-value\n"
 msgstr ""
 
 #: sunrpc/rpc_main.c:1485
-#, fuzzy, c-format
+#, c-format
 msgid "-o outfile\tname of the output file\n"
-msgstr "出力ファイルを生成できません"
+msgstr "-o outfile\t出力ファイルの名前を設定する\n"
 
 #: sunrpc/rpc_main.c:1486
 #, c-format
@@ -4989,9 +4987,9 @@ msgid "-T\t\tgenerate code to support RPC dispatch tables\n"
 msgstr ""
 
 #: sunrpc/rpc_main.c:1492
-#, fuzzy, c-format
+#, c-format
 msgid "-Y path\t\tdirectory name to find C preprocessor (cpp)\n"
-msgstr "どのような C プリプロセッサも見つかりません (cpp)\n"
+msgstr "-Y path\t\tC プリプロセッサ (cpp) を見つけるためのディレクトリ名\n"
 
 #: sunrpc/rpc_scan.c:114
 msgid "constant or identifier expected"
@@ -5093,9 +5091,8 @@ msgid "rpcinfo: %s is unknown host\n"
 msgstr "rpcinfo: %sは不明なホストです\n"
 
 #: sunrpc/svc_run.c:70
-#, fuzzy
 msgid "svc_run: - out of memory"
-msgstr "svctcp_create: メモリが足りません\n"
+msgstr "mesvc_run: - メモリが足りません"
 
 #: sunrpc/svc_run.c:90
 msgid "svc_run: - poll failed"
@@ -6287,19 +6284,18 @@ msgid "%s: warning: zone \"%s\" abbreviation \"%s\" %s\n"
 msgstr ""
 
 #: timezone/zdump.c:279
-#, fuzzy, c-format
+#, c-format
 msgid "%s: usage is %s [ --version ] [ -v ] [ -c [loyear,]hiyear ] zonename ...\n"
-msgstr "%s: 使用法 %s [ --version ] [ -v ] [ -c cutoff ] zonename ...\n"
+msgstr "%s: 使用法: %s [ --version ] [ -v ] [ -c [loyear,]hiyear ] zonename ...\n"
 
 #: timezone/zdump.c:296
-#, fuzzy, c-format
+#, c-format
 msgid "%s: wild -c argument %s\n"
-msgstr "%s: 引数が多すぎます\n"
+msgstr ""
 
 #: timezone/zdump.c:387
-#, fuzzy
 msgid "Error writing to standard output"
-msgstr "エラーを標準出力に書き出し中"
+msgstr ""
 
 #: timezone/zdump.c:410
 #, c-format
@@ -6326,13 +6322,13 @@ msgid "warning: "
 msgstr "警告: "
 
 #: timezone/zic.c:459
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "%s: usage is %s [ --version ] [ -v ] [ -l localtime ] [ -p posixrules ] \\\n"
 "\t[ -d directory ] [ -L leapseconds ] [ -y yearistype ] [ filename ... ]\n"
 msgstr ""
-"%s: 使用法 %s [ --version ] [ -s ] [ -v ] [ -l ローカル時刻 ] [ -p posixrules ] \\\n"
-"\t[ -d ディレクトリ ] [ -L 閏秒 ] [ -y yearistype ] [ ファイル名 ... ]\n"
+"%s: 使用法: %s [ --version ] [ -v ] [ -l localtime ] [ -p posixrules ] \\\n"
+"\t[ -d directory ] [ -L leapseconds ] [ -y yearistype ] [ filename ... ]\n"
 
 #: timezone/zic.c:494
 msgid "wild compilation-time specification of zic_t"
@@ -6364,9 +6360,8 @@ msgid "%s: More than one -L option specified\n"
 msgstr "%s: -L オプションが複数指定されています\n"
 
 #: timezone/zic.c:600
-#, fuzzy
 msgid "link to link"
-msgstr "行が長すぎます"
+msgstr ""
 
 #: timezone/zic.c:665
 msgid "hard link failed, symbolic link used"
@@ -6606,9 +6601,8 @@ msgid "too many local time types"
 msgstr "ローカル時間形式が多すぎます"
 
 #: timezone/zic.c:2268
-#, fuzzy
 msgid "UTC offset out of range"
-msgstr "チャンネル番号が範囲外です"
+msgstr "UTC オフセットが範囲外です"
 
 #: timezone/zic.c:2296
 msgid "too many leap seconds"
@@ -6811,7 +6805,7 @@ msgstr "%s: %d は正しく記号を拡張しませんでした\n"
 #~ msgstr "\"%s\" ファイルの書き込み中にエラーが発生しました"
 
 #~ msgid "Java compiler not found, try installing gcj or set $JAVAC"
-#~ msgstr "Java コンパイラが見つかりません。 gcj をインストールするか、またはt $JAVAC を設定してみてください"
+#~ msgstr "Java コンパイラが見つかりません。 gcj をインストールするか、または $JAVAC を設定してみてください"
 
 #~ msgid "Java virtual machine not found, try installing gij or set $JAVA"
 #~ msgstr "Java 仮想マシンが見つかりません。 gij をインストールするか、または $JAVA を設定してみてください"
@@ -7054,13 +7048,8 @@ msgstr "%s: %d は正しく記号を拡張しませんでした\n"
 #~ msgid "%s%s argument `%s' too large"
 #~ msgstr "引数 `%3$s' に対する %1$s%2$s が大きすぎます"
 
-#, fuzzy
 #~ msgid "%s: illegal option -- %c\n"
-#~ msgstr ""
-#~ "#-#-#-#-#  gnulib-2.0.0.3462.e9796.ja.po (gnulib 2.0.0.3462.e9796)  #-#-#-#-#\n"
-#~ "%s: 不正なオプション -- %c\n"
-#~ "#-#-#-#-#  libc-2.11.1.ja.po.orig (libc 2.11.1)  #-#-#-#-#\n"
-#~ "%s: 不正なオプションです -- %c\n"
+#~ msgstr "%s: 不正なオプションです -- %c\n"
 
 #~ msgid "block size"
 #~ msgstr "ブロックサイズ"
