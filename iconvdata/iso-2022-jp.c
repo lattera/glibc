@@ -1,5 +1,5 @@
 /* Conversion module for ISO-2022-JP and ISO-2022-JP-2.
-   Copyright (C) 1998, 1999, 2000-2002 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999, 2000-2002, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -664,7 +664,7 @@ static const cvlist_t conversion_lists[4] =
 									      \
 			*outptr++ = ESC;				      \
 			*outptr++ = 'N';				      \
-			*outptr++ = res;				      \
+			*outptr++ = res & 0x7f;				      \
 			written = 3;					      \
 		      }							      \
 		  }							      \
@@ -706,7 +706,7 @@ static const cvlist_t conversion_lists[4] =
 									      \
 	    /* At the beginning of a line, G2 designation is cleared.  */     \
 	    if (var == iso2022jp2 && ch == 0x0a)			      \
-	      set2 = UNSPECIFIED_set; 					      \
+	      set2 = UNSPECIFIED_set;					      \
 	  }								      \
 	else								      \
 	  {								      \
@@ -764,9 +764,9 @@ static const cvlist_t conversion_lists[4] =
 			++rp;						      \
 		      if (ch >= rp->start)				      \
 			{						      \
-			  unsigned char res =				      \
+			  unsigned char ch2 =				      \
 			    iso88597_from_ucs4[ch - 0xa0 + rp->idx];	      \
-			  if (res != '\0')				      \
+			  if (ch2 != '\0')				      \
 			    {						      \
 			      if (set2 != ISO88597_set)			      \
 				{					      \
@@ -789,7 +789,7 @@ static const cvlist_t conversion_lists[4] =
 				}					      \
 			      *outptr++ = ESC;				      \
 			      *outptr++ = 'N';				      \
-			      *outptr++ = res;				      \
+			      *outptr++ = ch2 - 0x80;			      \
 			      res = __GCONV_OK;				      \
 			      break;					      \
 			    }						      \
