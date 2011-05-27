@@ -1,4 +1,4 @@
-/* Copyright (C) 2007 Free Software Foundation, Inc.
+/* Copyright (C) 2007, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -35,7 +35,12 @@ ENTRY (sched_getcpu)
 	movl	$VGETCPU_CACHE_OFFSET, %edx
 	addq	%fs:0, %rdx
 
+#ifdef SHARED
+	movq	__vdso_getcpu(%rip), %rax
+	PTR_DEMANGLE (%rax)
+#else
 	movq	$VSYSCALL_ADDR_vgetcpu, %rax
+#endif
 	callq	*%rax
 
 	cmpq	$-4095, %rax

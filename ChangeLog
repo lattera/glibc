@@ -1,5 +1,12 @@
 2011-05-27  Ulrich Drepper  <drepper@gmail.com>
 
+	[BZ #12813]
+	* sysdeps/unix/sysv/linux/x86_64/init-first.c (__vdso_getcpu):
+	Retrieve getcpu symbol from vDSO.  Substitute with vsyscall if not
+	available.
+	* sysdeps/unix/sysv/linux/x86_64/sched_getcpu.S [SHARED]: Use
+	__vdso_getcpu.
+
 	[BZ #12814]
 	* iconvdata/Makefile (tests): Add bug-iconv9.
 	* iconvdata/bug-iconv9.c: New file.
