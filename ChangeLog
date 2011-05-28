@@ -1,5 +1,7 @@
 2011-05-28  Ulrich Drepper  <drepper@gmail.com>
 
+	* sysdeps/unix/sysv/linux/socketcall.h (SOCKOP_sendmmsg): Define.
+
 	* debug/xtrace.sh: Unify messages.
 	* malloc/memusage.sh: Likewise.
 
