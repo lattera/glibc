@@ -762,7 +762,6 @@ glob (pattern, flags, errfunc, pglob)
 	  char *end_name = strchr (dirname, '/');
 	  char *user_name;
 	  int malloc_user_name = 0;
-	  const char *home_dir;
 	  char *unescape = NULL;
 
 	  if (!(flags & GLOB_NOESCAPE))
