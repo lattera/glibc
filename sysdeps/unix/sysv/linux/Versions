@@ -158,6 +158,8 @@ libc {
     clock_adjtime;
 
     name_to_handle_at; open_by_handle_at;
+
+    setns;
   }
   GLIBC_PRIVATE {
     # functions used in other libraries

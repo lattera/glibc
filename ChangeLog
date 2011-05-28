@@ -1,3 +1,9 @@
+2011-05-28  Ulrich Drepper  <drepper@gmail.com>
+
+	* sysdeps/unix/sysv/linux/syscalls.list: Add setns entry.
+	* sysdeps/unix/sysv/linux/bits/sched.h: Declare setns.
+	* sysdeps/unix/sysv/linux/Versions [GLIBC_2.14]: Add setns.
+
 2011-05-27  Ulrich Drepper  <drepper@gmail.com>
 
 	[BZ #12813]

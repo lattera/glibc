@@ -1,6 +1,6 @@
 /* Definitions of constants and data structure for POSIX 1003.1b-1993
    scheduling interface.
-   Copyright (C) 1996-1999,2001-2003,2005,2006,2007,2008,2009
+   Copyright (C) 1996-1999,2001-2003,2005,2006,2007,2008,2009,2011
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -37,7 +37,7 @@
 # define SCHED_RESET_ON_FORK	0x40000000
 #endif
 
-#ifdef __USE_MISC
+#ifdef __USE_GNU
 /* Cloning flags.  */
 # define CSIGNAL       0x000000ff /* Signal mask to be sent at exit.  */
 # define CLONE_VM      0x00000100 /* Set if VM shared between processes.  */
@@ -78,7 +78,7 @@ struct sched_param
 
 __BEGIN_DECLS
 
-#ifdef __USE_MISC
+#ifdef __USE_GNU
 /* Clone current process.  */
 extern int clone (int (*__fn) (void *__arg), void *__child_stack,
 		  int __flags, void *__arg, ...) __THROW;
@@ -88,7 +88,11 @@ extern int unshare (int __flags) __THROW;
 
 /* Get index of currently used CPU.  */
 extern int sched_getcpu (void) __THROW;
+
+/* Switch process to namespace of type NSTYPE indicated by FD.  */
+extern int setns (int __fd, int __nstype) __THROW;
 #endif
+
 
 __END_DECLS
 
