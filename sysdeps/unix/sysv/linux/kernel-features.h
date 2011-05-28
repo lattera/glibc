@@ -541,3 +541,8 @@
 #if __LINUX_KERNEL_VERSION >= 0x020624
 # define __ASSUME_PRLIMIT64	1
 #endif
+
+/* sendmmsg is available in 2.6.39.  */
+#if __LINUX_KERNEL_VERSION >= 0x020627
+# define __ASSUME_SENDMMSG	1
+#endif

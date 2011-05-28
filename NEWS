@@ -30,7 +30,7 @@ Version 2.14
   Implemented by Ulrich Drepper.
 
 * New Linux interfaces: clock_adjtime, name_to_handle_at, open_by_handle_at,
-  syncfs, setns
+  syncfs, setns, sendmmsg
 
 * New locales: os_RU, bem_ZA, en_ZA, ff_SN, sw_KE, sw_TZ, lb_LU, wae_CH,
   yue_HK, lij_IT, mhr_RU

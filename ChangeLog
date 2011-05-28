@@ -1,5 +1,13 @@
 2011-05-28  Ulrich Drepper  <drepper@gmail.com>
 
+	* sysdeps/unix/sysv/linux/internal_sendmmsg.S: New file.
+	* sysdeps/unix/sysv/linux/sendmmsg.c: New file.
+	* sysdeps/unix/sysv/linux/Makefile [subdir=socket] (sysdep_routines):
+	Add sendmmsg and internal_sendmmsg.
+	* sysdeps/unix/sysv/linux/Versions [GLIBC_2.14]: Add sendmmsg.
+	* sysdeps/unix/sysv/linux/bits/socket.h: Declare sendmmsg.
+	* sysdeps/unix/sysv/linux/kernel-features.h: Define __ASSUME_SENDMMSG.
+
 	* sysdeps/unix/sysv/linux/syscalls.list: Add setns entry.
 	* sysdeps/unix/sysv/linux/bits/sched.h: Declare setns.
 	* sysdeps/unix/sysv/linux/Versions [GLIBC_2.14]: Add setns.

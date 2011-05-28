@@ -421,7 +421,7 @@ struct linger
 
 __BEGIN_DECLS
 
-/* Receive a message as described by MESSAGE from socket FD.
+/* Receive up to VLEN messages as described by VMESSAGES from socket FD.
    Returns the number of bytes read or -1 for errors.
 
    This function is a cancellation point and therefore not marked with
@@ -429,6 +429,13 @@ __BEGIN_DECLS
 extern int recvmmsg (int __fd, struct mmsghdr *__vmessages,
 		     unsigned int __vlen, int __flags,
 		     __const struct timespec *__tmo);
+
+/* Send a VLEN messages as described by VMESSAGES to socket FD.
+   Return the number of datagrams successfully written or -1 for errors.
+This function is a cancellation point and therefore not marked with
+   __THROW.  */
+extern int sendmmsg (int __fd, struct mmsghdr *__vmessages,
+		     unsigned int __vlen, int __flags);
 
 __END_DECLS
 

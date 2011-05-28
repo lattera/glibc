@@ -160,6 +160,8 @@ libc {
     name_to_handle_at; open_by_handle_at;
 
     setns;
+
+    sendmmsg;
   }
   GLIBC_PRIVATE {
     # functions used in other libraries

@@ -12,7 +12,8 @@ CFLAGS-malloc.c += -DMORECORE_CLEARS=2
 endif
 
 ifeq ($(subdir),socket)
-sysdep_routines += internal_accept4 recvmmsg internal_recvmmsg
+sysdep_routines += internal_accept4 recvmmsg internal_recvmmsg sendmmsg \
+		   internal_sendmmsg
 endif
 
 ifeq ($(subdir),misc)
