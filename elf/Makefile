@@ -170,6 +170,28 @@ vpath %.c ../locale/programs
 endif
 endif
 
+ifeq ($(have-ksh)$(build-shared),yesyes)
+extra-objs += sotruss-lib.os sotruss-lib.so
+install-others += $(inst_auditdir)/sotruss-lib.so
+install-bin-script = sotruss
+generated += sotruss
+CPPFLAGS-sotruss-lib = -DNOT_IN_libc
+$(objpfx)sotruss-lib.so: $(objpfx)sotruss-lib.os $(common-objpfx)shlib.lds
+	$(build-module-asneeded)
+$(objpfx)sotruss-lib.so: $(common-objpfx)libc.so $(objpfx)ld.so \
+	$(common-objpfx)libc_nonshared.a
+
+$(objpfx)sotruss: sotruss.ksh $(common-objpfx)config.make
+	sed -e 's%@KSH@%$(KSH)%g' \
+	    -e 's%@VERSION@%$(version)%g' \
+	    -e 's%@TEXTDOMAINDIR@%$(msgcatdir)%g' \
+	    -e 's%@PREFIX@%$(prefix)%g' < $< > $@.new
+	chmod 555 $@.new
+	mv -f $@.new $@
+$(inst_auditdir)/sotruss-lib.so: $(objpfx)sotruss-lib.so $(+force)
+	$(do-install-program)
+endif
+
 tests = tst-tls1 tst-tls2 tst-tls9 tst-leaks1
 ifeq (yes,$(have-initfini-array))
 tests += tst-array1 tst-array2 tst-array3 tst-array4 tst-array5

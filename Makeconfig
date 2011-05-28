@@ -278,6 +278,12 @@ infodir = $(prefix)/info
 endif
 inst_infodir = $(install_root)$(infodir)
 
+# Where to install audit libraries.
+ifndef auditdir
+auditdir = $(libdir)/audit
+endif
+inst_auditdir = $(install_root)$(auditdir)
+
 # Where to install default configuration files.  These include the local
 # timezone specification and network data base files.
 ifndef sysconfdir
