@@ -1,5 +1,9 @@
 2011-05-28  Ulrich Drepper  <drepper@gmail.com>
 
+	* locale/findlocale.c (_nl_find_locale): Return right away if
+	_nl_explode_name failed.
+	* locale/programs/locarchive.c (add_locale_to_archive): Likewise.
+
 	* sysdeps/unix/sysv/linux/socketcall.h (SOCKOP_sendmmsg): Define.
 
 	* debug/xtrace.sh: Unify messages.

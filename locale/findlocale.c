@@ -1,4 +1,4 @@
-/* Copyright (C) 1996-2001, 2002, 2003, 2006, 2010 Free Software Foundation, Inc.
+/* Copyright (C) 1996-2003, 2006, 2010, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -140,6 +140,9 @@ _nl_find_locale (const char *locale_path, size_t locale_path_len,
    */
   mask = _nl_explode_name (loc_name, &language, &modifier, &territory,
 			   &codeset, &normalized_codeset);
+  if (mask == -1)
+    /* Memory allocate problem.  */
+    return NULL;
 
   /* If exactly this locale was already asked for we have an entry with
      the complete name.  */

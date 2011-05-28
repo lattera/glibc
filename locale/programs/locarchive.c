@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2005, 2007, 2009 Free Software Foundation, Inc.
+/* Copyright (C) 2002,2003,2005,2007,2009,2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -1079,6 +1079,8 @@ add_locale_to_archive (ah, name, data, replace)
   int mask = _nl_explode_name (strdupa (name),
 			       &language, &modifier, &territory,
 			       &codeset, &normalized_codeset);
+  if (mask == -1)
+    return -1;
 
   if (mask & XPG_NORM_CODESET)
     /* This name contains a codeset in unnormalized form.
@@ -1128,6 +1130,7 @@ add_locale_to_archive (ah, name, data, replace)
 
   /* Now read the locale.alias files looking for lines whose
      right hand side matches our name after normalization.  */
+  int result = 0;
   if (alias_file != NULL)
     {
       FILE *fp;
@@ -1207,6 +1210,11 @@ add_locale_to_archive (ah, name, data, replace)
 						     &rhs_territory,
 						     &rhs_codeset,
 						     &rhs_normalized_codeset);
+		    if (rhs_mask == 1)
+		      {
+			result = -1;
+			goto out;
+		      }
 		    if (!strcmp (language, rhs_language)
 			&& ((rhs_mask & XPG_CODESET)
 			    /* He has a codeset, it must match normalized.  */
@@ -1240,6 +1248,7 @@ add_locale_to_archive (ah, name, data, replace)
 	    }
 	}
 
+    out:
       fclose (fp);
     }
 
@@ -1248,7 +1257,7 @@ add_locale_to_archive (ah, name, data, replace)
   if (mask & XPG_NORM_CODESET)
     free ((char *) normalized_codeset);
 
-  return 0;
+  return result;
 }
 
 
