@@ -24,13 +24,13 @@ TEXTDOMAIN=libc
 
 # Print usage message.
 do_usage() {
-  echo >&2 $"Try \`memusage --help' for more information."
+  printf >&2 $"Try \`%s --help' or `%s --usage' for more information.\n" memusage memusage
   exit 1
 }
 
 # Message for missing argument.
 do_missing_arg() {
-  echo >&2 $"memusage: option \`$1' requires an argument"
+  printf >&2 $"%s: option '%s' requires an argument\n" memusage "$1"
   do_usage
 }
 

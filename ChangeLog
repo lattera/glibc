@@ -1,5 +1,8 @@
 2011-05-28  Ulrich Drepper  <drepper@gmail.com>
 
+	* debug/xtrace.sh: Unify messages.
+	* malloc/memusage.sh: Likewise.
+
 	[BZ #12813]
 	* sysdeps/unix/sysv/linux/x86_64/init-first.c (__vdso_time): Retrieve
 	time symbol from vDSO.  Substitute with vsyscall if not available.

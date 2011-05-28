@@ -30,13 +30,13 @@ do_usage() {
 
 # Refer to --help option.
 help_info() {
-  printf >&2 $"Try \`xtrace --help' for more information.\n"
+  printf >&2 $"Try \`%s --help' or `%s --usage' for more information.\n" xtrace xtrace
   exit 1
 }
 
 # Message for missing argument.
 do_missing_arg() {
-  printf >&2 $"xtrace: option \`$1' requires an argument.\n"
+  printf >&2 $"%s: option '%s' requires an argument.\n" xtrace "$1"
   help_info
 }
 
