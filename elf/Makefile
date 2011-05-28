@@ -173,7 +173,7 @@ endif
 ifeq ($(have-ksh)$(build-shared),yesyes)
 extra-objs += sotruss-lib.os sotruss-lib.so
 install-others += $(inst_auditdir)/sotruss-lib.so
-install-bin-script = sotruss
+install-bin-script += sotruss
 generated += sotruss
 CPPFLAGS-sotruss-lib = -DNOT_IN_libc
 $(objpfx)sotruss-lib.so: $(objpfx)sotruss-lib.os $(common-objpfx)shlib.lds
