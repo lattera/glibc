@@ -237,13 +237,8 @@ build_wcs_buffer (re_string_t *pstr)
       else
 	p = (const char *) pstr->raw_mbs + pstr->raw_mbs_idx + byte_idx;
       mbclen = __mbrtowc (&wc, p, remain_len, &pstr->cur_state);
-      if (BE (mbclen == (size_t) -2, 0))
-	{
-	  /* The buffer doesn't have enough space, finish to build.  */
-	  pstr->cur_state = prev_st;
-	  break;
-	}
-      else if (BE (mbclen == (size_t) -1 || mbclen == 0, 0))
+      if (BE (mbclen == (size_t) -1 || mbclen == 0
+	      || (mbclen == (size_t) -2 && pstr->bufs_len >= pstr->len), 0))
 	{
 	  /* We treat these cases as a singlebyte character.  */
 	  mbclen = 1;
@@ -251,6 +246,12 @@ build_wcs_buffer (re_string_t *pstr)
 	  if (BE (pstr->trans != NULL, 0))
 	    wc = pstr->trans[wc];
 	  pstr->cur_state = prev_st;
+	}
+      else if (BE (mbclen == (size_t) -2, 0))
+	{
+	  /* The buffer doesn't have enough space, finish to build.  */
+	  pstr->cur_state = prev_st;
+	  break;
 	}
 
       /* Write wide character and padding.  */
@@ -334,9 +335,11 @@ build_wcs_upper_buffer (re_string_t *pstr)
 	      for (remain_len = byte_idx + mbclen - 1; byte_idx < remain_len ;)
 		pstr->wcs[byte_idx++] = WEOF;
 	    }
-	  else if (mbclen == (size_t) -1 || mbclen == 0)
+	  else if (mbclen == (size_t) -1 || mbclen == 0
+		   || (mbclen == (size_t) -2 && pstr->bufs_len >= pstr->len))
 	    {
-	      /* It is an invalid character or '\0'.  Just use the byte.  */
+	      /* It is an invalid character, an incomplete character
+		 at the end of the string, or '\0'.  Just use the byte.  */
 	      int ch = pstr->raw_mbs[pstr->raw_mbs_idx + byte_idx];
 	      pstr->mbs[byte_idx] = ch;
 	      /* And also cast it to wide char.  */
@@ -449,7 +452,8 @@ build_wcs_upper_buffer (re_string_t *pstr)
 	    for (remain_len = byte_idx + mbclen - 1; byte_idx < remain_len ;)
 	      pstr->wcs[byte_idx++] = WEOF;
 	  }
-	else if (mbclen == (size_t) -1 || mbclen == 0)
+	else if (mbclen == (size_t) -1 || mbclen == 0
+		 || (mbclen == (size_t) -2 && pstr->bufs_len >= pstr->len))
 	  {
 	    /* It is an invalid character or '\0'.  Just use the byte.  */
 	    int ch = pstr->raw_mbs[pstr->raw_mbs_idx + src_idx];

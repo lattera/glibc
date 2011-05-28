@@ -1,5 +1,17 @@
 2011-05-28  Ulrich Drepper  <drepper@gmail.com>
 
+	[BZ #12811]
+	* posix/regex_internal.c (build_wcs_buffer): Don't signal we have to
+	grow the buffers more if it already has to be sufficient.
+	(build_wcs_upper_buffer): Likewise.
+	* posix/regexec.c (check_matching): Likewise.
+	(clean_state_log_if_needed): Likewise.
+	(extend_buffers): Don't enlarge buffers beyond size of the input
+	buffer.
+	Patches mostly by Emil Wojak <emil@wojak.eu>.
+	* posix/bug-regex32.c: New file.
+	* posix/Makefile (tests): Add bug-regex32.
+
 	* locale/findlocale.c (_nl_find_locale): Return right away if
 	_nl_explode_name failed.
 	* locale/programs/locarchive.c (add_locale_to_archive): Likewise.

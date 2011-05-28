@@ -82,7 +82,7 @@ tests		:= tstgetopt testfnm runtests runptests	     \
 		   bug-regex17 bug-regex18 bug-regex19 bug-regex20 \
 		   bug-regex21 bug-regex22 bug-regex23 bug-regex24 \
 		   bug-regex25 bug-regex26 bug-regex27 bug-regex28 \
-		   bug-regex29 bug-regex30 bug-regex31 \
+		   bug-regex29 bug-regex30 bug-regex31 bug-regex32 \
 		   tst-nice tst-nanosleep tst-regex2 \
 		   transbug tst-rxspencer tst-pcre tst-boost \
 		   bug-ga1 tst-vfork1 tst-vfork2 tst-vfork3 tst-waitid \

@@ -1,5 +1,5 @@
 /* Extended regular expression matching and search library.
-   Copyright (C) 2002-2005, 2007, 2009, 2010 Free Software Foundation, Inc.
+   Copyright (C) 2002-2005,2007,2009,2010,2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Isamu Hasegawa <isamu@yamato.ibm.com>.
 
@@ -1156,7 +1156,8 @@ check_matching (re_match_context_t *mctx, int fl_longest_match,
       re_dfastate_t *old_state = cur_state;
       int next_char_idx = re_string_cur_idx (&mctx->input) + 1;
 
-      if (BE (next_char_idx >= mctx->input.bufs_len, 0)
+      if ((BE (next_char_idx >= mctx->input.bufs_len, 0)
+	   && mctx->input.bufs_len < mctx->input.len)
 	  || (BE (next_char_idx >= mctx->input.valid_len, 0)
 	      && mctx->input.valid_len < mctx->input.len))
 	{
@@ -1732,7 +1733,8 @@ clean_state_log_if_needed (re_match_context_t *mctx, int next_state_log_idx)
 {
   int top = mctx->state_log_top;
 
-  if (next_state_log_idx >= mctx->input.bufs_len
+  if ((next_state_log_idx >= mctx->input.bufs_len
+       && mctx->input.bufs_len < mctx->input.len)
       || (next_state_log_idx >= mctx->input.valid_len
 	  && mctx->input.valid_len < mctx->input.len))
     {
@@ -4111,7 +4113,7 @@ extend_buffers (re_match_context_t *mctx)
     return REG_ESPACE;
 
   /* Double the lengthes of the buffers.  */
-  ret = re_string_realloc_buffers (pstr, pstr->bufs_len * 2);
+  ret = re_string_realloc_buffers (pstr, MIN (pstr->len, pstr->bufs_len * 2));
   if (BE (ret != REG_NOERROR, 0))
     return ret;
 
