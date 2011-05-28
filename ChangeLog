@@ -1,5 +1,11 @@
 2011-05-28  Ulrich Drepper  <drepper@gmail.com>
 
+	[BZ #12813]
+	* sysdeps/unix/sysv/linux/x86_64/init-first.c (__vdso_time): Retrieve
+	time symbol from vDSO.  Substitute with vsyscall if not available.
+	* sysdeps/unix/sysv/linux/x86_64/time.S [SHARED]: Use
+	__vdso_time.
+
 	* sysdeps/unix/sysv/linux/internal_sendmmsg.S: New file.
 	* sysdeps/unix/sysv/linux/sendmmsg.c: New file.
 	* sysdeps/unix/sysv/linux/Makefile [subdir=socket] (sysdep_routines):

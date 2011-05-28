@@ -28,6 +28,8 @@ strong_alias (__vdso_clock_gettime, __GI___vdso_clock_gettime attribute_hidden)
 
 long int (*__vdso_getcpu) (unsigned *, unsigned *, void *);
 
+long int (*__vdso_time) (time_t *) attribute_hidden;
+
 
 static inline void
 _libc_vdso_platform_setup (void)
@@ -53,6 +55,14 @@ _libc_vdso_platform_setup (void)
     p = (void *) VSYSCALL_ADDR_vgetcpu;
   PTR_MANGLE (p);
   __vdso_getcpu = p;
+
+  p = _dl_vdso_vsym ("time", &linux26);
+  /* If the vDSO is not available we fall back on the old vsyscall.  */
+#define VSYSCALL_ADDR_vtime	0xffffffffff600400
+  if (p == NULL)
+    p = (void *) VSYSCALL_ADDR_vtime;
+  PTR_MANGLE (p);
+  __vdso_time = p;
 }
 
 # define VDSO_SETUP _libc_vdso_platform_setup

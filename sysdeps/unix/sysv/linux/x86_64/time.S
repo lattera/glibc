@@ -1,4 +1,4 @@
-/* Copyright (C) 2001,02, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2001,02, 2003, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -32,7 +32,12 @@ ENTRY (time)
 	sub	$0x8, %rsp
 	cfi_adjust_cfa_offset(8)
 
+#ifdef SHARED
+	movq	__vdso_time(%rip), %rax
+	PTR_DEMANGLE (%rax)
+#else
 	movq	$VSYSCALL_ADDR_vtime, %rax
+#endif
 	callq	*%rax
 
 	add	$0x8, %rsp
