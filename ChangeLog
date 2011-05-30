@@ -1,3 +1,7 @@
+2011-05-30  Ulrich Drepper  <drepper@gmail.com>
+
+	* elf/rtld.c (dl_main): Don't allow the loader to load itself.
+
 2011-05-29  Ulrich Drepper  <drepper@gmail.com>
 
 	[BZ #12350]
