@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998, 2005, 2009 Free Software Foundation, Inc.
+/* Copyright (C) 1996-1998, 2005, 2009, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -52,11 +52,11 @@ LINE_PARSER
  else
    {
      STRING_FIELD (result->sp_pwdp, ISCOLON, 0);
-     INT_FIELD_MAYBE_NULL (result->sp_lstchg, ISCOLON, 0, 10, (long int),
+     INT_FIELD_MAYBE_NULL (result->sp_lstchg, ISCOLON, 0, 10, (long int) (int),
 			   (long int) -1);
-     INT_FIELD_MAYBE_NULL (result->sp_min, ISCOLON, 0, 10, (long int),
+     INT_FIELD_MAYBE_NULL (result->sp_min, ISCOLON, 0, 10, (long int) (int),
 			   (long int) -1);
-     INT_FIELD_MAYBE_NULL (result->sp_max, ISCOLON, 0, 10, (long int),
+     INT_FIELD_MAYBE_NULL (result->sp_max, ISCOLON, 0, 10, (long int) (int),
 			   (long int) -1);
      while (isspace (*line))
        ++line;
@@ -70,12 +70,12 @@ LINE_PARSER
        }
      else
        {
-	 INT_FIELD_MAYBE_NULL (result->sp_warn, ISCOLON, 0, 10, (long int),
-			       (long int) -1);
-	 INT_FIELD_MAYBE_NULL (result->sp_inact, ISCOLON, 0, 10, (long int),
-			       (long int) -1);
-	 INT_FIELD_MAYBE_NULL (result->sp_expire, ISCOLON, 0, 10, (long int),
-			       (long int) -1);
+	 INT_FIELD_MAYBE_NULL (result->sp_warn, ISCOLON, 0, 10,
+			       (long int) (int), (long int) -1);
+	 INT_FIELD_MAYBE_NULL (result->sp_inact, ISCOLON, 0, 10,
+			       (long int) (int), (long int) -1);
+	 INT_FIELD_MAYBE_NULL (result->sp_expire, ISCOLON, 0, 10,
+			       (long int) (int), (long int) -1);
 	 if (*line != '\0')
 	   INT_FIELD_MAYBE_NULL (result->sp_flag, FALSEP, 0, 10,
 				 (unsigned long int), ~0ul)
