@@ -1,5 +1,7 @@
 2011-05-29  Ulrich Drepper  <drepper@gmail.com>
 
+	* malloc/malloc.h: Mark malloc hook variables as deprecated.
+
 	[BZ #11781]
 	* malloc/malloc.h: Declare malloc hook variables as volatile.
 

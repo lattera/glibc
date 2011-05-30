@@ -39,8 +39,10 @@
 
 # ifdef _LIBC
 #  define __MALLOC_HOOK_VOLATILE
+#  define __MALLOC_DEPRECATED
 # else
 #  define __MALLOC_HOOK_VOLATILE __volatile
+#  define __MALLOC_DEPRECATED __attribute_deprecated__
 # endif
 
 #else	/* Not GCC.  */
@@ -48,6 +50,7 @@
 # define __MALLOC_P(args)	args
 # define __MALLOC_PMT(args)	args
 # define __MALLOC_HOOK_VOLATILE
+# define __MALLOC_DEPRECATED __attribute_deprecated__
 
 #endif	/* GCC.  */
 
@@ -164,22 +167,27 @@ extern int malloc_set_state (void *__ptr) __THROW;
 /* Called once when malloc is initialized; redefining this variable in
    the application provides the preferred way to set up the hook
    pointers. */
-extern void (*__MALLOC_HOOK_VOLATILE __malloc_initialize_hook) (void);
+extern void (*__MALLOC_HOOK_VOLATILE __malloc_initialize_hook) (void)
+     __MALLOC_DEPRECATED;
 /* Hooks for debugging and user-defined versions. */
 extern void (*__MALLOC_HOOK_VOLATILE __free_hook) (void *__ptr,
-						   __const __malloc_ptr_t);
+						   __const __malloc_ptr_t)
+     __MALLOC_DEPRECATED;
 extern void *(*__MALLOC_HOOK_VOLATILE __malloc_hook) (size_t __size,
-						      __const __malloc_ptr_t);
+						      __const __malloc_ptr_t)
+     __MALLOC_DEPRECATED;
 extern void *(*__MALLOC_HOOK_VOLATILE __realloc_hook) (void *__ptr,
 						       size_t __size,
-						       __const __malloc_ptr_t);
+						       __const __malloc_ptr_t)
+     __MALLOC_DEPRECATED;
 extern void *(*__MALLOC_HOOK_VOLATILE __memalign_hook) (size_t __alignment,
 							size_t __size,
-							__const __malloc_ptr_t);
+							__const __malloc_ptr_t)
+     __MALLOC_DEPRECATED;
 extern void (*__MALLOC_HOOK_VOLATILE __after_morecore_hook) (void);
 
 /* Activate a standard set of debugging hooks. */
-extern void __malloc_check_init (void) __THROW;
+extern void __malloc_check_init (void) __THROW __MALLOC_DEPRECATED;
 
 
 __END_DECLS

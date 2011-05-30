@@ -39,6 +39,11 @@ Version 2.14
 
 * New program sotruss to trace calls through PLTs
   Implemented by Ulrich Drepper.
+
+* The malloc hook implementation is marked deprecated and will be removed
+  from the default implementation in the next version.  The design never
+  worked ever since the introduction of threads.  Even programs which do
+  not create threads themselves can use multiple threads created internally.
 
 Version 2.13
 
