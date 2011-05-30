@@ -1,3 +1,9 @@
+2011-05-29  Ulrich Drepper  <drepper@gmail.com>
+
+	[BZ #11799]
+	* sysdeps/unix/sysv/linux/bits/siginfo.h (SI_USER): Don't mention
+	SI_USER in the comment.
+
 2011-05-28  Ulrich Drepper  <drepper@gmail.com>
 
 	[BZ #12811]
