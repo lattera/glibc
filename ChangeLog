@@ -1,5 +1,7 @@
 2011-05-29  Ulrich Drepper  <drepper@gmail.com>
 
+	* resolv/res_init.c (res_setoptions): Make the code more compact.
+
 	[BZ #11558]
 	* resolv/res_init.c (res_setoptions): Recognize use-vc option and
 	set RES_USEVC.

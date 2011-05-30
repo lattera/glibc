@@ -521,39 +521,42 @@ res_setoptions(res_state statp, const char *options, const char *source) {
 			}
 			printf(";;\tdebug\n");
 #endif
-		} else if (!strncmp(cp, "inet6", sizeof("inet6") - 1)) {
-			statp->options |= RES_USE_INET6;
-		} else if (!strncmp(cp, "ip6-bytestring",
-				    sizeof("ip6-bytestring") - 1)) {
-			statp->options |= RES_USEBSTRING;
-		} else if (!strncmp(cp, "no-ip6-dotint",
-				    sizeof("no-ip6-dotint") - 1)) {
-			statp->options |= RES_NOIP6DOTINT;
-		} else if (!strncmp(cp, "ip6-dotint",
-				    sizeof("ip6-dotint") - 1)) {
-			statp->options &= ~RES_NOIP6DOTINT;
-		} else if (!strncmp(cp, "rotate", sizeof("rotate") - 1)) {
-			statp->options |= RES_ROTATE;
-		} else if (!strncmp(cp, "no-check-names",
-				    sizeof("no-check-names") - 1)) {
-			statp->options |= RES_NOCHECKNAME;
-		} else if (!strncmp(cp, "edns0", sizeof("edns0") - 1)) {
-			statp->options |= RES_USE_EDNS0;
-		} else if (!strncmp(cp, "single-request-reopen",
-				    sizeof("single-request-reopen") - 1)) {
-			statp->options |= RES_SNGLKUPREOP;
-		} else if (!strncmp(cp, "single-request",
-				    sizeof("single-request") - 1)) {
-			statp->options |= RES_SNGLKUP;
-		} else if (!strncmp(cp, "no_tld_query",
-				    sizeof("no_tld_query") - 1) ||
-			   !strncmp(cp, "no-tld-query",
-				    sizeof("no-tld-query") - 1)) {
-			statp->options |= RES_NOTLDQUERY;
-		} else if (!strncmp(cp, "use-vc", sizeof("use-vc") - 1)) {
-			statp->options |= RES_USEVC;
 		} else {
-			/* XXX - print a warning here? */
+		  static const struct
+		  {
+		    char str[22];
+		    uint8_t len;
+		    uint8_t clear;
+		    unsigned long int flag;
+		  } options[] = {
+#define STRnLEN(str) str, sizeof (str) - 1
+		    { STRnLEN ("inet6"), 0, RES_USE_INET6 },
+		    { STRnLEN ("ip6-bytestring"), 0, RES_USEBSTRING },
+		    { STRnLEN ("no-ip6-dotint"), 0, RES_NOIP6DOTINT },
+		    { STRnLEN ("ip6-dotint"), 1, ~RES_NOIP6DOTINT },
+		    { STRnLEN ("rotate"), 0, RES_ROTATE },
+		    { STRnLEN ("no-check-names"), 0, RES_NOCHECKNAME },
+		    { STRnLEN ("edns0"), 0, RES_USE_EDNS0 },
+		    { STRnLEN ("single-request-reopen"), 0, RES_SNGLKUPREOP },
+		    { STRnLEN ("single-request"), 0, RES_SNGLKUP },
+		    { STRnLEN ("no_tld_query"), 0, RES_NOTLDQUERY },
+		    { STRnLEN ("no-tld-query"), 0, RES_NOTLDQUERY },
+		    { STRnLEN ("use-vc"), 0, RES_USEVC }
+		  };
+#define noptions (sizeof (options) / sizeof (options[0]))
+		  int i;
+		  for (i = 0; i < noptions; ++i)
+		    if (strncmp (cp, options[i].str, options[i].len) == 0)
+		      {
+			if (options[i].clear)
+			  statp->options &= options[i].flag;
+			else
+			  statp->options |= options[i].flag;
+			break;
+		      }
+		  if (i == noptions) {
+		    /* XXX - print a warning here? */
+		  }
 		}
 		/* skip to next run of spaces */
 		while (*cp && *cp != ' ' && *cp != '\t')
