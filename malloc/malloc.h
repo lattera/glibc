@@ -164,7 +164,7 @@ extern int malloc_set_state (void *__ptr) __THROW;
 /* Called once when malloc is initialized; redefining this variable in
    the application provides the preferred way to set up the hook
    pointers. */
-extern void (*__malloc_initialize_hook) (void);
+extern void (*__MALLOC_HOOK_VOLATILE __malloc_initialize_hook) (void);
 /* Hooks for debugging and user-defined versions. */
 extern void (*__MALLOC_HOOK_VOLATILE __free_hook) (void *__ptr,
 						   __const __malloc_ptr_t);
