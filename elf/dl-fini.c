@@ -33,9 +33,12 @@ internal_function
 _dl_sort_fini (struct link_map *l, struct link_map **maps, size_t nmaps,
 	       char *used, Lmid_t ns)
 {
+  /* A list of one element need not be sorted.  */
+  if (nmaps == 1)
+    return;
+
   /* We can skip looking for the binary itself which is at the front
      of the search list for the main namespace.  */
-  assert (nmaps > 1);
   unsigned int i = ns == LM_ID_BASE;
   bool seen[nmaps];
   memset (seen, false, nmaps * sizeof (seen[0]));
@@ -195,9 +198,8 @@ _dl_fini (void)
       assert (ns == LM_ID_BASE || i == nloaded || i == nloaded - 1);
       nmaps = i;
 
-      if (nmaps > 1)
-	/* Now we have to do the sorting.  */
-	_dl_sort_fini (GL(dl_ns)[ns]._ns_loaded, maps, nmaps, NULL, ns);
+      /* Now we have to do the sorting.  */
+      _dl_sort_fini (GL(dl_ns)[ns]._ns_loaded, maps, nmaps, NULL, ns);
 
       /* We do not rely on the linked list of loaded object anymore from
 	 this point on.  We have our own list here (maps).  The various

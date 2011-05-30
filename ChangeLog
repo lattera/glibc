@@ -1,5 +1,11 @@
 2011-05-30  Ulrich Drepper  <drepper@gmail.com>
 
+	[BZ #12454]
+	* elf/dl-deps.c (_dl_map_object_deps): Run initializer sorting only
+	when there are multiple maps.
+	* elf/dl-fini.c (_dl_sort_fini): Check for list of one.
+	(_dl_fini): Remove test here.
+
 	* elf/rtld.c (dl_main): Don't allow the loader to load itself.
 
 2011-05-29  Ulrich Drepper  <drepper@gmail.com>

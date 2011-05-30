@@ -922,7 +922,6 @@ dl_main (const ElfW(Phdr) *phdr,
 
   /* Process the environment variable which control the behaviour.  */
   process_envvars (&mode);
-  mode=trace;
 
 #ifndef HAVE_INLINED_SYSCALLS
   /* Set up a flag which tells we are just starting.  */
