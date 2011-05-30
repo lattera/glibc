@@ -10,7 +10,7 @@
 	(gaih_inet): Likewise.
 
 	[BZ #11099]
-	* shadow/sgetspent_r.c (LINE_PARSER): Interpret nymeric field values
+	* shadow/sgetspent_r.c (LINE_PARSER): Interpret numeric field values
 	as signed.
 
 	* resolv/res_init.c (res_setoptions): Make the code more compact.
