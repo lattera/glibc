@@ -1,5 +1,8 @@
 2011-05-29  Ulrich Drepper  <drepper@gmail.com>
 
+	[BZ #11781]
+	* malloc/malloc.h: Declare malloc hook variables as volatile.
+
 	* locale/programs/locarchive.c (add_locale_to_archive): Fix typo
 	in last patch.
 
