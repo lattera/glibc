@@ -1,5 +1,10 @@
 2011-05-29  Ulrich Drepper  <drepper@gmail.com>
 
+	[BZ #12350]
+	* sysdeps/posix/getaddrinfo.c (gethosts): Restore only RES_USE_IENT6
+	bit from old_res_options.
+	(gaih_inet): Likewise.
+
 	[BZ #11099]
 	* shadow/sgetspent_r.c (LINE_PARSER): Interpret nymeric field values
 	as signed.

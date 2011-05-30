@@ -207,7 +207,7 @@ gaih_inet_serv (const char *servicename, const struct gaih_typeproto *tp,
       if (herrno == NETDB_INTERNAL)					      \
 	{								      \
 	  __set_h_errno (herrno);					      \
-	  _res.options = old_res_options;				      \
+	  _res.options |= old_res_options & RES_USE_INET6;		      \
 	  return -EAI_SYSTEM;						      \
 	}								      \
       if (herrno == TRY_AGAIN)						      \
@@ -1015,7 +1015,7 @@ gaih_inet (const char *name, const struct gaih_service *service,
 		nip = nip->next;
 	    }
 
-	  _res.options = old_res_options;
+	  _res.options |= old_res_options & RES_USE_INET6;
 
 	  if (no_data != 0 && no_inet6_data != 0)
 	    {
