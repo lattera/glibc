@@ -32,7 +32,7 @@
 
 	[BZ #11799]
 	* sysdeps/unix/sysv/linux/bits/siginfo.h (SI_USER): Don't mention
-	SI_USER in the comment.
+	raise in the comment.
 	* sysdeps/unix/sysv/linux/s390/bits/siginfo.h: Likewise.
 	* sysdeps/unix/sysv/linux/sparc/bits/siginfo.h: Likewise.
 	* sysdeps/unix/sysv/linux/ia64/bits/siginfo.h: Likewise.
