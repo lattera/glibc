@@ -1,6 +1,6 @@
 2011-05-29  Ulrich Drepper  <drepper@gmail.com>
 
-	[BZ #9706]
+	[BZ #11099]
 	* shadow/sgetspent_r.c (LINE_PARSER): Interpret nymeric field values
 	as signed.
 
