@@ -40,7 +40,7 @@
 # ifdef _LIBC
 #  define __MALLOC_HOOK_VOLATILE
 # else
-#  define __MALLOC_HOOK_VOLATILE
+#  define __MALLOC_HOOK_VOLATILE __volatile
 # endif
 
 #else	/* Not GCC.  */
