@@ -550,6 +550,8 @@ res_setoptions(res_state statp, const char *options, const char *source) {
 			   !strncmp(cp, "no-tld-query",
 				    sizeof("no-tld-query") - 1)) {
 			statp->options |= RES_NOTLDQUERY;
+		} else if (!strncmp(cp, "use-vc", sizeof("use-vc") - 1)) {
+			statp->options |= RES_USEVC;
 		} else {
 			/* XXX - print a warning here? */
 		}

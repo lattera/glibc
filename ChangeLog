@@ -1,5 +1,9 @@
 2011-05-29  Ulrich Drepper  <drepper@gmail.com>
 
+	[BZ #11558]
+	* resolv/res_init.c (res_setoptions): Recognize use-vc option and
+	set RES_USEVC.
+
 	[BZ #11634]
 	* elf/Makefile (tests): Don't add tst-audit[67] without working -mavx.
 
