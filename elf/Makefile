@@ -233,7 +233,10 @@ ifneq ($(selinux-enabled),1)
 tests-execstack-yes = tst-execstack tst-execstack-needed tst-execstack-prog
 endif
 ifeq (x86_64,$(config-machine))
-tests += tst-audit3 tst-audit4 tst-audit5 tst-audit6 tst-audit7
+tests += tst-audit3 tst-audit4 tst-audit5
+ifeq (yes,$(config-cflags-avx))
+tests += tst-audit6 tst-audit7
+endif
 endif
 endif
 tests: $(objpfx)tst-leaks1-mem $(objpfx)noload-mem

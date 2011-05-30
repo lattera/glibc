@@ -1,5 +1,8 @@
 2011-05-29  Ulrich Drepper  <drepper@gmail.com>
 
+	[BZ #11634]
+	* elf/Makefile (tests): Don't add tst-audit[67] without working -mavx.
+
 	* malloc/malloc.h: Mark malloc hook variables as deprecated.
 
 	[BZ #11781]
