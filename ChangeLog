@@ -2512,6 +2512,7 @@
 
 2010-07-06  Andreas Schwab  <schwab@redhat.com>
 
+	[BZ #11577]
 	* elf/dl-version.c (match_symbol): Don't pass NULL occation to
 	dl_signal_cerror.
 
