@@ -1,5 +1,8 @@
 2011-05-29  Ulrich Drepper  <drepper@gmail.com>
 
+	* locale/programs/locarchive.c (add_locale_to_archive): Fix typo
+	in last patch.
+
 	[BZ #11799]
 	* sysdeps/unix/sysv/linux/bits/siginfo.h (SI_USER): Don't mention
 	SI_USER in the comment.

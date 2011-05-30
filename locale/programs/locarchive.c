@@ -1210,7 +1210,7 @@ add_locale_to_archive (ah, name, data, replace)
 						     &rhs_territory,
 						     &rhs_codeset,
 						     &rhs_normalized_codeset);
-		    if (rhs_mask == 1)
+		    if (rhs_mask == -1)
 		      {
 			result = -1;
 			goto out;
