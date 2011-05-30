@@ -1,5 +1,5 @@
 /* siginfo_t, sigevent and constants.  Linux/ia64 version.
-   Copyright (C) 2000-2004, 2009 Free Software Foundation, Inc.
+   Copyright (C) 2000-2004, 2009, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by David Mosberger-Tang <davidm@hpl.hp.com>.
 
@@ -146,7 +146,7 @@ enum
 # define SI_TIMER	SI_TIMER
   SI_QUEUE,			/* Sent by sigqueue.  */
 # define SI_QUEUE	SI_QUEUE
-  SI_USER,			/* Sent by kill, sigsend, raise.  */
+  SI_USER,			/* Sent by kill, sigsend.  */
 # define SI_USER	SI_USER
   SI_KERNEL = 0x80		/* Send by kernel.  */
 #define SI_KERNEL	SI_KERNEL
