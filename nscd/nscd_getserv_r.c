@@ -124,6 +124,7 @@ nscd_getserv_r (const char *crit, size_t critlen, const char *proto,
 	  s_name = (char *) (&found->data[0].servdata + 1);
 	  serv_resp = found->data[0].servdata;
 	  s_proto = s_name + serv_resp.s_name_len;
+	  alloca_aliases_len = 1;
 	  aliases_len = (uint32_t *) (s_proto + serv_resp.s_proto_len);
 	  aliases_list = ((char *) aliases_len
 			  + serv_resp.s_aliases_cnt * sizeof (uint32_t));
@@ -154,7 +155,9 @@ nscd_getserv_r (const char *crit, size_t critlen, const char *proto,
 				     + (serv_resp.s_aliases_cnt
 					* sizeof (uint32_t)));
 	      if (alloca_aliases_len)
-		tmp = __alloca (serv_resp.s_aliases_cnt * sizeof (uint32_t));
+		tmp = alloca_account (serv_resp.s_aliases_cnt
+				      * sizeof (uint32_t),
+				      alloca_used);
 	      else
 		{
 		  tmp = malloc (serv_resp.s_aliases_cnt * sizeof (uint32_t));
@@ -249,8 +252,9 @@ nscd_getserv_r (const char *crit, size_t critlen, const char *proto,
 				     + (serv_resp.s_aliases_cnt
 					* sizeof (uint32_t)));
 	      if (alloca_aliases_len)
-		aliases_len = alloca (serv_resp.s_aliases_cnt
-				      * sizeof (uint32_t));
+		aliases_len = alloca_account (serv_resp.s_aliases_cnt
+					      * sizeof (uint32_t),
+					      alloca_used);
 	      else
 		{
 		  aliases_len = malloc (serv_resp.s_aliases_cnt
@@ -368,7 +372,11 @@ nscd_getserv_r (const char *crit, size_t critlen, const char *proto,
 	}
 
       if (retval != -1)
-	goto retry;
+	{
+	  if (!alloca_aliases_len)
+	    free (aliases_len);
+	  goto retry;
+	}
     }
 
   if (!alloca_aliases_len)
