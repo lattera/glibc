@@ -1,4 +1,4 @@
-# Copyright (C) 1996-1999,2001,2002,2006,2007,2009
+# Copyright (C) 1996-1999,2001,2002,2006,2007,2009,2011
 #	Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
@@ -62,18 +62,24 @@ libc.pot: header.pot libc.pot.files
 	sed -e 's/VERSION/$(version)/' \
 	    -e "s/DATE/`date +'%Y-%m-%d %H:%M'$$disp`/" \
 	    $< > $@.new
+	egrep -v '\.ksh$$' $(word 2,$^) > $(objdir)/tmp-libc.pot-files
 	cd ..; $(XGETTEXT) --keyword=_ --keyword=N_ \
 			   --add-comments=TRANS --flag=error:3:c-format \
 			   --flag=f_print:2:c-format \
 			   --sort-by-file --omit-header -E -n -d - \
-			   -f po/$(word 2,$^) >> po/$@.new
+			   -f $(objdir)/tmp-libc.pot-files >> po/$@.new
+	egrep '\.ksh$$' $(word 2,$^) > $(objdir)/tmp-libc.pot-files
+	cd ..; $(XGETTEXT) --add-comments=TRANS --language=Shell \
+			   --sort-by-file --omit-header -E -n -o po/$@.new -j \
+			   -f $(objdir)/tmp-libc.pot-files po/$@.new
+	rm $(objdir)/tmp-libc.pot-files
 	mv -f $@.new $@
 ifeq ($(with-cvs),yes)
 	test ! -d CVS || cvs $(CVSOPTS) ci -m'Regenerated from source files' $@
 endif
 
 po-sed-cmd = \
-  '/\/tst-/d;$(foreach S,[ch] cxx sh bash,$(subst .,\.,/.$S\(.in\)*$$/p;))'
+  '/\/tst-/d;$(foreach S,[ch] cxx sh ksh bash,$(subst .,\.,/.$S\(.in\)*$$/p;))'
 
 # Omit tst-* files, and get only files with the given suffixes.
 libc.pot.files: FORCE

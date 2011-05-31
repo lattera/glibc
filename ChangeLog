@@ -1,5 +1,8 @@
 2011-05-30  Ulrich Drepper  <drepper@gmail.com>
 
+	* po/Makefile (po-sed-cmd): Add ksh to extensions.
+	(libc.pot): Work around missing support for .ksh extension in xgettext.
+
 	[BZ #12684]
 	* resolv/res_send.c (__libc_res_nsend): Only go to the next name server
 	if both request failed.
