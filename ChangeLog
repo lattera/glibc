@@ -1,3 +1,8 @@
+2011-05-31  Ulrich Drepper  <drepper@gmail.com>
+
+	* sysdeps/unix/sysv/linux/dl-osinfo.h (_dl_setup_stack_chk_guard): Fix
+	typo.
+
 2011-05-31  Andreas Schwab  <schwab@redhat.com>
 
 	* nscd/nscd_getserv_r.c (nscd_getserv_r): Don't free non-malloced
