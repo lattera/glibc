@@ -1,5 +1,8 @@
 2011-05-31  Ulrich Drepper  <drepper@gmail.com>
 
+	* version.h (RELEASE): Bump for 2.14 release.
+	* include/features.h (__GLIBC_MINOR__): Bump to 14.
+
 	* config.make.in (RANLIB): Remove entry.
 
 2011-05-30  Ulrich Drepper  <drepper@gmail.com>
