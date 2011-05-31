@@ -549,7 +549,7 @@ __libc_res_nsend(res_state statp, const u_char *buf, int buflen,
 				    ns, ansp, ansp2, nansp2, resplen2);
 			if (n < 0)
 				return (-1);
-			if (n == 0)
+			if (n == 0 && (buf2 == NULL || resplen2 == 0))
 				goto next_ns;
 		} else {
 			/* Use datagrams. */
@@ -559,7 +559,7 @@ __libc_res_nsend(res_state statp, const u_char *buf, int buflen,
 				    ansp2, nansp2, resplen2);
 			if (n < 0)
 				return (-1);
-			if (n == 0)
+			if (n == 0 && (buf2 == NULL || resplen2 == 0))
 				goto next_ns;
 			if (v_circuit)
 			  // XXX Check whether both requests failed or
@@ -1275,10 +1275,14 @@ send_dg(res_state statp,
 				(*thisresplenp > *thisanssizp)
 				? *thisanssizp : *thisresplenp);
 
-			if (recvresp1 || (buf2 != NULL && recvresp2))
+			if (recvresp1 || (buf2 != NULL && recvresp2)) {
+			  *resplen2 = 0;
 			  return resplen;
+			}
 			if (buf2 != NULL)
 			  {
+			    /* No data from the first reply.  */
+			    resplen = 0;
 			    /* We are waiting for a possible second reply.  */
 			    if (hp->id == anhp->id)
 			      recvresp1 = 1;
@@ -1344,7 +1348,7 @@ send_dg(res_state statp,
 		goto err_out;
 	}
 	else {
-	  	/* poll should not have returned > 0 in this case.  */
+		/* poll should not have returned > 0 in this case.  */
 		abort ();
 	}
 }
