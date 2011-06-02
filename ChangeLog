@@ -1,3 +1,8 @@
+2011-06-02  Ulrich Drepper  <drepper@gmail.com>
+
+	* nss/makedb.c: Rewritten to not use database library.
+	* nss/Makefile: Update to build new makedb program.
+
 2011-06-14  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/check_native.c: Include <string.h> for

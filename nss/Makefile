@@ -37,8 +37,10 @@ routines		= nsswitch getnssent getnssent_r digits_dots \
 databases		= proto service hosts network grp pwd rpc ethers \
 			  spwd netgrp key alias sgrp
 
-others                  := getent
-install-bin             := getent
+others                  := getent makedb
+install-bin             := getent makedb
+makedb-modules = xmalloc hash-string
+extra-objs		+= $(makedb-modules:=.o)
 
 tests			= test-netdb tst-nss-test1
 xtests			= bug-erange
@@ -60,7 +62,7 @@ extra-libs-others	= $(extra-libs)
 
 # The sources are found in the appropriate subdir.
 subdir-dirs = $(services:%=nss_%)
-vpath %.c $(subdir-dirs)
+vpath %.c $(subdir-dirs) ../locale/programs ../intl
 
 
 libnss_files-routines	:= $(addprefix files-,$(databases)) \
@@ -80,6 +82,10 @@ ifeq (yes,$(build-static-nss))
 $(objpfx)getent: $(objpfx)libnss_files.a
 endif
 
+ifeq (yes,$(have-selinux))
+LDLIBS-makedb		:= -lselinux
+endif
+
 # Depend on libc.so so a DT_NEEDED is generated in the shared objects.
 # This ensures they will load libc.so for needed symbols if loaded by
 # a statically-linked program that hasn't already loaded it.
@@ -87,6 +93,8 @@ libnss-libc = $(common-objpfx)linkobj/libc.so
 $(services:%=$(objpfx)libnss_%.so): $(libnss-libc) \
 				    $(common-objpfx)libc_nonshared.a
 
+
+$(objpfx)makedb: $(makedb-modules:%=$(objpfx)%.o)
 
 distribute		+= nss_test1.c
 
