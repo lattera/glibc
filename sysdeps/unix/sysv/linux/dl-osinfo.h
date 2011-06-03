@@ -81,7 +81,7 @@ _dl_setup_stack_chk_guard (void *dl_random)
 	{
 	  ssize_t reslen = read_not_cancel (fd, ret.bytes + 1, filllen);
 	  close_not_cancel_no_status (fd);
-	  if (reslen == (ssize_) filllen)
+	  if (reslen == (ssize_t) filllen)
 	    return ret.num;
 	}
 # endif
