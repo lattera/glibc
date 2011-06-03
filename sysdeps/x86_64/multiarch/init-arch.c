@@ -74,6 +74,7 @@ __init_cpu_features (void)
 	}
       else if (family == 0x06)
 	{
+	  ecx = __cpu_features.cpuid[COMMON_CPUID_INDEX_1].ecx;
 	  model += extended_model;
 	  switch (model)
 	    {
@@ -82,6 +83,12 @@ __init_cpu_features (void)
 	      /* BSF is slow on Atom.  */
 	      __cpu_features.feature[index_Slow_BSF] |= bit_Slow_BSF;
 	      break;
+
+	    default:
+	      /* Unknown family 0x06 processors.  Assuming this is one
+	         of Core i3/i5/i7 processors if AVX is available.  */
+	      if ((ecx & bit_AVX) == 0)
+		break;
 
 	    case 0x1a:
 	    case 0x1e:
