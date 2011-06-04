@@ -1,3 +1,10 @@
+2011-06-04  Jakub Jelinek  <jakub@redhat.com>
+
+	[BZ #12841]
+	* rt/bits/mqueue2.h (__mq_open_2): Add __THROW.
+	(__mq_open_alias): Use __REDIRECT_NTH instead of __REDIRECT.
+	(mq_open): Add __NTH.
+
 2011-06-02  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/x86_64/multiarch/init-arch.c (__init_cpu_features):
