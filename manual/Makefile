@@ -1,4 +1,4 @@
-# Copyright (C) 1992-1999,2000,2001,2002,2003,2004,2006
+# Copyright (C) 1992-1999,2000,2001,2002,2003,2004,2006,2011
 #	Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
@@ -59,11 +59,11 @@ chapters = $(addsuffix .texi, \
 		       resource setjmp signal startup process job nss	\
 		       users sysinfo conf crypt debug)
 add-chapters = $(wildcard $(foreach d, $(add-ons), ../$d/$d.texi))
-appendices = lang.texi header.texi install.texi maint.texi contrib.texi \
-	     freemanuals.texi
+appendices = lang.texi header.texi install.texi maint.texi contrib.texi
+licenses = freemanuals.texi lgpl-2.1.texi fdl-1.1.texi
 
 -include texis
-texis: texis.awk $(chapters) $(add-chapters) $(appendices) lesser.texi fdl.texi
+texis: texis.awk $(chapters) $(add-chapters) $(appendices) $(licenses)
 	$(AWK) -f $^ > $@.T
 	mv -f $@.T $@
 
@@ -73,7 +73,9 @@ examples = $(filter-out $(foreach d, $(add-ons), ../$d/%.c.texi), \
 
 # Kludge: implicit rule so Make knows the one command does it all.
 chapters.% top-menu.%: libc-texinfo.sh $(texis) Makefile
-	AWK=$(AWK) $(SHELL) $< '$(chapters)' '$(add-chapters)' '$(appendices)'
+	AWK=$(AWK) $(SHELL) $< '$(chapters)' \
+			       '$(add-chapters)' \
+			       '$(appendices) $(licenses)'
 
 libc.dvi libc.pdf libc.info: chapters.texi top-menu.texi dir-add.texi \
 			     libm-err.texi

@@ -1,12 +1,12 @@
-
-@appendix GNU Free Documentation License
-
-@cindex FDL, GNU Free Documentation License
+@c The GNU Free Documentation License.
 @center Version 1.1, March 2000
+
+@c This file is intended to be included within another document,
+@c hence no sectioning command or @node.
 
 @display
 Copyright @copyright{} 2000 Free Software Foundation, Inc.
-59 Temple Place, Suite 330, Boston, MA  02111-1307, USA
+51 Franklin St, Fifth Floor, Boston, MA  02110-1301, USA
 
 Everyone is permitted to copy and distribute verbatim copies
 of this license document, but changing it is not allowed.
@@ -399,4 +399,3 @@ to permit their use in free software.
 @c Local Variables:
 @c ispell-local-pdict: "ispell-dict"
 @c End:
-
