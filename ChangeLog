@@ -1,3 +1,7 @@
+2011-06-06  Andreas Krebbel  <Andreas.Krebbel@de.ibm.com>
+
+	* stdlib/longlong.h: Update from GCC.  Fix smul_ppmm for S/390.
+
 2011-06-06  Roland McGrath  <roland@hack.frob.com>
 
 	[BZ #12849]
