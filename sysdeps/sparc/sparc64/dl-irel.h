@@ -24,6 +24,7 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <dl-plt.h>
+#include <ldsodefs.h>
 
 #define ELF_MACHINE_IRELA	1
 
@@ -36,13 +37,13 @@ elf_irela (const Elf64_Rela *reloc)
   if (__builtin_expect (r_type == R_SPARC_IRELATIVE, 1))
     {
       Elf64_Addr *const reloc_addr = (void *) reloc->r_offset;
-      Elf64_Addr value = ((Elf64_Addr (*) (void)) reloc->r_addend) ();
+      Elf64_Addr value = ((Elf64_Addr (*) (int)) reloc->r_addend) (GLRO(dl_hwcap));
       *reloc_addr = value;
     }
   else if (__builtin_expect (r_type == R_SPARC_JMP_IREL, 1))
     {
       Elf64_Addr *const reloc_addr = (void *) reloc->r_offset;
-      Elf64_Addr value = ((Elf64_Addr (*) (void)) reloc->r_addend) ();
+      Elf64_Addr value = ((Elf64_Addr (*) (int)) reloc->r_addend) (GLRO(dl_hwcap));
       struct link_map map = { .l_addr = 0 };
 
       /* 'high' is always zero, for large PLT entries the linker

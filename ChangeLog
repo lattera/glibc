@@ -1,3 +1,17 @@
+2011-06-07  David S. Miller  <davem@davemloft.net>
+
+	* sysdeps/sparc/sparc32/dl-irel.h (elf_irela): Pass dl_hwcap to
+	ifuncs.
+	* sysdeps/sparc/sparc32/dl-machine.h (elf_machine_rela,
+	elf_machine_lazy_rel): Likewise.
+	* sysdeps/sparc/sparc64/dl-irel.h (elf_irela): Likewise.
+	* sysdeps/sparc/sparc64/dl-machine.h (elf_machine_rela,
+	elf_machine_lazy_rel): Likewise.
+	* sysdeps/sparc/sparc64/multiarch/memcpy.S (memcpy): Fetch
+	dl_hwcap via passed in argument.
+	* sysdeps/sparc/sparc64/multiarch/memset.S (memset, bzero):
+	Likewise.
+
 2011-06-06  Andreas Krebbel  <Andreas.Krebbel@de.ibm.com>
 
 	* stdlib/longlong.h: Update from GCC.  Fix smul_ppmm for S/390.

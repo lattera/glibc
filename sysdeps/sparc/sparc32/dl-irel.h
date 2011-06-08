@@ -24,6 +24,7 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <dl-plt.h>
+#include <ldsodefs.h>
 
 #define ELF_MACHINE_IRELA	1
 
@@ -36,13 +37,13 @@ elf_irela (const Elf32_Rela *reloc)
   if (__builtin_expect (r_type == R_SPARC_IRELATIVE, 1))
     {
       Elf32_Addr *const reloc_addr = (void *) reloc->r_offset;
-      Elf32_Addr value = ((Elf32_Addr (*) (void)) reloc->r_addend) ();
+      Elf32_Addr value = ((Elf32_Addr (*) (int)) reloc->r_addend) (GLRO(dl_hwcap));
       *reloc_addr = value;
     }
   else if (__builtin_expect (r_type == R_SPARC_JMP_IREL, 1))
     {
       Elf32_Addr *const reloc_addr = (void *) reloc->r_offset;
-      Elf32_Addr value = ((Elf32_Addr (*) (void)) reloc->r_addend) ();
+      Elf32_Addr value = ((Elf32_Addr (*) (int)) reloc->r_addend) (GLRO(dl_hwcap));
 
       sparc_fixup_plt (reloc, reloc_addr, value, 0, 1);
     }

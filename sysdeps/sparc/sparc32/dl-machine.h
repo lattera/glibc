@@ -399,7 +399,7 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
       && __builtin_expect (ELFW(ST_TYPE) (sym->st_info) == STT_GNU_IFUNC, 0)
       && __builtin_expect (sym->st_shndx != SHN_UNDEF, 1))
     {
-      value = ((Elf32_Addr (*) (void)) value) ();
+      value = ((Elf32_Addr (*) (int)) value) (GLRO(dl_hwcap));
     }
 
   switch (r_type)
@@ -430,11 +430,11 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
       *reloc_addr = value;
       break;
     case R_SPARC_IRELATIVE:
-      value = ((Elf32_Addr (*) (void)) value) ();
+      value = ((Elf32_Addr (*) (int)) value) (GLRO(dl_hwcap));
       *reloc_addr = value;
       break;
     case R_SPARC_JMP_IREL:
-      value = ((Elf32_Addr (*) (void)) value) ();
+      value = ((Elf32_Addr (*) (int)) value) (GLRO(dl_hwcap));
       /* Fall thru */
     case R_SPARC_JMP_SLOT:
       {
@@ -562,7 +562,7 @@ elf_machine_lazy_rel (struct link_map *map,
   else if (r_type == R_SPARC_JMP_IREL)
     {
       Elf32_Addr value = map->l_addr + reloc->r_addend;
-      value = ((Elf32_Addr (*) (void)) value) ();
+      value = ((Elf32_Addr (*) (int)) value) (GLRO(dl_hwcap));
       sparc_fixup_plt (reloc, reloc_addr, value, 1, 1);
     }
   else if (r_type == R_SPARC_NONE)
