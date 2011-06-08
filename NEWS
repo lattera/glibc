@@ -1,9 +1,11 @@
-GNU C Library NEWS -- history of user-visible changes.  2011-6-4
+GNU C Library NEWS -- history of user-visible changes.  2011-6-7
 Copyright (C) 1992-2009, 2010, 2011 Free Software Foundation, Inc.
 See the end for copying conditions.
 
 Please send GNU C library bug reports via <http://sources.redhat.com/bugzilla/>
 using `glibc' in the "product" field.
+
+Version 2.15
 
 Version 2.14
 

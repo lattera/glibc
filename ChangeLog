@@ -1,3 +1,7 @@
+2011-06-07  Ulrich Drepper  <drepper@gmail.com>
+
+	* version.h: Update for 2.15 development version.
+
 2011-06-06  Andreas Krebbel  <Andreas.Krebbel@de.ibm.com>
 
 	* stdlib/longlong.h: Update from GCC.  Fix smul_ppmm for S/390.
