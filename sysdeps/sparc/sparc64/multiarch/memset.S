@@ -32,24 +32,8 @@ ENTRY(memset)
 	 or	%o3, %lo(_GLOBAL_OFFSET_TABLE_+4), %o3
 1:	add	%o7, %o3, %o3
 	mov	%o5, %o7
-	sethi	%hi(_rtld_global_ro), %o2
-	or	%o2, %lo(_rtld_global_ro), %o2
-#  ifdef __arch64__
-	ldx	[%o3 + %o2], %o2
-	ldx	[%o2 + RTLD_GLOBAL_RO_DL_HWCAP_OFFSET], %o2
-#  else
-	ld	[%o3 + %o2], %o2
-	ld	[%o2 + RTLD_GLOBAL_RO_DL_HWCAP_OFFSET + 4], %o2
-#  endif
-# else
-	set	_dl_hwcap, %o3
-#  ifdef __arch64__
-	ldx	[%o3], %o2
-#  else
-	ld	[%o3 + 4], %o2
-#  endif
 # endif
-	andcc	%o2, 0x40, %g0	! HWCAP_SPARC_BLKINIT
+	andcc	%o0, 0x40, %g0	! HWCAP_SPARC_BLKINIT
 	be	9f
 	 nop
 # ifdef SHARED
@@ -84,24 +68,8 @@ ENTRY(__bzero)
 	 or	%o3, %lo(_GLOBAL_OFFSET_TABLE_+4), %o3
 1:	add	%o7, %o3, %o3
 	mov	%o5, %o7
-	sethi	%hi(_rtld_global_ro), %o2
-	or	%o2, %lo(_rtld_global_ro), %o2
-#  ifdef __arch64__
-	ldx	[%o3 + %o2], %o2
-	ldx	[%o2 + RTLD_GLOBAL_RO_DL_HWCAP_OFFSET], %o2
-#  else
-	ld	[%o3 + %o2], %o2
-	ld	[%o2 + RTLD_GLOBAL_RO_DL_HWCAP_OFFSET + 4], %o2
-#  endif
-# else
-	set	_dl_hwcap, %o3
-#  ifdef __arch64__
-	ldx	[%o3], %o2
-#  else
-	ld	[%o3 + 4], %o2
-#  endif
 # endif
-	andcc	%o2, 0x40, %g0	! HWCAP_SPARC_BLKINIT
+	andcc	%o0, 0x40, %g0	! HWCAP_SPARC_BLKINIT
 	be	9f
 	 nop
 # ifdef SHARED

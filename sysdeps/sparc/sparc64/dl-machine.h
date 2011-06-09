@@ -430,7 +430,7 @@ elf_machine_rela (struct link_map *map, const Elf64_Rela *reloc,
   if (sym != NULL
       && __builtin_expect (ELFW(ST_TYPE) (sym->st_info) == STT_GNU_IFUNC, 0)
       && __builtin_expect (sym->st_shndx != SHN_UNDEF, 1))
-    value = ((Elf64_Addr (*) (void)) value) ();
+    value = ((Elf64_Addr (*) (int)) value) (GLRO(dl_hwcap));
 
   switch (r_type)
     {
@@ -460,11 +460,11 @@ elf_machine_rela (struct link_map *map, const Elf64_Rela *reloc,
       *reloc_addr = value;
       break;
     case R_SPARC_IRELATIVE:
-      value = ((Elf64_Addr (*) (void)) value) ();
+      value = ((Elf64_Addr (*) (int)) value) (GLRO(dl_hwcap));
       *reloc_addr = value;
       break;
     case R_SPARC_JMP_IREL:
-      value = ((Elf64_Addr (*) (void)) value) ();
+      value = ((Elf64_Addr (*) (int)) value) (GLRO(dl_hwcap));
       /* Fall thru */
     case R_SPARC_JMP_SLOT:
 #ifdef RESOLVE_CONFLICT_FIND_MAP
@@ -658,7 +658,7 @@ elf_machine_lazy_rel (struct link_map *map,
 	   || r_type == R_SPARC_IRELATIVE)
     {
       Elf64_Addr value = map->l_addr + reloc->r_addend;
-      value = ((Elf64_Addr (*) (void)) value) ();
+      value = ((Elf64_Addr (*) (int)) value) (GLRO(dl_hwcap));
       if (r_type == R_SPARC_JMP_IREL)
 	{
 	  /* 'high' is always zero, for large PLT entries the linker

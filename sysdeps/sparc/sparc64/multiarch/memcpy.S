@@ -32,26 +32,10 @@ ENTRY(memcpy)
 	 or	%o3, %lo(_GLOBAL_OFFSET_TABLE_+4), %o3
 1:	add	%o7, %o3, %o3
 	mov	%o5, %o7
-	sethi	%hi(_rtld_global_ro), %o2
-	or	%o2, %lo(_rtld_global_ro), %o2
-#  ifdef __arch64__
-	ldx	[%o3 + %o2], %o2
-	ldx	[%o2 + RTLD_GLOBAL_RO_DL_HWCAP_OFFSET], %o2
-#  else
-	ld	[%o3 + %o2], %o2
-	ld	[%o2 + RTLD_GLOBAL_RO_DL_HWCAP_OFFSET + 4], %o2
-#  endif
-# else
-	set	_dl_hwcap, %o3
-#  ifdef __arch64__
-	ldx	[%o3], %o2
-#  else
-	ld	[%o3 + 4], %o2
-#  endif
 # endif
-	andcc	%o2, 0x80, %g0	! HWCAP_SPARC_N2
+	andcc	%o0, 0x80, %g0	! HWCAP_SPARC_N2
 	be	1f
-	 andcc	%o2, 0x40, %g0	! HWCAP_SPARC_BLKINIT
+	 andcc	%o0, 0x40, %g0	! HWCAP_SPARC_BLKINIT
 # ifdef SHARED
 	sethi	%gdop_hix22(__memcpy_niagara2), %o1
 	xor	%o1, %gdop_lox10(__memcpy_niagara2), %o1
@@ -61,7 +45,7 @@ ENTRY(memcpy)
 	ba	10f
 	 nop
 1:	be	1f
-	 andcc	%o2, 0x20, %g0	! HWCAP_SPARC_ULTRA3
+	 andcc	%o0, 0x20, %g0	! HWCAP_SPARC_ULTRA3
 # ifdef SHARED
 	sethi	%gdop_hix22(__memcpy_niagara1), %o1
 	xor	%o1, %gdop_lox10(__memcpy_niagara1), %o1
