@@ -1,3 +1,9 @@
+2011-06-09  Ulrich Drepper  <drepper@gmail.com>
+
+	* elf/Makefile: Add rules to build pldd.
+	* elf/pldd.c: New file.
+	* elf/pldd-xx.c: New file.
+
 2011-06-07  Ulrich Drepper  <drepper@gmail.com>
 
 	* version.h: Update for 2.15 development version.
