@@ -1,5 +1,8 @@
 2011-06-10  Roland McGrath  <roland@hack.frob.com>
 
+	* configure.in (nss-crypt check): Use AC_LANG_PROGRAM.
+	* configure: Regenerated.
+
 	* Makerules: Revert last change.
 	* elf/Makefile: Likewise.
 

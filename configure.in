@@ -293,10 +293,10 @@ if test x$nss_crypt = xyes; then
   fi
   old_CFLAGS="$CFLAGS"
   CFLAGS="$CFLAGS $nss_includes"
-  AC_COMPILE_IFELSE([typedef int PRBool;
+  AC_COMPILE_IFELSE([AC_LANG_PROGRAM([typedef int PRBool;
 #include <hasht.h>
 #include <nsslowhash.h>
-void f (void) { NSSLOW_Init (); }],
+void f (void) { NSSLOW_Init (); }])],
 	     libc_cv_nss_crypt=yes,
 	     AC_MSG_ERROR([
 cannot find NSS headers with lowlevel hash function interfaces]))
