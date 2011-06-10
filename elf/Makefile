@@ -353,7 +353,7 @@ lib-noranlib: $(objpfx)$(rtld-installed-name) \
 endif
 
 # Command to link into a larger single relocatable object.
-reloc-link = $(LINK.o) -nostdlib -nostartfiles -Wl,-r
+reloc-link = $(LINK.o) -nostdlib -nostartfiles -r
 
 $(objpfx)dl-allobjs.os: $(all-rtld-routines:%=$(objpfx)%.os)
 	$(reloc-link) -o $@ $^
@@ -398,8 +398,7 @@ $(objpfx)rtld-libc.a: $(objpfx)librtld.mk FORCE
 	$(MAKE) -f $< -f rtld-Rules
 
 $(objpfx)librtld.os: $(objpfx)dl-allobjs.os $(objpfx)rtld-libc.a
-	$(LINK.o) -nostdlib -nostartfiles -Wl,-r -o $@ \
-		  '-Wl,-(' $^ -lgcc '-Wl,-)' \
+	$(LINK.o) -nostdlib -nostartfiles -r -o $@ '-Wl,-(' $^ -lgcc '-Wl,-)' \
 		  -Wl,-Map,$@.map
 
 generated += librtld.map librtld.mk rtld-libc.a librtld.os.map
