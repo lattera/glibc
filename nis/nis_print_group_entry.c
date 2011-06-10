@@ -1,4 +1,5 @@
-/* Copyright (c) 1997, 1998, 2000, 2004, 2006 Free Software Foundation, Inc.
+/* Copyright (c) 1997,1998,2000,2004,2006,2011
+	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1997.
 
@@ -156,7 +157,7 @@ nis_print_group_entry (const_nis_name group)
 	{
 	  fputs (_("    Implicit nonmembers:\n"), stdout);
 	  for (i = 0; i < nomem_imp_cnt; ++i)
-	    printf ("\t%s\n", &mem_imp[i][3]);
+	    printf ("\t%s\n", &nomem_imp[i][3]);
 	}
       else
 	fputs (_("    No implicit nonmembers\n"), stdout);

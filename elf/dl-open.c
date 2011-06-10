@@ -516,7 +516,7 @@ _dl_open (const char *file, int mode, const void *caller_dlopen, Lmid_t nsid,
   if (__builtin_expect (nsid == LM_ID_NEWLM, 0))
     {
       /* Find a new namespace.  */
-      for (nsid = 1; nsid < GL(dl_nns); ++nsid)
+      for (nsid = 1; DL_NNS > 1 && nsid < GL(dl_nns); ++nsid)
 	if (GL(dl_ns)[nsid]._ns_loaded == NULL)
 	  break;
 
@@ -528,8 +528,7 @@ _dl_open (const char *file, int mode, const void *caller_dlopen, Lmid_t nsid,
 	  _dl_signal_error (EINVAL, file, NULL, N_("\
 no more namespaces available for dlmopen()"));
 	}
-
-      if (nsid == GL(dl_nns))
+      else if (nsid == GL(dl_nns))
 	{
 	  __rtld_lock_initialize (GL(dl_ns)[nsid]._ns_unique_sym_table.lock);
 	  ++GL(dl_nns);

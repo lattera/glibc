@@ -300,7 +300,6 @@ enlarge_archive (struct locarhandle *ah, const struct locarhead *head)
   void *p;
   unsigned int cnt, loccnt;
   struct namehashent *oldnamehashtab;
-  struct locrecent *oldlocrectab;
   struct locarhandle new_ah;
   size_t prefix_len = output_prefix ? strlen (output_prefix) : 0;
   char archivefname[prefix_len + sizeof (ARCHIVE_NAME)];
@@ -431,8 +430,6 @@ enlarge_archive (struct locarhandle *ah, const struct locarhead *head)
      still referenced and transfer it into the new file.  */
   oldnamehashtab = (struct namehashent *) ((char *) ah->addr
 					   + head->namehash_offset);
-  oldlocrectab = (struct locrecent *) ((char *) ah->addr
-				       + head->locrectab_offset);
 
   /* Sort the old locrec table in order of data position.  */
   struct oldlocrecent oldlocrecarray[head->namehash_size];

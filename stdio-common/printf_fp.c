@@ -640,7 +640,6 @@ ___printf_fp (FILE *fp,
       int exp10 = 0;
       int explog = LDBL_MAX_10_EXP_LOG;
       const struct mp_power *powers = &_fpioconst_pow10[explog + 1];
-      mp_size_t used_limbs = fracsize - 1;
 
       /* Now shift the input value to its right place.	*/
       cy = __mpn_lshift (frac, fp_input, fracsize, to_shift);
@@ -762,7 +761,6 @@ ___printf_fp (FILE *fp,
 			  fracsize = tmpsize - (i - 1);
 			}
 		    }
-		  used_limbs = fracsize - 1;
 		}
 	    }
 	  --explog;

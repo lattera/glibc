@@ -1,5 +1,5 @@
-/* Copyright (C) 1996, 1997, 1998, 1999, 2002, 2004, 2007, 2008
-   Free Software Foundation, Inc.
+/* Copyright (C) 1996,1997,1998,1999,2002,2004,2007,2008,2011
+	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Extended from original form by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -293,7 +293,6 @@ getanswer_r (const querybuf *answer, int anslen, struct netent *result,
   const unsigned char *cp = &answer->buf[HFIXEDSZ];
   char **alias_pointer;
   int have_answer;
-  char *ans;
   u_char packtmp[NS_MAXCDNAME];
 
   if (question_count == 0)
@@ -328,7 +327,6 @@ getanswer_r (const querybuf *answer, int anslen, struct netent *result,
   alias_pointer = result->n_aliases = &net_data->aliases[0];
   *alias_pointer = NULL;
   have_answer = 0;
-  ans = NULL;
 
   while (--answer_count >= 0 && cp < end_of_message)
     {
@@ -351,7 +349,6 @@ getanswer_r (const querybuf *answer, int anslen, struct netent *result,
       if (n < 0 || res_dnok (bp) == 0)
 	break;
       cp += n;
-      ans = strdupa (bp);
       GETSHORT (type, cp);
       GETSHORT (class, cp);
       cp += INT32SZ;		/* TTL */

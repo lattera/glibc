@@ -1,5 +1,42 @@
 2011-06-10  Roland McGrath  <roland@hack.frob.com>
 
+	* Makefile ($(common-objpfx)linkobj/libc.so): Break long lines with \.
+	Don't list ld.so twice in dependencies.
+
+	* posix/bug-regex31.c: Include <stdlib.h>.
+
+	* nscd/hstcache.c (cache_addhst): Remove unused variable.
+
+	* nis/nss_compat/compat-spwd.c
+	(getspent_next_nss_netgr): Remove unused variable.
+	* nis/nss_compat/compat-pwd.c (getpwent_next_nss_netgr): Likewise.
+
+	* nis/nis_print_group_entry.c (nis_print_group_entry): Fix "Implicit
+	nonmembers" output to use the right array.
+
+	* resolv/nss_dns/dns-network.c (getanswer_r): Remove unused variable.
+
+	* elf/dl-open.c (_dl_open): Quash warnings when DL_NNS==1.
+
+	* locale/programs/ld-ctype.c (ctype_read): Remove unused variable.
+	* locale/programs/ld-collate.c (add_to_tablewc): Likewise.
+	* catgets/gencat.c (read_input_file): Likewise.
+	* locale/programs/locarchive.c (enlarge_archive): Likewise.
+
+	* sunrpc/clnt_udp.c (__libc_clntudp_bufcreate): Move DONTBLOCK
+	variable definition inside #if's controlling its use.
+
+	* inet/getnetgrent_r.c (innetgr): Remove unused variable.
+
+	* resolv/res_hconf.c (_res_hconf_reorder_addrs): Fix errno restoration.
+
+	* misc/syslog.c (__vsyslog_chk): Remove unused variable.
+
+	* io/fts.c (fts_build): Use if (0 && ...) rather than #if 0 for
+	unreachable code.
+
+	* stdio-common/printf_fp.c (___printf_fp): Remove unused variable.
+
 	* configure.in (nss-crypt check): Use AC_LANG_PROGRAM.
 	* configure: Regenerated.
 

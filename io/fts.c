@@ -748,20 +748,17 @@ mem1:				saved_errno = errno;
 			p->fts_flags |= FTS_ISW;
 #endif
 
-#if 0
 		/* Unreachable code.  cderrno is only ever set to a nonnull
 		   value if dirp is closed at the same time.  But then we
 		   cannot enter this loop.  */
-		if (cderrno) {
+		if (0 && cderrno) {
 			if (nlinks) {
 				p->fts_info = FTS_NS;
 				p->fts_errno = cderrno;
 			} else
 				p->fts_info = FTS_NSOK;
 			p->fts_accpath = cur->fts_accpath;
-		} else
-#endif
-		if (nlinks == 0
+		} else if (nlinks == 0
 #if defined DT_DIR && defined _DIRENT_HAVE_D_TYPE
 			   || (nostat &&
 			       dp->d_type != DT_DIR && dp->d_type != DT_UNKNOWN)

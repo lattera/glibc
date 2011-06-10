@@ -190,7 +190,6 @@ cache_addhst (struct database_dyn *db, int fd, request_header *req,
       size_t h_aliases_cnt;
       uint32_t *h_aliases_len;
       size_t h_addr_list_cnt;
-      int addr_list_type;
       char *addresses;
       char *aliases;
       char *key_copy = NULL;
@@ -408,9 +407,6 @@ cache_addhst (struct database_dyn *db, int fd, request_header *req,
 		     ((uintptr_t) dataset & pagesize_m1)
 		     + total + req->key_len, MS_ASYNC);
 	    }
-
-	  addr_list_type = (hst->h_length == NS_INADDRSZ
-			    ? GETHOSTBYADDR : GETHOSTBYADDRv6);
 
 	  /* NB: the following code is really complicated.  It has
 	     seemlingly duplicated code paths which do the same.  The

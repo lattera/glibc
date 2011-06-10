@@ -172,8 +172,6 @@ __libc_clntudp_bufcreate (struct sockaddr_in *raddr, u_long program,
   cu->cu_xdrpos = XDR_GETPOS (&(cu->cu_outxdrs));
   if (*sockp < 0)
     {
-      int dontblock = 1;
-
 #ifdef SOCK_NONBLOCK
 # ifndef __ASSUME_SOCK_CLOEXEC
       if (__have_sock_cloexec >= 0)
@@ -212,8 +210,11 @@ __libc_clntudp_bufcreate (struct sockaddr_in *raddr, u_long program,
 # ifdef SOCK_CLOEXEC
       if (__have_sock_cloexec < 0)
 # endif
-	/* the sockets rpc controls are non-blocking */
-	(void) __ioctl (*sockp, FIONBIO, (char *) &dontblock);
+	{
+	  /* the sockets rpc controls are non-blocking */
+	  int dontblock = 1;
+	  (void) __ioctl (*sockp, FIONBIO, (char *) &dontblock);
+	}
 #endif
 #ifdef IP_RECVERR
       {

@@ -141,7 +141,7 @@ __vsyslog_chk(int pri, int flag, const char *fmt, va_list ap)
 	FILE *f;
 	char *buf = 0;
 	size_t bufsize = 0;
-	size_t prioff, msgoff;
+	size_t msgoff;
 #ifndef NO_SIGPIPE
  	struct sigaction action, oldaction;
  	int sigpipe;
@@ -192,7 +192,7 @@ __vsyslog_chk(int pri, int flag, const char *fmt, va_list ap)
 	else
 	  {
 	    __fsetlocking (f, FSETLOCKING_BYCALLER);
-	    prioff = fprintf (f, "<%d>", pri);
+	    fprintf (f, "<%d>", pri);
 	    (void) time (&now);
 	    f->_IO_write_ptr += __strftime_l (f->_IO_write_ptr,
 					      f->_IO_write_end

@@ -1,4 +1,4 @@
-/* Copyright (C) 1995-2006, 2007, 2009 Free Software Foundation, Inc.
+/* Copyright (C) 1995-2006,2007,2009,2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.org>, 1995.
 
@@ -2209,7 +2209,6 @@ ctype_read (struct linereader *ldfile, struct localedef_t *result,
   struct token *now;
   enum token_t nowtok;
   size_t cnt;
-  struct charseq *last_seq;
   uint32_t last_wch = 0;
   enum token_t last_token;
   enum token_t ellipsis_token;
@@ -2465,7 +2464,6 @@ ctype_read (struct linereader *ldfile, struct localedef_t *result,
 		    }
 		  else
 		    last_str = NULL;
-		  last_seq = seq;
 		  last_wch = wch;
 		  memcpy (last_charcode, now->val.charcode.bytes, 16);
 		  last_charcode_len = now->val.charcode.nbytes;

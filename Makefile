@@ -138,10 +138,16 @@ lib: $(common-objpfx)libc.so
 
 lib: $(common-objpfx)linkobj/libc.so
 
-$(common-objpfx)linkobj/libc.so: $(elfobjdir)/soinit.os $(common-objpfx)linkobj/libc_pic.a $(elfobjdir)/sofini.os $(elfobjdir)/interp.os $(elfobjdir)/ld.so $(common-objpfx)shlib.lds $(common-objpfx)elf/ld.so
+$(common-objpfx)linkobj/libc.so: $(elfobjdir)/soinit.os \
+				 $(common-objpfx)linkobj/libc_pic.a \
+				 $(elfobjdir)/sofini.os \
+				 $(elfobjdir)/interp.os \
+				 $(elfobjdir)/ld.so \
+				 $(common-objpfx)shlib.lds
 	$(build-shlib)
 
-$(common-objpfx)linkobj/libc_pic.a: $(common-objpfx)libc_pic.a $(common-objpfx)sunrpc/librpc_compat_pic.a
+$(common-objpfx)linkobj/libc_pic.a: $(common-objpfx)libc_pic.a \
+				    $(common-objpfx)sunrpc/librpc_compat_pic.a
 	$(..)./scripts/mkinstalldirs $(common-objpfx)linkobj
 	(cd $(common-objpfx)linkobj; \
 	 $(AR) x ../libc_pic.a; \
