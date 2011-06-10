@@ -1,3 +1,9 @@
+2011-06-09  Roland McGrath  <roland@hack.frob.com>
+
+	* Makerules ($(common-objpfx)libc_pic.os): Use -Wl, before -r.
+	* elf/Makefile ($(objpfx)librtld.os): Likewise.
+	(reloc-link): Likewise.
+
 2011-06-09  Ulrich Drepper  <drepper@gmail.com>
 
 	* elf/Makefile: Add rules to build pldd.
