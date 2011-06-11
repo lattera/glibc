@@ -990,11 +990,15 @@ install: $(inst_slibdir)/libc.so$(libc.so-version)
 $(common-objpfx)format.lds: $(..)scripts/output-format.sed \
 			    $(common-objpfx)config.make \
 			    $(common-objpfx)config.h $(..)Makerules
+ifneq (unknown,$(output-format))
+	echo > $@.new 'OUTPUT_FORMAT($(output-format))'
+else
 	$(LINK.o) -shared $(sysdep-LDFLAGS) $(config-LDFLAGS) $(LDFLAGS.so) \
 		  -x c /dev/null -o $@.so -Wl,--verbose -v 2>&1 \
 	| sed -n -f $< > $@.new
 	test -s $@.new
 	rm -f $@.so
+endif
 	mv -f $@.new $@
 common-generated += format.lds
 

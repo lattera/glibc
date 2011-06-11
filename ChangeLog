@@ -1,3 +1,12 @@
+2011-07-02  Roland McGrath  <roland@hack.frob.com>
+
+	* config.make.in (output-format): New variable.
+	* configure.in: Check for ld --print-output-format support.
+	* configure: Regenerated.
+	* Makerules ($(common-objpfx)format.lds)
+	[$(output-format) != unknown]: Just use $(output-format),
+	instead of the linker-script munging.
+
 2011-07-14  Roland McGrath  <roland@hack.frob.com>
 
 	* Makefile ($(common-objpfx)linkobj/libc.so): Use $(shlib-lds) instead

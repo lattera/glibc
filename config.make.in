@@ -70,6 +70,7 @@ fno-unit-at-a-time = @fno_unit_at_a_time@
 bind-now = @bindnow@
 have-hash-style = @libc_cv_hashstyle@
 use-default-link = @use_default_link@
+output-format = @libc_cv_output_format@
 
 static-libgcc = @libc_cv_gcc_static_libgcc@
 

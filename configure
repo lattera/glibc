@@ -647,6 +647,7 @@ libc_cv_have_initfini
 gnu89_inline
 libc_cv_ssp
 fno_unit_at_a_time
+libc_cv_output_format
 libc_cv_hashstyle
 libc_cv_fpie
 libc_cv_z_execstack
@@ -6702,6 +6703,24 @@ fi
 $as_echo "$libc_cv_hashstyle" >&6; }
 
 fi
+
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking linker output format" >&5
+$as_echo_n "checking linker output format... " >&6; }
+if ${libc_cv_output_format+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  if libc_cv_output_format=`
+${CC-cc} -nostartfiles -nostdlib -Wl,--print-output-format 2>&5`
+then
+  :
+else
+  libc_cv_output_format=
+fi
+test -n "$libc_cv_output_format" || libc_cv_output_format=unknown
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_output_format" >&5
+$as_echo "$libc_cv_output_format" >&6; }
+
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for -fno-toplevel-reorder -fno-section-anchors" >&5
 $as_echo_n "checking for -fno-toplevel-reorder -fno-section-anchors... " >&6; }
