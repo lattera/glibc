@@ -1,5 +1,12 @@
 2011-07-02  Roland McGrath  <roland@hack.frob.com>
 
+	* Makerules (shlib-lds): New variable.
+	(shlib-lds-flags): New variable.
+	(build-shlib, build-moduile, build-module-asneeded): Use it.
+	($(common-objpfx)libc.so): Use $(shlib-lds).
+	($(extra-modules-build:%=$(objpfx)%.so)): Likewise.
+	* iconvdata/extra-module.mk ($(objpfx)$(mod).so): Likewise.
+
 	* elf/dynamic-link.h (elf_get_dynamic_info): Make asserts accept
 	DT_FLAGS/DT_FLAGS_1 with zero flags.
 

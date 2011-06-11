@@ -4,7 +4,7 @@ extra-modules-left := $(strip $(filter-out $(mod),$(extra-modules-left)))
 extra-objs := $(extra-objs) $(patsubst %,%.os,$($(mod)-routines))
 
 $(objpfx)$(mod).so: $(addprefix $(objpfx),$(addsuffix .os,$($(mod)-routines)))\
-		    $(common-objpfx)shlib.lds
+		    $(shlib-lds)
 	$(build-module-asneeded)
 
 # Depend on libc.so so a DT_NEEDED is generated in the shared objects.
