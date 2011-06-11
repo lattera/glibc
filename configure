@@ -1469,7 +1469,7 @@ Optional Packages:
   --without-cvs           if CVS should not be used
   --with-headers=PATH     location of system headers to use (for example
                           /usr/src/linux/include) [default=compiler default]
-  --with-default-link     do not use explicit linker scripts [default=no]
+  --with-default-link     do not use explicit linker scripts
   --with-tls              enable support for TLS
   --without-__thread      do not use TLS features even when supporting them
   --with-cpu=CPU          select code for CPU variant
@@ -3593,7 +3593,7 @@ fi
 if test "${with_default_link+set}" = set; then :
   withval=$with_default_link; use_default_link=$withval
 else
-  use_default_link=no
+  use_default_link=default
 fi
 
 
@@ -6702,6 +6702,69 @@ fi
 { $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_hashstyle" >&5
 $as_echo "$libc_cv_hashstyle" >&6; }
 
+
+  # The linker's default -shared behavior is good enough if it
+  # does these things that our custom linker scripts ensure that
+  # all allocated NOTE sections come first.
+  if test "$use_default_link" = default; then
+    { $as_echo "$as_me:${as_lineno-$LINENO}: checking for sufficient default -shared layout" >&5
+$as_echo_n "checking for sufficient default -shared layout... " >&6; }
+if ${libc_cv_use_default_link+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+      libc_cv_use_default_link=no
+    cat > conftest.s <<\EOF
+	  .section .note.a,"a",%note
+	  .balign 4
+	  .long 4,4,9
+	  .string "GNU"
+	  .string "foo"
+	  .section .note.b,"a",%note
+	  .balign 4
+	  .long 4,4,9
+	  .string "GNU"
+	  .string "bar"
+EOF
+    if { ac_try='  ${CC-cc} $ASFLAGS -shared -o conftest.so conftest.s 1>&5'
+  { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; } &&
+       ac_try=`$READELF -S conftest.so | sed -n \
+	 '${x;p;}
+	  s/^ *\[ *[1-9][0-9]*\]  *\([^ ][^ ]*\)  *\([^ ][^ ]*\) .*$/\2 \1/
+	  t a
+	  b
+	  : a
+	  H'`
+    then
+      libc_seen_a=no libc_seen_b=no
+      set -- $ac_try
+      while test $# -ge 2 -a "$1" = NOTE; do
+	case "$2" in
+	.note.a) libc_seen_a=yes ;;
+	.note.b) libc_seen_b=yes ;;
+	esac
+	shift 2
+      done
+      case "$libc_seen_a$libc_seen_b" in
+      yesyes)
+	libc_cv_use_default_link=yes
+	;;
+      *)
+	echo >&5 "\
+$libc_seen_a$libc_seen_b from:
+$ac_try"
+	;;
+      esac
+    fi
+    rm -f conftest*
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_use_default_link" >&5
+$as_echo "$libc_cv_use_default_link" >&6; }
+    use_default_link=$libc_cv_use_default_link
+  fi
 fi
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking linker output format" >&5

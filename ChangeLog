@@ -1,5 +1,9 @@
 2011-07-02  Roland McGrath  <roland@hack.frob.com>
 
+	* configure.in (use-default-link): Default to yes if a test -shared
+	link meets our qualifications.
+	* configure: Regenerated.
+
 	* config.make.in (output-format): New variable.
 	* configure.in: Check for ld --print-output-format support.
 	* configure: Regenerated.
