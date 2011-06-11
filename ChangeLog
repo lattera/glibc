@@ -1,3 +1,8 @@
+2011-07-02  Roland McGrath  <roland@hack.frob.com>
+
+	* elf/Makefile ($(objpfx)ld.so): Use -defsym=_begin=0 instead of
+	linker script munging.
+
 2011-07-02  Ulrich Drepper  <drepper@gmail.com>
 
 	* crypt/sha512.h (struct sha512_ctx): Add union to access total also

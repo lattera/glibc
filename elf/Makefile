@@ -406,19 +406,11 @@ generated += librtld.map librtld.mk rtld-libc.a librtld.os.map
 z-now-yes = -Wl,-z,now
 
 $(objpfx)ld.so: $(objpfx)librtld.os $(ld-map)
-	@rm -f $@.lds
-	$(LINK.o) -nostdlib -nostartfiles -shared $(z-now-$(bind-now))	\
-		  $(LDFLAGS-rtld) -Wl,-z,defs -Wl,--verbose 2>&1 |	\
-		  LC_ALL=C \
-		  sed -e '/^=========/,/^=========/!d;/^=========/d'	\
-		      -e 's/\. = .* + SIZEOF_HEADERS;/& _begin = . - SIZEOF_HEADERS;/' \
-		  > $@.lds
-	test -s $@.lds
 	$(LINK.o) -nostdlib -nostartfiles -shared -o $@			\
 		  $(LDFLAGS-rtld) -Wl,-z,defs $(z-now-$(bind-now))	\
 		  $(filter-out $(map-file),$^) $(load-map-file)		\
-		  -Wl,-soname=$(rtld-installed-name) -T $@.lds
-	rm -f $@.lds
+		  -Wl,-soname=$(rtld-installed-name)			\
+		  -Wl,-defsym=_begin=0
 	readelf -s $@ \
 	  | $(AWK) '($$7 ~ /^UND(|EF)$$/ && $$1 != "0:" && $$4 != "REGISTER") { print; p=1 } END { exit p != 0 }'
 
