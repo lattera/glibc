@@ -1,5 +1,11 @@
 2011-07-02  Roland McGrath  <roland@hack.frob.com>
 
+	* config.make.in (use-default-link): New variable.
+	* configure.in (use_default_link): Grok --with-default-link to set it.
+	* configure: Regenerated.
+	* Makerules [$(elf) = yes] [$(use-default-link) = yes]:
+	(shlib-lds, shlib-lds-flags): Define to empty.
+
 	* Makerules (shlib-lds): New variable.
 	(shlib-lds-flags): New variable.
 	(build-shlib, build-moduile, build-module-asneeded): Use it.

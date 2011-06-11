@@ -479,6 +479,11 @@ endif
 endif
 
 ifeq (yes,$(elf))
+ifeq (yes,$(use-default-link))
+# If the linker is good enough, we can let it use its default linker script.
+shlib-lds =
+shlib-lds-flags =
+else
 # binutils only position loadable notes into the first page for binaries,
 # not for shared objects
 $(common-objpfx)shlib.lds: $(common-objpfx)config.make $(..)Makerules
@@ -516,6 +521,7 @@ common-generated += shlib.lds
 
 shlib-lds = $(common-objpfx)shlib.lds
 shlib-lds-flags = -T $(shlib-lds)
+endif
 
 define build-shlib
 $(build-shlib-helper) -o $@ $(shlib-lds-flags) \

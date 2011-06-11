@@ -114,6 +114,14 @@ AC_ARG_WITH([headers],
 	    [sysheaders=$withval],
 	    [sysheaders=''])
 
+AC_SUBST(use_default_link)
+AC_ARG_WITH([default-link],
+	    AC_HELP_STRING([--with-default-link],
+			   [do not use explicit linker scripts
+			    @<:@default=no@:>@]),
+	    [use_default_link=$withval],
+	    [use_default_link=no])
+
 AC_ARG_ENABLE([sanity-checks],
 	      AC_HELP_STRING([--disable-sanity-checks],
 			     [really do not use threads (should not be used except in special situations) @<:@default=yes@:>@]),
