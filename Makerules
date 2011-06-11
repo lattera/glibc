@@ -510,6 +510,7 @@ $(common-objpfx)shlib.lds: $(common-objpfx)config.make $(..)Makerules
 		 __libc_thread_subfreeres : { *(__libc_thread_subfreeres) }\
 		 PROVIDE(__stop___libc_thread_subfreeres = .);\
 		 /DISCARD/ : { *(.gnu.glibc-stub.*) }@'
+	test -s $@T
 	mv -f $@T $@
 common-generated += shlib.lds
 

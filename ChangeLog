@@ -1,5 +1,8 @@
 2011-06-10  Roland McGrath  <roland@hack.frob.com>
 
+	* Makerules (shlib.lds): Fail if the linker script comes out empty.
+	* elf/Makefile ($(objpfx)ld.so): Likewise.
+
 	* Makefile ($(common-objpfx)linkobj/libc.so): Break long lines with \.
 	Don't list ld.so twice in dependencies.
 

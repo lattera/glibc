@@ -413,6 +413,7 @@ $(objpfx)ld.so: $(objpfx)librtld.os $(ld-map)
 		  sed -e '/^=========/,/^=========/!d;/^=========/d'	\
 		      -e 's/\. = .* + SIZEOF_HEADERS;/& _begin = . - SIZEOF_HEADERS;/' \
 		  > $@.lds
+	test -s $@.lds
 	$(LINK.o) -nostdlib -nostartfiles -shared -o $@			\
 		  $(LDFLAGS-rtld) -Wl,-z,defs $(z-now-$(bind-now))	\
 		  $(filter-out $(map-file),$^) $(load-map-file)		\
