@@ -1,5 +1,8 @@
 2011-07-02  Roland McGrath  <roland@hack.frob.com>
 
+	* elf/dynamic-link.h (elf_get_dynamic_info): Make asserts accept
+	DT_FLAGS/DT_FLAGS_1 with zero flags.
+
 	* elf/Makefile ($(objpfx)ld.so): Use -defsym=_begin=0 instead of
 	linker script munging.
 

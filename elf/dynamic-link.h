@@ -1,5 +1,5 @@
 /* Inline functions for dynamic linking.
-   Copyright (C) 1995-2005, 2006, 2008 Free Software Foundation, Inc.
+   Copyright (C) 1995-2005,2006,2008,2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -201,9 +201,9 @@ elf_get_dynamic_info (struct link_map *l, ElfW(Dyn) *temp)
 #ifdef RTLD_BOOTSTRAP
   /* Only the bind now flags are allowed.  */
   assert (info[VERSYMIDX (DT_FLAGS_1)] == NULL
-	  || info[VERSYMIDX (DT_FLAGS_1)]->d_un.d_val == DF_1_NOW);
+	  || (info[VERSYMIDX (DT_FLAGS_1)]->d_un.d_val & ~DF_1_NOW) == 0);
   assert (info[DT_FLAGS] == NULL
-	  || info[DT_FLAGS]->d_un.d_val == DF_BIND_NOW);
+	  || (info[DT_FLAGS]->d_un.d_val & ~DF_BIND_NOW) == 0);
   /* Flags must not be set for ld.so.  */
   assert (info[DT_RUNPATH] == NULL);
   assert (info[DT_RPATH] == NULL);
