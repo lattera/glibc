@@ -821,7 +821,7 @@ gaih_inet (const char *name, const struct gaih_service *service,
 	  size_t tmpbuflen = 1024;
 	  malloc_tmpbuf = !__libc_use_alloca (alloca_used + tmpbuflen);
 	  assert (tmpbuf == NULL);
-	  if (malloc_tmpbuf)
+	  if (!malloc_tmpbuf)
 	    tmpbuf = alloca_account (tmpbuflen, alloca_used);
 	  else
 	    {

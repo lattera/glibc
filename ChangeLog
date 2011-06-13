@@ -1,3 +1,8 @@
+2011-06-10  Andreas Schwab  <schwab@redhat.com>
+
+	* sysdeps/posix/getaddrinfo.c (gaih_inet): Fix logic allocating
+	tmpbuf.
+
 2011-06-10  Roland McGrath  <roland@hack.frob.com>
 
 	* Makerules (shlib.lds): Fail if the linker script comes out empty.
