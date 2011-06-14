@@ -1,3 +1,7 @@
+2011-06-14  Andreas Jaeger  <aj@suse.de>
+
+	* pthread_rwlock_init.c: Include <string.h> for memset declaration.
+
 2011-05-11  Ulrich Drepper  <drepper@gmail.com>
 
 	[BZ #386]

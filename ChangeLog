@@ -1,3 +1,8 @@
+2011-06-14  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/check_native.c: Include <string.h> for
+	memset declaration.
+
 2011-06-10  Andreas Schwab  <schwab@redhat.com>
 
 	* sysdeps/posix/getaddrinfo.c (gaih_inet): Fix logic allocating

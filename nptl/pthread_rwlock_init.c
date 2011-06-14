@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2007, 2009 Free Software Foundation, Inc.
+/* Copyright (C) 2002,2007,2009,2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -18,6 +18,7 @@
    02111-1307 USA.  */
 
 #include "pthreadP.h"
+#include <string.h>
 #include <kernel-features.h>
 
 
