@@ -67,6 +67,9 @@ libnss_compat {
 libnss_dns {
   GLIBC_PRIVATE
 }
+libnss_db {
+  GLIBC_PRIVATE
+}
 libnss_files {
   GLIBC_PRIVATE
 }

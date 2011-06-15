@@ -1,5 +1,5 @@
 /* Netgroup file parser in nss_db modules.
-   Copyright (C) 1996, 1997, 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1999, 2000, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -18,6 +18,7 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <ctype.h>
 #include <dlfcn.h>
 #include <errno.h>
 #include <fcntl.h>
@@ -29,40 +30,62 @@
 #include "nsswitch.h"
 #include "nss_db.h"
 
+/* The hashing function we use.  */
+#include "../intl/hash-string.h"
+
 
 #define DBFILE		_PATH_VARDB "netgroup.db"
-
-
-/* Locks the static variables in this file.  */
-__libc_lock_define_initialized (static, lock)
 
 /* Maintenance of the shared handle open on the database.  */
-static NSS_DB *db;
-static char *entry;
-static char *cursor;
-
 enum nss_status
-_nss_db_setnetgrent (const char *group)
+_nss_db_setnetgrent (const char *group, struct __netgrent *result)
 {
-  enum nss_status status;
-
-  __libc_lock_lock (lock);
-
-  status = internal_setent (DBFILE, &db);
+  struct nss_db_map state;
+  enum nss_status status = internal_setent (DBFILE, &state);
 
   if (status == NSS_STATUS_SUCCESS)
     {
-      DBT key = { data: (void *) group, size: strlen (group), flags: 0 };
-      DBT value;
+      const struct nss_db_header *header = state.header;
+      const stridx_t *hashtable
+	= (const stridx_t *) ((const char *) header
+			      + header->dbs[0].hashoffset);
+      const char *valstrtab = (const char *) header + header->valstroffset;
+      uint32_t hashval = __hash_string (group);
+      size_t grouplen = strlen (group);
+      size_t hidx = hashval % header->dbs[0].hashsize;
+      size_t hval2 = 1 + hashval % (header->dbs[0].hashsize - 2);
 
-      value.flags = 0;
-      if (DL_CALL_FCT (db->get, (db->db, NULL, &key, &value, 0)) != 0)
-	status = NSS_STATUS_NOTFOUND;
-      else
-	cursor = entry = value.data;
+      status = NSS_STATUS_NOTFOUND;
+      while (hashtable[hidx] != ~((stridx_t) 0))
+	{
+	  const char *valstr = valstrtab + hashtable[hidx];
+
+	  if (strncmp (valstr, group, grouplen) == 0
+	      && isblank (valstr[grouplen]))
+	    {
+	      const char *cp = &valstr[grouplen + 1];
+	      while (isblank (*cp))
+		++cp;
+	      if (*cp != '\0')
+		{
+		  result->data = strdup (cp);
+		  if (result->data == NULL)
+		    status = NSS_STATUS_TRYAGAIN;
+		  else
+		    {
+		      status = NSS_STATUS_SUCCESS;
+		      result->cursor = result->data;
+		    }
+		  break;
+		}
+	    }
+
+	  if ((hidx += hval2) >= header->dbs[0].hashsize)
+	    hidx -= header->dbs[0].hashsize;
+	}
+
+      internal_endent (&state);
     }
-
-  __libc_lock_unlock (lock);
 
   return status;
 
@@ -70,14 +93,12 @@ _nss_db_setnetgrent (const char *group)
 
 
 enum nss_status
-_nss_db_endnetgrent (void)
+_nss_db_endnetgrent (struct __netgrent *result)
 {
-  __libc_lock_lock (lock);
-
-  internal_endent (&db);
-
-  __libc_lock_unlock (lock);
-
+  free (result->data);
+  result->data = NULL;
+  result->data_size = 0;
+  result->cursor = NULL;
   return NSS_STATUS_SUCCESS;
 }
 
@@ -91,13 +112,10 @@ enum nss_status
 _nss_db_getnetgrent_r (struct __netgrent *result, char *buffer, size_t buflen,
 		       int *errnop)
 {
-  int status;
+  enum nss_status status;
 
-  __libc_lock_lock (lock);
-
-  status = _nss_netgroup_parseline (&cursor, result, buffer, buflen, errnop);
-
-  __libc_lock_unlock (lock);
+  status = _nss_netgroup_parseline (&result->cursor, result, buffer, buflen,
+				    errnop);
 
   return status;
 }

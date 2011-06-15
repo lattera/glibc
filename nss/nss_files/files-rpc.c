@@ -1,5 +1,5 @@
 /* SunRPC program number file parser in nss_files module.
-   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -36,11 +36,11 @@ LINE_PARSER
 
 #include GENERIC
 
-DB_LOOKUP (rpcbyname, 1 + strlen (name), (".%s", name),
+DB_LOOKUP (rpcbyname, '.', 0, ("%s", name),
 	   LOOKUP_NAME (r_name, r_aliases),
 	   const char *name)
 
-DB_LOOKUP (rpcbynumber, 20, ("=%d", number),
+DB_LOOKUP (rpcbynumber, '=', 20, ("%zd", (ssize_t) number),
 	   {
 	     if (result->r_number == number)
 	       break;

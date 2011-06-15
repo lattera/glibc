@@ -1,3 +1,35 @@
+2011-06-14  Ulrich Drepper  <drepper@gmail.com>
+
+	* Versions.def: Add entry for libnss_db.
+	* shlib-versions: Likewise.
+	* nss/Makefile: Add rules to build libnss_db.
+	* nss/Versions: Add libnss_db information.  Organize libnss_files
+	entries better.
+	* nss/db-Makefile: Add gshadow support.  Change rules for the new
+	makedb progra.  Some minor improvements to generate smaller files.
+	* nss/nss_db/nss_db.h: Move NSS database header data structures to
+	here from...
+	* nss/makedb.c: ...here.
+	Improve database format to be smaller and require less memory at
+	runtime.
+	* nss/nss_db/db-XXX.x: Adjust for new database format.  Don't use
+	db anymore.
+	* nss/nss_db/db-netgrp.c: Likewise.
+	* nss/nss_db/db-open.c: Likewise.
+	* nss/nss_files/flies-XXX.x: Adjust comments.
+	* nss/nss_files/files-ethers.c: Adjust for new DB_LOOKUP definition.
+	* nss/nss_files/files-grp.c: Likewise.
+	* nss/nss_files/files-hosts.c: Likewise.
+	* nss/nss_files/files-network.c: Likewise.
+	* nss/nss_files/files-proto.c: Likewise.
+	* nss/nss_files/files-pwd.c: Likewise.
+	* nss/nss_files/files-rpc.c: Likewise.
+	* nss/nss_files/files-service.c: Likewise.
+	* nss/nss_files/files-sgrp.c: Likewise.
+	* nss/nss_files/files-spwd.c: Likewise.
+	* nss/nss_db/db-alias.c: Removed.
+	* nss/nss_db/dummy-db.h: Removed.
+
 2011-06-02  Ulrich Drepper  <drepper@gmail.com>
 
 	* nss/makedb.c: Rewritten to not use database library.

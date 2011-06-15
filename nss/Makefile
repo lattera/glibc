@@ -53,7 +53,7 @@ otherlibs += $(nssobjdir)/libnss_files.a $(resolvobjdir)/libnss_dns.a \
 endif
 
 # Specify rules for the nss_* modules.  We have some services.
-services		:= files
+services		:= files db
 
 extra-libs		= $(services:%=libnss_%)
 # These libraries will be built in the `others' pass rather than
@@ -69,10 +69,18 @@ libnss_files-routines	:= $(addprefix files-,$(databases)) \
 			   files-initgroups files-have_o_cloexec
 distribute		+= files-XXX.c files-parse.c
 
+libnss_db-dbs		:= $(addprefix db-,\
+				       $(filter-out hosts network key alias,\
+						    $(databases)))
+libnss_db-routines	:= $(libnss_db-dbs) db-open hash-string
+generated		+= $(filter-out db-alias.c db-netgrp.c, \
+					$(addsuffix .c,$(libnss_db-dbs)))
+distribute		+= $(addprefix nss_db/, db-XXX.c nss_db.h)
 
 # Build static module if requested
 ifneq ($(build-static-nss),yes)
 libnss_files-inhibit-o	= $(filter-out .os,$(object-suffixes))
+libnss_db-inhibit-o	= $(filter-out .os,$(object-suffixes))
 endif
 
 include ../Rules
@@ -92,6 +100,15 @@ endif
 libnss-libc = $(common-objpfx)linkobj/libc.so
 $(services:%=$(objpfx)libnss_%.so): $(libnss-libc) \
 				    $(common-objpfx)libc_nonshared.a
+
+$(objpfx)libnss_db.so: $(objpfx)libnss_files.so
+
+$(libnss_db-dbs:%=$(objpfx)%.c): $(objpfx)db-%.c: nss_files/files-%.c
+	@rm -f $@.new
+	(echo '#define EXTERN_PARSER';\
+	 echo '#define GENERIC "../nss_db/db-XXX.c"';\
+	 echo '#include "$<"') > $@.new
+	mv -f $@.new $@
 
 
 $(objpfx)makedb: $(makedb-modules:%=$(objpfx)%.o)

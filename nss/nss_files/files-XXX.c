@@ -1,5 +1,5 @@
 /* Common code for file-based databases in nss_files module.
-   Copyright (C) 1996-1999,2001,2002,2004,2007,2008
+   Copyright (C) 1996-1999,2001,2002,2004,2007,2008,2011
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -306,15 +306,15 @@ CONCAT(_nss_files_get,ENTNAME_r) (struct STRUCTURE *result, char *buffer,
 
    NAME is the name of the lookup; e.g. `hostbyname'.
 
-   KEYSIZE and KEYPATTERN are ignored here but used by ../nss_db/db-XXX.c.
+   DB_CHAR, KEYPATTERN, KEYSIZE are ignored here but used by db-XXX.c
+   e.g. `1 + sizeof (id) * 4'.
 
-   PROTO describes the arguments for the lookup key;
-   e.g. `const char *hostname'.
+   PROTO is the potentially empty list of other parameters.
 
    BREAK_IF_MATCH is a block of code which compares `struct STRUCTURE *result'
    to the lookup key arguments and does `break;' if they match.  */
 
-#define DB_LOOKUP(name, keysize, keypattern, break_if_match, proto...)	      \
+#define DB_LOOKUP(name, db_char, keysize, keypattern, break_if_match, proto...)\
 enum nss_status								      \
 _nss_files_get##name##_r (proto,					      \
 			  struct STRUCTURE *result, char *buffer,	      \

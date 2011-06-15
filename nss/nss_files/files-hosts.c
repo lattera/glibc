@@ -358,7 +358,7 @@ HOST_DB_LOOKUP (hostbyname2, ,,
    gethostbyaddr() function is an IPv6 address.  */
 #define EXTRA_ARGS_VALUE \
   , af, (len == IN6ADDRSZ ? AI_V4MAPPED : 0)
-DB_LOOKUP (hostbyaddr, ,,
+DB_LOOKUP (hostbyaddr, ,,,
 	   {
 	     if (result->h_length == (int) len
 		 && ! memcmp (addr, result->h_addr_list[0], len))

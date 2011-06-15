@@ -27,6 +27,8 @@ libnss_files {
     _nss_files_endetherent;
     _nss_files_getetherent_r;
     _nss_files_parse_etherent;
+    _nss_files_gethostton_r;
+    _nss_files_getntohost_r;
 
     _nss_files_setgrent;
     _nss_files_endgrent;
@@ -41,14 +43,12 @@ libnss_files {
     _nss_files_gethostbyname4_r;
     _nss_files_gethostbyname_r;
     _nss_files_gethostent_r;
-    _nss_files_gethostton_r;
 
     _nss_files_setnetent;
     _nss_files_endnetent;
     _nss_files_getnetbyaddr_r;
     _nss_files_getnetbyname_r;
     _nss_files_getnetent_r;
-    _nss_files_getntohost_r;
     _nss_files_parse_netent;
 
     _nss_files_setnetgrent;
@@ -97,5 +97,59 @@ libnss_files {
     _nss_files_getsecretkey;
 
     _nss_files_initgroups_dyn;
+  }
+}
+
+libnss_db {
+  GLIBC_PRIVATE {
+    _nss_db_setetherent;
+    _nss_db_endetherent;
+    _nss_db_getetherent_r;
+    _nss_db_gethostton_r;
+    _nss_db_getntohost_r;
+
+    _nss_db_setgrent;
+    _nss_db_endgrent;
+    _nss_db_getgrent_r;
+    _nss_db_getgrgid_r;
+    _nss_db_getgrnam_r;
+
+    _nss_db_setnetgrent;
+    _nss_db_endnetgrent;
+    _nss_db_getnetgrent_r;
+
+    _nss_db_setprotoent;
+    _nss_db_endprotoent;
+    _nss_db_getprotoent_r;
+    _nss_db_getprotobyname_r;
+    _nss_db_getprotobynumber_r;
+
+    _nss_db_setpwent;
+    _nss_db_endpwent;
+    _nss_db_getpwent_r;
+    _nss_db_getpwnam_r;
+    _nss_db_getpwuid_r;
+
+    _nss_db_setrpcent;
+    _nss_db_endrpcent;
+    _nss_db_getrpcent_r;
+    _nss_db_getrpcbyname_r;
+    _nss_db_getrpcbynumber_r;
+
+    _nss_db_setservent;
+    _nss_db_endservent;
+    _nss_db_getservent_r;
+    _nss_db_getservbyname_r;
+    _nss_db_getservbyport_r;
+
+    _nss_db_setsgent;
+    _nss_db_endsgent;
+    _nss_db_getsgent_r;
+    _nss_db_getsgnam_r;
+
+    _nss_db_setspent;
+    _nss_db_endspent;
+    _nss_db_getspent_r;
+    _nss_db_getspnam_r;
   }
 }

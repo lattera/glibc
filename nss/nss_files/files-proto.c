@@ -1,5 +1,5 @@
 /* Protocols file parser in nss_files module.
-   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -36,11 +36,11 @@ LINE_PARSER
 
 #include GENERIC
 
-DB_LOOKUP (protobyname, 1 + strlen (name), (".%s", name),
+DB_LOOKUP (protobyname, '.', 0, ("%s", name),
 	   LOOKUP_NAME (p_name, p_aliases),
 	   const char *name)
 
-DB_LOOKUP (protobynumber, 20, ("=%d", proto),
+DB_LOOKUP (protobynumber, '=', 20, ("%zd", (ssize_t) proto),
 	   {
 	     if (result->p_proto == proto)
 	       break;

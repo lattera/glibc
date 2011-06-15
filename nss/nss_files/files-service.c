@@ -1,5 +1,5 @@
 /* Services file parser in nss_files module.
-   Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -39,8 +39,9 @@ LINE_PARSER
 
 #include GENERIC
 
-DB_LOOKUP (servbyname, 2 + strlen (name) + (proto ? strlen (proto) : 0),
-	   (".%s/%s", name, proto ?: ""),
+DB_LOOKUP (servbyname, ':',
+	   strlen (name) + 2 + (proto == NULL ? 0 : strlen (proto)),
+	   ("%s/%s", name, proto ?: ""),
 	   {
 	     /* Must match both protocol (if specified) and name.  */
 	     if (proto != NULL && strcmp (result->s_proto, proto))
@@ -49,8 +50,8 @@ DB_LOOKUP (servbyname, 2 + strlen (name) + (proto ? strlen (proto) : 0),
 	   },
 	   const char *name, const char *proto)
 
-DB_LOOKUP (servbyport, 21 + (proto ? strlen (proto) : 0),
-	   ("=%d/%s", ntohs (port), proto ?: ""),
+DB_LOOKUP (servbyport, '=', 21 + (proto ? strlen (proto) : 0),
+	   ("%zd/%s", (ssize_t) ntohs (port), proto ?: ""),
 	   {
 	     /* Must match both port and protocol.  */
 	     if (result->s_port == port

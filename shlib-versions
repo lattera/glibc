@@ -113,6 +113,7 @@ alpha.*-.*-linux.*	libresolv=2.1
 .*-.*-.*		libnss_nisplus=2
 .*-.*-.*		libnss_ldap=2
 .*-.*-.*		libnss_hesiod=2
+.*-.*-.*		libnss_db=2
 
 # Tests for NSS.  They must have the same NSS_SHLIB_REVISION number as
 # the rest.

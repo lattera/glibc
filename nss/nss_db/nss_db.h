@@ -1,5 +1,5 @@
 /* Common database open/close routines for nss_db.
-   Copyright (C) 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2000, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -22,73 +22,49 @@
 
 #include <nss.h>
 #include <stdint.h>
+#include <bits/libc-lock.h>
 
-/* Variables which keep track of the error values.  */
-extern int db_keyexist;
-extern int db_notfound;
 
-/* This flag is the same for all versions of the Berkeley DB library.  */
-#define DB_CREATE	0x000001
+/* String table index type.  */
+typedef uint32_t stridx_t;
 
-/* But constants which vary from version to version are actually
-   variables here.  */
-extern int db_first;
-extern int db_next;
-extern int db_nooverwrite;
-extern int db_truncate;
-extern int db_rdonly;
-
-/* The `DBT' type is the same in all versions we support.  */
-typedef struct
+/* Database file header.  */
+struct nss_db_header
 {
-  void *data;
-  uint32_t size;
-  uint32_t ulen;
-  uint32_t dlen;
-  uint32_t doff;
-  uint32_t flags;
-} DBT;
+  uint32_t magic;
+#define NSS_DB_MAGIC 0xdd110601
+  uint32_t ndbs;
+  uint64_t valstroffset;
+  uint64_t valstrlen;
+  uint64_t allocate;
+  struct
+  {
+    char id;
+    char pad[sizeof (uint32_t) - 1];
+    uint32_t hashsize;
+    uint64_t hashoffset;
+    uint64_t keyidxoffset;
+    uint64_t keystroffset;
+  } dbs[0];
+};
 
-/* But the cursor object is very different from version to version.  */
-typedef struct
+
+/* Information about mapped database.  */
+struct nss_db_map
 {
-  void *cursor;
-  int (*c_get) (void *, DBT *, DBT *, uint32_t);
-} NSS_DBC;
+  struct nss_db_header *header;
+  size_t len;
+};
 
-/* We need a helper function for it.  */
-extern int db_cursor (void *db, void *txn, NSS_DBC **dbcp);
-
-/* This is the wrapper we put around the `DB' structures to provide a
-   uniform interface to the higher-level functions.  */
-typedef struct
-{
-  void *db;
-  int (*close) (void *, uint32_t);
-  int (*cursor) (void *, void *, NSS_DBC **);
-  int (*fd) (void *, int *);
-  int (*get) (void *, void *, DBT *, DBT *, uint32_t);
-  int (*put) (void *, void *, DBT *, DBT *, uint32_t);
-} NSS_DB;
 
 /* Open the database stored in FILE.  If succesful, store the database
-   handle in *DBP and return NSS_STATUS_SUCCESS.  On failure, return
-   the appropriate lookup status.  */
-extern enum nss_status internal_setent (const char *file, NSS_DB **dbp);
-
-/* Close the database *DBP.  */
-extern void internal_endent (NSS_DB **dbp);
-
-/* Dynamically load the Berkeley DB library.  Return zero if
-   successful, non-zero if no suitable version of the library could be
-   loaded.  */
-extern enum nss_status load_db (void);
-
-/* Open the database in FNAME, for access specified by FLAGS.  If
-   opening the database causes the file FNAME to be created, it is
-   created with MODE.  If succesful, store the database handle in *DBP
-   and return NSS_STATUS_SUCCESS.  On failure, return the appropriate
+   handle in *MAPPINGP or a file descriptor for the file in *FDP and
+   return NSS_STATUS_SUCCESS.  On failure, return the appropriate
    lookup status.  */
-extern int dbopen (const char *fname, int oper, int mode, NSS_DB **dbp);
+enum nss_status internal_setent (const char *file,
+				 struct nss_db_map *mappingp);
+
+/* Close the database FD.  */
+extern void internal_endent (struct nss_db_map *mapping);
 
 #endif	/* nss_db.h */

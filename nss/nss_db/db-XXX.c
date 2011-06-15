@@ -1,5 +1,5 @@
 /* Common code for DB-based databases in nss_db module.
-   Copyright (C) 1996, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1996-2000, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -19,9 +19,13 @@
 
 #include <dlfcn.h>
 #include <fcntl.h>
+#include <sys/mman.h>
 #include <bits/libc-lock.h>
 #include "nsswitch.h"
 #include "nss_db.h"
+
+/* The hashing function we use.  */
+#include "../intl/hash-string.h"
 
 /* These symbols are defined by the including source file:
 
@@ -38,25 +42,25 @@
 #define	DBFILE		_PATH_VARDB DATABASE ".db"
 
 #ifdef NEED_H_ERRNO
-#define H_ERRNO_PROTO	, int *herrnop
-#define H_ERRNO_ARG	, herrnop
-#define H_ERRNO_SET(val) (*herrnop = (val))
+# define H_ERRNO_PROTO	, int *herrnop
+# define H_ERRNO_ARG	, herrnop
+# define H_ERRNO_SET(val) (*herrnop = (val))
 #else
-#define H_ERRNO_PROTO
-#define H_ERRNO_ARG
-#define H_ERRNO_SET(val) ((void) 0)
+# define H_ERRNO_PROTO
+# define H_ERRNO_ARG
+# define H_ERRNO_SET(val) ((void) 0)
 #endif
 
-/* Locks the static variables in this file.  */
-__libc_lock_define_initialized (static, lock)
-
+/* State for this database.  */
+static struct nss_db_map state;
+/* Lock to protect the state and global variables.  */
+__libc_lock_define (static , lock);
+
 /* Maintenance of the shared handle open on the database.  */
-
-static NSS_DB *db;
 static int keep_db;
-static int entidx;
+static const char *entidx;
 
-
+
 /* Open the database.  */
 enum nss_status
 CONCAT(_nss_db_set,ENTNAME) (int stayopen)
@@ -65,13 +69,13 @@ CONCAT(_nss_db_set,ENTNAME) (int stayopen)
 
   __libc_lock_lock (lock);
 
-  status = internal_setent (DBFILE, &db);
+  status = internal_setent (DBFILE, &state);
 
   /* Remember STAYOPEN flag.  */
-  if (db != NULL)
+  if (status == NSS_STATUS_SUCCESS)
     keep_db |= stayopen;
   /* Reset the sequential index.  */
-  entidx = 0;
+  entidx  = (const char *) state.header + state.header->valstroffset;
 
   __libc_lock_unlock (lock);
 
@@ -85,7 +89,7 @@ CONCAT(_nss_db_end,ENTNAME) (void)
 {
   __libc_lock_lock (lock);
 
-  internal_endent (&db);
+  internal_endent (&state);
 
   /* Reset STAYOPEN flag.  */
   keep_db = 0;
@@ -94,132 +98,128 @@ CONCAT(_nss_db_end,ENTNAME) (void)
 
   return NSS_STATUS_SUCCESS;
 }
-
-/* Do a database lookup for KEY.  */
-static enum nss_status
-lookup (DBT *key, struct STRUCTURE *result,
-	void *buffer, size_t buflen, int *errnop H_ERRNO_PROTO EXTRA_ARGS_DECL)
-{
-  char *p;
-  enum nss_status status;
-  int err;
-  DBT value;
-
-  /* Open the database.  */
-  if (db == NULL)
-    {
-      status = internal_setent (DBFILE, &db);
-      if (status != NSS_STATUS_SUCCESS)
-	{
-	  *errnop = errno;
-	  H_ERRNO_SET (NETDB_INTERNAL);
-	  return status;
-	}
-    }
-
-  /* Succeed iff it matches a value that parses correctly.  */
-  value.flags = 0;
-  err = DL_CALL_FCT (db->get, (db->db, NULL, key, &value, 0));
-  if (err != 0)
-    {
-      if (err == db_notfound)
-	{
-	  H_ERRNO_SET (HOST_NOT_FOUND);
-	  status = NSS_STATUS_NOTFOUND;
-	}
-      else
-	{
-	  *errnop = err;
-	  H_ERRNO_SET (NETDB_INTERNAL);
-	  status = NSS_STATUS_UNAVAIL;
-	}
-    }
-  else if (buflen < value.size)
-    {
-      /* No room to copy the data to.  */
-      *errnop = ERANGE;
-      H_ERRNO_SET (NETDB_INTERNAL);
-      status = NSS_STATUS_TRYAGAIN;
-    }
-  else
-    {
-      /* Copy the result to a safe place.  */
-      p = (char *) memcpy (buffer, value.data, value.size);
-
-      /* Skip leading blanks.  */
-      while (isspace (*p))
-	++p;
-
-      err = parse_line (p, result, buffer, buflen, errnop EXTRA_ARGS);
-
-      if (err == 0)
-	{
-	  /* If the key begins with '0' we are trying to get the next
-	     entry.  We want to ignore unparsable lines in this case.  */
-	  if (((char *) key->data)[0] == '0')
-	    {
-	      /* Super magical return value.  We need to tell our caller
-		 that it should continue looping.  This value cannot
-		 happen in other cases.  */
-	      status = NSS_STATUS_RETURN;
-	    }
-	  else
-	    {
-	      H_ERRNO_SET (HOST_NOT_FOUND);
-	      status = NSS_STATUS_NOTFOUND;
-	    }
-	}
-      else if (err < 0)
-	{
-	  H_ERRNO_SET (NETDB_INTERNAL);
-	  status = NSS_STATUS_TRYAGAIN;
-	}
-      else
-	status = NSS_STATUS_SUCCESS;
-    }
-
-  if (! keep_db)
-    internal_endent (&db);
-
-  return status;
-}
 
 
 /* Macro for defining lookup functions for this DB-based database.
 
    NAME is the name of the lookup; e.g. `pwnam'.
 
+   DB_CHAR is index indicator for the database.
+
    KEYPATTERN gives `printf' args to construct a key string;
-   e.g. `(".%s", name)'.
+   e.g. `("%d", id)'.
 
    KEYSIZE gives the allocation size of a buffer to construct it in;
-   e.g. `1 + strlen (name)'.
+   e.g. `1 + sizeof (id) * 4'.
 
-   PROTO describes the arguments for the lookup key;
-   e.g. `const char *name'.
+   PROTO is the potentially empty list of other parameters.
 
-   BREAK_IF_MATCH is ignored, but used by ../nss_files/files-XXX.c.  */
+   BREAK_IF_MATCH is a block of code which compares `struct STRUCTURE *result'
+   to the lookup key arguments and does `break;' if they match.  */
 
-#define DB_LOOKUP(name, keysize, keypattern, break_if_match, proto...)	      \
+#define DB_LOOKUP(name, db_char, keysize, keypattern, break_if_match, proto...)\
 enum nss_status								      \
-_nss_db_get##name##_r (proto,						      \
-		       struct STRUCTURE *result,			      \
-		       char *buffer, size_t buflen, int *errnop H_ERRNO_PROTO)\
+ _nss_db_get##name##_r (proto, struct STRUCTURE *result,		      \
+			char *buffer, size_t buflen, int *errnop H_ERRNO_PROTO)\
 {									      \
-  DBT key;								      \
-  enum nss_status status;						      \
-  const size_t size = (keysize) + 1;					      \
-  key.data = __alloca (size);						      \
-  key.size = KEYPRINTF keypattern;					      \
-  key.flags = 0;							      \
-  __libc_lock_lock (lock);						      \
-  status = lookup (&key, result, buffer, buflen, errnop H_ERRNO_ARG	      \
-		   EXTRA_ARGS_VALUE);					      \
-  __libc_lock_unlock (lock);						      \
+  enum nss_status status = NSS_STATUS_SUCCESS;				      \
+  struct nss_db_map state = { NULL, 0 };				      \
+  struct parser_data *data = (void *) buffer;				      \
+									      \
+  if (buflen < sizeof *data)						      \
+    {									      \
+      *errnop = ERANGE;							      \
+      H_ERRNO_SET (NETDB_INTERNAL);					      \
+      return NSS_STATUS_TRYAGAIN;					      \
+    }									      \
+									      \
+  status = internal_setent (DBFILE, &state);				      \
+  if (status != NSS_STATUS_SUCCESS)					      \
+    {									      \
+      *errnop = errno;							      \
+      H_ERRNO_SET (NETDB_INTERNAL);					      \
+      return status;							      \
+    }									      \
+									      \
+  if (status == NSS_STATUS_SUCCESS)					      \
+    {									      \
+      const struct nss_db_header *header = state.header;		      \
+      int i;								      \
+      for (i = 0; i < header->ndbs; ++i)				      \
+	if (header->dbs[i].id == db_char)				      \
+	  break;							      \
+      if (i == header->ndbs)						      \
+	{								      \
+	  status = NSS_STATUS_UNAVAIL;					      \
+	  goto out;							      \
+	}								      \
+									      \
+      char *key;							      \
+      if (db_char == '.')						      \
+	key = (char *) IGNOREPATTERN keypattern;			      \
+      else								      \
+	{								      \
+	  const size_t size = (keysize) + 1;				      \
+	  key = alloca (size);						      \
+									      \
+	  KEYPRINTF keypattern;						      \
+	}								      \
+									      \
+      const stridx_t *hashtable						      \
+	= (const stridx_t *) ((const char *) header			      \
+			      + header->dbs[i].hashoffset);		      \
+      const char *valstrtab = (const char *) header + header->valstroffset;   \
+      uint32_t hashval = __hash_string (key);				      \
+      size_t hidx = hashval % header->dbs[i].hashsize;			      \
+      size_t hval2 = 1 + hashval % (header->dbs[i].hashsize - 2);	      \
+									      \
+      status = NSS_STATUS_NOTFOUND;					      \
+      while (hashtable[hidx] != ~((stridx_t) 0))			      \
+	{								      \
+	  const char *valstr = valstrtab + hashtable[hidx];		      \
+	  size_t len = strlen (valstr) + 1;				      \
+	  if (len > buflen)						      \
+	    {								      \
+	      /* No room to copy the data to.  */			      \
+	      *errnop = ERANGE;						      \
+	      H_ERRNO_SET (NETDB_INTERNAL);				      \
+	      status = NSS_STATUS_TRYAGAIN;				      \
+	      break;							      \
+	    }								      \
+									      \
+	  /* Copy the string to a place where it can be modified.  */	      \
+	  char *p = memcpy (buffer, valstr, len);			      \
+									      \
+	  int err = parse_line (p, result, data, buflen, errnop		      \
+				EXTRA_ARGS);				      \
+	  if (err > 0)							      \
+	    {								      \
+	      status = NSS_STATUS_SUCCESS;				      \
+	      break_if_match;						      \
+	      status = NSS_STATUS_NOTFOUND;				      \
+	    }								      \
+	  else if (err == -1)						      \
+	    {								      \
+	      H_ERRNO_SET (NETDB_INTERNAL);				      \
+	      status = NSS_STATUS_TRYAGAIN;				      \
+	      break;							      \
+	    }								      \
+									      \
+	  if ((hidx += hval2) >= header->dbs[i].hashsize)		      \
+	    hidx -= header->dbs[i].hashsize;				      \
+	}								      \
+									      \
+      if (status == NSS_STATUS_NOTFOUND)				      \
+	H_ERRNO_SET (HOST_NOT_FOUND);					      \
+    }									      \
+ out:									      \
+  internal_endent (&state);						      \
+									      \
   return status;							      \
 }
 
-#define KEYPRINTF(pattern, args...) snprintf (key.data, size, pattern ,##args)
+#define KEYPRINTF(pattern, args...) snprintf (key, size, pattern ,##args)
+#define IGNOREPATTERN(pattern, arg1, args...) (char *) (uintptr_t) arg1
 
 
 
@@ -231,30 +231,72 @@ CONCAT(_nss_db_get,ENTNAME_r) (struct STRUCTURE *result, char *buffer,
 {
   /* Return next entry in host file.  */
   enum nss_status status;
-  char buf[20];
-  DBT key;
+  struct parser_data *data = (void *) buffer;
+
+  if (buflen < sizeof *data)
+    {
+      *errnop = ERANGE;
+      H_ERRNO_SET (NETDB_INTERNAL);
+      return NSS_STATUS_TRYAGAIN;
+    }
 
   __libc_lock_lock (lock);
 
-  /* Loop until we find a valid entry or hit EOF.  See above for the
-     special meaning of the status value.  */
-  do
+  if (state.header == NULL)
     {
-      key.size = snprintf (key.data = buf, sizeof buf, "0%u", entidx++);
-      key.flags = 0;
-      status = lookup (&key, result, buffer, buflen, errnop H_ERRNO_ARG
-		       EXTRA_ARGS_VALUE);
-      if (status == NSS_STATUS_TRYAGAIN
-#ifdef NEED_H_ERRNO
-	  && *herrnop == NETDB_INTERNAL
-#endif
-	  && *errnop == ERANGE)
-	/* Give the user a chance to get the same entry with a larger
-	   buffer.  */
-	--entidx;
+      status = internal_setent (DBFILE, &state);
+      if (status != NSS_STATUS_SUCCESS)
+	{
+	  *errnop = errno;
+	  H_ERRNO_SET (NETDB_INTERNAL);
+	  goto out;
+	}
     }
-  while (status == NSS_STATUS_RETURN);
 
+  status = NSS_STATUS_UNAVAIL;
+  if (state.header != MAP_FAILED)
+    {
+      const char *const end = ((const char *) state.header
+			       + state.header->valstroffset
+			       + state.header->valstrlen);
+      while (entidx < end)
+	{
+	  const char *next = rawmemchr (entidx, '\0') + 1;
+	  size_t len = next - entidx;
+
+	  if (len > buflen)
+	    {
+	      /* No room to copy the data to.  */
+	      *errnop = ERANGE;
+	      H_ERRNO_SET (NETDB_INTERNAL);
+	      status = NSS_STATUS_TRYAGAIN;
+	      break;
+	    }
+
+	  /* Copy the string to a place where it can be modified.  */
+	  char *p = memcpy (buffer, entidx, len);
+
+	  int err = parse_line (p, result, data, buflen, errnop EXTRA_ARGS);
+
+	  if (err > 0)
+	    {
+	      status = NSS_STATUS_SUCCESS;
+	      entidx = next;
+	      break;
+	    }
+	  if (err < 0)
+	    {
+	      H_ERRNO_SET (HOST_NOT_FOUND);
+	      status = NSS_STATUS_NOTFOUND;
+	      break;
+	    }
+
+	  /* Continue with the next record, this one is ill-formed.  */
+	  entidx = next;
+	}
+    }
+
+ out:
   __libc_lock_unlock (lock);
 
   return status;

@@ -1,5 +1,5 @@
 /* User file parser in nss_files module.
-   Copyright (C) 2009 Free Software Foundation, Inc.
+   Copyright (C) 2009, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -30,7 +30,7 @@ struct sgent_data {};
 #include "files-parse.c"
 #include GENERIC
 
-DB_LOOKUP (sgnam, 1 + strlen (name), (".%s", name),
+DB_LOOKUP (sgnam, '.', 0, ("%s", name),
 	   {
 	     if (name[0] != '+' && name[0] != '-'
 		 && ! strcmp (name, result->sg_namp))

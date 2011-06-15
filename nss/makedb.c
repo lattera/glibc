@@ -34,7 +34,7 @@
 #include <unistd.h>
 #include <sys/mman.h>
 #include <sys/stat.h>
-#include "nss_db/dummy-db.h"
+#include "nss_db/nss_db.h"
 
 /* Get libc version number.  */
 #include "../version.h"
@@ -49,51 +49,21 @@
 
 #define PACKAGE _libc_intl_domainname
 
-/* String table index type.  */
-typedef uint32_t stridx_t;
-
-/* Database file header.  */
-struct nss_db_header
-{
-  uint32_t magic;
-#define NSS_DB_MAGIC 0xdd110601
-  uint32_t ndbs;
-  uint64_t valstroffset;
-  uint64_t valstrlen;
-  struct
-  {
-    char id;
-    enum nss_db_type { nss_db_type_hash = 0,
-		       nss_db_type_iterate,
-		       nss_db_type_int4 } type:8;
-    char pad[sizeof (uint32_t) - 2];
-    uint32_t hashsize;
-    uint64_t hashoffset;
-    uint64_t stroffset;
-  } dbs[0];
-};
-
-struct nss_db_entry
-{
-  stridx_t keyidx;
-  stridx_t dataidx;
-};
-
-
 /* List of data bases.  */
 struct database
 {
   char dbid;
-  enum nss_db_type type;
   struct database *next;
   void *entries;
   size_t nentries;
-  size_t keystrlen;
   size_t nhashentries;
-  struct nss_db_entry *hashtable;
+  stridx_t *hashtable;
+  size_t keystrlen;
+  stridx_t *keyidxtab;
   char *keystrtab;
 } *databases;
 static size_t ndatabases;
+static size_t nhashentries;
 static size_t valstrlen;
 static void *valstrtree;
 static char *valstrtab;
@@ -101,7 +71,6 @@ static char *valstrtab;
 /* Database entry.  */
 struct dbentry
 {
-  size_t keylen;
   stridx_t validx;
   uint32_t hashval;
   char str[0];
@@ -113,16 +82,6 @@ struct valstrentry
   stridx_t idx;
   char str[0];
 };
-
-
-/* Database type specifiers.  */
-struct dbtype
-{
-  char dbid;
-  enum nss_db_type type;
-  struct dbtype *next;
-};
-static struct dbtype *dbtypes;
 
 
 /* True if any entry has been added.  */
@@ -154,10 +113,6 @@ static const struct argp_option options[] =
   { "undo", 'u', NULL, 0,
     N_("Print content of database file, one entry a line") },
   { NULL, 0, NULL, 0, N_("Select index type") },
-  { "iterate", 'I', "KEY", 0,
-    N_("Index identified by KEY used to iterate over database") },
-  { "binary", 'B', "KEY", 0,
-    N_("Index identified by KEY has binary key value") },
   { NULL, 0, NULL, 0, NULL }
 };
 
@@ -210,7 +165,7 @@ main (int argc, char *argv[])
   const char *input_name;
   FILE *input_file;
   int remaining;
-  int mode = 0666;
+  int mode = 0644;
 
   /* Set locale via LC_ALL.  */
   setlocale (LC_ALL, "");
@@ -292,7 +247,12 @@ main (int argc, char *argv[])
 
   /* Bail out if nothing is to be done.  */
   if (!any_dbentry)
-    error (EXIT_SUCCESS, 0, gettext ("no entries to be processed"));
+    {
+      if (be_quiet)
+	return EXIT_SUCCESS;
+      else
+	error (EXIT_SUCCESS, 0, gettext ("no entries to be processed"));
+    }
 
   /* Compute hash and string tables.  */
   compute_tables ();
@@ -308,7 +268,6 @@ main (int argc, char *argv[])
   reset_file_creation_context ();
   if (fd == -1)
     error (EXIT_FAILURE, errno, gettext ("cannot create temporary file"));
-  // XXX SELinux context
 
   status = write_output (fd);
 
@@ -352,7 +311,6 @@ main (int argc, char *argv[])
 static error_t
 parse_opt (int key, char *arg, struct argp_state *state)
 {
-  struct dbtype *newtype;
   switch (key)
     {
     case 'f':
@@ -366,17 +324,6 @@ parse_opt (int key, char *arg, struct argp_state *state)
       break;
     case 'u':
       do_undo = 1;
-      break;
-    case 'I':
-    case 'B':
-      if (arg[0] == '\0' || arg[1] != '\0')
-	error (EXIT_FAILURE, 0, gettext ("\
-argument for option to specify database type must be a single-byte character"));
-      newtype = xmalloc (sizeof (struct dbtype));
-      newtype->dbid = arg[0];
-      newtype->type = key == 'I' ? nss_db_type_iterate : nss_db_type_int4;
-      newtype->next = dbtypes;
-      dbtypes = newtype;
       break;
     default:
       return ARGP_ERR_UNKNOWN;
@@ -424,13 +371,7 @@ dbentry_compare (const void *p1, const void *p2)
   if (d1->hashval != d2->hashval)
     return d1->hashval < d2->hashval ? -1 : 1;
 
-  if (d1->keylen < d2->keylen)
-    return -1;
-
-  if (d1->keylen > d2->keylen)
-    return 1;
-
-  return memcmp (d1->str, d2->str, d1->keylen);
+  return strcmp (d1->str, d2->str);
 }
 
 
@@ -522,46 +463,17 @@ process_input (input, inname, to_lowercase, be_quiet)
 	    {
 	      last_database = xmalloc (sizeof (*last_database));
 	      last_database->dbid = key[0];
-	      last_database->type = nss_db_type_hash;	/* Default.  */
 	      last_database->next = databases;
 	      last_database->entries = NULL;
 	      last_database->nentries = 0;
 	      last_database->keystrlen = 0;
 	      databases = last_database;
-
-	      struct dbtype *typeit = dbtypes;
-	      while (typeit != NULL)
-		if (typeit->dbid == last_database->dbid)
-		  {
-		    last_database->type = typeit->type;
-		    break;
-		  }
-		else
-		  typeit = typeit->next;
 	    }
 	}
 
       /* Skip the database selector.  */
       ++key;
       --keylen;
-
-      /* Check the key value if it has to be numeric.  */
-      unsigned long int keyvalue = 0;
-      if (last_database->type != nss_db_type_hash)
-	{
-	  char *endp;
-	  errno = 0;
-	  keyvalue = strtoul (key, &endp, 0);
-	  if ((keyvalue == ULONG_MAX && errno == ERANGE)
-	      || keyvalue > ~((stridx_t) 0))
-	    error (EXIT_FAILURE, 0,
-		   gettext ("index value in line %zu too large"), linenr);
-
-	  if (*endp != '\0')
-	    error (EXIT_FAILURE, 0,
-		   gettext ("index value in line %zu is not a number"),
-		   linenr);
-	}
 
       /* Store the data.  */
       struct valstrentry *nentry = xmalloc (sizeof (struct valstrentry)
@@ -584,24 +496,10 @@ process_input (input, inname, to_lowercase, be_quiet)
 	valstrlen += datalen;
 
       /* Store the key.  */
-      struct dbentry *newp;
-      if (last_database->type == nss_db_type_hash)
-	{
-	  newp = xmalloc (sizeof (struct dbentry) + keylen);
-	  newp->keylen = keylen;
-	  newp->validx = nentry->idx;
-	  newp->hashval = __hash_string (key);
-	  memcpy (newp->str, key, keylen);
-	}
-      else
-	{
-	  newp = xmalloc (sizeof (struct dbentry) + sizeof (stridx_t));
-	  newp->keylen = keylen = sizeof (stridx_t);
-	  newp->validx = nentry->idx;
-	  newp->hashval = keyvalue;
-	  stridx_t value = keyvalue;
-	  memcpy (newp->str, &value, sizeof (stridx_t));
-	}
+      struct dbentry *newp = xmalloc (sizeof (struct dbentry) + keylen);
+      newp->validx = nentry->idx;
+      newp->hashval = __hash_string (key);
+      memcpy (newp->str, key, keylen);
 
       struct dbentry **found = tsearch (newp, &last_database->entries,
 					dbentry_compare);
@@ -657,29 +555,14 @@ compute_tables (void)
       {
 	++ndatabases;
 
-	if (db->type == nss_db_type_iterate)
-	  {
-	    /* We need no hash table and no key value table in this case.  */
-	    db->nhashentries = 0;
-	    db->hashtable = NULL;
-	    db->keystrtab = NULL;
-	    db->keystrlen = 0;
-	    continue;
-	  }
-
-	if (db->keystrlen > ~((stridx_t) 0))
-	  error (EXIT_FAILURE, 0, gettext ("\
-table size too large; recompile with larger stridx_t"));
-
 	/* We simply use an odd number large than twice the number of
 	   elements to store in the hash table for the size.  This gives
 	   enough efficiency.  */
 	db->nhashentries = db->nentries * 2 + 1;
-	db->hashtable = xmalloc (db->nhashentries
-				 * sizeof (struct nss_db_entry));
-	memset (db->hashtable, '\xff',
-		db->nhashentries * sizeof (struct nss_db_entry));
-	db->keystrlen = roundup (db->keystrlen, sizeof (stridx_t));
+	db->hashtable = xmalloc (db->nhashentries * sizeof (stridx_t));
+	memset (db->hashtable, '\xff', db->nhashentries * sizeof (stridx_t));
+	db->keyidxtab = xmalloc (db->nhashentries * sizeof (stridx_t));
+	memset (db->keyidxtab, '\xff', db->nhashentries * sizeof (stridx_t));
 	db->keystrtab = xmalloc (db->keystrlen);
 
 	size_t max_chainlength = 0;
@@ -693,21 +576,21 @@ table size too large; recompile with larger stridx_t"));
 	  const struct dbentry *dbe = *(const struct dbentry **) nodep;
 
 	  ptrdiff_t stridx = wp - db->keystrtab;
-	  wp = mempcpy (wp, dbe->str, dbe->keylen);
+	  wp = stpcpy (wp, dbe->str) + 1;
 
 	  size_t hidx = dbe->hashval % db->nhashentries;
 	  size_t hval2 = 1 + dbe->hashval % (db->nhashentries - 2);
 	  size_t chainlength = 0;
 
-	  while (db->hashtable[hidx].keyidx != ~((stridx_t) 0))
+	  while (db->hashtable[hidx] != ~((stridx_t) 0))
 	    {
 	      ++chainlength;
 	      if ((hidx += hval2) >= db->nhashentries)
 		hidx -= db->nhashentries;
 	    }
 
-	  db->hashtable[hidx].keyidx = stridx;
-	  db->hashtable[hidx].dataidx = dbe->validx;
+	  db->hashtable[hidx] = dbe->validx;
+	  db->keyidxtab[hidx] = stridx;
 
 	  max_chainlength = MAX (max_chainlength, chainlength);
 	}
@@ -716,8 +599,7 @@ table size too large; recompile with larger stridx_t"));
 
 	// XXX if hash length is too long resize table and start again
 
-	while ((wp - db->keystrtab) % sizeof (stridx_t) != 0)
-	  *wp++ = '\0';
+	nhashentries += db->nhashentries;
     }
 }
 
@@ -736,7 +618,7 @@ write_output (int fd)
   header->valstrlen = valstrlen;
 
   size_t filled_dbs = 0;
-  struct iovec iov[2 + 2 * ndatabases];
+  struct iovec iov[2 + ndatabases * 3];
   iov[0].iov_base = header;
   iov[0].iov_len = file_offset;
 
@@ -744,6 +626,7 @@ write_output (int fd)
   iov[1].iov_len = valstrlen;
   file_offset += valstrlen;
 
+  size_t keydataoffset = file_offset + nhashentries * sizeof (stridx_t);
   for (struct database *db = databases; db != NULL; db = db->next)
     if (db->entries != NULL)
       {
@@ -751,28 +634,35 @@ write_output (int fd)
 	assert (filled_dbs < ndatabases);
 
 	header->dbs[filled_dbs].id = db->dbid;
-	header->dbs[filled_dbs].type = db->type;
 	memset (header->dbs[filled_dbs].pad, '\0',
 		sizeof (header->dbs[0].pad));
 	header->dbs[filled_dbs].hashsize = db->nhashentries;
 
-	iov[2 + filled_dbs * 2].iov_base = db->hashtable;
-	iov[2 + filled_dbs * 2].iov_len = (db->nhashentries
-					   * sizeof (struct nss_db_entry));
+	iov[2 + filled_dbs].iov_base = db->hashtable;
+	iov[2 + filled_dbs].iov_len = db-> nhashentries * sizeof (stridx_t);
 	header->dbs[filled_dbs].hashoffset = file_offset;
-	file_offset += iov[2 + filled_dbs * 2].iov_len;
+	file_offset += iov[2 + filled_dbs].iov_len;
 
-	iov[3 + filled_dbs * 2].iov_base = db->keystrtab;
-	iov[3 + filled_dbs * 2].iov_len = db->keystrlen;
-	header->dbs[filled_dbs].stroffset = file_offset;
-	file_offset += iov[3 + filled_dbs * 2].iov_len;
+	iov[2 + ndatabases + filled_dbs * 2].iov_base = db->keyidxtab;
+	iov[2 + ndatabases + filled_dbs * 2].iov_len
+	  = db-> nhashentries * sizeof (stridx_t);
+	header->dbs[filled_dbs].keyidxoffset = keydataoffset;
+	keydataoffset += iov[2 + ndatabases + filled_dbs * 2].iov_len;
+
+	iov[3 + ndatabases + filled_dbs * 2].iov_base = db->keystrtab;
+	iov[3 + ndatabases + filled_dbs * 2].iov_len = db->keystrlen;
+	header->dbs[filled_dbs].keystroffset = keydataoffset;
+	keydataoffset += iov[3 + ndatabases + filled_dbs * 2].iov_len;
 
 	++filled_dbs;
       }
 
   assert (filled_dbs == ndatabases);
+  assert (file_offset == (iov[0].iov_len + iov[1].iov_len
+			  + nhashentries * sizeof (stridx_t)));
+  header->allocate = file_offset;
 
-  if (writev (fd, iov, 2 + 2 * ndatabases) != file_offset)
+  if (writev (fd, iov, 2 + ndatabases * 3) != keydataoffset)
     {
       error (0, errno, gettext ("failed to write new database file"));
       return EXIT_FAILURE;
@@ -801,42 +691,21 @@ print_database (int fd)
 
   for (unsigned int dbidx = 0; dbidx < header->ndbs; ++dbidx)
     {
+      const stridx_t *stridxtab
+	= ((const stridx_t *) ((const char *) header
+			       + header->dbs[dbidx].keyidxoffset));
       const char *keystrtab
-	= (const char *) header + header->dbs[dbidx].stroffset;
-      const struct nss_db_entry *hashtab
-	= (const struct nss_db_entry *) ((const char *) header
-					 + header->dbs[dbidx].hashoffset);
+	= (const char *) header + header->dbs[dbidx].keystroffset;
+      const stridx_t *hashtab
+	= (const stridx_t *) ((const char *) header
+			      + header->dbs[dbidx].hashoffset);
 
-      if (header->dbs[dbidx].type == nss_db_type_hash)
-	{
-	  for (uint32_t hidx = 0; hidx < header->dbs[dbidx].hashsize; ++hidx)
-	    if (hashtab[hidx].keyidx != ~((stridx_t) 0))
-	      printf ("%c%s %s\n",
-		      header->dbs[dbidx].id,
-		      keystrtab + hashtab[hidx].keyidx,
-		      valstrtab + hashtab[hidx].dataidx);
-	}
-      else if (header->dbs[dbidx].type == nss_db_type_iterate)
-	{
-	  const char *endvalstrtab = valstrtab + header->valstrlen;
-	  const char *cp = valstrtab;
-	  unsigned int count = 0;
-	  while (cp < endvalstrtab && *cp != '\0')
-	    {
-	      printf ("%c%u %s\n", header->dbs[dbidx].id, count++, cp);
-	      cp = rawmemchr (cp, '\0') + 1;
-	    }
-	}
-      else
-	{
-	  assert (header->dbs[dbidx].type == nss_db_type_int4);
-	  for (uint32_t hidx = 0; hidx < header->dbs[dbidx].hashsize; ++hidx)
-	    if (hashtab[hidx].keyidx != ~((stridx_t) 0))
-	      printf ("%c%" PRIu32 " %s\n",
-		      header->dbs[dbidx].id,
-		      *((uint32_t *) (keystrtab + hashtab[hidx].keyidx)),
-		      valstrtab + hashtab[hidx].dataidx);
-	}
+      for (uint32_t hidx = 0; hidx < header->dbs[dbidx].hashsize; ++hidx)
+	if (hashtab[hidx] != ~((stridx_t) 0))
+	  printf ("%c%s %s\n",
+		  header->dbs[dbidx].id,
+		  keystrtab + stridxtab[hidx],
+		  valstrtab + hashtab[hidx]);
     }
 
   return EXIT_SUCCESS;

@@ -1,5 +1,5 @@
 /* Networks file parser in nss_files module.
-   Copyright (C) 1996-1998, 2000, 2001, 2009 Free Software Foundation, Inc.
+   Copyright (C) 1996-1998, 2000, 2001, 2009, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -75,11 +75,11 @@ LINE_PARSER
 
 #include "files-XXX.c"
 
-DB_LOOKUP (netbyname, ,,
+DB_LOOKUP (netbyname, ,,,
 	   LOOKUP_NAME_CASE (n_name, n_aliases),
 	   const char *name)
 
-DB_LOOKUP (netbyaddr, ,,
+DB_LOOKUP (netbyaddr, ,,,
 	   {
 	     if ((type == AF_UNSPEC || result->n_addrtype == type)
 		 && result->n_net == net)

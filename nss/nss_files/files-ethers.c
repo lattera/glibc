@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 2000, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -51,13 +51,13 @@ LINE_PARSER
 
 #include GENERIC
 
-DB_LOOKUP (hostton, 1 + strlen (name), (".%s", name),
+DB_LOOKUP (hostton, '.', 0, ("%s", name),
 	   {
 	     if (__strcasecmp (result->e_name, name) == 0)
 	       break;
 	   }, const char *name)
 
-DB_LOOKUP (ntohost, 18, ("=%x:%x:%x:%x:%x:%x",
+DB_LOOKUP (ntohost, '=', 18, ("%x:%x:%x:%x:%x:%x",
 			 addr->ether_addr_octet[0], addr->ether_addr_octet[1],
 			 addr->ether_addr_octet[2], addr->ether_addr_octet[3],
 			 addr->ether_addr_octet[4], addr->ether_addr_octet[5]),
