@@ -1,3 +1,8 @@
+2011-06-15  Ulrich Drepper  <drepper@gmail.com>
+
+	* nss/makedb.c (compute_tables): Check result of multiple hash table
+	sizes to minimize maximum chain length.
+
 2011-06-14  Ulrich Drepper  <drepper@gmail.com>
 
 	* Versions.def: Add entry for libnss_db.

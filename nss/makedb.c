@@ -63,7 +63,7 @@ struct database
   char *keystrtab;
 } *databases;
 static size_t ndatabases;
-static size_t nhashentries;
+static size_t nhashentries_total;
 static size_t valstrlen;
 static void *valstrtree;
 static char *valstrtab;
@@ -542,6 +542,37 @@ copy_valstr (const void *nodep, const VISIT which, const int depth)
 }
 
 
+static int
+is_prime (size_t candidate)
+{
+  /* No even number and none less than 10 will be passed here.  */
+  size_t divn = 3;
+  size_t sq = divn * divn;
+
+  while (sq < candidate && candidate % divn != 0)
+    {
+      ++divn;
+      sq += 4 * divn;
+      ++divn;
+    }
+
+  return candidate % divn != 0;
+}
+
+
+static size_t
+next_prime (size_t seed)
+{
+  /* Make it definitely odd.  */
+  seed |= 1;
+
+  while (!is_prime (seed))
+    seed += 2;
+
+  return seed;
+}
+
+
 static void
 compute_tables (void)
 {
@@ -558,15 +589,23 @@ compute_tables (void)
 	/* We simply use an odd number large than twice the number of
 	   elements to store in the hash table for the size.  This gives
 	   enough efficiency.  */
-	db->nhashentries = db->nentries * 2 + 1;
-	db->hashtable = xmalloc (db->nhashentries * sizeof (stridx_t));
-	memset (db->hashtable, '\xff', db->nhashentries * sizeof (stridx_t));
-	db->keyidxtab = xmalloc (db->nhashentries * sizeof (stridx_t));
-	memset (db->keyidxtab, '\xff', db->nhashentries * sizeof (stridx_t));
-	db->keystrtab = xmalloc (db->keystrlen);
+#define TEST_RANGE 30
+	size_t nhashentries_min = next_prime (MAX (db->nentries,
+						   db->nentries
+						   * 2 - TEST_RANGE));
+	size_t nhashentries_max = MAX (nhashentries_min, db->nentries * 4);
+	size_t nhashentries_best = nhashentries_min;
+	size_t chainlength_best = db->nentries;
 
-	size_t max_chainlength = 0;
-	char *wp = db->keystrtab;
+	db->hashtable = xmalloc (2 * nhashentries_max * sizeof (stridx_t)
+				 + db->keystrlen);
+	db->keyidxtab = db->hashtable + nhashentries_max;
+	db->keystrtab = (char *) (db->keyidxtab + nhashentries_max);
+
+	size_t max_chainlength;
+	char *wp;
+	size_t nhashentries;
+	bool copy_string = false;
 
 	void add_key(const void *nodep, const VISIT which, const int depth)
 	{
@@ -575,18 +614,24 @@ compute_tables (void)
 
 	  const struct dbentry *dbe = *(const struct dbentry **) nodep;
 
-	  ptrdiff_t stridx = wp - db->keystrtab;
-	  wp = stpcpy (wp, dbe->str) + 1;
+	  ptrdiff_t stridx;
+	  if (copy_string)
+	    {
+	      stridx = wp - db->keystrtab;
+	      wp = stpcpy (wp, dbe->str) + 1;
+	    }
+	  else
+	    stridx = 0;
 
-	  size_t hidx = dbe->hashval % db->nhashentries;
-	  size_t hval2 = 1 + dbe->hashval % (db->nhashentries - 2);
+	  size_t hidx = dbe->hashval % nhashentries;
+	  size_t hval2 = 1 + dbe->hashval % (nhashentries - 2);
 	  size_t chainlength = 0;
 
 	  while (db->hashtable[hidx] != ~((stridx_t) 0))
 	    {
 	      ++chainlength;
-	      if ((hidx += hval2) >= db->nhashentries)
-		hidx -= db->nhashentries;
+	      if ((hidx += hval2) >= nhashentries)
+		hidx -= nhashentries;
 	    }
 
 	  db->hashtable[hidx] = dbe->validx;
@@ -595,11 +640,45 @@ compute_tables (void)
 	  max_chainlength = MAX (max_chainlength, chainlength);
 	}
 
+	nhashentries = nhashentries_min;
+	for (size_t cnt = 0; cnt < TEST_RANGE; ++cnt)
+	  {
+	    memset (db->hashtable, '\xff', nhashentries * sizeof (stridx_t));
+
+	    max_chainlength = 0;
+	    wp = db->keystrtab;
+
+	    twalk (db->entries, add_key);
+
+	    if (max_chainlength == 0)
+	      {
+		/* No need to look further, this is as good as it gets.  */
+		nhashentries_best = nhashentries;
+		break;
+	      }
+
+	    if (max_chainlength < chainlength_best)
+	      {
+		chainlength_best = max_chainlength;
+		nhashentries_best = nhashentries;
+	      }
+
+	    nhashentries = next_prime (nhashentries + 1);
+	    if (nhashentries > nhashentries_max)
+	      break;
+	  }
+
+	/* Recompute the best table again, this time fill in the strings.  */
+	nhashentries = nhashentries_best;
+	memset (db->hashtable, '\xff',
+		2 * nhashentries_max * sizeof (stridx_t));
+	copy_string = true;
+	wp = db->keystrtab;
+
 	twalk (db->entries, add_key);
 
-	// XXX if hash length is too long resize table and start again
-
-	nhashentries += db->nhashentries;
+	db->nhashentries = nhashentries_best;
+	nhashentries_total += nhashentries_best;
     }
 }
 
@@ -626,7 +705,7 @@ write_output (int fd)
   iov[1].iov_len = valstrlen;
   file_offset += valstrlen;
 
-  size_t keydataoffset = file_offset + nhashentries * sizeof (stridx_t);
+  size_t keydataoffset = file_offset + nhashentries_total * sizeof (stridx_t);
   for (struct database *db = databases; db != NULL; db = db->next)
     if (db->entries != NULL)
       {
@@ -639,13 +718,13 @@ write_output (int fd)
 	header->dbs[filled_dbs].hashsize = db->nhashentries;
 
 	iov[2 + filled_dbs].iov_base = db->hashtable;
-	iov[2 + filled_dbs].iov_len = db-> nhashentries * sizeof (stridx_t);
+	iov[2 + filled_dbs].iov_len = db->nhashentries * sizeof (stridx_t);
 	header->dbs[filled_dbs].hashoffset = file_offset;
 	file_offset += iov[2 + filled_dbs].iov_len;
 
 	iov[2 + ndatabases + filled_dbs * 2].iov_base = db->keyidxtab;
 	iov[2 + ndatabases + filled_dbs * 2].iov_len
-	  = db-> nhashentries * sizeof (stridx_t);
+	  = db->nhashentries * sizeof (stridx_t);
 	header->dbs[filled_dbs].keyidxoffset = keydataoffset;
 	keydataoffset += iov[2 + ndatabases + filled_dbs * 2].iov_len;
 
@@ -659,7 +738,7 @@ write_output (int fd)
 
   assert (filled_dbs == ndatabases);
   assert (file_offset == (iov[0].iov_len + iov[1].iov_len
-			  + nhashentries * sizeof (stridx_t)));
+			  + nhashentries_total * sizeof (stridx_t)));
   header->allocate = file_offset;
 
   if (writev (fd, iov, 2 + ndatabases * 3) != keydataoffset)
