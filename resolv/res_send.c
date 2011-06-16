@@ -549,7 +549,7 @@ __libc_res_nsend(res_state statp, const u_char *buf, int buflen,
 				    ns, ansp, ansp2, nansp2, resplen2);
 			if (n < 0)
 				return (-1);
-			if (n == 0 && (buf2 == NULL || resplen2 == 0))
+			if (n == 0 && (buf2 == NULL || *resplen2 == 0))
 				goto next_ns;
 		} else {
 			/* Use datagrams. */
@@ -559,7 +559,7 @@ __libc_res_nsend(res_state statp, const u_char *buf, int buflen,
 				    ansp2, nansp2, resplen2);
 			if (n < 0)
 				return (-1);
-			if (n == 0 && (buf2 == NULL || resplen2 == 0))
+			if (n == 0 && (buf2 == NULL || *resplen2 == 0))
 				goto next_ns;
 			if (v_circuit)
 			  // XXX Check whether both requests failed or

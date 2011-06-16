@@ -1,3 +1,8 @@
+2011-06-15  Ulrich Drepper  <drepper@gmail.com>
+
+	* resolv/res_send.c (__libc_res_nsend): Fix typos in last patch.  We
+	need to dereference resplen2.
+
 2011-06-14  Andreas Schwab  <schwab@redhat.com>
 
 	* sysdeps/unix/sysv/linux/wordsize-64/dl-fxstatat64.c: New file.
