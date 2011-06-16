@@ -122,8 +122,6 @@ enum nss_status								      \
  _nss_db_get##name##_r (proto, struct STRUCTURE *result,		      \
 			char *buffer, size_t buflen, int *errnop H_ERRNO_PROTO)\
 {									      \
-  enum nss_status status = NSS_STATUS_SUCCESS;				      \
-  struct nss_db_map state = { NULL, 0 };				      \
   struct parser_data *data = (void *) buffer;				      \
 									      \
   if (buflen < sizeof *data)						      \
@@ -133,7 +131,8 @@ enum nss_status								      \
       return NSS_STATUS_TRYAGAIN;					      \
     }									      \
 									      \
-  status = internal_setent (DBFILE, &state);				      \
+  struct nss_db_map state = { NULL, 0 };				      \
+  enum nss_status status = internal_setent (DBFILE, &state);		      \
   if (status != NSS_STATUS_SUCCESS)					      \
     {									      \
       *errnop = errno;							      \
@@ -141,77 +140,74 @@ enum nss_status								      \
       return status;							      \
     }									      \
 									      \
-  if (status == NSS_STATUS_SUCCESS)					      \
+  const struct nss_db_header *header = state.header;			      \
+  int i;								      \
+  for (i = 0; i < header->ndbs; ++i)					      \
+    if (header->dbs[i].id == db_char)					      \
+      break;								      \
+  if (i == header->ndbs)						      \
     {									      \
-      const struct nss_db_header *header = state.header;		      \
-      int i;								      \
-      for (i = 0; i < header->ndbs; ++i)				      \
-	if (header->dbs[i].id == db_char)				      \
-	  break;							      \
-      if (i == header->ndbs)						      \
-	{								      \
-	  status = NSS_STATUS_UNAVAIL;					      \
-	  goto out;							      \
-	}								      \
-									      \
-      char *key;							      \
-      if (db_char == '.')						      \
-	key = (char *) IGNOREPATTERN keypattern;			      \
-      else								      \
-	{								      \
-	  const size_t size = (keysize) + 1;				      \
-	  key = alloca (size);						      \
-									      \
-	  KEYPRINTF keypattern;						      \
-	}								      \
-									      \
-      const stridx_t *hashtable						      \
-	= (const stridx_t *) ((const char *) header			      \
-			      + header->dbs[i].hashoffset);		      \
-      const char *valstrtab = (const char *) header + header->valstroffset;   \
-      uint32_t hashval = __hash_string (key);				      \
-      size_t hidx = hashval % header->dbs[i].hashsize;			      \
-      size_t hval2 = 1 + hashval % (header->dbs[i].hashsize - 2);	      \
-									      \
-      status = NSS_STATUS_NOTFOUND;					      \
-      while (hashtable[hidx] != ~((stridx_t) 0))			      \
-	{								      \
-	  const char *valstr = valstrtab + hashtable[hidx];		      \
-	  size_t len = strlen (valstr) + 1;				      \
-	  if (len > buflen)						      \
-	    {								      \
-	      /* No room to copy the data to.  */			      \
-	      *errnop = ERANGE;						      \
-	      H_ERRNO_SET (NETDB_INTERNAL);				      \
-	      status = NSS_STATUS_TRYAGAIN;				      \
-	      break;							      \
-	    }								      \
-									      \
-	  /* Copy the string to a place where it can be modified.  */	      \
-	  char *p = memcpy (buffer, valstr, len);			      \
-									      \
-	  int err = parse_line (p, result, data, buflen, errnop		      \
-				EXTRA_ARGS);				      \
-	  if (err > 0)							      \
-	    {								      \
-	      status = NSS_STATUS_SUCCESS;				      \
-	      break_if_match;						      \
-	      status = NSS_STATUS_NOTFOUND;				      \
-	    }								      \
-	  else if (err == -1)						      \
-	    {								      \
-	      H_ERRNO_SET (NETDB_INTERNAL);				      \
-	      status = NSS_STATUS_TRYAGAIN;				      \
-	      break;							      \
-	    }								      \
-									      \
-	  if ((hidx += hval2) >= header->dbs[i].hashsize)		      \
-	    hidx -= header->dbs[i].hashsize;				      \
-	}								      \
-									      \
-      if (status == NSS_STATUS_NOTFOUND)				      \
-	H_ERRNO_SET (HOST_NOT_FOUND);					      \
+      status = NSS_STATUS_UNAVAIL;					      \
+      goto out;								      \
     }									      \
+									      \
+  char *key;								      \
+  if (db_char == '.')							      \
+    key = (char *) IGNOREPATTERN keypattern;				      \
+  else									      \
+    {									      \
+      const size_t size = (keysize) + 1;				      \
+      key = alloca (size);						      \
+									      \
+      KEYPRINTF keypattern;						      \
+    }									      \
+									      \
+  const stridx_t *hashtable						      \
+    = (const stridx_t *) ((const char *) header				      \
+			  + header->dbs[i].hashoffset);			      \
+  const char *valstrtab = (const char *) header + header->valstroffset;	      \
+  uint32_t hashval = __hash_string (key);				      \
+  size_t hidx = hashval % header->dbs[i].hashsize;			      \
+  size_t hval2 = 1 + hashval % (header->dbs[i].hashsize - 2);		      \
+									      \
+  status = NSS_STATUS_NOTFOUND;						      \
+  while (hashtable[hidx] != ~((stridx_t) 0))				      \
+    {									      \
+      const char *valstr = valstrtab + hashtable[hidx];			      \
+      size_t len = strlen (valstr) + 1;					      \
+      if (len > buflen)							      \
+	{								      \
+	  /* No room to copy the data to.  */				      \
+	  *errnop = ERANGE;						      \
+	  H_ERRNO_SET (NETDB_INTERNAL);					      \
+	  status = NSS_STATUS_TRYAGAIN;					      \
+	  break;							      \
+	}								      \
+									      \
+      /* Copy the string to a place where it can be modified.  */	      \
+      char *p = memcpy (buffer, valstr, len);				      \
+									      \
+      int err = parse_line (p, result, data, buflen, errnop EXTRA_ARGS);      \
+      if (err > 0)							      \
+	{								      \
+	  status = NSS_STATUS_SUCCESS;					      \
+	  break_if_match;						      \
+	  status = NSS_STATUS_NOTFOUND;					      \
+	}								      \
+      else if (err == -1)						      \
+	{								      \
+	  H_ERRNO_SET (NETDB_INTERNAL);					      \
+	  status = NSS_STATUS_TRYAGAIN;					      \
+	  break;							      \
+	}								      \
+									      \
+      if ((hidx += hval2) >= header->dbs[i].hashsize)			      \
+	hidx -= header->dbs[i].hashsize;				      \
+    }									      \
+									      \
+  if (status == NSS_STATUS_NOTFOUND)					      \
+    H_ERRNO_SET (HOST_NOT_FOUND);					      \
+									      \
  out:									      \
   internal_endent (&state);						      \
 									      \

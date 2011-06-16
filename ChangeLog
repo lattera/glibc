@@ -1,5 +1,7 @@
 2011-06-15  Ulrich Drepper  <drepper@gmail.com>
 
+	* nss/nss_db/db-XXX.c: Cleanup.
+
 	* nss/Makefile (libnss_db-dbs): Add db-initgroups.
 	* nss/Versions [libnss_db]: Add _nss_db_initgroups_dyn for
 	GLIBC_PRIVATE.
