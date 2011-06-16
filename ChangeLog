@@ -1,5 +1,8 @@
 2011-06-15  Ulrich Drepper  <drepper@gmail.com>
 
+	* nss/getent.c: Add support for initgroups lookups through getgrouplist
+	interface.
+
 	* grp/initgroups.c (__nss_initgroups_database): Renamed and exported.
 	(internal_getgrouplist): Adjust to name change.
 	Update use_initgroups_entry if this is not the first call.
