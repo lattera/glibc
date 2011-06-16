@@ -1,5 +1,8 @@
 2011-06-15  Ulrich Drepper  <drepper@gmail.com>
 
+	* Makeconfig: Define vardbdir and inst_vardbdir.
+	* nss/Makefile: Add rules to install db-Makefile.
+
 	* nss/nss_db/db-XXX.c: Cleanup.
 
 	* nss/Makefile (libnss_db-dbs): Add db-initgroups.

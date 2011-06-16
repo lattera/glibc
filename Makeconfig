@@ -291,6 +291,12 @@ sysconfdir = $(prefix)/etc
 endif
 inst_sysconfdir = $(install_root)$(sysconfdir)
 
+# Directory for the database files and Makefile for nss_db.
+ifndef vardbdir
+vardbdir = /var/db
+endif
+inst_vardbdir = $(install_root)$(vardbdir)
+
 # What timezone should be the installed default (e.g., US/Eastern).
 # Run `make -C time echo-zonenames' to see a list of available zone names.
 # The local timezone can be changed with `zic -l TIMEZONE' at any time.

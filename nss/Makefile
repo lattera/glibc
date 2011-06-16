@@ -78,6 +78,8 @@ generated		+= $(filter-out db-alias.c db-netgrp.c, \
 					$(addsuffix .c,$(libnss_db-dbs)))
 distribute		+= $(addprefix nss_db/, db-XXX.c nss_db.h)
 
+install-others		+= $(inst_vardbdir)/Makefile
+
 # Build static module if requested
 ifneq ($(build-static-nss),yes)
 libnss_files-inhibit-o	= $(filter-out .os,$(object-suffixes))
@@ -113,6 +115,9 @@ $(libnss_db-dbs:%=$(objpfx)%.c): $(objpfx)db-%.c: nss_files/files-%.c
 
 
 $(objpfx)makedb: $(makedb-modules:%=$(objpfx)%.o)
+
+$(inst_vardbdir)/Makefile: db-Makefile $(+force)
+	$(do-install)
 
 distribute		+= nss_test1.c
 
