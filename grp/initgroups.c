@@ -44,7 +44,7 @@ extern int __nss_group_lookup (service_user **nip, const char *name,
 extern void *__nss_lookup_function (service_user *ni, const char *fct_name);
 
 extern service_user *__nss_group_database attribute_hidden;
-static service_user *initgroups_database;
+service_user *__nss_initgroups_database;
 static bool use_initgroups_entry;
 
 
@@ -80,26 +80,31 @@ internal_getgrouplist (const char *user, gid_t group, long int *size,
   /* Start is one, because we have the first group as parameter.  */
   long int start = 1;
 
-  if (initgroups_database == NULL)
+  if (__nss_initgroups_database == NULL)
     {
       no_more = __nss_database_lookup ("initgroups", NULL, "",
-				       &initgroups_database);
-      if (no_more == 0 && initgroups_database == NULL)
+				       &__nss_initgroups_database);
+      if (no_more == 0 && __nss_initgroups_database == NULL)
 	{
 	  if (__nss_group_database == NULL)
 	    no_more = __nss_database_lookup ("group", NULL, "compat files",
 					     &__nss_group_database);
 
-	  initgroups_database = __nss_group_database;
+	  __nss_initgroups_database = __nss_group_database;
 	}
-      else if (initgroups_database != NULL)
+      else if (__nss_initgroups_database != NULL)
 	{
 	  assert (no_more == 0);
 	  use_initgroups_entry = true;
 	}
     }
+  else
+    /* __nss_initgroups_database might have been set through
+       __nss_configure_lookup in which case use_initgroups_entry was
+       not set here.  */
+    use_initgroups_entry = __nss_initgroups_database != __nss_group_database;
 
-  service_user *nip = initgroups_database;
+  service_user *nip = __nss_initgroups_database;
   while (! no_more)
     {
       long int prev_start = start;

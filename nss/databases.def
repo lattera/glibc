@@ -1,5 +1,5 @@
 /* List of all databases defined for the NSS in GNU C Library.
-   Copyright (C) 1996, 1997, 2005 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 2005, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -25,6 +25,7 @@ DEFINE_DATABASE (aliases)
 DEFINE_DATABASE (ethers)
 DEFINE_DATABASE (group)
 DEFINE_DATABASE (hosts)
+DEFINE_DATABASE (initgroups)
 DEFINE_DATABASE (netgroup)
 DEFINE_DATABASE (networks)
 DEFINE_DATABASE (passwd)

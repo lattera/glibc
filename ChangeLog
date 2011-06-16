@@ -1,5 +1,10 @@
 2011-06-15  Ulrich Drepper  <drepper@gmail.com>
 
+	* grp/initgroups.c (__nss_initgroups_database): Renamed and exported.
+	(internal_getgrouplist): Adjust to name change.
+	Update use_initgroups_entry if this is not the first call.
+	* nss/databases.def: Add initgroups entry.
+
 	* nss/makedb.c (compute_tables): Check result of multiple hash table
 	sizes to minimize maximum chain length.
 
