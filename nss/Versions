@@ -151,5 +151,7 @@ libnss_db {
     _nss_db_endspent;
     _nss_db_getspent_r;
     _nss_db_getspnam_r;
+
+    _nss_db_initgroups_dyn;
   }
 }

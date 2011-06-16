@@ -53,6 +53,7 @@
 struct database
 {
   char dbid;
+  bool extra_string;
   struct database *next;
   void *entries;
   size_t nentries;
@@ -67,6 +68,7 @@ static size_t nhashentries_total;
 static size_t valstrlen;
 static void *valstrtree;
 static char *valstrtab;
+static size_t extrastrlen;
 
 /* Database entry.  */
 struct dbentry
@@ -80,6 +82,7 @@ struct dbentry
 struct valstrentry
 {
   stridx_t idx;
+  bool extra_string;
   char str[0];
 };
 
@@ -112,7 +115,8 @@ static const struct argp_option options[] =
     N_("Do not print messages while building database") },
   { "undo", 'u', NULL, 0,
     N_("Print content of database file, one entry a line") },
-  { NULL, 0, NULL, 0, N_("Select index type") },
+  { "generated", 'g', N_("CHAR"), 0,
+    N_("Generated line not part of iteration") },
   { NULL, 0, NULL, 0, NULL }
 };
 
@@ -134,6 +138,14 @@ static struct argp argp =
 {
   options, parse_opt, args_doc, doc, NULL, more_help
 };
+
+
+/* List of databases which are not part of the iteration table.  */
+static struct db_option
+{
+  char dbid;
+  struct db_option *next;
+} *db_options;
 
 
 /* Prototypes for local functions.  */
@@ -311,6 +323,8 @@ main (int argc, char *argv[])
 static error_t
 parse_opt (int key, char *arg, struct argp_state *state)
 {
+  struct db_option *newp;
+
   switch (key)
     {
     case 'f':
@@ -324,6 +338,12 @@ parse_opt (int key, char *arg, struct argp_state *state)
       break;
     case 'u':
       do_undo = 1;
+      break;
+    case 'g':
+      newp = xmalloc (sizeof (*newp));
+      newp->dbid = arg[0];
+      newp->next = db_options;
+      db_options = newp;
       break;
     default:
       return ARGP_ERR_UNKNOWN;
@@ -463,11 +483,22 @@ process_input (input, inname, to_lowercase, be_quiet)
 	    {
 	      last_database = xmalloc (sizeof (*last_database));
 	      last_database->dbid = key[0];
+	      last_database->extra_string = false;
 	      last_database->next = databases;
 	      last_database->entries = NULL;
 	      last_database->nentries = 0;
 	      last_database->keystrlen = 0;
 	      databases = last_database;
+
+	      struct db_option *runp = db_options;
+	      while (runp != NULL)
+		if (runp->dbid == key[0])
+		  {
+		    last_database->extra_string = true;
+		    break;
+		  }
+		else
+		  runp = runp->next;
 	    }
 	}
 
@@ -478,7 +509,11 @@ process_input (input, inname, to_lowercase, be_quiet)
       /* Store the data.  */
       struct valstrentry *nentry = xmalloc (sizeof (struct valstrentry)
 					    + datalen);
-      nentry->idx = valstrlen;
+      if (last_database->extra_string)
+	nentry->idx = extrastrlen;
+      else
+	nentry->idx = valstrlen;
+      nentry->extra_string = last_database->extra_string;
       memcpy (nentry->str, data, datalen);
 
       struct valstrentry **fdata = tsearch (nentry, &valstrtree,
@@ -493,7 +528,10 @@ process_input (input, inname, to_lowercase, be_quiet)
 	  nentry = *fdata;
 	}
       else
-	valstrlen += datalen;
+	if (last_database->extra_string)
+	  extrastrlen += datalen;
+	else
+	  valstrlen += datalen;
 
       /* Store the key.  */
       struct dbentry *newp = xmalloc (sizeof (struct dbentry) + keylen);
@@ -538,7 +576,7 @@ copy_valstr (const void *nodep, const VISIT which, const int depth)
 
   const struct valstrentry *p = *(const struct valstrentry **) nodep;
 
-  strcpy (valstrtab + p->idx, p->str);
+  strcpy (valstrtab + (p->extra_string ? valstrlen : 0) + p->idx, p->str);
 }
 
 
@@ -576,8 +614,8 @@ next_prime (size_t seed)
 static void
 compute_tables (void)
 {
-  valstrtab = xmalloc (roundup (valstrlen, sizeof (stridx_t)));
-  while (valstrlen % sizeof (stridx_t) != 0)
+  valstrtab = xmalloc (roundup (valstrlen + extrastrlen, sizeof (stridx_t)));
+  while ((valstrlen + extrastrlen) % sizeof (stridx_t) != 0)
     valstrtab[valstrlen++] = '\0';
   twalk (valstrtree, copy_valstr);
 
@@ -590,9 +628,9 @@ compute_tables (void)
 	   elements to store in the hash table for the size.  This gives
 	   enough efficiency.  */
 #define TEST_RANGE 30
-	size_t nhashentries_min = next_prime (MAX (db->nentries,
-						   db->nentries
-						   * 2 - TEST_RANGE));
+	size_t nhashentries_min = next_prime (db->nentries < TEST_RANGE
+					      ? db->nentries
+					      : db->nentries * 2 - TEST_RANGE);
 	size_t nhashentries_max = MAX (nhashentries_min, db->nentries * 4);
 	size_t nhashentries_best = nhashentries_min;
 	size_t chainlength_best = db->nentries;
@@ -634,7 +672,8 @@ compute_tables (void)
 		hidx -= nhashentries;
 	    }
 
-	  db->hashtable[hidx] = dbe->validx;
+	  db->hashtable[hidx] = ((db->extra_string ? valstrlen : 0)
+				 + dbe->validx);
 	  db->keyidxtab[hidx] = stridx;
 
 	  max_chainlength = MAX (max_chainlength, chainlength);
@@ -702,8 +741,8 @@ write_output (int fd)
   iov[0].iov_len = file_offset;
 
   iov[1].iov_base = valstrtab;
-  iov[1].iov_len = valstrlen;
-  file_offset += valstrlen;
+  iov[1].iov_len = valstrlen + extrastrlen;
+  file_offset += iov[1].iov_len;
 
   size_t keydataoffset = file_offset + nhashentries_total * sizeof (stridx_t);
   for (struct database *db = databases; db != NULL; db = db->next)

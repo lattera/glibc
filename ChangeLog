@@ -1,5 +1,14 @@
 2011-06-15  Ulrich Drepper  <drepper@gmail.com>
 
+	* nss/Makefile (libnss_db-dbs): Add db-initgroups.
+	* nss/Versions [libnss_db]: Add _nss_db_initgroups_dyn for
+	GLIBC_PRIVATE.
+	* nss/db-Makefile (groups.db): Emit entries for initgroups lookups.
+	* nss/makedb.c: Implement -g option to specify that value strings
+	are generated and should not be added to table iterated over for
+	get*ent calls.
+	* nss/nss_db/db-initgroups.c: New file.
+
 	* nss/getent.c: Add support for initgroups lookups through getgrouplist
 	interface.
 
