@@ -1,5 +1,5 @@
 /* siginfo_t, sigevent and constants.  Linux/MIPS version.
-   Copyright (C) 1997, 1998, 2000, 2001, 2002, 2003, 2004, 2005, 2008
+   Copyright (C) 1997, 1998, 2000, 2001, 2002, 2003, 2004, 2005, 2008, 2011
 	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -146,7 +146,7 @@ enum
 # define SI_ASYNCIO	SI_ASYNCIO
   SI_QUEUE,			/* Sent by sigqueue.  */
 # define SI_QUEUE	SI_QUEUE
-  SI_USER,			/* Sent by kill, sigsend, raise.  */
+  SI_USER,			/* Sent by kill, sigsend.  */
 # define SI_USER	SI_USER
   SI_KERNEL = 0x80		/* Send by kernel.  */
 #define SI_KERNEL	SI_KERNEL

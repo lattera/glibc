@@ -1,3 +1,8 @@
+2011-06-20  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/mips/bits/siginfo.h (SI_USER): Don't
+	mention raise in the comment.
+
 2011-05-23  Aurelien Jarno  <aurelien@aurel32.net>
 
 	* sysdeps/unix/sysv/linux/mips/bits/resource.h (RLIMIT_RTTIME):
