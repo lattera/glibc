@@ -1,3 +1,7 @@
+2010-06-20  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/arm/eabi/internal_sendmmsg.S: New.
+
 2011-05-07  Konstantinos Margaritis  <markos@genesi-usa.com>
 
 	* sysdeps/arm/preconfigure: Detect arm-linux-gnueabi* as ARM EABI.
