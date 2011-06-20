@@ -1,5 +1,10 @@
 2011-06-20  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/unix/sysv/linux/mips/mips32/sendmmsg.c,
+	sysdeps/unix/sysv/linux/mips/mips32/internal_sendmmsg.S: New.
+
+2011-06-20  Joseph Myers  <joseph@codesourcery.com>
+
 	* sysdeps/unix/sysv/linux/mips/bits/siginfo.h (SI_USER): Don't
 	mention raise in the comment.
 
