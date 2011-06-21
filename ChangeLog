@@ -1,5 +1,8 @@
 2011-06-21  Ulrich Drepper  <drepper@gmail.com>
 
+	* sysdeps/posix/getaddrinfo.c (gaih_inet): After the last change the
+	branch using gethostbyname2 is only for AF_INET.  Optimize accordingly.
+
 	* inet/getnetgrent_r.c: Use DL_CALL_FCT in several places.
 
 2011-06-20  David S. Miller  <davem@davemloft.net>

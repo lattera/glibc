@@ -565,7 +565,6 @@ gaih_inet (const char *name, const struct gaih_service *service,
 	     IPv6 scope ids. */
 	  if (req->ai_family == AF_INET)
 	    {
-	      int family = req->ai_family;
 	      size_t tmpbuflen = 512;
 	      assert (tmpbuf == NULL);
 	      tmpbuf = alloca_account (tmpbuflen, alloca_used);
@@ -576,7 +575,7 @@ gaih_inet (const char *name, const struct gaih_service *service,
 
 	      while (1)
 		{
-		  rc = __gethostbyname2_r (name, family, &th, tmpbuf,
+		  rc = __gethostbyname2_r (name, AF_INET, &th, tmpbuf,
 					   tmpbuflen, &h, &herrno);
 		  if (rc != ERANGE || herrno != NETDB_INTERNAL)
 		    break;
@@ -638,18 +637,9 @@ gaih_inet (const char *name, const struct gaih_service *service,
 			      (*pat)->scopeid = 0;
 			    }
 			  (*pat)->next = NULL;
-			  (*pat)->family = req->ai_family;
-			  if (family == req->ai_family)
-			    memcpy ((*pat)->addr, h->h_addr_list[i],
-				    h->h_length);
-			  else
-			    {
-			      uint32_t *addr = (uint32_t *) (*pat)->addr;
-			      addr[3] = *(uint32_t *) h->h_addr_list[i];
-			      addr[2] = htonl (0xffff);
-			      addr[1] = 0;
-			      addr[0] = 0;
-			    }
+			  (*pat)->family = AF_INET;
+			  memcpy ((*pat)->addr, h->h_addr_list[i],
+				  h->h_length);
 			  pat = &((*pat)->next);
 			}
 		    }
