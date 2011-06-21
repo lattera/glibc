@@ -1,3 +1,8 @@
+2011-06-21  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/arm/dl-irel.h (elf_ifunc_invoke): New.
+	(elf_irel): Use it.
+
 2010-06-20  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/arm/eabi/internal_sendmmsg.S: New.
