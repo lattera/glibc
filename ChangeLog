@@ -1,3 +1,20 @@
+2011-06-20  David S. Miller  <davem@davemloft.net>
+
+	* sysdeps/sparc/sparc32/dl-plt.h: Protect against multiple
+	inclusions.
+	* sysdeps/sparc/sparc64/dl-plt.h: Likewise.
+
+	* sysdeps/i386/dl-irel.h (elf_ifunc_invoke): New.
+	(elf_irel): Use it.
+	* sysdeps/powerpc/powerpc32/dl-irel.h: Likewise.
+	* sysdeps/powerpc/powerpc64/dl-irel.h: Likewise.
+	* sysdeps/sparc/sparc32/dl-irel.h: Likewise.
+	* sysdeps/sparc/sparc64/dl-irel.h: Likewise.
+	* sysdeps/x86_64/dl-irel.h: Likewise.
+
+	* elf/dl-runtime.c: Use elf_ifunc_invoke.
+	* elf/dl-sym.c: Likewise.
+
 2011-06-15  Ulrich Drepper  <drepper@gmail.com>
 
 	* resolv/res_send.c (__libc_res_nsend): Fix typos in last patch.  We

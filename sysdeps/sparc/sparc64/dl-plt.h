@@ -17,6 +17,9 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#ifndef _DL_PLT_H
+#define _DL_PLT_H
+
 /* We have 4 cases to handle.  And we code different code sequences
    for each one.  I love V9 code models...  */
 static inline void __attribute__ ((always_inline))
@@ -161,3 +164,5 @@ sparc64_fixup_plt (struct link_map *map, const Elf64_Rela *reloc,
       __asm __volatile ("flush %0" : : "r" (insns));
     }
 }
+
+#endif /* dl-plt.h */

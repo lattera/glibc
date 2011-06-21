@@ -18,6 +18,9 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#ifndef _DL_PLT_H
+#define _DL_PLT_H
+
 /* Some SPARC opcodes we need to use for self-modifying code.  */
 #define OPCODE_NOP	0x01000000 /* nop */
 #define OPCODE_CALL	0x40000000 /* call ?; add PC-rel word address */
@@ -95,3 +98,5 @@ sparc_fixup_plt (const Elf32_Rela *reloc, Elf32_Addr *reloc_addr,
 
   return value;
 }
+
+#endif /* dl-plt.h */

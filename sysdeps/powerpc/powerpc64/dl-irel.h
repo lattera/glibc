@@ -33,6 +33,13 @@ typedef struct
   Elf64_Addr fd_aux;
 } Elf64_FuncDesc;
 
+static inline Elf64_Addr
+__attribute ((always_inline))
+elf_ifunc_invoke (Elf64_Addr addr)
+{
+  return ((Elf64_Addr (*) (void)) (addr)) ();
+}
+
 static inline void
 __attribute ((always_inline))
 elf_irela (const Elf64_Rela *reloc)
@@ -42,13 +49,13 @@ elf_irela (const Elf64_Rela *reloc)
   if (__builtin_expect (r_type == R_PPC64_IRELATIVE, 1))
     {
       Elf64_Addr *const reloc_addr = (void *) reloc->r_offset;
-      Elf64_Addr value = ((Elf64_Addr (*) (void)) reloc->r_addend) ();
+      Elf64_Addr value = elf_ifunc_invoke(reloc->r_addend);
       *reloc_addr = value;
     }
   else if (__builtin_expect (r_type == R_PPC64_JMP_IREL, 1))
     {
       Elf64_Addr *const reloc_addr = (void *) reloc->r_offset;
-      Elf64_Addr value = ((Elf64_Addr (*) (void)) reloc->r_addend) ();
+      Elf64_Addr value = elf_ifunc_invoke(reloc->r_addend);
       *(Elf64_FuncDesc *) reloc_addr = *(Elf64_FuncDesc *) value;
     }
   else
