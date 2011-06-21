@@ -123,15 +123,12 @@ _dl_close_worker (struct link_map *map)
 	{
 	  if (map->l_type == lt_loaded)
 	    dl_close_state = rerun;
-#if 1
-	  else if (map->l_type == lt_library && map->l_initfini != map->l_orig_initfini)
+	  else if (map->l_type == lt_library)
 	    {
 	      struct link_map **oldp = map->l_initfini;
 	      map->l_initfini = map->l_orig_initfini;
- _dl_printf("aaa\n");
 	      _dl_scope_free (oldp);
 	    }
-#endif
 	}
 
       /* There are still references to this object.  Do nothing more.  */
