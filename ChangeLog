@@ -1,3 +1,7 @@
+2011-06-21  Ulrich Drepper  <drepper@gmail.com>
+
+	* inet/getnetgrent_r.c: Use DL_CALL_FCT in several places.
+
 2011-06-20  David S. Miller  <davem@davemloft.net>
 
 	* sysdeps/sparc/sparc32/dl-plt.h: Protect against multiple
