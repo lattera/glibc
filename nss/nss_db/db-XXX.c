@@ -71,11 +71,14 @@ CONCAT(_nss_db_set,ENTNAME) (int stayopen)
 
   status = internal_setent (DBFILE, &state);
 
-  /* Remember STAYOPEN flag.  */
   if (status == NSS_STATUS_SUCCESS)
-    keep_db |= stayopen;
-  /* Reset the sequential index.  */
-  entidx  = (const char *) state.header + state.header->valstroffset;
+    {
+      /* Remember STAYOPEN flag.  */
+      keep_db |= stayopen;
+
+      /* Reset the sequential index.  */
+      entidx  = (const char *) state.header + state.header->valstroffset;
+    }
 
   __libc_lock_unlock (lock);
 

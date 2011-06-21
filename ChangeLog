@@ -1,5 +1,8 @@
 2011-06-21  Ulrich Drepper  <drepper@gmail.com>
 
+	* nss/nss_db/db-XXX.c (nss_db_setENT): Only set entidx for successful
+	calls to internal_setent.
+
 	[BZ #12885]
 	* sysdeps/posix/getaddrinfo.c (gaih_inet): When looking up only IPv6
 	addresses using gethostbyname4_r ignore IPv4 addresses.
