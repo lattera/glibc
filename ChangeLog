@@ -1,5 +1,9 @@
 2011-06-21  Ulrich Drepper  <drepper@gmail.com>
 
+	[BZ #12885]
+	* sysdeps/posix/getaddrinfo.c (gaih_inet): When looking up only IPv6
+	addresses using gethostbyname4_r ignore IPv4 addresses.
+
 	* sysdeps/posix/getaddrinfo.c (gaih_inet): After the last change the
 	branch using gethostbyname2 is only for AF_INET.  Optimize accordingly.
 
