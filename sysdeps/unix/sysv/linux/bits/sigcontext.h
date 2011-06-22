@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -26,4 +26,8 @@
 # define sigcontext_struct sigcontext
 
 # include <asm/sigcontext.h>
+
+/* The Linux kernel headers redefine NULL wrongly, so cleanup afterwards.  */
+# define __need_NULL
+# include <stddef.h>
 #endif

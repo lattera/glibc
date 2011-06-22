@@ -1,3 +1,8 @@
+2011-06-21  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/bits/sigcontext.h: Fix definition of
+	NULL after inclusion of kernel headers.
+
 2011-06-21  Ulrich Drepper  <drepper@gmail.com>
 
 	* nss/nss_db/db-XXX.c (nss_db_setENT): Only set entidx for successful
