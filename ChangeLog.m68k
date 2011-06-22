@@ -1,3 +1,8 @@
+2011-06-23  Andreas Schwab  <schwab@linux-m68k.org>
+
+	* sysdeps/m68k/dl-trampoline.S (_dl_runtime_profile)
+	[__mcoldfire__]: Fix typo saving %fp0.
+
 2011-04-11  Andreas Schwab  <schwab@linux-m68k.org>
 
 	* sysdeps/m68k/dl-tls.h (TLS_DTV_UNALLOCATED): Define.
