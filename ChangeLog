@@ -1,5 +1,8 @@
 2011-06-22  Ulrich Drepper  <drepper@gmail.com>
 
+	* sysdeps/unix/sysv/linux/getsysstats.c (__get_nprocs): Use
+	/sys/devices/system/cpu/online if it is usable.
+
 	* sysdeps/unix/sysv/linux/getsysstats.c (__get_nprocs): Rate limit
 	reading the information from the /proc filesystem to once a second.
 

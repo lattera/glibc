@@ -161,20 +161,65 @@ __get_nprocs ()
   char *buffer_end = buffer + buffer_size;
   char *cp = buffer_end;
   char *re = buffer_end;
-  int result = 1;
 
 #ifdef O_CLOEXEC
   const int flags = O_RDONLY | O_CLOEXEC;
 #else
   const int flags = O_RDONLY;
 #endif
+  int fd = open_not_cancel_2 ("/sys/devices/system/cpu/online", flags);
+  char *l;
+  int result = 0;
+  if (fd != -1)
+    {
+      l = next_line (fd, buffer, &cp, &re, buffer_end);
+      if (l != NULL)
+	do
+	  {
+	    char *endp;
+	    unsigned long int n = strtoul (l, &endp, 10);
+	    if (l == endp)
+	      {
+		result = 0;
+		break;
+	      }
+
+	    unsigned long int m = n;
+	    if (*endp == '-')
+	      {
+		l = endp + 1;
+		m = strtoul (l, &endp, 10);
+		if (l == endp)
+		  {
+		    result = 0;
+		    break;
+		  }
+	      }
+
+	    result += m - n + 1;
+
+	    l = endp;
+	    while (l < re && isspace (*l))
+	      ++l;
+	  }
+	while (l < re);
+
+      close_not_cancel_no_status (fd);
+
+      if (result > 0)
+	goto out;
+    }
+
+  cp = buffer_end;
+  re = buffer_end;
+  result = 1;
+
   /* The /proc/stat format is more uniform, use it by default.  */
-  int fd = open_not_cancel_2 ("/proc/stat", flags);
+  fd = open_not_cancel_2 ("/proc/stat", flags);
   if (fd != -1)
     {
       result = 0;
 
-      char *l;
       while ((l = next_line (fd, buffer, &cp, &re, buffer_end)) != NULL)
 	/* The current format of /proc/stat has all the cpu* entries
 	   at the front.  We assume here that stays this way.  */
@@ -195,6 +240,7 @@ __get_nprocs ()
 	}
     }
 
+ out:
   cached_result = result;
   atomic_write_barrier ();
   timestamp = ts.tv_sec;
