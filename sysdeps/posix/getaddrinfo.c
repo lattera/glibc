@@ -894,7 +894,7 @@ gaih_inet (const char *name, const struct gaih_service *service,
 			      pat = &((*pat)->next);
 			      no_data = 0;
 			    }
-			  else if ((*pat)->family == AF_UNSPEC
+			  else if (req->ai_family == AF_UNSPEC
 				   || (*pat)->family == req->ai_family)
 			    {
 			      pat = &((*pat)->next);

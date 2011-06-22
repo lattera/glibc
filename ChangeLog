@@ -1,3 +1,7 @@
+2011-06-22  Andreas Schwab  <schwab@redhat.com>
+
+	* sysdeps/posix/getaddrinfo.c (gaih_inet): Fix last change.
+
 2011-06-22  Ulrich Drepper  <drepper@gmail.com>
 
 	* sysdeps/unix/sysv/linux/getsysstats.c (__get_nprocs): Use
