@@ -1,3 +1,10 @@
+2011-06-22  Ulrich Drepper  <drepper@gmail.com>
+
+	[BZ #12907]
+	* sysdeps/posix/getaddrinfo.c (getaddrinfo): Avoid calling __check_pf
+	until it is clear that the information is realy needed.
+	Patch mostly by David Hanisch <david.hanisch@nsn.com>.
+
 2011-06-22  Andreas Schwab  <schwab@redhat.com>
 
 	* sysdeps/posix/getaddrinfo.c (gaih_inet): Fix last change.

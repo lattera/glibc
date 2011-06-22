@@ -2352,14 +2352,17 @@ getaddrinfo (const char *name, const char *service,
   size_t in6ailen = 0;
   bool seen_ipv4 = false;
   bool seen_ipv6 = false;
-  /* We might need information about what interfaces are available.
-     Also determine whether we have IPv4 or IPv6 interfaces or both.  We
-     cannot cache the results since new interfaces could be added at
-     any time.  */
-  __check_pf (&seen_ipv4, &seen_ipv6, &in6ai, &in6ailen);
+  bool check_pf_called = false;
 
   if (hints->ai_flags & AI_ADDRCONFIG)
     {
+      /* We might need information about what interfaces are available.
+	 Also determine whether we have IPv4 or IPv6 interfaces or both.  We
+	 cannot cache the results since new interfaces could be added at
+	 any time.  */
+      __check_pf (&seen_ipv4, &seen_ipv6, &in6ai, &in6ailen);
+      check_pf_called = true;
+
       /* Now make a decision on what we return, if anything.  */
       if (hints->ai_family == PF_UNSPEC && (seen_ipv4 || seen_ipv6))
 	{
@@ -2440,6 +2443,10 @@ getaddrinfo (const char *name, const char *service,
       struct addrinfo *q;
       struct addrinfo *last = NULL;
       char *canonname = NULL;
+
+      /* Now we definitely need the interface information.  */
+      if (! check_pf_called)
+	__check_pf (&seen_ipv4, &seen_ipv6, &in6ai, &in6ailen);
 
       /* If we have information about deprecated and temporary addresses
 	 sort the array now.  */
