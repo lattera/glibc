@@ -20,6 +20,7 @@
 #define bit_Fast_Copy_Backward		(1 << 1)
 #define bit_Slow_BSF			(1 << 2)
 #define bit_Prefer_SSE_for_memop	(1 << 3)
+#define bit_Fast_Unaligned_Load		(1 << 4)
 
 #ifdef	__ASSEMBLER__
 
@@ -39,6 +40,7 @@
 # define index_Fast_Copy_Backward	FEATURE_INDEX_1*FEATURE_SIZE
 # define index_Slow_BSF			FEATURE_INDEX_1*FEATURE_SIZE
 # define index_Prefer_SSE_for_memop	FEATURE_INDEX_1*FEATURE_SIZE
+# define index_Fast_Unaligned_Load	FEATURE_INDEX_1*FEATURE_SIZE
 
 #else	/* __ASSEMBLER__ */
 
@@ -112,6 +114,7 @@ extern const struct cpu_features *__get_cpu_features (void)
 # define index_Fast_Copy_Backward	FEATURE_INDEX_1
 # define index_Slow_BSF			FEATURE_INDEX_1
 # define index_Prefer_SSE_for_memop	FEATURE_INDEX_1
+# define index_Fast_Unaligned_Load	FEATURE_INDEX_1
 
 #define HAS_ARCH_FEATURE(idx, bit) \
   ((__get_cpu_features ()->feature[idx] & (bit)) != 0)
@@ -127,5 +130,8 @@ extern const struct cpu_features *__get_cpu_features (void)
 
 #define HAS_PREFER_SSE_FOR_MEMOP \
   HAS_ARCH_FEATURE (index_Prefer_SSE_for_memop, bit_Prefer_SSE_for_memop)
+
+#define HAS_FAST_UNALIGNED_LOAD \
+  HAS_ARCH_FEATURE (index_Fast_Unaligned_Load, bit_Fast_Unaligned_Load)
 
 #endif	/* __ASSEMBLER__ */

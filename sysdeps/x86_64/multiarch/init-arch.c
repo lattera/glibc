@@ -97,13 +97,18 @@ __init_cpu_features (void)
 	    case 0x2c:
 	    case 0x2e:
 	    case 0x2f:
-	      /* Rep string instructions and copy backward are fast on
-		 Intel Core i3, i5 and i7.  */
+	      /* Rep string instructions, copy backward and unaligned loads
+		 are fast on Intel Core i3, i5 and i7.  */
 #if index_Fast_Rep_String != index_Fast_Copy_Backward
 # error index_Fast_Rep_String != index_Fast_Copy_Backward
 #endif
+#if index_Fast_Rep_String != index_Fast_Unaligned_Load
+# error index_Fast_Rep_String != index_Fast_Unaligned_Load
+#endif
 	      __cpu_features.feature[index_Fast_Rep_String]
-		|= bit_Fast_Rep_String | bit_Fast_Copy_Backward;
+		|= (bit_Fast_Rep_String
+		    | bit_Fast_Copy_Backward
+		    | bit_Fast_Unaligned_Load);
 	      break;
 	    }
 	}

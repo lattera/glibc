@@ -10,7 +10,9 @@ sysdep_routines += bzero-sse2 memset-sse2 memcpy-ssse3 mempcpy-ssse3 \
 		   memset-sse2-rep bzero-sse2-rep strcmp-ssse3 \
 		   strcmp-sse4 strncmp-c strncmp-ssse3 strncmp-sse4 \
 		   memcmp-ssse3 memcmp-sse4 strcasestr-nonascii varshift \
-		   strlen-sse2 strlen-sse2-bsf
+		   strlen-sse2 strlen-sse2-bsf strncpy-c strcpy-ssse3 \
+		   strncpy-ssse3 stpcpy-ssse3 stpncpy-ssse3 strcpy-sse2 \
+		   strncpy-sse2 stpcpy-sse2 stpncpy-sse2
 ifeq (yes,$(config-cflags-sse4))
 sysdep_routines += strcspn-c strpbrk-c strspn-c strstr-c strcasestr-c
 CFLAGS-varshift.c += -msse4
