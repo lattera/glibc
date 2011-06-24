@@ -20,6 +20,9 @@ Version 2.15
 
 * Optimized strcpy, strncpy, stpcpy, stpncpy for SSE2 and SSSE3 on x86-32.
   Contributed by HJ Lu.
+
+* Improved strcpy, strncpy, stpcpy, stpncpy for SSE2 and SSSE3 on x86-64.
+  Contributed by HJ Lu.
 
 Version 2.14
 

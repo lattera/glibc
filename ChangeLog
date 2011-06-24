@@ -1,3 +1,20 @@
+2011-06-22  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/x86_64/multiarch/Makefile (sysdep_routines): Add
+	strcpy-ssse3 strncpy-ssse3 stpcpy-ssse3 stpncpy-ssse3
+	strcpy-sse2-unaligned strncpy-sse2-unaligned
+	stpcpy-sse2-unaligned stpncpy-sse2-unaligned.
+	* sysdeps/x86_64/multiarch/stpcpy-sse2-unaligned.S: New file.
+	* sysdeps/x86_64/multiarch/stpcpy-ssse3.S: New file.
+	* sysdeps/x86_64/multiarch/stpncpy-sse2-unaligned.S: New file.
+	* sysdeps/x86_64/multiarch/stpncpy-ssse3.S: New file.
+	* sysdeps/x86_64/multiarch/strcpy-sse2-unaligned.S: New file.
+	* sysdeps/x86_64/multiarch/strcpy-ssse3.S: New file.
+	* sysdeps/x86_64/multiarch/strncpy-sse2-unaligned.S: New file.
+	* sysdeps/x86_64/multiarch/strncpy-ssse3.S: New file.
+	* sysdeps/x86_64/multiarch/strcpy.S: Remove strcpy with SSSE3.
+	(STRCPY): Support SSE2 and SSSE3 versions.
+
 2011-06-24  Ulrich Drepper  <drepper@gmail.com>
 
 	[BZ #12874]
