@@ -1,3 +1,7 @@
+2011-06-23  Marek Polacek  <mpolacek@redhat.com>
+
+	* nss/nss_db/db-open.c: Include <unistd.h> for read declaration.
+
 2011-06-22  Ulrich Drepper  <drepper@gmail.com>
 
 	[BZ #12907]
