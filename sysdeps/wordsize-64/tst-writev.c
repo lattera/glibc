@@ -96,8 +96,14 @@ do_test (void)
 
   if (ret != (ssize_t) EXPECTED)
     {
-      printf ("writev() return value: %zd != EXPECTED: %zd\n", ret, EXPECTED);
-      return 1;
+#ifdef ARTIFICIAL_LIMIT
+      if (ret != (ssize_t) ARTIFICIAL_LIMIT)
+#endif
+	{
+	  printf ("writev() return value: %zd != EXPECTED: %zd\n",
+		  ret, EXPECTED);
+	  return 1;
+	}
     }
 
   return 0;
