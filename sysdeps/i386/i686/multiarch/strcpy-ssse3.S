@@ -3220,6 +3220,8 @@ L(ExitTail16):
 # endif
 	RETURN
 # ifdef USE_AS_STRNCPY
+	CFI_PUSH (%esi)
+	CFI_PUSH (%edi)
 L(StrncpyLeaveCase2OrCase3):
 	test	%eax, %eax
 	jnz	L(Aligned64LeaveCase2)
@@ -3978,6 +3980,8 @@ L(StrncpyExit15):
 	lea	1(%esi), %esi
 	jmp	L(CopyFrom1To16BytesCase3)
 
+	CFI_POP (%esi)
+	CFI_POP (%edi)
 	.p2align 4
 L(ExitTail0):
 	movl	%edx, %eax

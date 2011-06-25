@@ -47,7 +47,7 @@
 #  define PARMS  16
 #  define ENTRANCE PUSH(%ebx); PUSH(%esi); PUSH(%edi)
 #  define RETURN  POP(%edi); POP(%esi); POP(%ebx); ret;          \
-	CFI_PUSH(%ebx); CFI_PUSH(%edi); CFI_PUSH(%edi);
+	CFI_PUSH(%ebx); CFI_PUSH(%esi); CFI_PUSH(%edi);
 
 # ifdef SHARED
 #  define JMPTBL(I, B)	I - B
