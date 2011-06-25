@@ -621,10 +621,27 @@ endif
 ifeq ($(elf),yes)
 $(common-objpfx)libc_pic.os: $(common-objpfx)libc_pic.a
 	$(LINK.o) -nostdlib -nostartfiles -r -o $@ \
-	$(LDFLAGS-c_pic.os) -Wl,-d -Wl,--whole-archive $^
+	$(LDFLAGS-c_pic.os) -Wl,-d -Wl,--whole-archive $^ -o $@
+
+ifeq (,$(strip $(shlib-lds-flags)))
+# Generate a list of -R options to excise .gnu.glibc-stub.* sections.
+$(common-objpfx)libc_pic.opts: $(common-objpfx)libc_pic.os
+	$(OBJDUMP) -h $< | \
+	$(AWK) '$$2 ~ /\.gnu\.glibc-stub\./ { print "-R", $$2 }' \
+		> $@T
+	mv -f $@T $@
+# Apply those -R options.
+$(common-objpfx)libc_pic.os.clean: $(common-objpfx)libc_pic.opts \
+				   $(common-objpfx)libc_pic.os
+	$(OBJCOPY) @$^ $@
+generated += libc_pic.opts libc_pic.os.clean
+
+libc_pic_clean := .clean
+endif
+
 # Use our own special initializer and finalizer files for libc.so.
 $(common-objpfx)libc.so: $(elfobjdir)/soinit.os \
-			 $(common-objpfx)libc_pic.os \
+			 $(common-objpfx)libc_pic.os$(libc_pic_clean) \
 			 $(elfobjdir)/sofini.os \
 			 $(elfobjdir)/interp.os $(elfobjdir)/ld.so \
 			 $(shlib-lds)

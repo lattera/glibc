@@ -677,6 +677,7 @@ PWD_P
 LD
 AS
 MIG
+OBJCOPY
 OBJDUMP
 AR
 LN_S
@@ -4685,6 +4686,8 @@ LD=`$CC -print-prog-name=ld`
 AR=`$CC -print-prog-name=ar`
 
 OBJDUMP=`$CC -print-prog-name=objdump`
+
+OBJCOPY=`$CC -print-prog-name=objcopy`
 
 
 # Determine whether we are using GNU binutils.
