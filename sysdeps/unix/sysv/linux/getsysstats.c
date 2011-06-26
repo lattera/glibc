@@ -147,7 +147,7 @@ __get_nprocs ()
   INTERNAL_VSYSCALL (clock_gettime, err, 2, CLOCK_REALTIME, &ts);
 #else
   struct timeval ts;
-  gettimeofday (&ts, NULL);
+  __gettimeofday (&ts, NULL);
 #endif
   time_t prev = timestamp;
   atomic_read_barrier ();
