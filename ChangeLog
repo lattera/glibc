@@ -1,3 +1,7 @@
+2011-06-26  Ulrich Drepper  <drepper@gmail.com>
+
+	* elf/Makefile (all-built-dso): No need to check linkobj/libc.so.
+
 2011-06-24  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/i386/i686/multiarch/strcpy-sse2.S (RETURN): Fix a typo.

@@ -973,8 +973,9 @@ ifeq (yes,$(build-shared))
 tests: $(objpfx)check-textrel.out $(objpfx)check-execstack.out
 
 all-built-dso = $(common-objpfx)libc.so \
-		$(sort $(wildcard $(common-objpfx)*/lib*.so \
-				  $(common-objpfx)iconvdata/*.so))
+		$(filter-out $(common-objpfx)linkobj/libc.so, \
+			     $(sort $(wildcard $(common-objpfx)*/lib*.so \
+					       $(common-objpfx)iconvdata/*.so)))
 
 $(objpfx)check-textrel.out: $(objpfx)check-textrel $(all-built-dso)
 	$(dir $<)$(notdir $<) $(filter-out $<, $^) > $@
