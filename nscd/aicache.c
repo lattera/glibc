@@ -534,7 +534,7 @@ next_nip:
    }
 
  out:
-  _res.options = old_res_options;
+  _res.options |= old_res_options & RES_USE_INET6;
 
   if (dataset != NULL && !alloca_used)
     {

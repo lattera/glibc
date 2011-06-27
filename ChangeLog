@@ -1,5 +1,9 @@
 2011-06-27  Ulrich Drepper  <drepper@gmail.com>
 
+	[BZ #12350]
+	* nscd/aicache.c (addhstaiX):  Restore only RES_USE_INET6
+	bit from old_res_options.
+
 	* sysdeps/unix/sysv/linux/Makefile (CFLAGS-servicescache.c): Define.
 
 	* inet/getnetgrent_r.c (innetgr): Minimal cleanup, use correct return
