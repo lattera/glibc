@@ -1,3 +1,8 @@
+2011-06-27  Ulrich Drepper  <drepper@gmail.com>
+
+	* inet/getnetgrent_r.c (innetgr): Minimal cleanup, use correct return
+	value type for setfct.
+
 2011-06-23  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/unix/sysv/linux/getsysstats.c (__get_nprocs): Use

@@ -339,7 +339,7 @@ innetgr (const char *netgroup, const char *host, const char *user,
 {
   union
   {
-    int (*f) (const char *, struct __netgrent *);
+    enum nss_status (*f) (const char *, struct __netgrent *);
     void *ptr;
   } setfct;
   void (*endfct) (struct __netgrent *);
