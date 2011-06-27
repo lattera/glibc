@@ -167,5 +167,6 @@ CFLAGS-grpcache.c += -DHAVE_SENDFILE
 CFLAGS-hstcache.c += -DHAVE_SENDFILE
 CFLAGS-aicache.c += -DHAVE_SENDFILE
 CFLAGS-initgrcache.c += -DHAVE_SENDFILE
+CFLAGS-servicescache.c += -DHAVE_SENDFILE
 CFLAGS-gai.c += -DNEED_NETLINK
 endif
