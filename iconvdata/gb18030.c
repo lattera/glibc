@@ -18233,17 +18233,17 @@ static const unsigned char __ucs_to_gb18030_tab2[][2] =
 	      len = 0;							      \
 	  }								      \
 	else if (ch == 0x20087)						      \
-	  idx = 0xfe51;							      \
+	  cp = (const unsigned char *) "\xfe\x51";			      \
 	else if (ch == 0x20089)						      \
-	  idx = 0xfe52;							      \
+	  cp = (const unsigned char *) "\xfe\x52";			      \
 	else if (ch == 0x200CC)						      \
-	  idx = 0xfe53;							      \
+	  cp = (const unsigned char *) "\xfe\x53";			      \
 	else if (ch == 0x215d7)						      \
-	  idx = 0xfe6c;							      \
+	  cp = (const unsigned char *) "\xfe\x6c";			      \
 	else if (ch == 0x2298F)						      \
-	  idx = 0xfe76;							      \
+	  cp = (const unsigned char *) "\xfe\x76";			      \
 	else if (ch == 0x241FE)						      \
-	  idx = 0xfe91;							      \
+	  cp = (const unsigned char *) "\xfe\x91";			      \
 	else								      \
 	  len = 0;							      \
 									      \

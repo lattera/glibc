@@ -1,3 +1,8 @@
+2011-06-27  Andreas Schwab  <schwab@redhat.com>
+
+	* iconvdata/gb18030.c (BODY for TO_LOOP): Fix encoding of non-BMP
+	two-byte characters.
+
 2011-06-27  Roland McGrath  <roland@hack.frob.com>
 
 	* configure.in (NO_CTORS_DTORS_SECTIONS): Give this check its own
