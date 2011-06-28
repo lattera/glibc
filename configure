@@ -691,7 +691,6 @@ base_machine
 add_on_subdirs
 add_ons
 libc_cv_nss_crypt
-experimental_malloc
 all_warnings
 force_install
 bindnow
@@ -790,7 +789,6 @@ enable_force_install
 enable_kernel
 enable_all_warnings
 enable_multi_arch
-enable_experimental_malloc
 enable_nss_crypt
 with_cpu
 '
@@ -1450,8 +1448,6 @@ Optional Features:
   --enable-all-warnings   enable all useful warnings gcc can issue
   --enable-multi-arch     enable single DSO with optimizations for multiple
                           architectures
-  --enable-experimental-malloc
-                          enable experimental malloc features
   --enable-nss-crypt      enable libcrypt to use nss
 
 Optional Packages:
@@ -3764,13 +3760,6 @@ if test "${enable_multi_arch+set}" = set; then :
 else
   multi_arch=default
 fi
-
-
-# Check whether --enable-experimental-malloc was given.
-if test "${enable_experimental_malloc+set}" = set; then :
-  enableval=$enable_experimental_malloc; experimental_malloc=$enableval
-fi
-
 
 
 # Check whether --enable-nss-crypt was given.

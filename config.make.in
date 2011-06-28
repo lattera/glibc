@@ -85,8 +85,6 @@ have-ksh = @libc_cv_have_ksh@
 
 sizeof-long-double = @sizeof_long_double@
 
-experimental-malloc = @experimental_malloc@
-
 nss-crypt = @libc_cv_nss_crypt@
 
 # Configuration options.

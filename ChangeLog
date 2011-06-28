@@ -1,3 +1,10 @@
+2011-06-28  Ulrich Drepper  <drepper@gmail.com>
+
+	* configure.in: Remove support for --experimental-malloc option, make
+	it the default.
+	* config.make.in: Likewise.
+	* malloc/Makefile: Likewise.
+
 2011-06-27  Andreas Schwab  <schwab@redhat.com>
 
 	* iconvdata/gb18030.c (BODY for TO_LOOP): Fix encoding of non-BMP
