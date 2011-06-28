@@ -1,5 +1,9 @@
 2011-06-28  Ulrich Drepper  <drepper@gmail.com>
 
+	[BZ #12935]
+	* malloc/memusage.sh: Fix quoting in message.
+	* debug/xtrace.sh: Likewise.
+
 	* configure.in: Remove support for --experimental-malloc option, make
 	it the default.
 	* config.make.in: Likewise.

@@ -24,7 +24,7 @@ TEXTDOMAIN=libc
 
 # Print usage message.
 do_usage() {
-  printf >&2 $"Try \`%s --help' or `%s --usage' for more information.\n" memusage memusage
+  printf >&2 $"Try \`%s --help' or \`%s --usage' for more information.\n" memusage memusage
   exit 1
 }
 

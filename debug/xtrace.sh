@@ -30,7 +30,7 @@ do_usage() {
 
 # Refer to --help option.
 help_info() {
-  printf >&2 $"Try \`%s --help' or `%s --usage' for more information.\n" xtrace xtrace
+  printf >&2 $"Try \`%s --help' or \`%s --usage' for more information.\n" xtrace xtrace
   exit 1
 }
 
