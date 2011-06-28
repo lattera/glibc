@@ -1,5 +1,9 @@
 2011-06-27  Roland McGrath  <roland@hack.frob.com>
 
+	* configure.in (NO_CTORS_DTORS_SECTIONS): Give this check its own
+	AC_CACHE_CHECK invocation.
+	* configure: Regenerated.
+
 	* elf/soinit.c (__CTOR_LIST__, __DTOR_LIST__): Add used attribute.
 
 2011-06-27  Ulrich Drepper  <drepper@gmail.com>

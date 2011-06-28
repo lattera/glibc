@@ -1479,7 +1479,17 @@ EOF
   rm -f conftest*])
   if test $libc_cv_initfini_array != yes; then
     AC_MSG_ERROR([Need linker with .init_array/.fini_array support.])
-  elif AC_TRY_COMMAND([${CC-cc} -Wl,--verbose 2>&1|grep SORT_BY_INIT_PRIORITY 1>&AS_MESSAGE_LOG_FD]); then
+  fi
+
+  AC_CACHE_CHECK(whether to use .ctors/.dtors header and trailer,
+		 libc_cv_ctors_header, [dnl
+  if AC_TRY_COMMAND([${CC-cc} -Wl,--verbose 2>&1|grep SORT_BY_INIT_PRIORITY 1>&AS_MESSAGE_LOG_FD]); then
+    libc_cv_ctors_header=no
+  else
+    libc_cv_ctors_header=yes
+  fi])
+
+  if test $libc_cv_ctors_header = no; then
     AC_DEFINE(NO_CTORS_DTORS_SECTIONS)
   fi
 
