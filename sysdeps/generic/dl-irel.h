@@ -17,7 +17,14 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#ifndef _DL_IREL_h
+#ifndef _DL_IREL_H
 #define _DL_IREL_H
+
+static inline DL_FIXUP_VALUE_TYPE
+__attribute ((always_inline))
+elf_ifunc_invoke (ElfW(Addr) addr)
+{
+  return ((DL_FIXUP_VALUE_TYPE (*) (void)) (addr)) ();
+}
 
 #endif /* dl-irel.h */
