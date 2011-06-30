@@ -1,3 +1,9 @@
+2011-06-29  Ulrich Drepper  <drepper@gmail.com>
+
+	* nscd/grpcache.c (cache_addgr): Don't write notfound reply if we
+	are re-adding the entry.
+	* nscd/servicescache.c (cache_addserv): Likewise.
+
 2011-06-28  Ulrich Drepper  <drepper@gmail.com>
 
 	[BZ #12935]
