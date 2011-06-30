@@ -1,3 +1,8 @@
+2011-06-30  Andreas Schwab  <schwab@redhat.com>
+
+	* sysdeps/posix/getaddrinfo.c (gaih_inet): Make sure RES_USE_INET6
+	is always restored.
+
 2011-06-29  Ulrich Drepper  <drepper@gmail.com>
 
 	* nscd/grpcache.c (cache_addgr): Don't write notfound reply if we
