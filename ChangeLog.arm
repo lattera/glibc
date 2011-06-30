@@ -1,3 +1,7 @@
+2011-06-30  Richard Sandiford  <richard.sandiford@linaro.org>
+
+	* sysdeps/arm/elf/start.S (_start): Align the constant pool to 4 bytes.
+
 2011-06-21  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/arm/dl-irel.h (elf_ifunc_invoke): New.

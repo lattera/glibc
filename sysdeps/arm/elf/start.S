@@ -134,6 +134,7 @@ _start:
 	bl abort
 
 #ifdef SHARED
+	.align 2
 .L_GOT:
 	.word _GLOBAL_OFFSET_TABLE_ - .L_GOT
 	.word __libc_csu_fini(GOT)
