@@ -4,6 +4,12 @@
 	are re-adding the entry.
 	* nscd/servicescache.c (cache_addserv): Likewise.
 
+2011-06-30  Aurelien Jarno  <aurelien@aurel32.net>
+
+	* sysdeps/generic/dl-irel.h: fix protection against multiple
+	inclusions.
+	* sysdeps/generic/dl-irel.h (elf_ifunc_invoke): New.
+
 2011-06-28  Ulrich Drepper  <drepper@gmail.com>
 
 	[BZ #12935]
