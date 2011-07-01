@@ -1,3 +1,13 @@
+2011-06-30  Ulrich Drepper  <drepper@gmail.com>
+
+	* nptl-init.c (__nptl_set_robust): New function.
+	(pthread_functions): Add reference.
+	* npthreadP.h: Declare __nptl_set_robust.
+	* sysdeps/pthread/pthread-functions.h (pthread_functions): Add
+	ptr_set_robust member.
+	* sysdeps/unix/sysv/linux/fork.c: Call set_robust_list syscall in
+	child if threads are used.
+
 2011-06-14  Andreas Jaeger  <aj@suse.de>
 
 	* pthread_rwlock_init.c: Include <string.h> for memset declaration.

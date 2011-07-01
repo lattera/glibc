@@ -1,4 +1,4 @@
-/* Copyright (C) 2003, 2004, 2005, 2006, 2007 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2004, 2005, 2006, 2007, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2003.
 
@@ -97,6 +97,7 @@ struct pthread_functions
   void (*ptr__nptl_deallocate_tsd) (void);
   int (*ptr__nptl_setxid) (struct xid_command *);
   void (*ptr_freeres) (void);
+  void (*ptr_set_robust) (struct pthread *);
 };
 
 /* Variable in libc.so.  */

@@ -1,4 +1,4 @@
-/* Copyright (C) 2002-2007, 2008, 2009 Free Software Foundation, Inc.
+/* Copyright (C) 2002-2007, 2008, 2009, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -68,6 +68,13 @@ extern void __libc_setup_tls (size_t tcbsize, size_t tcbalign);
 #endif
 
 #ifdef SHARED
+static
+#else
+extern
+#endif
+void __nptl_set_robust (struct pthread *);
+
+#ifdef SHARED
 static void nptl_freeres (void);
 
 
@@ -130,7 +137,8 @@ static const struct pthread_functions pthread_functions =
     .ptr__nptl_deallocate_tsd = __nptl_deallocate_tsd,
     .ptr__nptl_setxid = __nptl_setxid,
     /* For now only the stack cache needs to be freed.  */
-    .ptr_freeres = nptl_freeres
+    .ptr_freeres = nptl_freeres,
+    .ptr_set_robust = __nptl_set_robust
   };
 # define ptr_pthread_functions &pthread_functions
 #else
@@ -147,7 +155,17 @@ nptl_freeres (void)
   __unwind_freeres ();
   __free_stacks (0);
 }
+
+
+static
 #endif
+void
+__nptl_set_robust (struct pthread *self)
+{
+  INTERNAL_SYSCALL_DECL (err);
+  INTERNAL_SYSCALL (set_robust_list, err, 2, &self->robust_head,
+		    sizeof (struct robust_list_head));
+}
 
 
 /* For asynchronous cancellation we use a signal.  This is the handler.  */

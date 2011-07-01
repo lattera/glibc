@@ -1,4 +1,4 @@
-/* Copyright (C) 2002-2007, 2009 Free Software Foundation, Inc.
+/* Copyright (C) 2002-2007, 2009, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -555,17 +555,20 @@ extern void __pthread_cleanup_pop_restore (struct _pthread_cleanup_buffer *buffe
 
 /* Old cleanup interfaces, still used in libc.so.  */
 extern void _pthread_cleanup_push (struct _pthread_cleanup_buffer *buffer,
-                                   void (*routine) (void *), void *arg);
+				   void (*routine) (void *), void *arg);
 extern void _pthread_cleanup_pop (struct _pthread_cleanup_buffer *buffer,
-                                  int execute);
+				  int execute);
 extern void _pthread_cleanup_push_defer (struct _pthread_cleanup_buffer *buffer,
-                                         void (*routine) (void *), void *arg);
+					 void (*routine) (void *), void *arg);
 extern void _pthread_cleanup_pop_restore (struct _pthread_cleanup_buffer *buffer,
-                                          int execute);
+					  int execute);
 
 extern void __nptl_deallocate_tsd (void) attribute_hidden;
 
 extern int __nptl_setxid (struct xid_command *cmdp) attribute_hidden;
+#ifndef SHARED
+extern void __nptl_set_robust (struct pthread *self);
+#endif
 
 extern void __free_stacks (size_t limit) attribute_hidden;
 
