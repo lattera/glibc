@@ -1,3 +1,8 @@
+2011-07-01  Andreas Schwab  <schwab@redhat.com>
+
+	* nis/nss_compat/compat-pwd.c (getpwent_next_nss_netgr): Query NIS
+	domain only when needed.
+
 2011-06-30  Andreas Schwab  <schwab@redhat.com>
 
 	* sysdeps/posix/getaddrinfo.c (gaih_inet): Make sure RES_USE_INET6
