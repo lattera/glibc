@@ -1,3 +1,17 @@
+2011-07-02  Ulrich Drepper  <drepper@gmail.com>
+
+	* crypt/sha512.h (struct sha512_ctx): Add union to access total also
+	as 128-bit value.
+	* crypt/sha512.c (sha512_process_block): Perform total addition using
+	128-bit if possible.
+	(__sha512_finish_ctx): Likewise.
+	* crypt/sha256.h (struct sha256_ctx): Add union to access total also
+	as 64-bit value.
+	* crypt/sha256.c (SWAP64): Define.
+	(sha256_process_block): Perform total addition using 64-bit if
+	possible.
+	(__sha256_finish_ctx): Likewise.
+
 2011-07-01  Ulrich Drepper  <drepper@gmail.com>
 
 	* nscd/pwdcache.c (cache_addpw): Cleanup.  Add branch prediction.

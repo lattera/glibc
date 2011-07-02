@@ -1,6 +1,6 @@
 /* Functions to compute SHA256 message digest of files or memory blocks.
    according to the definition of SHA256 in FIPS 180-2.
-   Copyright (C) 2007 Free Software Foundation, Inc.
+   Copyright (C) 2007, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -35,12 +35,23 @@
 # ifdef _LIBC
 #  include <byteswap.h>
 #  define SWAP(n) bswap_32 (n)
+#  define SWAP64(n) bswap_64 (n)
 # else
 #  define SWAP(n) \
     (((n) << 24) | (((n) & 0xff00) << 8) | (((n) >> 8) & 0xff00) | ((n) >> 24))
+#  define SWAP64(n) \
+  (((n) << 56)					\
+   | (((n) & 0xff00) << 40)			\
+   | (((n) & 0xff0000) << 24)			\
+   | (((n) & 0xff000000) << 8)			\
+   | (((n) >> 8) & 0xff000000)			\
+   | (((n) >> 24) & 0xff0000)			\
+   | (((n) >> 40) & 0xff00)			\
+   | ((n) >> 56))
 # endif
 #else
 # define SWAP(n) (n)
+# define SWAP64(n) (n)
 #endif
 
 
@@ -89,10 +100,8 @@ sha256_process_block (const void *buffer, size_t len, struct sha256_ctx *ctx)
 
   /* First increment the byte count.  FIPS 180-2 specifies the possible
      length of the file up to 2^64 bits.  Here we only compute the
-     number of bytes.  Do a double word increment.  */
-  ctx->total[0] += len;
-  if (ctx->total[0] < len)
-    ++ctx->total[1];
+     number of bytes.  */
+  ctx->total64 += len;
 
   /* Process all bytes in the buffer with 64 bytes in each round of
      the loop.  */
@@ -186,7 +195,7 @@ __sha256_init_ctx (ctx)
   ctx->H[6] = 0x1f83d9ab;
   ctx->H[7] = 0x5be0cd19;
 
-  ctx->total[0] = ctx->total[1] = 0;
+  ctx->total64 = 0;
   ctx->buflen = 0;
 }
 
@@ -206,17 +215,19 @@ __sha256_finish_ctx (ctx, resbuf)
   size_t pad;
 
   /* Now count remaining bytes.  */
-  ctx->total[0] += bytes;
-  if (ctx->total[0] < bytes)
-    ++ctx->total[1];
+  ctx->total64 += bytes;
 
   pad = bytes >= 56 ? 64 + 56 - bytes : 56 - bytes;
   memcpy (&ctx->buffer[bytes], fillbuf, pad);
 
   /* Put the 64-bit file length in *bits* at the end of the buffer.  */
+#ifdef _STRING_ARCH_unaligned
+  *(uint64_t *)  &ctx->buffer[bytes + pad] = SWAP64 (ctx->total64 << 3);
+#else
   *(uint32_t *) &ctx->buffer[bytes + pad + 4] = SWAP (ctx->total[0] << 3);
   *(uint32_t *) &ctx->buffer[bytes + pad] = SWAP ((ctx->total[1] << 3) |
 						  (ctx->total[0] >> 29));
+#endif
 
   /* Process last bytes.  */
   sha256_process_block (ctx->buffer, bytes + pad + 8, ctx);

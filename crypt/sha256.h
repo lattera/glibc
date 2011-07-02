@@ -1,6 +1,6 @@
 /* Declaration of functions and data types used for SHA256 sum computing
    library functions.
-   Copyright (C) 2007 Free Software Foundation, Inc.
+   Copyright (C) 2007, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -31,7 +31,11 @@ struct sha256_ctx
 {
   uint32_t H[8];
 
-  uint32_t total[2];
+  union
+  {
+    uint64_t total64;
+    uint32_t total[2];
+  };
   uint32_t buflen;
   char buffer[128] __attribute__ ((__aligned__ (__alignof__ (uint32_t))));
 };
