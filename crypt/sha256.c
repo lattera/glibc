@@ -224,9 +224,11 @@ __sha256_finish_ctx (ctx, resbuf)
 #ifdef _STRING_ARCH_unaligned
   *(uint64_t *)  &ctx->buffer[bytes + pad] = SWAP64 (ctx->total64 << 3);
 #else
-  *(uint32_t *) &ctx->buffer[bytes + pad + 4] = SWAP (ctx->total[0] << 3);
-  *(uint32_t *) &ctx->buffer[bytes + pad] = SWAP ((ctx->total[1] << 3) |
-						  (ctx->total[0] >> 29));
+  *(uint32_t *) &ctx->buffer[bytes + pad + 4]
+    = SWAP (ctx->total[TOTAL64_low] << 3);
+  *(uint32_t *) &ctx->buffer[bytes + pad]
+    = SWAP ((ctx->total[TOTAL64_high] << 3) |
+	    (ctx->total[TOTAL64_low] >> 29));
 #endif
 
   /* Process last bytes.  */

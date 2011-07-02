@@ -24,6 +24,7 @@
 #include <limits.h>
 #include <stdint.h>
 #include <stdio.h>
+#include <endian.h>
 
 
 /* Structure to save state of computation between the single steps.  */
@@ -34,6 +35,8 @@ struct sha256_ctx
   union
   {
     uint64_t total64;
+#define TOTAL64_low (1 - (BYTE_ORDER == LITTLE_ENDIAN))
+#define TOTAL64_high (BYTE_ORDER == LITTLE_ENDIAN)
     uint32_t total[2];
   };
   uint32_t buflen;

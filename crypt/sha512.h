@@ -24,9 +24,8 @@
 #include <limits.h>
 #include <stdint.h>
 #include <stdio.h>
-#ifdef _LIBC
-# include <bits/wordsize.h>
-#endif
+#include <endian.h>
+#include <bits/wordsize.h>
 
 
 /* Structure to save state of computation between the single steps.  */
@@ -39,6 +38,13 @@ struct sha512_ctx
 #if defined __GNUC__ && __WORDSIZE == 64
 # define USE_TOTAL128
     unsigned int total128 __attribute__ ((__mode__ (TI)));
+#endif
+#if BYTE_ORDER == LITTLE_ENDIAN
+# define TOTAL128_low 0
+# define TOTAL128_high 1
+#else
+# define TOTAL128_low 1
+# define TOTAL128_high 0
 #endif
     uint64_t total[2];
   };
