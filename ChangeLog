@@ -1,5 +1,8 @@
 2011-07-02  Roland McGrath  <roland@hack.frob.com>
 
+	* Makefile ($(common-objpfx)testrun.sh): Generate to work relative to
+	containing directory rather than embedding absolute directory names.
+
 	* scripts/check-local-headers.sh: Rewritten using awk.
 	Match by word, not by line.  Print error messages for matches.
 	* Makefile ($(objpfx)check-local-headers.out): Pass AWK in to it.
