@@ -125,13 +125,14 @@ cache_addpw (struct database_dyn *db, int fd, request_header *req,
 						MSG_NOSIGNAL));
 
 	  /* If we cannot permanently store the result, so be it.  */
-	  if (db->negtimeout == 0)
+	  if (__builtin_expect (db->negtimeout == 0, 0))
 	    {
 	      /* Mark the old entry as obsolete.  */
 	      if (dh != NULL)
 		dh->usable = false;
 	    }
-	  else if ((dataset = mempool_alloc (db, sizeof (struct dataset) + req->key_len, 1)) != NULL)
+	  else if ((dataset = mempool_alloc (db, (sizeof (struct dataset)
+						  + req->key_len), 1)) != NULL)
 	    {
 	      dataset->head.allocsize = sizeof (struct dataset) + req->key_len;
 	      dataset->head.recsize = total;

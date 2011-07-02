@@ -1,3 +1,12 @@
+2011-07-01  Ulrich Drepper  <drepper@gmail.com>
+
+	* nscd/pwdcache.c (cache_addpw): Cleanup.  Add branch prediction.
+	* nscd/initgrcache.c (addinitgroupsX): Likewise.
+	* nscd/hstcache.c (cache_addhst): Likewise.
+	* nscd/grpcache.c (cache_addgr): Likewise.
+	* nscd/aicache.c (addhstaiX): Likewise
+	* nscd/servicescache.c (cache_addserv): Handle zero negtimeout.
+
 2011-07-01  Thorsten Kukuk  <kukuk@suse.de>
 
 	* nscd/pwdcache.c (cache_addpw): Handle zero negtimeout.
