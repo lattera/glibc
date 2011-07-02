@@ -1,3 +1,11 @@
+2011-07-01  Thorsten Kukuk  <kukuk@suse.de>
+
+	* nscd/pwdcache.c (cache_addpw): Handle zero negtimeout.
+	* nscd/initgrcache.c (addinitgroupsX): Likewise.
+	* nscd/hstcache.c (cache_addhst): Likewise.
+	* nscd/grpcache.c (cache_addgr): Likewise.
+	* nscd/aicache.c (addhstaiX): Likewise
+
 2011-07-01  Andreas Schwab  <schwab@redhat.com>
 
 	* nis/nss_compat/compat-pwd.c (getpwent_next_nss_netgr): Query NIS
