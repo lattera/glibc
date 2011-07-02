@@ -284,7 +284,8 @@ endif
 endif
 
 $(objpfx)check-local-headers.out: scripts/check-local-headers.sh
-	scripts/check-local-headers.sh "$(includedir)" "$(objpfx)" > $@
+	AWK='$(AWK)' scripts/check-local-headers.sh \
+	  "$(includedir)" "$(objpfx)" > $@
 
 ifneq ($(PERL),no)
 installed-headers = argp/argp.h assert/assert.h catgets/nl_types.h \
