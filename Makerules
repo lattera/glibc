@@ -993,6 +993,7 @@ $(common-objpfx)format.lds: $(..)scripts/output-format.sed \
 	$(LINK.o) -shared $(sysdep-LDFLAGS) $(config-LDFLAGS) $(LDFLAGS.so) \
 		  -x c /dev/null -o $@.so -Wl,--verbose -v 2>&1 \
 	| sed -n -f $< > $@.new
+	test -s $@.new
 	rm -f $@.so
 	mv -f $@.new $@
 common-generated += format.lds

@@ -1,5 +1,7 @@
 2011-07-02  Roland McGrath  <roland@hack.frob.com>
 
+	* Makerules ($(common-objpfx)format.lds): Fail if result is empty.
+
 	* Makefile ($(common-objpfx)testrun.sh): Generate to work relative to
 	containing directory rather than embedding absolute directory names.
 
