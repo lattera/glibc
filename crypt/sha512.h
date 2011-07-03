@@ -39,13 +39,8 @@ struct sha512_ctx
 # define USE_TOTAL128
     unsigned int total128 __attribute__ ((__mode__ (TI)));
 #endif
-#if BYTE_ORDER == LITTLE_ENDIAN
-# define TOTAL128_low 0
-# define TOTAL128_high 1
-#else
-# define TOTAL128_low 1
-# define TOTAL128_high 0
-#endif
+#define TOTAL128_low (1 - (BYTE_ORDER == LITTLE_ENDIAN))
+#define TOTAL128_high (BYTE_ORDER == LITTLE_ENDIAN)
     uint64_t total[2];
   };
   uint64_t buflen;
