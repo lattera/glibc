@@ -1,3 +1,11 @@
+2011-07-04  Aurelien Jarno  <aurelien@aurel32.net>
+
+	* sysdeps/powerpc/dl-tls.h: Add _PPC_DL_TLS_H inclusion
+	protection macro.
+	* sysdeps/powerpc/powerpc64/dl-irel.h: Include <ldsodefs.h>
+	and <dl-machine.h>.
+	(Elf64_FuncDesc): Remove.
+
 2011-08-22  David S. Miller  <davem@davemloft.net>
 
 	* sysdeps/unix/sysv/linux/sparc/sparc32/____longjmp_chk.S: Fix
