@@ -1,3 +1,42 @@
+2011-07-02  Roland McGrath  <roland@hack.frob.com>
+
+	* Makerules ($(common-objpfx)format.lds): Fail if result is empty.
+
+	* Makefile ($(common-objpfx)testrun.sh): Generate to work relative to
+	containing directory rather than embedding absolute directory names.
+
+	* scripts/check-local-headers.sh: Rewritten using awk.
+	Match by word, not by line.  Print error messages for matches.
+	* Makefile ($(objpfx)check-local-headers.out): Pass AWK in to it.
+
+	* Makerules [shlib-lds-flags empty]:
+	($(common-objpfx)libc_pic.opts): New target.
+	($(common-objpfx)libc_pic.os.clean): New target.
+	($(common-objpfx)libc.so): Link it instead of libc_pic.os.
+
+	* config.make.in (OBJCOPY): New variable.
+	* aclocal.m4 (LIBC_PROG_BINUTILS): Substitute OBJCOPY too.
+	* configure: Regenerated.
+
+	* config.make.in (use-default-link): New variable.
+	* configure.in (use_default_link): Grok --with-default-link to set it.
+	* configure: Regenerated.
+	* Makerules [$(elf) = yes] [$(use-default-link) = yes]:
+	(shlib-lds, shlib-lds-flags): Define to empty.
+
+	* Makerules (shlib-lds): New variable.
+	(shlib-lds-flags): New variable.
+	(build-shlib, build-moduile, build-module-asneeded): Use it.
+	($(common-objpfx)libc.so): Use $(shlib-lds).
+	($(extra-modules-build:%=$(objpfx)%.so)): Likewise.
+	* iconvdata/extra-module.mk ($(objpfx)$(mod).so): Likewise.
+
+	* elf/dynamic-link.h (elf_get_dynamic_info): Make asserts accept
+	DT_FLAGS/DT_FLAGS_1 with zero flags.
+
+	* elf/Makefile ($(objpfx)ld.so): Use -defsym=_begin=0 instead of
+	linker script munging.
+
 2011-07-02  Ulrich Drepper  <drepper@gmail.com>
 
 	* crypt/sha512.h (struct sha512_ctx): Add union to access total also

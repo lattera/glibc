@@ -69,6 +69,7 @@ have-cc-with-libunwind = @libc_cv_cc_with_libunwind@
 fno-unit-at-a-time = @fno_unit_at_a_time@
 bind-now = @bindnow@
 have-hash-style = @libc_cv_hashstyle@
+use-default-link = @use_default_link@
 
 static-libgcc = @libc_cv_gcc_static_libgcc@
 
@@ -115,6 +116,7 @@ PWD_P = @PWD_P@
 BISON = @BISON@
 AUTOCONF = @AUTOCONF@
 OBJDUMP = @OBJDUMP@
+OBJCOPY = @OBJCOPY@
 
 # Installation tools.
 INSTALL = @INSTALL@

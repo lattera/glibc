@@ -677,6 +677,7 @@ PWD_P
 LD
 AS
 MIG
+OBJCOPY
 OBJDUMP
 AR
 LN_S
@@ -696,6 +697,7 @@ force_install
 bindnow
 oldest_abi
 enable_check_abi
+use_default_link
 with_cvs
 with_fp
 ac_ct_CXX
@@ -770,6 +772,7 @@ with_selinux
 with_xcoff
 with_cvs
 with_headers
+with_default_link
 enable_sanity_checks
 enable_check_abi
 enable_shared
@@ -1464,6 +1467,7 @@ Optional Packages:
   --without-cvs           if CVS should not be used
   --with-headers=PATH     location of system headers to use (for example
                           /usr/src/linux/include) [default=compiler default]
+  --with-default-link     do not use explicit linker scripts [default=no]
   --with-tls              enable support for TLS
   --without-__thread      do not use TLS features even when supporting them
   --with-cpu=CPU          select code for CPU variant
@@ -3581,6 +3585,16 @@ else
 fi
 
 
+
+
+# Check whether --with-default-link was given.
+if test "${with_default_link+set}" = set; then :
+  withval=$with_default_link; use_default_link=$withval
+else
+  use_default_link=no
+fi
+
+
 # Check whether --enable-sanity-checks was given.
 if test "${enable_sanity_checks+set}" = set; then :
   enableval=$enable_sanity_checks; enable_sanity=$enableval
@@ -4672,6 +4686,8 @@ LD=`$CC -print-prog-name=ld`
 AR=`$CC -print-prog-name=ar`
 
 OBJDUMP=`$CC -print-prog-name=objdump`
+
+OBJCOPY=`$CC -print-prog-name=objcopy`
 
 
 # Determine whether we are using GNU binutils.

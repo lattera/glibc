@@ -1,3 +1,8 @@
+2011-07-02  Roland McGrath  <roland@hack.frob.com>
+
+	* tests-mbwc/tst_funcs.h (TST_DECL_VARS, TST_HEAD_LOCALE):
+	Remove unused variable.
+
 2011-05-21  Ulrich Drepper  <drepper@gmail.com>
 
 	[BZ #12788]

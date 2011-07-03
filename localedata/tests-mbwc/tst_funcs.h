@@ -84,7 +84,7 @@ extern int result (FILE * fp, char res, const char *func, const char *loc,
 #define TST_DECL_VARS(_type_)				\
 	int   loc, rec, err_count = 0;			\
 	int   warn_count __attribute__ ((unused));	\
-	int   func_id, seq_num = 0;			\
+	int   seq_num = 0;				\
 	const char *locale;				\
 	int   err_exp, ret_flg;				\
 	int errno_save = 0;				\
@@ -96,8 +96,7 @@ extern int result (FILE * fp, char res, const char *func, const char *loc,
 
 
 #define TST_HEAD_LOCALE(ofunc, s_func) \
-  func_id = TST_HEAD (ofunc).func_id;					      \
-  locale  = TST_HEAD (ofunc).locale;					      \
+  locale = TST_HEAD (ofunc).locale;					      \
   if (setlocale (LC_ALL, locale) == NULL)				      \
     {									      \
       fprintf (stderr, "Warning : can't set locale: %s\nskipping ...\n",      \

@@ -479,6 +479,11 @@ endif
 endif
 
 ifeq (yes,$(elf))
+ifeq (yes,$(use-default-link))
+# If the linker is good enough, we can let it use its default linker script.
+shlib-lds =
+shlib-lds-flags =
+else
 # binutils only position loadable notes into the first page for binaries,
 # not for shared objects
 $(common-objpfx)shlib.lds: $(common-objpfx)config.make $(..)Makerules
@@ -514,8 +519,12 @@ $(common-objpfx)shlib.lds: $(common-objpfx)config.make $(..)Makerules
 	mv -f $@T $@
 common-generated += shlib.lds
 
+shlib-lds = $(common-objpfx)shlib.lds
+shlib-lds-flags = -T $(shlib-lds)
+endif
+
 define build-shlib
-$(build-shlib-helper) -o $@ -T $(common-objpfx)shlib.lds \
+$(build-shlib-helper) -o $@ $(shlib-lds-flags) \
 	  $(csu-objpfx)abi-note.o $(build-shlib-objlist)
 endef
 else
@@ -557,11 +566,11 @@ ifeq (yes,$(elf))
 # binutils only position loadable notes into the first page for binaries,
 # not for shared objects
 define build-module
-$(build-module-helper) -o $@ -T $(common-objpfx)shlib.lds \
+$(build-module-helper) -o $@ $(shlib-lds-flags) \
 	  $(csu-objpfx)abi-note.o $(build-module-objlist)
 endef
 define build-module-asneeded
-$(build-module-helper) -o $@ -T $(common-objpfx)shlib.lds \
+$(build-module-helper) -o $@ $(shlib-lds-flags) \
 	  $(csu-objpfx)abi-note.o \
 	  -Wl,--as-needed $(build-module-objlist) -Wl,--no-as-needed
 endef
@@ -612,13 +621,30 @@ endif
 ifeq ($(elf),yes)
 $(common-objpfx)libc_pic.os: $(common-objpfx)libc_pic.a
 	$(LINK.o) -nostdlib -nostartfiles -r -o $@ \
-	$(LDFLAGS-c_pic.os) -Wl,-d -Wl,--whole-archive $^
+	$(LDFLAGS-c_pic.os) -Wl,-d -Wl,--whole-archive $^ -o $@
+
+ifeq (,$(strip $(shlib-lds-flags)))
+# Generate a list of -R options to excise .gnu.glibc-stub.* sections.
+$(common-objpfx)libc_pic.opts: $(common-objpfx)libc_pic.os
+	$(OBJDUMP) -h $< | \
+	$(AWK) '$$2 ~ /\.gnu\.glibc-stub\./ { print "-R", $$2 }' \
+		> $@T
+	mv -f $@T $@
+# Apply those -R options.
+$(common-objpfx)libc_pic.os.clean: $(common-objpfx)libc_pic.opts \
+				   $(common-objpfx)libc_pic.os
+	$(OBJCOPY) @$^ $@
+generated += libc_pic.opts libc_pic.os.clean
+
+libc_pic_clean := .clean
+endif
+
 # Use our own special initializer and finalizer files for libc.so.
 $(common-objpfx)libc.so: $(elfobjdir)/soinit.os \
-			 $(common-objpfx)libc_pic.os \
+			 $(common-objpfx)libc_pic.os$(libc_pic_clean) \
 			 $(elfobjdir)/sofini.os \
 			 $(elfobjdir)/interp.os $(elfobjdir)/ld.so \
-			 $(common-objpfx)shlib.lds
+			 $(shlib-lds)
 	$(build-shlib)
 ifeq ($(versioning),yes)
 $(common-objpfx)libc.so: $(common-objpfx)libc.map
@@ -689,7 +715,7 @@ include $(patsubst %,$(..)extra-modules.mk,$(modules-names))
 
 extra-modules-build := $(filter-out $(modules-names-nobuild),$(modules-names))
 $(extra-modules-build:%=$(objpfx)%.so): $(objpfx)%.so: \
-		$(objpfx)%.os $(common-objpfx)shlib.lds \
+		$(objpfx)%.os $(shlib-lds) \
 		$(common-objpfx)libc.so $(common-objpfx)libc_nonshared.a
 	$(build-module)
 endif
@@ -967,6 +993,7 @@ $(common-objpfx)format.lds: $(..)scripts/output-format.sed \
 	$(LINK.o) -shared $(sysdep-LDFLAGS) $(config-LDFLAGS) $(LDFLAGS.so) \
 		  -x c /dev/null -o $@.so -Wl,--verbose -v 2>&1 \
 	| sed -n -f $< > $@.new
+	test -s $@.new
 	rm -f $@.so
 	mv -f $@.new $@
 common-generated += format.lds
