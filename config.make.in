@@ -5,7 +5,7 @@ version = @VERSION@
 release = @RELEASE@
 
 # Installation prefixes.
-install_root =
+install_root = $(DESTDIR)
 prefix = @prefix@
 exec_prefix = @exec_prefix@
 datadir = @datadir@
