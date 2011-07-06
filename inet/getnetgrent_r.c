@@ -389,6 +389,11 @@ innetgr (const char *netgroup, const char *host, const char *user,
 			   namep = namep->next)
 			if (strcmp (entry.val.group, namep->name) == 0)
 			  break;
+		      if (namep == NULL)
+			for (namep = entry.needed_groups; namep != NULL;
+			     namep = namep->next)
+			  if (strcmp (entry.val.group, namep->name) == 0)
+			    break;
 		      if (namep == NULL
 			  && strcmp (netgroup, entry.val.group) != 0)
 			{

@@ -2,6 +2,7 @@
 
 	* inet/getnetgrent_r.c (internal_getnetgrent_r): Fix check for known
 	netgroups to read.
+	(innetgr): Likewise.
 
 2011-07-05  Roland McGrath  <roland@hack.frob.com>
 
