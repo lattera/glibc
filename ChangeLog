@@ -1,3 +1,8 @@
+2011-07-06  Ulrich Drepper  <drepper@gmail.com>
+
+	* inet/getnetgrent_r.c (internal_getnetgrent_r): Fix check for known
+	netgroups to read.
+
 2011-07-05  Roland McGrath  <roland@hack.frob.com>
 
 	* config.make.in (install_root): Default to $(DESTDIR).

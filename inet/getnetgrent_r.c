@@ -279,6 +279,11 @@ internal_getnetgrent_r (char **hostp, char **userp, char **domainp,
 	       namep = namep->next)
 	    if (strcmp (datap->val.group, namep->name) == 0)
 	      break;
+	  if (namep == NULL)
+	    for (namep = datap->needed_groups; namep != NULL;
+		 namep = namep->next)
+	      if (strcmp (datap->val.group, namep->name) == 0)
+		break
 	  if (namep != NULL)
 	    /* Really ignore.  */
 	    continue;
