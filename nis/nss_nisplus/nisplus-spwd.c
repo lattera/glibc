@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 2001, 2002, 2003, 2005, 2007
+/* Copyright (C) 1997, 2001, 2002, 2003, 2005, 2007, 2011
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1997.
@@ -57,7 +57,7 @@ _nss_nisplus_setspent (int stayopen)
 
   __libc_lock_unlock (lock);
 
-  return NSS_STATUS_SUCCESS;
+  return status;
 }
 
 enum nss_status
@@ -91,7 +91,7 @@ internal_nisplus_getspent_r (struct spwd *sp, char *buffer, size_t buflen,
 	{
 	  saved_res = NULL;
 
-          if (pwd_tablename_val == NULL)
+	  if (pwd_tablename_val == NULL)
 	    {
 	      enum nss_status status = _nss_pwd_create_tablename (errnop);
 

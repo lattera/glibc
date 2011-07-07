@@ -1,4 +1,4 @@
-/* Copyright (C) 1997,1998,2000-2003,2005,2006,2007
+/* Copyright (C) 1997,1998,2000-2003,2005,2006,2007,2011
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@suse.de>, 1997.
@@ -40,10 +40,10 @@ static u_long tablename_len;
 
 
 #define NISENTRYVAL(idx, col, res) \
-        (NIS_RES_OBJECT (res)[idx].zo_data.objdata_u.en_data.en_cols.en_cols_val[col].ec_value.ec_value_val)
+	(NIS_RES_OBJECT (res)[idx].zo_data.objdata_u.en_data.en_cols.en_cols_val[col].ec_value.ec_value_val)
 
 #define NISENTRYLEN(idx, col, res) \
-        (NIS_RES_OBJECT (res)[idx].zo_data.objdata_u.en_data.en_cols.en_cols_val[col].ec_value.ec_value_len)
+	(NIS_RES_OBJECT (res)[idx].zo_data.objdata_u.en_data.en_cols.en_cols_val[col].ec_value.ec_value_len)
 
 static int
 _nss_nisplus_parse_etherent (nis_result *result, struct etherent *ether,
@@ -136,7 +136,7 @@ _nss_nisplus_setetherent (int stayopen)
 
   __libc_lock_unlock (lock);
 
-  return NSS_STATUS_SUCCESS;
+  return status;
 }
 
 enum nss_status
