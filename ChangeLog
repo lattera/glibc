@@ -1,3 +1,8 @@
+2011-07-04  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* Makefile (strop-tests): Add strncat.
+	* string/test-strncat.c: New file.
+
 2011-06-30  Marek Polacek  <mpolacek@redhat.com>
 
 	* iconvdata/johab.c: Don't inline `johab_sym_hanja_to_ucs' function.
