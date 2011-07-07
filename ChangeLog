@@ -1,3 +1,7 @@
+2011-07-05  Andreas Jaeger  <aj@suse.de>
+
+	* resolv/res_comp.c (dn_skipname): Remove unused variable.
+
 2011-07-06  Marek Polacek  <mpolacek@redhat.com>
 
 	* nis/nss_nisplus/nisplus-spwd.c (_nss_nisplus_setspent): Honour the

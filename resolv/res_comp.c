@@ -152,7 +152,7 @@ libresolv_hidden_def (dn_skipname)
 
 int
 res_hnok(const char *dn) {
-	int ppch = '\0', pch = PERIOD, ch = *dn++;
+	int pch = PERIOD, ch = *dn++;
 
 	while (ch != '\0') {
 		int nch = *dn++;
@@ -169,7 +169,7 @@ res_hnok(const char *dn) {
 			if (!middlechar(ch))
 				return (0);
 		}
-		ppch = pch, pch = ch, ch = nch;
+		pch = ch, ch = nch;
 	}
 	return (1);
 }
