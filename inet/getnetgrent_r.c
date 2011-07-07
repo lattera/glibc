@@ -279,6 +279,11 @@ internal_getnetgrent_r (char **hostp, char **userp, char **domainp,
 	       namep = namep->next)
 	    if (strcmp (datap->val.group, namep->name) == 0)
 	      break;
+	  if (namep == NULL)
+	    for (namep = datap->needed_groups; namep != NULL;
+		 namep = namep->next)
+	      if (strcmp (datap->val.group, namep->name) == 0)
+		break
 	  if (namep != NULL)
 	    /* Really ignore.  */
 	    continue;
@@ -384,6 +389,11 @@ innetgr (const char *netgroup, const char *host, const char *user,
 			   namep = namep->next)
 			if (strcmp (entry.val.group, namep->name) == 0)
 			  break;
+		      if (namep == NULL)
+			for (namep = entry.needed_groups; namep != NULL;
+			     namep = namep->next)
+			  if (strcmp (entry.val.group, namep->name) == 0)
+			    break;
 		      if (namep == NULL
 			  && strcmp (netgroup, entry.val.group) != 0)
 			{

@@ -374,7 +374,7 @@ nscd_getserv_r (const char *crit, size_t critlen, const char *proto,
       if (retval != -1)
 	{
 	  if (!alloca_aliases_len)
-	    free (aliases_len);
+	    free ((void *) aliases_len);
 	  goto retry;
 	}
     }

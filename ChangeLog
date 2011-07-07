@@ -1,3 +1,17 @@
+2011-07-06  Ulrich Drepper  <drepper@gmail.com>
+
+	* inet/getnetgrent_r.c (internal_getnetgrent_r): Fix check for known
+	netgroups to read.
+	(innetgr): Likewise.
+
+2011-07-05  Roland McGrath  <roland@hack.frob.com>
+
+	* config.make.in (install_root): Default to $(DESTDIR).
+
+2011-07-05  Ulrich Drepper  <drepper@gmail.com>
+
+	* nscd/nscd_getserv_r.c (nscd_getserv_r): Add cast to avoid warning.
+
 2011-07-02  Roland McGrath  <roland@hack.frob.com>
 
 	* Makerules ($(common-objpfx)format.lds): Fail if result is empty.
