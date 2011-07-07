@@ -1,3 +1,8 @@
+2011-06-21  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/s390/s390-64/Makefile ($(inst_gconvdir)/gconv-modules):
+	Copy rule from iconvdata/Makefile.
+
 2011-07-06  Ulrich Drepper  <drepper@gmail.com>
 
 	[BZ #12922]
