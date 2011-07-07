@@ -1,3 +1,13 @@
+2011-07-07  Ulrich Drepper  <drepper@gmail.com>
+
+	[BZ #12868]
+	* sysdeps/unix/sysv/linux/linux_fsinfo.h: Define Lustre constants.
+	* sysdeps/unix/sysv/linux/internal_statvfs.c (__statvfs_getflags):
+	Handle Lustre.
+	* sysdeps/unix/sysv/linux/pathconf.c (__statfs_link_max): Likewise.
+	(__statfs_filesize_max): Likewise.
+	Patch mostly by Andreas Dilger <adilger@whamcloud.com>.
+
 2011-07-05  Andreas Jaeger  <aj@suse.de>
 
 	* resolv/res_comp.c (dn_skipname): Remove unused variable.

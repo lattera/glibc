@@ -121,6 +121,9 @@ __statfs_link_max (int result, const struct statfs *fsbuf)
     case XFS_SUPER_MAGIC:
       return XFS_LINK_MAX;
 
+    case LUSTRE_SUPER_MAGIC:
+      return LUSTRE_LINK_MAX;
+
     default:
       return LINUX_LINK_MAX;
     }
@@ -157,6 +160,7 @@ __statfs_filesize_max (int result, const struct statfs *fsbuf)
     case JFS_SUPER_MAGIC:
     case VXFS_SUPER_MAGIC:
     case CGROUP_SUPER_MAGIC:
+    case LUSTRE_SUPER_MAGIC:
       return 64;
 
     case MSDOS_SUPER_MAGIC:

@@ -1,5 +1,5 @@
 /* Constants from kernel header for various FSes.
-   Copyright (C) 1998-2003,2005,2010 Free Software Foundation, Inc.
+   Copyright (C) 1998-2003,2005,2010,2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -83,6 +83,9 @@
 /* Constant that identifies the `logfs' filesystem.  */
 #define LOGFS_MAGIC_U32		0xc97e8168u
 
+/* Constant that identifies the `lustre' filesystem.  */
+#define LUSTRE_SUPER_MAGIC	0x0BD00BD0
+
 /* Constants that identify the `minix2' filesystem.  */
 #define MINIX2_SUPER_MAGIC	0x2468
 #define MINIX2_SUPER_MAGIC2	0x2478
@@ -150,6 +153,8 @@
 /* Maximum link counts.  */
 #define COH_LINK_MAX		10000
 #define EXT2_LINK_MAX		32000
+#define EXT4_LINK_MAX		65000
+#define LUSTRE_LINK_MAX		EXT4_LINK_MAX
 #define MINIX2_LINK_MAX		65530
 #define MINIX_LINK_MAX		250
 #define REISERFS_LINK_MAX	64535
