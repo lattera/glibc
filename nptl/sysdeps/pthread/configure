@@ -122,7 +122,7 @@ fi
   # interfere with the next link command; also delete a directory that is
   # left behind by Apple's compiler.  We do this before executing the actions.
   rm -rf conftest.dSYM conftest_ipa8_conftest.oo
-  eval $as_lineno_stack; test "x$as_lineno_stack" = x && { as_lineno=; unset as_lineno;}
+  eval $as_lineno_stack; ${as_lineno_stack:+:} unset as_lineno
   as_fn_set_status $ac_retval
 
 } # ac_fn_c_try_link
@@ -148,7 +148,7 @@ fi
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for forced unwind support" >&5
 $as_echo_n "checking for forced unwind support... " >&6; }
-if test "${libc_cv_forced_unwind+set}" = set; then :
+if ${libc_cv_forced_unwind+:} false; then :
   $as_echo_n "(cached) " >&6
 else
   cat confdefs.h - <<_ACEOF >conftest.$ac_ext
@@ -182,7 +182,7 @@ if test $libc_cv_forced_unwind = yes; then
   CFLAGS="$CFLAGS -Werror -fexceptions"
   { $as_echo "$as_me:${as_lineno-$LINENO}: checking for C cleanup handling" >&5
 $as_echo_n "checking for C cleanup handling... " >&6; }
-if test "${libc_cv_c_cleanup+set}" = set; then :
+if ${libc_cv_c_cleanup+:} false; then :
   $as_echo_n "(cached) " >&6
 else
     cat confdefs.h - <<_ACEOF >conftest.$ac_ext

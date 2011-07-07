@@ -112,7 +112,7 @@ fi
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for grep that handles long lines and -e" >&5
 $as_echo_n "checking for grep that handles long lines and -e... " >&6; }
-if test "${ac_cv_path_GREP+set}" = set; then :
+if ${ac_cv_path_GREP+:} false; then :
   $as_echo_n "(cached) " >&6
 else
   if test -z "$GREP"; then
@@ -175,7 +175,7 @@ $as_echo "$ac_cv_path_GREP" >&6; }
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for egrep" >&5
 $as_echo_n "checking for egrep... " >&6; }
-if test "${ac_cv_path_EGREP+set}" = set; then :
+if ${ac_cv_path_EGREP+:} false; then :
   $as_echo_n "(cached) " >&6
 else
   if echo a | $GREP -E '(a|b)' >/dev/null 2>&1
@@ -242,7 +242,7 @@ $as_echo "$ac_cv_path_EGREP" >&6; }
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking installed Linux kernel header files" >&5
 $as_echo_n "checking installed Linux kernel header files... " >&6; }
-if test "${libc_cv_linux2010+set}" = set; then :
+if ${libc_cv_linux2010+:} false; then :
   $as_echo_n "(cached) " >&6
 else
   cat confdefs.h - <<_ACEOF >conftest.$ac_ext
