@@ -1,5 +1,15 @@
 2011-07-07  Ulrich Drepper  <drepper@gmail.com>
 
+	* sysdeps/unix/sysv/linux/pathconf.c (distinguish_extX): New function.
+	(__statfs_link_max): Use it to dostinguish between ext2/3 and ext4.
+	The latter has a higher limit.  Take additional parameter to pass to
+	the new function.
+	(__pathconf): Pass file to __statfs_link_max.
+	* sysdeps/unix/sysv/linux/fpathconf.c (__fpathconf): Pass fd to
+	__statfs_link_max.
+	* sysdeps/unix/sysv/linux/pathconf.h: Adjust prototype of
+	__statfs_link_max.
+
 	[BZ #12868]
 	* sysdeps/unix/sysv/linux/linux_fsinfo.h: Define Lustre constants.
 	* sysdeps/unix/sysv/linux/internal_statvfs.c (__statvfs_getflags):

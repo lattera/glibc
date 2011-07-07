@@ -1,5 +1,5 @@
 /* Get file-specific information about descriptor FD.  Linux version.
-   Copyright (C) 1991,1995,1996,1998-2003,2008,2010
+   Copyright (C) 1991,1995,1996,1998-2003,2008,2010,2011
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -40,7 +40,7 @@ __fpathconf (fd, name)
   switch (name)
     {
     case _PC_LINK_MAX:
-      return __statfs_link_max (__fstatfs (fd, &fsbuf), &fsbuf);
+      return __statfs_link_max (__fstatfs (fd, &fsbuf), &fsbuf, NULL, fd);
 
     case _PC_FILESIZEBITS:
       return __statfs_filesize_max (__fstatfs (fd, &fsbuf), &fsbuf);

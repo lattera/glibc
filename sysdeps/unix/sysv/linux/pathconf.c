@@ -17,8 +17,11 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <unistd.h>
 #include <errno.h>
+#include <mntent.h>
+#include <stdio_ext.h>
+#include <unistd.h>
+#include <sys/sysmacros.h>
 
 #include "pathconf.h"
 #include "linux_fsinfo.h"
@@ -42,7 +45,7 @@ __pathconf (const char *file, int name)
   switch (name)
     {
     case _PC_LINK_MAX:
-      return __statfs_link_max (__statfs (file, &fsbuf), &fsbuf);
+      return __statfs_link_max (__statfs (file, &fsbuf), &fsbuf, file, -1);
 
     case _PC_FILESIZEBITS:
       return __statfs_filesize_max (__statfs (file, &fsbuf), &fsbuf);
@@ -74,9 +77,77 @@ __pathconf (const char *file, int name)
 }
 
 
+static long int
+distinguish_extX (const struct statfs *fsbuf, const char *file, int fd)
+{
+  char buf[64];
+  char path[PATH_MAX];
+  struct stat64 st;
+
+  if ((file == NULL ? fstat64 (fd, &st) : stat64 (file, &st)) != 0)
+    /* Strange.  The statfd call worked, but stat fails.  Default to
+       the more pessimistic value.  */
+    return EXT2_LINK_MAX;
+
+  __snprintf (buf, sizeof (buf), "/sys/dev/block/%u:%u",
+	      gnu_dev_major (st.st_dev), gnu_dev_minor (st.st_dev));
+
+  ssize_t n = __readlink (buf, path, sizeof (path));
+  if (n != -1 && n < sizeof (path))
+    {
+      path[n] = '\0';
+      char *base = strdupa (basename (path));
+      __snprintf (path, sizeof (path), "/sys/fs/ext4/%s", base);
+
+      return __access (path, F_OK) == 0 ? EXT4_LINK_MAX : EXT2_LINK_MAX;
+    }
+
+  /* XXX Is there a better way to distinguish ext2/3 from ext4 than
+     iterating over the mounted filesystems and compare the device
+     numbers?  */
+  FILE *mtab = __setmntent ("/proc/mounts", "r");
+  if (mtab == NULL)
+    mtab = __setmntent (_PATH_MOUNTED, "r");
+
+  /* By default be conservative.  */
+  long int result = EXT2_LINK_MAX;
+  if (mtab != NULL)
+    {
+      struct mntent mntbuf;
+      char tmpbuf[1024];
+
+      /* No locking needed.  */
+      (void) __fsetlocking (mtab, FSETLOCKING_BYCALLER);
+
+      while (__getmntent_r (mtab, &mntbuf, tmpbuf, sizeof (tmpbuf)))
+	{
+	  if (strcmp (mntbuf.mnt_type, "ext2") != 0
+	      && strcmp (mntbuf.mnt_type, "ext3") != 0
+	      && strcmp (mntbuf.mnt_type, "ext4") != 0)
+	    continue;
+
+	  struct stat64 fsst;
+	  if (stat64 (mntbuf.mnt_dir, &fsst) >= 0
+	      && st.st_dev == fsst.st_dev)
+	    {
+	      if (strcmp (mntbuf.mnt_type, "ext4") == 0)
+		result = EXT4_LINK_MAX;
+	      break;
+	    }
+	}
+
+      /* Close the file.  */
+      __endmntent (mtab);
+    }
+
+  return result;
+}
+
+
 /* Used like: return statfs_link_max (__statfs (name, &buf), &buf); */
 long int
-__statfs_link_max (int result, const struct statfs *fsbuf)
+__statfs_link_max (int result, const struct statfs *fsbuf, const char *file,
+		   int fd)
 {
   if (result < 0)
     {
@@ -91,7 +162,11 @@ __statfs_link_max (int result, const struct statfs *fsbuf)
   switch (fsbuf->f_type)
     {
     case EXT2_SUPER_MAGIC:
-      return EXT2_LINK_MAX;
+      /* Unfortunately the kernel does not return a different magic number
+	 for ext4.  This would be necessary to easily detect etx4 since it
+	 has a different LINK_MAX value.  Therefore we have to find it out
+	 the hard way.  */
+      return distinguish_extX (fsbuf, file, fd);
 
     case MINIX_SUPER_MAGIC:
     case MINIX_SUPER_MAGIC2:

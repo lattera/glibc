@@ -1,5 +1,6 @@
 /* Common parts of Linux implementation of pathconf and fpathconf.
-   Copyright (C) 1991,1995,1996,1998-2003,2008 Free Software Foundation, Inc.
+   Copyright (C) 1991,1995,1996,1998-2003,2008,2011
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -22,8 +23,10 @@
 #include <sys/statfs.h>
 
 
-/* Used like: return __statfs_link_max (__statfs (name, &buf), &buf); */
-extern long int __statfs_link_max (int result, const struct statfs *fsbuf);
+/* Used like: return __statfs_link_max (__statfs (name, &buf), &buf,
+					name, -1); */
+extern long int __statfs_link_max (int result, const struct statfs *fsbuf,
+				   const char *file, int fd);
 
 
 /* Used like: return __statfs_filesize_max (__statfs (name, &buf), &buf); */
