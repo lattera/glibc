@@ -1,3 +1,9 @@
+2011-07-06  Ulrich Drepper  <drepper@gmail.com>
+
+	[BZ #12922]
+	* posix/getopt.c (_getopt_internal_r): When "W;" is in short options
+	but no long options are defined, just return 'W'.
+
 2011-06-22  Marek Polacek  <mpolacek@redhat.com>
 
 	[BZ #9696]
