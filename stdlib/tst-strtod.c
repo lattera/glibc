@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,1996-2001,2003,2009 Free Software Foundation, Inc.
+/* Copyright (C) 1991,1996-2001,2003,2009,2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -72,6 +72,7 @@ static const struct ltest tests[] =
     { "+InFiNiTy", HUGE_VAL, '\0', 0 },
 #endif
     { "0x80000Ap-23", 0x80000Ap-23, '\0', 0 },
+    { "1e-324", 0, '\0', ERANGE },
     { NULL, 0, '\0', 0 }
   };
 
