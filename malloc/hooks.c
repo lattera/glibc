@@ -1,5 +1,5 @@
 /* Malloc implementation for multiple threads without lock contention.
-   Copyright (C) 2001-2006, 2007, 2008, 2009 Free Software Foundation, Inc.
+   Copyright (C) 2001-2006, 2007, 2008, 2009, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Wolfram Gloger <wg@malloc.de>, 2001.
 
@@ -398,7 +398,6 @@ memalign_check(alignment, bytes, caller)
      size_t alignment; size_t bytes; const Void_t *caller;
 #endif
 {
-  INTERNAL_SIZE_T nb;
   Void_t* mem;
 
   if (alignment <= MALLOC_ALIGNMENT) return malloc_check(bytes, NULL);
@@ -408,7 +407,6 @@ memalign_check(alignment, bytes, caller)
     MALLOC_FAILURE_ACTION;
     return NULL;
   }
-  checked_request2size(bytes+1, nb);
   (void)mutex_lock(&main_arena.mutex);
   mem = (top_check() >= 0) ? _int_memalign(&main_arena, alignment, bytes+1) :
     NULL;
