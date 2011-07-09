@@ -1,3 +1,9 @@
+2011-07-09  Roland McGrath  <roland@hack.frob.com>
+
+	* configure.in (READELF): Find it with AC_CHECK_TOOL.
+	Update tests that use readelf to use $READELF instead.
+	* configure: Regenerated.
+
 2011-07-08  Ulrich Drepper  <drepper@gmail.com>
 
 	* malloc/hooks.c (memalign_check): Avoid using checked_request2size
