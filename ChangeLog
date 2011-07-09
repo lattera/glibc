@@ -1,5 +1,9 @@
 2011-07-09  Roland McGrath  <roland@hack.frob.com>
 
+	* configure.in (.ctors/.dtors header and trailer check):
+	Use an empirical test on a built program.
+	* configure: Regenerated.
+
 	* configure.in (-z relro check): Use an empirical test on a built DSO.
 	Detect, but do not require, on ia64.
 	* configure: Regenerated.
