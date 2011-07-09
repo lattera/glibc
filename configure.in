@@ -1561,26 +1561,72 @@ EOF
   fi
   rm -f conftest*])
 
+  # Add-on fragments can set these for other machines.
+  libc_commonpagesize=${libc_commonpagesize:-no}
+  libc_relro_required=${libc_relro_required:-no}
   case "$base_machine" in
-changequote(,)dnl
-    i[34567]86 | x86_64 | powerpc* | s390* | sparc* | alpha*)
-changequote([,])dnl
-      AC_CACHE_CHECK(for -z relro option,
-		     libc_cv_z_relro, [dnl
-  libc_cv_z_relro=no
-  if AC_TRY_COMMAND([${CC-cc} -v --help 2>&1|grep "z relro" 1>&AS_MESSAGE_LOG_FD])
-  then
-    if AC_TRY_COMMAND([${CC-cc} -Wl,--verbose 2>&1|grep DATA_SEGMENT_RELRO_END 1>&AS_MESSAGE_LOG_FD])
-    then
-      libc_cv_z_relro=yes
-    fi
-  fi])
-      if test "$libc_cv_z_relro" = no; then
-	AC_MSG_ERROR(linker with -z relro support required)
-      fi
+    i[[34567]]86 | x86_64 | powerpc* | s390*)
+      libc_commonpagesize=0x1000
+      libc_relro_required=yes
       ;;
-    *) ;;
-   esac
+    sparc*)
+      libc_commonpagesize=0x2000
+      libc_relro_required=yes
+      ;;
+    ia64*)
+      libc_commonpagesize=0x4000
+      ;;
+    alpha*)
+      libc_commonpagesize=0x10000
+      libc_relro_required=yes
+      ;;
+  esac
+
+  if test $libc_commonpagesize != no; then
+    AC_CACHE_CHECK(for -z relro option,
+		   libc_cv_z_relro, [dnl
+    libc_cv_z_relro=no
+    AC_LANG_CONFTEST([AC_LANG_SOURCE([[
+int _start (void) { return 42; }
+extern void _exit (int);
+const void *relro[] = { &_start, &_exit, 0 };
+]])])
+    cat > conftest.awk <<\EOF
+BEGIN {
+  result = "no"
+  commonpagesize = strtonum(commonpagesize)
+}
+{ print "LINE:", $0 > "/dev/stderr" }
+$1 == "GNU_RELRO" {
+  vaddr = strtonum($3)
+  memsz = strtonum($6)
+  end = vaddr + memsz
+  printf "vaddr %#x memsz %#x end %#x commonpagesize %#x\n", \
+    vaddr, memsz, end, commonpagesize > "/dev/stderr"
+  result = (end % commonpagesize == 0) ? "yes" : "broken"
+}
+END { print result }
+EOF
+    AC_TRY_COMMAND([${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS
+		    -fPIC -shared -o conftest.so conftest.c
+		    -nostartfiles -nostdlib
+		    -Wl,-z,relro 1>&AS_MESSAGE_LOG_FD]) &&
+    AC_TRY_COMMAND([$READELF -Wl conftest.so > conftest.ph]) &&
+    AC_TRY_COMMAND([
+      $AWK -v commonpagesize=$libc_commonpagesize -f conftest.awk
+	   conftest.ph > conftest.cps
+    ]) &&
+    libc_cv_z_relro=`cat conftest.cps 2>&AS_MESSAGE_LOG_FD`
+    rm -f conftest*])
+    if { test "x$libc_relro_required" = xyes &&
+	 test "x$libc_cv_z_relro" != xyes
+       }
+    then
+      AC_MSG_ERROR(linker with -z relro support required)
+    fi
+  else
+    AC_MSG_WARN([missing architecture parameter to check for working -z relro])
+  fi
 
   AC_CACHE_CHECK(for -Bgroup option,
 		 libc_cv_Bgroup, [dnl

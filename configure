@@ -6342,40 +6342,97 @@ fi
 { $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_z_initfirst" >&5
 $as_echo "$libc_cv_z_initfirst" >&6; }
 
+  # Add-on fragments can set these for other machines.
+  libc_commonpagesize=${libc_commonpagesize:-no}
+  libc_relro_required=${libc_relro_required:-no}
   case "$base_machine" in
-    i[34567]86 | x86_64 | powerpc* | s390* | sparc* | alpha*)
-      { $as_echo "$as_me:${as_lineno-$LINENO}: checking for -z relro option" >&5
+    i[34567]86 | x86_64 | powerpc* | s390*)
+      libc_commonpagesize=0x1000
+      libc_relro_required=yes
+      ;;
+    sparc*)
+      libc_commonpagesize=0x2000
+      libc_relro_required=yes
+      ;;
+    ia64*)
+      libc_commonpagesize=0x4000
+      ;;
+    alpha*)
+      libc_commonpagesize=0x10000
+      libc_relro_required=yes
+      ;;
+  esac
+
+  if test $libc_commonpagesize != no; then
+    { $as_echo "$as_me:${as_lineno-$LINENO}: checking for -z relro option" >&5
 $as_echo_n "checking for -z relro option... " >&6; }
 if ${libc_cv_z_relro+:} false; then :
   $as_echo_n "(cached) " >&6
 else
-    libc_cv_z_relro=no
-  if { ac_try='${CC-cc} -v --help 2>&1|grep "z relro" 1>&5'
+      libc_cv_z_relro=no
+    cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+int _start (void) { return 42; }
+extern void _exit (int);
+const void *relro[] = { &_start, &_exit, 0 };
+
+_ACEOF
+    cat > conftest.awk <<\EOF
+BEGIN {
+  result = "no"
+  commonpagesize = strtonum(commonpagesize)
+}
+{ print "LINE:", $0 > "/dev/stderr" }
+$1 == "GNU_RELRO" {
+  vaddr = strtonum($3)
+  memsz = strtonum($6)
+  end = vaddr + memsz
+  printf "vaddr %#x memsz %#x end %#x commonpagesize %#x\n", \
+    vaddr, memsz, end, commonpagesize > "/dev/stderr"
+  result = (end % commonpagesize == 0) ? "yes" : "broken"
+}
+END { print result }
+EOF
+    { ac_try='${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS
+		    -fPIC -shared -o conftest.so conftest.c
+		    -nostartfiles -nostdlib
+		    -Wl,-z,relro 1>&5'
   { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
   (eval $ac_try) 2>&5
   ac_status=$?
   $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
-  test $ac_status = 0; }; }
-  then
-    if { ac_try='${CC-cc} -Wl,--verbose 2>&1|grep DATA_SEGMENT_RELRO_END 1>&5'
+  test $ac_status = 0; }; } &&
+    { ac_try='$READELF -Wl conftest.so > conftest.ph'
   { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
   (eval $ac_try) 2>&5
   ac_status=$?
   $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
-  test $ac_status = 0; }; }
-    then
-      libc_cv_z_relro=yes
-    fi
-  fi
+  test $ac_status = 0; }; } &&
+    { ac_try='
+      $AWK -v commonpagesize=$libc_commonpagesize -f conftest.awk
+	   conftest.ph > conftest.cps
+    '
+  { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; } &&
+    libc_cv_z_relro=`cat conftest.cps 2>&5`
+    rm -f conftest*
 fi
 { $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_z_relro" >&5
 $as_echo "$libc_cv_z_relro" >&6; }
-      if test "$libc_cv_z_relro" = no; then
-	as_fn_error $? "linker with -z relro support required" "$LINENO" 5
-      fi
-      ;;
-    *) ;;
-   esac
+    if { test "x$libc_relro_required" = xyes &&
+	 test "x$libc_cv_z_relro" != xyes
+       }
+    then
+      as_fn_error $? "linker with -z relro support required" "$LINENO" 5
+    fi
+  else
+    { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: missing architecture parameter to check for working -z relro" >&5
+$as_echo "$as_me: WARNING: missing architecture parameter to check for working -z relro" >&2;}
+  fi
 
   { $as_echo "$as_me:${as_lineno-$LINENO}: checking for -Bgroup option" >&5
 $as_echo_n "checking for -Bgroup option... " >&6; }

@@ -1,5 +1,9 @@
 2011-07-09  Roland McGrath  <roland@hack.frob.com>
 
+	* configure.in (-z relro check): Use an empirical test on a built DSO.
+	Detect, but do not require, on ia64.
+	* configure: Regenerated.
+
 	* configure.in (READELF): Find it with AC_CHECK_TOOL.
 	Update tests that use readelf to use $READELF instead.
 	* configure: Regenerated.
