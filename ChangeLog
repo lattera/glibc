@@ -1,3 +1,11 @@
+2011-07-09  Ulrich Drepper  <drepper@gmail.com>
+
+	* po/pl.po: Update from translation team.
+	* po/ja.po: Likewise.
+	* po/ru.po: Likewise.
+	* po/ko.po: Likewise.
+	* po/fr.po: Likewise.
+
 2011-07-09  Roland McGrath  <roland@hack.frob.com>
 
 	* configure.in (.ctors/.dtors header and trailer check):
@@ -25,7 +33,7 @@
 2011-07-07  Ulrich Drepper  <drepper@gmail.com>
 
 	* sysdeps/unix/sysv/linux/pathconf.c (distinguish_extX): New function.
-	(__statfs_link_max): Use it to dostinguish between ext2/3 and ext4.
+	(__statfs_link_max): Use it to distinguish between ext2/3 and ext4.
 	The latter has a higher limit.  Take additional parameter to pass to
 	the new function.
 	(__pathconf): Pass file to __statfs_link_max.
