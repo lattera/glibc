@@ -1,5 +1,6 @@
 /* Startup support for ELF initializers/finalizers in the main executable.
-   Copyright (C) 2002, 2003, 2004, 2005, 2009 Free Software Foundation, Inc.
+   Copyright (C) 2002,2003,2004,2005,2009,2011
+	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -105,7 +106,7 @@ void
 __libc_csu_init (int argc, char **argv, char **envp)
 {
   /* For dynamically linked executables the preinit array is executed by
-     the dynamic linker (before initializing any shared object.  */
+     the dynamic linker (before initializing any shared object).  */
 
 #ifndef LIBC_NONSHARED
   /* For static executables, preinit happens right before init.  */

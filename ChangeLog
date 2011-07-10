@@ -1,3 +1,7 @@
+2011-07-10  Roland McGrath  <roland@hack.frob.com>
+
+	* csu/elf-init.c (__libc_csu_init): Comment typo.
+
 2011-07-09  Ulrich Drepper  <drepper@gmail.com>
 
 	* po/pl.po: Update from translation team.
