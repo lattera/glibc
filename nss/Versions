@@ -97,6 +97,8 @@ libnss_files {
     _nss_files_getsecretkey;
 
     _nss_files_initgroups_dyn;
+
+    _nss_files_init;
   }
 }
 
@@ -153,5 +155,7 @@ libnss_db {
     _nss_db_getspnam_r;
 
     _nss_db_initgroups_dyn;
+
+    _nss_db_init;
   }
 }

@@ -1,4 +1,5 @@
-/* Copyright (C) 1996-1999,2001-2007,2009,2010 Free Software Foundation, Inc.
+/* Copyright (C) 1996-1999,2001-2007,2009,2010,2011
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -40,6 +41,7 @@
 
 #include "nsswitch.h"
 #include "../nscd/nscd_proto.h"
+#include <sysdep.h>
 
 /* Prototypes for the local functions.  */
 static name_database *nss_parse_file (const char *fname) internal_function;
@@ -86,6 +88,12 @@ static const char *const __nss_shlib_revision = LIBNSS_FILES_SO + 15;
 static name_database *service_table;
 
 
+/* Nonzero if this is the nscd process.  */
+static bool is_nscd;
+/* The callback passed to the init functions when nscd is used.  */
+static void (*nscd_init_cb) (size_t, struct traced_file *);
+
+
 /* -1 == database not found
     0 == database entry pointer stored */
 int
@@ -129,7 +137,7 @@ __nss_database_lookup (const char *database, const char *alternate_name,
     }
 
   /* No configuration data is available, either because nsswitch.conf
-     doesn't exist or because it doesn't has a line for this database.
+     doesn't exist or because it doesn't have a line for this database.
 
      DEFCONFIG specifies the default service list for this database,
      or null to use the most common default.  */
@@ -285,6 +293,79 @@ known_compare (const void *p1, const void *p2)
 }
 
 
+#if !defined DO_STATIC_NSS || defined SHARED
+/* Load library.  */
+static int
+nss_load_library (service_user *ni)
+{
+  if (ni->library == NULL)
+    {
+      /* This service has not yet been used.  Fetch the service
+	 library for it, creating a new one if need be.  If there
+	 is no service table from the file, this static variable
+	 holds the head of the service_library list made from the
+	 default configuration.  */
+      static name_database default_table;
+      ni->library = nss_new_service (service_table ?: &default_table,
+				     ni->name);
+      if (ni->library == NULL)
+	return -1;
+    }
+
+  if (ni->library->lib_handle == NULL)
+    {
+      /* Load the shared library.  */
+      size_t shlen = (7 + strlen (ni->library->name) + 3
+		      + strlen (__nss_shlib_revision) + 1);
+      int saved_errno = errno;
+      char shlib_name[shlen];
+
+      /* Construct shared object name.  */
+      __stpcpy (__stpcpy (__stpcpy (__stpcpy (shlib_name,
+					      "libnss_"),
+				    ni->library->name),
+			  ".so"),
+		__nss_shlib_revision);
+
+      ni->library->lib_handle = __libc_dlopen (shlib_name);
+      if (ni->library->lib_handle == NULL)
+	{
+	  /* Failed to load the library.  */
+	  ni->library->lib_handle = (void *) -1l;
+	  __set_errno (saved_errno);
+	}
+      else if (is_nscd)
+	{
+	  /* Call the init function when nscd is used.  */
+	  size_t initlen = (5 + strlen (ni->library->name)
+			    + strlen ("_init") + 1);
+	  char init_name[initlen];
+
+	  /* Construct the init function name.  */
+	  __stpcpy (__stpcpy (__stpcpy (init_name,
+					"_nss_"),
+			      ni->library->name),
+		    "_init");
+
+	  /* Find the optional init function.  */
+	  void (*ifct) (void (*) (size_t, struct traced_file *))
+	    = __libc_dlsym (ni->library->lib_handle, init_name);
+	  if (ifct != NULL)
+	    {
+	      void (*cb) (size_t, struct traced_file *) = nscd_init_cb;
+# ifdef PTR_DEMANGLE
+	      PTR_DEMANGLE (cb);
+# endif
+	      ifct (cb);
+	    }
+	}
+    }
+
+  return 0;
+}
+#endif
+
+
 void *
 __nss_lookup_function (service_user *ni, const char *fct_name)
 {
@@ -331,47 +412,13 @@ __nss_lookup_function (service_user *ni, const char *fct_name)
 	  *found = known;
 	  known->fct_name = fct_name;
 
-	  if (ni->library == NULL)
-	    {
-	      /* This service has not yet been used.  Fetch the service
-		 library for it, creating a new one if need be.  If there
-		 is no service table from the file, this static variable
-		 holds the head of the service_library list made from the
-		 default configuration.  */
-	      static name_database default_table;
-	      ni->library = nss_new_service (service_table ?: &default_table,
-					     ni->name);
-	      if (ni->library == NULL)
-		{
-		  /* This only happens when out of memory.  */
-		  free (known);
-		  goto remove_from_tree;
-		}
-	    }
-
 #if !defined DO_STATIC_NSS || defined SHARED
-	  if (ni->library->lib_handle == NULL)
+	  /* Load the appropriate library.  */
+	  if (nss_load_library (ni) != 0)
 	    {
-	      /* Load the shared library.  */
-	      size_t shlen = (7 + strlen (ni->library->name) + 3
-			      + strlen (__nss_shlib_revision) + 1);
-	      int saved_errno = errno;
-	      char shlib_name[shlen];
-
-	      /* Construct shared object name.  */
-	      __stpcpy (__stpcpy (__stpcpy (__stpcpy (shlib_name,
-						      "libnss_"),
-					    ni->library->name),
-				  ".so"),
-			__nss_shlib_revision);
-
-	      ni->library->lib_handle = __libc_dlopen (shlib_name);
-	      if (ni->library->lib_handle == NULL)
-		{
-		  /* Failed to load the library.  */
-		  ni->library->lib_handle = (void *) -1l;
-		  __set_errno (saved_errno);
-		}
+	      /* This only happens when out of memory.  */
+	      free (known);
+	      goto remove_from_tree;
 	    }
 
 	  if (ni->library->lib_handle == (void *) -1l)
@@ -463,7 +510,10 @@ nss_parse_file (const char *fname)
 
   result = (name_database *) malloc (sizeof (name_database));
   if (result == NULL)
-    return NULL;
+    {
+      fclose (fp);
+      return NULL;
+    }
 
   result->entry = NULL;
   result->library = NULL;
@@ -724,16 +774,45 @@ nss_new_service (name_database *database, const char *name)
 }
 
 
+#ifdef SHARED
+/* Load all libraries for the service.  */
+static void
+nss_load_all_libraries (const char *service, const char *def)
+{
+  service_user *ni = NULL;
+
+  if (__nss_database_lookup (service, NULL, def, &ni) == 0)
+    while (ni != NULL)
+      {
+	nss_load_library (ni);
+	ni = ni->next;
+      }
+}
+
+
 /* Called by nscd and nscd alone.  */
 void
-__nss_disable_nscd (void)
+__nss_disable_nscd (void (*cb) (size_t, struct traced_file *))
 {
+# ifdef PTR_MANGLE
+  PTR_MANGLE (cb);
+# endif
+  nscd_init_cb = cb;
+  is_nscd = true;
+
+  /* Find all the relevant modules so that the init functions are called.  */
+  nss_load_all_libraries ("passwd", "compat [NOTFOUND=return] files");
+  nss_load_all_libraries ("group", "compat [NOTFOUND=return] files");
+  nss_load_all_libraries ("hosts", "dns [!UNAVAIL=return] files");
+  nss_load_all_libraries ("services", NULL);
+
   /* Disable all uses of NSCD.  */
   __nss_not_use_nscd_passwd = -1;
   __nss_not_use_nscd_group = -1;
   __nss_not_use_nscd_hosts = -1;
   __nss_not_use_nscd_services = -1;
 }
+#endif
 
 
 /* Free all resources if necessary.  */

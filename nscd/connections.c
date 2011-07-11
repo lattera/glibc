@@ -117,8 +117,6 @@ struct database_dyn dbs[lastdb] =
     .shared = 0,
     .max_db_size = DEFAULT_MAX_DB_SIZE,
     .suggested_module = DEFAULT_SUGGESTED_MODULE,
-   .reset_res = 0,
-    .filename = "/etc/passwd",
     .db_filename = _PATH_NSCD_PASSWD_DB,
     .disabled_iov = &pwd_iov_disabled,
     .postimeout = 3600,
@@ -138,8 +136,6 @@ struct database_dyn dbs[lastdb] =
     .shared = 0,
     .max_db_size = DEFAULT_MAX_DB_SIZE,
     .suggested_module = DEFAULT_SUGGESTED_MODULE,
-    .reset_res = 0,
-    .filename = "/etc/group",
     .db_filename = _PATH_NSCD_GROUP_DB,
     .disabled_iov = &grp_iov_disabled,
     .postimeout = 3600,
@@ -159,8 +155,6 @@ struct database_dyn dbs[lastdb] =
     .shared = 0,
     .max_db_size = DEFAULT_MAX_DB_SIZE,
     .suggested_module = DEFAULT_SUGGESTED_MODULE,
-    .reset_res = 1,
-    .filename = "/etc/hosts",
     .db_filename = _PATH_NSCD_HOSTS_DB,
     .disabled_iov = &hst_iov_disabled,
     .postimeout = 3600,
@@ -180,8 +174,6 @@ struct database_dyn dbs[lastdb] =
     .shared = 0,
     .max_db_size = DEFAULT_MAX_DB_SIZE,
     .suggested_module = DEFAULT_SUGGESTED_MODULE,
-    .reset_res = 0,
-    .filename = "/etc/services",
     .db_filename = _PATH_NSCD_SERVICES_DB,
     .disabled_iov = &serv_iov_disabled,
     .postimeout = 28800,
@@ -232,10 +224,7 @@ static int sock;
 
 #ifdef HAVE_INOTIFY
 /* Inotify descriptor.  */
-static int inotify_fd = -1;
-
-/* Watch descriptor for resolver configuration file.  */
-static int resolv_conf_descr = -1;
+int inotify_fd = -1;
 #endif
 
 #ifndef __ASSUME_SOCK_CLOEXEC
@@ -522,19 +511,6 @@ nscd_init (void)
   if (nthreads == -1)
     /* No configuration for this value, assume a default.  */
     nthreads = 4;
-
-#ifdef HAVE_INOTIFY
-  /* Use inotify to recognize changed files.  */
-  inotify_fd = inotify_init1 (IN_NONBLOCK);
-# ifndef __ASSUME_IN_NONBLOCK
-  if (inotify_fd == -1 && errno == ENOSYS)
-    {
-      inotify_fd = inotify_init ();
-      if (inotify_fd != -1)
-	fcntl (inotify_fd, F_SETFL, O_RDONLY | O_NONBLOCK);
-    }
-# endif
-#endif
 
   for (size_t cnt = 0; cnt < lastdb; ++cnt)
     if (dbs[cnt].enabled)
@@ -840,40 +816,6 @@ cannot set socket to close on exec: %s; disabling paranoia mode"),
 	    dbs[cnt].shared = 0;
 	    assert (dbs[cnt].ro_fd == -1);
 	  }
-
-	dbs[cnt].inotify_descr = -1;
-	if (dbs[cnt].check_file)
-	  {
-#ifdef HAVE_INOTIFY
-	    if (inotify_fd < 0
-		|| (dbs[cnt].inotify_descr
-		    = inotify_add_watch (inotify_fd, dbs[cnt].filename,
-					 IN_DELETE_SELF | IN_MODIFY)) < 0)
-	      /* We cannot notice changes in the main thread.  */
-#endif
-	      {
-		/* We need the modification date of the file.  */
-		struct stat64 st;
-
-		if (stat64 (dbs[cnt].filename, &st) < 0)
-		  {
-		    /* We cannot stat() the file, disable file checking.  */
-		    dbg_log (_("cannot stat() file `%s': %s"),
-			     dbs[cnt].filename, strerror (errno));
-		    dbs[cnt].check_file = 0;
-		  }
-		else
-		  dbs[cnt].file_mtime = st.st_mtime;
-	      }
-	  }
-
-#ifdef HAVE_INOTIFY
-	if (cnt == hstdb && inotify_fd >= -1)
-	  /* We also monitor the resolver configuration file.  */
-	  resolv_conf_descr = inotify_add_watch (inotify_fd,
-						 _PATH_RESCONF,
-						 IN_DELETE_SELF | IN_MODIFY);
-#endif
       }
 
   /* Create the socket.  */
@@ -940,9 +882,47 @@ cannot set socket to close on exec: %s; disabling paranoia mode"),
       exit (1);
     }
 
-  /* Change to unprivileged uid/gid/groups if specifed in config file */
+  /* Change to unprivileged uid/gid/groups if specified in config file */
   if (server_user != NULL)
     finish_drop_privileges ();
+}
+
+
+void
+register_traced_file (size_t dbidx, struct traced_file *finfo)
+{
+  if (! dbs[dbidx].check_file)
+    return;
+
+  if (__builtin_expect (debug_level > 0, 0))
+    dbg_log (_("register trace file %s for database %s"),
+	     finfo->fname, dbnames[dbidx]);
+
+#ifdef HAVE_INOTIFY
+  if (inotify_fd < 0
+      || (finfo->inotify_descr = inotify_add_watch (inotify_fd, finfo->fname,
+						    IN_DELETE_SELF
+						    | IN_MODIFY)) < 0)
+#endif
+    {
+      /* We need the modification date of the file.  */
+      struct stat64 st;
+
+      if (stat64 (finfo->fname, &st) < 0)
+	{
+	  /* We cannot stat() the file, disable file checking.  */
+	  dbg_log (_("cannot stat() file `%s': %s"),
+		   finfo->fname, strerror (errno));
+	  return;
+	}
+
+      finfo->inotify_descr = -1;
+      finfo->mtime = st.st_mtime;
+    }
+
+  /* Queue up the file name.  */
+  finfo->next = dbs[dbidx].traced_files;
+  dbs[dbidx].traced_files = finfo;
 }
 
 
@@ -963,11 +943,20 @@ invalidate_cache (char *key, int fd)
   for (number = pwddb; number < lastdb; ++number)
     if (strcmp (key, dbnames[number]) == 0)
       {
-	if (dbs[number].reset_res)
-	  res_init ();
-
+	if (number == hstdb)
+	  {
+	    struct traced_file *runp = dbs[hstdb].traced_files;
+	    while (runp != NULL)
+	      if (runp->call_res_init)
+		{
+		  res_init ();
+		  break;
+		}
+	      else
+		runp = runp->next;
+	  }
 	break;
-      }
+    }
 
   if (number == lastdb)
     {
@@ -1913,16 +1902,21 @@ disabled inotify after read error %d"),
 
 		      /* Check which of the files changed.  */
 		      for (size_t dbcnt = 0; dbcnt < lastdb; ++dbcnt)
-			if (inev.i.wd == dbs[dbcnt].inotify_descr)
-			  {
-			    to_clear[dbcnt] = true;
-			    goto next;
-			  }
-
-		      if (inev.i.wd == resolv_conf_descr)
 			{
-			  res_init ();
-			  to_clear[hstdb] = true;
+			  struct traced_file *finfo = dbs[dbcnt].traced_files;
+
+			  while (finfo != NULL)
+			    {
+			      if (finfo->inotify_descr == inev.i.wd)
+				{
+				  to_clear[dbcnt] = true;
+				  if (finfo->call_res_init)
+				    res_init ();
+				  goto next;
+				}
+
+			      finfo = finfo->next;
+			    }
 			}
 		    next:;
 		    }
@@ -2089,7 +2083,7 @@ main_loop_epoll (int efd)
 	    while (1)
 	      {
 		ssize_t nb = TEMP_FAILURE_RETRY (read (inotify_fd, &inev,
-				 		 sizeof (inev)));
+						 sizeof (inev)));
 		if (nb < (ssize_t) sizeof (struct inotify_event))
 		  {
 		    if (__builtin_expect (nb == -1 && errno != EAGAIN, 0))
@@ -2108,16 +2102,21 @@ main_loop_epoll (int efd)
 
 		/* Check which of the files changed.  */
 		for (size_t dbcnt = 0; dbcnt < lastdb; ++dbcnt)
-		  if (inev.i.wd == dbs[dbcnt].inotify_descr)
-		    {
-		      to_clear[dbcnt] = true;
-		      goto next;
-		    }
-
-		if (inev.i.wd == resolv_conf_descr)
 		  {
-		    res_init ();
-		    to_clear[hstdb] = true;
+		    struct traced_file *finfo = dbs[dbcnt].traced_files;
+
+		    while (finfo != NULL)
+		      {
+			if (finfo->inotify_descr == inev.i.wd)
+			  {
+			    to_clear[dbcnt] = true;
+			    if (finfo->call_res_init)
+			      res_init ();
+			    goto next;
+			  }
+
+			finfo = finfo->next;
+		      }
 		  }
 	      next:;
 	      }

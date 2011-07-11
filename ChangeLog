@@ -1,3 +1,45 @@
+2011-07-11  Ulrich Drepper  <drepper@gmail.com>
+
+	* nscd/nscd.h (struct traced_file): Define.
+	(struct database_dyn): Remove inotify_descr, reset_res, and filename
+	elements.  Add traced_files.
+	(inotify_fd): Declare.
+	(register_traced_file): Declare.
+	* nscd/connections.c (dbs): Remove reset_res and filename initializers.
+	(inotify_fd): Export.
+	(resolv_conf_descr): Remove.
+	(nscd_init): Move inotify descriptor creation to main.
+	Don't register files for notification here.
+	(register_traced_file): New function.
+	(invalidate_cache): Don't use reset_res to determine whether to call
+	res_init, go through the list of registered files.
+	(main_loop_poll): The inotify descriptors are now stored in the
+	structures for the traced files.
+	(main_loop_epoll): Likewise
+	* nscd/nscd.c (main): Create inotify socket here.  Pass extra argument
+	to __nss_disable_nscd.
+	* nscd/cache.c (prune_cache): There is no single inotify descriptor
+	for a database anymore.  Check the records for all the registered
+	files instead.
+	* nss/Makefile (libnss_files-routines): Add files-init.
+	(libnss_db-routines): Add db-init.
+	* nss/Versions [libnss_files] (GLIBC_PRIVATE): Add _nss_files_init.
+	[libnss_db] (GLIBC_PRIVATE): Add _nss_db_init.
+	* nss/nss_db/db-init.c: New file.
+	* nss/nss_files/files-init.c: New file.
+	* nss/nsswitch.c (nss_load_library): New function.  Broken out of
+	__nss_lookup_function.
+	(__nss_lookup_function): Call nss_load_library.
+	(nss_load_all_libraries): New function.
+	(__nss_disable_nscd): Take parameter with callback function for files
+	to register.  Set is_nscd.  Load all the DSOs for the NSS modules
+	used for the cached services.
+	* nss/nsswitch.h (__nss_disable_nscd): Adjust prototype.
+	* sysdeps/unix/sysv/linux/Makefile [subdir=nscd]: Pass the various -D
+	options for features to all the files in nscd.
+
+	* nss/nsswitch.c (nss_parse_file): Add missing fclose.
+
 2011-07-10  Roland McGrath  <roland@hack.frob.com>
 
 	* csu/elf-init.c (__libc_csu_init): Comment typo.

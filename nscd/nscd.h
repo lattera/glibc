@@ -62,6 +62,17 @@ typedef enum
 #define MAX_STACK_USE ((8 * NSCD_THREAD_STACKSIZE) / 10)
 
 
+/* Registered filename used to fill database.  */
+struct traced_file
+{
+  time_t mtime;
+  struct traced_file *next;
+  int call_res_init;
+  int inotify_descr;
+  char fname[];
+};
+
+
 /* Structure describing dynamic part of one database.  */
 struct database_dyn
 {
@@ -73,13 +84,11 @@ struct database_dyn
 
   int enabled;
   int check_file;
-  int inotify_descr;
   int clear_cache;
   int persistent;
   int shared;
   int propagate;
-  int reset_res;
-  const char filename[16];
+  struct traced_file *traced_files;
   const char *db_filename;
   time_t file_mtime;
   size_t suggested_module;
@@ -147,6 +156,9 @@ extern int nthreads;
 /* Maximum number of threads to use.  */
 extern int max_nthreads;
 
+/* Inotify descriptor.  */
+extern int inotify_fd;
+
 /* User name to run server processes as.  */
 extern const char *server_user;
 
@@ -191,6 +203,7 @@ extern int nscd_open_socket (void);
 
 /* connections.c */
 extern void nscd_init (void);
+extern void register_traced_file (size_t dbidx, struct traced_file *finfo);
 extern void close_sockets (void);
 extern void start_threads (void) __attribute__ ((__noreturn__));
 

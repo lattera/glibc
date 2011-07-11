@@ -66,14 +66,14 @@ vpath %.c $(subdir-dirs) ../locale/programs ../intl
 
 
 libnss_files-routines	:= $(addprefix files-,$(databases)) \
-			   files-initgroups files-have_o_cloexec
+			   files-initgroups files-have_o_cloexec files-init
 distribute		+= files-XXX.c files-parse.c
 
 libnss_db-dbs		:= $(addprefix db-,\
 				       $(filter-out hosts network key alias,\
 						    $(databases))) \
 			   db-initgroups
-libnss_db-routines	:= $(libnss_db-dbs) db-open hash-string
+libnss_db-routines	:= $(libnss_db-dbs) db-open db-init hash-string
 generated		+= $(filter-out db-alias.c db-netgrp.c, \
 					$(addsuffix .c,$(libnss_db-dbs)))
 distribute		+= $(addprefix nss_db/, db-XXX.c nss_db.h)

@@ -46,6 +46,9 @@
 #include "selinux.h"
 #include "../nss/nsswitch.h"
 #include <device-nrs.h>
+#ifdef HAVE_INOTIFY
+# include <sys/inotify.h>
+#endif
 
 /* Get libc version number.  */
 #include <version.h>
@@ -272,8 +275,21 @@ main (int argc, char **argv)
   /* Cleanup files created by a previous 'bind'.  */
   unlink (_PATH_NSCDSOCKET);
 
+#ifdef HAVE_INOTIFY
+  /* Use inotify to recognize changed files.  */
+  inotify_fd = inotify_init1 (IN_NONBLOCK);
+# ifndef __ASSUME_IN_NONBLOCK
+  if (inotify_fd == -1 && errno == ENOSYS)
+    {
+      inotify_fd = inotify_init ();
+      if (inotify_fd != -1)
+	fcntl (inotify_fd, F_SETFL, O_RDONLY | O_NONBLOCK);
+    }
+# endif
+#endif
+
   /* Make sure we do not get recursive calls.  */
-  __nss_disable_nscd ();
+  __nss_disable_nscd (register_traced_file);
 
   /* Init databases.  */
   nscd_init ();

@@ -1,4 +1,4 @@
-/* Copyright (C) 1996-1999,2001,2002,2003,2004,2007,2010
+/* Copyright (C) 1996-1999,2001,2002,2003,2004,2007,2010,2011
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -153,8 +153,10 @@ extern void *__nss_lookup_function (service_user *ni, const char *fct_name);
 libc_hidden_proto (__nss_lookup_function)
 
 
-/* Called by NSCD to disable recursive calls.  */
-extern void __nss_disable_nscd (void);
+/* Called by NSCD to disable recursive calls and enable special handling
+   when used in nscd.  */
+struct traced_file;
+extern void __nss_disable_nscd (void (*) (size_t, struct traced_file *));
 
 
 typedef int (*db_lookup_function) (service_user **, const char *, const char *,
