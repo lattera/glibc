@@ -6404,7 +6404,7 @@ else
 
 int _start (void) { return 42; }
 extern void _exit (int);
-const void *relro[] = { &_start, &_exit, 0 };
+const void *const relro[] = { &_start, &_exit, 0 };
 
 _ACEOF
     cat > conftest.awk <<\EOF

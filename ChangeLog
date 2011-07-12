@@ -1,3 +1,9 @@
+2011-07-11  Roland McGrath  <roland@hack.frob.com>
+
+	* configure.in (-z relro check): Fix test code to make the variable
+	truly const.
+	* configure: Regenerated.
+
 2011-07-11  Ulrich Drepper  <drepper@gmail.com>
 
 	* nscd/nscd.h (struct traced_file): Define.
