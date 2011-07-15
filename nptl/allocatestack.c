@@ -824,7 +824,7 @@ __reclaim_stacks (void)
   if (in_flight_stack != 0)
     {
       bool add_p = in_flight_stack & 1;
-      list_t *elem = (list_t *) (in_flight_stack & ~UINTMAX_C (1));
+      list_t *elem = (list_t *) (in_flight_stack & ~(uintptr_t) 1);
 
       if (add_p)
 	{
