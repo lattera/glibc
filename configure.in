@@ -1607,7 +1607,14 @@ EOF
     AC_LANG_CONFTEST([AC_LANG_SOURCE([[
 int _start (void) { return 42; }
 extern void _exit (int);
+/* Since these pointers are const, they should go in rodata.
+   Since they refer to functions that have to be resolved by
+   dynamic linking, they should instead go in RELRO data.  */
 const void *const relro[] = { &_start, &_exit, 0 };
+/* GNU ld fails to produce RELRO data when it's very small and there is no
+   normal writable data following it, or if only uninitialized (.bss) data
+   follows it, or only very small writable data.  */
+int data[0x10000] = { 1, };
 ]])])
     cat > conftest.awk <<\EOF
 BEGIN {
