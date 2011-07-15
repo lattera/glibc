@@ -1,5 +1,9 @@
 2011-07-14  Roland McGrath  <roland@hack.frob.com>
 
+	* Makefile ($(common-objpfx)linkobj/libc.so): Use $(shlib-lds) instead
+	of $(common-objpfx)shlib.lds.
+	* elf/Makefile ($(objpfx)sotruss-lib.so): Likewise.
+
 	* sysdeps/i386/i686/multiarch/strstr-c.c (libc_hidden_builtin_def):
 	Conditionalize redefinition on [SHARED && DO_VERSIONING && !NO_HIDDEN].
 

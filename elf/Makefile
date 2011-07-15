@@ -178,7 +178,7 @@ install-others += $(inst_auditdir)/sotruss-lib.so
 install-bin-script += sotruss
 generated += sotruss
 CPPFLAGS-sotruss-lib = -DNOT_IN_libc
-$(objpfx)sotruss-lib.so: $(objpfx)sotruss-lib.os $(common-objpfx)shlib.lds
+$(objpfx)sotruss-lib.so: $(objpfx)sotruss-lib.os
 	$(build-module-asneeded)
 $(objpfx)sotruss-lib.so: $(common-objpfx)libc.so $(objpfx)ld.so \
 	$(common-objpfx)libc_nonshared.a
@@ -354,6 +354,8 @@ endif
 
 # Command to link into a larger single relocatable object.
 reloc-link = $(LINK.o) -nostdlib -nostartfiles -r
+
+$(objpfx)sotruss-lib.so: $(shlib-lds)
 
 $(objpfx)dl-allobjs.os: $(all-rtld-routines:%=$(objpfx)%.os)
 	$(reloc-link) -o $@ $^

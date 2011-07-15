@@ -143,7 +143,7 @@ $(common-objpfx)linkobj/libc.so: $(elfobjdir)/soinit.os \
 				 $(elfobjdir)/sofini.os \
 				 $(elfobjdir)/interp.os \
 				 $(elfobjdir)/ld.so \
-				 $(common-objpfx)shlib.lds
+				 $(shlib-lds)
 	$(build-shlib)
 
 $(common-objpfx)linkobj/libc_pic.a: $(common-objpfx)libc_pic.a \
