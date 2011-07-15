@@ -1,5 +1,8 @@
 2011-07-14  Roland McGrath  <roland@hack.frob.com>
 
+	* sysdeps/i386/i686/multiarch/strstr-c.c (libc_hidden_builtin_def):
+	Conditionalize redefinition on [SHARED && DO_VERSIONING && !NO_HIDDEN].
+
 	* configure.in (-z relro check): Adjust test code to add a large
 	writable data section after it.
 	* configure: Regenerated.
