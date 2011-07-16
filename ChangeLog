@@ -1,4 +1,7 @@
-2011-07-02  Roland McGrath  <roland@hack.frob.com>
+2011-07-16  Roland McGrath  <roland@hack.frob.com>
+
+	* sysdeps/i386/Makefile: Never use -mpreferred-stack-boundary=2,
+	now disallowed by GCC.
 
 	* configure.in (use-default-link): Default to yes if a test -shared
 	link meets our qualifications.
