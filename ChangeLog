@@ -1,3 +1,8 @@
+2011-07-19  Ulrich Drepper  <drepper@gmail.com>
+
+	* nscd/nscd.c (termination_handler): Don't do anything for a database
+	if it has not yet been initialized.
+
 2011-07-18  Ulrich Drepper  <drepper@gmail.com>
 
 	* sysdeps/unix/sysv/linux/bits/sched.h (__CPU_EQUAL_S): Fix a typo.

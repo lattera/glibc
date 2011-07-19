@@ -493,7 +493,7 @@ termination_handler (int signum)
   /* Synchronize memory.  */
   for (int cnt = 0; cnt < lastdb; ++cnt)
     {
-      if (!dbs[cnt].enabled)
+      if (!dbs[cnt].enabled || dbs[cnt].head == NULL)
 	continue;
 
       /* Make sure nobody keeps using the database.  */
