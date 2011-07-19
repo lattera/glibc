@@ -1,6 +1,6 @@
 /* Declaration of functions and data types used for MD5 sum computing
    library functions.
-   Copyright (C) 1995-1997,1999,2000,2001,2004,2005
+   Copyright (C) 1995-1997,1999,2000,2001,2004,2005,2011
       Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -68,7 +68,7 @@ typedef uintptr_t md5_uintptr;
      typedef unsigned long md5_uint32;
 #   else
      /* The following line is intended to evoke an error.
-        Using #error is not portable enough.  */
+	Using #error is not portable enough.  */
      "Cannot determine unsigned 32-bit data type."
 #   endif
 #  endif
@@ -88,7 +88,11 @@ struct md5_ctx
 
   md5_uint32 total[2];
   md5_uint32 buflen;
-  char buffer[128] __attribute__ ((__aligned__ (__alignof__ (md5_uint32))));
+  union
+  {
+    char buffer[128];
+    md5_uint32 buffer32[32];
+  };
 };
 
 /*

@@ -253,11 +253,9 @@ __sha512_finish_ctx (ctx, resbuf)
   memcpy (&ctx->buffer[bytes], fillbuf, pad);
 
   /* Put the 128-bit file length in *bits* at the end of the buffer.  */
-  *(uint64_t *) &ctx->buffer[bytes + pad + 8]
-    = SWAP (ctx->total[TOTAL128_low] << 3);
-  *(uint64_t *) &ctx->buffer[bytes + pad]
-    = SWAP ((ctx->total[TOTAL128_high] << 3) |
-	    (ctx->total[TOTAL128_low] >> 61));
+  ctx->buffer64[(bytes + pad + 8) / 8] = SWAP (ctx->total[TOTAL128_low] << 3);
+  ctx->buffer64[(bytes + pad) / 8] = SWAP ((ctx->total[TOTAL128_high] << 3) |
+					   (ctx->total[TOTAL128_low] >> 61));
 
   /* Process last bytes.  */
   sha512_process_block (ctx->buffer, bytes + pad + 16, ctx);

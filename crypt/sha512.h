@@ -44,7 +44,11 @@ struct sha512_ctx
     uint64_t total[2];
   };
   uint64_t buflen;
-  char buffer[256] __attribute__ ((__aligned__ (__alignof__ (uint64_t))));
+  union
+  {
+    char buffer[256];
+    uint64_t buffer64[32];
+  };
 };
 
 /* Initialize structure containing state of computation.

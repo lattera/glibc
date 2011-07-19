@@ -222,13 +222,11 @@ __sha256_finish_ctx (ctx, resbuf)
 
   /* Put the 64-bit file length in *bits* at the end of the buffer.  */
 #ifdef _STRING_ARCH_unaligned
-  *(uint64_t *)  &ctx->buffer[bytes + pad] = SWAP64 (ctx->total64 << 3);
+  ctx->buffer64[(bytes + pad) / 8] = SWAP64 (ctx->total64 << 3);
 #else
-  *(uint32_t *) &ctx->buffer[bytes + pad + 4]
-    = SWAP (ctx->total[TOTAL64_low] << 3);
-  *(uint32_t *) &ctx->buffer[bytes + pad]
-    = SWAP ((ctx->total[TOTAL64_high] << 3) |
-	    (ctx->total[TOTAL64_low] >> 29));
+  ctx->buffer32[(bytes + pad + 4) / 4] = SWAP (ctx->total[TOTAL64_low] << 3);
+  ctx->buffer32[(bytes + pad) / 4] = SWAP ((ctx->total[TOTAL64_high] << 3) |
+					   (ctx->total[TOTAL64_low] >> 29));
 #endif
 
   /* Process last bytes.  */

@@ -1,3 +1,18 @@
+2011-07-19  Ulrich Drepper  <drepper@gmail.com>
+
+	* crypt/sha512.h (struct sha512_ctx): Move buffer into union and add
+	buffer64.
+	* crypt/sha512.c (__sha512_finish_ctx): Use buffer64 for writes instead
+	of casting of buffer.
+	* crypt/sha256.h (struct sha256_ctx): Move buffer into union and add
+	buffer32 and buffer64.
+	* crypt/sha256.c (__sha256_finish_ctx): Use buffer32 or buffer64 for
+	writes instead of casting of buffer.
+	* crypt/md5.h (struct md5_ctx): Move buffer into union and add
+	buffer32.
+	* crypt/md5.c (md5_finish_ctx): Use buffer32 for writes instead of
+	casting of buffer.
+
 2011-07-19  Andreas Schwab  <schwab@redhat.com>
 
 	* string/strxfrm_l.c (STRXFRM): Fix alloca accounting.
