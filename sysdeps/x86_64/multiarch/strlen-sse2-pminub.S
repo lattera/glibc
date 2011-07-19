@@ -141,7 +141,7 @@ L(align16_start):
 	pmovmskb %xmm3, %edx
 	test	%edx, %edx
 	jnz	L(exit64)
-	
+
 
 	test	$0x3f, %rax
 	jz	L(align64_loop)
@@ -183,10 +183,10 @@ L(align16_start):
 	.p2align 4
 	L(align64_loop):
 	movaps	(%rax),	%xmm4
-	pminub	16(%rax), 	%xmm4
-	movaps	32(%rax), 	%xmm5
-	pminub	48(%rax), 	%xmm5
-	add	$64, 	%rax
+	pminub	16(%rax),	%xmm4
+	movaps	32(%rax),	%xmm5
+	pminub	48(%rax),	%xmm5
+	add	$64,	%rax
 	pminub	%xmm4,	%xmm5
 	pcmpeqb	%xmm0,	%xmm5
 	pmovmskb %xmm5,	%edx
@@ -195,7 +195,7 @@ L(align16_start):
 
 
 	pcmpeqb	-64(%rax), %xmm0
-	sub	$80, 	%rax
+	sub	$80,	%rax
 	pmovmskb %xmm0, %edx
 	test	%edx, %edx
 	jnz	L(exit16)

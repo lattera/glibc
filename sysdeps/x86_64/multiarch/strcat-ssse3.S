@@ -556,4 +556,3 @@ L(StrncatExit8Bytes):
 # endif
 END (STRCAT)
 #endif
-

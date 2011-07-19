@@ -1742,7 +1742,7 @@ L(Unaligned64LeaveCase2):
 #  ifndef USE_AS_STRCAT
 	jnz	L(CopyFrom1To16BytesUnalignedXmm4)
 #  else
-        jnz	L(CopyFrom1To16Bytes)
+	jnz	L(CopyFrom1To16Bytes)
 #  endif
 	pcmpeqb	%xmm5, %xmm0
 	pmovmskb %xmm0, %rdx
@@ -1754,7 +1754,7 @@ L(Unaligned64LeaveCase2):
 #  ifndef USE_AS_STRCAT
 	jnz	L(CopyFrom1To16BytesUnalignedXmm5)
 #  else
-        jnz	L(CopyFrom1To16Bytes)
+	jnz	L(CopyFrom1To16Bytes)
 #  endif
 
 	pcmpeqb	%xmm6, %xmm0
@@ -1767,7 +1767,7 @@ L(Unaligned64LeaveCase2):
 #  ifndef USE_AS_STRCAT
 	jnz	L(CopyFrom1To16BytesUnalignedXmm6)
 #  else
-        jnz	L(CopyFrom1To16Bytes)
+	jnz	L(CopyFrom1To16Bytes)
 #  endif
 
 	pcmpeqb	%xmm7, %xmm0
@@ -1888,4 +1888,3 @@ L(FillTable):
 #  endif
 # endif
 #endif
-

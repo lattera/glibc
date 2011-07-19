@@ -52,4 +52,3 @@ L(StartStrcpyPart):
 
 # include "strcpy-sse2-unaligned.S"
 #endif
-
