@@ -1,5 +1,13 @@
 2011-07-18  Ulrich Drepper  <drepper@gmail.com>
 
+	* sysdeps/unix/sysv/linux/bits/sched.h (__CPU_EQUAL_S): Fix a typo.
+
+2011-07-15  Marek Polacek  <mpolacek@redhat.com>
+
+	* bits/sched.h (__CPU_EQUAL_S): Fix a typo.
+
+2011-07-18  Ulrich Drepper  <drepper@gmail.com>
+
 	* po/nl.po: Update from translation team.
 	* po/sv.po: Likewise.
 

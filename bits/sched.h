@@ -1,6 +1,6 @@
 /* Definitions of constants and data structure for POSIX 1003.1b-1993
    scheduling interface.
-   Copyright (C) 1996-1999,2001-2003,2005,2006,2007,2008,2009
+   Copyright (C) 1996-1999,2001-2003,2005,2006,2007,2008,2009,2011
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -120,7 +120,7 @@ typedef struct
       size_t __imax = (setsize) / sizeof (__cpu_mask);			      \
       size_t __i;							      \
       for (__i = 0; __i < __imax; ++__i)				      \
-	if (__bits[__i] != __bits[__i])					      \
+	if (__arr1[__i] != __arr2[__i])					      \
 	  break;							      \
       __i == __imax; }))
 # endif
