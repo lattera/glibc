@@ -1,3 +1,32 @@
+2011-07-15  Liubov Dmitrieva  <liubov.dmitrieva@intel.com>
+
+	* sysdeps/x86_64/multiarch/Makefile (sysdep_routines): Add
+	strcat-ssse3 strcat-sse2-unaligned strncat-ssse3
+	strncat-sse2-unaligned strncat-c strlen-sse2-pminub
+	* sysdeps/x86_64/multiarch/strcat-sse2-unaligned.S: New file.
+	* sysdeps/x86_64/multiarch/strcat.S: New file.
+	* sysdeps/x86_64/multiarch/strncat.S: New file.
+	* sysdeps/x86_64/multiarch/strncat-c.c: New file.
+	* sysdeps/x86_64/multiarch/strcat-ssse3.S: New file.
+	* sysdeps/x86_64/multiarch/strncat-sse2-unaligned.S: New file.
+	* sysdeps/x86_64/multiarch/strncat-ssse3.S: New file.
+	* sysdeps/x86_64/multiarch/strcpy-ssse3.S
+	(USE_AS_STRCAT): Define.
+	Add strcat and strncat support.
+	* sysdeps/x86_64/multiarch/strlen-no-bsf.S: Likewise.
+	* sysdeps/x86_64/multiarch/strcpy-sse2-unaligned.S: Likewise.
+	* sysdeps/x86_64/multiarch/strlen-sse2-pminub.S: New file.
+	* string/strncat.c: Update.
+	(USE_AS_STRNCAT): Define.
+	* sysdeps/x86_64/multiarch/init-arch.c (__init_cpu_features):
+	Turn on bit_Prefer_PMINUB_for_stringop for Intel Core i3, i5
+	and i7.
+	* sysdeps/x86_64/multiarch/init-arch.h
+	(bit_Prefer_PMINUB_for_stringop): New.
+	(index_Prefer_PMINUB_for_stringop): Likewise.
+	* sysdeps/x86_64/multiarch/strlen.S (strlen): Check
+	bit_Prefer_PMINUB_for_stringop.
+
 2011-07-19  Ulrich Drepper  <drepper@gmail.com>
 
 	* crypt/sha512.h (struct sha512_ctx): Move buffer into union and add

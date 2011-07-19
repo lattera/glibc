@@ -20,25 +20,26 @@
 
 #ifndef NOT_IN_libc
 
-# include <sysdep.h>
+# ifndef USE_AS_STRCAT
+#  include <sysdep.h>
 
-# ifndef STRCPY
-#  define STRCPY  __strcpy_ssse3
-# endif
+#  ifndef STRCPY
+#   define STRCPY  __strcpy_ssse3
+#  endif
 
 	.section .text.ssse3,"ax",@progbits
 ENTRY (STRCPY)
 	mov	%rsi, %rcx
-# ifdef USE_AS_STRNCPY
+#  ifdef USE_AS_STRNCPY
 	mov	%rdx, %r8
-# endif
+#  endif
 	mov	%rdi, %rdx
-# ifdef USE_AS_STRNCPY
+#  ifdef USE_AS_STRNCPY
 	test	%r8, %r8
 	jz	L(Exit0)
 	cmp	$8, %r8
 	jbe	L(StrncpyExit8Bytes)
-# endif
+#  endif
 	cmpb	$0, (%rcx)
 	jz	L(Exit1)
 	cmpb	$0, 1(%rcx)
@@ -55,10 +56,10 @@ ENTRY (STRCPY)
 	jz	L(Exit7)
 	cmpb	$0, 7(%rcx)
 	jz	L(Exit8)
-# ifdef USE_AS_STRNCPY
+#  ifdef USE_AS_STRNCPY
 	cmp	$16, %r8
 	jb	L(StrncpyExit15Bytes)
-# endif
+#  endif
 	cmpb	$0, 8(%rcx)
 	jz	L(Exit9)
 	cmpb	$0, 9(%rcx)
@@ -73,12 +74,13 @@ ENTRY (STRCPY)
 	jz	L(Exit14)
 	cmpb	$0, 14(%rcx)
 	jz	L(Exit15)
-# ifdef USE_AS_STRNCPY
+#  ifdef USE_AS_STRNCPY
 	cmp	$16, %r8
 	je	L(Exit16)
-# endif
+#  endif
 	cmpb	$0, 15(%rcx)
 	jz	L(Exit16)
+# endif
 
 # ifdef USE_AS_STRNCPY
 	mov	%rcx, %rsi
@@ -2180,12 +2182,12 @@ L(Shl15LoopExit):
 	jmp	L(CopyFrom1To16Bytes)
 # endif
 
-
+# ifndef USE_AS_STRCAT
 	.p2align 4
 L(CopyFrom1To16Bytes):
-# ifdef USE_AS_STRNCPY
+#  ifdef USE_AS_STRNCPY
 	add	$16, %r8
-# endif
+#  endif
 	add	%rsi, %rdx
 	add	%rsi, %rcx
 
@@ -2210,20 +2212,20 @@ L(CopyFrom1To16Bytes):
 L(Exit8):
 	mov	(%rcx), %rax
 	mov	%rax, (%rdx)
-# ifdef USE_AS_STPCPY
+#  ifdef USE_AS_STPCPY
 	lea	7(%rdx), %rax
-# else
+#  else
 	mov	%rdi, %rax
-# endif
-# ifdef USE_AS_STRNCPY
+#  endif
+#  ifdef USE_AS_STRNCPY
 	sub	$8, %r8
 	lea	8(%rdx), %rcx
 	jnz	L(StrncpyFillTailWithZero1)
-# ifdef USE_AS_STPCPY
+#   ifdef USE_AS_STPCPY
 	cmpb	$1, (%rax)
 	sbb	$-1, %rax
-# endif
-# endif
+#   endif
+#  endif
 	ret
 
 	.p2align 4
@@ -2249,23 +2251,23 @@ L(Exit16):
 	mov	%rax, (%rdx)
 	mov	8(%rcx), %rax
 	mov	%rax, 8(%rdx)
-# ifdef USE_AS_STPCPY
+#  ifdef USE_AS_STPCPY
 	lea	15(%rdx), %rax
-# else
+#  else
 	mov	%rdi, %rax
-# endif
-# ifdef USE_AS_STRNCPY
+#  endif
+#  ifdef USE_AS_STRNCPY
 	sub	$16, %r8
 	lea	16(%rdx), %rcx
 	jnz	L(StrncpyFillTailWithZero1)
-# ifdef USE_AS_STPCPY
+#   ifdef USE_AS_STPCPY
 	cmpb	$1, (%rax)
 	sbb	$-1, %rax
-# endif
-# endif
+#   endif
+#  endif
 	ret
 
-# ifdef USE_AS_STRNCPY
+#  ifdef USE_AS_STRNCPY
 
 	.p2align 4
 L(CopyFrom1To16BytesCase2):
@@ -2381,46 +2383,46 @@ L(Less12Case3): /* but more than 8 */
 	jl	L(Exit9)
 	je	L(Exit10)
 	jg	L(Exit11)
-# endif
+#  endif
 
 	.p2align 4
 L(Exit1):
 	movb	(%rcx), %al
 	movb	%al, (%rdx)
-# ifdef USE_AS_STPCPY
+#  ifdef USE_AS_STPCPY
 	lea	(%rdx), %rax
-# else
+#  else
 	mov	%rdi, %rax
-# endif
-# ifdef USE_AS_STRNCPY
+#  endif
+#  ifdef USE_AS_STRNCPY
 	sub	$1, %r8
 	lea	1(%rdx), %rcx
 	jnz	L(StrncpyFillTailWithZero1)
-# ifdef USE_AS_STPCPY
+#   ifdef USE_AS_STPCPY
 	cmpb	$1, (%rax)
 	sbb	$-1, %rax
-# endif
-# endif
+#   endif
+#  endif
 	ret
 
 	.p2align 4
 L(Exit2):
 	movw	(%rcx), %ax
 	movw	%ax, (%rdx)
-# ifdef USE_AS_STPCPY
+#  ifdef USE_AS_STPCPY
 	lea	1(%rdx), %rax
-# else
+#  else
 	mov	%rdi, %rax
-# endif
-# ifdef USE_AS_STRNCPY
+#  endif
+#  ifdef USE_AS_STRNCPY
 	sub	$2, %r8
 	lea	2(%rdx), %rcx
 	jnz	L(StrncpyFillTailWithZero1)
-# ifdef USE_AS_STPCPY
+#   ifdef USE_AS_STPCPY
 	cmpb	$1, (%rax)
 	sbb	$-1, %rax
-# endif
-# endif
+#   endif
+#  endif
 	ret
 
 	.p2align 4
@@ -2429,40 +2431,40 @@ L(Exit3):
 	movw	%ax, (%rdx)
 	movb	2(%rcx), %al
 	movb	%al, 2(%rdx)
-# ifdef USE_AS_STPCPY
+#  ifdef USE_AS_STPCPY
 	lea	2(%rdx), %rax
-# else
+#  else
 	mov	%rdi, %rax
-# endif
-# ifdef USE_AS_STRNCPY
+#  endif
+#  ifdef USE_AS_STRNCPY
 	sub	$3, %r8
 	lea	3(%rdx), %rcx
 	jnz	L(StrncpyFillTailWithZero1)
-# ifdef USE_AS_STPCPY
+#   ifdef USE_AS_STPCPY
 	cmpb	$1, (%rax)
 	sbb	$-1, %rax
-# endif
-# endif
+#   endif
+#  endif
 	ret
 
 	.p2align 4
 L(Exit4):
 	movl	(%rcx), %eax
 	movl	%eax, (%rdx)
-# ifdef USE_AS_STPCPY
+#  ifdef USE_AS_STPCPY
 	lea	3(%rdx), %rax
-# else
+#  else
 	mov	%rdi, %rax
-# endif
-# ifdef USE_AS_STRNCPY
+#  endif
+#  ifdef USE_AS_STRNCPY
 	sub	$4, %r8
 	lea	4(%rdx), %rcx
 	jnz	L(StrncpyFillTailWithZero1)
-# ifdef USE_AS_STPCPY
+#   ifdef USE_AS_STPCPY
 	cmpb	$1, (%rax)
 	sbb	$-1, %rax
-# endif
-# endif
+#  endif
+#  endif
 	ret
 
 	.p2align 4
@@ -2471,20 +2473,20 @@ L(Exit5):
 	movl	%eax, (%rdx)
 	movb	4(%rcx), %al
 	movb	%al, 4(%rdx)
-# ifdef USE_AS_STPCPY
+#  ifdef USE_AS_STPCPY
 	lea	4(%rdx), %rax
-# else
+#  else
 	mov	%rdi, %rax
-# endif
-# ifdef USE_AS_STRNCPY
+#  endif
+#  ifdef USE_AS_STRNCPY
 	sub	$5, %r8
 	lea	5(%rdx), %rcx
 	jnz	L(StrncpyFillTailWithZero1)
-# ifdef USE_AS_STPCPY
+#   ifdef USE_AS_STPCPY
 	cmpb	$1, (%rax)
 	sbb	$-1, %rax
-# endif
-# endif
+#   endif
+#  endif
 	ret
 
 	.p2align 4
@@ -2493,20 +2495,20 @@ L(Exit6):
 	movl	%eax, (%rdx)
 	movw	4(%rcx), %ax
 	movw	%ax, 4(%rdx)
-# ifdef USE_AS_STPCPY
+#  ifdef USE_AS_STPCPY
 	lea	5(%rdx), %rax
-# else
+#  else
 	mov	%rdi, %rax
-# endif
-# ifdef USE_AS_STRNCPY
+#  endif
+#  ifdef USE_AS_STRNCPY
 	sub	$6, %r8
 	lea	6(%rdx), %rcx
 	jnz	L(StrncpyFillTailWithZero1)
-# ifdef USE_AS_STPCPY
+#   ifdef USE_AS_STPCPY
 	cmpb	$1, (%rax)
 	sbb	$-1, %rax
-# endif
-# endif
+#   endif
+#  endif
 	ret
 
 	.p2align 4
@@ -2515,20 +2517,20 @@ L(Exit7):
 	movl	%eax, (%rdx)
 	movl	3(%rcx), %eax
 	movl	%eax, 3(%rdx)
-# ifdef USE_AS_STPCPY
+#  ifdef USE_AS_STPCPY
 	lea	6(%rdx), %rax
-# else
+#  else
 	mov	%rdi, %rax
-# endif
-# ifdef USE_AS_STRNCPY
+#  endif
+#  ifdef USE_AS_STRNCPY
 	sub	$7, %r8
 	lea	7(%rdx), %rcx
 	jnz	L(StrncpyFillTailWithZero1)
-# ifdef USE_AS_STPCPY
+#   ifdef USE_AS_STPCPY
 	cmpb	$1, (%rax)
 	sbb	$-1, %rax
-# endif
-# endif
+#   endif
+#  endif
 	ret
 
 	.p2align 4
@@ -2537,20 +2539,20 @@ L(Exit9):
 	mov	%rax, (%rdx)
 	mov	5(%rcx), %eax
 	mov	%eax, 5(%rdx)
-# ifdef USE_AS_STPCPY
+#  ifdef USE_AS_STPCPY
 	lea	8(%rdx), %rax
-# else
+#  else
 	mov	%rdi, %rax
-# endif
-# ifdef USE_AS_STRNCPY
+#  endif
+#  ifdef USE_AS_STRNCPY
 	sub	$9, %r8
 	lea	9(%rdx), %rcx
 	jnz	L(StrncpyFillTailWithZero1)
-# ifdef USE_AS_STPCPY
+#   ifdef USE_AS_STPCPY
 	cmpb	$1, (%rax)
 	sbb	$-1, %rax
-# endif
-# endif
+#   endif
+#  endif
 	ret
 
 	.p2align 4
@@ -2559,20 +2561,20 @@ L(Exit10):
 	mov	%rax, (%rdx)
 	mov	6(%rcx), %eax
 	mov	%eax, 6(%rdx)
-# ifdef USE_AS_STPCPY
+#  ifdef USE_AS_STPCPY
 	lea	9(%rdx), %rax
-# else
+#  else
 	mov	%rdi, %rax
-# endif
-# ifdef USE_AS_STRNCPY
+#  endif
+#  ifdef USE_AS_STRNCPY
 	sub	$10, %r8
 	lea	10(%rdx), %rcx
 	jnz	L(StrncpyFillTailWithZero1)
-# ifdef USE_AS_STPCPY
+#   ifdef USE_AS_STPCPY
 	cmpb	$1, (%rax)
 	sbb	$-1, %rax
-# endif
-# endif
+#   endif
+#  endif
 	ret
 
 	.p2align 4
@@ -2581,20 +2583,20 @@ L(Exit11):
 	mov	%rax, (%rdx)
 	mov	7(%rcx), %eax
 	mov	%eax, 7(%rdx)
-# ifdef USE_AS_STPCPY
+#  ifdef USE_AS_STPCPY
 	lea	10(%rdx), %rax
-# else
+#  else
 	mov	%rdi, %rax
-# endif
-# ifdef USE_AS_STRNCPY
+#  endif
+#  ifdef USE_AS_STRNCPY
 	sub	$11, %r8
 	lea	11(%rdx), %rcx
 	jnz	L(StrncpyFillTailWithZero1)
-# ifdef USE_AS_STPCPY
+#   ifdef USE_AS_STPCPY
 	cmpb	$1, (%rax)
 	sbb	$-1, %rax
-# endif
-# endif
+#   endif
+#  endif
 	ret
 
 	.p2align 4
@@ -2603,20 +2605,20 @@ L(Exit12):
 	mov	%rax, (%rdx)
 	mov	8(%rcx), %eax
 	mov	%eax, 8(%rdx)
-# ifdef USE_AS_STPCPY
+#  ifdef USE_AS_STPCPY
 	lea	11(%rdx), %rax
-# else
+#  else
 	mov	%rdi, %rax
-# endif
-# ifdef USE_AS_STRNCPY
+#  endif
+#  ifdef USE_AS_STRNCPY
 	sub	$12, %r8
 	lea	12(%rdx), %rcx
 	jnz	L(StrncpyFillTailWithZero1)
-# ifdef USE_AS_STPCPY
+#   ifdef USE_AS_STPCPY
 	cmpb	$1, (%rax)
 	sbb	$-1, %rax
-# endif
-# endif
+#   endif
+#  endif
 	ret
 
 	.p2align 4
@@ -2625,20 +2627,20 @@ L(Exit13):
 	mov	%rax, (%rdx)
 	mov	5(%rcx), %rax
 	mov	%rax, 5(%rdx)
-# ifdef USE_AS_STPCPY
+#  ifdef USE_AS_STPCPY
 	lea	12(%rdx), %rax
-# else
+#  else
 	mov	%rdi, %rax
-# endif
-# ifdef USE_AS_STRNCPY
+#  endif
+#  ifdef USE_AS_STRNCPY
 	sub	$13, %r8
 	lea	13(%rdx), %rcx
 	jnz	L(StrncpyFillTailWithZero1)
-# ifdef USE_AS_STPCPY
+#   ifdef USE_AS_STPCPY
 	cmpb	$1, (%rax)
 	sbb	$-1, %rax
-# endif
-# endif
+#   endif
+#  endif
 	ret
 
 	.p2align 4
@@ -2647,20 +2649,20 @@ L(Exit14):
 	mov	%rax, (%rdx)
 	mov	6(%rcx), %rax
 	mov	%rax, 6(%rdx)
-# ifdef USE_AS_STPCPY
+#  ifdef USE_AS_STPCPY
 	lea	13(%rdx), %rax
-# else
+#  else
 	mov	%rdi, %rax
-# endif
-# ifdef USE_AS_STRNCPY
+#  endif
+#  ifdef USE_AS_STRNCPY
 	sub	$14, %r8
 	lea	14(%rdx), %rcx
 	jnz	L(StrncpyFillTailWithZero1)
-# ifdef USE_AS_STPCPY
+#   ifdef USE_AS_STPCPY
 	cmpb	$1, (%rax)
 	sbb	$-1, %rax
-# endif
-# endif
+#   endif
+#  endif
 	ret
 
 	.p2align 4
@@ -2669,23 +2671,23 @@ L(Exit15):
 	mov	%rax, (%rdx)
 	mov	7(%rcx), %rax
 	mov	%rax, 7(%rdx)
-# ifdef USE_AS_STPCPY
+#  ifdef USE_AS_STPCPY
 	lea	14(%rdx), %rax
-# else
+#  else
 	mov	%rdi, %rax
-# endif
-# ifdef USE_AS_STRNCPY
+#  endif
+#  ifdef USE_AS_STRNCPY
 	sub	$15, %r8
 	lea	15(%rdx), %rcx
 	jnz	L(StrncpyFillTailWithZero1)
-# ifdef USE_AS_STPCPY
+#   ifdef USE_AS_STPCPY
 	cmpb	$1, (%rax)
 	sbb	$-1, %rax
-# endif
-# endif
+#   endif
+#  endif
 	ret
 
-# ifdef USE_AS_STRNCPY
+#  ifdef USE_AS_STRNCPY
 	.p2align 4
 L(Fill0):
 	ret
@@ -2902,13 +2904,13 @@ L(StrncpyExit15Bytes):
 	mov	%rax, (%rdx)
 	mov	7(%rcx), %rax
 	mov	%rax, 7(%rdx)
-# ifdef USE_AS_STPCPY
+#   ifdef USE_AS_STPCPY
 	lea	14(%rdx), %rax
 	cmpb	$1, (%rax)
 	sbb	$-1, %rax
-# else
+#   else
 	mov	%rdi, %rax
-# endif
+#   endif
 	ret
 
 	.p2align 4
@@ -2943,14 +2945,16 @@ L(StrncpyExit8Bytes):
 	jz	L(Exit7)
 	mov	(%rcx), %rax
 	mov	%rax, (%rdx)
-# ifdef USE_AS_STPCPY
+#   ifdef USE_AS_STPCPY
 	lea	7(%rdx), %rax
 	cmpb	$1, (%rax)
 	sbb	$-1, %rax
-# else
+#   else
 	mov	%rdi, %rax
-# endif
+#   endif
 	ret
+
+#  endif
 
 # endif
 
@@ -3715,7 +3719,7 @@ L(StrncpyExit15):
 	lea	1(%rsi), %rsi
 	jmp	L(CopyFrom1To16BytesCase3)
 # endif
-
+# ifndef USE_AS_STRCAT
 END (STRCPY)
-
+# endif
 #endif

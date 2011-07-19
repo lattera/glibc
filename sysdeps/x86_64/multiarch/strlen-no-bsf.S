@@ -1,5 +1,5 @@
-/* strlen without BSF
-   Copyright (C) 2010 Free Software Foundation, Inc.
+/* strlen SSE2 without bsf
+   Copyright (C) 2010, 2011 Free Software Foundation, Inc.
    Contributed by Intel Corporation.
    This file is part of the GNU C Library.
 
@@ -18,12 +18,17 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#if defined SHARED && !defined NOT_IN_libc
+#if (defined SHARED || defined USE_AS_STRCAT) && !defined NOT_IN_libc
 
-#include <sysdep.h>
+# ifndef USE_AS_STRCAT
 
-	.section .text.slow,"ax",@progbits
+#  include <sysdep.h>
+
+#  define RETURN ret
+
+	.section .text.sse2,"ax",@progbits
 ENTRY (__strlen_no_bsf)
+# endif
 	xor	%eax, %eax
 	cmpb	$0, (%rdi)
 	jz	L(exit_tail0)
@@ -165,39 +170,37 @@ ENTRY (__strlen_no_bsf)
 	jnz	L(exit)
 
 	and	$-0x40, %rax
-	xor	%r8d, %r8d
 L(aligned_64):
 	pcmpeqb	(%rax), %xmm0
 	pcmpeqb	16(%rax), %xmm1
 	pcmpeqb	32(%rax), %xmm2
 	pcmpeqb	48(%rax), %xmm3
 	pmovmskb %xmm0, %edx
-	pmovmskb %xmm1, %esi
-	pmovmskb %xmm2, %edi
+	pmovmskb %xmm1, %r11d
+	pmovmskb %xmm2, %r10d
 	pmovmskb %xmm3, %r9d
-	or	%edx, %r8d
-	or	%esi, %r8d
-	or	%edi, %r8d
-	or	%r9d, %r8d
+	or	%edx, %r9d
+	or	%r11d, %r9d
+	or	%r10d, %r9d
 	lea	64(%rax), %rax
 	jz	L(aligned_64)
 
 	test	%edx, %edx
 	jnz	L(aligned_64_exit_16)
-	test	%esi, %esi
+	test	%r11d, %r11d
 	jnz	L(aligned_64_exit_32)
-	test	%edi, %edi
+	test	%r10d, %r10d
 	jnz	L(aligned_64_exit_48)
 L(aligned_64_exit_64):
-	mov	%r9d, %edx
+	pmovmskb %xmm3, %edx
 	jmp	L(aligned_64_exit)
 L(aligned_64_exit_48):
 	lea	-16(%rax), %rax
-	mov	%edi, %edx
+	mov	%r10d, %edx
 	jmp	L(aligned_64_exit)
 L(aligned_64_exit_32):
 	lea	-32(%rax), %rax
-	mov	%esi, %edx
+	mov	%r11d, %edx
 	jmp	L(aligned_64_exit)
 L(aligned_64_exit_16):
 	lea	-48(%rax), %rax
@@ -228,7 +231,7 @@ L(exit):
 	jnz	L(exit_tail6)
 	add	$7, %eax
 L(exit_tail0):
-	ret
+	RETURN
 
 L(exit_high):
 	add	$8, %eax
@@ -253,57 +256,58 @@ L(exit_high):
 	test	$0x40, %dh
 	jnz	L(exit_tail6)
 	add	$7, %eax
-	ret
+	RETURN
 	.p2align 4
 L(exit_tail1):
 	add	$1, %eax
-	ret
+	RETURN
 
 L(exit_tail2):
 	add	$2, %eax
-	ret
+	RETURN
 
 L(exit_tail3):
 	add	$3, %eax
-	ret
+	RETURN
 
 L(exit_tail4):
 	add	$4, %eax
-	ret
+	RETURN
 
 L(exit_tail5):
 	add	$5, %eax
-	ret
+	RETURN
 L(exit_tail6):
 	add	$6, %eax
-	ret
+	RETURN
 L(exit_tail7):
 	add	$7, %eax
-	ret
+	RETURN
 L(exit_tail8):
 	add	$8, %eax
-	ret
+	RETURN
 L(exit_tail9):
 	add	$9, %eax
-	ret
+	RETURN
 L(exit_tail10):
 	add	$10, %eax
-	ret
+	RETURN
 L(exit_tail11):
 	add	$11, %eax
-	ret
+	RETURN
 L(exit_tail12):
 	add	$12, %eax
-	ret
+	RETURN
 L(exit_tail13):
 	add	$13, %eax
-	ret
+	RETURN
 L(exit_tail14):
 	add	$14, %eax
-	ret
+	RETURN
 L(exit_tail15):
 	add	$15, %eax
-	ret
+# ifndef USE_AS_STRCAT
+	RETURN
 END (__strlen_no_bsf)
-
+# endif
 #endif

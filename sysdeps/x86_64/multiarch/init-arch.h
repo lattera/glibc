@@ -21,6 +21,7 @@
 #define bit_Slow_BSF			(1 << 2)
 #define bit_Prefer_SSE_for_memop	(1 << 3)
 #define bit_Fast_Unaligned_Load		(1 << 4)
+#define bit_Prefer_PMINUB_for_stringop	(1 << 5)
 
 #ifdef	__ASSEMBLER__
 
@@ -41,6 +42,7 @@
 # define index_Slow_BSF			FEATURE_INDEX_1*FEATURE_SIZE
 # define index_Prefer_SSE_for_memop	FEATURE_INDEX_1*FEATURE_SIZE
 # define index_Fast_Unaligned_Load	FEATURE_INDEX_1*FEATURE_SIZE
+# define index_Prefer_PMINUB_for_stringop FEATURE_INDEX_1*FEATURE_SIZE
 
 #else	/* __ASSEMBLER__ */
 

@@ -24,10 +24,12 @@
 typedef char reg_char;
 #endif
 
-#undef strncat
+#ifndef STRNCAT
+# define STRNCAT  strncat
+#endif
 
 char *
-strncat (s1, s2, n)
+STRNCAT (s1, s2, n)
      char *s1;
      const char *s2;
      size_t n;
