@@ -1,3 +1,7 @@
+2011-07-19  Andreas Schwab  <schwab@redhat.com>
+
+	* string/strxfrm_l.c (STRXFRM): Fix alloca accounting.
+
 2011-07-19  Ulrich Drepper  <drepper@gmail.com>
 
 	* nscd/nscd.c (termination_handler): Don't do anything for a database

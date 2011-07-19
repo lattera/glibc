@@ -1,4 +1,5 @@
-/* Copyright (C) 1995-1997,2002,2004-2006,2010 Free Software Foundation, Inc.
+/* Copyright (C) 1995-1997,2002,2004-2006,2010,2011
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Ulrich Drepper <drepper@gnu.org>, 1995.
 
@@ -150,7 +151,7 @@ STRXFRM (STRING_TYPE *dest, const STRING_TYPE *src, size_t n, __locale_t l)
      values.  But since there is no limit on the length of the string
      we have to use `malloc' if the string is too long.  We should be
      very conservative here.  */
-  if (! __libc_use_alloca (srclen))
+  if (! __libc_use_alloca ((srclen + 1) * (sizeof (int32_t) + 1)))
     {
       idxarr = (int32_t *) malloc ((srclen + 1) * (sizeof (int32_t) + 1));
       rulearr = (unsigned char *) &idxarr[srclen];
