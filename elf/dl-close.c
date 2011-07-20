@@ -231,7 +231,7 @@ _dl_close_worker (struct link_map *map)
     }
 
   /* Sort the entries.  */
-  _dl_sort_fini (ns->_ns_loaded, maps, nloaded, used, nsid);
+  _dl_sort_fini (maps, nloaded, used, nsid);
 
   /* Call all termination functions at once.  */
 #ifdef SHARED

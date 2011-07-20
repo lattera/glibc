@@ -30,8 +30,7 @@ typedef void (*fini_t) (void);
 
 void
 internal_function
-_dl_sort_fini (struct link_map *l, struct link_map **maps, size_t nmaps,
-	       char *used, Lmid_t ns)
+_dl_sort_fini (struct link_map **maps, size_t nmaps, char *used, Lmid_t ns)
 {
   /* A list of one element need not be sorted.  */
   if (nmaps == 1)
@@ -199,7 +198,7 @@ _dl_fini (void)
       nmaps = i;
 
       /* Now we have to do the sorting.  */
-      _dl_sort_fini (GL(dl_ns)[ns]._ns_loaded, maps, nmaps, NULL, ns);
+      _dl_sort_fini (maps, nmaps, NULL, ns);
 
       /* We do not rely on the linked list of loaded object anymore from
 	 this point on.  We have our own list here (maps).  The various

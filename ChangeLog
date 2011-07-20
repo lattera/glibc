@@ -1,3 +1,10 @@
+2011-07-14  Marek Polacek  <mpolacek@redhat.com>
+
+	* elf/dl-fini.c (_dl_sort_fini): Remove unused link_map *l argument,
+	* elf/dl-fini.c (_dl_fini): Adjust caller.
+	* elf/dl-close.c (_dl_close_worker): Likewise.
+	* sysdeps/generic/ldsodefs.h: Adjust declaration.
+
 2011-07-15  Marek Polacek  <mpolacek@redhat.com>
 
 	* elf/cache.c (load_aux_cache): Remove unnecessary condition of

@@ -1,5 +1,5 @@
 /* Run-time dynamic linker data structures for loaded ELF shared objects.
-   Copyright (C) 1995-2009, 2010 Free Software Foundation, Inc.
+   Copyright (C) 1995-2009, 2010, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -947,8 +947,8 @@ extern void _dl_init (struct link_map *main_map, int argc, char **argv,
 extern void _dl_fini (void) internal_function;
 
 /* Sort array MAPS according to dependencies of the contained objects.  */
-extern void _dl_sort_fini (struct link_map *l, struct link_map **maps,
-			   size_t nmaps, char *used, Lmid_t ns)
+extern void _dl_sort_fini (struct link_map **maps, size_t nmaps, char *used,
+			   Lmid_t ns)
      internal_function;
 
 /* The dynamic linker calls this function before and having changing
