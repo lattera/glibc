@@ -543,7 +543,7 @@ __libc_res_nquerydomain(res_state statp,
 {
 	char nbuf[MAXDNAME];
 	const char *longname = nbuf;
-	int n, d;
+	size_t n, d;
 
 #ifdef DEBUG
 	if (statp->options & RES_DEBUG)

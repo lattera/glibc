@@ -1,3 +1,8 @@
+2011-07-20  Andreas Schwab  <schwab@redhat.com>
+
+	* resolv/res_query.c (__libc_res_nquerydomain): Use size_t for
+	strlen results.
+
 2011-07-13  Andreas Krebbel  <Andreas.Krebbel@de.ibm.com>
 
 	* sysdeps/unix/sysv/linux/s390/s390-32/sysdep.h
