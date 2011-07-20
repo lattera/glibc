@@ -1,5 +1,8 @@
 2011-07-15  Marek Polacek  <mpolacek@redhat.com>
 
+	* elf/cache.c (load_aux_cache): Remove unnecessary condition of
+	"aux_cache->nlibs < 0".
+
 	* nscd/nscd_conf.c (nscd_parse_file): Remove unnecessary condition
 	in the reload-count case.
 

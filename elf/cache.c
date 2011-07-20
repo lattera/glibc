@@ -675,7 +675,6 @@ load_aux_cache (const char *aux_cache_name)
   if (aux_cache == MAP_FAILED
       || aux_cache_size < sizeof (struct aux_cache_file)
       || memcmp (aux_cache->magic, AUX_CACHEMAGIC, sizeof AUX_CACHEMAGIC - 1)
-      || aux_cache->nlibs < 0
       || aux_cache->nlibs >= aux_cache_size)
     {
       close (fd);
