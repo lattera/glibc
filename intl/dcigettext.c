@@ -1,5 +1,5 @@
 /* Implementation of the internal dcigettext function.
-   Copyright (C) 1995-2005, 2006, 2007, 2008, 2009
+   Copyright (C) 1995-2005, 2006, 2007, 2008, 2009, 2011
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -1402,7 +1402,7 @@ get_output_charset (domainbinding)
 	  return _NL_CURRENT (LC_CTYPE, CODESET);
 # else
 #  if HAVE_ICONV
-	  extern const char *locale_charset PARAMS ((void);
+	  extern const char *locale_charset PARAMS ((void));
 	  return locale_charset ();
 #  endif
 # endif

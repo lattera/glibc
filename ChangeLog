@@ -1,3 +1,7 @@
+2011-07-20  Marek Polacek  <mpolacek@redhat.com>
+
+	* intl/dcigettext.c (get_output_charset): Add missing bracket.
+
 2011-07-20  Andreas Schwab  <schwab@redhat.com>
 
 	* resolv/res_query.c (__libc_res_nquerydomain): Use size_t for
