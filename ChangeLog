@@ -1,3 +1,12 @@
+2011-07-13  Andreas Krebbel  <Andreas.Krebbel@de.ibm.com>
+
+	* sysdeps/unix/sysv/linux/s390/s390-32/sysdep.h
+	(INTERNAL_VSYSCALL_NCS): Use r10 for backing up the return address
+	register in order to avoid conflicts with the soft frame pointer
+	being held in r11 when necessary.
+	* sysdeps/unix/sysv/linux/s390/s390-64/sysdep.h
+	(INTERNAL_VSYSCALL_NCS): Likewise.
+
 2011-07-14  Marek Polacek  <mpolacek@redhat.com>
 
 	* elf/dl-fini.c (_dl_sort_fini): Remove unused link_map *l argument,
