@@ -1,3 +1,8 @@
+2011-07-20  Ulrich Drepper  <drepper@gmail.com>
+
+	* po/cs.po: Update from translation team.
+	* po/bg.po: Likewise.
+
 2011-07-12  Marek Polacek  <mpolacek@redhat.com>
 
 	* misc/sys/cdefs.h: Add support for const attribute.
