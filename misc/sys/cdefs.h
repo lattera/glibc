@@ -1,4 +1,4 @@
-/* Copyright (C) 1992-2001, 2002, 2004, 2005, 2006, 2007, 2009
+/* Copyright (C) 1992-2001, 2002, 2004, 2005, 2006, 2007, 2009, 2011
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -216,6 +216,13 @@
 # define __attribute_pure__ __attribute__ ((__pure__))
 #else
 # define __attribute_pure__ /* Ignore */
+#endif
+
+/* This declaration tells the compiler that the value is constant.  */
+#if __GNUC_PREREQ (2,5)
+# define __attribute_const__ __attribute__ ((__const__))
+#else
+# define __attribute_const__ /* Ignore */
 #endif
 
 /* At some point during the gcc 3.1 development the `used' attribute

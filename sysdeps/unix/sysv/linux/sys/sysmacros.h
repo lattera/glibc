@@ -31,29 +31,29 @@ __BEGIN_DECLS
 
 __extension__
 extern unsigned int gnu_dev_major (unsigned long long int __dev)
-     __THROW;
+     __THROW __attribute_const__;
 __extension__
 extern unsigned int gnu_dev_minor (unsigned long long int __dev)
-     __THROW;
+     __THROW __attribute_const__;
 __extension__
 extern unsigned long long int gnu_dev_makedev (unsigned int __major,
 					       unsigned int __minor)
-     __THROW;
+     __THROW __attribute_const__;
 
 # if defined __GNUC__ && __GNUC__ >= 2 && defined __USE_EXTERN_INLINES
-__extension__ __extern_inline unsigned int
+__extension__ __extern_inline __attribute_const__ unsigned int
 __NTH (gnu_dev_major (unsigned long long int __dev))
 {
   return ((__dev >> 8) & 0xfff) | ((unsigned int) (__dev >> 32) & ~0xfff);
 }
 
-__extension__ __extern_inline unsigned int
+__extension__ __extern_inline __attribute_const__ unsigned int
 __NTH (gnu_dev_minor (unsigned long long int __dev))
 {
   return (__dev & 0xff) | ((unsigned int) (__dev >> 12) & ~0xff);
 }
 
-__extension__ __extern_inline unsigned long long int
+__extension__ __extern_inline __attribute_const__ unsigned long long int
 __NTH (gnu_dev_makedev (unsigned int __major, unsigned int __minor))
 {
   return ((__minor & 0xff) | ((__major & 0xfff) << 8)
