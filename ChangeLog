@@ -1,3 +1,8 @@
+2011-07-15  Marek Polacek  <mpolacek@redhat.com>
+
+	* nscd/nscd_conf.c (nscd_parse_file): Remove unnecessary condition
+	in the reload-count case.
+
 2011-07-15  Liubov Dmitrieva  <liubov.dmitrieva@intel.com>
 
 	* sysdeps/x86_64/multiarch/Makefile (sysdep_routines): Add
