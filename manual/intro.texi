@@ -714,9 +714,12 @@ macros in the library, with complete data types and function prototypes,
 and says what standard or system each is derived from.
 
 @item
-@ref{Maintenance}, explains how to build and install the GNU C library on
-your system, how to report any bugs you might find, and how to add new
-functions or port the library to a new system.
+@ref{Installation}, explains how to build and install the GNU C library on
+your system, and how to report any bugs you might find.
+
+@item
+@ref{Maintenance}, explains how to add new functions or port the
+library to a new system.
 @end itemize
 
 If you already know the name of the facility you are interested in, you
