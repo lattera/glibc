@@ -24,7 +24,7 @@ Version 2.15
 * Improved strcpy, strncpy, stpcpy, stpncpy for SSE2 and SSSE3 on x86-64.
   Contributed by HJ Lu.
 
-* Improved strcat and strncat on x86-64.
+* Optimized strcat and strncat on x86-64.
   Contributed by Liubov Dmitrieva.
 
 Version 2.14
