@@ -1,3 +1,7 @@
+2011-07-09  Andreas Schwab  <schwab@linux-m68k.org>
+
+	* sysdeps/unix/sysv/linux/pathconf.c: Include <string.h>.
+
 2011-07-20  Ulrich Drepper  <drepper@gmail.com>
 
 	* po/cs.po: Update from translation team.
