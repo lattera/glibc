@@ -1,4 +1,4 @@
-/* Copyright (C) 2004, 2005, 2009 Free Software Foundation, Inc.
+/* Copyright (C) 2004, 2005, 2009, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -65,7 +65,8 @@ __END_DECLS
 /* Registers for entry into PLT on x86-64.  */
 # if __GNUC_PREREQ (4,0)
 typedef float La_x86_64_xmm __attribute__ ((__vector_size__ (16)));
-typedef float La_x86_64_ymm __attribute__ ((__vector_size__ (32)));
+typedef float La_x86_64_ymm
+    __attribute__ ((__vector_size__ (32), __aligned__ (16)));
 # else
 typedef float La_x86_64_xmm __attribute__ ((__mode__ (__V4SF__)));
 # endif
@@ -76,7 +77,7 @@ typedef union
   La_x86_64_ymm ymm[2];
 # endif
   La_x86_64_xmm xmm[4];
-} La_x86_64_vector __attribute__ ((aligned(16)));
+} La_x86_64_vector __attribute__ ((__aligned__ (16)));
 
 typedef struct La_x86_64_regs
 {
