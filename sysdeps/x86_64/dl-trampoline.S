@@ -1,5 +1,5 @@
 /* PLT trampolines.  x86-64 version.
-   Copyright (C) 2004, 2005, 2007, 2009 Free Software Foundation, Inc.
+   Copyright (C) 2004, 2005, 2007, 2009, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -139,10 +139,17 @@ L(have_avx):
 	movl	$1, %eax
 	cpuid
 	movq	%r11,%rbx		# Restore rbx
-	movl	$1, %eax
-	testl	$(1 << 28), %ecx
-	jne	2f
-	negl	%eax
+	xorl	%eax, %eax
+	// AVX and XSAVE supported?
+	testl	$((1 << 28) | (1 << 27)), %ecx
+	je	2f
+	xorl	%ecx, %ecx
+	// Get XFEATURE_ENABLED_MASK
+	xgetbv
+	andl	$0x6, %eax
+	cmpl	$0x6, %eax
+	// Nonzero if SSE and AVX state saving is enabled.
+	sete	%al
 2:	movl	%eax, L(have_avx)(%rip)
 	cmpl	$0, %eax
 

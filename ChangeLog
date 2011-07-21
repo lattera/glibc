@@ -1,6 +1,13 @@
 2011-07-20  Ulrich Drepper  <drepper@gmail.com>
 
-	* sysdeps/x86_64/bits/link.h (La_x86_64_ymm): Force 16-byt alignment.
+	[BZ #13007]
+	* sysdeps/x86_64/dl-trampoline.S (_dl_runtime_profile): More complete
+	check for AVX enablement so that we don't crash with old kernels and
+	new hardware.
+	* elf/tst-audit4.c: Add same checks here.
+	* elf/tst-audit6.c: Likewise.
+
+	* sysdeps/x86_64/bits/link.h (La_x86_64_ymm): Force 16-byte alignment.
 
 2011-07-09  Andreas Schwab  <schwab@linux-m68k.org>
 
