@@ -84,10 +84,10 @@ ENTRY (STRCPY)
 
 # ifdef USE_AS_STRNCPY
 	mov	%rcx, %rsi
+	sub	$16, %r8
 	and	$0xf, %rsi
 
 /* add 16 bytes rcx_shift to r8 */
-
 	add	%rsi, %r8
 # endif
 	lea	16(%rcx), %rsi
@@ -120,7 +120,7 @@ ENTRY (STRCPY)
 /* rax = 0: there isn't end of string from position rsi to rsi+15 */
 
 # ifdef USE_AS_STRNCPY
-	sub	$32, %r8
+	sub	$16, %r8
 	jbe	L(CopyFrom1To16BytesCase2OrCase3)
 # endif
 	test	%rax, %rax

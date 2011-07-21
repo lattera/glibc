@@ -1,3 +1,9 @@
+2011-07-21  Liubov Dmitrieva  <liubov.dmitrieva@gmail.com>
+
+	* sysdeps/x86_64/multiarch/strcpy-sse2-unaligned.S: Fix overfow
+	bug in strncpy/strncat.
+	* sysdeps/x86_64/multiarch/strcpy-ssse3.S: Likewise.
+
 2011-07-21  Ulrich Drepper  <drepper@gmail.com>
 
 	* string/tester.c (test_strcat): Add tests for different alignments

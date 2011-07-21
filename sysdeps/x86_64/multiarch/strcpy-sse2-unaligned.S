@@ -52,24 +52,28 @@ ENTRY (STRCPY)
 
 # endif
 
-	and	$15, %rcx
-	jz	L(SourceStringAlignmentZero)
+	and	$63, %rcx
+	cmp	$32, %rcx
+	jbe	L(SourceStringAlignmentLess32)
 
 	and	$-16, %rsi
+	and	$15, %rcx
 	pxor	%xmm0, %xmm0
 	pxor	%xmm1, %xmm1
 
 	pcmpeqb	(%rsi), %xmm1
-# ifdef USE_AS_STRNCPY
-	add	%rcx, %r8
-# endif
 	pmovmskb %xmm1, %rdx
 	shr	%cl, %rdx
+
 # ifdef USE_AS_STRNCPY
 #  if defined USE_AS_STPCPY || defined USE_AS_STRCAT
-	cmp	$16, %r8
+	mov	$16, %r10
+	sub	%rcx, %r10
+	cmp	%r10, %r8
 #  else
-	cmp	$17, %r8
+	mov	$17, %r10
+	sub	%rcx, %r10
+	cmp	%r10, %r8
 #  endif
 	jbe	L(CopyFrom1To16BytesTailCase2OrCase3)
 # endif
@@ -78,12 +82,10 @@ ENTRY (STRCPY)
 
 	pcmpeqb	16(%rsi), %xmm0
 	pmovmskb %xmm0, %rdx
+
 # ifdef USE_AS_STRNCPY
-#  if defined USE_AS_STPCPY || defined USE_AS_STRCAT
-	cmp	$32, %r8
-#  else
-	cmp	$33, %r8
-#  endif
+	add	$16, %r10
+	cmp	%r10, %r8
 	jbe	L(CopyFrom1To32BytesCase2OrCase3)
 # endif
 	test	%rdx, %rdx
@@ -92,11 +94,13 @@ ENTRY (STRCPY)
 	movdqu	(%rsi, %rcx), %xmm1   /* copy 16 bytes */
 	movdqu	%xmm1, (%rdi)
 
-	sub	%rcx, %rdi
-
 /* If source adress alignment != destination adress alignment */
 	.p2align 4
 L(Unalign16Both):
+	sub	%rcx, %rdi
+# ifdef USE_AS_STRNCPY
+	add	%rcx, %r8
+# endif
 	mov	$16, %rcx
 	movdqa	(%rsi, %rcx), %xmm1
 	movaps	16(%rsi, %rcx), %xmm2
@@ -288,9 +292,10 @@ L(Unaligned64Leave):
 
 /* If source adress alignment == destination adress alignment */
 
-L(SourceStringAlignmentZero):
+L(SourceStringAlignmentLess32):
 	pxor	%xmm0, %xmm0
-	movdqa	(%rsi), %xmm1
+	movdqu	(%rsi), %xmm1
+	movdqu	16(%rsi), %xmm2
 	pcmpeqb	%xmm1, %xmm0
 	pmovmskb %xmm0, %rdx
 
@@ -305,7 +310,7 @@ L(SourceStringAlignmentZero):
 	test	%rdx, %rdx
 	jnz	L(CopyFrom1To16BytesTail1)
 
-	pcmpeqb	16(%rsi), %xmm0
+	pcmpeqb	%xmm2, %xmm0
 	movdqu	%xmm1, (%rdi)
 	pmovmskb %xmm0, %rdx
 
@@ -319,6 +324,9 @@ L(SourceStringAlignmentZero):
 # endif
 	test	%rdx, %rdx
 	jnz	L(CopyFrom1To32Bytes1)
+
+	and	$-16, %rsi
+	and	$15, %rcx
 	jmp	L(Unalign16Both)
 
 /*------End of main part with loops---------------------*/
@@ -335,9 +343,6 @@ L(CopyFrom1To16Bytes):
 # endif
 	.p2align 4
 L(CopyFrom1To16BytesTail):
-# if defined USE_AS_STRNCPY && !defined USE_AS_STRCAT
-	sub	%rcx, %r8
-# endif
 	add	%rcx, %rsi
 	bsf	%rdx, %rdx
 	BRANCH_TO_JMPTBL_ENTRY (L(ExitTable), %rdx, 4)
@@ -355,9 +360,6 @@ L(CopyFrom1To16BytesTail1):
 
 	.p2align 4
 L(CopyFrom1To32Bytes):
-# if defined USE_AS_STRNCPY && !defined USE_AS_STRCAT
-	sub	%rcx, %r8
-# endif
 	bsf	%rdx, %rdx
 	add	%rcx, %rsi
 	add	$16, %rdx
@@ -465,7 +467,6 @@ L(CopyFrom1To16BytesCase2):
 
 	.p2align 4
 L(CopyFrom1To32BytesCase2):
-	sub	%rcx, %r8
 	add	%rcx, %rsi
 	bsf	%rdx, %rdx
 	add	$16, %rdx
@@ -475,7 +476,6 @@ L(CopyFrom1To32BytesCase2):
 	BRANCH_TO_JMPTBL_ENTRY (L(ExitStrncpyTable), %r8, 4)
 
 L(CopyFrom1To16BytesTailCase2):
-	sub	%rcx, %r8
 	add	%rcx, %rsi
 	bsf	%rdx, %rdx
 	cmp	%r8, %rdx
@@ -504,7 +504,6 @@ L(CopyFrom1To16BytesCase3):
 L(CopyFrom1To32BytesCase2OrCase3):
 	test	%rdx, %rdx
 	jnz	L(CopyFrom1To32BytesCase2)
-	sub	%rcx, %r8
 	add	%rcx, %rsi
 	BRANCH_TO_JMPTBL_ENTRY (L(ExitStrncpyTable), %r8, 4)
 
@@ -512,7 +511,6 @@ L(CopyFrom1To32BytesCase2OrCase3):
 L(CopyFrom1To16BytesTailCase2OrCase3):
 	test	%rdx, %rdx
 	jnz	L(CopyFrom1To16BytesTailCase2)
-	sub	%rcx, %r8
 	add	%rcx, %rsi
 	BRANCH_TO_JMPTBL_ENTRY (L(ExitStrncpyTable), %r8, 4)
 
