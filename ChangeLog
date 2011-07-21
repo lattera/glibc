@@ -1,3 +1,9 @@
+2011-07-21  Ulrich Drepper  <drepper@gmail.com>
+
+	* string/tester.c (test_strcat): Add tests for different alignments
+	of source and destination.
+	(test_strncat): Likewise.
+
 2011-07-20  Ulrich Drepper  <drepper@gmail.com>
 
 	[BZ #12852]

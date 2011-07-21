@@ -1,5 +1,6 @@
 /* Tester for string functions.
-   Copyright (C) 1995-2001, 2003, 2005, 2008, 2010 Free Software Foundation, Inc.
+   Copyright (C) 1995-2001,2003,2005,2008,2010,2011
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -46,7 +47,7 @@ check (int thing, int number)
 {
   if (!thing)
     {
-      printf("%s flunked test %d\n", it, number);
+      printf ("%s flunked test %d\n", it, number);
       ++errors;
     }
 }
@@ -55,7 +56,7 @@ check (int thing, int number)
 static void
 equal (const char *a, const char *b, int number)
 {
-  check(a != NULL && b != NULL && STREQ (a, b), number);
+  check (a != NULL && b != NULL && STREQ (a, b), number);
 }
 
 char one[50];
@@ -302,6 +303,48 @@ test_strcat (void)
   (void) strcpy (one, "");
   (void) strcat (one, "cd");
   equal (one, "cd", 9);
+
+  int ntest = 10;
+  char buf1[80] __attribute__ ((aligned (16)));
+  char buf2[32] __attribute__ ((aligned (16)));
+  for (size_t n1 = 0; n1 < 16; ++n1)
+    for (size_t n2 = 0; n2 < 16; ++n2)
+      for (size_t n3 = 0; n3 < 32; ++n3)
+	{
+	  size_t olderrors = errors;
+
+	  memset (buf1, 'b', sizeof (buf1));
+
+	  memset (buf1 + n2, 'a', n3);
+	  buf1[n2 + n3] = '\0';
+	  strcpy (buf2 + n1, "123");
+
+	  check (strcat (buf1 + n2, buf2 + n1) == buf1 + n2, ntest);
+	  if (errors == olderrors)
+	    for (size_t i = 0; i < sizeof (buf1); ++i)
+	      {
+		if (i < n2)
+		  check (buf1[i] == 'b', ntest);
+		else if (i < n2 + n3)
+		  check (buf1[i] == 'a', ntest);
+		else if (i < n2 + n3 + 3)
+		  check (buf1[i] == "123"[i - (n2 + n3)], ntest);
+		else if (i == n2 + n3 + 3)
+		  check (buf1[i] == '\0', ntest);
+		else
+		  check (buf1[i] == 'b', ntest);
+
+		if (errors != olderrors)
+		  {
+		    printf ("n1=%zu, n2=%zu, n3=%zu, buf1=%02hhx",
+			    n1, n2, n3, buf1[0]);
+		    for (size_t j = 1; j < sizeof (buf1); ++j)
+		      printf (",%02hhx", buf1[j]);
+		    putchar_unlocked ('\n');
+		    break;
+		  }
+	      }
+	}
 }
 
 static void
@@ -347,6 +390,50 @@ test_strncat (void)
 
   (void) strncat (one, "ij", (size_t)-1);	/* set sign bit in count */
   equal (one, "abcdghij", 13);
+
+  int ntest = 14;
+  char buf1[80] __attribute__ ((aligned (16)));
+  char buf2[32] __attribute__ ((aligned (16)));
+  for (size_t n1 = 0; n1 < 16; ++n1)
+    for (size_t n2 = 0; n2 < 16; ++n2)
+      for (size_t n3 = 0; n3 < 32; ++n3)
+	for (size_t n4 = 0; n4 < 16; ++n4)
+	  {
+	    size_t olderrors = errors;
+
+	    memset (buf1, 'b', sizeof (buf1));
+
+	    memset (buf1 + n2, 'a', n3);
+	    buf1[n2 + n3] = '\0';
+	    strcpy (buf2 + n1, "123");
+
+	    check (strncat (buf1 + n2, buf2 + n1, ~((size_t) 0) - n4)
+		   == buf1 + n2, ntest);
+	    if (errors == olderrors)
+	      for (size_t i = 0; i < sizeof (buf1); ++i)
+		{
+		  if (i < n2)
+		    check (buf1[i] == 'b', ntest);
+		  else if (i < n2 + n3)
+		    check (buf1[i] == 'a', ntest);
+		  else if (i < n2 + n3 + 3)
+		    check (buf1[i] == "123"[i - (n2 + n3)], ntest);
+		  else if (i == n2 + n3 + 3)
+		    check (buf1[i] == '\0', ntest);
+		  else
+		    check (buf1[i] == 'b', ntest);
+
+		  if (errors != olderrors)
+		    {
+		      printf ("n1=%zu, n2=%zu, n3=%zu, n4=%zu, buf1=%02hhx",
+			      n1, n2, n3, n4, buf1[0]);
+		      for (size_t j = 1; j < sizeof (buf1); ++j)
+			printf (",%02hhx", buf1[j]);
+		      putchar_unlocked ('\n');
+		      break;
+		    }
+		}
+	  }
 }
 
 static void
