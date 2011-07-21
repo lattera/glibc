@@ -46,6 +46,12 @@
 
 #include <pwd.h>
 
+#if defined HAVE_STDINT_H || defined _LIBC
+# include <stdint.h>
+#elif !defined UINTPTR_MAX
+# define UINTPTR_MAX (~((size_t) 0))
+#endif
+
 #include <errno.h>
 #ifndef __set_errno
 # define __set_errno(val) errno = (val)
@@ -436,6 +442,10 @@ glob (pattern, flags, errfunc, pglob)
       else
 	{
 	  size_t i;
+
+	  if (pglob->gl_offs >= ~((size_t) 0) / sizeof (char *))
+	    return GLOB_NOSPACE;
+
 	  pglob->gl_pathv = (char **) malloc ((pglob->gl_offs + 1)
 					      * sizeof (char *));
 	  if (pglob->gl_pathv == NULL)
@@ -954,10 +964,8 @@ glob (pattern, flags, errfunc, pglob)
 	  int newcount = pglob->gl_pathc + pglob->gl_offs;
 	  char **new_gl_pathv;
 
-	  new_gl_pathv
-	    = (char **) realloc (pglob->gl_pathv,
-				 (newcount + 1 + 1) * sizeof (char *));
-	  if (new_gl_pathv == NULL)
+	  if (newcount > UINTPTR_MAX - (1 + 1)
+	      || newcount + 1 + 1 > ~((size_t) 0) / sizeof (char *))
 	    {
 	    nospace:
 	      free (pglob->gl_pathv);
@@ -965,6 +973,12 @@ glob (pattern, flags, errfunc, pglob)
 	      pglob->gl_pathc = 0;
 	      return GLOB_NOSPACE;
 	    }
+
+	  new_gl_pathv
+	    = (char **) realloc (pglob->gl_pathv,
+				 (newcount + 1 + 1) * sizeof (char *));
+	  if (new_gl_pathv == NULL)
+	    goto nospace;
 	  pglob->gl_pathv = new_gl_pathv;
 
 	  if (flags & GLOB_MARK)
@@ -1104,14 +1118,19 @@ glob (pattern, flags, errfunc, pglob)
 	      int newcount = pglob->gl_pathc + pglob->gl_offs;
 	      char **new_gl_pathv;
 
+	      if (newcount > UINTPTR_MAX - 2
+		  || newcount + 2 > ~((size_t) 0) / sizeof (char *))
+		{
+		nospace2:
+		  globfree (&dirs);
+		  return GLOB_NOSPACE;
+		}
+
 	      new_gl_pathv = (char **) realloc (pglob->gl_pathv,
 						(newcount + 2)
 						* sizeof (char *));
 	      if (new_gl_pathv == NULL)
-		{
-		  globfree (&dirs);
-		  return GLOB_NOSPACE;
-		}
+		goto nospace2;
 	      pglob->gl_pathv = new_gl_pathv;
 
 	      pglob->gl_pathv[newcount] = __strdup (pattern);
@@ -1635,6 +1654,13 @@ glob_in_dir (const char *pattern, const char *directory, int flags,
   if (nfound != 0)
     {
       result = 0;
+
+      if (pglob->gl_pathc > UINTPTR_MAX - pglob->gl_offs
+	  || pglob->gl_pathc + pglob->gl_offs > UINTPTR_MAX - nfound
+	  || pglob->gl_pathc + pglob->gl_offs + nfound > UINTPTR_MAX - 1
+	  || (pglob->gl_pathc + pglob->gl_offs + nfound + 1
+	      > UINTPTR_MAX / sizeof (char *)))
+	goto memory_error;
 
       char **new_gl_pathv;
       new_gl_pathv

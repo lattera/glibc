@@ -1,5 +1,10 @@
 2011-07-20  Ulrich Drepper  <drepper@gmail.com>
 
+	[BZ #12852]
+	* posix/glob.c (glob): Check passed in values before using them in
+	expressions to avoid some overflows.
+	(glob_in_dir): Likewise.
+
 	[BZ #13007]
 	* sysdeps/x86_64/dl-trampoline.S (_dl_runtime_profile): More complete
 	check for AVX enablement so that we don't crash with old kernels and
