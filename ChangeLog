@@ -1,3 +1,9 @@
+2011-07-21  Andreas Schwab  <schwab@redhat.com>
+
+	* sysdeps/x86_64/dl-trampoline.S (_dl_runtime_profile): Fix last
+	change.
+	(_dl_x86_64_save_sse): Use correct AVX check.
+
 2011-07-21  Ulrich Drepper  <drepper@gmail.com>
 
 	* string/tester.c (test_strcat): Add tests for different alignments

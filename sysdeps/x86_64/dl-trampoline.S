@@ -150,7 +150,8 @@ L(have_avx):
 	cmpl	$0x6, %eax
 	// Nonzero if SSE and AVX state saving is enabled.
 	sete	%al
-2:	movl	%eax, L(have_avx)(%rip)
+2:	leal	-1(%eax,%eax), %eax
+	movl	%eax, L(have_avx)(%rip)
 	cmpl	$0, %eax
 
 1:	js	L(no_avx)
@@ -183,11 +184,19 @@ _dl_x86_64_save_sse:
 	movl	$1, %eax
 	cpuid
 	movq	%r11,%rbx		# Restore rbx
-	movl	$1, %eax
-	testl	$(1 << 28), %ecx
-	jne	2f
-	negl	%eax
-2:	movl	%eax, L(have_avx)(%rip)
+	xorl	%eax, %eax
+	// AVX and XSAVE supported?
+	testl	$((1 << 28) | (1 << 27)), %ecx
+	je	2f
+	xorl	%ecx, %ecx
+	// Get XFEATURE_ENABLED_MASK
+	xgetbv
+	andl	$0x6, %eax
+	cmpl	$0x6, %eax
+	// Nonzero if SSE and AVX state saving is enabled.
+	sete	%al
+2:	leal	-1(%eax,%eax), %eax
+	movl	%eax, L(have_avx)(%rip)
 	cmpl	$0, %eax
 
 1:	js	L(no_avx5)
