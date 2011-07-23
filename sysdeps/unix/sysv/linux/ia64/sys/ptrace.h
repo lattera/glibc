@@ -1,5 +1,5 @@
 /* `ptrace' debugger support interface.  Linux/ia64 version.
-   Copyright (C) 2001, 2006, 2007 Free Software Foundation, Inc.
+   Copyright (C) 2001, 2006, 2007, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -110,6 +110,33 @@ enum __ptrace_request
   /* Set new siginfo for process.  */
   PTRACE_SETSIGINFO = 0x4203
 #define PT_SETSIGINFO PTRACE_SETSIGINFO
+
+  /* Get register content.  */
+  PTRACE_GETREGSET = 0x4204,
+#define PTRACE_GETREGSET PTRACE_GETREGSET
+
+  /* Set register content.  */
+  PTRACE_SETREGSET = 0x4205,
+#define PTRACE_SETREGSET PTRACE_SETREGSET
+
+  /* Like PTRACE_ATTACH, but do not force tracee to trap and do not affect
+     signal or group stop state.  */
+  PTRACE_SEIZE = 0x4206,
+#define PTRACE_SEIZE PTRACE_SEIZE
+
+  /* Trap seized tracee.  */
+  PTRACE_INTERRUPT = 0x4207,
+#define PTRACE_INTERRUPT PTRACE_INTERRUPT
+
+  /* Wait for next group event.  */
+  PTRACE_LISTEN = 0x4208
+};
+
+
+/* Flag for PTRACE_LISTEN.  */
+enum __ptrace_flags
+{
+  PTRACE_SEIZE_DEVEL = 0x80000000
 };
 
 /* pt_all_user_regs is used for PTRACE_GETREGS/PTRACE_SETREGS.  */

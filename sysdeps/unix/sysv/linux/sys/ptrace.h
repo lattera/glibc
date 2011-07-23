@@ -1,5 +1,5 @@
 /* `ptrace' debugger support interface.  Linux version.
-   Copyright (C) 1996-1999,2000,2006,2007 Free Software Foundation, Inc.
+   Copyright (C) 1996-1999,2000,2006,2007,2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -125,13 +125,40 @@ enum __ptrace_request
 #define PT_GETSIGINFO PTRACE_GETSIGINFO
 
   /* Set new siginfo for process.  */
-  PTRACE_SETSIGINFO = 0x4203
+  PTRACE_SETSIGINFO = 0x4203,
 #define PT_SETSIGINFO PTRACE_SETSIGINFO
+
+  /* Get register content.  */
+  PTRACE_GETREGSET = 0x4204,
+#define PTRACE_GETREGSET PTRACE_GETREGSET
+
+  /* Set register content.  */
+  PTRACE_SETREGSET = 0x4205,
+#define PTRACE_SETREGSET PTRACE_SETREGSET
+
+  /* Like PTRACE_ATTACH, but do not force tracee to trap and do not affect
+     signal or group stop state.  */
+  PTRACE_SEIZE = 0x4206,
+#define PTRACE_SEIZE PTRACE_SEIZE
+
+  /* Trap seized tracee.  */
+  PTRACE_INTERRUPT = 0x4207,
+#define PTRACE_INTERRUPT PTRACE_INTERRUPT
+
+  /* Wait for next group event.  */
+  PTRACE_LISTEN = 0x4208
 };
 
 
+/* Flag for PTRACE_LISTEN.  */
+enum __ptrace_flags
+{
+  PTRACE_SEIZE_DEVEL = 0x80000000
+};
+
 /* Options set using PTRACE_SETOPTIONS.  */
-enum __ptrace_setoptions {
+enum __ptrace_setoptions
+{
   PTRACE_O_TRACESYSGOOD	= 0x00000001,
   PTRACE_O_TRACEFORK	= 0x00000002,
   PTRACE_O_TRACEVFORK   = 0x00000004,
@@ -143,7 +170,8 @@ enum __ptrace_setoptions {
 };
 
 /* Wait extended result codes for the above trace options.  */
-enum __ptrace_eventcodes {
+enum __ptrace_eventcodes
+{
   PTRACE_EVENT_FORK	= 1,
   PTRACE_EVENT_VFORK	= 2,
   PTRACE_EVENT_CLONE	= 3,
