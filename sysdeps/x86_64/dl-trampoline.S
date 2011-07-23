@@ -141,7 +141,8 @@ L(have_avx):
 	movq	%r11,%rbx		# Restore rbx
 	xorl	%eax, %eax
 	// AVX and XSAVE supported?
-	testl	$((1 << 28) | (1 << 27)), %ecx
+	andl	$((1 << 28) | (1 << 27)), %ecx
+	cmpl	$((1 << 28) | (1 << 27)), %ecx
 	je	2f
 	xorl	%ecx, %ecx
 	// Get XFEATURE_ENABLED_MASK
@@ -186,7 +187,8 @@ _dl_x86_64_save_sse:
 	movq	%r11,%rbx		# Restore rbx
 	xorl	%eax, %eax
 	// AVX and XSAVE supported?
-	testl	$((1 << 28) | (1 << 27)), %ecx
+	andl	$((1 << 28) | (1 << 27)), %ecx
+	cmpl	$((1 << 28) | (1 << 27)), %ecx
 	je	2f
 	xorl	%ecx, %ecx
 	// Get XFEATURE_ENABLED_MASK

@@ -1,5 +1,9 @@
 2011-07-22  Ulrich Drepper  <drepper@gmail.com>
 
+	* sysdeps/x86_64/dl-trampoline.S (_dl_runtime_profile): Fix test for
+	OSXSAVE.
+	(_dl_x86_64_save_sse): Likewise.
+
 	* crypt/crypt_util.c (__init_des_r): Optimize memset calls.
 
 	* crypt/crypt_util.c (__init_des_r): Add read barrier as well.
