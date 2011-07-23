@@ -1,3 +1,9 @@
+2011-07-23  Ulrich Drepper  <drepper@gmail.com>
+
+	* sysdeps/x86_64/dl-trampoline.S (_dl_runtime_profile): Fix one more
+	typo.
+	(_dl_x86_64_save_sse): Likewise.
+
 2011-07-22  Ulrich Drepper  <drepper@gmail.com>
 
 	* sysdeps/x86_64/dl-trampoline.S (_dl_runtime_profile): Fix test for
