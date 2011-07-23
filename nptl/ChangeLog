@@ -1,3 +1,11 @@
+2011-07-22  Ulrich Drepper  <drepper@gmail.com>
+
+	* sysdeps/pthread/unwind-forcedunwind.c (_Unwind_Resume): Add read
+	barrier.
+	(__gcc_personality_v0): Likewise.
+	(_Unwind_ForcedUnwind): Likewise.
+	(_Unwind_GetCFA): Likewise.
+
 2011-07-14  Roland McGrath  <roland@hack.frob.com>
 
 	* allocatestack.c (__reclaim_stacks): Use uintptr_t cast rather than
