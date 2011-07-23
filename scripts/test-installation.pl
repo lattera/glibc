@@ -1,5 +1,5 @@
 #! /usr/bin/perl -w
-# Copyright (C) 1997, 1998, 1999, 2004 Free Software Foundation, Inc.
+# Copyright (C) 1997, 1998, 1999, 2004, 2011 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 # Contributed by Andreas Jaeger <aj@arthur.rhein-neckar.de>, 1997.
 
@@ -105,8 +105,10 @@ while (<SOVERSIONS>) {
     # - libdb1 since it conflicts with libdb
     # - libnss1_* from glibc-compat add-on
     # - libthread_db since it contains unresolved references
+    # - it's just a test NSS module
     if ($name ne "nss_ldap" && $name ne "db1"
-	&& !($name =~/^nss1_/) && $name ne "thread_db") {
+	&& !($name =~/^nss1_/) && $name ne "thread_db"
+	&& $name ne "nss_test1") {
       $link_libs .= " -l$name";
       $versions{$name} = $version;
     }

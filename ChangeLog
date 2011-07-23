@@ -1,5 +1,9 @@
 2011-07-23  Ulrich Drepper  <drepper@gmail.com>
 
+	[BZ #13021]
+	* scripts/test-installation.pl: Don't expect libnss_test1 to be
+	installed.
+
 	* sysdeps/x86_64/dl-trampoline.S (_dl_runtime_profile): Fix one more
 	typo.
 	(_dl_x86_64_save_sse): Likewise.
