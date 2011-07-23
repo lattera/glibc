@@ -492,10 +492,20 @@ small_tables_done:
    *
    */
 
-  _ufc_clearmem((char*)__data->sb0, (int)sizeof(__data->sb0));
-  _ufc_clearmem((char*)__data->sb1, (int)sizeof(__data->sb1));
-  _ufc_clearmem((char*)__data->sb2, (int)sizeof(__data->sb2));
-  _ufc_clearmem((char*)__data->sb3, (int)sizeof(__data->sb3));
+  if (__data->sb0 + sizeof (__data->sb0) == __data->sb1
+      && __data->sb1 + sizeof (__data->sb1) == __data->sb2
+      && __data->sb2 + sizeof (__data->sb2) == __data->sb3)
+    _ufc_clearmem(__data->sb0,
+		  (int)sizeof(__data->sb0)
+		  + (int)sizeof(__data->sb1)
+		  + (int)sizeof(__data->sb2)
+		  + (int)sizeof(__data->sb3));
+  else {
+    _ufc_clearmem(__data->sb0, (int)sizeof(__data->sb0));
+    _ufc_clearmem(__data->sb1, (int)sizeof(__data->sb1));
+    _ufc_clearmem(__data->sb2, (int)sizeof(__data->sb2));
+    _ufc_clearmem(__data->sb3, (int)sizeof(__data->sb3));
+  }
 
   for(sg = 0; sg < 4; sg++) {
     int j1, j2;
