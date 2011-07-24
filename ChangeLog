@@ -1,5 +1,10 @@
 2011-07-23  Ulrich Drepper  <drepper@gmail.com>
 
+	* sysdeps/unix/sysv/linux/bits/socket.h (PF_NFC): Define.
+	(AF_NFC): Define.
+	* sysdeps/unix/sysv/linux/sparc/bits/socket.h (PF_NFC): Define.
+	(AF_NFC): Define.
+
 	* sysdeps/unix/sysv/linux/sys/ptrace.h: Add new constants.
 	* sysdeps/unix/sysv/linux/sparc/sys/ptrace.h: Likewise.
 	* sysdeps/unix/sysv/linux/powerpc/sys/ptrace.h: Likewise.
