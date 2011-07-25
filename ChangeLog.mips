@@ -1,3 +1,8 @@
+2011-07-25  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/mips/bits/socket.h (PF_NFC, AF_NFC):
+	Define.
+
 2011-06-20  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/mips/mips32/sendmmsg.c,
