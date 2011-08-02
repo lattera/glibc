@@ -1,3 +1,7 @@
+2011-08-02  Matt Turner  <mattst88@gmail.com>
+
+	* sysdeps/mips/bits/atomic.h: Workaround R10K ll/sc errata.
+
 2011-07-25  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/mips/bits/socket.h (PF_NFC, AF_NFC):
