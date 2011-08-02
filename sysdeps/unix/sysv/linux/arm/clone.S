@@ -81,8 +81,11 @@ ENTRY(__clone)
 	RETINSTR(, lr)
 
 	cfi_startproc
-	cfi_undefined (lr)
+PSEUDO_END (__clone)
+
 1:
+	.fnstart
+	.cantunwind
 #ifdef RESET_PID
 	tst	ip, #CLONE_THREAD
 	bne	3f
@@ -116,6 +119,6 @@ ENTRY(__clone)
 	@ and we are done, passing the return value through r0
 	b	PLTJMP(HIDDEN_JUMPTARGET(_exit))
 
-PSEUDO_END (__clone)
+	.fnend
 
 weak_alias (__clone, clone)
