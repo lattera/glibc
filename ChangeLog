@@ -1,3 +1,8 @@
+2011-07-26  Andreas Schwab  <schwab@redhat.com>
+
+	* sysdeps/posix/getaddrinfo.c (gaih_inet): Don't discard result of
+	encoding to ACE if AI_IDN.
+
 2011-08-01  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/ieee754/dbl-64/k_rem_pio2.c (__kernel_rem_pio2): Fix up fq

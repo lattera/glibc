@@ -432,7 +432,10 @@ gaih_inet (const char *name, const struct gaih_service *service,
 	  /* In case the output string is the same as the input string
 	     no new string has been allocated.  */
 	  if (p != name)
-	    malloc_name = true;
+	    {
+	      name = p;
+	      malloc_name = true;
+	    }
 	}
 #endif
 
