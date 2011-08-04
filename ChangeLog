@@ -1,3 +1,9 @@
+2011-07-25  Andreas Schwab  <schwab@redhat.com>
+
+	* sysdeps/i386/i486/bits/string.h (__strncat_g): Correctly handle
+	__n bigger than INT_MAX+1.
+	(__strncmp_g): Likewise.
+
 2011-07-23  Ulrich Drepper  <drepper@gmail.com>
 
 	* posix/unistd.h: Define SEEK_DATA and SEEK_HOLE.

@@ -1,6 +1,6 @@
 /* Optimized, inlined string functions.  i486 version.
-   Copyright (C) 1997,1998,1999,2000,2001,2002,2003,2004,2007
-   	Free Software Foundation, Inc.
+   Copyright (C) 1997,1998,1999,2000,2001,2002,2003,2004,2007,2011
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -1058,8 +1058,8 @@ __strncat_g (char *__dest, __const char __src[], size_t __n)
      "movl %4, %3\n\t"
      "decl %1\n\t"
      "1:\n\t"
-     "decl	%3\n\t"
-     "js	2f\n\t"
+     "subl	$1,%3\n\t"
+     "jc	2f\n\t"
      "movb	(%2),%b0\n\t"
      "movsb\n\t"
      "testb	%b0,%b0\n\t"
@@ -1078,8 +1078,8 @@ __strncat_g (char *__dest, __const char __src[], size_t __n)
      "leal	1(%1),%1\n\t"
      "jne	1b\n"
      "2:\n\t"
-     "decl	%3\n\t"
-     "js	3f\n\t"
+     "subl	$1,%3\n\t"
+     "jc	3f\n\t"
      "movb	(%2),%b0\n\t"
      "leal	1(%2),%2\n\t"
      "movb	%b0,(%1)\n\t"
@@ -1219,8 +1219,8 @@ __strncmp_g (__const char *__s1, __const char *__s2, size_t __n)
   register int __res;
   __asm__ __volatile__
     ("1:\n\t"
-     "decl	%3\n\t"
-     "js	2f\n\t"
+     "subl	$1,%3\n\t"
+     "jc	2f\n\t"
      "movb	(%1),%b0\n\t"
      "incl	%1\n\t"
      "cmpb	%b0,(%2)\n\t"
