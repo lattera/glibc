@@ -318,7 +318,7 @@ __res_vinit(res_state statp, int preinit) {
 			struct in6_addr a6;
 			char *el;
 
-			if ((el = strchr(cp, '\n')) != NULL)
+			if ((el = strpbrk(cp, " \t\n")) != NULL)
 			    *el = '\0';
 			if ((el = strchr(cp, SCOPE_DELIMITER)) != NULL)
 			    *el = '\0';

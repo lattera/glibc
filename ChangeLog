@@ -1,3 +1,8 @@
+2011-07-22  Andreas Schwab  <schwab@redhat.com>
+
+	* resolv/res_init.c (__res_vinit): Properly tokenize nameserver
+	line.
+
 2011-07-26  Andreas Schwab  <schwab@redhat.com>
 
 	* sysdeps/posix/getaddrinfo.c (gaih_inet): Don't discard result of
