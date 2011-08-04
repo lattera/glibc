@@ -1,3 +1,8 @@
+2011-08-01  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/ieee754/dbl-64/k_rem_pio2.c (__kernel_rem_pio2): Fix up fq
+	to y conversion for prec 3 and __FLT_EVAL_METHOD__ != 0.
+
 2011-07-22  Liubov Dmitrieva  <liubov.dmitrieva@intel.com>
 
 	* sysdeps/i386/i686/multiarch/strcat-sse2.S: Update.
