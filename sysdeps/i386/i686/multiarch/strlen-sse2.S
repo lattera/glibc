@@ -336,4 +336,3 @@ L(exit_tail15):
 END (__strlen_sse2)
 # endif
 #endif
-

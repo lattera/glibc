@@ -128,4 +128,3 @@ END(STRCAT)
 #ifndef USE_AS_STRNCAT
 # include "../../i486/strcat.S"
 #endif
-
