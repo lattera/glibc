@@ -1,5 +1,5 @@
 /* Test and measure string and memory functions.
-   Copyright (C) 1999, 2002, 2004, 2008 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2002, 2004, 2008, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Jakub Jelinek <jakub@redhat.com>, 1999.
 
@@ -18,6 +18,8 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <sys/cdefs.h>
+
 typedef struct
 {
   const char *name;
@@ -29,7 +31,7 @@ extern impl_t __start_impls[], __stop_impls[];
 #define IMPL(name, test) \
   impl_t tst_ ## name							\
   __attribute__ ((section ("impls"), aligned (sizeof (void *))))	\
-    = { #name, (void (*) (void))name, test };
+       = { __STRING (name), (void (*) (void))name, test };
 
 #ifdef TEST_MAIN
 
