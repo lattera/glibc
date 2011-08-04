@@ -20,39 +20,39 @@
 
 
 #ifndef NOT_IN_libc
+# ifndef USE_AS_STRCAT
+#  include <sysdep.h>
 
-# include <sysdep.h>
-
-# define CFI_PUSH(REG)                  \
-	cfi_adjust_cfa_offset (4);     \
+#  define CFI_PUSH(REG)	\
+	cfi_adjust_cfa_offset (4);	\
 	cfi_rel_offset (REG, 0)
 
-# define CFI_POP(REG)                   \
-	cfi_adjust_cfa_offset (-4);    \
+#  define CFI_POP(REG)	\
+	cfi_adjust_cfa_offset (-4);	\
 	cfi_restore (REG)
 
-# define PUSH(REG) pushl REG; CFI_PUSH (REG)
-# define POP(REG) popl REG; CFI_POP (REG)
+#  define PUSH(REG) pushl REG; CFI_PUSH (REG)
+#  define POP(REG) popl REG; CFI_POP (REG)
 
-# ifndef STRCPY
-#  define STRCPY  __strcpy_ssse3
-# endif
+#  ifndef STRCPY
+#   define STRCPY  __strcpy_ssse3
+#  endif
 
-# ifdef USE_AS_STRNCPY
-#  define PARMS  8
-#  define ENTRANCE PUSH(%ebx)
-#  define RETURN  POP(%ebx); ret; CFI_PUSH(%ebx);
-#  define RETURN1  POP(%edi); POP(%ebx); ret; CFI_PUSH(%ebx); CFI_PUSH(%edi)
-# else
-#  define PARMS  4
-#  define ENTRANCE
-#  define RETURN  ret
-#  define RETURN1  POP(%edi); ret; CFI_PUSH(%edi)
-# endif
+#  ifdef USE_AS_STRNCPY
+#   define PARMS  8
+#   define ENTRANCE PUSH(%ebx)
+#   define RETURN  POP(%ebx); ret; CFI_PUSH(%ebx);
+#   define RETURN1  POP(%edi); POP(%ebx); ret; CFI_PUSH(%ebx); CFI_PUSH(%edi)
+#  else
+#   define PARMS  4
+#   define ENTRANCE
+#   define RETURN  ret
+#   define RETURN1  POP(%edi); ret; CFI_PUSH(%edi)
+#  endif
 
-# define STR1  PARMS
-# define STR2  STR1+4
-# define LEN  STR2+4
+#  define STR1  PARMS
+#  define STR2  STR1+4
+#  define LEN  STR2+4
 
 /* In this code following instructions are used for copying:
 	movb	- 1 byte
@@ -60,9 +60,9 @@
 	movl	- 4 byte
 	movlpd	- 8 byte
 	movaps	- 16 byte - requires 16 byte alignment
-	of	sourse and destination adresses.
+	of sourse and destination adresses.
 	16 byte alignment: adress is 32bit value,
-	right	four bit of adress shall be 0.
+	right four bit of adress shall be 0.
 */
 
 .text
@@ -70,13 +70,13 @@ ENTRY (STRCPY)
 	ENTRANCE
 	mov	STR1(%esp), %edx
 	mov	STR2(%esp), %ecx
-# ifdef USE_AS_STRNCPY
+#  ifdef USE_AS_STRNCPY
 	movl	LEN(%esp), %ebx
 	test	%ebx, %ebx
 	jz	L(ExitTail0)
 	cmp	$8, %ebx
 	jbe	L(StrncpyExit8Bytes)
-# endif
+#  endif
 	cmpb	$0, (%ecx)
 	jz	L(ExitTail1)
 	cmpb	$0, 1(%ecx)
@@ -93,10 +93,10 @@ ENTRY (STRCPY)
 	jz	L(ExitTail7)
 	cmpb	$0, 7(%ecx)
 	jz	L(ExitTail8)
-# ifdef USE_AS_STRNCPY
+#  ifdef USE_AS_STRNCPY
 	cmp	$16, %ebx
 	jb	L(StrncpyExit15Bytes)
-# endif
+#  endif
 	cmpb	$0, 8(%ecx)
 	jz	L(ExitTail9)
 	cmpb	$0, 9(%ecx)
@@ -111,18 +111,20 @@ ENTRY (STRCPY)
 	jz	L(ExitTail14)
 	cmpb	$0, 14(%ecx)
 	jz	L(ExitTail15)
-# ifdef USE_AS_STRNCPY
+#  ifdef USE_AS_STRNCPY
 	cmp	$16, %ebx
 	je	L(ExitTail16)
-# endif
+#  endif
 	cmpb	$0, 15(%ecx)
 	jz	L(ExitTail16)
 
 	PUSH	(%edi)
 	mov	%edx, %edi
+# endif
 	PUSH	(%esi)
 # ifdef USE_AS_STRNCPY
 	mov	%ecx, %esi
+	sub	$16, %ebx
 	and	$0xf, %esi
 
 /* add 16 bytes ecx_shift to ebx */
@@ -159,7 +161,7 @@ ENTRY (STRCPY)
 /* eax = 0: there isn't end of string from position esi to esi+15 */
 
 # ifdef USE_AS_STRNCPY
-	sub	$32, %ebx
+	sub	$16, %ebx
 	jbe	L(CopyFrom1To16BytesCase2OrCase3)
 # endif
 	test	%eax, %eax
@@ -2217,12 +2219,17 @@ L(Shl15LoopExit):
 	mov	$1, %esi
 	palignr	$15, %xmm1, %xmm6
 	movaps	%xmm6, (%edx)
+# ifdef USE_AS_STRCAT
+	jmp	L(CopyFrom1To16Bytes)
+# endif
+
+# ifndef USE_AS_STRCAT
 
 	.p2align 4
 L(CopyFrom1To16Bytes):
-# ifdef USE_AS_STRNCPY
+#  ifdef USE_AS_STRNCPY
 	add	$16, %ebx
-# endif
+#  endif
 	add	%esi, %edx
 	add	%esi, %ecx
 
@@ -2248,20 +2255,20 @@ L(CopyFrom1To16Bytes):
 L(Exit8):
 	movlpd	(%ecx), %xmm0
 	movlpd	%xmm0, (%edx)
-# ifdef USE_AS_STPCPY
+#  ifdef USE_AS_STPCPY
 	lea	7(%edx), %eax
-# else
+#  else
 	movl	%edi, %eax
-# endif
-# ifdef USE_AS_STRNCPY
+#  endif
+#  ifdef USE_AS_STRNCPY
 	sub	$8, %ebx
 	lea	8(%edx), %ecx
 	jnz	L(StrncpyFillTailWithZero1)
-#  ifdef USE_AS_STPCPY
+#   ifdef USE_AS_STPCPY
 	cmpb	$1, (%eax)
 	sbb	$-1, %eax
+#   endif
 #  endif
-# endif
 	RETURN1
 
 	.p2align 4
@@ -2287,23 +2294,23 @@ L(Exit16):
 	movlpd	%xmm0, (%edx)
 	movlpd	8(%ecx), %xmm0
 	movlpd	%xmm0, 8(%edx)
-# ifdef USE_AS_STPCPY
+#  ifdef USE_AS_STPCPY
 	lea	15(%edx), %eax
-# else
+#  else
 	movl	%edi, %eax
-# endif
-# ifdef USE_AS_STRNCPY
+#  endif
+#  ifdef USE_AS_STRNCPY
 	sub	$16, %ebx
 	lea	16(%edx), %ecx
 	jnz	L(StrncpyFillTailWithZero1)
-#  ifdef USE_AS_STPCPY
+#   ifdef USE_AS_STPCPY
 	cmpb	$1, (%eax)
 	sbb	$-1, %eax
+#   endif
 #  endif
-# endif
 	RETURN1
 
-# ifdef USE_AS_STRNCPY
+#  ifdef USE_AS_STRNCPY
 
 	CFI_PUSH(%esi)
 
@@ -2425,46 +2432,46 @@ L(Less12Case3): /* but more than 8 */
 	jl	L(Exit9)
 	je	L(Exit10)
 	jg	L(Exit11)
-# endif
+#  endif
 
 	.p2align 4
 L(Exit1):
 	movb	(%ecx), %al
 	movb	%al, (%edx)
-# ifdef USE_AS_STPCPY
+#  ifdef USE_AS_STPCPY
 	lea	(%edx), %eax
-# else
+#  else
 	movl	%edi, %eax
-# endif
-# ifdef USE_AS_STRNCPY
+#  endif
+#  ifdef USE_AS_STRNCPY
 	sub	$1, %ebx
 	lea	1(%edx), %ecx
 	jnz	L(StrncpyFillTailWithZero1)
-#  ifdef USE_AS_STPCPY
+#   ifdef USE_AS_STPCPY
 	cmpb	$1, (%eax)
 	sbb	$-1, %eax
+#   endif
 #  endif
-# endif
 	RETURN1
 
 	.p2align 4
 L(Exit2):
 	movw	(%ecx), %ax
 	movw	%ax, (%edx)
-# ifdef USE_AS_STPCPY
+#  ifdef USE_AS_STPCPY
 	lea	1(%edx), %eax
-# else
+#  else
 	movl	%edi, %eax
-# endif
-# ifdef USE_AS_STRNCPY
+#  endif
+#  ifdef USE_AS_STRNCPY
 	sub	$2, %ebx
 	lea	2(%edx), %ecx
 	jnz	L(StrncpyFillTailWithZero1)
-#  ifdef USE_AS_STPCPY
+#   ifdef USE_AS_STPCPY
 	cmpb	$1, (%eax)
 	sbb	$-1, %eax
+#   endif
 #  endif
-# endif
 	RETURN1
 
 	.p2align 4
@@ -2473,40 +2480,40 @@ L(Exit3):
 	movw	%ax, (%edx)
 	movb	2(%ecx), %al
 	movb	%al, 2(%edx)
-# ifdef USE_AS_STPCPY
+#  ifdef USE_AS_STPCPY
 	lea	2(%edx), %eax
-# else
+#  else
 	movl	%edi, %eax
-# endif
-# ifdef USE_AS_STRNCPY
+#  endif
+#  ifdef USE_AS_STRNCPY
 	sub	$3, %ebx
 	lea	3(%edx), %ecx
 	jnz	L(StrncpyFillTailWithZero1)
-#  ifdef USE_AS_STPCPY
+#   ifdef USE_AS_STPCPY
 	cmpb	$1, (%eax)
 	sbb	$-1, %eax
+#   endif
 #  endif
-# endif
 	RETURN1
 
 	.p2align 4
 L(Exit4):
 	movl	(%ecx), %eax
 	movl	%eax, (%edx)
-# ifdef USE_AS_STPCPY
+#  ifdef USE_AS_STPCPY
 	lea	3(%edx), %eax
-# else
+#  else
 	movl	%edi, %eax
-# endif
-# ifdef USE_AS_STRNCPY
+#  endif
+#  ifdef USE_AS_STRNCPY
 	sub	$4, %ebx
 	lea	4(%edx), %ecx
 	jnz	L(StrncpyFillTailWithZero1)
-#  ifdef USE_AS_STPCPY
+#   ifdef USE_AS_STPCPY
 	cmpb	$1, (%eax)
 	sbb	$-1, %eax
+#   endif
 #  endif
-# endif
 	RETURN1
 
 	.p2align 4
@@ -2515,20 +2522,20 @@ L(Exit5):
 	movl	%eax, (%edx)
 	movb	4(%ecx), %al
 	movb	%al, 4(%edx)
-# ifdef USE_AS_STPCPY
+#  ifdef USE_AS_STPCPY
 	lea	4(%edx), %eax
-# else
+#  else
 	movl	%edi, %eax
-# endif
-# ifdef USE_AS_STRNCPY
+#  endif
+#  ifdef USE_AS_STRNCPY
 	sub	$5, %ebx
 	lea	5(%edx), %ecx
 	jnz	L(StrncpyFillTailWithZero1)
-#  ifdef USE_AS_STPCPY
+#   ifdef USE_AS_STPCPY
 	cmpb	$1, (%eax)
 	sbb	$-1, %eax
+#   endif
 #  endif
-# endif
 	RETURN1
 
 	.p2align 4
@@ -2537,20 +2544,20 @@ L(Exit6):
 	movl	%eax, (%edx)
 	movw	4(%ecx), %ax
 	movw	%ax, 4(%edx)
-# ifdef USE_AS_STPCPY
+#  ifdef USE_AS_STPCPY
 	lea	5(%edx), %eax
-# else
+#  else
 	movl	%edi, %eax
-# endif
-# ifdef USE_AS_STRNCPY
+#  endif
+#  ifdef USE_AS_STRNCPY
 	sub	$6, %ebx
 	lea	6(%edx), %ecx
 	jnz	L(StrncpyFillTailWithZero1)
-#  ifdef USE_AS_STPCPY
+#   ifdef USE_AS_STPCPY
 	cmpb	$1, (%eax)
 	sbb	$-1, %eax
+#   endif
 #  endif
-# endif
 	RETURN1
 
 	.p2align 4
@@ -2559,20 +2566,20 @@ L(Exit7):
 	movl	%eax, (%edx)
 	movl	3(%ecx), %eax
 	movl	%eax, 3(%edx)
-# ifdef USE_AS_STPCPY
+#  ifdef USE_AS_STPCPY
 	lea	6(%edx), %eax
-# else
+#  else
 	movl	%edi, %eax
-# endif
-# ifdef USE_AS_STRNCPY
+#  endif
+#  ifdef USE_AS_STRNCPY
 	sub	$7, %ebx
 	lea	7(%edx), %ecx
 	jnz	L(StrncpyFillTailWithZero1)
-#  ifdef USE_AS_STPCPY
+#   ifdef USE_AS_STPCPY
 	cmpb	$1, (%eax)
 	sbb	$-1, %eax
+#   endif
 #  endif
-# endif
 	RETURN1
 
 	.p2align 4
@@ -2581,20 +2588,20 @@ L(Exit9):
 	movlpd	%xmm0, (%edx)
 	movb	8(%ecx), %al
 	movb	%al, 8(%edx)
-# ifdef USE_AS_STPCPY
+#  ifdef USE_AS_STPCPY
 	lea	8(%edx), %eax
-# else
+#  else
 	movl	%edi, %eax
-# endif
-# ifdef USE_AS_STRNCPY
+#  endif
+#  ifdef USE_AS_STRNCPY
 	sub	$9, %ebx
 	lea	9(%edx), %ecx
 	jnz	L(StrncpyFillTailWithZero1)
-#  ifdef USE_AS_STPCPY
+#   ifdef USE_AS_STPCPY
 	cmpb	$1, (%eax)
 	sbb	$-1, %eax
+#   endif
 #  endif
-# endif
 	RETURN1
 
 	.p2align 4
@@ -2603,20 +2610,20 @@ L(Exit10):
 	movlpd	%xmm0, (%edx)
 	movw	8(%ecx), %ax
 	movw	%ax, 8(%edx)
-# ifdef USE_AS_STPCPY
+#  ifdef USE_AS_STPCPY
 	lea	9(%edx), %eax
-# else
+#  else
 	movl	%edi, %eax
-# endif
-# ifdef USE_AS_STRNCPY
+#  endif
+#  ifdef USE_AS_STRNCPY
 	sub	$10, %ebx
 	lea	10(%edx), %ecx
 	jnz	L(StrncpyFillTailWithZero1)
-#  ifdef USE_AS_STPCPY
+#   ifdef USE_AS_STPCPY
 	cmpb	$1, (%eax)
 	sbb	$-1, %eax
+#   endif
 #  endif
-# endif
 	RETURN1
 
 	.p2align 4
@@ -2625,20 +2632,20 @@ L(Exit11):
 	movlpd	%xmm0, (%edx)
 	movl	7(%ecx), %eax
 	movl	%eax, 7(%edx)
-# ifdef USE_AS_STPCPY
+#  ifdef USE_AS_STPCPY
 	lea	10(%edx), %eax
-# else
+#  else
 	movl	%edi, %eax
-# endif
-# ifdef USE_AS_STRNCPY
+#  endif
+#  ifdef USE_AS_STRNCPY
 	sub	$11, %ebx
 	lea	11(%edx), %ecx
 	jnz	L(StrncpyFillTailWithZero1)
-#  ifdef USE_AS_STPCPY
+#   ifdef USE_AS_STPCPY
 	cmpb	$1, (%eax)
 	sbb	$-1, %eax
+#   endif
 #  endif
-# endif
 	RETURN1
 
 	.p2align 4
@@ -2647,20 +2654,20 @@ L(Exit12):
 	movlpd	%xmm0, (%edx)
 	movl	8(%ecx), %eax
 	movl	%eax, 8(%edx)
-# ifdef USE_AS_STPCPY
+#  ifdef USE_AS_STPCPY
 	lea	11(%edx), %eax
-# else
+#  else
 	movl	%edi, %eax
-# endif
-# ifdef USE_AS_STRNCPY
+#  endif
+#  ifdef USE_AS_STRNCPY
 	sub	$12, %ebx
 	lea	12(%edx), %ecx
 	jnz	L(StrncpyFillTailWithZero1)
-#  ifdef USE_AS_STPCPY
+#   ifdef USE_AS_STPCPY
 	cmpb	$1, (%eax)
 	sbb	$-1, %eax
+#   endif
 #  endif
-# endif
 	RETURN1
 
 	.p2align 4
@@ -2669,20 +2676,20 @@ L(Exit13):
 	movlpd	%xmm0, (%edx)
 	movlpd	5(%ecx), %xmm0
 	movlpd	%xmm0, 5(%edx)
-# ifdef USE_AS_STPCPY
+#  ifdef USE_AS_STPCPY
 	lea	12(%edx), %eax
-# else
+#  else
 	movl	%edi, %eax
-# endif
-# ifdef USE_AS_STRNCPY
+#  endif
+#  ifdef USE_AS_STRNCPY
 	sub	$13, %ebx
 	lea	13(%edx), %ecx
 	jnz	L(StrncpyFillTailWithZero1)
-#  ifdef USE_AS_STPCPY
+#   ifdef USE_AS_STPCPY
 	cmpb	$1, (%eax)
 	sbb	$-1, %eax
+#   endif
 #  endif
-# endif
 	RETURN1
 
 	.p2align 4
@@ -2691,20 +2698,20 @@ L(Exit14):
 	movlpd	%xmm0, (%edx)
 	movlpd	6(%ecx), %xmm0
 	movlpd	%xmm0, 6(%edx)
-# ifdef USE_AS_STPCPY
+#  ifdef USE_AS_STPCPY
 	lea	13(%edx), %eax
-# else
+#  else
 	movl	%edi, %eax
-# endif
-# ifdef USE_AS_STRNCPY
+#  endif
+#  ifdef USE_AS_STRNCPY
 	sub	$14, %ebx
 	lea	14(%edx), %ecx
 	jnz	L(StrncpyFillTailWithZero1)
-#  ifdef USE_AS_STPCPY
+#   ifdef USE_AS_STPCPY
 	cmpb	$1, (%eax)
 	sbb	$-1, %eax
+#   endif
 #  endif
-# endif
 	RETURN1
 
 	.p2align 4
@@ -2713,25 +2720,25 @@ L(Exit15):
 	movlpd	%xmm0, (%edx)
 	movlpd	7(%ecx), %xmm0
 	movlpd	%xmm0, 7(%edx)
-# ifdef USE_AS_STPCPY
+#  ifdef USE_AS_STPCPY
 	lea	14(%edx), %eax
-# else
+#  else
 	movl	%edi, %eax
-# endif
-# ifdef USE_AS_STRNCPY
+#  endif
+#  ifdef USE_AS_STRNCPY
 	sub	$15, %ebx
 	lea	15(%edx), %ecx
 	jnz	L(StrncpyFillTailWithZero1)
-#  ifdef USE_AS_STPCPY
+#   ifdef USE_AS_STPCPY
 	cmpb	$1, (%eax)
 	sbb	$-1, %eax
+#   endif
 #  endif
-# endif
 	RETURN1
 
 CFI_POP	(%edi)
 
-# ifdef USE_AS_STRNCPY
+#  ifdef USE_AS_STRNCPY
 	.p2align 4
 L(Fill0):
 	RETURN
@@ -2865,11 +2872,11 @@ L(FillLess12): /* but more than 8 */
 	je	L(Fill10)
 	jmp	L(Fill11)
 
-        CFI_PUSH(%edi)
+	CFI_PUSH	(%edi)
 
 	.p2align 4
 L(StrncpyFillTailWithZero1):
-        POP     (%edi)
+	POP	(%edi)
 L(StrncpyFillTailWithZero):
 	pxor	%xmm0, %xmm0
 	xor	%edx, %edx
@@ -2916,46 +2923,46 @@ L(StrncpyFillLess32):
 	movdqa	%xmm0, (%ecx)
 	lea	16(%ecx), %ecx
 	jmp	L(FillFrom1To16Bytes)
-# endif
+#  endif
 
 	.p2align 4
 L(ExitTail1):
 	movb	(%ecx), %al
 	movb	%al, (%edx)
-# ifdef USE_AS_STPCPY
+#  ifdef USE_AS_STPCPY
 	lea	(%edx), %eax
-# else
+#  else
 	movl	%edx, %eax
-# endif
-# ifdef USE_AS_STRNCPY
+#  endif
+#  ifdef USE_AS_STRNCPY
 	sub	$1, %ebx
 	lea	1(%edx), %ecx
 	jnz	L(StrncpyFillTailWithZero)
-#  ifdef USE_AS_STPCPY
+#   ifdef USE_AS_STPCPY
 	cmpb	$1, (%eax)
 	sbb	$-1, %eax
+#   endif
 #  endif
-# endif
 	RETURN
 
 	.p2align 4
 L(ExitTail2):
 	movw	(%ecx), %ax
 	movw	%ax, (%edx)
-# ifdef USE_AS_STPCPY
+#  ifdef USE_AS_STPCPY
 	lea	1(%edx), %eax
-# else
+#  else
 	movl	%edx, %eax
-# endif
-# ifdef USE_AS_STRNCPY
+#  endif
+#  ifdef USE_AS_STRNCPY
 	sub	$2, %ebx
 	lea	2(%edx), %ecx
 	jnz	L(StrncpyFillTailWithZero)
-#  ifdef USE_AS_STPCPY
+#   ifdef USE_AS_STPCPY
 	cmpb	$1, (%eax)
 	sbb	$-1, %eax
+#   endif
 #  endif
-# endif
 	RETURN
 
 	.p2align 4
@@ -2964,40 +2971,40 @@ L(ExitTail3):
 	movw	%ax, (%edx)
 	movb	2(%ecx), %al
 	movb	%al, 2(%edx)
-# ifdef USE_AS_STPCPY
+#  ifdef USE_AS_STPCPY
 	lea	2(%edx), %eax
-# else
+#  else
 	movl	%edx, %eax
-# endif
-# ifdef USE_AS_STRNCPY
+#  endif
+#  ifdef USE_AS_STRNCPY
 	sub	$3, %ebx
 	lea	3(%edx), %ecx
 	jnz	L(StrncpyFillTailWithZero)
-#  ifdef USE_AS_STPCPY
+#   ifdef USE_AS_STPCPY
 	cmpb	$1, (%eax)
 	sbb	$-1, %eax
+#   endif
 #  endif
-# endif
 	RETURN
 
 	.p2align 4
 L(ExitTail4):
 	movl	(%ecx), %eax
 	movl	%eax, (%edx)
-# ifdef USE_AS_STPCPY
+#  ifdef USE_AS_STPCPY
 	lea	3(%edx), %eax
-# else
+#  else
 	movl	%edx, %eax
-# endif
-# ifdef USE_AS_STRNCPY
+#  endif
+#  ifdef USE_AS_STRNCPY
 	sub	$4, %ebx
 	lea	4(%edx), %ecx
 	jnz	L(StrncpyFillTailWithZero)
-#  ifdef USE_AS_STPCPY
+#   ifdef USE_AS_STPCPY
 	cmpb	$1, (%eax)
 	sbb	$-1, %eax
+#   endif
 #  endif
-# endif
 	RETURN
 
 	.p2align 4
@@ -3006,20 +3013,20 @@ L(ExitTail5):
 	movl	%eax, (%edx)
 	movb	4(%ecx), %al
 	movb	%al, 4(%edx)
-# ifdef USE_AS_STPCPY
+#  ifdef USE_AS_STPCPY
 	lea	4(%edx), %eax
-# else
+#  else
 	movl	%edx, %eax
-# endif
-# ifdef USE_AS_STRNCPY
+#  endif
+#  ifdef USE_AS_STRNCPY
 	sub	$5, %ebx
 	lea	5(%edx), %ecx
 	jnz	L(StrncpyFillTailWithZero)
-#  ifdef USE_AS_STPCPY
+#   ifdef USE_AS_STPCPY
 	cmpb	$1, (%eax)
 	sbb	$-1, %eax
+#   endif
 #  endif
-# endif
 	RETURN
 
 	.p2align 4
@@ -3028,20 +3035,20 @@ L(ExitTail6):
 	movl	%eax, (%edx)
 	movw	4(%ecx), %ax
 	movw	%ax, 4(%edx)
-# ifdef USE_AS_STPCPY
+#  ifdef USE_AS_STPCPY
 	lea	5(%edx), %eax
-# else
+#  else
 	movl	%edx, %eax
-# endif
-# ifdef USE_AS_STRNCPY
+#  endif
+#  ifdef USE_AS_STRNCPY
 	sub	$6, %ebx
 	lea	6(%edx), %ecx
 	jnz	L(StrncpyFillTailWithZero)
-#  ifdef USE_AS_STPCPY
+#   ifdef USE_AS_STPCPY
 	cmpb	$1, (%eax)
 	sbb	$-1, %eax
+#   endif
 #  endif
-# endif
 	RETURN
 
 	.p2align 4
@@ -3050,20 +3057,40 @@ L(ExitTail7):
 	movl	%eax, (%edx)
 	movl	3(%ecx), %eax
 	movl	%eax, 3(%edx)
-# ifdef USE_AS_STPCPY
+#  ifdef USE_AS_STPCPY
 	lea	6(%edx), %eax
-# else
+#  else
 	movl	%edx, %eax
-# endif
-# ifdef USE_AS_STRNCPY
+#  endif
+#  ifdef USE_AS_STRNCPY
 	sub	$7, %ebx
 	lea	7(%edx), %ecx
 	jnz	L(StrncpyFillTailWithZero)
-#  ifdef USE_AS_STPCPY
+#   ifdef USE_AS_STPCPY
 	cmpb	$1, (%eax)
 	sbb	$-1, %eax
+#   endif
 #  endif
-# endif
+	RETURN
+
+	.p2align 4
+L(ExitTail8):
+	movlpd	(%ecx), %xmm0
+	movlpd	%xmm0, (%edx)
+#  ifdef USE_AS_STPCPY
+	lea	7(%edx), %eax
+#  else
+	movl	%edx, %eax
+#  endif
+#  ifdef USE_AS_STRNCPY
+	sub	$8, %ebx
+	lea	8(%edx), %ecx
+	jnz	L(StrncpyFillTailWithZero)
+#   ifdef USE_AS_STPCPY
+	cmpb	$1, (%eax)
+	sbb	$-1, %eax
+#   endif
+#  endif
 	RETURN
 
 	.p2align 4
@@ -3072,20 +3099,20 @@ L(ExitTail9):
 	movlpd	%xmm0, (%edx)
 	movb	8(%ecx), %al
 	movb	%al, 8(%edx)
-# ifdef USE_AS_STPCPY
+#  ifdef USE_AS_STPCPY
 	lea	8(%edx), %eax
-# else
+#  else
 	movl	%edx, %eax
-# endif
-# ifdef USE_AS_STRNCPY
+#  endif
+#  ifdef USE_AS_STRNCPY
 	sub	$9, %ebx
 	lea	9(%edx), %ecx
 	jnz	L(StrncpyFillTailWithZero)
-#  ifdef USE_AS_STPCPY
+#   ifdef USE_AS_STPCPY
 	cmpb	$1, (%eax)
 	sbb	$-1, %eax
+#   endif
 #  endif
-# endif
 	RETURN
 
 	.p2align 4
@@ -3094,20 +3121,20 @@ L(ExitTail10):
 	movlpd	%xmm0, (%edx)
 	movw	8(%ecx), %ax
 	movw	%ax, 8(%edx)
-# ifdef USE_AS_STPCPY
+#  ifdef USE_AS_STPCPY
 	lea	9(%edx), %eax
-# else
+#  else
 	movl	%edx, %eax
-# endif
-# ifdef USE_AS_STRNCPY
+#  endif
+#  ifdef USE_AS_STRNCPY
 	sub	$10, %ebx
 	lea	10(%edx), %ecx
 	jnz	L(StrncpyFillTailWithZero)
-#  ifdef USE_AS_STPCPY
+#   ifdef USE_AS_STPCPY
 	cmpb	$1, (%eax)
 	sbb	$-1, %eax
+#   endif
 #  endif
-# endif
 	RETURN
 
 	.p2align 4
@@ -3116,20 +3143,20 @@ L(ExitTail11):
 	movlpd	%xmm0, (%edx)
 	movl	7(%ecx), %eax
 	movl	%eax, 7(%edx)
-# ifdef USE_AS_STPCPY
+#  ifdef USE_AS_STPCPY
 	lea	10(%edx), %eax
-# else
+#  else
 	movl	%edx, %eax
-# endif
-# ifdef USE_AS_STRNCPY
+#  endif
+#  ifdef USE_AS_STRNCPY
 	sub	$11, %ebx
 	lea	11(%edx), %ecx
 	jnz	L(StrncpyFillTailWithZero)
-#  ifdef USE_AS_STPCPY
+#   ifdef USE_AS_STPCPY
 	cmpb	$1, (%eax)
 	sbb	$-1, %eax
+#   endif
 #  endif
-# endif
 	RETURN
 
 	.p2align 4
@@ -3138,20 +3165,20 @@ L(ExitTail12):
 	movlpd	%xmm0, (%edx)
 	movl	8(%ecx), %eax
 	movl	%eax, 8(%edx)
-# ifdef USE_AS_STPCPY
+#  ifdef USE_AS_STPCPY
 	lea	11(%edx), %eax
-# else
+#  else
 	movl	%edx, %eax
-# endif
-# ifdef USE_AS_STRNCPY
+#  endif
+#  ifdef USE_AS_STRNCPY
 	sub	$12, %ebx
 	lea	12(%edx), %ecx
 	jnz	L(StrncpyFillTailWithZero)
-#  ifdef USE_AS_STPCPY
+#   ifdef USE_AS_STPCPY
 	cmpb	$1, (%eax)
 	sbb	$-1, %eax
+#   endif
 #  endif
-# endif
 	RETURN
 
 	.p2align 4
@@ -3160,20 +3187,20 @@ L(ExitTail13):
 	movlpd	%xmm0, (%edx)
 	movlpd	5(%ecx), %xmm0
 	movlpd	%xmm0, 5(%edx)
-# ifdef USE_AS_STPCPY
+#  ifdef USE_AS_STPCPY
 	lea	12(%edx), %eax
-# else
+#  else
 	movl	%edx, %eax
-# endif
-# ifdef USE_AS_STRNCPY
+#  endif
+#  ifdef USE_AS_STRNCPY
 	sub	$13, %ebx
 	lea	13(%edx), %ecx
 	jnz	L(StrncpyFillTailWithZero)
-#  ifdef USE_AS_STPCPY
+#   ifdef USE_AS_STPCPY
 	cmpb	$1, (%eax)
 	sbb	$-1, %eax
+#   endif
 #  endif
-# endif
 	RETURN
 
 	.p2align 4
@@ -3182,20 +3209,42 @@ L(ExitTail14):
 	movlpd	%xmm0, (%edx)
 	movlpd	6(%ecx), %xmm0
 	movlpd	%xmm0, 6(%edx)
-# ifdef USE_AS_STPCPY
+#  ifdef USE_AS_STPCPY
 	lea	13(%edx), %eax
-# else
+#  else
 	movl	%edx, %eax
-# endif
-# ifdef USE_AS_STRNCPY
+#  endif
+#  ifdef USE_AS_STRNCPY
 	sub	$14, %ebx
 	lea	14(%edx), %ecx
 	jnz	L(StrncpyFillTailWithZero)
-#  ifdef USE_AS_STPCPY
+#   ifdef USE_AS_STPCPY
 	cmpb	$1, (%eax)
 	sbb	$-1, %eax
+#   endif
 #  endif
-# endif
+	RETURN
+
+	.p2align 4
+L(ExitTail15):
+	movlpd	(%ecx), %xmm0
+	movlpd	%xmm0, (%edx)
+	movlpd	7(%ecx), %xmm0
+	movlpd	%xmm0, 7(%edx)
+#  ifdef USE_AS_STPCPY
+	lea	14(%edx), %eax
+#  else
+	movl	%edx, %eax
+#  endif
+#  ifdef USE_AS_STRNCPY
+	sub	$15, %ebx
+	lea	15(%edx), %ecx
+	jnz	L(StrncpyFillTailWithZero)
+#   ifdef USE_AS_STPCPY
+	cmpb	$1, (%eax)
+	sbb	$-1, %eax
+#   endif
+#  endif
 	RETURN
 
 	.p2align 4
@@ -3204,24 +3253,28 @@ L(ExitTail16):
 	movlpd	%xmm0, (%edx)
 	movlpd	8(%ecx), %xmm0
 	movlpd	%xmm0, 8(%edx)
-# ifdef USE_AS_STPCPY
+#  ifdef USE_AS_STPCPY
 	lea	15(%edx), %eax
-# else
+#  else
 	movl	%edx, %eax
-# endif
-# ifdef USE_AS_STRNCPY
+#  endif
+#  ifdef USE_AS_STRNCPY
 	sub	$16, %ebx
 	lea	16(%edx), %ecx
 	jnz	L(StrncpyFillTailWithZero)
-#  ifdef USE_AS_STPCPY
+#   ifdef USE_AS_STPCPY
 	cmpb	$1, (%eax)
 	sbb	$-1, %eax
+#   endif
 #  endif
-# endif
 	RETURN
+#endif
+
 # ifdef USE_AS_STRNCPY
-	CFI_PUSH (%esi)
-	CFI_PUSH (%edi)
+#  ifndef USE_AS_STRCAT
+	CFI_PUSH	(%esi)
+	CFI_PUSH	(%edi)
+#  endif
 L(StrncpyLeaveCase2OrCase3):
 	test	%eax, %eax
 	jnz	L(Aligned64LeaveCase2)
@@ -3979,9 +4032,13 @@ L(StrncpyExit15):
 	movaps	%xmm6, (%edx, %esi)
 	lea	1(%esi), %esi
 	jmp	L(CopyFrom1To16BytesCase3)
+# endif
 
-	CFI_POP (%esi)
-	CFI_POP (%edi)
+# ifndef USE_AS_STRCAT
+#  ifdef USE_AS_STRNCPY
+	CFI_POP	(%esi)
+	CFI_POP	(%edi)
+
 	.p2align 4
 L(ExitTail0):
 	movl	%edx, %eax
@@ -4013,31 +4070,19 @@ L(StrncpyExit15Bytes):
 	je	L(ExitTail14)
 	cmpb	$0, 13(%ecx)
 	jz	L(ExitTail14)
-# endif
-
-	.p2align 4
-L(ExitTail15):
 	movlpd	(%ecx), %xmm0
 	movlpd	%xmm0, (%edx)
 	movlpd	7(%ecx), %xmm0
 	movlpd	%xmm0, 7(%edx)
-# ifdef USE_AS_STPCPY
+#   ifdef USE_AS_STPCPY
 	lea	14(%edx), %eax
-# else
-	movl	%edx, %eax
-# endif
-# ifdef USE_AS_STRNCPY
-	sub	$15, %ebx
-	lea	15(%edx), %ecx
-	jnz	L(StrncpyFillTailWithZero)
-#  ifdef USE_AS_STPCPY
 	cmpb	$1, (%eax)
 	sbb	$-1, %eax
-#  endif
-# endif
+#   else
+	movl	%edx, %eax
+#   endif
 	RETURN
 
-# ifdef USE_AS_STRNCPY
 	.p2align 4
 L(StrncpyExit8Bytes):
 	cmp	$1, %ebx
@@ -4068,27 +4113,19 @@ L(StrncpyExit8Bytes):
 	je	L(ExitTail7)
 	cmpb	$0, 6(%ecx)
 	jz	L(ExitTail7)
-# endif
-	.p2align 4
-L(ExitTail8):
 	movlpd	(%ecx), %xmm0
 	movlpd	%xmm0, (%edx)
-# ifdef USE_AS_STPCPY
+#   ifdef USE_AS_STPCPY
 	lea	7(%edx), %eax
-# else
-	movl	%edx, %eax
-# endif
-# ifdef USE_AS_STRNCPY
-	sub	$8, %ebx
-	lea	8(%edx), %ecx
-	jnz	L(StrncpyFillTailWithZero)
-#  ifdef USE_AS_STPCPY
 	cmpb	$1, (%eax)
 	sbb	$-1, %eax
-#  endif
-# endif
+#   else
+	movl	%edx, %eax
+#   endif
 	RETURN
+#  endif
+
 
 END (STRCPY)
-
+# endif
 #endif

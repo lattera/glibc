@@ -1,3 +1,29 @@
+2011-07-22  Liubov Dmitrieva  <liubov.dmitrieva@intel.com>
+
+	* sysdeps/i386/i686/multiarch/strcat-sse2.S: Update.
+	Fix overflow bug in strncat.
+	* sysdeps/i386/i686/multiarch/strcpy-ssse3.S: Likewise.
+
+	* string/test-strncat.c: Update.
+	Add new tests for checking overflow bugs.
+
+2011-07-15  Liubov Dmitrieva  <liubov.dmitrieva@intel.com>
+
+	* sysdeps/i386/i686/multiarch/Makefile (sysdep_routines): Add
+	strcat-ssse3 strcat-sse2 strncat-ssse3 strncat-sse2 strncat-c.
+	* sysdeps/i386/i686/multiarch/strcat.S: New file.
+	* sysdeps/i386/i686/multiarch/strcat-c.c: New file.
+	* sysdeps/i386/i686/multiarch/strcat-sse2.S: New file.
+	* sysdeps/i386/i686/multiarch/strcat-ssse3.S: New file.
+	* sysdeps/i386/i686/multiarch/strncat.S: New file.
+	* sysdeps/i386/i686/multiarch/strncat-sse2.S: New file.
+	* sysdeps/i386/i686/multiarch/strncat-ssse3.S: New file.
+
+	* sysdeps/i386/i686/multiarch/strcpy-ssse3.S
+	(USE_AS_STRCAT): Define.
+	Add strcat and strncat support.
+	* sysdeps/i386/i686/multiarch/strlen-sse2.S: Likewise.
+
 2011-07-25  Andreas Schwab  <schwab@redhat.com>
 
 	* sysdeps/i386/i486/bits/string.h (__strncat_g): Correctly handle

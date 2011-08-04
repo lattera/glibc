@@ -1,5 +1,5 @@
 /* strlen with SSE2
-   Copyright (C) 2010 Free Software Foundation, Inc.
+   Copyright (C) 2010, 2011 Free Software Foundation, Inc.
    Contributed by Intel Corporation.
    This file is part of the GNU C Library.
 
@@ -18,30 +18,32 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#if defined SHARED && !defined NOT_IN_libc
+#if (defined USE_AS_STRCAT || defined SHARED) && !defined NOT_IN_libc
+# ifndef USE_AS_STRCAT
 
-#include <sysdep.h>
-#include "asm-syntax.h"
+#  include <sysdep.h>
+#  include "asm-syntax.h"
 
-#define CFI_PUSH(REG)						\
-  cfi_adjust_cfa_offset (4);					\
-  cfi_rel_offset (REG, 0)
+#  define CFI_PUSH(REG)	\
+	cfi_adjust_cfa_offset (4);	\
+	cfi_rel_offset (REG, 0)
 
-#define CFI_POP(REG)						\
-  cfi_adjust_cfa_offset (-4);					\
-  cfi_restore (REG)
+#  define CFI_POP(REG)	\
+	cfi_adjust_cfa_offset (-4);	\
+	cfi_restore (REG)
 
-#define PUSH(REG)	pushl REG; CFI_PUSH (REG)
-#define POP(REG)	popl REG; CFI_POP (REG)
-#define PARMS		4
-#define	STR		PARMS
-#define ENTRANCE
-#define RETURN		ret
+#  define PUSH(REG)	pushl REG; CFI_PUSH (REG)
+#  define POP(REG)	popl REG; CFI_POP (REG)
+#  define PARMS		4
+#  define STR		PARMS
+#  define ENTRANCE
+#  define RETURN		ret
 
 	.text
 ENTRY (__strlen_sse2)
 	ENTRANCE
 	mov	STR(%esp), %edx
+# endif
 	xor	%eax, %eax
 	cmpb	$0, (%edx)
 	jz	L(exit_tail0)
@@ -77,9 +79,8 @@ ENTRY (__strlen_sse2)
 	jz	L(exit_tail15)
 	pxor	%xmm0, %xmm0
 	mov	%edx, %eax
-	mov	%edx, %ecx
+	lea	16(%edx), %ecx
 	and	$-16, %eax
-	add	$16, %ecx
 	add	$16, %eax
 
 	pcmpeqb	(%eax), %xmm0
@@ -183,51 +184,41 @@ ENTRY (__strlen_sse2)
 	jnz	L(exit)
 
 	and	$-0x40, %eax
-	PUSH (%esi)
-	PUSH (%edi)
-	PUSH (%ebx)
-	PUSH (%ebp)
-	xor	%ebp, %ebp
 L(aligned_64):
-	pcmpeqb	(%eax), %xmm0
-	pcmpeqb	16(%eax), %xmm1
-	pcmpeqb	32(%eax), %xmm2
-	pcmpeqb	48(%eax), %xmm3
-	pmovmskb %xmm0, %edx
-	pmovmskb %xmm1, %esi
-	pmovmskb %xmm2, %edi
-	pmovmskb %xmm3, %ebx
-	or	%edx, %ebp
-	or	%esi, %ebp
-	or	%edi, %ebp
-	or	%ebx, %ebp
+	movaps	(%eax), %xmm0
+	movaps	16(%eax), %xmm1
+	movaps	32(%eax), %xmm2
+	movaps	48(%eax), %xmm6
+	pminub	%xmm1, %xmm0
+	pminub	%xmm6, %xmm2
+	pminub	%xmm0, %xmm2
+	pcmpeqb	%xmm3, %xmm2
+	pmovmskb %xmm2, %edx
+	test	%edx, %edx
 	lea	64(%eax), %eax
 	jz	L(aligned_64)
-L(48leave):
+
+	pcmpeqb	-64(%eax), %xmm3
+	pmovmskb %xmm3, %edx
 	test	%edx, %edx
-	jnz	L(aligned_64_exit_16)
-	test	%esi, %esi
-	jnz	L(aligned_64_exit_32)
-	test	%edi, %edi
-	jnz	L(aligned_64_exit_48)
-	mov	%ebx, %edx
-	lea	(%eax), %eax
-	jmp	L(aligned_64_exit)
-L(aligned_64_exit_48):
-	lea	-16(%eax), %eax
-	mov	%edi, %edx
-	jmp	L(aligned_64_exit)
-L(aligned_64_exit_32):
-	lea	-32(%eax), %eax
-	mov	%esi, %edx
-	jmp	L(aligned_64_exit)
-L(aligned_64_exit_16):
-	lea	-48(%eax), %eax
-L(aligned_64_exit):
-	POP (%ebp)
-	POP (%ebx)
-	POP (%edi)
-	POP (%esi)
+	lea	48(%ecx), %ecx
+	jnz	L(exit)
+
+	pcmpeqb	%xmm1, %xmm3
+	pmovmskb %xmm3, %edx
+	test	%edx, %edx
+	lea	-16(%ecx), %ecx
+	jnz	L(exit)
+
+	pcmpeqb	-32(%eax), %xmm3
+	pmovmskb %xmm3, %edx
+	test	%edx, %edx
+	lea	-16(%ecx), %ecx
+	jnz	L(exit)
+
+	pcmpeqb	%xmm6, %xmm3
+	pmovmskb %xmm3, %edx
+	lea	-16(%ecx), %ecx
 L(exit):
 	sub	%ecx, %eax
 	test	%dl, %dl
@@ -340,8 +331,9 @@ L(exit_tail14):
 
 L(exit_tail15):
 	add	$15, %eax
+# ifndef USE_AS_STRCAT
 	ret
-
 END (__strlen_sse2)
-
+# endif
 #endif
+
