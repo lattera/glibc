@@ -1,3 +1,12 @@
+2011-07-22  Liubov Dmitrieva  <liubov.dmitrieva@gmail.com>
+
+	* string/Makefile: Update.
+	(strop-tests): Append strncat.
+	* string/test-wcscmp.c: New file.
+	New comprehensive test for wcscmp.
+	* string/test-strcmp.c: Update.
+	(WIDE): New define.
+
 2011-07-22  Andreas Schwab  <schwab@redhat.com>
 
 	* resolv/res_init.c (__res_vinit): Properly tokenize nameserver
