@@ -1,4 +1,5 @@
-/* Copyright (C) 1992-1998,2000,2002,2003,2009 Free Software Foundation, Inc.
+/* Copyright (C) 1992-1998,2000,2002,2003,2009,2011
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -23,13 +24,13 @@
 #include <bits/libc-lock.h>
 
 #ifndef SCANDIR
-#define SCANDIR scandir
-#define READDIR __readdir
-#define DIRENT_TYPE struct dirent
+# define SCANDIR scandir
+# define READDIR __readdir
+# define DIRENT_TYPE struct dirent
 #endif
 
 #ifndef SCANDIR_CANCEL
-#define SCANDIR_CANCEL
+# define SCANDIR_CANCEL
 struct scandir_cancel_struct
 {
   DIR *dp;
@@ -37,8 +38,9 @@ struct scandir_cancel_struct
   size_t cnt;
 };
 
-static void
-cancel_handler (void *arg)
+# ifndef SKIP_SCANDIR_CANCEL
+void
+__scandir_cancel_handler (void *arg)
 {
   struct scandir_cancel_struct *cp = arg;
   size_t i;
@@ -49,6 +51,9 @@ cancel_handler (void *arg)
   free (v);
   (void) __closedir (cp->dp);
 }
+# else
+extern void __scandir_cancel_handler (void *arg);
+# endif
 #endif
 
 
@@ -75,7 +80,7 @@ SCANDIR (dir, namelist, select, cmp)
   c.dp = dp;
   c.v = NULL;
   c.cnt = 0;
-  __libc_cleanup_push (cancel_handler, &c);
+  __libc_cleanup_push (__scandir_cancel_handler, &c);
 
   while ((d = READDIR (dp)) != NULL)
     {
