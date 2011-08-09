@@ -1,4 +1,4 @@
-/* Copyright (C) 2009 Free Software Foundation, Inc.
+/* Copyright (C) 2009, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2009.
 
@@ -71,7 +71,9 @@ ENTRY(__pthread_enable_asynccancel)
 
 1:	ret
 
-3:	movq	$TCB_PTHREAD_CANCELED, %fs:RESULT
+3:	subq	$8, %rsp
+	cfi_adjust_cfa_offset(8)
+	movq	$TCB_PTHREAD_CANCELED, %fs:RESULT
 	lock
 	orl	$TCB_EXITING_BITMASK, %fs:CANCELHANDLING
 	movq	%fs:CLEANUP_JMP_BUF, %rdi

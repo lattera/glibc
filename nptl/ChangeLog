@@ -1,3 +1,10 @@
+2011-08-08  Andreas Schwab  <schwab@redhat.com>
+
+	* sysdeps/unix/sysv/linux/x86_64/cancellation.S: Maintain aligned
+	stack.
+	* sysdeps/unix/sysv/linux/x86_64/pthread_cond_timedwait.S: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/pthread_cond_wait.S: Likewise.
+
 2011-07-22  Ulrich Drepper  <drepper@gmail.com>
 
 	* sysdeps/pthread/unwind-forcedunwind.c (_Unwind_Resume): Add read
