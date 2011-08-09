@@ -1,4 +1,5 @@
-/* Copyright (C) 1991-2000,2003-2005,2009,2010 Free Software Foundation, Inc.
+/* Copyright (C) 1991-2000,2003-2005,2009,2010,2011
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -247,7 +248,10 @@ extern int dirfd (DIR *__dirp) __THROW __nonnull ((1));
 /* Scan the directory DIR, calling SELECTOR on each directory entry.
    Entries for which SELECT returns nonzero are individually malloc'd,
    sorted using qsort with CMP, and collected in a malloc'd array in
-   *NAMELIST.  Returns the number of entries selected, or -1 on error.  */
+   *NAMELIST.  Returns the number of entries selected, or -1 on error.
+
+   This function is a cancellation point and therefore not marked with
+   __THROW.  */
 # ifndef __USE_FILE_OFFSET64
 extern int scandir (__const char *__restrict __dir,
 		    struct dirent ***__restrict __namelist,
@@ -278,6 +282,43 @@ extern int scandir64 (__const char *__restrict __dir,
 		      int (*__cmp) (__const struct dirent64 **,
 				    __const struct dirent64 **))
      __nonnull ((1, 2));
+# endif
+
+# ifdef __USE_GNU
+/* Similar to `scandir' but a relative DIR name is interpreted relative
+   to the directory for which DFD is a descriptor.
+
+   This function is a cancellation point and therefore not marked with
+   __THROW.  */
+#  ifndef __USE_FILE_OFFSET64
+extern int scandirat (int __dfd, __const char *__restrict __dir,
+		      struct dirent ***__restrict __namelist,
+		      int (*__selector) (__const struct dirent *),
+		      int (*__cmp) (__const struct dirent **,
+				    __const struct dirent **))
+     __nonnull ((2, 3));
+#  else
+#   ifdef __REDIRECT
+extern int __REDIRECT (scandirat,
+		       (int __dfd, __const char *__restrict __dir,
+			struct dirent ***__restrict __namelist,
+			int (*__selector) (__const struct dirent *),
+			int (*__cmp) (__const struct dirent **,
+				      __const struct dirent **)),
+		       scandirat64) __nonnull ((2, 3));
+#   else
+#    define scandirat scandirat64
+#   endif
+#  endif
+
+/* This function is like `scandir' but it uses the 64bit dirent structure.
+   Please note that the CMP function must now work with struct dirent64 **.  */
+extern int scandirat64 (int __dfd, __const char *__restrict __dir,
+			struct dirent64 ***__restrict __namelist,
+			int (*__selector) (__const struct dirent64 *),
+			int (*__cmp) (__const struct dirent64 **,
+				      __const struct dirent64 **))
+     __nonnull ((2, 3));
 # endif
 
 /* Function to compare two `struct dirent's alphabetically.  */

@@ -44,4 +44,7 @@ libc {
   GLIBC_2.4 {
     fdopendir;
   }
+  GLIBC_2.15 {
+    scandirat; scandirat64;
+  }
 }

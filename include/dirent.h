@@ -4,8 +4,16 @@
 # include <sys/stat.h>
 # include <stdbool.h>
 
+struct scandir_cancel_struct
+{
+  DIR *dp;
+  void *v;
+  size_t cnt;
+};
+
 /* Now define the internal interfaces.  */
 extern DIR *__opendir (__const char *__name);
+extern DIR *__opendirat (int dfd, __const char *__name) internal_function;
 extern DIR *__fdopendir (int __fd);
 extern int __closedir (DIR *__dirp);
 extern struct dirent *__readdir (DIR *__dirp);
@@ -19,6 +27,11 @@ extern int __scandir64 (__const char * __dir,
 			int (*__selector) (__const struct dirent64 *),
 			int (*__cmp) (__const struct dirent64 **,
 				      __const struct dirent64 **));
+extern int __scandirat64 (int __dfd, __const char * __dir,
+			  struct dirent64 *** __namelist,
+			  int (*__selector) (__const struct dirent64 *),
+			  int (*__cmp) (__const struct dirent64 **,
+					__const struct dirent64 **));
 extern __ssize_t __getdents (int __fd, char *__buf, size_t __nbytes)
      internal_function;
 extern __ssize_t __getdents64 (int __fd, char *__buf, size_t __nbytes)
@@ -31,6 +44,7 @@ extern int __versionsort64 (const struct dirent64 **a,
 extern DIR *__alloc_dir (int fd, bool close_fd, int flags,
 			 const struct stat64 *statp)
      internal_function;
+extern void __scandir_cancel_handler (void *arg);
 
 libc_hidden_proto (rewinddir)
 

@@ -1,3 +1,26 @@
+2011-08-09  Ulrich Drepper  <drepper@gmail.com>
+
+	* Versions.def [libc]: Add GLIBC_2.15.
+	* dirent/Makefile (routines): Add scandirat and scandirat64.
+	* dirent/Versions [libc]: Export scandirat and scandirat64 for
+	GLIBC_2.15.
+	* dirent/dirent.h: Declare scandirat and scandirat64.
+	* dirent/scandirat.c: New file.
+	* dirent/scandirat64.c: New file.
+	* sysdeps/wordsize-64/scandirat.c: New file.
+	* sysdeps/wordsize-64/scandirat64.c: New file.
+	* dirent/opendir.c: Define opendirat.
+	* dirent/scandir.c: Move code to scandirat.c.  Implement scandir
+	using scandirat.
+	* dirent/scandir64.c: Adjust for scandir.c change.
+	* include/dirent.h: Define scandir_cancel_struct.  Declare __opendirat,
+	__scandirat64, and __scandir_cancel_handler.
+	* sysdeps/unix/opendir.c: Rename __opendir to __opendirat.  Take
+	additional parameter and use openat instead of open (outside of ld.so).
+	Add new __opendir as wrapper around __opendirat.
+	* sysdeps/unix/sysv/linux/i386/scandir64.c: Reimplement __old_scandir64
+	here without requiring old scandirat implementation.
+
 2011-08-08  Ulrich Drepper  <drepper@gmail.com>
 
 	* dirent/scandir.c (cancel_handler): Renamed to

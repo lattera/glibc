@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1995, 1996, 1997, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,12 +21,19 @@
 #include <dirent.h>
 
 
+DIR *
+__opendirat (int dfd, const char *name)
+{
+  __set_errno (ENOSYS);
+  return NULL;
+}
+
+
 /* Open a directory stream on NAME.  */
 DIR *
 __opendir (const char *name)
 {
-  __set_errno (ENOSYS);
-  return NULL;
+  return __opendirat (AT_FDCWD, name);
 }
 weak_alias (__opendir, opendir)
 

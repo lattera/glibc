@@ -17,6 +17,7 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <assert.h>
 #include <errno.h>
 #include <limits.h>
 #include <stddef.h>
@@ -76,9 +77,9 @@ tryopen_o_directory (void)
 #endif
 
 
-/* Open a directory stream on NAME.  */
 DIR *
-__opendir (const char *name)
+internal_function
+__opendirat (int dfd, const char *name)
 {
   struct stat64 statbuf;
   struct stat64 *statp = NULL;
@@ -116,7 +117,13 @@ __opendir (const char *name)
 #ifdef O_CLOEXEC
   flags |= O_CLOEXEC;
 #endif
-  int fd = open_not_cancel_2 (name, flags);
+  int fd;
+#ifdef IS_IN_rtld
+  assert (dfd == AT_FDCWD);
+  fd = open_not_cancel_2 (name, flags);
+#else
+  fd = openat_not_cancel_3 (dfd, name, flags);
+#endif
   if (__builtin_expect (fd, 0) < 0)
     return NULL;
 
@@ -139,6 +146,14 @@ __opendir (const char *name)
     }
 
   return __alloc_dir (fd, true, 0, statp);
+}
+
+
+/* Open a directory stream on NAME.  */
+DIR *
+__opendir (const char *name)
+{
+  return __opendirat (AT_FDCWD, name);
 }
 weak_alias (__opendir, opendir)
 

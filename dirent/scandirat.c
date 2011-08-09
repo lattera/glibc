@@ -1,4 +1,5 @@
-/* Copyright (C) 2000, 2004, 2011 Free Software Foundation, Inc.
+/* Copyright (C) 1992-1998,2000,2002,2003,2009,2011
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,40 +18,46 @@
    02111-1307 USA.  */
 
 #include <dirent.h>
+#include <stdlib.h>
+#include <string.h>
+#include <errno.h>
+#include <bits/libc-lock.h>
 
-#define SCANDIR __scandir64
-#define SCANDIRAT __scandirat64
-#define READDIR __readdir64
-#define DIRENT_TYPE struct dirent64
-#define SKIP_SCANDIR_CANCEL 1
+#ifndef SCANDIRAT
+# define SCANDIRAT scandirat
+# define READDIR __readdir
+# define DIRENT_TYPE struct dirent
+#endif
 
-#include <dirent/scandir.c>
+#ifndef SKIP_SCANDIR_CANCEL
+void
+__scandir_cancel_handler (void *arg)
+{
+  struct scandir_cancel_struct *cp = arg;
+  size_t i;
+  void **v = cp->v;
 
-#undef SCANDIR
-#undef READDIR
-#undef DIRENT_TYPE
+  for (i = 0; i < cp->cnt; ++i)
+    free (v[i]);
+  free (v);
+  (void) __closedir (cp->dp);
+}
+#endif
 
-#include <shlib-compat.h>
-
-versioned_symbol (libc, __scandir64, scandir64, GLIBC_2_2);
-
-#if SHLIB_COMPAT(libc, GLIBC_2_1, GLIBC_2_2)
-# include <errno.h>
-# include "olddirent.h"
 
 int
-__old_scandir64 (dir, namelist, select, cmp)
+SCANDIRAT (dfd, dir, namelist, select, cmp)
+     int dfd;
      const char *dir;
-     struct __old_dirent64 ***namelist;
-     int (*select) (const struct __old_dirent64 *);
-     int (*cmp) (const struct __old_dirent64 **,
-		 const struct __old_dirent64 **);
+     DIRENT_TYPE ***namelist;
+     int (*select) (const DIRENT_TYPE *);
+     int (*cmp) (const DIRENT_TYPE **, const DIRENT_TYPE **);
 {
-  DIR *dp = __opendir (dir);
-  struct __old_dirent64 **v = NULL;
+  DIR *dp = __opendirat (dfd, dir);
+  DIRENT_TYPE **v = NULL;
   size_t vsize = 0;
   struct scandir_cancel_struct c;
-  struct __old_dirent64 *d;
+  DIRENT_TYPE *d;
   int save;
 
   if (dp == NULL)
@@ -64,7 +71,7 @@ __old_scandir64 (dir, namelist, select, cmp)
   c.cnt = 0;
   __libc_cleanup_push (__scandir_cancel_handler, &c);
 
-  while ((d = __old_readdir64 (dp)) != NULL)
+  while ((d = READDIR (dp)) != NULL)
     {
       int use_it = select == NULL;
 
@@ -79,7 +86,7 @@ __old_scandir64 (dir, namelist, select, cmp)
 
       if (use_it)
 	{
-	  struct __old_dirent64 *vnew;
+	  DIRENT_TYPE *vnew;
 	  size_t dsize;
 
 	  /* Ignore errors from select or readdir */
@@ -87,13 +94,12 @@ __old_scandir64 (dir, namelist, select, cmp)
 
 	  if (__builtin_expect (c.cnt == vsize, 0))
 	    {
-	      struct __old_dirent64 **new;
+	      DIRENT_TYPE **new;
 	      if (vsize == 0)
 		vsize = 10;
 	      else
 		vsize *= 2;
-	      new = (struct __old_dirent64 **) realloc (v,
-							vsize * sizeof (*v));
+	      new = (DIRENT_TYPE **) realloc (v, vsize * sizeof (*v));
 	      if (new == NULL)
 		break;
 	      v = new;
@@ -101,11 +107,11 @@ __old_scandir64 (dir, namelist, select, cmp)
 	    }
 
 	  dsize = &d->d_name[_D_ALLOC_NAMLEN (d)] - (char *) d;
-	  vnew = (struct __old_dirent64 *) malloc (dsize);
+	  vnew = (DIRENT_TYPE *) malloc (dsize);
 	  if (vnew == NULL)
 	    break;
 
-	  v[c.cnt++] = (struct __old_dirent64 *) memcpy (vnew, d, dsize);
+	  v[c.cnt++] = (DIRENT_TYPE *) memcpy (vnew, d, dsize);
 	}
     }
 
@@ -135,6 +141,3 @@ __old_scandir64 (dir, namelist, select, cmp)
 
   return c.cnt;
 }
-compat_symbol (libc, __old_scandir64, scandir64, GLIBC_2_1);
-
-#endif
