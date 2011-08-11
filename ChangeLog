@@ -1,3 +1,8 @@
+2011-08-11  Ulrich Drepper  <drepper@gmail.com>
+
+	* intl/l10nflist.c (_nl_make_l10nflist): Use locale-independent
+	classification.
+
 2011-08-10  Andreas Schwab  <schwab@redhat.com>
 
 	* include/dirent.h: Add libc_hidden_proto for scandirat and
