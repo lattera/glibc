@@ -179,7 +179,7 @@ enum __ptrace_request
 #define PT_GETSIGINFO PTRACE_GETSIGINFO
 
   /* Set new siginfo for process.  */
-  PTRACE_SETSIGINFO = 0x4203
+  PTRACE_SETSIGINFO = 0x4203,
 #define PT_SETSIGINFO PTRACE_SETSIGINFO
 
   /* Get register content.  */
