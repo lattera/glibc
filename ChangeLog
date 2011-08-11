@@ -1,3 +1,11 @@
+2011-08-10  Andreas Schwab  <schwab@redhat.com>
+
+	* include/dirent.h: Add libc_hidden_proto for scandirat and
+	scandirat64.  Don't declare __scandirat64.
+	* dirent/scandirat.c: Add libc_hidden_def.
+	* dirent/scandirat64.c (SCANDIRAT): Remove underscores.
+	* sysdeps/unix/sysv/linux/i386/scandir64.c (SCANDIRAT): Likewise.
+
 2011-08-09  Ulrich Drepper  <drepper@gmail.com>
 
 	* Versions.def [libc]: Add GLIBC_2.15.

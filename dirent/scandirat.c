@@ -141,3 +141,4 @@ SCANDIRAT (dfd, dir, namelist, select, cmp)
 
   return c.cnt;
 }
+libc_hidden_def (SCANDIRAT)

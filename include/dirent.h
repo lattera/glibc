@@ -27,11 +27,6 @@ extern int __scandir64 (__const char * __dir,
 			int (*__selector) (__const struct dirent64 *),
 			int (*__cmp) (__const struct dirent64 **,
 				      __const struct dirent64 **));
-extern int __scandirat64 (int __dfd, __const char * __dir,
-			  struct dirent64 *** __namelist,
-			  int (*__selector) (__const struct dirent64 *),
-			  int (*__cmp) (__const struct dirent64 **,
-					__const struct dirent64 **));
 extern __ssize_t __getdents (int __fd, char *__buf, size_t __nbytes)
      internal_function;
 extern __ssize_t __getdents64 (int __fd, char *__buf, size_t __nbytes)
@@ -47,5 +42,7 @@ extern DIR *__alloc_dir (int fd, bool close_fd, int flags,
 extern void __scandir_cancel_handler (void *arg);
 
 libc_hidden_proto (rewinddir)
+libc_hidden_proto (scandirat)
+libc_hidden_proto (scandirat64)
 
 #endif

@@ -19,7 +19,7 @@
 #include <dirent.h>
 
 #define SCANDIR __scandir64
-#define SCANDIRAT __scandirat64
+#define SCANDIRAT scandirat64
 #define READDIR __readdir64
 #define DIRENT_TYPE struct dirent64
 #define SKIP_SCANDIR_CANCEL 1
