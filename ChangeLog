@@ -1,5 +1,8 @@
 2011-08-11  Ulrich Drepper  <drepper@gmail.com>
 
+	* intl/l10nflist.c: Allow architecture-specific pop function.
+	* sysdeps/x86_64/l10nflist.c: New file.
+
 	* intl/l10nflist.c (_nl_make_l10nflist): Use locale-independent
 	classification.
 

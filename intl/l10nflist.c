@@ -150,6 +150,7 @@ argz_next__ (argz, argz_len, entry)
 
 
 /* Return number of bits set in X.  */
+#ifndef ARCH_POP
 static int pop PARAMS ((int x));
 
 static inline int
@@ -164,6 +165,7 @@ pop (x)
 
   return x;
 }
+#endif
 
 
 struct loaded_l10nfile *
