@@ -2094,7 +2094,7 @@ _dl_map_object (struct link_map *loader, const char *name,
   /* Display information if we are debugging.  */
   if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_FILES, 0)
       && loader != NULL)
-    _dl_debug_printf ((mode & __RTLD_DLOPEN) == 0
+    _dl_debug_printf ((mode & __RTLD_CALLMAP) == 0
 		      ? "\nfile=%s [%lu];  needed by %s [%lu]\n"
 		      : "\nfile=%s [%lu];  dynamically loaded by %s [%lu]\n",
 		      name, nsid, loader->l_name[0]
