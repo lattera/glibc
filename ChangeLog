@@ -1,3 +1,8 @@
+2011-08-12  Ulrich Drepper  <drepper@gmail.com>
+
+	* elf/dl-load.c (_dl_map_object): Show in debug output whether a DSO
+	was a dependency or dynamically loaded.
+
 2011-08-11  Ulrich Drepper  <drepper@gmail.com>
 
 	* intl/l10nflist.c: Allow architecture-specific pop function.

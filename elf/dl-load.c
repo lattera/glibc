@@ -2094,9 +2094,11 @@ _dl_map_object (struct link_map *loader, const char *name,
   /* Display information if we are debugging.  */
   if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_FILES, 0)
       && loader != NULL)
-    _dl_debug_printf ("\nfile=%s [%lu];  needed by %s [%lu]\n", name, nsid,
-			      loader->l_name[0]
-			      ? loader->l_name : rtld_progname, loader->l_ns);
+    _dl_debug_printf ((mode & __RTLD_DLOPEN) == 0
+		      ? "\nfile=%s [%lu];  needed by %s [%lu]\n"
+		      : "\nfile=%s [%lu];  dynamically loaded by %s [%lu]\n",
+		      name, nsid, loader->l_name[0]
+		      ? loader->l_name : rtld_progname, loader->l_ns);
 
 #ifdef SHARED
   /* Give the auditing libraries a chance to change the name before we
