@@ -1,5 +1,6 @@
 /* Handle loading and unloading shared objects for internal libc purposes.
-   Copyright (C) 1999-2002,2004-2006,2009,2010 Free Software Foundation, Inc.
+   Copyright (C) 1999-2002,2004-2006,2009,2010,2011
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Zack Weinberg <zack@rabi.columbia.edu>, 1999.
 
@@ -62,6 +63,8 @@ struct do_dlopen_args
   const char *name;
   /* Opening mode.  */
   int mode;
+  /* This is the caller of the dlopen() function.  */
+  const void *caller_dlopen;
 
   /* Return from do_dlopen.  */
   struct link_map *map;
@@ -83,8 +86,9 @@ do_dlopen (void *ptr)
 {
   struct do_dlopen_args *args = (struct do_dlopen_args *) ptr;
   /* Open and relocate the shared object.  */
-  args->map = GLRO(dl_open) (args->name, args->mode, NULL, __LM_ID_CALLER,
-			     __libc_argc, __libc_argv, __environ);
+  args->map = GLRO(dl_open) (args->name, args->mode, args->caller_dlopen,
+			     __LM_ID_CALLER, __libc_argc, __libc_argv,
+			     __environ);
 }
 
 static void
@@ -153,6 +157,7 @@ __libc_dlopen_mode (const char *name, int mode)
   struct do_dlopen_args args;
   args.name = name;
   args.mode = mode;
+  args.caller_dlopen = RETURN_ADDRESS (0);
 
 #ifdef SHARED
   if (__builtin_expect (_dl_open_hook != NULL, 0))

@@ -1,5 +1,9 @@
 2011-08-13  Ulrich Drepper  <drepper@gmail.com>
 
+	* elf/dl-libc.c (do_dlopen_args): Add caller_dlopen.
+	(do_dlopen): Pass caller_dlopen to dl_open.
+	(__libc_dlopen_mode): Initialize caller_dlopen.
+
 	* intl/l10nflist.c (_nl_normalize_codeset): Make it compile outside
 	of libc.  Make tolower call locale-independent.  Optimize a bit by
 	using isdigit instead of isalnum.
