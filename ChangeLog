@@ -1,3 +1,10 @@
+2011-08-13  Ulrich Drepper  <drepper@gmail.com>
+
+	* intl/l10nflist.c (_nl_normalize_codeset): Make it compile outside
+	of libc.  Make tolower call locale-independent.  Optimize a bit by
+	using isdigit instead of isalnum.
+	* locale/Makefile (locale-CPPFLAGS): Add -DNOT_IN_libc.
+
 2011-08-12  Ulrich Drepper  <drepper@gmail.com>
 
 	* elf/dl-load.c (_dl_map_object): Show in debug output whether a DSO

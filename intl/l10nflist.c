@@ -334,13 +334,18 @@ _nl_normalize_codeset (codeset, name_len)
   char *retval;
   char *wp;
   size_t cnt;
+#ifdef NOT_IN_libc
+  locale_t locale = newlocale (0, "C", NULL);
+#else
+# define locale _nl_C_locobj_ptr
+#endif
 
   for (cnt = 0; cnt < name_len; ++cnt)
-    if (__isalnum_l ((unsigned char) codeset[cnt], _nl_C_locobj_ptr))
+    if (__isalnum_l ((unsigned char) codeset[cnt], locale))
       {
 	++len;
 
-	if (__isalpha_l ((unsigned char) codeset[cnt], _nl_C_locobj_ptr))
+	if (! __isdigit_l ((unsigned char) codeset[cnt], locale))
 	  only_digit = 0;
       }
 
@@ -348,15 +353,14 @@ _nl_normalize_codeset (codeset, name_len)
 
   if (retval != NULL)
     {
+      wp = retval;
       if (only_digit)
-	wp = stpcpy (retval, "iso");
-      else
-	wp = retval;
+	wp = stpcpy (wp, "iso");
 
       for (cnt = 0; cnt < name_len; ++cnt)
-	if (__isalpha_l ((unsigned char) codeset[cnt], _nl_C_locobj_ptr))
-	  *wp++ = tolower ((unsigned char) codeset[cnt]);
-	else if (__isdigit_l ((unsigned char) codeset[cnt], _nl_C_locobj_ptr))
+	if (__isalpha_l ((unsigned char) codeset[cnt], locale))
+	  *wp++ = __tolower_l ((unsigned char) codeset[cnt], locale);
+	else if (__isdigit_l ((unsigned char) codeset[cnt], locale))
 	  *wp++ = codeset[cnt];
 
       *wp = '\0';
