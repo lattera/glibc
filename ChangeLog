@@ -1,3 +1,9 @@
+2011-08-14  Roland McGrath  <roland@hack.frob.com>
+
+	* sysdeps/generic/ldsodefs.h (struct unique_sym): Add a const.
+	* elf/rtld.c (dl_main): Invert order of assignment in last change,
+	to avoid a warning.
+
 2011-08-14  David S. Miller  <davem@davemloft.net>
 
 	* sysdeps/unix/sysv/linux/sparc/bits/resource.h (RLIM_INFINITY,
