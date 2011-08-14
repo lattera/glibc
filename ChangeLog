@@ -1,5 +1,7 @@
 2011-08-14  Roland McGrath  <roland@hack.frob.com>
 
+	* string/strncat.c (STRNCAT): Use prototype definition.
+
 	* locale/Makefile (locale-CPPFLAGS): Renamed CPPFLAGS-locale-programs.
 	(locale-CPPFLAGS): New variable; put LOCALEDIR, LOCALE_ALIAS_PATH and
 	-Iprograms here.
