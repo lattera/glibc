@@ -46,12 +46,6 @@ weak_extern (BP_SYM (_dl_sysdep_start))
 
 extern int __libc_multiple_libcs;	/* Defined in init-first.c.  */
 
-/* Undefine the following for debugging.  */
-/* #define SCOPE_DEBUG 1 */
-#ifdef SCOPE_DEBUG
-static void show_scope (struct link_map *new);
-#endif
-
 /* We must be carefull not to leave us in an inconsistent state.  Thus we
    catch any error and re-raise it after cleaning up.  */
 
@@ -269,10 +263,6 @@ dl_open_worker (void *a)
       (void) _dl_check_map_versions (new->l_searchlist.r_list[i]->l_real,
 				     0, 0);
 
-#ifdef SCOPE_DEBUG
-  show_scope (new);
-#endif
-
 #ifdef SHARED
   /* Auditing checkpoint: we have added all objects.  */
   if (__builtin_expect (GLRO(dl_naudit) > 0, 0))
@@ -414,6 +404,10 @@ dl_open_worker (void *a)
 	  imap->l_scope[cnt + 1] = NULL;
 	  atomic_write_barrier ();
 	  imap->l_scope[cnt] = &new->l_searchlist;
+
+	  /* Print scope information.  */
+	  if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_SCOPES, 0))
+	    _dl_show_scope (imap);
 	}
       /* Only add TLS memory if this object is loaded now and
 	 therefore is not yet initialized.  */
@@ -499,6 +493,10 @@ cannot load any more object with static TLS"));
   if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_FILES, 0))
     _dl_debug_printf ("opening file=%s [%lu]; direct_opencount=%u\n\n",
 		      new->l_name, new->l_ns, new->l_direct_opencount);
+
+  /* Print scope information.  */
+  if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_SCOPES, 0))
+    _dl_show_scope (new);
 }
 
 
@@ -635,33 +633,32 @@ no more namespaces available for dlmopen()"));
 }
 
 
-#ifdef SCOPE_DEBUG
-#include <unistd.h>
-
-static void
-show_scope (struct link_map *new)
+void
+_dl_show_scope (struct link_map *l)
 {
-  int scope_cnt;
+  _dl_debug_printf ("object=%s [%lu]\n",
+		    *l->l_name ? l->l_name : rtld_progname, l->l_ns);
+  if (l->l_scope != NULL)
+    for (int scope_cnt = 0; l->l_scope[scope_cnt] != NULL; ++scope_cnt)
+      {
+	char numbuf[2];
+	unsigned int cnt;
 
-  for (scope_cnt = 0; new->l_scope[scope_cnt] != NULL; ++scope_cnt)
-    {
-      char numbuf[2];
-      unsigned int cnt;
+	numbuf[0] = '0' + scope_cnt;
+	numbuf[1] = '\0';
+	_dl_debug_printf (" scope %s:", numbuf);
 
-      numbuf[0] = '0' + scope_cnt;
-      numbuf[1] = '\0';
-      _dl_printf ("scope %s:", numbuf);
+	for (cnt = 0; cnt < l->l_scope[scope_cnt]->r_nlist; ++cnt)
+	  if (*l->l_scope[scope_cnt]->r_list[cnt]->l_name)
+	    _dl_debug_printf_c (" %s",
+				l->l_scope[scope_cnt]->r_list[cnt]->l_name);
+	  else
+	    _dl_debug_printf_c (" %s", rtld_progname);
 
-      for (cnt = 0; cnt < new->l_scope[scope_cnt]->r_nlist; ++cnt)
-	if (*new->l_scope[scope_cnt]->r_list[cnt]->l_name)
-	  _dl_printf (" %s", new->l_scope[scope_cnt]->r_list[cnt]->l_name);
-	else
-	  _dl_printf (" <main>");
-
-      _dl_printf ("\n");
-    }
+	_dl_debug_printf_c ("\n");
+      }
+  _dl_debug_printf ("\n");
 }
-#endif
 
 #ifdef IS_IN_rtld
 /* Return non-zero if ADDR lies within one of L's segments.  */

@@ -1,5 +1,13 @@
 2011-08-13  Ulrich Drepper  <drepper@gmail.com>
 
+	* elf/dl-open.c: Rename show_scope to _dl_schow_scope and export.
+	(dl_open_worker): Call _dl_show_scope when DL_DEBUG_SCOPES is set.
+	* elf/rtld.c (dl_main): Set l_name of vDSO.
+	Call _dl_show_scope when DL_DEBUG_SCOPES.
+	(process_dl_debug): Recognize scopes flag and also set it for all.
+	* sysdeps/generic/ldsodefs.h: Define DL_DEBUG_SCOPES.
+	Declare _dl_show_scope.
+
 	* elf/dl-libc.c (do_dlopen_args): Add caller_dlopen.
 	(do_dlopen): Pass caller_dlopen to dl_open.
 	(__libc_dlopen_mode): Initialize caller_dlopen.

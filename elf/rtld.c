@@ -1391,7 +1391,7 @@ of this helper program; chances are you did not intend to run this program.\n\
 	      char *copy = malloc (len);
 	      if (copy == NULL)
 		_dl_fatal_printf ("out of memory\n");
-	      l->l_libname->name = memcpy (copy, dsoname, len);
+	      l->l_name = l->l_libname->name = memcpy (copy, dsoname, len);
 	    }
 
 	  /* Add the vDSO to the object list.  */
@@ -2191,6 +2191,15 @@ ERROR: ld.so: object '%s' cannot be loaded as audit interface: %s; ignored.\n",
      malloc will no longer be the one from dl-minimal.c.  */
   GLRO(dl_init_all_dirs) = GL(dl_all_dirs);
 
+  /* Print scope information.  */
+  if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_SCOPES, 0))
+    {
+      _dl_debug_printf ("\nInitial object scopes\n");
+
+      for (struct link_map *l = main_map; l != NULL; l = l->l_next)
+	_dl_show_scope (l);
+    }
+
   if (prelinked)
     {
       if (main_map->l_info [ADDRIDX (DT_GNU_CONFLICT)] != NULL)
@@ -2431,9 +2440,12 @@ process_dl_debug (const char *dl_debug)
 	DL_DEBUG_BINDINGS | DL_DEBUG_IMPCALLS },
       { LEN_AND_STR ("versions"), "display version dependencies",
 	DL_DEBUG_VERSIONS | DL_DEBUG_IMPCALLS },
+      { LEN_AND_STR ("scopes"), "display scope information",
+	DL_DEBUG_SCOPES },
       { LEN_AND_STR ("all"), "all previous options combined",
 	DL_DEBUG_LIBS | DL_DEBUG_RELOC | DL_DEBUG_FILES | DL_DEBUG_SYMBOLS
-	| DL_DEBUG_BINDINGS | DL_DEBUG_VERSIONS | DL_DEBUG_IMPCALLS },
+	| DL_DEBUG_BINDINGS | DL_DEBUG_VERSIONS | DL_DEBUG_IMPCALLS
+	| DL_DEBUG_SCOPES },
       { LEN_AND_STR ("statistics"), "display relocation statistics",
 	DL_DEBUG_STATISTICS },
       { LEN_AND_STR ("unused"), "determined unused DSOs",
