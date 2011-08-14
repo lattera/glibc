@@ -1,3 +1,8 @@
+2011-08-14  David S. Miller  <davem@davemloft.net>
+
+	* sysdeps/unix/sysv/linux/sparc/bits/resource.h (RLIM_INFINITY,
+	RLIM64_INFINITY): Fix 64-bit values for 32-bit sparc.
+
 2011-08-13  Ulrich Drepper  <drepper@gmail.com>
 
 	* elf/dl-open.c: Rename show_scope to _dl_schow_scope and export.
