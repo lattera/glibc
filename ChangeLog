@@ -1,5 +1,12 @@
 2011-08-14  Roland McGrath  <roland@hack.frob.com>
 
+	* locale/Makefile (locale-CPPFLAGS): Renamed CPPFLAGS-locale-programs.
+	(locale-CPPFLAGS): New variable; put LOCALEDIR, LOCALE_ALIAS_PATH and
+	-Iprograms here.
+	(cppflags-iterator.mk sequence): Use locale-programs in place of nonlib.
+	(localedef-modules): Add localedef.
+	(locale-modules): Add locale.
+
 	* sysdeps/generic/ldsodefs.h (struct unique_sym): Add a const.
 	* elf/rtld.c (dl_main): Invert order of assignment in last change,
 	to avoid a warning.
