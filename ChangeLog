@@ -5,6 +5,11 @@
 
 2011-08-14  Roland McGrath  <roland@hack.frob.com>
 
+	* sysdeps/i386/i486/bits/atomic.h
+	(__arch_compare_and_exchange_val_64_acq): Use RET alone at end of
+	statement expression, so as to suppress "set but not used" warning.
+	(__arch_c_compare_and_exchange_val_64_acq): Likewise.
+
 	* string/strncat.c (STRNCAT): Use prototype definition.
 
 	* locale/Makefile (locale-CPPFLAGS): Renamed CPPFLAGS-locale-programs.

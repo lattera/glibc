@@ -1,4 +1,4 @@
-/* Copyright (C) 2002-2004, 2006, 2007, 2009 Free Software Foundation, Inc.
+/* Copyright (C) 2002-2004,2006,2007,2009,2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -125,10 +125,18 @@ typedef uintmax_t uatomic_max_t;
    really going to be used the code below can be used on Intel Pentium
    and later, but NOT on i486.  */
 #if 1
-# define __arch_compare_and_exchange_val_64_acq(mem, newval, oldval) \
-  ({ __typeof (*mem) ret = *(mem); abort (); ret = (newval); ret = (oldval); })
-# define __arch_c_compare_and_exchange_val_64_acq(mem, newval, oldval) \
-  ({ __typeof (*mem) ret = *(mem); abort (); ret = (newval); ret = (oldval); })
+# define __arch_compare_and_exchange_val_64_acq(mem, newval, oldval)	      \
+  ({ __typeof (*mem) ret = *(mem);					      \
+     abort ();								      \
+     ret = (newval);							      \
+     ret = (oldval);							      \
+     ret; })
+# define __arch_c_compare_and_exchange_val_64_acq(mem, newval, oldval)	      \
+  ({ __typeof (*mem) ret = *(mem);					      \
+     abort ();								      \
+     ret = (newval);							      \
+     ret = (oldval);							      \
+     ret; })
 #else
 # ifdef __PIC__
 #  define __arch_compare_and_exchange_val_64_acq(mem, newval, oldval) \
