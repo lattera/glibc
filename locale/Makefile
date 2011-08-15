@@ -60,10 +60,11 @@ vpath %.c programs ../crypt
 vpath %.h programs
 vpath %.gperf programs
 
-localedef-modules	:= $(categories:%=ld-%) charmap linereader locfile \
+localedef-modules	:= localedef $(categories:%=ld-%) \
+			   charmap linereader locfile \
 			   repertoire locarchive
 localedef-aux		:= md5
-locale-modules		:= locale-spec
+locale-modules		:= locale locale-spec
 lib-modules		:= charmap-dir simple-hash xmalloc xstrdup
 
 
@@ -91,22 +92,27 @@ endif
 
 localepath = "$(localedir):$(i18ndir)"
 
-locale-CPPFLAGS := -DLOCALE_PATH='$(localepath)' \
-		   -DLOCALEDIR='"$(localedir)"' \
-		   -DLOCALE_ALIAS_PATH='"$(msgcatdir)"' \
-		   -DCHARMAP_PATH='"$(i18ndir)/charmaps"' \
-		   -DREPERTOIREMAP_PATH='"$(i18ndir)/repertoiremaps"' \
-		   -DLOCSRCDIR='"$(i18ndir)/locales"' -DHAVE_CONFIG_H \
-		   -Iprograms -DNOT_IN_libc
+# -Iprograms doesn't really belong here, but this gets it at the head
+# of the list instead of the tail, where CPPFLAGS-$(lib) gets added.
+# We need it before the standard -I's to see programs/config.h first.
+locale-CPPFLAGS = -DLOCALEDIR='"$(localedir)"' \
+		  -DLOCALE_ALIAS_PATH='"$(msgcatdir)"' \
+		  -Iprograms
+
+CPPFLAGS-locale-programs = -DLOCALE_PATH='$(localepath)' \
+			   -DCHARMAP_PATH='"$(i18ndir)/charmaps"' \
+			   -DREPERTOIREMAP_PATH='"$(i18ndir)/repertoiremaps"' \
+			   -DLOCSRCDIR='"$(i18ndir)/locales"' \
+			   -DHAVE_CONFIG_H -DNOT_IN_libc
 
 CFLAGS-charmap.c = -Wno-write-strings -Wno-char-subscripts
 CFLAGS-locfile.c = -Wno-write-strings -Wno-char-subscripts
 CFLAGS-charmap-dir.c = -Wno-write-strings
 
-# This makes sure -DNOT_IN_libc is passed for all these modules.
+# This makes sure -DNOT_IN_libc et al are passed for all these modules.
 cpp-srcs-left := $(addsuffix .c,$(localedef-modules) $(localedef-aux) \
 				$(locale-modules) $(lib-modules))
-lib := nonlib
+lib := locale-programs
 include $(patsubst %,$(..)cppflags-iterator.mk,$(cpp-srcs-left))
 
 # Depend on libc.so so a DT_NEEDED is generated in the shared objects.
