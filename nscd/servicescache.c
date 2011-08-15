@@ -102,7 +102,7 @@ cache_addserv (struct database_dyn *db, int fd, request_header *req,
 	{
 	  /* We have no data.  This means we send the standard reply for this
 	     case.  */
-	  total = sizeof (notfound);
+	  written = total = sizeof (notfound);
 
 	  if (fd != -1)
 	    written = TEMP_FAILURE_RETRY (send (fd, &notfound, total,

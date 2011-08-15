@@ -1,3 +1,8 @@
+2011-08-14  Ulrich Drepper  <drepper@gmail.com>
+
+	* nscd/servicescache.c (cache_addserv): Make sure written is always
+	initialized.
+
 2011-08-13  Ulrich Drepper  <drepper@gmail.com>
 
 	* elf/dl-open.c: Rename show_scope to _dl_schow_scope and export.
