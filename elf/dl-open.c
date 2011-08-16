@@ -288,6 +288,10 @@ dl_open_worker (void *a)
   r->r_state = RT_CONSISTENT;
   _dl_debug_state ();
 
+  /* Print scope information.  */
+  if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_SCOPES, 0))
+    _dl_show_scope (new, 0);
+
   /* Only do lazy relocation if `LD_BIND_NOW' is not set.  */
   int reloc_mode = mode & __RTLD_AUDIT;
   if (GLRO(dl_lazy))
@@ -407,7 +411,7 @@ dl_open_worker (void *a)
 
 	  /* Print scope information.  */
 	  if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_SCOPES, 0))
-	    _dl_show_scope (imap);
+	    _dl_show_scope (imap, cnt);
 	}
       /* Only add TLS memory if this object is loaded now and
 	 therefore is not yet initialized.  */
@@ -493,10 +497,6 @@ cannot load any more object with static TLS"));
   if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_FILES, 0))
     _dl_debug_printf ("opening file=%s [%lu]; direct_opencount=%u\n\n",
 		      new->l_name, new->l_ns, new->l_direct_opencount);
-
-  /* Print scope information.  */
-  if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_SCOPES, 0))
-    _dl_show_scope (new);
 }
 
 
@@ -634,12 +634,12 @@ no more namespaces available for dlmopen()"));
 
 
 void
-_dl_show_scope (struct link_map *l)
+_dl_show_scope (struct link_map *l, int from)
 {
   _dl_debug_printf ("object=%s [%lu]\n",
 		    *l->l_name ? l->l_name : rtld_progname, l->l_ns);
   if (l->l_scope != NULL)
-    for (int scope_cnt = 0; l->l_scope[scope_cnt] != NULL; ++scope_cnt)
+    for (int scope_cnt = from; l->l_scope[scope_cnt] != NULL; ++scope_cnt)
       {
 	_dl_debug_printf (" scope %u:", scope_cnt);
 

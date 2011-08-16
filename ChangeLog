@@ -1,5 +1,12 @@
 2011-08-16  Ulrich Drepper  <drepper@gmail.com>
 
+	* elf/dl-open.c (_dl_show_scope): Take additional parameter which
+	specifies first scope to show.
+	(dl_open_worker): Update callers.  Move printing scope of new
+	object to before the relocation.
+	* rtld.c (dl_main): Update _dl_show_scope call.
+	* sysdeps/generic/ldsodefs.h: Update declaration.
+
 	* elf/dl-open.c (_dl_show_scope): Use _dl_debug_printf to generate the
 	string for the scope number.
 

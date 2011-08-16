@@ -2197,7 +2197,7 @@ ERROR: ld.so: object '%s' cannot be loaded as audit interface: %s; ignored.\n",
       _dl_debug_printf ("\nInitial object scopes\n");
 
       for (struct link_map *l = main_map; l != NULL; l = l->l_next)
-	_dl_show_scope (l);
+	_dl_show_scope (l, 0);
     }
 
   if (prelinked)

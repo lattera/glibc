@@ -1106,7 +1106,7 @@ extern int _dl_addr_inside_object (struct link_map *l, const ElfW(Addr) addr)
      internal_function attribute_hidden;
 
 /* Show show of an object.  */
-extern void _dl_show_scope (struct link_map *new);
+extern void _dl_show_scope (struct link_map *new, int from);
 
 __END_DECLS
 
