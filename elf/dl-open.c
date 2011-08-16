@@ -641,14 +641,9 @@ _dl_show_scope (struct link_map *l)
   if (l->l_scope != NULL)
     for (int scope_cnt = 0; l->l_scope[scope_cnt] != NULL; ++scope_cnt)
       {
-	char numbuf[2];
-	unsigned int cnt;
+	_dl_debug_printf (" scope %lu:", scope_cnt);
 
-	numbuf[0] = '0' + scope_cnt;
-	numbuf[1] = '\0';
-	_dl_debug_printf (" scope %s:", numbuf);
-
-	for (cnt = 0; cnt < l->l_scope[scope_cnt]->r_nlist; ++cnt)
+	for (unsigned int cnt = 0; cnt < l->l_scope[scope_cnt]->r_nlist; ++cnt)
 	  if (*l->l_scope[scope_cnt]->r_list[cnt]->l_name)
 	    _dl_debug_printf_c (" %s",
 				l->l_scope[scope_cnt]->r_list[cnt]->l_name);
