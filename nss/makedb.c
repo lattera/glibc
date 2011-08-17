@@ -619,7 +619,8 @@ compute_tables (void)
     valstrtab[valstrlen++] = '\0';
   twalk (valstrtree, copy_valstr);
 
-  for (struct database *db = databases; db != NULL; db = db->next)
+  static struct database *db;
+  for (db = databases; db != NULL; db = db->next)
     if (db->nentries != 0)
       {
 	++ndatabases;
@@ -640,10 +641,10 @@ compute_tables (void)
 	db->keyidxtab = db->hashtable + nhashentries_max;
 	db->keystrtab = (char *) (db->keyidxtab + nhashentries_max);
 
-	size_t max_chainlength;
-	char *wp;
-	size_t nhashentries;
-	bool copy_string = false;
+	static size_t max_chainlength;
+	static char *wp;
+	static size_t nhashentries;
+	static bool copy_string;
 
 	void add_key(const void *nodep, const VISIT which, const int depth)
 	{
@@ -679,6 +680,7 @@ compute_tables (void)
 	  max_chainlength = MAX (max_chainlength, chainlength);
 	}
 
+	copy_string = false;
 	nhashentries = nhashentries_min;
 	for (size_t cnt = 0; cnt < TEST_RANGE; ++cnt)
 	  {
