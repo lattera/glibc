@@ -20,6 +20,8 @@
 
 #include <alloca.h>
 #include <argp.h>
+#include <assert.h>
+#include <dirent.h>
 #include <elf.h>
 #include <errno.h>
 #include <error.h>
@@ -83,7 +85,7 @@ static int memfd;
 static char *exe;
 
 /* Local functions.  */
-static int get_process_info (pid_t pid);
+static int get_process_info (int dfd, long int pid);
 
 
 int
@@ -101,33 +103,96 @@ main (int argc, char *argv[])
       return 1;
     }
 
+  assert (sizeof (pid_t) == sizeof (int)
+	  || sizeof (pid_t) == sizeof (long int));
   char *endp;
   errno = 0;
-  pid_t pid = strtoul (argv[remaining], &endp, 10);
-  if ((pid == ULONG_MAX && errno == ERANGE) || *endp != '\0')
+  long int pid = strtol (argv[remaining], &endp, 10);
+  if (pid < 0 || (pid == ULONG_MAX && errno == ERANGE) || *endp != '\0'
+      || (sizeof (pid_t) < sizeof (pid) && pid > INT_MAX))
     error (EXIT_FAILURE, 0, gettext ("invalid process ID '%s'"),
 	   argv[remaining]);
 
   /* Determine the program name.  */
-  char buf[11 + 3 * sizeof (pid)];
-  snprintf (buf, sizeof (buf), "/proc/%lu/exe", (unsigned long int) pid);
+  char buf[7 + 3 * sizeof (pid)];
+  snprintf (buf, sizeof (buf), "/proc/%lu", pid);
+  int dfd = open (buf, O_RDONLY | O_DIRECTORY);
+  if (dfd == -1)
+    error (EXIT_FAILURE, errno, gettext ("cannot open %s"), buf);
+
   size_t exesize = 1024;
+#ifdef PATH_MAX
+  exesize = PATH_MAX;
+#endif
   exe = alloca (exesize);
   ssize_t nexe;
-  while ((nexe = readlink (buf, exe, exesize)) == exesize)
+  while ((nexe = readlinkat (dfd, "exe", exe, exesize)) == exesize)
     extend_alloca (exe, exesize, 2 * exesize);
   if (nexe == -1)
     exe = (char *) "<program name undetermined>";
   else
     exe[nexe] = '\0';
 
-  if (ptrace (PTRACE_ATTACH, pid, NULL, NULL) != 0)
-    error (EXIT_FAILURE, errno, gettext ("cannot attach to process %lu"),
-	   (unsigned long int) pid);
+  /* Stop all threads since otherwise the list of loaded modules might
+     change while we are reading it.  */
+  struct thread_list
+  {
+    pid_t tid;
+    struct thread_list *next;
+  } *thread_list = NULL;
 
-  int status = get_process_info (pid);
+  int taskfd = openat (dfd, "task", O_RDONLY | O_DIRECTORY | O_CLOEXEC);
+  if (taskfd == 1)
+    error (EXIT_FAILURE, errno, gettext ("cannot open %s/task"), buf);
+  DIR *dir = fdopendir (taskfd);
+  if (dir == NULL)
+    error (EXIT_FAILURE, errno, gettext ("cannot prepare reading %s/task"),
+	   buf);
 
-  ptrace (PTRACE_DETACH, pid, NULL, NULL);
+  struct dirent64 *d;
+  while ((d = readdir64 (dir)) != NULL)
+    {
+      if (! isdigit (d->d_name[0]))
+	continue;
+
+      errno = 0;
+      long int tid = strtol (d->d_name, &endp, 10);
+      if (tid < 0 || (tid == ULONG_MAX && errno == ERANGE) || *endp != '\0'
+	  || (sizeof (pid_t) < sizeof (pid) && tid > INT_MAX))
+	error (EXIT_FAILURE, 0, gettext ("invalid thread ID '%s'"),
+	       d->d_name);
+
+      if (ptrace (PTRACE_ATTACH, tid, NULL, NULL) != 0)
+	{
+	  /* There might be a race between reading the directory and
+	     threads terminating.  Ignore errors attaching to unknown
+	     threads unless this is the main thread.  */
+	  if (errno == ESRCH && tid != pid)
+	    continue;
+
+	  error (EXIT_FAILURE, errno, gettext ("cannot attach to process %lu"),
+		 tid);
+	}
+
+      struct thread_list *newp = alloca (sizeof (*newp));
+      newp->tid = tid;
+      newp->next = thread_list;
+      thread_list = newp;
+    }
+
+  closedir (dir);
+
+  int status = get_process_info (dfd, pid);
+
+  assert (thread_list != NULL);
+  do
+    {
+      ptrace (PTRACE_DETACH, thread_list->tid, NULL, NULL);
+      thread_list = thread_list->next;
+    }
+  while (thread_list != NULL);
+
+  close (dfd);
 
   return status;
 }
@@ -167,22 +232,18 @@ warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\
 
 
 static int
-get_process_info (pid_t pid)
+get_process_info (int dfd, long int pid)
 {
-  char buf[12 + 3 * sizeof (pid)];
-
-  snprintf (buf, sizeof (buf), "/proc/%lu/mem", (unsigned long int) pid);
-  memfd = open (buf, O_RDONLY);
+  memfd = openat (dfd, "mem", O_RDONLY);
   if (memfd == -1)
     goto no_info;
 
-  snprintf (buf, sizeof (buf), "/proc/%lu/exe", (unsigned long int) pid);
-  int fd = open (buf, O_RDONLY);
+  int fd = openat (dfd, "exe", O_RDONLY);
   if (fd == -1)
     {
     no_info:
       error (0, errno, gettext ("cannot get information about process %lu"),
-	     (unsigned long int) pid);
+	     pid);
       return EXIT_FAILURE;
     }
 
@@ -198,13 +259,11 @@ get_process_info (pid_t pid)
 
   if (memcmp (uehdr.ehdr32.e_ident, ELFMAG, SELFMAG) != 0)
     {
-      error (0, 0, gettext ("process %lu is no ELF program"),
-	     (unsigned long int) pid);
+      error (0, 0, gettext ("process %lu is no ELF program"), pid);
       return EXIT_FAILURE;
     }
 
-  snprintf (buf, sizeof (buf), "/proc/%lu/auxv", (unsigned long int) pid);
-  fd = open (buf, O_RDONLY);
+  fd = openat (dfd, "auxv", O_RDONLY);
   if (fd == -1)
     goto no_info;
 
@@ -227,8 +286,14 @@ get_process_info (pid_t pid)
 
   close (fd);
 
+  int retval;
   if (uehdr.ehdr32.e_ident[EI_CLASS] == ELFCLASS32)
-    return find_maps32 (pid, &uehdr.ehdr32, auxv, auxv_size);
+    retval = find_maps32 (pid, &uehdr.ehdr32, auxv, auxv_size);
   else
-    return find_maps64 (pid, &uehdr.ehdr64, auxv, auxv_size);
+    retval = find_maps64 (pid, &uehdr.ehdr64, auxv, auxv_size);
+
+  free (auxv);
+  close (memfd);
+
+  return retval;
 }
