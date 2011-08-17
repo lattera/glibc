@@ -274,7 +274,7 @@ get_process_info (int dfd, long int pid)
       auxv_size += 512;
       auxv = xrealloc (auxv, auxv_size);
 
-      ssize_t n = read (fd, auxv, auxv_size);
+      ssize_t n = pread (fd, auxv, auxv_size, 0);
       if (n < 0)
 	goto no_info;
       if (n < auxv_size)

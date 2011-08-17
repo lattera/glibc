@@ -1,5 +1,9 @@
 2011-08-17  Ulrich Drepper  <drepper@gmail.com>
 
+	* elf/pldd-xx.c (r_debug): Explicitly add padding when needed.
+	* elf/pldd.c (get_process_info): Use pread to re-read auxiliary vector
+	if buffer was too small.
+
 	* elf/pldd.c (main): Attach to all threads in the process.
 	Rewrite /proc handling to use *at functions.
 
