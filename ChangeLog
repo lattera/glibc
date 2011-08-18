@@ -1,3 +1,8 @@
+2011-08-17  Ulrich Drepper  <drepper@gmail.com>
+
+	* Makeconfig (override CFLAGS): Add library-specific CFLAGS.
+	* resolv/Makefile: Define CFLAGS-libresolv.
+
 2011-08-17  Andreas Schwab  <schwab@redhat.com>
 
 	* nss/makedb.c (compute_tables): Make variables used in nested
@@ -18,7 +23,7 @@
 	specifies first scope to show.
 	(dl_open_worker): Update callers.  Move printing scope of new
 	object to before the relocation.
-	* rtld.c (dl_main): Update _dl_show_scope call.
+	* elf/rtld.c (dl_main): Update _dl_show_scope call.
 	* sysdeps/generic/ldsodefs.h: Update declaration.
 
 	* elf/dl-open.c (_dl_show_scope): Use _dl_debug_printf to generate the
@@ -56,7 +61,7 @@
 
 2011-08-13  Ulrich Drepper  <drepper@gmail.com>
 
-	* elf/dl-open.c: Rename show_scope to _dl_schow_scope and export.
+	* elf/dl-open.c: Rename show_scope to _dl_show_scope and export.
 	(dl_open_worker): Call _dl_show_scope when DL_DEBUG_SCOPES is set.
 	* elf/rtld.c (dl_main): Set l_name of vDSO.
 	Call _dl_show_scope when DL_DEBUG_SCOPES.

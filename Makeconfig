@@ -708,7 +708,9 @@ CPPFLAGS = $($(subdir)-CPPFLAGS) $(+includes) $(defines) \
 override CFLAGS	= -std=gnu99 $(gnu89-inline-CFLAGS) \
 		  $(filter-out %frame-pointer,$(+cflags)) $(+gccwarn-c) \
 		  $(sysdep-CFLAGS) $(CFLAGS-$(suffix $@)) $(CFLAGS-$(<F)) \
-		  $(CFLAGS-$(@F))
+		  $(CFLAGS-$(@F)) \
+		  $(foreach lib,$(libof-$(basename $(@F))) \
+				$(libof-$(<F)) $(libof-$(@F)),$(CFLAGS-$(lib)))
 override CXXFLAGS = $(c++-sysincludes) \
 		    $(filter-out %frame-pointer,$(+cflags)) $(sysdep-CFLAGS) \
 		    $(CFLAGS-$(suffix $@)) $(CFLAGS-$(<F)) $(CFLAGS-$(@F))

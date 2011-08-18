@@ -76,6 +76,9 @@ CPPFLAGS += -Dgethostbyname=res_gethostbyname \
 	    -Dgetnetbyname=res_getnetbyname \
 	    -Dgetnetbyaddr=res_getnetbyaddr
 
+ifeq (yes,$(have-ssp))
+CFLAGS-libresolv += -fstack-protector
+endif
 CFLAGS-res_hconf.c = -fexceptions
 
 # The BIND code elicits some harmless warnings.
