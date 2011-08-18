@@ -33,6 +33,11 @@ ifeq ($(subdir),nscd)
 nscd-modules += libc-do-syscall
 endif
 
+ifeq ($(subdir),nss)
+libnss_db-sysdep_routines += libc-do-syscall
+libnss_db-shared-only-routines += libc-do-syscall
+endif
+
 ifeq ($(subdir),posix)
 LDFLAGS-tst-rfc3484 += $(common-objpfx)csu/libc-do-syscall.o
 LDFLAGS-tst-rfc3484-2 += $(common-objpfx)csu/libc-do-syscall.o
