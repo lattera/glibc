@@ -27,8 +27,9 @@
 	.align 16
 	cfi_startproc
 _dl_runtime_resolve:
+	cfi_adjust_cfa_offset(16) # Incorporate PLT
 	subq $56,%rsp
-	cfi_adjust_cfa_offset(72) # Incorporate PLT
+	cfi_adjust_cfa_offset(56)
 	movq %rax,(%rsp)	# Preserve registers otherwise clobbered.
 	movq %rcx, 8(%rsp)
 	movq %rdx, 16(%rsp)

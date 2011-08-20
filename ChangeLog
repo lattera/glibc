@@ -1,5 +1,8 @@
 2011-08-20  Ulrich Drepper  <drepper@gmail.com>
 
+	* sysdeps/x86_64/dl-trampoline.S (_dl_runtime_resolve): Fix CFI for
+	the very first instruction.
+
 	* sysdeps/x86_64/dl-trampoline.h: If MORE_CODE is defined, restore
 	the CFI state in the end.
 	* sysdeps/x86_64/dl-trampoline.S: Define MORE_CODE before first
