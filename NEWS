@@ -1,4 +1,4 @@
-GNU C Library NEWS -- history of user-visible changes.  2011-8-8
+GNU C Library NEWS -- history of user-visible changes.  2011-8-20
 Copyright (C) 1992-2009, 2010, 2011 Free Software Foundation, Inc.
 See the end for copying conditions.
 
@@ -9,7 +9,7 @@ Version 2.15
 
 * The following bugs are resolved with this release:
 
-  9696, 12868, 12852, 12874, 12885, 12907, 12922, 12935, 13007, 13021
+  9696, 12868, 12852, 12874, 12885, 12907, 12922, 12935, 13007, 13021, 13114
 
 * New program pldd to list loaded object of a process
   Implemented by Ulrich Drepper.

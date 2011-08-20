@@ -1,3 +1,9 @@
+2011-08-20  Ulrich Drepper  <drepper@gmail.com>
+
+	[BZ #13114]
+	* stdio-common/Makefile (tests): Add bug24.
+	* stdio-common/bug24.c: New file.
+
 2011-08-19  Andreas Jaeger  <aj@suse.de>
 
 	[BZ #13114]
