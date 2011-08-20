@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2007 Free Software Foundation, Inc.
+/* Copyright (C) 2002,2003,2007,2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -27,9 +27,17 @@
 /* Minimal stack size after allocating thread descriptor and guard size.  */
 #define MINIMAL_REST_STACK	2048
 
-/* Alignment requirement for TCB.  Need to store post-AVX vector registers
-   in the TCB and we want the storage to be aligned at 32-byte.  */
-#define TCB_ALIGNMENT		32
+/* Alignment requirement for TCB.
+
+   We need to store post-AVX vector registers in the TCB and we want the
+   storage to be aligned to at least 32 bytes.
+
+   Some processors such as Intel Atom pay a big penalty on every
+   access using a segment override if that segment's base is not
+   aligned to the size of a cache line.  (See Intel 64 and IA-32
+   Architectures Optimization Reference Manual, section 13.3.3.3,
+   "Segment Base".)  On such machines, a cache line is 64 bytes.  */
+#define TCB_ALIGNMENT		64
 
 
 /* Location of current stack frame.  The frame pointer is not usable.  */

@@ -1,3 +1,8 @@
+2011-08-14  Roland McGrath  <roland@hack.frob.com>
+
+	* sysdeps/i386/pthreaddef.h (TCB_ALIGNMENT): Set to 64, optimal on Atom.
+	* sysdeps/x86_64/pthreaddef.h (TCB_ALIGNMENT): Likewise.
+
 2011-08-08  Andreas Schwab  <schwab@redhat.com>
 
 	* sysdeps/unix/sysv/linux/x86_64/cancellation.S: Maintain aligned
