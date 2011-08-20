@@ -158,14 +158,15 @@ L(have_avx):
 1:	js	L(no_avx)
 
 #  define RESTORE_AVX
+#  define MORE_CODE
 #  include "dl-trampoline.h"
 
 	.align 16
 L(no_avx):
 # endif
 
-#  undef RESTORE_AVX
-#  include "dl-trampoline.h"
+# undef RESTORE_AVX
+# include "dl-trampoline.h"
 
 	cfi_endproc
 	.size _dl_runtime_profile, .-_dl_runtime_profile

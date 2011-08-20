@@ -1,6 +1,6 @@
 /* Partial PLT profile trampoline to save and restore x86-64 vector
    registers.
-   Copyright (C) 2009 Free Software Foundation, Inc.
+   Copyright (C) 2009, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -195,14 +195,14 @@
 	   _dl_call_pltexit.  The La_x86_64_regs is being pointed by rsp now,
 	   so we just need to allocate the sizeof(La_x86_64_retval) space on
 	   the stack, since the alignment has already been taken care of. */
-# ifdef RESTORE_AVX
+#ifdef RESTORE_AVX
 	/* sizeof(La_x86_64_retval).  Need extra space for 2 SSE
 	   registers to detect if xmm0/xmm1 registers are changed
 	   by audit module.  */
 	subq $(LRV_SIZE + XMM_SIZE*2), %rsp
-# else
+#else
 	subq $LRV_SIZE, %rsp	# sizeof(La_x86_64_retval)
-# endif
+#endif
 	movq %rsp, %rcx		# La_x86_64_retval argument to %rcx.
 
 	/* Fill in the La_x86_64_retval structure.  */
@@ -212,7 +212,7 @@
 	movaps %xmm0, LRV_XMM0_OFFSET(%rcx)
 	movaps %xmm1, LRV_XMM1_OFFSET(%rcx)
 
-# ifdef RESTORE_AVX
+#ifdef RESTORE_AVX
 	/* This is to support AVX audit modules.  */
 	vmovdqu %ymm0, LRV_VECTOR0_OFFSET(%rcx)
 	vmovdqu %ymm1, LRV_VECTOR1_OFFSET(%rcx)
@@ -221,14 +221,14 @@
 	   by audit module.  */
 	vmovdqa %xmm0,		  (LRV_SIZE)(%rcx)
 	vmovdqa %xmm1, (LRV_SIZE + XMM_SIZE)(%rcx)
-# endif
+#endif
 
 	fstpt LRV_ST0_OFFSET(%rcx)
 	fstpt LRV_ST1_OFFSET(%rcx)
 
 	movq 24(%rbx), %rdx	# La_x86_64_regs argument to %rdx.
 	movq 40(%rbx), %rsi	# Copy args pushed by PLT in register.
-        movq 32(%rbx), %rdi	# %rdi: link_map, %rsi: reloc_index
+	movq 32(%rbx), %rdi	# %rdi: link_map, %rsi: reloc_index
 	call _dl_call_pltexit
 
 	/* Restore return registers.  */
@@ -238,7 +238,7 @@
 	movaps LRV_XMM0_OFFSET(%rsp), %xmm0
 	movaps LRV_XMM1_OFFSET(%rsp), %xmm1
 
-# ifdef RESTORE_AVX
+#ifdef RESTORE_AVX
 	/* Check if xmm0/xmm1 registers are changed by audit module.  */
 	vpcmpeqq (LRV_SIZE)(%rsp), %xmm0, %xmm2
 	vpmovmskb %xmm2, %esi
@@ -253,7 +253,7 @@
 	vmovdqu LRV_VECTOR1_OFFSET(%rsp), %ymm1
 
 1:
-# endif
+#endif
 
 	fldt LRV_ST1_OFFSET(%rsp)
 	fldt LRV_ST0_OFFSET(%rsp)
@@ -267,3 +267,10 @@
 				# (eats the reloc index and link_map)
 	cfi_adjust_cfa_offset(-48)
 	retq
+
+#ifdef MORE_CODE
+	cfi_adjust_cfa_offset(48)
+	cfi_rel_offset(%rbx, 0)
+	cfi_def_cfa_register(%rbx)
+# undef MORE_CODE
+#endif

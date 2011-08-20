@@ -1,3 +1,11 @@
+2011-08-20  Ulrich Drepper  <drepper@gmail.com>
+
+	* sysdeps/x86_64/dl-trampoline.h: If MORE_CODE is defined, restore
+	the CFI state in the end.
+	* sysdeps/x86_64/dl-trampoline.S: Define MORE_CODE before first
+	inclusion of dl-trampoline.h.
+	Based on a patch by Jiri Olsa <jolsa@redhat.com>.
+
 2011-08-19  Andreas Schwab  <schwab@redhat.com>
 
 	* sysdeps/powerpc/fpu/libm-test-ulps: Relax ctan (0.75 + 1.25 i)
