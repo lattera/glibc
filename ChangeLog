@@ -1,6 +1,9 @@
 2011-08-20  Ulrich Drepper  <drepper@gmail.com>
 
-	* nss/nss_files/files-alias.c (get_next_alias): Use feof_unlocked.
+	* nss/nss_files/files-alias.c (get_next_alias): Use feof_unlocked
+	and fgetc_unlocked.
+	* nss/nss_files/files-key.c (search): Use fgets_unlocked and
+	getc_unlocked.
 
 	* elf/dl-open.c (add_to_global): Report additions to the global scope
 	for LD_DEBUG=scopes.

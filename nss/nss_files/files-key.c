@@ -1,5 +1,5 @@
 /* Public key file parser in nss_files module.
-   Copyright (C) 1996, 1997, 1998, 2006 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998, 2006, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -33,9 +33,7 @@ extern int xdecrypt (char *, char *);
 static enum nss_status
 search (const char *netname, char *result, int *errnop, int secret)
 {
-  FILE *stream;
-
-  stream = fopen (DATAFILE, "r");
+  FILE *stream = fopen (DATAFILE, "re");
   if (stream == NULL)
     return errno == EAGAIN ? NSS_STATUS_TRYAGAIN : NSS_STATUS_UNAVAIL;
 
@@ -46,7 +44,7 @@ search (const char *netname, char *result, int *errnop, int secret)
       char *save_ptr;
 
       buffer[sizeof (buffer) - 1] = '\xff';
-      p = fgets (buffer, sizeof (buffer), stream);
+      p = fgets_unlocked (buffer, sizeof (buffer), stream);
       if (p == NULL)
 	{
 	  /* End of file or read error.  */
@@ -58,7 +56,7 @@ search (const char *netname, char *result, int *errnop, int secret)
 	{
 	  /* Invalid line in file?  Skip remainder of line.  */
 	  if (buffer[sizeof (buffer) - 2] != '\0')
-	    while (getc (stream) != '\n')
+	    while (getc_unlocked (stream) != '\n')
 	      continue;
 	  continue;
 	}

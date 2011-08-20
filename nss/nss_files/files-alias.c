@@ -335,7 +335,7 @@ get_next_alias (const char *match, struct aliasent *result,
 		     just read character.  */
 		  int ch;
 
-		  ch = fgetc (stream);
+		  ch = fgetc_unlocked (stream);
 		  if (ch == EOF || ch == '\n' || !isspace (ch))
 		    {
 		      size_t cnt;
