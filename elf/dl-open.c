@@ -152,6 +152,11 @@ add_to_global (struct link_map *new)
 	{
 	  map->l_global = 1;
 	  ns->_ns_main_searchlist->r_list[new_nlist++] = map;
+
+	  /* We modify the global scope.  Report this.  */
+	  if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_SCOPES, 0))
+	    _dl_debug_printf ("\nadd %s [%lu] to global scope\n",
+			      map->l_name, map->l_ns);
 	}
     }
   atomic_write_barrier ();
@@ -345,6 +350,7 @@ dl_open_worker (void *a)
   for (unsigned int i = 0; i < new->l_searchlist.r_nlist; ++i)
     {
       struct link_map *imap = new->l_searchlist.r_list[i];
+      int from_scope = 0;
 
       /* If the initializer has been called already, the object has
 	 not been loaded here and now.  */
@@ -409,9 +415,8 @@ dl_open_worker (void *a)
 	  atomic_write_barrier ();
 	  imap->l_scope[cnt] = &new->l_searchlist;
 
-	  /* Print scope information.  */
-	  if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_SCOPES, 0))
-	    _dl_show_scope (imap, cnt);
+	  /* Print only new scope information.  */
+	  from_scope = cnt;
 	}
       /* Only add TLS memory if this object is loaded now and
 	 therefore is not yet initialized.  */
@@ -431,6 +436,10 @@ dl_open_worker (void *a)
 	  /* We have to bump the generation counter.  */
 	  any_tls = true;
 	}
+
+      /* Print scope information.  */
+      if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_SCOPES, 0))
+	_dl_show_scope (imap, from_scope);
     }
 
   /* Bump the generation number if necessary.  */
