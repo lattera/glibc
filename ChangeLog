@@ -1,3 +1,8 @@
+2011-08-19  Andreas Schwab  <schwab@redhat.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/scandir64.c: Renamed
+	from sysdeps/unix/sysv/linux/powerpc/scandir64.c.
+
 2011-08-14  David S. Miller  <davem@firepit.lan>
 
 	* sysdeps/unix/sysv/linux/Makefile (CFLAGS-tst-writev.c): The
