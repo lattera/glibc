@@ -1,5 +1,7 @@
 2011-08-20  Ulrich Drepper  <drepper@gmail.com>
 
+	* nss/nss_files/files-alias.c (get_next_alias): Use feof_unlocked.
+
 	* elf/dl-open.c (add_to_global): Report additions to the global scope
 	for LD_DEBUG=scopes.
 	(dl_open_worker): Also print scope of newly loaded dependencies.
