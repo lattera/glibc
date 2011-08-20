@@ -17,7 +17,7 @@
 	* sysdeps/unix/sysv/linux/powerpc/powerpc32/scandir64.c: Renamed
 	from sysdeps/unix/sysv/linux/powerpc/scandir64.c.
 
-2011-08-14  David S. Miller  <davem@firepit.lan>
+2011-08-14  David S. Miller  <davem@davemloft.net>
 
 	* sysdeps/unix/sysv/linux/Makefile (CFLAGS-tst-writev.c): The
 	artificual limit depends upon the system page size.
