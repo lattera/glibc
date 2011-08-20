@@ -345,23 +345,22 @@ _IO_new_file_fopen (fp, filename, mode, is32not64)
   result = _IO_file_open (fp, filename, omode|oflags, oprot, read_write,
 			  is32not64);
 
-#ifndef __ASSUME_O_CLOEXEC
-  if ((fp->_flags2 & _IO_FLAGS2_CLOEXEC) != 0 && __have_o_cloexec <= 0)
-    {
-      int fd = _IO_fileno (fp);
-      if (__have_o_cloexec == 0)
-	{
-	  int flags = __fcntl (fd, F_GETFD);
-	  __have_o_cloexec = (flags & FD_CLOEXEC) == 0 ? -1 : 1;
-	}
-      if (__have_o_cloexec < 0)
-	__fcntl (fd, F_SETFD, FD_CLOEXEC);
-    }
-#endif
-
-#ifdef _LIBC
   if (result != NULL)
     {
+#ifndef __ASSUME_O_CLOEXEC
+      if ((fp->_flags2 & _IO_FLAGS2_CLOEXEC) != 0 && __have_o_cloexec <= 0)
+	{
+	  int fd = _IO_fileno (fp);
+	  if (__have_o_cloexec == 0)
+	    {
+	      int flags = __fcntl (fd, F_GETFD);
+	      __have_o_cloexec = (flags & FD_CLOEXEC) == 0 ? -1 : 1;
+	    }
+	  if (__have_o_cloexec < 0)
+	    __fcntl (fd, F_SETFD, FD_CLOEXEC);
+	}
+#endif
+
       /* Test whether the mode string specifies the conversion.  */
       cs = strstr (last_recognized + 1, ",ccs=");
       if (cs != NULL)
@@ -432,7 +431,6 @@ _IO_new_file_fopen (fp, filename, mode, is32not64)
 	  result->_mode = 1;
 	}
     }
-#endif	/* GNU libc */
 
   return result;
 }
