@@ -1,5 +1,8 @@
 2011-08-19  Andreas Schwab  <schwab@redhat.com>
 
+	* sysdeps/powerpc/fpu/libm-test-ulps: Relax ctan (0.75 + 1.25 i)
+	expectations for long double.
+
 	* sysdeps/unix/sysv/linux/powerpc/powerpc32/scandir64.c: Renamed
 	from sysdeps/unix/sysv/linux/powerpc/scandir64.c.
 
