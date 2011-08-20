@@ -3,6 +3,7 @@
 	* elf/dl-open.c (add_to_global): Report additions to the global scope
 	for LD_DEBUG=scopes.
 	(dl_open_worker): Also print scope of newly loaded dependencies.
+	(_dl_show_scope): Indicate if there is no scope.
 
 	[BZ #13114]
 	* stdio-common/Makefile (tests): Add bug24.

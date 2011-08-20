@@ -661,6 +661,8 @@ _dl_show_scope (struct link_map *l, int from)
 
 	_dl_debug_printf_c ("\n");
       }
+  else
+    _dl_debug_printf (" no scope\n");
   _dl_debug_printf ("\n");
 }
 
