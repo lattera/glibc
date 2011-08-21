@@ -550,7 +550,7 @@ $(objpfx)pt-initfini.s: pt-initfini.c
 		$(patsubst -f%,-fno-%,$(exceptions)) -o $@
 
 $(objpfx)tst-cleanup0.out: /dev/null $(objpfx)tst-cleanup0
-	$(make-test-out) 2>&1 | cmp - tst-cleanup0.expect >& $@
+	$(make-test-out) 2>&1 | cmp - tst-cleanup0.expect > $@
 
 # We only have one kind of startup code files.  Static binaries and
 # shared libraries are build using the PIC version.

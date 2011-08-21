@@ -1,3 +1,7 @@
+2011-08-20  David S. Miller  <davem@davemloft.net>
+
+	* Makefile (tst-cleanup0.out): Fix typo in output redirection.
+
 2011-08-14  Roland McGrath  <roland@hack.frob.com>
 
 	* sysdeps/i386/pthreaddef.h (TCB_ALIGNMENT): Set to 64, optimal on Atom.
