@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2007 Free Software Foundation, Inc.
+/* Copyright (C) 2001,02, 2003, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,34 +16,32 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <sysdep.h>
-#define _ERRNO_H	1
-#include <bits/errno.h>
-
-/* For the calculation see asm/vsyscall.h.  */
-#define VSYSCALL_ADDR_vgettimeofday	0xffffffffff600000
+#include <dl-vdso.h>
 
 
-ENTRY (__gettimeofday)
-	/* Align stack.  */
-	sub	$0x8, %rsp
-	cfi_adjust_cfa_offset(8)
+#define VSYSCALL_ADDR_vtime	0xffffffffff600400
+
+
 #ifdef SHARED
-	movq	__vdso_gettimeofday(%rip), %rax
-	PTR_DEMANGLE (%rax)
+void *time_ifunc (void) __asm__ ("time");
+
+void *
+time_ifunc (void)
+{
+  PREPARE_VERSION (linux26, "LINUX_2.6", 61765110);
+
+  /* If the vDSO is not available we fall back on the old vsyscall.  */
+  return _dl_vdso_vsym ("time", &linux26) ?: (void *) VSYSCALL_ADDR_vtime;
+}
+__asm (".type time, %gnu_indirect_function");
 #else
-	movq	$VSYSCALL_ADDR_vgettimeofday, %rax
+# include <time.h>
+
+time_t
+time (time_t *t)
+{
+  return ((time_t (*) (time_t *)) VSYSCALL_ADDR_vtime) (t);
+}
 #endif
-	callq	*%rax
-	/* Check error return.  */
-	cmpl	$-4095, %eax
-	jae	SYSCALL_ERROR_LABEL
 
-L(pseudo_end):
-	add	$0x8, %rsp
-	cfi_adjust_cfa_offset(-8)
-	ret
-PSEUDO_END(__gettimeofday)
-
-strong_alias (__gettimeofday, __gettimeofday_internal)
-weak_alias (__gettimeofday, gettimeofday)
+strong_alias (time, __GI_time)

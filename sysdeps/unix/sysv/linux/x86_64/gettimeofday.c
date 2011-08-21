@@ -1,4 +1,4 @@
-/* Copyright (C) 2001,02, 2003, 2011 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2007, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,32 +16,34 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <sysdep.h>
-#define _ERRNO_H	1
-#include <bits/errno.h>
-
-/* For the calculation see asm/vsyscall.h.  */
-#define VSYSCALL_ADDR_vtime	0xffffffffff600400
+#include <dl-vdso.h>
 
 
-/* Return the current time as a `time_t' and also put it in *T if T is
-   not NULL.  Time is represented as seconds from Jan 1 00:00:00 1970.  */
+#define VSYSCALL_ADDR_vgettimeofday	0xffffffffff600000ul
 
-ENTRY (time)
-	/* Align stack.  */
-	sub	$0x8, %rsp
-	cfi_adjust_cfa_offset(8)
 
 #ifdef SHARED
-	movq	__vdso_time(%rip), %rax
-	PTR_DEMANGLE (%rax)
-#else
-	movq	$VSYSCALL_ADDR_vtime, %rax
-#endif
-	callq	*%rax
+void *gettimeofday_ifunc (void) __asm__ ("__gettimeofday");
 
-	add	$0x8, %rsp
-	cfi_adjust_cfa_offset(-8)
-	ret
-PSEUDO_END_NOERRNO(time)
-libc_hidden_def (time)
+void *
+gettimeofday_ifunc (void)
+{
+  PREPARE_VERSION (linux26, "LINUX_2.6", 61765110);
+
+  /* If the vDSO is not available we fall back on the old vsyscall.  */
+  return (_dl_vdso_vsym ("gettimeofday", &linux26)
+	  ?: (void *) VSYSCALL_ADDR_vgettimeofday);
+}
+__asm (".type __gettimeofday, %gnu_indirect_function");
+#else
+# include <sys/time.h>
+
+int
+__gettimeofday (struct timeval *tv, struct timezone *tz)
+{
+  return ((int (*) (struct timeval *, struct timezone *)) VSYSCALL_ADDR_vgettimeofday) (tv, tz);
+}
+#endif
+
+weak_alias (__gettimeofday, gettimeofday)
+strong_alias (__gettimeofday, __gettimeofday_internal)
