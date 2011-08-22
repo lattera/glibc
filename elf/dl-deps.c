@@ -491,10 +491,6 @@ _dl_map_object_deps (struct link_map *map,
   if (errno == 0 && errno_saved != 0)
     __set_errno (errno_saved);
 
-  if (errno_reason)
-    _dl_signal_error (errno_reason == -1 ? 0 : errno_reason, objname,
-		      NULL, errstring);
-
   struct link_map **old_l_initfini = NULL;
   if (map->l_initfini != NULL && map->l_type == lt_loaded)
     {
@@ -691,4 +687,8 @@ Filters not supported with LD_TRACE_PRELINKING"));
     }
   if (old_l_initfini != NULL)
       map->l_orig_initfini = old_l_initfini;
+
+  if (errno_reason)
+    _dl_signal_error (errno_reason == -1 ? 0 : errno_reason, objname,
+		      NULL, errstring);
 }

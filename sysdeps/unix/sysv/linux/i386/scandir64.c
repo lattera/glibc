@@ -35,6 +35,7 @@
 versioned_symbol (libc, __scandir64, scandir64, GLIBC_2_2);
 
 #if SHLIB_COMPAT(libc, GLIBC_2_1, GLIBC_2_2)
+# include <string.h>
 # include <errno.h>
 # include "olddirent.h"
 
