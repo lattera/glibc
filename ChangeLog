@@ -1,5 +1,7 @@
 2011-08-22  Andreas Schwab  <schwab@redhat.com>
 
+	* sysdeps/unix/sysv/linux/i386/scandir64.c: Include <string.h>.
+
 	* elf/dl-deps.c (_dl_map_object_deps): Move check for missing
 	dependencies back to end of function.
 
