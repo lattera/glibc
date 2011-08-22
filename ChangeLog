@@ -1,3 +1,18 @@
+2011-08-16  Andreas Schwab  <schwab@redhat.com>
+
+	[BZ #11724]
+	* elf/dl-deps.c (_dl_map_object_deps): Only assume cycle when
+	object is seen twice.
+	* elf/dl-fini.c (_dl_sort_fini): Likewise.
+
+	* elf/Makefile (distribute): Add tst-initorder2.c.
+	(tests): Add tst-initorder2.
+	(modules-names): Add tst-initorder2a tst-initorder2b
+	tst-initorder2c tst-initorder2d.  Add rules to build them.
+	($(objpfx)tst-initorder2.out): New rule.
+	* elf/tst-initorder2.c: New file.
+	* elf/tst-initorder2.exp: New file.
+
 2011-08-21  Ulrich Drepper  <drepper@gmail.com>
 
 	* sysdeps/unix/sysv/linux/x86_64/gettimeofday.S: Removed.

@@ -39,12 +39,12 @@ _dl_sort_fini (struct link_map **maps, size_t nmaps, char *used, Lmid_t ns)
   /* We can skip looking for the binary itself which is at the front
      of the search list for the main namespace.  */
   unsigned int i = ns == LM_ID_BASE;
-  bool seen[nmaps];
-  memset (seen, false, nmaps * sizeof (seen[0]));
+  char seen[nmaps];
+  memset (seen, 0, nmaps * sizeof (seen[0]));
   while (1)
     {
       /* Keep track of which object we looked at this round.  */
-      seen[i] = true;
+      seen[i] += seen[i] < 2;
       struct link_map *thisp = maps[i];
 
       /* Do not handle ld.so in secondary namespaces and object which
@@ -79,14 +79,15 @@ _dl_sort_fini (struct link_map **maps, size_t nmaps, char *used, Lmid_t ns)
 		      used[k] = here_used;
 		    }
 
-		  if (seen[i + 1])
+		  if (seen[i + 1] > 1)
 		    {
 		      ++i;
 		      goto next_clear;
 		    }
 
+		  char this_seen = seen[i];
 		  memmove (&seen[i], &seen[i + 1], (k - i) * sizeof (seen[0]));
-		  seen[k] = true;
+		  seen[k] = this_seen;
 
 		  goto next;
 		}
@@ -96,7 +97,7 @@ _dl_sort_fini (struct link_map **maps, size_t nmaps, char *used, Lmid_t ns)
 	      unsigned int m = maps[k]->l_reldeps->act;
 	      struct link_map **relmaps = &maps[k]->l_reldeps->list[0];
 
-	    /* Look through the relocation dependencies of the object.  */
+	      /* Look through the relocation dependencies of the object.  */
 	      while (m-- > 0)
 		if (__builtin_expect (relmaps[m] == thisp, 0))
 		  goto move;
@@ -109,7 +110,7 @@ _dl_sort_fini (struct link_map **maps, size_t nmaps, char *used, Lmid_t ns)
       if (++i == nmaps)
 	break;
     next_clear:
-      memset (&seen[i], false, (nmaps - i) * sizeof (seen[0]));
+      memset (&seen[i], 0, (nmaps - i) * sizeof (seen[0]));
 
     next:;
     }

@@ -626,12 +626,12 @@ Filters not supported with LD_TRACE_PRELINKING"));
       /* We can skip looking for the binary itself which is at the front
 	 of the search list.  */
       i = 1;
-      bool seen[nlist];
-      memset (seen, false, nlist * sizeof (seen[0]));
+      char seen[nlist];
+      memset (seen, 0, nlist * sizeof (seen[0]));
       while (1)
 	{
 	  /* Keep track of which object we looked at this round.  */
-	  seen[i] = true;
+	  seen[i] += seen[i] < 2;
 	  struct link_map *thisp = l_initfini[i];
 
 	  /* Find the last object in the list for which the current one is
@@ -652,15 +652,16 @@ Filters not supported with LD_TRACE_PRELINKING"));
 			       (k - i) * sizeof (l_initfini[0]));
 		      l_initfini[k] = thisp;
 
-		      if (seen[i + 1])
+		      if (seen[i + 1] > 1)
 			{
 			  ++i;
 			  goto next_clear;
 			}
 
+		      char this_seen = seen[i];
 		      memmove (&seen[i], &seen[i + 1],
 			       (k - i) * sizeof (seen[0]));
-		      seen[k] = true;
+		      seen[k] = this_seen;
 
 		      goto next;
 		    }
@@ -671,7 +672,7 @@ Filters not supported with LD_TRACE_PRELINKING"));
 	  if (++i == nlist)
 	    break;
 	next_clear:
-	  memset (&seen[i], false, (nlist - i) * sizeof (seen[0]));
+	  memset (&seen[i], 0, (nlist - i) * sizeof (seen[0]));
 
 	next:;
 	}
