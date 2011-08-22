@@ -40,8 +40,29 @@ ENTRY (____longjmp_chk)
 	bleu,pt	%xcc, .Lok
 	 nop
 
-	save	%sp, -128, %sp
+	save	%sp, -208, %sp
+	cfi_remember_state
+	cfi_def_cfa_register(%fp)
+	cfi_window_save
+	cfi_register(%o7, %i7)
+	add	%fp, 2023, %o1
+	clr	%o0
+	LOADSYSCALL(sigaltstack)
+	ta	0x6d
+	bcs,pn	%xcc, .Lok2
+	 lduw	[%fp + 2031], %l2
+	andcc	%l2, 0x1, %g0
+	be,pn	%xcc, .Lfail
+	 ldx	[%fp + 2023], %l0
+	ldx	[%fp + 2039], %l1
+	sub	%l0, STACK_BIAS, %l0
+	add	%l0, %l1, %l0
+	sub	%l0, %i2, %l0
+	cmp	%l0, %l1
+	bgeu,pt	%xcc, .Lok2
+	 nop
 
+.Lfail:
 #ifdef PIC
 1:	call	2f
 	sethi	%hi(_GLOBAL_OFFSET_TABLE_-(1b-.)), %l7
@@ -56,7 +77,8 @@ ENTRY (____longjmp_chk)
 	call	HIDDEN_JUMPTARGET(__fortify_fail)
 	 nop
 
-	restore
+.Lok2:	restore
+	cfi_restore_state
 
 .Lok:
 	/* Modify the context with the value we want to return.  */

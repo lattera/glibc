@@ -41,10 +41,14 @@ ENTRY (____longjmp_chk)
 	 nop
 
 	save	%sp, -80, %sp
+	cfi_remember_state
+	cfi_def_cfa_register(%fp)
+	cfi_window_save
+	cfi_register(%o7, %i7)
 
 	clr	%o0
 	add	%sp, 64, %o1
-	set	__NR_sigaltstack, %g1
+	LOADSYSCALL(sigaltstack)
 	ta	0x10
 	bcs	.Lok
 	 ld	[%sp + 64 + 4], %o2
@@ -54,8 +58,8 @@ ENTRY (____longjmp_chk)
 
 	ld	[%sp + 64 + 8], %o1
 	add	%o0, %o1, %o0
-	sub	%o0, %g3, %o0
-	cmp	%o1, %o0
+	sub	%o0, %g5, %o0
+	cmp	%o0, %o1
 	bgeu	.Lok
 	 nop
 
@@ -76,6 +80,7 @@ ENTRY (____longjmp_chk)
 
 .Lok:
 	restore
+	cfi_restore_state
 
 .Lok_norestore:
 	ld	ENV(o0,JB_FP), %g3	/* Cache target FP in register %g3.  */

@@ -1,3 +1,10 @@
+2011-08-22  David S. Miller  <davem@davemloft.net>
+
+	* sysdeps/unix/sysv/linux/sparc/sparc32/____longjmp_chk.S: Fix
+	sigaltstack check, add missing cfi directives.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/____longjmp_chk.S: Add
+	missing cfi directives, and sigaltstack handling.
+
 2011-08-16  Andreas Schwab  <schwab@redhat.com>
 
 	[BZ #11724]
