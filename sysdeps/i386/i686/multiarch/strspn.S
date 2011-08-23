@@ -76,8 +76,8 @@ END(strspn)
 # define ENTRY(name) \
 	.type __strspn_ia32, @function; \
 	.globl __strspn_ia32; \
-	.p2align 4
-	__strspn_ia32: cfi_startproc; \
+	.p2align 4; \
+__strspn_ia32: cfi_startproc; \
 	CALL_MCOUNT
 # undef END
 # define END(name) \

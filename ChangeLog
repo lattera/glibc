@@ -1,3 +1,8 @@
+2011-08-23  Andreas Schwab  <schwab@redhat.com>
+
+	* sysdeps/i386/i686/multiarch/strspn.S (ENTRY): Add missing
+	backslash.
+
 2011-07-04  Aurelien Jarno  <aurelien@aurel32.net>
 
 	* sysdeps/powerpc/dl-tls.h: Add _PPC_DL_TLS_H inclusion
