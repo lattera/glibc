@@ -90,6 +90,7 @@ distribute	:= rtld-Rules \
 		   unload4mod1.c unload4mod2.c unload4mod3.c unload4mod4.c \
 		   unload6mod1.c unload6mod2.c unload6mod3.c \
 		   unload7mod1.c unload7mod2.c \
+		   unload8mod1.c unload8mod1x.c unload8mod2.c unload8mod3.c \
 		   tst-audit1.c tst-audit2.c tst-audit3.c tst-audit4.c \
 		   tst-auditmod1.c tst-auditmod3a.c tst-auditmod3b.c \
 		   tst-auditmod4a.c tst-auditmod4b.c \
@@ -224,7 +225,7 @@ tests += loadtest restest1 preloadtest loadfail multiload origtest resolvfail \
 	 tst-align tst-align2 $(tests-execstack-$(have-z-execstack)) \
 	 tst-dlmodcount tst-dlopenrpath tst-deep1 \
 	 tst-dlmopen1 tst-dlmopen2 tst-dlmopen3 \
-	 unload3 unload4 unload5 unload6 unload7 tst-global1 order2 \
+	 unload3 unload4 unload5 unload6 unload7 unload8 tst-global1 order2 \
 	 tst-audit1 tst-audit2 \
 	 tst-stackguard1 tst-addr1 tst-thrlock \
 	 tst-unique1 tst-unique2 tst-unique3 tst-unique4 \
@@ -282,6 +283,7 @@ modules-names = testobj1 testobj2 testobj3 testobj4 testobj5 testobj6 \
 		unload4mod1 unload4mod2 unload4mod3 unload4mod4 \
 		unload6mod1 unload6mod2 unload6mod3 \
 		unload7mod1 unload7mod2 \
+		unload8mod1 unload8mod1x unload8mod2 unload8mod3 \
 		order2mod1 order2mod2 order2mod3 order2mod4 \
 		tst-unique1mod1 tst-unique1mod2 \
 		tst-unique2mod1 tst-unique2mod2 \
@@ -570,6 +572,9 @@ $(objpfx)unload6mod2.so: $(libdl)
 $(objpfx)unload6mod3.so: $(libdl)
 $(objpfx)unload7mod1.so: $(libdl)
 $(objpfx)unload7mod2.so: $(objpfx)unload7mod1.so
+$(objpfx)unload8mod1.so: $(objpfx)unload8mod2.so
+$(objpfx)unload8mod2.so: $(objpfx)unload8mod3.so
+$(objpfx)unload8mod3.so: $(libdl)
 $(objpfx)tst-initordera2.so: $(objpfx)tst-initordera1.so
 $(objpfx)tst-initorderb2.so: $(objpfx)tst-initorderb1.so $(objpfx)tst-initordera2.so
 $(objpfx)tst-initordera3.so: $(objpfx)tst-initorderb2.so $(objpfx)tst-initorderb1.so
@@ -882,6 +887,9 @@ $(objpfx)unload6.out: $(objpfx)unload6mod1.so $(objpfx)unload6mod2.so \
 $(objpfx)unload7: $(libdl)
 $(objpfx)unload7.out: $(objpfx)unload7mod1.so $(objpfx)unload7mod2.so
 unload7-ENV = MALLOC_PERTURB_=85
+
+$(objpfx)unload8: $(libdl)
+$(objpfx)unload8.out: $(objpfx)unload8mod1.so $(objpfx)unload8mod1x.so
 
 ifdef libdl
 $(objpfx)tst-tls9-static: $(common-objpfx)dlfcn/libdl.a

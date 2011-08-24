@@ -430,6 +430,13 @@ _dl_close_worker (struct link_map *map)
 
 	      imap->l_scope_max = new_size;
 	    }
+	  else if (new_list != NULL)
+	    {
+	      /* We didn't change the scope array, so reset the search
+		 list.  */
+	      imap->l_searchlist.r_list = NULL;
+	      imap->l_searchlist.r_nlist = 0;
+	    }
 
 	  /* The loader is gone, so mark the object as not having one.
 	     Note: l_idx != IDX_STILL_USED -> object will be removed.  */

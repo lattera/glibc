@@ -1,3 +1,15 @@
+2011-08-24  Andreas Schwab  <schwab@redhat.com>
+
+	* elf/Makefile: Add rules to build and run unload8 test.
+	* elf/unload8.c: New file.
+	* elf/unload8mod1.c: New file.
+	* elf/unload8mod1x.c: New file.
+	* elf/unload8mod2.c: New file.
+	* elf/unload8mod3.c: New file.
+
+	* elf/dl-close.c (_dl_close_worker): Reset private search list if
+	it wasn't used.
+
 2011-08-23  David S. Miller  <davem@davemloft.net>
 
 	* sysdeps/sparc/sparc64/dl-machine.h (DL_STACK_END): Do not
