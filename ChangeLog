@@ -6,6 +6,10 @@
 	%sp not %fp in calculations.
 	(_JMPBUF_UNWINDS_ADJ): Likewise.
 
+	* sysdeps/pthread/aio_suspend.c (do_aio_misc_wait): New function.
+	(aio_suspend): Call it to force an exception region around the
+	AIO_MISC_WAIT() invocation.
+
 2011-08-23  Andreas Schwab  <schwab@redhat.com>
 
 	* sysdeps/i386/i686/multiarch/strspn.S (ENTRY): Add missing
