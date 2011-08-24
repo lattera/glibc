@@ -1,3 +1,11 @@
+2011-08-23  David S. Miller  <davem@davemloft.net>
+
+	* sysdeps/sparc/sparc64/dl-machine.h (DL_STACK_END): Do not
+	subtract stack bias.
+	* sysdeps/sparc/sparc64/jmpbuf-unwind.h (_JMPBUF_UNWINDS): Use
+	%sp not %fp in calculations.
+	(_JMPBUF_UNWINDS_ADJ): Likewise.
+
 2011-08-23  Andreas Schwab  <schwab@redhat.com>
 
 	* sysdeps/i386/i686/multiarch/strspn.S (ENTRY): Add missing

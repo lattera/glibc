@@ -264,9 +264,9 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 #define elf_machine_relplt elf_machine_rela
 
 /* Undo the sub %sp, 6*8, %sp; add %sp, STACK_BIAS + 22*8, %o0 below
-   to get at the value we want in __libc_stack_end.  */
+   (but w/o STACK_BIAS) to get at the value we want in __libc_stack_end.  */
 #define DL_STACK_END(cookie) \
-  ((void *) (((long) (cookie)) - (22 - 6) * 8 - STACK_BIAS))
+  ((void *) (((long) (cookie)) - (22 - 6) * 8))
 
 /* Initial entry point code for the dynamic linker.
    The C function `_dl_start' is the real entry point;

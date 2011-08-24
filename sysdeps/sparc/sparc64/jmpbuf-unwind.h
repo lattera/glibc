@@ -24,14 +24,14 @@
 /* Test if longjmp to JMPBUF would unwind the frame
    containing a local variable at ADDRESS.  */
 #define _JMPBUF_UNWINDS(jmpbuf, address, demangle)			\
-  ((unsigned long int) (address) < (jmpbuf)->uc_mcontext.mc_fp + 2047)
+  ((unsigned long int) (address) < (jmpbuf)->uc_mcontext.mc_gregs[MC_O6] + 2047)
 
 #define _JMPBUF_CFA_UNWINDS_ADJ(_jmpbuf, _context, _adj) \
   _JMPBUF_UNWINDS_ADJ (_jmpbuf, (void *) _Unwind_GetCFA (_context), _adj)
 
 #define _JMPBUF_UNWINDS_ADJ(_jmpbuf, _address, _adj) \
   ((uintptr_t) (_address) - (_adj) \
-   < (uintptr_t) (_jmpbuf)[0].uc_mcontext.mc_fp + 2047 - (_adj))
+   < (uintptr_t) (_jmpbuf)[0].uc_mcontext.mc_gregs[MC_O6] + 2047 - (_adj))
 
 /* We use the normal lobngjmp for unwinding.  */
 #define __libc_unwind_longjmp(buf, val) __libc_longjmp (buf, val)
