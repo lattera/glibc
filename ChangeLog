@@ -1,3 +1,7 @@
+2011-08-24  David S. Miller  <davem@davemloft.net>
+
+	* sysdeps/sparc/sparc64/strcmp.S: Rewrite.
+
 2011-08-24  Andreas Schwab  <schwab@redhat.com>
 
 	* elf/Makefile: Add rules to build and run unload8 test.
