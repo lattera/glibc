@@ -1,3 +1,8 @@
+2011-08-29  Jiri Olsa <jolsa@redhat.com>
+
+	* sysdeps/i386/dl-trampoline.S (_dl_runtime_profile): Fix cfi
+	directive.
+
 2011-08-24  David S. Miller  <davem@davemloft.net>
 
 	* sysdeps/sparc/sparc64/strcmp.S: Rewrite.
