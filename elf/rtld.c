@@ -2255,13 +2255,12 @@ ERROR: ld.so: object '%s' cannot be loaded as audit interface: %s; ignored.\n",
       /* If we are profiling we also must do lazy reloaction.  */
       GLRO(dl_lazy) |= consider_profiling;
 
-      struct link_map *l = main_map;
-      while (l->l_next)
-	l = l->l_next;
-
       HP_TIMING_NOW (start);
-      do
+      unsigned i = main_map->l_searchlist.r_nlist;
+      while (i-- > 0)
 	{
+	  struct link_map *l = main_map->l_initfini[i];
+
 	  /* While we are at it, help the memory handling a bit.  We have to
 	     mark some data structures as allocated with the fake malloc()
 	     implementation in ld.so.  */
@@ -2280,10 +2279,7 @@ ERROR: ld.so: object '%s' cannot be loaded as audit interface: %s; ignored.\n",
 	  /* Add object to slot information data if necessasy.  */
 	  if (l->l_tls_blocksize != 0 && tls_init_tp_called)
 	    _dl_add_to_slotinfo (l);
-
-	  l = l->l_prev;
 	}
-      while (l);
       HP_TIMING_NOW (stop);
 
       HP_TIMING_DIFF (relocate_time, start, stop);

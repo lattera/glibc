@@ -1,3 +1,7 @@
+2011-08-30  Andreas Schwab  <schwab@redhat.com>
+
+	* elf/rtld.c (dl_main): Relocate objects in dependency order.
+
 2011-08-29  Jiri Olsa <jolsa@redhat.com>
 
 	* sysdeps/i386/dl-trampoline.S (_dl_runtime_profile): Fix cfi
