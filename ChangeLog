@@ -1,3 +1,33 @@
+2011-08-31  David S. Miller  <davem@davemloft.net>
+
+	* sysdeps/unix/sparc/sysdep.h (SETUP_PIC_REG): Define.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/sysdep.h (PSEUDO):
+	Reimplement to do errno handling inline.
+	(SYSCALL_ERROR_HANDLER): New macro.
+	(__SYSCALL_STRING): Do not do errno handling in asm.
+	(__CLONE_SYSCALL_STRING): Delete.
+	(__INTERNAL_SYSCALL_STRING): Delete.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/sysdep.h: Include
+	sysdeps/unix/sparc/sysdep.h instead of sysdeps/unix/sysdep.h
+	(PSEUDO): Reimplement to do errno handling inline.
+	(ret, ret_NOERRNO, ret_ERRVAL, r0, r1, MOVE): Don't redefine.
+	(SYSCALL_ERROR_HANDLER): New macro.
+	(__SYSCALL_STRING): Do not do errno handling in asm.
+	(__CLONE_SYSCALL_STRING): Delete.
+	(__INTERNAL_SYSCALL_STRING): Delete.
+	* sysdeps/unix/sysv/linux/sparc/sysdep.h (INLINE_SYSCALL):
+	Implement in terms of INTERNAL_SYSCALL and __set_errno, just like
+	i386.
+	(INTERNAL_SYSCALL_DECL): Declare %g1 var for err state.
+	(inline_syscall*): Add 'err' argument.
+	(INTERNAL_SYSCALL, INTERNAL_SYSCALL_NCS,
+	INTERNAL_SYSCALL_ERROR_P): Likewise and pass it down.
+	(INLINE_CLONE_SYSCALL): Reimplement in terms of __SYSCALL_STRING,
+	INTERNAL_SYSCALL_ERRNO, and INTERNAL_SYSCALL_ERROR_P.
+
+	* scripts/data/localplt-sparc-linux-gnu.data: Remove 'ffs'.
+	* scripts/data/localplt-sparc64-linux-gnu.data: Likewise.
+
 2011-08-30  Andreas Schwab  <schwab@redhat.com>
 
 	* elf/rtld.c (dl_main): Relocate objects in dependency order.

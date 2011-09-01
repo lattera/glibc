@@ -57,20 +57,14 @@ C_LABEL(name)				\
 
 #define LOC(name)  .L##name
 
-	/* If the offset to __syscall_error fits into a signed 22-bit
-	 * immediate branch offset, the linker will relax the call into
-	 * a normal branch.
-	 */
 #define PSEUDO(name, syscall_name, args)	\
 	.text;					\
-	.globl		__syscall_error;	\
 ENTRY(name);					\
 	LOADSYSCALL(syscall_name);		\
 	ta		0x10;			\
 	bcc		1f;			\
-	 mov		%o7, %g1;		\
-	call		__syscall_error;	\
-	 mov		%g1, %o7;		\
+	 nop;					\
+	SYSCALL_ERROR_HANDLER			\
 1:
 
 #define PSEUDO_NOERRNO(name, syscall_name, args)\
@@ -88,50 +82,70 @@ ENTRY(name);					\
 #define PSEUDO_END(name)			\
 	END(name)
 
-#else  /* __ASSEMBLER__ */
-
-#if defined SHARED && defined DO_VERSIONING && defined PIC \
-    && !defined NO_HIDDEN && !defined NOT_IN_libc
-# define CALL_ERRNO_LOCATION "call   __GI___errno_location;"
+#ifndef PIC
+# define SYSCALL_ERROR_HANDLER			\
+	mov	%o7, %g1;			\
+	call	__syscall_error;		\
+	 mov	%g1, %o7;
 #else
-# define CALL_ERRNO_LOCATION "call   __errno_location;"
-#endif
+# if RTLD_PRIVATE_ERRNO
+#  define SYSCALL_ERROR_HANDLER			\
+0:	SETUP_PIC_REG(o2,g1)			\
+	sethi	%hi(rtld_errno), %g1;		\
+	or	%g1, %lo(rtld_errno), %g1;	\
+	ld	[%o2 + %g1], %g1;		\
+	st	%o0, [%g1];			\
+	jmp	%o7 + 8;			\
+	 mov	-1, %o0;
+# elif defined _LIBC_REENTRANT
+
+#  if USE___THREAD
+#   ifndef NOT_IN_libc
+#    define SYSCALL_ERROR_ERRNO __libc_errno
+#   else
+#    define SYSCALL_ERROR_ERRNO errno
+#   endif
+#   define SYSCALL_ERROR_HANDLER				\
+0:	SETUP_PIC_REG(o2,g1)					\
+	sethi	%tie_hi22(SYSCALL_ERROR_ERRNO), %g1;		\
+	add	%g1, %tie_lo10(SYSCALL_ERROR_ERRNO), %g1;	\
+	ld	[%o2 + %g1], %g1, %tie_ld(SYSCALL_ERROR_ERRNO);	\
+	st	%o0, [%g7 + %g1]; 				\
+	jmp	%o7 + 8;    					\
+	 mov	-1, %o0;
+#  else
+#  define SYSCALL_ERROR_HANDLER		\
+0:	save	%sp, -96, %sp;		\
+	cfi_def_cfa_register(%fp);	\
+	cfi_window_save;		\
+	cfi_register (%o7, %i7);	\
+	call	__errno_location;	\
+	 nop;				\
+	st	%i0, [%o0];		\
+	jmp	%i7 + 8;		\
+	 restore %g0, -1, %o0;
+#  endif
+# else
+#  define SYSCALL_ERROR_HANDLER		\
+0:	SETUP_PIC_REG(o2,g1)		\
+	sethi	%hi(errno), %g1;	\
+	or	%g1, %lo(errno), %g1;	\
+	ld	[%o2 + %g1], %g1;	\
+	st	%o0, [%g1];		\
+	jmp	%o7 + 8;		\
+	 mov	-1, %o0;
+# endif	/* _LIBC_REENTRANT */
+#endif	/* PIC */
+
+
+#else  /* __ASSEMBLER__ */
 
 #define __SYSCALL_STRING						\
 	"ta	0x10;"							\
-	"bcs	2f;"							\
-	" nop;"								\
-	"1:"								\
-	".subsection 2;"						\
-	"2:"								\
-	"save	%%sp, -192, %%sp;"					\
-	CALL_ERRNO_LOCATION						\
-	" nop;"								\
-	"st	%%i0,[%%o0];"						\
-	"ba	1b;"							\
-	" restore %%g0, -1, %%o0;"					\
-	".previous;"
-
-#define __CLONE_SYSCALL_STRING						\
-	"ta	0x10;"							\
-	"bcs	2f;"							\
-	" sub	%%o1, 1, %%o1;"						\
-	"and	%%o0, %%o1, %%o0;"					\
-	"1:"								\
-	".subsection 2;"						\
-	"2:"								\
-	"save	%%sp, -192, %%sp;"					\
-	CALL_ERRNO_LOCATION						\
-	" nop;"								\
-	"st	%%i0, [%%o0];"						\
-	"ba	1b;"							\
-	" restore %%g0, -1, %%o0;"					\
-	".previous;"
-
-#define __INTERNAL_SYSCALL_STRING					\
-	"ta	0x10;"							\
-	"bcs,a	1f;"							\
-	" sub	%%g0, %%o0, %%o0;"					\
+	"bcc	1f;"							\
+	" mov	0, %%g1;"						\
+	"sub	%%g0, %%o0, %%o0;"					\
+	"mov	1, %%g1;"						\
 	"1:"
 
 #define __SYSCALL_CLOBBERS						\

@@ -27,6 +27,26 @@
 #define	syscall_error	C_SYMBOL_NAME(__syscall_error)
 #endif
 
+#ifdef PIC
+#define SETUP_PIC_REG(reg, tmp)						\
+	.ifndef __sparc_get_pc_thunk.reg;				\
+	.section .text.__sparc_get_pc_thunk.reg,"axG",@progbits,__sparc_get_pc_thunk.reg,comdat; \
+	.align	 32;							\
+	.weak	 __sparc_get_pc_thunk.reg;				\
+	.hidden	 __sparc_get_pc_thunk.reg;				\
+	.type	 __sparc_get_pc_thunk.reg, #function;			\
+__sparc_get_pc_thunk.reg:		   				\
+	jmp	%o7 + 8;						\
+	 add	%o7, %reg, %##reg;					\
+	.previous;							\
+	.endif;								\
+	sethi	%hi(_GLOBAL_OFFSET_TABLE_-4), %##reg;			\
+	mov	%o7, %##tmp;		      				\
+	call	__sparc_get_pc_thunk.reg;				\
+	 or	%##reg, %lo(_GLOBAL_OFFSET_TABLE_+4), %##reg;		\
+	mov	%##tmp, %o7;
+#endif
+
 #ifdef HAVE_ELF
 #define	ENTRY(name)		\
   .global C_SYMBOL_NAME(name);	\

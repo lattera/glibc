@@ -21,101 +21,109 @@
 #define _LINUX_SPARC_SYSDEP_H 1
 
 #undef INLINE_SYSCALL
-#define INLINE_SYSCALL(name, nr, args...) \
-  inline_syscall##nr(__SYSCALL_STRING, __NR_##name, args)
+#define INLINE_SYSCALL(name, nr, args...) 				\
+({	INTERNAL_SYSCALL_DECL(err);  					\
+	unsigned int resultvar = INTERNAL_SYSCALL(name, err, nr, args);	\
+	if (__builtin_expect (INTERNAL_SYSCALL_ERROR_P (resultvar, err), 0)) \
+	  {		     			       		   	\
+	    __set_errno (INTERNAL_SYSCALL_ERRNO (resultvar, err));	\
+	    resultvar = 0xffffffff;			    		\
+	  } 	      							\
+	(int) resultvar;						\
+})
 
 #undef INTERNAL_SYSCALL_DECL
-#define INTERNAL_SYSCALL_DECL(err) do { } while (0)
+#define INTERNAL_SYSCALL_DECL(err) \
+	register long err __asm__("g1");
 
 #undef INTERNAL_SYSCALL
 #define INTERNAL_SYSCALL(name, err, nr, args...) \
-  inline_syscall##nr(__INTERNAL_SYSCALL_STRING, __NR_##name, args)
+  inline_syscall##nr(__SYSCALL_STRING, err, __NR_##name, args)
 
 #undef INTERNAL_SYSCALL_NCS
 #define INTERNAL_SYSCALL_NCS(name, err, nr, args...) \
-  inline_syscall##nr(__INTERNAL_SYSCALL_STRING, name, args)
+  inline_syscall##nr(__SYSCALL_STRING, err, name, args)
 
 #undef INTERNAL_SYSCALL_ERROR_P
-#define INTERNAL_SYSCALL_ERROR_P(val, err) \
-  ((unsigned long) (val) >= -515L)
+#define INTERNAL_SYSCALL_ERROR_P(val, err) ((err) != 0)
 
 #undef INTERNAL_SYSCALL_ERRNO
 #define INTERNAL_SYSCALL_ERRNO(val, err)	(-(val))
 
-#define inline_syscall0(string,name,dummy...)				\
+#define inline_syscall0(string,err,name,dummy...)			\
 ({									\
 	register long __o0 __asm__ ("o0");				\
-	register long __g1 __asm__ ("g1") = name;			\
-	__asm __volatile (string : "=r" (__g1), "=r" (__o0) :		\
-			  "0" (__g1) :					\
+	err = name;							\
+	__asm __volatile (string : "=r" (err), "=r" (__o0) :		\
+			  "0" (err) :					\
 			  __SYSCALL_CLOBBERS);				\
 	__o0;								\
 })
 
-#define inline_syscall1(string,name,arg1)				\
+#define inline_syscall1(string,err,name,arg1)				\
 ({									\
 	register long __o0 __asm__ ("o0") = (long)(arg1);		\
-	register long __g1 __asm__ ("g1") = name;			\
-	__asm __volatile (string : "=r" (__g1), "=r" (__o0) :		\
-			  "0" (__g1), "1" (__o0) :			\
+	err = name;							\
+	__asm __volatile (string : "=r" (err), "=r" (__o0) :		\
+			  "0" (err), "1" (__o0) :			\
 			  __SYSCALL_CLOBBERS);				\
 	__o0;								\
 })
 
-#define inline_syscall2(string,name,arg1,arg2)				\
+#define inline_syscall2(string,err,name,arg1,arg2)			\
 ({									\
 	register long __o0 __asm__ ("o0") = (long)(arg1);		\
 	register long __o1 __asm__ ("o1") = (long)(arg2);		\
-	register long __g1 __asm__ ("g1") = name;			\
-	__asm __volatile (string : "=r" (__g1), "=r" (__o0) :		\
-			  "0" (__g1), "1" (__o0), "r" (__o1) :		\
+	err = name;							\
+	__asm __volatile (string : "=r" (err), "=r" (__o0) :		\
+			  "0" (err), "1" (__o0), "r" (__o1) :		\
 			  __SYSCALL_CLOBBERS);				\
 	__o0;								\
 })
 
-#define inline_syscall3(string,name,arg1,arg2,arg3)			\
+#define inline_syscall3(string,err,name,arg1,arg2,arg3)			\
 ({									\
 	register long __o0 __asm__ ("o0") = (long)(arg1);		\
 	register long __o1 __asm__ ("o1") = (long)(arg2);		\
 	register long __o2 __asm__ ("o2") = (long)(arg3);		\
-	register long __g1 __asm__ ("g1") = name;			\
-	__asm __volatile (string : "=r" (__g1), "=r" (__o0) :		\
-			  "0" (__g1), "1" (__o0), "r" (__o1),		\
+	err = name;							\
+	__asm __volatile (string : "=r" (err), "=r" (__o0) :		\
+			  "0" (err), "1" (__o0), "r" (__o1),		\
 			  "r" (__o2) :					\
 			  __SYSCALL_CLOBBERS);				\
 	__o0;								\
 })
 
-#define inline_syscall4(string,name,arg1,arg2,arg3,arg4)		\
+#define inline_syscall4(string,err,name,arg1,arg2,arg3,arg4)		\
 ({									\
 	register long __o0 __asm__ ("o0") = (long)(arg1);		\
 	register long __o1 __asm__ ("o1") = (long)(arg2);		\
 	register long __o2 __asm__ ("o2") = (long)(arg3);		\
 	register long __o3 __asm__ ("o3") = (long)(arg4);		\
-	register long __g1 __asm__ ("g1") = name;			\
-	__asm __volatile (string : "=r" (__g1), "=r" (__o0) :		\
-			  "0" (__g1), "1" (__o0), "r" (__o1),		\
+	err = name;							\
+	__asm __volatile (string : "=r" (err), "=r" (__o0) :		\
+			  "0" (err), "1" (__o0), "r" (__o1),		\
 			  "r" (__o2), "r" (__o3) :			\
 			  __SYSCALL_CLOBBERS);				\
 	__o0;								\
 })
 
-#define inline_syscall5(string,name,arg1,arg2,arg3,arg4,arg5)		\
+#define inline_syscall5(string,err,name,arg1,arg2,arg3,arg4,arg5)	\
 ({									\
 	register long __o0 __asm__ ("o0") = (long)(arg1);		\
 	register long __o1 __asm__ ("o1") = (long)(arg2);		\
 	register long __o2 __asm__ ("o2") = (long)(arg3);		\
 	register long __o3 __asm__ ("o3") = (long)(arg4);		\
 	register long __o4 __asm__ ("o4") = (long)(arg5);		\
-	register long __g1 __asm__ ("g1") = name;			\
-	__asm __volatile (string : "=r" (__g1), "=r" (__o0) :		\
-			  "0" (__g1), "1" (__o0), "r" (__o1),		\
+	err = name;							\
+	__asm __volatile (string : "=r" (err), "=r" (__o0) :		\
+			  "0" (err), "1" (__o0), "r" (__o1),		\
 			  "r" (__o2), "r" (__o3), "r" (__o4) :		\
 			  __SYSCALL_CLOBBERS);				\
 	__o0;								\
 })
 
-#define inline_syscall6(string,name,arg1,arg2,arg3,arg4,arg5,arg6)	\
+#define inline_syscall6(string,err,name,arg1,arg2,arg3,arg4,arg5,arg6)	\
 ({									\
 	register long __o0 __asm__ ("o0") = (long)(arg1);		\
 	register long __o1 __asm__ ("o1") = (long)(arg2);		\
@@ -123,9 +131,9 @@
 	register long __o3 __asm__ ("o3") = (long)(arg4);		\
 	register long __o4 __asm__ ("o4") = (long)(arg5);		\
 	register long __o5 __asm__ ("o5") = (long)(arg6);		\
-	register long __g1 __asm__ ("g1") = name;			\
-	__asm __volatile (string : "=r" (__g1), "=r" (__o0) :		\
-			  "0" (__g1), "1" (__o0), "r" (__o1),		\
+	err = name;							\
+	__asm __volatile (string : "=r" (err), "=r" (__o0) :		\
+			  "0" (err), "1" (__o0), "r" (__o1),		\
 			  "r" (__o2), "r" (__o3), "r" (__o4),		\
 			  "r" (__o5) :					\
 			  __SYSCALL_CLOBBERS);				\
@@ -140,11 +148,20 @@
 	register long __o3 __asm__ ("o3") = (long)(arg4);		\
 	register long __o4 __asm__ ("o4") = (long)(arg5);		\
 	register long __g1 __asm__ ("g1") = __NR_clone;			\
-	__asm __volatile (__CLONE_SYSCALL_STRING :			\
+	__asm __volatile (__SYSCALL_STRING :				\
 			  "=r" (__g1), "=r" (__o0), "=r" (__o1)	:	\
 			  "0" (__g1), "1" (__o0), "2" (__o1),		\
 			  "r" (__o2), "r" (__o3), "r" (__o4) :		\
 			  __SYSCALL_CLOBBERS);				\
+	if (__builtin_expect (INTERNAL_SYSCALL_ERROR_P (__o0, __g1), 0)) \
+	  {		     			       		   	\
+	    __set_errno (INTERNAL_SYSCALL_ERRNO (__o0, __g1));		\
+	    __o0 = -1L;			    				\
+	  } 	      							\
+	else								\
+	  { 	      							\
+	    __o0 &= (__o1 - 1);						\
+	  } 	    	    						\
 	__o0;								\
 })
 
