@@ -1,3 +1,19 @@
+2011-09-01  David S. Miller  <davem@davemloft.net>
+
+	* elf/elf.h (HWCAP_SPARC_*): Move to..
+	* sysdeps/sparc/sysdep.h: this new file and add new values.
+	* sysdeps/unix/sparc/sysdep.h: Include sysdeps/sparc/sysdep.h
+	* sysdeps/sparc/dl-procinfo.h: Include sysdep.h and increase
+	_DL_HWCAP_COUNT to 24.
+	* sysdeps/sparc/dl-procinfo.c (_dl_sparc_cap_flags): Add new
+	entries.
+	* sysdeps/sparc/sparc32/bits/atomic.h: Don't use magic local
+	__ATOMIC_HWCAP_SPARC_V9 define, use sysdep.h one instead.
+	* sysdeps/sparc/sparc32/dl-machine.h: Include sysdep.h
+	* sysdeps/sparc/sparc64/multiarch/memcpy.S: Use HWCAP_SPARC_*
+	instead of magic constants.
+	* sysdeps/sparc/sparc64/multiarch/memset.S: Likewise.
+
 2011-08-31  David S. Miller  <davem@davemloft.net>
 
 	* sysdeps/unix/sparc/sysdep.h (SETUP_PIC_REG): Define.

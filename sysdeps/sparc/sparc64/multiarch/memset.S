@@ -1,5 +1,5 @@
 /* Multiple versions of memset and bzero
-   Copyright (C) 2010 Free Software Foundation, Inc.
+   Copyright (C) 2010, 2011 Free Software Foundation, Inc.
    Contributed by David S. Miller (davem@davemloft.net)
    This file is part of the GNU C Library.
 
@@ -33,7 +33,7 @@ ENTRY(memset)
 1:	add	%o7, %o3, %o3
 	mov	%o5, %o7
 # endif
-	andcc	%o0, 0x40, %g0	! HWCAP_SPARC_BLKINIT
+	andcc	%o0, HWCAP_SPARC_BLKINIT, %g0
 	be	9f
 	 nop
 # ifdef SHARED
@@ -69,7 +69,7 @@ ENTRY(__bzero)
 1:	add	%o7, %o3, %o3
 	mov	%o5, %o7
 # endif
-	andcc	%o0, 0x40, %g0	! HWCAP_SPARC_BLKINIT
+	andcc	%o0, HWCAP_SPARC_BLKINIT, %g0
 	be	9f
 	 nop
 # ifdef SHARED

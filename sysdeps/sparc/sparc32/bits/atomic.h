@@ -1,5 +1,5 @@
 /* Atomic operations.  sparc32 version.
-   Copyright (C) 2003, 2004, 2006 Free Software Foundation, Inc.
+   Copyright (C) 2003, 2004, 2006, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jakub@redhat.com>, 2003.
 
@@ -22,6 +22,7 @@
 #define _BITS_ATOMIC_H	1
 
 #include <stdint.h>
+#include <sysdep.h>
 
 typedef int8_t atomic8_t;
 typedef uint8_t uatomic8_t;
@@ -238,13 +239,10 @@ volatile unsigned char __sparc32_atomic_locks[64]
    apps on v9 CPUs e.g. with process shared primitives, use cas insn
    on v9 CPUs and ldstub on pre-v9.  */
 
-/* Avoid <ldsodefs.h> include here.  */
 extern uint64_t _dl_hwcap __attribute__((weak));
-# define __ATOMIC_HWCAP_SPARC_V9	16
 # define __atomic_is_v9 \
   (__builtin_expect (&_dl_hwcap != 0, 1) \
-   && __builtin_expect (_dl_hwcap & __ATOMIC_HWCAP_SPARC_V9, \
-			__ATOMIC_HWCAP_SPARC_V9))
+   && __builtin_expect (_dl_hwcap & HWCAP_SPARC_V9, HWCAP_SPARC_V9))
 
 # define atomic_compare_and_exchange_val_acq(mem, newval, oldval) \
   ({								      \

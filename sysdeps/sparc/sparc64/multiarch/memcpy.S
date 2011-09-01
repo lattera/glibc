@@ -1,5 +1,5 @@
 /* Multiple versions of memcpy
-   Copyright (C) 2010 Free Software Foundation, Inc.
+   Copyright (C) 2010, 2011 Free Software Foundation, Inc.
    Contributed by David S. Miller (davem@davemloft.net)
    This file is part of the GNU C Library.
 
@@ -33,9 +33,9 @@ ENTRY(memcpy)
 1:	add	%o7, %o3, %o3
 	mov	%o5, %o7
 # endif
-	andcc	%o0, 0x80, %g0	! HWCAP_SPARC_N2
+	andcc	%o0, HWCAP_SPARC_N2, %g0
 	be	1f
-	 andcc	%o0, 0x40, %g0	! HWCAP_SPARC_BLKINIT
+	 andcc	%o0, HWCAP_SPARC_BLKINIT, %g0
 # ifdef SHARED
 	sethi	%gdop_hix22(__memcpy_niagara2), %o1
 	xor	%o1, %gdop_lox10(__memcpy_niagara2), %o1
@@ -45,7 +45,7 @@ ENTRY(memcpy)
 	ba	10f
 	 nop
 1:	be	1f
-	 andcc	%o0, 0x20, %g0	! HWCAP_SPARC_ULTRA3
+	 andcc	%o0, HWCAP_SPARC_ULTRA3, %g0
 # ifdef SHARED
 	sethi	%gdop_hix22(__memcpy_niagara1), %o1
 	xor	%o1, %gdop_lox10(__memcpy_niagara1), %o1

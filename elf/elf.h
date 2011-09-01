@@ -1339,17 +1339,6 @@ typedef struct
 #define DT_SPARC_REGISTER 0x70000001
 #define DT_SPARC_NUM	2
 
-/* Bits present in AT_HWCAP on SPARC.  */
-
-#define HWCAP_SPARC_FLUSH	1	/* The CPU supports flush insn.  */
-#define HWCAP_SPARC_STBAR	2
-#define HWCAP_SPARC_SWAP	4
-#define HWCAP_SPARC_MULDIV	8
-#define HWCAP_SPARC_V9		16	/* The CPU is v9, so v8plus is ok.  */
-#define HWCAP_SPARC_ULTRA3	32
-#define HWCAP_SPARC_BLKINIT	64	/* Sun4v with block-init/load-twin.  */
-#define HWCAP_SPARC_N2		128
-
 /* MIPS R3000 specific definitions.  */
 
 /* Legal values for e_flags field of Elf32_Ehdr.  */
