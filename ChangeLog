@@ -1,5 +1,8 @@
 2011-11-03  Andreas Schwab  <schwab@redhat.com>
 
+	* nscd/nscd.c (main): Don't start AVC thread until credentials are
+	installed.
+
 	* nss/makedb.c (set_file_creation_context): Do nothing if SELinux
 	is disabled.
 

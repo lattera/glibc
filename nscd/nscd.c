@@ -263,10 +263,6 @@ main (int argc, char **argv)
     /* In foreground mode we are not paranoid.  */
     paranoia = 0;
 
-  /* Start the SELinux AVC.  */
-  if (selinux_enabled)
-    nscd_avc_init ();
-
   signal (SIGINT, termination_handler);
   signal (SIGQUIT, termination_handler);
   signal (SIGTERM, termination_handler);
@@ -293,6 +289,10 @@ main (int argc, char **argv)
 
   /* Init databases.  */
   nscd_init ();
+
+  /* Start the SELinux AVC.  */
+  if (selinux_enabled)
+    nscd_avc_init ();
 
   /* Handle incoming requests */
   start_threads ();
