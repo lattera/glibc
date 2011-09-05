@@ -281,4 +281,3 @@ L(return_null_1):
 
 END (__strrchr_sse2_bsf)
 #endif
-

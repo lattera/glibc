@@ -347,4 +347,3 @@ L(return_null):
 
 END (__strchr_sse2)
 #endif
-
