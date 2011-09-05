@@ -1,3 +1,12 @@
+2011-08-29  Liubov Dmitrieva  <liubov.dmitrieva@gmail.com>
+
+	* sysdeps/i386/i686/multiarch/Makefile: (sysdep_routines): Add
+	wcscmp-c wcscmp-sse2
+	* sysdeps/i386/i686/multiarch/wcscmp-c.c: New file.
+	* sysdeps/i386/i686/multiarch/wcscmp.S: New file.
+	* sysdeps/i386/i686/multiarch/wcscmp-sse2.S: New file.
+	* wcsmbs/wcscmp.c: Allow renaming.
+
 2011-09-05  David S. Miller  <davem@davemloft.net>
 
 	* sysdeps/sparc/sparc32/fpu/s_fabsf.S: Use first argument

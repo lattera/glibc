@@ -19,12 +19,15 @@
 
 #include <wchar.h>
 
+#ifndef WCSCMP
+# define WCSCMP wcscmp
+#endif
 
 /* Compare S1 and S2, returning less than, equal to or
    greater than zero if S1 is lexicographically less than,
    equal to or greater than S2.	 */
 int
-wcscmp (s1, s2)
+WCSCMP (s1, s2)
      const wchar_t *s1;
      const wchar_t *s2;
 {
@@ -41,4 +44,4 @@ wcscmp (s1, s2)
 
   return c1 - c2;
 }
-libc_hidden_def (wcscmp)
+libc_hidden_def (WCSCMP)

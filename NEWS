@@ -25,7 +25,7 @@ Version 2.15
 * Improved strcpy, strncpy, stpcpy, stpncpy for SSE2 and SSSE3 on x86-64.
   Contributed by HJ Lu.
 
-* Optimized strcat and strncat on x86-64.
+* Optimized strcat and strncat on x86-64 and optimized wcscmp on x86-32.
   Contributed by Liubov Dmitrieva.
 
 * New interfaces: scandirat, scandirat64
