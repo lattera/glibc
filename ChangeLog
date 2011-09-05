@@ -1,5 +1,8 @@
 2011-09-05  Ulrich Drepper  <drepper@gmail.com>
 
+	[BZ #13150]
+	* posix/glob.h: Remove gcc 1.x support.
+
 	[BZ #13068]
 	* elf/dl-misc.c (_dl_sysdep_read_whole_file): Use O_CLOEXEC.
 

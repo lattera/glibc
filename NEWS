@@ -10,7 +10,7 @@ Version 2.15
 * The following bugs are resolved with this release:
 
   9696, 12868, 12852, 12874, 12885, 12907, 12922, 12935, 13007, 13021,
-  13068, 13114, 13144
+  13068, 13114, 13144, 13150
 
 * New program pldd to list loaded object of a process
   Implemented by Ulrich Drepper.
