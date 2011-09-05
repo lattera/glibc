@@ -8,4 +8,3 @@
 #endif
 
 #include "wcsmbs/wcscmp.c"
-

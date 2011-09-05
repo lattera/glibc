@@ -1,4 +1,4 @@
-/* Multiple versions of wcscmp 
+/* Multiple versions of wcscmp
    Copyright (C) 2011 Free Software Foundation, Inc.
    Contributed by Intel Corporation.
    This file is part of the GNU C Library.
@@ -55,4 +55,3 @@ ENTRY(wcscmp)
 	ret
 END(wcscmp)
 #endif
-
