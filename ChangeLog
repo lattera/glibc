@@ -1,3 +1,9 @@
+2011-09-05  Ulrich Drepper  <drepper@gmail.com>
+
+	[BZ #13144]
+	* sysdeps/unix/sysv/linux/x86_64/bits/sem.h (semdid_ds): Fix to match
+	kernel in 64-bit binaries.
+
 2011-08-24  David S. Miller  <davem@davemloft.net>
 
 	* sysdeps/sparc/sparc64/strcmp.S: Rewrite.
