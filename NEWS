@@ -29,6 +29,9 @@ Version 2.15
   x86-64.
   Contributed by Liubov Dmitrieva.
 
+* Optimized strchrm strrchr for SSE on x86-32.
+  Contributed by Liubov Dmitrieva.
+
 * New interfaces: scandirat, scandirat64
   Implemented by Ulrich Drepper.
 

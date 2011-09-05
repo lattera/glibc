@@ -1,3 +1,15 @@
+2011-07-20  Liubov Dmitrieva  <liubov.dmitrieva@intel.com>
+
+	* sysdeps/i386/i686/multiarch/Makefile (sysdep_routines): Add
+	strchr-sse2 strrchr-sse2 strchr-sse2-bsf
+	strrchr-sse2-bsf
+	* sysdeps/i386/i686/multiarch/strchr.S: New file.
+	* sysdeps/i386/i686/multiarch/strrchr.S: New file.
+	* sysdeps/i386/i686/multiarch/strchr-sse2.S: New file.
+	* sysdeps/i386/i686/multiarch/strchr-sse2-bsf.S: New file.
+	* sysdeps/i386/i686/multiarch/strrchr-sse2.S: New file.
+	* sysdeps/i386/i686/multiarch/strrchr-sse2-bsf.S: New file.
+
 2011-08-29  Liubov Dmitrieva  <liubov.dmitrieva@gmail.com>
 
 	* sysdeps/x86_64/wcscmp.S: New file.
