@@ -1,7 +1,6 @@
 /* Float absolute value, sparc32 version.
-   Copyright (C) 2006 Free Software Foundation, Inc.
+   Copyright (C) 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Jakub Jelinek <jakub@redhat.com>, 2006.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -20,10 +19,11 @@
 
 #include <sysdep.h>
 
-ENTRY (__fabsf)
-	st	%o0, [%sp+68]
-	ld	[%sp+68], %f0
+ENTRY (__fabs)
+	st	%o0, [%sp+72]
+	st	%o1, [%sp+76]
+	ldd	[%sp+72], %f0
 	retl
 	 fabss	%f0, %f0
-END (__fabsf)
-weak_alias (__fabsf, fabsf)
+END (__fabs)
+weak_alias (__fabs, fabs)

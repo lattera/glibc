@@ -1,3 +1,17 @@
+2011-09-05  David S. Miller  <davem@davemloft.net>
+
+	* sysdeps/unix/sysv/linux/sem_timedwait.c (do_futex_timed_wait):
+	New function.
+	(sem_timedwait): Call it to force an exception region around
+	the async cancel enable and the futex operation.
+	* sysdeps/unix/sysv/linux/sparc/sem_timedwait.c: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/sem_timedwait.c: Likewise.
+	* sysdeps/unix/sysv/linux/sem_wait.c (do_futex_wait): New function.
+	(__new_sem_wait): Call it to force an exception region around
+	the async cancel enable and the futex operation.
+	* sysdeps/unix/sysv/linux/sparc/sem_wait.c: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/sem_wait.c: Likewise.
+
 2011-08-31  Andreas Schwab  <schwab@redhat.com>
 
 	* allocatestack.c (setxid_mark_thread): Ensure that the exiting
