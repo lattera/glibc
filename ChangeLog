@@ -1,3 +1,8 @@
+2011-09-05  Ulrich Drepper  <drepper@gmail.com>
+
+	[BZ #13068]
+	* elf/dl-misc.c (_dl_sysdep_read_whole_file): Use O_CLOEXEC.
+
 2011-07-20  Liubov Dmitrieva  <liubov.dmitrieva@intel.com>
 
 	* sysdeps/i386/i686/multiarch/Makefile (sysdep_routines): Add
