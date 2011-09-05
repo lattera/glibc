@@ -999,7 +999,16 @@ setxid_mark_thread (struct xid_command *cmdp, struct pthread *t)
 
       /* If the thread is exiting right now, ignore it.  */
       if ((ch & EXITING_BITMASK) != 0)
-	return;
+	{
+	  /* Release the futex if there is no other setxid in
+	     progress.  */
+	  if ((ch & SETXID_BITMASK) == 0)
+	    {
+	      t->setxid_futex = 1;
+	      lll_futex_wake (&t->setxid_futex, 1, LLL_PRIVATE);
+	    }
+	  return;
+	}
     }
   while (atomic_compare_and_exchange_bool_acq (&t->cancelhandling,
 					       ch | SETXID_BITMASK, ch));

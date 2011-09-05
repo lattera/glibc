@@ -1,5 +1,5 @@
 /* Machine-dependent ELF dynamic relocation inline functions.  SPARC version.
-   Copyright (C) 1996-2003, 2004, 2005, 2006, 2007, 2010
+   Copyright (C) 1996-2003, 2004, 2005, 2006, 2007, 2010, 2011
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -26,6 +26,7 @@
 #include <string.h>
 #include <sys/param.h>
 #include <ldsodefs.h>
+#include <sysdep.h>
 #include <tls.h>
 #include <dl-plt.h>
 

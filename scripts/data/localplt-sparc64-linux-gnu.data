@@ -12,7 +12,6 @@ libc.so: _Qp_sub
 libc.so: _Qp_xtoq
 libc.so: _Unwind_Find_FDE
 libc.so: calloc
-libc.so: ffs
 libc.so: free
 libc.so: malloc
 libc.so: memalign

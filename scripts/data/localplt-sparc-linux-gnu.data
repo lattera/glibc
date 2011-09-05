@@ -10,7 +10,6 @@ libc.so: _Q_mul
 libc.so: _Q_sub
 libc.so: _Unwind_Find_FDE
 libc.so: calloc
-libc.so: ffs
 libc.so: free
 libc.so: malloc
 libc.so: memalign

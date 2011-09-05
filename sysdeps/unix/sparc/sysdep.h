@@ -1,4 +1,5 @@
-/* Copyright (C) 1993, 1994, 1995, 1997, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1994, 1995, 1997, 2003, 2011
+        Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,6 +18,7 @@
    02111-1307 USA.  */
 
 #include <sysdeps/unix/sysdep.h>
+#include <sysdeps/sparc/sysdep.h>
 
 #ifdef	__ASSEMBLER__
 
@@ -25,6 +27,26 @@
    on this system, the asm identifier `syscall_error' intrudes on the
    C name space.  Make sure we use an innocuous name.  */
 #define	syscall_error	C_SYMBOL_NAME(__syscall_error)
+#endif
+
+#ifdef PIC
+#define SETUP_PIC_REG(reg, tmp)						\
+	.ifndef __sparc_get_pc_thunk.reg;				\
+	.section .text.__sparc_get_pc_thunk.reg,"axG",@progbits,__sparc_get_pc_thunk.reg,comdat; \
+	.align	 32;							\
+	.weak	 __sparc_get_pc_thunk.reg;				\
+	.hidden	 __sparc_get_pc_thunk.reg;				\
+	.type	 __sparc_get_pc_thunk.reg, #function;			\
+__sparc_get_pc_thunk.reg:		   				\
+	jmp	%o7 + 8;						\
+	 add	%o7, %reg, %##reg;					\
+	.previous;							\
+	.endif;								\
+	sethi	%hi(_GLOBAL_OFFSET_TABLE_-4), %##reg;			\
+	mov	%o7, %##tmp;		      				\
+	call	__sparc_get_pc_thunk.reg;				\
+	 or	%##reg, %lo(_GLOBAL_OFFSET_TABLE_+4), %##reg;		\
+	mov	%##tmp, %o7;
 #endif
 
 #ifdef HAVE_ELF
