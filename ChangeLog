@@ -1,5 +1,7 @@
 2011-08-29  Liubov Dmitrieva  <liubov.dmitrieva@gmail.com>
 
+	* sysdeps/x86_64/wcscmp.S: New file.
+
 	* sysdeps/i386/i686/multiarch/Makefile: (sysdep_routines): Add
 	wcscmp-c wcscmp-sse2
 	* sysdeps/i386/i686/multiarch/wcscmp-c.c: New file.
