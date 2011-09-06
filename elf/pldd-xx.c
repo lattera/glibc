@@ -79,7 +79,7 @@ static_assert (r_map, (offsetof (struct r_debug, r_map)
 
 static int
 
-E(find_maps) (pid_t pid, EW(Ehdr) *ehdr, void *auxv, size_t auxv_size)
+E(find_maps) (pid_t pid, void *auxv, size_t auxv_size)
 {
   EW(Addr) phdr = 0;
   unsigned int phnum = 0;

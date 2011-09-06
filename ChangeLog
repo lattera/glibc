@@ -1,3 +1,9 @@
+2011-09-05  Ulrich Drepper  <drepper@gmail.com>
+
+	* elf/pldd.c (get_process_info): Don't read whole ELF header, just
+	e_ident.  Don't pass to find_mapsXX.
+	* elf/pldd-xx.c (find_mapsXX): Remove second parameter.
+
 2011-07-20  Liubov Dmitrieva  <liubov.dmitrieva@intel.com>
 
 	* sysdeps/x86_64/multiarch/Makefile (sysdep_routines): Add

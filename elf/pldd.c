@@ -247,17 +247,13 @@ get_process_info (int dfd, long int pid)
       return EXIT_FAILURE;
     }
 
-  union
-  {
-    Elf32_Ehdr ehdr32;
-    Elf64_Ehdr ehdr64;
-  } uehdr;
-  if (read (fd, &uehdr, sizeof (uehdr)) != sizeof (uehdr))
+  char e_ident[EI_NIDENT];
+  if (read (fd, e_ident, EI_NIDENT) != EI_NIDENT)
     goto no_info;
 
   close (fd);
 
-  if (memcmp (uehdr.ehdr32.e_ident, ELFMAG, SELFMAG) != 0)
+  if (memcmp (e_ident, ELFMAG, SELFMAG) != 0)
     {
       error (0, 0, gettext ("process %lu is no ELF program"), pid);
       return EXIT_FAILURE;
@@ -287,10 +283,10 @@ get_process_info (int dfd, long int pid)
   close (fd);
 
   int retval;
-  if (uehdr.ehdr32.e_ident[EI_CLASS] == ELFCLASS32)
-    retval = find_maps32 (pid, &uehdr.ehdr32, auxv, auxv_size);
+  if (e_ident[EI_CLASS] == ELFCLASS32)
+    retval = find_maps32 (pid, auxv, auxv_size);
   else
-    retval = find_maps64 (pid, &uehdr.ehdr64, auxv, auxv_size);
+    retval = find_maps64 (pid, auxv, auxv_size);
 
   free (auxv);
   close (memfd);
