@@ -1,3 +1,11 @@
+2011-09-06  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #13109]
+	* sysdeps/unix/sysv/linux/mips/mips64/n64/syscalls.list (fstatfs)
+	(statfs): New.
+	* sysdeps/unix/sysv/linux/mips/mips64/n64/fstatfs64.c,
+	sysdeps/unix/sysv/linux/mips/mips64/n64/statfs64.c: New.
+
 2011-08-02  Matt Turner  <mattst88@gmail.com>
 
 	* sysdeps/mips/bits/atomic.h: Workaround R10K ll/sc errata.
