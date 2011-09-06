@@ -279,4 +279,3 @@ L(Exit15):
 
 END (__strchr_sse2_no_bsf)
 #endif
-

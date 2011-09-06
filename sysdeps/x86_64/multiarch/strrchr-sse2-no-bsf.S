@@ -554,4 +554,3 @@ L(PrologFindZeroExit15):
 
 END (__strrchr_sse2_no_bsf)
 #endif
-
