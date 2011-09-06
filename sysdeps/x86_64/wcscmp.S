@@ -19,11 +19,6 @@
    02111-1307 USA.  */
 
 #include <sysdep.h>
-#include <init-arch.h>
-
-/* Define multiple versions only for the definition in libc and for
-   the DSO.  In static binaries we need wcscmp before the initialization
-   happened.  */
 
 	.text
 ENTRY (wcscmp)
