@@ -29,6 +29,7 @@ __BEGIN_DECLS
 typedef __SIZE_TYPE__ __size_t;
 # if defined __USE_XOPEN || __USE_XOPEN2K8
 typedef __SIZE_TYPE__ size_t;
+# endif
 #else
 /* The GNU CC stddef.h version defines __size_t as empty.  We need a real
    definition.  */
