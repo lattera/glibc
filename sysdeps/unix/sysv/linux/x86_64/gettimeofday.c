@@ -38,6 +38,7 @@ __asm (".type __gettimeofday, %gnu_indirect_function");
 #else
 # include <sys/time.h>
 # include <sysdep.h>
+# include <errno.h>
 
 int
 __gettimeofday (struct timeval *tv, struct timezone *tz)
