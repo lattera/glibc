@@ -33,7 +33,11 @@ ENTRY(strchr)
 	testl	$bit_SSE4_2, __cpu_features+CPUID_OFFSET+index_SSE4_2(%rip)
 	jz	2f
 	leaq	__strchr_sse42(%rip), %rax
-2:	ret
+	ret
+2:	testl	$bit_Slow_BSF, __cpu_features+FEATURE_OFFSET+index_Slow_BSF(%rip)
+	jz	3f
+	leaq    __strchr_sse2_no_bsf(%rip), %rax
+3:	ret
 END(strchr)
 
 
