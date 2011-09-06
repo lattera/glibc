@@ -546,3 +546,8 @@
 #if __LINUX_KERNEL_VERSION >= 0x020627
 # define __ASSUME_SENDMMSG	1
 #endif
+
+/* getcpu is a syscall for x86-64 since 3.1.  */
+#if defined __x86_64__ && __LINUX_KERNEL_VERSION >= 0x030100
+# define __ASSUME_GETCPU_SYSCALL	1
+#endif

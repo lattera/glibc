@@ -36,11 +36,13 @@ time_ifunc (void)
 __asm (".type time, %gnu_indirect_function");
 #else
 # include <time.h>
+# include <sysdep.h>
 
 time_t
 time (time_t *t)
 {
-  return ((time_t (*) (time_t *)) VSYSCALL_ADDR_vtime) (t);
+  INTERNAL_SYSCALL_DECL (err);
+  return INTERNAL_SYSCALL (time, err, 1, t);
 }
 #endif
 

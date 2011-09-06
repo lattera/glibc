@@ -20,6 +20,7 @@
 #include <tls.h>
 #define _ERRNO_H	1
 #include <bits/errno.h>
+#include <kernel-features.h>
 
 /* For the calculation see asm/vsyscall.h.  */
 #define VSYSCALL_ADDR_vgetcpu	0xffffffffff600800
@@ -38,10 +39,26 @@ ENTRY (sched_getcpu)
 #ifdef SHARED
 	movq	__vdso_getcpu(%rip), %rax
 	PTR_DEMANGLE (%rax)
-#else
-	movq	$VSYSCALL_ADDR_vgetcpu, %rax
-#endif
 	callq	*%rax
+#else
+# ifdef __NR_getcpu
+	movl	$__NR_getcpu, %eax
+	syscall
+#  ifndef __ASSUME_GETCPU_SYSCALL
+	cmpq	$-ENOSYS, %rax
+	jne	1f
+#  endif
+# endif
+# ifndef __ASSUME_GETCPU_SYSCALL
+	movq	$VSYSCALL_ADDR_vgetcpu, %rax
+	callq	*%rax
+1:
+# else
+#  ifndef __NR_getcpu
+#   error "cannot happen"
+#  endif
+# endif
+#endif
 
 	cmpq	$-4095, %rax
 	jae	SYSCALL_ERROR_LABEL

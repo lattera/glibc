@@ -37,11 +37,12 @@ gettimeofday_ifunc (void)
 __asm (".type __gettimeofday, %gnu_indirect_function");
 #else
 # include <sys/time.h>
+# include <sysdep.h>
 
 int
 __gettimeofday (struct timeval *tv, struct timezone *tz)
 {
-  return ((int (*) (struct timeval *, struct timezone *)) VSYSCALL_ADDR_vgettimeofday) (tv, tz);
+  return INLINE_SYSCALL (gettimeofday, 2, tv, tz);
 }
 #endif
 
