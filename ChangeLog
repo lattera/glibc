@@ -1,5 +1,20 @@
 2011-09-05  Ulrich Drepper  <drepper@gmail.com>
 
+	[BZ #13134]
+	* sysdeps/posix/spawni.c (script_execute): Define only for compatibility
+	before glibc 2.15.
+	(tryshell): Define.
+	(__spawni): Change last parameter to be flag.  Test
+	SPAWN_XFLAGS_USE_PATH flag to use path or not.
+	Don't try to use shell unless SPAWN_XFLAGS_TRY_SHELL is set.
+	* sysdeps/mach/hurd/spawni.c: Change last parameter and adjust user.
+	* posix/spawni.c: Likewise.
+	* posix/spawn.c: Add compat version which passed SPAWN_XFLAGS_TRY_SHELL.
+	* posix/spawnp.c: Likewise.  Change normal version to use
+	SPAWN_XFLAGS_USE_PATH.
+	* posix/spawn_int.c: Define SPAWN_XFLAGS_USE_PATH and
+	SPAWN_XFLAGS_TRY_SHELL.
+
 	[BZ #13150]
 	* posix/glob.h: Remove gcc 1.x support.
 

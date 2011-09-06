@@ -1,5 +1,5 @@
 /* spawn a new process running an executable.  Hurd version.
-   Copyright (C) 2001,02,04 Free Software Foundation, Inc.
+   Copyright (C) 2001,02,04,11 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -41,7 +41,7 @@ __spawni (pid_t *pid, const char *file,
 	  const posix_spawn_file_actions_t *file_actions,
 	  const posix_spawnattr_t *attrp,
 	  char *const argv[], char *const envp[],
-	  int use_path)
+	  int xflags)
 {
   pid_t new_pid;
   char *path, *p, *name;
@@ -391,7 +391,7 @@ __spawni (pid_t *pid, const char *file,
 
 	/* Make sure the dtable can hold NEWFD.  */
 #define EXPAND_DTABLE(newfd)						      \
-	({ 								      \
+	({								      \
 	  if ((unsigned int)newfd >= dtablesize				      \
 	      && newfd < _hurd_rlimits[RLIMIT_OFILE].rlim_cur)		      \
 	    {								      \
@@ -399,7 +399,7 @@ __spawni (pid_t *pid, const char *file,
 	      NEW_TABLE (dtable, newfd);				      \
 	      NEW_TABLE (ulink_dtable, newfd);				      \
 	      NEW_TABLE (dtable_cells, newfd);				      \
-	      dtablesize = newfd + 1;		       		       	      \
+	      dtablesize = newfd + 1;					      \
 	    }								      \
 	  ((unsigned int)newfd < dtablesize ? 0 : EMFILE);		      \
 	})
@@ -543,7 +543,7 @@ __spawni (pid_t *pid, const char *file,
      conditions are diagnosed first and what side effects (file creation,
      etc) can be observed before what errors.  */
 
-  if (! use_path || strchr (file, '/') != NULL)
+  if ((xflags & SPAWN_XFLAGS_USE_PATH) == 0 || strchr (file, '/') != NULL)
     /* The FILE parameter is actually a path.  */
     err = child_lookup (file, O_EXEC, 0, &execfile);
   else

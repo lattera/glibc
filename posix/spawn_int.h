@@ -29,10 +29,13 @@ struct __spawn_action
   } action;
 };
 
+#define SPAWN_XFLAGS_USE_PATH	0x1
+#define SPAWN_XFLAGS_TRY_SHELL	0x2
+
 extern int __posix_spawn_file_actions_realloc (posix_spawn_file_actions_t *
 					       file_actions);
 
 extern int __spawni (pid_t *pid, const char *path,
 		     const posix_spawn_file_actions_t *file_actions,
 		     const posix_spawnattr_t *attrp, char *const argv[],
-		     char *const envp[], int use_path);
+		     char *const envp[], int xflags);

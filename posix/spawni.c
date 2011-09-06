@@ -1,5 +1,5 @@
 /* Guts of POSIX spawn interface.  Stub version.
-   Copyright (C) 2001 Free Software Foundation, Inc.
+   Copyright (C) 2001, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -36,7 +36,7 @@ int
 __spawni (pid_t *pid, const char *file,
 	  const posix_spawn_file_actions_t *file_actions,
 	  const posix_spawnattr_t *attrp, char *const argv[],
-	  char *const envp[], int use_path)
+	  char *const envp[], int xflags)
 {
   __set_errno (ENOSYS);
   return -1;
