@@ -1,5 +1,8 @@
 2011-09-06  Ulrich Drepper  <drepper@gmail.com>
 
+	* sysdeps/unix/sysv/linux/x86_64/clock_gettime.c (INTERNAL_GETTIME):
+	Forgot to demangle the pointer.
+
 	* sysdeps/i386/sysdep.h: Define atom_text_section.
 	* sysdeps/x86_64/sysdep.h: Likewise.
 	* sysdeps/i386/i686/multiarch/strchr-sse2-bsf.S: Place function in
