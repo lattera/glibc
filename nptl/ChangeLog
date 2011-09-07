@@ -2,6 +2,14 @@
 
 	* sysdeps/unix/sysv/linux/x86_64/sem_timedwait.S (sem_timedwait): Don't
 	use gettimeofday vsyscall, just call gettimeofday.
+	* sysdeps/unix/sysv/linux/x86_64/lowlevellock.S: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/lowlevelrobustlock.S: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/pthread_rwlock_timedrdlock.S:
+	Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/pthread_rwlock_timedwrlock.S:
+	Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/pthread_cond_timedwait.S: Likewise.
+	Simplify __vdso_clock_gettime use.
 
 2011-09-05  David S. Miller  <davem@davemloft.net>
 

@@ -1,4 +1,4 @@
-/* Copyright (C) 2002-2006, 2007, 2009, 2010 Free Software Foundation, Inc.
+/* Copyright (C) 2002-2007, 2009, 2010, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -66,10 +66,6 @@
 	andl	%fs:PRIVATE_FUTEX, reg ; \
 	orl	$FUTEX_WAKE, reg
 #endif
-
-
-/* For the calculation see asm/vsyscall.h.  */
-#define VSYSCALL_ADDR_vgettimeofday	0xffffffffff600000
 
 
 	.globl	__lll_lock_wait_private
@@ -250,10 +246,9 @@ __lll_timedlock_wait:
 	/* Get current time.  */
 	movq	%rsp, %rdi
 	xorl	%esi, %esi
-	movq	$VSYSCALL_ADDR_vgettimeofday, %rax
-	/* This is a regular function call, all caller-save registers
-	   might be clobbered.  */
-	callq	*%rax
+	/* This call works because we directly jump to a system call entry
+	   which preserves all the registers.  */
+	call	JUMPTARGET(__gettimeofday)
 
 	/* Compute relative timeout.  */
 	movq	8(%rsp), %rax
@@ -402,8 +397,9 @@ __lll_timedwait_tid:
 	/* Get current time.  */
 2:	movq	%rsp, %rdi
 	xorl	%esi, %esi
-	movq	$VSYSCALL_ADDR_vgettimeofday, %rax
-	callq	*%rax
+	/* This call works because we directly jump to a system call entry
+	   which preserves all the registers.  */
+	call	JUMPTARGET(__gettimeofday)
 
 	/* Compute relative timeout.  */
 	movq	8(%rsp), %rax
