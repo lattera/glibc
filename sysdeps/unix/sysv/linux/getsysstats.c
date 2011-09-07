@@ -37,15 +37,6 @@
 #include <not-cancel.h>
 #include <kernel-features.h>
 
-#ifndef HAVE_CLOCK_GETTIME_VSYSCALL
-# undef INTERNAL_VSYSCALL
-# define INTERNAL_VSYSCALL INTERNAL_SYSCALL
-# undef INLINE_VSYSCALL
-# define INLINE_VSYSCALL INLINE_SYSCALL
-#else
-# include <bits/libc-vdso.h>
-#endif
-
 
 /* How we can determine the number of available processors depends on
    the configuration.  There is currently (as of version 2.0.21) no
@@ -141,17 +132,10 @@ __get_nprocs ()
   static int cached_result;
   static time_t timestamp;
 
-#ifdef __ASSUME_POSIX_TIMERS
-  struct timespec ts;
-  INTERNAL_SYSCALL_DECL (err);
-  INTERNAL_VSYSCALL (clock_gettime, err, 2, CLOCK_REALTIME, &ts);
-#else
-  struct timeval ts;
-  __gettimeofday (&ts, NULL);
-#endif
+  time_t now = time (NULL);
   time_t prev = timestamp;
   atomic_read_barrier ();
-  if (ts.tv_sec == prev)
+  if (now == prev)
     return cached_result;
 
   /* XXX Here will come a test for the new system call.  */
@@ -243,7 +227,7 @@ __get_nprocs ()
  out:
   cached_result = result;
   atomic_write_barrier ();
-  timestamp = ts.tv_sec;
+  timestamp = now;
 
   return result;
 }
