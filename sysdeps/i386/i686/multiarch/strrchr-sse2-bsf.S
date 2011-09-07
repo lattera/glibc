@@ -37,7 +37,7 @@
 # define STR1  PARMS
 # define STR2  STR1+4
 
-	.text
+	atom_text_section
 ENTRY (__strrchr_sse2_bsf)
 
 	mov	STR1(%esp), %ecx

@@ -1,5 +1,5 @@
 /* strlen with SSE2 and BSF
-   Copyright (C) 2010 Free Software Foundation, Inc.
+   Copyright (C) 2010, 2011 Free Software Foundation, Inc.
    Contributed by Intel Corporation.
    This file is part of the GNU C Library.
 
@@ -39,7 +39,7 @@
 #define RETURN		POP (%edi); POP (%esi); ret; \
 			cfi_restore_state; cfi_remember_state
 
-	.text
+	atom_text_section
 ENTRY ( __strlen_sse2_bsf)
 	ENTRANCE
 	mov	STR(%esp), %edi

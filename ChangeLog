@@ -1,5 +1,15 @@
 2011-09-06  Ulrich Drepper  <drepper@gmail.com>
 
+	* sysdeps/i386/sysdep.h: Define atom_text_section.
+	* sysdeps/x86_64/sysdep.h: Likewise.
+	* sysdeps/i386/i686/multiarch/strchr-sse2-bsf.S: Place function in
+	section with atom_text_section.
+	* sysdeps/i386/i686/multiarch/strlen-sse2-bsf.S: Likewise.
+	* sysdeps/i386/i686/multiarch/strrchr-sse2-bsf.S: Likewise.
+	* sysdeps/x86_64/multiarch/strchr-sse2-no-bsf.S: Likewise.
+	* sysdeps/x86_64/multiarch/strlen-no-bsf.S: Likewise.
+	* sysdeps/x86_64/multiarch/strrchr-sse2-no-bsf.S: Likewise.
+
 	* sysdeps/unix/sysv/linux/x86_64/clock_gettime.c: New file.
 	* sysdeps/unix/sysv/linux/clock_gettime.c (SYSCALL_GETTIME): Allow
 	already be defined.  Change to take two parameters and don't assign

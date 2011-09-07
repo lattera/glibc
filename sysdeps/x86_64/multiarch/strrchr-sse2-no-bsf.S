@@ -23,7 +23,7 @@
 # include <sysdep.h>
 # include "asm-syntax.h"
 
-	.text
+	atom_text_section
 ENTRY (__strrchr_sse2_no_bsf)
 
 	movd	%rsi, %xmm1

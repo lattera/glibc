@@ -26,7 +26,7 @@
 
 #  define RETURN ret
 
-	.section .text.sse2,"ax",@progbits
+	atom_text_section
 ENTRY (__strlen_no_bsf)
 # endif
 	xor	%eax, %eax
