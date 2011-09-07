@@ -1,4 +1,4 @@
-/* Copyright (C) 2001-2005, 2007 Free Software Foundation, Inc.
+/* Copyright (C) 2001-2005, 2007, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -279,8 +279,8 @@
     if (INTERNAL_SYSCALL_ERROR_P (sc_ret, sc_err))			      \
       {									      \
       iserr:								      \
-        __set_errno (INTERNAL_SYSCALL_ERRNO (sc_ret, sc_err));		      \
-        sc_ret = -1L;							      \
+	__set_errno (INTERNAL_SYSCALL_ERRNO (sc_ret, sc_err));		      \
+	sc_ret = -1L;							      \
       }									      \
   out:									      \
     sc_ret;								      \
@@ -303,9 +303,6 @@
   out:									      \
     v_ret;								      \
   })
-
-/* List of system calls which are supported as vsyscalls.  */
-#  define HAVE_CLOCK_GETTIME_VSYSCALL	1
 
 # else
 #  define INLINE_VSYSCALL(name, nr, args...) \

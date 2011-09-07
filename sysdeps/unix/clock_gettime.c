@@ -1,5 +1,5 @@
 /* clock_gettime -- Get the current time from a POSIX clockid_t.  Unix version.
-   Copyright (C) 1999-2004, 2005, 2007 Free Software Foundation, Inc.
+   Copyright (C) 1999-2004, 2005, 2007, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -113,7 +113,7 @@ clock_gettime (clockid_t clock_id, struct timespec *tp)
 
     default:
 #ifdef SYSDEP_GETTIME_CPU
-      SYSDEP_GETTIME_CPU;
+      retval = SYSDEP_GETTIME_CPU (clock_id, tp);
 #endif
 #if HP_TIMING_AVAIL
       if ((clock_id & ((1 << CLOCK_IDFIELD_SIZE) - 1))

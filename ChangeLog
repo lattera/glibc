@@ -1,5 +1,16 @@
 2011-09-06  Ulrich Drepper  <drepper@gmail.com>
 
+	* sysdeps/unix/sysv/linux/x86_64/clock_gettime.c: New file.
+	* sysdeps/unix/sysv/linux/clock_gettime.c (SYSCALL_GETTIME): Allow
+	already be defined.  Change to take two parameters and don't assign
+	result to variable.  Adjust all users.
+	Define INTERNAL_GETTIME if not already defined.
+	Use INTERNAL_GETTIME instead of INTERNAL_VSYSCALL got clock_gettime
+	call.
+	* sysdeps/unix/sysv/linux/x86_64/sysdep.h: Don't define
+	HAVE_CLOCK_GETTIME_VSYSCALL.
+	* sysdeps/unix/clock_gettime.c: Adjust use of SYSDEP_GETTIME_CPU.
+
 	* sysdeps/unix/sysv/linux/getsysstats.c (__get_nprocs): Don't use
 	gettimeofday vsyscall, just use time.
 

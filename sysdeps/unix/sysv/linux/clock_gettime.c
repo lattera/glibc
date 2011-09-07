@@ -1,5 +1,5 @@
 /* clock_gettime -- Get current time from a POSIX clockid_t.  Linux version.
-   Copyright (C) 2003,2004,2005,2006,2007,2010 Free Software Foundation, Inc.
+   Copyright (C) 2003,2004,2005,2006,2007,2010,2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -32,9 +32,14 @@
 # include <bits/libc-vdso.h>
 #endif
 
-#define SYSCALL_GETTIME \
-  retval = INLINE_VSYSCALL (clock_gettime, 2, clock_id, tp); \
-  break
+#ifndef SYSCALL_GETTIME
+# define SYSCALL_GETTIME(id, tp) \
+  INLINE_VSYSCALL (clock_gettime, 2, id, tp)
+#endif
+#ifndef INTERNAL_GETTIME
+# define INTERNAL_GETTIME(id, tp) \
+  INTERNAL_VSYSCALL (clock_gettime, err, 2, id, tp)
+#endif
 
 #ifdef __ASSUME_POSIX_TIMERS
 
@@ -44,7 +49,8 @@
   SYSDEP_GETTIME_CPUTIME						      \
   case CLOCK_REALTIME:							      \
   case CLOCK_MONOTONIC:							      \
-    SYSCALL_GETTIME
+    retval = SYSCALL_GETTIME (clock_id, tp);				      \
+    break
 
 # define __libc_missing_posix_timers 0
 #elif defined __NR_clock_gettime
@@ -59,7 +65,7 @@ maybe_syscall_gettime (clockid_t clock_id, struct timespec *tp)
   if (!__libc_missing_posix_timers)
     {
       INTERNAL_SYSCALL_DECL (err);
-      int r = INTERNAL_VSYSCALL (clock_gettime, err, 2, clock_id, tp);
+      int r = INTERNAL_GETTIME (clock_id, tp);
       if (!INTERNAL_SYSCALL_ERROR_P (r, err))
 	return 0;
 
@@ -89,7 +95,7 @@ maybe_syscall_gettime (clockid_t clock_id, struct timespec *tp)
     /* Fallback code.  */						      \
     if (retval == EINVAL && clock_id == CLOCK_REALTIME)			      \
       retval = realtime_gettime (tp);					      \
-    else 								      \
+    else								      \
       {									      \
 	__set_errno (retval);						      \
 	retval = -1;							      \
@@ -119,7 +125,7 @@ maybe_syscall_gettime_cpu (clockid_t clock_id, struct timespec *tp)
   if (!__libc_missing_posix_cpu_timers)
     {
       INTERNAL_SYSCALL_DECL (err);
-      int r = INTERNAL_VSYSCALL (clock_gettime, err, 2, clock_id, tp);
+      int r = INTERNAL_GETTIME (clock_id, tp);
       if (!INTERNAL_SYSCALL_ERROR_P (r, err))
 	return 0;
 
