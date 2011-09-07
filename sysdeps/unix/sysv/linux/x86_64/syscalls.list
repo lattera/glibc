@@ -14,6 +14,7 @@ semop		-	semop		i:ipi	__semop		semop
 semtimedop	-	semtimedop	i:ipip	semtimedop
 semget		-	semget		i:iii	__semget	semget
 semctl		-	semctl		i:iiii	__semctl	semctl
+syscall_clock_gettime	EXTRA	clock_gettime	Ei:ip		__syscall_clock_gettime
 
 
 # proper socket implementations:

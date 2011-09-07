@@ -1,3 +1,11 @@
+2011-09-07  Ulrich Drepper  <drepper@gmail.com>
+
+	* sysdeps/unix/sysv/linux/x86_64/init-first.c
+	(_libc_vdso_platform_setup): If vDSO is not present store pointer to
+	syscall wrapper around clock_gettime in __vdso_clock_gettime.
+	* sysdeps/unix/sysv/linux/x86_64/syscalls.list: Add entry for
+	clock_gettime.
+
 2011-09-06  Ulrich Drepper  <drepper@gmail.com>
 
 	* sysdeps/unix/sysv/linux/x86_64/clock_gettime.c (INTERNAL_GETTIME):
