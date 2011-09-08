@@ -1,5 +1,7 @@
 2011-09-07  Ulrich Drepper  <drepper@gmail.com>
 
+	* elf/dl-load.c (open_verify): Use O_CLOEXEC.
+
 	* elf/dl-libc.c (dlerror_run): Pass back error code from
 	dl_catch_error.
 

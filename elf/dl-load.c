@@ -1706,7 +1706,7 @@ open_verify (const char *name, struct filebuf *fbp, struct link_map *loader,
 #endif
 
   /* Open the file.  We always open files read-only.  */
-  int fd = __open (name, O_RDONLY);
+  int fd = __open (name, O_RDONLY | O_CLOEXEC);
   if (fd != -1)
     {
       ElfW(Ehdr) *ehdr;
