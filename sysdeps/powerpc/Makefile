@@ -2,10 +2,6 @@
 # machine.
 +cflags += -mnew-mnemonics
 
-ifeq ($(subdir),gmon)
-sysdep_routines += ppc-mcount
-endif
-
 ifeq ($(subdir),string)
 CFLAGS-memcmp.c += -Wno-uninitialized
 endif

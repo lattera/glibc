@@ -58,8 +58,7 @@ ENTRY(_mcount)
 	stw	r4, 44(r1)
 	cfi_offset (lr, -4)
 	stw	r5,  8(r1)
-	bl	__mcount_internal@local
-	nop
+	bl	JUMPTARGET(__mcount_internal)
  /* Restore the registers...  */
 	lwz     r6,  8(r1)
 	lwz	r0, 44(r1)

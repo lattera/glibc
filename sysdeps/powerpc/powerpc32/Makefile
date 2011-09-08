@@ -5,6 +5,11 @@ ifeq ($(with-fp),no)
 sysdep-LDFLAGS += -msoft-float
 endif
 
+ifeq ($(subdir),gmon)
+sysdep_routines += ppc-mcount
+static-only-routines += ppc-mcount
+endif
+
 ifeq ($(subdir),misc)
 sysdep_routines += gprsave0 gprrest0 gprsave1 gprrest1
 endif

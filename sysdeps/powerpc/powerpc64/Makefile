@@ -45,4 +45,5 @@ ifeq ($(subdir),gmon)
 # Compiling with -msoft-float ensures that fp regs are not used
 # for moving memory around.
 CFLAGS-mcount.c += $(no-special-regs)
+sysdep_routines += ppc-mcount
 endif

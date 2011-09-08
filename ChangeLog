@@ -1,3 +1,15 @@
+2011-08-15  Alan Modra  <amodra@gmail.com>
+
+	[BZ #13092]
+	* sysdeps/powerpc/Makefile (gmon): Move sysdep_routines to..
+	* sysdeps/powerpc/powerpc64/Makefile (gmon): ..here..
+	* sysdeps/powerpc/powerpc32/Makefile (gmon): ..and here.  Add
+	ppc_mcount to static-only-routines.
+	* sysdeps/powerpc/powerpc32/Versions: Export GLIBC_PRIVATE
+	__mcount_internal.
+	* sysdeps/powerpc/powerpc32/ppc-mcount.S (_mcount): Call
+	__mcount_internal with usual JUMPTARGET.  Remove useless nop.
+
 2011-08-04  Will Schmidt  <will_schmidt@vnet.ibm.com>
 
 	* sysdeps/powerpc/powerpc32/power7/strncmp.S: Adjust the alignment
