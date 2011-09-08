@@ -149,10 +149,7 @@ L(have_avx):
 	// Get XFEATURE_ENABLED_MASK
 	xgetbv
 	andl	$0x6, %eax
-	cmpl	$0x6, %eax
-	// Nonzero if SSE and AVX state saving is enabled.
-	sete	%al
-2:	leal	-1(%eax,%eax), %eax
+2:	subl	$0x5, %eax
 	movl	%eax, L(have_avx)(%rip)
 	cmpl	$0, %eax
 
