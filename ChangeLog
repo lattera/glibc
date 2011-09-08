@@ -23,6 +23,11 @@
 	* sysdeps/powerpc/powerpc32/ppc-mcount.S (_mcount): Call
 	__mcount_internal with usual JUMPTARGET.  Remove useless nop.
 
+2011-08-18  David Flaherty  <flaherty@linux.vnet.ibm.com>
+
+	* sysdeps/ieee754/ldbl-128ibm/s_fmal.c: New file which checks
+	for finite and infinity parameters.
+
 2011-08-04  Will Schmidt  <will_schmidt@vnet.ibm.com>
 
 	* sysdeps/powerpc/powerpc32/power7/strncmp.S: Adjust the alignment
