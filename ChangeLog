@@ -1,3 +1,9 @@
+2011-07-28  Will Schmidt  <will_schmidt@vnet.ibm.com>
+
+	* sysdeps/powerpc/powerpc32/power7/memcpy.S: Optimize the
+	aligned copy for power7 with vector-scalar instructions.
+	* sysdeps/powerpc/powerpc64/power7/memcpy.S: Likewise.
+
 2011-07-24  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/x86_64/dl-trampoline.S (_dl_runtime_profile): Simplify

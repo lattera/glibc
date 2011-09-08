@@ -1,5 +1,5 @@
 /* Optimized memcpy implementation for PowerPC64/POWER7.
-   Copyright (C) 2010 Free Software Foundation, Inc.
+   Copyright (C) 2010, 2011 Free Software Foundation, Inc.
    Contributed by Luis Machado <luisgpm@br.ibm.com>.
    This file is part of the GNU C Library.
 
@@ -115,23 +115,81 @@ L(copy_GE_32_aligned_cont):
 	std     6,0(3)
 	addi    10,3,8
 
-	/* Main aligned copy loop. Copies 32-bytes at a time.  */
+L(aligned_copy):
+	/* Main aligned copy loop. Copies up to 128-bytes at a time. */
 	.align  4
 4:
-	ld	6,0(11)
-	ld      7,8(11)
-	ld      8,16(11)
-	ld      0,24(11)
-	addi    11,11,32
+	/* check for any 32-byte or 64-byte lumps that are outside of a
+	   nice 128-byte range.  R8 contains the number of 32-byte
+	   lumps, so drop this into the CR, and use the SO/EQ bits to help
+	   handle the 32- or 64- byte lumps.  Then handle the rest with an
+	   unrolled 128-bytes-at-a-time copy loop. */
+	mtocrf	1,8
+	li	6,16	# 16() index
+	li	7,32	# 32() index
+	li	8,48	# 48() index
 
-	std     6,0(10)
-	std     7,8(10)
-	std     8,16(10)
-	std     0,24(10)
-	addi    10,10,32
-	bdnz    4b
+L(aligned_32byte):
+	/* if the SO bit (indicating a 32-byte lump) is not set, move along. */
+	bns	cr7,L(aligned_64byte)
+	lxvd2x	6,0,11
+	lxvd2x	7,11,6
+	addi	11,11,32
+	stxvd2x	6,0,10
+	stxvd2x	7,10,6
+	addi	10,10,32
+
+L(aligned_64byte):
+	/* if the EQ bit (indicating a 64-byte lump) is not set, move along. */
+	bne	cr7,L(aligned_128setup)
+	lxvd2x	6,0,11
+	lxvd2x	7,11,6
+	lxvd2x	8,11,7
+	lxvd2x	9,11,8
+	addi	11,11,64
+	stxvd2x	6,0,10
+	stxvd2x	7,10,6
+	stxvd2x	8,10,7
+	stxvd2x	9,10,8
+	addi	10,10,64
+
+L(aligned_128setup):
+	/* Set up for the 128-byte at a time copy loop.  */
+	srdi	8,31,7
+	cmpdi	8,0	# Any 4x lumps left?
+	beq	3f	# if not, move along.
+	lxvd2x	6,0,11
+	lxvd2x	7,11,6
+	mtctr	8	# otherwise, load the ctr and begin.
+	li	8,48	# 48() index
+	b	L(aligned_128loop)
+
+L(aligned_128head):
+	/* for the 2nd + iteration of this loop. */
+	lxvd2x	6,0,11
+	lxvd2x	7,11,6
+L(aligned_128loop):
+	lxvd2x	8,11,7
+	lxvd2x	9,11,8
+	stxvd2x	6,0,10
+	addi	11,11,64
+	stxvd2x	7,10,6
+	stxvd2x	8,10,7
+	stxvd2x	9,10,8
+	lxvd2x	6,0,11
+	lxvd2x	7,11,6
+	addi	10,10,64
+	lxvd2x	8,11,7
+	lxvd2x	9,11,8
+	addi	11,11,64
+	stxvd2x	6,0,10
+	stxvd2x	7,10,6
+	stxvd2x	8,10,7
+	stxvd2x	9,10,8
+	addi	10,10,64
+	bdnz	L(aligned_128head)
+
 3:
-
 	/* Check for tail bytes.  */
 	rldicr  0,31,0,60
 	mtcrf   0x01,31
