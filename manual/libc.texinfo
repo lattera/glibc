@@ -18,9 +18,9 @@
 @comment %**end of header (This is for running Texinfo on a region.)
 
 @c sold 0.06/1.09, print run out 21may96
-@set EDITION 0.12
-@set VERSION 2.8
-@set UPDATED 2007-10-27
+@set EDITION 0.13
+@set VERSION 2.14
+@set UPDATED 2011-07-19
 @set ISBN 1-882114-55-8
 
 @copying

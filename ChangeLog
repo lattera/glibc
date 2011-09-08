@@ -1,5 +1,9 @@
 2011-09-08  Roland McGrath  <roland@hack.frob.com>
 
+	[BZ #13153]
+	* manual/libc.texinfo (EDITION, VERSION, UPDATED): Update for
+	2011-07-19 change.
+
 	* sysdeps/mach/hurd/fork.c (__fork): Initialize REFS so we don't use a
 	garbage value in a __mach_port_mod_refs call in the cases of the
 	task-self and thread-self ports.
