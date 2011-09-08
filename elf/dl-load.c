@@ -888,7 +888,7 @@ lose (int code, int fd, const char *name, char *realname, struct link_map *l,
   /* The file might already be closed.  */
   if (fd != -1)
     (void) __close (fd);
-  if (l->l_origin != (char *) -1l)
+  if (l != NULL && l->l_origin != (char *) -1l)
     free (l->l_origin);
   free (l);
   free (realname);
