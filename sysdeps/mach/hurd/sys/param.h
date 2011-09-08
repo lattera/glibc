@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1994, 1995, 1997, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1993,1994,1995,1997,1999,2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -117,6 +117,10 @@
 /* Macros for min/max.  */
 #define	MIN(a,b) (((a)<(b))?(a):(b))
 #define	MAX(a,b) (((a)>(b))?(a):(b))
+
+
+/* Unit of `st_blocks'.  */
+#define DEV_BSIZE       512
 
 
 /* Scale factor for scaled integers used to count %cpu time and load avgs.

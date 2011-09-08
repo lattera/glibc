@@ -4,6 +4,10 @@
 	garbage value in a __mach_port_mod_refs call in the cases of the
 	task-self and thread-self ports.
 
+2011-09-06  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	* sysdeps/mach/hurd/sys/param.h (DEV_BSIZE): New macro.
+
 2011-09-08  Andreas Schwab  <schwab@redhat.com>
 
 	* elf/dl-load.c (lose): Check for non-null L.
