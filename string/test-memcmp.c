@@ -1,7 +1,8 @@
 /* Test and measure memcmp functions.
-   Copyright (C) 1999, 2002, 2003, 2005 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2002, 2003, 2005, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Jakub Jelinek <jakub@redhat.com>, 1999.
+   Added wmemcmp support by Liubov Dmitrieva <liubov.dmitrieva@gmail.com>, 2011.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -20,25 +21,47 @@
 
 #define TEST_MAIN
 #include "test-string.h"
+#ifdef WIDE
+# include <inttypes.h>
+# include <wchar.h>
 
-typedef int (*proto_t) (const char *, const char *, size_t);
-int simple_memcmp (const char *, const char *, size_t);
+# define L(str) L##str
+# define MEMCMP wmemcmp
+# define MEMCPY wmemcpy
+# define SIMPLE_MEMCMP simple_wmemcmp
+# define STUPID_MEMCMP stupid_wmemcmp
+# define CHAR wchar_t
+# define MAX_CHAR 256000
+# define UCHAR uint32_t
+# define CHARBYTES 4
+#else
+# define L(str) str
+# define MEMCMP memcmp
+# define MEMCPY memcpy
+# define SIMPLE_MEMCMP simple_memcmp
+# define STUPID_MEMCMP stupid_memcmp
+# define CHAR char
+# define MAX_CHAR 255
+# define UCHAR unsigned char
+# define CHARBYTES 1
+#endif
 
-IMPL (simple_memcmp, 0)
-IMPL (memcmp, 1)
+typedef int (*proto_t) (const CHAR *, const CHAR *, size_t);
 
 int
-simple_memcmp (const char *s1, const char *s2, size_t n)
+SIMPLE_MEMCMP (const CHAR *s1, const CHAR *s2, size_t n)
 {
   int ret = 0;
 
-  while (n--
-	 && (ret = *(unsigned char *) s1++ - *(unsigned char *) s2++) == 0);
+  while (n-- && (ret = *(UCHAR *) s1++ - *(UCHAR *) s2++) == 0);
   return ret;
 }
 
+IMPL (SIMPLE_MEMCMP, 0)
+IMPL (MEMCMP, 1)
+
 static int
-check_result (impl_t *impl, const char *s1, const char *s2, size_t len,
+check_result (impl_t *impl, const CHAR *s1, const CHAR *s2, size_t len,
 	      int exp_result)
 {
   int result = CALL (impl, s1, s2, len);
@@ -56,7 +79,7 @@ check_result (impl_t *impl, const char *s1, const char *s2, size_t len,
 }
 
 static void
-do_one_test (impl_t *impl, const char *s1, const char *s2, size_t len,
+do_one_test (impl_t *impl, const CHAR *s1, const CHAR *s2, size_t len,
 	     int exp_result)
 {
   if (check_result (impl, s1, s2, len, exp_result) < 0)
@@ -85,24 +108,24 @@ static void
 do_test (size_t align1, size_t align2, size_t len, int exp_result)
 {
   size_t i;
-  char *s1, *s2;
+  CHAR *s1, *s2;
 
   if (len == 0)
     return;
 
-  align1 &= 7;
-  if (align1 + len >= page_size)
+  align1 &= 63;
+  if (align1 + (len + 1) * CHARBYTES >= page_size)
     return;
 
-  align2 &= 7;
-  if (align2 + len >= page_size)
+  align2 &= 63;
+  if (align2 + (len + 1) * CHARBYTES >= page_size)
     return;
 
-  s1 = (char *) (buf1 + align1);
-  s2 = (char *) (buf2 + align2);
+  s1 = (CHAR *) (buf1 + align1);
+  s2 = (CHAR *) (buf2 + align2);
 
   for (i = 0; i < len; i++)
-    s1[i] = s2[i] = 1 + 23 * i % 255;
+    s1[i] = s2[i] = 1 + (23 << ((CHARBYTES - 1) * 8)) * i % MAX_CHAR;
 
   s1[len] = align1;
   s2[len] = align2;
@@ -124,12 +147,12 @@ do_random_tests (void)
   size_t i, j, n, align1, align2, pos, len;
   int result;
   long r;
-  unsigned char *p1 = buf1 + page_size - 512;
-  unsigned char *p2 = buf2 + page_size - 512;
+  UCHAR *p1 =  (UCHAR *) (buf1 + page_size - 512 * CHARBYTES);
+  UCHAR *p2 =  (UCHAR *) (buf2 + page_size - 512 * CHARBYTES);
 
   for (n = 0; n < ITERATIONS; n++)
     {
-      align1 = random () & 31;
+   align1 = random () & 31;
       if (random () & 1)
 	align2 = random () & 31;
       else
@@ -142,7 +165,7 @@ do_random_tests (void)
 	pos = 511 - j - (random () & 7);
       len = random () & 511;
       if (len + j >= 512)
-        len = 511 - j - (random () & 7);
+	len = 511 - j - (random () & 7);
       j = len + align1 + 64;
       if (j > 512) j = 512;
       for (i = 0; i < j; ++i)
@@ -152,10 +175,10 @@ do_random_tests (void)
 
       result = 0;
       if (pos >= len)
-	memcpy (p2 + align2, p1 + align1, len);
+	MEMCPY ((CHAR *) p2 + align2, (const CHAR *) p1 + align1, len);
       else
 	{
-	  memcpy (p2 + align2, p1 + align1, pos);
+	  MEMCPY ((CHAR *) p2 + align2, (const CHAR *) p1 + align1, pos);
 	  if (p2[align2 + pos] == p1[align1 + pos])
 	    {
 	      p2[align2 + pos] = random () & 255;
@@ -171,16 +194,14 @@ do_random_tests (void)
 
       FOR_EACH_IMPL (impl, 1)
 	{
-	  r = CALL (impl, (char *) (p1 + align1), (char *) (p2 + align2), len);
-	  /* Test whether on 64-bit architectures where ABI requires
-	     callee to promote has the promotion been done.  */
-	  asm ("" : "=g" (r) : "0" (r));
+	  r = CALL (impl, (CHAR *) p1 + align1, (const CHAR *) p2 + align2,
+		    len);
 	  if ((r == 0 && result)
 	      || (r < 0 && result >= 0)
 	      || (r > 0 && result <= 0))
 	    {
 	      error (0, 0, "Iteration %zd - wrong result in function %s (%zd, %zd, %zd, %zd) %ld != %d, p1 %p p2 %p",
-		     n, impl->name, align1, align2, len, pos, r, result, p1, p2);
+		     n, impl->name, align1 * CHARBYTES & 63,  align2 * CHARBYTES & 63, len, pos, r, result, p1, p2);
 	      ret = 1;
 	    }
 	}
@@ -190,7 +211,7 @@ do_random_tests (void)
 static void
 check1 (void)
 {
-  char s1[116], s2[116];
+  CHAR s1[116], s2[116];
   int n, exp_result;
 
   s1[0] = -108;
@@ -427,7 +448,7 @@ check1 (void)
   s2[115] = 1;
 
   n = 116;
-  exp_result = simple_memcmp (s1, s2, n);
+  exp_result = SIMPLE_MEMCMP (s1, s2, n);
   FOR_EACH_IMPL (impl, 0)
     check_result (impl, s1, s2, n, exp_result);
 }
@@ -448,9 +469,9 @@ test_main (void)
 
   for (i = 1; i < 16; ++i)
     {
-      do_test (i, i, i, 0);
-      do_test (i, i, i, 1);
-      do_test (i, i, i, -1);
+      do_test (i * CHARBYTES, i * CHARBYTES, i, 0);
+      do_test (i * CHARBYTES, i * CHARBYTES, i, 1);
+      do_test (i * CHARBYTES, i * CHARBYTES, i, -1);
     }
 
   for (i = 0; i < 16; ++i)
@@ -466,20 +487,19 @@ test_main (void)
       do_test (0, 0, 2 << i, 1);
       do_test (0, 0, 2 << i, -1);
       do_test (0, 0, 16 << i, 0);
-      do_test (8 - i, 2 * i, 16 << i, 0);
+      do_test ((8 - i) * CHARBYTES, (2 * i) * CHARBYTES, 16 << i, 0);
       do_test (0, 0, 16 << i, 1);
       do_test (0, 0, 16 << i, -1);
     }
 
   for (i = 1; i < 8; ++i)
     {
-      do_test (i, 2 * i, 8 << i, 0);
-      do_test (i, 2 * i, 8 << i, 1);
-      do_test (i, 2 * i, 8 << i, -1);
+      do_test (i * CHARBYTES, 2 * (i * CHARBYTES), 8 << i, 0);
+      do_test (i * CHARBYTES, 2 * (i * CHARBYTES), 8 << i, 1);
+      do_test (i * CHARBYTES, 2 * (i * CHARBYTES), 8 << i, -1);
     }
 
   do_random_tests ();
   return ret;
 }
-
 #include "../test-skeleton.c"
