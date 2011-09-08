@@ -40,7 +40,7 @@
 # define STR1  PARMS
 # define STR2  STR1+4
 
-	.text
+	atom_text_section
 ENTRY (__strchr_sse2)
 
 	ENTRANCE

@@ -1,3 +1,14 @@
+2011-09-07  Ulrich Drepper  <drepper@gmail.com>
+
+	* sysdeps/i386/i686/multiarch/strchr-sse2-bsf.S: Fix mixup in section
+	names.
+	* sysdeps/i386/i686/multiarch/strchr-sse2.S: Likewise.
+	* sysdeps/i386/i686/multiarch/strlen-sse2-bsf.S: Likewise.
+	* sysdeps/i386/i686/multiarch/strlen-sse2.S: Likewise.
+	* sysdeps/i386/i686/multiarch/strrchr-sse2-bsf.S: Likewise.
+	* sysdeps/i386/i686/multiarch/strrchr-sse2.S: Likewise.
+	Patch by Liubov Dmitrieva <liubov.dmitrieva@intel.com>.
+
 2011-08-01  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/fpu/e_hypot.c: New file.

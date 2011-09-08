@@ -21,7 +21,6 @@
 #if defined SHARED && !defined NOT_IN_libc
 
 #include <sysdep.h>
-#include "asm-syntax.h"
 
 #define CFI_PUSH(REG)						\
   cfi_adjust_cfa_offset (4);					\
@@ -39,7 +38,7 @@
 #define RETURN		POP (%edi); POP (%esi); ret; \
 			cfi_restore_state; cfi_remember_state
 
-	atom_text_section
+	.text
 ENTRY ( __strlen_sse2_bsf)
 	ENTRANCE
 	mov	STR(%esp), %edi

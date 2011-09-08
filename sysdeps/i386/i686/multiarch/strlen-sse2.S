@@ -22,8 +22,6 @@
 # ifndef USE_AS_STRCAT
 
 #  include <sysdep.h>
-#  include "asm-syntax.h"
-
 #  define CFI_PUSH(REG)	\
 	cfi_adjust_cfa_offset (4);	\
 	cfi_rel_offset (REG, 0)
@@ -39,7 +37,7 @@
 #  define ENTRANCE
 #  define RETURN		ret
 
-	.text
+	atom_text_section
 ENTRY (__strlen_sse2)
 	ENTRANCE
 	mov	STR(%esp), %edx
