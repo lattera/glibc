@@ -49,6 +49,9 @@ libc {
   GLIBC_2.11 {
     __longjmp_chk;
   }
+  GLIBC_2.15 {
+    __fdelt_chk; __fdelt_warn;
+  }
   GLIBC_PRIVATE {
     __fortify_fail;
   }

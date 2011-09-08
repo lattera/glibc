@@ -1,9 +1,19 @@
 2011-09-08  Ulrich Drepper  <drepper@gmail.com>
 
+	* misc/Makefile (headers): Add bits/select2.h.
+	* misc/sys/select.h: Include bits/select2.h for _FORTIFY_SOURCE.
+	* misc/bits/select2.h: New file.
+	* include/bits/select2.h: New file.
+	* debug/Makefile (routines): Add fdelt_chk.
+	* debug/Versions: Export __fdelt_chk and __fdelt_warn for GLIBC_2.15.
+	* debug/tst-chk1.c (do_test): Add tests for FD_SET, FD_CLR, and
+	FD_ISSET.
+	* debug/fdelt_chk.c: New file.
+
 	* wcsmbs/test-wcscmp.c: Moved from string/*.  Adjust.
 	* wcsmbs/test-wmemcmp.c: Likewise.
 	* string/Makefile (strop-tests): Remove wcscmp and wmemcmp.
-	* wcsmbs/Makefile (strop-tests): Add  wcscmp and wmemcmp.
+	* wcsmbs/Makefile (strop-tests): Add wcscmp and wmemcmp.
 
 2011-09-08  Liubov Dmitrieva  <liubov.dmitrieva@gmail.com>
 

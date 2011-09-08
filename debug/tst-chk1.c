@@ -1,4 +1,4 @@
-/* Copyright (C) 2004, 2005, 2006, 2007, 2008 Free Software Foundation, Inc.
+/* Copyright (C) 2004,2005,2006,2007,2008,2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jakub@redhat.com>, 2004.
 
@@ -29,6 +29,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <wchar.h>
+#include <sys/select.h>
 #include <sys/socket.h>
 #include <sys/un.h>
 
@@ -107,11 +108,11 @@ int num2 = 987654;
       FAIL ();					\
     }
 #if __USE_FORTIFY_LEVEL >= 2 && (!defined __cplusplus || defined __va_arg_pack)
-#define CHK_FAIL2_START CHK_FAIL_START
-#define CHK_FAIL2_END CHK_FAIL_END
+# define CHK_FAIL2_START CHK_FAIL_START
+# define CHK_FAIL2_END CHK_FAIL_END
 #else
-#define CHK_FAIL2_START
-#define CHK_FAIL2_END
+# define CHK_FAIL2_START
+# define CHK_FAIL2_END
 #endif
 
 static int
@@ -1445,6 +1446,27 @@ do_test (void)
   char smallbuf[1];
   res = getdomainname (smallbuf, sizeof (domainnamelarge));
   asm volatile ("" : : "r" (res));
+  CHK_FAIL_END
+#endif
+
+  fd_set s;
+  FD_ZERO (&s);
+  FD_SET (FD_SETSIZE - 1, &s);
+#if __USE_FORTIFY_LEVEL >= 1
+  CHK_FAIL_START
+  FD_SET (FD_SETSIZE, &s);
+  CHK_FAIL_END
+#endif
+  FD_CLR (FD_SETSIZE - 1, &s);
+#if __USE_FORTIFY_LEVEL >= 1
+  CHK_FAIL_START
+  FD_CLR (FD_SETSIZE, &s);
+  CHK_FAIL_END
+#endif
+  FD_ISSET (FD_SETSIZE - 1, &s);
+#if __USE_FORTIFY_LEVEL >= 1
+  CHK_FAIL_START
+  FD_ISSET (FD_SETSIZE, &s);
   CHK_FAIL_END
 #endif
 
