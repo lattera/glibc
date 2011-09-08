@@ -27,7 +27,7 @@
 		     const char *s2 [r4],
 		     size_t size [r5])  */
 
-EALIGN (BP_SYM(strncmp),4,0)
+EALIGN (BP_SYM(strncmp),5,0)
 
 #define rTMP	r0
 #define rRTN	r3
@@ -47,9 +47,11 @@ EALIGN (BP_SYM(strncmp),4,0)
 #define rBITDIF	r11	/* bits that differ in s1 & s2 words */
 
 	dcbt	0,rSTR1
+	nop
 	or	rTMP,rSTR2,rSTR1
 	lis	r7F7F,0x7f7f
 	dcbt	0,rSTR2
+	nop
 	clrlwi.	rTMP,rTMP,30
 	cmplwi	cr1,rN,0
 	lis	rFEFE,-0x101

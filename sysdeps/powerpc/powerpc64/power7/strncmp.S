@@ -27,7 +27,7 @@
 		     const char *s2 [r4],
 		     size_t size [r5])  */
 
-EALIGN (BP_SYM(strncmp),4,0)
+EALIGN (BP_SYM(strncmp),5,0)
 	CALL_MCOUNT 3
 
 #define rTMP	r0
@@ -48,9 +48,11 @@ EALIGN (BP_SYM(strncmp),4,0)
 #define rBITDIF	r11	/* bits that differ in s1 & s2 words */
 
 	dcbt	0,rSTR1
+	nop
 	or	rTMP,rSTR2,rSTR1
 	lis	r7F7F,0x7f7f
 	dcbt	0,rSTR2
+	nop
 	clrldi.	rTMP,rTMP,61
 	cmpldi	cr1,rN,0
 	lis	rFEFE,-0x101

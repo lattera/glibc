@@ -1,3 +1,9 @@
+2011-08-04  Will Schmidt  <will_schmidt@vnet.ibm.com>
+
+	* sysdeps/powerpc/powerpc32/power7/strncmp.S: Adjust the alignment
+	and add nop instructions for throughput optimization.
+	* sysdeps/powerpc/powerpc64/power7/strncmp.S: Likewise.
+
 2011-07-28  Will Schmidt  <will_schmidt@vnet.ibm.com>
 
 	* sysdeps/powerpc/powerpc32/power7/memcpy.S: Optimize the
