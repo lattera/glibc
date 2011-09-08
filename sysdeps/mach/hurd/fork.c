@@ -1,4 +1,4 @@
-/* Copyright (C) 1994,1995,1996,1997,1999,2001,2002,2004,2005,2006
+/* Copyright (C) 1994,1995,1996,1997,1999,2001,2002,2004,2005,2006,2011
 	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -313,7 +313,7 @@ __fork (void)
 	    {
 	      /* This is a send right or a dead name.
 		 Give the child as many references for it as we have.  */
-	      mach_port_urefs_t refs, *record_refs = NULL;
+	      mach_port_urefs_t refs = 0, *record_refs = NULL;
 	      mach_port_t insert;
 	      mach_msg_type_name_t insert_type = MACH_MSG_TYPE_COPY_SEND;
 	      if (portnames[i] == newtask || portnames[i] == newproc)
