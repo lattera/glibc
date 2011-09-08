@@ -1,4 +1,4 @@
-# Copyright (C) 1991-2002, 2005-2008, 2009, 2010 Free Software Foundation, Inc.
+# Copyright (C) 1991-2002, 2005-2010, 2011 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -46,11 +46,11 @@ routines	:= strcat strchr strcmp strcoll strcpy strcspn		\
 # for -fbounded-pointer compiles.  Glibc uses memchr for explicit checks.
 o-objects.ob	:= memcpy.o memset.o memchr.o
 
-strop-tests	:=  wcscmp memchr memcmp memcpy memmove mempcpy memset memccpy	\
+strop-tests	:= memchr memcmp memcpy memmove mempcpy memset memccpy	\
 		   stpcpy stpncpy strcat strchr strcmp strcpy strcspn	\
 		   strlen strncmp strncpy strpbrk strrchr strspn memmem	\
 		   strstr strcasestr strnlen strcasecmp strncasecmp	\
-		   strncat wmemcmp
+		   strncat
 tests		:= tester inl-tester noinl-tester testcopy test-ffs	\
 		   tst-strlen stratcliff tst-svc tst-inlcall		\
 		   bug-strncat1 bug-strspn1 bug-strpbrk1 tst-bswap	\

@@ -1,4 +1,4 @@
-# Copyright (C) 1995-2000,2002,2003,2004,2005,2006,2007
+# Copyright (C) 1995-2000,2002,2003,2004,2005,2006,2007,2011
 #	Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
@@ -42,9 +42,10 @@ routines := wcscat wcschr wcscmp wcscpy wcscspn wcsdup wcslen wcsncat \
 	    isoc99_wscanf isoc99_vwscanf isoc99_fwscanf isoc99_vfwscanf \
 	    isoc99_swscanf isoc99_vswscanf
 
+strop-tests :=  wcscmp wmemcmp
 tests := tst-wcstof wcsmbs-tst1 tst-wcsnlen tst-btowc tst-mbrtowc \
 	 tst-wcrtomb tst-wcpncpy tst-mbsrtowcs tst-wchar-h tst-mbrtowc2 \
-	 wcsatcliff
+	 wcsatcliff $(addprefix test-,$(strop-tests))
 
 include ../Rules
 
