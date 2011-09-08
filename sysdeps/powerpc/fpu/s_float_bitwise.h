@@ -74,7 +74,7 @@ float __float_and8 (float num)
   float ret;
 #ifdef _ARCH_PWR7
   vector int mask = (vector int) {
-    0x7ff00000, 0x00000000, 0x00000000, 0x00000000 
+    0x7ff00000, 0x00000000, 0x00000000, 0x00000000
   };
   __asm__ (
     "xxland %x0,%x1,%x2" : "=f" (ret) : "f" (num), "f" (mask)

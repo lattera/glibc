@@ -187,4 +187,3 @@ __ieee754_rem_pio2f (float x, float *y)
     }
   return i;
 }
-
