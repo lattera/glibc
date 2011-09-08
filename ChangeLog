@@ -1,3 +1,16 @@
+2011-08-01  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/fpu/e_hypot.c: New file.
+	* sysdeps/powerpc/fpu/e_hypotf.c: New file.
+	* sysdeps/powerpc/fpu/e_rem_pio2f.c: New file.
+	* sysdeps/powerpc/fpu/k_rem_pio2f.c: New file.
+	* sysdeps/powerpc/fpu/k_cosf.c: New file.
+	* sysdeps/powerpc/fpu/k_sinf.c: New file.
+	* sysdeps/powerpc/fpu/s_cosf.c: New file.
+	* sysdeps/powerpc/fpu/s_sinf.c: New file.
+	* sysdeps/powerpc/fpu/s_scalbnf.c: New file.
+	* sysdeps/powerpc/fpu/s_float_bitwise.h: New file.
+
 2011-08-15  Alan Modra  <amodra@gmail.com>
 
 	[BZ #13092]
