@@ -1,5 +1,8 @@
 2011-09-07  Ulrich Drepper  <drepper@gmail.com>
 
+	* elf/dl-libc.c (dlerror_run): Pass back error code from
+	dl_catch_error.
+
 	[BZ #13123]
 	* elf/dl-load.c (lose): Free l_origin if it is valid.
 

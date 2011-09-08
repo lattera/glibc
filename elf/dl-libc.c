@@ -45,10 +45,10 @@ dlerror_run (void (*operate) (void *), void *args)
   const char *last_errstring = NULL;
   bool malloced;
 
-  (void) GLRO(dl_catch_error) (&objname, &last_errstring, &malloced,
-			       operate, args);
+  int result = (GLRO(dl_catch_error) (&objname, &last_errstring, &malloced,
+				      operate, args)
+		?: last_errstring != NULL);
 
-  int result = last_errstring != NULL;
   if (result && malloced)
     free ((char *) last_errstring);
 
