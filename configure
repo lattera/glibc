@@ -700,7 +700,6 @@ bindnow
 oldest_abi
 enable_check_abi
 use_default_link
-with_cvs
 with_fp
 ac_ct_CXX
 CXXFLAGS
@@ -772,7 +771,6 @@ with_binutils
 with_elf
 with_selinux
 with_xcoff
-with_cvs
 with_headers
 with_default_link
 enable_sanity_checks
@@ -1466,7 +1464,6 @@ Optional Packages:
   --with-elf              if using the ELF object format
   --with-selinux          if building with SELinux support
   --with-xcoff            if using the XCOFF object format
-  --without-cvs           if CVS should not be used
   --with-headers=PATH     location of system headers to use (for example
                           /usr/src/linux/include) [default=compiler default]
   --with-default-link     do not use explicit linker scripts
@@ -3563,21 +3560,6 @@ else
 fi
 
 
-# Check whether --with-cvs was given.
-if test "${with_cvs+set}" = set; then :
-  withval=$with_cvs; with_cvs=$withval
-else
-  with_cvs=yes
-fi
-
-if test "$with_cvs" = yes; then
-  if test -d $srcdir/CVS && grep :pserver: $srcdir/CVS/Root > /dev/null
-  then
-    with_cvs=no
-  fi
-fi
-
-
 
 # Check whether --with-headers was given.
 if test "${with_headers+set}" = set; then :
@@ -5383,8 +5365,7 @@ $as_echo "$libc_cv_autoconf_works" >&6; }
   test $libc_cv_autoconf_works = yes || AUTOCONF=no
   ;;
 esac
-if test "x$with_cvs" = xyes && test "x$AUTOCONF" = xno; then
-  # If --without-cvs they probably won't change configure.in, so no complaints.
+if test "x$AUTOCONF" = xno; then
   aux_missing="$aux_missing autoconf"
 fi
 
@@ -6235,13 +6216,13 @@ __attribute__ ((destructor))  void dtor (void) { puts("dtor"); }
 _ACEOF
 if ac_fn_c_try_link "$LINENO"; then :
         if $READELF -WS conftest$ac_exeext | $AWK '
-        { gsub(/\[ */, "[") }
+	{ gsub(/\[ */, "[") }
 	$2 == ".ctors" || $2 == ".dtors" {
 	  size = strtonum("0x" $6)
 	  align = strtonum("0x" $NF)
 	  seen[$2] = 1
 	  stub[$2] = size == align * 2
-        }
+	}
 	END {
 	  ctors_ok = !seen[".ctors"] || stub[".ctors"]
 	  dtors_ok = !seen[".dtors"] || stub[".dtors"]
