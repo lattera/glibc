@@ -190,7 +190,7 @@ pthread_rwlock_timedwrlock:
 
 7:	movq	%rdx, %rax
 
-#ifndef __ASSUME_PRIVATE_FUTEX
+#ifndef __ASSUME_FUTEX_CLOCK_REALTIME
 	addq	$16, %rsp
 	cfi_adjust_cfa_offset(-16)
 	popq	%r14

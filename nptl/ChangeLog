@@ -1,3 +1,10 @@
+2011-09-08  Ulrich Drepper  <drepper@gmail.com>
+
+	[BZ #12403]
+	* sysdeps/unix/sysv/linux/x86_64/pthread_rwlock_timedwrlock.S
+	(pthread_rwlock_timedwrlock): Use correct macro in test.
+	Patch by H.J. Lu <hongjiu.lu@intel.com>.
+
 2011-09-06  Ulrich Drepper  <drepper@gmail.com>
 
 	* sysdeps/unix/sysv/linux/x86_64/sem_timedwait.S (sem_timedwait): Don't
