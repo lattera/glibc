@@ -142,7 +142,8 @@ typedef struct
 #define ELFOSABI_SYSV		0	/* Alias.  */
 #define ELFOSABI_HPUX		1	/* HP-UX */
 #define ELFOSABI_NETBSD		2	/* NetBSD.  */
-#define ELFOSABI_LINUX		3	/* Linux.  */
+#define ELFOSABI_GNU		3	/* Object uses GNU ELF extensions.  */
+#define ELFOSABI_LINUX		ELFOSABI_GNU /* Compatibility alias.  */
 #define ELFOSABI_SOLARIS	6	/* Sun Solaris.  */
 #define ELFOSABI_AIX		7	/* IBM AIX.  */
 #define ELFOSABI_IRIX		8	/* SGI Irix.  */
