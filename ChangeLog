@@ -1,3 +1,9 @@
+2011-09-09  Ulrich Drepper  <drepper@gmail.com>
+
+	[BZ #12847]
+	* libio/genops.c (INTDEF): For string streams the _lock pointer can
+	be NULL.  Don't lock in this case.
+
 2011-07-29  Denis Zaitceff  <zaitceff@gmail.com>
 
 	* string/strncat.c (strncat): Undef the symbol in case it has been
