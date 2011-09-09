@@ -404,7 +404,6 @@ load_shobj (const char *name)
   ElfW(Addr) mapend = 0;
   const ElfW(Phdr) *ph;
   size_t textsize;
-  unsigned int log_hashfraction;
   ElfW(Ehdr) *ehdr;
   int fd;
   ElfW(Shdr) *shdr;
@@ -474,13 +473,6 @@ load_shobj (const char *name)
   textsize = result->highpc - result->lowpc;
   result->kcountsize = textsize / HISTFRACTION;
   result->hashfraction = HASHFRACTION;
-  if ((HASHFRACTION & (HASHFRACTION - 1)) == 0)
-    /* If HASHFRACTION is a power of two, mcount can use shifting
-       instead of integer division.  Precompute shift amount.  */
-    log_hashfraction = __builtin_ffs (result->hashfraction
-				      * sizeof (struct here_fromstruct)) - 1;
-  else
-    log_hashfraction = -1;
   if (do_test)
     printf ("hashfraction = %d\ndivider = %Zu\n",
 	    result->hashfraction,
