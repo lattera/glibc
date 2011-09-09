@@ -31,22 +31,23 @@ lib='@PREFIX@/$LIB/audit/sotruss-lib.so'
 
 function do_help {
   echo $"Usage: sotruss [OPTION...] [--] EXECUTABLE [EXECUTABLE-OPTION...]
-  -F, --from FROMLIST     trace calls from objects on FORMLIST
-  -T, --to TOLIST         trace calls to objects on TOLIST
+  -F, --from FROMLIST     Trace calls from objects on FROMLIST
+  -T, --to TOLIST         Trace calls to objects on TOLIST
 
-  -e, --exit              also show exits from the function calls
-  -f, --follow            trace child processes
-  -o, --output FILENAME   write output to FILENAME (or FILENAME.$PID in case
+  -e, --exit              Also show exits from the function calls
+  -f, --follow            Trace child processes
+  -o, --output FILENAME   Write output to FILENAME (or FILENAME.$PID in case
 			  -f is also used) instead of standard error
 
-      --help              print this help and exit
-      --version           print version information and exit"
+  -?, --help              Give this help list
+      --usage             Give a short usage message
+      --version           Print program version"
 
   echo
   printf $"Mandatory arguments to long options are also mandatory for any corresponding\nshort options.\n"
   echo
 
-  echo $"For bug reporting instructions, please see:
+  printf $"For bug reporting instructions, please see:
 <http://www.gnu.org/software/libc/bugs.html>.
 "
   exit 0
@@ -80,12 +81,14 @@ warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
     printf $"Written by %s.\n" "Ulrich Drepper"
     exit 0
     ;;
-  --h | --he | --hel | --help)
+  -\? | --h | --he | --hel | --help)
     do_help
     ;;
   --u | --us | --usa | --usag | --usage)
     printf $"Usage: %s [-ef] [-F FROMLIST] [-o FILENAME] [-T TOLIST] [--exit]
-	    [--follow] [--from FROMLIST] [--output FILENAME] [--to TOLIST]\n" sotruss
+	    [--follow] [--from FROMLIST] [--output FILENAME] [--to TOLIST]
+	    [--help] [--usage] [--version] [--]
+	    EXECUTABLE [EXECUTABLE-OPTION...]\n" sotruss
     exit 0
     ;;
   -F | --fr | --fro | --from)

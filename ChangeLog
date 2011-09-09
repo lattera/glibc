@@ -1,5 +1,7 @@
 2011-09-09  Ulrich Drepper  <drepper@gmail.com>
 
+	* elf/sotruss.ksh: Clean up, fix, and complete help messages.
+
 	* elf/dl-iteratephdr.c (hidden_proto): Fill in data from the real
 	link map.
 
