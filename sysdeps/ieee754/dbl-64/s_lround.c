@@ -51,7 +51,7 @@ __lround (double x)
   else if (j0 < (int32_t) (8 * sizeof (long int)) - 1)
     {
       if (j0 >= 52)
-	result = ((long int) i0 << (j0 - 20)) | (i1 << (j0 - 52));
+	result = ((long int) i0 << (j0 - 20)) | ((long int) i1 << (j0 - 52));
       else
 	{
 	  u_int32_t j = i1 + (0x80000000 >> (j0 - 20));
