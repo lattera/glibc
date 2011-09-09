@@ -4,6 +4,11 @@
 	* libio/genops.c (INTDEF): For string streams the _lock pointer can
 	be NULL.  Don't lock in this case.
 
+2011-09-09  Roland McGrath  <roland@hack.frob.com>
+
+	* elf/elf.h (ELFOSABI_GNU): New macro.
+	(ELFOSABI_LINUX): Define to that.
+
 2011-07-29  Denis Zaitceff  <zaitceff@gmail.com>
 
 	* string/strncat.c (strncat): Undef the symbol in case it has been
@@ -13,7 +18,7 @@
 
 	* elf/sotruss.ksh: Clean up, fix, and complete help messages.
 
-	* elf/dl-iteratephdr.c (hidden_proto): Fill in data from the real
+	* elf/dl-iteratephdr.c (__dl_iterate_phdr): Fill in data from the real
 	link map.
 
 2011-08-17  Andreas Jaeger  <aj@suse.de>

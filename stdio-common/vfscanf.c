@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-2006, 2007, 2010 Free Software Foundation, Inc.
+/* Copyright (C) 1991-2006, 2007, 2010, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -48,7 +48,7 @@
 #if INT_MAX == LONG_MAX
 # define need_long	0
 #else
-# define need_long 	1
+# define need_long	1
 #endif
 
 /* Those are flags in the conversion format. */
@@ -102,9 +102,9 @@
 # define __strtof_internal	__wcstof_internal
 
 # define L_(Str)	L##Str
-# define CHAR_T	  	wchar_t
+# define CHAR_T		wchar_t
 # define UCHAR_T	unsigned int
-# define WINT_T	  	wint_t
+# define WINT_T		wint_t
 # undef EOF
 # define EOF		WEOF
 #else
@@ -128,7 +128,7 @@
 			    return EOF
 
 # define L_(Str)	Str
-# define CHAR_T	  	char
+# define CHAR_T		char
 # define UCHAR_T	unsigned char
 # define WINT_T		int
 #endif
