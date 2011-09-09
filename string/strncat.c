@@ -25,6 +25,7 @@ typedef char reg_char;
 #endif
 
 #ifndef STRNCAT
+# undef strncat
 # define STRNCAT  strncat
 #endif
 
