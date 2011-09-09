@@ -1,5 +1,9 @@
 2011-09-08  Ulrich Drepper  <drepper@gmail.com>
 
+	[BZ #13118]
+	* posix/Makefile (bug-regex32-ENV): Define.
+	Patch by John Stanley <jpsinthemix@verizon.net>.
+
 	* misc/Makefile (headers): Add bits/select2.h.
 	* misc/sys/select.h: Include bits/select2.h for _FORTIFY_SOURCE.
 	* misc/bits/select2.h: New file.
