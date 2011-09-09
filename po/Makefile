@@ -74,9 +74,6 @@ libc.pot: header.pot libc.pot.files
 			   -f $(objdir)/tmp-libc.pot-files po/$@.new
 	rm $(objdir)/tmp-libc.pot-files
 	mv -f $@.new $@
-ifeq ($(with-cvs),yes)
-	test ! -d CVS || cvs $(CVSOPTS) ci -m'Regenerated from source files' $@
-endif
 
 po-sed-cmd = \
   '/\/tst-/d;$(foreach S,[ch] cxx sh ksh bash,$(subst .,\.,/.$S\(.in\)*$$/p;))'
@@ -116,9 +113,6 @@ ifneq (,$(pofiles))
 	chmod 444 $@
 
 linguas: $(pofiles:$(podir)/%=%)
-ifeq ($(with-cvs),yes)
-	test ! -d CVS || cvs $(CVSOPTS) commit -m'Copied from $(podir)' $^
-endif
 linguas.mo: $(pofiles:$(podir)/%.po=%.mo)
 
 endif

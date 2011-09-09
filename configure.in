@@ -93,18 +93,6 @@ AC_ARG_WITH([xcoff],
 			   [if using the XCOFF object format]),
 	    [xcoff=$withval],
 	    [xcoff=no])
-AC_ARG_WITH([cvs],
-	    AC_HELP_STRING([--without-cvs],
-			   [if CVS should not be used]),
-	    [with_cvs=$withval],
-	    [with_cvs=yes])
-if test "$with_cvs" = yes; then
-  if test -d $srcdir/CVS && grep :pserver: $srcdir/CVS/Root > /dev/null
-  then
-    with_cvs=no
-  fi
-fi
-AC_SUBST(with_cvs)
 
 AC_ARG_WITH([headers],
 	    AC_HELP_STRING([--with-headers=PATH],
@@ -1061,8 +1049,7 @@ whether $AUTOCONF${ACFLAGS:+ }$ACFLAGS works, libc_cv_autoconf_works, [dnl
   test $libc_cv_autoconf_works = yes || AUTOCONF=no
   ;;
 esac
-if test "x$with_cvs" = xyes && test "x$AUTOCONF" = xno; then
-  # If --without-cvs they probably won't change configure.in, so no complaints.
+if test "x$AUTOCONF" = xno; then
   aux_missing="$aux_missing autoconf"
 fi
 
@@ -1492,13 +1479,13 @@ __attribute__ ((destructor))  void dtor (void) { puts("dtor"); }
 ],
 		[dnl
       AS_IF([$READELF -WS conftest$ac_exeext | $AWK '
-        { gsub(/\@<:@ */, "@<:@") }
+	{ gsub(/\@<:@ */, "@<:@") }
 	$2 == ".ctors" || $2 == ".dtors" {
 	  size = strtonum("0x" $6)
 	  align = strtonum("0x" $NF)
 	  seen@<:@$2@:>@ = 1
 	  stub@<:@$2@:>@ = size == align * 2
-        }
+	}
 	END {
 	  ctors_ok = !seen@<:@".ctors"@:>@ || stub@<:@".ctors"@:>@
 	  dtors_ok = !seen@<:@".dtors"@:>@ || stub@<:@".dtors"@:>@

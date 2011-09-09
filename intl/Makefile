@@ -1,4 +1,4 @@
-# Copyright (C) 1995-2003, 2005, 2008 Free Software Foundation, Inc.
+# Copyright (C) 1995-2003, 2005, 2008, 2011 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -53,9 +53,6 @@ generated-dirs := domaindir localedir
 ifneq (no,$(BISON))
 plural.c: plural.y
 	$(BISON) $(BISONFLAGS) $@ $^
-ifeq ($(with-cvs),yes)
-	test ! -d CVS || cvs $(CVSOPTS) commit -m'$(BISON) $(BISONFLAGS) $@ $^' $@
-endif
 endif
 $(objpfx)plural.o: plural.c
 

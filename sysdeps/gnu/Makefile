@@ -1,4 +1,4 @@
-# Copyright (C) 1996,1997,1998,1999,2001,2002,2003,2004,2005,2006,2010
+# Copyright (C) 1996,1997,1998,1999,2001,2002,2003,2004,2005,2006,2010,2011
 #	Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
@@ -26,9 +26,6 @@ $(..)sysdeps/gnu/errlist.c: $(..)sysdeps/gnu/errlist.awk \
 # Make it unwritable so noone will edit it by mistake.
 	-chmod a-w $@-tmp
 	mv -f $@-tmp $@
-ifeq ($(with-cvs),yes)
-	test ! -d CVS || cvs commit -m'Regenerated from $^' $@
-endif
 
 ifeq ($(subdir),stdio-common)
 
@@ -63,7 +60,7 @@ endif
 
 ifeq ($(subdir),login)
 sysdep_routines += setutxent getutxent endutxent getutxid getutxline \
-                   pututxline utmpxname updwtmpx getutmpx getutmp
+		   pututxline utmpxname updwtmpx getutmpx getutmp
 
 sysdep_headers += utmpx.h bits/utmpx.h
 endif

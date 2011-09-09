@@ -33,20 +33,11 @@ all: lib others
 
 ifneq ($(AUTOCONF),no)
 
-ifeq ($(with-cvs),yes)
-define autoconf-it-cvs
-test ! -d CVS || cvs $(CVSOPTS) commit -m'Regenerated: autoconf $(ACFLAGS) $<' $@
-endef
-else
-autoconf-it-cvs =
-endif
-
 define autoconf-it
 @-rm -f $@.new
 $(AUTOCONF) $(ACFLAGS) $< > $@.new
 chmod a-w$(patsubst %,$(comma)a+x,$(filter .,$(@D))) $@.new
 mv -f $@.new $@
-$(autoconf-it-cvs)
 endef
 
 configure: configure.in aclocal.m4; $(autoconf-it)
@@ -414,9 +405,6 @@ manual/dir-add.texi manual/dir-add.info: FORCE
 	$(MAKE) $(PARALLELMFLAGS) -C $(@D) $(@F)
 FAQ: scripts/gen-FAQ.pl FAQ.in
 	$(PERL) $^ > $@.new && rm -f $@ && mv $@.new $@ && chmod a-w $@
-ifeq ($(with-cvs),yes)
-	test ! -d CVS || cvs $(CVSOPTS) commit -m'Regenerated:  $(PERL) $^' $@
-endif
 FORCE:
 
 iconvdata/% localedata/% po/% manual/%: FORCE

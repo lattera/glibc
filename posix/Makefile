@@ -219,16 +219,10 @@ tst-execvp3-ARGS = --test-dir=$(objpfx)
 testcases.h: TESTS TESTS2C.sed
 	sed -f TESTS2C.sed < $< > $@T
 	mv -f $@T $@
-ifeq ($(with-cvs),yes)
-	test ! -d CVS || cvs $(CVSOPTS) commit -mRegenerated $@
-endif
 
 ptestcases.h: PTESTS PTESTS2C.sed
 	sed -f PTESTS2C.sed < $< > $@T
 	mv -f $@T $@
-ifeq ($(with-cvs),yes)
-	test ! -d CVS || cvs $(CVSOPTS) commit -mRegenerated $@
-endif
 
 # Run a test on the header files we use.
 # XXX Please note that for now we ignore the result of this test.

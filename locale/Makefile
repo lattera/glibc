@@ -86,9 +86,6 @@ $(objpfx)localedef $(objpfx)locale: $(lib-modules:%=$(objpfx)%.o)
 C-translit.h: C-translit.h.in gen-translit.pl
 	$(PERL) gen-translit.pl < $< > $@.tmp
 	mv -f $@.tmp $@
-ifeq ($(with-cvs),yes)
-	test ! -d CVS || cvs $(CVSOPTS) commit -mRegenerated $@
-endif
 
 localepath = "$(localedir):$(i18ndir)"
 
