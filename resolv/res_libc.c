@@ -126,12 +126,10 @@ struct __res_state _res __attribute__((section (".bss")));
 
 #include <tls.h>
 
-#if USE___THREAD
 #undef __resp
 __thread struct __res_state *__resp = &_res;
 extern __thread struct __res_state *__libc_resp
   __attribute__ ((alias ("__resp"))) attribute_hidden;
-#endif
 
 /* We declare this with compat_symbol so that it's not
    visible at link time.  Programs must use the accessor functions.  */

@@ -139,7 +139,7 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 		 nop
 		.word MAP
 
-         The PC value (pltpc) saved in %g2 by the jmpl points near the
+	 The PC value (pltpc) saved in %g2 by the jmpl points near the
 	 location where we store the link_map pointer for this object.  */
 
       plt[0] = 0x05000000 | ((rfunc >> 10) & 0x003fffff);
@@ -193,17 +193,11 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
    PLT entries should not be allowed to define the value.
    ELF_RTYPE_CLASS_NOCOPY iff TYPE should not be allowed to resolve to one
    of the main executable's symbols, as for a COPY reloc.  */
-#if !defined RTLD_BOOTSTRAP || USE___THREAD
-# define elf_machine_type_class(type) \
+#define elf_machine_type_class(type) \
   ((((type) == R_SPARC_JMP_SLOT						      \
      || ((type) >= R_SPARC_TLS_GD_HI22 && (type) <= R_SPARC_TLS_TPOFF64))     \
     * ELF_RTYPE_CLASS_PLT)						      \
    | (((type) == R_SPARC_COPY) * ELF_RTYPE_CLASS_COPY))
-#else
-# define elf_machine_type_class(type) \
-  ((((type) == R_SPARC_JMP_SLOT) * ELF_RTYPE_CLASS_PLT)			      \
-   | (((type) == R_SPARC_COPY) * ELF_RTYPE_CLASS_COPY))
-#endif
 
 /* A reloc type used for ld.so cmdline arg lookups to reject PLT entries.  */
 #define ELF_MACHINE_JMP_SLOT	R_SPARC_JMP_SLOT
@@ -454,8 +448,7 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 	sparc_fixup_plt (reloc, reloc_addr, value, 0, do_flush);
       }
       break;
-#if (!defined RTLD_BOOTSTRAP || USE___THREAD) \
-    && !defined RESOLVE_CONFLICT_FIND_MAP
+#ifndef RESOLVE_CONFLICT_FIND_MAP
     case R_SPARC_TLS_DTPMOD32:
       /* Get the information from the link map returned by the
 	 resolv function.  */

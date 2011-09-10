@@ -417,7 +417,7 @@ memalign_check(alignment, bytes, caller)
 #ifndef NO_THREADS
 
 # ifdef _LIBC
-#  if USE___THREAD || !defined SHARED
+#  ifndef SHARED
     /* These routines are never needed in this configuration.  */
 #   define NO_STARTER
 #  endif

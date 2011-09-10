@@ -1,5 +1,43 @@
 2011-09-10  Ulrich Drepper  <drepper@gmail.com>
 
+	* include/tls.h: Removed.  USE___THREAD must always be defined.
+	* bits/libc-tsd.h: Don't handle !USE___THREAD.
+	* elf/dl-libc.c: Likewise.
+	* elf/dl-tsd.c: Likewise.
+	* include/errno.h: Likewise.
+	* include/netdb.h: Likewise.
+	* include/resolv.h: Likewise.
+	* inet/herrno-loc.c: Likewise.
+	* inet/herrno.c: Likewise.
+	* malloc/arena.c: Likewise.
+	* malloc/hooks.c: Likewise.
+	* malloc/malloc.c: Likewise.
+	* resolv/res-state.c: Likewise.
+	* resolv/res_libc.c: Likewise.
+	* sysdeps/i386/dl-machine.h: Likewise.
+	* sysdeps/ia64/dl-machine.h: Likewise.
+	* sysdeps/powerpc/powerpc32/dl-machine.h: Likewise.
+	* sysdeps/powerpc/powerpc64/dl-machine.h: Likewise.
+	* sysdeps/s390/s390-32/dl-machine.h: Likewise.
+	* sysdeps/s390/s390-64/dl-machine.h: Likewise.
+	* sysdeps/sh/dl-machine.h: Likewise.
+	* sysdeps/sparc/sparc32/dl-machine.h: Likewise.
+	* sysdeps/sparc/sparc64/dl-machine.h: Likewise.
+	* sysdeps/unix/i386/sysdep.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/sysdep.h: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/sysdep.S: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/sysdep.S: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/sysdep.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/sysdep.S: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/sysdep.h: Likewise.
+	* sysdeps/unix/sysv/linux/sh/sysdep.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/sysdep.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/sysdep.h: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/sysdep.h: Likewise.
+	* sysdeps/unix/x86_64/sysdep.S: Likewise.
+	* sysdeps/x86_64/dl-machine.h: Likewise.
+	* tls.make.c: Likewise.
+
 	* configure.in: Remove --with-__thread option.  Make tests for
 	--no-whole-archive, __builtin_expect, symbol redirection, __thread,
 	tls_model attribute fail if no support is available.  Remove

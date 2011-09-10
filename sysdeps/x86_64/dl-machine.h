@@ -1,5 +1,5 @@
 /* Machine-dependent ELF dynamic relocation inline functions.  x86-64 version.
-   Copyright (C) 2001-2006, 2008, 2009, 2010 Free Software Foundation, Inc.
+   Copyright (C) 2001-2006, 2008-2010, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Andreas Jaeger <aj@suse.de>.
 
@@ -195,8 +195,7 @@ _dl_start_user:\n\
    define the value.
    ELF_RTYPE_CLASS_NOCOPY iff TYPE should not be allowed to resolve to one
    of the main executable's symbols, as for a COPY reloc.  */
-#if !defined RTLD_BOOTSTRAP || USE___THREAD
-# define elf_machine_type_class(type)					      \
+#define elf_machine_type_class(type)					      \
   ((((type) == R_X86_64_JUMP_SLOT					      \
      || (type) == R_X86_64_DTPMOD64					      \
      || (type) == R_X86_64_DTPOFF64					      \
@@ -204,11 +203,6 @@ _dl_start_user:\n\
      || (type) == R_X86_64_TLSDESC)					      \
     * ELF_RTYPE_CLASS_PLT)						      \
    | (((type) == R_X86_64_COPY) * ELF_RTYPE_CLASS_COPY))
-#else
-# define elf_machine_type_class(type) \
-  ((((type) == R_X86_64_JUMP_SLOT) * ELF_RTYPE_CLASS_PLT) \
-   | (((type) == R_X86_64_COPY) * ELF_RTYPE_CLASS_COPY))
-#endif
 
 /* A reloc type used for ld.so cmdline arg lookups to reject PLT entries.  */
 #define ELF_MACHINE_JMP_SLOT	R_X86_64_JUMP_SLOT
@@ -302,10 +296,6 @@ elf_machine_rela (struct link_map *map, const Elf64_Rela *reloc,
 	  && __builtin_expect (sym->st_shndx != SHN_UNDEF, 1))
 	value = ((Elf64_Addr (*) (void)) value) ();
 
-# if defined RTLD_BOOTSTRAP && !USE___THREAD
-      assert (r_type == R_X86_64_GLOB_DAT || r_type == R_X86_64_JUMP_SLOT);
-      *reloc_addr = value + reloc->r_addend;
-# else
       switch (r_type)
 	{
 	case R_X86_64_GLOB_DAT:
@@ -453,7 +443,6 @@ elf_machine_rela (struct link_map *map, const Elf64_Rela *reloc,
 	  break;
 # endif
 	}
-#endif
     }
 }
 

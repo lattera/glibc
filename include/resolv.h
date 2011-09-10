@@ -15,14 +15,12 @@
 
 # ifdef _LIBC_REENTRANT
 #  include <tls.h>
-#  if USE___THREAD
-#   undef _res
-#   ifndef NOT_IN_libc
-#    define __resp __libc_resp
-#   endif
-#   define _res (*__resp)
-extern __thread struct __res_state *__resp attribute_tls_model_ie;
+#  undef _res
+#  ifndef NOT_IN_libc
+#   define __resp __libc_resp
 #  endif
+#  define _res (*__resp)
+extern __thread struct __res_state *__resp attribute_tls_model_ie;
 # else
 #  ifndef __BIND_NOSTATIC
 #   undef _res

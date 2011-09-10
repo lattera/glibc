@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 2002, 2003, 2004, 2006, 2008
+/* Copyright (C) 1997, 2002, 2003, 2004, 2006, 2008, 2011
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Miguel de Icaza <miguel@gnu.ai.mit.edu>, January 1997.
@@ -99,32 +99,19 @@ ENTRY(name);					\
 	 mov	-1, %o0;
 # elif defined _LIBC_REENTRANT
 
-#  if USE___THREAD
-#   ifndef NOT_IN_libc
-#    define SYSCALL_ERROR_ERRNO __libc_errno
-#   else
-#    define SYSCALL_ERROR_ERRNO errno
-#   endif
-#   define SYSCALL_ERROR_HANDLER				\
+#  ifndef NOT_IN_libc
+#   define SYSCALL_ERROR_ERRNO __libc_errno
+#  else
+#   define SYSCALL_ERROR_ERRNO errno
+#  endif
+#  define SYSCALL_ERROR_HANDLER				\
 0:	SETUP_PIC_REG(o2,g1)					\
 	sethi	%tie_hi22(SYSCALL_ERROR_ERRNO), %g1;		\
 	add	%g1, %tie_lo10(SYSCALL_ERROR_ERRNO), %g1;	\
 	ld	[%o2 + %g1], %g1, %tie_ld(SYSCALL_ERROR_ERRNO);	\
-	st	%o0, [%g7 + %g1]; 				\
-	jmp	%o7 + 8;    					\
+	st	%o0, [%g7 + %g1];				\
+	jmp	%o7 + 8;					\
 	 mov	-1, %o0;
-#  else
-#  define SYSCALL_ERROR_HANDLER		\
-0:	save	%sp, -96, %sp;		\
-	cfi_def_cfa_register(%fp);	\
-	cfi_window_save;		\
-	cfi_register (%o7, %i7);	\
-	call	__errno_location;	\
-	 nop;				\
-	st	%i0, [%o0];		\
-	jmp	%i7 + 8;		\
-	 restore %g0, -1, %o0;
-#  endif
 # else
 #  define SYSCALL_ERROR_HANDLER		\
 0:	SETUP_PIC_REG(o2,g1)		\

@@ -307,22 +307,19 @@ libc_freeres_fn (free_mem)
 	}
     }
 
-  if (USE___THREAD || GL(dl_tls_dtv_slotinfo_list) != NULL)
-    {
-      /* Free the memory allocated for the dtv slotinfo array.  We can do
-	 this only if all modules which used this memory are unloaded.  */
+  /* Free the memory allocated for the dtv slotinfo array.  We can do
+     this only if all modules which used this memory are unloaded.  */
 #ifdef SHARED
-      if (GL(dl_initial_dtv) == NULL)
-	/* There was no initial TLS setup, it was set up later when
-	   it used the normal malloc.  */
-	free_slotinfo (&GL(dl_tls_dtv_slotinfo_list));
-      else
+  if (GL(dl_initial_dtv) == NULL)
+    /* There was no initial TLS setup, it was set up later when
+       it used the normal malloc.  */
+    free_slotinfo (&GL(dl_tls_dtv_slotinfo_list));
+  else
 #endif
-	/* The first element of the list does not have to be deallocated.
-	   It was allocated in the dynamic linker (i.e., with a different
-	   malloc), and in the static library it's in .bss space.  */
-	free_slotinfo (&GL(dl_tls_dtv_slotinfo_list)->next);
-    }
+    /* The first element of the list does not have to be deallocated.
+       It was allocated in the dynamic linker (i.e., with a different
+       malloc), and in the static library it's in .bss space.  */
+    free_slotinfo (&GL(dl_tls_dtv_slotinfo_list)->next);
 
   void *scope_free_list = GL(dl_scope_free_list);
   GL(dl_scope_free_list) = NULL;

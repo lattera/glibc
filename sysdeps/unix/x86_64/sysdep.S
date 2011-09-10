@@ -1,4 +1,4 @@
-/* Copyright (C) 2001, 2002, 2004, 2005 Free Software Foundation, Inc.
+/* Copyright (C) 2001, 2002, 2004, 2005, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -45,43 +45,11 @@ syscall_error:
 	movl $EAGAIN, %eax	/* Yes; translate it to EAGAIN.  */
 notb:
 #endif
-#if USE___THREAD
-# ifdef PIC
+#ifdef PIC
 	movq C_SYMBOL_NAME(errno@GOTTPOFF)(%rip), %rcx
 	movl %eax, %fs:0(%rcx)
-# else
-	movl %eax, %fs:C_SYMBOL_NAME(errno@TPOFF)
-# endif
-#elif !defined PIC
-# ifndef _LIBC_REENTRANT
-	movl %eax, C_SYMBOL_NAME(errno)
-# else
-	pushq %rax
-	cfi_adjust_cfa_offset(8)
-	PUSH_ERRNO_LOCATION_RETURN
-	call BP_SYM (__errno_location)
-	POP_ERRNO_LOCATION_RETURN
-	popq %rcx
-	cfi_adjust_cfa_offset(-8)
-	movl %ecx, (%rax)
-# endif
 #else
-# if RTLD_PRIVATE_ERRNO
-	leaq rtld_errno(%rip), %rcx
-	movl %eax, (%rcx)
-# elif !defined _LIBC_REENTRANT
-	movq C_SYMBOL_NAME(errno)@GOTPCREL(%rip), %rcx
-	movl %eax, (%rcx)
-# else
-	pushq %rax
-	cfi_adjust_cfa_offset(8)
-	PUSH_ERRNO_LOCATION_RETURN
-	call C_SYMBOL_NAME (BP_SYM (__errno_location)@PLT)
-	POP_ERRNO_LOCATION_RETURN
-	popq %rcx
-	cfi_adjust_cfa_offset(-8)
-	movl %ecx, (%rax)
-# endif
+	movl %eax, %fs:C_SYMBOL_NAME(errno@TPOFF)
 #endif
 	movq $-1, %rax
 	ret

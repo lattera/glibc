@@ -1,5 +1,5 @@
 /* Assembler macros for 64 bit S/390.
-   Copyright (C) 2001, 2002, 2003, 2004, 2005, 2006, 2008
+   Copyright (C) 2001, 2002, 2003, 2004, 2005, 2006, 2008, 2011
    Free Software Foundation, Inc.
    Contributed by Martin Schwidefsky (schwidefsky@de.ibm.com).
    This file is part of the GNU C Library.
@@ -115,14 +115,13 @@
     lghi  %r2,-1;							      \
     br    %r14
 # elif defined _LIBC_REENTRANT
-#  if USE___THREAD
-#   ifndef NOT_IN_libc
-#    define SYSCALL_ERROR_ERRNO __libc_errno
-#   else
-#    define SYSCALL_ERROR_ERRNO errno
-#   endif
-#   define SYSCALL_ERROR_LABEL 0f
-#   define SYSCALL_ERROR_HANDLER \
+#  ifndef NOT_IN_libc
+#   define SYSCALL_ERROR_ERRNO __libc_errno
+#  else
+#   define SYSCALL_ERROR_ERRNO errno
+#  endif
+#  define SYSCALL_ERROR_LABEL 0f
+#  define SYSCALL_ERROR_HANDLER \
 0:  lcr   %r0,%r2;							      \
     larl  %r1,SYSCALL_ERROR_ERRNO@indntpoff;				      \
     lg    %r1,0(%r1);							      \
@@ -132,10 +131,6 @@
     st    %r0,0(%r1,%r2);						      \
     lghi   %r2,-1;							      \
     br    %r14
-#  else
-#   define SYSCALL_ERROR_LABEL syscall_error@plt
-#   define SYSCALL_ERROR_HANDLER
-#  endif
 # else
 #  define SYSCALL_ERROR_LABEL 0f
 #  define SYSCALL_ERROR_HANDLER \
@@ -319,8 +314,8 @@
     if (INTERNAL_SYSCALL_ERROR_P (_ret, ))				      \
       {									      \
       iserr:								      \
-        __set_errno (INTERNAL_SYSCALL_ERRNO (_ret, ));			      \
-        _ret = -1L;							      \
+	__set_errno (INTERNAL_SYSCALL_ERRNO (_ret, ));			      \
+	_ret = -1L;							      \
       }									      \
   out:									      \
     (int) _ret;								      \

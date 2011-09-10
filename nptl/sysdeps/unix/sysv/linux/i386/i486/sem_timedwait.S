@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2004, 2005, 2007, 2009 Free Software Foundation, Inc.
+/* Copyright (C) 2002-2005, 2007, 2009, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -154,18 +154,13 @@ sem_timedwait:
 4:
 #endif
 	addl	$_GLOBAL_OFFSET_TABLE_, %ebx
-#if USE___THREAD
-# ifdef NO_TLS_DIRECT_SEG_REFS
+#ifdef NO_TLS_DIRECT_SEG_REFS
 	movl	errno@gotntpoff(%ebx), %edx
 	addl	%gs:0, %edx
 	movl	%esi, (%edx)
-# else
+#else
 	movl	errno@gotntpoff(%ebx), %edx
 	movl	%esi, %gs:(%edx)
-# endif
-#else
-	call	__errno_location@plt
-	movl	%esi, (%eax)
 #endif
 
 	movl	28(%esp), %ebx	/* Load semaphore address.  */

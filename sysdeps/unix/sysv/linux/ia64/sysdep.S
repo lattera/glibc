@@ -1,4 +1,4 @@
-/* Copyright (C) 1999, 2000, 2001, 2003, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 1999-2001, 2003, 2004, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by David Mosberger-Tang <davidm@hpl.hp.com>.
 
@@ -34,7 +34,7 @@ ENTRY(__syscall_error)
 	;;
 	st4	[r2]=r8
 	mov	r8=-1
-#elif USE___THREAD
+#else
 # ifndef NOT_IN_libc
 #  define SYSCALL_ERROR_ERRNO __libc_errno
 # else
@@ -46,37 +46,7 @@ ENTRY(__syscall_error)
 	mov	r8=-1
 	add	r2=r2,r13;;
 	st4	[r2]=r3
-#elif defined _LIBC_REENTRANT
-	.prologue ASM_UNW_PRLG_RP|ASM_UNW_PRLG_PFS, ASM_UNW_PRLG_GRSAVE(0)
-	alloc	r33=ar.pfs, 0, 4, 0, 0
-	mov	r32=rp
-	.body
-	mov	r35=r8
-	mov	r34=r1
-	;;
-	br.call.sptk.many b0 = __errno_location
-.Lret0:		/* force new bundle */
-	st4	[r8]=r35
-	mov	r1=r34
-	mov	rp=r32
-	mov	r8=-1
-	mov	ar.pfs=r33
-#else /* _LIBC_REENTRANT */
-	/*
-	 * Note that the gp has to be set properly for this to work.
-	 * As long as all syscalls are in the same load unit
-	 * (executable or shared library) as this routine, we should
-	 * be fine.  Otherwise, we would have to first load the global
-	 * pointer register from __gp.
-	 */
-	addl	r2=@ltoff(errno),gp
-	;;
-	ld8	r2=[r2]
-	mov	r3=r8
-	mov	r8=-1
-	;;
-	st4	[r2]=r3
-#endif /* _LIBC_REENTRANT */
+#endif
 	ret			// ret is #define'd in syscall.h!
 END(__syscall_error)
 

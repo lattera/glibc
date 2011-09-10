@@ -1,6 +1,6 @@
 /* Machine-dependent ELF dynamic relocation inline functions.
    64 bit S/390 Version.
-   Copyright (C) 2001-2005, 2006 Free Software Foundation, Inc.
+   Copyright (C) 2001-2005, 2006, 2011 Free Software Foundation, Inc.
    Contributed by Martin Schwidefsky (schwidefsky@de.ibm.com).
    This file is part of the GNU C Library.
 
@@ -288,8 +288,7 @@ elf_machine_rela (struct link_map *map, const Elf64_Rela *reloc,
 	  *reloc_addr = value + reloc->r_addend;
 	  break;
 
-#if (!defined RTLD_BOOTSTRAP || USE___THREAD) \
-    && !defined RESOLVE_CONFLICT_FIND_MAP
+#ifndef RESOLVE_CONFLICT_FIND_MAP
 	case R_390_TLS_DTPMOD:
 # ifdef RTLD_BOOTSTRAP
 	  /* During startup the dynamic linker is always the module

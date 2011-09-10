@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2005, 2007 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2005, 2007, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -41,13 +41,8 @@ sem_trywait:
 	retq
 
 1:
-#if USE___THREAD
 	movq	errno@gottpoff(%rip), %rdx
 	movl	$EAGAIN, %fs:(%rdx)
-#else
-	callq	__errno_location@plt
-	movl	$EAGAIN, (%rax)
-#endif
 	orl	$-1, %eax
 	retq
 	.size	sem_trywait,.-sem_trywait

@@ -1,4 +1,4 @@
-/* Copyright (C) 2003, 2004, 2007 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2004, 2007, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -68,7 +68,7 @@ __new_sem_wait:
 .Lafter_ret:
 1:
 	INC (@(NWAITERS,r8),r2)
-	
+
 .LcleanupSTART:
 6:
 	mov.l	.Lenable0, r1
@@ -96,7 +96,7 @@ __new_sem_wait:
 	mov	r10, r4
 	bsrf	r1
 	 mov	r0, r10
-.Ldisable0b:	
+.Ldisable0b:
 	mov	r10, r0
 .LcleanupEND:
 
@@ -131,7 +131,6 @@ __new_sem_wait:
 	mov.l	.Lgot0, r12
 	add	r0, r12
 
-#if USE___THREAD
 	mov.l	.Lerrno0, r0
 	stc	gbr, r1
 	mov.l	@(r0, r12), r0
@@ -141,12 +140,6 @@ __new_sem_wait:
 .Lerrno0:
 	.long	errno@GOTTPOFF
 .Lexit:
-#else
-	mov.l	.Lerrloc0, r1
-	bsrf	r1
-	 nop
-.Lerrloc0b:
-#endif
 	mov.l	r8, @r0
 	bra	9b
 	 mov	#-1, r0
@@ -154,10 +147,6 @@ __new_sem_wait:
 	.align	2
 .Lgot0:
 	.long	_GLOBAL_OFFSET_TABLE_
-#if !USE___THREAD
-.Lerrloc0:
-	.long	__errno_location@PLT-(.Lerrloc0b-.)
-#endif
 .Lenable0:
 	.long	__pthread_enable_asynccancel-.Lenable0b
 .Ldisable0:
@@ -168,7 +157,7 @@ __new_sem_wait:
 
 	.type	sem_wait_cleanup,@function
 sem_wait_cleanup:
- 	DEC (@(NWAITERS,r8), r2)
+	DEC (@(NWAITERS,r8), r2)
 .LcallUR:
 	mov.l	.Lresume, r1
 #ifdef PIC
@@ -269,25 +258,25 @@ sem_wait_cleanup:
 	.byte	14				! DW_CFA_def_cfa_offset
 	.uleb128 4
 	.byte   0x88				! DW_CFA_offset r8
-        .uleb128 1
+	.uleb128 1
 	.byte	4				! DW_CFA_advance_loc4
 	.ualong	.Lpush_r10-.Lpush_r8
 	.byte	14				! DW_CFA_def_cfa_offset
 	.uleb128 8
 	.byte   0x8a				! DW_CFA_offset r10
-        .uleb128 2
+	.uleb128 2
 	.byte	4				! DW_CFA_advance_loc4
 	.ualong	.Lpush_r12-.Lpush_r10
 	.byte	14				! DW_CFA_def_cfa_offset
 	.uleb128 12
 	.byte   0x8c				! DW_CFA_offset r12
-        .uleb128 3
+	.uleb128 3
 	.byte	4				! DW_CFA_advance_loc4
 	.ualong	.Lpush_pr-.Lpush_r12
 	.byte	14				! DW_CFA_def_cfa_offset
 	.uleb128 16
 	.byte   0x91				! DW_CFA_offset pr
-        .uleb128 4
+	.uleb128 4
 	.align	4
 .LENDFDE:
 

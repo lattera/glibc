@@ -1,5 +1,5 @@
 /* libc-internal interface for thread-specific data.  Stub or TLS version.
-   Copyright (C) 1998,2001,2002,2008 Free Software Foundation, Inc.
+   Copyright (C) 1998,2001,2002,2008,2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -24,12 +24,12 @@
    set of thread-specific `void *' data used only internally by libc.
 
    __libc_tsd_define(CLASS, TYPE, KEY)	-- Define or declare a datum with TYPE
-   					   for KEY.  CLASS can be `static' for
+					   for KEY.  CLASS can be `static' for
 					   keys used in only one source file,
 					   empty for global definitions, or
 					   `extern' for global declarations.
    __libc_tsd_address(TYPE, KEY)	-- Return the `TYPE *' pointing to
-   					   the current thread's datum for KEY.
+					   the current thread's datum for KEY.
    __libc_tsd_get(TYPE, KEY)		-- Return the `TYPE' datum for KEY.
    __libc_tsd_set(TYPE, KEY, VALUE)	-- Set the datum for KEY to VALUE.
 
@@ -51,20 +51,11 @@
    We don't define an enum for the possible key values, because the KEYs
    translate directly into variables by macro magic.  */
 
-#if USE___THREAD
-# define __libc_tsd_define(CLASS, TYPE, KEY)	\
+#define __libc_tsd_define(CLASS, TYPE, KEY)	\
   CLASS __thread TYPE __libc_tsd_##KEY attribute_tls_model_ie;
 
-# define __libc_tsd_address(TYPE, KEY)		(&__libc_tsd_##KEY)
-# define __libc_tsd_get(TYPE, KEY)		(__libc_tsd_##KEY)
-# define __libc_tsd_set(TYPE, KEY, VALUE)	(__libc_tsd_##KEY = (VALUE))
-#else
-# define __libc_tsd_define(CLASS, TYPE, KEY)	\
-  CLASS TYPE __libc_tsd_##KEY##_data;
-
-# define __libc_tsd_address(TYPE, KEY)		(&__libc_tsd_##KEY##_data)
-# define __libc_tsd_get(TYPE, KEY)		(__libc_tsd_##KEY##_data)
-# define __libc_tsd_set(TYPE, KEY, VALUE)	(__libc_tsd_##KEY##_data = (VALUE))
-#endif
+#define __libc_tsd_address(TYPE, KEY)		(&__libc_tsd_##KEY)
+#define __libc_tsd_get(TYPE, KEY)		(__libc_tsd_##KEY)
+#define __libc_tsd_set(TYPE, KEY, VALUE)	(__libc_tsd_##KEY = (VALUE))
 
 #endif	/* bits/libc-tsd.h */

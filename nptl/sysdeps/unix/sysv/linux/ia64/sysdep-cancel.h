@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2004, 2006 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2004, 2006, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jakub@redhat.com>, 2002.
 
@@ -27,13 +27,12 @@
 
 # undef PSEUDO
 
-# if USE___THREAD
-#  ifndef NOT_IN_libc
-#   define SYSDEP_CANCEL_ERRNO __libc_errno
-#  else
-#   define SYSDEP_CANCEL_ERRNO errno
-#  endif
-#  define SYSDEP_CANCEL_ERROR(args)					      \
+# ifndef NOT_IN_libc
+#  define SYSDEP_CANCEL_ERRNO __libc_errno
+# else
+#  define SYSDEP_CANCEL_ERRNO errno
+# endif
+# define SYSDEP_CANCEL_ERROR(args)					      \
 .section .gnu.linkonce.t.__syscall_error_##args, "ax";			      \
      .align 32;								      \
      .proc __syscall_error_##args;					      \
@@ -53,28 +52,6 @@ __syscall_error_##args:							      \
      add loc4 = loc4, r13;;						      \
      st4 [loc4] = loc3;							      \
      mov ar.pfs = loc0
-# else
-#  define SYSDEP_CANCEL_ERROR(args)					      \
-.section .gnu.linkonce.t.__syscall_error_##args, "ax";			      \
-     .align 32;								      \
-     .proc __syscall_error_##args;					      \
-     .global __syscall_error_##args;					      \
-     .hidden __syscall_error_##args;					      \
-     .size __syscall_error_##args, 64;					      \
-__syscall_error_##args:							      \
-     .prologue;								      \
-     .regstk args, 5, args, 0;						      \
-     .save ar.pfs, loc0;						      \
-     .save rp, loc1;							      \
-     .body;								      \
-     mov loc4 = r1;;							      \
-     br.call.sptk.many b0 = __errno_location;;				      \
-     st4 [r8] = loc3;							      \
-     mov r1 = loc4;							      \
-     mov rp = loc1;							      \
-     mov r8 = -1;							      \
-     mov ar.pfs = loc0
-# endif
 
 # ifndef USE_DL_SYSINFO
 

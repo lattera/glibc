@@ -173,10 +173,6 @@ int __malloc_initialized = -1;
 
 static __malloc_ptr_t (*save_malloc_hook) (size_t __size,
 					   __const __malloc_ptr_t);
-# if !defined _LIBC || (defined SHARED && !USE___THREAD)
-static __malloc_ptr_t (*save_memalign_hook) (size_t __align, size_t __size,
-					     __const __malloc_ptr_t);
-# endif
 static void           (*save_free_hook) (__malloc_ptr_t __ptr,
 					 __const __malloc_ptr_t);
 static Void_t*        save_arena;
@@ -432,34 +428,6 @@ __failing_morecore (ptrdiff_t d)
 extern struct dl_open_hook *_dl_open_hook;
 libc_hidden_proto (_dl_open_hook);
 # endif
-
-# if defined SHARED && !USE___THREAD
-/* This is called by __pthread_initialize_minimal when it needs to use
-   malloc to set up the TLS state.  We cannot do the full work of
-   ptmalloc_init (below) until __pthread_initialize_minimal has finished,
-   so it has to switch to using the special startup-time hooks while doing
-   those allocations.  */
-void
-__libc_malloc_pthread_startup (bool first_time)
-{
-  if (first_time)
-    {
-      ptmalloc_init_minimal ();
-      save_malloc_hook = __malloc_hook;
-      save_memalign_hook = __memalign_hook;
-      save_free_hook = __free_hook;
-      __malloc_hook = malloc_starter;
-      __memalign_hook = memalign_starter;
-      __free_hook = free_starter;
-    }
-  else
-    {
-      __malloc_hook = save_malloc_hook;
-      __memalign_hook = save_memalign_hook;
-      __free_hook = save_free_hook;
-    }
-}
-# endif
 #endif
 
 static void
@@ -475,14 +443,7 @@ ptmalloc_init (void)
   if(__malloc_initialized >= 0) return;
   __malloc_initialized = 0;
 
-#ifdef _LIBC
-# if defined SHARED && !USE___THREAD
-  /* ptmalloc_init_minimal may already have been called via
-     __libc_malloc_pthread_startup, above.  */
-  if (mp_.pagesize == 0)
-# endif
-#endif
-    ptmalloc_init_minimal();
+  ptmalloc_init_minimal();
 
   mutex_init(&main_arena.mutex);
   main_arena.next = &main_arena;

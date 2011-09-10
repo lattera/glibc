@@ -1,5 +1,5 @@
-/* Copyright (C) 1992,1993,1995-2000,2002-2006,2007
-   	Free Software Foundation, Inc.
+/* Copyright (C) 1992,1993,1995-2000,2002-2006,2007,2011
+	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper, <drepper@gnu.org>, August 1995.
 
@@ -121,13 +121,12 @@
 
 # elif defined _LIBC_REENTRANT
 
-#  if USE___THREAD
-#   ifndef NOT_IN_libc
-#    define SYSCALL_ERROR_ERRNO __libc_errno
-#   else
-#    define SYSCALL_ERROR_ERRNO errno
-#   endif
-#   define SYSCALL_ERROR_HANDLER					      \
+#  ifndef NOT_IN_libc
+#   define SYSCALL_ERROR_ERRNO __libc_errno
+#  else
+#   define SYSCALL_ERROR_ERRNO errno
+#  endif
+#  define SYSCALL_ERROR_HANDLER					      \
 0:SETUP_PIC_REG (cx);							      \
   addl $_GLOBAL_OFFSET_TABLE_, %ecx;					      \
   movl SYSCALL_ERROR_ERRNO@GOTNTPOFF(%ecx), %ecx;			      \
@@ -136,38 +135,13 @@
   SYSCALL_ERROR_HANDLER_TLS_STORE (%edx, %ecx);				      \
   orl $-1, %eax;							      \
   jmp L(pseudo_end);
-#   ifndef NO_TLS_DIRECT_SEG_REFS
-#    define SYSCALL_ERROR_HANDLER_TLS_STORE(src, destoff)		      \
+#  ifndef NO_TLS_DIRECT_SEG_REFS
+#   define SYSCALL_ERROR_HANDLER_TLS_STORE(src, destoff)		      \
   movl src, %gs:(destoff)
-#   else
-#    define SYSCALL_ERROR_HANDLER_TLS_STORE(src, destoff)		      \
+#  else
+#   define SYSCALL_ERROR_HANDLER_TLS_STORE(src, destoff)		      \
   addl %gs:0, destoff;							      \
   movl src, (destoff)
-#   endif
-#  else
-#   define SYSCALL_ERROR_HANDLER					      \
-0:pushl %ebx;								      \
-  cfi_adjust_cfa_offset (4);						      \
-  cfi_rel_offset (ebx, 0);						      \
-  SETUP_PIC_REG (bx);							      \
-  addl $_GLOBAL_OFFSET_TABLE_, %ebx;					      \
-  xorl %edx, %edx;							      \
-  subl %eax, %edx;							      \
-  pushl %edx;								      \
-  cfi_adjust_cfa_offset (4);						      \
-  PUSH_ERRNO_LOCATION_RETURN;						      \
-  call BP_SYM (__errno_location)@PLT;					      \
-  POP_ERRNO_LOCATION_RETURN;						      \
-  popl %ecx;								      \
-  cfi_adjust_cfa_offset (-4);						      \
-  popl %ebx;								      \
-  cfi_adjust_cfa_offset (-4);						      \
-  cfi_restore (ebx);							      \
-  movl %ecx, (%eax);							      \
-  orl $-1, %eax;							      \
-  jmp L(pseudo_end);
-/* A quick note: it is assumed that the call to `__errno_location' does
-   not modify the stack!  */
 #  endif
 # else
 /* Store (- %eax) into errno through the GOT.  */

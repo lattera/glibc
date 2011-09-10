@@ -1,4 +1,4 @@
-/* Copyright (C) 2003, 2004, 2007 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2004, 2007, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -57,7 +57,6 @@ __new_sem_trywait:
 	mov.l	.Lgot1, r12
 	add	r0, r12
 
-#if USE___THREAD
 	mov.l	.Lerrno1, r0
 	stc	gbr, r1
 	mov.l	@(r0, r12), r0
@@ -67,12 +66,6 @@ __new_sem_trywait:
 .Lerrno1:
 	.long	errno@GOTTPOFF
 .Lexit:
-#else
-	mov.l	.Lerrloc1, r1
-	bsrf	r1
-	 nop
-.Lerrloc1b:
-#endif
 	mov.l	r8, @r0
 	lds.l	@r15+, pr
 	mov.l	@r15+, r8
@@ -83,9 +76,5 @@ __new_sem_trywait:
 	.align	2
 .Lgot1:
 	.long	_GLOBAL_OFFSET_TABLE_
-#if !USE___THREAD
-.Lerrloc1:
-	.long	__errno_location@PLT-(.Lerrloc1b-.)
-#endif
 	.size	__new_sem_trywait,.-__new_sem_trywait
 	versioned_symbol(libpthread, __new_sem_trywait, sem_trywait, GLIBC_2_1)

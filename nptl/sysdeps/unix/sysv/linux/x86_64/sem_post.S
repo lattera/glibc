@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2005, 2007, 2008 Free Software Foundation, Inc.
+/* Copyright (C) 2002,2003,2005,2007,2008,2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -62,29 +62,15 @@ sem_post:
 	retq
 
 1:
-#if USE___THREAD
 	movl	$EINVAL, %eax
-#else
-	callq	__errno_location@plt
-	movl	$EINVAL, %edx
-#endif
 	jmp	4f
 
 3:
-#if USE___THREAD
 	movl	$EOVERFLOW, %eax
-#else
-	callq	__errno_location@plt
-	movl	$EOVERFLOW, %edx
-#endif
 
 4:
-#if USE___THREAD
 	movq	errno@gottpoff(%rip), %rdx
 	movl	%eax, %fs:(%rdx)
-#else
-	movl	%edx, (%rax)
-#endif
 	orl	$-1, %eax
 	retq
 	.size	sem_post,.-sem_post

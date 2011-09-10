@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2005, 2007, 2009 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2005, 2007, 2009, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -125,14 +125,8 @@ sem_wait:
 
 	cfi_adjust_cfa_offset(8)
 4:	negq	%rcx
-#if USE___THREAD
 	movq	errno@gottpoff(%rip), %rdx
 	movl	%ecx, %fs:(%rdx)
-#else
-# error "not supported.  %rcx and %rdi must be preserved"
-	callq	__errno_location@plt
-	movl	%ecx, (%rax)
-#endif
 	orl	$-1, %eax
 
 	jmp 9b

@@ -2,29 +2,19 @@
 #include <resolv/netdb.h>
 
 /* Macros for accessing h_errno from inside libc.  */
+# undef  h_errno
 # ifdef _LIBC_REENTRANT
 #  include <tls.h>
-#  if USE___THREAD
-#   undef  h_errno
-#   ifndef NOT_IN_libc
-#    define h_errno __libc_h_errno
-#   else
-#    define h_errno h_errno	/* For #ifndef h_errno tests.  */
-#   endif
-extern __thread int h_errno attribute_tls_model_ie;
-#   define __set_h_errno(x)	(h_errno = (x))
+#  ifndef NOT_IN_libc
+#   define h_errno __libc_h_errno
 #  else
-static inline int
-__set_h_errno (int __err)
-{
-  return *__h_errno_location () = __err;
-}
+#   define h_errno h_errno	/* For #ifndef h_errno tests.  */
 #  endif
+extern __thread int h_errno attribute_tls_model_ie;
 # else
-#  undef  h_errno
-#  define __set_h_errno(x) (h_errno = (x))
 extern int h_errno;
 # endif	/* _LIBC_REENTRANT */
+# define __set_h_errno(x) (h_errno = (x))
 
 libc_hidden_proto (hstrerror)
 libc_hidden_proto (innetgr)

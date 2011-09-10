@@ -1,5 +1,5 @@
 /* Machine-dependent ELF dynamic relocation inline functions.  S390 Version.
-   Copyright (C) 2000, 2001, 2002, 2003, 2004, 2005, 2006
+   Copyright (C) 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2011
    Free Software Foundation, Inc.
    Contributed by Carl Pederson & Martin Schwidefsky.
    This file is part of the GNU C Library.
@@ -43,7 +43,7 @@ elf_machine_matches_host (const Elf32_Ehdr *ehdr)
     return 0;
 
   return (ehdr->e_machine == EM_S390 || ehdr->e_machine == EM_S390_OLD)
-         && ehdr->e_ident[EI_CLASS] == ELFCLASS32;
+	 && ehdr->e_ident[EI_CLASS] == ELFCLASS32;
 }
 
 
@@ -316,8 +316,7 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 	  *reloc_addr = value + reloc->r_addend;
 	  break;
 
-#if (!defined RTLD_BOOTSTRAP || USE___THREAD) \
-    && !defined RESOLVE_CONFLICT_FIND_MAP
+#ifndef RESOLVE_CONFLICT_FIND_MAP
 	case R_390_TLS_DTPMOD:
 # ifdef RTLD_BOOTSTRAP
 	  /* During startup the dynamic linker is always the module

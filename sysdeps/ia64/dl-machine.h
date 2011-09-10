@@ -1,5 +1,5 @@
 /* Machine-dependent ELF dynamic relocation inline functions.  IA-64 version.
-   Copyright (C) 1995-1997, 2000-2004, 2005, 2006 Free Software Foundation, Inc.
+   Copyright (C) 1995-1997, 2000-2006, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -311,15 +311,10 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
    of the main executable's symbols, as for a COPY reloc, which we don't
    use.  */
 /* ??? Ignore *MSB for now.  */
-#if !defined RTLD_BOOTSTRAP || USE___THREAD
 #define elf_machine_type_class(type) \
   (((type) == R_IA64_IPLTLSB || (type) == R_IA64_DTPMOD64LSB		      \
     || (type) == R_IA64_DTPREL64LSB || (type) == R_IA64_TPREL64LSB)	      \
    * ELF_RTYPE_CLASS_PLT)
-#else
-#define elf_machine_type_class(type) \
-  (((type) == R_IA64_IPLTLSB) * ELF_RTYPE_CLASS_PLT)
-#endif
 
 /* A reloc type used for ld.so cmdline arg lookups to reject PLT entries.  */
 #define ELF_MACHINE_JMP_SLOT	 R_IA64_IPLTLSB
@@ -405,7 +400,7 @@ elf_machine_rela (struct link_map *map,
       /* Already done in dynamic linker.  */
       if (map != &GL(dl_rtld_map))
 # endif
-        value += map->l_addr;
+	value += map->l_addr;
     }
   else
 #endif
@@ -417,7 +412,7 @@ elf_machine_rela (struct link_map *map,
 
       /* RESOLVE_MAP() will return NULL if it fail to locate the symbol.  */
       if ((sym_map = RESOLVE_MAP (&sym, version, r_type)))
-        {
+	{
 	  value = sym_map->l_addr + sym->st_value + reloc->r_addend;
 
 	  if (R_IA64_TYPE (r_type) == R_IA64_TYPE (R_IA64_DIR64LSB))
@@ -432,26 +427,24 @@ elf_machine_rela (struct link_map *map,
 	    value = _dl_make_fptr (sym_map, sym, value);
 	  else if (R_IA64_TYPE (r_type) == R_IA64_TYPE (R_IA64_PCREL64LSB))
 	    value -= (Elf64_Addr) reloc_addr & -16;
-#if !defined RTLD_BOOTSTRAP || defined USE___THREAD
 	  else if (R_IA64_TYPE (r_type) == R_IA64_TYPE (R_IA64_DTPMOD64LSB))
-# ifdef RTLD_BOOTSTRAP
+#ifdef RTLD_BOOTSTRAP
 	    /* During startup the dynamic linker is always index 1.  */
 	    value = 1;
-# else
+#else
 	    /* Get the information from the link map returned by the
 	       resolv function.  */
 	    value = sym_map->l_tls_modid;
 	  else if (R_IA64_TYPE (r_type) == R_IA64_TYPE (R_IA64_DTPREL64LSB))
 	    value -= sym_map->l_addr;
-# endif
+#endif
 	  else if (R_IA64_TYPE (r_type) == R_IA64_TYPE (R_IA64_TPREL64LSB))
 	    {
-# ifndef RTLD_BOOTSTRAP
+#ifndef RTLD_BOOTSTRAP
 	      CHECK_STATIC_TLS (map, sym_map);
-# endif
+#endif
 	      value += sym_map->l_tls_offset - sym_map->l_addr;
 	    }
-#endif
 	  else
 	    _dl_reloc_bad_type (map, r_type, 0);
 	}

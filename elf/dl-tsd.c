@@ -1,5 +1,5 @@
 /* Thread-local data used by error handling for runtime dynamic linker.
-   Copyright (C) 2002, 2005 Free Software Foundation, Inc.
+   Copyright (C) 2002, 2005, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -30,17 +30,13 @@
 void ** __attribute__ ((const))
 _dl_initial_error_catch_tsd (void)
 {
-#  if USE___THREAD
   static __thread void *data;
-#  else
-  static void *data;
-#  endif
   return &data;
 }
 void **(*_dl_error_catch_tsd) (void) __attribute__ ((const))
      = &_dl_initial_error_catch_tsd;
 
-# elif USE___THREAD
+# else
 
 /* libpthread sets _dl_error_catch_tsd to point to this function.
    We define it here instead of in libpthread so that it doesn't

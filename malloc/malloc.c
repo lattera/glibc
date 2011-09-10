@@ -1649,19 +1649,7 @@ static Void_t*   realloc_check(Void_t* oldmem, size_t bytes,
 static Void_t*   memalign_check(size_t alignment, size_t bytes,
 				const Void_t *caller);
 #ifndef NO_THREADS
-# ifdef _LIBC
-#  if USE___THREAD || !defined SHARED
-    /* These routines are never needed in this configuration.  */
-#   define NO_STARTER
-#  endif
-# endif
-# ifdef NO_STARTER
-#  undef NO_STARTER
-# else
-static Void_t*   malloc_starter(size_t sz, const Void_t *caller);
-static Void_t*   memalign_starter(size_t aln, size_t sz, const Void_t *caller);
-static void      free_starter(Void_t* mem, const Void_t *caller);
-# endif
+/* These routines are never needed in this configuration.  */
 static Void_t*   malloc_atfork(size_t sz, const Void_t *caller);
 static void      free_atfork(Void_t* mem, const Void_t *caller);
 #endif

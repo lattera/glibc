@@ -1,4 +1,4 @@
-/* Copyright (C) 2003, 2004, 2007, 2008 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2004, 2007, 2008, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -65,7 +65,7 @@ __new_sem_post:
 
 3:
 	mov	#EOVERFLOW, r2
-4:	
+4:
 	mov.l	r12, @-r15
 	mov.l	r8, @-r15
 	sts.l	pr, @-r15
@@ -73,7 +73,6 @@ __new_sem_post:
 	mov.l	.Lgot3, r12
 	add	r0, r12
 
-#if USE___THREAD
 	mov.l	.Lerrno3, r0
 	stc	gbr, r1
 	mov.l	@(r0, r12), r0
@@ -84,14 +83,6 @@ __new_sem_post:
 	.long	errno@GOTTPOFF
 .Lexit:
 	mov.l	r2, @r0
-#else
-	mov	r2, r8
-	mov.l	.Lerrloc3, r1
-	bsrf	r1
-	 nop
-.Lerrloc3b:
-	mov	r8, @r0
-#endif
 	lds.l	@r15+, pr
 	mov.l	@r15+, r8
 	mov.l	@r15+, r12
@@ -103,9 +94,5 @@ __new_sem_post:
 	.long	SEM_VALUE_MAX
 .Lgot3:
 	.long	_GLOBAL_OFFSET_TABLE_
-#if !USE___THREAD
-.Lerrloc3:
-	.long	__errno_location@PLT-(.Lerrloc3b-.)
-#endif
 	.size	__new_sem_post,.-__new_sem_post
 	versioned_symbol(libpthread, __new_sem_post, sem_post, GLIBC_2_1)
