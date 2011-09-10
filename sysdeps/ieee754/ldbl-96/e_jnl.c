@@ -281,7 +281,16 @@ __ieee754_jnl (n, x)
 		    }
 		}
 	    }
-	  b = (t * __ieee754_j0l (x) / b);
+	  /* j0() and j1() suffer enormous loss of precision at and
+	   * near zero; however, we know that their zero points never
+	   * coincide, so just choose the one further away from zero.
+	   */
+	  z = __ieee754_j0l (x);
+	  w = __ieee754_j1l (x);
+	  if (fabsl (z) >= fabsl (w))
+	    b = (t * z / b);
+	  else
+	    b = (t * w / a);
 	}
     }
   if (sgn == 1)

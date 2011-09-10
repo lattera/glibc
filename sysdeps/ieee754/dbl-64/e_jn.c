@@ -215,7 +215,16 @@ static double zero  =  0.00000000000000000000e+00;
 			}
 	     	    }
 		}
-	    	b = (t*__ieee754_j0(x)/b);
+		/* j0() and j1() suffer enormous loss of precision at and
+		 * near zero; however, we know that their zero points never
+		 * coincide, so just choose the one further away from zero.
+		 */
+		z = __ieee754_j0 (x);
+		w = __ieee754_j1 (x);
+		if (fabs (z) >= fabs (w))
+		  b = (t * z / b);
+		else
+		  b = (t * w / a);
 	    }
 	}
 	if(sgn==1) return -b; else return b;

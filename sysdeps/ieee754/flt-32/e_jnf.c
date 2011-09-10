@@ -165,7 +165,16 @@ static float zero  =  0.0000000000e+00;
 			}
 		    }
 		}
-		b = (t*__ieee754_j0f(x)/b);
+		/* j0() and j1() suffer enormous loss of precision at and
+		 * near zero; however, we know that their zero points never
+		 * coincide, so just choose the one further away from zero.
+		 */
+		z = __ieee754_j0f (x);
+		w = __ieee754_j1f (x);
+		if (fabsf (z) >= fabsf (w))
+		  b = (t * z / b);
+		else
+		  b = (t * w / a);
 	    }
 	}
 	if(sgn==1) return -b; else return b;
