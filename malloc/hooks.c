@@ -25,26 +25,16 @@
 /* Hooks for debugging versions.  The initial hooks just call the
    initialization routine, then do the normal work. */
 
-static Void_t*
-#if __STD_C
+static void*
 malloc_hook_ini(size_t sz, const __malloc_ptr_t caller)
-#else
-malloc_hook_ini(sz, caller)
-     size_t sz; const __malloc_ptr_t caller;
-#endif
 {
   __malloc_hook = NULL;
   ptmalloc_init();
   return public_mALLOc(sz);
 }
 
-static Void_t*
-#if __STD_C
-realloc_hook_ini(Void_t* ptr, size_t sz, const __malloc_ptr_t caller)
-#else
-realloc_hook_ini(ptr, sz, caller)
-     Void_t* ptr; size_t sz; const __malloc_ptr_t caller;
-#endif
+static void*
+realloc_hook_ini(void* ptr, size_t sz, const __malloc_ptr_t caller)
 {
   __malloc_hook = NULL;
   __realloc_hook = NULL;
@@ -52,13 +42,8 @@ realloc_hook_ini(ptr, sz, caller)
   return public_rEALLOc(ptr, sz);
 }
 
-static Void_t*
-#if __STD_C
+static void*
 memalign_hook_ini(size_t alignment, size_t sz, const __malloc_ptr_t caller)
-#else
-memalign_hook_ini(alignment, sz, caller)
-     size_t alignment; size_t sz; const __malloc_ptr_t caller;
-#endif
 {
   __memalign_hook = NULL;
   ptmalloc_init();
@@ -108,13 +93,9 @@ __malloc_check_init()
 /* Instrument a chunk with overrun detector byte(s) and convert it
    into a user pointer with requested size sz. */
 
-static Void_t*
+static void*
 internal_function
-#if __STD_C
-mem2mem_check(Void_t *ptr, size_t sz)
-#else
-mem2mem_check(ptr, sz) Void_t *ptr; size_t sz;
-#endif
+mem2mem_check(void *ptr, size_t sz)
 {
   mchunkptr p;
   unsigned char* m_ptr = (unsigned char*)BOUNDED_N(ptr, sz);
@@ -133,7 +114,7 @@ mem2mem_check(ptr, sz) Void_t *ptr; size_t sz;
     m_ptr[i] = 0xFF;
   }
   m_ptr[sz] = MAGICBYTE(p);
-  return (Void_t*)m_ptr;
+  return (void*)m_ptr;
 }
 
 /* Convert a pointer to be free()d or realloc()ed to a valid chunk
@@ -141,11 +122,7 @@ mem2mem_check(ptr, sz) Void_t *ptr; size_t sz;
 
 static mchunkptr
 internal_function
-#if __STD_C
-mem2chunk_check(Void_t* mem, unsigned char **magic_p)
-#else
-mem2chunk_check(mem, magic_p) Void_t* mem; unsigned char **magic_p;
-#endif
+mem2chunk_check(void* mem, unsigned char **magic_p)
 {
   mchunkptr p;
   INTERNAL_SIZE_T sz, c;
@@ -200,11 +177,7 @@ mem2chunk_check(mem, magic_p) Void_t* mem; unsigned char **magic_p;
 
 static int
 internal_function
-#if __STD_C
 top_check(void)
-#else
-top_check()
-#endif
 {
   mchunkptr t = top(&main_arena);
   char* brk, * new_brk;
@@ -246,14 +219,10 @@ top_check()
   return 0;
 }
 
-static Void_t*
-#if __STD_C
-malloc_check(size_t sz, const Void_t *caller)
-#else
-malloc_check(sz, caller) size_t sz; const Void_t *caller;
-#endif
+static void*
+malloc_check(size_t sz, const void *caller)
 {
-  Void_t *victim;
+  void *victim;
 
   if (sz+1 == 0) {
     MALLOC_FAILURE_ACTION;
@@ -267,11 +236,7 @@ malloc_check(sz, caller) size_t sz; const Void_t *caller;
 }
 
 static void
-#if __STD_C
-free_check(Void_t* mem, const Void_t *caller)
-#else
-free_check(mem, caller) Void_t* mem; const Void_t *caller;
-#endif
+free_check(void* mem, const void *caller)
 {
   mchunkptr p;
 
@@ -284,34 +249,20 @@ free_check(mem, caller) Void_t* mem; const Void_t *caller;
     malloc_printerr(check_action, "free(): invalid pointer", mem);
     return;
   }
-#if HAVE_MMAP
   if (chunk_is_mmapped(p)) {
     (void)mutex_unlock(&main_arena.mutex);
     munmap_chunk(p);
     return;
   }
-#endif
-#if 0 /* Erase freed memory. */
-  memset(mem, 0, chunksize(p) - (SIZE_SZ+1));
-#endif
-#ifdef ATOMIC_FASTBINS
   _int_free(&main_arena, p, 1);
-#else
-  _int_free(&main_arena, p);
-#endif
   (void)mutex_unlock(&main_arena.mutex);
 }
 
-static Void_t*
-#if __STD_C
-realloc_check(Void_t* oldmem, size_t bytes, const Void_t *caller)
-#else
-realloc_check(oldmem, bytes, caller)
-     Void_t* oldmem; size_t bytes; const Void_t *caller;
-#endif
+static void*
+realloc_check(void* oldmem, size_t bytes, const void *caller)
 {
   INTERNAL_SIZE_T nb;
-  Void_t* newmem = 0;
+  void* newmem = 0;
   unsigned char *magic_p;
 
   if (bytes+1 == 0) {
@@ -335,7 +286,6 @@ realloc_check(oldmem, bytes, caller)
   checked_request2size(bytes+1, nb);
   (void)mutex_lock(&main_arena.mutex);
 
-#if HAVE_MMAP
   if (chunk_is_mmapped(oldp)) {
 #if HAVE_MREMAP
     mchunkptr newp = mremap_chunk(oldp, nb);
@@ -358,27 +308,12 @@ realloc_check(oldmem, bytes, caller)
       }
     }
   } else {
-#endif /* HAVE_MMAP */
     if (top_check() >= 0) {
       INTERNAL_SIZE_T nb;
       checked_request2size(bytes + 1, nb);
       newmem = _int_realloc(&main_arena, oldp, oldsize, nb);
     }
-#if 0 /* Erase freed memory. */
-    if(newmem)
-      newp = mem2chunk(newmem);
-    nb = chunksize(newp);
-    if(oldp<newp || oldp>=chunk_at_offset(newp, nb)) {
-      memset((char*)oldmem + 2*sizeof(mbinptr), 0,
-	     oldsize - (2*sizeof(mbinptr)+2*SIZE_SZ+1));
-    } else if(nb > oldsize+SIZE_SZ) {
-      memset((char*)BOUNDED_N(chunk2mem(newp), bytes) + oldsize,
-	     0, nb - (oldsize+SIZE_SZ));
-    }
-#endif
-#if HAVE_MMAP
   }
-#endif
 
   /* mem2chunk_check changed the magic byte in the old chunk.
      If newmem is NULL, then the old chunk will still be used though,
@@ -390,15 +325,10 @@ realloc_check(oldmem, bytes, caller)
   return mem2mem_check(newmem, bytes);
 }
 
-static Void_t*
-#if __STD_C
-memalign_check(size_t alignment, size_t bytes, const Void_t *caller)
-#else
-memalign_check(alignment, bytes, caller)
-     size_t alignment; size_t bytes; const Void_t *caller;
-#endif
+static void*
+memalign_check(size_t alignment, size_t bytes, const void *caller)
 {
-  Void_t* mem;
+  void* mem;
 
   if (alignment <= MALLOC_ALIGNMENT) return malloc_check(bytes, NULL);
   if (alignment <  MINSIZE) alignment = MINSIZE;
@@ -413,77 +343,6 @@ memalign_check(alignment, bytes, caller)
   (void)mutex_unlock(&main_arena.mutex);
   return mem2mem_check(mem, bytes);
 }
-
-#ifndef NO_THREADS
-
-# ifdef _LIBC
-#  ifndef SHARED
-    /* These routines are never needed in this configuration.  */
-#   define NO_STARTER
-#  endif
-# endif
-
-# ifdef NO_STARTER
-#  undef NO_STARTER
-# else
-
-/* The following hooks are used when the global initialization in
-   ptmalloc_init() hasn't completed yet. */
-
-static Void_t*
-#if __STD_C
-malloc_starter(size_t sz, const Void_t *caller)
-#else
-malloc_starter(sz, caller) size_t sz; const Void_t *caller;
-#endif
-{
-  Void_t* victim;
-
-  victim = _int_malloc(&main_arena, sz);
-
-  return victim ? BOUNDED_N(victim, sz) : 0;
-}
-
-static Void_t*
-#if __STD_C
-memalign_starter(size_t align, size_t sz, const Void_t *caller)
-#else
-memalign_starter(align, sz, caller) size_t align, sz; const Void_t *caller;
-#endif
-{
-  Void_t* victim;
-
-  victim = _int_memalign(&main_arena, align, sz);
-
-  return victim ? BOUNDED_N(victim, sz) : 0;
-}
-
-static void
-#if __STD_C
-free_starter(Void_t* mem, const Void_t *caller)
-#else
-free_starter(mem, caller) Void_t* mem; const Void_t *caller;
-#endif
-{
-  mchunkptr p;
-
-  if(!mem) return;
-  p = mem2chunk(mem);
-#if HAVE_MMAP
-  if (chunk_is_mmapped(p)) {
-    munmap_chunk(p);
-    return;
-  }
-#endif
-#ifdef ATOMIC_FASTBINS
-  _int_free(&main_arena, p, 1);
-#else
-  _int_free(&main_arena, p);
-#endif
-}
-
-# endif	/* !defiend NO_STARTER */
-#endif /* NO_THREADS */
 
 
 /* Get/set state: malloc_get_state() records the current state of all
@@ -529,7 +388,7 @@ struct malloc_save_state {
   unsigned long narenas;
 };
 
-Void_t*
+void*
 public_gET_STATe(void)
 {
   struct malloc_save_state* ms;
@@ -564,11 +423,7 @@ public_gET_STATe(void)
   ms->mmap_threshold = mp_.mmap_threshold;
   ms->check_action = check_action;
   ms->max_sbrked_mem = main_arena.max_system_mem;
-#ifdef NO_THREADS
-  ms->max_total_mem = mp_.max_total_mem;
-#else
   ms->max_total_mem = 0;
-#endif
   ms->n_mmaps = mp_.n_mmaps;
   ms->max_n_mmaps = mp_.max_n_mmaps;
   ms->mmapped_mem = mp_.mmapped_mem;
@@ -581,11 +436,11 @@ public_gET_STATe(void)
   ms->narenas = narenas;
 #endif
   (void)mutex_unlock(&main_arena.mutex);
-  return (Void_t*)ms;
+  return (void*)ms;
 }
 
 int
-public_sET_STATe(Void_t* msptr)
+public_sET_STATe(void* msptr)
 {
   struct malloc_save_state* ms = (struct malloc_save_state*)msptr;
   size_t i;
@@ -656,9 +511,6 @@ public_sET_STATe(Void_t* msptr)
   mp_.mmap_threshold = ms->mmap_threshold;
   check_action = ms->check_action;
   main_arena.max_system_mem = ms->max_sbrked_mem;
-#ifdef NO_THREADS
-  mp_.max_total_mem = ms->max_total_mem;
-#endif
   mp_.n_mmaps = ms->n_mmaps;
   mp_.max_n_mmaps = ms->max_n_mmaps;
   mp_.mmapped_mem = ms->mmapped_mem;

@@ -125,7 +125,7 @@ endif
 
 tst-mcheck-ENV = MALLOC_CHECK_=3
 
-CPPFLAGS-malloc.c += -DPER_THREAD -DATOMIC_FASTBINS
+CPPFLAGS-malloc.c += -DPER_THREAD
 # Uncomment this for test releases.  For public releases it is too expensive.
 #CPPFLAGS-malloc.o += -DMALLOC_DEBUG=1
 

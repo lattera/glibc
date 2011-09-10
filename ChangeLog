@@ -1,5 +1,10 @@
 2011-09-10  Ulrich Drepper  <drepper@gmail.com>
 
+	* malloc/malloc.c: Removed unused configurations and dead code.
+	* malloc/arena.c: Likewise.
+	* malloc/hooks.c: Likewise.
+	* malloc/Makefile (-CPPFLAGS-malloc.c): Don't add -DATOMIC_FASTBINS.
+
 	* include/tls.h: Removed.  USE___THREAD must always be defined.
 	* bits/libc-tsd.h: Don't handle !USE___THREAD.
 	* elf/dl-libc.c: Likewise.
