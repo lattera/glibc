@@ -1,5 +1,12 @@
 2011-09-09  Ulrich Drepper  <drepper@gmail.com>
 
+	* sysdeps/unix/bsd/bsd4.4/bits/socket.h (__cmsg_nxthdr): Use NULL
+	instead of 0.
+	* sysdeps/unix/sysv/linux/bits/socket.h (__cmsg_nxthdr): Use (void*)0
+	instead of 0.                              .
+	* sysdeps/unix/sysv/linux/sparc/bits/socket.h: Likewise.
+	Patch in part by Pavel Roskin <proski@gnu.org>.
+
 	[BZ #13138]
 	* stdio-common/vfscanf.c (ADDW): Allocate large memory block with
 	realloc.
