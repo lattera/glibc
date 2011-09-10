@@ -1,4 +1,4 @@
-/* Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2004, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2003.
 
@@ -22,7 +22,6 @@
 #include <stdlib.h>
 
 
-#if HAVE___THREAD
 struct test_s
 {
   int a;
@@ -52,19 +51,11 @@ tf (void *arg)
 
   return NULL;
 }
-#endif
 
 
 int
 do_test (void)
 {
-#if !HAVE___THREAD
-
-  puts ("No __thread support in compiler, test skipped.");
-
-  return 0;
-#else
-
   if (s.a != INIT_A || s.b != INIT_B)
     {
       puts ("initial value of s in main thread wrong");
@@ -114,7 +105,6 @@ do_test (void)
     }
 
   return 0;
-#endif
 }
 
 

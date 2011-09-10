@@ -47,11 +47,8 @@
 #include <unistd.h>
 #include <rpc/rpc.h>
 #include <libintl.h>
-
-#ifdef USE_IN_LIBIO
-# include <wchar.h>
-# include <libio/iolibio.h>
-#endif
+#include <wchar.h>
+#include <libio/iolibio.h>
 
 static bool_t xdrrec_getlong (XDR *, long *);
 static bool_t xdrrec_putlong (XDR *, const long *);

@@ -25,10 +25,8 @@
 #include <string.h>
 #include <sys/types.h>
 
-#ifdef USE_IN_LIBIO
-# define flockfile(s) _IO_flockfile (s)
-# define funlockfile(s) _IO_funlockfile (s)
-#endif
+#define flockfile(s) _IO_flockfile (s)
+#define funlockfile(s) _IO_funlockfile (s)
 
 #undef __setmntent
 #undef __endmntent

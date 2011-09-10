@@ -1,4 +1,4 @@
-/* Copyright (C) 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jakub@redhat.com>, 2003.
 
@@ -22,7 +22,6 @@
 #include <unistd.h>
 #include <tls.h>
 
-#if HAVE___THREAD && defined HAVE_TLS_MODEL_ATTRIBUTE
 
 static __thread unsigned char foo [32]
   __attribute__ ((tls_model ("initial-exec"), aligned (sizeof (void *))));
@@ -35,7 +34,7 @@ test1 (void)
   for (s = 0; s < sizeof (foo); ++s)
     {
       if (foo [s])
-        abort ();
+	abort ();
       foo [s] = s;
     }
 }
@@ -48,9 +47,7 @@ test2 (void)
   for (s = 0; s < sizeof (foo); ++s)
     {
       if (foo [s] != s)
-        abort ();
+	abort ();
       foo [s] = sizeof (foo) - s;
     }
 }
-
-#endif

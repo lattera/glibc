@@ -1,4 +1,4 @@
-/* Copyright (C) 1994,95,97,2000,01,02 Free Software Foundation, Inc.
+/* Copyright (C) 1994,1995,1997,2000-2002,2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -63,11 +63,7 @@ writeio (void *cookie, const char *buf, size_t n)
    Returns zero if successful, nonzero if not.  */
 static int
 seekio (void *cookie,
-#ifdef USE_IN_LIBIO
 	_IO_off64_t *pos,
-#else
-	fpos_t *pos,
-#endif
 	int whence)
 {
   error_t err = __io_seek ((file_t) cookie, *pos, whence, pos);
@@ -86,12 +82,8 @@ closeio (void *cookie)
   return 0;
 }
 
-#ifdef USE_IN_LIBIO
 #include "../libio/libioP.h"
 #define fopencookie _IO_fopencookie
-#else
-#define cookie_io_functions_t __io_functions
-#endif
 static const cookie_io_functions_t funcsio =
 { readio, writeio, seekio, closeio };
 

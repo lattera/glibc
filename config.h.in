@@ -74,10 +74,6 @@
 /* Define if _Unwind_Find_FDE should be exported from glibc.  */
 #undef  EXPORT_UNWIND_FIND_FDE
 
-/* Define to use GNU libio instead of GNU stdio.
-   This is defined by configure under --enable-libio.  */
-#undef	USE_IN_LIBIO
-
 /* Define if using ELF and the assembler supports the `.previous'
    directive.  */
 #undef	HAVE_ASM_PREVIOUS_DIRECTIVE
@@ -95,21 +91,8 @@
 /* Define if static NSS modules are wanted.  */
 #undef	DO_STATIC_NSS
 
-/* Define if the compiler supports __builtin_expect.  */
-#undef	HAVE_BUILTIN_EXPECT
-
 /* Define if the compiler supports __builtin_memset.  */
 #undef	HAVE_BUILTIN_MEMSET
-
-/* Define if __asm () on built-in function's prototype causes redirection of
-   the builtin.  */
-#undef	HAVE_BUILTIN_REDIRECTION
-
-/* Define if the __thread keyword is supported.  */
-#undef HAVE___THREAD
-
-/* Define if the compiler supports __attribute__((tls_model(""))).  */
-#undef HAVE_TLS_MODEL_ATTRIBUTE
 
 /* Define if the regparm attribute shall be used for local functions
    (gcc on ix86 only).  */

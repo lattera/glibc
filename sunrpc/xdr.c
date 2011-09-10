@@ -39,13 +39,11 @@
 #include <limits.h>
 #include <string.h>
 #include <libintl.h>
+#include <wchar.h>
 
 #include <rpc/types.h>
 #include <rpc/xdr.h>
 
-#ifdef USE_IN_LIBIO
-# include <wchar.h>
-#endif
 
 /*
  * constants specific to the xdr "protocol"

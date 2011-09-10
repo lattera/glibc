@@ -3,9 +3,7 @@
 
 #include <tls.h>
 
-#if HAVE___THREAD
-
-# define AL 4096
+#define AL 4096
 struct foo
 {
   int i;
@@ -15,9 +13,9 @@ static __thread struct foo f;
 static struct foo g;
 
 
-# ifndef FCT
-#  define FCT in_dso1
-# endif
+#ifndef FCT
+# define FCT in_dso1
+#endif
 
 
 int
@@ -37,5 +35,3 @@ FCT (void)
 
   return result;
 }
-
-#endif

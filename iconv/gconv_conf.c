@@ -1,5 +1,5 @@
 /* Handle configuration data.
-   Copyright (C) 1997-2003, 2005, 2006 Free Software Foundation, Inc.
+   Copyright (C) 1997-2003, 2005, 2006, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -90,10 +90,8 @@ static const char builtin_aliases[] =
 #undef BUILTIN_ALIAS
 };
 
-#ifdef USE_IN_LIBIO
-# include <libio/libioP.h>
-# define __getdelim(line, len, c, fp) _IO_getdelim (line, len, c, fp)
-#endif
+#include <libio/libioP.h>
+#define __getdelim(line, len, c, fp) _IO_getdelim (line, len, c, fp)
 
 
 /* Value of the GCONV_PATH environment variable.  */

@@ -595,7 +595,6 @@ endif
 build-module-helper-objlist = \
 	$(patsubst %_pic.a,$(whole-archive) %_pic.a $(no-whole-archive),\
 		   $(filter-out %.lds $(map-file) $(+preinit) $(+postinit),$^))
-whole-archive := -Wl,--whole-archive
 
 build-module-objlist = $(build-module-helper-objlist) $(LDLIBS-$(@F:%.so=%).so)
 build-shlib-objlist = $(build-module-helper-objlist) \
@@ -621,7 +620,7 @@ endif
 ifeq ($(elf),yes)
 $(common-objpfx)libc_pic.os: $(common-objpfx)libc_pic.a
 	$(LINK.o) -nostdlib -nostartfiles -r -o $@ \
-	$(LDFLAGS-c_pic.os) -Wl,-d -Wl,--whole-archive $^ -o $@
+	$(LDFLAGS-c_pic.os) -Wl,-d $(whole-archive) $^ -o $@
 
 ifeq (,$(strip $(shlib-lds-flags)))
 # Generate a list of -R options to excise .gnu.glibc-stub.* sections.

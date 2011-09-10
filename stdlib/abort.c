@@ -32,10 +32,8 @@
 # define ABORT_INSTRUCTION
 #endif
 
-#ifdef USE_IN_LIBIO
-# include <libio/libioP.h>
-# define fflush(s) _IO_flush_all_lockp (0)
-#endif
+#include <libio/libioP.h>
+#define fflush(s) _IO_flush_all_lockp (0)
 
 /* Exported variable to locate abort message in core files etc.  */
 struct abort_msg_s *__abort_msg __attribute__ ((nocommon));

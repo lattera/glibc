@@ -1,5 +1,5 @@
 /* Malloc implementation for multiple threads without lock contention.
-   Copyright (C) 2001,2002,2003,2004,2005,2006,2007,2009,2010
+   Copyright (C) 2001,2002,2003,2004,2005,2006,2007,2009,2010,2011
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Wolfram Gloger <wg@malloc.de>, 2001.
@@ -484,29 +484,6 @@ ptmalloc_init (void)
 #endif
     ptmalloc_init_minimal();
 
-#ifndef NO_THREADS
-# if defined _LIBC
-  /* We know __pthread_initialize_minimal has already been called,
-     and that is enough.  */
-#   define NO_STARTER
-# endif
-# ifndef NO_STARTER
-  /* With some threads implementations, creating thread-specific data
-     or initializing a mutex may call malloc() itself.  Provide a
-     simple starter version (realloc() won't work). */
-  save_malloc_hook = __malloc_hook;
-  save_memalign_hook = __memalign_hook;
-  save_free_hook = __free_hook;
-  __malloc_hook = malloc_starter;
-  __memalign_hook = memalign_starter;
-  __free_hook = free_starter;
-#  ifdef _LIBC
-  /* Initialize the pthreads interface. */
-  if (__pthread_initialize != NULL)
-    __pthread_initialize();
-#  endif /* !defined _LIBC */
-# endif	/* !defined NO_STARTER */
-#endif /* !defined NO_THREADS */
   mutex_init(&main_arena.mutex);
   main_arena.next = &main_arena;
 
@@ -526,15 +503,6 @@ ptmalloc_init (void)
   tsd_key_create(&arena_key, NULL);
   tsd_setspecific(arena_key, (Void_t *)&main_arena);
   thread_atfork(ptmalloc_lock_all, ptmalloc_unlock_all, ptmalloc_unlock_all2);
-#ifndef NO_THREADS
-# ifndef NO_STARTER
-  __malloc_hook = save_malloc_hook;
-  __memalign_hook = save_memalign_hook;
-  __free_hook = save_free_hook;
-# else
-#  undef NO_STARTER
-# endif
-#endif
 #ifdef _LIBC
   secure = __libc_enable_secure;
   s = NULL;

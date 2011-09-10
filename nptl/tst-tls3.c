@@ -1,4 +1,4 @@
-/* Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2004, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2003.
 
@@ -73,13 +73,6 @@ int nsigs;
 int
 do_test (void)
 {
-#if !HAVE___THREAD
-
-  puts ("No __thread support in compiler, test skipped.");
-
-  return 0;
-#else
-
   if ((uintptr_t) pthread_self () & (TCB_ALIGNMENT - 1))
     {
       puts ("initial thread's struct pthread not aligned enough");
@@ -206,7 +199,6 @@ do_test (void)
     }
 
   return 0;
-#endif
 }
 
 

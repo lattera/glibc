@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,94,97,2000,01 Free Software Foundation, Inc.
+/* Copyright (C) 1991,94,97,2000,01,11 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,9 +21,7 @@
 #include <string.h>
 #include <hurd.h>
 
-#ifdef USE_IN_LIBIO
-# include <libioP.h>
-#endif
+#include <libioP.h>
 
 static ssize_t
 do_write (void *cookie,	const char *buf, size_t n)
@@ -42,8 +40,6 @@ vpprintf (io_t port, const char *format, va_list arg)
 {
   int done;
 
-#ifdef USE_IN_LIBIO
-
   struct locked_FILE
   {
     struct _IO_cookie_file cfile;
@@ -59,25 +55,6 @@ vpprintf (io_t port, const char *format, va_list arg)
 		   (void *) port, (cookie_io_functions_t) { write: do_write });
 
   done = _IO_vfprintf (&temp_f.cfile.__fp.file, format, arg);
-
-#else
-
-  FILE f;
-
-  /* Create an unbuffered stream talking to PORT on the stack.  */
-  memset ((void *) &f, 0, sizeof (f));
-  f.__magic = _IOMAGIC;
-  f.__mode.__write = 1;
-  f.__cookie = (void *) port;
-  f.__room_funcs = __default_room_functions;
-  f.__io_funcs.__write = do_write;
-  f.__seen = 1;
-  f.__userbuf = 1;
-
-  /* vfprintf will use a buffer on the stack for the life of the call.  */
-  done = vfprintf (&f, format, arg);
-
-#endif
 
   return done;
 }

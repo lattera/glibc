@@ -2,11 +2,6 @@
 
 libc {
   GLIBC_2.0 {
-%if !HAVE___THREAD
-    # global variables
-    _h_errno;
-%endif
-
     _res;
 
     # helper functions
@@ -17,9 +12,6 @@ libc {
 
     # variables in normal name space
     h_errlist; h_nerr;
-%if !HAVE___THREAD
-    h_errno;
-%endif
 
     # h*
     herror; hstrerror;
@@ -34,10 +26,7 @@ libc {
   GLIBC_PRIVATE {
     __gai_sigqueue;
 
-%if HAVE___THREAD
-    # This version is for the TLS symbol, GLIBC_2.0 is the old object symbol.
     h_errno; __resp;
-%endif
 
     __res_maybe_init; __res_iclose;
   }

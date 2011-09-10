@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, Oracle America, Inc.
+ * Copyright (c) 2010, 2011, Oracle America, Inc.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
@@ -45,15 +45,13 @@
 #include <unistd.h>
 #include <libintl.h>
 #include <sys/param.h>
+#include <wchar.h>
 
 #include <rpc/types.h>
 #include <rpc/xdr.h>
 #include <rpc/auth.h>
 #include <rpc/auth_unix.h>
 
-#ifdef USE_IN_LIBIO
-# include <wchar.h>
-#endif
 
 /*
  * Unix authenticator operations vector

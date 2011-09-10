@@ -1,4 +1,4 @@
-/* Copyright (C) 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2003.
 
@@ -26,7 +26,6 @@
 #include <unistd.h>
 #include <pthreaddef.h>
 
-#if HAVE___THREAD
 
 extern pthread_barrier_t b;
 
@@ -88,5 +87,3 @@ tf (void *arg)
 
   return NULL;
 }
-
-#endif

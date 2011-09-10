@@ -1,4 +1,4 @@
-/* Copyright (C) 1996-2000, 2002, 2003, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 1996-2000, 2002-2004, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -42,12 +42,6 @@
 
 #ifndef internal_function
 # define internal_function
-#endif
-
-/* Tell the compiler when a conditional or integer expression is
-   almost always true or almost always false.  */
-#ifndef HAVE_BUILTIN_EXPECT
-# define __builtin_expect(expr, val) (expr)
 #endif
 
 /* Encoding of locale name parts.  */

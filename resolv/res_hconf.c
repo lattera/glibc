@@ -46,9 +46,7 @@
 #include <bits/libc-lock.h>
 #include "ifreq.h"
 #include "res_hconf.h"
-#ifdef USE_IN_LIBIO
-# include <wchar.h>
-#endif
+#include <wchar.h>
 
 #define _PATH_HOSTCONF	"/etc/host.conf"
 

@@ -216,11 +216,6 @@
 # define internal_function	/* empty */
 #endif
 
-/* Prepare for the case that `__builtin_expect' is not available.  */
-#ifndef HAVE_BUILTIN_EXPECT
-# define __builtin_expect(expr, val) (expr)
-#endif
-
 /* Determine the return address.  */
 #define RETURN_ADDRESS(nr) \
   __builtin_extract_return_addr (__builtin_return_address (nr))
@@ -460,11 +455,7 @@ for linking")
 # define attribute_hidden
 #endif
 
-#ifdef HAVE_TLS_MODEL_ATTRIBUTE
-# define attribute_tls_model_ie __attribute__ ((tls_model ("initial-exec")))
-#else
-# define attribute_tls_model_ie
-#endif
+#define attribute_tls_model_ie __attribute__ ((tls_model ("initial-exec")))
 
 #define attribute_relro __attribute__ ((section (".data.rel.ro")))
 
@@ -794,22 +785,12 @@ for linking")
 # define libnss_nisplus_hidden_data_ver(local, name)
 #endif
 
-#ifdef HAVE_BUILTIN_REDIRECTION
-# define libc_hidden_builtin_proto(name, attrs...) libc_hidden_proto (name, ##attrs)
-# define libc_hidden_builtin_def(name) libc_hidden_def (name)
-# define libc_hidden_builtin_weak(name) libc_hidden_weak (name)
-# define libc_hidden_builtin_ver(local, name) libc_hidden_ver (local, name)
-# ifdef __ASSEMBLER__
-#  define HIDDEN_BUILTIN_JUMPTARGET(name) HIDDEN_JUMPTARGET(name)
-# endif
-#else
-# define libc_hidden_builtin_proto(name, attrs...)
-# define libc_hidden_builtin_def(name)
-# define libc_hidden_builtin_weak(name)
-# define libc_hidden_builtin_ver(local, name)
-# ifdef __ASSEMBLER__
-#  define HIDDEN_BUILTIN_JUMPTARGET(name) JUMPTARGET(name)
-# endif
+#define libc_hidden_builtin_proto(name, attrs...) libc_hidden_proto (name, ##attrs)
+#define libc_hidden_builtin_def(name) libc_hidden_def (name)
+#define libc_hidden_builtin_weak(name) libc_hidden_weak (name)
+#define libc_hidden_builtin_ver(local, name) libc_hidden_ver (local, name)
+#ifdef __ASSEMBLER__
+# define HIDDEN_BUILTIN_JUMPTARGET(name) HIDDEN_JUMPTARGET(name)
 #endif
 
 #if defined NOT_IN_libc && defined IS_IN_libutil

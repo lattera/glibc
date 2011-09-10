@@ -1,9 +1,7 @@
 #include "tst-tls10.h"
 
-#ifdef USE_TLS__THREAD
 __thread int dummy __attribute__((visibility ("hidden"))) = 12;
 __thread struct A local = { 1, 2, 3 };
-#endif
 
 #define CHECK(N, S)					\
   p = f##N##a ();					\
@@ -13,7 +11,6 @@ __thread struct A local = { 1, 2, 3 };
 int
 main (void)
 {
-#ifdef USE_TLS__THREAD
   struct A *p;
   if (local.a != 1 || local.b != 2 || local.c != 3)
     abort ();
@@ -35,6 +32,6 @@ main (void)
     abort ();
   CHECK (9, 28);
   CHECK (10, 31);
-#endif
+
   exit (0);
 }

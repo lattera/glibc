@@ -74,7 +74,7 @@
 # define _(msgid) gettext (msgid)
 #endif
 
-#if defined _LIBC && defined USE_IN_LIBIO
+#if defined _LIBC
 # include <wchar.h>
 #endif
 
@@ -583,7 +583,7 @@ _getopt_internal_r (int argc, char *const *argv, const char *optstring,
 	      first.next = ambig_list;
 	      ambig_list = &first;
 
-#if defined _LIBC && defined USE_IN_LIBIO
+#if defined _LIBC
 	      char *buf = NULL;
 	      size_t buflen = 0;
 
@@ -652,7 +652,7 @@ _getopt_internal_r (int argc, char *const *argv, const char *optstring,
 		{
 		  if (print_errors)
 		    {
-#if defined _LIBC && defined USE_IN_LIBIO
+#if defined _LIBC
 		      char *buf;
 		      int n;
 #endif
@@ -660,7 +660,7 @@ _getopt_internal_r (int argc, char *const *argv, const char *optstring,
 		      if (argv[d->optind - 1][1] == '-')
 			{
 			  /* --option */
-#if defined _LIBC && defined USE_IN_LIBIO
+#if defined _LIBC
 			  n = __asprintf (&buf, _("\
 %s: option '--%s' doesn't allow an argument\n"),
 					  argv[0], pfound->name);
@@ -673,7 +673,7 @@ _getopt_internal_r (int argc, char *const *argv, const char *optstring,
 		      else
 			{
 			  /* +option or -option */
-#if defined _LIBC && defined USE_IN_LIBIO
+#if defined _LIBC
 			  n = __asprintf (&buf, _("\
 %s: option '%c%s' doesn't allow an argument\n"),
 					  argv[0], argv[d->optind - 1][0],
@@ -686,7 +686,7 @@ _getopt_internal_r (int argc, char *const *argv, const char *optstring,
 #endif
 			}
 
-#if defined _LIBC && defined USE_IN_LIBIO
+#if defined _LIBC
 		      if (n >= 0)
 			{
 			  _IO_flockfile (stderr);
@@ -719,7 +719,7 @@ _getopt_internal_r (int argc, char *const *argv, const char *optstring,
 		{
 		  if (print_errors)
 		    {
-#if defined _LIBC && defined USE_IN_LIBIO
+#if defined _LIBC
 		      char *buf;
 
 		      if (__asprintf (&buf, _("\
@@ -770,7 +770,7 @@ _getopt_internal_r (int argc, char *const *argv, const char *optstring,
 	{
 	  if (print_errors)
 	    {
-#if defined _LIBC && defined USE_IN_LIBIO
+#if defined _LIBC
 	      char *buf;
 	      int n;
 #endif
@@ -778,7 +778,7 @@ _getopt_internal_r (int argc, char *const *argv, const char *optstring,
 	      if (argv[d->optind][1] == '-')
 		{
 		  /* --option */
-#if defined _LIBC && defined USE_IN_LIBIO
+#if defined _LIBC
 		  n = __asprintf (&buf, _("%s: unrecognized option '--%s'\n"),
 				  argv[0], d->__nextchar);
 #else
@@ -789,7 +789,7 @@ _getopt_internal_r (int argc, char *const *argv, const char *optstring,
 	      else
 		{
 		  /* +option or -option */
-#if defined _LIBC && defined USE_IN_LIBIO
+#if defined _LIBC
 		  n = __asprintf (&buf, _("%s: unrecognized option '%c%s'\n"),
 				  argv[0], argv[d->optind][0], d->__nextchar);
 #else
@@ -798,7 +798,7 @@ _getopt_internal_r (int argc, char *const *argv, const char *optstring,
 #endif
 		}
 
-#if defined _LIBC && defined USE_IN_LIBIO
+#if defined _LIBC
 	      if (n >= 0)
 		{
 		  _IO_flockfile (stderr);
@@ -836,19 +836,19 @@ _getopt_internal_r (int argc, char *const *argv, const char *optstring,
       {
 	if (print_errors)
 	  {
-#if defined _LIBC && defined USE_IN_LIBIO
+#if defined _LIBC
 	    char *buf;
 	    int n;
 #endif
 
-#if defined _LIBC && defined USE_IN_LIBIO
+#if defined _LIBC
 	    n = __asprintf (&buf, _("%s: invalid option -- '%c'\n"),
 			    argv[0], c);
 #else
 	    fprintf (stderr, _("%s: invalid option -- '%c'\n"), argv[0], c);
 #endif
 
-#if defined _LIBC && defined USE_IN_LIBIO
+#if defined _LIBC
 	    if (n >= 0)
 	      {
 		_IO_flockfile (stderr);
@@ -894,7 +894,7 @@ _getopt_internal_r (int argc, char *const *argv, const char *optstring,
 	  {
 	    if (print_errors)
 	      {
-#if defined _LIBC && defined USE_IN_LIBIO
+#if defined _LIBC
 		char *buf;
 
 		if (__asprintf (&buf,
@@ -968,7 +968,7 @@ _getopt_internal_r (int argc, char *const *argv, const char *optstring,
 	  {
 	    if (print_errors)
 	      {
-#if defined _LIBC && defined USE_IN_LIBIO
+#if defined _LIBC
 		char *buf;
 
 		if (__asprintf (&buf, _("%s: option '-W %s' is ambiguous\n"),
@@ -1008,7 +1008,7 @@ _getopt_internal_r (int argc, char *const *argv, const char *optstring,
 		  {
 		    if (print_errors)
 		      {
-#if defined _LIBC && defined USE_IN_LIBIO
+#if defined _LIBC
 			char *buf;
 
 			if (__asprintf (&buf, _("\
@@ -1047,7 +1047,7 @@ _getopt_internal_r (int argc, char *const *argv, const char *optstring,
 		  {
 		    if (print_errors)
 		      {
-#if defined _LIBC && defined USE_IN_LIBIO
+#if defined _LIBC
 			char *buf;
 
 			if (__asprintf (&buf, _("\
@@ -1122,7 +1122,7 @@ _getopt_internal_r (int argc, char *const *argv, const char *optstring,
 	      {
 		if (print_errors)
 		  {
-#if defined _LIBC && defined USE_IN_LIBIO
+#if defined _LIBC
 		    char *buf;
 
 		    if (__asprintf (&buf, _("\

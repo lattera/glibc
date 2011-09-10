@@ -45,10 +45,8 @@
 #include <sys/uio.h>
 #endif
 
-#ifdef USE_IN_LIBIO
-# include <wchar.h>
-# include <libio/iolibio.h>
-#endif
+#include <wchar.h>
+#include <libio/iolibio.h>
 
 #define rpc_buffer(xprt) ((xprt)->xp_p1)
 #ifndef MAX

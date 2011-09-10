@@ -1,4 +1,4 @@
-/* Copyright (C) 1997,1999,2000-2003,2005, 2006 Free Software Foundation, Inc.
+/* Copyright (C) 1997,1999-2003,2005,2006,2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -23,9 +23,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/syslog.h>
-#ifdef USE_IN_LIBIO
-# include <wchar.h>
-#endif
+#include <wchar.h>
 
 
 /* We have global data, protect the modification.  */

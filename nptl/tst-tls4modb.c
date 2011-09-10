@@ -1,4 +1,4 @@
-/* Copyright (C) 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jakub@redhat.com>, 2003.
 
@@ -22,7 +22,6 @@
 #include <unistd.h>
 #include <tls.h>
 
-#if HAVE___THREAD && defined HAVE_TLS_MODEL_ATTRIBUTE
 
 static int i;
 int bar;
@@ -44,7 +43,7 @@ test1 (void)
   for (s = 0; s < sizeof (foo) / sizeof (void *); ++s)
     {
       if (foo [s])
-        abort ();
+	abort ();
       foo [s] = &foo[s];
     }
 }
@@ -57,9 +56,7 @@ test2 (void)
   for (s = 0; s < sizeof (foo) / sizeof (void *); ++s)
     {
       if (foo [s] != &foo [s])
-        abort ();
+	abort ();
       foo [s] = &foo [s ^ 1];
     }
 }
-
-#endif

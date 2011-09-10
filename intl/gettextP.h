@@ -1,5 +1,5 @@
 /* Header describing internals of libintl library.
-   Copyright (C) 1995-1999, 2000, 2001, 2004-2005, 2007
+   Copyright (C) 1995-1999, 2000, 2001, 2004-2005, 2007, 2011
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Ulrich Drepper <drepper@cygnus.com>, 1995.
@@ -52,12 +52,6 @@
 
 #ifndef attribute_hidden
 # define attribute_hidden
-#endif
-
-/* Tell the compiler when a conditional or integer expression is
-   almost always true or almost always false.  */
-#ifndef HAVE_BUILTIN_EXPECT
-# define __builtin_expect(expr, val) (expr)
 #endif
 
 #ifndef W

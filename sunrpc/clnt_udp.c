@@ -45,9 +45,7 @@
 #include <rpc/pmap_clnt.h>
 #include <net/if.h>
 #include <ifaddrs.h>
-#ifdef USE_IN_LIBIO
-# include <wchar.h>
-#endif
+#include <wchar.h>
 #include <fcntl.h>
 
 #ifdef IP_RECVERR

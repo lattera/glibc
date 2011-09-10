@@ -4,11 +4,9 @@
 #include <stdlib.h>
 #include <string.h>
 
-#if HAVE___THREAD
-# define MAGIC1 0xabcdef72
-# define MAGIC2 0xd8675309
+#define MAGIC1 0xabcdef72
+#define MAGIC2 0xd8675309
 static __thread unsigned int magic[] = { MAGIC1, MAGIC2 };
-#endif
 
 #undef calloc
 
@@ -18,7 +16,6 @@ static __thread unsigned int magic[] = { MAGIC1, MAGIC2 };
 void *
 calloc (size_t n, size_t m)
 {
-#if HAVE___THREAD
   if (magic[0] != MAGIC1 || magic[1] != MAGIC2)
     {
       printf ("{%x, %x} != {%x, %x}\n", magic[0], magic[1], MAGIC1, MAGIC2);
@@ -26,7 +23,6 @@ calloc (size_t n, size_t m)
     }
   magic[0] = MAGIC2;
   magic[1] = MAGIC1;
-#endif
 
   n *= m;
   void *ptr = malloc (n);
@@ -38,13 +34,11 @@ calloc (size_t n, size_t m)
 int
 main (void)
 {
-#if HAVE___THREAD
   if (magic[1] != MAGIC1 || magic[0] != MAGIC2)
     {
       printf ("{%x, %x} != {%x, %x}\n", magic[0], magic[1], MAGIC2, MAGIC1);
       return 1;
     }
-#endif
 
   return 0;
 }

@@ -1,5 +1,5 @@
 /*-
- * Copyright (c) 1983, 1992, 1993
+ * Copyright (c) 1983, 1992, 1993, 2011
  *	The Regents of the University of California.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -36,6 +36,7 @@
 #include <stdio.h>
 #include <fcntl.h>
 #include <unistd.h>
+#include <wchar.h>
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -45,9 +46,6 @@
 #include <libc-internal.h>
 #include <not-cancel.h>
 
-#ifdef USE_IN_LIBIO
-# include <wchar.h>
-#endif
 
 /*  Head of basic-block list or NULL. */
 struct __bb *__bb_head attribute_hidden;
@@ -194,7 +192,7 @@ write_hist (fd)
 	char dimen_abbrev;
       } thdr;
       struct iovec iov[3] =
-        {
+	{
 	  { &tag, sizeof (tag) },
 	  { &thdr, sizeof (struct gmon_hist_hdr) },
 	  { _gmonparam.kcount, _gmonparam.kcountsize }

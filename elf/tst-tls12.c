@@ -8,11 +8,10 @@
 int
 main (void)
 {
-#ifdef USE_TLS__THREAD
   struct A *p;
   check1 ();
   CHECK (1, 4);
   CHECK (2, 7);
-#endif
+
   exit (0);
 }

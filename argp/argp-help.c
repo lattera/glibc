@@ -1,6 +1,5 @@
 /* Hierarchial argument parsing help output
-   Copyright (C) 1995-2003, 2004, 2005, 2006, 2007
-   Free Software Foundation, Inc.
+   Copyright (C) 1995-2007, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Miles Bader <miles@gnu.ai.mit.edu>.
 
@@ -312,13 +311,13 @@ fill_in_uparams (const struct argp_state *state)
      {"no-parent", 'P',	      0,     0, "Include processes without parents"},
      {0,           'x',       0,     OPTION_ALIAS},
      {"all-fields",'Q',       0,     0, "Don't elide unusable fields (normally"
-                                        " if there's some reason ps can't"
+					" if there's some reason ps can't"
 					" print a field for any process, it's"
-                                        " removed from the output entirely)" },
+					" removed from the output entirely)" },
      {"reverse",   'r',       0,     0, "Reverse the order of any sort"},
      {"gratuitously-long-reverse-option", 0, 0, OPTION_ALIAS},
      {"session",   OPT_SESS,  "SID", OPTION_ARG_OPTIONAL,
-                                        "Add the processes from the session"
+					"Add the processes from the session"
 					" SID (which defaults to the sid of"
 					" the current process)" },
 
@@ -1874,11 +1873,9 @@ __argp_failure (const struct argp_state *state, int status, int errnum,
 #endif
 	    }
 
-#ifdef USE_IN_LIBIO
 	  if (_IO_fwide (stream, 0) > 0)
 	    putwc_unlocked (L'\n', stream);
 	  else
-#endif
 	    putc_unlocked ('\n', stream);
 
 #if _LIBC || (HAVE_FLOCKFILE && HAVE_FUNLOCKFILE)

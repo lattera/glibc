@@ -45,10 +45,8 @@
 #include <errno.h>
 #include <stdlib.h>
 
-#ifdef USE_IN_LIBIO
-# include <wchar.h>
-# include <libio/iolibio.h>
-#endif
+#include <wchar.h>
+#include <libio/iolibio.h>
 
 /*
  * Ops vector for TCP/IP based rpc service handle

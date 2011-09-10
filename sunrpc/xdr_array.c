@@ -40,10 +40,7 @@
 #include <rpc/xdr.h>
 #include <libintl.h>
 #include <limits.h>
-
-#ifdef USE_IN_LIBIO
-# include <wchar.h>
-#endif
+#include <wchar.h>
 
 #define LASTUNSIGNED	((u_int)0-1)
 

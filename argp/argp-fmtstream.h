@@ -1,5 +1,5 @@
 /* Word-wrapping and line-truncating streams.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Miles Bader <miles@gnu.ai.mit.edu>.
 
@@ -43,8 +43,7 @@
 # endif
 #endif
 
-#if    (_LIBC - 0 && !defined (USE_IN_LIBIO)) \
-    || (defined (__GNU_LIBRARY__) && defined (HAVE_LINEWRAP_H))
+#if defined (__GNU_LIBRARY__) && defined (HAVE_LINEWRAP_H)
 /* line_wrap_stream is available, so use that.  */
 #define ARGP_FMTSTREAM_USE_LINEWRAP
 #endif

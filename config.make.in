@@ -75,7 +75,6 @@ static-libgcc = @libc_cv_gcc_static_libgcc@
 
 versioning = @VERSIONING@
 oldest-abi = @oldest_abi@
-no-whole-archive = @no_whole_archive@
 exceptions = @exceptions@
 multi-arch = @multi_arch@
 

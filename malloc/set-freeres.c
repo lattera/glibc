@@ -1,4 +1,4 @@
-/* Copyright (C) 1997,1999,2000,2001,2002,2003 Free Software Foundation, Inc.
+/* Copyright (C) 1997,1999-2003,2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,9 +21,7 @@
 #include <set-hooks.h>
 #include <libc-internal.h>
 
-#ifdef USE_IN_LIBIO
-# include "../libio/libioP.h"
-#endif
+#include "../libio/libioP.h"
 
 DEFINE_HOOK (__libc_subfreeres, (void));
 
@@ -40,9 +38,7 @@ __libc_freeres (void)
     {
       void * const *p;
 
-#ifdef USE_IN_LIBIO
       _IO_cleanup ();
-#endif
 
       RUN_HOOK (__libc_subfreeres, ());
 

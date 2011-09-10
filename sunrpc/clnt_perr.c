@@ -1,7 +1,7 @@
 /*
  * clnt_perror.c
  *
- * Copyright (c) 2010, Oracle America, Inc.
+ * Copyright (c) 2010, 2011, Oracle America, Inc.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
@@ -34,11 +34,8 @@
 #include <string.h>
 #include <libintl.h>
 #include <rpc/rpc.h>
-
-#ifdef USE_IN_LIBIO
-# include <wchar.h>
-# include <libio/iolibio.h>
-#endif
+#include <wchar.h>
+#include <libio/iolibio.h>
 
 static char *auth_errmsg (enum auth_stat stat) internal_function;
 

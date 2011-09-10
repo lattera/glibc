@@ -194,12 +194,6 @@ AC_ARG_WITH([tls],
 	    [usetls=$withval],
 	    [usetls=yes])
 
-AC_ARG_WITH([__thread],
-	    AC_HELP_STRING([--without-__thread],
-			   [do not use TLS features even when supporting them]),
-	    [use__thread=$withval],
-	    [use__thread=yes])
-
 AC_ARG_ENABLE([hidden-plt],
 	      AC_HELP_STRING([--disable-hidden-plt],
 			     [do not hide internal function calls to avoid PLT]),
@@ -2078,10 +2072,9 @@ else
   libc_cv_ld_no_whole_archive=no
 fi
 rm -f conftest*])
-if test $libc_cv_ld_no_whole_archive = yes; then
-  no_whole_archive=-Wl,--no-whole-archive
+if test $libc_cv_ld_no_whole_archive = no; then
+  AC_MSG_ERROR([support for --no-whole-archive is needed])
 fi
-AC_SUBST(no_whole_archive)dnl
 
 AC_CACHE_CHECK(for gcc -fexceptions, libc_cv_gcc_exceptions, [dnl
 cat > conftest.c <<\EOF
@@ -2133,8 +2126,8 @@ else
   libc_cv_gcc_builtin_expect=no
 fi
 rm -f conftest*])
-if test "$libc_cv_gcc_builtin_expect" = yes; then
-  AC_DEFINE(HAVE_BUILTIN_EXPECT)
+if test "$libc_cv_gcc_builtin_expect" = no; then
+  AC_MSG_ERROR([support for __builtin_expect needed])
 fi
 
 AC_CACHE_CHECK(for __builtin_memset, libc_cv_gcc_builtin_memset, [dnl
@@ -2172,44 +2165,38 @@ else
   libc_cv_gcc_builtin_redirection=no
 fi
 rm -f conftest* ])
-if test "$libc_cv_gcc_builtin_redirection" = yes ; then
-  AC_DEFINE(HAVE_BUILTIN_REDIRECTION)
+if test "$libc_cv_gcc_builtin_redirection" = no; then
+  AC_MSG_ERROR([support for the symbol redirection needed])
 fi
 
 dnl Check whether the compiler supports the __thread keyword.
-if test "x$use__thread" != xno; then
-  AC_CACHE_CHECK([for __thread], libc_cv_gcc___thread,
-  [cat > conftest.c <<\EOF
+AC_CACHE_CHECK([for __thread], libc_cv_gcc___thread,
+[cat > conftest.c <<\EOF
 __thread int a = 42;
 EOF
-  if AC_TRY_COMMAND([${CC-cc} $CFLAGS $CPPFLAGS -c conftest.c >&AS_MESSAGE_LOG_FD]); then
-    libc_cv_gcc___thread=yes
-  else
-    libc_cv_gcc___thread=no
-  fi
-  rm -f conftest*])
-  if test "$libc_cv_gcc___thread" = yes; then
-    AC_DEFINE(HAVE___THREAD)
-  fi
+if AC_TRY_COMMAND([${CC-cc} $CFLAGS $CPPFLAGS -c conftest.c >&AS_MESSAGE_LOG_FD]); then
+  libc_cv_gcc___thread=yes
 else
   libc_cv_gcc___thread=no
 fi
+rm -f conftest*])
+if test "$libc_cv_gcc___thread" = no; then
+  AC_MSG_ERROR([support for the __thread keyword is required])
+fi
 
-if test "$libc_cv_gcc___thread" = yes; then
-  dnl Check whether the compiler supports the tls_model attribute.
-  AC_CACHE_CHECK([for tls_model attribute], libc_cv_gcc_tls_model_attr, [dnl
-  cat > conftest.c <<\EOF
+dnl Check whether the compiler supports the tls_model attribute.
+AC_CACHE_CHECK([for tls_model attribute], libc_cv_gcc_tls_model_attr, [dnl
+cat > conftest.c <<\EOF
 extern __thread int a __attribute__((tls_model ("initial-exec")));
 EOF
-  if AC_TRY_COMMAND([${CC-cc} $CFLAGS $CPPFLAGS -S -Werror conftest.c >&AS_MESSAGE_LOG_FD]); then
-    libc_cv_gcc_tls_model_attr=yes
-  else
-    libc_cv_gcc_tls_model_attr=no
-  fi
-  rm -f conftest*])
-  if test "$libc_cv_gcc_tls_model_attr" = yes; then
-    AC_DEFINE(HAVE_TLS_MODEL_ATTRIBUTE)
-  fi
+if AC_TRY_COMMAND([${CC-cc} $CFLAGS $CPPFLAGS -S -Werror conftest.c >&AS_MESSAGE_LOG_FD]); then
+  libc_cv_gcc_tls_model_attr=yes
+else
+  libc_cv_gcc_tls_model_attr=no
+fi
+rm -f conftest*])
+if test "$libc_cv_gcc_tls_model_attr" = no; then
+  AC_MSG_ERROR([support for the tls_model attribute is required])
 fi
 
 if test -n "$submachine"; then
@@ -2326,9 +2313,6 @@ if test x$libc_cv_gcc_unwind_find_fde = xyes; then
   AC_DEFINE(EXPORT_UNWIND_FIND_FDE)
 fi
 AC_SUBST(libc_cv_gcc_unwind_find_fde)
-
-dnl This is tested by existing code and it's simpler to avoid changing it.
-AC_DEFINE(USE_IN_LIBIO)
 
 # Test for old glibc 2.0.x headers so that they can be removed properly
 # Search only in includedir.

@@ -39,11 +39,8 @@
 #include <rpc/types.h>
 #include <rpc/xdr.h>
 #include <libintl.h>
-
-#ifdef USE_IN_LIBIO
-# include <wchar.h>
-# include <libio/iolibio.h>
-#endif
+#include <wchar.h>
+#include <libio/iolibio.h>
 
 #define LASTUNSIGNED	((u_int)0-1)
 

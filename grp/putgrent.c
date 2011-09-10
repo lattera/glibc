@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,92,96,98,99,2000,2005 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,96,98,99,2000,2005,2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,10 +20,8 @@
 #include <stdio.h>
 #include <grp.h>
 
-#ifdef USE_IN_LIBIO
-# define flockfile(s) _IO_flockfile (s)
-# define funlockfile(s) _IO_funlockfile (s)
-#endif
+#define flockfile(s) _IO_flockfile (s)
+#define funlockfile(s) _IO_funlockfile (s)
 
 #define _S(x)	x ? x : ""
 

@@ -1,5 +1,5 @@
 /* Open a stdio stream on an anonymous temporary file.  Generic/POSIX version.
-   Copyright (C) 1991,1993,1996-2000,2002,2003,2007,2009
+   Copyright (C) 1991,1993,1996-2000,2002,2003,2007,2009,2011
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -22,12 +22,10 @@
 #include <stdio.h>
 #include <unistd.h>
 
-#ifdef USE_IN_LIBIO
-# include <iolibio.h>
-# define __fdopen INTUSE(_IO_fdopen)
-# ifndef tmpfile
-#  define tmpfile __new_tmpfile
-# endif
+#include <iolibio.h>
+#define __fdopen INTUSE(_IO_fdopen)
+#ifndef tmpfile
+# define tmpfile __new_tmpfile
 #endif
 
 
@@ -62,7 +60,7 @@ tmpfile (void)
   return f;
 }
 
-#if defined USE_IN_LIBIO && !defined FLAGS /* Not for tmpfile64.  */
+#ifndef FLAGS /* Not for tmpfile64.  */
 # undef tmpfile
 # include <shlib-compat.h>
 versioned_symbol (libc, __new_tmpfile, tmpfile, GLIBC_2_1);

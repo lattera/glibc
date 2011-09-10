@@ -1,5 +1,5 @@
 /* Print floating point number in hexadecimal notation according to ISO C99.
-   Copyright (C) 1997-2002,2004,2006 Free Software Foundation, Inc.
+   Copyright (C) 1997-2002,2004,2006,2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -35,22 +35,16 @@
 
 /* This defines make it possible to use the same code for GNU C library and
    the GNU I/O library.	 */
-#ifdef USE_IN_LIBIO
-# include <libioP.h>
-# define PUT(f, s, n) _IO_sputn (f, s, n)
-# define PAD(f, c, n) (wide ? _IO_wpadn (f, c, n) : INTUSE(_IO_padn) (f, c, n))
+#include <libioP.h>
+#define PUT(f, s, n) _IO_sputn (f, s, n)
+#define PAD(f, c, n) (wide ? _IO_wpadn (f, c, n) : INTUSE(_IO_padn) (f, c, n))
 /* We use this file GNU C library and GNU I/O library.	So make
    names equal.	 */
-# undef putc
-# define putc(c, f) (wide \
+#undef putc
+#define putc(c, f) (wide \
 		     ? (int)_IO_putwc_unlocked (c, f) : _IO_putc_unlocked (c, f))
-# define size_t     _IO_size_t
-# define FILE	     _IO_FILE
-#else	/* ! USE_IN_LIBIO */
-# define PUT(f, s, n) fwrite (s, 1, n, f)
-# define PAD(f, c, n) __printf_pad (f, c, n)
-ssize_t __printf_pad (FILE *, char pad, int n) __THROW; /* In vfprintf.c.  */
-#endif	/* USE_IN_LIBIO */
+#define size_t     _IO_size_t
+#define FILE	     _IO_FILE
 
 /* Macros for doing the actual output.  */
 

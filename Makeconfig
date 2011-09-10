@@ -407,6 +407,10 @@ as-needed :=
 no-as-needed :=
 endif
 
+# Must be supported by the linker.
+no-whole-archive = -Wl,--no-whole-archive
+whole-archive = -Wl,--whole-archive
+
 # Installed name of the startup code.
 ifneq ($(have-initfini),yes)
 # When not having init/fini, there is just one startfile, called crt0.o.

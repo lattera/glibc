@@ -1,3 +1,83 @@
+2011-09-10  Ulrich Drepper  <drepper@gmail.com>
+
+	* configure.in: Remove --with-__thread option.  Make tests for
+	--no-whole-archive, __builtin_expect, symbol redirection, __thread,
+	tls_model attribute fail if no support is available.  Remove
+	USE_IN_LIBIO.
+	* Makeconfig: Adjust for dropped configure option.  All features are
+	now mandatory.
+	* Makerules: Likewise.
+	* Versions.def: Likewise.
+	* argp/argp-fmtstream.c: Likewise.
+	* argp/argp-fmtstream.h: Likewise.
+	* argp/argp-help.c: Likewise.
+	* assert/assert.c: Likewise.
+	* config.h.in: Likewise.
+	* config.make.in: Likewise.
+	* configure: Likewise.
+	* configure.in: Likewise.
+	* csu/Versions: Likewise.
+	* csu/init.c: Likewise.
+	* elf/tst-audit2.c: Likewise.
+	* elf/tst-tls10.c: Likewise.
+	* elf/tst-tls10.h: Likewise.
+	* elf/tst-tls11.c: Likewise.
+	* elf/tst-tls12.c: Likewise.
+	* elf/tst-tls14.c: Likewise.
+	* elf/tst-tlsmod11.c: Likewise.
+	* elf/tst-tlsmod12.c: Likewise.
+	* elf/tst-tlsmod13.c: Likewise.
+	* elf/tst-tlsmod13a.c: Likewise.
+	* elf/tst-tlsmod14a.c: Likewise.
+	* elf/tst-tlsmod15b.c: Likewise.
+	* elf/tst-tlsmod16a.c: Likewise.
+	* elf/tst-tlsmod16b.c: Likewise.
+	* elf/tst-tlsmod7.c: Likewise.
+	* elf/tst-tlsmod8.c: Likewise.
+	* elf/tst-tlsmod9.c: Likewise.
+	* gmon/gmon.c: Likewise.
+	* grp/fgetgrent_r.c: Likewise.
+	* grp/putgrent.c: Likewise.
+	* hurd/fopenport.c: Likewise.
+	* include/libc-symbols.h: Likewise.
+	* include/tls.h: Likewise.
+	* intl/gettextP.h: Likewise.
+	* intl/loadinfo.h: Likewise.
+	* locale/global-locale.c: Likewise.
+	* locale/localeinfo.h: Likewise.
+	* mach/devstream.c: Likewise.
+	* malloc/arena.c: Likewise.
+	* malloc/set-freeres.c: Likewise.
+	* misc/err.c: Likewise.
+	* misc/getttyent.c: Likewise.
+	* misc/mntent_r.c: Likewise.
+	* posix/getopt.c: Likewise.
+	* posix/wordexp.c: Likewise.
+	* pwd/fgetpwent_r.c: Likewise.
+	* resolv/Versions: Likewise.
+	* resolv/res_hconf.c: Likewise.
+	* shadow/fgetspent_r.c: Likewise.
+	* shadow/putspent.c: Likewise.
+	* stdio-common/printf_fphex.c: Likewise.
+	* stdio-common/tmpfile.c: Likewise.
+	* stdlib/abort.c: Likewise.
+	* stdlib/fmtmsg.c: Likewise.
+	* sunrpc/auth_unix.c: Likewise.
+	* sunrpc/clnt_perr.c: Likewise.
+	* sunrpc/clnt_tcp.c: Likewise.
+	* sunrpc/clnt_udp.c: Likewise.
+	* sunrpc/clnt_unix.c: Likewise.
+	* sunrpc/openchild.c: Likewise.
+	* sunrpc/svc_simple.c: Likewise.
+	* sunrpc/svc_tcp.c: Likewise.
+	* sunrpc/svc_udp.c: Likewise.
+	* sunrpc/svc_unix.c: Likewise.
+	* sunrpc/xdr.c: Likewise.
+	* sunrpc/xdr_array.c: Likewise.
+	* sunrpc/xdr_rec.c: Likewise.
+	* sunrpc/xdr_ref.c: Likewise.
+	* sunrpc/xdr_stdio.c: Likewise.
+
 2011-09-09  Ulrich Drepper  <drepper@gmail.com>
 
 	* sysdeps/i386/fpu/libm-test-ulps: Adjust ULPs for jn tests.

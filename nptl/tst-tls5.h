@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <tls.h>
 
-#if HAVE___THREAD
 
 struct tls_obj
 {
@@ -24,5 +23,3 @@ tls_register_##x (void)				\
   tls_registry[i].size = sizeof (x);		\
   tls_registry[i].align = __alignof__ (x);	\
 }
-
-#endif

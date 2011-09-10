@@ -41,10 +41,8 @@
 #include <sys/socket.h>
 #include <netdb.h>
 
-#ifdef USE_IN_LIBIO
-# include <wchar.h>
-# include <libio/iolibio.h>
-#endif
+#include <wchar.h>
+#include <libio/iolibio.h>
 
 struct proglst_
   {
