@@ -4,7 +4,6 @@
 	if non-absolute.
 	* sysdeps/unix/sysv/linux/configure.in: Remove leading ../ from
 	ldd_rewrite_script.
-	* sysdeps/unix/sysv/linux/configure: Regenerated.
 
 2011-09-11  Ulrich Drepper  <drepper@gmail.com>
 
@@ -34,15 +33,16 @@
 
 2011-09-10  Ulrich Drepper  <drepper@gmail.com>
 
-	* malloc/malloc.c: Replace MALLOC_FAILURE_ACTION with use of __set_errno.
+	* malloc/malloc.c: Replace MALLOC_FAILURE_ACTION with use of
+	__set_errno.
 	* malloc/hooks.c: Likewise.
 
 	* malloc/arena.c (ptmalloc_init_minimal): Removed.  Initialize all
 	variables statically.
 	(narenas): Initialize.
 	(list_lock): Initialize.
-	(ptmalloc_init): Don't call ptmalloc_init_minimal.  Remove initializtion
-	of main_arena and list_lock.  Small cleanups.
+	(ptmalloc_init): Don't call ptmalloc_init_minimal.  Remove
+	initializtion of main_arena and list_lock.  Small cleanups.
 	Replace all uses of malloc_getpagesize with GLRO(dl_pagesize).
 	* malloc/malloc.c: Remove malloc_getpagesize.  Include <ldsodefs.h>.
 	Add initializers to main_arena and mp_.
