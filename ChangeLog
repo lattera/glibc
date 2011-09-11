@@ -1,3 +1,7 @@
+2011-09-11  Ulrich Drepper  <drepper@gmail.com>
+
+	* elf/dl-support.c (_dl_pagesize): Initialize to EXEC_PAGESIZE.
+
 2011-09-10  Ulrich Drepper  <drepper@gmail.com>
 
 	* malloc/malloc.c: Replace MALLOC_FAILURE_ACTION with use of __set_errno.

@@ -1,5 +1,5 @@
 /* Support for dynamic linking code in static libc.
-   Copyright (C) 1996-2008,2009,2010 Free Software Foundation, Inc.
+   Copyright (C) 1996-2008,2009,2010,2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -24,6 +24,7 @@
 #include <libintl.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <sys/param.h>
 #include <ldsodefs.h>
 #include <dl-machine.h>
 #include <bits/libc-lock.h>
@@ -105,7 +106,7 @@ hp_timing_t _dl_cpuclock_offset;
 
 void (*_dl_init_static_tls) (struct link_map *) = &_dl_nothread_init_static_tls;
 
-size_t _dl_pagesize;
+size_t _dl_pagesize = EXEC_PAGESIZE;
 
 unsigned int _dl_osversion;
 
