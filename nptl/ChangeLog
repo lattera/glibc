@@ -1,3 +1,13 @@
+2011-09-11  Ulrich Drepper  <drepper@gmail.com>
+
+	* sysdeps/i386/tls.h: Remove HAVE_TLS_SUPPORT test.
+	* sysdeps/ia64/tls.h: Likewise.
+	* sysdeps/powerpc/tls.h: Likewise.
+	* sysdeps/s390/tls.h: Likewise.
+	* sysdeps/sh/tls.h: Likewise.
+	* sysdeps/sparc/tls.h: Likewise.
+	* sysdeps/x86_64/tls.h: Likewise.
+
 2011-09-10  Ulrich Drepper  <drepper@gmail.com>
 
 	* sysdeps/pthread/malloc-machine.h: Define MUTEX_INITIALIZER.

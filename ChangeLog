@@ -1,5 +1,21 @@
 2011-09-11  Ulrich Drepper  <drepper@gmail.com>
 
+	* configure.in: Remove --with-tls option.
+	* config.h.in: Remove HAVE_TLS_SUPPORT entry.
+	* sysdeps/i386/elf/configure.in: Always test for TLS support and err
+	out in case it is missing.
+	* sysdeps/ia64/elf/configure.in: Likewise.
+	* sysdeps/powerpc/powerpc32/elf/configure.in: Likewise.
+	* sysdeps/powerpc/powerpc64/elf/configure.in: Likewise.
+	* sysdeps/s390/s390-32/elf/configure.in: Likewise.
+	* sysdeps/s390/s390-64/elf/configure.in: Likewise.
+	* sysdeps/sh/elf/configure.in: Likewise.
+	* sysdeps/sparc/sparc32/elf/configure.in: Likewise.
+	* sysdeps/sparc/sparc64/elf/configure.in: Likewise.
+	* sysdeps/x86_64/elf/configure.in: Likewise.
+	* sysdeps/mach/hurd/i386/tls.h: Remove test for HAVE_TLS_SUPPORT.
+	* sysdeps/mach/hurd/tls.h: Likewise.
+
 	[BZ #13067]
 	* malloc/obstack.h [!GNUC] (obstack_free): Avoid cast to int.
 

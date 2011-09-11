@@ -783,7 +783,6 @@ enable_versioning
 enable_oldest_abi
 enable_stackguard_randomization
 enable_add_ons
-with_tls
 enable_hidden_plt
 enable_bind_now
 enable_static_nss
@@ -1466,7 +1465,6 @@ Optional Packages:
   --with-headers=PATH     location of system headers to use (for example
                           /usr/src/linux/include) [default=compiler default]
   --with-default-link     do not use explicit linker scripts
-  --with-tls              enable support for TLS
   --with-cpu=CPU          select code for CPU variant
 
 Some influential environment variables:
@@ -3665,15 +3663,6 @@ if test "${enable_add_ons+set}" = set; then :
   enableval=$enable_add_ons;
 else
   enable_add_ons=yes
-fi
-
-
-
-# Check whether --with-tls was given.
-if test "${with_tls+set}" = set; then :
-  withval=$with_tls; usetls=$withval
-else
-  usetls=yes
 fi
 
 

@@ -1,5 +1,5 @@
 /* Definitions for thread-local data handling.  Hurd version.
-   Copyright (C) 2003, 2005, 2007 Free Software Foundation, Inc.
+   Copyright (C) 2003, 2005, 2007, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,7 +20,7 @@
 #ifndef _TLS_H
 #define _TLS_H
 
-#if defined HAVE_TLS_SUPPORT && !defined __ASSEMBLER__
+#ifndef __ASSEMBLER__
 
 # include <stddef.h>
 # include <stdbool.h>
@@ -71,7 +71,7 @@ typedef struct
 # define GET_DTV(descr) \
   (((tcbhead_t *) (descr))->dtv)
 
-#endif /* HAVE_TLS_SUPPORT */
+#endif /* !ASSEMBLER */
 
 
 #endif /* tls.h */

@@ -83,7 +83,6 @@ $as_echo X/"$0" |
 # This file is generated from configure.in by Autoconf.  DO NOT EDIT!
  # Local configure fragment for sysdeps/x86_64/elf.
 
-if test "$usetls" != no; then
 # Check for support of thread-local storage handling in assembler and linker.
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for x86-64 TLS support" >&5
 $as_echo_n "checking for x86-64 TLS support... " >&6; }
@@ -117,10 +116,8 @@ rm -f conftest*
 fi
 { $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_x86_64_tls" >&5
 $as_echo "$libc_cv_x86_64_tls" >&6; }
-if test $libc_cv_x86_64_tls = yes; then
-  $as_echo "#define HAVE_TLS_SUPPORT 1" >>confdefs.h
-
-fi
+if test $libc_cv_x86_64_tls = no; then
+  as_fn_error $? "the assembler must support TLS" "$LINENO" 5
 fi
 
 $as_echo "#define PI_STATIC_AND_HIDDEN 1" >>confdefs.h

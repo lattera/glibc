@@ -1,23 +1,22 @@
 GLIBC_PROVIDES dnl See aclocal.m4 in the top level source directory.
 # Local configure fragment for sysdeps/ia64/elf.
 
-if test "$usetls" != no; then
 # Check for support of thread-local storage handling in assembler and
 # linker.
 AC_CACHE_CHECK(for ia64 TLS support, libc_cv_ia64_tls, [dnl
 cat > conftest.s <<\EOF
-        .section ".tdata","awT",@progbits
+	.section ".tdata","awT",@progbits
 foo:    data8   25
-        .text
-        addl    r16 = @ltoff(@dtpmod(foo#)), gp
-        addl    r17 = @ltoff(@dtprel(foo#)), gp
-        addl    r18 = @ltoff(@tprel(foo#)), gp
-        addl    r19 = @dtprel(foo#), gp
-        adds    r21 = @dtprel(foo#), r13
-        movl    r23 = @dtprel(foo#)
-        addl    r20 = @tprel(foo#), gp
-        adds    r22 = @tprel(foo#), r13
-        movl    r24 = @tprel(foo#)
+	.text
+	addl    r16 = @ltoff(@dtpmod(foo#)), gp
+	addl    r17 = @ltoff(@dtprel(foo#)), gp
+	addl    r18 = @ltoff(@tprel(foo#)), gp
+	addl    r19 = @dtprel(foo#), gp
+	adds    r21 = @dtprel(foo#), r13
+	movl    r23 = @dtprel(foo#)
+	addl    r20 = @tprel(foo#), gp
+	adds    r22 = @tprel(foo#), r13
+	movl    r24 = @tprel(foo#)
 EOF
 dnl
 if AC_TRY_COMMAND(${CC-cc} -c $CFLAGS conftest.s 1>&AS_MESSAGE_LOG_FD); then
@@ -26,9 +25,8 @@ else
   libc_cv_ia64_tls=no
 fi
 rm -f conftest*])
-if test $libc_cv_ia64_tls = yes; then
-  AC_DEFINE(HAVE_TLS_SUPPORT)
-fi
+if test $libc_cv_ia64_tls = no; then
+  AC_MSG_ERROR([the assembler must support TLS])
 fi
 
 dnl It is always possible to access static and hidden symbols in an

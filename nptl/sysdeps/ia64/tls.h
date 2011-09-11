@@ -1,5 +1,5 @@
 /* Definition for thread-local data handling.  nptl/IA-64 version.
-   Copyright (C) 2003, 2004, 2005, 2006, 2007 Free Software Foundation, Inc.
+   Copyright (C) 2003-2007, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -55,11 +55,6 @@ register struct pthread *__thread_self __asm__("r13");
 # include <tcb-offsets.h>
 #endif
 
-
-/* We require TLS support in the tools.  */
-#ifndef HAVE_TLS_SUPPORT
-# error "TLS support is required."
-#endif
 
 /* Alignment requirement for the stack.  */
 #define STACK_ALIGN	16

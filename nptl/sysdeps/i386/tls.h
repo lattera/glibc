@@ -1,5 +1,5 @@
 /* Definition for thread-local data handling.  nptl/i386 version.
-   Copyright (C) 2002-2007, 2009 Free Software Foundation, Inc.
+   Copyright (C) 2002-2007, 2009, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -69,11 +69,6 @@ typedef struct
 # include <tcb-offsets.h>
 #endif
 
-
-/* We require TLS support in the tools.  */
-#ifndef HAVE_TLS_SUPPORT
-# error "TLS support is required."
-#endif
 
 /* Alignment requirement for the stack.  For IA-32 this is governed by
    the SSE memory functions.  */
@@ -261,7 +256,7 @@ union user_desc_init
 
    The contained asm must *not* be marked volatile since otherwise
    assignments like
-        pthread_descr self = thread_self();
+	pthread_descr self = thread_self();
    do not get optimized away.  */
 # define THREAD_SELF \
   ({ struct pthread *__self;						      \

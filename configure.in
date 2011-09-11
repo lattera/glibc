@@ -187,13 +187,6 @@ AC_ARG_ENABLE([add-ons],
 			      search for add-ons if no parameter given]),
 			     , [enable_add_ons=yes])
 
-dnl Let the user avoid using TLS.  Don't know why but...
-AC_ARG_WITH([tls],
-	    AC_HELP_STRING([--with-tls],
-			   [enable support for TLS]),
-	    [usetls=$withval],
-	    [usetls=yes])
-
 AC_ARG_ENABLE([hidden-plt],
 	      AC_HELP_STRING([--disable-hidden-plt],
 			     [do not hide internal function calls to avoid PLT]),

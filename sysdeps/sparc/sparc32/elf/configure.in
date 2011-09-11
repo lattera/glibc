@@ -1,7 +1,6 @@
 GLIBC_PROVIDES dnl See aclocal.m4 in the top level source directory.
 # Local configure fragment for sysdeps/sparc/sparc32/elf.
 
-if test "$usetls" != no; then
 # Check for support of thread-local storage handling in assembler and linker.
 AC_CACHE_CHECK(for sparc32 TLS support, libc_cv_sparc32_tls, [dnl
 changequote(,)dnl
@@ -39,9 +38,8 @@ else
   libc_cv_sparc32_tls=no
 fi
 rm -f conftest*])
-if test $libc_cv_sparc32_tls = yes; then
-  AC_DEFINE(HAVE_TLS_SUPPORT)
-fi
+if test $libc_cv_sparc32_tls = no; then
+  AC_MSG_ERROR([the assembler must support TLS])
 fi
 
 # Check for broken WDISP22 in the linker.

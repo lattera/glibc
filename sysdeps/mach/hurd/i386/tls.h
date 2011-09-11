@@ -1,5 +1,5 @@
 /* Definitions for thread-local data handling.  Hurd/i386 version.
-   Copyright (C) 2003, 2004, 2006, 2007 Free Software Foundation, Inc.
+   Copyright (C) 2003, 2004, 2006, 2007, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,16 +20,15 @@
 #ifndef _I386_TLS_H
 #define _I386_TLS_H
 
-#if defined HAVE_TLS_SUPPORT
 
 /* Some things really need not be machine-dependent.  */
-# include <sysdeps/mach/hurd/tls.h>
+#include <sysdeps/mach/hurd/tls.h>
 
 /* The TCB can have any size and the memory following the address the
    thread pointer points to is unspecified.  Allocate the TCB there.  */
-# define TLS_TCB_AT_TP	1
+#define TLS_TCB_AT_TP	1
 
-# ifndef __ASSEMBLER__
+#ifndef __ASSEMBLER__
 
 /* Use i386-specific RPCs to arrange that %gs segment register prefix
    addresses the TCB in each thread.  */
@@ -42,7 +41,7 @@
 # include <errno.h>
 # include <assert.h>
 
-#define HURD_TLS_DESC_DECL(desc, tcb)					      \
+# define HURD_TLS_DESC_DECL(desc, tcb)					      \
   struct descriptor desc =						      \
     {				/* low word: */				      \
       0xffff			/* limit 0..15 */			      \
@@ -123,7 +122,7 @@ _hurd_tls_init (tcbhead_t *tcb, int secondcall)
 # define TLS_INIT_TP_EXPENSIVE 1
 
 /* Return the TCB address of the current thread.  */
-# define THREAD_SELF 							      \
+# define THREAD_SELF							      \
   ({ tcbhead_t *__tcb;							      \
      __asm__ ("movl %%gs:%c1,%0" : "=r" (__tcb)				      \
 	      : "i" (offsetof (tcbhead_t, tcb)));			      \
@@ -135,12 +134,12 @@ _hurd_tls_init (tcbhead_t *tcb, int secondcall)
 		   : : "ir" (dtvp), "i" (offsetof (tcbhead_t, dtv))); })
 
 /* Return the address of the dtv for the current thread.  */
-# define THREAD_DTV() 							      \
+# define THREAD_DTV()							      \
   ({ dtv_t *_dtv;							      \
      asm ("movl %%gs:%P1,%0" : "=q" (_dtv) : "i" (offsetof (tcbhead_t, dtv)));\
      _dtv; })
 
-#include <mach/machine/thread_status.h>
+# include <mach/machine/thread_status.h>
 
 /* Set up TLS in the new thread of a fork child, copying from our own.  */
 static inline error_t __attribute__ ((unused))
@@ -165,7 +164,6 @@ _hurd_tls_fork (thread_t child, struct i386_thread_state *state)
   return err;
 }
 
-# endif	/* !__ASSEMBLER__ */
-#endif /* HAVE_TLS_SUPPORT */
+#endif	/* !__ASSEMBLER__ */
 
 #endif	/* i386/tls.h */

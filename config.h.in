@@ -112,9 +112,6 @@
 /* Define if _rtld_local structure should be forced into .sdata section.  */
 #undef	HAVE_SDATA_SECTION
 
-/* Define if binutils support TLS handling.  */
-#undef	HAVE_TLS_SUPPORT
-
 /* Define if gcc supports SSE4.  */
 #undef	HAVE_SSE4_SUPPORT
 

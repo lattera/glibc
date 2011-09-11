@@ -1,5 +1,5 @@
 /* Definition for thread-local data handling.  nptl/x86_64 version.
-   Copyright (C) 2002-2007, 2008, 2009 Free Software Foundation, Inc.
+   Copyright (C) 2002-2007, 2008, 2009, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -79,11 +79,6 @@ typedef struct
 # include <tcb-offsets.h>
 #endif
 
-
-/* We require TLS support in the tools.  */
-#ifndef HAVE_TLS_SUPPORT
-# error "TLS support is required."
-#endif
 
 /* Alignment requirement for the stack.  */
 #define STACK_ALIGN	16
