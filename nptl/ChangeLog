@@ -1,5 +1,7 @@
 2011-09-10  Ulrich Drepper  <drepper@gmail.com>
 
+	* sysdeps/pthread/malloc-machine.h: Define MUTEX_INITIALIZER.
+
 	* sysdeps/unix/sysv/linux/i386/i486/sem_post.S: Don't handle
 	!USE___THREAD.
 	* sysdeps/unix/sysv/linux/i386/i486/sem_timedwait.S: Likewise.

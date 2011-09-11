@@ -76,9 +76,9 @@ extern int sanity_check_heap_info_alignment[(sizeof (heap_info)
 /* Thread specific data */
 
 static tsd_key_t arena_key;
-static mutex_t list_lock;
+static mutex_t list_lock = MUTEX_INITIALIZER;
 #ifdef PER_THREAD
-static size_t narenas;
+static size_t narenas = 1;
 static mstate free_list;
 #endif
 
@@ -353,24 +353,6 @@ next_env_entry (char ***position)
   return result;
 }
 
-/* Set up basic state so that _int_malloc et al can work.  */
-static void
-ptmalloc_init_minimal (void)
-{
-#if DEFAULT_TOP_PAD != 0
-  mp_.top_pad        = DEFAULT_TOP_PAD;
-#endif
-  mp_.n_mmaps_max    = DEFAULT_MMAP_MAX;
-  mp_.mmap_threshold = DEFAULT_MMAP_THRESHOLD;
-  mp_.trim_threshold = DEFAULT_TRIM_THRESHOLD;
-  mp_.pagesize       = malloc_getpagesize;
-#ifdef PER_THREAD
-# define NARENAS_FROM_NCORES(n) ((n) * (sizeof(long) == 4 ? 2 : 8))
-  mp_.arena_test     = NARENAS_FROM_NCORES (1);
-  narenas = 1;
-#endif
-}
-
 
 #ifdef SHARED
 static void *
@@ -386,16 +368,8 @@ libc_hidden_proto (_dl_open_hook);
 static void
 ptmalloc_init (void)
 {
-  const char* s;
-  int secure = 0;
-
   if(__malloc_initialized >= 0) return;
   __malloc_initialized = 0;
-
-  ptmalloc_init_minimal();
-
-  mutex_init(&main_arena.mutex);
-  main_arena.next = &main_arena;
 
 #ifdef SHARED
   /* In case this libc copy is in a non-default namespace, never use brk.
@@ -409,12 +383,10 @@ ptmalloc_init (void)
     __morecore = __failing_morecore;
 #endif
 
-  mutex_init(&list_lock);
   tsd_key_create(&arena_key, NULL);
   tsd_setspecific(arena_key, (void *)&main_arena);
   thread_atfork(ptmalloc_lock_all, ptmalloc_unlock_all, ptmalloc_unlock_all2);
-  secure = __libc_enable_secure;
-  s = NULL;
+  const char *s = NULL;
   if (__builtin_expect (_environ != NULL, 1))
     {
       char **runp = _environ;
@@ -438,7 +410,7 @@ ptmalloc_init (void)
 		s = &envline[7];
 	      break;
 	    case 8:
-	      if (! secure)
+	      if (! __builtin_expect (__libc_enable_secure, 0))
 		{
 		  if (memcmp (envline, "TOP_PAD_", 8) == 0)
 		    mALLOPt(M_TOP_PAD, atoi(&envline[9]));
@@ -447,7 +419,7 @@ ptmalloc_init (void)
 		}
 	      break;
 	    case 9:
-	      if (! secure)
+	      if (! __builtin_expect (__libc_enable_secure, 0))
 		{
 		  if (memcmp (envline, "MMAP_MAX_", 9) == 0)
 		    mALLOPt(M_MMAP_MAX, atoi(&envline[10]));
@@ -459,7 +431,7 @@ ptmalloc_init (void)
 	      break;
 #ifdef PER_THREAD
 	    case 10:
-	      if (! secure)
+	      if (! __builtin_expect (__libc_enable_secure, 0))
 		{
 		  if (memcmp (envline, "ARENA_TEST", 10) == 0)
 		    mALLOPt(M_ARENA_TEST, atoi(&envline[11]));
@@ -467,7 +439,7 @@ ptmalloc_init (void)
 	      break;
 #endif
 	    case 15:
-	      if (! secure)
+	      if (! __builtin_expect (__libc_enable_secure, 0))
 		{
 		  if (memcmp (envline, "TRIM_THRESHOLD_", 15) == 0)
 		    mALLOPt(M_TRIM_THRESHOLD, atoi(&envline[16]));
@@ -549,7 +521,7 @@ static heap_info *
 internal_function
 new_heap(size_t size, size_t top_pad)
 {
-  size_t page_mask = malloc_getpagesize - 1;
+  size_t page_mask = GLRO(dl_pagesize) - 1;
   char *p1, *p2;
   unsigned long ul;
   heap_info *h;
@@ -619,7 +591,7 @@ new_heap(size_t size, size_t top_pad)
 static int
 grow_heap(heap_info *h, long diff)
 {
-  size_t page_mask = malloc_getpagesize - 1;
+  size_t page_mask = GLRO(dl_pagesize) - 1;
   long new_size;
 
   diff = (diff + page_mask) & ~page_mask;
@@ -679,7 +651,7 @@ internal_function
 heap_trim(heap_info *heap, size_t pad)
 {
   mstate ar_ptr = heap->ar_ptr;
-  unsigned long pagesz = mp_.pagesize;
+  unsigned long pagesz = GLRO(dl_pagesize);
   mchunkptr top_chunk = top(ar_ptr), p, bck, fwd;
   heap_info *prev_heap;
   long new_size, top_size, extra;

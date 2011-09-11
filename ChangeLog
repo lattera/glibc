@@ -1,9 +1,25 @@
 2011-09-10  Ulrich Drepper  <drepper@gmail.com>
 
+	* malloc/arena.c (ptmalloc_init_minimal): Removed.  Initialize all
+	variables statically.
+	(narenas): Initialize.
+	(list_lock): Initialize.
+	(ptmalloc_init): Don't call ptmalloc_init_minimal.  Remove initializtion
+	of main_arena and list_lock.  Small cleanups.
+	Replace all uses of malloc_getpagesize with GLRO(dl_pagesize).
+	* malloc/malloc.c: Remove malloc_getpagesize.  Include <ldsodefs.h>.
+	Add initializers to main_arena and mp_.
+	(malloc_state): Remove pagesize member.  Change all users to use
+	GLRO(dl_pagesize).
+
+	* elf/rtld.c (rtld_global_ro): Initialize _dl_pagesize.
+	* sysdeps/unix/sysv/linux/getpagesize.c: Simplify.  GLRO(dl_pagesize)
+	is always initialized.
+
 	* malloc/malloc.c: Removed unused configurations and dead code.
 	* malloc/arena.c: Likewise.
 	* malloc/hooks.c: Likewise.
-	* malloc/Makefile (-CPPFLAGS-malloc.c): Don't add -DATOMIC_FASTBINS.
+	* malloc/Makefile (CPPFLAGS-malloc.c): Don't add -DATOMIC_FASTBINS.
 
 	* include/tls.h: Removed.  USE___THREAD must always be defined.
 	* bits/libc-tsd.h: Don't handle !USE___THREAD.

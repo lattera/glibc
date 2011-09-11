@@ -147,7 +147,7 @@ mem2chunk_check(void* mem, unsigned char **magic_p)
       if(c<=0 || sz<(c+2*SIZE_SZ)) return NULL;
     }
   } else {
-    unsigned long offset, page_mask = malloc_getpagesize-1;
+    unsigned long offset, page_mask = GLRO(dl_pagesize)-1;
 
     /* mmap()ed chunks have MALLOC_ALIGNMENT or higher power-of-two
        alignment relative to the beginning of a page.  Check this
@@ -182,7 +182,7 @@ top_check(void)
   mchunkptr t = top(&main_arena);
   char* brk, * new_brk;
   INTERNAL_SIZE_T front_misalign, sbrk_size;
-  unsigned long pagesz = malloc_getpagesize;
+  unsigned long pagesz = GLRO(dl_pagesize);
 
   if (t == initial_top(&main_arena) ||
       (!chunk_is_mmapped(t) &&

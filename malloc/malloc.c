@@ -170,7 +170,6 @@
     Compilation Environment options:
 
     HAVE_MREMAP                0 unless linux defined
-    malloc_getpagesize         derived from system #includes, or 4096 if not
 
     Changing default word sizes:
 
@@ -225,6 +224,8 @@
 #include <stdio-common/_itoa.h>
 #include <bits/wordsize.h>
 #include <sys/sysinfo.h>
+
+#include <ldsodefs.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -454,7 +455,6 @@ __malloc_assert (const char *assertion, const char *file, unsigned int line,
 #define public_iCOMALLOc __libc_independent_comalloc
 #define public_gET_STATe __malloc_get_state
 #define public_sET_STATe __malloc_set_state
-#define malloc_getpagesize __getpagesize()
 #define open             __open
 #define mmap             __mmap
 #define munmap           __munmap
@@ -587,24 +587,6 @@ void *(*__morecore)(ptrdiff_t) = __default_morecore;
 
 #endif /* HAVE_MREMAP */
 
-
-/*
-  The system page size. To the extent possible, this malloc manages
-  memory from the system in page-size units.  Note that this value is
-  cached during initialization into a field of malloc_state. So even
-  if malloc_getpagesize is a function, it is only called once.
-
-  The following mechanics for getpagesize were adapted from bsd/gnu
-  getpagesize.h. If none of the system-probes here apply, a value of
-  4096 is used, which should be OK: If they don't apply, then using
-  the actual value probably doesn't impact performance.
-*/
-
-
-#ifndef malloc_getpagesize
-# include <unistd.h>
-# define malloc_getpagesize sysconf(_SC_PAGE_SIZE)
-#endif
 
 /*
   This version of malloc supports the standard SVID/XPG mallinfo
@@ -1878,9 +1860,6 @@ struct malloc_par {
      dynamic behavior. */
   int              no_dyn_threshold;
 
-  /* Cache malloc_getpagesize */
-  unsigned int     pagesize;
-
   /* Statistics */
   INTERNAL_SIZE_T  mmapped_mem;
   /*INTERNAL_SIZE_T  sbrked_mem;*/
@@ -1898,11 +1877,25 @@ struct malloc_par {
    before using. This malloc relies on the property that malloc_state
    is initialized to all zeroes (as is true of C statics).  */
 
-static struct malloc_state main_arena;
+static struct malloc_state main_arena =
+  {
+    .mutex = MUTEX_INITIALIZER,
+    .next = &main_arena
+  };
 
 /* There is only one instance of the malloc parameters.  */
 
-static struct malloc_par mp_;
+static struct malloc_par mp_ =
+  {
+    .top_pad        = DEFAULT_TOP_PAD,
+    .n_mmaps_max    = DEFAULT_MMAP_MAX,
+    .mmap_threshold = DEFAULT_MMAP_THRESHOLD,
+    .trim_threshold = DEFAULT_TRIM_THRESHOLD,
+#ifdef PER_THREAD
+# define NARENAS_FROM_NCORES(n) ((n) * (sizeof(long) == 4 ? 2 : 8))
+    .arena_test     = NARENAS_FROM_NCORES (1)
+#endif
+  };
 
 
 #ifdef PER_THREAD
@@ -2070,7 +2063,7 @@ static void do_check_chunk(mstate av, mchunkptr p)
       assert(((char*)p) < min_address || ((char*)p) >= max_address);
     }
     /* chunk is page-aligned */
-    assert(((p->prev_size + sz) & (mp_.pagesize-1)) == 0);
+    assert(((p->prev_size + sz) & (GLRO(dl_pagesize)-1)) == 0);
     /* mem is aligned */
     assert(aligned_OK(chunk2mem(p)));
   }
@@ -2231,7 +2224,7 @@ static void do_check_malloc_state(mstate av)
     return;
 
   /* pagesize is a power of 2 */
-  assert((mp_.pagesize & (mp_.pagesize-1)) == 0);
+  assert((GLRO(dl_pagesize) & (GLRO(dl_pagesize)-1)) == 0);
 
   /* A contiguous main_arena is consistent with sbrk_base.  */
   if (av == &main_arena && contiguous(av))
@@ -2389,7 +2382,7 @@ static void* sYSMALLOc(INTERNAL_SIZE_T nb, mstate av)
 
   unsigned long   sum;            /* for updating stats */
 
-  size_t          pagemask  = mp_.pagesize - 1;
+  size_t          pagemask  = GLRO(dl_pagesize) - 1;
   bool            tried_mmap = false;
 
 
@@ -2804,7 +2797,7 @@ static int sYSTRIm(size_t pad, mstate av)
   char* new_brk;         /* address returned by post-check sbrk call */
   size_t pagesz;
 
-  pagesz = mp_.pagesize;
+  pagesz = GLRO(dl_pagesize);
   top_size = chunksize(av->top);
 
   /* Release in pagesize units, keeping at least one page */
@@ -2867,7 +2860,7 @@ munmap_chunk(mchunkptr p)
      page size.  But gcc does not recognize the optimization possibility
      (in the moment at least) so we combine the two values into one before
      the bit test.  */
-  if (__builtin_expect (((block | total_size) & (mp_.pagesize - 1)) != 0, 0))
+  if (__builtin_expect (((block | total_size) & (GLRO(dl_pagesize) - 1)) != 0, 0))
     {
       malloc_printerr (check_action, "munmap_chunk(): invalid pointer",
 		       chunk2mem (p));
@@ -2889,13 +2882,13 @@ static mchunkptr
 internal_function
 mremap_chunk(mchunkptr p, size_t new_size)
 {
-  size_t page_mask = mp_.pagesize - 1;
+  size_t page_mask = GLRO(dl_pagesize) - 1;
   INTERNAL_SIZE_T offset = p->prev_size;
   INTERNAL_SIZE_T size = chunksize(p);
   char *cp;
 
   assert (chunk_is_mmapped(p));
-  assert(((size + offset) & (mp_.pagesize-1)) == 0);
+  assert(((size + offset) & (GLRO(dl_pagesize)-1)) == 0);
 
   /* Note the extra SIZE_SZ overhead as in mmap_chunk(). */
   new_size = (new_size + offset + SIZE_SZ + page_mask) & ~page_mask;
@@ -3157,7 +3150,7 @@ public_vALLOc(size_t bytes)
   if(__malloc_initialized < 0)
     ptmalloc_init ();
 
-  size_t pagesz = mp_.pagesize;
+  size_t pagesz = GLRO(dl_pagesize);
 
   __malloc_ptr_t (*hook) __MALLOC_PMT ((size_t, size_t,
 					__const __malloc_ptr_t)) =
@@ -3201,8 +3194,8 @@ public_pVALLOc(size_t bytes)
   if(__malloc_initialized < 0)
     ptmalloc_init ();
 
-  size_t pagesz = mp_.pagesize;
-  size_t page_mask = mp_.pagesize - 1;
+  size_t pagesz = GLRO(dl_pagesize);
+  size_t page_mask = GLRO(dl_pagesize) - 1;
   size_t rounded_bytes = (bytes + page_mask) & ~(page_mask);
 
   __malloc_ptr_t (*hook) __MALLOC_PMT ((size_t, size_t,
@@ -4582,7 +4575,7 @@ _int_valloc(mstate av, size_t bytes)
 {
   /* Ensure initialization/consolidation */
   if (have_fastchunks(av)) malloc_consolidate(av);
-  return _int_memalign(av, mp_.pagesize, bytes);
+  return _int_memalign(av, GLRO(dl_pagesize), bytes);
 }
 
 /*
@@ -4597,7 +4590,7 @@ _int_pvalloc(mstate av, size_t bytes)
 
   /* Ensure initialization/consolidation */
   if (have_fastchunks(av)) malloc_consolidate(av);
-  pagesz = mp_.pagesize;
+  pagesz = GLRO(dl_pagesize);
   return _int_memalign(av, pagesz, (bytes + pagesz - 1) & ~(pagesz - 1));
 }
 
@@ -4611,7 +4604,7 @@ static int mTRIm(mstate av, size_t pad)
   /* Ensure initialization/consolidation */
   malloc_consolidate (av);
 
-  const size_t ps = mp_.pagesize;
+  const size_t ps = GLRO(dl_pagesize);
   int psindex = bin_index (ps);
   const size_t psm1 = ps - 1;
 

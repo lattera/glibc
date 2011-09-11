@@ -1,6 +1,6 @@
 /* Basic platform-independent macro definitions for mutexes,
    thread-specific data and parameters for malloc.
-   Copyright (C) 2003, 2007, 2008 Free Software Foundation, Inc.
+   Copyright (C) 2003, 2007, 2008, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -32,6 +32,7 @@ __libc_lock_define (typedef, mutex_t)
 #define mutex_lock(m)		__libc_lock_lock (*(m))
 #define mutex_trylock(m)	__libc_lock_trylock (*(m))
 #define mutex_unlock(m)		__libc_lock_unlock (*(m))
+#define MUTEX_INITIALIZER	LLL_LOCK_INITIALIZER
 
 /* This is defined by newer gcc version unique for each module.  */
 extern void *__dso_handle __attribute__ ((__weak__));

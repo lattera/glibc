@@ -28,26 +28,8 @@
 int
 __getpagesize ()
 {
-#ifdef __ASSUME_AT_PAGESIZE
   assert (GLRO(dl_pagesize) != 0);
   return GLRO(dl_pagesize);
-#else
-  if (GLRO(dl_pagesize) != 0)
-    return GLRO(dl_pagesize);
-
-# ifdef	EXEC_PAGESIZE
-  return EXEC_PAGESIZE;
-# else	/* No EXEC_PAGESIZE.  */
-#  ifdef NBPG
-#   ifndef CLSIZE
-#    define CLSIZE	1
-#   endif	/* No CLSIZE.  */
-  return NBPG * CLSIZE;
-#  else	/* No NBPG.  */
-  return NBPC;
-#  endif	/* NBPG.  */
-# endif	/* EXEC_PAGESIZE.  */
-#endif
 }
 libc_hidden_def (__getpagesize)
 weak_alias (__getpagesize, getpagesize)
