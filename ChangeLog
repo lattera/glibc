@@ -1,3 +1,11 @@
+2011-09-11  Andreas Schwab  <schwab@linux-m68k.org>
+
+	* elf/Makefile (gen-ldd): Prepend $(..) to $(ldd-rewrite-script)
+	if non-absolute.
+	* sysdeps/unix/sysv/linux/configure.in: Remove leading ../ from
+	ldd_rewrite_script.
+	* sysdeps/unix/sysv/linux/configure: Regenerated.
+
 2011-09-11  Ulrich Drepper  <drepper@gmail.com>
 
 	* configure.in: Remove --with-tls option.
