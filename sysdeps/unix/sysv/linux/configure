@@ -485,22 +485,22 @@ use_ldconfig=yes
 
 case "$machine" in
   i[3456]86* | m68*)
-    ldd_rewrite_script=../sysdeps/unix/sysv/linux/ldd-rewrite.sed
+    ldd_rewrite_script=sysdeps/unix/sysv/linux/ldd-rewrite.sed
     ;;
   ia64*)
-    ldd_rewrite_script=../sysdeps/unix/sysv/linux/ia64/ldd-rewrite.sed
+    ldd_rewrite_script=sysdeps/unix/sysv/linux/ia64/ldd-rewrite.sed
     ;;
   s390*)
-    ldd_rewrite_script=../sysdeps/unix/sysv/linux/s390/ldd-rewrite.sed
+    ldd_rewrite_script=sysdeps/unix/sysv/linux/s390/ldd-rewrite.sed
     ;;
   sparc*)
-    ldd_rewrite_script=../sysdeps/unix/sysv/linux/sparc/ldd-rewrite.sed
+    ldd_rewrite_script=sysdeps/unix/sysv/linux/sparc/ldd-rewrite.sed
     ;;
   x86_64*)
-    ldd_rewrite_script=../sysdeps/unix/sysv/linux/x86_64/ldd-rewrite.sed
+    ldd_rewrite_script=sysdeps/unix/sysv/linux/x86_64/ldd-rewrite.sed
     ;;
   powerpc*)
-    ldd_rewrite_script=../sysdeps/unix/sysv/linux/powerpc/ldd-rewrite.sed
+    ldd_rewrite_script=sysdeps/unix/sysv/linux/powerpc/ldd-rewrite.sed
     ;;
   *)
     ;;
