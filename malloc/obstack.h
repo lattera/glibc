@@ -1,5 +1,5 @@
 /* obstack.h - object stack macros
-   Copyright (C) 1988-1994,1996-1999,2003,2004,2005,2009
+   Copyright (C) 1988-1994,1996-1999,2003,2004,2005,2009,2011
 	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -496,9 +496,9 @@ __extension__								\
 ( (h)->temp.tempint = (char *) (obj) - (char *) (h)->chunk,		\
   ((((h)->temp.tempint > 0						\
     && (h)->temp.tempint < (h)->chunk_limit - (char *) (h)->chunk))	\
-   ? (int) ((h)->next_free = (h)->object_base				\
-	    = (h)->temp.tempint + (char *) (h)->chunk)			\
-   : (((obstack_free) ((h), (h)->temp.tempint + (char *) (h)->chunk), 0), 0)))
+   ? (((h)->next_free = (h)->object_base				\
+       = (h)->temp.tempint + (char *) (h)->chunk), 0)			\
+   : ((obstack_free) ((h), (h)->temp.tempint + (char *) (h)->chunk), 0)))
 
 #endif /* not __GNUC__ or not __STDC__ */
 
