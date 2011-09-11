@@ -1,5 +1,5 @@
 /* Thread-local storage handling in the ELF dynamic linker.  ARM version.
-   Copyright (C) 2006, 2010 Free Software Foundation, Inc.
+   Copyright (C) 2006, 2010, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -31,7 +31,6 @@
 	@ emit debug information with cfi
 	@ use arm-specific pseudos for unwinding itself
 	.cfi_sections .debug_frame
-#ifdef USE_TLS
 	.hidden _dl_tlsdesc_return
 	.global	_dl_tlsdesc_return
 	.type	_dl_tlsdesc_return,#function
@@ -218,5 +217,3 @@ _dl_tlsdesc_resolve_hold:
 	.fnend
 	cfi_endproc
 	.size	_dl_tlsdesc_resolve_hold, .-_dl_tlsdesc_resolve_hold
-
-#endif /* USE_TLS */

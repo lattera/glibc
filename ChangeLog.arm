@@ -1,3 +1,11 @@
+2011-09-11  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/arm/dl-machine.h, sysdeps/arm/dl-tlsdesc.S,
+	sysdeps/arm/libc-tls.c, sysdeps/arm/nptl/tls.h,
+	sysdeps/arm/tlsdesc.c, sysdeps/arm/tlsdesc.sym,
+	sysdeps/unix/arm/sysdep.S: Remove !USE_THREAD and !USE_TLS cases.
+	Don't define USE_TLS.
+
 2011-08-18  Ramana Radhakrishnan  <ramana.radhakrishnan@linaro.org>
 
 	* sysdeps/unix/sysv/linux/arm/eabi/Makefile: Add libc-do-syscall

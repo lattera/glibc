@@ -1,6 +1,6 @@
 /* Machine-dependent ELF dynamic relocation inline functions.  ARM version.
    Copyright (C) 1995,1996,1997,1998,1999,2000,2001,2002,2003,2004,2005,
-	2006, 2009, 2010 Free Software Foundation, Inc.
+	2006, 2009, 2010, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -242,18 +242,12 @@ _dl_start_user:\n\
    define the value.
    ELF_RTYPE_CLASS_NOCOPY iff TYPE should not be allowed to resolve to one
    of the main executable's symbols, as for a COPY reloc.  */
-#if defined USE_TLS && (!defined RTLD_BOOTSTRAP || USE___THREAD)
-# define elf_machine_type_class(type) \
+#define elf_machine_type_class(type) \
   ((((type) == R_ARM_JUMP_SLOT || (type) == R_ARM_TLS_DTPMOD32		\
      || (type) == R_ARM_TLS_DTPOFF32 || (type) == R_ARM_TLS_TPOFF32	\
      || (type) == R_ARM_TLS_DESC)					\
     * ELF_RTYPE_CLASS_PLT)						\
    | (((type) == R_ARM_COPY) * ELF_RTYPE_CLASS_COPY))
-#else
-#define elf_machine_type_class(type) \
-  ((((type) == R_ARM_JUMP_SLOT) * ELF_RTYPE_CLASS_PLT)	\
-   | (((type) == R_ARM_COPY) * ELF_RTYPE_CLASS_COPY))
-#endif
 
 /* A reloc type used for ld.so cmdline arg lookups to reject PLT entries.  */
 #define ELF_MACHINE_JMP_SLOT	R_ARM_JUMP_SLOT
@@ -494,7 +488,6 @@ elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
 	  }
 	  break;
 #if !defined RTLD_BOOTSTRAP
-#if defined USE_TLS
 	case R_ARM_TLS_DTPMOD32:
 	  /* Get the information from the link map returned by the
 	     resolv function.  */
@@ -514,7 +507,6 @@ elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
 	      *reloc_addr += sym->st_value + sym_map->l_tls_offset;
 	    }
 	  break;
-#endif
 	case R_ARM_IRELATIVE:
 	  value = map->l_addr + *reloc_addr;
 	  value = ((Elf32_Addr (*) (void)) value) ();
@@ -608,7 +600,6 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 	  }
 	  break;
 #if !defined RTLD_BOOTSTRAP
-#if defined USE_TLS
 	case R_ARM_TLS_DTPMOD32:
 	  /* Get the information from the link map returned by the
 	     resolv function.  */
@@ -628,7 +619,6 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 			     + reloc->r_addend);
 	    }
 	  break;
-#endif
 	case R_ARM_IRELATIVE:
 	  value = map->l_addr + *reloc_addr;
 	  value = ((Elf32_Addr (*) (void)) value) ();
@@ -678,7 +668,6 @@ elf_machine_lazy_rel (struct link_map *map,
       else
 	*reloc_addr = map->l_mach.plt;
     }
-#ifdef USE_TLS
   else if (__builtin_expect (r_type == R_ARM_TLS_DESC, 1))
     {
       struct tlsdesc volatile *td =
@@ -691,7 +680,6 @@ elf_machine_lazy_rel (struct link_map *map,
       td->entry = (void*)(D_PTR (map, l_info[ADDRIDX (DT_TLSDESC_PLT)])
 			  + map->l_addr);
     }
-#endif
   else
     _dl_reloc_bad_type (map, r_type, 1);
 }

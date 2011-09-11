@@ -1,5 +1,5 @@
 /* Copyright (C) 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 2002, 2003,
-   2004, 2005, 2009
+   2004, 2005, 2009, 2011
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -42,7 +42,6 @@ syscall_error:
 	moveq r0, $EAGAIN	/* Yes; translate it to EAGAIN.  */
 #endif
 
-#if USE___THREAD
 	mov ip, lr
 	cfi_register (lr, ip)
 	mov r1, r0
@@ -58,46 +57,6 @@ syscall_error:
 	RETINSTR (, ip)
 
 1:	.word errno(gottpoff) + (. - 2b - 8)
-#elif RTLD_PRIVATE_ERRNO
-	ldr r1, 1f
-0:	str r0, [pc, r1]
-	mvn r0, $0
-	DO_RET(r14)
-
-1:	.word C_SYMBOL_NAME(rtld_errno) - 0b - 8
-#elif defined(_LIBC_REENTRANT)
-	str lr, [sp, #-4]!
-	cfi_adjust_cfa_offset (4)
-	cfi_rel_offset (lr, 0)
-	str r0, [sp, #-4]!
-	cfi_adjust_cfa_offset (4)
-	bl PLTJMP(C_SYMBOL_NAME(__errno_location))
-	ldr r1, [sp], #4
-	cfi_adjust_cfa_offset (-4)
-	str r1, [r0]
-	mvn r0, $0
-	ldr pc, [sp], #4	
-#else
-#ifndef	PIC
-	ldr r1, 1f
-	str r0, [r1]
-	mvn r0, $0
-	DO_RET (r14)
-
-1:	.long C_SYMBOL_NAME(errno)
-#else
-	@ we have to establish our PIC register
-	ldr r2, 1f
-	ldr r1, 2f
-0:	add r2, pc, r2
-	str r0, [r1, r2]
-	mvn r0, $0
-	DO_RET (r14)
-
-1:	.word _GLOBAL_OFFSET_TABLE_ - 0b - 8
-2:	.word C_SYMBOL_NAME(errno)(GOTOFF)
-#endif
-#endif
 
 #undef	__syscall_error
 END (__syscall_error)

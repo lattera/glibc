@@ -1,5 +1,5 @@
 /* Manage TLS descriptors.  ARM version.
-   Copyright (C) 2005, 2010 Free Software Foundation, Inc.
+   Copyright (C) 2005, 2010, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -23,8 +23,6 @@
 #include <tls.h>
 #include <dl-tlsdesc.h>
 #include <tlsdeschtab.h>
-
-#ifdef USE_TLS
 
 /* This function is used to lazily resolve TLS_DESC REL relocations
    Besides the TLS descriptor itself, we get the module's got address
@@ -161,4 +159,3 @@ _dl_unmap (struct link_map *map)
     htab_delete (map->l_mach.tlsdesc_table);
 #endif
 }
-#endif

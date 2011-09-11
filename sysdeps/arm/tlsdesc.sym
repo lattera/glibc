@@ -7,13 +7,9 @@
 --
 
 -- Abuse tls.h macros to derive offsets relative to the thread register.
-#if defined USE_TLS
-
 
 TLSDESC_ARG			offsetof(struct tlsdesc, argument.pointer)
 
 TLSDESC_GEN_COUNT		offsetof(struct tlsdesc_dynamic_arg, gen_count)
 TLSDESC_MODID			offsetof(struct tlsdesc_dynamic_arg, tlsinfo.ti_module)
 TLSDESC_MODOFF			offsetof(struct tlsdesc_dynamic_arg, tlsinfo.ti_offset)
-
-#endif
