@@ -1,5 +1,5 @@
 /* Machine-dependent ELF dynamic relocation inline functions.  m68k version.
-   Copyright (C) 1996-2001, 2002, 2003, 2004, 2005, 2010
+   Copyright (C) 1996-2001, 2002, 2003, 2004, 2005, 2010, 2011
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -269,7 +269,7 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 	case R_68K_PC32:
 	  *reloc_addr = value + reloc->r_addend - (Elf32_Addr) reloc_addr;
 	  break;
-#if defined USE_TLS && !defined RTLD_BOOTSTRAP
+#ifndef RTLD_BOOTSTRAP
 	case R_68K_TLS_DTPMOD32:
 	  /* Get the information from the link map returned by the
 	     resolv function.  */
@@ -287,7 +287,7 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 	      *reloc_addr = TLS_TPREL_VALUE (sym_map, sym, reloc);
 	    }
 	  break;
-#endif /* defined USE_TLS && !defined RTLD_BOOTSTRAP */
+#endif /* !RTLD_BOOTSTRAP */
 	case R_68K_NONE:		/* Alright, Wilbur.  */
 	  break;
 	default:

@@ -43,9 +43,6 @@ typedef union dtv
 # include <tcb-offsets.h>
 #endif /* __ASSEMBLER__ */
 
-/* Signal that TLS support is available.  */
-#define USE_TLS	1
-
 #ifndef __ASSEMBLER__
 
 /* Get system call information.  */
