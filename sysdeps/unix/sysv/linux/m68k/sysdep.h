@@ -106,7 +106,7 @@ SYSCALL_ERROR_LABEL:							      \
        a pointer (e.g., mmap).  */					      \
     move.l %d0, %a0;							      \
     rts;
-# elif USE___THREAD
+# elif defined _LIBC_REENTRANT
 #  ifndef NOT_IN_libc
 #   define SYSCALL_ERROR_ERRNO __libc_errno
 #  else
@@ -119,18 +119,6 @@ SYSCALL_ERROR_LABEL:							      \
     jbsr __m68k_read_tp@PLTPC;						      \
     SYSCALL_ERROR_LOAD_GOT (%a1);					      \
     add.l (SYSCALL_ERROR_ERRNO@TLSIE, %a1), %a0;			      \
-    move.l (%sp)+, (%a0);						      \
-    move.l &-1, %d0;							      \
-    /* Copy return value to %a0 for syscalls that are declared to return      \
-       a pointer (e.g., mmap).  */					      \
-    move.l %d0, %a0;							      \
-    rts;
-# elif defined _LIBC_REENTRANT
-#  define SYSCALL_ERROR_HANDLER						      \
-SYSCALL_ERROR_LABEL:							      \
-    neg.l %d0;								      \
-    move.l %d0, -(%sp);							      \
-    jbsr __errno_location@PLTPC;					      \
     move.l (%sp)+, (%a0);						      \
     move.l &-1, %d0;							      \
     /* Copy return value to %a0 for syscalls that are declared to return      \
