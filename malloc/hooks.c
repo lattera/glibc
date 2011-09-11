@@ -204,7 +204,7 @@ top_check(void)
   new_brk = (char*)(MORECORE (sbrk_size));
   if (new_brk == (char*)(MORECORE_FAILURE))
     {
-      MALLOC_FAILURE_ACTION;
+      __set_errno (ENOMEM);
       return -1;
     }
   /* Call the `morecore' hook if necessary.  */
@@ -225,7 +225,7 @@ malloc_check(size_t sz, const void *caller)
   void *victim;
 
   if (sz+1 == 0) {
-    MALLOC_FAILURE_ACTION;
+    __set_errno (ENOMEM);
     return NULL;
   }
 
@@ -266,7 +266,7 @@ realloc_check(void* oldmem, size_t bytes, const void *caller)
   unsigned char *magic_p;
 
   if (bytes+1 == 0) {
-    MALLOC_FAILURE_ACTION;
+    __set_errno (ENOMEM);
     return NULL;
   }
   if (oldmem == 0) return malloc_check(bytes, NULL);
@@ -334,7 +334,7 @@ memalign_check(size_t alignment, size_t bytes, const void *caller)
   if (alignment <  MINSIZE) alignment = MINSIZE;
 
   if (bytes+1 == 0) {
-    MALLOC_FAILURE_ACTION;
+    __set_errno (ENOMEM);
     return NULL;
   }
   (void)mutex_lock(&main_arena.mutex);

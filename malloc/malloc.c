@@ -184,7 +184,6 @@
     USE_MALLOC_LOCK            NOT defined
     MALLOC_DEBUG               NOT defined
     REALLOC_ZERO_BYTES_FREES   1
-    MALLOC_FAILURE_ACTION      errno = ENOMEM
     TRIM_FASTBINS              0
 
     Options for customizing MORECORE:
@@ -233,7 +232,7 @@ extern "C" {
 
 #include <unistd.h>
 #include <stdio.h>    /* needed for malloc_stats */
-#include <errno.h>    /* needed for optional MALLOC_FAILURE_ACTION */
+#include <errno.h>
 
 /* For uintptr_t.  */
 #include <stdint.h>
@@ -477,20 +476,6 @@ void *(*__morecore)(ptrdiff_t) = __default_morecore;
 #define force_reg(val) \
   ({ __typeof (val) _v; asm ("" : "=r" (_v) : "0" (val)); _v; })
 
-
-/*
-  MALLOC_FAILURE_ACTION is the action to take before "return 0" when
-  malloc fails to be able to return memory, either because memory is
-  exhausted or because of illegal arguments.
-
-  By default, sets errno if running on STD_C platform, else does nothing.
-*/
-
-#ifndef MALLOC_FAILURE_ACTION
-#define MALLOC_FAILURE_ACTION \
-   errno = ENOMEM;
-
-#endif
 
 /*
   MORECORE-related declarations. By default, rely on sbrk
@@ -1401,7 +1386,7 @@ nextchunk-> +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
 #define checked_request2size(req, sz)                             \
   if (REQUEST_OUT_OF_RANGE(req)) {                                \
-    MALLOC_FAILURE_ACTION;                                        \
+    __set_errno (ENOMEM);					  \
     return 0;                                                     \
   }                                                               \
   (sz) = request2size(req);
@@ -2774,7 +2759,7 @@ static void* sYSMALLOc(INTERNAL_SIZE_T nb, mstate av)
   }
 
   /* catch all failure paths */
-  MALLOC_FAILURE_ACTION;
+  __set_errno (ENOMEM);
   return 0;
 }
 
@@ -3247,7 +3232,7 @@ public_cALLOc(size_t n, size_t elem_size)
   (((INTERNAL_SIZE_T) 1) << (8 * sizeof (INTERNAL_SIZE_T) / 2))
   if (__builtin_expect ((n | elem_size) >= HALF_INTERNAL_SIZE_T, 0)) {
     if (elem_size != 0 && bytes / elem_size != n) {
-      MALLOC_FAILURE_ACTION;
+      __set_errno (ENOMEM);
       return 0;
     }
   }
