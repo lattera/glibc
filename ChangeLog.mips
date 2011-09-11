@@ -1,3 +1,8 @@
+2011-09-11  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/mips/dl-machine.h, sysdeps/mips/libc-tls.c,
+	sysdeps/mips/nptl/tls.h: Don't define or use USE_TLS.
+
 2011-09-06  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #13109]

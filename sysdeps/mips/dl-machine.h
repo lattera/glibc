@@ -1,5 +1,5 @@
 /* Machine-dependent ELF dynamic relocation inline functions.  MIPS version.
-   Copyright (C) 1996-2001, 2002, 2003, 2004, 2005, 2006, 2007
+   Copyright (C) 1996-2001, 2002, 2003, 2004, 2005, 2006, 2007, 2011
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Kazumoto Kojima <kkojima@info.kanagawa-u.ac.jp>.
@@ -343,7 +343,7 @@ elf_machine_reloc (struct link_map *map, ElfW(Addr) r_info,
 
   switch (r_type)
     {
-#if defined (USE_TLS) && !defined (RTLD_BOOTSTRAP)
+#if !defined (RTLD_BOOTSTRAP)
 # if _MIPS_SIM == _ABI64
     case R_MIPS_TLS_DTPMOD64:
     case R_MIPS_TLS_DTPREL64:
