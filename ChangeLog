@@ -1,3 +1,7 @@
+2011-09-12  Ulrich Drepper  <drepper@gmail.com>
+
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_logb.c: New file.
+
 2011-09-12  Andreas Schwab  <schwab@redhat.com>
 
 	* sysdeps/unix/sysv/linux/bits/socket.h (__cmsg_nxthdr): Cast to
