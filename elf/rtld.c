@@ -306,21 +306,9 @@ _dl_start_final (void *arg, struct dl_start_final_info *info)
   GL(dl_rtld_map).l_text_end = (ElfW(Addr)) _etext;
   /* Copy the TLS related data if necessary.  */
 #ifndef DONT_USE_BOOTSTRAP_MAP
-# if USE___THREAD
-  assert (info->l.l_tls_modid != 0);
-  GL(dl_rtld_map).l_tls_blocksize = info->l.l_tls_blocksize;
-  GL(dl_rtld_map).l_tls_align = info->l.l_tls_align;
-  GL(dl_rtld_map).l_tls_firstbyte_offset = info->l.l_tls_firstbyte_offset;
-  GL(dl_rtld_map).l_tls_initimage_size = info->l.l_tls_initimage_size;
-  GL(dl_rtld_map).l_tls_initimage = info->l.l_tls_initimage;
-  GL(dl_rtld_map).l_tls_offset = info->l.l_tls_offset;
-  GL(dl_rtld_map).l_tls_modid = 1;
-# else
-#  if NO_TLS_OFFSET != 0
+# if NO_TLS_OFFSET != 0
   GL(dl_rtld_map).l_tls_offset = NO_TLS_OFFSET;
-#  endif
 # endif
-
 #endif
 
 #if HP_TIMING_AVAIL
@@ -402,9 +390,6 @@ _dl_start (void *arg)
        ++cnt)
     bootstrap_map.l_info[cnt] = 0;
 # endif
-# if USE___THREAD
-  bootstrap_map.l_tls_modid = 0;
-# endif
 #endif
 
   /* Figure out the run-time load address of the dynamic linker itself.  */
@@ -417,123 +402,6 @@ _dl_start (void *arg)
 #if NO_TLS_OFFSET != 0
   bootstrap_map.l_tls_offset = NO_TLS_OFFSET;
 #endif
-
-  /* Get the dynamic linker's own program header.  First we need the ELF
-     file header.  The `_begin' symbol created by the linker script points
-     to it.  When we have something like GOTOFF relocs, we can use a plain
-     reference to find the runtime address.  Without that, we have to rely
-     on the `l_addr' value, which is not the value we want when prelinked.  */
-#if USE___THREAD
-  dtv_t initdtv[3];
-  ElfW(Ehdr) *ehdr
-# ifdef DONT_USE_BOOTSTRAP_MAP
-    = (ElfW(Ehdr) *) &_begin;
-# else
-#  error This will not work with prelink.
-    = (ElfW(Ehdr) *) bootstrap_map.l_addr;
-# endif
-  ElfW(Phdr) *phdr = (ElfW(Phdr) *) ((void *) ehdr + ehdr->e_phoff);
-  size_t cnt = ehdr->e_phnum;	/* PT_TLS is usually the last phdr.  */
-  while (cnt-- > 0)
-    if (phdr[cnt].p_type == PT_TLS)
-      {
-	void *tlsblock;
-	size_t max_align = MAX (TLS_INIT_TCB_ALIGN, phdr[cnt].p_align);
-	char *p;
-
-	bootstrap_map.l_tls_blocksize = phdr[cnt].p_memsz;
-	bootstrap_map.l_tls_align = phdr[cnt].p_align;
-	if (phdr[cnt].p_align == 0)
-	  bootstrap_map.l_tls_firstbyte_offset = 0;
-	else
-	  bootstrap_map.l_tls_firstbyte_offset = (phdr[cnt].p_vaddr
-						  & (phdr[cnt].p_align - 1));
-	assert (bootstrap_map.l_tls_blocksize != 0);
-	bootstrap_map.l_tls_initimage_size = phdr[cnt].p_filesz;
-	bootstrap_map.l_tls_initimage = (void *) (bootstrap_map.l_addr
-						  + phdr[cnt].p_vaddr);
-
-	/* We can now allocate the initial TLS block.  This can happen
-	   on the stack.  We'll get the final memory later when we
-	   know all about the various objects loaded at startup
-	   time.  */
-# if TLS_TCB_AT_TP
-	tlsblock = alloca (roundup (bootstrap_map.l_tls_blocksize,
-				    TLS_INIT_TCB_ALIGN)
-			   + TLS_INIT_TCB_SIZE
-			   + max_align);
-# elif TLS_DTV_AT_TP
-	tlsblock = alloca (roundup (TLS_INIT_TCB_SIZE,
-				    bootstrap_map.l_tls_align)
-			   + bootstrap_map.l_tls_blocksize
-			   + max_align);
-# else
-	/* In case a model with a different layout for the TCB and DTV
-	   is defined add another #elif here and in the following #ifs.  */
-#  error "Either TLS_TCB_AT_TP or TLS_DTV_AT_TP must be defined"
-# endif
-	/* Align the TLS block.  */
-	tlsblock = (void *) (((uintptr_t) tlsblock + max_align - 1)
-			     & ~(max_align - 1));
-
-	/* Initialize the dtv.  [0] is the length, [1] the generation
-	   counter.  */
-	initdtv[0].counter = 1;
-	initdtv[1].counter = 0;
-
-	/* Initialize the TLS block.  */
-# if TLS_TCB_AT_TP
-	initdtv[2].pointer = tlsblock;
-# elif TLS_DTV_AT_TP
-	bootstrap_map.l_tls_offset = roundup (TLS_INIT_TCB_SIZE,
-					      bootstrap_map.l_tls_align);
-	initdtv[2].pointer = (char *) tlsblock + bootstrap_map.l_tls_offset;
-# else
-#  error "Either TLS_TCB_AT_TP or TLS_DTV_AT_TP must be defined"
-# endif
-	p = __mempcpy (initdtv[2].pointer, bootstrap_map.l_tls_initimage,
-		       bootstrap_map.l_tls_initimage_size);
-# ifdef HAVE_BUILTIN_MEMSET
-	__builtin_memset (p, '\0', (bootstrap_map.l_tls_blocksize
-				    - bootstrap_map.l_tls_initimage_size));
-# else
-	{
-	  size_t remaining = (bootstrap_map.l_tls_blocksize
-			      - bootstrap_map.l_tls_initimage_size);
-	  while (remaining-- > 0)
-	    *p++ = '\0';
-	}
-# endif
-
-	/* Install the pointer to the dtv.  */
-
-	/* Initialize the thread pointer.  */
-# if TLS_TCB_AT_TP
-	bootstrap_map.l_tls_offset
-	  = roundup (bootstrap_map.l_tls_blocksize, TLS_INIT_TCB_ALIGN);
-
-	INSTALL_DTV ((char *) tlsblock + bootstrap_map.l_tls_offset,
-		     initdtv);
-
-	const char *lossage = TLS_INIT_TP ((char *) tlsblock
-					   + bootstrap_map.l_tls_offset, 0);
-# elif TLS_DTV_AT_TP
-	INSTALL_DTV (tlsblock, initdtv);
-	const char *lossage = TLS_INIT_TP (tlsblock, 0);
-# else
-#  error "Either TLS_TCB_AT_TP or TLS_DTV_AT_TP must be defined"
-# endif
-	if (__builtin_expect (lossage != NULL, 0))
-	  _dl_fatal_printf ("cannot set up thread-local storage: %s\n",
-			    lossage);
-
-	/* So far this is module number one.  */
-	bootstrap_map.l_tls_modid = 1;
-
-	/* There can only be one PT_TLS entry.  */
-	break;
-      }
-#endif	/* USE___THREAD */
 
 #ifdef ELF_MACHINE_BEFORE_RTLD_RELOC
   ELF_MACHINE_BEFORE_RTLD_RELOC (bootstrap_map.l_info);
@@ -779,7 +647,7 @@ cannot allocate TLS data structures for initial thread");
 
   /* And finally install it for the main thread.  If ld.so itself uses
      TLS we know the thread pointer was initialized earlier.  */
-  const char *lossage = TLS_INIT_TP (tcbp, USE___THREAD);
+  const char *lossage = TLS_INIT_TP (tcbp, 0);
   if (__builtin_expect (lossage != NULL, 0))
     _dl_fatal_printf ("cannot set up thread-local storage: %s\n", lossage);
   tls_init_tp_called = true;
@@ -2310,7 +2178,7 @@ ERROR: ld.so: object '%s' cannot be loaded as audit interface: %s; ignored.\n",
      TLS we know the thread pointer was initialized earlier.  */
   if (! tls_init_tp_called)
     {
-      const char *lossage = TLS_INIT_TP (tcbp, USE___THREAD);
+      const char *lossage = TLS_INIT_TP (tcbp, 0);
       if (__builtin_expect (lossage != NULL, 0))
 	_dl_fatal_printf ("cannot set up thread-local storage: %s\n",
 			  lossage);
