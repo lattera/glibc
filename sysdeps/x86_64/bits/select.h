@@ -57,8 +57,8 @@
 #endif	/* GNU CC */
 
 #define __FD_SET(d, set) \
-  ((void) (__FDS_BITS (set)[__FDELT (d)] |= __FDMASK (d)))
+  ((void) (__FDS_BITS (set)[__FD_ELT (d)] |= __FD_MASK (d)))
 #define __FD_CLR(d, set) \
-  ((void) (__FDS_BITS (set)[__FDELT (d)] &= ~__FDMASK (d)))
+  ((void) (__FDS_BITS (set)[__FD_ELT (d)] &= ~__FD_MASK (d)))
 #define __FD_ISSET(d, set) \
-  ((__FDS_BITS (set)[__FDELT (d)] & __FDMASK (d)) != 0)
+  ((__FDS_BITS (set)[__FD_ELT (d)] & __FD_MASK (d)) != 0)

@@ -31,7 +31,8 @@
       __FDS_BITS (__arr)[__i] = 0;					      \
   } while (0)
 #define __FD_SET(d, s) \
-  ((void) (__FDS_BITS (s)[__FDELT(d)] |= __FDMASK(d)))
+  ((void) (__FDS_BITS (s)[__FD_ELT(d)] |= __FD_MASK(d)))
 #define __FD_CLR(d, s) \
-  ((void) (__FDS_BITS (s)[__FDELT(d)] &= ~__FDMASK(d)))
-#define __FD_ISSET(d, s)   ((__FDS_BITS (s)[__FDELT (d)] & __FDMASK (d)) != 0)
+  ((void) (__FDS_BITS (s)[__FD_ELT(d)] &= ~__FD_MASK(d)))
+#define __FD_ISSET(d, s) \
+  ((__FDS_BITS (s)[__FD_ELT (d)] & __FD_MASK (d)) != 0)
