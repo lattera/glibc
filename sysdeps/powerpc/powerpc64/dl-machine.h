@@ -560,9 +560,7 @@ elf_machine_rela (struct link_map *map,
 {
   Elf64_Addr *const reloc_addr = reloc_addr_arg;
   const int r_type = ELF64_R_TYPE (reloc->r_info);
-#ifndef RTLD_BOOTSTRAP
   const Elf64_Sym *const refsym = sym;
-#endif
 
   if (r_type == R_PPC64_RELATIVE)
     {
