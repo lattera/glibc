@@ -312,7 +312,7 @@ __NTH (__cmsg_nxthdr (struct msghdr *__mhdr, struct cmsghdr *__cmsg))
 {
   if ((size_t) __cmsg->cmsg_len < sizeof (struct cmsghdr))
     /* The kernel header does this so there may be a reason.  */
-    return 0;
+    return (struct cmsghdr *) 0;
 
   __cmsg = (struct cmsghdr *) ((unsigned char *) __cmsg
 			       + CMSG_ALIGN (__cmsg->cmsg_len));
@@ -321,7 +321,7 @@ __NTH (__cmsg_nxthdr (struct msghdr *__mhdr, struct cmsghdr *__cmsg))
       || ((unsigned char *) __cmsg + CMSG_ALIGN (__cmsg->cmsg_len)
 	  > ((unsigned char *) __mhdr->msg_control + __mhdr->msg_controllen)))
     /* No more entries.  */
-    return 0;
+    return (struct cmsghdr *) 0;
   return __cmsg;
 }
 #endif	/* Use `extern inline'.  */
