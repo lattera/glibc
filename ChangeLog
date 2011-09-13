@@ -1,3 +1,8 @@
+2011-09-13  Andreas Schwab  <schwab@redhat.com>
+
+	* elf/rtld.c (dl_main): Only use USE___THREAD when defined.
+	(init_tls): Likewise.
+
 2011-09-12  Ulrich Drepper  <drepper@gmail.com>
 
 	* sysdeps/ieee754/dbl-64/wordsize-64/s_logb.c: New file.
