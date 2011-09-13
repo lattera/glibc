@@ -43,11 +43,6 @@ typedef union dtv
 #endif /* __ASSEMBLER__ */
 
 
-/* We require TLS support in the tools.  */
-#ifndef HAVE_TLS_SUPPORT
-# error "TLS support is required."
-#endif
-
 #ifndef __ASSEMBLER__
 
 /* Get system call information.  */

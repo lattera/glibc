@@ -35,8 +35,6 @@
 
 #include <sysdep.h>
 
-#ifdef HAVE_TLS_SUPPORT
-
 /* GCC will emit calls to this routine under -mtp=soft.  Linux has an
    equivalent helper function (which clobbers fewer registers than
    a normal function call) in a high page of memory; tail call to the
@@ -47,5 +45,3 @@ ENTRY (__aeabi_read_tp)
 	mov	r0, #0xffff0fff
 	sub	pc, r0, #31
 END (__aeabi_read_tp)
-
-#endif
