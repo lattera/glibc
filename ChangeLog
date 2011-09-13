@@ -1,5 +1,7 @@
 2011-09-13  Andreas Schwab  <schwab@redhat.com>
 
+	* elf/Makefile (gen-ldd): Fix pattern.
+
 	* elf/rtld.c (dl_main): Only use USE___THREAD when defined.
 	(init_tls): Likewise.
 

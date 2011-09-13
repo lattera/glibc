@@ -483,7 +483,7 @@ endef
 else
 define gen-ldd
 LC_ALL=C sed $($(ldd-shell)-ldd-rewrite) < $< \
-| LC_ALL=C sed -f $(patsubst $(..)/,/,$(..)$(ldd-rewrite-script)) > $@.new
+| LC_ALL=C sed -f $(patsubst $(..)/%,/%,$(..)$(ldd-rewrite-script)) > $@.new
 endef
 endif
 
