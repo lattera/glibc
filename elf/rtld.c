@@ -2027,24 +2027,21 @@ ERROR: ld.so: object '%s' cannot be loaded as audit interface: %s; ignored.\n",
 	    {
 	      /* We have to do symbol dependency testing.  */
 	      struct relocate_args args;
-	      struct link_map *l;
+	      unsigned int i;
 
 	      args.reloc_mode = GLRO(dl_lazy) ? RTLD_LAZY : 0;
 
-	      l = main_map;
-	      while (l->l_next != NULL)
-		l = l->l_next;
-	      do
+	      i = main_map->l_searchlist.r_nlist;
+	      while (i-- > 0)
 		{
+		  struct link_map *l = main_map->l_initfini[i];
 		  if (l != &GL(dl_rtld_map) && ! l->l_faked)
 		    {
 		      args.l = l;
 		      _dl_receive_error (print_unresolved, relocate_doit,
 					 &args);
 		    }
-		  l = l->l_prev;
 		}
-	      while (l != NULL);
 
 	      if ((GLRO(dl_debug_mask) & DL_DEBUG_PRELINK)
 		  && rtld_multiple_ref)
