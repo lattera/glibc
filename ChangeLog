@@ -1,5 +1,7 @@
 2011-09-14  Ulrich Drepper  <drepper@gmail.com>
 
+	* sysdeps/x86_64/fpu/s_copysign.S [ELF]: Use correct section.
+
 	* sysdeps/x86_64/fpu/bits/mathinline.h (__MATH_INLINE): Use
 	__extern_always_inline.
 	Define lrint{f,} and llrint{f,} for 64-bit and in some situations for
