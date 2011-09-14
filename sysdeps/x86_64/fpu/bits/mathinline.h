@@ -1,7 +1,6 @@
 /* Inline math functions for x86-64.
-   Copyright (C) 2002, 2003, 2004, 2007, 2009 Free Software Foundation, Inc.
+   Copyright (C) 2002-2004, 2007, 2009, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Andreas Jaeger <aj@suse.de>, 2002.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -24,10 +23,10 @@
 
 #include <bits/wordsize.h>
 
-#ifndef __extern_inline
+#ifndef __extern_always_inline
 # define __MATH_INLINE __inline
 #else
-# define __MATH_INLINE __extern_inline
+# define __MATH_INLINE __extern_always_inline
 #endif
 
 
@@ -37,26 +36,26 @@
 __MATH_INLINE int
 __NTH (__signbitf (float __x))
 {
-#if __WORDSIZE == 32
+# if __WORDSIZE == 32
   __extension__ union { float __f; int __i; } __u = { __f: __x };
   return __u.__i < 0;
-#else
+# else
   int __m;
   __asm ("pmovmskb %1, %0" : "=r" (__m) : "x" (__x));
   return __m & 0x8;
-#endif
+# endif
 }
 __MATH_INLINE int
 __NTH (__signbit (double __x))
 {
-#if __WORDSIZE == 32
+# if __WORDSIZE == 32
   __extension__ union { double __d; int __i[2]; } __u = { __d: __x };
   return __u.__i[1] < 0;
-#else
+# else
   int __m;
   __asm ("pmovmskb %1, %0" : "=r" (__m) : "x" (__x));
   return __m & 0x80;
-#endif
+# endif
 }
 __MATH_INLINE int
 __NTH (__signbitl (long double __x))
@@ -64,4 +63,41 @@ __NTH (__signbitl (long double __x))
   __extension__ union { long double __l; int __i[3]; } __u = { __l: __x };
   return (__u.__i[2] & 0x8000) != 0;
 }
+
+/* Round to nearest integer.  */
+# if __WORDSIZE == 64 || defined __SSE_MATH__
+__MATH_INLINE long int
+__NTH (lrintf (float __x))
+{
+  long int __res;
+  asm ("cvtss2si %1, %0" : "=r" (__res) : "xm" (__x));
+  return __res;
+}
+# endif
+# if __WORDSIZE == 64 || defined __SSE2_MATH__
+__MATH_INLINE long int
+__NTH (lrint (double __x))
+{
+  long int __res;
+  asm ("cvtsd2si %1, %0" : "=r" (__res) : "xm" (__x));
+  return __res;
+}
+# endif
+# if __WORDSIZE == 64
+__MATH_INLINE long long int
+__NTH (llrintf (float __x))
+{
+  long long int __res;
+  asm ("cvtss2si %1, %0" : "=r" (__res) : "xm" (__x));
+  return __res;
+}
+__MATH_INLINE long long int
+__NTH (llrint (double __x))
+{
+  long long int __res;
+  asm ("cvtsd2si %1, %0" : "=r" (__res) : "xm" (__x));
+  return __res;
+}
+# endif
+
 #endif
