@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2009 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2009, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -18,27 +18,39 @@
    02111-1307 USA.  */
 
 #ifndef _LIST_H
-#define _LIST_H	1
+
+#ifndef __need_list_t
+# define _LIST_H	1
+#endif
 
 /* The definitions of this file are adopted from those which can be
    found in the Linux kernel headers to enable people familiar with
    the latter find their way in these sources as well.  */
 
 
+#if defined __need_list_t || defined _LIST_H
+# ifndef __list_t_defined
+#  define __list_t_defined
 /* Basic type for the double-link list.  */
 typedef struct list_head
 {
   struct list_head *next;
   struct list_head *prev;
 } list_t;
+# endif
+# undef __need_list_t
+#endif
 
+#ifdef _LIST_H
+
+# include <atomic.h>
 
 /* Define a variable with the head and tail of the list.  */
-#define LIST_HEAD(name) \
+# define LIST_HEAD(name) \
   list_t name = { &(name), &(name) }
 
 /* Initialize a new list head.  */
-#define INIT_LIST_HEAD(ptr) \
+# define INIT_LIST_HEAD(ptr) \
   (ptr)->next = (ptr)->prev = (ptr)
 
 
@@ -49,6 +61,7 @@ list_add (list_t *newp, list_t *head)
   newp->next = head->next;
   newp->prev = head;
   head->next->prev = newp;
+  atomic_write_barrier ();
   head->next = newp;
 }
 
@@ -78,26 +91,28 @@ list_splice (list_t *add, list_t *head)
 
 
 /* Get typed element from list at a given position.  */
-#define list_entry(ptr, type, member) \
+# define list_entry(ptr, type, member) \
   ((type *) ((char *) (ptr) - (unsigned long) (&((type *) 0)->member)))
 
 
 
 /* Iterate forward over the elements of the list.  */
-#define list_for_each(pos, head) \
+# define list_for_each(pos, head) \
   for (pos = (head)->next; pos != (head); pos = pos->next)
 
 
 /* Iterate forward over the elements of the list.  */
-#define list_for_each_prev(pos, head) \
+# define list_for_each_prev(pos, head) \
   for (pos = (head)->prev; pos != (head); pos = pos->prev)
 
 
 /* Iterate backwards over the elements list.  The list elements can be
    removed from the list while doing this.  */
-#define list_for_each_prev_safe(pos, p, head) \
+# define list_for_each_prev_safe(pos, p, head) \
   for (pos = (head)->prev, p = pos->prev; \
        pos != (head); \
        pos = p, p = pos->prev)
+
+#endif /* _LIST_H */
 
 #endif	/* list.h */

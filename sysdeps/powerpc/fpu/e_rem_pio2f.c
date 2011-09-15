@@ -112,7 +112,7 @@ __ieee754_rem_pio2f (float x, float *y)
     }
   if (ax <= pio2_2e7)
     {
-      n = floorf (ax * invpio2 + half);
+      n = __floorf (ax * invpio2 + half);
       i = (int32_t) n;
       r = ax - n * pio2_1;
       w = n * pio2_1t;		/* 1st round good to 40 bit */
@@ -168,11 +168,11 @@ __ieee754_rem_pio2f (float x, float *y)
   e0 = __float_and8 (ax / 128.0);
   z = ax / e0;
 
-  tx[0] = floorf (z);
+  tx[0] = __floorf (z);
   z = (z - tx[0]) * two8;
-  tx[1] = floorf (z);
+  tx[1] = __floorf (z);
   z = (z - tx[1]) * two8;
-  tx[2] = floorf (z);
+  tx[2] = __floorf (z);
 
   nx = 3;
   while (tx[nx - 1] == zero)

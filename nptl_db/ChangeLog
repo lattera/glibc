@@ -1,3 +1,7 @@
+2011-09-15  Andreas Schwab  <schwab@redhat.com>
+
+	* thread_dbP.h: Include <list.h>
+
 2009-08-23  Roland McGrath  <roland@redhat.com>
 
 	* td_ta_map_lwp2thr.c (__td_ta_lookup_th_unique): Move ta_ok check
