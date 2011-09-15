@@ -28,6 +28,7 @@
 #include <dl-sysdep.h>
 #include <dl-tls.h>
 #include <tls.h>
+#include <list.h>
 #include <lowlevellock.h>
 #include <kernel-features.h>
 

@@ -1,3 +1,12 @@
+2011-09-15  Andreas Schwab  <schwab@redhat.com>
+
+	* sysdeps/pthread/list.h: Define only list_t if __need_list_t is
+	defined.
+	(list_add): Add atomic_write_barrier.
+	* descr.h: Define __need_list_t before including <list.h>.
+	* nptl-init.c: Include <list.h>
+	* allocatestack.c: Likewise.
+
 2011-09-11  Ulrich Drepper  <drepper@gmail.com>
 
 	* sysdeps/i386/tls.h: Remove HAVE_TLS_SUPPORT test.

@@ -26,6 +26,7 @@
 #include <stdbool.h>
 #include <sys/types.h>
 #include <hp-timing.h>
+#define __need_list_t
 #include <list.h>
 #include <lowlevellock.h>
 #include <pthreaddef.h>
