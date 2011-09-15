@@ -97,7 +97,7 @@ __ieee754_hypotf (float x, float y)
     {
       x *= twoM60;
       y *= twoM60;
-      return sqrtf (x * x + y * y) / twoM60;
+      return __ieee754_sqrtf (x * x + y * y) / twoM60;
     }
   if (y < twoM50)
     {
@@ -105,14 +105,14 @@ __ieee754_hypotf (float x, float y)
 	{
 	  x *= two126;
 	  y *= two126;
-	  return sqrtf (x * x + y * y) / two126;
+	  return __ieee754_sqrtf (x * x + y * y) / two126;
 	}
       else
 	{
 	  x *= two60;
 	  y *= two60;
-	  return sqrtf (x * x + y * y) / two60;
+	  return __ieee754_sqrtf (x * x + y * y) / two60;
 	}
     }
-  return sqrtf (x * x + y * y);
+  return __ieee754_sqrtf (x * x + y * y);
 }

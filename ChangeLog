@@ -1,3 +1,14 @@
+2011-09-15  Andreas Schwab  <schwab@redhat.com>
+
+	* sysdeps/powerpc/fpu/e_hypot.c (__ieee754_hypot): Use
+	__ieee754_sqrt instead of sqrt.
+	* sysdeps/powerpc/fpu/e_hypotf.c (__ieee754_hypotf): Use
+	__ieee754_sqrtf instead of sqrtf.
+	* sysdeps/powerpc/fpu/e_rem_pio2f.c (__ieee754_rem_pio2f): Use
+	__floorf instead of floorf.
+	* sysdeps/powerpc/fpu/k_rem_pio2f.c (__fp_kernel_rem_pio2f): Use
+	__floorf, __truncf instead of floorf, truncf.
+
 2011-09-14  Ulrich Drepper  <drepper@gmail.com>
 
 	* sysdeps/x86_64/fpu/s_copysign.S [ELF]: Use correct section.

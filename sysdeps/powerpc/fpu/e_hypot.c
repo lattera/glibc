@@ -96,7 +96,7 @@ __ieee754_hypot (double x, double y)
     {
       x *= twoM600;
       y *= twoM600;
-      return sqrt (x * x + y * y) / twoM600;
+      return __ieee754_sqrt (x * x + y * y) / twoM600;
     }
   if (y < twoM500)
     {
@@ -104,14 +104,14 @@ __ieee754_hypot (double x, double y)
 	{
 	  x *= two1022;
 	  y *= two1022;
-	  return sqrt (x * x + y * y) / two1022;
+	  return __ieee754_sqrt (x * x + y * y) / two1022;
 	}
       else
 	{
 	  x *= two600;
 	  y *= two600;
-	  return sqrt (x * x + y * y) / two600;
+	  return __ieee754_sqrt (x * x + y * y) / two600;
 	}
     }
-  return sqrt (x * x + y * y);
+  return __ieee754_sqrt (x * x + y * y);
 }

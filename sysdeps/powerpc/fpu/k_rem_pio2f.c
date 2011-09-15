@@ -135,16 +135,16 @@ recompute:
   /* distill q[] into iq[] reversingly */
   for (i = 0, j = jz, z = q[jz]; j > 0; i++, j--)
     {
-      fw = truncf (twon8 * z);
+      fw = __truncf (twon8 * z);
       iq[i] = (int32_t) (z - two8 * fw);
       z = q[j - 1] + fw;
     }
 
   /* compute n */
   z = __scalbnf (z, q0);	/* actual value of z */
-  z -= 8.0 * floorf (z * 0.125);	/* trim off integer >= 8 */
+  z -= 8.0 * __floorf (z * 0.125);	/* trim off integer >= 8 */
   n = (int32_t) z;
-  z -= truncf (z);
+  z -= __truncf (z);
   ih = 0;
   if (q0 > 0)
     {				/* need iq[jz-1] to determine n */
@@ -234,7 +234,7 @@ recompute:
       z = __scalbnf (z, -q0);
       if (z >= two8)
 	{
-	  fw = truncf (twon8 * z);
+	  fw = __truncf (twon8 * z);
 	  iq[jz] = (int32_t) (z - two8 * fw);
 	  jz += 1;
 	  q0 += 8;
