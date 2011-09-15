@@ -30,19 +30,13 @@ longjmp_msg:
 
 #define __longjmp ____longjmp_chk
 
-#ifdef PIC
-#  define CALL_FAIL	__GI___fortify_fail
-#else
-#  define CALL_FAIL	__fortify_fail
-#endif
-
 #define CHECK_RSP(reg) \
 	cmp.ltu p0, p8 = reg, r12;				\
 (p8)	br.cond.dpnt .Lok;;					\
 	addl r28 = @ltoffx(longjmp_msg#), r1;;			\
 	ld8.mov r28 = [r28], longjmp_msg#;;			\
 	ld8 out0 = [r28];					\
-	br.call.sptk.many b0 = CALL_FAIL#;;			\
+	br.call.sptk.many b0 = HIDDEN_JUMPTARGET(__fortify_fail)#;; \
 .Lok:
 
 #include "__longjmp.S"

@@ -1,3 +1,13 @@
+2011-09-15  Roland McGrath  <roland@hack.frob.com>
+
+	* sysdeps/unix/sysv/linux/i386/____longjmp_chk.S
+	(CALL_FAIL): Use HIDDEN_JUMPTARGET for __fortify_fail.
+	* sysdeps/unix/sysv/linux/x86_64/____longjmp_chk.S
+	(CALL_FAIL): Likewise.
+	* sysdeps/unix/sysv/linux/ia64/____longjmp_chk.S (CHECK_RSP): Likewise.
+	(CALL_FAIL): Macro removed.
+	Patch mostly by Mike Frysinger <vapier@gentoo.org>.
+
 2011-09-15  Ulrich Drepper  <drepper@gmail.com>
 
 	* sysdeps/x86_64/fpu/bits/mathinline.h: Add fmax and fmin optimizations

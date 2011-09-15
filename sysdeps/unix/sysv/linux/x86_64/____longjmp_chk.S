@@ -34,7 +34,7 @@ longjmp_msg:
 			cfi_remember_state;				      \
 			cfi_def_cfa_offset(16);				      \
 			leaq	longjmp_msg(%rip), %rdi;		      \
-			call	__GI___fortify_fail;			      \
+			call	HIDDEN_JUMPTARGET(__fortify_fail);	      \
 			nop;						      \
 			cfi_restore_state
 #else
@@ -42,7 +42,7 @@ longjmp_msg:
 			cfi_remember_state;				      \
 			cfi_def_cfa_offset(16);				      \
 			movq	$longjmp_msg, %rdi;			      \
-			call	__fortify_fail;				      \
+			call	HIDDEN_JUMPTARGET(__fortify_fail);	      \
 			nop;						      \
 			cfi_restore_state
 #endif
