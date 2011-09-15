@@ -64,8 +64,11 @@ __NTH (__signbitl (long double __x))
   return (__u.__i[2] & 0x8000) != 0;
 }
 
+#ifdef __USE_ISOC99
+__BEGIN_NAMESPACE_C99
+
 /* Round to nearest integer.  */
-# if __WORDSIZE == 64 || defined __SSE_MATH__
+#  if __WORDSIZE == 64 || defined __SSE_MATH__
 __MATH_INLINE long int
 __NTH (lrintf (float __x))
 {
@@ -73,8 +76,8 @@ __NTH (lrintf (float __x))
   asm ("cvtss2si %1, %0" : "=r" (__res) : "xm" (__x));
   return __res;
 }
-# endif
-# if __WORDSIZE == 64 || defined __SSE2_MATH__
+#  endif
+#  if __WORDSIZE == 64 || defined __SSE2_MATH__
 __MATH_INLINE long int
 __NTH (lrint (double __x))
 {
@@ -82,8 +85,8 @@ __NTH (lrint (double __x))
   asm ("cvtsd2si %1, %0" : "=r" (__res) : "xm" (__x));
   return __res;
 }
-# endif
-# if __WORDSIZE == 64
+#  endif
+#  if __WORDSIZE == 64
 __MATH_INLINE long long int
 __NTH (llrintf (float __x))
 {
@@ -98,6 +101,39 @@ __NTH (llrint (double __x))
   asm ("cvtsd2si %1, %0" : "=r" (__res) : "xm" (__x));
   return __res;
 }
+#  endif
+
+#  if __FINITE_MATH_ONLY__ == 1 && (__WORDSIZE == 64 || defined __SSE2_MATH__)
+/* Determine maximum of two values.  */
+__MATH_INLINE float
+__NTH (fmaxf (float __x, float __y))
+{
+  asm ("maxss %1, %0" : "+x" (__x) : "xm" (__y));
+  return __x;
+}
+__MATH_INLINE double
+__NTH (fmax (double __x, double __y))
+{
+  asm ("maxsd %1, %0" : "+x" (__x) : "xm" (__y));
+  return __x;
+}
+
+/* Determine minimum of two values.  */
+__MATH_INLINE float
+__NTH (fminf (float __x, float __y))
+{
+  asm ("minss %1, %0" : "+x" (__x) : "xm" (__y));
+  return __x;
+}
+__MATH_INLINE double
+__NTH (fmin (double __x, double __y))
+{
+  asm ("minsd %1, %0" : "+x" (__x) : "xm" (__y));
+  return __x;
+}
+#  endif
+
+__END_NAMESPACE_C99
 # endif
 
 #endif
