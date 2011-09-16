@@ -1,5 +1,7 @@
 2011-09-15  Ulrich Drepper  <drepper@gmail.com>
 
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_finite.c: New file.
+
 	* sysdeps/unix/sysv/linux/bits/in.h (IP_MULTICAST_ALL): Define.
 	Patch mostly by Neil Horman <nhorman@tuxdriver.com>.
 
