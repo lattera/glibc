@@ -1,5 +1,8 @@
 2011-10-08  Roland McGrath  <roland@hack.frob.com>
 
+	* locale/programs/locarchive.c (prepare_address_space): New function.
+	(create_archive, enlarge_archive, open_archive): Use it.
+
 	* sysdeps/unix/sysv/linux/x86_64/time.c: Move #include <dl-vdso.h>
 	inside [SHARED], where it is used.
 

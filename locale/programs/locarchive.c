@@ -74,6 +74,29 @@ static const char *locnames[] =
 /* Size of the reserved address space area.  */
 #define RESERVE_MMAP_SIZE	512 * 1024 * 1024
 
+/* To prepare for enlargements of the mmaped area reserve some address
+   space.  On some machines, being a file mapping rather than an anonymous
+   mapping affects the address selection.  So do this mapping from the
+   actual file, even though it's only a dummy to reserve address space.  */
+static void *
+prepare_address_space (int fd, size_t total, size_t *reserved, int *xflags)
+{
+  if (total < RESERVE_MMAP_SIZE)
+    {
+      void *p = mmap64 (NULL, RESERVE_MMAP_SIZE, PROT_NONE, MAP_SHARED, fd, 0);
+      if (p != MAP_FAILED)
+        {
+          *reserved = RESERVE_MMAP_SIZE;
+          *xflags = MAP_FIXED;
+          return p;
+        }
+    }
+
+  *reserved = total;
+  *xflags = 0;
+  return NULL;
+}
+
 
 static void
 create_archive (const char *archivefname, struct locarhandle *ah)
@@ -81,7 +104,6 @@ create_archive (const char *archivefname, struct locarhandle *ah)
   int fd;
   char fname[strlen (archivefname) + sizeof (".XXXXXX")];
   struct locarhead head;
-  void *p;
   size_t total;
 
   strcpy (stpcpy (fname, archivefname), ".XXXXXX");
@@ -129,19 +151,9 @@ create_archive (const char *archivefname, struct locarhandle *ah)
       error (EXIT_FAILURE, errval, _("cannot resize archive file"));
     }
 
-  /* To prepare for enlargements of the mmaped area reserve some
-     address space.  */
-  size_t reserved = RESERVE_MMAP_SIZE;
-  int xflags = 0;
-  if (total < reserved
-      && ((p = mmap64 (NULL, reserved, PROT_NONE, MAP_PRIVATE | MAP_ANON,
-		       -1, 0)) != MAP_FAILED))
-    xflags = MAP_FIXED;
-  else
-    {
-      p = NULL;
-      reserved = total;
-    }
+  size_t reserved;
+  int xflags;
+  void *p = prepare_address_space (fd, total, &reserved, &xflags);
 
   /* Map the header and all the administration data structures.  */
   p = mmap64 (p, total, PROT_READ | PROT_WRITE, MAP_SHARED | xflags, fd, 0);
@@ -297,7 +309,6 @@ enlarge_archive (struct locarhandle *ah, const struct locarhead *head)
   int fd;
   struct locarhead newhead;
   size_t total;
-  void *p;
   unsigned int cnt, loccnt;
   struct namehashent *oldnamehashtab;
   struct locarhandle new_ah;
@@ -390,19 +401,9 @@ enlarge_archive (struct locarhandle *ah, const struct locarhead *head)
       error (EXIT_FAILURE, errval, _("cannot resize archive file"));
     }
 
-  /* To prepare for enlargements of the mmaped area reserve some
-     address space.  */
-  size_t reserved = RESERVE_MMAP_SIZE;
-  int xflags = 0;
-  if (total < reserved
-      && ((p = mmap64 (NULL, reserved, PROT_NONE, MAP_PRIVATE | MAP_ANON,
-		       -1, 0)) != MAP_FAILED))
-    xflags = MAP_FIXED;
-  else
-    {
-      p = NULL;
-      reserved = total;
-    }
+  size_t reserved;
+  int xflags;
+  void *p = prepare_address_space (fd, total, &reserved, &xflags);
 
   /* Map the header and all the administration data structures.  */
   p = mmap64 (p, total, PROT_READ | PROT_WRITE, MAP_SHARED | xflags, fd, 0);
@@ -605,20 +606,9 @@ open_archive (struct locarhandle *ah, bool readonly)
   ah->fd = fd;
   ah->mmaped = st.st_size;
 
-  /* To prepare for enlargements of the mmaped area reserve some
-     address space.  */
-  size_t reserved = RESERVE_MMAP_SIZE;
-  int xflags = 0;
-  void *p;
-  if (st.st_size < reserved
-      && ((p = mmap64 (NULL, reserved, PROT_NONE, MAP_PRIVATE | MAP_ANON,
-		       -1, 0)) != MAP_FAILED))
-    xflags = MAP_FIXED;
-  else
-    {
-      p = NULL;
-      reserved = st.st_size;
-    }
+  size_t reserved;
+  int xflags;
+  void *p = prepare_address_space (fd, st.st_size, &reserved, &xflags);
 
   /* Map the entire file.  We might need to compare the category data
      in the file with the newly added data.  */
