@@ -1260,11 +1260,7 @@ check-abi-warn = || echo '*** WARNING: $*.so failed ABI check'
 endif
 
 ifeq ($(firstword $(sysd-sorted-done) f)$(firstword $(generating) f),tf)
--include $(common-objpfx)tls.make
-config-tls := tls
-ifeq ($(use-thread),yes)
 config-tls := thread
-endif
 check-abi-config := \
   $(config-machine)-$(config-vendor)-$(config-os)/$(config-tls)
 endif

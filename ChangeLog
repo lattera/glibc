@@ -1,3 +1,9 @@
+2011-09-19  Roland McGrath  <roland@hack.frob.com>
+
+	* Makerules: Don't include tls.make.
+	(config-tls): Always set to thread.
+	* tls.make.c: File removed.
+
 2011-09-19  Mike Frysinger  <vapier@gentoo.org>
 
 	* Makeconfig (CPPFLAGS): Prepend $(CPPFLAGS-config).
