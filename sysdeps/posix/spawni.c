@@ -39,7 +39,6 @@
 #define SPAWN_ERROR	127
 
 
-#if SHLIB_COMPAT (libc, GLIBC_2_2, GLIBC_2_15)
 /* The file is accessible but it is not an executable file.  Invoke
    the shell to interpret it as a script.  */
 static void
@@ -66,11 +65,16 @@ script_execute (const char *file, char *const argv[], char *const envp[])
     __execve (new_argv[0], new_argv, envp);
   }
 }
-# define tryshell (xflags & SPAWN_XFLAGS_TRY_SHELL)
-#else
-# define tryshell 0
-#endif
 
+static inline void
+maybe_script_execute (const char *file, char *const argv[], char *const envp[],
+                      int xflags)
+{
+  if (SHLIB_COMPAT (libc, GLIBC_2_2, GLIBC_2_15)
+      && (xflags & SPAWN_XFLAGS_TRY_SHELL)
+      && errno == ENOEXEC)
+    script_execute (file, argv, envp);
+}
 
 /* Spawn a new process executing PATH with the attributes describes in *ATTRP.
    Before running the process perform the actions described in FILE-ACTIONS. */
@@ -237,8 +241,7 @@ __spawni (pid_t *pid, const char *file,
       /* The FILE parameter is actually a path.  */
       __execve (file, argv, envp);
 
-      if (tryshell && errno == ENOEXEC)
-	script_execute (file, argv, envp);
+      maybe_script_execute (file, argv, envp, xflags);
 
       /* Oh, oh.  `execve' returns.  This is bad.  */
       _exit (SPAWN_ERROR);
@@ -283,8 +286,7 @@ __spawni (pid_t *pid, const char *file,
       /* Try to execute this name.  If it works, execv will not return.  */
       __execve (startp, argv, envp);
 
-      if (tryshell && errno == ENOEXEC)
-	script_execute (startp, argv, envp);
+      maybe_script_execute (startp, argv, envp, xflags);
 
       switch (errno)
 	{
