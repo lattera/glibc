@@ -1,4 +1,5 @@
-# Copyright (C) 1994-2001,2003,2004,2007,2008 Free Software Foundation, Inc.
+# Copyright (C) 1994-2001,2003,2004,2007,2008,2011
+#	Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -88,6 +89,11 @@ CFLAGS-res_hconf.c = -fexceptions
 # This ensures they will load libc.so for needed symbols if loaded by
 # a statically-linked program that hasn't already loaded it.
 $(objpfx)libresolv.so: $(common-objpfx)libc.so $(common-objpfx)libc_nonshared.a
+# Some hosts need '__stack_chk_guard', so pull in the definition from
+# ld.so if required.
+ifeq (yesyes,$(have-ssp)$(elf))
+LDLIBS-resolv.so += $(as-needed) $(elfobjdir)/ld.so $(no-as-needed)
+endif
 
 # The DNS NSS modules needs the resolver.
 $(objpfx)libnss_dns.so: $(objpfx)libresolv.so $(common-objpfx)libc.so \
