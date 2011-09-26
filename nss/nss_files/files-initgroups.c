@@ -52,8 +52,10 @@ _nss_files_initgroups_dyn (const char *user, gid_t group, long int *start,
   gid_t *groups = *groupsp;
 
   /* We have to iterate over the entire file.  */
-  while (!feof_unlocked (stream))
+  while (1)
     {
+      fpos_t pos;
+      fgetpos (stream, &pos);
       ssize_t n = getline (&line, &linelen, stream);
       if (n < 0)
 	{
@@ -64,9 +66,8 @@ _nss_files_initgroups_dyn (const char *user, gid_t group, long int *start,
 	}
 
       struct group grp;
-      int res;
-      while ((res = _nss_files_parse_grent (line, &grp, buffer, buflen,
-					    errnop)) == -1)
+      int res = _nss_files_parse_grent (line, &grp, buffer, buflen, errnop);
+      if (res == -1)
 	{
 	  size_t newbuflen = 2 * buflen;
 	  if (buffer_use_malloc || ! __libc_use_alloca (buflen + newbuflen))
@@ -85,6 +86,9 @@ _nss_files_initgroups_dyn (const char *user, gid_t group, long int *start,
 	    }
 	  else
 	    buffer = extend_alloca (buffer, buflen, newbuflen);
+	  /* Reread current line, the parser has clobbered it.  */
+	  fsetpos (stream, &pos);
+	  continue;
 	}
 
       if (res > 0 && grp.gr_gid != group)
