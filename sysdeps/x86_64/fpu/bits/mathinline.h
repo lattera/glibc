@@ -73,7 +73,7 @@ __MATH_INLINE long int
 __NTH (lrintf (float __x))
 {
   long int __res;
-  asm ("cvtss2si %1, %0" : "=r" (__res) : "xm" (__x));
+  __asm ("cvtss2si %1, %0" : "=r" (__res) : "xm" (__x));
   return __res;
 }
 #  endif
@@ -82,7 +82,7 @@ __MATH_INLINE long int
 __NTH (lrint (double __x))
 {
   long int __res;
-  asm ("cvtsd2si %1, %0" : "=r" (__res) : "xm" (__x));
+  __asm ("cvtsd2si %1, %0" : "=r" (__res) : "xm" (__x));
   return __res;
 }
 #  endif
@@ -91,14 +91,14 @@ __MATH_INLINE long long int
 __NTH (llrintf (float __x))
 {
   long long int __res;
-  asm ("cvtss2si %1, %0" : "=r" (__res) : "xm" (__x));
+  __asm ("cvtss2si %1, %0" : "=r" (__res) : "xm" (__x));
   return __res;
 }
 __MATH_INLINE long long int
 __NTH (llrint (double __x))
 {
   long long int __res;
-  asm ("cvtsd2si %1, %0" : "=r" (__res) : "xm" (__x));
+  __asm ("cvtsd2si %1, %0" : "=r" (__res) : "xm" (__x));
   return __res;
 }
 #  endif
@@ -108,13 +108,13 @@ __NTH (llrint (double __x))
 __MATH_INLINE float
 __NTH (fmaxf (float __x, float __y))
 {
-  asm ("maxss %1, %0" : "+x" (__x) : "xm" (__y));
+  __asm ("maxss %1, %0" : "+x" (__x) : "xm" (__y));
   return __x;
 }
 __MATH_INLINE double
 __NTH (fmax (double __x, double __y))
 {
-  asm ("maxsd %1, %0" : "+x" (__x) : "xm" (__y));
+  __asm ("maxsd %1, %0" : "+x" (__x) : "xm" (__y));
   return __x;
 }
 
@@ -122,13 +122,13 @@ __NTH (fmax (double __x, double __y))
 __MATH_INLINE float
 __NTH (fminf (float __x, float __y))
 {
-  asm ("minss %1, %0" : "+x" (__x) : "xm" (__y));
+  __asm ("minss %1, %0" : "+x" (__x) : "xm" (__y));
   return __x;
 }
 __MATH_INLINE double
 __NTH (fmin (double __x, double __y))
 {
-  asm ("minsd %1, %0" : "+x" (__x) : "xm" (__y));
+  __asm ("minsd %1, %0" : "+x" (__x) : "xm" (__y));
   return __x;
 }
 #  endif
