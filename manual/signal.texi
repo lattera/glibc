@@ -1544,8 +1544,8 @@ for the parts of the program that update important data structures.
 Blocking the signal delays its delivery until it is unblocked, once the
 critical updating is finished.  @xref{Blocking Signals}.
 
-The other way to re-initialize the crucial data structures in the signal
-handler, or make their values consistent.
+The other way is to re-initialize the crucial data structures in the
+signal handler, or to make their values consistent.
 
 Here is a rather schematic example showing the reinitialization of one
 global variable.
