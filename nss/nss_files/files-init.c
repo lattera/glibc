@@ -20,53 +20,36 @@
 #include <nscd/nscd.h>
 
 
-static union
-{
-  struct traced_file file;
-  char buf[sizeof (struct traced_file) + sizeof ("/etc/passwd")];
-} pwd_traced_file;
+#define TF(id, filename, ...)					\
+static union							\
+{								\
+  struct traced_file file;					\
+  char buf[sizeof (struct traced_file) + sizeof (filename)];	\
+} id##_traced_file =						\
+  {								\
+    .file =							\
+    {								\
+      .fname = filename, ## __VA_ARGS__				\
+    }								\
+  }
 
-static union
-{
-  struct traced_file file;
-  char buf[sizeof (struct traced_file) + sizeof ("/etc/group")];
-} grp_traced_file;
-
-static union
-{
-  struct traced_file file;
-  char buf[sizeof (struct traced_file) + sizeof ("/etc/hosts")];
-} hst_traced_file;
-
-static union
-{
-  struct traced_file file;
-  char buf[sizeof (struct traced_file) + sizeof ("/etc/resolv.conf")];
-} resolv_traced_file;
-
-static union
-{
-  struct traced_file file;
-  char buf[sizeof (struct traced_file) + sizeof ("/etc/services")];
-} serv_traced_file;
+TF (pwd, "/etc/passwd");
+TF (grp, "/etc/group");
+TF (hst, "/etc/hosts");
+TF (resolv, "/etc/resolv.conf", .call_res_init = 1);
+TF (serv, "/etc/services");
 
 
 void
 _nss_files_init (void (*cb) (size_t, struct traced_file *))
 {
-  strcpy (pwd_traced_file.file.fname, "/etc/passwd");
   cb (pwddb, &pwd_traced_file.file);
 
-  strcpy (grp_traced_file.file.fname, "/etc/group");
   cb (grpdb, &grp_traced_file.file);
 
-  strcpy (hst_traced_file.file.fname, "/etc/hosts");
   cb (hstdb, &hst_traced_file.file);
 
-  resolv_traced_file.file.call_res_init = 1;
-  strcpy (resolv_traced_file.file.fname, "/etc/resolv.conf");
   cb (hstdb, &resolv_traced_file.file);
 
-  strcpy (serv_traced_file.file.fname, "/etc/services");
   cb (servdb, &serv_traced_file.file);
 }

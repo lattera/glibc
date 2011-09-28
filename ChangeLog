@@ -1,3 +1,8 @@
+2011-09-28  Ulrich Drepper  <drepper@gmail.com>
+
+	* nss/nss_files/files-init.c (_nss_files_init): Use static
+	initialization for all the *_traced_file variables.
+
 2011-09-28  Andreas Schwab  <schwab@redhat.com>
 
 	* sysdeps/powerpc/fpu/libm-test-ulps: Adjust ULPs for jn tests.
