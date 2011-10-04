@@ -162,6 +162,7 @@ _dl_relocate_object (struct link_map *l, struct r_scope_elem *scope[],
   /* Initialize it to make the compiler happy.  */
   const char *errstring = NULL;
   int lazy = reloc_mode & RTLD_LAZY;
+  int skip_ifunc = reloc_mode & __RTLD_NOIFUNC;
 
 #ifdef SHARED
   /* If we are auditing, install the same handlers we need for profiling.  */
@@ -261,7 +262,7 @@ _dl_relocate_object (struct link_map *l, struct r_scope_elem *scope[],
 
 #include "dynamic-link.h"
 
-    ELF_DYNAMIC_RELOCATE (l, lazy, consider_profiling);
+    ELF_DYNAMIC_RELOCATE (l, lazy, consider_profiling, skip_ifunc);
 
 #ifndef PROF
     if (__builtin_expect (consider_profiling, 0))

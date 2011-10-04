@@ -1,3 +1,46 @@
+2011-10-04  Andreas Schwab  <schwab@redhat.com>
+
+	* include/dlfcn.h (__RTLD_NOIFUNC): Define.
+	* elf/do-rel.h (elf_dynamic_do_rel): Add parameter skip_ifunc and
+	pass it down.
+	* elf/dynamic-link.h: Adjust prototypes of elf_machine_rel,
+	elf_machine_rela, elf_machine_lazy_rel.
+	(_ELF_DYNAMIC_DO_RELOC): Add parameter skip_ifunc and pass it down.
+	(ELF_DYNAMIC_DO_REL): Likewise.
+	(ELF_DYNAMIC_DO_RELA): Likewise.
+	(ELF_DYNAMIC_RELOCATE): Likewise.
+	* elf/dl-reloc.c (_dl_relocate_object): Pass __RTLD_NOIFUNC down
+	to ELF_DYNAMIC_DO_REL.
+	* elf/rtld.c (_dl_start): Adjust use of ELF_DYNAMIC_RELOCATE.
+	(dl_main): In trace mode always set __RTLD_NOIFUNC.
+	* elf/dl-conflict.c (_dl_resolve_conflicts): Adjust call to
+	elf_machine_rela.
+	* sysdeps/i386/dl-machine.h (elf_machine_rel): Add parameter
+	skip_ifunc, don't call ifunc function if non-zero.
+	(elf_machine_rela): Likewise.
+	(elf_machine_lazy_rel): Likewise.
+	(elf_machine_lazy_rela): Likewise.
+	* sysdeps/ia64/dl-machine.h (elf_machine_rela): Likewise.
+	(elf_machine_lazy_rel): Likewise.
+	* sysdeps/powerpc/powerpc32/dl-machine.h (elf_machine_rela):
+	Likewise.
+	(elf_machine_lazy_rel): Likewise.
+	* sysdeps/powerpc/powerpc64/dl-machine.h (elf_machine_rela):
+	Likewise.
+	(elf_machine_lazy_rel): Likewise.
+	* sysdeps/s390/s390-32/dl-machine.h (elf_machine_rela): Likewise.
+	(elf_machine_lazy_rel): Likewise.
+	* sysdeps/s390/s390-64/dl-machine.h (elf_machine_rela): Likewise.
+	(elf_machine_lazy_rel): Likewise.
+	* sysdeps/sh/dl-machine.h (elf_machine_rela): Likewise.
+	(elf_machine_lazy_rel): Likewise.
+	* sysdeps/sparc/sparc32/dl-machine.h (elf_machine_rela): Likewise.
+	(elf_machine_lazy_rel): Likewise.
+	* sysdeps/sparc/sparc64/dl-machine.h (elf_machine_rela): Likewise.
+	(elf_machine_lazy_rel): Likewise.
+	* sysdeps/x86_64/dl-machine.h (elf_machine_rela): Likewise.
+	(elf_machine_lazy_rel): Likewise.
+
 2011-09-28  Ulrich Drepper  <drepper@gmail.com>
 
 	* nss/nss_files/files-init.c (_nss_files_init): Use static

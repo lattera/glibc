@@ -368,7 +368,7 @@ auto inline void
 __attribute__ ((always_inline))
 elf_machine_rela (struct link_map *map, const Elf64_Rela *reloc,
 		  const Elf64_Sym *sym, const struct r_found_version *version,
-		  void *const reloc_addr_arg)
+		  void *const reloc_addr_arg, int skip_ifunc)
 {
   Elf64_Addr *const reloc_addr = reloc_addr_arg;
 #if !defined RTLD_BOOTSTRAP && !defined RESOLVE_CONFLICT_FIND_MAP
@@ -422,7 +422,8 @@ elf_machine_rela (struct link_map *map, const Elf64_Rela *reloc,
 
   if (sym != NULL
       && __builtin_expect (ELFW(ST_TYPE) (sym->st_info) == STT_GNU_IFUNC, 0)
-      && __builtin_expect (sym->st_shndx != SHN_UNDEF, 1))
+      && __builtin_expect (sym->st_shndx != SHN_UNDEF, 1)
+      && __builtin_expect (!skip_ifunc, 1))
     value = ((Elf64_Addr (*) (int)) value) (GLRO(dl_hwcap));
 
   switch (r_type)
@@ -639,7 +640,8 @@ elf_machine_rela_relative (Elf64_Addr l_addr, const Elf64_Rela *reloc,
 auto inline void
 __attribute__ ((always_inline))
 elf_machine_lazy_rel (struct link_map *map,
-		      Elf64_Addr l_addr, const Elf64_Rela *reloc)
+		      Elf64_Addr l_addr, const Elf64_Rela *reloc,
+		      int skip_ifunc)
 {
   Elf64_Addr *const reloc_addr = (void *) (l_addr + reloc->r_offset);
   const unsigned int r_type = ELF64_R_TYPE (reloc->r_info);
@@ -650,7 +652,8 @@ elf_machine_lazy_rel (struct link_map *map,
 	   || r_type == R_SPARC_IRELATIVE)
     {
       Elf64_Addr value = map->l_addr + reloc->r_addend;
-      value = ((Elf64_Addr (*) (int)) value) (GLRO(dl_hwcap));
+      if (__builtin_expect (!skip_ifunc, 1))
+	value = ((Elf64_Addr (*) (int)) value) (GLRO(dl_hwcap));
       if (r_type == R_SPARC_JMP_IREL)
 	{
 	  /* 'high' is always zero, for large PLT entries the linker

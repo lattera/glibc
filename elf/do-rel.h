@@ -1,5 +1,5 @@
 /* Do relocations for ELF dynamic linking.
-   Copyright (C) 1995-2003, 2004 Free Software Foundation, Inc.
+   Copyright (C) 1995-2003, 2004, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -52,7 +52,7 @@
 auto inline void __attribute__ ((always_inline))
 elf_dynamic_do_rel (struct link_map *map,
 		    ElfW(Addr) reladdr, ElfW(Addr) relsize,
-		    int lazy)
+		    int lazy, int skip_ifunc)
 {
   const ElfW(Rel) *r = (const void *) reladdr;
   const ElfW(Rel) *end = (const void *) (reladdr + relsize);
@@ -66,7 +66,7 @@ elf_dynamic_do_rel (struct link_map *map,
     {
       /* Doing lazy PLT relocations; they need very little info.  */
       for (; r < end; ++r)
-	elf_machine_lazy_rel (map, l_addr, r);
+	elf_machine_lazy_rel (map, l_addr, r, skip_ifunc);
     }
   else
 #endif
@@ -119,14 +119,14 @@ elf_dynamic_do_rel (struct link_map *map,
 	      ElfW(Half) ndx = version[ELFW(R_SYM) (r->r_info)] & 0x7fff;
 	      elf_machine_rel (map, r, &symtab[ELFW(R_SYM) (r->r_info)],
 			       &map->l_versions[ndx],
-			       (void *) (l_addr + r->r_offset));
+			       (void *) (l_addr + r->r_offset), skip_ifunc);
 	    }
 	}
 #ifndef RTLD_BOOTSTRAP
       else
 	for (; r < end; ++r)
 	  elf_machine_rel (map, r, &symtab[ELFW(R_SYM) (r->r_info)], NULL,
-			   (void *) (l_addr + r->r_offset));
+			   (void *) (l_addr + r->r_offset), skip_ifunc);
 #endif
     }
 }

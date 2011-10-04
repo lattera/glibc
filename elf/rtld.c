@@ -544,7 +544,7 @@ _dl_start (void *arg)
       /* Relocate ourselves so we can do normal function calls and
 	 data access using the global offset table.  */
 
-      ELF_DYNAMIC_RELOCATE (&bootstrap_map, 0, 0);
+      ELF_DYNAMIC_RELOCATE (&bootstrap_map, 0, 0, 0);
     }
   bootstrap_map.l_relocated = 1;
 
@@ -1951,8 +1951,9 @@ ERROR: ld.so: object '%s' cannot be loaded as audit interface: %s; ignored.\n",
 
 	  /* Relocate the main executable.  */
 	  struct relocate_args args = { .l = l,
-					.reloc_mode = (GLRO(dl_lazy)
-						       ? RTLD_LAZY : 0) };
+					.reloc_mode = ((GLRO(dl_lazy)
+						       ? RTLD_LAZY : 0)
+						       | __RTLD_NOIFUNC) };
 	  _dl_receive_error (print_unresolved, relocate_doit, &args);
 
 	  /* This loop depends on the dependencies of the executable to
@@ -2029,7 +2030,8 @@ ERROR: ld.so: object '%s' cannot be loaded as audit interface: %s; ignored.\n",
 	      struct relocate_args args;
 	      unsigned int i;
 
-	      args.reloc_mode = GLRO(dl_lazy) ? RTLD_LAZY : 0;
+	      args.reloc_mode = ((GLRO(dl_lazy) ? RTLD_LAZY : 0)
+				 | __RTLD_NOIFUNC);
 
 	      i = main_map->l_searchlist.r_nlist;
 	      while (i-- > 0)
@@ -2049,7 +2051,7 @@ ERROR: ld.so: object '%s' cannot be loaded as audit interface: %s; ignored.\n",
 		  /* Mark the link map as not yet relocated again.  */
 		  GL(dl_rtld_map).l_relocated = 0;
 		  _dl_relocate_object (&GL(dl_rtld_map),
-				       main_map->l_scope, 0, 0);
+				       main_map->l_scope, __RTLD_NOIFUNC, 0);
 		}
 	    }
 #define VERNEEDTAG (DT_NUM + DT_THISPROCNUM + DT_VERSIONTAGIDX (DT_VERNEED))
