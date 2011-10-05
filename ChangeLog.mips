@@ -1,3 +1,8 @@
+2011-10-05  Andreas Schwab  <schwab@redhat.com>
+
+	* sysdeps/mips/dl-machine.h (elf_machine_rel, elf_machine_rela)
+	(elf_machine_lazy_rel): Add parameter skip_ifunc.
+
 2011-09-13  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/mips/bits/socket.h (__cmsg_nxthdr): Cast
@@ -389,7 +394,7 @@
 	Update comment.
 	* sysdeps/unix/sysv/linux/mips/kernel_rt_sigframe.h: New file.
 	* sysdeps/unix/sysv/linux/mips/ucontext_i.sym: New file.
-	* sysdeps/unix/sysv/linux/mips/Makefile (gen-as-const-headers): 
+	* sysdeps/unix/sysv/linux/mips/Makefile (gen-as-const-headers):
 	Add ucontext_i.sym.
 
 2009-04-18  Joseph Myers  <joseph@codesourcery.com>
@@ -594,7 +599,7 @@
 
 2008-04-02  Aurelien Jarno  <aurelien@aurel32.net>
 
-	* sysdeps/unix/sysv/linux/mips/mips64/n32/syscalls.list: Add 
+	* sysdeps/unix/sysv/linux/mips/mips64/n32/syscalls.list: Add
 	truncate and ftruncate systems calls.
 	* sysdeps/unix/sysv/linux/mips/mips64/n32/ftruncate64.c: Make an
 	empty file.
@@ -980,7 +985,7 @@
 	(lll_robust_mutex_dead, lll_robust_mutex_trylock, lll_robust_mutex_lock,
 	lll_robust_mutex_cond_lock, lll_robust_mutex_timedlock,
 	lll_robust_mutex_unlock): New macros.
-	(__lll_robust_lock_wait, __lll_robust_timedlock_wait): New prototypes.	
+	(__lll_robust_lock_wait, __lll_robust_timedlock_wait): New prototypes.
 	* sysdeps/unix/sysv/linux/mips/nptl/pt-vfork.S: Use correct path to
 	vfork.S.
 	* sysdeps/unix/sysv/linux/mips/nptl/vfork.S: Likewise.

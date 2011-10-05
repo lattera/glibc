@@ -528,7 +528,7 @@ elf_machine_reloc (struct link_map *map, ElfW(Addr) r_info,
 			      strtab + refsym->st_name);
 	  }
 	memcpy (reloc_addr, (void *) value,
-	        MIN (sym->st_size, refsym->st_size));
+		MIN (sym->st_size, refsym->st_size));
 	break;
       }
 
@@ -559,7 +559,7 @@ auto inline void
 __attribute__ ((always_inline))
 elf_machine_rel (struct link_map *map, const ElfW(Rel) *reloc,
 		 const ElfW(Sym) *sym, const struct r_found_version *version,
-		 void *const reloc_addr)
+		 void *const reloc_addr, int skip_ifunc)
 {
   elf_machine_reloc (map, reloc->r_info, sym, version, reloc_addr, 0, 1);
 }
@@ -575,7 +575,8 @@ elf_machine_rel_relative (ElfW(Addr) l_addr, const ElfW(Rel) *reloc,
 auto inline void
 __attribute__((always_inline))
 elf_machine_lazy_rel (struct link_map *map,
-		      ElfW(Addr) l_addr, const ElfW(Rel) *reloc)
+		      ElfW(Addr) l_addr, const ElfW(Rel) *reloc,
+		      int skip_ifunc)
 {
   ElfW(Addr) *const reloc_addr = (void *) (l_addr + reloc->r_offset);
   const unsigned int r_type = ELFW(R_TYPE) (reloc->r_info);
@@ -598,7 +599,7 @@ auto inline void
 __attribute__ ((always_inline))
 elf_machine_rela (struct link_map *map, const ElfW(Rela) *reloc,
 		  const ElfW(Sym) *sym, const struct r_found_version *version,
-		 void *const reloc_addr)
+		  void *const reloc_addr, int skip_ifunc)
 {
   elf_machine_reloc (map, reloc->r_info, sym, version, reloc_addr,
 		     reloc->r_addend, 0);
@@ -626,7 +627,7 @@ elf_machine_got_rel (struct link_map *map, int lazy)
     ({									  \
       const ElfW(Sym) *ref = sym;					  \
       const struct r_found_version *version				  \
-        = vernum ? &map->l_versions[vernum[sym_index] & 0x7fff] : NULL;	  \
+	= vernum ? &map->l_versions[vernum[sym_index] & 0x7fff] : NULL;	  \
       struct link_map *sym_map;						  \
       sym_map = RESOLVE_MAP (&ref, version, reloc);			  \
       ref ? sym_map->l_addr + ref->st_value : 0;			  \
@@ -648,7 +649,7 @@ elf_machine_got_rel (struct link_map *map, int lazy)
       i = (got[1] & ELF_MIPS_GNU_GOT1_MASK)? 2 : 1;
 
       /* Add the run-time displacement to all local got entries if
-         needed.  */
+	 needed.  */
       if (__builtin_expect (map->l_addr != 0, 0))
 	{
 	  while (i < n)
