@@ -335,7 +335,7 @@ auto inline void
 __attribute__ ((always_inline))
 elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
 		 const Elf32_Sym *sym, const struct r_found_version *version,
-		 void *const reloc_addr_arg)
+		 void *const reloc_addr_arg, int skip_ifunc)
 {
   Elf32_Addr *const reloc_addr = reloc_addr_arg;
   const unsigned int r_type = ELF32_R_TYPE (reloc->r_info);
@@ -369,9 +369,9 @@ elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
       Elf32_Addr value = sym_map == NULL ? 0 : sym_map->l_addr + sym->st_value;
 
       if (sym != NULL
-	  && __builtin_expect (ELFW(ST_TYPE) (sym->st_info) == STT_GNU_IFUNC,
-			       0)
-	  && __builtin_expect (sym->st_shndx != SHN_UNDEF, 1))
+	  && __builtin_expect (ELFW(ST_TYPE) (sym->st_info) == STT_GNU_IFUNC, 0)
+	  && __builtin_expect (sym->st_shndx != SHN_UNDEF, 1)
+	  && __builtin_expect (!skip_ifunc, 1))
 	value = ((Elf32_Addr (*) (void)) value) ();
 
       switch (r_type)
@@ -430,7 +430,7 @@ elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
 	  }
 	case R_ARM_TLS_DESC:
 	  {
-            struct tlsdesc volatile *td =
+	    struct tlsdesc volatile *td =
 	      (struct tlsdesc volatile *)reloc_addr;
 
 # ifndef RTLD_BOOTSTRAP
@@ -454,10 +454,10 @@ elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
 		else
 #  endif
 # endif
-	        {
+		{
 		  td->argument.value = value + sym_map->l_tls_offset;
 		  td->entry = _dl_tlsdesc_return;
-	        }
+		}
 	      }
 	    }
 	    break;
@@ -525,7 +525,7 @@ auto inline void
 __attribute__ ((always_inline))
 elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 		  const Elf32_Sym *sym, const struct r_found_version *version,
-		  void *const reloc_addr_arg)
+		  void *const reloc_addr_arg, int skip_ifunc)
 {
   Elf32_Addr *const reloc_addr = reloc_addr_arg;
   const unsigned int r_type = ELF32_R_TYPE (reloc->r_info);
@@ -543,9 +543,9 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
       Elf32_Addr value = sym_map == NULL ? 0 : sym_map->l_addr + sym->st_value;
 
       if (sym != NULL
-	  && __builtin_expect (ELFW(ST_TYPE) (sym->st_info) == STT_GNU_IFUNC,
-			       0)
-	  && __builtin_expect (sym->st_shndx != SHN_UNDEF, 1))
+	  && __builtin_expect (ELFW(ST_TYPE) (sym->st_info) == STT_GNU_IFUNC, 0)
+	  && __builtin_expect (sym->st_shndx != SHN_UNDEF, 1)
+	  && __builtin_expect (!skip_ifunc, 1))
 	value = ((Elf32_Addr (*) (void)) value) ();
 
       switch (r_type)
@@ -656,7 +656,8 @@ elf_machine_rela_relative (Elf32_Addr l_addr, const Elf32_Rela *reloc,
 auto inline void
 __attribute__ ((always_inline))
 elf_machine_lazy_rel (struct link_map *map,
-		      Elf32_Addr l_addr, const Elf32_Rel *reloc)
+		      Elf32_Addr l_addr, const Elf32_Rel *reloc,
+		      int skip_ifunc)
 {
   Elf32_Addr *const reloc_addr = (void *) (l_addr + reloc->r_offset);
   const unsigned int r_type = ELF32_R_TYPE (reloc->r_info);
@@ -674,8 +675,8 @@ elf_machine_lazy_rel (struct link_map *map,
 	(struct tlsdesc volatile *)reloc_addr;
 
       /* The linker must have given us the parameter we need in the
-         first GOT entry, and left the second one empty. We fill the
-         last with the resolver address */
+	 first GOT entry, and left the second one empty. We fill the
+	 last with the resolver address */
       assert (td->entry == 0);
       td->entry = (void*)(D_PTR (map, l_info[ADDRIDX (DT_TLSDESC_PLT)])
 			  + map->l_addr);

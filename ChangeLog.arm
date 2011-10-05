@@ -1,3 +1,9 @@
+2011-10-05  Andreas Schwab  <schwab@redhat.com>
+
+	* sysdeps/arm/dl-machine.h (elf_machine_rel, elf_machine_rela)
+	(elf_machine_lazy_rel): Add parameter skip_ifunc, don't call ifunc
+	function if non-zero.
+
 2011-09-13  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/arm/elf/configure.in: Always test for TLS support and
@@ -370,7 +376,7 @@
 	file.
 
 2009-10-22  Andrew Stubbs  <ams@codesourcery.com>
-            Julian Brown  <julian@codesourcery.com>
+	    Julian Brown  <julian@codesourcery.com>
 
 	* sysdeps/arm/eabi/setjmp.S (__sigsetjmp): Replace deprecated
 	instruction fstmiax with vstmia.
@@ -415,9 +421,9 @@
 	(setup_aeabi_stdio): New function.  Add it to .preinit_array.
 
 2009-06-24  Maxim Kuvyrkov  <maxim@codesourcery.com>
-            Mark Mitchell  <mark@codesourcery.com>
-            Joseph Myers  <joseph@codesourcery.com>
-            Kazu Hirata  <kazu@codesourcery.com>
+	    Mark Mitchell  <mark@codesourcery.com>
+	    Joseph Myers  <joseph@codesourcery.com>
+	    Kazu Hirata  <kazu@codesourcery.com>
 
 	* sysdeps/arm/eabi/backtrace.c: New.
 	* sysdeps/arm/eabi/Makefile (CFLAGS-backtrace.c): Add
@@ -478,17 +484,17 @@
 
 2009-02-13  Khem Raj  <raj.khem@gmail.com>
 
-	* sysdeps/unix/sysv/linux/arm/nptl/unwind-forcedunwind.c 
+	* sysdeps/unix/sysv/linux/arm/nptl/unwind-forcedunwind.c
 	(libgcc_s_handle): New variable.
 	(pthread_cancel_init): Depend in libgcc_s_handle for decision to
 	load DSO.  Assign last.
 	(__unwind_freeres): New function.
 
-	* sysdeps/unix/sysv/linux/arm/eabi/nptl/unwind-forcedunwind.c: 
+	* sysdeps/unix/sysv/linux/arm/eabi/nptl/unwind-forcedunwind.c:
 	Likewise.
 
 2009-02-05  Paul Brook  <paul@codesourcery.com>
-            Joseph Myers  <joseph@codesourcery.com>
+	    Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/arm/dl-machine.h (elf_machine_dynamic): Ditto.
 	(elf_machine_load_address): Clear T bit of PLT entry contents.
@@ -894,7 +900,7 @@
 
 2006-06-08  Mark Shinwell  <shinwell@codesourcery.com>
 
-        * sysdeps/arm/nptl/pthreaddef.h (CURRENT_STACK_FRAME): Add -12.
+	* sysdeps/arm/nptl/pthreaddef.h (CURRENT_STACK_FRAME): Add -12.
 
 2006-06-08  Daniel Jacobowitz  <dan@codesourcery.com>
 
