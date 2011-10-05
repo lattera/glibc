@@ -1,5 +1,5 @@
 /* Machine-dependent ELF dynamic relocation inline functions.  AM33 version.
-   Copyright (C) 1995,96,97,98,99,2000,2001, 2004
+   Copyright (C) 1995,96,97,98,99,2000,2001, 2004, 2011
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -296,7 +296,7 @@ elf_machine_plt_value (struct link_map *map, const Elf32_Rela *reloc,
 static inline void
 elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 		  const Elf32_Sym *sym, const struct r_found_version *version,
-		  void *const reloc_addr_arg)
+		  void *const reloc_addr_arg, int skip_ifunc)
 {
   const unsigned int r_type = ELF32_R_TYPE (reloc->r_info);
   Elf32_Addr value, *reloc_addr;
@@ -457,7 +457,8 @@ elf_machine_rela_relative (Elf32_Addr l_addr, const Elf32_Rela *reloc,
 
 static inline void
 elf_machine_lazy_rel (struct link_map *map,
-		      Elf32_Addr l_addr, const Elf32_Rela *reloc)
+		      Elf32_Addr l_addr, const Elf32_Rela *reloc,
+		      int skip_ifunc)
 {
   unsigned long int const r_type = ELF32_R_TYPE (reloc->r_info);
 

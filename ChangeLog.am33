@@ -1,3 +1,8 @@
+2011-10-05  Andreas Schwab  <schwab@redhat.com>
+
+	* sysdeps/am33/dl-machine.h (elf_machine_rela)
+	(elf_machine_lazy_rel): Add parameter skip_ifunc.
+
 2007-10-22  Daniel Jacobowitz  <dan@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/am33/bits/fcntl.h (F_DUPFD_CLOEXEC): Define.
