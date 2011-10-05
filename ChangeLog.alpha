@@ -1,3 +1,8 @@
+2011-10-05  Andreas Schwab  <schwab@redhat.com>
+
+	* sysdeps/alpha/dl-machine.h (elf_machine_rela)
+	(elf_machine_lazy_rel): Add parameter skip_ifunc.
+
 2011-03-28  Aurelien Jarno  <aurelien@aurel32.net>
 
 	* sysdeps/unix/sysv/linux/alpha/____longjmp_chk.S(____longjmp_chk):
@@ -48,7 +53,7 @@
 	Define without 64-bit aliases.
 
 2010-05-03  Aurelien Jarno  <aurelien@aurel32.net>
- 
+
 	* sysdeps/alpha/memchr.S: Use prefetch load.
 	* sysdeps/alpha/alphaev6/memchr.S: Likewise.
 
