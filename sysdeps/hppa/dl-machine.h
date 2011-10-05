@@ -1,5 +1,5 @@
 /* Machine-dependent ELF dynamic relocation inline functions.  PA-RISC version.
-   Copyright (C) 1995-1997,1999-2003
+   Copyright (C) 1995-1997,1999-2003,2011
 	Free Software Foundation, Inc.
    Contributed by David Huggins-Daines <dhd@debian.org>
    This file is part of the GNU C Library.
@@ -33,19 +33,19 @@
 #include <abort-instr.h>
 #include <tls.h>
 
-/* These two definitions must match the definition of the stub in 
+/* These two definitions must match the definition of the stub in
    bfd/elf32-hppa.c (see plt_stub[]).
-   
+
    a. Define the size of the *entire* stub we place at the end of the PLT
    table (right up against the GOT).
-   
+
    b. Define the number of bytes back from the GOT to the entry point of
    the PLT stub. You see the PLT stub must be entered in the middle
-   so it can depwi to find it's own address (long jump stub) 
-   
+   so it can depwi to find it's own address (long jump stub)
+
    c. Define the size of a single PLT entry so we can jump over the
    last entry to get the stub address */
-	
+
 #define SIZEOF_PLT_STUB (7*4)
 #define GOT_FROM_PLT_STUB (4*4)
 #define PLT_ENTRY_SIZE (2*4)
@@ -110,8 +110,8 @@ elf_machine_load_address (void)
   return dynamic - elf_machine_dynamic ();
 }
 
-/* Fixup a PLT entry to bounce directly to the function at VALUE. */ 
-static inline struct fdesc __attribute__ ((always_inline)) 
+/* Fixup a PLT entry to bounce directly to the function at VALUE. */
+static inline struct fdesc __attribute__ ((always_inline))
 elf_machine_fixup_plt (struct link_map *map, lookup_t t,
 		       const Elf32_Rela *reloc,
 		       Elf32_Addr *reloc_addr, struct fdesc value)
@@ -127,7 +127,7 @@ elf_machine_fixup_plt (struct link_map *map, lookup_t t,
 }
 
 /* Return the final value of a plt relocation.  */
-static inline struct fdesc 
+static inline struct fdesc
 elf_machine_plt_value (struct link_map *map, const Elf32_Rela *reloc,
 		       struct fdesc value)
 {
@@ -149,106 +149,106 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
     unsigned char c[8];
     Elf32_Addr i[2];
   } sig = {{0x00,0xc0,0xff,0xee, 0xde,0xad,0xbe,0xef}};
-		
+
   /* If we don't have a PLT we can just skip all this... */
   if (__builtin_expect (l->l_info[DT_JMPREL] == NULL,0))
     return lazy;
-  
-  /* All paths use these values */ 
+
+  /* All paths use these values */
   l_addr = l->l_addr;
   jmprel = D_PTR(l, l_info[DT_JMPREL]);
   end_jmprel = jmprel + l->l_info[DT_PLTRELSZ]->d_un.d_val;
-  
+
   extern void _dl_runtime_resolve (void);
   extern void _dl_runtime_profile (void);
- 
+
   /* Linking lazily */
   if (lazy)
     {
       /* FIXME: Search for the got, but backwards through the relocs, technically we should
-         find it on the first try. However, assuming the relocs got out of order the 
-         routine is made a bit more robust by searching them all in case of failure. */
+	 find it on the first try. However, assuming the relocs got out of order the
+	 routine is made a bit more robust by searching them all in case of failure. */
       for (iplt = (end_jmprel - sizeof(Elf32_Rela)); iplt >= jmprel; iplt -= sizeof (Elf32_Rela))
-        {
-	      
+	{
+
 	  reloc = (const Elf32_Rela *) iplt;
-          r_type = ELF32_R_TYPE (reloc->r_info);
-          r_sym = ELF32_R_SYM (reloc->r_info);
+	  r_type = ELF32_R_TYPE (reloc->r_info);
+	  r_sym = ELF32_R_SYM (reloc->r_info);
 
-          got = (Elf32_Addr *) (reloc->r_offset + l_addr + PLT_ENTRY_SIZE + SIZEOF_PLT_STUB);
+	  got = (Elf32_Addr *) (reloc->r_offset + l_addr + PLT_ENTRY_SIZE + SIZEOF_PLT_STUB);
 
-          /* If we aren't an IPLT, and we aren't NONE then it's a bad reloc */
-          if (__builtin_expect (r_type != R_PARISC_IPLT, 0))
+	  /* If we aren't an IPLT, and we aren't NONE then it's a bad reloc */
+	  if (__builtin_expect (r_type != R_PARISC_IPLT, 0))
 	    {
 	      if (__builtin_expect (r_type != R_PARISC_NONE, 0))
-	        _dl_reloc_bad_type (l, r_type, 1);
+		_dl_reloc_bad_type (l, r_type, 1);
 	      continue;
 	    }
-	
-          /* Check for the plt_stub that binutils placed here for us 
-             to use with _dl_runtime_resolve  */
-          if (got[-2] != sig.i[0] || got[-1] != sig.i[1])
-            {
-              got = NULL; /* Not the stub... keep looking */
-            } 
-          else 
+
+	  /* Check for the plt_stub that binutils placed here for us
+	     to use with _dl_runtime_resolve  */
+	  if (got[-2] != sig.i[0] || got[-1] != sig.i[1])
 	    {
-              /* Found the GOT! */       	
-              register Elf32_Addr ltp __asm__ ("%r19");
-              
-              /* Identify this shared object. Second entry in the got. */
-              got[1] = (Elf32_Addr) l;
-              
-              /* This function will be called to perform the relocation. */
-              if (__builtin_expect (!profile, 1))
-                {
-                  /* If a static application called us, then _dl_runtime_resolve is not
+	      got = NULL; /* Not the stub... keep looking */
+	    }
+	  else
+	    {
+	      /* Found the GOT! */
+	      register Elf32_Addr ltp __asm__ ("%r19");
+
+	      /* Identify this shared object. Second entry in the got. */
+	      got[1] = (Elf32_Addr) l;
+
+	      /* This function will be called to perform the relocation. */
+	      if (__builtin_expect (!profile, 1))
+		{
+		  /* If a static application called us, then _dl_runtime_resolve is not
 		     a function descriptor, but the *real* address of the function... */
 		  if((unsigned long) &_dl_runtime_resolve & 3)
 		    {
-                      got[-2] = (Elf32_Addr) ((struct fdesc *) 
-                                  ((unsigned long) &_dl_runtime_resolve & ~3))->ip;
+		      got[-2] = (Elf32_Addr) ((struct fdesc *)
+				  ((unsigned long) &_dl_runtime_resolve & ~3))->ip;
 		    }
 		  else
 		    {
 		      /* Static executable! */
-                      got[-2] = (Elf32_Addr) &_dl_runtime_resolve;
+		      got[-2] = (Elf32_Addr) &_dl_runtime_resolve;
 		    }
-                }
-              else
-	        {
-	          if (GLRO(dl_profile) != NULL
+		}
+	      else
+		{
+		  if (GLRO(dl_profile) != NULL
 		      && _dl_name_match_p (GLRO(dl_profile), l))
-	            {
+		    {
 		      /* This is the object we are looking for.  Say that
-		         we really want profiling and the timers are
-		         started.  */
-                      GL(dl_profile_map) = l;
-                    }
+			 we really want profiling and the timers are
+			 started.  */
+		      GL(dl_profile_map) = l;
+		    }
 
 		  if((unsigned long) &_dl_runtime_profile & 3)
 		    {
-                      got[-2] = (Elf32_Addr) ((struct fdesc *)
-                                  ((unsigned long) &_dl_runtime_profile & ~3))->ip;
+		      got[-2] = (Elf32_Addr) ((struct fdesc *)
+				  ((unsigned long) &_dl_runtime_profile & ~3))->ip;
 		    }
 		  else
 		    {
 		      /* Static executable */
-                      got[-2] = (Elf32_Addr) &_dl_runtime_profile;
+		      got[-2] = (Elf32_Addr) &_dl_runtime_profile;
 		    }
-                }
-              /* Plunk in the gp of this function descriptor so we 
-	         can make the call to _dl_runtime_xxxxxx */
-              got[-1] = ltp;
-              break;
-              /* Done looking for the GOT, and stub is setup */
-            } /* else we found the GOT */
-        } /* for, walk the relocs backwards */
+		}
+	      /* Plunk in the gp of this function descriptor so we
+		 can make the call to _dl_runtime_xxxxxx */
+	      got[-1] = ltp;
+	      break;
+	      /* Done looking for the GOT, and stub is setup */
+	    } /* else we found the GOT */
+	} /* for, walk the relocs backwards */
 
-      if(!got) 
-        return 0; /* No lazy linking for you! */
-  
-      /* Process all the relocs, now that we know the GOT... */    
+      if(!got)
+	return 0; /* No lazy linking for you! */
+
+      /* Process all the relocs, now that we know the GOT... */
       for (iplt = jmprel; iplt < end_jmprel; iplt += sizeof (Elf32_Rela))
 	{
 	  reloc = (const Elf32_Rela *) iplt;
@@ -276,25 +276,25 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 		  fptr->gp = D_PTR (l, l_info[DT_PLTGOT]);
 		}
 	    } /* r_type == R_PARISC_IPLT */
-	} /* for all the relocations */ 
+	} /* for all the relocations */
     } /* if lazy */
   else
     {
       for (iplt = jmprel; iplt < end_jmprel; iplt += sizeof (Elf32_Rela))
-        {
-          reloc = (const Elf32_Rela *) iplt;
-          r_type = ELF32_R_TYPE (reloc->r_info);
-          r_sym = ELF32_R_SYM (reloc->r_info);
+	{
+	  reloc = (const Elf32_Rela *) iplt;
+	  r_type = ELF32_R_TYPE (reloc->r_info);
+	  r_sym = ELF32_R_SYM (reloc->r_info);
 
-          if (__builtin_expect ((r_type == R_PARISC_IPLT) && (r_sym == 0), 1))
-            {
-              fptr = (struct fdesc *) (reloc->r_offset + l_addr);
-              /* Relocate this *ABS* entry, set only the gp, the rest is set later
-                 when elf_machine_rela_relative is called (WITHOUT the linkmap)  */
-              fptr->gp = D_PTR (l, l_info[DT_PLTGOT]);
-            } /* r_type == R_PARISC_IPLT */
-        } /* for all the relocations */ 
-    }	  
+	  if (__builtin_expect ((r_type == R_PARISC_IPLT) && (r_sym == 0), 1))
+	    {
+	      fptr = (struct fdesc *) (reloc->r_offset + l_addr);
+	      /* Relocate this *ABS* entry, set only the gp, the rest is set later
+		 when elf_machine_rela_relative is called (WITHOUT the linkmap)  */
+	      fptr->gp = D_PTR (l, l_info[DT_PLTGOT]);
+	    } /* r_type == R_PARISC_IPLT */
+	} /* for all the relocations */
+    }
   return lazy;
 }
 
@@ -441,7 +441,7 @@ asm (									\
 "	ldw	-44(%sp),%r24\n"					\
 									\
 	/* _dl_fini is a local function in the loader, so we construct	\
-           a false OPD here and pass this to the application.  */	\
+	   a false OPD here and pass this to the application.  */	\
 	/* FIXME: Should be able to use P%, and LR RR to have the	\
 	   the linker construct a proper OPD.  */			\
 "	.section .data\n"						\
@@ -462,7 +462,7 @@ asm (									\
 "	depi	2,31,2,%r23\n"	/* delay slot */			\
 );
 
-/* ELF_RTYPE_CLASS_PLT iff TYPE describes relocation of a PLT entry or 
+/* ELF_RTYPE_CLASS_PLT iff TYPE describes relocation of a PLT entry or
    a TLS variable, so references should not be allowed to define the value.
    ELF_RTYPE_CLASS_NOCOPY iff TYPE should not be allowed to resolve to one
    of the main executable's symbols, as for a COPY reloc.  */
@@ -505,7 +505,7 @@ dl_platform_init (void)
 	/* Avoid an empty string which would disturb us.  */
 		GLRO(dl_platform) = NULL;
 }
-	
+
 #endif /* !dl_machine_h */
 
 /* These are only actually used where RESOLVE_MAP is defined, anyway. */
@@ -523,11 +523,12 @@ dl_platform_init (void)
    | (((as14) & 0x2000) >> 13))
 
 auto void __attribute__((always_inline))
-elf_machine_rela (struct link_map *map, 
+elf_machine_rela (struct link_map *map,
     		  const Elf32_Rela *reloc,
-		  const Elf32_Sym *sym, 
+		  const Elf32_Sym *sym,
 		  const struct r_found_version *version,
-		  void *const reloc_addr_arg)
+		  void *const reloc_addr_arg,
+		  int skip_ifunc)
 {
   Elf32_Addr *const reloc_addr = reloc_addr_arg;
   const Elf32_Sym *const refsym = sym;
@@ -557,7 +558,7 @@ elf_machine_rela (struct link_map *map,
 # else
   sym_map = RESOLVE_MAP (&sym, version, r_type);
 # endif
-  
+
   if (sym_map)
     {
       value = sym ? sym_map->l_addr + sym->st_value : 0;
@@ -584,7 +585,7 @@ elf_machine_rela (struct link_map *map,
     case R_PARISC_DIR21L:
       {
 	unsigned int insn = *(unsigned int *)reloc_addr;
-        value = sym_map->l_addr + sym->st_value 
+	value = sym_map->l_addr + sym->st_value
 		+ ((reloc->r_addend + 0x1000) & -0x2000);
 	value = value >> 11;
 	insn = (insn &~ 0x1fffff) | reassemble_21 (value);
@@ -595,7 +596,7 @@ elf_machine_rela (struct link_map *map,
     case R_PARISC_DIR14R:
       {
 	unsigned int insn = *(unsigned int *)reloc_addr;
-	value = ((sym_map->l_addr + sym->st_value) & 0x7ff) 
+	value = ((sym_map->l_addr + sym->st_value) & 0x7ff)
 		+ (((reloc->r_addend & 0x1fff) ^ 0x1000) - 0x1000);
 	insn = (insn &~ 0x3fff) | reassemble_14 (value);
 	*(unsigned int *)reloc_addr = insn;
@@ -604,17 +605,17 @@ elf_machine_rela (struct link_map *map,
 
     case R_PARISC_PLABEL32:
       /* Easy rule: If there is a symbol and it is global, then we
-         need to make a dynamic function descriptor.  Otherwise we
-         have the address of a PLT slot for a local symbol which we
-         know to be unique. */
+	 need to make a dynamic function descriptor.  Otherwise we
+	 have the address of a PLT slot for a local symbol which we
+	 know to be unique. */
       if (sym == NULL
 	  || sym_map == NULL
 	  || ELF32_ST_BIND (sym->st_info) == STB_LOCAL)
-        {
+	{
 	  break;
-        }
+	}
       /* Set bit 30 to indicate to $$dyncall that this is a PLABEL.
-         We have to do this outside of the generic function descriptor
+	 We have to do this outside of the generic function descriptor
 	 code, since it doesn't know about our requirement for setting
 	 protection bits */
       value = (Elf32_Addr)((unsigned int)_dl_make_fptr (sym_map, sym, value) | 2);
@@ -625,17 +626,17 @@ elf_machine_rela (struct link_map *map,
       {
 	unsigned int insn = *(unsigned int *)reloc_addr;
 
-        if (__builtin_expect (sym == NULL, 0))
-          break;
+	if (__builtin_expect (sym == NULL, 0))
+	  break;
 
-        value = (Elf32_Addr)((unsigned int)_dl_make_fptr (sym_map, sym, value) | 2);
+	value = (Elf32_Addr)((unsigned int)_dl_make_fptr (sym_map, sym, value) | 2);
 
-        if (r_type == R_PARISC_PLABEL21L)
+	if (r_type == R_PARISC_PLABEL21L)
 	  {
 	    value >>= 11;
 	    insn = (insn &~ 0x1fffff) | reassemble_21 (value);
 	  }
-        else
+	else
 	  {
 	    value &= 0x7ff;
 	    insn = (insn &~ 0x3fff) | reassemble_14 (value);
@@ -647,16 +648,16 @@ elf_machine_rela (struct link_map *map,
 
     case R_PARISC_IPLT:
       if (__builtin_expect (sym_map != NULL, 1))
-        {
-	  elf_machine_fixup_plt (NULL, sym_map, reloc, reloc_addr, 
+	{
+	  elf_machine_fixup_plt (NULL, sym_map, reloc, reloc_addr,
 	      			 DL_FIXUP_MAKE_VALUE(sym_map, value));
-        } 
-      else 
-        {
+	}
+      else
+	{
 	  /* If we get here, it's a (weak) undefined sym.  */
-	  elf_machine_fixup_plt (NULL, map, reloc, reloc_addr, 
+	  elf_machine_fixup_plt (NULL, map, reloc, reloc_addr,
 	      			 DL_FIXUP_MAKE_VALUE(map, value));
-        }
+	}
       return;
 
     case R_PARISC_COPY:
@@ -687,21 +688,21 @@ elf_machine_rela (struct link_map *map,
 
     case R_PARISC_TLS_DTPOFF32:
       /* During relocation all TLS symbols are defined and used.
-         Therefore the offset is already correct.  */
+	 Therefore the offset is already correct.  */
       if (sym != NULL)
-        *reloc_addr = sym->st_value;
+	*reloc_addr = sym->st_value;
       return;
 
     case R_PARISC_TLS_TPREL32:
       /* The offset is negative, forward from the thread pointer */
       if (sym != NULL)
-        {
-          CHECK_STATIC_TLS (map, sym_map);
+	{
+	  CHECK_STATIC_TLS (map, sym_map);
 	  value = sym_map->l_tls_offset + sym->st_value + reloc->r_addend;
 	}
       break;
 #endif	/* use TLS */
-      
+
     case R_PARISC_NONE:	/* Alright, Wilbur. */
       return;
 
@@ -721,13 +722,13 @@ elf_machine_rela_relative (Elf32_Addr l_addr,
 {
   unsigned long const r_type = ELF32_R_TYPE (reloc->r_info);
   Elf32_Addr *const reloc_addr = reloc_addr_arg;
-  static char msgbuf[] = { "Unknown" }; 
+  static char msgbuf[] = { "Unknown" };
   struct link_map map;
   Elf32_Addr value;
 
   value = l_addr + reloc->r_addend;
 
-  if (ELF32_R_SYM (reloc->r_info) != 0){ 
+  if (ELF32_R_SYM (reloc->r_info) != 0){
     _dl_error_printf ("%s: In elf_machine_rela_relative "
 		      "ELF32_R_SYM (reloc->r_info) != 0. Aborting.",
 		      rtld_progname ?: "<program name unknown>");
@@ -769,7 +770,8 @@ elf_machine_rela_relative (Elf32_Addr l_addr,
 
 auto void __attribute__((always_inline))
 elf_machine_lazy_rel (struct link_map *map,
-		      Elf32_Addr l_addr, const Elf32_Rela *reloc)
+		      Elf32_Addr l_addr, const Elf32_Rela *reloc,
+		      int skip_ifunc)
 {
   /* We don't have anything to do here.  elf_machine_runtime_setup has
      done all the relocs already.  */

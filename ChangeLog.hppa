@@ -1,7 +1,12 @@
+2011-10-05  Andreas Schwab  <schwab@redhat.com>
+
+	* sysdeps/hppa/dl-machine.h (elf_machine_rela)
+	(elf_machine_lazy_rel): Add parameter skip_ifunc.
+
 2010-06-24  Carlos O'Donell  <carlos@codesourcery.com>
 
-	* sysdeps/unix/sysv/linux/hppa/nptl/pt-vfork.S: Only create stack 
-	frame around call to SYSCALL_ERROR_HANDLER. Do not restore %rp 
+	* sysdeps/unix/sysv/linux/hppa/nptl/pt-vfork.S: Only create stack
+	frame around call to SYSCALL_ERROR_HANDLER. Do not restore %rp
 	from the stack frame on successfull return.
 
 2010-06-23  Carlos O'Donell  <carlos@codesourcery.com>
@@ -10,12 +15,12 @@
 	Document that this function is a non-standard calling ABI.
 	Document register usage.
 	(__getcontext): Use normal %sp without adjustment. Use named
-	resgister %sp. 
+	resgister %sp.
 	* sysdeps/unix/sysv/linux/hppa/makecontext.c: Remove FRAME_SIZE.
 	Define FRAME_SIZE_UL, FRAME_SIZE_BYTES, ARGS.
-	(__makecontext): Create and setup a stack frame. 
+	(__makecontext): Create and setup a stack frame.
 	* sysdeps/unix/sysv/linux/hppa/setcontext.S (__setcontext):
-	Use named register %sp. Do not use oSS_SP. 
+	Use named register %sp. Do not use oSS_SP.
 
 2010-06-07  Andreas Schwab  <schwab@redhat.com>
 
