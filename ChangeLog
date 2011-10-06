@@ -1,3 +1,8 @@
+2011-09-25  Jiri Olsa  <jolsa@redhat.com>
+
+	* nss/nsswitch.c (__nss_database_lookup): Handle
+	nss_parse_service_list out of memory case.
+
 2011-09-15  Jiri Olsa  <jolsa@redhat.com>
 
 	* nss/nsswitch.c (__nss_lookup_function): Handle __tsearch

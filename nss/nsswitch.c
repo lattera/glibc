@@ -147,7 +147,7 @@ __nss_database_lookup (const char *database, const char *alternate_name,
 
   __libc_lock_unlock (lock);
 
-  return 0;
+  return *ni != NULL ? 0 : -1;
 }
 libc_hidden_def (__nss_database_lookup)
 
