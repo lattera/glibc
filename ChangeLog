@@ -1,5 +1,7 @@
 2011-10-06  Ulrich Drepper  <drepper@gmail.com>
 
+	* nscd/grpcache.c (cache_addgr): Initialize written in all cases.
+
 	* nss/nsswitch.c (__nss_lookup_function): Fix order of deleting
 	from tree and freeing node.
 

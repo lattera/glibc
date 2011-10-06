@@ -117,6 +117,8 @@ cache_addgr (struct database_dyn *db, int fd, request_header *req,
 	  if (fd != -1)
 	    written = TEMP_FAILURE_RETRY (send (fd, &notfound, total,
 						MSG_NOSIGNAL));
+	  else
+	    written = total;
 
 	  /* If we cannot permanently store the result, so be it.  */
 	  if (db->negtimeout == 0)
