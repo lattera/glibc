@@ -1,3 +1,8 @@
+2011-09-15  Jiri Olsa  <jolsa@redhat.com>
+
+	* nss/nsswitch.c (__nss_lookup_function): Handle __tsearch
+	out of memory case.
+
 2011-10-04  Andreas Schwab  <schwab@redhat.com>
 
 	* include/dlfcn.h (__RTLD_NOIFUNC): Define.

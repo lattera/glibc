@@ -384,7 +384,10 @@ __nss_lookup_function (service_user *ni, const char *fct_name)
      will be passed to `known_compare' (above).  */
 
   found = __tsearch (&fct_name, &ni->known, &known_compare);
-  if (*found != &fct_name)
+  if (found == NULL)
+    /* This means out-of-memory.  */
+    result = NULL;
+  else if (*found != &fct_name)
     {
       /* The search found an existing structure in the tree.  */
       result = ((known_function *) *found)->fct_ptr;
