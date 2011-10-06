@@ -407,6 +407,7 @@ __nss_lookup_function (service_user *ni, const char *fct_name)
 	  /* Oops.  We can't instantiate this node properly.
 	     Remove it from the tree.  */
 	  __tdelete (&fct_name, &ni->known, &known_compare);
+	  free (known);
 	  result = NULL;
 	}
       else
@@ -418,11 +419,8 @@ __nss_lookup_function (service_user *ni, const char *fct_name)
 #if !defined DO_STATIC_NSS || defined SHARED
 	  /* Load the appropriate library.  */
 	  if (nss_load_library (ni) != 0)
-	    {
-	      /* This only happens when out of memory.  */
-	      free (known);
-	      goto remove_from_tree;
-	    }
+	    /* This only happens when out of memory.  */
+	    goto remove_from_tree;
 
 	  if (ni->library->lib_handle == (void *) -1l)
 	    /* Library not found => function not found.  */
