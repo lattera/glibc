@@ -8,7 +8,7 @@
  *
  * Developed at SunPro, a Sun Microsystems, Inc. business.
  * Permission to use, copy, modify, and distribute this
- * software is freely granted, provided that this notice 
+ * software is freely granted, provided that this notice
  * is preserved.
  * ====================================================
  */
@@ -17,7 +17,7 @@
 static char rcsid[] = "$NetBSD: w_remainderf.c,v 1.3 1995/05/10 20:49:46 jtc Exp $";
 #endif
 
-/* 
+/*
  * wrapper remainderf(x,p)
  */
 
@@ -36,8 +36,8 @@ static char rcsid[] = "$NetBSD: w_remainderf.c,v 1.3 1995/05/10 20:49:46 jtc Exp
 #else
 	float z;
 	z = __ieee754_remainderf(x,y);
-	if(_LIB_VERSION == _IEEE_ || __isnanf(y)) return z;
-	if(y==(float)0.0) 
+	if(_LIB_VERSION == _IEEE_ || __isnanf(y) || __isnanf(x)) return z;
+	if(y==(float)0.0 || __isinff(x))
 	    /* remainder(x,0) */
 	    return (float)__kernel_standard((double)x,(double)y,128);
 	else

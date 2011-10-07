@@ -38,8 +38,8 @@ static char rcsid[] = "$NetBSD: $";
 #else
 	long double z;
 	z = __ieee754_remainderl(x,y);
-	if(_LIB_VERSION == _IEEE_ || __isnanl(y)) return z;
-	if(y==0.0)
+	if(_LIB_VERSION == _IEEE_ || __isnanl(y) || __isnanl(x)) return z;
+	if(y==0.0 || __isinfl(x))
 	    return __kernel_standard(x,y,228); /* remainder(x,0) */
 	else
 	    return z;

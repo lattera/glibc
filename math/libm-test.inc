@@ -189,7 +189,7 @@ static FLOAT max_error, real_max_error, imag_max_error;
 
 
 #define MANT_DIG CHOOSE ((LDBL_MANT_DIG-1), (DBL_MANT_DIG-1), (FLT_MANT_DIG-1),  \
-                         (LDBL_MANT_DIG-1), (DBL_MANT_DIG-1), (FLT_MANT_DIG-1))
+			 (LDBL_MANT_DIG-1), (DBL_MANT_DIG-1), (FLT_MANT_DIG-1))
 
 static void
 init_max_error (void)
@@ -4940,11 +4940,27 @@ remainder_test (void)
 
   START (remainder);
 
+  errno = 0;
   TEST_ff_f (remainder, 1, 0, nan_value, INVALID_EXCEPTION);
+  check_int ("errno for remainder(1, 0) = EDOM ", errno, EDOM, 0, 0, 0);
+  errno = 0;
   TEST_ff_f (remainder, 1, minus_zero, nan_value, INVALID_EXCEPTION);
+  check_int ("errno for remainder(1, -0) = EDOM ", errno, EDOM, 0, 0, 0);
+  errno = 0;
   TEST_ff_f (remainder, plus_infty, 1, nan_value, INVALID_EXCEPTION);
+  check_int ("errno for remainder(INF, 1) = EDOM ", errno, EDOM, 0, 0, 0);
+  errno = 0;
   TEST_ff_f (remainder, minus_infty, 1, nan_value, INVALID_EXCEPTION);
+  check_int ("errno for remainder(-INF, 1) = EDOM ", errno, EDOM, 0, 0, 0);
+  errno = 0;
   TEST_ff_f (remainder, nan_value, nan_value, nan_value);
+  check_int ("errno for remainder(NAN, NAN) unchanged", errno, 0, 0, 0, 0);
+  errno = 0;
+  TEST_ff_f (remainder, 0, nan_value, nan_value);
+  check_int ("errno for remainder(0, NAN) unchanged", errno, 0, 0, 0, 0);
+  errno = 0;
+  TEST_ff_f (remainder, nan_value, 0, nan_value);
+  check_int ("errno for remainder(NaN, 0) unchanged", errno, 0, 0, 0, 0);
 
   TEST_ff_f (remainder, 1.625, 1.0, -0.375);
   TEST_ff_f (remainder, -1.625, 1.0, 0.375);
