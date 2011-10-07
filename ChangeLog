@@ -1,5 +1,7 @@
 2011-10-07  Ulrich Drepper  <drepper@gmail.com>
 
+	* po/ca.po: Update from translation team.
+
 	* inet/getnetgrent_r.c: Hook up nscd.
 	* nscd/Makefile (routines): Add nscd_netgroup.
 	(nscd-modules): Add netgroupcache.
