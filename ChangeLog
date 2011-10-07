@@ -1,3 +1,8 @@
+2011-10-07  Ulrich Drepper  <drepper@gmail.com>
+
+	* nscd/connections.c (register_traced_file): Don't register file
+	for disabled databases.
+
 2011-10-06  Ulrich Drepper  <drepper@gmail.com>
 
 	* nscd/grpcache.c (cache_addgr): Initialize written in all cases.

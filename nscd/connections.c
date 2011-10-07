@@ -891,7 +891,7 @@ cannot set socket to close on exec: %s; disabling paranoia mode"),
 void
 register_traced_file (size_t dbidx, struct traced_file *finfo)
 {
-  if (! dbs[dbidx].check_file)
+  if (! dbs[dbidx].enabled || ! dbs[dbidx].check_file)
     return;
 
   if (__builtin_expect (debug_level > 0, 0))
