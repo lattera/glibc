@@ -38,6 +38,7 @@ TF (grp, "/etc/group");
 TF (hst, "/etc/hosts");
 TF (resolv, "/etc/resolv.conf", .call_res_init = 1);
 TF (serv, "/etc/services");
+TF (netgr, "/etc/netgroup");
 
 
 void
@@ -52,4 +53,6 @@ _nss_files_init (void (*cb) (size_t, struct traced_file *))
   cb (hstdb, &resolv_traced_file.file);
 
   cb (servdb, &serv_traced_file.file);
+
+  cb (netgrdb, &netgr_traced_file.file);
 }

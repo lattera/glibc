@@ -57,11 +57,6 @@
 #endif
 
 
-/* Wrapper functions with error checking for standard functions.  */
-extern void *xmalloc (size_t n);
-extern void *xcalloc (size_t n, size_t s);
-extern void *xrealloc (void *o, size_t n);
-
 /* Support to run nscd as an unprivileged user */
 const char *server_user;
 static uid_t server_uid;
@@ -100,7 +95,10 @@ const char *const serv2str[LASTREQ] =
   [INITGROUPS] = "INITGROUPS",
   [GETSERVBYNAME] = "GETSERVBYNAME",
   [GETSERVBYPORT] = "GETSERVBYPORT",
-  [GETFDSERV] = "GETFDSERV"
+  [GETFDSERV] = "GETFDSERV",
+  [GETNETGRENT] = "GETNETGRENT",
+  [INNETGR] = "INNETGR",
+  [GETFDNETGR] = "GETFDNETGR"
 };
 
 /* The control data structures for the services.  */
@@ -181,6 +179,25 @@ struct database_dyn dbs[lastdb] =
     .wr_fd = -1,
     .ro_fd = -1,
     .mmap_used = false
+  },
+  [netgrdb] = {
+    .lock = PTHREAD_RWLOCK_WRITER_NONRECURSIVE_INITIALIZER_NP,
+    .prune_lock = PTHREAD_MUTEX_INITIALIZER,
+    .prune_run_lock = PTHREAD_MUTEX_INITIALIZER,
+    .enabled = 0,
+    .check_file = 1,
+    .persistent = 0,
+    .propagate = 0,		/* Not used.  */
+    .shared = 0,
+    .max_db_size = DEFAULT_MAX_DB_SIZE,
+    .suggested_module = DEFAULT_SUGGESTED_MODULE,
+    .db_filename = _PATH_NSCD_NETGROUP_DB,
+    .disabled_iov = &netgroup_iov_disabled,
+    .postimeout = 28800,
+    .negtimeout = 20,
+    .wr_fd = -1,
+    .ro_fd = -1,
+    .mmap_used = false
   }
 };
 
@@ -210,7 +227,10 @@ static struct
   [INITGROUPS] = { true, &dbs[grpdb] },
   [GETSERVBYNAME] = { true, &dbs[servdb] },
   [GETSERVBYPORT] = { true, &dbs[servdb] },
-  [GETFDSERV] = { false, &dbs[servdb] }
+  [GETFDSERV] = { false, &dbs[servdb] },
+  [GETNETGRENT] = { true, &dbs[netgrdb] },
+  [INNETGR] = { true, &dbs[netgrdb] },
+  [GETFDNETGR] = { false, &dbs[netgrdb] }
 };
 
 
@@ -355,7 +375,8 @@ check_use (const char *data, nscd_ssize_t first_free, uint8_t *usemap,
 static int
 verify_persistent_db (void *mem, struct database_pers_head *readhead, int dbnr)
 {
-  assert (dbnr == pwddb || dbnr == grpdb || dbnr == hstdb || dbnr == servdb);
+  assert (dbnr == pwddb || dbnr == grpdb || dbnr == hstdb || dbnr == servdb
+	  || dbnr == netgrdb);
 
   time_t now = time (NULL);
 
@@ -1230,6 +1251,14 @@ request from '%s' [%ld] not handled due to missing permission"),
       addservbyport (db, fd, req, key, uid);
       break;
 
+    case GETNETGRENT:
+      addgetnetgrent (db, fd, req, key, uid);
+      break;
+
+    case INNETGR:
+      addinnetgr (db, fd, req, key, uid);
+      break;
+
     case GETSTAT:
     case SHUTDOWN:
     case INVALIDATE:
@@ -1276,6 +1305,7 @@ request from '%s' [%ld] not handled due to missing permission"),
     case GETFDGR:
     case GETFDHST:
     case GETFDSERV:
+    case GETFDNETGR:
 #ifdef SCM_RIGHTS
       send_ro_fd (reqinfo[req->type].db, key, fd);
 #endif

@@ -1,5 +1,45 @@
 2011-10-07  Ulrich Drepper  <drepper@gmail.com>
 
+	* inet/getnetgrent_r.c: Hook up nscd.
+	* nscd/Makefile (routines): Add nscd_netgroup.
+	(nscd-modules): Add netgroupcache.
+	(CFLAGS-netgroupcache.c): Define.
+	* nscd/cache.c (readdfcts): Add entries for GETNETGRENT and INNETGR.
+	(cache_search): Add const to second parameter.
+	* nscd/connections.c (serv2str): Add entries for GETNETGRENT and
+	INNETGR.
+	(dbs): Add netgrdb entry.
+	(reqinfo): Add entries for GETNETGRENT, INNETGR, and GETFDNETGR.
+	(verify_persistent_db): Handle netgrdb.
+	(handle_request): Handle GETNETGRENT, INNETGR, and GETFDNETGR.
+	* nscd/nscd-client.h (request_type): Add GETNETGRENT, INNETGR, and
+	GETFDNETGR.
+	(netgroup_response_header): Define.
+	(innetgroup_response_header): Define.
+	(datahead): Add netgroup_response_header and innetgroup_response_header
+	elements.
+	* nscd/nscd.conf: Add entries for netgroup cache.
+	* nscd/nscd.h (dbtype): Add netgrdb.
+	(_PATH_NSCD_NETGROUP_DB): Define.
+	(netgroup_iov_disabled): Declare.
+	(xmalloc, xcalloc, xrealloc): Move declarations here.
+	(cache_search): Adjust prototype.
+	Add netgroup-related prototypes.
+	* nscd/nscd_conf.c (dbnames): Add netgrdb entry.
+	* nscd/nscd_proto.h (__nss_not_use_nscd_netgroup): Declare.
+	(__nscd_innetgr): Declare.
+	* nscd/selinux.c (perms): Use access_vector_t as element type and
+	add netgroup-related initializers.
+	* nscd/netgroupcache.c: New file.
+	* nscd/nscd_netgroup.c: New file.
+	* nss/Versions [libc] (GLIBC_PRIVATE): Export __nss_lookup.
+	* nss/getent.c (netgroup_keys): Use setnetgrent only for one parameter.
+	For four parameters use innetgr.
+	* nss/nss_files/files-init.c: Add definition and callback for netgr.
+	* nss/nsswitch.c (__nss_lookup): Add libc_hidden_def.
+	(__nss_disable_nscd): Set __nss_not_use_nscd_netgroup.
+	* nss/nsswitch.h (__nss_lookup): Add libc_hidden_proto.
+
 	* nscd/connections.c (register_traced_file): Don't register file
 	for disabled databases.
 

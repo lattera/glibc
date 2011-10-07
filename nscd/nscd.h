@@ -38,6 +38,7 @@ typedef enum
   grpdb,
   hstdb,
   servdb,
+  netgrdb,
   lastdb
 } dbtype;
 
@@ -116,6 +117,7 @@ struct database_dyn
 #define _PATH_NSCD_GROUP_DB	"/var/db/nscd/group"
 #define _PATH_NSCD_HOSTS_DB	"/var/db/nscd/hosts"
 #define _PATH_NSCD_SERVICES_DB	"/var/db/nscd/services"
+#define _PATH_NSCD_NETGROUP_DB	"/var/db/nscd/netgroup"
 
 /* Path used when not using persistent storage.  */
 #define _PATH_NSCD_XYZ_DB_TMP	"/var/run/nscd/dbXXXXXX"
@@ -149,6 +151,7 @@ extern const struct iovec pwd_iov_disabled;
 extern const struct iovec grp_iov_disabled;
 extern const struct iovec hst_iov_disabled;
 extern const struct iovec serv_iov_disabled;
+extern const struct iovec netgroup_iov_disabled;
 
 
 /* Initial number of threads to run.  */
@@ -197,6 +200,11 @@ extern gid_t old_gid;
 
 /* Prototypes for global functions.  */
 
+/* Wrapper functions with error checking for standard functions.  */
+extern void *xmalloc (size_t n);
+extern void *xcalloc (size_t n, size_t s);
+extern void *xrealloc (void *o, size_t n);
+
 /* nscd.c */
 extern void termination_handler (int signum) __attribute__ ((__noreturn__));
 extern int nscd_open_socket (void);
@@ -216,8 +224,8 @@ extern void send_stats (int fd, struct database_dyn dbs[lastdb]);
 extern int receive_print_stats (void) __attribute__ ((__noreturn__));
 
 /* cache.c */
-extern struct datahead *cache_search (request_type, void *key, size_t len,
-				      struct database_dyn *table,
+extern struct datahead *cache_search (request_type, const void *key,
+				      size_t len, struct database_dyn *table,
 				      uid_t owner);
 extern int cache_add (int type, const void *key, size_t len,
 		      struct datahead *packet, bool first,
@@ -285,6 +293,16 @@ extern void addservbyport (struct database_dyn *db, int fd,
 			   request_header *req, void *key, uid_t uid);
 extern time_t readdservbyport (struct database_dyn *db, struct hashentry *he,
 			       struct datahead *dh);
+
+/* netgroupcache.c */
+extern void addinnetgr (struct database_dyn *db, int fd, request_header *req,
+			void *key, uid_t uid);
+extern time_t readdinnetgr (struct database_dyn *db, struct hashentry *he,
+			    struct datahead *dh);
+extern void addgetnetgrent (struct database_dyn *db, int fd,
+			    request_header *req, void *key, uid_t uid);
+extern time_t readdgetnetgrent (struct database_dyn *db, struct hashentry *he,
+				struct datahead *dh);
 
 /* mem.c */
 extern void *mempool_alloc (struct database_dyn *db, size_t len,

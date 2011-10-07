@@ -70,6 +70,9 @@ typedef enum
   GETSERVBYNAME,
   GETSERVBYPORT,
   GETFDSERV,
+  GETNETGRENT,
+  INNETGR,
+  GETFDNETGR,
   LASTREQ
 } request_type;
 
@@ -171,6 +174,24 @@ typedef struct
 } serv_response_header;
 
 
+/* Structure send in reply to netgroup query.  Note that this struct is
+   sent also if the service is disabled or there is no record found.  */
+typedef struct
+{
+  int32_t version;
+  int32_t found;
+  nscd_ssize_t nresults;
+  nscd_ssize_t result_len;
+} netgroup_response_header;
+
+typedef struct
+{
+  int32_t version;
+  int32_t found;
+  int32_t result;
+} innetgroup_response_header;
+
+
 /* Type for offsets in data part of database.  */
 typedef uint32_t ref_t;
 /* Value for invalid/no reference.  */
@@ -210,6 +231,8 @@ struct datahead
     ai_response_header aidata;
     initgr_response_header initgrdata;
     serv_response_header servdata;
+    netgroup_response_header netgroupdata;
+    innetgroup_response_header innetgroupdata;
     nscd_ssize_t align1;
     nscd_time_t align2;
   } data[0];

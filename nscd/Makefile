@@ -22,7 +22,7 @@
 subdir	:= nscd
 
 routines := nscd_getpw_r nscd_getgr_r nscd_gethst_r nscd_getai \
-	    nscd_initgroups nscd_getserv_r
+	    nscd_initgroups nscd_getserv_r nscd_netgroup
 aux	:= nscd_helper
 
 include ../Makeconfig
@@ -34,7 +34,8 @@ nscd-modules := nscd connections pwdcache getpwnam_r getpwuid_r grpcache \
 		getgrnam_r getgrgid_r hstcache gethstbyad_r gethstbynm3_r \
 		getsrvbynm_r getsrvbypt_r servicescache \
 		dbg_log nscd_conf nscd_stat cache mem nscd_setup_thread \
-		xmalloc xstrdup aicache initgrcache gai res_hconf
+		xmalloc xstrdup aicache initgrcache gai res_hconf \
+		netgroupcache
 
 ifeq ($(have-thread-library),yes)
 
@@ -121,6 +122,7 @@ CFLAGS-servicescache.c += $(nscd-cflags)
 CFLAGS-getsrvbynm_r.c += $(nscd-cflags)
 CFLAGS-getsrvbypt_r.c += $(nscd-cflags)
 CFLAGS-res_hconf.c += $(nscd-cflags)
+CFLAGS-netgroupcache.c += $(nscd-cflags)
 
 ifeq (yesyes,$(have-fpie)$(build-shared))
 LDFLAGS-nscd = -Wl,-z,now

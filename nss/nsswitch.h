@@ -125,7 +125,8 @@ libc_hidden_proto (__nss_database_lookup)
    position is remembered in NI.  The function returns a value < 0 if
    an error occurred or no such function exists.  */
 extern int __nss_lookup (service_user **ni, const char *fct_name,
-			 const char *fct2_name, void **fctp) attribute_hidden;
+			 const char *fct2_name, void **fctp);
+libc_hidden_proto (__nss_lookup)
 
 /* Determine the next step in the lookup process according to the
    result STATUS of the call to the last function returned by

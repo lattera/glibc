@@ -60,7 +60,9 @@ static time_t (*const readdfcts[LASTREQ]) (struct database_dyn *,
   [GETAI] = readdhstai,
   [INITGROUPS] = readdinitgroups,
   [GETSERVBYNAME] = readdservbyname,
-  [GETSERVBYPORT] = readdservbyport
+  [GETSERVBYPORT] = readdservbyport,
+  [GETNETGRENT] = readdgetnetgrent,
+  [INNETGR] = readdinnetgr
 };
 
 
@@ -70,7 +72,7 @@ static time_t (*const readdfcts[LASTREQ]) (struct database_dyn *,
 
    This function must be called with the read-lock held.  */
 struct datahead *
-cache_search (request_type type, void *key, size_t len,
+cache_search (request_type type, const void *key, size_t len,
 	      struct database_dyn *table, uid_t owner)
 {
   unsigned long int hash = __nis_hash (key, len) % table->head->module;

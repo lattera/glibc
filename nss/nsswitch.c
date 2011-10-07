@@ -176,6 +176,7 @@ __nss_lookup (service_user **ni, const char *fct_name, const char *fct2_name,
 
   return *fctp != NULL ? 0 : (*ni)->next == NULL ? 1 : -1;
 }
+libc_hidden_def (__nss_lookup)
 
 
 /* -1 == not found
@@ -812,6 +813,7 @@ __nss_disable_nscd (void (*cb) (size_t, struct traced_file *))
   __nss_not_use_nscd_group = -1;
   __nss_not_use_nscd_hosts = -1;
   __nss_not_use_nscd_services = -1;
+  __nss_not_use_nscd_netgroup = -1;
 }
 #endif
 

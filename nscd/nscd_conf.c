@@ -43,7 +43,8 @@ const char *const dbnames[lastdb] =
   [pwddb] = "passwd",
   [grpdb] = "group",
   [hstdb] = "hosts",
-  [servdb] = "services"
+  [servdb] = "services",
+  [netgrdb] = "netgroup"
 };
 
 
