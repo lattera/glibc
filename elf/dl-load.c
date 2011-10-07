@@ -889,7 +889,7 @@ lose (int code, int fd, const char *name, char *realname, struct link_map *l,
   if (fd != -1)
     (void) __close (fd);
   if (l != NULL && l->l_origin != (char *) -1l)
-    free (l->l_origin);
+    free ((char *) l->l_origin);
   free (l);
   free (realname);
 
