@@ -111,7 +111,7 @@ L(loop_prolog):
 
 	mov	%rdi, %rcx
 	and	$63, %rcx
-	jz	L(align64_loop)    
+	jz	L(align64_loop)
 
 	add	$64, %rdi
 	add	$64, %rdx
