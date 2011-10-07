@@ -1,3 +1,15 @@
+2011-08-31  Liubov Dmitrieva  <liubov.dmitrieva@gmail.com>
+
+	* sysdeps/x86_64/multiarch/rawmemchr.S: Update.
+	Use new sse2 version for core i3 - i7 as it's faster
+	than sse42 version.
+	(bit_Prefer_PMINUB_for_stringop): New.
+	* sysdeps/x86_64/rawmemchr.S: Update.
+	Replace with faster SSE2 version.
+	* sysdeps/x86_64/memrchr.S: New file.
+	* sysdeps/x86_64/memchr.S: Update.
+	Replace with faster SSE2 version.
+
 2011-09-12  Marek Polacek  <mpolacek@redhat.com>
 
 	* elf/dl-load.c (lose): Add cast to avoid warning.

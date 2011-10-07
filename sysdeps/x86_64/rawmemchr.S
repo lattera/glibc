@@ -1,5 +1,7 @@
-/* Copyright (C) 2009 Free Software Foundation, Inc.
-   Contributed by Ulrich Drepper <drepper@redhat.com>.
+/* fast SSE2 memchr with 64 byte loop and pmaxub instruction using
+
+   Copyright (C) 2011 Free Software Foundation, Inc.
+   Contributed by Intel Corporation.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -19,34 +21,187 @@
 
 #include <sysdep.h>
 
-
 	.text
 ENTRY (rawmemchr)
-	movd	%esi, %xmm1
-	movq	%rdi, %rcx
+	movd	%rsi, %xmm1
+	mov	%rdi, %rcx
+
 	punpcklbw %xmm1, %xmm1
-	andq	$~15, %rdi
 	punpcklbw %xmm1, %xmm1
-	orl	$0xffffffff, %esi
-	movdqa	(%rdi), %xmm0
+
+	and	$63, %rcx
 	pshufd	$0, %xmm1, %xmm1
-	subq	%rdi, %rcx
-	pcmpeqb	%xmm1, %xmm0
-	shl	%cl, %esi
-	pmovmskb %xmm0, %ecx
-	andl	%esi, %ecx
-	jnz	1f
 
-2:	movdqa	16(%rdi), %xmm0
-	leaq	16(%rdi), %rdi
-	pcmpeqb	%xmm1, %xmm0
-	pmovmskb %xmm0, %ecx
-	testl	%ecx, %ecx
-	jz	2b
+	cmp	$48, %rcx
+	ja	L(crosscache)
 
-1:	bsfl	%ecx, %eax
-	addq	%rdi, %rax
+	movdqu	(%rdi), %xmm0
+	pcmpeqb	%xmm1, %xmm0
+/* Check if there is a match.  */
+	pmovmskb %xmm0, %eax
+	test	%eax, %eax
+
+	jnz	L(matches)
+	add	$16, %rdi
+	and	$-16, %rdi
+	jmp	L(loop_prolog)
+
+	.p2align 4
+L(crosscache):
+	and	$15, %rcx
+	and	$-16, %rdi
+	movdqa	(%rdi), %xmm0
+
+	pcmpeqb	%xmm1, %xmm0
+/* Check if there is a match.  */
+	pmovmskb %xmm0, %eax
+/* Remove the leading bytes.  */
+	sar	%cl, %eax
+	test	%eax, %eax
+	je	L(unaligned_no_match)
+/* Check which byte is a match.  */
+	bsf	%eax, %eax
+
+	add	%rdi, %rax
+	add	%rcx, %rax
 	ret
+
+	.p2align 4
+L(unaligned_no_match):
+	add	$16, %rdi
+
+	.p2align 4
+L(loop_prolog):
+	movdqa	(%rdi), %xmm0
+	pcmpeqb	%xmm1, %xmm0
+	pmovmskb %xmm0, %eax
+	test	%eax, %eax
+	jnz	L(matches)
+
+	movdqa	16(%rdi), %xmm2
+	pcmpeqb	%xmm1, %xmm2
+	pmovmskb %xmm2, %eax
+	test	%eax, %eax
+	jnz	L(matches16)
+
+	movdqa	32(%rdi), %xmm3
+	pcmpeqb	%xmm1, %xmm3
+	pmovmskb %xmm3, %eax
+	test	%eax, %eax
+	jnz	L(matches32)
+
+	movdqa	48(%rdi), %xmm4
+	pcmpeqb	%xmm1, %xmm4
+	add	$64, %rdi
+	pmovmskb %xmm4, %eax
+	test	%eax, %eax
+	jnz	L(matches0)
+
+	test	$0x3f, %rdi
+	jz	L(align64_loop)
+
+	movdqa	(%rdi), %xmm0
+	pcmpeqb	%xmm1, %xmm0
+	pmovmskb %xmm0, %eax
+	test	%eax, %eax
+	jnz	L(matches)
+
+	movdqa	16(%rdi), %xmm2
+	pcmpeqb	%xmm1, %xmm2
+	pmovmskb %xmm2, %eax
+	test	%eax, %eax
+	jnz	L(matches16)
+
+	movdqa	32(%rdi), %xmm3
+	pcmpeqb	%xmm1, %xmm3
+	pmovmskb %xmm3, %eax
+	test	%eax, %eax
+	jnz	L(matches32)
+
+	movdqa	48(%rdi), %xmm3
+	pcmpeqb	%xmm1, %xmm3
+	pmovmskb %xmm3, %eax
+
+	add	$64, %rdi
+	test	%eax, %eax
+	jnz	L(matches0)
+
+	and	$-64, %rdi
+
+	.p2align 4
+L(align64_loop):
+	movdqa	(%rdi), %xmm0
+	movdqa	16(%rdi), %xmm2
+	movdqa	32(%rdi), %xmm3
+	movdqa	48(%rdi), %xmm4
+
+	pcmpeqb	%xmm1, %xmm0
+	pcmpeqb	%xmm1, %xmm2
+	pcmpeqb	%xmm1, %xmm3
+	pcmpeqb	%xmm1, %xmm4
+
+	pmaxub	%xmm0, %xmm3
+	pmaxub	%xmm2, %xmm4
+	pmaxub	%xmm3, %xmm4
+	pmovmskb %xmm4, %eax
+
+	add	$64, %rdi
+
+	test	%eax, %eax
+	jz	L(align64_loop)
+
+	sub	$64, %rdi
+
+	pmovmskb %xmm0, %eax
+	test	%eax, %eax
+	jnz	L(matches)
+
+	pmovmskb %xmm2, %eax
+	test	%eax, %eax
+	jnz	L(matches16)
+
+	movdqa	32(%rdi), %xmm3
+	pcmpeqb	%xmm1, %xmm3
+
+	pcmpeqb	48(%rdi), %xmm1
+	pmovmskb %xmm3, %eax
+	test	%eax, %eax
+	jnz	L(matches32)
+
+	pmovmskb %xmm1, %eax
+	bsf	%eax, %eax
+	lea	48(%rdi, %rax), %rax
+	ret
+
+	.p2align 4
+L(matches0):
+	bsf	%eax, %eax
+	lea	-16(%rax, %rdi), %rax
+	ret
+
+	.p2align 4
+L(matches):
+	bsf	%eax, %eax
+	add	%rdi, %rax
+	ret
+
+	.p2align 4
+L(matches16):
+	bsf	%eax, %eax
+	lea	16(%rax, %rdi), %rax
+	ret
+
+	.p2align 4
+L(matches32):
+	bsf	%eax, %eax
+	lea	32(%rax, %rdi), %rax
+	ret
+
+	.p2align 4
+L(return_null):
+	xor	%rax, %rax
+	ret
+
 END (rawmemchr)
 
 strong_alias (rawmemchr, __rawmemchr)
