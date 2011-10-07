@@ -25,21 +25,17 @@
 # include <inttypes.h>
 # include <wchar.h>
 
-# define L(str) L##str
 # define MEMCMP wmemcmp
 # define MEMCPY wmemcpy
 # define SIMPLE_MEMCMP simple_wmemcmp
-# define STUPID_MEMCMP stupid_wmemcmp
 # define CHAR wchar_t
 # define MAX_CHAR 256000
 # define UCHAR uint32_t
 # define CHARBYTES 4
 #else
-# define L(str) str
 # define MEMCMP memcmp
 # define MEMCPY memcpy
 # define SIMPLE_MEMCMP simple_memcmp
-# define STUPID_MEMCMP stupid_memcmp
 # define CHAR char
 # define MAX_CHAR 255
 # define UCHAR unsigned char
