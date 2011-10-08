@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libc 2.14\n"
 "POT-Creation-Date: 2011-05-31 00:06-0400\n"
-"PO-Revision-Date: 2011-08-28 14:30+0900\n"
+"PO-Revision-Date: 2011-10-08 09:53+0900\n"
 "Last-Translator: Yasuaki Taniguchi <yasuakit@gmail.com>\n"
 "Language-Team: Japanese <translation-team-ja@lists.sourceforge.net>\n"
 "Language: ja\n"
@@ -98,11 +98,13 @@ msgid "%s%s%s:%u: %s%sUnexpected error: %s.\n"
 msgstr "%s%s%s:%u: %s%s予期しないエラーです: %s。\n"
 
 #: assert/assert.c:105
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "%s%s%s:%u: %s%sAssertion `%s' failed.\n"
 "%n"
-msgstr "%s%s%s:%u: %s%sアサーション `%s' が失敗しました。\n"
+msgstr ""
+"%s%s%s:%u: %s%sアサーション `%s' に失敗しました。\n"
+"%n"
 
 #: catgets/gencat.c:110 catgets/gencat.c:114 nscd/nscd.c:100 nss/makedb.c:61
 msgid "NAME"
@@ -294,14 +296,12 @@ msgid "Usage: xtrace [OPTION]... PROGRAM [PROGRAMOPTION]...\\n"
 msgstr "使用法: xtrace [OPTION]... PROGRAM [PROGRAMOPTION]...\\n"
 
 #: debug/xtrace.sh:33 malloc/memusage.sh:27
-#, fuzzy
 msgid "Try \\`%s --help' or `%s --usage' for more information.\\n"
-msgstr "詳細は `%s --help' または `%s --usage' を実行して下さい。\n"
+msgstr "詳細は \\`%s --help' または `%s --usage' を実行してください。\\n"
 
 #: debug/xtrace.sh:39
-#, fuzzy
 msgid "%s: option '%s' requires an argument.\\n"
-msgstr "%s: オプション '--%s' は引数が必要です\n"
+msgstr "%s: オプション '%s' は引数が必要です。\\n"
 
 #: debug/xtrace.sh:46
 msgid ""
@@ -641,9 +641,8 @@ msgid "TLS generation counter wrapped!  Please report this."
 msgstr "TLS 生成カウンタが一周しました!  これを報告してください。"
 
 #: elf/dl-open.c:462
-#, fuzzy
 msgid "cannot load any more object with static TLS"
-msgstr "静的 TLS ブロック内にメモリを配置出来ません"
+msgstr "静的 TLS ブロックではこれ以上オブジェクトをロードできません"
 
 #: elf/dl-open.c:511
 msgid "invalid mode for dlopen()"
@@ -4131,7 +4130,7 @@ msgid "            %2lus  server runtime\n"
 msgstr "            %2lus  サーバ 実行時間\n"
 
 #: nscd/nscd_stat.c:241
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "%15d  current number of threads\n"
 "%15d  maximum number of threads\n"
@@ -4145,6 +4144,7 @@ msgstr ""
 "%15lu  クライアントが待機しなければならなかった回数\n"
 "%15s  paranoia mode enabled\n"
 "%15lu  内部再起動\n"
+"%15u  再起動回数\n"
 
 #: nscd/nscd_stat.c:276
 #, c-format
@@ -4176,26 +4176,26 @@ msgstr ""
 "\n"
 "%s キャッシュ:\n"
 "\n"
-"%15s  cache is enabled\n"
-"%15s  cache is persistent\n"
-"%15s  cache is shared\n"
-"%15zu  suggested size\n"
-"%15zu  total data pool size\n"
-"%15zu  used data pool size\n"
-"%15lu  seconds time to live for positive entries\n"
-"%15lu  seconds time to live for negative entries\n"
-"%15<PRIuMAX>  cache hits on positive entries\n"
-"%15<PRIuMAX>  cache hits on negative entries\n"
-"%15<PRIuMAX>  cache misses on positive entries\n"
-"%15<PRIuMAX>  cache misses on negative entries\n"
-"%15lu%% cache hit rate\n"
-"%15zu  current number of cached values\n"
-"%15zu  maximum number of cached values\n"
-"%15zu  maximum chain length searched\n"
-"%15<PRIuMAX>  number of delays on rdlock\n"
-"%15<PRIuMAX>  number of delays on wrlock\n"
-"%15<PRIuMAX>  memory allocations failed\n"
-"%15s  check /etc/%s for changes\n"
+"%15s  キャッシュが有効\n"
+"%15s  キャッシュが永続的\n"
+"%15s  キャッシュが共有されている\n"
+"%15zu  提案されるサイズ\n"
+"%15zu  全データプールサイズ\n"
+"%15zu  使用中のデータプールサイズ\n"
+"%15lu  正のエントリのキャッシュ保持秒数\n"
+"%15lu  負のエントリのキャッシュ保持秒数\n"
+"%15<PRIuMAX>  正のエントリのキャッシュヒット\n"
+"%15<PRIuMAX>  負のエントリのキャッシュヒット\n"
+"%15<PRIuMAX>  正のエントリのキャッシュミス\n"
+"%15<PRIuMAX>  負のエントリのキャッシュミス\n"
+"%15lu%% キャッシュヒット率\n"
+"%15zu  現在のキャッシュ個数\n"
+"%15zu  最大のキャッシュ個数\n"
+"%15zu  検索される最大連鎖長\n"
+"%15<PRIuMAX>  rdlock の遅延数\n"
+"%15<PRIuMAX>  wrlock の遅延数\n"
+"%15<PRIuMAX>  メモリ割り当て失敗\n"
+"%15s  変更に関しては /etc/%s を確認してください\n"
 
 #: nscd/pwdcache.c:423
 #, c-format
@@ -4334,11 +4334,11 @@ msgstr "使用されるサービス設定"
 
 #: nss/getent.c:60
 msgid "disable IDN encoding"
-msgstr ""
+msgstr "IDN エンコーディングを無効にする"
 
 #: nss/getent.c:65
 msgid "Get entries from administrative database."
-msgstr "管理データベースからエントリを取得する"
+msgstr "管理データベースからエントリを取得します。"
 
 #: nss/getent.c:149 nss/getent.c:479
 #, c-format
@@ -6614,15 +6614,18 @@ msgid "warning: "
 msgstr "警告: "
 
 #: timezone/zic.c:459
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "%s: usage is %s [ --version ] [ --help ] [ -v ] [ -l localtime ] [ -p posixrules ] \\\n"
 "\t[ -d directory ] [ -L leapseconds ] [ -y yearistype ] [ filename ... ]\n"
 "\n"
 "Report bugs to tz@elsie.nci.nih.gov.\n"
 msgstr ""
-"%s: 使用法: %s [ --version ] [ -v ] [ -l localtime ] [ -p posixrules ] \\\n"
+"%s: 使用法 %s [ --version ] [ --help ] [ -v ] [ -l localtime ] [ -p posixrules ] \\\n"
 "\t[ -d directory ] [ -L leapseconds ] [ -y yearistype ] [ filename ... ]\n"
+"\n"
+"バグを発見したら <tz@elsie.nci.nih.gov> に報告してください。\n"
+"翻訳に関するバグは<translation-team-ja@lists.sourceforge.net>に報告してください。\n"
 
 #: timezone/zic.c:496
 msgid "wild compilation-time specification of zic_t"
@@ -6868,7 +6871,7 @@ msgstr "%s: %sの書き込みエラーです\n"
 
 #: timezone/zic.c:2019
 msgid "no POSIX environment variable for zone"
-msgstr ""
+msgstr "ゾーン用の POSIX 環境変数ではありません"
 
 #: timezone/zic.c:2176
 msgid "can't determine time zone abbreviation to use just after until time"
