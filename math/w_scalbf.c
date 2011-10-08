@@ -24,7 +24,7 @@ static char rcsid[] = "$NetBSD: w_scalbf.c,v 1.3 1995/05/10 20:49:50 jtc Exp $";
  */
 
 #include <math.h>
-#include "math_private.h"
+#include <math_private.h>
 
 #include <errno.h>
 

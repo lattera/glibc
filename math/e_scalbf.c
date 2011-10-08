@@ -19,7 +19,7 @@ static char rcsid[] = "$NetBSD: e_scalbf.c,v 1.3 1995/05/10 20:46:12 jtc Exp $";
 
 #include <fenv.h>
 #include <math.h>
-#include "math_private.h"
+#include <math_private.h>
 
 #ifdef _SCALB_INT
 #ifdef __STDC__

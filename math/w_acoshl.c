@@ -23,7 +23,7 @@ static char rcsid[] = "$NetBSD: $";
  */
 
 #include <math.h>
-#include "math_private.h"
+#include <math_private.h>
 
 #ifdef __STDC__
 	long double __acoshl(long double x)	/* wrapper acosh */

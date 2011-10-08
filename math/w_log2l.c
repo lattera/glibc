@@ -3,7 +3,7 @@
  */
 
 #include <math.h>
-#include "math_private.h"
+#include <math_private.h>
 
 long double
 __log2l (long double x)	/* wrapper log2l */

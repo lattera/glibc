@@ -4,7 +4,7 @@
 
 #include <float.h>
 #include <math.h>
-#include "math_private.h"
+#include <math_private.h>
 
 static const long double o_threshold = (long double) LDBL_MAX_EXP;
 static const long double u_threshold

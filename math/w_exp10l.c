@@ -19,7 +19,7 @@
  */
 
 #include <math.h>
-#include "math_private.h"
+#include <math_private.h>
 
 #ifdef __STDC__
 	long double __exp10l(long double x)	/* wrapper exp10 */

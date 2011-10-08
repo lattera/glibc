@@ -4,7 +4,7 @@
 
 #include <float.h>
 #include <math.h>
-#include "math_private.h"
+#include <math_private.h>
 
 static const double o_threshold= (double) DBL_MAX_EXP;
 static const double u_threshold= (double) (DBL_MIN_EXP - DBL_MANT_DIG - 1);

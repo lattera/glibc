@@ -18,7 +18,7 @@ static char rcsid[] = "$NetBSD: w_jnf.c,v 1.3 1995/05/10 20:49:21 jtc Exp $";
 #endif
 
 #include <math.h>
-#include "math_private.h"
+#include <math_private.h>
 
 #ifdef __STDC__
 	float jnf(int n, float x)	/* wrapper jnf */

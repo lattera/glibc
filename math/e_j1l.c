@@ -1,7 +1,7 @@
 #include <math.h>
 #include <stdio.h>
 #include <errno.h>
-#include "math_private.h"
+#include <math_private.h>
 
 long double
 __ieee754_j1l (long double x)

@@ -1,5 +1,5 @@
 #include <math.h>
-#include "math_private.h"
+#include <math_private.h>
 
 long double
 __ieee754_exp2l (long double x)

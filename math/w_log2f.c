@@ -3,7 +3,7 @@
  */
 
 #include <math.h>
-#include "math_private.h"
+#include <math_private.h>
 
 float
 __log2f (float x)	/* wrapper log2f */

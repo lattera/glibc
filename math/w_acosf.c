@@ -22,7 +22,7 @@ static char rcsid[] = "$NetBSD: w_acosf.c,v 1.3 1995/05/10 20:48:29 jtc Exp $";
  */
 
 #include <math.h>
-#include "math_private.h"
+#include <math_private.h>
 
 
 #ifdef __STDC__

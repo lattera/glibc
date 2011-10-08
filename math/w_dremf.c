@@ -6,7 +6,7 @@
  */
 
 #include <math.h>
-#include "math_private.h"
+#include <math_private.h>
 
 float
 __dremf(x, y)

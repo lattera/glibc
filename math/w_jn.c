@@ -41,7 +41,7 @@ static char rcsid[] = "$NetBSD: w_jn.c,v 1.6 1995/05/10 20:49:19 jtc Exp $";
  */
 
 #include <math.h>
-#include "math_private.h"
+#include <math_private.h>
 
 #ifdef __STDC__
 	double jn(int n, double x)	/* wrapper jn */

@@ -18,7 +18,7 @@
  */
 
 #include <math.h>
-#include "math_private.h"
+#include <math_private.h>
 
 #ifdef __STDC__
 	float __exp10f(float x)		/* wrapper exp10f */

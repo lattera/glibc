@@ -26,7 +26,7 @@ static char rcsid[] = "$NetBSD: $";
 
 #include <fenv.h>
 #include <math.h>
-#include "math_private.h"
+#include <math_private.h>
 
 #ifdef _SCALB_INT
 #ifdef __STDC__

@@ -22,7 +22,7 @@ static char rcsid[] = "$NetBSD: w_j0f.c,v 1.3 1995/05/10 20:49:13 jtc Exp $";
  */
 
 #include <math.h>
-#include "math_private.h"
+#include <math_private.h>
 
 #ifdef __STDC__
 	float j0f(float x)		/* wrapper j0f */

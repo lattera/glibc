@@ -19,7 +19,7 @@ static char rcsid[] = "$NetBSD: w_j0.c,v 1.6 1995/05/10 20:49:11 jtc Exp $";
  */
 
 #include <math.h>
-#include "math_private.h"
+#include <math_private.h>
 
 #ifdef __STDC__
 	double j0(double x)		/* wrapper j0 */
