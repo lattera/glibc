@@ -180,7 +180,8 @@ __printf_fphex (FILE *fp,
 	}
       else
 	{
-	  if (__isinfl (fpnum.ldbl.d))
+	  int res = __isinfl (fpnum.ldbl.d);
+	  if (res)
 	    {
 	      if (isupper (info->spec))
 		{
@@ -192,9 +193,10 @@ __printf_fphex (FILE *fp,
 		  special = "inf";
 		  wspecial = L"inf";
 		}
+	      negative = res < 0;
 	    }
-
-	  negative = signbit (fpnum.ldbl.d);
+	  else
+	    negative = signbit (fpnum.ldbl.d);
 	}
     }
   else
@@ -219,7 +221,8 @@ __printf_fphex (FILE *fp,
 	}
       else
 	{
-	  if (__isinf (fpnum.dbl.d))
+	  int res = __isinf (fpnum.dbl.d);
+	  if (res)
 	    {
 	      if (isupper (info->spec))
 		{
@@ -231,9 +234,10 @@ __printf_fphex (FILE *fp,
 		  special = "inf";
 		  wspecial = L"inf";
 		}
+	      negative = res < 0;
 	    }
-
-	  negative = signbit (fpnum.dbl.d);
+	  else
+	    negative = signbit (fpnum.dbl.d);
 	}
     }
 

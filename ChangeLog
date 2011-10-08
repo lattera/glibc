@@ -1,5 +1,10 @@
 2011-10-08  Ulrich Drepper  <drepper@gmail.com>
 
+	* stdio-common/printf_fp.c: Use the fact that isinf returns the sign
+	of the number.
+	* stdio-common/printf_fphex.c: Likewise.
+	* stdio-common/printf_size.c: Likewise.
+
 	* math/e_exp10.c: Include math_private.h using <...> not "...".
 	* math/e_exp10f.c: Likewise.
 	* math/e_exp10l.c: Likewise.

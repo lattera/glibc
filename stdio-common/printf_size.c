@@ -1,5 +1,5 @@
 /* Print size value using units for orders of magnitude.
-   Copyright (C) 1997-2002, 2004, 2006 Free Software Foundation, Inc.
+   Copyright (C) 1997-2002, 2004, 2006, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
    Based on a proposal by Larry McVoy <lm@sgi.com>.
@@ -109,7 +109,7 @@ __printf_size (FILE *fp, const struct printf_info *info,
   fpnum;
   const void *ptr = &fpnum;
 
-  int negative = 0;
+  int fpnum_sign = 0;
 
   /* "NaN" or "Inf" for the special cases.  */
   const char *special = NULL;
@@ -118,7 +118,7 @@ __printf_size (FILE *fp, const struct printf_info *info,
   struct printf_info fp_info;
   int done = 0;
   int wide = info->wide;
-
+  int res;
 
   /* Fetch the argument value.	*/
 #ifndef __NO_LONG_DOUBLE_MATH
@@ -131,14 +131,13 @@ __printf_size (FILE *fp, const struct printf_info *info,
 	{
 	  special = "nan";
 	  wspecial = L"nan";
-	  negative = 0;
+	  // fpnum_sign = 0;	Already zero
 	}
-      else if (__isinfl (fpnum.ldbl.d))
+      else if ((res = __isinfl (fpnum.ldbl.d)))
 	{
+	  fpnum_sign = res;
 	  special = "inf";
 	  wspecial = L"inf";
-
-	  negative = fpnum.ldbl.d < 0;
 	}
       else
 	while (fpnum.ldbl.d >= divisor && tag[1] != '\0')
@@ -157,14 +156,13 @@ __printf_size (FILE *fp, const struct printf_info *info,
 	{
 	  special = "nan";
 	  wspecial = L"nan";
-	  negative = 0;
+	  // fpnum_sign = 0;	Already zero
 	}
-      else if (__isinf (fpnum.dbl.d))
+      else if ((res = __isinf (fpnum.dbl.d)))
 	{
+	  fpnum_sign = res;
 	  special = "inf";
 	  wspecial = L"inf";
-
-	  negative = fpnum.dbl.d < 0;
 	}
       else
 	while (fpnum.dbl.d >= divisor && tag[1] != '\0')
@@ -178,14 +176,14 @@ __printf_size (FILE *fp, const struct printf_info *info,
     {
       int width = info->prec > info->width ? info->prec : info->width;
 
-      if (negative || info->showsign || info->space)
+      if (fpnum_sign < 0 || info->showsign || info->space)
 	--width;
       width -= 3;
 
       if (!info->left && width > 0)
 	PADN (' ', width);
 
-      if (negative)
+      if (fpnum_sign < 0)
 	outchar ('-');
       else if (info->showsign)
 	outchar ('+');

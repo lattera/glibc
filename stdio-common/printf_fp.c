@@ -334,6 +334,7 @@ ___printf_fp (FILE *fp,
       fpnum.ldbl = *(const long double *) args[0];
 
       /* Check for special values: not a number or infinity.  */
+      int res;
       if (__isnanl (fpnum.ldbl))
 	{
 	  union ieee854_long_double u = { .d = fpnum.ldbl };
@@ -349,9 +350,9 @@ ___printf_fp (FILE *fp,
 		wspecial = L"nan";
 	      }
 	}
-      else if (__isinfl (fpnum.ldbl))
+      else if ((res = __isinfl (fpnum.ldbl)))
 	{
-	  is_neg = fpnum.ldbl < 0;
+	  is_neg = res < 0;
 	  if (isupper (info->spec))
 	    {
 	      special = "INF";
@@ -379,6 +380,7 @@ ___printf_fp (FILE *fp,
       fpnum.dbl = *(const double *) args[0];
 
       /* Check for special values: not a number or infinity.  */
+      int res;
       if (__isnan (fpnum.dbl))
 	{
 	  union ieee754_double u = { .d = fpnum.dbl };
@@ -394,9 +396,9 @@ ___printf_fp (FILE *fp,
 	      wspecial = L"nan";
 	    }
 	}
-      else if (__isinf (fpnum.dbl))
+      else if ((res = __isinf (fpnum.dbl)))
 	{
-	  is_neg = fpnum.dbl < 0;
+	  is_neg = res < 0;
 	  if (isupper (info->spec))
 	    {
 	      special = "INF";
