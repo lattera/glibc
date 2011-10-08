@@ -22,6 +22,7 @@ static char rcsid[] = "$NetBSD: s_finite.c,v 1.8 1995/05/10 20:47:17 jtc Exp $";
 #include "math.h"
 #include "math_private.h"
 
+#undef __finite
 #ifdef __STDC__
 	int __finite(double x)
 #else

@@ -1,5 +1,5 @@
 /* Return cosine of complex double value.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -21,6 +21,7 @@
 #include <complex.h>
 #include <fenv.h>
 #include <math.h>
+#include <math_private.h>
 
 
 __complex__ double
@@ -36,17 +37,17 @@ __ccos (__complex__ double x)
 	  __imag__ res = 0.0;
 
 #ifdef FE_INVALID
-	  if (__isinf (__real__ x))
+	  if (__isinf_ns (__real__ x))
 	    feraiseexcept (FE_INVALID);
 #endif
 	}
-      else if (__isinf (__imag__ x))
+      else if (__isinf_ns (__imag__ x))
 	{
 	  __real__ res = HUGE_VAL;
 	  __imag__ res = __nan ("");
 
 #ifdef FE_INVALID
-	  if (__isinf (__real__ x))
+	  if (__isinf_ns (__real__ x))
 	    feraiseexcept (FE_INVALID);
 #endif
 	}

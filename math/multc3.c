@@ -1,4 +1,4 @@
-/* Copyright (C) 2005, 2006 Free Software Foundation, Inc.
+/* Copyright (C) 2005, 2006, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Richard Henderson <rth@redhat.com>, 2005.
 
@@ -39,28 +39,29 @@ __multc3 (long double a, long double b, long double c, long double d)
     {
       /* Recover infinities that computed as NaN + iNaN.  */
       bool recalc = 0;
-      if (isinf (a) || isinf (b))
+      if (__isinf_nsl (a) || __isinf_nsl (b))
 	{
 	  /* z is infinite.  "Box" the infinity and change NaNs in
 	     the other factor to 0.  */
-	  a = __copysignl (isinf (a) ? 1 : 0, a);
-	  b = __copysignl (isinf (b) ? 1 : 0, b);
+	  a = __copysignl (__isinf_nsl (a) ? 1 : 0, a);
+	  b = __copysignl (__isinf_nsl (b) ? 1 : 0, b);
 	  if (isnan (c)) c = __copysignl (0, c);
 	  if (isnan (d)) d = __copysignl (0, d);
 	  recalc = 1;
 	}
-     if (isinf (c) || isinf (d))
+     if (__isinf_nsl (c) || __isinf_nsl (d))
 	{
 	  /* w is infinite.  "Box" the infinity and change NaNs in
 	     the other factor to 0.  */
-	  c = __copysignl (isinf (c) ? 1 : 0, c);
-	  d = __copysignl (isinf (d) ? 1 : 0, d);
+	  c = __copysignl (__isinf_nsl (c) ? 1 : 0, c);
+	  d = __copysignl (__isinf_nsl (d) ? 1 : 0, d);
 	  if (isnan (a)) a = __copysignl (0, a);
 	  if (isnan (b)) b = __copysignl (0, b);
 	  recalc = 1;
 	}
      if (!recalc
-	  && (isinf (ac) || isinf (bd) || isinf (ad) || isinf (bc)))
+	  && (__isinf_nsl (ac) || __isinf_nsl (bd)
+	      || __isinf_nsl (ad) || __isinf_nsl (bc)))
 	{
 	  /* Recover infinities from overflow by changing NaNs to 0.  */
 	  if (isnan (a)) a = __copysignl (0, a);

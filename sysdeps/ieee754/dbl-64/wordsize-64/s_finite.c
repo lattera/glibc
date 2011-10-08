@@ -17,6 +17,7 @@
 #include "math.h"
 #include "math_private.h"
 
+#undef __finite
 int
 __finite(double x)
 {

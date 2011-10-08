@@ -18,6 +18,7 @@
 #include "math.h"
 #include "math_private.h"
 
+#undef __isnan
 #ifdef __STDC__
 	int __isnan(double x)
 #else

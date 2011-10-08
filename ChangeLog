@@ -1,5 +1,41 @@
 2011-10-08  Ulrich Drepper  <drepper@gmail.com>
 
+	* include/math.h: Declare __isinf_ns, __isinf_nsf, __isinf_nsl.
+	* sysdeps/ieee754/dbl-64/s_isinf_ns.c: New file.
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_isinf_ns.c: New file.
+	* sysdeps/ieee754/flt-32/s_isinf_nsf.c: New file.
+	* sysdeps/ieee754/ldbl-128/s_isinf_nsl.c: New file.
+	* sysdeps/ieee754/ldbl-96/s_isinf_nsl.c: New file.
+	* math/Makefile (libm-calls): Add s_isinf_ns.
+	* math/divtc3.c: Use __isinf_nsl instead of isinf.
+	* math/multc3.c: Likewise.
+	* math/s_casin.c: Likewise.
+	* math/s_casinf.c: Likewise.
+	* math/s_casinl.c: Likewise.
+	* math/s_ccos.c: Likewise.
+	* math/s_ccosf.c: Likewise.
+	* math/s_ccosl.c: Likewise.
+	* math/s_ctan.c: Likewise.
+	* math/s_ctanf.c: Likewise.
+	* math/s_ctanh.c: Likewise.
+	* math/s_ctanhf.c: Likewise.
+	* math/s_ctanhl.c: Likewise.
+	* math/s_ctanl.c: Likewise.
+	* math/w_fmod.c: Likewise.
+	* math/w_fmodf.c: Likewise.
+	* math/w_fmodl.c: Likewise.
+	* math/w_remainder.c: Likewise.
+	* math/w_remainderf.c: Likewise.
+	* math/w_remainderl.c: Likewise.
+	* sysdeps/ieee754/dbl-64/s_finite.c: Undefine __finite.
+	* sysdeps/ieee754/dbl-64/s_isnan.c: Undefine __isnan.
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_finite.c: Undefine __finite.
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_isnan.c: Undefine __nan.
+	* sysdeps/ieee754/flt-32/s_finitef.c: Undefine __finitef.
+	* sysdeps/ieee754/flt-32/s_isnanf.c: Undefine __nan.
+	* sysdeps/x86_64/fpu/math_private.h: Add optimized versions of __isnsn,
+	__isnanf, __isinf_ns, __isinf_nsf, __finite, and __finitef.
+
 	* stdio-common/printf_fp.c: Use the fact that isinf returns the sign
 	of the number.
 	* stdio-common/printf_fphex.c: Likewise.

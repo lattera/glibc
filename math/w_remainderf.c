@@ -37,7 +37,7 @@ static char rcsid[] = "$NetBSD: w_remainderf.c,v 1.3 1995/05/10 20:49:46 jtc Exp
 	float z;
 	z = __ieee754_remainderf(x,y);
 	if(_LIB_VERSION == _IEEE_ || __isnanf(y) || __isnanf(x)) return z;
-	if(y==(float)0.0 || __isinff(x))
+	if(y==(float)0.0 || __isinf_nsf(x))
 	    /* remainder(x,0) */
 	    return (float)__kernel_standard((double)x,(double)y,128);
 	else

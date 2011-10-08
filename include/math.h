@@ -31,4 +31,8 @@ libm_hidden_proto (__expl)
 libm_hidden_proto (__expm1l)
 # endif
 
+extern int __isinf_ns (double);
+extern int __isinf_nsf (float);
+extern int __isinf_nsl (long double);
+
 #endif

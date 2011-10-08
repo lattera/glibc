@@ -56,3 +56,24 @@ do {								\
 } while (0)
 
 #endif
+
+#define __isnan(d) \
+  ({ long int __di; EXTRACT_WORDS64 (__di, d);				      \
+     (__di & 0x7fffffffffffffffl) > 0x7ff0000000000000l; })
+#define __isnanf(d) \
+  ({ int __di; GET_FLOAT_WORD (__di, d);				      \
+     (__di & 0x7fffffff) > 0x7f800000; })
+
+#define __isinf_ns(d) \
+  ({ long int __di; EXTRACT_WORDS64 (__di, d);				      \
+     (__di & 0x7fffffffffffffffl) == 0x7ff0000000000000l; })
+#define __isinf_nsf(d) \
+  ({ int __di; GET_FLOAT_WORD (__di, d);				      \
+     (__di & 0x7fffffff) == 0x7f800000; })
+
+#define __finite(d) \
+  ({ long int __di; EXTRACT_WORDS64 (__di, d);				      \
+     (__di & 0x7fffffffffffffffl) < 0x7ff0000000000000l; })
+#define __finitef(d) \
+  ({ int __di; GET_FLOAT_WORD (__di, d);				      \
+     (__di & 0x7fffffff) < 0x7f800000; })

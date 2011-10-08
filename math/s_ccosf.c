@@ -1,5 +1,5 @@
 /* Return cosine of complex float value.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -21,6 +21,7 @@
 #include <complex.h>
 #include <fenv.h>
 #include <math.h>
+#include <math_private.h>
 
 
 __complex__ float
@@ -36,17 +37,17 @@ __ccosf (__complex__ float x)
 	  __imag__ res = 0.0;
 
 #ifdef FE_INVALID
-	  if (__isinff (__real__ x))
+	  if (__isinf_nsf (__real__ x))
 	    feraiseexcept (FE_INVALID);
 #endif
 	}
-      else if (__isinff (__imag__ x))
+      else if (__isinf_nsf (__imag__ x))
 	{
 	  __real__ res = HUGE_VALF;
 	  __imag__ res = __nanf ("");
 
 #ifdef FE_INVALID
-	  if (__isinff (__real__ x))
+	  if (__isinf_nsf (__real__ x))
 	    feraiseexcept (FE_INVALID);
 #endif
 	}

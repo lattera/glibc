@@ -35,9 +35,9 @@ static char rcsid[] = "$NetBSD: w_fmod.c,v 1.6 1995/05/10 20:48:55 jtc Exp $";
 	double z;
 	z = __ieee754_fmod(x,y);
 	if(_LIB_VERSION == _IEEE_ ||__isnan(y)||__isnan(x)) return z;
-	if(__isinf(x)||y==0.0) {
+	if(__isinf_ns(x)||y==0.0) {
 		/* fmod(+-Inf,y) or fmod(x,0) */
-	        return __kernel_standard(x,y,27);
+		return __kernel_standard(x,y,27);
 	} else
 	    return z;
 #endif

@@ -1,5 +1,5 @@
 /* Complex hyperbole tangent for float.
-   Copyright (C) 1997, 2005 Free Software Foundation, Inc.
+   Copyright (C) 1997, 2005, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -32,7 +32,7 @@ __ctanhf (__complex__ float x)
 
   if (!isfinite (__real__ x) || !isfinite (__imag__ x))
     {
-      if (__isinff (__real__ x))
+      if (__isinf_nsf (__real__ x))
 	{
 	  __real__ res = __copysignf (1.0, __real__ x);
 	  __imag__ res = __copysignf (0.0, __imag__ x);
@@ -47,7 +47,7 @@ __ctanhf (__complex__ float x)
 	  __imag__ res = __nanf ("");
 
 #ifdef FE_INVALID
-	  if (__isinff (__imag__ x))
+	  if (__isinf_nsf (__imag__ x))
 	    feraiseexcept (FE_INVALID);
 #endif
 	}

@@ -38,9 +38,9 @@ static char rcsid[] = "$NetBSD: w_fmodf.c,v 1.3 1995/05/10 20:48:57 jtc Exp $";
 	float z;
 	z = __ieee754_fmodf(x,y);
 	if(_LIB_VERSION == _IEEE_ ||__isnanf(y)||__isnanf(x)) return z;
-	if(__isinff(x)||y==(float)0.0) {
+	if(__isinf_nsf(x)||y==(float)0.0) {
 		/* fmodf(+-Inf,y) or fmodf(x,0) */
-	        return (float)__kernel_standard((double)x,(double)y,127);
+		return (float)__kernel_standard((double)x,(double)y,127);
 	} else
 	    return z;
 #endif
