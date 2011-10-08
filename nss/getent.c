@@ -472,7 +472,6 @@ static int
 netgroup_keys (int number, char *key[])
 {
   int result = 0;
-  int i;
 
   if (number == 0)
     {

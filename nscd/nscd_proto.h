@@ -74,5 +74,7 @@ extern int __nscd_getservbyport_r (int port, const char *proto,
 				   size_t buflen, struct servent **result);
 extern int __nscd_innetgr (const char *netgroup, const char *host,
 			   const char *user, const char *domain);
+extern int __nscd_setnetgrent (const char *group, struct __netgrent *datap);
+
 
 #endif /* _NSCD_PROTO_H */
