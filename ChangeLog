@@ -1,5 +1,8 @@
 2011-10-08  Roland McGrath  <roland@hack.frob.com>
 
+	* sysdeps/unix/sysv/linux/x86_64/time.c: Move #include <dl-vdso.h>
+	inside [SHARED], where it is used.
+
 	* nscd/nscd_proto.h: Declare __nscd_setnetgrent.
 
 	* nss/getent.c (netgroup_keys): Remove unused variable.
