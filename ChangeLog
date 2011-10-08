@@ -198,6 +198,7 @@
 
 	* sysdeps/ieee754/dbl-64/wordsize-64/s_finite.c: New file.
 
+	[BZ #13192]
 	* sysdeps/unix/sysv/linux/bits/in.h (IP_MULTICAST_ALL): Define.
 	Patch mostly by Neil Horman <nhorman@tuxdriver.com>.
 
