@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998, 1999, 2002, 2007 Free Software Foundation, Inc.
+/* Copyright (C) 1997-1999, 2002, 2007, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1997.
 
@@ -196,9 +196,8 @@ netname2host (const char netname[MAXNETNAMELEN + 1], char *hostname,
 	      const int hostlen)
 {
   char *p1, *p2;
-  char buffer[MAXNETNAMELEN + 1];
 
-  p1 = strchr (buffer, '.');
+  p1 = strchr (netname, '.');
   if (p1 == NULL)
     return 0;
   p1++;

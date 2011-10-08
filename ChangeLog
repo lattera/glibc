@@ -1,5 +1,8 @@
 2011-09-29  Andreas Jaeger  <aj@suse.de>
 
+	[BZ #13179]
+	* sunrpc/netname.c (netname2host): Fix logic.
+
 	[BZ #6779]
 	[BZ #6783]
 	* math/w_remainderl.c (__remainderl): Handle (NaN, 0) and (Inf,y)
