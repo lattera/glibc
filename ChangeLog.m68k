@@ -1,3 +1,8 @@
+2011-10-09  Andreas Schwab  <schwab@linux-m68k.org>
+
+	* sysdeps/m68k/m680x0/s_isinfl.c: Remove.
+	* sysdeps/m68k/m680x0/s_isnanl.c: Remove.
+
 2011-10-05  Andreas Schwab  <schwab@redhat.com>
 
 	* sysdeps/m68k/dl-machine.h (elf_machine_rela)
