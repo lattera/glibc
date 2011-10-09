@@ -2,6 +2,19 @@
 
 	* po/ja.po: Update from translation team.
 
+2011-10-08  Roland McGrath  <roland@hack.frob.com>
+
+	* locale/programs/locarchive.c (prepare_address_space): New function.
+	(create_archive, enlarge_archive, open_archive): Use it.
+
+	* sysdeps/unix/sysv/linux/x86_64/time.c: Move #include <dl-vdso.h>
+	inside [SHARED], where it is used.
+
+	* nscd/nscd_proto.h: Declare __nscd_setnetgrent.
+
+	* nss/getent.c (netgroup_keys): Remove unused variable.
+	* sysdeps/ieee754/flt-32/s_isinf_nsf.c: Likewise.
+
 2011-10-08  Ulrich Drepper  <drepper@gmail.com>
 
 	* include/math.h: Declare __isinf_ns, __isinf_nsf, __isinf_nsl.
