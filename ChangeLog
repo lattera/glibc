@@ -1,3 +1,7 @@
+2011-10-10  Andreas Schwab  <schwab@linux-m68k.org>
+
+	* sysdeps/ieee754/ldbl-128ibm/s_isinf_nsl.c: New file.
+
 2011-10-09  Ulrich Drepper  <drepper@gmail.com>
 
 	* po/ja.po: Update from translation team.
