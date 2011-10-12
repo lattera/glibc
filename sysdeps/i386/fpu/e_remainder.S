@@ -5,8 +5,6 @@
 
 #include <machine/asm.h>
 
-RCSID("$NetBSD: e_remainder.S,v 1.4 1995/05/08 23:49:37 jtc Exp $")
-
 ENTRY(__ieee754_remainder)
 	fldl	12(%esp)
 	fldl	4(%esp)
@@ -17,3 +15,4 @@ ENTRY(__ieee754_remainder)
 	fstp	%st(1)
 	ret
 END (__ieee754_remainder)
+strong_alias (__ieee754_remainder, __remainder_finite)

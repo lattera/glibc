@@ -10,18 +10,14 @@
  */
 
 
-#if defined(LIBM_SCCS) && !defined(lint)
-static char rcsid[] = "$NetBSD: e_sinh.c,v 1.7 1995/05/10 20:46:13 jtc Exp $";
-#endif
-
 /* __ieee754_sinh(x)
  * Method :
  * mathematically sinh(x) if defined to be (exp(x)-exp(-x))/2
  *	1. Replace x by |x| (sinh(-x) = -sinh(x)).
  *	2.
- *		                                    E + E/(E+1)
+ *						    E + E/(E+1)
  *	    0        <= x <= 22     :  sinh(x) := --------------, E=expm1(x)
- *			       			        2
+ *							2
  *
  *	    22       <= x <= lnovft :  sinh(x) := exp(x)/2
  *	    lnovft   <= x <= ln2ovft:  sinh(x) := exp(x/2)/2 * exp(x/2)
@@ -35,18 +31,10 @@ static char rcsid[] = "$NetBSD: e_sinh.c,v 1.7 1995/05/10 20:46:13 jtc Exp $";
 #include "math.h"
 #include "math_private.h"
 
-#ifdef __STDC__
 static const long double one = 1.0, shuge = 1.0e307;
-#else
-static long double one = 1.0, shuge = 1.0e307;
-#endif
 
-#ifdef __STDC__
-	long double __ieee754_sinhl(long double x)
-#else
-	long double __ieee754_sinhl(x)
-	long double x;
-#endif
+long double
+__ieee754_sinhl(long double x)
 {
 	long double t,w,h;
 	int64_t ix,jx;
@@ -62,7 +50,7 @@ static long double one = 1.0, shuge = 1.0e307;
 	if (jx<0) h = -h;
     /* |x| in [0,22], return sign(x)*0.5*(E+E/(E+1))) */
 	if (ix < 0x4036000000000000LL) {	/* |x|<22 */
-	    if (ix<0x3e20000000000000LL) 	/* |x|<2**-29 */
+	    if (ix<0x3e20000000000000LL)	/* |x|<2**-29 */
 		if(shuge+x>one) return x;/* sinhl(tiny) = tiny with inexact */
 	    t = __expm1l(fabsl(x));
 	    if(ix<0x3ff0000000000000LL) return h*(2.0*t-t*t/(t+one));
@@ -82,3 +70,4 @@ static long double one = 1.0, shuge = 1.0e307;
     /* |x| > overflowthresold, sinh(x) overflow */
 	return x*shuge;
 }
+strong_alias (__ieee754_sinhl, __sinhl_finite)

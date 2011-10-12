@@ -9,6 +9,7 @@ __ieee754_fmodl (long double x, long double y)
   __set_errno (ENOSYS);
   return 0.0;
 }
+strong_alias (__ieee754_fmodl, __fmodl_finite)
 
 stub_warning (fmodl)
 #include <stub-tag.h>

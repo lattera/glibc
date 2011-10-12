@@ -20,3 +20,4 @@ ENTRY(__ieee754_acosf)
 	fpatan
 	ret
 END (__ieee754_acosf)
+strong_alias (__ieee754_acosf, __acosf_finite)

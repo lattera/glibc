@@ -9,6 +9,7 @@ __ieee754_acosl (long double x)
   __set_errno (ENOSYS);
   return 0.0;
 }
+strong_alias (__ieee754_acosl, __acosl_finite)
 
 stub_warning (acosl)
 #include <stub-tag.h>

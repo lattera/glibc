@@ -23,9 +23,9 @@ static char rcsid[] = "$NetBSD: $";
  * mathematically sinh(x) if defined to be (exp(x)-exp(-x))/2
  *	1. Replace x by |x| (sinhl(-x) = -sinhl(x)).
  *	2.
- *		                                     E + E/(E+1)
+ *						     E + E/(E+1)
  *	    0        <= x <= 25     :  sinhl(x) := --------------, E=expm1l(x)
- *			       			         2
+ *							 2
  *
  *	    25       <= x <= lnovft :  sinhl(x) := expl(x)/2
  *	    lnovft   <= x <= ln2ovft:  sinhl(x) := expl(x/2)/2 * expl(x/2)
@@ -39,18 +39,10 @@ static char rcsid[] = "$NetBSD: $";
 #include "math.h"
 #include "math_private.h"
 
-#ifdef __STDC__
 static const long double one = 1.0, shuge = 1.0e4931L;
-#else
-static long double one = 1.0, shuge = 1.0e4931L;
-#endif
 
-#ifdef __STDC__
-	long double __ieee754_sinhl(long double x)
-#else
-	long double __ieee754_sinhl(x)
-	long double x;
-#endif
+long double
+__ieee754_sinhl(long double x)
 {
 	long double t,w,h;
 	u_int32_t jx,ix,i0,i1;
@@ -60,13 +52,13 @@ static long double one = 1.0, shuge = 1.0e4931L;
 	ix = jx&0x7fff;
 
     /* x is INF or NaN */
-	if(ix==0x7fff) return x+x;
+	if(__builtin_expect(ix==0x7fff, 0)) return x+x;
 
 	h = 0.5;
 	if (jx & 0x8000) h = -h;
     /* |x| in [0,25], return sign(x)*0.5*(E+E/(E+1))) */
 	if (ix < 0x4003 || (ix == 0x4003 && i0 <= 0xc8000000)) { /* |x|<25 */
-	    if (ix<0x3fdf) 		/* |x|<2**-32 */
+	    if (ix<0x3fdf)		/* |x|<2**-32 */
 		if(shuge+x>one) return x;/* sinh(tiny) = tiny with inexact */
 	    t = __expm1l(fabsl(x));
 	    if(ix<0x3fff) return h*(2.0*t-t*t/(t+one));
@@ -89,3 +81,4 @@ static long double one = 1.0, shuge = 1.0e4931L;
     /* |x| > overflowthreshold, sinhl(x) overflow */
 	return x*shuge;
 }
+strong_alias (__ieee754_sinhl, __sinhl_finite)

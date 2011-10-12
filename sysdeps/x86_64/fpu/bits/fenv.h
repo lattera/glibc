@@ -1,4 +1,4 @@
-/* Copyright (C) 1997,1998,1999,2000,2001,2004 Free Software Foundation, Inc.
+/* Copyright (C) 1997-2001,2004,2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -94,4 +94,37 @@ fenv_t;
 #ifdef __USE_GNU
 /* Floating-point environment where none of the exception is masked.  */
 # define FE_NOMASK_ENV	((__const fenv_t *) -2)
+#endif
+
+
+#ifdef __OPTIMIZE__
+/* Optimized versions.  */
+extern int __feraiseexcept_renamed (int) __asm__ ("feraiseexcept");
+__extern_inline int feraiseexcept (int __excepts)
+{
+  if (__builtin_constant_p (__excepts)
+      && (__excepts & ~(FE_INVALID | FE_DIVBYZERO)) == 0)
+    {
+      if ((FE_INVALID & __excepts) != 0)
+	{
+	  /* One example of a invalid operation is 0.0 / 0.0.  */
+	  float __f = 0.0;
+
+	  __asm__ __volatile__ ("divss %0, %0 " : : "x" (__f));
+	  (void) &__f;
+	}
+      if ((FE_DIVBYZERO & __excepts) != 0)
+	{
+	  float f = 1.0;
+	  float g = 0.0;
+
+	  __asm__ __volatile__ ("divss %1, %0" : : "x" (f), "x" (g));
+	  (void) &f;
+	}
+
+      return 0;
+    }
+
+  return __feraiseexcept_renamed (__excepts);
+}
 #endif

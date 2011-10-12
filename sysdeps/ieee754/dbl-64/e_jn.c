@@ -10,10 +10,6 @@
  * ====================================================
  */
 
-#if defined(LIBM_SCCS) && !defined(lint)
-static char rcsid[] = "$NetBSD: e_jn.c,v 1.9 1995/05/10 20:45:34 jtc Exp $";
-#endif
-
 /*
  * __ieee754_jn(n, x), __ieee754_yn(n, x)
  * floating point Bessel's function of the 1st and 2nd kind
@@ -43,27 +39,15 @@ static char rcsid[] = "$NetBSD: e_jn.c,v 1.9 1995/05/10 20:45:34 jtc Exp $";
 #include "math.h"
 #include "math_private.h"
 
-#ifdef __STDC__
 static const double
-#else
-static double
-#endif
 invsqrtpi=  5.64189583547756279280e-01, /* 0x3FE20DD7, 0x50429B6D */
 two   =  2.00000000000000000000e+00, /* 0x40000000, 0x00000000 */
 one   =  1.00000000000000000000e+00; /* 0x3FF00000, 0x00000000 */
 
-#ifdef __STDC__
 static const double zero  =  0.00000000000000000000e+00;
-#else
-static double zero  =  0.00000000000000000000e+00;
-#endif
 
-#ifdef __STDC__
-	double __ieee754_jn(int n, double x)
-#else
-	double __ieee754_jn(n,x)
-	int n; double x;
-#endif
+double
+__ieee754_jn(int n, double x)
 {
 	int32_t i,hx,ix,lx, sgn;
 	double a, b, temp, di;
@@ -75,7 +59,8 @@ static double zero  =  0.00000000000000000000e+00;
 	EXTRACT_WORDS(hx,lx,x);
 	ix = 0x7fffffff&hx;
     /* if J(n,NaN) is NaN */
-	if((ix|((u_int32_t)(lx|-lx))>>31)>0x7ff00000) return x+x;
+	if(__builtin_expect((ix|((u_int32_t)(lx|-lx))>>31)>0x7ff00000, 0))
+		return x+x;
 	if(n<0){
 		n = -n;
 		x = -x;
@@ -85,8 +70,9 @@ static double zero  =  0.00000000000000000000e+00;
 	if(n==1) return(__ieee754_j1(x));
 	sgn = (n&1)&(hx>>31);	/* even n -- 0, odd n -- sign(x) */
 	x = fabs(x);
-	if((ix|lx)==0||ix>=0x7ff00000) 	/* if x is 0 or inf */
-	    b = zero;
+	if(__builtin_expect((ix|lx)==0||ix>=0x7ff00000,0))
+		/* if x is 0 or inf */
+		b = zero;
 	else if((double)n<=x) {
 		/* Safe to use J(n+1,x)=2n/x *J(n,x)-J(n-1,x) */
 	    if(ix>=0x52D00000) { /* x > 2**302 */
@@ -99,7 +85,7 @@ static double zero  =  0.00000000000000000000e+00;
      *		   n	sin(xn)*sqt2	cos(xn)*sqt2
      *		----------------------------------
      *		   0	 s-c		 c+s
-     *		   1	-s-c 		-c+s
+     *		   1	-s-c		-c+s
      *		   2	-s+c		-c-s
      *		   3	 s+c		 c-s
      */
@@ -114,13 +100,13 @@ static double zero  =  0.00000000000000000000e+00;
 		}
 		b = invsqrtpi*temp/__ieee754_sqrt(x);
 	    } else {
-	        a = __ieee754_j0(x);
-	        b = __ieee754_j1(x);
-	        for(i=1;i<n;i++){
+		a = __ieee754_j0(x);
+		b = __ieee754_j1(x);
+		for(i=1;i<n;i++){
 		    temp = b;
 		    b = b*((double)(i+i)/x) - a; /* avoid underflow */
 		    a = temp;
-	        }
+		}
 	    }
 	} else {
 	    if(ix<0x3e100000) {	/* x < 2**-29 */
@@ -139,11 +125,11 @@ static double zero  =  0.00000000000000000000e+00;
 		}
 	    } else {
 		/* use backward recurrence */
-		/* 			x      x^2      x^2
+		/*			x      x^2      x^2
 		 *  J(n,x)/J(n-1,x) =  ----   ------   ------   .....
 		 *			2n  - 2(n+1) - 2(n+2)
 		 *
-		 * 			1      1        1
+		 *			1      1        1
 		 *  (for large x)   =  ----  ------   ------   .....
 		 *			2n   2(n+1)   2(n+2)
 		 *			-- - ------ - ------ -
@@ -156,7 +142,7 @@ static double zero  =  0.00000000000000000000e+00;
 		 *		       1
 		 *	   w - -----------------
 		 *			  1
-		 * 	        w+h - ---------
+		 *		w+h - ---------
 		 *		       w+2h - ...
 		 *
 		 * To determine how many terms needed, let
@@ -193,19 +179,19 @@ static double zero  =  0.00000000000000000000e+00;
 		v = two/x;
 		tmp = tmp*__ieee754_log(fabs(v*tmp));
 		if(tmp<7.09782712893383973096e+02) {
-	    	    for(i=n-1,di=(double)(i+i);i>0;i--){
-		        temp = b;
+		    for(i=n-1,di=(double)(i+i);i>0;i--){
+			temp = b;
 			b *= di;
 			b  = b/x - a;
-		        a = temp;
+			a = temp;
 			di -= two;
-	     	    }
+		    }
 		} else {
-	    	    for(i=n-1,di=(double)(i+i);i>0;i--){
-		        temp = b;
+		    for(i=n-1,di=(double)(i+i);i>0;i--){
+			temp = b;
 			b *= di;
 			b  = b/x - a;
-		        a = temp;
+			a = temp;
 			di -= two;
 		    /* scale b to avoid spurious overflow */
 			if(b>1e100) {
@@ -213,7 +199,7 @@ static double zero  =  0.00000000000000000000e+00;
 			    t /= b;
 			    b  = one;
 			}
-	     	    }
+		    }
 		}
 		/* j0() and j1() suffer enormous loss of precision at and
 		 * near zero; however, we know that their zero points never
@@ -229,13 +215,10 @@ static double zero  =  0.00000000000000000000e+00;
 	}
 	if(sgn==1) return -b; else return b;
 }
+strong_alias (__ieee754_jn, __jn_finite)
 
-#ifdef __STDC__
-	double __ieee754_yn(int n, double x)
-#else
-	double __ieee754_yn(n,x)
-	int n; double x;
-#endif
+double
+__ieee754_yn(int n, double x)
 {
 	int32_t i,hx,ix,lx;
 	int32_t sign;
@@ -244,9 +227,11 @@ static double zero  =  0.00000000000000000000e+00;
 	EXTRACT_WORDS(hx,lx,x);
 	ix = 0x7fffffff&hx;
     /* if Y(n,NaN) is NaN */
-	if((ix|((u_int32_t)(lx|-lx))>>31)>0x7ff00000) return x+x;
-	if((ix|lx)==0) return -HUGE_VAL+x; /* -inf and overflow exception.  */;
-	if(hx<0) return zero/(zero*x);
+	if(__builtin_expect((ix|((u_int32_t)(lx|-lx))>>31)>0x7ff00000,0))
+		return x+x;
+	if(__builtin_expect((ix|lx)==0, 0))
+		return -HUGE_VAL+x; /* -inf and overflow exception.  */;
+	if(__builtin_expect(hx<0, 0)) return zero/(zero*x);
 	sign = 1;
 	if(n<0){
 		n = -n;
@@ -254,7 +239,7 @@ static double zero  =  0.00000000000000000000e+00;
 	}
 	if(n==0) return(__ieee754_y0(x));
 	if(n==1) return(sign*__ieee754_y1(x));
-	if(ix==0x7ff00000) return zero;
+	if(__builtin_expect(ix==0x7ff00000, 0)) return zero;
 	if(ix>=0x52D00000) { /* x > 2**302 */
     /* (x >> n**2)
      *	    Jn(x) = cos(x-(2n+1)*pi/4)*sqrt(2/x*pi)
@@ -265,7 +250,7 @@ static double zero  =  0.00000000000000000000e+00;
      *		   n	sin(xn)*sqt2	cos(xn)*sqt2
      *		----------------------------------
      *		   0	 s-c		 c+s
-     *		   1	-s-c 		-c+s
+     *		   1	-s-c		-c+s
      *		   2	-s+c		-c-s
      *		   3	 s+c		 c-s
      */
@@ -294,3 +279,4 @@ static double zero  =  0.00000000000000000000e+00;
 	}
 	if(sign>0) return b; else return -b;
 }
+strong_alias (__ieee754_yn, __yn_finite)

@@ -14,10 +14,6 @@
  * ====================================================
  */
 
-#if defined(LIBM_SCCS) && !defined(lint)
-static char rcsid[] = "$NetBSD: $";
-#endif
-
 /*
  * wrapper sinhl(x)
  */
@@ -25,23 +21,14 @@ static char rcsid[] = "$NetBSD: $";
 #include <math.h>
 #include <math_private.h>
 
-#ifdef __STDC__
-	long double __sinhl(long double x)	/* wrapper sinhl */
-#else
-	long double __sinhl(x)			/* wrapper sinhl */
-	long double x;
-#endif
+long double
+__sinhl (long double x)
 {
-#ifdef _IEEE_LIBM
-	return __ieee754_sinhl(x);
-#else
-	long double z;
-	z = __ieee754_sinhl(x);
-	if(_LIB_VERSION == _IEEE_) return z;
-	if(!__finitel(z)&&__finitel(x)) {
-	    return __kernel_standard(x,x,225); /* sinh overflow */
-	} else
-	    return z;
-#endif
+	long double z = __ieee754_sinhl (x);
+	if (__builtin_expect (!__finitel (z), 0) && __finitel (x)
+	    && _LIB_VERSION != _IEEE_)
+	    return __kernel_standard (x, x, 225); /* sinh overflow */
+
+	return z;
 }
 weak_alias (__sinhl, sinhl)

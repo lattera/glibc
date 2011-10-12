@@ -1,62 +1,54 @@
-/* @(#)w_scalb.c 5.1 93/09/24 */
-/*
- * ====================================================
- * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.
- *
- * Developed at SunPro, a Sun Microsystems, Inc. business.
- * Permission to use, copy, modify, and distribute this
- * software is freely granted, provided that this notice
- * is preserved.
- * ====================================================
- */
+/* Copyright (C) 2011 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+   Contributed by Ulrich Drepper <drepper@gmail.com>, 2011.
 
-#if defined(LIBM_SCCS) && !defined(lint)
-static char rcsid[] = "$NetBSD: w_scalb.c,v 1.6 1995/05/10 20:49:48 jtc Exp $";
-#endif
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
 
-/*
- * wrapper scalb(double x, double fn) is provide for
- * passing various standard test suite. One
- * should use scalbn() instead.
- */
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
 
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, write to the Free
+   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
+   02111-1307 USA.  */
+
+#include <errno.h>
 #include <math.h>
 #include <math_private.h>
 
-#include <errno.h>
 
-#ifdef __STDC__
-#ifdef _SCALB_INT
-	double __scalb(double x, int fn)		/* wrapper scalb */
-#else
-	double __scalb(double x, double fn)	/* wrapper scalb */
-#endif
-#else
-	double __scalb(x,fn)			/* wrapper scalb */
-#ifdef _SCALB_INT
-	double x; int fn;
-#else
-	double x,fn;
-#endif
-#endif
+static double
+__attribute__ ((noinline))
+sysv_scalb (double x, double fn)
 {
-#ifdef _IEEE_LIBM
-	return __ieee754_scalb(x,fn);
-#else
-	double z;
-	z = __ieee754_scalb(x,fn);
-	if(_LIB_VERSION != _SVID_) return z;
-	if(!(__finite(z)||__isnan(z))&&__finite(x)) {
-	    return __kernel_standard(x,(double)fn,32); /* scalb overflow */
-	}
-	if(z==0.0&&z!=x) {
-	    return __kernel_standard(x,(double)fn,33); /* scalb underflow */
-	}
-#ifndef _SCALB_INT
-	if(!__finite(fn)) __set_errno (ERANGE);
-#endif
-	return z;
-#endif
+  double z = __ieee754_scalb (x, fn);
+
+  if (__builtin_expect (__isinf (z), 0))
+    {
+      if (__finite (x))
+	return __kernel_standard (x, fn, 32); /* scalb overflow */
+      else
+	__set_errno (ERANGE);
+    }
+  else if (__builtin_expect (z == 0.0, 0) && z != x)
+    return __kernel_standard (x, fn, 33); /* scalb underflow */
+
+  return z;
+}
+
+
+/* Wrapper scalb */
+double
+__scalb (double x, double fn)
+{
+  return (__builtin_expect (_LIB_VERSION == _SVID_, 0)
+	  ? sysv_scalb (x, fn)
+	  : __ieee754_scalb (x, fn));
 }
 weak_alias (__scalb, scalb)
 #ifdef NO_LONG_DOUBLE

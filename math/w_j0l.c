@@ -1,76 +1,60 @@
-/* w_j0l.c -- long double version of w_j0.c.
- * Conversion to long double by Ulrich Drepper,
- * Cygnus Support, drepper@cygnus.com.
- */
+/* Copyright (C) 2011 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+   Contributed by Ulrich Drepper <drepper@gmail.com>, 2011.
 
-/*
- * ====================================================
- * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.
- *
- * Developed at SunPro, a Sun Microsystems, Inc. business.
- * Permission to use, copy, modify, and distribute this
- * software is freely granted, provided that this notice
- * is preserved.
- * ====================================================
- */
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
 
-#if defined(LIBM_SCCS) && !defined(lint)
-static char rcsid[] = "$NetBSD: $";
-#endif
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
 
-/*
- * wrapper j0l(long double x), y0l(long double x)
- */
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, write to the Free
+   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
+   02111-1307 USA.  */
 
+#include <fenv.h>
 #include <math.h>
 #include <math_private.h>
 
-#ifdef __STDC__
-	long double __j0l(long double x)		/* wrapper j0l */
-#else
-	long double __j0l(x)				/* wrapper j0 */
-	long double x;
-#endif
+
+/* wrapper j0l */
+long double
+__j0l (long double x)
 {
-#ifdef _IEEE_LIBM
-	return __ieee754_j0l(x);
-#else
-	long double z = __ieee754_j0l(x);
-	if(_LIB_VERSION == _IEEE_ || __isnanl(x)) return z;
-	if(fabsl(x)>X_TLOSS) {
-	        return __kernel_standard(x,x,234); /* j0(|x|>X_TLOSS) */
-	} else
-	    return z;
-#endif
+  if (__builtin_expect (fabsl (x) > X_TLOSS, 0) && _LIB_VERSION != _IEEE_)
+    /* j0(|x|>X_TLOSS) */
+    return __kernel_standard (x, x, 234);
+
+  return __ieee754_j0l (x);
 }
 weak_alias (__j0l, j0l)
 
-#ifdef __STDC__
-	long double __y0l(long double x)		/* wrapper y0l */
-#else
-	long double __y0l(x)				/* wrapper y0 */
-	long double x;
-#endif
-{
-#ifdef _IEEE_LIBM
-	return __ieee754_y0l(x);
-#else
-	long double z;
-	z = __ieee754_y0l(x);
-	if(_LIB_VERSION == _IEEE_ || __isnanl(x) ) return z;
-        if(x <= 0.0){
-                if(x==0.0)
-                    /* d= -one/(x-x); */
-                    return __kernel_standard(x,x,208);
-                else
-                    /* d = zero/(x-x); */
-                    return __kernel_standard(x,x,209);
-        }
-	if(x>X_TLOSS) {
-	        return __kernel_standard(x,x,235); /* y0(x>X_TLOSS) */
-	} else
-	    return z;
-#endif
-}
 
+/* wrapper y0l */
+long double
+__y0l (long double x)
+{
+  if (__builtin_expect (x <= 0.0L || x > X_TLOSS, 0) && _LIB_VERSION != _IEEE_)
+    {
+      if (x < 0.0L)
+	{
+	  /* d = zero/(x-x) */
+	  feraiseexcept (FE_INVALID);
+	  return __kernel_standard (x, x, 209);
+	}
+      else if (x == 0.0L)
+	/* d = -one/(x-x) */
+	return __kernel_standard (x, x, 208);
+      else
+	/* y0(x>X_TLOSS) */
+	return __kernel_standard (x, x, 235);
+    }
+
+  return __ieee754_y0l (x);
+}
 weak_alias (__y0l, y0l)

@@ -13,3 +13,4 @@ ENTRY(__ieee754_atan2f)
 	fpatan
 	ret
 END (__ieee754_atan2f)
+strong_alias (__ieee754_atan2f, __atan2f_finite)

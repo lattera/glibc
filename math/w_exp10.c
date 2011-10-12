@@ -1,17 +1,22 @@
-/* @(#)w_exp10.c
- * Conversion to exp10 by Ulrich Drepper <drepper@cygnus.com>.
- */
+/* Copyright (C) 2011 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+   Contributed by Ulrich Drepper <drepper@gmail.com>, 2011.
 
-/*
- * ====================================================
- * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.
- *
- * Developed at SunPro, a Sun Microsystems, Inc. business.
- * Permission to use, copy, modify, and distribute this
- * software is freely granted, provided that this notice
- * is preserved.
- * ====================================================
- */
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
+
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
+
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, write to the Free
+   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
+   02111-1307 USA.  */
+
 
 /*
  * wrapper exp10(x)
@@ -20,25 +25,16 @@
 #include <math.h>
 #include <math_private.h>
 
-#ifdef __STDC__
-	double __exp10(double x)		/* wrapper exp10 */
-#else
-	double __exp10(x)			/* wrapper exp10 */
-	double x;
-#endif
+double
+__exp10 (double x)
 {
-#ifdef _IEEE_LIBM
-	return __ieee754_exp10(x);
-#else
-	double z;
-	z = __ieee754_exp10(x);
-	if(_LIB_VERSION == _IEEE_) return z;
-	if(!__finite(z) && __finite(x)) {
-	    /* exp10 overflow (46) if x > 0, underflow (47) if x < 0.  */
-	    return __kernel_standard(x,x,46+!!__signbit(x));
-	}
-	return z;
-#endif
+  double z = __ieee754_exp10 (x);
+  if (__builtin_expect (!__finite (z), 0)
+      && __finite (x) && _LIB_VERSION != _IEEE_)
+    /* exp10 overflow (46) if x > 0, underflow (47) if x < 0.  */
+    return __kernel_standard (x, x, 46 + !!__signbit (x));
+
+  return z;
 }
 weak_alias (__exp10, exp10)
 strong_alias (__exp10, __pow10)

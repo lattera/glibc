@@ -55,9 +55,9 @@ double __ieee754_log(double x) {
   int k;
 #endif
   double dbl_n,u,p0,q,r0,w,nln2a,luai,lubi,lvaj,lvbj,
-         sij,ssij,ttij,A,B,B0,y,y1,y2,polI,polII,sa,sb,
-         t1,t2,t3,t4,t5,t6,t7,t8,t,ra,rb,ww,
-         a0,aa0,s1,s2,ss2,s3,ss3,a1,aa1,a,aa,b,bb,c;
+	 sij,ssij,ttij,A,B,B0,y,y1,y2,polI,polII,sa,sb,
+	 t1,t2,t3,t4,t5,t6,t7,t8,t,ra,rb,ww,
+	 a0,aa0,s1,s2,ss2,s3,ss3,a1,aa1,a,aa,b,bb,c;
   number num;
   mp_no mpx,mpy,mpy1,mpy2,mperr;
 
@@ -69,12 +69,15 @@ double __ieee754_log(double x) {
   num.d = x;  ux = num.i[HIGH_HALF];  dx = num.i[LOW_HALF];
   n=0;
   if (ux < 0x00100000) {
-    if (((ux & 0x7fffffff) | dx) == 0)  return MHALF/ZERO; /* return -INF */
-    if (ux < 0) return (x-x)/ZERO;                         /* return NaN  */
+    if (__builtin_expect(((ux & 0x7fffffff) | dx) == 0, 0))
+      return MHALF/ZERO; /* return -INF */
+    if (__builtin_expect(ux < 0, 0))
+      return (x-x)/ZERO;                         /* return NaN  */
     n -= 54;    x *= two54.d;                              /* scale x     */
     num.d = x;
   }
-  if (ux >= 0x7ff00000) return x+x;                        /* INF or NaN  */
+  if (__builtin_expect(ux >= 0x7ff00000, 0))
+    return x+x;                        /* INF or NaN  */
 
   /* Regular values of x */
 
@@ -90,7 +93,7 @@ double __ieee754_log(double x) {
 
   /* Evaluate polynomial II */
   polII = (b0.d+w*(b1.d+w*(b2.d+w*(b3.d+w*(b4.d+
-          w*(b5.d+w*(b6.d+w*(b7.d+w*b8.d))))))))*w*w*w;
+	  w*(b5.d+w*(b6.d+w*(b7.d+w*b8.d))))))))*w*w*w;
   c = (aa+bb)+polII;
 
   /* End stage I, case abs(x-1) < 0.03 */
@@ -99,7 +102,7 @@ double __ieee754_log(double x) {
   /*--- Stage II, the case abs(x-1) < 0.03 */
 
   a = d11.d+w*(d12.d+w*(d13.d+w*(d14.d+w*(d15.d+w*(d16.d+
-            w*(d17.d+w*(d18.d+w*(d19.d+w*d20.d))))))));
+	    w*(d17.d+w*(d18.d+w*(d19.d+w*d20.d))))))));
   EMULV(w,a,s2,ss2,t1,t2,t3,t4,t5)
   ADD2(d10.d,dd10.d,s2,ss2,s3,ss3,t1,t2)
   MUL2(w,ZERO,s3,ss3,s2,ss2,t1,t2,t3,t4,t5,t6,t7,t8)
@@ -201,3 +204,4 @@ double __ieee754_log(double x) {
   }
   return y1;
 }
+strong_alias (__ieee754_log, __log_finite)

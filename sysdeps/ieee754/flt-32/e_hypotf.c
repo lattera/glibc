@@ -13,19 +13,11 @@
  * ====================================================
  */
 
-#if defined(LIBM_SCCS) && !defined(lint)
-static char rcsid[] = "$NetBSD: e_hypotf.c,v 1.5 1995/05/12 04:57:30 jtc Exp $";
-#endif
-
 #include "math.h"
 #include "math_private.h"
 
-#ifdef __STDC__
-	float __ieee754_hypotf(float x, float y)
-#else
-	float __ieee754_hypotf(x,y)
-	float x, y;
-#endif
+float
+__ieee754_hypotf(float x, float y)
 {
 	float a,b,t1,t2,y1,y2,w;
 	int32_t j,k,ha,hb;
@@ -39,7 +31,7 @@ static char rcsid[] = "$NetBSD: e_hypotf.c,v 1.5 1995/05/12 04:57:30 jtc Exp $";
 	SET_FLOAT_WORD(b,hb);	/* b <- |b| */
 	if((ha-hb)>0xf000000) {return a+b;} /* x/y > 2**30 */
 	k=0;
-	if(ha > 0x58800000) {	/* a>2**50 */
+	if(__builtin_expect(ha > 0x58800000, 0)) {	/* a>2**50 */
 	   if(ha >= 0x7f800000) {	/* Inf or NaN */
 	       w = a+b;			/* for sNaN */
 	       if(ha == 0x7f800000) w = a;
@@ -51,15 +43,15 @@ static char rcsid[] = "$NetBSD: e_hypotf.c,v 1.5 1995/05/12 04:57:30 jtc Exp $";
 	   SET_FLOAT_WORD(a,ha);
 	   SET_FLOAT_WORD(b,hb);
 	}
-	if(hb < 0x26800000) {	/* b < 2**-50 */
+	if(__builtin_expect(hb < 0x26800000, 0)) {	/* b < 2**-50 */
 	    if(hb <= 0x007fffff) {	/* subnormal b or 0 */
-	        if(hb==0) return a;
+		if(hb==0) return a;
 		SET_FLOAT_WORD(t1,0x7e800000);	/* t1=2^126 */
 		b *= t1;
 		a *= t1;
 		k -= 126;
 	    } else {		/* scale a and b by 2^60 */
-	        ha += 0x1e000000; 	/* a *= 2^60 */
+		ha += 0x1e000000;	/* a *= 2^60 */
 		hb += 0x1e000000;	/* b *= 2^60 */
 		k -= 60;
 		SET_FLOAT_WORD(a,ha);
@@ -85,3 +77,4 @@ static char rcsid[] = "$NetBSD: e_hypotf.c,v 1.5 1995/05/12 04:57:30 jtc Exp $";
 	    return t1*w;
 	} else return w;
 }
+strong_alias (__ieee754_hypotf, __hypotf_finite)

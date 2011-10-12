@@ -7,15 +7,13 @@
 
 #include <machine/asm.h>
 
-RCSID("$NetBSD: $")
-
 
 #ifdef __ELF__
-	.section .rodata
+	.section .rodata.cst8,"aM",@progbits,8
 #else
 	.text
 #endif
-	.align ALIGNARG(4)
+	.p2align 3
 	ASM_TYPE_DIRECTIVE(one,@object)
 one:	.double 1.0
 	ASM_SIZE_DIRECTIVE(one)
@@ -28,9 +26,9 @@ limit:	.double 0.29
 
 
 #ifdef PIC
-#define MO(op) op##@GOTOFF(%edx)
+# define MO(op) op##@GOTOFF(%edx)
 #else
-#define MO(op) op
+# define MO(op) op
 #endif
 
 	.text
@@ -65,3 +63,4 @@ ENTRY(__ieee754_logl)
 	fstp	%st(1)
 	ret
 END (__ieee754_logl)
+strong_alias (__ieee754_logl, __logl_finite)

@@ -14,10 +14,6 @@
  * ====================================================
  */
 
-#if defined(LIBM_SCCS) && !defined(lint)
-static char rcsid[] = "$NetBSD: $";
-#endif
-
 /* long double gammal(double x)
  * Return the Gamma function of x.
  */
@@ -25,31 +21,21 @@ static char rcsid[] = "$NetBSD: $";
 #include <math.h>
 #include <math_private.h>
 
-#ifdef __STDC__
-	long double __tgammal(long double x)
-#else
-	long double __tgammal(x)
-	long double x;
-#endif
+long double
+__tgammal(long double x)
 {
-        long double y;
 	int local_signgam;
-	y = __ieee754_gammal_r(x,&local_signgam);
-	if (local_signgam < 0) y = -y;
-#ifdef _IEEE_LIBM
-	return y;
-#else
-	if(_LIB_VERSION == _IEEE_) return y;
+	long double y = __ieee754_gammal_r(x,&local_signgam);
 
-	if(!__finitel(y)&&__finitel(x)) {
+	if(__builtin_expect(!__finitel(y), 0) && __finitel(x)
+	   && _LIB_VERSION != _IEEE_) {
 	  if(x==0.0)
 	    return __kernel_standard(x,x,250); /* tgamma pole */
-	  else if(__floorl(x)==x&&x<0.0)
+	  else if(__floorl(x)==x&&x<0.0L)
 	    return __kernel_standard(x,x,241); /* tgamma domain */
 	  else
 	    return __kernel_standard(x,x,240); /* tgamma overflow */
 	}
-	return y;
-#endif
+	return local_signgam < 0 ? - y : y;
 }
 weak_alias (__tgammal, tgammal)

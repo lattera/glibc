@@ -1,8 +1,8 @@
 /*
  * IBM Accurate Mathematical Library
  * written by International Business Machines Corp.
- * Copyright (C) 2001 Free Software Foundation
- * 
+ * Copyright (C) 2001, 2011 Free Software Foundation
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation; either version 2.1 of the License, or
@@ -96,9 +96,9 @@ double __ieee754_remainder(double x, double y)
       u.x=(u.x-d*w.x)-d*ww.x;
       if (ABS(u.x)<0.5*t.x) return (u.x!=0)?u.x:((x>0)?ZERO.x:nZERO.x);
       else
-        if (ABS(u.x)>0.5*t.x) return (d>z)?u.x+t.x:u.x-t.x;
-        else
-        {z=u.x/t.x; d=(z+big.x)-big.x; return ((u.x-d*w.x)-d*ww.x);}
+	if (ABS(u.x)>0.5*t.x) return (d>z)?u.x+t.x:u.x-t.x;
+	else
+	{z=u.x/t.x; d=(z+big.x)-big.x; return ((u.x-d*w.x)-d*ww.x);}
     }
 
   }   /*   (kx<0x7fe00000&&ky<0x7ff00000&&ky>=0x03500000)     */
@@ -128,3 +128,4 @@ double __ieee754_remainder(double x, double y)
    }
   }
 }
+strong_alias (__ieee754_remainder, __remainder_finite)

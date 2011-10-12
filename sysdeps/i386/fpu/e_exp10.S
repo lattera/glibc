@@ -36,3 +36,4 @@ ENTRY(__ieee754_exp10)
 	fldz				/* Set result to 0.  */
 2:	ret
 END (__ieee754_exp10)
+strong_alias (__ieee754_exp10, __exp10_finite)

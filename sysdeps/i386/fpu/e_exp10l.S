@@ -4,7 +4,7 @@
 
 #include <machine/asm.h>
 
-/* e^x = 2^(x * log2l(10)) */
+/* 10^x = 2^(x * log2l(10)) */
 ENTRY(__ieee754_exp10l)
 	fldt	4(%esp)
 /* I added the following ugly construct because expl(+-Inf) resulted
@@ -36,3 +36,4 @@ ENTRY(__ieee754_exp10l)
 	fldz				/* Set result to 0.  */
 2:	ret
 END (__ieee754_exp10l)
+strong_alias (__ieee754_exp10l, __exp10l_finite)

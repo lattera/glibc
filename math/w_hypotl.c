@@ -14,10 +14,6 @@
  * ====================================================
  */
 
-#if defined(LIBM_SCCS) && !defined(lint)
-static char rcsid[] = "$NetBSD: $";
-#endif
-
 /*
  * wrapper hypotl(x,y)
  */
@@ -26,23 +22,15 @@ static char rcsid[] = "$NetBSD: $";
 #include <math_private.h>
 
 
-#ifdef __STDC__
-	long double __hypotl(long double x, long double y)/* wrapper hypotl */
-#else
-	long double __hypotl(x,y)			 /* wrapper hypotl */
-	long double x,y;
-#endif
+long double
+__hypotl(long double x, long double y)
 {
-#ifdef _IEEE_LIBM
-	return __ieee754_hypotl(x,y);
-#else
 	long double z;
 	z = __ieee754_hypotl(x,y);
-	if(_LIB_VERSION == _IEEE_) return z;
-	if((!__finitel(z))&&__finitel(x)&&__finitel(y))
-	    return __kernel_standard(x,y,204); /* hypot overflow */
-	else
-	    return z;
-#endif
+	if(__builtin_expect(!__finitel(z), 0)
+	   && __finitel(x) && __finitel(y) && _LIB_VERSION != _IEEE_)
+	    return __kernel_standard(x, y, 204); /* hypot overflow */
+
+	return z;
 }
 weak_alias (__hypotl, hypotl)

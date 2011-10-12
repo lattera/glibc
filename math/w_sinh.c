@@ -10,10 +10,6 @@
  * ====================================================
  */
 
-#if defined(LIBM_SCCS) && !defined(lint)
-static char rcsid[] = "$NetBSD: w_sinh.c,v 1.6 1995/05/10 20:49:51 jtc Exp $";
-#endif
-
 /*
  * wrapper sinh(x)
  */
@@ -21,24 +17,15 @@ static char rcsid[] = "$NetBSD: w_sinh.c,v 1.6 1995/05/10 20:49:51 jtc Exp $";
 #include <math.h>
 #include <math_private.h>
 
-#ifdef __STDC__
-	double __sinh(double x)		/* wrapper sinh */
-#else
-	double __sinh(x)			/* wrapper sinh */
-	double x;
-#endif
+double
+__sinh (double x)
 {
-#ifdef _IEEE_LIBM
-	return __ieee754_sinh(x);
-#else
-	double z;
-	z = __ieee754_sinh(x);
-	if(_LIB_VERSION == _IEEE_) return z;
-	if(!__finite(z)&&__finite(x)) {
-	    return __kernel_standard(x,x,25); /* sinh overflow */
-	} else
-	    return z;
-#endif
+	double z = __ieee754_sinh (x);
+	if (__builtin_expect (!__finite (z), 0) && __finite (x)
+	    && _LIB_VERSION != _IEEE_)
+		return __kernel_standard (x, x, 25); /* sinh overflow */
+
+	return z;
 }
 weak_alias (__sinh, sinh)
 #ifdef NO_LONG_DOUBLE

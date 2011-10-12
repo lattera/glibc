@@ -1,48 +1,34 @@
-/* w_fmodf.c -- float version of w_fmod.c.
- * Conversion to float by Ian Lance Taylor, Cygnus Support, ian@cygnus.com.
- */
+/* Copyright (C) 2011 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+   Contributed by Ulrich Drepper <drepper@gmail.com>, 2011.
 
-/*
- * ====================================================
- * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.
- *
- * Developed at SunPro, a Sun Microsystems, Inc. business.
- * Permission to use, copy, modify, and distribute this
- * software is freely granted, provided that this notice
- * is preserved.
- * ====================================================
- */
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
 
-#if defined(LIBM_SCCS) && !defined(lint)
-static char rcsid[] = "$NetBSD: w_fmodf.c,v 1.3 1995/05/10 20:48:57 jtc Exp $";
-#endif
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
 
-/*
- * wrapper fmodf(x,y)
- */
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, write to the Free
+   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
+   02111-1307 USA.  */
 
 #include <math.h>
 #include <math_private.h>
 
-
-#ifdef __STDC__
-	float __fmodf(float x, float y)	/* wrapper fmodf */
-#else
-	float __fmodf(x,y)		/* wrapper fmodf */
-	float x,y;
-#endif
+/* wrapper fmodf */
+float
+__fmodf (float x, float y)
 {
-#ifdef _IEEE_LIBM
-	return __ieee754_fmodf(x,y);
-#else
-	float z;
-	z = __ieee754_fmodf(x,y);
-	if(_LIB_VERSION == _IEEE_ ||__isnanf(y)||__isnanf(x)) return z;
-	if(__isinf_nsf(x)||y==(float)0.0) {
-		/* fmodf(+-Inf,y) or fmodf(x,0) */
-		return (float)__kernel_standard((double)x,(double)y,127);
-	} else
-	    return z;
-#endif
+  if (__builtin_expect (__isinf_nsf (x) || y == 0.0f, 0)
+      && _LIB_VERSION != _IEEE_ && !__isnanf (y) && !__isnanf (x))
+    /* fmod(+-Inf,y) or fmod(x,0) */
+    return __kernel_standard_f (x, y, 127);
+
+  return __ieee754_fmodf (x, y);
 }
 weak_alias (__fmodf, fmodf)

@@ -5,16 +5,12 @@
  *
  * Developed at SunPro, a Sun Microsystems, Inc. business.
  * Permission to use, copy, modify, and distribute this
- * software is freely granted, provided that this notice 
+ * software is freely granted, provided that this notice
  * is preserved.
  * ====================================================
  */
 
-#if defined(LIBM_SCCS) && !defined(lint)
-static char rcsid[] = "$NetBSD: e_fmod.c,v 1.8 1995/05/10 20:45:07 jtc Exp $";
-#endif
-
-/* 
+/*
  * __ieee754_fmod(x,y)
  * Return x mod y in exact arithmetic
  * Method: shift and subtract
@@ -23,18 +19,10 @@ static char rcsid[] = "$NetBSD: e_fmod.c,v 1.8 1995/05/10 20:45:07 jtc Exp $";
 #include "math.h"
 #include "math_private.h"
 
-#ifdef __STDC__
 static const double one = 1.0, Zero[] = {0.0, -0.0,};
-#else
-static double one = 1.0, Zero[] = {0.0, -0.0,};
-#endif
 
-#ifdef __STDC__
-	double __ieee754_fmod(double x, double y)
-#else
-	double __ieee754_fmod(x,y)
-	double x,y ;
-#endif
+double
+__ieee754_fmod (double x, double y)
 {
 	int32_t n,hx,hy,hz,ix,iy,sx,i;
 	u_int32_t lx,ly,lz;
@@ -51,7 +39,7 @@ static double one = 1.0, Zero[] = {0.0, -0.0,};
 	    return (x*y)/(x*y);
 	if(hx<=hy) {
 	    if((hx<hy)||(lx<ly)) return x;	/* |x|<|y| return x */
-	    if(lx==ly) 
+	    if(lx==ly)
 		return Zero[(u_int32_t)sx>>31];	/* |x|=|y| return x*0*/
 	}
 
@@ -74,25 +62,25 @@ static double one = 1.0, Zero[] = {0.0, -0.0,};
 	} else iy = (hy>>20)-1023;
 
     /* set up {hx,lx}, {hy,ly} and align y to x */
-	if(ix >= -1022) 
+	if(ix >= -1022)
 	    hx = 0x00100000|(0x000fffff&hx);
 	else {		/* subnormal x, shift x to normal */
 	    n = -1022-ix;
 	    if(n<=31) {
-	        hx = (hx<<n)|(lx>>(32-n));
-	        lx <<= n;
+		hx = (hx<<n)|(lx>>(32-n));
+		lx <<= n;
 	    } else {
 		hx = lx<<(n-32);
 		lx = 0;
 	    }
 	}
-	if(iy >= -1022) 
+	if(iy >= -1022)
 	    hy = 0x00100000|(0x000fffff&hy);
 	else {		/* subnormal y, shift y to normal */
 	    n = -1022-iy;
 	    if(n<=31) {
-	        hy = (hy<<n)|(ly>>(32-n));
-	        ly <<= n;
+		hy = (hy<<n)|(ly>>(32-n));
+		ly <<= n;
 	    } else {
 		hy = ly<<(n-32);
 		ly = 0;
@@ -105,17 +93,17 @@ static double one = 1.0, Zero[] = {0.0, -0.0,};
 	    hz=hx-hy;lz=lx-ly; if(lx<ly) hz -= 1;
 	    if(hz<0){hx = hx+hx+(lx>>31); lx = lx+lx;}
 	    else {
-	    	if((hz|lz)==0) 		/* return sign(x)*0 */
+		if((hz|lz)==0)		/* return sign(x)*0 */
 		    return Zero[(u_int32_t)sx>>31];
-	    	hx = hz+hz+(lz>>31); lx = lz+lz;
+		hx = hz+hz+(lz>>31); lx = lz+lz;
 	    }
 	}
 	hz=hx-hy;lz=lx-ly; if(lx<ly) hz -= 1;
 	if(hz>=0) {hx=hz;lx=lz;}
 
     /* convert back to floating value and restore the sign */
-	if((hx|lx)==0) 			/* return sign(x)*0 */
-	    return Zero[(u_int32_t)sx>>31];	
+	if((hx|lx)==0)			/* return sign(x)*0 */
+	    return Zero[(u_int32_t)sx>>31];
 	while(hx<0x00100000) {		/* normalize x */
 	    hx = hx+hx+(lx>>31); lx = lx+lx;
 	    iy -= 1;
@@ -138,3 +126,4 @@ static double one = 1.0, Zero[] = {0.0, -0.0,};
 	}
 	return x;		/* exact output */
 }
+strong_alias (__ieee754_fmod, __fmod_finite)

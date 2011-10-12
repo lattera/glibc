@@ -1,6 +1,6 @@
-/* Copyright (C) 2011 Free Software Foundation, Inc.
+/* Entry points to finite-math-only compiler runs.
+   Copyright (C) 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@gmail.com>, 2011.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -17,17 +17,9 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <math.h>
-#include <math_private.h>
+#ifndef _MATH_H
+# error "Never use <bits/math-finite.h> directly; include <math.h> instead."
+#endif
 
-
-/* wrapper sqrtl */
-long double
-__sqrtl (long double x)
-{
-  if (__builtin_expect (x < 0.0L, 0) && _LIB_VERSION != _IEEE_)
-    return __kernel_standard (x, x, 226); /* sqrt(negative) */
-
-  return __ieee754_sqrtl (x);
-}
-weak_alias (__sqrtl, sqrtl)
+/* Nothing can be done for IA-64 since the math functions differ in their
+   structure.  */

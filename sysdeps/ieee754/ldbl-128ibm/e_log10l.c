@@ -179,8 +179,7 @@ deval (long double x, const long double *p, int n)
 
 
 long double
-__ieee754_log10l (x)
-     long double x;
+__ieee754_log10l (long double x)
 {
   long double z;
   long double y;
@@ -256,3 +255,4 @@ done:
   z += e * L102A;
   return (z);
 }
+strong_alias (__ieee754_log10l, __log10l_finite)

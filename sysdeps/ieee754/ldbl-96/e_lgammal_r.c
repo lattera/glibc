@@ -94,11 +94,7 @@
 #include "math.h"
 #include "math_private.h"
 
-#ifdef __STDC__
 static const long double
-#else
-static long double
-#endif
   half = 0.5L,
   one = 1.0L,
   pi = 3.14159265358979323846264L,
@@ -204,20 +200,10 @@ static long double
   w6 = -1.880801938119376907179E-3L,
   w7 =  4.885026142432270781165E-3L;
 
-#ifdef __STDC__
 static const long double zero = 0.0L;
-#else
-static long double zero = 0.0L;
-#endif
 
-#ifdef __STDC__
 static long double
 sin_pi (long double x)
-#else
-static long double
-sin_pi (x)
-     long double x;
-#endif
 {
   long double y, z;
   int n, ix;
@@ -283,15 +269,8 @@ sin_pi (x)
 }
 
 
-#ifdef __STDC__
 long double
 __ieee754_lgammal_r (long double x, int *signgamp)
-#else
-long double
-__ieee754_lgammal_r (x, signgamp)
-     long double x;
-     int *signgamp;
-#endif
 {
   long double t, y, z, nadj, p, p1, p2, q, r, w;
   int i, ix;
@@ -301,7 +280,7 @@ __ieee754_lgammal_r (x, signgamp)
   GET_LDOUBLE_WORDS (se, i0, i1, x);
   ix = se & 0x7fff;
 
-  if ((ix | i0 | i1) == 0)
+  if (__builtin_expect((ix | i0 | i1) == 0, 0))
     {
       if (se & 0x8000)
 	*signgamp = -1;
@@ -311,10 +290,10 @@ __ieee754_lgammal_r (x, signgamp)
   ix = (ix << 16) | (i0 >> 16);
 
   /* purge off +-inf, NaN, +-0, and negative arguments */
-  if (ix >= 0x7fff0000)
+  if (__builtin_expect(ix >= 0x7fff0000, 0))
     return x * x;
 
-  if (ix < 0x3fc08000) /* 2^-63 */
+  if (__builtin_expect(ix < 0x3fc08000, 0)) /* 2^-63 */
     {				/* |x|<2**-63, return -log(|x|) */
       if (se & 0x8000)
 	{
@@ -438,7 +417,7 @@ __ieee754_lgammal_r (x, signgamp)
       z = one / x;
       y = z * z;
       w = w0 + z * (w1
-          + y * (w2 + y * (w3 + y * (w4 + y * (w5 + y * (w6 + y * w7))))));
+	  + y * (w2 + y * (w3 + y * (w4 + y * (w5 + y * (w6 + y * w7))))));
       r = (x - half) * (t - one) + w;
     }
   else
@@ -448,3 +427,4 @@ __ieee754_lgammal_r (x, signgamp)
     r = nadj - r;
   return r;
 }
+strong_alias (__ieee754_lgammal_r, __lgammal_r_finite)

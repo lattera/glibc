@@ -18,3 +18,4 @@ ENTRY(__ieee754_asin)
 	fpatan
 	ret
 END (__ieee754_asin)
+strong_alias (__ieee754_asin, __asin_finite)

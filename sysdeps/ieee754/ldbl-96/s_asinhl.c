@@ -52,19 +52,21 @@ huge=  1.000000000000000000e+4900L;
 	int32_t hx,ix;
 	GET_LDOUBLE_EXP(hx,x);
 	ix = hx&0x7fff;
-	if(ix==0x7fff) return x+x;	/* x is inf or NaN */
-	if(ix< 0x3fde) {	/* |x|<2**-34 */
+	if(__builtin_expect(ix< 0x3fde, 0)) {	/* |x|<2**-34 */
 	    if(huge+x>one) return x;	/* return x inexact except 0 */
 	}
-	if(ix>0x4020) {		/* |x| > 2**34 */
+	if(__builtin_expect(ix>0x4020,0)) {		/* |x| > 2**34 */
+	    if(ix==0x7fff) return x+x;	/* x is inf or NaN */
 	    w = __ieee754_logl(fabsl(x))+ln2;
-	} else if (ix>0x4000) {	/* 2**34 > |x| > 2.0 */
-	    t = fabsl(x);
-	    w = __ieee754_logl(2.0*t+one/(__ieee754_sqrtl(x*x+one)+t));
-	} else {		/* 2.0 > |x| > 2**-28 */
-	    t = x*x;
-	    w =__log1pl(fabsl(x)+t/(one+__ieee754_sqrtl(one+t)));
+	} else {
+	    long double xa = fabsl(x);
+	    if (ix>0x4000) {	/* 2**34 > |x| > 2.0 */
+		w = __ieee754_logl(2.0*xa+one/(__ieee754_sqrtl(xa*xa+one)+xa));
+	    } else {		/* 2.0 > |x| > 2**-28 */
+		t = xa*xa;
+		w =__log1pl(xa+t/(one+__ieee754_sqrtl(one+t)));
+	    }
 	}
-	if(hx&0x8000) return -w; else return w;
+	return __copysignl(w, x);
 }
 weak_alias (__asinhl, asinhl)

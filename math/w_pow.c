@@ -1,67 +1,76 @@
+/* Copyright (C) 2011 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+   Contributed by Ulrich Drepper <drepper@gmail.com>, 2011.
 
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
 
-/* @(#)w_pow.c 5.2 93/10/01 */
-/*
- * ====================================================
- * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.
- *
- * Developed at SunPro, a Sun Microsystems, Inc. business.
- * Permission to use, copy, modify, and distribute this
- * software is freely granted, provided that this notice
- * is preserved.
- * ====================================================
- */
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
 
-/*
- * wrapper pow(x,y) return x**y
- */
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, write to the Free
+   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
+   02111-1307 USA.  */
 
 #include <math.h>
 #include <math_private.h>
 
 
-#ifdef __STDC__
-	double __pow(double x, double y)	/* wrapper pow */
-#else
-	double __pow(x,y)			/* wrapper pow */
-	double x,y;
-#endif
+/* wrapper pow */
+double
+__pow (double x, double y)
 {
-#ifdef _IEEE_LIBM
-	return  __ieee754_pow(x,y);
-#else
-	double z;
-	z=__ieee754_pow(x,y);
-	if(_LIB_VERSION == _IEEE_|| __isnan(y)) return z;
-	if(__isnan(x)) {
-	    if(y==0.0)
-	        return __kernel_standard(x,y,42); /* pow(NaN,0.0) */
-	    else
-		return z;
-	}
-	if(x==0.0) {
-	    if(y==0.0)
-	        return __kernel_standard(x,y,20); /* pow(0.0,0.0) */
-	    if(__finite(y)&&y<0.0) {
-	      if (signbit (x) && signbit (z))
-	        return __kernel_standard(x,y,23); /* pow(-0.0,negative) */
+  double z = __ieee754_pow (x, y);
+  if (__builtin_expect (!__finite (z), 0))
+    {
+      if (_LIB_VERSION != _IEEE_)
+	{
+	  if (__isnan (x))
+	    {
+	      if (y == 0.0)
+		/* pow(NaN,0.0) */
+		return __kernel_standard (x, y, 42);
+	    }
+	  else if (__finite (x) && __finite (y))
+	    {
+	      if (__isnan (z))
+		/* pow neg**non-int */
+		return __kernel_standard (x, y, 24);
+	      else if (x == 0.0 && y < 0.0)
+		{
+		  if (signbit (x) && signbit (z))
+		    /* pow(-0.0,negative) */
+		    return __kernel_standard (x, y, 23);
+		  else
+		    /* pow(+0.0,negative) */
+		    return __kernel_standard (x, y, 43);
+		}
 	      else
-	        return __kernel_standard(x,y,43); /* pow(+0.0,negative) */
-	    }
-	    return z;
-	}
-	if(!__finite(z)) {
-	    if(__finite(x)&&__finite(y)) {
-	        if(__isnan(z))
-	            return __kernel_standard(x,y,24); /* pow neg**non-int */
-	        else
-	            return __kernel_standard(x,y,21); /* pow overflow */
+		/* pow overflow */
+		return __kernel_standard (x, y, 21);
 	    }
 	}
-	if(z==0.0&&__finite(x)&&__finite(y))
-	    return __kernel_standard(x,y,22); /* pow underflow */
-	return z;
-#endif
+    }
+  else if (__builtin_expect (z == 0.0, 0) && __finite (x) && __finite (y)
+	   && _LIB_VERSION != _IEEE_)
+    {
+      if (x == 0.0)
+	{
+	  if (y == 0.0)
+	    /* pow(0.0,0.0) */
+	    return __kernel_standard (x, y, 20);
+	}
+      else
+	/* pow underflow */
+	return __kernel_standard (x, y, 22);
+    }
+
+  return z;
 }
 weak_alias (__pow, pow)
 #ifdef NO_LONG_DOUBLE

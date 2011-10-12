@@ -14,15 +14,11 @@
  * ====================================================
  */
 
-#if defined(LIBM_SCCS) && !defined(lint)
-static char rcsid[] = "$NetBSD: $";
-#endif
-
 /* __ieee754_atan2l(y,x)
  * Method :
  *	1. Reduce y to positive by atan2(y,x)=-atan2(-y,x).
  *	2. Reduce x to positive by (if x and y are unexceptional):
- *		ARG (x+iy) = arctan(y/x)   	   ... if x > 0,
+ *		ARG (x+iy) = arctan(y/x)	   ... if x > 0,
  *		ARG (x+iy) = pi - arctan[y/(-x)]   ... if x < 0,
  *
  * Special cases:
@@ -48,11 +44,7 @@ static char rcsid[] = "$NetBSD: $";
 #include "math.h"
 #include "math_private.h"
 
-#ifdef __STDC__
 static const long double
-#else
-static long double
-#endif
 tiny  = 1.0e-4900L,
 zero  = 0.0,
 pi_o_4  = 7.85398163397448309628202E-01L, /* 0x3FFE, 0xC90FDAA2, 0x2168C235 */
@@ -60,12 +52,8 @@ pi_o_2  = 1.5707963267948966192564E+00L,  /* 0x3FFF, 0xC90FDAA2, 0x2168C235 */
 pi      = 3.14159265358979323851281E+00L, /* 0x4000, 0xC90FDAA2, 0x2168C235 */
 pi_lo   = -5.01655761266833202345176e-20L;/* 0xBFBE, 0xECE675D1, 0xFC8F8CBB */
 
-#ifdef __STDC__
-	long double __ieee754_atan2l(long double y, long double x)
-#else
-	long double __ieee754_atan2l(y,x)
-	long double  y,x;
-#endif
+long double
+__ieee754_atan2l (long double y, long double x)
 {
 	long double z;
 	int32_t k,m,hx,hy,ix,iy;
@@ -87,7 +75,7 @@ pi_lo   = -5.01655761266833202345176e-20L;/* 0xBFBE, 0xECE675D1, 0xFC8F8CBB */
 	if((iy|ly)==0) {
 	    switch(m) {
 		case 0:
-		case 1: return y; 	/* atan(+-0,+anything)=+-0 */
+		case 1: return y;	/* atan(+-0,+anything)=+-0 */
 		case 2: return  pi+tiny;/* atan(+0,-anything) = pi */
 		case 3: return -pi-tiny;/* atan(-0,-anything) =-pi */
 	    }
@@ -118,19 +106,20 @@ pi_lo   = -5.01655761266833202345176e-20L;/* 0xBFBE, 0xECE675D1, 0xFC8F8CBB */
 
     /* compute y/x */
 	k = sy-sx;
-	if(k > 70) z=pi_o_2+0.5*pi_lo; 	/* |y/x| >  2**70 */
-	else if(sx>=0x8000&&k<-70) z=0.0; 	/* |y|/x < -2**70 */
+	if(k > 70) z=pi_o_2+0.5*pi_lo;	/* |y/x| >  2**70 */
+	else if(sx>=0x8000&&k<-70) z=0.0;	/* |y|/x < -2**70 */
 	else z=__atanl(fabsl(y/x));	/* safe to do y/x */
 	switch (m) {
 	    case 0: return       z  ;	/* atan(+,+) */
 	    case 1: {
-	    	      u_int32_t sz;
+		      u_int32_t sz;
 		      GET_LDOUBLE_EXP(sz,z);
 		      SET_LDOUBLE_EXP(z,sz ^ 0x8000);
 		    }
 		    return       z  ;	/* atan(-,+) */
 	    case 2: return  pi-(z-pi_lo);/* atan(+,-) */
 	    default: /* case 3 */
-	    	    return  (z-pi_lo)-pi;/* atan(-,-) */
+		    return  (z-pi_lo)-pi;/* atan(-,-) */
 	}
 }
+strong_alias (__ieee754_atan2l, __atan2l_finite)

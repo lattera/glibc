@@ -8,3 +8,4 @@ __ieee754_exp2l (long double x)
      replaced sometime (soon?).  */
   return __ieee754_expl (M_LN2l * x);
 }
+strong_alias (__ieee754_exp2l, __exp2l_finite)

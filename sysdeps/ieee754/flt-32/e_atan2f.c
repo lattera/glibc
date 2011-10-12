@@ -13,18 +13,10 @@
  * ====================================================
  */
 
-#if defined(LIBM_SCCS) && !defined(lint)
-static char rcsid[] = "$NetBSD: e_atan2f.c,v 1.4 1995/05/10 20:44:53 jtc Exp $";
-#endif
-
 #include "math.h"
 #include "math_private.h"
 
-#ifdef __STDC__
 static const float
-#else
-static float
-#endif
 tiny  = 1.0e-30,
 zero  = 0.0,
 pi_o_4  = 7.8539818525e-01,  /* 0x3f490fdb */
@@ -32,12 +24,8 @@ pi_o_2  = 1.5707963705e+00,  /* 0x3fc90fdb */
 pi      = 3.1415927410e+00,  /* 0x40490fdb */
 pi_lo   = -8.7422776573e-08; /* 0xb3bbbd2e */
 
-#ifdef __STDC__
-	float __ieee754_atan2f(float y, float x)
-#else
-	float __ieee754_atan2f(y,x)
-	float  y,x;
-#endif
+float
+__ieee754_atan2f (float y, float x)
 {
 	float z;
 	int32_t k,m,hx,hy,ix,iy;
@@ -56,7 +44,7 @@ pi_lo   = -8.7422776573e-08; /* 0xb3bbbd2e */
 	if(iy==0) {
 	    switch(m) {
 		case 0:
-		case 1: return y; 	/* atan(+-0,+anything)=+-0 */
+		case 1: return y;	/* atan(+-0,+anything)=+-0 */
 		case 2: return  pi+tiny;/* atan(+0,-anything) = pi */
 		case 3: return -pi-tiny;/* atan(-0,-anything) =-pi */
 	    }
@@ -87,19 +75,20 @@ pi_lo   = -8.7422776573e-08; /* 0xb3bbbd2e */
 
     /* compute y/x */
 	k = (iy-ix)>>23;
-	if(k > 60) z=pi_o_2+(float)0.5*pi_lo; 	/* |y/x| >  2**60 */
-	else if(hx<0&&k<-60) z=0.0; 	/* |y|/x < -2**60 */
+	if(k > 60) z=pi_o_2+(float)0.5*pi_lo;	/* |y/x| >  2**60 */
+	else if(hx<0&&k<-60) z=0.0;	/* |y|/x < -2**60 */
 	else z=__atanf(fabsf(y/x));	/* safe to do y/x */
 	switch (m) {
 	    case 0: return       z  ;	/* atan(+,+) */
 	    case 1: {
-	    	      u_int32_t zh;
+		      u_int32_t zh;
 		      GET_FLOAT_WORD(zh,z);
 		      SET_FLOAT_WORD(z,zh ^ 0x80000000);
 		    }
 		    return       z  ;	/* atan(-,+) */
 	    case 2: return  pi-(z-pi_lo);/* atan(+,-) */
 	    default: /* case 3 */
-	    	    return  (z-pi_lo)-pi;/* atan(-,-) */
+		    return  (z-pi_lo)-pi;/* atan(-,-) */
 	}
 }
+strong_alias (__ieee754_atan2f, __atan2f_finite)

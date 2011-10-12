@@ -283,11 +283,11 @@ __ieee754_acosl (x)
       s = __ieee754_sqrtl (z);
       /* Compute an extended precision square root from
 	 the Newton iteration  s -> 0.5 * (s + z / s).
-         The change w from s to the improved value is
+	 The change w from s to the improved value is
 	    w = 0.5 * (s + z / s) - s  = (s^2 + z)/2s - s = (z - s^2)/2s.
-          Express s = f1 + f2 where f1 * f1 is exactly representable.
+	  Express s = f1 + f2 where f1 * f1 is exactly representable.
 	  w = (z - s^2)/2s = (z - f1^2 - 2 f1 f2 - f2^2)/2s .
-          s + w has extended precision.  */
+	  s + w has extended precision.  */
       u.value = s;
       u.parts32.w2 = 0;
       u.parts32.w3 = 0;
@@ -326,3 +326,4 @@ __ieee754_acosl (x)
       return 2.0 * w;
     }
 }
+strong_alias (__ieee754_acosl, __acosl_finite)

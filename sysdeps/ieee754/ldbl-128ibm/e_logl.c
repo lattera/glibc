@@ -253,7 +253,7 @@ __ieee754_logl(long double x)
       /* log(u) = log( t u/t ) = log(t) + log(u/t)
 	 log(t) is tabulated in the lookup table.
 	 Express log(u/t) = log(1+z),  where z = u/t - 1 = (u-t)/t.
-         cf. Cody & Waite. */
+	 cf. Cody & Waite. */
       z = (u.value - t.value) / t.value;
     }
   /* Series expansion of log(1+z).  */
@@ -279,3 +279,4 @@ __ieee754_logl(long double x)
   y += e * ln2a;
   return y;
 }
+strong_alias (__ieee754_logl, __logl_finite)

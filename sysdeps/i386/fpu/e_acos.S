@@ -19,3 +19,4 @@ ENTRY(__ieee754_acos)
 	fpatan				/* atan (sqrt(1 - x^2) / x) */
 	ret
 END (__ieee754_acos)
+strong_alias (__ieee754_acos, __acos_finite)

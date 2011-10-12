@@ -1,5 +1,5 @@
 /* Implementation of gamma function according to ISO C.
-   Copyright (C) 1997, 1999, 2001, 2003, 2004 Free Software Foundation, Inc.
+   Copyright (C) 1997,1999,2001,2003,2004,2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -32,25 +32,27 @@ __ieee754_gammal_r (long double x, int *signgamp)
 
   GET_LDOUBLE_WORDS (es, hx, lx, x);
 
-  if (((es & 0x7fff) | hx | lx) == 0)
+  if (__builtin_expect (((es & 0x7fff) | hx | lx) == 0, 0))
     {
       /* Return value for x == 0 is Inf with divide by zero exception.  */
       *signgamp = 0;
       return 1.0 / x;
     }
-  if (es == 0xffffffff && ((hx & 0x7fffffff) | lx) == 0)
+  if (__builtin_expect (es == 0xffffffff && ((hx & 0x7fffffff) | lx) == 0, 0))
     {
       /* x == -Inf.  According to ISO this is NaN.  */
       *signgamp = 0;
       return x - x;
     }
-  if ((es & 0x7fff) == 0x7fff && ((hx & 0x7fffffff) | lx) != 0)
+  if (__builtin_expect ((es & 0x7fff) == 0x7fff, 0)
+      && ((hx & 0x7fffffff) | lx) != 0)
     {
       /* NaN, return it.  */
       *signgamp = 0;
       return x;
     }
-  if ((es & 0x8000) != 0 && x < 0xffffffff && __rintl (x) == x)
+  if (__builtin_expect ((es & 0x8000) != 0, 0)
+      && x < 0xffffffff && __rintl (x) == x)
     {
       /* Return value for integer x < 0 is NaN with invalid exception.  */
       *signgamp = 0;
@@ -60,3 +62,4 @@ __ieee754_gammal_r (long double x, int *signgamp)
   /* XXX FIXME.  */
   return __ieee754_expl (__ieee754_lgammal_r (x, signgamp));
 }
+strong_alias (__ieee754_gammal_r, __gammal_r_finite)

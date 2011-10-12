@@ -12,9 +12,9 @@
 /*
   Long double expansions are
   Copyright (C) 2001 Stephen L. Moshier <moshier@na-net.ornl.gov>
-  and are incorporated herein by permission of the author.  The author 
+  and are incorporated herein by permission of the author.  The author
   reserves the right to distribute this material elsewhere under different
-  copying permissions.  These modifications are distributed here under 
+  copying permissions.  These modifications are distributed here under
   the following terms:
 
     This library is free software; you can redistribute it and/or
@@ -45,7 +45,7 @@
  *			= pio2_hi - (2*(s+s*z*R(z)) - pio2_lo)
  *	For x<=0.98, let pio4_hi = pio2_hi/2, then
  *		f = hi part of s;
- *		c = sqrt(z) - f = (z-f*f)/(s+f) 	...f+c=sqrt(z)
+ *		c = sqrt(z) - f = (z-f*f)/(s+f)		...f+c=sqrt(z)
  *	and
  *		asin(x) = pi/2 - 2*(s+s*z*R(z))
  *			= pio4_hi+(pio4-2s)-(2s*z*R(z)-pio2_lo)
@@ -159,3 +159,4 @@ __ieee754_asinl (x)
   else
     return -t;
 }
+strong_alias (__ieee754_asinl, __asinl_finite)

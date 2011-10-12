@@ -6,8 +6,6 @@
 
 #include <machine/asm.h>
 
-RCSID("$NetBSD: $")
-
 ENTRY(__ieee754_fmodf)
 	flds	8(%esp)
 	flds	4(%esp)
@@ -18,3 +16,4 @@ ENTRY(__ieee754_fmodf)
 	fstp	%st(1)
 	ret
 END(__ieee754_fmodf)
+strong_alias (__ieee754_fmodf, __fmodf_finite)

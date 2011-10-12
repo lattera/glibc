@@ -14,11 +14,11 @@
  */
 
 /*
-  Modifications for single precision expansion are 
+  Modifications for single precision expansion are
   Copyright (C) 2001 Stephen L. Moshier <moshier@na-net.ornl.gov>
-  and are incorporated herein by permission of the author.  The author 
+  and are incorporated herein by permission of the author.  The author
   reserves the right to distribute this material elsewhere under different
-  copying permissions.  These modifications are distributed here under 
+  copying permissions.  These modifications are distributed here under
   the following terms:
 
     This library is free software; you can redistribute it and/or
@@ -93,7 +93,7 @@ p4 = 4.216630880e-2f;
 	t = w*0.5f;
 	p = t * (p0 + t * (p1 + t * (p2 + t * (p3 + t * p4))));
 	s = __ieee754_sqrtf(t);
-	if(ix>=0x3F79999A) { 	/* if |x| > 0.975 */
+	if(ix>=0x3F79999A) {	/* if |x| > 0.975 */
 	    t = pio2_hi-(2.0f*(s+s*p)-pio2_lo);
 	} else {
 	    int32_t iw;
@@ -108,3 +108,4 @@ p4 = 4.216630880e-2f;
 	}
 	if(hx>0) return t; else return -t;
 }
+strong_alias (__ieee754_asinf, __asinf_finite)

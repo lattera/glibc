@@ -1,5 +1,6 @@
 /* w_coshf.c -- float version of w_cosh.c.
  * Conversion to float by Ian Lance Taylor, Cygnus Support, ian@cygnus.com.
+ * Optimizations by Ulrich Drepper <drepper@gmail.com>, 2011.
  */
 
 /*
@@ -8,40 +9,26 @@
  *
  * Developed at SunPro, a Sun Microsystems, Inc. business.
  * Permission to use, copy, modify, and distribute this
- * software is freely granted, provided that this notice 
+ * software is freely granted, provided that this notice
  * is preserved.
  * ====================================================
  */
 
-#if defined(LIBM_SCCS) && !defined(lint)
-static char rcsid[] = "$NetBSD: w_coshf.c,v 1.3 1995/05/10 20:48:49 jtc Exp $";
-#endif
-
-/* 
+/*
  * wrapper coshf(x)
  */
 
 #include <math.h>
 #include <math_private.h>
 
-#ifdef __STDC__
-	float __coshf(float x)		/* wrapper coshf */
-#else
-	float __coshf(x)			/* wrapper coshf */
-	float x;
-#endif
+float
+__coshf (float x)
 {
-#ifdef _IEEE_LIBM
-	return __ieee754_coshf(x);
-#else
-	float z;
-	z = __ieee754_coshf(x);
-	if(_LIB_VERSION == _IEEE_ || __isnanf(x)) return z;
-	if(!__finite(z) && __finite(x)) {	
-		/* cosh overflow */
-	        return (float)__kernel_standard((double)x,(double)x,105);
-	} else
-	    return z;
-#endif
+	float z = __ieee754_coshf (x);
+	if (__builtin_expect (!__finitef (z), 0) && __finitef (x)
+	    && _LIB_VERSION != _IEEE_)
+		return __kernel_standard_f (x, x, 105); /* cosh overflow */
+
+	return z;
 }
 weak_alias (__coshf, coshf)

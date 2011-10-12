@@ -54,6 +54,7 @@ libm {
   GLIBC_2.2.3
   GLIBC_2.3.4
   GLIBC_2.4
+  GLIBC_2.15
 }
 libnsl {
   GLIBC_2.0

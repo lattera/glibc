@@ -1,5 +1,5 @@
 /* Compute the hypothenuse of X and Y.
-   Copyright (C) 1998 Free Software Foundation, Inc.
+   Copyright (C) 1998, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -58,5 +58,6 @@ ENTRY(__ieee754_hypot)
 	fxch
 5:	fstp	%st(1)
 	jmp	2b
-	
+
 END(__ieee754_hypot)
+strong_alias (__ieee754_hypot, __hypot_finite)

@@ -9,6 +9,7 @@ __ieee754_log2l (long double x)
   __set_errno (ENOSYS);
   return 0.0;
 }
+strong_alias (__ieee754_log2l, __log2l_finite)
 
 stub_warning (log2l)
 #include <stub-tag.h>

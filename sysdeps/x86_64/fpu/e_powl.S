@@ -22,12 +22,27 @@
 #include <machine/asm.h>
 
 #ifdef __ELF__
-	.section .rodata
+	.section .rodata.cst8,"aM",@progbits,8
 #else
 	.text
 #endif
+	.p2align 3
+	ASM_TYPE_DIRECTIVE(one,@object)
+one:	.double 1.0
+	ASM_SIZE_DIRECTIVE(one)
+	ASM_TYPE_DIRECTIVE(limit,@object)
+limit:	.double 0.29
+	ASM_SIZE_DIRECTIVE(limit)
+	ASM_TYPE_DIRECTIVE(p63,@object)
+p63:	.byte 0, 0, 0, 0, 0, 0, 0xe0, 0x43
+	ASM_SIZE_DIRECTIVE(p63)
 
-	.align ALIGNARG(4)
+#ifdef __ELF__
+	.section .rodata.cst16,"aM",@progbits,16
+#else
+	.text
+#endif
+	.p2align 3
 	ASM_TYPE_DIRECTIVE(infinity,@object)
 inf_zero:
 infinity:
@@ -43,21 +58,11 @@ minfinity:
 mzero:
 	.byte 0, 0, 0, 0, 0, 0, 0, 0x80
 	ASM_SIZE_DIRECTIVE(minf_mzero)
-	ASM_TYPE_DIRECTIVE(one,@object)
-one:	.double 1.0
-	ASM_SIZE_DIRECTIVE(one)
-	ASM_TYPE_DIRECTIVE(limit,@object)
-limit:	.double 0.29
-	ASM_SIZE_DIRECTIVE(limit)
-	ASM_TYPE_DIRECTIVE(p63,@object)
-p63:
-	.byte 0, 0, 0, 0, 0, 0, 0xe0, 0x43
-	ASM_SIZE_DIRECTIVE(p63)
 
 #ifdef PIC
-#define MO(op) op##(%rip)
+# define MO(op) op##(%rip)
 #else
-#define MO(op) op
+# define MO(op) op
 #endif
 
 	.text
@@ -339,3 +344,4 @@ ENTRY(__ieee754_powl)
 	ret
 
 END(__ieee754_powl)
+strong_alias (__ieee754_powl, __powl_finite)

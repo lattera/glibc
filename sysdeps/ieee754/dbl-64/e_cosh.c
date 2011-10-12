@@ -1,11 +1,11 @@
-/* @(#)e_cosh.c 5.1 93/09/24 */
+/* Optimized by Ulrich Drepper <drepper@gmail.com>, 2011 */
 /*
  * ====================================================
  * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.
  *
  * Developed at SunPro, a Sun Microsystems, Inc. business.
  * Permission to use, copy, modify, and distribute this
- * software is freely granted, provided that this notice 
+ * software is freely granted, provided that this notice
  * is preserved.
  * ====================================================
  */
@@ -15,18 +15,18 @@ static char rcsid[] = "$NetBSD: e_cosh.c,v 1.7 1995/05/10 20:44:58 jtc Exp $";
 #endif
 
 /* __ieee754_cosh(x)
- * Method : 
+ * Method :
  * mathematically cosh(x) if defined to be (exp(x)+exp(-x))/2
- *	1. Replace x by |x| (cosh(x) = cosh(-x)). 
- *	2. 
- *		                                        [ exp(x) - 1 ]^2 
+ *	1. Replace x by |x| (cosh(x) = cosh(-x)).
+ *	2.
+ *							[ exp(x) - 1 ]^2
  *	    0        <= x <= ln2/2  :  cosh(x) := 1 + -------------------
- *			       			           2*exp(x)
+ *							   2*exp(x)
  *
- *		                                  exp(x) +  1/exp(x)
+ *						  exp(x) +  1/exp(x)
  *	    ln2/2    <= x <= 22     :  cosh(x) := -------------------
- *			       			          2
- *	    22       <= x <= lnovft :  cosh(x) := exp(x)/2 
+ *							  2
+ *	    22       <= x <= lnovft :  cosh(x) := exp(x)/2
  *	    lnovft   <= x <= ln2ovft:  cosh(x) := exp(x/2)/2 * exp(x/2)
  *	    ln2ovft  <  x	    :  cosh(x) := huge*huge (overflow)
  *
@@ -38,19 +38,11 @@ static char rcsid[] = "$NetBSD: e_cosh.c,v 1.7 1995/05/10 20:44:58 jtc Exp $";
 #include "math.h"
 #include "math_private.h"
 
-#ifdef __STDC__
 static const double one = 1.0, half=0.5, huge = 1.0e300;
-#else
-static double one = 1.0, half=0.5, huge = 1.0e300;
-#endif
 
-#ifdef __STDC__
-	double __ieee754_cosh(double x)
-#else
-	double __ieee754_cosh(x)
-	double x;
-#endif
-{	
+double
+__ieee754_cosh (double x)
+{
 	double t,w;
 	int32_t ix;
 	u_int32_t lx;
@@ -59,19 +51,17 @@ static double one = 1.0, half=0.5, huge = 1.0e300;
 	GET_HIGH_WORD(ix,x);
 	ix &= 0x7fffffff;
 
-    /* x is INF or NaN */
-	if(ix>=0x7ff00000) return x*x;	
-
-    /* |x| in [0,0.5*ln2], return 1+expm1(|x|)^2/(2*exp(|x|)) */
-	if(ix<0x3fd62e43) {
-	    t = __expm1(fabs(x));
-	    w = one+t;
-	    if (ix<0x3c800000) return w;	/* cosh(tiny) = 1 */
-	    return one+(t*t)/(w+w);
-	}
-
-    /* |x| in [0.5*ln2,22], return (exp(|x|)+1/exp(|x|)/2; */
+    /* |x| in [0,22] */
 	if (ix < 0x40360000) {
+	    /* |x| in [0,0.5*ln2], return 1+expm1(|x|)^2/(2*exp(|x|)) */
+		if(ix<0x3fd62e43) {
+		    t = __expm1(fabs(x));
+		    w = one+t;
+		    if (ix<0x3c800000) return w;	/* cosh(tiny) = 1 */
+		    return one+(t*t)/(w+w);
+		}
+
+	    /* |x| in [0.5*ln2,22], return (exp(|x|)+1/exp(|x|)/2; */
 		t = __ieee754_exp(fabs(x));
 		return half*t+half/t;
 	}
@@ -87,6 +77,10 @@ static double one = 1.0, half=0.5, huge = 1.0e300;
 	    return t*w;
 	}
 
+    /* x is INF or NaN */
+	if(ix>=0x7ff00000) return x*x;
+
     /* |x| > overflowthresold, cosh(x) overflow */
 	return huge*huge;
 }
+strong_alias (__ieee754_cosh, __cosh_finite)

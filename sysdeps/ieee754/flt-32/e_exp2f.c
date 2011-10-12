@@ -1,5 +1,6 @@
 /* Single-precision floating point 2^x.
-   Copyright (C) 1997,1998,2000,2001,2005,2006 Free Software Foundation, Inc.
+   Copyright (C) 1997,1998,2000,2001,2005,2006,2011
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Geoffrey Keating <geoffk@ozemail.com.au>
 
@@ -126,3 +127,4 @@ __ieee754_exp2f (float x)
     /* Return x, if x is a NaN or Inf; or overflow, otherwise.  */
     return TWO127*x;
 }
+strong_alias (__ieee754_exp2f, __exp2f_finite)

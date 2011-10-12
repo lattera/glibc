@@ -14,10 +14,6 @@
  * ====================================================
  */
 
-#if defined(LIBM_SCCS) && !defined(lint)
-static char rcsid[] = "$NetBSD: $";
-#endif
-
 /* __ieee754_acoshl(x)
  * Method :
  *	Based on
@@ -35,20 +31,12 @@ static char rcsid[] = "$NetBSD: $";
 #include "math.h"
 #include "math_private.h"
 
-#ifdef __STDC__
 static const long double
-#else
-static long double
-#endif
 one	= 1.0,
 ln2	= 6.931471805599453094287e-01L; /* 0x3FFE, 0xB17217F7, 0xD1CF79AC */
 
-#ifdef __STDC__
-	long double __ieee754_acoshl(long double x)
-#else
-	long double __ieee754_acoshl(x)
-	long double x;
-#endif
+long double
+__ieee754_acoshl(long double x)
 {
 	long double t;
 	u_int32_t se,i0,i1;
@@ -57,7 +45,7 @@ ln2	= 6.931471805599453094287e-01L; /* 0x3FFE, 0xB17217F7, 0xD1CF79AC */
 	    return (x-x)/(x-x);
 	} else if(se >=0x401d) {	/* x > 2**30 */
 	    if(se >=0x7fff) {		/* x is inf of NaN */
-	        return x+x;
+		return x+x;
 	    } else
 		return __ieee754_logl(x)+ln2;	/* acoshl(huge)=logl(2x) */
 	} else if(((se-0x3fff)|i0|i1)==0) {
@@ -70,3 +58,4 @@ ln2	= 6.931471805599453094287e-01L; /* 0x3FFE, 0xB17217F7, 0xD1CF79AC */
 	    return __log1pl(t+__sqrtl(2.0*t+t*t));
 	}
 }
+strong_alias (__ieee754_acoshl, __acoshl_finite)

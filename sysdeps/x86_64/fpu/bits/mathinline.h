@@ -103,7 +103,8 @@ __NTH (llrint (double __x))
 }
 #  endif
 
-#  if __FINITE_MATH_ONLY__ == 1 && (__WORDSIZE == 64 || defined __SSE2_MATH__)
+#  if defined __FINITE_MATH_ONLY__ && __FINITE_MATH_ONLY__ > 0 \
+      && (__WORDSIZE == 64 || defined __SSE2_MATH__)
 /* Determine maximum of two values.  */
 __MATH_INLINE float
 __NTH (fmaxf (float __x, float __y))

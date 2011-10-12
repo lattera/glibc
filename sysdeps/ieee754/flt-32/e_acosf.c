@@ -8,23 +8,15 @@
  *
  * Developed at SunPro, a Sun Microsystems, Inc. business.
  * Permission to use, copy, modify, and distribute this
- * software is freely granted, provided that this notice 
+ * software is freely granted, provided that this notice
  * is preserved.
  * ====================================================
  */
 
-#if defined(LIBM_SCCS) && !defined(lint)
-static char rcsid[] = "$NetBSD: e_acosf.c,v 1.5 1995/05/12 04:57:16 jtc Exp $";
-#endif
-
 #include "math.h"
 #include "math_private.h"
 
-#ifdef __STDC__
-static const float 
-#else
-static float 
-#endif
+static const float
 one =  1.0000000000e+00, /* 0x3F800000 */
 pi =  3.1415925026e+00, /* 0x40490fda */
 pio2_hi =  1.5707962513e+00, /* 0x3fc90fda */
@@ -40,12 +32,8 @@ qS2 =  2.0209457874e+00, /* 0x4001572d */
 qS3 = -6.8828397989e-01, /* 0xbf303361 */
 qS4 =  7.7038154006e-02; /* 0x3d9dc62e */
 
-#ifdef __STDC__
-	float __ieee754_acosf(float x)
-#else
-	float __ieee754_acosf(x)
-	float x;
-#endif
+float
+__ieee754_acosf(float x)
 {
 	float z,p,q,r,w,s,c,df;
 	int32_t hx,ix;
@@ -87,3 +75,4 @@ qS4 =  7.7038154006e-02; /* 0x3d9dc62e */
 	    return (float)2.0*(df+w);
 	}
 }
+strong_alias (__ieee754_acosf, __acosf_finite)

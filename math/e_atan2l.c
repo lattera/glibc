@@ -9,6 +9,7 @@ __ieee754_atan2l (long double x, long double y)
   __set_errno (ENOSYS);
   return 0.0;
 }
+strong_alias (__ieee754_atan2l, __atan2l_finite)
 
 stub_warning (atan2l)
 #include <stub-tag.h>

@@ -1,5 +1,5 @@
 /* Long double square root, sparc64 version.
-   Copyright (C) 2000 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jakub@redhat.com>, 2000.
 
@@ -29,3 +29,4 @@ __ieee754_sqrtl (long double x)
   _Qp_sqrt (&ret, &x);
   return ret;
 }
+strong_alias (__ieee754_sqrtl, __sqrtl_finite)

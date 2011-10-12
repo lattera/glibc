@@ -1,6 +1,7 @@
 /* w_acoshl.c -- long double version of w_acosh.c.
  * Conversion to long double by Ulrich Drepper,
  * Cygnus Support, drepper@cygnus.com.
+ * Optimizations bu Ulrich Drepper <drepper@gmail.com>, 2011.
  */
 
 /*
@@ -14,10 +15,6 @@
  * ====================================================
  */
 
-#if defined(LIBM_SCCS) && !defined(lint)
-static char rcsid[] = "$NetBSD: $";
-#endif
-
 /*
  * wrapper coshl(x)
  */
@@ -25,23 +22,14 @@ static char rcsid[] = "$NetBSD: $";
 #include <math.h>
 #include <math_private.h>
 
-#ifdef __STDC__
-	long double __coshl(long double x)	/* wrapper coshl */
-#else
-	long double __coshl(x)			/* wrapper coshl */
-	long double x;
-#endif
+long double
+__coshl (long double x)
 {
-#ifdef _IEEE_LIBM
-	return __ieee754_coshl(x);
-#else
-	long double z;
-	z = __ieee754_coshl(x);
-	if(_LIB_VERSION == _IEEE_ || __isnanl(x)) return z;
-	if(!__finitel(z) && __finitel(x)) {
-		return __kernel_standard(x,x,205); /* cosh overflow */
-	} else
-	    return z;
-#endif
+	long double z = __ieee754_coshl (x);
+	if (__builtin_expect (!__finitel (z), 0) && __finitel (x)
+	    && _LIB_VERSION != _IEEE_)
+		return __kernel_standard (x, x, 205); /* cosh overflow */
+
+	return z;
 }
 weak_alias (__coshl, coshl)

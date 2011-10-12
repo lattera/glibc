@@ -10,10 +10,6 @@
  * ====================================================
  */
 
-#if defined(LIBM_SCCS) && !defined(lint)
-static char rcsid[] = "$NetBSD: s_asinh.c,v 1.9 1995/05/12 04:57:37 jtc Exp $";
-#endif
-
 /* asinh(x)
  * Method :
  *	Based on
@@ -28,40 +24,34 @@ static char rcsid[] = "$NetBSD: s_asinh.c,v 1.9 1995/05/12 04:57:37 jtc Exp $";
 #include "math.h"
 #include "math_private.h"
 
-#ifdef __STDC__
 static const double
-#else
-static double
-#endif
 one =  1.00000000000000000000e+00, /* 0x3FF00000, 0x00000000 */
 ln2 =  6.93147180559945286227e-01, /* 0x3FE62E42, 0xFEFA39EF */
 huge=  1.00000000000000000000e+300;
 
-#ifdef __STDC__
-	double __asinh(double x)
-#else
-	double __asinh(x)
-	double x;
-#endif
+double
+__asinh(double x)
 {
-	double t,w;
+	double w;
 	int32_t hx,ix;
 	GET_HIGH_WORD(hx,x);
 	ix = hx&0x7fffffff;
-	if(ix>=0x7ff00000) return x+x;	/* x is inf or NaN */
-	if(ix< 0x3e300000) {	/* |x|<2**-28 */
+	if(__builtin_expect(ix< 0x3e300000, 0)) {	/* |x|<2**-28 */
 	    if(huge+x>one) return x;	/* return x inexact except 0 */
 	}
-	if(ix>0x41b00000) {	/* |x| > 2**28 */
+	if(__builtin_expect(ix>0x41b00000, 0)) {	/* |x| > 2**28 */
+	    if(ix>=0x7ff00000) return x+x;	/* x is inf or NaN */
 	    w = __ieee754_log(fabs(x))+ln2;
-	} else if (ix>0x40000000) {	/* 2**28 > |x| > 2.0 */
-	    t = fabs(x);
-	    w = __ieee754_log(2.0*t+one/(__ieee754_sqrt(x*x+one)+t));
-	} else {		/* 2.0 > |x| > 2**-28 */
-	    t = x*x;
-	    w =__log1p(fabs(x)+t/(one+__ieee754_sqrt(one+t)));
+	} else {
+	    double xa = fabs(x);
+	    if (ix>0x40000000) {	/* 2**28 > |x| > 2.0 */
+		w = __ieee754_log(2.0*xa+one/(__ieee754_sqrt(xa*xa+one)+xa));
+	    } else {		/* 2.0 > |x| > 2**-28 */
+		double t = xa*xa;
+		w =__log1p(xa+t/(one+__ieee754_sqrt(one+t)));
+	    }
 	}
-	if(hx>0) return w; else return -w;
+	return __copysign(w, x);
 }
 weak_alias (__asinh, asinh)
 #ifdef NO_LONG_DOUBLE

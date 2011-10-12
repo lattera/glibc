@@ -9,6 +9,7 @@ __ieee754_powl (long double x, long double y)
   __set_errno (ENOSYS);
   return 0.0;
 }
+strong_alias (__ieee754_powl, __powl_finite)
 
 stub_warning (powl)
 #include <stub-tag.h>

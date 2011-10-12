@@ -14,10 +14,6 @@
  * ====================================================
  */
 
-#if defined(LIBM_SCCS) && !defined(lint)
-static char rcsid[] = "$NetBSD: $";
-#endif
-
 /* long double lgammal(long double x)
  * Return the logarithm of the Gamma function of x.
  *
@@ -27,31 +23,24 @@ static char rcsid[] = "$NetBSD: $";
 #include <math.h>
 #include <math_private.h>
 
-#ifdef __STDC__
-	long double __lgammal(long double x)
-#else
-	long double __lgammal(x)
-	long double x;
-#endif
+long double
+__lgammal(long double x)
 {
-#ifdef _IEEE_LIBM
-	return __ieee754_lgammal_r(x,&signgam);
-#else
-        long double y;
 	int local_signgam = 0;
-        y = __ieee754_lgammal_r(x,&local_signgam);
-	if (_LIB_VERSION != _ISOC_)
-	  /* ISO C99 does not define the global variable.  */
-	  signgam = local_signgam;
-        if(_LIB_VERSION == _IEEE_) return y;
-        if(!__finitel(y)&&__finitel(x)) {
-            if(__floorl(x)==x&&x<=0.0)
-                return __kernel_standard(x,x,215); /* lgamma pole */
-            else
-                return __kernel_standard(x,x,214); /* lgamma overflow */
-        } else
-            return y;
-#endif
+	long double y = __ieee754_lgammal_r(x,
+					    _LIB_VERSION != _ISOC_
+					    /* ISO C99 does not define the
+					       global variable.  */
+					    ? &signgam
+					    : &local_signgam);
+	if(__builtin_expect(!__finitel(y), 0)
+	   && __finitel(x) && _LIB_VERSION != _IEEE_)
+		return __kernel_standard(x, x,
+					 __floorl(x)==x&&x<=0.0L
+					 ? 215 /* lgamma pole */
+					 : 214); /* lgamma overflow */
+
+	return y;
 }
 weak_alias (__lgammal, lgammal)
 strong_alias (__lgammal, __gammal)

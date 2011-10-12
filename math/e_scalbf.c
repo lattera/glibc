@@ -1,68 +1,59 @@
-/* e_scalbf.c -- float version of e_scalb.c.
- * Conversion to float by Ian Lance Taylor, Cygnus Support, ian@cygnus.com.
- */
+/* Copyright (C) 2011 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+   Contributed by Ulrich Drepper <drepper@gmail.com>, 2011.
 
-/*
- * ====================================================
- * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.
- *
- * Developed at SunPro, a Sun Microsystems, Inc. business.
- * Permission to use, copy, modify, and distribute this
- * software is freely granted, provided that this notice
- * is preserved.
- * ====================================================
- */
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
 
-#if defined(LIBM_SCCS) && !defined(lint)
-static char rcsid[] = "$NetBSD: e_scalbf.c,v 1.3 1995/05/10 20:46:12 jtc Exp $";
-#endif
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
+
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, write to the Free
+   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
+   02111-1307 USA.  */
 
 #include <fenv.h>
 #include <math.h>
 #include <math_private.h>
 
-#ifdef _SCALB_INT
-#ifdef __STDC__
-	float __ieee754_scalbf(float x, int fn)
-#else
-	float __ieee754_scalbf(x,fn)
-	float x; int fn;
-#endif
-#else
-#ifdef __STDC__
-	float __ieee754_scalbf(float x, float fn)
-#else
-	float __ieee754_scalbf(x,fn)
-	float x, fn;
-#endif
-#endif
+
+static float
+__attribute__ ((noinline))
+invalid_fn (float x, float fn)
 {
-#ifdef _SCALB_INT
-	return __scalbnf(x,fn);
-#else
-	if (__isnanf(x)||__isnanf(fn)) return x*fn;
-	if (!__finitef(fn)) {
-	    if(fn>(float)0.0) return x*fn;
-	    else if (x == 0)
-	      return x;
-	    else if (!__finitef (x))
-	      {
-# ifdef FE_INVALID
-		feraiseexcept (FE_INVALID);
-# endif
-		return __nanf ("");
-	      }
-	    else       return x/(-fn);
-	}
-	if (__rintf(fn)!=fn)
-	  {
-# ifdef FE_INVALID
-	    feraiseexcept (FE_INVALID);
-# endif
-	    return __nanf ("");
-	  }
-	if ( fn > (float)65000.0) return __scalbnf(x, 65000);
-	if (-fn > (float)65000.0) return __scalbnf(x,-65000);
-	return __scalbnf(x,(int)fn);
-#endif
+  if (__rintf (fn) != fn)
+    {
+      feraiseexcept (FE_INVALID);
+      return __nan ("");
+    }
+  else if (fn > 65000.0f)
+    return __scalbnf (x, 65000);
+  else
+    return __scalbnf (x,-65000);
 }
+
+
+float
+__ieee754_scalbf (float x, float fn)
+{
+  if (__builtin_expect (__isnanf (x), 0))
+    return x * fn;
+  if (__builtin_expect (!__finitef (fn), 0))
+    {
+      if (__isnanf (fn) || fn > 0.0f)
+	return x * fn;
+      if (x == 0.0f)
+	return x;
+      return x / -fn;
+    }
+  if (__builtin_expect ((float) (int) fn != fn, 0))
+    return invalid_fn (x, fn);
+
+  return __scalbnf (x, (int) fn);
+}
+strong_alias (__ieee754_scalbf, __scalbf_finite)

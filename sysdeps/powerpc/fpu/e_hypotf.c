@@ -116,3 +116,4 @@ __ieee754_hypotf (float x, float y)
     }
   return __ieee754_sqrtf (x * x + y * y);
 }
+strong_alias (__ieee754_hypotf, __hypotf_finite)

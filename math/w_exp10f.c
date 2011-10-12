@@ -1,45 +1,40 @@
-/* w_exp10f.c -- float version of w_exp10.c.
- * Conversion to exp10 by Ulrich Drepper <drepper@cygnus.com>.
- */
+/* Copyright (C) 2011 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+   Contributed by Ulrich Drepper <drepper@gmail.com>, 2011.
+
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
+
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
+
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, write to the Free
+   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
+   02111-1307 USA.  */
+
 
 /*
- * ====================================================
- * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.
- *
- * Developed at SunPro, a Sun Microsystems, Inc. business.
- * Permission to use, copy, modify, and distribute this
- * software is freely granted, provided that this notice
- * is preserved.
- * ====================================================
- */
-
-/*
- * wrapper expf10(x)
+ * wrapper exp10f(x)
  */
 
 #include <math.h>
 #include <math_private.h>
 
-#ifdef __STDC__
-	float __exp10f(float x)		/* wrapper exp10f */
-#else
-	float __exp10f(x)			/* wrapper exp10f */
-	float x;
-#endif
+float
+__exp10f (float x)
 {
-#ifdef _IEEE_LIBM
-	return __ieee754_exp10f(x);
-#else
-	float z;
-	z = __ieee754_exp10f(x);
-	if(_LIB_VERSION == _IEEE_) return z;
-	if(!__finitef(z) && __finitef(x)) {
-	    /* exp10f overflow (146) if x > 0, underflow (147) if x < 0.  */
-	    return (float)__kernel_standard((double) x, (double) x,
-					    146+!!__signbitf(x));
-	}
-	return z;
-#endif
+  float z = __ieee754_exp10f (x);
+  if (__builtin_expect (!__finitef (z), 0)
+      && __finitef (x) && _LIB_VERSION != _IEEE_)
+    /* exp10f overflow (146) if x > 0, underflow (147) if x < 0.  */
+    return __kernel_standard_f (x, x, 146 + !!__signbitf (x));
+
+  return z;
 }
 weak_alias (__exp10f, exp10f)
 strong_alias (__exp10f, __pow10f)

@@ -8,43 +8,31 @@
  *
  * Developed at SunPro, a Sun Microsystems, Inc. business.
  * Permission to use, copy, modify, and distribute this
- * software is freely granted, provided that this notice 
+ * software is freely granted, provided that this notice
  * is preserved.
  * ====================================================
  */
 
-#if defined(LIBM_SCCS) && !defined(lint)
-static char rcsid[] = "$NetBSD: e_sqrtf.c,v 1.4 1995/05/10 20:46:19 jtc Exp $";
-#endif
-
 #include "math.h"
 #include "math_private.h"
 
-#ifdef __STDC__
 static	const float	one	= 1.0, tiny=1.0e-30;
-#else
-static	float	one	= 1.0, tiny=1.0e-30;
-#endif
 
-#ifdef __STDC__
-	float __ieee754_sqrtf(float x)
-#else
-	float __ieee754_sqrtf(x)
-	float x;
-#endif
+float
+__ieee754_sqrtf(float x)
 {
 	float z;
-	int32_t sign = (int)0x80000000; 
+	int32_t sign = (int)0x80000000;
 	int32_t ix,s,q,m,t,i;
 	u_int32_t r;
 
 	GET_FLOAT_WORD(ix,x);
 
     /* take care of Inf and NaN */
-	if((ix&0x7f800000)==0x7f800000) {			
+	if((ix&0x7f800000)==0x7f800000) {
 	    return x*x+x;		/* sqrt(NaN)=NaN, sqrt(+inf)=+inf
 					   sqrt(-inf)=sNaN */
-	} 
+	}
     /* take care of zero */
 	if(ix<=0) {
 	    if((ix&(~sign))==0) return x;/* sqrt(+-0) = +-0 */
@@ -69,12 +57,12 @@ static	float	one	= 1.0, tiny=1.0e-30;
 	r = 0x01000000;		/* r = moving bit from right to left */
 
 	while(r!=0) {
-	    t = s+r; 
-	    if(t<=ix) { 
-		s    = t+r; 
-		ix  -= t; 
-		q   += r; 
-	    } 
+	    t = s+r;
+	    if(t<=ix) {
+		s    = t+r;
+		ix  -= t;
+		q   += r;
+	    }
 	    ix += ix;
 	    r>>=1;
 	}
@@ -83,7 +71,7 @@ static	float	one	= 1.0, tiny=1.0e-30;
 	if(ix!=0) {
 	    z = one-tiny; /* trigger inexact flag */
 	    if (z>=one) {
-	        z = one+tiny;
+		z = one+tiny;
 		if (z>one)
 		    q += 2;
 		else
@@ -95,3 +83,4 @@ static	float	one	= 1.0, tiny=1.0e-30;
 	SET_FLOAT_WORD(z,ix);
 	return z;
 }
+strong_alias (__ieee754_sqrtf, __sqrtf_finite)

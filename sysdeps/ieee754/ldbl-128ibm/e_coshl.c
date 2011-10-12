@@ -10,22 +10,18 @@
  * ====================================================
  */
 
-#if defined(LIBM_SCCS) && !defined(lint)
-static char rcsid[] = "$NetBSD: e_cosh.c,v 1.7 1995/05/10 20:44:58 jtc Exp $";
-#endif
-
 /* __ieee754_cosh(x)
  * Method :
  * mathematically cosh(x) if defined to be (exp(x)+exp(-x))/2
  *	1. Replace x by |x| (cosh(x) = cosh(-x)).
  *	2.
- *		                                        [ exp(x) - 1 ]^2
+ *							[ exp(x) - 1 ]^2
  *	    0        <= x <= ln2/2  :  cosh(x) := 1 + -------------------
- *			       			           2*exp(x)
+ *							   2*exp(x)
  *
- *		                                  exp(x) +  1/exp(x)
+ *						  exp(x) +  1/exp(x)
  *	    ln2/2    <= x <= 22     :  cosh(x) := -------------------
- *			       			          2
+ *							  2
  *	    22       <= x <= lnovft :  cosh(x) := exp(x)/2
  *	    lnovft   <= x <= ln2ovft:  cosh(x) := exp(x/2)/2 * exp(x/2)
  *	    ln2ovft  <  x	    :  cosh(x) := huge*huge (overflow)
@@ -38,18 +34,10 @@ static char rcsid[] = "$NetBSD: e_cosh.c,v 1.7 1995/05/10 20:44:58 jtc Exp $";
 #include "math.h"
 #include "math_private.h"
 
-#ifdef __STDC__
 static const long double one = 1.0L, half=0.5L, huge = 1.0e300L;
-#else
-static long double one = 1.0L, half=0.5L, huge = 1.0e300L;
-#endif
 
-#ifdef __STDC__
-	long double __ieee754_coshl(long double x)
-#else
-	long double __ieee754_coshl(x)
-	long double x;
-#endif
+long double
+__ieee754_coshl (long double x)
 {
 	long double t,w;
 	int64_t ix;
@@ -79,7 +67,7 @@ static long double one = 1.0L, half=0.5L, huge = 1.0e300L;
 	if (ix < 0x40862e42fefa39efLL)  return half*__ieee754_expl(fabsl(x));
 
     /* |x| in [log(maxdouble), overflowthresold] */
-        if (ix < 0x408633ce8fb9f87dLL) {
+	if (ix < 0x408633ce8fb9f87dLL) {
 	    w = __ieee754_expl(half*fabsl(x));
 	    t = half*w;
 	    return t*w;
@@ -88,3 +76,4 @@ static long double one = 1.0L, half=0.5L, huge = 1.0e300L;
     /* |x| > overflowthresold, cosh(x) overflow */
 	return huge*huge;
 }
+strong_alias (__ieee754_coshl, __coshl_finite)

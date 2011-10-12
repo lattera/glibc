@@ -9,6 +9,7 @@ __ieee754_sqrtl (long double x)
   __set_errno (ENOSYS);
   return 0.0;
 }
+strong_alias (__ieee754_sqrtl, __sqrtl_finite)
 
 stub_warning (sqrtl)
 #include <stub-tag.h>

@@ -248,3 +248,4 @@ done:
   z += e;
   return (z);
 }
+strong_alias (__ieee754_log2l, __log2l_finite)

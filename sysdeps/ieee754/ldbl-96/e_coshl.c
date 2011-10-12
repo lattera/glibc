@@ -18,13 +18,13 @@ static char rcsid[] = "$NetBSD: e_cosh.c,v 1.7 1995/05/10 20:44:58 jtc Exp $";
  * mathematically coshl(x) if defined to be (exp(x)+exp(-x))/2
  *	1. Replace x by |x| (coshl(x) = coshl(-x)).
  *	2.
- *		                                        [ exp(x) - 1 ]^2
+ *							[ exp(x) - 1 ]^2
  *	    0        <= x <= ln2/2  :  coshl(x) := 1 + -------------------
- *			       			           2*exp(x)
+ *							   2*exp(x)
  *
- *		                                   exp(x) +  1/exp(x)
+ *						   exp(x) +  1/exp(x)
  *	    ln2/2    <= x <= 22     :  coshl(x) := -------------------
- *			       			           2
+ *							   2
  *	    22       <= x <= lnovft :  coshl(x) := expl(x)/2
  *	    lnovft   <= x <= ln2ovft:  coshl(x) := expl(x/2)/2 * expl(x/2)
  *	    ln2ovft  <  x	    :  coshl(x) := huge*huge (overflow)
@@ -37,18 +37,10 @@ static char rcsid[] = "$NetBSD: e_cosh.c,v 1.7 1995/05/10 20:44:58 jtc Exp $";
 #include "math.h"
 #include "math_private.h"
 
-#ifdef __STDC__
 static const long double one = 1.0, half=0.5, huge = 1.0e4900L;
-#else
-static long double one = 1.0, half=0.5, huge = 1.0e4900L;
-#endif
 
-#ifdef __STDC__
-	long double __ieee754_coshl(long double x)
-#else
-	long double __ieee754_coshl(x)
-	long double x;
-#endif
+long double
+__ieee754_coshl (long double x)
 {
 	long double t,w;
 	int32_t ex;
@@ -58,19 +50,17 @@ static long double one = 1.0, half=0.5, huge = 1.0e4900L;
 	GET_LDOUBLE_WORDS(ex,mx,lx,x);
 	ex &= 0x7fff;
 
-    /* x is INF or NaN */
-	if(ex==0x7fff) return x*x;
-
-    /* |x| in [0,0.5*ln2], return 1+expm1l(|x|)^2/(2*expl(|x|)) */
-	if(ex < 0x3ffd || (ex == 0x3ffd && mx < 0xb17217f7u)) {
-	    t = __expm1l(fabsl(x));
-	    w = one+t;
-	    if (ex<0x3fbc) return w;	/* cosh(tiny) = 1 */
-	    return one+(t*t)/(w+w);
-	}
-
-    /* |x| in [0.5*ln2,22], return (exp(|x|)+1/exp(|x|)/2; */
+    /* |x| in [0,22] */
 	if (ex < 0x4003 || (ex == 0x4003 && mx < 0xb0000000u)) {
+	    /* |x| in [0,0.5*ln2], return 1+expm1l(|x|)^2/(2*expl(|x|)) */
+		if(ex < 0x3ffd || (ex == 0x3ffd && mx < 0xb17217f7u)) {
+		    t = __expm1l(fabsl(x));
+		    w = one+t;
+		    if (ex<0x3fbc) return w;	/* cosh(tiny) = 1 */
+		    return one+(t*t)/(w+w);
+		}
+
+	    /* |x| in [0.5*ln2,22], return (exp(|x|)+1/exp(|x|)/2; */
 		t = __ieee754_expl(fabsl(x));
 		return half*t+half/t;
 	}
@@ -88,6 +78,10 @@ static long double one = 1.0, half=0.5, huge = 1.0e4900L;
 	    return t*w;
 	}
 
+    /* x is INF or NaN */
+	if(ex==0x7fff) return x*x;
+
     /* |x| >= log(2*maxdouble), cosh(x) overflow */
 	return huge*huge;
 }
+strong_alias (__ieee754_coshl, __coshl_finite)

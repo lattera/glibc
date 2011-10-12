@@ -1,5 +1,5 @@
 /* Square root of floating point number.
-   Copyright (C) 2002 Free Software Foundation, Inc.
+   Copyright (C) 2002, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -19,12 +19,14 @@
 
 #include <math_private.h>
 
+#undef __ieee754_sqrtf
 float
 __ieee754_sqrtf (float x)
 {
   float res;
 
-  asm ("sqrtss %0, %1" : "=x" (res) : "x" (x));
+  asm ("sqrtss %1, %0" : "=x" (res) : "xm" (x));
 
   return res;
 }
+strong_alias (__ieee754_sqrtf, __sqrtf_finite)

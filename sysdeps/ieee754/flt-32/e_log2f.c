@@ -18,11 +18,7 @@
 #include "math.h"
 #include "math_private.h"
 
-#ifdef __STDC__
 static const float
-#else
-static float
-#endif
 ln2 = 0.69314718055994530942,
 two25 =    3.355443200e+07,	/* 0x4c000000 */
 Lg1 = 6.6666668653e-01,	/* 3F2AAAAB */
@@ -33,18 +29,10 @@ Lg5 = 1.8183572590e-01, /* 3E3A3325 */
 Lg6 = 1.5313838422e-01, /* 3E1CD04F */
 Lg7 = 1.4798198640e-01; /* 3E178897 */
 
-#ifdef __STDC__
 static const float zero   =  0.0;
-#else
-static float zero   =  0.0;
-#endif
 
-#ifdef __STDC__
-	float __ieee754_log2f(float x)
-#else
-	float __ieee754_log2f(x)
-	float x;
-#endif
+float
+__ieee754_log2f(float x)
 {
 	float hfsq,f,s,z,R,w,t1,t2,dk;
 	int32_t k,ix,i,j;
@@ -53,13 +41,14 @@ static float zero   =  0.0;
 
 	k=0;
 	if (ix < 0x00800000) {			/* x < 2**-126  */
-	    if ((ix&0x7fffffff)==0)
+	    if (__builtin_expect((ix&0x7fffffff)==0, 0))
 		return -two25/(x-x);		/* log(+-0)=-inf */
-	    if (ix<0) return (x-x)/(x-x);	/* log(-#) = NaN */
+	    if (__builtin_expect(ix<0, 0))
+		return (x-x)/(x-x);	/* log(-#) = NaN */
 	    k -= 25; x *= two25; /* subnormal number, scale up x */
 	    GET_FLOAT_WORD(ix,x);
 	}
-	if (ix >= 0x7f800000) return x+x;
+	if (__builtin_expect(ix >= 0x7f800000, 0)) return x+x;
 	k += (ix>>23)-127;
 	ix &= 0x007fffff;
 	i = (ix+(0x95f64<<3))&0x800000;
@@ -72,7 +61,7 @@ static float zero   =  0.0;
 	    R = f*f*((float)0.5-(float)0.33333333333333333*f);
 	    return dk-(R-f)/ln2;
 	}
- 	s = f/((float)2.0+f);
+	s = f/((float)2.0+f);
 	z = s*s;
 	i = ix-(0x6147a<<3);
 	w = z*z;
@@ -88,3 +77,4 @@ static float zero   =  0.0;
 	    return dk-((s*(f-R))-f)/ln2;
 	}
 }
+strong_alias (__ieee754_log2f, __log2f_finite)

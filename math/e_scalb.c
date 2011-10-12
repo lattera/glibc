@@ -1,71 +1,59 @@
-/* @(#)e_scalb.c 5.1 93/09/24 */
-/*
- * ====================================================
- * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.
- *
- * Developed at SunPro, a Sun Microsystems, Inc. business.
- * Permission to use, copy, modify, and distribute this
- * software is freely granted, provided that this notice
- * is preserved.
- * ====================================================
- */
+/* Copyright (C) 2011 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+   Contributed by Ulrich Drepper <drepper@gmail.com>, 2011.
 
-#if defined(LIBM_SCCS) && !defined(lint)
-static char rcsid[] = "$NetBSD: e_scalb.c,v 1.6 1995/05/10 20:46:09 jtc Exp $";
-#endif
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
 
-/*
- * __ieee754_scalb(x, fn) is provide for
- * passing various standard test suite. One
- * should use scalbn() instead.
- */
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
+
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, write to the Free
+   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
+   02111-1307 USA.  */
 
 #include <fenv.h>
 #include <math.h>
 #include <math_private.h>
 
-#ifdef _SCALB_INT
-#ifdef __STDC__
-	double __ieee754_scalb(double x, int fn)
-#else
-	double __ieee754_scalb(x,fn)
-	double x; int fn;
-#endif
-#else
-#ifdef __STDC__
-	double __ieee754_scalb(double x, double fn)
-#else
-	double __ieee754_scalb(x,fn)
-	double x, fn;
-#endif
-#endif
+
+static double
+__attribute__ ((noinline))
+invalid_fn (double x, double fn)
 {
-#ifdef _SCALB_INT
-	return __scalbn(x,fn);
-#else
-	if (__isnan(x)||__isnan(fn)) return x*fn;
-	if (!__finite(fn)) {
-	    if(fn>0.0) return x*fn;
-	    else if (x == 0)
-	      return x;
-	    else if (!__finite (x))
-	      {
-# ifdef FE_INVALID
-		feraiseexcept (FE_INVALID);
-# endif
-		return __nan ("");
-	      }
-	    else       return x/(-fn);
-	}
-	if (__rint(fn)!=fn)
-	  {
-# ifdef FE_INVALID
-	    feraiseexcept (FE_INVALID);
-# endif
-	    return __nan ("");
-	  }
-	if ( fn > 65000.0) return __scalbn(x, 65000);
-	if (-fn > 65000.0) return __scalbn(x,-65000);
-	return __scalbn(x,(int)fn);
-#endif
+  if (__rint (fn) != fn)
+    {
+      feraiseexcept (FE_INVALID);
+      return __nan ("");
+    }
+  else if (fn > 65000.0)
+    return __scalbn (x, 65000);
+  else
+    return __scalbn (x,-65000);
 }
+
+
+double
+__ieee754_scalb (double x, double fn)
+{
+  if (__builtin_expect (__isnan (x), 0))
+    return x * fn;
+  if (__builtin_expect (!__finite (fn), 0))
+    {
+      if (__isnan (fn) || fn > 0.0)
+	return x * fn;
+      if (x == 0.0)
+	return x;
+      return x / -fn;
+    }
+  if (__builtin_expect ((double) (int) fn != fn, 0))
+    return invalid_fn (x, fn);
+
+  return __scalbn (x, (int) fn);
+}
+strong_alias (__ieee754_scalb, __scalb_finite)

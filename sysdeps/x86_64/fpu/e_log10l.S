@@ -10,14 +10,12 @@
 
 #include <machine/asm.h>
 
-RCSID("$NetBSD: $")
-
 #ifdef __ELF__
-	.section .rodata
+	.section .rodata.cst8,"aM",@progbits,8
 #else
 	.text
 #endif
-	.align ALIGNARG(4)
+	.p2align 3
 	ASM_TYPE_DIRECTIVE(one,@object)
 one:	.double 1.0
 	ASM_SIZE_DIRECTIVE(one)
@@ -30,9 +28,9 @@ limit:	.double 0.29
 
 
 #ifdef PIC
-#define MO(op) op##(%rip)
+# define MO(op) op##(%rip)
 #else
-#define MO(op) op
+# define MO(op) op
 #endif
 
 	.text
@@ -65,3 +63,20 @@ ENTRY(__ieee754_log10l)
 	fstp	%st(1)
 	ret
 END(__ieee754_log10l)
+
+
+ENTRY(__log10l_finite)
+	fldlg2			// log10(2)
+	fldt	8(%rsp)		// x : log10(2)
+	fld	%st		// x : x : log10(2)
+4:	fsubl	MO(one)		// x-1 : x : log10(2)
+	fld	%st		// x-1 : x-1 : x : log10(2)
+	fabs			// |x-1| : x-1 : x : log10(2)
+	fcompl	MO(limit)	// x-1 : x : log10(2)
+	fnstsw			// x-1 : x : log10(2)
+	andb	$0x45, %ah
+	jz	2b
+	fstp	%st(1)		// x-1 : log10(2)
+	fyl2xp1			// log10(x)
+	ret
+END(__log10l_finite)

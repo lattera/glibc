@@ -23,3 +23,4 @@ __ieee754_acosl (long double x)
 	: "=t" (res) : "0" (x) : "st(1)");
   return res;
 }
+strong_alias (__ieee754_acosl, __acosl_finite)

@@ -10,10 +10,6 @@
  * ====================================================
  */
 
-#if defined(LIBM_SCCS) && !defined(lint)
-static char rcsid[] = "$NetBSD: e_hypotl.c,v 1.9 1995/05/12 04:57:27 jtc Exp $";
-#endif
-
 /* __ieee754_hypotl(x,y)
  *
  * Method :
@@ -42,8 +38,8 @@ static char rcsid[] = "$NetBSD: e_hypotl.c,v 1.9 1995/05/12 04:57:27 jtc Exp $";
  *	hypotl(x,y) is NAN if x or y is NAN.
  *
  * Accuracy:
- * 	hypotl(x,y) returns sqrtl(x^2+y^2) with error less
- * 	than 1 ulps (units in the last place)
+ *	hypotl(x,y) returns sqrtl(x^2+y^2) with error less
+ *	than 1 ulps (units in the last place)
  */
 
 #include "math.h"
@@ -52,12 +48,8 @@ static char rcsid[] = "$NetBSD: e_hypotl.c,v 1.9 1995/05/12 04:57:27 jtc Exp $";
 static const long double two600 = 0x1.0p+600L;
 static const long double two1022 = 0x1.0p+1022L;
 
-#ifdef __STDC__
-	long double __ieee754_hypotl(long double x, long double y)
-#else
-	long double __ieee754_hypotl(x,y)
-	long double x, y;
-#endif
+long double
+__ieee754_hypotl(long double x, long double y)
 {
 	long double a,b,t1,t2,y1,y2,w,kld;
 	int64_t j,k,ha,hb;
@@ -93,7 +85,7 @@ static const long double two1022 = 0x1.0p+1022L;
 	}
 	if(hb < 0x20b0000000000000LL) {	/* b < 2**-500 */
 	    if(hb <= 0x000fffffffffffffLL) {	/* subnormal b or 0 */
-	        u_int64_t low;
+		u_int64_t low;
 		GET_LDOUBLE_LSW64(low,b);
 		if((hb|(low&0x7fffffffffffffffLL))==0) return a;
 		t1=two1022;	/* t1=2^1022 */
@@ -102,7 +94,7 @@ static const long double two1022 = 0x1.0p+1022L;
 		k -= 1022;
 		kld = kld / two1022;
 	    } else {		/* scale a and b by 2^600 */
-	        ha += 0x2580000000000000LL; 	/* a *= 2^600 */
+		ha += 0x2580000000000000LL;	/* a *= 2^600 */
 		hb += 0x2580000000000000LL;	/* b *= 2^600 */
 		k -= 600;
 		a *= two600;
@@ -129,3 +121,4 @@ static const long double two1022 = 0x1.0p+1022L;
 	else
 	    return w;
 }
+strong_alias (__ieee754_hypotl, __hypotl_finite)

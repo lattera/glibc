@@ -1,5 +1,5 @@
 /* Double-precision floating point square root.
-   Copyright (C) 1997, 2002, 2003, 2004, 2006 Free Software Foundation, Inc.
+   Copyright (C) 1997, 2002-2004, 2006, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -27,3 +27,4 @@ __ieee754_sqrt (double x)
   __asm __volatile ("fsqrt %0,%1" : "=f" (z) : "f" (x));
   return z;
 }
+strong_alias (__ieee754_sqrt, __sqrt_finite)

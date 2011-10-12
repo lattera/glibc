@@ -13,18 +13,10 @@
  * ====================================================
  */
 
-#if defined(LIBM_SCCS) && !defined(lint)
-static char rcsid[] = "$NetBSD: e_lgammaf_r.c,v 1.3 1995/05/10 20:45:47 jtc Exp $";
-#endif
-
 #include "math.h"
 #include "math_private.h"
 
-#ifdef __STDC__
 static const float
-#else
-static float
-#endif
 two23=  8.3886080000e+06, /* 0x4b000000 */
 half=  5.0000000000e-01, /* 0x3f000000 */
 one =  1.0000000000e+00, /* 0x3f800000 */
@@ -92,18 +84,10 @@ w4  = -5.9518753551e-04, /* 0xba1c065c */
 w5  =  8.3633989561e-04, /* 0x3a5b3dd2 */
 w6  = -1.6309292987e-03; /* 0xbad5c4e8 */
 
-#ifdef __STDC__
 static const float zero=  0.0000000000e+00;
-#else
-static float zero=  0.0000000000e+00;
-#endif
 
-#ifdef __STDC__
-	static float sin_pif(float x)
-#else
-	static float sin_pif(x)
-	float x;
-#endif
+static float
+sin_pif(float x)
 {
 	float y,z;
 	int n,ix;
@@ -124,16 +108,16 @@ static float zero=  0.0000000000e+00;
 	    y   = (float)2.0*(y - __floorf(y));	/* y = |x| mod 2.0 */
 	    n   = (int) (y*(float)4.0);
 	} else {
-            if(ix>=0x4b800000) {
-                y = zero; n = 0;                 /* y must be even */
-            } else {
-                if(ix<0x4b000000) z = y+two23;	/* exact */
+	    if(ix>=0x4b800000) {
+		y = zero; n = 0;                 /* y must be even */
+	    } else {
+		if(ix<0x4b000000) z = y+two23;	/* exact */
 		GET_FLOAT_WORD(n,z);
 		n &= 1;
-                y  = n;
-                n<<= 2;
-            }
-        }
+		y  = n;
+		n<<= 2;
+	    }
+	}
 	switch (n) {
 	    case 0:   y =  __kernel_sinf(pi*y,zero,0); break;
 	    case 1:
@@ -148,12 +132,8 @@ static float zero=  0.0000000000e+00;
 }
 
 
-#ifdef __STDC__
-	float __ieee754_lgammaf_r(float x, int *signgamp)
-#else
-	float __ieee754_lgammaf_r(x,signgamp)
-	float x; int *signgamp;
-#endif
+float
+__ieee754_lgammaf_r(float x, int *signgamp)
 {
 	float t,y,z,nadj,p,p1,p2,p3,q,r,w;
 	int i,hx,ix;
@@ -163,21 +143,22 @@ static float zero=  0.0000000000e+00;
     /* purge off +-inf, NaN, +-0, and negative arguments */
 	*signgamp = 1;
 	ix = hx&0x7fffffff;
-	if(ix>=0x7f800000) return x*x;
-	if(ix==0)
+	if(__builtin_expect(ix>=0x7f800000, 0)) return x*x;
+	if(__builtin_expect(ix==0, 0))
 	  {
 	    if (hx < 0)
 	      *signgamp = -1;
 	    return one/fabsf(x);
 	  }
-	if(ix<0x1c800000) {	/* |x|<2**-70, return -log(|x|) */
+	if(__builtin_expect(ix<0x1c800000, 0)) {
+	    /* |x|<2**-70, return -log(|x|) */
 	    if(hx<0) {
-	        *signgamp = -1;
-	        return -__ieee754_logf(-x);
+		*signgamp = -1;
+		return -__ieee754_logf(-x);
 	    } else return -__ieee754_logf(x);
 	}
 	if(hx<0) {
-	    if(ix>=0x4b000000) 	/* |x|>=2**23, must be -integer */
+	    if(ix>=0x4b000000)	/* |x|>=2**23, must be -integer */
 		return x/zero;
 	    t = sin_pif(x);
 	    if(t==zero) return one/fabsf(t); /* -integer */
@@ -190,15 +171,15 @@ static float zero=  0.0000000000e+00;
 	if (ix==0x3f800000||ix==0x40000000) r = 0;
     /* for x < 2.0 */
 	else if(ix<0x40000000) {
-	    if(ix<=0x3f666666) { 	/* lgamma(x) = lgamma(x+1)-log(x) */
+	    if(ix<=0x3f666666) {	/* lgamma(x) = lgamma(x+1)-log(x) */
 		r = -__ieee754_logf(x);
 		if(ix>=0x3f3b4a20) {y = one-x; i= 0;}
 		else if(ix>=0x3e6d3308) {y= x-(tc-one); i=1;}
-	  	else {y = x; i=2;}
+		else {y = x; i=2;}
 	    } else {
-	  	r = zero;
-	        if(ix>=0x3fdda618) {y=(float)2.0-x;i=0;} /* [1.7316,2] */
-	        else if(ix>=0x3F9da620) {y=x-tc;i=1;} /* [1.23,1.73] */
+		r = zero;
+		if(ix>=0x3fdda618) {y=(float)2.0-x;i=0;} /* [1.7316,2] */
+		else if(ix>=0x3F9da620) {y=x-tc;i=1;} /* [1.23,1.73] */
 		else {y=x-one;i=2;}
 	    }
 	    switch(i) {
@@ -222,7 +203,7 @@ static float zero=  0.0000000000e+00;
 		r += (-(float)0.5*y + p1/p2);
 	    }
 	}
-	else if(ix<0x41000000) { 			/* x < 8.0 */
+	else if(ix<0x41000000) {			/* x < 8.0 */
 	    i = (int)x;
 	    t = zero;
 	    y = x-(float)i;
@@ -251,3 +232,4 @@ static float zero=  0.0000000000e+00;
 	if(hx<0) r = nadj - r;
 	return r;
 }
+strong_alias (__ieee754_lgammaf_r, __lgammaf_r_finite)

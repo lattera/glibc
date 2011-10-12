@@ -168,4 +168,33 @@ libm {
     # puts exp2l in GLIBC_2.1, which will override this entry.
     exp2l;
   }
+  GLIBC_2.15 {
+    # Optimized -ffinite-math-only entry points
+    __acos_finite; __acosf_finite; __acosl_finite;
+    __acosh_finite; __acoshf_finite; __acoshl_finite;
+    __asin_finite; __asinf_finite; __asinl_finite;
+    __atan2_finite; __atan2f_finite; __atan2l_finite;
+    __atanh_finite; __atanhf_finite; __atanhl_finite;
+    __cosh_finite; __coshf_finite; __coshl_finite;
+    __exp10_finite; __exp10f_finite; __exp10l_finite;
+    __exp2_finite; __exp2f_finite; __exp2l_finite;
+    __fmod_finite; __fmodf_finite; __fmodl_finite;
+    __hypot_finite; __hypotf_finite; __hypotl_finite;
+    __j0_finite; __j0f_finite; __j0l_finite;
+    __y0_finite; __y0f_finite; __y0l_finite;
+    __j1_finite; __j1f_finite; __j1l_finite;
+    __y1_finite; __y1f_finite; __y1l_finite;
+    __jn_finite; __jnf_finite; __jnl_finite;
+    __yn_finite; __ynf_finite; __ynl_finite;
+    __lgamma_r_finite; __lgammaf_r_finite; __lgammal_r_finite;
+    __log_finite; __logf_finite; __logl_finite;
+    __log10_finite; __log10f_finite; __log10l_finite;
+    __log2_finite; __log2f_finite; __log2l_finite;
+    __pow_finite; __powf_finite; __powl_finite;
+    __remainder_finite; __remainderf_finite; __remainderl_finite;
+    __scalb_finite; __scalbf_finite; __scalbl_finite;
+    __sinh_finite; __sinhf_finite; __sinhl_finite;
+    __sqrt_finite; __sqrtf_finite; __sqrtl_finite;
+    __gamma_r_finite; __gammaf_r_finite; __gammal_r_finite;
+  }
 }

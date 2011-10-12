@@ -9,6 +9,7 @@ __ieee754_atanhl (long double x)
   __set_errno (ENOSYS);
   return 0.0;
 }
+strong_alias (__ieee754_atanhl, __atanhl_finite)
 
 stub_warning (__ieee754_atanhl)
 #include <stub-tag.h>

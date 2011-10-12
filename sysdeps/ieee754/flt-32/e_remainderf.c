@@ -8,31 +8,19 @@
  *
  * Developed at SunPro, a Sun Microsystems, Inc. business.
  * Permission to use, copy, modify, and distribute this
- * software is freely granted, provided that this notice 
+ * software is freely granted, provided that this notice
  * is preserved.
  * ====================================================
  */
 
-#if defined(LIBM_SCCS) && !defined(lint)
-static char rcsid[] = "$NetBSD: e_remainderf.c,v 1.4 1995/05/10 20:46:08 jtc Exp $";
-#endif
-
 #include "math.h"
 #include "math_private.h"
 
-#ifdef __STDC__
 static const float zero = 0.0;
-#else
-static float zero = 0.0;
-#endif
 
 
-#ifdef __STDC__
-	float __ieee754_remainderf(float x, float p)
-#else
-	float __ieee754_remainderf(x,p)
-	float x,p;
-#endif
+float
+__ieee754_remainderf(float x, float p)
 {
 	int32_t hx,hp;
 	u_int32_t sx;
@@ -45,7 +33,7 @@ static float zero = 0.0;
 	hx &= 0x7fffffff;
 
     /* purge off exception values */
-	if(hp==0) return (x*p)/(x*p);	 	/* p = 0 */
+	if(hp==0) return (x*p)/(x*p);		/* p = 0 */
 	if((hx>=0x7f800000)||			/* x not finite */
 	  ((hp>0x7f800000)))			/* p is NaN */
 	    return (x*p)/(x*p);
@@ -71,3 +59,4 @@ static float zero = 0.0;
 	SET_FLOAT_WORD(x,hx^sx);
 	return x;
 }
+strong_alias (__ieee754_remainderf, __remainderf_finite)

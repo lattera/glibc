@@ -42,7 +42,7 @@
  *
  */
 
-/* Copyright 2001 by Stephen L. Moshier <moshier@na-net.ornl.gov> 
+/* Copyright 2001 by Stephen L. Moshier <moshier@na-net.ornl.gov>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Lesser General Public
@@ -251,7 +251,7 @@ __ieee754_logl(long double x)
       /* log(u) = log( t u/t ) = log(t) + log(u/t)
 	 log(t) is tabulated in the lookup table.
 	 Express log(u/t) = log(1+z),  where z = u/t - 1 = (u-t)/t.
-         cf. Cody & Waite. */
+	 cf. Cody & Waite. */
       z = (u.value - t.value) / t.value;
     }
   /* Series expansion of log(1+z).  */
@@ -277,3 +277,4 @@ __ieee754_logl(long double x)
   y += e * ln2a;
   return y;
 }
+strong_alias (__ieee754_logl, __logl_finite)

@@ -20,3 +20,4 @@ ENTRY(__ieee754_fmodl)
 	fstp	%st(1)
 	ret
 END (__ieee754_fmodl)
+strong_alias (__ieee754_fmodl, __fmodl_finite)

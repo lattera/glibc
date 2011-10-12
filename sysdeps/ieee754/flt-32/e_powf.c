@@ -13,20 +13,12 @@
  * ====================================================
  */
 
-#if defined(LIBM_SCCS) && !defined(lint)
-static char rcsid[] = "$NetBSD: e_powf.c,v 1.7 1996/04/08 15:43:44 phil Exp $";
-#endif
-
 #include "math.h"
 #include "math_private.h"
 
 static const float huge = 1.0e+30, tiny = 1.0e-30;
 
-#ifdef __STDC__
 static const float
-#else
-static float
-#endif
 bp[] = {1.0, 1.5,},
 dp_h[] = { 0.0, 5.84960938e-01,}, /* 0x3f15c000 */
 dp_l[] = { 0.0, 1.56322085e-06,}, /* 0x35d1cfdc */
@@ -57,12 +49,8 @@ ivln2    =  1.4426950216e+00, /* 0x3fb8aa3b =1/ln2 */
 ivln2_h  =  1.4426879883e+00, /* 0x3fb8aa00 =16b 1/ln2*/
 ivln2_l  =  7.0526075433e-06; /* 0x36eca570 =1/ln2 tail*/
 
-#ifdef __STDC__
-	float __ieee754_powf(float x, float y)
-#else
-	float __ieee754_powf(x,y)
-	float x, y;
-#endif
+float
+__ieee754_powf(float x, float y)
 {
 	float z,ax,z_h,z_l,p_h,p_l;
 	float y1,t1,t2,r,s,t,u,v,w;
@@ -81,8 +69,8 @@ ivln2_l  =  7.0526075433e-06; /* 0x36eca570 =1/ln2 tail*/
 	if(x == -1.0 && isinf(y)) return one;
 
     /* +-NaN return x+y */
-	if(ix > 0x7f800000 ||
-	   iy > 0x7f800000)
+	if(__builtin_expect(ix > 0x7f800000 ||
+			    iy > 0x7f800000, 0))
 		return x+y;
 
     /* determine if y is an odd int when x < 0
@@ -101,26 +89,26 @@ ivln2_l  =  7.0526075433e-06; /* 0x36eca570 =1/ln2 tail*/
 	}
 
     /* special value of y */
-	if (iy==0x7f800000) {	/* y is +-inf */
+	if (__builtin_expect(iy==0x7f800000, 0)) {	/* y is +-inf */
 	    if (ix==0x3f800000)
-	        return  y - y;	/* inf**+-1 is NaN */
+		return  y - y;	/* inf**+-1 is NaN */
 	    else if (ix > 0x3f800000)/* (|x|>1)**+-inf = inf,0 */
-	        return (hy>=0)? y: zero;
+		return (hy>=0)? y: zero;
 	    else			/* (|x|<1)**-,+inf = inf,0 */
-	        return (hy<0)?-y: zero;
+		return (hy<0)?-y: zero;
 	}
 	if(iy==0x3f800000) {	/* y is  +-1 */
 	    if(hy<0) return one/x; else return x;
 	}
 	if(hy==0x40000000) return x*x; /* y is  2 */
 	if(hy==0x3f000000) {	/* y is  0.5 */
-	    if(hx>=0)	/* x >= +0 */
+	    if(__builtin_expect(hx>=0, 1))	/* x >= +0 */
 	    return __ieee754_sqrtf(x);
 	}
 
 	ax   = fabsf(x);
     /* special value of x */
-	if(ix==0x7f800000||ix==0||ix==0x3f800000){
+	if(__builtin_expect(ix==0x7f800000||ix==0||ix==0x3f800000, 0)){
 	    z = ax;			/*x is +-0,+-inf,+-1*/
 	    if(hy<0) z = one/z;	/* z = (1/|x|) */
 	    if(hx<0) {
@@ -133,10 +121,11 @@ ivln2_l  =  7.0526075433e-06; /* 0x36eca570 =1/ln2 tail*/
 	}
 
     /* (x<0)**(non-int) is NaN */
-	if(((((u_int32_t)hx>>31)-1)|yisint)==0) return (x-x)/(x-x);
+	if(__builtin_expect(((((u_int32_t)hx>>31)-1)|yisint)==0, 0))
+	    return (x-x)/(x-x);
 
     /* |y| is huge */
-	if(iy>0x4d000000) { /* if |y| > 2**27 */
+	if(__builtin_expect(iy>0x4d000000, 0)) { /* if |y| > 2**27 */
 	/* over/underflow if x is not close to one */
 	    if(ix<0x3f7ffff8) return (hy<0)? huge*huge:tiny*tiny;
 	    if(ix>0x3f800007) return (hy>0)? huge*huge:tiny*tiny;
@@ -214,14 +203,14 @@ ivln2_l  =  7.0526075433e-06; /* 0x36eca570 =1/ln2 tail*/
 	p_h = y1*t1;
 	z = p_l+p_h;
 	GET_FLOAT_WORD(j,z);
-	if (j>0x43000000)				/* if z > 128 */
+	if (__builtin_expect(j>0x43000000, 0))		/* if z > 128 */
 	    return s*huge*huge;				/* overflow */
-	else if (j==0x43000000) {			/* if z == 128 */
+	else if (__builtin_expect(j==0x43000000, 0)) {	/* if z == 128 */
 	    if(p_l+ovt>z-p_h) return s*huge*huge;	/* overflow */
 	}
-	else if ((j&0x7fffffff)>0x43160000)		/* z <= -150 */
+	else if (__builtin_expect((j&0x7fffffff)>0x43160000, 0))/* z <= -150 */
 	    return s*tiny*tiny;				/* underflow */
-	else if ((u_int32_t) j==0xc3160000){		/* z == -150 */
+	else if (__builtin_expect((u_int32_t) j==0xc3160000, 0)){/* z == -150*/
 	    if(p_l<=z-p_h) return s*tiny*tiny;		/* underflow */
 	}
     /*
@@ -255,3 +244,4 @@ ivln2_l  =  7.0526075433e-06; /* 0x36eca570 =1/ln2 tail*/
 	else SET_FLOAT_WORD(z,j);
 	return s*z;
 }
+strong_alias (__ieee754_powf, __powf_finite)

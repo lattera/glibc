@@ -11,9 +11,9 @@
 
 /* Expansions and modifications for 128-bit long double are
    Copyright (C) 2001 Stephen L. Moshier <moshier@na-net.ornl.gov>
-   and are incorporated herein by permission of the author.  The author 
+   and are incorporated herein by permission of the author.  The author
    reserves the right to distribute this material elsewhere under different
-   copying permissions.  These modifications are distributed here under 
+   copying permissions.  These modifications are distributed here under
    the following terms:
 
     This library is free software; you can redistribute it and/or
@@ -144,14 +144,8 @@ static const long double
   cp_h = 9.6179669392597555432899980587535537779331E-1L,
   cp_l = 5.0577616648125906047157785230014751039424E-17L;
 
-#ifdef __STDC__
 long double
 __ieee754_powl (long double x, long double y)
-#else
-long double
-__ieee754_powl (x, y)
-     long double x, y;
-#endif
 {
   long double z, ax, z_h, z_l, p_h, p_l;
   long double y1, t1, t2, r, s, t, u, v, w;
@@ -445,3 +439,4 @@ __ieee754_powl (x, y)
     }
   return s * z;
 }
+strong_alias (__ieee754_powl, __powl_finite)

@@ -20,3 +20,4 @@ __ieee754_fmodl (long double x, long double y)
        : "=t" (res) : "0" (x), "u" (y) : "ax", "st(1)");
   return res;
 }
+strong_alias (__ieee754_fmodl, __fmodl_finite)

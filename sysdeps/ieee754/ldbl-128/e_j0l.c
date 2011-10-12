@@ -779,6 +779,7 @@ __ieee754_j0l (long double x)
   z = ONEOSQPI * (p * cc - q * ss) / __ieee754_sqrtl (xx);
   return z;
 }
+strong_alias (__ieee754_j0l, __j0l_finite)
 
 
 /* Y0(x) = 2/pi * log(x) * J0(x) + R(x^2)
@@ -918,3 +919,4 @@ long double
   z = ONEOSQPI * (p * ss + q * cc) / __ieee754_sqrtl (x);
   return z;
 }
+strong_alias (__ieee754_y0l, __y0l_finite)

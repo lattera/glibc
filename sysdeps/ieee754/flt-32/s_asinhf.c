@@ -13,46 +13,36 @@
  * ====================================================
  */
 
-#if defined(LIBM_SCCS) && !defined(lint)
-static char rcsid[] = "$NetBSD: s_asinhf.c,v 1.5 1995/05/12 04:57:39 jtc Exp $";
-#endif
-
 #include "math.h"
 #include "math_private.h"
 
-#ifdef __STDC__
 static const float
-#else
-static float
-#endif
 one =  1.0000000000e+00, /* 0x3F800000 */
 ln2 =  6.9314718246e-01, /* 0x3f317218 */
 huge=  1.0000000000e+30;
 
-#ifdef __STDC__
-	float __asinhf(float x)
-#else
-	float __asinhf(x)
-	float x;
-#endif
+float
+__asinhf(float x)
 {
-	float t,w;
+	float w;
 	int32_t hx,ix;
 	GET_FLOAT_WORD(hx,x);
 	ix = hx&0x7fffffff;
-	if(ix>=0x7f800000) return x+x;	/* x is inf or NaN */
-	if(ix< 0x38000000) {	/* |x|<2**-14 */
+	if(__builtin_expect(ix< 0x38000000, 0)) {	/* |x|<2**-14 */
 	    if(huge+x>one) return x;	/* return x inexact except 0 */
 	}
-	if(ix>0x47000000) {	/* |x| > 2**14 */
+	if(__builtin_expect(ix>0x47000000, 0)) {	/* |x| > 2**14 */
+	    if(ix>=0x7f800000) return x+x;	/* x is inf or NaN */
 	    w = __ieee754_logf(fabsf(x))+ln2;
-	} else if (ix>0x40000000) {	/* 2**14 > |x| > 2.0 */
-	    t = fabsf(x);
-	    w = __ieee754_logf((float)2.0*t+one/(__ieee754_sqrtf(x*x+one)+t));
-	} else {		/* 2.0 > |x| > 2**-14 */
-	    t = x*x;
-	    w =__log1pf(fabsf(x)+t/(one+__ieee754_sqrtf(one+t)));
+	} else {
+	    float xa = fabsf(x);
+	    if (ix>0x40000000) {	/* 2**14 > |x| > 2.0 */
+		w = __ieee754_logf(2.0f*xa+one/(__ieee754_sqrtf(xa*xa+one)+xa));
+	    } else {		/* 2.0 > |x| > 2**-14 */
+		float t = xa*xa;
+		w =__log1pf(xa+t/(one+__ieee754_sqrtf(one+t)));
+	    }
 	}
-	if(hx>0) return w; else return -w;
+	return __copysignf(w, x);
 }
 weak_alias (__asinhf, asinhf)

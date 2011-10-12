@@ -5,8 +5,6 @@
 
 #include <machine/asm.h>
 
-RCSID("$NetBSD: e_fmod.S,v 1.4 1995/05/08 23:47:56 jtc Exp $")
-
 ENTRY(__ieee754_fmod)
 	fldl	12(%esp)
 	fldl	4(%esp)
@@ -17,3 +15,4 @@ ENTRY(__ieee754_fmod)
 	fstp	%st(1)
 	ret
 END (__ieee754_fmod)
+strong_alias (__ieee754_fmod, __fmod_finite)

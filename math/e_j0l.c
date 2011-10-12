@@ -10,6 +10,7 @@ __ieee754_j0l (long double x)
   __set_errno (ENOSYS);
   return 0.0;
 }
+strong_alias (__ieee754_j0l, __j0l_finite)
 
 stub_warning (j0l)
 
@@ -20,6 +21,7 @@ __ieee754_y0l (long double x)
   __set_errno (ENOSYS);
   return 0.0;
 }
+strong_alias (__ieee754_y0l, __y0l_finite)
 
 stub_warning (y0l)
 #include <stub-tag.h>

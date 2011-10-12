@@ -30,20 +30,12 @@
 #include "math.h"
 #include "math_private.h"
 
-#ifdef __STDC__
 static const long double
-#else
-static long double
-#endif
 one	= 1.0,
 ln2	= 0.6931471805599453094172321214581766L;
 
-#ifdef __STDC__
-	long double __ieee754_acoshl(long double x)
-#else
-	long double __ieee754_acoshl(x)
-	long double x;
-#endif
+long double
+__ieee754_acoshl(long double x)
 {
 	long double t;
 	u_int64_t lx;
@@ -53,7 +45,7 @@ ln2	= 0.6931471805599453094172321214581766L;
 	    return (x-x)/(x-x);
 	} else if(hx >=0x4035000000000000LL) {	/* x > 2**54 */
 	    if(hx >=0x7fff000000000000LL) {	/* x is inf of NaN */
-	        return x+x;
+		return x+x;
 	    } else
 		return __ieee754_logl(x)+ln2;	/* acoshl(huge)=logl(2x) */
 	} else if(((hx-0x3fff000000000000LL)|lx)==0) {
@@ -66,3 +58,4 @@ ln2	= 0.6931471805599453094172321214581766L;
 	    return __log1pl(t+__sqrtl(2.0L*t+t*t));
 	}
 }
+strong_alias (__ieee754_acoshl, __acoshl_finite)

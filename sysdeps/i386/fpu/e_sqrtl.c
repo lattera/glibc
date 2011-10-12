@@ -7,6 +7,7 @@
 
 #include <math_private.h>
 
+#undef __ieee754_sqrtl
 long double
 __ieee754_sqrtl (long double x)
 {
@@ -16,3 +17,4 @@ __ieee754_sqrtl (long double x)
 
   return res;
 }
+strong_alias (__ieee754_sqrtl, __sqrtl_finite)

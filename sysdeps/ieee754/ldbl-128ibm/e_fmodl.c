@@ -22,18 +22,10 @@
 #include "math_private.h"
 #include <ieee754.h>
 
-#ifdef __STDC__
 static const long double one = 1.0, Zero[] = {0.0, -0.0,};
-#else
-static long double one = 1.0, Zero[] = {0.0, -0.0,};
-#endif
 
-#ifdef __STDC__
-	long double __ieee754_fmodl(long double x, long double y)
-#else
-	long double __ieee754_fmodl(x,y)
-	long double x,y;
-#endif
+long double
+__ieee754_fmodl (long double x, long double y)
 {
 	int64_t n,hx,hy,hz,ix,iy,sx,i;
 	u_int64_t lx,ly,lz;
@@ -76,8 +68,8 @@ static long double one = 1.0, Zero[] = {0.0, -0.0,};
     /* Make the IBM extended format 105 bit mantissa look like the ieee854 112
        bit mantissa so the following operatations will give the correct
        result.  */
-        ldbl_extract_mantissa(&hx, &lx, &temp, x);
-        ldbl_extract_mantissa(&hy, &ly, &temp, y);
+	ldbl_extract_mantissa(&hx, &lx, &temp, x);
+	ldbl_extract_mantissa(&hy, &ly, &temp, y);
 
     /* set up {hx,lx}, {hy,ly} and align y to x */
 	if(ix >= -1022)
@@ -85,8 +77,8 @@ static long double one = 1.0, Zero[] = {0.0, -0.0,};
 	else {		/* subnormal x, shift x to normal */
 	    n = -1022-ix;
 	    if(n<=63) {
-	        hx = (hx<<n)|(lx>>(64-n));
-	        lx <<= n;
+		hx = (hx<<n)|(lx>>(64-n));
+		lx <<= n;
 	    } else {
 		hx = lx<<(n-64);
 		lx = 0;
@@ -97,8 +89,8 @@ static long double one = 1.0, Zero[] = {0.0, -0.0,};
 	else {		/* subnormal y, shift y to normal */
 	    n = -1022-iy;
 	    if(n<=63) {
-	        hy = (hy<<n)|(ly>>(64-n));
-	        ly <<= n;
+		hy = (hy<<n)|(ly>>(64-n));
+		ly <<= n;
 	    } else {
 		hy = ly<<(n-64);
 		ly = 0;
@@ -111,16 +103,16 @@ static long double one = 1.0, Zero[] = {0.0, -0.0,};
 	    hz=hx-hy;lz=lx-ly; if(lx<ly) hz -= 1;
 	    if(hz<0){hx = hx+hx+(lx>>63); lx = lx+lx;}
 	    else {
-	    	if((hz|(lz&0x7fffffffffffffff))==0) 		/* return sign(x)*0 */
+		if((hz|(lz&0x7fffffffffffffff))==0)		/* return sign(x)*0 */
 		    return Zero[(u_int64_t)sx>>63];
-	    	hx = hz+hz+(lz>>63); lx = lz+lz;
+		hx = hz+hz+(lz>>63); lx = lz+lz;
 	    }
 	}
 	hz=hx-hy;lz=lx-ly; if(lx<ly) hz -= 1;
 	if(hz>=0) {hx=hz;lx=lz;}
 
     /* convert back to floating value and restore the sign */
-	if((hx|(lx&0x7fffffffffffffff))==0) 			/* return sign(x)*0 */
+	if((hx|(lx&0x7fffffffffffffff))==0)			/* return sign(x)*0 */
 	    return Zero[(u_int64_t)sx>>63];
 	while(hx<0x0001000000000000LL) {	/* normalize x */
 	    hx = hx+hx+(lx>>63); lx = lx+lx;
@@ -143,3 +135,4 @@ static long double one = 1.0, Zero[] = {0.0, -0.0,};
 	}
 	return x;		/* exact output */
 }
+strong_alias (__ieee754_fmodl, __fmodl_finite)

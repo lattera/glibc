@@ -1,8 +1,8 @@
 /* Implementation of gamma function according to ISO C.
-   Copyright (C) 1997, 1999, 2002, 2004 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1999, 2002, 2004, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997 and
-   		  Jakub Jelinek <jj@ultra.linux.cz, 1999.
+		  Jakub Jelinek <jj@ultra.linux.cz, 1999.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -56,3 +56,4 @@ __ieee754_gammal_r (long double x, int *signgamp)
   /* XXX FIXME.  */
   return __ieee754_expl (__ieee754_lgammal_r (x, signgamp));
 }
+strong_alias (__ieee754_gammal_r, __gammal_r_finite)

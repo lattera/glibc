@@ -10,10 +10,6 @@
  * ====================================================
  */
 
-#if defined(LIBM_SCCS) && !defined(lint)
-static char rcsid[] = "$NetBSD: w_lgamma_r.c,v 1.6 1995/05/10 20:49:27 jtc Exp $";
-#endif
-
 /*
  * wrapper double lgamma_r(double x, int *signgamp)
  */
@@ -22,27 +18,18 @@ static char rcsid[] = "$NetBSD: w_lgamma_r.c,v 1.6 1995/05/10 20:49:27 jtc Exp $
 #include <math_private.h>
 
 
-#ifdef __STDC__
-	double __lgamma_r(double x, int *signgamp) /* wrapper lgamma_r */
-#else
-	double __lgamma_r(x,signgamp)              /* wrapper lgamma_r */
-        double x; int *signgamp;
-#endif
+double
+__lgamma_r(double x, int *signgamp)
 {
-#ifdef _IEEE_LIBM
-	return __ieee754_lgamma_r(x,signgamp);
-#else
-        double y;
-        y = __ieee754_lgamma_r(x,signgamp);
-        if(_LIB_VERSION == _IEEE_) return y;
-        if(!__finite(y)&&__finite(x)) {
-            if(__floor(x)==x&&x<=0.0)
-                return __kernel_standard(x,x,15); /* lgamma pole */
-            else
-                return __kernel_standard(x,x,14); /* lgamma overflow */
-        } else
-            return y;
-#endif
+	double y = __ieee754_lgamma_r(x,signgamp);
+	if(__builtin_expect(!__finite(y), 0)
+	   && __finite(x) && _LIB_VERSION != _IEEE_)
+		return __kernel_standard(x, x,
+					 __floor(x)==x&&x<=0.0
+					 ? 15 /* lgamma pole */
+					 : 14); /* lgamma overflow */
+
+	return y;
 }
 weak_alias (__lgamma_r, lgamma_r)
 #ifdef NO_LONG_DOUBLE

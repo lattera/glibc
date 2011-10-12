@@ -1,71 +1,60 @@
-/* w_jnf.c -- float version of w_jn.c.
- * Conversion to float by Ian Lance Taylor, Cygnus Support, ian@cygnus.com.
- */
+/* Copyright (C) 2011 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+   Contributed by Ulrich Drepper <drepper@gmail.com>, 2011.
 
-/*
- * ====================================================
- * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.
- *
- * Developed at SunPro, a Sun Microsystems, Inc. business.
- * Permission to use, copy, modify, and distribute this
- * software is freely granted, provided that this notice
- * is preserved.
- * ====================================================
- */
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
 
-#if defined(LIBM_SCCS) && !defined(lint)
-static char rcsid[] = "$NetBSD: w_jnf.c,v 1.3 1995/05/10 20:49:21 jtc Exp $";
-#endif
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
 
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, write to the Free
+   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
+   02111-1307 USA.  */
+
+#include <fenv.h>
 #include <math.h>
 #include <math_private.h>
 
-#ifdef __STDC__
-	float jnf(int n, float x)	/* wrapper jnf */
-#else
-	float jnf(n,x)			/* wrapper jnf */
-	float x; int n;
-#endif
+
+/* wrapper jnf */
+float
+jnf (int n, float x)
 {
-#ifdef _IEEE_LIBM
-	return __ieee754_jnf(n,x);
-#else
-	float z;
-	z = __ieee754_jnf(n,x);
-	if(_LIB_VERSION == _IEEE_ || __isnanf(x) ) return z;
-	if(fabsf(x)>(float)X_TLOSS) {
-	    /* jn(|x|>X_TLOSS,n) */
-	    return (float)__kernel_standard((double)n,(double)x,138);
-	} else
-	    return z;
-#endif
+  if (__builtin_expect (fabsf (x) > (float) X_TLOSS, 0)
+      && _LIB_VERSION != _IEEE_)
+    /* jn(n,|x|>X_TLOSS) */
+    return __kernel_standard_f (n, x, 138);
+
+  return __ieee754_jnf (n, x);
 }
 
-#ifdef __STDC__
-	float ynf(int n, float x)	/* wrapper ynf */
-#else
-	float ynf(n,x)			/* wrapper ynf */
-	float x; int n;
-#endif
+
+/* wrapper ynf */
+float
+ynf (int n, float x)
 {
-#ifdef _IEEE_LIBM
-	return __ieee754_ynf(n,x);
-#else
-	float z;
-	z = __ieee754_ynf(n,x);
-	if(_LIB_VERSION == _IEEE_ || __isnanf(x) ) return z;
-        if(x <= (float)0.0){
-                if(x==(float)0.0)
-                    /* d= -one/(x-x); */
-                    return (float)__kernel_standard((double)n,(double)x,112);
-                else
-                    /* d = zero/(x-x); */
-                    return (float)__kernel_standard((double)n,(double)x,113);
-        }
-	if(x>(float)X_TLOSS) {
-	    /* yn(x>X_TLOSS,n) */
-	    return (float)__kernel_standard((double)n,(double)x,139);
-	} else
-	    return z;
-#endif
+  if (__builtin_expect (x <= 0.0f || x > (float) X_TLOSS, 0)
+      && _LIB_VERSION != _IEEE_)
+    {
+      if (x < 0.0f)
+	{
+	  /* d = zero/(x-x) */
+	  feraiseexcept (FE_INVALID);
+	  return __kernel_standard_f (n, x, 113);
+	}
+      else if (x == 0.0)
+	/* d = -one/(x-x) */
+	return __kernel_standard_f (n, x, 112);
+      else
+	/* yn(n,x>X_TLOSS) */
+	return __kernel_standard_f (n, x, 139);
+    }
+
+  return __ieee754_ynf (n, x);
 }

@@ -3,16 +3,16 @@
  */
 /*
  * ====================================================
- * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.
+ * Copyright (C) 1993, 2011 by Sun Microsystems, Inc. All rights reserved.
  *
  * Developed at SunPro, a Sun Microsystems, Inc. business.
  * Permission to use, copy, modify, and distribute this
- * software is freely granted, provided that this notice 
+ * software is freely granted, provided that this notice
  * is preserved.
  * ====================================================
  */
 
-/* 
+/*
  * __ieee754_fmodl(x,y)
  * Return x mod y in exact arithmetic
  * Method: shift and subtract
@@ -21,18 +21,10 @@
 #include "math.h"
 #include "math_private.h"
 
-#ifdef __STDC__
 static const long double one = 1.0, Zero[] = {0.0, -0.0,};
-#else
-static long double one = 1.0, Zero[] = {0.0, -0.0,};
-#endif
 
-#ifdef __STDC__
-	long double __ieee754_fmodl(long double x, long double y)
-#else
-	long double __ieee754_fmodl(x,y)
-	long double x,y;
-#endif
+long double
+__ieee754_fmodl (long double x, long double y)
 {
 	int64_t n,hx,hy,hz,ix,iy,sx,i;
 	u_int64_t lx,ly,lz;
@@ -49,7 +41,7 @@ static long double one = 1.0, Zero[] = {0.0, -0.0,};
 	    return (x*y)/(x*y);
 	if(hx<=hy) {
 	    if((hx<hy)||(lx<ly)) return x;	/* |x|<|y| return x */
-	    if(lx==ly) 
+	    if(lx==ly)
 		return Zero[(u_int64_t)sx>>63];	/* |x|=|y| return x*0*/
 	}
 
@@ -72,25 +64,25 @@ static long double one = 1.0, Zero[] = {0.0, -0.0,};
 	} else iy = (hy>>48)-0x3fff;
 
     /* set up {hx,lx}, {hy,ly} and align y to x */
-	if(ix >= -16382) 
+	if(ix >= -16382)
 	    hx = 0x0001000000000000LL|(0x0000ffffffffffffLL&hx);
 	else {		/* subnormal x, shift x to normal */
 	    n = -16382-ix;
 	    if(n<=63) {
-	        hx = (hx<<n)|(lx>>(64-n));
-	        lx <<= n;
+		hx = (hx<<n)|(lx>>(64-n));
+		lx <<= n;
 	    } else {
 		hx = lx<<(n-64);
 		lx = 0;
 	    }
 	}
-	if(iy >= -16382) 
+	if(iy >= -16382)
 	    hy = 0x0001000000000000LL|(0x0000ffffffffffffLL&hy);
 	else {		/* subnormal y, shift y to normal */
 	    n = -16382-iy;
 	    if(n<=63) {
-	        hy = (hy<<n)|(ly>>(64-n));
-	        ly <<= n;
+		hy = (hy<<n)|(ly>>(64-n));
+		ly <<= n;
 	    } else {
 		hy = ly<<(n-64);
 		ly = 0;
@@ -103,17 +95,17 @@ static long double one = 1.0, Zero[] = {0.0, -0.0,};
 	    hz=hx-hy;lz=lx-ly; if(lx<ly) hz -= 1;
 	    if(hz<0){hx = hx+hx+(lx>>63); lx = lx+lx;}
 	    else {
-	    	if((hz|lz)==0) 		/* return sign(x)*0 */
+		if((hz|lz)==0)		/* return sign(x)*0 */
 		    return Zero[(u_int64_t)sx>>63];
-	    	hx = hz+hz+(lz>>63); lx = lz+lz;
+		hx = hz+hz+(lz>>63); lx = lz+lz;
 	    }
 	}
 	hz=hx-hy;lz=lx-ly; if(lx<ly) hz -= 1;
 	if(hz>=0) {hx=hz;lx=lz;}
 
     /* convert back to floating value and restore the sign */
-	if((hx|lx)==0) 			/* return sign(x)*0 */
-	    return Zero[(u_int64_t)sx>>63];	
+	if((hx|lx)==0)			/* return sign(x)*0 */
+	    return Zero[(u_int64_t)sx>>63];
 	while(hx<0x0001000000000000LL) {	/* normalize x */
 	    hx = hx+hx+(lx>>63); lx = lx+lx;
 	    iy -= 1;
@@ -136,3 +128,4 @@ static long double one = 1.0, Zero[] = {0.0, -0.0,};
 	}
 	return x;		/* exact output */
 }
+strong_alias (__ieee754_fmodl, __fmodl_finite)

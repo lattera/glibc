@@ -11,9 +11,9 @@
 
 /* Long double expansions are
   Copyright (C) 2001 Stephen L. Moshier <moshier@na-net.ornl.gov>
-  and are incorporated herein by permission of the author.  The author 
+  and are incorporated herein by permission of the author.  The author
   reserves the right to distribute this material elsewhere under different
-  copying permissions.  These modifications are distributed here under 
+  copying permissions.  These modifications are distributed here under
   the following terms:
 
     This library is free software; you can redistribute it and/or
@@ -74,17 +74,9 @@
 #include "math.h"
 #include "math_private.h"
 
-#ifdef __STDC__
 static long double pzero (long double), qzero (long double);
-#else
-static long double pzero (), qzero ();
-#endif
 
-#ifdef __STDC__
 static const long double
-#else
-static long double
-#endif
   huge = 1e4930L,
   one = 1.0L,
   invsqrtpi = 5.6418958354775628694807945156077258584405e-1L,
@@ -109,20 +101,10 @@ static long double
    /*   1.000000000000000000000000000000000000000E0L,*/
 };
 
-#ifdef __STDC__
 static const long double zero = 0.0;
-#else
-static long double zero = 0.0;
-#endif
 
-#ifdef __STDC__
 long double
 __ieee754_j0l (long double x)
-#else
-long double
-__ieee754_j0l (x)
-     long double x;
-#endif
 {
   long double z, s, c, ss, cc, r, u, v;
   int32_t ix;
@@ -130,7 +112,7 @@ __ieee754_j0l (x)
 
   GET_LDOUBLE_WORDS (se, i0, i1, x);
   ix = se & 0x7fff;
-  if (ix >= 0x7fff)
+  if (__builtin_expect (ix >= 0x7fff, 0))
     return one / (x * x);
   x = fabsl (x);
   if (ix >= 0x4000)		/* |x| >= 2.0 */
@@ -150,7 +132,7 @@ __ieee754_j0l (x)
        * j0(x) = 1/sqrt(pi) * (P(0,x)*cc - Q(0,x)*ss) / sqrt(x)
        * y0(x) = 1/sqrt(pi) * (P(0,x)*ss + Q(0,x)*cc) / sqrt(x)
        */
-      if (ix > 0x4080)	/* 2^129 */
+      if (__builtin_expect (ix > 0x4080, 0))	/* 2^129 */
 	z = (invsqrtpi * cc) / __ieee754_sqrtl (x);
       else
 	{
@@ -160,7 +142,7 @@ __ieee754_j0l (x)
 	}
       return z;
     }
-  if (ix < 0x3fef) /* |x| < 2**-16 */
+  if (__builtin_expect (ix < 0x3fef, 0)) /* |x| < 2**-16 */
     {
       if (huge + x > one)
 	{			/* raise inexact if x != 0 */
@@ -183,16 +165,13 @@ __ieee754_j0l (x)
       return ((one + u) * (one - u) + z * (r / s));
     }
 }
+strong_alias (__ieee754_j0l, __j0l_finite)
 
 
 /* y0(x) = 2/pi ln(x) J0(x) + U(x^2)/V(x^2)
    0 < x <= 2
    peak relative error 1.7e-21 */
-#ifdef __STDC__
 static const long double
-#else
-static long double
-#endif
 U[6] = {
   -1.054912306975785573710813351985351350861E10L,
   2.520192609749295139432773849576523636127E10L,
@@ -201,11 +180,7 @@ U[6] = {
   -3.440684087134286610316661166492641011539E5L,
   1.005524356159130626192144663414848383774E3L,
 };
-#ifdef __STDC__
 static const long double
-#else
-static long double
-#endif
 V[5] = {
   1.429337283720789610137291929228082613676E11L,
   2.492593075325119157558811370165695013002E9L,
@@ -215,14 +190,8 @@ V[5] = {
   /*  1.000000000000000000000000000000000000000E0L */
 };
 
-#ifdef __STDC__
 long double
 __ieee754_y0l (long double x)
-#else
-long double
-__ieee754_y0l (x)
-     long double x;
-#endif
 {
   long double z, s, c, ss, cc, u, v;
   int32_t ix;
@@ -231,11 +200,11 @@ __ieee754_y0l (x)
   GET_LDOUBLE_WORDS (se, i0, i1, x);
   ix = se & 0x7fff;
   /* Y0(NaN) is NaN, y0(-inf) is Nan, y0(inf) is 0  */
-  if (se & 0x8000)
+  if (__builtin_expect (se & 0x8000, 0))
     return zero / (zero * x);
-  if (ix >= 0x7fff)
+  if (__builtin_expect (ix >= 0x7fff, 0))
     return one / (x + x * x);
-  if ((i0 | i1) == 0)
+  if (__builtin_expect ((i0 | i1) == 0, 0))
     return -HUGE_VALL + x;  /* -inf and overflow exception.  */
   if (ix >= 0x4000)
     {				/* |x| >= 2.0 */
@@ -266,7 +235,7 @@ __ieee754_y0l (x)
 	  else
 	    ss = z / cc;
 	}
-      if (ix > 0x4080)	/* 1e39 */
+      if (__builtin_expect (ix > 0x4080, 0))	/* 1e39 */
 	z = (invsqrtpi * ss) / __ieee754_sqrtl (x);
       else
 	{
@@ -276,7 +245,7 @@ __ieee754_y0l (x)
 	}
       return z;
     }
-  if (ix <= 0x3fde) /* x < 2^-33 */
+  if (__builtin_expect (ix <= 0x3fde, 0)) /* x < 2^-33 */
     {
       z = -7.380429510868722527629822444004602747322E-2L
 	+ tpi * __ieee754_logl (x);
@@ -287,17 +256,14 @@ __ieee754_y0l (x)
   v = V[0] + z * (V[1] + z * (V[2] + z * (V[3] + z * (V[4] + z))));
   return (u / v + tpi * (__ieee754_j0l (x) * __ieee754_logl (x)));
 }
+strong_alias (__ieee754_y0l, __y0l_finite)
 
 /* The asymptotic expansions of pzero is
  *	1 - 9/128 s^2 + 11025/98304 s^4 - ...,	where s = 1/x.
  * For x >= 2, We approximate pzero by
  *	pzero(x) = 1 + s^2 R(s^2) / S(s^2)
  */
-#ifdef __STDC__
 static const long double pR8[7] = {
-#else
-static long double pR8[7] = {
-#endif
   /* 8 <= x <= inf
      Peak relative error 4.62 */
   -4.094398895124198016684337960227780260127E-9L,
@@ -308,11 +274,7 @@ static long double pR8[7] = {
   -5.827178869301452892963280214772398135283E-2L,
   -2.087563267939546435460286895807046616992E-2L,
 };
-#ifdef __STDC__
 static const long double pS8[6] = {
-#else
-static long double pS8[6] = {
-#endif
   5.823145095287749230197031108839653988393E-8L,
   1.279281986035060320477759999428992730280E-5L,
   9.132668954726626677174825517150228961304E-4L,
@@ -322,11 +284,7 @@ static long double pS8[6] = {
   /* 1.000000000000000000000000000000000000000E0L, */
 };
 
-#ifdef __STDC__
 static const long double pR5[7] = {
-#else
-static long double pR5[7] = {
-#endif
   /* 4.54541015625 <= x <= 8
      Peak relative error 6.51E-22 */
   -2.041226787870240954326915847282179737987E-7L,
@@ -337,11 +295,7 @@ static long double pR5[7] = {
   -8.641175552716402616180994954177818461588E-2L,
   -1.354654710097134007437166939230619726157E-2L,
 };
-#ifdef __STDC__
 static const long double pS5[6] = {
-#else
-static long double pS5[6] = {
-#endif
   2.903078099681108697057258628212823545290E-6L,
   3.253948449946735405975737677123673867321E-4L,
   1.181269751723085006534147920481582279979E-2L,
@@ -351,11 +305,7 @@ static long double pS5[6] = {
   /* 1.000000000000000000000000000000000000000E0L, */
 };
 
-#ifdef __STDC__
 static const long double pR3[7] = {
-#else
-static long double pR3[7] = {
-#endif
   /* 2.85711669921875 <= x <= 4.54541015625
      peak relative error 5.25e-21 */
   -5.755732156848468345557663552240816066802E-6L,
@@ -366,11 +316,7 @@ static long double pR3[7] = {
   -1.193350853469302941921647487062620011042E-1L,
   -8.567802507331578894302991505331963782905E-3L,
 };
-#ifdef __STDC__
 static const long double pS3[6] = {
-#else
-static long double pS3[6] = {
-#endif
   8.185931139070086158103309281525036712419E-5L,
   5.398016943778891093520574483111255476787E-3L,
   1.130589193590489566669164765853409621081E-1L,
@@ -380,11 +326,7 @@ static long double pS3[6] = {
   /* 1.000000000000000000000000000000000000000E0L, */
 };
 
-#ifdef __STDC__
 static const long double pR2[7] = {
-#else
-static long double pR2[7] = {
-#endif
   /* 2 <= x <= 2.85711669921875
      peak relative error 2.64e-21 */
   -1.219525235804532014243621104365384992623E-4L,
@@ -395,11 +337,7 @@ static long double pR2[7] = {
   -1.556241316844728872406672349347137975495E-1L,
   -5.355423239526452209595316733635519506958E-3L,
 };
-#ifdef __STDC__
 static const long double pS2[6] = {
-#else
-static long double pS2[6] = {
-#endif
   1.734442793664291412489066256138894953823E-3L,
   7.158111826468626405416300895617986926008E-2L,
   9.153839713992138340197264669867993552641E-1L,
@@ -409,20 +347,10 @@ static long double pS2[6] = {
   /* 1.000000000000000000000000000000000000000E0L, */
 };
 
-#ifdef __STDC__
 static long double
 pzero (long double x)
-#else
-static long double
-pzero (x)
-     long double x;
-#endif
 {
-#ifdef __STDC__
   const long double *p, *q;
-#else
-  long double *p, *q;
-#endif
   long double z, r, s;
   int32_t ix;
   u_int32_t se, i0, i1;
@@ -468,11 +396,7 @@ pzero (x)
  * We approximate qzero by
  *	qzero(x) = s*(-.125 + R(s^2) / S(s^2))
  */
-#ifdef __STDC__
 static const long double qR8[7] = {
-#else
-static long double qR8[7] = {
-#endif
   /* 8 <= x <= inf
      peak relative error 2.23e-21 */
   3.001267180483191397885272640777189348008E-10L,
@@ -483,11 +407,7 @@ static long double qR8[7] = {
   3.881970028476167836382607922840452192636E-2L,
   6.132191514516237371140841765561219149638E-2L,
 };
-#ifdef __STDC__
 static const long double qS8[7] = {
-#else
-static long double qS8[7] = {
-#endif
   4.097730123753051126914971174076227600212E-9L,
   1.199615869122646109596153392152131139306E-6L,
   1.196337580514532207793107149088168946451E-4L,
@@ -498,11 +418,7 @@ static long double qS8[7] = {
   /* 1.000000000000000000000000000000000000000E0L, */
 };
 
-#ifdef __STDC__
 static const long double qR5[7] = {
-#else
-static long double qR5[7] = {
-#endif
   /* 4.54541015625 <= x <= 8
      peak relative error 1.03e-21 */
   3.406256556438974327309660241748106352137E-8L,
@@ -513,11 +429,7 @@ static long double qR5[7] = {
   1.071578819056574524416060138514508609805E-1L,
   7.458950172851611673015774675225656063757E-2L,
 };
-#ifdef __STDC__
 static const long double qS5[7] = {
-#else
-static long double qS5[7] = {
-#endif
   4.650675622764245276538207123618745150785E-7L,
   6.773573292521412265840260065635377164455E-5L,
   3.340711249876192721980146877577806687714E-3L,
@@ -528,11 +440,7 @@ static long double qS5[7] = {
   /* 1.000000000000000000000000000000000000000E0L,*/
 };
 
-#ifdef __STDC__
 static const long double qR3[7] = {
-#else
-static long double qR3[7] = {
-#endif
   /* 2.85711669921875 <= x <= 4.54541015625
      peak relative error 5.24e-21 */
   1.749459596550816915639829017724249805242E-6L,
@@ -543,11 +451,7 @@ static long double qR3[7] = {
   2.538595333972857367655146949093055405072E-1L,
   8.560591367256769038905328596020118877936E-2L,
 };
-#ifdef __STDC__
 static const long double qS3[7] = {
-#else
-static long double qS3[7] = {
-#endif
   2.388596091707517488372313710647510488042E-5L,
   2.048679968058758616370095132104333998147E-3L,
   5.824663198201417760864458765259945181513E-2L,
@@ -558,11 +462,7 @@ static long double qS3[7] = {
   /* 1.000000000000000000000000000000000000000E0L, */
 };
 
-#ifdef __STDC__
 static const long double qR2[7] = {
-#else
-static long double qR2[7] = {
-#endif
   /* 2 <= x <= 2.85711669921875
      peak relative error 1.58e-21  */
   6.306524405520048545426928892276696949540E-5L,
@@ -573,11 +473,7 @@ static long double qR2[7] = {
   5.431871999743531634887107835372232030655E-1L,
   9.447736151202905471899259026430157211949E-2L,
 };
-#ifdef __STDC__
 static const long double qS2[7] = {
-#else
-static long double qS2[7] = {
-#endif
   8.610579901936193494609755345106129102676E-4L,
   4.649054352710496997203474853066665869047E-2L,
   8.104282924459837407218042945106320388339E-1L,
@@ -588,20 +484,10 @@ static long double qS2[7] = {
   /* 1.000000000000000000000000000000000000000E0L, */
 };
 
-#ifdef __STDC__
 static long double
 qzero (long double x)
-#else
-static long double
-qzero (x)
-     long double x;
-#endif
 {
-#ifdef __STDC__
   const long double *p, *q;
-#else
-  long double *p, *q;
-#endif
   long double s, r, z;
   int32_t ix;
   u_int32_t se, i0, i1;

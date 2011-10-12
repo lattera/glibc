@@ -10,10 +10,6 @@
  * ====================================================
  */
 
-#if defined(LIBM_SCCS) && !defined(lint)
-static char rcsid[] = "$NetBSD: w_hypot.c,v 1.6 1995/05/10 20:49:07 jtc Exp $";
-#endif
-
 /*
  * wrapper hypot(x,y)
  */
@@ -22,24 +18,15 @@ static char rcsid[] = "$NetBSD: w_hypot.c,v 1.6 1995/05/10 20:49:07 jtc Exp $";
 #include <math_private.h>
 
 
-#ifdef __STDC__
-	double __hypot(double x, double y)/* wrapper hypot */
-#else
-	double __hypot(x,y)		/* wrapper hypot */
-	double x,y;
-#endif
+double
+__hypot (double x, double y)
 {
-#ifdef _IEEE_LIBM
-	return __ieee754_hypot(x,y);
-#else
-	double z;
-	z = __ieee754_hypot(x,y);
-	if(_LIB_VERSION == _IEEE_) return z;
-	if((!__finite(z))&&__finite(x)&&__finite(y))
-	    return __kernel_standard(x,y,4); /* hypot overflow */
-	else
-	    return z;
-#endif
+	double z = __ieee754_hypot(x,y);
+	if(__builtin_expect(!__finite(z), 0)
+	   && __finite(x) && __finite(y) && _LIB_VERSION != _IEEE_)
+	    return __kernel_standard(x, y, 4); /* hypot overflow */
+
+	return z;
 }
 weak_alias (__hypot, hypot)
 #ifdef NO_LONG_DOUBLE

@@ -1,5 +1,5 @@
 /* ix87 specific implementation of pow function.
-   Copyright (C) 1996, 1997, 1999, 2001, 2004, 2005, 2007
+   Copyright (C) 1996, 1997, 1999, 2001, 2004, 2005, 2007, 2011
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
@@ -22,12 +22,27 @@
 #include <machine/asm.h>
 
 #ifdef __ELF__
-	.section .rodata
+	.section .rodata.cst8,"aM",@progbits,8
 #else
 	.text
 #endif
+	.p2align 3
+	ASM_TYPE_DIRECTIVE(one,@object)
+one:	.double 1.0
+	ASM_SIZE_DIRECTIVE(one)
+	ASM_TYPE_DIRECTIVE(limit,@object)
+limit:	.double 0.29
+	ASM_SIZE_DIRECTIVE(limit)
+	ASM_TYPE_DIRECTIVE(p31,@object)
+p31:	.byte 0, 0, 0, 0, 0, 0, 0xe0, 0x41
+	ASM_SIZE_DIRECTIVE(p31)
 
-	.align ALIGNARG(4)
+#ifdef __ELF__
+	.section .rodata.cst16,"aM",@progbits,16
+#else
+	.text
+#endif
+	.p2align 3
 	ASM_TYPE_DIRECTIVE(infinity,@object)
 inf_zero:
 infinity:
@@ -43,22 +58,13 @@ minfinity:
 mzero:
 	.byte 0, 0, 0, 0, 0, 0, 0, 0x80
 	ASM_SIZE_DIRECTIVE(minf_mzero)
-	ASM_TYPE_DIRECTIVE(one,@object)
-one:	.double 1.0
-	ASM_SIZE_DIRECTIVE(one)
-	ASM_TYPE_DIRECTIVE(limit,@object)
-limit:	.double 0.29
-	ASM_SIZE_DIRECTIVE(limit)
-	ASM_TYPE_DIRECTIVE(p31,@object)
-p31:	.byte 0, 0, 0, 0, 0, 0, 0xe0, 0x41
-	ASM_SIZE_DIRECTIVE(p31)
 
 #ifdef PIC
-#define MO(op) op##@GOTOFF(%ecx)
-#define MOX(op,x,f) op##@GOTOFF(%ecx,x,f)
+# define MO(op) op##@GOTOFF(%ecx)
+# define MOX(op,x,f) op##@GOTOFF(%ecx,x,f)
 #else
-#define MO(op) op
-#define MOX(op,x,f) op(,x,f)
+# define MO(op) op
+# define MOX(op,x,f) op(,x,f)
 #endif
 
 	.text
@@ -348,3 +354,4 @@ ENTRY(__ieee754_powf)
 	ret
 
 END(__ieee754_powf)
+strong_alias (__ieee754_powf, __powf_finite)

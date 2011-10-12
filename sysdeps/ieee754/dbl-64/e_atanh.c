@@ -1,74 +1,70 @@
-/* @(#)e_atanh.c 5.1 93/09/24 */
-/*
- * ====================================================
- * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.
- *
- * Developed at SunPro, a Sun Microsystems, Inc. business.
- * Permission to use, copy, modify, and distribute this
- * software is freely granted, provided that this notice 
- * is preserved.
- * ====================================================
- */
+/* Copyright (C) 2011 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+   Contributed by Ulrich Drepper <drepper@gmail.com>, 2011.
 
-#if defined(LIBM_SCCS) && !defined(lint)
-static char rcsid[] = "$NetBSD: e_atanh.c,v 1.8 1995/05/10 20:44:55 jtc Exp $";
-#endif
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
+
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
+
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, write to the Free
+   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
+   02111-1307 USA.  */
+
 
 /* __ieee754_atanh(x)
- * Method :
- *    1.Reduced x to positive by atanh(-x) = -atanh(x)
- *    2.For x>=0.5
- *                  1              2x                          x
- *	atanh(x) = --- * log(1 + -------) = 0.5 * log1p(2 * --------)
- *                  2             1 - x                      1 - x
- *	
- * 	For x<0.5
- *	atanh(x) = 0.5*log1p(2x+2x*x/(1-x))
- *
- * Special cases:
- *	atanh(x) is NaN if |x| > 1 with signal;
- *	atanh(NaN) is that NaN with no signal;
- *	atanh(+-1) is +-INF with signal.
- *
+   Method :
+      1.Reduced x to positive by atanh(-x) = -atanh(x)
+      2.For x>=0.5
+		    1              2x                          x
+	atanh(x) = --- * log(1 + -------) = 0.5 * log1p(2 * --------)
+		    2             1 - x                      1 - x
+
+	For x<0.5
+	atanh(x) = 0.5*log1p(2x+2x*x/(1-x))
+
+   Special cases:
+	atanh(x) is NaN if |x| > 1 with signal;
+	atanh(NaN) is that NaN with no signal;
+	atanh(+-1) is +-INF with signal.
+
  */
 
+#include <inttypes.h>
 #include "math.h"
 #include "math_private.h"
 
-#ifdef __STDC__
-static const double one = 1.0, huge = 1e300;
-#else
-static double one = 1.0, huge = 1e300;
-#endif
+static const double huge = 1e300;
 
-#ifdef __STDC__
-static const double zero = 0.0;
-#else
-static double zero = 0.0;
-#endif
-
-#ifdef __STDC__
-	double __ieee754_atanh(double x)
-#else
-	double __ieee754_atanh(x)
-	double x;
-#endif
+double
+__ieee754_atanh (double x)
 {
-	double t;
-	int32_t hx,ix;
-	u_int32_t lx;
-	EXTRACT_WORDS(hx,lx,x);
-	ix = hx&0x7fffffff;
-	if ((ix|((lx|(-lx))>>31))>0x3ff00000) /* |x|>1 */
-	    return (x-x)/(x-x);
-	if(ix==0x3ff00000) 
-	    return x/zero;
-	if(ix<0x3e300000&&(huge+x)>zero) return x;	/* x<2**-28 */
-	SET_HIGH_WORD(x,ix);
-	if(ix<0x3fe00000) {		/* x < 0.5 */
-	    t = x+x;
-	    t = 0.5*__log1p(t+t*x/(one-x));
-	} else 
-	    t = 0.5*__log1p((x+x)/(one-x));
-	if(hx>=0) return t; else return -t;
+  double xa = fabs (x);
+  double t;
+  if (xa < 0.5)
+    {
+      if (__builtin_expect (xa < 0x1.0p-28, 0) && (huge + x) > 0.0)
+	return x;
+
+      t = xa + xa;
+      t = 0.5 * __log1p (t + t * xa / (1.0 - xa));
+    }
+  else if (__builtin_expect (xa < 1.0, 1))
+    t = 0.5 * __log1p ((xa + xa) / (1.0 - xa));
+  else
+    {
+      if (xa > 1.0)
+	return (x - x) / (x - x);
+
+      return x / 0.0;
+    }
+
+  return __copysign (t, x);
 }
+strong_alias (__ieee754_atanh, __atanh_finite)

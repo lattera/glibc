@@ -11,9 +11,9 @@
 
 /* Modifications for 128-bit long double are
    Copyright (C) 2001 Stephen L. Moshier <moshier@na-net.ornl.gov>
-   and are incorporated herein by permission of the author.  The author 
+   and are incorporated herein by permission of the author.  The author
    reserves the right to distribute this material elsewhere under different
-   copying permissions.  These modifications are distributed here under 
+   copying permissions.  These modifications are distributed here under
    the following terms:
 
     This library is free software; you can redistribute it and/or
@@ -59,26 +59,15 @@
 #include "math.h"
 #include "math_private.h"
 
-#ifdef __STDC__
 static const long double
-#else
-static long double
-#endif
   invsqrtpi = 5.6418958354775628694807945156077258584405E-1L,
   two = 2.0e0L,
   one = 1.0e0L,
   zero = 0.0L;
 
 
-#ifdef __STDC__
 long double
 __ieee754_jnl (int n, long double x)
-#else
-long double
-__ieee754_jnl (n, x)
-     int n;
-     long double x;
-#endif
 {
   u_int32_t se;
   int32_t i, ix, sgn;
@@ -302,16 +291,10 @@ __ieee754_jnl (n, x)
   else
     return b;
 }
+strong_alias (__ieee754_jnl, __jnl_finite)
 
-#ifdef __STDC__
 long double
 __ieee754_ynl (int n, long double x)
-#else
-long double
-__ieee754_ynl (n, x)
-     int n;
-     long double x;
-#endif
 {
   u_int32_t se;
   int32_t i, ix;
@@ -407,3 +390,4 @@ __ieee754_ynl (n, x)
   else
     return -b;
 }
+strong_alias (__ieee754_ynl, __ynl_finite)

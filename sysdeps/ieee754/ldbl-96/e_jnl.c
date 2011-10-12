@@ -11,9 +11,9 @@
 
 /* Modifications for long double are
   Copyright (C) 2001 Stephen L. Moshier <moshier@na-net.ornl.gov>
-  and are incorporated herein by permission of the author.  The author 
+  and are incorporated herein by permission of the author.  The author
   reserves the right to distribute this material elsewhere under different
-  copying permissions.  These modifications are distributed here under 
+  copying permissions.  These modifications are distributed here under
   the following terms:
 
     This library is free software; you can redistribute it and/or
@@ -59,28 +59,13 @@
 #include "math.h"
 #include "math_private.h"
 
-#ifdef __STDC__
 static const long double
-#else
-static long double
-#endif
   invsqrtpi = 5.64189583547756286948079e-1L, two = 2.0e0L, one = 1.0e0L;
 
-#ifdef __STDC__
 static const long double zero = 0.0L;
-#else
-static long double zero = 0.0L;
-#endif
 
-#ifdef __STDC__
 long double
 __ieee754_jnl (int n, long double x)
-#else
-long double
-__ieee754_jnl (n, x)
-     int n;
-     long double x;
-#endif
 {
   u_int32_t se, i0, i1;
   int32_t i, ix, sgn;
@@ -95,7 +80,7 @@ __ieee754_jnl (n, x)
   ix = se & 0x7fff;
 
   /* if J(n,NaN) is NaN */
-  if ((ix == 0x7fff) && ((i0 & 0x7fffffff) != 0))
+  if (__builtin_expect ((ix == 0x7fff) && ((i0 & 0x7fffffff) != 0), 0))
     return x + x;
   if (n < 0)
     {
@@ -109,7 +94,8 @@ __ieee754_jnl (n, x)
     return (__ieee754_j1l (x));
   sgn = (n & 1) & (se >> 15);	/* even n -- 0, odd n -- sign(x) */
   x = fabsl (x);
-  if ((ix | i0 | i1) == 0 || ix >= 0x7fff)	/* if x is 0 or inf */
+  if (__builtin_expect ((ix | i0 | i1) == 0 || ix >= 0x7fff, 0))
+    /* if x is 0 or inf */
     b = zero;
   else if ((long double) n <= x)
     {
@@ -298,16 +284,10 @@ __ieee754_jnl (n, x)
   else
     return b;
 }
+strong_alias (__ieee754_jnl, __jnl_finite)
 
-#ifdef __STDC__
 long double
 __ieee754_ynl (int n, long double x)
-#else
-long double
-__ieee754_ynl (n, x)
-     int n;
-     long double x;
-#endif
 {
   u_int32_t se, i0, i1;
   int32_t i, ix;
@@ -318,11 +298,11 @@ __ieee754_ynl (n, x)
   GET_LDOUBLE_WORDS (se, i0, i1, x);
   ix = se & 0x7fff;
   /* if Y(n,NaN) is NaN */
-  if ((ix == 0x7fff) && ((i0 & 0x7fffffff) != 0))
+  if (__builtin_expect ((ix == 0x7fff) && ((i0 & 0x7fffffff) != 0), 0))
     return x + x;
-  if ((ix | i0 | i1) == 0)
+  if (__builtin_expect ((ix | i0 | i1) == 0, 0))
     return -HUGE_VALL + x;  /* -inf and overflow exception.  */
-  if (se & 0x8000)
+  if (__builtin_expect (se & 0x8000, 0))
     return zero / (zero * x);
   sign = 1;
   if (n < 0)
@@ -334,7 +314,7 @@ __ieee754_ynl (n, x)
     return (__ieee754_y0l (x));
   if (n == 1)
     return (sign * __ieee754_y1l (x));
-  if (ix == 0x7fff)
+  if (__builtin_expect (ix == 0x7fff, 0))
     return zero;
   if (ix >= 0x412D)
     {				/* x > 2**302 */
@@ -393,3 +373,4 @@ __ieee754_ynl (n, x)
   else
     return -b;
 }
+strong_alias (__ieee754_ynl, __ynl_finite)

@@ -1,76 +1,63 @@
-/* @(#)w_j1.c 5.1 93/09/24 */
-/*
- * ====================================================
- * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.
- *
- * Developed at SunPro, a Sun Microsystems, Inc. business.
- * Permission to use, copy, modify, and distribute this
- * software is freely granted, provided that this notice
- * is preserved.
- * ====================================================
- */
+/* Copyright (C) 2011 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+   Contributed by Ulrich Drepper <drepper@gmail.com>, 2011.
 
-#if defined(LIBM_SCCS) && !defined(lint)
-static char rcsid[] = "$NetBSD: w_j1.c,v 1.6 1995/05/10 20:49:15 jtc Exp $";
-#endif
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
 
-/*
- * wrapper of j1,y1
- */
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
 
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, write to the Free
+   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
+   02111-1307 USA.  */
+
+#include <fenv.h>
 #include <math.h>
 #include <math_private.h>
 
-#ifdef __STDC__
-	double j1(double x)		/* wrapper j1 */
-#else
-	double j1(x)			/* wrapper j1 */
-	double x;
-#endif
+
+/* wrapper j1 */
+double
+j1 (double x)
 {
-#ifdef _IEEE_LIBM
-	return __ieee754_j1(x);
-#else
-	double z;
-	z = __ieee754_j1(x);
-	if(_LIB_VERSION == _IEEE_ || __isnan(x) ) return z;
-	if(fabs(x)>X_TLOSS) {
-	        return __kernel_standard(x,x,36); /* j1(|x|>X_TLOSS) */
-	} else
-	    return z;
-#endif
+  if (__builtin_expect (fabs (x) > X_TLOSS, 0) && _LIB_VERSION != _IEEE_)
+    /* j1(|x|>X_TLOSS) */
+    return __kernel_standard (x, x, 36);
+
+  return __ieee754_j1 (x);
 }
 #ifdef NO_LONG_DOUBLE
 strong_alias (j1, j1l)
 #endif
 
 
-#ifdef __STDC__
-	double y1(double x)		/* wrapper y1 */
-#else
-	double y1(x)			/* wrapper y1 */
-	double x;
-#endif
+/* wrapper y1 */
+double
+y1 (double x)
 {
-#ifdef _IEEE_LIBM
-	return __ieee754_y1(x);
-#else
-	double z;
-	z = __ieee754_y1(x);
-	if(_LIB_VERSION == _IEEE_ || __isnan(x) ) return z;
-        if(x <= 0.0){
-                if(x==0.0)
-                    /* d= -one/(x-x); */
-                    return __kernel_standard(x,x,10);
-                else
-                    /* d = zero/(x-x); */
-                    return __kernel_standard(x,x,11);
-        }
-	if(x>X_TLOSS) {
-	        return __kernel_standard(x,x,37); /* y1(x>X_TLOSS) */
-	} else
-	    return z;
-#endif
+  if (__builtin_expect (x <= 0.0 || x > X_TLOSS, 0) && _LIB_VERSION != _IEEE_)
+    {
+      if (x < 0.0)
+	{
+	  /* d = zero/(x-x) */
+	  feraiseexcept (FE_INVALID);
+	  return __kernel_standard (x, x, 11);
+	}
+      else if (x == 0.0)
+	/* d = -one/(x-x) */
+	return __kernel_standard (x, x, 10);
+      else
+	/* y1(x>X_TLOSS) */
+	return __kernel_standard (x, x, 37);
+    }
+
+  return __ieee754_y1 (x);
 }
 #ifdef NO_LONG_DOUBLE
 strong_alias (y1, y1l)

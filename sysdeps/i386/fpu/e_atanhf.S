@@ -1,5 +1,5 @@
 /* ix87 specific implementation of arctanh function.
-   Copyright (C) 1996, 1999, 2005 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1999, 2005, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -107,3 +107,4 @@ ENTRY(__ieee754_atanhf)
 5:	flds	4(%esp)
 	ret
 END(__ieee754_atanhf)
+strong_alias (__ieee754_atanhf, __atanhf_finite)

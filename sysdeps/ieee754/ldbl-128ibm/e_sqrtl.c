@@ -1,7 +1,7 @@
 /*
  * IBM Accurate Mathematical Library
  * written by International Business Machines Corp.
- * Copyright (C) 2001, 2004, 2006 Free Software Foundation
+ * Copyright (C) 2001, 2004, 2006, 2011 Free Software Foundation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -50,7 +50,7 @@ twom54 = 5.55111512312578270212e-17; /* 0x3C90000000000000 */
 /* it computes the correctly rounded (to nearest) value of square    */
 /* root of x.                                                        */
 /*********************************************************************/
-long double __ieee754_sqrtl(long double x) 
+long double __ieee754_sqrtl(long double x)
 {
   static const long double big = 134217728.0, big1 = 134217729.0;
   long double t,s,i;
@@ -107,3 +107,4 @@ long double __ieee754_sqrtl(long double x)
     return tm256.x*__ieee754_sqrtl(x*t512.x);
   }
 }
+strong_alias (__ieee754_sqrtl, __sqrtl_finite)

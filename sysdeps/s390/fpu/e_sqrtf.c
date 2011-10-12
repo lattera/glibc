@@ -1,5 +1,5 @@
-/* Copyright (C) 2004 Free Software Foundation, Inc.
-   Contributed by Martin Schwidefsky (schwidefsky@de.ibm.com).
+/* Copyright (C) 2004, 2011 Free Software Foundation, Inc.
+   Contributed by Martin Schwidefsky <schwidefsky@de.ibm.com>.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -27,3 +27,4 @@ __ieee754_sqrtf (float x)
   asm ( "sqebr %0,%1" : "=f" (res) : "f" (x) );
   return res;
 }
+strong_alias (__ieee754_sqrtf, __sqrtf_finite)

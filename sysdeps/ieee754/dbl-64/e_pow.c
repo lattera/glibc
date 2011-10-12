@@ -1,7 +1,7 @@
 /*
  * IBM Accurate Mathematical Library
  * written by International Business Machines Corp.
- * Copyright (C) 2001, 2002, 2004 Free Software Foundation
+ * Copyright (C) 2001, 2002, 2004, 2011 Free Software Foundation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -22,12 +22,12 @@
 /*                                                                         */
 /*  FUNCTIONS: upow                                                        */
 /*             power1                                                      */
-/*             my_log2                                                        */
+/*             my_log2                                                     */
 /*             log1                                                        */
 /*             checkint                                                    */
 /* FILES NEEDED: dla.h endian.h mpa.h mydefs.h                             */
 /*               halfulp.c mpexp.c mplog.c slowexp.c slowpow.c mpa.c       */
-/*                          uexp.c  upow.c			           */
+/*                          uexp.c  upow.c				   */
 /*               root.tbl uexp.tbl upow.tbl                                */
 /* An ultimate power routine. Given two IEEE double machine numbers y,x    */
 /* it computes the correctly rounded (to nearest) value of x^y.            */
@@ -77,7 +77,7 @@ double __ieee754_pow(double x, double y) {
   /* else */
   if(((u.i[HIGH_HALF]>0 && u.i[HIGH_HALF]<0x7ff00000)||        /* x>0 and not x->0 */
        (u.i[HIGH_HALF]==0 && u.i[LOW_HALF]!=0))  &&
-                                      /*   2^-1023< x<= 2^-1023 * 0x1.0000ffffffff */
+				      /*   2^-1023< x<= 2^-1023 * 0x1.0000ffffffff */
       (v.i[HIGH_HALF]&0x7fffffff) < 0x4ff00000) {              /* if y<-1 or y>1   */
     z = log1(x,&aa,&error);                                 /* x^y  =e^(y log (X)) */
     t = y*134217729.0;
@@ -153,6 +153,7 @@ double __ieee754_pow(double x, double y) {
   if (y<0) return (x<1.0)?INF.x:0;
   return 0;     /* unreachable, to make the compiler happy */
 }
+strong_alias (__ieee754_pow, __pow_finite)
 
 /**************************************************************************/
 /* Computing x^y using more accurate but more slow log routine            */

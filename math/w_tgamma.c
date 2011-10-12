@@ -10,10 +10,6 @@
  * ====================================================
  */
 
-#if defined(LIBM_SCCS) && !defined(lint)
-static char rcsid[] = "$NetBSD: w_gamma.c,v 1.7 1995/11/20 22:06:43 jtc Exp $";
-#endif
-
 /* double gamma(double x)
  * Return  the logarithm of the Gamma function of x or the Gamma function of x,
  * depending on the library mode.
@@ -22,23 +18,14 @@ static char rcsid[] = "$NetBSD: w_gamma.c,v 1.7 1995/11/20 22:06:43 jtc Exp $";
 #include <math.h>
 #include <math_private.h>
 
-#ifdef __STDC__
-	double __tgamma(double x)
-#else
-	double __tgamma(x)
-	double x;
-#endif
+double
+__tgamma(double x)
 {
-        double y;
 	int local_signgam;
-	y = __ieee754_gamma_r(x,&local_signgam);
-	if (local_signgam < 0) y = -y;
-#ifdef _IEEE_LIBM
-	return y;
-#else
-	if(_LIB_VERSION == _IEEE_) return y;
+	double y = __ieee754_gamma_r(x,&local_signgam);
 
-	if(!__finite(y)&&__finite(x)) {
+	if(__builtin_expect(!__finite(y), 0)&&__finite(x)
+	   && _LIB_VERSION != _IEEE_) {
 	  if (x == 0.0)
 	    return __kernel_standard(x,x,50); /* tgamma pole */
 	  else if(__floor(x)==x&&x<0.0)
@@ -46,8 +33,7 @@ static char rcsid[] = "$NetBSD: w_gamma.c,v 1.7 1995/11/20 22:06:43 jtc Exp $";
 	  else
 	    return __kernel_standard(x,x,40); /* tgamma overflow */
 	}
-	return y;
-#endif
+	return local_signgam < 0 ? -y : y;
 }
 weak_alias (__tgamma, tgamma)
 #ifdef NO_LONG_DOUBLE

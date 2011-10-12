@@ -1,46 +1,39 @@
-/* @(#)w_asin.c 5.1 93/09/24 */
-/*
- * ====================================================
- * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.
- *
- * Developed at SunPro, a Sun Microsystems, Inc. business.
- * Permission to use, copy, modify, and distribute this
- * software is freely granted, provided that this notice
- * is preserved.
- * ====================================================
- */
+/* Copyright (C) 2011 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+   Contributed by Ulrich Drepper <drepper@gmail.com>, 2011.
 
-#if defined(LIBM_SCCS) && !defined(lint)
-static char rcsid[] = "$NetBSD: w_asin.c,v 1.6 1995/05/10 20:48:35 jtc Exp $";
-#endif
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
 
-/*
- * wrapper asin(x)
- */
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
 
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, write to the Free
+   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
+   02111-1307 USA.  */
 
+#include <fenv.h>
 #include <math.h>
 #include <math_private.h>
 
 
-#ifdef __STDC__
-	double __asin(double x)		/* wrapper asin */
-#else
-	double __asin(x)			/* wrapper asin */
-	double x;
-#endif
+/* wrapper asin */
+double
+__asin (double x)
 {
-#ifdef _IEEE_LIBM
-	return __ieee754_asin(x);
-#else
-	double z;
-	z = __ieee754_asin(x);
-	if(_LIB_VERSION == _IEEE_ || __isnan(x)) return z;
-	if(fabs(x)>1.0) {
-	        return __kernel_standard(x,x,2); /* asin(|x|>1) */
-	} else
-	    return z;
-#endif
+  if (__builtin_expect (fabs (x) > 1.0, 0) && _LIB_VERSION != _IEEE_)
+    {
+      /* asin(|x|>1) */
+      feraiseexcept (FE_INVALID);
+      return __kernel_standard (x, x, 2);
+    }
+
+  return __ieee754_asin (x);
 }
 weak_alias (__asin, asin)
 #ifdef NO_LONG_DOUBLE

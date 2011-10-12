@@ -16,3 +16,4 @@ __ieee754_atan2l (long double y, long double x)
 
   return res;
 }
+strong_alias (__ieee754_atan2l, __atan2l_finite)

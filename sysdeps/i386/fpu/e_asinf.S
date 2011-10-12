@@ -19,3 +19,4 @@ ENTRY(__ieee754_asinf)
 	fpatan
 	ret
 END (__ieee754_asinf)
+strong_alias (__ieee754_asinf, __asinf_finite)

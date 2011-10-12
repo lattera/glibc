@@ -754,15 +754,8 @@ deval (long double x, const long double *p, int n)
 }
 
 
-#ifdef __STDC__
 long double
 __ieee754_lgammal_r (long double x, int *signgamp)
-#else
-long double
-__ieee754_lgammal_r (x, signgamp)
-     long double x;
-     int *signgamp;
-#endif
 {
   long double p, q, w, z, nx;
   int i, nn;
@@ -775,7 +768,7 @@ __ieee754_lgammal_r (x, signgamp)
   if (x == 0.0L)
     {
       if (__signbitl (x))
-        *signgamp = -1;
+	*signgamp = -1;
     }
 
   if (x < 0.0L)
@@ -863,7 +856,7 @@ __ieee754_lgammal_r (x, signgamp)
 		{
 		  z = x - 0.75L;
 		  p = z * neval (z, RN1r75, NRN1r75)
-		        / deval (z, RD1r75, NRD1r75);
+			/ deval (z, RD1r75, NRD1r75);
 		  p += lgam1r75b;
 		  p += lgam1r75a;
 		}
@@ -1040,3 +1033,4 @@ __ieee754_lgammal_r (x, signgamp)
   q += neval (p, RASY, NRASY) / x;
   return (q);
 }
+strong_alias (__ieee754_lgammal_r, __lgammal_r_finite)

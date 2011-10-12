@@ -14,10 +14,6 @@
  * ====================================================
  */
 
-#if defined(LIBM_SCCS) && !defined(lint)
-static char rcsid[] = "$NetBSD: $";
-#endif
-
 /* __ieee754_hypotl(x,y)
  *
  * Method :
@@ -46,8 +42,8 @@ static char rcsid[] = "$NetBSD: $";
  *	hypot(x,y) is NAN if x or y is NAN.
  *
  * Accuracy:
- * 	hypot(x,y) returns sqrt(x^2+y^2) with error less
- * 	than 1 ulps (units in the last place)
+ *	hypot(x,y) returns sqrt(x^2+y^2) with error less
+ *	than 1 ulps (units in the last place)
  */
 
 #include "math.h"
@@ -72,7 +68,7 @@ static char rcsid[] = "$NetBSD: $";
 	SET_LDOUBLE_EXP(b,eb);	/* b <- |b| */
 	if((ea-eb)>0x46) {return a+b;} /* x/y > 2**70 */
 	k=0;
-	if(ea > 0x5f3f) {	/* a>2**8000 */
+	if(__builtin_expect(ea > 0x5f3f,0)) {	/* a>2**8000 */
 	   if(ea == 0x7fff) {	/* Inf or NaN */
 	       u_int32_t exp,high,low;
 	       w = a+b;			/* for sNaN */
@@ -87,9 +83,9 @@ static char rcsid[] = "$NetBSD: $";
 	   SET_LDOUBLE_EXP(a,ea);
 	   SET_LDOUBLE_EXP(b,eb);
 	}
-	if(eb < 0x20bf) {	/* b < 2**-8000 */
+	if(__builtin_expect(eb < 0x20bf, 0)) {	/* b < 2**-8000 */
 	    if(eb == 0) {	/* subnormal b or 0 */
-	        u_int32_t exp,high,low;
+		u_int32_t exp,high,low;
 		GET_LDOUBLE_WORDS(exp,high,low,b);
 		if((high|low)==0) return a;
 		SET_LDOUBLE_WORDS(t1, 0x7ffd, 0, 0);	/* t1=2^16382 */
@@ -97,7 +93,7 @@ static char rcsid[] = "$NetBSD: $";
 		a *= t1;
 		k -= 16382;
 	    } else {		/* scale a and b by 2^9600 */
-	        ea += 0x2580; 	/* a *= 2^9600 */
+		ea += 0x2580;	/* a *= 2^9600 */
 		eb += 0x2580;	/* b *= 2^9600 */
 		k -= 9600;
 		SET_LDOUBLE_EXP(a,ea);
@@ -131,3 +127,4 @@ static char rcsid[] = "$NetBSD: $";
 	    return t1*w;
 	} else return w;
 }
+strong_alias (__ieee754_hypotl, __hypotl_finite)

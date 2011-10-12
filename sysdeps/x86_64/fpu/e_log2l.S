@@ -10,11 +10,11 @@
 #include <machine/asm.h>
 
 #ifdef __ELF__
-	.section .rodata
+	.section .rodata.cst8,"aM",@progbits,8
 #else
 	.text
 #endif
-	.align ALIGNARG(4)
+	.p2align 3
 	ASM_TYPE_DIRECTIVE(one,@object)
 one:	.double 1.0
 	ASM_SIZE_DIRECTIVE(one)
@@ -27,9 +27,9 @@ limit:	.double 0.29
 
 
 #ifdef PIC
-#define MO(op) op##(%rip)
+# define MO(op) op##(%rip)
 #else
-#define MO(op) op
+# define MO(op) op
 #endif
 
 	.text
@@ -62,3 +62,20 @@ ENTRY(__ieee754_log2l)
 	fstp	%st(1)
 	ret
 END (__ieee754_log2l)
+
+
+ENTRY(__log2l_finite)
+	fldl	MO(one)
+	fldt	8(%rsp)		// x : 1
+	fld	%st		// x : x : 1
+	fsub	%st(2), %st	// x-1 : x : 1
+	fld	%st		// x-1 : x-1 : x : 1
+	fabs			// |x-1| : x-1 : x : 1
+	fcompl	MO(limit)	// x-1 : x : 1
+	fnstsw			// x-1 : x : 1
+	andb	$0x45, %ah
+	jz	2b
+	fstp	%st(1)		// x-1 : 1
+	fyl2xp1			// log(x)
+	ret
+END (__log2l_finite)

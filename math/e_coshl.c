@@ -9,6 +9,7 @@ __ieee754_coshl (long double x)
   __set_errno (ENOSYS);
   return 0.0;
 }
+strong_alias (__ieee754_coshl, __coshl_finite)
 
 stub_warning (__ieee754_coshl)
 #include <stub-tag.h>

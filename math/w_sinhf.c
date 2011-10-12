@@ -8,40 +8,26 @@
  *
  * Developed at SunPro, a Sun Microsystems, Inc. business.
  * Permission to use, copy, modify, and distribute this
- * software is freely granted, provided that this notice 
+ * software is freely granted, provided that this notice
  * is preserved.
  * ====================================================
  */
 
-#if defined(LIBM_SCCS) && !defined(lint)
-static char rcsid[] = "$NetBSD: w_sinhf.c,v 1.3 1995/05/10 20:49:54 jtc Exp $";
-#endif
-
-/* 
+/*
  * wrapper sinhf(x)
  */
 
 #include <math.h>
 #include <math_private.h>
 
-#ifdef __STDC__
-	float __sinhf(float x)		/* wrapper sinhf */
-#else
-	float __sinhf(x)			/* wrapper sinhf */
-	float x;
-#endif
+float
+__sinhf (float x)
 {
-#ifdef _IEEE_LIBM
-	return __ieee754_sinhf(x);
-#else
-	float z; 
-	z = __ieee754_sinhf(x);
-	if(_LIB_VERSION == _IEEE_) return z;
-	if(!__finitef(z)&&__finitef(x)) {
-	    /* sinhf overflow */
-	    return (float)__kernel_standard((double)x,(double)x,125);
-	} else
-	    return z;
-#endif
+	float z = __ieee754_sinhf (x);
+	if (__builtin_expect (!__finitef (z), 0) && __finitef (x)
+	    && _LIB_VERSION != _IEEE_)
+	    return __kernel_standard_f (x, x, 125); /* sinhf overflow */
+
+	return z;
 }
 weak_alias (__sinhf, sinhf)

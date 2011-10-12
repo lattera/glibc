@@ -144,14 +144,8 @@ static const long double
   cp_h = 9.6179669392597555432899980587535537779331E-1L,
   cp_l = 5.0577616648125906047157785230014751039424E-17L;
 
-#ifdef __STDC__
 long double
 __ieee754_powl (long double x, long double y)
-#else
-long double
-__ieee754_powl (x, y)
-     long double x, y;
-#endif
 {
   long double z, ax, z_h, z_l, p_h, p_l;
   long double y1, t1, t2, r, s, t, u, v, w;
@@ -390,7 +384,7 @@ __ieee754_powl (x, y)
     {
       /* if z > 16384 */
       if (((j - 0x40d00000) | o.parts32.w1
-        | (o.parts32.w2 & 0x7fffffff) | o.parts32.w3) != 0)
+	| (o.parts32.w2 & 0x7fffffff) | o.parts32.w3) != 0)
 	return s * huge * huge;	/* overflow */
       else
 	{
@@ -402,7 +396,7 @@ __ieee754_powl (x, y)
     {
       /* z < -16495 */
       if (((j - 0xc0d01bc0) | o.parts32.w1
-         | (o.parts32.w2 & 0x7fffffff) | o.parts32.w3) != 0)
+	 | (o.parts32.w2 & 0x7fffffff) | o.parts32.w3) != 0)
 	return s * tiny * tiny;	/* underflow */
       else
 	{
@@ -439,3 +433,4 @@ __ieee754_powl (x, y)
   z = __scalbnl (z, n);
   return s * z;
 }
+strong_alias (__ieee754_powl, __powl_finite)

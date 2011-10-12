@@ -14,14 +14,10 @@
  * ====================================================
  */
 
-#if defined(LIBM_SCCS) && !defined(lint)
-static char rcsid[] = "$NetBSD: $";
-#endif
-
 /* __ieee754_remainderl(x,p)
  * Return :
- * 	returns  x REM p  =  x - [x/p]*p as if in infinite
- * 	precise arithmetic, where [x/p] is the (infinite bit)
+ *	returns  x REM p  =  x - [x/p]*p as if in infinite
+ *	precise arithmetic, where [x/p] is the (infinite bit)
  *	integer nearest x/p (in half way case choose the even one).
  * Method :
  *	Based on fmod() return x-[x/p]chopped*p exactlp.
@@ -30,19 +26,11 @@ static char rcsid[] = "$NetBSD: $";
 #include "math.h"
 #include "math_private.h"
 
-#ifdef __STDC__
 static const long double zero = 0.0;
-#else
-static long double zero = 0.0;
-#endif
 
 
-#ifdef __STDC__
-	long double __ieee754_remainderl(long double x, long double p)
-#else
-	long double __ieee754_remainderl(x,p)
-	long double x,p;
-#endif
+long double
+__ieee754_remainderl(long double x, long double p)
 {
 	u_int32_t sx,sex,sep,x0,x1,p0,p1;
 	long double p_half;
@@ -54,7 +42,7 @@ static long double zero = 0.0;
 	sex &= 0x7fff;
 
     /* purge off exception values */
-	if((sep|p0|p1)==0) return (x*p)/(x*p); 	/* p = 0 */
+	if((sep|p0|p1)==0) return (x*p)/(x*p);	/* p = 0 */
 	if((sex==0x7fff)||			/* x not finite */
 	  ((sep==0x7fff)&&			/* p is NaN */
 	   ((p0|p1)!=0)))
@@ -81,3 +69,4 @@ static long double zero = 0.0;
 	SET_LDOUBLE_EXP(x,sex^sx);
 	return x;
 }
+strong_alias (__ieee754_remainderl, __remainderl_finite)

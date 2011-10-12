@@ -115,3 +115,4 @@ __ieee754_hypot (double x, double y)
     }
   return __ieee754_sqrt (x * x + y * y);
 }
+strong_alias (__ieee754_hypot, __hypot_finite)

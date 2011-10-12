@@ -1,49 +1,45 @@
-/* w_logf.c -- float version of w_log.c.
- * Conversion to float by Ian Lance Taylor, Cygnus Support, ian@cygnus.com.
- */
+/* Copyright (C) 2011 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+   Contributed by Ulrich Drepper <drepper@gmail.com>, 2011.
 
-/*
- * ====================================================
- * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.
- *
- * Developed at SunPro, a Sun Microsystems, Inc. business.
- * Permission to use, copy, modify, and distribute this
- * software is freely granted, provided that this notice 
- * is preserved.
- * ====================================================
- */
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
 
-#if defined(LIBM_SCCS) && !defined(lint)
-static char rcsid[] = "$NetBSD: w_logf.c,v 1.3 1995/05/10 20:49:40 jtc Exp $";
-#endif
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
 
-/*
- * wrapper logf(x)
- */
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, write to the Free
+   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
+   02111-1307 USA.  */
 
+#include <fenv.h>
 #include <math.h>
 #include <math_private.h>
 
 
-#ifdef __STDC__
-	float __logf(float x)		/* wrapper logf */
-#else
-	float __logf(x)			/* wrapper logf */
-	float x;
-#endif
+/* wrapper logf(x) */
+float
+__logf (float x)
 {
-#ifdef _IEEE_LIBM
-	return __ieee754_logf(x);
-#else
-	float z;
-	z = __ieee754_logf(x);
-	if(_LIB_VERSION == _IEEE_ || __isnanf(x) || x > (float)0.0) return z;
-	if(x==(float)0.0)
-	    /* logf(0) */
-	    return (float)__kernel_standard((double)x,(double)x,116);
-	else 
-	    /* logf(x<0) */
-	    return (float)__kernel_standard((double)x,(double)x,117);
-#endif
+  if (__builtin_expect (x <= 0.0f, 0) && _LIB_VERSION != _IEEE_)
+    {
+      if (x == 0.0f)
+	{
+	  feraiseexcept (FE_DIVBYZERO);
+	  return __kernel_standard_f (x, x, 116); /* log(0) */
+	}
+      else
+	{
+	  feraiseexcept (FE_INVALID);
+	  return __kernel_standard_f (x, x, 117); /* log(x<0) */
+	}
+    }
+
+  return  __ieee754_logf (x);
 }
 weak_alias (__logf, logf)

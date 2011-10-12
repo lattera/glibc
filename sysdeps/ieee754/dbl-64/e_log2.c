@@ -21,14 +21,14 @@
  *   2. Approximation of log(1+f).
  *	Let s = f/(2+f) ; based on log(1+f) = log(1+s) - log(1-s)
  *		 = 2s + 2/3 s**3 + 2/5 s**5 + .....,
- *	     	 = 2s + s*R
+ *		 = 2s + s*R
  *      We use a special Reme algorithm on [0,0.1716] to generate
- * 	a polynomial of degree 14 to approximate R The maximum error
+ *	a polynomial of degree 14 to approximate R The maximum error
  *	of this polynomial approximation is bounded by 2**-58.45. In
  *	other words,
- *		        2      4      6      8      10      12      14
+ *			2      4      6      8      10      12      14
  *	    R(z) ~ Lg1*s +Lg2*s +Lg3*s +Lg4*s +Lg5*s  +Lg6*s  +Lg7*s
- *  	(the values of Lg1 to Lg7 are listed in the program)
+ *	(the values of Lg1 to Lg7 are listed in the program)
  *	and
  *	    |      2          14          |     -58.45
  *	    | Lg1*s +...+Lg7*s    -  R(z) | <= 2
@@ -57,11 +57,7 @@
 #include "math.h"
 #include "math_private.h"
 
-#ifdef __STDC__
 static const double
-#else
-static double
-#endif
 ln2 = 0.69314718055994530942,
 two54   =  1.80143985094819840000e+16,  /* 43500000 00000000 */
 Lg1 = 6.666666666666735130e-01,  /* 3FE55555 55555593 */
@@ -72,18 +68,10 @@ Lg5 = 1.818357216161805012e-01,  /* 3FC74664 96CB03DE */
 Lg6 = 1.531383769920937332e-01,  /* 3FC39A09 D078C69F */
 Lg7 = 1.479819860511658591e-01;  /* 3FC2F112 DF3E5244 */
 
-#ifdef __STDC__
 static const double zero   =  0.0;
-#else
-static double zero   =  0.0;
-#endif
 
-#ifdef __STDC__
-	double __ieee754_log2(double x)
-#else
-	double __ieee754_log2(x)
-	double x;
-#endif
+double
+__ieee754_log2(double x)
 {
 	double hfsq,f,s,z,R,w,t1,t2,dk;
 	int32_t k,hx,i,j;
@@ -93,13 +81,14 @@ static double zero   =  0.0;
 
 	k=0;
 	if (hx < 0x00100000) {			/* x < 2**-1022  */
-	    if (((hx&0x7fffffff)|lx)==0)
+	    if (__builtin_expect(((hx&0x7fffffff)|lx)==0, 0))
 		return -two54/(x-x);		/* log(+-0)=-inf */
-	    if (hx<0) return (x-x)/(x-x);	/* log(-#) = NaN */
+	    if (__builtin_expect(hx<0, 0))
+		return (x-x)/(x-x);	/* log(-#) = NaN */
 	    k -= 54; x *= two54; /* subnormal number, scale up x */
 	    GET_HIGH_WORD(hx,x);
 	}
-	if (hx >= 0x7ff00000) return x+x;
+	if (__builtin_expect(hx >= 0x7ff00000, 0)) return x+x;
 	k += (hx>>20)-1023;
 	hx &= 0x000fffff;
 	i = (hx+0x95f64)&0x100000;
@@ -112,7 +101,7 @@ static double zero   =  0.0;
 	    R = f*f*(0.5-0.33333333333333333*f);
 	    return dk-(R-f)/ln2;
 	}
- 	s = f/(2.0+f);
+	s = f/(2.0+f);
 	z = s*s;
 	i = hx-0x6147a;
 	w = z*z;
@@ -128,3 +117,4 @@ static double zero   =  0.0;
 	    return dk-((s*(f-R))-f)/ln2;
 	}
 }
+strong_alias (__ieee754_log2, __log2_finite)

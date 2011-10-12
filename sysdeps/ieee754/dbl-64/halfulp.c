@@ -1,7 +1,7 @@
 /*
  * IBM Accurate Mathematical Library
  * written by International Business Machines Corp.
- * Copyright (C) 2001, 2005 Free Software Foundation
+ * Copyright (C) 2001, 2005, 2011 Free Software Foundation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -40,13 +40,11 @@
 #include "dla.h"
 #include "math_private.h"
 
-double __ieee754_sqrt(double x);
-
 static const int4 tab54[32] = {
    262143, 11585, 1782, 511, 210, 107, 63, 42,
        30,    22,   17,  14,  12,  10,  9,  7,
-        7,     6,    5,   5,   5,   4,  4,  4,
-        3,     3,    3,   3,   3,   3,  3,  3 };
+	7,     6,    5,   5,   5,   4,  4,  4,
+	3,     3,    3,   3,   3,   3,  3,  3 };
 
 
 double __halfulp(double x, double y)
@@ -64,12 +62,12 @@ double __halfulp(double x, double y)
     z = (double) k;
     return (z*y == -1075.0)?0: -10.0;
   }
-                              /* if y > 0  */
+			      /* if y > 0  */
   v.x = y;
     if (v.i[LOW_HALF] != 0) return -10.0;
 
   v.x=x;
-                              /*  case where x = 2**n for some integer n */
+			      /*  case where x = 2**n for some integer n */
   if (((v.i[HIGH_HALF]&0x000fffff)|v.i[LOW_HALF]) == 0) {
     k=(v.i[HIGH_HALF]>>20)-1023;
     return (((double) k)*y == -1075.0)?0:-10.0;
@@ -90,7 +88,7 @@ double __halfulp(double x, double y)
   k = -k;
   if (k>5) return -10.0;
 
-                            /*   now treat x        */
+			    /*   now treat x        */
   while (k>0) {
     z = __ieee754_sqrt(x);
     EMULV(z,z,u,uu,j1,j2,j3,j4,j5);
@@ -111,11 +109,11 @@ double __halfulp(double x, double y)
   m = (k&0x000fffff)|0x00100000;
   m = m>>(20-l);                       /*   m is the odd integer of x    */
 
-            /*   now check whether the length of m**n is at most 54 bits */
+	    /*   now check whether the length of m**n is at most 54 bits */
 
   if  (m > tab54[n-3]) return -10.0;
 
-             /* yes, it is - now compute x**n by simple multiplications  */
+	     /* yes, it is - now compute x**n by simple multiplications  */
 
   u = x;
   for (k=1;k<n;k++) u = u*x;

@@ -1,18 +1,21 @@
-/* @(#)w_atan2.c 5.1 93/09/24 */
-/*
- * ====================================================
- * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.
- *
- * Developed at SunPro, a Sun Microsystems, Inc. business.
- * Permission to use, copy, modify, and distribute this
- * software is freely granted, provided that this notice
- * is preserved.
- * ====================================================
- */
+/* Copyright (C) 2011 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+   Contributed by Ulrich Drepper <drepper@gmail.com>, 2011.
 
-#if defined(LIBM_SCCS) && !defined(lint)
-static char rcsid[] = "$NetBSD: w_atan2.c,v 1.6 1995/05/10 20:48:39 jtc Exp $";
-#endif
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
+
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
+
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, write to the Free
+   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
+   02111-1307 USA.  */
 
 /*
  * wrapper atan2(y,x)
@@ -22,23 +25,13 @@ static char rcsid[] = "$NetBSD: w_atan2.c,v 1.6 1995/05/10 20:48:39 jtc Exp $";
 #include <math_private.h>
 
 
-#ifdef __STDC__
-	double __atan2(double y, double x)	/* wrapper atan2 */
-#else
-	double __atan2(y,x)			/* wrapper atan2 */
-	double y,x;
-#endif
+double
+__atan2 (double y, double x)
 {
-#ifdef _IEEE_LIBM
-	return __ieee754_atan2(y,x);
-#else
-	double z;
-	z = __ieee754_atan2(y,x);
-	if(_LIB_VERSION != _SVID_||__isnan(x)||__isnan(y)) return z;
-	if(x==0.0&&y==0.0)
-	  return __kernel_standard(y,x,3); /* atan2(+-0,+-0) */
-	return z;
-#endif
+  if (__builtin_expect (x == 0.0 && y == 0.0, 0) && _LIB_VERSION == _SVID_)
+    return __kernel_standard (y, x, 3); /* atan2(+-0,+-0) */
+
+  return __ieee754_atan2 (y, x);
 }
 weak_alias (__atan2, atan2)
 #ifdef NO_LONG_DOUBLE

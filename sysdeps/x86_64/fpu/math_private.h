@@ -58,22 +58,35 @@ do {								\
 #endif
 
 #define __isnan(d) \
-  ({ long int __di; EXTRACT_WORDS64 (__di, d);				      \
+  ({ long int __di; EXTRACT_WORDS64 (__di, (double) d);			      \
      (__di & 0x7fffffffffffffffl) > 0x7ff0000000000000l; })
 #define __isnanf(d) \
-  ({ int __di; GET_FLOAT_WORD (__di, d);				      \
+  ({ int __di; GET_FLOAT_WORD (__di, (float) d);			      \
      (__di & 0x7fffffff) > 0x7f800000; })
 
 #define __isinf_ns(d) \
-  ({ long int __di; EXTRACT_WORDS64 (__di, d);				      \
+  ({ long int __di; EXTRACT_WORDS64 (__di, (double) d);			      \
      (__di & 0x7fffffffffffffffl) == 0x7ff0000000000000l; })
 #define __isinf_nsf(d) \
-  ({ int __di; GET_FLOAT_WORD (__di, d);				      \
+  ({ int __di; GET_FLOAT_WORD (__di, (float) d);			      \
      (__di & 0x7fffffff) == 0x7f800000; })
 
 #define __finite(d) \
-  ({ long int __di; EXTRACT_WORDS64 (__di, d);				      \
+  ({ long int __di; EXTRACT_WORDS64 (__di, (double) d);			      \
      (__di & 0x7fffffffffffffffl) < 0x7ff0000000000000l; })
 #define __finitef(d) \
-  ({ int __di; GET_FLOAT_WORD (__di, d);				      \
+  ({ int __di; GET_FLOAT_WORD (__di, (float) d);			      \
      (__di & 0x7fffffff) < 0x7f800000; })
+
+#define __ieee754_sqrt(d) \
+  ({ double __res;							      \
+     asm ("sqrtsd %1, %0" : "=x" (__res) : "xm" ((double) d));		      \
+     __res; })
+#define __ieee754_sqrtf(d) \
+  ({ float __res;							      \
+     asm ("sqrtss %1, %0" : "=x" (__res) : "xm" ((float) d));		      \
+     __res; })
+#define __ieee754_sqrtl(d) \
+  ({ long double __res;							      \
+     asm ("fsqrt" : "=t" (__res) : "0" ((long double) d));		      \
+     __res; })
