@@ -133,7 +133,7 @@ L(loop_prolog):
 	mov	%ecx, %eax
 	and	$63, %eax
 	test	%eax, %eax
-	jz	L(align64_loop)    
+	jz	L(align64_loop)
 
 	add	$64, %ecx
 	add	$64, %edx
@@ -333,7 +333,7 @@ L(length_less16):
 	pshufd	$0, %xmm1, %xmm1
 	and	$15, %ecx
 	jz	L(length_less16_offset0)
-	
+
 	PUSH	(%edi)
 	mov	%cl, %dh
 	add	%dl, %dh

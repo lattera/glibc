@@ -56,7 +56,7 @@ ENTRY (__memrchr_sse2)
 
 	pmovmskb %xmm0, %eax
 	test	%eax, %eax
-	jnz	L(exit_dispatch)  
+	jnz	L(exit_dispatch)
 
 	sub	$64, %ecx
 	mov	%ecx, %eax
@@ -129,7 +129,7 @@ L(loop_prolog):
 	mov	%ecx, %eax
 	and	$63, %eax
 	test	%eax, %eax
-	jz	L(align64_loop)    
+	jz	L(align64_loop)
 
 	lea	64(%ecx), %ecx
 	lea	64(%edx), %edx
@@ -244,7 +244,7 @@ L(exit_loop_32):
 
 	.p2align 4
 L(matches16):
-	lea	16(%ecx), %ecx	
+	lea	16(%ecx), %ecx
 	test	%ah, %ah
 	jnz	L(exit_dispatch_high)
 	mov	%al, %dl
@@ -261,7 +261,7 @@ L(matches16):
 
 	.p2align 4
 L(matches32):
-	lea	32(%ecx), %ecx	
+	lea	32(%ecx), %ecx
 	test	%ah, %ah
 	jnz	L(exit_dispatch_high)
 	mov	%al, %dl
@@ -297,7 +297,7 @@ L(exit_dispatch):
 	ret
 
 	.p2align 4
-L(exit_dispatch_8):        
+L(exit_dispatch_8):
 	test	$0x80, %al
 	jnz	L(exit_8)
 	test	$0x40, %al
@@ -437,7 +437,7 @@ L(matches16_1):
 L(matches32_1):
 	lea	-32(%edx), %edx
 	lea	32(%ecx), %ecx
-	
+
 	test	%ah, %ah
 	jnz	L(exit_dispatch_1_high)
 	mov	%al, %ah
@@ -478,7 +478,7 @@ L(exit_dispatch_1):
 	ret
 
 	.p2align 4
-L(exit_dispatch_1_8):        
+L(exit_dispatch_1_8):
 	test	$0x80, %al
 	jnz	L(exit_1_8)
 	test	$0x40, %al
@@ -639,7 +639,7 @@ L(length_less16):
 
 	and	$15, %ecx
 	jz	L(length_less16_offset0)
-	
+
 	PUSH	(%edi)
 
 	mov	%cl, %dh
