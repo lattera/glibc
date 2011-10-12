@@ -63,7 +63,12 @@
 
 /* Search no more than N bytes of S for C.  */
 __ptr_t
-__memrchr (s, c_in, n)
+#ifndef MEMRCHR
+__memrchr
+#else
+MEMRCHR
+#endif
+     (s, c_in, n)
      const __ptr_t s;
      int c_in;
      size_t n;
@@ -205,6 +210,8 @@ __memrchr (s, c_in, n)
 
   return 0;
 }
-#ifdef weak_alias
+#ifndef MEMRCHR
+# ifdef weak_alias
 weak_alias (__memrchr, memrchr)
+# endif
 #endif

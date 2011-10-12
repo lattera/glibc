@@ -1,3 +1,20 @@
+2011-10-12  Liubov Dmitrieva  <liubov.dmitrieva@gmail.com>
+
+	* sysdeps/i386/i686/multiarch/Makefile (sysdep_routines): Add
+	memchr-sse2 memchr-sse2-bsf memrchr-sse2 memrchr-sse2-bsf memrchr-c
+	rawmemchr-sse2 rawmemchr-sse2-bsf.
+	* sysdeps/i386/i686/multiarch/memchr.S: New file.
+	* sysdeps/i386/i686/multiarch/memchr-sse2.S: New file.
+	* sysdeps/i386/i686/multiarch/memchr-sse2-bsf.S: New file.
+	* sysdeps/i386/i686/multiarch/memrchr.S: New file.
+	* sysdeps/i386/i686/multiarch/memrchr-c.c: New file.
+	* sysdeps/i386/i686/multiarch/memrchr-sse2.S: New file.
+	* sysdeps/i386/i686/multiarch/memrchr-sse2-bsf.S: New file.
+	* sysdeps/i386/i686/multiarch/rawmemchr.S: New file.
+	* sysdeps/i386/i686/multiarch/rawmemchr-sse2.S: New file.
+	* sysdeps/i386/i686/multiarch/rawmemchr-sse2-bsf.S: New file.
+	* string/memrchr.c (MEMRCHR): New macro.
+
 2011-10-12  Ulrich Drepper  <drepper@gmail.com>
 
 	Add integration with gcc's -ffinite-math-only and optimize wrapper

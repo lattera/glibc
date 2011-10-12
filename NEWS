@@ -33,7 +33,7 @@ Version 2.15
 * Optimized strchr and strrchr for SSE on x86-32.
   Contributed by Liubov Dmitrieva.
 
-* Optimized memchr, memrchr, rawmemchr for x86-64.
+* Optimized memchr, memrchr, rawmemchr for x86-64 and x86-32.
   Contributed by Liubov Dmitrieva.
 
 * New interfaces: scandirat, scandirat64
