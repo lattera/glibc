@@ -1,4 +1,4 @@
-/* Copyright (C) 2002 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Hartvig Ekner <hartvige@mips.com>, 2002.
 
@@ -30,6 +30,7 @@ __ieee754_sqrt (double x)
   __asm__ ("sqrt.d %0,%1" : "=f" (z) : "f" (x));
   return z;
 }
+strong_alias (__ieee754_sqrt, __sqrt_finite)
 
 #else
 

@@ -1,3 +1,9 @@
+2011-10-12  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/mips/fpu/e_sqrt.c: Add __sqrt_finite alias.
+	* sysdeps/mips/fpu/e_sqrtf.c: Add __sqrtf_finite alias.
+	* sysdeps/mips/mips64/soft-fp/e_sqrtl.c: Add __sqrtl_finite alias.
+
 2011-10-05  Andreas Schwab  <schwab@redhat.com>
 
 	* sysdeps/mips/dl-machine.h (elf_machine_rel, elf_machine_rela)
