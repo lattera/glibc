@@ -1,5 +1,9 @@
 2011-10-13  Andreas Schwab  <schwab@redhat.com>
 
+	* sysdeps/x86_64/fpu/fraiseexcpt.c: Add __feraiseexcept alias.
+	* sysdeps/x86_64/fpu/feupdateenv.c: Use __feraiseexcept instead of
+	feraiseexcept.
+
 	* sysdeps/x86_64/memrchr.S: Check for zero size.
 
 	* string/stratcliff.c: Add memrchr tests.
