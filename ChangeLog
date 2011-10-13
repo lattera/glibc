@@ -1,3 +1,7 @@
+2011-10-13  Andreas Schwab  <schwab@redhat.com>
+
+	* string/stratcliff.c: Add memrchr tests.
+
 2011-10-12  Liubov Dmitrieva  <liubov.dmitrieva@gmail.com>
 
 	* sysdeps/i386/i686/multiarch/Makefile (sysdep_routines): Add

@@ -1,5 +1,5 @@
 /* Test for string function add boundaries of usable memory.
-   Copyright (C) 1996,1997,1999-2003,2007,2009,2010
+   Copyright (C) 1996,1997,1999-2003,2007,2009,2010,2011
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
@@ -240,7 +240,7 @@ do_test (void)
 	    }
 	}
 
-      /* This function only exists for single-byte characters.  */
+      /* These functions only exist for single-byte characters.  */
 #ifndef WCSTEST
       /* rawmemchr test */
       for (outer = nchars - 1; outer >= MAX (0, nchars - 128); --outer)
@@ -259,6 +259,37 @@ do_test (void)
 		}
 
 	      adr[middle] = L('T');
+	    }
+	}
+
+      /* memrchr test */
+      for (outer = nchars - 1; outer >= MAX (0, nchars - 128); --outer)
+	{
+	  for (middle = MAX (outer, nchars - 64); middle < nchars; ++middle)
+	    {
+	      adr[middle] = L('V');
+
+	      CHAR *cp = memrchr (&adr[outer], L('V'), nchars - outer);
+
+	      if (cp - &adr[outer] != middle - outer)
+		{
+		  printf ("%s flunked for outer = %d, middle = %d\n",
+			  STRINGIFY (memrchr), outer, middle);
+		  result = 1;
+		}
+
+	      adr[middle] = L('T');
+	    }
+	}
+      for (outer = nchars; outer >= MAX (0, nchars - 128); --outer)
+	{
+	  CHAR *cp = memrchr (&adr[outer], L('V'), nchars - outer);
+
+	  if (cp != NULL)
+	    {
+	      printf ("%s flunked for outer = %d\n",
+		      STRINGIFY (memrchr), outer);
+	      result = 1;
 	    }
 	}
 #endif
