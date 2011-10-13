@@ -282,6 +282,9 @@ L(return_null):
 
 	.p2align 4
 L(length_less16_offset0):
+	test	%edx, %edx
+	jz	L(return_null)
+
 	mov	%dl, %cl
 	pcmpeqb	(%rdi), %xmm1
 

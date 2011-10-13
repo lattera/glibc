@@ -1,5 +1,7 @@
 2011-10-13  Andreas Schwab  <schwab@redhat.com>
 
+	* sysdeps/x86_64/memrchr.S: Check for zero size.
+
 	* string/stratcliff.c: Add memrchr tests.
 
 2011-10-12  Liubov Dmitrieva  <liubov.dmitrieva@gmail.com>
