@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1999, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,10 +21,11 @@
 #include "mathimpl.h"
 
 #ifndef	FUNC
-#define	FUNC	__ieee754_acos
+# define FUNC __ieee754_acos
+# define FUNC_FINITE __acos_finite
 #endif
 #ifndef float_type
-#define float_type double
+# define float_type double
 #endif
 
 float_type
@@ -33,3 +34,6 @@ FUNC (x)
 {
   return __m81_u(FUNC)(x);
 }
+#ifdef FUNC_FINITE
+strong_alias (FUNC, FUNC_FINITE)
+#endif

@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1999, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -124,3 +124,4 @@ s(__ieee754_pow) (float_type x, float_type y)
     z = m81(__ieee754_exp) (y * m81(__ieee754_log) (x));
   return z;
 }
+strong_alias (s(__ieee754_pow), CONCATX (s(__pow), _finite))

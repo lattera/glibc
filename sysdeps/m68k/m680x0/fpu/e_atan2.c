@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1999, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -102,3 +102,4 @@ s(__ieee754_atan2) (float_type y, float_type x)
     }
   return z;
 }
+strong_alias (s(__ieee754_atan2), CONCATX (s (__atan2), _finite))

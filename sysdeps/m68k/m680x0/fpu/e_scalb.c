@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1999, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Andreas Schwab <schwab@issan.informatik.uni-dortmund.de>.
 
@@ -58,3 +58,4 @@ s(__ieee754_scalb) (float_type x, float_type fn)
   __asm ("fscale%.x %1, %0" : "=f" (retval) : "f" (fn), "0" (x));
   return retval;
 }
+strong_alias (s(__ieee754_scalb), CONCATX (s(__scalb), _finite))
