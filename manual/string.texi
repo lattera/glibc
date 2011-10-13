@@ -1249,10 +1249,10 @@ strncmp ("hello, world", "hello, stupid world!!!", 5)
 @comment GNU
 @deftypefun int strverscmp (const char *@var{s1}, const char *@var{s2})
 The @code{strverscmp} function compares the string @var{s1} against
-@var{s2}, considering them as holding indices/version numbers.  Return
-value follows the same conventions as found in the @code{strverscmp}
-function.  In fact, if @var{s1} and @var{s2} contain no digits,
-@code{strverscmp} behaves like @code{strcmp}.
+@var{s2}, considering them as holding indices/version numbers.  The
+return value follows the same conventions as found in the
+@code{strcmp} function.  In fact, if @var{s1} and @var{s2} contain no
+digits, @code{strverscmp} behaves like @code{strcmp}.
 
 Basically, we compare strings normally (character by character), until
 we find a digit in each string - then we enter a special comparison

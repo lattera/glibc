@@ -1,3 +1,8 @@
+2011-10-13  Roland McGrath  <roland@hack.frob.com>
+
+	[BZ #13291]
+	* manual/string.texi (String/Array Comparison): Typo fix in strverscmp.
+
 2011-10-13  Andreas Schwab  <schwab@redhat.com>
 
 	* sysdeps/x86_64/fpu/fraiseexcpt.c: Add __feraiseexcept alias.
