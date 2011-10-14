@@ -1,5 +1,7 @@
 2011-10-14  Andreas Schwab  <schwab@redhat.com>
 
+	* sysdeps/s390/fpu/libm-test-ulps: Adjust ULPs for jn tests.
+
 	* sysdeps/x86_64/fpu/fraiseexcpt.c: Fix last change.
 
 2011-10-13  Roland McGrath  <roland@hack.frob.com>
