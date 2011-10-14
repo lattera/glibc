@@ -1,5 +1,5 @@
-/* Copyright (C) 1991,92,93,95,96,97,98,99,2001,2002,2004,2007,2008,2009
-   	Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,93,95,96,97,98,99,2001,2002,2004,2007,2008,2009,2011
+	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -85,8 +85,18 @@ extern __const __int32_t **__ctype_tolower_loc (void)
 extern __const __int32_t **__ctype_toupper_loc (void)
      __THROW __attribute__ ((__const));
 
-#define __isctype(c, type) \
+
+#ifndef __cplusplus
+# define __isctype(c, type) \
   ((*__ctype_b_loc ())[(int) (c)] & (unsigned short int) type)
+#elif defined __USE_EXTERN_INLINES
+# define __isctype_f(type) \
+  __extern_inline int							      \
+  is##type (int __c)							      \
+  {									      \
+    return (*__ctype_b_loc ())[(int) (__c)] & (unsigned short int) _IS##type; \
+  }
+#endif
 
 #define	__isascii(c)	(((c) & ~0x7f) == 0)	/* If C is a 7 bit value.  */
 #define	__toascii(c)	((c) & 0x7f)		/* Mask off high bits.  */
@@ -169,7 +179,23 @@ __exctype (_tolower);
 	__res = (a)[(int) (c)];						      \
       __res; }))
 
-#if !defined __NO_CTYPE && !defined __cplusplus
+#if !defined __NO_CTYPE
+# ifdef __isctype_f
+__isctype_f (alnum)
+__isctype_f (alpha)
+__isctype_f (cntrl)
+__isctype_f (digit)
+__isctype_f (lower)
+__isctype_f (graph)
+__isctype_f (print)
+__isctype_f (punct)
+__isctype_f (space)
+__isctype_f (upper)
+__isctype_f (xdigit)
+#  ifdef __USE_ISOC99
+__isctype_f (blank)
+#  endif
+# elif defined __isctype
 # define isalnum(c)	__isctype((c), _ISalnum)
 # define isalpha(c)	__isctype((c), _ISalpha)
 # define iscntrl(c)	__isctype((c), _IScntrl)
@@ -181,9 +207,9 @@ __exctype (_tolower);
 # define isspace(c)	__isctype((c), _ISspace)
 # define isupper(c)	__isctype((c), _ISupper)
 # define isxdigit(c)	__isctype((c), _ISxdigit)
-
-# ifdef __USE_ISOC99
-#  define isblank(c)	__isctype((c), _ISblank)
+#  ifdef __USE_ISOC99
+#   define isblank(c)	__isctype((c), _ISblank)
+#  endif
 # endif
 
 # ifdef __USE_EXTERN_INLINES

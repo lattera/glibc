@@ -1,3 +1,8 @@
+2011-10-14  Ulrich Drepper  <drepper@gmail.com>
+
+	* ctype/ctype.h: Add support for inlined isXXX functions when
+	compiling C++ code.
+
 2011-10-14  Andreas Schwab  <schwab@redhat.com>
 
 	* sysdeps/s390/fpu/libm-test-ulps: Adjust ULPs for jn tests.
