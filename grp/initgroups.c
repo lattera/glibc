@@ -82,9 +82,8 @@ internal_getgrouplist (const char *user, gid_t group, long int *size,
 
   if (__nss_initgroups_database == NULL)
     {
-      no_more = __nss_database_lookup ("initgroups", NULL, "",
-				       &__nss_initgroups_database);
-      if (no_more == 0 && __nss_initgroups_database == NULL)
+      if (__nss_database_lookup ("initgroups", NULL, "",
+				 &__nss_initgroups_database) < 0)
 	{
 	  if (__nss_group_database == NULL)
 	    no_more = __nss_database_lookup ("group", NULL, "compat files",
@@ -92,11 +91,8 @@ internal_getgrouplist (const char *user, gid_t group, long int *size,
 
 	  __nss_initgroups_database = __nss_group_database;
 	}
-      else if (__nss_initgroups_database != NULL)
-	{
-	  assert (no_more == 0);
-	  use_initgroups_entry = true;
-	}
+      else
+	use_initgroups_entry = true;
     }
   else
     /* __nss_initgroups_database might have been set through

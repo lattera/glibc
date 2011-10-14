@@ -1,3 +1,8 @@
+2011-10-17  Andreas Schwab  <schwab@redhat.com>
+
+	* grp/initgroups.c (internal_getgrouplist): Fix initgroups
+	database lookup.
+
 2011-10-16  Ulrich Drepper  <drepper@gmail.com>
 
 	* misc/sys/cdefs.h: Use leaf function attribute in __THROW.
