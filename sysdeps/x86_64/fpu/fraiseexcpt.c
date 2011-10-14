@@ -117,4 +117,5 @@ __feraiseexcept (int excepts)
   /* Success.  */
   return 0;
 }
-libm_hidden_ver (__feraiseexcept, feraiseexcept)
+strong_alias (__feraiseexcept, feraiseexcept)
+libm_hidden_def (feraiseexcept)
