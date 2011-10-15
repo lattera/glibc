@@ -1,4 +1,4 @@
-/* Copyright (C) 2002-2007,2008,2009,2010 Free Software Foundation, Inc.
+/* Copyright (C) 2002-2007,2008,2009,2010,2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -17,6 +17,7 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <ctype.h>
 #include <errno.h>
 #include <stdbool.h>
 #include <stdlib.h>
@@ -238,6 +239,9 @@ start_thread (void *arg)
 
   /* Initialize resolver state pointer.  */
   __resp = &pd->res;
+
+  /* Initialize pointers to locale data.  */
+  __ctype_init ();
 
   /* Allow setxid from now onwards.  */
   if (__builtin_expect (atomic_exchange_acq (&pd->setxid_futex, 0) == -2, 0))

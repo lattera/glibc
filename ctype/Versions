@@ -21,4 +21,7 @@ libc {
     # functions used by optimized macros in ctype.h
     __ctype_b_loc; __ctype_tolower_loc; __ctype_toupper_loc;
   }
+  GLIBC_PRIVATE {
+    __ctype_init;
+  }
 }

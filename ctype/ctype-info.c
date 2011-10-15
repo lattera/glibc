@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,92,95,96,97,99,2000, 2002, 2008
+/* Copyright (C) 1991,92,95,96,97,99,2000, 2002, 2008, 2011
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -24,6 +24,19 @@
 __libc_tsd_define (, const uint16_t *, CTYPE_B)
 __libc_tsd_define (, const int32_t *, CTYPE_TOLOWER)
 __libc_tsd_define (, const int32_t *, CTYPE_TOUPPER)
+
+
+void
+__ctype_init (void)
+{
+  const uint16_t **bp = __libc_tsd_address (const uint16_t *, CTYPE_B);
+  *bp = (const uint16_t *) _NL_CURRENT (LC_CTYPE, _NL_CTYPE_CLASS) + 128;
+  const int32_t **up = __libc_tsd_address (const int32_t *, CTYPE_TOUPPER);
+  *up = ((int32_t *) _NL_CURRENT (LC_CTYPE, _NL_CTYPE_TOUPPER) + 128);
+  const int32_t **lp = __libc_tsd_address (const int32_t *, CTYPE_TOLOWER);
+  *lp = ((int32_t *) _NL_CURRENT (LC_CTYPE, _NL_CTYPE_TOLOWER) + 128);
+}
+libc_hidden_def (__ctype_init)
 
 
 #include <shlib-compat.h>

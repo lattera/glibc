@@ -1,5 +1,5 @@
 /* Initialization code run first thing by the ELF startup code.  Linux version.
-   Copyright (C) 1995-2004, 2005, 2007 Free Software Foundation, Inc.
+   Copyright (C) 1995-2004, 2005, 2007, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,6 +17,7 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <fcntl.h>
@@ -93,11 +94,13 @@ _init (int argc, char **argv, char **envp)
   __getopt_clean_environment (envp);
 #endif
 
+  /* Initialize ctype data.  */
+  __ctype_init ();
+
 #if defined SHARED && !defined NO_CTORS_DTORS_SECTIONS
   __libc_global_ctors ();
 #endif
 }
-
 
 /* This function is defined here so that if this file ever gets into
    ld.so we will get a link error.  Having this file silently included

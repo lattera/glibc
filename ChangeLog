@@ -1,3 +1,13 @@
+2011-10-15  Ulrich Drepper  <drepper@gmail.com>
+
+	* ctype/ctype-info.c (__ctype_init): Define.
+	* include/ctype.h (__ctype_init): Declare.
+	(__ctype_b_loc): The variable is always initialized.
+	(__ctype_toupper_loc): Likewise.
+	(__ctype_tolower_loc): Likewise.
+	* ctype/Versions: Export __ctype_init for GLIBC_PRIVATE.
+	* sysdeps/unix/sysv/linux/init-first.c (_init): Call __ctype_init.
+
 2011-09-27  Liubov Dmitrieva  <liubov.dmitrieva@gmail.com>
 
 	* sysdeps/x86_64/multiarch/Makefile: (sysdep_routines): Add

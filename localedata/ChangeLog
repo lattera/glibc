@@ -1,3 +1,10 @@
+2011-10-15  Ulrich Drepper  <drepper@gmail.com>
+
+	* Makefile (tests): Add tst-setlocale2:
+	(LOCALES): Add tr_TR.ISO-8859-9;
+	(tst-setlocale2-ENV): Define.
+	* tst-setlocale2.c: New file.
+
 2011-07-02  Roland McGrath  <roland@hack.frob.com>
 
 	* tests-mbwc/tst_funcs.h (TST_DECL_VARS, TST_HEAD_LOCALE):
