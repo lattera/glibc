@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997i, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1996.
 
@@ -19,9 +19,12 @@
 
 #include <wchar.h>
 
+#ifndef WMEMCMP
+# define wmemcmp
+#endif
 
 int
-wmemcmp (s1, s2, n)
+WMEMCMP (s1, s2, n)
      const wchar_t *s1;
      const wchar_t *s2;
      size_t n;
@@ -34,19 +37,19 @@ wmemcmp (s1, s2, n)
       c1 = (wint_t) s1[0];
       c2 = (wint_t) s2[0];
       if (c1 - c2 != 0)
-	return c1 - c2;
+	return c1 > c2 ? 1 : -1;
       c1 = (wint_t) s1[1];
       c2 = (wint_t) s2[1];
       if (c1 - c2 != 0)
-	return c1 - c2;
+	return c1 > c2 ? 1 : -1;
       c1 = (wint_t) s1[2];
       c2 = (wint_t) s2[2];
       if (c1 - c2 != 0)
-	return c1 - c2;
+	return c1 > c2 ? 1 : -1;
       c1 = (wint_t) s1[3];
       c2 = (wint_t) s2[3];
       if (c1 - c2 != 0)
-	return c1 - c2;
+	return c1 > c2 ? 1 : -1;
       s1 += 4;
       s2 += 4;
       n -= 4;
@@ -57,7 +60,7 @@ wmemcmp (s1, s2, n)
       c1 = (wint_t) s1[0];
       c2 = (wint_t) s2[0];
       if (c1 - c2 != 0)
-	return c1 - c2;
+	return c1 > c2 ? 1 : -1;
       ++s1;
       ++s2;
       --n;
@@ -67,7 +70,7 @@ wmemcmp (s1, s2, n)
       c1 = (wint_t) s1[0];
       c2 = (wint_t) s2[0];
       if (c1 - c2 != 0)
-	return c1 - c2;
+	return c1 > c2 ? 1 : -1;
       ++s1;
       ++s2;
       --n;
@@ -77,7 +80,7 @@ wmemcmp (s1, s2, n)
       c1 = (wint_t) s1[0];
       c2 = (wint_t) s2[0];
       if (c1 - c2 != 0)
-	return c1 - c2;
+	return c1 > c2 ? 1 : -1;
     }
 
   return 0;

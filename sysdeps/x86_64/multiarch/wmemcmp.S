@@ -1,5 +1,5 @@
-/* Multiple versions of memcmp
-   Copyright (C) 2010, 2011 Free Software Foundation, Inc.
+/* Multiple versions of wmemcmp
+   Copyright (C)  2011 Free Software Foundation, Inc.
    Contributed by Intel Corporation.
    This file is part of the GNU C Library.
 
@@ -24,45 +24,24 @@
 /* Define multiple versions only for the definition in libc. */
 #ifndef NOT_IN_libc
 	.text
-ENTRY(memcmp)
-	.type	memcmp, @gnu_indirect_function
+ENTRY(wmemcmp)
+	.type	wmemcmp, @gnu_indirect_function
 	cmpl	$0, KIND_OFFSET+__cpu_features(%rip)
 	jne	1f
 	call	__init_cpu_features
 
 1:	testl	$bit_SSSE3, __cpu_features+CPUID_OFFSET+index_SSSE3(%rip)
 	jnz	2f
-	leaq	__memcmp_sse2(%rip), %rax
+	leaq	__wmemcmp_sse2(%rip), %rax
 	ret
 
 2:	testl	$bit_SSE4_1, __cpu_features+CPUID_OFFSET+index_SSE4_1(%rip)
 	jz	3f
-	leaq	__memcmp_sse4_1(%rip), %rax
+	leaq	__wmemcmp_sse4_1(%rip), %rax
 	ret
 
-3:	leaq	__memcmp_ssse3(%rip), %rax
+3:	leaq	__wmemcmp_ssse3(%rip), %rax
 	ret
 
-END(memcmp)
-
-# undef ENTRY
-# define ENTRY(name) \
-	.type __memcmp_sse2, @function; \
-	.p2align 4; \
-	__memcmp_sse2: cfi_startproc; \
-	CALL_MCOUNT
-# undef END
-# define END(name) \
-	cfi_endproc; .size __memcmp_sse2, .-__memcmp_sse2
-
-# ifdef SHARED
-#  undef libc_hidden_builtin_def
-/* IFUNC doesn't work with the hidden functions in shared library since
-   they will be called without setting up EBX needed for PLT which is
-   used by IFUNC.  */
-#  define libc_hidden_builtin_def(name) \
-	.globl __GI_memcmp; __GI_memcmp = __memcmp_sse2
-# endif
+END(wmemcmp)
 #endif
-
-#include "../memcmp.S"

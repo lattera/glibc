@@ -1,3 +1,32 @@
+2011-09-27  Liubov Dmitrieva  <liubov.dmitrieva@gmail.com>
+
+	* sysdeps/x86_64/multiarch/Makefile: (sysdep_routines): Add
+	memcmp-ssse3 wmemcmp-sse4 wmemcmp-ssse3 wmemcmp-c
+	* sysdeps/x86_64/multiarch/memcmp-ssse3: New file.
+	* sysdeps/x86_64/multiarch/memcmp.S: Update.  Add __memcmp_ssse3.
+	* sysdeps/x86_64/multiarch/memcmp-sse4.S: Update.
+	(USE_AS_WMEMCMP): New macro.
+	Fixing indents.
+	* sysdeps/x86_64/multiarch/wmemcmp.S: New file.
+	* sysdeps/x86_64/multiarch/wmemcmp-ssse3.S: New file.
+	* sysdeps/x86_64/multiarch/wmemcmp-sse4.S: New file.
+	* sysdeps/x86_64/multiarch/wmemcmp-c.S: New file.
+	* sysdeps/i386/i686/multiarch/Makefile (sysdep_routines): Add
+	wmemcmp-ssse3 wmemcmp-sse4 wmemcmp-c
+	* sysdeps/i386/i686/multiarch/wmemcmp.S: New file.
+	* sysdeps/i386/i686/multiarch/wmemcmp-c.c: New file.
+	* sysdeps/i386/i686/multiarch/wmemcmp-ssse3.S: New file.
+	* sysdeps/i386/i686/multiarch/wmemcmp-sse4.S: New file.
+	* sysdeps/i386/i686/multiarch/memcmp-sse4.S: Update.
+	(USE_AS_WMEMCMP): New macro.
+	* sysdeps/i386/i686/multiarch/memcmp-ssse3: Likewise.
+	* sysdeps/string/test-memcmp.c: Update.
+	Fix simple_wmemcmp.
+	Add new tests.
+	* wcsmbs/wmemcmp.c: Update.
+	(WMEMCMP): New macro.
+	Fix overflow bug.
+
 2011-10-12  Andreas Jaeger  <aj@suse.de>
 
 	[BZ #13268]

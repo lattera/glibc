@@ -17,7 +17,8 @@ sysdep_routines += bzero-sse2 memset-sse2 memcpy-ssse3 mempcpy-ssse3 \
 		   strchr-sse2 strrchr-sse2 strchr-sse2-bsf strrchr-sse2-bsf \
 		   wcscmp-sse2 wcscmp-c memchr-sse2 memchr-sse2-bsf \
 		   memrchr-sse2 memrchr-sse2-bsf memrchr-c \
-		   rawmemchr-sse2 rawmemchr-sse2-bsf
+		   rawmemchr-sse2 rawmemchr-sse2-bsf \
+		   wmemcmp-sse4 wmemcmp-ssse3 wmemcmp-c
 ifeq (yes,$(config-cflags-sse4))
 sysdep_routines += strcspn-c strpbrk-c strspn-c strstr-c strcasestr-c
 CFLAGS-varshift.c += -msse4

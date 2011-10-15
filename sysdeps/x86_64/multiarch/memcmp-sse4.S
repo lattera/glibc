@@ -1,5 +1,5 @@
-/* memcmp with SSE4.1
-   Copyright (C) 2010 Free Software Foundation, Inc.
+/* memcmp with SSE4.1, wmemcmp with SSE4.1
+   Copyright (C) 2010, 2011 Free Software Foundation, Inc.
    Contributed by Intel Corporation.
    This file is part of the GNU C Library.
 
@@ -20,43 +20,54 @@
 
 #ifndef NOT_IN_libc
 
-#include <sysdep.h>
-#include "asm-syntax.h"
+# include <sysdep.h>
 
-#ifndef MEMCMP
-# define MEMCMP		__memcmp_sse4_1
-#endif
+# ifndef MEMCMP
+#  define MEMCMP	__memcmp_sse4_1
+# endif
 
-#ifndef ALIGN
-# define ALIGN(n)	.p2align n
-#endif
+# ifndef ALIGN
+#  define ALIGN(n)	.p2align n
+# endif
 
-#define JMPTBL(I, B)	(I - B)
+# define JMPTBL(I, B)	(I - B)
 
-#define BRANCH_TO_JMPTBL_ENTRY(TABLE, INDEX, SCALE)		\
+# define BRANCH_TO_JMPTBL_ENTRY(TABLE, INDEX, SCALE)		\
   lea		TABLE(%rip), %r11;				\
   movslq	(%r11, INDEX, SCALE), %rcx;			\
   add		%r11, %rcx;					\
   jmp		*%rcx;						\
   ud2
 
+/* Warning!
+           wmemcmp has to use SIGNED comparison for elements.
+           memcmp has to use UNSIGNED comparison for elemnts.
+*/
+
 	.section .text.sse4.1,"ax",@progbits
 ENTRY (MEMCMP)
+# ifdef USE_AS_WMEMCMP
+	shl	$2, %rdx
+# endif
 	pxor	%xmm0, %xmm0
 	cmp	$79, %rdx
 	ja	L(79bytesormore)
+# ifndef USE_AS_WMEMCMP
 	cmp	$1, %rdx
 	je	L(firstbyte)
+# endif
 	add	%rdx, %rsi
 	add	%rdx, %rdi
 	BRANCH_TO_JMPTBL_ENTRY(L(table_64bytes), %rdx, 4)
 
+# ifndef USE_AS_WMEMCMP
 	ALIGN (4)
 L(firstbyte):
 	movzbl	(%rdi), %eax
 	movzbl	(%rsi), %ecx
 	sub	%ecx, %eax
 	ret
+# endif
 
 	ALIGN (4)
 L(79bytesormore):
@@ -308,11 +319,11 @@ L(less32bytesin256):
 
 	ALIGN (4)
 L(512bytesormore):
-#ifdef DATA_CACHE_SIZE_HALF
+# ifdef DATA_CACHE_SIZE_HALF
 	mov	$DATA_CACHE_SIZE_HALF, %r8
-#else
+# else
 	mov	__x86_64_data_cache_size_half(%rip), %r8
-#endif
+# endif
 	mov	%r8, %r9
 	shr	$1, %r8
 	add	%r9, %r8
@@ -624,11 +635,11 @@ L(less32bytesin256in2alinged):
 
 	ALIGN (4)
 L(512bytesormorein2aligned):
-#ifdef DATA_CACHE_SIZE_HALF
+# ifdef DATA_CACHE_SIZE_HALF
 	mov	$DATA_CACHE_SIZE_HALF, %r8
-#else
+# else
 	mov	__x86_64_data_cache_size_half(%rip), %r8
-#endif
+# endif
 	mov	%r8, %r9
 	shr	$1, %r8
 	add	%r9, %r8
@@ -667,6 +678,7 @@ L(64bytesormore_loopin2aligned):
 	BRANCH_TO_JMPTBL_ENTRY(L(table_64bytes), %rdx, 4)
 L(L2_L3_cache_aglined):
 	sub	$64, %rdx
+
 	ALIGN (4)
 L(L2_L3_aligned_128bytes_loop):
 	prefetchnta 0x1c0(%rdi)
@@ -803,13 +815,19 @@ L(12bytes):
 	jne	L(diffin8bytes)
 L(4bytes):
 	mov	-4(%rsi), %ecx
+# ifndef USE_AS_WMEMCMP
 	mov	-4(%rdi), %eax
 	cmp	%eax, %ecx
+# else
+	cmp	-4(%rdi), %ecx
+# endif
 	jne	L(diffin4bytes)
 L(0bytes):
 	xor	%eax, %eax
 	ret
 
+# ifndef USE_AS_WMEMCMP
+/* unreal case for wmemcmp */
 	ALIGN (4)
 L(65bytes):
 	movdqu	-65(%rdi), %xmm1
@@ -1017,6 +1035,7 @@ L(1bytes):
 	movzbl	-1(%rsi), %ecx
 	sub	%ecx, %eax
 	ret
+# endif
 
 	ALIGN (4)
 L(68bytes):
@@ -1047,13 +1066,20 @@ L(20bytes):
 	pxor	%xmm1, %xmm2
 	ptest	%xmm2, %xmm0
 	jnc	L(less16bytes)
-	mov	-4(%rdi), %eax
 	mov	-4(%rsi), %ecx
+
+# ifndef USE_AS_WMEMCMP
+	mov	-4(%rdi), %eax
 	cmp	%eax, %ecx
+# else
+	cmp	-4(%rdi), %ecx
+# endif
 	jne	L(diffin4bytes)
 	xor	%eax, %eax
 	ret
 
+# ifndef USE_AS_WMEMCMP
+/* unreal cases for wmemcmp */
 	ALIGN (4)
 L(69bytes):
 	movdqu	-69(%rsi), %xmm1
@@ -1161,6 +1187,7 @@ L(23bytes):
 	jne	L(diffin8bytes)
 	xor	%eax, %eax
 	ret
+# endif
 
 	ALIGN (4)
 L(72bytes):
@@ -1191,13 +1218,16 @@ L(24bytes):
 	pxor	%xmm1, %xmm2
 	ptest	%xmm2, %xmm0
 	jnc	L(less16bytes)
-	mov	-8(%rdi), %rax
+
 	mov	-8(%rsi), %rcx
+	mov	-8(%rdi), %rax
 	cmp	%rax, %rcx
 	jne	L(diffin8bytes)
 	xor	%eax, %eax
 	ret
 
+# ifndef USE_AS_WMEMCMP
+/* unreal cases for wmemcmp */
 	ALIGN (4)
 L(73bytes):
 	movdqu	-73(%rsi), %xmm1
@@ -1312,7 +1342,7 @@ L(27bytes):
 	jne	L(diffin4bytes)
 	xor	%eax, %eax
 	ret
-
+# endif
 	ALIGN (4)
 L(76bytes):
 	movdqu	-76(%rsi), %xmm1
@@ -1346,13 +1376,19 @@ L(28bytes):
 	mov	-12(%rsi), %rcx
 	cmp	%rax, %rcx
 	jne	L(diffin8bytes)
-	mov	-4(%rdi), %eax
 	mov	-4(%rsi), %ecx
+# ifndef USE_AS_WMEMCMP
+	mov	-4(%rdi), %eax
 	cmp	%eax, %ecx
+# else
+	cmp	-4(%rdi), %ecx
+# endif
 	jne	L(diffin4bytes)
 	xor	%eax, %eax
 	ret
 
+# ifndef USE_AS_WMEMCMP
+/* unreal cases for wmemcmp */
 	ALIGN (4)
 L(77bytes):
 	movdqu	-77(%rsi), %xmm1
@@ -1474,7 +1510,7 @@ L(31bytes):
 	jne	L(diffin8bytes)
 	xor	%eax, %eax
 	ret
-
+# endif
 	ALIGN (4)
 L(64bytes):
 	movdqu	-64(%rdi), %xmm2
@@ -1527,7 +1563,17 @@ L(diffin8bytes):
 	jne	L(diffin4bytes)
 	shr	$32, %rcx
 	shr	$32, %rax
+
+# ifdef USE_AS_WMEMCMP
+/* for wmemcmp */
+	cmp	%eax, %ecx
+	jne	L(diffin4bytes)
+	xor	%eax, %eax
+	ret
+# endif
+
 L(diffin4bytes):
+# ifndef USE_AS_WMEMCMP
 	cmp	%cx, %ax
 	jne	L(diffin2bytes)
 	shr	$16, %ecx
@@ -1546,11 +1592,28 @@ L(end):
 	and	$0xff, %ecx
 	sub	%ecx, %eax
 	ret
+# else
+
+/* for wmemcmp */
+	mov	$1, %eax
+	jl	L(nequal_bigger)
+	neg	%eax
+	ret
+
+	ALIGN (4)
+L(nequal_bigger):
+	ret
+
+L(unreal_case):
+	xor	%eax, %eax
+	ret
+# endif
 
 END (MEMCMP)
 
 	.section .rodata.sse4.1,"a",@progbits
 	ALIGN (3)
+# ifndef USE_AS_WMEMCMP
 L(table_64bytes):
 	.int	JMPTBL (L(0bytes), L(table_64bytes))
 	.int	JMPTBL (L(1bytes), L(table_64bytes))
@@ -1632,4 +1695,87 @@ L(table_64bytes):
 	.int	JMPTBL (L(77bytes), L(table_64bytes))
 	.int	JMPTBL (L(78bytes), L(table_64bytes))
 	.int	JMPTBL (L(79bytes), L(table_64bytes))
+# else
+L(table_64bytes):
+	.int	JMPTBL (L(0bytes), L(table_64bytes))
+	.int	JMPTBL (L(unreal_case), L(table_64bytes))
+	.int	JMPTBL (L(unreal_case), L(table_64bytes))
+	.int	JMPTBL (L(unreal_case), L(table_64bytes))
+	.int	JMPTBL (L(4bytes), L(table_64bytes))
+	.int	JMPTBL (L(unreal_case), L(table_64bytes))
+	.int	JMPTBL (L(unreal_case), L(table_64bytes))
+	.int	JMPTBL (L(unreal_case), L(table_64bytes))
+	.int	JMPTBL (L(8bytes), L(table_64bytes))
+	.int	JMPTBL (L(unreal_case), L(table_64bytes))
+	.int	JMPTBL (L(unreal_case), L(table_64bytes))
+	.int	JMPTBL (L(unreal_case), L(table_64bytes))
+	.int	JMPTBL (L(12bytes), L(table_64bytes))
+	.int	JMPTBL (L(unreal_case), L(table_64bytes))
+	.int	JMPTBL (L(unreal_case), L(table_64bytes))
+	.int	JMPTBL (L(unreal_case), L(table_64bytes))
+	.int	JMPTBL (L(16bytes), L(table_64bytes))
+	.int	JMPTBL (L(unreal_case), L(table_64bytes))
+	.int	JMPTBL (L(unreal_case), L(table_64bytes))
+	.int	JMPTBL (L(unreal_case), L(table_64bytes))
+	.int	JMPTBL (L(20bytes), L(table_64bytes))
+	.int	JMPTBL (L(unreal_case), L(table_64bytes))
+	.int	JMPTBL (L(unreal_case), L(table_64bytes))
+	.int	JMPTBL (L(unreal_case), L(table_64bytes))
+	.int	JMPTBL (L(24bytes), L(table_64bytes))
+	.int	JMPTBL (L(unreal_case), L(table_64bytes))
+	.int	JMPTBL (L(unreal_case), L(table_64bytes))
+	.int	JMPTBL (L(unreal_case), L(table_64bytes))
+	.int	JMPTBL (L(28bytes), L(table_64bytes))
+	.int	JMPTBL (L(unreal_case), L(table_64bytes))
+	.int	JMPTBL (L(unreal_case), L(table_64bytes))
+	.int	JMPTBL (L(unreal_case), L(table_64bytes))
+	.int	JMPTBL (L(32bytes), L(table_64bytes))
+	.int	JMPTBL (L(unreal_case), L(table_64bytes))
+	.int	JMPTBL (L(unreal_case), L(table_64bytes))
+	.int	JMPTBL (L(unreal_case), L(table_64bytes))
+	.int	JMPTBL (L(36bytes), L(table_64bytes))
+	.int	JMPTBL (L(unreal_case), L(table_64bytes))
+	.int	JMPTBL (L(unreal_case), L(table_64bytes))
+	.int	JMPTBL (L(unreal_case), L(table_64bytes))
+	.int	JMPTBL (L(40bytes), L(table_64bytes))
+	.int	JMPTBL (L(unreal_case), L(table_64bytes))
+	.int	JMPTBL (L(unreal_case), L(table_64bytes))
+	.int	JMPTBL (L(unreal_case), L(table_64bytes))
+	.int	JMPTBL (L(44bytes), L(table_64bytes))
+	.int	JMPTBL (L(unreal_case), L(table_64bytes))
+	.int	JMPTBL (L(unreal_case), L(table_64bytes))
+	.int	JMPTBL (L(unreal_case), L(table_64bytes))
+	.int	JMPTBL (L(48bytes), L(table_64bytes))
+	.int	JMPTBL (L(unreal_case), L(table_64bytes))
+	.int	JMPTBL (L(unreal_case), L(table_64bytes))
+	.int	JMPTBL (L(unreal_case), L(table_64bytes))
+	.int	JMPTBL (L(52bytes), L(table_64bytes))
+	.int	JMPTBL (L(unreal_case), L(table_64bytes))
+	.int	JMPTBL (L(unreal_case), L(table_64bytes))
+	.int	JMPTBL (L(unreal_case), L(table_64bytes))
+	.int	JMPTBL (L(56bytes), L(table_64bytes))
+	.int	JMPTBL (L(unreal_case), L(table_64bytes))
+	.int	JMPTBL (L(unreal_case), L(table_64bytes))
+	.int	JMPTBL (L(unreal_case), L(table_64bytes))
+	.int	JMPTBL (L(60bytes), L(table_64bytes))
+	.int	JMPTBL (L(unreal_case), L(table_64bytes))
+	.int	JMPTBL (L(unreal_case), L(table_64bytes))
+	.int	JMPTBL (L(unreal_case), L(table_64bytes))
+	.int	JMPTBL (L(64bytes), L(table_64bytes))
+	.int	JMPTBL (L(unreal_case), L(table_64bytes))
+	.int	JMPTBL (L(unreal_case), L(table_64bytes))
+	.int	JMPTBL (L(unreal_case), L(table_64bytes))
+	.int	JMPTBL (L(68bytes), L(table_64bytes))
+	.int	JMPTBL (L(unreal_case), L(table_64bytes))
+	.int	JMPTBL (L(unreal_case), L(table_64bytes))
+	.int	JMPTBL (L(unreal_case), L(table_64bytes))
+	.int	JMPTBL (L(72bytes), L(table_64bytes))
+	.int	JMPTBL (L(unreal_case), L(table_64bytes))
+	.int	JMPTBL (L(unreal_case), L(table_64bytes))
+	.int	JMPTBL (L(unreal_case), L(table_64bytes))
+	.int	JMPTBL (L(76bytes), L(table_64bytes))
+	.int	JMPTBL (L(unreal_case), L(table_64bytes))
+	.int	JMPTBL (L(unreal_case), L(table_64bytes))
+	.int	JMPTBL (L(unreal_case), L(table_64bytes))
+# endif
 #endif
