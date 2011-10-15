@@ -1,4 +1,4 @@
-/* Copyright (C) 1999-2003, 2005 Free Software Foundation, Inc.
+/* Copyright (C) 1999-2003, 2005, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -471,7 +471,6 @@ do_length (struct _IO_codecvt *codecvt, __mbstate_t *statep,
   const unsigned char *cp = (const unsigned char *) from_start;
   wchar_t to_buf[max];
   struct __gconv_step *gs = codecvt->__cd_in.__cd.__steps;
-  int status;
   size_t dummy;
 
   codecvt->__cd_in.__cd.__data[0].__outbuf = (unsigned char *) to_buf;
@@ -484,10 +483,10 @@ do_length (struct _IO_codecvt *codecvt, __mbstate_t *statep,
     PTR_DEMANGLE (fct);
 #endif
 
-  status = DL_CALL_FCT (fct,
-			(gs, codecvt->__cd_in.__cd.__data, &cp,
-			 (const unsigned char *) from_end, NULL,
-			 &dummy, 0, 0));
+  DL_CALL_FCT (fct,
+	       (gs, codecvt->__cd_in.__cd.__data, &cp,
+		(const unsigned char *) from_end, NULL,
+		&dummy, 0, 0));
 
   result = cp - (const unsigned char *) from_start;
 #else

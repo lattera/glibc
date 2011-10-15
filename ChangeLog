@@ -1,5 +1,7 @@
 2011-10-15  Ulrich Drepper  <drepper@gmail.com>
 
+	* libio/iofwide.c (do_length): Avoid warning.
+
 	* ctype/ctype.h (__isctype_f): Add missing __THROW.
 
 2011-10-14  Ulrich Drepper  <drepper@gmail.com>
