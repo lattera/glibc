@@ -101,7 +101,6 @@ E(find_maps) (pid_t pid, void *auxv, size_t auxv_size)
       default:
 	break;
       }
-  printf("progam header at offset %lu\n", (unsigned long)phdr);
 
   if (phdr == 0 || phnum == 0 || phent == 0)
     error (EXIT_FAILURE, 0, gettext ("cannot find program header of process"));

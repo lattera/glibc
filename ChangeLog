@@ -1,5 +1,7 @@
 2011-10-14  Ulrich Drepper  <drepper@gmail.com>
 
+	* elf/pldd-xx.c (find_maps): Remove leftover debug message.
+
 	* sysdeps/i386/fpu/e_log.S: Add real definition of __log_finite.
 	* sysdeps/i386/fpu/e_logf.S: Add real definition of __logf_finite.
 	* sysdeps/i386/fpu/e_logl.S: Add real definition of __logl_finite.
