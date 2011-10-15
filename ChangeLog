@@ -8,6 +8,13 @@
 	* ctype/Versions: Export __ctype_init for GLIBC_PRIVATE.
 	* sysdeps/unix/sysv/linux/init-first.c (_init): Call __ctype_init.
 
+2011-10-15  Andreas Schwab  <schwab@linux-m68k.org>
+
+	* wcsmbs/wmemcmp.c (WMEMCMP): Define.
+
+	* configure.in: Also look in $cxxmachine/include for C++ system
+	headers.
+
 2011-09-27  Liubov Dmitrieva  <liubov.dmitrieva@gmail.com>
 
 	* sysdeps/x86_64/multiarch/Makefile: (sysdep_routines): Add
