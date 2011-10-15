@@ -8,7 +8,7 @@
    License as published by the Free Software Foundation; either
    version 2.1 of the License, or (at your option) any later version.
 
-   The GNU C Library is distributed in the hope that it will be useful, 
+   The GNU C Library is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
    Lesser General Public License for more details.
@@ -31,8 +31,8 @@
 # endif
 
 /* Warning!
-           wmemcmp has to use SIGNED comparison for elements.
-           memcmp has to use UNSIGNED comparison for elemnts.
+	   wmemcmp has to use SIGNED comparison for elements.
+	   memcmp has to use UNSIGNED comparison for elemnts.
 */
 
 	atom_text_section
@@ -1625,7 +1625,7 @@ L(more32bytes):
 # else
 	jmp	L(36bytes)
 # endif
- 
+
 	ALIGN	(4)
 L(more40bytes):
 	cmp	$40, %ecx
