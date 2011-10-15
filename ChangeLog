@@ -1,5 +1,8 @@
 2011-10-15  Ulrich Drepper  <drepper@gmail.com>
 
+	* sysdeps/i386/i686/fpu/e_logf.S: No need for the fyl2xp1 use, fyl2x
+	is sufficient, at least on modern CPUs.
+
 	* ctype/ctype-info.c (__ctype_init): Define.
 	* include/ctype.h (__ctype_init): Declare.
 	(__ctype_b_loc): The variable is always initialized.
