@@ -1,5 +1,12 @@
 2011-10-14  Ulrich Drepper  <drepper@gmail.com>
 
+	* sysdeps/i386/fpu/e_log.S: Add real definition of __log_finite.
+	* sysdeps/i386/fpu/e_logf.S: Add real definition of __logf_finite.
+	* sysdeps/i386/fpu/e_logl.S: Add real definition of __logl_finite.
+	* sysdeps/i386/i686/fpu/e_log.S: New file.
+	* sysdeps/i386/i686/fpu/e_logf.S: New file.
+	* sysdeps/i386/i686/fpu/e_logl.S: New file.
+
 	* ctype/ctype.h: Add support for inlined isXXX functions when
 	compiling C++ code.
 

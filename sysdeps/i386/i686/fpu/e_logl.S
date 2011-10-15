@@ -1,9 +1,10 @@
 /*
  * Written by J.T. Conklin <jtc@netbsd.org>.
  * Public domain.
- * Adapted for float by Ulrich Drepper <drepper@cygnus.com>.
  *
+ * Adapted for `long double' by Ulrich Drepper <drepper@cygnus.com>.
  * Changed to use fyl2xp1 for values near 1, <drepper@cygnus.com>.
+ * Adapted for i686 instructions.
  */
 
 #include <machine/asm.h>
@@ -32,24 +33,22 @@ limit:	.double 0.29
 #endif
 
 	.text
-ENTRY(__ieee754_logf)
+ENTRY(__ieee754_logl)
 	fldln2			// log(2)
-	flds	4(%esp)		// x : log(2)
-	fxam
-	fnstsw
+	fldt	4(%esp)		// x : log(2)
+	fucomi	%st
+	jp	3f
 #ifdef PIC
 	LOAD_PIC_REG (dx)
 #endif
 	fld	%st		// x : x : log(2)
-	sahf
-	jc	3f		// in case x is NaN or +-Inf
-4:	fsubl	MO(one)		// x-1 : x : log(2)
+	fsubl	MO(one)		// x-1 : x : log(2)
 	fld	%st		// x-1 : x-1 : x : log(2)
 	fabs			// |x-1| : x-1 : x : log(2)
-	fcompl	MO(limit)	// x-1 : x : log(2)
-	fnstsw			// x-1 : x : log(2)
-	andb	$0x45, %ah
-	jz	2f
+	fld	MO(limit)	// 0.29 : |x-1| : x-1 : x : log(2)
+	fcomip	%st(1)		// |x-1| : x-1 : x : log(2)
+	fstp	%st(0)		// x-1 : x : log(2)
+	jc	2f
 	fstp	%st(1)		// x-1 : log(2)
 	fyl2xp1			// log(x)
 	ret
@@ -58,15 +57,13 @@ ENTRY(__ieee754_logf)
 	fyl2x			// log(x)
 	ret
 
-3:	jp	4b		// in case x is +-Inf
-	fstp	%st(1)
-	fstp	%st(1)
+3:	fstp	%st(1)
 	ret
-END (__ieee754_logf)
+END (__ieee754_logl)
 
-ENTRY(__logf_finite)
+ENTRY(__logl_finite)
 	fldln2			// log(2)
-	flds	4(%esp)		// x : log(2)
+	fldt	4(%esp)		// x : log(2)
 #ifdef PIC
 	LOAD_PIC_REG (dx)
 #endif
@@ -74,11 +71,11 @@ ENTRY(__logf_finite)
 	fsubl	MO(one)		// x-1 : x : log(2)
 	fld	%st		// x-1 : x-1 : x : log(2)
 	fabs			// |x-1| : x-1 : x : log(2)
-	fcompl	MO(limit)	// x-1 : x : log(2)
-	fnstsw			// x-1 : x : log(2)
-	andb	$0x45, %ah
-	jz	2b
+	fld	MO(limit)	// 0.29 : |x-1| : x-1 : x : log(2)
+	fcomip	%st(1)		// |x-1| : x-1 : x : log(2)
+	fstp	%st(0)		// x-1 : x : log(2)
+	jc	2b
 	fstp	%st(1)		// x-1 : log(2)
 	fyl2xp1			// log(x)
 	ret
-END(__logf_finite)
+END(__logl_finite)
