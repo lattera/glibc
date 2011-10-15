@@ -1,3 +1,7 @@
+2011-10-15  Ulrich Drepper  <drepper@gmail.com>
+
+	* ctype/ctype.h (__isctype_f): Add missing __THROW.
+
 2011-10-14  Ulrich Drepper  <drepper@gmail.com>
 
 	* elf/pldd-xx.c (find_maps): Remove leftover debug message.

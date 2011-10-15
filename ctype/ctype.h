@@ -92,7 +92,7 @@ extern __const __int32_t **__ctype_toupper_loc (void)
 #elif defined __USE_EXTERN_INLINES
 # define __isctype_f(type) \
   __extern_inline int							      \
-  is##type (int __c)							      \
+  is##type (int __c) __THROW						      \
   {									      \
     return (*__ctype_b_loc ())[(int) (__c)] & (unsigned short int) _IS##type; \
   }
