@@ -5372,11 +5372,16 @@ if test -n "$sysheaders"; then
   SYSINCLUDES="$SYSINCLUDES \
 -isystem `echo $sysheaders | sed 's/:/ -isystem /g'`"
   if test -n "$CXX"; then
+    CXX_SYSINCLUDES=
     cxxversion=`$CXX -dumpversion 2>&5` &&
     cxxmachine=`$CXX -dumpmachine 2>&5` &&
-    cxxheaders=`$CXX -print-file-name=../../../../include/c++/`"$cxxversion" &&
-    CXX_SYSINCLUDES="-isystem $cxxheaders \
+    for d in include "$cxxmachine/include"; do
+      i=../../../../$d/c++/$cxxversion
+      cxxheaders=`$CXX -print-file-name="$i"` &&
+      test "x$cxxheaders" != x && test "x$i" != "x$cxxheaders" &&
+      CXX_SYSINCLUDES="$CXX_SYSINCLUDES -isystem $cxxheaders \
 -isystem $cxxheaders/$cxxmachine -isystem $cxxheaders/backward"
+    done
   fi
 fi
 
