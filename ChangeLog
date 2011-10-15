@@ -1,3 +1,8 @@
+2011-10-12  Andreas Jaeger  <aj@suse.de>
+
+	[BZ #13268]
+	* math/bits/mathcalls.h: Mark argument 2 of modf as non-null.
+
 2011-10-15  Ulrich Drepper  <drepper@gmail.com>
 
 	* libio/iofwide.c (do_length): Avoid warning.
