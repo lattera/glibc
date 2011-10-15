@@ -1,5 +1,7 @@
 2011-10-15  Andreas Schwab  <schwab@linux-m68k.org>
 
+	* wcsmbs/wmemcmp.c (WMEMCMP): Define.
+
 	* configure.in: Also look in $cxxmachine/include for C++ system
 	headers.
 
