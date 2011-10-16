@@ -1,5 +1,8 @@
 2011-10-15  Ulrich Drepper  <drepper@gmail.com>
 
+	* sysdeps/ieee754/dbl-64/e_cosh.c: Cleanup.
+	* sysdeps/ieee754/dbl-64/wordsize-64/e_cosh.c: New file.
+
 	* math/Versions [libm] (GLIBC_2.15): Add __exp_finite, __expf_finite,
 	__expl_finite.
 	* math/bits/math-finite.h: Add entries for exp.
