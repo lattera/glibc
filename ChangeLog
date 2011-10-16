@@ -1,5 +1,8 @@
 2011-10-15  Ulrich Drepper  <drepper@gmail.com>
 
+	* sysdeps/i386/i686/fpu/e_log.S: No need for the fyl2xp1 use, fyl2x
+	is sufficient, at least on modern CPUs.
+
 	* sysdeps/ieee754/dbl-64/wordsize-64/s_floor.c: New file.
 
 	* sysdeps/ieee754/dbl-64/e_cosh.c: Cleanup.
