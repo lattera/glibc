@@ -1,5 +1,7 @@
 2011-10-15  Ulrich Drepper  <drepper@gmail.com>
 
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_floor.c: New file.
+
 	* sysdeps/ieee754/dbl-64/e_cosh.c: Cleanup.
 	* sysdeps/ieee754/dbl-64/wordsize-64/e_cosh.c: New file.
 
