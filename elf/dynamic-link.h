@@ -258,17 +258,23 @@ elf_get_dynamic_info (struct link_map *l, ElfW(Dyn) *temp)
 # ifdef ELF_MACHINE_PLTREL_OVERLAP
 #  define _ELF_DYNAMIC_DO_RELOC(RELOC, reloc, map, do_lazy, skip_ifunc, test_rel) \
   do {									      \
-    struct { ElfW(Addr) start, size; int lazy; } ranges[3];		      \
+    struct { ElfW(Addr) start, size; ElfW(Word) nrelative; int lazy; }	      \
+    ranges[3];								      \
     int ranges_index;							      \
 									      \
     ranges[0].lazy = ranges[2].lazy = 0;				      \
     ranges[1].lazy = 1;							      \
     ranges[0].size = ranges[1].size = ranges[2].size = 0;		      \
+    ranges[0].nrelative = ranges[1].nrelative = ranges[2].nrelative = 0;      \
 									      \
     if ((map)->l_info[DT_##RELOC])					      \
       {									      \
 	ranges[0].start = D_PTR ((map), l_info[DT_##RELOC]);		      \
 	ranges[0].size = (map)->l_info[DT_##RELOC##SZ]->d_un.d_val;	      \
+	if (map->l_info[VERSYMIDX (DT_##RELOC##COUNT)] != NULL)		      \
+	  ranges[0].nrelative						      \
+	    = MIN (map->l_info[VERSYMIDX (DT_##RELOC##COUNT)]->d_un.d_val,    \
+		   ranges[0].size / sizeof (ElfW(reloc)));		      \
       }									      \
 									      \
     if ((do_lazy)							      \
@@ -286,21 +292,24 @@ elf_get_dynamic_info (struct link_map *l, ElfW(Dyn) *temp)
       elf_dynamic_do_##reloc ((map),					      \
 			      ranges[ranges_index].start,		      \
 			      ranges[ranges_index].size,		      \
+			      ranges[ranges_index].nrelative,		      \
 			      ranges[ranges_index].lazy,		      \
 			      skip_ifunc);				      \
   } while (0)
 # else
 #  define _ELF_DYNAMIC_DO_RELOC(RELOC, reloc, map, do_lazy, skip_ifunc, test_rel) \
   do {									      \
-    struct { ElfW(Addr) start, size; int lazy; } ranges[2];		      \
-    ranges[0].lazy = 0;							      \
-    ranges[0].size = ranges[1].size = 0;				      \
-    ranges[0].start = 0;						      \
+    struct { ElfW(Addr) start, size; ElfW(Word) nrelative; int lazy; }	      \
+      ranges[2] = { { 0, 0, 0, 0 }, { 0, 0, 0, 0 } };			      \
 									      \
     if ((map)->l_info[DT_##RELOC])					      \
       {									      \
 	ranges[0].start = D_PTR ((map), l_info[DT_##RELOC]);		      \
 	ranges[0].size = (map)->l_info[DT_##RELOC##SZ]->d_un.d_val;	      \
+	if (map->l_info[VERSYMIDX (DT_##RELOC##COUNT)] != NULL)		      \
+	  ranges[0].nrelative						      \
+	    = MIN (map->l_info[VERSYMIDX (DT_##RELOC##COUNT)]->d_un.d_val,    \
+		   ranges[0].size / sizeof (ElfW(reloc)));		      \
       }									      \
     if ((map)->l_info[DT_PLTREL]					      \
 	&& (!test_rel || (map)->l_info[DT_PLTREL]->d_un.d_val == DT_##RELOC)) \
@@ -312,7 +321,8 @@ elf_get_dynamic_info (struct link_map *l, ElfW(Dyn) *temp)
 		/* This test does not only detect whether the relocation      \
 		   sections are in the right order, it also checks whether    \
 		   there is a DT_REL/DT_RELA section.  */		      \
-		|| ranges[0].start + ranges[0].size != start))		      \
+		|| __builtin_expect (ranges[0].start + ranges[0].size	      \
+				     != start, 0)))			      \
 	  {								      \
 	    ranges[1].start = start;					      \
 	    ranges[1].size = (map)->l_info[DT_PLTRELSZ]->d_un.d_val;	      \
@@ -327,8 +337,8 @@ elf_get_dynamic_info (struct link_map *l, ElfW(Dyn) *temp)
       }									      \
 									      \
     if (ELF_DURING_STARTUP)						      \
-      elf_dynamic_do_##reloc ((map), ranges[0].start, ranges[0].size, 0,      \
-			      skip_ifunc);				      \
+      elf_dynamic_do_##reloc ((map), ranges[0].start, ranges[0].size,	      \
+			      ranges[0].nrelative, 0, skip_ifunc);	      \
     else								      \
       {									      \
 	int ranges_index;						      \
@@ -336,6 +346,7 @@ elf_get_dynamic_info (struct link_map *l, ElfW(Dyn) *temp)
 	  elf_dynamic_do_##reloc ((map),				      \
 				  ranges[ranges_index].start,		      \
 				  ranges[ranges_index].size,		      \
+				  ranges[ranges_index].nrelative,	      \
 				  ranges[ranges_index].lazy,		      \
 				  skip_ifunc);				      \
       }									      \
@@ -351,7 +362,7 @@ elf_get_dynamic_info (struct link_map *l, ElfW(Dyn) *temp)
 # if ! ELF_MACHINE_NO_REL
 #  include "do-rel.h"
 #  define ELF_DYNAMIC_DO_REL(map, lazy, skip_ifunc) \
-  _ELF_DYNAMIC_DO_RELOC (REL, rel, map, lazy, skip_ifunc, _ELF_CHECK_REL)
+  _ELF_DYNAMIC_DO_RELOC (REL, Rel, map, lazy, skip_ifunc, _ELF_CHECK_REL)
 # else
 #  define ELF_DYNAMIC_DO_REL(map, lazy, skip_ifunc) /* Nothing to do.  */
 # endif
@@ -360,7 +371,7 @@ elf_get_dynamic_info (struct link_map *l, ElfW(Dyn) *temp)
 #  define DO_RELA
 #  include "do-rel.h"
 #  define ELF_DYNAMIC_DO_RELA(map, lazy, skip_ifunc) \
-  _ELF_DYNAMIC_DO_RELOC (RELA, rela, map, lazy, skip_ifunc, _ELF_CHECK_REL)
+  _ELF_DYNAMIC_DO_RELOC (RELA, Rela, map, lazy, skip_ifunc, _ELF_CHECK_REL)
 # else
 #  define ELF_DYNAMIC_DO_RELA(map, lazy, skip_ifunc) /* Nothing to do.  */
 # endif

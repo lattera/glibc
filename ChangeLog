@@ -1,3 +1,12 @@
+2011-10-16  Ulrich Drepper  <drepper@gmail.com>
+
+	* elf/do-rel.h: Add another parameter nrelative, replacing the
+	local variable with the same name.  Change name of the function
+	to end in Rel or Rela (uppercase).
+	* elf/dynamic-link.h (_ELF_DYNAMIC_DO_RELOC): Add new element
+	nrelative to ranges.  Only nonzero for DT_REL/DT_RELA.  Pass to the
+	elf_dynamic_do_##reloc function.
+
 2011-10-15  Ulrich Drepper  <drepper@gmail.com>
 
 	* sysdeps/i386/i686/fpu/e_log.S: No need for the fyl2xp1 use, fyl2x

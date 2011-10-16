@@ -21,13 +21,10 @@
    `elf_dynamic_do_rel' and `elf_dynamic_do_rela'.  */
 
 #ifdef DO_RELA
-# define elf_dynamic_do_rel		elf_dynamic_do_rela
-# define RELCOUNT_IDX			VERSYMIDX (DT_RELACOUNT)
+# define elf_dynamic_do_Rel		elf_dynamic_do_Rela
 # define Rel				Rela
 # define elf_machine_rel		elf_machine_rela
 # define elf_machine_rel_relative	elf_machine_rela_relative
-#else
-# define RELCOUNT_IDX			VERSYMIDX (DT_RELCOUNT)
 #endif
 
 #ifndef DO_ELF_MACHINE_REL_RELATIVE
@@ -50,9 +47,9 @@
    than fully resolved now.  */
 
 auto inline void __attribute__ ((always_inline))
-elf_dynamic_do_rel (struct link_map *map,
+elf_dynamic_do_Rel (struct link_map *map,
 		    ElfW(Addr) reladdr, ElfW(Addr) relsize,
-		    int lazy, int skip_ifunc)
+		    ElfW(Word) nrelative, int lazy, int skip_ifunc)
 {
   const ElfW(Rel) *r = (const void *) reladdr;
   const ElfW(Rel) *end = (const void *) (reladdr + relsize);
@@ -73,10 +70,8 @@ elf_dynamic_do_rel (struct link_map *map,
     {
       const ElfW(Sym) *const symtab =
 	(const void *) D_PTR (map, l_info[DT_SYMTAB]);
-      ElfW(Word) nrelative = (map->l_info[RELCOUNT_IDX] == NULL
-			      ? 0 : map->l_info[RELCOUNT_IDX]->d_un.d_val);
       const ElfW(Rel) *relative = r;
-      r = r + MIN (nrelative, relsize / sizeof (ElfW(Rel)));
+      r += nrelative;
 
 #ifndef RTLD_BOOTSTRAP
       /* This is defined in rtld.c, but nowhere in the static libc.a; make
@@ -131,9 +126,9 @@ elf_dynamic_do_rel (struct link_map *map,
     }
 }
 
-#undef elf_dynamic_do_rel
+#undef elf_dynamic_do_Rel
 #undef Rel
 #undef elf_machine_rel
 #undef elf_machine_rel_relative
 #undef DO_ELF_MACHINE_REL_RELATIVE
-#undef RELCOUNT_IDX
+#undef DO_RELA
