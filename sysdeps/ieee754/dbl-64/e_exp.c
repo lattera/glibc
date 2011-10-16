@@ -1,7 +1,7 @@
 /*
  * IBM Accurate Mathematical Library
  * written by International Business Machines Corp.
- * Copyright (C) 2001 Free Software Foundation
+ * Copyright (C) 2001, 2011 Free Software Foundation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -145,6 +145,7 @@ double __ieee754_exp(double x) {
     else return __slowexp(x);
   }
 }
+strong_alias (__ieee754_exp, __exp_finite)
 
 /************************************************************************/
 /* Compute e^(x+xx)(Double-Length number) .The routine also receive     */

@@ -67,6 +67,13 @@ extern float coshf (float) __asm__ ("__coshf_finite");
 extern long double coshl (long double) __asm__ ("__coshl_finite");
 #endif
 
+/* exp.  */
+extern double exp (double) __asm__ ("__exp_finite");
+extern float expf (float) __asm__ ("__expf_finite");
+#ifdef __MATH_DECLARE_LDOUBLE
+extern long double expl (long double) __asm__ ("__expl_finite");
+#endif
+
 #ifdef __USE_GNU
 /* exp10.  */
 extern double exp10 (double) __asm__ ("__exp10_finite");

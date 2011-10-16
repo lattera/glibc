@@ -1,61 +1,48 @@
-/* w_expl.c -- long double version of w_exp.c.
- * Conversion to long double by Ulrich Drepper,
- * Cygnus Support, drepper@cygnus.com.
- */
+/* Copyright (C) 2011 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+   Contributed by Ulrich Drepper <drepper@gmail.com>, 2011.
 
-/*
- * ====================================================
- * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.
- *
- * Developed at SunPro, a Sun Microsystems, Inc. business.
- * Permission to use, copy, modify, and distribute this
- * software is freely granted, provided that this notice
- * is preserved.
- * ====================================================
- */
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
 
-#if defined(LIBM_SCCS) && !defined(lint)
-static char rcsid[] = "$NetBSD: $";
-#endif
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
 
-/*
- * wrapper expl(x)
- */
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, write to the Free
+   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
+   02111-1307 USA.  */
 
-#include "math.h"
-#include "math_private.h"
+#include <math.h>
+#include <math_private.h>
 
-#ifdef __STDC__
 static const long double
-#else
-static long double
-#endif
 o_threshold=  1.135652340629414394949193107797076489134e4,
   /* 0x400C, 0xB17217F7, 0xD1CF79AC */
 u_threshold= -1.140019167866942050398521670162263001513e4;
   /* 0x400C, 0xB220C447, 0x69C201E8 */
 
-#ifdef __STDC__
-	long double __expl(long double x)	/* wrapper exp */
-#else
-	long double __expl(x)			/* wrapper exp */
-	long double x;
-#endif
+
+/* wrapper expl */
+long double
+__expl (long double x)
 {
-#ifdef _IEEE_LIBM
-	return __ieee754_expl(x);
-#else
-	long double z;
-	z = __ieee754_expl(x);
-	if(_LIB_VERSION == _IEEE_) return z;
-	if(__finitel(x)) {
-	    if(x>o_threshold)
-	        return __kernel_standard(x,x,206); /* exp overflow */
-	    else if(x<u_threshold)
-	        return __kernel_standard(x,x,207); /* exp underflow */
-	}
-	return z;
-#endif
+  if (__builtin_expect (x > o_threshold, 0))
+    {
+      if (_LIB_VERSION != _IEEE_)
+	return __kernel_standard (x, x, 206);
+    }
+  else if (__builtin_expect (x < u_threshold, 0))
+    {
+      if (_LIB_VERSION != _IEEE_)
+	return __kernel_standard (x, x, 207);
+    }
+
+  return __ieee754_expl (x);
 }
 hidden_def (__expl)
 weak_alias (__expl, expl)

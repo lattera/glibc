@@ -1,5 +1,20 @@
 2011-10-15  Ulrich Drepper  <drepper@gmail.com>
 
+	* math/Versions [libm] (GLIBC_2.15): Add __exp_finite, __expf_finite,
+	__expl_finite.
+	* math/bits/math-finite.h: Add entries for exp.
+	* math/e_expl.c: Add __*_finite alias.
+	* sysdeps/i386/fpu/e_exp.S: Likewise.
+	* sysdeps/i386/fpu/e_expf.S: Likewise.
+	* sysdeps/i386/fpu/e_expl.c: Likewise.
+	* sysdeps/ieee754/dbl-64/e_exp.c: Likewise.
+	* sysdeps/ieee754/flt-32/e_expf.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/e_expl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/e_expl.c: Likewise.
+	* sysdeps/ieee754/dbl-64/w_exp.c: Complete rewrite.
+	* sysdeps/ieee754/flt-32/w_expf.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/w_expl.c: Likewise.
+
 	* sysdeps/i386/i686/fpu/e_logf.S: No need for the fyl2xp1 use, fyl2x
 	is sufficient, at least on modern CPUs.
 

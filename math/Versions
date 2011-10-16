@@ -196,5 +196,6 @@ libm {
     __sinh_finite; __sinhf_finite; __sinhl_finite;
     __sqrt_finite; __sqrtf_finite; __sqrtl_finite;
     __gamma_r_finite; __gammaf_r_finite; __gammal_r_finite;
+    __exp_finite; __expf_finite; __expl_finite;
   }
 }

@@ -1,5 +1,5 @@
 /* Single-precision floating point e^x.
-   Copyright (C) 1997, 1998, 2005, 2006 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 2005, 2006, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Geoffrey Keating <geoffk@ozemail.com.au>
 
@@ -33,8 +33,8 @@
    Then e^x is approximated as
 
    e^x = 2^n ( e^(t/512 + delta[t])
-               + ( e^(t/512 + delta[t])
-                   * ( p(x + delta[t] + n * ln(2)) - delta ) ) )
+	       + ( e^(t/512 + delta[t])
+		   * ( p(x + delta[t] + n * ln(2)) - delta ) ) )
 
    where
    - p(x) is a polynomial approximating e(x)-1;
@@ -138,3 +138,4 @@ __ieee754_expf (float x)
     /* Return x, if x is a NaN or Inf; or overflow, otherwise.  */
     return TWO127*x;
 }
+strong_alias (__ieee754_expf, __expf_finite)

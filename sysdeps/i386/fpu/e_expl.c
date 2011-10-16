@@ -63,7 +63,7 @@ __ieee754_expl (long double x)
        "fld1\n\t"               /* 4 1.0              */
        "faddp\n\t"		/* 3 2^(fract(x * log2(e))) */
        "fstp	%%st(1)\n\t"    /* 2  */
-       "fscale\n\t"	        /* 2 scale factor is st(1); e^x */
+       "fscale\n\t"		/* 2 scale factor is st(1); e^x */
        "fstp	%%st(1)\n\t"    /* 1  */
        "fstp	%%st(1)\n\t"    /* 0  */
        "jmp 2f\n\t"
@@ -75,3 +75,4 @@ __ieee754_expl (long double x)
        : "=t" (res) : "0" (x), "m" (c0), "m" (c1) : "ax", "dx");
   return res;
 }
+strong_alias (__ieee754_expl, __expl_finite)
