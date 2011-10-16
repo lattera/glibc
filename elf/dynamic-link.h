@@ -258,7 +258,8 @@ elf_get_dynamic_info (struct link_map *l, ElfW(Dyn) *temp)
 # ifdef ELF_MACHINE_PLTREL_OVERLAP
 #  define _ELF_DYNAMIC_DO_RELOC(RELOC, reloc, map, do_lazy, skip_ifunc, test_rel) \
   do {									      \
-    struct { ElfW(Addr) start, size; ElfW(Word) nrelative; int lazy; }	      \
+    struct { ElfW(Addr) start, size;					      \
+	     __typeof (((ElfW(Dyn) *) 0)->d_un.d_val) nrelative; int lazy; }  \
     ranges[3];								      \
     int ranges_index;							      \
 									      \
@@ -299,7 +300,8 @@ elf_get_dynamic_info (struct link_map *l, ElfW(Dyn) *temp)
 # else
 #  define _ELF_DYNAMIC_DO_RELOC(RELOC, reloc, map, do_lazy, skip_ifunc, test_rel) \
   do {									      \
-    struct { ElfW(Addr) start, size; ElfW(Word) nrelative; int lazy; }	      \
+    struct { ElfW(Addr) start, size;					      \
+	     __typeof (((ElfW(Dyn) *) 0)->d_un.d_val) nrelative; int lazy; }  \
       ranges[2] = { { 0, 0, 0, 0 }, { 0, 0, 0, 0 } };			      \
 									      \
     if ((map)->l_info[DT_##RELOC])					      \

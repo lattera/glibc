@@ -49,7 +49,8 @@
 auto inline void __attribute__ ((always_inline))
 elf_dynamic_do_Rel (struct link_map *map,
 		    ElfW(Addr) reladdr, ElfW(Addr) relsize,
-		    ElfW(Word) nrelative, int lazy, int skip_ifunc)
+		    __typeof (((ElfW(Dyn) *) 0)->d_un.d_val) nrelative,
+		    int lazy, int skip_ifunc)
 {
   const ElfW(Rel) *r = (const void *) reladdr;
   const ElfW(Rel) *end = (const void *) (reladdr + relsize);
