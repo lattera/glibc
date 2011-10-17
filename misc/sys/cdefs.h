@@ -53,8 +53,8 @@
    as non-throwing using a function attribute since programs can use
    the -fexceptions options for C code as well.  */
 # if !defined __cplusplus && __GNUC_PREREQ (3, 3)
-#  define __THROW	__attribute__ ((__nothrow__ __LEAF_ATTR))
-#  define __NTH(fct)	__attribute__ ((__nothrow__ __LEAF_ATTR)) fct
+#  define __THROW	__attribute__ ((__nothrow__ __LEAF))
+#  define __NTH(fct)	__attribute__ ((__nothrow__ __LEAF)) fct
 # else
 #  if defined __cplusplus && __GNUC_PREREQ (2,8)
 #   define __THROW	throw ()

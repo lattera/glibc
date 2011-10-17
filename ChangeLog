@@ -1,5 +1,7 @@
 2011-10-17  Andreas Schwab  <schwab@redhat.com>
 
+	* misc/sys/cdefs.h: Fix last change.
+
 	* grp/initgroups.c (internal_getgrouplist): Fix initgroups
 	database lookup.
 
