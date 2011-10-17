@@ -1,5 +1,15 @@
 2011-10-17  Ulrich Drepper  <drepper@gmail.com>
 
+	* sysdeps/x86_64/fpu/bits/mathinline.h: Don't define inlines if
+	__NO_MATH_INLINES is defined.  Cleanups.
+
+	* sysdeps/x86_64/fpu/math_private.h: Define __rint, __rintf, __floor,
+	and __floorf is target has SSE4.1.
+	* sysdeps/x86_64/fpu/multiarch/s_floor-c.c: Undef first.
+	* sysdeps/x86_64/fpu/multiarch/s_floorf-c.: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/s_rint-c.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/s_rintf-c.c: Likewise.
+
 	* sysdeps/x86_64/fpu/bits/mathinline.h (floor): Use correct function
 	name.
 	(floorf): Likewise.

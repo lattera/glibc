@@ -90,3 +90,31 @@ do {								\
   ({ long double __res;							      \
      asm ("fsqrt" : "=t" (__res) : "0" ((long double) d));		      \
      __res; })
+
+#ifdef __SSE4_1__
+# ifndef __rint
+#  define __rint(d) \
+  ({ double __res; \
+     asm ("roundsd $4, %1, %0" : "=x" (__res) : "x" ((double) d));	      \
+     __res; })
+# endif
+# ifndef __rintf
+#  define __rintf(d) \
+  ({ float __res; \
+     asm ("roundss $4, %1, %0" : "=x" (__res) : "x" ((float) d));	      \
+     __res; })
+# endif
+
+# ifndef __floor
+#  define __floor(d) \
+  ({ double __res; \
+     asm ("roundsd $1, %1, %0" : "=x" (__res) : "x" ((double) d));	      \
+     __res; })
+# endif
+# ifndef __floorf
+#  define __floorf(d) \
+  ({ float __res; \
+     asm ("roundss $1, %1, %0" : "=x" (__res) : "x" ((float) d));	      \
+     __res; })
+# endif
+#endif
