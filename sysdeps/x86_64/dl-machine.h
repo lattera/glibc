@@ -207,6 +207,10 @@ _dl_start_user:\n\
 /* A reloc type used for ld.so cmdline arg lookups to reject PLT entries.  */
 #define ELF_MACHINE_JMP_SLOT	R_X86_64_JUMP_SLOT
 
+/* The relative ifunc relocation.  */
+// XXX This is a work-around for a broken linker.  Remove!
+#define ELF_MACHINE_IRELATIVE	R_X86_64_IRELATIVE
+
 /* The x86-64 never uses Elf64_Rel relocations.  */
 #define ELF_MACHINE_NO_REL 1
 

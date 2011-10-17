@@ -55,6 +55,10 @@ elf_dynamic_do_Rel (struct link_map *map,
   const ElfW(Rel) *r = (const void *) reladdr;
   const ElfW(Rel) *end = (const void *) (reladdr + relsize);
   ElfW(Addr) l_addr = map->l_addr;
+# if defined ELF_MACHINE_IRELATIVE && !defined RTLD_BOOTSTRAP
+  const ElfW(Rel) *r2 = NULL;
+  const ElfW(Rel) *end2 = NULL;
+# endif
 
 #if (!defined DO_RELA || !defined ELF_MACHINE_PLT_REL) && !defined RTLD_BOOTSTRAP
   /* We never bind lazily during ld.so bootstrap.  Unfortunately gcc is
@@ -64,7 +68,23 @@ elf_dynamic_do_Rel (struct link_map *map,
     {
       /* Doing lazy PLT relocations; they need very little info.  */
       for (; r < end; ++r)
-	elf_machine_lazy_rel (map, l_addr, r, skip_ifunc);
+# ifdef ELF_MACHINE_IRELATIVE
+	if (ELFW(R_TYPE) (r->r_info) == ELF_MACHINE_IRELATIVE)
+	  {
+	    if (r2 == NULL)
+	      r2 = r;
+	    end2 = r;
+	  }
+	else
+# endif
+	  elf_machine_lazy_rel (map, l_addr, r, skip_ifunc);
+
+# ifdef ELF_MACHINE_IRELATIVE
+      if (r2 != NULL)
+	for (; r2 <= end2; ++r2)
+	  if (ELFW(R_TYPE) (r2->r_info) == ELF_MACHINE_IRELATIVE)
+	    elf_machine_lazy_rel (map, l_addr, r2, skip_ifunc);
+# endif
     }
   else
 #endif
@@ -112,17 +132,62 @@ elf_dynamic_do_Rel (struct link_map *map,
 
 	  for (; r < end; ++r)
 	    {
+#if defined ELF_MACHINE_IRELATIVE && !defined RTLD_BOOTSTRAP
+	      if (ELFW(R_TYPE) (r->r_info) == ELF_MACHINE_IRELATIVE)
+		{
+		  if (r2 == NULL)
+		    r2 = r;
+		  end2 = r;
+		  continue;
+		}
+#endif
+
 	      ElfW(Half) ndx = version[ELFW(R_SYM) (r->r_info)] & 0x7fff;
 	      elf_machine_rel (map, r, &symtab[ELFW(R_SYM) (r->r_info)],
 			       &map->l_versions[ndx],
 			       (void *) (l_addr + r->r_offset), skip_ifunc);
 	    }
+
+#if defined ELF_MACHINE_IRELATIVE && !defined RTLD_BOOTSTRAP
+	  if (r2 != NULL)
+	    for (; r2 <= end2; ++r2)
+	      if (ELFW(R_TYPE) (r2->r_info) == ELF_MACHINE_IRELATIVE)
+		{
+		  ElfW(Half) ndx
+		    = version[ELFW(R_SYM) (r2->r_info)] & 0x7fff;
+		  elf_machine_rel (map, r2,
+				   &symtab[ELFW(R_SYM) (r2->r_info)],
+				   &map->l_versions[ndx],
+				   (void *) (l_addr + r2->r_offset),
+				   skip_ifunc);
+		}
+#endif
 	}
 #ifndef RTLD_BOOTSTRAP
       else
-	for (; r < end; ++r)
-	  elf_machine_rel (map, r, &symtab[ELFW(R_SYM) (r->r_info)], NULL,
-			   (void *) (l_addr + r->r_offset), skip_ifunc);
+	{
+	  for (; r < end; ++r)
+# ifdef ELF_MACHINE_IRELATIVE
+	    if (ELFW(R_TYPE) (r->r_info) == ELF_MACHINE_IRELATIVE)
+	      {
+		if (r2 == NULL)
+		  r2 = r;
+		end2 = r;
+	      }
+	    else
+# endif
+	      elf_machine_rel (map, r, &symtab[ELFW(R_SYM) (r->r_info)], NULL,
+			       (void *) (l_addr + r->r_offset), skip_ifunc);
+
+# ifdef ELF_MACHINE_IRELATIVE
+	  if (r2 != NULL)
+	    for (; r2 <= end2; ++r2)
+	      if (ELFW(R_TYPE) (r2->r_info) == ELF_MACHINE_IRELATIVE)
+		elf_machine_rel (map, r2, &symtab[ELFW(R_SYM) (r2->r_info)],
+				 NULL, (void *) (l_addr + r2->r_offset),
+				 skip_ifunc);
+# endif
+	}
 #endif
     }
 }

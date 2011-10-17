@@ -10,10 +10,6 @@
  * ====================================================
  */
 
-#if defined(LIBM_SCCS) && !defined(lint)
-static char rcsid[] = "$NetBSD: s_floor.c,v 1.8 1995/05/10 20:47:20 jtc Exp $";
-#endif
-
 /*
  * floor(x)
  * Return x rounded toward -inf to integral value
@@ -44,7 +40,7 @@ static double huge = 1.0e300;
 	EXTRACT_WORDS(i0,i1,x);
 	j0 = ((i0>>20)&0x7ff)-0x3ff;
 	if(j0<20) {
-	    if(j0<0) { 	/* raise inexact if x != 0 */
+	    if(j0<0) {	/* raise inexact if x != 0 */
 		if(huge+x>0.0) {/* return 0*sign(x) if |x|<1 */
 		    if(i0>=0) {i0=i1=0;}
 		    else if(((i0&0x7fffffff)|i1)!=0)
@@ -64,12 +60,12 @@ static double huge = 1.0e300;
 	} else {
 	    i = ((u_int32_t)(0xffffffff))>>(j0-20);
 	    if((i1&i)==0) return x;	/* x is integral */
-	    if(huge+x>0.0) { 		/* raise inexact flag */
+	    if(huge+x>0.0) {		/* raise inexact flag */
 		if(i0<0) {
 		    if(j0==20) i0+=1;
 		    else {
 			j = i1+(1<<(52-j0));
-			if(j<i1) i0 +=1 ; 	/* got a carry */
+			if(j<i1) i0 +=1 ;	/* got a carry */
 			i1=j;
 		    }
 		}
@@ -79,8 +75,10 @@ static double huge = 1.0e300;
 	INSERT_WORDS(x,i0,i1);
 	return x;
 }
+#ifndef __floor
 weak_alias (__floor, floor)
-#ifdef NO_LONG_DOUBLE
+# ifdef NO_LONG_DOUBLE
 strong_alias (__floor, __floorl)
 weak_alias (__floor, floorl)
+# endif
 #endif

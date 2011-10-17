@@ -72,8 +72,10 @@ __floor (double x)
 	    return x+x;	/* inf or NaN */
 	return x;
 }
+#ifndef __floor
 weak_alias (__floor, floor)
-#ifdef NO_LONG_DOUBLE
+# ifdef NO_LONG_DOUBLE
 strong_alias (__floor, __floorl)
 weak_alias (__floor, floorl)
+# endif
 #endif

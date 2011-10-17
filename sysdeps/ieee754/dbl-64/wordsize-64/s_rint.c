@@ -1,4 +1,3 @@
-/* @(#)s_rint.c 5.1 93/09/24 */
 /*
  * ====================================================
  * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.
@@ -23,22 +22,14 @@
 #include "math.h"
 #include "math_private.h"
 
-#ifdef __STDC__
 static const double
-#else
-static double
-#endif
 TWO52[2]={
   4.50359962737049600000e+15, /* 0x43300000, 0x00000000 */
  -4.50359962737049600000e+15, /* 0xC3300000, 0x00000000 */
 };
 
-#ifdef __STDC__
-	double __rint(double x)
-#else
-	double __rint(x)
-	double x;
-#endif
+double
+__rint(double x)
 {
 	int64_t i0,sx;
 	int32_t j0;
@@ -72,8 +63,10 @@ TWO52[2]={
 	double w = TWO52[sx]+x;
 	return w-TWO52[sx];
 }
+#ifndef __rint
 weak_alias (__rint, rint)
-#ifdef NO_LONG_DOUBLE
+# ifdef NO_LONG_DOUBLE
 strong_alias (__rint, __rintl)
 weak_alias (__rint, rintl)
+# endif
 #endif

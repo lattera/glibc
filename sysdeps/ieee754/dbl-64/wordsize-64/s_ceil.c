@@ -22,18 +22,10 @@
 #include "math.h"
 #include "math_private.h"
 
-#ifdef __STDC__
 static const double huge = 1.0e300;
-#else
-static double huge = 1.0e300;
-#endif
 
-#ifdef __STDC__
-	double __ceil(double x)
-#else
-	double __ceil(x)
-	double x;
-#endif
+double
+__ceil(double x)
 {
 	int64_t i0,i;
 	int32_t j0;
@@ -60,8 +52,10 @@ static double huge = 1.0e300;
 	INSERT_WORDS64(x,i0);
 	return x;
 }
+#ifndef __ceil
 weak_alias (__ceil, ceil)
-#ifdef NO_LONG_DOUBLE
+# ifdef NO_LONG_DOUBLE
 strong_alias (__ceil, __ceill)
 weak_alias (__ceil, ceill)
+# endif
 #endif

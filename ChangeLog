@@ -1,5 +1,34 @@
 2011-10-16  Ulrich Drepper  <drepper@gmail.com>
 
+	* sysdeps/ieee754/dbl-64/s_ceil.c: Avoid alias renamed.
+	* sysdeps/ieee754/dbl-64/s_floor.c: Likewise.
+	* sysdeps/ieee754/dbl-64/s_rint.c: Likewise.
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_ceil.c: Likewise.
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_floor.c: Likewise.
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_rint.c: Likewise.
+	* sysdeps/ieee754/flt-32/s_ceilf.c: Likewise.
+	* sysdeps/ieee754/flt-32/s_floorf.c: Likewise.
+	* sysdeps/ieee754/flt-32/s_rintf.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/Makefile: New file.
+	* sysdeps/x86_64/fpu/multiarch/s_ceil-c.c: New file.
+	* sysdeps/x86_64/fpu/multiarch/s_ceil.S: New file.
+	* sysdeps/x86_64/fpu/multiarch/s_ceilf-c.c: New file.
+	* sysdeps/x86_64/fpu/multiarch/s_ceilf.S: New file.
+	* sysdeps/x86_64/fpu/multiarch/s_floor-c.c: New file.
+	* sysdeps/x86_64/fpu/multiarch/s_floor.S: New file.
+	* sysdeps/x86_64/fpu/multiarch/s_floorf-c.c: New file.
+	* sysdeps/x86_64/fpu/multiarch/s_floorf.S: New file.
+	* sysdeps/x86_64/fpu/multiarch/s_rint-c.c: New file.
+	* sysdeps/x86_64/fpu/multiarch/s_rint.S: New file.
+	* sysdeps/x86_64/fpu/multiarch/s_rintf-c.c: New file.
+	* sysdeps/x86_64/fpu/multiarch/s_rintf.S: New file.
+
+	* sysdeps/x86_64/fpu/bits/mathinline.h: Add inlines for rint, rintf,
+	ceil, ceilf, floor, floorf.
+
+	* elf/do-rel.h (elf_dynamic_do_Rel): Work around linker problem.
+	Perform IRELATIVE relocations last.
+
 	* elf/do-rel.h: Add another parameter nrelative, replacing the
 	local variable with the same name.  Change name of the function
 	to end in Rel or Rela (uppercase).

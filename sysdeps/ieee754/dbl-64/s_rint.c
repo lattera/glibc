@@ -10,10 +10,6 @@
  * ====================================================
  */
 
-#if defined(LIBM_SCCS) && !defined(lint)
-static char rcsid[] = "$NetBSD: s_rint.c,v 1.8 1995/05/10 20:48:04 jtc Exp $";
-#endif
-
 /*
  * rint(x)
  * Return x rounded to integral value according to the prevailing
@@ -27,22 +23,14 @@ static char rcsid[] = "$NetBSD: s_rint.c,v 1.8 1995/05/10 20:48:04 jtc Exp $";
 #include "math.h"
 #include "math_private.h"
 
-#ifdef __STDC__
 static const double
-#else
-static double
-#endif
 TWO52[2]={
   4.50359962737049600000e+15, /* 0x43300000, 0x00000000 */
  -4.50359962737049600000e+15, /* 0xC3300000, 0x00000000 */
 };
 
-#ifdef __STDC__
-	double __rint(double x)
-#else
-	double __rint(x)
-	double x;
-#endif
+double
+__rint(double x)
 {
 	int32_t i0,j0,sx;
 	u_int32_t i,i1;
@@ -57,11 +45,11 @@ TWO52[2]={
 		i0 &= 0xfffe0000;
 		i0 |= ((i1|-i1)>>12)&0x80000;
 		SET_HIGH_WORD(x,i0);
-	        w = TWO52[sx]+x;
-	        t =  w-TWO52[sx];
+		w = TWO52[sx]+x;
+		t =  w-TWO52[sx];
 		GET_HIGH_WORD(i0,t);
 		SET_HIGH_WORD(t,(i0&0x7fffffff)|(sx<<31));
-	        return t;
+		return t;
 	    } else {
 		i = (0x000fffff)>>j0;
 		if(((i0&i)|i1)==0) return x; /* x is integral */
@@ -91,8 +79,10 @@ TWO52[2]={
 	w = TWO52[sx]+x;
 	return w-TWO52[sx];
 }
+#ifndef __rint
 weak_alias (__rint, rint)
-#ifdef NO_LONG_DOUBLE
+# ifdef NO_LONG_DOUBLE
 strong_alias (__rint, __rintl)
 weak_alias (__rint, rintl)
+# endif
 #endif
