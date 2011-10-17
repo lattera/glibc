@@ -1,5 +1,8 @@
 2011-10-17  Ulrich Drepper  <drepper@gmail.com>
 
+	* sysdeps/x86_64/fpu/math_private.h: Add some parenthesis to be safe
+	about macro parameter expansion.
+
 	* sysdeps/x86_64/fpu/bits/mathinline.h: Don't define inlines if
 	__NO_MATH_INLINES is defined.  Cleanups.
 

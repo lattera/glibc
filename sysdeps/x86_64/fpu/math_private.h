@@ -58,21 +58,21 @@ do {								\
 #endif
 
 #define __isnan(d) \
-  ({ long int __di; EXTRACT_WORDS64 (__di, (double) d);			      \
+  ({ long int __di; EXTRACT_WORDS64 (__di, (double) (d));		      \
      (__di & 0x7fffffffffffffffl) > 0x7ff0000000000000l; })
 #define __isnanf(d) \
   ({ int __di; GET_FLOAT_WORD (__di, (float) d);			      \
      (__di & 0x7fffffff) > 0x7f800000; })
 
 #define __isinf_ns(d) \
-  ({ long int __di; EXTRACT_WORDS64 (__di, (double) d);			      \
+  ({ long int __di; EXTRACT_WORDS64 (__di, (double) (d));		      \
      (__di & 0x7fffffffffffffffl) == 0x7ff0000000000000l; })
 #define __isinf_nsf(d) \
   ({ int __di; GET_FLOAT_WORD (__di, (float) d);			      \
      (__di & 0x7fffffff) == 0x7f800000; })
 
 #define __finite(d) \
-  ({ long int __di; EXTRACT_WORDS64 (__di, (double) d);			      \
+  ({ long int __di; EXTRACT_WORDS64 (__di, (double) (d));		      \
      (__di & 0x7fffffffffffffffl) < 0x7ff0000000000000l; })
 #define __finitef(d) \
   ({ int __di; GET_FLOAT_WORD (__di, (float) d);			      \
@@ -80,41 +80,41 @@ do {								\
 
 #define __ieee754_sqrt(d) \
   ({ double __res;							      \
-     asm ("sqrtsd %1, %0" : "=x" (__res) : "xm" ((double) d));		      \
+    asm ("sqrtsd %1, %0" : "=x" (__res) : "xm" ((double) (d)));		      \
      __res; })
 #define __ieee754_sqrtf(d) \
   ({ float __res;							      \
-     asm ("sqrtss %1, %0" : "=x" (__res) : "xm" ((float) d));		      \
+    asm ("sqrtss %1, %0" : "=x" (__res) : "xm" ((float) (d)));		      \
      __res; })
 #define __ieee754_sqrtl(d) \
   ({ long double __res;							      \
-     asm ("fsqrt" : "=t" (__res) : "0" ((long double) d));		      \
+    asm ("fsqrt" : "=t" (__res) : "0" ((long double) (d)));		      \
      __res; })
 
 #ifdef __SSE4_1__
 # ifndef __rint
 #  define __rint(d) \
   ({ double __res; \
-     asm ("roundsd $4, %1, %0" : "=x" (__res) : "x" ((double) d));	      \
+    asm ("roundsd $4, %1, %0" : "=x" (__res) : "x" ((double) (d)));	      \
      __res; })
 # endif
 # ifndef __rintf
 #  define __rintf(d) \
   ({ float __res; \
-     asm ("roundss $4, %1, %0" : "=x" (__res) : "x" ((float) d));	      \
+    asm ("roundss $4, %1, %0" : "=x" (__res) : "x" ((float) (d)));	      \
      __res; })
 # endif
 
 # ifndef __floor
 #  define __floor(d) \
   ({ double __res; \
-     asm ("roundsd $1, %1, %0" : "=x" (__res) : "x" ((double) d));	      \
+    asm ("roundsd $1, %1, %0" : "=x" (__res) : "x" ((double) (d)));	      \
      __res; })
 # endif
 # ifndef __floorf
 #  define __floorf(d) \
   ({ float __res; \
-     asm ("roundss $1, %1, %0" : "=x" (__res) : "x" ((float) d));	      \
+    asm ("roundss $1, %1, %0" : "=x" (__res) : "x" ((float) (d)));	      \
      __res; })
 # endif
 #endif
