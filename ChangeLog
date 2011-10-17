@@ -1,5 +1,9 @@
 2011-10-17  Ulrich Drepper  <drepper@gmail.com>
 
+	* sysdeps/x86_64/fpu/bits/mathinline.h (floor): Use correct function
+	name.
+	(floorf): Likewise.
+
 	* nscd/netgroupcache.c (addgetnetgrentX): Fix #ifdef nesting.
 
 2011-10-17  Andreas Schwab  <schwab@redhat.com>

@@ -187,7 +187,7 @@ __END_NAMESPACE_C99
 __BEGIN_NAMESPACE_STD
 /* Largest integer not greater than X.  */
 __MATH_INLINE double
-__NTH (ceil (double __x))
+__NTH (floor (double __x))
 {
   double __res;
   __asm ("roundsd $1, %1, %0" : "=x" (__res) : "x" (__x));
@@ -197,7 +197,7 @@ __END_NAMESPACE_STD
 
 __BEGIN_NAMESPACE_C99
 __MATH_INLINE float
-__NTH (ceilf (float __x))
+__NTH (floorf (float __x))
 {
   float __res;
   __asm ("roundss $1, %1, %0" : "=x" (__res) : "x" (__x));
