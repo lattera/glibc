@@ -1,5 +1,7 @@
 2011-10-16  Ulrich Drepper  <drepper@gmail.com>
 
+	* misc/sys/cdefs.h: Use leaf function attribute in __THROW.
+
 	* sysdeps/ieee754/dbl-64/s_ceil.c: Avoid alias renamed.
 	* sysdeps/ieee754/dbl-64/s_floor.c: Likewise.
 	* sysdeps/ieee754/dbl-64/s_rint.c: Likewise.
