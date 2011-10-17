@@ -1,3 +1,7 @@
+2011-10-17  Ulrich Drepper  <drepper@gmail.com>
+
+	* nscd/netgroupcache.c (addgetnetgrentX): Fix #ifdef nesting.
+
 2011-10-17  Andreas Schwab  <schwab@redhat.com>
 
 	* misc/sys/cdefs.h: Fix last change.
