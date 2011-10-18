@@ -156,14 +156,14 @@ __MATH_INLINE double
 __NTH (rint (double __x))
 {
   double __res;
-  __asm ("roundsd $4, %1, %0" : "=x" (__res) : "x" (__x));
+  __asm ("roundsd $4, %1, %0" : "=x" (__res) : "xm" (__x));
   return __res;
 }
 __MATH_INLINE float
 __NTH (rintf (float __x))
 {
   float __res;
-  __asm ("roundss $4, %1, %0" : "=x" (__res) : "x" (__x));
+  __asm ("roundss $4, %1, %0" : "=x" (__res) : "xm" (__x));
   return __res;
 }
 
@@ -176,7 +176,7 @@ __MATH_INLINE double
 __NTH (ceil (double __x))
 {
   double __res;
-  __asm ("roundsd $2, %1, %0" : "=x" (__res) : "x" (__x));
+  __asm ("roundsd $2, %1, %0" : "=x" (__res) : "xm" (__x));
   return __res;
 }
 __END_NAMESPACE_STD
@@ -186,7 +186,7 @@ __MATH_INLINE float
 __NTH (ceilf (float __x))
 {
   float __res;
-  __asm ("roundss $2, %1, %0" : "=x" (__res) : "x" (__x));
+  __asm ("roundss $2, %1, %0" : "=x" (__res) : "xm" (__x));
   return __res;
 }
 __END_NAMESPACE_C99
@@ -197,7 +197,7 @@ __MATH_INLINE double
 __NTH (floor (double __x))
 {
   double __res;
-  __asm ("roundsd $1, %1, %0" : "=x" (__res) : "x" (__x));
+  __asm ("roundsd $1, %1, %0" : "=x" (__res) : "xm" (__x));
   return __res;
 }
 __END_NAMESPACE_STD
@@ -207,7 +207,7 @@ __MATH_INLINE float
 __NTH (floorf (float __x))
 {
   float __res;
-  __asm ("roundss $1, %1, %0" : "=x" (__res) : "x" (__x));
+  __asm ("roundss $1, %1, %0" : "=x" (__res) : "xm" (__x));
   return __res;
 }
 __END_NAMESPACE_C99

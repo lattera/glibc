@@ -1,5 +1,9 @@
 2011-10-17  Ulrich Drepper  <drepper@gmail.com>
 
+	* sysdeps/x86_64/fpu/math_private.h: Relax asm requirements for
+	recently added interfaces.
+	* sysdeps/x86_64/fpu/bits/mathinline.h: Likewise.
+
 	* sysdeps/x86_64/fpu/math_private.h: Add some parenthesis to be safe
 	about macro parameter expansion.
 
