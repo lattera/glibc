@@ -1,3 +1,18 @@
+2011-10-18  Ulrich Drepper  <drepper@gmail.com>
+
+	* math/math_private.h: Define defaults for libc_fegetround,
+	libc_fegetroundf, libc_fegetroundl, libc_fesetround, libc_fesetroundf,
+	libc_fesetroundl, libc_feholdexcept, libc_feholdexceptf,
+	libc_feholdexceptl, libc_fesetenv, libc_fesetenvf, libc_fesetenvl.
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_nearbyint.c: Use
+	libc_feholdexcept, libc_fesetround, libc_fesetenv instead of the
+	standard functions.
+	* sysdeps/ieee754/dbl-64/e_exp2.c: Likewise.
+	Remove comments and hacks for old compiler versions.
+	* sysdeps/x86_64/fpu/math_private.h: Define special versions of
+	libc_fegetround, libc_fesetround, libc_feholdexcept, and
+	libc_feholdexceptl.
+
 2011-10-18  Andreas Schwab  <schwab@redhat.com>
 
 	* sysdeps/x86_64/fpu/bits/fenv.h: Add C linkage markers.

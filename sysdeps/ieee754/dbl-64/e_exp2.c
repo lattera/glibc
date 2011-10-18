@@ -25,9 +25,6 @@
    17 (1), March 1991, pp. 26-45.
    It has been slightly modified to compute 2^x instead of e^x.
    */
-#ifndef _GNU_SOURCE
-#define _GNU_SOURCE
-#endif
 #include <stdlib.h>
 #include <float.h>
 #include <ieee754.h>
@@ -38,13 +35,8 @@
 
 #include "t_exp2.h"
 
-/* XXX I know the assembler generates a warning about incorrect section
-   attributes. But without the attribute here the compiler places the
-   constants in the .data section.  Ideally the constant is placed in
-   .rodata.cst8 so that it can be merged, but gcc sucks, it ICEs when
-   we try to force this section on it.  --drepper  */
-static const volatile double TWO1023 = 8.988465674311579539e+307;
-static const volatile double TWOM1000 = 9.3326361850321887899e-302;
+static const double TWO1023 = 8.988465674311579539e+307;
+static const double TWOM1000 = 9.3326361850321887899e-302;
 
 double
 __ieee754_exp2 (double x)
@@ -72,10 +64,10 @@ __ieee754_exp2 (double x)
       union ieee754_double ex2_u, scale_u;
       fenv_t oldenv;
 
-      feholdexcept (&oldenv);
+      libc_feholdexcept (&oldenv);
 #ifdef FE_TONEAREST
       /* If we don't have this, it's too bad.  */
-      fesetround (FE_TONEAREST);
+      libc_fesetround (FE_TONEAREST);
 #endif
 
       /* 1. Argument reduction.
@@ -120,9 +112,10 @@ __ieee754_exp2 (double x)
 	       * x + .055504110254308625)
 	      * x + .240226506959100583)
 	     * x + .69314718055994495) * ex2_u.d;
+      math_opt_barrier (x22);
 
       /* 5. Return (2^x2-1) * 2^(t/512+e+ex) + 2^(t/512+e+ex).  */
-      fesetenv (&oldenv);
+      libc_fesetenv (&oldenv);
 
       result = x22 * x + ex2_u.d;
 

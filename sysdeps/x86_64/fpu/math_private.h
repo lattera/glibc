@@ -118,3 +118,45 @@ do {								\
      __res; })
 # endif
 #endif
+
+
+/* Specialized variants of the <fenv.h> interfaces which only handle
+   either the FPU or the SSE unit.  */
+#undef libc_fegetround
+#define libc_fegetround() \
+  ({									      \
+     unsigned int mxcsr;						      \
+     asm volatile ("stmxcsr %0" : "=m" (*&mxcsr));			      \
+     (mxcsr & 0x6000) >> 3;						      \
+  })
+// #define libc_fegetroundf() fegetround ()
+// #define libc_fegetroundl() fegetround ()
+
+#undef libc_fesetround
+#define libc_fesetround(r) \
+  do {									      \
+     unsigned int mxcsr;						      \
+     asm ("stmxcsr %0" : "=m" (*&mxcsr));				      \
+     mxcsr = (mxcsr & ~0x6000) | ((r) << 3);				      \
+     asm volatile ("ldmxcsr %0" : : "m" (*&mxcsr));			      \
+  } while (0)
+// #define libc_fesetroundf(r) (void) fesetround (r)
+// #define libc_fesetroundl(r) (void) fesetround (r)
+
+#undef libc_feholdexcept
+#define libc_feholdexcept(e) \
+  do {			     \
+     unsigned int mxcsr;						      \
+     asm ("stmxcsr %0" : "=m" (*&mxcsr));				      \
+     (e)->__mxcsr = mxcsr;						      \
+     mxcsr = (mxcsr | 0x1f80) & ~0x3f;					      \
+     asm volatile ("ldmxcsr %0" : : "m" (*&mxcsr));			      \
+  } while (0)
+// #define libc_feholdexceptf(e) (void) feholdexcept (e)
+// #define libc_feholdexceptl(e) (void) feholdexcept (e)
+
+#undef libc_fesetenv
+#define libc_fesetenv(e) \
+  asm volatile ("ldmxcsr %0" : : "m" ((e)->__mxcsr))
+// #define libc_fesetenvf(e) (void) fesetenv (e)
+// #define libc_fesetenvl(e) (void) fesetenv (e)
