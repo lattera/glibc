@@ -1,5 +1,11 @@
 2011-10-18  Ulrich Drepper  <drepper@gmail.com>
 
+	* math/math_private.h: Define defaults for libc_feholdexcept_setround,
+	libc_feholdexcept_setroundf, libc_feholdexcept_setroundl.
+	* sysdeps/ieee754/dbl-64/e_exp2.c: Use libc_feholdexcept_setround.
+	* sysdeps/x86_64/fpu/math_private.h: Define special version of
+	libc_feholdexcept_setround.
+
 	* sysdeps/x86_64/fpu/multiarch/Makefile [math] (libm-sysdep-routines):
 	Add s_nearbyint-c and s_nearbyintf-c.
 	* sysdeps/x86_64/fpu/bits/mathinline.h: Define nearbyint and

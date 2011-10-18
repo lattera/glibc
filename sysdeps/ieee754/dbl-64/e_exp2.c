@@ -64,11 +64,7 @@ __ieee754_exp2 (double x)
       union ieee754_double ex2_u, scale_u;
       fenv_t oldenv;
 
-      libc_feholdexcept (&oldenv);
-#ifdef FE_TONEAREST
-      /* If we don't have this, it's too bad.  */
-      libc_fesetround (FE_TONEAREST);
-#endif
+      libc_feholdexcept_setround (&oldenv, FE_TONEAREST);
 
       /* 1. Argument reduction.
 	 Choose integers ex, -256 <= t < 256, and some real

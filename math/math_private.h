@@ -376,6 +376,13 @@ extern void __docos (double __x, double __dx, double __v[]);
 #define libc_feholdexceptf(e) (void) feholdexcept (e)
 #define libc_feholdexceptl(e) (void) feholdexcept (e)
 
+#define libc_feholdexcept_setround(e, r) \
+  do { feholdexcept (e); fesetround (r); } while (0)
+#define libc_feholdexcept_setroundf(e, r) \
+  do { feholdexcept (e); fesetround (r); } while (0)
+#define libc_feholdexcept_setroundl(e, r) \
+  do { feholdexcept (e); fesetround (r); } while (0)
+
 #define libc_fesetenv(e) (void) fesetenv (e)
 #define libc_fesetenvf(e) (void) fesetenv (e)
 #define libc_fesetenvl(e) (void) fesetenv (e)

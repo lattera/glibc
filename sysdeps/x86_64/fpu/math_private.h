@@ -145,7 +145,7 @@ do {								\
 
 #undef libc_feholdexcept
 #define libc_feholdexcept(e) \
-  do {			     \
+  do {									      \
      unsigned int mxcsr;						      \
      asm ("stmxcsr %0" : "=m" (*&mxcsr));				      \
      (e)->__mxcsr = mxcsr;						      \
@@ -154,6 +154,18 @@ do {								\
   } while (0)
 // #define libc_feholdexceptf(e) (void) feholdexcept (e)
 // #define libc_feholdexceptl(e) (void) feholdexcept (e)
+
+#undef libc_feholdexcept_setround
+#define libc_feholdexcept_setround(e, r) \
+  do {									      \
+     unsigned int mxcsr;						      \
+     asm ("stmxcsr %0" : "=m" (*&mxcsr));				      \
+     (e)->__mxcsr = mxcsr;						      \
+     mxcsr = ((mxcsr | 0x1f80) & ~0x603f) | ((r) << 3);			      \
+     asm volatile ("ldmxcsr %0" : : "m" (*&mxcsr));			      \
+  } while (0)
+// #define libc_feholdexcept_setroundf(e, r) ...
+// #define libc_feholdexcept_setroundl(e, r) ...
 
 #undef libc_fesetenv
 #define libc_fesetenv(e) \
