@@ -1,5 +1,5 @@
 /* Compute x * y + z as ternary operation.
-   Copyright (C) 2010 Free Software Foundation, Inc.
+   Copyright (C) 2010, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jakub@redhat.com>, 2010.
 
@@ -21,6 +21,7 @@
 #include <math.h>
 #include <fenv.h>
 #include <ieee754.h>
+#include <math_private.h>
 
 /* This implementation relies on double being more than twice as
    precise as float and uses rounding to odd in order to avoid problems
@@ -35,13 +36,12 @@ __fmaf (float x, float y, float z)
   /* Multiplication is always exact.  */
   double temp = (double) x * (double) y;
   union ieee754_double u;
-  feholdexcept (&env);
-  fesetround (FE_TOWARDZERO);
+  libc_feholdexcept_setroundf (&env, FE_TOWARDZERO);
   /* Perform addition with round to odd.  */
   u.d = temp + (double) z;
   if ((u.ieee.mantissa1 & 1) == 0 && u.ieee.exponent != 0x7ff)
-    u.ieee.mantissa1 |= fetestexcept (FE_INEXACT) != 0;
-  feupdateenv (&env);
+    u.ieee.mantissa1 |= libc_fetestexcept (FE_INEXACT) != 0;
+  libc_feupdateenv (&env);
   /* And finally truncation with round to nearest.  */
   return (float) u.d;
 }

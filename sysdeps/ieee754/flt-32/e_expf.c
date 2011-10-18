@@ -47,9 +47,6 @@
    to perform an 'accurate table method' expf, because of the range reduction
    overhead (compare exp2f).
    */
-#ifndef _GNU_SOURCE
-#define _GNU_SOURCE
-#endif
 #include <float.h>
 #include <ieee754.h>
 #include <math.h>
@@ -60,8 +57,8 @@
 extern const float __exp_deltatable[178];
 extern const double __exp_atable[355] /* __attribute__((mode(DF))) */;
 
-static const volatile float TWOM100 = 7.88860905e-31;
-static const volatile float TWO127 = 1.7014118346e+38;
+static const float TWOM100 = 7.88860905e-31;
+static const float TWO127 = 1.7014118346e+38;
 
 float
 __ieee754_expf (float x)
@@ -86,10 +83,7 @@ __ieee754_expf (float x)
       union ieee754_double ex2_u;
       fenv_t oldenv;
 
-      feholdexcept (&oldenv);
-#ifdef FE_TONEAREST
-      fesetround (FE_TONEAREST);
-#endif
+      libc_feholdexcept_setroundf (&oldenv, FE_TONEAREST);
 
       /* Calculate n.  */
       n = x * M_1_LN2 + THREEp22;
@@ -119,7 +113,7 @@ __ieee754_expf (float x)
       x22 = (0.5000000496709180453 * dx + 1.0000001192102037084) * dx + delta;
 
       /* Return result.  */
-      fesetenv (&oldenv);
+      libc_fesetenvf (&oldenv);
 
       result = x22 * ex2_u.d + ex2_u.d;
       return (float) result;

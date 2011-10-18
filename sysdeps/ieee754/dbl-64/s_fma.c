@@ -1,5 +1,5 @@
 /* Compute x * y + z as ternary operation.
-   Copyright (C) 2010 Free Software Foundation, Inc.
+   Copyright (C) 2010, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jakub@redhat.com>, 2010.
 
@@ -22,6 +22,7 @@
 #include <math.h>
 #include <fenv.h>
 #include <ieee754.h>
+#include <math_private.h>
 
 /* This implementation uses rounding to odd to avoid problems with
    double rounding.  See a paper by Boldo and Melquiond:
@@ -47,7 +48,7 @@ __fma (double x, double y, double z)
 	 z rather than NaN.  */
       if (w.ieee.exponent == 0x7ff
 	  && u.ieee.exponent != 0x7ff
-          && v.ieee.exponent != 0x7ff)
+	  && v.ieee.exponent != 0x7ff)
 	return (z + x) + y;
       /* If x or y or z is Inf/NaN, or if fma will certainly overflow,
 	 or if x * y is less than half of DBL_DENORM_MIN,
@@ -148,34 +149,33 @@ __fma (double x, double y, double z)
   double a2 = t1 + t2;
 
   fenv_t env;
-  feholdexcept (&env);
-  fesetround (FE_TOWARDZERO);
+  libc_feholdexcept_setround (&env, FE_TOWARDZERO);
   /* Perform m2 + a2 addition with round to odd.  */
   u.d = a2 + m2;
 
   if (__builtin_expect (adjust == 0, 1))
     {
       if ((u.ieee.mantissa1 & 1) == 0 && u.ieee.exponent != 0x7ff)
-	u.ieee.mantissa1 |= fetestexcept (FE_INEXACT) != 0;
-      feupdateenv (&env);
+	u.ieee.mantissa1 |= libc_fetestexcept (FE_INEXACT) != 0;
+      libc_feupdateenv (&env);
       /* Result is a1 + u.d.  */
       return a1 + u.d;
     }
   else if (__builtin_expect (adjust > 0, 1))
     {
       if ((u.ieee.mantissa1 & 1) == 0 && u.ieee.exponent != 0x7ff)
-	u.ieee.mantissa1 |= fetestexcept (FE_INEXACT) != 0;
-      feupdateenv (&env);
+	u.ieee.mantissa1 |= libc_fetestexcept (FE_INEXACT) != 0;
+      libc_feupdateenv (&env);
       /* Result is a1 + u.d, scaled up.  */
       return (a1 + u.d) * 0x1p53;
     }
   else
     {
       if ((u.ieee.mantissa1 & 1) == 0)
-	u.ieee.mantissa1 |= fetestexcept (FE_INEXACT) != 0;
+	u.ieee.mantissa1 |= libc_fetestexcept (FE_INEXACT) != 0;
       v.d = a1 + u.d;
-      int j = fetestexcept (FE_INEXACT) != 0;
-      feupdateenv (&env);
+      int j = libc_fetestexcept (FE_INEXACT) != 0;
+      libc_feupdateenv (&env);
       /* Ensure the following computations are performed in default rounding
 	 mode instead of just reusing the round to zero computation.  */
       asm volatile ("" : "=m" (u) : "m" (u));

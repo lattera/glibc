@@ -1,5 +1,15 @@
 2011-10-18  Ulrich Drepper  <drepper@gmail.com>
 
+	* math/math_private.h: Define defaults for libc_fetestexcept and
+	libc_feupdateenv.
+	* sysdeps/ieee754/dbl-64/s_fma.c: Use libc_fe* interfaces.
+	* sysdeps/ieee754/dbl-64/s_fmaf.c: Likewise.
+	* sysdeps/ieee754/flt-32/e_exp2f.c: Likewise.
+	* sysdeps/ieee754/flt-32/e_expf.c: Likewise.
+	* sysdeps/ieee754/flt-32/s_nearbyintf.c: Likewise.
+	* sysdeps/x86_64/fpu/math_private.h: Define special versions of
+	libc_fetestexcept and libc_feupdateenv.
+
 	* math/math_private.h: Define defaults for libc_feholdexcept_setround,
 	libc_feholdexcept_setroundf, libc_feholdexcept_setroundl.
 	* sysdeps/ieee754/dbl-64/e_exp2.c: Use libc_feholdexcept_setround.
