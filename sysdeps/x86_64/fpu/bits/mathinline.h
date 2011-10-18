@@ -167,6 +167,24 @@ __NTH (rintf (float __x))
   return __res;
 }
 
+#ifdef __USE_ISOC99
+/* Round to nearest integer without raising inexact exception.  */
+__MATH_INLINE double
+__NTH (nearbyint (double __x))
+{
+  double __res;
+  __asm ("roundsd $0xc, %1, %0" : "=x" (__res) : "xm" (__x));
+  return __res;
+}
+__MATH_INLINE float
+__NTH (nearbyintf (float __x))
+{
+  float __res;
+  __asm ("roundss $0xc, %1, %0" : "=x" (__res) : "xm" (__x));
+  return __res;
+}
+#endif
+
 __END_NAMESPACE_C99
 #  endif
 

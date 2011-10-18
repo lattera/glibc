@@ -1,5 +1,14 @@
 2011-10-18  Ulrich Drepper  <drepper@gmail.com>
 
+	* sysdeps/x86_64/fpu/multiarch/Makefile [math] (libm-sysdep-routines):
+	Add s_nearbyint-c and s_nearbyintf-c.
+	* sysdeps/x86_64/fpu/bits/mathinline.h: Define nearbyint and
+	nearbyintf inlines.
+	* sysdeps/x86_64/fpu/multiarch/s_nearbyint-c.c: New file.
+	* sysdeps/x86_64/fpu/multiarch/s_nearbyint.S: New file.
+	* sysdeps/x86_64/fpu/multiarch/s_nearbyintf-c.c: New file.
+	* sysdeps/x86_64/fpu/multiarch/s_nearbyintf.S: New file.
+
 	* math/math_private.h: Define defaults for libc_fegetround,
 	libc_fegetroundf, libc_fegetroundl, libc_fesetround, libc_fesetroundf,
 	libc_fesetroundl, libc_feholdexcept, libc_feholdexceptf,
