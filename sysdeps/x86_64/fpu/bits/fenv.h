@@ -101,8 +101,9 @@ fenv_t;
 __BEGIN_DECLS
 
 /* Optimized versions.  */
-extern int __feraiseexcept_renamed (int) __THROW __asm__ ("feraiseexcept");
-__extern_inline int feraiseexcept (int __excepts) __THROW
+extern int __NTH (__feraiseexcept_renamed (int)) __asm__ ("feraiseexcept");
+__extern_inline int
+__NTH (feraiseexcept (int __excepts))
 {
   if (__builtin_constant_p (__excepts)
       && (__excepts & ~(FE_INVALID | FE_DIVBYZERO)) == 0)
