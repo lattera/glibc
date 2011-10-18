@@ -53,8 +53,19 @@ __ieee754_exp2 (double x)
   static const double lomark = (double) (DBL_MIN_EXP - DBL_MANT_DIG - 1);
 
   /* Check for usual case.  */
-  if (isless (x, himark) && isgreaterequal (x, lomark))
+  if (__builtin_expect (isless (x, himark), 1))
     {
+      /* Exceptional cases:  */
+      if (__builtin_expect (! isgreaterequal (x, lomark), 0))
+	{
+	  if (__isinf (x))
+	    /* e^-inf == 0, with no error.  */
+	    return 0;
+	  else
+	    /* Underflow */
+	    return TWOM1000 * TWOM1000;
+	}
+
       static const double THREEp42 = 13194139533312.0;
       int tval, unsafe;
       double rx, x22, result;
@@ -119,16 +130,6 @@ __ieee754_exp2 (double x)
 	return result;
       else
 	return result * scale_u.d;
-    }
-  /* Exceptional cases:  */
-  else if (isless (x, himark))
-    {
-      if (__isinf (x))
-	/* e^-inf == 0, with no error.  */
-	return 0;
-      else
-	/* Underflow */
-	return TWOM1000 * TWOM1000;
     }
   else
     /* Return x, if x is a NaN or Inf; or overflow, otherwise.  */
