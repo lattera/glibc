@@ -1,5 +1,7 @@
 2011-10-17  Ulrich Drepper  <drepper@gmail.com>
 
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_frexp.c: New file.
+
 	* sysdeps/x86_64/fpu/math_private.h: Relax asm requirements for
 	recently added interfaces.
 	* sysdeps/x86_64/fpu/bits/mathinline.h: Likewise.
