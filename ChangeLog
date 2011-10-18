@@ -1,3 +1,10 @@
+2011-10-18  Andreas Schwab  <schwab@redhat.com>
+
+	* sysdeps/x86_64/fpu/bits/fenv.h: Add C linkage markers.
+	(__feraiseexcept_renamed): Add __THROW.
+	(feraiseexcept): Add __THROW.  Rename local variables to fix
+	namespace violations.
+
 2011-10-17  Ulrich Drepper  <drepper@gmail.com>
 
 	* sysdeps/ieee754/dbl-64/e_exp2.c (__ieee754_exp2): Small optimization.
