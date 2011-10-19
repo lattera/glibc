@@ -1,3 +1,11 @@
+2011-10-19  Ulrich Drepper  <drepper@gmail.com>
+
+	* sysdeps/x86_64/multiarch/init-arch.h: Define bit_AVX and index_AVX.
+	* sysdeps/x86_64/multiarch/strcmp-sse42.S: New file.  Split out from...
+	* sysdeps/x86_64/multiarch/strcmp.S: ...here.  Include strcmp-sse42.S
+	when compiling str{,n}casecmp and when AVX is available.  Hook up
+	new optimized code in initializers.
+
 2011-10-19  Andreas Schwab  <schwab@redhat.com>
 
 	* sysdeps/x86_64/fpu/math_private.h (libc_feupdateenv): Use

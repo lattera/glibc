@@ -1,4 +1,4 @@
-GNU C Library NEWS -- history of user-visible changes.  2011-10-15
+GNU C Library NEWS -- history of user-visible changes.  2011-10-19
 Copyright (C) 1992-2009, 2010, 2011 Free Software Foundation, Inc.
 See the end for copying conditions.
 
@@ -46,6 +46,12 @@ Version 2.15
   Implemented by Ulrich Drepper.
 
 * Integrate libm with gcc's -ffinite-math-only option.
+  Implemented by Ulrich Drepper.
+
+* Lots of generic, 64-bit, and x86-64-specific performance optimizations
+  to math functions.  Implemented by Ulrich Drepper.
+
+* Optimized strcasecmp and strncasecmp for AVX on x86-64.
   Implemented by Ulrich Drepper.
 
 Version 2.14
