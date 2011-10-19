@@ -1,3 +1,8 @@
+2011-10-19  Andreas Schwab  <schwab@redhat.com>
+
+	* sysdeps/x86_64/fpu/math_private.h (libc_feupdateenv): Use
+	__feraiseexcept instead of feraiseexcept.
+
 2011-10-18  Ulrich Drepper  <drepper@gmail.com>
 
 	* math/math_private.h: Define defaults for libc_fetestexcept and

@@ -192,7 +192,7 @@ do {								\
     unsigned int mxcsr;							      \
     asm volatile ("stmxcsr %0" : "=m" (*&mxcsr));			      \
     asm volatile ("ldmxcsr %0" : : "m" ((e)->__mxcsr));			      \
-    feraiseexcept (mxcsr & FE_ALL_EXCEPT);				      \
+    __feraiseexcept (mxcsr & FE_ALL_EXCEPT);				      \
   } while (0)
 #undef libc_feupdateenvf
 #define libc_feupdateenvf(e) libc_feupdateenv (e)
