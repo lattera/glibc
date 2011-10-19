@@ -100,7 +100,17 @@ _dl_sort_fini (struct link_map **maps, size_t nmaps, char *used, Lmid_t ns)
 	      /* Look through the relocation dependencies of the object.  */
 	      while (m-- > 0)
 		if (__builtin_expect (relmaps[m] == thisp, 0))
-		  goto move;
+		  {
+		    /* If a cycle exists with a link time dependency,
+		       preserve the latter.  */
+		    struct link_map **runp = thisp->l_initfini;
+		    if (runp != NULL)
+		      while (*runp != NULL)
+			if (__builtin_expect (*runp++ == maps[k], 0))
+			  goto ignore;
+		    goto move;
+		  }
+	    ignore:;
 	    }
 
 	  --k;

@@ -1,3 +1,9 @@
+2011-10-20  Andreas Schwab  <schwab@redhat.com>
+
+	[BZ #12892]
+	* elf/dl-fini.c (_dl_sort_fini): Ignore relocation dependency if
+	it would create a cycle with a link time dependency.
+
 2011-10-19  Ulrich Drepper  <drepper@gmail.com>
 
 	* sysdeps/x86_64/multiarch/rawmemchr.S: Small optimization to safe an
