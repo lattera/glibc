@@ -1,5 +1,10 @@
 2011-10-20  Carlos O'Donell  <carlos@systemhalted.org>
 
+	* sysdeps/unix/sysv/linux/hppa/bits/fcntl.h: Synchronize
+	with canonical fcntl.h.
+
+2011-10-20  Carlos O'Donell  <carlos@systemhalted.org>
+
 	* sysdeps/hppa/fpu/fegetenv.c: Add hidden alias.
 	* sysdeps/hppa/fpu/feupdateenv.c: Likewise.
 	* sysdeps/hppa/fpu/ftestexcept.c: Likewise.
