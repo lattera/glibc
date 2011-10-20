@@ -1,5 +1,11 @@
 2011-10-20  Carlos O'Donell  <carlos@systemhalted.org>
 
+	* sysdeps/hppa/fpu/fegetenv.c: Add hidden alias.
+	* sysdeps/hppa/fpu/feupdateenv.c: Likewise.
+	* sysdeps/hppa/fpu/ftestexcept.c: Likewise.
+
+2011-10-20  Carlos O'Donell  <carlos@systemhalted.org>
+
 	* sysdeps/hppa/dl-tls.h: Update copyright year.
 	Define TLS_DTV_UNALLOCATED.
 
