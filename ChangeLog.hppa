@@ -1,5 +1,10 @@
 2011-10-20  Carlos O'Donell  <carlos@systemhalted.org>
 
+	* sysdeps/hppa/dl-tls.h: Update copyright year.
+	Define TLS_DTV_UNALLOCATED.
+
+2011-10-20  Carlos O'Donell  <carlos@systemhalted.org>
+
 	* sysdeps/hppa/elf/configure.in: Always test for TLS support
 	and error out if missing.
 	* sysdeps/hppa/elf/configure: Regenerate.
