@@ -1,5 +1,10 @@
 2011-10-19  Ulrich Drepper  <drepper@gmail.com>
 
+	* sysdeps/x86_64/multiarch/rawmemchr.S: Small optimization to safe an
+	instruction.
+	* string/Makefile (strop-tests): Add rawmemchr.
+	* string/test-rawmemchr.c: New file.
+
 	* sysdeps/x86_64/multiarch/init-arch.h: Define bit_AVX and index_AVX.
 	* sysdeps/x86_64/multiarch/strcmp-sse42.S: New file.  Split out from...
 	* sysdeps/x86_64/multiarch/strcmp.S: ...here.  Include strcmp-sse42.S

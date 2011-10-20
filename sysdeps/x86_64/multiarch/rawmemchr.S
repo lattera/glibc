@@ -43,19 +43,18 @@ strong_alias (rawmemchr, __rawmemchr)
 
 
 	.section .text.sse4.2,"ax",@progbits
-	.align 	16
+	.align	16
 	.type	__rawmemchr_sse42, @function
 __rawmemchr_sse42:
 	cfi_startproc
 	CALL_MCOUNT
 	movd	%esi, %xmm1
 	movq	%rdi, %rcx
-	punpcklbw %xmm1, %xmm1
+	pxor	%xmm2, %xmm2
 	andq	$~15, %rdi
-	punpcklbw %xmm1, %xmm1
 	orl	$0xffffffff, %esi
+	pshufb	%xmm2, %xmm1
 	movdqa	(%rdi), %xmm0
-	pshufd	$0, %xmm1, %xmm1
 	subq	%rdi, %rcx
 	pcmpeqb	%xmm1, %xmm0
 	shl	%cl, %esi
