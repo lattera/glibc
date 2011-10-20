@@ -6,6 +6,9 @@
 	* sysdeps/unix/sysv/linux/hppa/linuxthreads/malloc-machine.h: Remove.
 	* sysdeps/unix/sysv/linux/hppa/linuxthreads/pt-initfini.c: Remove.
 	* sysdeps/unix/sysv/linux/hppa/linuxthreads/sysdep-cancel.h: Remove.
+	* sysdeps/hppa/linuxthreads/pspinlock.c: Remove.
+	* sysdeps/hppa/linuxthreads/pt-machine.h: Remove.
+	* sysdeps/hppa/linuxthreads/tls.h: Remove.
 
 2011-10-20  Carlos O'Donell  <carlos@systemhalted.org>
 
