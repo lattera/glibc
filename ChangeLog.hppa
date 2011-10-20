@@ -1,5 +1,12 @@
 2011-10-20  Carlos O'Donell  <carlos@systemhalted.org>
 
+	* sysdeps/hppa/elf/configure.in: Always test for TLS support
+	and error out if missing.
+	* sysdeps/hppa/elf/configure: Regenerate.
+	* sysdeps/hppa/configure: Regenerate.
+
+2011-10-20  Carlos O'Donell  <carlos@systemhalted.org>
+
 	* sysdeps/hppa/nptl/tls.h: Update copyright year.
 	Remove HAVE_TLS_SUPPORT check.
 
