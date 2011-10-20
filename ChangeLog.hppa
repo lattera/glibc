@@ -1,4 +1,9 @@
-2011-10-17  Guy Martin <gmsoft@tuxicoman.be>
+2011-10-20  Carlos O'Donell  <carlos@systemhalted.org>
+
+	* sysdeps/hppa/nptl/tls.h: Update copyright year.
+	Remove HAVE_TLS_SUPPORT check.
+
+2011-10-17  Guy Martin  <gmsoft@tuxicoman.be>
 
 	* sysdeps/unix/sysv/linux/hppa/sys/epoll.h
 	Fix EPOLL_CLOEXEC and EPOLL_NONBLOCK to match kernel definition.
