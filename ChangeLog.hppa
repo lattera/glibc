@@ -1,5 +1,14 @@
 2011-10-20  Carlos O'Donell  <carlos@systemhalted.org>
 
+	* sysdeps/unix/sysv/linux/hppa/linuxthreads/aio_cancel.c: Remove.
+	* sysdeps/unix/sysv/linux/hppa/linuxthreads/bits/initspin.h: Remove.
+	* sysdeps/unix/sysv/linux/hppa/linuxthreads/bits/pthreadtypes.h: Remove.
+	* sysdeps/unix/sysv/linux/hppa/linuxthreads/malloc-machine.h: Remove.
+	* sysdeps/unix/sysv/linux/hppa/linuxthreads/pt-initfini.c: Remove.
+	* sysdeps/unix/sysv/linux/hppa/linuxthreads/sysdep-cancel.h: Remove.
+
+2011-10-20  Carlos O'Donell  <carlos@systemhalted.org>
+
 	* sysdeps/hppa/stackinfo.h: Update copyright year.
 	Include elf.h and define DEFAULT_STACK_PERMS.
 
