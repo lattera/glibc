@@ -1,5 +1,10 @@
 2011-10-20  Carlos O'Donell  <carlos@systemhalted.org>
 
+	* sysdeps/hppa/stackinfo.h: Update copyright year.
+	Include elf.h and define DEFAULT_STACK_PERMS.
+
+2011-10-20  Carlos O'Donell  <carlos@systemhalted.org>
+
 	* sysdeps/unix/sysv/linux/hppa/bits/fcntl.h: Synchronize
 	with canonical fcntl.h.
 
