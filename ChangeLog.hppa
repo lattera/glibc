@@ -1,3 +1,16 @@
+2011-10-17  Guy Martin <gmsoft@tuxicoman.be>
+
+	* sysdeps/unix/sysv/linux/hppa/sys/epoll.h
+	Fix EPOLL_CLOEXEC and EPOLL_NONBLOCK to match kernel definition.
+	* sysdeps/unix/sysv/linux/hppa/sys/eventfd.h
+	Fix EFD_CLOEXEC and EFD_NONBLOCK to match kernel definition.
+	* sysdeps/unix/sysv/linux/hppa/sys/inotify.h
+	Fix IN_CLOEXEC and IN_NONBLOCK to match kernel definition.
+	* sysdeps/unix/sysv/linux/hppa/sys/signalfd.h
+	Fix SFD_CLOEXEC and SFD_NONBLOCK to match kernel definition.
+	* sysdeps/unix/sysv/linux/hppa/sys/timerfd.h
+	Fix TFD_CLOEXEC and TFD_NONBLOCK to match kernel definition.
+
 2011-10-05  Andreas Schwab  <schwab@redhat.com>
 
 	* sysdeps/hppa/dl-machine.h (elf_machine_rela)
