@@ -94,4 +94,7 @@ This web page gives detailed information on how to report bugs properly.
 
 The GNU C Library is free software.  See the file COPYING.LIB for copying
 conditions, and LICENSES for notices about a few contributions that require
-these additional notices to be distributed.
+these additional notices to be distributed.  License copyright years may be
+listed using range notation, e.g., 2000-2011, indicating that every year in
+the range, inclusive, is a copyrightable year that would otherwise be listed
+individually.
