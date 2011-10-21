@@ -1,3 +1,8 @@
+2011-10-21  Carlos O'Donell  <carlos@systemhalted.org>
+
+	* sysdeps/unix/sysv/linux/hppa/sys/procfs.h: Update copyright year.
+	Do not include signal.h and sys/ucontext.h. 
+
 2011-10-20  Carlos O'Donell  <carlos@systemhalted.org>
 
 	* sysdeps/unix/sysv/linux/hppa/nptl/sysdep-cancel.h: Update copyright 
