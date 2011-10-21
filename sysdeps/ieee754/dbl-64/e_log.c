@@ -1,7 +1,7 @@
 /*
  * IBM Accurate Mathematical Library
  * written by International Business Machines Corp.
- * Copyright (C) 2001 Free Software Foundation
+ * Copyright (C) 2001, 2011 Free Software Foundation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -68,7 +68,7 @@ double __ieee754_log(double x) {
 
   num.d = x;  ux = num.i[HIGH_HALF];  dx = num.i[LOW_HALF];
   n=0;
-  if (ux < 0x00100000) {
+  if (__builtin_expect(ux < 0x00100000, 0)) {
     if (__builtin_expect(((ux & 0x7fffffff) | dx) == 0, 0))
       return MHALF/ZERO; /* return -INF */
     if (__builtin_expect(ux < 0, 0))
@@ -82,7 +82,7 @@ double __ieee754_log(double x) {
   /* Regular values of x */
 
   w = x-ONE;
-  if (ABS(w) > U03) { goto case_03; }
+  if (__builtin_expect(ABS(w) > U03, 1)) { goto case_03; }
 
 
   /*--- Stage I, the case abs(x-1) < 0.03 */
