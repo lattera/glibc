@@ -1,5 +1,5 @@
 /* FMA version of fmaf.
-   Copyright (C) 2009, 2010 Free Software Foundation, Inc.
+   Copyright (C) 2009, 2010, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -27,13 +27,29 @@ extern float __fmaf_sse2 (float x, float y, float z) attribute_hidden;
 
 
 static float
-__fmaf_fma (float x, float y, float z)
+__fmaf_fma3 (float x, float y, float z)
 {
   asm ("vfmadd213ss %3, %2, %0" : "=x" (x) : "0" (x), "x" (y), "xm" (z));
   return x;
 }
 
-libm_ifunc (__fmaf, HAS_FMA ? __fmaf_fma : __fmaf_sse2);
+
+# ifdef HAVE_FMA4_SUPPORT
+static float
+__fmaf_fma4 (float x, float y, float z)
+{
+  asm ("vfmaddss %3, %2, %1, %0" : "=x" (x) : "x" (x), "xm" (y), "xm" (z));
+  return x;
+}
+# else
+#  undef HAS_FMA4
+#  define HAS_FMA4 0
+#  define __fmaf_fma4 NULL
+# endif
+
+
+libm_ifunc (__fmaf, HAS_FMA
+	    ? __fmaf_fma3 : (HAS_FMA4 ? __fmaf_fma4 : __fmaf_sse2));
 weak_alias (__fmaf, fmaf)
 
 # define __fmaf __fmaf_sse2

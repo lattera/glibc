@@ -67,6 +67,17 @@ if test $libc_cv_cc_avx = yes; then
   AC_DEFINE(HAVE_AVX_SUPPORT)
 fi
 
+dnl Check if -mfma4 works.
+AC_CACHE_CHECK(for FMA4 support, libc_cv_cc_fma4, [dnl
+if AC_TRY_COMMAND([${CC-cc} -mfma4 -xc /dev/null -S -o /dev/null]); then
+  libc_cv_cc_fma4=yes
+else
+  libc_cv_cc_fma4=no
+fi])
+if test $libc_cv_cc_fma4 = yes; then
+  AC_DEFINE(HAVE_FMA4_SUPPORT)
+fi
+
 dnl Check if -mno-vzeroupper works.
 AC_CACHE_CHECK(for -mno-vzeroupper support, libc_cv_cc_novzeroupper, [dnl
 if AC_TRY_COMMAND([${CC-cc} -mno-vzeroupper -xc /dev/null -S -o /dev/null]); then

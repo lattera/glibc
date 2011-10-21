@@ -1,5 +1,14 @@
 2011-10-20  Ulrich Drepper  <drepper@gmail.com>
 
+	* sysdeps/i386/configure.in: Test for -mfma4 option.
+	* config.h.in: Add HAVE_FMA4_SUPPORT entry.
+	* sysdeps/x86_64/multiarch/init-arch.h: Define HAS_FMA4 and
+	COMMON_CPUID_INDEX_80000001.
+	* sysdeps/x86_64/multiarch/init-arch.c: Read 80000001 leaf for AMD.
+	* sysdeps/x86_64/fpu/multiarch/s_fma.c: Test for FMA4 support and
+	use it if FMA3 is not supported.
+	* sysdeps/x86_64/fpu/multiarch/s_fmaf.c: Likewise.
+
 	* sysdeps/x86_64/multiarch/s_fma.c: Moved to ../fpu/multiarch.
 	* sysdeps/x86_64/multiarch/s_fmaf.c: Likewise.
 

@@ -118,6 +118,9 @@
 /* Define if gcc supports AVX.  */
 #undef	HAVE_AVX_SUPPORT
 
+/* Define if gcc supports FMA4.  */
+#undef	HAVE_FMA4_SUPPORT
+
 /* Define if the compiler's exception support is based on libunwind.  */
 #undef	HAVE_CC_WITH_LIBUNWIND
 

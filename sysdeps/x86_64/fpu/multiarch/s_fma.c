@@ -1,5 +1,5 @@
 /* FMA version of fma.
-   Copyright (C) 2009, 2010 Free Software Foundation, Inc.
+   Copyright (C) 2009, 2010, 2011 Free Software Foundation, Inc.
    Contributed by Intel Corporation.
    This file is part of the GNU C Library.
 
@@ -28,13 +28,29 @@ extern double __fma_sse2 (double x, double y, double z) attribute_hidden;
 
 
 static double
-__fma_fma (double x, double y, double z)
+__fma_fma3 (double x, double y, double z)
 {
   asm ("vfmadd213sd %3, %2, %0" : "=x" (x) : "0" (x), "x" (y), "xm" (z));
   return x;
 }
 
-libm_ifunc (__fma, HAS_FMA ? __fma_fma : __fma_sse2);
+
+# ifdef HAVE_FMA4_SUPPORT
+static double
+__fma_fma4 (double x, double y, double z)
+{
+  asm ("vfmaddsd %3, %2, %1, %0" : "=x" (x) : "x" (x), "xm" (y), "xm" (z));
+  return x;
+}
+# else
+#  undef HAS_FMA4
+#  define HAS_FMA4 0
+#  define __fma_fma4 NULL
+# endif
+
+
+libm_ifunc (__fma, HAS_FMA
+	    ? __fma_fma3 : (HAS_FMA4 ? __fma_fma4 : __fma_sse2));
 weak_alias (__fma, fma)
 
 # define __fma __fma_sse2

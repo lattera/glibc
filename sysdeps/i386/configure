@@ -167,7 +167,7 @@ sed 's/^/| /' conftest.$ac_ext >&5
 
 	ac_retval=1
 fi
-  eval $as_lineno_stack; test "x$as_lineno_stack" = x && { as_lineno=; unset as_lineno;}
+  eval $as_lineno_stack; ${as_lineno_stack:+:} unset as_lineno
   as_fn_set_status $ac_retval
 
 } # ac_fn_c_try_compile
@@ -193,7 +193,7 @@ $as_echo "$ac_try_echo"; } >&5
     mv -f conftest.er1 conftest.err
   fi
   $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
-  test $ac_status = 0; } >/dev/null && {
+  test $ac_status = 0; } > conftest.i && {
 	 test -z "$ac_c_preproc_warn_flag$ac_c_werror_flag" ||
 	 test ! -s conftest.err
        }; then :
@@ -204,7 +204,7 @@ sed 's/^/| /' conftest.$ac_ext >&5
 
     ac_retval=1
 fi
-  eval $as_lineno_stack; test "x$as_lineno_stack" = x && { as_lineno=; unset as_lineno;}
+  eval $as_lineno_stack; ${as_lineno_stack:+:} unset as_lineno
   as_fn_set_status $ac_retval
 
 } # ac_fn_c_try_cpp
@@ -217,10 +217,10 @@ fi
 ac_fn_c_check_header_mongrel ()
 {
   as_lineno=${as_lineno-"$1"} as_lineno_stack=as_lineno_stack=$as_lineno_stack
-  if eval "test \"\${$3+set}\"" = set; then :
+  if eval \${$3+:} false; then :
   { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $2" >&5
 $as_echo_n "checking for $2... " >&6; }
-if eval "test \"\${$3+set}\"" = set; then :
+if eval \${$3+:} false; then :
   $as_echo_n "(cached) " >&6
 fi
 eval ac_res=\$$3
@@ -256,7 +256,7 @@ if ac_fn_c_try_cpp "$LINENO"; then :
 else
   ac_header_preproc=no
 fi
-rm -f conftest.err conftest.$ac_ext
+rm -f conftest.err conftest.i conftest.$ac_ext
 { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_header_preproc" >&5
 $as_echo "$ac_header_preproc" >&6; }
 
@@ -283,7 +283,7 @@ $as_echo "$as_me: WARNING: $2: proceeding with the compiler's result" >&2;}
 esac
   { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $2" >&5
 $as_echo_n "checking for $2... " >&6; }
-if eval "test \"\${$3+set}\"" = set; then :
+if eval \${$3+:} false; then :
   $as_echo_n "(cached) " >&6
 else
   eval "$3=\$ac_header_compiler"
@@ -292,7 +292,7 @@ eval ac_res=\$$3
 	       { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_res" >&5
 $as_echo "$ac_res" >&6; }
 fi
-  eval $as_lineno_stack; test "x$as_lineno_stack" = x && { as_lineno=; unset as_lineno;}
+  eval $as_lineno_stack; ${as_lineno_stack:+:} unset as_lineno
 
 } # ac_fn_c_check_header_mongrel
 
@@ -333,7 +333,7 @@ sed 's/^/| /' conftest.$ac_ext >&5
        ac_retval=$ac_status
 fi
   rm -rf conftest.dSYM conftest_ipa8_conftest.oo
-  eval $as_lineno_stack; test "x$as_lineno_stack" = x && { as_lineno=; unset as_lineno;}
+  eval $as_lineno_stack; ${as_lineno_stack:+:} unset as_lineno
   as_fn_set_status $ac_retval
 
 } # ac_fn_c_try_run
@@ -347,7 +347,7 @@ ac_fn_c_check_header_compile ()
   as_lineno=${as_lineno-"$1"} as_lineno_stack=as_lineno_stack=$as_lineno_stack
   { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $2" >&5
 $as_echo_n "checking for $2... " >&6; }
-if eval "test \"\${$3+set}\"" = set; then :
+if eval \${$3+:} false; then :
   $as_echo_n "(cached) " >&6
 else
   cat confdefs.h - <<_ACEOF >conftest.$ac_ext
@@ -365,7 +365,7 @@ fi
 eval ac_res=\$$3
 	       { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_res" >&5
 $as_echo "$ac_res" >&6; }
-  eval $as_lineno_stack; test "x$as_lineno_stack" = x && { as_lineno=; unset as_lineno;}
+  eval $as_lineno_stack; ${as_lineno_stack:+:} unset as_lineno
 
 } # ac_fn_c_check_header_compile
 # This file is generated from configure.in by Autoconf.  DO NOT EDIT!
@@ -375,7 +375,7 @@ $as_echo "$ac_res" >&6; }
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for grep that handles long lines and -e" >&5
 $as_echo_n "checking for grep that handles long lines and -e... " >&6; }
-if test "${ac_cv_path_GREP+set}" = set; then :
+if ${ac_cv_path_GREP+:} false; then :
   $as_echo_n "(cached) " >&6
 else
   if test -z "$GREP"; then
@@ -438,7 +438,7 @@ $as_echo "$ac_cv_path_GREP" >&6; }
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for egrep" >&5
 $as_echo_n "checking for egrep... " >&6; }
-if test "${ac_cv_path_EGREP+set}" = set; then :
+if ${ac_cv_path_EGREP+:} false; then :
   $as_echo_n "(cached) " >&6
 else
   if echo a | $GREP -E '(a|b)' >/dev/null 2>&1
@@ -505,7 +505,7 @@ $as_echo "$ac_cv_path_EGREP" >&6; }
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for ANSI C header files" >&5
 $as_echo_n "checking for ANSI C header files... " >&6; }
-if test "${ac_cv_header_stdc+set}" = set; then :
+if ${ac_cv_header_stdc+:} false; then :
   $as_echo_n "(cached) " >&6
 else
   cat confdefs.h - <<_ACEOF >conftest.$ac_ext
@@ -633,7 +633,7 @@ done
 
 
 ac_fn_c_check_header_mongrel "$LINENO" "cpuid.h" "ac_cv_header_cpuid_h" "$ac_includes_default"
-if test "x$ac_cv_header_cpuid_h" = x""yes; then :
+if test "x$ac_cv_header_cpuid_h" = xyes; then :
 
 else
   as_fn_error $? "gcc must provide the <cpuid.h> header" "$LINENO" 5
@@ -643,7 +643,7 @@ fi
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking if -g produces usable source locations for assembler-with-cpp" >&5
 $as_echo_n "checking if -g produces usable source locations for assembler-with-cpp... " >&6; }
-if test "${libc_cv_cpp_asm_debuginfo+set}" = set; then :
+if ${libc_cv_cpp_asm_debuginfo+:} false; then :
   $as_echo_n "(cached) " >&6
 else
   cat > conftest.S <<EOF
@@ -693,7 +693,7 @@ fi
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for SSE4 support" >&5
 $as_echo_n "checking for SSE4 support... " >&6; }
-if test "${libc_cv_cc_sse4+set}" = set; then :
+if ${libc_cv_cc_sse4+:} false; then :
   $as_echo_n "(cached) " >&6
 else
   if { ac_try='${CC-cc} -msse4 -xc /dev/null -S -o /dev/null'
@@ -716,7 +716,7 @@ fi
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for assembler -mtune=i686 support" >&5
 $as_echo_n "checking for assembler -mtune=i686 support... " >&6; }
-if test "${libc_cv_as_i686+set}" = set; then :
+if ${libc_cv_as_i686+:} false; then :
   $as_echo_n "(cached) " >&6
 else
   if { ac_try='${CC-cc} -Wa,-mtune=i686 -xc /dev/null -S -o /dev/null'
@@ -735,7 +735,7 @@ $as_echo "$libc_cv_as_i686" >&6; }
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for AVX support" >&5
 $as_echo_n "checking for AVX support... " >&6; }
-if test "${libc_cv_cc_avx+set}" = set; then :
+if ${libc_cv_cc_avx+:} false; then :
   $as_echo_n "(cached) " >&6
 else
   if { ac_try='${CC-cc} -mavx -xc /dev/null -S -o /dev/null'
@@ -756,9 +756,32 @@ if test $libc_cv_cc_avx = yes; then
 
 fi
 
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for FMA4 support" >&5
+$as_echo_n "checking for FMA4 support... " >&6; }
+if ${libc_cv_cc_fma4+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  if { ac_try='${CC-cc} -mfma4 -xc /dev/null -S -o /dev/null'
+  { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; }; then
+  libc_cv_cc_fma4=yes
+else
+  libc_cv_cc_fma4=no
+fi
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_cc_fma4" >&5
+$as_echo "$libc_cv_cc_fma4" >&6; }
+if test $libc_cv_cc_fma4 = yes; then
+  $as_echo "#define HAVE_FMA4_SUPPORT 1" >>confdefs.h
+
+fi
+
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for -mno-vzeroupper support" >&5
 $as_echo_n "checking for -mno-vzeroupper support... " >&6; }
-if test "${libc_cv_cc_novzeroupper+set}" = set; then :
+if ${libc_cv_cc_novzeroupper+:} false; then :
   $as_echo_n "(cached) " >&6
 else
   if { ac_try='${CC-cc} -mno-vzeroupper -xc /dev/null -S -o /dev/null'

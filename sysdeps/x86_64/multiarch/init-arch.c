@@ -86,7 +86,7 @@ __init_cpu_features (void)
 
 	    default:
 	      /* Unknown family 0x06 processors.  Assuming this is one
-	         of Core i3/i5/i7 processors if AVX is available.  */
+		 of Core i3/i5/i7 processors if AVX is available.  */
 	      if ((ecx & bit_AVX) == 0)
 		break;
 
@@ -131,6 +131,14 @@ __init_cpu_features (void)
       if ((ecx & 0x200))
 	__cpu_features.feature[index_Prefer_SSE_for_memop]
 	  |= bit_Prefer_SSE_for_memop;
+
+      __cpuid (0x80000000, eax, ebx, ecx, edx);
+      if (eax >= 0x80000001)
+	__cpuid (0x80000001,
+		 __cpu_features.cpuid[COMMON_CPUID_INDEX_80000001].eax,
+		 __cpu_features.cpuid[COMMON_CPUID_INDEX_80000001].ebx,
+		 __cpu_features.cpuid[COMMON_CPUID_INDEX_80000001].ecx,
+		 __cpu_features.cpuid[COMMON_CPUID_INDEX_80000001].edx);
     }
   else
     kind = arch_kind_other;
