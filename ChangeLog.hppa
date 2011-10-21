@@ -1,5 +1,24 @@
 2011-10-20  Carlos O'Donell  <carlos@systemhalted.org>
 
+	* sysdeps/unix/sysv/linux/hppa/nptl/sysdep-cancel.h: Update copyright 
+	year. 
+	(PSEUDO): Define __*_nocancel version. Add CFI directives to __*_nocancel
+	and normal version.
+	(PUSHARGS_1): Add CFI directive.
+	(PUSHARGS_2): Likewise.
+	(PUSHARGS_3): Likewise.
+	(PUSHARGS_4): Likewise.
+	(PUSHARGS_5): Likewise.
+	(PUSHARGS_6): Likewise.
+	(POPARGS_1): Likewise.
+	(POPARGS_2): Likewise.
+	(POPARGS_3): Likewise.
+	(POPARGS_4): Likewise.
+	(POPARGS_5): Likewise.
+	(POPARGS_6): Likewise.
+
+2011-10-20  Carlos O'Donell  <carlos@systemhalted.org>
+
 	* sysdeps/unix/sysv/linux/hppa/linuxthreads/aio_cancel.c: Remove.
 	* sysdeps/unix/sysv/linux/hppa/linuxthreads/bits/initspin.h: Remove.
 	* sysdeps/unix/sysv/linux/hppa/linuxthreads/bits/pthreadtypes.h: Remove.
