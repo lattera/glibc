@@ -45,7 +45,7 @@ __fma_fma4 (double x, double y, double z)
 # else
 #  undef HAS_FMA4
 #  define HAS_FMA4 0
-#  define __fma_fma4 NULL
+#  define __fma_fma4 ((void *) 0)
 # endif
 
 

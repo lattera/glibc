@@ -44,7 +44,7 @@ __fmaf_fma4 (float x, float y, float z)
 # else
 #  undef HAS_FMA4
 #  define HAS_FMA4 0
-#  define __fmaf_fma4 NULL
+#  define __fmaf_fma4 ((void *) 0)
 # endif
 
 
