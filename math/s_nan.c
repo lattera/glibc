@@ -25,6 +25,7 @@
 #include <ieee754.h>
 
 
+#undef __nan
 double
 __nan (const char *tagp)
 {
