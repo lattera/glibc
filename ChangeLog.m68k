@@ -1,3 +1,9 @@
+2011-10-22  Andreas Schwab  <schwab@linux-m68k.org>
+
+	* sysdeps/m68k/m680x0/fpu/s_ccos.c: Remove.
+	* sysdeps/m68k/m680x0/fpu/s_ccosf.c: Remove.
+	* sysdeps/m68k/m680x0/fpu/s_ccosl.c: Remove.
+
 2011-10-13  Andreas Schwab  <schwab@linux-m68k.org>
 
 	* sysdeps/m68k/m680x0/fpu/e_acos.c: Add __*_finite alias.
