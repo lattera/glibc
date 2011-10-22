@@ -27,52 +27,12 @@
 __complex__ float
 __ccosf (__complex__ float x)
 {
-  __complex__ float res;
+  __complex__ float y;
 
-  if (!isfinite (__real__ x) || __isnanf (__imag__ x))
-    {
-      if (__real__ x == 0.0 || __imag__ x == 0.0)
-	{
-	  __real__ res = __nanf ("");
-	  __imag__ res = 0.0;
+  __real__ y = -__imag__ x;
+  __imag__ y = __real__ x;
 
-#ifdef FE_INVALID
-	  if (__isinf_nsf (__real__ x))
-	    feraiseexcept (FE_INVALID);
-#endif
-	}
-      else if (__isinf_nsf (__imag__ x))
-	{
-	  __real__ res = HUGE_VALF;
-	  __imag__ res = __nanf ("");
-
-#ifdef FE_INVALID
-	  if (__isinf_nsf (__real__ x))
-	    feraiseexcept (FE_INVALID);
-#endif
-	}
-      else
-	{
-	  __real__ res = __nanf ("");
-	  __imag__ res = __nanf ("");
-
-#ifdef FE_INVALID
-	  if (isfinite (__imag__ x))
-	    feraiseexcept (FE_INVALID);
-#endif
-	}
-    }
-  else
-    {
-      __complex__ float y;
-
-      __real__ y = -__imag__ x;
-      __imag__ y = __real__ x;
-
-      res = __ccoshf (y);
-    }
-
-  return res;
+  return __ccoshf (y);
 }
 #ifndef __ccosf
 weak_alias (__ccosf, ccosf)

@@ -1,5 +1,5 @@
 /* Return arc hyperbole sine for float value.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -20,6 +20,7 @@
 
 #include <complex.h>
 #include <math.h>
+#include <math_private.h>
 
 
 __complex__ float

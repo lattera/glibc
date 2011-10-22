@@ -55,7 +55,7 @@ __ieee754_acoshl(long double x)
 	    return __ieee754_logl(2.0*x-one/(x+__ieee754_sqrtl(t-one)));
 	} else {			/* 1<x<2 */
 	    t = x-one;
-	    return __log1pl(t+__sqrtl(2.0*t+t*t));
+	    return __log1pl(t+__ieee754_sqrtl(2.0*t+t*t));
 	}
 }
 strong_alias (__ieee754_acoshl, __acoshl_finite)

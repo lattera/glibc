@@ -27,51 +27,11 @@
 __complex__ long double
 __ccosl (__complex__ long double x)
 {
-  __complex__ long double res;
+  __complex__ long double y;
 
-  if (!isfinite (__real__ x) || __isnanl (__imag__ x))
-    {
-      if (__real__ x == 0.0 || __imag__ x == 0.0)
-	{
-	  __real__ res = __nanl ("");
-	  __imag__ res = 0.0;
+  __real__ y = -__imag__ x;
+  __imag__ y = __real__ x;
 
-#ifdef FE_INVALID
-	  if (__isinf_nsl (__real__ x))
-	    feraiseexcept (FE_INVALID);
-#endif
-	}
-      else if (__isinf_nsl (__imag__ x))
-	{
-	  __real__ res = HUGE_VALL;
-	  __imag__ res = __nanl ("");
-
-#ifdef FE_INVALID
-	  if (__isinf_nsl (__real__ x))
-	    feraiseexcept (FE_INVALID);
-#endif
-	}
-      else
-	{
-	  __real__ res = __nanl ("");
-	  __imag__ res = __nanl ("");
-
-#ifdef FE_INVALID
-	  if (isfinite (__imag__ x))
-	    feraiseexcept (FE_INVALID);
-#endif
-	}
-    }
-  else
-    {
-      __complex__ long double y;
-
-      __real__ y = -__imag__ x;
-      __imag__ y = __real__ x;
-
-      res = __ccoshl (y);
-    }
-
-  return res;
+  return __ccoshl (y);
 }
 weak_alias (__ccosl, ccosl)

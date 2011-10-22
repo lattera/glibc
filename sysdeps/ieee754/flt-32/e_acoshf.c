@@ -52,7 +52,7 @@ ln2	= 6.9314718246e-01;  /* 0x3f317218 */
 	    return __ieee754_logf((float)2.0*x-one/(x+__ieee754_sqrtf(t-one)));
 	} else {			/* 1<x<2 */
 	    t = x-one;
-	    return __log1pf(t+__sqrtf((float)2.0*t+t*t));
+	    return __log1pf(t+__ieee754_sqrtf((float)2.0*t+t*t));
 	}
 }
 strong_alias (__ieee754_acoshf, __acoshf_finite)

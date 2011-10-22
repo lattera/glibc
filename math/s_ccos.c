@@ -27,52 +27,12 @@
 __complex__ double
 __ccos (__complex__ double x)
 {
-  __complex__ double res;
+  __complex__ double y;
 
-  if (!isfinite (__real__ x) || __isnan (__imag__ x))
-    {
-      if (__real__ x == 0.0 || __imag__ x == 0.0)
-	{
-	  __real__ res = __nan ("");
-	  __imag__ res = 0.0;
+  __real__ y = -__imag__ x;
+  __imag__ y = __real__ x;
 
-#ifdef FE_INVALID
-	  if (__isinf_ns (__real__ x))
-	    feraiseexcept (FE_INVALID);
-#endif
-	}
-      else if (__isinf_ns (__imag__ x))
-	{
-	  __real__ res = HUGE_VAL;
-	  __imag__ res = __nan ("");
-
-#ifdef FE_INVALID
-	  if (__isinf_ns (__real__ x))
-	    feraiseexcept (FE_INVALID);
-#endif
-	}
-      else
-	{
-	  __real__ res = __nan ("");
-	  __imag__ res = __nan ("");
-
-#ifdef FE_INVALID
-	  if (isfinite (__imag__ x))
-	    feraiseexcept (FE_INVALID);
-#endif
-	}
-    }
-  else
-    {
-      __complex__ double y;
-
-      __real__ y = -__imag__ x;
-      __imag__ y = __real__ x;
-
-      res = __ccosh (y);
-    }
-
-  return res;
+  return __ccosh (y);
 }
 weak_alias (__ccos, ccos)
 #ifdef NO_LONG_DOUBLE

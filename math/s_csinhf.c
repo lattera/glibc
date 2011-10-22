@@ -1,5 +1,5 @@
 /* Complex sine hyperbole function for float.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -35,10 +35,10 @@ __csinhf (__complex__ float x)
 
   __real__ x = fabsf (__real__ x);
 
-  if (rcls >= FP_ZERO)
+  if (__builtin_expect (rcls >= FP_ZERO, 1))
     {
       /* Real part is finite.  */
-      if (icls >= FP_ZERO)
+      if (__builtin_expect (icls >= FP_ZERO, 1))
 	{
 	  /* Imaginary part is finite.  */
 	  float sinh_val = __ieee754_sinhf (__real__ x);
@@ -61,32 +61,22 @@ __csinhf (__complex__ float x)
 	      __real__ retval = __copysignf (0.0, negate ? -1.0 : 1.0);
 	      __imag__ retval = __nanf ("") + __nanf ("");
 
-#ifdef FE_INVALID
 	      if (icls == FP_INFINITE)
 		feraiseexcept (FE_INVALID);
-#endif
 	    }
 	  else
 	    {
 	      __real__ retval = __nanf ("");
 	      __imag__ retval = __nanf ("");
 
-#ifdef FE_INVALID
 	      feraiseexcept (FE_INVALID);
-#endif
 	    }
 	}
     }
-  else if (rcls == FP_INFINITE)
+  else if (__builtin_expect (rcls == FP_INFINITE, 1))
     {
       /* Real part is infinite.  */
-      if (icls == FP_ZERO)
-	{
-	  /* Imaginary part is 0.0.  */
-	  __real__ retval = negate ? -HUGE_VALF : HUGE_VALF;
-	  __imag__ retval = __imag__ x;
-	}
-      else if (icls > FP_ZERO)
+      if (__builtin_expect (icls > FP_ZERO, 1))
 	{
 	  /* Imaginary part is finite.  */
 	  float sinix, cosix;
@@ -98,6 +88,12 @@ __csinhf (__complex__ float x)
 
 	  if (negate)
 	    __real__ retval = -__real__ retval;
+	}
+      else if (icls == FP_ZERO)
+	{
+	  /* Imaginary part is 0.0.  */
+	  __real__ retval = negate ? -HUGE_VALF : HUGE_VALF;
+	  __imag__ retval = __imag__ x;
 	}
       else
 	{

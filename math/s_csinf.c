@@ -1,5 +1,5 @@
 /* Complex sine function for float.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -35,10 +35,10 @@ __csinf (__complex__ float x)
 
   __real__ x = fabsf (__real__ x);
 
-  if (icls >= FP_ZERO)
+  if (__builtin_expect (icls >= FP_ZERO, 1))
     {
       /* Imaginary part is finite.  */
-      if (rcls >= FP_ZERO)
+      if (__builtin_expect (rcls >= FP_ZERO, 1))
 	{
 	  /* Real part is finite.  */
 	  float sinh_val = __ieee754_sinhf (__imag__ x);
@@ -61,19 +61,15 @@ __csinf (__complex__ float x)
 	      __real__ retval = __nanf ("");
 	      __imag__ retval = __imag__ x;
 
-#ifdef FE_INVALID
 	      if (rcls == FP_INFINITE)
 		feraiseexcept (FE_INVALID);
-#endif
 	    }
 	  else
 	    {
 	      __real__ retval = __nanf ("");
 	      __imag__ retval = __nanf ("");
 
-#ifdef FE_INVALID
 	      feraiseexcept (FE_INVALID);
-#endif
 	    }
 	}
     }
@@ -107,10 +103,8 @@ __csinf (__complex__ float x)
 	  __real__ retval = __nanf ("");
 	  __imag__ retval = HUGE_VALF;
 
-#ifdef FE_INVALID
 	  if (rcls == FP_INFINITE)
 	    feraiseexcept (FE_INVALID);
-#endif
 	}
     }
   else

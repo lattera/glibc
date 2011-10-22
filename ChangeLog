@@ -1,3 +1,29 @@
+2011-10-22  Ulrich Drepper  <drepper@gmail.com>
+
+	* math/math_private.h: Define __nan, __nanf, __nanl.
+	* math/s_cacosh.c: Include <math_private.h>.
+	* math/s_cacoshl.c: Likewise.
+	* math/s_casinh.c: Likewise.
+	* math/s_casinhf.c: Likewise.
+	* math/s_casinhl.c: Likewise.
+	* math/s_ccos.c: Rely entire on ccosh.
+	* math/s_ccosf.c: Rely entire on ccoshf.
+	* math/s_ccosl.c: Rely entirely on ccoshl.
+	* math/s_ccosh.c: Add branch predicion helpers.  Add branch prediction.
+	Remove tests for FE_INVALID.
+	* math/s_ccoshf.c: Likewise.
+	* math/s_ccoshl.c: Likewise.
+	* math/s_csin.c: Likewise.
+	* math/s_csinf.c: Likewise.
+	* math/s_csinh.c Likewise.
+	* math/s_csinhf.c: Likewise.
+	* math/s_csinhl.c: Likewise.
+	* math/s_csinl.c: Likewise.
+	* math/s_ctan.c: Likewise.
+	* sysdeps/ieee754/dbl-64/e_acosh.c: Use __ieee754_sqrt.
+	* sysdeps/ieee754/flt-32/e_acoshf.c: Use __ieee754_sqrtf.
+	* sysdeps/ieee754/ldbl-96/e_acoshl.c: Use __ieee754_sqrtl.
+
 2011-10-21  Ulrich Drepper  <drepper@gmail.com>
 
 	* sysdeps/x86_64/multiarch/init-arch.c (__init_cpu_features): Fix
