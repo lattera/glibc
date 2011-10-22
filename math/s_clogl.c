@@ -1,5 +1,5 @@
 /* Compute complex natural logarithm.
-   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -20,7 +20,6 @@
 
 #include <complex.h>
 #include <math.h>
-
 #include <math_private.h>
 
 
@@ -31,7 +30,7 @@ __clogl (__complex__ long double x)
   int rcls = fpclassify (__real__ x);
   int icls = fpclassify (__imag__ x);
 
-  if (rcls == FP_ZERO && icls == FP_ZERO)
+  if (__builtin_expect (rcls == FP_ZERO && icls == FP_ZERO, 0))
     {
       /* Real and imaginary part are 0.0.  */
       __imag__ result = signbit (__real__ x) ? M_PIl : 0.0;
@@ -39,7 +38,7 @@ __clogl (__complex__ long double x)
       /* Yes, the following line raises an exception.  */
       __real__ result = -1.0 / fabsl (__real__ x);
     }
-  else if (rcls != FP_NAN && icls != FP_NAN)
+  else if (__builtin_expect (rcls != FP_NAN && icls != FP_NAN, 1))
     {
       /* Neither real nor imaginary part is NaN.  */
       __real__ result = __ieee754_logl (__ieee754_hypotl (__real__ x,

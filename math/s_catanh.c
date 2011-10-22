@@ -1,5 +1,5 @@
 /* Return arc hyperbole tangent for double value.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -20,7 +20,6 @@
 
 #include <complex.h>
 #include <math.h>
-
 #include <math_private.h>
 
 
@@ -31,7 +30,7 @@ __catanh (__complex__ double x)
   int rcls = fpclassify (__real__ x);
   int icls = fpclassify (__imag__ x);
 
-  if (rcls <= FP_INFINITE || icls <= FP_INFINITE)
+  if (__builtin_expect (rcls <= FP_INFINITE || icls <= FP_INFINITE, 0))
     {
       if (icls == FP_INFINITE)
 	{
@@ -52,20 +51,18 @@ __catanh (__complex__ double x)
 	  __imag__ res = __nan ("");
 	}
     }
-  else if (rcls == FP_ZERO && icls == FP_ZERO)
+  else if (__builtin_expect (rcls == FP_ZERO && icls == FP_ZERO, 0))
     {
       res = x;
     }
   else
     {
-      double i2, num, den;
+      double i2 = __imag__ x * __imag__ x;
 
-      i2 = __imag__ x * __imag__ x;
-
-      num = 1.0 + __real__ x;
+      double num = 1.0 + __real__ x;
       num = i2 + num * num;
 
-      den = 1.0 - __real__ x;
+      double den = 1.0 - __real__ x;
       den = i2 + den * den;
 
       __real__ res = 0.25 * (__ieee754_log (num) - __ieee754_log (den));

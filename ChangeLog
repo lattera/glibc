@@ -1,5 +1,29 @@
 2011-10-22  Ulrich Drepper  <drepper@gmail.com>
 
+	* math/s_catan.c: Add branch predictions.
+	* math/s_catanf.c: Likewise.
+	* math/s_catanh.c: Likewise.
+	* math/s_catanhf.c: Likewise.
+	* math/s_catanhl.c: Likewise.
+	* math/s_catanl.c: Likewise.
+	* math/s_cexp.c: Likewise.
+	* math/s_cexpf.c: Likewise.
+	* math/s_cexpl.c: Likewise.
+	* math/s_clog.c: Likewise.
+	* math/s_clog10.c: Likewise.
+	* math/s_clog10f.c: Likewise.
+	* math/s_clog10l.c: Likewise.
+	* math/s_clogf.c: Likewise.
+	* math/s_clogl.c: Likewise.
+	* math/s_csqrt.c: Likewise.
+	* math/s_csqrtf.c: Likewise.
+	* math/s_csqrtl.c: Likewise.
+	* math/s_ctanf.c: Likewise.
+	* math/s_ctanh.c: Likewise.
+	* math/s_ctanhf.c: Likewise.
+	* math/s_ctanhl.c: Likewise.
+	* math/s_ctanl.c: Likewise.
+
 	* math/math_private.h: Define __nan, __nanf, __nanl.
 	* math/s_cacosh.c: Include <math_private.h>.
 	* math/s_cacoshl.c: Likewise.

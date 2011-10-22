@@ -1,5 +1,5 @@
 /* Return arc tangent of complex double value.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -20,7 +20,6 @@
 
 #include <complex.h>
 #include <math.h>
-
 #include <math_private.h>
 
 
@@ -31,7 +30,7 @@ __catan (__complex__ double x)
   int rcls = fpclassify (__real__ x);
   int icls = fpclassify (__imag__ x);
 
-  if (rcls <= FP_INFINITE || icls <= FP_INFINITE)
+  if (__builtin_expect (rcls <= FP_INFINITE || icls <= FP_INFINITE, 0))
     {
       if (rcls == FP_INFINITE)
 	{
@@ -57,7 +56,7 @@ __catan (__complex__ double x)
 	  __imag__ res = __nan ("");
 	}
     }
-  else if (rcls == FP_ZERO && icls == FP_ZERO)
+  else if (__builtin_expect (rcls == FP_ZERO && icls == FP_ZERO, 0))
     {
       res = x;
     }

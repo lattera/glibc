@@ -21,7 +21,6 @@
 #include <complex.h>
 #include <fenv.h>
 #include <math.h>
-
 #include <math_private.h>
 
 
@@ -30,7 +29,7 @@ __ctanh (__complex__ double x)
 {
   __complex__ double res;
 
-  if (!isfinite (__real__ x) || !isfinite (__imag__ x))
+  if (__builtin_expect (!isfinite (__real__ x) || !isfinite (__imag__ x), 0))
     {
       if (__isinf_ns (__real__ x))
 	{
@@ -46,10 +45,8 @@ __ctanh (__complex__ double x)
 	  __real__ res = __nan ("");
 	  __imag__ res = __nan ("");
 
-#ifdef FE_INVALID
 	  if (__isinf_ns (__imag__ x))
 	    feraiseexcept (FE_INVALID);
-#endif
 	}
     }
   else

@@ -1,5 +1,5 @@
 /* Return value of complex exponential function for float complex value.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -21,7 +21,6 @@
 #include <complex.h>
 #include <fenv.h>
 #include <math.h>
-
 #include <math_private.h>
 
 
@@ -32,10 +31,10 @@ __cexpf (__complex__ float x)
   int rcls = fpclassify (__real__ x);
   int icls = fpclassify (__imag__ x);
 
-  if (rcls >= FP_ZERO)
+  if (__builtin_expect (rcls >= FP_ZERO, 1))
     {
       /* Real part is finite.  */
-      if (icls >= FP_ZERO)
+      if (__builtin_expect (icls >= FP_ZERO, 1))
 	{
 	  /* Imaginary part is finite.  */
 	  float exp_val = __ieee754_expf (__real__ x);
@@ -61,15 +60,13 @@ __cexpf (__complex__ float x)
 	  __real__ retval = __nanf ("");
 	  __imag__ retval = __nanf ("");
 
-#ifdef FE_INVALID
 	  feraiseexcept (FE_INVALID);
-#endif
 	}
     }
-  else if (rcls == FP_INFINITE)
+  else if (__builtin_expect (rcls == FP_INFINITE, 1))
     {
       /* Real part is infinite.  */
-      if (icls >= FP_ZERO)
+      if (__builtin_expect (icls >= FP_ZERO, 1))
 	{
 	  /* Imaginary part is finite.  */
 	  float value = signbit (__real__ x) ? 0.0 : HUGE_VALF;
@@ -95,10 +92,8 @@ __cexpf (__complex__ float x)
 	  __real__ retval = HUGE_VALF;
 	  __imag__ retval = __nanf ("");
 
-#ifdef FE_INVALID
 	  if (icls == FP_INFINITE)
 	    feraiseexcept (FE_INVALID);
-#endif
 	}
       else
 	{
@@ -112,10 +107,8 @@ __cexpf (__complex__ float x)
       __real__ retval = __nanf ("");
       __imag__ retval = __nanf ("");
 
-#ifdef FE_INVALID
       if (rcls != FP_NAN || icls != FP_NAN)
 	feraiseexcept (FE_INVALID);
-#endif
     }
 
   return retval;

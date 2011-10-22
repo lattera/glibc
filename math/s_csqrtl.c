@@ -1,5 +1,5 @@
 /* Complex square root of long double value.
-   Copyright (C) 1997, 1998, 2005 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 2005, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Based on an algorithm by Stephen L. Moshier <moshier@world.std.com>.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
@@ -21,7 +21,6 @@
 
 #include <complex.h>
 #include <math.h>
-
 #include <math_private.h>
 
 
@@ -32,7 +31,7 @@ __csqrtl (__complex__ long double x)
   int rcls = fpclassify (__real__ x);
   int icls = fpclassify (__imag__ x);
 
-  if (rcls <= FP_INFINITE || icls <= FP_INFINITE)
+  if (__builtin_expect (rcls <= FP_INFINITE || icls <= FP_INFINITE, 0))
     {
       if (icls == FP_INFINITE)
 	{
@@ -61,7 +60,7 @@ __csqrtl (__complex__ long double x)
     }
   else
     {
-      if (icls == FP_ZERO)
+      if (__builtin_expect (icls == FP_ZERO, 0))
 	{
 	  if (__real__ x < 0.0)
 	    {
@@ -75,7 +74,7 @@ __csqrtl (__complex__ long double x)
 	      __imag__ res = __copysignl (0.0, __imag__ x);
 	    }
 	}
-      else if (rcls == FP_ZERO)
+      else if (__builtin_expect (rcls == FP_ZERO, 0))
 	{
 	  long double r = __ieee754_sqrtl (0.5 * fabsl (__imag__ x));
 
