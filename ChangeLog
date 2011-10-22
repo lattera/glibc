@@ -1,5 +1,8 @@
 2011-10-21  Ulrich Drepper  <drepper@gmail.com>
 
+	* sysdeps/x86_64/multiarch/init-arch.c (__init_cpu_features): Fix
+	compilation problems.
+
 	* sysdeps/ieee754/dbl-64/e_log.c (__ieee754_log): Add a few more
 	__builtin_expect.
 

@@ -124,7 +124,7 @@ __init_cpu_features (void)
 
       get_common_indeces (&family, &model);
 
-      unsigned int ecx = __cpu_features.cpuid[COMMON_CPUID_INDEX_1].ecx;
+      ecx = __cpu_features.cpuid[COMMON_CPUID_INDEX_1].ecx;
 
       /* AMD processors prefer SSE instructions for memory/string routines
 	 if they are available, otherwise they prefer integer instructions.  */
@@ -132,6 +132,7 @@ __init_cpu_features (void)
 	__cpu_features.feature[index_Prefer_SSE_for_memop]
 	  |= bit_Prefer_SSE_for_memop;
 
+      unsigned int eax;
       __cpuid (0x80000000, eax, ebx, ecx, edx);
       if (eax >= 0x80000001)
 	__cpuid (0x80000001,
