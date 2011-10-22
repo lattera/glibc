@@ -40,8 +40,8 @@
 # ifdef __FMA4__
 #  define DLA_FMA(x,y,z) \
 	   ({ double __zz; \
-	      asm ("vfmaddsd %3, %2, %1, %0"				      \
-		   : "=x" (__zz) : "x" (x), "xm" (y), "x" (-z));	      \
+	      asm ("vfmsubsd %3, %2, %1, %0"				      \
+		   : "=x" (__zz) : "x" (x), "xm" (y), "x" (z));		      \
 	      __zz; })
 # endif
 #endif
