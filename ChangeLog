@@ -1,3 +1,11 @@
+2011-10-22  Andreas Schwab  <schwab@linux-m68k.org>
+
+	* math/s_nan.c: Undef __nan.
+	* math/s_nanf.c: Undef __nanf.
+	* math/s_nanl.c: Undef __nanl.
+	* sysdeps/ieee754/ldbl-128ibm/s_atanl.c: Include <math.h> before
+	"math_private.h".
+
 2011-10-22  Ulrich Drepper  <drepper@gmail.com>
 
 	* math/math_private.h: Define __nan, __nanf, __nanl.

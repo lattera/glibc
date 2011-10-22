@@ -25,6 +25,7 @@
 #include <ieee754.h>
 
 
+#undef __nanf
 float
 __nanf (const char *tagp)
 {
