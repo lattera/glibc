@@ -1,7 +1,7 @@
 /*
  * IBM Accurate Mathematical Library
  * written by International Business Machines Corp.
- * Copyright (C) 2001 Free Software Foundation
+ * Copyright (C) 2001, 2011 Free Software Foundation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -62,8 +62,11 @@ double __ieee754_atan2(double y,double x) {
   int p;
 #endif
   static const int pr[MM]={6,8,10,20,32};
-  double ax,ay,u,du,u9,ua,v,vv,dv,t1,t2,t3,t4,t5,t6,t7,t8,
+  double ax,ay,u,du,u9,ua,v,vv,dv,t1,t2,t3,t7,t8,
 	 z,zz,cor,s1,ss1,s2,ss2;
+#ifndef DLA_FMA
+  double t4,t5,t6;
+#endif
 #if 0
   double z1,z2;
 #endif

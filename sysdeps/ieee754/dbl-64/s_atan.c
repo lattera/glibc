@@ -1,7 +1,7 @@
 /*
  * IBM Accurate Mathematical Library
  * written by International Business Machines Corp.
- * Copyright (C) 2001 Free Software Foundation
+ * Copyright (C) 2001, 2011 Free Software Foundation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -52,8 +52,11 @@ double __signArctan(double,double);
 double atan(double x) {
 
 
-  double cor,s1,ss1,s2,ss2,t1,t2,t3,t4,t5,t6,t7,t8,t9,t10,u,u2,u3,
-         v,vv,w,ww,y,yy,z,zz;
+  double cor,s1,ss1,s2,ss2,t1,t2,t3,t7,t8,t9,t10,u,u2,u3,
+	 v,vv,w,ww,y,yy,z,zz;
+#ifndef DLA_FMA
+  double t4,t5,t6;
+#endif
 #if 0
   double y1,y2;
 #endif
@@ -78,44 +81,44 @@ double atan(double x) {
   if (u<C) {
     if (u<B) {
       if (u<A) {                                           /* u < A */
-         return x; }
+	 return x; }
       else {                                               /* A <= u < B */
-        v=x*x;  yy=x*v*(d3.d+v*(d5.d+v*(d7.d+v*(d9.d+v*(d11.d+v*d13.d)))));
-        if ((y=x+(yy-U1*x)) == x+(yy+U1*x))  return y;
+	v=x*x;  yy=x*v*(d3.d+v*(d5.d+v*(d7.d+v*(d9.d+v*(d11.d+v*d13.d)))));
+	if ((y=x+(yy-U1*x)) == x+(yy+U1*x))  return y;
 
-        EMULV(x,x,v,vv,t1,t2,t3,t4,t5)                       /* v+vv=x^2 */
-        s1=v*(f11.d+v*(f13.d+v*(f15.d+v*(f17.d+v*f19.d))));
-        ADD2(f9.d,ff9.d,s1,ZERO,s2,ss2,t1,t2)
-        MUL2(v,vv,s2,ss2,s1,ss1,t1,t2,t3,t4,t5,t6,t7,t8)
-        ADD2(f7.d,ff7.d,s1,ss1,s2,ss2,t1,t2)
-        MUL2(v,vv,s2,ss2,s1,ss1,t1,t2,t3,t4,t5,t6,t7,t8)
-        ADD2(f5.d,ff5.d,s1,ss1,s2,ss2,t1,t2)
-        MUL2(v,vv,s2,ss2,s1,ss1,t1,t2,t3,t4,t5,t6,t7,t8)
-        ADD2(f3.d,ff3.d,s1,ss1,s2,ss2,t1,t2)
-        MUL2(v,vv,s2,ss2,s1,ss1,t1,t2,t3,t4,t5,t6,t7,t8)
-        MUL2(x,ZERO,s1,ss1,s2,ss2,t1,t2,t3,t4,t5,t6,t7,t8)
-        ADD2(x,ZERO,s2,ss2,s1,ss1,t1,t2)
-        if ((y=s1+(ss1-U5*s1)) == s1+(ss1+U5*s1))  return y;
+	EMULV(x,x,v,vv,t1,t2,t3,t4,t5)                       /* v+vv=x^2 */
+	s1=v*(f11.d+v*(f13.d+v*(f15.d+v*(f17.d+v*f19.d))));
+	ADD2(f9.d,ff9.d,s1,ZERO,s2,ss2,t1,t2)
+	MUL2(v,vv,s2,ss2,s1,ss1,t1,t2,t3,t4,t5,t6,t7,t8)
+	ADD2(f7.d,ff7.d,s1,ss1,s2,ss2,t1,t2)
+	MUL2(v,vv,s2,ss2,s1,ss1,t1,t2,t3,t4,t5,t6,t7,t8)
+	ADD2(f5.d,ff5.d,s1,ss1,s2,ss2,t1,t2)
+	MUL2(v,vv,s2,ss2,s1,ss1,t1,t2,t3,t4,t5,t6,t7,t8)
+	ADD2(f3.d,ff3.d,s1,ss1,s2,ss2,t1,t2)
+	MUL2(v,vv,s2,ss2,s1,ss1,t1,t2,t3,t4,t5,t6,t7,t8)
+	MUL2(x,ZERO,s1,ss1,s2,ss2,t1,t2,t3,t4,t5,t6,t7,t8)
+	ADD2(x,ZERO,s2,ss2,s1,ss1,t1,t2)
+	if ((y=s1+(ss1-U5*s1)) == s1+(ss1+U5*s1))  return y;
 
-        return atanMp(x,pr);
+	return atanMp(x,pr);
       } }
     else {  /* B <= u < C */
       i=(TWO52+TWO8*u)-TWO52;  i-=16;
       z=u-cij[i][0].d;
       yy=z*(cij[i][2].d+z*(cij[i][3].d+z*(cij[i][4].d+
-                        z*(cij[i][5].d+z* cij[i][6].d))));
+			z*(cij[i][5].d+z* cij[i][6].d))));
       t1=cij[i][1].d;
       if (i<112) {
-        if (i<48)  u2=U21;    /* u < 1/4        */
-        else       u2=U22; }  /* 1/4 <= u < 1/2 */
+	if (i<48)  u2=U21;    /* u < 1/4        */
+	else       u2=U22; }  /* 1/4 <= u < 1/2 */
       else {
-        if (i<176) u2=U23;    /* 1/2 <= u < 3/4 */
-        else       u2=U24; }  /* 3/4 <= u <= 1  */
+	if (i<176) u2=U23;    /* 1/2 <= u < 3/4 */
+	else       u2=U24; }  /* 3/4 <= u <= 1  */
       if ((y=t1+(yy-u2*t1)) == t1+(yy+u2*t1))  return __signArctan(x,y);
 
       z=u-hij[i][0].d;
       s1=z*(hij[i][11].d+z*(hij[i][12].d+z*(hij[i][13].d+
-         z*(hij[i][14].d+z* hij[i][15].d))));
+	 z*(hij[i][14].d+z* hij[i][15].d))));
       ADD2(hij[i][9].d,hij[i][10].d,s1,ZERO,s2,ss2,t1,t2)
       MUL2(z,ZERO,s2,ss2,s1,ss1,t1,t2,t3,t4,t5,t6,t7,t8)
       ADD2(hij[i][7].d,hij[i][8].d,s1,ss1,s2,ss2,t1,t2)
@@ -138,7 +141,7 @@ double atan(double x) {
       i=(TWO52+TWO8*w)-TWO52;  i-=16;
       z=(w-cij[i][0].d)+ww;
       yy=HPI1-z*(cij[i][2].d+z*(cij[i][3].d+z*(cij[i][4].d+
-                             z*(cij[i][5].d+z* cij[i][6].d))));
+			     z*(cij[i][5].d+z* cij[i][6].d))));
       t1=HPI-cij[i][1].d;
       if (i<112)  u3=U31;  /* w <  1/2 */
       else        u3=U32;  /* w >= 1/2 */
@@ -148,7 +151,7 @@ double atan(double x) {
       t1=w-hij[i][0].d;
       EADD(t1,ww,z,zz)
       s1=z*(hij[i][11].d+z*(hij[i][12].d+z*(hij[i][13].d+
-         z*(hij[i][14].d+z* hij[i][15].d))));
+	 z*(hij[i][14].d+z* hij[i][15].d))));
       ADD2(hij[i][9].d,hij[i][10].d,s1,ZERO,s2,ss2,t1,t2)
       MUL2(z,zz,s2,ss2,s1,ss1,t1,t2,t3,t4,t5,t6,t7,t8)
       ADD2(hij[i][7].d,hij[i][8].d,s1,ss1,s2,ss2,t1,t2)
@@ -165,36 +168,36 @@ double atan(double x) {
     }
     else {
       if (u<E) { /* D <= u < E */
-        w=ONE/u;   v=w*w;
-        EMULV(w,u,t1,t2,t3,t4,t5,t6,t7)
-        yy=w*v*(d3.d+v*(d5.d+v*(d7.d+v*(d9.d+v*(d11.d+v*d13.d)))));
-        ww=w*((ONE-t1)-t2);
-        ESUB(HPI,w,t3,cor)
-        yy=((HPI1+cor)-ww)-yy;
-        if ((y=t3+(yy-U4)) == t3+(yy+U4))  return __signArctan(x,y);
+	w=ONE/u;   v=w*w;
+	EMULV(w,u,t1,t2,t3,t4,t5,t6,t7)
+	yy=w*v*(d3.d+v*(d5.d+v*(d7.d+v*(d9.d+v*(d11.d+v*d13.d)))));
+	ww=w*((ONE-t1)-t2);
+	ESUB(HPI,w,t3,cor)
+	yy=((HPI1+cor)-ww)-yy;
+	if ((y=t3+(yy-U4)) == t3+(yy+U4))  return __signArctan(x,y);
 
-        DIV2(ONE,ZERO,u,ZERO,w,ww,t1,t2,t3,t4,t5,t6,t7,t8,t9,t10)
-        MUL2(w,ww,w,ww,v,vv,t1,t2,t3,t4,t5,t6,t7,t8)
-        s1=v*(f11.d+v*(f13.d+v*(f15.d+v*(f17.d+v*f19.d))));
-        ADD2(f9.d,ff9.d,s1,ZERO,s2,ss2,t1,t2)
-        MUL2(v,vv,s2,ss2,s1,ss1,t1,t2,t3,t4,t5,t6,t7,t8)
-        ADD2(f7.d,ff7.d,s1,ss1,s2,ss2,t1,t2)
-        MUL2(v,vv,s2,ss2,s1,ss1,t1,t2,t3,t4,t5,t6,t7,t8)
-        ADD2(f5.d,ff5.d,s1,ss1,s2,ss2,t1,t2)
-        MUL2(v,vv,s2,ss2,s1,ss1,t1,t2,t3,t4,t5,t6,t7,t8)
-        ADD2(f3.d,ff3.d,s1,ss1,s2,ss2,t1,t2)
-        MUL2(v,vv,s2,ss2,s1,ss1,t1,t2,t3,t4,t5,t6,t7,t8)
-        MUL2(w,ww,s1,ss1,s2,ss2,t1,t2,t3,t4,t5,t6,t7,t8)
-        ADD2(w,ww,s2,ss2,s1,ss1,t1,t2)
-        SUB2(HPI,HPI1,s1,ss1,s2,ss2,t1,t2)
-        if ((y=s2+(ss2-U8)) == s2+(ss2+U8))  return __signArctan(x,y);
+	DIV2(ONE,ZERO,u,ZERO,w,ww,t1,t2,t3,t4,t5,t6,t7,t8,t9,t10)
+	MUL2(w,ww,w,ww,v,vv,t1,t2,t3,t4,t5,t6,t7,t8)
+	s1=v*(f11.d+v*(f13.d+v*(f15.d+v*(f17.d+v*f19.d))));
+	ADD2(f9.d,ff9.d,s1,ZERO,s2,ss2,t1,t2)
+	MUL2(v,vv,s2,ss2,s1,ss1,t1,t2,t3,t4,t5,t6,t7,t8)
+	ADD2(f7.d,ff7.d,s1,ss1,s2,ss2,t1,t2)
+	MUL2(v,vv,s2,ss2,s1,ss1,t1,t2,t3,t4,t5,t6,t7,t8)
+	ADD2(f5.d,ff5.d,s1,ss1,s2,ss2,t1,t2)
+	MUL2(v,vv,s2,ss2,s1,ss1,t1,t2,t3,t4,t5,t6,t7,t8)
+	ADD2(f3.d,ff3.d,s1,ss1,s2,ss2,t1,t2)
+	MUL2(v,vv,s2,ss2,s1,ss1,t1,t2,t3,t4,t5,t6,t7,t8)
+	MUL2(w,ww,s1,ss1,s2,ss2,t1,t2,t3,t4,t5,t6,t7,t8)
+	ADD2(w,ww,s2,ss2,s1,ss1,t1,t2)
+	SUB2(HPI,HPI1,s1,ss1,s2,ss2,t1,t2)
+	if ((y=s2+(ss2-U8)) == s2+(ss2+U8))  return __signArctan(x,y);
 
       return atanMp(x,pr);
       }
       else {
-        /* u >= E */
-        if (x>0) return  HPI;
-        else     return MHPI; }
+	/* u >= E */
+	if (x>0) return  HPI;
+	else     return MHPI; }
     }
   }
 

@@ -1,7 +1,7 @@
 /*
  * IBM Accurate Mathematical Library
  * written by International Business Machines Corp.
- * Copyright (C) 2001 Free Software Foundation
+ * Copyright (C) 2001, 2011 Free Software Foundation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -52,7 +52,10 @@ void __doasin(double x, double dx, double v[]) {
     d11 = 0.79470250400727425881446981833568758E-02;
 
   double xx,p,pp,u,uu,r,s;
-  double hx,tx,hy,ty,tp,tq,tc,tcc;
+  double tc,tcc;
+#ifndef DLA_FMA
+  double hx,tx,hy,ty,tp,tq;
+#endif
 
 
 /* Taylor series for arcsin for Double-Length numbers         */

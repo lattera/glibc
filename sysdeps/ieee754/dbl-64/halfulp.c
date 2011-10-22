@@ -50,7 +50,10 @@ static const int4 tab54[32] = {
 double __halfulp(double x, double y)
 {
   mynumber v;
-  double z,u,uu,j1,j2,j3,j4,j5;
+  double z,u,uu;
+#ifndef DLA_FMA
+  double j1,j2,j3,j4,j5;
+#endif
   int4 k,l,m,n;
   if (y <= 0) {               /*if power is negative or zero */
     v.x = y;

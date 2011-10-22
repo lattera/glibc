@@ -283,7 +283,10 @@ static double my_log2(double x, double *delta, double *error) {
   double cor;
 #endif
   double ou1,ou2,lu1,lu2,ov,lv1,lv2,a,a1,a2;
-  double y,yy,z,zz,j1,j2,j3,j4,j5,j6,j7,j8;
+  double y,yy,z,zz,j1,j2,j7,j8;
+#ifndef DLA_FMA
+  double j3,j4,j5,j6;
+#endif
   mynumber u,v;
 #ifdef BIG_ENDI
   mynumber

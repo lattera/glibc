@@ -1,7 +1,7 @@
 /*
  * IBM Accurate Mathematical Library
  * written by International Business Machines Corp.
- * Copyright (C) 2001, 2009 Free Software Foundation
+ * Copyright (C) 2001, 2009, 2011 Free Software Foundation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -50,7 +50,10 @@ double tan(double x) {
 
   int ux,i,n;
   double a,da,a2,b,db,c,dc,c1,cc1,c2,cc2,c3,cc3,fi,ffi,gi,pz,s,sy,
-  t,t1,t2,t3,t4,t5,t6,t7,t8,t9,t10,w,x2,xn,xx2,y,ya,yya,z0,z,zz,z2,zz2;
+  t,t1,t2,t3,t4,t7,t8,t9,t10,w,x2,xn,xx2,y,ya,yya,z0,z,zz,z2,zz2;
+#ifndef DLA_FMA
+  double t5,t6;
+#endif
   int p;
   number num,v;
   mp_no mpa,mpt1,mpt2;
@@ -84,7 +87,7 @@ double tan(double x) {
 
     /* Second stage */
     c1 = x2*(a15.d+x2*(a17.d+x2*(a19.d+x2*(a21.d+x2*(a23.d+x2*(a25.d+
-         x2*a27.d))))));
+	 x2*a27.d))))));
     EMULV(x,x,x2,xx2,t1,t2,t3,t4,t5)
     ADD2(a13.d,aa13.d,c1,zero.d,c2,cc2,t1,t2)
     MUL2(x2,xx2,c2,cc2,c1,cc1,t1,t2,t3,t4,t5,t6,t7,t8)
@@ -159,13 +162,13 @@ double tan(double x) {
       a2 = a*a;
       t2 = da+a*a2*(d3.d+a2*(d5.d+a2*(d7.d+a2*(d9.d+a2*d11.d))));
       if (n) {
-        /* First stage -cot */
-        EADD(a,t2,b,db)
-        DIV2(one.d,zero.d,b,db,c,dc,t1,t2,t3,t4,t5,t6,t7,t8,t9,t10)
-        if ((y=c+(dc-u6.d*c))==c+(dc+u6.d*c))  return (-y); }
+	/* First stage -cot */
+	EADD(a,t2,b,db)
+	DIV2(one.d,zero.d,b,db,c,dc,t1,t2,t3,t4,t5,t6,t7,t8,t9,t10)
+	if ((y=c+(dc-u6.d*c))==c+(dc+u6.d*c))  return (-y); }
       else {
-        /* First stage tan */
-        if ((y=a+(t2-u5.d*a))==a+(t2+u5.d*a))  return y; }
+	/* First stage tan */
+	if ((y=a+(t2-u5.d*a))==a+(t2+u5.d*a))  return y; }
       /* Second stage */
       /* Range reduction by algorithm ii */
       t = (x*hpinv.d + toint.d);
@@ -184,7 +187,7 @@ double tan(double x) {
       EADD(a,da,t1,t2)   a=t1;  da=t2;
       MUL2(a,da,a,da,x2,xx2,t1,t2,t3,t4,t5,t6,t7,t8)
       c1 = x2*(a15.d+x2*(a17.d+x2*(a19.d+x2*(a21.d+x2*(a23.d+x2*(a25.d+
-           x2*a27.d))))));
+	   x2*a27.d))))));
       ADD2(a13.d,aa13.d,c1,zero.d,c2,cc2,t1,t2)
       MUL2(x2,xx2,c2,cc2,c1,cc1,t1,t2,t3,t4,t5,t6,t7,t8)
       ADD2(a11.d,aa11.d,c1,cc1,c2,cc2,t1,t2)
@@ -201,12 +204,12 @@ double tan(double x) {
       ADD2(a  ,da  ,c2,cc2,c1,cc1,t1,t2)
 
       if (n) {
-        /* Second stage -cot */
-        DIV2(one.d,zero.d,c1,cc1,c2,cc2,t1,t2,t3,t4,t5,t6,t7,t8,t9,t10)
-        if ((y=c2+(cc2-u8.d*c2)) == c2+(cc2+u8.d*c2))  return (-y); }
+	/* Second stage -cot */
+	DIV2(one.d,zero.d,c1,cc1,c2,cc2,t1,t2,t3,t4,t5,t6,t7,t8,t9,t10)
+	if ((y=c2+(cc2-u8.d*c2)) == c2+(cc2+u8.d*c2))  return (-y); }
       else {
-        /* Second stage tan */
-        if ((y=c1+(cc1-u7.d*c1)) == c1+(cc1+u7.d*c1))  return y; }
+	/* Second stage tan */
+	if ((y=c1+(cc1-u7.d*c1)) == c1+(cc1+u7.d*c1))  return y; }
       return tanMp(x);
     }
 
@@ -287,18 +290,18 @@ double tan(double x) {
       a2 = a*a;
       t2 = da+a*a2*(d3.d+a2*(d5.d+a2*(d7.d+a2*(d9.d+a2*d11.d))));
       if (n) {
-        /* First stage -cot */
-        EADD(a,t2,b,db)
-        DIV2(one.d,zero.d,b,db,c,dc,t1,t2,t3,t4,t5,t6,t7,t8,t9,t10)
-        if ((y=c+(dc-u14.d*c))==c+(dc+u14.d*c))  return (-y); }
+	/* First stage -cot */
+	EADD(a,t2,b,db)
+	DIV2(one.d,zero.d,b,db,c,dc,t1,t2,t3,t4,t5,t6,t7,t8,t9,t10)
+	if ((y=c+(dc-u14.d*c))==c+(dc+u14.d*c))  return (-y); }
       else {
-        /* First stage tan */
-        if ((y=a+(t2-u13.d*a))==a+(t2+u13.d*a))  return y; }
+	/* First stage tan */
+	if ((y=a+(t2-u13.d*a))==a+(t2+u13.d*a))  return y; }
 
       /* Second stage */
       MUL2(a,da,a,da,x2,xx2,t1,t2,t3,t4,t5,t6,t7,t8)
       c1 = x2*(a15.d+x2*(a17.d+x2*(a19.d+x2*(a21.d+x2*(a23.d+x2*(a25.d+
-           x2*a27.d))))));
+	   x2*a27.d))))));
       ADD2(a13.d,aa13.d,c1,zero.d,c2,cc2,t1,t2)
       MUL2(x2,xx2,c2,cc2,c1,cc1,t1,t2,t3,t4,t5,t6,t7,t8)
       ADD2(a11.d,aa11.d,c1,cc1,c2,cc2,t1,t2)
@@ -315,12 +318,12 @@ double tan(double x) {
       ADD2(a  ,da  ,c2,cc2,c1,cc1,t1,t2)
 
       if (n) {
-        /* Second stage -cot */
-        DIV2(one.d,zero.d,c1,cc1,c2,cc2,t1,t2,t3,t4,t5,t6,t7,t8,t9,t10)
-        if ((y=c2+(cc2-u16.d*c2)) == c2+(cc2+u16.d*c2))  return (-y); }
+	/* Second stage -cot */
+	DIV2(one.d,zero.d,c1,cc1,c2,cc2,t1,t2,t3,t4,t5,t6,t7,t8,t9,t10)
+	if ((y=c2+(cc2-u16.d*c2)) == c2+(cc2+u16.d*c2))  return (-y); }
       else {
-        /* Second stage tan */
-        if ((y=c1+(cc1-u15.d*c1)) == c1+(cc1+u15.d*c1))  return (y); }
+	/* Second stage tan */
+	if ((y=c1+(cc1-u15.d*c1)) == c1+(cc1+u15.d*c1))  return (y); }
       return tanMp(x);
     }
 
@@ -404,7 +407,7 @@ double tan(double x) {
 
     MUL2(a,da,a,da,x2,xx2,t1,t2,t3,t4,t5,t6,t7,t8)
     c1 = x2*(a15.d+x2*(a17.d+x2*(a19.d+x2*(a21.d+x2*(a23.d+x2*(a25.d+
-         x2*a27.d))))));
+	 x2*a27.d))))));
     ADD2(a13.d,aa13.d,c1,zero.d,c2,cc2,t1,t2)
     MUL2(x2,xx2,c2,cc2,c1,cc1,t1,t2,t3,t4,t5,t6,t7,t8)
     ADD2(a11.d,aa11.d,c1,cc1,c2,cc2,t1,t2)

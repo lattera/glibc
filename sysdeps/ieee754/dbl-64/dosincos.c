@@ -1,7 +1,7 @@
 /*
  * IBM Accurate Mathematical Library
  * written by International Business Machines Corp.
- * Copyright (C) 2001 Free Software Foundation
+ * Copyright (C) 2001, 2011 Free Software Foundation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -48,8 +48,11 @@
 /***********************************************************************/
 
 void __dubsin(double x, double dx, double v[]) {
-  double r,s,p,hx,tx,hy,ty,q,c,cc,d,dd,d2,dd2,e,ee,
+  double r,s,c,cc,d,dd,d2,dd2,e,ee,
     sn,ssn,cs,ccs,ds,dss,dc,dcc;
+#ifndef DLA_FMA
+  double p,hx,tx,hy,ty,q;
+#endif
 #if 0
   double xx,y,yy,z,zz;
 #endif
@@ -61,7 +64,7 @@ void __dubsin(double x, double dx, double v[]) {
   x=x-(u.x-big.x);
   d=x+dx;
   dd=(x-d)+dx;
-         /* sin(x+dx)=sin(Xi+t)=sin(Xi)*cos(t) + cos(Xi)sin(t) where t ->0 */
+	 /* sin(x+dx)=sin(Xi+t)=sin(Xi)*cos(t) + cos(Xi)sin(t) where t ->0 */
   MUL2(d,dd,d,dd,d2,dd2,p,hx,tx,hy,ty,q,c,cc);
   sn=sincos.x[k];     /*                                  */
   ssn=sincos.x[k+1];  /*      sin(Xi) and cos(Xi)         */
@@ -99,8 +102,11 @@ void __dubsin(double x, double dx, double v[]) {
 /**********************************************************************/
 
 void __dubcos(double x, double dx, double v[]) {
-  double r,s,p,hx,tx,hy,ty,q,c,cc,d,dd,d2,dd2,e,ee,
+  double r,s,c,cc,d,dd,d2,dd2,e,ee,
     sn,ssn,cs,ccs,ds,dss,dc,dcc;
+#ifndef DLA_FMA
+  double p,hx,tx,hy,ty,q;
+#endif
 #if 0
   double xx,y,yy,z,zz;
 #endif
@@ -166,15 +172,15 @@ void __docos(double x, double dx, double v[]) {
   if (x>0) {y=x; yy=dx;}
      else {y=-x; yy=-dx;}
   if (y<0.5*hp0.x)                                 /*  y< PI/4    */
-           {__dubcos(y,yy,w); v[0]=w[0]; v[1]=w[1];}
+	   {__dubcos(y,yy,w); v[0]=w[0]; v[1]=w[1];}
      else if (y<1.5*hp0.x) {                       /* y< 3/4 * PI */
        p=hp0.x-y;  /* p = PI/2 - y */
        yy=hp1.x-yy;
        y=p+yy;
        yy=(p-y)+yy;
        if (y>0) {__dubsin(y,yy,w); v[0]=w[0]; v[1]=w[1];}
-                                       /* cos(x) = sin ( 90 -  x ) */
-         else {__dubsin(-y,-yy,w); v[0]=-w[0]; v[1]=-w[1];
+				       /* cos(x) = sin ( 90 -  x ) */
+	 else {__dubsin(-y,-yy,w); v[0]=-w[0]; v[1]=-w[1];
 	 }
      }
   else { /* y>= 3/4 * PI */
