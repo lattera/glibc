@@ -1,3 +1,17 @@
+2011-10-20  Liubov Dmitrieva  <liubov.dmitrieva@gmail.com>
+
+	* sysdeps/x86_64/multiarch/Makefile (sysdep_routines): Add
+	strnlen-sse2-no-bsf.
+	Rename strlen-no-bsf to strlen-sse2-no-bsf.
+	* sysdeps/x86_64/multiarch/strlen-no-bsf.S: Rename to
+	* sysdeps/x86_64/multiarch/strlen-sse2-no-bsf.S:
+	Add strnlen support.
+	(USE_AS_STRNLEN): New macro.
+	* sysdeps/x86_64/multiarch/strnlen-sse2-no-bsf.S: New file.
+	* sysdeps/x86_64/multiarch/strcat-ssse3.S: Update.
+	Rename strlen-no-bsf.S to strlen-sse2-no-bsf.S
+	* sysdeps/x86_64/wcslen.S: New file.
+
 2011-10-20  Michael Zolotukhin  <michael.v.zolotukhin@gmail.com>
 
 	* sysdeps/i386/i686/multiarch/memcpy-ssse3.S: Update.

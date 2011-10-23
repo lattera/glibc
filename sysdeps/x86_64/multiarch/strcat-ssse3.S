@@ -35,7 +35,7 @@ ENTRY (STRCAT)
 # endif
 
 # define RETURN  jmp L(StartStrcpyPart)
-# include "strlen-no-bsf.S"
+# include "strlen-sse2-no-bsf.S"
 
 # undef RETURN
 

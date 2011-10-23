@@ -42,7 +42,7 @@ ENTRY(strlen)
 	ret
 2:	testl	$bit_Slow_BSF, __cpu_features+FEATURE_OFFSET+index_Slow_BSF(%rip)
 	jz	3f
-	leaq    __strlen_no_bsf(%rip), %rax
+	leaq    __strlen_sse2_no_bsf(%rip), %rax
 3:	ret
 END(strlen)
 
