@@ -1,3 +1,14 @@
+2011-09-22  Liubov Dmitrieva  <liubov.dmitrieva@gmail.com>
+
+	* sysdeps/x86_64/wcscmp.S: Update.
+	Fix wrong comparison semantics.
+	wcscmp shall use signed comparison not unsigned.
+	Don't use substraction to avoid overflow bug.
+	* sysdeps/i386/i686/multiarch/wcscmp-sse2.S: Likewise.
+	* wcsmbc/wcscmp.c: Likewise.
+	* string/test-strcmp.c: Likewise.
+	Add new tests to check cases with negative values.
+
 2011-10-23  Ulrich Drepper  <drepper@gmail.com>
 
 	* sysdeps/ieee754/dbl-64/dla.h: Move DLA_FMA definition to...

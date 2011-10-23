@@ -1,4 +1,4 @@
-/* Test and measure STRCMP functions.
+/* Test and measure strcmp and wcscmp functions.
    Copyright (C) 1999, 2002, 2003, 2005, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Jakub Jelinek <jakub@redhat.com>, 1999.
@@ -23,7 +23,6 @@
 #include "test-string.h"
 
 #ifdef WIDE
-# include <inttypes.h>
 # include <wchar.h>
 
 # define L(str) L##str
@@ -34,12 +33,53 @@
 # define SIMPLE_STRCMP simple_wcscmp
 # define STUPID_STRCMP stupid_wcscmp
 # define CHAR wchar_t
-# define UCHAR uint32_t
+# define UCHAR wchar_t
 # define CHARBYTES 4
 # define CHARBYTESLOG 2
 # define CHARALIGN __alignof__ (CHAR)
 # define MIDCHAR 0x7fffffff
 # define LARGECHAR 0xfffffffe
+# define CHAR__MAX WCHAR_MAX
+# define CHAR__MIN WCHAR_MIN
+
+/* Wcscmp uses signed semantics for comparison, not unsigned */
+/* Avoid using substraction since possible overflow */
+
+int
+simple_wcscmp (const wchar_t *s1, const wchar_t *s2)
+{
+  wchar_t c1, c2;
+  do
+    {
+      c1 = *s1++;
+      c2 = *s2++;
+      if (c2 == L'\0')
+      return c1 - c2;
+    }
+  while (c1 == c2);
+
+  return c1 < c2 ? -1 : 1;
+}
+
+int
+stupid_wcscmp (const wchar_t *s1, const wchar_t *s2)
+{
+  size_t ns1 = wcslen (s1) + 1;
+  size_t ns2 = wcslen (s2) + 1;
+  size_t n = ns1 < ns2 ? ns1 : ns2;
+  int ret = 0;
+  
+  wchar_t c1, c2;
+
+  while (n--) {
+    c1 = *s1++;
+    c2 = *s2++;
+    if ((ret = c1 < c2 ? -1 : c1 == c2 ? 0 : 1) != 0)
+      break;
+  }
+  return ret;
+}
+
 #else
 # define L(str) str
 # define STRCMP strcmp
@@ -55,31 +95,35 @@
 # define CHARALIGN 1
 # define MIDCHAR 0x7f
 # define LARGECHAR 0xfe
-#endif
-typedef int (*proto_t) (const CHAR *, const CHAR *);
+# define CHAR__MAX CHAR_MAX
+# define CHAR__MIN CHAR_MIN
 
+/* Strcmp uses unsigned semantics for comparison. */
 int
-SIMPLE_STRCMP (const CHAR *s1, const CHAR *s2)
+simple_strcmp (const char *s1, const char *s2)
 {
   int ret;
 
-  while ((ret = *(UCHAR *) s1 - *(UCHAR *) s2++) == 0 && *s1++);
+  while ((ret = *(unsigned char *) s1 - *(unsigned char*) s2++) == 0 && *s1++);
   return ret;
 }
 
 int
-STUPID_STRCMP (const CHAR *s1, const CHAR *s2)
+stupid_strcmp (const char *s1, const char *s2)
 {
-  size_t ns1 = STRLEN (s1) + 1;
-  size_t ns2 = STRLEN (s2) + 1;
+  size_t ns1 = strlen (s1) + 1;
+  size_t ns2 = strlen (s2) + 1;
   size_t n = ns1 < ns2 ? ns1 : ns2;
   int ret = 0;
 
   while (n--)
-    if ((ret = *(UCHAR *) s1++ - *(UCHAR *) s2++) != 0)
+    if ((ret = *(unsigned char *) s1++ - *(unsigned char *) s2++) != 0)
       break;
   return ret;
 }
+#endif
+
+typedef int (*proto_t) (const CHAR *, const CHAR *);
 
 IMPL (STUPID_STRCMP, 1)
 IMPL (SIMPLE_STRCMP, 1)
@@ -276,14 +320,31 @@ check (void)
   STRCPY(s1, L("abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrs"));
   STRCPY(s2, L("abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijkLMNOPQRSTUV"));
 
+  /* Check correct working for negatives values */
+
+  s1[0] = 1;
+  s2[0] = 1;
+  s1[1] = 1;
+  s2[1] = 1;
+  s1[2] = -1;
+  s2[2] = 3;
+  s1[3] = 0;
+  s2[3] = -1;
+
+  /* Check possible overflow bug, actual more for wcscmp */
+
+  s1[7] = CHAR__MIN;
+  s2[7] = CHAR__MAX;
+
   size_t l1 = STRLEN (s1);
   size_t l2 = STRLEN (s2);
+
   for (size_t i1 = 0; i1 < l1; i1++)
     for (size_t i2 = 0; i2 < l2; i2++)
       {
-	int exp_result = SIMPLE_STRCMP (s1 + i1, s2 + i2);
-	FOR_EACH_IMPL (impl, 0)
-	  check_result (impl, s1 + i1, s2 + i2, exp_result);
+	        int exp_result = SIMPLE_STRCMP (s1 + i1, s2 + i2);
+	        FOR_EACH_IMPL (impl, 0)
+	        check_result (impl, s1 + i1, s2 + i2, exp_result);
       }
 }
 

@@ -21,7 +21,6 @@
 #ifndef NOT_IN_libc
 
 # include <sysdep.h>
-# include "asm-syntax.h"
 
 # define CFI_PUSH(REG)	\
 	cfi_adjust_cfa_offset (4);	\
@@ -34,18 +33,16 @@
 # define PUSH(REG) pushl REG; CFI_PUSH (REG)
 # define POP(REG) popl REG; CFI_POP (REG)
 
-# ifndef STRCMP
-# define STRCMP __wcscmp_sse2
-# endif
-
 # define ENTRANCE PUSH(%esi); PUSH(%edi)
 # define RETURN  POP(%edi); POP(%esi); ret; CFI_PUSH(%esi); CFI_PUSH(%edi);
 # define PARMS  4
 # define STR1  PARMS
 # define STR2  STR1+4
 
+/* Note: wcscmp uses signed comparison, not unsugned as in strcmp function. */
+
 	.text
-ENTRY (STRCMP)
+ENTRY (__wcscmp_sse2)
 /*
 	* This implementation uses SSE to compare up to 16 bytes at a time.
 */
@@ -131,7 +128,7 @@ L(continue_48_48):
 	jne	L(nequal)
 	test	%ecx, %ecx
 	jz	L(equal)
-
+	
 	movdqu	16(%edi), %xmm1
 	movdqu	16(%esi), %xmm2
 	pcmpeqd	%xmm1, %xmm0		/* Any null double_word? */
@@ -264,21 +261,21 @@ L(continue_00_48):
 	test	%ecx, %ecx
 	jnz	L(less4_double_words1)
 
-	sub	(%esi), %eax
-	jnz	L(return)
-
+	cmp	(%esi), %eax
+	jne	L(nequal)
+	
 	mov	4(%edi), %eax
-	sub	4(%esi), %eax
-	jnz	L(return)
+	cmp	4(%esi), %eax
+	jne	L(nequal)
 
 	mov	8(%edi), %eax
-	sub	8(%esi), %eax
-	jnz	L(return)
+	cmp	8(%esi), %eax
+	jne	L(nequal)
 
 	mov	12(%edi), %eax
-	sub	12(%esi), %eax
-	jnz	L(return)
-
+	cmp	12(%esi), %eax
+	jne	L(nequal)
+	
 	movdqu	16(%esi), %xmm2
 	pcmpeqd	%xmm2, %xmm0		/* Any null double_word? */
 	pcmpeqd	16(%edi), %xmm2		/* compare first 4 double_words for equality */
@@ -381,7 +378,7 @@ L(continue_32_48):
 	movdqu	48(%esi), %xmm2
 	pcmpeqd	%xmm1, %xmm0		/* Any null double_word? */
 	pcmpeqd	%xmm2, %xmm1		/* compare first 4 double_words for equality */
-	psubb	%xmm0, %xmm1		/* packed sub of comparison results*/
+	psubb	%xmm0, %xmm1		/* packed sub of comparison results */
 	pmovmskb %xmm1, %edx
 	sub	$0xffff, %edx		/* if first 4 double_words are same, edx == 0xffff */
 	jnz	L(less4_double_words_48)
@@ -585,21 +582,21 @@ L(continue_48_00):
 	test	%ecx, %ecx
 	jnz	L(less4_double_words1)
 
-	sub	(%esi), %eax
-	jnz	L(return)
-
+	cmp	(%esi), %eax
+	jne	L(nequal)
+	
 	mov	4(%edi), %eax
-	sub	4(%esi), %eax
-	jnz	L(return)
+	cmp	4(%esi), %eax
+	jne	L(nequal)
 
 	mov	8(%edi), %eax
-	sub	8(%esi), %eax
-	jnz	L(return)
+	cmp	8(%esi), %eax
+	jne	L(nequal)
 
 	mov	12(%edi), %eax
-	sub	12(%esi), %eax
-	jnz	L(return)
-
+	cmp	12(%esi), %eax
+	jne	L(nequal)
+	
 	movdqu	16(%edi), %xmm1
 	pcmpeqd	%xmm1, %xmm0		/* Any null double_word? */
 	pcmpeqd	16(%esi), %xmm1		/* compare first 4 double_words for equality */
@@ -839,142 +836,161 @@ L(less4_double_words1):
 	test	%ecx, %ecx
 	jz	L(equal)
 
-	mov	12(%esi), %edx
-	mov	12(%edi), %eax
-	sub	%edx, %eax
+	mov	12(%esi), %ecx
+	cmp	%ecx, 12(%edi)
+	jne	L(nequal)
+	xor	%eax, %eax
 	RETURN
 
 	.p2align 4
 L(less4_double_words):
+	xor	%eax, %eax
 	test	%dl, %dl
 	jz	L(next_two_double_words)
 	and	$15, %dl
 	jz	L(second_double_word)
-	mov	(%edi), %eax
-	sub	(%esi), %eax
+	mov	(%esi), %ecx
+	cmp	%ecx, (%edi)
+	jne	L(nequal)
 	RETURN
 
 	.p2align 4
 L(second_double_word):
-	mov	4(%edi), %eax
-	sub	4(%esi), %eax
+	mov	4(%esi), %ecx
+	cmp	%ecx, 4(%edi)
+	jne	L(nequal)
 	RETURN
 
 	.p2align 4
 L(next_two_double_words):
 	and	$15, %dh
 	jz	L(fourth_double_word)
-	mov	8(%edi), %eax
-	sub	8(%esi), %eax
+	mov	8(%esi), %ecx
+	cmp	%ecx, 8(%edi)
+	jne	L(nequal)
 	RETURN
 
 	.p2align 4
 L(fourth_double_word):
-	mov	12(%edi), %eax
-	sub	12(%esi), %eax
+	mov	12(%esi), %ecx
+	cmp	%ecx, 12(%edi)
+	jne	L(nequal)
 	RETURN
 
 	.p2align 4
 L(less4_double_words_16):
+	xor	%eax, %eax
 	test	%dl, %dl
 	jz	L(next_two_double_words_16)
 	and	$15, %dl
 	jz	L(second_double_word_16)
-	mov	16(%edi), %eax
-	sub	16(%esi), %eax
+	mov	16(%esi), %ecx
+	cmp	%ecx, 16(%edi)
+	jne	L(nequal)
 	RETURN
 
 	.p2align 4
 L(second_double_word_16):
-	mov	20(%edi), %eax
-	sub	20(%esi), %eax
+	mov	20(%esi), %ecx
+	cmp	%ecx, 20(%edi)
+	jne	L(nequal)
 	RETURN
 
 	.p2align 4
 L(next_two_double_words_16):
 	and	$15, %dh
 	jz	L(fourth_double_word_16)
-	mov	24(%edi), %eax
-	sub	24(%esi), %eax
+	mov	24(%esi), %ecx
+	cmp	%ecx, 24(%edi)
+	jne	L(nequal)
 	RETURN
 
 	.p2align 4
 L(fourth_double_word_16):
-	mov	28(%edi), %eax
-	sub	28(%esi), %eax
+	mov	28(%esi), %ecx
+	cmp	%ecx, 28(%edi)
+	jne	L(nequal)
 	RETURN
 
 	.p2align 4
 L(less4_double_words_32):
+	xor	%eax, %eax
 	test	%dl, %dl
 	jz	L(next_two_double_words_32)
 	and	$15, %dl
 	jz	L(second_double_word_32)
-	mov	32(%edi), %eax
-	sub	32(%esi), %eax
+	mov	32(%esi), %ecx
+	cmp	%ecx, 32(%edi)
+	jne	L(nequal)
 	RETURN
 
 	.p2align 4
 L(second_double_word_32):
-	mov	36(%edi), %eax
-	sub	36(%esi), %eax
+	mov	36(%esi), %ecx
+	cmp	%ecx, 36(%edi)
+	jne	L(nequal)
 	RETURN
 
 	.p2align 4
 L(next_two_double_words_32):
 	and	$15, %dh
 	jz	L(fourth_double_word_32)
-	mov	40(%edi), %eax
-	sub	40(%esi), %eax
+	mov	40(%esi), %ecx
+	cmp	%ecx, 40(%edi)
+	jne	L(nequal)
 	RETURN
 
 	.p2align 4
 L(fourth_double_word_32):
-	mov	44(%edi), %eax
-	sub	44(%esi), %eax
+	mov	44(%esi), %ecx
+	cmp	%ecx, 44(%edi)
+	jne	L(nequal)
 	RETURN
 
 	.p2align 4
 L(less4_double_words_48):
+	xor	%eax, %eax
 	test	%dl, %dl
 	jz	L(next_two_double_words_48)
 	and	$15, %dl
 	jz	L(second_double_word_48)
-	mov	48(%edi), %eax
-	sub	48(%esi), %eax
+	mov	48(%esi), %ecx
+	cmp	%ecx, 48(%edi)
+	jne	L(nequal)
 	RETURN
 
 	.p2align 4
 L(second_double_word_48):
-	mov	52(%edi), %eax
-	sub	52(%esi), %eax
+	mov	52(%esi), %ecx
+	cmp	%ecx, 52(%edi)
+	jne	L(nequal)
 	RETURN
 
 	.p2align 4
 L(next_two_double_words_48):
 	and	$15, %dh
 	jz	L(fourth_double_word_48)
-	mov	56(%edi), %eax
-	sub	56(%esi), %eax
+	mov	56(%esi), %ecx
+	cmp	%ecx, 56(%edi)
+	jne	L(nequal)
 	RETURN
 
 	.p2align 4
 L(fourth_double_word_48):
-	mov	60(%edi), %eax
-	sub	60(%esi), %eax
-	RETURN
-
-	.p2align 4
-L(return):
+	mov	60(%esi), %ecx
+	cmp	%ecx, 60(%edi)
+	jne	L(nequal)
 	RETURN
 
 	.p2align 4
 L(nequal):
 	mov	$1, %eax
-	ja	L(nequal_bigger)
+	jg	L(return)
 	neg	%eax
+	RETURN
 
-L(nequal_bigger):
+	.p2align 4
+L(return):
 	RETURN
 
 	.p2align 4
@@ -988,7 +1004,7 @@ L(equal):
 	.p2align 4
 L(neq):
 	mov	$1, %eax
-	ja	L(neq_bigger)
+	jg	L(neq_bigger)
 	neg	%eax
 
 L(neq_bigger):
@@ -999,5 +1015,5 @@ L(eq):
 	xorl	%eax, %eax
 	ret
 
-END (STRCMP)
+END (__wcscmp_sse2)
 #endif

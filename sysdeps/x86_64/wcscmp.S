@@ -20,6 +20,8 @@
 
 #include <sysdep.h>
 
+/* Note: wcscmp uses signed comparison, not unsighed as in strcmp function. */
+
 	.text
 ENTRY (wcscmp)
 /*
@@ -76,7 +78,7 @@ L(continue_48_48):
 	jne	L(nequal)
 	test	%ecx, %ecx
 	jz	L(equal)
-
+	
 	movdqu	16(%rdi), %xmm1
 	movdqu	16(%rsi), %xmm2
 	pcmpeqd	%xmm1, %xmm0		/* Any null double_word? */
@@ -209,21 +211,21 @@ L(continue_00_48):
 	test	%ecx, %ecx
 	jnz	L(less4_double_words1)
 
-	sub	(%rsi), %eax
-	jnz	L(return)
-
+	cmp	(%rsi), %eax
+	jne	L(nequal)
+	
 	mov	4(%rdi), %eax
-	sub	4(%rsi), %eax
-	jnz	L(return)
+	cmp	4(%rsi), %eax
+	jne	L(nequal)
 
 	mov	8(%rdi), %eax
-	sub	8(%rsi), %eax
-	jnz	L(return)
+	cmp	8(%rsi), %eax
+	jne	L(nequal)
 
 	mov	12(%rdi), %eax
-	sub	12(%rsi), %eax
-	jnz	L(return)
-
+	cmp	12(%rsi), %eax
+	jne	L(nequal)
+	
 	movdqu	16(%rsi), %xmm2
 	pcmpeqd	%xmm2, %xmm0		/* Any null double_word? */
 	pcmpeqd	16(%rdi), %xmm2		/* compare first 4 double_words for equality */
@@ -530,21 +532,21 @@ L(continue_48_00):
 	test	%ecx, %ecx
 	jnz	L(less4_double_words1)
 
-	sub	(%rsi), %eax
-	jnz	L(return)
-
+	cmp	(%rsi), %eax
+	jne	L(nequal)
+	
 	mov	4(%rdi), %eax
-	sub	4(%rsi), %eax
-	jnz	L(return)
+	cmp	4(%rsi), %eax
+	jne	L(nequal)
 
 	mov	8(%rdi), %eax
-	sub	8(%rsi), %eax
-	jnz	L(return)
+	cmp	8(%rsi), %eax
+	jne	L(nequal)
 
 	mov	12(%rdi), %eax
-	sub	12(%rsi), %eax
-	jnz	L(return)
-
+	cmp	12(%rsi), %eax
+	jne	L(nequal)
+	
 	movdqu	16(%rdi), %xmm1
 	pcmpeqd	%xmm1, %xmm0		/* Any null double_word? */
 	pcmpeqd	16(%rsi), %xmm1		/* compare first 4 double_words for equality */
@@ -784,25 +786,29 @@ L(less4_double_words1):
 	test	%ecx, %ecx
 	jz	L(equal)
 
-	mov	12(%rsi), %edx
-	mov	12(%rdi), %eax
-	sub	%edx, %eax
+	mov	12(%rsi), %ecx
+	cmp	%ecx, 12(%rdi)
+	jne	L(nequal)
+	xor	%eax, %eax
 	ret
 
 	.p2align 4
 L(less4_double_words):
+	xor	%eax, %eax
 	test	%dl, %dl
 	jz	L(next_two_double_words)
 	and	$15, %dl
 	jz	L(second_double_word)
 	mov	(%rdi), %eax
-	sub	(%rsi), %eax
+	cmp	(%rsi), %eax
+	jne	L(nequal)
 	ret
 
 	.p2align 4
 L(second_double_word):
 	mov	4(%rdi), %eax
-	sub	4(%rsi), %eax
+	cmp	4(%rsi), %eax
+	jne	L(nequal)
 	ret
 
 	.p2align 4
@@ -810,29 +816,34 @@ L(next_two_double_words):
 	and	$15, %dh
 	jz	L(fourth_double_word)
 	mov	8(%rdi), %eax
-	sub	8(%rsi), %eax
+	cmp	8(%rsi), %eax
+	jne	L(nequal)
 	ret
 
 	.p2align 4
 L(fourth_double_word):
 	mov	12(%rdi), %eax
-	sub	12(%rsi), %eax
+	cmp	12(%rsi), %eax
+	jne	L(nequal)
 	ret
 
 	.p2align 4
 L(less4_double_words_16):
+	xor	%eax, %eax
 	test	%dl, %dl
 	jz	L(next_two_double_words_16)
 	and	$15, %dl
 	jz	L(second_double_word_16)
 	mov	16(%rdi), %eax
-	sub	16(%rsi), %eax
+	cmp	16(%rsi), %eax
+	jne	L(nequal)
 	ret
 
 	.p2align 4
 L(second_double_word_16):
 	mov	20(%rdi), %eax
-	sub	20(%rsi), %eax
+	cmp	20(%rsi), %eax
+	jne	L(nequal)
 	ret
 
 	.p2align 4
@@ -840,29 +851,34 @@ L(next_two_double_words_16):
 	and	$15, %dh
 	jz	L(fourth_double_word_16)
 	mov	24(%rdi), %eax
-	sub	24(%rsi), %eax
+	cmp	24(%rsi), %eax
+	jne	L(nequal)
 	ret
 
 	.p2align 4
 L(fourth_double_word_16):
 	mov	28(%rdi), %eax
-	sub	28(%rsi), %eax
+	cmp	28(%rsi), %eax
+	jne	L(nequal)
 	ret
 
 	.p2align 4
 L(less4_double_words_32):
+	xor	%eax, %eax
 	test	%dl, %dl
 	jz	L(next_two_double_words_32)
 	and	$15, %dl
 	jz	L(second_double_word_32)
 	mov	32(%rdi), %eax
-	sub	32(%rsi), %eax
+	cmp	32(%rsi), %eax
+	jne	L(nequal)
 	ret
 
 	.p2align 4
 L(second_double_word_32):
 	mov	36(%rdi), %eax
-	sub	36(%rsi), %eax
+	cmp	36(%rsi), %eax
+	jne	L(nequal)
 	ret
 
 	.p2align 4
@@ -870,29 +886,34 @@ L(next_two_double_words_32):
 	and	$15, %dh
 	jz	L(fourth_double_word_32)
 	mov	40(%rdi), %eax
-	sub	40(%rsi), %eax
+	cmp	40(%rsi), %eax
+	jne	L(nequal)
 	ret
 
 	.p2align 4
 L(fourth_double_word_32):
 	mov	44(%rdi), %eax
-	sub	44(%rsi), %eax
+	cmp	44(%rsi), %eax
+	jne	L(nequal)
 	ret
 
 	.p2align 4
 L(less4_double_words_48):
+	xor	%eax, %eax
 	test	%dl, %dl
 	jz	L(next_two_double_words_48)
 	and	$15, %dl
 	jz	L(second_double_word_48)
 	mov	48(%rdi), %eax
-	sub	48(%rsi), %eax
+	cmp	48(%rsi), %eax
+	jne	L(nequal)
 	ret
 
 	.p2align 4
 L(second_double_word_48):
 	mov	52(%rdi), %eax
-	sub	52(%rsi), %eax
+	cmp	52(%rsi), %eax
+	jne	L(nequal)
 	ret
 
 	.p2align 4
@@ -900,23 +921,21 @@ L(next_two_double_words_48):
 	and	$15, %dh
 	jz	L(fourth_double_word_48)
 	mov	56(%rdi), %eax
-	sub	56(%rsi), %eax
+	cmp	56(%rsi), %eax
+	jne	L(nequal)
 	ret
 
 	.p2align 4
 L(fourth_double_word_48):
 	mov	60(%rdi), %eax
-	sub	60(%rsi), %eax
-	ret
-
-	.p2align 4
-L(return):
+	cmp	60(%rsi), %eax
+	jne	L(nequal)
 	ret
 
 	.p2align 4
 L(nequal):
 	mov	$1, %eax
-	ja	L(nequal_bigger)
+	jg	L(nequal_bigger)
 	neg	%eax
 
 L(nequal_bigger):

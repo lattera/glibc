@@ -37,11 +37,11 @@ WCSCMP (s1, s2)
     {
       c1 = (wint_t) *s1++;
       c2 = (wint_t) *s2++;
-      if (c1 == L'\0')
+      if (c2 == L'\0')
 	return c1 - c2;
     }
   while (c1 == c2);
 
-  return c1 - c2;
+  return c1 < c2 ? -1 : 1;
 }
 libc_hidden_def (WCSCMP)
