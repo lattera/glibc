@@ -1,3 +1,9 @@
+2011-10-23  Andreas Schwab  <schwab@linux-m68k.org>
+
+	* sysdeps/m68k/m680x0/fpu/e_exp.c (FUNC_FINITE): Define.
+	* sysdeps/m68k/m680x0/fpu/e_expf.c (FUNC_FINITE): Define.
+	* sysdeps/m68k/m680x0/fpu/e_expl.c (FUNC_FINITE): Define.
+
 2011-10-22  Andreas Schwab  <schwab@linux-m68k.org>
 
 	* sysdeps/m68k/m680x0/fpu/s_ccos.c: Remove.
