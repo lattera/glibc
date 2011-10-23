@@ -26,8 +26,8 @@ Version 2.15
 * Improved strcpy, strncpy, stpcpy, stpncpy for SSE2 and SSSE3 on x86-64.
   Contributed by HJ Lu.
 
-* Optimized strcat, strncat, wcslen, strnlen on x86-64 and optimized
-  wcscmp on x86-32 and x86-64.
+* Optimized strcat, strncat on x86-64 and optimized wcscmp, wcslen, strnlen
+  on x86-32 and x86-64.
   Contributed by Liubov Dmitrieva.
 
 * Optimized strchr and strrchr for SSE on x86-32.

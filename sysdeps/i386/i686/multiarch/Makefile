@@ -18,6 +18,7 @@ sysdep_routines += bzero-sse2 memset-sse2 memcpy-ssse3 mempcpy-ssse3 \
 		   wcscmp-sse2 wcscmp-c memchr-sse2 memchr-sse2-bsf \
 		   memrchr-sse2 memrchr-sse2-bsf memrchr-c \
 		   rawmemchr-sse2 rawmemchr-sse2-bsf \
+		   strnlen-sse2 strnlen-c wcslen-sse2 wcslen-c \
 		   wmemcmp-sse4 wmemcmp-ssse3 wmemcmp-c
 ifeq (yes,$(config-cflags-sse4))
 sysdep_routines += strcspn-c strpbrk-c strspn-c strstr-c strcasestr-c

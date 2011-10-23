@@ -1,5 +1,5 @@
 /* Find the length of STRING, but scan at most MAXLEN characters.
-   Copyright (C) 1991,1993,1997,2000,2001,2005 Free Software Foundation, Inc.
+   Copyright (C) 1991, 1993, 1997, 2000, 2001, 2005, 2011 Free Software Foundation, Inc.
    Contributed by Jakub Jelinek <jakub@redhat.com>.
 
    Based on strlen written by Torbjorn Granlund (tege@sics.se),
@@ -26,8 +26,13 @@
 
 /* Find the length of S, but scan at most MAXLEN characters.  If no
    '\0' terminator is found in that many characters, return MAXLEN.  */
+
+#ifndef STRNLEN
+# define STRNLEN __strnlen
+#endif
+
 size_t
-__strnlen (const char *str, size_t maxlen)
+STRNLEN (const char *str, size_t maxlen)
 {
   const char *char_ptr, *end_ptr = str + maxlen;
   const unsigned long int *longword_ptr;
@@ -157,5 +162,7 @@ __strnlen (const char *str, size_t maxlen)
     char_ptr = end_ptr;
   return char_ptr - str;
 }
+#ifndef STRNLEN
 weak_alias (__strnlen, strnlen)
+#endif
 libc_hidden_def (strnlen)

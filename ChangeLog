@@ -1,3 +1,18 @@
+2011-10-23  Ulrich Drepper  <drepper@gmail.com>
+
+	* string/strnlen.c: Define and use STRNLEN macro.
+	* sysdeps/i386/i686/multiarch/Makefile [string] (sysdep_routines):
+	Add strnlen-sse2, strnlen-c, wcslen-sse2, and wcslen-c.
+	* sysdeps/i386/i686/multiarch/strlen-sse2.S: Add support for strnlen.
+	* wcsmbs/wcslen.c: Define and use WCSLEN.
+	* sysdeps/i386/i686/multiarch/strnlen-c.c: New file.
+	* sysdeps/i386/i686/multiarch/strnlen-sse2.S: New file.
+	* sysdeps/i386/i686/multiarch/strnlen.S: New file.
+	* sysdeps/i386/i686/multiarch/wcslen-c.c: New file.
+	* sysdeps/i386/i686/multiarch/wcslen-sse2.S: New file.
+	* sysdeps/i386/i686/multiarch/wcslen.S: New file.
+	Patch by Liubov Dmitrieva <liubov.dmitrieva@gmail.com>.
+
 2011-10-20  Liubov Dmitrieva  <liubov.dmitrieva@gmail.com>
 
 	* sysdeps/x86_64/multiarch/Makefile (sysdep_routines): Add

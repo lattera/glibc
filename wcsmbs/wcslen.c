@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1996, 1997, 1998, 2011  Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1995.
 
@@ -19,10 +19,13 @@
 
 #include <wchar.h>
 
-
 /* Return length of string S.  */
+#ifndef WCSLEN
+# define WCSLEN __wcslen
+#endif
+
 size_t
-__wcslen (s)
+WCSLEN (s)
      const wchar_t *s;
 {
   size_t len = 0;
@@ -40,4 +43,6 @@ __wcslen (s)
 
   return len;
 }
+#ifndef WCSLEN
 weak_alias (__wcslen, wcslen)
+#endif
