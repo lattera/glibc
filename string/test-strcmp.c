@@ -68,7 +68,7 @@ stupid_wcscmp (const wchar_t *s1, const wchar_t *s2)
   size_t ns2 = wcslen (s2) + 1;
   size_t n = ns1 < ns2 ? ns1 : ns2;
   int ret = 0;
-  
+
   wchar_t c1, c2;
 
   while (n--) {
@@ -342,9 +342,9 @@ check (void)
   for (size_t i1 = 0; i1 < l1; i1++)
     for (size_t i2 = 0; i2 < l2; i2++)
       {
-	        int exp_result = SIMPLE_STRCMP (s1 + i1, s2 + i2);
-	        FOR_EACH_IMPL (impl, 0)
-	        check_result (impl, s1 + i1, s2 + i2, exp_result);
+		int exp_result = SIMPLE_STRCMP (s1 + i1, s2 + i2);
+		FOR_EACH_IMPL (impl, 0)
+		check_result (impl, s1 + i1, s2 + i2, exp_result);
       }
 }
 
