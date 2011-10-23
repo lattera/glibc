@@ -1,5 +1,9 @@
 2011-10-23  Ulrich Drepper  <drepper@gmail.com>
 
+	* string/strnlen.c: Don't define STRNLEN, reverse logic.
+	Remove unused variable magic_bits.
+	* sysdeps/i386/i686/multiarch/rtld-strnlen.c: New file.
+
 	* string/strnlen.c: Define and use STRNLEN macro.
 	* sysdeps/i386/i686/multiarch/Makefile [string] (sysdep_routines):
 	Add strnlen-sse2, strnlen-c, wcslen-sse2, and wcslen-c.
