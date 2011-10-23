@@ -1,5 +1,5 @@
 /* Test and measure STRCHR functions.
-   Copyright (C) 1999, 2002, 2003 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2002, 2003, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Jakub Jelinek <jakub@redhat.com>, 1999.
    Added wcschr support by Liubov Dmitrieva <liubov.dmitrieva@gmail.com>, 2011
@@ -100,7 +100,7 @@ do_one_test (impl_t *impl, const CHAR *s, int c, const CHAR *exp_res)
 
 static void
 do_test (size_t align, size_t pos, size_t len, int seek_char, int max_char)
-/* for wcschr: align here means align not in bytes, 
+/* for wcschr: align here means align not in bytes,
  * but in wchar_ts, in bytes it will equal to align * (sizeof (wchar_t))
  * len for wcschr here isn't in bytes but it's number of wchar_t symbols */
 {
@@ -115,7 +115,7 @@ do_test (size_t align, size_t pos, size_t len, int seek_char, int max_char)
     {
       buf[align + i] = 32 + 23 * i % max_char;
       if (buf[align + i] == seek_char)
-        buf[align + i] = seek_char + 1;
+	buf[align + i] = seek_char + 1;
     }
   buf[align + len] = 0;
 
@@ -156,18 +156,18 @@ do_random_tests (void)
       seek_char = random () & 255;
       if (pos + align >= 511)
 	pos = 510 - align - (random () & 7);
-/* len for wcschr here isn't in bytes but it's number of wchar_t symbols */  
+/* len for wcschr here isn't in bytes but it's number of wchar_t symbols */
       len = random () & 511;
       if ((pos == len && seek_char)
 	  || (pos > len && (random () & 1)))
 	len = pos + 1 + (random () & 7);
       if (len + align >= 512)
-        len = 511 - align - (random () & 7);
+	len = 511 - align - (random () & 7);
       if (pos == len && seek_char)
 	len = pos + 1;
       j = (pos > len ? pos : len) + align + 64;
       if (j > 512)
-        j = 512;
+	j = 512;
 
       for (i = 0; i < j; i++)
 	{
@@ -200,7 +200,7 @@ do_random_tests (void)
 	if (CALL (impl, (CHAR *) (p + align), seek_char) != result)
 	  {
 	    error (0, 0, "Iteration %zd - wrong result in function \
-                   %s (align in bytes: %zd, seek_char: %d, len: %zd, pos: %zd) %p != %p, p %p",
+		   %s (align in bytes: %zd, seek_char: %d, len: %zd, pos: %zd) %p != %p, p %p",
 		   n, impl->name, align * sizeof (CHAR), seek_char, len, pos,
 		   CALL (impl, (CHAR *) (p + align), seek_char), result, p);
 	    ret = 1;
