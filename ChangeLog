@@ -1,5 +1,7 @@
 2011-10-22  Ulrich Drepper  <drepper@gmail.com>
 
+	* sysdeps/x86_64/fpu/libm-test-ulps: Update.
+
 	* sysdeps/ieee754/dbl-64/dla.h: When compiling with FMA4 support
 	define DLA_FMA.
 	[DLA_FMA] (EMULV): Use DLA_FMA.
