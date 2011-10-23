@@ -37,7 +37,7 @@
 
 #include "endian.h"
 #include "mydefs.h"
-#include "dla.h"
+#include <dla.h>
 #include "math_private.h"
 
 static const int4 tab54[32] = {

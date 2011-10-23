@@ -35,18 +35,6 @@
 /* IEEE double.                                                        */
 /***********************************************************************/
 
-/* We can use fma instructions if available.  */
-#if defined __x86_64__ || (defined __i386__ && defined __SSE2_MATH__)
-# ifdef __FMA4__
-#  define DLA_FMA(x,y,z) \
-	   ({ double __zz; \
-	      asm ("vfmsubsd %3, %2, %1, %0"				      \
-		   : "=x" (__zz) : "x" (x), "xm" (y), "x" (z));		      \
-	      __zz; })
-# endif
-#endif
-
-
 /* CN = 1+2**27 = '41a0000002000000' IEEE double format */
 #define  CN   134217729.0
 

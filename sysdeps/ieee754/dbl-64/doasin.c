@@ -31,7 +31,7 @@
 
 #include "endian.h"
 #include "mydefs.h"
-#include "dla.h"
+#include <dla.h>
 #include "math_private.h"
 
 /********************************************************************/

@@ -37,7 +37,7 @@
 /***************************************************************************/
 #include "endian.h"
 #include "upow.h"
-#include "dla.h"
+#include <dla.h>
 #include "mydefs.h"
 #include "MathLib.h"
 #include "upow.tbl"

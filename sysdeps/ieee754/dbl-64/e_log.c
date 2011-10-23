@@ -36,7 +36,7 @@
 
 
 #include "endian.h"
-#include "dla.h"
+#include <dla.h>
 #include "mpa.h"
 #include "MathLib.h"
 #include "math_private.h"
