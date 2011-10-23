@@ -78,7 +78,7 @@ L(continue_48_48):
 	jne	L(nequal)
 	test	%ecx, %ecx
 	jz	L(equal)
-	
+
 	movdqu	16(%rdi), %xmm1
 	movdqu	16(%rsi), %xmm2
 	pcmpeqd	%xmm1, %xmm0		/* Any null double_word? */
@@ -213,7 +213,7 @@ L(continue_00_48):
 
 	cmp	(%rsi), %eax
 	jne	L(nequal)
-	
+
 	mov	4(%rdi), %eax
 	cmp	4(%rsi), %eax
 	jne	L(nequal)
@@ -225,7 +225,7 @@ L(continue_00_48):
 	mov	12(%rdi), %eax
 	cmp	12(%rsi), %eax
 	jne	L(nequal)
-	
+
 	movdqu	16(%rsi), %xmm2
 	pcmpeqd	%xmm2, %xmm0		/* Any null double_word? */
 	pcmpeqd	16(%rdi), %xmm2		/* compare first 4 double_words for equality */
@@ -534,7 +534,7 @@ L(continue_48_00):
 
 	cmp	(%rsi), %eax
 	jne	L(nequal)
-	
+
 	mov	4(%rdi), %eax
 	cmp	4(%rsi), %eax
 	jne	L(nequal)
@@ -546,7 +546,7 @@ L(continue_48_00):
 	mov	12(%rdi), %eax
 	cmp	12(%rsi), %eax
 	jne	L(nequal)
-	
+
 	movdqu	16(%rdi), %xmm1
 	pcmpeqd	%xmm1, %xmm0		/* Any null double_word? */
 	pcmpeqd	16(%rsi), %xmm1		/* compare first 4 double_words for equality */
