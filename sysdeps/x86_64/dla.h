@@ -1,9 +1,6 @@
-#ifdef __FMA4__
-# define DLA_FMA(x,y,z) \
-	   ({ double __zz; \
-	      asm ("vfmsubsd %3, %2, %1, %0"				      \
-		   : "=x" (__zz) : "x" (x), "xm" (y), "x" (z));		      \
-	      __zz; })
+#if defined __FMA4__ || defined __FMA__
+# define DLA_FMS(x,y,z) \
+  __builtin_fma (x, y, -z)
 #endif
 
 #include "sysdeps/ieee754/dbl-64/dla.h"

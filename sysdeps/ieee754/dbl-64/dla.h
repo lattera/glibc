@@ -60,9 +60,9 @@
 /* satisfies z+zz = x*y exactly. p,hx,tx,hy,ty are temporary           */
 /* storage variables of type double.                                   */
 
-#ifdef DLA_FMA
+#ifdef DLA_FMS
 # define  EMULV(x,y,z,zz,p,hx,tx,hy,ty)          \
-	   z=x*y; zz=DLA_FMA(x,y,z);
+	   z=x*y; zz=DLA_FMS(x,y,z);
 #else
 # define  EMULV(x,y,z,zz,p,hx,tx,hy,ty)          \
 	   p=CN*(x);  hx=((x)-p)+p;  tx=(x)-hx; \
@@ -76,7 +76,7 @@
 /* that satisfies z+zz = x*y exactly. p,hx,tx,hy,ty,q are temporary          */
 /* storage variables of type double.                                         */
 
-#ifdef DLA_FMA
+#ifdef DLA_FMS
 # define  MUL12(x,y,z,zz,p,hx,tx,hy,ty,q)        \
 	   EMULV(x,y,z,zz,p,hx,tx,hy,ty)
 #else
