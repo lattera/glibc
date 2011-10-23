@@ -1,7 +1,8 @@
-/* Test and measure strchr functions.
+/* Test and measure STRCHR functions.
    Copyright (C) 1999, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Jakub Jelinek <jakub@redhat.com>, 1999.
+   Added wcschr support by Liubov Dmitrieva <liubov.dmitrieva@gmail.com>, 2011
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -21,38 +22,55 @@
 #define TEST_MAIN
 #include "test-string.h"
 
-typedef char *(*proto_t) (const char *, int);
-char *simple_strchr (const char *, int);
-char *stupid_strchr (const char *, int);
+#ifndef WIDE
+# define STRCHR strchr
+# define STRLEN strlen
+# define CHAR char
+# define BIG_CHAR CHAR_MAX
+# define MIDDLE_CHAR 127
+# define SMALL_CHAR 23
+# define UCHAR unsigned char
+#else
+# include <wchar.h>
+# define STRCHR wcschr
+# define STRLEN wcslen
+# define CHAR wchar_t
+# define BIG_CHAR WCHAR_MAX
+# define MIDDLE_CHAR 1121
+# define SMALL_CHAR 851
+# define UCHAR wchar_t
+#endif
 
-IMPL (stupid_strchr, 0)
-IMPL (simple_strchr, 0)
-IMPL (strchr, 1)
+typedef CHAR *(*proto_t) (const CHAR *, int);
 
-char *
-simple_strchr (const char *s, int c)
+CHAR *
+simple_STRCHR (const CHAR *s, int c)
 {
-  for (; *s != (char) c; ++s)
+  for (; *s != (CHAR) c; ++s)
     if (*s == '\0')
       return NULL;
-  return (char *) s;
+  return (CHAR *) s;
 }
 
-char *
-stupid_strchr (const char *s, int c)
+CHAR *
+stupid_STRCHR (const CHAR *s, int c)
 {
-  size_t n = strlen (s) + 1;
+  size_t n = STRLEN (s) + 1;
 
   while (n--)
-    if (*s++ == (char) c)
-      return (char *) s - 1;
+    if (*s++ == (CHAR) c)
+      return (CHAR *) s - 1;
   return NULL;
 }
 
+IMPL (stupid_STRCHR, 1)
+IMPL (simple_STRCHR, 1)
+IMPL (STRCHR, 1)
+
 static void
-do_one_test (impl_t *impl, const char *s, int c, char *exp_res)
+do_one_test (impl_t *impl, const CHAR *s, int c, const CHAR *exp_res)
 {
-  char *res = CALL (impl, s, c);
+  CHAR *res = CALL (impl, s, c);
   if (res != exp_res)
     {
       error (0, 0, "Wrong result in function %s %p %p", impl->name,
@@ -82,37 +100,40 @@ do_one_test (impl_t *impl, const char *s, int c, char *exp_res)
 
 static void
 do_test (size_t align, size_t pos, size_t len, int seek_char, int max_char)
+/* for wcschr: align here means align not in bytes, 
+ * but in wchar_ts, in bytes it will equal to align * (sizeof (wchar_t))
+ * len for wcschr here isn't in bytes but it's number of wchar_t symbols */
 {
   size_t i;
-  char *result;
-
-  align &= 7;
-  if (align + len >= page_size)
+  CHAR *result;
+  CHAR *buf = (CHAR *) (buf1);
+  align &= 15;
+  if ((align + len) * sizeof(CHAR) >= page_size)
     return;
 
   for (i = 0; i < len; ++i)
     {
-      buf1[align + i] = 32 + 23 * i % (max_char - 32);
-      if (buf1[align + i] == seek_char)
-        buf1[align + i] = seek_char + 1;
+      buf[align + i] = 32 + 23 * i % max_char;
+      if (buf[align + i] == seek_char)
+        buf[align + i] = seek_char + 1;
     }
-  buf1[align + len] = 0;
+  buf[align + len] = 0;
 
   if (pos < len)
     {
-      buf1[align + pos] = seek_char;
-      result = (char *) (buf1 + align + pos);
+      buf[align + pos] = seek_char;
+      result = buf + align + pos;
     }
   else if (seek_char == 0)
-    result = (char *) (buf1 + align + len);
+    result = buf + align + len;
   else
     result = NULL;
 
   if (HP_TIMING_AVAIL)
-    printf ("Length %4zd, alignment %2zd:", pos, align);
+    printf ("Length %4zd, alignment in bytes %2zd:", pos, align * sizeof (CHAR));
 
   FOR_EACH_IMPL (impl, 0)
-    do_one_test (impl, (char *) (buf1 + align), seek_char, result);
+    do_one_test (impl, buf + align, seek_char, result);
 
   if (HP_TIMING_AVAIL)
     putchar ('\n');
@@ -123,16 +144,19 @@ do_random_tests (void)
 {
   size_t i, j, n, align, pos, len;
   int seek_char;
-  char *result;
-  unsigned char *p = buf1 + page_size - 512;
+  CHAR *result;
+  UCHAR *p = (UCHAR *) (buf1 + page_size - 512 * sizeof (CHAR));
 
   for (n = 0; n < ITERATIONS; n++)
     {
+/* for wcschr: align here means align not in bytes, but in wchar_ts,
+ * in bytes it will equal to align * (sizeof (wchar_t)) */
       align = random () & 15;
       pos = random () & 511;
       seek_char = random () & 255;
       if (pos + align >= 511)
 	pos = 510 - align - (random () & 7);
+/* len for wcschr here isn't in bytes but it's number of wchar_t symbols */  
       len = random () & 511;
       if ((pos == len && seek_char)
 	  || (pos > len && (random () & 1)))
@@ -166,18 +190,19 @@ do_random_tests (void)
 	}
 
       if (pos <= len)
-	result = (char *) (p + pos + align);
+	result = (CHAR *) (p + pos + align);
       else if (seek_char == 0)
-	result = (char *) (p + len + align);
+	result = (CHAR *) (p + len + align);
       else
 	result = NULL;
 
       FOR_EACH_IMPL (impl, 1)
-	if (CALL (impl, (char *) (p + align), seek_char) != result)
+	if (CALL (impl, (CHAR *) (p + align), seek_char) != result)
 	  {
-	    error (0, 0, "Iteration %zd - wrong result in function %s (%zd, %d, %zd, %zd) %p != %p, p %p",
-		   n, impl->name, align, seek_char, len, pos,
-		   CALL (impl, (char *) (p + align), seek_char), result, p);
+	    error (0, 0, "Iteration %zd - wrong result in function \
+                   %s (align in bytes: %zd, seek_char: %d, len: %zd, pos: %zd) %p != %p, p %p",
+		   n, impl->name, align * sizeof (CHAR), seek_char, len, pos,
+		   CALL (impl, (CHAR *) (p + align), seek_char), result, p);
 	    ret = 1;
 	  }
     }
@@ -197,38 +222,38 @@ test_main (void)
 
   for (i = 1; i < 8; ++i)
     {
-      do_test (0, 16 << i, 2048, 23, 127);
-      do_test (i, 16 << i, 2048, 23, 127);
+      do_test (0, 16 << i, 2048, SMALL_CHAR, MIDDLE_CHAR);
+      do_test (i, 16 << i, 2048, SMALL_CHAR, MIDDLE_CHAR);
     }
 
   for (i = 1; i < 8; ++i)
     {
-      do_test (i, 64, 256, 23, 127);
-      do_test (i, 64, 256, 23, 255);
+      do_test (i, 64, 256, SMALL_CHAR, MIDDLE_CHAR);
+      do_test (i, 64, 256, SMALL_CHAR, BIG_CHAR);
     }
 
   for (i = 0; i < 32; ++i)
     {
-      do_test (0, i, i + 1, 23, 127);
-      do_test (0, i, i + 1, 23, 255);
+      do_test (0, i, i + 1, SMALL_CHAR, MIDDLE_CHAR);
+      do_test (0, i, i + 1, SMALL_CHAR, BIG_CHAR);
     }
 
   for (i = 1; i < 8; ++i)
     {
-      do_test (0, 16 << i, 2048, 0, 127);
-      do_test (i, 16 << i, 2048, 0, 127);
+      do_test (0, 16 << i, 2048, 0, MIDDLE_CHAR);
+      do_test (i, 16 << i, 2048, 0, MIDDLE_CHAR);
     }
 
   for (i = 1; i < 8; ++i)
     {
-      do_test (i, 64, 256, 0, 127);
-      do_test (i, 64, 256, 0, 255);
+      do_test (i, 64, 256, 0, MIDDLE_CHAR);
+      do_test (i, 64, 256, 0, BIG_CHAR);
     }
 
   for (i = 0; i < 32; ++i)
     {
-      do_test (0, i, i + 1, 0, 127);
-      do_test (0, i, i + 1, 0, 255);
+      do_test (0, i, i + 1, 0, MIDDLE_CHAR);
+      do_test (0, i, i + 1, 0, BIG_CHAR);
     }
 
   do_random_tests ();

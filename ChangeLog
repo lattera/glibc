@@ -1,7 +1,14 @@
+2011-10-19  Liubov Dmitrieva  <liubov.dmitrieva@gmail.com>
+
+	* wcsmbs/Makefile (strop-tests): Add wcschr.
+	* wcsmbs/test-wcschr.c: New file.
+	* string/test-strchr.c: Update.
+	Add wcschr support.
+	(WIDE): New macro.
+
 2011-10-18  Liubov Dmitrieva  <liubov.dmitrieva@gmail.com>
 
-	* wcsmbs/Makefile
-	(strop-tests): Add wcslen.
+	* wcsmbs/Makefile (strop-tests): Add wcslen.
 	* wcsmbs/test-wcslen.c: New file.
 	* string/test-strlen.c: Update.
 	Add wcslen support.
