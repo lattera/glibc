@@ -1,3 +1,8 @@
+2011-10-20  Michael Zolotukhin  <michael.v.zolotukhin@gmail.com>
+
+	* sysdeps/i386/i686/multiarch/memcpy-ssse3.S: Update.
+	XMM-moves are used for copying on small sizes.
+
 2011-10-19  Liubov Dmitrieva  <liubov.dmitrieva@gmail.com>
 
 	* wcsmbs/Makefile (strop-tests): Add wcschr.

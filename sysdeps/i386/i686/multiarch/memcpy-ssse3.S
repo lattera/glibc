@@ -1,5 +1,5 @@
 /* memcpy with SSSE3
-   Copyright (C) 2010 Free Software Foundation, Inc.
+   Copyright (C) 2010, 2011 Free Software Foundation, Inc.
    Contributed by Intel Corporation.
    This file is part of the GNU C Library.
 
@@ -235,7 +235,7 @@ L(shl_0_end):
 	add	%edi, %edx
 	add	%edi, %eax
 	POP (%edi)
-	BRANCH_TO_JMPTBL_ENTRY (L(table_48bytes_fwd), %ecx, 4)
+	BRANCH_TO_JMPTBL_ENTRY (L(table_48bytes_fwd_align), %ecx, 4)
 
 	CFI_PUSH (%edi)
 L(shl_0_gobble):
@@ -385,7 +385,7 @@ L(shl_0_mem_less_32bytes):
 L(shl_0_mem_less_16bytes):
 	add	%ecx, %edx
 	add	%ecx, %eax
-	BRANCH_TO_JMPTBL_ENTRY (L(table_48bytes_fwd), %ecx, 4)
+	BRANCH_TO_JMPTBL_ENTRY (L(table_48bytes_fwd_align), %ecx, 4)
 
 	cfi_restore_state
 	cfi_remember_state
@@ -1065,38 +1065,48 @@ L(shl_15_end):
 
 	ALIGN (4)
 L(fwd_write_44bytes):
-	movl	-44(%eax), %ecx
-	movl	%ecx, -44(%edx)
-L(fwd_write_40bytes):
-	movl	-40(%eax), %ecx
-	movl	%ecx, -40(%edx)
+	movq	-44(%eax), %xmm0
+	movq	%xmm0, -44(%edx)
 L(fwd_write_36bytes):
-	movl	-36(%eax), %ecx
-	movl	%ecx, -36(%edx)
-L(fwd_write_32bytes):
-	movl	-32(%eax), %ecx
-	movl	%ecx, -32(%edx)
+	movq	-36(%eax), %xmm0
+	movq	%xmm0, -36(%edx)
 L(fwd_write_28bytes):
-	movl	-28(%eax), %ecx
-	movl	%ecx, -28(%edx)
-L(fwd_write_24bytes):
-	movl	-24(%eax), %ecx
-	movl	%ecx, -24(%edx)
+	movq	-28(%eax), %xmm0
+	movq	%xmm0, -28(%edx)
 L(fwd_write_20bytes):
-	movl	-20(%eax), %ecx
-	movl	%ecx, -20(%edx)
-L(fwd_write_16bytes):
-	movl	-16(%eax), %ecx
-	movl	%ecx, -16(%edx)
+	movq	-20(%eax), %xmm0
+	movq	%xmm0, -20(%edx)
 L(fwd_write_12bytes):
-	movl	-12(%eax), %ecx
-	movl	%ecx, -12(%edx)
-L(fwd_write_8bytes):
-	movl	-8(%eax), %ecx
-	movl	%ecx, -8(%edx)
+	movq	-12(%eax), %xmm0
+	movq	%xmm0, -12(%edx)
 L(fwd_write_4bytes):
 	movl	-4(%eax), %ecx
 	movl	%ecx, -4(%edx)
+#ifndef USE_AS_BCOPY
+# ifdef USE_AS_MEMPCPY
+	movl	%edx, %eax
+# else
+	movl	DEST(%esp), %eax
+# endif
+#endif
+	RETURN
+
+	ALIGN (4)
+L(fwd_write_40bytes):
+	movq	-40(%eax), %xmm0
+	movq	%xmm0, -40(%edx)
+L(fwd_write_32bytes):
+	movq	-32(%eax), %xmm0
+	movq	%xmm0, -32(%edx)
+L(fwd_write_24bytes):
+	movq	-24(%eax), %xmm0
+	movq	%xmm0, -24(%edx)
+L(fwd_write_16bytes):
+	movq	-16(%eax), %xmm0
+	movq	%xmm0, -16(%edx)
+L(fwd_write_8bytes):
+	movq	-8(%eax), %xmm0
+	movq	%xmm0, -8(%edx)
 L(fwd_write_0bytes):
 #ifndef USE_AS_BCOPY
 # ifdef USE_AS_MEMPCPY
@@ -1124,37 +1134,49 @@ L(fwd_write_5bytes):
 
 	ALIGN (4)
 L(fwd_write_45bytes):
-	movl	-45(%eax), %ecx
-	movl	%ecx, -45(%edx)
-L(fwd_write_41bytes):
-	movl	-41(%eax), %ecx
-	movl	%ecx, -41(%edx)
+	movq	-45(%eax), %xmm0
+	movq	%xmm0, -45(%edx)
 L(fwd_write_37bytes):
-	movl	-37(%eax), %ecx
-	movl	%ecx, -37(%edx)
-L(fwd_write_33bytes):
-	movl	-33(%eax), %ecx
-	movl	%ecx, -33(%edx)
+	movq	-37(%eax), %xmm0
+	movq	%xmm0, -37(%edx)
 L(fwd_write_29bytes):
-	movl	-29(%eax), %ecx
-	movl	%ecx, -29(%edx)
-L(fwd_write_25bytes):
-	movl	-25(%eax), %ecx
-	movl	%ecx, -25(%edx)
+	movq	-29(%eax), %xmm0
+	movq	%xmm0, -29(%edx)
 L(fwd_write_21bytes):
-	movl	-21(%eax), %ecx
-	movl	%ecx, -21(%edx)
-L(fwd_write_17bytes):
-	movl	-17(%eax), %ecx
-	movl	%ecx, -17(%edx)
+	movq	-21(%eax), %xmm0
+	movq	%xmm0, -21(%edx)
 L(fwd_write_13bytes):
-	movl	-13(%eax), %ecx
-	movl	%ecx, -13(%edx)
-L(fwd_write_9bytes):
-	movl	-9(%eax), %ecx
-	movl	%ecx, -9(%edx)
+	movq	-13(%eax), %xmm0
+	movq	%xmm0, -13(%edx)
 	movl	-5(%eax), %ecx
 	movl	%ecx, -5(%edx)
+	movzbl	-1(%eax), %ecx
+	movb	%cl, -1(%edx)
+#ifndef USE_AS_BCOPY
+# ifdef USE_AS_MEMPCPY
+	movl	%edx, %eax
+# else
+	movl	DEST(%esp), %eax
+# endif
+#endif
+	RETURN
+
+	ALIGN (4)
+L(fwd_write_41bytes):
+	movq	-41(%eax), %xmm0
+	movq	%xmm0, -41(%edx)
+L(fwd_write_33bytes):
+	movq	-33(%eax), %xmm0
+	movq	%xmm0, -33(%edx)
+L(fwd_write_25bytes):
+	movq	-25(%eax), %xmm0
+	movq	%xmm0, -25(%edx)
+L(fwd_write_17bytes):
+	movq	-17(%eax), %xmm0
+	movq	%xmm0, -17(%edx)
+L(fwd_write_9bytes):
+	movq	-9(%eax), %xmm0
+	movq	%xmm0, -9(%edx)
 L(fwd_write_1bytes):
 	movzbl	-1(%eax), %ecx
 	movb	%cl, -1(%edx)
@@ -1169,38 +1191,50 @@ L(fwd_write_1bytes):
 
 	ALIGN (4)
 L(fwd_write_46bytes):
-	movl	-46(%eax), %ecx
-	movl	%ecx, -46(%edx)
-L(fwd_write_42bytes):
-	movl	-42(%eax), %ecx
-	movl	%ecx, -42(%edx)
+	movq	-46(%eax), %xmm0
+	movq	%xmm0, -46(%edx)
 L(fwd_write_38bytes):
-	movl	-38(%eax), %ecx
-	movl	%ecx, -38(%edx)
-L(fwd_write_34bytes):
-	movl	-34(%eax), %ecx
-	movl	%ecx, -34(%edx)
+	movq	-38(%eax), %xmm0
+	movq	%xmm0, -38(%edx)
 L(fwd_write_30bytes):
-	movl	-30(%eax), %ecx
-	movl	%ecx, -30(%edx)
-L(fwd_write_26bytes):
-	movl	-26(%eax), %ecx
-	movl	%ecx, -26(%edx)
+	movq	-30(%eax), %xmm0
+	movq	%xmm0, -30(%edx)
 L(fwd_write_22bytes):
-	movl	-22(%eax), %ecx
-	movl	%ecx, -22(%edx)
-L(fwd_write_18bytes):
-	movl	-18(%eax), %ecx
-	movl	%ecx, -18(%edx)
+	movq	-22(%eax), %xmm0
+	movq	%xmm0, -22(%edx)
 L(fwd_write_14bytes):
-	movl	-14(%eax), %ecx
-	movl	%ecx, -14(%edx)
-L(fwd_write_10bytes):
-	movl	-10(%eax), %ecx
-	movl	%ecx, -10(%edx)
+	movq	-14(%eax), %xmm0
+	movq	%xmm0, -14(%edx)
 L(fwd_write_6bytes):
 	movl	-6(%eax), %ecx
 	movl	%ecx, -6(%edx)
+	movzwl	-2(%eax), %ecx
+	movw	%cx, -2(%edx)
+#ifndef USE_AS_BCOPY
+# ifdef USE_AS_MEMPCPY
+	movl	%edx, %eax
+# else
+	movl	DEST(%esp), %eax
+# endif
+#endif
+	RETURN
+
+	ALIGN (4)
+L(fwd_write_42bytes):
+	movq	-42(%eax), %xmm0
+	movq	%xmm0, -42(%edx)
+L(fwd_write_34bytes):
+	movq	-34(%eax), %xmm0
+	movq	%xmm0, -34(%edx)
+L(fwd_write_26bytes):
+	movq	-26(%eax), %xmm0
+	movq	%xmm0, -26(%edx)
+L(fwd_write_18bytes):
+	movq	-18(%eax), %xmm0
+	movq	%xmm0, -18(%edx)
+L(fwd_write_10bytes):
+	movq	-10(%eax), %xmm0
+	movq	%xmm0, -10(%edx)
 L(fwd_write_2bytes):
 	movzwl	-2(%eax), %ecx
 	movw	%cx, -2(%edx)
@@ -1215,43 +1249,407 @@ L(fwd_write_2bytes):
 
 	ALIGN (4)
 L(fwd_write_47bytes):
-	movl	-47(%eax), %ecx
-	movl	%ecx, -47(%edx)
-L(fwd_write_43bytes):
-	movl	-43(%eax), %ecx
-	movl	%ecx, -43(%edx)
+	movq	-47(%eax), %xmm0
+	movq	%xmm0, -47(%edx)
 L(fwd_write_39bytes):
-	movl	-39(%eax), %ecx
-	movl	%ecx, -39(%edx)
-L(fwd_write_35bytes):
-	movl	-35(%eax), %ecx
-	movl	%ecx, -35(%edx)
+	movq	-39(%eax), %xmm0
+	movq	%xmm0, -39(%edx)
 L(fwd_write_31bytes):
-	movl	-31(%eax), %ecx
-	movl	%ecx, -31(%edx)
-L(fwd_write_27bytes):
-	movl	-27(%eax), %ecx
-	movl	%ecx, -27(%edx)
+	movq	-31(%eax), %xmm0
+	movq	%xmm0, -31(%edx)
 L(fwd_write_23bytes):
-	movl	-23(%eax), %ecx
-	movl	%ecx, -23(%edx)
-L(fwd_write_19bytes):
-	movl	-19(%eax), %ecx
-	movl	%ecx, -19(%edx)
+	movq	-23(%eax), %xmm0
+	movq	%xmm0, -23(%edx)
 L(fwd_write_15bytes):
-	movl	-15(%eax), %ecx
-	movl	%ecx, -15(%edx)
-L(fwd_write_11bytes):
-	movl	-11(%eax), %ecx
-	movl	%ecx, -11(%edx)
+	movq	-15(%eax), %xmm0
+	movq	%xmm0, -15(%edx)
 L(fwd_write_7bytes):
 	movl	-7(%eax), %ecx
 	movl	%ecx, -7(%edx)
+	movzwl	-3(%eax), %ecx
+	movzbl	-1(%eax), %eax
+	movw	%cx, -3(%edx)
+	movb	%al, -1(%edx)
+#ifndef USE_AS_BCOPY
+# ifdef USE_AS_MEMPCPY
+	movl	%edx, %eax
+# else
+	movl	DEST(%esp), %eax
+# endif
+#endif
+	RETURN
+
+	ALIGN (4)
+L(fwd_write_43bytes):
+	movq	-43(%eax), %xmm0
+	movq	%xmm0, -43(%edx)
+L(fwd_write_35bytes):
+	movq	-35(%eax), %xmm0
+	movq	%xmm0, -35(%edx)
+L(fwd_write_27bytes):
+	movq	-27(%eax), %xmm0
+	movq	%xmm0, -27(%edx)
+L(fwd_write_19bytes):
+	movq	-19(%eax), %xmm0
+	movq	%xmm0, -19(%edx)
+L(fwd_write_11bytes):
+	movq	-11(%eax), %xmm0
+	movq	%xmm0, -11(%edx)
 L(fwd_write_3bytes):
 	movzwl	-3(%eax), %ecx
 	movzbl	-1(%eax), %eax
 	movw	%cx, -3(%edx)
 	movb	%al, -1(%edx)
+#ifndef USE_AS_BCOPY
+# ifdef USE_AS_MEMPCPY
+	movl	%edx, %eax
+# else
+	movl	DEST(%esp), %eax
+# endif
+#endif
+	RETURN
+
+	ALIGN (4)
+L(fwd_write_40bytes_align):
+	movdqa	-40(%eax), %xmm0
+	movdqa	%xmm0, -40(%edx)
+L(fwd_write_24bytes_align):
+	movdqa	-24(%eax), %xmm0
+	movdqa	%xmm0, -24(%edx)
+L(fwd_write_8bytes_align):
+	movq	-8(%eax), %xmm0
+	movq	%xmm0, -8(%edx)
+L(fwd_write_0bytes_align):
+#ifndef USE_AS_BCOPY
+# ifdef USE_AS_MEMPCPY
+	movl	%edx, %eax
+# else
+	movl	DEST(%esp), %eax
+# endif
+#endif
+	RETURN
+
+	ALIGN (4)
+L(fwd_write_32bytes_align):
+	movdqa	-32(%eax), %xmm0
+	movdqa	%xmm0, -32(%edx)
+L(fwd_write_16bytes_align):
+	movdqa	-16(%eax), %xmm0
+	movdqa	%xmm0, -16(%edx)
+#ifndef USE_AS_BCOPY
+# ifdef USE_AS_MEMPCPY
+	movl	%edx, %eax
+# else
+	movl	DEST(%esp), %eax
+# endif
+#endif
+	RETURN
+
+	ALIGN (4)
+L(fwd_write_5bytes_align):
+	movl	-5(%eax), %ecx
+	movl	-4(%eax), %eax
+	movl	%ecx, -5(%edx)
+	movl	%eax, -4(%edx)
+#ifndef USE_AS_BCOPY
+# ifdef USE_AS_MEMPCPY
+	movl	%edx, %eax
+# else
+	movl	DEST(%esp), %eax
+# endif
+#endif
+	RETURN
+
+	ALIGN (4)
+L(fwd_write_45bytes_align):
+	movdqa	-45(%eax), %xmm0
+	movdqa	%xmm0, -45(%edx)
+L(fwd_write_29bytes_align):
+	movdqa	-29(%eax), %xmm0
+	movdqa	%xmm0, -29(%edx)
+L(fwd_write_13bytes_align):
+	movq	-13(%eax), %xmm0
+	movq	%xmm0, -13(%edx)
+	movl	-5(%eax), %ecx
+	movl	%ecx, -5(%edx)
+	movzbl	-1(%eax), %ecx
+	movb	%cl, -1(%edx)
+#ifndef USE_AS_BCOPY
+# ifdef USE_AS_MEMPCPY
+	movl	%edx, %eax
+# else
+	movl	DEST(%esp), %eax
+# endif
+#endif
+	RETURN
+
+	ALIGN (4)
+L(fwd_write_37bytes_align):
+	movdqa	-37(%eax), %xmm0
+	movdqa	%xmm0, -37(%edx)
+L(fwd_write_21bytes_align):
+	movdqa	-21(%eax), %xmm0
+	movdqa	%xmm0, -21(%edx)
+	movl	-5(%eax), %ecx
+	movl	%ecx, -5(%edx)
+	movzbl	-1(%eax), %ecx
+	movb	%cl, -1(%edx)
+#ifndef USE_AS_BCOPY
+# ifdef USE_AS_MEMPCPY
+	movl	%edx, %eax
+# else
+	movl	DEST(%esp), %eax
+# endif
+#endif
+	RETURN
+
+	ALIGN (4)
+L(fwd_write_41bytes_align):
+	movdqa	-41(%eax), %xmm0
+	movdqa	%xmm0, -41(%edx)
+L(fwd_write_25bytes_align):
+	movdqa	-25(%eax), %xmm0
+	movdqa	%xmm0, -25(%edx)
+L(fwd_write_9bytes_align):
+	movq	-9(%eax), %xmm0
+	movq	%xmm0, -9(%edx)
+L(fwd_write_1bytes_align):
+	movzbl	-1(%eax), %ecx
+	movb	%cl, -1(%edx)
+#ifndef USE_AS_BCOPY
+# ifdef USE_AS_MEMPCPY
+	movl	%edx, %eax
+# else
+	movl	DEST(%esp), %eax
+# endif
+#endif
+	RETURN
+
+	ALIGN (4)
+L(fwd_write_33bytes_align):
+	movdqa	-33(%eax), %xmm0
+	movdqa	%xmm0, -33(%edx)
+L(fwd_write_17bytes_align):
+	movdqa	-17(%eax), %xmm0
+	movdqa	%xmm0, -17(%edx)
+	movzbl	-1(%eax), %ecx
+	movb	%cl, -1(%edx)
+#ifndef USE_AS_BCOPY
+# ifdef USE_AS_MEMPCPY
+	movl	%edx, %eax
+# else
+	movl	DEST(%esp), %eax
+# endif
+#endif
+	RETURN
+
+	ALIGN (4)
+L(fwd_write_46bytes_align):
+	movdqa	-46(%eax), %xmm0
+	movdqa	%xmm0, -46(%edx)
+L(fwd_write_30bytes_align):
+	movdqa	-30(%eax), %xmm0
+	movdqa	%xmm0, -30(%edx)
+L(fwd_write_14bytes_align):
+	movq	-14(%eax), %xmm0
+	movq	%xmm0, -14(%edx)
+L(fwd_write_6bytes_align):
+	movl	-6(%eax), %ecx
+	movl	%ecx, -6(%edx)
+	movzwl	-2(%eax), %ecx
+	movw	%cx, -2(%edx)
+#ifndef USE_AS_BCOPY
+# ifdef USE_AS_MEMPCPY
+	movl	%edx, %eax
+# else
+	movl	DEST(%esp), %eax
+# endif
+#endif
+	RETURN
+
+	ALIGN (4)
+L(fwd_write_38bytes_align):
+	movdqa	-38(%eax), %xmm0
+	movdqa	%xmm0, -38(%edx)
+L(fwd_write_22bytes_align):
+	movdqa	-22(%eax), %xmm0
+	movdqa	%xmm0, -22(%edx)
+	movl	-6(%eax), %ecx
+	movl	%ecx, -6(%edx)
+	movzwl	-2(%eax), %ecx
+	movw	%cx, -2(%edx)
+#ifndef USE_AS_BCOPY
+# ifdef USE_AS_MEMPCPY
+	movl	%edx, %eax
+# else
+	movl	DEST(%esp), %eax
+# endif
+#endif
+	RETURN
+
+	ALIGN (4)
+L(fwd_write_42bytes_align):
+	movdqa	-42(%eax), %xmm0
+	movdqa	%xmm0, -42(%edx)
+L(fwd_write_26bytes_align):
+	movdqa	-26(%eax), %xmm0
+	movdqa	%xmm0, -26(%edx)
+L(fwd_write_10bytes_align):
+	movq	-10(%eax), %xmm0
+	movq	%xmm0, -10(%edx)
+L(fwd_write_2bytes_align):
+	movzwl	-2(%eax), %ecx
+	movw	%cx, -2(%edx)
+#ifndef USE_AS_BCOPY
+# ifdef USE_AS_MEMPCPY
+	movl	%edx, %eax
+# else
+	movl	DEST(%esp), %eax
+# endif
+#endif
+	RETURN
+
+	ALIGN (4)
+L(fwd_write_34bytes_align):
+	movdqa	-34(%eax), %xmm0
+	movdqa	%xmm0, -34(%edx)
+L(fwd_write_18bytes_align):
+	movdqa	-18(%eax), %xmm0
+	movdqa	%xmm0, -18(%edx)
+	movzwl	-2(%eax), %ecx
+	movw	%cx, -2(%edx)
+#ifndef USE_AS_BCOPY
+# ifdef USE_AS_MEMPCPY
+	movl	%edx, %eax
+# else
+	movl	DEST(%esp), %eax
+# endif
+#endif
+	RETURN
+
+	ALIGN (4)
+L(fwd_write_47bytes_align):
+	movdqa	-47(%eax), %xmm0
+	movdqa	%xmm0, -47(%edx)
+L(fwd_write_31bytes_align):
+	movdqa	-31(%eax), %xmm0
+	movdqa	%xmm0, -31(%edx)
+L(fwd_write_15bytes_align):
+	movq	-15(%eax), %xmm0
+	movq	%xmm0, -15(%edx)
+L(fwd_write_7bytes_align):
+	movl	-7(%eax), %ecx
+	movl	%ecx, -7(%edx)
+	movzwl	-3(%eax), %ecx
+	movzbl	-1(%eax), %eax
+	movw	%cx, -3(%edx)
+	movb	%al, -1(%edx)
+#ifndef USE_AS_BCOPY
+# ifdef USE_AS_MEMPCPY
+	movl	%edx, %eax
+# else
+	movl	DEST(%esp), %eax
+# endif
+#endif
+	RETURN
+
+	ALIGN (4)
+L(fwd_write_39bytes_align):
+	movdqa	-39(%eax), %xmm0
+	movdqa	%xmm0, -39(%edx)
+L(fwd_write_23bytes_align):
+	movdqa	-23(%eax), %xmm0
+	movdqa	%xmm0, -23(%edx)
+	movl	-7(%eax), %ecx
+	movl	%ecx, -7(%edx)
+	movzwl	-3(%eax), %ecx
+	movzbl	-1(%eax), %eax
+	movw	%cx, -3(%edx)
+	movb	%al, -1(%edx)
+#ifndef USE_AS_BCOPY
+# ifdef USE_AS_MEMPCPY
+	movl	%edx, %eax
+# else
+	movl	DEST(%esp), %eax
+# endif
+#endif
+	RETURN
+
+	ALIGN (4)
+L(fwd_write_43bytes_align):
+	movdqa	-43(%eax), %xmm0
+	movdqa	%xmm0, -43(%edx)
+L(fwd_write_27bytes_align):
+	movdqa	-27(%eax), %xmm0
+	movdqa	%xmm0, -27(%edx)
+L(fwd_write_11bytes_align):
+	movq	-11(%eax), %xmm0
+	movq	%xmm0, -11(%edx)
+L(fwd_write_3bytes_align):
+	movzwl	-3(%eax), %ecx
+	movzbl	-1(%eax), %eax
+	movw	%cx, -3(%edx)
+	movb	%al, -1(%edx)
+#ifndef USE_AS_BCOPY
+# ifdef USE_AS_MEMPCPY
+	movl	%edx, %eax
+# else
+	movl	DEST(%esp), %eax
+# endif
+#endif
+	RETURN
+
+	ALIGN (4)
+L(fwd_write_35bytes_align):
+	movdqa	-35(%eax), %xmm0
+	movdqa	%xmm0, -35(%edx)
+L(fwd_write_19bytes_align):
+	movdqa	-19(%eax), %xmm0
+	movdqa	%xmm0, -19(%edx)
+	movzwl	-3(%eax), %ecx
+	movzbl	-1(%eax), %eax
+	movw	%cx, -3(%edx)
+	movb	%al, -1(%edx)
+#ifndef USE_AS_BCOPY
+# ifdef USE_AS_MEMPCPY
+	movl	%edx, %eax
+# else
+	movl	DEST(%esp), %eax
+# endif
+#endif
+	RETURN
+
+	ALIGN (4)
+L(fwd_write_44bytes_align):
+	movdqa	-44(%eax), %xmm0
+	movdqa	%xmm0, -44(%edx)
+L(fwd_write_28bytes_align):
+	movdqa	-28(%eax), %xmm0
+	movdqa	%xmm0, -28(%edx)
+L(fwd_write_12bytes_align):
+	movq	-12(%eax), %xmm0
+	movq	%xmm0, -12(%edx)
+L(fwd_write_4bytes_align):
+	movl	-4(%eax), %ecx
+	movl	%ecx, -4(%edx)
+#ifndef USE_AS_BCOPY
+# ifdef USE_AS_MEMPCPY
+	movl	%edx, %eax
+# else
+	movl	DEST(%esp), %eax
+# endif
+#endif
+	RETURN
+
+	ALIGN (4)
+L(fwd_write_36bytes_align):
+	movdqa	-36(%eax), %xmm0
+	movdqa	%xmm0, -36(%edx)
+L(fwd_write_20bytes_align):
+	movdqa	-20(%eax), %xmm0
+	movdqa	%xmm0, -20(%edx)
+	movl	-4(%eax), %ecx
+	movl	%ecx, -4(%edx)
 #ifndef USE_AS_BCOPY
 # ifdef USE_AS_MEMPCPY
 	movl	%edx, %eax
@@ -1330,35 +1728,20 @@ L(large_page_less_32bytes):
 
 	ALIGN (4)
 L(bk_write_44bytes):
-	movl	40(%eax), %ecx
-	movl	%ecx, 40(%edx)
-L(bk_write_40bytes):
-	movl	36(%eax), %ecx
-	movl	%ecx, 36(%edx)
+	movq	36(%eax), %xmm0
+	movq	%xmm0, 36(%edx)
 L(bk_write_36bytes):
-	movl	32(%eax), %ecx
-	movl	%ecx, 32(%edx)
-L(bk_write_32bytes):
-	movl	28(%eax), %ecx
-	movl	%ecx, 28(%edx)
+	movq	28(%eax), %xmm0
+	movq	%xmm0, 28(%edx)
 L(bk_write_28bytes):
-	movl	24(%eax), %ecx
-	movl	%ecx, 24(%edx)
-L(bk_write_24bytes):
-	movl	20(%eax), %ecx
-	movl	%ecx, 20(%edx)
+	movq	20(%eax), %xmm0
+	movq	%xmm0, 20(%edx)
 L(bk_write_20bytes):
-	movl	16(%eax), %ecx
-	movl	%ecx, 16(%edx)
-L(bk_write_16bytes):
-	movl	12(%eax), %ecx
-	movl	%ecx, 12(%edx)
+	movq	12(%eax), %xmm0
+	movq	%xmm0, 12(%edx)
 L(bk_write_12bytes):
-	movl	8(%eax), %ecx
-	movl	%ecx, 8(%edx)
-L(bk_write_8bytes):
-	movl	4(%eax), %ecx
-	movl	%ecx, 4(%edx)
+	movq	4(%eax), %xmm0
+	movq	%xmm0, 4(%edx)
 L(bk_write_4bytes):
 	movl	(%eax), %ecx
 	movl	%ecx, (%edx)
@@ -1373,36 +1756,46 @@ L(bk_write_0bytes):
 	RETURN
 
 	ALIGN (4)
+L(bk_write_40bytes):
+	movq	32(%eax), %xmm0
+	movq	%xmm0, 32(%edx)
+L(bk_write_32bytes):
+	movq	24(%eax), %xmm0
+	movq	%xmm0, 24(%edx)
+L(bk_write_24bytes):
+	movq	16(%eax), %xmm0
+	movq	%xmm0, 16(%edx)
+L(bk_write_16bytes):
+	movq	8(%eax), %xmm0
+	movq	%xmm0, 8(%edx)
+L(bk_write_8bytes):
+	movq	(%eax), %xmm0
+	movq	%xmm0, (%edx)
+#ifndef USE_AS_BCOPY
+	movl	DEST(%esp), %eax
+# ifdef USE_AS_MEMPCPY
+	movl	LEN(%esp), %ecx
+	add	%ecx, %eax
+# endif
+#endif
+	RETURN
+
+	ALIGN (4)
 L(bk_write_45bytes):
-	movl	41(%eax), %ecx
-	movl	%ecx, 41(%edx)
-L(bk_write_41bytes):
-	movl	37(%eax), %ecx
-	movl	%ecx, 37(%edx)
+	movq	37(%eax), %xmm0
+	movq	%xmm0, 37(%edx)
 L(bk_write_37bytes):
-	movl	33(%eax), %ecx
-	movl	%ecx, 33(%edx)
-L(bk_write_33bytes):
-	movl	29(%eax), %ecx
-	movl	%ecx, 29(%edx)
+	movq	29(%eax), %xmm0
+	movq	%xmm0, 29(%edx)
 L(bk_write_29bytes):
-	movl	25(%eax), %ecx
-	movl	%ecx, 25(%edx)
-L(bk_write_25bytes):
-	movl	21(%eax), %ecx
-	movl	%ecx, 21(%edx)
+	movq	21(%eax), %xmm0
+	movq	%xmm0, 21(%edx)
 L(bk_write_21bytes):
-	movl	17(%eax), %ecx
-	movl	%ecx, 17(%edx)
-L(bk_write_17bytes):
-	movl	13(%eax), %ecx
-	movl	%ecx, 13(%edx)
+	movq	13(%eax), %xmm0
+	movq	%xmm0, 13(%edx)
 L(bk_write_13bytes):
-	movl	9(%eax), %ecx
-	movl	%ecx, 9(%edx)
-L(bk_write_9bytes):
-	movl	5(%eax), %ecx
-	movl	%ecx, 5(%edx)
+	movq	5(%eax), %xmm0
+	movq	%xmm0, 5(%edx)
 L(bk_write_5bytes):
 	movl	1(%eax), %ecx
 	movl	%ecx, 1(%edx)
@@ -1419,39 +1812,78 @@ L(bk_write_1bytes):
 	RETURN
 
 	ALIGN (4)
+L(bk_write_41bytes):
+	movq	33(%eax), %xmm0
+	movq	%xmm0, 33(%edx)
+L(bk_write_33bytes):
+	movq	25(%eax), %xmm0
+	movq	%xmm0, 25(%edx)
+L(bk_write_25bytes):
+	movq	17(%eax), %xmm0
+	movq	%xmm0, 17(%edx)
+L(bk_write_17bytes):
+	movq	9(%eax), %xmm0
+	movq	%xmm0, 9(%edx)
+L(bk_write_9bytes):
+	movq	1(%eax), %xmm0
+	movq	%xmm0, 1(%edx)
+	movzbl	(%eax), %ecx
+	movb	%cl, (%edx)
+#ifndef USE_AS_BCOPY
+	movl	DEST(%esp), %eax
+# ifdef USE_AS_MEMPCPY
+	movl	LEN(%esp), %ecx
+	add	%ecx, %eax
+# endif
+#endif
+	RETURN
+
+	ALIGN (4)
 L(bk_write_46bytes):
-	movl	42(%eax), %ecx
-	movl	%ecx, 42(%edx)
-L(bk_write_42bytes):
-	movl	38(%eax), %ecx
-	movl	%ecx, 38(%edx)
+	movq	38(%eax), %xmm0
+	movq	%xmm0, 38(%edx)
 L(bk_write_38bytes):
-	movl	34(%eax), %ecx
-	movl	%ecx, 34(%edx)
-L(bk_write_34bytes):
-	movl	30(%eax), %ecx
-	movl	%ecx, 30(%edx)
+	movq	30(%eax), %xmm0
+	movq	%xmm0, 30(%edx)
 L(bk_write_30bytes):
-	movl	26(%eax), %ecx
-	movl	%ecx, 26(%edx)
-L(bk_write_26bytes):
-	movl	22(%eax), %ecx
-	movl	%ecx, 22(%edx)
+	movq	22(%eax), %xmm0
+	movq	%xmm0, 22(%edx)
 L(bk_write_22bytes):
-	movl	18(%eax), %ecx
-	movl	%ecx, 18(%edx)
-L(bk_write_18bytes):
-	movl	14(%eax), %ecx
-	movl	%ecx, 14(%edx)
+	movq	14(%eax), %xmm0
+	movq	%xmm0, 14(%edx)
 L(bk_write_14bytes):
-	movl	10(%eax), %ecx
-	movl	%ecx, 10(%edx)
-L(bk_write_10bytes):
-	movl	6(%eax), %ecx
-	movl	%ecx, 6(%edx)
+	movq	6(%eax), %xmm0
+	movq	%xmm0, 6(%edx)
 L(bk_write_6bytes):
 	movl	2(%eax), %ecx
 	movl	%ecx, 2(%edx)
+	movzwl	(%eax), %ecx
+	movw	%cx, (%edx)
+#ifndef USE_AS_BCOPY
+	movl	DEST(%esp), %eax
+# ifdef USE_AS_MEMPCPY
+	movl	LEN(%esp), %ecx
+	add	%ecx, %eax
+# endif
+#endif
+	RETURN
+
+	ALIGN (4)
+L(bk_write_42bytes):
+	movq	34(%eax), %xmm0
+	movq	%xmm0, 34(%edx)
+L(bk_write_34bytes):
+	movq	26(%eax), %xmm0
+	movq	%xmm0, 26(%edx)
+L(bk_write_26bytes):
+	movq	18(%eax), %xmm0
+	movq	%xmm0, 18(%edx)
+L(bk_write_18bytes):
+	movq	10(%eax), %xmm0
+	movq	%xmm0, 10(%edx)
+L(bk_write_10bytes):
+	movq	2(%eax), %xmm0
+	movq	%xmm0, 2(%edx)
 L(bk_write_2bytes):
 	movzwl	(%eax), %ecx
 	movw	%cx, (%edx)
@@ -1466,38 +1898,52 @@ L(bk_write_2bytes):
 
 	ALIGN (4)
 L(bk_write_47bytes):
-	movl	43(%eax), %ecx
-	movl	%ecx, 43(%edx)
-L(bk_write_43bytes):
-	movl	39(%eax), %ecx
-	movl	%ecx, 39(%edx)
+	movq	39(%eax), %xmm0
+	movq	%xmm0, 39(%edx)
 L(bk_write_39bytes):
-	movl	35(%eax), %ecx
-	movl	%ecx, 35(%edx)
-L(bk_write_35bytes):
-	movl	31(%eax), %ecx
-	movl	%ecx, 31(%edx)
+	movq	31(%eax), %xmm0
+	movq	%xmm0, 31(%edx)
 L(bk_write_31bytes):
-	movl	27(%eax), %ecx
-	movl	%ecx, 27(%edx)
-L(bk_write_27bytes):
-	movl	23(%eax), %ecx
-	movl	%ecx, 23(%edx)
+	movq	23(%eax), %xmm0
+	movq	%xmm0, 23(%edx)
 L(bk_write_23bytes):
-	movl	19(%eax), %ecx
-	movl	%ecx, 19(%edx)
-L(bk_write_19bytes):
-	movl	15(%eax), %ecx
-	movl	%ecx, 15(%edx)
+	movq	15(%eax), %xmm0
+	movq	%xmm0, 15(%edx)
 L(bk_write_15bytes):
-	movl	11(%eax), %ecx
-	movl	%ecx, 11(%edx)
-L(bk_write_11bytes):
-	movl	7(%eax), %ecx
-	movl	%ecx, 7(%edx)
+	movq	7(%eax), %xmm0
+	movq	%xmm0, 7(%edx)
 L(bk_write_7bytes):
 	movl	3(%eax), %ecx
 	movl	%ecx, 3(%edx)
+	movzwl	1(%eax), %ecx
+	movw	%cx, 1(%edx)
+	movzbl	(%eax), %eax
+	movb	%al, (%edx)
+#ifndef USE_AS_BCOPY
+	movl	DEST(%esp), %eax
+# ifdef USE_AS_MEMPCPY
+	movl	LEN(%esp), %ecx
+	add	%ecx, %eax
+# endif
+#endif
+	RETURN
+
+	ALIGN (4)
+L(bk_write_43bytes):
+	movq	35(%eax), %xmm0
+	movq	%xmm0, 35(%edx)
+L(bk_write_35bytes):
+	movq	27(%eax), %xmm0
+	movq	%xmm0, 27(%edx)
+L(bk_write_27bytes):
+	movq	19(%eax), %xmm0
+	movq	%xmm0, 19(%edx)
+L(bk_write_19bytes):
+	movq	11(%eax), %xmm0
+	movq	%xmm0, 11(%edx)
+L(bk_write_11bytes):
+	movq	3(%eax), %xmm0
+	movq	%xmm0, 3(%edx)
 L(bk_write_3bytes):
 	movzwl	1(%eax), %ecx
 	movw	%cx, 1(%edx)
@@ -1564,6 +2010,57 @@ L(table_48bytes_fwd):
 	.int	JMPTBL (L(fwd_write_45bytes), L(table_48bytes_fwd))
 	.int	JMPTBL (L(fwd_write_46bytes), L(table_48bytes_fwd))
 	.int	JMPTBL (L(fwd_write_47bytes), L(table_48bytes_fwd))
+
+	ALIGN (2)
+L(table_48bytes_fwd_align):
+	.int	JMPTBL (L(fwd_write_0bytes_align), L(table_48bytes_fwd_align))
+	.int	JMPTBL (L(fwd_write_1bytes_align), L(table_48bytes_fwd_align))
+	.int	JMPTBL (L(fwd_write_2bytes_align), L(table_48bytes_fwd_align))
+	.int	JMPTBL (L(fwd_write_3bytes_align), L(table_48bytes_fwd_align))
+	.int	JMPTBL (L(fwd_write_4bytes_align), L(table_48bytes_fwd_align))
+	.int	JMPTBL (L(fwd_write_5bytes_align), L(table_48bytes_fwd_align))
+	.int	JMPTBL (L(fwd_write_6bytes_align), L(table_48bytes_fwd_align))
+	.int	JMPTBL (L(fwd_write_7bytes_align), L(table_48bytes_fwd_align))
+	.int	JMPTBL (L(fwd_write_8bytes_align), L(table_48bytes_fwd_align))
+	.int	JMPTBL (L(fwd_write_9bytes_align), L(table_48bytes_fwd_align))
+	.int	JMPTBL (L(fwd_write_10bytes_align), L(table_48bytes_fwd_align))
+	.int	JMPTBL (L(fwd_write_11bytes_align), L(table_48bytes_fwd_align))
+	.int	JMPTBL (L(fwd_write_12bytes_align), L(table_48bytes_fwd_align))
+	.int	JMPTBL (L(fwd_write_13bytes_align), L(table_48bytes_fwd_align))
+	.int	JMPTBL (L(fwd_write_14bytes_align), L(table_48bytes_fwd_align))
+	.int	JMPTBL (L(fwd_write_15bytes_align), L(table_48bytes_fwd_align))
+	.int	JMPTBL (L(fwd_write_16bytes_align), L(table_48bytes_fwd_align))
+	.int	JMPTBL (L(fwd_write_17bytes_align), L(table_48bytes_fwd_align))
+	.int	JMPTBL (L(fwd_write_18bytes_align), L(table_48bytes_fwd_align))
+	.int	JMPTBL (L(fwd_write_19bytes_align), L(table_48bytes_fwd_align))
+	.int	JMPTBL (L(fwd_write_20bytes_align), L(table_48bytes_fwd_align))
+	.int	JMPTBL (L(fwd_write_21bytes_align), L(table_48bytes_fwd_align))
+	.int	JMPTBL (L(fwd_write_22bytes_align), L(table_48bytes_fwd_align))
+	.int	JMPTBL (L(fwd_write_23bytes_align), L(table_48bytes_fwd_align))
+	.int	JMPTBL (L(fwd_write_24bytes_align), L(table_48bytes_fwd_align))
+	.int	JMPTBL (L(fwd_write_25bytes_align), L(table_48bytes_fwd_align))
+	.int	JMPTBL (L(fwd_write_26bytes_align), L(table_48bytes_fwd_align))
+	.int	JMPTBL (L(fwd_write_27bytes_align), L(table_48bytes_fwd_align))
+	.int	JMPTBL (L(fwd_write_28bytes_align), L(table_48bytes_fwd_align))
+	.int	JMPTBL (L(fwd_write_29bytes_align), L(table_48bytes_fwd_align))
+	.int	JMPTBL (L(fwd_write_30bytes_align), L(table_48bytes_fwd_align))
+	.int	JMPTBL (L(fwd_write_31bytes_align), L(table_48bytes_fwd_align))
+	.int	JMPTBL (L(fwd_write_32bytes_align), L(table_48bytes_fwd_align))
+	.int	JMPTBL (L(fwd_write_33bytes_align), L(table_48bytes_fwd_align))
+	.int	JMPTBL (L(fwd_write_34bytes_align), L(table_48bytes_fwd_align))
+	.int	JMPTBL (L(fwd_write_35bytes_align), L(table_48bytes_fwd_align))
+	.int	JMPTBL (L(fwd_write_36bytes_align), L(table_48bytes_fwd_align))
+	.int	JMPTBL (L(fwd_write_37bytes_align), L(table_48bytes_fwd_align))
+	.int	JMPTBL (L(fwd_write_38bytes_align), L(table_48bytes_fwd_align))
+	.int	JMPTBL (L(fwd_write_39bytes_align), L(table_48bytes_fwd_align))
+	.int	JMPTBL (L(fwd_write_40bytes_align), L(table_48bytes_fwd_align))
+	.int	JMPTBL (L(fwd_write_41bytes_align), L(table_48bytes_fwd_align))
+	.int	JMPTBL (L(fwd_write_42bytes_align), L(table_48bytes_fwd_align))
+	.int	JMPTBL (L(fwd_write_43bytes_align), L(table_48bytes_fwd_align))
+	.int	JMPTBL (L(fwd_write_44bytes_align), L(table_48bytes_fwd_align))
+	.int	JMPTBL (L(fwd_write_45bytes_align), L(table_48bytes_fwd_align))
+	.int	JMPTBL (L(fwd_write_46bytes_align), L(table_48bytes_fwd_align))
+	.int	JMPTBL (L(fwd_write_47bytes_align), L(table_48bytes_fwd_align))
 
 	ALIGN (2)
 L(shl_table):
@@ -1658,22 +2155,14 @@ L(bk_write_64bytesless):
 L(bk_write_more32bytes):
 	/* Copy 32 bytes at a time.  */
 	sub	$32, %ecx
-	movl	-4(%esi), %eax
-	movl	%eax, -4(%edx)
-	movl	-8(%esi), %eax
-	movl	%eax, -8(%edx)
-	movl	-12(%esi), %eax
-	movl	%eax, -12(%edx)
-	movl	-16(%esi), %eax
-	movl	%eax, -16(%edx)
-	movl	-20(%esi), %eax
-	movl	%eax, -20(%edx)
-	movl	-24(%esi), %eax
-	movl	%eax, -24(%edx)
-	movl	-28(%esi), %eax
-	movl	%eax, -28(%edx)
-	movl	-32(%esi), %eax
-	movl	%eax, -32(%edx)
+	movq	-8(%esi), %xmm0
+	movq	%xmm0, -8(%edx)
+	movq	-16(%esi), %xmm0
+	movq	%xmm0, -16(%edx)
+	movq	-24(%esi), %xmm0
+	movq	%xmm0, -24(%edx)
+	movq	-32(%esi), %xmm0
+	movq	%xmm0, -32(%edx)
 	sub	$32, %edx
 	sub	$32, %esi
 
