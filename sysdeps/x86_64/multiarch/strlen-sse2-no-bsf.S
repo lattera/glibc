@@ -37,7 +37,7 @@ ENTRY (STRLEN)
 # endif
 	xor	%eax, %eax
 #  ifdef USE_AS_STRNLEN
-	mov	%rsi, %r8 
+	mov	%rsi, %r8
 	sub	$4, %rsi
 	jbe	L(len_less4_prolog)
 #  endif
