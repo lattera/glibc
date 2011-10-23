@@ -1,3 +1,12 @@
+2011-10-18  Liubov Dmitrieva  <liubov.dmitrieva@gmail.com>
+
+	* wcsmbs/Makefile
+	(strop-tests): Add wcslen.
+	* wcsmbs/test-wcslen.c: New file.
+	* string/test-strlen.c: Update.
+	Add wcslen support.
+	(WIDE): New macro.
+
 2011-10-23  Ulrich Drepper  <drepper@gmail.com>
 
 	* po/it.po: Update from translation team.
