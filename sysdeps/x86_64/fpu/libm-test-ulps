@@ -812,7 +812,7 @@ Test "sincos (pi/6, &sin_res, &cos_res) puts 0.866025403784438646763723170752936
 float: 1
 ifloat: 1
 
-Test "sinh (0x8p-32) == 1.86264514923095703232705808926175479e-9L":
+Test "sinh (0x8p-32) == 1.86264514923095703232705808926175479e-9":
 ldouble: 1
 ildouble: 1
 
