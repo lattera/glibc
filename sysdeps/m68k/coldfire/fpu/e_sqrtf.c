@@ -1,4 +1,4 @@
-/* Copyright (C) 2006 Free Software Foundation, Inc.
+/* Copyright (C) 2006, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -23,3 +23,4 @@ __ieee754_sqrtf (float x)
   asm ("fssqrt.s %1,%0" : "=f" (result) : "dm" (x));
   return result;
 }
+strong_alias (__ieee754_sqrtf, __sqrtf_finite)
