@@ -303,6 +303,7 @@ __ieee754_jnl (n, x)
   else
     return b;
 }
+strong_alias (__ieee754_jnl, __jnl_finite)
 
 #ifdef __STDC__
 long double
@@ -409,3 +410,4 @@ __ieee754_ynl (n, x)
   else
     return -b;
 }
+strong_alias (__ieee754_ynl, __ynl_finite)
