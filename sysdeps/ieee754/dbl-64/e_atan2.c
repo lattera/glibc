@@ -64,7 +64,7 @@ double __ieee754_atan2(double y,double x) {
   static const int pr[MM]={6,8,10,20,32};
   double ax,ay,u,du,u9,ua,v,vv,dv,t1,t2,t3,t7,t8,
 	 z,zz,cor,s1,ss1,s2,ss2;
-#ifndef DLA_FMA
+#ifndef DLA_FMS
   double t4,t5,t6;
 #endif
 #if 0

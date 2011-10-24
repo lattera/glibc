@@ -50,7 +50,7 @@
 void __dubsin(double x, double dx, double v[]) {
   double r,s,c,cc,d,dd,d2,dd2,e,ee,
     sn,ssn,cs,ccs,ds,dss,dc,dcc;
-#ifndef DLA_FMA
+#ifndef DLA_FMS
   double p,hx,tx,hy,ty,q;
 #endif
 #if 0
@@ -104,7 +104,7 @@ void __dubsin(double x, double dx, double v[]) {
 void __dubcos(double x, double dx, double v[]) {
   double r,s,c,cc,d,dd,d2,dd2,e,ee,
     sn,ssn,cs,ccs,ds,dss,dc,dcc;
-#ifndef DLA_FMA
+#ifndef DLA_FMS
   double p,hx,tx,hy,ty,q;
 #endif
 #if 0

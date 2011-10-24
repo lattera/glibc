@@ -51,7 +51,7 @@ double __halfulp(double x, double y)
 {
   mynumber v;
   double z,u,uu;
-#ifndef DLA_FMA
+#ifndef DLA_FMS
   double j1,j2,j3,j4,j5;
 #endif
   int4 k,l,m,n;

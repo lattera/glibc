@@ -54,7 +54,7 @@ double atan(double x) {
 
   double cor,s1,ss1,s2,ss2,t1,t2,t3,t7,t8,t9,t10,u,u2,u3,
 	 v,vv,w,ww,y,yy,z,zz;
-#ifndef DLA_FMA
+#ifndef DLA_FMS
   double t4,t5,t6;
 #endif
 #if 0

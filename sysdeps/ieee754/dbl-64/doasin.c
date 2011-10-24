@@ -53,7 +53,7 @@ void __doasin(double x, double dx, double v[]) {
 
   double xx,p,pp,u,uu,r,s;
   double tc,tcc;
-#ifndef DLA_FMA
+#ifndef DLA_FMS
   double hx,tx,hy,ty,tp,tq;
 #endif
 

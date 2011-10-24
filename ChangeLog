@@ -1,3 +1,16 @@
+2011-10-24  Ulrich Drepper  <drepper@gmail.com>
+
+	* sysdeps/ieee754/dbl-64/doasin.c: Adjust for DLA_FMA -> DLA_FMS
+	rename.
+	* sysdeps/ieee754/dbl-64/dosincos.c: Likewise.
+	* sysdeps/ieee754/dbl-64/dosincos.c: Likewise.
+	* sysdeps/ieee754/dbl-64/e_atan2.c: Likewise.
+	* sysdeps/ieee754/dbl-64/e_log.c: Likewise.
+	* sysdeps/ieee754/dbl-64/e_pow.c: Likewise.
+	* sysdeps/ieee754/dbl-64/halfulp.c: Likewise.
+	* sysdeps/ieee754/dbl-64/s_atan.c: Likewise.
+	* sysdeps/ieee754/dbl-64/s_tan.c: Likewise.
+
 2011-10-24  Andreas Schwab  <schwab@redhat.com>
 
 	* wcsmbs/wcslen.c: Don't define WCSLEN, reverse logic.
