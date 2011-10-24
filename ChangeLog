@@ -1,5 +1,9 @@
 2011-10-23  Ulrich Drepper  <drepper@gmail.com>
 
+	* sysdeps/ieee754/dbl-64/e_fmod.c (__ieee754_fmod): Add some branch
+	prediction.
+	* sysdeps/ieee754/dbl-64/wordsize-64/e_fmod.c: New file.
+
 	* string/strnlen.c: Don't define STRNLEN, reverse logic.
 	Remove unused variable magic_bits.
 	* sysdeps/i386/i686/multiarch/rtld-strnlen.c: New file.

@@ -1,4 +1,3 @@
-/* @(#)e_fmod.c 5.1 93/09/24 */
 /*
  * ====================================================
  * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.
@@ -44,7 +43,7 @@ __ieee754_fmod (double x, double y)
 	}
 
     /* determine ix = ilogb(x) */
-	if(hx<0x00100000) {	/* subnormal x */
+	if(__builtin_expect(hx<0x00100000, 0)) {	/* subnormal x */
 	    if(hx==0) {
 		for (ix = -1043, i=lx; i>0; i<<=1) ix -=1;
 	    } else {
@@ -53,7 +52,7 @@ __ieee754_fmod (double x, double y)
 	} else ix = (hx>>20)-1023;
 
     /* determine iy = ilogb(y) */
-	if(hy<0x00100000) {	/* subnormal y */
+	if(__builtin_expect(hy<0x00100000, 0)) {	/* subnormal y */
 	    if(hy==0) {
 		for (iy = -1043, i=ly; i>0; i<<=1) iy -=1;
 	    } else {
@@ -62,7 +61,7 @@ __ieee754_fmod (double x, double y)
 	} else iy = (hy>>20)-1023;
 
     /* set up {hx,lx}, {hy,ly} and align y to x */
-	if(ix >= -1022)
+	if(__builtin_expect(ix >= -1022, 1))
 	    hx = 0x00100000|(0x000fffff&hx);
 	else {		/* subnormal x, shift x to normal */
 	    n = -1022-ix;
@@ -74,7 +73,7 @@ __ieee754_fmod (double x, double y)
 		lx = 0;
 	    }
 	}
-	if(iy >= -1022)
+	if(__builtin_expect(iy >= -1022, 1))
 	    hy = 0x00100000|(0x000fffff&hy);
 	else {		/* subnormal y, shift y to normal */
 	    n = -1022-iy;
@@ -108,7 +107,7 @@ __ieee754_fmod (double x, double y)
 	    hx = hx+hx+(lx>>31); lx = lx+lx;
 	    iy -= 1;
 	}
-	if(iy>= -1022) {	/* normalize output */
+	if(__builtin_expect(iy>= -1022, 1)) {	/* normalize output */
 	    hx = ((hx-0x00100000)|((iy+1023)<<20));
 	    INSERT_WORDS(x,hx|sx,lx);
 	} else {		/* subnormal output */
