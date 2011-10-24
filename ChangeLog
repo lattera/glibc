@@ -1,3 +1,7 @@
+2011-10-24  Andreas Schwab  <schwab@redhat.com>
+
+	* wcsmbs/wcslen.c: Don't define WCSLEN, reverse logic.
+
 2011-10-23  Ulrich Drepper  <drepper@gmail.com>
 
 	* sysdeps/ieee754/dbl-64/wordsize-64/s_remquo.c: New file.

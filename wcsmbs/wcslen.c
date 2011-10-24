@@ -20,12 +20,12 @@
 #include <wchar.h>
 
 /* Return length of string S.  */
-#ifndef WCSLEN
-# define WCSLEN __wcslen
+#ifdef WCSLEN
+# define __wcslen WCSLEN
 #endif
 
 size_t
-WCSLEN (s)
+__wcslen (s)
      const wchar_t *s;
 {
   size_t len = 0;
