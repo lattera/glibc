@@ -1,3 +1,7 @@
+2011-10-25  Ulrich Drepper  <drepper@gmail.com>
+
+	* sysdeps/x86_64/fpu/math_private.h: Use VEX encoding when possible.
+
 2011-10-25  Andreas Schwab  <schwab@redhat.com>
 
 	* elf/dl-deps.c (_dl_map_object_deps): Remove always true
