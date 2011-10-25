@@ -1,7 +1,9 @@
 2011-10-24  Ulrich Drepper  <drepper@gmail.com>
 
-	* sysdeps/x86_64/dla.h (DLA_FMS): Some compilers fail to inline
-	__builtin_fma in some situations.  Have to use an asm.
+	* sysdeps/x86_64/dla.h: Move to ...
+	* sysdeps/x86_64/fpu/dla.h: ...here.
+	(DLA_FMS): Some compilers fail to inline __builtin_fma in some
+	situations.  Use __builtin_fma only for gcc 4.6 and up.
 
 	* config.make.in: Add have-mfma4 entry.
 	* configure.in: Substitute libc_cv_cc_fma4.
