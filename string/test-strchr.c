@@ -63,8 +63,8 @@ stupid_STRCHR (const CHAR *s, int c)
   return NULL;
 }
 
-IMPL (stupid_STRCHR, 1)
-IMPL (simple_STRCHR, 1)
+IMPL (stupid_STRCHR, 0)
+IMPL (simple_STRCHR, 0)
 IMPL (STRCHR, 1)
 
 static void
@@ -100,15 +100,15 @@ do_one_test (impl_t *impl, const CHAR *s, int c, const CHAR *exp_res)
 
 static void
 do_test (size_t align, size_t pos, size_t len, int seek_char, int max_char)
-/* for wcschr: align here means align not in bytes,
- * but in wchar_ts, in bytes it will equal to align * (sizeof (wchar_t))
- * len for wcschr here isn't in bytes but it's number of wchar_t symbols */
+/* For wcschr: align here means align not in bytes,
+   but in wchar_ts, in bytes it will equal to align * (sizeof (wchar_t))
+   len for wcschr here isn't in bytes but it's number of wchar_t symbols.  */
 {
   size_t i;
   CHAR *result;
-  CHAR *buf = (CHAR *) (buf1);
+  CHAR *buf = (CHAR *) buf1;
   align &= 15;
-  if ((align + len) * sizeof(CHAR) >= page_size)
+  if ((align + len) * sizeof (CHAR) >= page_size)
     return;
 
   for (i = 0; i < len; ++i)
@@ -116,6 +116,8 @@ do_test (size_t align, size_t pos, size_t len, int seek_char, int max_char)
       buf[align + i] = 32 + 23 * i % max_char;
       if (buf[align + i] == seek_char)
 	buf[align + i] = seek_char + 1;
+      else if (buf[align + i] == 0)
+	buf[align + i] = 1;
     }
   buf[align + len] = 0;
 
@@ -130,7 +132,8 @@ do_test (size_t align, size_t pos, size_t len, int seek_char, int max_char)
     result = NULL;
 
   if (HP_TIMING_AVAIL)
-    printf ("Length %4zd, alignment in bytes %2zd:", pos, align * sizeof (CHAR));
+    printf ("Length %4zd, alignment in bytes %2zd:",
+	    pos, align * sizeof (CHAR));
 
   FOR_EACH_IMPL (impl, 0)
     do_one_test (impl, buf + align, seek_char, result);
@@ -149,14 +152,15 @@ do_random_tests (void)
 
   for (n = 0; n < ITERATIONS; n++)
     {
-/* for wcschr: align here means align not in bytes, but in wchar_ts,
- * in bytes it will equal to align * (sizeof (wchar_t)) */
+      /* For wcschr: align here means align not in bytes, but in wchar_ts,
+	 in bytes it will equal to align * (sizeof (wchar_t)).  */
       align = random () & 15;
       pos = random () & 511;
       seek_char = random () & 255;
       if (pos + align >= 511)
 	pos = 510 - align - (random () & 7);
-/* len for wcschr here isn't in bytes but it's number of wchar_t symbols */
+      /* len for wcschr here isn't in bytes but it's number of wchar_t
+	 symbols.  */
       len = random () & 511;
       if ((pos == len && seek_char)
 	  || (pos > len && (random () & 1)))
