@@ -44,7 +44,7 @@ _dl_sort_fini (struct link_map **maps, size_t nmaps, char *used, Lmid_t ns)
   while (1)
     {
       /* Keep track of which object we looked at this round.  */
-      seen[i] += seen[i] < 2;
+      ++seen[i];
       struct link_map *thisp = maps[i];
 
       /* Do not handle ld.so in secondary namespaces and object which

@@ -627,7 +627,7 @@ Filters not supported with LD_TRACE_PRELINKING"));
       while (1)
 	{
 	  /* Keep track of which object we looked at this round.  */
-	  seen[i] += seen[i] < 2;
+	  ++seen[i];
 	  struct link_map *thisp = l_initfini[i];
 
 	  /* Find the last object in the list for which the current one is

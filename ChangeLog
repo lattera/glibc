@@ -1,3 +1,9 @@
+2011-10-25  Andreas Schwab  <schwab@redhat.com>
+
+	* elf/dl-deps.c (_dl_map_object_deps): Remove always true
+	condition.
+	* elf/dl-fini.c (_dl_sort_fini): Likewise.
+
 2011-10-25  Ulrich Drepper  <drepper@gmail.com>
 
 	* sysdeps/ieee754/dbl-64/branred.c: Move FMA4 code into separate
