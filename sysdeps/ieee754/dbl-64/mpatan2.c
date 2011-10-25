@@ -1,8 +1,7 @@
-
 /*
  * IBM Accurate Mathematical Library
  * written by International Business Machines Corp.
- * Copyright (C) 2001 Free Software Foundation
+ * Copyright (C) 2001, 2011 Free Software Foundation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -38,18 +37,24 @@
 
 #include "mpa.h"
 
+#ifndef SECTION
+# define SECTION
+#endif
+
 void __mpsqrt(mp_no *, mp_no *, int);
 void __mpatan(mp_no *, mp_no *, int);
 
 /* Multi-Precision Atan2(y,x) function subroutine, for p >= 4.    */
 /* y=0 is not permitted if x<=0. No error messages are given.     */
-void __mpatan2(mp_no *y, mp_no *x, mp_no *z, int p) {
+void
+SECTION
+__mpatan2(mp_no *y, mp_no *x, mp_no *z, int p) {
 
   static const double ZERO = 0.0, ONE = 1.0;
 
   mp_no mpone = {0,{0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,
-                    0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,
-                    0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0}};
+		    0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,
+		    0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0}};
   mp_no mpt1,mpt2,mpt3;
 
 

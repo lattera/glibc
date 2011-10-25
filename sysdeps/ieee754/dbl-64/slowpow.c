@@ -1,7 +1,7 @@
 /*
  * IBM Accurate Mathematical Library
  * written by International Business Machines Corp.
- * Copyright (C) 2001 Free Software Foundation
+ * Copyright (C) 2001, 2011 Free Software Foundation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -35,12 +35,18 @@
 #include "mpa.h"
 #include "math_private.h"
 
+#ifndef SECTION
+# define SECTION
+#endif
+
 void __mpexp(mp_no *x, mp_no *y, int p);
 void __mplog(mp_no *x, mp_no *y, int p);
 double ulog(double);
 double __halfulp(double x,double y);
 
-double __slowpow(double x, double y, double z) {
+double
+SECTION
+__slowpow(double x, double y, double z) {
   double res,res1;
   mp_no mpx, mpy, mpz,mpw,mpp,mpr,mpr1;
   static const mp_no eps = {-3,{1.0,4.0}};
@@ -48,7 +54,7 @@ double __slowpow(double x, double y, double z) {
 
   res = __halfulp(x,y);        /* halfulp() returns -10 or x^y             */
   if (res >= 0) return res;  /* if result was really computed by halfulp */
-                  /*  else, if result was not really computed by halfulp */
+		  /*  else, if result was not really computed by halfulp */
   p = 10;         /*  p=precision   */
   __dbl_mp(x,&mpx,p);
   __dbl_mp(y,&mpy,p);

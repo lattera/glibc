@@ -55,6 +55,10 @@
 #include "MathLib.h"
 #include "math_private.h"
 
+#ifndef SECTION
+# define SECTION
+#endif
+
 extern const union
 {
   int4 i[880];
@@ -92,7 +96,9 @@ static double csloww2(double x, double dx, double orig, int n);
 /* An ultimate sin routine. Given an IEEE double machine number x   */
 /* it computes the correctly rounded (to nearest) value of sin(x)  */
 /*******************************************************************/
-double __sin(double x){
+double
+SECTION
+__sin(double x){
 	double xx,res,t,cor,y,s,c,sn,ssn,cs,ccs,xn,a,da,db,eps,xn1,xn2;
 #if 0
 	double w[2];
@@ -349,7 +355,9 @@ double __sin(double x){
 /* it computes the correctly rounded (to nearest) value of cos(x)  */
 /*******************************************************************/
 
-double __cos(double x)
+double
+SECTION
+__cos(double x)
 {
   double y,xx,res,t,cor,s,c,sn,ssn,cs,ccs,xn,a,da,db,eps,xn1,xn2;
   mynumber u,v;
@@ -596,7 +604,9 @@ double __cos(double x)
 /* precision  and if still doesn't accurate enough by mpsin   or dubsin */
 /************************************************************************/
 
-static double slow(double x) {
+static double
+SECTION
+slow(double x) {
 static const double th2_36 = 206158430208.0;   /*    1.5*2**37   */
  double y,x1,x2,xx,r,t,res,cor,w[2];
  x1=(x+th2_36)-th2_36;
@@ -620,7 +630,9 @@ static const double th2_36 = 206158430208.0;   /*    1.5*2**37   */
 /* and if result still doesn't accurate enough by mpsin   or dubsin            */
 /*******************************************************************************/
 
-static double slow1(double x) {
+static double
+SECTION
+slow1(double x) {
   mynumber u;
   double sn,ssn,cs,ccs,s,c,w[2],y,y1,y2,c1,c2,xx,cor,res;
   static const double t22 = 6291456.0;
@@ -656,7 +668,9 @@ static double slow1(double x) {
 /*  Routine compute sin(x) for   0.855469  <|x|<2.426265  by  __sincostab.tbl  */
 /* and if result still doesn't accurate enough by mpsin   or dubsin       */
 /**************************************************************************/
-static double slow2(double x) {
+static double
+SECTION
+slow2(double x) {
   mynumber u;
   double sn,ssn,cs,ccs,s,c,w[2],y,y1,y2,e1,e2,xx,cor,res,del;
   static const double t22 = 6291456.0;
@@ -708,7 +722,9 @@ static double slow2(double x) {
 /* result.And if result not accurate enough routine calls mpsin1 or dubsin */
 /***************************************************************************/
 
-static double sloww(double x,double dx, double orig) {
+static double
+SECTION
+sloww(double x,double dx, double orig) {
   static const double th2_36 = 206158430208.0;   /*    1.5*2**37   */
   double y,x1,x2,xx,r,t,res,cor,w[2],a,da,xn;
   union {int4 i[2]; double x;} v;
@@ -755,7 +771,9 @@ static double sloww(double x,double dx, double orig) {
 /* accurate enough routine calls  mpsin1   or dubsin                       */
 /***************************************************************************/
 
-static double sloww1(double x, double dx, double orig) {
+static double
+SECTION
+sloww1(double x, double dx, double orig) {
   mynumber u;
   double sn,ssn,cs,ccs,s,c,w[2],y,y1,y2,c1,c2,xx,cor,res;
   static const double t22 = 6291456.0;
@@ -797,7 +815,9 @@ static double sloww1(double x, double dx, double orig) {
 /* accurate enough routine calls  mpsin1   or dubsin                       */
 /***************************************************************************/
 
-static double sloww2(double x, double dx, double orig, int n) {
+static double
+SECTION
+sloww2(double x, double dx, double orig, int n) {
   mynumber u;
   double sn,ssn,cs,ccs,s,c,w[2],y,y1,y2,e1,e2,xx,cor,res;
   static const double t22 = 6291456.0;
@@ -841,7 +861,9 @@ static double sloww2(double x, double dx, double orig, int n) {
 /* result.And if result not accurate enough routine calls other routines    */
 /***************************************************************************/
 
-static double bsloww(double x,double dx, double orig,int n) {
+static double
+SECTION
+bsloww(double x,double dx, double orig,int n) {
   static const double th2_36 = 206158430208.0;   /*    1.5*2**37   */
   double y,x1,x2,xx,r,t,res,cor,w[2];
 #if 0
@@ -874,7 +896,9 @@ static double bsloww(double x,double dx, double orig,int n) {
 /* And if result not  accurate enough routine calls  other routines         */
 /***************************************************************************/
 
-static double bsloww1(double x, double dx, double orig,int n) {
+static double
+SECTION
+bsloww1(double x, double dx, double orig,int n) {
 mynumber u;
  double sn,ssn,cs,ccs,s,c,w[2],y,y1,y2,c1,c2,xx,cor,res;
  static const double t22 = 6291456.0;
@@ -917,7 +941,9 @@ mynumber u;
 /* And if result not accurate enough routine calls  other routines          */
 /***************************************************************************/
 
-static double bsloww2(double x, double dx, double orig, int n) {
+static double
+SECTION
+bsloww2(double x, double dx, double orig, int n) {
 mynumber u;
  double sn,ssn,cs,ccs,s,c,w[2],y,y1,y2,e1,e2,xx,cor,res;
  static const double t22 = 6291456.0;
@@ -959,7 +985,9 @@ mynumber u;
 /* precision  and if still doesn't accurate enough by mpcos   or docos  */
 /************************************************************************/
 
-static double cslow2(double x) {
+static double
+SECTION
+cslow2(double x) {
   mynumber u;
   double sn,ssn,cs,ccs,s,c,w[2],y,y1,y2,e1,e2,xx,cor,res;
   static const double t22 = 6291456.0;
@@ -1002,7 +1030,9 @@ static double cslow2(double x) {
 /***************************************************************************/
 
 
-static double csloww(double x,double dx, double orig) {
+static double
+SECTION
+csloww(double x,double dx, double orig) {
   static const double th2_36 = 206158430208.0;   /*    1.5*2**37   */
   double y,x1,x2,xx,r,t,res,cor,w[2],a,da,xn;
   union {int4 i[2]; double x;} v;
@@ -1051,7 +1081,9 @@ static double csloww(double x,double dx, double orig) {
 /* accurate enough routine calls  other routines                            */
 /***************************************************************************/
 
-static double csloww1(double x, double dx, double orig) {
+static double
+SECTION
+csloww1(double x, double dx, double orig) {
   mynumber u;
   double sn,ssn,cs,ccs,s,c,w[2],y,y1,y2,c1,c2,xx,cor,res;
   static const double t22 = 6291456.0;
@@ -1095,7 +1127,9 @@ static double csloww1(double x, double dx, double orig) {
 /* accurate enough routine calls  other routines                            */
 /***************************************************************************/
 
-static double csloww2(double x, double dx, double orig, int n) {
+static double
+SECTION
+csloww2(double x, double dx, double orig, int n) {
   mynumber u;
   double sn,ssn,cs,ccs,s,c,w[2],y,y1,y2,e1,e2,xx,cor,res;
   static const double t22 = 6291456.0;

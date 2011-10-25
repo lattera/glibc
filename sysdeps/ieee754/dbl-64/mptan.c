@@ -1,8 +1,7 @@
-
 /*
  * IBM Accurate Mathematical Library
  * written by International Business Machines Corp.
- * Copyright (C) 2001 Free Software Foundation
+ * Copyright (C) 2001, 2011 Free Software Foundation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -38,10 +37,16 @@
 #include "endian.h"
 #include "mpa.h"
 
+#ifndef SECTION
+# define SECTION
+#endif
+
 int __mpranred(double, mp_no *, int);
 void __c32(mp_no *, mp_no *, mp_no *, int);
 
-void __mptan(double x, mp_no *mpy, int p) {
+void
+SECTION
+__mptan(double x, mp_no *mpy, int p) {
 
   static const double MONE = -1.0;
 

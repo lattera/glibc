@@ -39,6 +39,10 @@
 #include "dosincos.h"
 #include "math_private.h"
 
+#ifndef SECTION
+# define SECTION
+#endif
+
 extern const union
 {
   int4 i[880];
@@ -52,7 +56,9 @@ extern const union
 /*(x+dx) between 0 and PI/4                                            */
 /***********************************************************************/
 
-void __dubsin(double x, double dx, double v[]) {
+void
+SECTION
+__dubsin(double x, double dx, double v[]) {
   double r,s,c,cc,d,dd,d2,dd2,e,ee,
     sn,ssn,cs,ccs,ds,dss,dc,dcc;
 #ifndef DLA_FMS
@@ -106,7 +112,9 @@ void __dubsin(double x, double dx, double v[]) {
 /*(x+dx) between 0 and PI/4                                           */
 /**********************************************************************/
 
-void __dubcos(double x, double dx, double v[]) {
+void
+SECTION
+__dubcos(double x, double dx, double v[]) {
   double r,s,c,cc,d,dd,d2,dd2,e,ee,
     sn,ssn,cs,ccs,ds,dss,dc,dcc;
 #ifndef DLA_FMS
@@ -172,7 +180,9 @@ void __dubcos(double x, double dx, double v[]) {
 /* Routine receive Double-Length number (x+dx) and computes cos(x+dx) */
 /* as Double-Length number and store it in array v                    */
 /**********************************************************************/
-void __docos(double x, double dx, double v[]) {
+void
+SECTION
+__docos(double x, double dx, double v[]) {
   double y,yy,p,w[2];
   if (x>0) {y=x; yy=dx;}
      else {y=-x; yy=-dx;}

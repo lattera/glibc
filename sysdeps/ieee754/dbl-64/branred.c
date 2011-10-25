@@ -1,7 +1,7 @@
 /*
  * IBM Accurate Mathematical Library
  * Written by International Business Machines Corp.
- * Copyright (C) 2001 Free Software Foundation, Inc.
+ * Copyright (C) 2001, 2011 Free Software Foundation, Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -38,6 +38,10 @@
 #include "branred.h"
 #include "math_private.h"
 
+#ifndef SECTION
+# define SECTION
+#endif
+
 
 /*******************************************************************/
 /* Routine  branred() performs range  reduction of a double number */
@@ -45,7 +49,9 @@
 /* x=n*pi/2+(a+aa), abs(a+aa)<pi/4, n=0,+-1,+-2,....               */
 /* Routine return integer (n mod 4)                                */
 /*******************************************************************/
-int __branred(double x, double *a, double *aa)
+int
+SECTION
+__branred(double x, double *a, double *aa)
 {
   int i,k;
 #if 0

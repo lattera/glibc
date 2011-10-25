@@ -1,8 +1,7 @@
-
 /*
  * IBM Accurate Mathematical Library
  * written by International Business Machines Corp.
- * Copyright (C) 2001 Free Software Foundation
+ * Copyright (C) 2001, 2011 Free Software Foundation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU  Lesser General Public License as published by
@@ -34,34 +33,40 @@
 #include "mpa.h"
 #include "mpexp.h"
 
+#ifndef SECTION
+# define SECTION
+#endif
+
 /* Multi-Precision exponential function subroutine (for p >= 4,          */
 /* 2**(-55) <= abs(x) <= 1024).                                          */
-void __mpexp(mp_no *x, mp_no *y, int p) {
+void
+SECTION
+__mpexp(mp_no *x, mp_no *y, int p) {
 
   int i,j,k,m,m1,m2,n;
   double a,b;
   static const int np[33] = {0,0,0,0,3,3,4,4,5,4,4,5,5,5,6,6,6,6,6,6,
-                             6,6,6,6,7,7,7,7,8,8,8,8,8};
+			     6,6,6,6,7,7,7,7,8,8,8,8,8};
   static const int m1p[33]= {0,0,0,0,17,23,23,28,27,38,42,39,43,47,43,47,50,54,
-                               57,60,64,67,71,74,68,71,74,77,70,73,76,78,81};
+			       57,60,64,67,71,74,68,71,74,77,70,73,76,78,81};
   static const int m1np[7][18] = {
-                 { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                 { 0, 0, 0, 0,36,48,60,72, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                 { 0, 0, 0, 0,24,32,40,48,56,64,72, 0, 0, 0, 0, 0, 0, 0},
-                 { 0, 0, 0, 0,17,23,29,35,41,47,53,59,65, 0, 0, 0, 0, 0},
-                 { 0, 0, 0, 0, 0, 0,23,28,33,38,42,47,52,57,62,66, 0, 0},
-                 { 0, 0, 0, 0, 0, 0, 0, 0,27, 0, 0,39,43,47,51,55,59,63},
-                 { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,43,47,50,54}};
+		 { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+		 { 0, 0, 0, 0,36,48,60,72, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+		 { 0, 0, 0, 0,24,32,40,48,56,64,72, 0, 0, 0, 0, 0, 0, 0},
+		 { 0, 0, 0, 0,17,23,29,35,41,47,53,59,65, 0, 0, 0, 0, 0},
+		 { 0, 0, 0, 0, 0, 0,23,28,33,38,42,47,52,57,62,66, 0, 0},
+		 { 0, 0, 0, 0, 0, 0, 0, 0,27, 0, 0,39,43,47,51,55,59,63},
+		 { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,43,47,50,54}};
   mp_no mpone = {0,{0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,
-                    0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,
-                    0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0}};
+		    0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,
+		    0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0}};
   mp_no mpk   = {0,{0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,
-                    0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,
-                    0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0}};
+		    0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,
+		    0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0}};
   mp_no mps,mpak,mpt1,mpt2;
 
   /* Choose m,n and compute a=2**(-m) */
-  n = np[p];    m1 = m1p[p];    a = twomm1[p].d;
+  n = np[p];    m1 = m1p[p];    a = __mpexp_twomm1[p].d;
   for (i=0; i<EX; i++)  a *= RADIXI;
   for (   ; i>EX; i--)  a *= RADIX;
   b = X[1]*RADIXI;   m2 = 24*EX;
@@ -81,12 +86,12 @@ void __mpexp(mp_no *x, mp_no *y, int p) {
 
   /* Evaluate the polynomial. Put result in mpt2 */
   mpone.e=1;   mpone.d[0]=ONE;   mpone.d[1]=ONE;
-  mpk.e = 1;   mpk.d[0] = ONE;   mpk.d[1]=nn[n].d;
+  mpk.e = 1;   mpk.d[0] = ONE;   mpk.d[1]=__mpexp_nn[n].d;
   __dvd(&mps,&mpk,&mpt1,p);
   __add(&mpone,&mpt1,&mpak,p);
   for (k=n-1; k>1; k--) {
     __mul(&mps,&mpak,&mpt1,p);
-    mpk.d[1]=nn[k].d;
+    mpk.d[1]=__mpexp_nn[k].d;
     __dvd(&mpt1,&mpk,&mpt2,p);
     __add(&mpone,&mpt2,&mpak,p);
   }

@@ -32,6 +32,12 @@
 #include "endian.h"
 #include "mpa.h"
 
+#ifndef SECTION
+# define SECTION
+#endif
+
+#include "mpsqrt.h"
+
 /****************************************************************************/
 /* Multi-Precision square root function subroutine for precision p >= 4.    */
 /* The relative error is bounded by 3.501*r**(1-p), where r=2**24.          */
@@ -42,9 +48,9 @@
 
 static double fastiroot(double);
 
-void __mpsqrt(mp_no *x, mp_no *y, int p) {
-#include "mpsqrt.h"
-
+void
+SECTION
+__mpsqrt(mp_no *x, mp_no *y, int p) {
   int i,m,ex,ey;
   double dx,dy;
   mp_no
@@ -64,7 +70,7 @@ void __mpsqrt(mp_no *x, mp_no *y, int p) {
   __mp_dbl(&mpxn,&dx,p);   dy=fastiroot(dx);    __dbl_mp(dy,&mpu,p);
   __mul(&mpxn,&mphalf,&mpz,p);
 
-  m=mp[p];
+  m=__mpsqrt_mp[p];
   for (i=0; i<m; i++) {
     __mul(&mpu,&mpu,&mpt1,p);
     __mul(&mpt1,&mpz,&mpt2,p);
@@ -81,7 +87,9 @@ void __mpsqrt(mp_no *x, mp_no *y, int p) {
 /* Compute a double precision approximation for 1/sqrt(x)  */
 /* with the relative error bounded by 2**-51.              */
 /***********************************************************/
-static double fastiroot(double x) {
+static double
+SECTION
+fastiroot(double x) {
   union {int i[2]; double d;} p,q;
   double y,z, t;
   int n;

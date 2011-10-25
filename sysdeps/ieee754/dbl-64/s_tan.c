@@ -41,10 +41,16 @@
 #include "MathLib.h"
 #include "math.h"
 
+#ifndef SECTION
+# define SECTION
+#endif
+
 static double tanMp(double);
 void __mptan(double, mp_no *, int);
 
-double tan(double x) {
+double
+SECTION
+tan(double x) {
 #include "utan.h"
 #include "utan.tbl"
 
@@ -486,7 +492,9 @@ double tan(double x) {
 /* multiple precision stage                                              */
 /* Convert x to multi precision number,compute tan(x) by mptan() routine */
 /* and converts result back to double                                    */
-static double tanMp(double x)
+static double
+SECTION
+tanMp(double x)
 {
   int p;
   double y;

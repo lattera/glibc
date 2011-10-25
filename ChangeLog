@@ -1,3 +1,53 @@
+2011-10-25  Ulrich Drepper  <drepper@gmail.com>
+
+	* sysdeps/ieee754/dbl-64/branred.c: Move FMA4 code into separate
+	.text section.  Avoid duplicate constants.
+	* sysdeps/ieee754/dbl-64/doasin.c: Likewise.
+	* sysdeps/ieee754/dbl-64/dosincos.c: Likewise.
+	* sysdeps/ieee754/dbl-64/e_asin.c: Likewise.
+	* sysdeps/ieee754/dbl-64/e_atan2.c: Likewise.
+	* sysdeps/ieee754/dbl-64/e_exp.c: Likewise.
+	* sysdeps/ieee754/dbl-64/e_log.c: Likewise.
+	* sysdeps/ieee754/dbl-64/e_pow.c: Likewise.
+	* sysdeps/ieee754/dbl-64/halfulp.c: Likewise.
+	* sysdeps/ieee754/dbl-64/mpa.c: Likewise.
+	* sysdeps/ieee754/dbl-64/mpa.h: Likewise.
+	* sysdeps/ieee754/dbl-64/mpatan.c: Likewise.
+	* sysdeps/ieee754/dbl-64/mpatan.h: Likewise.
+	* sysdeps/ieee754/dbl-64/mpatan2.c: Likewise.
+	* sysdeps/ieee754/dbl-64/mpexp.c: Likewise.
+	* sysdeps/ieee754/dbl-64/mpexp.h: Likewise.
+	* sysdeps/ieee754/dbl-64/mpsqrt.c: Likewise.
+	* sysdeps/ieee754/dbl-64/mpsqrt.h: Likewise.
+	* sysdeps/ieee754/dbl-64/mptan.c: Likewise.
+	* sysdeps/ieee754/dbl-64/s_sin.c: Likewise.
+	* sysdeps/ieee754/dbl-64/s_tan.c: Likewise.
+	* sysdeps/ieee754/dbl-64/sincos32.c: Likewise.
+	* sysdeps/ieee754/dbl-64/slowexp.c: Likewise.
+	* sysdeps/ieee754/dbl-64/slowpow.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/brandred-fma4.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/doasin-fma4.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/dosincos-fma4.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/e_asin-fma4.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/e_atan2-fma4.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/e_exp-fma4.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/e_log-fma4.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/e_pow-fma4.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/halfulp-fma4.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/mpa-fma4.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/mpatan-fma4.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/mpatan2-fma4.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/mpexp-fma4.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/mplog-fma4.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/mpsqrt-fma4.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/mptan-fma4.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/s_atan-fma4.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/s_sin-fma4.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/s_tan-fma4.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/sincos32-fma4.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/slowexp-fma4.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/slowpow-fma4.c: Likewise.
+
 2011-10-24  Ulrich Drepper  <drepper@gmail.com>
 
 	* sysdeps/x86_64/dla.h: Move to ...

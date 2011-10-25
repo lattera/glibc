@@ -64,7 +64,7 @@ typedef union { int i[2]; double d; } number;
 
 #define ABS(x)   ((x) <  0  ? -(x) : (x))
 
-// int __acr(const mp_no *, const mp_no *, int);
+int __acr(const mp_no *, const mp_no *, int);
 // int  __cr(const mp_no *, const mp_no *, int);
 void __cpy(const mp_no *, mp_no *, int);
 // void __cpymn(const mp_no *, int, mp_no *, int);

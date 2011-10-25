@@ -1,8 +1,7 @@
-
 /*
  * IBM Accurate Mathematical Library
  * Written by International Business Machines Corp.
- * Copyright (C) 2001 Free Software Foundation, Inc.
+ * Copyright (C) 2001, 2011 Free Software Foundation, Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -29,9 +28,18 @@
 #ifndef MPATAN_H
 #define MPATAN_H
 
+extern const number __atan_xm[8] attribute_hidden;
+extern const number __atan_twonm1[33] attribute_hidden;
+extern const number __atan_twom[8] attribute_hidden;
+extern const number __atan_one attribute_hidden;
+extern const number __atan_two attribute_hidden;
+extern const int __atan_np[33] attribute_hidden;
+
+
+#ifndef AVOID_MPATAN_H
 #ifdef BIG_ENDI
-  static const number
-            xm[8] = {                             /* x[m]   */
+  const number
+	    __atan_xm[8] = {                         /* x[m]   */
 /**/                  {{0x00000000, 0x00000000} }, /* 0.0    */
 /**/                  {{0x3f8930be, 0x00000000} }, /* 0.0123 */
 /**/                  {{0x3f991687, 0x00000000} }, /* 0.0245 */
@@ -40,9 +48,9 @@
 /**/                  {{0x3fc95810, 0x00000000} }, /* 0.198  */
 /**/                  {{0x3fda7ef9, 0x00000000} }, /* 0.414  */
 /**/                  {{0x3ff00000, 0x00000000} }, /* 1.0    */
-                    };
-  static const number
-       twonm1[33] = {                             /* 2n-1   */
+		    };
+  const number
+ __atan_twonm1[33] = {                             /* 2n-1   */
 /**/                  {{0x00000000, 0x00000000} }, /* 0      */
 /**/                  {{0x00000000, 0x00000000} }, /* 0      */
 /**/                  {{0x00000000, 0x00000000} }, /* 0      */
@@ -76,10 +84,10 @@
 /**/                  {{0x405b4000, 0x00000000} }, /* 109    */
 /**/                  {{0x405c4000, 0x00000000} }, /* 113    */
 /**/                  {{0x405d4000, 0x00000000} }, /* 117    */
-                    };
+		    };
 
-  static const number
-          twom[8] = {                             /* 2**m   */
+  const number
+    __atan_twom[8] = {                             /* 2**m   */
 /**/                  {{0x3ff00000, 0x00000000} }, /*   1.0  */
 /**/                  {{0x40000000, 0x00000000} }, /*   2.0  */
 /**/                  {{0x40100000, 0x00000000} }, /*   4.0  */
@@ -88,17 +96,17 @@
 /**/                  {{0x40400000, 0x00000000} }, /*  32.0  */
 /**/                  {{0x40500000, 0x00000000} }, /*  64.0  */
 /**/                  {{0x40600000, 0x00000000} }, /* 128.0  */
-                    };
+		    };
 
-  static const number
-/**/ one            = {{0x3ff00000, 0x00000000} }, /* 1      */
-/**/ two            = {{0x40000000, 0x00000000} }; /* 2      */
+  const number
+/**/ __atan_one     = {{0x3ff00000, 0x00000000} }, /* 1      */
+/**/ __atan_two     = {{0x40000000, 0x00000000} }; /* 2      */
 
 #else
 #ifdef LITTLE_ENDI
 
-  static const number
-            xm[8] = {                             /* x[m]   */
+  const number
+      __atan_xm[8] = {                             /* x[m]   */
 /**/                  {{0x00000000, 0x00000000} }, /* 0.0    */
 /**/                  {{0x00000000, 0x3f8930be} }, /* 0.0123 */
 /**/                  {{0x00000000, 0x3f991687} }, /* 0.0245 */
@@ -107,9 +115,9 @@
 /**/                  {{0x00000000, 0x3fc95810} }, /* 0.198  */
 /**/                  {{0x00000000, 0x3fda7ef9} }, /* 0.414  */
 /**/                  {{0x00000000, 0x3ff00000} }, /* 1.0    */
-                    };
-  static const number
-       twonm1[33] = {                             /* 2n-1   */
+		    };
+  const number
+__atan_twonm1[33] = {                             /* 2n-1   */
 /**/                  {{0x00000000, 0x00000000} }, /* 0      */
 /**/                  {{0x00000000, 0x00000000} }, /* 0      */
 /**/                  {{0x00000000, 0x00000000} }, /* 0      */
@@ -143,10 +151,10 @@
 /**/                  {{0x00000000, 0x405b4000} }, /* 109    */
 /**/                  {{0x00000000, 0x405c4000} }, /* 113    */
 /**/                  {{0x00000000, 0x405d4000} }, /* 117    */
-                    };
+		    };
 
-  static const number
-          twom[8] = {                             /* 2**m   */
+  const number
+    __atan_twom[8] = {                             /* 2**m   */
 /**/                  {{0x00000000, 0x3ff00000} }, /*   1.0  */
 /**/                  {{0x00000000, 0x40000000} }, /*   2.0  */
 /**/                  {{0x00000000, 0x40100000} }, /*   4.0  */
@@ -155,20 +163,21 @@
 /**/                  {{0x00000000, 0x40400000} }, /*  32.0  */
 /**/                  {{0x00000000, 0x40500000} }, /*  64.0  */
 /**/                  {{0x00000000, 0x40600000} }, /* 128.0  */
-                    };
+		    };
 
-  static const number
-/**/ one            = {{0x00000000, 0x3ff00000} }, /* 1      */
-/**/ two            = {{0x00000000, 0x40000000} }; /* 2      */
+  const number
+/**/ __atan_one    = {{0x00000000, 0x3ff00000} }, /* 1      */
+/**/ __atan_two    = {{0x00000000, 0x40000000} }; /* 2      */
+
+#endif
+#endif
+
+  const int
+    __atan_np[33] = { 0, 0, 0, 0, 6, 8,10,11,13,15,17,19,21,23,25,27,28,
+		      30,32,34,36,38,40,42,43,45,47,49,51,53,55,57,59};
 
 #endif
 #endif
 
-#define  ONE       one.d
-#define  TWO       two.d
-
-  static const int
-    np[33] = { 0, 0, 0, 0, 6, 8,10,11,13,15,17,19,21,23,25,27,28,
-	       30,32,34,36,38,40,42,43,45,47,49,51,53,55,57,59};
-
-#endif
+#define  ONE       __atan_one.d
+#define  TWO       __atan_two.d

@@ -40,6 +40,10 @@
 #include <dla.h>
 #include "math_private.h"
 
+#ifndef SECTION
+# define SECTION
+#endif
+
 static const int4 tab54[32] = {
    262143, 11585, 1782, 511, 210, 107, 63, 42,
        30,    22,   17,  14,  12,  10,  9,  7,
@@ -47,7 +51,9 @@ static const int4 tab54[32] = {
 	3,     3,    3,   3,   3,   3,  3,  3 };
 
 
-double __halfulp(double x, double y)
+double
+SECTION
+__halfulp(double x, double y)
 {
   mynumber v;
   double z,u,uu;

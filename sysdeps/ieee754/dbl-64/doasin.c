@@ -34,11 +34,17 @@
 #include <dla.h>
 #include "math_private.h"
 
+#ifndef SECTION
+# define SECTION
+#endif
+
 /********************************************************************/
 /* Compute arcsin(x,dx,v) of double-length number (x+dx) the result */
 /* stored in v where v= v[0]+v[1] =arcsin(x+dx)                     */
 /********************************************************************/
-void __doasin(double x, double dx, double v[]) {
+void
+SECTION
+__doasin(double x, double dx, double v[]) {
 
 #include "doasin.h"
 

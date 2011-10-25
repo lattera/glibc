@@ -1,7 +1,7 @@
 /*
  * IBM Accurate Mathematical Library
  * written by International Business Machines Corp.
- * Copyright (C) 2001 Free Software Foundation
+ * Copyright (C) 2001, 2011 Free Software Foundation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -45,11 +45,17 @@
 #include "sincos32.h"
 #include "math_private.h"
 
+#ifndef SECTION
+# define SECTION
+#endif
+
 /****************************************************************/
 /* Compute Multi-Precision sin() function for given p.  Receive */
 /* Multi  Precision number x and result stored at y             */
 /****************************************************************/
-static void ss32(mp_no *x, mp_no *y, int p) {
+static void
+SECTION
+ss32(mp_no *x, mp_no *y, int p) {
   int i;
   double a;
 #if 0
@@ -79,7 +85,9 @@ static void ss32(mp_no *x, mp_no *y, int p) {
 /* Compute Multi-Precision cos() function for given p. Receive Multi  */
 /* Precision number x and result stored at y                          */
 /**********************************************************************/
-static void cc32(mp_no *x, mp_no *y, int p) {
+static void
+SECTION
+cc32(mp_no *x, mp_no *y, int p) {
   int i;
   double a;
 #if 0
@@ -109,7 +117,9 @@ static void cc32(mp_no *x, mp_no *y, int p) {
 /***************************************************************************/
 /* c32()   computes both sin(x), cos(x) as Multi precision numbers         */
 /***************************************************************************/
-void __c32(mp_no *x, mp_no *y, mp_no *z, int p) {
+void
+SECTION
+__c32(mp_no *x, mp_no *y, mp_no *z, int p) {
   static const mp_no mpt={1,{1.0,2.0}}, one={1,{1.0,1.0}};
   mp_no u,t,t1,t2,c,s;
   int i;
@@ -134,7 +144,9 @@ void __c32(mp_no *x, mp_no *y, mp_no *z, int p) {
 /*result which is more accurate                                         */
 /*Computing sin(x) with multi precision routine c32                     */
 /************************************************************************/
-double __sin32(double x, double res, double res1) {
+double
+SECTION
+__sin32(double x, double res, double res1) {
   int p;
   mp_no a,b,c;
   p=32;
@@ -158,7 +170,9 @@ double __sin32(double x, double res, double res1) {
 /*result which is more accurate                                         */
 /*Computing cos(x) with multi precision routine c32                     */
 /************************************************************************/
-double __cos32(double x, double res, double res1) {
+double
+SECTION
+__cos32(double x, double res, double res1) {
   int p;
   mp_no a,b,c;
   p=32;
@@ -172,12 +186,12 @@ double __cos32(double x, double res, double res1) {
   }
   else if (x>0.8)
        { __sub(&hp,&c,&a,p);
-         __c32(&a,&c,&b,p);
+	 __c32(&a,&c,&b,p);
        }
   else __c32(&c,&b,&a,p);     /* b=cos(0.5*(res+res1))  */
   __dbl_mp(x,&c,p);    /* c = x                  */
   __sub(&b,&c,&a,p);
-             /* if a>0 return max(res,res1), otherwise return min(res,res1) */
+	     /* if a>0 return max(res,res1), otherwise return min(res,res1) */
   if (a.d[0]>0)  return (res>res1)?res:res1;
   else  return (res<res1)?res:res1;
 }
@@ -186,7 +200,9 @@ double __cos32(double x, double res, double res1) {
 /*Compute sin(x+dx) as Multi Precision number and return result as */
 /* double                                                          */
 /*******************************************************************/
-double __mpsin(double x, double dx) {
+double
+SECTION
+__mpsin(double x, double dx) {
   int p;
   double y;
   mp_no a,b,c;
@@ -204,7 +220,9 @@ double __mpsin(double x, double dx) {
 /* Compute cos()of double-length number (x+dx) as Multi Precision  */
 /* number and return result as double                              */
 /*******************************************************************/
-double __mpcos(double x, double dx) {
+double
+SECTION
+__mpcos(double x, double dx) {
   int p;
   double y;
   mp_no a,b,c;
@@ -227,7 +245,9 @@ double __mpcos(double x, double dx) {
 /* n=0,+-1,+-2,....                                               */
 /* Return int which indicates in which quarter of circle x is     */
 /******************************************************************/
-int __mpranred(double x, mp_no *y, int p)
+int
+SECTION
+__mpranred(double x, mp_no *y, int p)
 {
   number v;
   double t,xn;
@@ -275,7 +295,9 @@ int __mpranred(double x, mp_no *y, int p)
 /* Multi-Precision sin() function subroutine, for p=32.  It is     */
 /* based on the routines mpranred() and c32().                     */
 /*******************************************************************/
-double __mpsin1(double x)
+double
+SECTION
+__mpsin1(double x)
 {
   int p;
   int n;
@@ -314,7 +336,9 @@ double __mpsin1(double x)
 /* based  on the routines mpranred() and c32().                  */
 /*****************************************************************/
 
-double __mpcos1(double x)
+double
+SECTION
+__mpcos1(double x)
 {
   int p;
   int n;

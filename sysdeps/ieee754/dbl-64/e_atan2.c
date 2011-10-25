@@ -44,6 +44,10 @@
 #include "atnat2.h"
 #include "math_private.h"
 
+#ifndef SECTION
+# define SECTION
+#endif
+
 /************************************************************************/
 /* An ultimate atan2 routine. Given two IEEE double machine numbers y,x */
 /* it computes the correctly rounded (to nearest) value of atan2(y,x).  */
@@ -59,7 +63,9 @@ static double signArctan2(double y,double z)
 static double normalized(double ,double,double ,double);
 void __mpatan2(mp_no *,mp_no *,mp_no *,int);
 
-double __ieee754_atan2(double y,double x) {
+double
+SECTION
+__ieee754_atan2(double y,double x) {
 
   int i,de,ux,dx,uy,dy;
 #if 0
@@ -384,7 +390,9 @@ strong_alias (__ieee754_atan2, __atan2_finite)
 #endif
 
   /* Treat the Denormalized case */
-static double  normalized(double ax,double ay,double y, double z)
+static double
+SECTION
+normalized(double ax,double ay,double y, double z)
     { int p;
       mp_no mpx,mpy,mpz,mperr,mpz2,mpt1;
   p=6;
@@ -394,7 +402,9 @@ static double  normalized(double ax,double ay,double y, double z)
   return signArctan2(y,z);
 }
   /* Stage 3: Perform a multi-Precision computation */
-static double  atan2Mp(double x,double y,const int pr[])
+static double
+SECTION
+atan2Mp(double x,double y,const int pr[])
 {
   double z1,z2;
   int i,p;

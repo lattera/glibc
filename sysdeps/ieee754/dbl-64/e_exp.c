@@ -40,13 +40,19 @@
 #include "uexp.tbl"
 #include "math_private.h"
 
+#ifndef SECTION
+# define SECTION
+#endif
+
 double __slowexp(double);
 
 /***************************************************************************/
 /* An ultimate exp routine. Given an IEEE double machine number x          */
 /* it computes the correctly rounded (to nearest) value of e^x             */
 /***************************************************************************/
-double __ieee754_exp(double x) {
+double
+SECTION
+__ieee754_exp(double x) {
   double bexp, t, eps, del, base, y, al, bet, res, rem, cor;
   mynumber junk1, junk2, binexp  = {{0,0}};
 #if 0
@@ -156,7 +162,9 @@ strong_alias (__ieee754_exp, __exp_finite)
 /*else return   e^(x + xx)   (always positive )                         */
 /************************************************************************/
 
-double __exp1(double x, double xx, double error) {
+double
+SECTION
+__exp1(double x, double xx, double error) {
   double bexp, t, eps, del, base, y, al, bet, res, rem, cor;
   mynumber junk1, junk2, binexp  = {{0,0}};
 #if 0

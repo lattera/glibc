@@ -42,6 +42,10 @@
 #include "uasncs.h"
 #include "math_private.h"
 
+#ifndef SECTION
+# define SECTION
+#endif
+
 void __doasin(double x, double dx, double w[]);
 void __dubsin(double x, double dx, double v[]);
 void __dubcos(double x, double dx, double v[]);
@@ -53,7 +57,9 @@ double __cos32(double x, double res, double res1);
 /* An ultimate asin routine. Given an IEEE double machine number x         */
 /* it computes the correctly rounded (to nearest) value of arcsin(x)       */
 /***************************************************************************/
-double __ieee754_asin(double x){
+double
+SECTION
+__ieee754_asin(double x){
   double x1,x2,xx,s1,s2,res1,p,t,res,r,cor,cc,y,c,z,w[2];
   mynumber u,v;
   int4 k,m,n;
@@ -334,7 +340,9 @@ strong_alias (__ieee754_asin, __asin_finite)
 /*                                                                 */
 /*******************************************************************/
 
-double __ieee754_acos(double x)
+double
+SECTION
+__ieee754_acos(double x)
 {
   double x1,x2,xx,s1,s2,res1,p,t,res,r,cor,cc,y,c,z,w[2],eps;
 #if 0
