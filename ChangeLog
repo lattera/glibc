@@ -1,5 +1,8 @@
 2011-10-24  Ulrich Drepper  <drepper@gmail.com>
 
+	* sysdeps/x86_64/dla.h (DLA_FMS): Some compilers fail to inline
+	__builtin_fma in some situations.  Have to use an asm.
+
 	* config.make.in: Add have-mfma4 entry.
 	* configure.in: Substitute libc_cv_cc_fma4.
 	* math/Makefile (dbl-only-routines): Add sincostab.
