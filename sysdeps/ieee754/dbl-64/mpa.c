@@ -1,8 +1,7 @@
-
 /*
  * IBM Accurate Mathematical Library
  * written by International Business Machines Corp.
- * Copyright (C) 2001 Free Software Foundation
+ * Copyright (C) 2001, 2011 Free Software Foundation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -64,7 +63,7 @@ static int mcr(const mp_no *x, const mp_no *y, int p) {
 
 
 /* acr() compares the absolute values of two multiple precision numbers */
-int __acr(const mp_no *x, const mp_no *y, int p) {
+static int __acr(const mp_no *x, const mp_no *y, int p) {
   int i;
 
   if      (X[0] == ZERO) {
@@ -82,8 +81,9 @@ int __acr(const mp_no *x, const mp_no *y, int p) {
 }
 
 
+#if 0
 /* cr90 compares the values of two multiple precision numbers           */
-int  __cr(const mp_no *x, const mp_no *y, int p) {
+static int  __cr(const mp_no *x, const mp_no *y, int p) {
   int i;
 
   if      (X[0] > Y[0])  i= 1;
@@ -93,26 +93,26 @@ int  __cr(const mp_no *x, const mp_no *y, int p) {
 
   return i;
 }
+#endif
 
 
+#ifndef NO___CPY
 /* Copy a multiple precision number. Set *y=*x. x=y is permissible.      */
 void __cpy(const mp_no *x, mp_no *y, int p) {
-  int i;
-
   EY = EX;
-  for (i=0; i <= p; i++)    Y[i] = X[i];
-
-  return;
+  for (int i=0; i <= p; i++)    Y[i] = X[i];
 }
+#endif
 
 
+#if 0
 /* Copy a multiple precision number x of precision m into a */
 /* multiple precision number y of precision n. In case n>m, */
 /* the digits of y beyond the m'th are set to zero. In case */
 /* n<m, the digits of x beyond the n'th are ignored.        */
 /* x=y is permissible.                                      */
 
-void __cpymn(const mp_no *x, int m, mp_no *y, int n) {
+static void __cpymn(const mp_no *x, int m, mp_no *y, int n) {
 
   int i,k;
 
@@ -122,7 +122,10 @@ void __cpymn(const mp_no *x, int m, mp_no *y, int n) {
 
   return;
 }
+#endif
 
+
+#ifndef NO___MP_DBL
 /* Convert a multiple precision number *x into a double precision */
 /* number *y, normalized case  (|x| >= 2**(-1022))) */
 static void norm(const mp_no *x, double *y, int p)
@@ -141,7 +144,7 @@ static void norm(const mp_no *x, double *y, int p)
   }
   else {
     for (a=ONE, z[1]=X[1]; z[1] < TWO23; )
-        {a *= TWO;   z[1] *= TWO; }
+	{a *= TWO;   z[1] *= TWO; }
 
     for (i=2; i<5; i++) {
       z[i] = X[i]*a;
@@ -157,10 +160,10 @@ static void norm(const mp_no *x, double *y, int p)
 
     if (v == TWO18) {
       if (z[4] == ZERO) {
-        for (i=5; i <= p; i++) {
-          if (X[i] == ZERO)   continue;
-          else                {z[3] += ONE;   break; }
-        }
+	for (i=5; i <= p; i++) {
+	  if (X[i] == ZERO)   continue;
+	  else                {z[3] += ONE;   break; }
+	}
       }
       else              z[3] += ONE;
     }
@@ -242,6 +245,7 @@ void __mp_dbl(const mp_no *x, double *y, int p) {
   else if (EX==-42 && X[1]>=TWO10)  norm(x,y,p);
   else                              denorm(x,y,p);
 }
+#endif
 
 
 /* dbl_mp() converts a double precision number x into a multiple precision  */
@@ -336,11 +340,11 @@ static void sub_magnitudes(const mp_no *x, const mp_no *y, mp_no *z, int p) {
     else {
       i=p;   j=p+1-j;   k=p;
       if (Y[j] > ZERO) {
-        Z[k+1] = RADIX - Y[j--];
-        Z[k]   = MONE; }
+	Z[k+1] = RADIX - Y[j--];
+	Z[k]   = MONE; }
       else {
-        Z[k+1] = ZERO;
-        Z[k]   = ZERO;   j--;}
+	Z[k+1] = ZERO;
+	Z[k]   = ZERO;   j--;}
     }
   }
 
@@ -431,11 +435,11 @@ void __mul(const mp_no *x, const mp_no *y, mp_no *z, int p) {
   int i, i1, i2, j, k, k2;
   double u;
 
-                      /* Is z=0? */
+		      /* Is z=0? */
   if (X[0]*Y[0]==ZERO)
      { Z[0]=ZERO;  return; }
 
-                       /* Multiply, add and carry */
+		       /* Multiply, add and carry */
   k2 = (p<3) ? p+p : p+3;
   Z[k2]=ZERO;
   for (k=k2; k>1; ) {
@@ -449,7 +453,7 @@ void __mul(const mp_no *x, const mp_no *y, mp_no *z, int p) {
     Z[--k] = u*RADIXI;
   }
 
-                 /* Is there a carry beyond the most significant digit? */
+		 /* Is there a carry beyond the most significant digit? */
   if (Z[1] == ZERO) {
     for (i=1; i<=p; i++)  Z[i]=Z[i+1];
     EZ = EX + EY - 1; }
@@ -466,7 +470,7 @@ void __mul(const mp_no *x, const mp_no *y, mp_no *z, int p) {
 /* 2.001*r**(1-p) for p>3.                                                  */
 /* *x=0 is not permissible. *x is left unchanged.                           */
 
-void __inv(const mp_no *x, mp_no *y, int p) {
+static void __inv(const mp_no *x, mp_no *y, int p) {
   int i;
 #if 0
   int l;
@@ -474,11 +478,11 @@ void __inv(const mp_no *x, mp_no *y, int p) {
   double t;
   mp_no z,w;
   static const int np1[] = {0,0,0,0,1,2,2,2,2,3,3,3,3,3,3,3,3,3,
-                            4,4,4,4,4,4,4,4,4,4,4,4,4,4,4};
+			    4,4,4,4,4,4,4,4,4,4,4,4,4,4,4};
   const mp_no mptwo = {1,{1.0,2.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,
-                         0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,
-                         0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,
-                         0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0}};
+			 0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,
+			 0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,
+			 0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0}};
 
   __cpy(x,&z,p);  z.e=0;  __mp_dbl(&z,&t,p);
   t=ONE/t;   __dbl_mp(t,y,p);    EY -= EX;

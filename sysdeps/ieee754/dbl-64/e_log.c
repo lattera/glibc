@@ -207,4 +207,6 @@ double __ieee754_log(double x) {
   }
   return y1;
 }
+#ifndef __ieee754_log
 strong_alias (__ieee754_log, __log_finite)
+#endif

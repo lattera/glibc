@@ -145,7 +145,9 @@ double __ieee754_exp(double x) {
     else return __slowexp(x);
   }
 }
+#ifndef __ieee754_exp
 strong_alias (__ieee754_exp, __exp_finite)
+#endif
 
 /************************************************************************/
 /* Compute e^(x+xx)(Double-Length number) .The routine also receive     */

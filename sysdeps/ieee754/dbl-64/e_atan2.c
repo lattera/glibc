@@ -51,7 +51,11 @@
 /* round to nearest mode of IEEE 754 standard.                          */
 /************************************************************************/
 static double atan2Mp(double ,double ,const int[]);
-static double signArctan2(double ,double);
+  /* Fix the sign and return after stage 1 or stage 2 */
+static double signArctan2(double y,double z)
+{
+  return __copysign(z, y);
+}
 static double normalized(double ,double,double ,double);
 void __mpatan2(mp_no *,mp_no *,mp_no *,int);
 
@@ -375,7 +379,9 @@ double __ieee754_atan2(double y,double x) {
     }
   }
 }
+#ifndef __ieee754_atan2
 strong_alias (__ieee754_atan2, __atan2_finite)
+#endif
 
   /* Treat the Denormalized case */
 static double  normalized(double ax,double ay,double y, double z)
@@ -386,11 +392,6 @@ static double  normalized(double ax,double ay,double y, double z)
   __dbl_mp(ue.d,&mpt1,p);   __mul(&mpz,&mpt1,&mperr,p);
   __sub(&mpz,&mperr,&mpz2,p);  __mp_dbl(&mpz2,&z,p);
   return signArctan2(y,z);
-}
-  /* Fix the sign and return after stage 1 or stage 2 */
-static double signArctan2(double y,double z)
-{
-  return ((y<ZERO) ? -z : z);
 }
   /* Stage 3: Perform a multi-Precision computation */
 static double  atan2Mp(double x,double y,const int pr[])

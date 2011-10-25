@@ -35,10 +35,15 @@
 
 #include "endian.h"
 #include "mydefs.h"
-#include "sincos.tbl"
 #include <dla.h>
 #include "dosincos.h"
 #include "math_private.h"
+
+extern const union
+{
+  int4 i[880];
+  double x[440];
+} __sincostab attribute_hidden;
 
 /***********************************************************************/
 /* Routine receive Double-Length number (x+dx) and computing sin(x+dx) */
@@ -66,10 +71,10 @@ void __dubsin(double x, double dx, double v[]) {
   dd=(x-d)+dx;
 	 /* sin(x+dx)=sin(Xi+t)=sin(Xi)*cos(t) + cos(Xi)sin(t) where t ->0 */
   MUL2(d,dd,d,dd,d2,dd2,p,hx,tx,hy,ty,q,c,cc);
-  sn=sincos.x[k];     /*                                  */
-  ssn=sincos.x[k+1];  /*      sin(Xi) and cos(Xi)         */
-  cs=sincos.x[k+2];   /*                                  */
-  ccs=sincos.x[k+3];  /*                                  */
+  sn=__sincostab.x[k];     /*                                  */
+  ssn=__sincostab.x[k+1];  /*      sin(Xi) and cos(Xi)         */
+  cs=__sincostab.x[k+2];   /*                                  */
+  ccs=__sincostab.x[k+3];  /*                                  */
   MUL2(d2,dd2,s7.x,ss7.x,ds,dss,p,hx,tx,hy,ty,q,c,cc);  /* Taylor    */
   ADD2(ds,dss,s5.x,ss5.x,ds,dss,r,s);
   MUL2(d2,dd2,ds,dss,ds,dss,p,hx,tx,hy,ty,q,c,cc);      /* series    */
@@ -118,10 +123,10 @@ void __dubcos(double x, double dx, double v[]) {
   d=x+dx;
   dd=(x-d)+dx;  /* cos(x+dx)=cos(Xi+t)=cos(Xi)cos(t) - sin(Xi)sin(t) */
   MUL2(d,dd,d,dd,d2,dd2,p,hx,tx,hy,ty,q,c,cc);
-  sn=sincos.x[k];     /*                                  */
-  ssn=sincos.x[k+1];  /*      sin(Xi) and cos(Xi)         */
-  cs=sincos.x[k+2];   /*                                  */
-  ccs=sincos.x[k+3];  /*                                  */
+  sn=__sincostab.x[k];     /*                                  */
+  ssn=__sincostab.x[k+1];  /*      sin(Xi) and cos(Xi)         */
+  cs=__sincostab.x[k+2];   /*                                  */
+  ccs=__sincostab.x[k+3];  /*                                  */
   MUL2(d2,dd2,s7.x,ss7.x,ds,dss,p,hx,tx,hy,ty,q,c,cc);
   ADD2(ds,dss,s5.x,ss5.x,ds,dss,r,s);
   MUL2(d2,dd2,ds,dss,ds,dss,p,hx,tx,hy,ty,q,c,cc);

@@ -1,5 +1,62 @@
 2011-10-24  Ulrich Drepper  <drepper@gmail.com>
 
+	* config.make.in: Add have-mfma4 entry.
+	* configure.in: Substitute libc_cv_cc_fma4.
+	* math/Makefile (dbl-only-routines): Add sincostab.
+	* sysdeps/ieee754/dbl-64/dosincos.c: Don't include sincos.tbl.
+	Use __sincostab not sincos.
+	* sysdeps/ieee754/dbl-64/e_asin.c: Don't define aliases when function
+	name is a macro.
+	* sysdeps/ieee754/dbl-64/e_exp.c: Likewise.
+	* sysdeps/ieee754/dbl-64/e_log.c: Likewise.
+	* sysdeps/ieee754/dbl-64/e_pow.c: Likewise.
+	* sysdeps/ieee754/dbl-64/e_atan2.c: Likewise.  Define singArctan2
+	using __copysign.
+	* sysdeps/ieee754/dbl-64/mpa.c: Don't export __acr.  Don't define
+	__cr and __cpymn.  Define __cpy unless NO___CPY is defined.  Define
+	norm, denorm, and __mp_dbl unless NO___MP_DBL is defined.
+	* sysdeps/ieee754/dbl-64/mpa.h: Don't declare __acr, __cr, __cpymn,
+	and __inv.
+	* sysdeps/ieee754/dbl-64/mpsqrt.c: Make fastiroot static.
+	* sysdeps/ieee754/dbl-64/s_atan.c: Define __signArctan using
+	__copysign.
+	* sysdeps/ieee754/dbl-64/s_sin.c: Use __sincostab not sincos.  Don't
+	define aliases when function name is a macro.
+	* sysdeps/ieee754/dbl-64/sincostab.c: Renamed from
+	sysdeps/ieee754/dbl-64/sincos.tbl.
+	* sysdeps/x86_64/fpu/multiarch/Makefile: Add entries to build
+	fma4-enabled routines.
+	* sysdeps/x86_64/fpu/multiarch/brandred-fma4.c: New file.
+	* sysdeps/x86_64/fpu/multiarch/doasin-fma4.c: New file.
+	* sysdeps/x86_64/fpu/multiarch/dosincos-fma4.c: New file.
+	* sysdeps/x86_64/fpu/multiarch/e_asin-fma4.c: New file.
+	* sysdeps/x86_64/fpu/multiarch/e_asin.c: New file.
+	* sysdeps/x86_64/fpu/multiarch/e_atan2-fma4.c: New file.
+	* sysdeps/x86_64/fpu/multiarch/e_atan2.c: New file.
+	* sysdeps/x86_64/fpu/multiarch/e_exp-fma4.c: New file.
+	* sysdeps/x86_64/fpu/multiarch/e_exp.c: New file.
+	* sysdeps/x86_64/fpu/multiarch/e_log-fma4.c: New file.
+	* sysdeps/x86_64/fpu/multiarch/e_log.c: New file.
+	* sysdeps/x86_64/fpu/multiarch/e_pow-fma4.c: New file.
+	* sysdeps/x86_64/fpu/multiarch/e_pow.c: New file.
+	* sysdeps/x86_64/fpu/multiarch/halfulp-fma4.c: New file.
+	* sysdeps/x86_64/fpu/multiarch/mpa-fma4.c: New file.
+	* sysdeps/x86_64/fpu/multiarch/mpatan-fma4.c: New file.
+	* sysdeps/x86_64/fpu/multiarch/mpatan2-fma4.c: New file.
+	* sysdeps/x86_64/fpu/multiarch/mpexp-fma4.c: New file.
+	* sysdeps/x86_64/fpu/multiarch/mplog-fma4.c: New file.
+	* sysdeps/x86_64/fpu/multiarch/mpsqrt-fma4.c: New file.
+	* sysdeps/x86_64/fpu/multiarch/mptan-fma4.c: New file.
+	* sysdeps/x86_64/fpu/multiarch/s_atan-fma4.c: New file.
+	* sysdeps/x86_64/fpu/multiarch/s_atan.c: New file.
+	* sysdeps/x86_64/fpu/multiarch/s_sin-fma4.c: New file.
+	* sysdeps/x86_64/fpu/multiarch/s_sin.c: New file.
+	* sysdeps/x86_64/fpu/multiarch/s_tan-fma4.c: New file.
+	* sysdeps/x86_64/fpu/multiarch/s_tan.c: New file.
+	* sysdeps/x86_64/fpu/multiarch/sincos32-fma4.c: New file.
+	* sysdeps/x86_64/fpu/multiarch/slowexp-fma4.c: New file.
+	* sysdeps/x86_64/fpu/multiarch/slowpow-fma4.c: New file.
+
 	* sysdeps/ieee754/dbl-64/doasin.c: Adjust for DLA_FMA -> DLA_FMS
 	rename.
 	* sysdeps/ieee754/dbl-64/dosincos.c: Likewise.

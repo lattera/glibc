@@ -153,7 +153,9 @@ double __ieee754_pow(double x, double y) {
   if (y<0) return (x<1.0)?INF.x:0;
   return 0;     /* unreachable, to make the compiler happy */
 }
+#ifndef __ieee754_pow
 strong_alias (__ieee754_pow, __pow_finite)
+#endif
 
 /**************************************************************************/
 /* Computing x^y using more accurate but more slow log routine            */

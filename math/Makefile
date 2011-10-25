@@ -66,7 +66,7 @@ include ../Makeconfig
 
 dbl-only-routines := branred doasin dosincos halfulp mpa mpatan2	\
 		     mpatan mpexp mplog mpsqrt mptan sincos32 slowexp	\
-		     slowpow
+		     slowpow sincostab
 libm-routines = $(strip $(libm-support) $(libm-calls) \
 			$(patsubst %_rf,%f_r,$(libm-calls:=f))	\
 			$(long-m-$(long-double-fcts))) \

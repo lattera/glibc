@@ -1,8 +1,7 @@
-
 /*
  * IBM Accurate Mathematical Library
  * written by International Business Machines Corp.
- * Copyright (C) 2001 Free Software Foundation
+ * Copyright (C) 2001, 2011 Free Software Foundation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -41,7 +40,7 @@
 /* p as integer. Routine computes sqrt(*x) and stores result in *y          */
 /****************************************************************************/
 
-double fastiroot(double);
+static double fastiroot(double);
 
 void __mpsqrt(mp_no *x, mp_no *y, int p) {
 #include "mpsqrt.h"
@@ -50,11 +49,11 @@ void __mpsqrt(mp_no *x, mp_no *y, int p) {
   double dx,dy;
   mp_no
     mphalf   = {0,{0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,
-                   0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,
-                   0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0}},
+		   0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,
+		   0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0}},
     mp3halfs = {0,{0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,
-                   0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,
-                   0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0}};
+		   0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,
+		   0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0}};
   mp_no mpxn,mpz,mpu,mpt1,mpt2;
 
   /* Prepare multi-precision 1/2 and 3/2 */
@@ -82,7 +81,7 @@ void __mpsqrt(mp_no *x, mp_no *y, int p) {
 /* Compute a double precision approximation for 1/sqrt(x)  */
 /* with the relative error bounded by 2**-51.              */
 /***********************************************************/
-double fastiroot(double x) {
+static double fastiroot(double x) {
   union {int i[2]; double d;} p,q;
   double y,z, t;
   int n;

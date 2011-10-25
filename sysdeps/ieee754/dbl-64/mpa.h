@@ -1,8 +1,7 @@
-
 /*
  * IBM Accurate Mathematical Library
  * Written by International Business Machines Corp.
- * Copyright (C) 2001 Free Software Foundation, Inc.
+ * Copyright (C) 2001, 2011 Free Software Foundation, Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -45,14 +44,14 @@ typedef struct {/* This structure holds the details of a multi-precision     */
   int e;        /* floating point number, x: d[0] holds its sign (-1,0 or 1) */
   double d[40]; /* e holds its exponent (...,-2,-1,0,1,2,...) and            */
 } mp_no;        /* d[1]...d[p] hold its mantissa digits. The value of x is,  */
-                /* x = d[1]*r**(e-1) + d[2]*r**(e-2) + ... + d[p]*r**(e-p).  */
-                /* Here   r = 2**24,   0 <= d[i] < r  and  1 <= p <= 32.     */
-                /* p is a global variable. A multi-precision number is       */
-                /* always normalized. Namely, d[1] > 0. An exception is      */
-                /* a zero which is characterized by d[0] = 0. The terms      */
-                /* d[p+1], d[p+2], ... of a none zero number have no         */
-                /* significance and so are the terms e, d[1],d[2],...        */
-                /* of a zero.                                                */
+		/* x = d[1]*r**(e-1) + d[2]*r**(e-2) + ... + d[p]*r**(e-p).  */
+		/* Here   r = 2**24,   0 <= d[i] < r  and  1 <= p <= 32.     */
+		/* p is a global variable. A multi-precision number is       */
+		/* always normalized. Namely, d[1] > 0. An exception is      */
+		/* a zero which is characterized by d[0] = 0. The terms      */
+		/* d[p+1], d[p+2], ... of a none zero number have no         */
+		/* significance and so are the terms e, d[1],d[2],...        */
+		/* of a zero.                                                */
 
 typedef union { int i[2]; double d; } number;
 
@@ -65,16 +64,16 @@ typedef union { int i[2]; double d; } number;
 
 #define ABS(x)   ((x) <  0  ? -(x) : (x))
 
-int __acr(const mp_no *, const mp_no *, int);
-int  __cr(const mp_no *, const mp_no *, int);
+// int __acr(const mp_no *, const mp_no *, int);
+// int  __cr(const mp_no *, const mp_no *, int);
 void __cpy(const mp_no *, mp_no *, int);
-void __cpymn(const mp_no *, int, mp_no *, int);
+// void __cpymn(const mp_no *, int, mp_no *, int);
 void __mp_dbl(const mp_no *, double *, int);
 void __dbl_mp(double, mp_no *, int);
 void __add(const mp_no *, const mp_no *, mp_no *, int);
 void __sub(const mp_no *, const mp_no *, mp_no *, int);
 void __mul(const mp_no *, const mp_no *, mp_no *, int);
-void __inv(const mp_no *, mp_no *, int);
+// void __inv(const mp_no *, mp_no *, int);
 void __dvd(const mp_no *, const mp_no *, mp_no *, int);
 
 extern void __mpatan (mp_no *, mp_no *, int);

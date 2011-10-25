@@ -46,7 +46,13 @@
 
 void __mpatan(mp_no *,mp_no *,int);          /* see definition in mpatan.c */
 static double atanMp(double,const int[]);
-double __signArctan(double,double);
+
+  /* Fix the sign of y and return */
+static double  __signArctan(double x,double y){
+  return __copysign(y, x);
+}
+
+
 /* An ultimate atan() routine. Given an IEEE double machine number x,    */
 /* routine computes the correctly rounded (to nearest) value of atan(x). */
 double atan(double x) {
@@ -201,14 +207,6 @@ double atan(double x) {
     }
   }
 
-}
-
-
-  /* Fix the sign of y and return */
-double  __signArctan(double x,double y){
-
-    if (x<ZERO) return -y;
-    else        return  y;
 }
 
  /* Final stages. Compute atan(x) by multiple precision arithmetic */

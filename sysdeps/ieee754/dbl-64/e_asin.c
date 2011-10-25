@@ -324,7 +324,9 @@ double __ieee754_asin(double x){
     return u.x/v.x;  /* NaN */
  }
 }
+#ifndef __ieee754_asin
 strong_alias (__ieee754_asin, __asin_finite)
+#endif
 
 /*******************************************************************/
 /*                                                                 */
@@ -636,4 +638,6 @@ double __ieee754_acos(double x)
     return u.x/v.x;
   }
 }
+#ifndef __ieee754_acos
 strong_alias (__ieee754_acos, __acos_finite)
+#endif
