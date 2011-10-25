@@ -1,3 +1,10 @@
+2011-10-25  Andreas Schwab  <schwab@redhat.com>
+
+	* wcsmbs/wcscmp.c (WCSCMP): Compare as wchar_t, not wint_t.
+	* wcsmbs/wmemcmp.c (WMEMCMP): Likewise.
+
+	* string/test-strchr.c (do_test): Don't generate NUL bytes.
+
 2011-10-25  Ulrich Drepper  <drepper@gmail.com>
 
 	* sysdeps/ieee754/dbl-64/e_atanh.c: Use math_force_eval instead of a

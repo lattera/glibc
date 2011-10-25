@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1996, 1997, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1995.
 
@@ -31,12 +31,12 @@ WCSCMP (s1, s2)
      const wchar_t *s1;
      const wchar_t *s2;
 {
-  wint_t c1, c2;
+  wchar_t c1, c2;
 
   do
     {
-      c1 = (wint_t) *s1++;
-      c2 = (wint_t) *s2++;
+      c1 = *s1++;
+      c2 = *s2++;
       if (c2 == L'\0')
 	return c1 - c2;
     }

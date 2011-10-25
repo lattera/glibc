@@ -29,25 +29,25 @@ WMEMCMP (s1, s2, n)
      const wchar_t *s2;
      size_t n;
 {
-  register wint_t c1;
-  register wint_t c2;
+  register wchar_t c1;
+  register wchar_t c2;
 
   while (n >= 4)
     {
-      c1 = (wint_t) s1[0];
-      c2 = (wint_t) s2[0];
+      c1 = s1[0];
+      c2 = s2[0];
       if (c1 - c2 != 0)
 	return c1 > c2 ? 1 : -1;
-      c1 = (wint_t) s1[1];
-      c2 = (wint_t) s2[1];
+      c1 = s1[1];
+      c2 = s2[1];
       if (c1 - c2 != 0)
 	return c1 > c2 ? 1 : -1;
-      c1 = (wint_t) s1[2];
-      c2 = (wint_t) s2[2];
+      c1 = s1[2];
+      c2 = s2[2];
       if (c1 - c2 != 0)
 	return c1 > c2 ? 1 : -1;
-      c1 = (wint_t) s1[3];
-      c2 = (wint_t) s2[3];
+      c1 = s1[3];
+      c2 = s2[3];
       if (c1 - c2 != 0)
 	return c1 > c2 ? 1 : -1;
       s1 += 4;
@@ -57,8 +57,8 @@ WMEMCMP (s1, s2, n)
 
   if (n > 0)
     {
-      c1 = (wint_t) s1[0];
-      c2 = (wint_t) s2[0];
+      c1 = s1[0];
+      c2 = s2[0];
       if (c1 - c2 != 0)
 	return c1 > c2 ? 1 : -1;
       ++s1;
@@ -67,8 +67,8 @@ WMEMCMP (s1, s2, n)
     }
   if (n > 0)
     {
-      c1 = (wint_t) s1[0];
-      c2 = (wint_t) s2[0];
+      c1 = s1[0];
+      c2 = s2[0];
       if (c1 - c2 != 0)
 	return c1 > c2 ? 1 : -1;
       ++s1;
@@ -77,8 +77,8 @@ WMEMCMP (s1, s2, n)
     }
   if (n > 0)
     {
-      c1 = (wint_t) s1[0];
-      c2 = (wint_t) s2[0];
+      c1 = s1[0];
+      c2 = s2[0];
       if (c1 - c2 != 0)
 	return c1 > c2 ? 1 : -1;
     }
