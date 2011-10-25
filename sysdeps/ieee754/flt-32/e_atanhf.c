@@ -49,8 +49,11 @@ __ieee754_atanhf (float x)
   float t;
   if (xa < 0.5f)
     {
-      if (__builtin_expect (xa < 0x1.0p-28f, 0) && (huge + x) > 0.0f)
-	return x;
+      if (__builtin_expect (xa < 0x1.0p-28f, 0))
+	{
+	  math_force_eval (huge + x);
+	  return x;
+	}
 
       t = xa + xa;
       t = 0.5f * __log1pf (t + t * xa / (1.0f - xa));

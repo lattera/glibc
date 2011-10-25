@@ -144,13 +144,12 @@ __ieee754_j0l (long double x)
     }
   if (__builtin_expect (ix < 0x3fef, 0)) /* |x| < 2**-16 */
     {
-      if (huge + x > one)
-	{			/* raise inexact if x != 0 */
-	  if (ix < 0x3fde) /* |x| < 2^-33 */
-	    return one;
-	  else
-	    return one - 0.25 * x * x;
-	}
+      /* raise inexact if x != 0 */
+      math_force_eval (huge + x);
+      if (ix < 0x3fde) /* |x| < 2^-33 */
+	return one;
+      else
+	return one - 0.25 * x * x;
     }
   z = x * x;
   r = z * (R[0] + z * (R[1] + z * (R[2] + z * (R[3] + z * R[4]))));

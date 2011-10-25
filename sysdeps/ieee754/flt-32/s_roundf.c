@@ -1,5 +1,5 @@
 /* Round float to integer away from zero.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -37,12 +37,11 @@ __roundf (float x)
     {
       if (j0 < 0)
 	{
-	  if (huge + x > 0.0F)
-	    {
-	      i0 &= 0x80000000;
-	      if (j0 == -1)
-		i0 |= 0x3f800000;
-	    }
+	  math_force_eval (huge + x > 0.0F);
+
+	  i0 &= 0x80000000;
+	  if (j0 == -1)
+	    i0 |= 0x3f800000;
 	}
       else
 	{
@@ -50,12 +49,11 @@ __roundf (float x)
 	  if ((i0 & i) == 0)
 	    /* X is integral.  */
 	    return x;
-	  if (huge + x > 0.0F)
-	    {
-	      /* Raise inexact if x != 0.  */
-	      i0 += 0x00400000 >> j0;
-	      i0 &= ~i;
-	    }
+	  math_force_eval (huge + x > 0.0F);
+
+	  /* Raise inexact if x != 0.  */
+	  i0 += 0x00400000 >> j0;
+	  i0 &= ~i;
 	}
     }
   else

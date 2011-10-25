@@ -1,5 +1,5 @@
 /* Round double to integer away from zero.
-   Copyright (C) 1997, 2009 Free Software Foundation, Inc.
+   Copyright (C) 1997, 2009, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -37,12 +37,11 @@ __round (double x)
     {
       if (j0 < 0)
 	{
-	  if (huge + x > 0.0)
-	    {
-	      i0 &= UINT64_C(0x8000000000000000);
-	      if (j0 == -1)
-		i0 |= UINT64_C(0x3ff0000000000000);
-	    }
+	  math_force_eval (huge + x);
+
+	  i0 &= UINT64_C(0x8000000000000000);
+	  if (j0 == -1)
+	    i0 |= UINT64_C(0x3ff0000000000000);
 	}
       else
 	{
@@ -50,12 +49,11 @@ __round (double x)
 	  if ((i0 & i) == 0)
 	    /* X is integral.  */
 	    return x;
-	  if (huge + x > 0.0)
-	    {
-	      /* Raise inexact if x != 0.  */
-	      i0 += UINT64_C(0x0008000000000000) >> j0;
-	      i0 &= ~i;
-	    }
+	  math_force_eval (huge + x);
+
+	  /* Raise inexact if x != 0.  */
+	  i0 += UINT64_C(0x0008000000000000) >> j0;
+	  i0 &= ~i;
 	}
     }
   else

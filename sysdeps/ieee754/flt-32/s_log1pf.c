@@ -13,18 +13,10 @@
  * ====================================================
  */
 
-#if defined(LIBM_SCCS) && !defined(lint)
-static char rcsid[] = "$NetBSD: s_log1pf.c,v 1.4 1995/05/10 20:47:48 jtc Exp $";
-#endif
-
 #include "math.h"
 #include "math_private.h"
 
-#ifdef __STDC__
 static const float
-#else
-static float
-#endif
 ln2_hi =   6.9313812256e-01,	/* 0x3f317180 */
 ln2_lo =   9.0580006145e-06,	/* 0x3717f7d1 */
 two25 =    3.355443200e+07,	/* 0x4c000000 */
@@ -36,18 +28,10 @@ Lp5 = 1.8183572590e-01, /* 3E3A3325 */
 Lp6 = 1.5313838422e-01, /* 3E1CD04F */
 Lp7 = 1.4798198640e-01; /* 3E178897 */
 
-#ifdef __STDC__
 static const float zero = 0.0;
-#else
-static float zero = 0.0;
-#endif
 
-#ifdef __STDC__
-	float __log1pf(float x)
-#else
-	float __log1pf(x)
-	float x;
-#endif
+float
+__log1pf(float x)
 {
 	float hfsq,f,c,s,z,R,u;
 	int32_t k,hx,hu,ax;
@@ -62,8 +46,8 @@ static float zero = 0.0;
 		else return (x-x)/(x-x);	/* log1p(x<-1)=NaN */
 	    }
 	    if(ax<0x31000000) {			/* |x| < 2**-29 */
-		if(two25+x>zero			/* raise inexact */
-	            &&ax<0x24800000) 		/* |x| < 2**-54 */
+		math_force_eval(two25+x);	/* raise inexact */
+		if (ax<0x24800000)		/* |x| < 2**-54 */
 		    return x;
 		else
 		    return x - x*x*(float)0.5;
@@ -76,37 +60,37 @@ static float zero = 0.0;
 	    if(hx<0x5a000000) {
 		u  = (float)1.0+x;
 		GET_FLOAT_WORD(hu,u);
-	        k  = (hu>>23)-127;
+		k  = (hu>>23)-127;
 		/* correction term */
-	        c  = (k>0)? (float)1.0-(u-x):x-(u-(float)1.0);
+		c  = (k>0)? (float)1.0-(u-x):x-(u-(float)1.0);
 		c /= u;
 	    } else {
 		u  = x;
 		GET_FLOAT_WORD(hu,u);
-	        k  = (hu>>23)-127;
+		k  = (hu>>23)-127;
 		c  = 0;
 	    }
 	    hu &= 0x007fffff;
 	    if(hu<0x3504f7) {
-	        SET_FLOAT_WORD(u,hu|0x3f800000);/* normalize u */
+		SET_FLOAT_WORD(u,hu|0x3f800000);/* normalize u */
 	    } else {
-	        k += 1;
+		k += 1;
 		SET_FLOAT_WORD(u,hu|0x3f000000);	/* normalize u/2 */
-	        hu = (0x00800000-hu)>>2;
+		hu = (0x00800000-hu)>>2;
 	    }
 	    f = u-(float)1.0;
 	}
 	hfsq=(float)0.5*f*f;
 	if(hu==0) {	/* |f| < 2**-20 */
 	    if(f==zero) {
-	    	if(k==0) return zero;
+		if(k==0) return zero;
 		else {c += k*ln2_lo; return k*ln2_hi+c;}
 	    }
 	    R = hfsq*((float)1.0-(float)0.66666666666666666*f);
 	    if(k==0) return f-R; else
-	    	     return k*ln2_hi-((R-(k*ln2_lo+c))-f);
+		     return k*ln2_hi-((R-(k*ln2_lo+c))-f);
 	}
- 	s = f/((float)2.0+f);
+	s = f/((float)2.0+f);
 	z = s*s;
 	R = z*(Lp1+z*(Lp2+z*(Lp3+z*(Lp4+z*(Lp5+z*(Lp6+z*Lp7))))));
 	if(k==0) return f-(hfsq-s*(hfsq+R)); else

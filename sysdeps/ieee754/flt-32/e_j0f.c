@@ -66,10 +66,9 @@ __ieee754_j0f(float x)
 		return z;
 	}
 	if(ix<0x39000000) {	/* |x| < 2**-13 */
-	    if(huge+x>one) {	/* raise inexact if x != 0 */
-		if(ix<0x32000000) return one;	/* |x|<2**-27 */
-		else	      return one - (float)0.25*x*x;
-	    }
+	    math_force_eval(huge+x>one);	/* raise inexact if x != 0 */
+	    if(ix<0x32000000) return one;	/* |x|<2**-27 */
+	    else	      return one - (float)0.25*x*x;
 	}
 	z = x*x;
 	r =  z*(R02+z*(R03+z*(R04+z*R05)));

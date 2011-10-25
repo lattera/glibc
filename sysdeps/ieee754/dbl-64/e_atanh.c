@@ -49,8 +49,11 @@ __ieee754_atanh (double x)
   double t;
   if (xa < 0.5)
     {
-      if (__builtin_expect (xa < 0x1.0p-28, 0) && (huge + x) > 0.0)
-	return x;
+      if (__builtin_expect (xa < 0x1.0p-28, 0))
+	{
+	  math_force_eval (huge + x);
+	  return x;
+	}
 
       t = xa + xa;
       t = 0.5 * __log1p (t + t * xa / (1.0 - xa));

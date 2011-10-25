@@ -111,10 +111,9 @@ __ieee754_j0(double x)
 		return z;
 	}
 	if(ix<0x3f200000) {	/* |x| < 2**-13 */
-	    if(huge+x>one) {	/* raise inexact if x != 0 */
-		if(ix<0x3e400000) return one;	/* |x|<2**-27 */
-		else	      return one - 0.25*x*x;
-	    }
+	  math_force_eval(huge+x);	/* raise inexact if x != 0 */
+	  if(ix<0x3e400000) return one;	/* |x|<2**-27 */
+	  else	      return one - 0.25*x*x;
 	}
 	z = x*x;
 #ifdef DO_NOT_USE_THIS

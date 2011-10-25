@@ -52,7 +52,10 @@ __ieee754_atanhl(long double x)
 	    return (x-x)/(x-x);
 	if(ix==0x3fff)
 	    return x/zero;
-	if(ix<0x3fe3&&(huge+x)>zero) return x;	/* x<2**-28 */
+	if(ix<0x3fe3) {
+	    math_force_eval(huge+x);
+	    return x;	/* x<2**-28 */
+	}
 	SET_LDOUBLE_EXP(x,ix);
 	if(ix<0x3ffe) {		/* x < 0.5 */
 	    t = x+x;
