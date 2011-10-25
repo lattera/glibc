@@ -1,4 +1,4 @@
-/* Copyright (C) 2003, 2004, 2006 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2004, 2006, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2003.
 
@@ -37,7 +37,6 @@ do_test (void)
   pthread_mutex_t *m;
   pthread_mutexattr_t a;
   pid_t pid;
-  char *p;
 
   fd = mkstemp (tmpfname);
   if (fd == -1)
@@ -68,7 +67,6 @@ do_test (void)
 
   m = (pthread_mutex_t *) (((uintptr_t) mem + __alignof (pthread_mutex_t))
 			   & ~(__alignof (pthread_mutex_t) - 1));
-  p = (char *) (m + 1);
 
   if (pthread_mutexattr_init (&a) != 0)
     {

@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2006 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2006, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -25,7 +25,8 @@
 
 
 #ifndef ATTR
-# define ATTR NULL
+pthread_mutexattr_t *attr;
+# define ATTR attr
 #endif
 
 

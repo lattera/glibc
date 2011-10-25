@@ -3,11 +3,13 @@
 #include <stdlib.h>
 
 
-static pthread_mutexattr_t a;
+pthread_mutexattr_t a;
+pthread_mutexattr_t *attr;
 
 static void
 prepare (void)
 {
+  attr = &a;
   if (pthread_mutexattr_init (&a) != 0)
     {
       puts ("mutexattr_init failed");
@@ -23,5 +25,5 @@ prepare (void)
 #define PREPARE(argc, argv) prepare ()
 
 
-#define ATTR &a
+#define ATTR attr
 #include "tst-mutex6.c"
