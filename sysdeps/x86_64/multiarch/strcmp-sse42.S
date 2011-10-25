@@ -72,6 +72,23 @@ END (GLABEL(__strncasecmp))
 	/* FALLTHROUGH to strncasecmp_l.  */
 #endif
 
+
+#ifdef USE_AVX
+# define movdqa vmovdqa
+# define movdqu vmovdqu
+# define pmovmskb vpmovmskb
+# define pcmpistri vpcmpistri
+# define psubb vpsubb
+# define pcmpeqb vpcmpeqb
+# define psrldq vpsrldq
+# define pslldq vpslldq
+# define palignr vpalignr
+# define pxor vpxor
+# define D(arg) arg, arg
+#else
+# define D(arg) arg
+#endif
+
 STRCMP_SSE42:
 	cfi_startproc
 	CALL_MCOUNT
@@ -179,10 +196,10 @@ LABEL(touppermask):
 #else
 # define TOLOWER(reg1, reg2)
 #endif
-	pxor	%xmm0, %xmm0		/* clear %xmm0 for null char checks */
-	pcmpeqb	%xmm1, %xmm0		/* Any null chars? */
-	pcmpeqb	%xmm2, %xmm1		/* compare first 16 bytes for equality */
-	psubb	%xmm0, %xmm1		/* packed sub of comparison results*/
+	pxor	%xmm0, D(%xmm0)		/* clear %xmm0 for null char checks */
+	pcmpeqb	%xmm1, D(%xmm0)		/* Any null chars? */
+	pcmpeqb	%xmm2, D(%xmm1)		/* compare first 16 bytes for equality */
+	psubb	%xmm0, D(%xmm1)		/* packed sub of comparison results*/
 	pmovmskb %xmm1, %edx
 	sub	$0xffff, %edx		/* if first 16 bytes are same, edx == 0xffff */
 	jnz	LABEL(less16bytes)/* If not, find different value or null char */
@@ -206,6 +223,7 @@ LABEL(crosscache):
 	xor	%r8d, %r8d
 	and	$0xf, %ecx		/* offset of rsi */
 	and	$0xf, %eax		/* offset of rdi */
+	pxor	%xmm0, D(%xmm0)		/* clear %xmm0 for null char check */
 	cmp	%eax, %ecx
 	je	LABEL(ashr_0)		/* rsi and rdi relative offset same */
 	ja	LABEL(bigger)
@@ -213,10 +231,13 @@ LABEL(crosscache):
 	xchg	%ecx, %eax
 	xchg	%rsi, %rdi
 LABEL(bigger):
+	movdqa	(%rdi), %xmm2
+	movdqa	(%rsi), %xmm1
 	lea	15(%rax), %r9
 	sub	%rcx, %r9
 	lea	LABEL(unaligned_table)(%rip), %r10
 	movslq	(%r10, %r9,4), %r9
+	pcmpeqb	%xmm1, D(%xmm0)		/* Any null chars? */
 	lea	(%r10, %r9), %r10
 	jmp	*%r10			/* jump to corresponding case */
 
@@ -229,16 +250,15 @@ LABEL(bigger):
 LABEL(ashr_0):
 
 	movdqa	(%rsi), %xmm1
-	pxor	%xmm0, %xmm0		/* clear %xmm0 for null char check */
-	pcmpeqb	%xmm1, %xmm0		/* Any null chars? */
+	pcmpeqb	%xmm1, D(%xmm0)		/* Any null chars? */
 #if !defined USE_AS_STRCASECMP_L && !defined USE_AS_STRNCASECMP_L
-	pcmpeqb	(%rdi), %xmm1		/* compare 16 bytes for equality */
+	pcmpeqb	(%rdi), D(%xmm1)	/* compare 16 bytes for equality */
 #else
 	movdqa	(%rdi), %xmm2
 	TOLOWER (%xmm1, %xmm2)
-	pcmpeqb	%xmm2, %xmm1		/* compare 16 bytes for equality */
+	pcmpeqb	%xmm2, D(%xmm1)		/* compare 16 bytes for equality */
 #endif
-	psubb	%xmm0, %xmm1		/* packed sub of comparison results*/
+	psubb	%xmm0, D(%xmm1)		/* packed sub of comparison results*/
 	pmovmskb %xmm1, %r9d
 	shr	%cl, %edx		/* adjust 0xffff for offset */
 	shr	%cl, %r9d		/* adjust for 16-byte offset */
@@ -251,7 +271,6 @@ LABEL(ashr_0):
 	UPDATE_STRNCMP_COUNTER
 	mov	$16, %rcx
 	mov	$16, %r9
-	pxor	%xmm0, %xmm0		/* clear xmm0, may have changed above */
 
 	/*
 	 * Now both strings are aligned at 16-byte boundary. Loop over strings
@@ -319,14 +338,10 @@ LABEL(ashr_0_exit_use):
  */
 	.p2align 4
 LABEL(ashr_1):
-	pxor	%xmm0, %xmm0
-	movdqa	(%rdi), %xmm2
-	movdqa	(%rsi), %xmm1
-	pcmpeqb	%xmm1, %xmm0		/* Any null chars? */
-	pslldq	$15, %xmm2		/* shift first string to align with second */
+	pslldq	$15, D(%xmm2)		/* shift first string to align with second */
 	TOLOWER (%xmm1, %xmm2)
-	pcmpeqb	%xmm1, %xmm2		/* compare 16 bytes for equality */
-	psubb	%xmm0, %xmm2		/* packed sub of comparison results*/
+	pcmpeqb	%xmm1, D(%xmm2)		/* compare 16 bytes for equality */
+	psubb	%xmm0, D(%xmm2)		/* packed sub of comparison results*/
 	pmovmskb %xmm2, %r9d
 	shr	%cl, %edx		/* adjust 0xffff for offset */
 	shr	%cl, %r9d		/* adjust for 16-byte offset */
@@ -335,7 +350,6 @@ LABEL(ashr_1):
 	movdqa	(%rdi), %xmm3
 	UPDATE_STRNCMP_COUNTER
 
-	pxor	%xmm0, %xmm0
 	mov	$16, %rcx		/* index for loads*/
 	mov	$1, %r9d		/* byte position left over from less32bytes case */
 	/*
@@ -355,7 +369,7 @@ LABEL(loop_ashr_1_use):
 
 LABEL(nibble_ashr_1_restart_use):
 	movdqa	(%rdi, %rdx), %xmm0
-	palignr $1, -16(%rdi, %rdx), %xmm0
+	palignr $1, -16(%rdi, %rdx), D(%xmm0)
 #if !defined USE_AS_STRCASECMP_L && !defined USE_AS_STRNCASECMP_L
 	pcmpistri	$0x1a,(%rsi,%rdx), %xmm0
 #else
@@ -374,7 +388,7 @@ LABEL(nibble_ashr_1_restart_use):
 	jg	LABEL(nibble_ashr_1_use)
 
 	movdqa	(%rdi, %rdx), %xmm0
-	palignr $1, -16(%rdi, %rdx), %xmm0
+	palignr $1, -16(%rdi, %rdx), D(%xmm0)
 #if !defined USE_AS_STRCASECMP_L && !defined USE_AS_STRNCASECMP_L
 	pcmpistri	$0x1a,(%rsi,%rdx), %xmm0
 #else
@@ -394,7 +408,7 @@ LABEL(nibble_ashr_1_restart_use):
 LABEL(nibble_ashr_1_use):
 	sub	$0x1000, %r10
 	movdqa	-16(%rdi, %rdx), %xmm0
-	psrldq	$1, %xmm0
+	psrldq	$1, D(%xmm0)
 	pcmpistri      $0x3a,%xmm0, %xmm0
 #if defined USE_AS_STRNCMP || defined USE_AS_STRNCASECMP_L
 	cmp	%r11, %rcx
@@ -412,14 +426,10 @@ LABEL(nibble_ashr_1_use):
  */
 	.p2align 4
 LABEL(ashr_2):
-	pxor	%xmm0, %xmm0
-	movdqa	(%rdi), %xmm2
-	movdqa	(%rsi), %xmm1
-	pcmpeqb	%xmm1, %xmm0
-	pslldq	$14, %xmm2
+	pslldq	$14, D(%xmm2)
 	TOLOWER (%xmm1, %xmm2)
-	pcmpeqb	%xmm1, %xmm2
-	psubb	%xmm0, %xmm2
+	pcmpeqb	%xmm1, D(%xmm2)
+	psubb	%xmm0, D(%xmm2)
 	pmovmskb %xmm2, %r9d
 	shr	%cl, %edx
 	shr	%cl, %r9d
@@ -428,7 +438,6 @@ LABEL(ashr_2):
 	movdqa	(%rdi), %xmm3
 	UPDATE_STRNCMP_COUNTER
 
-	pxor	%xmm0, %xmm0
 	mov	$16, %rcx	/* index for loads */
 	mov	$2, %r9d	/* byte position left over from less32bytes case */
 	/*
@@ -448,7 +457,7 @@ LABEL(loop_ashr_2_use):
 
 LABEL(nibble_ashr_2_restart_use):
 	movdqa	(%rdi, %rdx), %xmm0
-	palignr $2, -16(%rdi, %rdx), %xmm0
+	palignr $2, -16(%rdi, %rdx), D(%xmm0)
 #if !defined USE_AS_STRCASECMP_L && !defined USE_AS_STRNCASECMP_L
 	pcmpistri	$0x1a,(%rsi,%rdx), %xmm0
 #else
@@ -467,7 +476,7 @@ LABEL(nibble_ashr_2_restart_use):
 	jg	LABEL(nibble_ashr_2_use)
 
 	movdqa	(%rdi, %rdx), %xmm0
-	palignr $2, -16(%rdi, %rdx), %xmm0
+	palignr $2, -16(%rdi, %rdx), D(%xmm0)
 #if !defined USE_AS_STRCASECMP_L && !defined USE_AS_STRNCASECMP_L
 	pcmpistri	$0x1a,(%rsi,%rdx), %xmm0
 #else
@@ -487,7 +496,7 @@ LABEL(nibble_ashr_2_restart_use):
 LABEL(nibble_ashr_2_use):
 	sub	$0x1000, %r10
 	movdqa	-16(%rdi, %rdx), %xmm0
-	psrldq	$2, %xmm0
+	psrldq	$2, D(%xmm0)
 	pcmpistri      $0x3a,%xmm0, %xmm0
 #if defined USE_AS_STRNCMP || defined USE_AS_STRNCASECMP_L
 	cmp	%r11, %rcx
@@ -505,14 +514,10 @@ LABEL(nibble_ashr_2_use):
  */
 	.p2align 4
 LABEL(ashr_3):
-	pxor	%xmm0, %xmm0
-	movdqa	(%rdi), %xmm2
-	movdqa	(%rsi), %xmm1
-	pcmpeqb	%xmm1, %xmm0
-	pslldq	$13, %xmm2
+	pslldq	$13, D(%xmm2)
 	TOLOWER (%xmm1, %xmm2)
-	pcmpeqb	%xmm1, %xmm2
-	psubb	%xmm0, %xmm2
+	pcmpeqb	%xmm1, D(%xmm2)
+	psubb	%xmm0, D(%xmm2)
 	pmovmskb %xmm2, %r9d
 	shr	%cl, %edx
 	shr	%cl, %r9d
@@ -522,7 +527,6 @@ LABEL(ashr_3):
 
 	UPDATE_STRNCMP_COUNTER
 
-	pxor	%xmm0, %xmm0
 	mov	$16, %rcx	/* index for loads */
 	mov	$3, %r9d	/* byte position left over from less32bytes case */
 	/*
@@ -541,7 +545,7 @@ LABEL(loop_ashr_3_use):
 
 LABEL(nibble_ashr_3_restart_use):
 	movdqa	(%rdi, %rdx), %xmm0
-	palignr $3, -16(%rdi, %rdx), %xmm0
+	palignr $3, -16(%rdi, %rdx), D(%xmm0)
 #if !defined USE_AS_STRCASECMP_L && !defined USE_AS_STRNCASECMP_L
 	pcmpistri	$0x1a,(%rsi,%rdx), %xmm0
 #else
@@ -560,7 +564,7 @@ LABEL(nibble_ashr_3_restart_use):
 	jg	LABEL(nibble_ashr_3_use)
 
 	movdqa	(%rdi, %rdx), %xmm0
-	palignr $3, -16(%rdi, %rdx), %xmm0
+	palignr $3, -16(%rdi, %rdx), D(%xmm0)
 #if !defined USE_AS_STRCASECMP_L && !defined USE_AS_STRNCASECMP_L
 	pcmpistri	$0x1a,(%rsi,%rdx), %xmm0
 #else
@@ -580,7 +584,7 @@ LABEL(nibble_ashr_3_restart_use):
 LABEL(nibble_ashr_3_use):
 	sub	$0x1000, %r10
 	movdqa	-16(%rdi, %rdx), %xmm0
-	psrldq	$3, %xmm0
+	psrldq	$3, D(%xmm0)
 	pcmpistri      $0x3a,%xmm0, %xmm0
 #if defined USE_AS_STRNCMP || defined USE_AS_STRNCASECMP_L
 	cmp	%r11, %rcx
@@ -598,14 +602,10 @@ LABEL(nibble_ashr_3_use):
  */
 	.p2align 4
 LABEL(ashr_4):
-	pxor	%xmm0, %xmm0
-	movdqa	(%rdi), %xmm2
-	movdqa	(%rsi), %xmm1
-	pcmpeqb	%xmm1, %xmm0
-	pslldq	$12, %xmm2
+	pslldq	$12, D(%xmm2)
 	TOLOWER (%xmm1, %xmm2)
-	pcmpeqb	%xmm1, %xmm2
-	psubb	%xmm0, %xmm2
+	pcmpeqb	%xmm1, D(%xmm2)
+	psubb	%xmm0, D(%xmm2)
 	pmovmskb %xmm2, %r9d
 	shr	%cl, %edx
 	shr	%cl, %r9d
@@ -615,7 +615,6 @@ LABEL(ashr_4):
 
 	UPDATE_STRNCMP_COUNTER
 
-	pxor	%xmm0, %xmm0
 	mov	$16, %rcx	/* index for loads */
 	mov	$4, %r9d	/* byte position left over from less32bytes case */
 	/*
@@ -635,7 +634,7 @@ LABEL(loop_ashr_4_use):
 
 LABEL(nibble_ashr_4_restart_use):
 	movdqa	(%rdi, %rdx), %xmm0
-	palignr $4, -16(%rdi, %rdx), %xmm0
+	palignr $4, -16(%rdi, %rdx), D(%xmm0)
 #if !defined USE_AS_STRCASECMP_L && !defined USE_AS_STRNCASECMP_L
 	pcmpistri	$0x1a,(%rsi,%rdx), %xmm0
 #else
@@ -654,7 +653,7 @@ LABEL(nibble_ashr_4_restart_use):
 	jg	LABEL(nibble_ashr_4_use)
 
 	movdqa	(%rdi, %rdx), %xmm0
-	palignr $4, -16(%rdi, %rdx), %xmm0
+	palignr $4, -16(%rdi, %rdx), D(%xmm0)
 #if !defined USE_AS_STRCASECMP_L && !defined USE_AS_STRNCASECMP_L
 	pcmpistri	$0x1a,(%rsi,%rdx), %xmm0
 #else
@@ -674,7 +673,7 @@ LABEL(nibble_ashr_4_restart_use):
 LABEL(nibble_ashr_4_use):
 	sub	$0x1000, %r10
 	movdqa	-16(%rdi, %rdx), %xmm0
-	psrldq	$4, %xmm0
+	psrldq	$4, D(%xmm0)
 	pcmpistri      $0x3a,%xmm0, %xmm0
 #if defined USE_AS_STRNCMP || defined USE_AS_STRNCASECMP_L
 	cmp	%r11, %rcx
@@ -692,14 +691,10 @@ LABEL(nibble_ashr_4_use):
  */
 	.p2align 4
 LABEL(ashr_5):
-	pxor	%xmm0, %xmm0
-	movdqa	(%rdi), %xmm2
-	movdqa	(%rsi), %xmm1
-	pcmpeqb	%xmm1, %xmm0
-	pslldq	$11, %xmm2
+	pslldq	$11, D(%xmm2)
 	TOLOWER (%xmm1, %xmm2)
-	pcmpeqb	%xmm1, %xmm2
-	psubb	%xmm0, %xmm2
+	pcmpeqb	%xmm1, D(%xmm2)
+	psubb	%xmm0, D(%xmm2)
 	pmovmskb %xmm2, %r9d
 	shr	%cl, %edx
 	shr	%cl, %r9d
@@ -709,7 +704,6 @@ LABEL(ashr_5):
 
 	UPDATE_STRNCMP_COUNTER
 
-	pxor	%xmm0, %xmm0
 	mov	$16, %rcx	/* index for loads */
 	mov	$5, %r9d	/* byte position left over from less32bytes case */
 	/*
@@ -729,7 +723,7 @@ LABEL(loop_ashr_5_use):
 
 LABEL(nibble_ashr_5_restart_use):
 	movdqa	(%rdi, %rdx), %xmm0
-	palignr $5, -16(%rdi, %rdx), %xmm0
+	palignr $5, -16(%rdi, %rdx), D(%xmm0)
 #if !defined USE_AS_STRCASECMP_L && !defined USE_AS_STRNCASECMP_L
 	pcmpistri	$0x1a,(%rsi,%rdx), %xmm0
 #else
@@ -749,7 +743,7 @@ LABEL(nibble_ashr_5_restart_use):
 
 	movdqa	(%rdi, %rdx), %xmm0
 
-	palignr $5, -16(%rdi, %rdx), %xmm0
+	palignr $5, -16(%rdi, %rdx), D(%xmm0)
 #if !defined USE_AS_STRCASECMP_L && !defined USE_AS_STRNCASECMP_L
 	pcmpistri	$0x1a,(%rsi,%rdx), %xmm0
 #else
@@ -769,7 +763,7 @@ LABEL(nibble_ashr_5_restart_use):
 LABEL(nibble_ashr_5_use):
 	sub	$0x1000, %r10
 	movdqa	-16(%rdi, %rdx), %xmm0
-	psrldq	$5, %xmm0
+	psrldq	$5, D(%xmm0)
 	pcmpistri      $0x3a,%xmm0, %xmm0
 #if defined USE_AS_STRNCMP || defined USE_AS_STRNCASECMP_L
 	cmp	%r11, %rcx
@@ -787,14 +781,10 @@ LABEL(nibble_ashr_5_use):
  */
 	.p2align 4
 LABEL(ashr_6):
-	pxor	%xmm0, %xmm0
-	movdqa	(%rdi), %xmm2
-	movdqa	(%rsi), %xmm1
-	pcmpeqb	%xmm1, %xmm0
-	pslldq	$10, %xmm2
+	pslldq	$10, D(%xmm2)
 	TOLOWER (%xmm1, %xmm2)
-	pcmpeqb	%xmm1, %xmm2
-	psubb	%xmm0, %xmm2
+	pcmpeqb	%xmm1, D(%xmm2)
+	psubb	%xmm0, D(%xmm2)
 	pmovmskb %xmm2, %r9d
 	shr	%cl, %edx
 	shr	%cl, %r9d
@@ -804,7 +794,6 @@ LABEL(ashr_6):
 
 	UPDATE_STRNCMP_COUNTER
 
-	pxor	%xmm0, %xmm0
 	mov	$16, %rcx	/* index for loads */
 	mov	$6, %r9d	/* byte position left over from less32bytes case */
 	/*
@@ -824,7 +813,7 @@ LABEL(loop_ashr_6_use):
 
 LABEL(nibble_ashr_6_restart_use):
 	movdqa	(%rdi, %rdx), %xmm0
-	palignr $6, -16(%rdi, %rdx), %xmm0
+	palignr $6, -16(%rdi, %rdx), D(%xmm0)
 #if !defined USE_AS_STRCASECMP_L && !defined USE_AS_STRNCASECMP_L
 	pcmpistri $0x1a,(%rsi,%rdx), %xmm0
 #else
@@ -843,7 +832,7 @@ LABEL(nibble_ashr_6_restart_use):
 	jg	LABEL(nibble_ashr_6_use)
 
 	movdqa	(%rdi, %rdx), %xmm0
-	palignr $6, -16(%rdi, %rdx), %xmm0
+	palignr $6, -16(%rdi, %rdx), D(%xmm0)
 #if !defined USE_AS_STRCASECMP_L && !defined USE_AS_STRNCASECMP_L
 	pcmpistri $0x1a,(%rsi,%rdx), %xmm0
 #else
@@ -863,7 +852,7 @@ LABEL(nibble_ashr_6_restart_use):
 LABEL(nibble_ashr_6_use):
 	sub	$0x1000, %r10
 	movdqa	-16(%rdi, %rdx), %xmm0
-	psrldq	$6, %xmm0
+	psrldq	$6, D(%xmm0)
 	pcmpistri      $0x3a,%xmm0, %xmm0
 #if defined USE_AS_STRNCMP || defined USE_AS_STRNCASECMP_L
 	cmp	%r11, %rcx
@@ -881,14 +870,10 @@ LABEL(nibble_ashr_6_use):
  */
 	.p2align 4
 LABEL(ashr_7):
-	pxor	%xmm0, %xmm0
-	movdqa	(%rdi), %xmm2
-	movdqa	(%rsi), %xmm1
-	pcmpeqb	%xmm1, %xmm0
-	pslldq	$9, %xmm2
+	pslldq	$9, D(%xmm2)
 	TOLOWER (%xmm1, %xmm2)
-	pcmpeqb	%xmm1, %xmm2
-	psubb	%xmm0, %xmm2
+	pcmpeqb	%xmm1, D(%xmm2)
+	psubb	%xmm0, D(%xmm2)
 	pmovmskb %xmm2, %r9d
 	shr	%cl, %edx
 	shr	%cl, %r9d
@@ -898,7 +883,6 @@ LABEL(ashr_7):
 
 	UPDATE_STRNCMP_COUNTER
 
-	pxor	%xmm0, %xmm0
 	mov	$16, %rcx	/* index for loads */
 	mov	$7, %r9d	/* byte position left over from less32bytes case */
 	/*
@@ -918,7 +902,7 @@ LABEL(loop_ashr_7_use):
 
 LABEL(nibble_ashr_7_restart_use):
 	movdqa	(%rdi, %rdx), %xmm0
-	palignr $7, -16(%rdi, %rdx), %xmm0
+	palignr $7, -16(%rdi, %rdx), D(%xmm0)
 #if !defined USE_AS_STRCASECMP_L && !defined USE_AS_STRNCASECMP_L
 	pcmpistri	$0x1a,(%rsi,%rdx), %xmm0
 #else
@@ -937,7 +921,7 @@ LABEL(nibble_ashr_7_restart_use):
 	jg	LABEL(nibble_ashr_7_use)
 
 	movdqa	(%rdi, %rdx), %xmm0
-	palignr $7, -16(%rdi, %rdx), %xmm0
+	palignr $7, -16(%rdi, %rdx), D(%xmm0)
 #if !defined USE_AS_STRCASECMP_L && !defined USE_AS_STRNCASECMP_L
 	pcmpistri	$0x1a,(%rsi,%rdx), %xmm0
 #else
@@ -957,7 +941,7 @@ LABEL(nibble_ashr_7_restart_use):
 LABEL(nibble_ashr_7_use):
 	sub	$0x1000, %r10
 	movdqa	-16(%rdi, %rdx), %xmm0
-	psrldq	$7, %xmm0
+	psrldq	$7, D(%xmm0)
 	pcmpistri      $0x3a,%xmm0, %xmm0
 #if defined USE_AS_STRNCMP || defined USE_AS_STRNCASECMP_L
 	cmp	%r11, %rcx
@@ -975,14 +959,10 @@ LABEL(nibble_ashr_7_use):
  */
 	.p2align 4
 LABEL(ashr_8):
-	pxor	%xmm0, %xmm0
-	movdqa	(%rdi), %xmm2
-	movdqa	(%rsi), %xmm1
-	pcmpeqb	%xmm1, %xmm0
-	pslldq	$8, %xmm2
+	pslldq	$8, D(%xmm2)
 	TOLOWER (%xmm1, %xmm2)
-	pcmpeqb	%xmm1, %xmm2
-	psubb	%xmm0, %xmm2
+	pcmpeqb	%xmm1, D(%xmm2)
+	psubb	%xmm0, D(%xmm2)
 	pmovmskb %xmm2, %r9d
 	shr	%cl, %edx
 	shr	%cl, %r9d
@@ -992,7 +972,6 @@ LABEL(ashr_8):
 
 	UPDATE_STRNCMP_COUNTER
 
-	pxor	%xmm0, %xmm0
 	mov	$16, %rcx	/* index for loads */
 	mov	$8, %r9d	/* byte position left over from less32bytes case */
 	/*
@@ -1012,7 +991,7 @@ LABEL(loop_ashr_8_use):
 
 LABEL(nibble_ashr_8_restart_use):
 	movdqa	(%rdi, %rdx), %xmm0
-	palignr $8, -16(%rdi, %rdx), %xmm0
+	palignr $8, -16(%rdi, %rdx), D(%xmm0)
 #if !defined USE_AS_STRCASECMP_L && !defined USE_AS_STRNCASECMP_L
 	pcmpistri $0x1a, (%rsi,%rdx), %xmm0
 #else
@@ -1031,7 +1010,7 @@ LABEL(nibble_ashr_8_restart_use):
 	jg	LABEL(nibble_ashr_8_use)
 
 	movdqa	(%rdi, %rdx), %xmm0
-	palignr $8, -16(%rdi, %rdx), %xmm0
+	palignr $8, -16(%rdi, %rdx), D(%xmm0)
 #if !defined USE_AS_STRCASECMP_L && !defined USE_AS_STRNCASECMP_L
 	pcmpistri $0x1a, (%rsi,%rdx), %xmm0
 #else
@@ -1051,7 +1030,7 @@ LABEL(nibble_ashr_8_restart_use):
 LABEL(nibble_ashr_8_use):
 	sub	$0x1000, %r10
 	movdqa	-16(%rdi, %rdx), %xmm0
-	psrldq	$8, %xmm0
+	psrldq	$8, D(%xmm0)
 	pcmpistri      $0x3a,%xmm0, %xmm0
 #if defined USE_AS_STRNCMP || defined USE_AS_STRNCASECMP_L
 	cmp	%r11, %rcx
@@ -1069,14 +1048,10 @@ LABEL(nibble_ashr_8_use):
  */
 	.p2align 4
 LABEL(ashr_9):
-	pxor	%xmm0, %xmm0
-	movdqa	(%rdi), %xmm2
-	movdqa	(%rsi), %xmm1
-	pcmpeqb	%xmm1, %xmm0
-	pslldq	$7, %xmm2
+	pslldq	$7, D(%xmm2)
 	TOLOWER (%xmm1, %xmm2)
-	pcmpeqb	%xmm1, %xmm2
-	psubb	%xmm0, %xmm2
+	pcmpeqb	%xmm1, D(%xmm2)
+	psubb	%xmm0, D(%xmm2)
 	pmovmskb %xmm2, %r9d
 	shr	%cl, %edx
 	shr	%cl, %r9d
@@ -1086,7 +1061,6 @@ LABEL(ashr_9):
 
 	UPDATE_STRNCMP_COUNTER
 
-	pxor	%xmm0, %xmm0
 	mov	$16, %rcx	/* index for loads */
 	mov	$9, %r9d	/* byte position left over from less32bytes case */
 	/*
@@ -1107,7 +1081,7 @@ LABEL(loop_ashr_9_use):
 LABEL(nibble_ashr_9_restart_use):
 	movdqa	(%rdi, %rdx), %xmm0
 
-	palignr $9, -16(%rdi, %rdx), %xmm0
+	palignr $9, -16(%rdi, %rdx), D(%xmm0)
 #if !defined USE_AS_STRCASECMP_L && !defined USE_AS_STRNCASECMP_L
 	pcmpistri $0x1a, (%rsi,%rdx), %xmm0
 #else
@@ -1126,7 +1100,7 @@ LABEL(nibble_ashr_9_restart_use):
 	jg	LABEL(nibble_ashr_9_use)
 
 	movdqa	(%rdi, %rdx), %xmm0
-	palignr $9, -16(%rdi, %rdx), %xmm0
+	palignr $9, -16(%rdi, %rdx), D(%xmm0)
 #if !defined USE_AS_STRCASECMP_L && !defined USE_AS_STRNCASECMP_L
 	pcmpistri $0x1a, (%rsi,%rdx), %xmm0
 #else
@@ -1146,7 +1120,7 @@ LABEL(nibble_ashr_9_restart_use):
 LABEL(nibble_ashr_9_use):
 	sub	$0x1000, %r10
 	movdqa	-16(%rdi, %rdx), %xmm0
-	psrldq	$9, %xmm0
+	psrldq	$9, D(%xmm0)
 	pcmpistri      $0x3a,%xmm0, %xmm0
 #if defined USE_AS_STRNCMP || defined USE_AS_STRNCASECMP_L
 	cmp	%r11, %rcx
@@ -1164,14 +1138,10 @@ LABEL(nibble_ashr_9_use):
  */
 	.p2align 4
 LABEL(ashr_10):
-	pxor	%xmm0, %xmm0
-	movdqa	(%rdi), %xmm2
-	movdqa	(%rsi), %xmm1
-	pcmpeqb	%xmm1, %xmm0
-	pslldq	$6, %xmm2
+	pslldq	$6, D(%xmm2)
 	TOLOWER (%xmm1, %xmm2)
-	pcmpeqb	%xmm1, %xmm2
-	psubb	%xmm0, %xmm2
+	pcmpeqb	%xmm1, D(%xmm2)
+	psubb	%xmm0, D(%xmm2)
 	pmovmskb %xmm2, %r9d
 	shr	%cl, %edx
 	shr	%cl, %r9d
@@ -1181,7 +1151,6 @@ LABEL(ashr_10):
 
 	UPDATE_STRNCMP_COUNTER
 
-	pxor	%xmm0, %xmm0
 	mov	$16, %rcx	/* index for loads */
 	mov	$10, %r9d	/* byte position left over from less32bytes case */
 	/*
@@ -1201,7 +1170,7 @@ LABEL(loop_ashr_10_use):
 
 LABEL(nibble_ashr_10_restart_use):
 	movdqa	(%rdi, %rdx), %xmm0
-	palignr $10, -16(%rdi, %rdx), %xmm0
+	palignr $10, -16(%rdi, %rdx), D(%xmm0)
 #if !defined USE_AS_STRCASECMP_L && !defined USE_AS_STRNCASECMP_L
 	pcmpistri $0x1a, (%rsi,%rdx), %xmm0
 #else
@@ -1220,7 +1189,7 @@ LABEL(nibble_ashr_10_restart_use):
 	jg	LABEL(nibble_ashr_10_use)
 
 	movdqa	(%rdi, %rdx), %xmm0
-	palignr $10, -16(%rdi, %rdx), %xmm0
+	palignr $10, -16(%rdi, %rdx), D(%xmm0)
 #if !defined USE_AS_STRCASECMP_L && !defined USE_AS_STRNCASECMP_L
 	pcmpistri $0x1a, (%rsi,%rdx), %xmm0
 #else
@@ -1240,7 +1209,7 @@ LABEL(nibble_ashr_10_restart_use):
 LABEL(nibble_ashr_10_use):
 	sub	$0x1000, %r10
 	movdqa	-16(%rdi, %rdx), %xmm0
-	psrldq	$10, %xmm0
+	psrldq	$10, D(%xmm0)
 	pcmpistri      $0x3a,%xmm0, %xmm0
 #if defined USE_AS_STRNCMP || defined USE_AS_STRNCASECMP_L
 	cmp	%r11, %rcx
@@ -1258,14 +1227,10 @@ LABEL(nibble_ashr_10_use):
  */
 	.p2align 4
 LABEL(ashr_11):
-	pxor	%xmm0, %xmm0
-	movdqa	(%rdi), %xmm2
-	movdqa	(%rsi), %xmm1
-	pcmpeqb	%xmm1, %xmm0
-	pslldq	$5, %xmm2
+	pslldq	$5, D(%xmm2)
 	TOLOWER (%xmm1, %xmm2)
-	pcmpeqb	%xmm1, %xmm2
-	psubb	%xmm0, %xmm2
+	pcmpeqb	%xmm1, D(%xmm2)
+	psubb	%xmm0, D(%xmm2)
 	pmovmskb %xmm2, %r9d
 	shr	%cl, %edx
 	shr	%cl, %r9d
@@ -1275,7 +1240,6 @@ LABEL(ashr_11):
 
 	UPDATE_STRNCMP_COUNTER
 
-	pxor	%xmm0, %xmm0
 	mov	$16, %rcx	/* index for loads */
 	mov	$11, %r9d	/* byte position left over from less32bytes case */
 	/*
@@ -1295,7 +1259,7 @@ LABEL(loop_ashr_11_use):
 
 LABEL(nibble_ashr_11_restart_use):
 	movdqa	(%rdi, %rdx), %xmm0
-	palignr $11, -16(%rdi, %rdx), %xmm0
+	palignr $11, -16(%rdi, %rdx), D(%xmm0)
 #if !defined USE_AS_STRCASECMP_L && !defined USE_AS_STRNCASECMP_L
 	pcmpistri $0x1a, (%rsi,%rdx), %xmm0
 #else
@@ -1314,7 +1278,7 @@ LABEL(nibble_ashr_11_restart_use):
 	jg	LABEL(nibble_ashr_11_use)
 
 	movdqa	(%rdi, %rdx), %xmm0
-	palignr $11, -16(%rdi, %rdx), %xmm0
+	palignr $11, -16(%rdi, %rdx), D(%xmm0)
 #if !defined USE_AS_STRCASECMP_L && !defined USE_AS_STRNCASECMP_L
 	pcmpistri $0x1a, (%rsi,%rdx), %xmm0
 #else
@@ -1334,7 +1298,7 @@ LABEL(nibble_ashr_11_restart_use):
 LABEL(nibble_ashr_11_use):
 	sub	$0x1000, %r10
 	movdqa	-16(%rdi, %rdx), %xmm0
-	psrldq	$11, %xmm0
+	psrldq	$11, D(%xmm0)
 	pcmpistri      $0x3a,%xmm0, %xmm0
 #if defined USE_AS_STRNCMP || defined USE_AS_STRNCASECMP_L
 	cmp	%r11, %rcx
@@ -1352,14 +1316,10 @@ LABEL(nibble_ashr_11_use):
  */
 	.p2align 4
 LABEL(ashr_12):
-	pxor	%xmm0, %xmm0
-	movdqa	(%rdi), %xmm2
-	movdqa	(%rsi), %xmm1
-	pcmpeqb	%xmm1, %xmm0
-	pslldq	$4, %xmm2
+	pslldq	$4, D(%xmm2)
 	TOLOWER (%xmm1, %xmm2)
-	pcmpeqb	%xmm1, %xmm2
-	psubb	%xmm0, %xmm2
+	pcmpeqb	%xmm1, D(%xmm2)
+	psubb	%xmm0, D(%xmm2)
 	pmovmskb %xmm2, %r9d
 	shr	%cl, %edx
 	shr	%cl, %r9d
@@ -1369,7 +1329,6 @@ LABEL(ashr_12):
 
 	UPDATE_STRNCMP_COUNTER
 
-	pxor	%xmm0, %xmm0
 	mov	$16, %rcx	/* index for loads */
 	mov	$12, %r9d	/* byte position left over from less32bytes case */
 	/*
@@ -1389,7 +1348,7 @@ LABEL(loop_ashr_12_use):
 
 LABEL(nibble_ashr_12_restart_use):
 	movdqa	(%rdi, %rdx), %xmm0
-	palignr $12, -16(%rdi, %rdx), %xmm0
+	palignr $12, -16(%rdi, %rdx), D(%xmm0)
 #if !defined USE_AS_STRCASECMP_L && !defined USE_AS_STRNCASECMP_L
 	pcmpistri $0x1a, (%rsi,%rdx), %xmm0
 #else
@@ -1408,7 +1367,7 @@ LABEL(nibble_ashr_12_restart_use):
 	jg	LABEL(nibble_ashr_12_use)
 
 	movdqa	(%rdi, %rdx), %xmm0
-	palignr $12, -16(%rdi, %rdx), %xmm0
+	palignr $12, -16(%rdi, %rdx), D(%xmm0)
 #if !defined USE_AS_STRCASECMP_L && !defined USE_AS_STRNCASECMP_L
 	pcmpistri $0x1a, (%rsi,%rdx), %xmm0
 #else
@@ -1428,7 +1387,7 @@ LABEL(nibble_ashr_12_restart_use):
 LABEL(nibble_ashr_12_use):
 	sub	$0x1000, %r10
 	movdqa	-16(%rdi, %rdx), %xmm0
-	psrldq	$12, %xmm0
+	psrldq	$12, D(%xmm0)
 	pcmpistri      $0x3a,%xmm0, %xmm0
 #if defined USE_AS_STRNCMP || defined USE_AS_STRNCASECMP_L
 	cmp	%r11, %rcx
@@ -1446,14 +1405,10 @@ LABEL(nibble_ashr_12_use):
  */
 	.p2align 4
 LABEL(ashr_13):
-	pxor	%xmm0, %xmm0
-	movdqa	(%rdi), %xmm2
-	movdqa	(%rsi), %xmm1
-	pcmpeqb	%xmm1, %xmm0
-	pslldq	$3, %xmm2
+	pslldq	$3, D(%xmm2)
 	TOLOWER (%xmm1, %xmm2)
-	pcmpeqb	%xmm1, %xmm2
-	psubb	%xmm0, %xmm2
+	pcmpeqb	%xmm1, D(%xmm2)
+	psubb	%xmm0, D(%xmm2)
 	pmovmskb %xmm2, %r9d
 	shr	%cl, %edx
 	shr	%cl, %r9d
@@ -1463,7 +1418,6 @@ LABEL(ashr_13):
 
 	UPDATE_STRNCMP_COUNTER
 
-	pxor	%xmm0, %xmm0
 	mov	$16, %rcx	/* index for loads */
 	mov	$13, %r9d	/* byte position left over from less32bytes case */
 	/*
@@ -1484,7 +1438,7 @@ LABEL(loop_ashr_13_use):
 
 LABEL(nibble_ashr_13_restart_use):
 	movdqa	(%rdi, %rdx), %xmm0
-	palignr $13, -16(%rdi, %rdx), %xmm0
+	palignr $13, -16(%rdi, %rdx), D(%xmm0)
 #if !defined USE_AS_STRCASECMP_L && !defined USE_AS_STRNCASECMP_L
 	pcmpistri $0x1a, (%rsi,%rdx), %xmm0
 #else
@@ -1503,7 +1457,7 @@ LABEL(nibble_ashr_13_restart_use):
 	jg	LABEL(nibble_ashr_13_use)
 
 	movdqa	(%rdi, %rdx), %xmm0
-	palignr $13, -16(%rdi, %rdx), %xmm0
+	palignr $13, -16(%rdi, %rdx), D(%xmm0)
 #if !defined USE_AS_STRCASECMP_L && !defined USE_AS_STRNCASECMP_L
 	pcmpistri $0x1a, (%rsi,%rdx), %xmm0
 #else
@@ -1523,7 +1477,7 @@ LABEL(nibble_ashr_13_restart_use):
 LABEL(nibble_ashr_13_use):
 	sub	$0x1000, %r10
 	movdqa	-16(%rdi, %rdx), %xmm0
-	psrldq	$13, %xmm0
+	psrldq	$13, D(%xmm0)
 	pcmpistri      $0x3a,%xmm0, %xmm0
 #if defined USE_AS_STRNCMP || defined USE_AS_STRNCASECMP_L
 	cmp	%r11, %rcx
@@ -1541,14 +1495,10 @@ LABEL(nibble_ashr_13_use):
  */
 	.p2align 4
 LABEL(ashr_14):
-	pxor	%xmm0, %xmm0
-	movdqa	(%rdi), %xmm2
-	movdqa	(%rsi), %xmm1
-	pcmpeqb	%xmm1, %xmm0
-	pslldq  $2, %xmm2
+	pslldq  $2, D(%xmm2)
 	TOLOWER (%xmm1, %xmm2)
-	pcmpeqb	%xmm1, %xmm2
-	psubb	%xmm0, %xmm2
+	pcmpeqb	%xmm1, D(%xmm2)
+	psubb	%xmm0, D(%xmm2)
 	pmovmskb %xmm2, %r9d
 	shr	%cl, %edx
 	shr	%cl, %r9d
@@ -1558,7 +1508,6 @@ LABEL(ashr_14):
 
 	UPDATE_STRNCMP_COUNTER
 
-	pxor	%xmm0, %xmm0
 	mov	$16, %rcx	/* index for loads */
 	mov	$14, %r9d	/* byte position left over from less32bytes case */
 	/*
@@ -1579,7 +1528,7 @@ LABEL(loop_ashr_14_use):
 
 LABEL(nibble_ashr_14_restart_use):
 	movdqa	(%rdi, %rdx), %xmm0
-	palignr $14, -16(%rdi, %rdx), %xmm0
+	palignr $14, -16(%rdi, %rdx), D(%xmm0)
 #if !defined USE_AS_STRCASECMP_L && !defined USE_AS_STRNCASECMP_L
 	pcmpistri $0x1a, (%rsi,%rdx), %xmm0
 #else
@@ -1598,7 +1547,7 @@ LABEL(nibble_ashr_14_restart_use):
 	jg	LABEL(nibble_ashr_14_use)
 
 	movdqa	(%rdi, %rdx), %xmm0
-	palignr $14, -16(%rdi, %rdx), %xmm0
+	palignr $14, -16(%rdi, %rdx), D(%xmm0)
 #if !defined USE_AS_STRCASECMP_L && !defined USE_AS_STRNCASECMP_L
 	pcmpistri $0x1a, (%rsi,%rdx), %xmm0
 #else
@@ -1618,7 +1567,7 @@ LABEL(nibble_ashr_14_restart_use):
 LABEL(nibble_ashr_14_use):
 	sub	$0x1000, %r10
 	movdqa	-16(%rdi, %rdx), %xmm0
-	psrldq	$14, %xmm0
+	psrldq	$14, D(%xmm0)
 	pcmpistri      $0x3a,%xmm0, %xmm0
 #if defined USE_AS_STRNCMP || defined USE_AS_STRNCASECMP_L
 	cmp	%r11, %rcx
@@ -1636,14 +1585,10 @@ LABEL(nibble_ashr_14_use):
  */
 	.p2align 4
 LABEL(ashr_15):
-	pxor	%xmm0, %xmm0
-	movdqa	(%rdi), %xmm2
-	movdqa	(%rsi), %xmm1
-	pcmpeqb	%xmm1, %xmm0
-	pslldq	$1, %xmm2
+	pslldq	$1, D(%xmm2)
 	TOLOWER (%xmm1, %xmm2)
-	pcmpeqb	%xmm1, %xmm2
-	psubb	%xmm0, %xmm2
+	pcmpeqb	%xmm1, D(%xmm2)
+	psubb	%xmm0, D(%xmm2)
 	pmovmskb %xmm2, %r9d
 	shr	%cl, %edx
 	shr	%cl, %r9d
@@ -1654,7 +1599,6 @@ LABEL(ashr_15):
 
 	UPDATE_STRNCMP_COUNTER
 
-	pxor	%xmm0, %xmm0
 	mov	$16, %rcx	/* index for loads */
 	mov	$15, %r9d	/* byte position left over from less32bytes case */
 	/*
@@ -1676,7 +1620,7 @@ LABEL(loop_ashr_15_use):
 
 LABEL(nibble_ashr_15_restart_use):
 	movdqa	(%rdi, %rdx), %xmm0
-	palignr $15, -16(%rdi, %rdx), %xmm0
+	palignr $15, -16(%rdi, %rdx), D(%xmm0)
 #if !defined USE_AS_STRCASECMP_L && !defined USE_AS_STRNCASECMP_L
 	pcmpistri $0x1a, (%rsi,%rdx), %xmm0
 #else
@@ -1695,7 +1639,7 @@ LABEL(nibble_ashr_15_restart_use):
 	jg	LABEL(nibble_ashr_15_use)
 
 	movdqa	(%rdi, %rdx), %xmm0
-	palignr $15, -16(%rdi, %rdx), %xmm0
+	palignr $15, -16(%rdi, %rdx), D(%xmm0)
 #if !defined USE_AS_STRCASECMP_L && !defined USE_AS_STRNCASECMP_L
 	pcmpistri $0x1a, (%rsi,%rdx), %xmm0
 #else
@@ -1715,7 +1659,7 @@ LABEL(nibble_ashr_15_restart_use):
 LABEL(nibble_ashr_15_use):
 	sub	$0x1000, %r10
 	movdqa	-16(%rdi, %rdx), %xmm0
-	psrldq	$15, %xmm0
+	psrldq	$15, D(%xmm0)
 	pcmpistri      $0x3a,%xmm0, %xmm0
 #if defined USE_AS_STRNCMP || defined USE_AS_STRNCASECMP_L
 	cmp	%r11, %rcx
@@ -1834,3 +1778,14 @@ LABEL(unaligned_table):
 #undef LABEL
 #undef GLABEL
 #undef SECTION
+#undef movdqa
+#undef movdqu
+#undef pmovmskb
+#undef pcmpistri
+#undef psubb
+#undef pcmpeqb
+#undef psrldq
+#undef pslldq
+#undef palignr
+#undef pxor
+#undef D
