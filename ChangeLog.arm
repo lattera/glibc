@@ -1,3 +1,8 @@
+2011-10-26  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/arm/dl-machine.h, sysdeps/unix/arm/sysdep.S: Restore
+	cases for use in rtld.
+
 2011-10-05  Andreas Schwab  <schwab@redhat.com>
 
 	* sysdeps/arm/dl-machine.h (elf_machine_rel, elf_machine_rela)

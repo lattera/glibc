@@ -42,6 +42,7 @@ syscall_error:
 	moveq r0, $EAGAIN	/* Yes; translate it to EAGAIN.  */
 #endif
 
+#ifndef IS_IN_rtld
 	mov ip, lr
 	cfi_register (lr, ip)
 	mov r1, r0
@@ -57,6 +58,16 @@ syscall_error:
 	RETINSTR (, ip)
 
 1:	.word errno(gottpoff) + (. - 2b - 8)
+#elif RTLD_PRIVATE_ERRNO
+	ldr r1, 1f
+0:	str r0, [pc, r1]
+	mvn r0, $0
+	DO_RET(r14)
+
+1:	.word C_SYMBOL_NAME(rtld_errno) - 0b - 8
+#else
+#error "Unsupported non-TLS case"
+#endif
 
 #undef	__syscall_error
 END (__syscall_error)
