@@ -1,5 +1,40 @@
 2011-10-25  Ulrich Drepper  <drepper@gmail.com>
 
+	* sysdeps/ieee754/dbl-64/e_rem_pio2.c: Comment everything out, the
+	file is not needed.
+
+	* sysdeps/x86_64/fpu/multiarch/e_asin.c: Support AVX variants.
+	* sysdeps/x86_64/fpu/multiarch/e_atan2.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/e_exp.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/e_log.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/s_atan.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/s_sin.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/s_tan.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/Makefile: Fix some CFLAGS-* variables.
+	Add AVX variants.
+	* sysdeps/x86_64/fpu/multiarch/brandred-avx.c: New file.
+	* sysdeps/x86_64/fpu/multiarch/doasin-avx.c: New file.
+	* sysdeps/x86_64/fpu/multiarch/dosincos-avx.c: New file.
+	* sysdeps/x86_64/fpu/multiarch/e_asin-avx.c: New file.
+	* sysdeps/x86_64/fpu/multiarch/e_atan2-avx.c: New file.
+	* sysdeps/x86_64/fpu/multiarch/e_exp-avx.c: New file.
+	* sysdeps/x86_64/fpu/multiarch/e_log-avx.c: New file.
+	* sysdeps/x86_64/fpu/multiarch/mpa-avx.c: New file.
+	* sysdeps/x86_64/fpu/multiarch/mpatan-avx.c: New file.
+	* sysdeps/x86_64/fpu/multiarch/mpatan2-avx.c: New file.
+	* sysdeps/x86_64/fpu/multiarch/mpexp-avx.c: New file.
+	* sysdeps/x86_64/fpu/multiarch/mplog-avx.c: New file.
+	* sysdeps/x86_64/fpu/multiarch/mpsqrt-avx.c: New file.
+	* sysdeps/x86_64/fpu/multiarch/mptan-avx.c: New file.
+	* sysdeps/x86_64/fpu/multiarch/s_atan-avx.c: New file.
+	* sysdeps/x86_64/fpu/multiarch/s_sin-avx.c: New file.
+	* sysdeps/x86_64/fpu/multiarch/s_tan-avx.c: New file.
+	* sysdeps/x86_64/fpu/multiarch/sincos32-avx.c: New file.
+	* sysdeps/x86_64/fpu/multiarch/slowexp-avx.c: New file.
+
+	* sysdeps/x86_64/multiarch/init-arch.h: Make bit_* macros available
+	all the time.  Define bit_AVX.  Define HAS_* macros using bit_* macros.
+
 	* sysdeps/x86_64/multiarch/strcmp-sse42.S: Move common code to earlier
 	place.  Use VEX encoding when compiling for AVX.
 
