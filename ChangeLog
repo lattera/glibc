@@ -1,3 +1,9 @@
+2011-10-26  Andreas Schwab  <schwab@redhat.com>
+
+	* math/math_private.h (math_force_eval): Allow non-addressable
+	arguments.
+	* sysdeps/i386/fpu/math_private.h (math_force_eval): Likewise.
+
 2011-10-25  Ulrich Drepper  <drepper@gmail.com>
 
 	* sysdeps/ieee754/dbl-64/e_rem_pio2.c: Comment everything out, the
