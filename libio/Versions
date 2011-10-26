@@ -58,7 +58,7 @@ libc {
     gets;
 
     # o*
-    open_memstream; open_obstack_stream; obstack_printf; obstack_vprintf;
+    open_memstream; obstack_printf; obstack_vprintf;
 
     # p*
     pclose; popen; putc; putc_locked; putc_unlocked; putchar;

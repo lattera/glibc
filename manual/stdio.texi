@@ -4780,7 +4780,6 @@ provide equivalent functionality.
 @menu
 * String Streams::              Streams that get data from or put data in
 				 a string or memory buffer.
-* Obstack Streams::		Streams that store data in an obstack.
 * Custom Streams::              Defining your own streams with an arbitrary
 				 input data source and/or output data sink.
 @end menu
@@ -4882,64 +4881,6 @@ This program produces the following output:
 @smallexample
 buf = `hello', size = 5
 buf = `hello, world', size = 12
-@end smallexample
-
-@c @group  Invalid outside @example.
-@node Obstack Streams
-@subsection Obstack Streams
-
-You can open an output stream that puts it data in an obstack.
-@xref{Obstacks}.
-
-@comment stdio.h
-@comment GNU
-@deftypefun {FILE *} open_obstack_stream (struct obstack *@var{obstack})
-This function opens a stream for writing data into the obstack @var{obstack}.
-This starts an object in the obstack and makes it grow as data is
-written (@pxref{Growing Objects}).
-@c @end group  Doubly invalid because not nested right.
-
-Calling @code{fflush} on this stream updates the current size of the
-object to match the amount of data that has been written.  After a call
-to @code{fflush}, you can examine the object temporarily.
-
-You can move the file position of an obstack stream with @code{fseek} or
-@code{fseeko} (@pxref{File Positioning}).  Moving the file position past
-the end of the data written fills the intervening space with zeros.
-
-To make the object permanent, update the obstack with @code{fflush}, and
-then use @code{obstack_finish} to finalize the object and get its address.
-The following write to the stream starts a new object in the obstack,
-and later writes add to that object until you do another @code{fflush}
-and @code{obstack_finish}.
-
-But how do you find out how long the object is?  You can get the length
-in bytes by calling @code{obstack_object_size} (@pxref{Status of an
-Obstack}), or you can null-terminate the object like this:
-
-@smallexample
-obstack_1grow (@var{obstack}, 0);
-@end smallexample
-
-Whichever one you do, you must do it @emph{before} calling
-@code{obstack_finish}.  (You can do both if you wish.)
-@end deftypefun
-
-Here is a sample function that uses @code{open_obstack_stream}:
-
-@smallexample
-char *
-make_message_string (const char *a, int b)
-@{
-  FILE *stream = open_obstack_stream (&message_obstack);
-  output_task (stream);
-  fprintf (stream, ": ");
-  fprintf (stream, a, b);
-  fprintf (stream, "\n");
-  fclose (stream);
-  obstack_1grow (&message_obstack, 0);
-  return obstack_finish (&message_obstack);
-@}
 @end smallexample
 
 @node Custom Streams

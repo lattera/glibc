@@ -1,3 +1,9 @@
+2011-10-26  Roland McGrath  <roland@hack.frob.com>
+
+	* libio/Versions (GLIBC_2.0): Remove open_obstack_stream, which
+	doesn't exist.
+	* manual/stdio.texi (Obstack Streams): Node removed.
+
 2011-10-26  Andreas Schwab  <schwab@redhat.com>
 
 	* sysdeps/ieee754/flt-32/e_j0f.c: Fix use of math_force_eval.
