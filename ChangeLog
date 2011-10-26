@@ -1,5 +1,6 @@
 2011-10-26  Roland McGrath  <roland@hack.frob.com>
 
+	[BZ #13349]
 	* libio/Versions (GLIBC_2.0): Remove open_obstack_stream, which
 	doesn't exist.
 	* manual/stdio.texi (Obstack Streams): Node removed.
