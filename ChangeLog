@@ -1,5 +1,9 @@
 2011-10-26  Andreas Schwab  <schwab@redhat.com>
 
+	* sysdeps/ieee754/flt-32/e_j0f.c: Fix use of math_force_eval.
+	* sysdeps/ieee754/dbl-64/s_round.c: Likewise.
+	* sysdeps/ieee754/flt-32/s_roundf.c: Likewise.
+
 	* math/math_private.h (math_force_eval): Allow non-addressable
 	arguments.
 	* sysdeps/i386/fpu/math_private.h (math_force_eval): Likewise.

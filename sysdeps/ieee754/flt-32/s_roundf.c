@@ -37,7 +37,7 @@ __roundf (float x)
     {
       if (j0 < 0)
 	{
-	  math_force_eval (huge + x > 0.0F);
+	  math_force_eval (huge + x);
 
 	  i0 &= 0x80000000;
 	  if (j0 == -1)
@@ -49,7 +49,7 @@ __roundf (float x)
 	  if ((i0 & i) == 0)
 	    /* X is integral.  */
 	    return x;
-	  math_force_eval (huge + x > 0.0F);
+	  math_force_eval (huge + x);
 
 	  /* Raise inexact if x != 0.  */
 	  i0 += 0x00400000 >> j0;
