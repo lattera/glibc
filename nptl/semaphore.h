@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -64,10 +64,10 @@ extern int sem_timedwait (sem_t *__restrict __sem,
 #endif
 
 /* Test whether SEM is posted.  */
-extern int sem_trywait (sem_t *__sem) __THROW;
+extern int sem_trywait (sem_t *__sem) __THROWNL;
 
 /* Post SEM.  */
-extern int sem_post (sem_t *__sem) __THROW;
+extern int sem_post (sem_t *__sem) __THROWNL;
 
 /* Get current value of SEM and store it in *SVAL.  */
 extern int sem_getvalue (sem_t *__restrict __sem, int *__restrict __sval)

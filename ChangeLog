@@ -1,3 +1,10 @@
+2011-10-27  Andreas Schwab  <schwab@redhat.com>
+
+	[BZ #13344]
+	* misc/sys/cdefs.h (__THROWNL): Define.
+	* posix/unistd.h: Use __THREADNL instead of __THREAD
+	for memory synchronization functions.
+
 2011-10-26  Roland McGrath  <roland@hack.frob.com>
 
 	[BZ #13349]

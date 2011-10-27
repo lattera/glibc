@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010
+/* Copyright (C) 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -225,7 +225,7 @@ __BEGIN_DECLS
 extern int pthread_create (pthread_t *__restrict __newthread,
 			   __const pthread_attr_t *__restrict __attr,
 			   void *(*__start_routine) (void *),
-			   void *__restrict __arg) __THROW __nonnull ((1, 3));
+			   void *__restrict __arg) __THROWNL __nonnull ((1, 3));
 
 /* Terminate calling thread.
 
@@ -740,22 +740,22 @@ extern int pthread_mutex_destroy (pthread_mutex_t *__mutex)
 
 /* Try locking a mutex.  */
 extern int pthread_mutex_trylock (pthread_mutex_t *__mutex)
-     __THROW __nonnull ((1));
+     __THROWNL __nonnull ((1));
 
 /* Lock a mutex.  */
 extern int pthread_mutex_lock (pthread_mutex_t *__mutex)
-     __THROW __nonnull ((1));
+     __THROWNL __nonnull ((1));
 
 #ifdef __USE_XOPEN2K
 /* Wait until lock becomes available, or specified time passes. */
 extern int pthread_mutex_timedlock (pthread_mutex_t *__restrict __mutex,
 				    __const struct timespec *__restrict
-				    __abstime) __THROW __nonnull ((1, 2));
+				    __abstime) __THROWNL __nonnull ((1, 2));
 #endif
 
 /* Unlock a mutex.  */
 extern int pthread_mutex_unlock (pthread_mutex_t *__mutex)
-     __THROW __nonnull ((1));
+     __THROWNL __nonnull ((1));
 
 
 /* Get the priority ceiling of MUTEX.  */
@@ -879,37 +879,37 @@ extern int pthread_rwlock_destroy (pthread_rwlock_t *__rwlock)
 
 /* Acquire read lock for RWLOCK.  */
 extern int pthread_rwlock_rdlock (pthread_rwlock_t *__rwlock)
-     __THROW __nonnull ((1));
+     __THROWNL __nonnull ((1));
 
 /* Try to acquire read lock for RWLOCK.  */
 extern int pthread_rwlock_tryrdlock (pthread_rwlock_t *__rwlock)
-  __THROW __nonnull ((1));
+  __THROWNL __nonnull ((1));
 
 # ifdef __USE_XOPEN2K
 /* Try to acquire read lock for RWLOCK or return after specfied time.  */
 extern int pthread_rwlock_timedrdlock (pthread_rwlock_t *__restrict __rwlock,
 				       __const struct timespec *__restrict
-				       __abstime) __THROW __nonnull ((1, 2));
+				       __abstime) __THROWNL __nonnull ((1, 2));
 # endif
 
 /* Acquire write lock for RWLOCK.  */
 extern int pthread_rwlock_wrlock (pthread_rwlock_t *__rwlock)
-     __THROW __nonnull ((1));
+     __THROWNL __nonnull ((1));
 
 /* Try to acquire write lock for RWLOCK.  */
 extern int pthread_rwlock_trywrlock (pthread_rwlock_t *__rwlock)
-     __THROW __nonnull ((1));
+     __THROWNL __nonnull ((1));
 
 # ifdef __USE_XOPEN2K
 /* Try to acquire write lock for RWLOCK or return after specfied time.  */
 extern int pthread_rwlock_timedwrlock (pthread_rwlock_t *__restrict __rwlock,
 				       __const struct timespec *__restrict
-				       __abstime) __THROW __nonnull ((1, 2));
+				       __abstime) __THROWNL __nonnull ((1, 2));
 # endif
 
 /* Unlock RWLOCK.  */
 extern int pthread_rwlock_unlock (pthread_rwlock_t *__rwlock)
-     __THROW __nonnull ((1));
+     __THROWNL __nonnull ((1));
 
 
 /* Functions for handling read-write lock attributes.  */
@@ -959,11 +959,11 @@ extern int pthread_cond_destroy (pthread_cond_t *__cond)
 
 /* Wake up one thread waiting for condition variable COND.  */
 extern int pthread_cond_signal (pthread_cond_t *__cond)
-     __THROW __nonnull ((1));
+     __THROWNL __nonnull ((1));
 
 /* Wake up all threads waiting for condition variables COND.  */
 extern int pthread_cond_broadcast (pthread_cond_t *__cond)
-     __THROW __nonnull ((1));
+     __THROWNL __nonnull ((1));
 
 /* Wait for condition variable COND to be signaled or broadcast.
    MUTEX is assumed to be locked before.
@@ -1034,15 +1034,15 @@ extern int pthread_spin_destroy (pthread_spinlock_t *__lock)
 
 /* Wait until spinlock LOCK is retrieved.  */
 extern int pthread_spin_lock (pthread_spinlock_t *__lock)
-     __THROW __nonnull ((1));
+     __THROWNL __nonnull ((1));
 
 /* Try to lock spinlock LOCK.  */
 extern int pthread_spin_trylock (pthread_spinlock_t *__lock)
-     __THROW __nonnull ((1));
+     __THROWNL __nonnull ((1));
 
 /* Release spinlock LOCK.  */
 extern int pthread_spin_unlock (pthread_spinlock_t *__lock)
-     __THROW __nonnull ((1));
+     __THROWNL __nonnull ((1));
 
 
 /* Functions to handle barriers.  */
@@ -1060,7 +1060,7 @@ extern int pthread_barrier_destroy (pthread_barrier_t *__barrier)
 
 /* Wait on barrier BARRIER.  */
 extern int pthread_barrier_wait (pthread_barrier_t *__barrier)
-     __THROW __nonnull ((1));
+     __THROWNL __nonnull ((1));
 
 
 /* Initialize barrier attribute ATTR.  */

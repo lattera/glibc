@@ -1,3 +1,10 @@
+2011-10-27  Andreas Schwab  <schwab@redhat.com>
+
+	[BZ #13344]
+	* sysdeps/pthread/pthread.h: Use __THREADNL instead of __THREAD
+	for memory synchronization functions.
+	* semaphore.h: Likewise.
+
 2011-10-24  Ulrich Drepper  <drepper@gmail.com>
 
 	* tst-cancel7.c: Avoid warning.
