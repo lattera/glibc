@@ -2,7 +2,6 @@
 #define __add __add_avx
 #define __dbl_mp __dbl_mp_avx
 #define __dvd __dvd_avx
-#define __mpatan2 __mpatan2_avx
 #define __mul __mul_avx
 #define __sub __sub_avx
 #define SECTION __attribute__ ((section (".text.avx")))

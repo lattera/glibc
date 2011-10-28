@@ -1,3 +1,26 @@
+2011-10-28  Ulrich Drepper  <drepper@gmail.com>
+
+	* sysdeps/x86_64/fpu/multiarch/Makefile: Don't build brandred-avx.c,
+	doasin-avx.c, dosincos-avx.c, e_asin-avx.c, mpatan-avx.c,
+	mpatan2-avx.c, mpsqrt-avx.c, mptan-avx.c, sincos32-avx.c.
+	* sysdeps/x86_64/fpu/multiarch/e_asin.c: There are no _avx variants
+	anymore.
+	* sysdeps/x86_64/fpu/multiarch/e_atan2-avx.c: Don't redirect __mpatan2.
+	* sysdeps/x86_64/fpu/multiarch/s_atan-avx.c: Don't redirect __mpatan.
+	* sysdeps/x86_64/fpu/multiarch/s_sin-avx.c: Don't redirect __branred,
+	__docos, __dubsin, __mpcos, __mpcos1, __mpsin, __mpsin1.
+	* sysdeps/x86_64/fpu/multiarch/s_tan-avx.c: Don't redirect __branred,
+	__mpranred, __mptan.
+	* sysdeps/x86_64/fpu/multiarch/brandred-avx.c: Removed.
+	* sysdeps/x86_64/fpu/multiarch/doasin-avx.c: Removed.
+	* sysdeps/x86_64/fpu/multiarch/dosincos-avx.c: Removed.
+	* sysdeps/x86_64/fpu/multiarch/e_asin-avx.c: Removed.
+	* sysdeps/x86_64/fpu/multiarch/mpatan-avx.c: Removed.
+	* sysdeps/x86_64/fpu/multiarch/mpatan2-avx.c: Removed.
+	* sysdeps/x86_64/fpu/multiarch/mpsqrt-avx.c: Removed.
+	* sysdeps/x86_64/fpu/multiarch/mptan-avx.c: Removed.
+	* sysdeps/x86_64/fpu/multiarch/sincos32-avx.c: Removed.
+
 2011-10-28  Andreas Schwab  <schwab@redhat.com>
 
 	* sysdeps/i386/i686/multiarch/strnlen-c.c (libc_hidden_def): Only

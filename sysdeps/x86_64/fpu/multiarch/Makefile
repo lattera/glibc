@@ -36,29 +36,18 @@ endif
 
 ifeq ($(config-cflags-avx),yes)
 libm-sysdep_routines += e_exp-avx e_log-avx s_atan-avx \
-			e_asin-avx e_atan2-avx s_sin-avx s_tan-avx \
+			e_atan2-avx s_sin-avx s_tan-avx \
 			mplog-avx mpa-avx slowexp-avx \
-			sincos32-avx doasin-avx dosincos-avx \
-			brandred-avx mpexp-avx \
-			mpatan2-avx mpatan-avx mpsqrt-avx mptan-avx
+			mpexp-avx
 
-CFLAGS-brandred-avx.c = -mavx
-CFLAGS-doasin-avx.c = -mavx
-CFLAGS-dosincos-avx.c = -mavx
-CFLAGS-e_asin-avx.c = -mavx
 CFLAGS-e_atan2-avx.c = -mavx
 CFLAGS-e_exp-avx.c = -mavx
 CFLAGS-e_log-avx.c = -mavx
 CFLAGS-mpa-avx.c = -mavx
-CFLAGS-mpatan-avx.c = -mavx
-CFLAGS-mpatan2-avx.c = -mavx
 CFLAGS-mpexp-avx.c = -mavx
 CFLAGS-mplog-avx.c = -mavx
-CFLAGS-mpsqrt-avx.c = -mavx
-CFLAGS-mptan-avx.c = -mavx
 CFLAGS-s_atan-avx.c = -mavx
 CFLAGS-s_sin-avx.c = -mavx
-CFLAGS-sincos32-avx.c = -mavx
 CFLAGS-slowexp-avx.c = -mavx
 CFLAGS-s_tan-avx.c = -mavx
 endif
