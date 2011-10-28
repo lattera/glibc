@@ -1,5 +1,10 @@
 2011-10-28  Ulrich Drepper  <drepper@gmail.com>
 
+	* sysdeps/x86_64/multiarch/strstr.c (__m128i_strloadu_tolower): Take
+	the three constants needed as parameters.  Drop the others.
+	(strcasestr_sse42): Load uclow, uchigh, and lcqword and pass to
+	__m128i_strloadu_tolower.
+
 	* sysdeps/x86_64/fpu/multiarch/Makefile: Don't build brandred-avx.c,
 	doasin-avx.c, dosincos-avx.c, e_asin-avx.c, mpatan-avx.c,
 	mpatan2-avx.c, mpsqrt-avx.c, mptan-avx.c, sincos32-avx.c.
