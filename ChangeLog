@@ -4,6 +4,8 @@
 	the three constants needed as parameters.  Drop the others.
 	(strcasestr_sse42): Load uclow, uchigh, and lcqword and pass to
 	__m128i_strloadu_tolower.
+	Create and initialize variable zero and use it in all the places
+	where _mm_setzero_si128 was used.
 
 	* sysdeps/x86_64/fpu/multiarch/Makefile: Don't build brandred-avx.c,
 	doasin-avx.c, dosincos-avx.c, e_asin-avx.c, mpatan-avx.c,

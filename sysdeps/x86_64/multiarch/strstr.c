@@ -88,14 +88,12 @@
    cross to next page.  */
 
 static inline __m128i
-__m128i_strloadu (const unsigned char * p)
+__m128i_strloadu (const unsigned char * p, __m128i zero)
 {
-  int offset = ((size_t) p & (16 - 1));
-
-  if (offset && (int) ((size_t) p & 0xfff) > 0xff0)
+  if (__builtin_expect ((int) ((size_t) p & 0xfff) > 0xff0, 0))
     {
+      size_t offset = ((size_t) p & (16 - 1));
       __m128i a = _mm_load_si128 ((__m128i *) (p - offset));
-      __m128i zero = _mm_setzero_si128 ();
       int bmsk = _mm_movemask_epi8 (_mm_cmpeq_epi8 (a, zero));
       if ((bmsk >> offset) != 0)
 	return __m128i_shift_right (a, offset);
@@ -109,10 +107,10 @@ __m128i_strloadu (const unsigned char * p)
    locale and other which have single-byte letters only in the ASCII
    range.  */
 static inline __m128i
-__m128i_strloadu_tolower (const unsigned char *p, __m128i uclow,
+__m128i_strloadu_tolower (const unsigned char *p, __m128i zero, __m128i uclow,
 			  __m128i uchigh, __m128i lcqword)
 {
-  __m128i frag = __m128i_strloadu (p);
+  __m128i frag = __m128i_strloadu (p, zero);
 
   /* Compare if 'Z' > bytes. Inverted way to get a mask for byte <= 'Z'.  */
   __m128i r2 = _mm_cmpgt_epi8 (uchigh, frag);
@@ -191,12 +189,15 @@ STRSTR_SSE42 (const unsigned char *s1, const unsigned char *s2)
   const __m128i uclow = _mm_set1_epi8 (0x40);
   const __m128i uchigh = _mm_set1_epi8 (0x5b);
   const __m128i lcqword = _mm_set1_epi8 (0x20);
-#  define strloadu(p) __m128i_strloadu_tolower (p, uclow, uchigh, lcqword)
+  const __m128i zero = _mm_setzero_si128 ();
+#  define strloadu(p) __m128i_strloadu_tolower (p, zero, uclow, uchigh, lcqword)
 # else
 #  define strloadu __m128i_strloadu_tolower
+#  define zero _mm_setzero_si128 ()
 # endif
 #else
-# define strloadu __m128i_strloadu
+# define strloadu(p) __m128i_strloadu (p, zero)
+  const __m128i zero = _mm_setzero_si128 ();
 #endif
 
   /* p1 > 1 byte long.  Load up to 16 bytes of fragment.  */
@@ -207,7 +208,7 @@ STRSTR_SSE42 (const unsigned char *s1, const unsigned char *s2)
     /* p2 is > 1 byte long.  */
     frag2 = strloadu (p2);
   else
-    frag2 = _mm_insert_epi8 (_mm_setzero_si128 (), LOADBYTE (p2[0]), 0);
+    frag2 = _mm_insert_epi8 (zero, LOADBYTE (p2[0]), 0);
 
   /* Unsigned bytes, equal order, does frag2 has null?  */
   int cmp_c = _mm_cmpistrc (frag2, frag1, 0x0c);
@@ -216,8 +217,7 @@ STRSTR_SSE42 (const unsigned char *s1, const unsigned char *s2)
   int cmp_s = _mm_cmpistrs (frag2, frag1, 0x0c);
   if (cmp_s & cmp_c)
     {
-      int bmsk = _mm_movemask_epi8 (_mm_cmpeq_epi8 (frag2,
-						    _mm_setzero_si128 ()));
+      int bmsk = _mm_movemask_epi8 (_mm_cmpeq_epi8 (frag2, zero));
       int len;
       __asm ("bsfl %[bmsk], %[len]"
 	     : [len] "=r" (len) : [bmsk] "r" (bmsk));
@@ -343,7 +343,6 @@ re_trace:
 
       /* Handle both zero and sign flag set and s1 is shorter in
 	 length.  */
-      __m128i zero = _mm_setzero_si128 ();
       int bmsk = _mm_movemask_epi8 (_mm_cmpeq_epi8 (zero, frag2));
       int bmsk1 = _mm_movemask_epi8 (_mm_cmpeq_epi8 (zero, frag1));
       int len;
