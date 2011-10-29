@@ -1,3 +1,10 @@
+2011-07-03  Andreas Jaeger  <aj@suse.de>
+
+	[BZ #10709]
+	* sysdeps/ieee754/dbl-64/s_sin.c (__sin): Fix incorrect rounding
+	of sin. Patch suggested by Paul Zimmermann <zimmerma+gcc@loria.fr>.
+	* math/libm-test.inc (sin_test): Add test case.
+
 2011-10-29  Ulrich Drepper  <drepper@gmail.com>
 
 	[BZ #13337]

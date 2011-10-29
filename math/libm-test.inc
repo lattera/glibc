@@ -5642,6 +5642,7 @@ sin_test (void)
 
 #ifdef TEST_DOUBLE
   TEST_f_f (sin, 0.80190127184058835, 0.71867942238767868);
+  TEST_f_f (sin, 2.522464e-1, 2.4957989804940911e-1);
 #endif
 
   END (sin);

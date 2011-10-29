@@ -138,7 +138,7 @@ __sin(double x){
 	  cor=(ssn+s*ccs-sn*c)+cs*s;
 	  res=sn+cor;
 	  cor=(sn-res)+cor;
-	  return (res==res+1.025*cor)? res : slow1(x);
+	  return (res==res+1.096*cor)? res : slow1(x);
 	}    /*   else  if (k < 0x3feb6000)    */
 
 /*----------------------- 0.855469  <|x|<2.426265  ----------------------*/
