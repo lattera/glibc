@@ -1,3 +1,11 @@
+2011-10-29  Ulrich Drepper  <drepper@gmail.com>
+
+	[BZ #13358]
+	* sysdeps/unix/sysv/linux/x86_64/pthread_cond_timedwait.S
+	(__pthread_cond_timedwait): Initialize %r15 correctly also for code
+	path for kernels with FUTEX_CLOCK_REALTIME.
+	Debugged by H.J. Lu <hjl.tools@gmail.com>.
+
 2011-10-27  Andreas Schwab  <schwab@redhat.com>
 
 	[BZ #13344]
