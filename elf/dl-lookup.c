@@ -860,7 +860,6 @@ internal_function
 _dl_setup_hash (struct link_map *map)
 {
   Elf_Symndx *hash;
-  Elf_Symndx nchain;
 
   if (__builtin_expect (map->l_info[DT_ADDRTAGIDX (DT_GNU_HASH) + DT_NUM
 				    + DT_THISPROCNUM + DT_VERSIONTAGNUM
@@ -892,7 +891,8 @@ _dl_setup_hash (struct link_map *map)
   hash = (void *) D_PTR (map, l_info[DT_HASH]);
 
   map->l_nbuckets = *hash++;
-  nchain = *hash++;
+  /* Skip nchain.  */
+  hash++;
   map->l_buckets = hash;
   hash += map->l_nbuckets;
   map->l_chain = hash;
