@@ -70,7 +70,6 @@ chroot_canon (const char *chroot, const char *name)
   for (start = end = name; *start; start = end)
     {
       struct stat64 st;
-      int n;
 
       /* Skip sequence of multiple path-separators.  */
       while (*start == '/')
@@ -135,7 +134,7 @@ chroot_canon (const char *chroot, const char *name)
 		  goto error;
 		}
 
-	      n = readlink (rpath, buf, PATH_MAX - 1);
+	      ssize_t n = readlink (rpath, buf, PATH_MAX - 1);
 	      if (n < 0)
 		{
 		  if (*end == '\0')
@@ -148,7 +147,7 @@ chroot_canon (const char *chroot, const char *name)
 		extra_buf = alloca (PATH_MAX);
 
 	      len = strlen (end);
-	      if ((long int) (n + len) >= PATH_MAX)
+	      if (len >= PATH_MAX - n)
 		{
 		  __set_errno (ENAMETOOLONG);
 		  goto error;

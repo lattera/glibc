@@ -1,5 +1,7 @@
 2011-10-29  Ulrich Drepper  <drepper@gmail.com>
 
+	* elf/chroot_canon.c (chroot_canon): Cleanups.
+
 	* elf/dl-lookup.c (_dl_setup_hash): Avoid warning.
 
 	[BZ #13335]
