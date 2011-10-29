@@ -1,3 +1,9 @@
+2011-10-29  Ulrich Drepper  <drepper@gmail.com>
+
+	* posix/sys/wait.h: Mark wait and wait4 with __THROWNL.
+	* libio/stdio.h: Mark sprintf, vsprintf snprintf, vsnprintf, vasprintf,
+	asprintf, __asprintf, obstack_printf, obstack_vprintf with __THROWNL.
+
 2011-07-03  Andreas Jaeger  <aj@suse.de>
 
 	[BZ #10709]

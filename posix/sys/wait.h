@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-1994,1996-2001,2003,2004,2005,2007,2009,2010
+/* Copyright (C) 1991-1994,1996-2001,2003,2004,2005,2007,2009,2010,2011
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -167,13 +167,13 @@ struct rusage;
    WUNTRACED bit is set in OPTIONS, return status for stopped children;
    otherwise don't.  */
 extern __pid_t wait3 (__WAIT_STATUS __stat_loc, int __options,
-		      struct rusage * __usage) __THROW;
+		      struct rusage * __usage) __THROWNL;
 #endif
 
 #ifdef __USE_BSD
 /* PID is like waitpid.  Other args are like wait3.  */
 extern __pid_t wait4 (__pid_t __pid, __WAIT_STATUS __stat_loc, int __options,
-		      struct rusage *__usage) __THROW;
+		      struct rusage *__usage) __THROWNL;
 #endif /* Use BSD.  */
 
 

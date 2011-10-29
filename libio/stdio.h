@@ -363,7 +363,7 @@ extern int fprintf (FILE *__restrict __stream,
 extern int printf (__const char *__restrict __format, ...);
 /* Write formatted output to S.  */
 extern int sprintf (char *__restrict __s,
-		    __const char *__restrict __format, ...) __THROW;
+		    __const char *__restrict __format, ...) __THROWNL;
 
 /* Write formatted output to S from argument list ARG.
 
@@ -378,7 +378,7 @@ extern int vfprintf (FILE *__restrict __s, __const char *__restrict __format,
 extern int vprintf (__const char *__restrict __format, _G_va_list __arg);
 /* Write formatted output to S from argument list ARG.  */
 extern int vsprintf (char *__restrict __s, __const char *__restrict __format,
-		     _G_va_list __arg) __THROW;
+		     _G_va_list __arg) __THROWNL;
 __END_NAMESPACE_STD
 
 #if defined __USE_BSD || defined __USE_ISOC99 || defined __USE_UNIX98
@@ -386,11 +386,11 @@ __BEGIN_NAMESPACE_C99
 /* Maximum chars of output to write in MAXLEN.  */
 extern int snprintf (char *__restrict __s, size_t __maxlen,
 		     __const char *__restrict __format, ...)
-     __THROW __attribute__ ((__format__ (__printf__, 3, 4)));
+     __THROWNL __attribute__ ((__format__ (__printf__, 3, 4)));
 
 extern int vsnprintf (char *__restrict __s, size_t __maxlen,
 		      __const char *__restrict __format, _G_va_list __arg)
-     __THROW __attribute__ ((__format__ (__printf__, 3, 0)));
+     __THROWNL __attribute__ ((__format__ (__printf__, 3, 0)));
 __END_NAMESPACE_C99
 #endif
 
@@ -399,13 +399,13 @@ __END_NAMESPACE_C99
    Store the address of the string in *PTR.  */
 extern int vasprintf (char **__restrict __ptr, __const char *__restrict __f,
 		      _G_va_list __arg)
-     __THROW __attribute__ ((__format__ (__printf__, 2, 0))) __wur;
+     __THROWNL __attribute__ ((__format__ (__printf__, 2, 0))) __wur;
 extern int __asprintf (char **__restrict __ptr,
 		       __const char *__restrict __fmt, ...)
-     __THROW __attribute__ ((__format__ (__printf__, 2, 3))) __wur;
+     __THROWNL __attribute__ ((__format__ (__printf__, 2, 3))) __wur;
 extern int asprintf (char **__restrict __ptr,
 		     __const char *__restrict __fmt, ...)
-     __THROW __attribute__ ((__format__ (__printf__, 2, 3))) __wur;
+     __THROWNL __attribute__ ((__format__ (__printf__, 2, 3))) __wur;
 #endif
 
 #ifdef __USE_XOPEN2K8
@@ -895,11 +895,11 @@ struct obstack;			/* See <obstack.h>.  */
 /* Write formatted output to an obstack.  */
 extern int obstack_printf (struct obstack *__restrict __obstack,
 			   __const char *__restrict __format, ...)
-     __THROW __attribute__ ((__format__ (__printf__, 2, 3)));
+     __THROWNL __attribute__ ((__format__ (__printf__, 2, 3)));
 extern int obstack_vprintf (struct obstack *__restrict __obstack,
 			    __const char *__restrict __format,
 			    _G_va_list __args)
-     __THROW __attribute__ ((__format__ (__printf__, 2, 0)));
+     __THROWNL __attribute__ ((__format__ (__printf__, 2, 0)));
 #endif /* Use GNU.  */
 
 
