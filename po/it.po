@@ -810,7 +810,7 @@ msgstr "Passa a RADICE come directory di root"
 
 #: elf/ldconfig.c:145
 msgid "ROOT"
-msgstr "RADICE"
+msgstr "ROOT"
 
 #: elf/ldconfig.c:146
 msgid "CACHE"
@@ -5806,11 +5806,11 @@ msgstr "enablecache: impossibile allocare la coda fifo della cache"
 
 #: sunrpc/svc_udp.c:535
 msgid "cache_set: victim not found"
-msgstr "cache_set: victim cache non trovata"
+msgstr "cache_set: victim non trovato"
 
 #: sunrpc/svc_udp.c:546
 msgid "cache_set: victim alloc failed"
-msgstr "cache_set: allocazione della victim cache non riuscita"
+msgstr "cache_set: allocazione di victim non riuscita"
 
 #: sunrpc/svc_udp.c:553
 msgid "cache_set: could not allocate new rpc_buffer"
