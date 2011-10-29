@@ -2855,10 +2855,10 @@ munmap_chunk(mchunkptr p)
   mp_.n_mmaps--;
   mp_.mmapped_mem -= total_size;
 
-  int ret __attribute__ ((unused)) = munmap((char *)block, total_size);
-
-  /* munmap returns non-zero on failure */
-  assert(ret == 0);
+  /* If munmap failed the process virtual memory address space is in a
+     bad shape.  Just leave the block hanging around, the process will
+     terminate shortly anyway since not much can be done.  */
+  munmap((char *)block, total_size);
 }
 
 #if HAVE_MREMAP
