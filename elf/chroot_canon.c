@@ -1,5 +1,5 @@
 /* Return the canonical absolute name of a given file inside chroot.
-   Copyright (C) 1996,1997,1998,1999,2000,2001,2004,2005,2010
+   Copyright (C) 1996,1997,1998,1999,2000,2001,2004,2005,2010,2011
 	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -135,7 +135,7 @@ chroot_canon (const char *chroot, const char *name)
 		  goto error;
 		}
 
-	      n = readlink (rpath, buf, PATH_MAX);
+	      n = readlink (rpath, buf, PATH_MAX - 1);
 	      if (n < 0)
 		{
 		  if (*end == '\0')

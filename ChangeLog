@@ -1,5 +1,9 @@
 2011-10-29  Ulrich Drepper  <drepper@gmail.com>
 
+	[BZ #13335]
+	* elf/chroot_canon.c (chroot_canon): Fix readlink call.
+	Patch by Thomas Jarosch <thomas.jarosch@intra2net.com>.
+
 	* string/test-strchr.c: Make usable for strchrnul testing.
 	* string/test-strchrnul.c: New file.
 	* string/Makefile (strop-tests): Add strchrnul.
