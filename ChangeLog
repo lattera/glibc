@@ -1,5 +1,9 @@
 2011-10-29  Ulrich Drepper  <drepper@gmail.com>
 
+	* string/test-strchr.c: Make usable for strchrnul testing.
+	* string/test-strchrnul.c: New file.
+	* string/Makefile (strop-tests): Add strchrnul.
+
 	* po/it.po: Update from translation team.
 	* po/es.po: Likewise.
 

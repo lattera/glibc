@@ -23,7 +23,13 @@
 #include "test-string.h"
 
 #ifndef WIDE
-# define STRCHR strchr
+# ifdef USE_FOR_STRCHRNUL
+#  define STRCHR strchrnul
+#  define stupid_STRCHR stupid_STRCHRNUL
+#  define simple_STRCHR simple_STRCHRNUL
+# else
+#  define STRCHR strchr
+# endif
 # define STRLEN strlen
 # define CHAR char
 # define BIG_CHAR CHAR_MAX
@@ -41,6 +47,13 @@
 # define UCHAR wchar_t
 #endif
 
+#ifdef USE_FOR_STRCHRNUL
+# define NULLRET(endptr) endptr
+#else
+# define NULLRET(endptr) NULL
+#endif
+
+
 typedef CHAR *(*proto_t) (const CHAR *, int);
 
 CHAR *
@@ -48,7 +61,7 @@ simple_STRCHR (const CHAR *s, int c)
 {
   for (; *s != (CHAR) c; ++s)
     if (*s == '\0')
-      return NULL;
+      return NULLRET ((CHAR *) s);
   return (CHAR *) s;
 }
 
@@ -60,7 +73,7 @@ stupid_STRCHR (const CHAR *s, int c)
   while (n--)
     if (*s++ == (CHAR) c)
       return (CHAR *) s - 1;
-  return NULL;
+  return NULLRET ((CHAR *) s - 1);
 }
 
 IMPL (stupid_STRCHR, 0)
@@ -73,8 +86,8 @@ do_one_test (impl_t *impl, const CHAR *s, int c, const CHAR *exp_res)
   CHAR *res = CALL (impl, s, c);
   if (res != exp_res)
     {
-      error (0, 0, "Wrong result in function %s %p %p", impl->name,
-	     res, exp_res);
+      error (0, 0, "Wrong result in function %s %#x %p %p", impl->name,
+	     c, res, exp_res);
       ret = 1;
       return;
     }
@@ -129,7 +142,7 @@ do_test (size_t align, size_t pos, size_t len, int seek_char, int max_char)
   else if (seek_char == 0)
     result = buf + align + len;
   else
-    result = NULL;
+    result = NULLRET (buf + align + len);
 
   if (HP_TIMING_AVAIL)
     printf ("Length %4zd, alignment in bytes %2zd:",
@@ -198,7 +211,7 @@ do_random_tests (void)
       else if (seek_char == 0)
 	result = (CHAR *) (p + len + align);
       else
-	result = NULL;
+	result = NULLRET ((CHAR *) (p + len + align));
 
       FOR_EACH_IMPL (impl, 1)
 	if (CALL (impl, (CHAR *) (p + align), seek_char) != result)
