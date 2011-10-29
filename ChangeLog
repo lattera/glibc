@@ -1,5 +1,9 @@
 2011-10-29  Ulrich Drepper  <drepper@gmail.com>
 
+	[BZ #13337]
+	* elf/sprof.c (load_shobj): Correctly NUL-terminate link name.
+	Patch by Thomas Jarosch <thomas.jarosch@intra2net.com>.
+
 	* elf/chroot_canon.c (chroot_canon): Cleanups.
 
 	* elf/dl-lookup.c (_dl_setup_hash): Avoid warning.

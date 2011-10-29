@@ -596,10 +596,11 @@ load_shobj (const char *name)
       static const char procpath[] = "/proc/self/fd/%d";
       char origprocname[sizeof (procpath) + sizeof (int) * 3];
       snprintf (origprocname, sizeof (origprocname), procpath, fd);
-      char *origlink = (char *) alloca (PATH_MAX + 1);
-      origlink[PATH_MAX] = '\0';
-      if (readlink (origprocname, origlink, PATH_MAX) == -1)
+      char *origlink = (char *) alloca (PATH_MAX);
+      ssize_t n = readlink (origprocname, origlink, PATH_MAX)
+      if (n == -1)
 	goto no_debuginfo;
+      origlink[n] = '\0';
 
       /* Try to find the actual file.  There are three places:
 	 1. the same directory the DSO is in
