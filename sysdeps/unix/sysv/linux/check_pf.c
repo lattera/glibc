@@ -211,8 +211,6 @@ make_request (int fd, pid_t pid, bool *seen_ipv4, bool *seen_ipv6,
     }
   while (! done);
 
-  close_not_cancel_no_status (fd);
-
   if (*seen_ipv6 && in6ailist != NULL)
     {
       *in6ai = malloc (in6ailistlen * sizeof (**in6ai));
@@ -262,22 +260,27 @@ __check_pf (bool *seen_ipv4, bool *seen_ipv6,
     {
       int fd = __socket (PF_NETLINK, SOCK_RAW, NETLINK_ROUTE);
 
-      struct sockaddr_nl nladdr;
-      memset (&nladdr, '\0', sizeof (nladdr));
-      nladdr.nl_family = AF_NETLINK;
+      if (__builtin_expect (fd >= 0, 1))
+	{
+	  struct sockaddr_nl nladdr;
+	  memset (&nladdr, '\0', sizeof (nladdr));
+	  nladdr.nl_family = AF_NETLINK;
 
-      socklen_t addr_len = sizeof (nladdr);
+	  socklen_t addr_len = sizeof (nladdr);
 
-      if (fd >= 0
-	  && __bind (fd, (struct sockaddr *) &nladdr, sizeof (nladdr)) == 0
-	  && __getsockname (fd, (struct sockaddr *) &nladdr, &addr_len) == 0
-	  && make_request (fd, nladdr.nl_pid, seen_ipv4, seen_ipv6,
-			   in6ai, in6ailen) == 0)
-	/* It worked.  */
-	return;
+	  bool success
+	    = (__bind (fd, (struct sockaddr *) &nladdr, sizeof (nladdr)) == 0
+	       && __getsockname (fd, (struct sockaddr *) &nladdr,
+				 &addr_len) == 0
+	       && make_request (fd, nladdr.nl_pid, seen_ipv4, seen_ipv6,
+				in6ai, in6ailen) == 0);
 
-      if (fd >= 0)
-	__close (fd);
+	  close_not_cancel_no_status (fd);
+
+	  if (success)
+	    /* It worked.  */
+	    return;
+	}
 
 #if __ASSUME_NETLINK_SUPPORT == 0
       /* Remember that there is no netlink support.  */

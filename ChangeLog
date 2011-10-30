@@ -1,3 +1,9 @@
+2011-10-30  Ulrich Drepper  <drepper@gmail.com>
+
+	* sysdeps/unix/sysv/linux/check_pf.c (make_request): Don't call
+	close_not_cancel_no_status here.
+	(__check_pf): Reorganize code a bit to not call close twice if OOM.
+
 2011-10-29  Ulrich Drepper  <drepper@gmail.com>
 
 	[BZ #13276]
