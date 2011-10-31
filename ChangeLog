@@ -36,7 +36,7 @@
 	* malloc/malloc.c (munmap_chunk): Don't use assertion to check munmap
 	return value.
 
-	* posix/sys/wait.h: Mark wait and wait4 with __THROWNL.
+	* posix/sys/wait.h: Mark wait3 and wait4 with __THROWNL.
 	* libio/stdio.h: Mark sprintf, vsprintf snprintf, vsnprintf, vasprintf,
 	asprintf, __asprintf, obstack_printf, obstack_vprintf with __THROWNL.
 
