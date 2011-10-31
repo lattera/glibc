@@ -21,8 +21,13 @@ struct in6addrinfo
 extern void __check_pf (bool *seen_ipv4, bool *seen_ipv6,
 			struct in6addrinfo **in6ai, size_t *in6ailen)
   attribute_hidden;
+extern void __free_in6ai (struct in6addrinfo *in6ai) attribute_hidden;
 extern void __check_native (uint32_t a1_index, int *a1_native,
 			    uint32_t a2_index, int *a2_native)
   attribute_hidden;
+
+#ifdef IS_IN_nscd
+extern uint32_t __bump_nl_timestamp (void) attribute_hidden;
+#endif
 
 #endif	/* ifaddrs.h */

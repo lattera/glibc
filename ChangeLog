@@ -1,3 +1,29 @@
+2011-10-31  Ulrich Drepper  <drepper@gmail.com>
+
+	* include/ifaddrs.h: Declare __free_in6ai and __bump_nl_timestamp.
+	* inet/check_pf.c: Provide dummy versions of __free_in6ai and
+	__bump_nl_timestamp.
+	* nscd/connections (nscd_init): When host database is served open
+	netlink socket and request notification about configuration changes.
+	(main_loop_poll): Track netlink file descriptor and bump timestamp
+	in case data becomes available.
+	(main_loop_epoll): Likewise.
+	* nscd/nscd-client.h (DB_VERSION): Bump to 2.
+	(database_pers_head): Add extra_data fileds.
+	Declare __nscd_get_mapping and __nscd_get_nl_timestamp.
+	* nscd/nscd_gethst_r.c (__nscd_get_nl_timestamp): New function.
+	* nscd/nscd_helper.c (__nscd_get_mapping): Renamed from get_mapping.
+	Adjust caller.
+	* sysdeps/posix/getaddrinfo.c (getaddrinfo): Don't call free on
+	in6ai data, call __free_in6ai.
+	* sysdeps/unix/sysv/linux/Makefile [subdir=nscd] (sysdep-CFLAGS):
+	Add -DHAVE_NETLINK.
+	* sysdeps/unix/sysv/linux/check_pf.c: Major rewrite.  Cache the
+	interface information.  Reuse previous data if netlink timestamp
+	is not changed.
+	(__bump_nl_timestamp): New function.
+	(__free_in6ai): New function.
+
 2011-10-30  Ulrich Drepper  <drepper@gmail.com>
 
 	* sysdeps/unix/sysv/linux/check_pf.c (make_request): Don't call

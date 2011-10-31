@@ -277,9 +277,9 @@ __nscd_unmap (struct mapped_database *mapped)
 
 /* Try to get a file descriptor for the shared meory segment
    containing the database.  */
-static struct mapped_database *
-get_mapping (request_type type, const char *key,
-	     struct mapped_database **mappedp)
+struct mapped_database *
+__nscd_get_mapping (request_type type, const char *key,
+		    struct mapped_database **mappedp)
 {
   struct mapped_database *result = NO_MAPPING;
 #ifdef SCM_RIGHTS
@@ -449,8 +449,8 @@ __nscd_get_map_ref (request_type type, const char *name,
 	  || (cur->head->nscd_certainly_running == 0
 	      && cur->head->timestamp + MAPPING_TIMEOUT < time (NULL))
 	  || cur->head->data_size > cur->datasize)
-	cur = get_mapping (type, name,
-			   (struct mapped_database **) &mapptr->mapped);
+	cur = __nscd_get_mapping (type, name,
+				  (struct mapped_database **) &mapptr->mapped);
 
       if (__builtin_expect (cur != NO_MAPPING, 1))
 	{

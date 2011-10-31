@@ -24,6 +24,7 @@
 #include <errno.h>
 #include <fcntl.h>
 #include <grp.h>
+#include <ifaddrs.h>
 #include <libintl.h>
 #include <pthread.h>
 #include <pwd.h>
@@ -32,6 +33,9 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <arpa/inet.h>
+#ifdef HAVE_NETLINK
+# include <netlink/netlink.h>
+#endif
 #ifdef HAVE_EPOLL
 # include <sys/epoll.h>
 #endif
@@ -245,6 +249,11 @@ static int sock;
 #ifdef HAVE_INOTIFY
 /* Inotify descriptor.  */
 int inotify_fd = -1;
+#endif
+
+#ifdef HAVE_NETLINK
+/* Descriptor for netlink status updates.  */
+static int nl_status_fd = -1;
 #endif
 
 #ifndef __ASSUME_SOCK_CLOEXEC
@@ -902,6 +911,65 @@ cannot set socket to close on exec: %s; disabling paranoia mode"),
 	       strerror (errno));
       exit (1);
     }
+
+#ifdef HAVE_NETLINK
+  if (dbs[hstdb].enabled)
+    {
+      /* Try to open netlink socket to monitor network setting changes.  */
+      nl_status_fd = socket (AF_NETLINK,
+			     SOCK_RAW | SOCK_CLOEXEC | SOCK_NONBLOCK,
+			     NETLINK_ROUTE);
+      if (nl_status_fd != -1)
+	{
+	  struct sockaddr_nl snl;
+	  memset (&snl, '\0', sizeof (snl));
+	  snl.nl_family = AF_NETLINK;
+	  /* XXX Is this the best set to use?  */
+	  snl.nl_groups = (RTMGRP_IPV4_IFADDR | RTMGRP_TC | RTMGRP_IPV4_MROUTE
+			   | RTMGRP_IPV4_ROUTE | RTMGRP_IPV4_RULE
+			   | RTMGRP_IPV6_IFADDR | RTMGRP_IPV6_MROUTE
+			   | RTMGRP_IPV6_ROUTE | RTMGRP_IPV6_IFINFO
+			   | RTMGRP_IPV6_PREFIX);
+
+	  if (bind (nl_status_fd, (struct sockaddr *) &snl, sizeof (snl)) != 0)
+	    {
+	      close (nl_status_fd);
+	      nl_status_fd = -1;
+	    }
+	  else
+	    {
+	      /* Start the timestamp process.  */
+	      dbs[hstdb].head->extra_data[NSCD_HST_IDX_CONF_TIMESTAMP]
+		= __bump_nl_timestamp ();
+
+# ifndef __ASSUME_SOCK_CLOEXEC
+	      if (have_sock_cloexec < 0)
+		{
+		  /* We don't want to get stuck on accept.  */
+		  int fl = fcntl (nl_status_fd, F_GETFL);
+		  if (fl == -1
+		      || fcntl (nl_status_fd, F_SETFL, fl | O_NONBLOCK) == -1)
+		    {
+		      dbg_log (_("\
+cannot change socket to nonblocking mode: %s"),
+			       strerror (errno));
+		      exit (1);
+		    }
+
+		  /* The descriptor needs to be closed on exec.  */
+		  if (paranoia
+		      && fcntl (nl_status_fd, F_SETFD, FD_CLOEXEC) == -1)
+		    {
+		      dbg_log (_("cannot set socket to close on exec: %s"),
+			       strerror (errno));
+		      exit (1);
+		    }
+		}
+# endif
+	    }
+	}
+    }
+#endif
 
   /* Change to unprivileged uid/gid/groups if specified in config file */
   if (server_user != NULL)
@@ -1826,6 +1894,18 @@ main_loop_poll (void)
     }
 #endif
 
+#ifdef HAVE_NETLINK
+  size_t idx_nl_status_fd = 0;
+  if (nl_status_fd != -1)
+    {
+      idx_nl_status_fd = nused;
+      conns[nused].fd = nl_status_fd;
+      conns[nused].events = POLLRDNORM;
+      ++nused;
+      firstfree = nused;
+    }
+#endif
+
   while (1)
     {
       /* Wait for any event.  We wait at most a couple of seconds so
@@ -1968,6 +2048,20 @@ disabled inotify after read error %d"),
 	    }
 #endif
 
+#ifdef HAVE_NETLINK
+	  if (idx_nl_status_fd != 0 && conns[idx_nl_status_fd].revents != 0)
+	    {
+	      char buf[4096];
+	      /* Read all the data.  We do not interpret it here.  */
+	      while (TEMP_FAILURE_RETRY (read (nl_status_fd, buf,
+					       sizeof (buf))) != -1)
+		;
+
+	      dbs[hstdb].head->extra_data[NSCD_HST_IDX_CONF_TIMESTAMP]
+		= __bump_nl_timestamp ();
+	    }
+#endif
+
 	  for (size_t cnt = first; cnt < nused && n > 0; ++cnt)
 	    if (conns[cnt].revents != 0)
 	      {
@@ -2043,6 +2137,17 @@ main_loop_epoll (int efd)
 	/* We cannot use epoll.  */
 	return;
       nused = 2;
+    }
+# endif
+
+# ifdef HAVE_NETLINK
+  if (nl_status_fd != -1)
+    {
+      ev.events = EPOLLRDNORM;
+      ev.data.fd = nl_status_fd;
+      if (epoll_ctl (efd, EPOLL_CTL_ADD, nl_status_fd, &ev) == -1)
+	/* We cannot use epoll.  */
+	return;
     }
 # endif
 
@@ -2162,6 +2267,18 @@ main_loop_epoll (int efd)
 		}
 	  }
 # endif
+# ifdef HAVE_NETLINK
+	else if (revs[cnt].data.fd == nl_status_fd)
+	  {
+	    char buf[4096];
+	    /* Read all the data.  We do not interpret it here.  */
+	    while (TEMP_FAILURE_RETRY (read (nl_status_fd, buf,
+					     sizeof (buf))) != -1)
+	      ;
+
+	    __bump_nl_timestamp ();
+	  }
+# endif
 	else
 	  {
 	    /* Remove the descriptor from the epoll descriptor.  */
@@ -2185,6 +2302,7 @@ main_loop_epoll (int efd)
       time_t laststart = now - ACCEPT_TIMEOUT;
       assert (starttime[sock] == 0);
       assert (inotify_fd == -1 || starttime[inotify_fd] == 0);
+      assert (nl_status_fd == -1 || starttime[nl_status_fd] == 0);
       for (int cnt = highest; cnt > STDERR_FILENO; --cnt)
 	if (starttime[cnt] != 0 && starttime[cnt] < laststart)
 	  {

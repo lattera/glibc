@@ -1,5 +1,5 @@
 /* Determine protocol families for which interfaces exist.  Linux version.
-   Copyright (C) 2003, 2006, 2007, 2008, 2010, 2011 Free Software Foundation, Inc.
+   Copyright (C) 2003, 2006-2008, 2010, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -33,6 +33,9 @@
 
 #include <not-cancel.h>
 #include <kernel-features.h>
+#include <bits/libc-lock.h>
+#include <atomic.h>
+#include <nscd/nscd-client.h>
 
 
 #ifndef IFA_F_HOMEADDRESS
@@ -43,9 +46,42 @@
 #endif
 
 
-static int
-make_request (int fd, pid_t pid, bool *seen_ipv4, bool *seen_ipv6,
-	      struct in6addrinfo **in6ai, size_t *in6ailen)
+struct cached_data
+{
+  uint32_t timestamp;
+  uint32_t usecnt;
+  bool seen_ipv4;
+  bool seen_ipv6;
+  size_t in6ailen;
+  struct in6addrinfo in6ai[0];
+};
+
+static struct cached_data noai6ai_cached =
+  {
+    .usecnt = 3,	/* Make sure we never try to delete this entry.  */
+    .in6ailen = 0
+  };
+
+static struct cached_data *cache;
+__libc_lock_define_initialized (static, lock);
+
+
+#ifdef IS_IN_nscd
+static uint32_t nl_timestamp;
+
+uint32_t
+__bump_nl_timestamp (void)
+{
+  if (atomic_increment_val (&nl_timestamp) == 0)
+    atomic_increment (&nl_timestamp);
+
+  return nl_timestamp;
+}
+#endif
+
+
+static struct cached_data *
+make_request (int fd, pid_t pid)
 {
   struct req
   {
@@ -99,9 +135,6 @@ make_request (int fd, pid_t pid, bool *seen_ipv4, bool *seen_ipv6,
 				    sizeof (nladdr))) < 0)
     goto out_fail;
 
-  *seen_ipv4 = false;
-  *seen_ipv6 = false;
-
   bool done = false;
   struct in6ailist
   {
@@ -109,6 +142,8 @@ make_request (int fd, pid_t pid, bool *seen_ipv4, bool *seen_ipv6,
     struct in6ailist *next;
   } *in6ailist = NULL;
   size_t in6ailistlen = 0;
+  bool seen_ipv4 = false;
+  bool seen_ipv6 = false;
 
   do
     {
@@ -172,12 +207,12 @@ make_request (int fd, pid_t pid, bool *seen_ipv4, bool *seen_ipv6,
 		    {
 		      if (*(const in_addr_t *) address
 			  != htonl (INADDR_LOOPBACK))
-			*seen_ipv4 = true;
+			seen_ipv4 = true;
 		    }
 		  else
 		    {
 		      if (!IN6_IS_ADDR_LOOPBACK (address))
-			*seen_ipv6 = true;
+			seen_ipv6 = true;
 		    }
 		}
 
@@ -211,30 +246,46 @@ make_request (int fd, pid_t pid, bool *seen_ipv4, bool *seen_ipv6,
     }
   while (! done);
 
-  if (*seen_ipv6 && in6ailist != NULL)
+  struct cached_data *result;
+  if (seen_ipv6 && in6ailist != NULL)
     {
-      *in6ai = malloc (in6ailistlen * sizeof (**in6ai));
-      if (*in6ai == NULL)
+      result = malloc (sizeof (*result)
+		       + in6ailistlen * sizeof (struct in6addrinfo));
+      if (result == NULL)
 	goto out_fail;
 
-      *in6ailen = in6ailistlen;
+#ifdef IS_IN_nscd
+      result->timestamp = nl_timestamp;
+#else
+      result->timestamp = __nscd_get_nl_timestamp ();
+#endif
+      result->usecnt = 2;
+      result->seen_ipv4 = seen_ipv4;
+      result->seen_ipv6 = true;
+      result->in6ailen = in6ailistlen;
 
       do
 	{
-	  (*in6ai)[--in6ailistlen] = in6ailist->info;
+	  result->in6ai[--in6ailistlen] = in6ailist->info;
 	  in6ailist = in6ailist->next;
 	}
       while (in6ailist != NULL);
     }
+  else
+    {
+      noai6ai_cached.seen_ipv4 = seen_ipv4;
+      noai6ai_cached.seen_ipv6 = seen_ipv6;
+      result = &noai6ai_cached;
+    }
 
   if (use_malloc)
     free (buf);
-  return 0;
+  return result;
 
 out_fail:
   if (use_malloc)
     free (buf);
-  return -1;
+  return NULL;
 }
 
 
@@ -258,28 +309,65 @@ __check_pf (bool *seen_ipv4, bool *seen_ipv6,
 
   if (! __no_netlink_support)
     {
-      int fd = __socket (PF_NETLINK, SOCK_RAW, NETLINK_ROUTE);
+      struct cached_data *olddata = NULL;
+      struct cached_data *data = NULL;
 
-      if (__builtin_expect (fd >= 0, 1))
+      __libc_lock_lock (lock);
+
+#ifdef IS_IN_nscd
+# define cache_valid() nl_timestamp != 0 && cache->timestamp == nl_timestamp
+#else
+# define cache_valid() \
+      ({ uint32_t val = __nscd_get_nl_timestamp ();			      \
+	 val != 0 && cache->timestamp == val; })
+#endif
+      if (cache != NULL && cache_valid ())
 	{
-	  struct sockaddr_nl nladdr;
-	  memset (&nladdr, '\0', sizeof (nladdr));
-	  nladdr.nl_family = AF_NETLINK;
+	  data = cache;
+	  atomic_increment (&cache->usecnt);
+	}
+      else
+	{
+	  int fd = __socket (PF_NETLINK, SOCK_RAW, NETLINK_ROUTE);
 
-	  socklen_t addr_len = sizeof (nladdr);
+	  if (__builtin_expect (fd >= 0, 1))
+	    {
+	      struct sockaddr_nl nladdr;
+	      memset (&nladdr, '\0', sizeof (nladdr));
+	      nladdr.nl_family = AF_NETLINK;
 
-	  bool success
-	    = (__bind (fd, (struct sockaddr *) &nladdr, sizeof (nladdr)) == 0
-	       && __getsockname (fd, (struct sockaddr *) &nladdr,
-				 &addr_len) == 0
-	       && make_request (fd, nladdr.nl_pid, seen_ipv4, seen_ipv6,
-				in6ai, in6ailen) == 0);
+	      socklen_t addr_len = sizeof (nladdr);
 
-	  close_not_cancel_no_status (fd);
+	      if(__bind (fd, (struct sockaddr *) &nladdr, sizeof (nladdr)) == 0
+		 && __getsockname (fd, (struct sockaddr *) &nladdr,
+				   &addr_len) == 0)
+		data = make_request (fd, nladdr.nl_pid);
 
-	  if (success)
-	    /* It worked.  */
-	    return;
+	      close_not_cancel_no_status (fd);
+	    }
+
+	  if (data != NULL)
+	    {
+	      olddata = cache;
+	      cache = data;
+	    }
+	}
+
+      __libc_lock_unlock (lock);
+
+      if (data != NULL)
+	{
+	  /* It worked.  */
+	  *seen_ipv4 = data->seen_ipv4;
+	  *seen_ipv6 = data->seen_ipv6;
+	  *in6ailen = data->in6ailen;
+	  *in6ai = data->in6ai;
+
+	  if (olddata != NULL && olddata->usecnt > 0
+	      && atomic_add_zero (&olddata->usecnt, -1))
+	    free (olddata);
+
+	  return;
 	}
 
 #if __ASSUME_NETLINK_SUPPORT == 0
@@ -317,4 +405,27 @@ __check_pf (bool *seen_ipv4, bool *seen_ipv6,
 
   (void) freeifaddrs (ifa);
 #endif
+}
+
+
+void
+__free_in6ai (struct in6addrinfo *ai)
+{
+  if (ai != NULL)
+    {
+      struct cached_data *data =
+	(struct cached_data *) ((char *) ai
+				- offsetof (struct cached_data, in6ai));
+
+      if (atomic_add_zero (&data->usecnt, -1))
+	{
+	  __libc_lock_lock (lock);
+
+	  if (data->usecnt == 0)
+	    /* Still unused.  */
+	    free (data);
+
+	  __libc_lock_unlock (lock);
+	}
+    }
 }

@@ -1,4 +1,4 @@
-/* Copyright (C) 1998-2005, 2006, 2007, 2008, 2009
+/* Copyright (C) 1998-2005, 2006, 2007, 2008, 2009, 2011
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
@@ -95,6 +95,27 @@ libc_freeres_fn (hst_map_free)
       __hst_map_handle.mapped = NO_MAPPING;
       free (p);
     }
+}
+
+
+uint32_t
+__nscd_get_nl_timestamp (void)
+{
+  if (__nss_not_use_nscd_hosts != 0)
+    return 0;
+
+  struct mapped_database *map = __hst_map_handle.mapped;
+
+  if (map == NULL
+      || (map != NO_MAPPING
+	  && map->head->nscd_certainly_running == 0
+	  && map->head->timestamp + MAPPING_TIMEOUT < time (NULL)))
+    map = __nscd_get_mapping (GETFDHST, "hosts", &__hst_map_handle.mapped);
+
+  if (map == NO_MAPPING)
+    return 0;
+
+  return map->head->extra_data[NSCD_HST_IDX_CONF_TIMESTAMP];
 }
 
 
