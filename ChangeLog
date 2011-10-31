@@ -1,5 +1,9 @@
 2011-10-31  Ulrich Drepper  <drepper@gmail.com>
 
+	[BZ #13367]
+	* nss/getent.c (initgroups_keys): Show error message in case no group
+	names are given.
+
 	* include/ifaddrs.h: Declare __free_in6ai and __bump_nl_timestamp.
 	* inet/check_pf.c: Provide dummy versions of __free_in6ai and
 	__bump_nl_timestamp.
