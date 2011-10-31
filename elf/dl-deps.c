@@ -188,6 +188,10 @@ _dl_map_object_deps (struct link_map *map,
   /* Pointer to last unique object.  */
   tail = &known[nlist - 1];
 
+  /* No alloca'd space yet.  */
+  struct link_map **needed_space = NULL;
+  size_t needed_space_bytes = 0;
+
   /* Process each element of the search list, loading each of its
      auxiliary objects and immediate dependencies.  Auxiliary objects
      will be added in the list before the object itself and
@@ -216,8 +220,19 @@ _dl_map_object_deps (struct link_map *map,
 	 dependencies of this object.  */
       if (l->l_searchlist.r_list == NULL && l->l_initfini == NULL
 	  && l != map && l->l_ldnum > 0)
-	needed = (struct link_map **) alloca (l->l_ldnum
-					      * sizeof (struct link_map *));
+	{
+	  /* 16-align so extend_alloca has a chance to re-use the space.
+	     Note that extend_alloca is broken for recent versions of GCC
+	     on x86: http://gcc.gnu.org/bugzilla/show_bug.cgi?id=50938  */
+	  size_t new_size
+            = (l->l_ldnum * sizeof (struct link_map *) + 15) & ~15;
+
+	  if (new_size > needed_space_bytes)
+	    needed_space
+              = extend_alloca (needed_space, needed_space_bytes, new_size);
+
+	  needed = needed_space;
+	}
 
       if (l->l_info[DT_NEEDED] || l->l_info[AUXTAG] || l->l_info[FILTERTAG])
 	{

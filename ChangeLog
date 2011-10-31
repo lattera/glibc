@@ -1,3 +1,8 @@
+2011-10-31  Paul Pluzhnikov  <ppluzhnikov@google.com>
+
+	* elf/dl-deps.c (_dl_map_object_deps): Reuse alloca space to reduce
+	stack usage.
+
 2011-10-31  Ulrich Drepper  <drepper@gmail.com>
 
 	[BZ #13367]
