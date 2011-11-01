@@ -163,6 +163,9 @@ libc {
 
     sendmmsg;
   }
+  GLIBC_2.15 {
+    process_vm_readv; process_vm_writev;
+  }
   GLIBC_PRIVATE {
     # functions used in other libraries
     __syscall_rt_sigqueueinfo;

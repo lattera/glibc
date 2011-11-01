@@ -1,5 +1,12 @@
 2011-11-01  Ulrich Drepper  <drepper@gmail.com>
 
+	* sysdeps/unix/sysv/linux/bits/uio.h: Declare process_vm_readv and
+	process_vm_writev.
+	* sysdeps/unix/sysv/linux/syscalls.list: Add process_vm_readv and
+	process_vm_writev.
+	* sysdeps/unix/sysv/linux/Versions: Export process_vm_readv and
+	process_vm_writev from libc using GLIBC_2.15 version.
+
 	* nscd/connections.c: Use kernel headers instead of <netlink/netlink.h>.
 
 2011-10-31  Paul Pluzhnikov  <ppluzhnikov@google.com>

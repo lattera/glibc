@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 2006 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 2006, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -46,5 +46,28 @@ struct iovec
     void *iov_base;	/* Pointer to data.  */
     size_t iov_len;	/* Length of data.  */
   };
+
+#endif
+
+#if defined _SYS_UIO_H && !defined _BITS_UIO_H_FOR_SYS_UIO_H
+#define _BITS_UIO_H_FOR_SYS_UIO_H 1
+
+__BEGIN_DECLS
+
+/* Read from another process' address space.  */
+extern ssize_t process_vm_readv (pid_t __pid, __const struct iovec *__lvec,
+				 size_t __liovcnt,
+				 __const struct iovec *__rvec,
+				 size_t __riovcnt, unsigned long int __flags)
+  __THROW;
+
+/* Write to another process' address space.  */
+extern ssize_t process_vm_writev (pid_t __pid, __const struct iovec *__lvec,
+				  size_t __liovcnt,
+				  __const struct iovec *__rvec,
+				  size_t __riovcnt, unsigned long int __flags)
+  __THROW;
+
+__END_DECLS
 
 #endif

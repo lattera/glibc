@@ -109,3 +109,6 @@ name_to_handle_at EXTRA	name_to_handle_at i:isppi name_to_handle_at
 open_by_handle_at EXTRA	open_by_handle_at Ci:ipi  open_by_handle_at
 
 setns		EXTRA	setns		i:ii	setns
+
+process_vm_readv EXTRA	process_vm_readv i:ipipii process_vm_readv
+process_vm_writev EXTRA	process_vm_writev i:ipipii process_vm_writev
