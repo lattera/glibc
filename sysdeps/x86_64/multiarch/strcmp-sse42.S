@@ -104,7 +104,7 @@ STRCMP_SSE42:
 # else
 	movq	(%rdx), %rax
 # endif
-	testl	$0, LOCALE_DATA_VALUES+_NL_CTYPE_NONASCII_CASE*SIZEOF_VALUES(%rax)
+	testl	$1, LOCALE_DATA_VALUES+_NL_CTYPE_NONASCII_CASE*SIZEOF_VALUES(%rax)
 	jne	__strcasecmp_l_nonascii
 #endif
 #ifdef USE_AS_STRNCASECMP_L
@@ -115,7 +115,7 @@ STRCMP_SSE42:
 # else
 	movq	(%rcx), %rax
 # endif
-	testl	$0, LOCALE_DATA_VALUES+_NL_CTYPE_NONASCII_CASE*SIZEOF_VALUES(%rax)
+	testl	$1, LOCALE_DATA_VALUES+_NL_CTYPE_NONASCII_CASE*SIZEOF_VALUES(%rax)
 	jne	__strncasecmp_l_nonascii
 #endif
 

@@ -1,5 +1,5 @@
 /* Highly optimized version for x86-64.
-   Copyright (C) 1999, 2000, 2002, 2003, 2005, 2009, 2010
+   Copyright (C) 1999, 2000, 2002, 2003, 2005, 2009, 2010, 2011
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Based on i686 version contributed by Ulrich Drepper
@@ -157,7 +157,7 @@ END (BP_SYM (STRCMP))
 #  else
 	movq	(%rdx), %rax
 #  endif
-	testl	$0, LOCALE_DATA_VALUES+_NL_CTYPE_NONASCII_CASE*SIZEOF_VALUES(%rax)
+	testl	$1, LOCALE_DATA_VALUES+_NL_CTYPE_NONASCII_CASE*SIZEOF_VALUES(%rax)
 	jne	__strcasecmp_l_nonascii
 # elif defined USE_AS_STRNCASECMP_L
 	/* We have to fall back on the C implementation for locales
@@ -167,7 +167,7 @@ END (BP_SYM (STRCMP))
 #  else
 	movq	(%rcx), %rax
 #  endif
-	testl	$0, LOCALE_DATA_VALUES+_NL_CTYPE_NONASCII_CASE*SIZEOF_VALUES(%rax)
+	testl	$1, LOCALE_DATA_VALUES+_NL_CTYPE_NONASCII_CASE*SIZEOF_VALUES(%rax)
 	jne	__strncasecmp_l_nonascii
 # endif
 

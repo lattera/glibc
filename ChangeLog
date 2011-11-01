@@ -1,5 +1,8 @@
 2011-11-01  Ulrich Drepper  <drepper@gmail.com>
 
+	* sysdeps/x86_64/strcmp.S: Fix test for non-ASCII locales.
+	* sysdeps/x86_64/multiarch/strcmp-sse42.S: Likewise.
+
 	* posix/tst-rfc3484.c: Add missing __free_in6ai dummy function.
 	* posix/tst-rfc3484-2.c: Likewise.
 	* posix/tst-rfc3484-3.c: Likewise.
