@@ -34,7 +34,8 @@
 #include <unistd.h>
 #include <arpa/inet.h>
 #ifdef HAVE_NETLINK
-# include <netlink/netlink.h>
+# include <linux/netlink.h>
+# include <linux/rtnetlink.h>
 #endif
 #ifdef HAVE_EPOLL
 # include <sys/epoll.h>

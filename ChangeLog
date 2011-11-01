@@ -1,3 +1,7 @@
+2011-11-01  Ulrich Drepper  <drepper@gmail.com>
+
+	* nscd/connections.c: Use kernel headers instead of <netlink/netlink.h>.
+
 2011-10-31  Paul Pluzhnikov  <ppluzhnikov@google.com>
 
 	* elf/dl-deps.c (_dl_map_object_deps): Reuse alloca space to reduce
