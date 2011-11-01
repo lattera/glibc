@@ -1,3 +1,7 @@
+2011-11-01  Andreas Schwab  <schwab@linux-m68k.org>
+
+	* nscd/Makefile (extra-objs): Make recursively expanded.
+
 2011-11-01  Ulrich Drepper  <drepper@gmail.com>
 
 	* posix/tst-rfc3484.c: Add missing __free_in6ai dummy function.

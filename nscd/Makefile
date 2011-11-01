@@ -43,7 +43,7 @@ others += nscd
 others-pie += nscd
 install-sbin := nscd
 
-extra-objs := $(nscd-modules:=.o)
+extra-objs = $(nscd-modules:=.o)
 
 endif
 
