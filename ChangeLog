@@ -1,5 +1,11 @@
 2011-11-01  Andreas Schwab  <schwab@linux-m68k.org>
 
+	* include/alloca.h (stackinfo_alloca_round): Define.
+	(extend_alloca): Use it.
+	[_STACK_GROWS_UP]: Correct check for adjacent allocation.
+	* elf/dl-deps.c (_dl_map_object_deps): Don't round alloca size
+	here.
+
 	* scripts/check-local-headers.sh: Ignore libaudit.h.
 
 	* nscd/Makefile (extra-objs): Make recursively expanded.

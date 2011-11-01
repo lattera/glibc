@@ -20,9 +20,13 @@ libc_hidden_proto (__libc_alloca_cutoff)
 
 #include <allocalim.h>
 
+#ifndef stackinfo_alloca_round
+# define stackinfo_alloca_round(l) (((l) + 15) & -16)
+#endif
+
 #if _STACK_GROWS_DOWN
 # define extend_alloca(buf, len, newlen) \
-  (__typeof (buf)) ({ size_t __newlen = (newlen);			      \
+  (__typeof (buf)) ({ size_t __newlen = stackinfo_alloca_round (newlen);      \
 		      char *__newbuf = __alloca (__newlen);		      \
 		      if (__newbuf + __newlen == (char *) buf)		      \
 			len += __newlen;				      \
@@ -31,10 +35,10 @@ libc_hidden_proto (__libc_alloca_cutoff)
 		      __newbuf; })
 #elif _STACK_GROWS_UP
 # define extend_alloca(buf, len, newlen) \
-  (__typeof (buf)) ({ size_t __newlen = (newlen);			      \
+  (__typeof (buf)) ({ size_t __newlen = stackinfo_alloca_round (newlen);      \
 		      char *__newbuf = __alloca (__newlen);		      \
 		      char *__buf = (buf);				      \
-		      if (__buf + __newlen == __newbuf)			      \
+		      if (__buf + len == __newbuf)			      \
 			{						      \
 			  len += __newlen;				      \
 			  __newbuf = __buf;				      \
