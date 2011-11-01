@@ -1,5 +1,9 @@
 2011-11-01  Ulrich Drepper  <drepper@gmail.com>
 
+	* posix/tst-rfc3484.c: Add missing __free_in6ai dummy function.
+	* posix/tst-rfc3484-2.c: Likewise.
+	* posix/tst-rfc3484-3.c: Likewise.
+
 	* sysdeps/unix/sysv/linux/bits/uio.h: Declare process_vm_readv and
 	process_vm_writev.
 	* sysdeps/unix/sysv/linux/syscalls.list: Add process_vm_readv and

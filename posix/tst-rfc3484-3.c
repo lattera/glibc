@@ -21,6 +21,12 @@ __check_pf (bool *p1, bool *p2, struct in6addrinfo **in6ai, size_t *in6ailen)
 
 void
 attribute_hidden
+__free_in6ai (struct in6addrinfo *ai)
+{
+}
+
+void
+attribute_hidden
 __check_native (uint32_t a1_index, int *a1_native,
 		uint32_t a2_index, int *a2_native)
 {
