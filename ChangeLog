@@ -1,5 +1,7 @@
 2011-11-01  Andreas Schwab  <schwab@linux-m68k.org>
 
+	* scripts/check-local-headers.sh: Ignore libaudit.h.
+
 	* nscd/Makefile (extra-objs): Make recursively expanded.
 
 2011-11-01  Ulrich Drepper  <drepper@gmail.com>
