@@ -221,15 +221,11 @@ _dl_map_object_deps (struct link_map *map,
       if (l->l_searchlist.r_list == NULL && l->l_initfini == NULL
 	  && l != map && l->l_ldnum > 0)
 	{
-	  /* 16-align so extend_alloca has a chance to re-use the space.
-	     Note that extend_alloca is broken for recent versions of GCC
-	     on x86: http://gcc.gnu.org/bugzilla/show_bug.cgi?id=50938  */
-	  size_t new_size
-            = (l->l_ldnum * sizeof (struct link_map *) + 15) & ~15;
+	  size_t new_size = l->l_ldnum * sizeof (struct link_map *);
 
 	  if (new_size > needed_space_bytes)
 	    needed_space
-              = extend_alloca (needed_space, needed_space_bytes, new_size);
+	      = extend_alloca (needed_space, needed_space_bytes, new_size);
 
 	  needed = needed_space;
 	}
