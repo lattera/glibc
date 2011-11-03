@@ -1,3 +1,8 @@
+2011-11-03  Andreas Schwab  <schwab@redhat.com>
+
+	* nss/makedb.c (set_file_creation_context): Do nothing if SELinux
+	is disabled.
+
 2011-11-02  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
 	* bits/ioctl-types.h (_IOT_sgttyb): Set number of chars to 4.

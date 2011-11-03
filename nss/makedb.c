@@ -842,7 +842,7 @@ set_file_creation_context (const char *outname, mode_t mode)
 
   /* Check if SELinux is enabled, and remember. */
   if (enabled == 0)
-    enabled = is_selinux_enabled ();
+    enabled = is_selinux_enabled () ? 1 : -1;
   if (enabled < 0)
     return;
 
