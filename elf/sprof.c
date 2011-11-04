@@ -597,7 +597,7 @@ load_shobj (const char *name)
       char origprocname[sizeof (procpath) + sizeof (int) * 3];
       snprintf (origprocname, sizeof (origprocname), procpath, fd);
       char *origlink = (char *) alloca (PATH_MAX);
-      ssize_t n = readlink (origprocname, origlink, PATH_MAX);
+      ssize_t n = readlink (origprocname, origlink, PATH_MAX - 1);
       if (n == -1)
 	goto no_debuginfo;
       origlink[n] = '\0';

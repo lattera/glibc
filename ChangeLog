@@ -1,3 +1,7 @@
+2011-11-04  Andreas Schwab  <schwab@redhat.com>
+
+	* elf/sprof.c (load_shobj): Fix off-by-one when reading link name.
+
 2011-11-03  Andreas Schwab  <schwab@redhat.com>
 
 	* nscd/nscd.c (main): Don't start AVC thread until credentials are
