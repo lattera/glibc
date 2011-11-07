@@ -1,5 +1,8 @@
 2011-11-07  Andreas Schwab  <schwab@redhat.com>
 
+	* libio/genops.c (_IO_flush_all_lockp): Only register cleanup
+	handler when locking.
+
 	* nss/nss_files/files-initgroups.c (_nss_files_initgroups_dyn):
 	Fix size of allocated buffer.
 
