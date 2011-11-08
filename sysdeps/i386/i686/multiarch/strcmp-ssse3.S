@@ -1,5 +1,5 @@
 /* strcmp with SSSE3
-   Copyright (C) 2010 Free Software Foundation, Inc.
+   Copyright (C) 2010, 2011 Free Software Foundation, Inc.
    Contributed by Intel Corporation.
    This file is part of the GNU C Library.
 
@@ -2201,8 +2201,6 @@ L(less16bytes_sncmp):
 	movzbl	15(%eax), %ecx
 	cmpb	%cl, 15(%edx)
 	jne	L(neq)
-	test	%cl, %cl
-	je	L(eq)
 
 	POP	(%ebp)
 	xor	%eax, %eax
