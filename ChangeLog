@@ -1,5 +1,8 @@
 2011-11-08  Ulrich Drepper  <drepper@gmail.com>
 
+	* locale/findlocale.c (_nl_find_locale): Use __strcasecmp_l.
+	* intl/localealias.c (strcasecmp): Define using __strcasecmp_l.
+
 	* sysdeps/i386/i686/multiarch/strcmp-ssse3.S: Remove unnecessary
 	instructions.
 

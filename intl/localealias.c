@@ -1,5 +1,5 @@
 /* Handle aliases for locale names.
-   Copyright (C) 1995-2002, 2003, 2005 Free Software Foundation, Inc.
+   Copyright (C) 1995-2002, 2003, 2005, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -64,7 +64,7 @@ char *alloca ();
 /* Rename the non ANSI C functions.  This is required by the standard
    because some ANSI C functions will require linking with this object
    file and the name space must not be polluted.  */
-# define strcasecmp __strcasecmp
+# define strcasecmp(s1, s2) __strcasecmp_l (s1, s2, _nl_C_locobj_ptr)
 
 # ifndef mempcpy
 #  define mempcpy __mempcpy
