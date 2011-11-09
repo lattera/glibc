@@ -747,8 +747,6 @@ _int_new_arena(size_t size)
   main_arena.next = a;
 
 #ifdef PER_THREAD
-  ++narenas;
-
   (void)mutex_unlock(&list_lock);
 #endif
 
@@ -786,30 +784,6 @@ get_free_list (void)
 static mstate
 reused_arena (void)
 {
-  if (narenas <= mp_.arena_test)
-    return NULL;
-
-  static int narenas_limit;
-  if (narenas_limit == 0)
-    {
-      if (mp_.arena_max != 0)
-	narenas_limit = mp_.arena_max;
-      else
-	{
-	  int n  = __get_nprocs ();
-
-	  if (n >= 1)
-	    narenas_limit = NARENAS_FROM_NCORES (n);
-	  else
-	    /* We have no information about the system.  Assume two
-	       cores.  */
-	    narenas_limit = NARENAS_FROM_NCORES (2);
-	}
-    }
-
-  if (narenas < narenas_limit)
-    return NULL;
-
   mstate result;
   static mstate next_to_use;
   if (next_to_use == NULL)
@@ -844,10 +818,41 @@ arena_get2(mstate a_tsd, size_t size)
   mstate a;
 
 #ifdef PER_THREAD
-  if ((a = get_free_list ()) == NULL
-      && (a = reused_arena ()) == NULL)
-    /* Nothing immediately available, so generate a new arena.  */
-    a = _int_new_arena(size);
+  static size_t narenas_limit;
+
+  a = get_free_list ();
+  if (a == NULL)
+    {
+      /* Nothing immediately available, so generate a new arena.  */
+      if (narenas_limit == 0)
+	{
+	  if (mp_.arena_max != 0)
+	    narenas_limit = mp_.arena_max;
+	  else
+	    {
+	      int n  = __get_nprocs ();
+
+	      if (n >= 1)
+		narenas_limit = NARENAS_FROM_NCORES (n);
+	      else
+		/* We have no information about the system.  Assume two
+		   cores.  */
+		narenas_limit = NARENAS_FROM_NCORES (2);
+	    }
+	}
+    repeat:;
+      size_t n = narenas;
+      if (__builtin_expect (n <= mp_.arena_test || n < narenas_limit, 0))
+	{
+	  if (catomic_compare_and_exchange_bool_acq(&narenas, n + 1, n))
+	    goto repeat;
+	  a = _int_new_arena (size);
+	  if (__builtin_expect (a != NULL, 1))
+	    return a;
+	  catomic_decrement(&narenas);
+	}
+      a = reused_arena ();
+    }
 #else
   if(!a_tsd)
     a = a_tsd = &main_arena;

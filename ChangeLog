@@ -1,3 +1,9 @@
+2011-11-10  Andreas Schwab  <schwab@redhat.com>
+
+	* malloc/arena.c (_int_new_arena): Don't increment narenas.
+	(reused_arena): Don't check arena limit.
+	(arena_get2): Atomically check arena limit.
+
 2011-11-08  Ulrich Drepper  <drepper@gmail.com>
 
 	* locale/findlocale.c (_nl_find_locale): Use __strcasecmp_l.
