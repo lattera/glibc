@@ -79,7 +79,7 @@ END LC_MONETARY
 LC_NUMERIC
 decimal_point             "<U002C>"
 thousands_sep             "<U002E>"
-grouping                  0;0
+grouping                  3;3
 END LC_NUMERIC
 
 LC_TIME
