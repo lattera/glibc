@@ -46,7 +46,7 @@ extern int swapcontext (ucontext_t *__restrict __oucp,
    We cannot say anything about the parameters FUNC takes; `void'
    is as good as any other choice.  */
 extern void makecontext (ucontext_t *__ucp, void (*__func) (void),
-			 int __argc, ...) __THROWNL;
+			 int __argc, ...) __THROW;
 
 __END_DECLS
 
