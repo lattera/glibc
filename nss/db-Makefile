@@ -59,7 +59,7 @@ $(VAR_DB)/group.db: /etc/group
 			     } \
 			     delete grmems; } } \
 		 END { for (mem in members) \
-			 printf ":%s $s %s\n", mem, mem, members[mem]; }' $^ | \
+			 printf ":%s %s %s\n", mem, mem, members[mem]; }' $^ | \
 	$(MAKEDB) -o $@ -
 	@echo "done."
 
