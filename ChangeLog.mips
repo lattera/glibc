@@ -1,3 +1,7 @@
+2011-11-11  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/mips/dl-lookup.c: Update from generic version.
+
 2011-10-12  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/mips/fpu/e_sqrt.c: Add __sqrt_finite alias.
