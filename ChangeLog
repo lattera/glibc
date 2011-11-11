@@ -1,3 +1,8 @@
+2011-11-11  Roland McGrath  <roland@hack.frob.com>
+
+	* include/unistd.h: Fix __readlink return type.
+	Reported by Chris Metcalf <cmetcalf@tilera.com>.
+
 2011-11-11  Ulrich Drepper  <drepper@gmail.com>
 
 	* stdlib/ucontext.h: Undo last change for makecontext.

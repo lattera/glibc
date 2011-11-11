@@ -117,7 +117,7 @@ extern int __ttyname_r (int __fd, char *__buf, size_t __buflen);
 extern int __isatty (int __fd);
 extern int __link (__const char *__from, __const char *__to);
 extern int __symlink (__const char *__from, __const char *__to);
-extern int __readlink (__const char *__path, char *__buf, size_t __len);
+extern ssize_t __readlink (__const char *__path, char *__buf, size_t __len);
 extern int __unlink (__const char *__name);
 extern int __gethostname (char *__name, size_t __len);
 extern int __profil (unsigned short int *__sample_buffer, size_t __size,
