@@ -1,3 +1,8 @@
+2011-10-30  Marek Polacek  <mpolacek@redhat.com>
+
+	* libio/wfileops.c (_IO_wfile_underflow_mmap): Remove unused variable.
+	* sysdeps/ieee754/dbl-64/mpsqrt.c (__mpsqrt): Likewise.
+
 2011-11-11  Ulrich Drepper  <drepper@gmail.com>
 
 	* stdlib/ucontext.h: Undo last change for makecontext.

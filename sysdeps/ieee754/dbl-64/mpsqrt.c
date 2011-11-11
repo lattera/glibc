@@ -51,7 +51,7 @@ static double fastiroot(double);
 void
 SECTION
 __mpsqrt(mp_no *x, mp_no *y, int p) {
-  int i,m,ex,ey;
+  int i,m,ey;
   double dx,dy;
   mp_no
     mphalf   = {0,{0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,
@@ -66,7 +66,7 @@ __mpsqrt(mp_no *x, mp_no *y, int p) {
   mphalf.e  =0;  mphalf.d[0]  =ONE;  mphalf.d[1]  =HALFRAD;
   mp3halfs.e=1;  mp3halfs.d[0]=ONE;  mp3halfs.d[1]=ONE;  mp3halfs.d[2]=HALFRAD;
 
-  ex=EX;      ey=EX/2;     __cpy(x,&mpxn,p);    mpxn.e -= (ey+ey);
+  ey=EX/2;     __cpy(x,&mpxn,p);    mpxn.e -= (ey+ey);
   __mp_dbl(&mpxn,&dx,p);   dy=fastiroot(dx);    __dbl_mp(dy,&mpu,p);
   __mul(&mpxn,&mphalf,&mpz,p);
 

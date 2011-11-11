@@ -252,7 +252,7 @@ _IO_wfile_underflow (fp)
     {
       if (naccbuf != 0)
 	/* There are some bytes in the external buffer but they don't
-           convert to anything.  */
+	   convert to anything.  */
 	__set_errno (EILSEQ);
       return WEOF;
     }
@@ -340,7 +340,6 @@ static wint_t
 _IO_wfile_underflow_mmap (_IO_FILE *fp)
 {
   struct _IO_codecvt *cd;
-  enum __codecvt_result status;
   const char *read_stop;
 
   if (__builtin_expect (fp->_flags & _IO_NO_READS, 0))
@@ -379,12 +378,12 @@ _IO_wfile_underflow_mmap (_IO_FILE *fp)
   fp->_wide_data->_IO_last_state = fp->_wide_data->_IO_state;
   fp->_wide_data->_IO_read_base = fp->_wide_data->_IO_read_ptr =
     fp->_wide_data->_IO_buf_base;
-  status = (*cd->__codecvt_do_in) (cd, &fp->_wide_data->_IO_state,
-				   fp->_IO_read_ptr, fp->_IO_read_end,
-				   &read_stop,
-				   fp->_wide_data->_IO_read_ptr,
-				   fp->_wide_data->_IO_buf_end,
-				   &fp->_wide_data->_IO_read_end);
+  (*cd->__codecvt_do_in) (cd, &fp->_wide_data->_IO_state,
+			  fp->_IO_read_ptr, fp->_IO_read_end,
+			  &read_stop,
+			  fp->_wide_data->_IO_read_ptr,
+			  fp->_wide_data->_IO_buf_end,
+			  &fp->_wide_data->_IO_read_end);
 
   fp->_IO_read_ptr = (char *) read_stop;
 
@@ -513,9 +512,9 @@ _IO_wfile_sync (fp)
       else
 	{
 	  /* We have to find out the hard way how much to back off.
-             To do this we determine how much input we needed to
-             generate the wide characters up to the current reading
-             position.  */
+	     To do this we determine how much input we needed to
+	     generate the wide characters up to the current reading
+	     position.  */
 	  int nread;
 
 	  fp->_wide_data->_IO_state = fp->_wide_data->_IO_last_state;
@@ -625,8 +624,8 @@ _IO_wfile_seekoff (fp, offset, dir, mode)
 
     case _IO_seek_cur:
       /* Adjust for read-ahead (bytes is buffer).  To do this we must
-         find out which position in the external buffer corresponds to
-         the current position in the internal buffer.  */
+	 find out which position in the external buffer corresponds to
+	 the current position in the internal buffer.  */
       cv = fp->_codecvt;
       clen = (*cv->__codecvt_do_encoding) (cv);
 
