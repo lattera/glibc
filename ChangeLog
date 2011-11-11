@@ -3,6 +3,11 @@
 	* libio/wfileops.c (_IO_wfile_underflow_mmap): Remove unused variable.
 	* sysdeps/ieee754/dbl-64/mpsqrt.c (__mpsqrt): Likewise.
 
+2011-11-11  Roland McGrath  <roland@hack.frob.com>
+
+	* include/unistd.h: Fix __readlink return type.
+	Reported by Chris Metcalf <cmetcalf@tilera.com>.
+
 2011-11-11  Ulrich Drepper  <drepper@gmail.com>
 
 	* stdlib/ucontext.h: Undo last change for makecontext.
