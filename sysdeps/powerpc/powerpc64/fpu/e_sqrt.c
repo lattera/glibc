@@ -20,6 +20,7 @@
 #include <math.h>
 #include <math_private.h>
 
+#undef __ieee754_sqrt
 double
 __ieee754_sqrt (double x)
 {

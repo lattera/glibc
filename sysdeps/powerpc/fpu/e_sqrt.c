@@ -154,6 +154,7 @@ __slow_ieee754_sqrt (double x)
   return f_wash (x);
 }
 
+#undef __ieee754_sqrt
 double
 __ieee754_sqrt (double x)
 {

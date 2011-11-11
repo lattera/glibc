@@ -130,7 +130,7 @@ __slow_ieee754_sqrtf (float x)
   return f_washf (x);
 }
 
-
+#undef __ieee754_sqrtf
 float
 __ieee754_sqrtf (float x)
 {

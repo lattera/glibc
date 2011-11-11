@@ -1,3 +1,14 @@
+2011-11-07  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/fpu/math_private.h: Using inline assembly version
+	of math functions ceil, trunc, floor, round, and sqrt, when
+	avaliable on the platform.
+	* sysdeps/powerpc/fpu/e_sqrt.c: Undefine __ieee754_sqrt to avoid
+	name clash.
+	* sysdeps/powerpc/fpu/e_sqrtf.c: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/e_sqrt.c: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/e_sqrtf.c: Likewise.
+
 2011-10-30  Marek Polacek  <mpolacek@redhat.com>
 
 	* libio/wfileops.c (_IO_wfile_underflow_mmap): Remove unused variable.

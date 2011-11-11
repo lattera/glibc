@@ -20,6 +20,7 @@
 #include <math.h>
 #include <math_private.h>
 
+#undef __ieee754_sqrtf
 float
 __ieee754_sqrtf (float x)
 {
