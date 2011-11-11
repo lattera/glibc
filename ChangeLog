@@ -1,3 +1,10 @@
+2011-11-11  Andreas Schwab  <schwab@redhat.com>
+
+	* misc/sys/cdefs.h (__REDIRECT_NTHNL): Define.
+	* setjmp/setjmp.h: Mark functions as non-leaf.
+	* setjmp/bits/setjmp2.h: Likewise.
+	* stdlib/ucontext.h: Likewise.
+
 2011-11-10  Andreas Schwab  <schwab@redhat.com>
 
 	* malloc/arena.c (_int_new_arena): Don't increment narenas.

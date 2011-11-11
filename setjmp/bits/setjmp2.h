@@ -1,5 +1,5 @@
 /* Checking macros for setjmp functions.
-   Copyright (C) 2009 Free Software Foundation, Inc.
+   Copyright (C) 2009, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -23,18 +23,18 @@
 
 /* Variant of the longjmp functions which perform some sanity checking.  */
 #ifdef __REDIRECT_NTH
-extern void __REDIRECT_NTH (longjmp,
-			    (struct __jmp_buf_tag __env[1], int __val),
-			    __longjmp_chk) __attribute__ ((__noreturn__));
-extern void __REDIRECT_NTH (_longjmp,
-			    (struct __jmp_buf_tag __env[1], int __val),
-			    __longjmp_chk) __attribute__ ((__noreturn__));
-extern void __REDIRECT_NTH (siglongjmp,
-			    (struct __jmp_buf_tag __env[1], int __val),
-			    __longjmp_chk) __attribute__ ((__noreturn__));
+extern void __REDIRECT_NTHNL (longjmp,
+			      (struct __jmp_buf_tag __env[1], int __val),
+			      __longjmp_chk) __attribute__ ((__noreturn__));
+extern void __REDIRECT_NTHNL (_longjmp,
+			      (struct __jmp_buf_tag __env[1], int __val),
+			      __longjmp_chk) __attribute__ ((__noreturn__));
+extern void __REDIRECT_NTHNL (siglongjmp,
+			      (struct __jmp_buf_tag __env[1], int __val),
+			      __longjmp_chk) __attribute__ ((__noreturn__));
 #else
 extern void __longjmp_chk (struct __jmp_buf_tag __env[1], int __val),
-     __THROW __attribute__ ((__noreturn__));
+     __THROWNL __attribute__ ((__noreturn__));
 # define longjmp __longjmp_chk
 # define _longjmp __longjmp_chk
 # define siglongjmp __longjmp_chk
