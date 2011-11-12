@@ -1,5 +1,8 @@
 2011-11-12  Ulrich Drepper  <drepper@gmail.com>
 
+	* sysdeps/unix/sysv/linux/internal_statvfs.c (INTERNAL_STATVFS): Use
+	unsigned long long int to avoid warnings in shift.
+
 	* posix/regex_internal.c (re_string_reconstruct): Actually use result
 	of use of trans.
 	* posix/regex_internal.h (re_string_wchar_at): Remove temporary
