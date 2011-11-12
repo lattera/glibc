@@ -1,5 +1,10 @@
 2011-11-12  Ulrich Drepper  <drepper@gmail.com>
 
+	* posix/regex_internal.c (re_string_reconstruct): Actually use result
+	of use of trans.
+	* posix/regex_internal.h (re_string_wchar_at): Remove temporary
+	variable tmp.
+
 	* sysdeps/i386/i686/multiarch/wcscmp-c.c: Avoid warning.
 	* sysdeps/i386/i686/multiarch/wcslen-c.c: Likewise.
 	* sysdeps/i386/i686/multiarch/wmemcmp-c.c: Likewise.
