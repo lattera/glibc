@@ -1,5 +1,8 @@
 2011-11-12  Ulrich Drepper  <drepper@gmail.com>
 
+	* sysdeps/ieee754/ldbl-96/e_hypotl.c (__ieee754_hypotl): Avoid warning
+	from unused variable.
+
 	* sysdeps/generic/sysdep.h: Clean up, pretty print, use dwarf2.h for
 	DWARF definitions.
 	* sysdeps/generic/dwarf2.h: Don't define enums when using the file

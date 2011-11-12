@@ -70,7 +70,8 @@
 	k=0;
 	if(__builtin_expect(ea > 0x5f3f,0)) {	/* a>2**8000 */
 	   if(ea == 0x7fff) {	/* Inf or NaN */
-	       u_int32_t exp,high,low;
+	       u_int32_t exp __attribute__ ((unused));
+	       u_int32_t high,low;
 	       w = a+b;			/* for sNaN */
 	       GET_LDOUBLE_WORDS(exp,high,low,a);
 	       if(((high&0x7fffffff)|low)==0) w = a;
@@ -85,7 +86,8 @@
 	}
 	if(__builtin_expect(eb < 0x20bf, 0)) {	/* b < 2**-8000 */
 	    if(eb == 0) {	/* subnormal b or 0 */
-		u_int32_t exp,high,low;
+		u_int32_t exp __attribute__ ((unused));
+		u_int32_t high,low;
 		GET_LDOUBLE_WORDS(exp,high,low,b);
 		if((high|low)==0) return a;
 		SET_LDOUBLE_WORDS(t1, 0x7ffd, 0, 0);	/* t1=2^16382 */
