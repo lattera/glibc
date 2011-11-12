@@ -1,5 +1,9 @@
 2011-11-12  Ulrich Drepper  <drepper@gmail.com>
 
+	* sysdeps/ieee754/ldbl-96/e_j0l.c (__ieee754_j0l): Avoid storing
+	mantissa words.
+	* sysdeps/ieee754/ldbl-96/e_j1l.c (__ieee754_j1l): Likewise.
+
 	* sysdeps/ieee754/ldbl-96/e_hypotl.c (__ieee754_hypotl): Avoid warning
 	from unused variable.
 

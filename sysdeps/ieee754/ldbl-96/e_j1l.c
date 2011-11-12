@@ -110,9 +110,9 @@ __ieee754_j1l (long double x)
 {
   long double z, c, r, s, ss, cc, u, v, y;
   int32_t ix;
-  u_int32_t se, i0, i1;
+  u_int32_t se;
 
-  GET_LDOUBLE_WORDS (se, i0, i1, x);
+  GET_LDOUBLE_EXP (se, x);
   ix = se & 0x7fff;
   if (__builtin_expect (ix >= 0x7fff, 0))
     return one / x;
