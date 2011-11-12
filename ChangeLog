@@ -1,5 +1,9 @@
 2011-11-12  Ulrich Drepper  <drepper@gmail.com>
 
+	* sysdeps/i386/i686/multiarch/wcscmp-c.c: Avoid warning.
+	* sysdeps/i386/i686/multiarch/wcslen-c.c: Likewise.
+	* sysdeps/i386/i686/multiarch/wmemcmp-c.c: Likewise.
+
 	* nis/nis_table.c (nis_list): Use variable of correct type for
 	result of __follow_path call.
 
