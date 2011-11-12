@@ -130,6 +130,4 @@
 # define CFI_LSDA(enc, exp)
 #endif
 
-#endif /* __ASSEMBLER__ */
-
 #include "dwarf2.h"
