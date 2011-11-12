@@ -1,3 +1,8 @@
+2011-11-12  Ulrich Drepper  <drepper@gmail.com>
+
+	* nis/nis_table.c (nis_list): Use variable of correct type for
+	result of __follow_path call.
+
 2011-11-07  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/fpu/math_private.h: Using inline assembly version
