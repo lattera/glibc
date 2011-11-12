@@ -45,8 +45,8 @@
 
 /* This means the REALTIME and MONOTONIC clock are definitely
    supported in the kernel.  */
-# define SYSDEP_GETTIME							      \
-  SYSDEP_GETTIME_CPUTIME						      \
+# define SYSDEP_GETTIME \
+  SYSDEP_GETTIME_CPUTIME;						      \
   case CLOCK_REALTIME:							      \
   case CLOCK_MONOTONIC:							      \
     retval = SYSCALL_GETTIME (clock_id, tp);				      \
@@ -82,8 +82,8 @@ maybe_syscall_gettime (clockid_t clock_id, struct timespec *tp)
 
 /* The REALTIME and MONOTONIC clock might be available.  Try the
    syscall first.  */
-# define SYSDEP_GETTIME							      \
-  SYSDEP_GETTIME_CPUTIME						      \
+# define SYSDEP_GETTIME \
+  SYSDEP_GETTIME_CPUTIME;						      \
   case CLOCK_REALTIME:							      \
   case CLOCK_MONOTONIC:							      \
   case CLOCK_MONOTONIC_RAW:						      \
@@ -100,7 +100,7 @@ maybe_syscall_gettime (clockid_t clock_id, struct timespec *tp)
 	__set_errno (retval);						      \
 	retval = -1;							      \
       }									      \
-    break;
+    break
 #endif
 
 #ifdef __NR_clock_gettime
@@ -164,7 +164,7 @@ maybe_syscall_gettime_cpu (clockid_t clock_id, struct timespec *tp)
   return e;
 }
 
-#  define SYSDEP_GETTIME_CPU						      \
+#  define SYSDEP_GETTIME_CPU(clock_id, tp) \
   retval = maybe_syscall_gettime_cpu (clock_id, tp);			      \
   if (retval == 0)							      \
     break;								      \
@@ -199,7 +199,7 @@ maybe_syscall_gettime_cputime (clockid_t clock_id, struct timespec *tp)
 	  break;							      \
 	}								      \
       retval = hp_timing_gettime (clock_id, tp);			      \
-      break;
+      break
 #  if !HP_TIMING_AVAIL
 #   define hp_timing_gettime(clock_id, tp) (__set_errno (EINVAL), -1)
 #  endif

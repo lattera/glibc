@@ -113,7 +113,7 @@ clock_gettime (clockid_t clock_id, struct timespec *tp)
 
     default:
 #ifdef SYSDEP_GETTIME_CPU
-      retval = SYSDEP_GETTIME_CPU (clock_id, tp);
+      SYSDEP_GETTIME_CPU (clock_id, tp);
 #endif
 #if HP_TIMING_AVAIL
       if ((clock_id & ((1 << CLOCK_IDFIELD_SIZE) - 1))

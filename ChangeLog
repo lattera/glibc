@@ -1,5 +1,10 @@
 2011-11-12  Ulrich Drepper  <drepper@gmail.com>
 
+	* sysdeps/unix/clock_gettime.c (clock_gettime): No need to assign
+	result of SYSDEP_GETTIME_CPU to retval.
+	* sysdeps/unix/sysv/linux/clock_gettime.c (SYSDEP_GETTIME_CPU): Add
+	parameter list to macro.  Remove trailing semicolon.  Adjust users.
+
 	* resolv/getaddrinfo_a.c (getaddrinfo_a): Avoid warning about unused
 	variable.
 
