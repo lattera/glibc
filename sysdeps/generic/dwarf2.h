@@ -1,6 +1,6 @@
 /* Declarations and definitions of codes relating to the DWARF2 symbolic
    debugging information format.
-   Copyright (C) 1992, 1993, 1995, 1996, 1997, 2000
+   Copyright (C) 1992, 1993, 1995, 1996, 1997, 2000, 2011
    	Free Software Foundation, Inc.
    Contributed by Gary Funck (gary@intrepid.com).  Derived from the
    DWARF 1 implementation written by Ron Guilmette (rfg@monkeys.com).
@@ -31,6 +31,7 @@
 /* This file is shared between GCC and GDB, and should not contain
    prototypes.  */
 
+#ifndef __ASSEMBLER__
 /* Tag names and codes.  */
 
 enum dwarf_tag
@@ -560,6 +561,7 @@ enum dwarf_macinfo_record_type
     DW_MACINFO_vendor_ext = 255
   };
 
+#endif /* !ASSEMBLER */
 
 /* @@@ For use with GNU frame unwind information.  */
 

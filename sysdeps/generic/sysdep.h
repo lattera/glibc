@@ -1,5 +1,6 @@
 /* Generic asm macros used on many machines.
-   Copyright (C) 1991,92,93,96,98,2002,2003,2009 Free Software Foundation, Inc.
+   Copyright (C) 1991-1993,96,98,2002,2003,2009,2011
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,19 +21,19 @@
 #ifndef C_LABEL
 
 /* Define a macro we can use to construct the asm name for a C symbol.  */
-#ifdef	NO_UNDERSCORES
-#ifdef	__STDC__
-#define C_LABEL(name)		name##:
-#else
-#define C_LABEL(name)		name/**/:
-#endif
-#else
-#ifdef	__STDC__
-#define C_LABEL(name)		_##name##:
-#else
-#define C_LABEL(name)		_/**/name/**/:
-#endif
-#endif
+# ifdef	NO_UNDERSCORES
+#  ifdef __STDC__
+#   define C_LABEL(name)	name##:
+#  else
+#   define C_LABEL(name)	name/**/:
+#  endif
+# else
+#  ifdef __STDC__
+#   define C_LABEL(name)	_##name##:
+#  else
+#   define C_LABEL(name)	_/**/name/**/:
+#  endif
+# endif
 
 #endif
 
@@ -40,15 +41,17 @@
 /* Mark the end of function named SYM.  This is used on some platforms
    to generate correct debugging information.  */
 # ifndef END
-# define END(sym)
+#  define END(sym)
 # endif
 
 # ifndef JUMPTARGET
-# define JUMPTARGET(sym)	sym
+#  define JUMPTARGET(sym)	sym
 # endif
+#endif
 
 /* Makros to generate eh_frame unwind information.  */
-# ifdef HAVE_ASM_CFI_DIRECTIVES
+#ifdef HAVE_ASM_CFI_DIRECTIVES
+# ifdef __ASSEMBLER__
 #  define cfi_startproc			.cfi_startproc
 #  define cfi_endproc			.cfi_endproc
 #  define cfi_def_cfa(reg, off)		.cfi_def_cfa reg, off
@@ -67,29 +70,9 @@
 #  define cfi_window_save		.cfi_window_save
 #  define cfi_personality(enc, exp)	.cfi_personality enc, exp
 #  define cfi_lsda(enc, exp)		.cfi_lsda enc, exp
-# else
-#  define cfi_startproc
-#  define cfi_endproc
-#  define cfi_def_cfa(reg, off)
-#  define cfi_def_cfa_register(reg)
-#  define cfi_def_cfa_offset(off)
-#  define cfi_adjust_cfa_offset(off)
-#  define cfi_offset(reg, off)
-#  define cfi_rel_offset(reg, off)
-#  define cfi_register(r1, r2)
-#  define cfi_return_column(reg)
-#  define cfi_restore(reg)
-#  define cfi_same_value(reg)
-#  define cfi_undefined(reg)
-#  define cfi_remember_state
-#  define cfi_restore_state
-#  define cfi_window_save
-#  define cfi_personality(enc, exp)
-#  define cfi_lsda(enc, exp)
-# endif
 
-#else /* ! ASSEMBLER */
-# ifdef HAVE_ASM_CFI_DIRECTIVES
+# else /* ! ASSEMBLER */
+
 #  define CFI_STRINGIFY(Name) CFI_STRINGIFY2 (Name)
 #  define CFI_STRINGIFY2(Name) #Name
 #  define CFI_STARTPROC	".cfi_startproc"
@@ -124,43 +107,29 @@
    ".cfi_personality " CFI_STRINGIFY(enc) "," CFI_STRINGIFY(exp)
 #  define CFI_LSDA(enc, exp) \
    ".cfi_lsda " CFI_STRINGIFY(enc) "," CFI_STRINGIFY(exp)
-# else
-#  define CFI_STARTPROC
-#  define CFI_ENDPROC
-#  define CFI_DEF_CFA(reg, off)
-#  define CFI_DEF_CFA_REGISTER(reg)
-#  define CFI_DEF_CFA_OFFSET(off)
-#  define CFI_ADJUST_CFA_OFFSET(off)
-#  define CFI_OFFSET(reg, off)
-#  define CFI_REL_OFFSET(reg, off)
-#  define CFI_REGISTER(r1, r2)
-#  define CFI_RETURN_COLUMN(reg)
-#  define CFI_RESTORE(reg)
-#  define CFI_UNDEFINED(reg)
-#  define CFI_REMEMBER_STATE
-#  define CFI_RESTORE_STATE
-#  define CFI_WINDOW_SAVE
-#  define CFI_PERSONALITY(enc, exp)
-#  define CFI_LSDA(enc, exp)
 # endif
+
+#else
+
+# define CFI_STARTPROC
+# define CFI_ENDPROC
+# define CFI_DEF_CFA(reg, off)
+# define CFI_DEF_CFA_REGISTER(reg)
+# define CFI_DEF_CFA_OFFSET(off)
+# define CFI_ADJUST_CFA_OFFSET(off)
+# define CFI_OFFSET(reg, off)
+# define CFI_REL_OFFSET(reg, off)
+# define CFI_REGISTER(r1, r2)
+# define CFI_RETURN_COLUMN(reg)
+# define CFI_RESTORE(reg)
+# define CFI_UNDEFINED(reg)
+# define CFI_REMEMBER_STATE
+# define CFI_RESTORE_STATE
+# define CFI_WINDOW_SAVE
+# define CFI_PERSONALITY(enc, exp)
+# define CFI_LSDA(enc, exp)
+#endif
 
 #endif /* __ASSEMBLER__ */
 
-/* Values used for encoding parameter of cfi_personality and cfi_lsda.  */
-#define DW_EH_PE_absptr		0x00
-#define DW_EH_PE_omit		0xff
-#define DW_EH_PE_uleb128	0x01
-#define DW_EH_PE_udata2		0x02
-#define DW_EH_PE_udata4		0x03
-#define DW_EH_PE_udata8		0x04
-#define DW_EH_PE_sleb128	0x09
-#define DW_EH_PE_sdata2		0x0a
-#define DW_EH_PE_sdata4		0x0b
-#define DW_EH_PE_sdata8		0x0c
-#define DW_EH_PE_signed		0x08
-#define DW_EH_PE_pcrel		0x10
-#define DW_EH_PE_textrel	0x20
-#define DW_EH_PE_datarel	0x30
-#define DW_EH_PE_funcrel	0x40
-#define DW_EH_PE_aligned	0x50
-#define DW_EH_PE_indirect	0x80
+#include "dwarf2.h"

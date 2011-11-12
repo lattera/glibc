@@ -1,5 +1,10 @@
 2011-11-12  Ulrich Drepper  <drepper@gmail.com>
 
+	* sysdeps/generic/sysdep.h: Clean up, pretty print, use dwarf2.h for
+	DWARF definitions.
+	* sysdeps/generic/dwarf2.h: Don't define enums when using the file
+	for assembling.
+
 	* elf/dl-iteratephdr.c [!SHARED] (__dl_iterate_phdr): Don't iterate
 	over namespaces.
 
