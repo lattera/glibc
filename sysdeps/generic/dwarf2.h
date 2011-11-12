@@ -22,6 +22,9 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#ifndef _DWARF2_H
+#define _DWARF2_H	1
+
 /* This file is derived from the DWARF specification (a public document)
    Revision 2.0.0 (July 27, 1993) developed by the UNIX International
    Programming Languages Special Interest Group (UI/PLSIG) and distributed
@@ -585,3 +588,5 @@ enum dwarf_macinfo_record_type
 #define DW_EH_PE_aligned	0x50
 
 #define DW_EH_PE_indirect	0x80
+
+#endif /* dwarf2.h */
