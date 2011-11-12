@@ -1,5 +1,8 @@
 2011-11-12  Ulrich Drepper  <drepper@gmail.com>
 
+	* elf/dl-iteratephdr.c [!SHARED] (__dl_iterate_phdr): Don't iterate
+	over namespaces.
+
 	* sunrpc/rpc_prot.c (rejected): Fix case value.
 
 	* sysdeps/unix/sysv/linux/internal_statvfs.c (INTERNAL_STATVFS): Use
