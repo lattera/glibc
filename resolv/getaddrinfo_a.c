@@ -1,4 +1,4 @@
-/* Copyright (C) 2001, 2006 Free Software Foundation, Inc.
+/* Copyright (C) 2001, 2006, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2001.
 
@@ -125,8 +125,8 @@ getaddrinfo_a (int mode, struct gaicb *list[], int ent, struct sigevent *sig)
       while (total > 0)
 	{
 #ifdef DONT_NEED_GAI_MISC_COND
-	  int result;
-	  GAI_MISC_WAIT (result, total, NULL, 1);
+	  int not_used __attribute__ ((unused));
+	  GAI_MISC_WAIT (not_used, total, NULL, 1);
 #else
 	  pthread_cond_wait (&cond, &__gai_requests_mutex);
 #endif
