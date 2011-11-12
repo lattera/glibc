@@ -1,5 +1,7 @@
 2011-11-12  Ulrich Drepper  <drepper@gmail.com>
 
+	* sunrpc/rpc_prot.c (rejected): Fix case value.
+
 	* sysdeps/unix/sysv/linux/internal_statvfs.c (INTERNAL_STATVFS): Use
 	unsigned long long int to avoid warnings in shift.
 
