@@ -1,3 +1,25 @@
+2011-11-13  Ulrich Drepper  <drepper@gmail.com>
+
+	* sysdeps/i386/i686/multiarch/Makefile [subdir=string]: Add
+	locale-defines.sym to gen-as-const-headers.
+	(sysdep_routines): Add strcasecmp_l-c, strcasecmp-c,
+	strcasecmp_l-ssse3, strncase_l-c, strncase-c, and strncase_l-ssse3.
+	* sysdeps/i386/i686/multiarch/strcmp-ssse3.S: Change to allow reuse
+	to compile strcasecmp and strncasecmp.
+	* sysdeps/i386/i686/multiarch/strcmp.S: Allow to use for
+	strcasecmp_l and strncasecmp_l.
+	* sysdeps/i386/i686/multiarch/locale-defines.sym: New file.
+	* sysdeps/i386/i686/multiarch/strcasecmp-c.c: New file.
+	* sysdeps/i386/i686/multiarch/strcasecmp.S: New file.
+	* sysdeps/i386/i686/multiarch/strcasecmp_l-c.c: New file.
+	* sysdeps/i386/i686/multiarch/strcasecmp_l-ssse3.S: New file.
+	* sysdeps/i386/i686/multiarch/strcasecmp_l.S: New file.
+	* sysdeps/i386/i686/multiarch/strncase-c.c: New file.
+	* sysdeps/i386/i686/multiarch/strncase.S: New file.
+	* sysdeps/i386/i686/multiarch/strncase_l-c.c: New file.
+	* sysdeps/i386/i686/multiarch/strncase_l-ssse3.S: New file.
+	* sysdeps/i386/i686/multiarch/strncase_l.S: New file.
+
 2011-11-12  Ulrich Drepper  <drepper@gmail.com>
 
 	* sysdeps/unix/clock_gettime.c (clock_gettime): No need to assign
