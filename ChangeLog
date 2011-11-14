@@ -1,3 +1,7 @@
+2011-11-14  Ulrich Drepper  <drepper@gmail.com>
+
+	* time/tzfile.c (__tzfile_read): Use "e" in fopen call.
+
 2011-11-14  Andreas Schwab  <schwab@redhat.com>
 
 	* malloc/arena.c (arena_get2): Don't call reused_arena when

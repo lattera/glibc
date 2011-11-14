@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-1993,1995-2001,2003,2004,2006,2007,2009
+/* Copyright (C) 1991-1993,1995-2001,2003,2004,2006,2007,2009,2011
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -178,8 +178,8 @@ __tzfile_read (const char *file, size_t extra, char **extrap)
     }
 
   /* Note the file is opened with cancellation in the I/O functions
-     disabled.  */
-  f = fopen (file, "rc");
+     disabled and if available FD_CLOEXEC set.  */
+  f = fopen (file, "rce");
   if (f == NULL)
     goto ret_free_transitions;
 
