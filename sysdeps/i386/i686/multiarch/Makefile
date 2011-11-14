@@ -4,6 +4,7 @@ gen-as-const-headers += ifunc-defines.sym
 endif
 
 ifeq ($(subdir),string)
+gen-as-const-headers += locale-defines.sym
 sysdep_routines += bzero-sse2 memset-sse2 memcpy-ssse3 mempcpy-ssse3 \
 		   memmove-ssse3 memcpy-ssse3-rep mempcpy-ssse3-rep \
 		   memmove-ssse3-rep bcopy-ssse3 bcopy-ssse3-rep \
@@ -18,7 +19,10 @@ sysdep_routines += bzero-sse2 memset-sse2 memcpy-ssse3 mempcpy-ssse3 \
 		   memchr-sse2 memchr-sse2-bsf \
 		   memrchr-sse2 memrchr-sse2-bsf memrchr-c \
 		   rawmemchr-sse2 rawmemchr-sse2-bsf \
-		   strnlen-sse2 strnlen-c
+		   strnlen-sse2 strnlen-c \
+		   strcasecmp_l-c strcasecmp-c strcasecmp_l-ssse3 \
+		   strncase_l-c strncase-c strncase_l-ssse3 \
+		   strcasecmp_l-sse4 strncase_l-sse4
 ifeq (yes,$(config-cflags-sse4))
 sysdep_routines += strcspn-c strpbrk-c strspn-c strstr-c strcasestr-c
 CFLAGS-varshift.c += -msse4

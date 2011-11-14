@@ -1,5 +1,5 @@
 /* Multiple versions of strcmp
-   Copyright (C) 2010 Free Software Foundation, Inc.
+   Copyright (C) 2010, 2011 Free Software Foundation, Inc.
    Contributed by Intel Corporation.
    This file is part of the GNU C Library.
 
@@ -21,18 +21,30 @@
 #include <sysdep.h>
 #include <init-arch.h>
 
-#ifndef USE_AS_STRNCMP
-# define STRCMP			strcmp
-# define __GI_STRCMP		__GI_strcmp
-# define __STRCMP_IA32		__strcmp_ia32
-# define __STRCMP_SSSE3		__strcmp_ssse3
-# define __STRCMP_SSE4_2	__strcmp_sse4_2
-#else
+#ifdef USE_AS_STRNCMP
 # define STRCMP			strncmp
 # define __GI_STRCMP		__GI_strncmp
 # define __STRCMP_IA32		__strncmp_ia32
 # define __STRCMP_SSSE3		__strncmp_ssse3
 # define __STRCMP_SSE4_2	__strncmp_sse4_2
+#elif defined USE_AS_STRCASECMP_L
+# define STRCMP			__strcasecmp_l
+# define __GI_STRCMP		__GI_strcasecmp_l
+# define __STRCMP_IA32		__strcasecmp_l_ia32
+# define __STRCMP_SSSE3		__strcasecmp_l_ssse3
+# define __STRCMP_SSE4_2	__strcasecmp_l_sse4_2
+#elif defined USE_AS_STRNCASECMP_L
+# define STRCMP			__strncasecmp_l
+# define __GI_STRCMP		__GI_strncasecmp_l
+# define __STRCMP_IA32		__strncasecmp_l_ia32
+# define __STRCMP_SSSE3		__strncasecmp_l_ssse3
+# define __STRCMP_SSE4_2	__strncasecmp_l_sse4_2
+#else
+# define STRCMP			strcmp
+# define __GI_STRCMP		__GI_strcmp
+# define __STRCMP_IA32		__strcmp_ia32
+# define __STRCMP_SSSE3		__strcmp_ssse3
+# define __STRCMP_SSE4_2	__strcmp_sse4_2
 #endif
 
 /* Define multiple versions only for the definition in libc.  Don't

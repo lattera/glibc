@@ -34,7 +34,65 @@
 #define PUSH(REG)	pushl REG; CFI_PUSH (REG)
 #define POP(REG)	popl REG; CFI_POP (REG)
 
-#ifndef USE_AS_STRNCMP
+#ifdef USE_AS_STRNCMP
+# ifndef STRCMP
+#  define STRCMP	__strncmp_ssse3
+# endif
+# define STR1		8
+# define STR2		STR1+4
+# define CNT		STR2+4
+# define RETURN		POP (REM); ret; .p2align 4; CFI_PUSH (REM)
+# define UPDATE_STRNCMP_COUNTER				\
+	/* calculate left number to compare */		\
+	mov	$16, %esi;				\
+	sub	%ecx, %esi;				\
+	cmp	%esi, REM;				\
+	jbe	L(more8byteseq);			\
+	sub	%esi, REM
+# define FLAGS		%ebx
+# define REM		%ebp
+#elif defined USE_AS_STRCASECMP_L
+# include "locale-defines.h"
+# ifndef STRCMP
+#  define STRCMP	__strcasecmp_l_ssse3
+# endif
+# define STR1		8
+# define STR2		STR1+4
+# define LOCALE		12	/* Loaded before the adjustement.  */
+# ifdef PIC
+#  define RETURN	POP (%ebx); ret; .p2align 4; CFI_PUSH (%ebx)
+# else
+#  define RETURN	ret; .p2align 4
+# endif
+# define UPDATE_STRNCMP_COUNTER
+# define FLAGS		(%esp)
+# define NONASCII	__strcasecmp_nonascii
+#elif defined USE_AS_STRNCASECMP_L
+# include "locale-defines.h"
+# ifndef STRCMP
+#  define STRCMP	__strncasecmp_l_ssse3
+# endif
+# define STR1		12
+# define STR2		STR1+4
+# define CNT		STR2+4
+# define LOCALE		16	/* Loaded before the adjustement.  */
+# ifdef PIC
+#  define RETURN	POP (REM); POP (%ebx); ret; \
+			.p2align 4; CFI_PUSH (%ebx); CFI_PUSH (REM)
+# else
+#  define RETURN	POP (REM); ret; .p2align 4; CFI_PUSH (REM)
+# endif
+# define UPDATE_STRNCMP_COUNTER				\
+	/* calculate left number to compare */		\
+	mov	$16, %esi;				\
+	sub	%ecx, %esi;				\
+	cmp	%esi, REM;				\
+	jbe	L(more8byteseq);			\
+	sub	%esi, REM
+# define FLAGS		(%esp)
+# define REM		%ebp
+# define NONASCII	__strncasecmp_nonascii
+#else
 # ifndef STRCMP
 #  define STRCMP	__strcmp_ssse3
 # endif
@@ -42,35 +100,107 @@
 # define STR2		STR1+4
 # define RETURN		ret; .p2align 4
 # define UPDATE_STRNCMP_COUNTER
-#else
-# ifndef STRCMP
-#  define STRCMP	__strncmp_ssse3
-# endif
-# define STR1		8
-# define STR2		STR1+4
-# define CNT		STR2+4
-# define RETURN		POP (%ebp); ret; .p2align 4; CFI_PUSH (%ebp)
-# define UPDATE_STRNCMP_COUNTER				\
-	/* calculate left number to compare */		\
-	mov	$16, %esi;				\
-	sub	%ecx, %esi;				\
-	cmp	%esi, %ebp;				\
-	jbe	L(more8byteseq);			\
-	sub	%esi, %ebp
+# define FLAGS		%ebx
 #endif
 
 	.section .text.ssse3,"ax",@progbits
-ENTRY (STRCMP)
-#ifdef USE_AS_STRNCMP
-	PUSH	(%ebp)
+
+#ifdef USE_AS_STRCASECMP_L
+ENTRY (__strcasecmp_ssse3)
+# ifdef PIC
+	PUSH	(%ebx)
+	call	__i686.get_pc_thunk.bx
+	addl	$_GLOBAL_OFFSET_TABLE_, %ebx
+	movl	__libc_tsd_LOCALE@GOTNTPOFF(%ebx), %eax
+# else
+	movl	__libc_tsd_LOCALE@NTPOFF, %eax
+# endif
+	movl	%gs:(%eax), %eax
+# if LOCALE_T___LOCALES != 0 || LC_CTYPE != 0
+	movl	LOCALE_T___LOCALES+LC_CTYPE*4(%eax), %eax
+# else
+	movl	(%eax), %eax
+# endif
+	testl	$1, LOCALE_DATA_VALUES+_NL_CTYPE_NONASCII_CASE*SIZEOF_VALUES(%eax)
+	jne	__strcasecmp_nonascii
+	jmp	L(ascii)
+END (__strcasecmp_ssse3)
 #endif
+
+#ifdef USE_AS_STRNCASECMP_L
+ENTRY (__strncasecmp_ssse3)
+# ifdef PIC
+	PUSH	(%ebx)
+	call	__i686.get_pc_thunk.bx
+	addl	$_GLOBAL_OFFSET_TABLE_, %ebx
+	movl	__libc_tsd_LOCALE@GOTNTPOFF(%ebx), %eax
+# else
+	movl	__libc_tsd_LOCALE@NTPOFF, %eax
+# endif
+	movl	%gs:(%eax), %eax
+# if LOCALE_T___LOCALES != 0 || LC_CTYPE != 0
+	movl	LOCALE_T___LOCALES+LC_CTYPE*4(%eax), %eax
+# else
+	movl	(%eax), %eax
+# endif
+	testl	$1, LOCALE_DATA_VALUES+_NL_CTYPE_NONASCII_CASE*SIZEOF_VALUES(%eax)
+	jne	__strncasecmp_nonascii
+	jmp	L(ascii)
+END (__strncasecmp_ssse3)
+#endif
+
+ENTRY (STRCMP)
+#if defined USE_AS_STRCASECMP_L || defined USE_AS_STRNCASECMP_L
+	movl	LOCALE(%esp), %eax
+# if LOCALE_T___LOCALES != 0 || LC_CTYPE != 0
+	movl	LOCALE_T___LOCALES+LC_CTYPE*4(%eax), %eax
+# else
+	movl	(%eax), %eax
+# endif
+	testl	$1, LOCALE_DATA_VALUES+_NL_CTYPE_NONASCII_CASE*SIZEOF_VALUES(%eax)
+	jne	NONASCII
+
+# ifdef PIC
+	PUSH	(%ebx)
+	call	__i686.get_pc_thunk.bx
+	addl	$_GLOBAL_OFFSET_TABLE_, %ebx
+# endif
+L(ascii):
+	.section .rodata.cst16,"aM",@progbits,16
+	.align 16
+.Lbelowupper:
+	.quad	0x4040404040404040
+	.quad	0x4040404040404040
+.Ltopupper:
+	.quad	0x5b5b5b5b5b5b5b5b
+	.quad	0x5b5b5b5b5b5b5b5b
+.Ltouppermask:
+	.quad	0x2020202020202020
+	.quad	0x2020202020202020
+	.previous
+
+# ifdef PIC
+#  define UCLOW_reg .Lbelowupper@GOTOFF(%ebx)
+#  define UCHIGH_reg .Ltopupper@GOTOFF(%ebx)
+#  define LCQWORD_reg .Ltouppermask@GOTOFF(%ebx)
+# else
+#  define UCLOW_reg .Lbelowupper
+#  define UCHIGH_reg .Ltopupper
+#  define LCQWORD_reg .Ltouppermask
+# endif
+#endif
+
+#if defined USE_AS_STRNCMP || defined USE_AS_STRNCASECMP_L
+	PUSH	(REM)
+#endif
+
 	movl	STR1(%esp), %edx
 	movl	STR2(%esp), %eax
-#ifdef USE_AS_STRNCMP
-	movl	CNT(%esp), %ebp
-	cmp	$16, %ebp
+#if defined USE_AS_STRNCMP || defined USE_AS_STRNCASECMP_L
+	movl	CNT(%esp), REM
+	cmp	$16, REM
 	jb	L(less16bytes_sncmp)
-#else
+#elif !defined USE_AS_STRCASECMP_L
 	movzbl	(%eax), %ecx
 	cmpb	%cl, (%edx)
 	jne	L(neq)
@@ -135,15 +265,35 @@ ENTRY (STRCMP)
 	movlpd	(%edx), %xmm2
 	movhpd	8(%eax), %xmm1
 	movhpd	8(%edx), %xmm2
+#if defined USE_AS_STRCASECMP_L || defined USE_AS_STRNCASECMP_L
+# define TOLOWER(reg1, reg2) \
+	movdqa	reg1, %xmm5;					\
+	movdqa	reg2, %xmm7;					\
+	movdqa	UCHIGH_reg, %xmm6;				\
+	pcmpgtb	UCLOW_reg, %xmm5;				\
+	pcmpgtb	UCLOW_reg, %xmm7;				\
+	pcmpgtb	reg1, %xmm6;					\
+	pand	%xmm6, %xmm5;					\
+	movdqa	UCHIGH_reg, %xmm6;				\
+	pcmpgtb	reg2, %xmm6;					\
+	pand	%xmm6, %xmm7;					\
+	pand	LCQWORD_reg, %xmm5;				\
+	por	%xmm5, reg1;					\
+	pand	LCQWORD_reg, %xmm7;				\
+	por	%xmm7, reg2
+	TOLOWER (%xmm1, %xmm2)
+#else
+# define TOLOWER(reg1, reg2)
+#endif
 	pcmpeqb	%xmm1, %xmm0
 	pcmpeqb	%xmm2, %xmm1
 	psubb	%xmm0, %xmm1
 	pmovmskb %xmm1, %ecx
 	sub	$0xffff, %ecx
 	jnz	L(less16bytes)
-#ifdef USE_AS_STRNCMP
-	cmp	$16, %ebp
-	lea	-16(%ebp), %ebp
+#if defined USE_AS_STRNCMP || defined USE_AS_STRNCASECMP_L
+	cmp	$16, REM
+	lea	-16(REM), REM
 	jbe	L(eq)
 #endif
 	add	$16, %eax
@@ -151,10 +301,16 @@ ENTRY (STRCMP)
 
 L(crosspage):
 
-	PUSH	(%ebx)
+#if !defined USE_AS_STRCASECMP_L && !defined USE_AS_STRNCASECMP_L
+	PUSH	(FLAGS)
+#endif
 	PUSH	(%edi)
 	PUSH	(%esi)
-#ifdef USE_AS_STRNCMP
+#if defined USE_AS_STRCASECMP_L || defined USE_AS_STRNCASECMP_L
+	pushl	$0
+	cfi_adjust_cfa_offset (4)
+#endif
+#if defined USE_AS_STRNCMP || defined USE_AS_STRNCASECMP_L
 	cfi_remember_state
 #endif
 
@@ -164,11 +320,13 @@ L(crosspage):
 	and	$0xf, %edi
 	xor	%ecx, %eax
 	xor	%edi, %edx
-	xor	%ebx, %ebx
+#if !defined USE_AS_STRCASECMP_L && !defined USE_AS_STRNCASECMP_L
+	xor	FLAGS, FLAGS
+#endif
 	cmp	%edi, %ecx
 	je	L(ashr_0)
 	ja	L(bigger)
-	or	$0x20, %ebx
+	orl	$0x20, FLAGS
 	xchg	%edx, %eax
 	xchg	%ecx, %edi
 L(bigger):
@@ -218,7 +376,13 @@ L(ashr_0):
 	movdqa	(%eax), %xmm1
 	pxor	%xmm0, %xmm0
 	pcmpeqb	%xmm1, %xmm0
+#if defined USE_AS_STRCASECMP_L || defined USE_AS_STRNCASECMP_L
+	movdqa	(%edx), %xmm2
+	TOLOWER (%xmm1, %xmm2)
+	pcmpeqb	%xmm2, %xmm1
+#else
 	pcmpeqb	(%edx), %xmm1
+#endif
 	psubb	%xmm0, %xmm1
 	pmovmskb %xmm1, %edi
 	shr	%cl, %esi
@@ -227,23 +391,29 @@ L(ashr_0):
 	mov	%ecx, %edi
 	jne	L(less32bytes)
 	UPDATE_STRNCMP_COUNTER
-	mov	$0x10, %ebx
+	movl	$0x10, FLAGS
 	mov	$0x10, %ecx
 	pxor	%xmm0, %xmm0
 	.p2align 4
 L(loop_ashr_0):
 	movdqa	(%eax, %ecx), %xmm1
+#if defined USE_AS_STRCASECMP_L || defined USE_AS_STRNCASECMP_L
 	movdqa	(%edx, %ecx), %xmm2
+	TOLOWER (%xmm1, %xmm2)
 
 	pcmpeqb	%xmm1, %xmm0
 	pcmpeqb	%xmm2, %xmm1
+#else
+	pcmpeqb	%xmm1, %xmm0
+	pcmpeqb	(%edx, %ecx), %xmm1
+#endif
 	psubb	%xmm0, %xmm1
 	pmovmskb %xmm1, %esi
 	sub	$0xffff, %esi
 	jnz	L(exit)
-#ifdef USE_AS_STRNCMP
-	cmp	$16, %ebp
-	lea	-16(%ebp), %ebp
+#if defined USE_AS_STRNCMP || defined USE_AS_STRNCASECMP_L
+	cmp	$16, REM
+	lea	-16(REM), REM
 	jbe	L(more8byteseq)
 #endif
 	add	$16, %ecx
@@ -262,6 +432,7 @@ L(ashr_1):
 	movdqa	(%eax), %xmm1
 	pcmpeqb	%xmm1, %xmm0
 	pslldq	$15, %xmm2
+	TOLOWER (%xmm1, %xmm2)
 	pcmpeqb	%xmm1, %xmm2
 	psubb	%xmm0, %xmm2
 	pmovmskb %xmm2, %edi
@@ -276,7 +447,7 @@ L(ashr_1):
 	movdqa	(%edx), %xmm3
 	pxor	%xmm0, %xmm0
 	mov	$16, %ecx
-	or	$1, %ebx
+	orl	$1, FLAGS
 	lea	1(%edx), %edi
 	and	$0xfff, %edi
 	sub	$0x1000, %edi
@@ -292,6 +463,7 @@ L(gobble_ashr_1):
 	movdqa	%xmm2, %xmm4
 
 	palignr	$1, %xmm3, %xmm2
+	TOLOWER (%xmm1, %xmm2)
 
 	pcmpeqb	%xmm1, %xmm0
 	pcmpeqb	%xmm2, %xmm1
@@ -299,9 +471,9 @@ L(gobble_ashr_1):
 	pmovmskb %xmm1, %esi
 	sub	$0xffff, %esi
 	jnz	L(exit)
-#ifdef USE_AS_STRNCMP
-	cmp	$16, %ebp
-	lea	-16(%ebp), %ebp
+#if defined USE_AS_STRNCMP || defined USE_AS_STRNCASECMP_L
+	cmp	$16, REM
+	lea	-16(REM), REM
 	jbe	L(more8byteseq)
 #endif
 
@@ -316,6 +488,7 @@ L(gobble_ashr_1):
 	movdqa	%xmm2, %xmm4
 
 	palignr	$1, %xmm3, %xmm2
+	TOLOWER (%xmm1, %xmm2)
 
 	pcmpeqb	%xmm1, %xmm0
 	pcmpeqb	%xmm2, %xmm1
@@ -324,9 +497,9 @@ L(gobble_ashr_1):
 	sub	$0xffff, %esi
 	jnz	L(exit)
 
-#ifdef USE_AS_STRNCMP
-	cmp	$16, %ebp
-	lea	-16(%ebp), %ebp
+#if defined USE_AS_STRNCMP || defined USE_AS_STRNCASECMP_L
+	cmp	$16, REM
+	lea	-16(REM), REM
 	jbe	L(more8byteseq)
 #endif
 	add	$16, %ecx
@@ -340,8 +513,8 @@ L(nibble_ashr_1):
 	test	$0xfffe, %esi
 	jnz	L(ashr_1_exittail)
 
-#ifdef USE_AS_STRNCMP
-	cmp	$15, %ebp
+#if defined USE_AS_STRNCMP || defined USE_AS_STRNCASECMP_L
+	cmp	$15, REM
 	jbe	L(ashr_1_exittail)
 #endif
 	pxor	%xmm0, %xmm0
@@ -368,6 +541,7 @@ L(ashr_2):
 	movdqa	(%eax), %xmm1
 	pcmpeqb	%xmm1, %xmm0
 	pslldq	$14, %xmm2
+	TOLOWER (%xmm1, %xmm2)
 	pcmpeqb	%xmm1, %xmm2
 	psubb	%xmm0, %xmm2
 	pmovmskb %xmm2, %edi
@@ -382,7 +556,7 @@ L(ashr_2):
 	movdqa	(%edx), %xmm3
 	pxor	%xmm0, %xmm0
 	mov	$16, %ecx
-	or	$2, %ebx
+	orl	$2, FLAGS
 	lea	2(%edx), %edi
 	and	$0xfff, %edi
 	sub	$0x1000, %edi
@@ -398,6 +572,7 @@ L(gobble_ashr_2):
 	movdqa	%xmm2, %xmm4
 
 	palignr	$2, %xmm3, %xmm2
+	TOLOWER (%xmm1, %xmm2)
 
 	pcmpeqb	%xmm1, %xmm0
 	pcmpeqb	%xmm2, %xmm1
@@ -406,9 +581,9 @@ L(gobble_ashr_2):
 	sub	$0xffff, %esi
 	jnz	L(exit)
 
-#ifdef USE_AS_STRNCMP
-	cmp	$16, %ebp
-	lea	-16(%ebp), %ebp
+#if defined USE_AS_STRNCMP || defined USE_AS_STRNCASECMP_L
+	cmp	$16, REM
+	lea	-16(REM), REM
 	jbe	L(more8byteseq)
 #endif
 	add	$16, %ecx
@@ -422,6 +597,7 @@ L(gobble_ashr_2):
 	movdqa	%xmm2, %xmm4
 
 	palignr	$2, %xmm3, %xmm2
+	TOLOWER (%xmm1, %xmm2)
 
 	pcmpeqb	%xmm1, %xmm0
 	pcmpeqb	%xmm2, %xmm1
@@ -430,9 +606,9 @@ L(gobble_ashr_2):
 	sub	$0xffff, %esi
 	jnz	L(exit)
 
-#ifdef USE_AS_STRNCMP
-	cmp	$16, %ebp
-	lea	-16(%ebp), %ebp
+#if defined USE_AS_STRNCMP || defined USE_AS_STRNCASECMP_L
+	cmp	$16, REM
+	lea	-16(REM), REM
 	jbe	L(more8byteseq)
 #endif
 	add	$16, %ecx
@@ -446,8 +622,8 @@ L(nibble_ashr_2):
 	test	$0xfffc, %esi
 	jnz	L(ashr_2_exittail)
 
-#ifdef USE_AS_STRNCMP
-	cmp	$14, %ebp
+#if defined USE_AS_STRNCMP || defined USE_AS_STRNCASECMP_L
+	cmp	$14, REM
 	jbe	L(ashr_2_exittail)
 #endif
 
@@ -475,6 +651,7 @@ L(ashr_3):
 	movdqa	(%eax), %xmm1
 	pcmpeqb	%xmm1, %xmm0
 	pslldq	$13, %xmm2
+	TOLOWER (%xmm1, %xmm2)
 	pcmpeqb	%xmm1, %xmm2
 	psubb	%xmm0, %xmm2
 	pmovmskb %xmm2, %edi
@@ -489,7 +666,7 @@ L(ashr_3):
 	movdqa	(%edx), %xmm3
 	pxor	%xmm0, %xmm0
 	mov	$16, %ecx
-	or	$3, %ebx
+	orl	$3, FLAGS
 	lea	3(%edx), %edi
 	and	$0xfff, %edi
 	sub	$0x1000, %edi
@@ -505,6 +682,7 @@ L(gobble_ashr_3):
 	movdqa	%xmm2, %xmm4
 
 	palignr	$3, %xmm3, %xmm2
+	TOLOWER (%xmm1, %xmm2)
 
 	pcmpeqb	%xmm1, %xmm0
 	pcmpeqb	%xmm2, %xmm1
@@ -513,9 +691,9 @@ L(gobble_ashr_3):
 	sub	$0xffff, %esi
 	jnz	L(exit)
 
-#ifdef USE_AS_STRNCMP
-	cmp	$16, %ebp
-	lea	-16(%ebp), %ebp
+#if defined USE_AS_STRNCMP || defined USE_AS_STRNCASECMP_L
+	cmp	$16, REM
+	lea	-16(REM), REM
 	jbe	L(more8byteseq)
 #endif
 	add	$16, %ecx
@@ -529,6 +707,7 @@ L(gobble_ashr_3):
 	movdqa	%xmm2, %xmm4
 
 	palignr	$3, %xmm3, %xmm2
+	TOLOWER (%xmm1, %xmm2)
 
 	pcmpeqb	%xmm1, %xmm0
 	pcmpeqb	%xmm2, %xmm1
@@ -537,9 +716,9 @@ L(gobble_ashr_3):
 	sub	$0xffff, %esi
 	jnz	L(exit)
 
-#ifdef USE_AS_STRNCMP
-	cmp	$16, %ebp
-	lea	-16(%ebp), %ebp
+#if defined USE_AS_STRNCMP || defined USE_AS_STRNCASECMP_L
+	cmp	$16, REM
+	lea	-16(REM), REM
 	jbe	L(more8byteseq)
 #endif
 	add	$16, %ecx
@@ -553,8 +732,8 @@ L(nibble_ashr_3):
 	test	$0xfff8, %esi
 	jnz	L(ashr_3_exittail)
 
-#ifdef USE_AS_STRNCMP
-	cmp	$13, %ebp
+#if defined USE_AS_STRNCMP || defined USE_AS_STRNCASECMP_L
+	cmp	$13, REM
 	jbe	L(ashr_3_exittail)
 #endif
 	pxor	%xmm0, %xmm0
@@ -581,6 +760,7 @@ L(ashr_4):
 	movdqa	(%eax), %xmm1
 	pcmpeqb	%xmm1, %xmm0
 	pslldq	$12, %xmm2
+	TOLOWER (%xmm1, %xmm2)
 	pcmpeqb	%xmm1, %xmm2
 	psubb	%xmm0, %xmm2
 	pmovmskb %xmm2, %edi
@@ -595,7 +775,7 @@ L(ashr_4):
 	movdqa	(%edx), %xmm3
 	pxor	%xmm0, %xmm0
 	mov	$16, %ecx
-	or	$4, %ebx
+	orl	$4, FLAGS
 	lea	4(%edx), %edi
 	and	$0xfff, %edi
 	sub	$0x1000, %edi
@@ -611,6 +791,7 @@ L(gobble_ashr_4):
 	movdqa	%xmm2, %xmm4
 
 	palignr	$4, %xmm3, %xmm2
+	TOLOWER (%xmm1, %xmm2)
 
 	pcmpeqb	%xmm1, %xmm0
 	pcmpeqb	%xmm2, %xmm1
@@ -619,9 +800,9 @@ L(gobble_ashr_4):
 	sub	$0xffff, %esi
 	jnz	L(exit)
 
-#ifdef USE_AS_STRNCMP
-	cmp	$16, %ebp
-	lea	-16(%ebp), %ebp
+#if defined USE_AS_STRNCMP || defined USE_AS_STRNCASECMP_L
+	cmp	$16, REM
+	lea	-16(REM), REM
 	jbe	L(more8byteseq)
 #endif
 
@@ -636,6 +817,7 @@ L(gobble_ashr_4):
 	movdqa	%xmm2, %xmm4
 
 	palignr	$4, %xmm3, %xmm2
+	TOLOWER (%xmm1, %xmm2)
 
 	pcmpeqb	%xmm1, %xmm0
 	pcmpeqb	%xmm2, %xmm1
@@ -644,9 +826,9 @@ L(gobble_ashr_4):
 	sub	$0xffff, %esi
 	jnz	L(exit)
 
-#ifdef USE_AS_STRNCMP
-	cmp	$16, %ebp
-	lea	-16(%ebp), %ebp
+#if defined USE_AS_STRNCMP || defined USE_AS_STRNCASECMP_L
+	cmp	$16, REM
+	lea	-16(REM), REM
 	jbe	L(more8byteseq)
 #endif
 
@@ -661,8 +843,8 @@ L(nibble_ashr_4):
 	test	$0xfff0, %esi
 	jnz	L(ashr_4_exittail)
 
-#ifdef USE_AS_STRNCMP
-	cmp	$12, %ebp
+#if defined USE_AS_STRNCMP || defined USE_AS_STRNCASECMP_L
+	cmp	$12, REM
 	jbe	L(ashr_4_exittail)
 #endif
 
@@ -690,6 +872,7 @@ L(ashr_5):
 	movdqa	(%eax), %xmm1
 	pcmpeqb	%xmm1, %xmm0
 	pslldq	$11, %xmm2
+	TOLOWER (%xmm1, %xmm2)
 	pcmpeqb	%xmm1, %xmm2
 	psubb	%xmm0, %xmm2
 	pmovmskb %xmm2, %edi
@@ -704,7 +887,7 @@ L(ashr_5):
 	movdqa	(%edx), %xmm3
 	pxor	%xmm0, %xmm0
 	mov	$16, %ecx
-	or	$5, %ebx
+	orl	$5, FLAGS
 	lea	5(%edx), %edi
 	and	$0xfff, %edi
 	sub	$0x1000, %edi
@@ -720,6 +903,7 @@ L(gobble_ashr_5):
 	movdqa	%xmm2, %xmm4
 
 	palignr	$5, %xmm3, %xmm2
+	TOLOWER (%xmm1, %xmm2)
 
 	pcmpeqb	%xmm1, %xmm0
 	pcmpeqb	%xmm2, %xmm1
@@ -728,9 +912,9 @@ L(gobble_ashr_5):
 	sub	$0xffff, %esi
 	jnz	L(exit)
 
-#ifdef USE_AS_STRNCMP
-	cmp	$16, %ebp
-	lea	-16(%ebp), %ebp
+#if defined USE_AS_STRNCMP || defined USE_AS_STRNCASECMP_L
+	cmp	$16, REM
+	lea	-16(REM), REM
 	jbe	L(more8byteseq)
 #endif
 	add	$16, %ecx
@@ -744,6 +928,7 @@ L(gobble_ashr_5):
 	movdqa	%xmm2, %xmm4
 
 	palignr	$5, %xmm3, %xmm2
+	TOLOWER (%xmm1, %xmm2)
 
 	pcmpeqb	%xmm1, %xmm0
 	pcmpeqb	%xmm2, %xmm1
@@ -752,9 +937,9 @@ L(gobble_ashr_5):
 	sub	$0xffff, %esi
 	jnz	L(exit)
 
-#ifdef USE_AS_STRNCMP
-	cmp	$16, %ebp
-	lea	-16(%ebp), %ebp
+#if defined USE_AS_STRNCMP || defined USE_AS_STRNCASECMP_L
+	cmp	$16, REM
+	lea	-16(REM), REM
 	jbe	L(more8byteseq)
 #endif
 	add	$16, %ecx
@@ -768,8 +953,8 @@ L(nibble_ashr_5):
 	test	$0xffe0, %esi
 	jnz	L(ashr_5_exittail)
 
-#ifdef USE_AS_STRNCMP
-	cmp	$11, %ebp
+#if defined USE_AS_STRNCMP || defined USE_AS_STRNCASECMP_L
+	cmp	$11, REM
 	jbe	L(ashr_5_exittail)
 #endif
 	pxor	%xmm0, %xmm0
@@ -797,6 +982,7 @@ L(ashr_6):
 	movdqa	(%eax), %xmm1
 	pcmpeqb	%xmm1, %xmm0
 	pslldq	$10, %xmm2
+	TOLOWER (%xmm1, %xmm2)
 	pcmpeqb	%xmm1, %xmm2
 	psubb	%xmm0, %xmm2
 	pmovmskb %xmm2, %edi
@@ -811,7 +997,7 @@ L(ashr_6):
 	movdqa	(%edx), %xmm3
 	pxor	%xmm0, %xmm0
 	mov	$16, %ecx
-	or	$6, %ebx
+	orl	$6, FLAGS
 	lea	6(%edx), %edi
 	and	$0xfff, %edi
 	sub	$0x1000, %edi
@@ -827,6 +1013,7 @@ L(gobble_ashr_6):
 	movdqa	%xmm2, %xmm4
 
 	palignr	$6, %xmm3, %xmm2
+	TOLOWER (%xmm1, %xmm2)
 
 	pcmpeqb	%xmm1, %xmm0
 	pcmpeqb	%xmm2, %xmm1
@@ -835,9 +1022,9 @@ L(gobble_ashr_6):
 	sub	$0xffff, %esi
 	jnz	L(exit)
 
-#ifdef USE_AS_STRNCMP
-	cmp	$16, %ebp
-	lea	-16(%ebp), %ebp
+#if defined USE_AS_STRNCMP || defined USE_AS_STRNCASECMP_L
+	cmp	$16, REM
+	lea	-16(REM), REM
 	jbe	L(more8byteseq)
 #endif
 
@@ -852,6 +1039,7 @@ L(gobble_ashr_6):
 	movdqa	%xmm2, %xmm4
 
 	palignr	$6, %xmm3, %xmm2
+	TOLOWER (%xmm1, %xmm2)
 
 	pcmpeqb	%xmm1, %xmm0
 	pcmpeqb	%xmm2, %xmm1
@@ -859,9 +1047,9 @@ L(gobble_ashr_6):
 	pmovmskb %xmm1, %esi
 	sub	$0xffff, %esi
 	jnz	L(exit)
-#ifdef USE_AS_STRNCMP
-	cmp	$16, %ebp
-	lea	-16(%ebp), %ebp
+#if defined USE_AS_STRNCMP || defined USE_AS_STRNCASECMP_L
+	cmp	$16, REM
+	lea	-16(REM), REM
 	jbe	L(more8byteseq)
 #endif
 
@@ -876,8 +1064,8 @@ L(nibble_ashr_6):
 	test	$0xffc0, %esi
 	jnz	L(ashr_6_exittail)
 
-#ifdef USE_AS_STRNCMP
-	cmp	$10, %ebp
+#if defined USE_AS_STRNCMP || defined USE_AS_STRNCASECMP_L
+	cmp	$10, REM
 	jbe	L(ashr_6_exittail)
 #endif
 	pxor	%xmm0, %xmm0
@@ -905,6 +1093,7 @@ L(ashr_7):
 	movdqa	(%eax), %xmm1
 	pcmpeqb	%xmm1, %xmm0
 	pslldq	$9, %xmm2
+	TOLOWER (%xmm1, %xmm2)
 	pcmpeqb	%xmm1, %xmm2
 	psubb	%xmm0, %xmm2
 	pmovmskb %xmm2, %edi
@@ -919,7 +1108,7 @@ L(ashr_7):
 	movdqa	(%edx), %xmm3
 	pxor	%xmm0, %xmm0
 	mov	$16, %ecx
-	or	$7, %ebx
+	orl	$7, FLAGS
 	lea	8(%edx), %edi
 	and	$0xfff, %edi
 	sub	$0x1000, %edi
@@ -935,6 +1124,7 @@ L(gobble_ashr_7):
 	movdqa	%xmm2, %xmm4
 
 	palignr	$7, %xmm3, %xmm2
+	TOLOWER (%xmm1, %xmm2)
 
 	pcmpeqb	%xmm1, %xmm0
 	pcmpeqb	%xmm2, %xmm1
@@ -943,9 +1133,9 @@ L(gobble_ashr_7):
 	sub	$0xffff, %esi
 	jnz	L(exit)
 
-#ifdef USE_AS_STRNCMP
-	cmp	$16, %ebp
-	lea	-16(%ebp), %ebp
+#if defined USE_AS_STRNCMP || defined USE_AS_STRNCASECMP_L
+	cmp	$16, REM
+	lea	-16(REM), REM
 	jbe	L(more8byteseq)
 #endif
 
@@ -960,6 +1150,7 @@ L(gobble_ashr_7):
 	movdqa	%xmm2, %xmm4
 
 	palignr	$7, %xmm3, %xmm2
+	TOLOWER (%xmm1, %xmm2)
 
 	pcmpeqb	%xmm1, %xmm0
 	pcmpeqb	%xmm2, %xmm1
@@ -968,9 +1159,9 @@ L(gobble_ashr_7):
 	sub	$0xffff, %esi
 	jnz	L(exit)
 
-#ifdef USE_AS_STRNCMP
-	cmp	$16, %ebp
-	lea	-16(%ebp), %ebp
+#if defined USE_AS_STRNCMP || defined USE_AS_STRNCASECMP_L
+	cmp	$16, REM
+	lea	-16(REM), REM
 	jbe	L(more8byteseq)
 #endif
 
@@ -985,8 +1176,8 @@ L(nibble_ashr_7):
 	test	$0xff80, %esi
 	jnz	L(ashr_7_exittail)
 
-#ifdef USE_AS_STRNCMP
-	cmp	$9, %ebp
+#if defined USE_AS_STRNCMP || defined USE_AS_STRNCASECMP_L
+	cmp	$9, REM
 	jbe	L(ashr_7_exittail)
 #endif
 	pxor	%xmm0, %xmm0
@@ -1014,6 +1205,7 @@ L(ashr_8):
 	movdqa	(%eax), %xmm1
 	pcmpeqb	%xmm1, %xmm0
 	pslldq	$8, %xmm2
+	TOLOWER (%xmm1, %xmm2)
 	pcmpeqb	%xmm1, %xmm2
 	psubb	%xmm0, %xmm2
 	pmovmskb %xmm2, %edi
@@ -1028,7 +1220,7 @@ L(ashr_8):
 	movdqa	(%edx), %xmm3
 	pxor	%xmm0, %xmm0
 	mov	$16, %ecx
-	or	$8, %ebx
+	orl	$8, FLAGS
 	lea	8(%edx), %edi
 	and	$0xfff, %edi
 	sub	$0x1000, %edi
@@ -1044,6 +1236,7 @@ L(gobble_ashr_8):
 	movdqa	%xmm2, %xmm4
 
 	palignr	$8, %xmm3, %xmm2
+	TOLOWER (%xmm1, %xmm2)
 
 	pcmpeqb	%xmm1, %xmm0
 	pcmpeqb	%xmm2, %xmm1
@@ -1052,9 +1245,9 @@ L(gobble_ashr_8):
 	sub	$0xffff, %esi
 	jnz	L(exit)
 
-#ifdef USE_AS_STRNCMP
-	cmp	$16, %ebp
-	lea	-16(%ebp), %ebp
+#if defined USE_AS_STRNCMP || defined USE_AS_STRNCASECMP_L
+	cmp	$16, REM
+	lea	-16(REM), REM
 	jbe	L(more8byteseq)
 #endif
 	add	$16, %ecx
@@ -1068,6 +1261,7 @@ L(gobble_ashr_8):
 	movdqa	%xmm2, %xmm4
 
 	palignr	$8, %xmm3, %xmm2
+	TOLOWER (%xmm1, %xmm2)
 
 	pcmpeqb	%xmm1, %xmm0
 	pcmpeqb	%xmm2, %xmm1
@@ -1076,9 +1270,9 @@ L(gobble_ashr_8):
 	sub	$0xffff, %esi
 	jnz	L(exit)
 
-#ifdef USE_AS_STRNCMP
-	cmp	$16, %ebp
-	lea	-16(%ebp), %ebp
+#if defined USE_AS_STRNCMP || defined USE_AS_STRNCASECMP_L
+	cmp	$16, REM
+	lea	-16(REM), REM
 	jbe	L(more8byteseq)
 #endif
 	add	$16, %ecx
@@ -1092,8 +1286,8 @@ L(nibble_ashr_8):
 	test	$0xff00, %esi
 	jnz	L(ashr_8_exittail)
 
-#ifdef USE_AS_STRNCMP
-	cmp	$8, %ebp
+#if defined USE_AS_STRNCMP || defined USE_AS_STRNCASECMP_L
+	cmp	$8, REM
 	jbe	L(ashr_8_exittail)
 #endif
 	pxor	%xmm0, %xmm0
@@ -1121,6 +1315,7 @@ L(ashr_9):
 	movdqa	(%eax), %xmm1
 	pcmpeqb	%xmm1, %xmm0
 	pslldq	$7, %xmm2
+	TOLOWER (%xmm1, %xmm2)
 	pcmpeqb	%xmm1, %xmm2
 	psubb	%xmm0, %xmm2
 	pmovmskb %xmm2, %edi
@@ -1135,7 +1330,7 @@ L(ashr_9):
 	movdqa	(%edx), %xmm3
 	pxor	%xmm0, %xmm0
 	mov	$16, %ecx
-	or	$9, %ebx
+	orl	$9, FLAGS
 	lea	9(%edx), %edi
 	and	$0xfff, %edi
 	sub	$0x1000, %edi
@@ -1151,6 +1346,7 @@ L(gobble_ashr_9):
 	movdqa	%xmm2, %xmm4
 
 	palignr	$9, %xmm3, %xmm2
+	TOLOWER (%xmm1, %xmm2)
 
 	pcmpeqb	%xmm1, %xmm0
 	pcmpeqb	%xmm2, %xmm1
@@ -1159,9 +1355,9 @@ L(gobble_ashr_9):
 	sub	$0xffff, %esi
 	jnz	L(exit)
 
-#ifdef USE_AS_STRNCMP
-	cmp	$16, %ebp
-	lea	-16(%ebp), %ebp
+#if defined USE_AS_STRNCMP || defined USE_AS_STRNCASECMP_L
+	cmp	$16, REM
+	lea	-16(REM), REM
 	jbe	L(more8byteseq)
 #endif
 	add	$16, %ecx
@@ -1175,6 +1371,7 @@ L(gobble_ashr_9):
 	movdqa	%xmm2, %xmm4
 
 	palignr	$9, %xmm3, %xmm2
+	TOLOWER (%xmm1, %xmm2)
 
 	pcmpeqb	%xmm1, %xmm0
 	pcmpeqb	%xmm2, %xmm1
@@ -1183,9 +1380,9 @@ L(gobble_ashr_9):
 	sub	$0xffff, %esi
 	jnz	L(exit)
 
-#ifdef USE_AS_STRNCMP
-	cmp	$16, %ebp
-	lea	-16(%ebp), %ebp
+#if defined USE_AS_STRNCMP || defined USE_AS_STRNCASECMP_L
+	cmp	$16, REM
+	lea	-16(REM), REM
 	jbe	L(more8byteseq)
 #endif
 	add	$16, %ecx
@@ -1199,8 +1396,8 @@ L(nibble_ashr_9):
 	test	$0xfe00, %esi
 	jnz	L(ashr_9_exittail)
 
-#ifdef USE_AS_STRNCMP
-	cmp	$7, %ebp
+#if defined USE_AS_STRNCMP || defined USE_AS_STRNCASECMP_L
+	cmp	$7, REM
 	jbe	L(ashr_9_exittail)
 #endif
 	pxor	%xmm0, %xmm0
@@ -1227,6 +1424,7 @@ L(ashr_10):
 	movdqa	(%eax), %xmm1
 	pcmpeqb	%xmm1, %xmm0
 	pslldq	$6, %xmm2
+	TOLOWER (%xmm1, %xmm2)
 	pcmpeqb	%xmm1, %xmm2
 	psubb	%xmm0, %xmm2
 	pmovmskb %xmm2, %edi
@@ -1241,7 +1439,7 @@ L(ashr_10):
 	movdqa	(%edx), %xmm3
 	pxor	%xmm0, %xmm0
 	mov	$16, %ecx
-	or	$10, %ebx
+	orl	$10, FLAGS
 	lea	10(%edx), %edi
 	and	$0xfff, %edi
 	sub	$0x1000, %edi
@@ -1257,6 +1455,7 @@ L(gobble_ashr_10):
 	movdqa	%xmm2, %xmm4
 
 	palignr	$10, %xmm3, %xmm2
+	TOLOWER (%xmm1, %xmm2)
 
 	pcmpeqb	%xmm1, %xmm0
 	pcmpeqb	%xmm2, %xmm1
@@ -1265,9 +1464,9 @@ L(gobble_ashr_10):
 	sub	$0xffff, %esi
 	jnz	L(exit)
 
-#ifdef USE_AS_STRNCMP
-	cmp	$16, %ebp
-	lea	-16(%ebp), %ebp
+#if defined USE_AS_STRNCMP || defined USE_AS_STRNCASECMP_L
+	cmp	$16, REM
+	lea	-16(REM), REM
 	jbe	L(more8byteseq)
 #endif
 	add	$16, %ecx
@@ -1281,6 +1480,7 @@ L(gobble_ashr_10):
 	movdqa	%xmm2, %xmm4
 
 	palignr	$10, %xmm3, %xmm2
+	TOLOWER (%xmm1, %xmm2)
 
 	pcmpeqb	%xmm1, %xmm0
 	pcmpeqb	%xmm2, %xmm1
@@ -1289,9 +1489,9 @@ L(gobble_ashr_10):
 	sub	$0xffff, %esi
 	jnz	L(exit)
 
-#ifdef USE_AS_STRNCMP
-	cmp	$16, %ebp
-	lea	-16(%ebp), %ebp
+#if defined USE_AS_STRNCMP || defined USE_AS_STRNCASECMP_L
+	cmp	$16, REM
+	lea	-16(REM), REM
 	jbe	L(more8byteseq)
 #endif
 	add	$16, %ecx
@@ -1305,8 +1505,8 @@ L(nibble_ashr_10):
 	test	$0xfc00, %esi
 	jnz	L(ashr_10_exittail)
 
-#ifdef USE_AS_STRNCMP
-	cmp	$6, %ebp
+#if defined USE_AS_STRNCMP || defined USE_AS_STRNCASECMP_L
+	cmp	$6, REM
 	jbe	L(ashr_10_exittail)
 #endif
 	pxor	%xmm0, %xmm0
@@ -1333,6 +1533,7 @@ L(ashr_11):
 	movdqa	(%eax), %xmm1
 	pcmpeqb	%xmm1, %xmm0
 	pslldq	$5, %xmm2
+	TOLOWER (%xmm1, %xmm2)
 	pcmpeqb	%xmm1, %xmm2
 	psubb	%xmm0, %xmm2
 	pmovmskb %xmm2, %edi
@@ -1347,7 +1548,7 @@ L(ashr_11):
 	movdqa	(%edx), %xmm3
 	pxor	%xmm0, %xmm0
 	mov	$16, %ecx
-	or	$11, %ebx
+	orl	$11, FLAGS
 	lea	11(%edx), %edi
 	and	$0xfff, %edi
 	sub	$0x1000, %edi
@@ -1363,6 +1564,7 @@ L(gobble_ashr_11):
 	movdqa	%xmm2, %xmm4
 
 	palignr	$11, %xmm3, %xmm2
+	TOLOWER (%xmm1, %xmm2)
 
 	pcmpeqb	%xmm1, %xmm0
 	pcmpeqb	%xmm2, %xmm1
@@ -1371,9 +1573,9 @@ L(gobble_ashr_11):
 	sub	$0xffff, %esi
 	jnz	L(exit)
 
-#ifdef USE_AS_STRNCMP
-	cmp	$16, %ebp
-	lea	-16(%ebp), %ebp
+#if defined USE_AS_STRNCMP || defined USE_AS_STRNCASECMP_L
+	cmp	$16, REM
+	lea	-16(REM), REM
 	jbe	L(more8byteseq)
 #endif
 	add	$16, %ecx
@@ -1387,6 +1589,7 @@ L(gobble_ashr_11):
 	movdqa	%xmm2, %xmm4
 
 	palignr	$11, %xmm3, %xmm2
+	TOLOWER (%xmm1, %xmm2)
 
 	pcmpeqb	%xmm1, %xmm0
 	pcmpeqb	%xmm2, %xmm1
@@ -1395,9 +1598,9 @@ L(gobble_ashr_11):
 	sub	$0xffff, %esi
 	jnz	L(exit)
 
-#ifdef USE_AS_STRNCMP
-	cmp	$16, %ebp
-	lea	-16(%ebp), %ebp
+#if defined USE_AS_STRNCMP || defined USE_AS_STRNCASECMP_L
+	cmp	$16, REM
+	lea	-16(REM), REM
 	jbe	L(more8byteseq)
 #endif
 	add	$16, %ecx
@@ -1411,8 +1614,8 @@ L(nibble_ashr_11):
 	test	$0xf800, %esi
 	jnz	L(ashr_11_exittail)
 
-#ifdef USE_AS_STRNCMP
-	cmp	$5, %ebp
+#if defined USE_AS_STRNCMP || defined USE_AS_STRNCASECMP_L
+	cmp	$5, REM
 	jbe	L(ashr_11_exittail)
 #endif
 	pxor	%xmm0, %xmm0
@@ -1439,6 +1642,7 @@ L(ashr_12):
 	movdqa	(%eax), %xmm1
 	pcmpeqb	%xmm1, %xmm0
 	pslldq	$4, %xmm2
+	TOLOWER (%xmm1, %xmm2)
 	pcmpeqb	%xmm1, %xmm2
 	psubb	%xmm0, %xmm2
 	pmovmskb %xmm2, %edi
@@ -1453,7 +1657,7 @@ L(ashr_12):
 	movdqa	(%edx), %xmm3
 	pxor	%xmm0, %xmm0
 	mov	$16, %ecx
-	or	$12, %ebx
+	orl	$12, FLAGS
 	lea	12(%edx), %edi
 	and	$0xfff, %edi
 	sub	$0x1000, %edi
@@ -1469,6 +1673,7 @@ L(gobble_ashr_12):
 	movdqa	%xmm2, %xmm4
 
 	palignr	$12, %xmm3, %xmm2
+	TOLOWER (%xmm1, %xmm2)
 
 	pcmpeqb	%xmm1, %xmm0
 	pcmpeqb	%xmm2, %xmm1
@@ -1477,9 +1682,9 @@ L(gobble_ashr_12):
 	sub	$0xffff, %esi
 	jnz	L(exit)
 
-#ifdef USE_AS_STRNCMP
-	cmp	$16, %ebp
-	lea	-16(%ebp), %ebp
+#if defined USE_AS_STRNCMP || defined USE_AS_STRNCASECMP_L
+	cmp	$16, REM
+	lea	-16(REM), REM
 	jbe	L(more8byteseq)
 #endif
 
@@ -1494,6 +1699,7 @@ L(gobble_ashr_12):
 	movdqa	%xmm2, %xmm4
 
 	palignr	$12, %xmm3, %xmm2
+	TOLOWER (%xmm1, %xmm2)
 
 	pcmpeqb	%xmm1, %xmm0
 	pcmpeqb	%xmm2, %xmm1
@@ -1502,9 +1708,9 @@ L(gobble_ashr_12):
 	sub	$0xffff, %esi
 	jnz	L(exit)
 
-#ifdef USE_AS_STRNCMP
-	cmp	$16, %ebp
-	lea	-16(%ebp), %ebp
+#if defined USE_AS_STRNCMP || defined USE_AS_STRNCASECMP_L
+	cmp	$16, REM
+	lea	-16(REM), REM
 	jbe	L(more8byteseq)
 #endif
 	add	$16, %ecx
@@ -1518,8 +1724,8 @@ L(nibble_ashr_12):
 	test	$0xf000, %esi
 	jnz	L(ashr_12_exittail)
 
-#ifdef USE_AS_STRNCMP
-	cmp	$4, %ebp
+#if defined USE_AS_STRNCMP || defined USE_AS_STRNCASECMP_L
+	cmp	$4, REM
 	jbe	L(ashr_12_exittail)
 #endif
 	pxor	%xmm0, %xmm0
@@ -1546,6 +1752,7 @@ L(ashr_13):
 	movdqa	(%eax), %xmm1
 	pcmpeqb	%xmm1, %xmm0
 	pslldq	$3, %xmm2
+	TOLOWER (%xmm1, %xmm2)
 	pcmpeqb	%xmm1, %xmm2
 	psubb	%xmm0, %xmm2
 	pmovmskb %xmm2, %edi
@@ -1560,7 +1767,7 @@ L(ashr_13):
 	movdqa	(%edx), %xmm3
 	pxor	%xmm0, %xmm0
 	mov	$16, %ecx
-	or	$13, %ebx
+	orl	$13, FLAGS
 	lea	13(%edx), %edi
 	and	$0xfff, %edi
 	sub	$0x1000, %edi
@@ -1576,6 +1783,7 @@ L(gobble_ashr_13):
 	movdqa	%xmm2, %xmm4
 
 	palignr	$13, %xmm3, %xmm2
+	TOLOWER (%xmm1, %xmm2)
 
 	pcmpeqb	%xmm1, %xmm0
 	pcmpeqb	%xmm2, %xmm1
@@ -1584,9 +1792,9 @@ L(gobble_ashr_13):
 	sub	$0xffff, %esi
 	jnz	L(exit)
 
-#ifdef USE_AS_STRNCMP
-	cmp	$16, %ebp
-	lea	-16(%ebp), %ebp
+#if defined USE_AS_STRNCMP || defined USE_AS_STRNCASECMP_L
+	cmp	$16, REM
+	lea	-16(REM), REM
 	jbe	L(more8byteseq)
 #endif
 	add	$16, %ecx
@@ -1600,6 +1808,7 @@ L(gobble_ashr_13):
 	movdqa	%xmm2, %xmm4
 
 	palignr	$13, %xmm3, %xmm2
+	TOLOWER (%xmm1, %xmm2)
 
 	pcmpeqb	%xmm1, %xmm0
 	pcmpeqb	%xmm2, %xmm1
@@ -1608,9 +1817,9 @@ L(gobble_ashr_13):
 	sub	$0xffff, %esi
 	jnz	L(exit)
 
-#ifdef USE_AS_STRNCMP
-	cmp	$16, %ebp
-	lea	-16(%ebp), %ebp
+#if defined USE_AS_STRNCMP || defined USE_AS_STRNCASECMP_L
+	cmp	$16, REM
+	lea	-16(REM), REM
 	jbe	L(more8byteseq)
 #endif
 	add	$16, %ecx
@@ -1624,8 +1833,8 @@ L(nibble_ashr_13):
 	test	$0xe000, %esi
 	jnz	L(ashr_13_exittail)
 
-#ifdef USE_AS_STRNCMP
-	cmp	$3, %ebp
+#if defined USE_AS_STRNCMP || defined USE_AS_STRNCASECMP_L
+	cmp	$3, REM
 	jbe	L(ashr_13_exittail)
 #endif
 	pxor	%xmm0, %xmm0
@@ -1652,6 +1861,7 @@ L(ashr_14):
 	movdqa	(%eax), %xmm1
 	pcmpeqb	%xmm1, %xmm0
 	pslldq	$2, %xmm2
+	TOLOWER (%xmm1, %xmm2)
 	pcmpeqb	%xmm1, %xmm2
 	psubb	%xmm0, %xmm2
 	pmovmskb %xmm2, %edi
@@ -1666,7 +1876,7 @@ L(ashr_14):
 	movdqa	(%edx), %xmm3
 	pxor	%xmm0, %xmm0
 	mov	$16, %ecx
-	or	$14, %ebx
+	orl	$14, FLAGS
 	lea	14(%edx), %edi
 	and	$0xfff, %edi
 	sub	$0x1000, %edi
@@ -1682,6 +1892,7 @@ L(gobble_ashr_14):
 	movdqa	%xmm2, %xmm4
 
 	palignr	$14, %xmm3, %xmm2
+	TOLOWER (%xmm1, %xmm2)
 
 	pcmpeqb	%xmm1, %xmm0
 	pcmpeqb	%xmm2, %xmm1
@@ -1690,9 +1901,9 @@ L(gobble_ashr_14):
 	sub	$0xffff, %esi
 	jnz	L(exit)
 
-#ifdef USE_AS_STRNCMP
-	cmp	$16, %ebp
-	lea	-16(%ebp), %ebp
+#if defined USE_AS_STRNCMP || defined USE_AS_STRNCASECMP_L
+	cmp	$16, REM
+	lea	-16(REM), REM
 	jbe	L(more8byteseq)
 #endif
 	add	$16, %ecx
@@ -1706,6 +1917,7 @@ L(gobble_ashr_14):
 	movdqa	%xmm2, %xmm4
 
 	palignr	$14, %xmm3, %xmm2
+	TOLOWER (%xmm1, %xmm2)
 
 	pcmpeqb	%xmm1, %xmm0
 	pcmpeqb	%xmm2, %xmm1
@@ -1714,9 +1926,9 @@ L(gobble_ashr_14):
 	sub	$0xffff, %esi
 	jnz	L(exit)
 
-#ifdef USE_AS_STRNCMP
-	cmp	$16, %ebp
-	lea	-16(%ebp), %ebp
+#if defined USE_AS_STRNCMP || defined USE_AS_STRNCASECMP_L
+	cmp	$16, REM
+	lea	-16(REM), REM
 	jbe	L(more8byteseq)
 #endif
 	add	$16, %ecx
@@ -1730,8 +1942,8 @@ L(nibble_ashr_14):
 	test	$0xc000, %esi
 	jnz	L(ashr_14_exittail)
 
-#ifdef USE_AS_STRNCMP
-	cmp	$2, %ebp
+#if defined USE_AS_STRNCMP || defined USE_AS_STRNCASECMP_L
+	cmp	$2, REM
 	jbe	L(ashr_14_exittail)
 #endif
 	pxor	%xmm0, %xmm0
@@ -1759,6 +1971,7 @@ L(ashr_15):
 	movdqa	(%eax), %xmm1
 	pcmpeqb	%xmm1, %xmm0
 	pslldq	$1, %xmm2
+	TOLOWER (%xmm1, %xmm2)
 	pcmpeqb	%xmm1, %xmm2
 	psubb	%xmm0, %xmm2
 	pmovmskb %xmm2, %edi
@@ -1773,7 +1986,7 @@ L(ashr_15):
 	movdqa	(%edx), %xmm3
 	pxor	%xmm0, %xmm0
 	mov	$16, %ecx
-	or	$15, %ebx
+	orl	$15, FLAGS
 	lea	15(%edx), %edi
 	and	$0xfff, %edi
 	sub	$0x1000, %edi
@@ -1789,6 +2002,7 @@ L(gobble_ashr_15):
 	movdqa	%xmm2, %xmm4
 
 	palignr	$15, %xmm3, %xmm2
+	TOLOWER (%xmm1, %xmm2)
 
 	pcmpeqb	%xmm1, %xmm0
 	pcmpeqb	%xmm2, %xmm1
@@ -1797,9 +2011,9 @@ L(gobble_ashr_15):
 	sub	$0xffff, %esi
 	jnz	L(exit)
 
-#ifdef USE_AS_STRNCMP
-	cmp	$16, %ebp
-	lea	-16(%ebp), %ebp
+#if defined USE_AS_STRNCMP || defined USE_AS_STRNCASECMP_L
+	cmp	$16, REM
+	lea	-16(REM), REM
 	jbe	L(more8byteseq)
 #endif
 	add	$16, %ecx
@@ -1813,6 +2027,7 @@ L(gobble_ashr_15):
 	movdqa	%xmm2, %xmm4
 
 	palignr	$15, %xmm3, %xmm2
+	TOLOWER (%xmm1, %xmm2)
 
 	pcmpeqb	%xmm1, %xmm0
 	pcmpeqb	%xmm2, %xmm1
@@ -1821,9 +2036,9 @@ L(gobble_ashr_15):
 	sub	$0xffff, %esi
 	jnz	L(exit)
 
-#ifdef USE_AS_STRNCMP
-	cmp	$16, %ebp
-	lea	-16(%ebp), %ebp
+#if defined USE_AS_STRNCMP || defined USE_AS_STRNCASECMP_L
+	cmp	$16, REM
+	lea	-16(REM), REM
 	jbe	L(more8byteseq)
 #endif
 	add	$16, %ecx
@@ -1837,8 +2052,8 @@ L(nibble_ashr_15):
 	test	$0x8000, %esi
 	jnz	L(ashr_15_exittail)
 
-#ifdef USE_AS_STRNCMP
-	cmp	$1, %ebp
+#if defined USE_AS_STRNCMP || defined USE_AS_STRNCASECMP_L
+	cmp	$1, REM
 	jbe	L(ashr_15_exittail)
 #endif
 	pxor	%xmm0, %xmm0
@@ -1854,27 +2069,34 @@ L(ashr_15_exittail):
 
 	.p2align 4
 L(aftertail):
+	TOLOWER (%xmm1, %xmm3)
 	pcmpeqb	%xmm3, %xmm1
 	psubb	%xmm0, %xmm1
 	pmovmskb %xmm1, %esi
 	not	%esi
 L(exit):
-	mov	%ebx, %edi
+	mov	FLAGS, %edi
 	and	$0x1f, %edi
 	lea	-16(%edi, %ecx), %edi
 L(less32bytes):
 	add	%edi, %edx
 	add	%ecx, %eax
-	test	$0x20, %ebx
+	testl	$0x20, FLAGS
 	jz	L(ret2)
 	xchg	%eax, %edx
 
 	.p2align 4
 L(ret2):
 	mov	%esi, %ecx
+#if defined USE_AS_STRCASECMP_L || defined USE_AS_STRNCASECMP_L
+	addl	$4, %esp
+	cfi_adjust_cfa_offset (-4)
+#endif
 	POP	(%esi)
 	POP	(%edi)
-	POP	(%ebx)
+#if !defined USE_AS_STRCASECMP_L && !defined USE_AS_STRNCASECMP_L
+	POP	(FLAGS)
+#endif
 L(less16bytes):
 	test	%cl, %cl
 	jz	L(2next_8_bytes)
@@ -1899,90 +2121,169 @@ L(less16bytes):
 
 	test	$0x40, %cl
 	jnz	L(Byte6)
-#ifdef USE_AS_STRNCMP
-	cmp	$7, %ebp
+#if defined USE_AS_STRNCMP || defined USE_AS_STRNCASECMP_L
+	cmp	$7, REM
 	jbe	L(eq)
 #endif
 
 	movzx	7(%eax), %ecx
 	movzx	7(%edx), %eax
+#if defined USE_AS_STRCASECMP_L || defined USE_AS_STRNCASECMP_L
+# ifdef PIC
+	movl	_nl_C_LC_CTYPE_tolower@GOTOFF+128*4(%ebx,%ecx,4), %ecx
+	movl	_nl_C_LC_CTYPE_tolower@GOTOFF+128*4(%ebx,%eax,4), %eax
+# else
+	movl	_nl_C_LC_CTYPE_tolower+128*4(,%ecx,4), %ecx
+	movl	_nl_C_LC_CTYPE_tolower+128*4(,%eax,4), %eax
+# endif
+#endif
 
 	sub	%ecx, %eax
 	RETURN
 
 L(Byte0):
-#ifdef USE_AS_STRNCMP
-	cmp	$0, %ebp
+#if defined USE_AS_STRNCMP || defined USE_AS_STRNCASECMP_L
+	cmp	$0, REM
 	jbe	L(eq)
 #endif
 	movzx	(%eax), %ecx
 	movzx	(%edx), %eax
 
+#if defined USE_AS_STRCASECMP_L || defined USE_AS_STRNCASECMP_L
+# ifdef PIC
+	movl	_nl_C_LC_CTYPE_tolower@GOTOFF+128*4(%ebx,%ecx,4), %ecx
+	movl	_nl_C_LC_CTYPE_tolower@GOTOFF+128*4(%ebx,%eax,4), %eax
+# else
+	movl	_nl_C_LC_CTYPE_tolower+128*4(,%ecx,4), %ecx
+	movl	_nl_C_LC_CTYPE_tolower+128*4(,%eax,4), %eax
+# endif
+#endif
+
 	sub	%ecx, %eax
 	RETURN
 
 L(Byte1):
-#ifdef USE_AS_STRNCMP
-	cmp	$1, %ebp
+#if defined USE_AS_STRNCMP || defined USE_AS_STRNCASECMP_L
+	cmp	$1, REM
 	jbe	L(eq)
 #endif
 	movzx	1(%eax), %ecx
 	movzx	1(%edx), %eax
 
+#if defined USE_AS_STRCASECMP_L || defined USE_AS_STRNCASECMP_L
+# ifdef PIC
+	movl	_nl_C_LC_CTYPE_tolower@GOTOFF+128*4(%ebx,%ecx,4), %ecx
+	movl	_nl_C_LC_CTYPE_tolower@GOTOFF+128*4(%ebx,%eax,4), %eax
+# else
+	movl	_nl_C_LC_CTYPE_tolower+128*4(,%ecx,4), %ecx
+	movl	_nl_C_LC_CTYPE_tolower+128*4(,%eax,4), %eax
+# endif
+#endif
+
 	sub	%ecx, %eax
 	RETURN
 
 L(Byte2):
-#ifdef USE_AS_STRNCMP
-	cmp	$2, %ebp
+#if defined USE_AS_STRNCMP || defined USE_AS_STRNCASECMP_L
+	cmp	$2, REM
 	jbe	L(eq)
 #endif
 	movzx	2(%eax), %ecx
 	movzx	2(%edx), %eax
 
+#if defined USE_AS_STRCASECMP_L || defined USE_AS_STRNCASECMP_L
+# ifdef PIC
+	movl	_nl_C_LC_CTYPE_tolower@GOTOFF+128*4(%ebx,%ecx,4), %ecx
+	movl	_nl_C_LC_CTYPE_tolower@GOTOFF+128*4(%ebx,%eax,4), %eax
+# else
+	movl	_nl_C_LC_CTYPE_tolower+128*4(,%ecx,4), %ecx
+	movl	_nl_C_LC_CTYPE_tolower+128*4(,%eax,4), %eax
+# endif
+#endif
+
 	sub	%ecx, %eax
 	RETURN
 
 L(Byte3):
-#ifdef USE_AS_STRNCMP
-	cmp	$3, %ebp
+#if defined USE_AS_STRNCMP || defined USE_AS_STRNCASECMP_L
+	cmp	$3, REM
 	jbe	L(eq)
 #endif
 	movzx	3(%eax), %ecx
 	movzx	3(%edx), %eax
 
+#if defined USE_AS_STRCASECMP_L || defined USE_AS_STRNCASECMP_L
+# ifdef PIC
+	movl	_nl_C_LC_CTYPE_tolower@GOTOFF+128*4(%ebx,%ecx,4), %ecx
+	movl	_nl_C_LC_CTYPE_tolower@GOTOFF+128*4(%ebx,%eax,4), %eax
+# else
+	movl	_nl_C_LC_CTYPE_tolower+128*4(,%ecx,4), %ecx
+	movl	_nl_C_LC_CTYPE_tolower+128*4(,%eax,4), %eax
+# endif
+#endif
+
 	sub	%ecx, %eax
 	RETURN
 
 L(Byte4):
-#ifdef USE_AS_STRNCMP
-	cmp	$4, %ebp
+#if defined USE_AS_STRNCMP || defined USE_AS_STRNCASECMP_L
+	cmp	$4, REM
 	jbe	L(eq)
 #endif
 	movzx	4(%eax), %ecx
 	movzx	4(%edx), %eax
 
+#if defined USE_AS_STRCASECMP_L || defined USE_AS_STRNCASECMP_L
+# ifdef PIC
+	movl	_nl_C_LC_CTYPE_tolower@GOTOFF+128*4(%ebx,%ecx,4), %ecx
+	movl	_nl_C_LC_CTYPE_tolower@GOTOFF+128*4(%ebx,%eax,4), %eax
+# else
+	movl	_nl_C_LC_CTYPE_tolower+128*4(,%ecx,4), %ecx
+	movl	_nl_C_LC_CTYPE_tolower+128*4(,%eax,4), %eax
+# endif
+#endif
+
 	sub	%ecx, %eax
 	RETURN
 
 L(Byte5):
-#ifdef USE_AS_STRNCMP
-	cmp	$5, %ebp
+#if defined USE_AS_STRNCMP || defined USE_AS_STRNCASECMP_L
+	cmp	$5, REM
 	jbe	L(eq)
 #endif
 	movzx	5(%eax), %ecx
 	movzx	5(%edx), %eax
 
+#if defined USE_AS_STRCASECMP_L || defined USE_AS_STRNCASECMP_L
+# ifdef PIC
+	movl	_nl_C_LC_CTYPE_tolower@GOTOFF+128*4(%ebx,%ecx,4), %ecx
+	movl	_nl_C_LC_CTYPE_tolower@GOTOFF+128*4(%ebx,%eax,4), %eax
+# else
+	movl	_nl_C_LC_CTYPE_tolower+128*4(,%ecx,4), %ecx
+	movl	_nl_C_LC_CTYPE_tolower+128*4(,%eax,4), %eax
+# endif
+#endif
+
 	sub	%ecx, %eax
 	RETURN
 
 L(Byte6):
-#ifdef USE_AS_STRNCMP
-	cmp	$6, %ebp
+#if defined USE_AS_STRNCMP || defined USE_AS_STRNCASECMP_L
+	cmp	$6, REM
 	jbe	L(eq)
 #endif
 	movzx	6(%eax), %ecx
 	movzx	6(%edx), %eax
+
+#if defined USE_AS_STRCASECMP_L || defined USE_AS_STRNCASECMP_L
+# ifdef PIC
+	movl	_nl_C_LC_CTYPE_tolower@GOTOFF+128*4(%ebx,%ecx,4), %ecx
+	movl	_nl_C_LC_CTYPE_tolower@GOTOFF+128*4(%ebx,%eax,4), %eax
+# else
+	movl	_nl_C_LC_CTYPE_tolower+128*4(,%ecx,4), %ecx
+	movl	_nl_C_LC_CTYPE_tolower+128*4(,%eax,4), %eax
+# endif
+#endif
 
 	sub	%ecx, %eax
 	RETURN
@@ -1990,9 +2291,9 @@ L(Byte6):
 L(2next_8_bytes):
 	add	$8, %eax
 	add	$8, %edx
-#ifdef USE_AS_STRNCMP
-	cmp	$8, %ebp
-	lea	-8(%ebp), %ebp
+#if defined USE_AS_STRNCMP || defined USE_AS_STRNCASECMP_L
+	cmp	$8, REM
+	lea	-8(REM), REM
 	jbe	L(eq)
 #endif
 
@@ -2017,194 +2318,455 @@ L(2next_8_bytes):
 	test	$0x40, %ch
 	jnz	L(Byte6)
 
-#ifdef USE_AS_STRNCMP
-	cmp	$7, %ebp
+#if defined USE_AS_STRNCMP || defined USE_AS_STRNCASECMP_L
+	cmp	$7, REM
 	jbe	L(eq)
 #endif
 	movzx	7(%eax), %ecx
 	movzx	7(%edx), %eax
 
+#if defined USE_AS_STRCASECMP_L || defined USE_AS_STRNCASECMP_L
+# ifdef PIC
+	movl	_nl_C_LC_CTYPE_tolower@GOTOFF+128*4(%ebx,%ecx,4), %ecx
+	movl	_nl_C_LC_CTYPE_tolower@GOTOFF+128*4(%ebx,%eax,4), %eax
+# else
+	movl	_nl_C_LC_CTYPE_tolower+128*4(,%ecx,4), %ecx
+	movl	_nl_C_LC_CTYPE_tolower+128*4(,%eax,4), %eax
+# endif
+#endif
+
 	sub	%ecx, %eax
 	RETURN
 
+#ifdef USE_AS_STRNCMP
+L(neq_sncmp):
+#endif
 L(neq):
 	mov	$1, %eax
 	ja	L(neq_bigger)
 	neg	%eax
 L(neq_bigger):
-#ifdef USE_AS_STRNCMP
-	POP	(%ebp)
+#if defined USE_AS_STRCASECMP_L || defined USE_AS_STRNCASECMP_L
+	addl	$4, %esp
+	cfi_adjust_cfa_offset (-4)
+#endif
+#if defined USE_AS_STRNCMP || defined USE_AS_STRNCASECMP_L
+	POP	(REM)
+#endif
+#if defined USE_AS_STRCASECMP_L || defined USE_AS_STRNCASECMP_L
+# ifdef PIC
+	POP	(%ebx)
+# endif
 #endif
 	ret
 
-#ifdef USE_AS_STRNCMP
+#if defined USE_AS_STRNCMP || defined USE_AS_STRNCASECMP_L
 	.p2align 4
 	cfi_restore_state
 L(more8byteseq):
+
+# ifdef USE_AS_STRNCASECMP_L
+	addl	$4, %esp
+	cfi_adjust_cfa_offset (-4)
+# endif
 	POP	(%esi)
 	POP	(%edi)
-	POP	(%ebx)
+# ifdef USE_AS_STRNCMP
+	POP	(FLAGS)
+# endif
 #endif
 
+#ifdef USE_AS_STRNCMP
+L(eq_sncmp):
+#endif
 L(eq):
 
-#ifdef USE_AS_STRNCMP
-	POP	(%ebp)
+#if defined USE_AS_STRNCMP || defined USE_AS_STRNCASECMP_L
+	POP	(REM)
+#endif
+#if defined USE_AS_STRCASECMP_L || defined USE_AS_STRNCASECMP_L
+# ifdef PIC
+	POP	(%ebx)
+# endif
 #endif
 	xorl	%eax, %eax
 	ret
 
-#ifdef USE_AS_STRNCMP
+#if defined USE_AS_STRNCMP || defined USE_AS_STRNCASECMP_L
 	.p2align 4
-	CFI_PUSH (%ebp)
+# if defined USE_AS_STRNCASECMP_L && defined PIC
+	CFI_PUSH (%ebx)
+# endif
+	CFI_PUSH (REM)
 L(less16bytes_sncmp):
-	test	%ebp, %ebp
-	jz	L(eq)
+# ifdef USE_AS_STRNCASECMP_L
+	PUSH	(%esi)
+# endif
+	test	REM, REM
+	jz	L(eq_sncmp)
 
 	movzbl	(%eax), %ecx
+# ifdef USE_AS_STRNCASECMP_L
+	movzbl	(%edx), %esi
+#  ifdef PIC
+	movl	_nl_C_LC_CTYPE_tolower@GOTOFF+128*4(%ebx,%ecx,4), %ecx
+	movl	_nl_C_LC_CTYPE_tolower@GOTOFF+128*4(%ebx,%esi,4), %esi
+#  else
+	movl	_nl_C_LC_CTYPE_tolower+128*4(,%ecx,4), %ecx
+	movl	_nl_C_LC_CTYPE_tolower+128*4(,%esi,4), %esi
+#  endif
+	cmpl	%ecx, %esi
+# else
 	cmpb	%cl, (%edx)
-	jne	L(neq)
+# endif
+	jne	L(neq_sncmp)
 	test	%cl, %cl
 	je	L(eq)
 
-	cmp	$1, %ebp
-	je	L(eq)
+	cmp	$1, REM
+	je	L(eq_sncmp)
 
 	movzbl	1(%eax), %ecx
+# ifdef USE_AS_STRNCASECMP_L
+	movzbl	1(%edx), %esi
+#  ifdef PIC
+	movl	_nl_C_LC_CTYPE_tolower@GOTOFF+128*4(%ebx,%ecx,4), %ecx
+	movl	_nl_C_LC_CTYPE_tolower@GOTOFF+128*4(%ebx,%esi,4), %esi
+#  else
+	movl	_nl_C_LC_CTYPE_tolower+128*4(,%ecx,4), %ecx
+	movl	_nl_C_LC_CTYPE_tolower+128*4(,%esi,4), %esi
+#  endif
+	cmpl	%ecx, %esi
+# else
 	cmpb	%cl, 1(%edx)
-	jne	L(neq)
+# endif
+	jne	L(neq_sncmp)
 	test	%cl, %cl
-	je	L(eq)
+	je	L(eq_sncmp)
 
-	cmp	$2, %ebp
-	je	L(eq)
+	cmp	$2, REM
+	je	L(eq_sncmp)
 
 	movzbl	2(%eax), %ecx
+# ifdef USE_AS_STRNCASECMP_L
+	movzbl	2(%edx), %esi
+#  ifdef PIC
+	movl	_nl_C_LC_CTYPE_tolower@GOTOFF+128*4(%ebx,%ecx,4), %ecx
+	movl	_nl_C_LC_CTYPE_tolower@GOTOFF+128*4(%ebx,%esi,4), %esi
+#  else
+	movl	_nl_C_LC_CTYPE_tolower+128*4(,%ecx,4), %ecx
+	movl	_nl_C_LC_CTYPE_tolower+128*4(,%esi,4), %esi
+#  endif
+	cmpl	%ecx, %esi
+# else
 	cmpb	%cl, 2(%edx)
-	jne	L(neq)
+# endif
+	jne	L(neq_sncmp)
 	test	%cl, %cl
-	je	L(eq)
+	je	L(eq_sncmp)
 
-	cmp	$3, %ebp
-	je	L(eq)
+	cmp	$3, REM
+	je	L(eq_sncmp)
 
 	movzbl	3(%eax), %ecx
+# ifdef USE_AS_STRNCASECMP_L
+	movzbl	3(%edx), %esi
+#  ifdef PIC
+	movl	_nl_C_LC_CTYPE_tolower@GOTOFF+128*4(%ebx,%ecx,4), %ecx
+	movl	_nl_C_LC_CTYPE_tolower@GOTOFF+128*4(%ebx,%esi,4), %esi
+#  else
+	movl	_nl_C_LC_CTYPE_tolower+128*4(,%ecx,4), %ecx
+	movl	_nl_C_LC_CTYPE_tolower+128*4(,%esi,4), %esi
+#  endif
+	cmpl	%ecx, %esi
+# else
 	cmpb	%cl, 3(%edx)
-	jne	L(neq)
+# endif
+	jne	L(neq_sncmp)
 	test	%cl, %cl
-	je	L(eq)
+	je	L(eq_sncmp)
 
-	cmp	$4, %ebp
-	je	L(eq)
+	cmp	$4, REM
+	je	L(eq_sncmp)
 
 	movzbl	4(%eax), %ecx
+# ifdef USE_AS_STRNCASECMP_L
+	movzbl	4(%edx), %esi
+#  ifdef PIC
+	movl	_nl_C_LC_CTYPE_tolower@GOTOFF+128*4(%ebx,%ecx,4), %ecx
+	movl	_nl_C_LC_CTYPE_tolower@GOTOFF+128*4(%ebx,%esi,4), %esi
+#  else
+	movl	_nl_C_LC_CTYPE_tolower+128*4(,%ecx,4), %ecx
+	movl	_nl_C_LC_CTYPE_tolower+128*4(,%esi,4), %esi
+#  endif
+	cmpl	%ecx, %esi
+# else
 	cmpb	%cl, 4(%edx)
-	jne	L(neq)
+# endif
+	jne	L(neq_sncmp)
 	test	%cl, %cl
-	je	L(eq)
+	je	L(eq_sncmp)
 
-	cmp	$5, %ebp
-	je	L(eq)
+	cmp	$5, REM
+	je	L(eq_sncmp)
 
 	movzbl	5(%eax), %ecx
+# ifdef USE_AS_STRNCASECMP_L
+	movzbl	5(%edx), %esi
+#  ifdef PIC
+	movl	_nl_C_LC_CTYPE_tolower@GOTOFF+128*4(%ebx,%ecx,4), %ecx
+	movl	_nl_C_LC_CTYPE_tolower@GOTOFF+128*4(%ebx,%esi,4), %esi
+#  else
+	movl	_nl_C_LC_CTYPE_tolower+128*4(,%ecx,4), %ecx
+	movl	_nl_C_LC_CTYPE_tolower+128*4(,%esi,4), %esi
+#  endif
+	cmpl	%ecx, %esi
+# else
 	cmpb	%cl, 5(%edx)
-	jne	L(neq)
+# endif
+	jne	L(neq_sncmp)
 	test	%cl, %cl
-	je	L(eq)
+	je	L(eq_sncmp)
 
-	cmp	$6, %ebp
-	je	L(eq)
+	cmp	$6, REM
+	je	L(eq_sncmp)
 
 	movzbl	6(%eax), %ecx
+# ifdef USE_AS_STRNCASECMP_L
+	movzbl	6(%edx), %esi
+#  ifdef PIC
+	movl	_nl_C_LC_CTYPE_tolower@GOTOFF+128*4(%ebx,%ecx,4), %ecx
+	movl	_nl_C_LC_CTYPE_tolower@GOTOFF+128*4(%ebx,%esi,4), %esi
+#  else
+	movl	_nl_C_LC_CTYPE_tolower+128*4(,%ecx,4), %ecx
+	movl	_nl_C_LC_CTYPE_tolower+128*4(,%esi,4), %esi
+#  endif
+	cmpl	%ecx, %esi
+# else
 	cmpb	%cl, 6(%edx)
-	jne	L(neq)
+# endif
+	jne	L(neq_sncmp)
 	test	%cl, %cl
-	je	L(eq)
+	je	L(eq_sncmp)
 
-	cmp	$7, %ebp
-	je	L(eq)
+	cmp	$7, REM
+	je	L(eq_sncmp)
 
 	movzbl	7(%eax), %ecx
+# ifdef USE_AS_STRNCASECMP_L
+	movzbl	7(%edx), %esi
+#  ifdef PIC
+	movl	_nl_C_LC_CTYPE_tolower@GOTOFF+128*4(%ebx,%ecx,4), %ecx
+	movl	_nl_C_LC_CTYPE_tolower@GOTOFF+128*4(%ebx,%esi,4), %esi
+#  else
+	movl	_nl_C_LC_CTYPE_tolower+128*4(,%ecx,4), %ecx
+	movl	_nl_C_LC_CTYPE_tolower+128*4(,%esi,4), %esi
+#  endif
+	cmpl	%ecx, %esi
+# else
 	cmpb	%cl, 7(%edx)
-	jne	L(neq)
+# endif
+	jne	L(neq_sncmp)
 	test	%cl, %cl
-	je	L(eq)
+	je	L(eq_sncmp)
 
 
-	cmp	$8, %ebp
-	je	L(eq)
+	cmp	$8, REM
+	je	L(eq_sncmp)
 
 	movzbl	8(%eax), %ecx
+# ifdef USE_AS_STRNCASECMP_L
+	movzbl	8(%edx), %esi
+#  ifdef PIC
+	movl	_nl_C_LC_CTYPE_tolower@GOTOFF+128*4(%ebx,%ecx,4), %ecx
+	movl	_nl_C_LC_CTYPE_tolower@GOTOFF+128*4(%ebx,%esi,4), %esi
+#  else
+	movl	_nl_C_LC_CTYPE_tolower+128*4(,%ecx,4), %ecx
+	movl	_nl_C_LC_CTYPE_tolower+128*4(,%esi,4), %esi
+#  endif
+	cmpl	%ecx, %esi
+# else
 	cmpb	%cl, 8(%edx)
-	jne	L(neq)
+# endif
+	jne	L(neq_sncmp)
 	test	%cl, %cl
-	je	L(eq)
+	je	L(eq_sncmp)
 
-	cmp	$9, %ebp
-	je	L(eq)
+	cmp	$9, REM
+	je	L(eq_sncmp)
 
 	movzbl	9(%eax), %ecx
+# ifdef USE_AS_STRNCASECMP_L
+	movzbl	9(%edx), %esi
+#  ifdef PIC
+	movl	_nl_C_LC_CTYPE_tolower@GOTOFF+128*4(%ebx,%ecx,4), %ecx
+	movl	_nl_C_LC_CTYPE_tolower@GOTOFF+128*4(%ebx,%esi,4), %esi
+#  else
+	movl	_nl_C_LC_CTYPE_tolower+128*4(,%ecx,4), %ecx
+	movl	_nl_C_LC_CTYPE_tolower+128*4(,%esi,4), %esi
+#  endif
+	cmpl	%ecx, %esi
+# else
 	cmpb	%cl, 9(%edx)
-	jne	L(neq)
+# endif
+	jne	L(neq_sncmp)
 	test	%cl, %cl
-	je	L(eq)
+	je	L(eq_sncmp)
 
-	cmp	$10, %ebp
-	je	L(eq)
+	cmp	$10, REM
+	je	L(eq_sncmp)
 
 	movzbl	10(%eax), %ecx
+# ifdef USE_AS_STRNCASECMP_L
+	movzbl	10(%edx), %esi
+#  ifdef PIC
+	movl	_nl_C_LC_CTYPE_tolower@GOTOFF+128*4(%ebx,%ecx,4), %ecx
+	movl	_nl_C_LC_CTYPE_tolower@GOTOFF+128*4(%ebx,%esi,4), %esi
+#  else
+	movl	_nl_C_LC_CTYPE_tolower+128*4(,%ecx,4), %ecx
+	movl	_nl_C_LC_CTYPE_tolower+128*4(,%esi,4), %esi
+#  endif
+	cmpl	%ecx, %esi
+# else
 	cmpb	%cl, 10(%edx)
-	jne	L(neq)
+# endif
+	jne	L(neq_sncmp)
 	test	%cl, %cl
-	je	L(eq)
+	je	L(eq_sncmp)
 
-	cmp	$11, %ebp
-	je	L(eq)
+	cmp	$11, REM
+	je	L(eq_sncmp)
 
 	movzbl	11(%eax), %ecx
+# ifdef USE_AS_STRNCASECMP_L
+	movzbl	11(%edx), %esi
+#  ifdef PIC
+	movl	_nl_C_LC_CTYPE_tolower@GOTOFF+128*4(%ebx,%ecx,4), %ecx
+	movl	_nl_C_LC_CTYPE_tolower@GOTOFF+128*4(%ebx,%esi,4), %esi
+#  else
+	movl	_nl_C_LC_CTYPE_tolower+128*4(,%ecx,4), %ecx
+	movl	_nl_C_LC_CTYPE_tolower+128*4(,%esi,4), %esi
+#  endif
+	cmpl	%ecx, %esi
+# else
 	cmpb	%cl, 11(%edx)
-	jne	L(neq)
+# endif
+	jne	L(neq_sncmp)
 	test	%cl, %cl
-	je	L(eq)
+	je	L(eq_sncmp)
 
 
-	cmp	$12, %ebp
-	je	L(eq)
+	cmp	$12, REM
+	je	L(eq_sncmp)
 
 	movzbl	12(%eax), %ecx
+# ifdef USE_AS_STRNCASECMP_L
+	movzbl	12(%edx), %esi
+#  ifdef PIC
+	movl	_nl_C_LC_CTYPE_tolower@GOTOFF+128*4(%ebx,%ecx,4), %ecx
+	movl	_nl_C_LC_CTYPE_tolower@GOTOFF+128*4(%ebx,%esi,4), %esi
+#  else
+	movl	_nl_C_LC_CTYPE_tolower+128*4(,%ecx,4), %ecx
+	movl	_nl_C_LC_CTYPE_tolower+128*4(,%esi,4), %esi
+#  endif
+	cmpl	%ecx, %esi
+# else
 	cmpb	%cl, 12(%edx)
-	jne	L(neq)
+# endif
+	jne	L(neq_sncmp)
 	test	%cl, %cl
-	je	L(eq)
+	je	L(eq_sncmp)
 
-	cmp	$13, %ebp
-	je	L(eq)
+	cmp	$13, REM
+	je	L(eq_sncmp)
 
 	movzbl	13(%eax), %ecx
+# ifdef USE_AS_STRNCASECMP_L
+	movzbl	13(%edx), %esi
+#  ifdef PIC
+	movl	_nl_C_LC_CTYPE_tolower@GOTOFF+128*4(%ebx,%ecx,4), %ecx
+	movl	_nl_C_LC_CTYPE_tolower@GOTOFF+128*4(%ebx,%esi,4), %esi
+#  else
+	movl	_nl_C_LC_CTYPE_tolower+128*4(,%ecx,4), %ecx
+	movl	_nl_C_LC_CTYPE_tolower+128*4(,%esi,4), %esi
+#  endif
+	cmpl	%ecx, %esi
+# else
 	cmpb	%cl, 13(%edx)
-	jne	L(neq)
+# endif
+	jne	L(neq_sncmp)
 	test	%cl, %cl
-	je	L(eq)
+	je	L(eq_sncmp)
 
-	cmp	$14, %ebp
-	je	L(eq)
+	cmp	$14, REM
+	je	L(eq_sncmp)
 
 	movzbl	14(%eax), %ecx
+# ifdef USE_AS_STRNCASECMP_L
+	movzbl	14(%edx), %esi
+#  ifdef PIC
+	movl	_nl_C_LC_CTYPE_tolower@GOTOFF+128*4(%ebx,%ecx,4), %ecx
+	movl	_nl_C_LC_CTYPE_tolower@GOTOFF+128*4(%ebx,%esi,4), %esi
+#  else
+	movl	_nl_C_LC_CTYPE_tolower+128*4(,%ecx,4), %ecx
+	movl	_nl_C_LC_CTYPE_tolower+128*4(,%esi,4), %esi
+#  endif
+	cmpl	%ecx, %esi
+# else
 	cmpb	%cl, 14(%edx)
-	jne	L(neq)
+# endif
+	jne	L(neq_sncmp)
 	test	%cl, %cl
-	je	L(eq)
+	je	L(eq_sncmp)
 
-	cmp	$15, %ebp
-	je	L(eq)
+	cmp	$15, REM
+	je	L(eq_sncmp)
 
 	movzbl	15(%eax), %ecx
+# ifdef USE_AS_STRNCASECMP_L
+	movzbl	15(%edx), %esi
+#  ifdef PIC
+	movl	_nl_C_LC_CTYPE_tolower@GOTOFF+128*4(%ebx,%ecx,4), %ecx
+	movl	_nl_C_LC_CTYPE_tolower@GOTOFF+128*4(%ebx,%esi,4), %esi
+#  else
+	movl	_nl_C_LC_CTYPE_tolower+128*4(,%ecx,4), %ecx
+	movl	_nl_C_LC_CTYPE_tolower+128*4(,%esi,4), %esi
+#  endif
+	cmpl	%ecx, %esi
+# else
 	cmpb	%cl, 15(%edx)
-	jne	L(neq)
+# endif
+	jne	L(neq_sncmp)
 
-	POP	(%ebp)
+# ifdef USE_AS_STRNCASECMP_L
+L(eq_sncmp):
+	POP	(%esi)
+# endif
+	POP	(REM)
+# if defined USE_AS_STRNCASECMP_L && defined PIC
+	POP	(%ebx)
+# endif
 	xor	%eax, %eax
 	ret
+
+# ifdef USE_AS_STRNCASECMP_L
+	.p2align 4
+#  ifdef PIC
+	CFI_PUSH (%ebx)
+#  endif
+	CFI_PUSH (REM)
+	CFI_PUSH (%esi)
+L(neq_sncmp):
+	mov	$1, %eax
+	mov	$-1, %edx
+	cmovna	%edx, %eax
+	POP	(%esi)
+	POP	(REM)
+#  ifdef PIC
+	POP	(%ebx)
+#  endif
+	ret
+# endif
 #endif
 
 END (STRCMP)
