@@ -1,4 +1,4 @@
-GNU C Library NEWS -- history of user-visible changes.  2011-11-4
+GNU C Library NEWS -- history of user-visible changes.  2011-11-14
 Copyright (C) 1992-2009, 2010, 2011 Free Software Foundation, Inc.
 See the end for copying conditions.
 
@@ -56,6 +56,9 @@ Version 2.15
   Implemented by Ulrich Drepper.
 
 * New Linux interfaces: process_vm_readv, process_vm_writev
+
+* Optimized strcasecmp and strncasecmp for SSSE3 and SSE4.2 on x86-32.
+  Implemented by Ulrich Drepper.
 
 Version 2.14
 
