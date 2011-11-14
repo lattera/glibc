@@ -76,12 +76,9 @@ ENTRY(STRCMP)
 	testl	$bit_SSSE3, CPUID_OFFSET+index_SSSE3+__cpu_features@GOTOFF(%ebx)
 	jz	2f
 	leal	__STRCMP_SSSE3@GOTOFF(%ebx), %eax
-#if 0
-	// XXX Temporarily
 	testl	$bit_SSE4_2, CPUID_OFFSET+index_SSE4_2+__cpu_features@GOTOFF(%ebx)
 	jz	2f
 	leal	__STRCMP_SSE4_2@GOTOFF(%ebx), %eax
-#endif
 2:	popl	%ebx
 	cfi_adjust_cfa_offset (-4)
 	cfi_restore (ebx)
@@ -98,12 +95,9 @@ ENTRY(STRCMP)
 	testl	$bit_SSSE3, CPUID_OFFSET+index_SSSE3+__cpu_features
 	jz	2f
 	leal	__STRCMP_SSSE3, %eax
-#if 0
-	// XXX Temporarily
 	testl	$bit_SSE4_2, CPUID_OFFSET+index_SSE4_2+__cpu_features
 	jz	2f
 	leal	__STRCMP_SSE4_2, %eax
-#endif
 2:	ret
 END(STRCMP)
 # endif

@@ -1,3 +1,17 @@
+2011-11-14  Ulrich Drepper  <drepper@gmail.com>
+
+	* sysdeps/i386/i686/multiarch/Makefile [subdir=string]
+	(sysdep_routines): Add strcasecmp_l-sse4 and strncase_l-sse4.
+	* sysdeps/i386/i686/multiarch/strcasecmp.S: Re-enable SSE4.2 code.
+	* sysdeps/i386/i686/multiarch/strcmp.S: Likewise.
+	* sysdeps/i386/i686/multiarch/strncase.S: Likewise.
+	* sysdeps/i386/i686/multiarch/strcmp-sse4.S: Change to allow reuse
+	to compile strcasecmp and strncasecmp.
+	* sysdeps/i386/i686/multiarch/strcasecmp_l-sse4.S: New file.
+	* sysdeps/i386/i686/multiarch/strncase_l-sse4.S: New file.
+
+	* sysdeps/i386/i686/multiarch/strcmp-ssse3.S: Use L macro consistently.
+
 2011-11-13  Ulrich Drepper  <drepper@gmail.com>
 
 	* sysdeps/i386/i686/multiarch/Makefile [subdir=string]: Add

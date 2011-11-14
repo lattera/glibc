@@ -123,7 +123,7 @@ ENTRY (__strcasecmp_ssse3)
 # endif
 	testl	$1, LOCALE_DATA_VALUES+_NL_CTYPE_NONASCII_CASE*SIZEOF_VALUES(%eax)
 	jne	__strcasecmp_nonascii
-	jmp	.Lascii
+	jmp	L(ascii)
 END (__strcasecmp_ssse3)
 #endif
 
@@ -145,7 +145,7 @@ ENTRY (__strncasecmp_ssse3)
 # endif
 	testl	$1, LOCALE_DATA_VALUES+_NL_CTYPE_NONASCII_CASE*SIZEOF_VALUES(%eax)
 	jne	__strncasecmp_nonascii
-	jmp	.Lascii
+	jmp	L(ascii)
 END (__strncasecmp_ssse3)
 #endif
 
@@ -165,7 +165,7 @@ ENTRY (STRCMP)
 	call	__i686.get_pc_thunk.bx
 	addl	$_GLOBAL_OFFSET_TABLE_, %ebx
 # endif
-.Lascii:
+L(ascii):
 	.section .rodata.cst16,"aM",@progbits,16
 	.align 16
 .Lbelowupper:
