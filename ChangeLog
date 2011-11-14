@@ -1,3 +1,8 @@
+2011-11-14  Andreas Schwab  <schwab@redhat.com>
+
+	* malloc/arena.c (arena_get2): Don't call reused_arena when
+	_int_new_arena failed.
+
 2011-11-12  Ulrich Drepper  <drepper@gmail.com>
 
 	* sysdeps/unix/clock_gettime.c (clock_gettime): No need to assign

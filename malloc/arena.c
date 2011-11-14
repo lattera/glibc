@@ -844,14 +844,14 @@ arena_get2(mstate a_tsd, size_t size)
       size_t n = narenas;
       if (__builtin_expect (n <= mp_.arena_test || n < narenas_limit, 0))
 	{
-	  if (catomic_compare_and_exchange_bool_acq(&narenas, n + 1, n))
+	  if (catomic_compare_and_exchange_bool_acq (&narenas, n + 1, n))
 	    goto repeat;
 	  a = _int_new_arena (size);
-	  if (__builtin_expect (a != NULL, 1))
-	    return a;
-	  catomic_decrement(&narenas);
+	  if (__builtin_expect (a == NULL, 0))
+	    catomic_decrement (&narenas);
 	}
-      a = reused_arena ();
+      else
+	a = reused_arena ();
     }
 #else
   if(!a_tsd)
