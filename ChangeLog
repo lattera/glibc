@@ -1,3 +1,8 @@
+2011-11-15  Andreas Schwab  <schwab@redhat.com>
+
+	* sysdeps/unix/sysv/linux/check_pf.c (make_request): Properly
+	count references to noai6ai_cached.
+
 2011-11-15  Ulrich Drepper  <drepper@gmail.com>
 
 	* time/getdate.c (__getdate_r): Set FD_CLOEXEC for given file.

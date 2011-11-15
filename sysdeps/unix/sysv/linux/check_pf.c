@@ -58,7 +58,7 @@ struct cached_data
 
 static struct cached_data noai6ai_cached =
   {
-    .usecnt = 3,	/* Make sure we never try to delete this entry.  */
+    .usecnt = 1,	/* Make sure we never try to delete this entry.  */
     .in6ailen = 0
   };
 
@@ -273,6 +273,7 @@ make_request (int fd, pid_t pid)
     }
   else
     {
+      atomic_add(&noai6ai_cached.usecnt, 2);
       noai6ai_cached.seen_ipv4 = seen_ipv4;
       noai6ai_cached.seen_ipv6 = seen_ipv6;
       result = &noai6ai_cached;
