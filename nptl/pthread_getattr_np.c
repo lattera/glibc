@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2004, 2006, 2007 Free Software Foundation, Inc.
+/* Copyright (C) 2002-2004, 2006, 2007, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -75,7 +75,7 @@ pthread_getattr_np (thread_id, attr)
       /* The safest way to get the top of the stack is to read
 	 /proc/self/maps and locate the line into which
 	 __libc_stack_end falls.  */
-      FILE *fp = fopen ("/proc/self/maps", "rc");
+      FILE *fp = fopen ("/proc/self/maps", "rce");
       if (fp == NULL)
 	ret = errno;
       /* We need the limit of the stack in any case.  */
@@ -164,7 +164,7 @@ pthread_getattr_np (thread_id, attr)
 	{
 	  free (cpuset);
 	  if (ret == ENOSYS)
-	    {	  
+	    {
 	      /* There is no such functionality.  */
 	      ret = 0;
 	      iattr->cpuset = NULL;

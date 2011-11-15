@@ -1,5 +1,5 @@
 /* Netgroup file parser in nss_files modules.
-   Copyright (C) 1996, 1997, 2000, 2004, 2005 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 2000, 2004, 2005, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -63,7 +63,7 @@ _nss_files_setnetgrent (const char *group, struct __netgrent *result)
     return NSS_STATUS_UNAVAIL;
 
   /* Find the netgroups file and open it.  */
-  fp = fopen (DATAFILE, "r");
+  fp = fopen (DATAFILE, "rce");
   if (fp == NULL)
     status = errno == EAGAIN ? NSS_STATUS_TRYAGAIN : NSS_STATUS_UNAVAIL;
   else

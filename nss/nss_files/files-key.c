@@ -33,7 +33,7 @@ extern int xdecrypt (char *, char *);
 static enum nss_status
 search (const char *netname, char *result, int *errnop, int secret)
 {
-  FILE *stream = fopen (DATAFILE, "re");
+  FILE *stream = fopen (DATAFILE, "rce");
   if (stream == NULL)
     return errno == EAGAIN ? NSS_STATUS_TRYAGAIN : NSS_STATUS_UNAVAIL;
 

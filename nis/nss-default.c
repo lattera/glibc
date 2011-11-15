@@ -1,4 +1,5 @@
-/* Copyright (C) 1996,2001,2004,2006,2007,2010 Free Software Foundation, Inc.
+/* Copyright (C) 1996,2001,2004,2006,2007,2010,2011
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -57,7 +58,7 @@ static void
 init (void)
 {
   int saved_errno = errno;
-  FILE *fp = fopen (default_nss, "rc");
+  FILE *fp = fopen (default_nss, "rce");
   if (fp != NULL)
     {
       char *line = NULL;

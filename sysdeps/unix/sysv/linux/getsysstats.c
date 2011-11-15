@@ -296,7 +296,7 @@ phys_pages_info (const char *format)
   long int result = -1;
 
   /* If we haven't found an appropriate entry return 1.  */
-  FILE *fp = fopen ("/proc/meminfo", "rc");
+  FILE *fp = fopen ("/proc/meminfo", "rce");
   if (fp != NULL)
     {
       /* No threads use this stream.  */

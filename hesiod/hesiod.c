@@ -278,7 +278,7 @@ parse_config_file(struct hesiod_p *ctx, const char *filename) {
 	/*
 	 * Now open and parse the file...
 	 */
-	if (!(fp = fopen(filename, "r")))
+	if (!(fp = fopen(filename, "rce")))
 		return (-1);
 
 	while (fgets(buf, sizeof(buf), fp) != NULL) {
@@ -482,7 +482,7 @@ __hesiod_res_get(void *context) {
 
 void
 __hesiod_res_set(void *context, struct __res_state *res,
-	         void (*free_res)(void *)) {
+		 void (*free_res)(void *)) {
 	struct hesiod_p *ctx = context;
 
 	if (ctx->res && ctx->free_res) {

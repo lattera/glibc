@@ -1,3 +1,68 @@
+2011-11-15  Ulrich Drepper  <drepper@gmail.com>
+
+	* time/getdate.c (__getdate_r): Set FD_CLOEXEC for given file.
+
+	* sysdeps/unix/sysv/linux/readonly-area.c (__readonly_area): Set
+	FD_CLOEXEC for /proc/self/maps.
+
+	* sysdeps/unix/sysv/linux/getsysstats.c (phys_pages_info): Set
+	FD_CLOEXEC for /proc/meminfo.
+
+	* sysdeps/posix/getaddrinfo.c (gaiconf_init): Set FD_CLOEXEC for
+	gai.conf.
+
+	* resolv/res_query.c (res_hostalias):  Don't allow cancellation and set
+	FD_CLOEXEC for given file.
+
+	* resolv/res_hconf.c (do_init): Set FD_CLOEXEC for host.conf.
+
+	* resolv/gethnamaddr.c (_sethtent): Don't allow cancellation and set
+	FD_CLOEXEC for /etc/hosts.
+	(_gethtent): Likewise.
+
+	* nss/nsswitch.c (nss_parse_file): Set FD_CLOEXEC.
+
+	* nss/nss_files/files-netgrp.c (_nss_files_setnetgrent): Don't allow
+	cancellation and set FD_CLOEXEC for /etc/netgroup.
+
+	* nss/nss_files/files-key.c (search): Don't allow cancellation when
+	reading /etc/publickey.
+
+	* nss/nss_files/files-initgroups.c (_nss_files_initgroups_dyn): Don't
+	allow cancellation when reading /etc/group.
+
+	* nss/nss_files/files-alias.c (internal_setent): Don't allow
+	cancellation.
+	(get_next_alias): Likewise for included file.  Also set FD_CLOEXEC.
+
+	* nss/nss_files/files-XXX.c (internal_setent): Don't allow cancellation
+	when using data file.
+
+	* nis/nss-default.c (init): Set FD_CLOEXEC for /etc/default/nss.
+
+	* nis/nis_file.c (read_nis_obj): Set FD_CLOEXEC.
+	(write_nis_obj): Use "c" and "e" in fopen.
+
+	* misc/mntent_r.c (__setmntent): Also append e to fopen format.
+
+	* misc/getusershell.c (initshells): Set FD_CLOEXEC for /etc/shells.
+
+	* misc/getttyent.c (setttyent): Set FD_CLOEXEC.
+
+	* misc/getpass.c (getpass): Set FD_CLOEXEC for /dev/tty.
+
+	* intl/localealias.c (read_alias_file): Set FD_CLOEXEC for
+	locale.alias.
+
+	* inet/ruserpass.c (ruserpass): Set FD_CLOEXEC for .netrc.
+
+	* inet/rcmd.c (iruserfopen): Set FD_CLOEXEC for hosts.equiv.
+
+	* iconv/gconv_conf.c (read_conf_file): Set FD_CLOEXEC for config file.
+
+	* hesiod/hesiod.c (parse_config_file): Prevent cancellation in config
+	file parsing and set FD_CLOEXEC.
+
 2011-11-14  Ulrich Drepper  <drepper@gmail.com>
 
 	* time/tzfile.c (__tzfile_read): Use "e" in fopen call.

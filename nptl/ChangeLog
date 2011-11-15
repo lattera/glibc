@@ -1,3 +1,8 @@
+2011-11-15  Ulrich Drepper  <drepper@gmail.com>
+
+	* pthread_getattr_np.c (pthread_getattr_np): Set FD_CLOEXEC for
+	/proc/self/maps.
+
 2011-10-29  Ulrich Drepper  <drepper@gmail.com>
 
 	[BZ #13358]

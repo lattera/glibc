@@ -602,7 +602,7 @@ res_hostalias(const res_state statp, const char *name, char *dst, size_t siz) {
 	if (statp->options & RES_NOALIASES)
 		return (NULL);
 	file = getenv("HOSTALIASES");
-	if (file == NULL || (fp = fopen(file, "r")) == NULL)
+	if (file == NULL || (fp = fopen(file, "rce")) == NULL)
 		return (NULL);
 	setbuf(fp, NULL);
 	buf[sizeof(buf) - 1] = '\0';

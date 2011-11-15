@@ -48,7 +48,7 @@ internal_setent (void)
 
   if (stream == NULL)
     {
-      stream = fopen ("/etc/aliases", "re");
+      stream = fopen ("/etc/aliases", "rce");
 
       if (stream == NULL)
 	status = errno == EAGAIN ? NSS_STATUS_TRYAGAIN : NSS_STATUS_UNAVAIL;
@@ -258,7 +258,7 @@ get_next_alias (const char *match, struct aliasent *result,
 
 		      first_unused = cp;
 
-		      listfile = fopen (&cp[9], "r");
+		      listfile = fopen (&cp[9], "rce");
 		      /* If the file does not exist we simply ignore
 			 the statement.  */
 		      if (listfile != NULL

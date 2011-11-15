@@ -307,7 +307,7 @@ do_init (void)
   if (hconf_name == NULL)
     hconf_name = _PATH_HOSTCONF;
 
-  fp = fopen (hconf_name, "rc");
+  fp = fopen (hconf_name, "rce");
   if (fp)
     {
       /* No threads using this stream.  */

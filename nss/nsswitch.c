@@ -503,7 +503,7 @@ nss_parse_file (const char *fname)
   size_t len;
 
   /* Open the configuration file.  */
-  fp = fopen (fname, "rc");
+  fp = fopen (fname, "rce");
   if (fp == NULL)
     return NULL;
 

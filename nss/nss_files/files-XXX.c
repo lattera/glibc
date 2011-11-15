@@ -77,7 +77,7 @@ internal_setent (int stayopen)
 
   if (stream == NULL)
     {
-      stream = fopen (DATAFILE, "re");
+      stream = fopen (DATAFILE, "rce");
 
       if (stream == NULL)
 	status = errno == EAGAIN ? NSS_STATUS_TRYAGAIN : NSS_STATUS_UNAVAIL;

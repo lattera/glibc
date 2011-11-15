@@ -149,7 +149,7 @@ rcmd_af(ahost, rport, locuser, remuser, cmd, fd2p, af)
 			__fxprintf(NULL, "rcmd: getaddrinfo: %s\n",
 				   gai_strerror(error));
 
-                return -1;
+		return -1;
 	}
 
 	pfd[0].events = POLLIN;
@@ -488,7 +488,7 @@ iruserfopen (const char *file, uid_t okuser)
     cp = _("not regular file");
   else
     {
-      res = fopen (file, "rc");
+      res = fopen (file, "rce");
       if (!res)
 	cp = _("cannot open");
       else if (__fxstat64 (_STAT_VER, fileno (res), &st) < 0)
@@ -574,8 +574,8 @@ ruserok2_sa (ra, ralen, superuser, ruser, luser, rhost)
 
        if (hostf != NULL)
 	 {
-           isbad = __validuser2_sa (hostf, ra, ralen, luser, ruser, rhost);
-           fclose (hostf);
+	   isbad = __validuser2_sa (hostf, ra, ralen, luser, ruser, rhost);
+	   fclose (hostf);
 	 }
 
        seteuid (uid);
@@ -618,7 +618,7 @@ iruserok_af (raddr, superuser, ruser, luser, af)
   case AF_INET6:
     ra.ss_family = AF_INET6;
     memcpy (&(((struct sockaddr_in6 *)&ra)->sin6_addr), raddr,
-            sizeof(struct in6_addr));
+	    sizeof(struct in6_addr));
     ralen = sizeof(struct sockaddr_in6);
     break;
   default:
@@ -778,7 +778,7 @@ __validuser2_sa(hostf, ra, ralen, luser, ruser, rhost)
 
     while (__getline (&buf, &bufsize, hostf) > 0) {
 	buf[bufsize - 1] = '\0'; /* Make sure it's terminated.  */
-        p = buf;
+	p = buf;
 
 	/* Skip empty or comment lines */
 	if (__isempty (p)) {

@@ -30,7 +30,7 @@ _nss_files_initgroups_dyn (const char *user, gid_t group, long int *start,
 			   long int *size, gid_t **groupsp, long int limit,
 			   int *errnop)
 {
-  FILE *stream = fopen ("/etc/group", "re");
+  FILE *stream = fopen ("/etc/group", "rce");
   if (stream == NULL)
     {
       *errnop = errno;

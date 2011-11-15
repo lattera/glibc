@@ -1,5 +1,5 @@
 /* Convert a string representation of time to a time value.
-   Copyright (C) 1997,1998,1999,2000,2001,2003 Free Software Foundation, Inc.
+   Copyright (C) 1997-2001,2003,2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Mark Kettenis <kettenis@phys.uva.nl>, 1997.
 
@@ -44,7 +44,7 @@ static int check_mday (int year, int mon, int mday);
      6  memory allication failed (not enough memory available),
      7  there is no line in the template that matches the input,
      8  invalid input specification Example: February 31 or a time is
-        specified that can not be represented in a time_t (representing
+	specified that can not be represented in a time_t (representing
 	the time in seconds since 00:00:00 UTC, January 1, 1970) */
 int getdate_err;
 
@@ -129,7 +129,7 @@ __getdate_r (const char *string, struct tm *tp)
     return 2;
 
   /* Open the template file.  */
-  fp = fopen (datemsk, "rc");
+  fp = fopen (datemsk, "rce");
   if (fp == NULL)
     return 2;
 

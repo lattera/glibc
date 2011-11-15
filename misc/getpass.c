@@ -1,4 +1,4 @@
-/* Copyright (C) 1992-1999,2001,2003,2004,2005 Free Software Foundation, Inc.
+/* Copyright (C) 1992-1999,2001,2003-2005,2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -57,7 +57,7 @@ getpass (prompt)
   /* Try to write to and read from the terminal if we can.
      If we can't open the terminal, use stderr and stdin.  */
 
-  in = fopen ("/dev/tty", "w+c");
+  in = fopen ("/dev/tty", "w+ce");
   if (in == NULL)
     {
       in = stdin;

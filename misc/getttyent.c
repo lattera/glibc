@@ -190,7 +190,7 @@ setttyent()
 	if (tf) {
 		(void)rewind(tf);
 		return (1);
-	} else if ((tf = fopen(_PATH_TTYS, "rc"))) {
+	} else if ((tf = fopen(_PATH_TTYS, "rce"))) {
 		/* We do the locking ourselves.  */
 		__fsetlocking (tf, FSETLOCKING_BYCALLER);
 		return (1);

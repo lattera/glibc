@@ -221,7 +221,7 @@ read_alias_file (fname, fname_len)
 
   /* Note the file is opened with cancellation in the I/O functions
      disabled.  */
-  fp = fopen (full_fname, "rc");
+  fp = fopen (full_fname, "rce");
   freea (full_fname);
   if (fp == NULL)
     return 0;

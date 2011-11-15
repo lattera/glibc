@@ -38,10 +38,10 @@ FILE *
 __setmntent (const char *file, const char *mode)
 {
   /* Extend the mode parameter with "c" to disable cancellation in the
-     I/O functions.  */
+     I/O functions and "e" to set FD_CLOEXEC.  */
   size_t modelen = strlen (mode);
-  char newmode[modelen + 2];
-  memcpy (mempcpy (newmode, mode, modelen), "c", 2);
+  char newmode[modelen + 3];
+  memcpy (mempcpy (newmode, mode, modelen), "ce", 3);
   FILE *result = fopen (file, newmode);
 
   if (result != NULL)
