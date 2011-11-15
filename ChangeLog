@@ -1,5 +1,10 @@
 2011-11-15  Andreas Schwab  <schwab@redhat.com>
 
+	* sysdeps/unix/sysv/linux/clock_gettime.c (SYSDEP_GETTIME_CPU)
+	[__ASSUME_POSIX_CPU_TIMERS > 0]: Assign to retval and break.
+	* sysdeps/unix/sysv/linux/x86_64/clock_gettime.c
+	(SYSCALL_GETTIME): Set errno on error.
+
 	* sysdeps/unix/sysv/linux/check_pf.c (make_request): Properly
 	count references to noai6ai_cached.
 

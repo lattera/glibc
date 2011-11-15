@@ -110,7 +110,9 @@ maybe_syscall_gettime (clockid_t clock_id, struct timespec *tp)
 
 # if __ASSUME_POSIX_CPU_TIMERS > 0
 
-#  define SYSDEP_GETTIME_CPU SYSCALL_GETTIME
+#  define SYSDEP_GETTIME_CPU(clock_id, tp) \
+  retval = SYSCALL_GETTIME (clock_id, tp); \
+  break
 #  define SYSDEP_GETTIME_CPUTIME	/* Default catches them too.  */
 
 # else
