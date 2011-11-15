@@ -1,3 +1,9 @@
+2011-11-15  Ulrich Drepper  <drepper@gmail.com>
+
+	* locale/loadarchive.c (_nl_load_locale_from_archive): Open files to
+	O_CLOEXEC.
+	* locale/loadlocale.c (_nl_load_locale): Likewise.
+
 2011-11-15  Andreas Schwab  <schwab@redhat.com>
 
 	* sysdeps/unix/sysv/linux/clock_gettime.c (SYSDEP_GETTIME_CPU)

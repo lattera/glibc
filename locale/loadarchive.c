@@ -1,5 +1,5 @@
 /* Code to load locale data from the locale archive file.
-   Copyright (C) 2002, 2003, 2005, 2010 Free Software Foundation, Inc.
+   Copyright (C) 2002, 2003, 2005, 2010, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -203,7 +203,7 @@ _nl_load_locale_from_archive (int category, const char **namep)
       archmapped = &headmap;
 
       /* The archive has never been opened.  */
-      fd = open_not_cancel_2 (archfname, O_RDONLY|O_LARGEFILE);
+      fd = open_not_cancel_2 (archfname, O_RDONLY|O_LARGEFILE|O_CLOEXEC);
       if (fd < 0)
 	/* Cannot open the archive, for whatever reason.  */
 	return NULL;
@@ -394,7 +394,8 @@ _nl_load_locale_from_archive (int category, const char **namep)
 	  if (fd == -1)
 	    {
 	      struct stat64 st;
-	      fd = open_not_cancel_2 (archfname, O_RDONLY|O_LARGEFILE);
+	      fd = open_not_cancel_2 (archfname,
+				      O_RDONLY|O_LARGEFILE|O_CLOEXEC);
 	      if (fd == -1)
 		/* Cannot open the archive, for whatever reason.  */
 		return NULL;
