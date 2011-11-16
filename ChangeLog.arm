@@ -1,3 +1,8 @@
+2011-11-16  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/arm/ioperm.c (init_iosys): Use "c" and
+	"e" in fopen.
+
 2011-10-26  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/arm/dl-machine.h, sysdeps/unix/arm/sysdep.S: Restore

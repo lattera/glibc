@@ -1,4 +1,5 @@
-/* Copyright (C) 1998, 1999, 2003, 2005, 2008 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 1999, 2003, 2005, 2008, 2011
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Phil Blundell, based on the Alpha version by
    David Mosberger.
@@ -135,7 +136,7 @@ init_iosys (void)
     {
       FILE * fp;
 
-      fp = fopen (PATH_CPUINFO, "r");
+      fp = fopen (PATH_CPUINFO, "rce");
       if (! fp)
 	return -1;
       while ((n = fscanf (fp, "Hardware\t: %256[^\n]\n", systype))
