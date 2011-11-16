@@ -1,3 +1,16 @@
+2011-11-16  Andreas Schwab  <schwab@redhat.com>
+
+	* sysdeps/i386/i686/multiarch/strcmp-ssse3.S
+	[USE_AS_STRCASECMP_L]: Fix argument offsets for non-PIC.
+	[USE_AS_STRNCASECMP_L]: Likewise.
+	(__strcasecmp_ssse3, __strncasecmp_ssse3): Handle
+	NO_TLS_DIRECT_SEG_REFS.
+	* sysdeps/i386/i686/multiarch/strcmp-sse4.S [USE_AS_STRCASECMP_L]:
+	Fix argument offsets for non-PIC.
+	[USE_AS_STRNCASECMP_L]: Likewise.
+	(__strcasecmp_sse4_2, __strncasecmp_sse4_2): Handle
+	NO_TLS_DIRECT_SEG_REFS.
+
 2011-11-15  Ulrich Drepper  <drepper@gmail.com>
 
 	* locale/loadarchive.c (_nl_load_locale_from_archive): Open files to

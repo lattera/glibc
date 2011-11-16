@@ -56,7 +56,11 @@
 # ifndef STRCMP
 #  define STRCMP	__strcasecmp_l_ssse3
 # endif
-# define STR1		8
+# ifdef PIC
+#  define STR1		8
+# else
+#  define STR1		4
+# endif
 # define STR2		STR1+4
 # define LOCALE		12	/* Loaded before the adjustement.  */
 # ifdef PIC
@@ -72,7 +76,11 @@
 # ifndef STRCMP
 #  define STRCMP	__strncasecmp_l_ssse3
 # endif
-# define STR1		12
+# ifdef PIC
+#  define STR1		12
+# else
+#  define STR1		8
+# endif
 # define STR2		STR1+4
 # define CNT		STR2+4
 # define LOCALE		16	/* Loaded before the adjustement.  */
@@ -112,10 +120,20 @@ ENTRY (__strcasecmp_ssse3)
 	call	__i686.get_pc_thunk.bx
 	addl	$_GLOBAL_OFFSET_TABLE_, %ebx
 	movl	__libc_tsd_LOCALE@GOTNTPOFF(%ebx), %eax
-# else
-	movl	__libc_tsd_LOCALE@NTPOFF, %eax
-# endif
+#  ifdef NO_TLS_DIRECT_SEG_REFS
+	addl	%gs:0, %eax
+	movl	(%eax), %eax
+#  else
 	movl	%gs:(%eax), %eax
+#  endif
+# else
+#  ifdef NO_TLS_DIRECT_SEG_REFS
+	movl	%gs:0, %eax
+	movl	__libc_tsd_LOCALE@NTPOFF(%eax), %eax
+#  else
+	movl	%gs:__libc_tsd_LOCALE@NTPOFF, %eax
+#  endif
+# endif
 # if LOCALE_T___LOCALES != 0 || LC_CTYPE != 0
 	movl	LOCALE_T___LOCALES+LC_CTYPE*4(%eax), %eax
 # else
@@ -134,10 +152,20 @@ ENTRY (__strncasecmp_ssse3)
 	call	__i686.get_pc_thunk.bx
 	addl	$_GLOBAL_OFFSET_TABLE_, %ebx
 	movl	__libc_tsd_LOCALE@GOTNTPOFF(%ebx), %eax
-# else
-	movl	__libc_tsd_LOCALE@NTPOFF, %eax
-# endif
+#  ifdef NO_TLS_DIRECT_SEG_REFS
+	addl	%gs:0, %eax
+	movl	(%eax), %eax
+#  else
 	movl	%gs:(%eax), %eax
+#  endif
+# else
+#  ifdef NO_TLS_DIRECT_SEG_REFS
+	movl	%gs:0, %eax
+	movl	__libc_tsd_LOCALE@NTPOFF(%eax), %eax
+#  else
+	movl	%gs:__libc_tsd_LOCALE@NTPOFF, %eax
+#  endif
+# endif
 # if LOCALE_T___LOCALES != 0 || LC_CTYPE != 0
 	movl	LOCALE_T___LOCALES+LC_CTYPE*4(%eax), %eax
 # else
