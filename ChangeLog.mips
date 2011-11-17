@@ -1,3 +1,8 @@
+2011-11-17  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/mips/mips64/n64/ftw.c,
+	sysdeps/unix/sysv/linux/mips/mips64/n64/ftw64.c: New.
+
 2011-11-11  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/mips/dl-lookup.c: Update from generic version.
