@@ -1,3 +1,9 @@
+2011-11-17  Ulrich Drepper  <drepper@gmail.com>
+
+	* Makefile (charmaps): Not need to filter out any of the VC
+	directories.
+	(locales): Likewise.
+
 2011-11-11  Ulrich Drepper  <drepper@gmail.com>
 
 	[BZ #13147]

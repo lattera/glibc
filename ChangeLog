@@ -1,3 +1,11 @@
+2011-11-17  Ulrich Drepper  <drepper@gmail.com>
+
+	* Makefile.in: Remove CVSOPT handling.
+	* configure.in: Remove use of AC_REVISION.
+	* iconvdata/Makefile (distribute): No need to filter out CVS.
+	* scripts/list-sources.sh: Remove CVS, subversion and monotone
+	handling.
+
 2011-11-16  Andreas Schwab  <schwab@redhat.com>
 
 	* sysdeps/i386/i686/multiarch/strcmp-ssse3.S
@@ -13,7 +21,7 @@
 
 2011-11-15  Ulrich Drepper  <drepper@gmail.com>
 
-	* locale/loadarchive.c (_nl_load_locale_from_archive): Open files to
+	* locale/loadarchive.c (_nl_load_locale_from_archive): Open files with
 	O_CLOEXEC.
 	* locale/loadlocale.c (_nl_load_locale): Likewise.
 

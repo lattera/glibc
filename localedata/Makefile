@@ -23,13 +23,10 @@ subdir := localedata
 all: # Make this the default target; it will be defined in Rules.
 
 # List with all available character set descriptions.
-charmaps := $(filter-out $(addprefix charmaps/, CVS RCS SCCS %~), \
-				     $(wildcard charmaps/[A-I]*) \
-				     $(wildcard charmaps/[J-Z]*))
+charmaps := $(wildcard charmaps/[A-I]*) $(wildcard charmaps/[J-Z]*)
 
 # List with all available character set descriptions.
-locales := $(filter-out $(addprefix locales/, CVS RCS SCCS %~), \
-				    $(wildcard locales/*))
+locales := $(wildcard locales/*)
 
 
 subdir-dirs = tests-mbwc

@@ -605,10 +605,10 @@ builtins (__builtin_*).
 
 Without optimizations enabled GNU CC will not inline functions. The
 early startup of the dynamic loader will make function calls via an
-unrelocated PLT and crash. 
+unrelocated PLT and crash.
 
 Without auditing the dynamic linker code it would be difficult to remove
-this requirement. 
+this requirement.
 
 Another reason is that nested functions must be inlined in many cases to
 avoid executable stacks.
@@ -1204,7 +1204,7 @@ solutions:
 {AJ} You might get the following errors when upgrading to glibc 2.1:
 
   In file included from /usr/include/stdio.h:57,
-                   from ...
+		   from ...
   /usr/include/libio.h:335: parse error before `_IO_seekoff'
   /usr/include/libio.h:335: parse error before `_G_off64_t'
   /usr/include/libio.h:336: parse error before `_IO_seekpos'
@@ -1278,10 +1278,7 @@ and gives more details for some topics.
 
 2.33.	The makefiles want to do a CVS commit.
 
-{UD} Only if you are not specifying the --without-cvs flag at configure
-time.  This is what you always have to use if you are checking sources
-directly out of the public CVS repository or you have your own private
-repository.
+{} Removed.  Does not apply anymore.
 
 
 2.34.	When compiling C++ programs, I get a compilation error in streambuf.h.

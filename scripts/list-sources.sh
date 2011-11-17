@@ -9,23 +9,7 @@ case $# in
 *) echo >&2 "Usage: $0 [top_srcdir]"; exit 2 ;;
 esac
 
-if [ -r CVS/Entries ]; then
-
-  ${CVS:-cvs} status 2>&1 | ${AWK:-awk} '
-NF >= 2 && $(NF - 1) == "Examining" { dir = $NF }
-$1 == "File:" { print (dir == ".") ? $2 : (dir "/" $2) }'
-  exit $?
-
-elif [ -r .svn/entries ]; then
-
-  ${SVN:-svn} ls -R | sed '/\/$/d'
-  exit $?
-
-elif [ -r MT/options ]; then
-
-  exec ${MONOTONE:-monotone} list known
-
-elif [ -r .git/HEAD ]; then
+if [ -r .git/HEAD ]; then
 
   exec ${GIT:-git} ls-files
 

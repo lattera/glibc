@@ -1,5 +1,4 @@
 dnl Process this file with autoconf to produce a configure script.
-AC_REVISION([$CVSid$])
 AC_PREREQ(2.53)dnl		dnl Minimum Autoconf version required.
 AC_INIT([GNU C Library], [(see version.h)], [http://sourceware.org/bugzilla/], [glibc])
 AC_CONFIG_SRCDIR([include/features.h])
