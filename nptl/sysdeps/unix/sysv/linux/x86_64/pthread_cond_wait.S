@@ -23,6 +23,7 @@
 #include <lowlevelcond.h>
 #include <tcb-offsets.h>
 #include <pthread-pi-defines.h>
+#include <pthread-errnos.h>
 
 #include <kernel-features.h>
 
@@ -133,11 +134,14 @@ __pthread_cond_wait:
 	cmpl	$PI_BIT, %eax
 	jne	61f
 
+90:
 	movl	$(FUTEX_WAIT_REQUEUE_PI|FUTEX_PRIVATE_FLAG), %esi
 	movl	$SYS_futex, %eax
 	syscall
 
 	movl	$1, %r8d
+	cmpq	$-EAGAIN, %rax
+	je	91f
 #ifdef __ASSUME_REQUEUE_PI
 	jmp	62f
 #else
@@ -324,6 +328,70 @@ __pthread_cond_wait:
 
 13:	movq	%r10, %rax
 	jmp	14b
+
+91:
+.LcleanupSTART2:
+	/* FUTEX_WAIT_REQUEUE_PI returned EAGAIN.  We need to
+	   call it again.  */
+	movq	8(%rsp), %rdi
+
+	/* Get internal lock.  */
+	movl	$1, %esi
+	xorl	%eax, %eax
+	LOCK
+#if cond_lock == 0
+	cmpxchgl %esi, (%rdi)
+#else
+	cmpxchgl %esi, cond_lock(%rdi)
+#endif
+	jz	92f
+
+#if cond_lock != 0
+	addq	$cond_lock, %rdi
+#endif
+	cmpq	$-1, dep_mutex-cond_lock(%rdi)
+	movl	$LLL_PRIVATE, %eax
+	movl	$LLL_SHARED, %esi
+	cmovne	%eax, %esi
+	callq	__lll_lock_wait
+#if cond_lock != 0
+	subq	$cond_lock, %rdi
+#endif
+92:
+	/* Increment the cond_futex value again, so it can be used as a new
+	   expected value. */
+	incl	cond_futex(%rdi)
+	movl	cond_futex(%rdi), %edx
+
+	/* Release internal lock.  */
+	LOCK
+#if cond_lock == 0
+	decl	(%rdi)
+#else
+	decl	cond_lock(%rdi)
+#endif
+	jz	93f
+
+#if cond_lock != 0
+	addq	$cond_lock, %rdi
+#endif
+	cmpq	$-1, dep_mutex-cond_lock(%rdi)
+	movl	$LLL_PRIVATE, %eax
+	movl	$LLL_SHARED, %esi
+	cmovne	%eax, %esi
+	/* The call preserves %rdx.  */
+	callq	__lll_unlock_wake
+#if cond_lock != 0
+	subq	$cond_lock, %rdi
+#endif
+93:
+	/* Set the rest of SYS_futex args for FUTEX_WAIT_REQUEUE_PI. */
+	xorq	%r10, %r10
+	movq	dep_mutex(%rdi), %r8
+	leaq	cond_futex(%rdi), %rdi
+	jmp	90b
+.LcleanupEND2:
+
 	.size	__pthread_cond_wait, .-__pthread_cond_wait
 versioned_symbol (libpthread, __pthread_cond_wait, pthread_cond_wait,
 		  GLIBC_2_3_2)
@@ -476,11 +544,15 @@ __condvar_cleanup1:
 	.uleb128 .LcleanupSTART-.LSTARTCODE
 	.uleb128 .LcleanupEND-.LcleanupSTART
 	.uleb128 __condvar_cleanup1-.LSTARTCODE
-	.uleb128  0
+	.uleb128 0
+	.uleb128 .LcleanupSTART2-.LSTARTCODE
+	.uleb128 .LcleanupEND2-.LcleanupSTART2
+	.uleb128 __condvar_cleanup1-.LSTARTCODE
+	.uleb128 0
 	.uleb128 .LcallUR-.LSTARTCODE
 	.uleb128 .LENDCODE-.LcallUR
 	.uleb128 0
-	.uleb128  0
+	.uleb128 0
 .Lcstend:
 
 

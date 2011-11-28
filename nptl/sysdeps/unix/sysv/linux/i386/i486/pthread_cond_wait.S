@@ -134,6 +134,7 @@ __pthread_cond_wait:
 	cmpl	$PI_BIT, %eax
 	jne	18f
 
+90:
 	movl	$(FUTEX_WAIT_REQUEUE_PI|FUTEX_PRIVATE_FLAG), %ecx
 	movl	%ebp, %edx
 	xorl	%esi, %esi
@@ -146,6 +147,9 @@ __pthread_cond_wait:
 	cmpl	$0, %eax
 	sete	16(%esp)
 	je	19f
+
+	cmpl	$-EAGAIN, %eax
+	je	91f
 
 	/* Normal and PI futexes dont mix. Use normal futex functions only
 	   if the kernel does not support the PI futex functions.  */
@@ -391,6 +395,78 @@ __pthread_cond_wait:
 #endif
 	call	__lll_unlock_wake
 	jmp	11b
+
+91:
+.LcleanupSTART2:
+	/* FUTEX_WAIT_REQUEUE_PI returned EAGAIN.  We need to
+	   call it again.  */
+
+	/* Get internal lock.  */
+	movl	$1, %edx
+	xorl	%eax, %eax
+	LOCK
+#if cond_lock == 0
+	cmpxchgl %edx, (%ebx)
+#else
+	cmpxchgl %edx, cond_lock(%ebx)
+#endif
+	jz	92f
+
+#if cond_lock == 0
+	movl	%ebx, %edx
+#else
+	leal	cond_lock(%ebx), %edx
+#endif
+#if (LLL_SHARED-LLL_PRIVATE) > 255
+	xorl	%ecx, %ecx
+#endif
+	cmpl	$-1, dep_mutex(%ebx)
+	setne	%cl
+	subl	$1, %ecx
+	andl	$(LLL_SHARED-LLL_PRIVATE), %ecx
+#if LLL_PRIVATE != 0
+	addl	$LLL_PRIVATE, %ecx
+#endif
+	call	__lll_lock_wait
+
+92:
+	/* Increment the cond_futex value again, so it can be used as a new
+	   expected value. */
+	addl	$1, cond_futex(%ebx)
+	movl	cond_futex(%ebx), %ebp
+
+	/* Unlock.  */
+	LOCK
+#if cond_lock == 0
+	subl	$1, (%ebx)
+#else
+	subl	$1, cond_lock(%ebx)
+#endif
+	je	93f
+#if cond_lock == 0
+	movl	%ebx, %eax
+#else
+	leal	cond_lock(%ebx), %eax
+#endif
+#if (LLL_SHARED-LLL_PRIVATE) > 255
+	xorl	%ecx, %ecx
+#endif
+	cmpl	$-1, dep_mutex(%ebx)
+	setne	%cl
+	subl	$1, %ecx
+	andl	$(LLL_SHARED-LLL_PRIVATE), %ecx
+#if LLL_PRIVATE != 0
+	addl	$LLL_PRIVATE, %ecx
+#endif
+	call	__lll_unlock_wake
+
+93:
+	/* Set the rest of SYS_futex args for FUTEX_WAIT_REQUEUE_PI. */
+	xorl	%ecx, %ecx
+	movl	dep_mutex(%ebx), %edi
+	jmp	90b
+.LcleanupEND2:
+
 	.size	__pthread_cond_wait, .-__pthread_cond_wait
 versioned_symbol (libpthread, __pthread_cond_wait, pthread_cond_wait,
 		  GLIBC_2_3_2)
@@ -561,6 +637,10 @@ __condvar_w_cleanup:
 	.uleb128  0
 	.long	.Lsub_cond_futex-.LSTARTCODE
 	.long	.LcleanupEND-.Lsub_cond_futex
+	.long	__condvar_w_cleanup-.LSTARTCODE
+	.uleb128  0
+	.long	.LcleanupSTART2-.LSTARTCODE
+	.long	.LcleanupEND2-.LcleanupSTART2
 	.long	__condvar_w_cleanup-.LSTARTCODE
 	.uleb128  0
 	.long	.LcallUR-.LSTARTCODE
