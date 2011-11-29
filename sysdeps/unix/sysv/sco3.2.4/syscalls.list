@@ -1,8 +1,0 @@
-# File name	Caller	Syscall name	# args	Strong name	Weak names
-
-pathconf	-	pathconf	2	__pathconf	pathconf
-pgrpsys		-	pgrpsys		3	__pgrpsys
-sco_getgrp	getgroups getgroups	2	__sco_getgroups
-sigpending	-	sigpending	1	sigpending
-sigprocmask	-	sigprocmask	3	__sigprocmask	sigprocmask
-sigsuspend	-	sigsuspend	1	sigsuspend

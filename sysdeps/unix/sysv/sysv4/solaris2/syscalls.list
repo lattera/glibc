@@ -1,7 +1,0 @@
-# File name	Caller	Syscall name	# args	Strong name	Weak names
-
-sigaction	-	sigaction	3	__sigaction	sigaction
-sigaltstack	-	sigaltstack	2	sigaltstack
-sigpending	-	sigpending	2	__syscall_sigpending
-sigqueue	-	sigqueue	3	__sigqueue	sigqueue
-sigtimedwait	-	sigtimedwait	3	__sigtimedwait	sigtime

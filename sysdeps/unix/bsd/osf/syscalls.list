@@ -1,3 +1,0 @@
-# File name	Caller	Syscall name	# args	Strong name	Weak names
-
-msync		-	msync		3	msync

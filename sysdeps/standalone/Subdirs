@@ -1,4 +1,0 @@
-# The `bare' subdirectory defines some structure for a target-specific
-# library of functions which are actually implemented in
-# sysdeps/standalone/CPU/TARGET.
-bare

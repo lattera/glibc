@@ -1,3 +1,13 @@
+2011-11-29  Joseph Myers  <joseph@codesourcery.com>
+
+	* bare, sysdeps/am29k, sysdeps/i860, sysdeps/i960, sysdeps/m88k,
+	sysdeps/mach, sysdeps/rs6000, sysdeps/standalone, sysdeps/tahoe,
+	sysdeps/unix/bsd, sysdeps/unix/sysv/hpux, sysdeps/unix/sysv/i386,
+	sysdeps/unix/sysv/irix4, sysdeps/unix/sysv/isc2.2,
+	sysdeps/unix/sysv/minix, sysdeps/unix/sysv/sco3.2,
+	sysdeps/unix/sysv/sco3.2.4, sysdeps/unix/sysv/sysv4, sysdeps/vax,
+	sysdeps/z8000: Remove.
+
 2010-04-14  Joseph Myers  <joseph@codesourcery.com>
 
 	* libc-abis: Remove.

@@ -1,7 +1,0 @@
-# File name	Caller	Syscall name	# args	Strong name	Weak names
-
-pgrpsys		-	pgrpsys		3	__pgrpsys
-sigprocmask	-	sigprocmask	3	__sigprocmask	sigprocmask
-sysconfig	-	sysconfig	1	__sysconfig
-sysinfo		-	systeminfo	3	__sysinfo
-__waitid	waitpid	waitsys		3	__waitid

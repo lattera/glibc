@@ -1,4 +1,0 @@
-# Irix 4 has the set of things which are also common to BSD and SVR4.
-unix/common
-# Irix 4 has the canonical set of <sys/mman.h> system calls.
-unix/mman
