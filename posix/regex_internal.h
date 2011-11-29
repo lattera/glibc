@@ -755,7 +755,7 @@ re_string_elem_size_at (const re_string_t *pstr, int idx)
       indirect = (const int32_t *) _NL_CURRENT (LC_COLLATE,
 						_NL_COLLATE_INDIRECTMB);
       p = pstr->mbs + idx;
-      findidx (&p);
+      findidx (&p, pstr->len - idx);
       return p - pstr->mbs - idx;
     }
   else

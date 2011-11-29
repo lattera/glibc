@@ -1,4 +1,4 @@
-/* Copyright (C) 1995-1997,2002,2004,2007,2010 Free Software Foundation, Inc.
+/* Copyright (C) 1995-1997,2002,2004,2007,2010,2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Ulrich Drepper <drepper@gnu.org>, 1995.
 
@@ -205,7 +205,7 @@ STRCOLL (s1, s2, l)
 
 		while (*us1 != L('\0'))
 		  {
-		    int32_t tmp = findidx (&us1);
+		    int32_t tmp = findidx (&us1, -1);
 		    rule1arr[idx1max] = tmp >> 24;
 		    idx1arr[idx1max] = tmp & 0xffffff;
 		    idx1cnt = idx1max++;
@@ -267,7 +267,7 @@ STRCOLL (s1, s2, l)
 
 		while (*us2 != L('\0'))
 		  {
-		    int32_t tmp = findidx (&us2);
+		    int32_t tmp = findidx (&us2, -1);
 		    rule2arr[idx2max] = tmp >> 24;
 		    idx2arr[idx2max] = tmp & 0xffffff;
 		    idx2cnt = idx2max++;

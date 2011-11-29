@@ -1,3 +1,14 @@
+2011-11-29  Andreas Schwab  <schwab@redhat.com>
+
+	* locale/weight.h (findidx): Add parameter len.
+	* locale/weightwc.h (findidx): Likewise.
+	* posix/fnmatch_loop.c (FCT): Adjust caller.
+	* posix/regcomp.c (build_equiv_class): Likewise.
+	* posix/regex_internal.h (re_string_elem_size_at): Likewise.
+	* posix/regexec.c (check_node_accept_bytes): Likewise.
+	* string/strcoll_l.c (STRCOLL): Likewise.
+	* string/strxfrm_l.c (STRXFRM): Likewise.
+
 2011-11-28  Andreas Schwab  <schwab@redhat.com>
 
 	* sysdeps/unix/sysv/linux/i386/i486/pthread_cond_wait.S: Handle

@@ -176,7 +176,7 @@ STRXFRM (STRING_TYPE *dest, const STRING_TYPE *src, size_t n, __locale_t l)
   idxmax = 0;
   do
     {
-      int32_t tmp = findidx (&usrc);
+      int32_t tmp = findidx (&usrc, -1);
       rulearr[idxmax] = tmp >> 24;
       idxarr[idxmax] = tmp & 0xffffff;
 

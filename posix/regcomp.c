@@ -1,5 +1,5 @@
 /* Extended regular expression matching and search library.
-   Copyright (C) 2002-2007,2009,2010 Free Software Foundation, Inc.
+   Copyright (C) 2002-2007,2009,2010,2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Isamu Hasegawa <isamu@yamato.ibm.com>.
 
@@ -3409,19 +3409,18 @@ build_equiv_class (bitset_t sbcset, const unsigned char *name)
 						   _NL_COLLATE_EXTRAMB);
       indirect = (const int32_t *) _NL_CURRENT (LC_COLLATE,
 						_NL_COLLATE_INDIRECTMB);
-      idx1 = findidx (&cp);
-      if (BE (idx1 == 0 || cp < name + strlen ((const char *) name), 0))
+      idx1 = findidx (&cp, -1);
+      if (BE (idx1 == 0 || *cp != '\0', 0))
 	/* This isn't a valid character.  */
 	return REG_ECOLLATE;
 
       /* Build single byte matcing table for this equivalence class.  */
-      char_buf[1] = (unsigned char) '\0';
       len = weights[idx1 & 0xffffff];
       for (ch = 0; ch < SBC_MAX; ++ch)
 	{
 	  char_buf[0] = ch;
 	  cp = char_buf;
-	  idx2 = findidx (&cp);
+	  idx2 = findidx (&cp, 1);
 /*
 	  idx2 = table[ch];
 */
