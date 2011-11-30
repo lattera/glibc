@@ -338,9 +338,9 @@ ildouble: 2
 ldouble: 2
 Test "Real part of: cpow (2 + 3 i, 4 + 0 i) == -119.0 - 120.0 i":
 double: 1
-float: 4
+float: 5
 idouble: 1
-ifloat: 4
+ifloat: 5
 ildouble: 3
 ldouble: 3
 Test "Imaginary part of: cpow (2 + 3 i, 4 + 0 i) == -119.0 - 120.0 i":
@@ -1155,9 +1155,9 @@ ldouble: 1
 
 Function: Real part of "cpow":
 double: 2
-float: 4
+float: 5
 idouble: 2
-ifloat: 4
+ifloat: 5
 ildouble: 10
 ldouble: 10
 
