@@ -1,5 +1,5 @@
 /* futimes -- change access and modification times of open file.  Linux version.
-   Copyright (C) 2002,2003,2005,2006,2007 Free Software Foundation, Inc.
+   Copyright (C) 2002,2003,2005,2006,2007,2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -95,8 +95,8 @@ __futimes (int fd, const struct timeval tvp[2])
       if (tvp != NULL)
 	{
 	  times = &buf;
-	  buf.actime = tvp[0].tv_sec + (tvp[0].tv_usec + 500000) / 1000000;
-	  buf.modtime = tvp[1].tv_sec + (tvp[1].tv_usec + 500000) / 1000000;
+	  buf.actime = tvp[0].tv_sec;
+	  buf.modtime = tvp[1].tv_sec;
 	}
       else
 	times = NULL;

@@ -1,3 +1,8 @@
+2011-12-01  Andreas Schwab  <schwab@redhat.com>
+
+	* sysdeps/unix/sysv/linux/futimes.c: Truncate time values when
+	falling back to utime.
+
 2011-11-30  Andreas Schwab  <schwab@redhat.com>
 
 	* sysdeps/s390/fpu/libm-test-ulps: Relax cpow (2 + 3 i, 4 + 0 i)
