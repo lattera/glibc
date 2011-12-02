@@ -1,3 +1,7 @@
+2011-12-02  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/sh/backtrace.c: New file.
+
 2011-12-02  Andreas Schwab  <schwab@redhat.com>
 
 	* misc/bits/select2.h (__FD_ELT): Mark as extension.  Add
