@@ -1,3 +1,9 @@
+2011-11-28  Andreas Schwab  <schwab@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_cond_wait.S: Handle
+	EAGAIN from FUTEX_WAIT_REQUEUE_PI.
+	* sysdeps/unix/sysv/linux/x86_64/pthread_cond_wait.S: Likewise.
+
 2011-11-15  Ulrich Drepper  <drepper@gmail.com>
 
 	* pthread_getattr_np.c (pthread_getattr_np): Set FD_CLOEXEC for
