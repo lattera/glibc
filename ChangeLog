@@ -1,3 +1,13 @@
+2011-11-29  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/sh/bits/atomic.h (rNOSP): Define
+	conditional on GCC version.
+	(__arch_compare_and_exchange_val_8_acq)
+	(__arch_compare_and_exchange_val_16_acq)
+	(__arch_compare_and_exchange_val_32_acq, atomic_exchange_and_add)
+	(atomic_add, atomic_add_negative, atomic_add_zero, atomic_bit_set)
+	(atomic_bit_test_set): Use rNOSP instead of "r" constraints.
+
 2011-12-02  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/sh/backtrace.c: New file.
