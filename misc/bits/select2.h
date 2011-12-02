@@ -27,7 +27,8 @@ extern unsigned long int __fdelt_warn (unsigned long int __d)
   __warnattr ("bit outside of fd_set selected");
 #undef __FD_ELT
 #define	__FD_ELT(d) \
-  ({ unsigned long int __d = d;						    \
+  __extension__								    \
+  ({ unsigned long int __d = (d);					    \
      (__builtin_constant_p (__d)					    \
       ? (__d >= __FD_SETSIZE						    \
 	 ? __fdelt_warn (__d) : (__d / __NFDBITS))			    \

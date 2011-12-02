@@ -1,3 +1,8 @@
+2011-12-02  Andreas Schwab  <schwab@redhat.com>
+
+	* misc/bits/select2.h (__FD_ELT): Mark as extension.  Add
+	parenthesis.
+
 2011-12-01  Andreas Schwab  <schwab@redhat.com>
 
 	* sysdeps/unix/sysv/linux/futimes.c: Truncate time values when
