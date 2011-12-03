@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1996,1997,1998,1999,2000,2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -41,7 +41,7 @@ enum mcheck_status
    null, the standard function prints on stderr and then calls `abort'.  */
 extern int mcheck (void (*__abortfunc) (enum mcheck_status)) __THROW;
 
-/* Similar to `mcheck´ but performs checks for all block whenever one of
+/* Similar to `mcheck' but performs checks for all block whenever one of
    the memory handling functions is called.  This can be very slow.  */
 extern int mcheck_pedantic (void (*__abortfunc) (enum mcheck_status)) __THROW;
 
