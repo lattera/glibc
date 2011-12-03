@@ -1,3 +1,7 @@
+2011-12-02  Ulrich Drepper  <drepper@gmail.com>
+
+	* nscd/aicache.c (addhstaiX): Avoid unused variable warning.
+
 2011-11-29  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/sh/bits/atomic.h (rNOSP): Define

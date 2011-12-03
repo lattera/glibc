@@ -461,9 +461,12 @@ addhstaiX (struct database_dyn *db, int fd, request_header *req,
 		      <= (sizeof (struct database_pers_head)
 			  + db->head->module * sizeof (ref_t)
 			  + db->head->data_size));
+# ifndef __ASSUME_SENDFILE
 	      ssize_t written;
-	      written = sendfileall (fd, db->wr_fd, (char *) &dataset->resp
-				     - (char *) db->head, dataset->head.recsize);
+	      written =
+# endif
+		sendfileall (fd, db->wr_fd, (char *) &dataset->resp
+			     - (char *) db->head, dataset->head.recsize);
 # ifndef __ASSUME_SENDFILE
 	      if (written == -1 && errno == ENOSYS)
 		goto use_write;
