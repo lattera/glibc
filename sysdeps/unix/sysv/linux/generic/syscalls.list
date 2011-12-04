@@ -1,0 +1,32 @@
+# File name	Caller	Syscall name	# args	Strong name	Weak names
+
+# SysV APIs
+msgget		-	msgget		i:ii	__msgget	msgget
+msgctl		-	msgctl		i:iip	__msgctl	msgctl
+msgrcv		-	msgrcv		Ci:ibnii __msgrcv	msgrcv
+msgsnd		-	msgsnd		Ci:ibni	__msgsnd	msgsnd
+semget		-	semget		i:iii	__semget	semget
+semctl		-	semctl		i:iiii	__semctl	semctl
+semtimedop	-	semtimedop	i:ipip	semtimedop
+semop		-	semop		i:ipi	__semop		semop
+shmget		-	shmget		i:iii	__shmget	shmget
+shmctl		-	shmctl		i:iip	__shmctl	shmctl
+shmat		-	shmat		i:ipi	__shmat		shmat
+shmdt		-	shmdt		i:s	__shmdt		shmdt
+
+# Socket APIs
+socket		-	socket		i:iii	__socket	socket
+socketpair	-	socketpair	i:iiif	__socketpair	socketpair
+bind		-	bind		i:ipi	__bind		bind
+listen		-	listen		i:ii	__listen	listen
+accept		-	accept		Ci:iBN	__libc_accept	__accept accept
+connect		-	connect		Ci:ipi	__libc_connect	__connect_internal __connect connect
+getsockname	-	getsockname	i:ipp	__getsockname	getsockname
+getpeername	-	getpeername	i:ipp	__getpeername	getpeername
+sendto		-	sendto		Ci:ibnibn	__libc_sendto	__sendto sendto
+recvfrom	-	recvfrom	Ci:ibniBN	__libc_recvfrom	__recvfrom recvfrom
+setsockopt	-	setsockopt	i:iiibn	__setsockopt	setsockopt
+getsockopt	-	getsockopt	i:iiiBN	__getsockopt	getsockopt
+shutdown	-	shutdown	i:ii	__shutdown	shutdown
+sendmsg		-	sendmsg		Ci:ipi	__libc_sendmsg	__sendmsg sendmsg
+recvmsg		-	recvmsg		Ci:ipi	__libc_recvmsg	__recvmsg recvmsg
