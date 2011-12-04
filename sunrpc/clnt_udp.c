@@ -473,8 +473,7 @@ send_again:
       /* see if reply transaction id matches sent id.
 	Don't do this if we only wait for a replay */
       if (xargs != NULL
-	  && (*((u_int32_t *) (cu->cu_inbuf))
-	      != *((u_int32_t *) (cu->cu_outbuf))))
+	  && memcmp (cu->cu_inbuf, cu->cu_outbuf, sizeof (u_int32_t)) != 0)
 	continue;
       /* we now assume we have the proper reply */
       break;

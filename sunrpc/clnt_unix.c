@@ -338,7 +338,8 @@ static bool_t
 clntunix_control (CLIENT *cl, int request, char *info)
 {
   struct ct_data *ct = (struct ct_data *) cl->cl_private;
-
+  u_long *mcall_ptr;
+  u_long ul;
 
   switch (request)
     {
@@ -366,11 +367,24 @@ clntunix_control (CLIENT *cl, int request, char *info)
        * first element in the call structure *.
        * This will get the xid of the PREVIOUS call
        */
+#if 0
+      /* This original code has aliasing issues.  */
       *(u_long *) info = ntohl (*(u_long *)ct->ct_mcall);
+#else
+      mcall_ptr = (u_long *)ct->ct_mcall;
+      ul = ntohl (*mcall_ptr);
+      memcpy (info, &ul, sizeof (ul));
+#endif
       break;
     case CLSET_XID:
       /* This will set the xid of the NEXT call */
+#if 0
+      /* This original code has aliasing issues.  */
       *(u_long *) ct->ct_mcall =  htonl (*(u_long *)info - 1);
+#else
+      ul = ntohl (*(u_long *)info - 1);
+      memcpy (ct->ct_mcall, &ul, sizeof (ul));
+#endif
       /* decrement by 1 as clntunix_call() increments once */
       break;
     case CLGET_VERS:
