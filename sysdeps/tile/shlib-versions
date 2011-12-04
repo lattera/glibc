@@ -1,0 +1,2 @@
+# glibc 2.12 was released to customers; 2.15 was the first community version.
+tile.*-.*-linux-gnu	DEFAULT		GLIBC_2.12 GLIBC_2.15

@@ -1,0 +1,4 @@
+# This file is generated from configure.in by Autoconf.  DO NOT EDIT!
+ # Local configure fragment for sysdeps/unix/sysv/linux/tile.
+
+arch_minimum_kernel=2.6.32
