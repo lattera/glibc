@@ -1,5 +1,7 @@
 2011-12-04  Ulrich Drepper  <drepper@gmail.com>
 
+	* sysdeps/generic/dl-hash.h (_dl_elf_hash): Fix attribute.
+
 	* sunrpc/clnt_unix.c (clntunix_control): Fix aliasing issues.
 	* sunrpc/clnt_tcp.c (clnttcp_control): Likewise.
 	* sunrpc/clnt_udp.c (clntudp_call): Likewise.
