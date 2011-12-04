@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1998, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -24,9 +24,9 @@
 	.text
 ENTRY (syscall)
 	move.l 4(%sp), %d0	/* Load syscall number.  */
-	_DOARGS_5 (24)		/* Frob arguments.  */
+	_DOARGS_6 (28)		/* Frob arguments.  */
 	trap &0			/* Do the system call.  */
-	UNDOARGS_5		/* Unfrob arguments.  */
+	UNDOARGS_6		/* Unfrob arguments.  */
 	cmp.l &-4095, %d0	/* Check %d0 for error.  */
 	jcc SYSCALL_ERROR_LABEL	/* Jump to error handler if negative.  */
 	rts			/* Return to caller.  */

@@ -1,3 +1,7 @@
+2011-12-04  Thorsten Glaser  <tg@mirbsd.de>
+
+	* sysdeps/unix/sysv/linux/m68k/syscall.S: Allow six arguments.
+
 2011-11-01  Andreas Schwab  <schwab@linux-m68k.org>
 
 	* sysdeps/m68k/stackinfo.h (stackinfo_get_sp, stackinfo_sub_sp):
