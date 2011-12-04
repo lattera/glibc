@@ -1,5 +1,21 @@
 2011-12-03  Ulrich Drepper  <drepper@gmail.com>
 
+	* inet/netinet/in.h: Provide versions of IN6_IS_ADDR_UNSPECIFIED,
+	IN6_IS_ADDR_LOOPBACK, IN6_IS_ADDR_LINKLOCAL, IN6_IS_ADDR_SITELOCAL,
+	IN6_IS_ADDR_V4MAPPED, IN6_IS_ADDR_V4COMPAT, and IN6_ARE_ADDR_EQUAL
+	for gcc to avoid warnings.
+	* inet/Makefile (tests): Add tst-checks.
+	* inet/tst-checks.c: New file.
+
+	* sysdeps/generic/dl-hash.h (_dl_elf_hash): Add attribute to avoid
+	warning.
+
+	* sysdeps/x86_64/multiarch/wmemcmp-c.c: Provide prototype for
+	__wmemcmp_sse2.
+
+	* sysdeps/x86_64/fpu/s_scalbln.c: Removed.
+	* sysdeps/x86_64/fpu/s_scalbn.c: Removed.
+
 	* malloc/mcheck.h: Fix use of incorrect encoding in comment.
 
 2011-12-02  Ulrich Drepper  <drepper@gmail.com>

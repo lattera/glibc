@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-2001, 2003, 2004, 2006, 2007, 2008
+/* Copyright (C) 1991-2001, 2003, 2004, 2006, 2007, 2008, 2011
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -396,44 +396,96 @@ extern uint16_t htons (uint16_t __hostshort)
 # endif
 #endif
 
-#define IN6_IS_ADDR_UNSPECIFIED(a) \
+#ifdef __GNUC__
+# define IN6_IS_ADDR_UNSPECIFIED(a) \
+  (__extension__							      \
+   ({ __const struct in6_addr *__a = (__const struct in6_addr *) (a);	      \
+      __a->s6_addr32[0] == 0						      \
+      && __a->s6_addr32[1] == 0						      \
+      && __a->s6_addr32[2] == 0						      \
+      && __a->s6_addr32[3] == 0; }))
+
+# define IN6_IS_ADDR_LOOPBACK(a) \
+  (__extension__							      \
+   ({ __const struct in6_addr *__a = (__const struct in6_addr *) (a);	      \
+      __a->s6_addr32[0] == 0						      \
+      && __a->s6_addr32[1] == 0						      \
+      && __a->s6_addr32[2] == 0						      \
+      && __a->s6_addr32[3] == htonl (1); }))
+
+# define IN6_IS_ADDR_LINKLOCAL(a) \
+  (__extension__							      \
+   ({ __const struct in6_addr *__a = (__const struct in6_addr *) (a);	      \
+      (__a->s6_addr32[0] & htonl (0xffc00000)) == htonl (0xfe800000); }))
+
+# define IN6_IS_ADDR_SITELOCAL(a) \
+  (__extension__							      \
+   ({ __const struct in6_addr *__a = (__const struct in6_addr *) (a);	      \
+      (__a->s6_addr32[0] & htonl (0xffc00000)) == htonl (0xfec00000); }))
+
+# define IN6_IS_ADDR_V4MAPPED(a) \
+  (__extension__							      \
+   ({ __const struct in6_addr *__a = (__const struct in6_addr *) (a);	      \
+      __a->s6_addr32[0] == 0						      \
+      && __a->s6_addr32[1] == 0						      \
+      && __a->s6_addr32[2] == htonl (0xffff); }))
+
+# define IN6_IS_ADDR_V4COMPAT(a) \
+  (__extension__							      \
+   ({ __const struct in6_addr *__a = (__const struct in6_addr *) (a);	      \
+      __a->s6_addr32[0] == 0						      \
+      && __a->s6_addr32[1] == 0						      \
+      && __a->s6_addr32[2] == 0						      \
+      && ntohl (__a->s6_addr32[3]) > 1; }))
+
+# define IN6_ARE_ADDR_EQUAL(a,b) \
+  (__extension__							      \
+   ({ __const struct in6_addr *__a = (__const struct in6_addr *) (a);	      \
+      __const struct in6_addr *__b = (__const struct in6_addr *) (b);	      \
+      __a->s6_addr32[0] == __b->s6_addr32[0]				      \
+      && __a->s6_addr32[1] == __b->s6_addr32[1]				      \
+      && __a->s6_addr32[2] == __b->s6_addr32[2]				      \
+      && __a->s6_addr32[3] == __b->s6_addr32[3]; }))
+#else
+# define IN6_IS_ADDR_UNSPECIFIED(a) \
 	(((__const uint32_t *) (a))[0] == 0				      \
 	 && ((__const uint32_t *) (a))[1] == 0				      \
 	 && ((__const uint32_t *) (a))[2] == 0				      \
 	 && ((__const uint32_t *) (a))[3] == 0)
 
-#define IN6_IS_ADDR_LOOPBACK(a) \
+# define IN6_IS_ADDR_LOOPBACK(a) \
 	(((__const uint32_t *) (a))[0] == 0				      \
 	 && ((__const uint32_t *) (a))[1] == 0				      \
 	 && ((__const uint32_t *) (a))[2] == 0				      \
 	 && ((__const uint32_t *) (a))[3] == htonl (1))
 
-#define IN6_IS_ADDR_MULTICAST(a) (((__const uint8_t *) (a))[0] == 0xff)
-
-#define IN6_IS_ADDR_LINKLOCAL(a) \
+# define IN6_IS_ADDR_LINKLOCAL(a) \
 	((((__const uint32_t *) (a))[0] & htonl (0xffc00000))		      \
 	 == htonl (0xfe800000))
 
-#define IN6_IS_ADDR_SITELOCAL(a) \
+# define IN6_IS_ADDR_SITELOCAL(a) \
 	((((__const uint32_t *) (a))[0] & htonl (0xffc00000))		      \
 	 == htonl (0xfec00000))
 
-#define IN6_IS_ADDR_V4MAPPED(a) \
+# define IN6_IS_ADDR_V4MAPPED(a) \
 	((((__const uint32_t *) (a))[0] == 0)				      \
 	 && (((__const uint32_t *) (a))[1] == 0)			      \
 	 && (((__const uint32_t *) (a))[2] == htonl (0xffff)))
 
-#define IN6_IS_ADDR_V4COMPAT(a) \
+# define IN6_IS_ADDR_V4COMPAT(a) \
 	((((__const uint32_t *) (a))[0] == 0)				      \
 	 && (((__const uint32_t *) (a))[1] == 0)			      \
 	 && (((__const uint32_t *) (a))[2] == 0)			      \
 	 && (ntohl (((__const uint32_t *) (a))[3]) > 1))
 
-#define IN6_ARE_ADDR_EQUAL(a,b) \
+# define IN6_ARE_ADDR_EQUAL(a,b) \
 	((((__const uint32_t *) (a))[0] == ((__const uint32_t *) (b))[0])     \
 	 && (((__const uint32_t *) (a))[1] == ((__const uint32_t *) (b))[1])  \
 	 && (((__const uint32_t *) (a))[2] == ((__const uint32_t *) (b))[2])  \
 	 && (((__const uint32_t *) (a))[3] == ((__const uint32_t *) (b))[3]))
+#endif
+
+#define IN6_IS_ADDR_MULTICAST(a) (((__const uint8_t *) (a))[0] == 0xff)
 
 #if defined __USE_MISC || defined __USE_GNU
 /* Bind socket to a privileged IP port.  */

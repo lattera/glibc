@@ -1,3 +1,7 @@
+2011-12-03  Ulrich Drepper  <drepper@gmail.com>
+
+	* idna.c (idna_to_unicode_4z4z): Remove variable rc.
+
 2008-02-10  Jim Meyering  <meyering@redhat.com>
 
 	* stringprep.c (stringprep, stringprep_profile): Remove useless

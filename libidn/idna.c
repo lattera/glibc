@@ -1,5 +1,5 @@
 /* idna.c	Convert to or from IDN strings.
- * Copyright (C) 2002, 2003, 2004  Simon Josefsson
+ * Copyright (C) 2002, 2003, 2004, 2011  Simon Josefsson
  *
  * This file is part of GNU Libidn.
  *
@@ -614,7 +614,6 @@ idna_to_unicode_4z4z (const uint32_t * input, uint32_t ** output, int flags)
   size_t buflen;
   uint32_t *out = NULL;
   size_t outlen = 0;
-  int rc;
 
   *output = NULL;
 
@@ -630,8 +629,8 @@ idna_to_unicode_4z4z (const uint32_t * input, uint32_t ** output, int flags)
       if (!buf)
 	return IDNA_MALLOC_ERROR;
 
-      rc = idna_to_unicode_44i (start, end - start, buf, &buflen, flags);
-      /* don't check rc as per specification! */
+      idna_to_unicode_44i (start, end - start, buf, &buflen, flags);
+      /* don't check return value as per specification! */
 
       if (out)
 	{
