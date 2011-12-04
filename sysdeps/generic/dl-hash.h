@@ -29,42 +29,39 @@ __attribute__ ((unused))
 _dl_elf_hash (const char *name_arg)
 {
   const unsigned char *name = (const unsigned char *) name_arg;
-  unsigned long int hash = 0;
-  if (*name != '\0')
+  unsigned long int hash = *name;
+  if (hash != 0 && name[1] != '\0')
     {
-      hash = *name++;
-      if (*name != '\0')
+      hash = (hash << 4) + name[1];
+      if (name[2] != '\0')
 	{
-	  hash = (hash << 4) + *name++;
-	  if (*name != '\0')
+	  hash = (hash << 4) + name[2];
+	  if (name[3] != '\0')
 	    {
-	      hash = (hash << 4) + *name++;
-	      if (*name != '\0')
+	      hash = (hash << 4) + name[3];
+	      if (name[4] != '\0')
 		{
-		  hash = (hash << 4) + *name++;
-		  if (*name != '\0')
+		  hash = (hash << 4) + name[4];
+		  name += 5;
+		  while (*name != '\0')
 		    {
+		      unsigned long int hi;
 		      hash = (hash << 4) + *name++;
-		      while (*name != '\0')
-			{
-			  unsigned long int hi;
-			  hash = (hash << 4) + *name++;
-			  hi = hash & 0xf0000000;
+		      hi = hash & 0xf0000000;
 
-			  /* The algorithm specified in the ELF ABI is as
-			     follows:
+		      /* The algorithm specified in the ELF ABI is as
+			 follows:
 
-			     if (hi != 0)
-			       hash ^= hi >> 24;
+			 if (hi != 0)
+			   hash ^= hi >> 24;
 
-			     hash &= ~hi;
+			 hash &= ~hi;
 
-			     But the following is equivalent and a lot
-			     faster, especially on modern processors.  */
+			 But the following is equivalent and a lot
+			 faster, especially on modern processors.  */
 
-			  hash ^= hi;
-			  hash ^= hi >> 24;
-			}
+		      hash ^= hi;
+		      hash ^= hi >> 24;
 		    }
 		}
 	    }
