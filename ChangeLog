@@ -1,3 +1,8 @@
+2011-12-06  Andreas Schwab  <schwab@linux-m68k.org>
+
+	[BZ #13472]
+	* sysdeps/powerpc/fpu/e_hypot.c (twoM600): Correct value.
+
 2011-12-04  Ulrich Drepper  <drepper@gmail.com>
 
 	* sysdeps/generic/dl-hash.h (_dl_elf_hash): Fix attribute.

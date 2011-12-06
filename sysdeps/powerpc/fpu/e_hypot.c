@@ -26,7 +26,7 @@ static const double two500  = 3.2733906078961419e+150;
 static const double two600  = 4.149515568880993e+180;
 static const double two1022 = 4.49423283715579e+307;
 static const double twoM500 = 3.054936363499605e-151;
-static const double twoM600 = 4.616489308892868e-128;
+static const double twoM600 = 2.4099198651028841e-181;
 static const double pdnum   = 2.225073858507201e-308;
 
 /* __ieee754_hypot(x,y)
