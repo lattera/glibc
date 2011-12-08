@@ -1,3 +1,10 @@
+2011-12-08  David Alan Gilbert  <david.gilbert@linaro.org>
+
+	* sysdeps/arm/preconfigure: Identify architecture version from
+	preprocessor defines.
+	* sysdeps/arm/eabi/armv6t2/memchr.S,
+	sysdeps/arm/eabi/armv7/Implies: New.
+
 2011-11-16  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/arm/ioperm.c (init_iosys): Use "c" and

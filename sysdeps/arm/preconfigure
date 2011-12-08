@@ -3,6 +3,38 @@ arm*)
 	base_machine=arm
 	case $config_os in
 	linux-gnueabi*)
+		# Lets ask the compiler which ARM family we've got
+		# Unfortunately it doesn't define any flags for implementations
+		# that you might pass to -mcpu or -mtune
+		# Note if you add patterns here you must ensure that
+		# an appropriate directory exists in sysdeps/arm/eabi
+		archcppflag=`echo "" |
+		$CC $CFLAGS $CPPFLAGS -E -dM - |
+		  grep __ARM_ARCH |
+		  sed -e 's/^#define //' -e 's/ .*//'`
+
+		case x$archcppflag in
+		x__ARM_ARCH_[89]*__)
+		  machine=armv7
+		  echo "Found compiler is configured for something newer than v7 - using v7"
+		  ;;
+
+		x__ARM_ARCH_7A__)
+		  machine=armv7
+		  echo "Found compiler is configured for $machine"
+		  ;;
+
+		x__ARM_ARCH_6T2__)
+		  machine=armv6t2
+		  echo "Found compiler is configured for $machine"
+		  ;;
+
+		*)
+		  machine=arm
+		  echo 2>&1 "arm/preconfigure: Did not find ARM architecture type; using default"
+		  ;;
+		esac
+
 		machine=arm/eabi/$machine
 		if [ "${CFLAGS+set}" != "set" ]; then
 		  CFLAGS="-g -O2"
