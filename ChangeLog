@@ -1,3 +1,8 @@
+2011-12-10  Ulrich Drepper  <drepper@gmail.com>
+
+	* sysdeps/generic/dl-hash.h (_dl_elf_hash): Lift one operation out of
+	the inner loop.
+
 2011-12-06  Andreas Schwab  <schwab@linux-m68k.org>
 
 	[BZ #13472]

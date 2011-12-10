@@ -60,9 +60,12 @@ _dl_elf_hash (const char *name_arg)
 			 But the following is equivalent and a lot
 			 faster, especially on modern processors.  */
 
-		      hash ^= hi;
 		      hash ^= hi >> 24;
 		    }
+
+		  /* Second part of the modified formula.  This
+		     operation can be lifted outside the loop.  */
+		  hash &= 0x0fffffff;
 		}
 	    }
 	}
