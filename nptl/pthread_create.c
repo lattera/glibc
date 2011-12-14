@@ -457,8 +457,9 @@ __pthread_create_2_1 (newthread, attr, start_routine, arg)
   int err = ALLOCATE_STACK (iattr, &pd);
   if (__builtin_expect (err != 0, 0))
     /* Something went wrong.  Maybe a parameter of the attributes is
-       invalid or we could not allocate memory.  */
-    return err;
+       invalid or we could not allocate memory.  Note we have to
+       translate error codes.  */
+    return err == ENOMEM ? EAGAIN : err;
 
 
   /* Initialize the TCB.  All initializations with zero should be

@@ -1,3 +1,8 @@
+2011-12-14  Jeff Law  <law@redhat.com>
+
+	[BZ #5245]
+	* pthread_create.c (__pthread_create_2_1): Translate ENOMEM to EAGAIN.
+
 2011-11-28  Andreas Schwab  <schwab@redhat.com>
 
 	* sysdeps/unix/sysv/linux/i386/i486/pthread_cond_wait.S: Handle
