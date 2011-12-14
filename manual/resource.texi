@@ -1607,7 +1607,7 @@ processors and so the call
 @end smallexample
 
 @noindent
-returns the number of processors which are currently inline (i.e.,
+returns the number of processors which are currently online (i.e.,
 available).
 
 For these two pieces of information the GNU C library also provides

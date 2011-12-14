@@ -1,3 +1,8 @@
+2011-12-12  Jeff Law  <law@redhat.com>
+
+	* manual/resource.texi (Processor Resources):
+	Fix typo in _SC_NPROCESSORS_ONLN.
+
 2011-12-10  Ulrich Drepper  <drepper@gmail.com>
 
 	* sysdeps/generic/dl-hash.h (_dl_elf_hash): Lift one operation out of
