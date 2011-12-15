@@ -435,7 +435,7 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
 	{
 	  /* Something went wrong.  */
 	  assert (errno == ENOMEM);
-	  return EAGAIN;
+	  return errno;
 	}
 
 
@@ -496,12 +496,7 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
 		      MAP_PRIVATE | MAP_ANONYMOUS | MAP_STACK, -1, 0);
 
 	  if (__builtin_expect (mem == MAP_FAILED, 0))
-	    {
-	      if (errno == ENOMEM)
-		__set_errno (EAGAIN);
-
-	       return errno;
-	    }
+	    return errno;
 
 	  /* SIZE is guaranteed to be greater than zero.
 	     So we can never get a null pointer back from mmap.  */
@@ -581,7 +576,7 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
 	      /* Free the stack memory we just allocated.  */
 	      (void) munmap (mem, size);
 
-	      return EAGAIN;
+	      return errno;
 	    }
 
 
@@ -636,10 +631,7 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
 #endif
 	  if (mprotect (guard, guardsize, PROT_NONE) != 0)
 	    {
-	      int err;
 	    mprot_error:
-	      err = errno == ENOMEM ? EAGAIN : errno;
-
 	      lll_lock (stack_cache_lock, LLL_PRIVATE);
 
 	      /* Remove the thread from the list.  */
@@ -657,7 +649,7 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
 		 is nothing we could do.  */
 	      (void) munmap (mem, size);
 
-	      return err;
+	      return errno;
 	    }
 
 	  pd->guardsize = guardsize;

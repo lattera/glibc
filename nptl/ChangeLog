@@ -1,3 +1,7 @@
+2011-12-14  Carlos O'Donell  <carlos@systemhalted.org>
+
+	* allocatestack.c (allocate_stack): Return errno on failure.
+
 2011-12-14  Jeff Law  <law@redhat.com>
 
 	[BZ #5245]
