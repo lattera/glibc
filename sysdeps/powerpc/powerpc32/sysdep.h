@@ -1,5 +1,6 @@
 /* Assembly macros for 32-bit PowerPC.
-   Copyright (C) 1999, 2001, 2002, 2003, 2006 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2001, 2002, 2003, 2006, 2011
+	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -45,6 +46,13 @@
   C_LABEL(name)								      \
   cfi_startproc;							      \
   CALL_MCOUNT
+
+/* helper macro for accessing the 32-bit powerpc GOT. */
+
+#define	SETUP_GOT_ACCESS(regname,GOT_LABEL)			      	      \
+	bcl	20,31,GOT_LABEL	;					      \
+GOT_LABEL:			;					      \
+	mflr	(regname)
 
 #define EALIGN_W_0  /* No words to insert.  */
 #define EALIGN_W_1  nop

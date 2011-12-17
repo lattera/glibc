@@ -1,4 +1,4 @@
-/* Copyright (C) 2009 Free Software Foundation, Inc.
+/* Copyright (C) 2009, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -29,10 +29,9 @@
 
 #ifdef PIC
 #  define LOAD_ARG \
-	bcl	20,31,1f;				\
-1:	mflr	r3;					\
-	addis	r3,r3,_GLOBAL_OFFSET_TABLE_-1b@ha;	\
-	addi	r3,r3,_GLOBAL_OFFSET_TABLE_-1b@l;	\
+	SETUP_GOT_ACCESS(r3,got_label2);			\
+	addis	r3,r3,_GLOBAL_OFFSET_TABLE_-got_label2@ha;	\
+	addi	r3,r3,_GLOBAL_OFFSET_TABLE_-got_label2@l;	\
 	lwz	r3,.LC0@got(r3)
 #else
 # define LOAD_ARG \

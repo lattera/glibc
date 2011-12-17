@@ -1,5 +1,5 @@
 /* Round float to int floating-point values.  PowerPC32 version.
-   Copyright (C) 2004, 2006 Free Software Foundation, Inc.
+   Copyright (C) 2004, 2006, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -29,10 +29,9 @@ ENTRY (__rintf)
 #ifdef SHARED
 	mflr	r11
 	cfi_register(lr,r11)
-	bcl	20,31,1f
-1:	mflr	r9
-	addis	r9,r9,.LC0-1b@ha
-	lfs	fp13,.LC0-1b@l(r9)
+	SETUP_GOT_ACCESS(r9,got_label)
+	addis	r9,r9,.LC0-got_label@ha
+	lfs	fp13,.LC0-got_label@l(r9)
 	mtlr	r11
 	cfi_same_value (lr)
 #else

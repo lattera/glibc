@@ -1,5 +1,5 @@
 /* Optimized memcpy implementation for PowerPC A2.
-   Copyright (C) 2010 Free Software Foundation, Inc.
+   Copyright (C) 2010, 2011 Free Software Foundation, Inc.
    Contributed by Michael Brutman <brutman@us.ibm.com>.
    This file is part of the GNU C Library.
 
@@ -113,11 +113,9 @@ L(dst_aligned):
 	mflr    r0
 /* Establishes GOT addressability so we can load __cache_line_size
    from static. This value was set from the aux vector during startup.  */
-	bcl     20,31,1f
-1:
-	mflr    r9
-	addis   r9,r9,__cache_line_size-1b@ha
-	lwz     r9,__cache_line_size-1b@l(r9)
+	SETUP_GOT_ACCESS(r9,got_label)
+	addis   r9,r9,__cache_line_size-got_label@ha
+	lwz     r9,__cache_line_size-got_label@l(r9)
 	mtlr    r0
 #else
 /* Load __cache_line_size from static. This value was set from the

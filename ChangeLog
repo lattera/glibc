@@ -1,3 +1,37 @@
+2011-11-21  Will Schmidt  <will_schmidt@vnet.ibm.com>
+
+	* powerpc/powerpc32/sysdep.h: Define SETUP_GOT_ACCESS() macro.
+	* powerpc/powerpc32/a2/memcpy.S: Use SETUP_GOT_ACCESS() macro.
+	* powerpc/powerpc32/dl-start.S: Likewise.
+	* powerpc/powerpc32/elf/start.S: Likewise.
+	* powerpc/powerpc32/fpu/__longjmp-common.S: Likewise.
+	* powerpc/powerpc32/fpu/s_ceil.S: Likewise.
+	* powerpc/powerpc32/fpu/s_ceilf.S: Likewise.
+	* powerpc/powerpc32/fpu/s_floor.S: Likewise.
+	* powerpc/powerpc32/fpu/s_floorf.S: Likewise.
+	* powerpc/powerpc32/fpu/s_lround.S: Likewise.
+	* powerpc/powerpc32/fpu/s_rint.S: Likewise.
+	* powerpc/powerpc32/fpu/s_rintf.S: Likewise.
+	* powerpc/powerpc32/fpu/s_round.S: Likewise.
+	* powerpc/powerpc32/fpu/s_roundf.S: Likewise.
+	* powerpc/powerpc32/fpu/s_trunc.S: Likewise.
+	* powerpc/powerpc32/fpu/s_truncf.S: Likewise.
+	* powerpc/powerpc32/fpu/setjmp-common.S: Likewise.
+	* powerpc/powerpc32/memset.S: Likewise.
+	* powerpc/powerpc32/power4/fpu/s_llround.S: Likewise.
+	* powerpc/powerpc32/power4/fpu/w_sqrt.S: Likewise.
+	* powerpc/powerpc32/power4/fpu/w_sqrtf.S: Likewise.
+	* powerpc/powerpc32/power5/fpu/w_sqrt.S: Likewise.
+	* powerpc/powerpc32/power5/fpu/w_sqrtf.S: Likewise.
+	* powerpc/powerpc32/power7/fpu/s_finite.S: Likewise.
+	* powerpc/powerpc32/power7/fpu/s_isinf.S: Likewise.
+	* powerpc/powerpc32/power7/fpu/s_isnan.S: Likewise.
+	* unix/sysv/linux/powerpc/powerpc32/____longjmp_chk.S: Likewise.
+	* unix/sysv/linux/powerpc/powerpc32/brk.S: Likewise.
+	* unix/sysv/linux/powerpc/powerpc32/getcontext-common.S: Likewise.
+	* unix/sysv/linux/powerpc/powerpc32/setcontext-common.S: Likewise.
+	* unix/sysv/linux/powerpc/powerpc32/swapcontext-common.S: Likewise.
+
 2011-11-18  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	* math/libm-test.inc: Added more nearbyint tests.

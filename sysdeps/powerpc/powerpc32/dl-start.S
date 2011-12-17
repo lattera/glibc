@@ -1,5 +1,6 @@
 /* Machine-dependent ELF startup code.  PowerPC version.
-   Copyright (C) 1995-2000, 2002, 2004, 2005, 2006 Free Software Foundation, Inc.
+   Copyright (C) 1995-2000, 2002, 2004, 2005, 2006, 2011
+	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -47,10 +48,9 @@ _dl_start_user:
    passed by value!).  */
 
 /*  Put our GOT pointer in r31, */
-	bcl	20,31,1f
-1:	mflr	r31
-	addis	r31,r31,_GLOBAL_OFFSET_TABLE_-1b@ha
-	addi	r31,r31,_GLOBAL_OFFSET_TABLE_-1b@l
+	SETUP_GOT_ACCESS(r31,got_label)
+	addis	r31,r31,_GLOBAL_OFFSET_TABLE_-got_label@ha
+	addi	r31,r31,_GLOBAL_OFFSET_TABLE_-got_label@l
 /*  the address of _start in r30, */
 	mr	r30,r3
 /*  &_dl_argc in 29, &_dl_argv in 27, and _dl_loaded in 28.  */

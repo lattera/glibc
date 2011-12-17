@@ -63,11 +63,9 @@ EALIGN (__sqrt, 5, 0)
 	cfi_offset(lr,20-16)
 	cfi_offset(r30,8-16)
 #ifdef SHARED
-	bcl	20,31,.LCF1
-.LCF1:
-	mflr	r30
-	addis	r30,r30,_GLOBAL_OFFSET_TABLE_-.LCF1@ha
-	addi	r30,r30,_GLOBAL_OFFSET_TABLE_-.LCF1@l
+	SETUP_GOT_ACCESS(r30,got_label)
+	addis	r30,r30,_GLOBAL_OFFSET_TABLE_-got_label@ha
+	addi	r30,r30,_GLOBAL_OFFSET_TABLE_-got_label@l
 	lwz	r9,_LIB_VERSION@got(30)
 	lwz	r0,0(r9)
 #else

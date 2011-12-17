@@ -1,5 +1,5 @@
 /* Save current context and jump to a new context.
-   Copyright (C) 2005, 2006, 2008, 2009 Free Software Foundation, Inc.
+   Copyright (C) 2005, 2006, 2008, 2009, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -146,10 +146,9 @@ ENTRY(__CONTEXT_FUNC_NAME)
 
 # ifdef PIC
 	mflr    r8
-	bcl	20,31,1f
-1:	mflr	r7
-	addis	r7,r7,_GLOBAL_OFFSET_TABLE_-1b@ha
-	addi	r7,r7,_GLOBAL_OFFSET_TABLE_-1b@l
+	SETUP_GOT_ACCESS(r7,got_label)
+	addis	r7,r7,_GLOBAL_OFFSET_TABLE_-got_label@ha
+	addi	r7,r7,_GLOBAL_OFFSET_TABLE_-got_label@l
 #  ifdef SHARED
 	lwz     r7,_rtld_global_ro@got(r7)
 	mtlr    r8
@@ -299,10 +298,9 @@ ENTRY(__CONTEXT_FUNC_NAME)
 #  ifdef PIC
 	mflr    r8
 #   ifdef HAVE_ASM_PPC_REL16
-	bcl	20,31,5f
-5:	mflr	r7
-	addis	r7,r7,_GLOBAL_OFFSET_TABLE_-5b@ha
-	addi	r7,r7,_GLOBAL_OFFSET_TABLE_-5b@l
+	SETUP_GOT_ACCESS(r7,got_label)
+	addis	r7,r7,_GLOBAL_OFFSET_TABLE_-got_label@ha
+	addi	r7,r7,_GLOBAL_OFFSET_TABLE_-got_label@l
 #   else
 	bl      _GLOBAL_OFFSET_TABLE_@local-4
 	mflr    r7

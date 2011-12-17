@@ -1,5 +1,6 @@
 /* Optimized memset implementation for PowerPC.
-   Copyright (C) 1997, 1999, 2000, 2003, 2007 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1999, 2000, 2003, 2007, 2011
+	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -256,10 +257,9 @@ L(checklinesize):
 	beq	L(medium)
 /* Establishes GOT addressability so we can load __cache_line_size
    from static. This value was set from the aux vector during startup.  */
-	bcl	20,31,1f
-1:	mflr	rGOT
-	addis	rGOT,rGOT,__cache_line_size-1b@ha
-	lwz	rCLS,__cache_line_size-1b@l(rGOT)
+	SETUP_GOT_ACCESS(rGOT,got_label)
+	addis	rGOT,rGOT,__cache_line_size-got_label@ha
+	lwz	rCLS,__cache_line_size-got_label@l(rGOT)
 	mtlr	rTMP
 #else
 /* Load __cache_line_size from static. This value was set from the

@@ -1,5 +1,6 @@
 /* longjmp for PowerPC.
-   Copyright (C) 1995-99, 2000, 2003-2006, 2009 Free Software Foundation, Inc.
+   Copyright (C) 1995-99, 2000, 2003-2006, 2009, 2011
+	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -34,10 +35,9 @@ ENTRY (BP_SYM (__longjmp))
 # ifdef PIC
 	mflr    r6
 	cfi_register (lr,r6)
-	bcl	20,31,1f
-1:	mflr	r5
-	addis	r5,r5,_GLOBAL_OFFSET_TABLE_-1b@ha
-	addi	r5,r5,_GLOBAL_OFFSET_TABLE_-1b@l
+	SETUP_GOT_ACCESS(r5,got_label)
+	addis	r5,r5,_GLOBAL_OFFSET_TABLE_-got_label@ha
+	addi	r5,r5,_GLOBAL_OFFSET_TABLE_-got_label@l
 #  ifdef SHARED
 	lwz     r5,_rtld_global_ro@got(r5)
 	mtlr    r6

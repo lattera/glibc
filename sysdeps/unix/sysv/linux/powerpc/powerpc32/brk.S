@@ -1,5 +1,5 @@
 /* brk system call for Linux/ppc.
-   Copyright (C) 1995-97, 1999, 2000, 2006 Free Software Foundation, Inc.
+   Copyright (C) 1995-97, 1999, 2000, 2006, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -36,10 +36,9 @@ ENTRY (BP_SYM (__brk))
 	DO_CALL(SYS_ify(brk))
 	lwz     r6,8(r1)
 #ifdef PIC
-	bcl	20,31,1f
-1:	mflr	r5
-	addis	r5,r5,__curbrk-1b@ha
-	stw	r3,__curbrk-1b@l(r5)
+	SETUP_GOT_ACCESS(r5,got_label)
+	addis	r5,r5,__curbrk-got_label@ha
+	stw	r3,__curbrk-got_label@l(r5)
 #else
 	lis     r4,__curbrk@ha
 	stw     r3,__curbrk@l(r4)

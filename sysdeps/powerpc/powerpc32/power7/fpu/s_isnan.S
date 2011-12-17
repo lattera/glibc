@@ -1,5 +1,5 @@
 /* isnan().  PowerPC32/POWER7 version.
-   Copyright (C) 2010 Free Software Foundation, Inc.
+   Copyright (C) 2010, 2011 Free Software Foundation, Inc.
    Contributed by Luis Machado <luisgpm@br.ibm.com>.
    This file is part of the GNU C Library.
 
@@ -35,10 +35,9 @@ ENTRY (__isnan)
 	mflr	r11
 	cfi_register(lr,r11)
 
-	bcl	20,31,1f
-1:	mflr	r9
-	addis	r9,r9,.LC0-1b@ha
-	lfd	fp0,.LC0-1b@l(r9)
+	SETUP_GOT_ACCESS(r9,got_label)
+	addis	r9,r9,.LC0-got_label@ha
+	lfd	fp0,.LC0-got_label@l(r9)
 
 	mtlr	r11
 	cfi_same_value (lr)

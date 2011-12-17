@@ -1,5 +1,5 @@
 /* round function.  PowerPC32 version.
-   Copyright (C) 2004, 2006 Free Software Foundation, Inc.
+   Copyright (C) 2004, 2006, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -43,10 +43,9 @@ ENTRY (__round)
 #ifdef SHARED
 	mflr	r11
 	cfi_register(lr,r11)
-	bcl	20,31,1f
-1:	mflr	r9
-	addis	r9,r9,.LC0-1b@ha
-	addi	r9,r9,.LC0-1b@l
+	SETUP_GOT_ACCESS(r9,got_label)
+	addis	r9,r9,.LC0-got_label@ha
+	addi	r9,r9,.LC0-got_label@l
 	mtlr	r11
 	cfi_same_value (lr)
 	lfs	fp13,0(r9)

@@ -1,5 +1,5 @@
 /* Startup code for programs linked with GNU libc.
-   Copyright (C) 1998,1999,2000,2001,2002,2003,2009
+   Copyright (C) 1998, 1999, 2000, 2001, 2002, 2003, 2009, 2011
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -59,10 +59,8 @@ ENTRY(_start)
  /* Set up an initial stack frame, and clear the LR.  */
 	clrrwi	r1,r1,4
 #ifdef PIC
-	bcl	20,31,L(branch)
-L(branch):
+	SETUP_GOT_ACCESS(r13,got_label)
 	li	r0,0
-	mflr	r13
 #else
 	li	r0,0
 #endif
@@ -73,10 +71,10 @@ L(branch):
     start_addresses in r8.  Also load the GOT pointer so that new PLT
     calls work, like the one to __libc_start_main.  */
 #ifdef PIC
-	addis	r30,r13,_GLOBAL_OFFSET_TABLE_-L(branch)@ha
-	addis	r8,r13,L(start_addresses)-L(branch)@ha
-	addi	r30,r30,_GLOBAL_OFFSET_TABLE_-L(branch)@l
-	lwzu	r13,L(start_addresses)-L(branch)@l(r8)
+	addis	r30,r13,_GLOBAL_OFFSET_TABLE_-got_label@ha
+	addis	r8,r13,L(start_addresses)-got_label@ha
+	addi	r30,r30,_GLOBAL_OFFSET_TABLE_-got_label@l
+	lwzu	r13, L(start_addresses)-got_label@l(r8) 
 #else
 	lis	r8,L(start_addresses)@ha
 	lwzu	r13,L(start_addresses)@l(r8)
