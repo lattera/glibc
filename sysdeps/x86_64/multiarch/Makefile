@@ -16,7 +16,7 @@ sysdep_routines += strncat-c stpncpy-c strncpy-c strcmp-ssse3 strncmp-ssse3 \
 		   strcat-sse2-unaligned strncat-sse2-unaligned \
 		   strcat-ssse3 strncat-ssse3 strlen-sse2-pminub \
 		   strnlen-sse2-no-bsf strrchr-sse2-no-bsf strchr-sse2-no-bsf \
-		   memcmp-ssse3 wmemcmp-sse4 wmemcmp-ssse3 wmemcmp-c
+		   memcmp-ssse3
 ifeq (yes,$(config-cflags-sse4))
 sysdep_routines += strcspn-c strpbrk-c strspn-c strstr-c strcasestr-c varshift
 CFLAGS-varshift.c += -msse4
@@ -27,4 +27,8 @@ CFLAGS-strstr.c += -msse4
 CFLAGS-strcasestr.c += -msse4
 CFLAGS-strcasestr-nonascii.c += -msse4
 endif
+endif
+
+ifeq ($(subdir),wcsmbs)
+sysdep_routines += wmemcmp-sse4 wmemcmp-ssse3 wmemcmp-c wcscpy-ssse3 wcscpy-c
 endif

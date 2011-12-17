@@ -1,4 +1,6 @@
-/* Copyright (C) 1995, 1996, 1999 Free Software Foundation, Inc.
+/* Multiple versions of wcscpy
+   Copyright (C)  2011 Free Software Foundation, Inc.
+   Contributed by Intel Corporation.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,23 +18,26 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <wchar.h>
+#include <sysdep.h>
+#include <init-arch.h>
 
-/* Find the first occurrence of WC in WCS.  */
-#ifdef WCSCHR
-# define wcschr WCSCHR
+/* Define multiple versions only for the definition in libc. */
+#ifndef NOT_IN_libc
+
+	.text
+ENTRY(wcscpy)
+	.type	wcscpy, @gnu_indirect_function
+	cmpl	$0, KIND_OFFSET+__cpu_features(%rip)
+	jne	1f
+	call	__init_cpu_features
+
+1:	testl	$bit_SSSE3, __cpu_features+CPUID_OFFSET+index_SSSE3(%rip)
+	jnz	2f
+	leaq	__wcscpy_sse2(%rip), %rax
+	ret
+
+2:	leaq	__wcscpy_ssse3(%rip), %rax
+	ret
+
+END(wcscpy)
 #endif
-
-wchar_t *
-wcschr (wcs, wc)
-     register const wchar_t *wcs;
-     register const wchar_t wc;
-{
-  do
-    if (*wcs == wc)
-      return (wchar_t *) wcs;
-  while (*wcs++ != L'\0');
-
-  return NULL;
-}
-libc_hidden_def (wcschr)

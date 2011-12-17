@@ -1,3 +1,28 @@
+2011-11-14  Liubov Dmitrieva  <liubov.dmitrieva@gmail.com>
+
+	* sysdeps/x86_64/multiarch/Makefile [subdir=wcsmbs] (sysdep_routines):
+	Add wcscpy-ssse3 wcscpy-c.
+	* sysdeps/x86_64/multiarch/wcscpy-ssse3.S: New file.
+	* sysdeps/x86_64/multiarch/wcscpy-c.c: New file.
+	* sysdeps/x86_64/multiarch/wcscpy.S: New file.
+	* sysdeps/x86_64/wcschr.S: New file.
+	* sysdeps/x86_64/wcsrchr.S: New file.
+	* string/test-strcmp.c: Remove checking of wcscmp function for
+	wrong alignments.
+	* sysdeps/i386/i686/multiarch/Makefile [subdir=wcsmbs]
+	(sysdep_routines): Add wcscpy-ssse3 wcscpy-c wcschr-sse2 wcschr-c
+	wcsrchr-sse2 wcsrchr-c.
+	* sysdeps/i386/i686/multiarch/wcschr.S: New file.
+	* sysdeps/i386/i686/multiarch/wcschr-c.c: New file.
+	* sysdeps/i386/i686/multiarch/wcschr-sse2.S: New file.
+	* sysdeps/i386/i686/multiarch/wcsrchr.S: New file.
+	* sysdeps/i386/i686/multiarch/wcsrchr-c.c: New file.
+	* sysdeps/i386/i686/multiarch/wcsrchr-sse2.S: New file.
+	* sysdeps/i386/i686/multiarch/wcscpy.S: New file.
+	* sysdeps/i386/i686/multiarch/wcscpy-c.c: New file.
+	* sysdeps/i386/i686/multiarch/wcscpy-ssse3.S: New file.
+	* wcsmbc/wcschr.c (WCSCHR): New macro.
+
 2011-11-17  Liubov Dmitrieva  <liubov.dmitrieva@gmail.com>
 
 	* wcsmbs/Makefile (strop-tests): Add wcsrchr wcscpy.
