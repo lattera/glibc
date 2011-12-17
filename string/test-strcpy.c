@@ -142,17 +142,17 @@ static void
 do_random_tests (void)
 {
   size_t i, j, n, align1, align2, len;
-  
   UCHAR *p1 = (UCHAR *) (buf1 + page_size) - 512;
   UCHAR *p2 = (UCHAR *) (buf2 + page_size) - 512;
   UCHAR *res;
 
   for (n = 0; n < ITERATIONS; n++)
     {
-   /* For wcsrchr: align1 and align2 here mean align not in bytes, but in wchar_ts,
-	 in bytes it will equal to align * (sizeof (wchar_t)).
-   For strrchr we need to check all alignments from 0 to 63 since some assembly implementations
-   have separate prolog for alignments more 48. */
+      /* For wcsrchr: align1 and align2 here mean align not in bytes,
+	 but in wchar_ts, in bytes it will equal to align * (sizeof
+	 (wchar_t)).  For strrchr we need to check all alignments from
+	 0 to 63 since some assembly implementations have separate
+	 prolog for alignments more 48. */
 
       align1 = random () & (63 / sizeof(CHAR));
       if (random () & 1)

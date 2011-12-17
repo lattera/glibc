@@ -93,12 +93,12 @@ static void
 do_test (size_t align, size_t pos, size_t len, int seek_char, int max_char)
 /* For wcsrchr: align here means align not in bytes,
    but in wchar_ts, in bytes it will equal to align * (sizeof (wchar_t))
-   len for wcschr here isn't in bytes but it's number of wchar_t symbols.  */        
+   len for wcschr here isn't in bytes but it's number of wchar_t symbols.  */
 {
   size_t i;
   CHAR *result;
   CHAR *buf = (CHAR *) buf1;
-  
+
   align &= 7;
   if ( (align + len) * sizeof(CHAR) >= page_size)
     return;
@@ -109,7 +109,7 @@ do_test (size_t align, size_t pos, size_t len, int seek_char, int max_char)
       if (!buf[align + i])
 	buf[align + i] = (random () * random ()) & max_char;
       if (!buf[align + i])
-        buf[align + i] = 1;
+	buf[align + i] = 1;
       if ((i > pos || pos >= len) && buf[align + i] == seek_char)
 	buf[align + i] = seek_char + 10 + (random () & 15);
     }
@@ -160,7 +160,7 @@ do_random_tests (void)
       if (pos >= len)
 	len = pos + (random () & 7);
       if (len + align >= 512)
-        len = 511 - align - (random () & 7);
+	len = 511 - align - (random () & 7);
       seek_char = random () & 255;
       if (seek_char && pos == len)
 	{
@@ -171,7 +171,7 @@ do_random_tests (void)
 	}
       j = len + align + 64;
       if (j > 512)
-        j = 512;
+	j = 512;
 
       for (i = 0; i < j; i++)
 	{
@@ -197,7 +197,7 @@ do_random_tests (void)
       if (pos <= len)
 	result = (CHAR *) (p + pos + align);
       else if (seek_char == 0)
-        result = (CHAR *) (p + len + align);
+	result = (CHAR *) (p + len + align);
       else
 	result = NULL;
 
