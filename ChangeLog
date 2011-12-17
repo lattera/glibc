@@ -1,3 +1,8 @@
+2011-11-21  Ross Lagerwall  <rosslagerwall@gmail.com>
+
+	* resolv/res_init.c (__res_vinit): Open /etc/resolv.conf with
+	FD_CLOEXEC.
+
 2011-11-14  Liubov Dmitrieva  <liubov.dmitrieva@gmail.com>
 
 	* sysdeps/x86_64/multiarch/Makefile [subdir=wcsmbs] (sysdep_routines):

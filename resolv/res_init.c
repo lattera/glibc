@@ -233,7 +233,7 @@ __res_vinit(res_state statp, int preinit) {
 	(line[sizeof(name) - 1] == ' ' || \
 	 line[sizeof(name) - 1] == '\t'))
 
-	if ((fp = fopen(_PATH_RESCONF, "rc")) != NULL) {
+	if ((fp = fopen(_PATH_RESCONF, "rce")) != NULL) {
 	    /* No threads use this stream.  */
 	    __fsetlocking (fp, FSETLOCKING_BYCALLER);
 	    /* read the config file */
