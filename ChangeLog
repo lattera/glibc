@@ -1,3 +1,11 @@
+2011-11-18  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
+	* math/libm-test.inc: Added more nearbyint tests.
+	* sysdeps/powerpc/powerpc32/fpu/s_nearbyint.S: New file.
+	* sysdeps/powerpc/powerpc32/fpu/s_nearbyintf.S: New file.
+	* sysdeps/powerpc/powerpc64/fpu/s_nearbyint.S: New file.
+	* sysdeps/powerpc/powerpc64/fpu/s_nearbyintf.S: New file.
+
 2011-11-21  Ross Lagerwall  <rosslagerwall@gmail.com>
 
 	* resolv/res_init.c (__res_vinit): Open /etc/resolv.conf with

@@ -4618,6 +4618,10 @@ nearbyint_test (void)
   TEST_f_f (nearbyint, minus_infty, minus_infty);
   TEST_f_f (nearbyint, nan_value, nan_value);
 
+  /* Subnormal values */
+  TEST_f_f (nearbyint, -8.98847e+307, -8.98847e+307);
+  TEST_f_f (nearbyint, -4.45015e-308, minus_zero);
+
   /* Default rounding mode is round to nearest.  */
   TEST_f_f (nearbyint, 0.5, 0.0);
   TEST_f_f (nearbyint, 1.5, 2.0);
