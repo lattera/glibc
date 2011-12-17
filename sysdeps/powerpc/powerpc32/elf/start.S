@@ -74,7 +74,7 @@ ENTRY(_start)
 	addis	r30,r13,_GLOBAL_OFFSET_TABLE_-got_label@ha
 	addis	r8,r13,L(start_addresses)-got_label@ha
 	addi	r30,r30,_GLOBAL_OFFSET_TABLE_-got_label@l
-	lwzu	r13, L(start_addresses)-got_label@l(r8) 
+	lwzu	r13, L(start_addresses)-got_label@l(r8)
 #else
 	lis	r8,L(start_addresses)@ha
 	lwzu	r13,L(start_addresses)@l(r8)
