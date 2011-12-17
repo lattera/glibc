@@ -2,7 +2,8 @@
    Copyright (C) 1999, 2002, 2003, 2005, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Jakub Jelinek <jakub@redhat.com>, 1999.
-   Added wcsrrchr support by Liubov Dmitrieva <liubov.dmitrieva@gmail.com>, 2011.
+   Added wcsrrchr support by Liubov Dmitrieva <liubov.dmitrieva@gmail.com>,
+   2011.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -145,15 +146,16 @@ do_random_tests (void)
   for (n = 0; n < ITERATIONS; n++)
     {
       align = random () & (63 / sizeof(CHAR));
-   /* For wcsrchr: align here means align not in bytes, but in wchar_ts,
+      /* For wcsrchr: align here means align not in bytes, but in wchar_ts,
 	 in bytes it will equal to align * (sizeof (wchar_t)).
-   For strrchr we need to check all alignments from 0 to 63 since some assembly implementations
-   have separate prolog for alignments more 48. */
+	 For strrchr we need to check all alignments from 0 to 63 since
+	 some assembly implementations have separate prolog for alignments
+	 more 48. */
       pos = random () & 511;
       if (pos + align >= 511)
 	pos = 510 - align - (random () & 7);
       len = random () & 511;
-   /* len for wcschr here isn't in bytes but it's number of wchar_t
+      /* len for wcschr here isn't in bytes but it's number of wchar_t
 	 symbols.  */
       if (pos >= len)
 	len = pos + (random () & 7);
