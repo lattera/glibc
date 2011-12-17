@@ -226,9 +226,11 @@ do_random_tests (void)
 
 	for (size_t n = 0; n < ITERATIONS; n++)
 	  {
-      /* for wcscmp case align1 and align2 mean here alignment in wchar_t symbols, it 
-       equal 4*k alignment in bytes, we don't check other alignments like for example p1 = (wchar_t *)(buf1 + 1)
-       because it's wrong using of wchar_t type. */
+	    /* for wcscmp case align1 and align2 mean here alignment
+	       in wchar_t symbols, it equal 4*k alignment in bytes, we
+	       don't check other alignments like for example
+	       p1 = (wchar_t *)(buf1 + 1)
+	       because it's wrong using of wchar_t type.  */
 	    size_t align1 = random () & 31;
 	    size_t align2;
 	    if (random () & 1)
