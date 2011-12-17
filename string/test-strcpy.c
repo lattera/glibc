@@ -1,7 +1,8 @@
 /* Test and measure strcpy functions.
-   Copyright (C) 1999, 2002, 2003, 2005 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2002, 2003, 2005, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Jakub Jelinek <jakub@redhat.com>, 1999.
+   Added wcscpy support by Liubov Dmitrieva <liubov.dmitrieva@gmail.com>, 2011
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -18,29 +19,55 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#ifdef WIDE
+# include <wchar.h>
+# define CHAR wchar_t
+# define UCHAR wchar_t
+# define BIG_CHAR WCHAR_MAX
+# define SMALL_CHAR 1273
+# define STRCMP wcscmp
+# define MEMCMP wmemcmp
+# define MEMSET wmemset
+#else
+# define CHAR char
+# define UCHAR unsigned char
+# define BIG_CHAR CHAR_MAX
+# define SMALL_CHAR 127
+# define STRCMP strcmp
+# define MEMCMP memcmp
+# define MEMSET memset
+#endif
+
 #ifndef STRCPY_RESULT
 # define STRCPY_RESULT(dst, len) dst
 # define TEST_MAIN
 # include "test-string.h"
+# ifndef WIDE
+#  define SIMPLE_STRCPY simple_strcpy
+#  define STRCPY strcpy
+# else
+#  define SIMPLE_STRCPY simple_wcscpy
+#  define STRCPY wcscpy
+# endif
 
-char *simple_strcpy (char *, const char *);
+CHAR *SIMPLE_STRCPY (CHAR *, const CHAR *);
 
-IMPL (simple_strcpy, 0)
-IMPL (strcpy, 1)
+IMPL (SIMPLE_STRCPY, 0)
+IMPL (STRCPY, 1)
 
-char *
-simple_strcpy (char *dst, const char *src)
+CHAR *
+SIMPLE_STRCPY (CHAR *dst, const CHAR *src)
 {
-  char *ret = dst;
+  CHAR *ret = dst;
   while ((*dst++ = *src++) != '\0');
   return ret;
 }
 #endif
 
-typedef char *(*proto_t) (char *, const char *);
+typedef CHAR *(*proto_t) (CHAR *, const CHAR *);
 
 static void
-do_one_test (impl_t *impl, char *dst, const char *src,
+do_one_test (impl_t *impl, CHAR *dst, const CHAR *src,
 	     size_t len __attribute__((unused)))
 {
   if (CALL (impl, dst, src) != STRCPY_RESULT (dst, len))
@@ -51,7 +78,7 @@ do_one_test (impl_t *impl, char *dst, const char *src,
       return;
     }
 
-  if (strcmp (dst, src) != 0)
+  if (STRCMP (dst, src) != 0)
     {
       error (0, 0, "Wrong result in function %s dst \"%s\" src \"%s\"",
 	     impl->name, dst, src);
@@ -82,25 +109,27 @@ static void
 do_test (size_t align1, size_t align2, size_t len, int max_char)
 {
   size_t i;
-  char *s1, *s2;
-
+  CHAR *s1, *s2;
+/* For wcscpy: align1 and align2 here mean alignment not in bytes,
+   but in wchar_ts, in bytes it will equal to align * (sizeof (wchar_t))
+   len for wcschr here isn't in bytes but it's number of wchar_t symbols.  */
   align1 &= 7;
-  if (align1 + len >= page_size)
+  if ((align1 + len) * sizeof(CHAR) >= page_size)
     return;
 
   align2 &= 7;
-  if (align2 + len >= page_size)
+  if ((align2 + len) * sizeof(CHAR) >= page_size)
     return;
 
-  s1 = (char *) (buf1 + align1);
-  s2 = (char *) (buf2 + align2);
+  s1 = (CHAR *) (buf1) + align1;
+  s2 = (CHAR *) (buf2) + align2;
 
   for (i = 0; i < len; i++)
     s1[i] = 32 + 23 * i % (max_char - 32);
   s1[len] = 0;
 
   if (HP_TIMING_AVAIL)
-    printf ("Length %4zd, alignment %2zd/%2zd:", len, align1, align2);
+    printf ("Length %4zd, alignments in bytes %2zd/%2zd:", len, align1 * sizeof(CHAR), align2 * sizeof(CHAR));
 
   FOR_EACH_IMPL (impl, 0)
     do_one_test (impl, s2, s1, len);
@@ -113,15 +142,21 @@ static void
 do_random_tests (void)
 {
   size_t i, j, n, align1, align2, len;
-  unsigned char *p1 = buf1 + page_size - 512;
-  unsigned char *p2 = buf2 + page_size - 512;
-  unsigned char *res;
+  
+  UCHAR *p1 = (UCHAR *) (buf1 + page_size) - 512;
+  UCHAR *p2 = (UCHAR *) (buf2 + page_size) - 512;
+  UCHAR *res;
 
   for (n = 0; n < ITERATIONS; n++)
     {
-      align1 = random () & 31;
+   /* For wcsrchr: align1 and align2 here mean align not in bytes, but in wchar_ts,
+	 in bytes it will equal to align * (sizeof (wchar_t)).
+   For strrchr we need to check all alignments from 0 to 63 since some assembly implementations
+   have separate prolog for alignments more 48. */
+
+      align1 = random () & (63 / sizeof(CHAR));
       if (random () & 1)
-	align2 = random () & 31;
+	align2 = random () & (63 / sizeof(CHAR));
       else
 	align2 = align1 + (random () & 24);
       len = random () & 511;
@@ -139,17 +174,16 @@ do_random_tests (void)
 	    p1[i] = 0;
 	  else
 	    {
-	      p1[i] = random () & 255;
+	      p1[i] = random () & BIG_CHAR;
 	      if (i >= align1 && i < len + align1 && !p1[i])
-		p1[i] = (random () & 127) + 3;
+		p1[i] = (random () & SMALL_CHAR) + 3;
 	    }
 	}
 
       FOR_EACH_IMPL (impl, 1)
 	{
-	  memset (p2 - 64, '\1', 512 + 64);
-	  res = (unsigned char *) CALL (impl, (char *) (p2 + align2),
-					(char *) (p1 + align1));
+	  MEMSET (p2 - 64, '\1', 512 + 64);
+	  res = (UCHAR *) CALL (impl, (CHAR *) (p2 + align2), (CHAR *) (p1 + align1));
 	  if (res != STRCPY_RESULT (p2 + align2, len))
 	    {
 	      error (0, 0, "Iteration %zd - wrong result in function %s (%zd, %zd, %zd) %p != %p",
@@ -177,7 +211,7 @@ do_random_tests (void)
 		  break;
 		}
 	    }
-	  if (memcmp (p1 + align1, p2 + align2, len + 1))
+	  if (MEMCMP (p1 + align1, p2 + align2, len + 1))
 	    {
 	      error (0, 0, "Iteration %zd - different strings, %s (%zd, %zd, %zd)",
 		     n, impl->name, align1, align2, len);
@@ -201,24 +235,24 @@ test_main (void)
 
   for (i = 0; i < 16; ++i)
     {
-      do_test (0, 0, i, 127);
-      do_test (0, 0, i, 255);
-      do_test (0, i, i, 127);
-      do_test (i, 0, i, 255);
+      do_test (0, 0, i, SMALL_CHAR);
+      do_test (0, 0, i, BIG_CHAR);
+      do_test (0, i, i, SMALL_CHAR);
+      do_test (i, 0, i, BIG_CHAR);
     }
 
   for (i = 1; i < 8; ++i)
     {
-      do_test (0, 0, 8 << i, 127);
-      do_test (8 - i, 2 * i, 8 << i, 127);
+      do_test (0, 0, 8 << i, SMALL_CHAR);
+      do_test (8 - i, 2 * i, 8 << i, SMALL_CHAR);
     }
 
   for (i = 1; i < 8; ++i)
     {
-      do_test (i, 2 * i, 8 << i, 127);
-      do_test (2 * i, i, 8 << i, 255);
-      do_test (i, i, 8 << i, 127);
-      do_test (i, i, 8 << i, 255);
+      do_test (i, 2 * i, 8 << i, SMALL_CHAR);
+      do_test (2 * i, i, 8 << i, BIG_CHAR);
+      do_test (i, i, 8 << i, SMALL_CHAR);
+      do_test (i, i, 8 << i, BIG_CHAR);
     }
 
   do_random_tests ();

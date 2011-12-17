@@ -1,7 +1,8 @@
-/* Test and measure strrchr functions.
-   Copyright (C) 1999, 2002, 2003, 2005 Free Software Foundation, Inc.
+/* Test and measure STRCHR functions.
+   Copyright (C) 1999, 2002, 2003, 2005, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Jakub Jelinek <jakub@redhat.com>, 1999.
+   Added wcsrrchr support by Liubov Dmitrieva <liubov.dmitrieva@gmail.com>, 2011.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -21,28 +22,45 @@
 #define TEST_MAIN
 #include "test-string.h"
 
-typedef char *(*proto_t) (const char *, int);
-char *simple_strrchr (const char *, int);
+#ifdef WIDE
+# include <wchar.h>
+# define SIMPLE_STRRCHR simple_wcsrchr
+# define STRRCHR wcsrchr
+# define CHAR wchar_t
+# define UCHAR wchar_t
+# define BIG_CHAR WCHAR_MAX
+# define SMALL_CHAR 1273
+#else
+# define SIMPLE_STRRCHR simple_strrchr
+# define STRRCHR strrchr
+# define CHAR char
+# define UCHAR unsigned char
+# define BIG_CHAR CHAR_MAX
+# define SMALL_CHAR 127
+#endif
 
-IMPL (simple_strrchr, 0)
-IMPL (strrchr, 1)
+typedef CHAR *(*proto_t) (const CHAR *, int);
+CHAR *SIMPLE_STRRCHR (const CHAR *, int);
 
-char *
-simple_strrchr (const char *s, int c)
+IMPL (SIMPLE_STRRCHR, 0)
+IMPL (STRRCHR, 1)
+
+CHAR *
+SIMPLE_STRRCHR (const CHAR *s, int c)
 {
-  const char *ret = NULL;
+  const CHAR *ret = NULL;
 
   for (; *s != '\0'; ++s)
-    if (*s == (char) c)
+    if (*s == (CHAR) c)
       ret = s;
 
-  return (char *) (c == '\0' ? s : ret);
+  return (CHAR *) (c == '\0' ? s : ret);
 }
 
 static void
-do_one_test (impl_t *impl, const char *s, int c, char *exp_res)
+do_one_test (impl_t *impl, const CHAR *s, int c, CHAR *exp_res)
 {
-  char *res = CALL (impl, s, c);
+  CHAR *res = CALL (impl, s, c);
   if (res != exp_res)
     {
       error (0, 0, "Wrong result in function %s %p %p", impl->name,
@@ -72,41 +90,45 @@ do_one_test (impl_t *impl, const char *s, int c, char *exp_res)
 
 static void
 do_test (size_t align, size_t pos, size_t len, int seek_char, int max_char)
+/* For wcsrchr: align here means align not in bytes,
+   but in wchar_ts, in bytes it will equal to align * (sizeof (wchar_t))
+   len for wcschr here isn't in bytes but it's number of wchar_t symbols.  */        
 {
   size_t i;
-  char *result;
-
+  CHAR *result;
+  CHAR *buf = (CHAR *) buf1;
+  
   align &= 7;
-  if (align + len >= page_size)
+  if ( (align + len) * sizeof(CHAR) >= page_size)
     return;
 
   for (i = 0; i < len; ++i)
     {
-      buf1[align + i] = random () & max_char;
-      if (!buf1[align + i])
-	buf1[align + i] = random () & max_char;
-      if (!buf1[align + i])
-        buf1[align + i] = 1;
-      if ((i > pos || pos >= len) && buf1[align + i] == seek_char)
-	buf1[align + i] = seek_char + 10 + (random () & 15);
+      buf[align + i] = (random () * random ()) & max_char;
+      if (!buf[align + i])
+	buf[align + i] = (random () * random ()) & max_char;
+      if (!buf[align + i])
+        buf[align + i] = 1;
+      if ((i > pos || pos >= len) && buf[align + i] == seek_char)
+	buf[align + i] = seek_char + 10 + (random () & 15);
     }
-  buf1[align + len] = 0;
+  buf[align + len] = 0;
 
   if (pos < len)
     {
-      buf1[align + pos] = seek_char;
-      result = (char *) (buf1 + align + pos);
+      buf[align + pos] = seek_char;
+      result = (CHAR *) (buf + align + pos);
     }
   else if (seek_char == 0)
-    result = (char *) (buf1 + align + len);
+    result = (CHAR *) (buf + align + len);
   else
     result = NULL;
 
   if (HP_TIMING_AVAIL)
-    printf ("Length %4zd, alignment %2zd:", pos, align);
+    printf ("Length %4zd, alignment in bytes %2zd:", pos, align * sizeof(CHAR));
 
   FOR_EACH_IMPL (impl, 0)
-    do_one_test (impl, (char *) (buf1 + align), seek_char, result);
+    do_one_test (impl, (CHAR *) (buf + align), seek_char, result);
 
   if (HP_TIMING_AVAIL)
     putchar ('\n');
@@ -117,16 +139,22 @@ do_random_tests (void)
 {
   size_t i, j, n, align, pos, len;
   int seek_char;
-  char *result;
-  unsigned char *p = buf1 + page_size - 512;
+  CHAR *result;
+  UCHAR *p = (UCHAR *) (buf1 + page_size) - 512;
 
   for (n = 0; n < ITERATIONS; n++)
     {
-      align = random () & 15;
+      align = random () & (63 / sizeof(CHAR));
+   /* For wcsrchr: align here means align not in bytes, but in wchar_ts,
+	 in bytes it will equal to align * (sizeof (wchar_t)).
+   For strrchr we need to check all alignments from 0 to 63 since some assembly implementations
+   have separate prolog for alignments more 48. */
       pos = random () & 511;
       if (pos + align >= 511)
 	pos = 510 - align - (random () & 7);
       len = random () & 511;
+   /* len for wcschr here isn't in bytes but it's number of wchar_t
+	 symbols.  */
       if (pos >= len)
 	len = pos + (random () & 7);
       if (len + align >= 512)
@@ -165,18 +193,18 @@ do_random_tests (void)
 	}
 
       if (pos <= len)
-	result = (char *) (p + pos + align);
+	result = (CHAR *) (p + pos + align);
       else if (seek_char == 0)
-        result = (char *) (p + len + align);
+        result = (CHAR *) (p + len + align);
       else
 	result = NULL;
 
       FOR_EACH_IMPL (impl, 1)
-	if (CALL (impl, (char *) (p + align), seek_char) != result)
+	if (CALL (impl, (CHAR *) (p + align), seek_char) != result)
 	  {
 	    error (0, 0, "Iteration %zd - wrong result in function %s (%zd, %d, %zd, %zd) %p != %p, p %p",
 		   n, impl->name, align, seek_char, len, pos,
-		   CALL (impl, (char *) (p + align), seek_char), result, p);
+		   CALL (impl, (CHAR *) (p + align), seek_char), result, p);
 	    ret = 1;
 	  }
     }
@@ -196,38 +224,38 @@ test_main (void)
 
   for (i = 1; i < 8; ++i)
     {
-      do_test (0, 16 << i, 2048, 23, 127);
-      do_test (i, 16 << i, 2048, 23, 127);
+      do_test (0, 16 << i, 2048, 23, SMALL_CHAR);
+      do_test (i, 16 << i, 2048, 23, SMALL_CHAR);
     }
 
   for (i = 1; i < 8; ++i)
     {
-      do_test (i, 64, 256, 23, 127);
-      do_test (i, 64, 256, 23, 255);
+      do_test (i, 64, 256, 23, SMALL_CHAR);
+      do_test (i, 64, 256, 23, BIG_CHAR);
     }
 
   for (i = 0; i < 32; ++i)
     {
-      do_test (0, i, i + 1, 23, 127);
-      do_test (0, i, i + 1, 23, 255);
+      do_test (0, i, i + 1, 23, SMALL_CHAR);
+      do_test (0, i, i + 1, 23, BIG_CHAR);
     }
 
   for (i = 1; i < 8; ++i)
     {
-      do_test (0, 16 << i, 2048, 0, 127);
-      do_test (i, 16 << i, 2048, 0, 127);
+      do_test (0, 16 << i, 2048, 0, SMALL_CHAR);
+      do_test (i, 16 << i, 2048, 0, SMALL_CHAR);
     }
 
   for (i = 1; i < 8; ++i)
     {
-      do_test (i, 64, 256, 0, 127);
-      do_test (i, 64, 256, 0, 255);
+      do_test (i, 64, 256, 0, SMALL_CHAR);
+      do_test (i, 64, 256, 0, BIG_CHAR);
     }
 
   for (i = 0; i < 32; ++i)
     {
-      do_test (0, i, i + 1, 0, 127);
-      do_test (0, i, i + 1, 0, 255);
+      do_test (0, i, i + 1, 0, SMALL_CHAR);
+      do_test (0, i, i + 1, 0, BIG_CHAR);
     }
 
   do_random_tests ();

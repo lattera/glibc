@@ -1,7 +1,12 @@
-2011-12-12  Jeff Law  <law@redhat.com>
+2011-11-17  Liubov Dmitrieva  <liubov.dmitrieva@gmail.com>
 
-	* manual/resource.texi (Processor Resources):
-	Fix typo in _SC_NPROCESSORS_ONLN.
+	* wcsmbs/Makefile (strop-tests): Add wcsrchr wcscpy.
+	* wcsmbs/test-wcsrchr.c: New file.
+	* string/test-strrchr.c: Add wcsrchr support.
+	(WIDE): New macro.
+	* wcsmbs/test-wcscpy.c: New file.
+	* string/test-strcpy.c: Add wcscpy support.
+	(WIDE): New macro.
 
 2011-12-10  Ulrich Drepper  <drepper@gmail.com>
 
