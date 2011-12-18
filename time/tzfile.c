@@ -234,23 +234,58 @@ __tzfile_read (const char *file, size_t extra, char **extrap)
       goto read_again;
     }
 
+  if (__builtin_expect (num_transitions
+			> ((SIZE_MAX - (__alignof__ (struct ttinfo) - 1))
+			   / (sizeof (time_t) + 1)), 0))
+    goto lose;
   total_size = num_transitions * (sizeof (time_t) + 1);
   total_size = ((total_size + __alignof__ (struct ttinfo) - 1)
 		& ~(__alignof__ (struct ttinfo) - 1));
   types_idx = total_size;
-  total_size += num_types * sizeof (struct ttinfo) + chars;
+  if (__builtin_expect (num_types
+			> (SIZE_MAX - total_size) / sizeof (struct ttinfo), 0))
+    goto lose;
+  total_size += num_types * sizeof (struct ttinfo);
+  if (__builtin_expect (chars > SIZE_MAX - total_size, 0))
+    goto lose;
+  total_size += chars;
+  if (__builtin_expect (__alignof__ (struct leap) - 1
+			> SIZE_MAX - total_size, 0))
+    goto lose;
   total_size = ((total_size + __alignof__ (struct leap) - 1)
 		& ~(__alignof__ (struct leap) - 1));
   leaps_idx = total_size;
+  if (__builtin_expect (num_leaps
+			> (SIZE_MAX - total_size) / sizeof (struct leap), 0))
+    goto lose;
   total_size += num_leaps * sizeof (struct leap);
-  tzspec_len = (sizeof (time_t) == 8 && trans_width == 8
-		? st.st_size - (ftello (f)
-				+ num_transitions * (8 + 1)
-				+ num_types * 6
-				+ chars
-				+ num_leaps * 12
-				+ num_isstd
-				+ num_isgmt) - 1 : 0);
+  tzspec_len = 0;
+  if (sizeof (time_t) == 8 && trans_width == 8)
+    {
+      off_t rem = st.st_size - ftello (f);
+      if (__builtin_expect (rem < 0
+			    || (size_t) rem < (num_transitions * (8 + 1)
+					       + num_types * 6
+					       + chars), 0))
+	goto lose;
+      tzspec_len = (size_t) rem - (num_transitions * (8 + 1)
+				   + num_types * 6
+				   + chars);
+      if (__builtin_expect (num_leaps > SIZE_MAX / 12
+			    || tzspec_len < num_leaps * 12, 0))
+	goto lose;
+      tzspec_len -= num_leaps * 12;
+      if (__builtin_expect (tzspec_len < num_isstd, 0))
+	goto lose;
+      tzspec_len -= num_isstd;
+      if (__builtin_expect (tzspec == 0 || tzspec_len - 1 < num_isgmt, 0))
+	goto lose;
+      tzspec_len -= num_isgmt + 1;
+      if (__builtin_expect (SIZE_MAX - total_size < tzspec_len, 0))
+	goto lose;
+    }
+  if (__builtin_expect (SIZE_MAX - total_size - tzspec_len < extra, 0))
+    goto lose;
 
   /* Allocate enough memory including the extra block requested by the
      caller.  */

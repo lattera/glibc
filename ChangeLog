@@ -1,3 +1,8 @@
+2011-12-17  Ulrich Drepper  <drepper@gmail.com>
+
+	[BZ #13506]
+	* time/tzfile.c (__tzfile_read): Check values from file header.
+
 2011-11-21  Will Schmidt  <will_schmidt@vnet.ibm.com>
 
 	* powerpc/powerpc32/sysdep.h: Define SETUP_GOT_ACCESS() macro.
