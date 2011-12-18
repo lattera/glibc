@@ -1,3 +1,9 @@
+2011-12-08  Marek Polacek  <mpolacek@redhat.com>
+
+	[BZ #13484]
+	* math/bits/math-finite.h: Use __REDIRECT_NTH and __NTH instead
+	of __asm__.
+
 2011-12-17  Ulrich Drepper  <drepper@gmail.com>
 
 	[BZ #13506]
