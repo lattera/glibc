@@ -1,3 +1,8 @@
+2011-12-17  Ulrich Drepper  <drepper@gmail.com>
+
+	[BZ #13446]
+	* stdio-common/vfprintf.c (vfprintf): Fix extension of specs array.
+
 2011-11-22  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/Makefile: Added locale-defines.sym generation.

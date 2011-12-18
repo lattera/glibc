@@ -1640,9 +1640,9 @@ do_positional:
     /* Array with information about the needed arguments.  This has to
        be dynamically extensible.  */
     size_t nspecs = 0;
-    size_t nspecs_max = 32;	/* A more or less arbitrary start value.  */
-    struct printf_spec *specs
-      = alloca (nspecs_max * sizeof (struct printf_spec));
+    /* A more or less arbitrary start value.  */
+    size_t nspecs_size = 32 * sizeof (struct printf_spec);
+    struct printf_spec *specs = alloca (nspecs_size);
 
     /* The number of arguments the format string requests.  This will
        determine the size of the array needed to store the argument
@@ -1679,15 +1679,14 @@ do_positional:
 
     for (f = lead_str_end; *f != L_('\0'); f = specs[nspecs++].next_fmt)
       {
-	if (nspecs >= nspecs_max)
+	if (nspecs * sizeof (*specs) >= nspecs_size)
 	  {
 	    /* Extend the array of format specifiers.  */
 	    struct printf_spec *old = specs;
-	    specs = extend_alloca (specs, nspecs_max,
-				   2 * nspecs_max * sizeof (*specs));
+	    specs = extend_alloca (specs, nspecs_size, 2 * nspecs_size);
 
 	    /* Copy the old array's elements to the new space.  */
-	    memmove (specs, old, nspecs * sizeof (struct printf_spec));
+	    memmove (specs, old, nspecs * sizeof (*specs));
 	  }
 
 	/* Parse the format specifier.  */
