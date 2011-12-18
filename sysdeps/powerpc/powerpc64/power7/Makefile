@@ -3,3 +3,8 @@ ifeq ($(subdir),elf)
 # optimization may require a TOC reference before relocations are resolved.
 CFLAGS-rtld.c += -mno-vsx
 endif
+
+ifeq ($(subdir),string)
+CFLAGS-strncase.c += -funroll-loops
+CFLAGS-strncase_l.c += -funroll-loops
+endif

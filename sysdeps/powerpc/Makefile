@@ -23,4 +23,6 @@ endif
 ifeq ($(subdir),csu)
 # get offset to rtld_global._dl_hwcap
 gen-as-const-headers += rtld-global-offsets.sym
+# get offset to __locale_struct.__ctype_tolower
+gen-as-const-headers += locale-defines.sym
 endif

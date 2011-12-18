@@ -1,3 +1,16 @@
+2011-11-22  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/Makefile: Added locale-defines.sym generation.
+	* sysdeps/powerpc/locale-defines.sym: Locale definitions for strcasecmp
+	optimized code.
+	* sysdeps/powerpc/powerpc32/power7/Makefile: New file.
+	* sysdeps/powerpc/powerpc32/power7/strcasecmp.S: New file.
+	* sysdeps/powerpc/powerpc32/power7/strcasecmp_l.S: New file.
+	* sysdeps/powerpc/powerpc64/power7/Makefile: Added unroll-loop option
+	for strncasecmp/strncasecmp_l compilation.
+	* sysdeps/powerpc/powerpc64/power7/strcasecmp.S: New file.
+	* sysdeps/powerpc/powerpc64/power7/strcasecmp_l.S: New file.
+
 2011-12-08  Marek Polacek  <mpolacek@redhat.com>
 
 	[BZ #13484]
