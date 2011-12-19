@@ -72,7 +72,7 @@ mips_list_syscalls =	$(filter-out -m%,$(CC)) -E -x c $(+includes) \
 # Here, __NR_N32_open and __NR_O32_open are used to detect case (2)
 # over case (3).  The n64 SYS_* macros can always use the normal
 # ABI-less names.
-$(objpfx)syscall-%.h $(objpfx)syscall-%.d: ../sysdeps/unix/sysv/linux/mips/sys/syscall.h
+$(objpfx)syscall-%.h $(objpfx)syscall-%.d: $(firstword $(wildcard $(sysdirs:=/sys/syscall.h)))
 	$(make-target-directory)
 	$(CC) -E -x c $(+includes) $(sysincludes) -D_LIBC $< -MD -MP \
 	      -MF $(@:.h=.d)-t -MT '$(@:.d=.h) $(@:.h=.d)' > /dev/null
