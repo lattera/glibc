@@ -1,4 +1,4 @@
-/* Copyright (C) 1997-1999, 2000-2002, 2007 Free Software Foundation, Inc.
+/* Copyright (C) 1997-1999, 2000-2002, 2007, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -56,7 +56,8 @@ enum
 enum
 {
   __GCONV_IS_LAST = 0x0001,
-  __GCONV_IGNORE_ERRORS = 0x0002
+  __GCONV_IGNORE_ERRORS = 0x0002,
+  __GCONV_SWAP = 0x0004
 };
 
 

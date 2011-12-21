@@ -1,3 +1,11 @@
+2011-12-21  Ulrich Drepper  <drepper@gmail.com>
+
+	[BZ #13439]
+	* iconv/gconv.h: Define __GCONV_SWAP.
+	* iconvdata/unicode.c: The swap bit must be stored in __flags.
+	* iconvdata/utf-16.c: Likewise.
+	* iconvdata/utf-32.c: Likewise.
+
 2011-12-21  Andreas Schwab  <schwab@linux-m68k.org>
 
 	[BZ #13524]

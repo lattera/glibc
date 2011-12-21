@@ -1,5 +1,5 @@
 /* Conversion module for UTF-32.
-   Copyright (C) 1999, 2000-2002 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2000-2002, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -45,7 +45,7 @@
   int swap;								      \
   if (FROM_DIRECTION && var == UTF_32)					      \
     {									      \
-      if (data->__invocation_counter == 0)				      \
+      if (__builtin_expect (data->__invocation_counter == 0, 0))	      \
 	{								      \
 	  /* We have to find out which byte order the file is encoded in.  */ \
 	  if (inptr + 4 > inend)					      \
@@ -57,7 +57,7 @@
 	    *inptrp = inptr += 4;					      \
 	  else if (get32u (inptr) == BOM_OE)				      \
 	    {								      \
-	      ((struct utf32_data *) step->__data)->swap = 1;		      \
+	      data->__flags |= __GCONV_SWAP;				      \
 	      *inptrp = inptr += 4;					      \
 	    }								      \
 	}								      \
@@ -72,7 +72,11 @@
       put32u (outbuf, BOM);						      \
       outbuf += 4;							      \
     }									      \
-  swap = ((struct utf32_data *) step->__data)->swap;
+  else if (__builtin_expect (data->__invocation_counter == 0, 0)	      \
+	   && ((var == UTF_32LE && BYTE_ORDER == BIG_ENDIAN)		      \
+	       || (var == UTF_32BE && BYTE_ORDER == LITTLE_ENDIAN)))	      \
+    data->__flags |= __GCONV_SWAP;					      \
+  swap = data->__flags & __GCONV_SWAP;
 #define EXTRA_LOOP_ARGS		, var, swap
 
 
@@ -96,7 +100,6 @@ struct utf32_data
 {
   enum direction dir;
   enum variant var;
-  int swap;
 };
 
 
@@ -151,9 +154,6 @@ gconv_init (struct __gconv_step *step)
 	{
 	  new_data->dir = dir;
 	  new_data->var = var;
-	  new_data->swap = ((var == UTF_32LE && BYTE_ORDER == BIG_ENDIAN)
-			    || (var == UTF_32BE
-				&& BYTE_ORDER == LITTLE_ENDIAN));
 	  step->__data = new_data;
 
 	  if (dir == from_utf32)
@@ -216,9 +216,8 @@ gconv_end (struct __gconv_step *data)
       }									      \
 									      \
     if (swap)								      \
-      put32 (outptr, bswap_32 (c));					      \
-    else								      \
-      put32 (outptr, c);						      \
+      c = bswap_32 (c);							      \
+    put32 (outptr, c);							      \
 									      \
     outptr += 4;							      \
     inptr += 4;								      \
