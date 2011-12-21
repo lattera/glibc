@@ -278,7 +278,7 @@ __tzfile_read (const char *file, size_t extra, char **extrap)
       if (__builtin_expect (tzspec_len < num_isstd, 0))
 	goto lose;
       tzspec_len -= num_isstd;
-      if (__builtin_expect (tzspec == 0 || tzspec_len - 1 < num_isgmt, 0))
+      if (__builtin_expect (tzspec_len == 0 || tzspec_len - 1 < num_isgmt, 0))
 	goto lose;
       tzspec_len -= num_isgmt + 1;
       if (__builtin_expect (SIZE_MAX - total_size < tzspec_len, 0))
