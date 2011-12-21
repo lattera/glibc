@@ -1,3 +1,8 @@
+2011-12-19  Rafael Ávila de Espíndola  <rafael.espindola@gmail.com>
+
+	* sysdeps/x86_64/fpu/bits/fenv.h (feraiseexcept): Define it only
+	under [__USE_EXTERN_INLINES].
+
 2011-12-17  Ulrich Drepper  <drepper@gmail.com>
 
 	[BZ #13446]

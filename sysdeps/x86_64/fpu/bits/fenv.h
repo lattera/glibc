@@ -97,7 +97,7 @@ fenv_t;
 #endif
 
 
-#ifdef __OPTIMIZE__
+#ifdef __USE_EXTERN_INLINES
 __BEGIN_DECLS
 
 /* Optimized versions.  */
