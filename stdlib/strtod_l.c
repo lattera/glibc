@@ -1513,6 +1513,7 @@ ____STRTOF_INTERNAL (nptr, endptr, group, loc)
 	      assert (numsize == densize);
 	      for (i = numsize; i > 0; --i)
 		num[i] = num[i - 1];
+	      num[0] = 0;
 	    }
 
 	  den[densize] = 0;
@@ -1557,6 +1558,7 @@ ____STRTOF_INTERNAL (nptr, endptr, group, loc)
 	      n0 = num[densize] = num[densize - 1];
 	      for (i = densize - 1; i > 0; --i)
 		num[i] = num[i - 1];
+	      num[0] = 0;
 
 	      got_limb;
 	    }
