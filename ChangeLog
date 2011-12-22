@@ -1,3 +1,9 @@
+2011-12-22  Ulrich Drepper  <drepper@gmail.com>
+
+	[BZ #13185]
+	* sysdeps/i386/fpu/fgetexcptflg.c (__fegetexceptflag): Also return
+	SSE flags if possible.
+
 2011-12-22  Liubov Dmitrieva  <liubov.dmitrieva@gmail.com>
 
 	* sysdeps/i386/i686/multiarch/strcpy-ssse3.S: Fix wrong copying
