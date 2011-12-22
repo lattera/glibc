@@ -1,5 +1,11 @@
 2011-12-21  Ulrich Drepper  <drepper@gmail.com>
 
+	[BZ #13538]
+	* sysdeps/unix/sysv/linux/sys/epoll.h: Initialize EPOLLONESHOT and
+	EPOLLET with unsigned values.
+	* sysdeps/unix/sysv/linux/x86_64/sys/epoll.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sys/epoll.h: Likewise.
+
 	* math/s_cacosh.c: Use Kahan's formula if the subtraction could lead
 	to large cancellation.
 	* math/s_cacoshf.c: Likewise.
