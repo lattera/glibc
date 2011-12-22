@@ -146,10 +146,12 @@ tr_freehook (ptr, caller)
   tr_where (caller, info);
   /* Be sure to print it first.  */
   fprintf (mallstream, "- %p\n", ptr);
-  __libc_lock_unlock (lock);
   if (ptr == mallwatch)
-    tr_break ();
-  __libc_lock_lock (lock);
+    {
+      __libc_lock_unlock (lock);
+      tr_break ();
+      __libc_lock_lock (lock);
+    }
   __free_hook = tr_old_free_hook;
   if (tr_old_free_hook != NULL)
     (*tr_old_free_hook) (ptr, caller);
