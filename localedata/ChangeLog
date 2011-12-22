@@ -1,5 +1,8 @@
 2011-12-22  Ulrich Drepper  <drepper@gmail.com>
 
+	[BZ #13413]
+	* locales/nl_BE: Use LC_MONETARY from nl_NL.
+
 	[BZ #13416]
 	* locales/es_CU: New file.
 	* SUPPORTED (SUPPORTED-LOCALES): Add appropriate entry

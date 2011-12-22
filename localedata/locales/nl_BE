@@ -59,7 +59,7 @@ copy "nl_NL"
 END LC_MESSAGES
 
 LC_MONETARY
-copy "fr_BE"
+copy "nl_NL"
 END LC_MONETARY
 
 LC_NUMERIC
