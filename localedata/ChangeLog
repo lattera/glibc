@@ -1,5 +1,8 @@
 2011-12-22  Ulrich Drepper  <drepper@gmail.com>
 
+	[BZ #13189]
+	* SUPPORTED (SUPPORTED-LOCALES): Add ur_IN entry.
+
 	[BZ #13282]
 	* locales/brx_IN: New file.
 	* SUPPORTED (SUPPORTED-LOCALES): Add appropriate entry
