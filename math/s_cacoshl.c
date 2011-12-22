@@ -74,17 +74,13 @@ __cacoshl (__complex__ long double x)
 
       y = __csqrtl (y);
 
-      if (__real__ x < 0.0)
+      if (signbit (__real__ x))
 	y = -y;
 
       __real__ y += __real__ x;
       __imag__ y += __imag__ x;
 
       res = __clogl (y);
-
-      /* We have to use the positive branch.  */
-      if (__real__ res < 0.0)
-	res = -res;
     }
 
   return res;

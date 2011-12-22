@@ -1,3 +1,10 @@
+2011-11-18  Richard B. Kreckel  <kreckel@ginac.de>
+
+	[BZ #13305]
+	* math/s_cacosh.c: Fix rare miscomputation in cacosh().
+	* math/s_cacoshf.c: Likewise.
+	* math/s_cacoshl.c: Likewise.
+
 2011-12-21  Ulrich Drepper  <drepper@gmail.com>
 
 	[BZ #13439]
