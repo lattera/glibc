@@ -65,6 +65,12 @@ __cacoshf (__complex__ float x)
       __real__ res = 0.0;
       __imag__ res = __copysignf (M_PI_2, __imag__ x);
     }
+  /* The factor 16 is just a guess.  */
+  else if (16.0 * fabsf (__imag__ x) < fabsf (__real__ x))
+    /* Kahan's formula which avoid cancellation through subtraction in
+       some cases.  */
+    res = 2.0 * __clogf (__csqrtf ((x + 1.0) / 2.0)
+			 + __csqrtf ((x - 1.0) / 2.0));
   else
     {
       __complex__ float y;

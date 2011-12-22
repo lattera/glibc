@@ -65,6 +65,11 @@ __cacosh (__complex__ double x)
       __real__ res = 0.0;
       __imag__ res = __copysign (M_PI_2, __imag__ x);
     }
+  /* The factor 16 is just a guess.  */
+  else if (16.0 * fabs (__imag__ x) < fabs (__real__ x))
+    /* Kahan's formula which avoid cancellation through subtraction in
+       some cases.  */
+    res = 2.0 * __clog (__csqrt ((x + 1.0) / 2.0) + __csqrt ((x - 1.0) / 2.0));
   else
     {
       __complex__ double y;

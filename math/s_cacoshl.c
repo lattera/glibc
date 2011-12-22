@@ -65,6 +65,12 @@ __cacoshl (__complex__ long double x)
       __real__ res = 0.0;
       __imag__ res = __copysignl (M_PI_2l, __imag__ x);
     }
+  /* The factor 16 is just a guess.  */
+  else if (16.0L * fabsl (__imag__ x) < fabsl (__real__ x))
+    /* Kahan's formula which avoid cancellation through subtraction in
+       some cases.  */
+    res = 2.0L * __clogl (__csqrtl ((x + 1.0L) / 2.0L)
+			  + __csqrtl ((x - 1.0L) / 2.0L));
   else
     {
       __complex__ long double y;
