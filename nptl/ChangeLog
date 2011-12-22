@@ -1,3 +1,9 @@
+2011-12-21  Ulrich Drepper  <drepper@gmail.com>
+
+	[BZ #13515]
+	* sysdeps/unix/sysv/linux/pthread_getname.c (pthread_getname_np):
+	Correct reading name from file.
+
 2011-12-14  Carlos O'Donell  <carlos@systemhalted.org>
 
 	* allocatestack.c (allocate_stack): Return errno on failure.
