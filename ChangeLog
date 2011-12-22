@@ -1,5 +1,8 @@
 2011-12-22  Ulrich Drepper  <drepper@gmail.com>
 
+	* sysdeps/i386/fpu/bits/fenv.h [__SSE_MATH__]: Add feraiseexcept
+	optimization.
+
 	[BZ #13185]
 	* sysdeps/i386/fpu/fgetexcptflg.c (__fegetexceptflag): Also return
 	SSE flags if possible.
