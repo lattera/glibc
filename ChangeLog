@@ -1,3 +1,8 @@
+2011-12-22  Ulrich Drepper  <drepper@gmail.com>
+
+	* sysdeps/x86_64/fpu/bits/fenv.h: Use __REDIRECT_NTH for
+	__feraiseexcept_renamed.
+
 2011-12-21  Ulrich Drepper  <drepper@gmail.com>
 
 	[BZ #13538]
