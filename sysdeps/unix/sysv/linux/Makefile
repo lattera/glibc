@@ -39,8 +39,27 @@ install-others += $(inst_includedir)/bits/syscall.h
 tests += tst-clone
 
 # Generate the list of SYS_* macros for the system calls (__NR_* macros).
-# For bi-arch platforms, the CPU/Makefile defines {32,64}bit-predefine and
-# we generate a file that uses <bits/wordsize.h>.
+
+# If there is more than one syscall list for different architecture
+# variants, the CPU/Makefile defines syscall-list-variants to be a
+# list of names for those variants (e.g. 32bit 64bit), and, for each
+# variant, defines syscall-list-$(variant)-options to be compiler
+# options to cause <asm/unistd.h> to define the desired list of
+# syscalls and syscall-list-$(variant)-condition to be the condition
+# for those options to use in a C #if condition.
+# syscall-list-includes may be defined to a list of headers to include
+# in the generated header, if the default does not suffice.
+
+ifndef syscall-list-variants
+syscall-list-variants := default
+syscall-list-default-options :=
+syscall-list-default-condition :=
+endif
+
+ifndef syscall-list-includes
+syscall-list-includes := bits/wordsize.h
+endif
+
 $(objpfx)syscall-%.h $(objpfx)syscall-%.d: ../sysdeps/unix/sysv/linux/sys/syscall.h
 	$(make-target-directory)
 	{ \
@@ -50,37 +69,30 @@ $(objpfx)syscall-%.h $(objpfx)syscall-%.d: ../sysdeps/unix/sysv/linux/sys/syscal
 	 echo '# error "Never use <bits/syscall.h> directly; include <sys/syscall.h> instead."'; \
 	 echo '#endif'; \
 	 echo ''; \
-	 $(CC) -E -MD -MP -MF $(@:.h=.d)-t1 -MT '$(@:.d=.h) $(@:.h=.d)' \
-	       -x c $(sysincludes) $< $(addprefix -U,$(64bit-predefine)) \
-	       $(addprefix -D,$(32bit-predefine)) -D_LIBC -dM | \
+	 $(foreach h,$(syscall-list-includes), echo '#include <$(h)>';) \
+	 echo ''; \
+	 $(foreach v,$(syscall-list-variants),\
+	 $(CC) -E -MD -MP -MF $(@:.h=.d)-t$(v) -MT '$(@:.d=.h) $(@:.h=.d)' \
+	       -x c $(sysincludes) $< $(syscall-list-$(v)-options) \
+	       -D_LIBC -dM | \
 	 sed -n 's@^#define __NR_\([^ ]*\) .*$$@#define SYS_\1 __NR_\1@p' | \
-	 LC_ALL=C sort > $(@:.d=.h).new32; \
-	 $(CC) -E -MD -MP -MF $(@:.h=.d)-t2 -MT '$(@:.d=.h) $(@:.h=.d)' \
-	       -x c $(sysincludes) $< $(addprefix -U,$(32bit-predefine)) \
-	       $(addprefix -D,$(64bit-predefine)) -D_LIBC -dM | \
-	 sed -n 's@^#define __NR_\([^ ]*\) .*$$@#define SYS_\1 __NR_\1@p' | \
-	 LC_ALL=C sort > $(@:.d=.h).new64; \
-	 if cmp -s $(@:.d=.h).new32 $(@:.d=.h).new64; then \
-	   cat $(@:.d=.h).new32; \
-	 else \
-	   echo '#include <bits/wordsize.h>'; \
-	   echo ''; \
-	   LC_ALL=C comm -12 $(@:.d=.h).new32 $(@:.d=.h).new64; \
-	   echo '#if __WORDSIZE == 64'; \
-	   LC_ALL=C comm -13 $(@:.d=.h).new32 $(@:.d=.h).new64; \
-	   echo '#else'; \
-	   LC_ALL=C comm -23 $(@:.d=.h).new32 $(@:.d=.h).new64; \
-	   echo '#endif'; \
-	 fi; \
-	 rm -f $(@:.d=.h).new32 $(@:.d=.h).new64; \
+	 LC_ALL=C sort > $(@:.d=.h).new$(v); \
+	 $(if $(syscall-list-$(v)-condition),\
+	 echo '#if $(syscall-list-$(v)-condition)';) \
+	 cat $(@:.d=.h).new$(v); \
+	 $(if $(syscall-list-$(v)-condition),echo '#endif';) \
+	 rm -f $(@:.d=.h).new$(v); \
+	 ) \
 	} > $(@:.d=.h).new
 	mv -f $(@:.d=.h).new $(@:.d=.h)
 ifneq (,$(objpfx))
-	sed $(sed-remove-objpfx) $(@:.h=.d)-t1 $(@:.h=.d)-t2 > $(@:.h=.d)-t3
+	sed $(sed-remove-objpfx) \
+	 $(foreach v,$(syscall-list-variants),$(@:.h=.d)-t$(v)) > $(@:.h=.d)-t3
 else
-	cat $(@:.h=.d)-t1 $(@:.h=.d)-t2 > $(@:.h=.d)-t3
+	cat $(foreach v,$(syscall-list-variants),$(@:.h=.d)-t$(v)) \
+	 > $(@:.h=.d)-t3
 endif
-	rm -f $(@:.h=.d)-t1 $(@:.h=.d)-t2
+	rm -f $(foreach v,$(syscall-list-variants),$(@:.h=.d)-t$(v))
 	mv -f $(@:.h=.d)-t3 $(@:.h=.d)
 
 $(inst_includedir)/bits/syscall.h: $(objpfx)syscall-list.h $(+force)
