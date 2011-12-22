@@ -3,6 +3,34 @@
 	* sysdeps/i386/i686/multiarch/strcpy-ssse3.S: Fix wrong copying
 	processing for last bytes.
 
+2011-12-22  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/Makefile (syscall-list-variants)
+	(syscall-list-default-options, syscall-list-default-condition)
+	(syscall-list-includes): Define.
+	($(objpfx)syscall-%.h $(objpfx)syscall-%.d): Support arbitrary
+	list of ABIs and options and #if conditions for each ABI.  Do not
+	handle common syscalls between ABIs specially.
+	* sysdeps/unix/sysv/linux/powerpc/Makefile (64bit-predefine):
+	Remove.
+	(syscall-list-variants, syscall-list-32bit-options)
+	(syscall-list-32bit-condition, syscall-list-64bit-options)
+	(syscall-list-64bit-condition): Define.
+	* sysdeps/unix/sysv/linux/s390/Makefile (64bit-predefine): Remove.
+	(syscall-list-variants, syscall-list-32bit-options)
+	(syscall-list-32bit-condition, syscall-list-64bit-options)
+	(syscall-list-64bit-condition): Define.
+	* sysdeps/unix/sysv/linux/sparc/Makefile (64bit-predefine):
+	Remove.
+	(syscall-list-variants, syscall-list-32bit-options)
+	(syscall-list-32bit-condition, syscall-list-64bit-options)
+	(syscall-list-64bit-condition): Define.
+	* sysdeps/unix/sysv/linux/x86_64/Makefile (64bit-predefine):
+	Remove.
+	(syscall-list-variants, syscall-list-32bit-options)
+	(syscall-list-32bit-condition, syscall-list-64bit-options)
+	(syscall-list-64bit-condition): Define.
+
 2011-12-22  Ulrich Drepper  <drepper@gmail.com>
 
 	* locale/iso-639.def: Add brx entry.
