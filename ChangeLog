@@ -9,6 +9,7 @@
 
 2011-12-22  Liubov Dmitrieva  <liubov.dmitrieva@gmail.com>
 
+	[BZ #13540]
 	* sysdeps/i386/i686/multiarch/strcpy-ssse3.S: Fix wrong copying
 	processing for last bytes.
 
