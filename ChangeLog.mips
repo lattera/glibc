@@ -1,5 +1,19 @@
 2011-12-22  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/unix/sysv/linux/mips/Makefile (no_syscall_list_h)
+	(mips_list_syscalls, $(objpfx)syscall-%.h $(objpfx)syscall-%.d):
+	Remove.
+	(syscall-list-variants, syscall-list-includes)
+	(syscall-list-o32-options, syscall-list-o32-condition)
+	(syscall-list-n32-options, syscall-list-n32-condition)
+	(syscall-list-n64-options, syscall-list-n64-condition): Define.
+	* sysdeps/unix/sysv/linux/mips/configure.in: Don't generate
+	asm-unistd.h.
+	* sysdeps/unix/sysv/linux/mips/configure: Regenerate.
+	* sysdeps/unix/sysv/linux/mips/sys/syscall.h: Remove.
+
+2011-12-22  Joseph Myers  <joseph@codesourcery.com>
+
 	[BZ #13538]
 	* sysdeps/unix/sysv/linux/mips/sys/epoll.h (EPOLLONESHOT)
 	(EPOLLET): Initialize with unsigned values.
