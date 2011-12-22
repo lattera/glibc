@@ -1,5 +1,9 @@
 2011-12-22  Ulrich Drepper  <drepper@gmail.com>
 
+	[BZ #13423]
+	* locales/unm_US: New file.
+	* SUPPORTED (SUPPORTED-LOCALES): Add appropriate entry
+
 	[BZ #13523]
 	* locales/bho_IN: New file.
 	* SUPPORTED (SUPPORTED-LOCALES): Add appropriate entry
