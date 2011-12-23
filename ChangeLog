@@ -1,5 +1,9 @@
 2011-08-06  Bruno Haible  <bruno@clisp.org>
 
+	[BZ #13061]
+	* iconvdata/cp1258.c (comp_table_data): Combine U+00A8 U+0301 to
+	U+0385, not to U+1FEE.
+
 	[BZ #13062]
 	* iconvdata/tcvn5712-1.c (comp_table_data): Remove useless and wrong
 	entry for U+00A5 U+0301.
