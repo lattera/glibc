@@ -1,3 +1,14 @@
+2011-12-22  Ulrich Drepper  <drepper@gmail.com>
+
+	[BZ #13088]
+	* sysdeps/unix/sysv/linux/timer_routines.c: Get minimum stack size
+	through __pthread_get_minstack.
+	* nptl-init.c (__pthread_initialize_minimal_internal): Get page size
+	directly from _rtld_global_ro.
+	(__pthread_get_minstack): New function.
+	* pthreadP.h: Declare __pthread_get_minstack.
+	* Versions (libpthread) [GLIBC_PRIVATE]: Add __pthread_get_minstack.
+
 2011-12-21  Ulrich Drepper  <drepper@gmail.com>
 
 	[BZ #13515]

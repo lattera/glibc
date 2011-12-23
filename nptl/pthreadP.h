@@ -397,6 +397,7 @@ weak_function;
 
 extern void __pthread_init_static_tls (struct link_map *) attribute_hidden;
 
+extern size_t __pthread_get_minstack (const pthread_attr_t *attr);
 
 /* Namespace save aliases.  */
 extern int __pthread_getschedparam (pthread_t thread_id, int *policy,

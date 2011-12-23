@@ -255,6 +255,6 @@ libpthread {
   GLIBC_PRIVATE {
     __pthread_initialize_minimal;
     __pthread_clock_gettime; __pthread_clock_settime;
-    __pthread_unwind;
+    __pthread_unwind; __pthread_get_minstack;
   }
 }

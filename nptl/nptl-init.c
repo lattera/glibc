@@ -427,7 +427,7 @@ __pthread_initialize_minimal_internal (void)
 
   /* Make sure it meets the minimum size that allocate_stack
      (allocatestack.c) will demand, which depends on the page size.  */
-  const uintptr_t pagesz = __sysconf (_SC_PAGESIZE);
+  const uintptr_t pagesz = GLRO(dl_pagesize);
   const size_t minstack = pagesz + __static_tls_size + MINIMAL_REST_STACK;
   if (limit.rlim_cur < minstack)
     limit.rlim_cur = minstack;
@@ -469,3 +469,13 @@ __pthread_initialize_minimal_internal (void)
 }
 strong_alias (__pthread_initialize_minimal_internal,
 	      __pthread_initialize_minimal)
+
+
+size_t
+__pthread_get_minstack (const pthread_attr_t *attr)
+{
+  struct pthread_attr *iattr = (struct pthread_attr *) attr;
+
+  return (GLRO(dl_pagesize) + __static_tls_size + PTHREAD_STACK_MIN
+	  + iattr->guardsize);
+}

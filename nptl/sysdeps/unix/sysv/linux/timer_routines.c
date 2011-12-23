@@ -1,4 +1,4 @@
-/* Copyright (C) 2003, 2004, 2005, 2006, 2007 Free Software Foundation, Inc.
+/* Copyright (C) 2003-2007, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2003.
 
@@ -165,7 +165,7 @@ __start_helper_thread (void)
      and should go away automatically when canceled.  */
   pthread_attr_t attr;
   (void) pthread_attr_init (&attr);
-  (void) pthread_attr_setstacksize (&attr, PTHREAD_STACK_MIN);
+  (void) pthread_attr_setstacksize (&attr, __pthread_get_minstack (&attr));
 
   /* Block all signals in the helper thread but SIGSETXID.  To do this
      thoroughly we temporarily have to block all signals here.  The
