@@ -1,4 +1,4 @@
-/* Copyright (C) 2004, 2005, 2008 Free Software Foundation, Inc.
+/* Copyright (C) 2004, 2005, 2008, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contribute by Ulrich Drepper <drepper@redhat.com>, 2004.
 
@@ -201,7 +201,7 @@ init_mq_netlink (void)
       (void) pthread_attr_init (&attr);
       (void) pthread_attr_setdetachstate (&attr, PTHREAD_CREATE_DETACHED);
       /* We do not need much stack space, the bare minimum will be enough.  */
-      (void) pthread_attr_setstacksize (&attr, PTHREAD_STACK_MIN);
+      (void) pthread_attr_setstacksize (&attr, __pthread_get_minstack (&attr));
 
       /* Temporarily block all signals so that the newly created
 	 thread inherits the mask.  */

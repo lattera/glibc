@@ -1,4 +1,4 @@
-/* Copyright (C) 2006, 2007, 2008 Free Software Foundation, Inc.
+/* Copyright (C) 2006, 2007, 2008, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -97,7 +97,9 @@ __gai_create_helper_thread (pthread_t *threadp, void *(*tf) (void *),
   pthread_attr_setdetachstate (&attr, PTHREAD_CREATE_DETACHED);
 
   /* The helper thread needs only very little resources.  */
-  (void) pthread_attr_setstacksize (&attr, 4 * PTHREAD_STACK_MIN);
+  (void) pthread_attr_setstacksize (&attr,
+				    __pthread_get_minstack (&attr)
+				    + 4 * PTHREAD_STACK_MIN);
 
   /* Block all signals in the helper thread.  To do this thoroughly we
      temporarily have to block all signals here.  */

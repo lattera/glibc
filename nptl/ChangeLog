@@ -1,5 +1,9 @@
 2011-12-22  Ulrich Drepper  <drepper@gmail.com>
 
+	* sysdeps/pthread/gai_misc.h (__gai_create_helper_thread): Use
+	__pthread_get_minstack.
+	* sysdeps/unix/sysv/linux/mq_notify.c (init_mq_netlink): Likewise.
+
 	[BZ #13088]
 	* sysdeps/unix/sysv/linux/timer_routines.c: Get minimum stack size
 	through __pthread_get_minstack.
