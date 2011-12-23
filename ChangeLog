@@ -1,3 +1,9 @@
+2011-08-06  Bruno Haible  <bruno@clisp.org>
+
+	[BZ #13062]
+	* iconvdata/tcvn5712-1.c (comp_table_data): Remove useless and wrong
+	entry for U+00A5 U+0301.
+
 2011-12-22  Ulrich Drepper  <drepper@gmail.com>
 
 	[BZ #13166]
