@@ -1,5 +1,8 @@
 2011-12-23  Ulrich Drepper  <drepper@gmail.com>
 
+	* version.h (RELEASE): Bump for 2.15 release.
+	* include/features.h (__GLIBC_MINOR__): Bump to 15.
+
 	* sysdeps/x86_64/dl-machine.h: Fix typos in comments.
 	Patch by Marek Polacek <mpolacek@redhat.com>.
 
