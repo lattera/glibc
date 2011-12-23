@@ -90,7 +90,7 @@ fenv_t;
 #endif
 
 
-#if defined __SSE_MATH__ && defined __USE_EXTERN_INLINES
+#ifdef __USE_EXTERN_INLINES
 __BEGIN_DECLS
 
 /* Optimized versions.  */
@@ -106,7 +106,12 @@ __NTH (feraiseexcept (int __excepts))
 	  /* One example of a invalid operation is 0.0 / 0.0.  */
 	  float __f = 0.0;
 
+# ifdef __SSE_MATH__
 	  __asm__ __volatile__ ("divss %0, %0 " : : "x" (__f));
+# else
+	  __asm__ __volatile__ ("fdiv %%st, %%st(0); fwait"
+				: "=t" (__f) : "0" (__f));
+# endif
 	  (void) &__f;
 	}
       if ((FE_DIVBYZERO & __excepts) != 0)
@@ -114,7 +119,12 @@ __NTH (feraiseexcept (int __excepts))
 	  float __f = 1.0;
 	  float __g = 0.0;
 
+# ifdef __SSE_MATH__
 	  __asm__ __volatile__ ("divss %1, %0" : : "x" (__f), "x" (__g));
+# else
+	  __asm__ __volatile__ ("fdivp %%st(1), %%st; fwait"
+				: "=t" (__f) : "0" (__f), "u" (__g) : "st(1)");
+# endif
 	  (void) &__f;
 	}
 
