@@ -1,3 +1,8 @@
+2011-12-23  Andreas Schwab  <schwab@linux-m68k.org>
+
+	* sysdeps/m68k/bits/byteswap.h (__bswap_constant_64): Protect long
+	long constant with __extension__.
+
 2011-12-04  Thorsten Glaser  <tg@mirbsd.de>
 
 	* sysdeps/unix/sysv/linux/m68k/syscall.S: Allow six arguments.

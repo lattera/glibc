@@ -28,7 +28,7 @@
    because GCC is smart enough to generate optimal assembler output, and
    this allows for better cse.  */
 #define __bswap_constant_16(x) \
-     ((((x) >> 8) & 0xffu) | (((x) & 0xffu) << 8))
+  ((((x) >> 8) & 0xffu) | (((x) & 0xffu) << 8))
 
 static __inline unsigned short int
 __bswap_16 (unsigned short int __bsx)
@@ -38,8 +38,8 @@ __bswap_16 (unsigned short int __bsx)
 
 /* Swap bytes in 32 bit value.  */
 #define __bswap_constant_32(x) \
-     ((((x) & 0xff000000u) >> 24) | (((x) & 0x00ff0000u) >>  8) |	      \
-      (((x) & 0x0000ff00u) <<  8) | (((x) & 0x000000ffu) << 24))
+  ((((x) & 0xff000000u) >> 24) | (((x) & 0x00ff0000u) >>  8) |		      \
+   (((x) & 0x0000ff00u) <<  8) | (((x) & 0x000000ffu) << 24))
 
 #if !defined(__mcoldfire__)
 static __inline unsigned int
@@ -64,14 +64,15 @@ __bswap_32 (unsigned int __bsx)
 #if defined __GNUC__ && __GNUC__ >= 2
 /* Swap bytes in 64 bit value.  */
 # define __bswap_constant_64(x) \
-     ((((x) & 0xff00000000000000ull) >> 56)				      \
-      | (((x) & 0x00ff000000000000ull) >> 40)				      \
-      | (((x) & 0x0000ff0000000000ull) >> 24)				      \
-      | (((x) & 0x000000ff00000000ull) >> 8)				      \
-      | (((x) & 0x00000000ff000000ull) << 8)				      \
-      | (((x) & 0x0000000000ff0000ull) << 24)				      \
-      | (((x) & 0x000000000000ff00ull) << 40)				      \
-      | (((x) & 0x00000000000000ffull) << 56))
+  __extension__								      \
+  ((((x) & 0xff00000000000000ull) >> 56)				      \
+   | (((x) & 0x00ff000000000000ull) >> 40)				      \
+   | (((x) & 0x0000ff0000000000ull) >> 24)				      \
+   | (((x) & 0x000000ff00000000ull) >> 8)				      \
+   | (((x) & 0x00000000ff000000ull) << 8)				      \
+   | (((x) & 0x0000000000ff0000ull) << 24)				      \
+   | (((x) & 0x000000000000ff00ull) << 40)				      \
+   | (((x) & 0x00000000000000ffull) << 56))
 
 /* Swap bytes in 64 bit value.  */
 static __inline unsigned long long
