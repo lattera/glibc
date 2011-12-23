@@ -108,7 +108,7 @@ la_symbind64 (Elf64_Sym *sym, unsigned int ndx, uintptr_t *refcook,
 
 static int avx = -1;
 
-static int
+static inline int
 __attribute ((always_inline))
 check_avx (void)
 {

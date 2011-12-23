@@ -1,3 +1,11 @@
+2011-12-23  Marek Polacek  <polacek@redhat.com>
+
+	* elf/dl-addr.c (determine_info): Add inline keyword.
+	* elf/tst-auditmod4b.c (check_avx): Likewise.
+	* elf/tst-auditmod6b.c (check_avx): Likewise.
+	* elf/tst-auditmod6c.c (check_avx): Likewise.
+	* elf/tst-auditmod7b.c (check_avx): Likewise.
+
 2011-12-23  Ulrich Drepper  <drepper@gmail.com>
 
 	* sysdeps/i386/fpu/bits/fenv.h (feraiseexcept): Also enable for

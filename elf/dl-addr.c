@@ -1,5 +1,5 @@
 /* Locate the shared object symbol nearest a given address.
-   Copyright (C) 1996-2007, 2009 Free Software Foundation, Inc.
+   Copyright (C) 1996-2007, 2009, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -22,7 +22,7 @@
 #include <ldsodefs.h>
 
 
-static void
+static inline void
 __attribute ((always_inline))
 determine_info (const ElfW(Addr) addr, struct link_map *match, Dl_info *info,
 		struct link_map **mapp, const ElfW(Sym) **symbolp)
