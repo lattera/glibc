@@ -1,4 +1,4 @@
-escape_char	/
+escape_char     /
 comment_char    %
 
 % Finnish language locale for Finland
@@ -45,10 +45,10 @@ category  "fi_FI:2000";LC_NUMERIC
 category  "fi_FI:2000";LC_MONETARY
 category  "fi_FI:2000";LC_MESSAGES
 category  "fi_FI:2000";LC_PAPER
+category  "fi_FI:2000";LC_MEASUREMENT
 category  "fi_FI:2000";LC_NAME
 category  "fi_FI:2000";LC_ADDRESS
 category  "fi_FI:2000";LC_TELEPHONE
-
 END LC_IDENTIFICATION
 
 LC_COLLATE
@@ -125,7 +125,6 @@ reorder-after <U0044>
 <U0110> <d>;<OBL>;<CAP>;IGNORE
 
 reorder-end
-
 END LC_COLLATE
 
 LC_CTYPE
@@ -146,12 +145,10 @@ positive_sign        ""
 negative_sign        "<U002D>"
 int_frac_digits      2
 frac_digits          2
-% int_curr_symbol precedes
-% curr_symbol succeeds
 p_cs_precedes        0
-p_sep_by_space       2
+p_sep_by_space       1
 n_cs_precedes        0
-n_sep_by_space       2
+n_sep_by_space       1
 p_sign_posn          1
 n_sign_posn          1
 END LC_MONETARY
@@ -173,18 +170,18 @@ day      "<U0073><U0075><U006E><U006E><U0075><U006E><U0074><U0061><U0069>";/
          "<U0074><U006F><U0072><U0073><U0074><U0061><U0069>";/
          "<U0070><U0065><U0072><U006A><U0061><U006E><U0074><U0061><U0069>";/
          "<U006C><U0061><U0075><U0061><U006E><U0074><U0061><U0069>"
-abmon    "<U0074><U0061><U006D><U006D><U0069><U00A0>";/
-         "<U0068><U0065><U006C><U006D><U0069><U00A0>";/
+abmon    "<U0074><U0061><U006D><U006D><U0069>";/
+         "<U0068><U0065><U006C><U006D><U0069>";/
          "<U006D><U0061><U0061><U006C><U0069><U0073>";/
-         "<U0068><U0075><U0068><U0074><U0069><U00A0>";/
-         "<U0074><U006F><U0075><U006B><U006F><U00A0>";/
-         "<U006B><U0065><U0073><U00E4><U00A0><U00A0>";/
-         "<U0068><U0065><U0069><U006E><U00E4><U00A0>";/
-         "<U0065><U006C><U006F><U00A0><U00A0><U00A0>";/
-         "<U0073><U0079><U0079><U0073><U00A0><U00A0>";/
-         "<U006C><U006F><U006B><U0061><U00A0><U00A0>";/
+         "<U0068><U0075><U0068><U0074><U0069>";/
+         "<U0074><U006F><U0075><U006B><U006F>";/
+         "<U006B><U0065><U0073><U00E4>";/
+         "<U0068><U0065><U0069><U006E><U00E4>";/
+         "<U0065><U006C><U006F>";/
+         "<U0073><U0079><U0079><U0073>";/
+         "<U006C><U006F><U006B><U0061>";/
          "<U006D><U0061><U0072><U0072><U0061><U0073>";/
-         "<U006A><U006F><U0075><U006C><U0075><U00A0>"
+         "<U006A><U006F><U0075><U006C><U0075>"
 mon      "<U0074><U0061><U006D><U006D><U0069><U006B><U0075><U0075>";/
          "<U0068><U0065><U006C><U006D><U0069><U006B><U0075><U0075>";/
          "<U006D><U0061><U0061><U006C><U0069><U0073><U006B><U0075><U0075>";/
@@ -207,13 +204,14 @@ t_fmt_ampm  ""
 date_fmt       "<U0025><U0061><U0020><U0025><U002D><U0064><U002E><U0025>/
 <U002D><U006D><U002E><U0025><U0059><U0020><U0025><U0048><U002E><U0025>/
 <U004D><U002E><U0025><U0053><U0020><U0025><U007A>"
+week     7;19971130;4
 first_weekday 2 % Monday
 first_workday 2 % Monday
 END LC_TIME
 
 LC_MESSAGES
-yesexpr  "<U005E><U005B><U004B><U006B><U004A><U006A><U0059><U0079><U005D><U002E><U002A>"
-noexpr   "<U005E><U005B><U004E><U006E><U0045><U0065><U005D><U002E><U002A>"
+yesexpr  "<U005E><U005B><U004B><U006B><U0059><U0079><U005D><U002E><U002A>"
+noexpr   "<U005E><U005B><U0045><U0065><U004E><U006E><U005D><U002E><U002A>"
 END LC_MESSAGES
 
 LC_PAPER
@@ -222,6 +220,7 @@ width    210
 END LC_PAPER
 
 LC_TELEPHONE
+tel_dom_fmt    "<U0028><U0025><U0041><U0029><U0020><U0025><U006C>"
 tel_int_fmt    "<U002B><U0025><U0063><U0020><U0025><U0061><U0020><U0025>/
 <U006C>"
 int_prefix     "<U0033><U0035><U0038>"
@@ -235,15 +234,25 @@ END LC_MEASUREMENT
 LC_NAME
 name_fmt    "<U0025><U0064><U0025><U0074><U0025><U0067><U0025><U0074>/
 <U0025><U006D><U0025><U0074><U0025><U0066>"
+% Finnish equivalents for Mr/Mrs/Miss/Ms are herra/rouva/rouva/neiti
+% but they are practically never used, thus we don't define them here.
 END LC_NAME
 
 LC_ADDRESS
-postal_fmt    "<U0025><U0066><U0025><U004E><U0025><U0061><U0025><U004E>/
-<U0025><U0064><U0025><U004E><U0025><U0062><U0025><U004E><U0025><U0073>/
-<U0020><U0025><U0068><U0020><U0025><U0065><U0020><U0025><U0072><U0025>/
-<U004E><U0025><U007A><U0020><U0025><U0054><U0025>/
+postal_fmt   "<U0025><U0066><U0025><U004E><U0025><U0064><U0025><U004E>/
+<U0025><U0062><U0025><U004E><U0025><U0061><U0025><U004E><U0025><U0073>/
+<U0020><U0025><U0068><U0025><U0074><U0025><U0065><U0025><U0074><U0025>/
+<U0072><U0025><U004E><U0025><U007A><U0020><U0025><U0054><U0025>/
 <U004E><U0025><U0063><U0025><U004E>"
 country_ab2 "<U0046><U0049>"
 country_ab3 "<U0046><U0049><U004E>"
 country_num 246
+country_name "<U0053><U0075><U006F><U006D><U0069>"
+country_post "<U0046><U0049>"
+country_car  "<U0046><U0049><U004E>"
+country_isbn 952
+lang_name    "<U0073><U0075><U006F><U006D><U0069>"
+lang_ab      "<U0066><U0069>"
+lang_term    "<U0066><U0069><U006E>"
+lang_lib     "<U0066><U0069><U006E>"
 END LC_ADDRESS

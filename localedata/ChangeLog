@@ -1,5 +1,9 @@
 2011-12-23  Ulrich Drepper  <drepper@gmail.com>
 
+	[BZ #12962]
+	* locales/fi_FI: Various fixups.
+	Patch by Marko Myllynen <myllynen@redhat.com>.
+
 	[BZ #13085]
 	* locales/ta_LK: New file.
 	* SUPPORTED (SUPPORTED-LOCALES): Add appropriate entry
