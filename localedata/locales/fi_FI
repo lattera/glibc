@@ -63,60 +63,65 @@ reorder-after <z>
 <a-diaerisis>
 <o-diaerisis>
 
-reorder-after <U005A>
+reorder-after <U007A>
 <U00E5> <a-ring>;<BAS>;<MIN>;IGNORE
-<U00C5> <a-ring>;<BAS>;<CAP>;IGNORE
 <U01FB> <a-ring>;<ACA>;<MIN>;IGNORE
-<U01FA> <a-ring>;<ACA>;<CAP>;IGNORE
 <U00E4> <a-diaerisis>;<BAS>;<MIN>;IGNORE
-<U00C4> <a-diaerisis>;<BAS>;<CAP>;IGNORE
 <U00E6> <a-diaerisis>;<REU>;<MIN>;IGNORE
-<U00C6> <a-diaerisis>;<REU>;<CAP>;IGNORE
 <U01FD> <a-diaerisis>;<U01FD>;<MIN>;IGNORE
-<U01FC> <a-diaerisis>;<U01FD>;<CAP>;IGNORE
 <U01E3> <a-diaerisis>;<MAC>;<MIN>;IGNORE
-<U01E2> <a-diaerisis>;<MAC>;<CAP>;IGNORE
 <U00F6> <o-diaerisis>;<BAS>;<MIN>;IGNORE
-<U00D6> <o-diaerisis>;<BAS>;<CAP>;IGNORE
 <U00F8> <o-diaerisis>;<U00D8>;<MIN>;IGNORE
-<U00D8> <o-diaerisis>;<U00D8>;<CAP>;IGNORE
 <U01FF> <o-diaerisis>;<U01FF>;<MIN>;IGNORE
-<U01FE> <o-diaerisis>;<U01FF>;<CAP>;IGNORE
 <U00F5> <o-diaerisis>;<TIL>;<MIN>;IGNORE
+reorder-after <U005A>
+<U00C5> <a-ring>;<BAS>;<CAP>;IGNORE
+<U01FA> <a-ring>;<ACA>;<CAP>;IGNORE
+<U00C4> <a-diaerisis>;<BAS>;<CAP>;IGNORE
+<U00C6> <a-diaerisis>;<REU>;<CAP>;IGNORE
+<U01FC> <a-diaerisis>;<U01FD>;<CAP>;IGNORE
+<U01E2> <a-diaerisis>;<MAC>;<CAP>;IGNORE
+<U00D6> <o-diaerisis>;<BAS>;<CAP>;IGNORE
+<U00D8> <o-diaerisis>;<U00D8>;<CAP>;IGNORE
+<U01FE> <o-diaerisis>;<U01FF>;<CAP>;IGNORE
 <U00D5> <o-diaerisis>;<TIL>;<CAP>;IGNORE
 
-reorder-after <U016A>
+reorder-after <U016B>
 <U0076> <v>;<U0056>;<BAS>;<MIN>
-<U0056> <v>;<U0056>;<BAS>;<CAP>
 <U1E7D> <v>;<U0056>;<TIL>;<MIN>
-<U1E7C> <v>;<U0056>;<TIL>;<CAP>
 <U0077> <w>;<U0057>;<BAS>;<MIN>
-<U0057> <w>;<U0057>;<BAS>;<CAP>
 <U1E83> <w>;<U0057>;<ACA>;<MIN>
-<U1E82> <w>;<U0057>;<ACA>;<CAP>
 <U1E81> <w>;<U0057>;<GRA>;<MIN>
-<U1E80> <w>;<U0057>;<GRA>;<CAP>
 <U0175> <w>;<U0057>;<CIR>;<MIN>
-<U0174> <w>;<U0057>;<CIR>;<CAP>
 <U1E85> <w>;<U0057>;<REU>;<MIN>
-<U1E84> <w>;<U0057>;<REU>;<CAP>
 <U1E87> <w>;<U0057>;<PCT>;<MIN>
+reorder-after <U016A>
+<U0056> <v>;<U0056>;<BAS>;<CAP>
+<U1E7C> <v>;<U0056>;<TIL>;<CAP>
+<U0057> <w>;<U0057>;<BAS>;<CAP>
+<U1E82> <w>;<U0057>;<ACA>;<CAP>
+<U1E80> <w>;<U0057>;<GRA>;<CAP>
+<U0174> <w>;<U0057>;<CIR>;<CAP>
+<U1E84> <w>;<U0057>;<REU>;<CAP>
 <U1E86> <w>;<U0057>;<PCT>;<CAP>
 
 reorder-after <U00FF>
 <U00FC> <y>;<DTT>;<MIN>;IGNORE
+reorder-after <U0178>
 <U00DC> <y>;<DTT>;<CAP>;IGNORE
 
 %  Present in iso14651_t1, but these definitions seem to have been
 %  removed from latest iso14651 tables.
-reorder-after <U0162>
+reorder-after <U0163>
 <U00FE> "<t><h>";"<LIG><LIG>";"<MIN><MIN>";IGNORE
+reorder-after <U0162>
 <U00DE> "<t><h>";"<LIG><LIG>";"<CAP><CAP>";IGNORE
 
 reorder-after <U0064>
 <U00F0> <d>;<PCL>;<MIN>;IGNORE
-<U00D0> <d>;<PCL>;<CAP>;IGNORE
 <U0111> <d>;<OBL>;<MIN>;IGNORE
+reorder-after <U0044>
+<U00D0> <d>;<PCL>;<CAP>;IGNORE
 <U0110> <d>;<OBL>;<CAP>;IGNORE
 
 reorder-end

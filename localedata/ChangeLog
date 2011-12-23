@@ -1,5 +1,8 @@
 2011-12-22  Ulrich Drepper  <drepper@gmail.com>
 
+	[BZ #13096]
+	* locales/fi_FI: Fix collation reordering rules.
+
 	[BZ #13189]
 	* SUPPORTED (SUPPORTED-LOCALES): Add ur_IN entry.
 
