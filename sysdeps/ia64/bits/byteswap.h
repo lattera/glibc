@@ -1,5 +1,6 @@
 /* Macros to swap the order of bytes in integer values.
-   Copyright (C) 1997,1998,2000,2002,2003,2008 Free Software Foundation, Inc.
+   Copyright (C) 1997,1998,2000,2002,2003,2008,2011
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -77,17 +78,17 @@ __bswap_32 (unsigned int __bsx)
 
 
 /* Swap bytes in 64 bit value.  */
-#define __bswap_constant_64(x) \
-     ((((x) & 0xff00000000000000ul) >> 56)				      \
-      | (((x) & 0x00ff000000000000ul) >>  40)				      \
-      | (((x) & 0x0000ff0000000000ul) >> 24)				      \
-      | (((x) & 0x000000ff00000000ul) >> 8)				      \
-      | (((x) & 0x00000000ff000000ul) << 8)				      \
-      | (((x) & 0x0000000000ff0000ul) << 24)				      \
-      | (((x) & 0x000000000000ff00ul) << 40)				      \
-      | (((x) & 0x00000000000000fful) << 56))
-
 #if defined __GNUC__ && __GNUC__ >= 2
+# define __bswap_constant_64(x) \
+     (__extension__ ((((x) & 0xff00000000000000ul) >> 56)		      \
+		     | (((x) & 0x00ff000000000000ul) >>  40)		      \
+		     | (((x) & 0x0000ff0000000000ul) >> 24)		      \
+		     | (((x) & 0x000000ff00000000ul) >> 8)		      \
+		     | (((x) & 0x00000000ff000000ul) << 8)		      \
+		     | (((x) & 0x0000000000ff0000ul) << 24)		      \
+		     | (((x) & 0x000000000000ff00ul) << 40)		      \
+		     | (((x) & 0x00000000000000fful) << 56)))
+
 # define __bswap_64(x) \
      (__extension__							      \
       ({ register unsigned long int __v, __x = (x);			      \
@@ -97,9 +98,19 @@ __bswap_32 (unsigned int __bsx)
 	   __asm__ __volatile__ ("mux1 %0 = %1, @rev ;;"		      \
 				 : "=r" (__v)				      \
 				 : "r" ((unsigned long int) (__x)));	      \
-         __v; }))
+	 __v; }))
 
 #else
+# define __bswap_constant_64(x) \
+     ((((x) & 0xff00000000000000ul) >> 56)				      \
+      | (((x) & 0x00ff000000000000ul) >>  40)				      \
+      | (((x) & 0x0000ff0000000000ul) >> 24)				      \
+      | (((x) & 0x000000ff00000000ul) >> 8)				      \
+      | (((x) & 0x00000000ff000000ul) << 8)				      \
+      | (((x) & 0x0000000000ff0000ul) << 24)				      \
+      | (((x) & 0x000000000000ff00ul) << 40)				      \
+      | (((x) & 0x00000000000000fful) << 56))
+
 static __inline unsigned long int
 __bswap_64 (unsigned long int __bsx)
 {

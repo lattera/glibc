@@ -1,3 +1,11 @@
+2011-12-23  Ulrich Drepper  <drepper@gmail.com>
+
+	* bits/byteswap.h: Protect long long constants with __extension__.
+	* sysdeps/i386/bits/byteswap.h: Likewise.
+	* sysdeps/ia64/bits/byteswap.h: Likewise.
+	* sysdeps/s390/bits/byteswap.h: Likewise.
+	* sysdeps/x86_64/bits/byteswap.h: Likewise.
+
 2011-12-23  Liubov Dmitrieva  <liubov.dmitrieva@gmail.com>
 
 	[BZ #13540]

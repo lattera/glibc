@@ -1,5 +1,5 @@
 /* Macros to swap the order of bytes in integer values.  s390 version.
-   Copyright (C) 2000, 2001, 2002, 2003, 2008 Free Software Foundation, Inc.
+   Copyright (C) 2000-2003, 2008, 2011 Free Software Foundation, Inc.
    Contributed by Martin Schwidefsky (schwidefsky@de.ibm.com).
    This file is part of the GNU C Library.
 
@@ -35,31 +35,31 @@
 # if __WORDSIZE == 64
 #  define __bswap_16(x) \
      (__extension__							      \
-      ({ unsigned short int __v, __x = (x);	                              \
+      ({ unsigned short int __v, __x = (x);				      \
 	 if (__builtin_constant_p (x))					      \
 	   __v = __bswap_constant_16 (__x);				      \
 	 else {								      \
-           unsigned short int __tmp = (unsigned short int) (__x);             \
-           __asm__ __volatile__ (                                             \
-              "lrvh %0,%1"                                                    \
-              : "=&d" (__v) : "m" (__tmp) );                                  \
-         }                                                                    \
+	   unsigned short int __tmp = (unsigned short int) (__x);             \
+	   __asm__ __volatile__ (                                             \
+	      "lrvh %0,%1"                                                    \
+	      : "=&d" (__v) : "m" (__tmp) );                                  \
+	 }                                                                    \
 	 __v; }))
 # else
 #  define __bswap_16(x) \
      (__extension__							      \
-      ({ unsigned short int __v, __x = (x);	                              \
+      ({ unsigned short int __v, __x = (x);				      \
 	 if (__builtin_constant_p (x))					      \
 	   __v = __bswap_constant_16 (__x);				      \
 	 else {								      \
-           unsigned short int __tmp = (unsigned short int) (__x);             \
-           __asm__ __volatile__ (                                             \
-              "sr   %0,%0\n"                                                  \
-              "la   1,%1\n"                                                   \
-              "icm  %0,2,1(1)\n"                                              \
-              "ic   %0,0(1)"                                                  \
-              : "=&d" (__v) : "m" (__tmp) : "1");                             \
-         }                                                                    \
+	   unsigned short int __tmp = (unsigned short int) (__x);             \
+	   __asm__ __volatile__ (                                             \
+	      "sr   %0,%0\n"                                                  \
+	      "la   1,%1\n"                                                   \
+	      "icm  %0,2,1(1)\n"                                              \
+	      "ic   %0,0(1)"                                                  \
+	      : "=&d" (__v) : "m" (__tmp) : "1");                             \
+	 }                                                                    \
 	 __v; }))
 # endif
 #else
@@ -80,32 +80,32 @@ __bswap_16 (unsigned short int __bsx)
 # if __WORDSIZE == 64
 #  define __bswap_32(x) \
      (__extension__							      \
-      ({ unsigned int __v, __x = (x);				              \
+      ({ unsigned int __v, __x = (x);					      \
 	 if (__builtin_constant_p (x))					      \
 	   __v = __bswap_constant_32 (__x);				      \
 	 else {								      \
-           unsigned int __tmp = (unsigned int) (__x);                         \
-           __asm__ __volatile__ (                                             \
-              "lrv   %0,%1"                                                   \
-              : "=&d" (__v) : "m" (__tmp));                                   \
-         }                                                                    \
+	   unsigned int __tmp = (unsigned int) (__x);                         \
+	   __asm__ __volatile__ (                                             \
+	      "lrv   %0,%1"                                                   \
+	      : "=&d" (__v) : "m" (__tmp));                                   \
+	 }                                                                    \
 	 __v; }))
 # else
 #  define __bswap_32(x) \
      (__extension__							      \
-      ({ unsigned int __v, __x = (x);			                      \
+      ({ unsigned int __v, __x = (x);					      \
 	 if (__builtin_constant_p (x))					      \
 	   __v = __bswap_constant_32 (__x);				      \
 	 else {								      \
-           unsigned int __tmp = (unsigned int) (__x);                         \
-           __asm__ __volatile__ (                                             \
-              "la    1,%1\n"                                                  \
-              "icm   %0,8,3(1)\n"                                             \
-              "icm   %0,4,2(1)\n"                                             \
-              "icm   %0,2,1(1)\n"                                             \
-              "ic    %0,0(1)"                                                 \
-              : "=&d" (__v) : "m" (__tmp) : "1");                             \
-         }                                                                    \
+	   unsigned int __tmp = (unsigned int) (__x);                         \
+	   __asm__ __volatile__ (                                             \
+	      "la    1,%1\n"                                                  \
+	      "icm   %0,8,3(1)\n"                                             \
+	      "icm   %0,4,2(1)\n"                                             \
+	      "icm   %0,2,1(1)\n"                                             \
+	      "ic    %0,0(1)"                                                 \
+	      : "=&d" (__v) : "m" (__tmp) : "1");                             \
+	 }                                                                    \
 	 __v; }))
 # endif
 #else
@@ -117,37 +117,51 @@ __bswap_32 (unsigned int __bsx)
 #endif
 
 /* Swap bytes in 64 bit value.  */
-#define __bswap_constant_64(x) \
-     ((((x)&0xff00000000000000) >> 56) | (((x)&0x00ff000000000000) >> 40) |  \
-      (((x)&0x0000ff0000000000) >> 24) | (((x)&0x000000ff00000000) >>  8) |  \
-      (((x)&0x00000000ff000000) <<  8) | (((x)&0x0000000000ff0000) << 24) |  \
-      (((x)&0x000000000000ff00) << 40) | (((x)&0x00000000000000ff) << 56))
-
 #if defined __GNUC__ && __GNUC__ >= 2
+# define __bswap_constant_64(x) \
+     (__extension__ ((((x) & 0xff00000000000000ul) >> 56)		      \
+		     | (((x) & 0x00ff000000000000ul) >>  40)		      \
+		     | (((x) & 0x0000ff0000000000ul) >> 24)		      \
+		     | (((x) & 0x000000ff00000000ul) >> 8)		      \
+		     | (((x) & 0x00000000ff000000ul) << 8)		      \
+		     | (((x) & 0x0000000000ff0000ul) << 24)		      \
+		     | (((x) & 0x000000000000ff00ul) << 40)		      \
+		     | (((x) & 0x00000000000000fful) << 56)))
+
 # if __WORDSIZE == 64
 #  define __bswap_64(x) \
      (__extension__							      \
-      ({ unsigned long __w, __x = (x);				              \
+      ({ unsigned long __w, __x = (x);					      \
 	 if (__builtin_constant_p (x))					      \
 	   __w = __bswap_constant_64 (__x);				      \
 	 else {								      \
-           unsigned long __tmp = (unsigned long) (__x);                       \
-           __asm__ __volatile__ (                                             \
-              "lrvg  %0,%1"                                                   \
-              : "=&d" (__w) : "m" (__tmp));                                   \
-         }                                                                    \
+	   unsigned long __tmp = (unsigned long) (__x);                       \
+	   __asm__ __volatile__ (                                             \
+	      "lrvg  %0,%1"                                                   \
+	      : "=&d" (__w) : "m" (__tmp));                                   \
+	 }                                                                    \
 	 __w; }))
 # else
 #  define __bswap_64(x) \
      __extension__					\
        ({ union { unsigned long long int __ll;		\
-	          unsigned long int __l[2]; } __w, __r;	\
-          __w.__ll = (x);				\
-          __r.__l[0] = __bswap_32 (__w.__l[1]);		\
-          __r.__l[1] = __bswap_32 (__w.__l[0]);		\
-          __r.__ll; })
+		  unsigned long int __l[2]; } __w, __r;	\
+	  __w.__ll = (x);				\
+	  __r.__l[0] = __bswap_32 (__w.__l[1]);		\
+	  __r.__l[1] = __bswap_32 (__w.__l[0]);		\
+	  __r.__ll; })
 # endif
 #else
+# define __bswap_constant_64(x) \
+     ((((x) & 0xff00000000000000ul) >> 56)				      \
+      | (((x) & 0x00ff000000000000ul) >>  40)				      \
+      | (((x) & 0x0000ff0000000000ul) >> 24)				      \
+      | (((x) & 0x000000ff00000000ul) >> 8)				      \
+      | (((x) & 0x00000000ff000000ul) << 8)				      \
+      | (((x) & 0x0000000000ff0000ul) << 24)				      \
+      | (((x) & 0x000000000000ff00ul) << 40)				      \
+      | (((x) & 0x00000000000000fful) << 56))
+
 static __inline unsigned long long int
 __bswap_64 (unsigned long long int __bsx)
 {
