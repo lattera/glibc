@@ -1,5 +1,8 @@
 2011-12-23  Ulrich Drepper  <drepper@gmail.com>
 
+	[BZ #12840]
+	* locales/sv_SE: Modernize date format.
+
 	[BZ #12906]
 	* SUPPORTED (SUPPORTED-LOCALES): Add wal_ET entry.
 
