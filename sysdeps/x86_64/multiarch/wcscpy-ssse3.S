@@ -21,8 +21,9 @@
 #ifndef NOT_IN_libc
 # include <sysdep.h>
 
-.text
+	.section .text.ssse3,"ax",@progbits
 ENTRY (__wcscpy_ssse3)
+
 	mov	%rsi, %rcx
 	mov	%rdi, %rdx
 
@@ -136,6 +137,7 @@ L(Align16Both):
 
 	mov	$-0x40, %rsi
 
+	.p2align 4
 L(Aligned64Loop):
 	movaps	(%rcx), %xmm2
 	movaps	%xmm2, %xmm4
@@ -205,7 +207,19 @@ L(Shl4Start):
 	jnz	L(Shl4LoopExit)
 
 	palignr	$4, %xmm1, %xmm2
-	movaps	%xmm3, %xmm1
+	movaps	%xmm2, (%rdx)
+	movaps	28(%rcx), %xmm2
+
+	pcmpeqd	%xmm2, %xmm0
+	lea	16(%rdx), %rdx
+	pmovmskb %xmm0, %rax
+	lea	16(%rcx), %rcx
+	movaps	%xmm2, %xmm1
+
+	test	%rax, %rax
+	jnz	L(Shl4LoopExit)
+
+	palignr	$4, %xmm3, %xmm2
 	movaps	%xmm2, (%rdx)
 	movaps	28(%rcx), %xmm2
 
@@ -221,21 +235,6 @@ L(Shl4Start):
 	palignr	$4, %xmm1, %xmm2
 	movaps	%xmm2, (%rdx)
 	movaps	28(%rcx), %xmm2
-	movaps	%xmm3, %xmm1
-
-	pcmpeqd	%xmm2, %xmm0
-	lea	16(%rdx), %rdx
-	pmovmskb %xmm0, %rax
-	lea	16(%rcx), %rcx
-	movaps	%xmm2, %xmm3
-
-	test	%rax, %rax
-	jnz	L(Shl4LoopExit)
-
-	palignr	$4, %xmm1, %xmm2
-	movaps	%xmm3, %xmm1
-	movaps	%xmm2, (%rdx)
-	movaps	28(%rcx), %xmm2
 
 	pcmpeqd	%xmm2, %xmm0
 	lea	16(%rdx), %rdx
@@ -245,8 +244,7 @@ L(Shl4Start):
 	test	%rax, %rax
 	jnz	L(Shl4LoopExit)
 
-	palignr	$4, %xmm1, %xmm2
-	movaps	%xmm3, %xmm1
+	palignr	$4, %xmm3, %xmm2
 	movaps	%xmm2, (%rdx)
 	lea	28(%rcx), %rcx
 	lea	16(%rdx), %rdx
@@ -259,6 +257,7 @@ L(Shl4Start):
 
 	movaps	-4(%rcx), %xmm1
 
+	.p2align 4
 L(Shl4LoopStart):
 	movaps	12(%rcx), %xmm2
 	movaps	28(%rcx), %xmm3
@@ -289,11 +288,9 @@ L(Shl4LoopStart):
 	jmp	L(Shl4LoopStart)
 
 L(Shl4LoopExit):
-	movaps	(%rdx), %xmm6
-	psrldq	$12, %xmm6
+	movdqu	-4(%rcx), %xmm1
 	mov	$12, %rsi
-	palignr	$4, %xmm1, %xmm6
-	movaps	%xmm6, (%rdx)
+	movdqu	%xmm1, -4(%rdx)
 	jmp	L(CopyFrom1To16Bytes)
 
 	.p2align 4
@@ -309,7 +306,19 @@ L(Shl8Start):
 	jnz	L(Shl8LoopExit)
 
 	palignr	$8, %xmm1, %xmm2
-	movaps	%xmm3, %xmm1
+	movaps	%xmm2, (%rdx)
+	movaps	24(%rcx), %xmm2
+
+	pcmpeqd	%xmm2, %xmm0
+	lea	16(%rdx), %rdx
+	pmovmskb %xmm0, %rax
+	lea	16(%rcx), %rcx
+	movaps	%xmm2, %xmm1
+
+	test	%rax, %rax
+	jnz	L(Shl8LoopExit)
+
+	palignr	$8, %xmm3, %xmm2
 	movaps	%xmm2, (%rdx)
 	movaps	24(%rcx), %xmm2
 
@@ -325,33 +334,16 @@ L(Shl8Start):
 	palignr	$8, %xmm1, %xmm2
 	movaps	%xmm2, (%rdx)
 	movaps	24(%rcx), %xmm2
-	movaps	%xmm3, %xmm1
 
 	pcmpeqd	%xmm2, %xmm0
 	lea	16(%rdx), %rdx
 	pmovmskb %xmm0, %rax
 	lea	16(%rcx), %rcx
-	movaps	%xmm2, %xmm3
 
 	test	%rax, %rax
 	jnz	L(Shl8LoopExit)
 
-	palignr	$8, %xmm1, %xmm2
-	movaps	%xmm3, %xmm1
-	movaps	%xmm2, (%rdx)
-	movaps	24(%rcx), %xmm2
-
-	pcmpeqd	%xmm2, %xmm0
-	lea	16(%rdx), %rdx
-	pmovmskb %xmm0, %rax
-	lea	16(%rcx), %rcx
-	movaps	%xmm2, %xmm3
-
-	test	%rax, %rax
-	jnz	L(Shl8LoopExit)
-
-	palignr	$8, %xmm1, %xmm2
-	movaps	%xmm3, %xmm1
+	palignr	$8, %xmm3, %xmm2
 	movaps	%xmm2, (%rdx)
 	lea	24(%rcx), %rcx
 	lea	16(%rdx), %rdx
@@ -364,6 +356,7 @@ L(Shl8Start):
 
 	movaps	-8(%rcx), %xmm1
 
+	.p2align 4
 L(Shl8LoopStart):
 	movaps	8(%rcx), %xmm2
 	movaps	24(%rcx), %xmm3
@@ -394,11 +387,9 @@ L(Shl8LoopStart):
 	jmp	L(Shl8LoopStart)
 
 L(Shl8LoopExit):
-	movaps	(%rdx), %xmm6
-	psrldq	$8, %xmm6
+	mov	(%rcx), %r9
 	mov	$8, %rsi
-	palignr	$8, %xmm1, %xmm6
-	movaps	%xmm6, (%rdx)
+	mov	%r9, (%rdx)
 	jmp	L(CopyFrom1To16Bytes)
 
 	.p2align 4
@@ -414,7 +405,19 @@ L(Shl12Start):
 	jnz	L(Shl12LoopExit)
 
 	palignr	$12, %xmm1, %xmm2
-	movaps	%xmm3, %xmm1
+	movaps	%xmm2, (%rdx)
+	movaps	20(%rcx), %xmm2
+
+	pcmpeqd	%xmm2, %xmm0
+	lea	16(%rdx), %rdx
+	pmovmskb %xmm0, %rax
+	lea	16(%rcx), %rcx
+	movaps	%xmm2, %xmm1
+
+	test	%rax, %rax
+	jnz	L(Shl12LoopExit)
+
+	palignr	$12, %xmm3, %xmm2
 	movaps	%xmm2, (%rdx)
 	movaps	20(%rcx), %xmm2
 
@@ -430,33 +433,16 @@ L(Shl12Start):
 	palignr	$12, %xmm1, %xmm2
 	movaps	%xmm2, (%rdx)
 	movaps	20(%rcx), %xmm2
-	movaps	%xmm3, %xmm1
 
 	pcmpeqd	%xmm2, %xmm0
 	lea	16(%rdx), %rdx
 	pmovmskb %xmm0, %rax
 	lea	16(%rcx), %rcx
-	movaps	%xmm2, %xmm3
 
 	test	%rax, %rax
 	jnz	L(Shl12LoopExit)
 
-	palignr	$12, %xmm1, %xmm2
-	movaps	%xmm3, %xmm1
-	movaps	%xmm2, (%rdx)
-	movaps	20(%rcx), %xmm2
-
-	pcmpeqd	%xmm2, %xmm0
-	lea	16(%rdx), %rdx
-	pmovmskb %xmm0, %rax
-	lea	16(%rcx), %rcx
-	movaps	%xmm2, %xmm3
-
-	test	%rax, %rax
-	jnz	L(Shl12LoopExit)
-
-	palignr	$12, %xmm1, %xmm2
-	movaps	%xmm3, %xmm1
+	palignr	$12, %xmm3, %xmm2
 	movaps	%xmm2, (%rdx)
 	lea	20(%rcx), %rcx
 	lea	16(%rdx), %rdx
@@ -469,6 +455,7 @@ L(Shl12Start):
 
 	movaps	-12(%rcx), %xmm1
 
+	.p2align 4
 L(Shl12LoopStart):
 	movaps	4(%rcx), %xmm2
 	movaps	20(%rcx), %xmm3
@@ -498,11 +485,10 @@ L(Shl12LoopStart):
 	jmp	L(Shl12LoopStart)
 
 L(Shl12LoopExit):
-	movaps	(%rdx), %xmm6
-	psrldq	$4, %xmm6
+	mov	(%rcx), %r9d
 	mov	$4, %rsi
-	palignr	$12, %xmm1, %xmm6
-	movaps	%xmm6, (%rdx)
+	mov	%r9d, (%rdx)
+	jmp	L(CopyFrom1To16Bytes)
 
 	.p2align 4
 L(CopyFrom1To16Bytes):
@@ -556,8 +542,10 @@ L(Exit12):
 
 	.p2align 4
 L(Exit16):
-	movdqu	(%rcx), %xmm0
-	movdqu	%xmm0, (%rdx)
+	mov	(%rcx), %rax
+	mov	%rax, (%rdx)
+	mov	8(%rcx), %rax
+	mov	%rax, 8(%rdx)
 	mov	%rdi, %rax
 	ret
 
