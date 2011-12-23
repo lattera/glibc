@@ -1,5 +1,10 @@
 2011-12-23  Ulrich Drepper  <drepper@gmail.com>
 
+	[BZ #12906]
+	* SUPPORTED (SUPPORTED-LOCALES): Add wal_ET entry.
+
+	* locales/wal_ET: Remove lang_ab entry.
+
 	[BZ #12962]
 	* locales/fi_FI: Various fixups.
 	Patch by Marko Myllynen <myllynen@redhat.com>.
