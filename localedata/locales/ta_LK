@@ -1,0 +1,85 @@
+comment_char %
+escape_char  /
+%
+% Tamil language locale for Sri Lanka
+% Language: ta
+% Territory: LK
+% Revision: 1.0
+% Date: 2011,August,11
+% Application: general
+% Users: general
+% Charset: SLS 1326:2008
+% Distribution and use is free, also
+% for commercial purposes.
+
+LC_IDENTIFICATION
+title      "Tamil language locale for Sri Lanka"
+source     "J.Yogaraj"
+address    "30/36Q -2/1,Charles Apartments, De Silva Cross Rd,/
+	    Kalubowila,Dehiwela,SriLanka."
+contact    "94-777-315206"
+email      "yogaraj.ubuntu@gmail.com"
+tel        "94-112-765773"
+fax        ""
+language   "Tamil"
+territory  "Sri Lanka"
+revision   "1.0"
+date       "2011,August,11"
+%
+category  "ta_LK:2000";LC_IDENTIFICATION
+category  "ta_LK:2000";LC_CTYPE
+category  "ta_LK:2000";LC_COLLATE
+category  "ta_LK:2000";LC_TIME
+category  "ta_LK:2000";LC_NUMERIC
+category  "ta_LK:2000";LC_MONETARY
+category  "ta_LK:2000";LC_MESSAGES
+category  "ta_LK:2000";LC_PAPER
+category  "ta_LK:2000";LC_NAME
+category  "ta_LK:2000";LC_ADDRESS
+category  "ta_LK:2000";LC_TELEPHONE
+
+END LC_IDENTIFICATION
+
+LC_COLLATE
+copy "ta_IN"
+END LC_COLLATE
+
+LC_CTYPE
+copy "ta_IN"
+END LC_CTYPE
+
+LC_MESSAGES
+copy "ta_IN"
+END LC_MESSAGES
+
+LC_MONETARY
+copy "ta_IN"
+END LC_MONETARY
+
+LC_NUMERIC
+copy "ta_IN"
+END LC_NUMERIC
+
+LC_TIME
+copy "ta_IN"
+END LC_TIME
+
+LC_PAPER
+copy "si_LK"
+END LC_PAPER
+
+LC_TELEPHONE
+copy "si_LK"
+END LC_TELEPHONE
+
+LC_MEASUREMENT
+copy "si_LK"
+END LC_MEASUREMENT
+
+LC_NAME
+copy "ta_IN"
+END LC_NAME
+
+LC_ADDRESS
+copy "si_LK"
+END LC_ADDRESS

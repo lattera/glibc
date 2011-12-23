@@ -1,3 +1,11 @@
+2011-12-23  Ulrich Drepper  <drepper@gmail.com>
+
+	[BZ #13085]
+	* locales/ta_LK: New file.
+	* SUPPORTED (SUPPORTED-LOCALES): Add appropriate entry
+
+	* locales/si_LK: Add country_ab2, country_ab3, country_num.
+
 2011-12-22  Ulrich Drepper  <drepper@gmail.com>
 
 	[BZ #13096]
