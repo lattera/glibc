@@ -1,5 +1,9 @@
 2011-12-22  Ulrich Drepper  <drepper@gmail.com>
 
+	[BZ #13166]
+	* inet/getnameinfo.c (getnameinfo): Return EAI_OVERFLOW if the
+	buffer for the output is too small.
+
 	* sysdeps/i386/fpu/bits/fenv.h [__SSE_MATH__]: Add feraiseexcept
 	optimization.
 

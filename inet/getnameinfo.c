@@ -346,10 +346,11 @@ getnameinfo (const struct sockaddr *sa, socklen_t addrlen, char *host,
 						     "%u", scopeid);
 
 			if (real_hostlen + scopelen + 1 > hostlen)
-			  /* XXX We should not fail here.  Simply enlarge
-			     the buffer or return with out of memory.  */
-			  return EAI_SYSTEM;
-			memcpy (host + real_hostlen, scopebuf, scopelen + 1);
+			  /* Signal the buffer is too small.  This is
+			     what inet_ntop does.  */
+			  c = NULL;
+			else
+			  memcpy (host + real_hostlen, scopebuf, scopelen + 1);
 		      }
 		  }
 		else
@@ -357,7 +358,7 @@ getnameinfo (const struct sockaddr *sa, socklen_t addrlen, char *host,
 				 (const void *) &(((const struct sockaddr_in *) sa)->sin_addr),
 				 host, hostlen);
 		if (c == NULL)
-		  return EAI_SYSTEM;
+		  return EAI_OVERFLOW;
 	      }
 	    ok = 1;
 	  }
