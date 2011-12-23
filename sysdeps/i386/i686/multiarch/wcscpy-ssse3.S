@@ -54,7 +54,6 @@ ENTRY (__wcscpy_ssse3)
 
 	PUSH	(%edi)
 	mov	%edx, %edi
-
 	PUSH	(%esi)
 	lea	16(%ecx), %esi
 
@@ -220,7 +219,19 @@ L(Shl4Start):
 	jnz	L(Shl4LoopExit)
 
 	palignr	$4, %xmm1, %xmm2
-	movaps	%xmm3, %xmm1
+	movaps	%xmm2, (%edx)
+	movaps	28(%ecx), %xmm2
+
+	pcmpeqd	%xmm2, %xmm0
+	lea	16(%edx), %edx
+	pmovmskb %xmm0, %eax
+	lea	16(%ecx), %ecx
+	movaps	%xmm2, %xmm1
+
+	test	%eax, %eax
+	jnz	L(Shl4LoopExit)
+
+	palignr	$4, %xmm3, %xmm2
 	movaps	%xmm2, (%edx)
 	movaps	28(%ecx), %xmm2
 
@@ -236,33 +247,16 @@ L(Shl4Start):
 	palignr	$4, %xmm1, %xmm2
 	movaps	%xmm2, (%edx)
 	movaps	28(%ecx), %xmm2
-	movaps	%xmm3, %xmm1
 
 	pcmpeqd	%xmm2, %xmm0
 	lea	16(%edx), %edx
 	pmovmskb %xmm0, %eax
 	lea	16(%ecx), %ecx
-	movaps	%xmm2, %xmm3
 
 	test	%eax, %eax
 	jnz	L(Shl4LoopExit)
 
-	palignr	$4, %xmm1, %xmm2
-	movaps	%xmm3, %xmm1
-	movaps	%xmm2, (%edx)
-	movaps	28(%ecx), %xmm2
-
-	pcmpeqd	%xmm2, %xmm0
-	lea	16(%edx), %edx
-	pmovmskb %xmm0, %eax
-	lea	16(%ecx), %ecx
-	movaps	%xmm2, %xmm3
-
-	test	%eax, %eax
-	jnz	L(Shl4LoopExit)
-
-	palignr	$4, %xmm1, %xmm2
-	movaps	%xmm3, %xmm1
+	palignr	$4, %xmm3, %xmm2
 	movaps	%xmm2, (%edx)
 	lea	28(%ecx), %ecx
 	lea	16(%edx), %edx
@@ -305,14 +299,13 @@ L(Shl4LoopStart):
 	jmp	L(Shl4LoopStart)
 
 L(Shl4LoopExit):
-	movaps	(%edx), %xmm6
-	psrldq	$12, %xmm6
-	palignr	$4, %xmm1, %xmm6
-	movaps	%xmm6, (%edx)
+	movlpd	(%ecx), %xmm0
+	movl	8(%ecx), %esi
+	movlpd	%xmm0, (%edx)
+	movl	%esi, 8(%edx)
+	POP	(%esi)
 	add	$12, %edx
 	add	$12, %ecx
-
-	POP	(%esi)
 	test	%al, %al
 	jz	L(ExitHigh)
 	test	$0x01, %al
@@ -337,7 +330,19 @@ L(Shl8Start):
 	jnz	L(Shl8LoopExit)
 
 	palignr	$8, %xmm1, %xmm2
-	movaps	%xmm3, %xmm1
+	movaps	%xmm2, (%edx)
+	movaps	24(%ecx), %xmm2
+
+	pcmpeqd	%xmm2, %xmm0
+	lea	16(%edx), %edx
+	pmovmskb %xmm0, %eax
+	lea	16(%ecx), %ecx
+	movaps	%xmm2, %xmm1
+
+	test	%eax, %eax
+	jnz	L(Shl8LoopExit)
+
+	palignr	$8, %xmm3, %xmm2
 	movaps	%xmm2, (%edx)
 	movaps	24(%ecx), %xmm2
 
@@ -353,33 +358,16 @@ L(Shl8Start):
 	palignr	$8, %xmm1, %xmm2
 	movaps	%xmm2, (%edx)
 	movaps	24(%ecx), %xmm2
-	movaps	%xmm3, %xmm1
 
 	pcmpeqd	%xmm2, %xmm0
 	lea	16(%edx), %edx
 	pmovmskb %xmm0, %eax
 	lea	16(%ecx), %ecx
-	movaps	%xmm2, %xmm3
 
 	test	%eax, %eax
 	jnz	L(Shl8LoopExit)
 
-	palignr	$8, %xmm1, %xmm2
-	movaps	%xmm3, %xmm1
-	movaps	%xmm2, (%edx)
-	movaps	24(%ecx), %xmm2
-
-	pcmpeqd	%xmm2, %xmm0
-	lea	16(%edx), %edx
-	pmovmskb %xmm0, %eax
-	lea	16(%ecx), %ecx
-	movaps	%xmm2, %xmm3
-
-	test	%eax, %eax
-	jnz	L(Shl8LoopExit)
-
-	palignr	$8, %xmm1, %xmm2
-	movaps	%xmm3, %xmm1
+	palignr	$8, %xmm3, %xmm2
 	movaps	%xmm2, (%edx)
 	lea	24(%ecx), %ecx
 	lea	16(%edx), %edx
@@ -422,14 +410,11 @@ L(Shl8LoopStart):
 	jmp	L(Shl8LoopStart)
 
 L(Shl8LoopExit):
-	movaps	(%edx), %xmm6
-	psrldq	$8, %xmm6
-	palignr	$8, %xmm1, %xmm6
-	movaps	%xmm6, (%edx)
+	movlpd	(%ecx), %xmm0
+	movlpd	%xmm0, (%edx)
+	POP	(%esi)
 	add	$8, %edx
 	add	$8, %ecx
-
-	POP	(%esi)
 	test	%al, %al
 	jz	L(ExitHigh)
 	test	$0x01, %al
@@ -454,7 +439,19 @@ L(Shl12Start):
 	jnz	L(Shl12LoopExit)
 
 	palignr	$12, %xmm1, %xmm2
-	movaps	%xmm3, %xmm1
+	movaps	%xmm2, (%edx)
+	movaps	20(%ecx), %xmm2
+
+	pcmpeqd	%xmm2, %xmm0
+	lea	16(%edx), %edx
+	pmovmskb %xmm0, %eax
+	lea	16(%ecx), %ecx
+	movaps	%xmm2, %xmm1
+
+	test	%eax, %eax
+	jnz	L(Shl12LoopExit)
+
+	palignr	$12, %xmm3, %xmm2
 	movaps	%xmm2, (%edx)
 	movaps	20(%ecx), %xmm2
 
@@ -470,33 +467,16 @@ L(Shl12Start):
 	palignr	$12, %xmm1, %xmm2
 	movaps	%xmm2, (%edx)
 	movaps	20(%ecx), %xmm2
-	movaps	%xmm3, %xmm1
 
 	pcmpeqd	%xmm2, %xmm0
 	lea	16(%edx), %edx
 	pmovmskb %xmm0, %eax
 	lea	16(%ecx), %ecx
-	movaps	%xmm2, %xmm3
 
 	test	%eax, %eax
 	jnz	L(Shl12LoopExit)
 
-	palignr	$12, %xmm1, %xmm2
-	movaps	%xmm3, %xmm1
-	movaps	%xmm2, (%edx)
-	movaps	20(%ecx), %xmm2
-
-	pcmpeqd	%xmm2, %xmm0
-	lea	16(%edx), %edx
-	pmovmskb %xmm0, %eax
-	lea	16(%ecx), %ecx
-	movaps	%xmm2, %xmm3
-
-	test	%eax, %eax
-	jnz	L(Shl12LoopExit)
-
-	palignr	$12, %xmm1, %xmm2
-	movaps	%xmm3, %xmm1
+	palignr	$12, %xmm3, %xmm2
 	movaps	%xmm2, (%edx)
 	lea	20(%ecx), %ecx
 	lea	16(%edx), %edx
@@ -539,11 +519,9 @@ L(Shl12LoopStart):
 	jmp	L(Shl12LoopStart)
 
 L(Shl12LoopExit):
-	movaps	(%edx), %xmm6
-	psrldq	$4, %xmm6
+	movl	(%ecx), %esi
+	movl	%esi, (%edx)
 	mov	$4, %esi
-	palignr	$12, %xmm1, %xmm6
-	movaps	%xmm6, (%edx)
 
 	.p2align 4
 L(CopyFrom1To16Bytes):
@@ -555,6 +533,7 @@ L(CopyFrom1To16Bytes):
 	jz	L(ExitHigh)
 	test	$0x01, %al
 	jnz	L(Exit4)
+L(Exit8):
 	movlpd	(%ecx), %xmm0
 	movlpd	%xmm0, (%edx)
 	movl	%edi, %eax
@@ -564,6 +543,7 @@ L(CopyFrom1To16Bytes):
 L(ExitHigh):
 	test	$0x01, %ah
 	jnz	L(Exit12)
+L(Exit16):
 	movdqu	(%ecx), %xmm0
 	movdqu	%xmm0, (%edx)
 	movl	%edi, %eax
