@@ -1,5 +1,8 @@
 2011-12-23  Ulrich Drepper  <drepper@gmail.com>
 
+	* sysdeps/x86_64/dl-machine.h: Fix typos in comments.
+	Patch by Marek Polacek <mpolacek@redhat.com>.
+
 	* bits/byteswap.h: Protect long long constants with __extension__.
 	* sysdeps/i386/bits/byteswap.h: Likewise.
 	* sysdeps/ia64/bits/byteswap.h: Likewise.
