@@ -26,6 +26,10 @@
 	* posix/regex_internal.c (re_string_fetch_byte_case): Remove
 	pure attribute.
 
+2011-12-24  Ulrich Drepper  <drepper@gmail.com>
+
+	* wcsmbs/wchar.h: Add missing __restrict.
+
 2011-12-23  Ulrich Drepper  <drepper@gmail.com>
 
 	[BZ #13532]
