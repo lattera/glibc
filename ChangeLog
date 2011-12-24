@@ -28,6 +28,15 @@
 
 2011-12-23  Ulrich Drepper  <drepper@gmail.com>
 
+	[BZ #13532]
+	* time/Makefile (routines): Add timespec_get.
+	* time/Versions: Export timespec_get from libc for GLIBC_2.16.
+	* time/time.h: Define TIME_UTC and declare timespec_get.  Define
+	timespec for ISO C11.
+	* time/timespec_get.c: New file.
+	* sysdeps/unix/sysv/linux/timespec_get.c: New file.
+	* sysdeps/unix/sysv/linux/x86_64/timespec_get.c: New file.
+
 	[BZ #13531]
 	* malloc/malloc.c: Define alias aligned_alloc for public_mEMALIGn.
 	* stdlib/stdlib.h: Declare aligned_alloc.

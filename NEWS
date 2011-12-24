@@ -9,7 +9,7 @@ Version 2.16
 
 * The following bugs are resolved with this release:
 
-  13526, 13527, 13528, 13529, 13531
+  13526, 13527, 13528, 13529, 13531, 13532
 
 * ISO C11 support:
 
@@ -24,6 +24,7 @@ Version 2.16
     in the standard but it is only a requirement on the caller, not the
     implementation.
 
+  + timespec_get added
 
 Version 2.15
 

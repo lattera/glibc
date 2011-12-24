@@ -107,10 +107,11 @@ typedef __timer_t timer_t;
 #undef	__need_timer_t
 
 
-#if !defined __timespec_defined &&				\
-    ((defined _TIME_H &&					\
-      (defined __USE_POSIX199309 || defined __USE_MISC)) ||	\
-      defined __need_timespec)
+#if (!defined __timespec_defined					\
+     && ((defined _TIME_H						\
+	  && (defined __USE_POSIX199309 || defined __USE_MISC		\
+	      || defined __USE_ISOC11))					\
+	 || defined __need_timespec))
 # define __timespec_defined	1
 
 # include <bits/types.h>	/* This defines __time_t for us.  */
@@ -142,13 +143,13 @@ struct tm
   int tm_yday;			/* Days in year.[0-365]	*/
   int tm_isdst;			/* DST.		[-1/0/1]*/
 
-#ifdef	__USE_BSD
+# ifdef	__USE_BSD
   long int tm_gmtoff;		/* Seconds east of UTC.  */
   __const char *tm_zone;	/* Timezone abbreviation.  */
-#else
+# else
   long int __tm_gmtoff;		/* Seconds east of UTC.  */
   __const char *__tm_zone;	/* Timezone abbreviation.  */
-#endif
+# endif
 };
 __END_NAMESPACE_STD
 #if defined __USE_XOPEN || defined __USE_POSIX || defined __USE_MISC
@@ -156,7 +157,7 @@ __USING_NAMESPACE_STD(tm)
 #endif
 
 
-#ifdef __USE_POSIX199309
+# ifdef __USE_POSIX199309
 /* POSIX.1b structure for timer start values and intervals.  */
 struct itimerspec
   {
@@ -167,14 +168,23 @@ struct itimerspec
 /* We can use a simple forward declaration.  */
 struct sigevent;
 
-#endif	/* POSIX.1b */
+# endif	/* POSIX.1b */
 
-#ifdef __USE_XOPEN2K
-# ifndef __pid_t_defined
+# ifdef __USE_XOPEN2K
+#  ifndef __pid_t_defined
 typedef __pid_t pid_t;
-#  define __pid_t_defined
+#   define __pid_t_defined
+#  endif
 # endif
-#endif
+
+
+# ifdef __USE_ISOC11
+/* Time base values for timespec_get.  */
+enum
+  {
+    TIME_UTC = 1
+  };
+# endif
 
 
 __BEGIN_NAMESPACE_STD
@@ -351,6 +361,13 @@ extern int clock_nanosleep (clockid_t __clock_id, int __flags,
 /* Return clock ID for CPU-time clock.  */
 extern int clock_getcpuclockid (pid_t __pid, clockid_t *__clock_id) __THROW;
 #  endif
+
+
+# ifdef __USE_ISOC11
+/* Set TS to calendar time based in time base BASE.  */
+extern int timespec_get (struct timespec *__ts, int __base)
+     __THROW __nonnull ((1));
+# endif
 
 
 /* Create new per-process timer using CLOCK_ID.  */
