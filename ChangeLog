@@ -28,6 +28,9 @@
 
 2011-12-23  Ulrich Drepper  <drepper@gmail.com>
 
+	* include/features.h: Handle __STDC_VERSION__ >= 201112 and
+	_ISOC11_SOURCE.
+
 	* version.h (RELEASE): Bump for 2.15 release.
 	* include/features.h (__GLIBC_MINOR__): Bump to 15.
 
