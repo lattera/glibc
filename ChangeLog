@@ -28,6 +28,9 @@
 
 2011-12-23  Ulrich Drepper  <drepper@gmail.com>
 
+	[BZ #13529]
+	* assert/assert.h (static_assert): Define.
+
 	* version.h: Update for 2.15 development version.
 
 	[BZ #13526]
