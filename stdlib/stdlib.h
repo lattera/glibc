@@ -509,6 +509,11 @@ extern int posix_memalign (void **__memptr, size_t __alignment, size_t __size)
      __THROW __nonnull ((1)) __wur;
 #endif
 
+#ifdef __USE_ISOC11
+/* ISO C variant of aligned allocation.  */
+extern int aligned_alloc (size_t __alignment, size_t __size) __THROW __wur;
+#endif
+
 __BEGIN_NAMESPACE_STD
 /* Abort execution and generate a core-dump.  */
 extern void abort (void) __THROW __attribute__ ((__noreturn__));

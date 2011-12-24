@@ -28,11 +28,17 @@
 
 2011-12-23  Ulrich Drepper  <drepper@gmail.com>
 
+	[BZ #13531]
+	* malloc/malloc.c: Define alias aligned_alloc for public_mEMALIGn.
+	* stdlib/stdlib.h: Declare aligned_alloc.
+	* Versions.def: Add GLIBC_2.16 for libc.
+	* malloc/Versions: Export aligned_alloc from libc for GLIBC_2.16.
+
 	[BZ 13527]
 	* stdlib/stdlib.h: Make at_quick_exit and quick_exit available for
 	ISO C11.
 
-	* include/features.h: Define __USE_ISOCXX11 when compiling ISo C++11
+	* include/features.h: Define __USE_ISOCXX11 when compiling ISO C++11
 	code.
 
 	[BZ #13528]
