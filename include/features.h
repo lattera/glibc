@@ -194,6 +194,8 @@
 /* This is to enable the ISO C11 extension.  */
 #if (defined _ISOC11_SOURCE \
      || (defined __STDC_VERSION__ && __STDC_VERSION__ >= 201112L))
+# define __USE_ISOC11	1
+#endif
 
 /* This is to enable the ISO C99 extension.  */
 #if (defined _ISOC99_SOURCE || defined _ISOC11_SOURCE \
