@@ -28,6 +28,9 @@
 
 2011-12-23  Ulrich Drepper  <drepper@gmail.com>
 
+	* include/features.h: Define __USE_ISOCXX11 when compiling ISo C++11
+	code.
+
 	[BZ #13528]
 	* libio/stdio.h: Do not declare gets for ISO C11 and _GNU_SOURCE.
 

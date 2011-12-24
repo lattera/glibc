@@ -100,6 +100,7 @@
 #undef	__USE_ISOC11
 #undef	__USE_ISOC99
 #undef	__USE_ISOC95
+#undef	__USE_ISOCXX11
 #undef	__USE_POSIX
 #undef	__USE_POSIX2
 #undef	__USE_POSIX199309
@@ -204,6 +205,15 @@
 #if (defined _ISOC99_SOURCE || defined _ISOC11_SOURCE \
      || (defined __STDC_VERSION__ && __STDC_VERSION__ >= 199409L))
 # define __USE_ISOC95	1
+#endif
+
+/* This is to enable compatibility for ISO C++11.
+
+   So far g++ does not provide a macro.  Check the temporary macro for
+   now, too.  */
+#if ((defined __cplusplus && __cplusplus >= 201103L)			      \
+     || defined __GXX_EXPERIMENTAL_CXX0X__)
+# define __USE_ISOCXX11	1
 #endif
 
 /* If none of the ANSI/POSIX macros are defined, use POSIX.1 and POSIX.2
