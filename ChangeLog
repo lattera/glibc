@@ -56,7 +56,7 @@
 	[BZ #13529]
 	* assert/assert.h (static_assert): Define.
 
-	* version.h: Update for 2.15 development version.
+	* version.h: Update for 2.16 development version.
 
 	[BZ #13526]
 	* include/features.h: Handle __STDC_VERSION__ >= 201112 and
