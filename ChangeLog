@@ -28,6 +28,10 @@
 
 2011-12-23  Ulrich Drepper  <drepper@gmail.com>
 
+	[BZ 13527]
+	* stdlib/stdlib.h: Make at_quick_exit and quick_exit available for
+	ISO C11.
+
 	* include/features.h: Define __USE_ISOCXX11 when compiling ISo C++11
 	code.
 
