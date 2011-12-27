@@ -638,7 +638,7 @@ extern char *fgets (char *__restrict __s, int __n, FILE *__restrict __stream)
 
    This function is a possible cancellation point and therefore not
    marked with __THROW.  */
-extern char *gets (char *__s) __wur;
+extern char *gets (char *__s) __wur __attribute_deprecated__;
 #endif
 __END_NAMESPACE_STD
 
