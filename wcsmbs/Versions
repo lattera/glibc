@@ -28,4 +28,7 @@ libc {
     __isoc99_wscanf; __isoc99_vwscanf; __isoc99_fwscanf; __isoc99_vfwscanf;
     __isoc99_swscanf; __isoc99_vswscanf;
   }
+  GLIBC_2.16 {
+    mbrtoc16; c16rtomb; mbrtoc32; c32rtomb;
+  }
 }

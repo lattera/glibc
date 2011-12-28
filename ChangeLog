@@ -28,6 +28,24 @@
 
 2011-12-24  Ulrich Drepper  <drepper@gmail.com>
 
+	* iconv/gconv_simple.c: Add ASCII<->UTF-16 transformations.
+	* iconv/gconv_builtin.h: Add entries for internal ASCII<->UTF-16
+	transformations.
+	* iconv/gconv_int.h: Likewise.
+	* wcsmbs/Makefile (routines): Add mbrtoc16 and c16rtomb.
+	* wcsmbs/Versions: Export mbrtoc16, c16rtomb, mbrtoc32, c32rtomb
+	from libc for GLIBC_2.16.
+	* wcsmbs/mbrtowc.c: Define mbrtoc32 alias.
+	* wcsmbs/wcrtomb.c: Define c32rtomb alias.
+	* wcsmbs/uchar.h: Really define mbstate_t.
+	* wcsmbs/wchar.h: Allow defining mbstate_t in uchar.h.
+	* wcsmbs/c16rtomb.c: New file.
+	* wcsmbs/mbrtoc16.c: New file.
+	* wcsmbs/wcsmbsload.c: Add static definitions for c16 conversions
+	for C/POSIX locale.
+	(__wcsmbs_load_conv): Do not fill in c16 routines yet.
+	* wcsmbs/wcsmbsload.h (gconv_fcts): Add entries for c16 routines.
+
 	* wcsmbs/wchar.h: Add missing __restrict.
 
 2011-12-23  Ulrich Drepper  <drepper@gmail.com>

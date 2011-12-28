@@ -1,4 +1,4 @@
-/* Copyright (C) 1998-2002, 2010 Free Software Foundation, Inc.
+/* Copyright (C) 1998-2002, 2010, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -32,6 +32,11 @@ struct gconv_fcts
     size_t towc_nsteps;
     struct __gconv_step *tomb;
     size_t tomb_nsteps;
+
+    struct __gconv_step *toc16;
+    size_t toc16_nsteps;
+    struct __gconv_step *fromc16;
+    size_t fromc16_nsteps;
   };
 
 /* Set of currently active conversion functions.  */

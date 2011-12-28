@@ -77,8 +77,8 @@ __END_NAMESPACE_STD
 # endif
 #endif
 
-#if (defined _WCHAR_H || defined __need_mbstate_t) && !defined __mbstate_t_defined
-# define __mbstate_t_defined	1
+#if (defined _WCHAR_H || defined __need_mbstate_t) && !defined ____mbstate_t_defined
+# define ____mbstate_t_defined	1
 /* Conversion state information.  */
 typedef struct
 {
@@ -101,10 +101,14 @@ typedef struct
    defined.  */
 #ifdef _WCHAR_H
 
+# ifndef __mbstate_t_defined
 __BEGIN_NAMESPACE_C99
 /* Public type.  */
 typedef __mbstate_t mbstate_t;
 __END_NAMESPACE_C99
+#  define __mbstate_t_defined 1
+# endif
+
 #ifdef __USE_GNU
 __USING_NAMESPACE_C99(mbstate_t)
 #endif
