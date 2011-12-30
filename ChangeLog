@@ -1,3 +1,8 @@
+2011-12-30  Jakub Jelinek  <jakub@redhat.com>
+
+	* posix/regex_internal.c (re_string_fetch_byte_case): Remove
+	pure attribute.
+
 2011-12-23  Ulrich Drepper  <drepper@gmail.com>
 
 	* version.h (RELEASE): Bump for 2.15 release.
