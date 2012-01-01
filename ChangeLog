@@ -2,15 +2,19 @@
 
 	* posix/getconf.c: Update copyright year.
 	* nss/getent.c: Likewise.
+	* nss/makedb.c: Likewise.
 	* iconv/iconvconfig.c: Likewise.
 	* iconv/iconv_prog.c: Likewise.
 	* elf/ldconfig.c: Likewise.
+	* elf/pldd.c: Likewise.
+	* elf/sotruss.ksh: Likewise.
 	* catgets/gencat.c: Likewise.
 	* csu/version.c: Likewise.
 	* elf/ldd.bash.in: Likewise.
 	* elf/sprof.c (print_version): Likewise.
 	* locale/programs/locale.c: Likewise.
 	* locale/programs/localedef.c: Likewise.
+	* login/programs/pt_chown.c: Likewise.
 	* nscd/nscd.c (print_version): Likewise.
 	* debug/xtrace.sh: Likewise.
 	* malloc/memusage.sh: Likewise.

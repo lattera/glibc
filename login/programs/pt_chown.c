@@ -1,5 +1,5 @@
 /* pt_chmod - helper program for `grantpt'.
-   Copyright (C) 1998, 1999, 2009 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999, 2009, 2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by C. Scott Ananian <cananian@alumni.princeton.edu>, 1998.
 
@@ -64,7 +64,7 @@ print_version (FILE *stream, struct argp_state *state)
 Copyright (C) %s Free Software Foundation, Inc.\n\
 This is free software; see the source for copying conditions.  There is NO\n\
 warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\
-"), "2011");
+"), "2012");
 }
 
 static char *
