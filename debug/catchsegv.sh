@@ -1,5 +1,5 @@
 #! /bin/sh
-# Copyright (C) 1998,1999,2001,2003,2004,2006,2007,2008,2009,2010,2011
+# Copyright (C) 1998,1999,2001,2003,2004,2006,2007,2008,2009,2010,2011,2012
 # Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 # Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
@@ -40,7 +40,7 @@ if test $# -eq 0; then
       ;;
     --v | --ve | --ver | --vers | --versi | --versio | --version)
       echo 'catchsegv (GNU libc) @VERSION@'
-      echo 'Copyright (C) 2011 Free Software Foundation, Inc.
+      echo 'Copyright (C) 2012 Free Software Foundation, Inc.
 This is free software; see the source for copying conditions.  There is NO
 warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 Written by Ulrich Drepper.'

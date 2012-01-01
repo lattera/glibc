@@ -1,4 +1,4 @@
-/* Copyright (C) 1992-2008, 2009, 2010, 2011 Free Software Foundation, Inc.
+/* Copyright (C) 1992-2011, 2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -26,7 +26,7 @@ static const char __libc_version[] = VERSION;
 
 static const char banner[] =
 "GNU C Library "RELEASE" release version "VERSION", by Roland McGrath et al.\n\
-Copyright (C) 2011 Free Software Foundation, Inc.\n\
+Copyright (C) 2012 Free Software Foundation, Inc.\n\
 This is free software; see the source for copying conditions.\n\
 There is NO warranty; not even for MERCHANTABILITY or FITNESS FOR A\n\
 PARTICULAR PURPOSE.\n\
