@@ -1,3 +1,9 @@
+2012-08-12  Mike Frysinger  <vapier@gentoo.org>
+
+	* sysdeps/arm/dl-machine.h (elf_machine_rel) [R_ARM_ABS32]: Declare
+	a new unaligned struct.  Cast reloc_addr to that when updating the
+	value it points to.
+
 2012-08-09  Roland McGrath  <roland@hack.frob.com>
 
 	* sysdeps/arm/arm-features.h: Document ARM_ASSUME_NO_IWMMXT.

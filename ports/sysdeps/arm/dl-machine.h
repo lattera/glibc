@@ -413,6 +413,10 @@ elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
 	  break;
 	case R_ARM_ABS32:
 	  {
+	    struct unaligned
+	      {
+		Elf32_Addr x;
+	      } __attribute__((packed, may_alias));
 # ifndef RTLD_BOOTSTRAP
 	   /* This is defined in rtld.c, but nowhere in the static
 	      libc.a; make the reference weak so static programs can
@@ -431,7 +435,8 @@ elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
 		 used while loading those libraries.  */
 	      value -= map->l_addr + refsym->st_value;
 # endif
-	    *reloc_addr += value;
+	    /* Support relocations on mis-aligned offsets.  */
+	    ((struct unaligned *) reloc_addr)->x += value;
 	    break;
 	  }
 	case R_ARM_TLS_DESC:
