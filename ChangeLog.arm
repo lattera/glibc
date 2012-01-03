@@ -1,5 +1,12 @@
 2012-01-03  Mike Frysinger  <vapier@gentoo.org>
 
+	[BZ #12354]
+	* sysdeps/unix/sysv/linux/arm/sigrestorer.S (__default_sa_restorer):
+	Add END(__default_sa_restorer).
+	(__default_rt_sa_restorer): Add END(__default_rt_sa_restorer).
+
+2012-01-03  Mike Frysinger  <vapier@gentoo.org>
+
 	* sysdeps/unix/sysv/linux/arm/nptl/sysdep-cancel.h (PSEUDO): Change
 	.type/.globl/label to ENTRY().  Change .size to END().
 

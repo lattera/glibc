@@ -1,4 +1,4 @@
-/* Copyright (C) 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1999, 2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -24,10 +24,12 @@
 
 ENTRY(__default_sa_restorer)
 	swi	SYS_ify(sigreturn)
+END(__default_sa_restorer)
 
 #ifdef __NR_rt_sigreturn
 
 ENTRY(__default_rt_sa_restorer)
 	swi	SYS_ify(rt_sigreturn)
+END(__default_rt_sa_restorer)
 
 #endif
