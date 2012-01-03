@@ -1,4 +1,4 @@
-/* Copyright (C) 2011 Free Software Foundation, Inc.
+/* Copyright (C) 2011, 2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 2011.
 
@@ -31,7 +31,7 @@
 # define EILSEQ EINVAL
 #endif
 
-#if __STDC__ >= 20100L
+#if __STDC__ >= 201000L
 # define u(c) U##c
 #else
 # define u(c) L##c
