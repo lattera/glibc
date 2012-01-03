@@ -1,3 +1,7 @@
+2012-01-03  Ulrich Drepper  <drepper@gmail.com>
+
+	* posix/regcomp.c (init_word_char): Optimize a bit for sane encodings.
+
 2012-01-01  Ulrich Drepper  <drepper@gmail.com>
 
 	* posix/getconf.c: Update copyright year.
