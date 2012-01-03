@@ -1,4 +1,5 @@
-/* Copyright (C) 2003, 2004, 2005 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2004, 2005, 2007, 2008, 2012
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -28,12 +29,10 @@
 # define PSEUDO(name, syscall_name, args)				\
   .section ".text";							\
     PSEUDO_PROLOGUE;							\
-  .type __##syscall_name##_nocancel,%function;				\
-  .globl __##syscall_name##_nocancel;					\
-  __##syscall_name##_nocancel:						\
+  ENTRY (__##syscall_name##_nocancel);					\
     DO_CALL (syscall_name, args);					\
     PSEUDO_RET;								\
-  .size __##syscall_name##_nocancel,.-__##syscall_name##_nocancel;	\
+  END (__##syscall_name##_nocancel);					\
   ENTRY (name);								\
     SINGLE_THREAD_P;							\
     DOARGS_##args;							\
