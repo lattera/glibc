@@ -3124,6 +3124,8 @@ public_mEMALIGn(size_t alignment, size_t bytes)
 	 ar_ptr == arena_for_chunk(mem2chunk(p)));
   return p;
 }
+/* For ISO C11.  */
+weak_alias (public_mEMALIGn, aligned_alloc)
 libc_hidden_def (public_mEMALIGn)
 
 void*

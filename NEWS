@@ -5,6 +5,27 @@ See the end for copying conditions.
 Please send GNU C library bug reports via <http://sources.redhat.com/bugzilla/>
 using `glibc' in the "product" field.
 
+Version 2.16
+
+* The following bugs are resolved with this release:
+
+  13526, 13527, 13528, 13529, 13531, 13532
+
+* ISO C11 support:
+
+  + define static_assert
+
+  + do not declare gets
+
+  + declare at_quick_exit and quick_exit also for ISO C11
+
+  + aligned_alloc.  NB: The code is deliberately allows the size parameter
+    to not be a multiple of the alignment.  This is a moronic requirement
+    in the standard but it is only a requirement on the caller, not the
+    implementation.
+
+  + timespec_get added
+
 Version 2.15
 
 * The following bugs are resolved with this release:

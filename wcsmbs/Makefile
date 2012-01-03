@@ -22,7 +22,7 @@
 #
 subdir	:= wcsmbs
 
-headers	:= wchar.h bits/wchar.h bits/wchar2.h bits/wchar-ldbl.h
+headers	:= wchar.h bits/wchar.h bits/wchar2.h bits/wchar-ldbl.h uchar.h
 distribute := wcwidth.h wcsmbsload.h
 
 routines := wcscat wcschr wcscmp wcscpy wcscspn wcsdup wcslen wcsncat \
@@ -40,7 +40,8 @@ routines := wcscat wcschr wcscmp wcscpy wcscspn wcsdup wcslen wcsncat \
 	    wcscasecmp wcsncase wcscasecmp_l wcsncase_l \
 	    wcsmbsload mbsrtowcs_l \
 	    isoc99_wscanf isoc99_vwscanf isoc99_fwscanf isoc99_vfwscanf \
-	    isoc99_swscanf isoc99_vswscanf
+	    isoc99_swscanf isoc99_vswscanf \
+	    mbrtoc16 c16rtomb
 
 strop-tests :=  wcscmp wmemcmp wcslen wcschr wcsrchr wcscpy
 tests := tst-wcstof wcsmbs-tst1 tst-wcsnlen tst-btowc tst-mbrtowc \

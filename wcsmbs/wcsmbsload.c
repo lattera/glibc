@@ -1,4 +1,4 @@
-/* Copyright (C) 1998-2002,2004,2005,2008,2010 Free Software Foundation, Inc.
+/* Copyright (C) 1998-2002,2004,2005,2008,2010,2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -67,6 +67,44 @@ static const struct __gconv_step to_mb =
   .__data = NULL
 };
 
+static const struct __gconv_step to_c16 =
+{
+  .__shlib_handle = NULL,
+  .__modname = NULL,
+  .__counter = INT_MAX,
+  .__from_name = (char *) "ANSI_X3.4-1968//TRANSLIT",
+  .__to_name = (char *) "UTF-16//",
+  .__fct = __gconv_transform_ascii_utf16,
+  .__btowc_fct = NULL,
+  .__init_fct = NULL,
+  .__end_fct = NULL,
+  .__min_needed_from = 1,
+  .__max_needed_from = 1,
+  .__min_needed_to = 4,
+  .__max_needed_to = 4,
+  .__stateful = 0,
+  .__data = NULL
+};
+
+static const struct __gconv_step from_c16 =
+{
+  .__shlib_handle = NULL,
+  .__modname = NULL,
+  .__counter = INT_MAX,
+  .__from_name = (char *) "UTF-16//",
+  .__to_name = (char *) "ANSI_X3.4-1968//TRANSLIT",
+  .__fct = __gconv_transform_utf16_ascii,
+  .__btowc_fct = NULL,
+  .__init_fct = NULL,
+  .__end_fct = NULL,
+  .__min_needed_from = 4,
+  .__max_needed_from = 4,
+  .__min_needed_to = 1,
+  .__max_needed_to = 1,
+  .__stateful = 0,
+  .__data = NULL
+};
+
 
 /* For the default locale we only have to handle ANSI_X3.4-1968.  */
 const struct gconv_fcts __wcsmbs_gconv_fcts_c =
@@ -74,7 +112,12 @@ const struct gconv_fcts __wcsmbs_gconv_fcts_c =
   .towc = (struct __gconv_step *) &to_wc,
   .towc_nsteps = 1,
   .tomb = (struct __gconv_step *) &to_mb,
-  .tomb_nsteps = 1
+  .tomb_nsteps = 1,
+
+  .toc16 = (struct __gconv_step *) &to_c16,
+  .toc16_nsteps = 1,
+  .fromc16 = (struct __gconv_step *) &from_c16,
+  .fromc16_nsteps = 1,
 };
 
 
@@ -191,6 +234,12 @@ __wcsmbs_load_conv (struct __locale_data *new_category)
 					   &new_fcts->tomb_nsteps)
 			: NULL);
 
+      // XXX
+      new_fcts->toc16 = (struct __gconv_step *) &to_c16;
+      new_fcts->toc16_nsteps = 1;
+      new_fcts->fromc16 = (struct __gconv_step *) &from_c16;
+      new_fcts->fromc16_nsteps = 1;
+
       /* If any of the conversion functions is not available we don't
 	 use any since this would mean we cannot convert back and
 	 forth.*/
@@ -242,14 +291,36 @@ internal_function
 __wcsmbs_named_conv (struct gconv_fcts *copy, const char *name)
 {
   copy->towc = __wcsmbs_getfct ("INTERNAL", name, &copy->towc_nsteps);
-  if (copy->towc != NULL)
+  if (copy->towc == NULL)
+    return 1;
+
+  copy->tomb = __wcsmbs_getfct (name, "INTERNAL", &copy->tomb_nsteps);
+  if (copy->tomb == NULL)
+    goto out_mb;
+
+#if 0
+  copy->fromc16 = __wcsmbs_getfct (name, "UTF-16//", &copy->fromc16_nsteps);
+  if (copy->fromc16 == NULL)
+    goto out_fromc16;
+
+  copy->toc16 = __wcsmbs_getfct ("UTF-16//", name, &copy->toc16_nsteps);
+  if (copy->toc16 == NULL)
+#else
+  if (0)
+#endif
     {
-      copy->tomb = __wcsmbs_getfct (name, "INTERNAL", &copy->tomb_nsteps);
-      if (copy->tomb == NULL)
-	__gconv_close_transform (copy->towc, copy->towc_nsteps);
+#if 0
+      __gconv_close_transform (copy->fromc16, copy->fromc16_nsteps);
+    out_fromc16:
+      __gconv_close_transform (copy->tomb, copy->tomb_nsteps);
+#endif
+    out_mb:
+      __gconv_close_transform (copy->towc, copy->towc_nsteps);
+    out_wc:
+      return 1;
     }
 
-  return copy->towc == NULL || copy->tomb == NULL ? 1 : 0;
+  return 0;
 }
 
 void internal_function
@@ -264,6 +335,11 @@ _nl_cleanup_ctype (struct __locale_data *locale)
       /* Free the old conversions.  */
       __gconv_close_transform (data->tomb, data->tomb_nsteps);
       __gconv_close_transform (data->towc, data->towc_nsteps);
+#if 0
+      // XXX
+      __gconv_close_transform (data->fromc16, data->fromc16_nsteps);
+      __gconv_close_transform (data->toc16, data->toc16c_nsteps);
+#endif
       free ((char *) data);
     }
 }

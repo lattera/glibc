@@ -628,12 +628,18 @@ __BEGIN_NAMESPACE_STD
 extern char *fgets (char *__restrict __s, int __n, FILE *__restrict __stream)
      __wur;
 
+#ifndef __USE_ISOC11
 /* Get a newline-terminated string from stdin, removing the newline.
    DO NOT USE THIS FUNCTION!!  There is no limit on how much it will read.
 
+   The function has been officially removed in ISO C11.  This opportunity
+   is used to also remove it from the GNU feature list.  It is now only
+   available when explicitly using an old ISO C, Unix, or POSIX standard.
+
    This function is a possible cancellation point and therefore not
    marked with __THROW.  */
-extern char *gets (char *__s) __wur;
+extern char *gets (char *__s) __wur __attribute_deprecated__;
+#endif
 __END_NAMESPACE_STD
 
 #ifdef __USE_GNU

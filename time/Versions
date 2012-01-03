@@ -62,4 +62,7 @@ libc {
   GLIBC_2.3.2 {
     strptime_l;
   }
+  GLIBC_2.16 {
+    timespec_get;
+  }
 }

@@ -30,7 +30,63 @@
 	* posix/regex_internal.c (re_string_fetch_byte_case): Remove
 	pure attribute.
 
+2011-12-24  Ulrich Drepper  <drepper@gmail.com>
+
+	* iconv/gconv_simple.c: Add ASCII<->UTF-16 transformations.
+	* iconv/gconv_builtin.h: Add entries for internal ASCII<->UTF-16
+	transformations.
+	* iconv/gconv_int.h: Likewise.
+	* wcsmbs/Makefile (routines): Add mbrtoc16 and c16rtomb.
+	* wcsmbs/Versions: Export mbrtoc16, c16rtomb, mbrtoc32, c32rtomb
+	from libc for GLIBC_2.16.
+	* wcsmbs/mbrtowc.c: Define mbrtoc32 alias.
+	* wcsmbs/wcrtomb.c: Define c32rtomb alias.
+	* wcsmbs/uchar.h: Really define mbstate_t.
+	* wcsmbs/wchar.h: Allow defining mbstate_t in uchar.h.
+	* wcsmbs/c16rtomb.c: New file.
+	* wcsmbs/mbrtoc16.c: New file.
+	* wcsmbs/wcsmbsload.c: Add static definitions for c16 conversions
+	for C/POSIX locale.
+	(__wcsmbs_load_conv): Do not fill in c16 routines yet.
+	* wcsmbs/wcsmbsload.h (gconv_fcts): Add entries for c16 routines.
+
+	* wcsmbs/wchar.h: Add missing __restrict.
+
 2011-12-23  Ulrich Drepper  <drepper@gmail.com>
+
+	[BZ #13532]
+	* time/Makefile (routines): Add timespec_get.
+	* time/Versions: Export timespec_get from libc for GLIBC_2.16.
+	* time/time.h: Define TIME_UTC and declare timespec_get.  Define
+	timespec for ISO C11.
+	* time/timespec_get.c: New file.
+	* sysdeps/unix/sysv/linux/timespec_get.c: New file.
+	* sysdeps/unix/sysv/linux/x86_64/timespec_get.c: New file.
+
+	[BZ #13531]
+	* malloc/malloc.c: Define alias aligned_alloc for public_mEMALIGn.
+	* stdlib/stdlib.h: Declare aligned_alloc.
+	* Versions.def: Add GLIBC_2.16 for libc.
+	* malloc/Versions: Export aligned_alloc from libc for GLIBC_2.16.
+
+	[BZ 13527]
+	* stdlib/stdlib.h: Make at_quick_exit and quick_exit available for
+	ISO C11.
+
+	* include/features.h: Define __USE_ISOCXX11 when compiling ISO C++11
+	code.
+
+	[BZ #13528]
+	* libio/stdio.h: Do not declare gets for ISO C11 and _GNU_SOURCE.
+
+	[BZ #13529]
+	* assert/assert.h (static_assert): Define.
+
+	* version.h: Update for 2.16 development version.
+
+	[BZ #13526]
+	* include/features.h: Handle __STDC_VERSION__ >= 201112 and
+	_ISOC11_SOURCE.
 
 	* version.h (RELEASE): Bump for 2.15 release.
 	* include/features.h (__GLIBC_MINOR__): Bump to 15.

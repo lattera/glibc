@@ -1,7 +1,6 @@
-/* Copyright (C) 1996, 1997, 1998, 1999, 2000, 2002, 2004, 2005, 2011
-   Free Software Foundation, Inc.
+/* Copyright (C) 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@gnu.org>, 1996.
+   Contributed by Ulrich Drepper <drepper@gnu.org>, 2011.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -22,7 +21,7 @@
 #include <dlfcn.h>
 #include <errno.h>
 #include <gconv.h>
-#include <wchar.h>
+#include <uchar.h>
 #include <wcsmbsload.h>
 
 #include <sysdep.h>
@@ -31,19 +30,26 @@
 # define EILSEQ EINVAL
 #endif
 
+#if __STDC__ >= 20100L
+# define U(c) U##c
+#else
+# define U(c) L##c
+#endif
+
+
 /* This is the private state used if PS is NULL.  */
 static mbstate_t state;
 
 size_t
-__mbrtowc (wchar_t *pwc, const char *s, size_t n, mbstate_t *ps)
+mbrtoc16 (char16_t *pc16, const char *s, size_t n, mbstate_t *ps)
 {
-  wchar_t buf[1];
+  char16_t buf[1];
   struct __gconv_step_data data;
   int status;
   size_t result;
   size_t dummy;
   const unsigned char *inbuf, *endbuf;
-  unsigned char *outbuf = (unsigned char *) (pwc ?: buf);
+  unsigned char *outbuf = (unsigned char *) (pc16 ?: buf);
   const struct gconv_fcts *fcts;
 
   /* Set information for this step.  */
@@ -64,7 +70,7 @@ __mbrtowc (wchar_t *pwc, const char *s, size_t n, mbstate_t *ps)
 
   /* Tell where we want the result.  */
   data.__outbuf = outbuf;
-  data.__outbufend = outbuf + sizeof (wchar_t);
+  data.__outbufend = outbuf + sizeof (char16_t);
 
   /* Get the conversion functions.  */
   fcts = get_gconv_fcts (_NL_CURRENT_DATA (LC_CTYPE));
@@ -74,12 +80,12 @@ __mbrtowc (wchar_t *pwc, const char *s, size_t n, mbstate_t *ps)
   endbuf = inbuf + n;
   if (__builtin_expect (endbuf < inbuf, 0))
     endbuf = (const unsigned char *) ~(uintptr_t) 0;
-  __gconv_fct fct = fcts->towc->__fct;
+  __gconv_fct fct = fcts->toc16->__fct;
 #ifdef PTR_DEMANGLE
-  if (fcts->towc->__shlib_handle != NULL)
+  if (fcts->toc16->__shlib_handle != NULL)
     PTR_DEMANGLE (fct);
 #endif
-  status = DL_CALL_FCT (fct, (fcts->towc, &data, &inbuf, endbuf,
+  status = DL_CALL_FCT (fct, (fcts->toc16, &data, &inbuf, endbuf,
 			      NULL, &dummy, 0, 1));
 
   /* There must not be any problems with the conversion but illegal input
@@ -95,7 +101,7 @@ __mbrtowc (wchar_t *pwc, const char *s, size_t n, mbstate_t *ps)
       || status == __GCONV_FULL_OUTPUT)
     {
       if (data.__outbuf != (unsigned char *) outbuf
-	  && *(wchar_t *) outbuf == L'\0')
+	  && *(char16_t *) outbuf == U('\0'))
 	{
 	  /* The converted character is the NUL character.  */
 	  assert (__mbsinit (data.__statep));
@@ -114,11 +120,3 @@ __mbrtowc (wchar_t *pwc, const char *s, size_t n, mbstate_t *ps)
 
   return result;
 }
-libc_hidden_def (__mbrtowc)
-weak_alias (__mbrtowc, mbrtowc)
-libc_hidden_weak (mbrtowc)
-
-/* There should be no difference between the UTF-32 handling required
-   by mbrtoc32 and the wchar_t handling which has long since been
-   implemented in mbrtowc.  */
-weak_alias (__mbrtowc, mbrtoc32)

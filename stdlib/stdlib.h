@@ -509,6 +509,12 @@ extern int posix_memalign (void **__memptr, size_t __alignment, size_t __size)
      __THROW __nonnull ((1)) __wur;
 #endif
 
+#ifdef __USE_ISOC11
+/* ISO C variant of aligned allocation.  */
+extern void *aligned_alloc (size_t __alignment, size_t __size)
+     __THROW __wur __attribute__ ((__malloc__, __alloc_size__ (2)));
+#endif
+
 __BEGIN_NAMESPACE_STD
 /* Abort execution and generate a core-dump.  */
 extern void abort (void) __THROW __attribute__ ((__noreturn__));
@@ -517,9 +523,7 @@ extern void abort (void) __THROW __attribute__ ((__noreturn__));
 /* Register a function to be called when `exit' is called.  */
 extern int atexit (void (*__func) (void)) __THROW __nonnull ((1));
 
-#ifdef __USE_GNU
-// XXX There should be a macro to signal with C++ revision is used.
-// XXX This function is in the C++1x revision.
+#if defined __USE_ISOC11 || defined __USE_ISOCXX11
 /* Register a function to be called when `quick_exit' is called.  */
 # ifdef __cplusplus
 extern "C++" int at_quick_exit (void (*__func) (void))
@@ -543,9 +547,7 @@ __BEGIN_NAMESPACE_STD
    perform stdio cleanup, and terminate program execution with STATUS.  */
 extern void exit (int __status) __THROW __attribute__ ((__noreturn__));
 
-#ifdef __USE_GNU
-// XXX There should be a macro to signal with C++ revision is used.
-// XXX This function is in the C++1x revision.
+#if defined __USE_ISOC11 || defined __USE_ISOCXX11
 /* Call all functions registered with `at_quick_exit' in the reverse
    of the order in which they were registered and terminate program
    execution with STATUS.  */

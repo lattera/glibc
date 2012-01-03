@@ -77,8 +77,8 @@ __END_NAMESPACE_STD
 # endif
 #endif
 
-#if (defined _WCHAR_H || defined __need_mbstate_t) && !defined __mbstate_t_defined
-# define __mbstate_t_defined	1
+#if (defined _WCHAR_H || defined __need_mbstate_t) && !defined ____mbstate_t_defined
+# define ____mbstate_t_defined	1
 /* Conversion state information.  */
 typedef struct
 {
@@ -101,10 +101,14 @@ typedef struct
    defined.  */
 #ifdef _WCHAR_H
 
+# ifndef __mbstate_t_defined
 __BEGIN_NAMESPACE_C99
 /* Public type.  */
 typedef __mbstate_t mbstate_t;
 __END_NAMESPACE_C99
+#  define __mbstate_t_defined 1
+# endif
+
 #ifdef __USE_GNU
 __USING_NAMESPACE_C99(mbstate_t)
 #endif
@@ -361,7 +365,7 @@ extern int mbsinit (__const mbstate_t *__ps) __THROW __attribute_pure__;
    to by S to PWC.  */
 extern size_t mbrtowc (wchar_t *__restrict __pwc,
 		       __const char *__restrict __s, size_t __n,
-		       mbstate_t *__p) __THROW;
+		       mbstate_t *__restrict __p) __THROW;
 
 /* Write multibyte representation of wide character WC to S.  */
 extern size_t wcrtomb (char *__restrict __s, wchar_t __wc,
