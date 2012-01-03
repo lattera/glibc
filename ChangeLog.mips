@@ -1,3 +1,8 @@
+2012-01-03  Tom de Vries  <tom@codesourcery.com>
+
+	* sysdeps/mips/backtrace.c: New file, including ia64 backtrace.c.
+	* sysdeps/mips/Makefile: Compile backtrace.c with -funwind-tables.
+
 2011-12-22  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/mips/Makefile (no_syscall_list_h)

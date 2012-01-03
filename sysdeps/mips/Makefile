@@ -11,4 +11,8 @@ ifeq ($(subdir),rt)
 librt-sysdep_routines += rt-sysdep
 endif
 
+ifeq ($(subdir),debug)
+CFLAGS-backtrace.c += -funwind-tables
+endif
+
 ASFLAGS-.os += $(pic-ccflag)
