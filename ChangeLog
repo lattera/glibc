@@ -1,5 +1,8 @@
 2012-01-03  Ulrich Drepper  <drepper@gmail.com>
 
+	* iconv/loop.c (single loop): Fix assertion in storing of
+	remaining bytes.
+
 	* posix/regcomp.c (init_word_char): Optimize a bit for sane encodings.
 
 2012-01-01  Ulrich Drepper  <drepper@gmail.com>
