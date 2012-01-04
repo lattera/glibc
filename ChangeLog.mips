@@ -1,3 +1,8 @@
+2012-01-04  Tom de Vries  <tom@codesourcery.com>
+
+	* sysdeps/mips/Makefile: Compile initfini.c, pt-initfini.c with
+	-fno-unwind-tables.
+
 2012-01-03  Tom de Vries  <tom@codesourcery.com>
 
 	* sysdeps/mips/backtrace.c: New file, including ia64 backtrace.c.

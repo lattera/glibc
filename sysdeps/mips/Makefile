@@ -15,4 +15,12 @@ ifeq ($(subdir),debug)
 CFLAGS-backtrace.c += -funwind-tables
 endif
 
+ifeq ($(subdir),csu)
+CFLAGS-initfini.s += -fno-unwind-tables
+endif
+
+ifeq ($(subdir),nptl)
+CFLAGS-pt-initfini.s += -fno-unwind-tables
+endif
+
 ASFLAGS-.os += $(pic-ccflag)
