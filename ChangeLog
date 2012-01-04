@@ -1,3 +1,7 @@
+2013-04-16  David Holsgrove  <david.holsgrove@xilinx.com>
+
+	* elf/elf.h: Add EM_MICROBLAZE and MicroBlaze relocations.
+
 2013-04-15  Thomas Schwinge  <thomas@codesourcery.com>
 
 	* stdio-common/tstdiomisc.c: Fix coding-style violation.
