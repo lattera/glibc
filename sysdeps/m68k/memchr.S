@@ -1,7 +1,7 @@
 /* memchr (str, ch, n) -- Return pointer to first occurrence of CH in the
    first N bytes of STR.
    For Motorola 68000.
-   Copyright (C) 1999, 2000, 2003 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2000, 2003, 2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Andreas Schwab <schwab@gnu.org>.
 
@@ -28,10 +28,20 @@ ENTRY(__memchr)
 	/* Save the callee-saved registers we use.  */
 #ifdef __mcoldfire__
 	movel	R(d2),MEM_PREDEC(sp)
+	cfi_adjust_cfa_offset (4)
 	movel	R(d3),MEM_PREDEC(sp)
+	cfi_adjust_cfa_offset (4)
 	movel	R(d4),MEM_PREDEC(sp)
+	cfi_adjust_cfa_offset (4)
+	cfi_rel_offset (R(d2), 8)
+	cfi_rel_offset (R(d3), 4)
+	cfi_rel_offset (R(d4), 0)
 #else
 	moveml	R(d2)-R(d4),MEM_PREDEC(sp)
+	cfi_adjust_cfa_offset (3*4)
+	cfi_rel_offset (R(d2), 0)
+	cfi_rel_offset (R(d3), 4)
+	cfi_rel_offset (R(d4), 8)
 #endif
 
 	/* Get string pointer, character and length.  */
@@ -234,13 +244,26 @@ L(L7:)
 	movel	R(d0),R(a0)
 #ifdef __mcoldfire__
 	movel	MEM_POSTINC(sp),R(d4)
+	cfi_remember_state
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (R(d4))
 	movel	MEM_POSTINC(sp),R(d3)
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (R(d3))
 	movel	MEM_POSTINC(sp),R(d2)
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (R(d2))
 #else
 	moveml	MEM_POSTINC(sp),R(d2)-R(d4)
+	cfi_remember_state
+	cfi_adjust_cfa_offset (-3*4)
+	cfi_restore (R(d2))
+	cfi_restore (R(d3))
+	cfi_restore (R(d4))
 #endif
 	rts
 
+	cfi_restore_state
 L(L8:)
 	/* We have a hit.  Check to see which byte it was.  First
 	   compensate for the autoincrement in the loop.  */
@@ -263,10 +286,20 @@ L(L9:)
 	movel	R(a0),R(d0)
 #ifdef __mcoldfire__
 	movel	MEM_POSTINC(sp),R(d4)
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (R(d4))
 	movel	MEM_POSTINC(sp),R(d3)
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (R(d3))
 	movel	MEM_POSTINC(sp),R(d2)
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (R(d2))
 #else
 	moveml	MEM_POSTINC(sp),R(d2)-R(d4)
+	cfi_adjust_cfa_offset (-3*4)
+	cfi_restore (R(d2))
+	cfi_restore (R(d3))
+	cfi_restore (R(d4))
 #endif
 	rts
 END(__memchr)

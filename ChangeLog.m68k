@@ -1,3 +1,32 @@
+2012-01-05  Andreas Schwab  <schwab@linux-m68k.org>
+
+	* sysdeps/m68k/dl-trampoline.S: Add cfi directives.
+	* sysdeps/m68k/memchr.S: Likewise.
+	* sysdeps/m68k/rawmemchr.S: Likewise.
+	* sysdeps/m68k/strchr.S: Likewise.
+	* sysdeps/m68k/strchrnul.S: Likewise.
+	* sysdeps/m68k/m680x0/add_n.S: Likewise.
+	* sysdeps/m68k/m680x0/lshift.S: Likewise.
+	* sysdeps/m68k/m680x0/rshift.S: Likewise.
+	* sysdeps/m68k/m680x0/sub_n.S: Likewise.
+	* sysdeps/m68k/m680x0/m68020/addmul_1.S: Likewise.
+	* sysdeps/m68k/m680x0/m68020/mul_1.S: Likewise.
+	* sysdeps/m68k/m680x0/m68020/submul_1.S: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/clone.S: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/semtimedop.S: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/socket.S: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/sysdep.S: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/sysdep.h: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/vfork.S: Likewise.
+	* sysdeps/m68k/sysdep.h (CALL_MCOUNT): Likewise.
+	(ENTRY): Add cfi_startproc.
+	(END): Add cfi_endproc.
+	* sysdeps/unix/sysv/linux/m68k/coldfire/m68k-helpers.S: Remove
+	cfi_startproc/cfi_endproc.
+	* sysdeps/unix/sysv/linux/m68k/m680x0/m68k-helpers.S: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/nptl/sysdep-cancel.h (PSEUDO):
+	Likewise.
+
 2011-12-23  Andreas Schwab  <schwab@linux-m68k.org>
 
 	* sysdeps/m68k/bits/byteswap.h (__bswap_constant_64): Protect long

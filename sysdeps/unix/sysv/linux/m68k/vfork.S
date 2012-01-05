@@ -1,4 +1,4 @@
-/* Copyright (C) 1999, 2002, 2003, 2010 Free Software Foundation, Inc.
+/* Copyright (C) 1999, 2002, 2003, 2010, 2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Andreas Schwab <schwab@gnu.org>.
 
@@ -46,6 +46,8 @@ ENTRY (__vfork)
 
 	/* Pop the return PC value into A0.  */
 	movel	%sp@+, %a0
+	cfi_adjust_cfa_offset (-4)
+	cfi_register (%pc, %a0)
 
 	/* Stuff the syscall number in D0 and trap into the kernel.  */
 	movel	#SYS_ify (vfork), %d0
@@ -62,6 +64,8 @@ ENTRY (__vfork)
 .Lerror:
 	/* Push back the return PC.  */
 	movel	%a0,%sp@-
+	cfi_adjust_cfa_offset (4)
+	cfi_rel_offset (%pc, 0)
 
 # ifdef __ASSUME_VFORK_SYSCALL
 #  ifndef PIC

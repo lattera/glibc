@@ -1,4 +1,4 @@
-/* Copyright (C) 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Andreas Schwab <schwab@suse.de>, 2003.
 
@@ -34,7 +34,12 @@ ENTRY (semtimedop)
 	/* Save registers.  */
 	move.l	%d2, %a1
 	move.l	%d3, -(%sp)
+	cfi_adjust_cfa_offset (4)
 	move.l	%d5, -(%sp)
+	cfi_adjust_cfa_offset (4)
+	cfi_register (%d2, %a1)
+	cfi_rel_offset (%d3, 0)
+	cfi_rel_offset (%d5, 4)
 
 	move.l	#SYSOP_semtimedop, %d1
 	move.l	SEMID(%sp), %d2
@@ -47,8 +52,13 @@ ENTRY (semtimedop)
 
 	/* Restore registers.  */
 	move.l	(%sp)+, %d5
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (%d5)
 	move.l	(%sp)+, %d3
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (%d3)
 	move.l	%a1, %d2
+	cfi_restore (%d2)
 
 	/* Check for error.  */
 	tst.l	%d0

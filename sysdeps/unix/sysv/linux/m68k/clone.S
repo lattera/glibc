@@ -1,4 +1,4 @@
-/* Copyright (C) 1996,97,98,2002,2010 Free Software Foundation, Inc.
+/* Copyright (C) 1996,97,98,2002,2010,2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Andreas Schwab (schwab@issan.informatik.uni-dortmund.de)
 
@@ -52,22 +52,36 @@ ENTRY (__clone)
 	movel	12+0(%sp), %d1		/* get flags */
 	movel	%d3, -(%a1)             /* save %d3 and get parent_tidptr */
 	movel	%d3, -(%sp)
+	cfi_adjust_cfa_offset (4)
+	cfi_rel_offset (%d3, 0)
 	movel	20+4(%sp), %d3
 	movel	%d4, -(%a1)		/* save %d4 and get child_tidptr */
 	movel	%d4, -(%sp)
+	cfi_adjust_cfa_offset (4)
+	cfi_rel_offset (%d4, 0)
 	movel	28+8(%sp), %d4
 	movel	%d5, -(%a1)             /* save %d5 and get tls */
 	movel	%d5, -(%sp)
+	cfi_adjust_cfa_offset (4)
+	cfi_rel_offset (%d5, 0)
 	movel	24+12(%sp), %d5
 	/* save %d2 and get stack pointer */
 #ifdef __mcoldfire__
 	movel	%d2, -(%a1)
 	movel	%d2, -(%sp)
+	cfi_adjust_cfa_offset (4)
+	cfi_rel_offset (%d2, 0)
 	movel	%a1, %d2
 #else
 	exg	%d2, %a1		/* save %d2 and get stack pointer */
+	cfi_register (%d2, %a1)
 #endif
 	movel	#SYS_ify (clone), %d0
+
+	/* End FDE now, because in the child the unwind info will be
+	   wrong.  */
+	cfi_endproc
+
 	trap	#0
 #ifdef __mcoldfire__
 	movel	(%sp)+, %d2
@@ -115,6 +129,7 @@ donepid:
 	trap	#0
 	cfi_endproc
 
+	cfi_startproc
 PSEUDO_END (__clone)
 
 weak_alias (__clone, clone)

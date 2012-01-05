@@ -1,7 +1,7 @@
 /* mc68020 __mpn_add_n -- Add two limb vectors of the same length > 0 and store
    sum in a third limb vector.
 
-Copyright (C) 1992, 1994, 1996, 1998 Free Software Foundation, Inc.
+Copyright (C) 1992, 1994, 1996, 1998, 2012 Free Software Foundation, Inc.
 
 This file is part of the GNU MP Library.
 
@@ -35,7 +35,11 @@ MA 02111-1307, USA. */
 ENTRY(__mpn_add_n)
 /* Save used registers on the stack.  */
 	movel	R(d2),MEM_PREDEC(sp)
+	cfi_adjust_cfa_offset (4)
 	movel	R(a2),MEM_PREDEC(sp)
+	cfi_adjust_cfa_offset (4)
+	cfi_rel_offset (R(d2), 4)
+	cfi_rel_offset (R(a2), 0)
 
 /* Copy the arguments to registers.  Better use movem?  */
 	movel	MEM_DISP(sp,12),R(a2)
@@ -70,7 +74,11 @@ L(L2:)
 
 /* Restore used registers from stack frame.  */
 	movel	MEM_POSTINC(sp),R(a2)
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (R(a2))
 	movel	MEM_POSTINC(sp),R(d2)
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (R(d2))
 
 	rts
 END(__mpn_add_n)

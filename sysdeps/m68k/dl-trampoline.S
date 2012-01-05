@@ -1,5 +1,5 @@
 /* PLT trampolines.  m68k version.
-   Copyright (C) 2005, 2011 Free Software Foundation, Inc.
+   Copyright (C) 2005, 2011, 2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -23,54 +23,81 @@
 	.globl _dl_runtime_resolve
 	.type _dl_runtime_resolve, @function
 _dl_runtime_resolve:
+	cfi_startproc
+	cfi_adjust_cfa_offset (8)
 	| Save %a0 (struct return address) and %a1.
 	move.l %a0, -(%sp)
+	cfi_adjust_cfa_offset (4)
 	move.l %a1, -(%sp)
+	cfi_adjust_cfa_offset (4)
 	| Call the real address resolver.
 	jbsr _dl_fixup
 	| Restore register %a0 and %a1.
 	move.l (%sp)+, %a1
+	cfi_adjust_cfa_offset (-4)
 	move.l (%sp)+, %a0
+	cfi_adjust_cfa_offset (-4)
 	| Pop parameters
 	addq.l #8, %sp
+	cfi_adjust_cfa_offset (-8)
 	| Call real function.
 #ifdef __mcoldfire__
 	move.l %d0,-(%sp)
+	cfi_adjust_cfa_offset (4)
 	rts
 #else
 	jmp (%d0)
 #endif
+	cfi_endproc
 	.size _dl_runtime_resolve, . - _dl_runtime_resolve
 
 	.text
 	.globl _dl_runtime_profile
 	.type _dl_runtime_profile, @function
 _dl_runtime_profile:
+	cfi_startproc
+	cfi_adjust_cfa_offset (8)
 	pea 8(%sp)
+	cfi_adjust_cfa_offset (4)
 	move.l %a1, -(%sp)
+	cfi_adjust_cfa_offset (4)
 	move.l %a0, -(%sp)
+	cfi_adjust_cfa_offset (4)
 	pea -1.w
+	cfi_adjust_cfa_offset (4)
 	| Push parameters for _dl_profile_fixup
 	pea (%sp)
+	cfi_adjust_cfa_offset (4)
 	pea 8(%sp)
+	cfi_adjust_cfa_offset (4)
 	move.l 32(%sp), -(%sp)
+	cfi_adjust_cfa_offset (4)
 	move.l 32(%sp), -(%sp)
+	cfi_adjust_cfa_offset (4)
 	move.l 32(%sp), -(%sp)
+	cfi_adjust_cfa_offset (4)
 	subq.l #8, %sp
+	cfi_adjust_cfa_offset (8)
 	| Call the real address resolver.
 	jbsr _dl_profile_fixup
 	| Pop parameters
 	lea 28(%sp), %sp
+	cfi_adjust_cfa_offset (-28)
 	move.l (%sp), %d1
 	jpl 1f
 	addq.l #4, %sp
+	cfi_adjust_cfa_offset (-4)
 	| Restore register %a0 and %a1.
 	move.l (%sp)+, %a0
+	cfi_adjust_cfa_offset (-4)
 	move.l (%sp)+, %a1
+	cfi_adjust_cfa_offset (-4)
 	lea 12(%sp), %sp
+	cfi_adjust_cfa_offset (-12)
 	| Call real function.
 #ifdef __mcoldfire__
 	move.l %d0,-(%sp)
+	cfi_adjust_cfa_offset (4)
 	rts
 #else
 	jmp (%d0)
@@ -85,7 +112,13 @@ _dl_runtime_profile:
 	    +4      %a0
 	   %sp      free
 	*/
+#ifdef __mcoldfire__
+	cfi_adjust_cfa_offset (20)
+#else
+	cfi_adjust_cfa_offset (24)
+#endif
 1:	move.l %a2, (%sp)
+	cfi_rel_offset (%a2, 0)
 	move.l %sp, %a2
 	move.l %sp, %a0
 	lea 28(%sp), %a1
@@ -94,6 +127,7 @@ _dl_runtime_profile:
 	and.l #-3, %d1
 	sub.l %d1, %a0
 	move.l %a0, %sp
+	cfi_def_cfa_register (%a2)
 #ifdef __mcoldfire__
 	tst.l %d1
 	beq 2f
@@ -129,7 +163,10 @@ _dl_runtime_profile:
 	jsr (%d0)
 #endif
 	move.l %a2, %sp
+	cfi_def_cfa_register (%sp)
 	move.l (%sp)+, %a2
+	cfi_adjust_cfa_offset (4)
+	cfi_restore (%a2)
 	/*
 	    +20     return address
 	    +16     PLT1
@@ -140,32 +177,52 @@ _dl_runtime_profile:
 	*/
 #ifdef __mcoldfire__
 	fmove.d %fp0, -(%sp)
+	cfi_adjust_cfa_offset (8)
 #else
 	fmove.x %fp0, -(%sp)
+	cfi_adjust_cfa_offset (12)
 #endif
 	move.l %a0, -(%sp)
+	cfi_adjust_cfa_offset (4)
 	move.l %d1, -(%sp)
+	cfi_adjust_cfa_offset (4)
 	move.l %d0, -(%sp)
+	cfi_adjust_cfa_offset (4)
 	pea (%sp)
+	cfi_adjust_cfa_offset (4)
 #ifdef __mcoldfire__
 	pea 24(%sp)
+	cfi_adjust_cfa_offset (4)
 	move.l 40(%sp), -(%sp)
+	cfi_adjust_cfa_offset (4)
 	move.l 40(%sp), -(%sp)
+	cfi_adjust_cfa_offset (4)
 #else
 	pea 28(%sp)
+	cfi_adjust_cfa_offset (4)
 	move.l 44(%sp), -(%sp)
+	cfi_adjust_cfa_offset (4)
 	move.l 44(%sp), -(%sp)
+	cfi_adjust_cfa_offset (4)
 #endif
 	jbsr _dl_call_pltexit
 	lea 16(%sp), %sp
+	cfi_adjust_cfa_offset (-16)
 	move.l (%sp)+, %d0
+	cfi_adjust_cfa_offset (-4)
 	move.l (%sp)+, %d1
+	cfi_adjust_cfa_offset (-4)
 	move.l (%sp)+, %a0
+	cfi_adjust_cfa_offset (-4)
 #ifdef __mcoldfire__
 	fmove.d (%sp)+, %fp0
+	cfi_adjust_cfa_offset (-8)
 #else
 	fmove.x (%sp)+, %fp0
+	cfi_adjust_cfa_offset (-12)
 #endif
 	lea 20(%sp), %sp
+	cfi_adjust_cfa_offset (-20)
 	rts
+	cfi_endproc
 	.size _dl_runtime_profile, . - _dl_runtime_profile

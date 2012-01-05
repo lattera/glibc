@@ -1,5 +1,5 @@
 /* Assembler macros for m68k.
-   Copyright (C) 1998, 2003, 2010 Free Software Foundation, Inc.
+   Copyright (C) 1998, 2003, 2010, 2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -54,10 +54,13 @@
   ASM_TYPE_DIRECTIVE (C_SYMBOL_NAME(name),@function);			      \
   .align ALIGNARG(2);							      \
   C_LABEL(name)								      \
+  cfi_startproc;							      \
   CALL_MCOUNT
 
 # undef END
-# define END(name) ASM_SIZE_DIRECTIVE(name)
+# define END(name)							      \
+  cfi_endproc;								      \
+  ASM_SIZE_DIRECTIVE(name)
 
 
 /* If compiled for profiling, call `_mcount' at the start of each function.  */
@@ -65,9 +68,12 @@
 /* The mcount code relies on a normal frame pointer being on the stack
    to locate our caller, so push one just for its benefit.  */
 #  define CALL_MCOUNT \
-  move.l %fp, -(%sp); move.l %sp, %fp;					      \
+  move.l %fp, -(%sp);							      \
+  cfi_adjust_cfa_offset (4);  cfi_rel_offset (%fp, 0);			      \
+  move.l %sp, %fp;							      \
   jbsr JUMPTARGET (mcount);						      \
-  move.l (%sp)+, %fp;
+  move.l (%sp)+, %fp;							      \
+  cfi_adjust_cfa_offset (-4); cfi_restore (%fp);
 # else
 #  define CALL_MCOUNT		/* Do nothing.  */
 # endif

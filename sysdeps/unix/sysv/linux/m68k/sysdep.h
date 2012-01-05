@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998, 2000, 2003, 2004, 2006, 2010
+/* Copyright (C) 1996, 1997, 1998, 2000, 2003, 2004, 2006, 2010, 2012
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Andreas Schwab, <schwab@issan.informatik.uni-dortmund.de>,
@@ -116,10 +116,12 @@ SYSCALL_ERROR_LABEL:							      \
 SYSCALL_ERROR_LABEL:							      \
     neg.l %d0;								      \
     move.l %d0, -(%sp);							      \
+    cfi_adjust_cfa_offset (4);						      \
     jbsr __m68k_read_tp@PLTPC;						      \
     SYSCALL_ERROR_LOAD_GOT (%a1);					      \
     add.l (SYSCALL_ERROR_ERRNO@TLSIE, %a1), %a0;			      \
     move.l (%sp)+, (%a0);						      \
+    cfi_adjust_cfa_offset (-4);						      \
     move.l &-1, %d0;							      \
     /* Copy return value to %a0 for syscalls that are declared to return      \
        a pointer (e.g., mmap).  */					      \
@@ -184,24 +186,35 @@ SYSCALL_ERROR_LABEL:							      \
 #define	UNDOARGS_1	UNDOARGS_0
 
 #define	DOARGS_2	_DOARGS_2 (8)
-#define	_DOARGS_2(n)	move.l %d2, %a0; move.l n(%sp), %d2; _DOARGS_1 (n-4)
-#define	UNDOARGS_2	UNDOARGS_1; move.l %a0, %d2
+#define	_DOARGS_2(n)	move.l %d2, %a0; cfi_register (%d2, %a0);	      \
+			move.l n(%sp), %d2; _DOARGS_1 (n-4)
+#define	UNDOARGS_2	UNDOARGS_1; move.l %a0, %d2; cfi_restore (%d2)
 
 #define DOARGS_3	_DOARGS_3 (12)
-#define _DOARGS_3(n)	move.l %d3, %a1; move.l n(%sp), %d3; _DOARGS_2 (n-4)
-#define UNDOARGS_3	UNDOARGS_2; move.l %a1, %d3
+#define _DOARGS_3(n)	move.l %d3, %a1; cfi_register (%d3, %a1);	      \
+			move.l n(%sp), %d3; _DOARGS_2 (n-4)
+#define UNDOARGS_3	UNDOARGS_2; move.l %a1, %d3; cfi_restore (%d3)
 
 #define DOARGS_4	_DOARGS_4 (16)
-#define _DOARGS_4(n)	move.l %d4, -(%sp); move.l n+4(%sp), %d4; _DOARGS_3 (n)
-#define UNDOARGS_4	UNDOARGS_3; move.l (%sp)+, %d4
+#define _DOARGS_4(n)	move.l %d4, -(%sp);				      \
+			cfi_adjust_cfa_offset (4); cfi_rel_offset (%d4, 0);   \
+			move.l n+4(%sp), %d4; _DOARGS_3 (n)
+#define UNDOARGS_4	UNDOARGS_3; move.l (%sp)+, %d4;			      \
+			cfi_adjust_cfa_offset (-4); cfi_restore (%d4)
 
 #define DOARGS_5	_DOARGS_5 (20)
-#define _DOARGS_5(n)	move.l %d5, -(%sp); move.l n+4(%sp), %d5; _DOARGS_4 (n)
-#define UNDOARGS_5	UNDOARGS_4; move.l (%sp)+, %d5
+#define _DOARGS_5(n)	move.l %d5, -(%sp); 				      \
+			cfi_adjust_cfa_offset (4); cfi_rel_offset (%d5, 0);   \
+			move.l n+4(%sp), %d5; _DOARGS_4 (n)
+#define UNDOARGS_5	UNDOARGS_4; move.l (%sp)+, %d5;			      \
+			cfi_adjust_cfa_offset (-4); cfi_restore (%d5)
 
 #define DOARGS_6	_DOARGS_6 (24)
-#define _DOARGS_6(n)	_DOARGS_5 (n-4); move.l %a0, -(%sp); move.l n+12(%sp), %a0;
-#define UNDOARGS_6	move.l (%sp)+, %a0; UNDOARGS_5
+#define _DOARGS_6(n)	_DOARGS_5 (n-4); move.l %a0, -(%sp);		      \
+			cfi_adjust_cfa_offset (4);			      \
+			move.l n+12(%sp), %a0;
+#define UNDOARGS_6	move.l (%sp)+, %a0; cfi_adjust_cfa_offset (-4);	      \
+			UNDOARGS_5
 
 
 #define	ret	rts

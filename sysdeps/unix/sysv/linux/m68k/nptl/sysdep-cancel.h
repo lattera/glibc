@@ -1,4 +1,4 @@
-/* Copyright (C) 2010 Free Software Foundation, Inc.
+/* Copyright (C) 2010, 2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Maxim Kuvyrkov <maxim@codesourcery.com>, 2010.
 
@@ -40,7 +40,6 @@
     rts;								      \
   .size __##syscall_name##_nocancel,.-__##syscall_name##_nocancel;	      \
   .Lpseudo_cancel:							      \
-    cfi_startproc;							      \
     CENABLE;								      \
     DOCARGS_##args							      \
     move.l %d0, -(%sp); /* Save result of CENABLE.  */  		      \
@@ -54,8 +53,7 @@
     move.l %d2, %d0;							      \
     UNDOCARGS_##args							      \
     cmp.l &-4095, %d0;							      \
-    jcc SYSCALL_ERROR_LABEL;		                                      \
-    cfi_endproc
+    jcc SYSCALL_ERROR_LABEL
 
 /* Note: we use D2 to save syscall's return value as D0 will be clobbered in
    CDISABLE.  */

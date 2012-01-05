@@ -1,4 +1,4 @@
-/* Copyright (C) 2010 Free Software Foundation, Inc.
+/* Copyright (C) 2010, 2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Maxim Kuvyrkov <maxim@codesourcery.com>, 2010.
 
@@ -41,12 +41,10 @@
 
 	.hidden __vdso_read_tp_stub
 ENTRY (__vdso_read_tp_stub)
-	cfi_startproc
 	move.l	#__NR_get_thread_area, %d0
 	trap	#0
 	move.l	%d0, %a0
 	rts
-	cfi_endproc
 END (__vdso_read_tp_stub)
 
 # ifdef SHARED
@@ -59,11 +57,9 @@ END (__vdso_read_tp_stub)
 	.hidden __m68k_read_tp
 # endif
 ENTRY (__m68k_read_tp)
-	cfi_startproc
 	lea	_GLOBAL_OFFSET_TABLE_@GOTPC(%pc), %a0
 	move.l	M68K_VDSO_SYMBOL (__vdso_read_tp)@GOT(%a0), %a0
 	jmp	([%a0])
-	cfi_endproc
 END (__m68k_read_tp)
 
 /* The following two stubs are for macros in atomic.h, they can't
@@ -71,7 +67,6 @@ END (__m68k_read_tp)
 
 	.hidden __vdso_atomic_cmpxchg_32_stub
 ENTRY (__vdso_atomic_cmpxchg_32_stub)
-	cfi_startproc
 	move.l	%d2, -(%sp)
 	cfi_adjust_cfa_offset (4)
 	cfi_rel_offset (%d2, 0)
@@ -82,12 +77,10 @@ ENTRY (__vdso_atomic_cmpxchg_32_stub)
 	cfi_adjust_cfa_offset (-4)
 	cfi_restore (%d2)
 	rts
-	cfi_endproc
 END (__vdso_atomic_cmpxchg_32_stub)
 
 	.hidden __vdso_atomic_barrier_stub
 ENTRY (__vdso_atomic_barrier_stub)
-	cfi_startproc
 	move.l	%d0, -(%sp)
 	cfi_adjust_cfa_offset (4)
 	move.l	#SYS_ify (atomic_barrier), %d0
@@ -95,7 +88,6 @@ ENTRY (__vdso_atomic_barrier_stub)
 	move.l	(%sp)+, %d0
 	cfi_adjust_cfa_offset (-4)
 	rts
-	cfi_endproc
 END (__vdso_atomic_barrier_stub)
 # else /* !SHARED */
 /* If the vDSO is not available, use a syscall to get TP.  */
