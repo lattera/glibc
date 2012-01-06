@@ -1,3 +1,9 @@
+2012-01-05  Nathan Sidwell  <nathan@codesourcery.com>
+	    Tom de Vries  <tom@codesourcery.com>
+
+	* sysdeps/arm/Makefile (libmemusage.so): Add libc_nonshared.a
+	dependency.
+
 2012-01-03  Mike Frysinger  <vapier@gentoo.org>
 
 	[BZ #12354]
