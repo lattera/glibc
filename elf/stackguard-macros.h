@@ -24,10 +24,7 @@
 #elif defined __s390__
 # define STACK_CHK_GUARD \
   ({ uintptr_t x; asm ("ear %0,%%a0; l %0,0x14(%0)" : "=a" (x)); x; })
-#elif defined __ia64__
-# define STACK_CHK_GUARD \
-  ({ uintptr_t x; asm ("adds %0 = -8, r13;; ld8 %0 = [%0]" : "=r" (x)); x; })
-#else
+#elif !defined STACK_CHK_GUARD
 extern uintptr_t __stack_chk_guard;
 # define STACK_CHK_GUARD __stack_chk_guard
 #endif

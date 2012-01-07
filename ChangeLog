@@ -1,5 +1,11 @@
 2012-01-07  Ulrich Drepper  <drepper@gmail.com>
 
+	* elf/tls-macros.h: Remove support for Alpha and IA-64.  Should be in
+	files in ports.
+	* elf/stackguard-macros.h: Remove support for IA-64.
+	* elf/tst-auditmod1.c: Likewise.
+	* sysdeps/generic/ldsodefs.h: Likewise.
+
 	* sysdeps/unix/sysv/linux/configure.in: Ports should define
 	libc_cv_gcc_unwind_find_fde and arch_minimum_kernel in their
 	configure files.

@@ -17,7 +17,7 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-/* Linux/ia64 only has rt signals, thus we do not even want to try falling
+/* Linux/x86_64 only has rt signals, thus we do not even want to try falling
    back to the old style signals as the default Linux handler does. */
 
 #include <errno.h>

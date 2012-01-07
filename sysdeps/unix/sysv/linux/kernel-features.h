@@ -274,7 +274,7 @@
    their availability with one define.  The changes were made first
    for i386 and the have to be done separately for the other archs.
    For i386 we pick 2.5.50 as the first version with support.
-   For ia64, s390*, PPC, x86-64, and SH we pick 2.5.64 as the first
+   For s390*, PPC, x86-64, and SH we pick 2.5.64 as the first
    version with support.  */
 #if ((__LINUX_KERNEL_VERSION >= 132402 && defined __i386__)		\
      || (__LINUX_KERNEL_VERSION >= 132416				\
