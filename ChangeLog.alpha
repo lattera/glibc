@@ -1,3 +1,9 @@
+2012-01-07  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/alpha/backtrace.c: Use x86_64 version of backtrace.c.
+	* sysdeps/unix/sysv/linux/alpha/wordexp.c: Use sparc64 version of
+	wordexp.c.
+
 2011-10-05  Andreas Schwab  <schwab@redhat.com>
 
 	* sysdeps/alpha/dl-machine.h (elf_machine_rela)

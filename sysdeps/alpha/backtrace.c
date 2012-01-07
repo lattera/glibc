@@ -1,1 +1,1 @@
-#include <sysdeps/ia64/backtrace.c>
+#include <sysdeps/x86_64/backtrace.c>
