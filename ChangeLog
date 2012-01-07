@@ -1,5 +1,9 @@
 2012-01-07  Ulrich Drepper  <drepper@gmail.com>
 
+	* sysdeps/unix/sysv/linux/configure.in: Ports should define
+	libc_cv_gcc_unwind_find_fde and arch_minimum_kernel in their
+	configure files.
+
 	[BZ #13552]
 	* configure.in: Remove --enable-omitfp support.
 	* FAQ.in: Adjust.

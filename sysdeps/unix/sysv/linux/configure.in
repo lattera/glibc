@@ -39,28 +39,9 @@ fi
 # if appropriate too.
 test -n "$arch_minimum_kernel" ||
 case "$machine" in
-  alpha*)
-    arch_minimum_kernel=2.1.100
-    libc_cv_gcc_unwind_find_fde=yes
-    ;;
-  arm*)
-    arch_minimum_kernel=2.0.10
-    libc_cv_gcc_unwind_find_fde=yes
-    ;;
   i386*)
     libc_cv_gcc_unwind_find_fde=yes
     arch_minimum_kernel=2.0.10
-    ;;
-  ia64*)
-    arch_minimum_kernel=2.4.0
-    ;;
-  hppa*)
-    libc_cv_gcc_unwind_find_fde=yes
-    arch_minimum_kernel=2.4.19
-    ;;
-  m68k*)
-    arch_minimum_kernel=2.0.10
-    libc_cv_gcc_unwind_find_fde=yes
     ;;
   powerpc/powerpc32)
     libc_cv_gcc_unwind_find_fde=yes
