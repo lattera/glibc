@@ -1,5 +1,9 @@
 2012-01-07  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/mips/nptl/shlib-versions: New.
+
+2012-01-07  Joseph Myers  <joseph@codesourcery.com>
+
 	* sysdeps/mips/backtrace.c: Use x86_64 version of backtrace.c.
 
 2012-01-04  Tom de Vries  <tom@codesourcery.com>
