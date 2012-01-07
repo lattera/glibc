@@ -1,5 +1,7 @@
 2012-01-07  Ulrich Drepper  <drepper@gmail.com>
 
+	* sysdeps/unix/sysv/linux/configure.in: Remove m68k support.
+
 	* sysdeps/generic/ldsodefs.h: Remove Alpha support.
 
 	* shlib-versions: Remove entries for ports architectures.
