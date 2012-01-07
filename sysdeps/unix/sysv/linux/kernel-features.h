@@ -1,6 +1,6 @@
 /* Set flags signalling availability of kernel features based on given
    kernel version number.
-   Copyright (C) 1999-2009, 2010, 2011 Free Software Foundation, Inc.
+   Copyright (C) 1999-2009, 2010, 2011, 2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -278,7 +278,7 @@
    version with support.  */
 #if ((__LINUX_KERNEL_VERSION >= 132402 && defined __i386__)		\
      || (__LINUX_KERNEL_VERSION >= 132416				\
-	 && (defined __ia64__ || defined __s390__			\
+	 && (defined __s390__			\
 	     || defined __powerpc__ || defined __x86_64__ || defined __sh__)))
 # define __ASSUME_CLONE_THREAD_FLAGS	1
 #endif
@@ -334,7 +334,7 @@
 /* The utimes syscall has been available for some architectures
    forever.  For x86 it was introduced after 2.5.75, for x86-64,
    ppc, and ppc64 it was introduced in 2.6.0-test3.  */
-#if defined __ia64__ || defined __sparc__ \
+#if defined __sparc__ \
     || (__LINUX_KERNEL_VERSION > 132427 && defined __i386__) \
     || (__LINUX_KERNEL_VERSION > 132609 && defined __x86_64__) \
     || (__LINUX_KERNEL_VERSION >= 132609 && defined __powerpc__) \
@@ -419,10 +419,9 @@
    the code.  On x86_64 and SH this appeared first in 2.6.19-rc1,
    on ia64 in 2.6.22-rc1.  */
 #if __LINUX_KERNEL_VERSION >= 0x020611 \
-    && ((!defined __x86_64__ && !defined __sh__ && !defined __ia64__) \
+    && ((!defined __x86_64__ && !defined __sh__) \
 	|| (__LINUX_KERNEL_VERSION >= 0x020613 \
-	    && (defined __x86_64__ || defined __sh__)) \
-	|| (__LINUX_KERNEL_VERSION >= 0x020616 && defined __ia64__))
+	    && (defined __x86_64__ || defined __sh__)))
 # define __ASSUME_PSELECT	1
 # define __ASSUME_PPOLL		1
 #endif
@@ -477,7 +476,7 @@
    x86-64, PPC, IA-64, SPARC< and S390 in 2.6.23.  */
 #if __LINUX_KERNEL_VERSION >= 0x020617 \
     && (defined __i386__ || defined __x86_64__ || defined __powerpc__ \
-	|| defined __ia64__ || defined __sparc__ || defined __s390__)
+	|| defined __sparc__ || defined __s390__)
 # define __ASSUME_O_CLOEXEC	1
 #endif
 
@@ -490,7 +489,7 @@
    x86-64, PPC, IA-64, and SPARC in 2.6.27.  */
 #if __LINUX_KERNEL_VERSION >= 0x02061b \
     && (defined __i386__ || defined __x86_64__ || defined __powerpc__ \
-	|| defined __ia64__ || defined __sparc__ || defined __s390__)
+	|| defined __sparc__ || defined __s390__)
 # define __ASSUME_SOCK_CLOEXEC	1
 # define __ASSUME_IN_NONBLOCK	1
 # define __ASSUME_PIPE2		1

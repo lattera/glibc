@@ -10,6 +10,7 @@
 	In case anyone cares, the IA-64 architecture could move to ports.
 	* sysdeps/ia64/*: Removed.
 	* sysdeps/unix/sysv/linux/ia64/*: Removed.
+	* sysdeps/unix/sysv/linux/kernel-features.h: Remove IA-64 support.
 
 	[BZ #13555]
 	* configure.in: Remove entries for unsupported architectures.
