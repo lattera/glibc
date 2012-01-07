@@ -1,5 +1,10 @@
 2012-01-07  Ulrich Drepper  <drepper@gmail.com>
 
+	* elf/tst-unique3.cc: Add explicit declaration of gets.
+	* elf/tst-unique3lib.cc: Likewise.
+	* elf/tst-unique3lib2.cc: Likewise.
+	* elf/tst-unique4.cc: Likewise.
+
 	* string/test-strcpy.c (do_one_test): Fix format string for WIDE use.
 
 2012-01-03  Ulrich Drepper  <drepper@gmail.com>

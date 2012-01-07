@@ -1,3 +1,5 @@
+extern char *gets (char *);
+
 #include <cstdio>
 #include "tst-unique3.h"
 template<typename T> int S<T>::i = 1;
