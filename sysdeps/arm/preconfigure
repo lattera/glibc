@@ -42,7 +42,8 @@ arm*)
 		CFLAGS="$CFLAGS -fno-unwind-tables"
 		;;
 	*)
-		machine=arm/$machine
+		echo "Old ABI no longer supported" 2>&1
+		exit 1
 		;;
 	esac
 	;;

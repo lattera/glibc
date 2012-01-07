@@ -1,3 +1,47 @@
+2012-01-07  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/arm/preconfigure: Give error for old-ABI ARM.
+	* sysdeps/unix/sysv/linux/arm/eabi/Makefile (arm-using-eabi):
+	Don't define.
+	* sysdeps/arm/__longjmp.S: Remove.
+	* sysdeps/arm/bits/atomic.h: Remove.
+	* sysdeps/arm/bits/huge_val.h: Remove.
+	* sysdeps/arm/bits/setjmp.h: Remove.
+	* sysdeps/arm/fpu/__longjmp.S: Remove.
+	* sysdeps/arm/fpu/bits/fenv.h: Remove.
+	* sysdeps/arm/fpu/bits/setjmp.h: Remove.
+	* sysdeps/arm/fpu/fclrexcpt.c: Remove.
+	* sysdeps/arm/fpu/fedisblxcpt.c: Remove.
+	* sysdeps/arm/fpu/feenablxcpt.c: Remove.
+	* sysdeps/arm/fpu/fegetenv.c: Remove.
+	* sysdeps/arm/fpu/fegetexcept.c: Remove.
+	* sysdeps/arm/fpu/fegetround.c: Remove.
+	* sysdeps/arm/fpu/feholdexcpt.c: Remove.
+	* sysdeps/arm/fpu/fesetenv.c: Remove.
+	* sysdeps/arm/fpu/fesetround.c: Remove.
+	* sysdeps/arm/fpu/fpu_control.h: Remove.
+	* sysdeps/arm/fpu/fraiseexcpt.c: Remove.
+	* sysdeps/arm/fpu/fsetexcptflg.c: Remove.
+	* sysdeps/arm/fpu/ftestexcept.c: Remove.
+	* sysdeps/arm/fpu/jmpbuf-offsets.h: Remove.
+	* sysdeps/arm/fpu/setjmp.S: Remove.
+	* sysdeps/arm/jmpbuf-offsets.h: Remove.
+	* sysdeps/arm/machine-gmon.h: Remove.
+	* sysdeps/arm/setjmp.S: Remove.
+	* sysdeps/unix/sysv/linux/arm/____longjmp_chk.S: Remove.
+	* sysdeps/unix/sysv/linux/arm/check_pf.c: Remove.
+	* sysdeps/unix/sysv/linux/arm/eabi/check_pf.c: Remove.
+	* sysdeps/unix/sysv/linux/arm/mmap64.S: Remove.
+	* sysdeps/unix/sysv/linux/arm/msgctl.c: Remove.
+	* sysdeps/unix/sysv/linux/arm/nptl/Makefile: Remove.
+	* sysdeps/unix/sysv/linux/arm/nptl/sysdep-cancel.h: Remove.
+	* sysdeps/unix/sysv/linux/arm/nptl/unwind-forcedunwind.c: Remove.
+	* sysdeps/unix/sysv/linux/arm/nptl/unwind-resume.c: Remove.
+	* sysdeps/unix/sysv/linux/arm/nptl/unwind.h: Remove.
+	* sysdeps/unix/sysv/linux/arm/semctl.c: Remove.
+	* sysdeps/unix/sysv/linux/arm/shmctl.c: Remove.
+	* sysdeps/unix/sysv/linux/arm/sigrestorer.S: Remove.
+
 2012-01-05  Nathan Sidwell  <nathan@codesourcery.com>
 	    Tom de Vries  <tom@codesourcery.com>
 
