@@ -612,7 +612,6 @@ DEFINES
 nopic_initfini
 static_nss
 bounded
-omitfp
 profile
 libc_cv_pic_default
 shared
@@ -777,7 +776,6 @@ enable_sanity_checks
 enable_check_abi
 enable_shared
 enable_profile
-enable_omitfp
 enable_bounded
 enable_versioning
 enable_oldest_abi
@@ -1427,7 +1425,6 @@ Optional Features:
                           [default=no]
   --enable-shared         build shared library [default=yes if GNU ld & ELF]
   --enable-profile        build profiled library [default=no]
-  --enable-omitfp         build undebuggable optimized library [default=no]
   --enable-bounded        build with runtime bounds checking [default=no]
   --disable-versioning    do not include versioning information in the library
                           objects [default=yes if supported]
@@ -3605,13 +3602,6 @@ if test "${enable_profile+set}" = set; then :
   enableval=$enable_profile; profile=$enableval
 else
   profile=no
-fi
-
-# Check whether --enable-omitfp was given.
-if test "${enable_omitfp+set}" = set; then :
-  enableval=$enable_omitfp; omitfp=$enableval
-else
-  omitfp=no
 fi
 
 # Check whether --enable-bounded was given.
@@ -7973,7 +7963,6 @@ rm -f conftest.*
 fi
 { $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_pic_default" >&5
 $as_echo "$libc_cv_pic_default" >&6; }
-
 
 
 

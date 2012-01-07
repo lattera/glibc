@@ -1,5 +1,12 @@
 2012-01-07  Ulrich Drepper  <drepper@gmail.com>
 
+	[BZ #13552]
+	* configure.in: Remove --enable-omitfp support.
+	* FAQ.in: Adjust.
+	* config.make.in: Likewise.
+	* Makeconfig: Likewise.
+	* manual/install.texi: Likewise.
+
 	In case anyone cares, the IA-64 architecture could move to ports.
 	* sysdeps/ia64/*: Removed.
 	* sysdeps/unix/sysv/linux/ia64/*: Removed.

@@ -464,21 +464,7 @@ any other link path.
 
 1.15.	What's the problem with configure --enable-omitfp?
 
-{AJ} When --enable-omitfp is set the libraries are built without frame
-pointers.  Some compilers produce buggy code for this model and therefore we
-don't advise using it at the moment.
-
-If you use --enable-omitfp, you're on your own.  If you encounter problems
-with a library that was build this way, we advise you to rebuild the library
-without --enable-omitfp.  If the problem vanishes consider tracking the
-problem down and report it as compiler failure.
-
-Since a library built with --enable-omitfp is undebuggable on most systems,
-debuggable libraries are also built - you can use them by appending "_g" to
-the library names.
-
-The compilation of these extra libraries and the compiler optimizations slow
-down the build process and need more disk space.
+{} Removed.  Does not apply anymore.
 
 
 1.16.	I get failures during `make check'.  What should I do?

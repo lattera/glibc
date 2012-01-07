@@ -1,4 +1,4 @@
-# Copyright (C) 1991-2003,2004,2005,2006,2007,2008,2009,2010,2011
+# Copyright (C) 1991-2003,2004,2005,2006,2007,2008,2009,2010,2011,2012
 #	Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
@@ -761,17 +761,6 @@ object-suffixes += .op
 CPPFLAGS-.op = -DPROF $(pic-default)
 CFLAGS-.op = -pg
 libtype.op = lib%_p.a
-endif
-ifeq (yes,$(build-omitfp))
-# Under --enable-omitfp, we build the library optimized without
-# debugging information using -fomit-frame-pointer, and build an extra
-# library with debugging information.  The debuggable objects are named foo.og.
-object-suffixes += .og
-CPPFLAGS-.og = $(pic-default)
-CFLAGS-.og = -g
-CFLAGS-.o = $(filter %frame-pointer,$(+cflags)) -g0 -O99 -fomit-frame-pointer -D__USE_STRING_INLINES
-CFLAGS-.os += -g0 -O99 -fomit-frame-pointer -D__USE_STRING_INLINES
-libtype.og = lib%_g.a
 endif
 
 bppfx = BP-

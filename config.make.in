@@ -93,7 +93,6 @@ build-static = @static@
 build-shared = @shared@
 build-pic-default= @libc_cv_pic_default@
 build-profile = @profile@
-build-omitfp = @omitfp@
 build-bounded = @bounded@
 build-static-nss = @static_nss@
 add-ons = @add_ons@

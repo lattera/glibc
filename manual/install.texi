@@ -136,13 +136,6 @@ linker.
 Don't build libraries with profiling information.  You may want to use
 this option if you don't plan to do profiling.
 
-@item --enable-omitfp
-Use maximum optimization for the normal (static and shared)
-libraries, and compile separate static libraries with debugging
-information and no optimization.  We recommend not doing this.  The extra
-optimization doesn't gain you much, it may provoke compiler bugs, and you
-won't be able to trace bugs through the C library.
-
 @item --disable-versioning
 Don't compile the shared libraries with symbol version information.
 Doing this will make the resulting library incompatible with old

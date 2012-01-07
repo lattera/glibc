@@ -142,11 +142,6 @@ AC_ARG_ENABLE([profile],
 			     [build profiled library @<:@default=no@:>@]),
 	      [profile=$enableval],
 	      [profile=no])
-AC_ARG_ENABLE([omitfp],
-	      AC_HELP_STRING([--enable-omitfp],
-			     [build undebuggable optimized library @<:@default=no@:>@]),
-	      [omitfp=$enableval],
-	      [omitfp=no])
 AC_ARG_ENABLE([bounded],
 	      AC_HELP_STRING([--enable-bounded],
 			     [build with runtime bounds checking @<:@default=no@:>@]),
@@ -2367,7 +2362,6 @@ rm -f conftest.*])
 AC_SUBST(libc_cv_pic_default)
 
 AC_SUBST(profile)
-AC_SUBST(omitfp)
 AC_SUBST(bounded)
 AC_SUBST(static_nss)
 AC_SUBST(nopic_initfini)
