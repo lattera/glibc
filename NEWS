@@ -25,6 +25,8 @@ Version 2.16
     implementation.
 
   + timespec_get added
+
+  + uchar.h support added
 
 Version 2.15
 
