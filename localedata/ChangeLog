@@ -1,3 +1,9 @@
+2012-01-07  Ulrich Drepper  <drepper@gmail.com>
+
+	[BZ #13547]
+	* locales/hu_HU: Fix collation rules.
+	Patch by Egmont Koblinger <egmont@gmail.com>.
+
 2011-12-23  Ulrich Drepper  <drepper@gmail.com>
 
 	[BZ #12840]
