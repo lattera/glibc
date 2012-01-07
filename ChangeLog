@@ -1,3 +1,7 @@
+2012-01-07  Ulrich Drepper  <drepper@gmail.com>
+
+	* string/test-strcpy.c (do_one_test): Fix format string for WIDE use.
+
 2012-01-03  Ulrich Drepper  <drepper@gmail.com>
 
 	* iconv/loop.c (single loop): Fix assertion in storing of
