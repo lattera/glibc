@@ -27,6 +27,8 @@ Version 2.16
   + timespec_get added
 
   + uchar.h support added
+
+* Support for the IA-64 is removed and could live in ports.
 
 Version 2.15
 
