@@ -109,7 +109,7 @@ __backtrace (array, size)
   if (size >= 1)
     unwind_backtrace (backtrace_helper, &arg);
 
-  /* _Unwind_Backtrace on IA-64 seems to put NULL address above
+  /* _Unwind_Backtrace seems to put NULL address above
      _start.  Fix it up here.  */
   if (arg.cnt > 1 && arg.array[arg.cnt - 1] == NULL)
     --arg.cnt;
