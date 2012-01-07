@@ -1,5 +1,7 @@
 2012-01-07  Ulrich Drepper  <drepper@gmail.com>
 
+	* libio/stdio.h: Do not declare gets at all for _GNU_SOURCE.
+
 	* elf/tst-unique3.cc: Add explicit declaration of gets.
 	* elf/tst-unique3lib.cc: Likewise.
 	* elf/tst-unique3lib2.cc: Likewise.
