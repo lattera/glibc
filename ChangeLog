@@ -1,5 +1,8 @@
 2012-01-07  Ulrich Drepper  <drepper@gmail.com>
 
+	[BZ #13555]
+	* configure.in: Remove entries for unsupported architectures.
+
 	[BZ #13533]
 	* iconv/gconv_builtin.h: Use CHAR16 for the char16_t conversions.
 	* iconv/gconv_simple.c: Rename char16_t routines.  Add char16_t<->utf8
