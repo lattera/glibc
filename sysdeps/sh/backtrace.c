@@ -1,1 +1,1 @@
-#include "../ia64/backtrace.c"
+#include "../x86_64/backtrace.c"
