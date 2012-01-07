@@ -1,3 +1,9 @@
+2012-01-07  Andreas Schwab  <schwab@linux-m68k.org>
+
+	* sysdeps/unix/sysv/linux/m68k/configure.in: Set
+	arch_minimum_kernel, libc_cv_gcc_unwind_find_fde and
+	ldd_rewrite_script.
+
 2012-01-05  Andreas Schwab  <schwab@linux-m68k.org>
 
 	* sysdeps/m68k/dl-trampoline.S: Add cfi directives.
