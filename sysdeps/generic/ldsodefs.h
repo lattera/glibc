@@ -194,8 +194,6 @@ struct La_ppc64_regs;
 struct La_ppc64_retval;
 struct La_sh_regs;
 struct La_sh_retval;
-struct La_alpha_regs;
-struct La_alpha_retval;
 struct La_s390_32_regs;
 struct La_s390_32_retval;
 struct La_s390_64_regs;
@@ -240,10 +238,6 @@ struct audit_ifaces
 				  uintptr_t *, const struct La_sh_regs *,
 				  unsigned int *, const char *name,
 				  long int *framesizep);
-    Elf64_Addr (*alpha_gnu_pltenter) (Elf64_Sym *, unsigned int, uintptr_t *,
-				      uintptr_t *, struct La_alpha_regs *,
-				      unsigned int *, const char *name,
-				      long int *framesizep);
     Elf32_Addr (*s390_32_gnu_pltenter) (Elf32_Sym *, unsigned int, uintptr_t *,
 					uintptr_t *, struct La_s390_32_regs *,
 					unsigned int *, const char *name,
@@ -287,10 +281,6 @@ struct audit_ifaces
     unsigned int (*sh_gnu_pltexit) (Elf32_Sym *, unsigned int, uintptr_t *,
 				    uintptr_t *, const struct La_sh_regs *,
 				    struct La_sh_retval *, const char *);
-    unsigned int (*alpha_gnu_pltexit) (Elf64_Sym *, unsigned int, uintptr_t *,
-				       uintptr_t *,
-				       const struct La_alpha_regs *,
-				       struct La_alpha_retval *, const char *);
     unsigned int (*s390_32_gnu_pltexit) (Elf32_Sym *, unsigned int,
 					 uintptr_t *, uintptr_t *,
 					 const struct La_s390_32_regs *,

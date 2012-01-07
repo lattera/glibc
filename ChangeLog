@@ -1,5 +1,7 @@
 2012-01-07  Ulrich Drepper  <drepper@gmail.com>
 
+	* sysdeps/generic/ldsodefs.h: Remove Alpha support.
+
 	* shlib-versions: Remove entries for ports architectures.
 
 	* elf/tls-macros.h: Remove support for Alpha and IA-64.  Should be in
