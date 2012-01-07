@@ -1,3 +1,7 @@
+2012-01-07  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/tile/backtrace.c: Use x86_64 version of backtrace.c.
+
 2011-12-03  Chris Metcalf  <cmetcalf@tilera.com>
 
 	* data/c++-types-tile-linux-gnu.data: New file.
