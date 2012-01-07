@@ -1,5 +1,21 @@
 2012-01-07  Ulrich Drepper  <drepper@gmail.com>
 
+	* iconv/gconv_builtin.h: Use CHAR16 for the char16_t conversions.
+	* iconv/gconv_simple.c: Rename char16_t routines.  Add char16_t<->utf8
+	routines.
+	* iconv/gconv_int.h: Adjust prototypes for char16_t routines.
+	* iconv/iconv_prog.c: Recognize CHAR16 as internal name.
+	* wcsmbs/c16rtomb.c: Fix a few problems.  Disable all the code and
+	fall back to using wcrtomb.
+	* wcsmbs/mbrtoc16.: Fix implementation to handle real conversions.
+	* wcsmbs/wcsmbsload.c: Make char16 routines optional.  Adjust for
+	renaming.
+	* wcsmbs/Makefile (tests): Add tst-c16c32-1:
+	* wcsmbs/tst-c16c32-1.c: New file.
+
+	* wcsmbs/wcrtomb.c: Use MB_LEN_MAX instead of MB_CUR_MAX for sizing
+	local variable.
+
 	* libio/stdio.h: Do not declare gets at all for _GNU_SOURCE.
 
 	* elf/tst-unique3.cc: Add explicit declaration of gets.

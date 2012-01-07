@@ -1,4 +1,5 @@
-/* Copyright (C) 1996-1998,2000,2002,2005,2011 Free Software Foundation, Inc.
+/* Copyright (C) 1996-1998,2000,2002,2005,2011,2012
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -38,7 +39,7 @@ static mbstate_t state;
 size_t
 __wcrtomb (char *s, wchar_t wc, mbstate_t *ps)
 {
-  char buf[MB_CUR_MAX];
+  char buf[MB_LEN_MAX];
   struct __gconv_step_data data;
   int status;
   size_t result;

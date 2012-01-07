@@ -1,4 +1,4 @@
-/* Copyright (C) 1997-2005, 2006, 2007, 2011 Free Software Foundation, Inc.
+/* Copyright (C) 1997-2005, 2006, 2007, 2011, 2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -303,8 +303,10 @@ __BUILTIN_TRANSFORM (__gconv_transform_internal_ucs4le);
 __BUILTIN_TRANSFORM (__gconv_transform_ucs4le_internal);
 __BUILTIN_TRANSFORM (__gconv_transform_internal_utf16);
 __BUILTIN_TRANSFORM (__gconv_transform_utf16_internal);
-__BUILTIN_TRANSFORM (__gconv_transform_ascii_utf16);
-__BUILTIN_TRANSFORM (__gconv_transform_utf16_ascii);
+__BUILTIN_TRANSFORM (__gconv_transform_ascii_char16);
+__BUILTIN_TRANSFORM (__gconv_transform_char16_ascii);
+__BUILTIN_TRANSFORM (__gconv_transform_utf8_char16);
+__BUILTIN_TRANSFORM (__gconv_transform_char16_utf8);
 # undef __BUITLIN_TRANSFORM
 
 /* Specialized conversion function for a single byte to INTERNAL, recognizing

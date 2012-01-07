@@ -1,5 +1,5 @@
 /* Builtin transformations.
-   Copyright (C) 1997-1999, 2000-2002, 2006, 2011 Free Software Foundation, Inc.
+   Copyright (C) 1997-1999, 2000-2002, 2006, 2011, 2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -124,22 +124,15 @@ BUILTIN_TRANSFORMATION ("INTERNAL", "UNICODEBIG//", 1,
 #endif
 
 
-BUILTIN_TRANSFORMATION ("ANSI_X3.4-1968//", "UTF-16//", 1, "=ascii->UTF-16",
-			__gconv_transform_ascii_utf16, NULL, 2, 2, 1, 1)
+BUILTIN_TRANSFORMATION ("ANSI_X3.4-1968//", "CHAR16", 1, "=ascii->CHAR16",
+			__gconv_transform_ascii_char16, NULL, 1, 1, 2, 4)
 
-BUILTIN_TRANSFORMATION ("UTF-16//", "ANSI_X3.4-1968//", 1, "=UTF-16->ascii",
-			__gconv_transform_utf16_ascii, NULL, 2, 2, 1, 1)
+BUILTIN_TRANSFORMATION ("CHAR16", "ANSI_X3.4-1968//", 1, "=CHAR16->ascii",
+			__gconv_transform_char16_ascii, NULL, 2, 4, 1, 1)
 
-#if BYTE_ORDER == BIG_ENDIAN
-BUILTIN_TRANSFORMATION ("ANSI_X3.4-1968//", "UTF-16BE//", 1, "=ascii->UTF-16BE",
-			__gconv_transform_ascii_utf16, NULL, 2, 2, 1, 1)
 
-BUILTIN_TRANSFORMATION ("UTF-16BE//", "ANSI_X3.4-1968//", 1, "=UTF-16BE->ascii",
-			__gconv_transform_utf16_ascii, NULL, 2, 2, 1, 1)
-#else
-BUILTIN_TRANSFORMATION ("ANSI_X3.4-1968//", "UTF-16LE//", 1, "=ascii->UTF-16LE",
-			__gconv_transform_ascii_utf16, NULL, 2, 2, 1, 1)
+BUILTIN_TRANSFORMATION ("ISO-10646/UTF8/", "CHAR16", 1, "=utf8->CHAR16",
+			__gconv_transform_utf8_char16, NULL, 1, 6, 2, 4)
 
-BUILTIN_TRANSFORMATION ("UTF-16LE//", "ANSI_X3.4-1968//", 1, "=UTF-16LE->ascii",
-			__gconv_transform_utf16_ascii, NULL, 2, 2, 1, 1)
-#endif
+BUILTIN_TRANSFORMATION ("CHAR16", "ISO-10646/UTF8/", 1, "=CHAR16->utf8",
+			__gconv_transform_char16_utf8, NULL, 2, 4, 1, 6)

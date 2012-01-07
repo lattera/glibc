@@ -719,10 +719,12 @@ add_known_names (struct gconv_module *node)
     add_known_names (node->right);
   do
     {
-      if (strcmp (node->from_string, "INTERNAL"))
+      if (strcmp (node->from_string, "INTERNAL") != 0
+	  && strcmp (node->from_string, "CHAR16") != 0)
 	tsearch (node->from_string, &printlist,
 		 (__compar_fn_t) strverscmp);
-      if (strcmp (node->to_string, "INTERNAL") != 0)
+      if (strcmp (node->to_string, "INTERNAL") != 0
+	  && strcmp (node->to_string, "CHAR16") != 0)
 	tsearch (node->to_string, &printlist, (__compar_fn_t) strverscmp);
 
       node = node->same;
@@ -748,7 +750,8 @@ insert_cache (void)
       {
 	const char *str = strtab + hashtab[cnt].string_offset;
 
-	if (strcmp (str, "INTERNAL") != 0)
+	if (strcmp (str, "INTERNAL") != 0
+	    && strcmp (str, "CHAR16") != 0)
 	  tsearch (str, &printlist, (__compar_fn_t) strverscmp);
       }
 }

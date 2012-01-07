@@ -1,6 +1,6 @@
 /* Copyright (C) 2011, 2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@cygnus.com>, 2011.
+   Contributed by Ulrich Drepper <drepper@gmail.com>, 2011.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -44,7 +44,12 @@ static mbstate_t state;
 size_t
 c16rtomb (char *s, char16_t c16, mbstate_t *ps)
 {
-  char buf[MB_CUR_MAX];
+#if 1
+  // XXX The ISO C 11 spec I have does not say anything about handling
+  // XXX surrogates in this interface.
+  return wcrtomb (s, c16, ps ?: &state);
+#else
+  char buf[MB_LEN_MAX];
   struct __gconv_step_data data;
   int status;
   size_t result;
@@ -78,9 +83,9 @@ c16rtomb (char *s, char16_t c16, mbstate_t *ps)
     PTR_DEMANGLE (fct);
 #endif
 
-  /* If C16 is the NUL character we write into the output buffer the byte
-     sequence necessary for PS to get into the initial state, followed
-     by a NUL byte.  */
+  /* If C16 is the NUL character we write into the output buffer
+     the byte sequence necessary for PS to get into the initial
+     state, followed by a NUL byte.  */
   if (c16 == L'\0')
     {
       status = DL_CALL_FCT (fct, (fcts->fromc16, &data, NULL, NULL,
@@ -96,7 +101,8 @@ c16rtomb (char *s, char16_t c16, mbstate_t *ps)
 
       status = DL_CALL_FCT (fct,
 			    (fcts->fromc16, &data, &inbuf,
-			     inbuf + sizeof (char16_t), NULL, &dummy, 0, 1));
+			     inbuf + sizeof (char16_t), NULL, &dummy,
+			     0, 1));
     }
 
   /* There must not be any problems with the conversion but illegal input
@@ -118,4 +124,5 @@ c16rtomb (char *s, char16_t c16, mbstate_t *ps)
     }
 
   return result;
+#endif
 }

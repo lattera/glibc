@@ -1,5 +1,5 @@
 /* Simple transformations functions.
-   Copyright (C) 1997-2005, 2007, 2008, 2009, 2011 Free Software Foundation, Inc.
+   Copyright (C) 1997-2005, 2007, 2008, 2009, 2011, 2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -1065,6 +1065,7 @@ ucs4le_internal_loop_single (struct __gconv_step *step,
 									      \
     state->__count = inend - *inptrp;					      \
 									      \
+    assert (ch != 0xc0 && ch != 0xc1);					      \
     if (ch >= 0xc2 && ch < 0xe0)					      \
       {									      \
 	/* We expect two bytes.  The first byte cannot be 0xc0 or	      \
@@ -1322,15 +1323,15 @@ ucs4le_internal_loop_single (struct __gconv_step *step,
 #include <iconv/skeleton.c>
 
 
-/* Convert from ISO 646-IRV to UTF-16.  */
+/* Convert from ISO 646-IRV to the char16_t format.  */
 #define DEFINE_INIT		0
 #define DEFINE_FINI		0
 #define MIN_NEEDED_FROM		1
 #define MIN_NEEDED_TO		2
 #define FROM_DIRECTION		1
-#define FROM_LOOP		ascii_utf16_loop
-#define TO_LOOP			ascii_utf16_loop /* This is not used.  */
-#define FUNCTION_NAME		__gconv_transform_ascii_utf16
+#define FROM_LOOP		ascii_char16_loop
+#define TO_LOOP			ascii_char16_loop /* This is not used.  */
+#define FUNCTION_NAME		__gconv_transform_ascii_char16
 #define ONE_DIRECTION		1
 
 #define MIN_NEEDED_INPUT	MIN_NEEDED_FROM
@@ -1358,15 +1359,15 @@ ucs4le_internal_loop_single (struct __gconv_step *step,
 #include <iconv/skeleton.c>
 
 
-/* Convert from UTF-16 to ISO 646-IRV.  */
+/* Convert from the char16_t format to ISO 646-IRV.  */
 #define DEFINE_INIT		0
 #define DEFINE_FINI		0
 #define MIN_NEEDED_FROM		2
 #define MIN_NEEDED_TO		1
 #define FROM_DIRECTION		1
-#define FROM_LOOP		utf16_ascii_loop
-#define TO_LOOP			utf16_ascii_loop /* This is not used.  */
-#define FUNCTION_NAME		__gconv_transform_utf16_ascii
+#define FROM_LOOP		char16_ascii_loop
+#define TO_LOOP			char16_ascii_loop /* This is not used.  */
+#define FUNCTION_NAME		__gconv_transform_char16_ascii
 #define ONE_DIRECTION		1
 
 #define MIN_NEEDED_INPUT	MIN_NEEDED_FROM
@@ -1383,9 +1384,328 @@ ucs4le_internal_loop_single (struct __gconv_step *step,
       {									      \
 	/* It's an one byte sequence.  */				      \
 	*outptr++ = *((const uint16_t *) inptr);			      \
-	inptr += sizeof (uint16_t);					      \
+	inptr += 2;							      \
       }									      \
   }
 #define LOOP_NEED_FLAGS
+#include <iconv/loop.c>
+#include <iconv/skeleton.c>
+
+
+/* Convert from the char16_t format to UTF-8.  */
+#define DEFINE_INIT		0
+#define DEFINE_FINI		0
+#define MIN_NEEDED_FROM		2
+#define MAX_NEEDED_FROM		4
+#define MIN_NEEDED_TO		1
+#define MAX_NEEDED_TO		6
+#define FROM_DIRECTION		1
+#define FROM_LOOP		char16_utf8_loop
+#define TO_LOOP			char16_utf8_loop /* This is not used.  */
+#define FUNCTION_NAME		__gconv_transform_char16_utf8
+#define ONE_DIRECTION		1
+
+#define MIN_NEEDED_INPUT	MIN_NEEDED_FROM
+#define MAX_NEEDED_INPUT	MAX_NEEDED_FROM
+#define MIN_NEEDED_OUTPUT	MIN_NEEDED_TO
+#define MAX_NEEDED_OUTPUT	MAX_NEEDED_TO
+#define LOOPFCT			FROM_LOOP
+#define BODY \
+  {									      \
+    /* Yes, reading a 16-bit number and storing it as 32-bit is correct.  */  \
+    uint32_t wc = *((const uint16_t *) inptr);				      \
+    inptr += 2;								      \
+									      \
+    if (__builtin_expect (wc < 0x80, 1))				      \
+      /* It's an one byte sequence.  */					      \
+      *outptr++ = (unsigned char) wc;					      \
+    else								      \
+      {									      \
+	size_t step;							      \
+									      \
+	if (__builtin_expect (wc < 0xd800 || wc > 0xdfff, 1))		      \
+	  step = wc < 0x800 ? 2 : 3;					      \
+	else								      \
+	  {								      \
+	    if (__builtin_expect (inptr + 2 > inend, 0))		      \
+	      {                                                               \
+		/* We don't have enough input for another complete input      \
+		   character.  */                                             \
+		inptr -= 2;						      \
+		result = __GCONV_INCOMPLETE_INPUT;                            \
+		break;                                                        \
+	      }								      \
+									      \
+	    uint32_t sec = *((const uint16_t *) inptr);			      \
+	    if (__builtin_expect (sec < 0xdc00, 0)			      \
+		|| __builtin_expect (sec > 0xdfff, 0))			      \
+	      {								      \
+		/* This is no valid second word for a surrogate.  */	      \
+		STANDARD_FROM_LOOP_ERR_HANDLER (2);			      \
+	      }								      \
+	    inptr += 2;							      \
+	    wc = ((wc - 0xd7c0) << 10) + (sec - 0xdc00);		      \
+									      \
+	    step = wc < 0x200000 ? 4 : 5;				      \
+	  }								      \
+									      \
+	if (__builtin_expect (outptr + step > outend, 0))		      \
+	  {								      \
+	    /* Too long.  */						      \
+	    result = __GCONV_FULL_OUTPUT;				      \
+	    inptr -= step >= 4 ? 4 : 2;					      \
+	    break;							      \
+	  }								      \
+									      \
+	unsigned char *start = outptr;					      \
+	*outptr = (unsigned char) (~0xff >> step);			      \
+	outptr += step;							      \
+	do								      \
+	  {								      \
+	    start[--step] = 0x80 | (wc & 0x3f);				      \
+	    wc >>= 6;							      \
+	  }								      \
+	while (step > 1);						      \
+	start[0] |= wc;							      \
+      }									      \
+  }
+#define LOOP_NEED_FLAGS
+#include <iconv/loop.c>
+#include <iconv/skeleton.c>
+
+
+/* Convert from UTF-8 to the char16_t format.  */
+#define DEFINE_INIT		0
+#define DEFINE_FINI		0
+#define MIN_NEEDED_FROM		1
+#define MAX_NEEDED_FROM		6
+#define MIN_NEEDED_TO		2
+#define MAX_NEEDED_TO		4
+#define FROM_DIRECTION		1
+#define FROM_LOOP		utf8_char16_loop
+#define TO_LOOP			utf8_char16_loop /* This is not used.  */
+#define FUNCTION_NAME		__gconv_transform_utf8_char16
+#define ONE_DIRECTION		1
+
+#define MIN_NEEDED_INPUT	MIN_NEEDED_FROM
+#define MAX_NEEDED_INPUT	MAX_NEEDED_FROM
+#define MIN_NEEDED_OUTPUT	MIN_NEEDED_TO
+#define LOOPFCT			FROM_LOOP
+#define BODY \
+  {									      \
+    /* Next input byte.  */						      \
+    uint32_t ch = *inptr;						      \
+									      \
+    if (__builtin_expect (ch < 0x80, 1))				      \
+      {									      \
+	/* One byte sequence.  */					      \
+	*((uint16_t *) outptr) = ch;					      \
+	outptr += 2;							      \
+	++inptr;							      \
+      }									      \
+    else								      \
+      {									      \
+	uint_fast32_t cnt;						      \
+	uint_fast32_t i;						      \
+									      \
+	if (ch >= 0xc2 && ch < 0xe0)					      \
+	  {								      \
+	    /* We expect two bytes.  The first byte cannot be 0xc0 or 0xc1,   \
+	       otherwise the wide character could have been represented	      \
+	       using a single byte.  */					      \
+	    cnt = 2;							      \
+	    ch &= 0x1f;							      \
+	  }								      \
+	else if (__builtin_expect ((ch & 0xf0) == 0xe0, 1))		      \
+	  {								      \
+	    /* We expect three bytes.  */				      \
+	    cnt = 3;							      \
+	    ch &= 0x0f;							      \
+	  }								      \
+	else if (__builtin_expect ((ch & 0xf8) == 0xf0, 1))		      \
+	  {								      \
+	    /* We expect four bytes.  */				      \
+	    cnt = 4;							      \
+	    ch &= 0x07;							      \
+	  }								      \
+	else if (__builtin_expect ((ch & 0xfc) == 0xf8, 1))		      \
+	  {								      \
+	    /* We expect five bytes.  */				      \
+	    cnt = 5;							      \
+	    ch &= 0x03;							      \
+	  }								      \
+	else if (__builtin_expect ((ch & 0xfe) == 0xfc, 1))		      \
+	  {								      \
+	    /* We expect six bytes.  */					      \
+	    cnt = 6;							      \
+	    ch &= 0x01;							      \
+	  }								      \
+	else								      \
+	  {								      \
+	    /* Search the end of this ill-formed UTF-8 character.  This	      \
+	       is the next byte with (x & 0xc0) != 0x80.  */		      \
+	    i = 0;							      \
+	    do								      \
+	      ++i;							      \
+	    while (inptr + i < inend					      \
+		   && (*(inptr + i) & 0xc0) == 0x80			      \
+		   && i < 5);						      \
+									      \
+	  errout:							      \
+	    STANDARD_FROM_LOOP_ERR_HANDLER (i);				      \
+	  }								      \
+									      \
+	if (__builtin_expect (inptr + cnt > inend, 0))			      \
+	  {								      \
+	    /* We don't have enough input.  But before we report that check   \
+	       that all the bytes are correct.  */			      \
+	    for (i = 1; inptr + i < inend; ++i)				      \
+	      if ((inptr[i] & 0xc0) != 0x80)				      \
+		break;							      \
+									      \
+	    if (__builtin_expect (inptr + i == inend, 1))		      \
+	      {								      \
+		result = __GCONV_INCOMPLETE_INPUT;			      \
+		break;							      \
+	      }								      \
+									      \
+	    goto errout;						      \
+	  }								      \
+									      \
+	/* Read the possible remaining bytes.  */			      \
+	for (i = 1; i < cnt; ++i)					      \
+	  {								      \
+	    uint32_t byte = inptr[i];					      \
+									      \
+	    if ((byte & 0xc0) != 0x80)					      \
+	      /* This is an illegal encoding.  */			      \
+	      break;							      \
+									      \
+	    ch <<= 6;							      \
+	    ch |= byte & 0x3f;						      \
+	  }								      \
+									      \
+	/* If i < cnt, some trail byte was not >= 0x80, < 0xc0.		      \
+	   If cnt > 2 and ch < 2^(5*cnt-4), the wide character ch could	      \
+	   have been represented with fewer than cnt bytes.  */		      \
+	if (i < cnt || (cnt > 2 && (ch >> (5 * cnt - 4)) == 0)		      \
+	    /* Do not accept UTF-16 surrogates.  */			      \
+	    || (ch >= 0xd800 && ch <= 0xdfff))				      \
+	  {								      \
+	    /* This is an illegal encoding.  */				      \
+	    goto errout;						      \
+	  }								      \
+									      \
+	/* Now adjust the pointers and store the result.  */		      \
+	if (ch < 0x10000)						      \
+	  *((uint16_t *) outptr) = ch;					      \
+	else								      \
+	  {								      \
+	    if (__builtin_expect (outptr + 4 > outend, 0))		      \
+	      {								      \
+		result = __GCONV_FULL_OUTPUT;				      \
+		break;							      \
+	      }								      \
+									      \
+	    *((uint16_t *) outptr) = 0xd7c0 + (ch >> 10);		      \
+	    outptr += 2;						      \
+	    *((uint16_t *) outptr) = 0xdc00 + (ch & 0x3ff);		      \
+	  }								      \
+									      \
+	outptr += 2;							      \
+	inptr += cnt;							      \
+      }									      \
+  }
+#define LOOP_NEED_FLAGS
+
+#define STORE_REST \
+  {									      \
+    /* We store the remaining bytes while converting them into the UCS4	      \
+       format.  We can assume that the first byte in the buffer is	      \
+       correct and that it requires a larger number of bytes than there	      \
+       are in the input buffer.  */					      \
+    wint_t ch = **inptrp;						      \
+    size_t cnt, r;							      \
+									      \
+    state->__count = inend - *inptrp;					      \
+									      \
+    assert (ch != 0xc0 && ch != 0xc1);					      \
+    if (ch >= 0xc2 && ch < 0xe0)					      \
+      {									      \
+	/* We expect two bytes.  The first byte cannot be 0xc0 or	      \
+	   0xc1, otherwise the wide character could have been		      \
+	   represented using a single byte.  */				      \
+	cnt = 2;							      \
+	ch &= 0x1f;							      \
+      }									      \
+    else if (__builtin_expect ((ch & 0xf0) == 0xe0, 1))			      \
+      {									      \
+	/* We expect three bytes.  */					      \
+	cnt = 3;							      \
+	ch &= 0x0f;							      \
+      }									      \
+    else if (__builtin_expect ((ch & 0xf8) == 0xf0, 1))			      \
+      {									      \
+	/* We expect four bytes.  */					      \
+	cnt = 4;							      \
+	ch &= 0x07;							      \
+      }									      \
+    else if (__builtin_expect ((ch & 0xfc) == 0xf8, 1))			      \
+      {									      \
+	/* We expect five bytes.  */					      \
+	cnt = 5;							      \
+	ch &= 0x03;							      \
+      }									      \
+    else								      \
+      {									      \
+	/* We expect six bytes.  */					      \
+	cnt = 6;							      \
+	ch &= 0x01;							      \
+      }									      \
+									      \
+    /* The first byte is already consumed.  */				      \
+    r = cnt - 1;							      \
+    while (++(*inptrp) < inend)						      \
+      {									      \
+	ch <<= 6;							      \
+	ch |= **inptrp & 0x3f;						      \
+	--r;								      \
+      }									      \
+									      \
+    /* Shift for the so far missing bytes.  */				      \
+    ch <<= r * 6;							      \
+									      \
+    /* Store the number of bytes expected for the entire sequence.  */	      \
+    state->__count |= cnt << 8;						      \
+									      \
+    /* Store the value.  */						      \
+    state->__value.__wch = ch;						      \
+  }
+
+#define UNPACK_BYTES \
+  {									      \
+    static const unsigned char inmask[5] = { 0xc0, 0xe0, 0xf0, 0xf8, 0xfc };  \
+    wint_t wch = state->__value.__wch;					      \
+    size_t ntotal = state->__count >> 8;				      \
+									      \
+    inlen = state->__count & 255;					      \
+									      \
+    bytebuf[0] = inmask[ntotal - 2];					      \
+									      \
+    do									      \
+      {									      \
+	if (--ntotal < inlen)						      \
+	  bytebuf[ntotal] = 0x80 | (wch & 0x3f);			      \
+	wch >>= 6;							      \
+      }									      \
+    while (ntotal > 1);							      \
+									      \
+    bytebuf[0] |= wch;							      \
+  }
+
+#define CLEAR_STATE \
+  state->__count = 0
+
+
 #include <iconv/loop.c>
 #include <iconv/skeleton.c>
