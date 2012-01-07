@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,1992,1994-2001,2003,2004,2007,2011
+/* Copyright (C) 1991,1992,1994-2001,2003,2004,2007,2011,2012
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -115,7 +115,7 @@ __END_DECLS
 #endif /* NDEBUG.  */
 
 
-#ifdef __USE_ISOC11
+#if defined __USE_ISOC11 && !defined __cplusplus
 /* Static assertion.  Requires support in the compiler.  */
 # undef static_assert
 # define static_assert _Static_assert
