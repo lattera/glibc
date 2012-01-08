@@ -1,3 +1,31 @@
+2012-01-08  Ulrich Drepper  <drepper@gmail.com>
+
+	* configure.in: Remove --with-elf and --enable-bounded options.
+	Dont set base_machine for ia64.  More non-ELF conditions removed.
+	Remove testing and setting of leading underscore information.
+	* config.make.in (build-bounded): Set to no.
+	* config.h.in: Remove NO_UNDERSCORES entry.
+	* include/libc-symbols.h: Don't define HAVE_WEAK_SYMBOLS.  ELF has
+	them.
+	* csu/start.c: Remove !NO_UNDERSCORE code.
+	* locale/localeinfo.h: Likewise.
+	* sysdeps/generic/machine-gmon.h: Likewise.
+	* sysdeps/generic/sysdep.h: Likewise.
+	* sysdeps/i386/sysdep.h: Likewise.
+	* sysdeps/ieee754/ldbl-opt/math_ldbl_opt.h: Likewise.
+	* sysdeps/mach/sysdep.h: Likewise.
+	* sysdeps/s390/s390-32/sysdep.h: Likewise.
+	* sysdeps/s390/s390-64/sysdep.h: Likewise.
+	* sysdeps/sh/sysdep.h: Likewise.
+	* sysdeps/sparc/sparc32/alloca.S: Likewise.
+	* sysdeps/unix/i386/sysdep.S: Likewise.
+	* sysdeps/unix/sparc/start.c: Likewise.
+	* sysdeps/unix/sparc/sysdep.S: Likewise.
+	* sysdeps/unix/sparc/sysdep.h: Likewise.
+	* sysdeps/unix/start.c: Likewise.
+	* sysdeps/unix/x86_64/sysdep.S: Likewise.
+	* sysdeps/x86_64/sysdep.h: Likewise.
+
 2012-01-07  Ulrich Drepper  <drepper@gmail.com>
 
 	[BZ #13553]

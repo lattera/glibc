@@ -8,6 +8,4 @@
 
 /* The first piece of initialized data.  */
 int __data_start = 0;
-#ifdef HAVE_WEAK_SYMBOLS
 weak_alias (__data_start, data_start)
-#endif

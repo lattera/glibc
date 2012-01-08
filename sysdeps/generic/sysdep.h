@@ -1,5 +1,5 @@
 /* Generic asm macros used on many machines.
-   Copyright (C) 1991-1993,96,98,2002,2003,2009,2011
+   Copyright (C) 1991-1993,96,98,2002,2003,2009,2011,2012
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -21,18 +21,10 @@
 #ifndef C_LABEL
 
 /* Define a macro we can use to construct the asm name for a C symbol.  */
-# ifdef	NO_UNDERSCORES
-#  ifdef __STDC__
-#   define C_LABEL(name)	name##:
-#  else
-#   define C_LABEL(name)	name/**/:
-#  endif
+# ifdef __STDC__
+#  define C_LABEL(name)	name##:
 # else
-#  ifdef __STDC__
-#   define C_LABEL(name)	_##name##:
-#  else
-#   define C_LABEL(name)	_/**/name/**/:
-#  endif
+#  define C_LABEL(name)	name/**/:
 # endif
 
 #endif

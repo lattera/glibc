@@ -1,4 +1,4 @@
-/* Copyright (C) 2001, 2002, 2004, 2005, 2011 Free Software Foundation, Inc.
+/* Copyright (C) 2001,2002,2004,2005,2011,2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -30,12 +30,7 @@
 .globl C_SYMBOL_NAME(errno)
 .globl syscall_error
 
-#undef syscall_error
-#ifdef NO_UNDERSCORES
 __syscall_error:
-#else
-syscall_error:
-#endif
 #if defined (EWOULDBLOCK_sys) && EWOULDBLOCK_sys != EAGAIN
 	/* We translate the system's EWOULDBLOCK error into EAGAIN.
 	   The GNU C library always defines EWOULDBLOCK==EAGAIN.

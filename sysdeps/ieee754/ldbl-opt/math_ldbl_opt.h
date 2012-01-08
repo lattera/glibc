@@ -20,7 +20,7 @@
   long_double_symbol (libc, __GL_##name##_##aliasname, aliasname);
 # define long_double_symbol_1(lib, local, symbol, version) \
   versioned_symbol (lib, local, symbol, version)
-#elif defined HAVE_WEAK_SYMBOLS
+#else
 # define ldbl_hidden_def(local, name) libc_hidden_def (name)
 # define ldbl_strong_alias(name, aliasname) strong_alias (name, aliasname)
 # define ldbl_weak_alias(name, aliasname) weak_alias (name, aliasname)
@@ -33,12 +33,6 @@
 #  define long_double_symbol_1(lib, local, symbol, version) \
   weak_alias (local, symbol)
 # endif
-#else
-# define ldbl_hidden_def(local, name) libc_hidden_def (name)
-# define ldbl_strong_alias(name, aliasname) strong_alias (name, aliasname)
-# define ldbl_weak_alias(name, aliasname) strong_alias (name, aliasname)
-# define long_double_symbol_1(lib, local, symbol, version) \
-  strong_alias (local, symbol)
 #endif
 
 #ifndef __ASSEMBLER__

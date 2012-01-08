@@ -1,5 +1,5 @@
 /* Machine-dependent definitions for profiling support.  Generic GCC 2 version.
-   Copyright (C) 1996, 1997, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 2000, 2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -31,16 +31,10 @@
 #endif
 
 #include <sysdep.h>
-#ifndef NO_UNDERSCORES
-/* The asm symbols for C functions are `_function'.
-   The canonical name for the counter function is `mcount', no _.  */
-void _mcount (void) asm ("mcount");
-#else
 /* The canonical name for the function is `_mcount' in both C and asm,
    but some old asm code might assume it's `mcount'.  */
 void _mcount (void);
 weak_alias (_mcount, mcount)
-#endif
 
 static void mcount_internal (u_long frompc, u_long selfpc);
 

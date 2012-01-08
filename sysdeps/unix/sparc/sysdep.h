@@ -22,12 +22,10 @@
 
 #ifdef	__ASSEMBLER__
 
-#ifdef	NO_UNDERSCORES
 /* Since C identifiers are not normally prefixed with an underscore
    on this system, the asm identifier `syscall_error' intrudes on the
    C name space.  Make sure we use an innocuous name.  */
 #define	syscall_error	C_SYMBOL_NAME(__syscall_error)
-#endif
 
 #ifdef PIC
 #define SETUP_PIC_REG(reg, tmp)						\

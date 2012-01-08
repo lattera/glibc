@@ -84,8 +84,4 @@
 #endif
 
 /* Used by some assembly code.  */
-#ifdef NO_UNDERSCORES
 #define C_SYMBOL_NAME(name)	name
-#else
-#define C_SYMBOL_NAME(name)	_##name
-#endif

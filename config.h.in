@@ -17,10 +17,6 @@
 /* Defined if building with SELinux support & libcap libs are detected.  */
 #undef  HAVE_LIBCAP
 
-/* Define if C symbols are asm symbols.  Don't define if C symbols
-   have a `_' prepended to make the asm symbol.  */
-#undef	NO_UNDERSCORES
-
 /* Define if weak symbols are available via the `.weak' directive.  */
 #undef	HAVE_ASM_WEAK_DIRECTIVE
 

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,92,93,94,95,96,97,2004 Free Software Foundation, Inc.
+/* Copyright (C) 1991-1997,2004,2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -52,9 +52,7 @@
 
 /* The first piece of initialized data.  */
 int __data_start = 0;
-#ifdef HAVE_WEAK_SYMBOLS
 weak_alias (__data_start, data_start)
-#endif
 
 extern void __libc_init (int argc, char **argv, char **envp) __THROW;
 extern int main (int argc, char **argv, char **envp) __THROW;

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 93, 1995-1998, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 93, 1995-1998, 2000, 2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -40,9 +40,7 @@
 
 /* The first piece of initialized data.  */
 int __data_start = 0;
-#ifdef HAVE_WEAK_SYMBOLS
 weak_alias (__data_start, data_start)
-#endif
 
 #ifdef	DUMMIES
 #define	ARG_DUMMIES	DUMMIES,
@@ -68,13 +66,6 @@ _start ()
 {
   start1 ();
 }
-
-#ifndef NO_UNDERSCORES
-/* Make an alias called `start' (no leading underscore, so it can't
-   conflict with C symbols) for `_start'.  This is the name vendor crt0.o's
-   tend to use, and thus the name most linkers expect.  */
-asm (".set start, __start");
-#endif
 
 #endif
 

@@ -55,24 +55,16 @@
 
 /* The symbols in all the user (non-_) macros are C symbols.  */
 
-#if defined HAVE_ASM_WEAK_DIRECTIVE || defined HAVE_ASM_WEAKEXT_DIRECTIVE
-# define HAVE_WEAK_SYMBOLS
+#if !defined HAVE_ASM_WEAK_DIRECTIVE && !defined HAVE_ASM_WEAKEXT_DIRECTIVE
+# error "weak symbol support needed"
 #endif
 
 #ifndef __SYMBOL_PREFIX
-# ifdef NO_UNDERSCORES
-#  define __SYMBOL_PREFIX
-# else
-#  define __SYMBOL_PREFIX "_"
-# endif
+# define __SYMBOL_PREFIX
 #endif
 
 #ifndef C_SYMBOL_NAME
-# ifdef NO_UNDERSCORES
-#  define C_SYMBOL_NAME(name) name
-# else
-#  define C_SYMBOL_NAME(name) _##name
-# endif
+# define C_SYMBOL_NAME(name) name
 #endif
 
 #ifndef ASM_LINE_SEP
@@ -104,32 +96,23 @@
 # define weak_function __attribute__ ((weak))
 # define weak_const_function __attribute__ ((weak, __const__))
 
-# ifdef HAVE_WEAK_SYMBOLS
-
 /* Define ALIASNAME as a weak alias for NAME.
    If weak aliases are not available, this defines a strong alias.  */
-#  define weak_alias(name, aliasname) _weak_alias (name, aliasname)
-#  define _weak_alias(name, aliasname) \
+# define weak_alias(name, aliasname) _weak_alias (name, aliasname)
+# define _weak_alias(name, aliasname) \
   extern __typeof (name) aliasname __attribute__ ((weak, alias (#name)));
 
 /* Same as WEAK_ALIAS, but mark symbol as hidden.  */
-#  define weak_hidden_alias(name, aliasname) \
+# define weak_hidden_alias(name, aliasname) \
   _weak_hidden_alias (name, aliasname)
-#  define _weak_hidden_alias(name, aliasname) \
+# define _weak_hidden_alias(name, aliasname) \
   extern __typeof (name) aliasname \
     __attribute__ ((weak, alias (#name), __visibility__ ("hidden")));
 
 /* Declare SYMBOL as weak undefined symbol (resolved to 0 if not defined).  */
-#  define weak_extern(symbol) _weak_extern (weak symbol)
-#  define _weak_extern(expr) _Pragma (#expr)
+# define weak_extern(symbol) _weak_extern (weak symbol)
+# define _weak_extern(expr) _Pragma (#expr)
 
-# else
-
-#  define weak_alias(name, aliasname) strong_alias(name, aliasname)
-#  define weak_hidden_alias(name, aliasname) strong_alias(name, aliasname)
-#  define weak_extern(symbol) /* Nothing. */
-
-# endif
 
 #else /* __ASSEMBLER__ */
 
@@ -167,43 +150,36 @@
 #  endif
 # endif
 
-# ifdef HAVE_WEAK_SYMBOLS
-#  ifdef HAVE_ASM_WEAKEXT_DIRECTIVE
-#   ifdef HAVE_ASM_GLOBAL_DOT_NAME
-#    define weak_alias(original, alias)					\
+# ifdef HAVE_ASM_WEAKEXT_DIRECTIVE
+#  ifdef HAVE_ASM_GLOBAL_DOT_NAME
+#   define weak_alias(original, alias)					\
   .weakext C_SYMBOL_NAME (alias), C_SYMBOL_NAME (original) ASM_LINE_SEP \
   .weakext C_SYMBOL_DOT_NAME (alias), C_SYMBOL_DOT_NAME (original)
-#   else
-#    define weak_alias(original, alias)					\
+#  else
+#   define weak_alias(original, alias)					\
   .weakext C_SYMBOL_NAME (alias), C_SYMBOL_NAME (original)
-#   endif
-#   define weak_extern(symbol)						\
+#  endif
+#  define weak_extern(symbol)						\
   .weakext C_SYMBOL_NAME (symbol)
 
-#  else /* ! HAVE_ASM_WEAKEXT_DIRECTIVE */
+# else /* ! HAVE_ASM_WEAKEXT_DIRECTIVE */
 
-#   ifdef HAVE_ASM_GLOBAL_DOT_NAME
-#    define weak_alias(original, alias)					\
+#  ifdef HAVE_ASM_GLOBAL_DOT_NAME
+#   define weak_alias(original, alias)					\
   .weak C_SYMBOL_NAME (alias) ASM_LINE_SEP				\
   C_SYMBOL_NAME (alias) = C_SYMBOL_NAME (original) ASM_LINE_SEP		\
   .weak C_SYMBOL_DOT_NAME (alias) ASM_LINE_SEP				\
   C_SYMBOL_DOT_NAME (alias) = C_SYMBOL_DOT_NAME (original)
-#   else
-#    define weak_alias(original, alias)					\
+#  else
+#   define weak_alias(original, alias)					\
   .weak C_SYMBOL_NAME (alias) ASM_LINE_SEP				\
   C_SYMBOL_NAME (alias) = C_SYMBOL_NAME (original)
-#   endif
+#  endif
 
-#   define weak_extern(symbol)						\
+#  define weak_extern(symbol)						\
   .weak C_SYMBOL_NAME (symbol)
 
-#  endif /* ! HAVE_ASM_WEAKEXT_DIRECTIVE */
-
-# else /* ! HAVE_WEAK_SYMBOLS */
-
-#  define weak_alias(original, alias) strong_alias(original, alias)
-#  define weak_extern(symbol) /* Nothing */
-# endif /* ! HAVE_WEAK_SYMBOLS */
+# endif /* ! HAVE_ASM_WEAKEXT_DIRECTIVE */
 
 #endif /* __ASSEMBLER__ */
 
