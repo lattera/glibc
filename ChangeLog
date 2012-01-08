@@ -1,7 +1,7 @@
 2012-01-08  Ulrich Drepper  <drepper@gmail.com>
 
 	* math/Makefile (tests): Add tst-CMPLX.
-	* math/test-CMPLX.c: New file.
+	* math/tst-CMPLX.c: New file.
 
 	* math/complex.h (CMPLXL): Fix typo.
 
@@ -40,7 +40,6 @@
 	Don't set libc_commonpagesize and libc_relro_required here for Alpha
 	and IA-64.
 	Remove __builtin_expect test because we require at least gcc 3.4.
-
 	* aclocal.m4: Likewise.
 
 	* wcsmbs/mbrtoc16.c: Implement using towc function.
