@@ -32,6 +32,8 @@ Version 2.16
   Implemented by Ulrich Drepper.
 
 * Support for the IA-64 is removed and could live in ports.
+
+* Remove support for anything but ELF binary format
 
 Version 2.15
 
