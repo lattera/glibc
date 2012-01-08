@@ -5634,30 +5634,6 @@ fi
 
 
 
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for signed size_t type" >&5
-$as_echo_n "checking for signed size_t type... " >&6; }
-if ${libc_cv_signed_size_t+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  echo '#include <stddef.h>
-FOOBAR __SIZE_TYPE__ FOOBAR' > conftest.c
-if eval "$ac_cpp conftest.c 2>/dev/null" \
-| grep '^FOOBAR.*unsigned.*FOOBAR$' >/dev/null; then
-  libc_cv_signed_size_t=no
-else
-  libc_cv_signed_size_t=yes
-fi
-rm -f conftest*
-fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_signed_size_t" >&5
-$as_echo "$libc_cv_signed_size_t" >&6; }
-if test $libc_cv_signed_size_t = yes; then
-    cat >> confdefs.h <<\EOF
-#undef __SIZE_TYPE__
-#define __SIZE_TYPE__ unsigned
-EOF
-fi
-
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for libc-friendly stddef.h" >&5
 $as_echo_n "checking for libc-friendly stddef.h... " >&6; }
 if ${libc_cv_friendly_stddef+:} false; then :

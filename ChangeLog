@@ -1,6 +1,8 @@
 2012-01-08  Ulrich Drepper  <drepper@gmail.com>
 
 	* configure.in: Remove last remnants of RANLIB.
+	No need to check for signed size_t anymore.
+
 	* aclocal.m4: Likewise.
 
 	* wcsmbs/mbrtoc16.c: Implement using towc function.

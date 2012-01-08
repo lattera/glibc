@@ -1096,24 +1096,6 @@ AC_PATH_PROG(INSTALL_INFO, install-info, no,
 	     $PATH:/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin)
 AC_PATH_PROG(BISON, bison, no, $PATH:/usr/local/bin:/usr/bin:/bin)
 
-AC_CACHE_CHECK(for signed size_t type, libc_cv_signed_size_t, [dnl
-echo '#include <stddef.h>
-FOOBAR __SIZE_TYPE__ FOOBAR' > conftest.c
-if eval "$ac_cpp conftest.c 2>/dev/null" \
-| grep '^FOOBAR.*unsigned.*FOOBAR$' >/dev/null; then
-  libc_cv_signed_size_t=no
-else
-  libc_cv_signed_size_t=yes
-fi
-rm -f conftest*])
-if test $libc_cv_signed_size_t = yes; then
-  dnl Do this by hand instead of AC_DEFINE so can add #undef to avoid warnings.
-  cat >> confdefs.h <<\EOF
-#undef __SIZE_TYPE__
-#define __SIZE_TYPE__ unsigned
-EOF
-fi
-
 AC_CACHE_CHECK(for libc-friendly stddef.h, libc_cv_friendly_stddef, [dnl
 AC_TRY_COMPILE(dnl
 [#define __need_size_t
