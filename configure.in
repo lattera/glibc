@@ -1027,9 +1027,6 @@ fi
 AC_SUBST(SYSINCLUDES)
 AC_SUBST(CXX_SYSINCLUDES)
 
-# ranlib is never necessary on Linux and Hurd systems
-RANLIB=:
-
 # Test if LD_LIBRARY_PATH contains the notation for the current directory
 # since this would lead to problems installing/building glibc.
 # LD_LIBRARY_PATH contains the current directory if one of the following

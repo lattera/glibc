@@ -1,5 +1,8 @@
 2012-01-08  Ulrich Drepper  <drepper@gmail.com>
 
+	* configure.in: Remove last remnants of RANLIB.
+	* aclocal.m4: Likewise.
+
 	* wcsmbs/mbrtoc16.c: Implement using towc function.
 	* wcsmbs/wcsmbsload.h: No need for toc16 and fromc16 functions.
 	* wcsmbs/wcsmbsload.c: Likewise.
