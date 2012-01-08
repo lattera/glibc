@@ -1,3 +1,13 @@
+2012-01-08  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/mips/bits/fenv.h: Use const instead of __const.
+	* sysdeps/unix/sysv/linux/mips/bits/resource.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/bits/socket.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/sys/cachectl.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/sys/epoll.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/sys/sysmips.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/sys/timerfd.h: Likewise.
+
 2012-01-07  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/mips/nptl/shlib-versions: New.

@@ -1,4 +1,5 @@
-/* Copyright (C) 1995, 1997, 2000, 2001, 2009 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1997, 2000, 2001, 2009, 2012
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -36,7 +37,7 @@
 
 __BEGIN_DECLS
 
-extern int sysmips (__const int __cmd, ...) __THROW;
+extern int sysmips (const int __cmd, ...) __THROW;
 
 __END_DECLS
 
