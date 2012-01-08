@@ -4,6 +4,7 @@
 	No need to check for signed size_t anymore.
 	Don't set libc_commonpagesize and libc_relro_required here for Alpha
 	and IA-64.
+	Remove __builtin_expect test because we require at least gcc 3.4.
 
 	* aclocal.m4: Likewise.
 
