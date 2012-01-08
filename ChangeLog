@@ -1,5 +1,8 @@
 2012-01-08  Ulrich Drepper  <drepper@gmail.com>
 
+	[BZ #1350]
+	* math/complex.h (CMPLX, CMPLXF, CMPLXL): Define.
+
 	* configure.in: static is always set to yes.  Remove.
 	* config.make.in: Don't set build-static.
 	* Makeconfig: Remove use of build-static.

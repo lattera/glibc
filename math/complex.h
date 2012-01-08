@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998, 1999, 2000, 2006, 2011 Free Software Foundation, Inc.
+/* Copyright (C) 1997-2000, 2006, 2011, 2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -48,6 +48,15 @@ __BEGIN_DECLS
    XXX Once we have the imaginary support switch this to _Imaginary_I.  */
 #undef I
 #define I _Complex_I
+
+#if defined __USE_ISOC11 && __GNUC_PREREQ (4, 7)
+/* Macros to expand into expression of specified complex type.  */
+# define CMPLX(x, y) __builtin_complex ((double) (x), (double) (y))
+# define CMPLXF(x, y) __builtin_complex ((float) (x), (float) (y))
+# ifndef __NO_LONG_DOUBLE_MATH
+#  define CMPLXL(x, y) __builtin_complex ((double) (x), (double) (y))
+# endif
+#endif
 
 /* The file <bits/cmathcalls.h> contains the prototypes for all the
    actual math functions.  These macros are used for those prototypes,
