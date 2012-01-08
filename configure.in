@@ -2180,7 +2180,6 @@ AC_SUBST(libc_cv_pic_default)
 
 AC_SUBST(profile)
 AC_SUBST(static_nss)
-AC_SUBST(nopic_initfini)
 
 AC_SUBST(DEFINES)
 

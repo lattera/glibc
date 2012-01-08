@@ -609,7 +609,6 @@ RELEASE
 VERSION
 mach_interface_list
 DEFINES
-nopic_initfini
 static_nss
 profile
 libc_cv_pic_default
@@ -7663,7 +7662,6 @@ rm -f conftest.*
 fi
 { $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_pic_default" >&5
 $as_echo "$libc_cv_pic_default" >&6; }
-
 
 
 

@@ -73,10 +73,6 @@ endif
 before-compile += $(objpfx)abi-tag.h
 generated += abi-tag.h
 
-ifeq ($(have-initfini),yes)
-
-CPPFLAGS += -DHAVE_INITFINI
-
 # These are the special initializer/finalizer files.  They are always the
 # first and last file in the link.  crti.o ... crtn.o define the global
 # "functions" _init and _fini to run the .init and .fini sections.
@@ -126,8 +122,6 @@ $(patsubst %,$(objpfx)crt%.o,i n): %.o: %.S
 $(objpfx)defs.h: $(objpfx)initfini.s
 	sed -n -e '/@TESTS_BEGIN/,/@TESTS_END/p' $< | \
 		$(AWK) -f defs.awk > $@
-
-endif
 
 endif
 

@@ -389,9 +389,6 @@ ifndef asm-CPPFLAGS
 asm-CPPFLAGS =
 endif
 
-# ELF always supports init/fini sections
-have-initfini = yes
-
 ifeq ($(have-as-needed),yes)
 as-needed := -Wl,--as-needed
 no-as-needed := -Wl,--no-as-needed
@@ -405,14 +402,8 @@ no-whole-archive = -Wl,--no-whole-archive
 whole-archive = -Wl,--whole-archive
 
 # Installed name of the startup code.
-ifneq ($(have-initfini),yes)
-# When not having init/fini, there is just one startfile, called crt0.o.
-start-installed-name = crt0.o
-else
-# On systems having init/fini, crt0.o is called crt1.o, and there are
-# some additional bizarre files.
+# The ELF convention is that the startfile is called crt1.o
 start-installed-name = crt1.o
-endif
 # On systems that do not need a special startfile for statically linked
 # binaries, simply set it to the normal name.
 ifndef static-start-installed-name
