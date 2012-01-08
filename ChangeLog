@@ -1,5 +1,8 @@
 2012-01-08  Ulrich Drepper  <drepper@gmail.com>
 
+	* configure.in: PWD_P is not used anymore.
+	* config.make.in: Remove PWD_P entry.
+
 	* configure.in: Remove last remnants of RANLIB.
 	No need to check for signed size_t anymore.
 	Don't set libc_commonpagesize and libc_relro_required here for Alpha
