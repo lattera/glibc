@@ -1,5 +1,8 @@
 2012-01-08  Ulrich Drepper  <drepper@gmail.com>
 
+	* math/Makefile (tests): Add tst-CMPLX.
+	* math/test-CMPLX.c: New file.
+
 	* math/complex.h (CMPLXL): Fix typo.
 
 	* debug/Makefile (routines): Add poll_chk and ppoll_chk.
