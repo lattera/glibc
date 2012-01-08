@@ -1,5 +1,7 @@
 2012-01-08  Ulrich Drepper  <drepper@gmail.com>
 
+	* math/complex.h (CMPLXL): Fix typo.
+
 	* debug/Makefile (routines): Add poll_chk and ppoll_chk.
 	* debug/Versions: Export __pool_chk and __ppoll_chk from libc for
 	GLIBC_2.16.

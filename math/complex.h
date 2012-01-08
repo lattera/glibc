@@ -54,7 +54,7 @@ __BEGIN_DECLS
 # define CMPLX(x, y) __builtin_complex ((double) (x), (double) (y))
 # define CMPLXF(x, y) __builtin_complex ((float) (x), (float) (y))
 # ifndef __NO_LONG_DOUBLE_MATH
-#  define CMPLXL(x, y) __builtin_complex ((double) (x), (double) (y))
+#  define CMPLXL(x, y) __builtin_complex ((long double) (x), (long double) (y))
 # endif
 #endif
 
