@@ -1498,13 +1498,6 @@ case "$base_machine" in
     libc_commonpagesize=0x2000
     libc_relro_required=yes
     ;;
-  ia64*)
-    libc_commonpagesize=0x4000
-    ;;
-  alpha*)
-    libc_commonpagesize=0x10000
-    libc_relro_required=yes
-    ;;
 esac
 
 if test $libc_commonpagesize != no; then

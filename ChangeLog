@@ -2,6 +2,8 @@
 
 	* configure.in: Remove last remnants of RANLIB.
 	No need to check for signed size_t anymore.
+	Don't set libc_commonpagesize and libc_relro_required here for Alpha
+	and IA-64.
 
 	* aclocal.m4: Likewise.
 
