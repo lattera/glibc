@@ -1,5 +1,6 @@
 /* Assembler macros for ARM.
-   Copyright (C) 1997, 1998, 2003, 2009, 2010 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 2003, 2009, 2010, 2012
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -29,8 +30,6 @@
 
 /* Syntactic details of assembler.  */
 
-#ifdef HAVE_ELF
-
 #define ALIGNARG(log2) log2
 /* For ELF we need the `.type' directive to make shared libs work right.  */
 #define ASM_TYPE_DIRECTIVE(name,typearg) .type name,%##typearg;
@@ -41,16 +40,6 @@
 #define NO_UNDERSCORES
 
 #define PLTJMP(_x)	_x##(PLT)
-
-#else
-
-#define ALIGNARG(log2) log2
-#define ASM_TYPE_DIRECTIVE(name,type)	/* Nothing is specified.  */
-#define ASM_SIZE_DIRECTIVE(name)	/* Nothing is specified.  */
-
-#define PLTJMP(_x)	_x
-
-#endif
 
 /* APCS-32 doesn't preserve the condition codes across function call. */
 #ifdef __APCS_32__

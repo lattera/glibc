@@ -1,3 +1,7 @@
+2012-01-08  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/arm/sysdep.h: Remove non-ELF support.
+
 2012-01-07  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/arm/preconfigure: Give error for old-ABI ARM.
