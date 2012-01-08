@@ -29,10 +29,6 @@
 # define ASM_TYPE_DIRECTIVE(name,typearg) .type name,typearg
 # define ASM_SIZE_DIRECTIVE(name) .size name,.-name
 
-/* In ELF C symbols are asm symbols.  */
-# undef NO_UNDERSCORES
-# define NO_UNDERSCORES
-
 /* Define an entry point visible from C.
 
    There is currently a bug in gdb which prevents us from specifying
@@ -60,26 +56,18 @@
   move.l %fp, -(%sp);							      \
   cfi_adjust_cfa_offset (4);  cfi_rel_offset (%fp, 0);			      \
   move.l %sp, %fp;							      \
-  jbsr JUMPTARGET (mcount);						      \
+  jbsr JUMPTARGET (_mcount);						      \
   move.l (%sp)+, %fp;							      \
   cfi_adjust_cfa_offset (-4); cfi_restore (%fp);
 # else
 #  define CALL_MCOUNT		/* Do nothing.  */
 # endif
 
-# ifdef	NO_UNDERSCORES
-/* Since C identifiers are not normally prefixed with an underscore
-   on this system, the asm identifier `syscall_error' intrudes on the
-   C name space.  Make sure we use an innocuous name.  */
-#  define syscall_error	__syscall_error
-#  define mcount	_mcount
-# endif
-
 # define PSEUDO(name, syscall_name, args)				      \
-  .globl syscall_error;							      \
+  .globl __syscall_error;						      \
   ENTRY (name)								      \
     DO_CALL (syscall_name, args);					      \
-    jcc JUMPTARGET(syscall_error)
+    jcc JUMPTARGET(__syscall_error)
 
 # undef PSEUDO_END
 # define PSEUDO_END(name)						      \

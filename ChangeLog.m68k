@@ -1,7 +1,8 @@
 2012-01-08  Andreas Schwab  <schwab@linux-m68k.org>
 
-	* sysdeps/m68k/sysdep.h: Remove non-ELF support.
-	* sysdeps/m68k/asm-syntax.h: Likewise.
+	* sysdeps/m68k/asm-syntax.h: Remove non-ELF support.
+	* sysdeps/m68k/sysdep.h: Likewise.
+	(NO_UNDERSCORES): Don't define.
 
 2012-01-07  Andreas Schwab  <schwab@linux-m68k.org>
 
