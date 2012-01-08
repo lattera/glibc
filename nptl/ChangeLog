@@ -1,3 +1,7 @@
+2012-01-08  Marek Polacek  <polacek@redhat.com>
+
+	* sysdeps/unix/sysv/linux/mq_notify.c: Include <nptl/pthreadP.h>.
+
 2012-01-07  Ulrich Drepper  <drepper@gmail.com>
 
 	[BZ #13553]

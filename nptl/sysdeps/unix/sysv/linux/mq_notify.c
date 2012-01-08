@@ -30,6 +30,7 @@
 #include <sys/socket.h>
 #include <not-cancel.h>
 #include <kernel-features.h>
+#include <nptl/pthreadP.h>
 
 
 #ifdef __NR_mq_notify
