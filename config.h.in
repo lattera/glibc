@@ -8,11 +8,6 @@
 # error "glibc must not be compiled with -ffast-math"
 #endif
 
-/* Define if using ELF, which supports weak symbols.
-   This implies HAVE_ASM_WEAK_DIRECTIVE and NO_UNDERSCORES; set by
-   --with-elf.  */
-#undef	HAVE_ELF
-
 /* Define if building with SELinux support.  Set by --with-selinux.  */
 #undef	HAVE_SELINUX
 
@@ -21,9 +16,6 @@
 
 /* Defined if building with SELinux support & libcap libs are detected.  */
 #undef  HAVE_LIBCAP
-
-/* Define if using XCOFF. Set by --with-xcoff.  */
-#undef	HAVE_XCOFF
 
 /* Define if C symbols are asm symbols.  Don't define if C symbols
    have a `_' prepended to make the asm symbol.  */

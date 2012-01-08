@@ -1,4 +1,4 @@
-# Copyright (C) 1994-2001,2003,2004,2007,2008,2011
+# Copyright (C) 1994-2001,2003,2004,2007,2008,2011,2012
 #	Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
@@ -91,7 +91,7 @@ CFLAGS-res_hconf.c = -fexceptions
 $(objpfx)libresolv.so: $(common-objpfx)libc.so $(common-objpfx)libc_nonshared.a
 # Some hosts need '__stack_chk_guard', so pull in the definition from
 # ld.so if required.
-ifeq (yesyes,$(have-ssp)$(elf))
+ifeq (yes,$(have-ssp))
 LDLIBS-resolv.so += $(as-needed) $(elfobjdir)/ld.so $(no-as-needed)
 endif
 

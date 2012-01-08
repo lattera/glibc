@@ -1,5 +1,5 @@
 /* Assembler macros for x86-64.
-   Copyright (C) 2001, 2002, 2003, 2011 Free Software Foundation, Inc.
+   Copyright (C) 2001, 2002, 2003, 2011, 2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -23,8 +23,6 @@
 
 /* Syntactic details of assembler.  */
 
-#ifdef HAVE_ELF
-
 /* ELF uses byte-counts for .align, most others use log2 of count of bytes.  */
 #define ALIGNARG(log2) 1<<log2
 /* For ELF we need the `.type' directive to make shared libs work right.  */
@@ -34,14 +32,6 @@
 /* In ELF C symbols are asm symbols.  */
 #undef	NO_UNDERSCORES
 #define NO_UNDERSCORES
-
-#else
-
-#define ALIGNARG(log2) log2
-#define ASM_TYPE_DIRECTIVE(name,type)	/* Nothing is specified.  */
-#define ASM_SIZE_DIRECTIVE(name)	/* Nothing is specified.  */
-
-#endif
 
 
 /* Define an entry point visible from C.  */
@@ -106,12 +96,8 @@ lose:									      \
 
 /* Local label name for asm code. */
 #ifndef L
-# ifdef HAVE_ELF
 /* ELF-like local names start with `.L'.  */
-#  define L(name)	.L##name
-# else
-#  define L(name)	name
-# endif
+# define L(name)	.L##name
 #endif
 
 #define atom_text_section .section ".text.atom", "ax"

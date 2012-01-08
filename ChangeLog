@@ -1,5 +1,38 @@
 2012-01-07  Ulrich Drepper  <drepper@gmail.com>
 
+	[BZ #13551]
+	* Makeconfig: Remove all but ELF support including AIX support.
+	* Makerules: Likewise.
+	* config.h.in: Likewise.
+	* config.make.in: Likewise.
+	* configure: Likewise.
+	* configure.in: Likewise.
+	* csu/Makefile: Likewise.
+	* csu/version.c: Likewise.
+	* debug/Makefile: Likewise.
+	* dlfcn/Makefile: Likewise.
+	* elf/Makefile: Likewise.
+	* extra-lib.mk: Likewise.
+	* iconv/Makefile: Likewise.
+	* include/libc-symbols.h: Likewise.
+	* include/shlib-compat.h: Likewise.
+	* resolv/Makefile: Likewise.
+	* resolv/res_libc.c: Likewise.
+	* rt/Makefile: Likewise.
+	* sysdeps/i386/asm-syntax.h: Likewise.
+	* sysdeps/i386/sysdep.h: Likewise.
+	* sysdeps/ieee754/ldbl-opt/math_ldbl_opt.h: Likewise.
+	* sysdeps/mach/sysdep.h: Likewise.
+	* sysdeps/powerpc/powerpc32/Makefile: Likewise.
+	* sysdeps/powerpc/powerpc64/Makefile: Likewise.
+	* sysdeps/s390/asm-syntax.h: Likewise.
+	* sysdeps/s390/s390-32/sysdep.h: Likewise.
+	* sysdeps/s390/s390-64/sysdep.h: Likewise.
+	* sysdeps/sh/sysdep.h: Likewise.
+	* sysdeps/unix/sparc/sysdep.h: Likewise.
+	* sysdeps/wordsize-32/divdi3.c: Likewise.
+	* sysdeps/x86_64/sysdep.h: Likewise.
+
 	* argp/Versions: Remove _argp_unlock_xxx.
 
 	[BZ #13559]

@@ -1,5 +1,5 @@
 # Makefile for csu code for GNU C library.
-# Copyright (C) 1995-2004, 2005, 2006, 2010 Free Software Foundation, Inc.
+# Copyright (C) 1995-2006, 2010, 2012 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -70,10 +70,8 @@ omit-deps += $(patsubst %.o,%,$(static-start-installed-name) \
 install-lib += $(static-start-installed-name) g$(static-start-installed-name)
 endif
 
-ifeq (yes,$(elf))
 before-compile += $(objpfx)abi-tag.h
 generated += abi-tag.h
-endif
 
 ifeq ($(have-initfini),yes)
 
@@ -124,10 +122,8 @@ $(objpfx)defs.h: $(objpfx)initfini.s
 
 endif
 
-ifeq (yes,$(elf))
 extra-objs += abi-note.o init.o
 asm-CPPFLAGS += -I$(objpfx).
-endif
 
 include ../Rules
 
@@ -139,7 +135,6 @@ $(CC) -nostdlib -nostartfiles -r -o $@ $^
 endef
 
 ifndef start-installed-name-rule
-ifeq (yes,$(elf))
 # We link the ELF startfile along with a SHT_NOTE section indicating
 # the kernel ABI the binaries linked with this library will require.
 $(objpfx)$(start-installed-name): $(objpfx)start.o $(objpfx)abi-note.o \
@@ -151,19 +146,6 @@ $(objpfx)S$(start-installed-name): $(objpfx)start.os $(objpfx)abi-note.o \
 $(objpfx)b$(start-installed-name): $(objpfx)start.ob $(objpfx)abi-note.ob \
 				  $(objpfx)init.ob
 	$(link-relocatable)
-else
-# The startfile is installed under different names, so we just call our
-# source file `start.c' and copy to the installed name after compiling.
-$(objpfx)$(start-installed-name): $(objpfx)start.o
-	rm -f $@
-	ln $< $@
-$(objpfx)S$(start-installed-name): $(objpfx)start.os
-	rm -f $@
-	ln $< $@
-$(objpfx)b$(start-installed-name): $(objpfx)start.ob
-	rm -f $@
-	ln $< $@
-endif
 endif
 
 # The profiling startfile is made by linking together the normal

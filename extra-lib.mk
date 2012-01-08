@@ -12,7 +12,7 @@ extra-libs-left := $(filter-out $(lib),$(extra-libs-left))
 object-suffixes-$(lib) := $(filter-out $($(lib)-inhibit-o),$(object-suffixes))
 
 ifneq (,$($(lib)-static-only-routines))
-ifneq (,$(filter yesyes%,$(build-shared)$(elf)$($(lib).so-version)))
+ifneq (,$(filter yes%,$(build-shared)$($(lib).so-version)))
 object-suffixes-$(lib) += $(filter-out $($(lib)-inhibit-o),.oS)
 endif
 endif

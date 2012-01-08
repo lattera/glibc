@@ -1,5 +1,5 @@
 /* Assembler macros for i386.
-   Copyright (C) 1991-93,95,96,98,2002,2003,2005,2006,2011
+   Copyright (C) 1991-93,95,96,98,2002,2003,2005,2006,2011,2012
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -24,8 +24,6 @@
 
 /* Syntactic details of assembler.  */
 
-#ifdef HAVE_ELF
-
 /* ELF uses byte-counts for .align, most others use log2 of count of bytes.  */
 #define ALIGNARG(log2) 1<<log2
 /* For ELF we need the `.type' directive to make shared libs work right.  */
@@ -35,14 +33,6 @@
 /* In ELF C symbols are asm symbols.  */
 #undef	NO_UNDERSCORES
 #define NO_UNDERSCORES
-
-#else
-
-#define ALIGNARG(log2) log2
-#define ASM_TYPE_DIRECTIVE(name,type)	/* Nothing is specified.  */
-#define ASM_SIZE_DIRECTIVE(name)	/* Nothing is specified.  */
-
-#endif
 
 
 /* Define an entry point visible from C.
@@ -160,11 +150,7 @@ __i686.get_pc_thunk.reg:						      \
 
 /* Local label name for asm code. */
 #ifndef L
-#ifdef HAVE_ELF
 #define L(name)		.L##name
-#else
-#define L(name)		name
-#endif
 #endif
 
 #define atom_text_section .section ".text.atom", "ax"

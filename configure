@@ -616,8 +616,6 @@ profile
 libc_cv_pic_default
 shared
 static
-xcoff
-elf
 ldd_rewrite_script
 use_ldconfig
 libc_cv_as_i686
@@ -769,7 +767,6 @@ with_fp
 with_binutils
 with_elf
 with_selinux
-with_xcoff
 with_headers
 with_default_link
 enable_sanity_checks
@@ -1458,7 +1455,6 @@ Optional Packages:
   --with-binutils=PATH    specify location of binutils (as and ld)
   --with-elf              if using the ELF object format
   --with-selinux          if building with SELinux support
-  --with-xcoff            if using the XCOFF object format
   --with-headers=PATH     location of system headers to use (for example
                           /usr/src/linux/include) [default=compiler default]
   --with-default-link     do not use explicit linker scripts
@@ -3545,14 +3541,6 @@ else
 fi
 
 
-# Check whether --with-xcoff was given.
-if test "${with_xcoff+set}" = set; then :
-  withval=$with_xcoff; xcoff=$withval
-else
-  xcoff=no
-fi
-
-
 
 # Check whether --with-headers was given.
 if test "${with_headers+set}" = set; then :
@@ -3817,20 +3805,7 @@ test "$config_vendor" = unknown && config_vendor=
 config_os="`echo $config_os | sed 's/^unknown-//'`"
 
 # Some configurations imply other options.
-case "$host_os" in
-# i586-linuxaout is mangled into i586-pc-linux-gnuaout
-linux*ecoff* | linux*aout* | gnu*aout* | gnu*ecoff*)
-  ;;
-gnu* | linux* | freebsd* | netbsd* | sysv4* | solaris2* | irix6*)
-  # These systems (almost) always use the ELF format.
-  elf=yes
-  ;;
-aix*)
-  # These systems are always xcoff
-  xcoff=yes
-  elf=no
-  ;;
-esac
+elf=yes
 
 # The configure fragment of an add-on port can modify these to supplement
 # or override the table in the case statement below.  No fragment should
@@ -4017,7 +3992,7 @@ fi
 ###
 if test -z "$enable_hacker_mode" && test x"$libc_config_ok" != xyes; then
   case "$machine-$host_os" in
-  *-linux* | *-gnu* | arm*-none* | powerpc-aix4.3.*)
+  *-linux* | *-gnu* | arm*-none*)
     ;;
   *)
     echo "*** The GNU C library is currently not available for this platform."
@@ -4223,10 +4198,6 @@ irix6*)
   base_os=unix/sysv/irix6/$os ;;
 solaris[2-9]*)
   base_os=unix/sysv/sysv4 ;;
-hpux*)
-  base_os=unix/sysv/hpux/$os ;;
-aix4.3*)
-  base_os=unix/sysv/aix/aix4.3 ;;
 none)
   base_os=standalone ;;
 esac
@@ -7928,16 +7899,6 @@ fi
 
 
 
-
-
-if test $elf = yes; then
-  $as_echo "#define HAVE_ELF 1" >>confdefs.h
-
-fi
-if test $xcoff = yes; then
-  $as_echo "#define HAVE_XCOFF 1" >>confdefs.h
-
-fi
 
 
 

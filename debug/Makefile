@@ -1,4 +1,4 @@
-# Copyright (C) 1998-2001,2004-2008, 2009, 2011 Free Software Foundation, Inc.
+# Copyright (C) 1998-2001,2004-2008, 2009, 2011, 2012 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -140,10 +140,8 @@ install-bin-script = xtrace
 include ../Makeconfig
 
 distribute += catchsegv.sh xtrace.sh
-ifeq ($(elf),yes)
 ifeq ($(build-shared),yes)
 install-bin-script += catchsegv
-endif
 endif
 generated = catchsegv xtrace
 

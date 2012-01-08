@@ -92,12 +92,7 @@ stack-align-test-flags =
 
 # We have a special subdir for each binary format.
 # For now, only ELF is fully supported.
-ifeq ($(elf),yes)
 binfmt-subdir = elf
-else
-# This is probably better than nothing.
-binfmt-subdir = aout
-endif
 
 # Complete path to sysdep dirs.
 # `configure' writes a definition of `config-sysdirs' in `config.make'.
@@ -395,9 +390,7 @@ asm-CPPFLAGS =
 endif
 
 # ELF always supports init/fini sections
-ifeq ($(elf),yes)
 have-initfini = yes
-endif
 
 ifeq ($(have-as-needed),yes)
 as-needed := -Wl,--as-needed
@@ -426,7 +419,7 @@ ifndef static-start-installed-name
 static-start-installed-name = $(start-installed-name)
 endif
 
-ifeq (yesyesyes,$(build-shared)$(elf)$(have-z-combreloc))
+ifeq (yesyes,$(build-shared)$(have-z-combreloc))
 combreloc-LDFLAGS = -Wl,-z,combreloc
 LDFLAGS.so += $(combreloc-LDFLAGS)
 LDFLAGS-rtld += $(combreloc-LDFLAGS)
@@ -496,13 +489,12 @@ ifndef +link-bounded
 	      $(link-extra-libs-bounded) $(link-libc-bounded) $(+postctor) $(+postinit)
 endif
 ifndef config-LDFLAGS
-ifeq (yesyes,$(build-shared)$(elf))
+ifeq (yes,$(build-shared))
 config-LDFLAGS = -Wl,-dynamic-linker=$(slibdir)/$(rtld-installed-name)
 endif
 endif
 ifndef link-libc
 ifeq (yes,$(build-shared))
-ifeq ($(elf),yes)
 # We need the versioned name of libc.so in the deps of $(others) et al
 # so that the symlink to libc.so is created before anything tries to
 # run the linked programs.
@@ -512,7 +504,6 @@ link-libc = -Wl,-rpath-link=$(rpath-link) \
 	    $(as-needed) $(common-objpfx)elf/ld.so $(no-as-needed) $(gnulib)
 # This is how to find at build-time things that will be installed there.
 rpath-dirs = math elf dlfcn nss nis rt resolv crypt
-endif
 rpath-link = \
 $(common-objdir):$(subst $(empty) ,:,$(patsubst ../$(subdir),.,$(rpath-dirs:%=$(common-objpfx)%)))
 elfobjdir := $(patsubst ../$(subdir),.,$(common-objpfx)elf)
@@ -524,12 +515,10 @@ endif
 endif
 
 # Differences in the linkers on the various platforms.
-ifeq ($(elf),yes)
 LDFLAGS-rpath-ORIGIN = -Wl,-rpath,'$$ORIGIN'
 LDFLAGS-soname-fname = -Wl,-soname,$(@F)
 LDFLAGS-rdynamic = -rdynamic
 LDFLAGS-Bsymbolic = -Bsymbolic
-endif
 
 # Choose the default search path for the dynamic linker based on
 # where we will install libraries.
@@ -571,7 +560,6 @@ gnulib := -lgcc $(libgcc_eh)
 static-gnulib := -lgcc -lgcc_eh $(libunwind)
 libc.so-gnulib := -lgcc
 endif
-ifeq ($(elf),yes)
 +preinit = $(addprefix $(csu-objpfx),crti.o)
 +postinit = $(addprefix $(csu-objpfx),crtn.o)
 +prector = `$(CC) $(sysdep-LDFLAGS) --print-file-name=crtbegin.o`
@@ -580,14 +568,13 @@ ifeq ($(elf),yes)
 +prectorS = `$(CC) $(sysdep-LDFLAGS) --print-file-name=crtbeginS.o`
 +postctorS = `$(CC) $(sysdep-LDFLAGS) --print-file-name=crtendS.o`
 +interp = $(addprefix $(elf-objpfx),interp.os)
-endif
 csu-objpfx = $(common-objpfx)csu/
 elf-objpfx = $(common-objpfx)elf/
 
 # How to run a program we just linked with our library.
 # The program binary is assumed to be $(word 2,$^).
 built-program-file = $(dir $(word 2,$^))$(notdir $(word 2,$^))
-ifeq (yesyes,$(build-shared)$(elf))
+ifeq (yes,$(build-shared))
 comma = ,
 sysdep-library-path = \
 $(subst $(empty) ,:,$(strip $(patsubst -Wl$(comma)-rpath-link=%, %,\
@@ -915,28 +902,11 @@ endif
 endif # build-shared
 
 
-ifeq ($(elf),yes)
 dlfcn = dlfcn
 ifeq ($(build-shared),yes)
 libdl = $(common-objpfx)dlfcn/libdl.so$(libdl.so-version)
 else
 libdl = $(common-objpfx)dlfcn/libdl.a
-endif
-else
-ifneq (,$(findstring aix,$(config-os)))
-ifeq ($(build-shared),yes)
-dlfcn = dlfcn
-libdl = $(common-objpfx)dlfcn/libdl.so$(libdl.so-version)
-else
-# No libdl without shared libs on AIX
-dlfcn =
-libdl =
-endif
-else
-# No ELF, no AIX - no libdl, at least for now.
-dlfcn =
-libdl =
-endif
 endif
 
 # These are the subdirectories containing the library source.  The order

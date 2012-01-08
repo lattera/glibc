@@ -1,5 +1,7 @@
 2012-01-07  Ulrich Drepper  <drepper@gmail.com>
 
+	* Makefile: Remove elf=yes test, only ELF is supported.
+
 	* shlib-versions: Remove entries for ports architectures.
 
 	In case anyone cares, the IA-64 architecture could move to ports.

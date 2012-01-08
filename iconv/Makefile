@@ -1,4 +1,5 @@
-# Copyright (C) 1997,1998,2000-2004,2007,2009 Free Software Foundation, Inc.
+# Copyright (C) 1997,1998,2000-2004,2007,2009,2012
+# Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -27,13 +28,7 @@ headers		= iconv.h gconv.h
 routines	= iconv_open iconv iconv_close \
 		  gconv_open gconv gconv_close gconv_db gconv_conf \
 		  gconv_builtin gconv_simple gconv_trans gconv_cache
-ifeq ($(elf),yes)
 routines	+= gconv_dl
-else
-CFLAGS-gconv_db.c = -DSTATIC_GCONV
-CFLAGS-gconv_cache.c = -DSTATIC_GCONV
-CFLAGS-gconv_simple.c = -DSTATIC_GCONV
-endif
 
 vpath %.c ../locale/programs ../intl
 

@@ -1,4 +1,4 @@
-# Copyright (C) 1995-2007,2008,2009,2010,2011 Free Software Foundation, Inc.
+# Copyright (C) 1995-2011, 2012 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -202,7 +202,7 @@ tests += tst-array1 tst-array2 tst-array3 tst-array4 tst-array5
 endif
 ifeq (yes,$(build-static))
 tests-static = tst-tls1-static tst-tls2-static tst-stackguard1-static
-ifeq (yesyesyes,$(build-static)$(build-shared)$(elf))
+ifeq (yesyes,$(build-static)$(build-shared))
 tests-static += tst-tls9-static
 tst-tls9-static-ENV = \
        LD_LIBRARY_PATH=$(objpfx):$(common-objpfx):$(common-objpfx)dlfcn

@@ -23,7 +23,6 @@ pic-ccflag = -fpic
 endif
 
 ifeq ($(subdir),csu)
-ifneq ($(elf),no)
 # The initfini generation code doesn't work in the presence of -fPIC, so
 # we use -fpic instead which is much better.
 CFLAGS-initfini.s += -fpic -O1
@@ -32,7 +31,7 @@ CFLAGS-initfini.s += -fpic -O1
 # of the library should be able to control what goes into sdata.
 CFLAGS-init.o = -G0
 CFLAGS-gmon-start.o = -G0
-endif
+
 ifeq (yes,$(build-shared))
 # Compatibility
 ifeq (yes,$(have-protected))

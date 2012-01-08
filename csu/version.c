@@ -66,7 +66,6 @@ __gnu_get_libc_version (void)
 }
 weak_alias (__gnu_get_libc_version, gnu_get_libc_version)
 
-#ifdef HAVE_ELF
 /* This function is the entry point for the shared object.
    Running the library as a program will get here.  */
 
@@ -77,4 +76,3 @@ __libc_main (void)
   __libc_print_version ();
   _exit (0);
 }
-#endif

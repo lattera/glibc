@@ -1,5 +1,5 @@
 /* Assembler macros for 64 bit S/390.
-   Copyright (C) 2001, 2003 Free Software Foundation, Inc.
+   Copyright (C) 2001, 2003, 2012 Free Software Foundation, Inc.
    Contributed by Martin Schwidefsky (schwidefsky@de.ibm.com).
    This file is part of the GNU C Library.
 
@@ -24,8 +24,6 @@
 
 /* Syntactic details of assembler.  */
 
-#ifdef HAVE_ELF
-
 /* ELF uses byte-counts for .align, most others use log2 of count of bytes.  */
 #define ALIGNARG(log2) 1<<log2
 /* For ELF we need the `.type' directive to make shared libs work right.  */
@@ -35,14 +33,6 @@
 /* In ELF C symbols are asm symbols.  */
 #undef	NO_UNDERSCORES
 #define NO_UNDERSCORES
-
-#else
-
-#define ALIGNARG(log2) log2
-#define ASM_TYPE_DIRECTIVE(name,type)	/* Nothing is specified.  */
-#define ASM_SIZE_DIRECTIVE(name)	/* Nothing is specified.  */
-
-#endif
 
 
 /* Define an entry point visible from C. */

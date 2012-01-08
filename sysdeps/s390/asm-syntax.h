@@ -1,5 +1,5 @@
 /* Definitions for S/390 syntax variations.
-   Copyright (C) 1992, 1994, 1995, 1997, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1992, 1994, 1995, 1997, 2000, 2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.  Its master source is NOT part of
    the C library, however.  The master source lives in the GNU MP Library.
 
@@ -19,11 +19,7 @@
    02111-1307 USA.  */
 
 #undef ALIGN
-#if defined NOLOG_ALIGN || defined HAVE_ELF
-# define ALIGN(log) .align 1<<log
-#else
-# define ALIGN(log) .align log
-#endif
+#define ALIGN(log) .align 1<<log
 
 #undef L
 #ifdef __ELF__

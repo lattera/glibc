@@ -1,4 +1,4 @@
-/* Copyright (C) 1994, 1995, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1994, 1995, 1997, 2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -28,7 +28,6 @@
 #define EXT(x) C_SYMBOL_NAME(x)
 #define LEXT(x) C_SYMBOL_NAME(x##:)
 
-#ifdef HAVE_ELF
 /* For ELF we need to add the `.type' directive to make shared libraries
    work right.  */
 #undef ENTRY
@@ -37,7 +36,6 @@
   .align ALIGN; \
   .type name,@function; \
   name:
-#endif
 
 #endif
 

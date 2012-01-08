@@ -1,5 +1,5 @@
 /* Assembler macros for SH.
-   Copyright (C) 1999, 2000, 2005 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2000, 2005, 2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -23,8 +23,6 @@
 
 /* Syntactic details of assembler.  */
 
-#ifdef HAVE_ELF
-
 #define ALIGNARG(log2) log2
 /* For ELF we need the `.type' directive to make shared libs work right.  */
 #define ASM_TYPE_DIRECTIVE(name,typearg) .type name,@##typearg;
@@ -36,15 +34,6 @@
 #define PLTJMP(_x)	_x
 #endif
 
-#else
-
-#define ALIGNARG(log2) log2
-#define ASM_TYPE_DIRECTIVE(name,type)	/* Nothing is specified.  */
-#define ASM_SIZE_DIRECTIVE(name)	/* Nothing is specified.  */
-
-#define PLTJMP(_x)	_x
-
-#endif
 
 /* Define an entry point visible from C.  */
 #define	ENTRY(name)							      \
