@@ -1,5 +1,12 @@
 2012-01-08  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/arm/sysdep.h: Don't test or define NO_UNDERSCORES.
+	* sysdeps/unix/arm/start.c: Don't test HAVE_WEAK_SYMBOLS or
+	NO_UNDERSCORES.
+	* sysdeps/unix/arm/sysdep.S: Don't test NO_UNDERSCORES.
+
+2012-01-08  Joseph Myers  <joseph@codesourcery.com>
+
 	* sysdeps/arm/sysdep.h: Remove non-ELF support.
 
 2012-01-07  Joseph Myers  <joseph@codesourcery.com>

@@ -35,10 +35,6 @@
 #define ASM_TYPE_DIRECTIVE(name,typearg) .type name,%##typearg;
 #define ASM_SIZE_DIRECTIVE(name) .size name,.-name
 
-/* In ELF C symbols are asm symbols.  */
-#undef	NO_UNDERSCORES
-#define NO_UNDERSCORES
-
 #define PLTJMP(_x)	_x##(PLT)
 
 /* APCS-32 doesn't preserve the condition codes across function call. */
@@ -105,7 +101,6 @@
 #define CALL_MCOUNT		/* Do nothing.  */
 #endif
 
-#ifdef	NO_UNDERSCORES
 /* Since C identifiers are not normally prefixed with an underscore
    on this system, the asm identifier `syscall_error' intrudes on the
    C name space.  Make sure we use an innocuous name.  */
@@ -114,7 +109,6 @@
 #define mcount		__gnu_mcount_nc
 #else
 #define mcount		_mcount
-#endif
 #endif
 
 #if defined(__ARM_EABI__)

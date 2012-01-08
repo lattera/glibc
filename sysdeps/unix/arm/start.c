@@ -1,5 +1,5 @@
 /* Special startup code for ARM a.out binaries.
-   Copyright (C) 1998, 2004 Free Software Foundation, Inc.
+   Copyright (C) 1998, 2004, 2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -41,9 +41,7 @@
 
 /* The first piece of initialized data.  */
 int __data_start = 0;
-#ifdef HAVE_WEAK_SYMBOLS
 weak_alias (__data_start, data_start)
-#endif
 
 extern void __libc_init (int argc, char **argv, char **envp);
 extern int main (int argc, char **argv, char **envp);
@@ -53,16 +51,7 @@ extern int main (int argc, char **argv, char **envp);
 
 /* If this was in C it might create its own stack frame and
    screw up the arguments.  */
-#ifdef NO_UNDERSCORES
 asm (".text; .globl _start; _start: B start1");
-#else
-asm (".text; .globl __start; __start: B _start1");
-
-/* Make an alias called `start' (no leading underscore, so it can't
-   conflict with C symbols) for `_start'.  This is the name vendor crt0.o's
-   tend to use, and thus the name most linkers expect.  */
-asm (".set start, __start");
-#endif
 
 /* Fool gcc into thinking that more args are passed.  This makes it look
    on the stack (correctly) for the real arguments.  It causes somewhat

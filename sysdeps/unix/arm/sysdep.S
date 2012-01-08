@@ -1,5 +1,5 @@
 /* Copyright (C) 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 2002, 2003,
-   2004, 2005, 2009, 2011
+   2004, 2005, 2009, 2011, 2012
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -29,11 +29,7 @@
 #include <tls.h>
 
 #undef syscall_error
-#ifdef NO_UNDERSCORES
 __syscall_error:
-#else
-syscall_error:
-#endif
 #if defined (EWOULDBLOCK_sys) && EWOULDBLOCK_sys != EAGAIN
 	/* We translate the system's EWOULDBLOCK error into EAGAIN.
 	   The GNU C library always defines EWOULDBLOCK==EAGAIN.
