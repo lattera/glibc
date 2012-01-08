@@ -1,5 +1,25 @@
 2012-01-07  Ulrich Drepper  <drepper@gmail.com>
 
+	* argp/Versions: Remove _argp_unlock_xxx.
+
+	[BZ #13559]
+	* abilist/ld.abilist: Update.  Adjust for removal of tls option.
+	* abilist/libBrokenLocale.abilist: Likewise.
+	* abilist/libanl.abilist: Likewise.
+	* abilist/libc.abilist: Likewise.
+	* abilist/libcrypt.abilist: Likewise.
+	* abilist/libdl.abilist: Likewise.
+	* abilist/libm.abilist: Likewise.
+	* abilist/libnsl.abilist: Likewise.
+	* abilist/libpthread.abilist: Likewise.
+	* abilist/libresolv.abilist: Likewise.
+	* abilist/librt.abilist: Likewise.
+	* abilist/libthread_db.abilist: Likewise.
+	* abilist/libutil.abilist: Likewise.
+	* abilist/libnss_db.abilist: New file.
+
+	* scripts/abilist.awk: Add support for indirect functions.
+
 	* sysdeps/unix/sysv/linux/configure.in: Remove m68k support.
 
 	* sysdeps/generic/ldsodefs.h: Remove Alpha support.

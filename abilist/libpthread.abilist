@@ -1,9 +1,9 @@
-GLIBC_2.0 i.86-.*-linux.*/notls i.86-.*-linux.*/thread i.86-.*-linux.*/tls m68.*-.*-linux.*/notls powerpc-.*-linux.*/notls powerpc-.*-linux.*/thread powerpc-.*-linux.*/tls s390-.*-linux.*/tls
+GLIBC_2.0 i.86-.*-linux.*/thread powerpc-.*-linux.*/thread s390-.*-linux.*/thread
  GLIBC_2.0 A
-GLIBC_2.0 i.86-.*-linux.*/notls i.86-.*-linux.*/thread i.86-.*-linux.*/tls m68.*-.*-linux.*/notls powerpc-.*-linux.*/notls powerpc-.*-linux.*/thread powerpc-.*-linux.*/tls s390-.*-linux.*/tls
-| GLIBC_2.1 i.86-.*-linux.*/notls i.86-.*-linux.*/thread i.86-.*-linux.*/tls m68.*-.*-linux.*/notls powerpc-.*-linux.*/notls powerpc-.*-linux.*/thread powerpc-.*-linux.*/tls s390-.*-linux.*/tls
-| GLIBC_2.2.5 x86_64-.*-linux.*/tls
-| GLIBC_2.2 ia64-.*-linux.*/tls s390x-.*-linux.*/tls sh[34].*-.*-linux.*/notls sh[34].*-.*-linux.*/thread sh[34].*-.*-linux.*/tls
+GLIBC_2.0 i.86-.*-linux.*/thread powerpc-.*-linux.*/thread s390-.*-linux.*/thread
+| GLIBC_2.1 i.86-.*-linux.*/thread powerpc-.*-linux.*/thread s390-.*-linux.*/thread
+| GLIBC_2.2.5 x86_64-.*-linux.*/thread
+| GLIBC_2.2 s390x-.*-linux.*/thread sh[34].*-.*-linux.*/thread
 | GLIBC_2.3 powerpc64-.*-linux.*/thread
  pthread_attr_init F
  pthread_create F
@@ -13,14 +13,14 @@ GLIBC_2.0 i.86-.*-linux.*/notls i.86-.*-linux.*/thread i.86-.*-linux.*/tls m68.*
  sem_post F
  sem_trywait F
  sem_wait F
-GLIBC_2.0 i.86-.*-linux.*/notls i.86-.*-linux.*/thread i.86-.*-linux.*/tls m68.*-.*-linux.*/notls powerpc-.*-linux.*/notls powerpc-.*-linux.*/thread powerpc-.*-linux.*/tls s390-.*-linux.*/tls
-| GLIBC_2.2.5 x86_64-.*-linux.*/tls
-| GLIBC_2.2 ia64-.*-linux.*/tls s390x-.*-linux.*/tls sh[34].*-.*-linux.*/notls sh[34].*-.*-linux.*/thread sh[34].*-.*-linux.*/tls
+GLIBC_2.0 i.86-.*-linux.*/thread powerpc-.*-linux.*/thread s390-.*-linux.*/thread
+| GLIBC_2.2.5 x86_64-.*-linux.*/thread
+| GLIBC_2.2 s390x-.*-linux.*/thread sh[34].*-.*-linux.*/thread
  pthread_atfork F
-GLIBC_2.0 i.86-.*-linux.*/notls i.86-.*-linux.*/thread i.86-.*-linux.*/tls m68.*-.*-linux.*/notls powerpc-.*-linux.*/notls powerpc-.*-linux.*/thread powerpc-.*-linux.*/tls s390-.*-linux.*/tls
-| GLIBC_2.2.5 x86_64-.*-linux.*/tls
-| GLIBC_2.2 ia64-.*-linux.*/tls s390x-.*-linux.*/tls sh[34].*-.*-linux.*/notls sh[34].*-.*-linux.*/thread sh[34].*-.*-linux.*/tls
-| GLIBC_2.3.2 i.86-.*-linux.*/notls i.86-.*-linux.*/thread i.86-.*-linux.*/tls ia64-.*-linux.*/tls m68.*-.*-linux.*/notls powerpc-.*-linux.*/notls powerpc-.*-linux.*/thread powerpc-.*-linux.*/tls powerpc64-.*-linux.*/thread s390-.*-linux.*/tls s390x-.*-linux.*/tls sh[34].*-.*-linux.*/notls sh[34].*-.*-linux.*/thread sh[34].*-.*-linux.*/tls x86_64-.*-linux.*/tls
+GLIBC_2.0 i.86-.*-linux.*/thread powerpc-.*-linux.*/thread s390-.*-linux.*/thread
+| GLIBC_2.2.5 x86_64-.*-linux.*/thread
+| GLIBC_2.2 s390x-.*-linux.*/thread sh[34].*-.*-linux.*/thread
+| GLIBC_2.3.2 i.86-.*-linux.*/thread powerpc-.*-linux.*/thread powerpc64-.*-linux.*/thread s390-.*-linux.*/thread s390x-.*-linux.*/thread sh[34].*-.*-linux.*/thread x86_64-.*-linux.*/thread
 | GLIBC_2.3 powerpc64-.*-linux.*/thread
  pthread_cond_broadcast F
  pthread_cond_destroy F
@@ -28,9 +28,9 @@ GLIBC_2.0 i.86-.*-linux.*/notls i.86-.*-linux.*/thread i.86-.*-linux.*/tls m68.*
  pthread_cond_signal F
  pthread_cond_timedwait F
  pthread_cond_wait F
-GLIBC_2.0 i.86-.*-linux.*/notls i.86-.*-linux.*/thread i.86-.*-linux.*/tls m68.*-.*-linux.*/notls powerpc-.*-linux.*/notls powerpc-.*-linux.*/thread powerpc-.*-linux.*/tls s390-.*-linux.*/tls
-| GLIBC_2.2.5 x86_64-.*-linux.*/tls
-| GLIBC_2.2 ia64-.*-linux.*/tls s390x-.*-linux.*/tls sh[34].*-.*-linux.*/notls sh[34].*-.*-linux.*/thread sh[34].*-.*-linux.*/tls
+GLIBC_2.0 i.86-.*-linux.*/thread powerpc-.*-linux.*/thread s390-.*-linux.*/thread
+| GLIBC_2.2.5 x86_64-.*-linux.*/thread
+| GLIBC_2.2 s390x-.*-linux.*/thread sh[34].*-.*-linux.*/thread
 | GLIBC_2.3 powerpc64-.*-linux.*/thread
  _IO_flockfile F
  _IO_ftrylockfile F
@@ -137,27 +137,27 @@ GLIBC_2.0 i.86-.*-linux.*/notls i.86-.*-linux.*/thread i.86-.*-linux.*/tls m68.*
  wait F
  waitpid F
  write F
-GLIBC_2.1.1 i.86-.*-linux.*/notls i.86-.*-linux.*/thread i.86-.*-linux.*/tls m68.*-.*-linux.*/notls powerpc-.*-linux.*/notls powerpc-.*-linux.*/thread powerpc-.*-linux.*/tls s390-.*-linux.*/tls
+GLIBC_2.1.1 i.86-.*-linux.*/thread powerpc-.*-linux.*/thread s390-.*-linux.*/thread
  GLIBC_2.1.1 A
-GLIBC_2.1.1 i.86-.*-linux.*/notls i.86-.*-linux.*/thread i.86-.*-linux.*/tls m68.*-.*-linux.*/notls powerpc-.*-linux.*/notls powerpc-.*-linux.*/thread powerpc-.*-linux.*/tls s390-.*-linux.*/tls
-| GLIBC_2.2.5 x86_64-.*-linux.*/tls
-| GLIBC_2.2 ia64-.*-linux.*/tls s390x-.*-linux.*/tls sh[34].*-.*-linux.*/notls sh[34].*-.*-linux.*/thread sh[34].*-.*-linux.*/tls
+GLIBC_2.1.1 i.86-.*-linux.*/thread powerpc-.*-linux.*/thread s390-.*-linux.*/thread
+| GLIBC_2.2.5 x86_64-.*-linux.*/thread
+| GLIBC_2.2 s390x-.*-linux.*/thread sh[34].*-.*-linux.*/thread
 | GLIBC_2.3 powerpc64-.*-linux.*/thread
  sem_close F
  sem_open F
  sem_unlink F
-GLIBC_2.1.2 i.86-.*-linux.*/notls i.86-.*-linux.*/thread i.86-.*-linux.*/tls m68.*-.*-linux.*/notls powerpc-.*-linux.*/notls powerpc-.*-linux.*/thread powerpc-.*-linux.*/tls s390-.*-linux.*/tls
+GLIBC_2.1.2 i.86-.*-linux.*/thread powerpc-.*-linux.*/thread s390-.*-linux.*/thread
  GLIBC_2.1.2 A
-GLIBC_2.1.2 i.86-.*-linux.*/notls i.86-.*-linux.*/thread i.86-.*-linux.*/tls m68.*-.*-linux.*/notls powerpc-.*-linux.*/notls powerpc-.*-linux.*/thread powerpc-.*-linux.*/tls s390-.*-linux.*/tls
-| GLIBC_2.2.5 x86_64-.*-linux.*/tls
-| GLIBC_2.2 ia64-.*-linux.*/tls s390x-.*-linux.*/tls sh[34].*-.*-linux.*/notls sh[34].*-.*-linux.*/thread sh[34].*-.*-linux.*/tls
+GLIBC_2.1.2 i.86-.*-linux.*/thread powerpc-.*-linux.*/thread s390-.*-linux.*/thread
+| GLIBC_2.2.5 x86_64-.*-linux.*/thread
+| GLIBC_2.2 s390x-.*-linux.*/thread sh[34].*-.*-linux.*/thread
 | GLIBC_2.3 powerpc64-.*-linux.*/thread
  __vfork F
-GLIBC_2.1 i.86-.*-linux.*/notls i.86-.*-linux.*/thread i.86-.*-linux.*/tls m68.*-.*-linux.*/notls powerpc-.*-linux.*/notls powerpc-.*-linux.*/thread powerpc-.*-linux.*/tls s390-.*-linux.*/tls
+GLIBC_2.1 i.86-.*-linux.*/thread powerpc-.*-linux.*/thread s390-.*-linux.*/thread
  GLIBC_2.1 A
-GLIBC_2.1 i.86-.*-linux.*/notls i.86-.*-linux.*/thread i.86-.*-linux.*/tls m68.*-.*-linux.*/notls powerpc-.*-linux.*/notls powerpc-.*-linux.*/thread powerpc-.*-linux.*/tls s390-.*-linux.*/tls
-| GLIBC_2.2.5 x86_64-.*-linux.*/tls
-| GLIBC_2.2 ia64-.*-linux.*/tls s390x-.*-linux.*/tls sh[34].*-.*-linux.*/notls sh[34].*-.*-linux.*/thread sh[34].*-.*-linux.*/tls
+GLIBC_2.1 i.86-.*-linux.*/thread powerpc-.*-linux.*/thread s390-.*-linux.*/thread
+| GLIBC_2.2.5 x86_64-.*-linux.*/thread
+| GLIBC_2.2 s390x-.*-linux.*/thread sh[34].*-.*-linux.*/thread
 | GLIBC_2.3 powerpc64-.*-linux.*/thread
  __libc_allocate_rtsig F
  __libc_current_sigrtmax F
@@ -185,16 +185,16 @@ GLIBC_2.1 i.86-.*-linux.*/notls i.86-.*-linux.*/thread i.86-.*-linux.*/tls m68.*
  pthread_rwlockattr_setkind_np F
  pthread_rwlockattr_setpshared F
  pthread_setconcurrency F
-GLIBC_2.2.3 i.86-.*-linux.*/notls i.86-.*-linux.*/thread i.86-.*-linux.*/tls ia64-.*-linux.*/tls m68.*-.*-linux.*/notls powerpc-.*-linux.*/notls powerpc-.*-linux.*/thread powerpc-.*-linux.*/tls s390-.*-linux.*/tls s390x-.*-linux.*/tls sh[34].*-.*-linux.*/notls sh[34].*-.*-linux.*/thread sh[34].*-.*-linux.*/tls
+GLIBC_2.2.3 i.86-.*-linux.*/thread powerpc-.*-linux.*/thread s390-.*-linux.*/thread s390x-.*-linux.*/thread sh[34].*-.*-linux.*/thread
  GLIBC_2.2.3 A
-GLIBC_2.2.3 i.86-.*-linux.*/notls i.86-.*-linux.*/thread i.86-.*-linux.*/tls ia64-.*-linux.*/tls m68.*-.*-linux.*/notls powerpc-.*-linux.*/notls powerpc-.*-linux.*/thread powerpc-.*-linux.*/tls s390-.*-linux.*/tls s390x-.*-linux.*/tls sh[34].*-.*-linux.*/notls sh[34].*-.*-linux.*/thread sh[34].*-.*-linux.*/tls
-| GLIBC_2.2.5 x86_64-.*-linux.*/tls
+GLIBC_2.2.3 i.86-.*-linux.*/thread powerpc-.*-linux.*/thread s390-.*-linux.*/thread s390x-.*-linux.*/thread sh[34].*-.*-linux.*/thread
+| GLIBC_2.2.5 x86_64-.*-linux.*/thread
 | GLIBC_2.3 powerpc64-.*-linux.*/thread
  pthread_getattr_np F
-GLIBC_2.2.5 x86_64-.*-linux.*/tls
+GLIBC_2.2.5 x86_64-.*-linux.*/thread
  GLIBC_2.2.5 A
-GLIBC_2.2.5 x86_64-.*-linux.*/tls
-| GLIBC_2.2 i.86-.*-linux.*/notls i.86-.*-linux.*/thread i.86-.*-linux.*/tls ia64-.*-linux.*/tls m68.*-.*-linux.*/notls powerpc-.*-linux.*/notls powerpc-.*-linux.*/thread powerpc-.*-linux.*/tls s390-.*-linux.*/tls s390x-.*-linux.*/tls sh[34].*-.*-linux.*/notls sh[34].*-.*-linux.*/thread sh[34].*-.*-linux.*/tls
+GLIBC_2.2.5 x86_64-.*-linux.*/thread
+| GLIBC_2.2 i.86-.*-linux.*/thread powerpc-.*-linux.*/thread s390-.*-linux.*/thread s390x-.*-linux.*/thread sh[34].*-.*-linux.*/thread
 | GLIBC_2.3 powerpc64-.*-linux.*/thread
  __open64 F
  __pread64 F
@@ -236,21 +236,59 @@ GLIBC_2.2.5 x86_64-.*-linux.*/tls
  pwrite F
  pwrite64 F
  sem_timedwait F
-GLIBC_2.2.6 i.86-.*-linux.*/notls i.86-.*-linux.*/thread i.86-.*-linux.*/tls ia64-.*-linux.*/tls m68.*-.*-linux.*/notls powerpc-.*-linux.*/notls powerpc-.*-linux.*/thread powerpc-.*-linux.*/tls s390-.*-linux.*/tls s390x-.*-linux.*/tls sh[34].*-.*-linux.*/notls sh[34].*-.*-linux.*/thread sh[34].*-.*-linux.*/tls x86_64-.*-linux.*/tls
+GLIBC_2.2.6 i.86-.*-linux.*/thread powerpc-.*-linux.*/thread s390-.*-linux.*/thread s390x-.*-linux.*/thread sh[34].*-.*-linux.*/thread x86_64-.*-linux.*/thread
  GLIBC_2.2.6 A
-GLIBC_2.2.6 i.86-.*-linux.*/notls i.86-.*-linux.*/thread i.86-.*-linux.*/tls ia64-.*-linux.*/tls m68.*-.*-linux.*/notls powerpc-.*-linux.*/notls powerpc-.*-linux.*/thread powerpc-.*-linux.*/tls s390-.*-linux.*/tls s390x-.*-linux.*/tls sh[34].*-.*-linux.*/notls sh[34].*-.*-linux.*/thread sh[34].*-.*-linux.*/tls x86_64-.*-linux.*/tls
+GLIBC_2.2.6 i.86-.*-linux.*/thread powerpc-.*-linux.*/thread s390-.*-linux.*/thread s390x-.*-linux.*/thread sh[34].*-.*-linux.*/thread x86_64-.*-linux.*/thread
 | GLIBC_2.3 powerpc64-.*-linux.*/thread
  __nanosleep F
-GLIBC_2.2 i.86-.*-linux.*/notls i.86-.*-linux.*/thread i.86-.*-linux.*/tls ia64-.*-linux.*/tls m68.*-.*-linux.*/notls powerpc-.*-linux.*/notls powerpc-.*-linux.*/thread powerpc-.*-linux.*/tls s390-.*-linux.*/tls s390x-.*-linux.*/tls sh[34].*-.*-linux.*/notls sh[34].*-.*-linux.*/thread sh[34].*-.*-linux.*/tls
+GLIBC_2.2 i.86-.*-linux.*/thread powerpc-.*-linux.*/thread s390-.*-linux.*/thread s390x-.*-linux.*/thread sh[34].*-.*-linux.*/thread
  GLIBC_2.2 A
-GLIBC_2.3.2 i.86-.*-linux.*/notls i.86-.*-linux.*/thread i.86-.*-linux.*/tls ia64-.*-linux.*/tls m68.*-.*-linux.*/notls powerpc-.*-linux.*/notls powerpc-.*-linux.*/thread powerpc-.*-linux.*/tls powerpc64-.*-linux.*/thread s390-.*-linux.*/tls s390x-.*-linux.*/tls sh[34].*-.*-linux.*/notls sh[34].*-.*-linux.*/thread sh[34].*-.*-linux.*/tls x86_64-.*-linux.*/tls
+GLIBC_2.3.2 i.86-.*-linux.*/thread powerpc-.*-linux.*/thread powerpc64-.*-linux.*/thread s390-.*-linux.*/thread s390x-.*-linux.*/thread sh[34].*-.*-linux.*/thread x86_64-.*-linux.*/thread
  GLIBC_2.3.2 A
-GLIBC_2.3.3 i.86-.*-linux.*/thread sh[34].*-.*-linux.*/notls sh[34].*-.*-linux.*/thread sh[34].*-.*-linux.*/tls
+GLIBC_2.3.3 i.86-.*-linux.*/thread sh[34].*-.*-linux.*/thread x86_64-.*-linux.*/thread
  GLIBC_2.3.3 A
+ __pthread_cleanup_routine F
+ __pthread_register_cancel F
+ __pthread_register_cancel_defer F
+ __pthread_unregister_cancel F
+ __pthread_unregister_cancel_restore F
+ __pthread_unwind_next F
+ pthread_attr_getaffinity_np F
+ pthread_attr_setaffinity_np F
  pthread_barrierattr_getpshared F
  pthread_condattr_getclock F
  pthread_condattr_setclock F
+ pthread_getaffinity_np F
+ pthread_setaffinity_np F
  pthread_timedjoin_np F
  pthread_tryjoin_np F
 GLIBC_2.3 powerpc64-.*-linux.*/thread
  GLIBC_2.3 A
+GLIBC_2.3.4 i.86-.*-linux.*/thread powerpc-.*-linux.*/thread powerpc64-.*-linux.*/thread s390-.*-linux.*/thread s390x-.*-linux.*/thread sh[34].*-.*-linux.*/thread x86_64-.*-linux.*/thread
+ GLIBC_2.3.4 A
+ pthread_attr_getaffinity_np F
+ pthread_attr_setaffinity_np F
+ pthread_getaffinity_np F
+ pthread_setaffinity_np F
+ pthread_setschedprio F
+GLIBC_2.4 i.86-.*-linux.*/thread powerpc-.*-linux.*/thread powerpc64-.*-linux.*/thread s390-.*-linux.*/thread s390x-.*-linux.*/thread sh[34].*-.*-linux.*/thread x86_64-.*-linux.*/thread
+ GLIBC_2.4 A
+ pthread_mutex_consistent_np F
+ pthread_mutex_getprioceiling F
+ pthread_mutex_setprioceiling F
+ pthread_mutexattr_getprioceiling F
+ pthread_mutexattr_getprotocol F
+ pthread_mutexattr_getrobust_np F
+ pthread_mutexattr_setprioceiling F
+ pthread_mutexattr_setprotocol F
+ pthread_mutexattr_setrobust_np F
+GLIBC_2.11 i.86-.*-linux.*/thread powerpc-.*-linux.*/thread powerpc64-.*-linux.*/thread s390-.*-linux.*/thread s390x-.*-linux.*/thread sh[34].*-.*-linux.*/thread x86_64-.*-linux.*/thread
+ GLIBC_2.11 A
+ pthread_sigqueue F
+GLIBC_2.12 i.86-.*-linux.*/thread powerpc-.*-linux.*/thread powerpc64-.*-linux.*/thread s390-.*-linux.*/thread s390x-.*-linux.*/thread sh[34].*-.*-linux.*/thread x86_64-.*-linux.*/thread
+ GLIBC_2.12 A
+ pthread_getname_np F
+ pthread_mutex_consistent F
+ pthread_mutexattr_getrobust F
+ pthread_mutexattr_setrobust F
+ pthread_setname_np F

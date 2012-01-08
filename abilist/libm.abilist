@@ -1,8 +1,8 @@
-GLIBC_2.0 i.86-.*-linux.*/notls i.86-.*-linux.*/thread i.86-.*-linux.*/tls m68.*-.*-linux.*/notls powerpc-.*-linux.*/notls powerpc-.*-linux.*/thread powerpc-.*-linux.*/tls s390-.*-linux.*/tls
+GLIBC_2.0 i.86-.*-linux.*/thread powerpc-.*-linux.*/thread s390-.*-linux.*/thread
  GLIBC_2.0 A
-GLIBC_2.0 i.86-.*-linux.*/notls i.86-.*-linux.*/thread i.86-.*-linux.*/tls m68.*-.*-linux.*/notls powerpc-.*-linux.*/notls powerpc-.*-linux.*/thread powerpc-.*-linux.*/tls s390-.*-linux.*/tls
-| GLIBC_2.2.5 x86_64-.*-linux.*/tls
-| GLIBC_2.2 ia64-.*-linux.*/tls s390x-.*-linux.*/tls sh[34].*-.*-linux.*/notls sh[34].*-.*-linux.*/thread sh[34].*-.*-linux.*/tls
+GLIBC_2.0 i.86-.*-linux.*/thread powerpc-.*-linux.*/thread s390-.*-linux.*/thread
+| GLIBC_2.2.5 x86_64-.*-linux.*/thread
+| GLIBC_2.2 s390x-.*-linux.*/thread sh[34].*-.*-linux.*/thread
 | GLIBC_2.3 powerpc64-.*-linux.*/thread
  _LIB_VERSION D 0x4
  acos F
@@ -160,11 +160,11 @@ GLIBC_2.0 i.86-.*-linux.*/notls i.86-.*-linux.*/thread i.86-.*-linux.*/tls m68.*
  yn F
  ynf F
  ynl F
-GLIBC_2.1 i.86-.*-linux.*/notls i.86-.*-linux.*/thread i.86-.*-linux.*/tls m68.*-.*-linux.*/notls powerpc-.*-linux.*/notls powerpc-.*-linux.*/thread powerpc-.*-linux.*/tls s390-.*-linux.*/tls
+GLIBC_2.1 i.86-.*-linux.*/thread powerpc-.*-linux.*/thread s390-.*-linux.*/thread
  GLIBC_2.1 A
-GLIBC_2.1 i.86-.*-linux.*/notls i.86-.*-linux.*/thread i.86-.*-linux.*/tls m68.*-.*-linux.*/notls powerpc-.*-linux.*/notls powerpc-.*-linux.*/thread powerpc-.*-linux.*/tls s390-.*-linux.*/tls
-| GLIBC_2.2.5 x86_64-.*-linux.*/tls
-| GLIBC_2.2 i.86-.*-linux.*/notls i.86-.*-linux.*/thread i.86-.*-linux.*/tls ia64-.*-linux.*/tls m68.*-.*-linux.*/notls powerpc-.*-linux.*/notls powerpc-.*-linux.*/thread powerpc-.*-linux.*/tls s390x-.*-linux.*/tls sh[34].*-.*-linux.*/notls sh[34].*-.*-linux.*/thread sh[34].*-.*-linux.*/tls
+GLIBC_2.1 i.86-.*-linux.*/thread powerpc-.*-linux.*/thread s390-.*-linux.*/thread
+| GLIBC_2.2.5 x86_64-.*-linux.*/thread
+| GLIBC_2.2 i.86-.*-linux.*/thread powerpc-.*-linux.*/thread s390x-.*-linux.*/thread sh[34].*-.*-linux.*/thread
 | GLIBC_2.3 powerpc64-.*-linux.*/thread
  feclearexcept F
  fegetenv F
@@ -173,9 +173,9 @@ GLIBC_2.1 i.86-.*-linux.*/notls i.86-.*-linux.*/thread i.86-.*-linux.*/tls m68.*
  fesetenv F
  fesetexceptflag F
  feupdateenv F
-GLIBC_2.1 i.86-.*-linux.*/notls i.86-.*-linux.*/thread i.86-.*-linux.*/tls m68.*-.*-linux.*/notls powerpc-.*-linux.*/notls powerpc-.*-linux.*/thread powerpc-.*-linux.*/tls s390-.*-linux.*/tls
-| GLIBC_2.2.5 x86_64-.*-linux.*/tls
-| GLIBC_2.2 ia64-.*-linux.*/tls s390x-.*-linux.*/tls sh[34].*-.*-linux.*/notls sh[34].*-.*-linux.*/thread sh[34].*-.*-linux.*/tls
+GLIBC_2.1 i.86-.*-linux.*/thread powerpc-.*-linux.*/thread s390-.*-linux.*/thread
+| GLIBC_2.2.5 x86_64-.*-linux.*/thread
+| GLIBC_2.2 s390x-.*-linux.*/thread sh[34].*-.*-linux.*/thread
 | GLIBC_2.3 powerpc64-.*-linux.*/thread
  __clog10 F
  __clog10f F
@@ -322,34 +322,114 @@ GLIBC_2.1 i.86-.*-linux.*/notls i.86-.*-linux.*/thread i.86-.*-linux.*/tls m68.*
  trunc F
  truncf F
  truncl F
-GLIBC_2.1 i.86-.*-linux.*/notls i.86-.*-linux.*/thread i.86-.*-linux.*/tls m68.*-.*-linux.*/notls
-| GLIBC_2.2.5 x86_64-.*-linux.*/tls
-| GLIBC_2.2 ia64-.*-linux.*/tls
+GLIBC_2.1 i.86-.*-linux.*/thread
+| GLIBC_2.2.5 x86_64-.*-linux.*/thread
  __fpclassifyl F
  __signbitl F
  exp2l F
-GLIBC_2.1 powerpc-.*-linux.*/notls powerpc-.*-linux.*/thread powerpc-.*-linux.*/tls
+GLIBC_2.1 powerpc-.*-linux.*/thread
 | GLIBC_2.3 powerpc64-.*-linux.*/thread
  __fe_dfl_env D 0x8
  __fe_enabled_env D 0x8
  __fe_nomask_env F
  __fe_nonieee_env D 0x8
-GLIBC_2.2.3 ia64-.*-linux.*/tls
- GLIBC_2.2.3 A
- matherrf F
- matherrl F
-GLIBC_2.2.5 x86_64-.*-linux.*/tls
+GLIBC_2.2.5 x86_64-.*-linux.*/thread
  GLIBC_2.2.5 A
-GLIBC_2.2.5 x86_64-.*-linux.*/tls
-| GLIBC_2.2 i.86-.*-linux.*/notls i.86-.*-linux.*/thread i.86-.*-linux.*/tls ia64-.*-linux.*/tls m68.*-.*-linux.*/notls powerpc-.*-linux.*/notls powerpc-.*-linux.*/thread powerpc-.*-linux.*/tls s390-.*-linux.*/tls s390x-.*-linux.*/tls sh[34].*-.*-linux.*/notls sh[34].*-.*-linux.*/thread sh[34].*-.*-linux.*/tls
+GLIBC_2.2.5 x86_64-.*-linux.*/thread
+| GLIBC_2.2 i.86-.*-linux.*/thread powerpc-.*-linux.*/thread s390-.*-linux.*/thread s390x-.*-linux.*/thread sh[34].*-.*-linux.*/thread
 | GLIBC_2.3 powerpc64-.*-linux.*/thread
  fedisableexcept F
  feenableexcept F
  fegetexcept F
-GLIBC_2.2 i.86-.*-linux.*/notls i.86-.*-linux.*/thread i.86-.*-linux.*/tls
+GLIBC_2.2 i.86-.*-linux.*/thread
  __expl F
  __expm1l F
-GLIBC_2.2 i.86-.*-linux.*/notls i.86-.*-linux.*/thread i.86-.*-linux.*/tls ia64-.*-linux.*/tls m68.*-.*-linux.*/notls powerpc-.*-linux.*/notls powerpc-.*-linux.*/thread powerpc-.*-linux.*/tls s390-.*-linux.*/tls s390x-.*-linux.*/tls sh[34].*-.*-linux.*/notls sh[34].*-.*-linux.*/thread sh[34].*-.*-linux.*/tls
+GLIBC_2.2 i.86-.*-linux.*/thread powerpc-.*-linux.*/thread s390-.*-linux.*/thread s390x-.*-linux.*/thread sh[34].*-.*-linux.*/thread
  GLIBC_2.2 A
 GLIBC_2.3 powerpc64-.*-linux.*/thread
  GLIBC_2.3 A
+GLIBC_2.4 i.86-.*-linux.*/thread x86_64-.*-linux.*/thread
+ GLIBC_2.4 A
+GLIBC_2.15 i.86-.*-linux.*/thread powerpc-.*-linux.*/thread s390-.*-linux.*/thread x86_64-.*-linux.*/thread s390x-.*-linux.*/thread sh[34].*-.*-linux.*/thread powerpc64-.*-linux.*/thread
+ GLIBC_2.15 A
+ __acos_finite F
+ __acosf_finite F
+ __acosh_finite F
+ __acoshf_finite F
+ __acoshl_finite F
+ __acosl_finite F
+ __asin_finite F
+ __asinf_finite F
+ __asinl_finite F
+ __atan2_finite F
+ __atan2f_finite F
+ __atan2l_finite F
+ __atanh_finite F
+ __atanhf_finite F
+ __atanhl_finite F
+ __cosh_finite F
+ __coshf_finite F
+ __coshl_finite F
+ __exp10_finite F
+ __exp10f_finite F
+ __exp10l_finite F
+ __exp2_finite F
+ __exp2f_finite F
+ __exp2l_finite F
+ __expl_finite F
+ __exp_finite F
+ __expf_finite F
+ __fmod_finite F
+ __fmodf_finite F
+ __fmodl_finite F
+ __gamma_r_finite F
+ __gammaf_r_finite F
+ __gammal_r_finite F
+ __hypot_finite F
+ __hypotf_finite F
+ __hypotl_finite F
+ __j0_finite F
+ __j0f_finite F
+ __j0l_finite F
+ __j1_finite F
+ __j1f_finite F
+ __j1l_finite F
+ __jn_finite F
+ __jnf_finite F
+ __jnl_finite F
+ __lgamma_r_finite F
+ __lgammaf_r_finite F
+ __lgammal_r_finite F
+ __log10_finite F
+ __log10f_finite F
+ __log10l_finite F
+ __log2_finite F
+ __log2f_finite F
+ __log2l_finite F
+ __log_finite F
+ __logf_finite F
+ __logl_finite F
+ __pow_finite F
+ __powf_finite F
+ __powl_finite F
+ __remainder_finite F
+ __remainderf_finite F
+ __remainderl_finite F
+ __scalb_finite F
+ __scalbf_finite F
+ __scalbl_finite F
+ __sinh_finite F
+ __sinhf_finite F
+ __sinhl_finite F
+ __sqrt_finite F
+ __sqrtf_finite F
+ __sqrtl_finite F
+ __y0_finite F
+ __y0f_finite F
+ __y0l_finite F
+ __y1_finite F
+ __y1f_finite F
+ __y1l_finite F
+ __yn_finite F
+ __ynf_finite F
+ __ynl_finite F

@@ -7,8 +7,5 @@ libc {
     # a*
     argp_error; argp_failure; argp_help; argp_parse; argp_state_help;
     argp_usage;
-
-    # kludge for recursive argp callers that know the magic.
-    _argp_unlock_xxx;
   }
 }

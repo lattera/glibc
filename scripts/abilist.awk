@@ -74,6 +74,11 @@ $2 == "g" || $2 == "w" && NF == 7 {
     type = "F";
     size = "";
   }
+  else if (type == "iD" && $4 == ".text") {
+    # Indirect functions.
+    type = "F";
+    size = "";
+  }
   else {
     desc = symbol " " version " " weak " ? " type " " $4 " " $5;
   }

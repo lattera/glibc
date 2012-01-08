@@ -1,13 +1,13 @@
-GLIBC_2.0 i.86-.*-linux.*/notls i.86-.*-linux.*/thread i.86-.*-linux.*/tls m68.*-.*-linux.*/notls powerpc-.*-linux.*/notls powerpc-.*-linux.*/thread powerpc-.*-linux.*/tls s390-.*-linux.*/tls
+GLIBC_2.0 i.86-.*-linux.*/thread powerpc-.*-linux.*/thread s390-.*-linux.*/thread
  GLIBC_2.0 A
-GLIBC_2.0 i.86-.*-linux.*/notls i.86-.*-linux.*/thread i.86-.*-linux.*/tls m68.*-.*-linux.*/notls powerpc-.*-linux.*/notls powerpc-.*-linux.*/thread powerpc-.*-linux.*/tls s390-.*-linux.*/tls
-| GLIBC_2.2.5 x86_64-.*-linux.*/tls
-| GLIBC_2.2 ia64-.*-linux.*/tls s390x-.*-linux.*/tls sh[34].*-.*-linux.*/notls sh[34].*-.*-linux.*/thread sh[34].*-.*-linux.*/tls
+GLIBC_2.0 i.86-.*-linux.*/thread powerpc-.*-linux.*/thread s390-.*-linux.*/thread
+| GLIBC_2.2.5 x86_64-.*-linux.*/thread
+| GLIBC_2.2 s390x-.*-linux.*/thread sh[34].*-.*-linux.*/thread
 | GLIBC_2.3 powerpc64-.*-linux.*/thread
  __ctype_get_mb_cur_max F
-GLIBC_2.2.5 x86_64-.*-linux.*/tls
+GLIBC_2.2.5 x86_64-.*-linux.*/thread
  GLIBC_2.2.5 A
-GLIBC_2.2 ia64-.*-linux.*/tls s390x-.*-linux.*/tls sh[34].*-.*-linux.*/notls sh[34].*-.*-linux.*/thread sh[34].*-.*-linux.*/tls
+GLIBC_2.2 s390x-.*-linux.*/thread sh[34].*-.*-linux.*/thread
  GLIBC_2.2 A
 GLIBC_2.3 powerpc64-.*-linux.*/thread
  GLIBC_2.3 A
