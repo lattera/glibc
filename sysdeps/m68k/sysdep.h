@@ -23,26 +23,15 @@
 
 /* Syntactic details of assembler.  */
 
-# ifdef HAVE_ELF
-
 /* ELF uses byte-counts for .align, most others use log2 of count of bytes.  */
-#  define ALIGNARG(log2) 1<<log2
+# define ALIGNARG(log2) 1<<log2
 /* For ELF we need the `.type' directive to make shared libs work right.  */
-#  define ASM_TYPE_DIRECTIVE(name,typearg) .type name,typearg
-#  define ASM_SIZE_DIRECTIVE(name) .size name,.-name
+# define ASM_TYPE_DIRECTIVE(name,typearg) .type name,typearg
+# define ASM_SIZE_DIRECTIVE(name) .size name,.-name
 
 /* In ELF C symbols are asm symbols.  */
-#  undef NO_UNDERSCORES
-#  define NO_UNDERSCORES
-
-# else
-
-#  define ALIGNARG(log2) log2
-#  define ASM_TYPE_DIRECTIVE(name,type)	/* Nothing is specified.  */
-#  define ASM_SIZE_DIRECTIVE(name)	/* Nothing is specified.  */
-
-# endif
-
+# undef NO_UNDERSCORES
+# define NO_UNDERSCORES
 
 /* Define an entry point visible from C.
 

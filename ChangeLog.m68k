@@ -1,3 +1,8 @@
+2012-01-08  Andreas Schwab  <schwab@linux-m68k.org>
+
+	* sysdeps/m68k/sysdep.h: Remove non-ELF support.
+	* sysdeps/m68k/asm-syntax.h: Likewise.
+
 2012-01-07  Andreas Schwab  <schwab@linux-m68k.org>
 
 	* sysdeps/unix/sysv/linux/m68k/configure.in: Set
