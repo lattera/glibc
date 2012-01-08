@@ -29,6 +29,8 @@ Version 2.16
 
   + uchar.h support added
 
+  Implemented by Ulrich Drepper.
+
 * Support for the IA-64 is removed and could live in ports.
 
 Version 2.15
