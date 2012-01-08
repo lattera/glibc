@@ -122,17 +122,3 @@ BUILTIN_TRANSFORMATION ("INTERNAL", "UNICODEBIG//", 1,
 			__gconv_transform_internal_ucs2reverse, NULL,
 			4, 4, 2, 2)
 #endif
-
-
-BUILTIN_TRANSFORMATION ("ANSI_X3.4-1968//", "CHAR16", 1, "=ascii->CHAR16",
-			__gconv_transform_ascii_char16, NULL, 1, 1, 2, 4)
-
-BUILTIN_TRANSFORMATION ("CHAR16", "ANSI_X3.4-1968//", 1, "=CHAR16->ascii",
-			__gconv_transform_char16_ascii, NULL, 2, 4, 1, 1)
-
-
-BUILTIN_TRANSFORMATION ("ISO-10646/UTF8/", "CHAR16", 1, "=utf8->CHAR16",
-			__gconv_transform_utf8_char16, NULL, 1, 6, 2, 4)
-
-BUILTIN_TRANSFORMATION ("CHAR16", "ISO-10646/UTF8/", 1, "=CHAR16->utf8",
-			__gconv_transform_char16_utf8, NULL, 2, 4, 1, 6)

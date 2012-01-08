@@ -32,11 +32,6 @@ struct gconv_fcts
     size_t towc_nsteps;
     struct __gconv_step *tomb;
     size_t tomb_nsteps;
-
-    struct __gconv_step *toc16;
-    size_t toc16_nsteps;
-    struct __gconv_step *fromc16;
-    size_t fromc16_nsteps;
   };
 
 /* Set of currently active conversion functions.  */

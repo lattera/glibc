@@ -1,5 +1,17 @@
 2012-01-08  Ulrich Drepper  <drepper@gmail.com>
 
+	* wcsmbs/mbrtoc16.c: Implement using towc function.
+	* wcsmbs/wcsmbsload.h: No need for toc16 and fromc16 functions.
+	* wcsmbs/wcsmbsload.c: Likewise.
+	* iconv/gconv_simple.c: Likewise.
+	* iconv/gconv_int.h: Likewise.
+	* iconv/gconv_builtin.h: Likewise.
+	* iconv/iconv_prog.c: Remove CHAR16 handling.
+
+	* wcsmbs/c16rtomb.c: Remove #if 0'ed code.
+
+	* wcsmbs/mbrtowc.c: Better check for invalid inputs.
+
 	* configure.in: Remove --with-elf and --enable-bounded options.
 	Dont set base_machine for ia64.  More non-ELF conditions removed.
 	Remove testing and setting of leading underscore information.

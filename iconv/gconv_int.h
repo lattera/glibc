@@ -303,10 +303,6 @@ __BUILTIN_TRANSFORM (__gconv_transform_internal_ucs4le);
 __BUILTIN_TRANSFORM (__gconv_transform_ucs4le_internal);
 __BUILTIN_TRANSFORM (__gconv_transform_internal_utf16);
 __BUILTIN_TRANSFORM (__gconv_transform_utf16_internal);
-__BUILTIN_TRANSFORM (__gconv_transform_ascii_char16);
-__BUILTIN_TRANSFORM (__gconv_transform_char16_ascii);
-__BUILTIN_TRANSFORM (__gconv_transform_utf8_char16);
-__BUILTIN_TRANSFORM (__gconv_transform_char16_utf8);
 # undef __BUITLIN_TRANSFORM
 
 /* Specialized conversion function for a single byte to INTERNAL, recognizing

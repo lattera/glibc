@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998, 1999, 2000, 2002, 2004, 2005, 2011
+/* Copyright (C) 1996, 1997, 1998, 1999, 2000, 2002, 2004, 2005, 2011, 2012
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.org>, 1996.
@@ -73,7 +73,11 @@ __mbrtowc (wchar_t *pwc, const char *s, size_t n, mbstate_t *ps)
   inbuf = (const unsigned char *) s;
   endbuf = inbuf + n;
   if (__builtin_expect (endbuf < inbuf, 0))
-    endbuf = (const unsigned char *) ~(uintptr_t) 0;
+    {
+      endbuf = (const unsigned char *) ~(uintptr_t) 0;
+      if (endbuf == inbuf)
+	goto ilseq;
+    }
   __gconv_fct fct = fcts->towc->__fct;
 #ifdef PTR_DEMANGLE
   if (fcts->towc->__shlib_handle != NULL)
@@ -108,6 +112,7 @@ __mbrtowc (wchar_t *pwc, const char *s, size_t n, mbstate_t *ps)
     result = (size_t) -2;
   else
     {
+    ilseq:
       result = (size_t) -1;
       __set_errno (EILSEQ);
     }

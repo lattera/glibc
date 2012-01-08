@@ -68,44 +68,6 @@ static const struct __gconv_step to_mb =
   .__data = NULL
 };
 
-static const struct __gconv_step to_c16 =
-{
-  .__shlib_handle = NULL,
-  .__modname = NULL,
-  .__counter = INT_MAX,
-  .__from_name = (char *) "ANSI_X3.4-1968//TRANSLIT",
-  .__to_name = (char *) "UTF-16//",
-  .__fct = __gconv_transform_ascii_char16,
-  .__btowc_fct = NULL,
-  .__init_fct = NULL,
-  .__end_fct = NULL,
-  .__min_needed_from = 1,
-  .__max_needed_from = 1,
-  .__min_needed_to = 4,
-  .__max_needed_to = 4,
-  .__stateful = 0,
-  .__data = NULL
-};
-
-static const struct __gconv_step from_c16 =
-{
-  .__shlib_handle = NULL,
-  .__modname = NULL,
-  .__counter = INT_MAX,
-  .__from_name = (char *) "UTF-16//",
-  .__to_name = (char *) "ANSI_X3.4-1968//TRANSLIT",
-  .__fct = __gconv_transform_char16_ascii,
-  .__btowc_fct = NULL,
-  .__init_fct = NULL,
-  .__end_fct = NULL,
-  .__min_needed_from = 4,
-  .__max_needed_from = 4,
-  .__min_needed_to = 1,
-  .__max_needed_to = 1,
-  .__stateful = 0,
-  .__data = NULL
-};
-
 
 /* For the default locale we only have to handle ANSI_X3.4-1968.  */
 const struct gconv_fcts __wcsmbs_gconv_fcts_c =
@@ -114,11 +76,6 @@ const struct gconv_fcts __wcsmbs_gconv_fcts_c =
   .towc_nsteps = 1,
   .tomb = (struct __gconv_step *) &to_mb,
   .tomb_nsteps = 1,
-
-  .toc16 = (struct __gconv_step *) &to_c16,
-  .toc16_nsteps = 1,
-  .fromc16 = (struct __gconv_step *) &from_c16,
-  .fromc16_nsteps = 1,
 };
 
 
@@ -234,24 +191,9 @@ __wcsmbs_load_conv (struct __locale_data *new_category)
 	new_fcts->tomb = __wcsmbs_getfct (complete_name, "INTERNAL",
 					  &new_fcts->tomb_nsteps);
 
-      if (new_fcts->tomb != NULL)
-	{
-	  new_fcts->toc16 = __wcsmbs_getfct ("CHAR16", complete_name,
-					     &new_fcts->toc16_nsteps);
-
-	  if (new_fcts->toc16 != NULL)
-	    new_fcts->fromc16 = __wcsmbs_getfct (complete_name, "CHAR16",
-						 &new_fcts->fromc16_nsteps);
-	  else
-	    {
-	      __gconv_close_transform (new_fcts->toc16, new_fcts->toc16_nsteps);
-	      new_fcts->toc16 = NULL;
-	    }
-	}
-
       /* If any of the conversion functions is not available we don't
 	 use any since this would mean we cannot convert back and
-	 forth.*/
+	 forth.  NB: NEW_FCTS was allocated with calloc.  */
       if (new_fcts->tomb == NULL)
 	{
 	  if (new_fcts->towc != NULL)
@@ -264,12 +206,6 @@ __wcsmbs_load_conv (struct __locale_data *new_category)
 	}
       else
 	{
-	  // XXX At least for now we live with the CHAR16 not being available.
-	  if (new_fcts->toc16 == NULL)
-	    new_fcts->toc16 = __wcsmbs_gconv_fcts_c.toc16;
-	  if (new_fcts->fromc16 == NULL)
-	    new_fcts->fromc16 = __wcsmbs_gconv_fcts_c.fromc16;
-
 	  new_category->private.ctype = new_fcts;
 	  new_category->private.cleanup = &_nl_cleanup_ctype;
 	}
@@ -297,10 +233,6 @@ __wcsmbs_clone_conv (struct gconv_fcts *copy)
     ++copy->towc->__counter;
   if (copy->tomb->__shlib_handle != NULL)
     ++copy->tomb->__counter;
-  if (copy->toc16->__shlib_handle != NULL)
-    ++copy->toc16->__counter;
-  if (copy->fromc16->__shlib_handle != NULL)
-    ++copy->fromc16->__counter;
 }
 
 
@@ -320,19 +252,6 @@ __wcsmbs_named_conv (struct gconv_fcts *copy, const char *name)
       return 1;
     }
 
-  copy->fromc16 = __wcsmbs_getfct (name, "CHAR16", &copy->fromc16_nsteps);
-  if (copy->fromc16 == NULL)
-    copy->toc16 = NULL;
-  else
-    {
-      copy->toc16 = __wcsmbs_getfct ("CHAR16", name, &copy->toc16_nsteps);
-      if (copy->toc16 == NULL)
-	{
-	  __gconv_close_transform (copy->fromc16, copy->fromc16_nsteps);
-	  copy->fromc16 = NULL;
-	}
-    }
-
   return 0;
 }
 
@@ -348,8 +267,6 @@ _nl_cleanup_ctype (struct __locale_data *locale)
       /* Free the old conversions.  */
       __gconv_close_transform (data->tomb, data->tomb_nsteps);
       __gconv_close_transform (data->towc, data->towc_nsteps);
-      __gconv_close_transform (data->fromc16, data->fromc16_nsteps);
-      __gconv_close_transform (data->toc16, data->toc16_nsteps);
       free ((char *) data);
     }
 }

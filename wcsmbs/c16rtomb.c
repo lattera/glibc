@@ -17,25 +17,8 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <assert.h>
-#include <dlfcn.h>
-#include <errno.h>
-#include <gconv.h>
-#include <stdlib.h>
 #include <uchar.h>
-#include <wcsmbsload.h>
-
-#include <sysdep.h>
-
-#ifndef EILSEQ
-# define EILSEQ EINVAL
-#endif
-
-#if __STDC__ >= 201000L
-# define u(c) U##c
-#else
-# define u(c) L##c
-#endif
+#include <wchar.h>
 
 
 /* This is the private state used if PS is NULL.  */
@@ -44,85 +27,7 @@ static mbstate_t state;
 size_t
 c16rtomb (char *s, char16_t c16, mbstate_t *ps)
 {
-#if 1
   // XXX The ISO C 11 spec I have does not say anything about handling
   // XXX surrogates in this interface.
   return wcrtomb (s, c16, ps ?: &state);
-#else
-  char buf[MB_LEN_MAX];
-  struct __gconv_step_data data;
-  int status;
-  size_t result;
-  size_t dummy;
-  const struct gconv_fcts *fcts;
-
-  /* Set information for this step.  */
-  data.__invocation_counter = 0;
-  data.__internal_use = 1;
-  data.__flags = __GCONV_IS_LAST;
-  data.__statep = ps ?: &state;
-  data.__trans = NULL;
-
-  /* A first special case is if S is NULL.  This means put PS in the
-     initial state.  */
-  if (s == NULL)
-    {
-      s = buf;
-      c16 = u('\0');
-    }
-
-  /* Tell where we want to have the result.  */
-  data.__outbuf = (unsigned char *) s;
-  data.__outbufend = (unsigned char *) s + MB_CUR_MAX;
-
-  /* Get the conversion functions.  */
-  fcts = get_gconv_fcts (_NL_CURRENT_DATA (LC_CTYPE));
-  __gconv_fct fct = fcts->fromc16->__fct;
-#ifdef PTR_DEMANGLE
-  if (fcts->tomb->__shlib_handle != NULL)
-    PTR_DEMANGLE (fct);
-#endif
-
-  /* If C16 is the NUL character we write into the output buffer
-     the byte sequence necessary for PS to get into the initial
-     state, followed by a NUL byte.  */
-  if (c16 == L'\0')
-    {
-      status = DL_CALL_FCT (fct, (fcts->fromc16, &data, NULL, NULL,
-				  NULL, &dummy, 1, 1));
-
-      if (status == __GCONV_OK || status == __GCONV_EMPTY_INPUT)
-	*data.__outbuf++ = '\0';
-    }
-  else
-    {
-      /* Do a normal conversion.  */
-      const unsigned char *inbuf = (const unsigned char *) &c16;
-
-      status = DL_CALL_FCT (fct,
-			    (fcts->fromc16, &data, &inbuf,
-			     inbuf + sizeof (char16_t), NULL, &dummy,
-			     0, 1));
-    }
-
-  /* There must not be any problems with the conversion but illegal input
-     characters.  The output buffer must be large enough, otherwise the
-     definition of MB_CUR_MAX is not correct.  All the other possible
-     errors also must not happen.  */
-  assert (status == __GCONV_OK || status == __GCONV_EMPTY_INPUT
-	  || status == __GCONV_ILLEGAL_INPUT
-	  || status == __GCONV_INCOMPLETE_INPUT
-	  || status == __GCONV_FULL_OUTPUT);
-
-  if (status == __GCONV_OK || status == __GCONV_EMPTY_INPUT
-      || status == __GCONV_FULL_OUTPUT)
-    result = data.__outbuf - (unsigned char *) s;
-  else
-    {
-      result = (size_t) -1;
-      __set_errno (EILSEQ);
-    }
-
-  return result;
-#endif
 }
