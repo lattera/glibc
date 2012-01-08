@@ -3562,7 +3562,6 @@ else
 fi
 
 
-static=yes
 # Check whether --enable-shared was given.
 if test "${enable_shared+set}" = set; then :
   enableval=$enable_shared; shared=$enableval
