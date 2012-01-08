@@ -1,4 +1,4 @@
-/* Copyright (C) 2006 Free Software Foundation, Inc.
+/* Copyright (C) 2006, 2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2006.
 
@@ -73,4 +73,5 @@ ppoll (struct pollfd *fds, nfds_t nfds, const struct timespec *timeout,
 #ifndef ppoll
 /* __poll handles cancellation.  */
 LIBC_CANCEL_HANDLED ();
+libc_hidden_def (ppoll);
 #endif

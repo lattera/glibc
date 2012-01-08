@@ -1,5 +1,4 @@
-/* poll file descriptors.  Hurd version.
-   Copyright (C) 2006, 2012 Free Software Foundation, Inc.
+/* Copyright (C) 2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -18,14 +17,13 @@
    02111-1307 USA.  */
 
 #include <sys/poll.h>
-#include <sys/time.h>
-#include <hurd.h>
-#include <hurd/fd.h>
+
 
 int
-ppoll (struct pollfd *fds, nfds_t nfds,
-       const struct timespec *timeout, const sigset_t *sigmask)
+__poll_chk (struct pollfd *fds, nfds_t nfds, int timeout, __SIZE_TYPE__ fdslen)
 {
-  return _hurd_select (nfds, fds, NULL, NULL, NULL, timeout, sigmask);
+  if (fdslen / sizeof (*fds) < nfds)
+    __chk_fail ();
+
+  return __poll (fds, nfds, timeout);
 }
-libc_hidden_def (ppoll)

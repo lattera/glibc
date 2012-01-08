@@ -36,6 +36,9 @@ Version 2.16
 * Support for the IA-64 is removed and could live in ports.
 
 * Remove support for anything but ELF binary format
+
+* Checking versions of poll, ppoll added.
+  Implemented by Ulrich Drepper.
 
 Version 2.15
 

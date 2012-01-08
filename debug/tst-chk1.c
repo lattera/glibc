@@ -1,4 +1,4 @@
-/* Copyright (C) 2004,2005,2006,2007,2008,2011 Free Software Foundation, Inc.
+/* Copyright (C) 2004-2008,2011,2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jakub@redhat.com>, 2004.
 
@@ -29,6 +29,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <wchar.h>
+#include <sys/poll.h>
 #include <sys/select.h>
 #include <sys/socket.h>
 #include <sys/un.h>
@@ -1473,6 +1474,22 @@ do_test (void)
 #if __USE_FORTIFY_LEVEL >= 1
   CHK_FAIL_START
   FD_ISSET (FD_SETSIZE, &s);
+  CHK_FAIL_END
+#endif
+
+  struct pollfd fds[1];
+  fds[0].fd = STDOUT_FILENO;
+  fds[0].events = POLLOUT;
+  poll (fds, 1, 0);
+#if __USE_FORTIFY_LEVEL >= 1
+  CHK_FAIL_START
+  poll (fds, 2, 0);
+  CHK_FAIL_END
+#endif
+  ppoll (fds, 1, NULL, NULL);
+#if __USE_FORTIFY_LEVEL >= 1
+  CHK_FAIL_START
+  ppoll (fds, 2, NULL, NULL);
   CHK_FAIL_END
 #endif
 

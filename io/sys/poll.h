@@ -71,4 +71,10 @@ extern int ppoll (struct pollfd *__fds, nfds_t __nfds,
 
 __END_DECLS
 
+
+/* Define some inlines helping to catch common problems.  */
+#if __USE_FORTIFY_LEVEL > 0 && defined __extern_always_inline
+# include <bits/poll2.h>
+#endif
+
 #endif	/* sys/poll.h */

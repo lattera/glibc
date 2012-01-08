@@ -1,5 +1,19 @@
 2012-01-08  Ulrich Drepper  <drepper@gmail.com>
 
+	* debug/Makefile (routines): Add poll_chk and ppoll_chk.
+	* debug/Versions: Export __pool_chk and __ppoll_chk from libc for
+	GLIBC_2.16.
+	* debug/tst-chk1.c: Add poll and ppoll tests.
+	* io/sys/poll.h: Include bits/poll2.h for _FORTIFY_SOURCE.
+	* include/sys/poll.h: Add hidden proto for ppoll.
+	* sysdeps/unix/sysv/linux/ppoll.c: Add hidden def.
+	* sysdeps/mach/hurd/ppoll.c: Likewise.
+	* io/ppoll.c: Likewise.
+	* debug/poll_chk.c: New file.
+	* debug/ppoll_chk.c: New file.
+	* include/bits/poll2.h: New file.
+	* io/bits/poll2.h: New file.
+
 	[BZ #1350]
 	* math/complex.h (CMPLX, CMPLXF, CMPLXL): Define.
 

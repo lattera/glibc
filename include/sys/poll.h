@@ -4,5 +4,6 @@
 extern int __poll (struct pollfd *__fds, unsigned long int __nfds,
 		   int __timeout);
 libc_hidden_proto (__poll)
+libc_hidden_proto (ppoll)
 
 #endif
