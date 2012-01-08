@@ -1,5 +1,8 @@
 2012-01-08  Andreas Schwab  <schwab@linux-m68k.org>
 
+	* sysdeps/m68k/fpu/bits/fenv.h (FE_DFL_ENV, FE_NOMASK_ENV): Use
+	const intead of __const.
+
 	* sysdeps/m68k/asm-syntax.h: Remove non-ELF support.
 	* sysdeps/m68k/sysdep.h: Likewise.
 	(NO_UNDERSCORES): Don't define.
