@@ -1,5 +1,5 @@
 /* Compatibility definitions for System V `poll' interface.
-   Copyright (C) 1994,1996-2001,2004,2005,2006 Free Software Foundation, Inc.
+   Copyright (C) 1994,1996-2001,2004-2006,2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -65,8 +65,8 @@ extern int poll (struct pollfd *__fds, nfds_t __nfds, int __timeout);
    This function is a cancellation point and therefore not marked with
    __THROW.  */
 extern int ppoll (struct pollfd *__fds, nfds_t __nfds,
-		  __const struct timespec *__timeout,
-		  __const __sigset_t *__ss);
+		  const struct timespec *__timeout,
+		  const __sigset_t *__ss);
 #endif
 
 __END_DECLS

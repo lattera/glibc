@@ -56,7 +56,7 @@ struct ttyent {
 __BEGIN_DECLS
 
 extern struct ttyent *getttyent (void) __THROW;
-extern struct ttyent *getttynam (__const char *__tty) __THROW;
+extern struct ttyent *getttynam (const char *__tty) __THROW;
 extern int setttyent (void) __THROW;
 extern int endttyent (void) __THROW;
 

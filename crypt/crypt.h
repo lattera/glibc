@@ -1,7 +1,8 @@
 /*
  * UFC-crypt: ultra fast crypt(3) implementation
  *
- * Copyright (C) 1991,92,93,96,97,98,2000,2004 Free Software Foundation, Inc.
+ * Copyright (C) 1991-1993,1996-1998,2000,2004,2012
+ * Free Software Foundation, Inc.
  *
  * The GNU C Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -30,11 +31,11 @@
 __BEGIN_DECLS
 
 /* Encrypt at most 8 characters from KEY using salt to perturb DES.  */
-extern char *crypt (__const char *__key, __const char *__salt)
+extern char *crypt (const char *__key, const char *__salt)
      __THROW __nonnull ((1, 2));
 
 /* Setup DES tables according KEY.  */
-extern void setkey (__const char *__key) __THROW __nonnull ((1));
+extern void setkey (const char *__key) __THROW __nonnull ((1));
 
 /* Encrypt data in BLOCK in place if EDFLAG is zero; otherwise decrypt
    block in place.  */
@@ -57,11 +58,11 @@ struct crypt_data
     int  direction, initialized;
   };
 
-extern char *crypt_r (__const char *__key, __const char *__salt,
+extern char *crypt_r (const char *__key, const char *__salt,
 		      struct crypt_data * __restrict __data)
      __THROW __nonnull ((1, 2, 3));
 
-extern void setkey_r (__const char *__key,
+extern void setkey_r (const char *__key,
 		      struct crypt_data * __restrict __data)
      __THROW __nonnull ((1, 2));
 

@@ -73,12 +73,11 @@ extern int __drand48_iterate (unsigned short int __xsubi[3],
 /* Global state for non-reentrant functions.  Defined in drand48-iter.c.  */
 extern struct drand48_data __libc_drand48_data attribute_hidden;
 
-extern int __setenv (__const char *__name, __const char *__value,
-		     int __replace);
-extern int __unsetenv (__const char *__name);
+extern int __setenv (const char *__name, const char *__value, int __replace);
+extern int __unsetenv (const char *__name);
 extern int __clearenv (void);
-extern char *__canonicalize_file_name (__const char *__name);
-extern char *__realpath (__const char *__name, char *__resolved);
+extern char *__canonicalize_file_name (const char *__name);
+extern char *__realpath (const char *__name, char *__resolved);
 extern int __ptsname_r (int __fd, char *__buf, size_t __buflen);
 # ifndef _ISOMAC
 extern int __ptsname_internal (int fd, char *buf, size_t buflen,
@@ -109,31 +108,31 @@ extern void *__libc_memalign (size_t alignment, size_t size)
 extern int __libc_system (const char *line);
 
 
-extern double __strtod_internal (__const char *__restrict __nptr,
+extern double __strtod_internal (const char *__restrict __nptr,
 				 char **__restrict __endptr, int __group)
      __THROW __nonnull ((1)) __wur;
-extern float __strtof_internal (__const char *__restrict __nptr,
+extern float __strtof_internal (const char *__restrict __nptr,
 				char **__restrict __endptr, int __group)
      __THROW __nonnull ((1)) __wur;
-extern long double __strtold_internal (__const char *__restrict __nptr,
+extern long double __strtold_internal (const char *__restrict __nptr,
 				       char **__restrict __endptr,
 				       int __group)
      __THROW __nonnull ((1)) __wur;
-extern long int __strtol_internal (__const char *__restrict __nptr,
+extern long int __strtol_internal (const char *__restrict __nptr,
 				   char **__restrict __endptr,
 				   int __base, int __group)
      __THROW __nonnull ((1)) __wur;
-extern unsigned long int __strtoul_internal (__const char *__restrict __nptr,
+extern unsigned long int __strtoul_internal (const char *__restrict __nptr,
 					     char **__restrict __endptr,
 					     int __base, int __group)
      __THROW __nonnull ((1)) __wur;
 __extension__
-extern long long int __strtoll_internal (__const char *__restrict __nptr,
+extern long long int __strtoll_internal (const char *__restrict __nptr,
 					 char **__restrict __endptr,
 					 int __base, int __group)
      __THROW __nonnull ((1)) __wur;
 __extension__
-extern unsigned long long int __strtoull_internal (__const char *
+extern unsigned long long int __strtoull_internal (const char *
 						   __restrict __nptr,
 						   char **__restrict __endptr,
 						   int __base, int __group)
@@ -146,31 +145,31 @@ libc_hidden_proto (__strtoll_internal)
 libc_hidden_proto (__strtoul_internal)
 libc_hidden_proto (__strtoull_internal)
 
-extern double ____strtod_l_internal (__const char *__restrict __nptr,
+extern double ____strtod_l_internal (const char *__restrict __nptr,
 				     char **__restrict __endptr, int __group,
 				     __locale_t __loc);
-extern float ____strtof_l_internal (__const char *__restrict __nptr,
+extern float ____strtof_l_internal (const char *__restrict __nptr,
 				    char **__restrict __endptr, int __group,
 				    __locale_t __loc);
-extern long double ____strtold_l_internal (__const char *__restrict __nptr,
+extern long double ____strtold_l_internal (const char *__restrict __nptr,
 					   char **__restrict __endptr,
 					   int __group, __locale_t __loc);
-extern long int ____strtol_l_internal (__const char *__restrict __nptr,
+extern long int ____strtol_l_internal (const char *__restrict __nptr,
 				       char **__restrict __endptr,
 				       int __base, int __group,
 				       __locale_t __loc);
-extern unsigned long int ____strtoul_l_internal (__const char *
+extern unsigned long int ____strtoul_l_internal (const char *
 						 __restrict __nptr,
 						 char **__restrict __endptr,
 						 int __base, int __group,
 						 __locale_t __loc);
 __extension__
-extern long long int ____strtoll_l_internal (__const char *__restrict __nptr,
+extern long long int ____strtoll_l_internal (const char *__restrict __nptr,
 					     char **__restrict __endptr,
 					     int __base, int __group,
 					     __locale_t __loc);
 __extension__
-extern unsigned long long int ____strtoull_l_internal (__const char *
+extern unsigned long long int ____strtoull_l_internal (const char *
 						       __restrict __nptr,
 						       char **
 						       __restrict __endptr,

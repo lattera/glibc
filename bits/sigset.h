@@ -1,5 +1,5 @@
 /* __sig_atomic_t, __sigset_t, and related definitions.  Generic/BSD version.
-   Copyright (C) 1991, 1992, 1994, 1996, 1997, 2007
+   Copyright (C) 1991, 1992, 1994, 1996, 1997, 2007, 2012
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -60,7 +60,7 @@ typedef unsigned long int __sigset_t;
 /* These functions needn't check for a bogus signal number -- error
    checking is done in the non __ versions.  */
 
-extern int __sigismember (__const __sigset_t *, int);
+extern int __sigismember (const __sigset_t *, int);
 extern int __sigaddset (__sigset_t *, int);
 extern int __sigdelset (__sigset_t *, int);
 
@@ -73,7 +73,7 @@ extern int __sigdelset (__sigset_t *, int);
     return BODY;							      \
   }
 
-__SIGSETFN (__sigismember, (*__set & __mask) ? 1 : 0, __const)
+__SIGSETFN (__sigismember, (*__set & __mask) ? 1 : 0, const)
 __SIGSETFN (__sigaddset, ((*__set |= __mask), 0), )
 __SIGSETFN (__sigdelset, ((*__set &= ~__mask), 0), )
 

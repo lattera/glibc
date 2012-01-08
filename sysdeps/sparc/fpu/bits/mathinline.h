@@ -1,5 +1,5 @@
 /* Inline math functions for SPARC.
-   Copyright (C) 1999, 2000, 2001, 2002, 2004, 2006, 2007
+   Copyright (C) 1999, 2000, 2001, 2002, 2004, 2006, 2007, 2012
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jakub@redhat.com>.
@@ -215,7 +215,7 @@ __MATH_INLINE long double
 __NTH (sqrtl (long double __x))
 {
   long double __r;
-  extern void _Qp_sqrt (long double *, __const__ long double *);
+  extern void _Qp_sqrt (long double *, const long double *);
   _Qp_sqrt (&__r, &__x);
   return __r;
 }
@@ -223,7 +223,7 @@ __NTH (sqrtl (long double __x))
 __MATH_INLINE long double
 sqrtl (long double __x) __THROW
 {
-  extern long double _Q_sqrt (__const__ long double);
+  extern long double _Q_sqrt (const long double);
   return _Q_sqrt (__x);
 }
 #   endif /* sparc64 */
@@ -253,7 +253,7 @@ __MATH_INLINE long double
 __ieee754_sqrtl (long double __x)
 {
   long double __r;
-  extern void _Qp_sqrt (long double *, __const__ long double *);
+  extern void _Qp_sqrt (long double *, const long double *);
   _Qp_sqrt(&__r, &__x);
   return __r;
 }
@@ -261,7 +261,7 @@ __ieee754_sqrtl (long double __x)
 __MATH_INLINE long double
 __ieee754_sqrtl (long double __x)
 {
-  extern long double _Q_sqrt (__const__ long double);
+  extern long double _Q_sqrt (const long double);
   return _Q_sqrt (__x);
 }
 #   endif /* sparc64 */

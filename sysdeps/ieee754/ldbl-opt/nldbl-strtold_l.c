@@ -7,7 +7,7 @@
 #undef __strtod_l
 
 extern double
-__strtod_l (__const char *__restrict __nptr, char **__restrict __endptr,
+__strtod_l (const char *__restrict __nptr, char **__restrict __endptr,
 	    __locale_t __loc);
 
 double

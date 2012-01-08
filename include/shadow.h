@@ -7,13 +7,13 @@ extern int __getspent_r (struct spwd *__result_buf, char *__buffer,
      attribute_hidden;
 extern int __old_getspent_r (struct spwd *__result_buf, char *__buffer,
 			     size_t __buflen, struct spwd **__result);
-extern int __getspnam_r (__const char *__name, struct spwd *__result_buf,
+extern int __getspnam_r (const char *__name, struct spwd *__result_buf,
 			 char *__buffer, size_t __buflen,
 			 struct spwd **__result);
-extern int __old_getspnam_r (__const char *__name, struct spwd *__result_buf,
+extern int __old_getspnam_r (const char *__name, struct spwd *__result_buf,
 			     char *__buffer, size_t __buflen,
 			     struct spwd **__result);
-extern int __sgetspent_r (__const char *__string,
+extern int __sgetspent_r (const char *__string,
 			  struct spwd *__result_buf, char *__buffer,
 			  size_t __buflen, struct spwd **__result);
 extern int __fgetspent_r (FILE *__stream, struct spwd *__result_buf,
@@ -32,10 +32,10 @@ libc_hidden_proto (_nss_files_parse_spent)
 extern enum nss_status _nss_ ## service ## _setspent (int);		\
 extern enum nss_status _nss_ ## service ## _endspent (void);		\
 extern enum nss_status _nss_ ## service ## _getspent_r			\
-                       (struct spwd *pwd, char *buffer, size_t buflen,	\
+		       (struct spwd *pwd, char *buffer, size_t buflen,	\
 			int *errnop);					\
 extern enum nss_status _nss_ ## service ## _getspnam_r			\
-                       (const char *name, struct spwd *pwd,		\
+		       (const char *name, struct spwd *pwd,		\
 			char *buffer, size_t buflen, int *errnop);
 
 DECLARE_NSS_PROTOTYPES (compat)

@@ -1,5 +1,12 @@
 2012-01-07  Ulrich Drepper  <drepper@gmail.com>
 
+	[BZ #13553]
+	* pthreadP.h: Use const instead of __const.
+	* semaphore.h: Likewise.
+	* sysdeps/pthread/bits/libc-lock.h: Likewise.
+	* sysdeps/pthread/bits/sigthread.h: Likewise.
+	* sysdeps/pthread/pthread.h: Likewise.
+
 	* Makefile: Remove elf=yes test, only ELF is supported.
 
 	* shlib-versions: Remove entries for ports architectures.

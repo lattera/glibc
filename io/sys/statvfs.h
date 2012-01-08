@@ -1,5 +1,5 @@
 /* Definitions for getting information about a filesystem.
-   Copyright (C) 1998, 1999, 2000, 2004 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999, 2000, 2004, 2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -49,13 +49,13 @@ __BEGIN_DECLS
 
 /* Return information about the filesystem on which FILE resides.  */
 #ifndef __USE_FILE_OFFSET64
-extern int statvfs (__const char *__restrict __file,
+extern int statvfs (const char *__restrict __file,
 		    struct statvfs *__restrict __buf)
      __THROW __nonnull ((1, 2));
 #else
 # ifdef __REDIRECT_NTH
 extern int __REDIRECT_NTH (statvfs,
-			   (__const char *__restrict __file,
+			   (const char *__restrict __file,
 			    struct statvfs *__restrict __buf), statvfs64)
      __nonnull ((1, 2));
 # else
@@ -63,7 +63,7 @@ extern int __REDIRECT_NTH (statvfs,
 # endif
 #endif
 #ifdef __USE_LARGEFILE64
-extern int statvfs64 (__const char *__restrict __file,
+extern int statvfs64 (const char *__restrict __file,
 		      struct statvfs64 *__restrict __buf)
      __THROW __nonnull ((1, 2));
 #endif

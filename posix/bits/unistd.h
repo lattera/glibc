@@ -1,5 +1,5 @@
 /* Checking macros for unistd functions.
-   Copyright (C) 2005, 2006, 2007, 2008 Free Software Foundation, Inc.
+   Copyright (C) 2005, 2006, 2007, 2008, 2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -121,23 +121,23 @@ pread64 (int __fd, void *__buf, size_t __nbytes, __off64_t __offset)
 #endif
 
 #if defined __USE_BSD || defined __USE_XOPEN_EXTENDED || defined __USE_XOPEN2K
-extern ssize_t __readlink_chk (__const char *__restrict __path,
+extern ssize_t __readlink_chk (const char *__restrict __path,
 			       char *__restrict __buf, size_t __len,
 			       size_t __buflen)
      __THROW __nonnull ((1, 2)) __wur;
 extern ssize_t __REDIRECT_NTH (__readlink_alias,
-			       (__const char *__restrict __path,
+			       (const char *__restrict __path,
 				char *__restrict __buf, size_t __len), readlink)
      __nonnull ((1, 2)) __wur;
 extern ssize_t __REDIRECT_NTH (__readlink_chk_warn,
-			       (__const char *__restrict __path,
+			       (const char *__restrict __path,
 				char *__restrict __buf, size_t __len,
 				size_t __buflen), __readlink_chk)
      __nonnull ((1, 2)) __wur __warnattr ("readlink called with bigger length "
 					  "than size of destination buffer");
 
 __extern_always_inline __nonnull ((1, 2)) __wur ssize_t
-__NTH (readlink (__const char *__restrict __path, char *__restrict __buf,
+__NTH (readlink (const char *__restrict __path, char *__restrict __buf,
 		 size_t __len))
 {
   if (__bos (__buf) != (size_t) -1)
@@ -153,17 +153,17 @@ __NTH (readlink (__const char *__restrict __path, char *__restrict __buf,
 #endif
 
 #ifdef __USE_ATFILE
-extern ssize_t __readlinkat_chk (int __fd, __const char *__restrict __path,
+extern ssize_t __readlinkat_chk (int __fd, const char *__restrict __path,
 				 char *__restrict __buf, size_t __len,
 				 size_t __buflen)
      __THROW __nonnull ((2, 3)) __wur;
 extern ssize_t __REDIRECT_NTH (__readlinkat_alias,
-			       (int __fd, __const char *__restrict __path,
+			       (int __fd, const char *__restrict __path,
 				char *__restrict __buf, size_t __len),
 			       readlinkat)
      __nonnull ((2, 3)) __wur;
 extern ssize_t __REDIRECT_NTH (__readlinkat_chk_warn,
-			       (int __fd, __const char *__restrict __path,
+			       (int __fd, const char *__restrict __path,
 				char *__restrict __buf, size_t __len,
 				size_t __buflen), __readlinkat_chk)
      __nonnull ((2, 3)) __wur __warnattr ("readlinkat called with bigger "
@@ -171,7 +171,7 @@ extern ssize_t __REDIRECT_NTH (__readlinkat_chk_warn,
 					  "buffer");
 
 __extern_always_inline __nonnull ((2, 3)) __wur ssize_t
-__NTH (readlinkat (int __fd, __const char *__restrict __path,
+__NTH (readlinkat (int __fd, const char *__restrict __path,
 		   char *__restrict __buf, size_t __len))
 {
   if (__bos (__buf) != (size_t) -1)

@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 2006, 2011 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 2006, 2011, 2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -55,17 +55,17 @@ struct iovec
 __BEGIN_DECLS
 
 /* Read from another process' address space.  */
-extern ssize_t process_vm_readv (pid_t __pid, __const struct iovec *__lvec,
+extern ssize_t process_vm_readv (pid_t __pid, const struct iovec *__lvec,
 				 unsigned long int __liovcnt,
-				 __const struct iovec *__rvec,
+				 const struct iovec *__rvec,
 				 unsigned long int __riovcnt,
 				 unsigned long int __flags)
   __THROW;
 
 /* Write to another process' address space.  */
-extern ssize_t process_vm_writev (pid_t __pid, __const struct iovec *__lvec,
+extern ssize_t process_vm_writev (pid_t __pid, const struct iovec *__lvec,
 				  unsigned long int __liovcnt,
-				  __const struct iovec *__rvec,
+				  const struct iovec *__rvec,
 				  unsigned long int __riovcnt,
 				  unsigned long int __flags)
   __THROW;

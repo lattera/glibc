@@ -1,7 +1,7 @@
 /*
  * UFC-crypt: ultra fast crypt(3) implementation
  *
- * Copyright (C) 1991, 92, 93, 96, 97, 98 Free Software Foundation, Inc.
+ * Copyright (C) 1991-1993, 1996-1998, 2012 Free Software Foundation, Inc.
  *
  * The GNU C Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -37,24 +37,24 @@ extern void _ufc_doit_r (ufc_long itr, struct crypt_data * __restrict __data,
 extern void __init_des_r (struct crypt_data * __restrict __data);
 extern void __init_des (void);
 
-extern void _ufc_setup_salt_r (__const char *s, 
+extern void _ufc_setup_salt_r (const char *s,
 			       struct crypt_data * __restrict __data);
-extern void _ufc_mk_keytab_r (__const char *key, 
+extern void _ufc_mk_keytab_r (const char *key,
 			      struct crypt_data * __restrict __data);
-extern void _ufc_dofinalperm_r (ufc_long *res, 
+extern void _ufc_dofinalperm_r (ufc_long *res,
 				struct crypt_data * __restrict __data);
 extern void _ufc_output_conversion_r (ufc_long v1, ufc_long v2,
-				      __const char *salt,
+				      const char *salt,
 				      struct crypt_data * __restrict __data);
 
-extern void __setkey_r (__const char *__key,
+extern void __setkey_r (const char *__key,
 			     struct crypt_data * __restrict __data);
 extern void __encrypt_r (char * __restrict __block, int __edflag,
 			      struct crypt_data * __restrict __data);
 
 /* crypt-entry.c */
-extern char *__crypt_r (__const char *__key, __const char *__salt,
+extern char *__crypt_r (const char *__key, const char *__salt,
 			     struct crypt_data * __restrict __data);
-extern char *fcrypt (__const char *key, __const char *salt);
+extern char *fcrypt (const char *key, const char *salt);
 
 #endif  /* crypt-private.h */

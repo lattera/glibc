@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-2003,2006,2009,2011 Free Software Foundation, Inc.
+/* Copyright (C) 1991-2003,2006,2009,2011,2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -145,10 +145,10 @@ struct tm
 
 # ifdef	__USE_BSD
   long int tm_gmtoff;		/* Seconds east of UTC.  */
-  __const char *tm_zone;	/* Timezone abbreviation.  */
+  const char *tm_zone;		/* Timezone abbreviation.  */
 # else
   long int __tm_gmtoff;		/* Seconds east of UTC.  */
-  __const char *__tm_zone;	/* Timezone abbreviation.  */
+  const char *__tm_zone;	/* Timezone abbreviation.  */
 # endif
 };
 __END_NAMESPACE_STD
@@ -207,15 +207,15 @@ extern time_t mktime (struct tm *__tp) __THROW;
    Write no more than MAXSIZE characters and return the number
    of characters written, or 0 if it would exceed MAXSIZE.  */
 extern size_t strftime (char *__restrict __s, size_t __maxsize,
-			__const char *__restrict __format,
-			__const struct tm *__restrict __tp) __THROW;
+			const char *__restrict __format,
+			const struct tm *__restrict __tp) __THROW;
 __END_NAMESPACE_STD
 
 # ifdef __USE_XOPEN
 /* Parse S according to FORMAT and store binary time information in TP.
    The return value is a pointer to the first unparsed character in S.  */
-extern char *strptime (__const char *__restrict __s,
-		       __const char *__restrict __fmt, struct tm *__tp)
+extern char *strptime (const char *__restrict __s,
+		       const char *__restrict __fmt, struct tm *__tp)
      __THROW;
 # endif
 
@@ -225,14 +225,14 @@ extern char *strptime (__const char *__restrict __s,
 # include <xlocale.h>
 
 extern size_t strftime_l (char *__restrict __s, size_t __maxsize,
-			  __const char *__restrict __format,
-			  __const struct tm *__restrict __tp,
+			  const char *__restrict __format,
+			  const struct tm *__restrict __tp,
 			  __locale_t __loc) __THROW;
 # endif
 
 # ifdef __USE_GNU
-extern char *strptime_l (__const char *__restrict __s,
-			 __const char *__restrict __fmt, struct tm *__tp,
+extern char *strptime_l (const char *__restrict __s,
+			 const char *__restrict __fmt, struct tm *__tp,
 			 __locale_t __loc) __THROW;
 # endif
 
@@ -240,32 +240,32 @@ extern char *strptime_l (__const char *__restrict __s,
 __BEGIN_NAMESPACE_STD
 /* Return the `struct tm' representation of *TIMER
    in Universal Coordinated Time (aka Greenwich Mean Time).  */
-extern struct tm *gmtime (__const time_t *__timer) __THROW;
+extern struct tm *gmtime (const time_t *__timer) __THROW;
 
 /* Return the `struct tm' representation
    of *TIMER in the local timezone.  */
-extern struct tm *localtime (__const time_t *__timer) __THROW;
+extern struct tm *localtime (const time_t *__timer) __THROW;
 __END_NAMESPACE_STD
 
 # if defined __USE_POSIX || defined __USE_MISC
 /* Return the `struct tm' representation of *TIMER in UTC,
    using *TP to store the result.  */
-extern struct tm *gmtime_r (__const time_t *__restrict __timer,
+extern struct tm *gmtime_r (const time_t *__restrict __timer,
 			    struct tm *__restrict __tp) __THROW;
 
 /* Return the `struct tm' representation of *TIMER in local time,
    using *TP to store the result.  */
-extern struct tm *localtime_r (__const time_t *__restrict __timer,
+extern struct tm *localtime_r (const time_t *__restrict __timer,
 			       struct tm *__restrict __tp) __THROW;
 # endif	/* POSIX or misc */
 
 __BEGIN_NAMESPACE_STD
 /* Return a string of the form "Day Mon dd hh:mm:ss yyyy\n"
    that is the representation of TP in this format.  */
-extern char *asctime (__const struct tm *__tp) __THROW;
+extern char *asctime (const struct tm *__tp) __THROW;
 
 /* Equivalent to `asctime (localtime (timer))'.  */
-extern char *ctime (__const time_t *__timer) __THROW;
+extern char *ctime (const time_t *__timer) __THROW;
 __END_NAMESPACE_STD
 
 # if defined __USE_POSIX || defined __USE_MISC
@@ -273,11 +273,11 @@ __END_NAMESPACE_STD
 
 /* Return in BUF a string of the form "Day Mon dd hh:mm:ss yyyy\n"
    that is the representation of TP in this format.  */
-extern char *asctime_r (__const struct tm *__restrict __tp,
+extern char *asctime_r (const struct tm *__restrict __tp,
 			char *__restrict __buf) __THROW;
 
 /* Equivalent to `asctime_r (localtime_r (timer, *TMP*), buf)'.  */
-extern char *ctime_r (__const time_t *__restrict __timer,
+extern char *ctime_r (const time_t *__restrict __timer,
 		      char *__restrict __buf) __THROW;
 # endif	/* POSIX or misc */
 
@@ -305,7 +305,7 @@ extern long int timezone;
 # ifdef __USE_SVID
 /* Set the system time to *WHEN.
    This call is restricted to the superuser.  */
-extern int stime (__const time_t *__when) __THROW;
+extern int stime (const time_t *__when) __THROW;
 # endif
 
 
@@ -335,7 +335,7 @@ extern int dysize (int __year) __THROW  __attribute__ ((__const__));
 
    This function is a cancellation point and therefore not marked with
    __THROW.  */
-extern int nanosleep (__const struct timespec *__requested_time,
+extern int nanosleep (const struct timespec *__requested_time,
 		      struct timespec *__remaining);
 
 
@@ -346,7 +346,7 @@ extern int clock_getres (clockid_t __clock_id, struct timespec *__res) __THROW;
 extern int clock_gettime (clockid_t __clock_id, struct timespec *__tp) __THROW;
 
 /* Set clock CLOCK_ID to value TP.  */
-extern int clock_settime (clockid_t __clock_id, __const struct timespec *__tp)
+extern int clock_settime (clockid_t __clock_id, const struct timespec *__tp)
      __THROW;
 
 #  ifdef __USE_XOPEN2K
@@ -355,7 +355,7 @@ extern int clock_settime (clockid_t __clock_id, __const struct timespec *__tp)
    This function is a cancellation point and therefore not marked with
    __THROW.  */
 extern int clock_nanosleep (clockid_t __clock_id, int __flags,
-			    __const struct timespec *__req,
+			    const struct timespec *__req,
 			    struct timespec *__rem);
 
 /* Return clock ID for CPU-time clock.  */
@@ -380,7 +380,7 @@ extern int timer_delete (timer_t __timerid) __THROW;
 
 /* Set timer TIMERID to VALUE, returning old value in OVLAUE.  */
 extern int timer_settime (timer_t __timerid, int __flags,
-			  __const struct itimerspec *__restrict __value,
+			  const struct itimerspec *__restrict __value,
 			  struct itimerspec *__restrict __ovalue) __THROW;
 
 /* Get current value of timer TIMERID and store it in VLAUE.  */
@@ -413,7 +413,7 @@ extern int getdate_err;
 
    This function is a possible cancellation point and therefore not
    marked with __THROW.  */
-extern struct tm *getdate (__const char *__string);
+extern struct tm *getdate (const char *__string);
 # endif
 
 # ifdef __USE_GNU
@@ -427,7 +427,7 @@ extern struct tm *getdate (__const char *__string);
    cancellation point.  But due to similarity with an POSIX interface
    or due to the implementation it is a cancellation point and
    therefore not marked with __THROW.  */
-extern int getdate_r (__const char *__restrict __string,
+extern int getdate_r (const char *__restrict __string,
 		      struct tm *__restrict __resbufp);
 # endif
 

@@ -1,5 +1,5 @@
 /* net/if.h -- declarations for inquiring about network interfaces
-   Copyright (C) 2000 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -27,7 +27,7 @@ __BEGIN_DECLS
 
 /* Convert an interface name to an index, and vice versa.  */
 
-extern unsigned int if_nametoindex (__const char *__ifname) __THROW;
+extern unsigned int if_nametoindex (const char *__ifname) __THROW;
 extern char *if_indextoname (unsigned int __ifindex, char *__ifname) __THROW;
 
 /* Return a list of all interfaces and their indices.  */

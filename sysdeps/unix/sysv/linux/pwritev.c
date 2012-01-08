@@ -1,4 +1,4 @@
-/* Copyright (C) 2009 Free Software Foundation, Inc.
+/* Copyright (C) 2009, 2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -42,7 +42,7 @@
   (off_t) ((((uint64_t) (val)) >> (sizeof (long) * 4)) >> (sizeof (long) * 4))
 
 #ifndef __ASSUME_PWRITEV
-static ssize_t PWRITEV_REPLACEMENT (int, __const struct iovec *,
+static ssize_t PWRITEV_REPLACEMENT (int, const struct iovec *,
 				    int, OFF_T) internal_function;
 #endif
 

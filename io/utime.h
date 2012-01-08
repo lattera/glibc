@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 96, 97, 98, 99, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 1991-1992,1996-1999,2004,2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -43,8 +43,8 @@ struct utimbuf
 
 /* Set the access and modification times of FILE to those given in
    *FILE_TIMES.  If FILE_TIMES is NULL, set them to the current time.  */
-extern int utime (__const char *__file,
-		  __const struct utimbuf *__file_times)
+extern int utime (const char *__file,
+		  const struct utimbuf *__file_times)
      __THROW __nonnull ((1));
 
 __END_DECLS

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,1992,1995-2001,2003,2004,2010
+/* Copyright (C) 1991,1992,1995-2001,2003,2004,2010,2012
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -96,7 +96,7 @@ extern struct group *fgetgrent (FILE *__stream);
    cancellation point.  But due to similarity with an POSIX interface
    or due to the implementation it is a cancellation point and
    therefore not marked with __THROW.  */
-extern int putgrent (__const struct group *__restrict __p,
+extern int putgrent (const struct group *__restrict __p,
 		     FILE *__restrict __f);
 #endif
 
@@ -110,7 +110,7 @@ extern struct group *getgrgid (__gid_t __gid);
 
    This function is a possible cancellation point and therefore not
    marked with __THROW.  */
-extern struct group *getgrnam (__const char *__name);
+extern struct group *getgrnam (const char *__name);
 
 #if defined __USE_POSIX || defined __USE_MISC
 
@@ -151,7 +151,7 @@ extern int getgrgid_r (__gid_t __gid, struct group *__restrict __resultbuf,
 
    This function is a possible cancellation point and therefore not
    marked with __THROW.  */
-extern int getgrnam_r (__const char *__restrict __name,
+extern int getgrnam_r (const char *__restrict __name,
 		       struct group *__restrict __resultbuf,
 		       char *__restrict __buffer, size_t __buflen,
 		       struct group **__restrict __result);
@@ -179,7 +179,7 @@ extern int fgetgrent_r (FILE *__restrict __stream,
 # include <stddef.h>
 
 /* Set the group set for the current user to GROUPS (N of them).  */
-extern int setgroups (size_t __n, __const __gid_t *__groups) __THROW;
+extern int setgroups (size_t __n, const __gid_t *__groups) __THROW;
 
 /* Store at most *NGROUPS members of the group set for USER into
    *GROUPS.  Also include GROUP.  The actual number of groups found is
@@ -189,7 +189,7 @@ extern int setgroups (size_t __n, __const __gid_t *__groups) __THROW;
    cancellation point.  But due to similarity with an POSIX interface
    or due to the implementation it is a cancellation point and
    therefore not marked with __THROW.  */
-extern int getgrouplist (__const char *__user, __gid_t __group,
+extern int getgrouplist (const char *__user, __gid_t __group,
 			 __gid_t *__groups, int *__ngroups);
 
 /* Initialize the group set for the current user
@@ -200,7 +200,7 @@ extern int getgrouplist (__const char *__user, __gid_t __group,
    cancellation point.  But due to similarity with an POSIX interface
    or due to the implementation it is a cancellation point and
    therefore not marked with __THROW.  */
-extern int initgroups (__const char *__user, __gid_t __group);
+extern int initgroups (const char *__user, __gid_t __group);
 
 #endif /* Use BSD.  */
 

@@ -26,9 +26,9 @@ extern int __getpeername (int __fd, __SOCKADDR_ARG __addr,
 			  socklen_t *__len) attribute_hidden;
 
 /* Send N bytes of BUF to socket FD.  Returns the number sent or -1.  */
-extern ssize_t __libc_send (int __fd, __const void *__buf, size_t __n,
+extern ssize_t __libc_send (int __fd, const void *__buf, size_t __n,
 			    int __flags);
-extern ssize_t __send (int __fd, __const void *__buf, size_t __n, int __flags);
+extern ssize_t __send (int __fd, const void *__buf, size_t __n, int __flags);
 libc_hidden_proto (__send)
 
 /* Read N bytes into BUF from socket FD.
@@ -37,7 +37,7 @@ extern ssize_t __libc_recv (int __fd, void *__buf, size_t __n, int __flags);
 
 /* Send N bytes of BUF on socket FD to peer at address ADDR (which is
    ADDR_LEN bytes long).  Returns the number sent, or -1 for errors.  */
-extern ssize_t __libc_sendto (int __fd, __const void *__buf, size_t __n,
+extern ssize_t __libc_sendto (int __fd, const void *__buf, size_t __n,
 			      int __flags, __CONST_SOCKADDR_ARG __addr,
 			      socklen_t __addr_len);
 
@@ -69,10 +69,10 @@ extern ssize_t __recv (int __fd, void *__buf, size_t __n, int __flags)
 
 /* Send N bytes of BUF on socket FD to peer at address ADDR (which is
    ADDR_LEN bytes long).  Returns the number sent, or -1 for errors.  */
-extern ssize_t __libc_sendto (int __fd, __const void *__buf, size_t __n,
+extern ssize_t __libc_sendto (int __fd, const void *__buf, size_t __n,
 			      int __flags, __CONST_SOCKADDR_ARG __addr,
 			      socklen_t __addr_len);
-extern ssize_t __sendto (int __fd, __const void *__buf, size_t __n,
+extern ssize_t __sendto (int __fd, const void *__buf, size_t __n,
 			 int __flags, __CONST_SOCKADDR_ARG __addr,
 			 socklen_t __addr_len) attribute_hidden;
 
@@ -86,9 +86,9 @@ extern ssize_t __recvfrom (int __fd, void *__restrict __buf, size_t __n,
 
 /* Send a message described MESSAGE on socket FD.
    Returns the number of bytes sent, or -1 for errors.  */
-extern ssize_t __libc_sendmsg (int __fd, __const struct msghdr *__message,
+extern ssize_t __libc_sendmsg (int __fd, const struct msghdr *__message,
 			       int __flags);
-extern ssize_t __sendmsg (int __fd, __const struct msghdr *__message,
+extern ssize_t __sendmsg (int __fd, const struct msghdr *__message,
 			  int __flags) attribute_hidden;
 
 /* Receive a message as described by MESSAGE from socket FD.
@@ -102,7 +102,7 @@ extern ssize_t __recvmsg (int __fd, struct msghdr *__message,
    to *OPTVAL (which is OPTLEN bytes long).
    Returns 0 on success, -1 for errors.  */
 extern int __setsockopt (int __fd, int __level, int __optname,
-			 __const void *__optval,
+			 const void *__optval,
 			 socklen_t __optlen) attribute_hidden;
 
 /* Put the current value for socket FD's option OPTNAME at protocol level LEVEL

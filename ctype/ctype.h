@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,92,93,95,96,97,98,99,2001,2002,2004,2007,2008,2009,2011
+/* Copyright (C) 1991,92,93,95,96,97,98,99,2001,2002,2004,2007-2009,2011,2012
 	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -78,12 +78,12 @@ enum
    rather than `unsigned char's because tolower (EOF) must be EOF, which
    doesn't fit into an `unsigned char'.  But today more important is that
    the arrays are also used for multi-byte character sets.  */
-extern __const unsigned short int **__ctype_b_loc (void)
-     __THROW __attribute__ ((__const));
-extern __const __int32_t **__ctype_tolower_loc (void)
-     __THROW __attribute__ ((__const));
-extern __const __int32_t **__ctype_toupper_loc (void)
-     __THROW __attribute__ ((__const));
+extern const unsigned short int **__ctype_b_loc (void)
+     __THROW __attribute__ ((__const__));
+extern const __int32_t **__ctype_tolower_loc (void)
+     __THROW __attribute__ ((__const__));
+extern const __int32_t **__ctype_toupper_loc (void)
+     __THROW __attribute__ ((__const__));
 
 
 #ifndef __cplusplus

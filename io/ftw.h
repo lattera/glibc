@@ -1,4 +1,4 @@
-/* Copyright (C) 1992,1996-1999,2003,2004 Free Software Foundation, Inc.
+/* Copyright (C) 1992,1996-1999,2003,2004,2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -112,19 +112,19 @@ struct FTW
 
 
 /* Convenient types for callback functions.  */
-typedef int (*__ftw_func_t) (__const char *__filename,
-			     __const struct stat *__status, int __flag);
+typedef int (*__ftw_func_t) (const char *__filename,
+			     const struct stat *__status, int __flag);
 #ifdef __USE_LARGEFILE64
-typedef int (*__ftw64_func_t) (__const char *__filename,
-			       __const struct stat64 *__status, int __flag);
+typedef int (*__ftw64_func_t) (const char *__filename,
+			       const struct stat64 *__status, int __flag);
 #endif
 #ifdef __USE_XOPEN_EXTENDED
-typedef int (*__nftw_func_t) (__const char *__filename,
-			      __const struct stat *__status, int __flag,
+typedef int (*__nftw_func_t) (const char *__filename,
+			      const struct stat *__status, int __flag,
 			      struct FTW *__info);
 # ifdef __USE_LARGEFILE64
-typedef int (*__nftw64_func_t) (__const char *__filename,
-				__const struct stat64 *__status,
+typedef int (*__nftw64_func_t) (const char *__filename,
+				const struct stat64 *__status,
 				int __flag, struct FTW *__info);
 # endif
 #endif
@@ -134,18 +134,18 @@ typedef int (*__nftw64_func_t) (__const char *__filename,
    This function is a possible cancellation point and therefore not
    marked with __THROW.  */
 #ifndef __USE_FILE_OFFSET64
-extern int ftw (__const char *__dir, __ftw_func_t __func, int __descriptors)
+extern int ftw (const char *__dir, __ftw_func_t __func, int __descriptors)
      __nonnull ((1, 2));
 #else
 # ifdef __REDIRECT
-extern int __REDIRECT (ftw, (__const char *__dir, __ftw_func_t __func,
+extern int __REDIRECT (ftw, (const char *__dir, __ftw_func_t __func,
 			     int __descriptors), ftw64) __nonnull ((1, 2));
 # else
 #  define ftw ftw64
 # endif
 #endif
 #ifdef __USE_LARGEFILE64
-extern int ftw64 (__const char *__dir, __ftw64_func_t __func,
+extern int ftw64 (const char *__dir, __ftw64_func_t __func,
 		  int __descriptors) __nonnull ((1, 2));
 #endif
 
@@ -156,11 +156,11 @@ extern int ftw64 (__const char *__dir, __ftw64_func_t __func,
    This function is a possible cancellation point and therefore not
    marked with __THROW.  */
 # ifndef __USE_FILE_OFFSET64
-extern int nftw (__const char *__dir, __nftw_func_t __func, int __descriptors,
+extern int nftw (const char *__dir, __nftw_func_t __func, int __descriptors,
 		 int __flag) __nonnull ((1, 2));
 # else
 #  ifdef __REDIRECT
-extern int __REDIRECT (nftw, (__const char *__dir, __nftw_func_t __func,
+extern int __REDIRECT (nftw, (const char *__dir, __nftw_func_t __func,
 			      int __descriptors, int __flag), nftw64)
      __nonnull ((1, 2));
 #  else
@@ -168,7 +168,7 @@ extern int __REDIRECT (nftw, (__const char *__dir, __nftw_func_t __func,
 #  endif
 # endif
 # ifdef __USE_LARGEFILE64
-extern int nftw64 (__const char *__dir, __nftw64_func_t __func,
+extern int nftw64 (const char *__dir, __nftw64_func_t __func,
 		   int __descriptors, int __flag) __nonnull ((1, 2));
 # endif
 #endif

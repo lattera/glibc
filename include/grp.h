@@ -22,10 +22,10 @@ extern int __old_getgrgid_r (__gid_t __gid, struct group *__resultbuf,
 			     struct group **__result);
 
 /* Search for an entry with a matching group name.  */
-extern int __getgrnam_r (__const char *__name, struct group *__resultbuf,
+extern int __getgrnam_r (const char *__name, struct group *__resultbuf,
 			 char *__buffer, size_t __buflen,
 			 struct group **__result);
-extern int __old_getgrnam_r (__const char *__name, struct group *__resultbuf,
+extern int __old_getgrnam_r (const char *__name, struct group *__resultbuf,
 			     char *__buffer, size_t __buflen,
 			     struct group **__result);
 
@@ -39,16 +39,16 @@ libc_hidden_proto (_nss_files_parse_grent)
 extern enum nss_status _nss_ ## service ## _setgrent (int);		   \
 extern enum nss_status _nss_ ## service ## _endgrent (void);		   \
 extern enum nss_status _nss_ ## service ## _getgrgid_r			   \
-                       (gid_t gid, struct group *grp, char *buffer,	   \
+		       (gid_t gid, struct group *grp, char *buffer,	   \
 			size_t buflen, int *errnop);			   \
 extern enum nss_status _nss_ ## service ## _getgrnam_r			   \
-                       (const char *name, struct group *grp,		   \
+		       (const char *name, struct group *grp,		   \
 			char *buffer, size_t buflen, int *errnop);	   \
 extern enum nss_status _nss_ ## service ##_getgrent_r			   \
-                       (struct group *result, char *buffer, size_t buflen, \
+		       (struct group *result, char *buffer, size_t buflen, \
 			int *errnop);					   \
 extern enum nss_status _nss_ ## service ##_initgroups_dyn		   \
-                       (const char *user, gid_t group, long int *start,	   \
+		       (const char *user, gid_t group, long int *start,	   \
 			long int *size, gid_t **groupsp, long int limit,   \
 			int *errnop);
 

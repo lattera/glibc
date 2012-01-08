@@ -1,5 +1,5 @@
 /* Malloc implementation for multiple threads without lock contention.
-   Copyright (C) 1996-2009, 2010, 2011 Free Software Foundation, Inc.
+   Copyright (C) 1996-2009, 2010, 2011, 2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Wolfram Gloger <wg@malloc.de>
    and Doug Lea <dl@cs.oswego.edu>, 2001.
@@ -2911,7 +2911,7 @@ public_mALLOc(size_t bytes)
   mstate ar_ptr;
   void *victim;
 
-  __malloc_ptr_t (*hook) (size_t, __const __malloc_ptr_t)
+  __malloc_ptr_t (*hook) (size_t, const __malloc_ptr_t)
     = force_reg (__malloc_hook);
   if (__builtin_expect (hook != NULL, 0))
     return (*hook)(bytes, RETURN_ADDRESS (0));
@@ -2953,7 +2953,7 @@ public_fREe(void* mem)
   mstate ar_ptr;
   mchunkptr p;                          /* chunk corresponding to mem */
 
-  void (*hook) (__malloc_ptr_t, __const __malloc_ptr_t)
+  void (*hook) (__malloc_ptr_t, const __malloc_ptr_t)
     = force_reg (__free_hook);
   if (__builtin_expect (hook != NULL, 0)) {
     (*hook)(mem, RETURN_ADDRESS (0));
@@ -2992,7 +2992,7 @@ public_rEALLOc(void* oldmem, size_t bytes)
 
   void* newp;             /* chunk to return */
 
-  __malloc_ptr_t (*hook) (__malloc_ptr_t, size_t, __const __malloc_ptr_t) =
+  __malloc_ptr_t (*hook) (__malloc_ptr_t, size_t, const __malloc_ptr_t) =
     force_reg (__realloc_hook);
   if (__builtin_expect (hook != NULL, 0))
     return (*hook)(oldmem, bytes, RETURN_ADDRESS (0));
@@ -3085,7 +3085,7 @@ public_mEMALIGn(size_t alignment, size_t bytes)
   void *p;
 
   __malloc_ptr_t (*hook) __MALLOC_PMT ((size_t, size_t,
-					__const __malloc_ptr_t)) =
+					const __malloc_ptr_t)) =
     force_reg (__memalign_hook);
   if (__builtin_expect (hook != NULL, 0))
     return (*hook)(alignment, bytes, RETURN_ADDRESS (0));
@@ -3140,7 +3140,7 @@ public_vALLOc(size_t bytes)
   size_t pagesz = GLRO(dl_pagesize);
 
   __malloc_ptr_t (*hook) __MALLOC_PMT ((size_t, size_t,
-					__const __malloc_ptr_t)) =
+					const __malloc_ptr_t)) =
     force_reg (__memalign_hook);
   if (__builtin_expect (hook != NULL, 0))
     return (*hook)(pagesz, bytes, RETURN_ADDRESS (0));
@@ -3186,7 +3186,7 @@ public_pVALLOc(size_t bytes)
   size_t rounded_bytes = (bytes + page_mask) & ~(page_mask);
 
   __malloc_ptr_t (*hook) __MALLOC_PMT ((size_t, size_t,
-					__const __malloc_ptr_t)) =
+					const __malloc_ptr_t)) =
     force_reg (__memalign_hook);
   if (__builtin_expect (hook != NULL, 0))
     return (*hook)(pagesz, rounded_bytes, RETURN_ADDRESS (0));
@@ -3239,7 +3239,7 @@ public_cALLOc(size_t n, size_t elem_size)
     }
   }
 
-  __malloc_ptr_t (*hook) __MALLOC_PMT ((size_t, __const __malloc_ptr_t)) =
+  __malloc_ptr_t (*hook) __MALLOC_PMT ((size_t, const __malloc_ptr_t)) =
     force_reg (__malloc_hook);
   if (__builtin_expect (hook != NULL, 0)) {
     sz = bytes;
@@ -5032,7 +5032,7 @@ __posix_memalign (void **memptr, size_t alignment, size_t size)
   /* Call the hook here, so that caller is posix_memalign's caller
      and not posix_memalign itself.  */
   __malloc_ptr_t (*hook) __MALLOC_PMT ((size_t, size_t,
-					__const __malloc_ptr_t)) =
+					const __malloc_ptr_t)) =
     force_reg (__memalign_hook);
   if (__builtin_expect (hook != NULL, 0))
     mem = (*hook)(alignment, size, RETURN_ADDRESS (0));

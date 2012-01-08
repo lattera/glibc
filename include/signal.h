@@ -17,31 +17,31 @@ libc_hidden_proto (__libc_current_sigrtmax)
 /* Now define the internal interfaces.  */
 extern __sighandler_t __bsd_signal (int __sig, __sighandler_t __handler);
 extern int __kill (__pid_t __pid, int __sig);
-extern int __sigaction (int __sig, __const struct sigaction *__restrict __act,
+extern int __sigaction (int __sig, const struct sigaction *__restrict __act,
 			struct sigaction *__restrict __oact);
 libc_hidden_proto (__sigaction)
 extern int __sigblock (int __mask);
 extern int __sigsetmask (int __mask);
 extern int __sigprocmask (int __how,
-			  __const sigset_t *__set, sigset_t *__oset);
-extern int __sigsuspend (__const sigset_t *__set);
+			  const sigset_t *__set, sigset_t *__oset);
+extern int __sigsuspend (const sigset_t *__set);
 libc_hidden_proto (__sigsuspend)
 #ifndef NO_CANCELLATION
-extern int __sigsuspend_nocancel (__const sigset_t *__set) attribute_hidden;
+extern int __sigsuspend_nocancel (const sigset_t *__set) attribute_hidden;
 #endif
-extern int __sigwait (__const sigset_t *__set, int *__sig);
+extern int __sigwait (const sigset_t *__set, int *__sig);
 libc_hidden_proto (__sigwait)
-extern int __sigwaitinfo (__const sigset_t *__set, siginfo_t *__info);
+extern int __sigwaitinfo (const sigset_t *__set, siginfo_t *__info);
 libc_hidden_proto (__sigwaitinfo)
-extern int __sigtimedwait (__const sigset_t *__set, siginfo_t *__info,
-			   __const struct timespec *__timeout);
+extern int __sigtimedwait (const sigset_t *__set, siginfo_t *__info,
+			   const struct timespec *__timeout);
 libc_hidden_proto (__sigtimedwait)
 extern int __sigqueue (__pid_t __pid, int __sig,
-		       __const union sigval __val);
-extern int __sigvec (int __sig, __const struct sigvec *__vec,
+		       const union sigval __val);
+extern int __sigvec (int __sig, const struct sigvec *__vec,
 		     struct sigvec *__ovec);
 extern int __sigreturn (struct sigcontext *__scp);
-extern int __sigaltstack (__const struct sigaltstack *__ss,
+extern int __sigaltstack (const struct sigaltstack *__ss,
 			  struct sigaltstack *__oss);
 extern int __libc_sigaction (int sig, const struct sigaction *act,
 			     struct sigaction *oact);

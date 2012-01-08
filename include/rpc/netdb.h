@@ -1,10 +1,10 @@
 #ifndef _RPC_NETDB_H
 #include <sunrpc/rpc/netdb.h>
 
-extern int __getrpcbyname_r (__const char *__name, struct rpcent *__result_buf,
+extern int __getrpcbyname_r (const char *__name, struct rpcent *__result_buf,
 			     char *__buffer, size_t __buflen,
 			     struct rpcent **__result);
-extern int __old_getrpcbyname_r (__const char *__name,
+extern int __old_getrpcbyname_r (const char *__name,
 				 struct rpcent *__result_buf,
 				 char *__buffer, size_t __buflen,
 				 struct rpcent **__result);

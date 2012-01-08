@@ -1,6 +1,6 @@
 #include <string.h>
 
-extern int __strncasecmp_l_nonascii (__const char *__s1, __const char *__s2,
+extern int __strncasecmp_l_nonascii (const char *__s1, const char *__s2,
 				     size_t __n, __locale_t __loc);
 
 #define __strncasecmp_l __strncasecmp_l_nonascii

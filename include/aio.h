@@ -2,7 +2,7 @@
 #include <rt/aio.h>
 
 /* Now define the internal interfaces.  */
-extern void __aio_init (__const struct aioinit *__init);
+extern void __aio_init (const struct aioinit *__init);
 
 /* Flag to signal we need to be compatible with glibc < 2.4 in
    lio_listio and we do not issue events for each individual list

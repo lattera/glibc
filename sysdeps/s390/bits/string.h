@@ -1,5 +1,5 @@
 /* Optimized, inlined string functions.  S/390 version.
-   Copyright (C) 2000, 2001, 2007 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2001, 2007, 2012 Free Software Foundation, Inc.
    Contributed by Martin Schwidefsky (schwidefsky@de.ibm.com).
    This file is part of the GNU C Library.
 
@@ -42,10 +42,10 @@
 #ifndef _FORCE_INLINES
 #define strlen(str) __strlen_g ((str))
 
-__STRING_INLINE size_t __strlen_g (__const char *) __asm__ ("strlen");
+__STRING_INLINE size_t __strlen_g (const char *) __asm__ ("strlen");
 
 __STRING_INLINE size_t
-__strlen_g (__const char *__str)
+__strlen_g (const char *__str)
 {
     char *__ptr, *__tmp;
 
@@ -54,7 +54,7 @@ __strlen_g (__const char *__str)
     __asm__ __volatile__ ("   la    0,0\n"
 			  "0: srst  %0,%1\n"
 			  "   jo    0b\n"
-			  : "+&a" (__ptr), "+&a" (__tmp) : 
+			  : "+&a" (__ptr), "+&a" (__tmp) :
 			  : "cc", "memory", "0" );
     return (size_t) (__ptr - __str);
 }
@@ -65,10 +65,10 @@ __strlen_g (__const char *__str)
 #ifndef _FORCE_INLINES
 #define strcpy(dest, src) __strcpy_g ((dest), (src))
 
-__STRING_INLINE char *__strcpy_g (char *, __const char *) __asm ("strcpy");
+__STRING_INLINE char *__strcpy_g (char *, const char *) __asm ("strcpy");
 
 __STRING_INLINE char *
-__strcpy_g (char *__dest, __const char *__src)
+__strcpy_g (char *__dest, const char *__src)
 {
     char *tmp = __dest;
 
@@ -85,11 +85,11 @@ __strcpy_g (char *__dest, __const char *__src)
 #ifndef _FORCE_INLINES
 #define strncpy(dest, src, n) __strncpy_g ((dest), (src), (n))
 
-__STRING_INLINE char *__strncpy_g (char *, __const char *, size_t)
+__STRING_INLINE char *__strncpy_g (char *, const char *, size_t)
      __asm__ ("strncpy");
 
 __STRING_INLINE char *
-__strncpy_g (char *__dest, __const char *__src, size_t __n)
+__strncpy_g (char *__dest, const char *__src, size_t __n)
 {
     char *__ret = __dest;
     char *__ptr;
@@ -99,26 +99,26 @@ __strncpy_g (char *__dest, __const char *__src, size_t __n)
       __diff = (size_t) (__dest - __src);
       __ptr = (char *) __src;
       __asm__ __volatile__ ("   j     1f\n"
-                            "0: la    %0,1(%0)\n"
-                            "1: icm   0,1,0(%0)\n"
-                            "   stc   0,0(%2,%0)\n"
-                            "   jz    3f\n"
+			    "0: la    %0,1(%0)\n"
+			    "1: icm   0,1,0(%0)\n"
+			    "   stc   0,0(%2,%0)\n"
+			    "   jz    3f\n"
 #if defined(__s390x__)
-                            "   brctg %1,0b\n"
+			    "   brctg %1,0b\n"
 #else
-                            "   brct  %1,0b\n"
+			    "   brct  %1,0b\n"
 #endif
-                            "   j     4f\n"
-                            "2: la    %0,1(%0)\n"
-                            "   stc   0,0(%2,%0)\n"
+			    "   j     4f\n"
+			    "2: la    %0,1(%0)\n"
+			    "   stc   0,0(%2,%0)\n"
 #if defined(__s390x__)
-                            "3: brctg %1,2b\n"
+			    "3: brctg %1,2b\n"
 #else
-                            "3: brct  %1,2b\n"
+			    "3: brct  %1,2b\n"
 #endif
-                            "4:"
-                            : "+&a" (__ptr), "+&a" (__n) : "a" (__diff)
-                            : "cc", "memory", "0" );
+			    "4:"
+			    : "+&a" (__ptr), "+&a" (__n) : "a" (__diff)
+			    : "cc", "memory", "0" );
     }
     return __ret;
 }
@@ -129,10 +129,10 @@ __strncpy_g (char *__dest, __const char *__src, size_t __n)
 #ifndef _FORCE_INLINES
 #define strcat(dest, src) __strcat_g ((dest), (src))
 
-__STRING_INLINE char *__strcat_g (char *, __const char *) __asm__ ("strcat");
+__STRING_INLINE char *__strcat_g (char *, const char *) __asm__ ("strcat");
 
 __STRING_INLINE char *
-__strcat_g (char *__dest, __const char *__src)
+__strcat_g (char *__dest, const char *__src)
 {
     char *__ret = __dest;
     char *__ptr, *__tmp;
@@ -161,11 +161,11 @@ __strcat_g (char *__dest, __const char *__src)
 #ifndef _FORCE_INLINES
 #define strncat(dest, src, n) __strncat_g ((dest), (src), (n))
 
-__STRING_INLINE char *__strncat_g (char *, __const char *, size_t)
+__STRING_INLINE char *__strncat_g (char *, const char *, size_t)
      __asm__ ("strncat");
 
 __STRING_INLINE char *
-__strncat_g (char *__dest, __const char *__src, size_t __n)
+__strncat_g (char *__dest, const char *__src, size_t __n)
 {
     char *__ret = __dest;
     char *__ptr, *__tmp;
@@ -184,20 +184,20 @@ __strncat_g (char *__dest, __const char *__src, size_t __n)
       __diff = (size_t) (__ptr - __src);
       __tmp = (char *) __src;
       __asm__ __volatile__ ("   j     1f\n"
-                            "0: la    %0,1(%0)\n"
-                            "1: icm   0,1,0(%0)\n"
-                            "   stc   0,0(%2,%0)\n"
-                            "   jz    2f\n"
+			    "0: la    %0,1(%0)\n"
+			    "1: icm   0,1,0(%0)\n"
+			    "   stc   0,0(%2,%0)\n"
+			    "   jz    2f\n"
 #if defined(__s390x__)
-                            "   brctg %1,0b\n"
+			    "   brctg %1,0b\n"
 #else
-                            "   brct  %1,0b\n"
+			    "   brct  %1,0b\n"
 #endif
 			    "   slr   0,0\n"
-                            "   stc   0,1(%2,%0)\n"
+			    "   stc   0,1(%2,%0)\n"
 			    "2:"
-                            : "+&a" (__tmp), "+&a" (__n) : "a" (__diff)
-                            : "cc", "memory", "0" );
+			    : "+&a" (__tmp), "+&a" (__n) : "a" (__diff)
+			    : "cc", "memory", "0" );
 
     }
     return __ret;
@@ -208,7 +208,7 @@ __strncat_g (char *__dest, __const char *__src, size_t __n)
 #define _HAVE_STRING_ARCH_memchr 1
 #ifndef _FORCE_INLINES
 __STRING_INLINE void *
-memchr (__const void *__str, int __c, size_t __n)
+memchr (const void *__str, int __c, size_t __n)
 {
     char *__ptr, *__tmp;
 
@@ -218,9 +218,9 @@ memchr (__const void *__str, int __c, size_t __n)
 			  "   nr    0,%2\n"
 			  "0: srst  %0,%1\n"
 			  "   jo    0b\n"
-                          "   brc   13,1f\n"
-                          "   la    %0,0\n"
-                          "1:"
+			  "   brc   13,1f\n"
+			  "   la    %0,0\n"
+			  "1:"
 			  : "+&a" (__ptr), "+&a" (__tmp) : "d" (__c)
 			  : "cc", "memory", "0" );
     return __ptr;
@@ -231,7 +231,7 @@ memchr (__const void *__str, int __c, size_t __n)
 #define _HAVE_STRING_ARCH_memchr 1
 #ifndef _FORCE_INLINES
 __STRING_INLINE int
-strcmp (__const char *__s1, __const char *__s2)
+strcmp (const char *__s1, const char *__s2)
 {
     char *__p1, *__p2;
     int __ret;
@@ -239,11 +239,11 @@ strcmp (__const char *__s1, __const char *__s2)
     __p1 = (char *) __s1;
     __p2 = (char *) __s2;
     __asm__ __volatile__ ("   slr   0,0\n"
-                          "0: clst  %1,%2\n"
+			  "0: clst  %1,%2\n"
 			  "   jo    0b\n"
 			  "   ipm   %0\n"
 			  "   srl   %0,28"
-			  : "=d" (__ret), "+&a" (__p1), "+&a" (__p2) : 
+			  : "=d" (__ret), "+&a" (__p1), "+&a" (__p2) :
 			  : "cc", "memory", "0" );
     __ret = (__ret == 0) ? 0 : (__ret == 1) ? -1 : 1;
     return __ret;

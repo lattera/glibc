@@ -1,5 +1,5 @@
 /* Checking macros for fcntl functions.
-   Copyright (C) 2007 Free Software Foundation, Inc.
+   Copyright (C) 2007, 2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -24,13 +24,13 @@
 /* Check that calls to open and openat with O_CREAT set have an
    appropriate third/fourth parameter.  */
 #ifndef __USE_FILE_OFFSET64
-extern int __open_2 (__const char *__path, int __oflag) __nonnull ((1));
-extern int __REDIRECT (__open_alias, (__const char *__path, int __oflag, ...),
+extern int __open_2 (const char *__path, int __oflag) __nonnull ((1));
+extern int __REDIRECT (__open_alias, (const char *__path, int __oflag, ...),
 		       open) __nonnull ((1));
 #else
-extern int __REDIRECT (__open_2, (__const char *__path, int __oflag),
+extern int __REDIRECT (__open_2, (const char *__path, int __oflag),
 		       __open64_2) __nonnull ((1));
-extern int __REDIRECT (__open_alias, (__const char *__path, int __oflag, ...),
+extern int __REDIRECT (__open_alias, (const char *__path, int __oflag, ...),
 		       open64) __nonnull ((1));
 #endif
 __errordecl (__open_too_many_args,
@@ -39,7 +39,7 @@ __errordecl (__open_missing_mode,
 	     "open with O_CREAT in second argument needs 3 arguments");
 
 __extern_always_inline int
-open (__const char *__path, int __oflag, ...)
+open (const char *__path, int __oflag, ...)
 {
   if (__va_arg_pack_len () > 1)
     __open_too_many_args ();
@@ -62,8 +62,8 @@ open (__const char *__path, int __oflag, ...)
 
 
 #ifdef __USE_LARGEFILE64
-extern int __open64_2 (__const char *__path, int __oflag) __nonnull ((1));
-extern int __REDIRECT (__open64_alias, (__const char *__path, int __oflag,
+extern int __open64_2 (const char *__path, int __oflag) __nonnull ((1));
+extern int __REDIRECT (__open64_alias, (const char *__path, int __oflag,
 					...), open64) __nonnull ((1));
 __errordecl (__open64_too_many_args,
 	     "open64 can be called either with 2 or 3 arguments, not more");
@@ -71,7 +71,7 @@ __errordecl (__open64_missing_mode,
 	     "open64 with O_CREAT in second argument needs 3 arguments");
 
 __extern_always_inline int
-open64 (__const char *__path, int __oflag, ...)
+open64 (const char *__path, int __oflag, ...)
 {
   if (__va_arg_pack_len () > 1)
     __open64_too_many_args ();
@@ -96,16 +96,16 @@ open64 (__const char *__path, int __oflag, ...)
 
 #ifdef __USE_ATFILE
 # ifndef __USE_FILE_OFFSET64
-extern int __openat_2 (int __fd, __const char *__path, int __oflag)
+extern int __openat_2 (int __fd, const char *__path, int __oflag)
      __nonnull ((2));
-extern int __REDIRECT (__openat_alias, (int __fd, __const char *__path,
+extern int __REDIRECT (__openat_alias, (int __fd, const char *__path,
 					int __oflag, ...), openat)
      __nonnull ((2));
 # else
-extern int __REDIRECT (__openat_2, (int __fd, __const char *__path,
+extern int __REDIRECT (__openat_2, (int __fd, const char *__path,
 				    int __oflag), __openat64_2)
      __nonnull ((2));
-extern int __REDIRECT (__openat_alias, (int __fd, __const char *__path,
+extern int __REDIRECT (__openat_alias, (int __fd, const char *__path,
 					int __oflag, ...), openat64)
      __nonnull ((2));
 # endif
@@ -115,7 +115,7 @@ __errordecl (__openat_missing_mode,
 	     "openat with O_CREAT in third argument needs 4 arguments");
 
 __extern_always_inline int
-openat (int __fd, __const char *__path, int __oflag, ...)
+openat (int __fd, const char *__path, int __oflag, ...)
 {
   if (__va_arg_pack_len () > 1)
     __openat_too_many_args ();
@@ -138,9 +138,9 @@ openat (int __fd, __const char *__path, int __oflag, ...)
 
 
 # ifdef __USE_LARGEFILE64
-extern int __openat64_2 (int __fd, __const char *__path, int __oflag)
+extern int __openat64_2 (int __fd, const char *__path, int __oflag)
      __nonnull ((2));
-extern int __REDIRECT (__openat64_alias, (int __fd, __const char *__path,
+extern int __REDIRECT (__openat64_alias, (int __fd, const char *__path,
 					  int __oflag, ...), openat64)
      __nonnull ((2));
 __errordecl (__openat64_too_many_args,
@@ -149,7 +149,7 @@ __errordecl (__openat64_missing_mode,
 	     "openat64 with O_CREAT in third argument needs 4 arguments");
 
 __extern_always_inline int
-openat64 (int __fd, __const char *__path, int __oflag, ...)
+openat64 (int __fd, const char *__path, int __oflag, ...)
 {
   if (__va_arg_pack_len () > 1)
     __openat64_too_many_args ();

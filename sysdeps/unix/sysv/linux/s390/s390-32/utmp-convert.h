@@ -1,4 +1,4 @@
-/* Copyright (C) 2008 Free Software Foundation, Inc.
+/* Copyright (C) 2008, 2012 Free Software Foundation, Inc.
    Contributed by Andreas Krebbel <Andreas.Krebbel@de.ibm.com>.
    This file is part of the GNU C Library.
 
@@ -32,7 +32,7 @@
 /* Convert the 64 bit struct utmp value in FROM to the 32 bit version
    returned in TO.  */
 static inline void
-utmp_convert64to32 (__const struct utmp *from, struct utmp32 *to)
+utmp_convert64to32 (const struct utmp *from, struct utmp32 *to)
 {
 #if _HAVE_UT_TYPE - 0
   to->ut_type = from->ut_type;
@@ -60,7 +60,7 @@ utmp_convert64to32 (__const struct utmp *from, struct utmp32 *to)
 /* Convert the 32 bit struct utmp value in FROM to the 64 bit version
    returned in TO.  */
 static inline void
-utmp_convert32to64 (__const struct utmp32 *from, struct utmp *to)
+utmp_convert32to64 (const struct utmp32 *from, struct utmp *to)
 {
 #if _HAVE_UT_TYPE - 0
   to->ut_type = from->ut_type;

@@ -1,5 +1,5 @@
 /* Checking macros for stdlib functions.
-   Copyright (C) 2005, 2007 Free Software Foundation, Inc.
+   Copyright (C) 2005, 2007, 2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,21 +21,21 @@
 # error "Never include <bits/stdlib.h> directly; use <stdlib.h> instead."
 #endif
 
-extern char *__realpath_chk (__const char *__restrict __name,
+extern char *__realpath_chk (const char *__restrict __name,
 			     char *__restrict __resolved,
 			     size_t __resolvedlen) __THROW __wur;
 extern char *__REDIRECT_NTH (__realpath_alias,
-			     (__const char *__restrict __name,
+			     (const char *__restrict __name,
 			      char *__restrict __resolved), realpath) __wur;
 extern char *__REDIRECT_NTH (__realpath_chk_warn,
-			     (__const char *__restrict __name,
+			     (const char *__restrict __name,
 			      char *__restrict __resolved,
 			      size_t __resolvedlen), __realpath_chk) __wur
      __warnattr ("second argument of realpath must be either NULL or at "
 		 "least PATH_MAX bytes long buffer");
 
 __extern_always_inline __wur char *
-__NTH (realpath (__const char *__restrict __name, char *__restrict __resolved))
+__NTH (realpath (const char *__restrict __name, char *__restrict __resolved))
 {
   if (__bos (__resolved) != (size_t) -1)
     {
@@ -97,21 +97,21 @@ __NTH (wctomb (char *__s, wchar_t __wchar))
 
 
 extern size_t __mbstowcs_chk (wchar_t *__restrict __dst,
-			      __const char *__restrict __src,
+			      const char *__restrict __src,
 			      size_t __len, size_t __dstlen) __THROW;
 extern size_t __REDIRECT_NTH (__mbstowcs_alias,
 			      (wchar_t *__restrict __dst,
-			       __const char *__restrict __src,
+			       const char *__restrict __src,
 			       size_t __len), mbstowcs);
 extern size_t __REDIRECT_NTH (__mbstowcs_chk_warn,
 			      (wchar_t *__restrict __dst,
-			       __const char *__restrict __src,
+			       const char *__restrict __src,
 			       size_t __len, size_t __dstlen), __mbstowcs_chk)
      __warnattr ("mbstowcs called with dst buffer smaller than len "
 		 "* sizeof (wchar_t)");
 
 __extern_always_inline size_t
-__NTH (mbstowcs (wchar_t *__restrict __dst, __const char *__restrict __src,
+__NTH (mbstowcs (wchar_t *__restrict __dst, const char *__restrict __src,
 		 size_t __len))
 {
   if (__bos (__dst) != (size_t) -1)
@@ -129,20 +129,20 @@ __NTH (mbstowcs (wchar_t *__restrict __dst, __const char *__restrict __src,
 
 
 extern size_t __wcstombs_chk (char *__restrict __dst,
-			      __const wchar_t *__restrict __src,
+			      const wchar_t *__restrict __src,
 			      size_t __len, size_t __dstlen) __THROW;
 extern size_t __REDIRECT_NTH (__wcstombs_alias,
 			      (char *__restrict __dst,
-			       __const wchar_t *__restrict __src,
+			       const wchar_t *__restrict __src,
 			       size_t __len), wcstombs);
 extern size_t __REDIRECT_NTH (__wcstombs_chk_warn,
 			      (char *__restrict __dst,
-			       __const wchar_t *__restrict __src,
+			       const wchar_t *__restrict __src,
 			       size_t __len, size_t __dstlen), __wcstombs_chk)
      __warnattr ("wcstombs called with dst buffer smaller than len");
 
 __extern_always_inline size_t
-__NTH (wcstombs (char *__restrict __dst, __const wchar_t *__restrict __src,
+__NTH (wcstombs (char *__restrict __dst, const wchar_t *__restrict __src,
 		 size_t __len))
 {
   if (__bos (__dst) != (size_t) -1)

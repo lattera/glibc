@@ -1,4 +1,5 @@
-/* Copyright (C) 1991,1992,1996-1999,2003,2009 Free Software Foundation, Inc.
+/* Copyright (C) 1991,1992,1996-1999,2003,2009,2012
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -37,7 +38,7 @@ __BEGIN_DECLS
 
    This function is a cancellation point and therefore not marked with
    __THROW.  */
-extern ssize_t readv (int __fd, __const struct iovec *__iovec, int __count)
+extern ssize_t readv (int __fd, const struct iovec *__iovec, int __count)
   __wur;
 
 /* Write data pointed by the buffers described by IOVEC, which
@@ -48,7 +49,7 @@ extern ssize_t readv (int __fd, __const struct iovec *__iovec, int __count)
 
    This function is a cancellation point and therefore not marked with
    __THROW.  */
-extern ssize_t writev (int __fd, __const struct iovec *__iovec, int __count)
+extern ssize_t writev (int __fd, const struct iovec *__iovec, int __count)
   __wur;
 
 
@@ -63,7 +64,7 @@ extern ssize_t writev (int __fd, __const struct iovec *__iovec, int __count)
 
    This function is a cancellation point and therefore not marked with
    __THROW.  */
-extern ssize_t preadv (int __fd, __const struct iovec *__iovec, int __count,
+extern ssize_t preadv (int __fd, const struct iovec *__iovec, int __count,
 		       __off_t __offset) __wur;
 
 /* Write data pointed by the buffers described by IOVEC, which is a
@@ -75,14 +76,14 @@ extern ssize_t preadv (int __fd, __const struct iovec *__iovec, int __count,
 
    This function is a cancellation point and therefore not marked with
    __THROW.  */
-extern ssize_t pwritev (int __fd, __const struct iovec *__iovec, int __count,
+extern ssize_t pwritev (int __fd, const struct iovec *__iovec, int __count,
 			__off_t __offset) __wur;
 # else
 #  ifdef __REDIRECT
-extern ssize_t __REDIRECT (preadv, (int __fd, __const struct iovec *__iovec,
+extern ssize_t __REDIRECT (preadv, (int __fd, const struct iovec *__iovec,
 				    int __count, __off64_t __offset),
 			   preadv64) __wur;
-extern ssize_t __REDIRECT (pwritev, (int __fd, __const struct iovec *__iovec,
+extern ssize_t __REDIRECT (pwritev, (int __fd, const struct iovec *__iovec,
 				     int __count, __off64_t __offset),
 			   pwritev64) __wur;
 #  else
@@ -101,7 +102,7 @@ extern ssize_t __REDIRECT (pwritev, (int __fd, __const struct iovec *__iovec,
 
    This function is a cancellation point and therefore not marked with
    __THROW.  */
-extern ssize_t preadv64 (int __fd, __const struct iovec *__iovec, int __count,
+extern ssize_t preadv64 (int __fd, const struct iovec *__iovec, int __count,
 			 __off64_t __offset) __wur;
 
 /* Write data pointed by the buffers described by IOVEC, which is a
@@ -113,7 +114,7 @@ extern ssize_t preadv64 (int __fd, __const struct iovec *__iovec, int __count,
 
    This function is a cancellation point and therefore not marked with
    __THROW.  */
-extern ssize_t pwritev64 (int __fd, __const struct iovec *__iovec, int __count,
+extern ssize_t pwritev64 (int __fd, const struct iovec *__iovec, int __count,
 			  __off64_t __offset) __wur;
 # endif
 #endif	/* Use BSD */

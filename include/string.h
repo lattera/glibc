@@ -2,42 +2,42 @@
 
 #include <sys/types.h>
 
-extern void *__memccpy (void *__dest, __const void *__src,
+extern void *__memccpy (void *__dest, const void *__src,
 			int __c, size_t __n);
 
-extern size_t __strnlen (__const char *__string, size_t __maxlen)
+extern size_t __strnlen (const char *__string, size_t __maxlen)
      __attribute_pure__;
 
-extern char *__strsep (char **__stringp, __const char *__delim);
+extern char *__strsep (char **__stringp, const char *__delim);
 
-extern int __strverscmp (__const char *__s1, __const char *__s2)
+extern int __strverscmp (const char *__s1, const char *__s2)
      __attribute_pure__;
 
-extern int __strncasecmp (__const char *__s1, __const char *__s2,
+extern int __strncasecmp (const char *__s1, const char *__s2,
 			  size_t __n)
      __attribute_pure__;
 
-extern int __strcasecmp (__const char *__s1, __const char *__s2)
+extern int __strcasecmp (const char *__s1, const char *__s2)
      __attribute_pure__;
 
-extern char *__strcasestr (__const char *__haystack, __const char *__needle)
+extern char *__strcasestr (const char *__haystack, const char *__needle)
      __attribute_pure__;
 
-extern char *__strdup (__const char *__string)
+extern char *__strdup (const char *__string)
      __attribute_malloc__;
-extern char *__strndup (__const char *__string, size_t __n)
+extern char *__strndup (const char *__string, size_t __n)
      __attribute_malloc__;
 
-extern void *__rawmemchr (__const void *__s, int __c)
+extern void *__rawmemchr (const void *__s, int __c)
      __attribute_pure__;
 
-extern char *__strchrnul (__const char *__s, int __c)
+extern char *__strchrnul (const char *__s, int __c)
      __attribute_pure__;
 
-extern void *__memrchr (__const void *__s, int __c, size_t __n)
+extern void *__memrchr (const void *__s, int __c, size_t __n)
      __attribute_pure__;
 
-extern void *__memchr (__const void *__s, int __c, size_t __n)
+extern void *__memchr (const void *__s, int __c, size_t __n)
      __attribute_pure__;
 
 extern int __ffs (int __i) __attribute__ ((const));
@@ -59,7 +59,7 @@ extern __typeof (strncasecmp_l) __strncasecmp_l;
 # define strndupa(s, n)							      \
   (__extension__							      \
     ({									      \
-      __const char *__old = (s);					      \
+      const char *__old = (s);						      \
       size_t __len = __strnlen (__old, (n));				      \
       char *__new = (char *) __builtin_alloca (__len + 1);		      \
       __new[__len] = '\0';						      \
@@ -83,7 +83,7 @@ libc_hidden_proto (strcoll)
 libc_hidden_proto (__strcoll_l)
 libc_hidden_proto (__strxfrm_l)
 libc_hidden_proto (__strtok_r)
-extern char *__strsep_g (char **__stringp, __const char *__delim);
+extern char *__strsep_g (char **__stringp, const char *__delim);
 libc_hidden_proto (__strsep_g)
 libc_hidden_proto (strnlen)
 

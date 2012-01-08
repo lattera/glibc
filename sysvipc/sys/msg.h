@@ -1,4 +1,4 @@
-/* Copyright (C) 1995-1997,1999,2000,2003,2006,2007
+/* Copyright (C) 1995-1997,1999,2000,2003,2006,2007,2012
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -77,7 +77,7 @@ extern ssize_t msgrcv (int __msqid, void *__msgp, size_t __msgsz,
 
    This function is a cancellation point and therefore not marked with
    __THROW.  */
-extern int msgsnd (int __msqid, __const void *__msgp, size_t __msgsz,
+extern int msgsnd (int __msqid, const void *__msgp, size_t __msgsz,
 		   int __msgflg);
 
 __END_DECLS

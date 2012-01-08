@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998, 1999, 2007 Free Software Foundation, Inc.
+/* Copyright (C) 1996-1999, 2007, 2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -102,7 +102,7 @@ enum
 
 
 /* Switch process accounting on and off.  */
-extern int acct (__const char *__filename) __THROW;
+extern int acct (const char *__filename) __THROW;
 
 __END_DECLS
 

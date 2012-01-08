@@ -1,4 +1,4 @@
-/* Copyright (C) 2008 Free Software Foundation, Inc.
+/* Copyright (C) 2008, 2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -49,7 +49,7 @@ extern int timerfd_create (clockid_t __clock_id, int __flags) __THROW;
    FLAGS has the TFD_TIMER_ABSTIME flag set the timeout value is
    absolute.  Optionally return the old expiration time in OTMR.  */
 extern int timerfd_settime (int __ufd, int __flags,
-			    __const struct itimerspec *__utmr,
+			    const struct itimerspec *__utmr,
 			    struct itimerspec *__otmr) __THROW;
 
 /* Return the next expiration time of UFD.  */

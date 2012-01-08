@@ -1,5 +1,5 @@
 /* Prototype declarations for math functions; helper file for <math.h>.
-   Copyright (C) 1996-2002, 2003, 2006, 2011 Free Software Foundation, Inc.
+   Copyright (C) 1996-2003, 2006, 2011, 2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -223,7 +223,7 @@ __END_NAMESPACE_C99
 #ifdef __USE_ISOC99
 __BEGIN_NAMESPACE_C99
 /* Return representation of NaN for double type.  */
-__MATHCALLX (nan,, (__const char *__tagb), (__const__));
+__MATHCALLX (nan,, (const char *__tagb), (__const__));
 __END_NAMESPACE_C99
 #endif
 

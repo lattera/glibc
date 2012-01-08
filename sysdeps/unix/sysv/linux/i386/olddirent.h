@@ -1,4 +1,4 @@
-/* Copyright (C) 2000, 2009 Free Software Foundation, Inc.
+/* Copyright (C) 2000, 2009, 2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -33,13 +33,13 @@ struct __old_dirent64
 /* Now define the internal interfaces.  */
 extern struct __old_dirent64 *__old_readdir64 (DIR *__dirp);
 extern int __old_readdir64_r (DIR *__dirp, struct __old_dirent64 *__entry,
-                          struct __old_dirent64 **__result);
+			  struct __old_dirent64 **__result);
 extern __ssize_t __old_getdents64 (int __fd, char *__buf, size_t __nbytes)
 	internal_function;
-int __old_scandir64 (__const char * __dir,
+int __old_scandir64 (const char * __dir,
 		     struct __old_dirent64 *** __namelist,
-		     int (*__selector) (__const struct __old_dirent64 *),
-		     int (*__cmp) (__const struct __old_dirent64 **,
-				   __const struct __old_dirent64 **));
+		     int (*__selector) (const struct __old_dirent64 *),
+		     int (*__cmp) (const struct __old_dirent64 **,
+				   const struct __old_dirent64 **));
 
 #endif

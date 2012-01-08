@@ -1,5 +1,5 @@
 /* The `struct utmp' type, describing entries in the utmp file.  GNU version.
-   Copyright (C) 1993, 1996, 1997, 1998, 1999, 2002, 2008, 2010
+   Copyright (C) 1993, 1996, 1997, 1998, 1999, 2002, 2008, 2010, 2012
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -51,14 +51,11 @@ struct utmpx32
 
 /* The internal interface needed by the compat wrapper functions.  */
 extern struct utmpx *__getutxent (void);
-extern struct utmpx *__getutxid (__const struct utmpx *__id);
-extern struct utmpx *__getutxline (__const struct utmpx *__line);
-extern struct utmpx *__pututxline (__const struct utmpx *__utmpx);
-extern void __updwtmpx (__const char *__wtmpx_file,
-			__const struct utmpx *__utmpx);
-extern void __getutmp (__const struct utmpx *__utmpx,
-		       struct utmp *__utmp);
-extern void __getutmpx (__const struct utmp *__utmp,
-			struct utmpx *__utmpx);
+extern struct utmpx *__getutxid (const struct utmpx *__id);
+extern struct utmpx *__getutxline (const struct utmpx *__line);
+extern struct utmpx *__pututxline (const struct utmpx *__utmpx);
+extern void __updwtmpx (const char *__wtmpx_file, const struct utmpx *__utmpx);
+extern void __getutmp (const struct utmpx *__utmpx, struct utmp *__utmp);
+extern void __getutmpx (const struct utmp *__utmp, struct utmpx *__utmpx);
 
 #endif /* utmpx32.h */

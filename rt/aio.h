@@ -1,4 +1,4 @@
-/* Copyright (C) 1996-2000,2003,2004,2007 Free Software Foundation, Inc.
+/* Copyright (C) 1996-2000,2003,2004,2007,2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -136,7 +136,7 @@ enum
 
 /* Allow user to specify optimization.  */
 #ifdef __USE_GNU
-extern void aio_init (__const struct aioinit *__init) __THROW __nonnull ((1));
+extern void aio_init (const struct aioinit *__init) __THROW __nonnull ((1));
 #endif
 
 
@@ -148,12 +148,12 @@ extern int aio_write (struct aiocb *__aiocbp) __THROW __nonnull ((1));
 
 /* Initiate list of I/O requests.  */
 extern int lio_listio (int __mode,
-		       struct aiocb *__const __list[__restrict_arr],
+		       struct aiocb *const __list[__restrict_arr],
 		       int __nent, struct sigevent *__restrict __sig)
   __THROW __nonnull ((2));
 
 /* Retrieve error status associated with AIOCBP.  */
-extern int aio_error (__const struct aiocb *__aiocbp) __THROW __nonnull ((1));
+extern int aio_error (const struct aiocb *__aiocbp) __THROW __nonnull ((1));
 /* Return status associated with AIOCBP.  */
 extern __ssize_t aio_return (struct aiocb *__aiocbp) __THROW __nonnull ((1));
 
@@ -166,8 +166,8 @@ extern int aio_cancel (int __fildes, struct aiocb *__aiocbp) __THROW;
 
    This function is a cancellation point and therefore not marked with
    __THROW.  */
-extern int aio_suspend (__const struct aiocb *__const __list[], int __nent,
-			__const struct timespec *__restrict __timeout)
+extern int aio_suspend (const struct aiocb *const __list[], int __nent,
+			const struct timespec *__restrict __timeout)
   __nonnull ((1));
 
 /* Force all operations associated with file desriptor described by
@@ -183,11 +183,11 @@ extern int __REDIRECT_NTH (aio_write, (struct aiocb *__aiocbp), aio_write64)
 
 extern int __REDIRECT_NTH (lio_listio,
 			   (int __mode,
-			    struct aiocb *__const __list[__restrict_arr],
+			    struct aiocb *const __list[__restrict_arr],
 			    int __nent, struct sigevent *__restrict __sig),
 			   lio_listio64) __nonnull ((2));
 
-extern int __REDIRECT_NTH (aio_error, (__const struct aiocb *__aiocbp),
+extern int __REDIRECT_NTH (aio_error, (const struct aiocb *__aiocbp),
 			   aio_error64) __nonnull ((1));
 extern __ssize_t __REDIRECT_NTH (aio_return, (struct aiocb *__aiocbp),
 				 aio_return64) __nonnull ((1));
@@ -197,8 +197,8 @@ extern int __REDIRECT_NTH (aio_cancel,
 			   aio_cancel64);
 
 extern int __REDIRECT_NTH (aio_suspend,
-			   (__const struct aiocb *__const __list[], int __nent,
-			    __const struct timespec *__restrict __timeout),
+			   (const struct aiocb *const __list[], int __nent,
+			    const struct timespec *__restrict __timeout),
 			   aio_suspend64) __nonnull ((1));
 
 extern int __REDIRECT_NTH (aio_fsync,
@@ -222,19 +222,19 @@ extern int aio_read64 (struct aiocb64 *__aiocbp) __THROW __nonnull ((1));
 extern int aio_write64 (struct aiocb64 *__aiocbp) __THROW __nonnull ((1));
 
 extern int lio_listio64 (int __mode,
-			 struct aiocb64 *__const __list[__restrict_arr],
+			 struct aiocb64 *const __list[__restrict_arr],
 			 int __nent, struct sigevent *__restrict __sig)
   __THROW __nonnull ((2));
 
-extern int aio_error64 (__const struct aiocb64 *__aiocbp)
+extern int aio_error64 (const struct aiocb64 *__aiocbp)
   __THROW __nonnull ((1));
 extern __ssize_t aio_return64 (struct aiocb64 *__aiocbp)
   __THROW __nonnull ((1));
 
 extern int aio_cancel64 (int __fildes, struct aiocb64 *__aiocbp) __THROW;
 
-extern int aio_suspend64 (__const struct aiocb64 *__const __list[], int __nent,
-			  __const struct timespec *__restrict __timeout)
+extern int aio_suspend64 (const struct aiocb64 *const __list[], int __nent,
+			  const struct timespec *__restrict __timeout)
   __THROW __nonnull ((1));
 
 extern int aio_fsync64 (int __operation, struct aiocb64 *__aiocbp)

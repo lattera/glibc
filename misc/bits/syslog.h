@@ -1,5 +1,5 @@
 /* Checking macros for syslog functions.
-   Copyright (C) 2005, 2007, 2010 Free Software Foundation, Inc.
+   Copyright (C) 2005, 2007, 2010, 2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -22,12 +22,12 @@
 #endif
 
 
-extern void __syslog_chk (int __pri, int __flag, __const char *__fmt, ...)
+extern void __syslog_chk (int __pri, int __flag, const char *__fmt, ...)
      __attribute__ ((__format__ (__printf__, 3, 4)));
 
 #ifdef __va_arg_pack
 __extern_always_inline void
-syslog (int __pri, __const char *__fmt, ...)
+syslog (int __pri, const char *__fmt, ...)
 {
   __syslog_chk (__pri, __USE_FORTIFY_LEVEL - 1, __fmt, __va_arg_pack ());
 }
@@ -38,12 +38,12 @@ syslog (int __pri, __const char *__fmt, ...)
 
 
 #ifdef __USE_BSD
-extern void __vsyslog_chk (int __pri, int __flag, __const char *__fmt,
+extern void __vsyslog_chk (int __pri, int __flag, const char *__fmt,
 			   __gnuc_va_list __ap)
      __attribute__ ((__format__ (__printf__, 3, 0)));
 
 __extern_always_inline void
-vsyslog (int __pri, __const char *__fmt, __gnuc_va_list __ap)
+vsyslog (int __pri, const char *__fmt, __gnuc_va_list __ap)
 {
   __vsyslog_chk (__pri,  __USE_FORTIFY_LEVEL - 1, __fmt, __ap);
 }

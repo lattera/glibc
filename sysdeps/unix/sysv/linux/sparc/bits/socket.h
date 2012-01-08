@@ -1,5 +1,5 @@
 /* System-specific socket constants and types.  Linux/SPARC version.
-   Copyright (C) 1991, 1992, 1994-2001, 2004, 2006, 2007, 2008, 2009, 2011
+   Copyright (C) 1991, 1992, 1994-2001, 2004, 2006, 2007, 2008, 2009, 2011, 2012
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -430,7 +430,7 @@ __BEGIN_DECLS
    __THROW.  */
 extern int recvmmsg (int __fd, struct mmsghdr *__vmessages,
 		     unsigned int __vlen, int __flags,
-		     __const struct timespec *__tmo);
+		     const struct timespec *__tmo);
 
 __END_DECLS
 

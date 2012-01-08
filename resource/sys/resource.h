@@ -1,4 +1,5 @@
-/* Copyright (C) 1992,94,1996-2000,2002,2004 Free Software Foundation, Inc.
+/* Copyright (C) 1992,94,1996-2000,2002,2004,2012
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -68,11 +69,11 @@ extern int getrlimit64 (__rlimit_resource_t __resource,
    Return 0 if successful, -1 if not (and sets errno).  */
 #ifndef __USE_FILE_OFFSET64
 extern int setrlimit (__rlimit_resource_t __resource,
-		      __const struct rlimit *__rlimits) __THROW;
+		      const struct rlimit *__rlimits) __THROW;
 #else
 # ifdef __REDIRECT_NTH
 extern int __REDIRECT_NTH (setrlimit, (__rlimit_resource_t __resource,
-				       __const struct rlimit *__rlimits),
+				       const struct rlimit *__rlimits),
 			   setrlimit64);
 # else
 #  define setrlimit setrlimit64
@@ -80,7 +81,7 @@ extern int __REDIRECT_NTH (setrlimit, (__rlimit_resource_t __resource,
 #endif
 #ifdef __USE_LARGEFILE64
 extern int setrlimit64 (__rlimit_resource_t __resource,
-			__const struct rlimit64 *__rlimits) __THROW;
+			const struct rlimit64 *__rlimits) __THROW;
 #endif
 
 /* Return resource usage information on process indicated by WHO

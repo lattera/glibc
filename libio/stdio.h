@@ -176,15 +176,15 @@ extern struct _IO_FILE *stderr;		/* Standard error output stream.  */
 
 __BEGIN_NAMESPACE_STD
 /* Remove file FILENAME.  */
-extern int remove (__const char *__filename) __THROW;
+extern int remove (const char *__filename) __THROW;
 /* Rename file OLD to NEW.  */
-extern int rename (__const char *__old, __const char *__new) __THROW;
+extern int rename (const char *__old, const char *__new) __THROW;
 __END_NAMESPACE_STD
 
 #ifdef __USE_ATFILE
 /* Rename file OLD relative to OLDFD to NEW relative to NEWFD.  */
-extern int renameat (int __oldfd, __const char *__old, int __newfd,
-		     __const char *__new) __THROW;
+extern int renameat (int __oldfd, const char *__old, int __newfd,
+		     const char *__new) __THROW;
 #endif
 
 __BEGIN_NAMESPACE_STD
@@ -225,7 +225,7 @@ extern char *tmpnam_r (char *__s) __THROW __wur;
    If not and if DIR is not NULL, that value is checked.  If that fails,
    P_tmpdir is tried and finally "/tmp".  The storage for the filename
    is allocated by `malloc'.  */
-extern char *tempnam (__const char *__dir, __const char *__pfx)
+extern char *tempnam (const char *__dir, const char *__pfx)
      __THROW __attribute_malloc__ __wur;
 #endif
 
@@ -270,22 +270,22 @@ __BEGIN_NAMESPACE_STD
 
    This function is a possible cancellation point and therefore not
    marked with __THROW.  */
-extern FILE *fopen (__const char *__restrict __filename,
-		    __const char *__restrict __modes) __wur;
+extern FILE *fopen (const char *__restrict __filename,
+		    const char *__restrict __modes) __wur;
 /* Open a file, replacing an existing stream with it.
 
    This function is a possible cancellation point and therefore not
    marked with __THROW.  */
-extern FILE *freopen (__const char *__restrict __filename,
-		      __const char *__restrict __modes,
+extern FILE *freopen (const char *__restrict __filename,
+		      const char *__restrict __modes,
 		      FILE *__restrict __stream) __wur;
 #else
 # ifdef __REDIRECT
-extern FILE *__REDIRECT (fopen, (__const char *__restrict __filename,
-				 __const char *__restrict __modes), fopen64)
+extern FILE *__REDIRECT (fopen, (const char *__restrict __filename,
+				 const char *__restrict __modes), fopen64)
   __wur;
-extern FILE *__REDIRECT (freopen, (__const char *__restrict __filename,
-				   __const char *__restrict __modes,
+extern FILE *__REDIRECT (freopen, (const char *__restrict __filename,
+				   const char *__restrict __modes,
 				   FILE *__restrict __stream), freopen64)
   __wur;
 # else
@@ -295,29 +295,29 @@ extern FILE *__REDIRECT (freopen, (__const char *__restrict __filename,
 #endif
 __END_NAMESPACE_STD
 #ifdef __USE_LARGEFILE64
-extern FILE *fopen64 (__const char *__restrict __filename,
-		      __const char *__restrict __modes) __wur;
-extern FILE *freopen64 (__const char *__restrict __filename,
-			__const char *__restrict __modes,
+extern FILE *fopen64 (const char *__restrict __filename,
+		      const char *__restrict __modes) __wur;
+extern FILE *freopen64 (const char *__restrict __filename,
+			const char *__restrict __modes,
 			FILE *__restrict __stream) __wur;
 #endif
 
 #ifdef	__USE_POSIX
 /* Create a new stream that refers to an existing system file descriptor.  */
-extern FILE *fdopen (int __fd, __const char *__modes) __THROW __wur;
+extern FILE *fdopen (int __fd, const char *__modes) __THROW __wur;
 #endif
 
 #ifdef	__USE_GNU
 /* Create a new stream that refers to the given magic cookie,
    and uses the given functions for input and output.  */
 extern FILE *fopencookie (void *__restrict __magic_cookie,
-			  __const char *__restrict __modes,
+			  const char *__restrict __modes,
 			  _IO_cookie_io_functions_t __io_funcs) __THROW __wur;
 #endif
 
 #ifdef __USE_XOPEN2K8
 /* Create a new stream that refers to a memory buffer.  */
-extern FILE *fmemopen (void *__s, size_t __len, __const char *__modes)
+extern FILE *fmemopen (void *__s, size_t __len, const char *__modes)
   __THROW __wur;
 
 /* Open a stream that writes into a malloc'd buffer that is expanded as
@@ -355,29 +355,29 @@ __BEGIN_NAMESPACE_STD
    This function is a possible cancellation point and therefore not
    marked with __THROW.  */
 extern int fprintf (FILE *__restrict __stream,
-		    __const char *__restrict __format, ...);
+		    const char *__restrict __format, ...);
 /* Write formatted output to stdout.
 
    This function is a possible cancellation point and therefore not
    marked with __THROW.  */
-extern int printf (__const char *__restrict __format, ...);
+extern int printf (const char *__restrict __format, ...);
 /* Write formatted output to S.  */
 extern int sprintf (char *__restrict __s,
-		    __const char *__restrict __format, ...) __THROWNL;
+		    const char *__restrict __format, ...) __THROWNL;
 
 /* Write formatted output to S from argument list ARG.
 
    This function is a possible cancellation point and therefore not
    marked with __THROW.  */
-extern int vfprintf (FILE *__restrict __s, __const char *__restrict __format,
+extern int vfprintf (FILE *__restrict __s, const char *__restrict __format,
 		     _G_va_list __arg);
 /* Write formatted output to stdout from argument list ARG.
 
    This function is a possible cancellation point and therefore not
    marked with __THROW.  */
-extern int vprintf (__const char *__restrict __format, _G_va_list __arg);
+extern int vprintf (const char *__restrict __format, _G_va_list __arg);
 /* Write formatted output to S from argument list ARG.  */
-extern int vsprintf (char *__restrict __s, __const char *__restrict __format,
+extern int vsprintf (char *__restrict __s, const char *__restrict __format,
 		     _G_va_list __arg) __THROWNL;
 __END_NAMESPACE_STD
 
@@ -385,11 +385,11 @@ __END_NAMESPACE_STD
 __BEGIN_NAMESPACE_C99
 /* Maximum chars of output to write in MAXLEN.  */
 extern int snprintf (char *__restrict __s, size_t __maxlen,
-		     __const char *__restrict __format, ...)
+		     const char *__restrict __format, ...)
      __THROWNL __attribute__ ((__format__ (__printf__, 3, 4)));
 
 extern int vsnprintf (char *__restrict __s, size_t __maxlen,
-		      __const char *__restrict __format, _G_va_list __arg)
+		      const char *__restrict __format, _G_va_list __arg)
      __THROWNL __attribute__ ((__format__ (__printf__, 3, 0)));
 __END_NAMESPACE_C99
 #endif
@@ -397,14 +397,14 @@ __END_NAMESPACE_C99
 #ifdef __USE_GNU
 /* Write formatted output to a string dynamically allocated with `malloc'.
    Store the address of the string in *PTR.  */
-extern int vasprintf (char **__restrict __ptr, __const char *__restrict __f,
+extern int vasprintf (char **__restrict __ptr, const char *__restrict __f,
 		      _G_va_list __arg)
      __THROWNL __attribute__ ((__format__ (__printf__, 2, 0))) __wur;
 extern int __asprintf (char **__restrict __ptr,
-		       __const char *__restrict __fmt, ...)
+		       const char *__restrict __fmt, ...)
      __THROWNL __attribute__ ((__format__ (__printf__, 2, 3))) __wur;
 extern int asprintf (char **__restrict __ptr,
-		     __const char *__restrict __fmt, ...)
+		     const char *__restrict __fmt, ...)
      __THROWNL __attribute__ ((__format__ (__printf__, 2, 3))) __wur;
 #endif
 
@@ -415,10 +415,10 @@ extern int asprintf (char **__restrict __ptr,
    cancellation point.  But due to similarity with an POSIX interface
    or due to the implementation they are cancellation points and
    therefore not marked with __THROW.  */
-extern int vdprintf (int __fd, __const char *__restrict __fmt,
+extern int vdprintf (int __fd, const char *__restrict __fmt,
 		     _G_va_list __arg)
      __attribute__ ((__format__ (__printf__, 2, 0)));
-extern int dprintf (int __fd, __const char *__restrict __fmt, ...)
+extern int dprintf (int __fd, const char *__restrict __fmt, ...)
      __attribute__ ((__format__ (__printf__, 2, 3)));
 #endif
 
@@ -429,15 +429,15 @@ __BEGIN_NAMESPACE_STD
    This function is a possible cancellation point and therefore not
    marked with __THROW.  */
 extern int fscanf (FILE *__restrict __stream,
-		   __const char *__restrict __format, ...) __wur;
+		   const char *__restrict __format, ...) __wur;
 /* Read formatted input from stdin.
 
    This function is a possible cancellation point and therefore not
    marked with __THROW.  */
-extern int scanf (__const char *__restrict __format, ...) __wur;
+extern int scanf (const char *__restrict __format, ...) __wur;
 /* Read formatted input from S.  */
-extern int sscanf (__const char *__restrict __s,
-		   __const char *__restrict __format, ...) __THROW;
+extern int sscanf (const char *__restrict __s,
+		   const char *__restrict __format, ...) __THROW;
 
 #if defined __USE_ISOC99 && !defined __USE_GNU \
     && (!defined __LDBL_COMPAT || !defined __REDIRECT) \
@@ -447,19 +447,19 @@ extern int sscanf (__const char *__restrict __s,
    GNU extension which conflicts with valid %a followed by letter
    s, S or [.  */
 extern int __REDIRECT (fscanf, (FILE *__restrict __stream,
-				__const char *__restrict __format, ...),
+				const char *__restrict __format, ...),
 		       __isoc99_fscanf) __wur;
-extern int __REDIRECT (scanf, (__const char *__restrict __format, ...),
+extern int __REDIRECT (scanf, (const char *__restrict __format, ...),
 		       __isoc99_scanf) __wur;
-extern int __REDIRECT_NTH (sscanf, (__const char *__restrict __s,
-				    __const char *__restrict __format, ...),
+extern int __REDIRECT_NTH (sscanf, (const char *__restrict __s,
+				    const char *__restrict __format, ...),
 			   __isoc99_sscanf);
 # else
 extern int __isoc99_fscanf (FILE *__restrict __stream,
-			    __const char *__restrict __format, ...) __wur;
-extern int __isoc99_scanf (__const char *__restrict __format, ...) __wur;
-extern int __isoc99_sscanf (__const char *__restrict __s,
-			    __const char *__restrict __format, ...) __THROW;
+			    const char *__restrict __format, ...) __wur;
+extern int __isoc99_scanf (const char *__restrict __format, ...) __wur;
+extern int __isoc99_sscanf (const char *__restrict __s,
+			    const char *__restrict __format, ...) __THROW;
 #  define fscanf __isoc99_fscanf
 #  define scanf __isoc99_scanf
 #  define sscanf __isoc99_sscanf
@@ -474,7 +474,7 @@ __BEGIN_NAMESPACE_C99
 
    This function is a possible cancellation point and therefore not
    marked with __THROW.  */
-extern int vfscanf (FILE *__restrict __s, __const char *__restrict __format,
+extern int vfscanf (FILE *__restrict __s, const char *__restrict __format,
 		    _G_va_list __arg)
      __attribute__ ((__format__ (__scanf__, 2, 0))) __wur;
 
@@ -482,12 +482,12 @@ extern int vfscanf (FILE *__restrict __s, __const char *__restrict __format,
 
    This function is a possible cancellation point and therefore not
    marked with __THROW.  */
-extern int vscanf (__const char *__restrict __format, _G_va_list __arg)
+extern int vscanf (const char *__restrict __format, _G_va_list __arg)
      __attribute__ ((__format__ (__scanf__, 1, 0))) __wur;
 
 /* Read formatted input from S into argument list ARG.  */
-extern int vsscanf (__const char *__restrict __s,
-		    __const char *__restrict __format, _G_va_list __arg)
+extern int vsscanf (const char *__restrict __s,
+		    const char *__restrict __format, _G_va_list __arg)
      __THROW __attribute__ ((__format__ (__scanf__, 2, 0)));
 
 # if !defined __USE_GNU \
@@ -499,25 +499,25 @@ extern int vsscanf (__const char *__restrict __s,
    s, S or [.  */
 extern int __REDIRECT (vfscanf,
 		       (FILE *__restrict __s,
-			__const char *__restrict __format, _G_va_list __arg),
+			const char *__restrict __format, _G_va_list __arg),
 		       __isoc99_vfscanf)
      __attribute__ ((__format__ (__scanf__, 2, 0))) __wur;
-extern int __REDIRECT (vscanf, (__const char *__restrict __format,
+extern int __REDIRECT (vscanf, (const char *__restrict __format,
 				_G_va_list __arg), __isoc99_vscanf)
      __attribute__ ((__format__ (__scanf__, 1, 0))) __wur;
 extern int __REDIRECT_NTH (vsscanf,
-			   (__const char *__restrict __s,
-			    __const char *__restrict __format,
+			   (const char *__restrict __s,
+			    const char *__restrict __format,
 			    _G_va_list __arg), __isoc99_vsscanf)
      __attribute__ ((__format__ (__scanf__, 2, 0)));
 #  else
 extern int __isoc99_vfscanf (FILE *__restrict __s,
-			     __const char *__restrict __format,
+			     const char *__restrict __format,
 			     _G_va_list __arg) __wur;
-extern int __isoc99_vscanf (__const char *__restrict __format,
+extern int __isoc99_vscanf (const char *__restrict __format,
 			    _G_va_list __arg) __wur;
-extern int __isoc99_vsscanf (__const char *__restrict __s,
-			     __const char *__restrict __format,
+extern int __isoc99_vsscanf (const char *__restrict __s,
+			     const char *__restrict __format,
 			     _G_va_list __arg) __THROW;
 #   define vfscanf __isoc99_vfscanf
 #   define vscanf __isoc99_vscanf
@@ -692,13 +692,13 @@ __BEGIN_NAMESPACE_STD
 
    This function is a possible cancellation point and therefore not
    marked with __THROW.  */
-extern int fputs (__const char *__restrict __s, FILE *__restrict __stream);
+extern int fputs (const char *__restrict __s, FILE *__restrict __stream);
 
 /* Write a string, followed by a newline, to stdout.
 
    This function is a possible cancellation point and therefore not
    marked with __THROW.  */
-extern int puts (__const char *__s);
+extern int puts (const char *__s);
 
 
 /* Push a character back onto the input buffer of STREAM.
@@ -718,7 +718,7 @@ extern size_t fread (void *__restrict __ptr, size_t __size,
 
    This function is a possible cancellation point and therefore not
    marked with __THROW.  */
-extern size_t fwrite (__const void *__restrict __ptr, size_t __size,
+extern size_t fwrite (const void *__restrict __ptr, size_t __size,
 		      size_t __n, FILE *__restrict __s) __wur;
 __END_NAMESPACE_STD
 
@@ -729,7 +729,7 @@ __END_NAMESPACE_STD
    cancellation point.  But due to similarity with an POSIX interface
    or due to the implementation it is a cancellation point and
    therefore not marked with __THROW.  */
-extern int fputs_unlocked (__const char *__restrict __s,
+extern int fputs_unlocked (const char *__restrict __s,
 			   FILE *__restrict __stream);
 #endif
 
@@ -742,7 +742,7 @@ extern int fputs_unlocked (__const char *__restrict __s,
    therefore not marked with __THROW.  */
 extern size_t fread_unlocked (void *__restrict __ptr, size_t __size,
 			      size_t __n, FILE *__restrict __stream) __wur;
-extern size_t fwrite_unlocked (__const void *__restrict __ptr, size_t __size,
+extern size_t fwrite_unlocked (const void *__restrict __ptr, size_t __size,
 			       size_t __n, FILE *__restrict __stream) __wur;
 #endif
 
@@ -806,13 +806,13 @@ extern int fgetpos (FILE *__restrict __stream, fpos_t *__restrict __pos);
 
    This function is a possible cancellation point and therefore not
    marked with __THROW.  */
-extern int fsetpos (FILE *__stream, __const fpos_t *__pos);
+extern int fsetpos (FILE *__stream, const fpos_t *__pos);
 #else
 # ifdef __REDIRECT
 extern int __REDIRECT (fgetpos, (FILE *__restrict __stream,
 				 fpos_t *__restrict __pos), fgetpos64);
 extern int __REDIRECT (fsetpos,
-		       (FILE *__stream, __const fpos_t *__pos), fsetpos64);
+		       (FILE *__stream, const fpos_t *__pos), fsetpos64);
 # else
 #  define fgetpos fgetpos64
 #  define fsetpos fsetpos64
@@ -824,7 +824,7 @@ __END_NAMESPACE_STD
 extern int fseeko64 (FILE *__stream, __off64_t __off, int __whence);
 extern __off64_t ftello64 (FILE *__stream) __wur;
 extern int fgetpos64 (FILE *__restrict __stream, fpos64_t *__restrict __pos);
-extern int fsetpos64 (FILE *__stream, __const fpos64_t *__pos);
+extern int fsetpos64 (FILE *__stream, const fpos64_t *__pos);
 #endif
 
 __BEGIN_NAMESPACE_STD
@@ -849,7 +849,7 @@ __BEGIN_NAMESPACE_STD
 
    This function is a possible cancellation point and therefore not
    marked with __THROW.  */
-extern void perror (__const char *__s);
+extern void perror (const char *__s);
 __END_NAMESPACE_STD
 
 /* Provide the declarations for `sys_errlist' and `sys_nerr' if they
@@ -876,7 +876,7 @@ extern int fileno_unlocked (FILE *__stream) __THROW __wur;
 
    This function is a possible cancellation point and therefore not
    marked with __THROW.  */
-extern FILE *popen (__const char *__command, __const char *__modes) __wur;
+extern FILE *popen (const char *__command, const char *__modes) __wur;
 
 /* Close a stream opened by popen and return the status of its child.
 
@@ -903,10 +903,10 @@ struct obstack;			/* See <obstack.h>.  */
 
 /* Write formatted output to an obstack.  */
 extern int obstack_printf (struct obstack *__restrict __obstack,
-			   __const char *__restrict __format, ...)
+			   const char *__restrict __format, ...)
      __THROWNL __attribute__ ((__format__ (__printf__, 2, 3)));
 extern int obstack_vprintf (struct obstack *__restrict __obstack,
-			    __const char *__restrict __format,
+			    const char *__restrict __format,
 			    _G_va_list __args)
      __THROWNL __attribute__ ((__format__ (__printf__, 2, 0)));
 #endif /* Use GNU.  */

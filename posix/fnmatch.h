@@ -1,4 +1,5 @@
-/* Copyright (C) 1991-93,96,97,98,99,2001,2004 Free Software Foundation, Inc.
+/* Copyright (C) 1991-93,1996-1999,2001,2004,2012
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,14 +22,6 @@
 
 #ifdef	__cplusplus
 extern "C" {
-#endif
-
-#ifndef const
-# if (defined __STDC__ && __STDC__) || defined __cplusplus
-#  define __const	const
-# else
-#  define __const
-# endif
 #endif
 
 /* We #undef these before defining them because some losing systems
@@ -62,8 +55,7 @@ extern "C" {
 
 /* Match NAME against the filename pattern PATTERN,
    returning zero if it matches, FNM_NOMATCH if not.  */
-extern int fnmatch (__const char *__pattern, __const char *__name,
-		    int __flags);
+extern int fnmatch (const char *__pattern, const char *__name, int __flags);
 
 #ifdef	__cplusplus
 }

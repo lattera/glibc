@@ -1,5 +1,5 @@
 /* Signal handling function for threaded programs.  Generic version.
-   Copyright (C) 2000 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -28,7 +28,7 @@
    same meaning as for sigprocmask; in fact, this and sigprocmask might be
    the same function.  We declare this the same on all platforms, since it
    doesn't use any thread-related types.  */
-extern int pthread_sigmask (int __how, __const __sigset_t *__newmask,
+extern int pthread_sigmask (int __how, const __sigset_t *__newmask,
 			    __sigset_t *__oldmask) __THROW;
 
 

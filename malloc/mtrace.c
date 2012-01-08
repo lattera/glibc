@@ -64,7 +64,7 @@ static __ptr_t (*tr_old_realloc_hook) (__ptr_t ptr, __malloc_size_t size,
 				       const __ptr_t);
 static __ptr_t (*tr_old_memalign_hook) (__malloc_size_t __alignment,
 					__malloc_size_t __size,
-					__const __ptr_t);
+					const __ptr_t);
 
 /* This function is called when the block being alloc'd, realloc'd, or
    freed has an address matching the variable "mallwatch".  In a debugger,

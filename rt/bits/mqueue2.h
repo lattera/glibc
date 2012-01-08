@@ -1,5 +1,5 @@
 /* Checking macros for mq functions.
-   Copyright (C) 2007, 2011 Free Software Foundation, Inc.
+   Copyright (C) 2007, 2011, 2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -23,11 +23,11 @@
 
 /* Check that calls to mq_open with O_CREAT set have an appropriate third and fourth
    parameter.  */
-extern mqd_t mq_open (__const char *__name, int __oflag, ...)
+extern mqd_t mq_open (const char *__name, int __oflag, ...)
      __THROW __nonnull ((1));
-extern mqd_t __mq_open_2 (__const char *__name, int __oflag)
+extern mqd_t __mq_open_2 (const char *__name, int __oflag)
      __THROW __nonnull ((1));
-extern mqd_t __REDIRECT_NTH (__mq_open_alias, (__const char *__name,
+extern mqd_t __REDIRECT_NTH (__mq_open_alias, (const char *__name,
 					       int __oflag, ...), mq_open)
      __nonnull ((1));
 __errordecl (__mq_open_wrong_number_of_args,
@@ -36,7 +36,7 @@ __errordecl (__mq_open_missing_mode_and_attr,
 	     "mq_open with O_CREAT in second argument needs 4 arguments");
 
 __extern_always_inline mqd_t
-__NTH (mq_open (__const char *__name, int __oflag, ...))
+__NTH (mq_open (const char *__name, int __oflag, ...))
 {
   if (__va_arg_pack_len () != 0 && __va_arg_pack_len () != 2)
     __mq_open_wrong_number_of_args ();

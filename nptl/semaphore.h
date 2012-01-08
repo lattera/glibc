@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2011 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2011, 2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -40,13 +40,13 @@ extern int sem_init (sem_t *__sem, int __pshared, unsigned int __value)
 extern int sem_destroy (sem_t *__sem) __THROW;
 
 /* Open a named semaphore NAME with open flags OFLAG.  */
-extern sem_t *sem_open (__const char *__name, int __oflag, ...) __THROW;
+extern sem_t *sem_open (const char *__name, int __oflag, ...) __THROW;
 
 /* Close descriptor for named semaphore SEM.  */
 extern int sem_close (sem_t *__sem) __THROW;
 
 /* Remove named semaphore NAME.  */
-extern int sem_unlink (__const char *__name) __THROW;
+extern int sem_unlink (const char *__name) __THROW;
 
 /* Wait for SEM being posted.
 
@@ -60,7 +60,7 @@ extern int sem_wait (sem_t *__sem);
    This function is a cancellation point and therefore not marked with
    __THROW.  */
 extern int sem_timedwait (sem_t *__restrict __sem,
-			  __const struct timespec *__restrict __abstime);
+			  const struct timespec *__restrict __abstime);
 #endif
 
 /* Test whether SEM is posted.  */

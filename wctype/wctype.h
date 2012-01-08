@@ -1,4 +1,4 @@
-/* Copyright (C) 1996-2002,2005,2007-2009,2010 Free Software Foundation, Inc.
+/* Copyright (C) 1996-2002,2005,2007-2009,2010,2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -169,7 +169,7 @@ extern int iswblank (wint_t __wc) __THROW;
 
 /* Construct value that describes a class of wide characters identified
    by the string argument PROPERTY.  */
-extern wctype_t wctype (__const char *__property) __THROW;
+extern wctype_t wctype (const char *__property) __THROW;
 
 /* Determine whether the wide-character WC has the property described by
    DESC.  */
@@ -184,7 +184,7 @@ __END_NAMESPACE_C99
 __BEGIN_NAMESPACE_C99
 /* Scalar type that can hold values which represent locale-specific
    character mappings.  */
-typedef __const __int32_t *wctrans_t;
+typedef const __int32_t *wctrans_t;
 __END_NAMESPACE_C99
 #ifdef __USE_GNU
 __USING_NAMESPACE_C99(wctrans_t)
@@ -216,7 +216,7 @@ __BEGIN_DECLS
 __BEGIN_NAMESPACE_C99
 /* Construct value that describes a mapping between wide characters
    identified by the string argument PROPERTY.  */
-extern wctrans_t wctrans (__const char *__property) __THROW;
+extern wctrans_t wctrans (const char *__property) __THROW;
 
 /* Map the wide character WC using the mapping described by DESC.  */
 extern wint_t towctrans (wint_t __wc, wctrans_t __desc) __THROW;
@@ -282,7 +282,7 @@ extern int iswblank_l (wint_t __wc, __locale_t __locale) __THROW;
 
 /* Construct value that describes a class of wide characters identified
    by the string argument PROPERTY.  */
-extern wctype_t wctype_l (__const char *__property, __locale_t __locale)
+extern wctype_t wctype_l (const char *__property, __locale_t __locale)
      __THROW;
 
 /* Determine whether the wide-character WC has the property described by
@@ -303,7 +303,7 @@ extern wint_t towupper_l (wint_t __wc, __locale_t __locale) __THROW;
 
 /* Construct value that describes a mapping between wide characters
    identified by the string argument PROPERTY.  */
-extern wctrans_t wctrans_l (__const char *__property, __locale_t __locale)
+extern wctrans_t wctrans_l (const char *__property, __locale_t __locale)
      __THROW;
 
 /* Map the wide character WC using the mapping described by DESC.  */

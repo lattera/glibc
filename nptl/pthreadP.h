@@ -406,9 +406,9 @@ extern int __pthread_setschedparam (pthread_t thread_id, int policy,
 				    const struct sched_param *param);
 extern int __pthread_setcancelstate (int state, int *oldstate);
 extern int __pthread_mutex_init (pthread_mutex_t *__mutex,
-				 __const pthread_mutexattr_t *__mutexattr);
+				 const pthread_mutexattr_t *__mutexattr);
 extern int __pthread_mutex_init_internal (pthread_mutex_t *__mutex,
-					  __const pthread_mutexattr_t *__mutexattr)
+					  const pthread_mutexattr_t *__mutexattr)
      attribute_hidden;
 extern int __pthread_mutex_destroy (pthread_mutex_t *__mutex);
 extern int __pthread_mutex_destroy_internal (pthread_mutex_t *__mutex)
@@ -447,22 +447,22 @@ extern int __pthread_attr_getschedpolicy (const pthread_attr_t *attr,
 extern int __pthread_attr_setschedpolicy (pthread_attr_t *attr, int policy);
 extern int __pthread_attr_getscope (const pthread_attr_t *attr, int *scope);
 extern int __pthread_attr_setscope (pthread_attr_t *attr, int scope);
-extern int __pthread_attr_getstackaddr (__const pthread_attr_t *__restrict
+extern int __pthread_attr_getstackaddr (const pthread_attr_t *__restrict
 					__attr, void **__restrict __stackaddr);
 extern int __pthread_attr_setstackaddr (pthread_attr_t *__attr,
 					void *__stackaddr);
-extern int __pthread_attr_getstacksize (__const pthread_attr_t *__restrict
+extern int __pthread_attr_getstacksize (const pthread_attr_t *__restrict
 					__attr,
 					size_t *__restrict __stacksize);
 extern int __pthread_attr_setstacksize (pthread_attr_t *__attr,
 					size_t __stacksize);
-extern int __pthread_attr_getstack (__const pthread_attr_t *__restrict __attr,
+extern int __pthread_attr_getstack (const pthread_attr_t *__restrict __attr,
 				    void **__restrict __stackaddr,
 				    size_t *__restrict __stacksize);
 extern int __pthread_attr_setstack (pthread_attr_t *__attr, void *__stackaddr,
 				    size_t __stacksize);
 extern int __pthread_rwlock_init (pthread_rwlock_t *__restrict __rwlock,
-				  __const pthread_rwlockattr_t *__restrict
+				  const pthread_rwlockattr_t *__restrict
 				  __attr);
 extern int __pthread_rwlock_destroy (pthread_rwlock_t *__rwlock);
 extern int __pthread_rwlock_rdlock (pthread_rwlock_t *__rwlock);

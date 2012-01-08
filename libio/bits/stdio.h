@@ -1,5 +1,5 @@
 /* Optimizing macros and inline functions for stdio functions.
-   Copyright (C) 1998, 2000, 2001, 2004, 2007 Free Software Foundation, Inc.
+   Copyright (C) 1998,2000,2001,2004,2007,2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -34,7 +34,7 @@
 # if !(__USE_FORTIFY_LEVEL > 0 && defined __extern_always_inline)
 /* Write formatted output to stdout from argument list ARG.  */
 __STDIO_INLINE int
-vprintf (__const char *__restrict __fmt, _G_va_list __arg)
+vprintf (const char *__restrict __fmt, _G_va_list __arg)
 {
   return vfprintf (stdout, __fmt, __arg);
 }

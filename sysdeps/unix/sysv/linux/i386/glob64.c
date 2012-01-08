@@ -32,8 +32,8 @@ libc_hidden_ver (__glob64, glob64)
 
 #include <sysdeps/unix/sysv/linux/i386/olddirent.h>
 
-int __old_glob64 (__const char *__pattern, int __flags,
-		  int (*__errfunc) (__const char *, int),
+int __old_glob64 (const char *__pattern, int __flags,
+		  int (*__errfunc) (const char *, int),
 		  glob64_t *__pglob);
 
 #undef dirent

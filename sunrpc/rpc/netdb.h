@@ -52,12 +52,12 @@ struct rpcent
 
 extern void setrpcent (int __stayopen) __THROW;
 extern void endrpcent (void) __THROW;
-extern struct rpcent *getrpcbyname (__const char *__name) __THROW;
+extern struct rpcent *getrpcbyname (const char *__name) __THROW;
 extern struct rpcent *getrpcbynumber (int __number) __THROW;
 extern struct rpcent *getrpcent (void) __THROW;
 
 #ifdef __USE_MISC
-extern int getrpcbyname_r (__const char *__name, struct rpcent *__result_buf,
+extern int getrpcbyname_r (const char *__name, struct rpcent *__result_buf,
 			   char *__buffer, size_t __buflen,
 			   struct rpcent **__result) __THROW;
 

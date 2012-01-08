@@ -1,5 +1,5 @@
 /* Skeleton for a conversion module.
-   Copyright (C) 1998-2002, 2005 Free Software Foundation, Inc.
+   Copyright (C) 1998-2002, 2005, 2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -39,24 +39,24 @@
 
      FROM_LOOP_MIN_NEEDED_FROM
      FROM_LOOP_MAX_NEEDED_FROM
-                        minimal/maximal number of bytes needed on input
-                        of one round through the FROM_LOOP.  Defaults
-                        to MIN_NEEDED_FROM and MAX_NEEDED_FROM, respectively.
+			minimal/maximal number of bytes needed on input
+			of one round through the FROM_LOOP.  Defaults
+			to MIN_NEEDED_FROM and MAX_NEEDED_FROM, respectively.
      FROM_LOOP_MIN_NEEDED_TO
      FROM_LOOP_MAX_NEEDED_TO
-                        minimal/maximal number of bytes needed on output
-                        of one round through the FROM_LOOP.  Defaults
-                        to MIN_NEEDED_TO and MAX_NEEDED_TO, respectively.
+			minimal/maximal number of bytes needed on output
+			of one round through the FROM_LOOP.  Defaults
+			to MIN_NEEDED_TO and MAX_NEEDED_TO, respectively.
      TO_LOOP_MIN_NEEDED_FROM
      TO_LOOP_MAX_NEEDED_FROM
-                        minimal/maximal number of bytes needed on input
-                        of one round through the TO_LOOP.  Defaults
-                        to MIN_NEEDED_TO and MAX_NEEDED_TO, respectively.
+			minimal/maximal number of bytes needed on input
+			of one round through the TO_LOOP.  Defaults
+			to MIN_NEEDED_TO and MAX_NEEDED_TO, respectively.
      TO_LOOP_MIN_NEEDED_TO
      TO_LOOP_MAX_NEEDED_TO
-                        minimal/maximal number of bytes needed on output
-                        of one round through the TO_LOOP.  Defaults
-                        to MIN_NEEDED_FROM and MAX_NEEDED_FROM, respectively.
+			minimal/maximal number of bytes needed on output
+			of one round through the TO_LOOP.  Defaults
+			to MIN_NEEDED_FROM and MAX_NEEDED_FROM, respectively.
 
      FROM_DIRECTION	this macro is supposed to return a value != 0
 			if we convert from the current character set,
@@ -206,8 +206,8 @@
    loops we have other definitions which allow optimized access.  */
 #ifdef _STRING_ARCH_unaligned
 /* We can handle unaligned memory access.  */
-# define get16u(addr) *((__const uint16_t *) (addr))
-# define get32u(addr) *((__const uint32_t *) (addr))
+# define get16u(addr) *((const uint16_t *) (addr))
+# define get32u(addr) *((const uint32_t *) (addr))
 
 /* We need no special support for writing values either.  */
 # define put16u(addr, val) *((uint16_t *) (addr)) = (val)
@@ -216,13 +216,13 @@
 /* Distinguish between big endian and little endian.  */
 # if __BYTE_ORDER == __LITTLE_ENDIAN
 #  define get16u(addr) \
-     (((__const unsigned char *) (addr))[1] << 8			      \
-      | ((__const unsigned char *) (addr))[0])
+     (((const unsigned char *) (addr))[1] << 8				      \
+      | ((const unsigned char *) (addr))[0])
 #  define get32u(addr) \
-     (((((__const unsigned char *) (addr))[3] << 8			      \
-	| ((__const unsigned char *) (addr))[2]) << 8			      \
-       | ((__const unsigned char *) (addr))[1]) << 8			      \
-      | ((__const unsigned char *) (addr))[0])
+     (((((const unsigned char *) (addr))[3] << 8			      \
+	| ((const unsigned char *) (addr))[2]) << 8			      \
+       | ((const unsigned char *) (addr))[1]) << 8			      \
+      | ((const unsigned char *) (addr))[0])
 
 #  define put16u(addr, val) \
      ({ uint16_t __val = (val);						      \
@@ -241,13 +241,13 @@
 	(void) 0; })
 # else
 #  define get16u(addr) \
-     (((__const unsigned char *) (addr))[0] << 8			      \
-      | ((__const unsigned char *) (addr))[1])
+     (((const unsigned char *) (addr))[0] << 8				      \
+      | ((const unsigned char *) (addr))[1])
 #  define get32u(addr) \
-     (((((__const unsigned char *) (addr))[0] << 8			      \
-	| ((__const unsigned char *) (addr))[1]) << 8			      \
-       | ((__const unsigned char *) (addr))[2]) << 8			      \
-      | ((__const unsigned char *) (addr))[3])
+     (((((const unsigned char *) (addr))[0] << 8			      \
+	| ((const unsigned char *) (addr))[1]) << 8			      \
+       | ((const unsigned char *) (addr))[2]) << 8			      \
+      | ((const unsigned char *) (addr))[3])
 
 #  define put16u(addr, val) \
      ({ uint16_t __val = (val);						      \
@@ -554,8 +554,8 @@ FUNCTION_NAME (struct __gconv_step *step, struct __gconv_step_data *data,
 	  && consume_incomplete && (data->__statep->__count & 7) != 0)
 	{
 	  /* Yep, we have some bytes left over.  Process them now.
-             But this must not happen while we are called from an
-             error handler.  */
+	     But this must not happen while we are called from an
+	     error handler.  */
 	  assert (outbufstart == NULL);
 
 # if FROM_LOOP_MAX_NEEDED_FROM > 1
@@ -652,14 +652,14 @@ FUNCTION_NAME (struct __gconv_step *step, struct __gconv_step_data *data,
 	  ++data->__invocation_counter;
 
 	  /* If this is the last step leave the loop, there is nothing
-             we can do.  */
+	     we can do.  */
 	  if (__builtin_expect (data->__flags & __GCONV_IS_LAST, 0))
 	    {
 	      /* Store information about how many bytes are available.  */
 	      data->__outbuf = outbuf;
 
 	      /* Remember how many non-identical characters we
-                 converted in a irreversible way.  */
+		 converted in a irreversible way.  */
 	      *irreversible += lirreversible;
 
 	      break;
@@ -782,7 +782,7 @@ FUNCTION_NAME (struct __gconv_step *step, struct __gconv_step_data *data,
 	  STORE_REST
 # else
 	  /* Make sure the remaining bytes fit into the state objects
-             buffer.  */
+	     buffer.  */
 	  assert (inend - *inptrp < 4);
 
 	  size_t cnt;

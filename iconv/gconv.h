@@ -70,7 +70,7 @@ struct __gconv_trans_data;
 
 /* Type of a conversion function.  */
 typedef int (*__gconv_fct) (struct __gconv_step *, struct __gconv_step_data *,
-			    __const unsigned char **, __const unsigned char *,
+			    const unsigned char **, const unsigned char *,
 			    unsigned char **, size_t *, int, int);
 
 /* Type of a specialized conversion function for a single byte to INTERNAL.  */
@@ -84,18 +84,18 @@ typedef void (*__gconv_end_fct) (struct __gconv_step *);
 /* Type of a transliteration/transscription function.  */
 typedef int (*__gconv_trans_fct) (struct __gconv_step *,
 				  struct __gconv_step_data *, void *,
-				  __const unsigned char *,
-				  __const unsigned char **,
-				  __const unsigned char *, unsigned char **,
+				  const unsigned char *,
+				  const unsigned char **,
+				  const unsigned char *, unsigned char **,
 				  size_t *);
 
 /* Function to call to provide transliteration module with context.  */
-typedef int (*__gconv_trans_context_fct) (void *, __const unsigned char *,
-					  __const unsigned char *,
+typedef int (*__gconv_trans_context_fct) (void *, const unsigned char *,
+					  const unsigned char *,
 					  unsigned char *, unsigned char *);
 
 /* Function to query module about supported encoded character sets.  */
-typedef int (*__gconv_trans_query_fct) (__const char *, __const char ***,
+typedef int (*__gconv_trans_query_fct) (const char *, const char ***,
 					size_t *);
 
 /* Constructor and destructor for local data for transliteration.  */
@@ -117,7 +117,7 @@ struct __gconv_trans_data
 struct __gconv_step
 {
   struct __gconv_loaded_object *__shlib_handle;
-  __const char *__modname;
+  const char *__modname;
 
   int __counter;
 

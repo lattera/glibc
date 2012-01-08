@@ -69,8 +69,8 @@ struct fstab
 __BEGIN_DECLS
 
 extern struct fstab *getfsent (void) __THROW;
-extern struct fstab *getfsspec (__const char *__name) __THROW;
-extern struct fstab *getfsfile (__const char *__name) __THROW;
+extern struct fstab *getfsspec (const char *__name) __THROW;
+extern struct fstab *getfsfile (const char *__name) __THROW;
 extern int setfsent (void) __THROW;
 extern void endfsent (void) __THROW;
 

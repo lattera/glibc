@@ -1,4 +1,4 @@
-/* Copyright (C) 2004, 2005, 2007 Free Software Foundation, Inc.
+/* Copyright (C) 2004, 2005, 2007, 2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -38,7 +38,7 @@ __BEGIN_DECLS
    argument is taken as `struct mq_attr *', pointer to message queue
    attributes.  If the fourth argument is NULL, default attributes are
    used.  */
-extern mqd_t mq_open (__const char *__name, int __oflag, ...)
+extern mqd_t mq_open (const char *__name, int __oflag, ...)
   __THROW __nonnull ((1));
 
 /* Removes the association between message queue descriptor MQDES and its
@@ -52,16 +52,16 @@ extern int mq_getattr (mqd_t __mqdes, struct mq_attr *__mqstat)
 /* Set attributes associated with message queue MQDES and if OMQSTAT is
    not NULL also query its old attributes.  */
 extern int mq_setattr (mqd_t __mqdes,
-		       __const struct mq_attr *__restrict __mqstat,
+		       const struct mq_attr *__restrict __mqstat,
 		       struct mq_attr *__restrict __omqstat)
   __THROW __nonnull ((2));
 
 /* Remove message queue named NAME.  */
-extern int mq_unlink (__const char *__name) __THROW __nonnull ((1));
+extern int mq_unlink (const char *__name) __THROW __nonnull ((1));
 
 /* Register notification issued upon message arrival to an empty
    message queue MQDES.  */
-extern int mq_notify (mqd_t __mqdes, __const struct sigevent *__notification)
+extern int mq_notify (mqd_t __mqdes, const struct sigevent *__notification)
      __THROW;
 
 /* Receive the oldest from highest priority messages in message queue
@@ -70,7 +70,7 @@ extern ssize_t mq_receive (mqd_t __mqdes, char *__msg_ptr, size_t __msg_len,
 			   unsigned int *__msg_prio) __nonnull ((2));
 
 /* Add message pointed by MSG_PTR to message queue MQDES.  */
-extern int mq_send (mqd_t __mqdes, __const char *__msg_ptr, size_t __msg_len,
+extern int mq_send (mqd_t __mqdes, const char *__msg_ptr, size_t __msg_len,
 		    unsigned int __msg_prio) __nonnull ((2));
 
 #ifdef __USE_XOPEN2K
@@ -79,14 +79,14 @@ extern int mq_send (mqd_t __mqdes, __const char *__msg_ptr, size_t __msg_len,
 extern ssize_t mq_timedreceive (mqd_t __mqdes, char *__restrict __msg_ptr,
 				size_t __msg_len,
 				unsigned int *__restrict __msg_prio,
-				__const struct timespec *__restrict __abs_timeout)
+				const struct timespec *__restrict __abs_timeout)
   __nonnull ((2, 5));
 
 /* Add message pointed by MSG_PTR to message queue MQDES, stop blocking
    on full message queue if ABS_TIMEOUT expires.  */
-extern int mq_timedsend (mqd_t __mqdes, __const char *__msg_ptr,
+extern int mq_timedsend (mqd_t __mqdes, const char *__msg_ptr,
 			 size_t __msg_len, unsigned int __msg_prio,
-			 __const struct timespec *__abs_timeout)
+			 const struct timespec *__abs_timeout)
   __nonnull ((2, 5));
 #endif
 

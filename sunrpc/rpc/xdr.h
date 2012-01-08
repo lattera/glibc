@@ -1,7 +1,7 @@
 /*
  * xdr.h, External Data Representation Serialization Routines.
  *
- * Copyright (c) 2010, Oracle America, Inc.
+ * Copyright (c) 2010, 2012, Oracle America, Inc.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
@@ -114,13 +114,13 @@ struct XDR
       {
 	bool_t (*x_getlong) (XDR *__xdrs, long *__lp);
 	/* get a long from underlying stream */
-	bool_t (*x_putlong) (XDR *__xdrs, __const long *__lp);
+	bool_t (*x_putlong) (XDR *__xdrs, const long *__lp);
 	/* put a long to " */
 	bool_t (*x_getbytes) (XDR *__xdrs, caddr_t __addr, u_int __len);
 	/* get some bytes from " */
-	bool_t (*x_putbytes) (XDR *__xdrs, __const char *__addr, u_int __len);
+	bool_t (*x_putbytes) (XDR *__xdrs, const char *__addr, u_int __len);
 	/* put some bytes to " */
-	u_int (*x_getpostn) (__const XDR *__xdrs);
+	u_int (*x_getpostn) (const XDR *__xdrs);
 	/* returns bytes off from beginning */
 	bool_t (*x_setpostn) (XDR *__xdrs, u_int __pos);
 	/* lets you reposition the stream */
@@ -130,7 +130,7 @@ struct XDR
 	/* free privates of this xdr_stream */
 	bool_t (*x_getint32) (XDR *__xdrs, int32_t *__ip);
 	/* get a int from underlying stream */
-	bool_t (*x_putint32) (XDR *__xdrs, __const int32_t *__ip);
+	bool_t (*x_putint32) (XDR *__xdrs, const int32_t *__ip);
 	/* put a int to " */
       }
      *x_ops;
@@ -163,14 +163,14 @@ typedef bool_t (*xdrproc_t) (XDR *, void *,...);
  * u_int         pos;
  */
 #define XDR_GETINT32(xdrs, int32p)                      \
-        (*(xdrs)->x_ops->x_getint32)(xdrs, int32p)
+	(*(xdrs)->x_ops->x_getint32)(xdrs, int32p)
 #define xdr_getint32(xdrs, int32p)                      \
-        (*(xdrs)->x_ops->x_getint32)(xdrs, int32p)
+	(*(xdrs)->x_ops->x_getint32)(xdrs, int32p)
 
 #define XDR_PUTINT32(xdrs, int32p)                      \
-        (*(xdrs)->x_ops->x_putint32)(xdrs, int32p)
+	(*(xdrs)->x_ops->x_putint32)(xdrs, int32p)
 #define xdr_putint32(xdrs, int32p)                      \
-        (*(xdrs)->x_ops->x_putint32)(xdrs, int32p)
+	(*(xdrs)->x_ops->x_putint32)(xdrs, int32p)
 
 #define XDR_GETLONG(xdrs, longp)			\
 	(*(xdrs)->x_ops->x_getlong)(xdrs, longp)
@@ -313,7 +313,7 @@ extern bool_t xdr_bytes (XDR *__xdrs, char **__cpp, u_int *__sizep,
 extern bool_t xdr_opaque (XDR *__xdrs, caddr_t __cp, u_int __cnt) __THROW;
 extern bool_t xdr_string (XDR *__xdrs, char **__cpp, u_int __maxsize) __THROW;
 extern bool_t xdr_union (XDR *__xdrs, enum_t *__dscmp, char *__unp,
-			 __const struct xdr_discrim *__choices,
+			 const struct xdr_discrim *__choices,
 			 xdrproc_t __dfault) __THROW;
 extern bool_t xdr_char (XDR *__xdrs, char *__cp) __THROW;
 extern bool_t xdr_u_char (XDR *__xdrs, u_char *__cp) __THROW;
@@ -347,7 +347,7 @@ extern bool_t xdr_netobj (XDR *__xdrs, struct netobj *__np) __THROW;
  */
 
 /* XDR using memory buffers */
-extern void xdrmem_create (XDR *__xdrs, __const caddr_t __addr,
+extern void xdrmem_create (XDR *__xdrs, const caddr_t __addr,
 			   u_int __size, enum xdr_op __xop) __THROW;
 
 /* XDR using stdio library */

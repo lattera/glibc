@@ -25,27 +25,27 @@ libc_hidden_proto (__wcstold_l)
 libc_hidden_proto (__wcsftime_l)
 
 
-extern double __wcstod_internal (__const wchar_t *__restrict __nptr,
+extern double __wcstod_internal (const wchar_t *__restrict __nptr,
 				 wchar_t **__restrict __endptr, int __group)
      __THROW;
-extern float __wcstof_internal (__const wchar_t *__restrict __nptr,
+extern float __wcstof_internal (const wchar_t *__restrict __nptr,
 				wchar_t **__restrict __endptr, int __group)
      __THROW;
-extern long double __wcstold_internal (__const wchar_t *__restrict __nptr,
+extern long double __wcstold_internal (const wchar_t *__restrict __nptr,
 				       wchar_t **__restrict __endptr,
 				       int __group) __THROW;
-extern long int __wcstol_internal (__const wchar_t *__restrict __nptr,
+extern long int __wcstol_internal (const wchar_t *__restrict __nptr,
 				   wchar_t **__restrict __endptr,
 				   int __base, int __group) __THROW;
-extern unsigned long int __wcstoul_internal (__const wchar_t *__restrict __npt,
+extern unsigned long int __wcstoul_internal (const wchar_t *__restrict __npt,
 					     wchar_t **__restrict __endptr,
 					     int __base, int __group) __THROW;
 __extension__
-extern long long int __wcstoll_internal (__const wchar_t *__restrict __nptr,
+extern long long int __wcstoll_internal (const wchar_t *__restrict __nptr,
 					 wchar_t **__restrict __endptr,
 					 int __base, int __group) __THROW;
 __extension__
-extern unsigned long long int __wcstoull_internal (__const wchar_t *
+extern unsigned long long int __wcstoull_internal (const wchar_t *
 						   __restrict __nptr,
 						   wchar_t **
 						   __restrict __endptr,
@@ -91,65 +91,65 @@ libc_hidden_proto (wmemchr)
 libc_hidden_proto (wmemset)
 
 /* Now define the internal interfaces.  */
-extern int __wcscasecmp (__const wchar_t *__s1, __const wchar_t *__s2)
+extern int __wcscasecmp (const wchar_t *__s1, const wchar_t *__s2)
      __attribute_pure__;
-extern int __wcsncasecmp (__const wchar_t *__s1, __const wchar_t *__s2,
+extern int __wcsncasecmp (const wchar_t *__s1, const wchar_t *__s2,
 			  size_t __n)
      __attribute_pure__;
-extern size_t __wcslen (__const wchar_t *__s) __attribute_pure__;
-extern size_t __wcsnlen (__const wchar_t *__s, size_t __maxlen)
+extern size_t __wcslen (const wchar_t *__s) __attribute_pure__;
+extern size_t __wcsnlen (const wchar_t *__s, size_t __maxlen)
      __attribute_pure__;
 extern wchar_t *__wcscat (wchar_t *dest, const wchar_t *src);
 extern wint_t __btowc (int __c);
-extern int __mbsinit (__const __mbstate_t *__ps);
+extern int __mbsinit (const __mbstate_t *__ps);
 extern size_t __mbrtowc (wchar_t *__restrict __pwc,
-			 __const char *__restrict __s, size_t __n,
+			 const char *__restrict __s, size_t __n,
 			 __mbstate_t *__restrict __p);
 libc_hidden_proto (__mbrtowc)
 libc_hidden_proto (__mbrlen)
 extern size_t __wcrtomb (char *__restrict __s, wchar_t __wc,
 			 __mbstate_t *__restrict __ps);
 extern size_t __mbsrtowcs (wchar_t *__restrict __dst,
-			   __const char **__restrict __src,
+			   const char **__restrict __src,
 			   size_t __len, __mbstate_t *__restrict __ps);
 extern size_t __wcsrtombs (char *__restrict __dst,
-			   __const wchar_t **__restrict __src,
+			   const wchar_t **__restrict __src,
 			   size_t __len, __mbstate_t *__restrict __ps);
 extern size_t __mbsnrtowcs (wchar_t *__restrict __dst,
-			    __const char **__restrict __src, size_t __nmc,
+			    const char **__restrict __src, size_t __nmc,
 			    size_t __len, __mbstate_t *__restrict __ps);
 extern size_t __wcsnrtombs (char *__restrict __dst,
-			    __const wchar_t **__restrict __src,
+			    const wchar_t **__restrict __src,
 			    size_t __nwc, size_t __len,
 			    __mbstate_t *__restrict __ps);
 extern wchar_t *__wcsncpy (wchar_t *__restrict __dest,
-			 __const wchar_t *__restrict __src, size_t __n);
-extern wchar_t *__wcpcpy (wchar_t *__dest, __const wchar_t *__src);
-extern wchar_t *__wcpncpy (wchar_t *__dest, __const wchar_t *__src,
+			   const wchar_t *__restrict __src, size_t __n);
+extern wchar_t *__wcpcpy (wchar_t *__dest, const wchar_t *__src);
+extern wchar_t *__wcpncpy (wchar_t *__dest, const wchar_t *__src,
 			   size_t __n);
-extern wchar_t *__wmemcpy (wchar_t *__s1, __const wchar_t *s2,
+extern wchar_t *__wmemcpy (wchar_t *__s1, const wchar_t *s2,
 			   size_t __n);
 extern wchar_t *__wmempcpy (wchar_t *__restrict __s1,
-			    __const wchar_t *__restrict __s2,
+			    const wchar_t *__restrict __s2,
 			    size_t __n);
-extern wchar_t *__wmemmove (wchar_t *__s1, __const wchar_t *__s2,
+extern wchar_t *__wmemmove (wchar_t *__s1, const wchar_t *__s2,
 			    size_t __n);
-extern wchar_t *__wcschrnul (__const wchar_t *__s, wchar_t __wc)
+extern wchar_t *__wcschrnul (const wchar_t *__s, wchar_t __wc)
      __attribute_pure__;
 
 extern int __vfwscanf (__FILE *__restrict __s,
-		       __const wchar_t *__restrict __format,
+		       const wchar_t *__restrict __format,
 		       __gnuc_va_list __arg)
      /* __attribute__ ((__format__ (__wscanf__, 2, 0)) */;
 extern int __vswprintf (wchar_t *__restrict __s, size_t __n,
-			__const wchar_t *__restrict __format,
+			const wchar_t *__restrict __format,
 			__gnuc_va_list __arg)
      /* __attribute__ ((__format__ (__wprintf__, 3, 0))) */;
 extern int __fwprintf (__FILE *__restrict __s,
-		       __const wchar_t *__restrict __format, ...)
+		       const wchar_t *__restrict __format, ...)
      /* __attribute__ ((__format__ (__wprintf__, 2, 3))) */;
 extern int __vfwprintf (__FILE *__restrict __s,
-			__const wchar_t *__restrict __format,
+			const wchar_t *__restrict __format,
 			__gnuc_va_list __arg)
      /* __attribute__ ((__format__ (__wprintf__, 2, 0))) */;
 #ifndef __cplusplus
@@ -159,7 +159,7 @@ extern int __vfwprintf_chk (FILE *__restrict __s, int __flag,
      /* __attribute__ ((__format__ (__wprintf__, 3, 0))) */;
 extern int __vswprintf_chk (wchar_t *__restrict __s, size_t __n,
 			    int __flag, size_t __s_len,
-			    __const wchar_t *__restrict __format,
+			    const wchar_t *__restrict __format,
 			    __gnuc_va_list __arg)
      /* __attribute__ ((__format__ (__wprintf__, 5, 0))) */;
 libc_hidden_proto (__vfwprintf_chk)
@@ -167,18 +167,18 @@ libc_hidden_proto (__vswprintf_chk)
 #endif
 
 extern int __isoc99_fwscanf (__FILE *__restrict __stream,
-			     __const wchar_t *__restrict __format, ...);
-extern int __isoc99_wscanf (__const wchar_t *__restrict __format, ...);
-extern int __isoc99_swscanf (__const wchar_t *__restrict __s,
-			     __const wchar_t *__restrict __format, ...)
+			     const wchar_t *__restrict __format, ...);
+extern int __isoc99_wscanf (const wchar_t *__restrict __format, ...);
+extern int __isoc99_swscanf (const wchar_t *__restrict __s,
+			     const wchar_t *__restrict __format, ...)
      __THROW;
 extern int __isoc99_vfwscanf (__FILE *__restrict __s,
-			      __const wchar_t *__restrict __format,
+			      const wchar_t *__restrict __format,
 			      __gnuc_va_list __arg);
-extern int __isoc99_vwscanf (__const wchar_t *__restrict __format,
+extern int __isoc99_vwscanf (const wchar_t *__restrict __format,
 			     __gnuc_va_list __arg);
-extern int __isoc99_vswscanf (__const wchar_t *__restrict __s,
-			      __const wchar_t *__restrict __format,
+extern int __isoc99_vswscanf (const wchar_t *__restrict __s,
+			      const wchar_t *__restrict __format,
 			      __gnuc_va_list __arg) __THROW;
 libc_hidden_proto (__isoc99_vswscanf)
 libc_hidden_proto (__isoc99_vfwscanf)

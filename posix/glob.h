@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,1992,1995-1998,2000,2001,2004,2010,2011
+/* Copyright (C) 1991,1992,1995-1998,2000,2001,2004,2010,2011,2012
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -96,13 +96,13 @@ typedef struct
 #else
     void *(*gl_readdir) (void *);
 #endif
-    void *(*gl_opendir) (__const char *);
+    void *(*gl_opendir) (const char *);
 #ifdef __USE_GNU
-    int (*gl_lstat) (__const char *__restrict, struct stat *__restrict);
-    int (*gl_stat) (__const char *__restrict, struct stat *__restrict);
+    int (*gl_lstat) (const char *__restrict, struct stat *__restrict);
+    int (*gl_stat) (const char *__restrict, struct stat *__restrict);
 #else
-    int (*gl_lstat) (__const char *__restrict, void *__restrict);
-    int (*gl_stat) (__const char *__restrict, void *__restrict);
+    int (*gl_lstat) (const char *__restrict, void *__restrict);
+    int (*gl_stat) (const char *__restrict, void *__restrict);
 #endif
   } glob_t;
 
@@ -125,13 +125,13 @@ typedef struct
 # else
     void *(*gl_readdir) (void *);
 # endif
-    void *(*gl_opendir) (__const char *);
+    void *(*gl_opendir) (const char *);
 # ifdef __USE_GNU
-    int (*gl_lstat) (__const char *__restrict, struct stat64 *__restrict);
-    int (*gl_stat) (__const char *__restrict, struct stat64 *__restrict);
+    int (*gl_lstat) (const char *__restrict, struct stat64 *__restrict);
+    int (*gl_stat) (const char *__restrict, struct stat64 *__restrict);
 # else
-    int (*gl_lstat) (__const char *__restrict, void *__restrict);
-    int (*gl_stat) (__const char *__restrict, void *__restrict);
+    int (*gl_lstat) (const char *__restrict, void *__restrict);
+    int (*gl_stat) (const char *__restrict, void *__restrict);
 # endif
   } glob64_t;
 #endif
@@ -145,24 +145,24 @@ typedef struct
    If memory cannot be allocated for PGLOB, GLOB_NOSPACE is returned.
    Otherwise, `glob' returns zero.  */
 #if !defined __USE_FILE_OFFSET64
-extern int glob (__const char *__restrict __pattern, int __flags,
-		 int (*__errfunc) (__const char *, int),
+extern int glob (const char *__restrict __pattern, int __flags,
+		 int (*__errfunc) (const char *, int),
 		 glob_t *__restrict __pglob) __THROW;
 
 /* Free storage allocated in PGLOB by a previous `glob' call.  */
 extern void globfree (glob_t *__pglob) __THROW;
 #else
-extern int __REDIRECT_NTH (glob, (__const char *__restrict __pattern,
+extern int __REDIRECT_NTH (glob, (const char *__restrict __pattern,
 				  int __flags,
-				  int (*__errfunc) (__const char *, int),
+				  int (*__errfunc) (const char *, int),
 				  glob_t *__restrict __pglob), glob64);
 
 extern void __REDIRECT_NTH (globfree, (glob_t *__pglob), globfree64);
 #endif
 
 #ifdef __USE_LARGEFILE64
-extern int glob64 (__const char *__restrict __pattern, int __flags,
-		   int (*__errfunc) (__const char *, int),
+extern int glob64 (const char *__restrict __pattern, int __flags,
+		   int (*__errfunc) (const char *, int),
 		   glob64_t *__restrict __pglob) __THROW;
 
 extern void globfree64 (glob64_t *__pglob) __THROW;
@@ -175,7 +175,7 @@ extern void globfree64 (glob64_t *__pglob) __THROW;
 
    This function is not part of the interface specified by POSIX.2
    but several programs want to use it.  */
-extern int glob_pattern_p (__const char *__pattern, int __quote) __THROW;
+extern int glob_pattern_p (const char *__pattern, int __quote) __THROW;
 #endif
 
 __END_DECLS

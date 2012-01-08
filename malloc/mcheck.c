@@ -1,5 +1,5 @@
 /* Standard debugging hooks for `malloc'.
-   Copyright (C) 1990-1997,1999,2000-2002,2007,2010
+   Copyright (C) 1990-1997,1999,2000-2002,2007,2010,2012
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written May 1989 by Mike Haertel.
@@ -30,13 +30,13 @@
 #endif
 
 /* Old hook values.  */
-static void (*old_free_hook) (__ptr_t ptr, __const __ptr_t);
+static void (*old_free_hook) (__ptr_t ptr, const __ptr_t);
 static __ptr_t (*old_malloc_hook) (__malloc_size_t size, const __ptr_t);
 static __ptr_t (*old_memalign_hook) (__malloc_size_t alignment,
 				     __malloc_size_t size,
 				     const __ptr_t);
 static __ptr_t (*old_realloc_hook) (__ptr_t ptr, __malloc_size_t size,
-				    __const __ptr_t);
+				    const __ptr_t);
 
 /* Function to call when something awful happens.  */
 static void (*abortfunc) (enum mcheck_status);

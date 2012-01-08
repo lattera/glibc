@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998, 1999, 2004, 2008
+/* Copyright (C) 1996, 1997, 1998, 1999, 2004, 2008, 2012
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
@@ -101,7 +101,7 @@ extern char *locs;
    on the macros.  */
 char *
 compile (char *__restrict instring, char *__restrict expbuf,
-	 __const char *__restrict endbuf, int eof)
+	 const char *__restrict endbuf, int eof)
 {
   char *__input_buffer = NULL;
   size_t __input_size = 0;
@@ -213,14 +213,14 @@ compile (char *__restrict instring, char *__restrict expbuf,
    found in the buffer starting at EXPBUF.  `loc1' will return the
    first character matched and `loc2' points to the next unmatched
    character.  */
-extern int step (__const char *__restrict __string,
-		 __const char *__restrict __expbuf) __THROW;
+extern int step (const char *__restrict __string,
+		 const char *__restrict __expbuf) __THROW;
 
 /* Match the beginning of STRING with the compiled regular expression
    in EXPBUF.  If the match is successful `loc2' will contain the
    position of the first unmatched character.  */
-extern int advance (__const char *__restrict __string,
-		    __const char *__restrict __expbuf) __THROW;
+extern int advance (const char *__restrict __string,
+		    const char *__restrict __expbuf) __THROW;
 
 
 __END_DECLS

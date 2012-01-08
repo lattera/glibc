@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-1994,1996-2001,2003,2004,2005,2007,2009,2010,2011
+/* Copyright (C) 1991-1994,1996-2001,2003,2004,2005,2007,2009,2010,2011,2012
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -47,7 +47,7 @@ __BEGIN_DECLS
   (__extension__ (((union { __typeof(status) __in; int __i; }) \
 		   { .__in = (status) }).__i))
 #  else
-#   define __WAIT_INT(status)	(*(__const int *) &(status))
+#   define __WAIT_INT(status)	(*(const int *) &(status))
 #  endif
 
 /* This is the type of the argument to `wait'.  The funky union

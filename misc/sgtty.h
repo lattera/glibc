@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1996, 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1991,1992,1996,1998,1999,2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -33,7 +33,7 @@ __BEGIN_DECLS
 extern int gtty (int __fd, struct sgttyb *__params) __THROW;
 
 /* Set the terminal parameters associated with FD to *PARAMS.  */
-extern int stty (int __fd, __const struct sgttyb *__params) __THROW;
+extern int stty (int __fd, const struct sgttyb *__params) __THROW;
 
 
 __END_DECLS

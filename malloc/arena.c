@@ -1,5 +1,5 @@
 /* Malloc implementation for multiple threads without lock contention.
-   Copyright (C) 2001,2002,2003,2004,2005,2006,2007,2009,2010,2011
+   Copyright (C) 2001,2002,2003,2004,2005,2006,2007,2009,2010,2011,2012
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Wolfram Gloger <wg@malloc.de>, 2001.
@@ -145,9 +145,9 @@ int __malloc_initialized = -1;
 /* atfork support.  */
 
 static __malloc_ptr_t (*save_malloc_hook) (size_t __size,
-					   __const __malloc_ptr_t);
+					   const __malloc_ptr_t);
 static void           (*save_free_hook) (__malloc_ptr_t __ptr,
-					 __const __malloc_ptr_t);
+					 const __malloc_ptr_t);
 static void*        save_arena;
 
 #ifdef ATFORK_MEM

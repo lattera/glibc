@@ -1,4 +1,5 @@
-/* Copyright (C) 1991-1995,1997-2006,2007,2009,2011 Free Software Foundation, Inc.
+/* Copyright (C) 1991-1995,1997-2007,2009,2011,2012
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Per Bothner <bothner@cygnus.com>.
 
@@ -371,7 +372,7 @@ typedef __ssize_t __io_read_fn (void *__cookie, char *__buf, size_t __nbytes);
    opened for append (__mode.__append set), then set the file pointer
    to the end of the file and then do the write; if not, just write at
    the current file pointer.  */
-typedef __ssize_t __io_write_fn (void *__cookie, __const char *__buf,
+typedef __ssize_t __io_write_fn (void *__cookie, const char *__buf,
 				 size_t __n);
 
 /* Move COOKIE's file position to *POS bytes from the

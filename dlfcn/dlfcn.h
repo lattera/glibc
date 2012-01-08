@@ -1,5 +1,6 @@
 /* User functions for run-time dynamic loading.
-   Copyright (C) 1995-2001,2003,2004,2006,2009 Free Software Foundation, Inc.
+   Copyright (C) 1995-2001,2003,2004,2006,2009,2012
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -54,7 +55,7 @@ __BEGIN_DECLS
 
 /* Open the shared object FILE and map it in; return a handle that can be
    passed to `dlsym' to get symbol values from it.  */
-extern void *dlopen (__const char *__file, int __mode) __THROW;
+extern void *dlopen (const char *__file, int __mode) __THROW;
 
 /* Unmap and close a shared object opened by `dlopen'.
    The handle cannot be used again after calling `dlclose'.  */
@@ -63,17 +64,17 @@ extern int dlclose (void *__handle) __THROW __nonnull ((1));
 /* Find the run-time address in the shared object HANDLE refers to
    of the symbol called NAME.  */
 extern void *dlsym (void *__restrict __handle,
-		    __const char *__restrict __name) __THROW __nonnull ((2));
+		    const char *__restrict __name) __THROW __nonnull ((2));
 
 #ifdef __USE_GNU
 /* Like `dlopen', but request object to be allocated in a new namespace.  */
-extern void *dlmopen (Lmid_t __nsid, __const char *__file, int __mode) __THROW;
+extern void *dlmopen (Lmid_t __nsid, const char *__file, int __mode) __THROW;
 
 /* Find the run-time address in the shared object HANDLE refers to
    of the symbol called NAME with VERSION.  */
 extern void *dlvsym (void *__restrict __handle,
-		     __const char *__restrict __name,
-		     __const char *__restrict __version)
+		     const char *__restrict __name,
+		     const char *__restrict __version)
      __THROW __nonnull ((2, 3));
 #endif
 
@@ -88,19 +89,19 @@ extern char *dlerror (void) __THROW;
    `dladdr'.  */
 typedef struct
 {
-  __const char *dli_fname;	/* File name of defining object.  */
+  const char *dli_fname;	/* File name of defining object.  */
   void *dli_fbase;		/* Load address of that object.  */
-  __const char *dli_sname;	/* Name of nearest symbol.  */
+  const char *dli_sname;	/* Name of nearest symbol.  */
   void *dli_saddr;		/* Exact value of nearest symbol.  */
 } Dl_info;
 
 /* Fill in *INFO with the following information about ADDRESS.
    Returns 0 iff no shared object's segments contain that address.  */
-extern int dladdr (__const void *__address, Dl_info *__info)
+extern int dladdr (const void *__address, Dl_info *__info)
      __THROW __nonnull ((2));
 
 /* Same as `dladdr', but additionally sets *EXTRA_INFO according to FLAGS.  */
-extern int dladdr1 (__const void *__address, Dl_info *__info,
+extern int dladdr1 (const void *__address, Dl_info *__info,
 		    void **__extra_info, int __flags) __THROW __nonnull ((2));
 
 /* These are the possible values for the FLAGS argument to `dladdr1'.

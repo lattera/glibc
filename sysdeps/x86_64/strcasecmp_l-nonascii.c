@@ -1,6 +1,6 @@
 #include <string.h>
 
-extern int __strcasecmp_l_nonascii (__const char *__s1, __const char *__s2,
+extern int __strcasecmp_l_nonascii (const char *__s1, const char *__s2,
 				    __locale_t __loc);
 
 #define __strcasecmp_l __strcasecmp_l_nonascii

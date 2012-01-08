@@ -60,7 +60,7 @@ __BEGIN_DECLS
 /* Write char16_t representation of multibyte character pointed
    to by S to PC16.  */
 extern size_t mbrtoc16 (char16_t *__restrict __pc16,
-			__const char *__restrict __s, size_t __n,
+			const char *__restrict __s, size_t __n,
 			mbstate_t *__restrict __p) __THROW;
 
 /* Write multibyte representation of char16_t C16 to S.  */
@@ -72,7 +72,7 @@ extern size_t c16rtomb (char *__restrict __s, char16_t __c16,
 /* Write char32_t representation of multibyte character pointed
    to by S to PC32.  */
 extern size_t mbrtoc32 (char32_t *__restrict __pc32,
-			__const char *__restrict __s, size_t __n,
+			const char *__restrict __s, size_t __n,
 			mbstate_t *__restrict __p) __THROW;
 
 /* Write multibyte representation of char32_t C32 to S.  */

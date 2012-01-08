@@ -1,5 +1,5 @@
 /* Message catalogs for internationalization.
-   Copyright (C) 1995-2002, 2004, 2005 Free Software Foundation, Inc.
+   Copyright (C) 1995-2002, 2004, 2005, 2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    This file is derived from the file libgettext.h in the GNU gettext package.
 
@@ -37,42 +37,42 @@ __BEGIN_DECLS
 /* Look up MSGID in the current default message catalog for the current
    LC_MESSAGES locale.  If not found, returns MSGID itself (the default
    text).  */
-extern char *gettext (__const char *__msgid)
+extern char *gettext (const char *__msgid)
      __THROW __attribute_format_arg__ (1);
 
 /* Look up MSGID in the DOMAINNAME message catalog for the current
    LC_MESSAGES locale.  */
-extern char *dgettext (__const char *__domainname, __const char *__msgid)
+extern char *dgettext (const char *__domainname, const char *__msgid)
      __THROW __attribute_format_arg__ (2);
-extern char *__dgettext (__const char *__domainname, __const char *__msgid)
+extern char *__dgettext (const char *__domainname, const char *__msgid)
      __THROW __attribute_format_arg__ (2);
 
 /* Look up MSGID in the DOMAINNAME message catalog for the current CATEGORY
    locale.  */
-extern char *dcgettext (__const char *__domainname,
-			__const char *__msgid, int __category)
+extern char *dcgettext (const char *__domainname,
+			const char *__msgid, int __category)
      __THROW __attribute_format_arg__ (2);
-extern char *__dcgettext (__const char *__domainname,
-			  __const char *__msgid, int __category)
+extern char *__dcgettext (const char *__domainname,
+			  const char *__msgid, int __category)
      __THROW __attribute_format_arg__ (2);
 
 
 /* Similar to `gettext' but select the plural form corresponding to the
    number N.  */
-extern char *ngettext (__const char *__msgid1, __const char *__msgid2,
+extern char *ngettext (const char *__msgid1, const char *__msgid2,
 		       unsigned long int __n)
      __THROW __attribute_format_arg__ (1) __attribute_format_arg__ (2);
 
 /* Similar to `dgettext' but select the plural form corresponding to the
    number N.  */
-extern char *dngettext (__const char *__domainname, __const char *__msgid1,
-			__const char *__msgid2, unsigned long int __n)
+extern char *dngettext (const char *__domainname, const char *__msgid1,
+			const char *__msgid2, unsigned long int __n)
      __THROW __attribute_format_arg__ (2) __attribute_format_arg__ (3);
 
 /* Similar to `dcgettext' but select the plural form corresponding to the
    number N.  */
-extern char *dcngettext (__const char *__domainname, __const char *__msgid1,
-			 __const char *__msgid2, unsigned long int __n,
+extern char *dcngettext (const char *__domainname, const char *__msgid1,
+			 const char *__msgid2, unsigned long int __n,
 			 int __category)
      __THROW __attribute_format_arg__ (2) __attribute_format_arg__ (3);
 
@@ -80,17 +80,17 @@ extern char *dcngettext (__const char *__domainname, __const char *__msgid1,
 /* Set the current default message catalog to DOMAINNAME.
    If DOMAINNAME is null, return the current default.
    If DOMAINNAME is "", reset to the default of "messages".  */
-extern char *textdomain (__const char *__domainname) __THROW;
+extern char *textdomain (const char *__domainname) __THROW;
 
 /* Specify that the DOMAINNAME message catalog will be found
    in DIRNAME rather than in the system locale data base.  */
-extern char *bindtextdomain (__const char *__domainname,
-			     __const char *__dirname) __THROW;
+extern char *bindtextdomain (const char *__domainname,
+			     const char *__dirname) __THROW;
 
 /* Specify the character encoding in which the messages from the
    DOMAINNAME message catalog will be returned.  */
-extern char *bind_textdomain_codeset (__const char *__domainname,
-				      __const char *__codeset) __THROW;
+extern char *bind_textdomain_codeset (const char *__domainname,
+				      const char *__codeset) __THROW;
 
 
 /* Optimized version of the function above.  */

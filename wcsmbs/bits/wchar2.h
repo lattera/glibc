@@ -1,5 +1,5 @@
 /* Checking macros for wchar functions.
-   Copyright (C) 2005, 2006, 2007, 2010 Free Software Foundation, Inc.
+   Copyright (C) 2005, 2006, 2007, 2010, 2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -23,21 +23,21 @@
 
 
 extern wchar_t *__wmemcpy_chk (wchar_t *__restrict __s1,
-			       __const wchar_t *__restrict __s2, size_t __n,
+			       const wchar_t *__restrict __s2, size_t __n,
 			       size_t __ns1) __THROW;
 extern wchar_t *__REDIRECT_NTH (__wmemcpy_alias,
 				(wchar_t *__restrict __s1,
-				 __const wchar_t *__restrict __s2, size_t __n),
+				 const wchar_t *__restrict __s2, size_t __n),
 				wmemcpy);
 extern wchar_t *__REDIRECT_NTH (__wmemcpy_chk_warn,
 				(wchar_t *__restrict __s1,
-				 __const wchar_t *__restrict __s2, size_t __n,
+				 const wchar_t *__restrict __s2, size_t __n,
 				 size_t __ns1), __wmemcpy_chk)
      __warnattr ("wmemcpy called with length bigger than size of destination "
 		 "buffer");
 
 __extern_always_inline wchar_t *
-__NTH (wmemcpy (wchar_t *__restrict __s1, __const wchar_t *__restrict __s2,
+__NTH (wmemcpy (wchar_t *__restrict __s1, const wchar_t *__restrict __s2,
 		size_t __n))
 {
   if (__bos0 (__s1) != (size_t) -1)
@@ -54,19 +54,19 @@ __NTH (wmemcpy (wchar_t *__restrict __s1, __const wchar_t *__restrict __s2,
 }
 
 
-extern wchar_t *__wmemmove_chk (wchar_t *__s1, __const wchar_t *__s2,
+extern wchar_t *__wmemmove_chk (wchar_t *__s1, const wchar_t *__s2,
 				size_t __n, size_t __ns1) __THROW;
 extern wchar_t *__REDIRECT_NTH (__wmemmove_alias, (wchar_t *__s1,
-						   __const wchar_t *__s2,
+						   const wchar_t *__s2,
 						   size_t __n), wmemmove);
 extern wchar_t *__REDIRECT_NTH (__wmemmove_chk_warn,
-				(wchar_t *__s1, __const wchar_t *__s2,
+				(wchar_t *__s1, const wchar_t *__s2,
 				 size_t __n, size_t __ns1), __wmemmove_chk)
      __warnattr ("wmemmove called with length bigger than size of destination "
 		 "buffer");
 
 __extern_always_inline wchar_t *
-__NTH (wmemmove (wchar_t *__s1, __const wchar_t *__s2, size_t __n))
+__NTH (wmemmove (wchar_t *__s1, const wchar_t *__s2, size_t __n))
 {
   if (__bos0 (__s1) != (size_t) -1)
     {
@@ -84,21 +84,21 @@ __NTH (wmemmove (wchar_t *__s1, __const wchar_t *__s2, size_t __n))
 
 #ifdef __USE_GNU
 extern wchar_t *__wmempcpy_chk (wchar_t *__restrict __s1,
-				__const wchar_t *__restrict __s2, size_t __n,
+				const wchar_t *__restrict __s2, size_t __n,
 				size_t __ns1) __THROW;
 extern wchar_t *__REDIRECT_NTH (__wmempcpy_alias,
 				(wchar_t *__restrict __s1,
-				 __const wchar_t *__restrict __s2,
+				 const wchar_t *__restrict __s2,
 				 size_t __n), wmempcpy);
 extern wchar_t *__REDIRECT_NTH (__wmempcpy_chk_warn,
 				(wchar_t *__restrict __s1,
-				 __const wchar_t *__restrict __s2, size_t __n,
+				 const wchar_t *__restrict __s2, size_t __n,
 				 size_t __ns1), __wmempcpy_chk)
      __warnattr ("wmempcpy called with length bigger than size of destination "
 		 "buffer");
 
 __extern_always_inline wchar_t *
-__NTH (wmempcpy (wchar_t *__restrict __s1, __const wchar_t *__restrict __s2,
+__NTH (wmempcpy (wchar_t *__restrict __s1, const wchar_t *__restrict __s2,
 		 size_t __n))
 {
   if (__bos0 (__s1) != (size_t) -1)
@@ -143,14 +143,14 @@ __NTH (wmemset (wchar_t *__s, wchar_t __c, size_t __n))
 
 
 extern wchar_t *__wcscpy_chk (wchar_t *__restrict __dest,
-			      __const wchar_t *__restrict __src,
+			      const wchar_t *__restrict __src,
 			      size_t __n) __THROW;
 extern wchar_t *__REDIRECT_NTH (__wcscpy_alias,
 				(wchar_t *__restrict __dest,
-				 __const wchar_t *__restrict __src), wcscpy);
+				 const wchar_t *__restrict __src), wcscpy);
 
 __extern_always_inline wchar_t *
-__NTH (wcscpy (wchar_t *__restrict __dest, __const wchar_t *__restrict __src))
+__NTH (wcscpy (wchar_t *__restrict __dest, const wchar_t *__restrict __src))
 {
   if (__bos (__dest) != (size_t) -1)
     return __wcscpy_chk (__dest, __src, __bos (__dest) / sizeof (wchar_t));
@@ -159,14 +159,14 @@ __NTH (wcscpy (wchar_t *__restrict __dest, __const wchar_t *__restrict __src))
 
 
 extern wchar_t *__wcpcpy_chk (wchar_t *__restrict __dest,
-			      __const wchar_t *__restrict __src,
+			      const wchar_t *__restrict __src,
 			      size_t __destlen) __THROW;
 extern wchar_t *__REDIRECT_NTH (__wcpcpy_alias,
 				(wchar_t *__restrict __dest,
-				 __const wchar_t *__restrict __src), wcpcpy);
+				 const wchar_t *__restrict __src), wcpcpy);
 
 __extern_always_inline wchar_t *
-__NTH (wcpcpy (wchar_t *__restrict __dest, __const wchar_t *__restrict __src))
+__NTH (wcpcpy (wchar_t *__restrict __dest, const wchar_t *__restrict __src))
 {
   if (__bos (__dest) != (size_t) -1)
     return __wcpcpy_chk (__dest, __src, __bos (__dest) / sizeof (wchar_t));
@@ -175,21 +175,21 @@ __NTH (wcpcpy (wchar_t *__restrict __dest, __const wchar_t *__restrict __src))
 
 
 extern wchar_t *__wcsncpy_chk (wchar_t *__restrict __dest,
-			       __const wchar_t *__restrict __src, size_t __n,
+			       const wchar_t *__restrict __src, size_t __n,
 			       size_t __destlen) __THROW;
 extern wchar_t *__REDIRECT_NTH (__wcsncpy_alias,
 				(wchar_t *__restrict __dest,
-				 __const wchar_t *__restrict __src,
+				 const wchar_t *__restrict __src,
 				 size_t __n), wcsncpy);
 extern wchar_t *__REDIRECT_NTH (__wcsncpy_chk_warn,
 				(wchar_t *__restrict __dest,
-				 __const wchar_t *__restrict __src,
+				 const wchar_t *__restrict __src,
 				 size_t __n, size_t __destlen), __wcsncpy_chk)
      __warnattr ("wcsncpy called with length bigger than size of destination "
 		 "buffer");
 
 __extern_always_inline wchar_t *
-__NTH (wcsncpy (wchar_t *__restrict __dest, __const wchar_t *__restrict __src,
+__NTH (wcsncpy (wchar_t *__restrict __dest, const wchar_t *__restrict __src,
 		size_t __n))
 {
   if (__bos (__dest) != (size_t) -1)
@@ -206,21 +206,21 @@ __NTH (wcsncpy (wchar_t *__restrict __dest, __const wchar_t *__restrict __src,
 
 
 extern wchar_t *__wcpncpy_chk (wchar_t *__restrict __dest,
-			       __const wchar_t *__restrict __src, size_t __n,
+			       const wchar_t *__restrict __src, size_t __n,
 			       size_t __destlen) __THROW;
 extern wchar_t *__REDIRECT_NTH (__wcpncpy_alias,
 				(wchar_t *__restrict __dest,
-				 __const wchar_t *__restrict __src,
+				 const wchar_t *__restrict __src,
 				 size_t __n), wcpncpy);
 extern wchar_t *__REDIRECT_NTH (__wcpncpy_chk_warn,
 				(wchar_t *__restrict __dest,
-				 __const wchar_t *__restrict __src,
+				 const wchar_t *__restrict __src,
 				 size_t __n, size_t __destlen), __wcpncpy_chk)
      __warnattr ("wcpncpy called with length bigger than size of destination "
 		 "buffer");
 
 __extern_always_inline wchar_t *
-__NTH (wcpncpy (wchar_t *__restrict __dest, __const wchar_t *__restrict __src,
+__NTH (wcpncpy (wchar_t *__restrict __dest, const wchar_t *__restrict __src,
 		size_t __n))
 {
   if (__bos (__dest) != (size_t) -1)
@@ -237,14 +237,14 @@ __NTH (wcpncpy (wchar_t *__restrict __dest, __const wchar_t *__restrict __src,
 
 
 extern wchar_t *__wcscat_chk (wchar_t *__restrict __dest,
-			      __const wchar_t *__restrict __src,
+			      const wchar_t *__restrict __src,
 			      size_t __destlen) __THROW;
 extern wchar_t *__REDIRECT_NTH (__wcscat_alias,
 				(wchar_t *__restrict __dest,
-				 __const wchar_t *__restrict __src), wcscat);
+				 const wchar_t *__restrict __src), wcscat);
 
 __extern_always_inline wchar_t *
-__NTH (wcscat (wchar_t *__restrict __dest, __const wchar_t *__restrict __src))
+__NTH (wcscat (wchar_t *__restrict __dest, const wchar_t *__restrict __src))
 {
   if (__bos (__dest) != (size_t) -1)
     return __wcscat_chk (__dest, __src, __bos (__dest) / sizeof (wchar_t));
@@ -253,15 +253,15 @@ __NTH (wcscat (wchar_t *__restrict __dest, __const wchar_t *__restrict __src))
 
 
 extern wchar_t *__wcsncat_chk (wchar_t *__restrict __dest,
-			       __const wchar_t *__restrict __src,
+			       const wchar_t *__restrict __src,
 			       size_t __n, size_t __destlen) __THROW;
 extern wchar_t *__REDIRECT_NTH (__wcsncat_alias,
 				(wchar_t *__restrict __dest,
-				 __const wchar_t *__restrict __src,
+				 const wchar_t *__restrict __src,
 				 size_t __n), wcsncat);
 
 __extern_always_inline wchar_t *
-__NTH (wcsncat (wchar_t *__restrict __dest, __const wchar_t *__restrict __src,
+__NTH (wcsncat (wchar_t *__restrict __dest, const wchar_t *__restrict __src,
 		size_t __n))
 {
   if (__bos (__dest) != (size_t) -1)
@@ -273,18 +273,18 @@ __NTH (wcsncat (wchar_t *__restrict __dest, __const wchar_t *__restrict __src,
 
 extern int __swprintf_chk (wchar_t *__restrict __s, size_t __n,
 			   int __flag, size_t __s_len,
-			   __const wchar_t *__restrict __format, ...)
+			   const wchar_t *__restrict __format, ...)
      __THROW /* __attribute__ ((__format__ (__wprintf__, 5, 6))) */;
 
 extern int __REDIRECT_NTH_LDBL (__swprintf_alias,
 				(wchar_t *__restrict __s, size_t __n,
-				 __const wchar_t *__restrict __fmt, ...),
+				 const wchar_t *__restrict __fmt, ...),
 				swprintf);
 
 #ifdef __va_arg_pack
 __extern_always_inline int
 __NTH (swprintf (wchar_t *__restrict __s, size_t __n,
-		 __const wchar_t *__restrict __fmt, ...))
+		 const wchar_t *__restrict __fmt, ...))
 {
   if (__bos (__s) != (size_t) -1 || __USE_FORTIFY_LEVEL > 1)
     return __swprintf_chk (__s, __n, __USE_FORTIFY_LEVEL - 1,
@@ -303,18 +303,18 @@ __NTH (swprintf (wchar_t *__restrict __s, size_t __n,
 
 extern int __vswprintf_chk (wchar_t *__restrict __s, size_t __n,
 			    int __flag, size_t __s_len,
-			    __const wchar_t *__restrict __format,
+			    const wchar_t *__restrict __format,
 			    __gnuc_va_list __arg)
      __THROW /* __attribute__ ((__format__ (__wprintf__, 5, 0))) */;
 
 extern int __REDIRECT_NTH_LDBL (__vswprintf_alias,
 				(wchar_t *__restrict __s, size_t __n,
-				 __const wchar_t *__restrict __fmt,
+				 const wchar_t *__restrict __fmt,
 				 __gnuc_va_list __ap), vswprintf);
 
 __extern_always_inline int
 __NTH (vswprintf (wchar_t *__restrict __s, size_t __n,
-		  __const wchar_t *__restrict __fmt, __gnuc_va_list __ap))
+		  const wchar_t *__restrict __fmt, __gnuc_va_list __ap))
 {
   if (__bos (__s) != (size_t) -1 || __USE_FORTIFY_LEVEL > 1)
     return __vswprintf_chk (__s, __n,  __USE_FORTIFY_LEVEL - 1,
@@ -326,24 +326,24 @@ __NTH (vswprintf (wchar_t *__restrict __s, size_t __n,
 #if __USE_FORTIFY_LEVEL > 1
 
 extern int __fwprintf_chk (__FILE *__restrict __stream, int __flag,
-			   __const wchar_t *__restrict __format, ...);
-extern int __wprintf_chk (int __flag, __const wchar_t *__restrict __format,
+			   const wchar_t *__restrict __format, ...);
+extern int __wprintf_chk (int __flag, const wchar_t *__restrict __format,
 			  ...);
 extern int __vfwprintf_chk (__FILE *__restrict __stream, int __flag,
-			    __const wchar_t *__restrict __format,
+			    const wchar_t *__restrict __format,
 			    __gnuc_va_list __ap);
-extern int __vwprintf_chk (int __flag, __const wchar_t *__restrict __format,
+extern int __vwprintf_chk (int __flag, const wchar_t *__restrict __format,
 			   __gnuc_va_list __ap);
 
 # ifdef __va_arg_pack
 __extern_always_inline int
-wprintf (__const wchar_t *__restrict __fmt, ...)
+wprintf (const wchar_t *__restrict __fmt, ...)
 {
   return __wprintf_chk (__USE_FORTIFY_LEVEL - 1, __fmt, __va_arg_pack ());
 }
 
 __extern_always_inline int
-fwprintf (__FILE *__restrict __stream, __const wchar_t *__restrict __fmt, ...)
+fwprintf (__FILE *__restrict __stream, const wchar_t *__restrict __fmt, ...)
 {
   return __fwprintf_chk (__stream, __USE_FORTIFY_LEVEL - 1, __fmt,
 			 __va_arg_pack ());
@@ -356,14 +356,14 @@ fwprintf (__FILE *__restrict __stream, __const wchar_t *__restrict __fmt, ...)
 # endif
 
 __extern_always_inline int
-vwprintf (__const wchar_t *__restrict __fmt, __gnuc_va_list __ap)
+vwprintf (const wchar_t *__restrict __fmt, __gnuc_va_list __ap)
 {
   return __vwprintf_chk (__USE_FORTIFY_LEVEL - 1, __fmt, __ap);
 }
 
 __extern_always_inline int
 vfwprintf (__FILE *__restrict __stream,
-	   __const wchar_t *__restrict __fmt, __gnuc_va_list __ap)
+	   const wchar_t *__restrict __fmt, __gnuc_va_list __ap)
 {
   return __vfwprintf_chk (__stream, __USE_FORTIFY_LEVEL - 1, __fmt, __ap);
 }
@@ -455,24 +455,24 @@ __NTH (wcrtomb (char *__restrict __s, wchar_t __wchar,
 
 
 extern size_t __mbsrtowcs_chk (wchar_t *__restrict __dst,
-			       __const char **__restrict __src,
+			       const char **__restrict __src,
 			       size_t __len, mbstate_t *__restrict __ps,
 			       size_t __dstlen) __THROW;
 extern size_t __REDIRECT_NTH (__mbsrtowcs_alias,
 			      (wchar_t *__restrict __dst,
-			       __const char **__restrict __src,
+			       const char **__restrict __src,
 			       size_t __len, mbstate_t *__restrict __ps),
 			      mbsrtowcs);
 extern size_t __REDIRECT_NTH (__mbsrtowcs_chk_warn,
 			      (wchar_t *__restrict __dst,
-			       __const char **__restrict __src,
+			       const char **__restrict __src,
 			       size_t __len, mbstate_t *__restrict __ps,
 			       size_t __dstlen), __mbsrtowcs_chk)
      __warnattr ("mbsrtowcs called with dst buffer smaller than len "
 		 "* sizeof (wchar_t)");
 
 __extern_always_inline size_t
-__NTH (mbsrtowcs (wchar_t *__restrict __dst, __const char **__restrict __src,
+__NTH (mbsrtowcs (wchar_t *__restrict __dst, const char **__restrict __src,
 		  size_t __len, mbstate_t *__restrict __ps))
 {
   if (__bos (__dst) != (size_t) -1)
@@ -490,23 +490,23 @@ __NTH (mbsrtowcs (wchar_t *__restrict __dst, __const char **__restrict __src,
 
 
 extern size_t __wcsrtombs_chk (char *__restrict __dst,
-			       __const wchar_t **__restrict __src,
+			       const wchar_t **__restrict __src,
 			       size_t __len, mbstate_t *__restrict __ps,
 			       size_t __dstlen) __THROW;
 extern size_t __REDIRECT_NTH (__wcsrtombs_alias,
 			      (char *__restrict __dst,
-			       __const wchar_t **__restrict __src,
+			       const wchar_t **__restrict __src,
 			       size_t __len, mbstate_t *__restrict __ps),
 			      wcsrtombs);
 extern size_t __REDIRECT_NTH (__wcsrtombs_chk_warn,
 			      (char *__restrict __dst,
-			       __const wchar_t **__restrict __src,
+			       const wchar_t **__restrict __src,
 			       size_t __len, mbstate_t *__restrict __ps,
 			       size_t __dstlen), __wcsrtombs_chk)
     __warnattr ("wcsrtombs called with dst buffer smaller than len");
 
 __extern_always_inline size_t
-__NTH (wcsrtombs (char *__restrict __dst, __const wchar_t **__restrict __src,
+__NTH (wcsrtombs (char *__restrict __dst, const wchar_t **__restrict __src,
 		  size_t __len, mbstate_t *__restrict __ps))
 {
   if (__bos (__dst) != (size_t) -1)
@@ -523,24 +523,24 @@ __NTH (wcsrtombs (char *__restrict __dst, __const wchar_t **__restrict __src,
 
 #ifdef __USE_GNU
 extern size_t __mbsnrtowcs_chk (wchar_t *__restrict __dst,
-				__const char **__restrict __src, size_t __nmc,
+				const char **__restrict __src, size_t __nmc,
 				size_t __len, mbstate_t *__restrict __ps,
 				size_t __dstlen) __THROW;
 extern size_t __REDIRECT_NTH (__mbsnrtowcs_alias,
 			      (wchar_t *__restrict __dst,
-			       __const char **__restrict __src, size_t __nmc,
+			       const char **__restrict __src, size_t __nmc,
 			       size_t __len, mbstate_t *__restrict __ps),
 			      mbsnrtowcs);
 extern size_t __REDIRECT_NTH (__mbsnrtowcs_chk_warn,
 			      (wchar_t *__restrict __dst,
-			       __const char **__restrict __src, size_t __nmc,
+			       const char **__restrict __src, size_t __nmc,
 			       size_t __len, mbstate_t *__restrict __ps,
 			       size_t __dstlen), __mbsnrtowcs_chk)
      __warnattr ("mbsnrtowcs called with dst buffer smaller than len "
 		 "* sizeof (wchar_t)");
 
 __extern_always_inline size_t
-__NTH (mbsnrtowcs (wchar_t *__restrict __dst, __const char **__restrict __src,
+__NTH (mbsnrtowcs (wchar_t *__restrict __dst, const char **__restrict __src,
 		   size_t __nmc, size_t __len, mbstate_t *__restrict __ps))
 {
   if (__bos (__dst) != (size_t) -1)
@@ -558,25 +558,25 @@ __NTH (mbsnrtowcs (wchar_t *__restrict __dst, __const char **__restrict __src,
 
 
 extern size_t __wcsnrtombs_chk (char *__restrict __dst,
-				__const wchar_t **__restrict __src,
+				const wchar_t **__restrict __src,
 				size_t __nwc, size_t __len,
 				mbstate_t *__restrict __ps, size_t __dstlen)
      __THROW;
 extern size_t __REDIRECT_NTH (__wcsnrtombs_alias,
 			      (char *__restrict __dst,
-			       __const wchar_t **__restrict __src,
+			       const wchar_t **__restrict __src,
 			       size_t __nwc, size_t __len,
 			       mbstate_t *__restrict __ps), wcsnrtombs);
 extern size_t __REDIRECT_NTH (__wcsnrtombs_chk_warn,
 			      (char *__restrict __dst,
-			       __const wchar_t **__restrict __src,
+			       const wchar_t **__restrict __src,
 			       size_t __nwc, size_t __len,
 			       mbstate_t *__restrict __ps,
 			       size_t __dstlen), __wcsnrtombs_chk)
      __warnattr ("wcsnrtombs called with dst buffer smaller than len");
 
 __extern_always_inline size_t
-__NTH (wcsnrtombs (char *__restrict __dst, __const wchar_t **__restrict __src,
+__NTH (wcsnrtombs (char *__restrict __dst, const wchar_t **__restrict __src,
 		   size_t __nwc, size_t __len, mbstate_t *__restrict __ps))
 {
   if (__bos (__dst) != (size_t) -1)

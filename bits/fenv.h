@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 1997-2001, 2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -53,4 +53,4 @@ typedef struct
 fenv_t;
 
 /* If the default argument is used we use this value.  */
-#define FE_DFL_ENV	((__const fenv_t *) -1l)
+#define FE_DFL_ENV	((const fenv_t *) -1l)

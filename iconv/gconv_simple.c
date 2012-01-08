@@ -34,7 +34,7 @@
 #define BUILTIN_TRANSFORMATION(From, To, Cost, Name, Fct, BtowcFct, \
 			       MinF, MaxF, MinT, MaxT) \
   extern int Fct (struct __gconv_step *, struct __gconv_step_data *,	      \
-		  __const unsigned char **, __const unsigned char *,	      \
+		  const unsigned char **, const unsigned char *,	      \
 		  unsigned char **, size_t *, int, int);
 #include "gconv_builtin.h"
 

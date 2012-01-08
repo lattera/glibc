@@ -1,5 +1,5 @@
 /* Bit values & structures for resource limits.  Linux version.
-   Copyright (C) 1994, 1996-2000, 2004, 2005, 2008, 2009, 2010, 2011
+   Copyright (C) 1994, 1996-2000, 2004, 2005, 2008, 2009, 2010, 2011, 2012
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -246,13 +246,13 @@ __BEGIN_DECLS
 /* Modify and return resource limits of a process atomically.  */
 # ifndef __USE_FILE_OFFSET64
 extern int prlimit (__pid_t __pid, enum __rlimit_resource __resource,
-		    __const struct rlimit *__new_limit,
+		    const struct rlimit *__new_limit,
 		    struct rlimit *__old_limit) __THROW;
 # else
 #  ifdef __REDIRECT_NTH
 extern int __REDIRECT_NTH (prlimit, (__pid_t __pid,
 				     enum __rlimit_resource __resource,
-				     __const struct rlimit *__new_limit,
+				     const struct rlimit *__new_limit,
 				     struct rlimit *__old_limit), prlimit64);
 #  else
 #   define prlimit prlimit64
@@ -260,7 +260,7 @@ extern int __REDIRECT_NTH (prlimit, (__pid_t __pid,
 # endif
 # ifdef __USE_LARGEFILE64
 extern int prlimit64 (__pid_t __pid, enum __rlimit_resource __resource,
-		      __const struct rlimit64 *__new_limit,
+		      const struct rlimit64 *__new_limit,
 		      struct rlimit64 *__old_limit) __THROW;
 # endif
 #endif

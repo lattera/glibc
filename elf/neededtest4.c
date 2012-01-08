@@ -36,7 +36,7 @@ check_loaded_objects (const char **loaded)
 	  for (n = 0; loaded[n] != NULL; n++)
 	    {
 	      if (strcmp (basename (loaded[n]), basename (lm->l_name)) == 0)
-	        {
+		{
 		  found[n] = 1;
 		  match = 1;
 		  break;
@@ -54,7 +54,7 @@ check_loaded_objects (const char **loaded)
   for (n = 0; loaded[n] != NULL; n++)
     {
       if (found[n] == 0)
-        {
+	{
 	  ++errors;
 	  printf ("ERRORS: %s is not loaded\n", loaded[n]);
 	}
@@ -64,7 +64,7 @@ check_loaded_objects (const char **loaded)
 }
 
 extern void c_function (void);
-extern char *dirname (__const char *__filename);
+extern char *dirname (const char *__filename);
 
 int
 main (int argc, char **argv)

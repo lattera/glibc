@@ -1,4 +1,4 @@
-/* Copyright (C) 1995-1999, 2000, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1995-1999, 2000, 2002, 2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -54,11 +54,11 @@ extern int shmctl (int __shmid, int __cmd, struct shmid_ds *__buf) __THROW;
 extern int shmget (key_t __key, size_t __size, int __shmflg) __THROW;
 
 /* Attach shared memory segment.  */
-extern void *shmat (int __shmid, __const void *__shmaddr, int __shmflg)
+extern void *shmat (int __shmid, const void *__shmaddr, int __shmflg)
      __THROW;
 
 /* Detach shared memory segment.  */
-extern int shmdt (__const void *__shmaddr) __THROW;
+extern int shmdt (const void *__shmaddr) __THROW;
 
 __END_DECLS
 

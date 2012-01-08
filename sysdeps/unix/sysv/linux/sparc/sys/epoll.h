@@ -137,7 +137,7 @@ extern int epoll_wait (int __epfd, struct epoll_event *__events,
    __THROW.  */
 extern int epoll_pwait (int __epfd, struct epoll_event *__events,
 			int __maxevents, int __timeout,
-			__const __sigset_t *__ss);
+			const __sigset_t *__ss);
 
 __END_DECLS
 

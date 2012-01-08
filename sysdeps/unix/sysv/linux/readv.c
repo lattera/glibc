@@ -1,5 +1,6 @@
 /* readv supports all Linux kernels >= 2.0.
-   Copyright (C) 1997,1998,2000,2002,2003,2009 Free Software Foundation, Inc.
+   Copyright (C) 1997,1998,2000,2002,2003,2009,2012
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -28,7 +29,7 @@
 #include <kernel-features.h>
 
 #ifndef __ASSUME_COMPLETE_READV_WRITEV
-static ssize_t __atomic_readv_replacement (int, __const struct iovec *,
+static ssize_t __atomic_readv_replacement (int, const struct iovec *,
 					   int) internal_function;
 #endif
 

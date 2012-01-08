@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998, 1999, 2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@suse.de>, 1996.
 
@@ -59,26 +59,26 @@ struct ypall_callback
   };
 
 /* External NIS client function references.  */
-extern int yp_bind (__const char *) __THROW;
-extern void yp_unbind (__const char *) __THROW;
+extern int yp_bind (const char *) __THROW;
+extern void yp_unbind (const char *) __THROW;
 extern int yp_get_default_domain (char **) __THROW;
-extern int yp_match (__const char *, __const char *, __const char *,
-		     __const int, char **, int *) __THROW;
-extern int yp_first (__const char *, __const char *, char **,
+extern int yp_match (const char *, const char *, const char *,
+		     const int, char **, int *) __THROW;
+extern int yp_first (const char *, const char *, char **,
 		     int *, char **, int *) __THROW;
-extern int yp_next (__const char *, __const char *, __const char *,
-		    __const int, char **, int *, char **, int *) __THROW;
-extern int yp_master (__const char *, __const char *, char **) __THROW;
-extern int yp_order (__const char *, __const char *, unsigned int *) __THROW;
-extern int yp_all (__const char *, __const char *,
-		   __const struct ypall_callback *) __THROW;
-extern __const char *yperr_string (__const int) __THROW;
-extern __const char *ypbinderr_string (__const int) __THROW;
-extern int ypprot_err (__const int) __THROW;
+extern int yp_next (const char *, const char *, const char *,
+		    const int, char **, int *, char **, int *) __THROW;
+extern int yp_master (const char *, const char *, char **) __THROW;
+extern int yp_order (const char *, const char *, unsigned int *) __THROW;
+extern int yp_all (const char *, const char *,
+		   const struct ypall_callback *) __THROW;
+extern const char *yperr_string (const int) __THROW;
+extern const char *ypbinderr_string (const int) __THROW;
+extern int ypprot_err (const int) __THROW;
 extern int yp_update (char *, char *, unsigned int,  char *,
 		      int, char *, int) __THROW;
 #if 0
-extern int yp_maplist (__const char *, struct ypmaplist **) __THROW;
+extern int yp_maplist (const char *, struct ypmaplist **) __THROW;
 #endif
 
 /* This functions exists only under BSD and Linux systems.  */

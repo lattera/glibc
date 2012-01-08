@@ -1,4 +1,4 @@
-/* Copyright (C) 1995,1996,1997,1999,2002 Free Software Foundation, Inc.
+/* Copyright (C) 1995,1996,1997,1999,2002,2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -52,7 +52,7 @@ typedef __key_t key_t;
 __BEGIN_DECLS
 
 /* Generates key for System V style IPC.  */
-extern key_t ftok (__const char *__pathname, int __proj_id) __THROW;
+extern key_t ftok (const char *__pathname, int __proj_id) __THROW;
 
 __END_DECLS
 

@@ -178,7 +178,7 @@ extern void closelog (void);
 
    This function is a possible cancellation point and therefore not
    marked with __THROW.  */
-extern void openlog (__const char *__ident, int __option, int __facility);
+extern void openlog (const char *__ident, int __option, int __facility);
 
 /* Set the log mask level.  */
 extern int setlogmask (int __mask) __THROW;
@@ -187,7 +187,7 @@ extern int setlogmask (int __mask) __THROW;
 
    This function is a possible cancellation point and therefore not
    marked with __THROW.  */
-extern void syslog (int __pri, __const char *__fmt, ...)
+extern void syslog (int __pri, const char *__fmt, ...)
      __attribute__ ((__format__ (__printf__, 2, 3)));
 
 #ifdef __USE_BSD
@@ -197,7 +197,7 @@ extern void syslog (int __pri, __const char *__fmt, ...)
    cancellation point.  But due to similarity with an POSIX interface
    or due to the implementation it is a cancellation point and
    therefore not marked with __THROW.  */
-extern void vsyslog (int __pri, __const char *__fmt, __gnuc_va_list __ap)
+extern void vsyslog (int __pri, const char *__fmt, __gnuc_va_list __ap)
      __attribute__ ((__format__ (__printf__, 2, 0)));
 #endif
 

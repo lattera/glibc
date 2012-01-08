@@ -1,5 +1,5 @@
 /* 4.4BSD utility functions for error messages.
-   Copyright (C) 1995,1996,1997,1998,1999,2003 Free Software Foundation, Inc.
+   Copyright (C) 1995,1996,1997,1998,1999,2003,2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -32,25 +32,25 @@ __BEGIN_DECLS
 
 /* Print "program: ", FORMAT, ": ", the standard error string for errno,
    and a newline, on stderr.  */
-extern void warn (__const char *__format, ...)
+extern void warn (const char *__format, ...)
      __attribute__ ((__format__ (__printf__, 1, 2)));
-extern void vwarn (__const char *__format, __gnuc_va_list)
+extern void vwarn (const char *__format, __gnuc_va_list)
      __attribute__ ((__format__ (__printf__, 1, 0)));
 
 /* Likewise, but without ": " and the standard error string.  */
-extern void warnx (__const char *__format, ...)
+extern void warnx (const char *__format, ...)
      __attribute__ ((__format__ (__printf__, 1, 2)));
-extern void vwarnx (__const char *__format, __gnuc_va_list)
+extern void vwarnx (const char *__format, __gnuc_va_list)
      __attribute__ ((__format__ (__printf__, 1, 0)));
 
 /* Likewise, and then exit with STATUS.  */
-extern void err (int __status, __const char *__format, ...)
+extern void err (int __status, const char *__format, ...)
      __attribute__ ((__noreturn__, __format__ (__printf__, 2, 3)));
-extern void verr (int __status, __const char *__format, __gnuc_va_list)
+extern void verr (int __status, const char *__format, __gnuc_va_list)
      __attribute__ ((__noreturn__, __format__ (__printf__, 2, 0)));
-extern void errx (int __status, __const char *__format, ...)
+extern void errx (int __status, const char *__format, ...)
      __attribute__ ((__noreturn__, __format__ (__printf__, 2, 3)));
-extern void verrx (int __status, __const char *, __gnuc_va_list)
+extern void verrx (int __status, const char *, __gnuc_va_list)
      __attribute__ ((__noreturn__, __format__ (__printf__, 2, 0)));
 
 __END_DECLS
