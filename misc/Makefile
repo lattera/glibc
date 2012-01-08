@@ -1,4 +1,4 @@
-# Copyright (C) 1991-2006, 2007, 2009, 2011 Free Software Foundation, Inc.
+# Copyright (C) 1991-2007, 2009, 2011, 2012 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -74,9 +74,7 @@ generated := tst-error1.mtrace tst-error1-mem
 include ../Makeconfig
 
 aux := init-misc
-ifeq ($(build-static),yes)
 install-lib := libbsd-compat.a libg.a
-endif
 gpl2lgpl := error.c error.h
 
 tests := tst-dirname tst-tsearch tst-fdset tst-efgcvt tst-mntent tst-hsearch \

@@ -1,5 +1,4 @@
-# Copyright (C) 1993,94,95,96,97,98,99,2000,2001,2002,2003,2004,2009,2011
-#	Free Software Foundation, Inc.
+# Copyright (C) 1993-2004,2009,2011,2012 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -169,20 +168,10 @@ CFLAGS-dl-load.c = -DEXTERNAL_MAP_FROM_FD
 endif
 
 # We need these libs to link static programs in the libc source tree, too.
-ifeq (yes,$(build-static))
 link-libc-static := -Wl,-\( \
 		    $(patsubst %,$(common-objpfx)%.a,\
 			       libc mach/libmachuser hurd/libhurduser) \
 		    $(static-gnulib) -Wl,-\)
-else
-ifeq (yes,$(build-shared))
-# We can try to link the programs with lib*_pic.a...
-link-libc-static := $(link-libc) -Wl,-\( \
-		    $(patsubst %,$(common-objpfx)%_pic.a,\
-			       libc mach/libmachuser hurd/libhurduser) \
-		    $(static-gnulib) -Wl,-\)
-endif
-endif
 
 ifeq ($(subdir),csu)
 

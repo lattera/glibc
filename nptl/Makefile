@@ -352,11 +352,10 @@ CFLAGS-funlockfile.c = -D_IO_MTSAFE_IO
 link-libc-static := $(common-objpfx)libc.a $(static-gnulib) \
 		    $(common-objpfx)libc.a
 
-ifeq ($(build-static),yes)
 tests-static += tst-locale1 tst-locale2 tst-stackguard1-static
 tests += tst-stackguard1-static
 xtests-static += tst-setuid1-static
-endif
+
 # These tests are linked with libc before libpthread
 tests-reverse += tst-cancel5 tst-cancel23 tst-vfork1x tst-vfork2x
 

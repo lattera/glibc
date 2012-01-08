@@ -1,5 +1,15 @@
 2012-01-08  Ulrich Drepper  <drepper@gmail.com>
 
+	* configure.in: static is always set to yes.  Remove.
+	* config.make.in: Don't set build-static.
+	* Makeconfig: Remove use of build-static.
+	* dlfcn/Makefile: Likewise.
+	* elf/Makefile: Likewise.
+	* math/Makefile: Likewise.
+	* misc/Makefile: Likewise.
+	* nptl/Makefile: Likewise.
+	* sysdeps/mach/hurd/Makefile: Likewise.
+
 	* configure.in: PWD_P is not used anymore.
 	* config.make.in: Remove PWD_P entry.
 

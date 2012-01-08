@@ -53,7 +53,7 @@ failtestmod.so-no-z-defs = yes
 glreflib2.so-no-z-defs = yes
 errmsg1mod.so-no-z-defs = yes
 
-ifeq (yesyes,$(build-static)$(build-shared))
+ifeq (yes,$(build-shared))
 tests += tststatic tststatic2
 tests-static += tststatic tststatic2
 modules-names += modstatic modstatic2
