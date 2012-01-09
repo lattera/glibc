@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-2006, 2007, 2010, 2011 Free Software Foundation, Inc.
+/* Copyright (C) 1991-2007, 2010, 2011, 2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -274,7 +274,7 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 	  CHAR_T *old = wp;						    \
 	  size_t newsize = (UCHAR_MAX + 1 > 2 * wpmax			    \
 			    ? UCHAR_MAX + 1 : 2 * wpmax);		    \
-	  if (use_malloc || __libc_use_alloca (newsize))		    \
+	  if (use_malloc || !__libc_use_alloca (newsize))		    \
 	    {								    \
 	      wp = realloc (use_malloc ? wp : NULL, newsize);		    \
 	      if (wp == NULL)						    \

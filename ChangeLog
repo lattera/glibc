@@ -1,3 +1,8 @@
+2012-01-05  Paul Pluzhnikov  <ppluzhnikov@google.com>
+
+	* stdio-common/vfscanf.c (_IO_vfscanf_internal): Use alloca when
+	appropriate.
+
 2012-01-08  Ulrich Drepper  <drepper@gmail.com>
 
 	* math/Makefile (tests): Add tst-CMPLX.
