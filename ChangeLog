@@ -1,3 +1,7 @@
+2012-01-09  Ulrich Drepper  <drepper@gmail.com>
+
+	* sysdeps/ieee754/dbl-64/s_log1p.c (__log1p): Add branch prediction.
+
 2012-01-08  Ulrich Drepper  <drepper@gmail.com>
 
 	* io/bits/poll2.h: Add __BEGIN/__END_DECLS.
