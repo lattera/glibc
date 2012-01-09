@@ -1,4 +1,4 @@
-/* Copyright (C) 1999, 2000, 2002, 2003, 2007 Free Software Foundation, Inc.
+/* Copyright (C) 1999,2000,2002,2003,2007,2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Andreas Jaeger <aj@suse.de>, 1999.
 
@@ -81,9 +81,12 @@ extern int opt_verbose;
 extern int opt_format;
 
 /* Prototypes for a few program-wide used functions.  */
-extern void *xmalloc (size_t __n);
-extern void *xcalloc (size_t __n, size_t __size);
-extern void *xrealloc (void *__p, size_t __n);
-extern char *xstrdup (const char *__str);
+extern void *xmalloc (size_t n)
+  __attribute_malloc__ __attribute_alloc_size (1);
+extern void *xcalloc (size_t n, size_t s)
+  __attribute_malloc__ __attribute_alloc_size (1, 2);
+extern void *xrealloc (void *o, size_t n)
+  __attribute_malloc__ __attribute_alloc_size (2);
+extern char *xstrdup (const char *) __attribute_malloc__;
 
 #endif /* ! _LDCONFIG_H  */

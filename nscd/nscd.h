@@ -1,4 +1,4 @@
-/* Copyright (c) 1998-2001, 2003-2009, 2011 Free Software Foundation, Inc.
+/* Copyright (c) 1998-2001, 2003-2009, 2011, 2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@suse.de>, 1998.
 
@@ -201,9 +201,12 @@ extern gid_t old_gid;
 /* Prototypes for global functions.  */
 
 /* Wrapper functions with error checking for standard functions.  */
-extern void *xmalloc (size_t n);
-extern void *xcalloc (size_t n, size_t s);
-extern void *xrealloc (void *o, size_t n);
+extern void *xmalloc (size_t n)
+  __attribute_malloc__ __attribute_alloc_size (1);
+extern void *xcalloc (size_t n, size_t s)
+  __attribute_malloc__ __attribute_alloc_size (1, 2);
+extern void *xrealloc (void *o, size_t n)
+  __attribute_malloc__ __attribute_alloc_size (2);
 
 /* nscd.c */
 extern void termination_handler (int signum) __attribute__ ((__noreturn__));

@@ -169,9 +169,6 @@ static struct argp argp =
 };
 
 
-/* Prototypes for global functions.  */
-extern void *xmalloc (size_t __n);
-
 /* Prototypes for local functions.  */
 static void error_print (void);
 static const char *construct_output_path (char *path);

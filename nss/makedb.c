@@ -167,8 +167,10 @@ static void reset_file_creation_context (void);
 
 
 /* External functions.  */
-extern void *xmalloc (size_t n) __attribute_malloc__;
-extern void *xcalloc (size_t n, size_t m) __attribute_malloc__;
+extern void *xmalloc (size_t n)
+  __attribute_malloc__ __attribute_alloc_size (1);
+extern void *xcalloc (size_t n, size_t s)
+  __attribute_malloc__ __attribute_alloc_size (1, 2);
 
 
 int

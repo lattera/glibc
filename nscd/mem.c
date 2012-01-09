@@ -1,5 +1,5 @@
 /* Cache memory handling.
-   Copyright (C) 2004, 2005, 2006, 2008, 2009 Free Software Foundation, Inc.
+   Copyright (C) 2004-2006, 2008, 2009, 2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2004.
 
@@ -33,11 +33,6 @@
 
 #include "dbg_log.h"
 #include "nscd.h"
-
-
-/* Wrapper functions with error checking for standard functions.  */
-extern void *xmalloc (size_t n);
-extern void *xcalloc (size_t n, size_t s);
 
 
 static int

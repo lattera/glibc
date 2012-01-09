@@ -1,5 +1,5 @@
 /* Convert using charmaps and possibly iconv().
-   Copyright (C) 2001, 2005, 2006, 2008 Free Software Foundation, Inc.
+   Copyright (C) 2001, 2005, 2006, 2008, 2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2001.
 
@@ -33,8 +33,10 @@
 
 
 /* Prototypes for a few program-wide used functions.  */
-extern void *xmalloc (size_t __n);
-extern void *xcalloc (size_t __n, size_t __s);
+extern void *xmalloc (size_t n)
+  __attribute_malloc__ __attribute_alloc_size (1);
+extern void *xcalloc (size_t n, size_t s)
+  __attribute_malloc__ __attribute_alloc_size (1, 2);
 
 
 struct convtable

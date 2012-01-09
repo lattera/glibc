@@ -44,8 +44,9 @@
 #include "charmap-dir.h"
 #include "../locarchive.h"
 
-extern void *xmalloc (size_t __n);
-extern char *xstrdup (const char *__str);
+extern void *xmalloc (size_t n)
+  __attribute_malloc__ __attribute_alloc_size (1);
+extern char *xstrdup (const char *) __attribute_malloc__;
 
 #define ARCHIVE_NAME LOCALEDIR "/locale-archive"
 

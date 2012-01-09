@@ -1,3 +1,21 @@
+2012-01-08  Ulrich Drepper  <drepper@gmail.com>
+
+	* include/sys/cdefs.h: Define __attribute_alloc_size.
+	* catgets/gencat.c: Add alloc_size attribute and apply consistently
+	the malloc attribute to xmalloc, xcalloc, xrealloc, and xstrdup.
+	* elf/pldd.c: Likewise.
+	* iconv/iconv_charmap.c: Likewise.
+	* iconv/iconvconfig.c: Likewise.
+	* iconv/strtab.c: Likewise.
+	* locale/programs/locale.c: Likewise.
+	* locale/programs/localedef.h: Likewise.
+	* locale/programs/simple-hash.c: Likewise.
+	* nscd/nscd.h: Likewise.
+	* nss/makedb.c: Likewise.
+	* sysdeps/generic/ldconfig.h: Likewise.
+	* locale/programs/localedef.c: Remove xmalloc prototype.
+	* nscd/mem.c: Remove xmalloc and xcalloc prototypes.
+
 2012-01-05  Paul Pluzhnikov  <ppluzhnikov@google.com>
 
 	* stdio-common/vfscanf.c (_IO_vfscanf_internal): Use alloca when

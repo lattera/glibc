@@ -1,5 +1,5 @@
 /* C string table handling.
-   Copyright (C) 2000, 2001, 2005 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2001, 2005, 2012 Free Software Foundation, Inc.
    Written by Ulrich Drepper <drepper@redhat.com>, 2000.
 
    This program is free software; you can redistribute it and/or modify
@@ -66,7 +66,8 @@ struct Strtab
 static size_t ps;
 
 
-extern void *xmalloc (size_t n) __attribute_malloc__;
+extern void *xmalloc (size_t n)
+  __attribute_malloc__ __attribute_alloc_size (1);
 
 /* Prototypes for our functions that are used from iconvconfig.c.  If
    you change these, change also iconvconfig.c.  */
