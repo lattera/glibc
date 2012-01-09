@@ -1,3 +1,9 @@
+2011-12-30  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
+	* sysdeps/unix/sysv/linux/aio_misc.h (__aio_create_helper_thread):
+	Call pthread_attr_setstacksize() with result of
+	__pthread_get_minstack() to account for application TLS usage.
+
 2012-01-08  Marek Polacek  <polacek@redhat.com>
 
 	* sysdeps/unix/sysv/linux/mq_notify.c: Include <nptl/pthreadP.h>.
