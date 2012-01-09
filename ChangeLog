@@ -1,5 +1,7 @@
 2012-01-08  Ulrich Drepper  <drepper@gmail.com>
 
+	* io/bits/poll2.h: Add __BEGIN/__END_DECLS.
+
 	* io/Makefile (headers): Add bits/poll2.h.
 
 2011-01-05  Will Schmidt  <will_schmidt@vnet.ibm.com>

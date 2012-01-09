@@ -22,6 +22,8 @@
 #endif
 
 
+__BEGIN_DECLS
+
 extern int __REDIRECT (__poll_alias, (struct pollfd *__fds, nfds_t __nfds,
 				      int __timeout), poll);
 extern int __poll_chk (struct pollfd *__fds, nfds_t __nfds, int __timeout,
@@ -76,3 +78,5 @@ ppoll (struct pollfd *__fds, nfds_t __nfds, const struct timespec *__timeout,
   return __ppoll_alias (__fds, __nfds, __timeout, __ss);
 }
 #endif
+
+__END_DECLS
