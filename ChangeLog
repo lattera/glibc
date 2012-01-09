@@ -2758,6 +2758,7 @@
 	__set_errno.
 	* malloc/hooks.c: Likewise.
 
+	[BZ #11929]
 	* malloc/arena.c (ptmalloc_init_minimal): Removed.  Initialize all
 	variables statically.
 	(narenas): Initialize.
