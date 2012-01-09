@@ -1,5 +1,9 @@
 2012-01-08  Carlos O'Donell  <carlos@systemhalted.org>
 
+	* sysdeps/unix/sysv/linux/hppa/nptl/pthread.h: Sync from libc copy.
+
+2012-01-08  Carlos O'Donell  <carlos@systemhalted.org>
+
 	* sysdeps/unix/sysv/linux/hppa/sys/epoll.h: Use const instead of __const.
 	* sysdeps/unix/sysv/linux/hppa/sys/timerfd.h: Likewise.
 
