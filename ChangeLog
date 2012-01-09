@@ -1,3 +1,8 @@
+2011-01-05  Will Schmidt  <will_schmidt@vnet.ibm.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/getcontext.S: Fix a
+	typo #include statement.
+
 2012-01-08  Ulrich Drepper  <drepper@gmail.com>
 
 	* include/sys/cdefs.h: Define __attribute_alloc_size.
