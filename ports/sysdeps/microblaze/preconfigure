@@ -1,0 +1,3 @@
+case "$machine" in
+microblaze*)	base_machine=microblaze machine=microblaze ;;
+esac

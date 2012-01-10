@@ -1,0 +1,3 @@
+GLIBC_2.18
+ GLIBC_2.18 A
+ __ctype_get_mb_cur_max F

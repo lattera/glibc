@@ -1,0 +1,11 @@
+libc.so: __errno_location
+libc.so: __signbit
+libc.so: calloc
+libc.so: free
+libc.so: malloc
+libc.so: memalign
+libc.so: realloc
+libm.so: __signbit
+libm.so: __signbitf
+libm.so: matherr
+libpthread.so: __errno_location
