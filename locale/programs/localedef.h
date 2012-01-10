@@ -178,6 +178,6 @@ extern int add_locales_to_archive (size_t nlist, char *list[], bool replace);
 extern int delete_locales_from_archive (size_t nlist, char *list[]);
 
 /* List content of locale archive.  */
-extern void show_archive_content (int verbose);
+extern void show_archive_content (int verbose) __attribute__ ((noreturn));
 
 #endif /* localedef.h */

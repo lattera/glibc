@@ -1,3 +1,8 @@
+2012-01-10  Marek Polacek  <polacek@redhat.com>
+
+	* locale/programs/localedef.h (show_archive_content): Add noreturn
+	attribute.
+
 2012-01-09  Ulrich Drepper  <drepper@gmail.com>
 
 	* sysdeps/ieee754/dbl-64/s_log1p.c (__log1p): Add branch prediction.
