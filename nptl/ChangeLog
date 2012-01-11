@@ -1,3 +1,9 @@
+2012-01-11  Marek Polacek  <polacek@redhat.com>
+
+	* forward.c (FORWARD_NORETURN): Define macro.
+	(__pthread_unwind): Use FORWARD_NORETURN macro to avoid warning.
+	(__pthread_exit): Likewise.
+
 2012-01-10  Ulrich Drepper  <drepper@gmail.com>
 
 	* sysdeps/pthread/pthread.h: Add const attribute to pthread_equal.
