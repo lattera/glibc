@@ -337,10 +337,10 @@ __MATHDECL (long long int,llround,, (_Mdouble_ __x));
 __MATHCALL (fdim,, (_Mdouble_ __x, _Mdouble_ __y));
 
 /* Return maximum numeric value from X and Y.  */
-__MATHCALL (fmax,, (_Mdouble_ __x, _Mdouble_ __y));
+__MATHCALLX (fmax,, (_Mdouble_ __x, _Mdouble_ __y), (__const__));
 
 /* Return minimum numeric value from X and Y.  */
-__MATHCALL (fmin,, (_Mdouble_ __x, _Mdouble_ __y));
+__MATHCALLX (fmin,, (_Mdouble_ __x, _Mdouble_ __y), (__const__));
 
 
 /* Classify given number.  */
