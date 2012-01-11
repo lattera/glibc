@@ -1,3 +1,12 @@
+2012-01-10  Ulrich Drepper  <drepper@gmail.com>
+
+	* sysdeps/ieee754/dbl-64/s_scalbn.c: Add branch prediction.
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_scalbn.c: Likewise.
+	* sysdeps/ieee754/flt-32/s_scalbnf.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/s_scalbnl.c: Likewise.
+
+	* math/bits/math-finite.h: Add ldexp support.
+
 2012-01-10  Marek Polacek  <polacek@redhat.com>
 
 	* locale/programs/localedef.h (show_archive_content): Add noreturn

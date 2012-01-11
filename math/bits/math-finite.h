@@ -1,5 +1,5 @@
 /* Entry points to finite-math-only compiler runs.
-   Copyright (C) 2011 Free Software Foundation, Inc.
+   Copyright (C) 2011, 2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -259,6 +259,13 @@ extern float __REDIRECT_NTH (log2f, (float), __log2f_finite);
 # ifdef __MATH_DECLARE_LDOUBLE
 extern long double __REDIRECT_NTH (log2l, (long double), __log2l_finite);
 # endif
+#endif
+
+/* ldexp.  */
+extern double __REDIRECT_NTH (ldexp, (double, int), scalbn);
+extern float __REDIRECT_NTH (ldexpf, (float, int), scalbnf);
+#ifdef __MATH_DECLARE_LDOUBLE
+extern long double __REDIRECT_NTH (ldexpl, (long double, int), scalbnl);
 #endif
 
 /* pow.  */

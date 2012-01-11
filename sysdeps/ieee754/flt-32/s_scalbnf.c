@@ -13,51 +13,39 @@
  * ====================================================
  */
 
-#if defined(LIBM_SCCS) && !defined(lint)
-static char rcsid[] = "$NetBSD: s_scalbnf.c,v 1.4 1995/05/10 20:48:10 jtc Exp $";
-#endif
-
 #include "math.h"
 #include "math_private.h"
 
-#ifdef __STDC__
 static const float
-#else
-static float
-#endif
 two25   =  3.355443200e+07,	/* 0x4c000000 */
 twom25  =  2.9802322388e-08,	/* 0x33000000 */
 huge   = 1.0e+30,
 tiny   = 1.0e-30;
 
-#ifdef __STDC__
-	float __scalbnf (float x, int n)
-#else
-	float __scalbnf (x,n)
-	float x; int n;
-#endif
+float
+__scalbnf (float x, int n)
 {
 	int32_t k,ix;
 	GET_FLOAT_WORD(ix,x);
-        k = (ix&0x7f800000)>>23;		/* extract exponent */
-        if (k==0) {				/* 0 or subnormal x */
-            if ((ix&0x7fffffff)==0) return x; /* +-0 */
+	k = (ix&0x7f800000)>>23;		/* extract exponent */
+	if (__builtin_expect(k==0, 0)) {	/* 0 or subnormal x */
+	    if ((ix&0x7fffffff)==0) return x; /* +-0 */
 	    x *= two25;
 	    GET_FLOAT_WORD(ix,x);
 	    k = ((ix&0x7f800000)>>23) - 25;
 	    }
-        if (k==0xff) return x+x;		/* NaN or Inf */
-        k = k+n;
-        if (n> 50000 || k >  0xfe)
+	if (__builtin_expect(k==0xff, 0)) return x+x;	/* NaN or Inf */
+	k = k+n;
+	if (__builtin_expect(n> 50000 || k >  0xfe, 0))
 	  return huge*__copysignf(huge,x); /* overflow  */
-	if (n< -50000)
+	if (__builtin_expect(n< -50000, 0))
 	  return tiny*__copysignf(tiny,x);	/*underflow*/
-        if (k > 0) 				/* normal result */
+	if (__builtin_expect(k > 0, 1))		/* normal result */
 	    {SET_FLOAT_WORD(x,(ix&0x807fffff)|(k<<23)); return x;}
-        if (k <= -25)
+	if (k <= -25)
 	    return tiny*__copysignf(tiny,x);	/*underflow*/
-        k += 25;				/* subnormal result */
+	k += 25;				/* subnormal result */
 	SET_FLOAT_WORD(x,(ix&0x807fffff)|(k<<23));
-        return x*twom25;
+	return x*twom25;
 }
 weak_alias (__scalbnf, scalbnf)
