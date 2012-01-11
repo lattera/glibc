@@ -1,4 +1,4 @@
-GNU C Library NEWS -- history of user-visible changes.  2012-1-8
+GNU C Library NEWS -- history of user-visible changes.  2012-1-10
 Copyright (C) 1992-2009, 2010, 2011, 2012 Free Software Foundation, Inc.
 See the end for copying conditions.
 
@@ -38,6 +38,9 @@ Version 2.16
 * Remove support for anything but ELF binary format
 
 * Checking versions of poll, ppoll added.
+  Implemented by Ulrich Drepper.
+
+* More generic and 64-bit performance optimizations to math functions.
   Implemented by Ulrich Drepper.
 
 Version 2.15

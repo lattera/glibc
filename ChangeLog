@@ -1,5 +1,11 @@
 2012-01-10  Ulrich Drepper  <drepper@gmail.com>
 
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_modf.c: New file.
+
+	* sysdeps/ieee754/dbl-64/s_modf.c: Add branch prediction.
+	* sysdeps/ieee754/flt-32/s_modff.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/s_modfl.c: Likewise.
+
 	* math/bits/mathcalls.h: Add const attribute to fmin and fmax.
 
 	* sysdeps/ieee754/dbl-64/s_scalbn.c: Add branch prediction.

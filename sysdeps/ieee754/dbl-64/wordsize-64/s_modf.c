@@ -1,3 +1,4 @@
+/* Rewritten for 64-bit machines by Ulrich Drepper <drepper@gmail.com>.  */
 /*
  * ====================================================
  * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.
@@ -27,42 +28,34 @@ static const double one = 1.0;
 double
 __modf(double x, double *iptr)
 {
-	int32_t i0,i1,j0;
-	u_int32_t i;
-	EXTRACT_WORDS(i0,i1,x);
-	j0 = ((i0>>20)&0x7ff)-0x3ff;	/* exponent of x */
-	if(j0<20) {			/* integer part in high x */
+	int64_t i0;
+	int32_t j0;
+	EXTRACT_WORDS64(i0,x);
+	j0 = ((i0>>52)&0x7ff)-0x3ff;	/* exponent of x */
+	if(j0<52) {			/* integer part in x */
 	    if(j0<0) {			/* |x|<1 */
-		INSERT_WORDS(*iptr,i0&0x80000000,0);	/* *iptr = +-0 */
+		/* *iptr = +-0 */
+		INSERT_WORDS64(*iptr,i0&UINT64_C(0x8000000000000000));
 		return x;
 	    } else {
-		i = (0x000fffff)>>j0;
-		if(((i0&i)|i1)==0) {		/* x is integral */
+		uint64_t i = UINT64_C(0x000fffffffffffff)>>j0;
+		if((i0&i)==0) {		/* x is integral */
 		    *iptr = x;
-		    INSERT_WORDS(x,i0&0x80000000,0);	/* return +-0 */
+		    /* return +-0 */
+		    INSERT_WORDS64(x,i0&UINT64_C(0x8000000000000000));
 		    return x;
 		} else {
-		    INSERT_WORDS(*iptr,i0&(~i),0);
+		    INSERT_WORDS64(*iptr,i0&(~i));
 		    return x - *iptr;
 		}
 	    }
-	} else if (__builtin_expect(j0>51, 0)) { /* no fraction part */
+	} else { /* no fraction part */
 	    *iptr = x*one;
 	    /* We must handle NaNs separately.  */
-	    if (j0 == 0x400 && ((i0 & 0xfffff) | i1))
+	    if (j0 == 0x400 && (i0 & UINT64_C(0xfffffffffffff)))
 	      return x*one;
-	    INSERT_WORDS(x,i0&0x80000000,0);	/* return +-0 */
+	    INSERT_WORDS64(x,i0&UINT64_C(0x8000000000000000));	/* return +-0 */
 	    return x;
-	} else {			/* fraction part in low x */
-	    i = ((u_int32_t)(0xffffffff))>>(j0-20);
-	    if((i1&i)==0) { 		/* x is integral */
-		*iptr = x;
-		INSERT_WORDS(x,i0&0x80000000,0);	/* return +-0 */
-		return x;
-	    } else {
-		INSERT_WORDS(*iptr,i0,i1&(~i));
-		return x - *iptr;
-	    }
 	}
 }
 weak_alias (__modf, modf)

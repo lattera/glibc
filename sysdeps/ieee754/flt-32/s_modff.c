@@ -13,33 +13,21 @@
  * ====================================================
  */
 
-#if defined(LIBM_SCCS) && !defined(lint)
-static char rcsid[] = "$NetBSD: s_modff.c,v 1.4 1995/05/10 20:47:56 jtc Exp $";
-#endif
-
 #include "math.h"
 #include "math_private.h"
 
-#ifdef __STDC__
 static const float one = 1.0;
-#else
-static float one = 1.0;
-#endif
 
-#ifdef __STDC__
-	float __modff(float x, float *iptr)
-#else
-	float __modff(x, iptr)
-	float x,*iptr;
-#endif
+float
+__modff(float x, float *iptr)
 {
 	int32_t i0,j0;
 	u_int32_t i;
 	GET_FLOAT_WORD(i0,x);
 	j0 = ((i0>>23)&0xff)-0x7f;	/* exponent of x */
-	if(j0<23) {			/* integer part in x */
+	if(__builtin_expect(j0<23, 1)) {		/* integer part in x */
 	    if(j0<0) {			/* |x|<1 */
-	        SET_FLOAT_WORD(*iptr,i0&0x80000000);	/* *iptr = +-0 */
+		SET_FLOAT_WORD(*iptr,i0&0x80000000);	/* *iptr = +-0 */
 		return x;
 	    } else {
 		i = (0x007fffff)>>j0;
