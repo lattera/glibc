@@ -501,7 +501,7 @@ extern int __pthread_atfork (void (*prepare) (void), void (*parent) (void),
 extern pthread_t __pthread_self (void);
 extern int __pthread_equal (pthread_t thread1, pthread_t thread2);
 extern int __pthread_kill (pthread_t threadid, int signo);
-extern void __pthread_exit (void *value);
+extern void __pthread_exit (void *value) __attribute__ ((__noreturn__));
 extern int __pthread_setcanceltype (int type, int *oldtype);
 extern int __pthread_enable_asynccancel (void) attribute_hidden;
 extern void __pthread_disable_asynccancel (int oldtype)

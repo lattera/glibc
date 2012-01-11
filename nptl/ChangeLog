@@ -1,3 +1,8 @@
+2012-01-10  Ulrich Drepper  <drepper@gmail.com>
+
+	* pthreadP.h: Add noreturn to __pthread_exit.
+	* sysdeps/pthread/pthread-functions.h: Likewise for ptr___pthread_exit.
+
 2011-12-30  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	* sysdeps/unix/sysv/linux/aio_misc.h (__aio_create_helper_thread):

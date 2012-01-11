@@ -1,4 +1,4 @@
-/* Copyright (C) 2003, 2004, 2005, 2006, 2007, 2011 Free Software Foundation, Inc.
+/* Copyright (C) 2003-2007, 2011, 2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2003.
 
@@ -66,7 +66,7 @@ struct pthread_functions
 					   pthread_mutex_t *,
 					   const struct timespec *);
   int (*ptr_pthread_equal) (pthread_t, pthread_t);
-  void (*ptr___pthread_exit) (void *);
+  void (*ptr___pthread_exit) (void *) __attribute__ ((__noreturn__));
   int (*ptr_pthread_getschedparam) (pthread_t, int *, struct sched_param *);
   int (*ptr_pthread_setschedparam) (pthread_t, int,
 				    const struct sched_param *);
