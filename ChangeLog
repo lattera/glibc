@@ -1,3 +1,10 @@
+2012-01-11  Ulrich Drepper  <drepper@gmail.com>
+
+	* sysdeps/ieee754/dbl-64/s_scalbln.c: Add branch prediction.
+	* sysdeps/ieee754/flt-32/s_scalblnf.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/s_scalblnl.c: Likewise.
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_scalbln.c: New file.
+
 2012-01-10  Ulrich Drepper  <drepper@gmail.com>
 
 	* sysdeps/ieee754/dbl-64/wordsize-64/s_modf.c: New file.
@@ -9,9 +16,9 @@
 	* math/bits/mathcalls.h: Add const attribute to fmin and fmax.
 
 	* sysdeps/ieee754/dbl-64/s_scalbn.c: Add branch prediction.
-	* sysdeps/ieee754/dbl-64/wordsize-64/s_scalbn.c: Likewise.
 	* sysdeps/ieee754/flt-32/s_scalbnf.c: Likewise.
 	* sysdeps/ieee754/ldbl-96/s_scalbnl.c: Likewise.
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_scalbn.c: New file.
 
 	* math/bits/math-finite.h: Add ldexp support.
 

@@ -28,14 +28,15 @@ tiny   = 1.0e-300;
 double
 __scalbln (double x, long int n)
 {
-	int32_t k,hx,lx;
-	EXTRACT_WORDS(hx,lx,x);
-	k = (hx&0x7ff00000)>>20;		/* extract exponent */
+	int64_t ix;
+	int64_t k;
+	EXTRACT_WORDS64(ix,x);
+	k = (ix >> 52) & 0x7ff;			/* extract exponent */
 	if (__builtin_expect(k==0, 0)) {	/* 0 or subnormal x */
-	    if ((lx|(hx&0x7fffffff))==0) return x; /* +-0 */
+	    if ((ix & UINT64_C(0xfffffffffffff))==0) return x; /* +-0 */
 	    x *= two54;
-	    GET_HIGH_WORD(hx,x);
-	    k = ((hx&0x7ff00000)>>20) - 54;
+	    EXTRACT_WORDS64(ix,x);
+	    k = ((ix >> 52) & 0x7ff) - 54;
 	    }
 	if (__builtin_expect(k==0x7ff, 0)) return x+x;	/* NaN or Inf */
 	k = k+n;
@@ -44,11 +45,12 @@ __scalbln (double x, long int n)
 	if (__builtin_expect(n< -50000, 0))
 	  return tiny*__copysign(tiny,x); /*underflow*/
 	if (__builtin_expect(k > 0, 1))		/* normal result */
-	    {SET_HIGH_WORD(x,(hx&0x800fffff)|(k<<20)); return x;}
+	    {INSERT_WORDS64(x,(ix&UINT64_C(0x800fffffffffffff))|(k<<52));
+	      return x;}
 	if (k <= -54)
-	  return tiny*__copysign(tiny,x); 	/*underflow*/
+	  return tiny*__copysign(tiny,x);	/*underflow*/
 	k += 54;				/* subnormal result */
-	SET_HIGH_WORD(x,(hx&0x800fffff)|(k<<20));
+	INSERT_WORDS64(x,(ix&INT64_C(0x800fffffffffffff))|(k<<52));
 	return x*twom54;
 }
 weak_alias (__scalbln, scalbln)
