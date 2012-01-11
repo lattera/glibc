@@ -266,7 +266,8 @@ extern int pthread_detach (pthread_t __th) __THROW;
 extern pthread_t pthread_self (void) __THROW __attribute__ ((__const__));
 
 /* Compare two thread identifiers.  */
-extern int pthread_equal (pthread_t __thread1, pthread_t __thread2) __THROW;
+extern int pthread_equal (pthread_t __thread1, pthread_t __thread2)
+  __THROW __attribute__ ((__const__));
 
 
 /* Thread attribute handling.  */

@@ -1,5 +1,7 @@
 2012-01-10  Ulrich Drepper  <drepper@gmail.com>
 
+	* sysdeps/pthread/pthread.h: Add const attribute to pthread_equal.
+
 	* pthreadP.h: Add noreturn to __pthread_exit.
 	* sysdeps/pthread/pthread-functions.h: Likewise for ptr___pthread_exit.
 
