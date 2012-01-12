@@ -1,5 +1,5 @@
 /* Assembly macros for 32-bit PowerPC.
-   Copyright (C) 1999, 2001, 2002, 2003, 2006, 2011
+   Copyright (C) 1999, 2001, 2002, 2003, 2006, 2011, 2012
 	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -93,7 +93,7 @@ GOT_LABEL:			;					      \
   ASM_SIZE_DIRECTIVE(name)
 
 #define DO_CALL(syscall)				      		      \
-    li 0,syscall;						              \
+    li 0,syscall;							      \
     sc
 
 #undef JUMPTARGET
@@ -152,6 +152,10 @@ GOT_LABEL:			;					      \
 /* Local labels stripped out by the linker.  */
 #undef L
 #define L(x) .L##x
+
+#define XGLUE(a,b) a##b
+#define GLUE(a,b) XGLUE (a,b)
+#define GENERATE_GOT_LABEL(name) GLUE (.got_label, name)
 
 /* Label in text section.  */
 #define C_TEXT(name) name

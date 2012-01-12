@@ -1,3 +1,11 @@
+2012-01-04  Will Schmidt  <will_schmidt@vnet.ibm.com>
+
+	* powerpc/powerpc32/sysdep.h: Add GLUE and GENERATE_GOT_LABEL macros.
+	* unix/sysv/linux/powerpc/powerpc32/getcontext-common.S: Call
+	macro to ensure uniqueness of label name.
+	* unix/sysv/linux/powerpc/powerpc32/setcontext-common.S: Likewise.
+	* unix/sysv/linux/powerpc/powerpc32/swapcontext-common.S: Likewise.
+
 2012-01-11  Ulrich Drepper  <drepper@gmail.com>
 
 	* sysdeps/ieee754/dbl-64/wordsize-64/e_acosh.c: New file.
