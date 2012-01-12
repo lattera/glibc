@@ -1,5 +1,7 @@
 2012-01-11  Ulrich Drepper  <drepper@gmail.com>
 
+	* sysdeps/ieee754/dbl-64/wordsize-64/e_acosh.c: New file.
+
 	* sysdeps/ieee754/dbl-64/s_scalbln.c: Add branch prediction.
 	* sysdeps/ieee754/flt-32/s_scalblnf.c: Likewise.
 	* sysdeps/ieee754/ldbl-96/s_scalblnl.c: Likewise.
