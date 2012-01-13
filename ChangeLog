@@ -1,3 +1,8 @@
+2012-01-12  Marek Polacek  <polacek@redhat.com>
+
+	* libio/bits/stdio2.h: Do not define gets for ISO C11, ISO C++11,
+	and _GNU_SOURCE.
+
 2012-01-04  Will Schmidt  <will_schmidt@vnet.ibm.com>
 
 	* powerpc/powerpc32/sysdep.h: Add GLUE and GENERATE_GOT_LABEL macros.

@@ -217,6 +217,8 @@ __NTH (obstack_vprintf (struct obstack *__restrict __obstack,
 
 #endif
 
+#if !defined __USE_ISOC11 \
+    || (defined __cplusplus && __cplusplus <= 201103L && !defined __USE_GNU)
 extern char *__gets_chk (char *__str, size_t) __wur;
 extern char *__REDIRECT (__gets_warn, (char *__str), gets)
      __wur __warnattr ("please use fgets or getline instead, gets can't "
@@ -229,6 +231,7 @@ gets (char *__str)
     return __gets_chk (__str, __bos (__str));
   return __gets_warn (__str);
 }
+#endif
 
 extern char *__fgets_chk (char *__restrict __s, size_t __size, int __n,
 			  FILE *__restrict __stream) __wur;
