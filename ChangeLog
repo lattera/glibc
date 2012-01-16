@@ -1,5 +1,8 @@
 2012-01-16  Ulrich Drepper  <drepper@gmail.com>
 
+	* malloc/malloc.c: Various cleanups.
+	* malloc/hooks.c: Likewise.
+
 	* stdlib/Makefile (tests): Add bug-fmtmsg1.
 	* stdlib/bug-fmtmsg1.c: New file.
 

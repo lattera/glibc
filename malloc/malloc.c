@@ -179,7 +179,6 @@
 
     Configuration and functionality options:
 
-    USE_DL_PREFIX              NOT defined
     USE_PUBLIC_MALLOC_WRAPPERS NOT defined
     USE_MALLOC_LOCK            NOT defined
     MALLOC_DEBUG               NOT defined
@@ -226,10 +225,6 @@
 
 #include <ldsodefs.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #include <unistd.h>
 #include <stdio.h>    /* needed for malloc_stats */
 #include <errno.h>
@@ -239,14 +234,6 @@ extern "C" {
 
 /* For va_arg, va_start, va_end.  */
 #include <stdarg.h>
-
-/* For writev and struct iovec.  */
-#include <sys/uio.h>
-/* For syslog.  */
-#include <sys/syslog.h>
-
-/* For various dynamic linking things.  */
-#include <dlfcn.h>
 
 
 /*
@@ -401,40 +388,10 @@ __malloc_assert (const char *assertion, const char *file, unsigned int line,
 
 
 /*
-  USE_DL_PREFIX will prefix all public routines with the string 'dl'.
-  This is necessary when you only want to use this malloc in one part
-  of a program, using your regular system malloc elsewhere.
-*/
-
-/* #define USE_DL_PREFIX */
-
-
-/*
    Two-phase name translation.
    All of the actual routines are given mangled names.
    When wrappers are used, they become the public callable versions.
-   When DL_PREFIX is used, the callable names are prefixed.
 */
-
-#ifdef USE_DL_PREFIX
-#define public_cALLOc    dlcalloc
-#define public_fREe      dlfree
-#define public_cFREe     dlcfree
-#define public_mALLOc    dlmalloc
-#define public_mEMALIGn  dlmemalign
-#define public_rEALLOc   dlrealloc
-#define public_vALLOc    dlvalloc
-#define public_pVALLOc   dlpvalloc
-#define public_mALLINFo  dlmallinfo
-#define public_mALLOPt   dlmallopt
-#define public_mTRIm     dlmalloc_trim
-#define public_mSTATs    dlmalloc_stats
-#define public_mUSABLe   dlmalloc_usable_size
-#define public_iCALLOc   dlindependent_calloc
-#define public_iCOMALLOc dlindependent_comalloc
-#define public_gET_STATe dlget_state
-#define public_sET_STATe dlset_state
-#else /* USE_DL_PREFIX */
 
 /* Special defines for the GNU C library.  */
 #define public_cALLOc    __libc_calloc
@@ -464,8 +421,6 @@ __malloc_assert (const char *assertion, const char *file, unsigned int line,
 
 void * __default_morecore (ptrdiff_t);
 void *(*__morecore)(ptrdiff_t) = __default_morecore;
-
-#endif /* USE_DL_PREFIX */
 
 
 #include <string.h>
@@ -1112,15 +1067,8 @@ int      __posix_memalign(void **, size_t, size_t);
 #define DEFAULT_MMAP_MAX       (65536)
 #endif
 
-#ifdef __cplusplus
-} /* end of extern "C" */
-#endif
-
 #include <malloc.h>
 
-#ifndef BOUNDED_N
-#define BOUNDED_N(ptr, sz) (ptr)
-#endif
 #ifndef RETURN_ADDRESS
 #define RETURN_ADDRESS(X_) (NULL)
 #endif
