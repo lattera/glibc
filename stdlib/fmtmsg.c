@@ -1,4 +1,5 @@
-/* Copyright (C) 1997,1999-2003,2005,2006,2011 Free Software Foundation, Inc.
+/* Copyright (C) 1997,1999-2003,2005,2006,2011,2012
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -280,6 +281,8 @@ init (void)
 
 	  sevlevel_var = end + (*end == ':' ? 1 : 0);
 	}
+
+      __libc_lock_unlock (lock);
     }
 }
 

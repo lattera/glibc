@@ -1,4 +1,4 @@
-# Copyright (C) 1991-2009, 2011 Free Software Foundation, Inc.
+# Copyright (C) 1991-2009, 2011, 2012 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -71,7 +71,7 @@ tests		:= tst-strtol tst-strtod testmb testrand testsort testdiv   \
 		   tst-atof1 tst-atof2 tst-strtod2 tst-strtod3 tst-rand48-2 \
 		   tst-makecontext tst-strtod4 tst-strtod5 tst-qsort2	    \
 		   tst-makecontext2 tst-strtod6 tst-unsetenv1		    \
-		   tst-makecontext3 bug-getcontext
+		   tst-makecontext3 bug-getcontext bug-fmtmsg1
 
 include ../Makeconfig
 
@@ -121,6 +121,7 @@ tst-strtod3-ENV = LOCPATH=$(common-objpfx)localedata
 tst-strtod4-ENV = LOCPATH=$(common-objpfx)localedata
 tst-strtod5-ENV = LOCPATH=$(common-objpfx)localedata
 testmb2-ENV = LOCPATH=$(common-objpfx)localedata
+bug-fmtmsg1-ENV = SEV_LEVEL=foo,11,newsev
 
 # Run a test on the header files we use.
 tests: $(objpfx)isomac.out

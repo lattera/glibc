@@ -1,3 +1,11 @@
+2012-01-16  Ulrich Drepper  <drepper@gmail.com>
+
+	* stdlib/Makefile (tests): Add bug-fmtmsg1.
+	* stdlib/bug-fmtmsg1.c: New file.
+
+	* stdlib/fmtmsg.c (init): Add missing unlock.
+	Patch by Peng Haitao <penght@cn.fujitsu.com>.
+
 2012-01-12  Marek Polacek  <polacek@redhat.com>
 
 	* libio/bits/stdio2.h: Do not define gets for ISO C11, ISO C++11,
