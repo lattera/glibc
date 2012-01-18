@@ -1089,11 +1089,10 @@ typedef struct malloc_chunk* mchunkptr;
 static void*  _int_malloc(mstate, size_t);
 static void     _int_free(mstate, mchunkptr, int);
 static void*  _int_realloc(mstate, mchunkptr, INTERNAL_SIZE_T,
-			     INTERNAL_SIZE_T);
+			   INTERNAL_SIZE_T);
 static void*  _int_memalign(mstate, size_t, size_t);
 static void*  _int_valloc(mstate, size_t);
 static void*  _int_pvalloc(mstate, size_t);
-/*static void*  cALLOc(size_t, size_t);*/
 static int      mTRIm(mstate, size_t);
 static size_t   mUSABLe(void*);
 static void     mSTATs(void);
@@ -1140,9 +1139,6 @@ static void      free_atfork(void* mem, const void *caller);
 #if !defined(MAP_ANONYMOUS) && defined(MAP_ANON)
 # define MAP_ANONYMOUS MAP_ANON
 #endif
-#if !defined(MAP_FAILED)
-# define MAP_FAILED ((char*)-1)
-#endif
 
 #ifndef MAP_NORESERVE
 # ifdef MAP_AUTORESRV
@@ -1152,27 +1148,8 @@ static void      free_atfork(void* mem, const void *caller);
 # endif
 #endif
 
-/*
-   Nearly all versions of mmap support MAP_ANONYMOUS,
-   so the following is unlikely to be needed, but is
-   supplied just in case.
-*/
-
-#ifndef MAP_ANONYMOUS
-
-static int dev_zero_fd = -1; /* Cached file descriptor for /dev/zero. */
-
-#define MMAP(addr, size, prot, flags) ((dev_zero_fd < 0) ? \
- (dev_zero_fd = open("/dev/zero", O_RDWR), \
-  mmap((addr), (size), (prot), (flags), dev_zero_fd, 0)) : \
-   mmap((addr), (size), (prot), (flags), dev_zero_fd, 0))
-
-#else
-
 #define MMAP(addr, size, prot, flags) \
  (mmap((addr), (size), (prot), (flags)|MAP_ANONYMOUS, -1, 0))
-
-#endif
 
 
 /*
