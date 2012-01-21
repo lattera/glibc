@@ -1,5 +1,5 @@
 /* Cache handling for host lookup.
-   Copyright (C) 1998-2008, 2009, 2011 Free Software Foundation, Inc.
+   Copyright (C) 1998-2008, 2009, 2011, 2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -141,8 +141,9 @@ cache_addhst (struct database_dyn *db, int fd, request_header *req,
 					MSG_NOSIGNAL)) != total)
 	    all_written = false;
 
-	  /* If we cannot permanently store the result, so be it.  */
-	  if (__builtin_expect (db->negtimeout == 0, 0))
+	  /* If we have a transient error or cannot permanently store
+	     the result, so be it.  */
+	  if (errval == EAGAIN || __builtin_expect (db->negtimeout == 0, 0))
 	    {
 	      /* Mark the old entry as obsolete.  */
 	      if (dh != NULL)
