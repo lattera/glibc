@@ -44,7 +44,7 @@ __END_NAMESPACE_C99
 /* Define the 16-bit and 32-bit character types.  Use the information
    provided by the compiler.  */
 # if !defined __CHAR16_TYPE__ || !defined __CHAR32_TYPE__
-#  if defined __STDC__ && __STDC__ < 201000L
+#  if defined __STDC_VERSION__ && __STDC_VERSION__ < 201000L
 #   error "<uchar.h> requires ISO C11 mode"
 #  else
 #   error "definitions of __CHAR16_TYPE__ and/or __CHAR32_TYPE__ missing"

@@ -1,3 +1,7 @@
+2012-01-21  Ulrich Drepper  <drepper@gmail.com>
+
+	* wcsmbs/uchar.h: Test __STDC_VERSION__.
+
 2012-01-20  Ulrich Drepper  <drepper@gmail.com>
 
 	* nscd/aicache.c (addhstaiX): Do not cache negative results of
