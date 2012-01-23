@@ -1,4 +1,4 @@
-/* Copyright (C) 1994,1995,1996,1997,1999,2002,2003,2004
+/* Copyright (C) 1994,1995,1996,1997,1999,2002,2003,2004,2012
 	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -51,15 +51,20 @@ __mmap (__ptr_t addr, size_t len, int prot, int flags, int fd, off_t offset)
     {
       /* vm_allocate has (a little) less overhead in the kernel too.  */
       err = __vm_allocate (__mach_task_self (), &mapaddr, len,
-			   !(flags & MAP_FIXED));
+			   mapaddr == NULL);
 
-      if (err == KERN_NO_SPACE && (flags & MAP_FIXED))
+      if (err == KERN_NO_SPACE)
 	{
-	  /* XXX this is not atomic as it is in unix! */
-	  /* The region is already allocated; deallocate it first.  */
-	  err = __vm_deallocate (__mach_task_self (), mapaddr, len);
-	  if (!err)
-	    err = __vm_allocate (__mach_task_self (), &mapaddr, len, 0);
+	  if (flags & MAP_FIXED)
+	    {
+	      /* XXX this is not atomic as it is in unix! */
+	      /* The region is already allocated; deallocate it first.  */
+	      err = __vm_deallocate (__mach_task_self (), mapaddr, len);
+	      if (!err)
+		err = __vm_allocate (__mach_task_self (), &mapaddr, len, 0);
+	    }
+	  else if (mapaddr != NULL)
+	    err = __vm_allocate (__mach_task_self (), &mapaddr, len, 1);
 	}
 
       return err ? (__ptr_t) (long int) __hurd_fail (err) : (__ptr_t) mapaddr;
@@ -135,21 +140,32 @@ __mmap (__ptr_t addr, size_t len, int prot, int flags, int fd, off_t offset)
 
   err = __vm_map (__mach_task_self (),
 		  &mapaddr, (vm_size_t) len, (vm_address_t) 0,
-		  ! (flags & MAP_FIXED),
+		  mapaddr == NULL,
 		  memobj, (vm_offset_t) offset,
 		  ! (flags & MAP_SHARED),
 		  vmprot, VM_PROT_ALL,
 		  (flags & MAP_SHARED) ? VM_INHERIT_SHARE : VM_INHERIT_COPY);
 
-  if (err == KERN_NO_SPACE && (flags & MAP_FIXED))
+  if (err == KERN_NO_SPACE)
     {
-      /* XXX this is not atomic as it is in unix! */
-      /* The region is already allocated; deallocate it first.  */
-      err = __vm_deallocate (__mach_task_self (), mapaddr, len);
-      if (! err)
+      if (flags & MAP_FIXED)
+	{
+	  /* XXX this is not atomic as it is in unix! */
+	  /* The region is already allocated; deallocate it first.  */
+	  err = __vm_deallocate (__mach_task_self (), mapaddr, len);
+	  if (! err)
+	    err = __vm_map (__mach_task_self (),
+			    &mapaddr, (vm_size_t) len, (vm_address_t) 0,
+			    0, memobj, (vm_offset_t) offset,
+			    ! (flags & MAP_SHARED),
+			    vmprot, VM_PROT_ALL,
+			    (flags & MAP_SHARED) ? VM_INHERIT_SHARE
+			    : VM_INHERIT_COPY);
+	}
+      else if (mapaddr != NULL)
 	err = __vm_map (__mach_task_self (),
 			&mapaddr, (vm_size_t) len, (vm_address_t) 0,
-			0, memobj, (vm_offset_t) offset,
+			1, memobj, (vm_offset_t) offset,
 			! (flags & MAP_SHARED),
 			vmprot, VM_PROT_ALL,
 			(flags & MAP_SHARED) ? VM_INHERIT_SHARE

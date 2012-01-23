@@ -3,6 +3,12 @@
 	* sysdeps/mach/hurd/socket.c (__socket): Return EAFNOSUPPORT instead
 	of the non-standard EPFNOSUPPORT.
 
+2011-12-26  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	* sysdeps/mach/hurd/mmap.c (__mmap): When MAPADDR is nonzero, try
+	__vm_allocate and __vm_map with ANYWHERE set to 0 first, and try with
+	ANYWHERE set to 1 only on KERN_NO_SPACE error.
+
 2012-01-21  Ulrich Drepper  <drepper@gmail.com>
 
 	* wcsmbs/uchar.h: Test __STDC_VERSION__.
