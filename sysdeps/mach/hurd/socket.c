@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 93, 94, 95, 96, 97, 98 Free Software Foundation, Inc.
+/* Copyright (C) 1992-1998,2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -57,7 +57,7 @@ __socket (domain, type, protocol)
      isn't supported.  */
   if (err == MACH_SEND_INVALID_DEST || err == MIG_SERVER_DIED
       || err == MIG_BAD_ID || err == EOPNOTSUPP)
-    err = EPFNOSUPPORT;
+    err = EAFNOSUPPORT;
 
   if (err)
     return __hurd_fail (err);
