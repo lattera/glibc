@@ -34,11 +34,6 @@
 #include <sys/socket.h>
 #include <sys/un.h>
 
-__BEGIN_DECLS
-/* The <stdio.h> header does not include the declaration for gets
-   anymore when compiling with _GNU_SOURCE.  Provide a copy here.  */
-extern char *gets (char *__s);
-__END_DECLS
 
 #define obstack_chunk_alloc malloc
 #define obstack_chunk_free free

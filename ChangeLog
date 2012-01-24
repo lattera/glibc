@@ -1,3 +1,10 @@
+2012-01-24  Ulrich Drepper  <drepper@gmail.com>
+
+	* include/stdio.h: Add C++ protection.  Add gets declarations and
+	definitions.
+	* debug/tst-chk1.c: Don't declare gets here.
+	* stdio-common/tst-gets.c: Likewise.
+
 2012-01-21  Ulrich Drepper  <drepper@gmail.com>
 
 	* wcsmbs/uchar.h: Test __STDC_VERSION__.
