@@ -1,5 +1,9 @@
 2012-01-24  Joseph Myers  <joseph@codesourcery.com>
 
+	* posix/glob: Remove directory.
+
+2012-01-24  Joseph Myers  <joseph@codesourcery.com>
+
 	* wcsmbs/Makefile (tst-c16c32-1-ENV): Define.
 
 2012-01-22  Pino Toscano  <toscano.pino@tiscali.it>
