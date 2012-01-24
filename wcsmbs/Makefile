@@ -86,3 +86,4 @@ tst-btowc-ENV = LOCPATH=$(common-objpfx)localedata
 tst-mbrtowc-ENV = LOCPATH=$(common-objpfx)localedata
 tst-wcrtomb-ENV = LOCPATH=$(common-objpfx)localedata
 tst-mbrtowc2-ENV = LOCPATH=$(common-objpfx)localedata
+tst-c16c32-1-ENV = LOCPATH=$(common-objpfx)localedata
