@@ -5,6 +5,25 @@
 	* debug/tst-chk1.c: Don't declare gets here.
 	* stdio-common/tst-gets.c: Likewise.
 
+2012-01-24  Joseph Myers  <joseph@codesourcery.com>
+
+	* posix/glob: Remove directory.
+
+2012-01-24  Joseph Myers  <joseph@codesourcery.com>
+
+	* wcsmbs/Makefile (tst-c16c32-1-ENV): Define.
+
+2012-01-22  Pino Toscano  <toscano.pino@tiscali.it>
+
+	* sysdeps/mach/hurd/socket.c (__socket): Return EAFNOSUPPORT instead
+	of the non-standard EPFNOSUPPORT.
+
+2011-12-26  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	* sysdeps/mach/hurd/mmap.c (__mmap): When MAPADDR is nonzero, try
+	__vm_allocate and __vm_map with ANYWHERE set to 0 first, and try with
+	ANYWHERE set to 1 only on KERN_NO_SPACE error.
+
 2012-01-21  Ulrich Drepper  <drepper@gmail.com>
 
 	* wcsmbs/uchar.h: Test __STDC_VERSION__.
