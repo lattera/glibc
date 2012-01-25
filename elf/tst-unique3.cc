@@ -1,5 +1,4 @@
 #include "tst-unique3.h"
-extern char *gets (char *);
 
 #include <cstdio>
 #include "../dlfcn/dlfcn.h"

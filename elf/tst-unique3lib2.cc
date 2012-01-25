@@ -1,5 +1,3 @@
-extern char *gets (char *);
-
 #include <cstdio>
 #include "tst-unique3.h"
 

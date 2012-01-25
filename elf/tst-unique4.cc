@@ -1,6 +1,5 @@
 // BZ 12511
 #include "tst-unique4.h"
-extern char *gets (char *);
 
 #include <cstdio>
 

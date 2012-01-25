@@ -1,3 +1,10 @@
+2012-01-25  Joseph Myers  <joseph@codesourcery.com>
+
+	* elf/tst-unique3.cc (gets): Remove declaration.
+	* elf/tst-unique3lib.cc (gets): Likewise.
+	* elf/tst-unique3lib2.cc (gets): Likewise.
+	* elf/tst-unique4.cc (gets): Likewise.
+
 2012-01-24  Ulrich Drepper  <drepper@gmail.com>
 
 	* include/stdio.h: Add C++ protection.  Add gets declarations and
