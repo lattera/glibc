@@ -1,5 +1,5 @@
 /* This file is part of the GNU C Library.
-   Copyright (C) 2008, 2009, 2010, 2011 Free Software Foundation, Inc.
+   Copyright (C) 2008, 2009, 2010, 2011, 2012 Free Software Foundation, Inc.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -27,6 +27,7 @@
 #define bit_SSSE3	(1 << 9)
 #define bit_SSE4_1	(1 << 19)
 #define bit_SSE4_2	(1 << 20)
+#define bit_OSXSAVE	(1 << 27)
 #define bit_AVX		(1 << 28)
 #define bit_POPCOUNT	(1 << 23)
 #define bit_FMA		(1 << 12)

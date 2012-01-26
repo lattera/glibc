@@ -1,3 +1,10 @@
+2012-01-26  Ulrich Drepper  <drepper@gmail.com>
+
+	[BZ #13583]
+	* sysdeps/x86_64/multiarch/init-arch.h: Define bit_OSXSAVE.
+	* sysdeps/x86_64/multiarch/init-arch.c (__init_cpu_features): If
+	bit_AVX is set also check OSXAVE/XCR0 and reset bit_AVX if necessary.
+
 2012-01-25  Joseph Myers  <joseph@codesourcery.com>
 
 	* elf/tst-unique3.cc (gets): Remove declaration.
