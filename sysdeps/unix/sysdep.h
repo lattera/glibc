@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 93, 96, 98, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 1991-1993, 96, 98, 2003, 2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -22,11 +22,7 @@
 #define	HAVE_SYSCALLS
 
 /* Note that using a `PASTE' macro loses.  */
-#ifdef	__STDC__
 #define	SYSCALL__(name, args)	PSEUDO (__##name, name, args)
-#else
-#define	SYSCALL__(name, args)	PSEUDO (__/**/name, name, args)
-#endif
 #define	SYSCALL(name, args)	PSEUDO (name, name, args)
 
 /* Machine-dependent sysdep.h files are expected to define the macro
@@ -36,11 +32,7 @@
    an instruction such that "MOVE(r1, r0)" works.  ret should be defined
    as the return instruction.  */
 
-#ifdef __STDC__
 #define SYS_ify(syscall_name) SYS_##syscall_name
-#else
-#define SYS_ify(syscall_name) SYS_/**/syscall_name
-#endif
 
 /* Terminate a system call named SYM.  This is used on some platforms
    to generate correct debugging information.  */

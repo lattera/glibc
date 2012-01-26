@@ -21,11 +21,7 @@
 #ifndef C_LABEL
 
 /* Define a macro we can use to construct the asm name for a C symbol.  */
-# ifdef __STDC__
-#  define C_LABEL(name)	name##:
-# else
-#  define C_LABEL(name)	name/**/:
-# endif
+# define C_LABEL(name)	name##:
 
 #endif
 

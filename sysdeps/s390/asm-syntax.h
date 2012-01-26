@@ -23,15 +23,7 @@
 
 #undef L
 #ifdef __ELF__
-# ifdef __STDC__
-#  define L(body) .L##body
-# else
-#  define L(body) .L/**/body
-# endif
+# define L(body) .L##body
 #else
-# ifdef __STDC__
-#  define L(body) L##body
-# else
-#  define L(body) L/**/body
-# endif
+# define L(body) L##body
 #endif
