@@ -1,4 +1,4 @@
-/* Copyright (C) 1997,1998,1999,2000,2003,2004,2006,2010
+/* Copyright (C) 1997,1998,1999,2000,2003,2004,2006,2010,2012
 	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -32,23 +32,13 @@
 # define _MATH_H_MATHDEF	1
 
 # ifdef __GNUC__
-#  if __STDC__ == 1
 
-/* In GNU or ANSI mode, gcc leaves `float' expressions as-is.  */
+/* gcc leaves `float' expressions as-is.  */
 typedef float float_t;		/* `float' expressions are evaluated as
 				   `float'.  */
 typedef double double_t;	/* `double' expressions are evaluated as
 				   `double'.  */
 
-#  else
-
-/* For `gcc -traditional', `float' expressions are evaluated as `double'. */
-typedef double float_t;		/* `float' expressions are evaluated as
-				   `double'.  */
-typedef double double_t;	/* `double' expressions are evaluated as
-				   `double'.  */
-
-#  endif
 # else
 
 /* Wild guess at types for float_t and double_t. */
