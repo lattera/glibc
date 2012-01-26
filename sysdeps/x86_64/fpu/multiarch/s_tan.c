@@ -12,7 +12,8 @@ extern double __tan_fma4 (double);
 #  define __tan_fma4 ((void *) 0)
 # endif
 
-libm_ifunc (tan, HAS_FMA4 ? __tan_fma4 : HAS_AVX ? __tan_avx : __tan_sse2);
+libm_ifunc (tan, (HAS_FMA4 ? __tan_fma4 :
+		  HAS_YMM_USABLE ? __tan_avx : __tan_sse2));
 
 # define tan __tan_sse2
 #endif

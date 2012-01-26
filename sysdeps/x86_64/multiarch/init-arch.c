@@ -147,13 +147,13 @@ __init_cpu_features (void)
   if (__cpu_features.cpuid[COMMON_CPUID_INDEX_1].ecx & bit_AVX)
     {
       /* Reset the AVX bit in case OSXSAVE is disabled.  */
-      if ((__cpu_features.cpuid[COMMON_CPUID_INDEX_1].ecx & bit_OSXSAVE) == 0
-	  || ({ unsigned int xcrlow;
-	      unsigned int xcrhigh;
-	      asm ("xgetbv"
-		   : "=a" (xcrlow), "=d" (xcrhigh) : "c" (0));
-	      (xcrlow & 6) != 6; }))
-	__cpu_features.cpuid[COMMON_CPUID_INDEX_1].ecx &= ~bit_AVX;
+      if ((__cpu_features.cpuid[COMMON_CPUID_INDEX_1].ecx & bit_OSXSAVE) != 0
+	  && ({ unsigned int xcrlow;
+		unsigned int xcrhigh;
+		asm ("xgetbv"
+		     : "=a" (xcrlow), "=d" (xcrhigh) : "c" (0));
+		(xcrlow & 6) == 6; }))
+	__cpu_features.feature[index_YMM_Usable] |= bit_YMM_Usable;
     }
 
   __cpu_features.family = family;
