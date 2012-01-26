@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998, 2002, 2003, 2004, 2005
+/* Copyright (C) 1997, 1998, 2002, 2003, 2004, 2005, 2012
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ralf Baechle <ralf@gnu.org>.
@@ -24,11 +24,7 @@
 #include <sgidefs.h>
 
 #ifndef CAT
-# ifdef __STDC__
-#  define __CAT(str1,str2) str1##str2
-# else
-#  define __CAT(str1,str2) str1/**/str2
-# endif
+# define __CAT(str1,str2) str1##str2
 # define CAT(str1,str2) __CAT(str1,str2)
 #endif
 

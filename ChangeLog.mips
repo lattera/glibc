@@ -1,3 +1,10 @@
+2012-01-26  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/mips/sys/asm.h: Remove __STDC__ conditionals.
+	* sysdeps/unix/sysv/linux/mips/mips32/sysdep.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n32/sysdep.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n64/sysdep.h: Likewise.
+
 2012-01-08  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/mips/bits/fenv.h: Use const instead of __const.
