@@ -21,12 +21,7 @@ static char rcsid[] = "$NetBSD: s_ldexpf.c,v 1.3 1995/05/10 20:47:42 jtc Exp $";
 #include <math_private.h>
 #include <errno.h>
 
-#ifdef __STDC__
-	float __ldexpf(float value, int exp)
-#else
-	float __ldexpf(value, exp)
-	float value; int exp;
-#endif
+float __ldexpf(float value, int exp)
 {
 	if(!__finitef(value)||value==(float)0.0) return value;
 	value = __scalbnf(value,exp);

@@ -29,12 +29,7 @@ static char rcsid[] = "$NetBSD: s_nextafter.c,v 1.8 1995/05/10 20:47:58 jtc Exp 
 #include <math_private.h>
 #include <float.h>
 
-#ifdef __STDC__
-	double __nextafter(double x, double y)
-#else
-	double __nextafter(x,y)
-	double x,y;
-#endif
+double __nextafter(double x, double y)
 {
 	int32_t hx,hy,ix,iy;
 	u_int32_t lx,ly;

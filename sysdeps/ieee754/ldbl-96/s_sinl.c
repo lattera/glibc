@@ -53,12 +53,7 @@ static char rcsid[] = "$NetBSD: $";
 #include "math.h"
 #include "math_private.h"
 
-#ifdef __STDC__
-	long double __sinl(long double x)
-#else
-	long double __sinl(x)
-	long double x;
-#endif
+long double __sinl(long double x)
 {
 	long double y[2],z=0.0;
 	int32_t n, se, i0, i1;

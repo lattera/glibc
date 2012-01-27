@@ -42,11 +42,7 @@ static char rcsid[] = "$NetBSD: e_asinf.c,v 1.5 1995/05/12 04:57:25 jtc Exp $";
 #include "math.h"
 #include "math_private.h"
 
-#ifdef __STDC__
 static const float
-#else
-static float
-#endif
 one =  1.0000000000e+00, /* 0x3F800000 */
 huge =  1.000e+30,
 
@@ -63,12 +59,7 @@ p2 = 4.547037598e-2f,
 p3 = 2.417951451e-2f,
 p4 = 4.216630880e-2f;
 
-#ifdef __STDC__
-	float __ieee754_asinf(float x)
-#else
-	float __ieee754_asinf(x)
-	float x;
-#endif
+float __ieee754_asinf(float x)
 {
 	float t,w,p,q,c,r,s;
 	int32_t hx,ix;

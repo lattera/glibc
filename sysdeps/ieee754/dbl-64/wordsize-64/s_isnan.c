@@ -19,12 +19,7 @@
 #include "math_private.h"
 
 #undef __isnan
-#ifdef __STDC__
-	int __isnan(double x)
-#else
-	int __isnan(x)
-	double x;
-#endif
+int __isnan(double x)
 {
 	int64_t hx;
 	EXTRACT_WORDS64(hx,x);

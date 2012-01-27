@@ -63,11 +63,7 @@
 #include "math_private.h"
 long double sqrtl (long double);
 
-#ifdef __STDC__
 static const long double
-#else
-static long double
-#endif
   one = 1.0L,
   huge = 1.0e+4932L,
   pio2_hi = 1.5707963267948966192313216916397514420986L,
@@ -132,14 +128,8 @@ static long double
 
 
 
-#ifdef __STDC__
 long double
 __ieee754_asinl (long double x)
-#else
-double
-__ieee754_asinl (x)
-     long double x;
-#endif
 {
   long double t, w, p, q, c, r, s;
   int32_t ix, sign, flag;

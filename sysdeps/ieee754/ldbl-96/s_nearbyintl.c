@@ -29,22 +29,13 @@
 #include "math.h"
 #include "math_private.h"
 
-#ifdef __STDC__
 static const long double
-#else
-static long double
-#endif
 TWO63[2]={
   9.223372036854775808000000e+18, /* 0x403E, 0x00000000, 0x00000000 */
  -9.223372036854775808000000e+18  /* 0xC03E, 0x00000000, 0x00000000 */
 };
 
-#ifdef __STDC__
-	long double __nearbyintl(long double x)
-#else
-	long double __nearbyintl(x)
-	long double x;
-#endif
+long double __nearbyintl(long double x)
 {
 	fenv_t env;
 	int32_t se,j0,sx;

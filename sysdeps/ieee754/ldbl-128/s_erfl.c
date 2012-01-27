@@ -136,11 +136,7 @@ deval (long double x, const long double *p, int n)
 
 
 
-#ifdef __STDC__
 static const long double
-#else
-static long double
-#endif
 tiny = 1e-4931L,
   half = 0.5L,
   one = 1.0L,
@@ -754,14 +750,8 @@ static const long double RDr1[NRDr1 + 1] =
 };
 
 
-#ifdef __STDC__
 long double
 __erfl (long double x)
-#else
-double
-__erfl (x)
-     long double x;
-#endif
 {
   long double a, y, z;
   int32_t i, ix, sign;
@@ -808,15 +798,8 @@ __erfl (x)
 }
 
 weak_alias (__erfl, erfl)
-#ifdef __STDC__
-     long double
-     __erfcl (long double x)
-#else
-     long double
-     __erfcl (x)
-     double
-       x;
-#endif
+long double
+__erfcl (long double x)
 {
   long double y, z, p, r;
   int32_t i, ix, sign;

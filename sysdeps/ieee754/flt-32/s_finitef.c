@@ -26,12 +26,7 @@ static char rcsid[] = "$NetBSD: s_finitef.c,v 1.4 1995/05/10 20:47:18 jtc Exp $"
 #include "math_private.h"
 
 #undef __finitef
-#ifdef __STDC__
-	int __finitef(float x)
-#else
-	int __finitef(x)
-	float x;
-#endif
+int __finitef(float x)
 {
 	int32_t ix;
 	GET_FLOAT_WORD(ix,x);

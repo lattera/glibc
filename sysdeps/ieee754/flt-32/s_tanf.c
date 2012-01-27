@@ -21,12 +21,7 @@ static char rcsid[] = "$NetBSD: s_tanf.c,v 1.4 1995/05/10 20:48:20 jtc Exp $";
 #include "math.h"
 #include "math_private.h"
 
-#ifdef __STDC__
-	float __tanf(float x)
-#else
-	float __tanf(x)
-	float x;
-#endif
+float __tanf(float x)
 {
 	float y[2],z=0.0;
 	int32_t n, ix;

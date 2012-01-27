@@ -26,12 +26,7 @@ static char rcsid[] = "$NetBSD: s_copysignf.c,v 1.4 1995/05/10 20:46:59 jtc Exp 
 #include "math.h"
 #include "math_private.h"
 
-#ifdef __STDC__
-	float __copysignf(float x, float y)
-#else
-	float __copysignf(x,y)
-	float x,y;
-#endif
+float __copysignf(float x, float y)
 {
 	u_int32_t ix,iy;
 	GET_FLOAT_WORD(ix,x);

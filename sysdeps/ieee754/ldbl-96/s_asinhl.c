@@ -32,21 +32,12 @@ static char rcsid[] = "$NetBSD: $";
 #include "math.h"
 #include "math_private.h"
 
-#ifdef __STDC__
 static const long double
-#else
-static long double
-#endif
 one =  1.000000000000000000000e+00L, /* 0x3FFF, 0x00000000, 0x00000000 */
 ln2 =  6.931471805599453094287e-01L, /* 0x3FFE, 0xB17217F7, 0xD1CF79AC */
 huge=  1.000000000000000000e+4900L;
 
-#ifdef __STDC__
-	long double __asinhl(long double x)
-#else
-	long double __asinhl(x)
-	long double x;
-#endif
+long double __asinhl(long double x)
 {
 	long double t,w;
 	int32_t hx,ix;

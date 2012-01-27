@@ -27,12 +27,7 @@ static char rcsid[] = "$NetBSD: $";
 #include <math.h>
 #include <math_private.h>
 
-#ifdef __STDC__
-	long double __significandl(long double x)
-#else
-	long double __significandl(x)
-	long double x;
-#endif
+long double __significandl(long double x)
 {
 	return __ieee754_scalbl(x,(long double) -__ilogbl(x));
 }

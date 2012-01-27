@@ -32,11 +32,7 @@ static char rcsid[] = "$NetBSD: $";
 #include "math.h"
 #include "math_private.h"
 
-#ifdef __STDC__
 static const long double
-#else
-static long double
-#endif
 #if LDBL_MANT_DIG == 64
 two65 =  3.68934881474191032320e+19L; /* 0x4040, 0x80000000, 0x00000000 */
 #else
@@ -44,12 +40,7 @@ two65 =  3.68934881474191032320e+19L; /* 0x4040, 0x80000000, 0x00000000 */
 #endif
 
 
-#ifdef __STDC__
-	long double __frexpl(long double x, int *eptr)
-#else
-	long double __frexpl(x, eptr)
-	long double x; int *eptr;
-#endif
+long double __frexpl(long double x, int *eptr)
 {
 	u_int32_t se, hx, ix, lx;
 	GET_LDOUBLE_WORDS(se,hx,lx,x);

@@ -28,22 +28,13 @@ static char rcsid[] = "$NetBSD: $";
 #include "math.h"
 #include "math_private.h"
 
-#ifdef __STDC__
 static const long double
-#else
-static long double
-#endif
 two114 = 2.0769187434139310514121985316880384E+34L, /* 0x4071000000000000, 0 */
 twom114 = 4.8148248609680896326399448564623183E-35L, /* 0x3F8D000000000000, 0 */
 huge   = 1.0E+4900L,
 tiny   = 1.0E-4900L;
 
-#ifdef __STDC__
-	long double __scalbnl (long double x, int n)
-#else
-	long double __scalbnl (x,n)
-	long double x; int n;
-#endif
+long double __scalbnl (long double x, int n)
 {
 	int64_t k,hx,lx;
 	GET_LDOUBLE_WORDS64(hx,lx,x);

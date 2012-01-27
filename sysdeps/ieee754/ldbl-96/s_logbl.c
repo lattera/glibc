@@ -27,12 +27,7 @@ static char rcsid[] = "$NetBSD: $";
 #include "math.h"
 #include "math_private.h"
 
-#ifdef __STDC__
-	long double __logbl(long double x)
-#else
-	long double __logbl(x)
-	long double x;
-#endif
+long double __logbl(long double x)
 {
 	int32_t es,lx,ix;
 	GET_LDOUBLE_WORDS(es,ix,lx,x);
