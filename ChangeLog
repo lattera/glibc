@@ -1,3 +1,9 @@
+2012-01-19  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/powerpc32/a2/memcpy.S: Fix for when cache line
+	size is not set.
+	* sysdeps/powerpc/powerpc64/a2/memcpy.S: Likewise.
+
 2012-01-27  Ulrich Drepper  <drepper@gmail.com>
 
 	[BZ #13618]

@@ -1,5 +1,5 @@
 /* Optimized memcpy implementation for PowerPC A2.
-   Copyright (C) 2010, 2011 Free Software Foundation, Inc.
+   Copyright (C) 2010, 2011, 2012 Free Software Foundation, Inc.
    Contributed by Michael Brutman <brutman@us.ibm.com>.
    This file is part of the GNU C Library.
 
@@ -126,8 +126,29 @@ L(dst_aligned):
 
 	cmplwi  cr5, r9, 0
 	bne+    cr5,L(cachelineset)
-	li      r9,64
 
+/* __cache_line_size not set: generic byte copy without much optimization */
+	andi.	r0,r5,1		/* If length is odd copy one byte.  */
+	beq	L(cachelinenotset_align)
+	lbz	r7,0(r4)	/* Read one byte from source.  */
+	addi	r5,r5,-1	/* Update length.  */
+	addi	r4,r4,1		/* Update source pointer address.  */
+	stb	r7,0(r6)	/* Store one byte on dest.  */
+	addi	r6,r6,1		/* Update dest pointer address.  */
+L(cachelinenotset_align):
+	cmpwi   cr7,r5,0	/* If length is 0 return.  */
+	beqlr	cr7
+	ori	r2,r2,0		/* Force a new dispatch group.  */
+L(cachelinenotset_loop):
+	addic.	r5,r5,-2	/* Update length.  */
+	lbz	r7,0(r4)	/* Load 2 bytes from source.  */
+	lbz	r8,1(r4)
+	addi	r4,r4,2		/* Update source pointer address.  */
+	stb	r7,0(r6)	/* Store 2 bytes on dest.  */
+	stb	r8,1(r6)
+	addi	r6,r6,2		/* Update dest pointer address.  */
+	bne	L(cachelinenotset_loop)
+	blr
 
 
 L(cachelineset):
