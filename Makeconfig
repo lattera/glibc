@@ -900,6 +900,12 @@ else
 libdl = $(common-objpfx)dlfcn/libdl.a
 endif
 
+ifeq ($(build-shared),yes)
+libm = $(common-objpfx)math/libm.so$(libm.so-version)
+else
+libm = $(common-objpfx)math/libm.a
+endif
+
 # These are the subdirectories containing the library source.  The order
 # is more or less arbitrary.  The sorting step will take care of the
 # dependencies.

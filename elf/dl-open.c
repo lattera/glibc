@@ -1,5 +1,5 @@
 /* Load a shared object at runtime, relocate it, and run its initializer.
-   Copyright (C) 1996-2007, 2009, 2010, 2011 Free Software Foundation, Inc.
+   Copyright (C) 1996-2007, 2009, 2010, 2011, 2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -302,45 +302,109 @@ dl_open_worker (void *a)
   if (GLRO(dl_lazy))
     reloc_mode |= mode & RTLD_LAZY;
 
-  /* Relocate the objects loaded.  We do this in reverse order so that copy
-     relocs of earlier objects overwrite the data written by later objects.  */
-
+  /* Sort the objects by dependency for the relocation process.  This
+     allows IFUNC relocations to work and it also means copy
+     relocation of dependencies are if necessary overwritten.  */
+  size_t nmaps = 0;
   struct link_map *l = new;
-  while (l->l_next)
-    l = l->l_next;
-  while (1)
+  do
     {
       if (! l->l_real->l_relocated)
+	++nmaps;
+      l = l->l_next;
+    }
+  while (l != NULL);
+  struct link_map *maps[nmaps];
+  nmaps = 0;
+  l = new;
+  do
+    {
+      if (! l->l_real->l_relocated)
+	maps[nmaps++] = l;
+      l = l->l_next;
+    }
+  while (l != NULL);
+  if (nmaps > 1)
+    {
+      char seen[nmaps];
+      memset (seen, '\0', nmaps);
+      size_t i = 0;
+      while (1)
 	{
-#ifdef SHARED
-	  if (__builtin_expect (GLRO(dl_profile) != NULL, 0))
+	  ++seen[i];
+	  struct link_map *thisp = maps[i];
+
+	  /* Find the last object in the list for which the current one is
+	     a dependency and move the current object behind the object
+	     with the dependency.  */
+	  size_t k = nmaps - 1;
+	  while (k > i)
 	    {
-	      /* If this here is the shared object which we want to profile
-		 make sure the profile is started.  We can find out whether
-		 this is necessary or not by observing the `_dl_profile_map'
-		 variable.  If was NULL but is not NULL afterwars we must
-		 start the profiling.  */
-	      struct link_map *old_profile_map = GL(dl_profile_map);
+	      struct link_map **runp = maps[k]->l_initfini;
+	      if (runp != NULL)
+		/* Look through the dependencies of the object.  */
+		while (*runp != NULL)
+		  if (__builtin_expect (*runp++ == thisp, 0))
+		    {
+		      /* Move the current object to the back past the last
+			 object with it as the dependency.  */
+		      memmove (&maps[i], &maps[i + 1],
+			       (k - i) * sizeof (maps[0]));
+		      maps[k] = thisp;
 
-	      _dl_relocate_object (l, l->l_scope, reloc_mode | RTLD_LAZY, 1);
+		      if (seen[i + 1] > 1)
+			{
+			  ++i;
+			  goto next_clear;
+			}
 
-	      if (old_profile_map == NULL && GL(dl_profile_map) != NULL)
-		{
-		  /* We must prepare the profiling.  */
-		  _dl_start_profile ();
+		      char this_seen = seen[i];
+		      memmove (&seen[i], &seen[i + 1],
+			       (k - i) * sizeof (seen[0]));
+		      seen[k] = this_seen;
 
-		  /* Prevent unloading the object.  */
-		  GL(dl_profile_map)->l_flags_1 |= DF_1_NODELETE;
-		}
+		      goto next;
+		    }
+
+	      --k;
 	    }
-	  else
-#endif
-	    _dl_relocate_object (l, l->l_scope, reloc_mode, 0);
-	}
 
-      if (l == new)
-	break;
-      l = l->l_prev;
+	  if (++i == nmaps)
+	    break;
+	next_clear:
+	  memset (&seen[i], 0, (nmaps - i) * sizeof (seen[0]));
+	next:;
+	}
+    }
+
+  for (size_t i = nmaps; i-- > 0; )
+    {
+      l = maps[i];
+
+#ifdef SHARED
+      if (__builtin_expect (GLRO(dl_profile) != NULL, 0))
+	{
+	  /* If this here is the shared object which we want to profile
+	     make sure the profile is started.  We can find out whether
+	     this is necessary or not by observing the `_dl_profile_map'
+	     variable.  If it was NULL but is not NULL afterwars we must
+	     start the profiling.  */
+	  struct link_map *old_profile_map = GL(dl_profile_map);
+
+	  _dl_relocate_object (l, l->l_scope, reloc_mode | RTLD_LAZY, 1);
+
+	  if (old_profile_map == NULL && GL(dl_profile_map) != NULL)
+	    {
+	      /* We must prepare the profiling.  */
+	      _dl_start_profile ();
+
+	      /* Prevent unloading the object.  */
+	      GL(dl_profile_map)->l_flags_1 |= DF_1_NODELETE;
+	    }
+	}
+      else
+#endif
+	_dl_relocate_object (l, l->l_scope, reloc_mode, 0);
     }
 
   /* If the file is not loaded now as a dependency, add the search

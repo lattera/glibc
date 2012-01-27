@@ -124,7 +124,8 @@ distribute	:= rtld-Rules \
 		   tst-initordera1.c tst-initordera2.c tst-initorderb1.c \
 		   tst-initorderb2.c tst-initordera3.c tst-initordera4.c \
 		   tst-initorder.c \
-		   tst-initorder2.c
+		   tst-initorder2.c \
+		   tst-relsort1.c tst-relsort1mod1.c tst-relsort1mod2.c
 
 CFLAGS-dl-runtime.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-dl-lookup.c = -fexceptions -fasynchronous-unwind-tables
@@ -227,7 +228,7 @@ tests += loadtest restest1 preloadtest loadfail multiload origtest resolvfail \
 	 tst-audit1 tst-audit2 \
 	 tst-stackguard1 tst-addr1 tst-thrlock \
 	 tst-unique1 tst-unique2 tst-unique3 tst-unique4 \
-	 tst-initorder tst-initorder2
+	 tst-initorder tst-initorder2 tst-relsort1
 #	 reldep9
 test-srcs = tst-pathopt
 selinux-enabled := $(shell cat /selinux/enforce 2> /dev/null)
@@ -290,7 +291,9 @@ modules-names = testobj1 testobj2 testobj3 testobj4 testobj5 testobj6 \
 		tst-initordera1 tst-initorderb1 \
 		tst-initordera2 tst-initorderb2 \
 		tst-initordera3 tst-initordera4 \
-		tst-initorder2a tst-initorder2b tst-initorder2c tst-initorder2d
+		tst-initorder2a tst-initorder2b tst-initorder2c \
+		tst-initorder2d \
+		tst-relsort1mod1 tst-relsort1mod2
 ifeq (yes,$(have-initfini-array))
 modules-names += tst-array2dep tst-array5dep
 endif
@@ -1195,3 +1198,9 @@ CFLAGS-tst-auditmod6b.c += $(AVX-CFLAGS)
 CFLAGS-tst-auditmod6c.c += $(AVX-CFLAGS)
 CFLAGS-tst-auditmod7b.c += $(AVX-CFLAGS)
 endif
+
+$(objpfx)tst-relsort1: $(libdl)
+$(objpfx)tst-relsort1mod1.so: $(libm) $(objpfx)tst-relsort1mod2.so
+$(objpfx)tst-relsort1mod2.so: $(libm)
+$(objpfx)tst-relsort1.out: $(objpfx)tst-relsort1mod1.so \
+			   $(objpfx)tst-relsort1mod2.so

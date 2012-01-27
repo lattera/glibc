@@ -1,3 +1,14 @@
+2012-01-27  Ulrich Drepper  <drepper@gmail.com>
+
+	[BZ #13618]
+	* elf/dl-open.c (dl_open_worker): Sort objects by dependency before
+	relocation.
+	* Makeconfig (libm): Define.
+	* elf/Makefile: Add rules to build and run tst-relsort1.
+	* elf/tst-relsort1.c: New file.
+	* elf/tst-relsort1mod1.c: New file.
+	* elf/tst-relsort1mod2.c: New file.
+
 2012-01-26  Joseph Myers  <joseph@codesourcery.com>
 
 	* crypt/md5.h: Remove __STDC__ conditionals.
