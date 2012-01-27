@@ -1,5 +1,5 @@
-/* Return the next shared object initializer function not yet run.
-   Copyright (C) 1995, 1996, 1998-2002, 2004 Free Software Foundation, Inc.
+/* Run initializers for newly loaded objects.
+   Copyright (C) 1995,1996,1998-2002, 2004,2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
