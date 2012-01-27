@@ -62,13 +62,8 @@
 # if _G_HAVE_SYS_CDEFS
 #  include <sys/cdefs.h>
 # else
-#  ifdef __STDC__
-#   define __P(p) p
-#   define __PMT(p) p
-#  else
-#   define __P(p) ()
-#   define __PMT(p) ()
-#  endif
+#  define __P(p) p
+#  define __PMT(p) p
 # endif
 #endif /*!__P*/
 
@@ -77,11 +72,6 @@
 # define _PARAMS(protos) __P(protos)
 #endif /*!_PARAMS*/
 
-#ifndef __STDC__
-# ifndef const
-#  define const
-# endif
-#endif
 #define _IO_UNIFIED_JUMPTABLES 1
 #ifndef _G_HAVE_PRINTF_FP
 # define _IO_USE_DTOA 1

@@ -927,11 +927,7 @@ VTABLE_LABEL(builtinbuf_vtable, builtinbuf, 10)
 # endif
 #endif /* !defined(builtinbuf_vtable) && defined(__cplusplus) */
 
-#if defined(__STDC__) || defined(__cplusplus)
-# define _IO_va_start(args, last) va_start(args, last)
-#else
-# define _IO_va_start(args, last) va_start(args)
-#endif
+#define _IO_va_start(args, last) va_start(args, last)
 
 extern struct _IO_fake_stdiobuf _IO_stdin_buf, _IO_stdout_buf, _IO_stderr_buf;
 

@@ -1,3 +1,28 @@
+2012-01-26  Joseph Myers  <joseph@codesourcery.com>
+
+	* crypt/md5.h: Remove __STDC__ conditionals.
+	* libio/libioP.h: Likewise.
+	* locale/programs/config.h: Likewise.
+	* sysdeps/generic/sysdep.h: Likewise.
+	* sysdeps/i386/asm-syntax.h: Likewise.
+	* sysdeps/s390/asm-syntax.h: Likewise.
+	* sysdeps/unix/sysdep.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/sysdep.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/sysdep.h: Likewise.
+
+2012-01-26  Joseph Myers  <joseph@codesourcery.com>
+
+	* libio/libio.h: Remove __STDC__ conditionals.
+	* malloc/obstack.h: Likewise.
+	* math/complex.h: Likewise.
+	* math/math.h: Likewise.
+	* sysdeps/generic/_G_config.h: Likewise.
+	* sysdeps/gnu/_G_config.h: Likewise.
+	* sysdeps/mach/hurd/_G_config.h: Likewise.
+	* sysdeps/powerpc/bits/mathdef.h: Likewise.
+	* sysdeps/sh/sh4/bits/mathdef.h: Likewise.
+	* sysdeps/sparc/bits/mathdef.h: Likewise.
+
 2012-01-26  Ulrich Drepper  <drepper@gmail.com>
 
 	[BZ #13583]
