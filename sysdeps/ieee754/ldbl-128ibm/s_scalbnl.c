@@ -29,28 +29,15 @@ static char rcsid[] = "$NetBSD: $";
 #include "math_private.h"
 #include <math_ldbl_opt.h>
 
-#ifdef __STDC__
 static const long double
-#else
-static long double
-#endif
 twolm54 = 5.55111512312578270212e-17, /* 0x3C90000000000000, 0 */
 huge   = 1.0E+300L,
 tiny   = 1.0E-300L;
-#ifdef __STDC__
 static const double
-#else
-static double
-#endif
 two54 = 1.80143985094819840000e+16, /* 0x4350000000000000 */
 twom54 = 5.55111512312578270212e-17; /* 0x3C90000000000000 */
 
-#ifdef __STDC__
-	long double __scalbnl (long double x, int n)
-#else
-	long double __scalbnl (x,n)
-	long double x; int n;
-#endif
+long double __scalbnl (long double x, int n)
 {
 	int64_t k,l,hx,lx;
 	union { int64_t i; double d; } u;

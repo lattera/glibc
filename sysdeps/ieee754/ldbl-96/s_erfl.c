@@ -107,11 +107,7 @@
 #include "math.h"
 #include "math_private.h"
 
-#ifdef __STDC__
 static const long double
-#else
-static long double
-#endif
 tiny = 1e-4931L,
   half = 0.5L,
   one = 1.0L,
@@ -253,14 +249,8 @@ tiny = 1e-4931L,
       /* 1.000000000000000000000000000000000000000E0 */
     };
 
-#ifdef __STDC__
 long double
 __erfl (long double x)
-#else
-long double
-__erfl (x)
-     long double x;
-#endif
 {
   long double R, S, P, Q, s, y, z, r;
   int32_t ix, i;
@@ -341,14 +331,8 @@ __erfl (x)
 }
 
 weak_alias (__erfl, erfl)
-#ifdef __STDC__
-     long double
-     __erfcl (long double x)
-#else
-     long double
-     __erfcl (x)
-     long double x;
-#endif
+long double
+__erfcl (long double x)
 {
   int32_t hx, ix;
   long double R, S, P, Q, s, y, z, r;

@@ -1,5 +1,5 @@
 /* Double-precision floating point square root wrapper.
-   Copyright (C) 2004 Free Software Foundation, Inc.
+   Copyright (C) 2004, 2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,14 +21,8 @@
 #include "math_private.h"
 #include <fenv_libc.h>
 
-#ifdef __STDC__
 double
 __sqrt (double x)		/* wrapper sqrt */
-#else
-double
-__sqrt (x)			/* wrapper sqrt */
-     double x;
-#endif
 {
 #ifdef _IEEE_LIBM
   return __ieee754_sqrt (x);

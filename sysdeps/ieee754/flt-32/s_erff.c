@@ -20,11 +20,7 @@ static char rcsid[] = "$NetBSD: s_erff.c,v 1.4 1995/05/10 20:47:07 jtc Exp $";
 #include "math.h"
 #include "math_private.h"
 
-#ifdef __STDC__
 static const float
-#else
-static float
-#endif
 tiny	    = 1e-30,
 half=  5.0000000000e-01, /* 0x3F000000 */
 one =  1.0000000000e+00, /* 0x3F800000 */
@@ -99,12 +95,7 @@ sb5  =  2.5530502930e+03, /* 0x451f90ce */
 sb6  =  4.7452853394e+02, /* 0x43ed43a7 */
 sb7  = -2.2440952301e+01; /* 0xc1b38712 */
 
-#ifdef __STDC__
-	float __erff(float x)
-#else
-	float __erff(x)
-	float x;
-#endif
+float __erff(float x)
 {
 	int32_t hx,ix,i;
 	float R,S,P,Q,s,y,z,r;
@@ -157,12 +148,7 @@ sb7  = -2.2440952301e+01; /* 0xc1b38712 */
 }
 weak_alias (__erff, erff)
 
-#ifdef __STDC__
-	float __erfcf(float x)
-#else
-	float __erfcf(x)
-	float x;
-#endif
+float __erfcf(float x)
 {
 	int32_t hx,ix;
 	float R,S,P,Q,s,y,z,r;

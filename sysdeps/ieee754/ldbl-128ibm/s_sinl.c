@@ -49,12 +49,7 @@
 #include "math_private.h"
 #include <math_ldbl_opt.h>
 
-#ifdef __STDC__
-	long double __sinl(long double x)
-#else
-	long double __sinl(x)
-	long double x;
-#endif
+long double __sinl(long double x)
 {
 	long double y[2],z=0.0L;
 	int64_t n, ix;

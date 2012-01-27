@@ -22,12 +22,7 @@ static char rcsid[] = "$NetBSD: $";
 #include <math_private.h>
 #include <errno.h>
 
-#ifdef __STDC__
-	long double __ldexpl(long double value, int exp)
-#else
-	long double __ldexpl(value, exp)
-	long double value; int exp;
-#endif
+long double __ldexpl(long double value, int exp)
 {
 	if(!__finitel(value)||value==0.0) return value;
 	value = __scalbnl(value,exp);

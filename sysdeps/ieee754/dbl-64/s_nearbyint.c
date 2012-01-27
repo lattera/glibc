@@ -28,22 +28,13 @@ static char rcsid[] = "$NetBSD: s_rint.c,v 1.8 1995/05/10 20:48:04 jtc Exp $";
 #include "math.h"
 #include "math_private.h"
 
-#ifdef __STDC__
 static const double
-#else
-static double
-#endif
 TWO52[2]={
   4.50359962737049600000e+15, /* 0x43300000, 0x00000000 */
  -4.50359962737049600000e+15, /* 0xC3300000, 0x00000000 */
 };
 
-#ifdef __STDC__
-	double __nearbyint(double x)
-#else
-	double __nearbyint(x)
-	double x;
-#endif
+double __nearbyint(double x)
 {
 	fenv_t env;
 	int32_t i0,j0,sx;

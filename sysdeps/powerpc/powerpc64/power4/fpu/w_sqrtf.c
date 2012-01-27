@@ -1,5 +1,5 @@
 /* Single-precision floating point square root wrapper.
-   Copyright (C) 2004, 2007 Free Software Foundation, Inc.
+   Copyright (C) 2004, 2007, 2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -24,14 +24,8 @@
 #include <sysdep.h>
 #include <ldsodefs.h>
 
-#ifdef __STDC__
 float
 __sqrtf (float x)		/* wrapper sqrtf */
-#else
-float
-__sqrtf (x)			/* wrapper sqrtf */
-     float x;
-#endif
 {
 #ifdef _IEEE_LIBM
   return __ieee754_sqrtf (x);

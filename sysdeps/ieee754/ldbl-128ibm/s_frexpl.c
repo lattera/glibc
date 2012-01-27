@@ -31,19 +31,10 @@ static char rcsid[] = "$NetBSD: $";
 #include "math_private.h"
 #include <math_ldbl_opt.h>
 
-#ifdef __STDC__
 static const long double
-#else
-static long double
-#endif
 two107 = 162259276829213363391578010288128.0; /* 0x4670000000000000, 0 */
 
-#ifdef __STDC__
-	long double __frexpl(long double x, int *eptr)
-#else
-	long double __frexpl(x, eptr)
-	long double x; int *eptr;
-#endif
+long double __frexpl(long double x, int *eptr)
 {
 	u_int64_t hx, lx, ix, ixl;
 	int64_t explo;

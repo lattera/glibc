@@ -58,11 +58,7 @@
 
 #include "math.h"
 #include "math_private.h"
-#ifdef __STDC__
 static const long double
-#else
-static long double
-#endif
   one = 1.0L,
   pio4hi = 7.8539816339744830961566084581987569936977E-1L,
   pio4lo = 2.1679525325309452561992610065108379921906E-35L,
@@ -85,15 +81,8 @@ static long double
   /* 1.000000000000000000000000000000000000000E0 */
 
 
-#ifdef __STDC__
 long double
 __kernel_tanl (long double x, long double y, int iy)
-#else
-long double
-__kernel_tanl (x, y, iy)
-     long double x, y;
-     int iy;
-#endif
 {
   long double z, r, v, w, s;
   int32_t ix, sign;

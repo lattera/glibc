@@ -25,20 +25,11 @@ static char rcsid[] = "$NetBSD: $";
 #include "math.h"
 #include "math_private.h"
 
-#ifdef __STDC__
 static const long double
-#else
-static long double
-#endif
 o_threshold= 1.1356523406294143949491931077970763428449E4L,
 u_threshold= -1.1433462743336297878837243843452621503410E4;
 
-#ifdef __STDC__
-	long double __expl(long double x)	/* wrapper exp */
-#else
-	long double __expl(x)			/* wrapper exp */
-	long double x;
-#endif
+long double __expl(long double x)	/* wrapper exp */
 {
 #ifdef _IEEE_LIBM
 	return __ieee754_expl(x);

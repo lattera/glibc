@@ -115,11 +115,7 @@ static char rcsid[] = "$NetBSD: s_erf.c,v 1.8 1995/05/10 20:47:05 jtc Exp $";
 #include "math.h"
 #include "math_private.h"
 
-#ifdef __STDC__
 static const double
-#else
-static double
-#endif
 tiny	    = 1e-300,
 half=  5.00000000000000000000e-01, /* 0x3FE00000, 0x00000000 */
 one =  1.00000000000000000000e+00, /* 0x3FF00000, 0x00000000 */
@@ -194,12 +190,7 @@ sb[]  =  {0.0,3.03380607434824582924e+01, /* 0x403E568B, 0x261D5190 */
   4.74528541206955367215e+02, /* 0x407DA874, 0xE79FE763 */
  -2.24409524465858183362e+01}; /* 0xC03670E2, 0x42712D62 */
 
-#ifdef __STDC__
-	double __erf(double x)
-#else
-	double __erf(x)
-	double x;
-#endif
+double __erf(double x)
 {
 	int32_t hx,ix,i;
 	double R,S,P,Q,s,y,z,r;
@@ -307,12 +298,7 @@ strong_alias (__erf, __erfl)
 weak_alias (__erf, erfl)
 #endif
 
-#ifdef __STDC__
-	double __erfc(double x)
-#else
-	double __erfc(x)
-	double x;
-#endif
+double __erfc(double x)
 {
 	int32_t hx,ix;
 	double R,S,P,Q,s,y,z,r;

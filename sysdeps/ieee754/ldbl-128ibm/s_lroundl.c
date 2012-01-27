@@ -1,6 +1,6 @@
 /* Round to long int long double floating-point values.
    IBM extended format long double version.
-   Copyright (C) 2006 Free Software Foundation, Inc.
+   Copyright (C) 2006, 2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -24,14 +24,8 @@
 #include <float.h>
 #include <ieee754.h>
 
-#ifdef __STDC__
 long
 __lroundl (long double x)
-#else
-long
-__lroundl (x)
-     long double x;
-#endif
 {
   double xh, xl;
   long res, hi, lo;

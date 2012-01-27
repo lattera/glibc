@@ -29,21 +29,12 @@ static char rcsid[] = "$NetBSD: s_asinh.c,v 1.9 1995/05/12 04:57:37 jtc Exp $";
 #include "math_private.h"
 #include <math_ldbl_opt.h>
 
-#ifdef __STDC__
 static const long double
-#else
-static long double
-#endif
 one =  1.00000000000000000000e+00L, /* 0x3ff0000000000000, 0 */
 ln2 =  0.6931471805599453094172321214581766L, /* 0x3fe62e42fefa39ef, 0x3c7abc9e3b398040 */
 huge=  1.00000000000000000000e+300L;
 
-#ifdef __STDC__
-	long double __asinhl(long double x)
-#else
-	long double __asinhl(x)
-	long double x;
-#endif
+long double __asinhl(long double x)
 {
 	long double t,w;
 	int64_t hx,ix;

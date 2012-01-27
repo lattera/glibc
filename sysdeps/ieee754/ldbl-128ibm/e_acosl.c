@@ -57,11 +57,7 @@
 #include "math.h"
 #include "math_private.h"
 
-#ifdef __STDC__
 static const long double
-#else
-static long double
-#endif
   one = 1.0L,
   pio2_hi = 1.5707963267948966192313216916397514420986L,
   pio2_lo = 4.3359050650618905123985220130216759843812E-35L,
@@ -152,14 +148,8 @@ static long double
   qS8 = -4.175375777334867025769346564600396877176E1L;
   /* 1.000000000000000000000000000000000000000E0 */
 
-#ifdef __STDC__
 long double
 __ieee754_acosl (long double x)
-#else
-long double
-__ieee754_acosl (x)
-     long double x;
-#endif
 {
   long double z, r, w, p, q, s, t, f2;
   int32_t ix, sign;

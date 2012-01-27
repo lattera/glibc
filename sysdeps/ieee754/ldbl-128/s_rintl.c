@@ -30,22 +30,13 @@ static char rcsid[] = "$NetBSD: $";
 #include "math.h"
 #include "math_private.h"
 
-#ifdef __STDC__
 static const long double
-#else
-static long double
-#endif
 TWO112[2]={
   5.19229685853482762853049632922009600E+33L, /* 0x406F000000000000, 0 */
  -5.19229685853482762853049632922009600E+33L  /* 0xC06F000000000000, 0 */
 };
 
-#ifdef __STDC__
-	long double __rintl(long double x)
-#else
-	long double __rintl(x)
-	long double x;
-#endif
+long double __rintl(long double x)
 {
 	int64_t i0,j0,sx;
 	u_int64_t i,i1;

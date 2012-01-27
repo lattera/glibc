@@ -20,18 +20,9 @@ static char rcsid[] = "$NetBSD: s_tanhf.c,v 1.4 1995/05/10 20:48:24 jtc Exp $";
 #include "math.h"
 #include "math_private.h"
 
-#ifdef __STDC__
 static const float one=1.0, two=2.0, tiny = 1.0e-30;
-#else
-static float one=1.0, two=2.0, tiny = 1.0e-30;
-#endif
 
-#ifdef __STDC__
-	float __tanhf(float x)
-#else
-	float __tanhf(x)
-	float x;
-#endif
+float __tanhf(float x)
 {
 	float t,z;
 	int32_t jx,ix;

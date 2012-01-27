@@ -21,12 +21,7 @@ static char rcsid[] = "$NetBSD: s_ilogbf.c,v 1.4 1995/05/10 20:47:31 jtc Exp $";
 #include "math.h"
 #include "math_private.h"
 
-#ifdef __STDC__
-	int __ilogbf(float x)
-#else
-	int __ilogbf(x)
-	float x;
-#endif
+int __ilogbf(float x)
 {
 	int32_t hx,ix;
 

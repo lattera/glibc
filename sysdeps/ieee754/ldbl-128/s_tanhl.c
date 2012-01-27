@@ -44,20 +44,10 @@
 #include "math.h"
 #include "math_private.h"
 
-#ifdef __STDC__
 static const long double one = 1.0, two = 2.0, tiny = 1.0e-4900L;
-#else
-static long double one = 1.0, two = 2.0, tiny = 1.0e-4900L;
-#endif
 
-#ifdef __STDC__
 long double
 __tanhl (long double x)
-#else
-long double
-__tanhl (x)
-     long double x;
-#endif
 {
   long double t, z;
   u_int32_t jx, ix;

@@ -31,18 +31,9 @@ static char rcsid[] = "$NetBSD: $";
 #include "math_private.h"
 #include <math_ldbl_opt.h>
 
-#ifdef __STDC__
 static const long double one = 1.0;
-#else
-static long double one = 1.0;
-#endif
 
-#ifdef __STDC__
-	long double __modfl(long double x, long double *iptr)
-#else
-	long double __modfl(x, iptr)
-	long double x,*iptr;
-#endif
+long double __modfl(long double x, long double *iptr)
 {
 	int64_t i0,i1,j0;
 	u_int64_t i;

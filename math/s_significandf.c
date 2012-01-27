@@ -20,12 +20,7 @@ static char rcsid[] = "$NetBSD: s_significandf.c,v 1.3 1995/05/10 20:48:13 jtc E
 #include <math.h>
 #include <math_private.h>
 
-#ifdef __STDC__
-	float __significandf(float x)
-#else
-	float __significandf(x)
-	float x;
-#endif
+float __significandf(float x)
 {
 	return __ieee754_scalbf(x,(float) -__ilogbf(x));
 }
