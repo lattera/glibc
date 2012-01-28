@@ -1,5 +1,9 @@
 2012-01-28  Chris Metcalf  <cmetcalf@tilera.com>
 
+	* elf/elf.h (EM_TILEPRO, EM_TILEGX): New macros.
+	(EM_NUM): Update.
+	(R_TILEPRO_*, R_TILEGX_*): New macros.
+
 	* scripts/firstversions.awk: Fix bug in version range handling.
 
 	* sysdeps/unix/sysv/linux/grantpt.c: Use <> brackets for not-cancel.h.
