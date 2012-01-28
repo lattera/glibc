@@ -1,5 +1,22 @@
 2012-01-28  Ulrich Drepper  <drepper@gmail.com>
 
+	* config.h.in: Define HAVE_SSE2AVX_SUPPORT.
+	* math/math_private.h: Remove libc_fegetround* and
+	libc_fesetround*.
+	* sysdeps/i386/configure.in: Check for -msse2avx.
+	* sysdeps/x86_64/fpu/math_private.h: Use VEX-encoded instructions
+	also if SSE2AVX is defined.
+	Remove libc_fegetround* and libc_fesetround*.
+	* sysdeps/x86_64/fpu/multiarch/Makefile: Compile *-avx functions
+	if config-cflags-sse2avx is yes.  Also add -DSSE2AVX to defines.
+	* sysdeps/x86_64/fpu/multiarch/e_atan2.c: Use HAS_AVX again instead
+	of HAS_YMM_USABLE.
+	* sysdeps/x86_64/fpu/multiarch/e_exp.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/e_log.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/s_atan.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/s_sin.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/s_tan.c: Likewise.
+
 	* sysdeps/x86_64/fpu/math_private.h: Simplify use of AVX instructions.
 
 2012-01-19  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>

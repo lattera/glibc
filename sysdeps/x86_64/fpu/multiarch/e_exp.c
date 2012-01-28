@@ -14,7 +14,7 @@ extern double __ieee754_exp_fma4 (double);
 
 libm_ifunc (__ieee754_exp,
 	    HAS_FMA4 ? __ieee754_exp_fma4
-	    : (HAS_YMM_USABLE ? __ieee754_exp_avx : __ieee754_exp_sse2));
+	    : (HAS_AVX ? __ieee754_exp_avx : __ieee754_exp_sse2));
 strong_alias (__ieee754_exp, __exp_finite)
 
 # define __ieee754_exp __ieee754_exp_sse2

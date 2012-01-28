@@ -756,6 +756,29 @@ if test $libc_cv_cc_avx = yes; then
 
 fi
 
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for AVX encoding of SSE instructions" >&5
+$as_echo_n "checking for AVX encoding of SSE instructions... " >&6; }
+if ${libc_cv_cc_sse2avx+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  if { ac_try='${CC-cc} -msse2avx -xc /dev/null -S -o /dev/null'
+  { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; }; then
+  libc_cv_cc_sse2avx=yes
+else
+  libc_cv_cc_sse2avx=no
+fi
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_cc_sse2avx" >&5
+$as_echo "$libc_cv_cc_sse2avx" >&6; }
+if test $libc_cv_cc_sse2avx = yes; then
+  $as_echo "#define HAVE_SSE2AVX_SUPPORT 1" >>confdefs.h
+
+fi
+
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for FMA4 support" >&5
 $as_echo_n "checking for FMA4 support... " >&6; }
 if ${libc_cv_cc_fma4+:} false; then :

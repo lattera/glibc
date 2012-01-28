@@ -365,14 +365,6 @@ extern void __docos (double __x, double __dx, double __v[]);
    know what operations are going to be performed.  Therefore we
    define additional interfaces.  By default they refer to the normal
    interfaces.  */
-#define libc_fegetround() fegetround ()
-#define libc_fegetroundf() fegetround ()
-#define libc_fegetroundl() fegetround ()
-
-#define libc_fesetround(r) (void) fesetround (r)
-#define libc_fesetroundf(r) (void) fesetround (r)
-#define libc_fesetroundl(r) (void) fesetround (r)
-
 #define libc_feholdexcept(e) (void) feholdexcept (e)
 #define libc_feholdexceptf(e) (void) feholdexcept (e)
 #define libc_feholdexceptl(e) (void) feholdexcept (e)

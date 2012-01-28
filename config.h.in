@@ -90,7 +90,7 @@
    certain registers (CR0, MQ, CTR, LR) in asm statements.  */
 #undef	BROKEN_PPC_ASM_CR0
 
-/* Defined on SPARC if ld doesn't handle R_SPARC_WDISP22 against .hidden
+/* Defined on SPARC if ld does not handle R_SPARC_WDISP22 against .hidden
    symbol.  sysdeps/sparc/sparc32/elf/configure.  */
 #undef	BROKEN_SPARC_WDISP22
 
@@ -106,17 +106,20 @@
 /* Define if gcc supports AVX.  */
 #undef	HAVE_AVX_SUPPORT
 
+/* Define if gcc supports VEX encoding.  */
+#undef	HAVE_SSE2AVX_SUPPORT
+
 /* Define if gcc supports FMA4.  */
 #undef	HAVE_FMA4_SUPPORT
 
-/* Define if the compiler's exception support is based on libunwind.  */
+/* Define if the compiler\'s exception support is based on libunwind.  */
 #undef	HAVE_CC_WITH_LIBUNWIND
 
 /* Define if the access to static and hidden variables is position independent
    and does not need relocations.  */
 #undef	PI_STATIC_AND_HIDDEN
 
-/* Define this to disable the `hidden_proto' et al macros in
+/* Define this to disable the 'hidden_proto' et al macros in
    include/libc-symbols.h that avoid PLT slots in the shared objects.  */
 #undef	NO_HIDDEN
 

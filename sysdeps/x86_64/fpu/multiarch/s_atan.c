@@ -13,7 +13,7 @@ extern double __atan_fma4 (double);
 # endif
 
 libm_ifunc (atan, (HAS_FMA4 ? __atan_fma4 :
-		   HAS_YMM_USABLE ? __atan_avx : __atan_sse2));
+		   HAS_AVX ? __atan_avx : __atan_sse2));
 
 # define atan __atan_sse2
 #endif

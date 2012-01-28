@@ -18,11 +18,11 @@ extern double __sin_fma4 (double);
 # endif
 
 libm_ifunc (__cos, (HAS_FMA4 ? __cos_fma4 :
-		    HAS_YMM_USABLE ? __cos_avx : __cos_sse2));
+		    HAS_AVX ? __cos_avx : __cos_sse2));
 weak_alias (__cos, cos)
 
 libm_ifunc (__sin, (HAS_FMA4 ? __sin_fma4 :
-		    HAS_YMM_USABLE ? __sin_avx : __sin_sse2));
+		    HAS_AVX ? __sin_avx : __sin_sse2));
 weak_alias (__sin, sin)
 
 # define __cos __cos_sse2
