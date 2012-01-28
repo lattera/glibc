@@ -1,3 +1,7 @@
+2012-01-28  Chris Metcalf  <cmetcalf@tilera.com>
+
+	* scripts/firstversions.awk: Fix bug in version range handling.
+
 2012-01-28  Ulrich Drepper  <drepper@gmail.com>
 
 	* sysdeps/x86_64/fpu/math_private.h: Simplify use of AVX instructions.
