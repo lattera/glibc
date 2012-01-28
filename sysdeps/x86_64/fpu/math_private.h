@@ -21,8 +21,12 @@
 
 #ifdef __AVX__
 # define MOVD "vmovd"
+# define STMXCSR "vstmxcsr"
+# define LDMXCSR "vldmxcsr"
 #else
 # define MOVD "movd"
+# define STMXCSR "stmxcsr"
+# define LDMXCSR "ldmxcsr"
 #endif
 
 /* Direct movement of float into integer register.  */
@@ -173,7 +177,7 @@
 #define libc_fegetround() \
   ({									      \
      unsigned int mxcsr;						      \
-     asm volatile ("stmxcsr %0" : "=m" (*&mxcsr));			      \
+     asm volatile (STMXCSR " %0" : "=m" (*&mxcsr));			      \
      (mxcsr & 0x6000) >> 3;						      \
   })
 #undef libc_fegetroundf
@@ -184,106 +188,63 @@
 #define libc_fesetround(r) \
   do {									      \
      unsigned int mxcsr;						      \
-     asm ("stmxcsr %0" : "=m" (*&mxcsr));				      \
+     asm (STMXCSR " %0" : "=m" (*&mxcsr));				      \
      mxcsr = (mxcsr & ~0x6000) | ((r) << 3);				      \
-     asm volatile ("ldmxcsr %0" : : "m" (*&mxcsr));			      \
+     asm volatile (LDMXCSR " %0" : : "m" (*&mxcsr));			      \
   } while (0)
 #undef libc_fesetroundf
 #define libc_fesetroundf(r) libc_fesetround (r)
 // #define libc_fesetroundl(r) (void) fesetround (r)
 
 #undef libc_feholdexcept
-#ifdef __AVX__
-# define libc_feholdexcept(e) \
+#define libc_feholdexcept(e) \
   do {									      \
      unsigned int mxcsr;						      \
-     asm ("vstmxcsr %0" : "=m" (*&mxcsr));				      \
+     asm (STMXCSR " %0" : "=m" (*&mxcsr));				      \
      (e)->__mxcsr = mxcsr;						      \
      mxcsr = (mxcsr | 0x1f80) & ~0x3f;					      \
-     asm volatile ("vldmxcsr %0" : : "m" (*&mxcsr));			      \
+     asm volatile (LDMXCSR " %0" : : "m" (*&mxcsr));			      \
   } while (0)
-#else
-# define libc_feholdexcept(e) \
-  do {									      \
-     unsigned int mxcsr;						      \
-     asm ("stmxcsr %0" : "=m" (*&mxcsr));				      \
-     (e)->__mxcsr = mxcsr;						      \
-     mxcsr = (mxcsr | 0x1f80) & ~0x3f;					      \
-     asm volatile ("ldmxcsr %0" : : "m" (*&mxcsr));			      \
-  } while (0)
-#endif
 #undef libc_feholdexceptf
 #define libc_feholdexceptf(e) libc_feholdexcept (e)
 // #define libc_feholdexceptl(e) (void) feholdexcept (e)
 
 #undef libc_feholdexcept_setround
-#ifdef __AVX__
-# define libc_feholdexcept_setround(e, r) \
+#define libc_feholdexcept_setround(e, r) \
   do {									      \
      unsigned int mxcsr;						      \
-     asm ("vstmxcsr %0" : "=m" (*&mxcsr));				      \
+     asm (STMXCSR " %0" : "=m" (*&mxcsr));				      \
      (e)->__mxcsr = mxcsr;						      \
      mxcsr = ((mxcsr | 0x1f80) & ~0x603f) | ((r) << 3);			      \
-     asm volatile ("vldmxcsr %0" : : "m" (*&mxcsr));			      \
+     asm volatile (LDMXCSR " %0" : : "m" (*&mxcsr));			      \
   } while (0)
-#else
-# define libc_feholdexcept_setround(e, r) \
-  do {									      \
-     unsigned int mxcsr;						      \
-     asm ("stmxcsr %0" : "=m" (*&mxcsr));				      \
-     (e)->__mxcsr = mxcsr;						      \
-     mxcsr = ((mxcsr | 0x1f80) & ~0x603f) | ((r) << 3);			      \
-     asm volatile ("ldmxcsr %0" : : "m" (*&mxcsr));			      \
-  } while (0)
-#endif
 #undef libc_feholdexcept_setroundf
 #define libc_feholdexcept_setroundf(e, r) libc_feholdexcept_setround (e, r)
 // #define libc_feholdexcept_setroundl(e, r) ...
 
 #undef libc_fetestexcept
-#ifdef __AVX__
-# define libc_fetestexcept(e) \
-  ({ unsigned int mxcsr; asm volatile ("vstmxcsr %0" : "=m" (*&mxcsr));	      \
+#define libc_fetestexcept(e) \
+  ({ unsigned int mxcsr; asm volatile (STMXCSR " %0" : "=m" (*&mxcsr));	      \
      mxcsr & (e) & FE_ALL_EXCEPT; })
-#else
-# define libc_fetestexcept(e) \
-  ({ unsigned int mxcsr; asm volatile ("stmxcsr %0" : "=m" (*&mxcsr));	      \
-     mxcsr & (e) & FE_ALL_EXCEPT; })
-#endif
 #undef libc_fetestexceptf
 #define libc_fetestexceptf(e) libc_fetestexcept (e)
 // #define libc_fetestexceptl(e) fetestexcept (e)
 
 #undef libc_fesetenv
-#ifdef __AVX__
-# define libc_fesetenv(e) \
-  asm volatile ("vldmxcsr %0" : : "m" ((e)->__mxcsr))
-#else
-# define libc_fesetenv(e) \
-  asm volatile ("ldmxcsr %0" : : "m" ((e)->__mxcsr))
-#endif
+#define libc_fesetenv(e) \
+  asm volatile (LDMXCSR " %0" : : "m" ((e)->__mxcsr))
 #undef libc_fesetenvf
 #define libc_fesetenvf(e) libc_fesetenv (e)
 // #define libc_fesetenvl(e) (void) fesetenv (e)
 
 #undef libc_feupdateenv
-#ifdef __AVX__
-# define libc_feupdateenv(e) \
+#define libc_feupdateenv(e) \
   do {									      \
     unsigned int mxcsr;							      \
-    asm volatile ("vstmxcsr %0" : "=m" (*&mxcsr));			      \
-    asm volatile ("vldmxcsr %0" : : "m" ((e)->__mxcsr));		      \
+    asm volatile (STMXCSR " %0" : "=m" (*&mxcsr));			      \
+    asm volatile (LDMXCSR " %0" : : "m" ((e)->__mxcsr));		      \
     __feraiseexcept (mxcsr & FE_ALL_EXCEPT);				      \
   } while (0)
-#else
-# define libc_feupdateenv(e) \
-  do {									      \
-    unsigned int mxcsr;							      \
-    asm volatile ("stmxcsr %0" : "=m" (*&mxcsr));			      \
-    asm volatile ("ldmxcsr %0" : : "m" ((e)->__mxcsr));			      \
-    __feraiseexcept (mxcsr & FE_ALL_EXCEPT);				      \
-  } while (0)
-#endif
 #undef libc_feupdateenvf
 #define libc_feupdateenvf(e) libc_feupdateenv (e)
 // #define libc_feupdateenvl(e) (void) feupdateenv (e)
