@@ -1,5 +1,12 @@
 2012-01-28  Ulrich Drepper  <drepper@gmail.com>
 
+	* sysdeps/x86_64/fpu/bits/mathinline.h (__signbitl): Optimize a bit.
+	Avoid unnecessary __WORDSIZE == 64 test.
+	(fmaxf): Use VEX format if possible.
+	(fmax): Likewise.
+	(fminf): Likewise.
+	(fmin): Likewise.
+
 	* config.h.in: Define HAVE_SSE2AVX_SUPPORT.
 	* math/math_private.h: Remove libc_fegetround* and
 	libc_fesetround*.
