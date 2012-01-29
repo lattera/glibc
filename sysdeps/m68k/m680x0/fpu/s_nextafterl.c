@@ -29,12 +29,7 @@ static char rcsid[] = "$NetBSD: $";
 #include "math.h"
 #include "math_private.h"
 
-#ifdef __STDC__
-	long double __nextafterl(long double x, long double y)
-#else
-	long double __nextafterl(x,y)
-	long double x,y;
-#endif
+long double __nextafterl(long double x, long double y)
 {
 	int32_t ix,iy,esx,esy;
 	u_int32_t hx,hy,lx,ly;

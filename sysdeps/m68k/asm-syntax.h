@@ -52,15 +52,10 @@
 #define MEM_DISP(base,displacement)(displacement,R(base))
 #define MEM_PREDEC(memory_base)-(R(memory_base))
 #define MEM_POSTINC(memory_base)(R(memory_base))+
-#ifdef __STDC__
 #define MEM_INDX_(base,idx,size_suffix)(R(base),R(idx##.##size_suffix))
 #define MEM_INDX(base,idx,size_suffix)MEM_INDX_(base,idx,size_suffix)
 #define MEM_INDX1_(base,idx,size_suffix,scale)(R(base),R(idx##.##size_suffix*scale))
 #define MEM_INDX1(base,idx,size_suffix,scale)MEM_INDX1_(base,idx,size_suffix,scale)
-#else
-#define MEM_INDX(base,idx,size_suffix)(R(base),R(idx).size_suffix)
-#define MEM_INDX1(base,idx,size_suffix,scale)(R(base),R(idx).size_suffix*scale)
-#endif
 #define TEXT .text
 #define ALIGN .align ALIGNARG(2)
 #define GLOBL .globl

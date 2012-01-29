@@ -1,3 +1,9 @@
+2012-01-29  Andreas Schwab  <schwab@linux-m68k.org>
+
+	* sysdeps/m68k/asm-syntax.h: Remove __STDC__ conditionals.
+	* sysdeps/m68k/m680x0/fpu/s_nextafterl.c: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/sysdep.h: Likewise.
+
 2012-01-08  Andreas Schwab  <schwab@linux-m68k.org>
 
 	* sysdeps/m68k/fpu/bits/fenv.h (FE_DFL_ENV, FE_NOMASK_ENV): Use
