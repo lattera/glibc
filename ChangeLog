@@ -1,3 +1,8 @@
+2012-01-29  Chris Metcalf  <cmetcalf@tilera.com>
+
+	* scripts/config.guess: Update from upstream config git repository.
+	* scripts/config.sub: Likewise.
+
 2012-01-28  Ulrich Drepper  <drepper@gmail.com>
 
 	* sysdeps/x86_64/fpu/math_private.h: Simplify use of AVX instructions.
