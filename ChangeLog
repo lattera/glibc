@@ -1,5 +1,7 @@
 2012-01-28  Chris Metcalf  <cmetcalf@tilera.com>
 
+	* scripts/firstversions.awk: Fix bug in version range handling.
+
 	* sysdeps/unix/sysv/linux/faccessat.c (faccessat): Call __fxstatat64.
 
 2012-01-28  Ulrich Drepper  <drepper@gmail.com>

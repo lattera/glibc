@@ -54,9 +54,13 @@ $1 == "}" {
     while (vers_compare($1, v) >= 0) {
       delete firstversion[thislib, idx[thislib]];
       idx[thislib]++;
-      if ((thislib, idx[thislib]) in firstversion)
+      if ((thislib, idx[thislib]) in firstversion) {
+        # If we're skipping a referenced version to jump ahead to a
+        # later version, synthesize the earlier referenced version now.
+        if (v != $1 && (thislib, v) in usedversion)
+          print "  " v;
         v = firstversion[thislib, idx[thislib]];
-      else
+      } else
         break;
     }
     if ($1 == v || $1 == f)
