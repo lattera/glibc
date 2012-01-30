@@ -1,3 +1,7 @@
+2012-01-30  Chris Metcalf  <cmetcalf@tilera.com>
+
+	* sysdeps/tile/sysdep.h: Don't check HAVE_ELF or NO_UNDERSCORES.
+
 2012-01-07  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/tile/backtrace.c: Use x86_64 version of backtrace.c.

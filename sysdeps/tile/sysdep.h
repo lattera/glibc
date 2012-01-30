@@ -21,14 +21,6 @@
 #include <bits/wordsize.h>
 #include <arch/abi.h>
 
-#ifndef HAVE_ELF
-# error "ELF is assumed."
-#endif
-
-#ifndef NO_UNDERSCORES
-# error "User-label prefix (underscore) assumed absent."
-#endif
-
 #if defined __ASSEMBLER__ || defined REQUEST_ASSEMBLER_MACROS
 
 #include <feedback-asm.h>
