@@ -51,11 +51,7 @@ static char sccsid[] = "@(#)syslog.c	8.4 (Berkeley) 3/18/94";
 #include <signal.h>
 #include <locale.h>
 
-#if __STDC__
 #include <stdarg.h>
-#else
-#include <varargs.h>
-#endif
 
 #include <libio/iolibio.h>
 #include <math_ldbl_opt.h>

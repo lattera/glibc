@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2004, 2007-2009, 2010 Free Software Foundation, Inc.
+/* Copyright (C) 2002,2004,2007-2009,2010,2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -124,11 +124,7 @@ extern char *tzname[];
 #endif
 
 #ifndef PTR
-# ifdef __STDC__
-#  define PTR void *
-# else
-#  define PTR char *
-# endif
+# define PTR void *
 #endif
 
 #ifndef CHAR_BIT

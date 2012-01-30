@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1995, 1997-2005, 2006, 2007, 2008, 2009, 2011
+/* Copyright (C) 1993, 1995, 1997-2005, 2006, 2007, 2008, 2009, 2011-2012
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Per Bothner <bothner@cygnus.com>.
@@ -40,9 +40,7 @@
 #include <string.h>
 #include <errno.h>
 #include <unistd.h>
-#ifdef __STDC__
 #include <stdlib.h>
-#endif
 #if _LIBC
 # include "../wcsmbs/wcsmbsload.h"
 # include "../iconv/gconv_charset.h"

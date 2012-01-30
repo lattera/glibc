@@ -12,14 +12,10 @@
 
 int totfails = 0;
 
-#if __STDC__ - 0
 int main (int argc, char *argv[]);
 void get8 (char *cp);
 void put8 (char *cp);
 void good_bye (void) __attribute__ ((noreturn));
-#else
-void get8(), put8();
-#endif
 
 void good_bye ()
 {

@@ -1,4 +1,5 @@
-/* Copyright (C) 1993,1995,1997-2002,2004,2006 Free Software Foundation, Inc.
+/* Copyright (C) 1993,1995,1997-2002,2004,2006,2012
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Ulrich Drepper <drepper@cygnus.com>.
    Based on the single byte version by Per Bothner <bothner@cygnus.com>.
@@ -30,9 +31,7 @@
 /* Generic or default I/O operations. */
 
 #include "libioP.h"
-#ifdef __STDC__
 #include <stdlib.h>
-#endif
 #include <string.h>
 #include <wchar.h>
 

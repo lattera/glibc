@@ -1,7 +1,7 @@
 /*
  * UFC-crypt: ultra fast crypt(3) implementation
  *
- * Copyright (C) 1991,1992,1993,1996,1997,2007 Free Software Foundation, Inc.
+ * Copyright (C) 1991-1993,1996-1997,2007,2012 Free Software Foundation, Inc.
  *
  * The GNU C Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -46,7 +46,6 @@
 #include "crypt-private.h"
 
 /* Prototypes for local functions.  */
-#if __STDC__ - 0
 #ifndef __GNU_LIBRARY__
 void _ufc_clearmem (char *start, int cnt);
 #else
@@ -61,7 +60,6 @@ extern char *__sha256_crypt (const char *key, const char *salt);
 extern char *__sha512_crypt_r (const char *key, const char *salt,
 			       char *buffer, int buflen);
 extern char *__sha512_crypt (const char *key, const char *salt);
-#endif
 
 /* Define our magic string to mark salt for MD5 encryption
    replacement.  This is meant to be the same as for other MD5 based
