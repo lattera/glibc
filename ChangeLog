@@ -1,3 +1,7 @@
+2012-01-28  Chris Metcalf  <cmetcalf@tilera.com>
+
+	* sysdeps/unix/sysv/linux/faccessat.c (faccessat): Call __fxstatat64.
+
 2012-01-28  Ulrich Drepper  <drepper@gmail.com>
 
 	* sysdeps/x86_64/fpu/bits/mathinline.h (__signbitl): Optimize a bit.
