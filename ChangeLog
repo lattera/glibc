@@ -6,6 +6,10 @@
 
 	* sysdeps/unix/sysv/linux/faccessat.c (faccessat): Call __fxstatat64.
 
+	* include/sys/epoll.h: New file.
+	* sysdeps/unix/sysv/linux/epoll_pwait.c (epoll_pwait): Mark as
+	libc_hidden_def.
+
 2012-01-28  Ulrich Drepper  <drepper@gmail.com>
 
 	* sysdeps/x86_64/fpu/bits/mathinline.h (__signbitl): Optimize a bit.
