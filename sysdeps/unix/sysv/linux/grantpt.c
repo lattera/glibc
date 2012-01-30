@@ -7,7 +7,8 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-#include "not-cancel.h"
+#include <not-cancel.h>
+
 #include "pty-private.h"
 
 
