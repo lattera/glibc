@@ -1,5 +1,9 @@
 2012-01-30  Chris Metcalf  <cmetcalf@tilera.com>
 
+	* sysdeps/unix/sysv/linux/generic/not-cancel.h: New file.
+
+2012-01-30  Chris Metcalf  <cmetcalf@tilera.com>
+
 	* sysdeps/unix/sysv/linux/generic/epoll_wait.c: Remove
 	libc_hidden_proto declaration now it's in sys/epoll.h override.
 
