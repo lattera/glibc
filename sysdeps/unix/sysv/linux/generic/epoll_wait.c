@@ -1,4 +1,4 @@
-/* Copyright (C) 2011 Free Software Foundation, Inc.
+/* Copyright (C) 2011, 2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Chris Metcalf <cmetcalf@tilera.com>, 2011.
 
@@ -21,8 +21,6 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/epoll.h>
-
-libc_hidden_proto (epoll_pwait)
 
 int
 epoll_wait (int epfd, struct epoll_event *events, int maxevents, int timeout)
