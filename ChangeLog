@@ -1,3 +1,8 @@
+2012-01-29  Chris Metcalf  <cmetcalf@tilera.com>
+
+	* scripts/config.guess: Update from upstream config git repository.
+	* scripts/config.sub: Likewise.
+
 2012-01-28  Chris Metcalf  <cmetcalf@tilera.com>
 
 	* elf/elf.h (EM_TILEPRO, EM_TILEGX): New macros.
