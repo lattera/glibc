@@ -1,3 +1,11 @@
+2012-01-30  Joseph Myers  <joseph@codesourcery.com>
+
+	* configure.in (libc_cv_cc_sse2avx): AC_SUBST.
+	* configure: Regenerate.
+	* config.make.in (config-cflags-sse2avx): Define.
+	* sysdeps/x86_64/fpu/multiarch/Makefile (CFLAGS-slowexp-avx.c):
+	Fix typo.
+
 2012-01-29  Chris Metcalf  <cmetcalf@tilera.com>
 
 	* scripts/config.guess: Update from upstream config git repository.

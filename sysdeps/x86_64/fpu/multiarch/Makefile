@@ -48,7 +48,7 @@ CFLAGS-mpexp-avx.c = -msse2avx -DSSE2AVX
 CFLAGS-mplog-avx.c = -msse2avx -DSSE2AVX
 CFLAGS-s_atan-avx.c = -msse2avx -DSSE2AVX
 CFLAGS-s_sin-avx.c = -msse2avx -DSSE2AVX
-CFLAGS-slowexp-avx.c = -sse2mavx -DSSE2AVX
+CFLAGS-slowexp-avx.c = -msse2avx -DSSE2AVX
 CFLAGS-s_tan-avx.c = -msse2avx -DSSE2AVX
 endif
 endif
