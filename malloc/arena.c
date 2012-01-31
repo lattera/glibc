@@ -828,7 +828,7 @@ arena_get2(mstate a_tsd, size_t size)
 	{
 	  if (mp_.arena_max != 0)
 	    narenas_limit = mp_.arena_max;
-	  else
+	  else if (narenas > mp_.arena_test)
 	    {
 	      int n  = __get_nprocs ();
 
@@ -842,7 +842,14 @@ arena_get2(mstate a_tsd, size_t size)
 	}
     repeat:;
       size_t n = narenas;
-      if (__builtin_expect (n <= mp_.arena_test || n < narenas_limit, 0))
+      /* NB: the following depends on the fact that (size_t)0 - 1 is a
+	 very large number and that the underflow is OK.  If arena_max
+	 is set the value of arena_test is irrelevant.  If arena_test
+	 is set but narenas is not yet larger or equal to arena_test
+	 narenas_limit is 0.  There is no possibility for narenas to
+	 be too big for the test to always fail since there is not
+	 enough address space to create that many arenas.  */
+      if (__builtin_expect (n <= narenas_limit - 1, 0))
 	{
 	  if (catomic_compare_and_exchange_bool_acq (&narenas, n + 1, n))
 	    goto repeat;
