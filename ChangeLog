@@ -1,3 +1,11 @@
+2012-01-30  Ulrich Drepper  <drepper@gmail.com>
+
+	* elf/dl-tls.c (__tls_get_addr): Optimize by transforming all calls
+	into tail calls.
+	(update_get_addr): New function.
+	(tls_get_addr_tail): Take GET_ADDR_ARGS parameter, remove
+	GET_ADDR_MODULE parameter.
+
 2012-01-28  Ulrich Drepper  <drepper@gmail.com>
 
 	* sysdeps/x86_64/fpu/bits/mathinline.h (__signbitl): Optimize a bit.

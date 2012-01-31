@@ -1,5 +1,5 @@
 /* Thread-local storage handling in the ELF dynamic linker.  Generic version.
-   Copyright (C) 2002-2006,2008,2011 Free Software Foundation, Inc.
+   Copyright (C) 2002-2006,2008,2011,2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -509,6 +509,7 @@ rtld_hidden_def (_dl_deallocate_tls)
    of the following macros.  */
 # ifndef GET_ADDR_ARGS
 #  define GET_ADDR_ARGS tls_index *ti
+#  define GET_ADDR_PARAM ti
 # endif
 # ifndef GET_ADDR_MODULE
 #  define GET_ADDR_MODULE ti->ti_module
@@ -690,13 +691,13 @@ _dl_update_slotinfo (unsigned long int req_modid)
 
 static void *
 __attribute_noinline__
-tls_get_addr_tail (dtv_t *dtv, struct link_map *the_map, size_t module)
+tls_get_addr_tail (GET_ADDR_ARGS, dtv_t *dtv, struct link_map *the_map)
 {
   /* The allocation was deferred.  Do it now.  */
   if (the_map == NULL)
     {
       /* Find the link map for this module.  */
-      size_t idx = module;
+      size_t idx = GET_ADDR_MODULE;
       struct dtv_slotinfo_list *listp = GL(dl_tls_dtv_slotinfo_list);
 
       while (idx >= listp->len)
@@ -728,18 +729,34 @@ tls_get_addr_tail (dtv_t *dtv, struct link_map *the_map, size_t module)
 	  if (__builtin_expect (the_map->l_tls_offset
 				!= FORCED_DYNAMIC_TLS_OFFSET, 1))
 	    {
-	      void *p = dtv[module].pointer.val;
+	      void *p = dtv[GET_ADDR_MODULE].pointer.val;
 	      if (__builtin_expect (p == TLS_DTV_UNALLOCATED, 0))
 		goto again;
 
-	      return p;
+	      return (char *) p + GET_ADDR_OFFSET;
 	    }
 	}
     }
-  void *p = dtv[module].pointer.val = allocate_and_init (the_map);
-  dtv[module].pointer.is_static = false;
+  void *p = dtv[GET_ADDR_MODULE].pointer.val = allocate_and_init (the_map);
+  dtv[GET_ADDR_MODULE].pointer.is_static = false;
 
-  return p;
+  return (char *) p + GET_ADDR_OFFSET;
+}
+
+
+static struct link_map *
+__attribute_noinline__
+update_get_addr (GET_ADDR_ARGS)
+{
+  struct link_map *the_map = _dl_update_slotinfo (GET_ADDR_MODULE);
+  dtv_t *dtv = THREAD_DTV ();
+
+  void *p = dtv[GET_ADDR_MODULE].pointer.val;
+
+  if (__builtin_expect (p == TLS_DTV_UNALLOCATED, 0))
+    return tls_get_addr_tail (GET_ADDR_PARAM, dtv, the_map);
+
+  return (char *) p + GET_ADDR_OFFSET;
 }
 
 
@@ -749,19 +766,14 @@ void *
 __tls_get_addr (GET_ADDR_ARGS)
 {
   dtv_t *dtv = THREAD_DTV ();
-  struct link_map *the_map = NULL;
-  void *p;
 
   if (__builtin_expect (dtv[0].counter != GL(dl_tls_generation), 0))
-    {
-      the_map = _dl_update_slotinfo (GET_ADDR_MODULE);
-      dtv = THREAD_DTV ();
-    }
+    return update_get_addr (GET_ADDR_PARAM);
 
-  p = dtv[GET_ADDR_MODULE].pointer.val;
+  void *p = dtv[GET_ADDR_MODULE].pointer.val;
 
   if (__builtin_expect (p == TLS_DTV_UNALLOCATED, 0))
-    p = tls_get_addr_tail (dtv, the_map, GET_ADDR_MODULE);
+    return tls_get_addr_tail (GET_ADDR_PARAM, dtv, NULL);
 
   return (char *) p + GET_ADDR_OFFSET;
 }
