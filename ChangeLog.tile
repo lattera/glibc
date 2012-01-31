@@ -1,3 +1,7 @@
+2012-01-31  Chris Metcalf  <cmetcalf@tilera.com>
+
+	* sysdeps/tile/math_private.h: Ignore feraiseexcept() internally.
+
 2012-01-30  Chris Metcalf  <cmetcalf@tilera.com>
 
 	* sysdeps/tile/sysdep.h: Don't check HAVE_ELF or NO_UNDERSCORES.
