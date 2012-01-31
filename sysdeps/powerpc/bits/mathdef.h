@@ -31,21 +31,9 @@
 #if defined __USE_ISOC99 && defined _MATH_H && !defined _MATH_H_MATHDEF
 # define _MATH_H_MATHDEF	1
 
-# ifdef __GNUC__
-
-/* gcc leaves `float' expressions as-is.  */
-typedef float float_t;		/* `float' expressions are evaluated as
-				   `float'.  */
-typedef double double_t;	/* `double' expressions are evaluated as
-				   `double'.  */
-
-# else
-
-/* Wild guess at types for float_t and double_t. */
-typedef double float_t;
+/* PowerPC has both `float' and `double' arithmetic.  */
+typedef float float_t;
 typedef double double_t;
-
-# endif
 
 /* The values returned by `ilogb' for 0 and NaN respectively.  */
 # define FP_ILOGB0	(-2147483647)
