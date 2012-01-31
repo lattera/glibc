@@ -67,11 +67,6 @@
 # endif
 #endif /*!__P*/
 
-/* For backward compatibility */
-#ifndef _PARAMS
-# define _PARAMS(protos) __P(protos)
-#endif /*!_PARAMS*/
-
 #define _IO_UNIFIED_JUMPTABLES 1
 #ifndef _G_HAVE_PRINTF_FP
 # define _IO_USE_DTOA 1
