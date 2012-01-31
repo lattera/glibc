@@ -29,10 +29,6 @@
 
 #define DEFAULT_CHARMAP "ANSI_X3.4-1968" /* ASCII */
 
-#ifndef PARAMS
-# define PARAMS(args) args
-#endif
-
 /* This must be one higer than the last used LC_xxx category value.  */
 #define __LC_LAST	13
 
