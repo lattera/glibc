@@ -40,4 +40,4 @@ typedef unsigned int fexcept_t;
 typedef unsigned int fenv_t;
 
 /* If the default argument is used we use this value.  */
-#define FE_DFL_ENV	((__const fenv_t *) -1l)
+#define FE_DFL_ENV	((const fenv_t *) -1l)
