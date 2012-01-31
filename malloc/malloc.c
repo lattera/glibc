@@ -387,38 +387,9 @@ __malloc_assert (const char *assertion, const char *file, unsigned int line,
 #endif
 
 
-/*
-   Two-phase name translation.
-   All of the actual routines are given mangled names.
-   When wrappers are used, they become the public callable versions.
-*/
-
-/* Special defines for the GNU C library.  */
-#define public_cALLOc    __libc_calloc
-#define public_fREe      __libc_free
-#define public_cFREe     __libc_cfree
-#define public_mALLOc    __libc_malloc
-#define public_mEMALIGn  __libc_memalign
-#define public_rEALLOc   __libc_realloc
-#define public_vALLOc    __libc_valloc
-#define public_pVALLOc   __libc_pvalloc
-#define public_mALLINFo  __libc_mallinfo
-#define public_mALLOPt   __libc_mallopt
-#define public_mTRIm     __malloc_trim
-#define public_mSTATs    __malloc_stats
-#define public_mUSABLe   __malloc_usable_size
-#define public_iCALLOc   __libc_independent_calloc
-#define public_iCOMALLOc __libc_independent_comalloc
-#define public_gET_STATe __malloc_get_state
-#define public_sET_STATe __malloc_set_state
-#define open             __open
-#define mmap             __mmap
-#define munmap           __munmap
-#define mremap           __mremap
-#define mprotect         __mprotect
+/* Definition for getting more memory from the OS.  */
 #define MORECORE         (*__morecore)
 #define MORECORE_FAILURE 0
-
 void * __default_morecore (ptrdiff_t);
 void *(*__morecore)(ptrdiff_t) = __default_morecore;
 
@@ -561,8 +532,8 @@ void *(*__morecore)(ptrdiff_t) = __default_morecore;
   differs across systems, but is in all cases less than the maximum
   representable value of a size_t.
 */
-void*  public_mALLOc(size_t);
-libc_hidden_proto (public_mALLOc)
+void*  __libc_malloc(size_t);
+libc_hidden_proto (__libc_malloc)
 
 /*
   free(void* p)
@@ -575,15 +546,15 @@ libc_hidden_proto (public_mALLOc)
   when possible, automatically trigger operations that give
   back unused memory to the system, thus reducing program footprint.
 */
-void     public_fREe(void*);
-libc_hidden_proto (public_fREe)
+void     __libc_free(void*);
+libc_hidden_proto (__libc_free)
 
 /*
   calloc(size_t n_elements, size_t element_size);
   Returns a pointer to n_elements * element_size bytes, with all locations
   set to zero.
 */
-void*  public_cALLOc(size_t, size_t);
+void*  __libc_calloc(size_t, size_t);
 
 /*
   realloc(void* p, size_t n)
@@ -612,8 +583,8 @@ void*  public_cALLOc(size_t, size_t);
   The old unix realloc convention of allowing the last-free'd chunk
   to be used as an argument to realloc is not supported.
 */
-void*  public_rEALLOc(void*, size_t);
-libc_hidden_proto (public_rEALLOc)
+void*  __libc_realloc(void*, size_t);
+libc_hidden_proto (__libc_realloc)
 
 /*
   memalign(size_t alignment, size_t n);
@@ -627,15 +598,15 @@ libc_hidden_proto (public_rEALLOc)
 
   Overreliance on memalign is a sure way to fragment space.
 */
-void*  public_mEMALIGn(size_t, size_t);
-libc_hidden_proto (public_mEMALIGn)
+void*  __libc_memalign(size_t, size_t);
+libc_hidden_proto (__libc_memalign)
 
 /*
   valloc(size_t n);
   Equivalent to memalign(pagesize, n), where pagesize is the page
   size of the system. If the pagesize is unknown, 4096 is used.
 */
-void*  public_vALLOc(size_t);
+void*  __libc_valloc(size_t);
 
 
 
@@ -660,7 +631,8 @@ void*  public_vALLOc(size_t);
   M_MMAP_THRESHOLD -3         128*1024   any   (or 0 if no MMAP support)
   M_MMAP_MAX       -4         65536      any   (0 disables use of mmap)
 */
-int      public_mALLOPt(int, int);
+int      __libc_mallopt(int, int);
+libc_hidden_proto (__libc_mallopt)
 
 
 /*
@@ -686,7 +658,7 @@ int      public_mALLOPt(int, int);
   be kept as longs, the reported values may wrap around zero and
   thus be inaccurate.
 */
-struct mallinfo public_mALLINFo(void);
+struct mallinfo __libc_mallinfo(void);
 
 
 /*
@@ -694,17 +666,7 @@ struct mallinfo public_mALLINFo(void);
   Equivalent to valloc(minimum-page-that-holds(n)), that is,
   round up n to nearest pagesize.
  */
-void*  public_pVALLOc(size_t);
-
-/*
-  cfree(void* p);
-  Equivalent to free(p).
-
-  cfree is needed/defined on some systems that pair it with calloc,
-  for odd historical reasons (such as: cfree is used in example
-  code in the first edition of K&R).
-*/
-void     public_cFREe(void*);
+void*  __libc_pvalloc(size_t);
 
 /*
   malloc_trim(size_t pad);
@@ -730,7 +692,7 @@ void     public_cFREe(void*);
   On systems that do not support "negative sbrks", it will always
   return 0.
 */
-int      public_mTRIm(size_t);
+int      __malloc_trim(size_t);
 
 /*
   malloc_usable_size(void* p);
@@ -747,7 +709,7 @@ int      public_mTRIm(size_t);
   assert(malloc_usable_size(p) >= 256);
 
 */
-size_t   public_mUSABLe(void*);
+size_t   __malloc_usable_size(void*);
 
 /*
   malloc_stats();
@@ -769,7 +731,7 @@ size_t   public_mUSABLe(void*);
   More information can be obtained by calling mallinfo.
 
 */
-void     public_mSTATs(void);
+void     __malloc_stats(void);
 
 /*
   malloc_get_state(void);
@@ -777,7 +739,7 @@ void     public_mSTATs(void);
   Returns the state of all malloc variables in an opaque data
   structure.
 */
-void*  public_gET_STATe(void);
+void*  __malloc_get_state(void);
 
 /*
   malloc_set_state(void* state);
@@ -785,7 +747,7 @@ void*  public_gET_STATe(void);
   Restore the state of all malloc variables from data obtained with
   malloc_get_state().
 */
-int      public_sET_STATe(void*);
+int      __malloc_set_state(void*);
 
 /*
   posix_memalign(void **memptr, size_t alignment, size_t size);
@@ -1093,11 +1055,6 @@ static void*  _int_realloc(mstate, mchunkptr, INTERNAL_SIZE_T,
 static void*  _int_memalign(mstate, size_t, size_t);
 static void*  _int_valloc(mstate, size_t);
 static void*  _int_pvalloc(mstate, size_t);
-static int      mTRIm(mstate, size_t);
-static size_t   mUSABLe(void*);
-static void     mSTATs(void);
-static int      mALLOPt(int, int);
-static struct mallinfo mALLINFo(mstate);
 static void malloc_printerr(int action, const char *str, void *ptr);
 
 static void* internal_function mem2mem_check(void *p, size_t sz);
@@ -1141,15 +1098,11 @@ static void      free_atfork(void* mem, const void *caller);
 #endif
 
 #ifndef MAP_NORESERVE
-# ifdef MAP_AUTORESRV
-#  define MAP_NORESERVE MAP_AUTORESRV
-# else
-#  define MAP_NORESERVE 0
-# endif
+# define MAP_NORESERVE 0
 #endif
 
 #define MMAP(addr, size, prot, flags) \
- (mmap((addr), (size), (prot), (flags)|MAP_ANONYMOUS, -1, 0))
+ __mmap((addr), (size), (prot), (flags)|MAP_ANONYMOUS|MAP_PRIVATE, -1, 0)
 
 
 /*
@@ -1584,7 +1537,7 @@ typedef struct malloc_chunk* mbinptr;
     need to do so when getting memory from system, so we make
     initial_top treat the bin as a legal but unusable chunk during the
     interval between initialization and the first call to
-    sYSMALLOc. (This is somewhat delicate, since it relies on
+    sysmalloc. (This is somewhat delicate, since it relies on
     the 2 preceding words to be zero during this interval as well.)
 */
 
@@ -1854,8 +1807,8 @@ static void malloc_init_state(mstate av)
    Other internal utilities operating on mstates
 */
 
-static void*  sYSMALLOc(INTERNAL_SIZE_T, mstate);
-static int      sYSTRIm(size_t, mstate);
+static void*  sysmalloc(INTERNAL_SIZE_T, mstate);
+static int      systrim(size_t, mstate);
 static void     malloc_consolidate(mstate);
 
 
@@ -2270,7 +2223,7 @@ static void do_check_malloc_state(mstate av)
   be extended or replaced.
 */
 
-static void* sYSMALLOc(INTERNAL_SIZE_T nb, mstate av)
+static void* sysmalloc(INTERNAL_SIZE_T nb, mstate av)
 {
   mchunkptr       old_top;        /* incoming value of av->top */
   INTERNAL_SIZE_T old_size;       /* its size */
@@ -2322,7 +2275,7 @@ static void* sYSMALLOc(INTERNAL_SIZE_T nb, mstate av)
     /* Don't try if size wraps around 0 */
     if ((unsigned long)(size) > (unsigned long)(nb)) {
 
-      mm = (char*)(MMAP(0, size, PROT_READ|PROT_WRITE, MAP_PRIVATE));
+      mm = (char*)(MMAP(0, size, PROT_READ|PROT_WRITE, 0));
 
       if (mm != MAP_FAILED) {
 
@@ -2485,7 +2438,7 @@ static void* sYSMALLOc(INTERNAL_SIZE_T nb, mstate av)
     /* Don't try if size wraps around 0 */
     if ((unsigned long)(size) > (unsigned long)(nb)) {
 
-      char *mbrk = (char*)(MMAP(0, size, PROT_READ|PROT_WRITE, MAP_PRIVATE));
+      char *mbrk = (char*)(MMAP(0, size, PROT_READ|PROT_WRITE, 0));
 
       if (mbrk != MAP_FAILED) {
 
@@ -2690,7 +2643,7 @@ static void* sYSMALLOc(INTERNAL_SIZE_T nb, mstate av)
 
 
 /*
-  sYSTRIm is an inverse of sorts to sYSMALLOc.  It gives memory back
+  systrim is an inverse of sorts to sysmalloc.  It gives memory back
   to the system (via negative arguments to sbrk) if there is unused
   memory at the `high' end of the malloc pool. It is called
   automatically by free() when top space exceeds the trim
@@ -2698,7 +2651,7 @@ static void* sYSMALLOc(INTERNAL_SIZE_T nb, mstate av)
   returns 1 if it actually released any memory, else 0.
 */
 
-static int sYSTRIm(size_t pad, mstate av)
+static int systrim(size_t pad, mstate av)
 {
   long  top_size;        /* Amount of top-most memory */
   long  extra;           /* Amount to release */
@@ -2783,7 +2736,7 @@ munmap_chunk(mchunkptr p)
   /* If munmap failed the process virtual memory address space is in a
      bad shape.  Just leave the block hanging around, the process will
      terminate shortly anyway since not much can be done.  */
-  munmap((char *)block, total_size);
+  __munmap((char *)block, total_size);
 }
 
 #if HAVE_MREMAP
@@ -2807,8 +2760,8 @@ mremap_chunk(mchunkptr p, size_t new_size)
   if (size + offset == new_size)
     return p;
 
-  cp = (char *)mremap((char *)p - offset, size + offset, new_size,
-		      MREMAP_MAYMOVE);
+  cp = (char *)__mremap((char *)p - offset, size + offset, new_size,
+			MREMAP_MAYMOVE);
 
   if (cp == MAP_FAILED) return 0;
 
@@ -2831,7 +2784,7 @@ mremap_chunk(mchunkptr p, size_t new_size)
 /*------------------------ Public wrappers. --------------------------------*/
 
 void*
-public_mALLOc(size_t bytes)
+__libc_malloc(size_t bytes)
 {
   mstate ar_ptr;
   void *victim;
@@ -2870,10 +2823,10 @@ public_mALLOc(size_t bytes)
 	 ar_ptr == arena_for_chunk(mem2chunk(victim)));
   return victim;
 }
-libc_hidden_def(public_mALLOc)
+libc_hidden_def(__libc_malloc)
 
 void
-public_fREe(void* mem)
+__libc_free(void* mem)
 {
   mstate ar_ptr;
   mchunkptr p;                          /* chunk corresponding to mem */
@@ -2907,10 +2860,10 @@ public_fREe(void* mem)
   ar_ptr = arena_for_chunk(p);
   _int_free(ar_ptr, p, 0);
 }
-libc_hidden_def (public_fREe)
+libc_hidden_def (__libc_free)
 
 void*
-public_rEALLOc(void* oldmem, size_t bytes)
+__libc_realloc(void* oldmem, size_t bytes)
 {
   mstate ar_ptr;
   INTERNAL_SIZE_T    nb;      /* padded request size */
@@ -2923,11 +2876,11 @@ public_rEALLOc(void* oldmem, size_t bytes)
     return (*hook)(oldmem, bytes, RETURN_ADDRESS (0));
 
 #if REALLOC_ZERO_BYTES_FREES
-  if (bytes == 0 && oldmem != NULL) { public_fREe(oldmem); return 0; }
+  if (bytes == 0 && oldmem != NULL) { __libc_free(oldmem); return 0; }
 #endif
 
   /* realloc of null is supposed to be same as malloc */
-  if (oldmem == 0) return public_mALLOc(bytes);
+  if (oldmem == 0) return __libc_malloc(bytes);
 
   /* chunk corresponding to oldmem */
   const mchunkptr oldp    = mem2chunk(oldmem);
@@ -2958,7 +2911,7 @@ public_rEALLOc(void* oldmem, size_t bytes)
     /* Note the extra SIZE_SZ overhead. */
     if(oldsize - SIZE_SZ >= nb) return oldmem; /* do nothing */
     /* Must alloc, copy, free. */
-    newmem = public_mALLOc(bytes);
+    newmem = __libc_malloc(bytes);
     if (newmem == 0) return 0; /* propagate failure */
     MALLOC_COPY(newmem, oldmem, oldsize - 2*SIZE_SZ);
     munmap_chunk(oldp);
@@ -2991,7 +2944,7 @@ public_rEALLOc(void* oldmem, size_t bytes)
   if (newp == NULL)
     {
       /* Try harder to allocate memory in other arenas.  */
-      newp = public_mALLOc(bytes);
+      newp = __libc_malloc(bytes);
       if (newp != NULL)
 	{
 	  MALLOC_COPY (newp, oldmem, oldsize - SIZE_SZ);
@@ -3001,10 +2954,10 @@ public_rEALLOc(void* oldmem, size_t bytes)
 
   return newp;
 }
-libc_hidden_def (public_rEALLOc)
+libc_hidden_def (__libc_realloc)
 
 void*
-public_mEMALIGn(size_t alignment, size_t bytes)
+__libc_memalign(size_t alignment, size_t bytes)
 {
   mstate ar_ptr;
   void *p;
@@ -3016,7 +2969,7 @@ public_mEMALIGn(size_t alignment, size_t bytes)
     return (*hook)(alignment, bytes, RETURN_ADDRESS (0));
 
   /* If need less alignment than we give anyway, just relay to malloc */
-  if (alignment <= MALLOC_ALIGNMENT) return public_mALLOc(bytes);
+  if (alignment <= MALLOC_ALIGNMENT) return __libc_malloc(bytes);
 
   /* Otherwise, ensure that it is at least a minimum chunk size */
   if (alignment <  MINSIZE) alignment = MINSIZE;
@@ -3050,11 +3003,11 @@ public_mEMALIGn(size_t alignment, size_t bytes)
   return p;
 }
 /* For ISO C11.  */
-weak_alias (public_mEMALIGn, aligned_alloc)
-libc_hidden_def (public_mEMALIGn)
+weak_alias (__libc_memalign, aligned_alloc)
+libc_hidden_def (__libc_memalign)
 
 void*
-public_vALLOc(size_t bytes)
+__libc_valloc(size_t bytes)
 {
   mstate ar_ptr;
   void *p;
@@ -3098,7 +3051,7 @@ public_vALLOc(size_t bytes)
 }
 
 void*
-public_pVALLOc(size_t bytes)
+__libc_pvalloc(size_t bytes)
 {
   mstate ar_ptr;
   void *p;
@@ -3143,7 +3096,7 @@ public_pVALLOc(size_t bytes)
 }
 
 void*
-public_cALLOc(size_t n, size_t elem_size)
+__libc_calloc(size_t n, size_t elem_size)
 {
   mstate av;
   mchunkptr oldtop, p;
@@ -3273,64 +3226,6 @@ public_cALLOc(size_t n, size_t elem_size)
   }
 
   return mem;
-}
-
-
-int
-public_mTRIm(size_t s)
-{
-  int result = 0;
-
-  if(__malloc_initialized < 0)
-    ptmalloc_init ();
-
-  mstate ar_ptr = &main_arena;
-  do
-    {
-      (void) mutex_lock (&ar_ptr->mutex);
-      result |= mTRIm (ar_ptr, s);
-      (void) mutex_unlock (&ar_ptr->mutex);
-
-      ar_ptr = ar_ptr->next;
-    }
-  while (ar_ptr != &main_arena);
-
-  return result;
-}
-
-size_t
-public_mUSABLe(void* m)
-{
-  size_t result;
-
-  result = mUSABLe(m);
-  return result;
-}
-
-void
-public_mSTATs()
-{
-  mSTATs();
-}
-
-struct mallinfo public_mALLINFo()
-{
-  struct mallinfo m;
-
-  if(__malloc_initialized < 0)
-    ptmalloc_init ();
-  (void)mutex_lock(&main_arena.mutex);
-  m = mALLINFo(&main_arena);
-  (void)mutex_unlock(&main_arena.mutex);
-  return m;
-}
-
-int
-public_mALLOPt(int p, int v)
-{
-  int result;
-  result = mALLOPt(p, v);
-  return result;
 }
 
 /*
@@ -3816,7 +3711,7 @@ _int_malloc(mstate av, size_t bytes)
        Otherwise, relay to handle system-dependent cases
     */
     else {
-      void *p = sYSMALLOc(nb, av);
+      void *p = sysmalloc(nb, av);
       if (p != NULL && __builtin_expect (perturb_byte, 0))
 	alloc_perturb (p, bytes);
       return p;
@@ -4076,7 +3971,7 @@ _int_free(mstate av, mchunkptr p, int have_lock)
 #ifndef MORECORE_CANNOT_TRIM
 	if ((unsigned long)(chunksize(av->top)) >=
 	    (unsigned long)(mp_.trim_threshold))
-	  sYSTRIm(mp_.top_pad, av);
+	  systrim(mp_.top_pad, av);
 #endif
       } else {
 	/* Always try heap_trim(), even if the top chunk is not
@@ -4511,7 +4406,7 @@ _int_pvalloc(mstate av, size_t bytes)
   ------------------------------ malloc_trim ------------------------------
 */
 
-static int mTRIm(mstate av, size_t pad)
+static int mtrim(mstate av, size_t pad)
 {
   /* Ensure initialization/consolidation */
   malloc_consolidate (av);
@@ -4559,10 +4454,33 @@ static int mTRIm(mstate av, size_t pad)
       }
 
 #ifndef MORECORE_CANNOT_TRIM
-  return result | (av == &main_arena ? sYSTRIm (pad, av) : 0);
+  return result | (av == &main_arena ? systrim (pad, av) : 0);
 #else
   return result;
 #endif
+}
+
+
+int
+__malloc_trim(size_t s)
+{
+  int result = 0;
+
+  if(__malloc_initialized < 0)
+    ptmalloc_init ();
+
+  mstate ar_ptr = &main_arena;
+  do
+    {
+      (void) mutex_lock (&ar_ptr->mutex);
+      result |= mtrim (ar_ptr, s);
+      (void) mutex_unlock (&ar_ptr->mutex);
+
+      ar_ptr = ar_ptr->next;
+    }
+  while (ar_ptr != &main_arena);
+
+  return result;
 }
 
 
@@ -4570,7 +4488,8 @@ static int mTRIm(mstate av, size_t pad)
   ------------------------- malloc_usable_size -------------------------
 */
 
-size_t mUSABLe(void* mem)
+static size_t
+musable(void* mem)
 {
   mchunkptr p;
   if (mem != 0) {
@@ -4583,11 +4502,22 @@ size_t mUSABLe(void* mem)
   return 0;
 }
 
+
+size_t
+__malloc_usable_size(void* m)
+{
+  size_t result;
+
+  result = musable(m);
+  return result;
+}
+
 /*
   ------------------------------ mallinfo ------------------------------
 */
 
-struct mallinfo mALLINFo(mstate av)
+static struct mallinfo
+int_mallinfo(mstate av)
 {
   struct mallinfo mi;
   size_t i;
@@ -4642,11 +4572,25 @@ struct mallinfo mALLINFo(mstate av)
   return mi;
 }
 
+
+struct mallinfo __libc_mallinfo()
+{
+  struct mallinfo m;
+
+  if(__malloc_initialized < 0)
+    ptmalloc_init ();
+  (void)mutex_lock(&main_arena.mutex);
+  m = int_mallinfo(&main_arena);
+  (void)mutex_unlock(&main_arena.mutex);
+  return m;
+}
+
 /*
   ------------------------------ malloc_stats ------------------------------
 */
 
-void mSTATs()
+void
+__malloc_stats()
 {
   int i;
   mstate ar_ptr;
@@ -4663,7 +4607,7 @@ void mSTATs()
   ((_IO_FILE *) stderr)->_flags2 |= _IO_FLAGS2_NOTCANCEL;
   for (i=0, ar_ptr = &main_arena;; i++) {
     (void)mutex_lock(&ar_ptr->mutex);
-    mi = mALLINFo(ar_ptr);
+    mi = int_mallinfo(ar_ptr);
     fprintf(stderr, "Arena %d:\n", i);
     fprintf(stderr, "system bytes     = %10u\n", (unsigned int)mi.arena);
     fprintf(stderr, "in use bytes     = %10u\n", (unsigned int)mi.uordblks);
@@ -4705,7 +4649,7 @@ void mSTATs()
   ------------------------------ mallopt ------------------------------
 */
 
-int mALLOPt(int param_number, int value)
+int __libc_mallopt(int param_number, int value)
 {
   mstate av = &main_arena;
   int res = 1;
@@ -4772,6 +4716,7 @@ int mALLOPt(int param_number, int value)
   (void)mutex_unlock(&av->mutex);
   return res;
 }
+libc_hidden_def (__libc_mallopt)
 
 
 /*
@@ -4962,7 +4907,7 @@ __posix_memalign (void **memptr, size_t alignment, size_t size)
   if (__builtin_expect (hook != NULL, 0))
     mem = (*hook)(alignment, size, RETURN_ADDRESS (0));
   else
-    mem = public_mEMALIGn (alignment, size);
+    mem = __libc_memalign (alignment, size);
 
   if (mem != NULL) {
     *memptr = mem;

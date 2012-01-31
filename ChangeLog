@@ -1,5 +1,11 @@
 2012-01-31  Ulrich Drepper  <drepper@gmail.com>
 
+	* malloc/malloc.c: Remove name translation.  Don't use mixed-cap
+	names.  Just use the correct names.  Remove unnecessary wrapper
+	functions.
+	* malloc/arena.c: Likewise.
+	* malloc/hooks.c: Likewise.
+
 	* malloc/arena.c (arena_get2): Really don't call __get_nprocs if
 	ARENA_TEST says not to.  Simplify test for creation of a new arena.
 	Partially based on a patch by Siddhesh Poyarekar <siddhesh@redhat.com>.

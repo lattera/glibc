@@ -185,7 +185,7 @@ malloc_atfork(size_t sz, const void *caller)
        mALLOc() can be used again. */
     (void)mutex_lock(&list_lock);
     (void)mutex_unlock(&list_lock);
-    return public_mALLOc(sz);
+    return __libc_malloc(sz);
   }
 }
 
@@ -413,19 +413,19 @@ ptmalloc_init (void)
 	      if (! __builtin_expect (__libc_enable_secure, 0))
 		{
 		  if (memcmp (envline, "TOP_PAD_", 8) == 0)
-		    mALLOPt(M_TOP_PAD, atoi(&envline[9]));
+		    __libc_mallopt(M_TOP_PAD, atoi(&envline[9]));
 		  else if (memcmp (envline, "PERTURB_", 8) == 0)
-		    mALLOPt(M_PERTURB, atoi(&envline[9]));
+		    __libc_mallopt(M_PERTURB, atoi(&envline[9]));
 		}
 	      break;
 	    case 9:
 	      if (! __builtin_expect (__libc_enable_secure, 0))
 		{
 		  if (memcmp (envline, "MMAP_MAX_", 9) == 0)
-		    mALLOPt(M_MMAP_MAX, atoi(&envline[10]));
+		    __libc_mallopt(M_MMAP_MAX, atoi(&envline[10]));
 #ifdef PER_THREAD
 		  else if (memcmp (envline, "ARENA_MAX", 9) == 0)
-		    mALLOPt(M_ARENA_MAX, atoi(&envline[10]));
+		    __libc_mallopt(M_ARENA_MAX, atoi(&envline[10]));
 #endif
 		}
 	      break;
@@ -434,7 +434,7 @@ ptmalloc_init (void)
 	      if (! __builtin_expect (__libc_enable_secure, 0))
 		{
 		  if (memcmp (envline, "ARENA_TEST", 10) == 0)
-		    mALLOPt(M_ARENA_TEST, atoi(&envline[11]));
+		    __libc_mallopt(M_ARENA_TEST, atoi(&envline[11]));
 		}
 	      break;
 #endif
@@ -442,9 +442,9 @@ ptmalloc_init (void)
 	      if (! __builtin_expect (__libc_enable_secure, 0))
 		{
 		  if (memcmp (envline, "TRIM_THRESHOLD_", 15) == 0)
-		    mALLOPt(M_TRIM_THRESHOLD, atoi(&envline[16]));
+		    __libc_mallopt(M_TRIM_THRESHOLD, atoi(&envline[16]));
 		  else if (memcmp (envline, "MMAP_THRESHOLD_", 15) == 0)
-		    mALLOPt(M_MMAP_THRESHOLD, atoi(&envline[16]));
+		    __libc_mallopt(M_MMAP_THRESHOLD, atoi(&envline[16]));
 		}
 	      break;
 	    default:
@@ -453,7 +453,7 @@ ptmalloc_init (void)
 	}
     }
   if(s && s[0]) {
-    mALLOPt(M_CHECK_ACTION, (int)(s[0] - '0'));
+    __libc_mallopt(M_CHECK_ACTION, (int)(s[0] - '0'));
     if (check_action != 0)
       __malloc_check_init();
   }
@@ -543,39 +543,38 @@ new_heap(size_t size, size_t top_pad)
   p2 = MAP_FAILED;
   if(aligned_heap_area) {
     p2 = (char *)MMAP(aligned_heap_area, HEAP_MAX_SIZE, PROT_NONE,
-		      MAP_PRIVATE|MAP_NORESERVE);
+		      MAP_NORESERVE);
     aligned_heap_area = NULL;
     if (p2 != MAP_FAILED && ((unsigned long)p2 & (HEAP_MAX_SIZE-1))) {
-      munmap(p2, HEAP_MAX_SIZE);
+      __munmap(p2, HEAP_MAX_SIZE);
       p2 = MAP_FAILED;
     }
   }
   if(p2 == MAP_FAILED) {
-    p1 = (char *)MMAP(0, HEAP_MAX_SIZE<<1, PROT_NONE,
-		      MAP_PRIVATE|MAP_NORESERVE);
+    p1 = (char *)MMAP(0, HEAP_MAX_SIZE<<1, PROT_NONE, MAP_NORESERVE);
     if(p1 != MAP_FAILED) {
       p2 = (char *)(((unsigned long)p1 + (HEAP_MAX_SIZE-1))
 		    & ~(HEAP_MAX_SIZE-1));
       ul = p2 - p1;
       if (ul)
-	munmap(p1, ul);
+	__munmap(p1, ul);
       else
 	aligned_heap_area = p2 + HEAP_MAX_SIZE;
-      munmap(p2 + HEAP_MAX_SIZE, HEAP_MAX_SIZE - ul);
+      __munmap(p2 + HEAP_MAX_SIZE, HEAP_MAX_SIZE - ul);
     } else {
       /* Try to take the chance that an allocation of only HEAP_MAX_SIZE
 	 is already aligned. */
-      p2 = (char *)MMAP(0, HEAP_MAX_SIZE, PROT_NONE, MAP_PRIVATE|MAP_NORESERVE);
+      p2 = (char *)MMAP(0, HEAP_MAX_SIZE, PROT_NONE, MAP_NORESERVE);
       if(p2 == MAP_FAILED)
 	return 0;
       if((unsigned long)p2 & (HEAP_MAX_SIZE-1)) {
-	munmap(p2, HEAP_MAX_SIZE);
+	__munmap(p2, HEAP_MAX_SIZE);
 	return 0;
       }
     }
   }
-  if(mprotect(p2, size, PROT_READ|PROT_WRITE) != 0) {
-    munmap(p2, HEAP_MAX_SIZE);
+  if(__mprotect(p2, size, PROT_READ|PROT_WRITE) != 0) {
+    __munmap(p2, HEAP_MAX_SIZE);
     return 0;
   }
   h = (heap_info *)p2;
@@ -599,9 +598,9 @@ grow_heap(heap_info *h, long diff)
   if((unsigned long) new_size > (unsigned long) HEAP_MAX_SIZE)
     return -1;
   if((unsigned long) new_size > h->mprotect_size) {
-    if (mprotect((char *)h + h->mprotect_size,
-		 (unsigned long) new_size - h->mprotect_size,
-		 PROT_READ|PROT_WRITE) != 0)
+    if (__mprotect((char *)h + h->mprotect_size,
+		   (unsigned long) new_size - h->mprotect_size,
+		   PROT_READ|PROT_WRITE) != 0)
       return -2;
     h->mprotect_size = new_size;
   }
@@ -625,7 +624,7 @@ shrink_heap(heap_info *h, long diff)
   if (__builtin_expect (__libc_enable_secure, 0))
     {
       if((char *)MMAP((char *)h + new_size, diff, PROT_NONE,
-		      MAP_PRIVATE|MAP_FIXED) == (char *) MAP_FAILED)
+		      MAP_FIXED) == (char *) MAP_FAILED)
 	return -2;
       h->mprotect_size = new_size;
     }
@@ -643,7 +642,7 @@ shrink_heap(heap_info *h, long diff)
   do {								\
     if ((char *)(heap) + HEAP_MAX_SIZE == aligned_heap_area)	\
       aligned_heap_area = NULL;					\
-    munmap((char*)(heap), HEAP_MAX_SIZE);			\
+    __munmap((char*)(heap), HEAP_MAX_SIZE);			\
   } while (0)
 
 static int
