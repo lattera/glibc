@@ -8,11 +8,9 @@ typedef struct _Buffer {
   int  room, used;
 } Buffer;
 
-#if __STDC__ - 0
 void InitBuffer (Buffer *b);
 void AppendToBuffer (register Buffer *b, const char *str, register int len);
 void ReadFile (register Buffer *buffer, FILE *input);
-#endif
 
 #define INIT_BUFFER_SIZE 10000
 

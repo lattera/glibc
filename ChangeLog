@@ -6,6 +6,67 @@
 	(tls_get_addr_tail): Take GET_ADDR_ARGS parameter, remove
 	GET_ADDR_MODULE parameter.
 
+2012-01-30  Joseph Myers  <joseph@codesourcery.com>
+
+	* crypt/cert.c: Remove __STDC__ conditionals.
+	* crypt/crypt-entry.c: Likewise.
+	* crypt/crypt_util.c: Likewise.
+	* libio/filedoalloc.c: Likewise.
+	* libio/fileops.c: Likewise.
+	* libio/genops.c: Likewise.
+	* libio/iofclose.c: Likewise.
+	* libio/iofdopen.c: Likewise.
+	* libio/iofopen.c: Likewise.
+	* libio/iofopen64.c: Likewise.
+	* libio/iogetdelim.c: Likewise.
+	* libio/iopopen.c: Likewise.
+	* libio/obprintf.c: Likewise.
+	* libio/oldfileops.c: Likewise.
+	* libio/oldiofclose.c: Likewise.
+	* libio/oldiofdopen.c: Likewise.
+	* libio/oldiofopen.c: Likewise.
+	* libio/oldiopopen.c: Likewise.
+	* libio/wfiledoalloc.c: Likewise.
+	* libio/wgenops.c: Likewise.
+	* locale/programs/xmalloc.c: Likewise.
+	* misc/syslog.c: Likewise.
+	* stdio-common/xbug.c: Likewise.
+	* string/memchr.c: Likewise.
+	* string/memcmp.c: Likewise.
+	* string/memrchr.c: Likewise.
+	* string/rawmemchr.c: Likewise.
+	* sysdeps/posix/getcwd.c: Likewise.
+	* time/strftime_l.c: Likewise.
+
+2012-01-30  Joseph Myers  <joseph@codesourcery.com>
+
+	* configure.in (libc_cv_cc_sse2avx): AC_SUBST.
+	* configure: Regenerate.
+	* config.make.in (config-cflags-sse2avx): Define.
+	* sysdeps/x86_64/fpu/multiarch/Makefile (CFLAGS-slowexp-avx.c):
+	Fix typo.
+
+2012-01-29  Chris Metcalf  <cmetcalf@tilera.com>
+
+	* scripts/config.guess: Update from upstream config git repository.
+	* scripts/config.sub: Likewise.
+
+2012-01-28  Chris Metcalf  <cmetcalf@tilera.com>
+
+	* elf/elf.h (EM_TILEPRO, EM_TILEGX): New macros.
+	(EM_NUM): Update.
+	(R_TILEPRO_*, R_TILEGX_*): New macros.
+
+	* scripts/firstversions.awk: Fix bug in version range handling.
+
+	* sysdeps/unix/sysv/linux/grantpt.c: Use <> brackets for not-cancel.h.
+
+	* sysdeps/unix/sysv/linux/faccessat.c (faccessat): Call __fxstatat64.
+
+	* include/sys/epoll.h: New file.
+	* sysdeps/unix/sysv/linux/epoll_pwait.c (epoll_pwait): Mark as
+	libc_hidden_def.
+
 2012-01-28  Ulrich Drepper  <drepper@gmail.com>
 
 	* sysdeps/x86_64/fpu/bits/mathinline.h (__signbitl): Optimize a bit.

@@ -49,7 +49,6 @@
 #include "crypt-private.h"
 
 /* Prototypes for local functions.  */
-#if __STDC__ - 0
 #ifndef __GNU_LIBRARY__
 void _ufc_clearmem (char *start, int cnt);
 void _ufc_copymem (char *from, char *to, int cnt);
@@ -58,7 +57,6 @@ void _ufc_copymem (char *from, char *to, int cnt);
 STATIC void shuffle_sb (long32 *k, ufc_long saltbits);
 #else
 STATIC void shuffle_sb (long64 *k, ufc_long saltbits);
-#endif
 #endif
 
 

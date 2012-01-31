@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1997, 1999, 2000, 2002, 2006
+/* Copyright (C) 1993, 1997, 1999, 2000, 2002, 2006, 2012
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -63,10 +63,8 @@
 #include "libioP.h"
 #include <sys/types.h>
 #include <sys/stat.h>
-#ifdef __STDC__
 #include <stdlib.h>
 #include <unistd.h>
-#endif
 
 #ifdef _LIBC
 # undef isatty

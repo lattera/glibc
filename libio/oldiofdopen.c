@@ -1,4 +1,4 @@
-/* Copyright (C) 1993,94,97,99,2000,2002,2003,2004
+/* Copyright (C) 1993,94,97,99,2000,2002,2003,2004,2012
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -30,9 +30,7 @@
 #if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_1)
 
 #define _IO_USE_OLD_IO_FILE
-#ifdef __STDC__
-# include <stdlib.h>
-#endif
+#include <stdlib.h>
 #include "libioP.h"
 #include <fcntl.h>
 

@@ -1,5 +1,5 @@
 /* Test for access to file, relative to open directory.  Linux version.
-   Copyright (C) 2006, 2009 Free Software Foundation, Inc.
+   Copyright (C) 2006, 2009, 2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -114,7 +114,7 @@ faccessat (fd, file, mode, flag)
 #endif
 
   struct stat64 stats;
-  if (fstatat64 (fd, file, &stats, flag & AT_SYMLINK_NOFOLLOW))
+  if (__fxstatat64 (_STAT_VER, fd, file, &stats, flag & AT_SYMLINK_NOFOLLOW))
     return -1;
 
   mode &= (X_OK | W_OK | R_OK);	/* Clear any bogus bits. */

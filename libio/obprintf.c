@@ -1,5 +1,5 @@
 /* Print output of stream to given obstack.
-   Copyright (C) 1996,1997,1999,2000,2001,2002,2003,2004,2005,2006,2008
+   Copyright (C) 1996,1997,1999,2000,2001,2002,2003,2004,2005,2006,2008,2012
 	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
@@ -20,9 +20,7 @@
    02111-1307 USA.  */
 
 
-#ifdef __STDC__
 #include <stdlib.h>
-#endif
 #include "libioP.h"
 #include "strfile.h"
 #include <assert.h>

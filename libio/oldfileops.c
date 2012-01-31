@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1995, 1997-2004, 2005, 2007, 2011
+/* Copyright (C) 1993, 1995, 1997-2004, 2005, 2007, 2011-2012
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Per Bothner <bothner@cygnus.com>.
@@ -42,9 +42,7 @@
 #include <sys/stat.h>
 #include <string.h>
 #include <errno.h>
-#ifdef __STDC__
 #include <stdlib.h>
-#endif
 #ifndef errno
 extern int errno;
 #endif

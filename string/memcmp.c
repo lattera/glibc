@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,1993,1995,1997,1998,2003,2004
+/* Copyright (C) 1991,1993,1995,1997,1998,2003,2004,2012
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Torbjorn Granlund (tege@sics.se).
@@ -23,13 +23,7 @@
 #endif
 
 #undef	__ptr_t
-#if defined __cplusplus || (defined __STDC__ && __STDC__)
-# define __ptr_t	void *
-#else /* Not C++ or ANSI C.  */
-# undef	const
-# define const
-# define __ptr_t	char *
-#endif /* C++ or ANSI C.  */
+#define __ptr_t	void *
 
 #if defined HAVE_STRING_H || defined _LIBC
 # include <string.h>

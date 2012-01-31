@@ -1,4 +1,4 @@
-/* Copyright (C) 1993,1994,1997,1998,1999,2000,2002,2003,2010
+/* Copyright (C) 1993,1994,1997,1998,1999,2000,2002,2003,2010,2012
 	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -26,9 +26,7 @@
    This exception applies to code released by its copyright holders
    in files containing the exception.  */
 
-#ifdef __STDC__
-# include <stdlib.h>
-#endif
+#include <stdlib.h>
 #include "libioP.h"
 #include <fcntl.h>
 
