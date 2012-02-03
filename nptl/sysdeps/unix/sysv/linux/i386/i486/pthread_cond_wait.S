@@ -1,4 +1,5 @@
-/* Copyright (C) 2002-2004,2006-2007,2009,2010 Free Software Foundation, Inc.
+/* Copyright (C) 2002-2004,2006-2007,2009,2010,2012
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -648,17 +649,6 @@ __condvar_w_cleanup:
 	.long	0
 	.uleb128  0
 .Lcstend:
-
-#ifdef PIC
-	.section .gnu.linkonce.t.__i686.get_pc_thunk.cx,"ax",@progbits
-	.globl	__i686.get_pc_thunk.cx
-	.hidden	__i686.get_pc_thunk.cx
-	.type	__i686.get_pc_thunk.cx,@function
-__i686.get_pc_thunk.cx:
-	movl (%esp), %ecx;
-	ret
-	.size	__i686.get_pc_thunk.cx,.-__i686.get_pc_thunk.cx
-#endif
 
 #ifdef SHARED
 	.hidden DW.ref.__gcc_personality_v0

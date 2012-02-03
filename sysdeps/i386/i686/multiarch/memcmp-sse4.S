@@ -1,5 +1,5 @@
 /* memcmp with SSE4.2, wmemcmp with SSE4.2
-   Copyright (C) 2010, 2011 Free Software Foundation, Inc.
+   Copyright (C) 2010-2012 Free Software Foundation, Inc.
    Contributed by Intel Corporation.
    This file is part of the GNU C Library.
 
@@ -53,7 +53,7 @@
 
 #  define BRANCH_TO_JMPTBL_ENTRY(TABLE, INDEX, SCALE)	\
 /* We first load PC into EBX.  */	\
-	call	__i686.get_pc_thunk.bx;	\
+	SETUP_PIC_REG(bx);	\
 /* Get the address of the jump table.  */	\
 	addl	$(TABLE - .), %ebx;	\
 /* Get the entry and convert the relative offset to the	\

@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2005, 2007, 2011 Free Software Foundation, Inc.
+/* Copyright (C) 2002-2003, 2005, 2007, 2011-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -43,7 +43,7 @@ __new_sem_trywait:
 
 1:
 #ifdef PIC
-	call	__i686.get_pc_thunk.cx
+	SETUP_PIC_REG(cx)
 #else
 	movl	$3f, %ecx
 3:
@@ -65,16 +65,4 @@ __new_sem_trywait:
 	.global	__old_sem_trywait
 __old_sem_trywait = __new_sem_trywait
 	compat_symbol(libpthread, __old_sem_trywait, sem_trywait, GLIBC_2_0)
-#endif
-
-
-#ifdef PIC
-	.section .gnu.linkonce.t.__i686.get_pc_thunk.cx,"ax",@progbits
-	.globl	__i686.get_pc_thunk.cx
-	.hidden	__i686.get_pc_thunk.cx
-	.type	__i686.get_pc_thunk.cx,@function
-__i686.get_pc_thunk.cx:
-	movl (%esp), %ecx;
-	ret
-	.size	__i686.get_pc_thunk.cx,.-__i686.get_pc_thunk.cx
 #endif

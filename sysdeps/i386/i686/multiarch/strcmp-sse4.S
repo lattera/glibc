@@ -1,5 +1,5 @@
 /* strcmp with SSE4.2
-   Copyright (C) 2010, 2011 Free Software Foundation, Inc.
+   Copyright (C) 2010-2012 Free Software Foundation, Inc.
    Contributed by Intel Corporation.
    This file is part of the GNU C Library.
 
@@ -100,8 +100,7 @@
 ENTRY (__strcasecmp_sse4_2)
 # ifdef PIC
 	PUSH	(%ebx)
-	call	__i686.get_pc_thunk.bx
-	addl	$_GLOBAL_OFFSET_TABLE_, %ebx
+	LOAD_PIC_REG(bx)
 	movl	__libc_tsd_LOCALE@GOTNTPOFF(%ebx), %eax
 #  ifdef NO_TLS_DIRECT_SEG_REFS
 	addl	%gs:0, %eax
@@ -132,8 +131,7 @@ END (__strcasecmp_sse4_2)
 ENTRY (__strncasecmp_sse4_2)
 # ifdef PIC
 	PUSH	(%ebx)
-	call	__i686.get_pc_thunk.bx
-	addl	$_GLOBAL_OFFSET_TABLE_, %ebx
+	LOAD_PIC_REG(bx)
 	movl	__libc_tsd_LOCALE@GOTNTPOFF(%ebx), %eax
 #  ifdef NO_TLS_DIRECT_SEG_REFS
 	addl	%gs:0, %eax
@@ -173,8 +171,7 @@ END (__strncasecmp_sse4_2)
 
 # ifdef PIC
 	PUSH	(%ebx)
-	call	__i686.get_pc_thunk.bx
-	addl	$_GLOBAL_OFFSET_TABLE_, %ebx
+	LOAD_PIC_REG(bx)
 # endif
 L(ascii):
 	.section .rodata.cst16,"aM",@progbits,16

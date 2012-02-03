@@ -1,3 +1,13 @@
+2012-02-03  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_cond_wait.S: Use
+	macros for PIC register setup.
+	* sysdeps/unix/sysv/linux/i386/i486/sem_post.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/i486/sem_timedwait.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/i486/sem_trywait.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/i486/sem_wait.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/pthread_once.S: Likewise.
+
 2012-01-11  Marek Polacek  <polacek@redhat.com>
 
 	* forward.c (FORWARD_NORETURN): Define macro.

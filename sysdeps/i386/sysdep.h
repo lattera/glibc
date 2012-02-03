@@ -109,22 +109,12 @@ lose: SYSCALL_PIC_SETUP							      \
 #define	PSEUDO_END(name)						      \
   END (name)
 
-#undef JUMPTARGET
-#ifdef PIC
-#define JUMPTARGET(name)	name##@PLT
-#define SYSCALL_PIC_SETUP \
-    pushl %ebx;								      \
-    cfi_adjust_cfa_offset (4);						      \
-    call 0f;								      \
-0:  popl %ebx;								      \
-    cfi_adjust_cfa_offset (-4);						      \
-    addl $_GLOBAL_OFFSET_TABLE+[.-0b], %ebx;
-
 # define SETUP_PIC_REG(reg) \
   .ifndef __i686.get_pc_thunk.reg;					      \
   .section .gnu.linkonce.t.__i686.get_pc_thunk.reg,"ax",@progbits;	      \
   .globl __i686.get_pc_thunk.reg;					      \
   .hidden __i686.get_pc_thunk.reg;					      \
+  .p2align 4;								      \
   .type __i686.get_pc_thunk.reg,@function;				      \
 __i686.get_pc_thunk.reg:						      \
   movl (%esp), %e##reg;							      \
@@ -136,6 +126,17 @@ __i686.get_pc_thunk.reg:						      \
 
 # define LOAD_PIC_REG(reg) \
   SETUP_PIC_REG(reg); addl $_GLOBAL_OFFSET_TABLE_, %e##reg
+
+#undef JUMPTARGET
+#ifdef PIC
+#define JUMPTARGET(name)	name##@PLT
+#define SYSCALL_PIC_SETUP \
+    pushl %ebx;								      \
+    cfi_adjust_cfa_offset (4);						      \
+    call 0f;								      \
+0:  popl %ebx;								      \
+    cfi_adjust_cfa_offset (-4);						      \
+    addl $_GLOBAL_OFFSET_TABLE+[.-0b], %ebx;
 
 #else
 #define JUMPTARGET(name)	name

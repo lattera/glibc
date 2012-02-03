@@ -1,5 +1,5 @@
 /* Entry point for multi-version x86 strcasecmp.
-   Copyright (C) 2011 Free Software Foundation, Inc.
+   Copyright (C) 2011-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -27,8 +27,7 @@ ENTRY(__strcasecmp)
 	pushl	%ebx
 	cfi_adjust_cfa_offset (4)
 	cfi_rel_offset (ebx, 0)
-	call	__i686.get_pc_thunk.bx
-	addl	$_GLOBAL_OFFSET_TABLE_, %ebx
+	LOAD_PIC_REG(bx)
 	cmpl	$0, KIND_OFFSET+__cpu_features@GOTOFF(%ebx)
 	jne	1f
 	call	__init_cpu_features

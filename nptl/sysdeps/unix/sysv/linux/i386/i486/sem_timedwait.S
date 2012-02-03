@@ -1,4 +1,4 @@
-/* Copyright (C) 2002-2005, 2007, 2009, 2011 Free Software Foundation, Inc.
+/* Copyright (C) 2002-2005, 2007, 2009, 2011-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -148,7 +148,7 @@ sem_timedwait:
 3:	negl	%esi
 6:
 #ifdef PIC
-	call	__i686.get_pc_thunk.bx
+	SETUP_PIC_REG(bx)
 #else
 	movl	$4f, %ebx
 4:

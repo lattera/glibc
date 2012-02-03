@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2007 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2007, 2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -52,8 +52,7 @@ __pthread_once:
 	   Get the fork generation counter now.  */
 6:	movl	(%ebx), %eax
 #ifdef PIC
-	call	__i686.get_pc_thunk.cx
-	addl	$_GLOBAL_OFFSET_TABLE_, %ecx
+	LOAD_PIC_REG(cx)
 #endif
 
 5:	movl	%eax, %edx
@@ -181,15 +180,3 @@ __pthread_once_internal = __pthread_once
 
 	.globl	pthread_once
 pthread_once = __pthread_once
-
-
-#ifdef PIC
-	.section .gnu.linkonce.t.__i686.get_pc_thunk.cx,"ax",@progbits
-	.globl	__i686.get_pc_thunk.cx
-	.hidden	__i686.get_pc_thunk.cx
-	.type	__i686.get_pc_thunk.cx,@function
-__i686.get_pc_thunk.cx:
-	movl (%esp), %ecx;
-	ret
-	.size	__i686.get_pc_thunk.cx,.-__i686.get_pc_thunk.cx
-#endif

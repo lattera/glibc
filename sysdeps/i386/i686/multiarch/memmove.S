@@ -1,5 +1,5 @@
 /* Multiple versions of memmove
-   Copyright (C) 2010 Free Software Foundation, Inc.
+   Copyright (C) 2010, 2012 Free Software Foundation, Inc.
    Contributed by Intel Corporation.
    This file is part of the GNU C Library.
 
@@ -24,23 +24,13 @@
 /* Define multiple versions only for the definition in lib.  */
 #ifndef NOT_IN_libc
 # ifdef SHARED
-	.section	.gnu.linkonce.t.__i686.get_pc_thunk.bx,"ax",@progbits
-	.globl	__i686.get_pc_thunk.bx
-	.hidden	__i686.get_pc_thunk.bx
-	.p2align 4
-	.type	__i686.get_pc_thunk.bx,@function
-__i686.get_pc_thunk.bx:
-	movl	(%esp), %ebx
-	ret
-
 	.text
 ENTRY(memmove)
 	.type	memmove, @gnu_indirect_function
 	pushl	%ebx
 	cfi_adjust_cfa_offset (4)
 	cfi_rel_offset (ebx, 0)
-	call	__i686.get_pc_thunk.bx
-	addl	$_GLOBAL_OFFSET_TABLE_, %ebx
+	LOAD_PIC_REG(bx)
 	cmpl	$0, KIND_OFFSET+__cpu_features@GOTOFF(%ebx)
 	jne	1f
 	call	__init_cpu_features

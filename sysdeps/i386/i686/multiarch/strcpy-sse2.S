@@ -1,5 +1,5 @@
 /* strcpy with SSE2 and unaligned load
-   Copyright (C) 2011 Free Software Foundation, Inc.
+   Copyright (C) 2011-2012 Free Software Foundation, Inc.
    Contributed by Intel Corporation.
    This file is part of the GNU C Library.
 
@@ -59,7 +59,7 @@
 
 #  define BRANCH_TO_JMPTBL_ENTRY(TABLE, INDEX, SCALE)            \
 	/* We first load PC into ECX.  */                       \
-	call	__i686.get_pc_thunk.cx;                         \
+	SETUP_PIC_REG(cx);                                      \
 	/* Get the address of the jump table.  */               \
 	addl	$(TABLE - .), %ecx;                             \
 	/* Get the entry and convert the relative offset to the \
