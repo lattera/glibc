@@ -20,6 +20,12 @@
 
 #include <sysdeps/generic/sysdep.h>
 
+#ifdef __ASSEMBLER__
+# define GET_PC_THUNK(reg) __i686.get_pc_thunk.reg
+#else
+# define GET_PC_THUNK_STR(reg) "__i686.get_pc_thunk." #reg
+#endif
+
 #ifdef	__ASSEMBLER__
 
 /* Syntactic details of assembler.  */
@@ -110,19 +116,19 @@ lose: SYSCALL_PIC_SETUP							      \
   END (name)
 
 # define SETUP_PIC_REG(reg) \
-  .ifndef __i686.get_pc_thunk.reg;					      \
-  .section .gnu.linkonce.t.__i686.get_pc_thunk.reg,"ax",@progbits;	      \
-  .globl __i686.get_pc_thunk.reg;					      \
-  .hidden __i686.get_pc_thunk.reg;					      \
+  .ifndef GET_PC_THUNK(reg);						      \
+  .section .gnu.linkonce.t.GET_PC_THUNK(reg),"ax",@progbits;		      \
+  .globl GET_PC_THUNK(reg);						      \
+  .hidden GET_PC_THUNK(reg);						      \
   .p2align 4;								      \
-  .type __i686.get_pc_thunk.reg,@function;				      \
-__i686.get_pc_thunk.reg:						      \
+  .type GET_PC_THUNK(reg),@function;					      \
+GET_PC_THUNK(reg):							      \
   movl (%esp), %e##reg;							      \
   ret;									      \
-  .size __i686.get_pc_thunk.reg, . - __i686.get_pc_thunk.reg;		      \
+  .size GET_PC_THUNK(reg), . - GET_PC_THUNK(reg);			      \
   .previous;								      \
   .endif;								      \
-  call __i686.get_pc_thunk.reg
+  call GET_PC_THUNK(reg)
 
 # define LOAD_PIC_REG(reg) \
   SETUP_PIC_REG(reg); addl $_GLOBAL_OFFSET_TABLE_, %e##reg

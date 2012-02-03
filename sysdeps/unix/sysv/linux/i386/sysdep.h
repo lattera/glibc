@@ -1,4 +1,4 @@
-/* Copyright (C) 1992,1993,1995-2000,2002-2006,2007,2011
+/* Copyright (C) 1992,1993,1995-2000,2002-2006,2007,2011-2012
 	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper, <drepper@gnu.org>, August 1995.
@@ -514,17 +514,17 @@ asm (".L__X'%ebx = 1\n\t"
 # define check_consistency()						      \
   ({ int __res;								      \
      __asm__ __volatile__						      \
-       ("call __i686.get_pc_thunk.cx;"					      \
+       ("call "GET_PC_THUNK_STR(cx)";"					      \
 	"addl $_GLOBAL_OFFSET_TABLE_, %%ecx;"				      \
 	"subl %%ebx, %%ecx;"						      \
 	"je 1f;"							      \
 	"ud2;"								      \
 	"1:\n"								      \
-	".section .gnu.linkonce.t.__i686.get_pc_thunk.cx,\"ax\",@progbits;"   \
-	".globl __i686.get_pc_thunk.cx;"				      \
-	".hidden __i686.get_pc_thunk.cx;"				      \
-	".type __i686.get_pc_thunk.cx,@function;"			      \
-	"__i686.get_pc_thunk.cx:"					      \
+	".section .gnu.linkonce.t."GET_PC_THUNK_STR(cx)",\"ax\",@progbits;"   \
+	".globl "GET_PC_THUNK_STR(cx)";"				      \
+	".hidden "GET_PC_THUNK_STR(cx)";"				      \
+	".type "GET_PC_THUNK_STR(cx)",@function;"			      \
+	GET_PC_THUNK_STR(cx)":"						      \
 	"movl (%%esp), %%ecx;"						      \
 	"ret;"								      \
 	".previous"							      \
