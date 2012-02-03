@@ -1,3 +1,7 @@
+2012-02-03  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/tst-CMPLX.c: Include <stdio.h>.
+
 2012-01-31  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/powerpc/bits/mathdef.h (float_t): Always define as
