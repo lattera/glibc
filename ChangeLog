@@ -1,3 +1,10 @@
+2012-02-05  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/i386/sysdep.h (SETUP_PIC_REG_STR, LOAD_PIC_REG_STR):
+	Define.
+	* sysdeps/unix/sysv/linux/i386/sysdep.h (check_consistency): Use
+	LOAD_PIC_REG_STR.
+
 2012-02-03  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/i386/sysdep.h (GET_PC_THUNK, GET_PC_THUNK_STR): Define.

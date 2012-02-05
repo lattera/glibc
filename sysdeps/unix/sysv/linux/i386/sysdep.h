@@ -514,20 +514,11 @@ asm (".L__X'%ebx = 1\n\t"
 # define check_consistency()						      \
   ({ int __res;								      \
      __asm__ __volatile__						      \
-       ("call "GET_PC_THUNK_STR(cx)";"					      \
-	"addl $_GLOBAL_OFFSET_TABLE_, %%ecx;"				      \
+       (LOAD_PIC_REG_STR (cx) ";"					      \
 	"subl %%ebx, %%ecx;"						      \
 	"je 1f;"							      \
 	"ud2;"								      \
 	"1:\n"								      \
-	".section .gnu.linkonce.t."GET_PC_THUNK_STR(cx)",\"ax\",@progbits;"   \
-	".globl "GET_PC_THUNK_STR(cx)";"				      \
-	".hidden "GET_PC_THUNK_STR(cx)";"				      \
-	".type "GET_PC_THUNK_STR(cx)",@function;"			      \
-	GET_PC_THUNK_STR(cx)":"						      \
-	"movl (%%esp), %%ecx;"						      \
-	"ret;"								      \
-	".previous"							      \
 	: "=c" (__res));						      \
      __res; })
 #endif

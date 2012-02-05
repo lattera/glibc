@@ -156,4 +156,24 @@ GET_PC_THUNK(reg):							      \
 
 #define atom_text_section .section ".text.atom", "ax"
 
+#else /* __ASSEMBLER__ */
+
+# define SETUP_PIC_REG_STR(reg)						\
+  ".ifndef " GET_PC_THUNK_STR (reg) "\n"				\
+  ".section .gnu.linkonce.t." GET_PC_THUNK_STR (reg) ",\"ax\",@progbits\n" \
+  ".globl " GET_PC_THUNK_STR (reg) "\n"					\
+  ".hidden " GET_PC_THUNK_STR (reg) "\n"				\
+  ".p2align 4\n"							\
+  ".type " GET_PC_THUNK_STR (reg) ",@function\n"			\
+GET_PC_THUNK_STR (reg) ":"						\
+  "movl (%%esp), %%e" #reg "\n"						\
+  "ret\n"								\
+  ".size " GET_PC_THUNK_STR (reg) ", . - " GET_PC_THUNK_STR (reg) "\n"	\
+  ".previous\n"								\
+  ".endif\n"								\
+  "call " GET_PC_THUNK_STR (reg)
+
+# define LOAD_PIC_REG_STR(reg) \
+  SETUP_PIC_REG_STR (reg) "\naddl $_GLOBAL_OFFSET_TABLE_, %%e" #reg
+
 #endif	/* __ASSEMBLER__ */
