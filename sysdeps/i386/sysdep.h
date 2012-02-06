@@ -23,7 +23,13 @@
 #include <features.h> /* For __GNUC_PREREQ.  */
 
 /* It is desirable that the names of PIC thunks match those used by
-   GCC so that multiple copies are eliminated by the linker.  */
+   GCC so that multiple copies are eliminated by the linker.  Because
+   GCC 4.6 and earlier use __i686 in the names, it is necessary to
+   override that predefined macro.  */
+#if defined __i686 && defined __ASSEMBLER__
+#undef __i686
+#define __i686 __i686
+#endif
 
 #ifdef	__ASSEMBLER__
 # if __GNUC_PREREQ (4, 7)

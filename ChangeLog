@@ -1,5 +1,10 @@
 2012-02-06  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #411]
+	* sysdeps/i386/sysdep.h (__i686): Undefine and redefine.
+
+2012-02-06  Joseph Myers  <joseph@codesourcery.com>
+
 	* sysdeps/i386/sysdep.h: Include <features.h>.
 	(GET_PC_THUNK, GET_PC_THUNK_STR): Define conditionally on compiler
 	version.
