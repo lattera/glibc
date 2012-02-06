@@ -1,3 +1,8 @@
+2012-05-11  Andreas Schwab  <schwab@linux-m68k.org>
+
+	[BZ #11837]
+	* charmaps/GB18030: Add missing entries.
+
 2012-04-29  Aurelien Jarno  <aurelien@aurel32.net>
 
 	[BZ #13758]

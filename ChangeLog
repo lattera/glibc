@@ -1,3 +1,11 @@
+2012-05-11  Andreas Schwab  <schwab@linux-m68k.org>
+
+	[BZ #11837]
+	* iconvdata/gb18030.c: Update tables.
+	(BODY for FROM_LOOP): Update.  Handle two-byte encoded non-BMP
+	characters specially.
+	(BODY for TO_LOOP): Add encoding of missing ranges.
+
 2012-05-11  Thomas Schwinge  <thomas@codesourcery.com>
 
 	[BZ #13673]
