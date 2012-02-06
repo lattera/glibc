@@ -1,5 +1,5 @@
 /* ix87 specific implementation of arcsinh.
-   Copyright (C) 1996, 2005, 2011 Free Software Foundation, Inc.
+   Copyright (C) 1996, 2005, 2011-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -20,11 +20,7 @@
 
 #include <machine/asm.h>
 
-#ifdef __ELF__
 	.section .rodata.cst8,"aM",@progbits,8
-#else
-	.text
-#endif
 
 	.p2align 3
 	ASM_TYPE_DIRECTIVE(one,@object)

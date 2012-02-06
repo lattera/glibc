@@ -1,5 +1,5 @@
 /* ix87 specific implementation of exp(x)-1.
-   Copyright (C) 1996,1997,2001,2002,2008,2009 Free Software Foundation, Inc.
+   Copyright (C) 1996,1997,2001,2002,2008,2009,2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
    Based on code by John C. Bowman <bowman@ipp-garching.mpg.de>.
@@ -24,11 +24,8 @@
 
 #include <machine/asm.h>
 
-#ifdef __ELF__
 	.section .rodata
-#else
-	.text
-#endif
+
 	.align ALIGNARG(4)
 	ASM_TYPE_DIRECTIVE(minus1,@object)
 minus1:	.double -1.0

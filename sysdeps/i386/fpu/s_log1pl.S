@@ -9,11 +9,8 @@
 
 RCSID("$NetBSD: s_log1p.S,v 1.7 1995/05/09 00:10:58 jtc Exp $")
 
-#ifdef __ELF__
 	.section .rodata
-#else
-	.text
-#endif
+
 	.align ALIGNARG(4)
 	/* The fyl2xp1 can only be used for values in
 		-1 + sqrt(2) / 2 <= x <= 1 - sqrt(2) / 2

@@ -1,5 +1,5 @@
 /* Assembly macros for 64-bit PowerPC.
-   Copyright (C) 2002, 2003, 2004, 2006 Free Software Foundation, Inc.
+   Copyright (C) 2002-2004, 2006, 2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -18,8 +18,6 @@
    02110-1301 USA.  */
 
 #include <sysdeps/powerpc/sysdep.h>
-
-#ifdef __ELF__
 
 #ifdef __ASSEMBLER__
 
@@ -313,5 +311,3 @@ LT_LABELSUFFIX(name,_name_end): ; \
 #endif
 
 #endif	/* __ASSEMBLER__ */
-
-#endif /* __ELF__ */

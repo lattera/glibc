@@ -1,5 +1,5 @@
 /* ix87 specific implementation of arctanh function.
-   Copyright (C) 1996, 1999, 2011 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1999, 2011-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -20,11 +20,7 @@
 
 #include <machine/asm.h>
 
-#ifdef __ELF__
 	.section .rodata
-#else
-	.text
-#endif
 
 	.align ALIGNARG(4)
 	/* Please note that we use double values for 0.5 and 1.0.  These

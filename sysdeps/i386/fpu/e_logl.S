@@ -8,11 +8,8 @@
 #include <machine/asm.h>
 
 
-#ifdef __ELF__
 	.section .rodata.cst8,"aM",@progbits,8
-#else
-	.text
-#endif
+
 	.p2align 3
 	ASM_TYPE_DIRECTIVE(one,@object)
 one:	.double 1.0

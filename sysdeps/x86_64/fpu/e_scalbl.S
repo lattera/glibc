@@ -10,11 +10,7 @@
 
 #include <machine/asm.h>
 
-#ifdef __ELF__
 	.section .rodata
-#else
-	.text
-#endif
 
 	.align ALIGNARG(4)
 	ASM_TYPE_DIRECTIVE(zero_nan,@object)

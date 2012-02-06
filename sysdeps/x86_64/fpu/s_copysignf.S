@@ -1,5 +1,5 @@
 /* copy sign, double version.
-   Copyright (C) 2002, 2006 Free Software Foundation, Inc.
+   Copyright (C) 2002, 2006, 2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Andreas Jaeger <aj@suse.de>, 2002.
 
@@ -20,11 +20,7 @@
 
 #include <machine/asm.h>
 
-#ifdef __ELF__
 	.section .rodata
-#else
-	.text
-#endif
 
 	.align ALIGNARG(4)
 	ASM_TYPE_DIRECTIVE(mask,@object)

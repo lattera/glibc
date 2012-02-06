@@ -22,8 +22,4 @@
 #define ALIGN(log) .align 1<<log
 
 #undef L
-#ifdef __ELF__
-# define L(body) .L##body
-#else
-# define L(body) L##body
-#endif
+#define L(body) .L##body

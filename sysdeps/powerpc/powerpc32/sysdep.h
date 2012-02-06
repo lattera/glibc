@@ -1,5 +1,5 @@
 /* Assembly macros for 32-bit PowerPC.
-   Copyright (C) 1999, 2001, 2002, 2003, 2006, 2011, 2012
+   Copyright (C) 1999, 2001-2003, 2006, 2011-2012
 	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -21,8 +21,6 @@
 #include <sysdeps/powerpc/sysdep.h>
 
 #ifdef __ASSEMBLER__
-
-#ifdef __ELF__
 
 /* If compiled for profiling, call `_mcount' at the start of each
    function.  */
@@ -159,7 +157,5 @@ GOT_LABEL:			;					      \
 
 /* Label in text section.  */
 #define C_TEXT(name) name
-
-#endif /* __ELF__ */
 
 #endif	/* __ASSEMBLER__ */

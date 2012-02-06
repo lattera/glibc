@@ -1,5 +1,5 @@
 /* Compute cubic root of float value.
-   Copyright (C) 1997, 2005 Free Software Foundation, Inc.
+   Copyright (C) 1997, 2005, 2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Dirk Alboth <dirka@uni-paderborn.de> and
    Ulrich Drepper <drepper@cygnus.com>, 1997.
@@ -21,11 +21,7 @@
 
 #include <machine/asm.h>
 
-#ifdef __ELF__
         .section .rodata
-#else
-        .text
-#endif
 
         .align ALIGNARG(4)
         ASM_TYPE_DIRECTIVE(f3,@object)
