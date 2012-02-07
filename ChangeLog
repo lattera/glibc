@@ -1,5 +1,11 @@
 2012-02-07  Marek Polacek  <polacek@redhat.com>
 
+	* sysdeps/generic/_G_config.h: Remove _G_ARGS macro.
+	* sysdeps/gnu/_G_config.h: Likewise.
+	* sysdeps/mach/hurd/_G_config.h: Likewise.
+
+2012-02-07  Marek Polacek  <polacek@redhat.com>
+
 	* math/Makefile (tests): Add tst-CMPLX2.
 	* math/tst-CMPLX2.c: New file.
 
