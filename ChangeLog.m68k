@@ -1,3 +1,8 @@
+2012-02-08  Andreas Schwab  <schwab@linux-m68k.org>
+
+	* sysdeps/unix/sysv/linux/m68k/configure.in
+	(libc_cv_gcc_unwind_find_fde): Don't set on coldfire.
+
 2012-01-29  Andreas Schwab  <schwab@linux-m68k.org>
 
 	* sysdeps/m68k/asm-syntax.h: Remove __STDC__ conditionals.
