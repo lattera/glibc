@@ -18,6 +18,9 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#ifndef _KERNEL_FEATURES_H
+#define _KERNEL_FEATURES_H 1
+
 /* alpha switched to a 64-bit timeval sometime before 2.2.0.  */
 #if __LINUX_KERNEL_VERSION >= 131584
 # define __ASSUME_TIMEVAL64	1
@@ -96,3 +99,9 @@
 #if __LINUX_KERNEL_VERSION < 0x020621
 # undef __ASSUME_FALLOCATE
 #endif
+
+/* There never has been support for fstat64.  */
+#undef __ASSUME_STATFS64
+#define __ASSUME_STATFS64 0
+
+#endif /* _KERNEL_FEATURES_H */

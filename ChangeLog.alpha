@@ -1,5 +1,10 @@
 2012-02-08  Richard Henderson  <rth@twiddle.net>
 
+	* sysdeps/unix/sysv/linux/alpha/configure.in: New file.
+	* sysdeps/unix/sysv/linux/alpha/configure: Build.
+	* sysdeps/unix/sysv/linux/alpha/kernel-features.h: Protect from
+	multiple includes.  Disable statfs64 entirely.
+
 	* sysdeps/alpha/nptl/tls.h: Don't test HAVE_TLS_SUPPORT.
 	* sysdeps/unix/alpha/sysdep.h: Don't test HAVE___THREAD.
 	* sysdeps/alpha/elf/configure.in (libc_cv_alpha_tls): Error out if
