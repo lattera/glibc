@@ -190,7 +190,9 @@ __LABEL(name)						\
 	_sc_ret;					\
 })
 
-#define INTERNAL_SYSCALL_DECL(err)		long int err
+#define INTERNAL_SYSCALL_DECL(err) \
+	long int err __attribute__((unused))
+
 /* Make sure and "use" the variable that we're not returning,
    in order to suppress unused variable warnings.  */
 #define INTERNAL_SYSCALL_ERROR_P(val, err)	((void)val, err)
