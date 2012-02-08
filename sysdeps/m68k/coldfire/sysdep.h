@@ -1,5 +1,5 @@
 /* Assembler macros for Coldfire.
-   Copyright (C) 1998, 2003, 2010 Free Software Foundation, Inc.
+   Copyright (C) 1998, 2003, 2010, 2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -25,6 +25,11 @@
    DST as the second.  TMP is available as a temporary if needed.  */
 # define PCREL_OP(OP, SRC, DST, TMP) \
   move.l &SRC - ., TMP; OP (-8, %pc, TMP), DST
+
+/* Load the address of the GOT into register R.  */
+# define LOAD_GOT(R) \
+  move.l &_GLOBAL_OFFSET_TABLE_@GOTPC, R; \
+  lea (-6, %pc, R), R
 
 #else
 

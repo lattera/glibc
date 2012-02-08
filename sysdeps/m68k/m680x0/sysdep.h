@@ -1,5 +1,5 @@
 /* Assembler macros for m680x0.
-   Copyright (C) 2010 Free Software Foundation, Inc.
+   Copyright (C) 2010, 2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -23,8 +23,12 @@
 
 /* Perform operation OP with PC-relative SRC as the first operand and
    DST as the second.  TMP is available as a temporary if needed.  */
-#define PCREL_OP(OP, SRC, DST, TMP) \
+# define PCREL_OP(OP, SRC, DST, TMP) \
   OP SRC(%pc), DST
+
+/* Load the address of the GOT into register R.  */
+# define LOAD_GOT(R) \
+  lea _GLOBAL_OFFSET_TABLE_@GOTPC (%pc), R
 
 #else
 

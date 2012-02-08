@@ -57,9 +57,10 @@ END (__vdso_read_tp_stub)
 	.hidden __m68k_read_tp
 # endif
 ENTRY (__m68k_read_tp)
-	lea	_GLOBAL_OFFSET_TABLE_@GOTPC(%pc), %a0
+	LOAD_GOT (%a0)
 	move.l	M68K_VDSO_SYMBOL (__vdso_read_tp)@GOT(%a0), %a0
-	jmp	([%a0])
+	move.l	(%a0), %a0
+	jmp	(%a0)
 END (__m68k_read_tp)
 
 /* The following two stubs are for macros in atomic.h, they can't
