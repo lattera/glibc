@@ -1,5 +1,7 @@
 2012-02-08  Richard Henderson  <rth@twiddle.net>
 
+	* sysdeps/unix/sysv/linux/alpha/bits/stat.h (_STAT_VER_LINUX): New.
+
 	* sysdeps/alpha/dl-tls.h (TLS_DTV_UNALLOCATED): New.
 
 	* sysdeps/unix/sysv/linux/alpha/configure.in: New file.

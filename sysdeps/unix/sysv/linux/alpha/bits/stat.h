@@ -1,4 +1,4 @@
-/* Copyright (C) 1996,1997,1998,1999,2000,2001,2004,2010
+/* Copyright (C) 1996,1997,1998,1999,2000,2001,2004,2010,2012
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -30,7 +30,8 @@
 #define _STAT_VER_GLIBC2_1	2
 #define _STAT_VER_KERNEL64	3
 #define _STAT_VER_GLIBC2_3_4	3
-#define _STAT_VER		_STAT_VER_GLIBC2_3_4
+#define _STAT_VER_LINUX		3
+#define _STAT_VER		_STAT_VER_LINUX
 
 /* Versions of the `xmknod' interface.  */
 #define _MKNOD_VER_LINUX	0
