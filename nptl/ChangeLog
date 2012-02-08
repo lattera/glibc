@@ -1,3 +1,7 @@
+2012-02-08  Andreas Schwab  <schwab@linux-m68k.org>
+
+	* Makefile (extra-objs) [crti.S in sysdirs]: Add pt-crti.o.
+
 2012-02-08  Joseph Myers  <joseph@codesourcery.com>
 
 	Support crti.S and crtn.S provided directly by architectures.

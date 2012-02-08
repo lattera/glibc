@@ -350,6 +350,8 @@ ifeq (,$(wildcard $(sysdirs:%=%/crti.S)))
 omit-deps += crti crtn
 
 CFLAGS-pt-initfini.s = -g0 -fPIC -fno-inline-functions $(fno-unit-at-a-time)
+else
+extra-objs += pt-crti.o
 endif
 endif
 
