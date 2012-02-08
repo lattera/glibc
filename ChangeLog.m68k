@@ -1,5 +1,8 @@
 2012-02-08  Andreas Schwab  <schwab@linux-m68k.org>
 
+	* sysdeps/m68k/crti.S: New file.
+	* sysdeps/m68k/crtn.S: New file.
+
 	* sysdeps/m68k/m680x0/sysdep.h (LOAD_GOT): Define.
 	* sysdeps/m68k/coldfire/sysdep.h (LOAD_GOT): Define.
 	* sysdeps/unix/sysv/linux/m68k/coldfire/m68k-helper.S: Remove.
