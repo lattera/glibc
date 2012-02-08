@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 2003, 2006 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 2003, 2006, 2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -23,7 +23,7 @@
 
 .text
 
-#if defined HAVE_ELF && defined PIC && defined DO_VERSIONING
+#if defined PIC && defined DO_VERSIONING
 #define GETITIMER	__getitimer_tv64
 #else
 #define GETITIMER	getitimer
@@ -108,6 +108,6 @@ $error:
 END(GETITIMER)
 #endif /* __ASSUME_TIMEVAL64 */
 
-#if defined HAVE_ELF && defined PIC && defined DO_VERSIONING
+#if defined PIC && defined DO_VERSIONING
 default_symbol_version (__getitimer_tv64, getitimer, GLIBC_2.1)
 #endif

@@ -1,5 +1,14 @@
 2012-02-08  Richard Henderson  <rth@twiddle.net>
 
+	* sysdeps/unix/sysv/linux/alpha/getitimer.S: Don't check HAVE_ELF.
+	* sysdeps/unix/sysv/linux/alpha/getrusage.S: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/gettimeofday.S: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/select.S: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/setitimer.S: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/settimeofday.S: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/utimes.S: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/wait4.S: Likewise.
+
 	* sysdeps/alpha/elf/crti.S, sysdeps/alpha/elf/crtn.S: New files...
 	* sysdeps/alpha/elf/initfini.c: ... split from here.  Remove file.
 	* sysdeps/alpha/nptl/elf/pt-initfini.c: Remove file.

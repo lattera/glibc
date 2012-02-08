@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 2003, 2006 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 2003, 2006, 2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -23,7 +23,7 @@
 
 .text
 
-#if defined HAVE_ELF && defined PIC && defined DO_VERSIONING
+#if defined PIC && defined DO_VERSIONING
 #define GETRUSAGE	__getrusage_tv64
 #else
 #define GETRUSAGE	__getrusage
@@ -140,7 +140,7 @@ $error:
 END(GETRUSAGE)
 #endif /* __ASSUME_TIMEVAL64 */
 
-#if defined HAVE_ELF && defined PIC && defined DO_VERSIONING
+#if defined PIC && defined DO_VERSIONING
 strong_alias(__getrusage_tv64, ____getrusage_tv64)
 default_symbol_version (____getrusage_tv64, __getrusage, GLIBC_2.1)
 default_symbol_version (__getrusage_tv64, getrusage, GLIBC_2.1)

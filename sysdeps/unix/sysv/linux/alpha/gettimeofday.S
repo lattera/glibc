@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 2002, 2003, 2006 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 2002, 2003, 2006, 2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -23,7 +23,7 @@
 
 .text
 
-#if defined HAVE_ELF && defined PIC && defined DO_VERSIONING
+#if defined PIC && defined DO_VERSIONING
 #define GETTIMEOFDAY	__gettimeofday_tv64
 #else
 #define GETTIMEOFDAY	__gettimeofday
@@ -106,7 +106,7 @@ $error:
 END(GETTIMEOFDAY)
 #endif /* __ASSUME_TIMEVAL64 */
 
-#if defined HAVE_ELF && defined PIC && defined DO_VERSIONING
+#if defined PIC && defined DO_VERSIONING
 default_symbol_version (__gettimeofday_tv64, __gettimeofday, GLIBC_2.1)
 
 /* It seems to me to be a misfeature of the assembler that we can only
