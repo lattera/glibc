@@ -1,3 +1,21 @@
+2012-02-08  Joseph Myers  <joseph@codesourcery.com>
+
+	Support crti.S and crtn.S provided directly by architectures.
+	* csu/Makefile [crti.S in sysdirs] (generated): Do not append.
+	[crti.S in sysdirs] (omit-deps): Likewise.
+	[crti.S in sysdirs] (CFLAGS-initfini.s): Do not define variable.
+	[crti.S in sysdirs] ($(crtstuff:%=$(objpfx)%.o)): Disable rule.
+	[crti.S in sysdirs] ($(objpfx)initfini.s): Likewise.
+	[crti.S in sysdirs] ($(objpfx)crti.S): Likewise.
+	[crti.S in sysdirs] ($(objpfx)crtn.S): Likewise.
+	[crti.S in sysdirs] ($(patsubst %,$(objpfx)crt%.o,i n)): Likewise.
+	[crti.S in sysdirs] ($(objpfx)defs.h): Likewise.
+	[crti.S in sysdirs] (initfini.c): Remove vpath directive.
+	* sysdeps/i386/crti.S, sysdeps/i386/crtn.S: New files, based on
+	compiler output for sysdeps/generic/initfini.c.
+	* sysdeps/i386/elf/Makefile: Remove file.
+	* sysdeps/i386/Makefile (CFLAGS-initfini.s): Remove variable.
+
 2012-02-07  Marek Polacek  <polacek@redhat.com>
 
 	* sysdeps/generic/_G_config.h: Remove _G_ARGS macro.

@@ -5,12 +5,6 @@ asm-CPPFLAGS += -DGAS_SYNTAX
 # The i386 `long double' is a distinct type we support.
 long-double-fcts = yes
 
-ifeq ($(subdir),csu)
-# On i686 we must avoid generating the trampoline functions generated
-# to get the GOT pointer.
-CFLAGS-initfini.s += -march=i386 -mtune=i386
-endif
-
 ifeq ($(subdir),gmon)
 sysdep_routines += i386-mcount
 endif

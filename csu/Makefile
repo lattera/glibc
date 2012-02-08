@@ -84,6 +84,13 @@ crtstuff = crti crtn
 
 install-lib += $(crtstuff:=.o)
 extra-objs += $(crtstuff:=.o)
+
+# Conditionals on the existence of a sysdeps version of crti.S are
+# temporary until all targets either have such a file or have been
+# removed, after which the old approach of postprocessing compiler
+# output will be removed.
+ifeq (,$(wildcard $(sysdirs:%=%/crti.S)))
+
 generated += $(crtstuff:=.S) initfini.s defs.h
 omit-deps += $(crtstuff)
 
@@ -119,6 +126,8 @@ $(patsubst %,$(objpfx)crt%.o,i n): %.o: %.S
 $(objpfx)defs.h: $(objpfx)initfini.s
 	sed -n -e '/@TESTS_BEGIN/,/@TESTS_END/p' $< | \
 		$(AWK) -f defs.awk > $@
+
+endif
 
 endif
 

@@ -1,3 +1,19 @@
+2012-02-08  Joseph Myers  <joseph@codesourcery.com>
+
+	Support crti.S and crtn.S provided directly by architectures.
+	* Makefile [crti.S in sysdirs] (omit-deps): Do not append.
+	[crti.S in sysdirs] (CFLAGS-pt-initfini.s): Do not define variable.
+	[crti.S in sysdirs] ($(objpfx)pt-initfini.s): Disable rule.
+	[crti.S in sysdirs] ($(objpfx)crti.S): Likewise.
+	[crti.S in sysdirs] ($(objpfx)crtn.S): Likewise.
+	[crti.S in sysdirs] ($(objpfx)defs.h): Likewise.
+	[crti.S in sysdirs] ($(objpfx)crti.o): Likewise.
+	[crti.S in sysdirs] ($(objpfx)crtn.o): Likewise.
+	[crti.S in sysdirs] (pt-initfini.c): Remove vpath directive.
+	[crti.S in sysdirs] ($(objpfx)crti.o): New rule.
+	* pt-crti.S: New file.
+	* sysdeps/unix/sysv/linux/i386/Makefile: Remove file.
+
 2012-02-03  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/i386/i486/pthread_cond_wait.S: Use
