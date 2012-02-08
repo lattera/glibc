@@ -30,11 +30,44 @@
 
 #undef __fxstatat64
 
+#ifdef __ASSUME_ATFCTS
+# define __have_atfcts 1
+#endif
+#ifdef __ASSUME_STAT64_SYSCALL
+# define __libc_missing_axp_stat64 0
+#endif
 
 /* Get information about the file NAME in BUF.  */
 int
 __fxstatat (int vers, int fd, const char *file, struct stat *st, int flag)
 {
+  INTERNAL_SYSCALL_DECL (err);
+  int result, errno_out;
+
+  /* ??? The __fxstatat entry point is new enough that it must be using
+     vers == _STAT_VER_KERNEL64.  For the benefit of dl-fxstatat64.c, we
+     cannot actually check this, lest the compiler not optimize the rest
+     of the function away.  */
+
+#ifdef __NR_fstatat64
+  if (__have_atfcts >= 0)
+    {
+      result = INTERNAL_SYSCALL (fstatat64, err, 4, fd, file, st, flag);
+      if (__builtin_expect (!INTERNAL_SYSCALL_ERROR_P (result, err), 1))
+	return result;
+      errno_out = INTERNAL_SYSCALL_ERRNO (result, err);
+#ifndef __ASSUME_ATFCTS
+      if (errno_out == ENOSYS)
+	__have_atfcts = -1;
+      else
+#endif
+	{
+	  __set_errno (errno_out);
+	  return -1;
+	}
+    }
+#endif /* __NR_fstatat64 */
+
   if (flag & ~AT_SYMLINK_NOFOLLOW)
     {
       __set_errno (EINVAL);
@@ -67,12 +100,8 @@ __fxstatat (int vers, int fd, const char *file, struct stat *st, int flag)
       file = buf;
     }
 
-  INTERNAL_SYSCALL_DECL (err);
-  int result, errno_out;
-  struct kernel_stat kst;
-
-#if __ASSUME_STAT64_SYSCALL > 0
-  if (vers == _STAT_VER_KERNEL64)
+#ifdef __NR_stat64
+  if (!__libc_missing_axp_stat64)
     {
       if (flag & AT_SYMLINK_NOFOLLOW)
 	result = INTERNAL_SYSCALL (lstat64, err, 2, file, st);
@@ -82,24 +111,16 @@ __fxstatat (int vers, int fd, const char *file, struct stat *st, int flag)
       if (__builtin_expect (!INTERNAL_SYSCALL_ERROR_P (result, err), 1))
 	return result;
       errno_out = INTERNAL_SYSCALL_ERRNO (result, err);
-      goto fail;
-    }
-#elif defined __NR_stat64
-  if (vers == _STAT_VER_KERNEL64 && !__libc_missing_axp_stat64)
-    {
-      if (flag & AT_SYMLINK_NOFOLLOW)
-	result = INTERNAL_SYSCALL (lstat64, err, 2, file, st);
+# if __ASSUME_STAT64_SYSCALL == 0
+      if (errno_out == ENOSYS)
+	__libc_missing_axp_stat64 = 1;
       else
-	result = INTERNAL_SYSCALL (stat64, err, 2, file, st);
-
-      if (__builtin_expect (!INTERNAL_SYSCALL_ERROR_P (result, err), 1))
-	return result;
-      errno_out = INTERNAL_SYSCALL_ERRNO (result, err);
-      if (errno_out != ENOSYS)
+# endif
 	goto fail;
-      __libc_missing_axp_stat64 = 1;
     }
-#endif
+#endif /* __NR_stat64 */
+
+  struct kernel_stat kst;
 
   if (flag & AT_SYMLINK_NOFOLLOW)
     result = INTERNAL_SYSCALL (lstat, err, 2, file, &kst);
