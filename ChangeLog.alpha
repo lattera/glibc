@@ -1,3 +1,11 @@
+2012-02-08  Richard Henderson  <rth@twiddle.net>
+
+	* sysdeps/alpha/nptl/tls.h: Don't test HAVE_TLS_SUPPORT.
+	* sysdeps/unix/alpha/sysdep.h: Don't test HAVE___THREAD.
+	* sysdeps/alpha/elf/configure.in (libc_cv_alpha_tls): Error out if
+	the test fails.  Don't set HAVE_TLS_SUPPORT.
+	* sysdeps/alpha/elf/configure: Rebuild.
+
 2012-01-07  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/alpha/backtrace.c: Use x86_64 version of backtrace.c.

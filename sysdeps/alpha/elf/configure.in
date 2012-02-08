@@ -1,9 +1,7 @@
 GLIBC_PROVIDES dnl See aclocal.m4 in the top level source directory.
 # Local configure fragment for sysdeps/alpha/elf.
 
-if test "$usetls" != no; then
-# Check for support of thread-local storage handling in assembler and
-# linker.
+# Check for support of thread-local storage handling in assembler and linker.
 AC_CACHE_CHECK(for Alpha TLS support, libc_cv_alpha_tls, [dnl
 cat > conftest.s <<\EOF
 	.section ".tdata", "awT", @progbits
@@ -46,9 +44,8 @@ else
   libc_cv_alpha_tls=no
 fi
 rm -f conftest*])
-if test $libc_cv_alpha_tls = yes; then
-  AC_DEFINE(HAVE_TLS_SUPPORT)
-fi
+if test $libc_cv_alpha_tls = no; then
+  AC_MSG_ERROR([the assembler must support TLS])
 fi
 
 AC_CACHE_CHECK(for GP relative module local relocs, libc_cv_alpha_hidden_gprel, [dnl

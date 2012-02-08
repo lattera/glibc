@@ -1,5 +1,5 @@
 /* Definition for thread-local data handling.  NPTL/Alpha version.
-   Copyright (C) 2003, 2005, 2006, 2007 Free Software Foundation, Inc.
+   Copyright (C) 2003, 2005, 2006, 2007, 2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -37,18 +37,6 @@ typedef union dtv
     bool is_static;
   } pointer;
 } dtv_t;
-
-#else /* __ASSEMBLER__ */
-# include <tcb-offsets.h>
-#endif /* __ASSEMBLER__ */
-
-
-/* We require TLS support in the tools.  */
-#ifndef HAVE_TLS_SUPPORT
-# error "TLS support is required."
-#endif
-
-#ifndef __ASSEMBLER__
 
 /* Get system call information.  */
 # include <sysdep.h>
@@ -144,6 +132,8 @@ typedef struct
 #define THREAD_GSCOPE_WAIT() \
   GL(dl_wait_lookup_done) ()
 
+#else /* __ASSEMBLER__ */
+# include <tcb-offsets.h>
 #endif /* __ASSEMBLER__ */
 
 #endif	/* tls.h */
