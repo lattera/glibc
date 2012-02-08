@@ -1,5 +1,5 @@
-/* Special .init and .fini section support.  ARM version.
-   Copyright (C) 2006 Free Software Foundation, Inc.
+/* Special .init and .fini section support for ARM.
+   Copyright (C) 1995-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -34,9 +34,23 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-/* Prevent this function from being inlined.  Otherwise half of its
-   constant pool will end up in crti and the other half in crtn.  */
+#include <sysdep.h>
 
-static void call_gmon_start (void) __attribute__((noinline));
+/* crtn.S puts function epilogues in the .init and .fini sections
+   corresponding to the prologues in crti.S. */
 
-#include <sysdeps/generic/initfini.c>
+	.section .init,"ax",%progbits
+#ifdef __ARM_ARCH_4T__
+	ldmfd sp!, {r3, lr}
+	bx lr
+#else
+	ldmfd sp!, {r3, pc}
+#endif
+
+	.section .fini,"ax",%progbits
+#ifdef __ARM_ARCH_4T__
+	ldmfd sp!, {r3, lr}
+	bx lr
+#else
+	ldmfd sp!, {r3, pc}
+#endif

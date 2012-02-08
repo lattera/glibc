@@ -1,3 +1,11 @@
+2012-02-08  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/arm/crti.S, sysdeps/arm/crtn.S: New files, based on
+	compiler output for sysdeps/generic/initfini.c.
+	* sysdeps/arm/initfini.c: Remove file.
+	* sysdeps/arm/eabi/Makefile (CFLAGS-initfini.s)
+	(CFLAGS-pt-initfini.s): Remove variables.
+
 2012-01-08  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/arm/eabi/bits/fenv.h: Use const instead of __const.
