@@ -671,8 +671,8 @@ double: 2
 float: 1
 idouble: 2
 ifloat: 1
-ildouble: 82
-ldouble: 82
+ildouble: 1
+ldouble: 1
 Test "jn (3, -1.0) == -0.0195633539826684059189053216217515083":
 ildouble: 1
 ldouble: 1
@@ -706,48 +706,46 @@ ldouble: 1
 Test "jn (3, 2.4048255576957729) == 0.19899990535769083404042146764530813":
 double: 3
 idouble: 3
-ildouble: 186
-ldouble: 186
+ildouble: 1
+ldouble: 1
 Test "jn (4, 2.4048255576957729) == 0.647466661641779720084932282551219891E-1":
 double: 1
 idouble: 1
-ildouble: 185
-ldouble: 185
+ildouble: 2
+ldouble: 2
 Test "jn (5, 2.4048255576957729) == 0.163892432048058525099230549946147698E-1":
 double: 3
 float: 1
 idouble: 3
 ifloat: 1
-ildouble: 249
-ldouble: 249
+ildouble: 3
+ldouble: 3
 Test "jn (6, 2.4048255576957729) == 0.34048184720278336646673682895929161E-2":
 double: 4
 float: 3
 idouble: 4
 ifloat: 3
-ildouble: 511
-ldouble: 511
+ildouble: 1
+ldouble: 1
 Test "jn (7, 2.4048255576957729) == 0.60068836573295394221291569249883076E-3":
 double: 3
 float: 5
 idouble: 3
 ifloat: 5
-ildouble: 428
-ldouble: 428
 Test "jn (8, 2.4048255576957729) == 0.92165786705344923232879022467054148E-4":
 double: 3
 float: 2
 idouble: 3
 ifloat: 2
-ildouble: 609
-ldouble: 609
+ildouble: 2
+ldouble: 2
 Test "jn (9, 2.4048255576957729) == 0.12517270977961513005428966643852564E-4":
 double: 1
 float: 2
 idouble: 1
 ifloat: 2
-ildouble: 750
-ldouble: 750
+ildouble: 2
+ldouble: 2
 
 # lgamma
 Test "lgamma (-0.5) == log(2*sqrt(pi))":
@@ -1296,8 +1294,8 @@ double: 4
 float: 5
 idouble: 4
 ifloat: 5
-ildouble: 750
-ldouble: 750
+ildouble: 3
+ldouble: 3
 
 Function: "lgamma":
 double: 1

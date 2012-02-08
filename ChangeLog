@@ -1,5 +1,9 @@
 2012-02-08  Andreas Schwab  <schwab@linux-m68k.org>
 
+	* sysdeps/i386/fpu/libm-test-ulps: Reduce ldouble ULPs for jn
+	tests.
+	* sysdeps/x86_64/fpu/libm-test-ulps: Likewise.
+
 	* Makeconfig (have-initfini): Don't set.
 	* config.make.in (have-initfini, need-nopic-initfini): Don't set.
 	* configure.in (nopic_initfini): Don't substitute.
