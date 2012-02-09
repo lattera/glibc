@@ -11,6 +11,11 @@
 	tests.
 	* sysdeps/x86_64/fpu/libm-test-ulps: Likewise.
 
+	* sysdeps/powerpc/powerpc32/crti.S: New file.
+	* sysdeps/powerpc/powerpc32/crtn.S: New file.
+	* sysdeps/powerpc/powerpc64/crti.S: New file.
+	* sysdeps/powerpc/powerpc64/crtn.S: New file.
+
 	* Makeconfig (have-initfini): Don't set.
 	* config.make.in (have-initfini, need-nopic-initfini): Don't set.
 	* configure.in (nopic_initfini): Don't substitute.
