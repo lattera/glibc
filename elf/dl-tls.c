@@ -756,7 +756,7 @@ update_get_addr (GET_ADDR_ARGS)
   if (__builtin_expect (p == TLS_DTV_UNALLOCATED, 0))
     return tls_get_addr_tail (GET_ADDR_PARAM, dtv, the_map);
 
-  return (char *) p + GET_ADDR_OFFSET;
+  return (void *) p + GET_ADDR_OFFSET;
 }
 
 

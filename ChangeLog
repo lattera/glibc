@@ -1,3 +1,7 @@
+2012-02-09  Richard Henderson  <rth@twiddle.net>
+
+	* elf/dl-tls.c (update_get_addr): Avoid pointer type mismatch warning.
+
 2012-02-08  Marek Polacek  <polacek@redhat.com>
 
 	* libio/libio.h: Remove _G_HAVE_SYS_CDEFS conditional.
