@@ -1,3 +1,13 @@
+2012-02-09  Paul Eggert  <eggert@cs.ucla.edu>
+
+	Replace FSF snail mail address with URLs, as per GNU coding standards.
+	Most of the snail mail addresses were wrong anyway, and omitting
+	them makes the source code easier to maintain.  Almost all of the
+	changes are to license notices and to locale LC_IDENTIFICATION
+	addresses, except for this one:
+	* manual/libc.texinfo: In "Published by", give the FSF's URL,
+	not its snail mail address.
+
 2012-02-09  Richard Henderson  <rth@twiddle.net>
 
 	* sysdeps/unix/sysv/linux/internal_statvfs.c: Use <> for include

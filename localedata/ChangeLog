@@ -1,3 +1,7 @@
+2012-02-07  Paul Eggert  <eggert@cs.ucla.edu>
+
+	Replace FSF snail mail address with URLs, as per GNU coding standards.
+
 2012-01-07  Ulrich Drepper  <drepper@gmail.com>
 
 	[BZ #13547]

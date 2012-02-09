@@ -13,9 +13,8 @@
    Lesser General Public License for more details.
 
    You should have received a copy of the GNU Lesser General Public
-   License along with the GNU C Library; if not, write to the Free
-   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
-   02111-1307 USA.  */
+   License along with the GNU C Library; if not, see
+   <http://www.gnu.org/licenses/>.  */
 
 #include <setjmp.h>
 #include <stdlib.h>
@@ -65,4 +64,3 @@ __vmx_siglongjmp (jmp_buf env, int val)
 
 versioned_symbol (libc, __vmx_longjmp, longjmp, GLIBC_2_3_4);
 versioned_symbol (libc, __vmx_siglongjmp, siglongjmp, GLIBC_2_3_4);
-
