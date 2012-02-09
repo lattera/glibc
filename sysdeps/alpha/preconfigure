@@ -1,3 +1,10 @@
 case "$machine" in
 alpha*)		base_machine=alpha machine=alpha/$machine ;;
 esac
+
+# We did historically export the unwinder from glibc.
+libc_cv_gcc_unwind_find_fde=yes
+
+# Parameters to allow auto-detection of -z relro.
+libc_commonpagesize=0x2000
+libc_relro_required=yes
