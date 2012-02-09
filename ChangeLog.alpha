@@ -1,5 +1,7 @@
 2012-02-08  Richard Henderson  <rth@twiddle.net>
 
+	* sysdeps/alpha/ldsodefs.h: New file.
+	* sysdeps/alpha/tst-audit.h: New file.
 	* sysdeps/alpha/tls-macros.h: New file.
 
 	* sysdeps/unix/sysv/linux/alpha/getitimer.S: Don't check HAVE_ELF.
