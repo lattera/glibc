@@ -60,7 +60,6 @@ typedef unsigned int _G_uint32_t __attribute__ ((__mode__ (__SI__)));
 
 /* These library features are always available in the GNU C library.  */
 #define _G_HAVE_ATEXIT 1
-#define _G_HAVE_SYS_CDEFS 1
 #define _G_HAVE_SYS_WAIT 1
 #define _G_NEED_STDARG_H 1
 #define _G_va_list __gnuc_va_list

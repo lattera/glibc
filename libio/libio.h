@@ -59,12 +59,7 @@
 #endif
 
 #ifndef __P
-# if _G_HAVE_SYS_CDEFS
-#  include <sys/cdefs.h>
-# else
-#  define __P(p) p
-#  define __PMT(p) p
-# endif
+# include <sys/cdefs.h>
 #endif /*!__P*/
 
 #define _IO_UNIFIED_JUMPTABLES 1

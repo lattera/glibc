@@ -1,3 +1,10 @@
+2012-02-08  Marek Polacek  <polacek@redhat.com>
+
+	* libio/libio.h: Remove _G_HAVE_SYS_CDEFS conditional.
+	* sysdeps/mach/hurd/_G_config.h: Remove _G_HAVE_SYS_CDEFS macro.
+	* sysdeps/gnu/_G_config.h: Likewise.
+	* sysdeps/generic/_G_config.h: Likewise.
+
 2012-02-08  Andreas Schwab  <schwab@linux-m68k.org>
 
 	* sysdeps/i386/fpu/libm-test-ulps: Reduce ldouble ULPs for jn
