@@ -1,5 +1,8 @@
 2012-02-09  Richard Henderson  <rth@twiddle.net>
 
+	* sysdeps/unix/sysv/linux/internal_statvfs.c: Use <> for include
+	of kernel-features.h.
+
 	* elf/dl-tls.c (update_get_addr): Avoid pointer type mismatch warning.
 
 2012-02-08  Marek Polacek  <polacek@redhat.com>

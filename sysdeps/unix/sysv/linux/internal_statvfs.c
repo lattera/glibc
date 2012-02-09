@@ -29,7 +29,7 @@
 #include <sys/statfs.h>
 #include <sys/statvfs.h>
 #include "linux_fsinfo.h"
-#include "kernel-features.h"
+#include <kernel-features.h>
 
 
 /* Special internal-only bit value.  */
