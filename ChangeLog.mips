@@ -1,3 +1,17 @@
+2012-02-10  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/mips/mips32/crti.S: New file, based on compiler output
+	for sysdeps/generic/initfini.c.
+	* sysdeps/mips/mips32/crtn.S: Likewise.
+	* sysdeps/mips/mips64/n32/crti.S: Likewise.
+	* sysdeps/mips/mips64/n32/crtn.S: Likewise.
+	* sysdeps/mips/mips64/n64/crti.S: Likewise.
+	* sysdeps/mips/mips64/n64/crtn.S: Likewise.
+	* sysdeps/mips/Makefile (CFLAGS-initfini.s): Remove variable.
+	(CFLAGS-pt-initfini.s): Likewise.
+	(CPPFLAGS-crti.S, CPPFLAGS-crtn.S, CPPFLAGS-pt-crti.S): Define
+	variables.
+
 2012-01-26  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/mips/sys/asm.h: Remove __STDC__ conditionals.

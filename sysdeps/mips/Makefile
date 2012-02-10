@@ -16,11 +16,13 @@ CFLAGS-backtrace.c += -funwind-tables
 endif
 
 ifeq ($(subdir),csu)
-CFLAGS-initfini.s += -fno-unwind-tables
+CPPFLAGS-crti.S += $(pic-ccflag)
+CPPFLAGS-crtn.S += $(pic-ccflag)
 endif
 
 ifeq ($(subdir),nptl)
-CFLAGS-pt-initfini.s += -fno-unwind-tables
+CPPFLAGS-pt-crti.S += $(pic-ccflag)
+CPPFLAGS-crtn.S += $(pic-ccflag)
 endif
 
 ASFLAGS-.os += $(pic-ccflag)
