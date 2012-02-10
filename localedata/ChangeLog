@@ -1,3 +1,7 @@
+2012-02-10  Joseph Myers  <joseph@codesourcery.com>
+
+	Revert changes to locales from previous commit.
+
 2012-02-07  Paul Eggert  <eggert@cs.ucla.edu>
 
 	Replace FSF snail mail address with URLs, as per GNU coding standards.
