@@ -1,7 +1,7 @@
 2012-02-10  Thomas Schwinge  <thomas@codesourcery.com>
 
-	* sysdeps/i386/fpu/feupdateenv.c (__feupdateenv) Invoke __feraiseexcept
-	instead of feraiseexcept.
+	* sysdeps/i386/fpu/feupdateenv.c (__feupdateenv): Invoke
+	__feraiseexcept instead of feraiseexcept.
 
 	* rt/tst-cpuclock1.c: Add a few comments, and error checking for
 	nanosleep invocations.
