@@ -1,5 +1,5 @@
 /* Test program for process and thread CPU clocks.
-   Copyright (C) 2005 Free Software Foundation, Inc.
+   Copyright (C) 2005, 2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -216,7 +216,7 @@ do_test (void)
   struct timespec res;
   if (clock_getres (th_clock, &res) < 0)
     {
-      printf ("clock_getres on thread clock %lx => %s\n",
+      printf ("clock_getres on live thread clock %lx => %s\n",
 	      (unsigned long int) th_clock, strerror (errno));
       result = 1;
       return 1;
@@ -228,7 +228,7 @@ do_test (void)
   if (clock_gettime (process_clock, &process_before) < 0)
     {
       printf ("clock_gettime on process clock %lx => %s\n",
-	      (unsigned long int) th_clock, strerror (errno));
+	      (unsigned long int) process_clock, strerror (errno));
       return 1;
     }
 
@@ -245,15 +245,19 @@ do_test (void)
   struct timespec me_before, me_after;
   if (clock_gettime (my_thread_clock, &me_before) < 0)
     {
-      printf ("clock_gettime on live thread clock %lx => %s\n",
-	      (unsigned long int) th_clock, strerror (errno));
+      printf ("clock_gettime on self thread clock %lx => %s\n",
+	      (unsigned long int) my_thread_clock, strerror (errno));
       return 1;
     }
   printf ("self thread before sleep => %lu.%.9lu\n",
 	  me_before.tv_sec, me_before.tv_nsec);
 
   struct timespec sleeptime = { .tv_nsec = 500000000 };
-  nanosleep (&sleeptime, NULL);
+  if (nanosleep (&sleeptime, NULL) != 0)
+    {
+      perror ("nanosleep");
+      return 1;
+    }
 
   if (clock_gettime (th_clock, &after) < 0)
     {
@@ -267,14 +271,14 @@ do_test (void)
   if (clock_gettime (process_clock, &process_after) < 0)
     {
       printf ("clock_gettime on process clock %lx => %s\n",
-	      (unsigned long int) th_clock, strerror (errno));
+	      (unsigned long int) process_clock, strerror (errno));
       return 1;
     }
 
   if (clock_gettime (my_thread_clock, &me_after) < 0)
     {
-      printf ("clock_gettime on live thread clock %lx => %s\n",
-	      (unsigned long int) th_clock, strerror (errno));
+      printf ("clock_gettime on self thread clock %lx => %s\n",
+	      (unsigned long int) my_thread_clock, strerror (errno));
       return 1;
     }
   printf ("self thread after sleep => %lu.%.9lu\n",
@@ -286,7 +290,7 @@ do_test (void)
 
   if (th_diff < 100000000 || th_diff > 600000000)
     {
-      printf ("thread before - after %llu outside reasonable range\n",
+      printf ("live thread before - after %llu outside reasonable range\n",
 	      th_diff);
       result = 1;
     }
@@ -305,7 +309,7 @@ do_test (void)
       result = 1;
     }
 
-  process_after.tv_nsec += test_nanosleep (th_clock, "thread",
+  process_after.tv_nsec += test_nanosleep (th_clock, "live thread",
 					   &after, &result);
   process_after.tv_nsec += test_nanosleep (process_clock, "process",
 					   &process_after, &result);

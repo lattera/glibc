@@ -1,3 +1,10 @@
+2012-02-10  Thomas Schwinge  <thomas@codesourcery.com>
+
+	* rt/tst-cpuclock1.c: Add a few comments, and error checking for
+	nanosleep invocations.
+	* rt/tst-cpuclock2.c: Print some values as intended, fix explanatory
+	strings, and add error checking for a nanosleep invocations.
+
 2012-02-09  Paul Eggert  <eggert@cs.ucla.edu>
 
 	Replace FSF snail mail address with URLs, as per GNU coding standards.

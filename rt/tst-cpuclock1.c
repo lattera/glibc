@@ -1,5 +1,5 @@
 /* Test program for process CPU clocks.
-   Copyright (C) 2004 Free Software Foundation, Inc.
+   Copyright (C) 2004, 2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -130,11 +130,17 @@ do_test (void)
       result = 1;
       goto done;
     }
+  /* Should be close to 0.0.  */
   printf ("live PID %d before sleep => %lu.%.9lu\n",
 	  child, before.tv_sec, before.tv_nsec);
 
   struct timespec sleeptime = { .tv_nsec = 500000000 };
-  nanosleep (&sleeptime, NULL);
+  if (nanosleep (&sleeptime, NULL) != 0)
+    {
+      perror ("nanosleep");
+      result = 1;
+      goto done;
+    }
 
   if (clock_gettime (child_clock, &after) < 0)
     {
@@ -143,6 +149,7 @@ do_test (void)
       result = 1;
       goto done;
     }
+  /* Should be close to 0.5.  */
   printf ("live PID %d after sleep => %lu.%.9lu\n",
 	  child, after.tv_sec, after.tv_nsec);
 
@@ -213,7 +220,12 @@ do_test (void)
   /* Wait long enough to let the child finish dying.  */
 
   sleeptime.tv_nsec = 200000000;
-  nanosleep (&sleeptime, NULL);
+  if (nanosleep (&sleeptime, NULL) != 0)
+    {
+      perror ("nanosleep");
+      result = 1;
+      goto done;
+    }
 
   struct timespec dead;
   if (clock_gettime (child_clock, &dead) < 0)
@@ -223,6 +235,7 @@ do_test (void)
       result = 1;
       goto done;
     }
+  /* Should be close to 0.6.  */
   printf ("dead PID %d => %lu.%.9lu\n",
 	  child, dead.tv_sec, dead.tv_nsec);
 
