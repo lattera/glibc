@@ -1,3 +1,14 @@
+2012-02-13  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/bits/eventfd.h: New file.
+	* sysdeps/unix/sysv/linux/sparc/bits/eventfd.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sys/eventfd.h: Remove.
+	* sysdeps/unix/sysv/linux/sys/eventfd.h: Get flags from
+	<bits/eventfd.h>.
+	(EFD_SEMAPHORE, EFD_CLOEXEC, EFD_NONBLOCK): Don't define here.
+	* sysdeps/unix/sysv/linux/Makefile (sysdep_headers): Add
+	bits/eventfd.h.
+
 2012-02-10  Thomas Schwinge  <thomas@codesourcery.com>
 
 	* sysdeps/i386/fpu/feupdateenv.c (__feupdateenv): Invoke
