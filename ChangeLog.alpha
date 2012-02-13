@@ -1,3 +1,8 @@
+2012-02-13  Richard Henderson  <rth@twiddle.net>
+
+        * sysdeps/unix/sysv/linux/alpha/bits/eventfd.h: New file.
+        * sysdeps/unix/sysv/linux/alpha/sys/eventfd.h: Remove.
+
 2012-02-09  Richard Henderson  <rth@twiddle.net>
 
 	* sysdeps/alpha/preconfigure (libc_cv_gcc_unwind_find_fde): New.
