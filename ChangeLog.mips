@@ -1,5 +1,10 @@
 2012-02-13  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/unix/sysv/linux/mips/bits/inotify.h: New file.
+	* sysdeps/unix/sysv/linux/mips/sys/inotify.h: Remove.
+
+2012-02-13  Joseph Myers  <joseph@codesourcery.com>
+
 	* sysdeps/unix/sysv/linux/mips/bits/eventfd.h: New file.
 	* sysdeps/unix/sysv/linux/mips/sys/eventfd.h: Remove.
 
