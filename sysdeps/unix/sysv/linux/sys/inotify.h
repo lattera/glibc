@@ -1,4 +1,4 @@
-/* Copyright (C) 2005, 2006, 2008, 2009, 2010 Free Software Foundation, Inc.
+/* Copyright (C) 2005-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,15 +20,8 @@
 
 #include <stdint.h>
 
-
-/* Flags for the parameter of inotify_init1.  */
-enum
-  {
-    IN_CLOEXEC = 02000000,
-#define IN_CLOEXEC IN_CLOEXEC
-    IN_NONBLOCK = 04000
-#define IN_NONBLOCK IN_NONBLOCK
-  };
+/* Get the platform-dependent flags.  */
+#include <bits/inotify.h>
 
 
 /* Structure describing an inotify event.  */

@@ -1,5 +1,16 @@
 2012-02-13  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/unix/sysv/linux/bits/inotify.h: New file.
+	* sysdeps/unix/sysv/linux/sparc/bits/inotify.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sys/inotify.h: Remove.
+	* sysdeps/unix/sysv/linux/sys/inotify.h: Get flags from
+	<bits/inotify.h>.
+	(IN_CLOEXEC, IN_NONBLOCK): Don't define here.
+	* sysdeps/unix/sysv/linux/Makefile (sysdep_headers): Add
+	bits/inotify.h.
+
+2012-02-13  Joseph Myers  <joseph@codesourcery.com>
+
 	* sysdeps/unix/sysv/linux/bits/eventfd.h: New file.
 	* sysdeps/unix/sysv/linux/sparc/bits/eventfd.h: Likewise.
 	* sysdeps/unix/sysv/linux/sparc/sys/eventfd.h: Remove.
