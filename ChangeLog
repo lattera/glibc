@@ -1,3 +1,9 @@
+2012-02-14  Marek Polacek  <polacek@redhat.com>
+
+	* sysdeps/x86_64/crti.S: New file.
+	* sysdeps/x86_64/crtn.S: New file.
+	* sysdeps/x86_64/elf/initfini.c: Remove file.
+
 2012-02-13  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/bits/inotify.h: New file.

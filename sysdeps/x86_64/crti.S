@@ -1,5 +1,5 @@
 /* Special .init and .fini section support for x86-64.
-   Copyright (C) 2001, 2002 Free Software Foundation, Inc.
+   Copyright (C) 2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -33,75 +33,48 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-/* This file is compiled into assembly code which is then munged by a sed
-   script into two files: crti.s and crtn.s.
+/* crti.S puts a function prologue at the beginning of the .init and
+   .fini sections and defines global symbols for those addresses, so
+   they can be called as functions.  The symbols _init and _fini are
+   magic and cause the linker to emit DT_INIT and DT_FINI.  */
 
-   * crti.s puts a function prologue at the beginning of the
-   .init and .fini sections and defines global symbols for
-   those addresses, so they can be called as functions.
+#include <libc-symbols.h>
+#include <sysdep.h>
 
-   * crtn.s puts the corresponding function epilogues
-   in the .init and .fini sections. */
+#ifndef PREINIT_FUNCTION
+# define PREINIT_FUNCTION __gmon_start__
+#endif
 
-__asm__ ("\n\
-#include \"defs.h\"\n\
-\n\
-/*@HEADER_ENDS*/\n\
-\n\
-/*@_init_PROLOG_BEGINS*/\n\
-	.align 4\n\
-	.type	call_gmon_start,@function\n\
-call_gmon_start:\n\
-	subq	$8, %rsp\n\
-	movq	__gmon_start__@GOTPCREL(%rip), %rax\n\
-	testq	%rax, %rax\n\
-	je	.L22\n\
-	call	*%rax\n\
-.L22:\n\
-	addq	$8, %rsp\n\
-	ret\n\
-\n\
-	.section .init\n\
-	.align 4\n\
-.globl _init\n\
-	.type	_init,@function\n\
-_init:\n\
-	subq	$8, %rsp\n\
-	call	call_gmon_start\n\
-	ALIGN\n\
-	END_INIT\n\
-\n\
-/*@_init_PROLOG_ENDS*/\n\
-\n\
-/*@_init_EPILOG_BEGINS*/\n\
-	.section .init\n\
-	addq	$8, %rsp\n\
-	ret\n\
-	END_INIT\n\
-\n\
-/*@_init_EPILOG_ENDS*/\n\
-\n\
-/*@_fini_PROLOG_BEGINS*/\n\
-	.section .fini\n\
-	.align 4\n\
-.globl _fini\n\
-	.type	_fini,@function\n\
-_fini:\n\
-	subq	$8, %rsp\n\
-	ALIGN\n\
-	END_FINI\n\
-\n\
-/*@_fini_PROLOG_ENDS*/\n\
-	call	i_am_not_a_leaf@PLT\n\
-\n\
-/*@_fini_EPILOG_BEGINS*/\n\
-	.section .fini\n\
-	addq	$8, %rsp\n\
-	ret\n\
-	END_FINI\n\
-\n\
-/*@_fini_EPILOG_ENDS*/\n\
-\n\
-/*@TRAILER_BEGINS*/\n\
-	.weak	__gmon_start__\n\
-");
+#ifndef PREINIT_FUNCTION_WEAK
+# define PREINIT_FUNCTION_WEAK 1
+#endif
+
+#if PREINIT_FUNCTION_WEAK
+	weak_extern (PREINIT_FUNCTION)
+#else
+	.hidden PREINIT_FUNCTION
+#endif
+
+	.section .init,"ax",@progbits
+	.p2align 2
+	.globl _init
+	.type _init, @function
+_init:
+	/* Maintain 16-byte stack alignment for called functions.  */
+	subq $8, %rsp
+#if PREINIT_FUNCTION_WEAK
+	movq PREINIT_FUNCTION@GOTPCREL(%rip), %rax
+	testq %rax, %rax
+	je .Lno_weak_fn
+	call PREINIT_FUNCTION@PLT
+.Lno_weak_fn:
+#else
+	call PREINIT_FUNCTION
+#endif
+
+	.section .fini,"ax",@progbits
+	.p2align 2
+	.globl _fini
+	.type _fini, @function
+_fini:
+	subq $8, %rsp
