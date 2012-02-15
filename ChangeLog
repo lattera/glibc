@@ -1,3 +1,7 @@
+2012-02-15  Mike Frysinger  <vapier@gentoo.org>
+
+	* sysdeps/unix/sysv/linux/getcwd.c: Include sys/param.h.
+
 2012-02-15  Roland McGrath  <roland@hack.frob.com>
 
 	* mach/devstream.c (cookie_io_functions_t): Macro removed.
