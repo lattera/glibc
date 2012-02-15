@@ -1,3 +1,8 @@
+2012-02-15  Khem Raj  <raj.khem@gmail.com>
+
+	* sysdeps/unix/sysv/linux/arm/eabi/libc-do-syscall.S: Disable
+	contents unless __thumb__.
+
 2012-02-08  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/arm/crti.S, sysdeps/arm/crtn.S: New files, based on

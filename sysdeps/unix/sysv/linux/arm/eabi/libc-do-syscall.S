@@ -1,4 +1,4 @@
-/* Copyright (C) 2010 Free Software Foundation, Inc.
+/* Copyright (C) 2010-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -25,6 +25,7 @@
    ARM unwind tables for register to register moves, the actual opcodes
    are not defined.  */
 
+#if defined(__thumb__)
 	.thumb
 	.syntax unified
 	.hidden __libc_do_syscall
@@ -44,3 +45,5 @@ ENTRY (__libc_do_syscall)
 	pop	{r7, pc}
 	.fnend
 END (__libc_do_syscall)
+
+#endif /* __thumb__ */
