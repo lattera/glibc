@@ -1,5 +1,7 @@
 2012-02-15  Richard Henderson  <rth@twiddle.net>
 
+	* sysdeps/alpha/dl-machine.h: Don't check USE___THREAD.
+
 	* sysdeps/unix/alpha/sysdeps.S: Don't check __ELF__, USE___THREAD,
 	or _LIBC_REENTRANT.
 

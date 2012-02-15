@@ -232,16 +232,11 @@ $fixup_stack:							\n\
    to one of the main executable's symbols, as for a COPY reloc.
    This is unused on Alpha.  */
 
-#if !defined RTLD_BOOTSTRAP || USE___THREAD
 # define elf_machine_type_class(type)	\
   (((type) == R_ALPHA_JMP_SLOT		\
     || (type) == R_ALPHA_DTPMOD64	\
     || (type) == R_ALPHA_DTPREL64	\
     || (type) == R_ALPHA_TPREL64) * ELF_RTYPE_CLASS_PLT)
-#else
-# define elf_machine_type_class(type)	\
-  (((type) == R_ALPHA_JMP_SLOT) * ELF_RTYPE_CLASS_PLT)
-#endif
 
 /* A reloc type used for ld.so cmdline arg lookups to reject PLT entries.  */
 #define ELF_MACHINE_JMP_SLOT	 R_ALPHA_JMP_SLOT
@@ -452,7 +447,6 @@ elf_machine_rela (struct link_map *map,
 	  memcpy (reloc_addr_arg, &sym_value, 8);
 	}
 #endif
-#if !defined RTLD_BOOTSTRAP || USE___THREAD
       else if (r_type == R_ALPHA_DTPMOD64)
 	{
 # ifdef RTLD_BOOTSTRAP
@@ -485,7 +479,6 @@ elf_machine_rela (struct link_map *map,
 	    }
 # endif
 	}
-#endif
       else
 	_dl_reloc_bad_type (map, r_type, 0);
     }
