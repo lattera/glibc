@@ -12,6 +12,9 @@
 
 2012-02-15  Roland McGrath  <roland@hack.frob.com>
 
+	[BZ #4822]
+	* sysdeps/mach/hurd/malloc-machine.h (madvise): New macro.
+
 	* mach/devstream.c (cookie_io_functions_t): Macro removed.
 	(write, read, close): Likewise.
 	Patch by Aurelien Jarno <aurelien@aurel32.net>.
