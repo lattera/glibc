@@ -208,7 +208,7 @@ do {									\
       when it is called to store away the arguments passed
       to it.
 
-   2) That under Linux the entry is named __start
+   2) That under Unix the entry is named __start
       and not just plain _start.  */
 
 #define RTLD_START asm (\

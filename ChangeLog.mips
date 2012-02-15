@@ -1,5 +1,12 @@
 2012-02-15  Robert Millan  <rmh@gnu.org>
 
+	[BZ #12297]
+	* sysdeps/mips/dl-machine.h: Fix a comment regarding __start.
+	* sysdeps/unix/sysv/linux/mips/entry.h: Moved to ...
+	* sysdeps/unix/mips/entry.h: ... here.
+
+2012-02-15  Robert Millan  <rmh@gnu.org>
+
 	[BZ #12193]
 	* sysdeps/mips/dl-machine.h (DL_PLATFORM_INIT, dl_platform_init):
 	Define.
