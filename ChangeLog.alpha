@@ -1,3 +1,11 @@
+2012-02-14  Joseph Myers  <joseph@codesourcery.com>
+	    Tom de Vries  <tom@codesourcery.com>
+
+	* sysdeps/alpha/preconfigure: Make setting of libc_commonpagesize and
+	libc_relro_required conditional on alpha machine.  Move setting of
+	libc_cv_gcc_unwind_find_fde ...
+	* sysdeps/unix/sysv/linux/alpha/configure.in: ... here.
+
 2012-02-13  Richard Henderson  <rth@twiddle.net>
 
         * sysdeps/unix/sysv/linux/alpha/bits/eventfd.h: New file.
