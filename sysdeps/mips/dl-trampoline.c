@@ -26,6 +26,7 @@
 #include <elf.h>
 #include <ldsodefs.h>
 #include <dl-machine.h>
+#include <sysdep-cancel.h>
 
 /* Get link map for callers object containing STUB_PC.  */
 static inline struct link_map *
@@ -153,17 +154,44 @@ __dl_runtime_resolve (ElfW(Word) sym_index,
 
 	    if (version->hash != 0)
 	      {
+                /* We need to keep the scope around so do some locking.  This is
+		   not necessary for objects which cannot be unloaded or when
+		   we are not using any threads (yet).  */
+		if (!RTLD_SINGLE_THREAD_P)
+		  THREAD_GSCOPE_SET_FLAG ();
+
 		sym_map = _dl_lookup_symbol_x (strtab + sym->st_name, l,
 					       &sym, l->l_scope, version,
 					       ELF_RTYPE_CLASS_PLT, 0, 0);
+
+                /* We are done with the global scope.  */
+		if (!RTLD_SINGLE_THREAD_P)
+		  THREAD_GSCOPE_RESET_FLAG ();
+
 		break;
 	      }
 	    /* Fall through.  */
 	  }
 	case 0:
+	  {
+          /* We need to keep the scope around so do some locking.  This is
+	     not necessary for objects which cannot be unloaded or when
+	     we are not using any threads (yet).  */
+	  int flags = DL_LOOKUP_ADD_DEPENDENCY;
+	  if (!RTLD_SINGLE_THREAD_P)
+	    {
+	      THREAD_GSCOPE_SET_FLAG ();
+	      flags |= DL_LOOKUP_GSCOPE_LOCK;
+	    }
+
 	  sym_map = _dl_lookup_symbol_x (strtab + sym->st_name, l, &sym,
 					 l->l_scope, 0, ELF_RTYPE_CLASS_PLT,
-					 DL_LOOKUP_ADD_DEPENDENCY, 0);
+					 flags, 0);
+
+          /* We are done with the global scope.  */
+	  if (!RTLD_SINGLE_THREAD_P)
+	    THREAD_GSCOPE_RESET_FLAG ();
+	  }
 	}
 
       /* Currently value contains the base load address of the object

@@ -1,3 +1,8 @@
+2012-02-15  Viju Vincent  <vijuvince@gmail.com>
+
+	* sysdeps/mips/dl-trampoline.c (__dl_runtime_resolve): Use locking
+	around calls to _dl_lookup_symbol_x.
+
 2012-02-13  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/mips/bits/inotify.h: New file.
