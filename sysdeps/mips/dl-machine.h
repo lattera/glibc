@@ -1,6 +1,5 @@
 /* Machine-dependent ELF dynamic relocation inline functions.  MIPS version.
-   Copyright (C) 1996-2001, 2002, 2003, 2004, 2005, 2006, 2007, 2011
-   Free Software Foundation, Inc.
+   Copyright (C) 1996-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Kazumoto Kojima <kkojima@info.kanagawa-u.ac.jp>.
 
@@ -295,6 +294,18 @@ do {									\
 #  define ARCH_LA_PLTENTER mips_n64_gnu_pltenter
 #  define ARCH_LA_PLTEXIT mips_n64_gnu_pltexit
 # endif
+
+/* We define an initialization function.  This is called very early in
+   _dl_sysdep_start.  */
+#define DL_PLATFORM_INIT dl_platform_init ()
+
+static inline void __attribute__ ((unused))
+dl_platform_init (void)
+{
+  if (GLRO(dl_platform) != NULL && *GLRO(dl_platform) == '\0')
+    /* Avoid an empty string which would disturb us.  */
+    GLRO(dl_platform) = NULL;
+}
 
 /* For a non-writable PLT, rewrite the .got.plt entry at RELOC_ADDR to
    point at the symbol with address VALUE.  For a writable PLT, rewrite

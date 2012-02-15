@@ -1,3 +1,10 @@
+2012-02-15  Robert Millan  <rmh@gnu.org>
+
+	* sysdeps/mips/dl-machine.h (DL_PLATFORM_INIT, dl_platform_init):
+	Define.
+	* sysdeps/mips/dl-procinfo.c: New file.
+	* sysdeps/mips/dl-procinfo.h: Likewise.
+
 2012-02-15  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/mips/bits/signalfd.h: New file.
