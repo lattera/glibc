@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1995, 1996, 2000, 2003, 2004, 2006, 2010
+/* Copyright (C) 1992, 1995, 1996, 2000, 2003, 2004, 2006, 2010, 2012
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Brendan Kehoe (brendan@zen.org).
@@ -27,8 +27,6 @@
 #else
 # include <regdef.h>
 #endif
-
-#include <tls.h>		/* Defines USE___THREAD.  */
 
 #ifdef IS_IN_rtld
 # include <dl-sysdep.h>         /* Defines RTLD_PRIVATE_ERRNO.  */
@@ -86,9 +84,8 @@
 	lda	v0, -1;				\
 	ret
 #elif defined(PIC)
-# define SYSCALL_ERROR_LABEL	__syscall_error
-# define SYSCALL_ERROR_HANDLER \
-	br	$31, __syscall_error !samegp
+# define SYSCALL_ERROR_LABEL	__syscall_error !samegp
+# define SYSCALL_ERROR_HANDLER
 #else
 # define SYSCALL_ERROR_LABEL	$syscall_error
 # define SYSCALL_ERROR_HANDLER \

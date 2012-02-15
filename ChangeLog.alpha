@@ -1,5 +1,9 @@
 2012-02-15  Richard Henderson  <rth@twiddle.net>
 
+	* sysdeps/unux/alpha/sysdep.h: Don't include <tls.h>
+	[PIC] (SYSCALL_ERROR_HANDLER): Emit nothing.
+	[PIC] (SYSCALL_ERROR_LABEL): Add !samegp markup.
+
 	* sysdeps/alpha/dl-machine.h: Don't check USE___THREAD.
 
 	* sysdeps/unix/alpha/sysdeps.S: Don't check __ELF__, USE___THREAD,
