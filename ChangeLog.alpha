@@ -1,3 +1,9 @@
+2012-02-15  Richard Henderson  <rth@twiddle.net>
+
+	[BZ #13361]
+	* sysdeps/unix/sysv/linux/alpha/bits/fcntl.h (struct file_handle): New.
+	(fallocate, name_to_handle_at, open_by_handle_at): Declare.
+
 2012-02-14  Joseph Myers  <joseph@codesourcery.com>
 	    Tom de Vries  <tom@codesourcery.com>
 
