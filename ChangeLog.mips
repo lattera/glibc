@@ -1,5 +1,11 @@
 2012-02-15  Robert Millan  <rmh@gnu.org>
 
+	[BZ #12298]
+	* sysdeps/unix/sysv/linux/mips/sys/tas.h: Moved to ...
+	* sysdeps/mips/sys/tas.h: ... here.
+
+2012-02-15  Robert Millan  <rmh@gnu.org>
+
 	[BZ #12297]
 	* sysdeps/mips/dl-machine.h: Fix a comment regarding __start.
 	* sysdeps/unix/sysv/linux/mips/entry.h: Moved to ...
