@@ -1,6 +1,6 @@
 /* Basic platform-independent macro definitions for mutexes,
    thread-specific data and parameters for malloc.
-   Copyright (C) 2003, 2008 Free Software Foundation, Inc.
+   Copyright (C) 2003-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -61,6 +61,10 @@ __libc_tsd_define (static, void *, MALLOC)	/* declaration/common definition */
 #define tsd_key_create(key, destr)	((void) (key))
 #define tsd_setspecific(key, data)	__libc_tsd_set (void *, MALLOC, (data))
 #define tsd_getspecific(key, vptr)	((vptr) = __libc_tsd_get (void *, MALLOC))
+
+/* madvise is a stub on Hurd, so don't bother calling it.  */
+#undef	madvise
+#define madvise(addr, len, advice)	((void) ((addr), (len), (advice)))
 
 #include <sysdeps/generic/malloc-machine.h>
 
