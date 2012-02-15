@@ -1,3 +1,8 @@
+2012-02-15  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/mips/bits/signalfd.h: New file.
+	* sysdeps/unix/sysv/linux/mips/sys/signalfd.h: Remove.
+
 2012-02-15  Viju Vincent  <vijuvince@gmail.com>
 
 	* sysdeps/mips/dl-trampoline.c (__dl_runtime_resolve): Use locking
