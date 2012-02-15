@@ -1,3 +1,14 @@
+2012-02-15  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/bits/signalfd.h: New file.
+	* sysdeps/unix/sysv/linux/sparc/bits/signalfd.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sys/signalfd.h: Remove.
+	* sysdeps/unix/sysv/linux/sys/signalfd.h: Get flags from
+	<bits/signalfd.h>.
+	(SFD_CLOEXEC, SFD_NONBLOCK): Don't define here.
+	* sysdeps/unix/sysv/linux/Makefile (sysdep_headers): Add
+	bits/signalfd.h.
+
 2012-02-14  Marek Polacek  <polacek@redhat.com>
 
 	* sysdeps/x86_64/crti.S: New file.
