@@ -1,5 +1,6 @@
 2012-02-15  Robert Millan  <rmh@gnu.org>
 
+	[BZ #12193]
 	* sysdeps/mips/dl-machine.h (DL_PLATFORM_INIT, dl_platform_init):
 	Define.
 	* sysdeps/mips/dl-procinfo.c: New file.
