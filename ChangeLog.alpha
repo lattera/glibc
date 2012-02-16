@@ -1,5 +1,8 @@
 2012-02-15  Richard Henderson  <rth@twiddle.net>
 
+        * sysdeps/unix/sysv/linux/alpha/bits/signalfd.h: New file.
+        * sysdeps/unix/sysv/linux/alpha/sys/signalfd.h: Remove.
+
 	* sysdeps/unix/alpha/sysdep.h (syscall_promote): New.
 	(inline_syscall0, inline_syscall1, inline_syscall2,
 	inline_syscall3, inline_syscall4, inline_syscall5,
