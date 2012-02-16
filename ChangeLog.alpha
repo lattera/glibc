@@ -1,3 +1,8 @@
+2012-02-16  Richard Henderson  <rth@twiddle.net>
+
+	* sysdeps/alpha/fpu/fenv_libc.h (__ieee_set_fp_control,
+	__ieee_get_fp_control): Mark as hidden proto.
+
 2012-02-15  Mike Hommey  <mh+reportbug@glandium.org>
 
 	[BZ #11677]

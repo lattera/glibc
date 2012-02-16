@@ -1,5 +1,5 @@
 /* Internal libc stuff for floating point environment routines.
-   Copyright (C) 2000 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -32,5 +32,9 @@
 #define SWCR_ALL_MASK		(SWCR_ENABLE_MASK	\
 				| SWCR_MAP_MASK		\
 				| SWCR_STATUS_MASK)
+
+/* These are declared for public consumption in <bits/fenv.h>.  */
+libc_hidden_proto(__ieee_set_fp_control)
+libc_hidden_proto(__ieee_get_fp_control)
 
 #endif /* fenv_libc.h */
