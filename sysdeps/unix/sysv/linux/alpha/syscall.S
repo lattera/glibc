@@ -31,13 +31,13 @@
  *
  * Usage:
  *
- * long	syscall(syscall_number, arg1, arg2, arg3, arg4, arg5)
+ * long	syscall(syscall_number, arg1, arg2, arg3, arg4, arg5, arg6)
  *
  * syscall_number = the index of the system call we're invoking
- * arg1-arg5 = up to 5 integer arguments to the system call
+ * arg1-arg6 = up to 6 integer arguments to the system call
  *
  * We need to do some arg shifting: the kernel expects the
- * syscall number in v0 and the first five args in a0-a4.
+ * syscall number in v0 and the first six args in a0-a5.
  *
  */
 
@@ -60,6 +60,7 @@ LEAF(__syscall, 0)
 	mov	a3, a2
 	mov	a4, a3
 	mov	a5, a4
+	ldq	a5,0(sp)	/* arg6 -> a5 */
 
 	call_pal PAL_callsys	/* Invoke system call */
 	bne	a3, $error

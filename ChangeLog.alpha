@@ -1,3 +1,8 @@
+2012-02-15  Mike Hommey  <mh+reportbug@glandium.org>
+
+	[BZ #11677]
+	* sysdeps/unix/sysv/linux/alpha/syscall.S: Support 6th argument.
+
 2012-02-15  Richard Henderson  <rth@twiddle.net>
 
         * sysdeps/unix/sysv/linux/alpha/bits/signalfd.h: New file.
