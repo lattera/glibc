@@ -1,3 +1,8 @@
+2012-02-16  Richard Henderson  <rth@twiddle.net>
+
+	* nptl/sysdeps/unix/sysv/linux/s390/s390-32/pt-initfini.c: Remove file.
+	* nptl/sysdeps/unix/sysv/linux/s390/s390-64/pt-initfini.c: Remove file.
+
 2012-02-15  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
 
 	* sysdeps/unix/sysv/linux/sh/pt-initfini.c: Remove file.

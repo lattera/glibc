@@ -1,3 +1,10 @@
+2012-02-16  Richard Henderson  <rth@redhat.com>
+
+	* sysdeps/s390/s390-32/crti.S, sysdeps/s390/s390-32/crtn.S: New files.
+	* sysdeps/s390/s390-32/initfini.c: Remove.
+	* sysdeps/s390/s390-64/crti.S, sysdeps/s390/s390-64/crtn.S:
+	* sysdeps/s390/s390-64/initfini.c: Remove.
+
 2012-02-15  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
 
 	* sysdeps/sh/crti.S, sysdeps/sh/crtn.S: New files, based on
