@@ -1,6 +1,15 @@
 2012-02-15  Richard Henderson  <rth@twiddle.net>
 
-	* sysdeps/unux/alpha/sysdep.h: Don't include <tls.h>
+	* sysdeps/unix/alpha/sysdep.h (syscall_promote): New.
+	(inline_syscall0, inline_syscall1, inline_syscall2,
+	inline_syscall3, inline_syscall4, inline_syscall5,
+	inline_syscall6): Use it.
+	* sysdeps/unix/sysv/linux/alpha/setregid.c: Remove.
+	* sysdeps/unix/sysv/linux/alpha/setreuid.c: Remove.
+	* sysdeps/unix/sysv/linux/alpha/setresgid.c: Remove.
+	* sysdeps/unix/sysv/linux/alpha/setresuid.c: Remove.
+
+	* sysdeps/unix/alpha/sysdep.h: Don't include <tls.h>
 	[PIC] (SYSCALL_ERROR_HANDLER): Emit nothing.
 	[PIC] (SYSCALL_ERROR_LABEL): Add !samegp markup.
 

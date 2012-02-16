@@ -190,6 +190,12 @@ __LABEL(name)						\
 #define INTERNAL_SYSCALL_DECL(err) \
 	long int err __attribute__((unused))
 
+/* The normal Alpha calling convention sign-extends 32-bit quantties
+   no matter what the "real" sign of the 32-bit type.  We want to
+   preserve that when filling in values for the kernel.  */
+#define syscall_promote(arg) \
+  (sizeof(arg) == 4 ? (long)(int)(long)(arg) : (long)(arg))
+
 /* Make sure and "use" the variable that we're not returning,
    in order to suppress unused variable warnings.  */
 #define INTERNAL_SYSCALL_ERROR_P(val, err)	((void)val, err)
@@ -205,172 +211,126 @@ __LABEL(name)						\
 
 #define inline_syscall0(name, args...)				\
 {								\
-	register long _sc_0;					\
 	register long _sc_19 __asm__("$19");			\
-								\
-	_sc_0 = name;						\
+	register long _sc_0 = name;				\
 	__asm__ __volatile__					\
 	  ("callsys # %0 %1 <= %2"				\
-	   : "=v"(_sc_0), "=r"(_sc_19)				\
-	   : "0"(_sc_0)						\
-	   : inline_syscall_clobbers,				\
+	   : "+v"(_sc_0), "=r"(_sc_19)				\
+	   : : inline_syscall_clobbers,				\
 	     "$16", "$17", "$18", "$20", "$21");		\
 	_sc_ret = _sc_0, _sc_err = _sc_19;			\
 }
 
 #define inline_syscall1(name,arg1)				\
 {								\
-	register long _sc_0;					\
-	register long _sc_16 __asm__("$16");			\
+	register long _tmp_16 = syscall_promote (arg1);		\
+	register long _sc_0 = name;				\
+	register long _sc_16 __asm__("$16") = _tmp_16;		\
 	register long _sc_19 __asm__("$19");			\
-	register long _tmp_16 = (long) (arg1);			\
-								\
-	_sc_0 = name;						\
-	_sc_16 = _tmp_16;					\
 	__asm__ __volatile__					\
 	  ("callsys # %0 %1 <= %2 %3"				\
-	   : "=v"(_sc_0), "=r"(_sc_19), "=r"(_sc_16)		\
-	   : "0"(_sc_0), "2"(_sc_16)				\
-	   : inline_syscall_clobbers,				\
+	   : "+v"(_sc_0), "=r"(_sc_19), "+r"(_sc_16)		\
+	   : : inline_syscall_clobbers,				\
 	     "$17", "$18", "$20", "$21");			\
 	_sc_ret = _sc_0, _sc_err = _sc_19;			\
 }
 
 #define inline_syscall2(name,arg1,arg2)				\
 {								\
-	register long _sc_0;					\
-	register long _sc_16 __asm__("$16");			\
-	register long _sc_17 __asm__("$17");			\
+	register long _tmp_16 = syscall_promote (arg1);		\
+	register long _tmp_17 = syscall_promote (arg2);		\
+	register long _sc_0 = name;				\
+	register long _sc_16 __asm__("$16") = _tmp_16;		\
+	register long _sc_17 __asm__("$17") = _tmp_17;		\
 	register long _sc_19 __asm__("$19");			\
-	register long _tmp_16 = (long) (arg1);			\
-	register long _tmp_17 = (long) (arg2);			\
-								\
-	_sc_0 = name;						\
-	_sc_16 = _tmp_16;					\
-	_sc_17 = _tmp_17;					\
 	__asm__ __volatile__					\
 	  ("callsys # %0 %1 <= %2 %3 %4"			\
-	   : "=v"(_sc_0), "=r"(_sc_19),				\
-	     "=r"(_sc_16), "=r"(_sc_17)				\
-	   : "0"(_sc_0), "2"(_sc_16), "3"(_sc_17)		\
-	   : inline_syscall_clobbers,				\
+	   : "+v"(_sc_0), "=r"(_sc_19),				\
+	     "+r"(_sc_16), "+r"(_sc_17)				\
+	   : : inline_syscall_clobbers,				\
 	     "$18", "$20", "$21");				\
 	_sc_ret = _sc_0, _sc_err = _sc_19;			\
 }
 
 #define inline_syscall3(name,arg1,arg2,arg3)			\
 {								\
-	register long _sc_0;					\
-	register long _sc_16 __asm__("$16");			\
-	register long _sc_17 __asm__("$17");			\
-	register long _sc_18 __asm__("$18");			\
+	register long _tmp_16 = syscall_promote (arg1);		\
+	register long _tmp_17 = syscall_promote (arg2);		\
+	register long _tmp_18 = syscall_promote (arg3);		\
+	register long _sc_0 = name;				\
+	register long _sc_16 __asm__("$16") = _tmp_16;		\
+	register long _sc_17 __asm__("$17") = _tmp_17;		\
+	register long _sc_18 __asm__("$18") = _tmp_18;		\
 	register long _sc_19 __asm__("$19");			\
-	register long _tmp_16 = (long) (arg1);			\
-	register long _tmp_17 = (long) (arg2);			\
-	register long _tmp_18 = (long) (arg3);			\
-								\
-	_sc_0 = name;						\
-	_sc_16 = _tmp_16;					\
-	_sc_17 = _tmp_17;					\
-	_sc_18 = _tmp_18;					\
 	__asm__ __volatile__					\
 	  ("callsys # %0 %1 <= %2 %3 %4 %5"			\
-	   : "=v"(_sc_0), "=r"(_sc_19), "=r"(_sc_16),		\
-	     "=r"(_sc_17), "=r"(_sc_18)				\
-	   : "0"(_sc_0), "2"(_sc_16), "3"(_sc_17),		\
-	     "4"(_sc_18)					\
-	   : inline_syscall_clobbers, "$20", "$21");		\
+	   : "+v"(_sc_0), "=r"(_sc_19), "+r"(_sc_16),		\
+	     "+r"(_sc_17), "+r"(_sc_18)				\
+	   : : inline_syscall_clobbers, "$20", "$21");		\
 	_sc_ret = _sc_0, _sc_err = _sc_19;			\
 }
 
 #define inline_syscall4(name,arg1,arg2,arg3,arg4)		\
 {								\
-	register long _sc_0;					\
-	register long _sc_16 __asm__("$16");			\
-	register long _sc_17 __asm__("$17");			\
-	register long _sc_18 __asm__("$18");			\
-	register long _sc_19 __asm__("$19");			\
-	register long _tmp_16 = (long) (arg1);			\
-	register long _tmp_17 = (long) (arg2);			\
-	register long _tmp_18 = (long) (arg3);			\
-	register long _tmp_19 = (long) (arg4);			\
-								\
-	_sc_0 = name;						\
-	_sc_16 = _tmp_16;					\
-	_sc_17 = _tmp_17;					\
-	_sc_18 = _tmp_18;					\
-	_sc_19 = _tmp_19;					\
+	register long _tmp_16 = syscall_promote (arg1);		\
+	register long _tmp_17 = syscall_promote (arg2);		\
+	register long _tmp_18 = syscall_promote (arg3);		\
+	register long _tmp_19 = syscall_promote (arg4);		\
+	register long _sc_0 = name;				\
+	register long _sc_16 __asm__("$16") = _tmp_16;		\
+	register long _sc_17 __asm__("$17") = _tmp_17;		\
+	register long _sc_18 __asm__("$18") = _tmp_18;		\
+	register long _sc_19 __asm__("$19") = _tmp_19;		\
 	__asm__ __volatile__					\
 	  ("callsys # %0 %1 <= %2 %3 %4 %5 %6"			\
-	   : "=v"(_sc_0), "=r"(_sc_19), "=r"(_sc_16),		\
-	     "=r"(_sc_17), "=r"(_sc_18)				\
-	   : "0"(_sc_0), "2"(_sc_16), "3"(_sc_17),		\
-	     "4"(_sc_18), "1"(_sc_19)				\
-	   : inline_syscall_clobbers, "$20", "$21");		\
+	   : "+v"(_sc_0), "+r"(_sc_19), "+r"(_sc_16),		\
+	     "+r"(_sc_17), "+r"(_sc_18)				\
+	   : : inline_syscall_clobbers, "$20", "$21");		\
 	_sc_ret = _sc_0, _sc_err = _sc_19;			\
 }
 
 #define inline_syscall5(name,arg1,arg2,arg3,arg4,arg5)		\
 {								\
-	register long _sc_0;					\
-	register long _sc_16 __asm__("$16");			\
-	register long _sc_17 __asm__("$17");			\
-	register long _sc_18 __asm__("$18");			\
-	register long _sc_19 __asm__("$19");			\
-	register long _sc_20 __asm__("$20");			\
-	register long _tmp_16 = (long) (arg1);			\
-	register long _tmp_17 = (long) (arg2);			\
-	register long _tmp_18 = (long) (arg3);			\
-	register long _tmp_19 = (long) (arg4);			\
-	register long _tmp_20 = (long) (arg5);			\
-								\
-	_sc_0 = name;						\
-	_sc_16 = _tmp_16;					\
-	_sc_17 = _tmp_17;					\
-	_sc_18 = _tmp_18;					\
-	_sc_19 = _tmp_19;					\
-	_sc_20 = _tmp_20;					\
+	register long _tmp_16 = syscall_promote (arg1);		\
+	register long _tmp_17 = syscall_promote (arg2);		\
+	register long _tmp_18 = syscall_promote (arg3);		\
+	register long _tmp_19 = syscall_promote (arg4);		\
+	register long _tmp_20 = syscall_promote (arg5);		\
+	register long _sc_0 = name;				\
+	register long _sc_16 __asm__("$16") = _tmp_16;		\
+	register long _sc_17 __asm__("$17") = _tmp_17;		\
+	register long _sc_18 __asm__("$18") = _tmp_18;		\
+	register long _sc_19 __asm__("$19") = _tmp_19;		\
+	register long _sc_20 __asm__("$20") = _tmp_20;		\
 	__asm__ __volatile__					\
 	  ("callsys # %0 %1 <= %2 %3 %4 %5 %6 %7"		\
-	   : "=v"(_sc_0), "=r"(_sc_19), "=r"(_sc_16),		\
-	     "=r"(_sc_17), "=r"(_sc_18), "=r"(_sc_20)		\
-	   : "0"(_sc_0), "2"(_sc_16), "3"(_sc_17),		\
-	     "4"(_sc_18), "1"(_sc_19), "5"(_sc_20)		\
-	   : inline_syscall_clobbers, "$21");			\
+	   : "+v"(_sc_0), "+r"(_sc_19), "+r"(_sc_16),		\
+	     "+r"(_sc_17), "+r"(_sc_18), "+r"(_sc_20)		\
+	   : : inline_syscall_clobbers, "$21");			\
 	_sc_ret = _sc_0, _sc_err = _sc_19;			\
 }
 
 #define inline_syscall6(name,arg1,arg2,arg3,arg4,arg5,arg6)	\
 {								\
-	register long _sc_0;					\
-	register long _sc_16 __asm__("$16");			\
-	register long _sc_17 __asm__("$17");			\
-	register long _sc_18 __asm__("$18");			\
-	register long _sc_19 __asm__("$19");			\
-	register long _sc_20 __asm__("$20");			\
-	register long _sc_21 __asm__("$21");			\
-	register long _tmp_16 = (long) (arg1);			\
-	register long _tmp_17 = (long) (arg2);			\
-	register long _tmp_18 = (long) (arg3);			\
-	register long _tmp_19 = (long) (arg4);			\
-	register long _tmp_20 = (long) (arg5);			\
-	register long _tmp_21 = (long) (arg6);			\
-								\
-	_sc_0 = name;						\
-	_sc_16 = _tmp_16;					\
-	_sc_17 = _tmp_17;					\
-	_sc_18 = _tmp_18;					\
-	_sc_19 = _tmp_19;					\
-	_sc_20 = _tmp_20;					\
-	_sc_21 = _tmp_21;					\
+	register long _tmp_16 = syscall_promote (arg1);		\
+	register long _tmp_17 = syscall_promote (arg2);		\
+	register long _tmp_18 = syscall_promote (arg3);		\
+	register long _tmp_19 = syscall_promote (arg4);		\
+	register long _tmp_20 = syscall_promote (arg5);		\
+	register long _tmp_21 = syscall_promote (arg6);		\
+	register long _sc_0 = name;				\
+	register long _sc_16 __asm__("$16") = _tmp_16;		\
+	register long _sc_17 __asm__("$17") = _tmp_17;		\
+	register long _sc_18 __asm__("$18") = _tmp_18;		\
+	register long _sc_19 __asm__("$19") = _tmp_19;		\
+	register long _sc_20 __asm__("$20") = _tmp_20;		\
+	register long _sc_21 __asm__("$21") = _tmp_21;		\
 	__asm__ __volatile__					\
 	  ("callsys # %0 %1 <= %2 %3 %4 %5 %6 %7 %8"		\
-	   : "=v"(_sc_0), "=r"(_sc_19), "=r"(_sc_16),		\
-	     "=r"(_sc_17), "=r"(_sc_18), "=r"(_sc_20),		\
-	     "=r"(_sc_21)					\
-	   : "0"(_sc_0), "2"(_sc_16), "3"(_sc_17), "4"(_sc_18),	\
-	     "1"(_sc_19), "5"(_sc_20), "6"(_sc_21)		\
-	   : inline_syscall_clobbers);				\
+	   : "+v"(_sc_0), "+r"(_sc_19), "+r"(_sc_16),		\
+	     "+r"(_sc_17), "+r"(_sc_18), "+r"(_sc_20),		\
+	     "+r"(_sc_21)					\
+	   : : inline_syscall_clobbers);			\
 	_sc_ret = _sc_0, _sc_err = _sc_19;			\
 }
 
