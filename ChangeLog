@@ -6,6 +6,9 @@
 
 2012-02-16  David S. Miller  <davem@davemloft.net>
 
+	[BZ #11494]
+	* sysdeps/unix/sysv/linux/sparc/bits/fcntl.h (O_FSYNC): Define.
+
 	* sysdeps/sparc/Makefile: Add -fPIC when building crt{i,n}.S
 	* sysdeps/sparc/crti.S: New file.
 	* sysdeps/sparc/crtn.S: New file.
