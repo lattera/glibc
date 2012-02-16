@@ -1,3 +1,11 @@
+2012-02-16  David S. Miller  <davem@davemloft.net>
+
+	* sysdeps/sparc/Makefile: Add -fPIC when building crt{i,n}.S
+	* sysdeps/sparc/crti.S: New file.
+	* sysdeps/sparc/crtn.S: New file.
+	* sysdeps/sparc/sparc32/Makefile: Remove initfini handling.
+	* sysdeps/sparc/sparc64/Makefile: Likewise.
+
 2012-02-15  Mike Frysinger  <vapier@gentoo.org>
 
 	* sysdeps/unix/sysv/linux/getcwd.c: Include sys/param.h.

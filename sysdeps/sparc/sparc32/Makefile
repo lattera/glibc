@@ -19,10 +19,6 @@ ifeq ($(subdir),gnulib)
 sysdep_routines = dotmul umul $(divrem) alloca
 endif	# gnulib
 
-ifeq ($(subdir),csu)
-CFLAGS-initfini.s += -mcpu=v7
-endif
-
 # We distribute these files, even though they are generated,
 # so as to avoid the need for a functioning m4 to build the library.
 divrem := sdiv udiv rem urem

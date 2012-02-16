@@ -1,3 +1,7 @@
+2012-02-16  David S. Miller  <davem@davemloft.net>
+
+	* sysdeps/sparc/Makefile: Add -fPIC when building pt-crti.S and crtn.S
+
 2012-02-15  Marek Polacek  <polacek@redhat.com>
 
 	* sysdeps/unix/sysv/linux/x86_64/Makefile: Remove file.
