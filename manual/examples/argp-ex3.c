@@ -52,6 +52,7 @@
 
    An options vector should be terminated by an option with all fields zero. */
 
+#include <stdlib.h>
 #include <argp.h>
 
 const char *argp_program_version =

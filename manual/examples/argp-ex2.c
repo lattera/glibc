@@ -19,6 +19,7 @@
    for a given program, even if it uses different argument
    parsers for various tasks).  */
 
+#include <stdlib.h>
 #include <argp.h>
 
 const char *argp_program_version =

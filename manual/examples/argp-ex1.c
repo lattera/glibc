@@ -5,6 +5,7 @@
    messages and exit when there are any arguments, and print
    a (rather pointless) messages for --help.  */
 
+#include <stdlib.h>
 #include <argp.h>
 
 int main (int argc, char **argv)

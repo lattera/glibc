@@ -1,3 +1,10 @@
+2012-02-17  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #10140]
+	* manual/examples/argp-ex1.c: Include <stdlib.h>.
+	* manual/examples/argp-ex2.c: Likewise.
+	* manual/examples/argp-ex3.c: Likewise.
+
 2012-02-16  Richard Henderson  <rth@redhat.com>
 
 	* sysdeps/s390/s390-32/crti.S, sysdeps/s390/s390-32/crtn.S: New files.
