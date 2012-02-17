@@ -215,8 +215,8 @@ difference in POSIX systems (including the GNU system).  If both
 If the @var{opentype} string contains the sequence
 @code{,ccs=@var{STRING}} then @var{STRING} is taken as the name of a
 coded character set and @code{fopen} will mark the stream as
-wide-oriented which appropriate conversion functions in place to convert
-from and to the character set @var{STRING} is place.  Any other stream
+wide-oriented with appropriate conversion functions in place to convert
+from and to the character set @var{STRING}.  Any other stream
 is opened initially unoriented and the orientation is decided with the
 first file operation.  If the first operation is a wide character
 operation, the stream is not only marked as wide-oriented, also the
