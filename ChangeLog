@@ -54,6 +54,7 @@
 
 2012-02-15  Mike Frysinger  <vapier@gentoo.org>
 
+	[BZ #3335]
 	* sysdeps/unix/sysv/linux/getcwd.c: Include sys/param.h.
 
 2012-02-15  Roland McGrath  <roland@hack.frob.com>
