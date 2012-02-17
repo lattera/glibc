@@ -279,6 +279,16 @@ If you specify an invalid locale name, @code{setlocale} returns a null
 pointer and leaves the current locale unchanged.
 @end deftypefun
 
+The path used for finding locale data can be set using the
+@code{LOCPATH} environment variable. The default path for finding
+locale data is system specific.  It is computed from the value given
+as the prefix while configuring the C library.  This value normally is
+@file{/usr} or @file{/}.  For the former the complete path is:
+
+@smallexample
+/usr/lib/locale
+@end smallexample
+
 Here is an example showing how you might use @code{setlocale} to
 temporarily switch to a new locale.
 

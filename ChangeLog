@@ -1,3 +1,8 @@
+2012-02-17  Dwayne Grant McConnell  <decimal@us.ibm.com>
+
+	[BZ #174]
+	* manual/locale.texi (setlocale): Document LOCPATH.
+
 2012-02-17  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #10210]
