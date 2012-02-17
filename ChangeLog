@@ -1,3 +1,9 @@
+2012-02-17  Fabrice Bauzac  <fabrice.bauzac@wanadoo.fr>
+
+	[BZ #6907]
+	* manual/string.texi (strchr): Change when strchrnul is
+	recommended.
+
 2012-02-17  Dwayne Grant McConnell  <decimal@us.ibm.com>
 
 	[BZ #174]

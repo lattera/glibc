@@ -1647,9 +1647,12 @@ strchr ("hello, world", '?')
 
 The terminating null character is considered to be part of the string,
 so you can use this function get a pointer to the end of a string by
-specifying a null character as the value of the @var{c} argument.  It
-would be better (but less portable) to use @code{strchrnul} in this
-case, though.
+specifying a null character as the value of the @var{c} argument.
+
+When @code{strchr} returns a null pointer, it does not let you know
+the position of the terminating null character it has found.  If you
+need that information, it is better (but less portable) to use
+@code{strchrnul} than to search for it a second time.
 @end deftypefun
 
 @comment wchar.h
