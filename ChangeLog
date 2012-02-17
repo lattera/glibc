@@ -1,3 +1,8 @@
+2012-02-17  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #10210]
+	* manual/process.texi (execle): Move @dots{} before last argument.
+
 2012-02-17  Paul Bolle  <pebolle@tiscali.nl>
 
 	[BZ #12047]

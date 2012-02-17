@@ -321,7 +321,7 @@ variable; see @ref{Environment Access}.
 
 @comment unistd.h
 @comment POSIX.1
-@deftypefun int execle (const char *@var{filename}, const char *@var{arg0}, char *const @var{env}@t{[]}, @dots{})
+@deftypefun int execle (const char *@var{filename}, const char *@var{arg0}, @dots{}, char *const @var{env}@t{[]})
 This is similar to @code{execl}, but permits you to specify the
 environment for the new program explicitly.  The environment argument is
 passed following the null pointer that marks the last @var{argv}
