@@ -1,5 +1,10 @@
 2012-02-17  Aurelien Jarno  <aurelien@aurel32.net>
 
+	* sysdeps/mips/dl-procinfo.h(_DL_PLATFORMS_COUNT): define to 4,
+	matching the array in dl-procinfo.c.
+
+2012-02-17  Aurelien Jarno  <aurelien@aurel32.net>
+
 	* sysdeps/mips/fpu/libm-test-ulps: Adjust ULPs for jn tests.
 	* sysdeps/mips/mips64/n32/fpu/libm-test-ulps: Likewise.
 	* sysdeps/mips/mips64/n64/fpu/libm-test-ulps: Likewise.

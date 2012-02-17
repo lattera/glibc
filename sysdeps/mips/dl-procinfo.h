@@ -27,7 +27,7 @@
 /* Mask to filter out platforms.  */
 #define _DL_HWCAP_PLATFORM    (-1ULL)
 
-#define _DL_PLATFORMS_COUNT   1
+#define _DL_PLATFORMS_COUNT   4
 
 static inline const char *
 __attribute__ ((unused))
