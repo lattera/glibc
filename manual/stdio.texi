@@ -4750,7 +4750,8 @@ This function is declared in the @file{stdio_ext.h} header.
 
 @comment stdio_ext.h
 @comment GNU
-@deftypefun size_t __fpending (FILE *@var{stream}) The @code{__fpending}
+@deftypefun size_t __fpending (FILE *@var{stream})
+The @code{__fpending}
 function returns the number of bytes currently in the output buffer.
 For wide-oriented stream the measuring unit is wide characters.  This
 function should not be used on buffers in read mode or opened read-only.

@@ -2168,7 +2168,7 @@ a BSD extension.
 
 @comment stdlib.h
 @comment GNU, BSD
-@deftypefun {void *} alloca (size_t @var{size});
+@deftypefun {void *} alloca (size_t @var{size})
 The return value of @code{alloca} is the address of a block of @var{size}
 bytes of memory, allocated in the stack frame of the calling function.
 @end deftypefun

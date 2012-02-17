@@ -1679,7 +1679,7 @@ of the terminal which is open with file descriptor @var{filedes}.
 
 @comment sgtty.h
 @comment BSD
-@deftypefun int stty (int @var{filedes}, struct sgttyb * attributes)
+@deftypefun int stty (int @var{filedes}, struct sgttyb *@var{attributes})
 
 This function sets the attributes of a terminal.
 

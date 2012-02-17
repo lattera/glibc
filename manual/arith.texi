@@ -1264,26 +1264,26 @@ The @code{scalb} function is the BSD name for @code{ldexp}.
 
 @comment math.h
 @comment BSD
-@deftypefun {long long int} scalbn (double @var{x}, int n)
+@deftypefun {long long int} scalbn (double @var{x}, int @var{n})
 @comment math.h
 @comment BSD
-@deftypefunx {long long int} scalbnf (float @var{x}, int n)
+@deftypefunx {long long int} scalbnf (float @var{x}, int @var{n})
 @comment math.h
 @comment BSD
-@deftypefunx {long long int} scalbnl (long double @var{x}, int n)
+@deftypefunx {long long int} scalbnl (long double @var{x}, int @var{n})
 @code{scalbn} is identical to @code{scalb}, except that the exponent
 @var{n} is an @code{int} instead of a floating-point number.
 @end deftypefun
 
 @comment math.h
 @comment BSD
-@deftypefun {long long int} scalbln (double @var{x}, long int n)
+@deftypefun {long long int} scalbln (double @var{x}, long int @var{n})
 @comment math.h
 @comment BSD
-@deftypefunx {long long int} scalblnf (float @var{x}, long int n)
+@deftypefunx {long long int} scalblnf (float @var{x}, long int @var{n})
 @comment math.h
 @comment BSD
-@deftypefunx {long long int} scalblnl (long double @var{x}, long int n)
+@deftypefunx {long long int} scalblnl (long double @var{x}, long int @var{n})
 @code{scalbln} is identical to @code{scalb}, except that the exponent
 @var{n} is a @code{long int} instead of a floating-point number.
 @end deftypefun

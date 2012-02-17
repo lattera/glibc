@@ -1148,13 +1148,13 @@ This function was introduced in @w{ISO C99}.
 
 @comment math.h
 @comment SVID
-@deftypefun double jn (int n, double @var{x})
+@deftypefun double jn (int @var{n}, double @var{x})
 @comment math.h
 @comment SVID
-@deftypefunx float jnf (int n, float @var{x})
+@deftypefunx float jnf (int @var{n}, float @var{x})
 @comment math.h
 @comment SVID
-@deftypefunx {long double} jnl (int n, long double @var{x})
+@deftypefunx {long double} jnl (int @var{n}, long double @var{x})
 @code{jn} returns the Bessel function of the first kind of order
 @var{n} of @var{x}.  It may signal underflow if @var{x} is too large.
 @end deftypefun
@@ -1191,13 +1191,13 @@ is negative, @code{y1} signals a domain error; if it is zero,
 
 @comment math.h
 @comment SVID
-@deftypefun double yn (int n, double @var{x})
+@deftypefun double yn (int @var{n}, double @var{x})
 @comment math.h
 @comment SVID
-@deftypefunx float ynf (int n, float @var{x})
+@deftypefunx float ynf (int @var{n}, float @var{x})
 @comment math.h
 @comment SVID
-@deftypefunx {long double} ynl (int n, long double @var{x})
+@deftypefunx {long double} ynl (int @var{n}, long double @var{x})
 @code{yn} returns the Bessel function of the second kind of order @var{n} of
 @var{x}.  It may signal underflow if @var{x} is too large.  If @var{x}
 is negative, @code{yn} signals a domain error; if it is zero,

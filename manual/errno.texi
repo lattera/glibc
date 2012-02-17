@@ -1585,7 +1585,7 @@ are not used.
 
 @comment err.h
 @comment BSD
-@deftypefun void vwarn (const char *@var{format}, va_list)
+@deftypefun void vwarn (const char *@var{format}, va_list @var{ap})
 The @code{vwarn} function is just like @code{warn} except that the
 parameters for the handling of the format string @var{format} are passed
 in as an value of type @code{va_list}.
@@ -1606,7 +1606,7 @@ string is printed.
 
 @comment err.h
 @comment BSD
-@deftypefun void vwarnx (const char *@var{format}, va_list)
+@deftypefun void vwarnx (const char *@var{format}, va_list @var{ap})
 The @code{vwarnx} function is just like @code{warnx} except that the
 parameters for the handling of the format string @var{format} are passed
 in as an value of type @code{va_list}.
@@ -1626,7 +1626,7 @@ are not used and that the program is exited even if @var{status} is zero.
 
 @comment err.h
 @comment BSD
-@deftypefun void verr (int @var{status}, const char *@var{format}, va_list)
+@deftypefun void verr (int @var{status}, const char *@var{format}, va_list @var{ap})
 The @code{verr} function is just like @code{err} except that the
 parameters for the handling of the format string @var{format} are passed
 in as an value of type @code{va_list}.
@@ -1648,7 +1648,7 @@ string is printed.
 
 @comment err.h
 @comment BSD
-@deftypefun void verrx (int @var{status}, const char *@var{format}, va_list)
+@deftypefun void verrx (int @var{status}, const char *@var{format}, va_list @var{ap})
 The @code{verrx} function is just like @code{errx} except that the
 parameters for the handling of the format string @var{format} are passed
 in as an value of type @code{va_list}.

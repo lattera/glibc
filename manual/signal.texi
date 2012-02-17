@@ -3300,7 +3300,7 @@ structure, it means to reset the action for the signal back to
 
 @comment signal.h
 @comment BSD
-@deftypefun int sigvec (int @var{signum}, const struct sigvec *@var{action},struct sigvec *@var{old-action})
+@deftypefun int sigvec (int @var{signum}, const struct sigvec *@var{action}, struct sigvec *@var{old-action})
 This function is the equivalent of @code{sigaction} (@pxref{Advanced Signal
 Handling}); it installs the action @var{action} for the signal @var{signum},
 returning information about the previous action in effect for that signal

@@ -500,14 +500,14 @@ interface name, including its terminating zero byte.
 
 @comment net/if.h
 @comment IPv6 basic API
-@deftypefun {unsigned int} if_nametoindex (const char *ifname)
+@deftypefun {unsigned int} if_nametoindex (const char *@var{ifname})
 This function yields the interface index corresponding to a particular
 name.  If no interface exists with the name given, it returns 0.
 @end deftypefun
 
 @comment net/if.h
 @comment IPv6 basic API
-@deftypefun {char *} if_indextoname (unsigned int ifindex, char *ifname)
+@deftypefun {char *} if_indextoname (unsigned int @var{ifindex}, char *@var{ifname})
 This function maps an interface index to its corresponding name.  The
 returned name is placed in the buffer pointed to by @code{ifname}, which
 must be at least @code{IFNAMSIZ} bytes in length.  If the index was
@@ -545,7 +545,7 @@ use.
 
 @comment net/if.h
 @comment IPv6 basic API
-@deftypefun void if_freenameindex (struct if_nameindex *ptr)
+@deftypefun void if_freenameindex (struct if_nameindex *@var{ptr})
 This function frees the structure returned by an earlier call to
 @code{if_nameindex}.
 @end deftypefun
@@ -2643,7 +2643,7 @@ more information about the @code{connect} function.
 
 @comment sys/socket.h
 @comment BSD
-@deftypefun int sendto (int @var{socket}, void *@var{buffer}. size_t @var{size}, int @var{flags}, struct sockaddr *@var{addr}, socklen_t @var{length})
+@deftypefun int sendto (int @var{socket}, void *@var{buffer}, size_t @var{size}, int @var{flags}, struct sockaddr *@var{addr}, socklen_t @var{length})
 The @code{sendto} function transmits the data in the @var{buffer}
 through the socket @var{socket} to the destination address specified
 by the @var{addr} and @var{length} arguments.  The @var{size} argument

@@ -275,7 +275,7 @@ The symbols referred to in this section are declared in the file
 @c syslog() is implemented as a call to vsyslog().
 @comment syslog.h
 @comment BSD
-@deftypefun void syslog (int @var{facility_priority}, char *@var{format}, ...)
+@deftypefun void syslog (int @var{facility_priority}, char *@var{format}, @dots{})
 
 @code{syslog} submits a message to the Syslog facility.  It does this by
 writing to the Unix domain socket @code{/dev/log}.
@@ -403,7 +403,7 @@ syslog (LOG_MAKEPRI(LOG_LOCAL1, LOG_ERROR),
 
 @comment syslog.h
 @comment BSD
-@deftypefun void vsyslog (int @var{facility_priority}, char *@var{format}, va_list arglist)
+@deftypefun void vsyslog (int @var{facility_priority}, char *@var{format}, va_list @var{arglist})
 
 This is functionally identical to @code{syslog}, with the BSD style variable
 length argument.

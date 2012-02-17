@@ -1,3 +1,48 @@
+2012-02-17  Nicolas Boulenguez  <nicolas.boulenguez@free.fr>
+
+	[BZ #5805]
+	* manual/arith.texi (scalbn): Use @var{} on parameter names.
+	(scalbnf): Likewise.
+	(scalbnl): Likewise.
+	(scalbln): Likewise.
+	(scalblnf): Likewise.
+	(scalblnl): Likewise.
+	* manual/errno.texi (vwarn): Name last parameter as @var{ap}.
+	(vwarnx): Likewise.
+	(verr): Likewise.
+	(verrx): Likewise.
+	* manual/filesys.texi (telldir): Use braces around return type.
+	* manual/llio.texi (mmap): Add space after comma.
+	(mmap64): Likewise.
+	* manual/math.texi (jn): Use @var{} on parameter names.
+	(jnf): Likewise.
+	(jnl): Likewise.
+	(yn): Likewise.
+	(ynf): Likewise.
+	(ynl): Likewise.
+	* manual/memory.texi (alloca): Remove semicolon on @deftypefun
+	line.
+	* manual/resource.texi (ulimit): Use @dots{} instead of literal
+	"...".
+	(sched_get_priority_min): Remove semicolon on @deftypefun line.
+	(sched_get_priority_max): Likewise.
+	* manual/signal.texi (sigvec): Add space after comma.
+	* manual/socket.texi (if_nametoindex): Use @var{} on parameter
+	names.
+	(if_indextoname): Likewise.
+	(if_freenameindex): Likewise.
+	(sendto): Use ',' instead of '.' in prototype.
+	* manual/startup.texi (syscall): Use @dots{} instead of literal
+	"...".
+	* manual/stdio.texi (__fpending): Separate initial words of
+	paragraph from @deftypefun line.
+	* manual/syslog.texi (syslog): Use @dots{} instead of literal
+	"...".
+	(vsyslog): Use @var{} on parameter names.
+	* manual/terminal.texi (stty): Use @var{} on parameter names.
+	* manual/users.texi (getutmp): Use @var{} on parameter names.
+	(getutmpx): Likewise.
+
 2012-02-17  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #6884]

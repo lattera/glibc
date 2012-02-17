@@ -436,7 +436,7 @@ above do.  The functions above are better choices.
 
 @comment ulimit.h
 @comment BSD
-@deftypefun int ulimit (int @var{cmd}, ...)
+@deftypefun int ulimit (int @var{cmd}, @dots{})
 
 @code{ulimit} gets the current limit or sets the current and maximum
 limit for a particular resource for the calling process according to the
@@ -925,7 +925,7 @@ There is no process with pid @var{pid} and it is not zero.
 
 @comment sched.h
 @comment POSIX
-@deftypefun int sched_get_priority_min (int *@var{policy});
+@deftypefun int sched_get_priority_min (int *@var{policy})
 
 This function returns the lowest absolute priority value that is
 allowable for a process with scheduling policy @var{policy}.
@@ -945,7 +945,7 @@ to this function are:
 
 @comment sched.h
 @comment POSIX
-@deftypefun int sched_get_priority_max (int *@var{policy});
+@deftypefun int sched_get_priority_max (int *@var{policy})
 
 This function returns the highest absolute priority value that is
 allowable for a process that with scheduling policy @var{policy}.

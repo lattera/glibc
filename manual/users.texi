@@ -1390,7 +1390,7 @@ identical.
 @comment utmpx.h
 @comment utmp.h
 @comment GNU
-@deftypefun int getutmp (const struct utmpx *utmpx, struct utmp *utmp)
+@deftypefun int getutmp (const struct utmpx *@var{utmpx}, struct utmp *@var{utmp})
 @code{getutmp} copies the information, insofar as the structures are
 compatible, from @var{utmpx} to @var{utmp}.
 @end deftypefun
@@ -1398,7 +1398,7 @@ compatible, from @var{utmpx} to @var{utmp}.
 @comment utmpx.h
 @comment utmp.h
 @comment GNU
-@deftypefun int getutmpx (const struct utmp *utmp, struct utmpx *utmpx)
+@deftypefun int getutmpx (const struct utmp *@var{utmp}, struct utmpx *@var{utmpx})
 @code{getutmpx} copies the information, insofar as the structures are
 compatible, from @var{utmp} to @var{utmpx}.
 @end deftypefun

@@ -582,7 +582,7 @@ added or removed since you last called @code{opendir} or
 
 @comment dirent.h
 @comment BSD
-@deftypefun long int telldir (DIR *@var{dirstream})
+@deftypefun {long int} telldir (DIR *@var{dirstream})
 The @code{telldir} function returns the file position of the directory
 stream @var{dirstream}.  You can use this value with @code{seekdir} to
 restore the directory stream to that position.

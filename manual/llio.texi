@@ -1161,7 +1161,7 @@ These functions are declared in @file{sys/mman.h}.
 
 @comment sys/mman.h
 @comment POSIX
-@deftypefun {void *} mmap (void *@var{address}, size_t @var{length},int @var{protect}, int @var{flags}, int @var{filedes}, off_t @var{offset})
+@deftypefun {void *} mmap (void *@var{address}, size_t @var{length}, int @var{protect}, int @var{flags}, int @var{filedes}, off_t @var{offset})
 
 The @code{mmap} function creates a new mapping, connected to bytes
 (@var{offset}) to (@var{offset} + @var{length} - 1) in the file open on
@@ -1280,7 +1280,7 @@ The file is on a filesystem that doesn't support mapping.
 
 @comment sys/mman.h
 @comment LFS
-@deftypefun {void *} mmap64 (void *@var{address}, size_t @var{length},int @var{protect}, int @var{flags}, int @var{filedes}, off64_t @var{offset})
+@deftypefun {void *} mmap64 (void *@var{address}, size_t @var{length}, int @var{protect}, int @var{flags}, int @var{filedes}, off64_t @var{offset})
 The @code{mmap64} function is equivalent to the @code{mmap} function but
 the @var{offset} parameter is of type @code{off64_t}.  On 32-bit systems
 this allows the file associated with the @var{filedes} descriptor to be
