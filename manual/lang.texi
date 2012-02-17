@@ -1202,8 +1202,8 @@ macro's value is the same as the type it describes.
 @comment ISO
 @item FLT_EPSILON
 
-This is the minimum positive floating point number of type @code{float}
-such that @code{1.0 + FLT_EPSILON != 1.0} is true.  It's supposed to
+This is the difference between 1 and the smallest floating point
+number of type @code{float} that is greater than 1.  It's supposed to
 be no greater than @code{1E-5}.
 
 @comment float.h
