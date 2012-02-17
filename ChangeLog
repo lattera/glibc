@@ -1,3 +1,9 @@
+2012-02-17  Thomas Schwinge  <thomas@schwinge.name>
+
+	[BZ #4822]
+	* sysdeps/mach/hurd/malloc-machine.h: #include <sys/mman.h>.
+	(madvise): Cast every argument to void on its own.
+
 2012-02-17  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #9902]

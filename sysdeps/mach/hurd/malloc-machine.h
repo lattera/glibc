@@ -63,8 +63,11 @@ __libc_tsd_define (static, void *, MALLOC)	/* declaration/common definition */
 #define tsd_getspecific(key, vptr)	((vptr) = __libc_tsd_get (void *, MALLOC))
 
 /* madvise is a stub on Hurd, so don't bother calling it.  */
+
+#include <sys/mman.h>
+
 #undef	madvise
-#define madvise(addr, len, advice)	((void) ((addr), (len), (advice)))
+#define madvise(addr, len, advice)	((void) (addr), (void) (len), (void) (advice))
 
 #include <sysdeps/generic/malloc-machine.h>
 
