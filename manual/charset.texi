@@ -1541,7 +1541,7 @@ character set is the character set of the locale for the @code{LC_CTYPE}
 category, one has to change the @code{LC_CTYPE} locale using
 @code{setlocale}.
 
-Changing the @code{LC_TYPE} locale introduces major problems for the rest
+Changing the @code{LC_CTYPE} locale introduces major problems for the rest
 of the programs since several more functions (e.g., the character
 classification functions, @pxref{Classification of Characters}) use the
 @code{LC_CTYPE} category.

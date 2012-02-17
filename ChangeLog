@@ -1,3 +1,9 @@
+2012-02-17  Paul Bolle  <pebolle@tiscali.nl>
+
+	[BZ #12047]
+	* manual/charset.texi (Generic Charset Conversion): Fix typo
+	(LC_TYPE -> LC_CTYPE).
+
 2012-02-17  Nicolas Boulenguez  <nicolas.boulenguez@free.fr>
 
 	[BZ #5805]
