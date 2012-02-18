@@ -1,5 +1,10 @@
 2012-02-18  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #5993]
+	* manual/install.texi: Do not document upgrading from libc5.
+
+2012-02-18  Joseph Myers  <joseph@codesourcery.com>
+
 	[BZ #4596]
 	* manual/conf.texi (_POSIX_VERSION): Do not mention __POSIX__.
 

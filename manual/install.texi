@@ -85,8 +85,7 @@ but if you specify this option, it will look in @var{DIRECTORY} instead.
 
 This option is primarily of use on a system where the headers in
 @file{/usr/include} come from an older version of glibc.  Conflicts can
-occasionally happen in this case.  Note that Linux libc5 qualifies as an
-older version of glibc.  You can also use this option if you want to
+occasionally happen in this case.  You can also use this option if you want to
 compile glibc with a newer set of kernel headers than the ones found in
 @file{/usr/include}.
 
@@ -238,10 +237,11 @@ primary C library, we recommend that you shut the system down to
 single-user mode first, and reboot afterward.  This minimizes the risk
 of breaking things when the library changes out from underneath.
 
-If you're upgrading from Linux libc5 or some other C library, you need to
-replace the @file{/usr/include} with a fresh directory before installing
-it.  The new @file{/usr/include} should contain the Linux headers, but
-nothing else.
+@samp{make install} will do the entire job of upgrading from a
+previous installation of glibc 2.x.  There may sometimes be headers
+left behind from the previous installation, but those are generally
+harmless.  If you want to avoid leaving headers behind you can do
+things in the following order.
 
 You must first build the library (@samp{make}), optionally check it
 (@samp{make check}), switch the include directories and then install
@@ -249,19 +249,11 @@ You must first build the library (@samp{make}), optionally check it
 the directory before install will result in an unusable mixture of header
 files from both libraries, but configuring, building, and checking the
 library requires the ability to compile and run programs against the old
+library.  The new @file{/usr/include}, after switching the include
+directories and before installing the library should contain the Linux
+headers, but nothing else.  If you do this, you will need to restore
+any headers from non-glibc libraries youself after installing the
 library.
-
-If you are upgrading from a previous installation of glibc 2.0 or 2.1,
-@samp{make install} will do the entire job.  You do not need to remove
-the old includes -- if you want to do so anyway you must then follow the
-order given above.
-
-You may also need to reconfigure GCC to work with the new library.  The
-easiest way to do that is to figure out the compiler switches to make it
-work again (@samp{-Wl,--dynamic-linker=/lib/ld-linux.so.2} should work on
-GNU/Linux systems) and use them to recompile gcc.  You can also edit the specs
-file (@file{/usr/lib/gcc-lib/@var{TARGET}/@var{VERSION}/specs}), but that
-is a bit of a black art.
 
 You can install glibc somewhere other than where you configured it to go
 by setting the @code{install_root} variable on the command line for
@@ -400,7 +392,6 @@ patches, although we try to avoid this.
 
 @node Linux
 @appendixsec Specific advice for GNU/Linux systems
-@cindex upgrading from libc5
 @cindex kernel header files
 
 If you are installing GNU libc on a GNU/Linux system, you need to have the
@@ -419,9 +410,7 @@ An alternate tactic is to unpack the 2.2 kernel and run @samp{make
 config} as above; then, rename or delete @file{/usr/include}, create a
 new @file{/usr/include}, and make symbolic links of
 @file{/usr/include/linux} and @file{/usr/include/asm} into the kernel
-sources.  You can then configure glibc with no special options.  This
-tactic is recommended if you are upgrading from libc5, since you need to
-get rid of the old header files anyway.
+sources.  You can then configure glibc with no special options.
 
 After installing GNU libc, you may need to remove or rename
 @file{/usr/include/linux} and @file{/usr/include/asm}, and replace them
@@ -444,12 +433,6 @@ GNU/Linux expects some components of the libc installation to be in
 if you configure glibc with @samp{--prefix=/usr}.  If you set some other
 prefix or allow it to default to @file{/usr/local}, then all the
 components are installed there.
-
-If you are upgrading from libc5, you need to recompile every shared
-library on your system against the new library for the sake of new code,
-but keep the old libraries around for old binaries to use.  This is
-complicated and difficult.  Consult the Glibc2 HOWTO at
-@url{http://www.imaxx.net/~thrytis/glibc} for details.
 
 You cannot use @code{nscd} with 2.0 kernels, due to bugs in the
 kernel-side thread support.  @code{nscd} happens to hit these bugs
