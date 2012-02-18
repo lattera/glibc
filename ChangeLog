@@ -1,3 +1,7 @@
+2012-02-17  Ulrich Drepper  <drepper@gmail.com>
+
+	* aout/Makefile: Remove.
+
 2012-02-18  Rafe Kettler  <rafe.kettler@gmail.com>
 
 	[BZ #13058]
