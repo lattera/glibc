@@ -1,3 +1,8 @@
+2012-02-18  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #4596]
+	* manual/conf.texi (_POSIX_VERSION): Do not mention __POSIX__.
+
 2012-02-18  David S. Miller  <davem@davemloft.net>
 
 	* sysdeps/unix/sparc/sysdep.h (SPARC_PIC_THUNK): New macro.

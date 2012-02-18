@@ -248,11 +248,6 @@ by including @file{unistd.h} and then checking whether
 probably fail because there is no @file{unistd.h}.  We do not know of
 @emph{any} way you can reliably test at compilation time whether your
 target system supports POSIX or whether @file{unistd.h} exists.
-
-The GNU C compiler predefines the symbol @code{__POSIX__} if the target
-system is a POSIX system.  Provided you do not use any other compilers
-on POSIX systems, testing @code{defined (__POSIX__)} will reliably
-detect such systems.
 @end deftypevr
 
 @comment unistd.h
