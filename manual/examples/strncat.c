@@ -5,7 +5,8 @@
 
 static char buffer[SIZE];
 
-main ()
+int
+main (void)
 {
   strncpy (buffer, "hello", SIZE);
   puts (buffer);

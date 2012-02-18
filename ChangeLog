@@ -1,3 +1,17 @@
+2012-02-18  Rafe Kettler  <rafe.kettler@gmail.com>
+
+	[BZ #13058]
+	* manual/examples/argp-ex1.c (main): Format definition in GNU
+	style.
+	* manual/examples/argp-ex2.c (main): Likewise.
+	* manual/examples/argp-ex3.c (main): Likewise.
+	* manual/examples/argp-ex4.c (main): Likewise.
+	* manual/examples/longopt.c (main): Use new-style prototype
+	definition.
+	* manual/examples/strncat.c (main): Specify return type and use
+	(void) for arguments.
+	* manual/examples/subopt.c (main): Use char **argv argument.
+
 2012-02-17  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #5077]

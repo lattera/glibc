@@ -6,9 +6,7 @@
 static int verbose_flag;
 
 int
-main (argc, argv)
-     int argc;
-     char **argv;
+main (int argc, char **argv)
 {
   int c;
 

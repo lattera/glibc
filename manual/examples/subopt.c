@@ -27,7 +27,7 @@ const char *mount_opts[] =
 };
 
 int
-main (int argc, char *argv[])
+main (int argc, char **argv)
 {
   char *subopts, *value;
   int opt;

@@ -129,7 +129,8 @@ parse_opt (int key, char *arg, struct argp_state *state)
 /* Our argp parser.  */
 static struct argp argp = { options, parse_opt, args_doc, doc };
 
-int main (int argc, char **argv)
+int
+main (int argc, char **argv)
 {
   struct arguments arguments;
 
