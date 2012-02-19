@@ -1,3 +1,9 @@
+2012-02-19  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #13704]
+	* manual/nss.texi (Services in the NSS configuration): Correct
+	list of services in example configuration file.
+
 2012-02-19  Nick Bowler  <nbowler@draconx.ca>
 
 	[BZ #11322]

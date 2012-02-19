@@ -138,8 +138,9 @@ the reaction on lookup result like @code{[NOTFOUND=return]}.
 @node Services in the NSS configuration, Actions in the NSS configuration, NSS Configuration File, NSS Configuration File
 @subsection Services in the NSS configuration File
 
-The above example file mentions four different services: @code{files},
-@code{db}, @code{nis}, and @code{nisplus}.  This does not mean these
+The above example file mentions five different services: @code{files},
+@code{db}, @code{dns}, @code{nis}, and @code{nisplus}.  This does not
+mean these
 services are available on all sites and it does also not mean these are
 all the services which will ever be available.
 
