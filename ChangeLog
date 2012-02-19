@@ -1,3 +1,9 @@
+2012-02-19  Nick Bowler  <nbowler@draconx.ca>
+
+	[BZ #11322]
+	* manual/arith.texi: Remove statements about negative zero
+	behaving identically to zero.
+
 2012-02-18  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #5993]

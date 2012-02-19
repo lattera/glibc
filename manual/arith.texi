@@ -657,9 +657,7 @@ such as by defining @code{_GNU_SOURCE}, and then you must include
 @w{IEEE 754} also allows for another unusual value: negative zero.  This
 value is produced when you divide a positive number by negative
 infinity, or when a negative result is smaller than the limits of
-representation.  Negative zero behaves identically to zero in all
-calculations, unless you explicitly test the sign bit with
-@code{signbit} or @code{copysign}.
+representation.
 
 @node Status bit operations
 @subsection Examining the FPU status word
@@ -926,9 +924,7 @@ If a result is too small to be represented as a denormalized number, it
 is rounded to zero.  However, the sign of the result is preserved; if
 the calculation was negative, the result is @dfn{negative zero}.
 Negative zero can also result from some operations on infinity, such as
-@math{4/-@infinity{}}.  Negative zero behaves identically to zero except
-when the @code{copysign} or @code{signbit} functions are used to check
-the sign bit directly.
+@math{4/-@infinity{}}.
 
 At any time one of the above four rounding modes is selected.  You can
 find out which one with this function:
