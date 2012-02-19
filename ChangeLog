@@ -1,5 +1,11 @@
 2012-02-19  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #9739]
+	* manual/string.texi (strnlen): Use correct parameter name in
+	equivalent expression.
+
+2012-02-19  Joseph Myers  <joseph@codesourcery.com>
+
 	[BZ #11174]
 	* manual/users.texi (seteuid): Consistently use neweuid for
 	argument name.

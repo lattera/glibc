@@ -303,7 +303,8 @@ This function was introduced in @w{Amendment 1} to @w{ISO C90}.
 The @code{strnlen} function returns the length of the string @var{s} in
 bytes if this length is smaller than @var{maxlen} bytes.  Otherwise it
 returns @var{maxlen}.  Therefore this function is equivalent to
-@code{(strlen (@var{s}) < n ? strlen (@var{s}) : @var{maxlen})} but it
+@code{(strlen (@var{s}) < @var{maxlen} ? strlen (@var{s}) : @var{maxlen})}
+but it
 is more efficient and works even if the string @var{s} is not
 null-terminated.
 
