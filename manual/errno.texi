@@ -1271,6 +1271,12 @@ They are not yet documented.}
 @comment errno ???/???
 @end deftypevr
 
+@comment errno.h
+@comment Linux: Memory page has hardware error
+@deftypevr Macro int EHWPOISON
+@comment errno ???/???
+@end deftypevr
+
 @node Error Messages,  , Error Codes, Error Reporting
 @section Error Messages
 

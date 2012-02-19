@@ -1464,6 +1464,14 @@ TRANS error; @pxref{Cancel AIO Operations}. */
 # define ERR_MAX ERFKILL
 # endif
 #endif
+#ifdef EHWPOISON
+/* */
+    [ERR_REMAP (EHWPOISON)] = N_("Memory page has hardware error"),
+# if EHWPOISON > ERR_MAX
+# undef ERR_MAX
+# define ERR_MAX EHWPOISON
+# endif
+#endif
   };
 
 #define NERR \

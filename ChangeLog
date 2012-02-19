@@ -1,3 +1,13 @@
+2012-02-19  Andreas Schwab  <schwab@linux-m68k.org>
+
+	* manual/errno.texi (Error Codes): Add EHWPOISON entry.
+	* sysdeps/unix/sysv/linux/bits/errno.h (EHWPOISON): Define if not
+	defined.
+	* sysdeps/unix/sysv/linux/sparc/bits/errno.h (EHWPOISON):
+	Likewise.
+	* sysdeps/unix/sysv/linux/sparc/Versions: Add new errlist compat
+	entry for 2.16.
+
 2012-02-19  Aurelien Jarno  <aurelien@aurel32.net>
 
 	* math/w_acos.c: Use non-signaling floating-point comparisons.
