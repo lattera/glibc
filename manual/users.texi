@@ -291,7 +291,7 @@ include the header files @file{sys/types.h} and @file{unistd.h}.
 @comment unistd.h
 @comment POSIX.1
 @deftypefun int seteuid (uid_t @var{neweuid})
-This function sets the effective user ID of a process to @var{newuid},
+This function sets the effective user ID of a process to @var{neweuid},
 provided that the process is allowed to change its effective user ID.  A
 privileged process (effective user ID zero) can change its effective
 user ID to any legal value.  An unprivileged process with a file user ID
@@ -305,7 +305,7 @@ function:
 
 @table @code
 @item EINVAL
-The value of the @var{newuid} argument is invalid.
+The value of the @var{neweuid} argument is invalid.
 
 @item EPERM
 The process may not change to the specified ID.
