@@ -70,9 +70,7 @@
 _init:
 	save		%sp, -STACKFRAME_SIZE, %sp
 #if PREINIT_FUNCTION_WEAK
-	sethi		%hi(_GLOBAL_OFFSET_TABLE_-4), %l7
-	call		__sparc_get_pc_thunk.l7
-	 add		%l7, %lo(_GLOBAL_OFFSET_TABLE_+4), %l7
+	SETUP_PIC_REG(l7)
 	sethi		%hi(PREINIT_FUNCTION), %g1
 	or		%g1, %lo(PREINIT_FUNCTION), %g1
 	GOT_LOAD	[%l7 + %g1], %g1
@@ -93,12 +91,3 @@ _init:
 	.type		_fini, @function
 _fini:
 	save		%sp, -STACKFRAME_SIZE, %sp
-
-	.section	.text.__sparc_get_pc_thunk.l7,"axG",@progbits,__sparc_get_pc_thunk.l7,comdat
-	.p2align	2
-	.weak		__sparc_get_pc_thunk.l7
-	.hidden		__sparc_get_pc_thunk.l7
-	.type		__sparc_get_pc_thunk.l7, #function
-__sparc_get_pc_thunk.l7:
-	jmp		%o7 + 8
-	 add		%o7, %l7, %l7

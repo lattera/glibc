@@ -1,3 +1,16 @@
+2012-02-18  David S. Miller  <davem@davemloft.net>
+
+	* sysdeps/unix/sparc/sysdep.h (SPARC_PIC_THUNK): New macro.
+	(SETUP_PIC_REG): Use SPARC_PIC_THUNK and don't save and restore
+	%o7 across the call.
+	(SETUP_PIC_REG_LEAF): Do %o7 save/restore in this new macro
+	instead.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/sysdep.h: Use
+	SETUP_PIC_REG_LEAF.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/sysdep.h: Likewise.
+	* sysdeps/sparc/crti.S: Use SETUP_PIC_REG.
+	* sysdeps/sparc/crtn.S: Likewise.
+
 2012-02-17  Ulrich Drepper  <drepper@gmail.com>
 
 	* aout/Makefile: Remove.
