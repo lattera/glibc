@@ -1,4 +1,4 @@
-/* Copyright (C) 2011 Free Software Foundation, Inc.
+/* Copyright (C) 2011, 2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gmail.com>, 2011.
 
@@ -25,7 +25,7 @@
 long double
 __log2l (long double x)
 {
-  if (__builtin_expect (x <= 0.0L, 0) && _LIB_VERSION != _IEEE_)
+  if (__builtin_expect (islessequal (x, 0.0L), 0) && _LIB_VERSION != _IEEE_)
     {
       if (x == 0.0L)
 	{

@@ -1,4 +1,4 @@
-/* Copyright (C) 2011 Free Software Foundation, Inc.
+/* Copyright (C) 2011, 2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gmail.com>, 2011.
 
@@ -25,7 +25,8 @@
 double
 j0 (double x)
 {
-  if (__builtin_expect (fabs (x) > X_TLOSS, 0) && _LIB_VERSION != _IEEE_)
+  if (__builtin_expect (isgreater (fabs (x), X_TLOSS), 0)
+      && _LIB_VERSION != _IEEE_)
     /* j0(|x|>X_TLOSS) */
     return __kernel_standard (x, x, 34);
 
@@ -40,7 +41,8 @@ strong_alias (j0, j0l)
 double
 y0 (double x)
 {
-  if (__builtin_expect (x <= 0.0 || x > X_TLOSS, 0) && _LIB_VERSION != _IEEE_)
+  if (__builtin_expect (islessequal (x, 0.0) || isgreater (x, X_TLOSS), 0)
+      && _LIB_VERSION != _IEEE_)
     {
       if (x < 0.0)
 	{

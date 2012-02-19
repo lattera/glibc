@@ -1,4 +1,4 @@
-/* Copyright (C) 2011 Free Software Foundation, Inc.
+/* Copyright (C) 2011, 2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gmail.com>, 2011.
 
@@ -25,7 +25,7 @@
 float
 jnf (int n, float x)
 {
-  if (__builtin_expect (fabsf (x) > (float) X_TLOSS, 0)
+  if (__builtin_expect (isgreater (fabsf (x), (float) X_TLOSS), 0)
       && _LIB_VERSION != _IEEE_)
     /* jn(n,|x|>X_TLOSS) */
     return __kernel_standard_f (n, x, 138);
@@ -38,7 +38,8 @@ jnf (int n, float x)
 float
 ynf (int n, float x)
 {
-  if (__builtin_expect (x <= 0.0f || x > (float) X_TLOSS, 0)
+  if (__builtin_expect (islessequal (x, 0.0f)
+			|| isgreater (x, (float) X_TLOSS), 0)
       && _LIB_VERSION != _IEEE_)
     {
       if (x < 0.0f)

@@ -1,4 +1,4 @@
-/* Copyright (C) 2011 Free Software Foundation, Inc.
+/* Copyright (C) 2011, 2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gmail.com>, 2011.
 
@@ -28,12 +28,12 @@ u_threshold= -1.0397208405e+02;  /* 0xc2cff1b5 */
 float
 __expf (float x)
 {
-  if (__builtin_expect (x > o_threshold, 0))
+  if (__builtin_expect (isgreater (x, o_threshold), 0))
     {
       if (_LIB_VERSION != _IEEE_)
 	return __kernel_standard_f (x, x, 106);
     }
-  else if (__builtin_expect (x < u_threshold, 0))
+  else if (__builtin_expect (isless (x, u_threshold), 0))
     {
       if (_LIB_VERSION != _IEEE_)
 	return __kernel_standard_f (x, x, 107);

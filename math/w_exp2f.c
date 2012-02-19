@@ -12,7 +12,8 @@ static const float u_threshold = (float) (FLT_MIN_EXP - FLT_MANT_DIG - 1);
 float
 __exp2f (float x)
 {
-  if (__builtin_expect (x <= u_threshold || x > o_threshold, 0)
+  if (__builtin_expect (islessequal (x, u_threshold)
+			|| isgreater (x, o_threshold), 0)
       && _LIB_VERSION != _IEEE_ && __finitef (x))
     /* exp2 overflow: 144, exp2 underflow: 145 */
     return __kernel_standard_f (x, x, 144 + (x <= o_threshold));

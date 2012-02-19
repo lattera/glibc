@@ -1,3 +1,46 @@
+2012-02-19  Aurelien Jarno  <aurelien@aurel32.net>
+
+	* math/w_acos.c: Use non-signaling floating-point comparisons.
+	* math/w_acosf.c: Likewise.
+	* math/w_acosh.c: Likewise.
+	* math/w_acoshf.c: Likewise.
+	* math/w_acoshl.c: Likewise.
+	* math/w_acosl.c: Likewise.
+	* math/w_asin.c: Likewise.
+	* math/w_asinf.c: Likewise.
+	* math/w_asinl.c: Likewise.
+	* math/w_atanh.c: Likewise.
+	* math/w_atanhf.c: Likewise.
+	* math/w_atanhl.c: Likewise.
+	* math/w_exp2.c: Likewise.
+	* math/w_exp2f.c: Likewise.
+	* math/w_exp2l.c: Likewise.
+	* math/w_j0.c: Likewise.
+	* math/w_j0f.c: Likewise.
+	* math/w_j0l.c: Likewise.
+	* math/w_j1.c: Likewise.
+	* math/w_j1f.c: Likewise.
+	* math/w_j1l.c: Likewise.
+	* math/w_jn.c: Likewise.
+	* math/w_jnf.c: Likewise.
+	* math/w_log.c: Likewise.
+	* math/w_log10.c: Likewise.
+	* math/w_log10f.c: Likewise.
+	* math/w_log10l.c: Likewise.
+	* math/w_log2.c: Likewise.
+	* math/w_log2f.c: Likewise.
+	* math/w_log2l.c: Likewise.
+	* math/w_logf.c: Likewise.
+	* math/w_logl.c: Likewise.
+	* math/w_sqrt.c: Likewise.
+	* math/w_sqrtf.c: Likewise.
+	* math/w_sqrtl.c: Likewise.
+	* sysdeps/ieee754/dbl-64/e_atanh.c: Likewise.
+	* sysdeps/ieee754/dbl-64/w_exp.c: Likewise.
+	* sysdeps/ieee754/flt-32/e_atanhf.c: Likewise.
+	* sysdeps/ieee754/flt-32/w_expf.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/w_expl.c: Likewise.
+
 2012-02-19  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #9739]

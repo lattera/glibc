@@ -1,4 +1,4 @@
-/* Copyright (C) 2011 Free Software Foundation, Inc.
+/* Copyright (C) 2011, 2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gmail.com>, 2011.
 
@@ -24,7 +24,8 @@
 long double
 __atanhl (long double x)
 {
-  if (__builtin_expect (fabsl (x) >= 1.0L, 0) && _LIB_VERSION != _IEEE_)
+  if (__builtin_expect (isgreaterequal (fabsl (x), 1.0L), 0)
+      && _LIB_VERSION != _IEEE_)
     return __kernel_standard (x, x,
 			      fabsl (x) > 1.0L
 			      ? 230		/* atanh(|x|>1) */

@@ -1,4 +1,4 @@
-/* Copyright (C) 2011 Free Software Foundation, Inc.
+/* Copyright (C) 2011, 2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gmail.com>, 2011.
 
@@ -46,7 +46,7 @@ __ieee754_atanh (double x)
 {
   double xa = fabs (x);
   double t;
-  if (xa < 0.5)
+  if (isless (xa, 0.5))
     {
       if (__builtin_expect (xa < 0x1.0p-28, 0))
 	{
@@ -57,11 +57,11 @@ __ieee754_atanh (double x)
       t = xa + xa;
       t = 0.5 * __log1p (t + t * xa / (1.0 - xa));
     }
-  else if (__builtin_expect (xa < 1.0, 1))
+  else if (__builtin_expect (isless (xa, 1.0), 1))
     t = 0.5 * __log1p ((xa + xa) / (1.0 - xa));
   else
     {
-      if (xa > 1.0)
+      if (isgreater (xa, 1.0))
 	return (x - x) / (x - x);
 
       return x / 0.0;

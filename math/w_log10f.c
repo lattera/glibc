@@ -1,4 +1,4 @@
-/* Copyright (C) 2011 Free Software Foundation, Inc.
+/* Copyright (C) 2011, 2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gmail.com>, 2011.
 
@@ -25,7 +25,7 @@
 float
 __log10f (float x)
 {
-  if (__builtin_expect (x <= 0.0f, 0) && _LIB_VERSION != _IEEE_)
+  if (__builtin_expect (islessequal (x, 0.0f), 0) && _LIB_VERSION != _IEEE_)
     {
       if (x == 0.0f)
 	{

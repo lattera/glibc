@@ -1,4 +1,4 @@
-/* Copyright (C) 2011 Free Software Foundation, Inc.
+/* Copyright (C) 2011, 2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gmail.com>, 2011.
 
@@ -24,7 +24,7 @@
 float
 __sqrtf (float x)
 {
-  if (__builtin_expect (x < 0.0f, 0) && _LIB_VERSION != _IEEE_)
+  if (__builtin_expect (isless (x, 0.0f), 0) && _LIB_VERSION != _IEEE_)
     return __kernel_standard_f (x, x, 126); /* sqrt(negative) */
 
   return __ieee754_sqrtf (x);
