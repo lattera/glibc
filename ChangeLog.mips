@@ -1,3 +1,8 @@
+2012-02-20  Andreas Schwab  <schwab@linux-m68k.org>
+
+	* sysdeps/unix/sysv/linux/mips/bits/errno.h (EHWPOISON): Define if
+	not defined.
+
 2012-02-17  Aurelien Jarno  <aurelien@aurel32.net>
 
 	* sysdeps/mips/dl-procinfo.h(_DL_PLATFORMS_COUNT): define to 4,

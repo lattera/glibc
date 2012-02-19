@@ -1,5 +1,5 @@
 /* Error constants.  MIPS/Linux specific version.
-   Copyright (C) 1996, 1997, 1998, 1999, 2000, 2006
+   Copyright (C) 1996, 1997, 1998, 1999, 2000, 2006, 2012
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -40,6 +40,10 @@
 
 # ifndef ERFKILL
 #  define ERFKILL		167
+# endif
+
+# ifndef EHWPOISON
+#  define EHWPOISON		168
 # endif
 
 # ifndef __ASSEMBLER__
