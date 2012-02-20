@@ -7,7 +7,7 @@
 
 2012-02-20  Aurelien Jarno  <aurelien@aurel32.net>
 
-        * sysdeps/unix/sysv/linux/alpha/sysconf.c: Fix cache sysconf switch.
+	* sysdeps/unix/sysv/linux/alpha/sysconf.c: Fix cache sysconf switch.
 
 2012-02-16  Richard Henderson  <rth@twiddle.net>
 
@@ -21,8 +21,8 @@
 
 2012-02-15  Richard Henderson  <rth@twiddle.net>
 
-        * sysdeps/unix/sysv/linux/alpha/bits/signalfd.h: New file.
-        * sysdeps/unix/sysv/linux/alpha/sys/signalfd.h: Remove.
+	* sysdeps/unix/sysv/linux/alpha/bits/signalfd.h: New file.
+	* sysdeps/unix/sysv/linux/alpha/sys/signalfd.h: Remove.
 
 	* sysdeps/unix/alpha/sysdep.h (syscall_promote): New.
 	(inline_syscall0, inline_syscall1, inline_syscall2,
@@ -58,8 +58,8 @@
 
 2012-02-13  Richard Henderson  <rth@twiddle.net>
 
-        * sysdeps/unix/sysv/linux/alpha/bits/eventfd.h: New file.
-        * sysdeps/unix/sysv/linux/alpha/sys/eventfd.h: Remove.
+	* sysdeps/unix/sysv/linux/alpha/bits/eventfd.h: New file.
+	* sysdeps/unix/sysv/linux/alpha/sys/eventfd.h: Remove.
 
 2012-02-09  Richard Henderson  <rth@twiddle.net>
 
@@ -169,7 +169,7 @@
 
 2010-05-03  Aurelien Jarno  <aurelien@aurel32.net>
 
- 	[BZ #6827]
+	[BZ #6827]
 	* sysdeps/alpha/dl-machine.h: Add dl-procinfo support.
 	* sysdeps/alpha/dl-procinfo.c: New.
 	* sysdeps/alpha/dl-procinfo.h: New.
