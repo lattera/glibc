@@ -1,4 +1,4 @@
-/* Copyright (C) 2004 Free Software Foundation, Inc.
+/* Copyright (C) 2004, 2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -135,7 +135,7 @@ __sysconf (int name)
   if (shape <= 0)
     return shape;
 
-  switch (name % 3)
+  switch ((name - _SC_LEVEL1_ICACHE_SIZE) % 3)
     {
     case 0: /* total size */
       return shape & -0x100;
