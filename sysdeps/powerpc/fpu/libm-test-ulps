@@ -296,6 +296,9 @@ ildouble: 1
 ldouble: 1
 
 # cos
+Test "cos (16.0) == -0.9576594803233846418996372326511034717803":
+ildouble: 2
+ldouble: 2
 Test "cos (M_PI_6l * 2.0) == 0.5":
 double: 1
 float: 1
@@ -311,9 +314,6 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
-Test "cos (16.0) == -0.9576594803233846418996372326511034717803"
-ildouble: 2
-ldouble: 2
 
 # cpow
 Test "Real part of: cpow (0.75 + 1.25 i, 0.0 + 1.0 i) == 0.331825439177608832276067945276730566 + 0.131338600281188544930936345230903032 i":
@@ -735,7 +735,7 @@ ildouble: 1
 ldouble: 1
 
 # sin
-Test "sin (16.0) == -0.2879033166650652947844562482186175296207"
+Test "sin (16.0) == -0.2879033166650652947844562482186175296207":
 ildouble: 2
 ldouble: 2
 
@@ -919,9 +919,6 @@ idouble: 1
 ifloat: 2
 ildouble: 2
 ldouble: 2
-Test "yn (3, 0.125) == -2612.69757350066712600220955744091741":
-double: 1
-idouble: 1
 Test "yn (10, 0.125) == -127057845771019398.252538486899753195":
 double: 1
 idouble: 1
