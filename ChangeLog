@@ -1,3 +1,8 @@
+2012-02-20  Aurelien Jarno  <aurelien@aurel32.net>
+
+	* sysdeps/sparc/sparc32/fpu/libm-test-ulps: Adjust ULPs for jn tests.
+	* sysdeps/sparc/sparc64/fpu/libm-test-ulps: Likewise.
+
 2012-02-19  Andreas Schwab  <schwab@linux-m68k.org>
 
 	* manual/errno.texi (Error Codes): Add EHWPOISON entry.
