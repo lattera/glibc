@@ -1,3 +1,8 @@
+2012-02-20  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/powerpc/nofpu/libm-test-ulps: Resort with
+	gen-libm-test.pl -n in C locale.
+
 2010-09-03  Luis Machado  <luisgpm@br.ibm.com>
 
 	* sysdeps/powerpc/dl-procinfo.c: New file.

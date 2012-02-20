@@ -11,6 +11,9 @@ ildouble: 2
 ldouble: 2
 
 # atan2
+Test "atan2 (-0.00756827042671106339, -.001792735857538728036) == -1.80338464113663849327153994379639112":
+ildouble: 1
+ldouble: 1
 Test "atan2 (-0.75, -1.0) == -2.49809154479650885165983415456218025":
 float: 3
 ifloat: 3
@@ -20,9 +23,6 @@ ifloat: 3
 Test "atan2 (1.390625, 0.9296875) == 0.981498387184244311516296577615519772":
 float: 1
 ifloat: 1
-ildouble: 1
-ldouble: 1
-Test "atan2 (-0.00756827042671106339, -.001792735857538728036) == -1.80338464113663849327153994379639112":
 ildouble: 1
 ldouble: 1
 
@@ -49,14 +49,14 @@ idouble: 1
 ifloat: 1
 
 # casin
+Test "Real part of: casin (-2 - 3 i) == -0.57065278432109940071028387968566963 - 1.9833870299165354323470769028940395 i":
+ildouble: 1
+ldouble: 1
 Test "Real part of: casin (0.75 + 1.25 i) == 0.453276177638793913448921196101971749 + 1.13239363160530819522266333696834467 i":
 double: 1
 float: 1
 idouble: 1
 ifloat: 1
-ildouble: 1
-ldouble: 1
-Test "Real part of: casin (-2 - 3 i) == -0.57065278432109940071028387968566963 - 1.9833870299165354323470769028940395 i":
 ildouble: 1
 ldouble: 1
 
@@ -156,8 +156,6 @@ ldouble: 1
 Test "Imaginary part of: ccosh (0.75 + 1.25 i) == 0.408242591877968807788852146397499084 + 0.780365930845853240391326216300863152 i":
 float: 1
 ifloat: 1
-ildouble: 1
-ldouble: 1
 ildouble: 2
 ldouble: 2
 
@@ -165,14 +163,14 @@ ldouble: 2
 Test "Imaginary part of: cexp (-2.0 - 3.0 i) == -0.13398091492954261346140525546115575 - 0.019098516261135196432576240858800925 i":
 float: 1
 ifloat: 1
-Test "Imaginary part of: cexp (0.75 + 1.25 i) == 0.667537446429131586942201977015932112 + 2.00900045494094876258347228145863909 i":
-ildouble: 1
-ldouble: 1
 Test "Real part of: cexp (0.75 + 1.25 i) == 0.667537446429131586942201977015932112 + 2.00900045494094876258347228145863909 i":
 float: 1
 ifloat: 1
 ildouble: 2
 ldouble: 2
+Test "Imaginary part of: cexp (0.75 + 1.25 i) == 0.667537446429131586942201977015932112 + 2.00900045494094876258347228145863909 i":
+ildouble: 1
+ldouble: 1
 
 # clog
 Test "Imaginary part of: clog (-2 - 3 i) == 1.2824746787307683680267437207826593 - 2.1587989303424641704769327722648368 i":
@@ -191,15 +189,15 @@ ldouble: 1
 
 # clog10
 Test "Imaginary part of: clog10 (-0 + inf i) == inf + pi/2*log10(e) i":
-float: 1
-ifloat: 1
 double: 1
+float: 1
 idouble: 1
+ifloat: 1
 Test "Imaginary part of: clog10 (-0 - inf i) == inf - pi/2*log10(e) i":
-float: 1
-ifloat: 1
 double: 1
+float: 1
 idouble: 1
+ifloat: 1
 Test "Imaginary part of: clog10 (-2 - 3 i) == 0.556971676153418384603252578971164214 - 0.937554462986374708541507952140189646 i":
 double: 1
 float: 5
@@ -208,75 +206,75 @@ ifloat: 5
 ildouble: 1
 ldouble: 1
 Test "Imaginary part of: clog10 (-3 + inf i) == inf + pi/2*log10(e) i":
-float: 1
-ifloat: 1
 double: 1
+float: 1
 idouble: 1
+ifloat: 1
 ildouble: 1
 ldouble: 1
 Test "Imaginary part of: clog10 (-3 - inf i) == inf - pi/2*log10(e) i":
-float: 1
-ifloat: 1
 double: 1
+float: 1
 idouble: 1
+ifloat: 1
 Test "Imaginary part of: clog10 (-inf + 0 i) == inf + pi*log10(e) i":
-float: 1
-ifloat: 1
 double: 1
-idouble: 1
-Test "Imaginary part of: clog10 (-inf + 1 i) == inf + pi*log10(e) i":
 float: 1
+idouble: 1
 ifloat: 1
+Test "Imaginary part of: clog10 (-inf + 1 i) == inf + pi*log10(e) i":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+Test "Imaginary part of: clog10 (-inf + inf i) == inf + 3/4 pi*log10(e) i":
 double: 1
 idouble: 1
 Test "Imaginary part of: clog10 (-inf - 0 i) == inf - pi*log10(e) i":
-float: 1
-ifloat: 1
 double: 1
+float: 1
 idouble: 1
+ifloat: 1
 Test "Imaginary part of: clog10 (-inf - 1 i) == inf - pi*log10(e) i":
-float: 1
-ifloat: 1
 double: 1
+float: 1
 idouble: 1
+ifloat: 1
 Test "Imaginary part of: clog10 (0 + inf i) == inf + pi/2*log10(e) i":
-float: 1
-ifloat: 1
 double: 1
+float: 1
 idouble: 1
+ifloat: 1
 Test "Imaginary part of: clog10 (0 - inf i) == inf - pi/2*log10(e) i":
-float: 1
-ifloat: 1
 double: 1
+float: 1
 idouble: 1
+ifloat: 1
 Test "Real part of: clog10 (0.75 + 1.25 i) == 0.163679467193165171449476605077428975 + 0.447486970040493067069984724340855636 i":
 float: 1
 ifloat: 1
 ildouble: 3
 ldouble: 3
 Test "Imaginary part of: clog10 (3 + inf i) == inf + pi/2*log10(e) i":
-float: 1
-ifloat: 1
 double: 1
+float: 1
 idouble: 1
+ifloat: 1
 Test "Imaginary part of: clog10 (3 - inf i) == inf - pi/2*log10(e) i":
-float: 1
-ifloat: 1
 double: 1
+float: 1
 idouble: 1
+ifloat: 1
 Test "Imaginary part of: clog10 (inf + inf i) == inf + pi/4*log10(e) i":
-float: 1
-ifloat: 1
 double: 1
+float: 1
 idouble: 1
+ifloat: 1
 Test "Imaginary part of: clog10 (inf - inf i) == inf - pi/4*log10(e) i":
+double: 1
 float: 1
+idouble: 1
 ifloat: 1
-double: 1
-idouble: 1
-Test "Imaginary part of: clog10 (-inf + inf i) == inf + 3/4 pi*log10(e) i":
-double: 1
-idouble: 1
 
 # cos
 Test "cos (M_PI_6l * 2.0) == 0.5":
@@ -349,18 +347,18 @@ ldouble: 2
 Test "Imaginary part of: csinh (-2 - 3 i) == 3.59056458998577995201256544779481679 - 0.530921086248519805267040090660676560 i":
 double: 1
 idouble: 1
-ldouble: 1
 ildouble: 1
+ldouble: 1
 Test "Real part of: csinh (0.75 + 1.25 i) == 0.259294854551162779153349830618433028 + 1.22863452409509552219214606515777594 i":
 float: 1
 ifloat: 1
-ldouble: 1
 ildouble: 1
+ldouble: 1
 Test "Imaginary part of: csinh (0.75 + 1.25 i) == 0.259294854551162779153349830618433028 + 1.22863452409509552219214606515777594 i":
 float: 1
 ifloat: 1
-ldouble: 1
 ildouble: 1
+ldouble: 1
 
 # csqrt
 Test "Real part of: csqrt (-2 + 3 i) == 0.89597747612983812471573375529004348 + 1.6741492280355400404480393008490519 i":
@@ -447,10 +445,10 @@ Test "expm1 (0.75) == 1.11700001661267466854536981983709561":
 double: 1
 idouble: 1
 Test "expm1 (1) == M_El - 1.0":
-float: 1
-ifloat: 1
 double: 1
+float: 1
 idouble: 1
+ifloat: 1
 
 # hypot
 Test "hypot (-0.7, -12.4) == 12.419742348374220601176836866763271":
@@ -471,15 +469,15 @@ ifloat: 1
 Test "hypot (0.7, 12.4) == 12.419742348374220601176836866763271":
 float: 1
 ifloat: 1
+Test "hypot (0.75, 1.25) == 1.45773797371132511771853821938639577":
+ildouble: 1
+ldouble: 1
 Test "hypot (12.4, -0.7) == 12.419742348374220601176836866763271":
 float: 1
 ifloat: 1
 Test "hypot (12.4, 0.7) == 12.419742348374220601176836866763271":
 float: 1
 ifloat: 1
-Test "hypot (0.75, 1.25) == 1.45773797371132511771853821938639577":
-ildouble: 1
-ldouble: 1
 
 # j0
 Test "j0 (-4.0) == -3.9714980986384737228659076845169804197562E-1":
@@ -651,15 +649,15 @@ Test "log10 (e) == log10(e)":
 float: 1
 ifloat: 1
 
-# log2
-Test "log2 (e) == M_LOG2El":
-ldouble: 1
-ildouble: 1
-
 # log1p
 Test "log1p (-0.25) == -0.287682072451780927439219005993827432":
 float: 1
 ifloat: 1
+
+# log2
+Test "log2 (e) == M_LOG2El":
+ildouble: 1
+ldouble: 1
 
 # sincos
 Test "sincos (M_PI_6l*2.0, &sin_res, &cos_res) puts 0.5 in cos_res":
@@ -690,8 +688,8 @@ ldouble: 1
 Test "tan (pi/4) == 1":
 double: 1
 idouble: 1
-ldouble: 1
 ildouble: 1
+ldouble: 1
 
 # tanh
 Test "tanh (-0.75) == -0.635148952387287319214434357312496495":
