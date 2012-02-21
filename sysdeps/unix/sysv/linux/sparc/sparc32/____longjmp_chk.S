@@ -20,7 +20,6 @@
 
 #define ENV(base,reg) [%base + (reg * 4)]
 #define ST_FLUSH_WINDOWS 3
-#define RW_FP [%fp + 0x48]
 
 .section .rodata.str1.1,"aMS",@progbits,1
 	.type	longjmp_msg,@object
@@ -97,6 +96,7 @@ ENTRY (____longjmp_chk)
 	 mov 1, %g2		/* Delay slot only hit if zero: VAL = 1.  */
 0:
 
+	save	%sp, -96, %sp
 	/*
 	 * Do a "flush register windows trap".  The trap handler in the
 	 * kernel writes all the register windows to their stack slots, and
@@ -108,14 +108,12 @@ ENTRY (____longjmp_chk)
 	ta	ST_FLUSH_WINDOWS
 #ifdef PTR_DEMANGLE
 	ld	ENV(g1,JB_PC), %g1 /* Set return PC. */
-	PTR_DEMANGLE2 (%o7, %g1, %g4)
+	PTR_DEMANGLE2 (%i7, %g1, %g4)
 #else
-	ld	ENV(g1,JB_PC), %o7 /* Set return PC. */
+	ld	ENV(g1,JB_PC), %i7 /* Set return PC. */
 #endif
 	mov	%g5, %fp
-	sub	%fp, 64, %sp	/* Allocate a register frame. */
-	st	%g3, RW_FP	/* Set saved FP on restore below. */
-	retl
+	jmp	%i7 + 8
 	 restore %g2, 0, %o0	/* Restore values from above register frame. */
 
 END(____longjmp_chk)

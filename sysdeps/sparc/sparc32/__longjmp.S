@@ -21,7 +21,6 @@
 #include <jmpbuf-offsets.h>
 #define ENV(base,reg) [%base + (reg * 4)]
 #define ST_FLUSH_WINDOWS 3
-#define RW_FP [%fp + 0x48]
 
 ENTRY(__longjmp)
 	/* Store our arguments in global registers so we can still
@@ -54,6 +53,7 @@ LOC(loop):
 	 ld ENV(g1,JB_SP), %o0	/* Delay slot: extract target SP.  */
 
 LOC(thread):
+	save	%sp, -96, %sp
 	/*
 	 * Do a "flush register windows trap".  The trap handler in the
 	 * kernel writes all the register windows to their stack slots, and
@@ -66,15 +66,13 @@ LOC(thread):
 #ifdef PTR_DEMANGLE
 	ld	ENV(g1,JB_PC), %g5 /* Set return PC. */
 	ld	ENV(g1,JB_SP), %g1 /* Set saved SP on restore below. */
-	PTR_DEMANGLE2 (%o7, %g5, %g4)
+	PTR_DEMANGLE2 (%i7, %g5, %g4)
 	PTR_DEMANGLE2 (%fp, %g1, %g4)
 #else
-	ld	ENV(g1,JB_PC), %o7 /* Set return PC. */
+	ld	ENV(g1,JB_PC), %i7 /* Set return PC. */
 	ld	ENV(g1,JB_SP), %fp /* Set saved SP on restore below. */
 #endif
-	sub	%fp, 64, %sp	/* Allocate a register frame. */
-	st	%g3, RW_FP	/* Set saved FP on restore below. */
-	retl
+	jmp	%i7 + 8
 	 restore %g2, 0, %o0	/* Restore values from above register frame. */
 
 LOC(found):

@@ -1,3 +1,10 @@
+2012-02-20  David S. Miller  <davem@davemloft.net>
+
+	* sysdeps/sparc/sparc32/__longjmp.S: Unwind in the 'thread' path
+	using a normal save/restore sequence, rather than allocating a
+	dummy stack frame just to store a frame pointer and restore.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/____longjmp_chk.S: Likewise.
+
 2012-02-21  Joseph Myers  <joseph@codesourcery.com>
 
 	* manual/install.texi: Fix stray word in line-wrapped comment.
