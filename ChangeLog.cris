@@ -1,3 +1,8 @@
+2012-02-21  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/cris: Remove.
+	* sysdeps/unix/sysv/linux/cris: Likewise.
+
 2011-10-05  Andreas Schwab  <schwab@redhat.com>
 
 	* sysdeps/cris/dl-machine.h (elf_machine_rela)
