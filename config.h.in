@@ -87,10 +87,6 @@
    certain registers (CR0, MQ, CTR, LR) in asm statements.  */
 #undef	BROKEN_PPC_ASM_CR0
 
-/* Defined on SPARC if ld does not handle R_SPARC_WDISP22 against .hidden
-   symbol.  sysdeps/sparc/sparc32/elf/configure.  */
-#undef	BROKEN_SPARC_WDISP22
-
 /* Define if the linker supports the -z combreloc option.  */
 #undef	HAVE_Z_COMBRELOC
 

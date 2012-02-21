@@ -1,3 +1,11 @@
+2012-02-20  David S. Miller  <davem@davemloft.net>
+
+	* sysdeps/sparc/sparc32/elf/configure.in: Delete WDISP22 check.
+	* sysdeps/sparc/sparc32/elf/configure: Regenerate.
+	* sysdeps/sparc/sparc64/elf/configure.in: Likewise.
+	* sysdeps/sparc/sparc64/elf/configure: Regenerate.
+	* config.h.in (BROKEN_SPARC_WDISP22): Remove.
+
 2012-02-21  Joseph Myers  <joseph@codesourcery.com>
 
 	* manual/install.texi: Do not mention specific glibc version

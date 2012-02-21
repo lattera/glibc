@@ -42,20 +42,3 @@ rm -f conftest*])
 if test $libc_cv_sparc64_tls = no; then
   AC_MSG_ERROR([the assembler must support TLS])
 fi
-
-# Check for broken WDISP22 in the linker.
-AC_CACHE_CHECK(for sparc64 ld WDISP22 handling, libc_cv_sparc64_wdisp22, [dnl
-echo 'bne foo; nop' > conftest1.s
-echo '.globl foo; .hidden foo; foo: nop' > conftest2.s
-libc_cv_sparc64_wdisp22=unknown
-if AC_TRY_COMMAND(${CC-cc} -nostdlib -shared $CFLAGS conftest1.s conftest2.s -o conftest.so 1>&AS_MESSAGE_LOG_FD); then
-  if readelf -r conftest.so | grep -q R_SPARC_WDISP22; then
-    libc_cv_sparc64_wdisp22=broken
-  else
-    libc_cv_sparc64_wdisp22=ok
-  fi
-fi
-rm -f conftest*])
-if test $libc_cv_sparc64_wdisp22 != ok; then
-  AC_DEFINE(BROKEN_SPARC_WDISP22)
-fi
