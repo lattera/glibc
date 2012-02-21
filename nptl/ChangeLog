@@ -1,3 +1,21 @@
+2012-02-21  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #13695]
+	* Makefile (generated): Remove crti.S, crtn.S, defs.h and
+	pt-initfini.s.
+	[crti.S not in sysdirs] (omit-deps): Do not append.
+	[crti.S not in sysdirs] (CFLAGS-pt-initfini.s): Remove variable.
+	[crti.S not in sysdirs] (pt-initfini.c): Remove vpath directive.
+	[crti.S not in sysdirs] ($(objpfx)crti.S): Remove rule.
+	[crti.S not in sysdirs] ($(objpfx)crtn.S): Likewise.
+	[crti.S not in sysdirs] ($(objpfx)defs.h): Likewise.
+	[crti.S not in sysdirs] ($(objpfx)crti.o): Likewise.
+	[crti.S not in sysdirs] ($(objpfx)crtn.o): Likewise.
+	[crti.S in sysdirs] (extra-objs): Append unconditionally.
+	[crti.S in sysdirs] ($(objpfx)crti.o): Define rule
+	unconditionally.
+	* sysdeps/pthread/pt-initfini.c: Remove file.
+
 2012-02-16  Richard Henderson  <rth@twiddle.net>
 
 	* nptl/sysdeps/unix/sysv/linux/s390/s390-32/pt-initfini.c: Remove file.

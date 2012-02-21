@@ -28,9 +28,6 @@ no-special-regs := $(sort $(foreach n,40 41 50 51 60 61 62 63 \
 ifeq ($(subdir),csu)
 sysdep_routines += hp-timing
 elide-routines.os += hp-timing
-# The initfini generation code doesn't work in the presence of -fPIC, so
-# we use -fpic instead which is much better.
-CFLAGS-initfini.s += -fpic -O1
 endif
 
 ifeq ($(subdir),elf)

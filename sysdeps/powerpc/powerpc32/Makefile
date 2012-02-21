@@ -23,10 +23,6 @@ pic-ccflag = -fpic
 endif
 
 ifeq ($(subdir),csu)
-# The initfini generation code doesn't work in the presence of -fPIC, so
-# we use -fpic instead which is much better.
-CFLAGS-initfini.s += -fpic -O1
-
 # There is no benefit to using sdata for these objects, and the user
 # of the library should be able to control what goes into sdata.
 CFLAGS-init.o = -G0

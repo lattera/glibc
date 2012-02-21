@@ -1,3 +1,25 @@
+2012-02-21  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #13695]
+	* csu/Makefile (distribute): Remove initfini.c and defs.awk.
+	[crti.S not in sysdirs] (generated): Do not append.
+	[crti.S not in sysdirs] (omit-deps): Likewise.
+	[crti.S not in sysdirs] ($(crtstuff:%=$(objpfx)%.o)): Remove rule.
+	[crti.S not in sysdirs] ($(objpfx)initfini.s): Likewise.
+	[crti.S not in sysdirs] ($(objpfx)crti.S): Likewise.
+	[crti.S not in sysdirs] ($(objpfx)crtn.S): Likewise.
+	[crti.S not in sysdirs] ($(patsubst %,$(objpfx)crt%.o,i n)):
+	Likewise.
+	[crti.S not in sysdirs] ($(objpfx)defs.h): Likewise.
+	[crti.S not in sysdirs] (CFLAGS-initfini.s): Remove variable.
+	[crti.S not in sysdirs] (initfini.c): Remove vpath directive.
+	* csu/defs.awk: Remove file.
+	* sysdeps/generic/initfini.c: Likewise.
+	* sysdeps/powerpc/powerpc32/Makefile (CFLAGS-initfini.s): Remove
+	variable.
+	* sysdeps/powerpc/powerpc64/Makefile (CFLAGS-initfini.s):
+	Likewise.
+
 2012-02-20  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/bits/epoll.h: New file.

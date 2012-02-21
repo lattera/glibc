@@ -20,8 +20,7 @@
 # consists of the startfile, built from start.c and installed as crt0.o
 # (traditionally) or crt1.o (for ELF).	In ELF we also install crti.o and
 # crtn.o, special "initializer" and "finalizer" files used in the link
-# to make the .init and .fini sections work right; both these files are
-# built (in an arcane manner) from initfini.c.
+# to make the .init and .fini sections work right.
 
 subdir := csu
 
@@ -38,7 +37,7 @@ omit-deps = $(patsubst %.o,%,$(start-installed-name) g$(start-installed-name) \
 			     b$(start-installed-name) $(csu-dummies) \
 			     S$(start-installed-name))
 install-lib = $(start-installed-name) g$(start-installed-name) $(csu-dummies)
-distribute = initfini.c gmon-start.c start.c defs.awk \
+distribute = gmon-start.c start.c \
 	     abi-note.S init.c c not-cancel.h
 generated = version-info.h
 before-compile = $(objpfx)version-info.h
@@ -79,50 +78,6 @@ crtstuff = crti crtn
 
 install-lib += $(crtstuff:=.o)
 extra-objs += $(crtstuff:=.o)
-
-# Conditionals on the existence of a sysdeps version of crti.S are
-# temporary until all targets either have such a file or have been
-# removed, after which the old approach of postprocessing compiler
-# output will be removed.
-ifeq (,$(wildcard $(sysdirs:%=%/crti.S)))
-
-generated += $(crtstuff:=.S) initfini.s defs.h
-omit-deps += $(crtstuff)
-
-# Special rules for the building of crti.o and crtn.o
-$(crtstuff:%=$(objpfx)%.o): %.o: %.S $(objpfx)defs.h
-	$(compile.S) -g0 $(ASFLAGS-.os) -o $@
-
-CFLAGS-initfini.s = -g0 -fPIC -fno-inline-functions $(fno-unit-at-a-time)
-
-vpath initfini.c $(sysdirs)
-
-$(objpfx)initfini.s: initfini.c $(before-compile)
-	$(compile.c) -S $(CFLAGS-initfini.s) -finhibit-size-directive \
-		$(patsubst -f%,-fno-%,$(exceptions)) -o $@
-
-# We only have one kind of startup code files.	Static binaries and
-# shared libraries are build using the PIC version.
-$(objpfx)crti.S: $(objpfx)initfini.s
-	sed -n -e '1,/@HEADER_ENDS/p' \
-	       -e '/@_.*_PROLOG_BEGINS/,/@_.*_PROLOG_ENDS/p' \
-	       -e '/@TRAILER_BEGINS/,$$p' $< > $@
-
-$(objpfx)crtn.S: $(objpfx)initfini.s
-	sed -n -e '1,/@HEADER_ENDS/p' \
-	       -e '/@_.*_EPILOG_BEGINS/,/@_.*_EPILOG_ENDS/p' \
-	       -e '/@TRAILER_BEGINS/,$$p' $< > $@
-
-# These explicit rules are necessary when the $(objpfx) subdirectory
-# did not exist at the time make considered the implicit rules using it.
-# This comes up with a fresh build using no_deps=t.
-$(patsubst %,$(objpfx)crt%.o,i n): %.o: %.S
-
-$(objpfx)defs.h: $(objpfx)initfini.s
-	sed -n -e '/@TESTS_BEGIN/,/@TESTS_END/p' $< | \
-		$(AWK) -f defs.awk > $@
-
-endif
 
 extra-objs += abi-note.o init.o
 asm-CPPFLAGS += -I$(objpfx).
