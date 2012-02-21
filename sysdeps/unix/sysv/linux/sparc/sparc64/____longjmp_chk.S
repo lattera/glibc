@@ -62,16 +62,20 @@ ENTRY (____longjmp_chk)
 	 nop
 
 .Lfail:
-#ifdef PIC
-1:	call	2f
-	sethi	%hi(_GLOBAL_OFFSET_TABLE_-(1b-.)), %l7
-2:	or	%l7, %lo(_GLOBAL_OFFSET_TABLE_-(1b-.)), %l7
-	add	%l7, %o7, %l7
-#endif
+#ifndef PIC
 	sethi	%hi(longjmp_msg), %o0
 	or	%o0, %lo(longjmp_msg), %o0
-#ifdef PIC
+#else
+	SETUP_PIC_REG(l7)
+#ifdef HAVE_BINUTILS_GOTDATA
+	sethi	%gdop_hix22(longjmp_msg), %o0
+	xor	%o0, %gdop_lox10(longjmp_msg), %o0
+	ldx	[%l7 + %o0], %o0, %gdop(longjmp_msg)
+#else
+	sethi	%hi(longjmp_msg), %o0
+	or	%o0, %lo(longjmp_msg), %o0
 	ldx	[%l7 + %o0], %o0
+#endif
 #endif
 	call	HIDDEN_JUMPTARGET(__fortify_fail)
 	 nop

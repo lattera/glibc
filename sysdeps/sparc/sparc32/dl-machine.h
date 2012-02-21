@@ -216,6 +216,18 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
    The C function `_dl_start' is the real entry point;
    its return value is the user program's entry point.  */
 
+#ifdef HAVE_BINUTILS_GOTDATA
+#define RTLD_GOT_ADDRESS(pic_reg, reg, symbol)	\
+	"sethi	%gdop_hix22(" #symbol "), " #reg "\n\t" \
+	"xor	" #reg ", %gdop_lox10(" #symbol "), " #reg "\n\t" \
+	"ld	[" #pic_reg " + " #reg "], " #reg ", %gdop(" #symbol ")"
+#else
+#define RTLD_GOT_ADDRESS(pic_reg, reg, symbol)	\
+	"sethi	%hi(" #symbol "), " #reg "\n\t" \
+	"or	" #reg ", %lo(" #symbol "), " #reg "\n\t" \
+	"ld	[" #pic_reg " + " #reg "], " #reg
+#endif
+
 #define RTLD_START __asm__ ("\
 	.text\n\
 	.globl	_start\n\
@@ -240,17 +252,13 @@ _dl_start_user:\n\
 	mov	%o0, %l0\n\
   /* See if we were run as a command with the executable file name as an\n\
      extra leading argument.  If so, adjust the contents of the stack.  */\n\
-	sethi	%hi(_dl_skip_args), %g2\n\
-	or	%g2, %lo(_dl_skip_args), %g2\n\
-	ld	[%l7+%g2], %i0\n\
-	ld	[%i0], %i0\n\
+	" RTLD_GOT_ADDRESS(%l7, %g2, _dl_skip_args) "\n\
+	ld	[%g2], %i0\n\
 	tst	%i0\n\
 	beq	3f\n\
 	 ld	[%sp+22*4], %i5		/* load argc */\n\
 	/* Find out how far to shift.  */\n\
-	sethi	%hi(_dl_argv), %l3\n\
-	or	%l3, %lo(_dl_argv), %l3\n\
-	ld	[%l7+%l3], %l3\n\
+	" RTLD_GOT_ADDRESS(%l7, %l3, _dl_argv) "\n\
 	sub	%i5, %i0, %i5\n\
 	ld	[%l3], %l4\n\
 	sll	%i0, 2, %i2\n\
@@ -283,20 +291,16 @@ _dl_start_user:\n\
 	bne	23b\n\
 	 add	%i1, 8, %i1\n\
   /* %o0 = _dl_loaded, %o1 = argc, %o2 = argv, %o3 = envp.  */\n\
-3:	sethi	%hi(_rtld_local), %o0\n\
+3:	" RTLD_GOT_ADDRESS(%l7, %o0, _rtld_local) "\n\
 	add	%sp, 23*4, %o2\n\
-	orcc	%o0, %lo(_rtld_local), %o0\n\
 	sll	%i5, 2, %o3\n\
-	ld	[%l7+%o0], %o0\n\
 	add	%o3, 4, %o3\n\
 	mov	%i5, %o1\n\
 	add	%o2, %o3, %o3\n\
 	call	_dl_init_internal\n\
 	 ld	[%o0], %o0\n\
   /* Pass our finalizer function to the user in %g1.  */\n\
-	sethi	%hi(_dl_fini), %g1\n\
-	or	%g1, %lo(_dl_fini), %g1\n\
-	ld	[%l7+%g1], %g1\n\
+	" RTLD_GOT_ADDRESS(%l7, %g1, _dl_fini) "\n\
   /* Jump to the user's entry point and deallocate the extra stack we got.  */\n\
 	jmp	%l0\n\
 	 add	%sp, 6*4, %sp\n\

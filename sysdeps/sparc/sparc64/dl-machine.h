@@ -264,6 +264,18 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
    The C function `_dl_start' is the real entry point;
    its return value is the user program's entry point.  */
 
+#ifdef HAVE_BINUTILS_GOTDATA
+#define RTLD_GOT_ADDRESS(pic_reg, reg, symbol)	\
+	"sethi	%gdop_hix22(" #symbol "), " #reg "\n\t" \
+	"xor	" #reg ", %gdop_lox10(" #symbol "), " #reg "\n\t" \
+	"ldx	[" #pic_reg " + " #reg "], " #reg ", %gdop(" #symbol ")\n"
+#else
+#define RTLD_GOT_ADDRESS(pic_reg, reg, symbol)	\
+	"sethi	%hi(" #symbol "), " #reg "\n\t" \
+	"or	" #reg ", %lo(" #symbol "), " #reg "\n\t" \
+	"ldx	[" #pic_reg " + " #reg "], " #reg "\n"
+#endif
+
 #define __S1(x)	#x
 #define __S(x)	__S1(x)
 
@@ -288,24 +300,20 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 "1:	call	11f\n"							\
 "	 sethi	%hi(_GLOBAL_OFFSET_TABLE_-(1b-.)), %l7\n"		\
 "11:	or	%l7, %lo(_GLOBAL_OFFSET_TABLE_-(1b-.)), %l7\n"		\
-"	sethi	%hi(_dl_skip_args), %g5\n"				\
 "	add	%l7, %o7, %l7\n"					\
-"	or	%g5, %lo(_dl_skip_args), %g5\n"				\
 "   /* Save the user entry point address in %l0.  */\n"			\
 "	mov	%o0, %l0\n"						\
 "   /* See if we were run as a command with the executable file name as an\n" \
 "      extra leading argument.  If so, we must shift things around since we\n" \
 "      must keep the stack doubleword aligned.  */\n"			\
-"	ldx	[%l7 + %g5], %i0\n"					\
-"	ld	[%i0], %i0\n"						\
+	RTLD_GOT_ADDRESS(%l7, %g5, _dl_skip_args)			\
+"	ld	[%g5], %i0\n"						\
 "	brz,pt	%i0, 2f\n"						\
 "	 ldx	[%sp + " __S(STACK_BIAS) " + 22*8], %i5\n"		\
 "	/* Find out how far to shift.  */\n"				\
-"	sethi	%hi(_dl_argv), %l4\n"					\
 "	sub	%i5, %i0, %i5\n"					\
-"	or	%l4, %lo(_dl_argv), %l4\n"				\
 "	sllx	%i0, 3, %l6\n"						\
-"	ldx	[%l7 + %l4], %l4\n"					\
+	RTLD_GOT_ADDRESS(%l7, %l4, _dl_argv)				\
 "	stx	%i5, [%sp + " __S(STACK_BIAS) " + 22*8]\n"		\
 "	add	%sp, " __S(STACK_BIAS) " + 23*8, %i1\n"			\
 "	add	%i1, %l6, %i2\n"					\
@@ -333,20 +341,16 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 "	 add	%i1, 16, %i1\n"						\
 "	stx	%l5, [%l4]\n"						\
 "  /* %o0 = _dl_loaded, %o1 = argc, %o2 = argv, %o3 = envp.  */\n"	\
-"2:	sethi	%hi(_rtld_local), %o0\n"				\
-"	add	%sp, " __S(STACK_BIAS) " + 23*8, %o2\n"			\
-"	orcc	%o0, %lo(_rtld_local), %o0\n"				\
+"2:\t"	RTLD_GOT_ADDRESS(%l7, %o0, _rtld_local)				\
 "	sllx	%i5, 3, %o3\n"						\
-"	ldx	[%l7 + %o0], %o0\n"					\
+"	add	%sp, " __S(STACK_BIAS) " + 23*8, %o2\n"			\
 "	add	%o3, 8, %o3\n"						\
 "	mov	%i5, %o1\n"						\
 "	add	%o2, %o3, %o3\n"					\
 "	call	_dl_init_internal\n"					\
 "	 ldx	[%o0], %o0\n"						\
 "   /* Pass our finalizer function to the user in %g1.  */\n"		\
-"	sethi	%hi(_dl_fini), %g1\n"					\
-"	or	%g1, %lo(_dl_fini), %g1\n"				\
-"	ldx	[%l7 + %g1], %g1\n"					\
+       RTLD_GOT_ADDRESS(%l7, %g1, _dl_fini)				\
 "  /* Jump to the user's entry point and deallocate the extra stack we got.  */\n" \
 "	jmp	%l0\n"							\
 "	 add	%sp, 6*8, %sp\n"					\

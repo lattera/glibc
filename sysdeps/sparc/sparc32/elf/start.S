@@ -40,18 +40,11 @@
 
 	.section ".text"
 	.align 4
-#ifdef SHARED
-.LLGETPC0:
-	retl
-	 add	%o7, %l7, %l7
-#endif
 	.global _start
 	.type _start,#function
 _start:
 #ifdef SHARED
-	sethi	%hi(_GLOBAL_OFFSET_TABLE_-4), %l7
-	call	.LLGETPC0
-	 add	%l7, %lo(_GLOBAL_OFFSET_TABLE_+4), %l7
+	SETUP_PIC_REG(l7)
 #endif
 
   /* Terminate the stack frame, and reserve space for functions to
@@ -65,16 +58,35 @@ _start:
 	add	%sp, 23*4, %o2
 
   /* Load the addresses of the user entry points.  */
+#ifndef SHARED
 	sethi	%hi(main), %o0
 	sethi	%hi(__libc_csu_init), %o3
 	sethi	%hi(__libc_csu_fini), %o4
 	or	%o0, %lo(main), %o0
 	or	%o3, %lo(__libc_csu_init), %o3
 	or	%o4, %lo(__libc_csu_fini), %o4
-#ifdef SHARED
+#else
+#ifdef HAVE_BINUTILS_GOTDATA
+	sethi	%gdop_hix22(main), %o0
+	sethi	%gdop_hix22(__libc_csu_init), %o3
+	sethi	%gdop_hix22(__libc_csu_fini), %o4
+	xor	%o0, %gdop_lox10(main), %o0
+	xor	%o3, %gdop_lox10(__libc_csu_init), %o3
+	xor	%o4, %gdop_lox10(__libc_csu_fini), %o4
+	ld	[%l7 + %o0], %o0, %gdop(main)
+	ld	[%l7 + %o3], %o3, %gdop(__libc_csu_init)
+	ld	[%l7 + %o4], %o4, %gdop(__libc_csu_fini)
+#else
+	sethi	%hi(main), %o0
+	sethi	%hi(__libc_csu_init), %o3
+	sethi	%hi(__libc_csu_fini), %o4
+	or	%o0, %lo(main), %o0
+	or	%o3, %lo(__libc_csu_init), %o3
+	or	%o4, %lo(__libc_csu_fini), %o4
 	ld	[%l7 + %o0], %o0
 	ld	[%l7 + %o3], %o3
 	ld	[%l7 + %o4], %o4
+#endif
 #endif
 
   /* When starting a binary via the dynamic linker, %g1 contains the

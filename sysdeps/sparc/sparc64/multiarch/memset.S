@@ -25,12 +25,7 @@
 ENTRY(memset)
 	.type	memset, @gnu_indirect_function
 # ifdef SHARED
-	mov	%o7, %o5
-	sethi	%hi(_GLOBAL_OFFSET_TABLE_-4), %o3
-	call	1f
-	 or	%o3, %lo(_GLOBAL_OFFSET_TABLE_+4), %o3
-1:	add	%o7, %o3, %o3
-	mov	%o5, %o7
+	SETUP_PIC_REG_LEAF(o3, o5)
 # endif
 	andcc	%o0, HWCAP_SPARC_BLKINIT, %g0
 	be	9f
@@ -61,12 +56,7 @@ END(memset)
 ENTRY(__bzero)
 	.type	bzero, @gnu_indirect_function
 # ifdef SHARED
-	mov	%o7, %o5
-	sethi	%hi(_GLOBAL_OFFSET_TABLE_-4), %o3
-	call	1f
-	 or	%o3, %lo(_GLOBAL_OFFSET_TABLE_+4), %o3
-1:	add	%o7, %o3, %o3
-	mov	%o5, %o7
+	SETUP_PIC_REG_LEAF(o3, o5)
 # endif
 	andcc	%o0, HWCAP_SPARC_BLKINIT, %g0
 	be	9f

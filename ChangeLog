@@ -1,5 +1,20 @@
 2012-02-20  David S. Miller  <davem@davemloft.net>
 
+	* sysdeps/sparc/crti.S: Try to use GOTDATA relocs.
+	* sysdeps/sparc/sparc32/dl-machine.h (RTLD_START): Likewise.
+	* sysdeps/sparc/sparc32/elf/start.S: Likewise.
+	* sysdeps/sparc/sparc64/dl-machine.h (RTLD_START): Likewise.
+	* sysdeps/sparc/sparc64/elf/start.S: Likewise.
+	* sysdeps/sparc/sparc64/multiarch/memcpy.S: Likewise.
+	* sysdeps/sparc/sparc64/multiarch/memset.S: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/____longjmp_chk.S: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/sysdep.h
+	(SYSCALL_ERROR_HANDLER): Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/____longjmp_chk.S: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/brk.S: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/sysdep.h
+	(SYSCALL_ERROR_HANDLER): Likewise.
+
 	* config.h.in (HAVE_BINUTILS_GOTDATA): New.
 	(HAVE_GCC_GOTDATA): New.
 	* sysdeps/sparc/elf/configure.in: Test for GOTDATA
