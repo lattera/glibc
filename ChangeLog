@@ -1,5 +1,12 @@
 2012-02-21  Joseph Myers  <joseph@codesourcery.com>
 
+	* manual/install.texi: Do not mention specific glibc version
+	numbers.
+	* manual/libc.texinfo (VERSION, UPDATED): Update.
+	(@copying): Use @copyright{} and range of years.
+
+2012-02-21  Joseph Myers  <joseph@codesourcery.com>
+
 	[BZ #13695]
 	* csu/Makefile (distribute): Remove initfini.c and defs.awk.
 	[crti.S not in sysdirs] (generated): Do not append.

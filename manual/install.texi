@@ -35,7 +35,7 @@ GNU Make, and possibly others.  @xref{Tools for Compilation}, below.
 
 GNU libc cannot be compiled in the source directory.  You must build
 it in a separate build directory.  For example, if you have unpacked
-the glibc sources in @file{/src/gnu/glibc-2.4}, create a directory
+the glibc sources in @file{/src/gnu/glibc-@var{version}}, create a directory
 @file{/src/gnu/glibc-build} to put the object files in.  This allows
 removing the whole build directory in case an error occurs, which is
 the safest way to get a fresh start and should always be done.
@@ -44,7 +44,7 @@ From your object directory, run the shell script @file{configure} located
 at the top level of the source tree.  In the scenario above, you'd type
 
 @smallexample
-$ ../glibc-2.4/configure @var{args@dots{}}
+$ ../glibc-@var{version}/configure @var{args@dots{}}
 @end smallexample
 
 Please note that even though you're building in a separate build
@@ -98,7 +98,7 @@ spaces or commas (if you use spaces, remember to quote them from the
 shell).  Each add-on in @var{list} can be an absolute directory name
 or can be a directory name relative to the main source directory, or
 relative to the build directory (that is, the current working directory).
-For example, @samp{--enable-add-ons=nptl,../glibc-libidn-2.4}.
+For example, @samp{--enable-add-ons=nptl,../glibc-libidn-@var{version}}.
 
 @item --enable-kernel=@var{version}
 This option is currently only useful on GNU/Linux systems.  The
@@ -262,7 +262,7 @@ paths for installation.  This is useful when setting up a chroot
 environment or preparing a binary distribution.  The directory should be
 specified with an absolute file name.
 
-Glibc 2.2 includes a daemon called @code{nscd}, which you
+Glibc includes a daemon called @code{nscd}, which you
 may or may not want to run.  @code{nscd} caches name service lookups; it
 can dramatically improve performance with NIS+, and may help with DNS as
 well.
@@ -315,11 +315,11 @@ bugs or lack features.
 @item
 GCC 3.4 or newer, GCC 4.1 recommended
 
-For the 2.4 release or later, GCC 3.4 or higher is required; as of this
+GCC 3.4 or higher is required; as of this
 writing, GCC 4.4 is the compiler we advise to use for current versions.
 On certain machines including @code{powerpc64}, compilers prior to GCC
-4.0 have bugs that prevent them compiling the C library code in the
-2.4 release.  On other machines, GCC 4.1 is required to build the C
+4.0 have bugs that prevent them compiling the C library code.  On other
+machines, GCC 4.1 is required to build the C
 library with support for the correct @code{long double} type format;
 these include @code{powerpc} (32 bit), @code{s390} and @code{s390x}.  For
 other architectures special compiler-provided headers are needed

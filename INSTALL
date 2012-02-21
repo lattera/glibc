@@ -20,7 +20,7 @@ Configuring and compiling GNU Libc
 
 GNU libc cannot be compiled in the source directory.  You must build it
 in a separate build directory.  For example, if you have unpacked the
-glibc sources in `/src/gnu/glibc-2.4', create a directory
+glibc sources in `/src/gnu/glibc-VERSION', create a directory
 `/src/gnu/glibc-build' to put the object files in.  This allows
 removing the whole build directory in case an error occurs, which is
 the safest way to get a fresh start and should always be done.
@@ -28,7 +28,7 @@ the safest way to get a fresh start and should always be done.
    From your object directory, run the shell script `configure' located
 at the top level of the source tree.  In the scenario above, you'd type
 
-     $ ../glibc-2.4/configure ARGS...
+     $ ../glibc-VERSION/configure ARGS...
 
    Please note that even though you're building in a separate build
 directory, the compilation needs to modify a few files in the source
@@ -79,7 +79,7 @@ will be used, and CFLAGS sets optimization options for the compiler.
      absolute directory name or can be a directory name relative to the
      main source directory, or relative to the build directory (that
      is, the current working directory).  For example,
-     `--enable-add-ons=nptl,../glibc-libidn-2.4'.
+     `--enable-add-ons=nptl,../glibc-libidn-VERSION'.
 
 `--enable-kernel=VERSION'
      This option is currently only useful on GNU/Linux systems.  The
@@ -235,8 +235,8 @@ paths for installation.  This is useful when setting up a chroot
 environment or preparing a binary distribution.  The directory should be
 specified with an absolute file name.
 
-   Glibc 2.2 includes a daemon called `nscd', which you may or may not
-want to run.  `nscd' caches name service lookups; it can dramatically
+   Glibc includes a daemon called `nscd', which you may or may not want
+to run.  `nscd' caches name service lookups; it can dramatically
 improve performance with NIS+, and may help with DNS as well.
 
    One auxiliary program, `/usr/libexec/pt_chown', is installed setuid
@@ -282,16 +282,15 @@ build the GNU C library:
 
    * GCC 3.4 or newer, GCC 4.1 recommended
 
-     For the 2.4 release or later, GCC 3.4 or higher is required; as of
-     this writing, GCC 4.4 is the compiler we advise to use for current
-     versions.  On certain machines including `powerpc64', compilers
-     prior to GCC 4.0 have bugs that prevent them compiling the C
-     library code in the 2.4 release.  On other machines, GCC 4.1 is
-     required to build the C library with support for the correct `long
-     double' type format; these include `powerpc' (32 bit), `s390' and
-     `s390x'.  For other architectures special compiler-provided
-     headers are needed (like `cpuid.h' on x86) which only come with
-     later compiler versions.
+     GCC 3.4 or higher is required; as of this writing, GCC 4.4 is the
+     compiler we advise to use for current versions.  On certain
+     machines including `powerpc64', compilers prior to GCC 4.0 have
+     bugs that prevent them compiling the C library code.  On other
+     machines, GCC 4.1 is required to build the C library with support
+     for the correct `long double' type format; these include `powerpc'
+     (32 bit), `s390' and `s390x'.  For other architectures special
+     compiler-provided headers are needed (like `cpuid.h' on x86) which
+     only come with later compiler versions.
 
      You can use whatever compiler you like to compile programs that
      use GNU libc, but be aware that both GCC 2.7 and 2.8 have bugs in
