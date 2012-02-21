@@ -1,5 +1,12 @@
 2012-02-20  David S. Miller  <davem@davemloft.net>
 
+	* sysdeps/sparc/sparc32/elf/configure.in: Delete.
+	* sysdeps/sparc/sparc32/elf/configure: Delete.
+	* sysdeps/sparc/sparc64/elf/configure.in: Delete.
+	* sysdeps/sparc/sparc64/elf/configure: Delete.
+	* sysdeps/sparc/elf/configure.in: New file.
+	* sysdeps/sparc/elf/configure: Generate.
+
 	* sysdeps/sparc/sparc32/elf/configure.in: Delete WDISP22 check.
 	* sysdeps/sparc/sparc32/elf/configure: Regenerate.
 	* sysdeps/sparc/sparc64/elf/configure.in: Likewise.
