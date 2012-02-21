@@ -101,8 +101,6 @@ will be used, and CFLAGS sets optimization options for the compiler.
      Use this option if your computer lacks hardware floating-point
      support and your operating system does not emulate an FPU.
 
-     these
-
 `--disable-shared'
      Don't build shared libraries even if it is possible.  Not all
      systems support shared libraries; you need ELF support and

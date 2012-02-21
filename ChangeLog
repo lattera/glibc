@@ -1,3 +1,7 @@
+2012-02-21  Joseph Myers  <joseph@codesourcery.com>
+
+	* manual/install.texi: Fix stray word in line-wrapped comment.
+
 2012-02-20  David S. Miller  <davem@davemloft.net>
 
 	* sysdeps/sparc/elf/configure.in (PI_STATIC_AND_HIDDEN): Define if

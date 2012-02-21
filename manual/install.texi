@@ -122,8 +122,7 @@ and your operating system does not emulate an FPU.
 
 @c disable static doesn't work currently
 @c @item --disable-static
-@c Don't build static libraries.  Static libraries aren't that useful
- these
+@c Don't build static libraries.  Static libraries aren't that useful these
 @c days, but we recommend you build them in case you need them.
 
 @item --disable-shared
