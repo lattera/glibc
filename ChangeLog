@@ -1,5 +1,16 @@
 2012-02-20  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/unix/sysv/linux/bits/timerfd.h: New file.
+	* sysdeps/unix/sysv/linux/sparc/bits/timerfd.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sys/timerfd.h: Remove.
+	* sysdeps/unix/sysv/linux/sys/timerfd.h: Get flags from
+	<bits/timerfd.h>.
+	(TFD_CLOEXEC, TFD_NONBLOCK): Don't define here.
+	* sysdeps/unix/sysv/linux/Makefile (sysdep_headers): Add
+	bits/timerfd.h.
+
+2012-02-20  Joseph Myers  <joseph@codesourcery.com>
+
 	* sysdeps/i386/fpu/libm-test-ulps: Resort with gen-libm-test.pl -n
 	in C locale.
 	* sysdeps/powerpc/fpu/libm-test-ulps: Likewise.

@@ -20,15 +20,8 @@
 
 #include <time.h>
 
-
-/* Bits to be set in the FLAGS parameter of `timerfd_create'.  */
-enum
-  {
-    TFD_CLOEXEC = 02000000,
-#define TFD_CLOEXEC TFD_CLOEXEC
-    TFD_NONBLOCK = 04000
-#define TFD_NONBLOCK TFD_NONBLOCK
-  };
+/* Get the platform-dependent flags.  */
+#include <bits/timerfd.h>
 
 
 /* Bits to be set in the FLAGS parameter of `timerfd_settime'.  */
