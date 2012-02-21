@@ -1,3 +1,10 @@
+2012-02-21  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/mips/bits/epoll.h: New file.
+	* sysdeps/unix/sysv/linux/mips/bits/timerfd.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/sys/epoll.h: Remove.
+	* sysdeps/unix/sysv/linux/mips/sys/timerfd.h: Likewise.
+
 2012-02-20  Andreas Schwab  <schwab@linux-m68k.org>
 
 	* sysdeps/unix/sysv/linux/mips/bits/errno.h (EHWPOISON): Define if
