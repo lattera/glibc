@@ -1,3 +1,8 @@
+2012-02-21  David S. Miller  <davem@davemloft.net>
+
+	* sysdeps/sparc/sparc32/fpu/libm-test-ulps: More jn test ULP updates.
+	* sysdeps/sparc/sparc64/fpu/libm-test-ulps: Likewise.
+
 2012-02-20  David S. Miller  <davem@davemloft.net>
 
 	* sysdeps/sparc/sparc32/__longjmp.S: Unwind in the 'thread' path
