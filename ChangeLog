@@ -1,5 +1,8 @@
 2012-02-20  David S. Miller  <davem@davemloft.net>
 
+	* sysdeps/unix/sparc/sysdep.h: Document why we don't use
+	"rd %pc" in the PIC register setup sequences.
+
 	* sysdeps/sparc/crti.S: Try to use GOTDATA relocs.
 	* sysdeps/sparc/sparc32/dl-machine.h (RTLD_START): Likewise.
 	* sysdeps/sparc/sparc32/elf/start.S: Likewise.

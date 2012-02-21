@@ -39,6 +39,9 @@ __sparc_get_pc_thunk.reg:		   				\
 	.previous;							\
 	.endif;
 
+/* Even when v9 we use a call sequence instead of using "rd %pc" because
+   RDPC is extremely expensive and incurs a full pipeline flush.  */
+
 #define SETUP_PIC_REG(reg)						\
 	SPARC_PIC_THUNK(reg)						\
 	sethi	%hi(_GLOBAL_OFFSET_TABLE_-4), %##reg;			\
