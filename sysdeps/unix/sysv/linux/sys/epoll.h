@@ -1,4 +1,4 @@
-/* Copyright (C) 2002-2009, 2011 Free Software Foundation, Inc.
+/* Copyright (C) 2002-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -29,15 +29,12 @@
 typedef __sigset_t sigset_t;
 #endif
 
+/* Get the platform-dependent flags.  */
+#include <bits/epoll.h>
 
-/* Flags to be passed to epoll_create1.  */
-enum
-  {
-    EPOLL_CLOEXEC = 02000000,
-#define EPOLL_CLOEXEC EPOLL_CLOEXEC
-    EPOLL_NONBLOCK = 04000
-#define EPOLL_NONBLOCK EPOLL_NONBLOCK
-  };
+#ifndef __EPOLL_PACKED
+# define __EPOLL_PACKED
+#endif
 
 
 enum EPOLL_EVENTS
@@ -89,7 +86,7 @@ struct epoll_event
 {
   uint32_t events;	/* Epoll events */
   epoll_data_t data;	/* User data variable */
-};
+} __EPOLL_PACKED;
 
 
 __BEGIN_DECLS

@@ -1,5 +1,21 @@
 2012-02-20  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/unix/sysv/linux/bits/epoll.h: New file.
+	* sysdeps/unix/sysv/linux/sparc/bits/epoll.h: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/bits/epoll.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sys/epoll.h: Remove
+	* sysdeps/unix/sysv/linux/x86_64/sys/epoll.h: Likewise.
+	* sysdeps/unix/sysv/linux/sys/epoll.h: Get flags from
+	<bits/epoll.h>.
+	(EPOLL_CLOEXEC, EPOLL_NONBLOCK): Don't define here.
+	(__EPOLL_PACKED): Define to empty if not defined by
+	<bits/epoll.h>.
+	(struct epoll_event): Use __EPOLL_PACKED to make possibly packed.
+	* sysdeps/unix/sysv/linux/Makefile (sysdep_headers): Add
+	bits/epoll.h.
+
+2012-02-20  Joseph Myers  <joseph@codesourcery.com>
+
 	* sysdeps/unix/sysv/linux/bits/timerfd.h: New file.
 	* sysdeps/unix/sysv/linux/sparc/bits/timerfd.h: Likewise.
 	* sysdeps/unix/sysv/linux/sparc/sys/timerfd.h: Remove.
