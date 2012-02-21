@@ -1,5 +1,11 @@
 2012-02-20  David S. Miller  <davem@davemloft.net>
 
+	* config.h.in (HAVE_BINUTILS_GOTDATA): New.
+	(HAVE_GCC_GOTDATA): New.
+	* sysdeps/sparc/elf/configure.in: Test for GOTDATA
+	relocation support in both binutils and gcc.
+	* sysdeps/sparc/elf/configure: Regenerate.
+
 	* sysdeps/sparc/sparc32/elf/configure.in: Delete.
 	* sysdeps/sparc/sparc32/elf/configure: Delete.
 	* sysdeps/sparc/sparc64/elf/configure.in: Delete.

@@ -136,3 +136,76 @@ $as_echo "$libc_cv_sparc_tls" >&6; }
 if test $libc_cv_sparc_tls = no; then
   as_fn_error $? "the assembler must support TLS" "$LINENO" 5
 fi
+
+# Check for GOTDATA relocation support in assembler and linker.
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for sparc binutils GOTDATA reloc support" >&5
+$as_echo_n "checking for sparc binutils GOTDATA reloc support... " >&6; }
+if ${libc_cv_sparc_gotdata+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  cat > conftest.S <<\EOF
+	.data
+	.globl	data
+data:	.word	0
+	.text
+	.globl	foo
+foo:	sethi	%gdop_hix22(data), %g1
+	xor	%g1, %gdop_lox10(data), %g1
+#ifdef __arch64__
+	ldx	[%l7 + %g1], %g1, %gdop(data)
+#else
+	ld	[%l7 + %g1], %g1, %gdop(data)
+#endif
+EOF
+if { ac_try='${CC-cc} -c $CFLAGS conftest.S 1>&5'
+  { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; }; then
+  libc_cv_sparc_gotdata=yes
+else
+  libc_cv_sparc_gotdata=no
+fi
+rm -f conftest*
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_sparc_gotdata" >&5
+$as_echo "$libc_cv_sparc_gotdata" >&6; }
+if test $libc_cv_sparc_gotdata = yes; then
+  $as_echo "#define HAVE_BINUTILS_GOTDATA 1" >>confdefs.h
+
+fi
+
+# Check for a GCC emitting GOTDATA relocations.
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for sparc gcc GOTDATA reloc support" >&5
+$as_echo_n "checking for sparc gcc GOTDATA reloc support... " >&6; }
+if ${libc_cv_sparc_gcc_gotdata+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  cat > conftest.c <<\EOF
+int data;
+int foo(void)
+{
+	return data;
+}
+EOF
+libc_cv_sparc_gcc_gotdata=no
+if { ac_try='${CC-cc} -S $CFLAGS -O2 -fPIC conftest.c 1>&5'
+  { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; }; then
+  if grep -q 'gdop_hix22' conftest.s \
+     && grep -q 'gdop_lox10' conftest.s; then
+    libc_cv_sparc_gcc_gotdata=yes
+  fi
+fi
+rm -f conftest*
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_sparc_gcc_gotdata" >&5
+$as_echo "$libc_cv_sparc_gcc_gotdata" >&6; }
+if test $libc_cv_sparc_gcc_gotdata = yes; then
+  $as_echo "#define HAVE_GCC_GOTDATA 1" >>confdefs.h
+
+fi
