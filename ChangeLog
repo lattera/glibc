@@ -1,5 +1,8 @@
 2012-02-20  David S. Miller  <davem@davemloft.net>
 
+	* sysdeps/sparc/elf/configure.in (PI_STATIC_AND_HIDDEN): Define if
+	both binutils and gcc support GOTDATA.
+
 	* sysdeps/unix/sparc/sysdep.h: Document why we don't use
 	"rd %pc" in the PIC register setup sequences.
 
