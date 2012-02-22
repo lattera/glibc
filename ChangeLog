@@ -1,5 +1,16 @@
 2012-02-22  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #2548]
+	* sysdeps/ieee754/flt-32/s_rintf.c (__rintf): Do not manipulate
+	bits before adding and subtracting TWO23[sx].
+	* math/libm-test.inc (rint_test): Add more tests.
+	(rint_test_tonearest): Likewise.
+	(rint_test_towardzero): Likewise.
+	(rint_test_downward): Likewise.
+	(rint_test_upward: Likewise.
+
+2012-02-22  Joseph Myers  <joseph@codesourcery.com>
+
 	[BZ #10110]
 	* include/stdc-predef.h: New file.  Extracted from features.h.
 	* include/features.h: Include stdc-predef.h.

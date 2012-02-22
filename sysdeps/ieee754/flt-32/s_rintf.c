@@ -26,34 +26,22 @@ float
 __rintf(float x)
 {
 	int32_t i0,j0,sx;
-	u_int32_t i,i1;
 	float w,t;
 	GET_FLOAT_WORD(i0,x);
 	sx = (i0>>31)&1;
 	j0 = ((i0>>23)&0xff)-0x7f;
 	if(j0<23) {
 	    if(j0<0) {
-		if((i0&0x7fffffff)==0) return x;
-		i1 = (i0&0x07fffff);
-		i0 &= 0xfff00000;
-		i0 |= ((i1|-i1)>>9)&0x400000;
-		SET_FLOAT_WORD(x,i0);
 		w = TWO23[sx]+x;
 		t =  w-TWO23[sx];
 		GET_FLOAT_WORD(i0,t);
 		SET_FLOAT_WORD(t,(i0&0x7fffffff)|(sx<<31));
 		return t;
-	    } else {
-		i = (0x007fffff)>>j0;
-		if((i0&i)==0) return x; /* x is integral */
-		i>>=1;
-		if((i0&i)!=0) i0 = (i0&(~i))|((0x100000)>>j0);
 	    }
 	} else {
 	    if(j0==0x80) return x+x;	/* inf or NaN */
 	    else return x;		/* x is integral */
 	}
-	SET_FLOAT_WORD(x,i0);
 	w = TWO23[sx]+x;
 	return w-TWO23[sx];
 }
