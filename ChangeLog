@@ -1,5 +1,13 @@
 2012-02-22  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #10110]
+	* include/stdc-predef.h: New file.  Extracted from features.h.
+	* include/features.h: Include stdc-predef.h.
+	* Makefile (headers): Add stdc-predef.h.
+	* CONFORMANCE (Compiler limitations): Update.
+
+2012-02-22  Joseph Myers  <joseph@codesourcery.com>
+
 	* manual/libc.texinfo (VERSION, UPDATED): Revert.
 
 2012-02-21  David S. Miller  <davem@davemloft.net>

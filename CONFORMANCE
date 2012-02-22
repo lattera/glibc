@@ -134,13 +134,12 @@ Compiler limitations
 ====================
 
 The macros __STDC_IEC_559__, __STDC_IEC_559_COMPLEX__ and
-__STDC_ISO_10646__ are properly supposed to be defined by the
-compiler, and to be constant throughout the translation unit (before
-and after any library headers are included).  However, they mainly
-relate to library features, and the necessary magic has yet to be
-implemented for GCC to predefine them to the correct values for the
-library in use, so glibc defines them in <features.h>.  Programs that
-test them before including any standard headers may misbehave.
+__STDC_ISO_10646__ are properly supposed to be constant throughout the
+translation unit (before and after any library headers are included).
+However, they mainly relate to library features, and GCC only knows to
+preinclude <stdc-predef.h> to get their definitions in version 4.8 and
+later.  Programs that test them before including any standard headers
+may misbehave with older compilers.
 
 GCC doesn't support the optional imaginary types.  Nor does it
 understand the keyword _Complex before GCC 3.0.  This has the
