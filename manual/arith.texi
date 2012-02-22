@@ -2131,7 +2131,7 @@ larger range.
 
 If the string has valid syntax for an integer but the value is not
 representable because of overflow, @code{strtoll} returns either
-@code{LONG_LONG_MAX} or @code{LONG_LONG_MIN} (@pxref{Range of Type}), as
+@code{LLONG_MAX} or @code{LLONG_MIN} (@pxref{Range of Type}), as
 appropriate for the sign of the value.  It also sets @code{errno} to
 @code{ERANGE} to indicate there was overflow.
 

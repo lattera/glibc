@@ -827,22 +827,36 @@ These are the maximum values that can be represented by a
 @w{@code{signed long int}} and @code{unsigned long int}, respectively.
 
 @comment limits.h
-@comment GNU
-@item LONG_LONG_MIN
+@comment ISO
+@item LLONG_MIN
 
 This is the minimum value that can be represented by a @w{@code{signed
 long long int}}.  On most machines that the GNU C system runs on,
 @w{@code{long long}} integers are 64-bit quantities.
 
 @comment limits.h
-@comment GNU
-@item LONG_LONG_MAX
+@comment ISO
+@item LLONG_MAX
 @comment limits.h
 @comment ISO
-@itemx ULONG_LONG_MAX
+@itemx ULLONG_MAX
 
 These are the maximum values that can be represented by a @code{signed
 long long int} and @code{unsigned long long int}, respectively.
+
+@comment limits.h
+@comment GNU
+@item LONG_LONG_MIN
+@comment limits.h
+@comment GNU
+@itemx LONG_LONG_MAX
+@comment limits.h
+@comment GNU
+@itemx ULONG_LONG_MAX
+These are obsolete names for @code{LLONG_MIN}, @code{LLONG_MAX}, and
+@code{ULLONG_MAX}.  They are only available if @code{_GNU_SOURCE} is
+defined (@pxref{Feature Test Macros}).  In GCC versions prior to 3.0,
+these were the only names available.
 
 @comment limits.h
 @comment GNU

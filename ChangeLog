@@ -1,4 +1,15 @@
 2012-02-22  Joseph Myers  <joseph@codesourcery.com>
+	    Roland McGrath  <roland@hack.frob.com>
+
+	[BZ #5461]
+	* manual/arith.texi (strtoll): Refer to LLONG_MAX and LLONG_MIN,
+	not LONG_LONG_MAX and LONG_LONG_MIN.
+	* manual/lang.texi (LONG_LONG_MIN): Document first as ISO
+	LLONG_MIN.  Refer to LONG_LONG_MIN only as older GCC-specific
+	name.
+	(LONG_LONG_MAX, LLONG_MAX, ULONG_LONG_MAX, ULLONG_MAX): Likewise.
+
+2012-02-22  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #2547]
 	[BZ #11365]
