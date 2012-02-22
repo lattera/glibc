@@ -1,5 +1,13 @@
 2012-02-22  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #2547]
+	[BZ #11365]
+	* sysdeps/ieee754/flt-32/s_nearbyintf.c (__nearbyintf): Do not
+	manipulate bits before adding and subtracting TWO23[sx].
+	* math/libm-test.inc (nearbyint_test): Add more tests.
+
+2012-02-22  Joseph Myers  <joseph@codesourcery.com>
+
 	[BZ #2548]
 	* sysdeps/ieee754/flt-32/s_rintf.c (__rintf): Do not manipulate
 	bits before adding and subtracting TWO23[sx].

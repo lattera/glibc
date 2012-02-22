@@ -4632,6 +4632,29 @@ nearbyint_test (void)
   TEST_f_f (nearbyint, 524286.75, 524287.0);
   TEST_f_f (nearbyint, 524288.75, 524289.0);
 
+  TEST_f_f (nearbyint, 1048576.75, 1048577.0);
+  TEST_f_f (nearbyint, 2097152.75, 2097153.0);
+  TEST_f_f (nearbyint, 2492472.75, 2492473.0);
+  TEST_f_f (nearbyint, 2886220.75, 2886221.0);
+  TEST_f_f (nearbyint, 3058792.75, 3058793.0);
+  TEST_f_f (nearbyint, -1048576.75, -1048577.0);
+  TEST_f_f (nearbyint, -2097152.75, -2097153.0);
+  TEST_f_f (nearbyint, -2492472.75, -2492473.0);
+  TEST_f_f (nearbyint, -2886220.75, -2886221.0);
+  TEST_f_f (nearbyint, -3058792.75, -3058793.0);
+#ifndef TEST_FLOAT
+  TEST_f_f (nearbyint, 70368744177664.75, 70368744177665.0);
+  TEST_f_f (nearbyint, 140737488355328.75, 140737488355329.0);
+  TEST_f_f (nearbyint, 281474976710656.75, 281474976710657.0);
+  TEST_f_f (nearbyint, 562949953421312.75, 562949953421313.0);
+  TEST_f_f (nearbyint, 1125899906842624.75, 1125899906842625.0);
+  TEST_f_f (nearbyint, -70368744177664.75, -70368744177665.0);
+  TEST_f_f (nearbyint, -140737488355328.75, -140737488355329.0);
+  TEST_f_f (nearbyint, -281474976710656.75, -281474976710657.0);
+  TEST_f_f (nearbyint, -562949953421312.75, -562949953421313.0);
+  TEST_f_f (nearbyint, -1125899906842624.75, -1125899906842625.0);
+#endif
+
   END (nearbyint);
 }
 
