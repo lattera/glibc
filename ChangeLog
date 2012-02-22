@@ -1,3 +1,7 @@
+2012-02-22  Joseph Myers  <joseph@codesourcery.com>
+
+	* manual/libc.texinfo (VERSION, UPDATED): Revert.
+
 2012-02-21  David S. Miller  <davem@davemloft.net>
 
 	* sysdeps/sparc/sparc32/fpu/libm-test-ulps: More jn test ULP updates.
