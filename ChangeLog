@@ -1,5 +1,9 @@
 2012-02-24  Joseph Myers  <joseph@codesourcery.com>
 
+	* manual/texinfo.tex: Update to version 2012-01-19.16.
+
+2012-02-24  Joseph Myers  <joseph@codesourcery.com>
+
 	* manual/Makefile (licenses): Change fdl-1.1.texi to fdl-1.3.texi.
 
 2012-02-24  Roland McGrath  <roland@hack.frob.com>
