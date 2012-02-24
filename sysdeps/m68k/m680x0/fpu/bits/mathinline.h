@@ -1,5 +1,5 @@
 /* Definitions of inline math functions implemented by the m68881/2.
-   Copyright (C) 1991,92,93,94,96,97,98,99,2000,2002, 2003, 2004, 2008, 2010
+   Copyright (C) 1991,92,93,94,96,97,98,99,2000,2002, 2003, 2004, 2008, 2010, 2012
      Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -175,9 +175,6 @@ __inline_mathop(__trunc, intrz)
 #if !defined __NO_MATH_INLINES && defined __OPTIMIZE__
 
 __inline_mathop(atan, atan)
-__inline_mathop(cos, cos)
-__inline_mathop(sin, sin)
-__inline_mathop(tan, tan)
 __inline_mathop(tanh, tanh)
 
 # if defined __USE_MISC || defined __USE_XOPEN_EXTENDED || defined __USE_ISOC99

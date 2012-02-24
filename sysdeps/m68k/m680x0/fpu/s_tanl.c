@@ -1,2 +1,2 @@
 #define FUNC tanl
-#include <s_atanl.c>
+#include <s_sinl.c>

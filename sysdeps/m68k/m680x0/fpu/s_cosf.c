@@ -1,2 +1,2 @@
-#define	FUNC	cosf
-#include <s_atanf.c>
+#define FUNC cosf
+#include <s_sinf.c>

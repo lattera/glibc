@@ -1,3 +1,18 @@
+2012-02-24  Andreas Schwab  <schwab@linux-m68k.org>
+
+	* sysdeps/m68k/m680x0/fpu/s_sin.c: Set errno to EDOM if argument
+	is infinite.
+	* sysdeps/m68k/m680x0/fpu/s_cos.c: Include <s_sin.c>.
+	* sysdeps/m68k/m680x0/fpu/s_tan.c: Likewise.
+	* sysdeps/m68k/m680x0/fpu/s_cosf.c: Include <s_sinf.c>.
+	* sysdeps/m68k/m680x0/fpu/s_cosl.c: Include <s_sinl.c>.
+	* sysdeps/m68k/m680x0/fpu/s_sinf.c: Include <s_sin.c>.
+	(FUNC): Don't define if already defined.
+	(float_type): Define.
+	* sysdeps/m68k/m680x0/fpu/s_sinl.c: Likewise.
+	* sysdeps/m68k/m680x0/fpu/bits/mathinline.h [__OPTIMIZE__]: Don't
+	define sin, cos, tan as inlines.
+
 2012-02-08  Andreas Schwab  <schwab@linux-m68k.org>
 
 	* sysdeps/m68k/crti.S: New file.
