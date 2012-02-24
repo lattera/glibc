@@ -1,4 +1,4 @@
-# Copyright (C) 1992-1999,2000,2001,2002,2003,2004,2006,2011
+# Copyright (C) 1992-2012
 #	Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
@@ -59,7 +59,7 @@ chapters = $(addsuffix .texi, \
 		       users sysinfo conf crypt debug)
 add-chapters = $(wildcard $(foreach d, $(add-ons), ../$d/$d.texi))
 appendices = lang.texi header.texi install.texi maint.texi contrib.texi
-licenses = freemanuals.texi lgpl-2.1.texi fdl-1.1.texi
+licenses = freemanuals.texi lgpl-2.1.texi fdl-1.3.texi
 
 -include texis
 texis: texis.awk $(chapters) $(add-chapters) $(appendices) $(licenses)
