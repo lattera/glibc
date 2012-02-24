@@ -23,7 +23,7 @@
 @set UPDATED 2011-07-19
 @set ISBN 1-882114-55-8
 
-@set FDL_VERSION 1.1
+@set FDL_VERSION 1.3
 
 @copying
 This file documents the GNU C library.
