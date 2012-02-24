@@ -1,5 +1,13 @@
 2012-02-24  Andreas Schwab  <schwab@linux-m68k.org>
 
+	* sysdeps/m68k/m680x0/fpu/s_expm1.c: Set errno to ERANGE if
+	argument causes overflow.
+	* sysdeps/m68k/m680x0/fpu/s_expm1f.c: Include <s_expm1.c>.
+	(float_type, o_threshold): Define.
+	* sysdeps/m68k/m680x0/fpu/s_expm1l.c: Likewise.
+	* sysdeps/m68k/m680x0/fpu/bits/mathinline.h [__OPTIMIZE__]: Don't
+	define expm1 as inline.
+
 	* sysdeps/m68k/m680x0/fpu/s_sin.c: Set errno to EDOM if argument
 	is infinite.
 	* sysdeps/m68k/m680x0/fpu/s_cos.c: Include <s_sin.c>.

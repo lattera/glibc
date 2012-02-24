@@ -179,7 +179,6 @@ __inline_mathop(tanh, tanh)
 
 # if defined __USE_MISC || defined __USE_XOPEN_EXTENDED || defined __USE_ISOC99
 __inline_mathop(rint, int)
-__inline_mathop(expm1, etoxm1)
 __inline_mathop(log1p, lognp1)
 # endif
 
