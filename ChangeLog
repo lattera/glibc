@@ -1,3 +1,10 @@
+2012-02-24  Roland McGrath  <roland@hack.frob.com>
+
+	[BZ #13738]
+	* manual/libc.texinfo (FDL_VERSION): New @set.
+	Use it for mention of FDL in cover text.
+	(Documentation License): Use it in @include file name.
+
 2012-02-22  Joseph Myers  <joseph@codesourcery.com>
 	    Roland McGrath  <roland@hack.frob.com>
 
