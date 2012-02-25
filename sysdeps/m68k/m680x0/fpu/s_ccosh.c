@@ -1,5 +1,5 @@
 /* Complex cosine hyperbole function.  m68k fpu version
-   Copyright (C) 1997, 1999, 2010 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1999, 2010, 2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Andreas Schwab <schwab@issan.informatik.uni-dortmund.de>.
 
@@ -67,7 +67,7 @@ s(__ccosh) (__complex__ float_type x)
 	  if (rx_cond & __M81_COND_INF)
 	    __real__ retval = s(fabs) (__real__ x);
 	  else
-	    __real__ retval = 0.0/0.0;
+	    __real__ retval = s(__nan) ("");
 	  __imag__ retval = __imag__ x - __imag__ x;
 	}
     }
