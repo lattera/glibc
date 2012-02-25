@@ -1,7 +1,11 @@
+2012-02-24  Ulrich Drepper  <drepper@gmail.com>
+
+	* stdlib/fmtmsg.c (fmtmsg): Lock around use of severity list.
+	Reported by Peng Haitao <penght@cn.fujitsu.com>.
+
 2012-02-24  Joseph Myers  <joseph@codesourcery.com>
 
 	* configure.in: Use -o not -a in test for unsupported multi-arch.
-	* configure: Regenerated.
 
 2012-02-24  Joseph Myers  <joseph@codesourcery.com>
 
