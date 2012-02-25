@@ -1,5 +1,10 @@
 2012-02-24  Joseph Myers  <joseph@codesourcery.com>
 
+	* configure.in: Use -o not -a in test for unsupported multi-arch.
+	* configure: Regenerated.
+
+2012-02-24  Joseph Myers  <joseph@codesourcery.com>
+
 	* manual/texinfo.tex: Update to version 2012-01-19.16.
 
 2012-02-24  Joseph Myers  <joseph@codesourcery.com>

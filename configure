@@ -4142,7 +4142,7 @@ _ACEOF
 
 fi
 
-if test x"$libc_cv_asm_gnu_indirect_function" != xyes -a x"$libc_cv_asm_type_prefix" = xno; then
+if test x"$libc_cv_asm_gnu_indirect_function" != xyes -o x"$libc_cv_asm_type_prefix" = xno; then
   if test x"$multi_arch" = xyes; then
     as_fn_error $? "--enable-multi-arch support requires assembler and linker support" "$LINENO" 5
   else
