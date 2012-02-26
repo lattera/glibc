@@ -179,10 +179,7 @@ typedef __pid_t pid_t;
 
 # ifdef __USE_ISOC11
 /* Time base values for timespec_get.  */
-enum
-  {
-    TIME_UTC = 1
-  };
+# define TIME_UTC 1
 # endif
 
 
@@ -362,13 +359,6 @@ extern int clock_getcpuclockid (pid_t __pid, clockid_t *__clock_id) __THROW;
 #  endif
 
 
-# ifdef __USE_ISOC11
-/* Set TS to calendar time based in time base BASE.  */
-extern int timespec_get (struct timespec *__ts, int __base)
-     __THROW __nonnull ((1));
-# endif
-
-
 /* Create new per-process timer using CLOCK_ID.  */
 extern int timer_create (clockid_t __clock_id,
 			 struct sigevent *__restrict __evp,
@@ -388,6 +378,13 @@ extern int timer_gettime (timer_t __timerid, struct itimerspec *__value)
 
 /* Get expiration overrun for timer TIMERID.  */
 extern int timer_getoverrun (timer_t __timerid) __THROW;
+# endif
+
+
+# ifdef __USE_ISOC11
+/* Set TS to calendar time based in time base BASE.  */
+extern int timespec_get (struct timespec *__ts, int __base)
+     __THROW __nonnull ((1));
 # endif
 
 

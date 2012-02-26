@@ -1,3 +1,8 @@
+2012-02-25  Ulrich Drepper  <drepper@gmail.com>
+
+	* time/time.h: TIME_UTC must be a macro.
+	Make timespec_get available for ISO C11 only as well.
+
 2012-02-24  Ulrich Drepper  <drepper@gmail.com>
 
 	* stdlib/fmtmsg.c (fmtmsg): Lock around use of severity list.
