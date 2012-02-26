@@ -1,3 +1,15 @@
+2012-02-26  Andreas Schwab  <schwab@linux-m68k.org>
+
+	* sysdeps/m68k/m680x0/fpu/k_sinl.c: Replace by empty file.
+	* sysdeps/m68k/m680x0/fpu/k_cosl.c: Likewise.
+	* sysdeps/m68k/m680x0/fpu/k_tanf.c: Likewise.
+	* sysdeps/m68k/m680x0/fpu/k_tanl.c: Likewise.
+	* sysdeps/m68k/m680x0/fpu/k_sin.c: Remove.
+	* sysdeps/m68k/m680x0/fpu/k_sinf.c: Remove.
+	* sysdeps/m68k/m680x0/fpu/k_cos.c: Remove.
+	* sysdeps/m68k/m680x0/fpu/k_cosf.c: Remove.
+	* sysdeps/m68k/m680x0/fpu/k_tan.c: Remove.
+
 2012-02-25  Andreas Schwab  <schwab@linux-m68k.org>
 
 	* sysdeps/m68k/m680x0/fpu/s_ccosh.c: Avoid raising invalid
