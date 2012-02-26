@@ -1,3 +1,8 @@
+2012-02-26  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/arm/nptl/bits/pthreadtypes.h: Name
+	pthread_attr_t union.
+
 2012-02-17  Aurelien Jarno  <aurelien@aurel32.net>
 
 	* sysdeps/arm/libm-test-ulps: Adjust ULPs for jn tests.
