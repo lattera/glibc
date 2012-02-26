@@ -270,7 +270,10 @@ enum
 # endif
 
 /* Forward declaration.  */
+# ifndef __have_pthread_attr_t
 typedef union __pthread_attr pthread_attr_t;
+#  define __have_pthread_attr_t	1
+# endif
 
 typedef struct sigevent
   {
