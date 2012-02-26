@@ -1,5 +1,8 @@
 2012-02-26  Andreas Schwab  <schwab@linux-m68k.org>
 
+	* sysdeps/m68k/m680x0/fpu/Makefile: Remove.
+	* sysdeps/m68k/m680x0/fpu/switch: Remove directory.
+
 	* sysdeps/m68k/m680x0/fpu/k_sinl.c: Replace by empty file.
 	* sysdeps/m68k/m680x0/fpu/k_cosl.c: Likewise.
 	* sysdeps/m68k/m680x0/fpu/k_tanf.c: Likewise.
