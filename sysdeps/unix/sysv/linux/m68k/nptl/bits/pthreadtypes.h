@@ -1,4 +1,4 @@
-/* Copyright (C) 2010 Free Software Foundation, Inc.
+/* Copyright (C) 2010, 2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Maxim Kuvyrkov <maxim@codesourcery.com>, 2010.
 
@@ -38,7 +38,7 @@
 typedef unsigned long int pthread_t;
 
 
-typedef union
+typedef union __pthread_attr
 {
   char __size[__SIZEOF_PTHREAD_ATTR_T];
   long int __align;
