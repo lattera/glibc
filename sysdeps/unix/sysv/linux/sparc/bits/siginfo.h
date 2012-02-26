@@ -1,5 +1,5 @@
 /* siginfo_t, sigevent and constants.  Linux/SPARC version.
-   Copyright (C) 1997-2002, 2003, 2011 Free Software Foundation, Inc.
+   Copyright (C) 1997-2002, 2003, 2011, 2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -47,7 +47,7 @@ typedef union sigval
 #  define __SI_PAD_SIZE     ((__SI_MAX_SIZE / sizeof (int)) - 3)
 # endif
 
-typedef struct siginfo
+typedef struct
   {
     int si_signo;		/* Signal number.  */
     int si_errno;		/* If non-zero, an errno value associated with

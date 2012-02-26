@@ -294,7 +294,7 @@ extern int lchmod (const char *__file, __mode_t __mode)
 #endif
 
 /* Set file access permissions of the file FD is open on to MODE.  */
-#if defined __USE_BSD || defined __USE_XOPEN_EXTENDED || defined __USE_XOPEN2K8
+#if defined __USE_BSD || defined __USE_POSIX
 extern int fchmod (int __fd, __mode_t __mode) __THROW;
 #endif
 

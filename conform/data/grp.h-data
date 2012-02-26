@@ -1,4 +1,8 @@
 #if !defined ISO && !defined ISO99 && !defined ISO11
+#ifdef POSIX
+# define gid_t __gid_t
+#endif
+
 type {struct group}
 element {struct group} {char*} gr_name
 element {struct group} gid_t gr_gid

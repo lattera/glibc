@@ -971,13 +971,11 @@ extern char *getpass (const char *__prompt) __nonnull ((1));
 #endif /* Use BSD || X/Open.  */
 
 
-#if defined __USE_BSD || defined __USE_XOPEN || defined __USE_XOPEN2K
 /* Make all changes done to FD actually appear on disk.
 
    This function is a cancellation point and therefore not marked with
    __THROW.  */
 extern int fsync (int __fd);
-#endif /* Use BSD || X/Open || Unix98.  */
 
 
 #ifdef __USE_GNU
@@ -1032,7 +1030,8 @@ extern int truncate64 (const char *__file, __off64_t __length)
 
 #endif /* Use BSD || X/Open Unix || POSIX 2008.  */
 
-#if defined __USE_BSD || defined __USE_XOPEN_EXTENDED || defined __USE_XOPEN2K
+#if defined __USE_BSD || defined __USE_POSIX199309 \
+    || defined __USE_XOPEN_EXTENDED || defined __USE_XOPEN2K
 
 /* Truncate the file FD is open on to LENGTH bytes.  */
 # ifndef __USE_FILE_OFFSET64
@@ -1049,7 +1048,7 @@ extern int __REDIRECT_NTH (ftruncate, (int __fd, __off64_t __length),
 extern int ftruncate64 (int __fd, __off64_t __length) __THROW __wur;
 # endif
 
-#endif /* Use BSD || X/Open Unix || POSIX 2003.  */
+#endif /* Use BSD || POSIX.1b || X/Open Unix || XPG6.  */
 
 
 #if (defined __USE_XOPEN_EXTENDED && !defined __USE_XOPEN2K) \

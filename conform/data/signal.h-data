@@ -8,7 +8,12 @@ typed-constant SIG_IGN {void(*)(int)}
 type sig_atomic_t
 #if !defined ISO && !defined ISO99 && !defined ISO11
 type sigset_t
+#endif
+#if !defined ISO && !defined ISO99 && !defined ISO11 && !defined POSIX
 type pid_t
+#elif defined POSIX
+# define pid_t __pid_t
+# define uid_t __uid_t
 #endif
 #if defined XOPEN2K8 || defined POSIX2008
 type size_t
@@ -28,7 +33,7 @@ element {struct timespec} __time_t tv_sec
 element {struct timespec} long tv_nsec
 #endif
 
-#if defined UNIX98 || defined XOPEN2K8 || defined POSIX2008
+#if defined POSIX || defined UNIX98 || defined XOPEN2K8 || defined POSIX2008
 element {union sigval} int sival_int
 element {union sigval} {void*} sival_ptr
 

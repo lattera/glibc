@@ -56,7 +56,7 @@ function {char*} cuserid (char*)
 function int dprintf (int, const char*, ...)
 #endif
 function int fclose (FILE*)
-#if defined XOPEN2K8 || defined POSIX2008
+#if !defined ISO && !defined ISO99 && !defined ISO11 && !defined XPG3 && !defined XPG4
 function {FILE*} fdopen (int, const char*)
 #endif
 function int feof (FILE*)
@@ -68,7 +68,7 @@ function {char*} fgets (char*, int, FILE*)
 #if !defined ISO && !defined ISO99 && !defined ISO11
 function int fileno (FILE*)
 #endif
-#if defined XOPEN2K || defined XOPEN2K8 || defined POSIX2008
+#if defined POSIX || defined XOPEN2K || defined XOPEN2K8 || defined POSIX2008
 function void flockfile (FILE*)
 #endif
 #if defined XOPEN2K8 || defined POSIX2008
@@ -90,14 +90,14 @@ function {long int} ftell (FILE*)
 #if defined XOPEN2K || defined XOPEN2K8 || defined POSIX2008
 function off_t ftello (FILE*)
 #endif
-#if defined XOPEN2K || defined XOPEN2K8 || defined POSIX2008
+#if defined POSIX || defined XOPEN2K || defined XOPEN2K8 || defined POSIX2008
 function int ftrylockfile (FILE*)
 function void funlockfile (FILE*)
 #endif
 function size_t fwrite (const void*, size_t, size_t, FILE*)
 function int getc (FILE*)
 function int getchar (void)
-#if defined XOPEN2K || defined XOPEN2K8 || defined POSIX2008
+#if defined POSIX || defined XOPEN2K || defined XOPEN2K8 || defined POSIX2008
 function int getc_unlocked (FILE*)
 function int getchar_unlocked ()
 #endif
@@ -127,7 +127,7 @@ function {FILE*} popen (const char*, const char*)
 function int printf (const char*, ...)
 function int putc (int, FILE*)
 function int putchar (int)
-#if defined XOPEN2K || defined XOPEN2K8 || defined POSIX2008
+#if defined POSIX || defined XOPEN2K || defined XOPEN2K8 || defined POSIX2008
 function int putc_unlocked (int, FILE*)
 function int putchar_unlocked (int)
 #endif
@@ -159,18 +159,18 @@ function int ungetc (int, FILE*)
 function int vdprintf (int, const char*, va_list)
 #endif
 function int vfprintf (FILE*, const char*, va_list)
-#if !defined ISO && !defined XPG3 && !defined XPG4 && !defined UNIX98
+#if !defined ISO && !defined POSIX && !defined XPG3 && !defined XPG4 && !defined UNIX98
 function int vfscanf (FILE*, const char*, va_list)
 #endif
 function int vprintf (const char*, va_list)
-#if !defined ISO && !defined XPG3 && !defined XPG4 && !defined UNIX98
+#if !defined ISO && !defined POSIX && !defined XPG3 && !defined XPG4 && !defined UNIX98
 function int vscanf (const char*, va_list)
 #endif
-#ifndef ISO
+#if !defined ISO && !defined POSIX
 function int vsnprintf (char*, size_t, const char*, va_list)
 #endif
 function int vsprintf (char*, const char*, va_list)
-#if !defined ISO && !defined XPG3 && !defined XPG4 && !defined UNIX98
+#if !defined ISO && !defined POSIX && !defined XPG3 && !defined XPG4 && !defined UNIX98
 function int vsscanf (const char*, const char*, va_list)
 #endif
 

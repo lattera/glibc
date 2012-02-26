@@ -1,5 +1,29 @@
 #if !defined ISO && !defined ISO99 && !defined ISO11
 
+#if !defined POSIX && !defined POSIX2008
+type blkcnt_t
+type blksize_t
+#endif
+#ifndef POSIX
+type dev_t
+type ino_t
+type mode_t
+type nlink_t
+type uid_t
+type gid_t
+type off_t
+type time_t
+#else
+# define dev_t __dev_t
+# define ino_t __ino_t
+# define mode_t __mode_t
+# define nlink_t __nlink_t
+# define uid_t __uid_t
+# define gid_t __gid_t
+# define off_t __off_t
+# define time_t __time_t
+#endif
+
 type {struct stat}
 
 element {struct stat} dev_t st_dev
@@ -20,18 +44,6 @@ element {struct stat} blksize_t st_blksize
 element {struct stat} blkcnt_t st_blocks
 #endif
 
-#if !defined POSIX && !defined POSIX2008
-type blkcnt_t
-type blksize_t
-#endif
-type dev_t
-type ino_t
-type mode_t
-type nlink_t
-type uid_t
-type gid_t
-type off_t
-type time_t
 # if defined XOPEN2K8 || defined POSIX2008
 type {struct timespec}
 element {struct timespec} time_t tv_sec
@@ -97,7 +109,9 @@ function int fstat (int, struct stat*)
 function int fstatat (int, const char*, struct stat*, int)
 function int futimens (int, const struct timespec[2])
 # endif
+#if !defined POSIX
 function int lstat (const char*, struct stat*)
+#endif
 function int mkdir (const char*, mode_t)
 # if defined XOPEN2K8 || defined POSIX2008
 function int mkdirat (int, const char*, mode_t)

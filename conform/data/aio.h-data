@@ -28,12 +28,12 @@ function int aio_suspend (const struct aiocb* const[], int, const struct timespe
 function int aio_write (struct aiocb*)
 function int lio_listio (int, struct aiocb *const[], int, struct sigevent*)
 
-# if !defined POSIX
+// POSIX in theory doesn't allow the header to be self contained but
+// this was fixed later and we do not test for this here.
 allow-header fcntl.h
 allow-header signal.h
 allow-header sys/types.h
 allow-header time.h
-# endif
 
 allow aio_*
 allow lio_*

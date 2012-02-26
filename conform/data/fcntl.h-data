@@ -1,4 +1,4 @@
-#if !defined ISO && !defined ISO99 && !defined ISO11 && !defined POSIX
+#if !defined ISO && !defined ISO99 && !defined ISO11
 constant F_DUPFD
 constant F_GETFD
 constant F_SETFD
@@ -7,8 +7,10 @@ constant F_SETFL
 constant F_GETLK
 constant F_SETLK
 constant F_SETLKW
+#if !defined POSIX && !defined XPG3 && !defined XPG4 && !defined UNIX98
 constant F_GETOWN
 constant F_SETOWN
+#endif
 
 constant FD_CLOEXEC
 
@@ -16,9 +18,11 @@ constant F_RDLCK
 constant F_UNLCK
 constant F_WRLCK
 
+#if !defined POSIX
 constant SEEK_SET
 constant SEEK_CUR
 constant SEEK_END
+#endif
 
 constant O_CREAT
 constant O_EXCL
@@ -37,6 +41,7 @@ constant O_RDONLY
 constant O_RDWR
 constant O_WRONLY
 
+#if !defined POSIX
 constant S_IFMT
 constant S_IFBLK
 constant S_IFCHR
@@ -60,8 +65,9 @@ constant S_IWOTH
 constant S_IXOTH
 constant S_ISUID
 constant S_ISGID
-#if !defined POSIX && !defined POSIX2008
+#if !defined POSIX2008
 constant S_ISVTX
+#endif
 #endif
 
 #if defined XOPEN2K || defined XOPEN2K8 || defined POSIX2008
@@ -103,7 +109,6 @@ constant O_EXEC
 constant O_SEARCH
 constant O_DIRECTORY
 constant O_NOFOLLOW
-constant FD_CLOEXEC
 constant F_DUPFD_CLOEXEC
 constant AT_FDCWD
 constant AT_EACCESS

@@ -48,10 +48,6 @@ type pthread_spinlock_t
 # endif
 type pthread_t
 
-#ifdef POSIX
-# define sigset_t __sigset_t
-#endif
-
 function int pthread_attr_destroy (pthread_attr_t*)
 function int pthread_attr_getdetachstate (const pthread_attr_t*, int*)
 # ifndef POSIX
@@ -95,10 +91,14 @@ function int pthread_cond_signal (pthread_cond_t*)
 function int pthread_cond_timedwait (pthread_cond_t*, pthread_mutex_t*, const struct timespec*)
 function int pthread_cond_wait (pthread_cond_t*, pthread_mutex_t*)
 function int pthread_condattr_destroy (pthread_condattr_t*)
+#if !defined POSIX && !defined UNIX98 && !defined XOPEN2K
 optional-function int pthread_condattr_getclock (const pthread_condattr_t*, clockid_t*)
+#endif
 function int pthread_condattr_getpshared (const pthread_condattr_t*, int*)
 function int pthread_condattr_init (pthread_condattr_t*)
+#if !defined POSIX && !defined UNIX98 && !defined XOPEN2K
 optional-function int pthread_condattr_setclock (pthread_condattr_t*, clockid_t)
+#endif
 function int pthread_condattr_setpshared (pthread_condattr_t*, int)
 function int pthread_create (pthread_t*, const pthread_attr_t*, void *(*) (void*), void*)
 function int pthread_detach (pthread_t)
@@ -162,7 +162,7 @@ function int pthread_setconcurrency (int)
 # endif
 function int pthread_setschedparam (pthread_t, int, const struct sched_param*)
 function int pthread_setspecific (pthread_key_t, const void*)
-# if !defined XOPEN2K && !defined XOPEN2K8 && !defined POSIX2008
+# if !defined POSIX && !defined XOPEN2K && !defined XOPEN2K8 && !defined POSIX2008
 function int pthread_sigmask (int, const sigset_t*, sigset_t*)
 # endif
 # if !defined POSIX

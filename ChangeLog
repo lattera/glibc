@@ -1,3 +1,39 @@
+2012-02-26  Ulrich Drepper  <drepper@gmail.com>
+
+	* conform/Makefile: For now ignore errors from run-conformtest.
+	* conform/conformtest.pl: Simplify code.  Add -ansi to CFLAGS for
+	POSIX to avoid namespace pollution.  Don't prepend headers.
+	* conform/data/aio.h-data: Fixes for POSIX testing.
+	* conform/data/fcntl.h-data: Likewise.
+	* conform/data/glob.h-data: Likewise.
+	* conform/data/grp.h-data: Likewise.
+	* conform/data/pthread.h-data: Likewise.
+	* conform/data/pwd.h-data: Likewise.
+	* conform/data/signal.h-data: Likewise.
+	* conform/data/spawn.h-data: Likewise.
+	* conform/data/stdio.h-data: Likewise.
+	* conform/data/stdlib.h-data: Likewise.
+	* conform/data/stropts.h-data: Likewise.
+	* conform/data/sys/mman.h-data: Likewise.
+	* conform/data/sys/stat.h-data: Likewise.
+	* conform/data/sys/types.h-data: Likewise.
+	* conform/data/sys/wait.h-data: Likewise.
+	* conform/data/time.h-data: Likewise.
+	* conform/data/unistd.h-data: Likewise.
+	* conform/data/utime.h-data: Likewise.
+
+	* io/sys/stat.h: fchmod was always in POSIX.
+	* posix/sys/wait.h: Include <sys/resource.h> only for waitid.
+	* posix/unistd.h: fsync and ftruncate were in early POSIX as well.
+	* rt/aio.h: Define __need_timespec before including <time.h>.
+	* sysdeps/unix/sysv/linux/bits/siginfo.h: Don't name siginfo_t
+	struct.  Add forward declaration of pthread_attr_t and use it in
+	sigevent.
+	* sysdeps/unix/sysv/linux/s390/bits/siginfo.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/siginfo.h: Likewise.
+	* sysdeps/unix/sysv/linux/bits/time.h: Don't let __STRICT_ANSI__
+	always remove CLK_TCK definition.
+
 2012-02-26  Andreas Schwab  <schwab@linux-m68k.org>
 
 	* sysdeps/ieee754/dbl-64/k_tan.c: Replace with empty file.

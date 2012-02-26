@@ -17,11 +17,13 @@ constant MCL_FUTURE
 
 constant MAP_FAILED
 
+#ifndef POSIX
 constant POSIX_MADV_NORMAL
 constant POSIX_MADV_SEQUENTIAL
 constant POSIX_MADV_RANDOM
 constant POSIX_MADV_WILLNEED
 constant POSIX_MADV_DONTNEED
+#endif
 
 optional-constant POSIX_TYPED_MEM_ALLOCATE
 optional-constant POSIX_TYPED_MEM_ALLOCATE_CONTIG
@@ -42,7 +44,9 @@ function int msync (void*, size_t, int)
 function int munlock (const void*, size_t)
 function int munlockall (void)
 function int munmap (void*, size_t)
+#ifndef POSIX
 function int posix_madvise (void*, size_t, int)
+#endif
 optional-function int posix_mem_offset (const void*, size_t, off_t*, size_t*, int*)
 optional-function int posix_typed_mem_get_info (int, struct posix_typed_mem_info*)
 optional-function int posix_typed_mem_open (const char*, int, int)

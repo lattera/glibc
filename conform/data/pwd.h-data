@@ -1,4 +1,9 @@
 #if !defined ISO && !defined ISO99 && !defined ISO11
+#ifdef POSIX
+# define uid_t __uid_t
+# define gid_t __gid_t
+#endif
+
 type {struct passwd}
 element {struct passwd} {char*} pw_name
 element {struct passwd} uid_t pw_uid

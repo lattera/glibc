@@ -1,4 +1,11 @@
 #if !defined ISO && !defined ISO99 && !defined ISO11
+#ifdef POSIX
+# define uid_t __uid_t
+# define gid_t __gid_t
+# define off_t __off_t
+# define pid_t __pid_t
+#endif
+
 optional-constant _POSIX_VERSION
 optional-constant _POSIX2_C_VERSION
 optional-constant _XOPEN_VERSION
@@ -336,9 +343,11 @@ type gid_t
 type off_t
 type pid_t
 
+#if !defined POSIX
 type useconds_t
 
 type intptr_t
+#endif
 
 function int access (const char*, int)
 function {unsigned int} alarm (unsigned int)
@@ -355,8 +364,8 @@ function size_t confstr (int, char*, size_t)
 #if !defined POSIX && !defined POSIX2008
 function {char*} crypt (const char*, const char*)
 #endif
-function {char*} ctermid (char*)
 #if defined XPG3 || defined XPG4 || defined UNIX98
+function {char*} ctermid (char*)
 function {char*} cuserid (char*)
 #endif
 function int dup (int)
@@ -374,7 +383,9 @@ function void _exit (int)
 # if defined XOPEN2K8 || defined POSIX2008
 function int faccessat (int, const char*, int, int)
 # endif
+#if !defined POSIX
 function int fchown (int, uid_t, gid_t)
+#endif
 # if defined XOPEN2K8 || defined POSIX2008
 function int fchownat (int, const char*, uid_t, gid_t, int)
 # endif
@@ -400,7 +411,9 @@ function int getgroups (int, gid_t[])
 #if !defined POSIX && !defined POSIX2008
 function long gethostid (void)
 #endif
+#if !defined POSIX
 function int gethostname (char*, size_t)
+#endif
 function {char*} getlogin (void)
 function int getlogin_r (char*, size_t)
 function int getopt (int, char*const[], const char*)
@@ -442,14 +455,16 @@ function int pipe (int[2])
 #ifndef POSIX
 function ssize_t pread (int, void*, size_t, off_t)
 #endif
-#if !defined XOPEN2K && !defined XOPEN2K8 && !defined POSIX2008
+#if !defined POSIX && !defined XOPEN2K && !defined XOPEN2K8 && !defined POSIX2008
 function int pthread_atfork (void(*)(void), void(*)(void), void(*)(void))
 #endif
 #ifndef POSIX
 function ssize_t pwrite (int, const void*, size_t, off_t)
 #endif
 function ssize_t read (int, void*, size_t)
+#ifndef POSIX
 function ssize_t readlink (const char*, char*, size_t)
+#endif
 # if defined XOPEN2K8 || defined POSIX2008
 function ssize_t readlinkat (int, const char*, char*, size_t)
 # endif
@@ -457,8 +472,10 @@ function int rmdir (const char*)
 #if !defined XOPEN2K && !defined XOPEN2K8 && !defined POSIX && !defined POSIX2008
 function {void*} sbrk (intptr_t)
 #endif
+#ifndef POSIX
 function int setegid (gid_t)
 function int seteuid (uid_t)
+#endif
 function int setgid (gid_t)
 function int setpgid (pid_t, pid_t)
 # if !defined POSIX && !defined POSIX2008
@@ -472,7 +489,9 @@ function {unsigned int} sleep (unsigned int)
 # if !defined POSIX && !defined POSIX2008
 function void swab (const void*, void*, ssize_t)
 # endif
+#ifndef POSIX
 function int symlink (const char*, const char*)
+# endif
 # if defined XOPEN2K8 || defined POSIX2008
 function int symlinkat (const char*, int, const char*)
 # endif

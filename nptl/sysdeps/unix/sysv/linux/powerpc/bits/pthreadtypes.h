@@ -1,7 +1,6 @@
 /* Machine-specific pthread type layouts.  PowerPC version.
-   Copyright (C) 2003, 2004, 2005, 2006, 2007 Free Software Foundation, Inc.
+   Copyright (C) 2003-2007, 2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Paul Mackerras <paulus@au.ibm.com>, 2003.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -50,7 +49,7 @@
 typedef unsigned long int pthread_t;
 
 
-typedef union
+typedef union __pthread_attr
 {
   char __size[__SIZEOF_PTHREAD_ATTR_T];
   long int __align;

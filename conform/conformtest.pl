@@ -32,27 +32,10 @@ if (@headers == ()) {
 	      "arpa/inet.h", "aio.h");
 }
 
-if ($standard ne "ISO" && $standard ne "ISO99" && $standard ne "ISO11"
-    && $standard ne "POSIX" && $standard ne "XPG3" && $standard ne "XPG4"
-    && $standard ne "UNIX98" && $standard ne "XOPEN2K" && $standard ne "XOPEN2K8"
-    && $standard ne "POSIX2008") {
-  die "unknown standard \"$standard\"";
-}
-
-# These are the ISO C99 keywords.
-@keywords = ('auto', 'break', 'case', 'char', 'const', 'continue', 'default',
-	     'do', 'double', 'else', 'enum', 'extern', 'float', 'for', 'goto',
-	     'if', 'inline', 'int', 'long', 'register', 'restrict', 'return',
-	     'short', 'signed', 'sizeof', 'static', 'struct', 'switch',
-	     'typedef', 'union', 'unsigned', 'void', 'volatile', 'while');
-
-# These are symbols which are known to pollute the namespace.
-@knownproblems = ('unix', 'linux', 'i386');
-
 $CFLAGS{"ISO"} = "-ansi";
 $CFLAGS{"ISO99"} = "-std=c99";
 $CFLAGS{"ISO11"} = "-std=c1x -D_ISOC11_SOURCE";
-$CFLAGS{"POSIX"} = "-D_POSIX_C_SOURCE=199912";
+$CFLAGS{"POSIX"} = "-D_POSIX_C_SOURCE=199912 -ansi";
 $CFLAGS{"XPG3"} = "-D_XOPEN_SOURCE";
 $CFLAGS{"XPG4"} = "-D_XOPEN_SOURCE_EXTENDED";
 $CFLAGS{"UNIX98"} = "-D_XOPEN_SOURCE=500";
@@ -62,26 +45,39 @@ $CFLAGS{"POSIX2008"} = "-D_POSIX_C_SOURCE=200809L";
 
 $CFLAGS = "$flags -fno-builtin '-D__attribute__(x)=' $CFLAGS{$standard} -D_ISOMAC";
 
-if ($standard ne "XOPEN2K8" && $standard ne "POSIX2008") {
-  # Some headers need a bit more attention.  At least with XPG7
-  # all headers should be self-contained.
-  $mustprepend{'inttypes.h'} = "#include <stddef.h>\n";
-  $mustprepend{'glob.h'} = "#include <sys/types.h>\n";
-  $mustprepend{'grp.h'} = "#include <sys/types.h>\n";
-  $mustprepend{'regex.h'} = "#include <sys/types.h>\n";
-  $mustprepend{'pwd.h'} = "#include <sys/types.h>\n";
-  $mustprepend{'sched.h'} = "#include <sys/types.h>\n";
-  $mustprepend{'signal.h'} = "#include <pthread.h>\n#include <sys/types.h>\n";
-  $mustprepend{'stdio.h'} = "#include <sys/types.h>\n";
-  $mustprepend{'sys/stat.h'} = "#include <sys/types.h>\n";
-  $mustprepend{'wchar.h'} = "#include <stdarg.h>\n";
-  $mustprepend{'wordexp.h'} = "#include <stddef.h>\n";
-}
+# Check standard name for validity.
+die "unknown standard \"$standard\"" if ($CFLAGS{$standard} eq "");
+
+# if ($standard ne "XOPEN2K8" && $standard ne "POSIX2008") {
+#   # Some headers need a bit more attention.  At least with XPG7
+#   # all headers should be self-contained.
+#   $mustprepend{'inttypes.h'} = "#include <stddef.h>\n";
+#   $mustprepend{'glob.h'} = "#include <sys/types.h>\n";
+#   $mustprepend{'grp.h'} = "#include <sys/types.h>\n";
+#   $mustprepend{'regex.h'} = "#include <sys/types.h>\n";
+#   $mustprepend{'pwd.h'} = "#include <sys/types.h>\n";
+#   $mustprepend{'sched.h'} = "#include <sys/types.h>\n";
+#   $mustprepend{'signal.h'} = "#include <pthread.h>\n#include <sys/types.h>\n";
+#   $mustprepend{'stdio.h'} = "#include <sys/types.h>\n";
+#   $mustprepend{'sys/stat.h'} = "#include <sys/types.h>\n";
+#   $mustprepend{'wchar.h'} = "#include <stdarg.h>\n";
+#   $mustprepend{'wordexp.h'} = "#include <stddef.h>\n";
+# }
+
+# These are the ISO C99 keywords.
+@keywords = ('auto', 'break', 'case', 'char', 'const', 'continue', 'default',
+	     'do', 'double', 'else', 'enum', 'extern', 'float', 'for', 'goto',
+	     'if', 'inline', 'int', 'long', 'register', 'restrict', 'return',
+	     'short', 'signed', 'sizeof', 'static', 'struct', 'switch',
+	     'typedef', 'union', 'unsigned', 'void', 'volatile', 'while');
 
 # Make a hash table from this information.
 while ($#keywords >= 0) {
   $iskeyword{pop (@keywords)} = 1;
 }
+
+# These are symbols which are known to pollute the namespace.
+@knownproblems = ('unix', 'linux', 'i386');
 
 # Make a hash table from the known problems.
 while ($#knownproblems >= 0) {
@@ -436,7 +432,7 @@ while ($#headers >= 0) {
 		     "Member \"$member\" does not have the correct type.",
 		     $res, 0);
       }
-    } elsif (/^optional-constant *([a-zA-Z0-9_]*) ([>=<]+) ([A-Za-z0-9_-]*)/) {
+    } elsif (/^optional-constant *([a-zA-Z0-9_]*) ([>=<!]+) ([A-Za-z0-9_-]*)/) {
       my($const) = $1;
       my($op) = $2;
       my($value) = $3;
@@ -467,7 +463,7 @@ while ($#headers >= 0) {
 	$res = runtest ($fnamebase, "Testing for value of constant $const",
 			"Constant \"$const\" has not the right value.", $res);
       }
-    } elsif (/^constant *([a-zA-Z0-9_]*) *([>=<]+) ([A-Za-z0-9_-]*)/) {
+    } elsif (/^constant *([a-zA-Z0-9_]*) *([>=<!]+) ([A-Za-z0-9_-]*)/) {
       my($const) = $1;
       my($op) = $2;
       my($value) = $3;
@@ -987,7 +983,7 @@ while ($#headers >= 0) {
 
       compiletest ($fnamebase, "Test availability of macro $macro",
 		   "NOT PRESENT", $missing, 1);
-    } elsif (/^macro *([a-zA-Z0-9_]*) *([>=<]+) ([A-Za-z0-9_]*)/) {
+    } elsif (/^macro *([a-zA-Z0-9_]*) *([>=<!]+) ([A-Za-z0-9_]*)/) {
       my($macro) = "$1";
       my($op) = $2;
       my($value) = $3;

@@ -28,7 +28,6 @@
 __BEGIN_DECLS
 
 #include <signal.h>
-#include <sys/resource.h>
 
 /* These macros could also be defined in <stdlib.h>.  */
 #if !defined _STDLIB_H || (!defined __USE_XOPEN && !defined __USE_XOPEN2K8)
@@ -138,6 +137,7 @@ extern __pid_t wait (__WAIT_STATUS __stat_loc);
 extern __pid_t waitpid (__pid_t __pid, int *__stat_loc, int __options);
 
 #if defined __USE_SVID || defined __USE_XOPEN || defined __USE_XOPEN2K8
+# include <sys/resource.h>
 # define __need_siginfo_t
 # include <bits/siginfo.h>
 /* Wait for a childing matching IDTYPE and ID to change the status and

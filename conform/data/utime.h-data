@@ -1,4 +1,8 @@
 #if !defined ISO && !defined ISO99 && !defined ISO11
+#ifdef POSIX
+# define time_t __time_t
+#endif
+
 type {struct utimbuf}
 
 element {struct utimbuf} time_t actime

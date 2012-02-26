@@ -1,4 +1,8 @@
 #if !defined ISO && !defined ISO99 && !defined ISO11
+#ifdef POSIX
+# define size_t __size_t
+#endif
+
 type glob_t
 element glob_t size_t gl_pathc
 element glob_t {char**} gl_pathv
