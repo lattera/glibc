@@ -1,3 +1,7 @@
+2012-02-26  Andreas Schwab  <schwab@linux-m68k.org>
+
+	* sysdeps/ieee754/dbl-64/k_tan.c: Replace with empty file.
+
 2012-02-25  Ulrich Drepper  <drepper@gmail.com>
 
 	* conform/run-conformtest.sh: New file.
