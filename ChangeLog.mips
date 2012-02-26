@@ -1,3 +1,11 @@
+2012-02-26  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/mips/bits/siginfo.h: Don't name
+	siginfo_t struct.  Add forward declaration of pthread_attr_t and
+	use it in sigevent.
+	* sysdeps/unix/sysv/linux/mips/nptl/bits/pthreadtypes.h: Name
+	pthread_attr_t union.
+
 2012-02-21  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/mips/bits/epoll.h: New file.
