@@ -4,6 +4,7 @@
 #else
 # include <signal/signal.h>
 
+# ifndef _ISOMAC
 libc_hidden_proto (sigemptyset)
 libc_hidden_proto (sigfillset)
 libc_hidden_proto (sigaddset)
@@ -58,5 +59,6 @@ extern int __xpg_sigpause (int sig);
 
 /* Allocate real-time signal with highest/lowest available priority.  */
 extern int __libc_allocate_rtsig (int __high);
+# endif
 #endif
 #endif

@@ -1,6 +1,7 @@
 #ifndef	_NETDB_H
 #include <resolv/netdb.h>
 
+#ifndef _ISOMAC
 /* Macros for accessing h_errno from inside libc.  */
 # undef  h_errno
 # ifdef _LIBC_REENTRANT
@@ -280,5 +281,6 @@ DECLARE_NSS_PROTOTYPES (nis)
 DECLARE_NSS_PROTOTYPES (nisplus)
 
 #undef DECLARE_NSS_PROTOTYPES
+#endif
 
 #endif /* !_NETDB_H */

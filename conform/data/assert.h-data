@@ -1,3 +1,7 @@
 macro assert
 
+#ifdef ISO11
+macro static_assert
+#endif
+
 allow *_t

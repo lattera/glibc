@@ -1,4 +1,4 @@
-#if !defined ISO && !defined POSIX
+#if !defined ISO && !defined ISO99 && !defined ISO11 && !defined POSIX
 // in_port_t should have exactly 16 bits
 type in_port_t
 // in_addr_t should have exactly 32 bits

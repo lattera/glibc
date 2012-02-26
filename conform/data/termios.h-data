@@ -1,4 +1,4 @@
-#ifndef ISO
+#if !defined ISO && !defined ISO99 && !defined ISO11
 type cc_t
 type speed_t
 type tcflag_t
@@ -39,7 +39,7 @@ constant INPCK
 constant ISTRIP
 # if !defined XOPEN2K && !defined XOPEN2K8 && !defined POSIX2008
 constant IUCLC
-# <endif
+# endif
 constant IXANY
 constant IXOFF
 constant IXON
@@ -118,7 +118,7 @@ constant IEXTEN
 constant ISIG
 constant NOFLSH
 constant TOSTOP
-# if !defined XOPEN2K && !defined XOPEN2K8 && !defined POSIX2008
+# if !defined POSIX && !defined XOPEN2K && !defined XOPEN2K8 && !defined POSIX2008
 constant XCASE
 # endif
 
@@ -142,7 +142,9 @@ function int tcdrain (int)
 function int tcflow (int, int)
 function int tcflush (int, int)
 function int tcgetattr (int, struct termios*)
+#ifndef POSIX
 function pid_t tcgetsid (int)
+#endif
 function int tcsendbreak (int, int)
 function int tcsetattr (int, int, const struct termios*)
 

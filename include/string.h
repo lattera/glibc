@@ -1,5 +1,6 @@
 #ifndef _STRING_H
 
+#ifndef _ISOMAC
 #include <sys/types.h>
 
 extern void *__memccpy (void *__dest, const void *__src,
@@ -43,11 +44,13 @@ extern void *__memchr (const void *__s, int __c, size_t __n)
 extern int __ffs (int __i) __attribute__ ((const));
 
 extern char *__strerror_r (int __errnum, char *__buf, size_t __buflen);
+#endif
 
 /* Now the real definitions.  We do this here since some of the functions
    above are defined as macros in the headers.  */
 #include <string/string.h>
 
+#ifndef _ISOMAC
 extern __typeof (strcoll_l) __strcoll_l;
 extern __typeof (strxfrm_l) __strxfrm_l;
 extern __typeof (strcasecmp_l) __strcasecmp_l;
@@ -142,5 +145,6 @@ extern char *__strcat_chk (char *__restrict __dest,
 extern char *__strncat_chk (char *__restrict __dest,
 			    const char *__restrict __src,
 			    size_t __len, size_t __destlen) __THROW;
+#endif
 
 #endif

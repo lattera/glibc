@@ -1,5 +1,5 @@
 #ifndef _STDIO_H
-# if defined __need_FILE || defined __need___FILE
+# if defined __need_FILE || defined __need___FILE || defined _ISOMAC
 #  include <libio/stdio.h>
 # else
 #  include <libio/stdio.h>
@@ -29,7 +29,7 @@ extern int __vsscanf (const char *__restrict __s,
 		      _G_va_list __arg)
      __attribute__ ((__format__ (__scanf__, 2, 0)));
 
-#ifndef __cplusplus
+#  ifndef __cplusplus
 extern int __sprintf_chk (char *, int, size_t, const char *, ...) __THROW;
 extern int __snprintf_chk (char *, size_t, int, size_t, const char *, ...)
      __THROW;
@@ -51,7 +51,7 @@ extern int __obstack_printf_chk (struct obstack *, int, const char *, ...)
      __THROW;
 extern int __obstack_vprintf_chk (struct obstack *, int, const char *,
 				  _G_va_list) __THROW;
-#endif
+#  endif
 
 extern int __isoc99_fscanf (FILE *__restrict __stream,
 			    const char *__restrict __format, ...) __wur;
@@ -119,7 +119,7 @@ extern int _sys_nerr_internal attribute_hidden;
 extern int __asprintf_internal (char **__restrict __ptr,
 				const char *__restrict __fmt, ...)
      attribute_hidden __attribute__ ((__format__ (__printf__, 2, 3)));
-#  if !defined NOT_IN_libc && !defined _ISOMAC
+#  if !defined NOT_IN_libc
 #    define __asprintf(ptr, fmt, args...) \
   INTUSE(__asprintf) (ptr, fmt, ##args)
 

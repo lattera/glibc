@@ -38,4 +38,23 @@ macro FLT_MIN
 macro DBL_MIN
 macro LDBL_MIN
 
+#if !defined ISO && !defined XPG3 && !defined XPG4 && !defined POSIX && !defined UNIX98
+constant DECIMAL_DIG >= 10
+constant FLT_EVAL_METHOD
+#endif
+
+#if defined ISO11
+constant DBL_HAS_SUBNORM
+constant FLT_HAS_SUBNORM
+constant LDBL_HAS_SUBNORM
+
+constant DBL_DECIMAL_DIG >= 10
+constant FLT_DECIMAL_DIG >= 6
+constant LDBL_DECIMAL_DIG >= 10
+
+constant DBL_TRUE_MIN <= 1E-37
+constant FLT_TRUE_MIN <= 1E-37
+constant LDBL_TRUE_MIN <= 1E-37
+#endif
+
 allow *_t

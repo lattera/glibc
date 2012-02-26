@@ -2,7 +2,10 @@ constant EDOM
 constant EILSEQ
 constant ERANGE
 
-#ifndef ISO
+// variable int errno
+allow errno
+
+#if !defined ISO && !defined ISO99 && !defined ISO11
 constant E2BIG
 constant EACCES
 constant EADDRINUSE
@@ -84,9 +87,9 @@ constant ENOTRECOVERABLE
 constant EOWNERDEAD
 # endif
 
-// variable int errno
-allow errno
-
 allow E*
 allow *_t
 #endif
+
+allow E[0123456789]*
+allow E[ABCDEFGHIJKLMNOPQRSTUVWXYZ]*

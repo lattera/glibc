@@ -1,3 +1,31 @@
+constant CHAR_BIT >= 8
+constant SCHAR_MIN <= -127
+constant SCHAR_MAX >= 127
+constant UCHAR_MAX >= 255
+#ifdef __CHAR_UNSIGNED__
+constant CHAR_MIN 0
+constant CHAR_MAX UCHAR_MAX
+#else
+constant CHAR_MIN SCHAR_MIN
+constant CHAR_MAX SCHAR_MAX
+#endif
+constant MB_LEN_MAX >= 1
+constant SHRT_MIN <= -32767
+constant SHRT_MAX >= 32767
+constant USHRT_MAX >= 65535
+constant INT_MAX >= 2147483647
+constant INT_MIN <= 2147483647
+constant UINT_MAX >= 4294967295
+constant LONG_MAX >= 2147483647
+constant LONG_MIN <= 2147483647
+constant ULONG_MAX >= 4294967295
+#if defined ISO99 || defined ISO11 || defined XOPEN2K8 || defined POSIX2008
+constant LLONG_MIN <= -9223372036854775807ll
+constant LLONG_MAX >= 9223372036854775807ll
+constant ULLONG_MAX >= 18446744073709551615ull
+#endif
+
+#if !defined ISO && !defined ISO99 && !defined ISO11
 // if these values exist, we should check the minimal value
 allow AIO_LIST_MAX
 allow AIO_MAX
@@ -111,25 +139,11 @@ optional-constant _POSIX2_LINE_MAX 2048
 optional-constant _POSIX2_RE_DUP_MAX 255
 optional-constant _XOPEN_IOV_MAX 16
 
-constant CHAR_BIT >= 8
-constant CHAR_MAX
-constant INT_MAX >= 2147483647
-constant LONG_BIT >= 32
-constant MB_LEN_MAX >= 1
-constant LONG_MAX >= 2147483647
-constant SCHAR_MAX >= 127
-constant SHRT_MAX >= 32767
-constant SSIZE_MAX
-constant UCHAR_MAX >= 255
-constant UINT_MAX >= 4294967295
-constant ULONG_MAX >= 4294967295
-constant USHRT_MAX >= 65535
+#if !defined POSIX && !defined POSIX2008
 constant WORD_BIT >= 16
-constant CHAR_MIN
-constant INT_MIN <= 2147483647
-constant LONG_MIN <= 2147483647
-constant SCHAR_MIN <= -127
-constant SHRT_MIN <= -32767
+constant LONG_BIT >= 32
+#endif
+constant SSIZE_MAX
 
 optional-constant CHARCLASS_NAME_MAX >= 14
 optional-constant NL_ARGMAX >= 9
@@ -149,3 +163,4 @@ optional-constant TMP_MAX >= 10000
 
 allow *_MAX
 allow *_MIN
+#endif

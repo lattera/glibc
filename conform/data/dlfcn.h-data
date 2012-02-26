@@ -1,4 +1,4 @@
-#if !defined ISO && !defined POSIX
+#if !defined ISO && !defined ISO99 && !defined ISO11 && !defined POSIX
 macro RTLD_LAZY
 macro RTLD_NOW
 macro RTLD_GLOBAL

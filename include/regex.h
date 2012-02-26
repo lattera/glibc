@@ -1,6 +1,7 @@
 #ifndef _REGEX_H
 #include <posix/regex.h>
 
+#ifndef _ISOMAC
 /* Document internal interfaces.  */
 extern reg_syntax_t __re_set_syntax (reg_syntax_t syntax);
 
@@ -40,4 +41,5 @@ extern size_t __regerror (int __errcode, const regex_t *__preg,
 			  char *__errbuf, size_t __errbuf_size);
 
 extern void __regfree (regex_t *__preg);
+#endif
 #endif

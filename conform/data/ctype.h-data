@@ -12,7 +12,7 @@ function int isxdigit (int)
 function int tolower (int)
 function int toupper (int)
 
-#if !defined ISO && !defined POSIX && !defined POSIX2008
+#if !defined ISO && !defined ISO99 && !defined ISO11 && !defined POSIX && !defined POSIX2008
 function int isascii (int)
 function int toascii (int)
 

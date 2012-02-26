@@ -2,6 +2,7 @@
 
 #include <math/math.h>
 
+#ifndef _ISOMAC
 /* Now define the internal interfaces.  */
 extern int __matherr (struct exception *__exc);
 
@@ -35,4 +36,5 @@ extern int __isinf_ns (double);
 extern int __isinf_nsf (float);
 extern int __isinf_nsl (long double);
 
+#endif
 #endif

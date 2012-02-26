@@ -1,5 +1,6 @@
 #ifndef _WCTYPE_H
 
+#ifndef _ISOMAC
 /* We try to get wint_t from <stddef.h>, but not all GCC versions define it
    there.  So define it ourselves if it remains undefined.  */
 # define __need_wint_t
@@ -33,9 +34,11 @@ libc_hidden_proto (iswspace)
 libc_hidden_proto (iswxdigit)
 libc_hidden_proto (towlower)
 libc_hidden_proto (towupper)
+#endif
 
 #include <wctype/wctype.h>
 
+#ifndef _ISOMAC
 /* Internal interfaces.  */
 extern int __iswalpha_l_internal (wint_t __wc, __locale_t __locale)
      attribute_hidden;
@@ -95,4 +98,5 @@ libc_hidden_proto (__towupper_l)
 #  define __iswdigit_l(c, l) ({ wint_t __c = (c); __c >= L'0' && __c <= L'9'; })
 # endif
 
+#endif
 #endif

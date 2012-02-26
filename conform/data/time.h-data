@@ -1,3 +1,21 @@
+constant NULL
+constant CLOCKS_PER_SEC
+
+#ifdef ISO11
+macro TIME_UTC
+#endif
+
+#if !defined ISO && !defined ISO99
+type {struct timespec}
+
+element {struct timespec} time_t tv_sec
+element {struct timespec} long tv_nsec
+#endif
+
+type size_t
+type clock_t
+type time_t
+
 type {struct tm}
 
 element {struct tm} int tm_sec
@@ -10,18 +28,25 @@ element {struct tm} int tm_wday
 element {struct tm} int tm_yday
 element {struct tm} int tm_isdst
 
-constant NULL
-#if !defined XOPEN2K && !defined XOPEN2K8 && !defined POSIX2008
-constant CLK_TCK
+function clock_t clock (void)
+function double difftime (time_t, time_t)
+function time_t mktime (struct tm*)
+function time_t time (time_t*)
+function {char*} asctime (const struct tm*)
+function {char*} ctime (const time_t*)
+function {struct tm*} gmtime (const time_t*)
+function {struct tm*} localtime (const time_t*)
+function size_t strftime (char*, size_t, const char*, const struct tm*)
+#if defined ISO11
+function int timespec_get (struct timespec *, int)
 #endif
-constant CLOCKS_PER_SEC
+
+#if !defined ISO && !defined ISO99 && !defined ISO11
+# if !defined XOPEN21K && !defined XOPEN2K8 && !defined POSIX2008
+constant CLK_TCK
+# endif
 constant CLOCK_PROCESS_CPUTIME_ID
 constant CLOCK_THREAD_CPUTIME_ID
-
-type {struct timespec}
-
-element {struct timespec} time_t tv_sec
-element {struct timespec} long tv_nsec
 
 type {struct itimerspec}
 
@@ -32,50 +57,38 @@ constant CLOCK_REALTIME
 constant TIMER_ABSTIME
 constant CLOCK_MONOTONIC
 
-type clock_t
 type clockid_t
-type size_t
-type time_t
 type timer_t
 
-#if defined XOPEN2K8 || defined POSIX2008
+# if defined XOPEN2K8 || defined POSIX2008
 type pid_t
 type locale_t
 tag {struct sigevent}
-#endif
+# endif
 
-#if !defined POSIX && !defined POSIX2008
+# if !defined POSIX && !defined POSIX2008
 variable int getdate_err
-#endif
+# endif
 
-function {char*} asctime (const struct tm*)
 function {char*} asctime_r (const struct tm*, char*)
-function clock_t clock (void)
 function int clock_getcpuclockid (pid_t, clockid_t*)
 function int clock_getres (clockid_t, struct timespec*)
 function int clock_gettime (clockid_t, struct timespec*)
 function int clock_nanosleep (clockid_t, int, const struct timespec*, struct timespec*)
 function int clock_settime (clockid_t, const struct timespec*)
-function {char*} ctime (const time_t*)
 function {char*} ctime_r (const time_t*, char*)
-function double difftime (time_t, time_t)
-#if !defined POSIX && !defined POSIX2008
+# if !defined POSIX && !defined POSIX2008
 function {struct tm*} getdate (const char*)
-#endif
-function {struct tm*} gmtime (const time_t*)
+# endif
 function {struct tm*} gmtime_r (const time_t*, struct tm*)
-function {struct tm*} localtime (const time_t*)
 function {struct tm*} localtime_r (const time_t*, struct tm*)
-function time_t mktime (struct tm*)
 function int nanosleep (const struct timespec*, struct timespec*)
-function size_t strftime (char*, size_t, const char*, const struct tm*)
-#if defined XOPEN2K8 || defined POSIX2008
+# if defined XOPEN2K8 || defined POSIX2008
 function size_t strftime_l (char*, size_t, const char*, const struct tm*, locale_t)
-#endif
-#if !defined POSIX && !defined POSIX2008
+# endif
+# if !defined POSIX && !defined POSIX2008
 function {char*} strptime (const char*, const char*, struct tm*)
-#endif
-function time_t time (time_t*)
+# endif
 function int timer_create (clockid_t, struct sigevent*, timer_t*)
 function int timer_delete (timer_t)
 function int timer_gettime (timer_t, struct itimerspec*)
@@ -83,10 +96,10 @@ function int timer_getoverrun (timer_t)
 function int timer_settime (timer_t, int, const struct itimerspec*, struct itimerspec*)
 function void tzset (void)
 
-#if !defined POSIX && !defined POSIX2008
+# if !defined POSIX && !defined POSIX2008
 variable int daylight
 variable {long int} timezone
-#endif
+# endif
 variable {char*} tzname [2]
 
 allow tm_*
@@ -98,3 +111,4 @@ allow CLOCK_*
 allow TIMER_*
 allow *_t
 allow sigevent
+#endif

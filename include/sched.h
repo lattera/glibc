@@ -1,6 +1,7 @@
 #ifndef _SCHED_H
 #include <posix/sched.h>
 
+#ifndef _ISOMAC
 /* Now define the internal interfaces.  */
 extern int __sched_setparam (__pid_t __pid,
 			     const struct sched_param *__param);
@@ -20,4 +21,5 @@ extern int __clone (int (*__fn) (void *__arg), void *__child_stack,
 		    int __flags, void *__arg, ...);
 extern int __clone2 (int (*__fn) (void *__arg), void *__child_stack_base,
 		     size_t __child_stack_size, int __flags, void *__arg, ...);
+#endif
 #endif

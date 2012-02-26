@@ -1,4 +1,4 @@
-#ifndef ISO
+#if !defined ISO && !defined ISO99 && !defined ISO11
 type {struct sched_param}
 element {struct sched_param} int sched_priority
 optional-element {struct sched_param} int sched_ss_low_priority

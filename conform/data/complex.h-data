@@ -1,4 +1,4 @@
-#if defined XOPEN2K || defined POSIX2008
+#if defined ISO99 || defined ISO11 || defined XOPEN2K || defined POSIX2008
 macro complex
 macro _Complex_I
 optional-macro imaginary
@@ -73,4 +73,10 @@ function {long double complex} csinl (long double complex)
 function {long double complex} csqrtl (long double complex)
 function {long double complex} ctanhl (long double complex)
 function {long double complex} ctanl (long double complex)
+
+# if defined ISO11
+macro-function {double complex} CMPLX (double, double)
+macro-function {float complex} CMPLXF (float, float)
+macro-function {long double complex} CMPLXL (long double, long double)
+# endif
 #endif

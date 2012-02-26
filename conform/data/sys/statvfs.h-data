@@ -1,3 +1,4 @@
+#if !defined ISO && !defined ISO99 && !defined ISO11 && !defined POSIX
 type {struct statvfs}
 
 element {struct statvfs} {unsigned long} f_bsize
@@ -24,3 +25,4 @@ function int fstatvfs (int, struct statvfs*)
 allow f_*
 allow ST_*
 allow *_t
+#endif

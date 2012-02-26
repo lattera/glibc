@@ -1,6 +1,7 @@
 #ifndef _SYS_STAT_H
 #include <io/sys/stat.h>
 
+#ifndef _ISOMAC
 /* Now define the internal interfaces. */
 extern int __stat (const char *__file, struct stat *__buf);
 extern int __fstat (int __fd, struct stat *__buf);
@@ -54,4 +55,5 @@ libc_hidden_proto (__fxstatat64)
   __fxstatat (_STAT_VER, dfd, fname, buf, flag)
 #define __fstatat64(dfd, fname, buf, flag) \
   __fxstatat64 (_STAT_VER, dfd, fname, buf, flag)
+#endif
 #endif

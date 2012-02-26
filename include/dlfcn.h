@@ -1,5 +1,6 @@
 #ifndef _DLFCN_H
 #include <dlfcn/dlfcn.h>
+#ifndef _ISOMAC
 #include <link.h>		/* For ElfW.  */
 #include <stdbool.h>
 
@@ -145,6 +146,7 @@ extern void __libc_register_dl_open_hook (struct link_map *map)
      attribute_hidden;
 extern void __libc_register_dlfcn_hook (struct link_map *map)
      attribute_hidden;
+#endif
 #endif
 
 #endif

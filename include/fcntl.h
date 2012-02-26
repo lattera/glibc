@@ -1,6 +1,7 @@
 #ifndef _FCNTL_H
 #include <io/fcntl.h>
 
+#ifndef _ISOMAC
 /* Now define the internal interfaces.  */
 extern int __open64 (const char *__file, int __oflag, ...);
 libc_hidden_proto (__open64)
@@ -43,6 +44,7 @@ extern int __have_atfcts attribute_hidden;
 
 #ifdef O_CLOEXEC
 extern int __have_o_cloexec attribute_hidden;
+#endif
 #endif
 
 #endif

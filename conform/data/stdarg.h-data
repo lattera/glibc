@@ -4,6 +4,9 @@ type va_list
 macro va_start
 macro va_arg
 macro va_end
+
+#if defined ISO99 || defined ISO11 || defined POSIX2008 || defined XOPEN2K8
 macro va_copy
+#endif
 
 allow *_t

@@ -1,13 +1,15 @@
 typed-constant SIG_DFL {void(*)(int)}
 typed-constant SIG_ERR {void(*)(int)}
-#if !defined ISO && !defined POSIX && !defined POSIX2008
+#if !defined ISO && !defined ISO99 && !defined ISO11 && !defined POSIX && !defined POSIX2008
 typed-constant SIG_HOLD {void(*)(int)}
 #endif
 typed-constant SIG_IGN {void(*)(int)}
 
 type sig_atomic_t
+#if !defined ISO && !defined ISO99 && !defined ISO11
 type sigset_t
 type pid_t
+#endif
 #if defined XOPEN2K8 || defined POSIX2008
 type size_t
 type pthread_t
@@ -26,6 +28,7 @@ element {struct timespec} __time_t tv_sec
 element {struct timespec} long tv_nsec
 #endif
 
+#if defined UNIX98 || defined XOPEN2K8 || defined POSIX2008
 element {union sigval} int sival_int
 element {union sigval} {void*} sival_ptr
 
@@ -46,19 +49,25 @@ type {union sigval}
 
 macro SIGRTMIN
 macro SIGRTMAX
+#endif
 
 constant SIGABRT
-constant SIGALRM
 constant SIGFPE
-constant SIGHUP
 constant SIGILL
 constant SIGINT
+constant SIGSEGV
+constant SIGTERM
+
+function void (*signal (int, void(*)(int)))(int)
+function int raise (int)
+
+#if !defined ISO && !defined ISO99 && !defined ISO11
+constant SIGALRM
+constant SIGHUP
 constant SIGIO
 constant SIGKILL
 constant SIGPIPE
 constant SIGQUIT
-constant SIGSEGV
-constant SIGTERM
 constant SIGUSR1
 constant SIGUSR2
 constant SIGCHLD
@@ -71,9 +80,9 @@ constant SIGBUS
 constant SIGPOLL
 constant SIGPROF
 constant SIGSYS
-#if !defined POSIX && !defined POSIX2008
+# if !defined POSIX && !defined POSIX2008
 constant SIGTRAP
-#endif
+# endif
 constant SIGURG
 constant SIGVTALRM
 constant SIGXCPU
@@ -90,21 +99,24 @@ constant SA_NOCLDSTOP
 constant SIG_BLOCK
 constant SIG_UNBLOCK
 constant SIG_SETMASK
-#if !defined POSIX && !defined POSIX2008
+# if !defined POSIX && !defined POSIX2008
 constant SA_ONSTACK
-#endif
+# endif
+# if !defined POSIX
 constant SA_RESETHAND
 constant SA_RESTART
 constant SA_SIGINFO
 constant SA_NOCLDWAIT
 constant SA_NODEFER
-#if !defined POSIX && !defined POSIX2008
+# endif
+# if !defined POSIX && !defined POSIX2008
 constant SS_ONSTACK
 constant SS_DISABLE
 constant MINSIGSTKSZ
 constant SIGSTKSZ
-#endif
+# endif
 
+# if !defined POSIX
 type ucontext_t
 
 element ucontext_t {ucontext_t*} uc_link
@@ -122,13 +134,14 @@ type {struct sigstack}
 
 element {struct sigstack} int ss_onstack
 element {struct sigstack} {void*} ss_sp
+# endif
 
 type siginfo_t
 
 element siginfo_t int si_signo
-#if !defined POSIX && !defined POSIX2008
+# if !defined POSIX && !defined POSIX2008
 element siginfo_t int si_errno
-#endif
+# endif
 element siginfo_t int si_code
 element siginfo_t pid_t si_pid
 element siginfo_t uid_t si_uid
@@ -178,50 +191,50 @@ constant SI_TIMER
 constant SI_ASYNCIO
 constant SI_MESGQ
 
-#if !defined XOPEN2K8 && !defined POSIX && !defined POSIX2008
+# if !defined XOPEN2K8 && !defined POSIX && !defined POSIX2008
 function void (*bsd_signal (int, void(*)(int)))(int)
-#endif
+# endif
 function int kill (pid_t, int)
-#if !defined POSIX && !defined POSIX2008
+# if !defined POSIX && !defined POSIX2008
 function int killpg (pid_t, int)
-#endif
+# endif
 function int pthread_kill (pthread_t, int)
 function int pthread_sigmask (int, const sigset_t*, sigset_t*)
-function int raise (int)
 function int sigaction (int, const struct sigaction*, struct sigaction*)
 function int sigaddset (sigset_t*, int)
-#if !defined POSIX && !defined POSIX2008
+# if !defined POSIX && !defined POSIX2008
 function int sigaltstack (const stack_t*, stack_t*)
-#endif
+# endif
 function int sigdelset (sigset_t*, int)
 function int sigemptyset (sigset_t*)
 function int sigfillset (sigset_t*)
-#if !defined POSIX && !defined POSIX2008
+# if !defined POSIX && !defined POSIX2008
 function int sighold (int)
 function int sigignore (int)
 function int siginterrupt (int, int)
-#endif
+# endif
 function int sigismember (const sigset_t*, int)
-function void (*signal (int, void(*)(int)))(int)
 #if !defined POSIX && !defined POSIX2008
 function int sigpause (int)
-#endif
+# endif
 function int sigpending (sigset_t*)
 function int sigprocmask (int, const sigset_t*, sigset_t*)
 function int sigqueue (pid_t, int, const union sigval)
-#if !defined POSIX && !defined POSIX2008
+# if !defined POSIX && !defined POSIX2008
 function int sigrelse (int)
 function void (*sigset (int, void(*)(int)))(int)
-#endif
+# endif
+# if !defined POSIX
 function int sigstack (struct sigstack*, struct sigstack*)
+# endif
 function int sigsuspend (const sigset_t*)
 function int sigtimedwait (const sigset_t*, siginfo_t*, const struct timespec*)
 function int sigwait (const sigset_t*, int*)
 function int sigwaitinfo (const sigset_t*, siginfo_t*)
-#if defined XOPEN2K8 || defined POSIX2008
+# if defined XOPEN2K8 || defined POSIX2008
 function void psiginfo (const siginfo_t*, const char*)
 function void psignal (int, const char*)
-#endif
+# endif
 
 // The following expressions are not entirely correct but the current
 // poorfnmatch implementation doesn't grok the right form.
@@ -248,3 +261,7 @@ allow TRAP_*
 allow *_t
 
 allow-header time.h
+#endif
+
+allow SIG[ABCDEFGHIJKLMNOPQRSTUVWXYZ]*
+allow SIG_*

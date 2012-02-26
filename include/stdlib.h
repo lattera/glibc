@@ -4,14 +4,14 @@
 #define __Need_M_And_C
 #endif
 
-#include <stddef.h>
+#ifndef _ISOMAC
+# include <stddef.h>
+#endif
 #include <stdlib/stdlib.h>
 
 /* Now define the internal interfaces.  */
-#ifndef __Need_M_And_C
-# ifndef _ISOMAC
-#  include <sys/stat.h>
-# endif
+#if !defined __Need_M_And_C && !defined _ISOMAC
+# include <sys/stat.h>
 
 __BEGIN_DECLS
 

@@ -1,5 +1,5 @@
 #ifndef _TIME_H
-#if defined __need_time_t  || defined __need_clock_t || defined __need_timespec
+#if defined __need_time_t  || defined __need_clock_t || defined __need_timespec || defined _ISOMAC
 # include <time/time.h>
 #else
 # include <time/time.h>
@@ -106,9 +106,7 @@ extern double __difftime (time_t time1, time_t time0);
 
 /* Use in the clock_* functions.  Size of the field representing the
    actual clock ID.  */
-#ifndef _ISOMAC
-# define CLOCK_IDFIELD_SIZE	3
-#endif
+#define CLOCK_IDFIELD_SIZE	3
 
 __END_DECLS
 

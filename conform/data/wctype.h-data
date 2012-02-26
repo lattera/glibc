@@ -1,9 +1,10 @@
+#if !defined ISO && !defined POSIX && !defined XPG3 && !defined XPG4
 type wint_t
 type wctrans_t
 type wctype_t
-#if defined XOPEN2K8 || defined POSIX2008
+# if defined XOPEN2K8 || defined POSIX2008
 type locale_t
-#endif
+# endif
 
 function int iswalnum (wint_t)
 function int iswalpha (wint_t)
@@ -22,7 +23,7 @@ function wint_t towlower (wint_t)
 function wint_t towupper (wint_t)
 function wctrans_t wctrans (const char*)
 function wctype_t wctype (const char*)
-#if defined XOPEN2K8 || defined POSIX2008
+# if defined XOPEN2K8 || defined POSIX2008
 function int iswalnum_l (wint_t, locale_t)
 function int iswalpha_l (wint_t, locale_t)
 function int iswcntrl_l (wint_t, locale_t)
@@ -40,7 +41,7 @@ function wint_t towlower_l (wint_t, locale_t)
 function wint_t towupper_l (wint_t, locale_t)
 function wctrans_t wctrans_l (const char*, locale_t)
 function wctype_t wctype_l (const char*, locale_t)
-#endif
+# endif
 
 macro WEOF
 
@@ -56,3 +57,4 @@ allow-header wchar.h
 allow is*
 allow to*
 allow *_t
+#endif

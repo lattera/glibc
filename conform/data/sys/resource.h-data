@@ -1,4 +1,4 @@
-#if !defined ISO && !defined POSIX && !defined POSIX2008
+#if !defined ISO && !defined ISO99 && !defined ISO11 && !defined POSIX && !defined POSIX2008
 constant PRIO_PROCESS
 constant PRIO_PGRP
 constant PRIO_USER

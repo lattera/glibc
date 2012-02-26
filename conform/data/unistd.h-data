@@ -1,4 +1,4 @@
-#ifndef ISO
+#if !defined ISO && !defined ISO99 && !defined ISO11
 optional-constant _POSIX_VERSION
 optional-constant _POSIX2_C_VERSION
 optional-constant _XOPEN_VERSION

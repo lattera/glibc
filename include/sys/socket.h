@@ -1,6 +1,7 @@
 #ifndef _SYS_SOCKET_H
 #include <socket/sys/socket.h>
 
+#ifndef _ISOMAC
 /* Now define the internal interfaces.  */
 
 /* Create a new socket of type TYPE in domain DOMAIN, using
@@ -161,4 +162,5 @@ extern int __have_sock_cloexec;
 # define __have_paccept __have_sock_cloexec
 #endif
 
+#endif
 #endif

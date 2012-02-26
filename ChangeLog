@@ -1,5 +1,136 @@
 2012-02-25  Ulrich Drepper  <drepper@gmail.com>
 
+	* conform/run-conformtest.sh: New file.
+	* conform/Makefile: Run run-conformtest for tests.
+	* conform/conformtest.pl: Many bug fixes.  Add ISO C99, ISO C11
+	support.
+
+	* conform/data/uchar.h-data: New file.
+	* conform/data/aio.h-data: Fixes for ISO C and POSIX 1995 testing.
+	* conform/data/arpa/inet.h-data: Likewise.
+	* conform/data/assert.h-data: Likewise.
+	* conform/data/complex.h-data: Likewise.
+	* conform/data/cpio.h-data: Likewise.
+	* conform/data/ctype.h-data: Likewise.
+	* conform/data/dirent.h-data: Likewise.
+	* conform/data/dlfcn.h-data: Likewise.
+	* conform/data/errno.h-data: Likewise.
+	* conform/data/fcntl.h-data: Likewise.
+	* conform/data/float.h-data: Likewise.
+	* conform/data/fmtmsg.h-data: Likewise.
+	* conform/data/fnmatch.h-data: Likewise.
+	* conform/data/ftw.h-data: Likewise.
+	* conform/data/glob.h-data: Likewise.
+	* conform/data/grp.h-data: Likewise.
+	* conform/data/iconv.h-data: Likewise.
+	* conform/data/inttypes.h-data: Likewise.
+	* conform/data/langinfo.h-data: Likewise.
+	* conform/data/libgen.h-data: Likewise.
+	* conform/data/limits.h-data: Likewise.
+	* conform/data/locale.h-data: Likewise.
+	* conform/data/math.h-data: Likewise.
+	* conform/data/monetary.h-data: Likewise.
+	* conform/data/mqueue.h-data: Likewise.
+	* conform/data/ndbm.h-data: Likewise.
+	* conform/data/net/if.h-data: Likewise.
+	* conform/data/netdb.h-data: Likewise.
+	* conform/data/netinet/in.h-data: Likewise.
+	* conform/data/nl_types.h-data: Likewise.
+	* conform/data/poll.h-data: Likewise.
+	* conform/data/pthread.h-data: Likewise.
+	* conform/data/pwd.h-data: Likewise.
+	* conform/data/regex.h-data: Likewise.
+	* conform/data/sched.h-data: Likewise.
+	* conform/data/search.h-data: Likewise.
+	* conform/data/semaphore.h-data: Likewise.
+	* conform/data/setjmp.h-data: Likewise.
+	* conform/data/signal.h-data: Likewise.
+	* conform/data/spawn.h-data: Likewise.
+	* conform/data/stdarg.h-data: Likewise.
+	* conform/data/stdio.h-data: Likewise.
+	* conform/data/stdlib.h-data: Likewise.
+	* conform/data/string.h-data: Likewise.
+	* conform/data/strings.h-data: Likewise.
+	* conform/data/stropts.h-data: Likewise.
+	* conform/data/sys/ipc.h-data: Likewise.
+	* conform/data/sys/mman.h-data: Likewise.
+	* conform/data/sys/msg.h-data: Likewise.
+	* conform/data/sys/resource.h-data: Likewise.
+	* conform/data/sys/select.h-data: Likewise.
+	* conform/data/sys/sem.h-data: Likewise.
+	* conform/data/sys/shm.h-data: Likewise.
+	* conform/data/sys/socket.h-data: Likewise.
+	* conform/data/sys/stat.h-data: Likewise.
+	* conform/data/sys/statvfs.h-data: Likewise.
+	* conform/data/sys/time.h-data: Likewise.
+	* conform/data/sys/timeb.h-data: Likewise.
+	* conform/data/sys/times.h-data: Likewise.
+	* conform/data/sys/types.h-data: Likewise.
+	* conform/data/sys/uio.h-data: Likewise.
+	* conform/data/sys/un.h-data: Likewise.
+	* conform/data/sys/utsname.h-data: Likewise.
+	* conform/data/sys/wait.h-data: Likewise.
+	* conform/data/syslog.h-data: Likewise.
+	* conform/data/tar.h-data: Likewise.
+	* conform/data/termios.h-data: Likewise.
+	* conform/data/utime.h-data: Likewise.
+	* conform/data/utmpx.h-data: Likewise.
+	* conform/data/varargs.h-data: Likewise.
+	* conform/data/wchar.h-data: Likewise.
+	* conform/data/wctype.h-data: Likewise.
+	* conform/data/wordexp.h-data: Likewise.
+
+	* include/stropts.h: New file.
+	* include/uchar.h: New file.
+	* include/aio.h: Changes to allow conformtest.pl to use the headers.
+	* include/assert.h: Likewise.
+	* include/ctype.h: Likewise.
+	* include/dirent.h: Likewise.
+	* include/dlfcn.h: Likewise.
+	* include/fcntl.h: Likewise.
+	* include/fnmatch.h: Likewise.
+	* include/glob.h: Likewise.
+	* include/grp.h: Likewise.
+	* include/libio.h: Likewise.
+	* include/locale.h: Likewise.
+	* include/math.h: Likewise.
+	* include/net/if.h: Likewise.
+	* include/netdb.h: Likewise.
+	* include/netinet/in.h: Likewise.
+	* include/pthread.h: Likewise.
+	* include/pwd.h: Likewise.
+	* include/regex.h: Likewise.
+	* include/sched.h: Likewise.
+	* include/search.h: Likewise.
+	* include/setjmp.h: Likewise.
+	* include/signal.h: Likewise.
+	* include/stdio.h: Likewise.
+	* include/stdlib.h: Likewise.
+	* include/string.h: Likewise.
+	* include/sys/cdefs.h: Likewise.
+	* include/sys/mman.h: Likewise.
+	* include/sys/msg.h: Likewise.
+	* include/sys/resource.h: Likewise.
+	* include/sys/select.h: Likewise.
+	* include/sys/socket.h: Likewise.
+	* include/sys/stat.h: Likewise.
+	* include/sys/statvfs.h: Likewise.
+	* include/sys/time.h: Likewise.
+	* include/sys/times.h: Likewise.
+	* include/sys/uio.h: Likewise.
+	* include/sys/utsname.h: Likewise.
+	* include/sys/wait.h: Likewise.
+	* include/termios.h: Likewise.
+	* include/time.h: Likewise.
+	* include/ulimit.h: Likewise.
+	* include/unistd.h: Likewise.
+	* include/utime.h: Likewise.
+	* include/wchar.h: Likewise.
+	* include/wctype.h: Likewise.
+	* include/wordexp.h: Likewise.
+
+	* posix/tar.h (TSVTX): Should not be visible for POSIX before 2008.
+
 	* time/time.h: TIME_UTC must be a macro.
 	Make timespec_get available for ISO C11 only as well.
 

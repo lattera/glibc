@@ -1,4 +1,4 @@
-#if !defined ISO && !defined POSIX
+#if !defined ISO && !defined ISO99 && !defined ISO11 && !defined POSIX
 constant CODESET
 constant D_T_FMT
 constant D_FMT

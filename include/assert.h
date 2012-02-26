@@ -1,5 +1,6 @@
 #include <assert/assert.h>
 
+#ifndef _ISOMAC
 /* This prints an "Assertion failed" message and aborts.
    In installed assert.h this is only conditionally declared,
    so it has to be repeated here.  */
@@ -19,7 +20,8 @@ extern void __assert_fail_base (const char *fmt, const char *assertion,
 				const char *function)
      __THROW  __attribute__ ((__noreturn__));
 
-#if !defined NOT_IN_libc || defined IS_IN_rtld
+# if !defined NOT_IN_libc || defined IS_IN_rtld
 hidden_proto (__assert_fail)
 hidden_proto (__assert_perror_fail)
+# endif
 #endif

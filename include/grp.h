@@ -1,6 +1,7 @@
 #ifndef _GRP_H
 #include <grp/grp.h>
 
+#ifndef _ISOMAC
 libc_hidden_proto (setgroups)
 
 /* Now define the internal interfaces.  */
@@ -59,4 +60,5 @@ DECLARE_NSS_PROTOTYPES (nis)
 DECLARE_NSS_PROTOTYPES (nisplus)
 
 #undef DECLARE_NSS_PROTOTYPES
+#endif
 #endif

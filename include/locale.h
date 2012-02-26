@@ -1,6 +1,7 @@
 #ifndef	_LOCALE_H
 #include <locale/locale.h>
 
+#ifndef _ISOMAC
 extern __typeof (uselocale) __uselocale;
 
 libc_hidden_proto (setlocale)
@@ -21,4 +22,5 @@ extern struct lconv *__localeconv (void);
 /* Fetch the name of the current locale set in the given category.  */
 extern const char *__current_locale_name (int category) attribute_hidden;
 
+#endif
 #endif

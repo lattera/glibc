@@ -1,3 +1,4 @@
+#if defined XPG3 || defined XPG4
 macro va_alist
 macro va_dcl
 type va_list
@@ -6,3 +7,4 @@ macro va_arg
 macro va_end
 
 allow *_t
+#endif

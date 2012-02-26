@@ -1,6 +1,7 @@
 #ifndef _SYS_MMAN_H
 #include <misc/sys/mman.h>
 
+#ifndef _ISOMAC
 /* Now define the internal interfaces.  */
 extern void *__mmap (void *__addr, size_t __len, int __prot,
 		     int __flags, int __fd, __off_t __offset);
@@ -14,5 +15,6 @@ extern void *__mremap (void *__addr, size_t __old_len,
 		       size_t __new_len, int __flags, ...);
 
 libc_hidden_proto (madvise);
+#endif
 
 #endif

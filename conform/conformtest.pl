@@ -5,46 +5,39 @@ use POSIX;
 
 $CC = "gcc";
 
-$dialect="XOPEN2K";
-GetOptions ('headers=s' => \@headers, 'dialect=s' => \$dialect);
+$standard="XOPEN2K8";
+GetOptions ('headers=s' => \@headers, 'standard=s' => \$standard,
+	    'flags=s' => \$flags, 'cc=s' => \$CC);
 @headers = split(/,/,join(',',@headers));
 
 # List of the headers we are testing.
 if (@headers == ()) {
   @headers = ("wordexp.h", "wctype.h", "wchar.h", "varargs.h", "utmpx.h",
-	      "utime.h", "unistd.h", "ulimit.h", "ucontext.h", "time.h",
-	      "tgmath.h", "termios.h", "tar.h", "sys/wait.h", "sys/utsname.h",
-	      "sys/un.h", "sys/uio.h", "sys/types.h", "sys/times.h",
-	      "sys/timeb.h", "sys/time.h", "sys/statvfs.h", "sys/stat.h",
-	      "sys/socket.h", "sys/shm.h", "sys/sem.h", "sys/select.h",
-	      "sys/resource.h", "sys/msg.h", "sys/mman.h", "sys/ipc.h",
-	      "syslog.h", "stropts.h", "strings.h", "string.h", "stdlib.h",
-	      "stdio.h", "stdint.h", "stddef.h", "stdarg.h", "spawn.h",
-	      "signal.h", "setjmp.h", "semaphore.h", "search.h", "sched.h",
-	      "regex.h", "pwd.h", "pthread.h", "poll.h", "nl_types.h",
-	      "netinet/tcp.h", "netinet/in.h", "net/if.h", "netdb.h", "ndbm.h",
-	      "mqueue.h", "monetary.h", "math.h", "locale.h", "libgen.h",
-	      "limits.h", "langinfo.h", "iso646.h", "inttypes.h", "iconv.h",
-	      "grp.h", "glob.h", "ftw.h", "fnmatch.h", "fmtmsg.h", "float.h",
-	      "fcntl.h", "errno.h", "dlfcn.h", "dirent.h", "ctype.h", "cpio.h",
-	      "complex.h", "assert.h", "arpa/inet.h", "aio.h");
+	      "utime.h", "unistd.h", "ulimit.h", "ucontext.h", "uchar.h",
+	      "time.h", "tgmath.h", "termios.h", "tar.h", "sys/wait.h",
+	      "sys/utsname.h", "sys/un.h", "sys/uio.h", "sys/types.h",
+	      "sys/times.h", "sys/timeb.h", "sys/time.h", "sys/statvfs.h",
+	      "sys/stat.h", "sys/socket.h", "sys/shm.h", "sys/sem.h",
+	      "sys/select.h", "sys/resource.h", "sys/msg.h", "sys/mman.h",
+	      "sys/ipc.h", "syslog.h", "stropts.h", "strings.h", "string.h",
+	      "stdlib.h", "stdio.h", "stdint.h", "stddef.h", "stdarg.h",
+	      "spawn.h", "signal.h", "setjmp.h", "semaphore.h", "search.h",
+	      "sched.h", "regex.h", "pwd.h", "pthread.h", "poll.h",
+	      "nl_types.h", "netinet/tcp.h", "netinet/in.h", "net/if.h",
+	      "netdb.h", "ndbm.h", "mqueue.h", "monetary.h", "math.h",
+	      "locale.h", "libgen.h", "limits.h", "langinfo.h", "iso646.h",
+	      "inttypes.h", "iconv.h", "grp.h", "glob.h", "ftw.h", "fnmatch.h",
+	      "fmtmsg.h", "float.h", "fcntl.h", "errno.h", "dlfcn.h",
+	      "dirent.h", "ctype.h", "cpio.h", "complex.h", "assert.h",
+	      "arpa/inet.h", "aio.h");
 }
 
-if ($dialect ne "ISO" && $dialect ne "POSIX" && $dialect ne "XPG3"
-    && $dialect ne "XPG4" && $dialect ne "UNIX98" && $dialect ne "XOPEN2K"
-    && $dialect ne "XOPEN2K8" && $dialect ne "POSIX2008") {
-  die "unknown dialect \"$dialect\"";
+if ($standard ne "ISO" && $standard ne "ISO99" && $standard ne "ISO11"
+    && $standard ne "POSIX" && $standard ne "XPG3" && $standard ne "XPG4"
+    && $standard ne "UNIX98" && $standard ne "XOPEN2K" && $standard ne "XOPEN2K8"
+    && $standard ne "POSIX2008") {
+  die "unknown standard \"$standard\"";
 }
-
-$CFLAGS{"ISO"} = "-I. -fno-builtin '-D__attribute__(x)=' -ansi";
-$CFLAGS{"POSIX"} = "-I. -fno-builtin '-D__attribute__(x)=' -D_POSIX_C_SOURCE=199912";
-$CFLAGS{"XPG3"} = "-I. -fno-builtin '-D__attribute__(x)=' -D_XOPEN_SOURCE";
-$CFLAGS{"XPG4"} = "-I. -fno-builtin '-D__attribute__(x)=' -D_XOPEN_SOURCE_EXTENDED";
-$CFLAGS{"UNIX98"} = "-I. -fno-builtin '-D__attribute__(x)=' -D_XOPEN_SOURCE=500";
-$CFLAGS{"XOPEN2K"} = "-I. -fno-builtin '-D__attribute__(x)=' -D_XOPEN_SOURCE=600";
-$CFLAGS{"XOPEN2K8"} = "-I. -fno-builtin '-D__attribute__(x)=' -D_XOPEN_SOURCE=700";
-$CFLAGS{"POSIX2008"} = "-I. -fno-builtin '-D__attribute__(x)=' -D_POSIX_C_SOURCE=200809L";
-
 
 # These are the ISO C99 keywords.
 @keywords = ('auto', 'break', 'case', 'char', 'const', 'continue', 'default',
@@ -56,14 +49,31 @@ $CFLAGS{"POSIX2008"} = "-I. -fno-builtin '-D__attribute__(x)=' -D_POSIX_C_SOURCE
 # These are symbols which are known to pollute the namespace.
 @knownproblems = ('unix', 'linux', 'i386');
 
-if ($dialect ne "XOPEN2K8" && $dialect ne "POSIX2008") {
+$CFLAGS{"ISO"} = "-ansi";
+$CFLAGS{"ISO99"} = "-std=c99";
+$CFLAGS{"ISO11"} = "-std=c1x -D_ISOC11_SOURCE";
+$CFLAGS{"POSIX"} = "-D_POSIX_C_SOURCE=199912";
+$CFLAGS{"XPG3"} = "-D_XOPEN_SOURCE";
+$CFLAGS{"XPG4"} = "-D_XOPEN_SOURCE_EXTENDED";
+$CFLAGS{"UNIX98"} = "-D_XOPEN_SOURCE=500";
+$CFLAGS{"XOPEN2K"} = "-D_XOPEN_SOURCE=600";
+$CFLAGS{"XOPEN2K8"} = "-D_XOPEN_SOURCE=700";
+$CFLAGS{"POSIX2008"} = "-D_POSIX_C_SOURCE=200809L";
+
+$CFLAGS = "$flags -fno-builtin '-D__attribute__(x)=' $CFLAGS{$standard} -D_ISOMAC";
+
+if ($standard ne "XOPEN2K8" && $standard ne "POSIX2008") {
   # Some headers need a bit more attention.  At least with XPG7
   # all headers should be self-contained.
   $mustprepend{'inttypes.h'} = "#include <stddef.h>\n";
+  $mustprepend{'glob.h'} = "#include <sys/types.h>\n";
+  $mustprepend{'grp.h'} = "#include <sys/types.h>\n";
   $mustprepend{'regex.h'} = "#include <sys/types.h>\n";
+  $mustprepend{'pwd.h'} = "#include <sys/types.h>\n";
   $mustprepend{'sched.h'} = "#include <sys/types.h>\n";
-  $mustprepend{'signal.h'} = "#include <pthread.h>\n";
+  $mustprepend{'signal.h'} = "#include <pthread.h>\n#include <sys/types.h>\n";
   $mustprepend{'stdio.h'} = "#include <sys/types.h>\n";
+  $mustprepend{'sys/stat.h'} = "#include <sys/types.h>\n";
   $mustprepend{'wchar.h'} = "#include <stdarg.h>\n";
   $mustprepend{'wordexp.h'} = "#include <stddef.h>\n";
 }
@@ -100,9 +110,17 @@ sub poorfnmatch {
     $res = ($strlen >= $patlen
 	    && substr ($pattern, -$patlen, $patlen) eq substr ($string, -$patlen, $patlen));
   } elsif (substr ($pattern, -1, 1) eq '*') {
-    my($patlen) = length ($pattern) - 1;
-    $res = ($strlen >= $patlen
-	    && substr ($pattern, 0, $patlen) eq substr ($string, 0, $patlen));
+    if (substr ($pattern, -2, 1) eq ']') {
+      my($patlen) = index ($pattern, '[');
+      my($range) = substr ($pattern, $patlen + 1, -2);
+      $res = ($strlen > $patlen
+	      && substr ($pattern, 0, $patlen) eq substr ($string, 0, $patlen)
+	      && index ($range, substr ($string, $patlen, 1)) != -1);
+    } else {
+      my($patlen) = length ($pattern) - 1;
+      $res = ($strlen >= $patlen
+	      && substr ($pattern, 0, $patlen) eq substr ($string, 0, $patlen));
+    }
   } else {
     $res = $pattern eq $string;
   }
@@ -123,7 +141,7 @@ sub compiletest
     ++$skipped;
     printf (" SKIP\n");
   } else {
-    $ret = system "$CC $CFLAGS{$dialect} -c $fnamebase.c -o $fnamebase.o > $fnamebase.out 2>&1";
+    $ret = system "$CC $CFLAGS -c $fnamebase.c -o $fnamebase.o > $fnamebase.out 2>&1";
     if ($ret != 0) {
       if ($optional != 0) {
 	printf (" $errmsg\n");
@@ -175,7 +193,7 @@ sub runtest
     ++$skipped;
     printf (" SKIP\n");
   } else {
-    $ret = system "$CC $CFLAGS{$dialect} -o $fnamebase $fnamebase.c > $fnamebase.out 2>&1";
+    $ret = system "$CC $CFLAGS -o $fnamebase $fnamebase.c > $fnamebase.out 2>&1";
     if ($ret != 0) {
       printf (" FAIL\n");
       if ($verbose != 0) {
@@ -232,9 +250,7 @@ sub newtoken {
     return if (poorfnmatch ($allow[$idx], $token));
   }
 
-  if ($isknown{$token}) {
-    ++$nknown;
-  } else {
+  unless ($isknown{$token}) {
     $errors{$token} = 1;
   }
 }
@@ -264,7 +280,7 @@ sub checknamespace {
 
   undef %errors;
   $nknown = 0;
-  open (CONTENT, "$CC $CFLAGS{$dialect} -E $fnamebase.c -P -Wp,-dN | sed -e '/^# [1-9]/d' -e '/^[[:space:]]*\$/d' |");
+  open (CONTENT, "$CC $CFLAGS -E $fnamebase.c -P -Wp,-dN | sed -e '/^# [1-9]/d' -e '/^[[:space:]]*\$/d' |");
   loop: while (<CONTENT>) {
     chop;
     if (/^#define (.*)/) {
@@ -303,12 +319,7 @@ sub checknamespace {
   }
 
   if ($realerror == 0) {
-    if ($nknown > 0) {
-      printf ("EXPECTED FAILURES\n");
-      ++$known;
-    } else {
-      printf ("OK\n");
-    }
+    printf ("OK\n");
   }
 }
 
@@ -318,31 +329,35 @@ while ($#headers >= 0) {
   my($hf) = $h;
   $hf =~ s|/|-|;
   my($fnamebase) = "$tmpdir/$hf-test";
-  my($missing);
+  my($missing) = 1;
   my(@allow) = ();
   my(@allowheader) = ();
   my(%seenheader) = ();
   my($prepend) = $mustprepend{$h};
+  my($test_exist) = 1;
 
   printf ("Testing <$h>\n");
   printf ("----------" . "-" x length ($h) . "\n");
 
-  # Generate a program to test for the availability of this header.
-  open (TESTFILE, ">$fnamebase.c");
-  print TESTFILE "$prepend";
-  print TESTFILE "#include <$h>\n";
-  close (TESTFILE);
-
-  $missing = compiletest ($fnamebase, "Checking whether <$h> is available",
-			  "Header <$h> not available", 0, 0);
-
-  printf ("\n");
-
-  open (CONTROL, "$CC -E -D$dialect - < data/$h-data |");
+  open (CONTROL, "$CC -E -D$standard -x c data/$h-data |");
   control: while (<CONTROL>) {
     chop;
     next control if (/^#/);
     next control if (/^[	]*$/);
+
+    if ($test_exist) {
+      $test_exist = 0;
+      # Generate a program to test for the availability of this header.
+      open (TESTFILE, ">$fnamebase.c");
+      print TESTFILE "$prepend";
+      print TESTFILE "#include <$h>\n";
+      close (TESTFILE);
+
+      $missing = compiletest ($fnamebase, "Checking whether <$h> is available",
+			      "Header <$h> not available", 0, 0);
+      printf ("\n");
+      last control if ($missing);
+    }
 
     if (/^element *({([^}]*)}|([^{ ]*)) *({([^}]*)}|([^{ ]*)) *([A-Za-z0-9_]*) *(.*)/) {
       my($struct) = "$2$3";
@@ -421,7 +436,7 @@ while ($#headers >= 0) {
 		     "Member \"$member\" does not have the correct type.",
 		     $res, 0);
       }
-    } elsif (/^optional-constant *([a-zA-Z0-9_]*) ([>=<]+) ([A-Za-z0-9_]*)/) {
+    } elsif (/^optional-constant *([a-zA-Z0-9_]*) ([>=<]+) ([A-Za-z0-9_-]*)/) {
       my($const) = $1;
       my($op) = $2;
       my($value) = $3;
@@ -452,7 +467,7 @@ while ($#headers >= 0) {
 	$res = runtest ($fnamebase, "Testing for value of constant $const",
 			"Constant \"$const\" has not the right value.", $res);
       }
-    } elsif (/^constant *([a-zA-Z0-9_]*) *([>=<]+) ([A-Za-z0-9_]*)/) {
+    } elsif (/^constant *([a-zA-Z0-9_]*) *([>=<]+) ([A-Za-z0-9_-]*)/) {
       my($const) = $1;
       my($op) = $2;
       my($value) = $3;
@@ -483,7 +498,7 @@ while ($#headers >= 0) {
 	$res = runtest ($fnamebase, "Testing for value of constant $const",
 			"Constant \"$const\" has not the right value.", $res);
       }
-    } elsif (/^typed-constant *([a-zA-Z0-9_]*) *({([^}]*)}|([^ ]*)) *([A-Za-z0-9_]*)?/) {
+    } elsif (/^typed-constant *([a-zA-Z0-9_]*) *({([^}]*)}|([^ ]*)) *([A-Za-z0-9_-]*)?/) {
       my($const) = $1;
       my($type) = "$3$4";
       my($value) = $5;
@@ -525,7 +540,7 @@ while ($#headers >= 0) {
 	$res = runtest ($fnamebase, "Testing for value of constant $const",
 			"Constant \"$const\" has not the right value.", $res);
       }
-    } elsif (/^optional-constant *([a-zA-Z0-9_]*) *([A-Za-z0-9_]*)?/) {
+    } elsif (/^optional-constant *([a-zA-Z0-9_]*) *([A-Za-z0-9_-]*)?/) {
       my($const) = $1;
       my($value) = $2;
       my($res) = $missing;
@@ -554,7 +569,7 @@ while ($#headers >= 0) {
 	$res = runtest ($fnamebase, "Testing for value of constant $const",
 			"Constant \"$const\" has not the right value.", $res);
       }
-    } elsif (/^constant *([a-zA-Z0-9_]*) *([A-Za-z0-9_]*)?/) {
+    } elsif (/^constant *([a-zA-Z0-9_]*) *([A-Za-z0-9_-]*)?/) {
       my($const) = $1;
       my($value) = $2;
       my($res) = $missing;
@@ -583,7 +598,7 @@ while ($#headers >= 0) {
 	$res = runtest ($fnamebase, "Testing for value of constant $const",
 			"Constant \"$const\" has not the right value.", $res);
       }
-    } elsif (/^symbol *([a-zA-Z0-9_]*) *([A-Za-z0-9_]*)?/) {
+    } elsif (/^symbol *([a-zA-Z0-9_]*) *([A-Za-z0-9_-]*)?/) {
       my($symbol) = $1;
       my($value) = $2;
       my($res) = $missing;
@@ -614,7 +629,7 @@ while ($#headers >= 0) {
 	$res = runtest ($fnamebase, "Testing for value of symbol $symbol",
 			"Symbol \"$symbol\" has not the right value.", $res);
       }
-    } elsif (/^typed-constant *([a-zA-Z0-9_]*) *({([^}]*)}|([^ ]*)) *([A-Za-z0-9_]*)?/) {
+    } elsif (/^typed-constant *([a-zA-Z0-9_]*) *({([^}]*)}|([^ ]*)) *([A-Za-z0-9_-]*)?/) {
       my($const) = $1;
       my($type) = "$3$4";
       my($value) = $5;
@@ -908,7 +923,7 @@ while ($#headers >= 0) {
       print TESTFILE "#endif\n";
       close (TESTFILE);
 
-      $res = compiletest ($fnamebase, "Test availability of function $fname",
+      $res = compiletest ($fnamebase, "Test availability of macro $fname",
 			  "Function \"$fname\" is not available.", $res, 0);
 
       # Generate a program to test for the type of this function.
@@ -921,7 +936,7 @@ while ($#headers >= 0) {
       print TESTFILE "#endif\n";
       close (TESTFILE);
 
-      compiletest ($fnamebase, "Test for type of function $fname",
+      compiletest ($fnamebase, "Test for type of macro $fname",
 		   "Function \"$fname\" has incorrect type.", $res, 0);
     } elsif (/^macro-str *([^	 ]*) *(\".*\")/) {
       # The above regex doesn't handle a \" in a string.
@@ -1002,7 +1017,39 @@ while ($#headers >= 0) {
 	print TESTFILE "int main (void) { return !($macro $op $value); }\n";
 	close (TESTFILE);
 
-	$res = runtest ($fnamebase, "Testing for value of constant $macro",
+	$res = runtest ($fnamebase, "Testing for value of macro $macro",
+			"Macro \"$macro\" has not the right value.", $res);
+      }
+    } elsif (/^macro *([a-zA-Z0-9_]*) *([A-Za-z0-9_]*)/) {
+      my($macro) = "$1";
+      my($value) = $2;
+      my($res) = $missing;
+
+      # Remember that this name is allowed.
+      push @allow, $macro;
+
+      # Generate a program to test for availability of this macro.
+      open (TESTFILE, ">$fnamebase.c");
+      print TESTFILE "$prepend";
+      print TESTFILE "#include <$h>\n";
+      print TESTFILE "#ifndef $macro\n";
+      print TESTFILE "# error \"Macro $macro not defined\"\n";
+      print TESTFILE "#endif\n";
+      close (TESTFILE);
+
+      $res = compiletest ($fnamebase, "Test availability of macro $macro",
+			  "Macro \"$macro\" is not available.", $res, 0);
+
+      if ($value ne "") {
+	# Generate a program to test for the value of this constant.
+	open (TESTFILE, ">$fnamebase.c");
+	print TESTFILE "$prepend";
+	print TESTFILE "#include <$h>\n";
+	# Negate the value since 0 means ok
+	print TESTFILE "int main (void) { return !($macro == $value); }\n";
+	close (TESTFILE);
+
+	$res = runtest ($fnamebase, "Testing for value of macro $macro",
 			"Macro \"$macro\" has not the right value.", $res);
       }
     } elsif (/^macro *([^	]*)/) {
@@ -1046,7 +1093,7 @@ while ($#headers >= 0) {
   while ($#allowheader >= 0) {
     my($ah) = pop @allowheader;
 
-    open (ALLOW, "$CC -E -D$dialect - < data/$ah-data |");
+    open (ALLOW, "$CC -E -D$standard - < data/$ah-data |");
     acontrol: while (<ALLOW>) {
       chop;
       next acontrol if (/^#/);
@@ -1091,13 +1138,17 @@ while ($#headers >= 0) {
     close (ALLOW);
   }
 
-  # Now check the namespace.
-  printf ("  Checking the namespace of \"%s\"... ", $h);
-  if ($missing) {
-    ++$skipped;
-    printf ("SKIP\n");
+  if ($test_exist) {
+    printf ("  Not defined\n");
   } else {
-    checknamespace ($h, $fnamebase, @allow);
+    # Now check the namespace.
+    printf ("  Checking the namespace of \"%s\"... ", $h);
+    if ($missing) {
+      ++$skipped;
+      printf ("SKIP\n");
+    } else {
+      checknamespace ($h, $fnamebase, @allow);
+    }
   }
 
   printf ("\n\n");
@@ -1105,14 +1156,6 @@ while ($#headers >= 0) {
 
 printf "-" x 76 . "\n";
 printf ("  Total number of tests   : %4d\n", $total);
-
-printf ("  Number of known failures: %4d (", $known);
-$percent = ($known * 100) / $total;
-if ($known > 0 && $percent < 1.0) {
-  printf (" <1%%)\n");
-} else {
-  printf ("%3d%%)\n", $percent);
-}
 
 printf ("  Number of failed tests  : %4d (", $errors);
 $percent = ($errors * 100) / $total;
@@ -1131,3 +1174,6 @@ if ($skipped > 0 && $percent < 1.0) {
 }
 
 exit $errors != 0;
+# Local Variables:
+#  perl-indent-level: 2
+# End:

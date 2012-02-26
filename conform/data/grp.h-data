@@ -1,4 +1,4 @@
-#ifndef ISO
+#if !defined ISO && !defined ISO99 && !defined ISO11
 type {struct group}
 element {struct group} {char*} gr_name
 element {struct group} gid_t gr_gid
@@ -13,9 +13,9 @@ type size_t
 
 function {struct group*} getgrgid (gid_t)
 function {struct group*} getgrnam (const char*)
-# ifndef POSIX
 function int getgrgid_r (gid_t, struct group*, char *, size_t, struct group**)
 function int getgrnam_r (const char *, struct group *, char *, size_t, struct group**)
+# ifndef POSIX
 function {struct group*} getgrent (void)
 function void endgrent (void)
 #  ifndef POSIX2008

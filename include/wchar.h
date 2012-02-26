@@ -1,6 +1,7 @@
 #ifndef _WCHAR_H
 #include <wcsmbs/wchar.h>
 
+# ifndef _ISOMAC
 # ifdef _WCHAR_H
 
 extern __typeof (wcscasecmp_l) __wcscasecmp_l;
@@ -193,6 +194,7 @@ extern size_t __mbsrtowcs_l (wchar_t *dst, const char **src, size_t len,
 #  define mbsinit(state) ((state)->__count == 0)
 #  define __mbsinit(state) ((state)->__count == 0)
 
+# endif
 # endif
 #endif
 

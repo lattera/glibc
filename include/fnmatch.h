@@ -2,6 +2,8 @@
 
 #include <posix/fnmatch.h>
 
+#ifndef _ISOMAC
 libc_hidden_proto (fnmatch)
+#endif
 
 #endif

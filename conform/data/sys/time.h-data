@@ -1,4 +1,4 @@
-#if !defined ISO && !defined POSIX && !defined POSIX2008
+#if !defined ISO && !defined ISO99 && !defined ISO11 && !defined POSIX && !defined POSIX2008
 type {struct timeval}
 
 element {struct timeval} time_t tv_sec

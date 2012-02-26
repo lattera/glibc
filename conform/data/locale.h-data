@@ -17,7 +17,7 @@ element {struct lconv} char p_cs_precedes
 element {struct lconv} char p_sep_by_space
 element {struct lconv} char p_sign_posn
 element {struct lconv} {char*} thousands_sep
-#if defined XOPEN2K || defined XOPEN2K8 || defined POSIX2008
+#if !defined ISO && !defined POSIX && !defined XPG3 && !defined XPG4 && !defined UNIX98
 element {struct lconv} char int_n_cs_precedes
 element {struct lconv} char int_n_sep_by_space
 element {struct lconv} char int_n_sign_posn

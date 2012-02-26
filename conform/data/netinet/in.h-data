@@ -1,4 +1,4 @@
-#ifndef ISO
+#if !defined ISO && !defined ISO99 && !defined ISO11 && !defined POSIX
 type in_port_t
 type in_addr_t
 

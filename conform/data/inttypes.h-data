@@ -1,3 +1,4 @@
+#if defined ISO99 || defined ISO11 || defined XOPEN2K || defined POSIX2008
 type int8_t
 type int16_t
 type int32_t
@@ -141,3 +142,4 @@ allow INT*
 allow UINT*
 allow PRI[Xa-z]*
 allow SCN[Xa-z]*
+#endif

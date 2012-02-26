@@ -1,4 +1,4 @@
-#if !defined ISO
+#if !defined ISO && !defined ISO99 && !defined ISO11
 type sem_t
 
 constant SEM_FAILED
@@ -9,7 +9,9 @@ function int sem_getvalue (sem_t*, int*)
 function int sem_init (sem_t*, int, unsigned int)
 function {sem_t*} sem_open (const char*, int, ...)
 function int sem_post (sem_t*)
+# if !defined POSIX
 function int sem_timedwait (sem_t*, const struct timespec*)
+# endif
 function int sem_trywait (sem_t*)
 function int sem_unlink (const char*)
 function int sem_wait (sem_t*)

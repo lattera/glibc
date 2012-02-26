@@ -1,9 +1,9 @@
-#ifndef ISO
+#if !defined ISO && !defined ISO99 && !defined ISO11
 constant FNM_NOMATCH
 constant FNM_PATHNAME
 constant FNM_PERIOD
 constant FNM_NOESCAPE
-#if !defined XOPEN2K8 && !defined POSIX2008
+#if !defined POSIX && !defined XOPEN2K8 && !defined POSIX2008
 constant FNM_NOSYS
 #endif
 

@@ -1,5 +1,6 @@
 #ifndef _CTYPE_H
 
+#ifndef _ISOMAC
 /* Initialize ctype locale data.  */
 extern void __ctype_init (void);
 libc_hidden_proto (__ctype_init)
@@ -46,9 +47,11 @@ __ctype_tolower_loc (void)
 }
 
 # endif	/* Not NOT_IN_libc.  */
+#endif
 
-# include <ctype/ctype.h>
+#include <ctype/ctype.h>
 
+#ifndef _ISOMAC
 # if !defined __NO_CTYPE && !defined NOT_IN_libc
 /* The spec says that isdigit must only match the decimal digits.  We
    can check this without a memory access.  */
@@ -59,5 +62,6 @@ __ctype_tolower_loc (void)
 #  undef __isdigit_l
 #  define __isdigit_l(c, l) ({ int __c = (c); __c >= '0' && __c <= '9'; })
 # endif
+#endif
 
 #endif /* ctype.h */

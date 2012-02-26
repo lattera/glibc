@@ -1,6 +1,7 @@
 #ifndef _SYS_TIME_H
 #include <time/sys/time.h>
 
+#ifndef _ISOMAC
 /* Now document the internal interfaces.  */
 extern int __gettimeofday (struct timeval *__tv,
 			   struct timezone *__tz);
@@ -26,4 +27,5 @@ extern int __futimes (int fd, const struct timeval tvp[2]) attribute_hidden;
 # define __gettimeofday(tv, tz) INTUSE(__gettimeofday) (tv, tz)
 #endif
 
+#endif
 #endif

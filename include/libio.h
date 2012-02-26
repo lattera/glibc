@@ -1,5 +1,6 @@
 #include <libio/libio.h>
 
+#ifndef _ISOMAC
 #ifndef _LIBC_LIBIO_H
 #define _LIBC_LIBIO_H
 
@@ -21,4 +22,5 @@ libc_hidden_proto (__wuflow)
     _IO_lock_unlock (*(_fp)->_lock)
 #endif
 
+#endif
 #endif
