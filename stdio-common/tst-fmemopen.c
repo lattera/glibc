@@ -11,7 +11,7 @@
 int
 main (int argc, char **argv)
 {
-  const char *test_file;
+  char *test_file;
   const char blah[] = "BLAH";
   FILE *fp;
   char *mmap_data;

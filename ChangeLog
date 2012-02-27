@@ -1,3 +1,7 @@
+2012-02-27  Roland McGrath  <roland@hack.frob.com>
+
+	* stdio-common/tst-fmemopen.c (main): Remove spurious const.
+
 2012-02-27  Joseph Myers  <joseph@codesourcery.com>
 
 	* manual/install.texi (--with-headers): Describe headers as
