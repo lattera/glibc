@@ -242,33 +242,33 @@ $as_echo "$ac_cv_path_EGREP" >&6; }
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking installed Linux kernel header files" >&5
 $as_echo_n "checking installed Linux kernel header files... " >&6; }
-if ${libc_cv_linux2010+:} false; then :
+if ${libc_cv_linux2619+:} false; then :
   $as_echo_n "(cached) " >&6
 else
   cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
 #include <linux/version.h>
-#if !defined LINUX_VERSION_CODE || LINUX_VERSION_CODE <  (2 *65536+ 0 *256+ 10) /* 2.0.10 */
+#if !defined LINUX_VERSION_CODE || LINUX_VERSION_CODE <  (2 *65536+ 6 *256+ 19) /* 2.6.19 */
 eat flaming death
 #endif
 _ACEOF
 if (eval "$ac_cpp conftest.$ac_ext") 2>&5 |
   $EGREP "eat flaming death" >/dev/null 2>&1; then :
-  libc_cv_linux2010='TOO OLD!'
+  libc_cv_linux2619='TOO OLD!'
 else
-  libc_cv_linux2010='2.0.10 or later'
+  libc_cv_linux2619='2.6.19 or later'
 fi
 rm -f conftest*
 
 fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_linux2010" >&5
-$as_echo "$libc_cv_linux2010" >&6; }
-if test "$libc_cv_linux2010" != '2.0.10 or later'; then
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_linux2619" >&5
+$as_echo "$libc_cv_linux2619" >&6; }
+if test "$libc_cv_linux2619" != '2.6.19 or later'; then
   as_fn_error $? "GNU libc requires kernel header files from
-Linux 2.0.10 or later to be installed before configuring.
+Linux 2.6.19 or later to be installed before configuring.
 The kernel header files are found usually in /usr/include/asm and
 /usr/include/linux; make sure these directories use files from
-Linux 2.0.10 or later.  This check uses <linux/version.h>, so
+Linux 2.6.19 or later.  This check uses <linux/version.h>, so
 make sure that file was built correctly when installing the kernel header
 files.  To use kernel headers not from /usr/include/linux, use the
 configure option --with-headers." "$LINENO" 5

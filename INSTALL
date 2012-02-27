@@ -59,9 +59,10 @@ will be used, and CFLAGS sets optimization options for the compiler.
 
 `--with-headers=DIRECTORY'
      Look for kernel header files in DIRECTORY, not `/usr/include'.
-     Glibc needs information from the kernel's private header files.
-     Glibc will normally look in `/usr/include' for them, but if you
-     specify this option, it will look in DIRECTORY instead.
+     Glibc needs information from the kernel's header files describing
+     the interface to the kernel.  Glibc will normally look in
+     `/usr/include' for them, but if you specify this option, it will
+     look in DIRECTORY instead.
 
      This option is primarily of use on a system where the headers in
      `/usr/include' come from an older version of glibc.  Conflicts can
@@ -347,37 +348,34 @@ Specific advice for GNU/Linux systems
 =====================================
 
 If you are installing GNU libc on a GNU/Linux system, you need to have
-the header files from a 2.2 or newer kernel around for reference.  For
-some architectures, like ia64, sh and hppa, you need at least headers
-from kernel 2.3.99 (sh and hppa) or 2.4.0 (ia64).  You do not need to
-use that kernel, just have its headers where glibc can access at them.
-The easiest way to do this is to unpack it in a directory such as
-`/usr/src/linux-2.2.1'.  In that directory, run `make config' and
-accept all the defaults.  Then run `make include/linux/version.h'.
-Finally, configure glibc with the option
-`--with-headers=/usr/src/linux-2.2.1/include'.  Use the most recent
-kernel you can get your hands on.
-
-   An alternate tactic is to unpack the 2.2 kernel and run `make
-config' as above; then, rename or delete `/usr/include', create a new
-`/usr/include', and make symbolic links of `/usr/include/linux' and
-`/usr/include/asm' into the kernel sources.  You can then configure
-glibc with no special options.
+the header files from a 2.6.19.1 or newer kernel around for reference.
+These headers must be installed using `make headers_install'; the
+headers present in the kernel source directory are not suitable for
+direct use by GNU libc.  You do not need to use that kernel, just have
+its headers installed where glibc can access them, referred to here as
+INSTALL-DIRECTORY.  The easiest way to do this is to unpack it in a
+directory such as `/usr/src/linux-VERSION'.  In that directory, run
+`make headers_install INSTALL_HDR_PATH=INSTALL-DIRECTORY'.  Finally,
+configure glibc with the option
+`--with-headers=INSTALL-DIRECTORY/include'.  Use the most recent kernel
+you can get your hands on.  (If you are cross-compiling GNU libc, you
+need to specify `ARCH=ARCHITECTURE' in the `make headers_install'
+command, where ARCHITECTURE is the architecture name used by the Linux
+kernel, such as `x86' or `powerpc'.)
 
    After installing GNU libc, you may need to remove or rename
-`/usr/include/linux' and `/usr/include/asm', and replace them with
-copies of `include/linux' and `include/asm-$ARCHITECTURE' taken from
-the Linux source package which supplied kernel headers for building the
-library.  ARCHITECTURE will be the machine architecture for which the
-library was built, such as `i386' or `alpha'.  You do not need to do
-this if you did not specify an alternate kernel header source using
-`--with-headers'.  The intent here is that these directories should be
-copies of, *not* symlinks to, the kernel headers used to build the
-library.
-
-   Note that `/usr/include/net' and `/usr/include/scsi' should *not* be
-symlinks into the kernel sources.  GNU libc provides its own versions
-of these files.
+directories such as `/usr/include/linux' and `/usr/include/asm', and
+replace them with copies of directories such as `linux' and `asm' from
+`INSTALL-DIRECTORY/include'.  All directories present in
+`INSTALL-DIRECTORY/include' should be copied, except that GNU libc
+provides its own version of `/usr/include/scsi'; the files provided by
+the kernel should be copied without replacing those provided by GNU
+libc.  The `linux', `asm' and `asm-generic' directories are required to
+compile programs using GNU libc; the other directories describe
+interfaces to the kernel but are not required if not compiling programs
+using those interfaces.  You do not need to copy kernel headers if you
+did not specify an alternate kernel header source using
+`--with-headers'.
 
    GNU/Linux expects some components of the libc installation to be in
 `/lib' and some in `/usr/lib'.  This is handled automatically if you

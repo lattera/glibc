@@ -1,5 +1,17 @@
 2012-02-27  Joseph Myers  <joseph@codesourcery.com>
 
+	* manual/install.texi (--with-headers): Describe headers as
+	interface headers, not private headers.
+	(Specific advice for GNU/Linux systems): Describe use of headers
+	from "make headers_install", not private headers from older
+	kernels.
+	* INSTALL: Regenerated.
+	* sysdeps/unix/sysv/linux/configure.in (LIBC_LINUX_VERSION):
+	Change to 2.6.19.
+	* sysdeps/unix/sysv/linux/configure: Regenerated.
+
+2012-02-27  Joseph Myers  <joseph@codesourcery.com>
+
 	* manual/llio.texi (fclean): Remove documentation.
 
 2012-02-27  Joseph Myers  <joseph@codesourcery.com>

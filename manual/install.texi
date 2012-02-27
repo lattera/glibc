@@ -79,8 +79,9 @@ directory if that option is specified, or @file{/usr/local} otherwise.
 
 @item --with-headers=@var{directory}
 Look for kernel header files in @var{directory}, not
-@file{/usr/include}.  Glibc needs information from the kernel's private
-header files.  Glibc will normally look in @file{/usr/include} for them,
+@file{/usr/include}.  Glibc needs information from the kernel's header
+files describing the interface to the kernel.  Glibc will normally
+look in @file{/usr/include} for them,
 but if you specify this option, it will look in @var{DIRECTORY} instead.
 
 This option is primarily of use on a system where the headers in
@@ -393,39 +394,37 @@ patches, although we try to avoid this.
 @appendixsec Specific advice for GNU/Linux systems
 @cindex kernel header files
 
-If you are installing GNU libc on a GNU/Linux system, you need to have the
-header files from a 2.2 or newer kernel around for reference.  For some
-architectures, like ia64, sh and hppa, you need at least headers from
-kernel 2.3.99 (sh and hppa) or 2.4.0 (ia64).  You do not need to use
-that kernel, just have its headers where glibc can access at them.  The
-easiest way to do this is to unpack it in a directory such as
-@file{/usr/src/linux-2.2.1}.  In that directory, run @samp{make config}
-and accept all the defaults.  Then run @samp{make
-include/linux/version.h}.  Finally, configure glibc with the option
-@samp{--with-headers=/usr/src/linux-2.2.1/include}.  Use the most recent
-kernel you can get your hands on.
-
-An alternate tactic is to unpack the 2.2 kernel and run @samp{make
-config} as above; then, rename or delete @file{/usr/include}, create a
-new @file{/usr/include}, and make symbolic links of
-@file{/usr/include/linux} and @file{/usr/include/asm} into the kernel
-sources.  You can then configure glibc with no special options.
+If you are installing GNU libc on a GNU/Linux system, you need to have
+the header files from a 2.6.19.1 or newer kernel around for reference.
+These headers must be installed using @samp{make headers_install}; the
+headers present in the kernel source directory are not suitable for
+direct use by GNU libc.  You do not need to use that kernel, just have
+its headers installed where glibc can access them, referred to here as
+@var{install-directory}.  The easiest way to do this is to unpack it
+in a directory such as @file{/usr/src/linux-@var{version}}.  In that
+directory, run @samp{make headers_install
+INSTALL_HDR_PATH=@var{install-directory}}.  Finally, configure glibc
+with the option @samp{--with-headers=@var{install-directory}/include}.
+Use the most recent kernel you can get your hands on.  (If you are
+cross-compiling GNU libc, you need to specify
+@samp{ARCH=@var{architecture}} in the @samp{make headers_install}
+command, where @var{architecture} is the architecture name used by the
+Linux kernel, such as @samp{x86} or @samp{powerpc}.)
 
 After installing GNU libc, you may need to remove or rename
-@file{/usr/include/linux} and @file{/usr/include/asm}, and replace them
-with copies of @file{include/linux} and
-@file{include/asm-$@var{ARCHITECTURE}} taken from the Linux source
-package which supplied kernel headers for building the library.
-@var{ARCHITECTURE} will be the machine architecture for which the
-library was built, such as @samp{i386} or @samp{alpha}.  You do not need
-to do this if you did not specify an alternate kernel header source
-using @samp{--with-headers}.  The intent here is that these directories
-should be copies of, @strong{not} symlinks to, the kernel headers used to
-build the library.
-
-Note that @file{/usr/include/net} and @file{/usr/include/scsi} should
-@strong{not} be symlinks into the kernel sources.  GNU libc provides its
-own versions of these files.
+directories such as @file{/usr/include/linux} and
+@file{/usr/include/asm}, and replace them with copies of directories
+such as @file{linux} and @file{asm} from
+@file{@var{install-directory}/include}.  All directories present in
+@file{@var{install-directory}/include} should be copied, except that
+GNU libc provides its own version of @file{/usr/include/scsi}; the
+files provided by the kernel should be copied without replacing those
+provided by GNU libc.  The @file{linux}, @file{asm} and
+@file{asm-generic} directories are required to compile programs using
+GNU libc; the other directories describe interfaces to the kernel but
+are not required if not compiling programs using those interfaces.
+You do not need to copy kernel headers if you did not specify an
+alternate kernel header source using @samp{--with-headers}.
 
 GNU/Linux expects some components of the libc installation to be in
 @file{/lib} and some in @file{/usr/lib}.  This is handled automatically

@@ -5,7 +5,7 @@ GLIBC_PROVIDES dnl See aclocal.m4 in the top level source directory.
 # existing system library, because we are the only system library.
 inhibit_glue=yes
 
-define([LIBC_LINUX_VERSION],[2.0.10])dnl
+define([LIBC_LINUX_VERSION],[2.6.19])dnl
 if test -n "$sysheaders"; then
   OLD_CPPFLAGS=$CPPFLAGS
   CPPFLAGS="$CPPFLAGS $SYSINCLUDES"
