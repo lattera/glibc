@@ -1,3 +1,13 @@
+2012-02-27  David S. Miller  <davem@davemloft.net>
+
+	* sysdeps/unix/sysv/linux/i386/bits/pthreadtypes.h: Don't refer to non-existing
+	__pthread_attr.
+	* sysdeps/unix/sysv/linux/powerpc/bits/pthreadtypes.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/bits/pthreadtypes.h: Likewise.
+	* sysdeps/unix/sysv/linux/sh/bits/pthreadtypes.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/pthreadtypes.h: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/bits/pthreadtypes.h: Likewise.
+
 2012-02-26  Ulrich Drepper  <drepper@gmail.com>
 
 	* sysdeps/pthread/pthread.h: Define __need_clockid_t for __USE_XOPEN2K.
