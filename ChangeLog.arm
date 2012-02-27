@@ -1,3 +1,9 @@
+2012-02-27  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/arm/nptl/bits/pthreadtypes.h
+	(pthread_attr_t): Change union tag to pthread_attr_t.  Only define
+	typedef if not already defined.
+
 2012-02-26  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/arm/nptl/bits/pthreadtypes.h: Name
