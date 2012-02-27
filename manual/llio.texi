@@ -1000,21 +1000,10 @@ for linked channels; see @ref{Linked Channels}.
 @node Cleaning Streams
 @subsection Cleaning Streams
 
-On the GNU system, you can clean up any stream with @code{fclean}:
-
-@comment stdio.h
-@comment GNU
-@deftypefun int fclean (FILE *@var{stream})
-Clean up the stream @var{stream} so that its buffer is empty.  If
-@var{stream} is doing output, force it out.  If @var{stream} is doing
-input, give the data in the buffer back to the system, arranging to
-reread it.
-@end deftypefun
-
-On other systems, you can use @code{fflush} to clean a stream in most
+You can use @code{fflush} to clean a stream in most
 cases.
 
-You can skip the @code{fclean} or @code{fflush} if you know the stream
+You can skip the @code{fflush} if you know the stream
 is already clean.  A stream is clean whenever its buffer is empty.  For
 example, an unbuffered stream is always clean.  An input stream that is
 at end-of-file is clean.  A line-buffered stream is clean when the last
@@ -1028,12 +1017,10 @@ not random access, there is no way to give back the excess data already
 read.  When an input stream reads from a random-access file,
 @code{fflush} does clean the stream, but leaves the file pointer at an
 unpredictable place; you must set the file pointer before doing any
-further I/O.  On the GNU system, using @code{fclean} avoids both of
-these problems.
+further I/O.
 
 Closing an output-only stream also does @code{fflush}, so this is a
-valid way of cleaning an output stream.  On the GNU system, closing an
-input stream does @code{fclean}.
+valid way of cleaning an output stream.
 
 You need not clean a stream before using its descriptor for control
 operations such as setting terminal modes; these operations don't affect
