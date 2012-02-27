@@ -279,22 +279,13 @@ build the GNU C library:
      recommend GNU `make' version 3.79.  All earlier versions have
      severe bugs or lack features.
 
-   * GCC 3.4 or newer, GCC 4.1 recommended
+   * GCC 4.3 or newer, GCC 4.6 recommended
 
-     GCC 3.4 or higher is required; as of this writing, GCC 4.4 is the
-     compiler we advise to use for current versions.  On certain
-     machines including `powerpc64', compilers prior to GCC 4.0 have
-     bugs that prevent them compiling the C library code.  On other
-     machines, GCC 4.1 is required to build the C library with support
-     for the correct `long double' type format; these include `powerpc'
-     (32 bit), `s390' and `s390x'.  For other architectures special
-     compiler-provided headers are needed (like `cpuid.h' on x86) which
-     only come with later compiler versions.
+     GCC 4.3 or higher is required; as of this writing, GCC 4.6 is the
+     compiler we advise to use to build the GNU C library.
 
      You can use whatever compiler you like to compile programs that
-     use GNU libc, but be aware that both GCC 2.7 and 2.8 have bugs in
-     their floating-point support that may be triggered by the math
-     library.
+     use GNU libc.
 
      Check the FAQ for any special compiler issues on particular
      platforms.
