@@ -1,3 +1,9 @@
+2012-02-27  David S. Miller  <davem@davemloft.net>
+
+	* sysdeps/ieee754/ldbl-128/s_nearbyintl.c (__nearbyintl): Do not
+	manipulate bits before adding and subtracting TWO112[sx].
+	* sysdeps/ieee754/ldbl-128/s_rintl.c (__rintl): Likewise.
+
 2012-02-27  Roland McGrath  <roland@hack.frob.com>
 
 	[BZ #13775]
