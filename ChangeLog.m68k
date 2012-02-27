@@ -1,3 +1,8 @@
+2012-02-27  Andreas Schwab  <schwab@linux-m68k.org>
+
+	* sysdeps/unix/sysv/linux/m68k/nptl/bits/pthreadtypes.h
+	(pthread_attr_t): Fix name of union.
+
 2012-02-26  Andreas Schwab  <schwab@linux-m68k.org>
 
 	* sysdeps/unix/sysv/linux/m68k/nptl/bits/pthreadtypes.h: Name
