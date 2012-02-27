@@ -1,3 +1,9 @@
+2012-02-27  Andreas Schwab  <schwab@linux-m68k.org>
+
+	* sysdeps/posix/spawni.c: Include <signal.h>.
+	* sysdeps/pthread/aio_cancel.c: Include <fcntl.h>.
+	* sysdeps/pthread/aio_fsync.c: Likewise.
+
 2012-02-26  Ulrich Drepper  <drepper@gmail.com>
 
 	* conform/Makefile (tests): Run only when not cross-compiling and

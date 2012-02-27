@@ -1,5 +1,5 @@
 /* Guts of POSIX spawn interface.  Generic POSIX.1 version.
-   Copyright (C) 2000-2005, 2006, 2011 Free Software Foundation, Inc.
+   Copyright (C) 2000-2005, 2006, 2011, 2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -23,6 +23,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <signal.h>
 #include <sys/resource.h>
 #include "spawn_int.h"
 #include <not-cancel.h>
