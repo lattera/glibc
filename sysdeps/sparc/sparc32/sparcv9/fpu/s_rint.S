@@ -20,13 +20,12 @@
 #include <sysdep.h>
 
 	/* We pop constants into the FPU registers using the incoming
-	 * argument stack slots, since this avoid having to use any PIC
-	 * references.  We also thus avoid having to allocate a register
-	 * window.
-	 *
-	 * VIS instructions are used to facilitate the formation of
-	 * easier constants, and the propagation of the sign bit.
-	 */
+	   argument stack slots, since this avoid having to use any PIC
+	   references.  We also thus avoid having to allocate a register
+	   window.
+
+	   VIS instructions are used to facilitate the formation of
+	   easier constants, and the propagation of the sign bit.  */
 
 #define TWO_FIFTYTWO	0x43300000		/* 2**52 */
 

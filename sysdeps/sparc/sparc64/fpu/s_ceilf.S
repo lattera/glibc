@@ -20,29 +20,28 @@
 #include <sysdep.h>
 
 	/* Since changing the rounding mode is extremely expensive, we
-	 * try to round up using a method that is rounding mode
-	 * agnostic.
-	 *
-	 * We add then subtract (or subtract than add if the initial
-	 * value was negative) 2**23 to the value, then subtract it
-	 * back out.
-	 *
-	 * This will clear out the fractional portion of the value.
-	 * One of two things will happen for non-whole initial values.
-	 * Either the rounding mode will round it up, or it will be
-	 * rounded down.  If the value started out whole, it will be
-	 * equal after the addition and subtraction.  This means we
-	 * can accurately detect with one test whether we need to add
-	 * another 1.0 to round it up properly.
-	 *
-	 * We pop constants into the FPU registers using the incoming
-	 * argument stack slots, since this avoid having to use any PIC
-	 * references.  We also thus avoid having to allocate a register
-	 * window.
-	 *
-	 * VIS instructions are used to facilitate the formation of
-	 * easier constants, and the propagation of the sign bit.
-	 */
+	   try to round up using a method that is rounding mode
+	   agnostic.
+
+	   We add then subtract (or subtract than add if the initial
+	   value was negative) 2**23 to the value, then subtract it
+	   back out.
+
+	   This will clear out the fractional portion of the value.
+	   One of two things will happen for non-whole initial values.
+	   Either the rounding mode will round it up, or it will be
+	   rounded down.  If the value started out whole, it will be
+	   equal after the addition and subtraction.  This means we
+	   can accurately detect with one test whether we need to add
+	   another 1.0 to round it up properly.
+
+	   We pop constants into the FPU registers using the incoming
+	   argument stack slots, since this avoid having to use any
+	   PIC references.  We also thus avoid having to allocate a
+	   register window.
+
+	   VIS instructions are used to facilitate the formation of
+	   easier constants, and the propagation of the sign bit.  */
 
 #define TWO_TWENTYTHREE	0x4b000000		/* 2**23 */
 #define ONE_DOT_ZERO	0x3f800000		/* 1.0 */

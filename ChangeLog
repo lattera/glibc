@@ -1,3 +1,14 @@
+2012-02-27  David S. Miller  <davem@davemloft.net>
+
+	* sysdeps/sparc/sparc32/sparcv9/fpu/s_ceil.S: Fix comment formatting.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/s_ceilf.S: Likewise.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/s_rint.S: Likewise.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/s_rintf.S: Likewise.
+	* sysdeps/sparc/sparc64/fpu/s_ceil.S: Likewise.
+	* sysdeps/sparc/sparc64/fpu/s_ceilf.S: Likewise.
+	* sysdeps/sparc/sparc64/fpu/s_rint.S: Likewise.
+	* sysdeps/sparc/sparc64/fpu/s_rintf.S: Likewise.
+
 2012-02-27  Joseph Myers  <joseph@codesourcery.com>
 
 	* configure.in (CC): Restrict allowed GCC versions to 4.3 and
