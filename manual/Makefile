@@ -76,12 +76,15 @@ chapters.% top-menu.%: libc-texinfo.sh $(texis) Makefile
 			       '$(add-chapters)' \
 			       '$(appendices) $(licenses)'
 
-libc.dvi libc.pdf libc.info: chapters.texi top-menu.texi dir-add.texi \
-			     libm-err.texi
+# Generated files directly included from libc.texinfo.
+libc-texi-generated = chapters.texi top-menu.texi dir-add.texi \
+		      libm-err.texi version.texi
+
+libc.dvi libc.pdf libc.info: $(libc-texi-generated)
 libc.dvi libc.pdf: texinfo.tex
 
 html: libc/index.html
-libc/index.html: chapters.texi top-menu.texi dir-add.texi libm-err.texi
+libc/index.html: $(libc-texi-generated)
 	$(MAKEINFO) --html libc.texinfo
 
 # Generate the summary from the Texinfo source files for each chapter.
@@ -108,6 +111,13 @@ stamp-libm-err: libm-err-tab.pl $(wildcard $(foreach dir,$(sysdirs),\
 	pwd=`pwd`; \
 	$(PERL) $< $$pwd/.. > libm-err-tmp
 	$(move-if-change) libm-err-tmp libm-err.texi
+	touch $@
+
+# Generate a file with the version number.
+version.texi: stamp-version ;
+stamp-version: $(common-objpfx)config.make
+	echo "@set VERSION $(version)" > version-tmp
+	$(move-if-change) version-tmp version.texi
 	touch $@
 
 # Generate Texinfo files from the C source for the example programs.
@@ -173,10 +183,10 @@ clean: mostlyclean
 distclean: clean
 indices = cp fn pg tp vr ky
 realclean: distclean
-	-rm -f texis summary.texi stamp-summary *.c.texi dir-add.texi
+	-rm -f texis summary.texi stamp-summary *.c.texi
 	-rm -f $(foreach index,$(indices),libc.$(index) libc.$(index)s)
-	-rm -f libc.log libc.aux libc.toc dir-add.texinfo
-	-rm -f top-menu.texi chapters.texi
+	-rm -f libc.log libc.aux libc.toc
+	-rm -f $(libc-texi-generated)
 
 .PHONY: install subdir_install installdirs install-data
 install-data subdir_install: install

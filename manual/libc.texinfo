@@ -17,19 +17,24 @@
 @c @smallbook
 @comment %**end of header (This is for running Texinfo on a region.)
 
+@c Everything related to printed editions is disabled until we have
+@c resolved how to keep them in sync with the master sources of the
+@c manual.
 @c sold 0.06/1.09, print run out 21may96
-@set EDITION 0.13
-@set VERSION 2.14
-@set UPDATED 2011-07-19
-@set ISBN 1-882114-55-8
+@c @set EDITION 0.13
+@c @set ISBN 1-882114-55-8
+
+@include version.texi
 
 @set FDL_VERSION 1.3
 
 @copying
 This file documents the GNU C library.
 
-This is Edition @value{EDITION}, last updated @value{UPDATED},
-of @cite{The GNU C Library Reference Manual}, for version @value{VERSION}.
+This is
+@c Disabled (printed editions, see above).
+@c Edition @value{EDITION} of
+@cite{The GNU C Library Reference Manual}, for version @value{VERSION}.
 
 Copyright @copyright{} 1993--2012 Free Software Foundation, Inc.
 
@@ -59,22 +64,23 @@ supports it in developing GNU and promoting software freedom.''
 @center with
 @center Richard M. Stallman, Roland McGrath, Andrew Oram, and Ulrich Drepper
 @sp 3
-@center Edition @value{EDITION}
-@sp 1
-@center last updated @value{UPDATED}
-@sp 1
+@c Disabled (printed editions, see above).
+@c @center Edition @value{EDITION}
+@c @sp 1
 @center for version @value{VERSION}
 @page
 @vskip 0pt plus 1filll
 @insertcopying
 
-@sp 2
-Published by the @uref{http://www.fsf.org/, Free Software Foundation} @*
+@c Disabled (printed editions, see above).
+@c @sp 2
+@c Published by the @uref{http://www.fsf.org/, Free Software Foundation} @*
 @c ISBN @value{ISBN} @*
 
-@sp 2
-Cover art for the Free Software Foundation's printed edition
-by Etienne Suvasa.
+@c Disabled (printed editions, see above).
+@c @sp 2
+@c Cover art for the Free Software Foundation's printed edition
+@c by Etienne Suvasa.
 
 @end titlepage
 
@@ -84,7 +90,9 @@ by Etienne Suvasa.
 @ifnottex
 @node Top, Introduction, (dir), (dir)
 @top Main Menu
-This is Edition @value{EDITION}, last updated @value{UPDATED}, of
+This is
+@c Disabled (printed editions, see above).
+@c Edition @value{EDITION} of
 @cite{The GNU C Library Reference Manual}, for Version @value{VERSION}
 of the GNU C Library.
 @end ifnottex

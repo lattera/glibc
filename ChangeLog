@@ -1,3 +1,19 @@
+2012-02-27  Joseph Myers  <joseph@codesourcery.com>
+
+	* manual/Makefile (libc-texi-generated): New variable.  Include
+	version.texi.
+	(libc.dvi, libc.pdf, libc.info, libc/index.html): Depend on
+	$(libc-texi-generated), not duplicated list of files.
+	(version.texi, stamp-version): New rules.
+	(realclean): Remove $(libc-texi-generated), not individual files
+	from that list.  Do not remove dir-add.texinfo.
+	* manual/libc.texinfo: Comment out uses of edition numbers and
+	references to printed manual.  Remove last-updated dates.
+	(EDITION): Comment out.
+	(ISBN): Likewise.
+	(VERSION, UPDATED): Remove.
+	(version.texi): Include.
+
 2012-02-27  Andreas Schwab  <schwab@linux-m68k.org>
 
 	* sysdeps/posix/spawni.c: Include <signal.h>.
