@@ -1,4 +1,4 @@
-#! /bin/sh
+#! /bin/bash
 
 objpfx="$1"
 perl="$2"
@@ -6,8 +6,6 @@ cc="$3"
 includes="$4"
 
 standards=("ISO" "ISO99" "ISO11" "POSIX" "XPG3" "XPG4" "UNIX98"
-	   "XOPEN2K" "XOPEN2K8" "POSIX2008")
-standards=("POSIX" "XPG3" "XPG4" "UNIX98"
 	   "XOPEN2K" "XOPEN2K8" "POSIX2008")
 
 exitval=0

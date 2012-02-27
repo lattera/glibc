@@ -1158,7 +1158,7 @@ extern void swab (const void *__restrict __from, void *__restrict __to,
 
 /* The Single Unix specification demands this prototype to be here.
    It is also found in <stdio.h>.  */
-#if defined __USE_XOPEN || defined __USE_XOPEN2K8
+#if defined __USE_XOPEN && !defined __USE_XOPEN2K
 /* Return the name of the controlling terminal.  */
 extern char *ctermid (char *__s) __THROW;
 #endif

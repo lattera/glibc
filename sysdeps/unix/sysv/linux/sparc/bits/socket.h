@@ -422,6 +422,7 @@ struct linger
 
 __BEGIN_DECLS
 
+#ifdef __USE_GNU
 /* Receive a message as described by MESSAGE from socket FD.
    Returns the number of bytes read or -1 for errors.
 
@@ -430,6 +431,7 @@ __BEGIN_DECLS
 extern int recvmmsg (int __fd, struct mmsghdr *__vmessages,
 		     unsigned int __vlen, int __flags,
 		     const struct timespec *__tmo);
+#endif
 
 __END_DECLS
 

@@ -95,7 +95,7 @@ extern int tcflush (int __fd, int __queue_selector) __THROW;
 extern int tcflow (int __fd, int __action) __THROW;
 
 
-#ifdef __USE_UNIX98
+#if defined __USE_UNIX98 || defined __USE_XOPEN2K8
 /* Get process group ID for session leader for controlling terminal FD.  */
 extern __pid_t tcgetsid (int __fd) __THROW;
 #endif

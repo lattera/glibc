@@ -1,5 +1,29 @@
 2012-02-26  Ulrich Drepper  <drepper@gmail.com>
 
+	* conform/conformtest.pl: XPG7 and POSIX2008 require C99.
+	* conform/data/limits.h-data: Fixes for POSIX2008.
+	* conform/run-conformtest.sh: Run all tests.
+	* include/arpa/inet.h: Changes to allow conformtest.pl to use the
+	headers.
+	* include/bits/dlfcn.h: Likewise.
+	* include/langinfo.h: Likewise.
+	* include/monetary.h: Likewise.
+	* include/sys/poll.h: Likewise.
+
+	* io/fcntl.h: Define AT_NO_AUTOMOUNT and AT_EMPTY_PATH only
+	for __USE_GNU.
+	* posix/spawn.h: Define __need_sigset_t.
+	* posix/sys/wait.h: Don't include <sys/resource.h>, define id_t here.
+	* posix/unistd.h: Declare ctermid only for XPG before XPG6.
+	* rt/aio.h: Don't include fcntl.h and signal.h.  Use bits/siginfo.h
+	to get sigevent_t only.
+	* sysdeps/unix/sysv/linux/bits/socket.h: Declare sendmmsg and recvmmsg
+	only for __USE_GNU.
+	* sysdeps/unix/sysv/linux/sparc/bits/socket.h: Likewise.
+	* sysdeps/unix/sysv/linux/bits/uio.h: Declare process_vm_readv and
+	process_vm_writev only for __USE_GNU.
+	* termios/termios.h: Declare tcgetsid also for POSIX2008.
+
 	* conform/Makefile: For now ignore errors from run-conformtest.
 	* conform/conformtest.pl: Simplify code.  Add -ansi to CFLAGS for
 	POSIX to avoid namespace pollution.  Don't prepend headers.

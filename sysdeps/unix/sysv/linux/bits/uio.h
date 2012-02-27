@@ -48,8 +48,10 @@ struct iovec
 
 #endif
 
-#if defined _SYS_UIO_H && !defined _BITS_UIO_H_FOR_SYS_UIO_H
-#define _BITS_UIO_H_FOR_SYS_UIO_H 1
+
+#ifdef __USE_GNU
+# if defined _SYS_UIO_H && !defined _BITS_UIO_H_FOR_SYS_UIO_H
+#  define _BITS_UIO_H_FOR_SYS_UIO_H 1
 
 __BEGIN_DECLS
 
@@ -71,4 +73,5 @@ extern ssize_t process_vm_writev (pid_t __pid, const struct iovec *__lvec,
 
 __END_DECLS
 
+# endif
 #endif

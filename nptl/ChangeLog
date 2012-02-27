@@ -1,5 +1,7 @@
 2012-02-26  Ulrich Drepper  <drepper@gmail.com>
 
+	* sysdeps/pthread/pthread.h: Define __need_clockid_t for __USE_XOPEN2K.
+
 	* sysdeps/pthread/pthread.h: Define __need_timespec before including
 	<time.h>.
 	* sysdeps/unix/sysv/linux/i386/bits/pthreadtypes.h: Name pthread_attr_t

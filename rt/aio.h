@@ -23,11 +23,11 @@
 #define _AIO_H	1
 
 #include <features.h>
-#include <fcntl.h>
-#include <signal.h>
+#include <sys/types.h>
+#define __need_sigevent_t
+#include <bits/siginfo.h>
 #define __need_timespec
 #include <time.h>
-#include <sys/types.h>
 
 __BEGIN_DECLS
 

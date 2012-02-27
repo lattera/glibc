@@ -21,6 +21,7 @@
 
 #include <features.h>
 #include <sched.h>
+#define __need_sigset_t
 #include <signal.h>
 #include <sys/types.h>
 

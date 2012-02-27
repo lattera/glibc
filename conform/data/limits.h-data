@@ -87,7 +87,7 @@ constant _POSIX_CLOCKRES_MIN <= 20000000
 optional-constant _POSIX_AIO_LISTIO_MAX	2
 optional-constant _POSIX_AIO_MAX 1
 optional-constant _POSIX_ARG_MAX 4096
-#ifdef XOPEN2K
+#if !defined POSIX && !defined XPG3 && !defined XPG4 && !defined UNIX98
 optional-constant _POSIX_CHILD_MAX 25
 #else
 optional-constant _POSIX_CHILD_MAX 6
@@ -100,12 +100,12 @@ optional-constant _POSIX_MAX_INPUT 255
 optional-constant _POSIX_MQ_OPEN_MAX 8
 optional-constant _POSIX_MQ_PRIO_MAX 32
 optional-constant _POSIX_NAME_MAX 14
-#ifdef XOPEN2K
+#if !defined POSIX && !defined XPG3 && !defined XPG4 && !defined UNIX98
 optional-constant _POSIX_NGROUPS_MAX 8
 #else
 optional-constant _POSIX_NGROUPS_MAX 0
 #endif
-#ifdef XOPEN2K
+#if !defined POSIX && !defined XPG3 && !defined XPG4 && !defined UNIX98
 optional-constant _POSIX_OPEN_MAX 20
 #else
 optional-constant _POSIX_OPEN_MAX 16
