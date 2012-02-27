@@ -1,5 +1,9 @@
 2012-02-27  Roland McGrath  <roland@hack.frob.com>
 
+	* rt/tst-aio.c: Include <fcntl.h>.
+	* rt/tst-aio7.c: Likewise.
+	* rt/tst-aio64.c: Likewise.
+
 	* stdio-common/tst-fmemopen.c (main): Remove spurious const.
 
 2012-02-27  Joseph Myers  <joseph@codesourcery.com>
@@ -14,11 +18,7 @@
 	Change to 2.6.19.
 	* sysdeps/unix/sysv/linux/configure: Regenerated.
 
-2012-02-27  Joseph Myers  <joseph@codesourcery.com>
-
 	* manual/llio.texi (fclean): Remove documentation.
-
-2012-02-27  Joseph Myers  <joseph@codesourcery.com>
 
 	* manual/Makefile (libc-texi-generated): New variable.  Include
 	version.texi.
