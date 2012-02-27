@@ -1,5 +1,14 @@
 2012-02-27  David S. Miller  <davem@davemloft.net>
 
+	* sysdeps/sparc/sparc32/sparcv9/fpu/s_ceil.S: New file.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/s_ceilf.S: New file.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/s_rint.S: New file.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/s_rintf.S: New file.
+	* sysdeps/sparc/sparc64/fpu/s_ceil.S: New file.
+	* sysdeps/sparc/sparc64/fpu/s_ceilf.S: New file.
+	* sysdeps/sparc/sparc64/fpu/s_rint.S: New file.
+	* sysdeps/sparc/sparc64/fpu/s_rintf.S: New file.
+
 	* sysdeps/ieee754/ldbl-128/s_nearbyintl.c (__nearbyintl): Do not
 	manipulate bits before adding and subtracting TWO112[sx].
 	* sysdeps/ieee754/ldbl-128/s_rintl.c (__rintl): Likewise.
