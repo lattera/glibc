@@ -1,5 +1,10 @@
 2012-02-27  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/unix/sysv/linux/mips/bits/socket.h [!__USE_GNU]: Do not
+	declare recvmmsg and sendmmsg.
+
+2012-02-27  Joseph Myers  <joseph@codesourcery.com>
+
 	* sysdeps/unix/sysv/linux/mips/bits/siginfo.h (pthread_attr_t):
 	Change union tag to pthread_attr_t.  Only define typedef if not
 	already defined.
