@@ -1,5 +1,8 @@
 2012-02-26  Ulrich Drepper  <drepper@gmail.com>
 
+	* conform/Makefile (tests): Run only when not cross-compiling and
+	when fast-check is not defined.
+
 	* conform/conformtest.pl: XPG7 and POSIX2008 require C99.
 	* conform/data/limits.h-data: Fixes for POSIX2008.
 	* conform/run-conformtest.sh: Run all tests.

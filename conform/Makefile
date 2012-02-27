@@ -25,7 +25,11 @@ distribute = conformtest.pl $(wildcard data/*.h-data) \
 
 include ../Rules
 
+ifneq (yes,$(fast-check))
+ifeq (no,$(cross-compiling))
 tests: $(objpfx)run-conformtest.out
+endif
+endif
 
 $(objpfx)run-conformtest.out: run-conformtest.sh conformtest.pl \
 			      $(wildcard data/*.h-data) \
