@@ -50,11 +50,15 @@
 typedef unsigned long int pthread_t;
 
 
-typedef union __pthread_attr
+union pthread_attr_t
 {
   char __size[__SIZEOF_PTHREAD_ATTR_T];
   long int __align;
-} pthread_attr_t;
+};
+#ifndef __have_pthread_attr_t
+typedef union pthread_attr_t pthread_attr_t;
+# define __have_pthread_attr_t	1
+#endif
 
 
 #if _MIPS_SIM == _ABI64
