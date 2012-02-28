@@ -1,5 +1,5 @@
 /* Return the file descriptor used by a DIR stream.  Unix version.
-   Copyright (C) 1995, 1996 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -22,8 +22,9 @@
 #undef dirfd
 
 int
-dirfd (dirp)
+__dirfd (dirp)
      DIR *dirp;
 {
   return dirp->fd;
 }
+weak_alias(__dirfd, dirfd)
