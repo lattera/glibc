@@ -1,3 +1,10 @@
+2012-02-28  David S. Miller  <davem@davemloft.net>
+
+	* sysdeps/sparc/sparc32/fpu/s_copysign.S: New file.
+	* sysdeps/sparc/sparc32/fpu/s_copysignf.S: New file.
+	* sysdeps/sparc/sparc64/fpu/s_copysign.S: New file.
+	* sysdeps/sparc/sparc64/fpu/s_copysignf.S: New file.
+
 2012-02-27  David S. Miller  <davem@davemloft.net>
 
 	* sysdeps/sparc/sparc32/sparcv9/fpu/s_floor.S: New file.
