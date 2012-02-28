@@ -1,5 +1,10 @@
 2012-02-27  David S. Miller  <davem@davemloft.net>
 
+	* sysdeps/sparc/sparc32/sparcv9/fpu/s_floor.S: New file.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/s_floorf.S: New file.
+	* sysdeps/sparc/sparc64/fpu/s_floor.S: New file.
+	* sysdeps/sparc/sparc64/fpu/s_floorf.S: New file.
+
 	* sysdeps/sparc/sparc32/sparcv9/fpu/s_ceil.S: Fix accidental use of
 	frame pointer instead of stack pointer relative arg slot.
 	* sysdeps/sparc/sparc32/sparcv9/fpu/s_ceilf.S: Likewise.
