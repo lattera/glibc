@@ -71,9 +71,9 @@ ENTRY (__ceil)
 	faddd	%f0, %f16, %f18
 	fsubd	%f18, %f16, %f18
 	fcmpd	%fcc2, %f18, %f0
-	stx	%o3, [%fp + STACK_BIAS + 128]
+	stx	%o3, [%sp + STACK_BIAS + 128]
 
-	ldd	[%fp + STACK_BIAS + 128], %f20
+	ldd	[%sp + STACK_BIAS + 128], %f20
 	fmovduge %fcc2, ZERO, %f20
 	faddd	%f18, %f20, %f0
 	fabsd	%f0, %f0

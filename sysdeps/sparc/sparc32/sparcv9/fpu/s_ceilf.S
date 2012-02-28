@@ -71,9 +71,9 @@ ENTRY (__ceilf)
 	fadds	%f0, %f16, %f1
 	fsubs	%f1, %f16, %f1
 	fcmps	%fcc2, %f1, %f0
-	st	%o3, [%fp + 68]
+	st	%o3, [%sp + 68]
 
-	ld	[%fp + 68], %f9
+	ld	[%sp + 68], %f9
 	fmovsuge %fcc2, ZERO, %f9
 	fadds	%f1, %f9, %f0
 	fabss	%f0, %f0

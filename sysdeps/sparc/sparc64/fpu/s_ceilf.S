@@ -69,9 +69,9 @@ ENTRY (__ceilf)
 	fadds	%f1, %f16, %f5
 	fsubs	%f5, %f16, %f5
 	fcmps	%fcc2, %f5, %f1
-	st	%o3, [%fp + STACK_BIAS + 128]
+	st	%o3, [%sp + STACK_BIAS + 128]
 
-	ld	[%fp + STACK_BIAS + 128], %f9
+	ld	[%sp + STACK_BIAS + 128], %f9
 	fmovsuge %fcc2, ZERO, %f9
 	fadds	%f5, %f9, %f0
 	fabss	%f0, %f0

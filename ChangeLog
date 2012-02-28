@@ -1,3 +1,11 @@
+2012-02-27  David S. Miller  <davem@davemloft.net>
+
+	* sysdeps/sparc/sparc32/sparcv9/fpu/s_ceil.S: Fix accidental use of
+	frame pointer instead of stack pointer relative arg slot.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/s_ceilf.S: Likewise.
+	* sysdeps/sparc/sparc64/fpu/s_ceil.S: Likewise.
+	* sysdeps/sparc/sparc64/fpu/s_ceilf.S: Likewise.
+
 2012-02-27  Carlos O'Donell  <carlos_odonell@mentor.com>
 
 	[BZ #3992]

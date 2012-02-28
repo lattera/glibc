@@ -75,9 +75,9 @@ ENTRY (__ceil)
 	faddd	%f0, %f16, %f18
 	fsubd	%f18, %f16, %f18
 	fcmpd	%fcc2, %f18, %f0
-	stx	%o3, [%fp + 72]
+	stx	%o3, [%sp + 72]
 
-	ldd	[%fp + 72], %f20
+	ldd	[%sp + 72], %f20
 	fmovduge %fcc2, ZERO, %f20
 	faddd	%f18, %f20, %f0
 	fabsd	%f0, %f0
