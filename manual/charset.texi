@@ -361,7 +361,7 @@ the @code{LC_CTYPE} category of the current locale is used; see
 The functions handling more than one character at a time require NUL
 terminated strings as the argument (i.e., converting blocks of text
 does not work unless one can add a NUL byte at an appropriate place).
-The GNU C library contains some extensions to the standard that allow
+@Theglibc{} contains some extensions to the standard that allow
 specifying a size, but basically they also expect terminated strings.
 @end itemize
 
@@ -418,7 +418,7 @@ a compile-time constant and is defined in @file{limits.h}.
 maximum number of bytes in a multibyte character in the current locale.
 The value is never greater than @code{MB_LEN_MAX}.  Unlike
 @code{MB_LEN_MAX} this macro need not be a compile-time constant, and in
-the GNU C library it is not.
+@theglibc{} it is not.
 
 @pindex stdlib.h
 @code{MB_CUR_MAX} is defined in @file{stdlib.h}.
@@ -793,7 +793,7 @@ character sequence but the one representing the NUL wide character.
 Therefore, the @code{mbrlen} function will never read invalid memory.
 
 Now that this function is available (just to make this clear, this
-function is @emph{not} part of the GNU C library) we can compute the
+function is @emph{not} part of @theglibc{}) we can compute the
 number of wide character required to store the converted multibyte
 character string @var{s} using
 
@@ -949,7 +949,7 @@ The functions described in the previous section only convert a single
 character at a time.  Most operations to be performed in real-world
 programs include strings and therefore the @w{ISO C} standard also
 defines conversions on entire strings.  However, the defined set of
-functions is quite limited; therefore, the GNU C library contains a few
+functions is quite limited; therefore, @theglibc{} contains a few
 extensions that can help in some important situations.
 
 @comment wchar.h
@@ -1030,7 +1030,7 @@ therefore, should never be used in generally used code.
 
 The generic conversion interface (@pxref{Generic Charset Conversion})
 does not have this limitation (it simply works on buffers, not
-strings), and the GNU C library contains a set of functions that take
+strings), and @theglibc{} contains a set of functions that take
 additional parameters specifying the maximal number of bytes that are
 consumed from the input string.  This way the problem of
 @code{mbsrtowcs}'s example above could be solved by determining the line
@@ -1528,8 +1528,8 @@ The conversion functions mentioned so far in this chapter all had in
 common that they operate on character sets that are not directly
 specified by the functions.  The multibyte encoding used is specified by
 the currently selected locale for the @code{LC_CTYPE} category.  The
-wide character set is fixed by the implementation (in the case of GNU C
-library it is always UCS-4 encoded @w{ISO 10646}.
+wide character set is fixed by the implementation (in the case of @theglibc{}
+it is always UCS-4 encoded @w{ISO 10646}.
 
 This has of course several problems when it comes to general character
 conversion:
@@ -1648,7 +1648,7 @@ An @code{iconv} descriptor is like a file descriptor as for every use a
 new descriptor must be created.  The descriptor does not stand for all
 of the conversions from @var{fromset} to @var{toset}.
 
-The GNU C library implementation of @code{iconv_open} has one
+The @glibcadj{} implementation of @code{iconv_open} has one
 significant extension to other implementations.  To ease the extension
 of the set of available conversions, the implementation allows storing
 the necessary files with data and code in an arbitrary number of
@@ -1740,7 +1740,7 @@ from the initial state.  It is important that the programmer never makes
 any assumption as to whether the conversion has to deal with states.
 Even if the input and output character sets are not stateful, the
 implementation might still have to keep states.  This is due to the
-implementation chosen for the GNU C library as it is described below.
+implementation chosen for @theglibc{} as it is described below.
 Therefore an @code{iconv} call to reset the state should always be
 performed if some protocol requires this for the output text.
 
@@ -1761,7 +1761,7 @@ Since the character sets selected in the @code{iconv_open} call can be
 almost arbitrary, there can be situations where the input buffer contains
 valid characters, which have no identical representation in the output
 character set.  The behavior in this situation is undefined.  The
-@emph{current} behavior of the GNU C library in this situation is to
+@emph{current} behavior of @theglibc{} in this situation is to
 return with an error immediately.  This certainly is not the most
 desirable solution; therefore, future versions will provide better ones,
 but they are not yet finished.
@@ -1980,7 +1980,7 @@ the door open for extensions and improvements, but this design is also
 limiting on some platforms since not many platforms support dynamic
 loading in statically linked programs.  On platforms without this
 capability it is therefore not possible to use this interface in
-statically linked programs.  The GNU C library has, on ELF platforms, no
+statically linked programs.  @Theglibc{} has, on ELF platforms, no
 problems with dynamic loading in these situations; therefore, this
 point is moot.  The danger is that one gets acquainted with this
 situation and forgets about the restrictions on other systems.
@@ -2054,38 +2054,38 @@ such conversion, one could make sure this also is true for indirect
 routes.
 
 @node glibc iconv Implementation
-@subsection The @code{iconv} Implementation in the GNU C library
+@subsection The @code{iconv} Implementation in @theglibc{}
 
 After reading about the problems of @code{iconv} implementations in the
 last section it is certainly good to note that the implementation in
-the GNU C library has none of the problems mentioned above.  What
+@theglibc{} has none of the problems mentioned above.  What
 follows is a step-by-step analysis of the points raised above.  The
 evaluation is based on the current state of the development (as of
 January 1999).  The development of the @code{iconv} functions is not
 complete, but basic functionality has solidified.
 
-The GNU C library's @code{iconv} implementation uses shared loadable
+@Theglibc{}'s @code{iconv} implementation uses shared loadable
 modules to implement the conversions.  A very small number of
 conversions are built into the library itself but these are only rather
 trivial conversions.
 
-All the benefits of loadable modules are available in the GNU C library
+All the benefits of loadable modules are available in the @glibcadj{}
 implementation.  This is especially appealing since the interface is
 well documented (see below), and it, therefore, is easy to write new
 conversion modules.  The drawback of using loadable objects is not a
-problem in the GNU C library, at least on ELF systems.  Since the
+problem in @theglibc{}, at least on ELF systems.  Since the
 library is able to load shared objects even in statically linked
 binaries, static linking need not be forbidden in case one wants to use
 @code{iconv}.
 
 The second mentioned problem is the number of supported conversions.
-Currently, the GNU C library supports more than 150 character sets.  The
+Currently, @theglibc{} supports more than 150 character sets.  The
 way the implementation is designed the number of supported conversions
 is greater than 22350 (@math{150} times @math{149}).  If any conversion
 from or to a character set is missing, it can be added easily.
 
 Particularly impressive as it may be, this high number is due to the
-fact that the GNU C library implementation of @code{iconv} does not have
+fact that the @glibcadj{} implementation of @code{iconv} does not have
 the third problem mentioned above (i.e., whenever there is a conversion
 from a character set @math{@cal{A}} to @math{@cal{B}} and from
 @math{@cal{B}} to @math{@cal{C}} it is always possible to convert from
@@ -2115,7 +2115,7 @@ the input to @w{ISO 10646} first.  The two character sets of interest
 are much more similar to each other than to @w{ISO 10646}.
 
 In such a situation one easily can write a new conversion and provide it
-as a better alternative.  The GNU C library @code{iconv} implementation
+as a better alternative.  The @glibcadj{} @code{iconv} implementation
 would automatically use the module implementing the conversion if it is
 specified to be more efficient.
 
@@ -2207,7 +2207,7 @@ file, however, specifies that the new conversion modules can perform this
 conversion with only the cost of @math{1}.
 
 A mysterious item about the @file{gconv-modules} file above (and also
-the file coming with the GNU C library) are the names of the character
+the file coming with @theglibc{}) are the names of the character
 sets specified in the @code{module} lines.  Why do almost all the names
 end in @code{//}?  And this is not all: the names can actually be
 regular expressions.  At this point in time this mystery should not be
@@ -2423,7 +2423,7 @@ loads the objects with the conversions.
 It is often the case that one conversion is used more than once (i.e.,
 there are several @code{iconv_open} calls for the same set of character
 sets during one program run).  The @code{mbsrtowcs} et.al.@: functions in
-the GNU C library also use the @code{iconv} functionality, which
+@theglibc{} also use the @code{iconv} functionality, which
 increases the number of uses of the same functions even more.
 
 Because of this multiple use of conversions, the modules do not get
@@ -2888,8 +2888,8 @@ gconv (struct __gconv_step *step, struct __gconv_step_data *data,
 @end deftypevr
 
 This information should be sufficient to write new modules.  Anybody
-doing so should also take a look at the available source code in the GNU
-C library sources.  It contains many examples of working and optimized
+doing so should also take a look at the available source code in the
+@glibcadj{} sources.  It contains many examples of working and optimized
 modules.
 
 @c File charset.texi edited October 2001 by Dennis Grace, IBM Corporation

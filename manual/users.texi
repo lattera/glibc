@@ -207,15 +207,15 @@ facilities, you must include the header files @file{sys/types.h} and
 @comment sys/types.h
 @comment POSIX.1
 @deftp {Data Type} uid_t
-This is an integer data type used to represent user IDs.  In the GNU
-library, this is an alias for @code{unsigned int}.
+This is an integer data type used to represent user IDs.  In
+@theglibc{}, this is an alias for @code{unsigned int}.
 @end deftp
 
 @comment sys/types.h
 @comment POSIX.1
 @deftp {Data Type} gid_t
-This is an integer data type used to represent group IDs.  In the GNU
-library, this is an alias for @code{unsigned int}.
+This is an integer data type used to represent group IDs.  In
+@theglibc{}, this is an alias for @code{unsigned int}.
 @end deftp
 
 @comment unistd.h
@@ -1118,7 +1118,7 @@ the user accounting database.
 All the @code{get*} functions mentioned before store the information
 they return in a static buffer.  This can be a problem in multi-threaded
 programs since the data returned for the request is overwritten by the
-return value data in another thread.  Therefore the GNU C Library
+return value data in another thread.  Therefore @theglibc{}
 provides as extensions three more functions which return the data in a
 user-provided buffer.
 
@@ -1202,7 +1202,7 @@ therefore the return value does not say anything about whether the
 database can be successfully opened.
 @end deftypefun
 
-Specially for maintaining log-like databases the GNU C Library provides
+Specially for maintaining log-like databases @theglibc{} provides
 the following function:
 
 @comment utmp.h
@@ -1941,7 +1941,7 @@ without loops.
 
 Sun's implementation allows netgroups only for the @code{nis} or
 @code{nisplus} service, @pxref{Services in the NSS configuration}.  The
-implementation in the GNU C library has no such restriction.  An entry
+implementation in @theglibc{} has no such restriction.  An entry
 in either of the input services must have the following form:
 
 @smallexample

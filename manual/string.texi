@@ -3,7 +3,7 @@
 @chapter String and Array Utilities
 
 Operations on strings (or arrays of characters) are an important part of
-many programs.  The GNU C library provides an extensive set of string
+many programs.  @Theglibc{} provides an extensive set of string
 utility functions, including functions for copying, concatenating,
 comparing, and searching strings.  Many of these functions can also
 operate on arbitrary regions of storage; for example, the @code{memcpy}
@@ -669,7 +669,7 @@ the end of the string @var{wto} (that is, the address of the terminating
 null character @code{wto + strlen (wfrom)}) rather than the beginning.
 
 This function is not part of ISO or POSIX but was found useful while
-developing the GNU C Library itself.
+developing @theglibc{} itself.
 
 The behavior of @code{wcpcpy} is undefined if the strings overlap.
 
@@ -695,7 +695,7 @@ is implemented to be useful in contexts where this behavior of the
 @emph{first} written null character.
 
 This function is not part of ISO or POSIX but was found useful while
-developing the GNU C Library itself.
+developing @theglibc{} itself.
 
 Its behavior is undefined if the strings overlap.  The function is
 declared in @file{string.h}.
@@ -721,7 +721,7 @@ is implemented to be useful in contexts where this behavior of the
 @emph{first} written null character.
 
 This function is not part of ISO or POSIX but was found useful while
-developing the GNU C Library itself.
+developing @theglibc{} itself.
 
 Its behavior is undefined if the strings overlap.
 
@@ -1712,7 +1712,7 @@ There is no restriction on the second parameter of @code{strchr} so it
 could very well also be the NUL character.  Those readers thinking very
 hard about this might now point out that the @code{strchr} function is
 more expensive than the @code{strlen} function since we have two abort
-criteria.  This is right.  But in the GNU C library the implementation of
+criteria.  This is right.  But in @theglibc{} the implementation of
 @code{strchr} is optimized in a special way so that @code{strchr}
 actually is faster.
 
@@ -2027,7 +2027,7 @@ when @code{strtok} or @code{wcstok} tries to modify it, your program
 will get a fatal signal for writing in read-only memory.  @xref{Program
 Error Signals}.  Even if the operation of @code{strtok} or @code{wcstok}
 would not require a modification of the string (e.g., if there is
-exactly one token) the string can (and in the GNU libc case will) be
+exactly one token) the string can (and in the @glibcadj{} case will) be
 modified.
 
 This is a special case of a general principle: if a part of a program
@@ -2064,7 +2064,7 @@ token = strtok (NULL, delimiters);    /* token => "punctuation" */
 token = strtok (NULL, delimiters);    /* token => NULL */
 @end smallexample
 
-The GNU C library contains two more functions for tokenizing a string
+@Theglibc{} contains two more functions for tokenizing a string
 which overcome the limitation of non-reentrancy.  They are only
 available for multibyte character strings.
 
@@ -2220,8 +2220,8 @@ function can be found in @file{libgen.h}.
 The function below addresses the perennial programming quandary: ``How do
 I take good data in string form and painlessly turn it into garbage?''
 This is actually a fairly simple task for C programmers who do not use
-the GNU C library string functions, but for programs based on the GNU C
-library, the @code{strfry} function is the preferred method for
+@theglibc{} string functions, but for programs based on @theglibc{},
+the @code{strfry} function is the preferred method for
 destroying string data.
 
 The prototype for this function is in @file{string.h}.
@@ -2237,7 +2237,7 @@ input with the anagram in place.  For each position in the string,
 
 The return value of @code{strfry} is always @var{string}.
 
-@strong{Portability Note:}  This function is unique to the GNU C library.
+@strong{Portability Note:}  This function is unique to @theglibc{}.
 
 @end deftypefun
 
@@ -2278,7 +2278,7 @@ want to see it or doesn't want to see it very much.  To really prevent
 people from retrieving the information, use stronger encryption such as
 that described in @xref{Cryptographic Functions}.
 
-@strong{Portability Note:}  This function is unique to the GNU C library.
+@strong{Portability Note:}  This function is unique to @theglibc{}.
 
 @end deftypefun
 

@@ -12,9 +12,9 @@ Network Information Service (NIS) and the Domain Name Service (DNS))
 became popular, and were hacked into the C library, usually with a fixed
 search order (@pxref{frobnicate, , ,jargon, The Jargon File}).
 
-The GNU C Library contains a cleaner solution of this problem.  It is
+@Theglibc{} contains a cleaner solution of this problem.  It is
 designed after a method used by Sun Microsystems in the C library of
-@w{Solaris 2}.  GNU C Library follows their name and calls this
+@w{Solaris 2}.  @Theglibc{} follows their name and calls this
 scheme @dfn{Name Service Switch} (NSS).
 
 Though the interface might be similar to Sun's version there is no
@@ -39,7 +39,7 @@ advantages:
 
 @enumerate
 @item
-Contributors can add new services without adding them to GNU C Library.
+Contributors can add new services without adding them to @theglibc{}.
 @item
 The modules can be updated separately.
 @item
@@ -364,7 +364,7 @@ system @file{nss_files.so.2}.  This is the difference mentioned above.
 Sun's NSS modules are usable as modules which get indirectly loaded
 only.
 
-The NSS modules in the GNU C Library are prepared to be used as normal
+The NSS modules in @theglibc{} are prepared to be used as normal
 libraries themselves.  This is @emph{not} true at the moment, though.
 However,  the organization of the name space in the modules does not make it
 impossible like it is for Solaris.  Now you can see why the modules are
@@ -528,8 +528,8 @@ completely aside).
 @node Adding another Service to NSS, NSS Module Function Internals, Extending NSS, Extending NSS
 @subsection Adding another Service to NSS
 
-The sources for a new service need not (and should not) be part of the
-GNU C Library itself.  The developer retains complete control over the
+The sources for a new service need not (and should not) be part of @theglibc{}
+itself.  The developer retains complete control over the
 sources and its development.  The links between the C library and the
 new service module consists solely of the interface functions.
 

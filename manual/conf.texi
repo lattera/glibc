@@ -147,7 +147,7 @@ should always be defined even if there is no specific imposed limit.
 
 POSIX defines certain system-specific options that not all POSIX systems
 support.  Since these options are provided in the kernel, not in the
-library, simply using the GNU C library does not guarantee any of these
+library, simply using @theglibc{} does not guarantee any of these
 features is supported; it depends on the system you are using.
 
 @pindex unistd.h
@@ -190,7 +190,7 @@ to find out.  @xref{Sysconf}.
 @comment POSIX.2
 @deftypevr Macro int _POSIX2_C_DEV
 If this symbol is defined, it indicates that the system has the POSIX.2
-C compiler command, @code{c89}.  The GNU C library always defines this
+C compiler command, @code{c89}.  @Theglibc{} always defines this
 as @code{1}, on the assumption that you would not have installed it if
 you didn't have a C compiler.
 @end deftypevr
@@ -199,7 +199,7 @@ you didn't have a C compiler.
 @comment POSIX.2
 @deftypevr Macro int _POSIX2_FORT_DEV
 If this symbol is defined, it indicates that the system has the POSIX.2
-Fortran compiler command, @code{fort77}.  The GNU C library never
+Fortran compiler command, @code{fort77}.  @Theglibc{} never
 defines this, because we don't know what the system has.
 @end deftypevr
 
@@ -207,15 +207,15 @@ defines this, because we don't know what the system has.
 @comment POSIX.2
 @deftypevr Macro int _POSIX2_FORT_RUN
 If this symbol is defined, it indicates that the system has the POSIX.2
-@code{asa} command to interpret Fortran carriage control.  The GNU C
-library never defines this, because we don't know what the system has.
+@code{asa} command to interpret Fortran carriage control.  @Theglibc{}
+never defines this, because we don't know what the system has.
 @end deftypevr
 
 @comment unistd.h
 @comment POSIX.2
 @deftypevr Macro int _POSIX2_LOCALEDEF
 If this symbol is defined, it indicates that the system has the POSIX.2
-@code{localedef} command.  The GNU C library never defines this, because
+@code{localedef} command.  @Theglibc{} never defines this, because
 we don't know what the system has.
 @end deftypevr
 
@@ -223,7 +223,7 @@ we don't know what the system has.
 @comment POSIX.2
 @deftypevr Macro int _POSIX2_SW_DEV
 If this symbol is defined, it indicates that the system has the POSIX.2
-commands @code{ar}, @code{make}, and @code{strip}.  The GNU C library
+commands @code{ar}, @code{make}, and @code{strip}.  @Theglibc{}
 always defines this as @code{1}, on the assumption that you had to have
 @code{ar} and @code{make} to install the library, and it's unlikely that
 @code{strip} would be absent when those are present.
@@ -728,7 +728,7 @@ utilities can handle.
 @item _SC_EQUIV_CLASS_MAX
 Inquire about the maximum number of weights that can be assigned to an
 entry of the @code{LC_COLLATE} category @samp{order} keyword in a locale
-definition.  The GNU C library does not presently support locale
+definition.  @Theglibc{} does not presently support locale
 definitions.
 
 @comment unistd.h
@@ -1198,7 +1198,7 @@ that big!  Use dynamic allocation (@pxref{Memory Allocation}) instead.
 POSIX defines certain system-specific options in the system calls for
 operating on files.  Some systems support these options and others do
 not.  Since these options are provided in the kernel, not in the
-library, simply using the GNU C library does not guarantee that any of these
+library, simply using @theglibc{} does not guarantee that any of these
 features is supported; it depends on the system you are using.  They can
 also vary between file systems on a single machine.
 
@@ -1210,11 +1210,10 @@ corresponding feature is supported.  (A value of @code{-1} indicates no;
 any other value indicates yes.)  If the macro is undefined, it means
 particular files may or may not support the feature.
 
-Since all the machines that support the GNU C library also support NFS,
+Since all the machines that support @theglibc{} also support NFS,
 one can never make a general statement about whether all file systems
 support the @code{_POSIX_CHOWN_RESTRICTED} and @code{_POSIX_NO_TRUNC}
-features.  So these names are never defined as macros in the GNU C
-library.
+features.  So these names are never defined as macros in @theglibc{}.
 
 @comment unistd.h
 @comment POSIX.1
@@ -1482,7 +1481,7 @@ The POSIX.2 standard specifies certain system limits that you can access
 through @code{sysconf} that apply to utility behavior rather than the
 behavior of the library or the operating system.
 
-The GNU C library defines macros for these limits, and @code{sysconf}
+@Theglibc{} defines macros for these limits, and @code{sysconf}
 returns values for them if you ask; but these values convey no
 meaningful information.  They are simply the smallest values that
 POSIX.2 permits.
@@ -1543,7 +1542,7 @@ memory, but there is no way that the library can tell you this.)
 @deftypevr Macro int EQUIV_CLASS_MAX
 The maximum number of weights that can be assigned to an entry of the
 @code{LC_COLLATE} category @samp{order} keyword in a locale definition.
-The GNU C library does not presently support locale definitions.
+@Theglibc{} does not presently support locale definitions.
 @end deftypevr
 
 @node Utility Minimums
@@ -1601,7 +1600,7 @@ a text line that the text utilities can handle.  Its value is
 The most restrictive limit permitted by POSIX.2 for the maximum number
 of weights that can be assigned to an entry of the @code{LC_COLLATE}
 category @samp{order} keyword in a locale definition.  Its value is
-@code{2}.  The GNU C library does not presently support locale
+@code{2}.  @Theglibc{} does not presently support locale
 definitions.
 @end table
 

@@ -23,7 +23,7 @@ through a @dfn{one-way function}, a function which makes it difficult to
 work out what its input was by looking at its output, before storing in
 the file.
 
-The GNU C library provides a one-way function that is compatible with
+@Theglibc{} provides a one-way function that is compatible with
 the behavior of the @code{crypt} function introduced in FreeBSD 2.0.
 It supports two one-way algorithms: one based on the MD5
 message-digest algorithm that is compatible with modern BSD systems,
@@ -103,7 +103,7 @@ The terminal is flushed before and after @code{getpass}, so that
 characters of a mistyped password are not accidentally visible.
 
 In other C libraries, @code{getpass} may only return the first
-@code{PASS_MAX} bytes of a password.  The GNU C library has no limit, so
+@code{PASS_MAX} bytes of a password.  @Theglibc{} has no limit, so
 @code{PASS_MAX} is undefined.
 
 The prototype for this function is in @file{unistd.h}.  @code{PASS_MAX}

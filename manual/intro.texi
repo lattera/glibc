@@ -9,13 +9,13 @@ in a standard @dfn{library}, which you compile and link with your
 programs.
 @cindex library
 
-The GNU C library, described in this document, defines all of the
+@Theglibc{}, described in this document, defines all of the
 library functions that are specified by the @w{ISO C} standard, as well as
 additional features specific to POSIX and other derivatives of the Unix
 operating system, and extensions specific to the GNU system.
 
 The purpose of this manual is to tell you how to use the facilities
-of the GNU library.  We have mentioned which features belong to which
+of @theglibc{}.  We have mentioned which features belong to which
 standards to help you identify things that are potentially non-portable
 to other systems.  But the emphasis in this manual is not on strict
 portability.
@@ -38,7 +38,7 @@ concepts.  Specifically, familiarity with ISO standard C
 (@pxref{ISO C}), rather than ``traditional'' pre-ISO C dialects, is
 assumed.
 
-The GNU C library includes several @dfn{header files}, each of which
+@Theglibc{} includes several @dfn{header files}, each of which
 provides definitions and declarations for a group of related facilities;
 this information is used by the C compiler when processing your program.
 For example, the header file @file{stdio.h} declares facilities for
@@ -48,7 +48,7 @@ generally follows the same division as the header files.
 
 If you are reading this manual for the first time, you should read all
 of the introductory material and skim the remaining chapters.  There are
-a @emph{lot} of functions in the GNU C library and it's not realistic to
+a @emph{lot} of functions in @theglibc{} and it's not realistic to
 expect that you will be able to remember exactly @emph{how} to use each
 and every one of them.  It's more important to become generally familiar
 with the kinds of facilities that the library provides, so that when you
@@ -61,12 +61,12 @@ specific information about them.
 @section Standards and Portability
 @cindex standards
 
-This section discusses the various standards and other sources that the
-GNU C library is based upon.  These sources include the @w{ISO C} and
+This section discusses the various standards and other sources that @theglibc{}
+is based upon.  These sources include the @w{ISO C} and
 POSIX standards, and the System V and Berkeley Unix implementations.
 
 The primary focus of this manual is to tell you how to make effective
-use of the GNU library facilities.  But if you are concerned about
+use of the @glibcadj{} facilities.  But if you are concerned about
 making your programs compatible with these standards, or portable to
 operating systems other than GNU, this can affect how you use the
 library.  This section gives you an overview of these standards, so that
@@ -91,14 +91,14 @@ standards each function or symbol comes from.
 @subsection ISO C
 @cindex ISO C
 
-The GNU C library is compatible with the C standard adopted by the
+@Theglibc{} is compatible with the C standard adopted by the
 American National Standards Institute (ANSI):
 @cite{American National Standard X3.159-1989---``ANSI C''} and later
 by the International Standardization Organization (ISO):
 @cite{ISO/IEC 9899:1990, ``Programming languages---C''}.
 We here refer to the standard as @w{ISO C} since this is the more
 general standard in respect of ratification.
-The header files and library facilities that make up the GNU library are
+The header files and library facilities that make up @theglibc{} are
 a superset of those specified by the @w{ISO C} standard.@refill
 
 @pindex gcc
@@ -131,7 +131,7 @@ not aim for completeness.
 @cindex IEEE Std 1003.2
 @cindex ISO/IEC 9945-2
 
-The GNU library is also compatible with the ISO @dfn{POSIX} family of
+@Theglibc{} is also compatible with the ISO @dfn{POSIX} family of
 standards, known more formally as the @dfn{Portable Operating System
 Interface for Computer Environments} (ISO/IEC 9945).  They were also
 published as ANSI/IEEE Std 1003.  POSIX is derived mostly from various
@@ -146,7 +146,7 @@ particular kind of operating system environment, rather than general
 programming language support which can run in many diverse operating
 system environments.@refill
 
-The GNU C library implements all of the functions specified in
+@Theglibc{} implements all of the functions specified in
 @cite{ISO/IEC 9945-1:1996, the POSIX System Application Program
 Interface}, commonly referred to as POSIX.1.  The primary extensions to
 the @w{ISO C} facilities specified by this standard include file system
@@ -155,7 +155,7 @@ terminal control functions (@pxref{Low-Level Terminal Interface}), and
 process control functions (@pxref{Processes}).
 
 Some facilities from @cite{ISO/IEC 9945-2:1993, the POSIX Shell and
-Utilities standard} (POSIX.2) are also implemented in the GNU library.
+Utilities standard} (POSIX.2) are also implemented in @theglibc{}.
 These include utilities for dealing with regular expressions and other
 pattern matching facilities (@pxref{Pattern Matching}).
 
@@ -181,7 +181,7 @@ pattern matching facilities (@pxref{Pattern Matching}).
 @cindex SunOS
 @cindex Unix, Berkeley
 
-The GNU C library defines facilities from some versions of Unix which
+@Theglibc{} defines facilities from some versions of Unix which
 are not formally standardized, specifically from the 4.2 BSD, 4.3 BSD,
 and 4.4 BSD Unix systems (also known as @dfn{Berkeley Unix}) and from
 @dfn{SunOS} (a popular 4.2 BSD derivative that includes some Unix System
@@ -202,7 +202,7 @@ The @dfn{System V Interface Description} (SVID) is a document describing
 the AT&T Unix System V operating system.  It is to some extent a
 superset of the POSIX standard (@pxref{POSIX}).
 
-The GNU C library defines most of the facilities required by the SVID
+@Theglibc{} defines most of the facilities required by the SVID
 that are not also required by the @w{ISO C} or POSIX standards, for
 compatibility with  System V Unix and other Unix systems (such as
 SunOS) which include these facilities.  However, many of the more
@@ -222,7 +222,7 @@ a more general standard than POSIX.  X/Open owns the Unix copyright and
 the XPG specifies the requirements for systems which are intended to be
 a Unix system.
 
-The GNU C library complies to the X/Open Portability Guide, Issue 4.2,
+@Theglibc{} complies to the X/Open Portability Guide, Issue 4.2,
 with all extensions common to XSI (X/Open System Interface)
 compliant systems and also all X/Open UNIX extensions.
 
@@ -238,7 +238,7 @@ functionality is available on commercial systems.
 @section Using the Library
 
 This section describes some of the practical issues involved in using
-the GNU C library.
+@theglibc{}.
 
 @menu
 * Header Files::                How to include the header files in your
@@ -269,7 +269,7 @@ variable or says what a function does.)
 @cindex definition (compared to declaration)
 @cindex declaration (compared to definition)
 
-In order to use the facilities in the GNU C library, you should be sure
+In order to use the facilities in @theglibc{}, you should be sure
 that your program source files include the appropriate header files.
 This is so that the compiler has declarations of these facilities
 available and can correctly process references to them.  Once your
@@ -310,7 +310,7 @@ For more information about the use of header files and @samp{#include}
 directives, @pxref{Header Files,,, cpp.info, The GNU C Preprocessor
 Manual}.@refill
 
-The GNU C library provides several header files, each of which contains
+@Theglibc{} provides several header files, each of which contains
 the type and macro definitions and variable and function declarations
 for a group of related facilities.  This means that your programs may
 need to include several header files, depending on exactly which
@@ -319,8 +319,8 @@ facilities you are using.
 Some library header files include other library header files
 automatically.  However, as a matter of programming style, you should
 not rely on this; it is better to explicitly include all the header
-files required for the library facilities you are using.  The GNU C
-library header files have been written in such a way that it doesn't
+files required for the library facilities you are using.  The @glibcadj{}
+header files have been written in such a way that it doesn't
 matter if a header file is accidentally included more than once;
 including a header file a second time has no effect.  Likewise, if your
 program needs to include multiple header files, the order in which they
@@ -572,7 +572,7 @@ debugging mechanism which allows you to put assertions in your code, and
 have diagnostic messages printed if the tests fail.
 
 @item
-@ref{Memory}, describes the GNU library's facilities for managing and
+@ref{Memory}, describes @theglibc{}'s facilities for managing and
 using virtual and real memory, including dynamic allocation of virtual
 memory.  If you do not know in advance how much memory your program
 needs, you can allocate it dynamically instead, and manipulate it via
@@ -714,7 +714,7 @@ macros in the library, with complete data types and function prototypes,
 and says what standard or system each is derived from.
 
 @item
-@ref{Installation}, explains how to build and install the GNU C library on
+@ref{Installation}, explains how to build and install @theglibc{} on
 your system, and how to report any bugs you might find.
 
 @item

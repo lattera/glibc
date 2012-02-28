@@ -107,11 +107,11 @@ Syslog facility/priority (It can be both because the facility code for
 the kernel is zero, and that makes priority and facility/priority the
 same value).
 
-The GNU C library provides functions to submit messages to Syslog.  They
+@Theglibc{} provides functions to submit messages to Syslog.  They
 do it by writing to the @file{/dev/log} socket.  @xref{Submitting Syslog
 Messages}.
 
-The GNU C library functions only work to submit messages to the Syslog
+The @glibcadj{} functions only work to submit messages to the Syslog
 facility on the same system.  To submit a message to the Syslog facility
 on another system, use the socket I/O functions to write a UDP datagram
 to the @code{syslog} UDP port on that system.  @xref{Sockets}.
@@ -120,7 +120,7 @@ to the @code{syslog} UDP port on that system.  @xref{Sockets}.
 @node Submitting Syslog Messages
 @section Submitting Syslog Messages
 
-The GNU C library provides functions to submit messages to the Syslog
+@Theglibc{} provides functions to submit messages to the Syslog
 facility:
 
 @menu
@@ -341,7 +341,7 @@ Results are undefined if the facility code is anything else.
 the kernel.  But you can't specify that facility code with these
 functions.  If you try, it looks the same to @code{syslog} as if you are
 requesting the default facility.  But you wouldn't want to anyway,
-because any program that uses the GNU C library is not the kernel.
+because any program that uses @theglibc{} is not the kernel.
 
 You can use just a priority code as @var{facility_priority}.  In that
 case, @code{syslog} assumes the default facility established when the
@@ -429,8 +429,8 @@ to @var{ident}.  The default identification string is the program name
 taken from argv[0].
 
 If you are writing shared library code that uses @code{openlog} to
-generate custom syslog output, you should use @code{closelog} to drop the
-GNU C library's internal reference to the @var{ident} pointer when you are
+generate custom syslog output, you should use @code{closelog} to drop
+@theglibc{}'s internal reference to the @var{ident} pointer when you are
 done.  Please read the section on @code{openlog} for more information:
 @xref{openlog}.
 

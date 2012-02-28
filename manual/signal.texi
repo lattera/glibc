@@ -9,7 +9,7 @@ executing program.  Some signals report errors such as references to
 invalid memory addresses; others report asynchronous events, such as
 disconnection of a phone line.
 
-The GNU C library defines a variety of signal types, each for a
+@Theglibc{} defines a variety of signal types, each for a
 particular kind of event.  Some kinds of events make it inadvisable or
 impossible for the program to proceed as usual, and the corresponding
 signals normally abort the program.  Other kinds of signals that report
@@ -307,7 +307,7 @@ BSD systems provide the @code{SIGFPE} handler with an extra argument
 that distinguishes various causes of the exception.  In order to access
 this argument, you must define the handler to accept two arguments,
 which means you must cast it to a one-argument function type in order to
-establish the handler.  The GNU library does provide this extra
+establish the handler.  @Theglibc{} does provide this extra
 argument, but the value is meaningful only on operating systems that
 provide the information (BSD systems and GNU systems).
 
@@ -933,7 +933,7 @@ The simplest way to change the action for a signal is to use the
 @code{signal} function.  You can specify a built-in action (such as to
 ignore the signal), or you can @dfn{establish a handler}.
 
-The GNU library also implements the more versatile @code{sigaction}
+@Theglibc{} also implements the more versatile @code{sigaction}
 facility.  This section describes both facilities and gives suggestions
 on which to use when.
 
@@ -1044,7 +1044,7 @@ a handler for @code{SIGKILL} or @code{SIGSTOP}.
 @code{signal} function is that it has different semantics on BSD and
 SVID systems.  The difference is that on SVID systems the signal handler
 is deinstalled after signal delivery.  On BSD systems the
-handler must be explicitly deinstalled.  In the GNU C Library we use the
+handler must be explicitly deinstalled.  In @theglibc{} we use the
 BSD version by default.  To use the SVID version you can either use the
 function @code{sysv_signal} (see below) or use the @code{_XOPEN_SOURCE}
 feature select macro (@pxref{Feature Test Macros}).  In general, use of these
@@ -1320,7 +1320,7 @@ Each signal number has its own set of flags.  Each call to
 @code{sigaction} affects one particular signal number, and the flags
 that you specify apply only to that particular signal.
 
-In the GNU C library, establishing a handler with @code{signal} sets all
+In @theglibc{}, establishing a handler with @code{signal} sets all
 the flags to zero except for @code{SA_RESTART}, whose value depends on
 the settings you have made with @code{siginterrupt}.  @xref{Interrupted
 Primitives}, to see what this is about.
@@ -2032,7 +2032,7 @@ atomically.
 In practice, you can assume that @code{int} is atomic.
 You can also assume that pointer
 types are atomic; that is very convenient.  Both of these assumptions
-are true on all of the machines that the GNU C library supports and on
+are true on all of the machines that @theglibc{} supports and on
 all POSIX systems we know of.
 @c ??? This might fail on a 386 that uses 64-bit pointers.
 
@@ -2077,7 +2077,7 @@ handlers must check for @code{EINTR} after each library function that
 can return it, in order to try the call again.  Often programmers forget
 to check, which is a common source of error.
 
-The GNU library provides a convenient way to retry a call after a
+@Theglibc{} provides a convenient way to retry a call after a
 temporary failure, with the macro @code{TEMP_FAILURE_RETRY}:
 
 @comment unistd.h
@@ -2099,7 +2099,7 @@ approach: to restart the interrupted primitive, instead of making it
 fail.  If you choose this approach, you need not be concerned with
 @code{EINTR}.
 
-You can choose either approach with the GNU library.  If you use
+You can choose either approach with @theglibc{}.  If you use
 @code{sigaction} to establish a signal handler, you can specify how that
 handler should behave.  If you specify the @code{SA_RESTART} flag,
 return from that handler will resume a primitive; otherwise, return from
@@ -2111,7 +2111,7 @@ function.  @xref{BSD Handler}.
 @c !!! not true now about _BSD_SOURCE
 When you don't specify with @code{sigaction} or @code{siginterrupt} what
 a particular handler should do, it uses a default choice.  The default
-choice in the GNU library depends on the feature test macros you have
+choice in @theglibc{} depends on the feature test macros you have
 defined.  If you define @code{_BSD_SOURCE} or @code{_GNU_SOURCE} before
 calling @code{signal}, the default is to resume primitives; otherwise,
 the default is to make them fail with @code{EINTR}.  (The library

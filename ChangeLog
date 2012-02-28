@@ -1,3 +1,52 @@
+2012-02-28  Joseph Myers  <joseph@codesourcery.com>
+
+	* manual/macros.texi: New file.
+	* Makefile (INSTALL, NOTES): Depend on manual/macros.texi.
+	* manual/libc.texinfo: Include macros.texi.
+	* manual/creatute.texi: Likewise.
+	* manual/install.texi: Likewise.
+	* manual/arith.texi: Use macros @Theglibc{}, @theglibc{} and
+	@glibcadj{} in references to the GNU C Library.
+	* manual/charset.texi: Likewise.
+	* manual/conf.texi: Likewise.
+	* manual/contrib.texi: Likewise.  Consistently use "GNU C Library"
+	when not using those macros.
+	* manual/creature.texi: Likewise.
+	* manual/crypt.texi: Likewise.
+	* manual/errno.texi: Likewise.
+	* manual/filesys.texi: Likewise.
+	* manual/header.texi: Likewise.
+	* manual/install.texi: Likewise.
+	* manual/intro.texi: Likewise.
+	* manual/io.texi: Likewise.
+	* manual/job.texi: Likewise.
+	* manual/lang.texi: Likewise.
+	* manual/libc.texiinfo: Likewise.
+	* manual/llio.texi: Likewise.
+	* manual/locale.texi: Likewise.
+	* manual/maint.texi: Likewise.
+	* manual/math.texi: Likewise.
+	* manual/memory.texi: Likewise.
+	* manual/message.texi: Likewise.
+	* manual/nss.texi: Likewise.
+	* manual/pattern.texi: Likewise.
+	* manual/process.texi: Likewise.
+	* manual/resource.texi: Likewise.
+	* manual/search.texi: Likewise.
+	* manual/setjmp.texi: Likewise.
+	* manual/signal.texi: Likewise.
+	* manual/socket.texi: Likewise.
+	* manual/startup.texi: Likewise.
+	* manual/stdio.texi: Likewise.
+	* manual/string.texi: Likewise.
+	* manual/sysinfo.texi: Likewise.
+	* manual/syslog.texi: Likewise.
+	* manual/terminal.texi: Likewise.
+	* manual/time.texi: Likewise.
+	* manual/users.texi: Likewise.
+	* INSTALL: Regenerated.
+	* NOTES: Regenerated.
+
 2012-02-28  Andreas Schwab  <schwab@linux-m68k.org>
 
 	* include/dirent.h: Include <dirstream.h> before

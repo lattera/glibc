@@ -1,17 +1,18 @@
 @c This is for making the `INSTALL' file for the distribution.
 @c Makeinfo ignores it when processing the file from the include.
 @setfilename INSTALL
+@include macros.texi
 
 @node Installation, Maintenance, Library Summary, Top
-@c %MENU% How to install the GNU C library
-@appendix Installing the GNU C Library
+@c %MENU% How to install the GNU C Library
+@appendix Installing @theglibc{}
 
 Before you do anything else, you should read the file @file{FAQ} located
 at the top level of the source tree.  This file answers common questions
 and describes problems you may experience with compilation and
 installation.  It is updated more frequently than this manual.
 
-Features can be added to GNU Libc via @dfn{add-on} bundles.  These are
+Features can be added to @theglibc{} via @dfn{add-on} bundles.  These are
 separate tar files, which you unpack into the top level of the source
 tree.  Then you give @code{configure} the @samp{--enable-add-ons} option
 to activate them, and they will be compiled into the library.
@@ -29,13 +30,14 @@ GNU Make, and possibly others.  @xref{Tools for Compilation}, below.
 @end menu
 
 @node Configuring and compiling
-@appendixsec Configuring and compiling GNU Libc
+@appendixsec Configuring and compiling @theglibc{}
 @cindex configuring
 @cindex compiling
 
-GNU libc cannot be compiled in the source directory.  You must build
+@Theglibc{} cannot be compiled in the source directory.  You must build
 it in a separate build directory.  For example, if you have unpacked
-the glibc sources in @file{/src/gnu/glibc-@var{version}}, create a directory
+the @glibcadj{} sources in @file{/src/gnu/glibc-@var{version}},
+create a directory
 @file{/src/gnu/glibc-build} to put the object files in.  This allows
 removing the whole build directory in case an error occurs, which is
 the safest way to get a fresh start and should always be done.
@@ -54,7 +56,7 @@ directory, especially some files in the manual subdirectory.
 @noindent
 @code{configure} takes many options, but the only one that is usually
 mandatory is @samp{--prefix}.  This option tells @code{configure}
-where you want glibc installed.  This defaults to @file{/usr/local},
+where you want @theglibc{} installed.  This defaults to @file{/usr/local},
 but the normal setting to install as the standard system library is
 @samp{--prefix=/usr} for GNU/Linux systems and @samp{--prefix=} (an
 empty prefix) for GNU/Hurd systems.
@@ -79,15 +81,15 @@ directory if that option is specified, or @file{/usr/local} otherwise.
 
 @item --with-headers=@var{directory}
 Look for kernel header files in @var{directory}, not
-@file{/usr/include}.  Glibc needs information from the kernel's header
-files describing the interface to the kernel.  Glibc will normally
+@file{/usr/include}.  @Theglibc{} needs information from the kernel's header
+files describing the interface to the kernel.  @Theglibc{} will normally
 look in @file{/usr/include} for them,
 but if you specify this option, it will look in @var{DIRECTORY} instead.
 
 This option is primarily of use on a system where the headers in
-@file{/usr/include} come from an older version of glibc.  Conflicts can
+@file{/usr/include} come from an older version of @theglibc{}.  Conflicts can
 occasionally happen in this case.  You can also use this option if you want to
-compile glibc with a newer set of kernel headers than the ones found in
+compile @theglibc{} with a newer set of kernel headers than the ones found in
 @file{/usr/include}.
 
 @item --enable-add-ons[=@var{list}]
@@ -112,7 +114,7 @@ compatibility code is added, and the faster the code gets.
 Use the binutils (assembler and linker) in @file{@var{directory}}, not
 the ones the C compiler would default to.  You can use this option if
 the default binutils on your system cannot deal with all the constructs
-in the GNU C library.  In that case, @code{configure} will detect the
+in @theglibc{}.  In that case, @code{configure} will detect the
 problem and suppress these constructs, so that the library will still be
 usable, but functionality may be lost---for example, you can't build a
 shared libc with old binutils.
@@ -156,7 +158,7 @@ compatibility problems.
 @itemx --host=@var{host-system}
 These options are for cross-compiling.  If you specify both options and
 @var{build-system} is different from @var{host-system}, @code{configure}
-will prepare to cross-compile glibc from @var{build-system} to be used
+will prepare to cross-compile @theglibc{} from @var{build-system} to be used
 on @var{host-system}.  You'll probably need the @samp{--with-headers}
 option too, and you may have to override @var{configure}'s selection of
 the compiler and/or binutils.
@@ -193,7 +195,7 @@ successfully, do not use the built library, and report a bug after
 verifying that the problem is not already known.  @xref{Reporting Bugs},
 for instructions on reporting bugs.  Note that some of the tests assume
 they are not being run by @code{root}.  We recommend you compile and
-test glibc as an unprivileged user.
+test @theglibc{} as an unprivileged user.
 
 Before reporting bugs make sure there is no problem with your system.
 The tests (and later installation) use some pre-existing files of the
@@ -213,7 +215,7 @@ the file @file{configparms}.  To change them, create a
 for your system.  The file is included and parsed by @code{make} and has
 to follow the conventions for makefiles.
 
-It is easy to configure the GNU C library for cross-compilation by
+It is easy to configure @theglibc{} for cross-compilation by
 setting a few variables in @file{configparms}.  Set @code{CC} to the
 cross-compiler for the target you configured the library for; it is
 important to use this same @code{CC} value when running
@@ -232,13 +234,14 @@ object files for the target you configured for.
 To install the library and its header files, and the Info files of the
 manual, type @code{env LANGUAGE=C LC_ALL=C make install}.  This will
 build things, if necessary, before installing them; however, you should
-still compile everything first.  If you are installing glibc as your
+still compile everything first.  If you are installing @theglibc{} as your
 primary C library, we recommend that you shut the system down to
 single-user mode first, and reboot afterward.  This minimizes the risk
 of breaking things when the library changes out from underneath.
 
 @samp{make install} will do the entire job of upgrading from a
-previous installation of glibc 2.x.  There may sometimes be headers
+previous installation of @theglibc{} version 2.x.  There may sometimes
+be headers
 left behind from the previous installation, but those are generally
 harmless.  If you want to avoid leaving headers behind you can do
 things in the following order.
@@ -252,17 +255,17 @@ library requires the ability to compile and run programs against the old
 library.  The new @file{/usr/include}, after switching the include
 directories and before installing the library should contain the Linux
 headers, but nothing else.  If you do this, you will need to restore
-any headers from non-glibc libraries youself after installing the
+any headers from libraries other than @theglibc{} yourself after installing the
 library.
 
-You can install glibc somewhere other than where you configured it to go
+You can install @theglibc{} somewhere other than where you configured it to go
 by setting the @code{install_root} variable on the command line for
 @samp{make install}.  The value of this variable is prepended to all the
 paths for installation.  This is useful when setting up a chroot
 environment or preparing a binary distribution.  The directory should be
 specified with an absolute file name.
 
-Glibc includes a daemon called @code{nscd}, which you
+@Theglibc{} includes a daemon called @code{nscd}, which you
 may or may not want to run.  @code{nscd} caches name service lookups; it
 can dramatically improve performance with NIS+, and may help with DNS as
 well.
@@ -278,11 +281,11 @@ providing pty slaves, you don't need this program; otherwise you do.
 The source for @file{pt_chown} is in @file{login/programs/pt_chown.c}.
 
 After installation you might want to configure the timezone and locale
-installation of your system.  The GNU C library comes with a locale
+installation of your system.  @Theglibc{} comes with a locale
 database which gets configured with @code{localedef}.  For example, to
 set up a German locale with name @code{de_DE}, simply issue the command
 @samp{localedef -i de_DE -f ISO-8859-1 de_DE}.  To configure all locales
-that are supported by glibc, you can issue from your build directory the
+that are supported by @theglibc{}, you can issue from your build directory the
 command @samp{make localedata/install-locales}.
 
 To configure the locally used timezone, set the @code{TZ} environment
@@ -300,14 +303,14 @@ timezone file which is in @file{/usr/share/zoneinfo} to the file
 @cindex tools, for installing library
 
 We recommend installing the following GNU tools before attempting to
-build the GNU C library:
+build @theglibc{}:
 
 @itemize @bullet
 @item
 GNU @code{make} 3.79 or newer
 
-You need the latest version of GNU @code{make}.  Modifying the GNU C
-Library to work with other @code{make} programs would be so difficult that
+You need the latest version of GNU @code{make}.  Modifying @theglibc{}
+to work with other @code{make} programs would be so difficult that
 we recommend you port GNU @code{make} instead.  @strong{Really.}  We
 recommend GNU @code{make} version 3.79.  All earlier versions have severe
 bugs or lack features.
@@ -316,17 +319,17 @@ bugs or lack features.
 GCC 4.3 or newer, GCC 4.6 recommended
 
 GCC 4.3 or higher is required; as of this writing, GCC 4.6 is the
-compiler we advise to use to build the GNU C library.
+compiler we advise to use to build @theglibc{}.
 
-You can use whatever compiler you like to compile programs that use GNU
-libc.
+You can use whatever compiler you like to compile programs that use
+@theglibc{}.
 
 Check the FAQ for any special compiler issues on particular platforms.
 
 @item
 GNU @code{binutils} 2.15 or later
 
-You must use GNU @code{binutils} (as and ld) to build the GNU C library.
+You must use GNU @code{binutils} (as and ld) to build @theglibc{}.
 No other assembler or linker has the necessary functionality at the
 moment.
 
@@ -386,41 +389,41 @@ patches, although we try to avoid this.
 @appendixsec Specific advice for GNU/Linux systems
 @cindex kernel header files
 
-If you are installing GNU libc on a GNU/Linux system, you need to have
+If you are installing @theglibc{} on a GNU/Linux system, you need to have
 the header files from a 2.6.19.1 or newer kernel around for reference.
 These headers must be installed using @samp{make headers_install}; the
 headers present in the kernel source directory are not suitable for
-direct use by GNU libc.  You do not need to use that kernel, just have
-its headers installed where glibc can access them, referred to here as
+direct use by @theglibc{}.  You do not need to use that kernel, just have
+its headers installed where @theglibc{} can access them, referred to here as
 @var{install-directory}.  The easiest way to do this is to unpack it
 in a directory such as @file{/usr/src/linux-@var{version}}.  In that
 directory, run @samp{make headers_install
-INSTALL_HDR_PATH=@var{install-directory}}.  Finally, configure glibc
+INSTALL_HDR_PATH=@var{install-directory}}.  Finally, configure @theglibc{}
 with the option @samp{--with-headers=@var{install-directory}/include}.
 Use the most recent kernel you can get your hands on.  (If you are
-cross-compiling GNU libc, you need to specify
+cross-compiling @theglibc{}, you need to specify
 @samp{ARCH=@var{architecture}} in the @samp{make headers_install}
 command, where @var{architecture} is the architecture name used by the
 Linux kernel, such as @samp{x86} or @samp{powerpc}.)
 
-After installing GNU libc, you may need to remove or rename
+After installing @theglibc{}, you may need to remove or rename
 directories such as @file{/usr/include/linux} and
 @file{/usr/include/asm}, and replace them with copies of directories
 such as @file{linux} and @file{asm} from
 @file{@var{install-directory}/include}.  All directories present in
 @file{@var{install-directory}/include} should be copied, except that
-GNU libc provides its own version of @file{/usr/include/scsi}; the
+@theglibc{} provides its own version of @file{/usr/include/scsi}; the
 files provided by the kernel should be copied without replacing those
-provided by GNU libc.  The @file{linux}, @file{asm} and
+provided by @theglibc{}.  The @file{linux}, @file{asm} and
 @file{asm-generic} directories are required to compile programs using
-GNU libc; the other directories describe interfaces to the kernel but
+@theglibc{}; the other directories describe interfaces to the kernel but
 are not required if not compiling programs using those interfaces.
 You do not need to copy kernel headers if you did not specify an
 alternate kernel header source using @samp{--with-headers}.
 
-GNU/Linux expects some components of the libc installation to be in
+GNU/Linux expects some components of the @glibcadj{} installation to be in
 @file{/lib} and some in @file{/usr/lib}.  This is handled automatically
-if you configure glibc with @samp{--prefix=/usr}.  If you set some other
+if you configure @theglibc{} with @samp{--prefix=/usr}.  If you set some other
 prefix or allow it to default to @file{/usr/local}, then all the
 components are installed there.
 
@@ -434,7 +437,7 @@ program.
 @cindex reporting bugs
 @cindex bugs, reporting
 
-There are probably bugs in the GNU C library.  There are certainly
+There are probably bugs in @theglibc{}.  There are certainly
 errors and omissions in this manual.  If you report them, they will get
 fixed.  If you don't, no one will ever know about them and they will
 remain unfixed for all eternity, if not longer.
@@ -449,14 +452,14 @@ normally includes a patch or a hint on solving the problem.
 
 To report a bug, first you must find it.  With any luck, this will be the
 hard part.  Once you've found a bug, make sure it's really a bug.  A
-good way to do this is to see if the GNU C library behaves the same way
+good way to do this is to see if @theglibc{} behaves the same way
 some other C library does.  If so, probably you are wrong and the
 libraries are right (but not necessarily).  If not, one of the libraries
-is probably wrong.  It might not be the GNU library.  Many historical
+is probably wrong.  It might not be @theglibc{}.  Many historical
 Unix C libraries permit things that we don't, such as closing a file
 twice.
 
-If you think you have found some way in which the GNU C library does not
+If you think you have found some way in which @theglibc{} does not
 conform to the ISO and POSIX standards (@pxref{Standards and
 Portability}), that is definitely a bug.  Report it!
 

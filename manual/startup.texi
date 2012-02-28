@@ -135,8 +135,8 @@ other words, the whitespace separating them is optional.)  Thus,
 @item
 Options typically precede other non-option arguments.
 
-The implementations of @code{getopt} and @code{argp_parse} in the GNU C
-library normally make it appear as if all the option arguments were
+The implementations of @code{getopt} and @code{argp_parse} in @theglibc{}
+normally make it appear as if all the option arguments were
 specified before all the non-option arguments for the purposes of
 parsing, even if the user of your program intermixed option and
 non-option arguments.  They do this by reordering the elements of the
@@ -319,7 +319,7 @@ can be safely used in multi-threaded programs
 @deftypefun {char *} getenv (const char *@var{name})
 This function returns a string that is the value of the environment
 variable @var{name}.  You must not modify this string.  In some non-Unix
-systems not using the GNU library, it might be overwritten by subsequent
+systems not using @theglibc{}, it might be overwritten by subsequent
 calls to @code{getenv} (but not by any other library function).  If the
 environment variable @var{name} is not defined, the value is a null
 pointer.
@@ -591,30 +591,30 @@ A system call is a request for service that a program makes of the
 kernel.  The service is generally something that only the kernel has
 the privilege to do, such as doing I/O.  Programmers don't normally
 need to be concerned with system calls because there are functions in
-the GNU C library to do virtually everything that system calls do.
+@theglibc{} to do virtually everything that system calls do.
 These functions work by making system calls themselves.  For example,
 there is a system call that changes the permissions of a file, but
-you don't need to know about it because you can just use the GNU C
-library's @code{chmod} function.
+you don't need to know about it because you can just use @theglibc{}'s
+@code{chmod} function.
 
 @cindex kernel call
 System calls are sometimes called kernel calls.
 
 However, there are times when you want to make a system call explicitly,
-and for that, the GNU C library provides the @code{syscall} function.
+and for that, @theglibc{} provides the @code{syscall} function.
 @code{syscall} is harder to use and less portable than functions like
 @code{chmod}, but easier and more portable than coding the system call
 in assembler instructions.
 
 @code{syscall} is most useful when you are working with a system call
-which is special to your system or is newer than the GNU C library you
+which is special to your system or is newer than @theglibc{} you
 are using.  @code{syscall} is implemented in an entirely generic way;
 the function does not know anything about what a particular system
 call does or even if it is valid.
 
 The description of @code{syscall} in this section assumes a certain
-protocol for system calls on the various platforms on which the GNU C
-library runs.  That protocol is not defined by any strong authority, but
+protocol for system calls on the various platforms on which @theglibc{}
+runs.  That protocol is not defined by any strong authority, but
 we won't describe it here either because anyone who is coding
 @code{syscall} probably won't accept anything less than kernel and C
 library source code as a specification of the interface between them
@@ -864,7 +864,7 @@ pointer @var{arg}.  At normal program termination, the @var{function} is
 called with two arguments:  the @var{status} value passed to @code{exit},
 and the @var{arg}.
 
-This function is included in the GNU C library only for compatibility
+This function is included in @theglibc{} only for compatibility
 for SunOS, and may not be supported by other implementations.
 @end deftypefun
 

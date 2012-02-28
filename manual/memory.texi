@@ -5,9 +5,9 @@
 @cindex storage allocation
 
 This chapter describes how processes manage and use memory in a system
-that uses the GNU C library.
+that uses @theglibc{}.
 
-The GNU C Library has several functions for dynamically allocating
+@Theglibc{} has several functions for dynamically allocating
 virtual memory in various ways.  They vary in generality and in
 efficiency.  The library also provides functions for controlling paging
 and allocation of real memory.
@@ -47,7 +47,7 @@ just a flag saying it is all zeroes.
 
 The same frame of real memory or backing store can back multiple virtual
 pages belonging to multiple processes.  This is normally the case, for
-example, with virtual memory occupied by GNU C library code.  The same
+example, with virtual memory occupied by @glibcadj{} code.  The same
 real memory frame containing the @code{printf} function backs a virtual
 memory page in each of the existing processes that has a @code{printf}
 call in its program.
@@ -100,7 +100,7 @@ Allocation and C}).
 @cindex constants
 
 Once that program begins to execute, it uses programmatic allocation to
-gain additional memory.  In a C program with the GNU C library, there
+gain additional memory.  In a C program with @theglibc{}, there
 are two kinds of programmatic allocation: automatic and dynamic.
 @xref{Memory Allocation and C}.
 
@@ -158,7 +158,7 @@ grows, but doesn't shrink when the stack shrinks.
 
 This section covers how ordinary programs manage storage for their data,
 including the famous @code{malloc} function and some fancier facilities
-special the GNU C library and GNU Compiler.
+special @theglibc{} and GNU Compiler.
 
 @menu
 * Memory Allocation and C::     How to get different kinds of allocation in C.
@@ -202,7 +202,7 @@ that varies.  In other C implementations, it must be a constant.
 @end itemize
 
 A third important kind of memory allocation, @dfn{dynamic allocation},
-is not supported by C variables but is available via GNU C library
+is not supported by C variables but is available via @glibcadj{}
 functions.
 @cindex dynamic memory allocation
 
@@ -234,8 +234,8 @@ as you want.
 Dynamic allocation is not supported by C variables; there is no storage
 class ``dynamic'', and there can never be a C variable whose value is
 stored in dynamically allocated space.  The only way to get dynamically
-allocated memory is via a system call (which is generally via a GNU C
-library function call), and the only way to refer to dynamically
+allocated memory is via a system call (which is generally via a @glibcadj{}
+function call), and the only way to refer to dynamically
 allocated space is through a pointer.  Because it is less convenient,
 and because the actual process of dynamic allocation requires more
 computation time, programmers generally use dynamic allocation only when
@@ -591,7 +591,7 @@ more time to minimize the wasted space.
 
 @end ignore
 
-As opposed to other versions, the @code{malloc} in the GNU C Library
+As opposed to other versions, the @code{malloc} in @theglibc{}
 does not round up block sizes to powers of two, neither for large nor
 for small sizes.  Neighboring chunks can be coalesced on a @code{free}
 no matter what their size is.  This makes the implementation suitable
@@ -620,7 +620,7 @@ power of two than that, use @code{memalign}, @code{posix_memalign}, or
 @code{valloc}.  @code{memalign} is declared in @file{malloc.h} and
 @code{posix_memalign} is declared in @file{stdlib.h}.
 
-With the GNU library, you can use @code{free} to free the blocks that
+With @theglibc{}, you can use @code{free} to free the blocks that
 @code{memalign}, @code{posix_memalign}, and @code{valloc} return.  That
 does not work in BSD, however---BSD does not provide any way to free
 such blocks.
@@ -834,7 +834,7 @@ recompile your application.
 @subsubsection Memory Allocation Hooks
 @cindex allocation hooks, for @code{malloc}
 
-The GNU C library lets you modify the behavior of @code{malloc},
+@Theglibc{} lets you modify the behavior of @code{malloc},
 @code{realloc}, and @code{free} by specifying appropriate hook
 functions.  You can use these hooks to help you debug programs that use
 dynamic memory allocation, for example.
@@ -1149,7 +1149,7 @@ Long running programs must assure that dynamically allocated objects are
 freed at the end of their lifetime.  If this does not happen the system
 runs out of memory, sooner or later.
 
-The @code{malloc} implementation in the GNU C library provides some
+The @code{malloc} implementation in @theglibc{} provides some
 simple means to detect such leaks and obtain some information to find
 the location.  To do this the application must be started in a special
 mode which is enabled by an environment variable.  There are no speed
@@ -1313,8 +1313,8 @@ If you take a look at the output it will look similar to this:
 
 What this all means is not really important since the trace file is not
 meant to be read by a human.  Therefore no attention is given to
-readability.  Instead there is a program which comes with the GNU C
-library which interprets the traces and outputs a summary in an
+readability.  Instead there is a program which comes with @theglibc{}
+which interprets the traces and outputs a summary in an
 user-friendly way.  The program is called @code{mtrace} (it is in fact a
 Perl script) and it takes one or two arguments.  In any case the name of
 the file with the trace output must be specified.  If an optional
@@ -2344,7 +2344,7 @@ The symbols in this section are declared in @file{unistd.h}.
 
 You will not normally use the functions in this section, because the
 functions described in @ref{Memory Allocation} are easier to use.  Those
-are interfaces to a GNU C Library memory allocator that uses the
+are interfaces to a @glibcadj{} memory allocator that uses the
 functions below itself.  The functions below are simple interfaces to
 system calls.
 
@@ -2526,7 +2526,7 @@ define the macro @code{_POSIX_MEMLOCK_RANGE} and the file
 @code{limits.h} define the macro @code{PAGESIZE} to be the size of a
 memory page in bytes.  It requires that when the @code{mlockall} and
 @code{munlockall} functions are available, the @file{unistd.h} file
-define the macro @code{_POSIX_MEMLOCK}.  The GNU C library conforms to
+define the macro @code{_POSIX_MEMLOCK}.  @Theglibc{} conforms to
 this requirement.
 
 @comment sys/mman.h

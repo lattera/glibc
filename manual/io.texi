@@ -3,8 +3,8 @@
 @chapter Input/Output Overview
 
 Most programs need to do either input (reading data) or output (writing
-data), or most frequently both, in order to do anything useful.  The GNU
-C library provides such a large selection of input and output functions
+data), or most frequently both, in order to do anything useful.  @Theglibc{}
+provides such a large selection of input and output functions
 that the hardest part is often deciding which function is most
 appropriate!
 
@@ -65,7 +65,7 @@ closed a stream or file descriptor, you cannot do any more input or
 output operations on it.
 
 @menu
-* Streams and File Descriptors::    The GNU Library provides two ways
+* Streams and File Descriptors::    The GNU C Library provides two ways
 			             to access the contents of files.
 * File Position::                   The number of bytes from the
                                      beginning of the file.
@@ -123,8 +123,8 @@ than GNU, you should also be aware that file descriptors are not as
 portable as streams.  You can expect any system running @w{ISO C} to
 support streams, but non-GNU systems may not support file descriptors at
 all, or may only implement a subset of the GNU functions that operate on
-file descriptors.  Most of the file descriptor functions in the GNU
-library are included in the POSIX.1 standard, however.
+file descriptors.  Most of the file descriptor functions in @theglibc{}
+are included in the POSIX.1 standard, however.
 
 @node File Position,  , Streams and File Descriptors, I/O Concepts
 @subsection File Position
@@ -236,7 +236,7 @@ in @ref{File System Interface}.
 @subsection File Name Resolution
 
 A file name consists of file name components separated by slash
-(@samp{/}) characters.  On the systems that the GNU C library supports,
+(@samp{/}) characters.  On the systems that @theglibc{} supports,
 multiple successive @samp{/} characters are equivalent to a single
 @samp{/} character.
 

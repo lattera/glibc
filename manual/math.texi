@@ -111,8 +111,8 @@ These constants come from the Unix98 standard and were also available in
 defined.  The default set of features includes these constants.
 @xref{Feature Test Macros}.
 
-All values are of type @code{double}.  As an extension, the GNU C
-library also defines these constants with type @code{long double}.  The
+All values are of type @code{double}.  As an extension, @theglibc{}
+also defines these constants with type @code{long double}.  The
 @code{long double} macros have a lowercase @samp{l} appended to their
 names: @code{M_El}, @code{M_PIl}, and so forth.  These are only
 available if @code{_GNU_SOURCE} is defined.
@@ -121,7 +121,7 @@ available if @code{_GNU_SOURCE} is defined.
 @emph{Note:} Some programs use a constant named @code{PI} which has the
 same value as @code{M_PI}.  This constant is not standard; it may have
 appeared in some old AT&T headers, and is mentioned in Stroustrup's book
-on C++.  It infringes on the user's name space, so the GNU C library
+on C++.  It infringes on the user's name space, so @theglibc{}
 does not define it.  Fixing programs written to expect it is simple:
 replace @code{PI} with @code{M_PI} throughout, or put @samp{-DPI=M_PI}
 on the compiler command line.
@@ -217,7 +217,7 @@ to cope with its absence.
 @cindex complex trigonometric functions
 
 @w{ISO C99} defines variants of the trig functions which work on
-complex numbers.  The GNU C library provides these functions, but they
+complex numbers.  @Theglibc{} provides these functions, but they
 are only useful if your compiler supports the new complex types defined
 by the standard.
 @c XXX Change this when gcc is fixed. -zw
@@ -1275,7 +1275,7 @@ generator.  There is no standard meaning for a particular seed value;
 the same seed, used in different C libraries or on different CPU types,
 will give you different random numbers.
 
-The GNU library supports the standard @w{ISO C} random number functions
+@Theglibc{} supports the standard @w{ISO C} random number functions
 plus two other sets derived from BSD and SVID.  The BSD and @w{ISO C}
 functions provide identical, somewhat limited functionality.  If only a
 small number of random bits are required, we recommend you use the
@@ -1306,7 +1306,7 @@ To use these facilities, you should include the header file
 @comment ISO
 @deftypevr Macro int RAND_MAX
 The value of this macro is an integer constant representing the largest
-value the @code{rand} function can return.  In the GNU library, it is
+value the @code{rand} function can return.  In @theglibc{}, it is
 @code{2147483647}, which is the largest signed integer representable in
 32 bits.  In other libraries, it may be as low as @code{32767}.
 @end deftypevr
@@ -1355,7 +1355,7 @@ available.
 
 This section describes a set of random number generation functions that
 are derived from BSD.  There is no advantage to using these functions
-with the GNU C library; we support them for BSD compatibility only.
+with @theglibc{}; we support them for BSD compatibility only.
 
 The prototypes for these functions are in @file{stdlib.h}.
 @pindex stdlib.h
@@ -1419,7 +1419,7 @@ the user and can only be modified by these functions.  This makes it
 hard to deal with situations where each thread should have its own
 pseudo-random number generator.
 
-The GNU C library contains four additional functions which contain the
+@Theglibc{} contains four additional functions which contain the
 state as an explicit parameter and therefore make it possible to handle
 thread-local PRNGs.  Beside this there is no difference.  In fact, the
 four functions already discussed are implemented internally using the
@@ -1824,7 +1824,7 @@ that the cost of the function calls themselves is not negligible.
 Modern processors can often execute the operations themselves
 very fast, but the function call disrupts the instruction pipeline.
 
-For this reason the GNU C Library provides optimizations for many of the
+For this reason @theglibc{} provides optimizations for many of the
 frequently-used math functions.  When GNU CC is used and the user
 activates the optimizer, several new inline functions and macros are
 defined.  These new functions and macros have the same names as the

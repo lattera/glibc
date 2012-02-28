@@ -15,7 +15,7 @@ network.  Sockets are the primary means of communicating with other
 machines; @code{telnet}, @code{rlogin}, @code{ftp}, @code{talk} and the
 other familiar network programs use sockets.
 
-Not all operating systems support sockets.  In the GNU library, the
+Not all operating systems support sockets.  In @theglibc{}, the
 header file @file{sys/socket.h} exists regardless of the operating
 system, and the socket functions always exist, but if the system does
 not really support sockets these functions always fail.
@@ -155,7 +155,7 @@ happy as implementations which use 64-bit values.
 @node Communication Styles
 @section Communication Styles
 
-The GNU library includes support for several different kinds of sockets,
+@Theglibc{} includes support for several different kinds of sockets,
 each with different characteristics.  This section describes the
 supported socket types.  The symbolic constants listed here are
 defined in @file{sys/socket.h}.
@@ -1276,7 +1276,7 @@ associated Internet address.
 
 The lookup functions above all have one in common: they are not
 reentrant and therefore unusable in multi-threaded applications.
-Therefore provides the GNU C library a new set of functions which can be
+Therefore provides @theglibc{} a new set of functions which can be
 used in this context.
 
 @comment netdb.h
