@@ -1,3 +1,8 @@
+2012-02-28  Andreas Schwab  <schwab@linux-m68k.org>
+
+	* include/dirent.h: Include <dirstream.h> before
+	<dirent/dirent.h>.
+
 2012-02-28  David S. Miller  <davem@davemloft.net>
 
 	* sysdeps/sparc/sparc32/fpu/s_copysign.S: New file.
