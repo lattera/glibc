@@ -25,7 +25,7 @@ close_all_fds (void)
 	  {
 	    char *endp;
 	    long int fd = strtol (d->d_name, &endp, 10);
-	    if (*endp == '\0' && fd != PTY_FILENO && fd != dirfd (dir))
+	    if (*endp == '\0' && fd != PTY_FILENO && fd != __dirfd (dir))
 	      close_not_cancel_no_status (fd);
 	  }
 
