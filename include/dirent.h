@@ -41,6 +41,7 @@ extern DIR *__alloc_dir (int fd, bool close_fd, int flags,
 			 const struct stat64 *statp)
      internal_function;
 extern void __scandir_cancel_handler (void *arg);
+extern int __dirfd (DIR *__dirp);
 
 libc_hidden_proto (rewinddir)
 libc_hidden_proto (scandirat)
