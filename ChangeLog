@@ -55,6 +55,7 @@
 	* manual/users.texi: Likewise.
 	* INSTALL: Regenerated.
 	* NOTES: Regenerated.
+	* sysdeps/gnu/errlist.c: Regenerated.
 
 2012-02-28  Andreas Schwab  <schwab@linux-m68k.org>
 
