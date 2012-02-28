@@ -332,7 +332,7 @@ some input.  But if the @code{O_NONBLOCK} flag is set for the file
 reading any data, and reports this error.
 
 @strong{Compatibility Note:} Most versions of BSD Unix use a different
-error code for this: @code{EWOULDBLOCK}.  In the GNU library,
+error code for this: @code{EWOULDBLOCK}.  In @theglibc{},
 @code{EWOULDBLOCK} is an alias for @code{EAGAIN}, so it doesn't matter
 which name you use.
 
@@ -483,7 +483,7 @@ flow control, where output has been suspended by receipt of a STOP
 character.
 
 @strong{Compatibility Note:} Most versions of BSD Unix use a different
-error code for this: @code{EWOULDBLOCK}.  In the GNU library,
+error code for this: @code{EWOULDBLOCK}.  In @theglibc{},
 @code{EWOULDBLOCK} is an alias for @code{EAGAIN}, so it doesn't matter
 which name you use.
 
@@ -844,7 +844,7 @@ null pointer is returned instead.
 
 In some other systems, @code{fdopen} may fail to detect that the modes
 for file descriptor do not permit the access specified by
-@code{opentype}.  The GNU C library always checks for this.
+@code{opentype}.  @Theglibc{} always checks for this.
 @end deftypefun
 
 For an example showing the use of the @code{fdopen} function,
@@ -1043,8 +1043,8 @@ with multiple calls to @code{read} and @code{write}, it is inefficient
 because there is overhead associated with each kernel call.
 
 Instead, many platforms provide special high-speed primitives to perform
-these @dfn{scatter-gather} operations in a single kernel call.  The GNU C
-library will provide an emulation on any system that lacks these
+these @dfn{scatter-gather} operations in a single kernel call.  @Theglibc{}
+will provide an emulation on any system that lacks these
 primitives, so they are not a portability threat.  They are defined in
 @code{sys/uio.h}.
 
@@ -1216,7 +1216,7 @@ systems.  They are also useful to share data between multiple tasks
 without creating a file.
 
 On some systems using private anonymous mmaps is more efficient than using
-@code{malloc} for large blocks.  This is not an issue with the GNU C library,
+@code{malloc} for large blocks.  This is not an issue with @theglibc{},
 as the included @code{malloc} automatically uses @code{mmap} where appropriate.
 
 @c Linux has some other MAP_ options, which I have not discussed here.
@@ -2498,7 +2498,7 @@ At the point of this writing, the available implementation is a userlevel
 implementation which uses threads for handling the enqueued requests.
 While this implementation requires making some decisions about
 limitations, hard limitations are something which is best avoided
-in the GNU C library.  Therefore, the GNU C library provides a means
+in @theglibc{}.  Therefore, @theglibc{} provides a means
 for tuning the AIO implementation according to the individual use.
 
 @comment aio.h

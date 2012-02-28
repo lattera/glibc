@@ -398,8 +398,8 @@ define format-me
 makeinfo --no-validate --plaintext --no-number-sections $< -o $@
 -chmod a-w $@
 endef
-INSTALL: manual/install.texi; $(format-me)
-NOTES: manual/creature.texi; $(format-me)
+INSTALL: manual/install.texi manual/macros.texi; $(format-me)
+NOTES: manual/creature.texi manual/macros.texi; $(format-me)
 manual/dir-add.texi manual/dir-add.info: FORCE
 	$(MAKE) $(PARALLELMFLAGS) -C $(@D) $(@F)
 FAQ: scripts/gen-FAQ.pl FAQ.in

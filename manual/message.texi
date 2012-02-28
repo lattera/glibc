@@ -17,7 +17,7 @@ A better solution is to keep the message sets for each language are kept
 in separate files which are loaded at runtime depending on the language
 selection of the user.
 
-The GNU C Library provides two different sets of functions to support
+@Theglibc{} provides two different sets of functions to support
 message translation.  The problem is that neither of the interfaces is
 officially defined by the POSIX standard.  The @code{catgets} family of
 functions is defined in the X/Open standard but this is derived from
@@ -170,8 +170,8 @@ is
 @end smallexample
 
 @noindent
-where @var{prefix} is given to @code{configure} while installing the GNU
-C Library (this value is in many cases @code{/usr} or the empty string).
+where @var{prefix} is given to @code{configure} while installing @theglibc{}
+(this value is in many cases @code{/usr} or the empty string).
 
 The remaining problem is to decide which must be used.  The value
 decides about the substitution of the format elements mentioned above.
@@ -439,11 +439,11 @@ detail in the next section.
 Files in this other format are not human readable.  To be easy to use by
 programs it is a binary file.  But the format is byte order independent
 so translation files can be shared by systems of arbitrary architecture
-(as long as they use the GNU C Library).
+(as long as they use @theglibc{}).
 
 Details about the binary file format are not important to know since
 these files are always created by the @code{gencat} program.  The
-sources of the GNU C Library also provide the sources for the
+sources of @theglibc{} also provide the sources for the
 @code{gencat} program and so the interested reader can look through
 these source files to learn about the file format.
 
@@ -730,11 +730,10 @@ translation in the Uniforum group.  There never was a real standard
 defined but still the interface was used in Sun's operation systems.
 Since this approach fits better in the development process of free
 software it is also used throughout the GNU project and the GNU
-@file{gettext} package provides support for this outside the GNU C
-Library.
+@file{gettext} package provides support for this outside @theglibc{}.
 
 The code of the @file{libintl} from GNU @file{gettext} is the same as
-the code in the GNU C Library.  So the documentation in the GNU
+the code in @theglibc{}.  So the documentation in the GNU
 @file{gettext} manual is also valid for the functionality here.  The
 following text will describe the library functions in detail.  But the
 numerous helper programs are not described in this manual.  Instead
@@ -982,7 +981,7 @@ As the functions described in the last sections already mention separate
 sets of messages can be selected by a @dfn{domain name}.  This is a
 simple string which should be unique for each program part with uses a
 separate domain.  It is possible to use in one program arbitrary many
-domains at the same time.  E.g., the GNU C Library itself uses a domain
+domains at the same time.  E.g., @theglibc{} itself uses a domain
 named @code{libc} while the program using the C Library could use a
 domain named @code{foo}.  The important point is that at any time
 exactly one domain is active.  This is controlled with the following
@@ -1128,7 +1127,7 @@ form, the second the plural form.
 
 This has the consequence that programs without language catalogs can
 display the correct strings only if the program itself is written using
-a Germanic language.  This is a limitation but since the GNU C library
+a Germanic language.  This is a limitation but since @theglibc{}
 (as well as the GNU @code{gettext} package) are written as part of the
 GNU package and the coding standards for the GNU project require program
 being written in English, this solution nevertheless fulfills its
@@ -1552,7 +1551,7 @@ functions as well which look almost identical, except for the parameters
 and the call to the underlying function.
 
 Now there is of course the question why such functions do not exist in
-the GNU C library?  There are two parts of the answer to this question.
+@theglibc{}?  There are two parts of the answer to this question.
 
 @itemize @bullet
 @item
@@ -1666,8 +1665,8 @@ The @var{domain_name} part is the name which was either registered using
 the @code{textdomain} function or which was given to @code{dgettext} or
 @code{dcgettext} as the first parameter.  Now it becomes obvious that a
 good choice for the domain name in the program code is a string which is
-closely related to the program/package name.  E.g., for the GNU C
-Library the domain name is @code{libc}.
+closely related to the program/package name.  E.g., for @theglibc{}
+the domain name is @code{libc}.
 
 @noindent
 A limit piece of example code should show how the programmer is supposed
@@ -1787,7 +1786,7 @@ different character sets the user has to be careful.
 @node Helper programs for gettext
 @subsection Programs to handle message catalogs for @code{gettext}
 
-The GNU C Library does not contain the source code for the programs to
+@Theglibc{} does not contain the source code for the programs to
 handle message catalogs for the @code{gettext} functions.  As part of
 the GNU project the GNU gettext package contains everything the
 developer needs.  The functionality provided by the tools in this

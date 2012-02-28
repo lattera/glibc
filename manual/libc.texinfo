@@ -4,6 +4,8 @@
 @settitle The GNU C Library
 @c setchapternewpage odd
 
+@include macros.texi
+
 @comment Tell install-info what to do.
 @dircategory Software libraries
 @direntry
@@ -29,7 +31,7 @@
 @set FDL_VERSION 1.3
 
 @copying
-This file documents the GNU C library.
+This file documents @theglibc{}.
 
 This is
 @c Disabled (printed editions, see above).
@@ -94,7 +96,7 @@ This is
 @c Disabled (printed editions, see above).
 @c Edition @value{EDITION} of
 @cite{The GNU C Library Reference Manual}, for Version @value{VERSION}
-of the GNU C Library.
+of @theglibc{}.
 @end ifnottex
 
 @include top-menu.texi

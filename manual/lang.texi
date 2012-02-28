@@ -454,7 +454,7 @@ This ends the use of @var{ap}.  After a @code{va_end} call, further
 @code{va_end} before returning from the function in which @code{va_start}
 was invoked with the same @var{ap} argument.
 
-In the GNU C library, @code{va_end} does nothing, and you need not ever
+In @theglibc{}, @code{va_end} does nothing, and you need not ever
 use it except for reasons of portability.
 @refill
 @end deftypefn
@@ -776,7 +776,7 @@ It's equal to @code{SCHAR_MAX} if @code{char} is signed, or
 @item SHRT_MIN
 
 This is the minimum value that can be represented by a @w{@code{signed
-short int}}.  On most machines that the GNU C library runs on,
+short int}}.  On most machines that @theglibc{} runs on,
 @code{short} integers are 16-bit quantities.
 
 @comment limits.h
@@ -795,7 +795,7 @@ respectively.
 @item INT_MIN
 
 This is the minimum value that can be represented by a @w{@code{signed
-int}}.  On most machines that the GNU C system runs on, an @code{int} is
+int}}.  On most machines that @theglibc{} runs on, an @code{int} is
 a 32-bit quantity.
 
 @comment limits.h
@@ -813,7 +813,7 @@ the type @w{@code{signed int}} and the type @w{@code{unsigned int}}.
 @item LONG_MIN
 
 This is the minimum value that can be represented by a @w{@code{signed
-long int}}.  On most machines that the GNU C system runs on, @code{long}
+long int}}.  On most machines that @theglibc{} runs on, @code{long}
 integers are 32-bit quantities, the same size as @code{int}.
 
 @comment limits.h
@@ -831,7 +831,7 @@ These are the maximum values that can be represented by a
 @item LLONG_MIN
 
 This is the minimum value that can be represented by a @w{@code{signed
-long long int}}.  On most machines that the GNU C system runs on,
+long long int}}.  On most machines that @theglibc{} runs on,
 @w{@code{long long}} integers are 64-bit quantities.
 
 @comment limits.h
@@ -939,8 +939,8 @@ Sometimes, in the actual bits representing the floating point number,
 the exponent is @dfn{biased} by adding a constant to it, to make it
 always be represented as an unsigned quantity.  This is only important
 if you have some reason to pick apart the bit fields making up the
-floating point number by hand, which is something for which the GNU
-library provides no support.  So this is ignored in the discussion that
+floating point number by hand, which is something for which @theglibc{}
+provides no support.  So this is ignored in the discussion that
 follows.
 
 @item
@@ -961,7 +961,7 @@ the mantissa.  This is a bit which is present virtually in the mantissa,
 but not stored in memory because its value is always 1 in a normalized
 number.  The precision figure (see above) includes any hidden bits.
 
-Again, the GNU library provides no facilities for dealing with such
+Again, @theglibc{} provides no facilities for dealing with such
 low-level aspects of the representation.
 @end itemize
 

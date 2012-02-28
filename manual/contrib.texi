@@ -1,8 +1,8 @@
 @node Contributors, Free Manuals, Maintenance, Top
-@c %MENU% Who wrote what parts of the GNU C library
-@appendix Contributors to the GNU C Library
+@c %MENU% Who wrote what parts of the GNU C Library
+@appendix Contributors to @theglibc{}
 
-The GNU C library was written originally by Roland McGrath, and is
+@Theglibc{} was written originally by Roland McGrath, and is
 currently maintained by Ulrich Drepper.  Some parts of the library were
 contributed or worked on by other people.
 
@@ -93,7 +93,7 @@ Roland McGrath, based on a backend interface defined by Peter Eriksson.
 @item
 The port to Linux i386/ELF (@code{i386-@var{anything}-linux}) was
 contributed by Ulrich Drepper, based in large part on work done in
-Hongjiu Lu's Linux version of the GNU C Library.
+Hongjiu Lu's Linux version of @theglibc{}.
 
 @item
 The port to Linux/m68k (@code{m68k-@var{anything}-linux}) was
@@ -178,7 +178,7 @@ The random number generation functions @code{random}, @code{srandom},
 @code{rand} and @code{srand} functions, were written by Earl T. Cohen
 for the University of California at Berkeley and are copyrighted by the
 Regents of the University of California.  They have undergone minor
-changes to fit into the GNU C library and to fit the @w{ISO C} standard,
+changes to fit into @theglibc{} and to fit the @w{ISO C} standard,
 but the functional code is Berkeley's.@refill
 
 @item

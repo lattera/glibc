@@ -116,7 +116,7 @@ shell.  (The primitives shells use to implement these facilities are
 described in @ref{File System Interface}.)  Most other operating systems
 provide similar mechanisms, but the details of how to use them can vary.
 
-In the GNU C library, @code{stdin}, @code{stdout}, and @code{stderr} are
+In @theglibc{}, @code{stdin}, @code{stdout}, and @code{stderr} are
 normal variables which you can set just like any others.  For example,
 to redirect the standard output to a file, you could do:
 
@@ -196,7 +196,7 @@ Additional characters may appear after these to specify flags for the
 call.  Always put the mode (@samp{r}, @samp{w+}, etc.) first; that is
 the only part you are guaranteed will be understood by all systems.
 
-The GNU C library defines one additional character for use in
+@Theglibc{} defines one additional character for use in
 @var{opentype}: the character @samp{x} insists on creating a new
 file---if a file @var{filename} already exists, @code{fopen} fails
 rather than opening it.  If you use @samp{x} you are guaranteed that
@@ -290,7 +290,7 @@ If the operation fails, a null pointer is returned; otherwise,
 @code{freopen} has traditionally been used to connect a standard stream
 such as @code{stdin} with a file of your own choice.  This is useful in
 programs in which use of a standard stream for certain purposes is
-hard-coded.  In the GNU C library, you can simply close the standard
+hard-coded.  In @theglibc{}, you can simply close the standard
 streams and open new ones with @code{fopen}.  But other systems lack
 this ability, so using @code{freopen} is more portable.
 
@@ -318,7 +318,7 @@ In some situations it is useful to know whether a given stream is
 available for reading or writing.  This information is normally not
 available and would have to be remembered separately.  Solaris
 introduced a few functions to get this information from the stream
-descriptor and these functions are also available in the GNU C library.
+descriptor and these functions are also available in @theglibc{}.
 
 @comment stdio_ext.h
 @comment GNU
@@ -394,7 +394,7 @@ you are using NFS.
 The function @code{fclose} is declared in @file{stdio.h}.
 @end deftypefun
 
-To close all streams currently available the GNU C Library provides
+To close all streams currently available @theglibc{} provides
 another function.
 
 @comment stdio.h
@@ -562,7 +562,7 @@ conservative and use locking.
 
 There are two basic mechanisms to avoid locking.  The first is to use
 the @code{_unlocked} variants of the stream operations.  The POSIX
-standard defines quite a few of those and the GNU library adds a few
+standard defines quite a few of those and @theglibc{} adds a few
 more.  These variants of the functions behave just like the functions
 with the name without the suffix except that they do not lock the
 stream.  Using these functions is very desirable since they are
@@ -598,7 +598,7 @@ the loop terminates.  Writing it the way illustrated above allows the
 manipulation of the buffer of the stream.
 
 A second way to avoid locking is by using a non-standard function which
-was introduced in Solaris and is available in the GNU C library as well.
+was introduced in Solaris and is available in @theglibc{} as well.
 
 @comment stdio_ext.h
 @comment GNU
@@ -1143,7 +1143,7 @@ convenient to have functions to read a line of text from a stream.
 
 Standard C has functions to do this, but they aren't very safe: null
 characters and even (for @code{gets}) long lines can confuse them.  So
-the GNU library provides the nonstandard @code{getline} function that
+@theglibc{} provides the nonstandard @code{getline} function that
 makes it easy to read lines reliably.
 
 Another GNU extension, @code{getdelim}, generalizes @code{getline}.  It
@@ -1289,7 +1289,7 @@ returns a null pointer; otherwise it returns @var{s}.
 
 @strong{Warning:} The @code{gets} function is @strong{very dangerous}
 because it provides no protection against overflowing the string
-@var{s}.  The GNU library includes it for compatibility only.  You
+@var{s}.  @Theglibc{} includes it for compatibility only.  You
 should @strong{always} use @code{fgets} or @code{getline} instead.  To
 remind you of this, the linker (if using GNU @code{ld}) will issue a
 warning whenever you use @code{gets}.
@@ -1383,10 +1383,10 @@ character that was actually read from the stream.  In fact, it isn't
 necessary to actually read any characters from the stream before
 unreading them with @code{ungetc}!  But that is a strange way to write a
 program; usually @code{ungetc} is used only to unread a character that
-was just read from the same stream.  The GNU C library supports this
+was just read from the same stream.  @Theglibc{} supports this
 even on files opened in binary mode, but other systems might not.
 
-The GNU C library only supports one character of pushback---in other
+@Theglibc{} only supports one character of pushback---in other
 words, it does not work to call @code{ungetc} twice without doing input
 in between.  Other systems might let you push back multiple characters;
 then reading from the stream retrieves the characters in the reverse
@@ -1658,7 +1658,7 @@ actual value in effect at runtime can be retrieved by using
 Definition}.
 
 Some system have a quite low limit such as @math{9} for @w{System V}
-systems.  The GNU C library has no real limit.
+systems.  @Theglibc{} has no real limit.
 @end defvr
 
 If any of the formats has a specification for the parameter position all
@@ -2149,7 +2149,7 @@ prints @samp{ nowhere }.
 If there is a @samp{l} modifier present the argument is expected to be of type @code{wchar_t} (or @code{const wchar_t *}).
 
 If you accidentally pass a null pointer as the argument for a @samp{%s}
-conversion, the GNU library prints it as @samp{(null)}.  We think this
+conversion, @theglibc{} prints it as @samp{(null)}.  We think this
 is more useful than crashing.  But it's not good practice to pass a null
 argument intentionally.
 
@@ -2168,7 +2168,7 @@ fprintf (stderr, "can't open `%s': %s\n", filename, strerror (errno));
 @end smallexample
 
 @noindent
-The @samp{%m} conversion is a GNU C library extension.
+The @samp{%m} conversion is a @glibcadj{} extension.
 
 The @samp{%p} conversion prints a pointer value.  The corresponding
 argument must be of type @code{void *}.  In practice, you can use any
@@ -2371,7 +2371,7 @@ make_message (char *name, char *value)
 
 In practice, it is often easier just to use @code{asprintf}, below.
 
-@strong{Attention:} In versions of the GNU C library prior to 2.1 the
+@strong{Attention:} In versions of @theglibc{} prior to 2.1 the
 return value is the number of characters stored, not including the
 terminating null; unless there was not enough space in @var{s} to
 store the result in which case @code{-1} is returned.  This was
@@ -2814,7 +2814,7 @@ validate_args (char *format, int nargs, OBJECT *args)
 @cindex defining new @code{printf} conversions
 @cindex extending @code{printf}
 
-The GNU C library lets you define your own custom conversion specifiers
+@Theglibc{} lets you define your own custom conversion specifiers
 for @code{printf} template strings, to teach @code{printf} clever ways
 to print the important data structures of your program.
 
@@ -2887,7 +2887,7 @@ about this.
 @c but if you are never going to call @code{parse_printf_format}, you do
 @c not need to define an arginfo function.
 
-@strong{Attention:} In the GNU C library versions before 2.0 the
+@strong{Attention:} In @theglibc{} versions before 2.0 the
 @var{arginfo-function} function did not need to be installed unless
 the user used the @code{parse_printf_format} function.  This has changed.
 Now a call to any of the @code{printf} functions will call this
@@ -3000,7 +3000,7 @@ width.  The value is @code{'0'} if the @samp{0} flag was specified, and
 Now let's look at how to define the handler and arginfo functions
 which are passed as arguments to @code{register_printf_function}.
 
-@strong{Compatibility Note:} The interface changed in GNU libc
+@strong{Compatibility Note:} The interface changed in @theglibc{}
 version 2.0.  Previously the third argument was of type
 @code{va_list *}.
 
@@ -3098,7 +3098,7 @@ The output produced by this program looks like:
 @node Predefined Printf Handlers
 @subsection Predefined @code{printf} Handlers
 
-The GNU libc also contains a concrete and useful application of the
+@Theglibc{} also contains a concrete and useful application of the
 @code{printf} handler extension.  There are two functions available
 which implement a special way to print floating-point numbers.
 
@@ -3926,7 +3926,7 @@ previous I/O operation on that stream.
 @deftypevr Macro int EOF
 This macro is an integer value that is returned by a number of narrow
 stream functions to indicate an end-of-file condition, or some other
-error situation.  With the GNU library, @code{EOF} is @code{-1}.  In
+error situation.  With @theglibc{}, @code{EOF} is @code{-1}.  In
 other libraries, its value may be some other negative number.
 
 This symbol is declared in @file{stdio.h}.
@@ -3937,7 +3937,7 @@ This symbol is declared in @file{stdio.h}.
 @deftypevr Macro int WEOF
 This macro is an integer value that is returned by a number of wide
 stream functions to indicate an end-of-file condition, or some other
-error situation.  With the GNU library, @code{WEOF} is @code{-1}.  In
+error situation.  With @theglibc{}, @code{WEOF} is @code{-1}.  In
 other libraries, its value may be some other negative number.
 
 This symbol is declared in @file{wchar.h}.
@@ -4094,7 +4094,7 @@ systems, text and binary streams use different file formats, and the
 only way to read or write ``an ordinary file of text'' that can work
 with other text-oriented programs is through a text stream.
 
-In the GNU library, and on all POSIX systems, there is no difference
+In @theglibc{}, and on all POSIX systems, there is no difference
 between text streams and binary streams.  When you open a stream, you
 get the same kind of stream regardless of whether you ask for binary.
 This stream can handle any file content, and has none of the
@@ -4562,7 +4562,7 @@ necessary since it might be done in situations when terminal input is
 required and the program wants to be sure that all output is visible on
 the terminal.  But this means that only line buffered streams have to be
 flushed.  Solaris introduced a function especially for this.  It was
-always available in the GNU C library in some form but never officially
+always available in @theglibc{} in some form but never officially
 exported.
 
 @comment stdio_ext.h
@@ -4584,7 +4584,7 @@ In some situations it might be useful to not flush the output pending
 for a stream but instead simply forget it.  If transmission is costly
 and the output is not needed anymore this is valid reasoning.  In this
 situation a non-standard function introduced in Solaris and available in
-the GNU C library can be used.
+@theglibc{} can be used.
 
 @comment stdio_ext.h
 @comment GNU
@@ -4722,8 +4722,8 @@ This function is provided for compatibility with old BSD code.  Use
 @end deftypefun
 
 It is possible to query whether a given stream is line buffered or not
-using a non-standard function introduced in Solaris and available in the
-GNU C library.
+using a non-standard function introduced in Solaris and available in
+@theglibc{}.
 
 @comment stdio_ext.h
 @comment GNU
@@ -4762,7 +4762,7 @@ This function is declared in the @file{stdio_ext.h} header.
 @node Other Kinds of Streams
 @section Other Kinds of Streams
 
-The GNU library provides ways for you to define additional kinds of
+@Theglibc{} provides ways for you to define additional kinds of
 streams that do not necessarily correspond to an open file.
 
 One such type of stream takes input from or writes output to a string.

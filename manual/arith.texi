@@ -40,9 +40,9 @@ this is that a program often needs to be written for a particular range
 of integers, and sometimes must be written for a particular size of
 storage, regardless of what machine the program runs on.
 
-To address this problem, the GNU C library contains C type definitions
+To address this problem, @theglibc{} contains C type definitions
 you can use to declare integers that meet your exact needs.  Because the
-GNU C library header files are customized to a specific machine, your
+@glibcadj{} header files are customized to a specific machine, your
 program source code doesn't have to be.
 
 These @code{typedef}s are in @file{stdint.h}.
@@ -105,7 +105,7 @@ of the integer.
 @item uintmax_t
 @end itemize
 
-The GNU C library also provides macros that tell you the maximum and
+@Theglibc{} also provides macros that tell you the maximum and
 minimum possible values for each integer data type.  The macro names
 follow these examples: @code{INT32_MAX}, @code{UINT8_MAX},
 @code{INT_FAST32_MIN}, @code{INT_LEAST64_MIN}, @code{UINTMAX_MAX},
@@ -388,7 +388,7 @@ to
 @end deftypefn
 
 Another set of floating-point classification functions was provided by
-BSD.  The GNU C library also supports these functions; however, we
+BSD.  @Theglibc{} also supports these functions; however, we
 recommend that you use the ISO C99 macros in new code.  Those are standard
 and will be available more widely.  Also, since they are macros, you do
 not have to worry about the type of their argument.
@@ -1019,7 +1019,7 @@ Implementation defined macros with names starting with @code{FE_} and
 having type @code{fenv_t *}.
 
 @vindex FE_NOMASK_ENV
-If possible, the GNU C Library defines a macro @code{FE_NOMASK_ENV}
+If possible, @theglibc{} defines a macro @code{FE_NOMASK_ENV}
 which represents an environment where every exception raised causes a
 trap to occur.  You can test for this macro using @code{#ifdef}.  It is
 only defined if @code{_GNU_SOURCE} is defined.
@@ -1813,7 +1813,7 @@ On processors which do not implement multiply-add in hardware,
 @file{math.h} defines the symbols @code{FP_FAST_FMA},
 @code{FP_FAST_FMAF}, and @code{FP_FAST_FMAL} when the corresponding
 version of @code{fma} is no slower than the expression @samp{x*y + z}.
-In the GNU C library, this always means the operation is implemented in
+In @theglibc{}, this always means the operation is implemented in
 hardware.
 @end deftypefun
 
@@ -2445,7 +2445,7 @@ is provided mostly for compatibility with existing code; using
 @code{strtod} is more robust.
 @end deftypefun
 
-The GNU C library also provides @samp{_l} versions of these functions,
+@Theglibc{} also provides @samp{_l} versions of these functions,
 which take an additional argument, the locale to use in conversion.
 @xref{Parsing of Integers}.
 
@@ -2453,10 +2453,10 @@ which take an additional argument, the locale to use in conversion.
 @section Old-fashioned System V number-to-string functions
 
 The old @w{System V} C library provided three functions to convert
-numbers to strings, with unusual and hard-to-use semantics.  The GNU C
-library also provides these functions and some natural extensions.
+numbers to strings, with unusual and hard-to-use semantics.  @Theglibc{}
+also provides these functions and some natural extensions.
 
-These functions are only available in glibc and on systems descended
+These functions are only available in @theglibc{} and on systems descended
 from AT&T Unix.  Therefore, unless these functions do precisely what you
 need, it is better to use @code{sprintf}, which is standard.
 
@@ -2516,7 +2516,7 @@ If @var{ndigit} decimal digits would exceed the precision of a
 @code{double} it is reduced to a system-specific value.
 @end deftypefun
 
-As extensions, the GNU C library provides versions of these three
+As extensions, @theglibc{} provides versions of these three
 functions that take @code{long double} arguments.
 
 @comment stdlib.h
@@ -2547,7 +2547,7 @@ restricted by the precision of a @code{long double}.
 @cindex gcvt_r
 The @code{ecvt} and @code{fcvt} functions, and their @code{long double}
 equivalents, all return a string located in a static buffer which is
-overwritten by the next call to the function.  The GNU C library
+overwritten by the next call to the function.  @Theglibc{}
 provides another set of extended functions which write the converted
 string into a user-supplied buffer.  These have the conventional
 @code{_r} suffix.

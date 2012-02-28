@@ -350,8 +350,8 @@ The empty name says to select a locale based on environment variables.
 @end table
 
 Defining and installing named locales is normally a responsibility of
-the system administrator at your site (or the person who installed the
-GNU C library).  It is also possible for the user to create private
+the system administrator at your site (or the person who installed
+@theglibc{}).  It is also possible for the user to create private
 locales.  All this will be discussed later when describing the tool to
 do so.
 @comment (@pxref{Building Locale Files}).
@@ -889,7 +889,7 @@ The same as the value returned by @code{localeconv} in the
 @item YESEXPR
 The return value is a regular expression which can be used with the
 @code{regex} function to recognize a positive response to a yes/no
-question.  The GNU C library provides the @code{rpmatch} function for
+question.  @Theglibc{} provides the @code{rpmatch} function for
 easier handling in applications.
 @item NOEXPR
 The return value is a regular expression which can be used with the
@@ -1048,7 +1048,7 @@ than given by the field width, the displayed value is rounded.  If the
 number of fractional digits is selected to be zero, no decimal point is
 printed.
 
-As a GNU extension, the @code{strfmon} implementation in the GNU libc
+As a GNU extension, the @code{strfmon} implementation in @theglibc{}
 allows an optional @samp{L} next as a format modifier.  If this modifier
 is given, the argument is expected to be a @code{long double} instead of
 a @code{double} value.
@@ -1179,7 +1179,7 @@ sure that you localize the answers too.  It would be very bad habit to
 ask a question in one language and request the answer in another, often
 English.
 
-The GNU C library contains @code{rpmatch} to give applications easy
+@Theglibc{} contains @code{rpmatch} to give applications easy
 access to the corresponding locale definitions.
 
 @comment GNU
@@ -1203,7 +1203,7 @@ The answer matched neither the @code{YESEXPR} nor the @code{NOEXPR}
 regular expression.
 @end table
 
-This function is not standardized but available beside in GNU libc at
+This function is not standardized but available beside in @theglibc{} at
 least also in the IBM AIX library.
 @end deftypefun
 

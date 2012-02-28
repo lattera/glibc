@@ -273,7 +273,7 @@ The general design of the classification functions for wide characters
 is more general.  It allows extensions to the set of available
 classifications, beyond those which are always available.  The POSIX
 standard specifies how extensions can be made, and this is already
-implemented in the GNU C library implementation of the @code{localedef}
+implemented in the @glibcadj{} implementation of the @code{localedef}
 program.
 
 The character class functions are normally implemented with bitsets,
@@ -589,7 +589,7 @@ iswctype (wc, wctype ("xdigit"))
 It is declared in @file{wctype.h}.
 @end deftypefun
 
-The GNU C library also provides a function which is not defined in the
+@Theglibc{} also provides a function which is not defined in the
 @w{ISO C} standard but which is available as a version for single byte
 characters as well.
 
@@ -607,7 +607,7 @@ It is declared in @file{wchar.h}.
 
 The first note is probably not astonishing but still occasionally a
 cause of problems.  The @code{isw@var{XXX}} functions can be implemented
-using macros and in fact, the GNU C library does this.  They are still
+using macros and in fact, @theglibc{} does this.  They are still
 available as real functions but when the @file{wctype.h} header is
 included the macros will be used.  This is the same as the
 @code{char} type versions of these functions.
