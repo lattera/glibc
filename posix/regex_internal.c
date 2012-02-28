@@ -499,7 +499,7 @@ re_string_skip_chars (re_string_t *pstr, int new_raw_idx, wint_t *last_wc)
        rawbuf_idx < new_raw_idx;)
     {
       wchar_t wc2;
-      int remain_len = pstr->len - rawbuf_idx;
+      int remain_len = pstr->raw_len - rawbuf_idx;
       prev_st = pstr->cur_state;
       mbclen = __mbrtowc (&wc2, (const char *) pstr->raw_mbs + rawbuf_idx,
 			  remain_len, &pstr->cur_state);

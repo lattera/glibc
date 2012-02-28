@@ -82,7 +82,7 @@ tests		:= tstgetopt testfnm runtests runptests	     \
 		   bug-regex21 bug-regex22 bug-regex23 bug-regex24 \
 		   bug-regex25 bug-regex26 bug-regex27 bug-regex28 \
 		   bug-regex29 bug-regex30 bug-regex31 bug-regex32 \
-		   tst-nice tst-nanosleep tst-regex2 \
+		   bug-regex33 tst-nice tst-nanosleep tst-regex2 \
 		   transbug tst-rxspencer tst-pcre tst-boost \
 		   bug-ga1 tst-vfork1 tst-vfork2 tst-vfork3 tst-waitid \
 		   tst-getaddrinfo2 bug-glob1 bug-glob2 bug-glob3 tst-sysconf \
@@ -208,6 +208,7 @@ bug-regex25-ENV = LOCPATH=$(common-objpfx)localedata
 bug-regex26-ENV = LOCPATH=$(common-objpfx)localedata
 bug-regex30-ENV = LOCPATH=$(common-objpfx)localedata
 bug-regex32-ENV = LOCPATH=$(common-objpfx)localedata
+bug-regex33-ENV = LOCPATH=$(common-objpfx)localedata
 tst-rxspencer-ARGS = --utf8 rxspencer/tests
 tst-rxspencer-ENV = LOCPATH=$(common-objpfx)localedata
 tst-pcre-ARGS = PCRE.tests

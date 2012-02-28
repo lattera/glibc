@@ -1,3 +1,12 @@
+2012-02-28  Stanislav Brabec  <sbrabec@suse.cz>
+
+	[BZ #13637]
+	* posix/regex_internal.c (re_string_skip_chars): Fix miscomputation
+	of remain_len that may cause incomplete multi-byte character and
+	false match.
+	* posix/bug-regex33.c: New file.
+	* posix/Makefile (tests): Add bug-regex33.
+
 2012-02-28  Andreas Schwab  <schwab@linux-m68k.org>
 
 	* include/dirent.h: Include <dirstream.h> before
