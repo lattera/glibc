@@ -1203,3 +1203,14 @@ $(objpfx)tst-relsort1mod1.so: $(libm) $(objpfx)tst-relsort1mod2.so
 $(objpfx)tst-relsort1mod2.so: $(libm)
 $(objpfx)tst-relsort1.out: $(objpfx)tst-relsort1mod1.so \
 			   $(objpfx)tst-relsort1mod2.so
+
+tests: $(objpfx)tst-unused-dep.out
+
+$(objpfx)tst-unused-dep.out: $(objpfx)testobj1.so
+	LD_TRACE_LOADED_OBJECTS=1 \
+	LD_DEBUG=unused \
+	LD_PRELOAD= \
+	$(elf-objpfx)${rtld-installed-name} \
+	  --library-path $(rpath-link)$(patsubst %,:%,$(sysdep-library-path)) \
+	  $< > $@
+	cmp $@ /dev/null > /dev/null

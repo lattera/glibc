@@ -1,3 +1,9 @@
+2012-02-29  Marek Polacek  <polacek@redhat.com>
+
+	[BZ #13706]
+	* elf/rtld.c (dl_main): Always set l_used to 1 for vDSO.
+	* elf/Makefile: Add rules to run tst-unused-dep.out.
+
 2012-02-28  David S. Miller  <davem@davemloft.net>
 
 	* sysdeps/sparc/sparc32/fpu/w_sqrt.S: New file.
