@@ -1,5 +1,15 @@
 2012-02-29  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #13786]
+	* sysdeps/i386/i686/multiarch/strcmp.S [USE_AS_STRCASECMP_L]: Do
+	not include ../strcmp.S.
+	[USE_AS_STRNCASECMP_L]: Likewise.
+	* sysdeps/i386/i686/multiarch/strcasecmp_l-c.c
+	(__strcasecmp_l_ia32): Define as alias to __strcasecmp_l_nonascii.
+	* sysdeps/i386/i686/multiarch/strncase_l-c.c
+	(__strncasecmp_l_ia32): Define as alias to
+	__strncasecmp_l_nonascii.
+
 	[BZ #5794]
 	* math/libm-test.inc (expm1_test): Add test for bug 5794.
 	* sysdeps/i386/fpu/libm-test-ulps: Update.
