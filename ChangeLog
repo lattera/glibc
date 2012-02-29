@@ -1,5 +1,10 @@
 2012-02-29  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #5794]
+	* math/libm-test.inc (expm1_test): Add test for bug 5794.
+	* sysdeps/i386/fpu/libm-test-ulps: Update.
+	* sysdeps/x86_64/fpu/libm-test-ulps: Likewise.
+
 	* sysdeps/i386/fpu/libm-test-ulps: Reduce some expected errors.
 	* sysdeps/x86_64/fpu/libm-test-ulps: Likewise.
 

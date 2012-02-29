@@ -511,6 +511,9 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
+Test "expm1 (11356.25) == 9.05128237311923300051376115753226014206e+4931":
+ildouble: 1
+ldouble: 1
 
 # gamma
 Test "gamma (-0.5) == log(2*sqrt(pi))":
@@ -1265,6 +1268,8 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
+ildouble: 1
+ldouble: 1
 
 Function: "gamma":
 ildouble: 1

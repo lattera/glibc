@@ -2602,6 +2602,10 @@ expm1_test (void)
   TEST_f_f (expm1, 1, M_El - 1.0);
   TEST_f_f (expm1, 0.75L, 1.11700001661267466854536981983709561L);
 
+#if defined TEST_LDOUBLE && LDBL_MAX_EXP >= 16384
+  TEST_f_f (expm1, 11356.25L, 9.05128237311923300051376115753226014206e+4931L);
+#endif
+
   errno = 0;
   TEST_f_f (expm1, 100000.0, plus_infty);
   check_int ("errno for expm1(large) == ERANGE", errno, ERANGE, 0, 0, 0);

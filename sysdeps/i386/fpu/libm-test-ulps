@@ -452,6 +452,8 @@ ldouble: 8
 # expm1
 Test "expm1 (1) == M_El - 1.0":
 ildouble: 1
+Test "expm1 (11356.25) == 9.05128237311923300051376115753226014206e+4931":
+ldouble: 1
 
 # gamma
 Test "gamma (-0.5) == log(2*sqrt(pi))":
@@ -1173,6 +1175,7 @@ ldouble: 8
 
 Function: "expm1":
 ildouble: 1
+ldouble: 1
 
 Function: "gamma":
 double: 1
