@@ -1,3 +1,8 @@
+2012-02-29  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/i386/fpu/libm-test-ulps: Reduce some expected errors.
+	* sysdeps/x86_64/fpu/libm-test-ulps: Likewise.
+
 2012-02-29  Jeff Law  <law@redhat.com>
 
 	* resolv/res_query.c (__libc_res_nquerydomain): Avoid

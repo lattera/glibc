@@ -420,8 +420,8 @@ ifloat: 1
 Test "Real part of: ctan (-2 - 3 i) == 0.376402564150424829275122113032269084e-2 - 1.00323862735360980144635859782192726 i":
 double: 1
 idouble: 1
-ildouble: 439
-ldouble: 439
+ildouble: 1
+ldouble: 1
 Test "Imaginary part of: ctan (-2 - 3 i) == 0.376402564150424829275122113032269084e-2 - 1.00323862735360980144635859782192726 i":
 float: 1
 ifloat: 1
@@ -444,11 +444,11 @@ double: 1
 float: 2
 idouble: 1
 ifloat: 2
-ildouble: 5
-ldouble: 5
+ildouble: 3
+ldouble: 3
 Test "Imaginary part of: ctanh (-2 - 3 i) == -0.965385879022133124278480269394560686 + 0.988437503832249372031403430350121098e-2 i":
-ildouble: 25
-ldouble: 25
+ildouble: 1
+ldouble: 1
 Test "Imaginary part of: ctanh (0 + pi/4 i) == 0.0 + 1.0 i":
 float: 1
 ifloat: 1
@@ -1215,8 +1215,8 @@ ifloat: 1
 Function: Real part of "ctan":
 double: 1
 idouble: 1
-ildouble: 439
-ldouble: 439
+ildouble: 1
+ldouble: 1
 
 Function: Imaginary part of "ctan":
 double: 1
@@ -1231,16 +1231,16 @@ double: 1
 float: 2
 idouble: 1
 ifloat: 2
-ildouble: 5
-ldouble: 5
+ildouble: 3
+ldouble: 3
 
 Function: Imaginary part of "ctanh":
 double: 1
 float: 1
 idouble: 1
 ifloat: 1
-ildouble: 25
-ldouble: 25
+ildouble: 1
+ldouble: 1
 
 Function: "erf":
 double: 1

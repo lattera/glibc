@@ -370,8 +370,8 @@ ifloat: 1
 Test "Real part of: ctan (-2 - 3 i) == 0.376402564150424829275122113032269084e-2 - 1.00323862735360980144635859782192726 i":
 double: 1
 idouble: 1
-ildouble: 439
-ldouble: 439
+ildouble: 1
+ldouble: 1
 Test "Imaginary part of: ctan (-2 - 3 i) == 0.376402564150424829275122113032269084e-2 - 1.00323862735360980144635859782192726 i":
 float: 1
 ifloat: 1
@@ -390,13 +390,13 @@ ldouble: 3
 
 # ctanh
 Test "Real part of: ctanh (-2 - 3 i) == -0.965385879022133124278480269394560686 + 0.988437503832249372031403430350121098e-2 i":
-ildouble: 5
-ldouble: 5
+ildouble: 3
+ldouble: 3
 Test "Imaginary part of: ctanh (-2 - 3 i) == -0.965385879022133124278480269394560686 + 0.988437503832249372031403430350121098e-2 i":
 float: 1
 ifloat: 1
-ildouble: 25
-ldouble: 25
+ildouble: 1
+ldouble: 1
 Test "Imaginary part of: ctanh (0 + pi/4 i) == 0.0 + 1.0 i":
 float: 1
 ifloat: 1
@@ -437,10 +437,6 @@ ldouble: 1
 # exp
 Test "exp (0.75) == 2.11700001661267466854536981983709561":
 ildouble: 1
-Test "exp (1000.0) == 0.197007111401704699388887935224332313e435":
-ildouble: 754
-Test "exp (50.0) == 5184705528587072464087.45332293348538":
-ildouble: 16
 
 # exp10
 Test "exp10 (-1) == 0.1":
@@ -942,10 +938,6 @@ idouble: 1
 ifloat: 1
 
 # Maximal error of functions:
-Function: "acos":
-ildouble: 622
-ldouble: 622
-
 Function: "asin":
 ildouble: 1
 ldouble: 1
@@ -1096,8 +1088,8 @@ double: 1
 float: 4
 idouble: 1
 ifloat: 4
-ildouble: 763
-ldouble: 763
+ildouble: 6
+ldouble: 6
 
 Function: Imaginary part of "cpow":
 double: 2
@@ -1136,8 +1128,8 @@ ldouble: 2
 Function: Real part of "ctan":
 double: 1
 idouble: 1
-ildouble: 439
-ldouble: 439
+ildouble: 1
+ldouble: 1
 
 Function: Imaginary part of "ctan":
 double: 1
@@ -1152,16 +1144,16 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
-ildouble: 5
-ldouble: 5
+ildouble: 3
+ldouble: 3
 
 Function: Imaginary part of "ctanh":
 double: 1
 float: 1
 idouble: 1
 ifloat: 1
-ildouble: 25
-ldouble: 25
+ildouble: 1
+ldouble: 1
 
 Function: "erf":
 double: 1
@@ -1174,9 +1166,6 @@ idouble: 1
 ifloat: 1
 ildouble: 1
 ldouble: 1
-
-Function: "exp":
-ildouble: 754
 
 Function: "exp10":
 ildouble: 8
