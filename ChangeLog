@@ -107,9 +107,11 @@
 
 	* configure.in (CC): Restrict allowed GCC versions to 4.3 and
 	later.  Allow versions 5-9.
+	* configure: Regenerated.
 	* manual/install.texi (Tools for Compilation): Give GCC 4.3 as
 	required minimum version and 4.6 as recommended version.  Do not
 	mention bugs in GCC 2.7 and 2.8.
+	* INSTALL: Regenerated.
 
 2012-02-27  David S. Miller  <davem@davemloft.net>
 
@@ -147,6 +149,7 @@
 	(Specific advice for GNU/Linux systems): Describe use of headers
 	from "make headers_install", not private headers from older
 	kernels.
+	* INSTALL: Regenerated.
 	* sysdeps/unix/sysv/linux/configure.in (LIBC_LINUX_VERSION):
 	Change to 2.6.19.
 	* sysdeps/unix/sysv/linux/configure: Regenerated.
