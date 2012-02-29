@@ -556,12 +556,16 @@ __libc_res_nquerydomain(res_state statp,
 		 * copy without '.' if present.
 		 */
 		n = strlen(name);
-		if (n >= MAXDNAME) {
+
+		/* Decrement N prior to checking it against MAXDNAME
+		   so that we detect a wrap to SIZE_MAX and return
+		   a reasonable error.  */
+		n--;
+		if (n >= MAXDNAME - 1) {
 			RES_SET_H_ERRNO(statp, NO_RECOVERY);
 			return (-1);
 		}
-		n--;
-		if (n >= 0 && name[n] == '.') {
+		if (name[n] == '.') {
 			strncpy(nbuf, name, n);
 			nbuf[n] = '\0';
 		} else
