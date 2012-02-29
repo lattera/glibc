@@ -1,3 +1,12 @@
+2012-02-28  David S. Miller  <davem@davemloft.net>
+
+	* sysdeps/sparc/sparc32/fpu/w_sqrt.S: New file.
+	* sysdeps/sparc/sparc32/fpu/w_sqrtf.S: New file.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/w_sqrt.S: New file.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/w_sqrtf.S: New file.
+	* sysdeps/sparc/sparc64/fpu/w_sqrt.S: New file.
+	* sysdeps/sparc/sparc64/fpu/w_sqrtf.S: New file.
+
 2012-02-29  Joseph Myers  <joseph@codesourcery.com>
 
 	* math/libm-test.inc (llround_test): Move one test from
