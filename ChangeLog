@@ -1,3 +1,10 @@
+2012-02-29  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/libm-test.inc (llround_test): Move one test from
+	lround_test.  Use TEST_f_L in moved test.
+	(lround_test): Move misplaced test to llround_test.  Add testcase
+	from bug 2561.
+
 2012-02-28  Ulrich Drepper  <drepper@gmail.com>
 
 	* sysdeps/x86_64/fpu/e_expf.S: New file.

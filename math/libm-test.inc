@@ -4395,7 +4395,7 @@ lround_test (void)
   TEST_f_l (lround, 1073741824.01, 1073741824);
 # if LONG_MAX > 281474976710656
   TEST_f_l (lround, 281474976710656.025, 281474976710656);
-  TEST_f_l (llround, -3.65309740835E17, -365309740835000000);
+  TEST_f_l (lround, 18014398509481974, 18014398509481974);
 # endif
   TEST_f_l (lround, 2097152.5, 2097153);
   TEST_f_l (lround, -2097152.5, -2097153);
@@ -4438,6 +4438,7 @@ llround_test (void)
   TEST_f_L (llround, -2097152.5, -2097153);
   TEST_f_L (llround, 34359738368.5, 34359738369ll);
   TEST_f_L (llround, -34359738368.5, -34359738369ll);
+  TEST_f_L (llround, -3.65309740835E17, -365309740835000000LL);
 #endif
 
   /* Test boundary conditions.  */
