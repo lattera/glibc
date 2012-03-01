@@ -920,7 +920,8 @@ __erfcl (long double x)
 	}
       u.value = x;
       u.parts32.w3 = 0;
-      u.parts32.w2 &= 0xffffe000;
+      u.parts32.w2 = 0;
+      u.parts32.w1 &= 0xf8000000;
       z = u.value;
       r = __ieee754_expl (-z * z - 0.5625) *
 	__ieee754_expl ((z - x) * (z + x) + p);

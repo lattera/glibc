@@ -1,3 +1,17 @@
+2012-03-01  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #2541]
+	[BZ #4108]
+	* sysdeps/ieee754/flt-32/s_erff.c (__erfcf): Mask out one more bit
+	before squaring exponent.
+	* sysdeps/ieee754/ldbl-128ibm/s_erfl.c (__erfcl): Mask out whole
+	bottom long double and 27 bits of top long double before squaring
+	exponent.
+	* math/libm-test.inc (erfc_test): Add more tests.
+	* sysdeps/i386/fpu/libm-test-ulps: Update.
+	* sysdeps/powerpc/fpu/libm-test-ulps: Likewise.
+	* sysdeps/x86_64/fpu/libm-test-ulps: Likewise.
+
 2012-03-01  Kai Tietz  <ktietz@redhat.com>
 
 	* soft-fp/soft-fp.h (_FP_STRUCT_LAYOUT): New macro.

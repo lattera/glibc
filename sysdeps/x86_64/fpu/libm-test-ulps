@@ -467,6 +467,16 @@ double: 1
 idouble: 1
 
 # erfc
+Test "erfc (0x1.f7303cp+1) == 2.705500297238986897105236321218861842255e-8":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "erfc (0x1.ffa002p+2) == 1.233585992097580296336099501489175967033e-29":
+float: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
 Test "erfc (1.25) == 0.0770998717435417698634765188027188596":
 ildouble: 1
 ldouble: 1
@@ -1251,7 +1261,9 @@ idouble: 1
 
 Function: "erfc":
 double: 1
+float: 1
 idouble: 1
+ifloat: 1
 ildouble: 1
 ldouble: 1
 
