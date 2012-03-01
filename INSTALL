@@ -291,7 +291,7 @@ build the GNU C Library:
      Check the FAQ for any special compiler issues on particular
      platforms.
 
-   * GNU `binutils' 2.15 or later
+   * GNU `binutils' 2.20 or later
 
      You must use GNU `binutils' (as and ld) to build the GNU C Library.
      No other assembler or linker has the necessary functionality at the

@@ -327,7 +327,7 @@ You can use whatever compiler you like to compile programs that use
 Check the FAQ for any special compiler issues on particular platforms.
 
 @item
-GNU @code{binutils} 2.15 or later
+GNU @code{binutils} 2.20 or later
 
 You must use GNU @code{binutils} (as and ld) to build @theglibc{}.
 No other assembler or linker has the necessary functionality at the
