@@ -1,6 +1,6 @@
 /* Software floating-point emulation.
    Definitions for IEEE Extended Precision.
-   Copyright (C) 1999,2006,2007 Free Software Foundation, Inc.
+   Copyright (C) 1999,2006,2007,2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek (jj@ultra.linux.cz).
 
@@ -63,7 +63,7 @@ typedef float XFtype __attribute__((mode(XF)));
 union _FP_UNION_E
 {
    XFtype flt;
-   struct 
+   struct _FP_STRUCT_LAYOUT
    {
 #if __BYTE_ORDER == __BIG_ENDIAN
       unsigned long pad1 : _FP_W_TYPE_SIZE;
@@ -262,7 +262,7 @@ union _FP_UNION_E
 union _FP_UNION_E
 {
   XFtype flt;
-  struct {
+  struct _FP_STRUCT_LAYOUT {
 #if __BYTE_ORDER == __BIG_ENDIAN
     _FP_W_TYPE pad  : (_FP_W_TYPE_SIZE - 1 - _FP_EXPBITS_E);
     unsigned sign   : 1;

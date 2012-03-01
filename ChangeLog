@@ -1,3 +1,12 @@
+2012-03-01  Kai Tietz  <ktietz@redhat.com>
+
+	* soft-fp/soft-fp.h (_FP_STRUCT_LAYOUT): New macro.
+	* soft-fp/quad.h (_FP_UNION_Q): Use _FP_STRUCT_LAYOUT on struct
+	containing bit-fields.
+	* soft-fp/extended.h (_FP_UNION_E): Likewise.
+	* soft-fp/single.h (_FP_UNION_S): Likewise.
+	* soft-fp/double.h (_FP_UNION_D): Likewise.
+
 2012-02-29  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #13786]
