@@ -28,15 +28,9 @@ ENTRY (__sqrtf)
 1:
 #ifdef SHARED
 	SETUP_PIC_REG_LEAF(o5, g1)
-#ifdef HAVE_BINUTILS_GOTDATA
 	sethi	%gdop_hix22(_LIB_VERSION), %g1
 	xor	%g1, %gdop_lox10(_LIB_VERSION), %g1
 	ldx	[%o5 + %g1], %g1, %gdop(_LIB_VERSION)
-#else
-	sethi	%hi(_LIB_VERSION), %g1
-	or	%g1, %lo(_LIB_VERSION), %g1
-	ldx	[%o5 + %g1], %g1
-#endif
 #else
 	sethi	%hi(_LIB_VERSION), %g1
 	or	%g1, %lo(_LIB_VERSION), %g1

@@ -216,17 +216,10 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
    The C function `_dl_start' is the real entry point;
    its return value is the user program's entry point.  */
 
-#ifdef HAVE_BINUTILS_GOTDATA
 #define RTLD_GOT_ADDRESS(pic_reg, reg, symbol)	\
 	"sethi	%gdop_hix22(" #symbol "), " #reg "\n\t" \
 	"xor	" #reg ", %gdop_lox10(" #symbol "), " #reg "\n\t" \
 	"ld	[" #pic_reg " + " #reg "], " #reg ", %gdop(" #symbol ")"
-#else
-#define RTLD_GOT_ADDRESS(pic_reg, reg, symbol)	\
-	"sethi	%hi(" #symbol "), " #reg "\n\t" \
-	"or	" #reg ", %lo(" #symbol "), " #reg "\n\t" \
-	"ld	[" #pic_reg " + " #reg "], " #reg
-#endif
 
 #define RTLD_START __asm__ ("\
 	.text\n\

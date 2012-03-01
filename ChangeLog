@@ -1,3 +1,25 @@
+2012-03-01  David S. Miller  <davem@davemloft.net>
+
+	* sysdeps/sparc/crti.S: Remove HAVE_BINUTILS_GOTDATA checks.
+	* sysdeps/sparc/sparc32/dl-machine.h: Likewise.
+	* sysdeps/sparc/sparc32/elf/start.S: Likewise.
+	* sysdeps/sparc/sparc32/fpu/w_sqrt.S: Likewise.
+	* sysdeps/sparc/sparc32/fpu/w_sqrtf.S: Likewise.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/w_sqrt.S: Likewise.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/w_sqrtf.S: Likewise.
+	* sysdeps/sparc/sparc64/dl-machine.h: Likewise.
+	* sysdeps/sparc/sparc64/elf/start.S: Likewise.
+	* sysdeps/sparc/sparc64/fpu/w_sqrt.S: Likewise.
+	* sysdeps/sparc/sparc64/fpu/w_sqrtf.S: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/____longjmp_chk.S: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/sysdep.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/____longjmp_chk.S: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/brk.S: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/sysdep.h: Likewise.
+	* config.h.in (HAVE_BINUTILS_GOTDATA): Delete.
+	* sysdeps/sparc/elf/configure.in: Remove binutils GOTDATA checks.
+	* sysdeps/sparc/elf/configure: Regenerated.
+
 2012-03-01  Joseph Myers  <joseph@codesourcery.com>
 
 	* configure.in (AS, LD): Require binutils 2.20 or later.
