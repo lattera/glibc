@@ -1,5 +1,15 @@
 2012-03-02  Joseph Myers  <joseph@codesourcery.com>
 
+	* manual/filesys.texi (mode_t): Describe constraints on size and
+	signedness, not exact equivalence to a particular type.
+	(ino_t): Likewise.
+	(ino64_t): Likewise.
+	(dev_t): Likewise.
+	(nlink_t): Likewise.
+	(blkcnt_t): Likewise.
+	(blkcnt64_t): Likewise.
+	* manual/llio.texi (off_t): Likewise.
+
 	[BZ #3976]
 	* sysdeps/ieee754/dbl-64/e_exp.c: Include <fenv.h>.
 	(__ieee754_exp): Save and restore rounding mode and use

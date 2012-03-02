@@ -1770,17 +1770,18 @@ Here is a list of them.
 @comment sys/types.h
 @comment POSIX.1
 @deftp {Data Type} mode_t
-This is an integer data type used to represent file modes.  In the
-GNU system, this is equivalent to @code{unsigned int}.
+This is an integer data type used to represent file modes.  In
+@theglibc{}, this is an unsigned type no narrower than @code{unsigned
+int}.
 @end deftp
 
 @cindex inode number
 @comment sys/types.h
 @comment POSIX.1
 @deftp {Data Type} ino_t
-This is an arithmetic data type used to represent file serial numbers.
+This is an unsigned integer type used to represent file serial numbers.
 (In Unix jargon, these are sometimes called @dfn{inode numbers}.)
-In the GNU system, this type is equivalent to @code{unsigned long int}.
+In @theglibc{}, this type is no narrower than @code{unsigned int}.
 
 If the source is compiled with @code{_FILE_OFFSET_BITS == 64} this type
 is transparently replaced by @code{ino64_t}.
@@ -1789,9 +1790,9 @@ is transparently replaced by @code{ino64_t}.
 @comment sys/types.h
 @comment Unix98
 @deftp {Data Type} ino64_t
-This is an arithmetic data type used to represent file serial numbers
-for the use in LFS.  In the GNU system, this type is equivalent to
-@code{unsigned long long int}.
+This is an unsigned integer type used to represent file serial numbers
+for the use in LFS.  In @theglibc{}, this type is no narrower than
+@code{unsigned int}.
 
 When compiling with @code{_FILE_OFFSET_BITS == 64} this type is
 available under the name @code{ino_t}.
@@ -1801,21 +1802,20 @@ available under the name @code{ino_t}.
 @comment POSIX.1
 @deftp {Data Type} dev_t
 This is an arithmetic data type used to represent file device numbers.
-In the GNU system, this is equivalent to @code{int}.
+In @theglibc{}, this is an integer type no narrower than @code{int}.
 @end deftp
 
 @comment sys/types.h
 @comment POSIX.1
 @deftp {Data Type} nlink_t
-This is an arithmetic data type used to represent file link counts.
-In the GNU system, this is equivalent to @code{unsigned short int}.
+This is an integer type used to represent file link counts.
 @end deftp
 
 @comment sys/types.h
 @comment Unix98
 @deftp {Data Type} blkcnt_t
-This is an arithmetic data type used to represent block counts.
-In the GNU system, this is equivalent to @code{unsigned long int}.
+This is a signed integer type used to represent block counts.
+In @theglibc{}, this type is no narrower than @code{int}.
 
 If the source is compiled with @code{_FILE_OFFSET_BITS == 64} this type
 is transparently replaced by @code{blkcnt64_t}.
@@ -1824,9 +1824,8 @@ is transparently replaced by @code{blkcnt64_t}.
 @comment sys/types.h
 @comment Unix98
 @deftp {Data Type} blkcnt64_t
-This is an arithmetic data type used to represent block counts for the
-use in LFS.  In the GNU system, this is equivalent to @code{unsigned
-long long int}.
+This is a signed integer type used to represent block counts for the
+use in LFS.  In @theglibc{}, this type is no narrower than @code{int}.
 
 When compiling with @code{_FILE_OFFSET_BITS == 64} this type is
 available under the name @code{blkcnt_t}.

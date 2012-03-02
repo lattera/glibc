@@ -776,8 +776,8 @@ character.
 @comment sys/types.h
 @comment POSIX.1
 @deftp {Data Type} off_t
-This is an arithmetic data type used to represent file sizes.
-In the GNU system, this is equivalent to @code{fpos_t} or @code{long int}.
+This is a signed integer type used to represent file sizes.  In
+@theglibc{}, this type is no narrower than @code{int}.
 
 If the source is compiled with @code{_FILE_OFFSET_BITS == 64} this type
 is transparently replaced by @code{off64_t}.
