@@ -84,7 +84,10 @@ END {
     printf "#define ERR_MAX %d\n\n", highest;
   }
 
-  for (old in compat) {
+  # same regardless of awk's ordering of the associative array.
+  num_compat_elems = asorti(compat, compat_indices)
+  for (i = 1; i <= num_compat_elems; i++) {
+    old = compat_indices[i]
     new = compat[old];
     n = vcount[old];
     printf "#if SHLIB_COMPAT (libc, %s, %s)\n", old, new;

@@ -1,3 +1,8 @@
+2012-03-01  Chris Demetriou  <cgd@google.com>
+
+	* sysdeps/gnu/errlist-compat.awk: Don't depend on AWK internals to
+	have predictable order.
+
 2012-03-01  David S. Miller  <davem@davemloft.net>
 
 	* sysdeps/unix/sysv/linux/sparc/sparc32/getpagesize.c: Delete.
