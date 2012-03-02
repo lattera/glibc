@@ -1,5 +1,7 @@
 2012-03-01  David S. Miller  <davem@davemloft.net>
 
+	* sysdeps/sparc/fpu/libm-test-ulps: Update.
+
 	* sysdeps/sparc/sparc32/fpu/libm-test-ulps: Move...
 	* sysdeps/sparc/fpu/libm-test-ulps: to here.
 	* sysdeps/sparc/sparc64/fpu/libm-test-ulps: Delete.
