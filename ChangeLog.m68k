@@ -1,3 +1,7 @@
+2012-03-02  Andreas Schwab  <schwab@linux-m68k.org>
+
+	* sysdeps/m68k/m680x0/fpu/libm-test-ulps: Update ULPs.
+
 2012-02-27  Andreas Schwab  <schwab@linux-m68k.org>
 
 	* sysdeps/unix/sysv/linux/m68k/nptl/bits/pthreadtypes.h
