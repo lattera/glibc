@@ -1,3 +1,10 @@
+2012-03-02  Roland McGrath  <roland@hack.frob.com>
+
+	[BZ #13792]
+	* manual/time.texi (Elapsed Time): Move timeval_subtract example
+	function to ...
+	* manual/timeval_subtract.c.texi: ... here, new file.
+
 2012-03-02  David S. Miller  <davem@davemloft.net>
 
 	* sysdeps/sparc/fpu/libm-test-ulps: Update for recently added tests.
