@@ -1,5 +1,10 @@
 2012-03-01  David S. Miller  <davem@davemloft.net>
 
+	* sysdeps/sparc/sparc64/fpu/s_finite.S: New file.
+	* sysdeps/sparc/sparc64/fpu/s_finitef.S: New file.
+	* sysdeps/sparc/sparc64/fpu/s_isinf.S: New file.
+	* sysdeps/sparc/sparc64/fpu/s_isinff.S: New file.
+
 	* sysdeps/sparc/sparc32/fpu/s_signbit.S: New file.
 	* sysdeps/sparc/sparc32/fpu/s_signbitf.S: New file.
 	* sysdeps/sparc/sparc32/fpu/s_signbitl.S: New file.
