@@ -460,6 +460,51 @@ Test "exp10 (3) == 1000":
 ildouble: 8
 ldouble: 8
 
+# exp_downward
+Test "exp_downward (1) == e":
+ildouble: 1
+ldouble: 1
+Test "exp_downward (2) == e^2":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 2
+ldouble: 2
+Test "exp_downward (3) == e^3":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+
+# exp_towardzero
+Test "exp_towardzero (1) == e":
+ildouble: 1
+ldouble: 1
+Test "exp_towardzero (2) == e^2":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 2
+ldouble: 2
+Test "exp_towardzero (3) == e^3":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+
+# exp_upward
+Test "exp_upward (1) == e":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+
 # expm1
 Test "expm1 (1) == M_El - 1.0":
 ildouble: 1
@@ -1183,6 +1228,28 @@ ldouble: 1
 Function: "exp10":
 ildouble: 8
 ldouble: 8
+
+Function: "exp_downward":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 2
+ldouble: 2
+
+Function: "exp_towardzero":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 2
+ldouble: 2
+
+Function: "exp_upward":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
 
 Function: "expm1":
 ildouble: 1

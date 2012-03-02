@@ -512,6 +512,41 @@ ifloat: 2
 ildouble: 8
 ldouble: 8
 
+# exp_downward
+Test "exp_downward (1) == e":
+ildouble: 1
+ldouble: 1
+Test "exp_downward (2) == e^2":
+float: 1
+ifloat: 1
+ildouble: 2
+ldouble: 2
+Test "exp_downward (3) == e^3":
+float: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+
+# exp_towardzero
+Test "exp_towardzero (1) == e":
+ildouble: 1
+ldouble: 1
+Test "exp_towardzero (2) == e^2":
+float: 1
+ifloat: 1
+ildouble: 2
+ldouble: 2
+Test "exp_towardzero (3) == e^3":
+float: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+
+# exp_upward
+Test "exp_upward (1) == e":
+float: 1
+ifloat: 1
+
 # expm1
 Test "expm1 (0.75) == 1.11700001661267466854536981983709561":
 double: 1
@@ -1274,6 +1309,22 @@ idouble: 6
 ifloat: 2
 ildouble: 8
 ldouble: 8
+
+Function: "exp_downward":
+float: 1
+ifloat: 1
+ildouble: 2
+ldouble: 2
+
+Function: "exp_towardzero":
+float: 1
+ifloat: 1
+ildouble: 2
+ldouble: 2
+
+Function: "exp_upward":
+float: 1
+ifloat: 1
 
 Function: "expm1":
 double: 1

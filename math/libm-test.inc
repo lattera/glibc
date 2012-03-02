@@ -2532,6 +2532,114 @@ exp_test (void)
 
 
 static void
+exp_test_tonearest (void)
+{
+  int save_round_mode;
+  errno = 0;
+  FUNC(exp) (0);
+  if (errno == ENOSYS)
+    /* Function not implemented.  */
+    return;
+
+  START (exp_tonearest);
+
+  save_round_mode = fegetround ();
+
+  if (!fesetround (FE_TONEAREST))
+    {
+      TEST_f_f (exp, 1, M_El);
+      TEST_f_f (exp, 2, M_E2l);
+      TEST_f_f (exp, 3, M_E3l);
+    }
+
+  fesetround (save_round_mode);
+
+  END (exp_tonearest);
+}
+
+
+static void
+exp_test_towardzero (void)
+{
+  int save_round_mode;
+  errno = 0;
+  FUNC(exp) (0);
+  if (errno == ENOSYS)
+    /* Function not implemented.  */
+    return;
+
+  START (exp_towardzero);
+
+  save_round_mode = fegetround ();
+
+  if (!fesetround (FE_TOWARDZERO))
+    {
+      TEST_f_f (exp, 1, M_El);
+      TEST_f_f (exp, 2, M_E2l);
+      TEST_f_f (exp, 3, M_E3l);
+    }
+
+  fesetround (save_round_mode);
+
+  END (exp_towardzero);
+}
+
+
+static void
+exp_test_downward (void)
+{
+  int save_round_mode;
+  errno = 0;
+  FUNC(exp) (0);
+  if (errno == ENOSYS)
+    /* Function not implemented.  */
+    return;
+
+  START (exp_downward);
+
+  save_round_mode = fegetround ();
+
+  if (!fesetround (FE_DOWNWARD))
+    {
+      TEST_f_f (exp, 1, M_El);
+      TEST_f_f (exp, 2, M_E2l);
+      TEST_f_f (exp, 3, M_E3l);
+    }
+
+  fesetround (save_round_mode);
+
+  END (exp_downward);
+}
+
+
+static void
+exp_test_upward (void)
+{
+  int save_round_mode;
+  errno = 0;
+  FUNC(exp) (0);
+  if (errno == ENOSYS)
+    /* Function not implemented.  */
+    return;
+
+  START (exp_upward);
+
+  save_round_mode = fegetround ();
+
+  if (!fesetround (FE_UPWARD))
+    {
+      TEST_f_f (exp, 1, M_El);
+      TEST_f_f (exp, 2, M_E2l);
+      TEST_f_f (exp, 3, M_E3l);
+    }
+
+  fesetround (save_round_mode);
+
+  END (exp_upward);
+}
+
+
+static void
 exp10_test (void)
 {
   errno = 0;
@@ -6400,6 +6508,10 @@ main (int argc, char **argv)
 
   /* Exponential and logarithmic functions:  */
   exp_test ();
+  exp_test_tonearest ();
+  exp_test_towardzero ();
+  exp_test_downward ();
+  exp_test_upward ();
   exp10_test ();
   exp2_test ();
   expm1_test ();

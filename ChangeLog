@@ -1,3 +1,17 @@
+2012-03-02  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #3976]
+	* sysdeps/ieee754/dbl-64/e_exp.c: Include <fenv.h>.
+	(__ieee754_exp): Save and restore rounding mode and use
+	round-to-nearest for all computations.
+	* math/libm-test.inc (exp_test_tonearest): New function.
+	(exp_test_towardzero): Likewise.
+	(exp_test_downward): Likewise.
+	(exp_test_upward): Likewise.
+	(main): Call the new functions.
+	* sysdeps/i386/fpu/libm-test-ulps: Update.
+	* sysdeps/x86_64/fpu/libm-test-ulps: Likewise.
+
 2012-03-01  Chris Demetriou  <cgd@google.com>
 
 	* sysdeps/gnu/errlist-compat.awk: Don't depend on AWK internals to
