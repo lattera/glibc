@@ -1,5 +1,15 @@
 2012-03-01  David S. Miller  <davem@davemloft.net>
 
+	* sysdeps/sparc/sparc32/fpu/s_signbit.S: New file.
+	* sysdeps/sparc/sparc32/fpu/s_signbitf.S: New file.
+	* sysdeps/sparc/sparc32/fpu/s_signbitl.S: New file.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/s_isnan.S: New file.
+	* sysdeps/sparc/sparc64/fpu/s_isnan.S: New file.
+	* sysdeps/sparc/sparc64/fpu/s_isnanf.S: New file.
+	* sysdeps/sparc/sparc64/fpu/s_signbit.S: New file.
+	* sysdeps/sparc/sparc64/fpu/s_signbitf.S: New file.
+	* sysdeps/sparc/sparc64/fpu/s_signbitl.S: New file.
+
 	* sysdeps/sparc/fpu/libm-test-ulps: Update.
 
 	* sysdeps/sparc/sparc32/fpu/libm-test-ulps: Move...
