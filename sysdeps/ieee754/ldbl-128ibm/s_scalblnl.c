@@ -52,10 +52,12 @@ long double __scalblnl (long double x, long int n)
 	    k = ((hx>>52)&0x7ff) - 54;
 	}
 	else if (k==0x7ff) return x+x;		/* NaN or Inf */
-	k = k+n;
-	if (n> 50000 || k > 0x7fe)
-	  return huge*__copysignl(huge,x); /* overflow */
 	if (n< -50000) return tiny*__copysignl(tiny,x); /*underflow */
+	if (n> 50000 || k+n > 0x7fe)
+	  return huge*__copysignl(huge,x); /* overflow */
+	/* Now k and n are bounded we know that k = k+n does not
+	   overflow.  */
+	k = k+n;
 	if (k > 0) {				/* normal result */
 	    hx = (hx&0x800fffffffffffffULL)|(k<<52);
 	    if ((lx & 0x7fffffffffffffffULL) == 0) { /* low part +-0 */

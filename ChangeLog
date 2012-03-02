@@ -1,5 +1,24 @@
 2012-03-02  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #10135]
+	* sysdeps/ieee754/dbl-64/s_scalbln.c (__scalbln): First test for
+	small n, then large n, before computing and testing k+n.
+	* sysdeps/ieee754/dbl-64/s_scalbn.c (__scalbn): Likewise.
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_scalbln.c (__scalbln):
+	Likewise.
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_scalbn.c (__scalbn):
+	Likewise.
+	* sysdeps/ieee754/flt-32/s_scalblnf.c (__scalblnf): Likewise.
+	* sysdeps/ieee754/flt-32/s_scalbnf.c (__scalbnf): Likewise.
+	* sysdeps/ieee754/ldbl-128/s_scalblnl.c (__scalblnl): Likewise.
+	* sysdeps/ieee754/ldbl-128/s_scalbnl.c (__scalbnl): Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_scalblnl.c (__scalblnl): Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_scalbnl.c (__scalbnl): Likewise.
+	* sysdeps/ieee754/ldbl-96/s_scalblnl.c (__scalblnl): Likewise.
+	* sysdeps/ieee754/ldbl-96/s_scalbnl.c (__scalbnl): Likewise.
+	* math/libm-test.inc (scalbn_test): Add more tests.
+	(scalbln_test): Likewise.
+
 	* manual/filesys.texi (mode_t): Describe constraints on size and
 	signedness, not exact equivalence to a particular type.
 	(ino_t): Likewise.

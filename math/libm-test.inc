@@ -5790,6 +5790,15 @@ scalbn_test (void)
 
   TEST_fi_f (scalbn, 1, 0L, 1);
 
+  TEST_fi_f (scalbn, 1, INT_MAX, plus_infty);
+  TEST_fi_f (scalbn, 1, INT_MIN, plus_zero);
+  TEST_fi_f (scalbn, max_value, INT_MAX, plus_infty);
+  TEST_fi_f (scalbn, max_value, INT_MIN, plus_zero);
+  TEST_fi_f (scalbn, min_value, INT_MAX, plus_infty);
+  TEST_fi_f (scalbn, min_value, INT_MIN, plus_zero);
+  TEST_fi_f (scalbn, min_value / 4, INT_MAX, plus_infty);
+  TEST_fi_f (scalbn, min_value / 4, INT_MIN, plus_zero);
+
   END (scalbn);
 }
 
@@ -5811,6 +5820,35 @@ scalbln_test (void)
   TEST_fl_f (scalbln, -0.854375L, 5, -27.34L);
 
   TEST_fl_f (scalbln, 1, 0L, 1);
+
+  TEST_fi_f (scalbln, 1, INT_MAX, plus_infty);
+  TEST_fi_f (scalbln, 1, INT_MIN, plus_zero);
+  TEST_fi_f (scalbln, max_value, INT_MAX, plus_infty);
+  TEST_fi_f (scalbln, max_value, INT_MIN, plus_zero);
+  TEST_fi_f (scalbln, min_value, INT_MAX, plus_infty);
+  TEST_fi_f (scalbln, min_value, INT_MIN, plus_zero);
+  TEST_fi_f (scalbln, min_value / 4, INT_MAX, plus_infty);
+  TEST_fi_f (scalbln, min_value / 4, INT_MIN, plus_zero);
+
+  TEST_fi_f (scalbln, 1, LONG_MAX, plus_infty);
+  TEST_fi_f (scalbln, 1, LONG_MIN, plus_zero);
+  TEST_fi_f (scalbln, max_value, LONG_MAX, plus_infty);
+  TEST_fi_f (scalbln, max_value, LONG_MIN, plus_zero);
+  TEST_fi_f (scalbln, min_value, LONG_MAX, plus_infty);
+  TEST_fi_f (scalbln, min_value, LONG_MIN, plus_zero);
+  TEST_fi_f (scalbln, min_value / 4, LONG_MAX, plus_infty);
+  TEST_fi_f (scalbln, min_value / 4, LONG_MIN, plus_zero);
+
+#if LONG_MAX >= 0x100000000
+  TEST_fi_f (scalbln, 1, 0x88000000L, plus_infty);
+  TEST_fi_f (scalbln, 1, -0x88000000L, plus_zero);
+  TEST_fi_f (scalbln, max_value, 0x88000000L, plus_infty);
+  TEST_fi_f (scalbln, max_value, -0x88000000L, plus_zero);
+  TEST_fi_f (scalbln, min_value, 0x88000000L, plus_infty);
+  TEST_fi_f (scalbln, min_value, -0x88000000L, plus_zero);
+  TEST_fi_f (scalbln, min_value / 4, 0x88000000L, plus_infty);
+  TEST_fi_f (scalbln, min_value / 4, -0x88000000L, plus_zero);
+#endif
 
   END (scalbn);
 }
