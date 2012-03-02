@@ -1,5 +1,31 @@
 2012-03-02  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #3976]
+	* sysdeps/ieee754/dbl-64/s_sin.c: Include <fenv.h>
+	(__sin): Save and restore rounding mode and use round-to-nearest
+	for all computations.
+	(__cos): Save and restore rounding mode and use round-to-nearest
+	for all computations.
+	* sysdeps/ieee754/dbl-64/s_tan.c: Include "math_private.h" and
+	<fenv.h>.
+	(tan): Save and restore rounding mode and use round-to-nearest for
+	all computations.
+	* math/libm-test.inc (cos_test_tonearest): New function.
+	(cos_test_towardzero): Likewise.
+	(cos_test_downward): Likewise.
+	(cos_test_upward): Likewise.
+	(sin_test_tonearest): Likewise.
+	(sin_test_towardzero): Likewise.
+	(sin_test_downward): Likewise.
+	(sin_test_upward): Likewise.
+	(tan_test_tonearest): Likewise.
+	(tan_test_towardzero): Likewise.
+	(tan_test_downward): Likewise.
+	(tan_test_upward): Likewise.
+	(main): Call the new functions.
+	* sysdeps/i386/fpu/libm-test-ulps: Update.
+	* sysdeps/x86_64/fpu/libm-test-ulps: Likewise.
+
 	[BZ #10135]
 	* sysdeps/ieee754/dbl-64/s_scalbln.c (__scalbln): First test for
 	small n, then large n, before computing and testing k+n.
