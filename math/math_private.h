@@ -211,10 +211,8 @@ extern int    __kernel_rem_pio2 (double*,double*,int,int,int, const int32_t*);
 /* internal functions.  */
 extern double __copysign (double x, double __y);
 
-#if __GNUC_PREREQ (4, 0)
 extern inline double __copysign (double x, double y)
 { return __builtin_copysign (x, y); }
-#endif
 
 /* ieee style elementary float functions */
 extern float __ieee754_sqrtf (float);
@@ -258,10 +256,8 @@ extern int   __kernel_rem_pio2f (float*,float*,int,int,int, const int32_t*);
 /* internal functions.  */
 extern float __copysignf (float x, float __y);
 
-#if __GNUC_PREREQ (4, 0)
 extern inline float __copysignf (float x, float y)
 { return __builtin_copysignf (x, y); }
-#endif
 
 /* ieee style elementary long double functions */
 extern long double __ieee754_sqrtl (long double);
@@ -326,10 +322,8 @@ extern void __sincosl (long double, long double *, long double *);
 extern long double __logbl (long double x);
 extern long double __significandl (long double x);
 
-#if __GNUC_PREREQ (4, 0)
 extern inline long double __copysignl (long double x, long double y)
 { return __builtin_copysignl (x, y); }
-#endif
 
 #endif
 

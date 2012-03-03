@@ -1,4 +1,4 @@
-/* Copyright (C) 2002-2004, 2006, 2007, 2009 Free Software Foundation, Inc.
+/* Copyright (C) 2002-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -55,41 +55,10 @@ typedef uintmax_t uatomic_max_t;
 #endif
 
 
-#if __GNUC_PREREQ (4, 1)
-# define atomic_compare_and_exchange_val_acq(mem, newval, oldval) \
+#define atomic_compare_and_exchange_val_acq(mem, newval, oldval) \
   __sync_val_compare_and_swap (mem, oldval, newval)
-#  define atomic_compare_and_exchange_bool_acq(mem, newval, oldval) \
+#define atomic_compare_and_exchange_bool_acq(mem, newval, oldval) \
   (! __sync_bool_compare_and_swap (mem, oldval, newval))
-#else
-# define __arch_compare_and_exchange_val_8_acq(mem, newval, oldval) \
-  ({ __typeof (*mem) ret;						      \
-     __asm __volatile (LOCK_PREFIX "cmpxchgb %b2, %1"			      \
-		       : "=a" (ret), "=m" (*mem)			      \
-		       : "q" (newval), "m" (*mem), "0" (oldval));	      \
-     ret; })
-
-# define __arch_compare_and_exchange_val_16_acq(mem, newval, oldval) \
-  ({ __typeof (*mem) ret;						      \
-     __asm __volatile (LOCK_PREFIX "cmpxchgw %w2, %1"			      \
-		       : "=a" (ret), "=m" (*mem)			      \
-		       : "r" (newval), "m" (*mem), "0" (oldval));	      \
-     ret; })
-
-# define __arch_compare_and_exchange_val_32_acq(mem, newval, oldval) \
-  ({ __typeof (*mem) ret;						      \
-     __asm __volatile (LOCK_PREFIX "cmpxchgl %2, %1"			      \
-		       : "=a" (ret), "=m" (*mem)			      \
-		       : "r" (newval), "m" (*mem), "0" (oldval));	      \
-     ret; })
-
-# define __arch_compare_and_exchange_val_64_acq(mem, newval, oldval) \
-  ({ __typeof (*mem) ret;						      \
-     __asm __volatile (LOCK_PREFIX "cmpxchgq %q2, %1"			      \
-		       : "=a" (ret), "=m" (*mem)			      \
-		       : "r" ((long int) (newval)), "m" (*mem),		      \
-			 "0" ((long int) (oldval)));			      \
-     ret; })
-#endif
 
 
 #define __arch_c_compare_and_exchange_val_8_acq(mem, newval, oldval) \
@@ -184,13 +153,8 @@ typedef uintmax_t uatomic_max_t;
 			   "i" (offsetof (tcbhead_t, multiple_threads)));     \
      result; })
 
-#if __GNUC_PREREQ (4, 1)
-# define atomic_exchange_and_add(mem, value) \
+#define atomic_exchange_and_add(mem, value) \
   __sync_fetch_and_add (mem, value)
-#else
-# define atomic_exchange_and_add(mem, value) \
-  __arch_exchange_and_add_body (LOCK_PREFIX, mem, value)
-#endif
 
 #define __arch_exchange_and_add_cprefix \
   "cmpl $0, %%fs:%P4\n\tje 0f\n\tlock\n0:\t"

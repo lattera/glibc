@@ -1,3 +1,11 @@
+2012-03-03  Marek Polacek  <polacek@redhat.com>
+
+	* include/sys/cdefs.h: Remove __GNUC_PREREQ macro.
+	* math/math_private.h: Likewise.
+	* stdlib/tst-strtod.c: Likewise.
+	* sysdeps/i386/i486/bits/atomic.h: Likewise.
+	* sysdeps/x86_64/bits/atomic.h: Likewise.
+
 2012-03-02  David S. Miller  <davem@davemloft.net>
 
 	* sysdeps/sparc/sparc32/sparcv9/fpu/s_llrint.S: New file.
