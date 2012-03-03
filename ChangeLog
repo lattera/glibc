@@ -1,3 +1,14 @@
+2012-03-02  David S. Miller  <davem@davemloft.net>
+
+	* sysdeps/sparc/sparc32/sparcv9/fpu/s_llrint.S: New file.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/s_llrintf.S: New file.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/s_lrint.S: New file.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/s_lrintf.S: New file.
+	* sysdeps/sparc/sparc64/fpu/s_llrint.S: New file.
+	* sysdeps/sparc/sparc64/fpu/s_llrintf.S: New file.
+	* sysdeps/sparc/sparc64/fpu/s_lrint.S: New file.
+	* sysdeps/sparc/sparc64/fpu/s_lrintf.S: New file.
+
 2012-03-02  Roland McGrath  <roland@hack.frob.com>
 
 	[BZ #13792]
