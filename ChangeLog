@@ -1,6 +1,53 @@
 2012-03-02  Roland McGrath  <roland@hack.frob.com>
 
 	[BZ #13792]
+	* manual/examples/README: New file, says the example source files
+	can be used under GPL>=2.
+	* manual/Makefile (%.c.texi): Eat the leading part of the file until a
+	line containing just "*/".
+	* manual/examples/add.c: Add copyright header (GPL>=2).
+	* manual/examples/argp-ex1.c: Likewise.
+	* manual/examples/argp-ex2.c: Likewise.
+	* manual/examples/argp-ex3.c: Likewise.
+	* manual/examples/argp-ex4.c: Likewise.
+	* manual/examples/atexit.c: Likewise.
+	* manual/examples/db.c: Likewise.
+	* manual/examples/dir.c: Likewise.
+	* manual/examples/dir2.c: Likewise.
+	* manual/examples/execinfo.c: Likewise.
+	* manual/examples/filecli.c: Likewise.
+	* manual/examples/filesrv.c: Likewise.
+	* manual/examples/fmtmsgexpl.c: Likewise.
+	* manual/examples/genpass.c: Likewise.
+	* manual/examples/inetcli.c: Likewise.
+	* manual/examples/inetsrv.c: Likewise.
+	* manual/examples/isockad.c: Likewise.
+	* manual/examples/longopt.c: Likewise.
+	* manual/examples/memopen.c: Likewise.
+	* manual/examples/memstrm.c: Likewise.
+	* manual/examples/mkfsock.c: Likewise.
+	* manual/examples/mkisock.c: Likewise.
+	* manual/examples/mygetpass.c: Likewise.
+	* manual/examples/pipe.c: Likewise.
+	* manual/examples/popen.c: Likewise.
+	* manual/examples/rprintf.c: Likewise.
+	* manual/examples/search.c: Likewise.
+	* manual/examples/select.c: Likewise.
+	* manual/examples/setjmp.c: Likewise.
+	* manual/examples/sigh1.c: Likewise.
+	* manual/examples/sigusr.c: Likewise.
+	* manual/examples/stpcpy.c: Likewise.
+	* manual/examples/strdupa.c: Likewise.
+	* manual/examples/strftim.c: Likewise.
+	* manual/examples/strncat.c: Likewise.
+	* manual/examples/subopt.c: Likewise.
+	* manual/examples/swapcontext.c: Likewise.
+	* manual/examples/termios.c: Likewise.
+	* manual/examples/testopt.c: Likewise.
+	* manual/examples/testpass.c: Likewise.
+	* manual/examples/timeval_subtract.c: Likewise.
+
+	[BZ #13792]
 	* manual/time.texi (Elapsed Time): Move timeval_subtract example
 	function to ...
 	* manual/timeval_subtract.c.texi: ... here, new file.
