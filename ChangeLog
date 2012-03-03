@@ -1,3 +1,7 @@
+2012-03-03  Andreas Schwab  <schwab@linux-m68k.org>
+
+	* sysdeps/powerpc/fpu/libm-test-ulps: Update.
+
 2012-03-03  Marek Polacek  <polacek@redhat.com>
 
 	* include/sys/cdefs.h: Remove __GNUC_PREREQ macro.
