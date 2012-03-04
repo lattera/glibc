@@ -1,5 +1,10 @@
 2012-03-04  Richard Henderson  <rth@twiddle.net>
 
+	* sysdeps/unix/sysv/linux/alpha/ioperm.c (inline_sethae): Mark
+	as always_inline.
+
+2012-03-04  Richard Henderson  <rth@twiddle.net>
+
 	* sysdeps/unix/sysv/linux/alpha/bits/socket.h (recvmmsg): Only
 	declare if __USE_GNU.
 	(sendmmsg): Add declaration.

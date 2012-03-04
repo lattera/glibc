@@ -220,7 +220,7 @@ port_to_cpu_addr (unsigned long int port, ioswizzle_t ioswiz, int size)
     return io.base + (port << 7) + ((size - 1) << 5);
 }
 
-static inline void
+static inline __attribute__((always_inline)) void
 inline_sethae (unsigned long int addr, ioswizzle_t ioswiz)
 {
   if (ioswiz == IOSWIZZLE_SPARSE)
