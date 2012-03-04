@@ -1,3 +1,12 @@
+2012-03-04  Richard Henderson  <rth@twiddle.net>
+
+	* sysdeps/unix/sysv/linux/alpha/bits/siginfo.h: Don't name the
+	siginfo_t struct.  Add forward declaration of pthread_attr_t;
+	use it in sigevent.
+	* sysdeps/unix/sysv/linux/alpha/nptl/bits/pthreadtypes.h
+	(pthread_attr_t): Add union tag to pthread_attr_t; only define
+	typedef if not already defined.
+
 2012-02-21  Richard Henderson  <rth@twiddle.net>
 
 	* sysdeps/unix/sysv/linux/alpha/bits/epoll.h: New file.

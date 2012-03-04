@@ -1,5 +1,5 @@
 /* siginfo_t, sigevent and constants.  Linux/Alpha version.
-   Copyright (C) 1997-2002, 2003 Free Software Foundation, Inc.
+   Copyright (C) 1997-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -42,7 +42,7 @@ typedef union sigval
 # define __SI_MAX_SIZE     128
 # define __SI_PAD_SIZE     ((__SI_MAX_SIZE / sizeof (int)) - 4)
 
-typedef struct siginfo
+typedef struct
   {
     int si_signo;		/* Signal number.  */
     int si_errno;		/* If non-zero, an errno value associated with
@@ -260,6 +260,12 @@ enum
 # define __SIGEV_MAX_SIZE	64
 # define __SIGEV_PAD_SIZE	((__SIGEV_MAX_SIZE / sizeof (int)) - 4)
 
+/* Forward declaration.  */
+#ifndef __have_pthread_attr_t
+typedef union pthread_attr_t pthread_attr_t;
+# define __have_pthread_attr_t  1
+#endif
+
 typedef struct sigevent
   {
     sigval_t sigev_value;
@@ -277,7 +283,7 @@ typedef struct sigevent
 	struct
 	  {
 	    void (*_function) (sigval_t);	/* Function to start.  */
-	    void *_attribute;			/* Really pthread_attr_t.  */
+	    pthread_attr_t *_attribute;		/* Thread attributes.  */
 	  } _sigev_thread;
       } _sigev_un;
   } sigevent_t;
