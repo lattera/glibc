@@ -1,3 +1,9 @@
+2012-03-05  Andreas Schwab  <schwab@linux-m68k.org>
+
+	* sysdeps/ieee754/ldbl-128ibm/e_coshl.c: Drop exp(-x) term
+	only for |x| >= 40.
+	* sysdeps/ieee754/ldbl-128ibm/e_sinhl.c: Likewise.
+
 2012-03-05  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/unix/sysv/linux/x86_64/gettimeofday.c (gettimeofday_ifunc):
