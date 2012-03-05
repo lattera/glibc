@@ -933,6 +933,42 @@ ifloat: 1
 ildouble: 1
 ldouble: 1
 
+# pow_downward
+Test "pow_downward (1.0625, 1.125) == 1.070582293028761362162622578677070098674":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "pow_downward (1.5, 1.03125) == 1.519127098714743184071644334163037684948":
+float: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+
+# pow_towardzero
+Test "pow_towardzero (1.0625, 1.125) == 1.070582293028761362162622578677070098674":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "pow_towardzero (1.5, 1.03125) == 1.519127098714743184071644334163037684948":
+float: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+
+# pow_upward
+Test "pow_upward (1.0625, 1.125) == 1.070582293028761362162622578677070098674":
+float: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "pow_upward (1.5, 1.03125) == 1.519127098714743184071644334163037684948":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+
 # sin_downward
 Test "sin_downward (1) == 0.8414709848078965066525023216302989996226":
 ildouble: 1
@@ -1834,6 +1870,30 @@ ifloat: 1
 
 Function: "log10":
 float: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+
+Function: "pow_downward":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+
+Function: "pow_towardzero":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+
+Function: "pow_upward":
+double: 1
+float: 1
+idouble: 1
 ifloat: 1
 ildouble: 1
 ldouble: 1

@@ -5318,6 +5318,111 @@ pow_test (void)
   END (pow);
 }
 
+
+static void
+pow_test_tonearest (void)
+{
+  int save_round_mode;
+  errno = 0;
+  FUNC(pow) (0, 0);
+  if (errno == ENOSYS)
+    /* Function not implemented.  */
+    return;
+
+  START (pow_tonearest);
+
+  save_round_mode = fegetround ();
+
+  if (!fesetround (FE_TONEAREST))
+    {
+      TEST_ff_f (pow, 1.0625L, 1.125L, 1.070582293028761362162622578677070098674L);
+      TEST_ff_f (pow, 1.5L, 1.03125L, 1.519127098714743184071644334163037684948L);
+    }
+
+  fesetround (save_round_mode);
+
+  END (pow_tonearest);
+}
+
+
+static void
+pow_test_towardzero (void)
+{
+  int save_round_mode;
+  errno = 0;
+  FUNC(pow) (0, 0);
+  if (errno == ENOSYS)
+    /* Function not implemented.  */
+    return;
+
+  START (pow_towardzero);
+
+  save_round_mode = fegetround ();
+
+  if (!fesetround (FE_TOWARDZERO))
+    {
+      TEST_ff_f (pow, 1.0625L, 1.125L, 1.070582293028761362162622578677070098674L);
+      TEST_ff_f (pow, 1.5L, 1.03125L, 1.519127098714743184071644334163037684948L);
+    }
+
+  fesetround (save_round_mode);
+
+  END (pow_towardzero);
+}
+
+
+static void
+pow_test_downward (void)
+{
+  int save_round_mode;
+  errno = 0;
+  FUNC(pow) (0, 0);
+  if (errno == ENOSYS)
+    /* Function not implemented.  */
+    return;
+
+  START (pow_downward);
+
+  save_round_mode = fegetround ();
+
+  if (!fesetround (FE_DOWNWARD))
+    {
+      TEST_ff_f (pow, 1.0625L, 1.125L, 1.070582293028761362162622578677070098674L);
+      TEST_ff_f (pow, 1.5L, 1.03125L, 1.519127098714743184071644334163037684948L);
+    }
+
+  fesetround (save_round_mode);
+
+  END (pow_downward);
+}
+
+
+static void
+pow_test_upward (void)
+{
+  int save_round_mode;
+  errno = 0;
+  FUNC(pow) (0, 0);
+  if (errno == ENOSYS)
+    /* Function not implemented.  */
+    return;
+
+  START (pow_upward);
+
+  save_round_mode = fegetround ();
+
+  if (!fesetround (FE_UPWARD))
+    {
+      TEST_ff_f (pow, 1.0625L, 1.125L, 1.070582293028761362162622578677070098674L);
+      TEST_ff_f (pow, 1.5L, 1.03125L, 1.519127098714743184071644334163037684948L);
+    }
+
+  fesetround (save_round_mode);
+
+  END (pow_upward);
+}
+
+
 static void
 remainder_test (void)
 {
@@ -7218,6 +7323,10 @@ main (int argc, char **argv)
   fabs_test ();
   hypot_test ();
   pow_test ();
+  pow_test_tonearest ();
+  pow_test_towardzero ();
+  pow_test_downward ();
+  pow_test_upward ();
   sqrt_test ();
 
   /* Error and gamma functions:  */

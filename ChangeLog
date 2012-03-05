@@ -1,4 +1,16 @@
-2012-03-02  Joseph Myers  <joseph@codesourcery.com>
+2012-03-05  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #3976]
+	* sysdeps/ieee754/dbl-64/e_pow.c: Include <fenv.h>.
+	(__ieee754_pow): Save and restore rounding mode and use
+	round-to-nearest for main computations.
+	* math/libm-test.inc (pow_test_tonearest): New function.
+	(pow_test_towardzero): Likewise.
+	(pow_test_downward): Likewise.
+	(pow_test_upward): Likewise.
+	(main): Call the new functions.
+	* sysdeps/i386/fpu/libm-test-ulps: Update.
+	* sysdeps/x86_64/fpu/libm-test-ulps: Likewise.
 
 	[BZ #3976]
 	* math/libm-test.inc (cosh_test_tonearest): New function.
