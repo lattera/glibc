@@ -1,3 +1,18 @@
+2012-03-02  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #3976]
+	* math/libm-test.inc (cosh_test_tonearest): New function.
+	(cosh_test_towardzero): Likewise.
+	(cosh_test_downward): Likewise.
+	(cosh_test_upward): Likewise.
+	(sinh_test_tonearest): Likewise.
+	(sinh_test_towardzero): Likewise.
+	(sinh_test_downward): Likewise.
+	(sinh_test_upward): Likewise.
+	(main): Call the new functions.
+	* sysdeps/i386/fpu/libm-test-ulps: Update.
+	* sysdeps/x86_64/fpu/libm-test-ulps: Likewise.
+
 2012-03-05  Tom de Vries  <tom@codesourcery.com>
 
 	* sysdeps/generic/dl-osinfo.h (_dl_setup_stack_chk_guard): Ensure

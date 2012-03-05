@@ -2178,6 +2178,114 @@ cosh_test (void)
 
 
 static void
+cosh_test_tonearest (void)
+{
+  int save_round_mode;
+  errno = 0;
+  FUNC(cosh) (0);
+  if (errno == ENOSYS)
+    /* Function not implemented.  */
+    return;
+
+  START (cosh_tonearest);
+
+  save_round_mode = fegetround ();
+
+  if (!fesetround (FE_TONEAREST))
+    {
+      TEST_f_f (cosh, 22, 1792456423.065795780980053377632656584997L);
+      TEST_f_f (cosh, 23, 4872401723.124451300068625740569997090344L);
+      TEST_f_f (cosh, 24, 13244561064.92173614708845674912733665919L);
+    }
+
+  fesetround (save_round_mode);
+
+  END (cosh_tonearest);
+}
+
+
+static void
+cosh_test_towardzero (void)
+{
+  int save_round_mode;
+  errno = 0;
+  FUNC(cosh) (0);
+  if (errno == ENOSYS)
+    /* Function not implemented.  */
+    return;
+
+  START (cosh_towardzero);
+
+  save_round_mode = fegetround ();
+
+  if (!fesetround (FE_TOWARDZERO))
+    {
+      TEST_f_f (cosh, 22, 1792456423.065795780980053377632656584997L);
+      TEST_f_f (cosh, 23, 4872401723.124451300068625740569997090344L);
+      TEST_f_f (cosh, 24, 13244561064.92173614708845674912733665919L);
+    }
+
+  fesetround (save_round_mode);
+
+  END (cosh_towardzero);
+}
+
+
+static void
+cosh_test_downward (void)
+{
+  int save_round_mode;
+  errno = 0;
+  FUNC(cosh) (0);
+  if (errno == ENOSYS)
+    /* Function not implemented.  */
+    return;
+
+  START (cosh_downward);
+
+  save_round_mode = fegetround ();
+
+  if (!fesetround (FE_DOWNWARD))
+    {
+      TEST_f_f (cosh, 22, 1792456423.065795780980053377632656584997L);
+      TEST_f_f (cosh, 23, 4872401723.124451300068625740569997090344L);
+      TEST_f_f (cosh, 24, 13244561064.92173614708845674912733665919L);
+    }
+
+  fesetround (save_round_mode);
+
+  END (cosh_downward);
+}
+
+
+static void
+cosh_test_upward (void)
+{
+  int save_round_mode;
+  errno = 0;
+  FUNC(cosh) (0);
+  if (errno == ENOSYS)
+    /* Function not implemented.  */
+    return;
+
+  START (cosh_upward);
+
+  save_round_mode = fegetround ();
+
+  if (!fesetround (FE_UPWARD))
+    {
+      TEST_f_f (cosh, 22, 1792456423.065795780980053377632656584997L);
+      TEST_f_f (cosh, 23, 4872401723.124451300068625740569997090344L);
+      TEST_f_f (cosh, 24, 13244561064.92173614708845674912733665919L);
+    }
+
+  fesetround (save_round_mode);
+
+  END (cosh_upward);
+}
+
+
+static void
 cpow_test (void)
 {
   errno = 0;
@@ -6243,6 +6351,115 @@ sinh_test (void)
   END (sinh);
 }
 
+
+static void
+sinh_test_tonearest (void)
+{
+  int save_round_mode;
+  errno = 0;
+  FUNC(sinh) (0);
+  if (errno == ENOSYS)
+    /* Function not implemented.  */
+    return;
+
+  START (sinh_tonearest);
+
+  save_round_mode = fegetround ();
+
+  if (!fesetround (FE_TONEAREST))
+    {
+      TEST_f_f (sinh, 22, 1792456423.065795780701106568345764104225L);
+      TEST_f_f (sinh, 23, 4872401723.124451299966006944252978187305L);
+      TEST_f_f (sinh, 24, 13244561064.92173614705070540368454568168L);
+    }
+
+  fesetround (save_round_mode);
+
+  END (sinh_tonearest);
+}
+
+
+static void
+sinh_test_towardzero (void)
+{
+  int save_round_mode;
+  errno = 0;
+  FUNC(sinh) (0);
+  if (errno == ENOSYS)
+    /* Function not implemented.  */
+    return;
+
+  START (sinh_towardzero);
+
+  save_round_mode = fegetround ();
+
+  if (!fesetround (FE_TOWARDZERO))
+    {
+      TEST_f_f (sinh, 22, 1792456423.065795780701106568345764104225L);
+      TEST_f_f (sinh, 23, 4872401723.124451299966006944252978187305L);
+      TEST_f_f (sinh, 24, 13244561064.92173614705070540368454568168L);
+    }
+
+  fesetround (save_round_mode);
+
+  END (sinh_towardzero);
+}
+
+
+static void
+sinh_test_downward (void)
+{
+  int save_round_mode;
+  errno = 0;
+  FUNC(sinh) (0);
+  if (errno == ENOSYS)
+    /* Function not implemented.  */
+    return;
+
+  START (sinh_downward);
+
+  save_round_mode = fegetround ();
+
+  if (!fesetround (FE_DOWNWARD))
+    {
+      TEST_f_f (sinh, 22, 1792456423.065795780701106568345764104225L);
+      TEST_f_f (sinh, 23, 4872401723.124451299966006944252978187305L);
+      TEST_f_f (sinh, 24, 13244561064.92173614705070540368454568168L);
+    }
+
+  fesetround (save_round_mode);
+
+  END (sinh_downward);
+}
+
+
+static void
+sinh_test_upward (void)
+{
+  int save_round_mode;
+  errno = 0;
+  FUNC(sinh) (0);
+  if (errno == ENOSYS)
+    /* Function not implemented.  */
+    return;
+
+  START (sinh_upward);
+
+  save_round_mode = fegetround ();
+
+  if (!fesetround (FE_UPWARD))
+    {
+      TEST_f_f (sinh, 22, 1792456423.065795780701106568345764104225L);
+      TEST_f_f (sinh, 23, 4872401723.124451299966006944252978187305L);
+      TEST_f_f (sinh, 24, 13244561064.92173614705070540368454568168L);
+    }
+
+  fesetround (save_round_mode);
+
+  END (sinh_upward);
+}
+
+
 static void
 sqrt_test (void)
 {
@@ -6962,7 +7179,15 @@ main (int argc, char **argv)
   asinh_test ();
   atanh_test ();
   cosh_test ();
+  cosh_test_tonearest ();
+  cosh_test_towardzero ();
+  cosh_test_downward ();
+  cosh_test_upward ();
   sinh_test ();
+  sinh_test_tonearest ();
+  sinh_test_towardzero ();
+  sinh_test_downward ();
+  sinh_test_upward ();
   tanh_test ();
 
   /* Exponential and logarithmic functions:  */

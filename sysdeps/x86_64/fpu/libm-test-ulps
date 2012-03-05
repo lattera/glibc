@@ -428,6 +428,50 @@ Test "cos_upward (9) == -0.9111302618846769883682947111811653112463":
 float: 2
 ifloat: 2
 
+# cosh_downward
+Test "cosh_downward (22) == 1792456423.065795780980053377632656584997":
+float: 1
+ifloat: 1
+ildouble: 2
+ldouble: 2
+Test "cosh_downward (23) == 4872401723.124451300068625740569997090344":
+float: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "cosh_downward (24) == 13244561064.92173614708845674912733665919":
+float: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+
+# cosh_tonearest
+Test "cosh_tonearest (22) == 1792456423.065795780980053377632656584997":
+ildouble: 1
+ldouble: 1
+
+# cosh_towardzero
+Test "cosh_towardzero (22) == 1792456423.065795780980053377632656584997":
+float: 1
+ifloat: 1
+ildouble: 2
+ldouble: 2
+Test "cosh_towardzero (23) == 4872401723.124451300068625740569997090344":
+float: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "cosh_towardzero (24) == 13244561064.92173614708845674912733665919":
+float: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+
+# cosh_upward
+Test "cosh_upward (23) == 4872401723.124451300068625740569997090344":
+ildouble: 1
+ldouble: 1
+
 # cpow
 Test "Real part of: cpow (0.75 + 1.25 i, 0.0 + 1.0 i) == 0.331825439177608832276067945276730566 + 0.131338600281188544930936345230903032 i":
 float: 1
@@ -1065,6 +1109,58 @@ Test "sinh (0x8p-32) == 1.86264514923095703232705808926175479e-9":
 ildouble: 1
 ldouble: 1
 
+# sinh_downward
+Test "sinh_downward (22) == 1792456423.065795780701106568345764104225":
+float: 1
+ifloat: 1
+ildouble: 4
+ldouble: 4
+Test "sinh_downward (23) == 4872401723.124451299966006944252978187305":
+float: 1
+ifloat: 1
+Test "sinh_downward (24) == 13244561064.92173614705070540368454568168":
+float: 1
+ifloat: 1
+ildouble: 5
+ldouble: 5
+
+# sinh_tonearest
+Test "sinh_tonearest (22) == 1792456423.065795780701106568345764104225":
+ildouble: 3
+ldouble: 3
+Test "sinh_tonearest (23) == 4872401723.124451299966006944252978187305":
+ildouble: 1
+ldouble: 1
+Test "sinh_tonearest (24) == 13244561064.92173614705070540368454568168":
+ildouble: 6
+ldouble: 6
+
+# sinh_towardzero
+Test "sinh_towardzero (22) == 1792456423.065795780701106568345764104225":
+float: 1
+ifloat: 1
+ildouble: 4
+ldouble: 4
+Test "sinh_towardzero (23) == 4872401723.124451299966006944252978187305":
+float: 1
+ifloat: 1
+Test "sinh_towardzero (24) == 13244561064.92173614705070540368454568168":
+float: 1
+ifloat: 1
+ildouble: 5
+ldouble: 5
+
+# sinh_upward
+Test "sinh_upward (22) == 1792456423.065795780701106568345764104225":
+ildouble: 16
+ldouble: 16
+Test "sinh_upward (23) == 4872401723.124451299966006944252978187305":
+ildouble: 27
+ldouble: 27
+Test "sinh_upward (24) == 13244561064.92173614705070540368454568168":
+ildouble: 7
+ldouble: 7
+
 # tan
 Test "tan (pi/4) == 1":
 double: 1
@@ -1546,6 +1642,26 @@ ifloat: 2
 ildouble: 1
 ldouble: 1
 
+Function: "cosh_downward":
+float: 1
+ifloat: 1
+ildouble: 2
+ldouble: 2
+
+Function: "cosh_tonearest":
+ildouble: 1
+ldouble: 1
+
+Function: "cosh_towardzero":
+float: 1
+ifloat: 1
+ildouble: 2
+ldouble: 2
+
+Function: "cosh_upward":
+ildouble: 1
+ldouble: 1
+
 Function: Real part of "cpow":
 double: 2
 float: 5
@@ -1753,6 +1869,26 @@ ldouble: 1
 Function: "sinh":
 ildouble: 1
 ldouble: 1
+
+Function: "sinh_downward":
+float: 1
+ifloat: 1
+ildouble: 5
+ldouble: 5
+
+Function: "sinh_tonearest":
+ildouble: 6
+ldouble: 6
+
+Function: "sinh_towardzero":
+float: 1
+ifloat: 1
+ildouble: 5
+ldouble: 5
+
+Function: "sinh_upward":
+ildouble: 27
+ldouble: 27
 
 Function: "tan":
 double: 1
