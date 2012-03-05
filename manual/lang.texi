@@ -629,26 +629,12 @@ This is an unsigned integer type used to represent the sizes of objects.
 The result of the @code{sizeof} operator is of this type, and functions
 such as @code{malloc} (@pxref{Unconstrained Allocation}) and
 @code{memcpy} (@pxref{Copying and Concatenation}) accept arguments of
-this type to specify object sizes.
+this type to specify object sizes.  On systems using @theglibc{}, this
+will be @w{@code{unsigned int}} or @w{@code{unsigned long int}}.
 
 @strong{Usage Note:} @code{size_t} is the preferred way to declare any
 arguments or variables that hold the size of an object.
 @end deftp
-
-In the GNU system @code{size_t} is equivalent to either
-@w{@code{unsigned int}} or @w{@code{unsigned long int}}.  These types
-have identical properties on the GNU system and, for most purposes, you
-can use them interchangeably.  However, they are distinct as data types,
-which makes a difference in certain contexts.
-
-For example, when you specify the type of a function argument in a
-function prototype, it makes a difference which one you use.  If the
-system header files declare @code{malloc} with an argument of type
-@code{size_t} and you declare @code{malloc} with an argument of type
-@code{unsigned int}, you will get a compilation error if @code{size_t}
-happens to be @code{unsigned long int} on your system.  To avoid any
-possibility of error, when a function argument or value is supposed to
-have type @code{size_t}, never declare its type in any other way.
 
 @strong{Compatibility Note:} Implementations of C before the advent of
 @w{ISO C} generally used @code{unsigned int} for representing object sizes

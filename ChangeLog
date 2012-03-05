@@ -1,3 +1,9 @@
+2012-03-05  Joseph Myers  <joseph@codesourcery.com>
+
+	* manual/lang.texi (size_t): Note types to which size_t may be
+	equivalent with the GNU C Library, but do not describe when
+	differences between them are significant.
+
 2012-03-05  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/i386/fpu/libm-test-ulps: Update.
