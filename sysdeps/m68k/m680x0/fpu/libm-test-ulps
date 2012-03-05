@@ -388,6 +388,52 @@ float: 1
 idouble: 1
 ifloat: 1
 
+# cosh_downward
+Test "cosh_downward (22) == 1792456423.065795780980053377632656584997":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+Test "cosh_downward (23) == 4872401723.124451300068625740569997090344":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "cosh_downward (24) == 13244561064.92173614708845674912733665919":
+float: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+
+# cosh_towardzero
+Test "cosh_towardzero (22) == 1792456423.065795780980053377632656584997":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+Test "cosh_towardzero (23) == 4872401723.124451300068625740569997090344":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "cosh_towardzero (24) == 13244561064.92173614708845674912733665919":
+float: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+
+# cosh_upward
+Test "cosh_upward (22) == 1792456423.065795780980053377632656584997":
+ildouble: 1
+ldouble: 1
+Test "cosh_upward (24) == 13244561064.92173614708845674912733665919":
+double: 1
+idouble: 1
+
 # cpow
 Test "Real part of: cpow (0.75 + 1.25 i, 0.0 + 1.0 i) == 0.331825439177608832276067945276730566 + 0.131338600281188544930936345230903032 i":
 float: 1
@@ -890,6 +936,42 @@ ifloat: 1
 ildouble: 7
 ldouble: 7
 
+# pow_downward
+Test "pow_downward (1.0625, 1.125) == 1.070582293028761362162622578677070098674":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "pow_downward (1.5, 1.03125) == 1.519127098714743184071644334163037684948":
+float: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+
+# pow_towardzero
+Test "pow_towardzero (1.0625, 1.125) == 1.070582293028761362162622578677070098674":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "pow_towardzero (1.5, 1.03125) == 1.519127098714743184071644334163037684948":
+float: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+
+# pow_upward
+Test "pow_upward (1.0625, 1.125) == 1.070582293028761362162622578677070098674":
+float: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "pow_upward (1.5, 1.03125) == 1.519127098714743184071644334163037684948":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+
 # sin_downward
 Test "sin_downward (1) == 0.8414709848078965066525023216302989996226":
 ildouble: 1
@@ -1034,6 +1116,53 @@ ldouble: 1
 Test "sinh (0.75) == 0.822316731935829980703661634446913849":
 ildouble: 1
 ldouble: 1
+
+# sinh_downward
+Test "sinh_downward (22) == 1792456423.065795780701106568345764104225":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "sinh_downward (23) == 4872401723.124451299966006944252978187305":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "sinh_downward (24) == 13244561064.92173614705070540368454568168":
+float: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+
+# sinh_towardzero
+Test "sinh_towardzero (22) == 1792456423.065795780701106568345764104225":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "sinh_towardzero (23) == 4872401723.124451299966006944252978187305":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "sinh_towardzero (24) == 13244561064.92173614705070540368454568168":
+float: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+
+# sinh_upward
+Test "sinh_upward (24) == 13244561064.92173614705070540368454568168":
+double: 1
+idouble: 1
 
 # tan
 Test "tan (0.75) == 0.931596459944072461165202756573936428":
@@ -1525,6 +1654,28 @@ ifloat: 1
 ildouble: 1
 ldouble: 1
 
+Function: "cosh_downward":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+
+Function: "cosh_towardzero":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+
+Function: "cosh_upward":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+
 Function: Real part of "cpow":
 double: 1
 float: 3
@@ -1679,6 +1830,30 @@ ifloat: 1
 ildouble: 7
 ldouble: 7
 
+Function: "pow_downward":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+
+Function: "pow_towardzero":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+
+Function: "pow_upward":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+
 Function: "sin_downward":
 double: 1
 float: 1
@@ -1714,6 +1889,26 @@ ldouble: 1
 Function: "sinh":
 ildouble: 1
 ldouble: 1
+
+Function: "sinh_downward":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+
+Function: "sinh_towardzero":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+
+Function: "sinh_upward":
+double: 1
+idouble: 1
 
 Function: "tan":
 double: 1
