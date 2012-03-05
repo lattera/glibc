@@ -1,3 +1,9 @@
+2012-03-05  Tom de Vries  <tom@codesourcery.com>
+
+	* sysdeps/generic/dl-osinfo.h (_dl_setup_stack_chk_guard): Ensure
+	default stack guard is set in last bytes.
+	* sysdeps/unix/sysv/linux/dl-osinfo.h (_dl_setup_stack_chk_guard): Same.
+
 2012-03-05  Kees Cook  <keescook@chromium.org>
 
 	* stdio-common/vfprintf.c (vfprintf): add missing errno settings.
