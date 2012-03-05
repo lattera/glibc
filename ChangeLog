@@ -1,4 +1,4 @@
-2012-03-0  H.J. Lu  <hongjiu.lu@intel.com>
+2012-03-05  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/unix/sysv/linux/x86_64/gettimeofday.c (gettimeofday_ifunc):
 	Replace gettimeofday with __vdso_gettimeofday.
