@@ -11,9 +11,9 @@
 	* sysdeps/unix/sysv/linux/x86_64/gettimeofday.c (gettimeofday_ifunc):
 	Replace gettimeofday with __vdso_gettimeofday.
 
-	* sysdeps/unix/sysv/linux/x86_64/init-first.c (_libc_vdso_platform_setup):
-	Replace clock_gettime and getcpu with __vdso_clock_gettime and
-	__vdso_getcpu.
+	* sysdeps/unix/sysv/linux/x86_64/init-first.c
+	(_libc_vdso_platform_setup): Replace clock_gettime and getcpu with
+	__vdso_clock_gettime and __vdso_getcpu.
 
 	* sysdeps/unix/sysv/linux/x86_64/time.c (time_ifunc): Replace
 	time with __vdso_time.
