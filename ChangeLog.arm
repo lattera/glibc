@@ -1,3 +1,13 @@
+2012-03-05  Michael Hope  <michael.hope@linaro.org>
+
+	* sysdeps/unix/sysv/linux/arm/eabi/getcontext.S: New file.
+	* sysdeps/unix/sysv/linux/arm/eabi/makecontext.c: New file.
+	* sysdeps/unix/sysv/linux/arm/eabi/setcontext.S: New file.
+	* sysdeps/unix/sysv/linux/arm/eabi/swapcontext.S: New file.
+	* sysdeps/unix/sysv/linux/arm/ucontext_i.sym: New file.
+	* sysdeps/unix/sysv/linux/arm/Makefile (gen-as-const-headers): Add
+	ucontext_i.sym.
+
 2012-02-27  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/arm/nptl/bits/pthreadtypes.h
