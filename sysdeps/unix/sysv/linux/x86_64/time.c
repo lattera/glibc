@@ -28,7 +28,7 @@ time_ifunc (void)
   PREPARE_VERSION (linux26, "LINUX_2.6", 61765110);
 
   /* If the vDSO is not available we fall back on the old vsyscall.  */
-  return _dl_vdso_vsym ("time", &linux26) ?: (void *) VSYSCALL_ADDR_vtime;
+  return _dl_vdso_vsym ("__vdso_time", &linux26) ?: (void *) VSYSCALL_ADDR_vtime;
 }
 __asm (".type time, %gnu_indirect_function");
 
