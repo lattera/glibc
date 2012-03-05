@@ -1,5 +1,7 @@
 2012-03-02  Kees Cook  <keescook@chromium.org>
 
+        * stdio-common/vfprintf.c (vfprintf): add missing errno settings.
+
         [BZ #13656]
         * stdio-common/vfprintf.c (vfprintf): Check for nargs overflow and
         possibly allocate from heap instead of stack.

@@ -822,7 +822,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 									      \
 	if (function_done < 0)						      \
 	  {								      \
-	    /* Error in print handler.  */				      \
+	    /* Error in print handler; up to handler to set errno.  */	      \
 	    done = -1;							      \
 	    goto all_done;						      \
 	  }								      \
@@ -876,7 +876,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 									      \
 	if (function_done < 0)						      \
 	  {								      \
-	    /* Error in print handler.  */				      \
+	    /* Error in print handler; up to handler to set errno.  */	      \
 	    done = -1;							      \
 	    goto all_done;						      \
 	  }								      \
@@ -1117,7 +1117,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 			 &mbstate);					      \
 	if (len == (size_t) -1)						      \
 	  {								      \
-	    /* Something went wron gduring the conversion.  Bail out.  */     \
+	    /* Something went wrong during the conversion.  Bail out.  */     \
 	    done = -1;							      \
 	    goto all_done;						      \
 	  }								      \
@@ -1188,6 +1188,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 		      if (__mbsnrtowcs (ignore, &str2, strend - str2,	      \
 					ignore_size, &ps) == (size_t) -1)     \
 			{						      \
+			  /* Conversion function has set errno.  */	      \
 			  done = -1;					      \
 			  goto all_done;				      \
 			}						      \
@@ -1605,6 +1606,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 	  if (spec == L_('\0'))
 	    {
 	      /* The format string ended before the specifier is complete.  */
+	      __set_errno (EINVAL);
 	      done = -1;
 	      goto all_done;
 	    }
@@ -1948,6 +1950,7 @@ do_positional:
 		       about # of chars.  */
 		    if (function_done < 0)
 		      {
+			/* Function has set errno.  */
 			done = -1;
 			goto all_done;
 		      }
@@ -1982,6 +1985,7 @@ do_positional:
 		 of chars.  */
 	      if (function_done < 0)
 		{
+		  /* Function has set errno.  */
 		  done = -1;
 		  goto all_done;
 		}
