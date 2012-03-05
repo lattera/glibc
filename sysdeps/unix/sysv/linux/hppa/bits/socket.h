@@ -1,6 +1,5 @@
 /* System-specific socket constants and types.  Linux version.
-   Copyright (C) 1991, 1992, 1994-2001, 2004, 2006, 2007, 2008, 2009,
-   2010 Free Software Foundation, Inc.
+   Copyright (C) 1991-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -14,9 +13,8 @@
    Lesser General Public License for more details.
 
    You should have received a copy of the GNU Lesser General Public
-   License along with the GNU C Library; if not, write to the Free
-   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
-   02111-1307 USA.  */
+   License along with the GNU C Library; if not, see
+   <http://www.gnu.org/licenses/>.  */
 
 #ifndef __BITS_SOCKET_H
 #define __BITS_SOCKET_H
@@ -65,7 +63,6 @@ enum __socket_type
   SOCK_CLOEXEC = 010000000,	/* Atomically set close-on-exec flag for the
 				   new descriptor(s).  */
 #define SOCK_CLOEXEC SOCK_CLOEXEC
-#undef SOCK_NONBLOCK
   SOCK_NONBLOCK = 0x40000000	/* Atomically mark descriptor(s) as
 				   non-blocking.  */
 #define SOCK_NONBLOCK SOCK_NONBLOCK
@@ -110,7 +107,10 @@ enum __socket_type
 #define PF_ISDN		34	/* mISDN sockets.  */
 #define PF_PHONET	35	/* Phonet sockets.  */
 #define PF_IEEE802154	36	/* IEEE 802.15.4 sockets.  */
-#define	PF_MAX		37	/* For now..  */
+#define PF_CAIF		37	/* CAIF sockets.  */
+#define PF_ALG		38	/* Algorithm sockets.  */
+#define PF_NFC		39	/* NFC sockets.  */
+#define	PF_MAX		40	/* For now..  */
 
 /* Address families.  */
 #define	AF_UNSPEC	PF_UNSPEC
@@ -151,6 +151,9 @@ enum __socket_type
 #define AF_ISDN		PF_ISDN
 #define AF_PHONET	PF_PHONET
 #define AF_IEEE802154	PF_IEEE802154
+#define AF_CAIF		PF_CAIF
+#define AF_ALG		PF_ALG
+#define AF_NFC		PF_NFC
 #define	AF_MAX		PF_MAX
 
 /* Socket level values.  Others are defined in the appropriate headers.
@@ -233,12 +236,12 @@ enum
 #define	MSG_NOSIGNAL	MSG_NOSIGNAL
     MSG_MORE		= 0x8000,  /* Sender will send more.  */
 #define	MSG_MORE	MSG_MORE
-    MSG_WAITFORONE     = 0x10000, /* Wait for at least one packet to return.*/
-#define MSG_WAITFORONE MSG_WAITFORONE
+    MSG_WAITFORONE	= 0x10000, /* Wait for at least one packet to return.*/
+#define MSG_WAITFORONE	MSG_WAITFORONE
 
     MSG_CMSG_CLOEXEC	= 0x40000000	/* Set close_on_exit for file
-                                           descriptor received through
-                                           SCM_RIGHTS.  */
+					   descriptor received through
+					   SCM_RIGHTS.  */
 #define MSG_CMSG_CLOEXEC MSG_CMSG_CLOEXEC
   };
 
@@ -261,6 +264,15 @@ struct msghdr
 
     int msg_flags;		/* Flags on received message.  */
   };
+
+#ifdef __USE_GNU
+/* For `recvmmsg'.  */
+struct mmsghdr
+  {
+    struct msghdr msg_hdr;	/* Actual message header.  */
+    unsigned int msg_len;	/* Number of received bytes for the entry.  */
+  };
+#endif
 
 /* Structure used for storage of ancillary data object information.  */
 struct cmsghdr
@@ -304,7 +316,7 @@ __NTH (__cmsg_nxthdr (struct msghdr *__mhdr, struct cmsghdr *__cmsg))
 {
   if ((size_t) __cmsg->cmsg_len < sizeof (struct cmsghdr))
     /* The kernel header does this so there may be a reason.  */
-    return 0;
+    return (struct cmsghdr *) 0;
 
   __cmsg = (struct cmsghdr *) ((unsigned char *) __cmsg
 			       + CMSG_ALIGN (__cmsg->cmsg_len));
@@ -313,7 +325,7 @@ __NTH (__cmsg_nxthdr (struct msghdr *__mhdr, struct cmsghdr *__cmsg))
       || ((unsigned char *) __cmsg + CMSG_ALIGN (__cmsg->cmsg_len)
 	  > ((unsigned char *) __mhdr->msg_control + __mhdr->msg_controllen)))
     /* No more entries.  */
-    return 0;
+    return (struct cmsghdr *) 0;
   return __cmsg;
 }
 #endif	/* Use `extern inline'.  */
@@ -405,5 +417,28 @@ struct linger
     int l_onoff;		/* Nonzero to linger on close.  */
     int l_linger;		/* Time to linger.  */
   };
+
+
+__BEGIN_DECLS
+
+#ifdef __USE_GNU
+/* Receive up to VLEN messages as described by VMESSAGES from socket FD.
+   Returns the number of bytes read or -1 for errors.
+
+   This function is a cancellation point and therefore not marked with
+   __THROW.  */
+extern int recvmmsg (int __fd, struct mmsghdr *__vmessages,
+		     unsigned int __vlen, int __flags,
+		     const struct timespec *__tmo);
+
+/* Send a VLEN messages as described by VMESSAGES to socket FD.
+   Return the number of datagrams successfully written or -1 for errors.
+This function is a cancellation point and therefore not marked with
+   __THROW.  */
+extern int sendmmsg (int __fd, struct mmsghdr *__vmessages,
+		     unsigned int __vlen, int __flags);
+#endif
+
+__END_DECLS
 
 #endif	/* bits/socket.h */

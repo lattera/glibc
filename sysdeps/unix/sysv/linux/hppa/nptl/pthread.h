@@ -12,9 +12,8 @@
    Lesser General Public License for more details.
 
    You should have received a copy of the GNU Lesser General Public
-   License along with the GNU C Library; if not, write to the Free
-   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
-   02111-1307 USA.  */
+   License along with the GNU C Library; if not, see
+   <http://www.gnu.org/licenses/>.  */
 
 #ifndef _PTHREAD_H
 #define _PTHREAD_H	1
@@ -22,6 +21,7 @@
 #include <features.h>
 #include <endian.h>
 #include <sched.h>
+#define __need_timespec
 #include <time.h>
 
 #include <bits/pthreadtypes.h>
@@ -72,7 +72,7 @@ enum
 #endif
 
 
-#ifdef __USE_UNIX98
+#if defined __USE_POSIX199506 || defined __USE_UNIX98
 /* Mutex protocols.  */
 enum
 {
@@ -266,7 +266,8 @@ extern int pthread_detach (pthread_t __th) __THROW;
 extern pthread_t pthread_self (void) __THROW __attribute__ ((__const__));
 
 /* Compare two thread identifiers.  */
-extern int pthread_equal (pthread_t __thread1, pthread_t __thread2) __THROW;
+extern int pthread_equal (pthread_t __thread1, pthread_t __thread2)
+  __THROW __attribute__ ((__const__));
 
 
 /* Thread attribute handling.  */
