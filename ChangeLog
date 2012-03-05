@@ -1,3 +1,7 @@
+2012-03-05  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/i386/fpu/libm-test-ulps: Update.
+
 2012-03-05  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #3976]

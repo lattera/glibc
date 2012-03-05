@@ -322,6 +322,9 @@ ldouble: 1
 Test "cos_tonearest (8) == -0.1455000338086135258688413818311946826093":
 ildouble: 1
 ldouble: 1
+Test "cos_tonearest (9) == -0.9111302618846769883682947111811653112463":
+ildouble: 1
+ldouble: 1
 
 # cos_towardzero
 Test "cos_towardzero (1) == 0.5403023058681397174009366074429766037323":
@@ -1022,6 +1025,9 @@ ldouble: 1
 Test "sin_tonearest (4) == -0.7568024953079282513726390945118290941359":
 ildouble: 1
 ldouble: 1
+Test "sin_tonearest (9) == 0.4121184852417565697562725663524351793439":
+ildouble: 1
+ldouble: 1
 
 # sin_towardzero
 Test "sin_towardzero (1) == 0.8414709848078965066525023216302989996226":
@@ -1205,6 +1211,9 @@ float: 1
 ifloat: 1
 ildouble: 1
 ldouble: 1
+Test "tan_downward (5) == -3.3805150062465856369827058794473439087096":
+ildouble: 1
+ldouble: 1
 Test "tan_downward (6) == -0.2910061913847491570536995888681755428312":
 double: 1
 float: 1
@@ -1254,6 +1263,8 @@ ldouble: 1
 Test "tan_towardzero (3) == -0.1425465430742778052956354105339134932261":
 float: 1
 ifloat: 1
+ildouble: 1
+ldouble: 1
 Test "tan_towardzero (4) == 1.1578212823495775831373424182673239231198":
 float: 1
 ifloat: 1
@@ -1298,6 +1309,8 @@ ldouble: 1
 Test "tan_upward (3) == -0.1425465430742778052956354105339134932261":
 float: 1
 ifloat: 1
+ildouble: 1
+ldouble: 1
 Test "tan_upward (4) == 1.1578212823495775831373424182673239231198":
 double: 1
 idouble: 1
@@ -1519,6 +1532,10 @@ idouble: 1
 ifloat: 1
 
 # Maximal error of functions:
+Function: "acos":
+ildouble: 1
+ldouble: 1
+
 Function: "asin":
 ildouble: 1
 ldouble: 1
