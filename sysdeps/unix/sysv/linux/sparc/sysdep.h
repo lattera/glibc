@@ -23,7 +23,7 @@
 #define INLINE_SYSCALL(name, nr, args...) 				\
 ({	INTERNAL_SYSCALL_DECL(err);  					\
 	unsigned int resultvar = INTERNAL_SYSCALL(name, err, nr, args);	\
-	if (__builtin_expect (INTERNAL_SYSCALL_ERROR_P (resultvar, err), 0)) \
+	if (INTERNAL_SYSCALL_ERROR_P (resultvar, err))			\
 	  {		     			       		   	\
 	    __set_errno (INTERNAL_SYSCALL_ERRNO (resultvar, err));	\
 	    resultvar = 0xffffffff;			    		\
@@ -44,7 +44,8 @@
   inline_syscall##nr(__SYSCALL_STRING, err, name, args)
 
 #undef INTERNAL_SYSCALL_ERROR_P
-#define INTERNAL_SYSCALL_ERROR_P(val, err) ((err) != 0)
+#define INTERNAL_SYSCALL_ERROR_P(val, err) \
+  ((void) (val), __builtin_expect((err) != 0, 0))
 
 #undef INTERNAL_SYSCALL_ERRNO
 #define INTERNAL_SYSCALL_ERRNO(val, err)	(-(val))
@@ -152,7 +153,7 @@
 			  "0" (__g1), "1" (__o0), "2" (__o1),		\
 			  "r" (__o2), "r" (__o3), "r" (__o4) :		\
 			  __SYSCALL_CLOBBERS);				\
-	if (__builtin_expect (INTERNAL_SYSCALL_ERROR_P (__o0, __g1), 0)) \
+	if (INTERNAL_SYSCALL_ERROR_P (__o0, __g1))			\
 	  {		     			       		   	\
 	    __set_errno (INTERNAL_SYSCALL_ERRNO (__o0, __g1));		\
 	    __o0 = -1L;			    				\

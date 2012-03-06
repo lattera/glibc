@@ -1,3 +1,14 @@
+2012-03-06  David S. Miller  <davem@davemloft.net>
+
+	* sysdeps/unix/sysv/linux/sparc/sparc64/get_clockfreq.c
+	(set_obp_int): New function.
+	(get_obp_int): New function.
+	(__get_clockfreq_via_dev_openprom): Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sysdep.h (INTERNAL_SYSCALL_ERROR_P): Avoid
+	unused variable warnings on 'val' and use builtin_expect.
+	(INLINE_SYSCALL): Don't wrap INTERNAL_SYSCALL_ERROR_P with builtin_expect.
+	(INLINE_CLONE_SYSCALL): Likewise.
+
 2012-03-05  David S. Miller  <davem@davemloft.net>
 
 	* sysdeps/sparc/fpu/libm-test-ulps: Update.
