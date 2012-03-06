@@ -1,5 +1,9 @@
 2012-03-08  Richard Henderson  <rth@twiddle.net>
 
+	* sysdeps/x86_64/fpu/math_private.h (__rint): Convert from macro
+	to inline function.
+	(__rintf, __floor, __floorf): Likewise.
+
 	* sysdeps/x86_64/fpu/math_private.h (__ieee754_sqrt): Convert from
 	macro to inline function.
 	(__ieee754_sqrtf, __ieee754_sqrtl): Likewise.

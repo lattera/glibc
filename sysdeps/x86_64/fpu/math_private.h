@@ -123,60 +123,54 @@ __ieee754_sqrtl (long double d)
 }
 
 #ifdef __SSE4_1__
-# ifndef __rint
-#  if defined __AVX__ || defined SSE2AVX
-#   define __rint(d) \
-  ({ double __res; \
-    asm ("vroundsd $4, %1, %0, %0" : "=x" (__res) : "xm" ((double) (d)));      \
-     __res; })
-#  else
-#   define __rint(d) \
-  ({ double __res; \
-    asm ("roundsd $4, %1, %0" : "=x" (__res) : "xm" ((double) (d)));	      \
-     __res; })
-#  endif
+extern __always_inline double
+__rint (double d)
+{
+  double res;
+# if defined __AVX__ || defined SSE2AVX
+  asm ("vroundsd $4, %1, %0, %0" : "=x" (res) : "xm" (d));
+# else
+  asm ("roundsd $4, %1, %0" : "=x" (res) : "xm" (d));
 # endif
-# ifndef __rintf
-#  if defined __AVX__ || defined SSE2AVX
-#   define __rintf(d) \
-  ({ float __res; \
-    asm ("vroundss $4, %1, %0, %0" : "=x" (__res) : "xm" ((float) (d)));      \
-     __res; })
-#  else
-#   define __rintf(d) \
-  ({ float __res; \
-    asm ("roundss $4, %1, %0" : "=x" (__res) : "xm" ((float) (d)));	      \
-     __res; })
-#  endif
-# endif
+  return res;
+}
 
-# ifndef __floor
-#  if defined __AVX__ || defined SSE2AVX
-#   define __floor(d) \
-  ({ double __res; \
-    asm ("vroundsd $1, %1, %0, %0" : "=x" (__res) : "xm" ((double) (d)));      \
-     __res; })
-#  else
-#   define __floor(d) \
-  ({ double __res; \
-    asm ("roundsd $1, %1, %0" : "=x" (__res) : "xm" ((double) (d)));	      \
-     __res; })
-#  endif
+extern __always_inline float
+__rintf (float d)
+{
+  float res;
+# if defined __AVX__ || defined SSE2AVX
+  asm ("vroundss $4, %1, %0, %0" : "=x" (res) : "xm" (d));
+# else
+  asm ("roundss $4, %1, %0" : "=x" (res) : "xm" (d));
 # endif
-# ifndef __floorf
-#  if defined __AVX__ || defined SSE2AVX
-#   define __floorf(d) \
-  ({ float __res; \
-    asm ("vroundss $1, %1, %0, %0" : "=x" (__res) : "xm" ((float) (d)));      \
-     __res; })
-#  else
-#   define __floorf(d) \
-  ({ float __res; \
-    asm ("roundss $1, %1, %0" : "=x" (__res) : "xm" ((float) (d)));	      \
-     __res; })
-#  endif
+  return res;
+}
+
+extern __always_inline double
+__floor (double d)
+{
+  double res;
+# if defined __AVX__ || defined SSE2AVX
+  asm ("vroundsd $1, %1, %0, %0" : "=x" (res) : "xm" (d));
+# else
+  asm ("roundsd $1, %1, %0" : "=x" (res) : "xm" (d));
 # endif
-#endif
+  return res;
+}
+
+extern __always_inline float
+__floorf (float d)
+{
+  float res;
+# if defined __AVX__ || defined SSE2AVX
+  asm ("vroundss $1, %1, %0, %0" : "=x" (res) : "xm" (d));
+# else
+  asm ("roundss $1, %1, %0" : "=x" (res) : "xm" (d));
+#  endif
+  return res;
+}
+#endif /* __SSE4_1__ */
 
 
 /* Specialized variants of the <fenv.h> interfaces which only handle
