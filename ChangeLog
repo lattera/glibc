@@ -1,3 +1,11 @@
+2012-03-06  Marek Polacek  <polacek@redhat.com>
+
+	[BZ #13726]
+	* sysdeps/ieee754/ldbl-96/printf_fphex.c: Adjust position of wnumstr.
+	* sysdeps/x86_64/fpu/printf_fphex.c: Likewise.
+	* stdio-common/Makefile (tests): Add tst-long-dbl-fphex.
+	* stdio-common/tst-long-dbl-fphex.c: New file.
+
 2012-03-06  David S. Miller  <davem@davemloft.net>
 
 	* sysdeps/unix/sysv/linux/sparc/sparc64/get_clockfreq.c
