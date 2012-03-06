@@ -415,6 +415,28 @@ ifloat: 2
 ildouble: 1
 ldouble: 1
 
+# cosh_downward
+Test "cosh_downward (22) == 1792456423.065795780980053377632656584997":
+float: 1
+ifloat: 1
+Test "cosh_downward (23) == 4872401723.124451300068625740569997090344":
+float: 1
+ifloat: 1
+Test "cosh_downward (24) == 13244561064.92173614708845674912733665919":
+float: 1
+ifloat: 1
+
+# cosh_towardzero
+Test "cosh_towardzero (22) == 1792456423.065795780980053377632656584997":
+float: 1
+ifloat: 1
+Test "cosh_towardzero (23) == 4872401723.124451300068625740569997090344":
+float: 1
+ifloat: 1
+Test "cosh_towardzero (24) == 13244561064.92173614708845674912733665919":
+float: 1
+ifloat: 1
+
 # cpow
 Test "Real part of: cpow (0.75 + 1.25 i, 0.0 + 1.0 i) == 0.331825439177608832276067945276730566 + 0.131338600281188544930936345230903032 i":
 float: 1
@@ -918,6 +940,21 @@ Test "log2 (0.75) == -.415037499278843818546261056052183492":
 ildouble: 1
 ldouble: 1
 
+# pow_downward
+Test "pow_downward (1.5, 1.03125) == 1.519127098714743184071644334163037684948":
+float: 1
+ifloat: 1
+
+# pow_towardzero
+Test "pow_towardzero (1.5, 1.03125) == 1.519127098714743184071644334163037684948":
+float: 1
+ifloat: 1
+
+# pow_upward
+Test "pow_upward (1.0625, 1.125) == 1.070582293028761362162622578677070098674":
+float: 1
+ifloat: 1
+
 # sin_downward
 Test "sin_downward (1) == 0.8414709848078965066525023216302989996226":
 ildouble: 1
@@ -1051,6 +1088,28 @@ ifloat: 1
 ildouble: 1
 ldouble: 1
 Test "sincos (pi/6, &sin_res, &cos_res) puts 0.86602540378443864676372317075293616 in cos_res":
+float: 1
+ifloat: 1
+
+# sinh_downward
+Test "sinh_downward (22) == 1792456423.065795780701106568345764104225":
+float: 1
+ifloat: 1
+Test "sinh_downward (23) == 4872401723.124451299966006944252978187305":
+float: 1
+ifloat: 1
+Test "sinh_downward (24) == 13244561064.92173614705070540368454568168":
+float: 1
+ifloat: 1
+
+# sinh_towardzero
+Test "sinh_towardzero (22) == 1792456423.065795780701106568345764104225":
+float: 1
+ifloat: 1
+Test "sinh_towardzero (23) == 4872401723.124451299966006944252978187305":
+float: 1
+ifloat: 1
+Test "sinh_towardzero (24) == 13244561064.92173614705070540368454568168":
 float: 1
 ifloat: 1
 
@@ -1524,6 +1583,14 @@ ifloat: 2
 ildouble: 1
 ldouble: 1
 
+Function: "cosh_downward":
+float: 1
+ifloat: 1
+
+Function: "cosh_towardzero":
+float: 1
+ifloat: 1
+
 Function: Real part of "cpow":
 double: 2
 float: 4
@@ -1704,6 +1771,18 @@ Function: "log2":
 ildouble: 1
 ldouble: 1
 
+Function: "pow_downward":
+float: 1
+ifloat: 1
+
+Function: "pow_towardzero":
+float: 1
+ifloat: 1
+
+Function: "pow_upward":
+float: 1
+ifloat: 1
+
 Function: "sin_downward":
 float: 1
 ifloat: 1
@@ -1735,6 +1814,14 @@ idouble: 1
 ifloat: 1
 ildouble: 1
 ldouble: 1
+
+Function: "sinh_downward":
+float: 1
+ifloat: 1
+
+Function: "sinh_towardzero":
+float: 1
+ifloat: 1
 
 Function: "sqrt":
 ildouble: 1
