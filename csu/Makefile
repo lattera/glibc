@@ -37,8 +37,6 @@ omit-deps = $(patsubst %.o,%,$(start-installed-name) g$(start-installed-name) \
 			     b$(start-installed-name) $(csu-dummies) \
 			     S$(start-installed-name))
 install-lib = $(start-installed-name) g$(start-installed-name) $(csu-dummies)
-distribute = gmon-start.c start.c \
-	     abi-note.S init.c c not-cancel.h
 generated = version-info.h
 before-compile = $(objpfx)version-info.h
 

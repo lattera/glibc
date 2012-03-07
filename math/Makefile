@@ -26,9 +26,6 @@ headers		:= math.h bits/mathcalls.h bits/mathinline.h bits/huge_val.h \
 		   bits/fenv.h bits/fenvinline.h bits/mathdef.h tgmath.h \
 		   bits/math-finite.h
 
-# Internal header files.
-distribute	:= math_ldbl.h math_private.h machine/asm.h
-
 # FPU support code.
 aux		:= setfpucw fpu_control
 
@@ -84,7 +81,6 @@ calls = s_isinf s_isnan s_finite s_copysign s_modf s_scalbn s_frexp s_ldexp \
 generated += $(foreach s,.c .S l.c l.S f.c f.S,$(calls:s_%=m_%$s))
 routines = $(calls) $(calls:=f) $(long-c-$(long-double-fcts))
 long-c-yes = $(calls:=l)
-distribute += $(filter-out $(generated),$(long-m-yes:=.c) $(long-c-yes:=.c))
 
 # Rules for the test suite.
 tests = test-matherr test-fenv atest-exp atest-sincos atest-exp2 basic-test \
@@ -94,7 +90,6 @@ tests = test-matherr test-fenv atest-exp atest-sincos atest-exp2 basic-test \
 # We do the `long double' tests only if this data type is available and
 # distinct from `double'.
 test-longdouble-yes = test-ldouble test-ildoubl
-distribute += $(test-longdouble-yes:=.c)
 
 ifneq (no,$(PERL))
 libm-tests = test-float test-double $(test-longdouble-$(long-double-fcts)) \
@@ -139,15 +134,12 @@ CPPFLAGS-test-idouble.c = -U__LIBC_INTERNAL_MATH_INLINES -D__FAST_MATH__ \
 CPPFLAGS-test-ildoubl.c = -U__LIBC_INTERNAL_MATH_INLINES -D__FAST_MATH__ \
 			  -DTEST_FAST_MATH -fno-builtin
 
-distribute += libm-test.inc gen-libm-test.pl README.libm-test
-
 
 # The -lieee module sets the _LIB_VERSION_ switch to IEEE mode
 # for error handling in the -lm functions.
 install-lib += libieee.a
 non-lib.a += libieee.a
 extra-objs += libieee.a ieee-math.o
-distribute += ieee-math.c
 
 include ../Rules
 

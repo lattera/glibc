@@ -1,4 +1,4 @@
-# Copyright (C) 1991-2002, 2005-2010, 2011 Free Software Foundation, Inc.
+# Copyright (C) 1991-2002, 2005-2011, 2012 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -57,8 +57,6 @@ tests		:= tester inl-tester noinl-tester testcopy test-ffs	\
 		   bug-strtok1 $(addprefix test-,$(strop-tests))	\
 		   bug-envz1 tst-strxfrm2 tst-endian tst-svc2		\
 		   bug-strstr1 bug-strchr1
-distribute	:= memcopy.h pagecopy.h tst-svc.expect test-string.h	\
-		   str-two-way.h
 
 
 include ../Rules

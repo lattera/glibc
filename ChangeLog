@@ -1,5 +1,50 @@
 2012-03-07  Ulrich Drepper  <drepper@gmail.com>
 
+	* login/Makefile (distribute): Remove variable.
+	* catgets/Makefile: Likewise.
+	* mach/Makefile: Likewise.
+	* malloc/Makefile: Likewise.
+	* misc/Makefile: Likewise.
+	* iconv/Makefile: Likewise.
+	* nscd/Makefile: Likewise.
+	* hurd/Makefile: Likewise.
+	* manual/Makefile: Likewise.
+	* locale/Makefile: Likewise.
+	* intl/Makefile: Likewise.
+	* conform/Makefile: Likewise.
+	* nss/Makefile: Likewise.
+	* time/Makefile: Likewise.
+	* soft-fp/Makefile: Likewise.
+	* dirent/Makefile: Likewise.
+	* gmon/Makefile: Likewise.
+	* po/Makefile: Likewise.
+	* rt/Makefile: Likewise.
+	* socket/Makefile: Likewise.
+	* math/Makefile: Likewise.
+	* signal/Makefile: Likewise.
+	* debug/Makefile: Likewise.
+	* elf/Makefile: Likewise.
+	* timezone/Makefile: Likewise.
+	* stdlib/Makefile: Likewise.
+	* iconvdata/Makefile: Likewise.
+	* sunrpc/Makefile: Likewise.
+	* io/Makefile: Likewise.
+	* argp/Makefile: Likewise.
+	* inet/Makefile: Likewise.
+	* hesiod/Makefile: Likewise.
+	* grp/Makefile: Likewise.
+	* csu/Makefile: Likewise.
+	* wctype/Makefile: Likewise.
+	* crypt/Makefile: Likewise.
+	* libio/Makefile: Likewise.
+	* string/Makefile: Likewise.
+	* nis/Makefile: Likewise.
+	* resolv/Makefile: Likewise.
+	* stdio-common/Makefile: Likewise.
+	* wcsmbs/Makefile: Likewise.
+	* dlfcn/Makefile: Likewise.
+	* posix/Makefile: Likewise.
+
 	* timezone/Makefile: Don't install timezone files, just the programs
 	and scripts.
 

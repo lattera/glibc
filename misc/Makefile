@@ -66,8 +66,6 @@ routines := brk sbrk sstk ioctl \
 	    listxattr lgetxattr llistxattr lremovexattr lsetxattr \
 	    removexattr setxattr
 
-distribute := device-nrs.h
-
 generated := tst-error1.mtrace tst-error1-mem
 
 include ../Makeconfig

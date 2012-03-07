@@ -268,8 +268,6 @@ tests-nolibpthread = tst-unload
 # of the page size since every architecture's page size is > 1k.
 tst-oddstacklimit-ENV = ; ulimit -s 1023;
 
-distribute = eintr.c tst-cleanup4aux.c
-
 gen-as-const-headers = pthread-errnos.sym
 
 LDFLAGS-pthread.so = -Wl,--enable-new-dtags,-z,nodelete,-z,initfirst

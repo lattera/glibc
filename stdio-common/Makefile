@@ -1,4 +1,4 @@
-# Copyright (C) 1991-2009, 2011 Free Software Foundation, Inc.
+# Copyright (C) 1991-2009, 2011, 2012 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -44,8 +44,6 @@ install-others = $(inst_includedir)/bits/stdio_lim.h
 include ../Makeconfig
 
 aux	:= errlist siglist printf-parsemb printf-parsewc fxprintf
-distribute := _itoa.h _itowa.h _i18n_number.h \
-	      printf-parse.h stdio_lim.h.in tst-unbputc.sh tst-printf.sh
 
 tests := tstscanf test_rdwr test-popen tstgetln test-fseek \
 	 temptest tst-fileno test-fwrite tst-ungetc tst-ferror \

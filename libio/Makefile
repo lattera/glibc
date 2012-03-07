@@ -1,4 +1,4 @@
-# Copyright (C) 1995-2004,2006-2009,2011 Free Software Foundation, Inc.
+# Copyright (C) 1995-2004,2006-2009,2011,2012 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -166,9 +166,6 @@ shared-only-routines = oldiofopen oldiofdopen oldiofclose oldfileops	\
 		       oldstdfiles oldiopopen oldpclose oldtmpfile	\
 		       oldiofgetpos oldiofgetpos64 oldiofsetpos		\
 		       oldiofsetpos64
-
-distribute := iolibio.h libioP.h strfile.h Banner test-freopen.sh \
-	      fd_to_filename.h
 
 include ../Rules
 

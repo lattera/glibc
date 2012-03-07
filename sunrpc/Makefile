@@ -1,4 +1,4 @@
-# Copyright (C) 1994-2004, 2005, 2006, 2011 Free Software Foundation, Inc.
+# Copyright (C) 1994-2006, 2011, 2012 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -85,11 +85,6 @@ install-bin := rpcgen
 rpcgen-objs = rpc_main.o rpc_hout.o rpc_cout.o rpc_parse.o \
 	      rpc_scan.o rpc_util.o rpc_svcout.o rpc_clntout.o \
 	      rpc_tblout.o rpc_sample.o
-# These headers are part of rpcgen.
-distribute := proto.h rpc_util.h rpc_parse.h rpc_scan.h \
-	      $(headers-in-tirpc) $(headers-not-in-tirpc) \
-	      $(rpcgen-objs:.o=.c) etc.rpc \
-	      errqueue.h
 extra-objs = $(rpcgen-objs)
 
 all: # Make this the default target; it will be defined in Rules.
@@ -100,7 +95,6 @@ xtests := tst-getmyaddr
 ifeq ($(have-thread-library),yes)
 xtests += thrsvc
 endif
-distribute += thrsvc.c
 
 ifeq (yes,$(build-static-nss))
 otherlibs += $(nssobjdir)/libnss_files.a $(resolvobjdir)/libnss_dns.a \

@@ -145,16 +145,7 @@ minimal-dist = summary.awk texis.awk tsort.awk libc-texinfo.sh libc.texinfo \
 	       $(filter-out summary.texi, $(nonexamples))		    \
 	       $(patsubst %.c.texi,examples/%.c, $(examples))
 
-doc-only-dist = Makefile COPYING.LIB
-distribute = $(minimal-dist) $(examples) stdio-fp.c	\
-	     libc.info* libc.?? libc.??s texinfo.tex	\
-	     xtract-typefun.awk dir-add.texi dir libm-err-tab.pl
-export distribute := $(distribute)
-
 tar-it = tar chovf $@ $^
-
-manual.tar: $(doc-only-dist) $(minimal-dist) ; $(tar-it)
-mandist.tar: $(doc-only-dist) $(distribute) ; $(tar-it)
 
 edition := $(shell sed -n 's/^@set EDITION \([0-9][0-9.]*\)[^0-9.]*.*$$/\1/p' \
 		       libc.texinfo)

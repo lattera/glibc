@@ -1,4 +1,5 @@
-# Copyright (C) 1991-2000,2002,2003,2005,2006,2011 Free Software Foundation, Inc.
+# Copyright (C) 1991-2000,2002,2003,2005,2006,2011,2012
+# Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -26,7 +27,6 @@ routines	:= opendir closedir readdir readdir_r rewinddir \
 		   getdents getdents64 dirfd readdir64 readdir64_r scandir64 \
 		   alphasort64 versionsort64 fdopendir \
 		   scandirat scandirat64
-distribute := dirstream.h
 
 tests	   := list tst-seekdir opendir-tst1 bug-readdir1 tst-fdopendir \
 	      tst-fdopendir2

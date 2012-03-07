@@ -1,4 +1,4 @@
-# Copyright (C) 2002,2003,2009 Free Software Foundation, Inc.
+# Copyright (C) 2002,2003,2009,2012 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -49,8 +49,6 @@ libthread_db-inhibit-o = $(filter-out .os,$(object-suffixes))
 # The ps_* callback functions are not defined.
 libthread_db.so-no-z-defs = yes
 
-distribute = thread_dbP.h shlib-versions proc_service.h \
-	     db_info.c structs.def db-symbols.h db-symbols.awk
 include ../Rules
 
 # Depend on libc.so so a DT_NEEDED is generated in the shared objects.

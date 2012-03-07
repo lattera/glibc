@@ -1,4 +1,4 @@
-# Copyright (C) 1997, 1999, 2000  Free Software Foundation, Inc.
+# Copyright (C) 1997, 1999, 2000, 2012  Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 #
 
@@ -34,11 +34,5 @@ gcc-quad-routines := negtf2 addtf3 subtf3 multf3 divtf3 eqtf2 \
 	letf2 getf2 unordtf2 fixtfsi fixunstfsi floatsitf fixtfdi      \
 	fixunstfdi floatditf extendsftf2 trunctfsf2 extenddftf2 \
 	trunctfdf2 sqrttf2 floatunsitf floatunditf
-
-distribute := double.h op-1.h op-2.h op-4.h op-common.h quad.h \
-	single.h soft-fp.h extended.h Banner op-8.h testit.c \
-	$(addsuffix .c,$(gcc-single-routines)) \
-	$(addsuffix .c,$(gcc-double-routines)) \
-	$(addsuffix .c,$(gcc-quad-routines))
 
 include ../Rules

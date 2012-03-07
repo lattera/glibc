@@ -1,4 +1,5 @@
-# Copyright (C) 1996-2003,2005,2007,2008,2009,2011 Free Software Foundation, Inc.
+# Copyright (C) 1996-2003,2005,2007-2009,2011,2012
+# Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -55,19 +56,6 @@ generated := $(test-input) $(test-output) sort-test.out tst-locale.out \
 	     tst-mbswcs.out tst-leaks.mtrace mtrace-tst-leaks
 generated-dirs := $(ld-test-names) tt_TT de_DE.437			\
 		  $(addprefix tstfmon_,$(fmon-tests))			\
-
-distribute := CHECKSUMS README SUPPORTED ChangeLog			\
-	      $(charmaps) $(locales)					\
-	      tst-rpmatch.sh tst-locale.sh tst-fmon.sh sort-test.sh	\
-	      tst-fmon.data $(test-input-data) $(ld-test-srcs)		\
-	      th_TH.in cs_CZ.in tst-mbswcs.sh tst-trans.sh tst-ctype.sh \
-	      tst-ctype-de_DE.ISO-8859-1.in				\
-	      tst-numeric.sh tst-numeric.data				\
-	      $(wildcard tests-mbwc/*.[ch])				\
-	      $(addprefix tst-fmon-locales/tstfmon_,$(fmon-tests))	\
-	      gen-locale.sh show-ucs-data.c tst-langinfo.sh		\
-	      tst-wctype.sh tst-wctype.input gen-unicode-ctype.c	\
-	      dump-ctype.c
 
 # Get $(inst_i18ndir) defined.
 include ../Makeconfig

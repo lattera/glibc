@@ -1,4 +1,4 @@
-# Copyright (C) 1997, 1998, 2000, 2001 Free Software Foundation, Inc.
+# Copyright (C) 1997, 1998, 2000, 2001, 2012 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -20,8 +20,6 @@
 #
 subdir	:= hesiod
 
-distribute := hesiod.h hesiod_p.h README.hesiod nss_hesiod/nss_hesiod.h
-
 extra-libs := libnss_hesiod
 extra-libs-others = $(extra-libs)
 
@@ -29,7 +27,7 @@ subdir-dirs = nss_hesiod
 vpath %.c nss_hesiod
 
 libnss_hesiod-routines	:= hesiod hesiod-grp hesiod-init hesiod-proto \
-                           hesiod-pwd hesiod-service
+			   hesiod-pwd hesiod-service
 # Build only shared library
 libnss_hesiod-inhibit-o	= $(filter-out .os,$(object-suffixes))
 
@@ -41,6 +39,6 @@ include ../Rules
 # The Hesiod NSS modules also needs the resolver and some help from
 # the file service.
 $(objpfx)libnss_hesiod.so: $(common-objpfx)resolv/libresolv.so \
-                           $(common-objpfx)nss/libnss_files.so \
-                           $(common-objpfx)libc.so \
+			   $(common-objpfx)nss/libnss_files.so \
+			   $(common-objpfx)libc.so \
 			   $(common-objpfx)libc_nonshared.a

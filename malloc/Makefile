@@ -1,4 +1,4 @@
-# Copyright (C) 1991-1999, 2000, 2001, 2002, 2003, 2005, 2006, 2007, 2009, 2011
+# Copyright (C) 1991-2003, 2005, 2006, 2007, 2009, 2011, 2012
 # Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
@@ -29,14 +29,7 @@ tests := mallocbug tst-malloc tst-valloc tst-calloc tst-obstack \
 	 tst-mallocstate tst-mcheck tst-mallocfork tst-trim1
 test-srcs = tst-mtrace
 
-distribute = thread-m.h mtrace.pl mcheck-init.c stackinfo.h memusage.h \
-	     memusage.sh memusagestat.c tst-mtrace.sh arena.c hooks.c
-
-# Things which get pasted together into gmalloc.c.
-gmalloc-routines := malloc morecore
-# Things to include in the standalone distribution.
-dist-routines = $(gmalloc-routines) mcheck mtrace
-routines = $(dist-routines) obstack
+routines = malloc morecore mcheck mtrace obstack
 
 install-lib := libmcheck.a
 non-lib.a := libmcheck.a

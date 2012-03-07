@@ -1,4 +1,4 @@
-# Copyright (C) 1991,92,93,94,95,96,97,98,99,2001,2002,2004,2006
+# Copyright (C) 1991,92,93,94,95,96,97,98,99,2001,2002,2004,2006,2012
 #	Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
@@ -29,7 +29,7 @@ headers = hurd.h $(interface-headers) \
 			    userlink.h resource.h threadvar.h lookup.h)
 
 inline-headers = hurd.h $(addprefix hurd/,fd.h signal.h \
-				          userlink.h threadvar.h port.h)
+					  userlink.h threadvar.h port.h)
 
 # The RPC interfaces go in a separate library.
 interface-library := libhurduser
@@ -67,12 +67,9 @@ dtable	= dtable port2fd new-fd alloc-fd intern-fd \
 	  getdport openport \
 	  fd-close fd-read fd-write hurdioctl ctty-input ctty-output
 inlines = $(inline-headers:%.h=%-inlines)
-distribute = hurdstartup.h hurdfault.h hurdhost.h \
-	     faultexc.defs intr-rpc.defs intr-rpc.h intr-msg.h Notes
 
 # XXX this is a temporary hack; see hurdmalloc.h
 routines += hurdmalloc
-distribute += hurdmalloc.h
 
 # Binary compatibility for libc.so.0.2[GLIBC_2.0].
 ifeq ($(versioning),yes)

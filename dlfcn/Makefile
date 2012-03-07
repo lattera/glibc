@@ -22,12 +22,6 @@ libdl-routines	:= dlopen dlclose dlsym dlvsym dlerror dladdr dladdr1 dlinfo \
 		   dlmopen dlfcn
 routines	:= $(patsubst %,s%,$(filter-out dlfcn,$(libdl-routines)))
 elide-routines.os := $(routines)
-distribute	:= dlopenold.c glreflib1.c glreflib2.c glreflib3.c \
-		   failtestmod.c \
-		   defaultmod1.c defaultmod2.c errmsg1mod.c modatexit.c \
-		   modcxaatexit.c modstatic.c modstatic2.c \
-		   bug-dlsym1-lib1.c bug-dlsym1-lib2.c bug-atexit1-lib.c \
-		   bug-atexit2-lib.c
 
 extra-libs-others := libdl
 

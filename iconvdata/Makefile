@@ -1,4 +1,4 @@
-# Copyright (C) 1997-2008, 2011 Free Software Foundation, Inc.
+# Copyright (C) 1997-2008, 2011, 2012 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -126,83 +126,6 @@ LDFLAGS-libGB.so = $(LDFLAGS-soname-fname)
 LDFLAGS-libCNS.so = $(LDFLAGS-soname-fname)
 LDFLAGS-libISOIR165.so = $(LDFLAGS-soname-fname)
 LDFLAGS-libJISX0213.so = $(LDFLAGS-soname-fname)
-
-distribute := gconv-modules extra-module.mk gap.awk gaptab.awk gconv.map    \
-	      gen-8bit.sh gen-8bit-gap.sh gen-8bit-gap-1.sh		    \
-	      TESTS $(wildcard testdata/*)	    \
-	      TESTS2 run-iconv-test.sh tst-tables.sh tst-table.sh	    \
-	      tst-table-charmap.sh tst-table-from.c tst-table-to.c	    \
-	      EUC-JP.irreversible ISIRI-3342.irreversible SJIS.irreversible \
-	      EUC-KR.irreversible BIG5HKSCS.irreversible BIG5.irreversible  \
-	      CP1255.irreversible CP1258.irreversible EUC-TW.irreversible   \
-	      IBM856.irreversible IBM922.irreversible IBM1132.irreversible  \
-	      IBM1133.irreversible IBM1160.irreversible IBM1161.irreversible\
-	      IBM1163.irreversible IBM1164.irreversible			    \
-	      ARMSCII-8.irreversible TCVN5712-1.precomposed		    \
-	      JISX0213.TXT EUC-JISX0213.precomposed			    \
-	      SHIFT_JISX0213.precomposed SHIFT_JISX0213.irreversible	    \
-	      TSCII.irreversible TSCII.precomposed			    \
-	      8bit-generic.c 8bit-gap.c					    \
-	      ansi_x3.110.c asmo_449.c big5.c cp737.c cp737.h		    \
-	      cp775.c cp775.h ibm874.c cns11643.c cns11643.h		    \
-	      cns11643l1.c cns11643l1.h cp1125.c cp1250.c cp1251.c cp1252.c \
-	      cp1253.c cp1254.c cp1255.c cp1256.c cp1257.c cp1258.c	    \
-	      csn_369103.c cwi.c dec-mcs.c ebcdic-at-de.c ebcdic-at-de-a.c  \
-	      ebcdic-ca-fr.c ebcdic-dk-no.c ebcdic-dk-no-a.c ebcdic-es.c    \
-	      ebcdic-es-a.c ebcdic-es-s.c ebcdic-fr.c ebcdic-fi-se.c	    \
-	      ebcdic-fi-se-a.c ebcdic-is-friss.c ebcdic-it.c ebcdic-pt.c    \
-	      ebcdic-uk.c ebcdic-us.c ecma-cyrillic.c euc-cn.c euc-jp.c	    \
-	      euc-kr.c euc-tw.c gb2312.c gb2312.h gbk.c gost_19768-74.c	    \
-	      greek-ccitt.c greek7.c greek7-old.c hp-roman8.c ibm037.c	    \
-	      ibm038.c ibm256.c ibm273.c ibm274.c ibm275.c ibm277.c	    \
-	      ibm278.c ibm280.c ibm281.c ibm284.c ibm285.c ibm290.c	    \
-	      ibm297.c ibm420.c ibm423.c ibm424.c ibm437.c ibm500.c	    \
-	      ibm850.c ibm851.c ibm852.c ibm855.c ibm857.c ibm860.c	    \
-	      ibm861.c ibm862.c ibm863.c ibm864.c ibm865.c ibm866.c	    \
-	      ibm868.c ibm869.c ibm870.c ibm871.c ibm875.c ibm880.c	    \
-	      ibm891.c ibm903.c ibm904.c ibm905.c ibm918.c ibm1004.c	    \
-	      ibm856.c ibm930.c ibm933.c ibm935.c ibm937.c ibm939.c ibm1046.c \
-	      ibm856.h ibm930.h ibm933.h ibm935.h ibm937.h ibm939.h ibm1046.h \
-	      ibm922.c ibm922.h ibm1124.c ibm1124.h ibm1129.c ibm1129.h     \
-	      ibm1132.c ibm1132.h ibm1133.c ibm1133.h ibm1162.c ibm1162.h   \
-	      ibm1026.c ibm1047.c iec_p27-1.c inis.c inis-8.c viscii.c	    \
-	      inis-cyrillic.c iso-2022-jp.c iso-2022-kr.c iso646.c	    \
-	      iso8859-1.c iso8859-2.c iso8859-3.c iso8859-4.c iso8859-5.c   \
-	      iso8859-6.c iso8859-7.c iso8859-8.c iso8859-9.c iso8859-10.c  \
-	      iso8859-11.c iso8859-13.c iso8859-14.c iso8859-9e.c	    \
-	      iso8859-15.c iso_2033.c iso_5427-ext.c iso_5427.c iso_5428.c  \
-	      iso_6937.c iso_6937-2.c iso_10367-box.c jis0201.c jis0201.h   \
-	      jis0208.c jis0208.h jis0212.c jis0212.h johab.c koi-8.c	    \
-	      koi8-r.c ksc5601.c ksc5601.h latin-greek.c latin-greek-1.c    \
-	      macintosh.c mac-is.c mac-uk.c nats-dano.c nats-sefi.c sjis.c  \
-	      t.61.c uhc.c sami-ws2.c iso-ir-197.c tis-620.c koi8-u.c	    \
-	      isiri-3342.c isiri-3342.h gbgbk.c iso-2022-cn.c cns11643l2.h  \
-	      iso8859-16.c utf-16.c unicode.c utf-32.c utf-7.c big5hkscs.c  \
-	      iso-ir-165.c iso-ir-165.h gb18030.c iso-2022-cn-ext.c	    \
-	      ibm932.c ibm932.h ibm943.c ibm943.h gbbig5.c cp10007.c	    \
-	      koi8-t.c georgian-ps.c georgian-academy.c iso-ir-209.c	    \
-	      mac-sami.c ibm1160.c ibm1160.h ibm1161.c ibm1161.h	    \
-	      ibm1163.c ibm1163.h ibm1164.c ibm1164.h jisx0213.c jisx0213.h \
-	      euc-jisx0213.c shift_jisx0213.c iso-2022-jp-3.c		    \
-	      tcvn5712-1.c armscii-8.c tscii.c ibm866nav.c pt154.c rk1048.c \
-	      ibm1025.c ibm1025.h ibm1122.c ibm1122.h ibm1137.c ibm1137.h   \
-	      ibm1153.c ibm1153.h ibm1154.c ibm1154.h ibm1155.c ibm1155.h   \
-	      ibm1156.c ibm1156.h ibm1157.c ibm1157.h ibm1158.c ibm1158.h   \
-	      ibm803.c ibm803.h ibm901.c ibm901.h ibm902.c ibm902.h	    \
-	      ibm921.c ibm921.h ibm1008.c ibm1008.h ibm1008_420.c	    \
-	      ibm1097.c ibm1097.h ibm1112.c ibm1112.h ibm1123.c ibm1123.h   \
-	      ibm1130.c ibm1130.h ibm1140.c ibm1140.h ibm1141.c ibm1141.h   \
-	      ibm1142.c ibm1142.h ibm1143.c ibm1143.h ibm1144.c ibm1144.h   \
-	      ibm1145.c ibm1145.h ibm1146.c ibm1146.h ibm1147.c ibm1147.h   \
-	      ibm1148.c ibm1148.h ibm1149.c ibm1149.h ibm1166.c ibm1166.h   \
-	      ibm1167.c ibm1167.h ibm4517.c ibm4517.h ibm4899.c ibm4899.h   \
-	      ibm4909.c ibm4909.h ibm4971.c ibm4971.h ibm5347.c ibm5347.h   \
-	      ibm9030.c ibm9030.h ibm9066.c ibm9066.h ibm9448.c ibm9448.h   \
-	      ibm12712.c ibm12712.h ibm16804.c ibm16804.h                   \
-	      ibm1364.c ibm1364.h ibm1371.c ibm1371.h ibm1388.c ibm1388.h   \
-	      ibm1390.c ibm1390.h ibm1399.c ibm1399.h iso_11548-1.c mik.c   \
-	      brf.c mac-centraleurope.c hp-roman9.c hp-turkish8.c	    \
-	      hp-thai8.c hp-greek8.c cp770.c cp771.c cp772.c cp773.c cp774.c
 
 # We build the transformation modules only when we build shared libs.
 ifeq (yes,$(build-shared))

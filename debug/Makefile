@@ -21,7 +21,6 @@
 subdir	:= debug
 
 headers	:= execinfo.h
-distribute = sigcontextinfo.h register-dump.h frame.h
 
 routines  = backtrace backtracesyms backtracesymsfd noophooks \
 	    memcpy_chk memmove_chk mempcpy_chk memset_chk stpcpy_chk \
@@ -138,7 +137,6 @@ install-bin-script = xtrace
 
 include ../Makeconfig
 
-distribute += catchsegv.sh xtrace.sh
 ifeq ($(build-shared),yes)
 install-bin-script += catchsegv
 endif

@@ -1,3 +1,7 @@
+2012-03-07  Ulrich Drepper  <drepper@gmail.com>
+
+	* Makefile (distribute): Remove variable.
+
 2011-12-03  Ulrich Drepper  <drepper@gmail.com>
 
 	* idna.c (idna_to_unicode_4z4z): Remove variable rc.

@@ -20,23 +20,18 @@
 #
 subdir	:= timezone
 
-distribute := tzfile.h private.h scheck.c ialloc.c yearistype	\
-	      iso3166.tab zone.tab tzselect.ksh checktab.awk	\
-	      README
-
 extra-objs := scheck.o ialloc.o
 
 others	:= zdump zic
 tests	:= test-tz tst-timezone
 
+# pacificnew doesn't compile; if it is to be used, it should be included in
+# northamerica.
 tzbases := africa antarctica asia australasia europe northamerica \
 	   southamerica etcetera factory \
 	   solar87 solar88 solar89
 tzlinks := backward systemv
 tzfiles := $(tzbases) $(tzlinks)
-# pacificnew doesn't compile; if it is to be used, it should be included in
-# northamerica.
-distribute += $(tzfiles) leapseconds pacificnew simplebackw
 
 generated := $(addprefix z.,$(tzfiles))
 install-sbin := zic zdump
