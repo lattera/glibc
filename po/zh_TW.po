@@ -6193,7 +6193,7 @@ msgstr "這次真的被您打敗了"
 # - Macro: int EIEIO
 #     Go home and have a glass of warm, dairy-fresh milk.
 #
-# The following messages were copied & pasted 
+# The following messages were copied & pasted
 # from es.po by Santiago Vila Doncel <sanvila@unex.es>.
 #
 # <es.po>
