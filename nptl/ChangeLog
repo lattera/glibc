@@ -1,3 +1,9 @@
+2012-03-06  Ulrich Drepper  <drepper@gmail.com>
+
+	* sysdeps/pthread/bits/libc-lock.h: Split information not needed in
+	installed headers...
+	* sysdeps/pthread/bits/libc-lockP.h: ...here.  New file.
+
 2012-03-06  David S. Miller  <davem@davemloft.net>
 
 	* sysdeps/unix/sysv/linux/sparc/sem_post.c (__new_sem_post): Use
@@ -6,8 +12,8 @@
 
 2012-02-27  David S. Miller  <davem@davemloft.net>
 
-	* sysdeps/unix/sysv/linux/i386/bits/pthreadtypes.h: Don't refer to non-existing
-	__pthread_attr.
+	* sysdeps/unix/sysv/linux/i386/bits/pthreadtypes.h: Don't refer to
+	non-existing __pthread_attr.
 	* sysdeps/unix/sysv/linux/powerpc/bits/pthreadtypes.h: Likewise.
 	* sysdeps/unix/sysv/linux/s390/bits/pthreadtypes.h: Likewise.
 	* sysdeps/unix/sysv/linux/sh/bits/pthreadtypes.h: Likewise.
