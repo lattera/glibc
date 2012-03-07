@@ -1,7 +1,7 @@
 2012-03-06  Ulrich Drepper  <drepper@gmail.com>
 
-	* sysdeps/pthread/bits/libc-lock.h: Split information not needed in
-	installed headers...
+	* sysdeps/pthread/bits/libc-lock.h: Move information not needed in
+	installed headers to...
 	* sysdeps/pthread/bits/libc-lockP.h: ...here.  New file.
 
 2012-03-06  David S. Miller  <davem@davemloft.net>
