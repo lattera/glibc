@@ -1,3 +1,8 @@
+2012-03-08  Richard Henderson  <rth@twiddle.net>
+
+	* sysdeps/ieee754/ldbl-opt/math_ldbl_opt.h: Include <math_private.h>,
+	not <math/math_private.h>.
+
 2012-03-08  David S. Miller  <davem@davemloft.net>
 
 	* sysdeps/unix/sysv/linux/sparc/sparc64/get_clockfreq.c: Update
