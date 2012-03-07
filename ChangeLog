@@ -1,3 +1,17 @@
+2012-03-07  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #10716]
+	* math/s_cacosh.c (__cacosh): Convert negative log results to 0.
+	* math/s_cacoshf.c (__cacoshf): Likewise.
+	* math/s_cacoshl.c (__cacoshl): Likewise.
+	* math/s_casinh.c (__casinh): Set signs of result from argument.
+	* math/s_casinhf.c (__casinhf): Likewise.
+	* math/s_casinhl.c (__casinhl): Likewise.
+	* math/libm-test.inc (cacos_test, cacosh_test, casin_test)
+	(casinh_test): Add more tests.
+	* sysdeps/i386/fpu/libm-test-ulps: Update.
+	* sysdeps/x86_64/fpu/libm-test-ulps: Likewise.
+
 2012-03-07  Ulrich Drepper  <drepper@gmail.com>
 
 	* login/Makefile (distribute): Remove variable.

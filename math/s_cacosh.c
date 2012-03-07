@@ -1,5 +1,5 @@
 /* Return arc hyperbole cosine for double value.
-   Copyright (C) 1997, 2006, 2011 Free Software Foundation, Inc.
+   Copyright (C) 1997-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -66,9 +66,13 @@ __cacosh (__complex__ double x)
     }
   /* The factor 16 is just a guess.  */
   else if (16.0 * fabs (__imag__ x) < fabs (__real__ x))
-    /* Kahan's formula which avoid cancellation through subtraction in
-       some cases.  */
-    res = 2.0 * __clog (__csqrt ((x + 1.0) / 2.0) + __csqrt ((x - 1.0) / 2.0));
+    {
+      /* Kahan's formula which avoid cancellation through subtraction in
+	 some cases.  */
+      res = 2.0 * __clog (__csqrt ((x + 1.0) / 2.0) + __csqrt ((x - 1.0) / 2.0));
+      if (signbit (__real__ res))
+	__real__ res = 0.0;
+    }
   else
     {
       __complex__ double y;
