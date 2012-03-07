@@ -1,3 +1,12 @@
+2012-03-07  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #10545]
+	* sysdeps/pthread/configure.in (libc_cv_forced_unwind): Change
+	link test to a compile test.
+	(libc_cv_c_cleanup): Likewise.  Declare puts rather than including
+	<stdio.h>.
+	* sysdeps/pthread/configure: Regenerated.
+
 2012-03-07  Ulrich Drepper  <drepper@gmail.com>
 
 	* Makefile (distribute): Remove variable.
