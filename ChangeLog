@@ -1,5 +1,9 @@
 2012-03-07  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/i386/configure.in (cpuid.h): Use AC_CHECK_HEADER with no
+	default includes instead of AC_HEADER_CHECK.
+	* sysdeps/i386/configure: Regenerated.
+
 	[BZ #10716]
 	* math/s_cacosh.c (__cacosh): Convert negative log results to 0.
 	* math/s_cacoshf.c (__cacoshf): Likewise.
