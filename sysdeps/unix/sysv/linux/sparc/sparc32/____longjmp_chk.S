@@ -67,15 +67,9 @@ ENTRY (____longjmp_chk)
 	or	%o0, %lo(longjmp_msg), %o0
 #else
 	SETUP_PIC_REG(l7)
-#ifdef HAVE_BINUTILS_GOTDATA
 	sethi	%gdop_hix22(longjmp_msg), %o0
 	xor	%o0, %gdop_lox10(longjmp_msg), %o0
 	ld	[%l7 + %o0], %o0, %gdop(longjmp_msg)
-#else
-	sethi	%hi(longjmp_msg), %o0
-	or	%o0, %lo(longjmp_msg), %o0
-	ld	[%l7 + %o0], %o0
-#endif
 #endif
 	call	HIDDEN_JUMPTARGET(__fortify_fail)
 	 nop

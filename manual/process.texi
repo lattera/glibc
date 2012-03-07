@@ -55,8 +55,8 @@ until the subprogram terminates before you can do anything else.
 @comment ISO
 @deftypefun int system (const char *@var{command})
 @pindex sh
-This function executes @var{command} as a shell command.  In the GNU C
-library, it always uses the default shell @code{sh} to run the command.
+This function executes @var{command} as a shell command.  In @theglibc{},
+it always uses the default shell @code{sh} to run the command.
 In particular, it searches the directories in @code{PATH} to find
 programs to execute.  The return value is @code{-1} if it wasn't
 possible to create the shell process, and otherwise is the status of the
@@ -151,7 +151,7 @@ program should include the header files @file{unistd.h} and
 @comment POSIX.1
 @deftp {Data Type} pid_t
 The @code{pid_t} data type is a signed integer type which is capable
-of representing a process ID.  In the GNU library, this is an @code{int}.
+of representing a process ID.  In @theglibc{}, this is an @code{int}.
 @end deftp
 
 @comment unistd.h
@@ -260,8 +260,8 @@ do a long jump out of) the function that called @code{vfork}!  This
 would leave the parent process's control information very confused.  If
 in doubt, use @code{fork} instead.
 
-Some operating systems don't really implement @code{vfork}.  The GNU C
-library permits you to use @code{vfork} on all systems, but actually
+Some operating systems don't really implement @code{vfork}.  @Theglibc{}
+permits you to use @code{vfork} on all systems, but actually
 executes @code{fork} if @code{vfork} isn't available.  If you follow
 the proper precautions for using @code{vfork}, your program will still
 work even if the system uses @code{fork} instead.
@@ -694,11 +694,11 @@ signal number of the signal that caused the child process to stop.
 @node BSD Wait Functions
 @section BSD Process Wait Functions
 
-The GNU library also provides these related facilities for compatibility
+@Theglibc{} also provides these related facilities for compatibility
 with BSD Unix.  BSD uses the @code{union wait} data type to represent
 status values rather than an @code{int}.  The two representations are
-actually interchangeable; they describe the same bit patterns.  The GNU
-C Library defines macros such as @code{WEXITSTATUS} so that they will
+actually interchangeable; they describe the same bit patterns.  @Theglibc{}
+defines macros such as @code{WEXITSTATUS} so that they will
 work on either kind of object, and the @code{wait} function is defined
 to accept either type of pointer as its @var{status-ptr} argument.
 

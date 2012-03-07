@@ -30,8 +30,8 @@ _dl_setup_stack_chk_guard (void *dl_random)
 
   if (dl_random == NULL)
     {
-      ret.bytes[sizeof (ret) - 2] = 255;
-      ret.bytes[sizeof (ret) - 3] = '\n';
+      ret.bytes[sizeof (ret) - 1] = 255;
+      ret.bytes[sizeof (ret) - 2] = '\n';
     }
   else
     {

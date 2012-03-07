@@ -107,7 +107,7 @@ controlling terminal,
 @cindex job control is optional
 
 Not all operating systems support job control.  The GNU system does
-support job control, but if you are using the GNU library on some other
+support job control, but if you are using @theglibc{} on some other
 system, that system may not support job control itself.
 
 You can use the @code{_POSIX_JOB_CONTROL} macro to test at compile-time
@@ -1026,7 +1026,7 @@ to job control.
 @cindex controlling terminal, determining
 
 You can use the @code{ctermid} function to get a file name that you can
-use to open the controlling terminal.  In the GNU library, it returns
+use to open the controlling terminal.  In @theglibc{}, it returns
 the same string all the time: @code{"/dev/tty"}.  That is a special
 ``magic'' file name that refers to the controlling terminal of the
 current process (if it has one).  To find the name of the specific

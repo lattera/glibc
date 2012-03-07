@@ -1,5 +1,6 @@
 @node Feature Test Macros
 @subsection Feature Test Macros
+@include macros.texi
 
 @cindex feature test macros
 The exact set of features available when you compile a source file
@@ -65,7 +66,7 @@ then the functionality from the 1993 edition of the POSIX.1b standard
 
 Greater values for @code{_POSIX_C_SOURCE} will enable future extensions.
 The POSIX standards process will define these values as necessary, and
-the GNU C Library should support them some time after they become standardized.
+@theglibc{} should support them some time after they become standardized.
 The 1996 edition of POSIX.1 (ISO/IEC 9945-1: 1996) states that
 if you define @code{_POSIX_C_SOURCE} to a value greater than
 or equal to @code{199506L}, then the functionality from the 1996
@@ -192,7 +193,7 @@ This macro was introduced as part of the Large File Support extension
 @comment GNU
 @defvr Macro _ISOC99_SOURCE
 Until the revised @w{ISO C} standard is widely adopted the new features
-are not automatically enabled.  The GNU libc nevertheless has a complete
+are not automatically enabled.  @Theglibc{} nevertheless has a complete
 implementation of the new standard and to enable the new features the
 macro @code{_ISOC99_SOURCE} should be defined.
 @end defvr
@@ -227,7 +228,7 @@ get very strange errors at run time.
 @defvrx Macro _THREAD_SAFE
 If you define one of these macros, reentrant versions of several functions get
 declared.  Some of the functions are specified in POSIX.1c but many others
-are only available on a few other systems or are unique to GNU libc.
+are only available on a few other systems or are unique to @theglibc{}.
 The problem is the delay in the standardization of the thread safe C library
 interface.
 

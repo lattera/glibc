@@ -1068,7 +1068,7 @@ which device you plan to set the speed for.  If you use @code{tcsetattr}
 to set the speed of a particular device to a value that it cannot
 handle, @code{tcsetattr} returns @math{-1}.
 
-@strong{Portability note:} In the GNU library, the functions above
+@strong{Portability note:} In @theglibc{}, the functions above
 accept speeds measured in bits per second as input, and return speed
 values measured in bits per second.  Other libraries require speeds to
 be indicated by special codes.  For POSIX.1 portability, you must use
@@ -1612,7 +1612,7 @@ system for a subsequent call to @code{read}.
 actually the same as the EOF and EOL slots.  This causes no serious
 problem because the MIN and TIME slots are used only in noncanonical
 input and the EOF and EOL slots are used only in canonical input, but it
-isn't very clean.  The GNU library allocates separate slots for these
+isn't very clean.  @Theglibc{} allocates separate slots for these
 uses.
 
 @comment termios.h
@@ -1642,7 +1642,7 @@ It does exactly this:
 The usual way to get and set terminal modes is with the functions described
 in @ref{Terminal Modes}.  However, on some systems you can use the
 BSD-derived functions in this section to do some of the same thing.  On
-many systems, these functions do not exist.  Even with the GNU C library,
+many systems, these functions do not exist.  Even with @theglibc{},
 the functions simply fail with @code{errno} = @code{ENOSYS} with many
 kernels, including Linux.
 

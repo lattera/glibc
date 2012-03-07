@@ -1,3 +1,432 @@
+2012-03-05  David S. Miller  <davem@davemloft.net>
+
+	* sysdeps/sparc/fpu/libm-test-ulps: Update.
+
+2012-03-05  Andreas Schwab  <schwab@linux-m68k.org>
+
+	* sysdeps/powerpc/fpu/libm-test-ulps: Update.
+
+	* sysdeps/ieee754/ldbl-128ibm/e_coshl.c: Drop exp(-x) term
+	only for |x| >= 40.
+	* sysdeps/ieee754/ldbl-128ibm/e_sinhl.c: Likewise.
+
+2012-03-05  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/unix/sysv/linux/x86_64/gettimeofday.c (gettimeofday_ifunc):
+	Replace gettimeofday with __vdso_gettimeofday.
+
+	* sysdeps/unix/sysv/linux/x86_64/init-first.c
+	(_libc_vdso_platform_setup): Replace clock_gettime and getcpu with
+	__vdso_clock_gettime and __vdso_getcpu.
+
+	* sysdeps/unix/sysv/linux/x86_64/time.c (time_ifunc): Replace
+	time with __vdso_time.
+
+2012-03-05  Joseph Myers  <joseph@codesourcery.com>
+
+	* manual/lang.texi (size_t): Note types to which size_t may be
+	equivalent with the GNU C Library, but do not describe when
+	differences between them are significant.
+
+2012-03-05  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/i386/fpu/libm-test-ulps: Update.
+
+2012-03-05  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #3976]
+	* sysdeps/ieee754/dbl-64/e_pow.c: Include <fenv.h>.
+	(__ieee754_pow): Save and restore rounding mode and use
+	round-to-nearest for main computations.
+	* math/libm-test.inc (pow_test_tonearest): New function.
+	(pow_test_towardzero): Likewise.
+	(pow_test_downward): Likewise.
+	(pow_test_upward): Likewise.
+	(main): Call the new functions.
+	* sysdeps/i386/fpu/libm-test-ulps: Update.
+	* sysdeps/x86_64/fpu/libm-test-ulps: Likewise.
+
+	[BZ #3976]
+	* math/libm-test.inc (cosh_test_tonearest): New function.
+	(cosh_test_towardzero): Likewise.
+	(cosh_test_downward): Likewise.
+	(cosh_test_upward): Likewise.
+	(sinh_test_tonearest): Likewise.
+	(sinh_test_towardzero): Likewise.
+	(sinh_test_downward): Likewise.
+	(sinh_test_upward): Likewise.
+	(main): Call the new functions.
+	* sysdeps/i386/fpu/libm-test-ulps: Update.
+	* sysdeps/x86_64/fpu/libm-test-ulps: Likewise.
+
+2012-03-05  Tom de Vries  <tom@codesourcery.com>
+
+	* sysdeps/generic/dl-osinfo.h (_dl_setup_stack_chk_guard): Ensure
+	default stack guard is set in last bytes.
+	* sysdeps/unix/sysv/linux/dl-osinfo.h (_dl_setup_stack_chk_guard): Same.
+
+2012-03-05  Kees Cook  <keescook@chromium.org>
+
+	* stdio-common/vfprintf.c (vfprintf): add missing errno settings.
+
+	[BZ #13656]
+	* stdio-common/vfprintf.c (vfprintf): Check for nargs overflow and
+	possibly allocate from heap instead of stack.
+	* stdio-common/bug-vfprintf-nargs.c: New file.
+	* stdio-common/Makefile (tests): Add nargs overflow test.
+
+2012-03-03  Andreas Schwab  <schwab@linux-m68k.org>
+
+	* sysdeps/powerpc/fpu/libm-test-ulps: Update.
+
+2012-03-03  Marek Polacek  <polacek@redhat.com>
+
+	* include/sys/cdefs.h: Remove __GNUC_PREREQ macro.
+	* math/math_private.h: Likewise.
+	* stdlib/tst-strtod.c: Likewise.
+	* sysdeps/i386/i486/bits/atomic.h: Likewise.
+	* sysdeps/x86_64/bits/atomic.h: Likewise.
+
+2012-03-02  David S. Miller  <davem@davemloft.net>
+
+	* sysdeps/sparc/sparc32/sparcv9/fpu/s_llrint.S: New file.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/s_llrintf.S: New file.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/s_lrint.S: New file.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/s_lrintf.S: New file.
+	* sysdeps/sparc/sparc64/fpu/s_llrint.S: New file.
+	* sysdeps/sparc/sparc64/fpu/s_llrintf.S: New file.
+	* sysdeps/sparc/sparc64/fpu/s_lrint.S: New file.
+	* sysdeps/sparc/sparc64/fpu/s_lrintf.S: New file.
+
+2012-03-02  Roland McGrath  <roland@hack.frob.com>
+
+	[BZ #13792]
+	* manual/examples/README: New file, says the example source files
+	can be used under GPL>=2.
+	* manual/Makefile (%.c.texi): Eat the leading part of the file until a
+	line containing just "*/".
+	* manual/examples/add.c: Add copyright header (GPL>=2).
+	* manual/examples/argp-ex1.c: Likewise.
+	* manual/examples/argp-ex2.c: Likewise.
+	* manual/examples/argp-ex3.c: Likewise.
+	* manual/examples/argp-ex4.c: Likewise.
+	* manual/examples/atexit.c: Likewise.
+	* manual/examples/db.c: Likewise.
+	* manual/examples/dir.c: Likewise.
+	* manual/examples/dir2.c: Likewise.
+	* manual/examples/execinfo.c: Likewise.
+	* manual/examples/filecli.c: Likewise.
+	* manual/examples/filesrv.c: Likewise.
+	* manual/examples/fmtmsgexpl.c: Likewise.
+	* manual/examples/genpass.c: Likewise.
+	* manual/examples/inetcli.c: Likewise.
+	* manual/examples/inetsrv.c: Likewise.
+	* manual/examples/isockad.c: Likewise.
+	* manual/examples/longopt.c: Likewise.
+	* manual/examples/memopen.c: Likewise.
+	* manual/examples/memstrm.c: Likewise.
+	* manual/examples/mkfsock.c: Likewise.
+	* manual/examples/mkisock.c: Likewise.
+	* manual/examples/mygetpass.c: Likewise.
+	* manual/examples/pipe.c: Likewise.
+	* manual/examples/popen.c: Likewise.
+	* manual/examples/rprintf.c: Likewise.
+	* manual/examples/search.c: Likewise.
+	* manual/examples/select.c: Likewise.
+	* manual/examples/setjmp.c: Likewise.
+	* manual/examples/sigh1.c: Likewise.
+	* manual/examples/sigusr.c: Likewise.
+	* manual/examples/stpcpy.c: Likewise.
+	* manual/examples/strdupa.c: Likewise.
+	* manual/examples/strftim.c: Likewise.
+	* manual/examples/strncat.c: Likewise.
+	* manual/examples/subopt.c: Likewise.
+	* manual/examples/swapcontext.c: Likewise.
+	* manual/examples/termios.c: Likewise.
+	* manual/examples/testopt.c: Likewise.
+	* manual/examples/testpass.c: Likewise.
+	* manual/examples/timeval_subtract.c: Likewise.
+
+	[BZ #13792]
+	* manual/time.texi (Elapsed Time): Move timeval_subtract example
+	function to ...
+	* manual/timeval_subtract.c.texi: ... here, new file.
+
+2012-03-02  David S. Miller  <davem@davemloft.net>
+
+	* sysdeps/sparc/fpu/libm-test-ulps: Update for recently added tests.
+
+2012-03-02  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #3976]
+	* sysdeps/ieee754/dbl-64/s_sin.c: Include <fenv.h>
+	(__sin): Save and restore rounding mode and use round-to-nearest
+	for all computations.
+	(__cos): Save and restore rounding mode and use round-to-nearest
+	for all computations.
+	* sysdeps/ieee754/dbl-64/s_tan.c: Include "math_private.h" and
+	<fenv.h>.
+	(tan): Save and restore rounding mode and use round-to-nearest for
+	all computations.
+	* math/libm-test.inc (cos_test_tonearest): New function.
+	(cos_test_towardzero): Likewise.
+	(cos_test_downward): Likewise.
+	(cos_test_upward): Likewise.
+	(sin_test_tonearest): Likewise.
+	(sin_test_towardzero): Likewise.
+	(sin_test_downward): Likewise.
+	(sin_test_upward): Likewise.
+	(tan_test_tonearest): Likewise.
+	(tan_test_towardzero): Likewise.
+	(tan_test_downward): Likewise.
+	(tan_test_upward): Likewise.
+	(main): Call the new functions.
+	* sysdeps/i386/fpu/libm-test-ulps: Update.
+	* sysdeps/x86_64/fpu/libm-test-ulps: Likewise.
+
+	[BZ #10135]
+	* sysdeps/ieee754/dbl-64/s_scalbln.c (__scalbln): First test for
+	small n, then large n, before computing and testing k+n.
+	* sysdeps/ieee754/dbl-64/s_scalbn.c (__scalbn): Likewise.
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_scalbln.c (__scalbln):
+	Likewise.
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_scalbn.c (__scalbn):
+	Likewise.
+	* sysdeps/ieee754/flt-32/s_scalblnf.c (__scalblnf): Likewise.
+	* sysdeps/ieee754/flt-32/s_scalbnf.c (__scalbnf): Likewise.
+	* sysdeps/ieee754/ldbl-128/s_scalblnl.c (__scalblnl): Likewise.
+	* sysdeps/ieee754/ldbl-128/s_scalbnl.c (__scalbnl): Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_scalblnl.c (__scalblnl): Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_scalbnl.c (__scalbnl): Likewise.
+	* sysdeps/ieee754/ldbl-96/s_scalblnl.c (__scalblnl): Likewise.
+	* sysdeps/ieee754/ldbl-96/s_scalbnl.c (__scalbnl): Likewise.
+	* math/libm-test.inc (scalbn_test): Add more tests.
+	(scalbln_test): Likewise.
+
+	* manual/filesys.texi (mode_t): Describe constraints on size and
+	signedness, not exact equivalence to a particular type.
+	(ino_t): Likewise.
+	(ino64_t): Likewise.
+	(dev_t): Likewise.
+	(nlink_t): Likewise.
+	(blkcnt_t): Likewise.
+	(blkcnt64_t): Likewise.
+	* manual/llio.texi (off_t): Likewise.
+
+	[BZ #3976]
+	* sysdeps/ieee754/dbl-64/e_exp.c: Include <fenv.h>.
+	(__ieee754_exp): Save and restore rounding mode and use
+	round-to-nearest for all computations.
+	* math/libm-test.inc (exp_test_tonearest): New function.
+	(exp_test_towardzero): Likewise.
+	(exp_test_downward): Likewise.
+	(exp_test_upward): Likewise.
+	(main): Call the new functions.
+	* sysdeps/i386/fpu/libm-test-ulps: Update.
+	* sysdeps/x86_64/fpu/libm-test-ulps: Likewise.
+
+2012-03-01  Chris Demetriou  <cgd@google.com>
+
+	* sysdeps/gnu/errlist-compat.awk: Don't depend on AWK internals to
+	have predictable order.
+
+2012-03-01  David S. Miller  <davem@davemloft.net>
+
+	* sysdeps/unix/sysv/linux/sparc/sparc32/getpagesize.c: Delete.
+
+	* sysdeps/sparc/sparc64/fpu/s_finite.S: New file.
+	* sysdeps/sparc/sparc64/fpu/s_finitef.S: New file.
+	* sysdeps/sparc/sparc64/fpu/s_isinf.S: New file.
+	* sysdeps/sparc/sparc64/fpu/s_isinff.S: New file.
+
+	* sysdeps/sparc/sparc32/fpu/s_signbit.S: New file.
+	* sysdeps/sparc/sparc32/fpu/s_signbitf.S: New file.
+	* sysdeps/sparc/sparc32/fpu/s_signbitl.S: New file.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/s_isnan.S: New file.
+	* sysdeps/sparc/sparc64/fpu/s_isnan.S: New file.
+	* sysdeps/sparc/sparc64/fpu/s_isnanf.S: New file.
+	* sysdeps/sparc/sparc64/fpu/s_signbit.S: New file.
+	* sysdeps/sparc/sparc64/fpu/s_signbitf.S: New file.
+	* sysdeps/sparc/sparc64/fpu/s_signbitl.S: New file.
+
+	* sysdeps/sparc/fpu/libm-test-ulps: Update.
+
+	* sysdeps/sparc/sparc32/fpu/libm-test-ulps: Move...
+	* sysdeps/sparc/fpu/libm-test-ulps: to here.
+	* sysdeps/sparc/sparc64/fpu/libm-test-ulps: Delete.
+
+	* sysdeps/sparc/crti.S: Remove HAVE_BINUTILS_GOTDATA checks.
+	* sysdeps/sparc/sparc32/dl-machine.h: Likewise.
+	* sysdeps/sparc/sparc32/elf/start.S: Likewise.
+	* sysdeps/sparc/sparc32/fpu/w_sqrt.S: Likewise.
+	* sysdeps/sparc/sparc32/fpu/w_sqrtf.S: Likewise.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/w_sqrt.S: Likewise.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/w_sqrtf.S: Likewise.
+	* sysdeps/sparc/sparc64/dl-machine.h: Likewise.
+	* sysdeps/sparc/sparc64/elf/start.S: Likewise.
+	* sysdeps/sparc/sparc64/fpu/w_sqrt.S: Likewise.
+	* sysdeps/sparc/sparc64/fpu/w_sqrtf.S: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/____longjmp_chk.S: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/sysdep.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/____longjmp_chk.S: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/brk.S: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/sysdep.h: Likewise.
+	* config.h.in (HAVE_BINUTILS_GOTDATA): Delete.
+	* sysdeps/sparc/elf/configure.in: Remove binutils GOTDATA checks.
+	* sysdeps/sparc/elf/configure: Regenerated.
+
+2012-03-01  Joseph Myers  <joseph@codesourcery.com>
+
+	* configure.in (AS, LD): Require binutils 2.20 or later.
+	* configure: Regenerated.
+	* manual/install.texi (Tools for Compilation): Give binutils 2.20
+	as required minimum version.
+	* INSTALL: Regenerated.
+
+	[BZ #2541]
+	[BZ #4108]
+	* sysdeps/ieee754/flt-32/s_erff.c (__erfcf): Mask out one more bit
+	before squaring exponent.
+	* sysdeps/ieee754/ldbl-128ibm/s_erfl.c (__erfcl): Mask out whole
+	bottom long double and 27 bits of top long double before squaring
+	exponent.
+	* math/libm-test.inc (erfc_test): Add more tests.
+	* sysdeps/i386/fpu/libm-test-ulps: Update.
+	* sysdeps/powerpc/fpu/libm-test-ulps: Likewise.
+	* sysdeps/x86_64/fpu/libm-test-ulps: Likewise.
+
+2012-03-01  Kai Tietz  <ktietz@redhat.com>
+
+	* soft-fp/soft-fp.h (_FP_STRUCT_LAYOUT): New macro.
+	* soft-fp/quad.h (_FP_UNION_Q): Use _FP_STRUCT_LAYOUT on struct
+	containing bit-fields.
+	* soft-fp/extended.h (_FP_UNION_E): Likewise.
+	* soft-fp/single.h (_FP_UNION_S): Likewise.
+	* soft-fp/double.h (_FP_UNION_D): Likewise.
+
+2012-02-29  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #13786]
+	* sysdeps/i386/i686/multiarch/strcmp.S [USE_AS_STRCASECMP_L]: Do
+	not include ../strcmp.S.
+	[USE_AS_STRNCASECMP_L]: Likewise.
+	* sysdeps/i386/i686/multiarch/strcasecmp_l-c.c
+	(__strcasecmp_l_ia32): Define as alias to __strcasecmp_l_nonascii.
+	* sysdeps/i386/i686/multiarch/strncase_l-c.c
+	(__strncasecmp_l_ia32): Define as alias to
+	__strncasecmp_l_nonascii.
+
+	[BZ #5794]
+	* math/libm-test.inc (expm1_test): Add test for bug 5794.
+	* sysdeps/i386/fpu/libm-test-ulps: Update.
+	* sysdeps/x86_64/fpu/libm-test-ulps: Likewise.
+
+	* sysdeps/i386/fpu/libm-test-ulps: Reduce some expected errors.
+	* sysdeps/x86_64/fpu/libm-test-ulps: Likewise.
+
+2012-02-29  Jeff Law  <law@redhat.com>
+
+	* resolv/res_query.c (__libc_res_nquerydomain): Avoid
+	out of bounds read.
+
+2012-02-29  Marek Polacek  <polacek@redhat.com>
+
+	[BZ #13706]
+	* elf/rtld.c (dl_main): Always set l_used to 1 for vDSO.
+	* elf/Makefile: Add rules to run tst-unused-dep.out.
+
+2012-02-28  David S. Miller  <davem@davemloft.net>
+
+	* sysdeps/sparc/sparc32/fpu/w_sqrt.S: New file.
+	* sysdeps/sparc/sparc32/fpu/w_sqrtf.S: New file.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/w_sqrt.S: New file.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/w_sqrtf.S: New file.
+	* sysdeps/sparc/sparc64/fpu/w_sqrt.S: New file.
+	* sysdeps/sparc/sparc64/fpu/w_sqrtf.S: New file.
+
+2012-02-29  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/libm-test.inc (llround_test): Move one test from
+	lround_test.  Use TEST_f_L in moved test.
+	(lround_test): Move misplaced test to llround_test.  Add testcase
+	from bug 2561.
+
+2012-02-28  Ulrich Drepper  <drepper@gmail.com>
+
+	* sysdeps/x86_64/fpu/e_expf.S: New file.
+	Contributed by Dmitrieva Liubov <liubov.dmitrieva@gmail.com>.
+
+2012-02-28  Stanislav Brabec  <sbrabec@suse.cz>
+
+	[BZ #13637]
+	* posix/regex_internal.c (re_string_skip_chars): Fix miscomputation
+	of remain_len that may cause incomplete multi-byte character and
+	false match.
+	* posix/bug-regex33.c: New file.
+	* posix/Makefile (tests): Add bug-regex33.
+
+2012-02-28  Joseph Myers  <joseph@codesourcery.com>
+
+	* manual/macros.texi: New file.
+	* Makefile (INSTALL, NOTES): Depend on manual/macros.texi.
+	* manual/libc.texinfo: Include macros.texi.
+	* manual/creatute.texi: Likewise.
+	* manual/install.texi: Likewise.
+	* manual/arith.texi: Use macros @Theglibc{}, @theglibc{} and
+	@glibcadj{} in references to the GNU C Library.
+	* manual/charset.texi: Likewise.
+	* manual/conf.texi: Likewise.
+	* manual/contrib.texi: Likewise.  Consistently use "GNU C Library"
+	when not using those macros.
+	* manual/creature.texi: Likewise.
+	* manual/crypt.texi: Likewise.
+	* manual/errno.texi: Likewise.
+	* manual/filesys.texi: Likewise.
+	* manual/header.texi: Likewise.
+	* manual/install.texi: Likewise.
+	* manual/intro.texi: Likewise.
+	* manual/io.texi: Likewise.
+	* manual/job.texi: Likewise.
+	* manual/lang.texi: Likewise.
+	* manual/libc.texiinfo: Likewise.
+	* manual/llio.texi: Likewise.
+	* manual/locale.texi: Likewise.
+	* manual/maint.texi: Likewise.
+	* manual/math.texi: Likewise.
+	* manual/memory.texi: Likewise.
+	* manual/message.texi: Likewise.
+	* manual/nss.texi: Likewise.
+	* manual/pattern.texi: Likewise.
+	* manual/process.texi: Likewise.
+	* manual/resource.texi: Likewise.
+	* manual/search.texi: Likewise.
+	* manual/setjmp.texi: Likewise.
+	* manual/signal.texi: Likewise.
+	* manual/socket.texi: Likewise.
+	* manual/startup.texi: Likewise.
+	* manual/stdio.texi: Likewise.
+	* manual/string.texi: Likewise.
+	* manual/sysinfo.texi: Likewise.
+	* manual/syslog.texi: Likewise.
+	* manual/terminal.texi: Likewise.
+	* manual/time.texi: Likewise.
+	* manual/users.texi: Likewise.
+	* INSTALL: Regenerated.
+	* NOTES: Regenerated.
+	* sysdeps/gnu/errlist.c: Regenerated.
+
+2012-02-28  Andreas Schwab  <schwab@linux-m68k.org>
+
+	* include/dirent.h: Include <dirstream.h> before
+	<dirent/dirent.h>.
+
+2012-02-28  David S. Miller  <davem@davemloft.net>
+
+	* sysdeps/sparc/sparc32/fpu/s_copysign.S: New file.
+	* sysdeps/sparc/sparc32/fpu/s_copysignf.S: New file.
+	* sysdeps/sparc/sparc64/fpu/s_copysign.S: New file.
+	* sysdeps/sparc/sparc64/fpu/s_copysignf.S: New file.
+
 2012-02-27  David S. Miller  <davem@davemloft.net>
 
 	* sysdeps/sparc/sparc32/sparcv9/fpu/s_floor.S: New file.

@@ -30,7 +30,7 @@ gettimeofday_ifunc (void)
   PREPARE_VERSION (linux26, "LINUX_2.6", 61765110);
 
   /* If the vDSO is not available we fall back on the old vsyscall.  */
-  return (_dl_vdso_vsym ("gettimeofday", &linux26)
+  return (_dl_vdso_vsym ("__vdso_gettimeofday", &linux26)
 	  ?: (void *) VSYSCALL_ADDR_vgettimeofday);
 }
 __asm (".type __gettimeofday, %gnu_indirect_function");

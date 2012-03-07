@@ -1,0 +1,20 @@
+@c Define common macros used to keep phrasing consistent in the manual.
+
+@ifclear MACROS
+@set MACROS
+
+@c Names used to refer to the library, as noun phrases at the start or
+@c not at the start of a sentence.
+@macro Theglibc
+The GNU C Library
+@end macro
+@macro theglibc
+the GNU C Library
+@end macro
+
+@c Name used to refer to the library as an adjective.
+@macro glibcadj
+GNU C Library
+@end macro
+
+@end ifclear

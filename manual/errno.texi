@@ -6,7 +6,7 @@
 @cindex error codes
 @cindex status codes
 
-Many functions in the GNU C library detect and report error conditions,
+Many functions in @theglibc{} detect and report error conditions,
 and sometimes your programs need to check for these error conditions.
 For example, when you open an input file, you should verify that the
 file was actually opened correctly, and print an error message or take
@@ -67,7 +67,7 @@ function returns an error.
 ``modifiable lvalue'' rather than as a variable, permitting it to be
 implemented as a macro.  For example, its expansion might involve a
 function call, like @w{@code{*_errno ()}}.  In fact, that is what it is
-on the GNU system itself.  The GNU library, on non-GNU systems, does
+on the GNU system itself.  @Theglibc{}, on non-GNU systems, does
 whatever is right for the particular system.
 
 There are a few library functions, like @code{sqrt} and @code{atan},
@@ -114,8 +114,8 @@ allocated memory instead of stack memory on that system.
 @pindex errno.h
 The error code macros are defined in the header file @file{errno.h}.
 All of them expand into integer constant values.  Some of these error
-codes can't occur on the GNU system, but they can occur using the GNU
-library on other systems.
+codes can't occur on the GNU system, but they can occur using @theglibc{}
+on other systems.
 
 @comment errno.h
 @comment POSIX.1: Operation not permitted
@@ -419,7 +419,7 @@ not representable because of overflow or underflow.
 @comment errno 35 @c DO NOT REMOVE
 Resource temporarily unavailable; the call might work if you try again
 later.  The macro @code{EWOULDBLOCK} is another name for @code{EAGAIN};
-they are always the same in the GNU C library.
+they are always the same in @theglibc{}.
 
 This error can happen in a few different situations:
 
@@ -452,7 +452,7 @@ and return to its command loop.
 @comment BSD: Operation would block
 @deftypevr Macro int EWOULDBLOCK
 @comment errno EAGAIN @c DO NOT REMOVE
-In the GNU C library, this is another name for @code{EAGAIN} (above).
+In @theglibc{}, this is another name for @code{EAGAIN} (above).
 The values are always the same, on every operating system.
 
 C libraries in many older Unix systems have @code{EWOULDBLOCK} as a
@@ -1572,7 +1572,7 @@ like this:
 
 @code{error} and @code{error_at_line} are clearly the functions of
 choice and enable the programmer to write applications which follow the
-GNU coding standard.  The GNU libc additionally contains functions which
+GNU coding standard.  @Theglibc{} additionally contains functions which
 are used in BSD for the same purpose.  These functions are declared in
 @file{err.h}.  It is generally advised to not use these functions.  They
 are included only for compatibility.

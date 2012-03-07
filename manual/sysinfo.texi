@@ -97,7 +97,7 @@ this array, in bytes.  Note that this is @emph{not} the DNS hostname.
 If the system participates in DNS, this is the FQDN (see above).
 
 The return value is @code{0} on success and @code{-1} on failure.  In
-the GNU C library, @code{gethostname} fails if @var{size} is not large
+@theglibc{}, @code{gethostname} fails if @var{size} is not large
 enough; then you can try again with a larger array.  The following
 @code{errno} error condition is defined for this function:
 
@@ -251,8 +251,8 @@ system.
 This is a description of the type of hardware that is in use.
 
 Some systems provide a mechanism to interrogate the kernel directly for
-this information.  On systems without such a mechanism, the GNU C
-library fills in this field based on the configuration name that was
+this information.  On systems without such a mechanism, @theglibc{}
+fills in this field based on the configuration name that was
 specified when building and installing the library.
 
 GNU uses a three-part name to describe a system configuration; the three
@@ -276,8 +276,8 @@ hardware, it consists of the first two parts of the configuration name:
 @end quotation
 
 @item char nodename[]
-This is the host name of this particular computer.  In the GNU C
-library, the value is the same as that returned by @code{gethostname};
+This is the host name of this particular computer.  In @theglibc{},
+the value is the same as that returned by @code{gethostname};
 see @ref{Host Identification}.
 
 @ gethostname() is implemented with a call to uname().
@@ -344,7 +344,7 @@ gets stored.
 
 For some programs it is desirable and necessary to access information
 about whether a certain filesystem is mounted and, if it is, where, or
-simply to get lists of all the available filesystems.  The GNU libc
+simply to get lists of all the available filesystems.  @Theglibc{}
 provides some functions to retrieve this information portably.
 
 Traditionally Unix systems have a file named @file{/etc/fstab} which
@@ -465,7 +465,7 @@ related to the @code{dump} utility used on Unix systems.
 @end deftp
 
 
-To read the entire content of the of the @file{fstab} file the GNU libc
+To read the entire content of the of the @file{fstab} file @theglibc{}
 contains a set of three functions which are designed in the usual way.
 
 @comment fstab.h
@@ -634,8 +634,8 @@ which is uninteresting for all programs beside @code{dump}.
 For accessing the @file{mtab} file there is again a set of three
 functions to access all entries in a row.  Unlike the functions to
 handle @file{fstab} these functions do not access a fixed file and there
-is even a thread safe variant of the get function.  Beside this the GNU
-libc contains functions to alter the file and test for specific options.
+is even a thread safe variant of the get function.  Beside this @theglibc
+contains functions to alter the file and test for specific options.
 
 @comment mntent.h
 @comment BSD
@@ -1184,7 +1184,7 @@ cat /proc/sys/vm/freepages
 @c possible to create a sysctl-only parameter.
 
 Some more traditional and more widely available, though less general,
-GNU C library functions for getting and setting some of the same system
+@glibcadj{} functions for getting and setting some of the same system
 parameters are:
 
 @itemize @bullet

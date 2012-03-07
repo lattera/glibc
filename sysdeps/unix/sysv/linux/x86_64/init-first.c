@@ -36,13 +36,13 @@ _libc_vdso_platform_setup (void)
 {
   PREPARE_VERSION (linux26, "LINUX_2.6", 61765110);
 
-  void *p = _dl_vdso_vsym ("clock_gettime", &linux26);
+  void *p = _dl_vdso_vsym ("__vdso_clock_gettime", &linux26);
   if (p == NULL)
     p = __syscall_clock_gettime;
   PTR_MANGLE (p);
   __GI___vdso_clock_gettime = p;
 
-  p = _dl_vdso_vsym ("getcpu", &linux26);
+  p = _dl_vdso_vsym ("__vdso_getcpu", &linux26);
   /* If the vDSO is not available we fall back on the old vsyscall.  */
 #define VSYSCALL_ADDR_vgetcpu	0xffffffffff600800
   if (p == NULL)

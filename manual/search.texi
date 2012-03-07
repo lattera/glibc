@@ -65,7 +65,7 @@ int comparison_fn_t (const void *, const void *);
 @cindex array search function
 
 Generally searching for a specific element in an array means that
-potentially all elements must be checked.  The GNU C library contains
+potentially all elements must be checked.  @Theglibc{} contains
 functions to perform linear search.  The prototypes for the following
 two functions can be found in @file{search.h}.
 
@@ -269,8 +269,8 @@ information.
 
 The weakest aspect of this function is that there can be at most one
 hashing table used through the whole program.  The table is allocated
-in local memory out of control of the programmer.  As an extension the
-GNU C library provides an additional set of functions with an reentrant
+in local memory out of control of the programmer.  As an extension @theglibc{}
+provides an additional set of functions with an reentrant
 interface which provide a similar interface but which allow to keep
 arbitrarily many hashing tables.
 
@@ -417,7 +417,7 @@ Another common form to organize data for efficient search is to use
 trees.  The @code{tsearch} function family provides a nice interface to
 functions to organize possibly large amounts of data by providing a mean
 access time proportional to the logarithm of the number of elements.
-The GNU C library implementation even guarantees that this bound is
+@Theglibc{} implementation even guarantees that this bound is
 never exceeded even for input data which cause problems for simple
 binary tree implementations.
 

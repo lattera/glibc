@@ -43,11 +43,13 @@ __scalblnl (long double x, long int n)
 	    k = (hx&0x7fff) - 63;
 	    }
 	if (__builtin_expect(k==0x7fff, 0)) return x+x;	/* NaN or Inf */
-	k = k+n;
-	if (__builtin_expect(n> 50000 || k > 0x7ffe, 0))
-	  return huge*__copysignl(huge,x); /* overflow  */
 	if (__builtin_expect(n< -50000, 0))
 	  return tiny*__copysignl(tiny,x);
+	if (__builtin_expect(n> 50000 || k+n > 0x7ffe, 0))
+	  return huge*__copysignl(huge,x); /* overflow  */
+	/* Now k and n are bounded we know that k = k+n does not
+	   overflow.  */
+	k = k+n;
 	if (__builtin_expect(k > 0, 1))		/* normal result */
 	    {SET_LDOUBLE_EXP(x,(es&0x8000)|k); return x;}
 	if (k <= -63)

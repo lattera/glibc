@@ -522,7 +522,7 @@ The process tried to set its current limit beyond its maximum limit.
 When multiple processes simultaneously require CPU time, the system's
 scheduling policy and process CPU priorities determine which processes
 get it.  This section describes how that determination is made and
-GNU C library functions to control it.
+@glibcadj{} functions to control it.
 
 It is common to refer to CPU scheduling simply as scheduling and a
 process' CPU priority simply as the process' priority, with the CPU
@@ -537,7 +537,7 @@ CPU scheduling is a complex issue and different systems do it in wildly
 different ways.  New ideas continually develop and find their way into
 the intricacies of the various systems' scheduling algorithms.  This
 section discusses the general concepts, some specifics of systems
-that commonly use the GNU C library, and some standards.
+that commonly use @theglibc{}, and some standards.
 
 For simplicity, we talk about CPU contention as if there is only one CPU
 in the system.  But all the same principles apply when a processor has
@@ -746,7 +746,7 @@ that has absolute priority higher than 0.
 @node Basic Scheduling Functions
 @subsection Basic Scheduling Functions
 
-This section describes functions in the GNU C library for setting the
+This section describes functions in @theglibc{} for setting the
 absolute priority and scheduling policy of a process.
 
 @strong{Portability Note:}  On systems that have the functions in this
@@ -759,7 +759,7 @@ functions to fine tune the scheduling are in @ref{Traditional Scheduling}.
 Don't try to make too much out of the naming and structure of these
 functions.  They don't match the concepts described in this manual
 because the functions are as defined by POSIX.1b, but the implementation
-on systems that use the GNU C library is the inverse of what the POSIX
+on systems that use @theglibc{} is the inverse of what the POSIX
 structure contemplates.  The POSIX scheme assumes that the primary
 scheduling parameter is the scheduling policy and that the priority
 value, if any, is a parameter of the scheduling policy.  In the
@@ -1107,7 +1107,7 @@ other process owned by the same user (or effective user).  But only a
 privileged process can lower its nice value.  A privileged process can
 also raise or lower another process' nice value.
 
-GNU C Library functions for getting and setting nice values are described in
+@glibcadj{} functions for getting and setting nice values are described in
 @xref{Traditional Scheduling Functions}.
 
 @node Traditional Scheduling Functions
@@ -1289,7 +1289,7 @@ The POSIX standard up to this date is of not much help to solve this
 problem.  The Linux kernel provides a set of interfaces to allow
 specifying @emph{affinity sets} for a process.  The scheduler will
 schedule the thread or process on CPUs specified by the affinity
-masks.  The interfaces which the GNU C library define follow to some
+masks.  The interfaces which @theglibc{} define follow to some
 extend the Linux kernel interface.
 
 @comment sched.h
@@ -1554,7 +1554,7 @@ increases its memory usage).  The value returned for
 If all applications together constantly use more than that amount of
 memory the system is in trouble.
 
-The GNU C library provides in addition to these already described way to
+@Theglibc{} provides in addition to these already described way to
 get this information two functions.  They are declared in the file
 @file{sys/sysinfo.h}.  Programmers should prefer to use the
 @code{sysconf} method described above.
@@ -1610,7 +1610,7 @@ processors and so the call
 returns the number of processors which are currently online (i.e.,
 available).
 
-For these two pieces of information the GNU C library also provides
+For these two pieces of information @theglibc{} also provides
 functions to get the information directly.  The functions are declared
 in @file{sys/sysinfo.h}.
 

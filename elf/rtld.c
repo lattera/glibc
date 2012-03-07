@@ -1,5 +1,5 @@
 /* Run time dynamic linker.
-   Copyright (C) 1995-2010, 2011 Free Software Foundation, Inc.
+   Copyright (C) 1995-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -1374,6 +1374,9 @@ of this helper program; chances are you did not intend to run this program.\n\
 	  elf_get_dynamic_info (l, dyn_temp);
 	  _dl_setup_hash (l);
 	  l->l_relocated = 1;
+
+	  /* The vDSO is always used.  */
+	  l->l_used = 1;
 
 	  /* Initialize l_local_scope to contain just this map.  This allows
 	     the use of dl_lookup_symbol_x to resolve symbols within the vdso.

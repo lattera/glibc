@@ -95,8 +95,7 @@ ENTRY(name);					\
 	 mov	%g1, %o7;
 #else
 # if RTLD_PRIVATE_ERRNO
-#  ifdef HAVE_BINUTILS_GOTDATA
-#   define SYSCALL_ERROR_HANDLER		\
+#  define SYSCALL_ERROR_HANDLER			\
 0:	SETUP_PIC_REG_LEAF(o2,g1)		\
 	sethi	%gdop_hix22(rtld_errno), %g1;	\
 	xor	%g1, %gdop_lox10(rtld_errno), %g1;\
@@ -104,16 +103,6 @@ ENTRY(name);					\
 	st	%o0, [%g1];			\
 	jmp	%o7 + 8;			\
 	 mov	-1, %o0;
-#  else
-#   define SYSCALL_ERROR_HANDLER		\
-0:	SETUP_PIC_REG_LEAF(o2,g1)		\
-	sethi	%hi(rtld_errno), %g1;		\
-	or	%g1, %lo(rtld_errno), %g1;	\
-	ldx	[%o2 + %g1], %g1;		\
-	st	%o0, [%g1];			\
-	jmp	%o7 + 8;			\
-	 mov	-1, %o0;
-#  endif
 # elif defined _LIBC_REENTRANT
 
 #  ifndef NOT_IN_libc
@@ -130,8 +119,7 @@ ENTRY(name);					\
 	jmp	%o7 + 8;					\
 	 mov	-1, %o0;
 # else
-#  ifdef HAVE_BINUTILS_GOTDATA
-#   define SYSCALL_ERROR_HANDLER	\
+#  define SYSCALL_ERROR_HANDLER		\
 0:	SETUP_PIC_REG_LEAF(o2,g1)	\
 	sethi	%gdop_hix22(errno), %g1;\
 	xor	%g1, %gdop_lox10(errno), %g1;\
@@ -139,16 +127,6 @@ ENTRY(name);					\
 	st	%o0, [%g1];		\
 	jmp	%o7 + 8;		\
 	 mov	-1, %o0;
-#  else
-#   define SYSCALL_ERROR_HANDLER	\
-0:	SETUP_PIC_REG_LEAF(o2,g1)	\
-	sethi	%hi(errno), %g1;	\
-	or	%g1, %lo(errno), %g1;	\
-	ldx	[%o2 + %g1], %g1;	\
-	st	%o0, [%g1];		\
-	jmp	%o7 + 8;		\
-	 mov	-1, %o0;
-#  endif
 # endif	/* _LIBC_REENTRANT */
 #endif	/* PIC */
 

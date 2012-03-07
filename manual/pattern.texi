@@ -2,7 +2,7 @@
 @c %MENU% Matching shell ``globs'' and regular expressions
 @chapter Pattern Matching
 
-The GNU C Library provides pattern matching facilities for two kinds of
+@Theglibc{} provides pattern matching facilities for two kinds of
 patterns: regular expressions and file-name wildcards.  The library also
 provides a facility for expanding variable and command references and
 parsing text into words in the way the shell does.
@@ -36,7 +36,7 @@ returns the nonzero value @code{FNM_NOMATCH}.  The arguments
 The argument @var{flags} is a combination of flag bits that alter the
 details of matching.  See below for a list of the defined flags.
 
-In the GNU C Library, @code{fnmatch} cannot experience an ``error''---it
+In @theglibc{}, @code{fnmatch} cannot experience an ``error''---it
 always returns an answer for whether the match succeeds.  However, other
 implementations of @code{fnmatch} might sometimes report ``errors''.
 They would do so by returning nonzero values that are not equal to
@@ -668,7 +668,7 @@ type @code{glob64_t} which were allocated by @code{glob64}.
 @node Regular Expressions
 @section Regular Expression Matching
 
-The GNU C library supports two interfaces for matching regular
+@Theglibc{} supports two interfaces for matching regular
 expressions.  One is the standard POSIX.2 interface, and the other is
 what the GNU system has had for many years.
 

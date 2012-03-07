@@ -87,9 +87,6 @@
    certain registers (CR0, MQ, CTR, LR) in asm statements.  */
 #undef	BROKEN_PPC_ASM_CR0
 
-/* Defined on SPARC if as and ld both support GOTDATA relocations.  */
-#undef  HAVE_BINUTILS_GOTDATA
-
 /* Defined on SPARC if GCC emits GOTDATA relocations.  */
 #undef  HAVE_GCC_GOTDATA
 

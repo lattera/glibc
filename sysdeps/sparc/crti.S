@@ -71,15 +71,9 @@ _init:
 	save		%sp, -STACKFRAME_SIZE, %sp
 #if PREINIT_FUNCTION_WEAK
 	SETUP_PIC_REG(l7)
-#ifdef HAVE_BINUTILS_GOTDATA
 	sethi		%gdop_hix22(PREINIT_FUNCTION), %g1
 	xor		%g1, %gdop_lox10(PREINIT_FUNCTION), %g1
 	GOT_LOAD	[%l7 + %g1], %g1, %gdop(PREINIT_FUNCTION)
-#else
-	sethi		%hi(PREINIT_FUNCTION), %g1
-	or		%g1, %lo(PREINIT_FUNCTION), %g1
-	GOT_LOAD	[%l7 + %g1], %g1
-#endif
 	cmp		%g1, 0
 	be		1f
 	 nop

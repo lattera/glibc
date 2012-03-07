@@ -1,7 +1,7 @@
 /*
  * IBM Accurate Mathematical Library
  * written by International Business Machines Corp.
- * Copyright (C) 2001, 2002, 2004, 2011 Free Software Foundation
+ * Copyright (C) 2001-2012 Free Software Foundation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -41,6 +41,7 @@
 #include "MathLib.h"
 #include "upow.tbl"
 #include "math_private.h"
+#include <fenv.h>
 
 #ifndef SECTION
 # define SECTION
@@ -84,6 +85,11 @@ __ieee754_pow(double x, double y) {
        (u.i[HIGH_HALF]==0 && u.i[LOW_HALF]!=0))  &&
 				      /*   2^-1023< x<= 2^-1023 * 0x1.0000ffffffff */
       (v.i[HIGH_HALF]&0x7fffffff) < 0x4ff00000) {              /* if y<-1 or y>1   */
+    fenv_t env;
+    double retval;
+
+    libc_feholdexcept_setround (&env, FE_TONEAREST);
+
     z = log1(x,&aa,&error);                                 /* x^y  =e^(y log (X)) */
     t = y*134217729.0;
     y1 = t - (t-y);
@@ -97,7 +103,10 @@ __ieee754_pow(double x, double y) {
     a2 = (a-a1)+aa;
     error = error*ABS(y);
     t = __exp1(a1,a2,1.9e16*error);     /* return -10 or 0 if wasn't computed exactly */
-    return (t>0)?t:power1(x,y);
+    retval = (t>0)?t:power1(x,y);
+
+    libc_feupdateenv (&env);
+    return retval;
   }
 
   if (x == 0) {

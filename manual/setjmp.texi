@@ -180,7 +180,7 @@ change the set of blocked signals, and provides an additional pair of
 functions (@code{sigsetjmp} and @code{siglongjmp}) to get the BSD
 behavior.
 
-The behavior of @code{setjmp} and @code{longjmp} in the GNU library is
+The behavior of @code{setjmp} and @code{longjmp} in @theglibc{} is
 controlled by feature test macros; see @ref{Feature Test Macros}.  The
 default in the GNU system is the POSIX.1 behavior rather than the BSD
 behavior.
@@ -221,7 +221,7 @@ and these functions are more powerful than those discussed in this
 chapter so far.  These function were part of the original @w{System V}
 API and by this route were added to the Unix API.  Beside on branded
 Unix implementations these interfaces are not widely available.  Not all
-platforms and/or architectures the GNU C Library is available on provide
+platforms and/or architectures @theglibc{} is available on provide
 this interface.  Use @file{configure} to detect the availability.
 
 Similar to the @code{jmp_buf} and @code{sigjmp_buf} types used for the
@@ -325,7 +325,7 @@ execution using (@pxref{Memory-mapped I/O}).
 @strong{Compatibility note}: The current Unix standard is very imprecise
 about the way the stack is allocated.  All implementations seem to agree
 that the @code{uc_stack} element must be used but the values stored in
-the elements of the @code{stack_t} value are unclear.  The GNU C library
+the elements of the @code{stack_t} value are unclear.  @Theglibc{}
 and most other Unix implementations require the @code{ss_sp} value of
 the @code{uc_stack} element to point to the base of the memory region
 allocated for the stack and the size of the memory region is stored in

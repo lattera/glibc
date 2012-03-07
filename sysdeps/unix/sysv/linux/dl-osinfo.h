@@ -84,8 +84,8 @@ _dl_setup_stack_chk_guard (void *dl_random)
 	    return ret.num;
 	}
 # endif
-      ret.bytes[filllen - 2] = 255;
-      ret.bytes[filllen - 3] = '\n';
+      ret.bytes[filllen] = 255;
+      ret.bytes[filllen - 1] = '\n';
     }
   else
 #endif

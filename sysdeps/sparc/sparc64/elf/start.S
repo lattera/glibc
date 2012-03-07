@@ -67,7 +67,6 @@ _start:
 	or	%o3, %lo(__libc_csu_init), %o3
 	or	%o4, %lo(__libc_csu_fini), %o4
 #else
-#ifdef HAVE_BINUTILS_GOTDATA
 	sethi	%gdop_hix22(main), %o0
 	sethi	%gdop_hix22(__libc_csu_init), %o3
 	sethi	%gdop_hix22(__libc_csu_fini), %o4
@@ -77,17 +76,6 @@ _start:
 	ldx	[%l7 + %o0], %o0, %gdop(main)
 	ldx	[%l7 + %o3], %o3, %gdop(__libc_csu_init)
 	ldx	[%l7 + %o4], %o4, %gdop(__libc_csu_fini)
-#else
-	sethi	%hi(main), %o0
-	sethi	%hi(__libc_csu_init), %o3
-	sethi	%hi(__libc_csu_fini), %o4
-	or	%o0, %lo(main), %o0
-	or	%o3, %lo(__libc_csu_init), %o3
-	or	%o4, %lo(__libc_csu_fini), %o4
-	ldx	[%l7 + %o0], %o0
-	ldx	[%l7 + %o3], %o3
-	ldx	[%l7 + %o4], %o4
-#endif
 #endif
 
   /* When starting a binary via the dynamic linker, %g1 contains the

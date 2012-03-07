@@ -2,7 +2,7 @@
 @c %MENU% Functions for manipulating files
 @chapter File System Interface
 
-This chapter describes the GNU C library's functions for manipulating
+This chapter describes @theglibc{}'s functions for manipulating
 files.  Unlike the input and output functions (@pxref{I/O on Streams};
 @pxref{Low-Level I/O}), these functions are concerned with operating
 on the files themselves rather than on their contents.
@@ -63,7 +63,7 @@ the current working directory, storing it in the character array
 @var{buffer} that you provide.  The @var{size} argument is how you tell
 the system the allocation size of @var{buffer}.
 
-The GNU library version of this function also permits you to specify a
+The @glibcadj{} version of this function also permits you to specify a
 null pointer for the @var{buffer} argument.  Then @code{getcwd}
 allocates a buffer automatically, as with @code{malloc}
 (@pxref{Unconstrained Allocation}).  If the @var{size} is greater than
@@ -117,7 +117,7 @@ software.
 @comment BSD
 @deftypefn {Deprecated Function} {char *} getwd (char *@var{buffer})
 This is similar to @code{getcwd}, but has no way to specify the size of
-the buffer.  The GNU library provides @code{getwd} only
+the buffer.  @Theglibc{} provides @code{getwd} only
 for backwards compatibility with BSD.
 
 The @var{buffer} argument should be a pointer to an array at least
@@ -413,7 +413,7 @@ descriptor which is created by the @code{opendir} call.  For instance,
 to switch the current working directory to the directory just read the
 @code{fchdir} function could be used.  Historically the @code{DIR} type
 was exposed and programs could access the fields.  This does not happen
-in the GNU C library.  Instead a separate function is provided to allow
+in @theglibc{}.  Instead a separate function is provided to allow
 access.
 
 @comment dirent.h
@@ -634,7 +634,7 @@ the global variable @code{errno} contains more information on the error.
 
 As described above the fourth argument to the @code{scandir} function
 must be a pointer to a sorting function.  For the convenience of the
-programmer the GNU C library contains implementations of functions which
+programmer @theglibc{} contains implementations of functions which
 are very helpful for this purpose.
 
 @comment dirent.h
@@ -1770,17 +1770,18 @@ Here is a list of them.
 @comment sys/types.h
 @comment POSIX.1
 @deftp {Data Type} mode_t
-This is an integer data type used to represent file modes.  In the
-GNU system, this is equivalent to @code{unsigned int}.
+This is an integer data type used to represent file modes.  In
+@theglibc{}, this is an unsigned type no narrower than @code{unsigned
+int}.
 @end deftp
 
 @cindex inode number
 @comment sys/types.h
 @comment POSIX.1
 @deftp {Data Type} ino_t
-This is an arithmetic data type used to represent file serial numbers.
+This is an unsigned integer type used to represent file serial numbers.
 (In Unix jargon, these are sometimes called @dfn{inode numbers}.)
-In the GNU system, this type is equivalent to @code{unsigned long int}.
+In @theglibc{}, this type is no narrower than @code{unsigned int}.
 
 If the source is compiled with @code{_FILE_OFFSET_BITS == 64} this type
 is transparently replaced by @code{ino64_t}.
@@ -1789,9 +1790,9 @@ is transparently replaced by @code{ino64_t}.
 @comment sys/types.h
 @comment Unix98
 @deftp {Data Type} ino64_t
-This is an arithmetic data type used to represent file serial numbers
-for the use in LFS.  In the GNU system, this type is equivalent to
-@code{unsigned long long int}.
+This is an unsigned integer type used to represent file serial numbers
+for the use in LFS.  In @theglibc{}, this type is no narrower than
+@code{unsigned int}.
 
 When compiling with @code{_FILE_OFFSET_BITS == 64} this type is
 available under the name @code{ino_t}.
@@ -1801,21 +1802,20 @@ available under the name @code{ino_t}.
 @comment POSIX.1
 @deftp {Data Type} dev_t
 This is an arithmetic data type used to represent file device numbers.
-In the GNU system, this is equivalent to @code{int}.
+In @theglibc{}, this is an integer type no narrower than @code{int}.
 @end deftp
 
 @comment sys/types.h
 @comment POSIX.1
 @deftp {Data Type} nlink_t
-This is an arithmetic data type used to represent file link counts.
-In the GNU system, this is equivalent to @code{unsigned short int}.
+This is an integer type used to represent file link counts.
 @end deftp
 
 @comment sys/types.h
 @comment Unix98
 @deftp {Data Type} blkcnt_t
-This is an arithmetic data type used to represent block counts.
-In the GNU system, this is equivalent to @code{unsigned long int}.
+This is a signed integer type used to represent block counts.
+In @theglibc{}, this type is no narrower than @code{int}.
 
 If the source is compiled with @code{_FILE_OFFSET_BITS == 64} this type
 is transparently replaced by @code{blkcnt64_t}.
@@ -1824,9 +1824,8 @@ is transparently replaced by @code{blkcnt64_t}.
 @comment sys/types.h
 @comment Unix98
 @deftp {Data Type} blkcnt64_t
-This is an arithmetic data type used to represent block counts for the
-use in LFS.  In the GNU system, this is equivalent to @code{unsigned
-long long int}.
+This is a signed integer type used to represent block counts for the
+use in LFS.  In @theglibc{}, this type is no narrower than @code{int}.
 
 When compiling with @code{_FILE_OFFSET_BITS == 64} this type is
 available under the name @code{blkcnt_t}.
@@ -3035,7 +3034,7 @@ set the real size of the file.
 @cindex special files
 
 The @code{mknod} function is the primitive for making special files,
-such as files that correspond to devices.  The GNU library includes
+such as files that correspond to devices.  @Theglibc{} includes
 this function for compatibility with BSD.
 
 The prototype for @code{mknod} is declared in @file{sys/stat.h}.
@@ -3176,7 +3175,7 @@ you can create with @code{tmpnam}.  You can rely on being able to call
 @code{tmpnam} at least this many times before it might fail saying you
 have made too many temporary file names.
 
-With the GNU library, you can create a very large number of temporary
+With @theglibc{}, you can create a very large number of temporary
 file names.  If you actually created the files, you would probably run
 out of disk space before you ran out of names.  Some other systems have
 a fixed, small limit on the number of temporary files.  The limit is

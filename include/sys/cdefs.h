@@ -14,11 +14,7 @@ libc_hidden_proto (__chk_fail)
 rtld_hidden_proto (__chk_fail)
 
 
-# if __GNUC_PREREQ (4,3)
-#  define __attribute_alloc_size(...) __attribute__ ((alloc_size (__VA_ARGS__)))
-# else
-#  define __attribute_alloc_size(...)
-# endif
+# define __attribute_alloc_size(...) __attribute__ ((alloc_size (__VA_ARGS__)))
 #endif
 
 #endif

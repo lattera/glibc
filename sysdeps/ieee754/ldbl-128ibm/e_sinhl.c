@@ -16,10 +16,10 @@
  *	1. Replace x by |x| (sinh(-x) = -sinh(x)).
  *	2.
  *						    E + E/(E+1)
- *	    0        <= x <= 22     :  sinh(x) := --------------, E=expm1(x)
+ *	    0        <= x <= 40     :  sinh(x) := --------------, E=expm1(x)
  *							2
  *
- *	    22       <= x <= lnovft :  sinh(x) := exp(x)/2
+ *	    40       <= x <= lnovft :  sinh(x) := exp(x)/2
  *	    lnovft   <= x <= ln2ovft:  sinh(x) := exp(x/2)/2 * exp(x/2)
  *	    ln2ovft  <  x	    :  sinh(x) := x*shuge (overflow)
  *
@@ -48,8 +48,8 @@ __ieee754_sinhl(long double x)
 
 	h = 0.5;
 	if (jx<0) h = -h;
-    /* |x| in [0,22], return sign(x)*0.5*(E+E/(E+1))) */
-	if (ix < 0x4036000000000000LL) {	/* |x|<22 */
+    /* |x| in [0,40], return sign(x)*0.5*(E+E/(E+1))) */
+	if (ix < 0x4044000000000000LL) {	/* |x|<40 */
 	    if (ix<0x3e20000000000000LL)	/* |x|<2**-29 */
 		if(shuge+x>one) return x;/* sinhl(tiny) = tiny with inexact */
 	    t = __expm1l(fabsl(x));
@@ -57,7 +57,7 @@ __ieee754_sinhl(long double x)
 	    return h*(t+t/(t+one));
 	}
 
-    /* |x| in [22, log(maxdouble)] return 0.5*exp(|x|) */
+    /* |x| in [40, log(maxdouble)] return 0.5*exp(|x|) */
 	if (ix < 0x40862e42fefa39efLL)  return h*__ieee754_expl(fabsl(x));
 
     /* |x| in [log(maxdouble), overflowthresold] */

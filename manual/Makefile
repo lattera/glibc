@@ -122,7 +122,8 @@ stamp-version: $(common-objpfx)config.make
 
 # Generate Texinfo files from the C source for the example programs.
 %.c.texi: examples/%.c
-	sed -e 's,[{}],@&,g'				\
+	sed -e '1,/^\*\/$$/d'				\
+	    -e 's,[{}],@&,g'				\
 	    -e 's,/\*\(@.*\)\*/,\1,g'			\
 	    -e 's,/\*  *,/* @r{,g' -e 's,  *\*/,} */,'	\
 	    -e 's/\(@[a-z][a-z]*\)@{\([^}]*\)@}/\1{\2}/g'\

@@ -20,9 +20,9 @@
  *							   2*exp(x)
  *
  *						  exp(x) +  1/exp(x)
- *	    ln2/2    <= x <= 22     :  cosh(x) := -------------------
+ *	    ln2/2    <= x <= 40     :  cosh(x) := -------------------
  *							  2
- *	    22       <= x <= lnovft :  cosh(x) := exp(x)/2
+ *	    40       <= x <= lnovft :  cosh(x) := exp(x)/2
  *	    lnovft   <= x <= ln2ovft:  cosh(x) := exp(x/2)/2 * exp(x/2)
  *	    ln2ovft  <  x	    :  cosh(x) := huge*huge (overflow)
  *
@@ -57,13 +57,13 @@ __ieee754_coshl (long double x)
 	    return one+(t*t)/(w+w);
 	}
 
-    /* |x| in [0.5*ln2,22], return (exp(|x|)+1/exp(|x|)/2; */
-	if (ix < 0x4036000000000000LL) {
+    /* |x| in [0.5*ln2,40], return (exp(|x|)+1/exp(|x|)/2; */
+	if (ix < 0x4044000000000000LL) {
 		t = __ieee754_expl(fabsl(x));
 		return half*t+half/t;
 	}
 
-    /* |x| in [22, log(maxdouble)] return half*exp(|x|) */
+    /* |x| in [40, log(maxdouble)] return half*exp(|x|) */
 	if (ix < 0x40862e42fefa39efLL)  return half*__ieee754_expl(fabsl(x));
 
     /* |x| in [log(maxdouble), overflowthresold] */

@@ -200,7 +200,7 @@ float __erfcf(float x)
 				sb5+s*(sb6+s*sb7))))));
 	    }
 	    GET_FLOAT_WORD(ix,x);
-	    SET_FLOAT_WORD(z,ix&0xfffff000);
+	    SET_FLOAT_WORD(z,ix&0xffffe000);
 	    r  =  __ieee754_expf(-z*z-(float)0.5625)*
 			__ieee754_expf((z-x)*(z+x)+R/S);
 	    if(hx>0) return r/x; else return two-r/x;

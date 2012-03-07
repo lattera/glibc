@@ -1,7 +1,7 @@
 /*
  * IBM Accurate Mathematical Library
  * written by International Business Machines Corp.
- * Copyright (C) 2001, 2011 Free Software Foundation
+ * Copyright (C) 2001-2012 Free Software Foundation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -38,6 +38,7 @@
 #include "MathLib.h"
 #include "uexp.tbl"
 #include "math_private.h"
+#include <fenv.h>
 
 #ifndef SECTION
 # define SECTION
@@ -58,6 +59,10 @@ __ieee754_exp(double x) {
   int4 k;
 #endif
   int4 i,j,m,n,ex;
+  fenv_t env;
+  double retval;
+
+  libc_feholdexcept_setround (&env, FE_TONEAREST);
 
   junk1.x = x;
   m = junk1.i[HIGH_HALF];
@@ -90,18 +95,19 @@ __ieee754_exp(double x) {
     rem=(bet + bet*eps)+al*eps;
     res = al + rem;
     cor = (al - res) + rem;
-    if  (res == (res+cor*err_0)) return res*binexp.x;
-    else return __slowexp(x); /*if error is over bound */
+    if  (res == (res+cor*err_0)) { retval = res*binexp.x; goto ret; }
+    else { retval = __slowexp(x); goto ret; } /*if error is over bound */
   }
 
-  if (n <= smallint) return 1.0;
+  if (n <= smallint) { retval = 1.0; goto ret; }
 
   if (n >= badint) {
-    if (n > infint) return(x+x);               /* x is NaN */
-    if (n < infint) return ( (x>0) ? (hhuge*hhuge) : (tiny*tiny) );
+    if (n > infint) { retval = x+x; goto ret; }               /* x is NaN */
+    if (n < infint) { retval = (x>0) ? (hhuge*hhuge) : (tiny*tiny); goto ret; }
     /* x is finite,  cause either overflow or underflow  */
-    if (junk1.i[LOW_HALF] != 0)  return (x+x);                /*  x is NaN  */
-    return ((x>0)?inf.x:zero );             /* |x| = inf;  return either inf or 0 */
+    if (junk1.i[LOW_HALF] != 0) { retval = x+x; goto ret; } /*  x is NaN  */
+    retval = (x>0)?inf.x:zero;             /* |x| = inf;  return either inf or 0 */
+    goto ret;
   }
 
   y = x*log2e.x + three51.x;
@@ -126,8 +132,8 @@ __ieee754_exp(double x) {
     if (res < 1.0) {res+=res; cor+=cor; ex-=1;}
     if (ex >=-1022) {
       binexp.i[HIGH_HALF] = (1023+ex)<<20;
-      if  (res == (res+cor*err_0)) return res*binexp.x;
-      else return __slowexp(x); /*if error is over bound */
+      if  (res == (res+cor*err_0)) { retval = res*binexp.x; goto ret; }
+      else { retval = __slowexp(x); goto ret; } /*if error is over bound */
     }
     ex = -(1022+ex);
     binexp.i[HIGH_HALF] = (1023-ex)<<20;
@@ -140,15 +146,19 @@ __ieee754_exp(double x) {
     cor = (t-res)+y;
     if (res == (res + eps*cor))
     { binexp.i[HIGH_HALF] = 0x00100000;
-      return (res-1.0)*binexp.x;
+      retval = (res-1.0)*binexp.x;
+      goto ret;
     }
-    else return __slowexp(x); /*   if error is over bound    */
+    else { retval = __slowexp(x); goto ret; } /*   if error is over bound    */
   }
   else {
     binexp.i[HIGH_HALF] =(junk1.i[LOW_HALF]+767)<<20;
-    if  (res == (res+cor*err_0)) return res*binexp.x*t256.x;
-    else return __slowexp(x);
+    if (res == (res+cor*err_0)) { retval = res*binexp.x*t256.x; goto ret; }
+    else { retval = __slowexp(x); goto ret; }
   }
+ ret:
+  libc_feupdateenv (&env);
+  return retval;
 }
 #ifndef __ieee754_exp
 strong_alias (__ieee754_exp, __exp_finite)

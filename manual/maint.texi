@@ -4,8 +4,8 @@
 
 @menu
 * Source Layout::         How to add new functions or header files
-                             to the GNU C library.
-* Porting::               How to port the GNU C library to
+                             to the GNU C Library.
+* Porting::               How to port the GNU C Library to
                              a new machine or operating system.
 @end menu
 
@@ -105,9 +105,9 @@ This variable is used for secondary object files needed to build
 @end table
 
 @node Porting
-@appendixsec Porting the GNU C Library
+@appendixsec Porting @theglibc{}
 
-The GNU C library is written to be easily portable to a variety of
+@Theglibc{} is written to be easily portable to a variety of
 machines and operating systems.  Machine- and operating system-dependent
 functions are well separated to make it easy to add implementations for
 new machines or operating systems.  This section describes the layout of
@@ -405,7 +405,7 @@ the @file{sysdeps} hierarchy, parallel to @file{unix} and @file{mach}.
 @end table
 
 @node Porting to Unix
-@appendixsubsec Porting the GNU C Library to Unix Systems
+@appendixsubsec Porting @theglibc{} to Unix Systems
 
 Most Unix systems are fundamentally very similar.  There are variations
 between different machines, and variations in what facilities are
@@ -452,10 +452,10 @@ generated are @file{ioctls.h}, @file{errnos.h}, @file{sys/param.h}, and
 @c It's not anymore true.  glibc 2.1 cannot be used with K&R compilers.
 @c --drepper
 
-Although the GNU C library implements the @w{ISO C} library facilities, you
-@emph{can} use the GNU C library with traditional, ``pre-ISO'' C
+Although @theglibc{} implements the @w{ISO C} library facilities, you
+@emph{can} use @theglibc{} with traditional, ``pre-ISO'' C
 compilers.  However, you need to be careful because the content and
-organization of the GNU C library header files differs from that of
+organization of the @glibcadj{} header files differs from that of
 traditional C implementations.  This means you may need to make changes
 to your program in order to get it to compile.
 @end ignore

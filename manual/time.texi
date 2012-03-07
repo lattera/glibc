@@ -89,8 +89,8 @@ other systems, the @code{time_t} data type might use some other encoding
 where subtraction doesn't work directly.
 @end deftypefun
 
-The GNU C library provides two data types specifically for representing
-an elapsed time.  They are used by various GNU C library functions, and
+@Theglibc{} provides two data types specifically for representing
+an elapsed time.  They are used by various @glibcadj{} functions, and
 you can use them for your own purposes too.  They're exactly the same
 except that one has a resolution in microseconds, and the other, newer
 one, is in nanoseconds.
@@ -139,41 +139,14 @@ this.  It works even on some peculiar operating systems where the
 @code{tv_sec} member has an unsigned type.
 
 @smallexample
-/* @r{Subtract the `struct timeval' values X and Y,}
-   @r{storing the result in RESULT.}
-   @r{Return 1 if the difference is negative, otherwise 0.}  */
-
-int
-timeval_subtract (result, x, y)
-     struct timeval *result, *x, *y;
-@{
-  /* @r{Perform the carry for the later subtraction by updating @var{y}.} */
-  if (x->tv_usec < y->tv_usec) @{
-    int nsec = (y->tv_usec - x->tv_usec) / 1000000 + 1;
-    y->tv_usec -= 1000000 * nsec;
-    y->tv_sec += nsec;
-  @}
-  if (x->tv_usec - y->tv_usec > 1000000) @{
-    int nsec = (x->tv_usec - y->tv_usec) / 1000000;
-    y->tv_usec += 1000000 * nsec;
-    y->tv_sec -= nsec;
-  @}
-
-  /* @r{Compute the time remaining to wait.}
-     @r{@code{tv_usec} is certainly positive.} */
-  result->tv_sec = x->tv_sec - y->tv_sec;
-  result->tv_usec = x->tv_usec - y->tv_usec;
-
-  /* @r{Return 1 if result is negative.} */
-  return x->tv_sec < y->tv_sec;
-@}
+@include timeval_subtract.c.texi
 @end smallexample
 
 Common functions that use @code{struct timeval} are @code{gettimeofday}
 and @code{settimeofday}.
 
 
-There are no GNU C library functions specifically oriented toward
+There are no @glibcadj{} functions specifically oriented toward
 dealing with elapsed times, but the calendar time, processor time, and
 alarm and sleeping functions have a lot to do with them.
 
@@ -356,7 +329,7 @@ and @code{tms_stime} fields returned by @code{times}.
 This section describes facilities for keeping track of calendar time.
 @xref{Time Basics}.
 
-The GNU C library represents calendar time three ways:
+@Theglibc{} represents calendar time three ways:
 
 @itemize @bullet
 @item
@@ -423,7 +396,7 @@ Note that a simple time has no concept of local time zone.  Calendar
 Time @var{T} is the same instant in time regardless of where on the
 globe the computer is.
 
-In the GNU C library, @code{time_t} is equivalent to @code{long int}.
+In @theglibc{}, @code{time_t} is equivalent to @code{long int}.
 In other systems, @code{time_t} might be either an integer or
 floating-point type.
 @end deftp
@@ -474,7 +447,7 @@ The process is not superuser.
 The @code{time_t} data type used to represent simple times has a
 resolution of only one second.  Some applications need more precision.
 
-So, the GNU C library also contains functions which are capable of
+So, @theglibc{} also contains functions which are capable of
 representing calendar times to a higher resolution than one second.  The
 functions and the associated data types described in this section are
 declared in @file{sys/time.h}.
@@ -616,7 +589,7 @@ This function is present only with a Linux kernel.
 @cindex broken-down time
 @cindex calendar time and broken-down time
 
-Calendar time is represented by the usual GNU C library functions as an
+Calendar time is represented by the usual @glibcadj{} functions as an
 elapsed time since a fixed base calendar time.  This is convenient for
 computation, but has no relation to the way people normally think of
 calendar time.  By contrast, @dfn{broken-down time} is a binary
@@ -1018,7 +991,7 @@ The process specified a settings update, but is not superuser.
 For more details see RFC1305 (Network Time Protocol, Version 3) and
 related documents.
 
-@strong{Portability note:} Early versions of the GNU C library did not
+@strong{Portability note:} Early versions of @theglibc{} did not
 have this function but did have the synonymous @code{adjtimex}.
 
 @end deftypefun
@@ -1775,7 +1748,7 @@ which can match zero or more whitespace characters in the format string.
 @strong{Portability Note:} The XPG standard advises applications to use
 at least one whitespace character (as specified by @code{isspace}) or
 other non-alphanumeric characters between any two conversion
-specifications.  The @w{GNU C Library} does not have this limitation but
+specifications.  @Theglibc{} does not have this limitation but
 other libraries might have trouble parsing formats like
 @code{"%d%m%Y%H%M%S"}.
 
@@ -1800,7 +1773,7 @@ does not specify what happens to those elements of @var{tm} which are
 not directly initialized by the different formats.  The
 implementations on different Unix systems vary here.
 
-The GNU libc implementation does not touch those fields which are not
+The @glibcadj{} implementation does not touch those fields which are not
 directly initialized.  Exceptions are the @code{tm_wday} and
 @code{tm_yday} elements, which are recomputed if any of the year, month,
 or date elements changed.  This has two implications:
@@ -2036,7 +2009,7 @@ different time zone, and would like times reported to you in the time
 zone local to you, rather than what is local to the computer.
 
 In POSIX.1 systems the value of the @code{TZ} variable can be in one of
-three formats.  With the GNU C library, the most common format is the
+three formats.  With @theglibc{}, the most common format is the
 last one, which can specify a selection from a large database of time
 zone information for many regions of the world.  The first two formats
 are used to describe the time zone information directly, which is both
@@ -2137,16 +2110,16 @@ The third format looks like this:
 :@var{characters}
 @end smallexample
 
-Each operating system interprets this format differently; in the GNU C
-library, @var{characters} is the name of a file which describes the time
+Each operating system interprets this format differently; in
+@theglibc{}, @var{characters} is the name of a file which describes the time
 zone.
 
 @pindex /etc/localtime
 @pindex localtime
 If the @code{TZ} environment variable does not have a value, the
-operation chooses a time zone by default.  In the GNU C library, the
+operation chooses a time zone by default.  In @theglibc{}, the
 default time zone is like the specification @samp{TZ=:/etc/localtime}
-(or @samp{TZ=:/usr/local/etc/localtime}, depending on how GNU C library
+(or @samp{TZ=:/usr/local/etc/localtime}, depending on how @theglibc{}
 was configured; @pxref{Installation}).  Other C libraries use their own
 rule for choosing the default time zone, so there is little we can say
 about them.
@@ -2163,7 +2136,7 @@ subdirectories for geographical areas; for example,
 @file{America/New_York}, @file{Europe/London}, @file{Asia/Hong_Kong}.
 These data files are installed by the system administrator, who also
 sets @file{/etc/localtime} to point to the data file for the local time
-zone.  The GNU C library comes with a large database of time zone
+zone.  @Theglibc{} comes with a large database of time zone
 information for most regions of the world, which is maintained by a
 community of volunteers and put in the public domain.
 
