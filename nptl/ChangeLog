@@ -1,3 +1,12 @@
+2012-01-23  Thomas Schwinge  <thomas@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/sem_timedwait.c (sem_timedwait): Get rid of
+	superfluous assignment.
+	* sysdeps/unix/sysv/linux/sparc/sem_timedwait.c (sem_timedwait):
+	Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/sem_timedwait.c
+	(sem_timedwait): Likewise.
+
 2012-03-06  Ulrich Drepper  <drepper@gmail.com>
 
 	* sysdeps/pthread/bits/libc-lock.h: Move information not needed in
