@@ -1,5 +1,7 @@
 2012-03-07  Ulrich Drepper  <drepper@gmail.com>
 
+	* po/zh_TW.po: Update from translation team.
+
 	* login/Makefile (distribute): Remove variable.
 	* catgets/Makefile: Likewise.
 	* mach/Makefile: Likewise.
