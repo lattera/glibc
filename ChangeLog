@@ -1,5 +1,7 @@
 2012-03-06  Ulrich Drepper  <drepper@gmail.com>
 
+	* nss/databases.def: Add missing gshadow entry.
+
 	* stdio-common/vfprintf.c: Fix formatting.  Missing copyright update.
 
 2012-03-06  Marek Polacek  <polacek@redhat.com>
