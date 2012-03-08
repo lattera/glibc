@@ -30,12 +30,31 @@ do_test (void)
     }
   if (errno != EINVAL)
     {
-      puts ("sem_timedwait did not fail with EINVAL");
+      perror ("sem_timedwait did not fail with EINVAL");
       return 1;
     }
   if (u.ns.nwaiters != 0)
     {
-      puts ("nwaiters modified");
+      printf ("sem_timedwait modified nwaiters: %ld\n", u.ns.nwaiters);
+      return 1;
+    }
+
+  ts.tv_sec = /* Invalid.  */ -2;
+  ts.tv_nsec = 0;
+  errno = 0;
+  if (sem_timedwait (&u.s, &ts) >= 0)
+    {
+      puts ("2nd sem_timedwait did not fail");
+      return 1;
+    }
+  if (errno != ETIMEDOUT)
+    {
+      perror ("2nd sem_timedwait did not fail with ETIMEDOUT");
+      return 1;
+    }
+  if (u.ns.nwaiters != 0)
+    {
+      printf ("2nd sem_timedwait modified nwaiters: %ld\n", u.ns.nwaiters);
       return 1;
     }
 

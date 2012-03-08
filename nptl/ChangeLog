@@ -1,3 +1,9 @@
+2012-03-08  Thomas Schwinge  <thomas@codesourcery.com>
+
+	* tst-sem13.c (do_test): Add another test case.
+	* sysdeps/unix/sysv/linux/i386/i486/sem_timedwait.S (sem_timedwait):
+	Fix updating nwaiters.
+
 2012-03-07  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #10545]
