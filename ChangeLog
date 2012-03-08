@@ -1,3 +1,10 @@
+2012-03-08  Thomas Schwinge  <thomas@codesourcery.com>
+
+	* resolv/gai_misc.c (handle_requests): Fix struct timespec
+	normalization.
+	* rt/tst-cpuclock2.c (test_nanosleep): Likewise.
+	* sysdeps/pthread/aio_misc.c (handle_fildes_io): Likewise.
+
 2012-03-08  Ulrich Drepper  <drepper@gmail.com>
 
 	* stdio-common/tst-fphex.c: Various cleanups.  The macros cannot

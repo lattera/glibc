@@ -110,7 +110,7 @@ test_nanosleep (clockid_t clock, const char *which,
   struct timespec sleeptimeabs = sleeptime;
   sleeptimeabs.tv_sec += after.tv_sec;
   sleeptimeabs.tv_nsec += after.tv_nsec;
-  while (sleeptimeabs.tv_nsec > 1000000000)
+  while (sleeptimeabs.tv_nsec >= 1000000000)
     {
       ++sleeptimeabs.tv_sec;
       sleeptimeabs.tv_nsec -= 1000000000;
