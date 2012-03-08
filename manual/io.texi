@@ -121,7 +121,7 @@ and formatted output functions (@pxref{Formatted Output}).
 If you are concerned about portability of your programs to systems other
 than GNU, you should also be aware that file descriptors are not as
 portable as streams.  You can expect any system running @w{ISO C} to
-support streams, but non-GNU systems may not support file descriptors at
+support streams, but @nongnusystems{} may not support file descriptors at
 all, or may only implement a subset of the GNU functions that operate on
 file descriptors.  Most of the file descriptor functions in @theglibc{}
 are included in the POSIX.1 standard, however.
@@ -131,7 +131,7 @@ are included in the POSIX.1 standard, however.
 
 One of the attributes of an open file is its @dfn{file position} that
 keeps track of where in the file the next character is to be read or
-written.  In the GNU system, and all POSIX.1 systems, the file position
+written.  On @gnusystems{}, and all POSIX.1 systems, the file position
 is simply an integer representing the number of bytes from the beginning
 of the file.
 
@@ -304,7 +304,7 @@ but the empty string is not a meaningful file name.  If you want to
 refer to the current working directory, use a file name of @file{.} or
 @file{./}.
 
-Unlike some other operating systems, the GNU system doesn't have any
+Unlike some other operating systems, @gnusystems{} don't have any
 built-in support for file types (or extensions) or file versions as part
 of its file name syntax.  Many programs and utilities use conventions
 for file names---for example, files containing C source code usually
@@ -332,7 +332,7 @@ This error is used when either the total length of a file name is
 greater than @code{PATH_MAX}, or when an individual file name component
 has a length greater than @code{NAME_MAX}.  @xref{Limits for Files}.
 
-In the GNU system, there is no imposed limit on overall file name
+On @gnuhurdsystems{}, there is no imposed limit on overall file name
 length, but some file systems may place limits on the length of a
 component.
 
@@ -357,7 +357,7 @@ way to detect loops.  @xref{Symbolic Links}.
 @subsection Portability of File Names
 
 The rules for the syntax of file names discussed in @ref{File Names},
-are the rules normally used by the GNU system and by other POSIX
+are the rules normally used by @gnusystems{} and by other POSIX
 systems.  However, other operating systems may use other conventions.
 
 There are two reasons why it can be important for you to be aware of
@@ -389,7 +389,7 @@ some operating systems and not by others.
 The POSIX.1 standard allows implementations to put additional
 restrictions on file name syntax, concerning what characters are
 permitted in file names and on the length of file name and file name
-component strings.  However, in the GNU system, you do not need to worry
-about these restrictions; any character except the null character is
-permitted in a file name string, and there are no limits on the length
-of file name strings.
+component strings.  However, on @gnusystems{}, any character except
+the null character is permitted in a file name string, and
+on @gnuhurdsystems{} there are no limits on the length of file name
+strings.

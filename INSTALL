@@ -339,7 +339,7 @@ patches, although we try to avoid this.
 Specific advice for GNU/Linux systems
 =====================================
 
-If you are installing the GNU C Library on a GNU/Linux system, you need
+If you are installing the GNU C Library on GNU/Linux systems, you need
 to have the header files from a 2.6.19.1 or newer kernel around for
 reference.  These headers must be installed using `make
 headers_install'; the headers present in the kernel source directory
@@ -370,11 +370,12 @@ required if not compiling programs using those interfaces.  You do not
 need to copy kernel headers if you did not specify an alternate kernel
 header source using `--with-headers'.
 
-   GNU/Linux expects some components of the GNU C Library installation
-to be in `/lib' and some in `/usr/lib'.  This is handled automatically
-if you configure the GNU C Library with `--prefix=/usr'.  If you set
-some other prefix or allow it to default to `/usr/local', then all the
-components are installed there.
+   The Filesystem Hierarchy Standard for GNU/Linux systems expects some
+components of the GNU C Library installation to be in `/lib' and some
+in `/usr/lib'.  This is handled automatically if you configure the GNU
+C Library with `--prefix=/usr'.  If you set some other prefix or allow
+it to default to `/usr/local', then all the components are installed
+there.
 
    You cannot use `nscd' with 2.0 kernels, due to bugs in the
 kernel-side thread support.  `nscd' happens to hit these bugs

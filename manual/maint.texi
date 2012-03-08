@@ -399,7 +399,7 @@ This directory is for @code{socket} and related functions on Unix systems.
 
 @item mach
 This is the directory for things based on the Mach microkernel from CMU
-(including the GNU operating system).  Other basic operating systems
+(including @gnuhurdsystems{}).  Other basic operating systems
 (VMS, for example) would have their own directories at the top level of
 the @file{sysdeps} hierarchy, parallel to @file{unix} and @file{mach}.
 @end table

@@ -169,7 +169,7 @@ To specify an argument for a long option, write
 @samp{--@var{name}=@var{value}}.  This syntax enables a long option to
 accept an argument that is itself optional.
 
-Eventually, the GNU system will provide completion for long option names
+Eventually, @gnusystems{} will provide completion for long option names
 in the shell.
 
 @node Parsing Program Arguments, , Argument Syntax, Program Arguments
@@ -423,7 +423,7 @@ If you just want to get the value of an environment variable, use
 @code{getenv}.
 @end deftypevar
 
-Unix systems, and the GNU system, pass the initial value of
+Unix systems, and @gnusystems{}, pass the initial value of
 @code{environ} as the third argument to @code{main}.
 @xref{Program Arguments}.
 

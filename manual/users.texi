@@ -884,7 +884,7 @@ The exit status of the process.
 
 @deftp {Data Type} {struct utmp}
 The @code{utmp} data structure is used to hold information about entries
-in the user accounting database.  On the GNU system it has the following
+in the user accounting database.  On @gnusystems{} it has the following
 members:
 
 @table @code
@@ -1217,7 +1217,7 @@ database specified by @var{wtmp_file}.  For possible values for the
 subset of these functions, they are not standardized.  There are often
 subtle differences in the return types, and there are considerable
 differences between the various definitions of @code{struct utmp}.  When
-programming for the GNU system, it is probably best to stick
+programming for @theglibc{}, it is probably best to stick
 with the functions described in this section.  If however, you want your
 program to be portable, consider using the XPG functions described in
 @ref{XPG Functions}, or take a look at the BSD compatible functions in
@@ -1257,14 +1257,14 @@ Time the entry was made.  For entries of type @code{OLD_TIME} this is
 the time when the system clock changed, and for entries of type
 @code{NEW_TIME} this is the time the system clock was set to.
 @end table
-On the GNU system, @code{struct utmpx} is identical to @code{struct
+In @theglibc{}, @code{struct utmpx} is identical to @code{struct
 utmp} except for the fact that including @file{utmpx.h} does not make
 visible the declaration of @code{struct exit_status}.
 @end deftp
 
 The following macros are defined for use as values for the
 @code{ut_type} member of the @code{utmpx} structure.  The values are
-integer constants and are, on the GNU system, identical to the
+integer constants and are, in @theglibc{}, identical to the
 definitions in @file{utmp.h}.
 
 @table @code
@@ -1330,7 +1330,7 @@ can be found using the @code{sizeof} operator.
 @comment utmpx.h
 @comment XPG4.2
 @deftypefun void setutxent (void)
-This function is similar to @code{setutent}.  On the GNU system it is
+This function is similar to @code{setutent}.  In @theglibc{} it is
 simply an alias for @code{setutent}.
 @end deftypefun
 
@@ -1338,14 +1338,14 @@ simply an alias for @code{setutent}.
 @comment XPG4.2
 @deftypefun {struct utmpx *} getutxent (void)
 The @code{getutxent} function is similar to @code{getutent}, but returns
-a pointer to a @code{struct utmpx} instead of @code{struct utmp}.  On
-the GNU system it simply is an alias for @code{getutent}.
+a pointer to a @code{struct utmpx} instead of @code{struct utmp}.  In
+@theglibc{} it simply is an alias for @code{getutent}.
 @end deftypefun
 
 @comment utmpx.h
 @comment XPG4.2
 @deftypefun void endutxent (void)
-This function is similar to @code{endutent}.  On the GNU system it is
+This function is similar to @code{endutent}.  In @theglibc{} it is
 simply an alias for @code{endutent}.
 @end deftypefun
 
@@ -1353,7 +1353,7 @@ simply an alias for @code{endutent}.
 @comment XPG4.2
 @deftypefun {struct utmpx *} getutxid (const struct utmpx *@var{id})
 This function is similar to @code{getutid}, but uses @code{struct utmpx}
-instead of @code{struct utmp}.  On the GNU system it is simply an alias
+instead of @code{struct utmp}.  In @theglibc{} it is simply an alias
 for @code{getutid}.
 @end deftypefun
 
@@ -1361,7 +1361,7 @@ for @code{getutid}.
 @comment XPG4.2
 @deftypefun {struct utmpx *} getutxline (const struct utmpx *@var{line})
 This function is similar to @code{getutid}, but uses @code{struct utmpx}
-instead of @code{struct utmp}.  On the GNU system it is simply an alias
+instead of @code{struct utmp}.  In @theglibc{} it is simply an alias
 for @code{getutline}.
 @end deftypefun
 
@@ -1370,7 +1370,7 @@ for @code{getutline}.
 @deftypefun {struct utmpx *} pututxline (const struct utmpx *@var{utmp})
 The @code{pututxline} function is functionally identical to
 @code{pututline}, but uses @code{struct utmpx} instead of @code{struct
-utmp}.  On the GNU system, @code{pututxline} is simply an alias for
+utmp}.  In @theglibc{}, @code{pututxline} is simply an alias for
 @code{pututline}.
 @end deftypefun
 
@@ -1378,12 +1378,12 @@ utmp}.  On the GNU system, @code{pututxline} is simply an alias for
 @comment XPG4.2
 @deftypefun int utmpxname (const char *@var{file})
 The @code{utmpxname} function is functionally identical to
-@code{utmpname}.  On the GNU system, @code{utmpxname} is simply an
+@code{utmpname}.  In @theglibc{}, @code{utmpxname} is simply an
 alias for @code{utmpname}.
 @end deftypefun
 
 You can translate between a traditional @code{struct utmp} and an XPG
-@code{struct utmpx} with the following functions.  On the GNU system,
+@code{struct utmpx} with the following functions.  In @theglibc{},
 these functions are merely copies, since the two structures are
 identical.
 

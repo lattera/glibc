@@ -17,4 +17,34 @@ the GNU C Library
 GNU C Library
 @end macro
 
+@c Description applying to all GNU systems; that is, used in
+@c describing a property of a system such that no system without that
+@c property would be considered a variant of the GNU system.
+@macro gnusystems
+GNU systems
+@end macro
+
+@c Systems that are not GNU systems.
+@macro nongnusystems
+non-GNU systems
+@end macro
+
+@c Description applying to GNU/Linux and GNU/Hurd systems, but not
+@c necessarily to other variants of the GNU system.
+@macro gnulinuxhurdsystems
+GNU/Linux and GNU/Hurd systems
+@end macro
+
+@c Descrption applying to GNU/Hurd systems; that is, systems using the
+@c GNU Hurd with the GNU C Library.
+@macro gnuhurdsystems
+GNU/Hurd systems
+@end macro
+
+@c Descrption applying to GNU/Linux systems; that is, systems using
+@c the Linux kernel with the GNU C Library.
+@macro gnulinuxsystems
+GNU/Linux systems
+@end macro
+
 @end ifclear

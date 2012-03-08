@@ -1185,7 +1185,7 @@ represents the maximum length of a file name string.  It is defined in
 
 Unlike @code{PATH_MAX}, this macro is defined even if there is no actual
 limit imposed.  In such a case, its value is typically a very large
-number.  @strong{This is always the case on the GNU system.}
+number.  @strong{This is always the case on @gnuhurdsystems{}.}
 
 @strong{Usage Note:} Don't use @code{FILENAME_MAX} as the size of an
 array in which to store a file name!  You can't possibly make an array
@@ -1252,7 +1252,7 @@ particular file, call @code{pathconf} or @code{fpathconf}.
 Here are the names for the POSIX minimum upper bounds for some of the
 above parameters.  The significance of these values is that you can
 safely push to these limits without checking whether the particular
-system you are using can go that far.  In most cases GNU systems do not
+system you are using can go that far.  In most cases @gnusystems{} do not
 have these strict limitations.  The actual limit should be requested if
 necessary.
 

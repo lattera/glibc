@@ -670,7 +670,7 @@ type @code{glob64_t} which were allocated by @code{glob64}.
 
 @Theglibc{} supports two interfaces for matching regular
 expressions.  One is the standard POSIX.2 interface, and the other is
-what the GNU system has had for many years.
+what @theglibc{} has had for many years.
 
 Both interfaces are declared in the header file @file{regex.h}.
 If you define @w{@code{_POSIX_C_SOURCE}}, then only the POSIX.2

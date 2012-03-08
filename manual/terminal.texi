@@ -319,7 +319,7 @@ This is like @code{TCSADRAIN}, but also discards any queued input.
 This is a flag bit that you can add to any of the above alternatives.
 Its meaning is to inhibit alteration of the state of the terminal
 hardware.  It is a BSD extension; it is only supported on BSD systems
-and the GNU system.
+and @gnuhurdsystems{}.
 
 Using @code{TCSASOFT} is exactly the same as setting the @code{CIGNORE}
 bit in the @code{c_cflag} member of the structure @var{termios-p} points
@@ -574,7 +574,8 @@ If this bit is set, any input character restarts output when output has
 been suspended with the STOP character.  Otherwise, only the START
 character restarts output.
 
-This is a BSD extension; it exists only on BSD systems and the GNU system.
+This is a BSD extension; it exists only on BSD systems and
+@gnulinuxhurdsystems{}.
 @end deftypevr
 
 @comment termios.h
@@ -611,12 +612,10 @@ carriage return and linefeed pairs.
 If this bit isn't set, the characters are transmitted as-is.
 @end deftypevr
 
-The following three bits are BSD features, and they exist only BSD
-systems and the GNU system.  They are effective only if @code{OPOST} is
-set.
+The following three bits are effective only if @code{OPOST} is set.
 
 @comment termios.h
-@comment BSD
+@comment POSIX.1
 @deftypevr Macro tcflag_t ONLCR
 If this bit is set, convert the newline character on output into a pair
 of characters, carriage return followed by linefeed.
@@ -626,7 +625,9 @@ of characters, carriage return followed by linefeed.
 @comment BSD
 @deftypevr Macro tcflag_t OXTABS
 If this bit is set, convert tab characters on output into the appropriate
-number of spaces to emulate a tab stop every eight columns.
+number of spaces to emulate a tab stop every eight columns.  This bit
+exists only on BSD systems and @gnuhurdsystems{}; on
+@gnulinuxsystems{} it is available as @code{XTABS}.
 @end deftypevr
 
 @comment termios.h
@@ -634,6 +635,7 @@ number of spaces to emulate a tab stop every eight columns.
 @deftypevr Macro tcflag_t ONOEOT
 If this bit is set, discard @kbd{C-d} characters (code @code{004}) on
 output.  These characters cause many dial-up terminals to disconnect.
+This bit exists only on BSD systems and @gnuhurdsystems{}.
 @end deftypevr
 
 @node Control Modes
@@ -747,8 +749,8 @@ This specifies seven bits per byte.
 This specifies eight bits per byte.
 @end deftypevr
 
-The following four bits are BSD extensions; this exist only on BSD
-systems and the GNU system.
+The following four bits are BSD extensions; these exist only on BSD
+systems and @gnuhurdsystems{}.
 
 @comment termios.h
 @comment BSD
@@ -839,8 +841,8 @@ character erased.  Typing the ERASE character again just prints the next
 character erased.  Then, the next time you type a normal character, a
 @samp{/} character is printed before the character echoes.
 
-This is a BSD extension, and exists only in BSD systems and the
-GNU system.
+This is a BSD extension, and exists only in BSD systems and
+@gnulinuxhurdsystems{}.
 @end deftypevr
 
 @comment termios.h
@@ -865,8 +867,8 @@ input, without which @code{ECHOK} is simply irrelevant.
 @deftypevr Macro tcflag_t ECHOKE
 This bit is similar to @code{ECHOK}.  It enables special display of the
 KILL character by erasing on the screen the entire line that has been
-killed.  This is a BSD extension, and exists only in BSD systems and the
-GNU system.
+killed.  This is a BSD extension, and exists only in BSD systems and
+@gnulinuxhurdsystems{}.
 @end deftypevr
 
 @comment termios.h
@@ -886,8 +888,8 @@ Thus, control-A echoes as @samp{^A}.  This is usually the preferred mode
 for interactive input, because echoing a control character back to the
 terminal could have some undesired effect on the terminal.
 
-This is a BSD extension, and exists only in BSD systems and the
-GNU system.
+This is a BSD extension, and exists only in BSD systems and
+@gnulinuxhurdsystems{}.
 @end deftypevr
 
 @comment termios.h
@@ -914,7 +916,8 @@ signals associated with these characters, or to escape from the program.
 POSIX.1 gives @code{IEXTEN} implementation-defined meaning,
 so you cannot rely on this interpretation on all systems.
 
-On BSD systems and the GNU system, it enables the LNEXT and DISCARD characters.
+On BSD systems and @gnulinuxhurdsystems{}, it enables the LNEXT and
+DISCARD characters.
 @xref{Other Special}.
 @end deftypevr
 
@@ -934,8 +937,8 @@ If this bit is set and the system supports job control, then
 attempt to write to the terminal.  @xref{Access to the Terminal}.
 @end deftypevr
 
-The following bits are BSD extensions; they exist only in BSD systems
-and the GNU system.
+The following bits are BSD extensions; they exist only on BSD systems
+and @gnuhurdsystems{}.
 
 @comment termios.h
 @comment BSD
@@ -1245,7 +1248,7 @@ terminate an input line, by setting EOL to one of them and EOL2 to the
 other.
 
 The EOL2 character is a BSD extension; it exists only on BSD systems
-and the GNU system.
+and @gnulinuxhurdsystems{}.
 @end deftypevr
 
 @comment termios.h
@@ -1404,7 +1407,7 @@ The DSUSP (suspend) character is recognized only if the implementation
 supports job control (@pxref{Job Control}).  It sends a @code{SIGTSTP}
 signal, like the SUSP character, but not right away---only when the
 program tries to read it as input.  Not all systems with job control
-support DSUSP; only BSD-compatible systems (including the GNU system).
+support DSUSP; only BSD-compatible systems (including @gnuhurdsystems{}).
 
 @xref{Signal Handling}, for more information about signals.
 
@@ -1461,8 +1464,6 @@ regardless of what you specify.
 @node Other Special
 @subsubsection Other Special Characters
 
-These special characters exist only in BSD systems and the GNU system.
-
 @comment termios.h
 @comment BSD
 @deftypevr Macro int VLNEXT
@@ -1479,6 +1480,8 @@ signal, it is read as a plain character.  This is the analogue of the
 @kbd{C-q} command in Emacs.  ``LNEXT'' stands for ``literal next.''
 
 The LNEXT character is usually @kbd{C-v}.
+
+This character is available on BSD systems and @gnulinuxhurdsystems{}.
 @end deftypevr
 
 @comment termios.h
@@ -1494,6 +1497,8 @@ in both canonical and noncanonical mode.  Its effect is to toggle the
 discard-output flag.  When this flag is set, all program output is
 discarded.  Setting the flag also discards all output currently in the
 output buffer.  Typing any other character resets the flag.
+
+This character is available on BSD systems and @gnulinuxhurdsystems{}.
 @end deftypevr
 
 @comment termios.h
@@ -1509,6 +1514,8 @@ the current process is running.
 
 The STATUS character is recognized only in canonical mode, and only if
 @code{NOKERNINFO} is not set.
+
+This character is available only on BSD systems and @gnuhurdsystems{}.
 @end deftypevr
 
 @node Noncanonical Input

@@ -1,5 +1,49 @@
 2012-03-08  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #6911]
+	* manual/macros.texi (gnusystems): New macro.
+	(nongnusystems): Likewise.
+	(gnulinuxhurdsystems): Likewise.
+	(gnuhurdsystems): Likewise..
+	(gnulinuxsystems): Likewise.
+	* manual/charset.texi: Use new macros or @theglibc{} to refer to
+	variants of the GNU system, not "GNU system".
+	* manual/conf.texi: Likewise.
+	* manual/errno.texi: Likewise.  Update example of errno macro
+	expansion.
+	* manual/filesys.texi: Likewise.
+	(getumask): Document as specific to GNU/Hurd.
+	* manual/install.texi: Likewise.  Reword some references to
+	GNU/Linux.
+	* manual/intro.texi: Likewise.
+	* manual/io.texi: Likewise.
+	(File Name Portability): Detail which constraints are inapplicable
+	to all GNU systems and which are only inapplicable to GNU/Hurd.
+	* manual/job.texi: Likewise.
+	* manual/llio.texi: Likewise.
+	(O_NOCTTY): Document as present on GNU/Linux.
+	* manual/maint.texi: Likewise.
+	* manual/memory.texi: Likewise.
+	* manual/pattern.texi: Likewise.
+	* manual/pipe.texi: Likewise.
+	* manual/process.texi: Likewise.
+	* manual/resource.texi: Likewise.
+	(RUSAGE_CHILDREN): Remove statement about specifying a particular
+	child on GNU/Hurd.
+	* manual/setjmp.texi: Likewise.
+	* manual/signal.texi: Likewise.
+	* manual/startup.texi: Likewise.
+	* manual/stdio.texi: Likewise.
+	* manual/terminal.texi: Likewise.
+	(ONLCR): Document as POSIX.
+	(OXTABS): Document availability on GNU/Linux as XTABS.
+	(ONOEOT): Document availability separately from other bits.
+	(VLNEXT, VDISCARD, VSTATUS): Document availability individually.
+	* manual/time.texi: Likewise.
+	* manual/users.texi: Likewise.
+	* INSTALL: Regenerated.
+	* sysdeps/gnu/errlist.c: Regenerated.
+
 	* aclocal.m4 (LIBC_TRY_LINK_STATIC): New macro.
 	* configure.in (libc_cv_preinit_array): Use LIBC_TRY_LINK_STATIC.
 	(libc_cv_ctors_header): Likewise.  Use asm ("") instead of calling

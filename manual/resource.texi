@@ -42,9 +42,6 @@ Just the current process.
 All child processes (direct and indirect) that have already terminated.
 @end table
 
-In the GNU system, you can also inquire about a particular child process
-by specifying its process ID.
-
 The return value of @code{getrusage} is zero for success, and @code{-1}
 for failure.
 
