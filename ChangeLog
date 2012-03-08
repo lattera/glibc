@@ -1,3 +1,11 @@
+2012-03-08  Marek Polacek  <polacek@redhat.com>
+
+	[BZ #13806]
+	* stdio-common/Makefile (tests): Add tst-fphex-wide.
+	* stdio-common/tst-fphex.c: Define a few macros to make the
+	test reusable.  Use them.
+	* stdio-common/tst-fphex-wide.c: New file.
+
 2012-03-08  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #6911]
