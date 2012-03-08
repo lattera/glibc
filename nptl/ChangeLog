@@ -1,5 +1,8 @@
 2012-03-08  Thomas Schwinge  <thomas@codesourcery.com>
 
+	* sysdeps/unix/sysv/linux/sh/lowlevellock.S (__lll_timedlock_wait):
+	Check for timestamp before the Epoch.
+
 	* sysdeps/unix/sysv/linux/sh/sem_timedwait.S (sem_timedwait): Fix
 	updating nwaiters.
 
