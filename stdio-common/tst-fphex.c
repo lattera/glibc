@@ -3,26 +3,22 @@
 #include <stdio.h>
 #include <string.h>
 
-#ifndef STR_LEN
+#ifndef WIDE
 # define STR_LEN strlen
-#endif
-#ifndef STR_CMP
 # define STR_CMP strcmp
-#endif
-#ifndef SPRINT
 # define SPRINT snprintf
-#endif
-#ifndef CHAR_T
 # define CHAR_T char
-#endif
-#ifndef PRINT
 # define PRINT printf
-#endif
-#ifndef L_
 # define L_(Str) Str
-#endif
-#ifndef L
-# define L
+# define S "%s"
+#else
+# define STR_LEN wcslen
+# define SPRINT swprintf
+# define STR_CMP wcscmp
+# define CHAR_T wchar_t
+# define PRINT wprintf
+# define L_(Str) L##Str
+# define S "%ls"
 #endif
 
 struct testcase
@@ -61,8 +57,9 @@ do_test (void)
       int n = SPRINT (buf, sizeof buf / sizeof (buf[0]), t->fmt, t->value);
       if (n != STR_LEN (t->expect) || STR_CMP (buf, t->expect) != 0)
 	{
-	  PRINT (L_("%" L "s\tExpected \"%" L "s\" (%Zu)\n\tGot      \"%" L
-		 "s\" (%d, %Zu)\n"), t->fmt, t->expect, STR_LEN (t->expect),
+	  PRINT (L_("" S "\tExpected \"" S "\" (%Zu)\n\tGot      \""
+		    S "\" (%d, %Zu)\n"),
+		 t->fmt, t->expect, STR_LEN (t->expect),
 		 buf, n, STR_LEN (buf));
 	  result = 1;
 	}

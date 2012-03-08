@@ -1,3 +1,11 @@
+2012-03-08  Ulrich Drepper  <drepper@gmail.com>
+
+	* stdio-common/tst-fphex.c: Various cleanups.  The macros cannot
+	be defined individually, they must be defined as a block.  Define
+	S for printing a string instead of hidint the different by using a
+	macro for adding the 'l'.
+	* stdio-common/tst-fphex-wide.c: Adjust.
+
 2012-03-07  Marek Polacek  <polacek@redhat.com>
 
 	* stdio-common/tst-long-dbl-fphex.c: Fix test for non ldbl-96 targets.

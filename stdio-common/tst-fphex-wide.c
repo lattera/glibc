@@ -19,12 +19,6 @@
 
 #include <wchar.h>
 
-#define STR_LEN wcslen
-#define SPRINT swprintf
-#define STR_CMP wcscmp
-#define CHAR_T wchar_t
-#define PRINT wprintf
-#define L_(Str)        L##Str
-#define L "l"
+#define WIDE 1
 
 #include "tst-fphex.c"
