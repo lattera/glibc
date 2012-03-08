@@ -182,7 +182,7 @@ behavior.
 
 The behavior of @code{setjmp} and @code{longjmp} in @theglibc{} is
 controlled by feature test macros; see @ref{Feature Test Macros}.  The
-default in the GNU system is the POSIX.1 behavior rather than the BSD
+default in @theglibc{} is the POSIX.1 behavior rather than the BSD
 behavior.
 
 The facilities in this section are declared in the header file

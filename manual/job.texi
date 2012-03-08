@@ -106,7 +106,7 @@ controlling terminal,
 @section Job Control is Optional
 @cindex job control is optional
 
-Not all operating systems support job control.  The GNU system does
+Not all operating systems support job control.  @gnusystems{} do
 support job control, but if you are using @theglibc{} on some other
 system, that system may not support job control itself.
 

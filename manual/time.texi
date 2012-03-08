@@ -84,7 +84,7 @@ time between calendar time @var{time1} and calendar time @var{time0}, as
 a value of type @code{double}.  The difference ignores leap seconds
 unless leap second support is enabled.
 
-In the GNU system, you can simply subtract @code{time_t} values.  But on
+In @theglibc{}, you can simply subtract @code{time_t} values.  But on
 other systems, the @code{time_t} data type might use some other encoding
 where subtraction doesn't work directly.
 @end deftypefun
@@ -163,7 +163,7 @@ you can get the information with the functions in this section.
 CPU time (@pxref{Time Basics}) is represented by the data type
 @code{clock_t}, which is a number of @dfn{clock ticks}.  It gives the
 total amount of time a process has actively used a CPU since some
-arbitrary event.  On the GNU system, that event is the creation of the
+arbitrary event.  On @gnusystems{}, that event is the creation of the
 process.  While arbitrary in general, the event is always the same event
 for any particular process, so you can always measure how much time on
 the CPU a particular computation takes by examining the process' CPU
@@ -172,7 +172,7 @@ time before and after the computation.
 @cindex clock ticks
 @cindex ticks, clock
 
-In the GNU system, @code{clock_t} is equivalent to @code{long int} and
+On @gnulinuxhurdsystems{}, @code{clock_t} is equivalent to @code{long int} and
 @code{CLOCKS_PER_SEC} is an integer value.  But in other systems, both
 @code{clock_t} and the macro @code{CLOCKS_PER_SEC} can be either integer
 or floating-point types.  Casting CPU time values to @code{double}, as
@@ -319,7 +319,7 @@ indicate failure.
 
 @strong{Portability Note:} The @code{clock} function described in
 @ref{CPU Time} is specified by the @w{ISO C} standard.  The
-@code{times} function is a feature of POSIX.1.  In the GNU system, the
+@code{times} function is a feature of POSIX.1.  On @gnusystems{}, the
 CPU time is defined to be equivalent to the sum of the @code{tms_utime}
 and @code{tms_stime} fields returned by @code{times}.
 
@@ -487,7 +487,7 @@ following @code{errno} error condition is defined for this function:
 @table @code
 @item ENOSYS
 The operating system does not support getting time zone information, and
-@var{tzp} is not a null pointer.  The GNU operating system does not
+@var{tzp} is not a null pointer.  @gnusystems{} do not
 support using @w{@code{struct timezone}} to represent time zone
 information; that is an obsolete feature of 4.3 BSD.
 Instead, use the facilities described in @ref{Time Zone Functions}.
@@ -2462,7 +2462,7 @@ handler.  And, if @code{sleep} is interrupted by delivery of a signal
 whose handler requests an alarm or alters the handling of @code{SIGALRM},
 this handler and @code{sleep} will interfere.
 
-On the GNU system, it is safe to use @code{sleep} and @code{SIGALRM} in
+On @gnusystems{}, it is safe to use @code{sleep} and @code{SIGALRM} in
 the same program, because @code{sleep} does not work by means of
 @code{SIGALRM}.
 

@@ -1349,24 +1349,17 @@ fi
 
 AC_CACHE_CHECK(for .preinit_array/.init_array/.fini_array support,
 	       libc_cv_initfini_array, [dnl
-cat > conftest.c <<EOF
-int _start (void) { return 0; }
-int __start (void) { return 0; }
+LIBC_TRY_LINK_STATIC([
 int foo (void) { return 1; }
 int (*fp) (void) __attribute__ ((section (".init_array"))) = foo;
-EOF
-if AC_TRY_COMMAND([${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS -o conftest conftest.c
-		   -static -nostartfiles -nostdlib 1>&AS_MESSAGE_LOG_FD])
-then
-  if $READELF -S conftest | fgrep INIT_ARRAY > /dev/null; then
+],
+  [if $READELF -S conftest | fgrep INIT_ARRAY > /dev/null; then
     libc_cv_initfini_array=yes
   else
     libc_cv_initfini_array=no
-  fi
-else
-  libc_cv_initfini_array=no
-fi
-rm -f conftest*])
+  fi],
+  [libc_cv_initfini_array=no])
+])
 if test $libc_cv_initfini_array != yes; then
   AC_MSG_ERROR([Need linker with .init_array/.fini_array support.])
 fi
@@ -1374,9 +1367,9 @@ fi
 AC_CACHE_CHECK(whether to use .ctors/.dtors header and trailer,
 	       libc_cv_ctors_header, [dnl
   libc_cv_ctors_header=yes
-  AC_TRY_LINK([], [
-__attribute__ ((constructor)) void ctor (void) { puts("ctor"); }
-__attribute__ ((destructor))  void dtor (void) { puts("dtor"); }
+  LIBC_TRY_LINK_STATIC([
+__attribute__ ((constructor)) void ctor (void) { asm (""); }
+__attribute__ ((destructor))  void dtor (void) { asm (""); }
 ],
 	      [dnl
       AS_IF([$READELF -WS conftest$ac_exeext | $AWK '

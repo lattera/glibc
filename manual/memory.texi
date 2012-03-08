@@ -379,7 +379,7 @@ savestring (const char *ptr, size_t len)
 @end smallexample
 
 The block that @code{malloc} gives you is guaranteed to be aligned so
-that it can hold any type of data.  In the GNU system, the address is
+that it can hold any type of data.  On @gnusystems{}, the address is
 always a multiple of eight on most systems, and a multiple of 16 on
 64-bit systems.  Only rarely is any higher boundary (such as a page
 boundary) necessary; for those cases, use @code{memalign},
@@ -614,7 +614,7 @@ after calling @code{free} wastes memory.  The size threshold for
 @cindex alignment (with @code{malloc})
 @pindex stdlib.h
 The address of a block returned by @code{malloc} or @code{realloc} in
-the GNU system is always a multiple of eight (or sixteen on 64-bit
+@gnusystems{} is always a multiple of eight (or sixteen on 64-bit
 systems).  If you need a block whose address is a multiple of a higher
 power of two than that, use @code{memalign}, @code{posix_memalign}, or
 @code{valloc}.  @code{memalign} is declared in @file{malloc.h} and
@@ -2295,7 +2295,7 @@ the one you would get from an infinite recursion; probably a
 segmentation violation (@pxref{Program Error Signals}).
 
 @item
-Some non-GNU systems fail to support @code{alloca}, so it is less
+Some @nongnusystems{} fail to support @code{alloca}, so it is less
 portable.  However, a slower emulation of @code{alloca} written in C
 is available for use on systems with this deficiency.
 @end itemize

@@ -1,5 +1,5 @@
 /* Return arc hyperbole sine for long double value.
-   Copyright (C) 1997, 1998, 2011 Free Software Foundation, Inc.
+   Copyright (C) 1997-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -73,6 +73,11 @@ __casinhl (__complex__ long double x)
       __imag__ y += __imag__ x;
 
       res = __clogl (y);
+
+      /* Ensure zeros have correct sign and results are correct if
+	 very close to branch cuts.  */
+      __real__ res = __copysignl (__real__ res, __real__ x);
+      __imag__ res = __copysignl (__imag__ res, __imag__ x);
     }
 
   return res;

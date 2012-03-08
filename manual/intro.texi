@@ -12,7 +12,7 @@ programs.
 @Theglibc{}, described in this document, defines all of the
 library functions that are specified by the @w{ISO C} standard, as well as
 additional features specific to POSIX and other derivatives of the Unix
-operating system, and extensions specific to the GNU system.
+operating system, and extensions specific to @gnusystems{}.
 
 The purpose of this manual is to tell you how to use the facilities
 of @theglibc{}.  We have mentioned which features belong to which
