@@ -1,3 +1,11 @@
+2012-03-08  Joseph Myers  <joseph@codesourcery.com>
+
+	* aclocal.m4 (LIBC_TRY_LINK_STATIC): New macro.
+	* configure.in (libc_cv_preinit_array): Use LIBC_TRY_LINK_STATIC.
+	(libc_cv_ctors_header): Likewise.  Use asm ("") instead of calling
+	puts.
+	* configure: Regenerated.
+
 2012-03-07  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/i386/configure.in (cpuid.h): Use AC_CHECK_HEADER with no
