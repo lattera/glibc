@@ -1,3 +1,9 @@
+2012-03-08  David S. Miller  <davem@davemloft.net>
+
+	* sysdeps/unix/sysv/linux/sparc/sparc64/get_clockfreq.c: Update
+	copyright year.
+	* sysdeps/unix/sysv/linux/sparc/sysdep.h: Likewise.
+
 2012-03-08  Thomas Schwinge  <thomas@codesourcery.com>
 
 	* resolv/gai_misc.c (handle_requests): Fix struct timespec
