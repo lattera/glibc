@@ -1,3 +1,7 @@
+2012-03-07  Marek Polacek  <polacek@redhat.com>
+
+	* stdio-common/tst-long-dbl-fphex.c: Fix test for non ldbl-96 targets.
+
 2012-03-08  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #6911]
