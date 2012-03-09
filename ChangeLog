@@ -1,5 +1,9 @@
 2012-03-09  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #13566]
+	* libio/stdio.h (gets): Always declare for C++ up to C++11 without
+	checking __USE_GNU.
+
 	* Makerules ($(inst_includedir)/%.h): New rule.
 	* stdio-common/Makefile (headers): Add bits/stdio_lim.h.
 	(install-others): Remove variable setting.
