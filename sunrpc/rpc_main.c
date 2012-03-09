@@ -164,18 +164,10 @@ int indefinitewait;		/* If started by port monitors, hang till it wants */
 int exitnow;			/* If started by port monitors, exit after the call */
 int timerflag;			/* TRUE if !indefinite && !exitnow */
 int newstyle;			/* newstyle of passing arguments (by value) */
-#ifdef __GNU_LIBRARY__
 int Cflag = 1;			/* ANSI C syntax */
-#else
-int Cflag;			/* ANSI C/C++ syntax */
-#endif
 int CCflag;			/* C++ files */
 static int allfiles;		/* generate all files */
-#ifdef __GNU_LIBRARY__
 int tirpcflag;			/* generating code for tirpc, by default */
-#else
-int tirpcflag = 1;		/* generating code for tirpc, by default */
-#endif
 xdrfunc *xdrfunc_head;		/* xdr function list */
 xdrfunc *xdrfunc_tail;		/* xdr function list */
 
@@ -707,37 +699,18 @@ s_output (int argc, const char *argv[], const char *infile, const char *define,
     }
 
   if (!tirpcflag && inetdflag)
-#ifdef __GNU_LIBRARY__
     fprintf (fout, "#include <sys/ioctl.h> /* ioctl, TIOCNOTTY */\n");
-#else
-    fprintf (fout, "#include <sys/ttycom.h>/* TIOCNOTTY */\n");
-#endif
   if (Cflag && (inetdflag || pmflag))
     {
-#ifdef __GNU_LIBRARY__
       fprintf (fout, "#include <sys/types.h> /* open */\n");
       fprintf (fout, "#include <sys/stat.h> /* open */\n");
       fprintf (fout, "#include <fcntl.h> /* open */\n");
       fprintf (fout, "#include <unistd.h> /* getdtablesize */\n");
-#else
-      fprintf (fout, "#ifdef __cplusplus\n");
-      fprintf (fout, "#include <sysent.h> /* getdtablesize, open */\n");
-      fprintf (fout, "#endif /* __cplusplus */\n");
-      if (tirpcflag)
-	fprintf (fout, "#include <unistd.h> /* setsid */\n");
-#endif
     }
-#ifdef __GNU_LIBRARY__
   if (tirpcflag && !(Cflag && (inetdflag || pmflag)))
-#else
-  if (tirpcflag)
-#endif
     fprintf (fout, "#include <sys/types.h>\n");
 
   fprintf (fout, "#include <memory.h>\n");
-#ifndef __GNU_LIBRARY__
-  fprintf (fout, "#include <stropts.h>\n");
-#endif
   if (inetdflag || !tirpcflag)
     {
       fprintf (fout, "#include <sys/socket.h>\n");
@@ -752,25 +725,13 @@ s_output (int argc, const char *argv[], const char *infile, const char *define,
     fprintf (fout, "#include <sys/resource.h> /* rlimit */\n");
   if (logflag || inetdflag || pmflag)
     {
-#ifdef __GNU_LIBRARY__
       fprintf (fout, "#include <syslog.h>\n");
-#else
-      fprintf (fout, "#ifdef SYSLOG\n");
-      fprintf (fout, "#include <syslog.h>\n");
-      fprintf (fout, "#else\n");
-      fprintf (fout, "#define LOG_ERR 1\n");
-      fprintf (fout, "#define openlog(a, b, c)\n");
-      fprintf (fout, "#endif\n");
-#endif
     }
 
   /* for ANSI-C */
   if (Cflag)
     fprintf (fout, "\n#ifndef SIG_PF\n#define SIG_PF void(*)(int)\n#endif\n");
 
-#ifndef __GNU_LIBRARY__
-  fprintf (fout, "\n#ifdef DEBUG\n#define RPC_SVC_FG\n#endif\n");
-#endif
   if (timerflag)
     fprintf (fout, "\n#define _RPCSVC_CLOSEDOWN %s\n", svcclosetime);
   while ((def = get_definition ()) != NULL)
@@ -1266,25 +1227,21 @@ parseargs (int argc, const char *argv[], struct commandline *cmd)
 		  Cflag = 1;
 		  break;
 
-#ifdef __GNU_LIBRARY__
 		case 'k':  /* K&R C syntax */
 		  Cflag = 0;
 		  break;
 
-#endif
 		case 'b':  /* turn TIRPC flag off for
 			      generating backward compatible
 			   */
 		  tirpcflag = 0;
 		  break;
 
-#ifdef __GNU_LIBRARY__
 		case '5':  /* turn TIRPC flag on for
 			      generating SysVr4 compatible
 			   */
 		  tirpcflag = 1;
 		  break;
-#endif
 		case 'I':
 		  inetdflag = 1;
 		  break;
@@ -1405,9 +1362,6 @@ parseargs (int argc, const char *argv[], struct commandline *cmd)
   else
     {				/* 4.1 mode */
       pmflag = 0;		/* set pmflag only in tirpcmode */
-#ifndef __GNU_LIBRARY__
-      inetdflag = 1;            /* inetdflag is TRUE by default */
-#endif
       if (cmd->nflag)
 	{			/* netid needs TIRPC */
 	  f_print (stderr, _("Cannot use netid flag without TIRPC!\n"));

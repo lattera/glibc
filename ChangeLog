@@ -1,3 +1,9 @@
+2012-03-09  Joseph Myers  <joseph@codesourcery.com>
+
+	* sunrpc/rpc_cout.c: Remove __GNU_LIBRARY__ conditionals.
+	* sunrpc/rpc_main.c: Likewise.
+	* sunrpc/rpc_svcout.c: Likewise.
+
 2012-03-09  David S. Miller  <davem@davemloft.net>
 
 	* include/math_private.h: New file.

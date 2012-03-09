@@ -91,12 +91,8 @@ write_most (const char *infile /* our name */ , int netflag, int nomain)
   if (inetdflag || pmflag)
     {
       const char *var_type;
-#ifdef __GNU_LIBRARY__
       /* WHY? */
       var_type = (nomain ? "extern" : "");
-#else
-      var_type = (nomain ? "extern" : "static");
-#endif
       f_print (fout, "%s int _rpcpmstart;", var_type);
       f_print (fout, "\t\t/* Started by a port monitor ? */\n");
       if (!tirpcflag)
@@ -133,7 +129,6 @@ write_most (const char *infile /* our name */ , int netflag, int nomain)
   if (nomain)
     return;
 
-#ifdef __GNU_LIBRARY__
   if (Cflag)
     f_print (fout, "\nint\nmain (int argc, char **argv)\n");
   else
@@ -142,9 +137,6 @@ write_most (const char *infile /* our name */ , int netflag, int nomain)
       f_print (fout, "\tint argc;\n");
       f_print (fout, "\tchar **argv;\n");
     }
-#else
-  f_print (fout, "\nmain()\n");
-#endif
   f_print (fout, "{\n");
   if (inetdflag)
     {
@@ -812,7 +804,7 @@ write_timeout_func (void)
     f_print (fout, "closedown (sig)\n\tint sig;\n");
   f_print (fout, "{\n");
 
-#if defined (__GNU_LIBRARY__) && 0
+#if 0
   f_print (fout, "\t(void) signal (sig, %s closedown);\n",
 	   Cflag ? "(SIG_PF)" : "(void(*)())");
 #endif

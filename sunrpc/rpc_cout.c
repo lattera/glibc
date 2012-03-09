@@ -416,13 +416,11 @@ emit_union (const definition * def)
 	  free (object);
 	  f_print (fout, "\t\tbreak;\n");
 	}
-#ifdef __GNU_LIBRARY__
       else
 	{
 	  f_print (fout, "\tdefault:\n");
 	  f_print (fout, "\t\tbreak;\n");
 	}
-#endif
     }
   else
     {
