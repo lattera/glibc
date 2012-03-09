@@ -1,3 +1,8 @@
+2012-03-09  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/pthread/pthread.h (__need_clockid_t, __need_timespec):
+	Do not define before including <time.h>.
+
 2012-03-08  David S. Miller  <davem@davemloft.net>
 
 	* sysdeps/unix/sysv/linux/sparc/sem_post.c: Update copyright year.

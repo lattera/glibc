@@ -21,10 +21,6 @@
 #include <features.h>
 #include <endian.h>
 #include <sched.h>
-#ifdef __USE_XOPEN2K
-# define __need_clockid_t
-#endif
-#define __need_timespec
 #include <time.h>
 
 #include <bits/pthreadtypes.h>
