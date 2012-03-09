@@ -20,7 +20,7 @@
 #
 subdir	:= stdio-common
 
-headers	:= stdio_ext.h printf.h bits/printf-ldbl.h
+headers	:= stdio_ext.h printf.h bits/printf-ldbl.h bits/stdio_lim.h
 
 routines	:=							      \
 	ctermid cuserid							      \
@@ -38,8 +38,6 @@ routines	:=							      \
 	isoc99_scanf isoc99_vscanf isoc99_fscanf isoc99_vfscanf isoc99_sscanf \
 	isoc99_vsscanf							      \
 	psiginfo
-
-install-others = $(inst_includedir)/bits/stdio_lim.h
 
 include ../Makeconfig
 
@@ -63,9 +61,6 @@ tests := tstscanf test_rdwr test-popen tstgetln test-fseek \
 test-srcs = tst-unbputc tst-printf
 
 include ../Rules
-
-$(inst_includedir)/bits/stdio_lim.h: $(common-objpfx)bits/stdio_lim.h $(+force)
-	$(do-install)
 
 ifeq ($(cross-compiling),no)
 .PHONY: do-tst-unbputc do-tst-printf

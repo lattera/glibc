@@ -1,3 +1,10 @@
+2012-03-09  Joseph Myers  <joseph@codesourcery.com>
+
+	* Makerules ($(inst_includedir)/%.h): New rule.
+	* stdio-common/Makefile (headers): Add bits/stdio_lim.h.
+	(install-others): Remove variable setting.
+	($(inst_includedir)/bits/stdio_lim.h): Remove rule.
+
 2012-03-08  Richard Henderson  <rth@twiddle.net>
 
 	* sysdeps/powerpc/fpu/math_private.h (__ieee754_sqrt): Convert
