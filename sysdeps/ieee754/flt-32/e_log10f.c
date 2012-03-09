@@ -13,8 +13,8 @@
  * ====================================================
  */
 
-#include "math.h"
-#include "math_private.h"
+#include <math.h>
+#include <math_private.h>
 
 static const float
 two25      =  3.3554432000e+07, /* 0x4c000000 */

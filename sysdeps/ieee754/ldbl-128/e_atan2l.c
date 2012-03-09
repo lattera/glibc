@@ -40,8 +40,8 @@
  * to produce the hexadecimal values shown.
  */
 
-#include "math.h"
-#include "math_private.h"
+#include <math.h>
+#include <math_private.h>
 
 static const long double
 tiny  = 1.0e-4900L,

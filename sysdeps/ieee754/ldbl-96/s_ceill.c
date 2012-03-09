@@ -27,8 +27,8 @@ static char rcsid[] = "$NetBSD: $";
  *	Inexact flag raised if x not equal to ceil(x).
  */
 
-#include "math.h"
-#include "math_private.h"
+#include <math.h>
+#include <math_private.h>
 
 static const long double huge = 1.0e4930;
 

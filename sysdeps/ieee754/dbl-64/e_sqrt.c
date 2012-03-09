@@ -37,7 +37,7 @@
 #include <dla.h>
 #include "MathLib.h"
 #include "root.tbl"
-#include "math_private.h"
+#include <math_private.h>
 
 /*********************************************************************/
 /* An ultimate sqrt routine. Given an IEEE double machine number x   */

@@ -28,8 +28,8 @@ static char rcsid[] = "$NetBSD: $";
  *	Inexact flag raised if x not equal to rintl(x).
  */
 
-#include "math.h"
-#include "math_private.h"
+#include <math.h>
+#include <math_private.h>
 
 static const long double
 TWO63[2]={

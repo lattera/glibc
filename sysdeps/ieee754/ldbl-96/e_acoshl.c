@@ -28,8 +28,8 @@
  *	acoshl(NaN) is NaN without signal.
  */
 
-#include "math.h"
-#include "math_private.h"
+#include <math.h>
+#include <math_private.h>
 
 static const long double
 one	= 1.0,

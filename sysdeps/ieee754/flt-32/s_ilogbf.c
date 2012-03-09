@@ -18,8 +18,8 @@ static char rcsid[] = "$NetBSD: s_ilogbf.c,v 1.4 1995/05/10 20:47:31 jtc Exp $";
 #endif
 
 #include <limits.h>
-#include "math.h"
-#include "math_private.h"
+#include <math.h>
+#include <math_private.h>
 
 int __ilogbf(float x)
 {

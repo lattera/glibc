@@ -13,8 +13,8 @@
  * ====================================================
  */
 
-#include "math.h"
-#include "math_private.h"
+#include <math.h>
+#include <math_private.h>
 
 float
 __ieee754_hypotf(float x, float y)

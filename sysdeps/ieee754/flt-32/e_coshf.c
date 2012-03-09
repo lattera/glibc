@@ -14,8 +14,8 @@
  * ====================================================
  */
 
-#include "math.h"
-#include "math_private.h"
+#include <math.h>
+#include <math_private.h>
 
 static const float huge = 1.0e30;
 static const float one = 1.0, half=0.5;

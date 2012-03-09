@@ -19,8 +19,8 @@
  * Method: shift and subtract
  */
 
-#include "math.h"
-#include "math_private.h"
+#include <math.h>
+#include <math_private.h>
 
 static const float one = 1.0, Zero[] = {0.0, -0.0,};
 

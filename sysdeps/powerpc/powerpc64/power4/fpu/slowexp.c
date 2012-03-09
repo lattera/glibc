@@ -27,7 +27,7 @@
 /*Converting from double precision to Multi-precision and calculating     */
 /* e^x                                                                    */
 /**************************************************************************/
-#include "math_private.h"
+#include <math_private.h>
 
 #ifdef NO_LONG_DOUBLE
 #include "mpa.h"

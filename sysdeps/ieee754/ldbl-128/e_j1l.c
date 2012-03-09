@@ -95,8 +95,8 @@
     License along with this library; if not, see
     <http://www.gnu.org/licenses/>.  */
 
-#include "math.h"
-#include "math_private.h"
+#include <math.h>
+#include <math_private.h>
 
 /* 1 / sqrt(pi) */
 static const long double ONEOSQPI = 5.6418958354775628694807945156077258584405E-1L;

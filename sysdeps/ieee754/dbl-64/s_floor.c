@@ -19,8 +19,8 @@
  *	Inexact flag raised if x not equal to floor(x).
  */
 
-#include "math.h"
-#include "math_private.h"
+#include <math.h>
+#include <math_private.h>
 
 static const double huge = 1.0e300;
 

@@ -20,8 +20,8 @@
  *	Inexact flag raised if x not equal to rint(x).
  */
 
-#include "math.h"
-#include "math_private.h"
+#include <math.h>
+#include <math_private.h>
 
 static const double
 TWO52[2]={

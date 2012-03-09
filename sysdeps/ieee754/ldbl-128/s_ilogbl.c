@@ -25,8 +25,8 @@ static char rcsid[] = "$NetBSD: $";
  */
 
 #include <limits.h>
-#include "math.h"
-#include "math_private.h"
+#include <math.h>
+#include <math_private.h>
 
 int __ilogbl(long double x)
 {

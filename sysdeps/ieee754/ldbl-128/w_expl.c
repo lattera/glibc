@@ -22,8 +22,8 @@ static char rcsid[] = "$NetBSD: $";
  * wrapper expl(x)
  */
 
-#include "math.h"
-#include "math_private.h"
+#include <math.h>
+#include <math_private.h>
 
 static const long double
 o_threshold= 1.1356523406294143949491931077970763428449E4L,

@@ -29,8 +29,8 @@ static char rcsid[] = "$NetBSD: $";
  */
 
 #include <float.h>
-#include "math.h"
-#include "math_private.h"
+#include <math.h>
+#include <math_private.h>
 
 static const long double
 #if LDBL_MANT_DIG == 64

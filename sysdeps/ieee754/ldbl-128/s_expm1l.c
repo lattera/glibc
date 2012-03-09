@@ -54,8 +54,8 @@
 
 
 #include <errno.h>
-#include "math.h"
-#include "math_private.h"
+#include <math.h>
+#include <math_private.h>
 
 /* exp(x) - 1 = x + 0.5 x^2 + x^3 P(x)/Q(x)
    -.5 ln 2  <  x  <  .5 ln 2

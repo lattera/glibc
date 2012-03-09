@@ -16,7 +16,7 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include "math.h"
+#include <math.h>
 
 double
 __rint (double x)

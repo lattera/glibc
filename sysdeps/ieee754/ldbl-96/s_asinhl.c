@@ -29,8 +29,8 @@ static char rcsid[] = "$NetBSD: $";
  *		  := signl(x)*log1pl(|x| + x^2/(1 + sqrtl(1+x^2)))
  */
 
-#include "math.h"
-#include "math_private.h"
+#include <math.h>
+#include <math_private.h>
 
 static const long double
 one =  1.000000000000000000000e+00L, /* 0x3FFF, 0x00000000, 0x00000000 */

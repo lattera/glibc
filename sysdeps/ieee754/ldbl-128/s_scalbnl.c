@@ -25,8 +25,8 @@ static char rcsid[] = "$NetBSD: $";
  * exponentiation or a multiplication.
  */
 
-#include "math.h"
-#include "math_private.h"
+#include <math.h>
+#include <math_private.h>
 
 static const long double
 two114 = 2.0769187434139310514121985316880384E+34L, /* 0x4071000000000000, 0 */

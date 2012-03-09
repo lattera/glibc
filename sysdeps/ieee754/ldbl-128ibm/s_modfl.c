@@ -27,8 +27,8 @@ static char rcsid[] = "$NetBSD: $";
  *	No exception.
  */
 
-#include "math.h"
-#include "math_private.h"
+#include <math.h>
+#include <math_private.h>
 #include <math_ldbl_opt.h>
 
 static const long double one = 1.0;

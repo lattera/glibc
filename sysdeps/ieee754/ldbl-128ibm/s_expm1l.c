@@ -52,8 +52,8 @@
     <http://www.gnu.org/licenses/>.  */
 
 #include <errno.h>
-#include "math.h"
-#include "math_private.h"
+#include <math.h>
+#include <math_private.h>
 #include <math_ldbl_opt.h>
 
 /* exp(x) - 1 = x + 0.5 x^2 + x^3 P(x)/Q(x)

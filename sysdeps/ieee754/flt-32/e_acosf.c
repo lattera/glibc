@@ -13,8 +13,8 @@
  * ====================================================
  */
 
-#include "math.h"
-#include "math_private.h"
+#include <math.h>
+#include <math_private.h>
 
 static const float
 one =  1.0000000000e+00, /* 0x3F800000 */

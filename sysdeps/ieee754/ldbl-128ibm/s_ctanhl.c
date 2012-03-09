@@ -22,7 +22,7 @@
 #include <math.h>
 #include <math_ldbl_opt.h>
 
-#include "math_private.h"
+#include <math_private.h>
 
 
 __complex__ long double

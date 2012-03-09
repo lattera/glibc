@@ -7,8 +7,8 @@
  * no branching!
  */
 
-#include "math.h"
-#include "math_private.h"
+#include <math.h>
+#include <math_private.h>
 
 #undef __isinf_ns
 int

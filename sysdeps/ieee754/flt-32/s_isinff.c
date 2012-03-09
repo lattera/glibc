@@ -12,8 +12,8 @@ static char rcsid[] = "$NetBSD: s_isinff.c,v 1.3 1995/05/11 23:20:21 jtc Exp $";
  * no branching!
  */
 
-#include "math.h"
-#include "math_private.h"
+#include <math.h>
+#include <math_private.h>
 
 int
 __isinff (float x)

@@ -54,8 +54,8 @@ Adapted for glibc October, 2001.
     <http://www.gnu.org/licenses/>.  */
 
 
-#include "math.h"
-#include "math_private.h"
+#include <math.h>
+#include <math_private.h>
 
 static const long double CBRT2 = 1.259921049894873164767210607278228350570251L;
 static const long double CBRT4 = 1.587401051968199474751705639272308260391493L;

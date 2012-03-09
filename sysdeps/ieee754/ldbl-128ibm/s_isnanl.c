@@ -22,8 +22,8 @@ static char rcsid[] = "$NetBSD: $";
  * no branching!
  */
 
-#include "math.h"
-#include "math_private.h"
+#include <math.h>
+#include <math_private.h>
 #include <math_ldbl_opt.h>
 
 int

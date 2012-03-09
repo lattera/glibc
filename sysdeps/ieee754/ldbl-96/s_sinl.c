@@ -50,8 +50,8 @@ static char rcsid[] = "$NetBSD: $";
  */
 
 #include <errno.h>
-#include "math.h"
-#include "math_private.h"
+#include <math.h>
+#include <math_private.h>
 
 long double __sinl(long double x)
 {

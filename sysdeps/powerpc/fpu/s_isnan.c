@@ -21,7 +21,7 @@
 #define isnanf Xisnanf
 #define __GI___isnanf __GI___Xisnanf
 
-#include "math.h"
+#include <math.h>
 #include <math_ldbl_opt.h>
 #include <fenv_libc.h>
 

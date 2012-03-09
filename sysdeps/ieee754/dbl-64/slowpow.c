@@ -32,7 +32,7 @@
 /*************************************************************************/
 
 #include "mpa.h"
-#include "math_private.h"
+#include <math_private.h>
 
 #ifndef SECTION
 # define SECTION

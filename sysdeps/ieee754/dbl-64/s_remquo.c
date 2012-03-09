@@ -19,7 +19,7 @@
 
 #include <math.h>
 
-#include "math_private.h"
+#include <math_private.h>
 
 
 static const double zero = 0.0;

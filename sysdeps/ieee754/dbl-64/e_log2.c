@@ -54,8 +54,8 @@
  * to produce the hexadecimal values shown.
  */
 
-#include "math.h"
-#include "math_private.h"
+#include <math.h>
+#include <math_private.h>
 
 static const double
 ln2 = 0.69314718055994530942,

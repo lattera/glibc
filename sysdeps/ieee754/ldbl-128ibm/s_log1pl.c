@@ -53,8 +53,8 @@
     <http://www.gnu.org/licenses/>.  */
 
 
-#include "math.h"
-#include "math_private.h"
+#include <math.h>
+#include <math_private.h>
 #include <math_ldbl_opt.h>
 
 /* Coefficients for log(1+x) = x - x^2 / 2 + x^3 P(x)/Q(x)

@@ -17,8 +17,8 @@
 static char rcsid[] = "$NetBSD: s_frexpf.c,v 1.5 1995/05/10 20:47:26 jtc Exp $";
 #endif
 
-#include "math.h"
-#include "math_private.h"
+#include <math.h>
+#include <math_private.h>
 
 static const float
 two25 =  3.3554432000e+07; /* 0x4c000000 */

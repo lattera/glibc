@@ -17,8 +17,8 @@
 static char rcsid[] = "$NetBSD: s_atanf.c,v 1.4 1995/05/10 20:46:47 jtc Exp $";
 #endif
 
-#include "math.h"
-#include "math_private.h"
+#include <math.h>
+#include <math_private.h>
 
 static const float atanhi[] = {
   4.6364760399e-01, /* atan(0.5)hi 0x3eed6338 */

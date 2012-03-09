@@ -6,8 +6,8 @@
  * __isinf_nsl(x) returns != 0 if x is ±inf, else 0;
  */
 
-#include "math.h"
-#include "math_private.h"
+#include <math.h>
+#include <math_private.h>
 
 int
 __isinf_nsl (long double x)
