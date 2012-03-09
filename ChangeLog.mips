@@ -1,3 +1,8 @@
+2012-03-09  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/mips/bits/socket_type.h: New file.
+	* sysdeps/unix/sysv/linux/mips/bits/socket.h: Remove.
+
 2012-02-27  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/mips/bits/socket.h [!__USE_GNU]: Do not
