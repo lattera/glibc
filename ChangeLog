@@ -1,5 +1,11 @@
 2012-03-09  Richard Henderson  <rth@twiddle.net>
 
+	* include/math_private.h: Remove file.
+	* math/math_private.h: Move file ...
+	* sysdeps/generic/math_private.h: ... here.
+
+2012-03-09  Richard Henderson  <rth@twiddle.net>
+
 	* sysdeps/i386/fpu/math_private.h: Use include_next for math_private.h.
 	* sysdeps/powerpc/fpu/math_private.h: Likewise.
 	* sysdeps/x86_64/fpu/math_private.h: Likewise.
