@@ -16,8 +16,6 @@
       __asm __volatile ("" : : "f" (x));				      \
   } while (0)
 
-#include_next <math_private.h>
-
 /* We can do a few things better on x86-64.  */
 
 #if defined __AVX__ || defined SSE2AVX
@@ -31,7 +29,6 @@
 #endif
 
 /* Direct movement of float into integer register.  */
-#undef EXTRACT_WORDS64
 #define EXTRACT_WORDS64(i, d)						      \
   do {									      \
     long int i_;							      \
@@ -40,7 +37,6 @@
   } while (0)
 
 /* And the reverse.  */
-#undef INSERT_WORDS64
 #define INSERT_WORDS64(d, i) \
   do {									      \
     long int i_ = i;							      \
@@ -50,7 +46,6 @@
   } while (0)
 
 /* Direct movement of float into integer register.  */
-#undef GET_FLOAT_WORD
 #define GET_FLOAT_WORD(i, d) \
   do {									      \
     int i_;								      \
@@ -59,7 +54,6 @@
   } while (0)
 
 /* And the reverse.  */
-#undef SET_FLOAT_WORD
 #define SET_FLOAT_WORD(f, i) \
   do {									      \
     int i_ = i;								      \
@@ -68,27 +62,7 @@
     f = f__;								      \
   } while (0)
 
-
-#define __isnan(d) \
-  ({ long int __di; EXTRACT_WORDS64 (__di, (double) (d));		      \
-     (__di & 0x7fffffffffffffffl) > 0x7ff0000000000000l; })
-#define __isnanf(d) \
-  ({ int __di; GET_FLOAT_WORD (__di, (float) d);			      \
-     (__di & 0x7fffffff) > 0x7f800000; })
-
-#define __isinf_ns(d) \
-  ({ long int __di; EXTRACT_WORDS64 (__di, (double) (d));		      \
-     (__di & 0x7fffffffffffffffl) == 0x7ff0000000000000l; })
-#define __isinf_nsf(d) \
-  ({ int __di; GET_FLOAT_WORD (__di, (float) d);			      \
-     (__di & 0x7fffffff) == 0x7f800000; })
-
-#define __finite(d) \
-  ({ long int __di; EXTRACT_WORDS64 (__di, (double) (d));		      \
-     (__di & 0x7fffffffffffffffl) < 0x7ff0000000000000l; })
-#define __finitef(d) \
-  ({ int __di; GET_FLOAT_WORD (__di, (float) d);			      \
-     (__di & 0x7fffffff) < 0x7f800000; })
+#include_next <math_private.h>
 
 extern __always_inline double
 __ieee754_sqrt (double d)
