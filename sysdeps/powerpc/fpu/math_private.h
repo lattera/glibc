@@ -23,7 +23,7 @@
 #include <sysdep.h>
 #include <ldsodefs.h>
 #include <dl-procinfo.h>
-#include <math/math_private.h>
+#include_next <math_private.h>
 
 # if __WORDSIZE == 64 || defined _ARCH_PWR4
 #  define __CPU_HAS_FSQRT 1

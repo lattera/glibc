@@ -16,7 +16,7 @@
       __asm __volatile ("" : : "f" (x));				      \
   } while (0)
 
-#include <math/math_private.h>
+#include_next <math_private.h>
 
 /* We can do a few things better on x86-64.  */
 

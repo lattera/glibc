@@ -1,5 +1,11 @@
 2012-03-09  Richard Henderson  <rth@twiddle.net>
 
+	* sysdeps/i386/fpu/math_private.h: Use include_next for math_private.h.
+	* sysdeps/powerpc/fpu/math_private.h: Likewise.
+	* sysdeps/x86_64/fpu/math_private.h: Likewise.
+
+2012-03-09  Richard Henderson  <rth@twiddle.net>
+
 	* sysdeps/i386/fpu/s_fpclassifyl.c, sysdeps/i386/fpu/s_isinfl.c,
 	sysdeps/i386/fpu/s_isnanl.c, sysdeps/i386/fpu/s_nextafterl.c,
 	sysdeps/i386/fpu/s_nexttoward.c, sysdeps/i386/fpu/s_nexttowardf.c,
