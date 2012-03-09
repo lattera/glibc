@@ -1,3 +1,12 @@
+2012-03-09  Richard Henderson  <rth@twiddle.net>
+
+	* m68k/m680x0/fpu/e_acos.c: Use <> to include math_private.h.
+	* m68k/m680x0/fpu/e_atan2.c, m68k/m680x0/fpu/e_fmod.c: Likewise.
+	* m68k/m680x0/fpu/e_pow.c, m68k/m680x0/fpu/e_scalb.c: Likewise.
+	* m68k/m680x0/fpu/s_fpclassifyl.c, m68k/m680x0/fpu/s_llrint.c: Likewise.
+	* m68k/m680x0/fpu/s_llrintf.c, m68k/m680x0/fpu/s_llrintl.c: Likewise.
+	* m68k/m680x0/fpu/s_nextafterl.c: Likewise.
+
 2012-03-09  Paul Eggert  <eggert@cs.ucla.edu>
 
 	[BZ #13673]

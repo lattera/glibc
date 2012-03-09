@@ -19,7 +19,7 @@
 
 #include <math.h>
 
-#include "math_private.h"
+#include <math_private.h>
 
 int
 __signbit (double x)
