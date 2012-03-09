@@ -1,5 +1,14 @@
 2012-03-09  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/unix/sysv/linux/bits/socket_type.h: New file.
+	* sysdeps/unix/sysv/linux/sparc/bits/socket_type.h: Likewise.
+	* sysdeps/unix/sysv/linux/bits/socket.h: Get enum __socket_type
+	from <bits/socket_type.h>.
+	(enum __socket_type): Don't define here.
+	* sysdeps/unix/sysv/linux/sparc/bits/socket.h: Remove.
+	* sysdeps/unix/sysv/linux/Makefile (sysdep_headers): Add
+	bits/socket_type.h.
+
 	[BZ #13566]
 	* libio/stdio.h (gets): Always declare for C++ up to C++11 without
 	checking __USE_GNU.
