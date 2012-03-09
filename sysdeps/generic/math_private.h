@@ -19,6 +19,7 @@
 #include <endian.h>
 #include <stdint.h>
 #include <sys/types.h>
+#include <fenv.h>
 
 /* The original fdlibm code used statements like:
 	n0 = ((*(int*)&one)>>29)^1;		* index of high word *
@@ -372,33 +373,89 @@ extern void __docos (double __x, double __dx, double __v[]);
    know what operations are going to be performed.  Therefore we
    define additional interfaces.  By default they refer to the normal
    interfaces.  */
-#define libc_feholdexcept(e) (void) feholdexcept (e)
-#define libc_feholdexceptf(e) (void) feholdexcept (e)
-#define libc_feholdexceptl(e) (void) feholdexcept (e)
 
-#define libc_feholdexcept_setround(e, r) \
-  do { feholdexcept (e); fesetround (r); } while (0)
-#define libc_feholdexcept_setroundf(e, r) \
-  do { feholdexcept (e); fesetround (r); } while (0)
-#define libc_feholdexcept_setroundl(e, r) \
-  do { feholdexcept (e); fesetround (r); } while (0)
+static __always_inline void
+default_libc_feholdexcept (fenv_t *e)
+{
+  (void) feholdexcept (e);
+}
 
-#define libc_feholdexcept_setround_53bit(e, r) \
-  libc_feholdexcept_setround (e, r)
+#ifndef libc_feholdexcept
+# define libc_feholdexcept  default_libc_feholdexcept
+#endif
+#ifndef libc_feholdexceptf
+# define libc_feholdexceptf default_libc_feholdexcept
+#endif
+#ifndef libc_feholdexceptl
+# define libc_feholdexceptl default_libc_feholdexcept
+#endif
 
-#define libc_fetestexcept(e) fetestexcept (e)
-#define libc_fetestexceptf(e) fetestexcept (e)
-#define libc_fetestexceptl(e) fetestexcept (e)
+static __always_inline void
+default_libc_feholdexcept_setround (fenv_t *e, int r)
+{
+  feholdexcept (e);
+  fesetround (r);
+}
 
-#define libc_fesetenv(e) (void) fesetenv (e)
-#define libc_fesetenvf(e) (void) fesetenv (e)
-#define libc_fesetenvl(e) (void) fesetenv (e)
+#ifndef libc_feholdexcept_setround
+# define libc_feholdexcept_setround  default_libc_feholdexcept_setround
+#endif
+#ifndef libc_feholdexcept_setroundf
+# define libc_feholdexcept_setroundf default_libc_feholdexcept_setround
+#endif
+#ifndef libc_feholdexcept_setroundl
+# define libc_feholdexcept_setroundl default_libc_feholdexcept_setround
+#endif
 
-#define libc_feupdateenv(e) (void) feupdateenv (e)
-#define libc_feupdateenvf(e) (void) feupdateenv (e)
-#define libc_feupdateenvl(e) (void) feupdateenv (e)
+#ifndef libc_feholdexcept_setround_53bit
+# define libc_feholdexcept_setround_53bit libc_feholdexcept_setround
+#endif
 
-#define libc_feupdateenv_53bit(e) libc_feupdateenv (e)
+#ifndef libc_fetestexcept
+# define libc_fetestexcept  fetestexcept
+#endif
+#ifndef libc_fetestexceptf
+# define libc_fetestexceptf fetestexcept
+#endif
+#ifndef libc_fetestexceptl
+# define libc_fetestexceptl fetestexcept
+#endif
+
+static __always_inline void
+default_libc_fesetenv (fenv_t *e)
+{
+  (void) fesetenv (e);
+}
+
+#ifndef libc_fesetenv
+# define libc_fesetenv  default_libc_fesetenv
+#endif
+#ifndef libc_fesetenvf
+# define libc_fesetenvf default_libc_fesetenv
+#endif
+#ifndef libc_fesetenvl
+# define libc_fesetenvl default_libc_fesetenv
+#endif
+
+static __always_inline void
+default_libc_feupdateenv (fenv_t *e)
+{
+  (void) feupdateenv (e);
+}
+
+#ifndef libc_feupdateenv
+# define libc_feupdateenv  default_libc_feupdateenv
+#endif
+#ifndef libc_feupdateenvf
+# define libc_feupdateenvf default_libc_feupdateenv
+#endif
+#ifndef libc_feupdateenvl
+# define libc_feupdateenvl default_libc_feupdateenv
+#endif
+
+#ifndef libc_feupdateenv_53bit
+# define libc_feupdateenv_53bit libc_feupdateenv
+#endif
 
 #define __nan(str) \
   (__builtin_constant_p (str) && str[0] == '\0' ? NAN : __nan (str))

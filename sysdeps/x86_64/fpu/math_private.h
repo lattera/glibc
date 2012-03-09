@@ -1,6 +1,8 @@
 #ifndef X86_64_MATH_PRIVATE_H
 #define X86_64_MATH_PRIVATE_H 1
 
+#include <fenv.h>
+
 #define math_opt_barrier(x) \
   ({ __typeof(x) __x;							      \
      if (sizeof (x) <= sizeof (double))					      \
@@ -61,6 +63,61 @@
     asm (MOVD " %1, %0" : "=x" (f__) : "rm" (i_));			      \
     f = f__;								      \
   } while (0)
+
+/* Specialized variants of the <fenv.h> interfaces which only handle
+   either the FPU or the SSE unit.  */
+static __always_inline void
+libc_feholdexcept (fenv_t *e)
+{
+  unsigned int mxcsr;
+  asm (STMXCSR " %0" : "=m" (*&mxcsr));
+  e->__mxcsr = mxcsr;
+  mxcsr = (mxcsr | 0x1f80) & ~0x3f;
+  asm volatile (LDMXCSR " %0" : : "m" (*&mxcsr));
+}
+#define libc_feholdexcept  libc_feholdexcept
+#define libc_feholdexceptf libc_feholdexcept
+
+static __always_inline void
+libc_feholdexcept_setround (fenv_t *e, int r)
+{
+  unsigned int mxcsr;
+  asm (STMXCSR " %0" : "=m" (*&mxcsr));
+  e->__mxcsr = mxcsr;
+  mxcsr = ((mxcsr | 0x1f80) & ~0x603f) | (r << 3);
+  asm volatile (LDMXCSR " %0" : : "m" (*&mxcsr));
+}
+#define libc_feholdexcept_setround  libc_feholdexcept_setround
+#define libc_feholdexcept_setroundf libc_feholdexcept_setround
+
+static __always_inline int
+libc_fetestexcept (int e)
+{
+  unsigned int mxcsr;
+  asm volatile (STMXCSR " %0" : "=m" (*&mxcsr));
+  return mxcsr & e & FE_ALL_EXCEPT;
+}
+#define libc_fetestexcept  libc_fetestexcept
+#define libc_fetestexceptf libc_fetestexcept
+
+static __always_inline void
+libc_fesetenv (fenv_t *e)
+{
+  asm volatile (LDMXCSR " %0" : : "m" (e->__mxcsr));
+}
+#define libc_fesetenv  libc_fesetenv
+#define libc_fesetenvf libc_fesetenv
+
+static __always_inline void
+libc_feupdateenv (fenv_t *e)
+{
+  unsigned int mxcsr;
+  asm volatile (STMXCSR " %0" : "=m" (*&mxcsr));
+  asm volatile (LDMXCSR " %0" : : "m" ((e)->__mxcsr));
+  __feraiseexcept (mxcsr & FE_ALL_EXCEPT);
+}
+#define libc_feupdateenv  libc_feupdateenv
+#define libc_feupdateenvf libc_feupdateenv
 
 #include_next <math_private.h>
 
@@ -145,62 +202,5 @@ __floorf (float d)
   return res;
 }
 #endif /* __SSE4_1__ */
-
-
-/* Specialized variants of the <fenv.h> interfaces which only handle
-   either the FPU or the SSE unit.  */
-#undef libc_feholdexcept
-#define libc_feholdexcept(e) \
-  do {									      \
-     unsigned int mxcsr;						      \
-     asm (STMXCSR " %0" : "=m" (*&mxcsr));				      \
-     (e)->__mxcsr = mxcsr;						      \
-     mxcsr = (mxcsr | 0x1f80) & ~0x3f;					      \
-     asm volatile (LDMXCSR " %0" : : "m" (*&mxcsr));			      \
-  } while (0)
-#undef libc_feholdexceptf
-#define libc_feholdexceptf(e) libc_feholdexcept (e)
-// #define libc_feholdexceptl(e) (void) feholdexcept (e)
-
-#undef libc_feholdexcept_setround
-#define libc_feholdexcept_setround(e, r) \
-  do {									      \
-     unsigned int mxcsr;						      \
-     asm (STMXCSR " %0" : "=m" (*&mxcsr));				      \
-     (e)->__mxcsr = mxcsr;						      \
-     mxcsr = ((mxcsr | 0x1f80) & ~0x603f) | ((r) << 3);			      \
-     asm volatile (LDMXCSR " %0" : : "m" (*&mxcsr));			      \
-  } while (0)
-#undef libc_feholdexcept_setroundf
-#define libc_feholdexcept_setroundf(e, r) libc_feholdexcept_setround (e, r)
-// #define libc_feholdexcept_setroundl(e, r) ...
-
-#undef libc_fetestexcept
-#define libc_fetestexcept(e) \
-  ({ unsigned int mxcsr;						      \
-     asm volatile (STMXCSR " %0" : "=m" (*&mxcsr));			      \
-     mxcsr & (e) & FE_ALL_EXCEPT; })
-#undef libc_fetestexceptf
-#define libc_fetestexceptf(e) libc_fetestexcept (e)
-// #define libc_fetestexceptl(e) fetestexcept (e)
-
-#undef libc_fesetenv
-#define libc_fesetenv(e) \
-  asm volatile (LDMXCSR " %0" : : "m" ((e)->__mxcsr))
-#undef libc_fesetenvf
-#define libc_fesetenvf(e) libc_fesetenv (e)
-// #define libc_fesetenvl(e) (void) fesetenv (e)
-
-#undef libc_feupdateenv
-#define libc_feupdateenv(e) \
-  do {									      \
-    unsigned int mxcsr;							      \
-    asm volatile (STMXCSR " %0" : "=m" (*&mxcsr));			      \
-    asm volatile (LDMXCSR " %0" : : "m" ((e)->__mxcsr));		      \
-    __feraiseexcept (mxcsr & FE_ALL_EXCEPT);				      \
-  } while (0)
-#undef libc_feupdateenvf
-#define libc_feupdateenvf(e) libc_feupdateenv (e)
-// #define libc_feupdateenvl(e) (void) feupdateenv (e)
 
 #endif /* X86_64_MATH_PRIVATE_H */

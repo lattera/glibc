@@ -1,5 +1,23 @@
 2012-03-19  Richard Henderson  <rth@twiddle.net>
 
+	* sysdeps/generic/math_private.h: Include <fenv.h>.
+	(default_libc_feholdexcept): New.
+	(default_libc_feholdexcept_setround): New.
+	(default_libc_fesetenv, default_libc_feupdateenv): New.
+	(libc_feholdexcept): Only define if undefined.
+	(libc_feholdexceptf, libc_feholdexceptl): Likewise.
+	(libc_feholdexcept_setround, libc_feholdexcept_setroundf): Likewise.
+	(libc_feholdexcept_setroundl): Likewise.
+	(libc_feholdexcept_setround_53bit): Likewise.
+	(libc_fetestexcept, libc_fetestexceptf, libc_fetestexceptl): Likewise.
+	(libc_fesetenv, libc_fesetenvf, libc_fesetenvl): Likewise.
+	(libc_feupdateenv, libc_feupdateenvf, libc_feupdateenvl): Likewise.
+	(libc_feupdateenv_53bit): Likewise.
+	* sysdeps/x86_64/fpu/math_private.h: Include <fenv.h>.
+	(libc_feholdexcept): Convert from macro to inline function.
+	(libc_feholdexcept_setround, libc_fetestexcept): Likewise.
+	(libc_fesetenv, libc_feupdateenv): Likewise.
+
 	* sysdeps/generic/math_private.h (GET_HIGH_WORD): Define only if
 	not previously defined.
 	(GET_LOW_WORD, EXTRACT_WORDS64, INSERT_WORDS): Likewise.
