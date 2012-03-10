@@ -1,5 +1,5 @@
 /* PLT trampolines.  Sparc 64-bit version.
-   Copyright (C) 2005 Free Software Foundation, Inc.
+   Copyright (C) 2005, 2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -158,8 +158,11 @@ _dl_profile_save_regs:
 _dl_profile_invoke:
 	cfi_startproc
 
-	sub	%sp, %l0, %sp
-1:
+	add	%l0, 7, %l0
+	andn	%l0, 7, %l0
+	add	%l0, (8 * 8), %g1
+
+	sub	%sp, %g1, %sp
 	srlx	%l0, 3, %l7
 	mov	%o0, %l1
 	mov	%i0, %o0
@@ -169,7 +172,8 @@ _dl_profile_invoke:
 	mov	%i4, %o4
 	mov	%i5, %o5
 	add	%fp, STACK_BIAS, %l2
-	add	%sp, STACK_BIAS, %l3
+	brz	%l0, 2f
+	 add	%sp, STACK_BIAS, %l3
 1:	ldx	[%l2], %l4
 	add	%l2, 0x8, %l2
 	subcc	%l7, 1, %l7
@@ -177,7 +181,7 @@ _dl_profile_invoke:
 	bne,pt	%xcc, 1b
 	 add	%l3, 0x8, %l3
 
-	jmpl	%l1, %o7
+2:	jmpl	%l1, %o7
 	 nop
 
 	stx	%o0, [%sp + STACK_BIAS + (16 * 8)]
@@ -191,15 +195,18 @@ _dl_profile_invoke:
 
 	mov	%l5, %o0
 	mov	%l6, %o1
-	add	%sp, %l0, %o2
-	add	%sp, STACK_BIAS + (16 * 8), %o3
+	add	%sp, STACK_BIAS + (24 * 8), %o2
 	call	_dl_call_pltexit
-	 add	%o2, STACK_BIAS, %o2
+	 add	%sp, STACK_BIAS + (16 * 8), %o3
 
 	ldx	[%sp + STACK_BIAS + (16 * 8)], %i0
 	ldx	[%sp + STACK_BIAS + (17 * 8)], %i1
 	ldx	[%sp + STACK_BIAS + (18 * 8)], %i2
 	ldx	[%sp + STACK_BIAS + (19 * 8)], %i3
+	ldd	[%sp + STACK_BIAS + (20 * 8)], %f0
+	ldd	[%sp + STACK_BIAS + (21 * 8)], %f2
+	ldd	[%sp + STACK_BIAS + (22 * 8)], %f4
+	ldd	[%sp + STACK_BIAS + (23 * 8)], %f8
 
 	jmpl	%i7 + 8, %g0
 	 restore
@@ -219,10 +226,7 @@ _dl_profile_invoke:
 _dl_runtime_profile_0:
 	cfi_startproc
 
-	brz,a,pn %fp, 1f
-	 mov	192, %g5
-	sub	%fp, %sp, %g5
-1:	save	%sp, -336, %sp
+	save	%sp, -336, %sp
 	cfi_def_cfa_register(%fp)
 	cfi_window_save
 	cfi_register(%o7, %i7)
@@ -250,7 +254,6 @@ _dl_runtime_profile_0:
 	mov	%i7, %o2
 	sllx    %l0, 3, %o1
 
-	mov	%g5, %l0
 	mov	%o0, %l5
 	mov	%o1, %l6
 
@@ -261,8 +264,8 @@ _dl_runtime_profile_0:
 	call	_dl_profile_fixup
 	 add	%sp, (STACK_BIAS + (32 * 8)), %o4
 
-	ldx	[%sp + STACK_BIAS + (32 * 8)], %o1
-	brgez,pt %o1, 1f
+	ldx	[%sp + STACK_BIAS + (32 * 8)], %l0
+	brlz,pt %l0, 1f
 	 nop
 
 	call	_dl_profile_invoke
@@ -285,10 +288,7 @@ _dl_runtime_profile_0:
 _dl_runtime_profile_1:
 	cfi_startproc
 
-	brz,a,pn %fp, 1f
-	 mov	192, %g5
-	sub	%fp, %sp, %g5
-1:	save	%sp, -336, %sp
+	save	%sp, -336, %sp
 	cfi_def_cfa_register(%fp)
 	cfi_window_save
 	cfi_register(%o7, %i7)
@@ -300,7 +300,6 @@ _dl_runtime_profile_1:
 	mov	%i7, %o2
 	add	%o1, %o3, %o1
 
-	mov	%g5, %l0
 	mov	%o0, %l5
 	mov	%o1, %l6
 
@@ -311,8 +310,8 @@ _dl_runtime_profile_1:
 	call	_dl_profile_fixup
 	 add	%sp, (STACK_BIAS + (32 * 8)), %o4
 
-	ldx	[%sp + STACK_BIAS + (32 * 8)], %o1
-	brgez,pt %o1, 1f
+	ldx	[%sp + STACK_BIAS + (32 * 8)], %l0
+	brlz,pt %l0, 1f
 	 nop
 
 	call	_dl_profile_invoke

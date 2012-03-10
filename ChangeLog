@@ -1,3 +1,19 @@
+2012-03-09  David S. Miller  <davem@davemloft.net>
+
+	* sysdeps/sparc/sparc32/dl-machine.h (elf_machine_rela): Protect local
+	variables with appropriate CPP guards.
+	* sysdeps/sparc/sparc32/dl-trampoline.S: Propagate the stack_ptr from the
+	frame pointer, not the stack pointer.  Correct layout comments.  Fix test
+	on resulting framesize and the management of the outregs buffer for pltexit.
+	Preserve floating point return values across _dl_call_pltexit call.
+	* sysdeps/sparc/sparc64/dl-trampoline.S: Fix test on resulting
+	framesize and the management of the outregs buffer for pltexit.
+	Preserve floating point return values across _dl_call_pltexit
+	call.
+	* elf/sotruss-lib.c (la_sparc32_gnu_pltenter, la_sparc64_gnu_pltenter,
+	la_sparc32_gnu_pltexit, la_sparc64_gnu_pltexit): New functions.
+	(print_exit): Fix format string for return register value.
+
 2012-03-10  Joseph Myers  <joseph@codesourcery.com>
 
 	* sunrpc/Makefile (others): Add rpcgen.
