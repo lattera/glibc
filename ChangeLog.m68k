@@ -1,5 +1,8 @@
 2012-03-09  Richard Henderson  <rth@twiddle.net>
 
+	* sysdeps/m68k/m680x0/fpu/math_private.h: Use include_next to
+	chain math_private.h.
+
 	* m68k/m680x0/fpu/e_acos.c: Use <> to include math_private.h.
 	* m68k/m680x0/fpu/e_atan2.c, m68k/m680x0/fpu/e_fmod.c: Likewise.
 	* m68k/m680x0/fpu/e_pow.c, m68k/m680x0/fpu/e_scalb.c: Likewise.

@@ -15,5 +15,5 @@ do							\
   }							\
 while (0)
 
-#include <math/math_private.h>
+#include_next <math_private.h>
 #endif

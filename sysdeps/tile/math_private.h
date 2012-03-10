@@ -1,6 +1,6 @@
 #ifndef _MATH_PRIVATE_H
 
-#include <math/math_private.h>
+#include_next <math_private.h>
 
 /* We have no exception support, so feraiseexcept() must be a no-op.
    And since we don't define FE_INVALID, FE_DIVBYZERO, etc., we
