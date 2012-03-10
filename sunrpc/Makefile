@@ -86,6 +86,7 @@ rpcgen-objs = rpc_main.o rpc_hout.o rpc_cout.o rpc_parse.o \
 	      rpc_scan.o rpc_util.o rpc_svcout.o rpc_clntout.o \
 	      rpc_tblout.o rpc_sample.o
 extra-objs = $(rpcgen-objs)
+others += rpcgen
 
 all: # Make this the default target; it will be defined in Rules.
 
@@ -149,10 +150,7 @@ $(objpfx)tst-getmyaddr: $(common-objpfx)linkobj/libc.so
 $(objpfx)tst-xdrmem: $(common-objpfx)linkobj/libc.so
 $(objpfx)tst-xdrmem2: $(common-objpfx)linkobj/libc.so
 
-$(objpfx)rpcgen: $(addprefix $(objpfx),$(rpcgen-objs)) \
-  $(sort $(filter $(common-objpfx)libc%,$(link-libc))) \
-  $(addprefix $(csu-objpfx),start.o) $(+preinit) $(+postinit)
-	$(+link)
+$(objpfx)rpcgen: $(addprefix $(objpfx),$(rpcgen-objs))
 
 # This makes sure -DNOT_IN_libc is passed for all these modules.
 cpp-srcs-left := $(rpcgen-objs:.o=.c)

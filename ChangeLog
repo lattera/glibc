@@ -1,3 +1,10 @@
+2012-03-10  Joseph Myers  <joseph@codesourcery.com>
+
+	* sunrpc/Makefile (others): Add rpcgen.
+	($(objpfx)rpcgen): Remove special build rule and dependency on
+	libc.
+	* sunrpc/rpcgen.c: New file.
+
 2012-03-09  Paul Eggert  <eggert@cs.ucla.edu>
 
 	[BZ #13673]
