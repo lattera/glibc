@@ -8,7 +8,7 @@
 	* sysdeps/powerpc/fpu/math_private.h: Likewise.
 	* sysdeps/x86_64/fpu/math_private.h: Likewise.
 
-	* sysdeps/i386/fpu/s_fpclassifyl.c Use <> to include both <math.h>
+	* sysdeps/i386/fpu/s_fpclassifyl.c: Use <> to include both <math.h>
 	and <math_private.h>.
 	* sysdeps/i386/fpu/s_isinfl.c: Likewise.
 	* sysdeps/i386/fpu/s_isnanl.c: Likewise.
