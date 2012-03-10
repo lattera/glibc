@@ -1,3 +1,8 @@
+2012-03-09  Paul Eggert  <eggert@cs.ucla.edu>
+
+	[BZ #13673]
+	* pt-crti.S: Replace FSF snail mail address with URL.
+
 2012-03-09  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/pthread/pthread.h (__need_clockid_t, __need_timespec):

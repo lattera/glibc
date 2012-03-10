@@ -1,6 +1,19 @@
 2012-03-09  Paul Eggert  <eggert@cs.ucla.edu>
 
 	[BZ #13673]
+	* posix/bug-regex33.c: Replace FSF snail mail address with URL.
+	* stdio-common/bug-vfprintf-nargs.c: Likewise.
+	* sysdeps/i386/crti.S: Likewise.
+	* sysdeps/i386/crtn.S: Likewise.
+	* sysdeps/powerpc/powerpc32/crti.S: Likewise.
+	* sysdeps/powerpc/powerpc32/crtn.S: Likewise.
+	* sysdeps/powerpc/powerpc64/crti.S: Likewise.
+	* sysdeps/powerpc/powerpc64/crtn.S: Likewise.
+	* sysdeps/sh/crti.S: Likewise.
+	* sysdeps/sh/crtn.S: Likewise.
+	* sysdeps/x86_64/fpu/e_expf.S: Likewise.
+
+	[BZ #13673]
 	* locale/programs/charmap-kw.gperf: Replace FSF snail mail address
 	with URL.
 	* locale/programs/locfile-kw.gperf: Likewise.
