@@ -59,10 +59,9 @@ __ieee754_exp(double x) {
   int4 k;
 #endif
   int4 i,j,m,n,ex;
-  fenv_t env;
   double retval;
 
-  libc_feholdexcept_setround (&env, FE_TONEAREST);
+  SET_RESTORE_ROUND (FE_TONEAREST);
 
   junk1.x = x;
   m = junk1.i[HIGH_HALF];
@@ -157,7 +156,6 @@ __ieee754_exp(double x) {
     else { retval = __slowexp(x); goto ret; }
   }
  ret:
-  libc_feupdateenv (&env);
   return retval;
 }
 #ifndef __ieee754_exp

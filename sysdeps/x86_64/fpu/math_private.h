@@ -119,6 +119,29 @@ libc_feupdateenv (fenv_t *e)
 #define libc_feupdateenv  libc_feupdateenv
 #define libc_feupdateenvf libc_feupdateenv
 
+static __always_inline void
+libc_feholdsetround (fenv_t *e, int r)
+{
+  unsigned int mxcsr;
+  asm (STMXCSR " %0" : "=m" (*&mxcsr));
+  e->__mxcsr = mxcsr;
+  mxcsr = (mxcsr & ~0x6000) | (r << 3);
+  asm volatile (LDMXCSR " %0" : : "m" (*&mxcsr));
+}
+#define libc_feholdsetround  libc_feholdsetround
+#define libc_feholdsetroundf libc_feholdsetround
+
+static __always_inline void
+libc_feresetround (fenv_t *e)
+{
+  unsigned int mxcsr;
+  asm (STMXCSR " %0" : "=m" (*&mxcsr));
+  mxcsr = (mxcsr & ~0x6000) | (e->__mxcsr & 0x6000);
+  asm volatile (LDMXCSR " %0" : : "m" (*&mxcsr));
+}
+#define libc_feresetround  libc_feresetround
+#define libc_feresetroundf libc_feresetround
+
 #include_next <math_private.h>
 
 extern __always_inline double

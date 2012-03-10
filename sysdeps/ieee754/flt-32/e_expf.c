@@ -80,40 +80,39 @@ __ieee754_expf (float x)
       double x22, t, result, dx;
       float n, delta;
       union ieee754_double ex2_u;
-      fenv_t oldenv;
 
-      libc_feholdexcept_setroundf (&oldenv, FE_TONEAREST);
+      {
+	SET_RESTORE_ROUND_NOEXF (FE_TONEAREST);
 
-      /* Calculate n.  */
-      n = x * M_1_LN2 + THREEp22;
-      n -= THREEp22;
-      dx = x - n*M_LN2;
+	/* Calculate n.  */
+	n = x * M_1_LN2 + THREEp22;
+	n -= THREEp22;
+	dx = x - n*M_LN2;
 
-      /* Calculate t/512.  */
-      t = dx + THREEp42;
-      t -= THREEp42;
-      dx -= t;
+	/* Calculate t/512.  */
+	t = dx + THREEp42;
+	t -= THREEp42;
+	dx -= t;
 
-      /* Compute tval = t.  */
-      tval = (int) (t * 512.0);
+	/* Compute tval = t.  */
+	tval = (int) (t * 512.0);
 
-      if (t >= 0)
-	delta = - __exp_deltatable[tval];
-      else
-	delta = __exp_deltatable[-tval];
+	if (t >= 0)
+	  delta = - __exp_deltatable[tval];
+	else
+	  delta = __exp_deltatable[-tval];
 
-      /* Compute ex2 = 2^n e^(t/512+delta[t]).  */
-      ex2_u.d = __exp_atable[tval+177];
-      ex2_u.ieee.exponent += (int) n;
+	/* Compute ex2 = 2^n e^(t/512+delta[t]).  */
+	ex2_u.d = __exp_atable[tval+177];
+	ex2_u.ieee.exponent += (int) n;
 
-      /* Approximate e^(dx+delta) - 1, using a second-degree polynomial,
-	 with maximum error in [-2^-10-2^-28,2^-10+2^-28]
-	 less than 5e-11.  */
-      x22 = (0.5000000496709180453 * dx + 1.0000001192102037084) * dx + delta;
+	/* Approximate e^(dx+delta) - 1, using a second-degree polynomial,
+	   with maximum error in [-2^-10-2^-28,2^-10+2^-28]
+	   less than 5e-11.  */
+	x22 = (0.5000000496709180453 * dx + 1.0000001192102037084) * dx + delta;
+      }
 
       /* Return result.  */
-      libc_fesetenvf (&oldenv);
-
       result = x22 * ex2_u.d + ex2_u.d;
       return (float) result;
     }

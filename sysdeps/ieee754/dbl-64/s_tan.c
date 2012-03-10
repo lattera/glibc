@@ -68,13 +68,12 @@ tan(double x) {
   mp_no mpy;
 #endif
 
-  fenv_t env;
   double retval;
 
   int __branred(double, double *, double *);
   int __mpranred(double, mp_no *, int);
 
-  libc_feholdexcept_setround_53bit (&env, FE_TONEAREST);
+  SET_RESTORE_ROUND_53BIT (FE_TONEAREST);
 
   /* x=+-INF, x=NaN */
   num.d = x;  ux = num.i[HIGH_HALF];
@@ -503,7 +502,6 @@ tan(double x) {
   goto ret;
 
  ret:
-  libc_feupdateenv_53bit (&env);
   return retval;
 }
 

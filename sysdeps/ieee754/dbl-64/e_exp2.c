@@ -61,57 +61,56 @@ __ieee754_exp2 (double x)
       int tval, unsafe;
       double rx, x22, result;
       union ieee754_double ex2_u, scale_u;
-      fenv_t oldenv;
 
-      libc_feholdexcept_setround (&oldenv, FE_TONEAREST);
+      {
+	SET_RESTORE_ROUND_NOEX (FE_TONEAREST);
 
-      /* 1. Argument reduction.
-	 Choose integers ex, -256 <= t < 256, and some real
-	 -1/1024 <= x1 <= 1024 so that
-	 x = ex + t/512 + x1.
+	/* 1. Argument reduction.
+	   Choose integers ex, -256 <= t < 256, and some real
+	   -1/1024 <= x1 <= 1024 so that
+	   x = ex + t/512 + x1.
 
-	 First, calculate rx = ex + t/512.  */
-      rx = x + THREEp42;
-      rx -= THREEp42;
-      x -= rx;  /* Compute x=x1. */
-      /* Compute tval = (ex*512 + t)+256.
-	 Now, t = (tval mod 512)-256 and ex=tval/512  [that's mod, NOT %; and
-	 /-round-to-nearest not the usual c integer /].  */
-      tval = (int) (rx * 512.0 + 256.0);
+	   First, calculate rx = ex + t/512.  */
+	rx = x + THREEp42;
+	rx -= THREEp42;
+	x -= rx;  /* Compute x=x1. */
+	/* Compute tval = (ex*512 + t)+256.
+	   Now, t = (tval mod 512)-256 and ex=tval/512  [that's mod, NOT %;
+	   and /-round-to-nearest not the usual c integer /].  */
+	tval = (int) (rx * 512.0 + 256.0);
 
-      /* 2. Adjust for accurate table entry.
-	 Find e so that
-	 x = ex + t/512 + e + x2
-	 where -1e6 < e < 1e6, and
-	 (double)(2^(t/512+e))
-	 is accurate to one part in 2^-64.  */
+	/* 2. Adjust for accurate table entry.
+	   Find e so that
+	   x = ex + t/512 + e + x2
+	   where -1e6 < e < 1e6, and
+	   (double)(2^(t/512+e))
+	   is accurate to one part in 2^-64.  */
 
-      /* 'tval & 511' is the same as 'tval%512' except that it's always
-	 positive.
-	 Compute x = x2.  */
-      x -= exp2_deltatable[tval & 511];
+	/* 'tval & 511' is the same as 'tval%512' except that it's always
+	   positive.
+	   Compute x = x2.  */
+	x -= exp2_deltatable[tval & 511];
 
-      /* 3. Compute ex2 = 2^(t/512+e+ex).  */
-      ex2_u.d = exp2_accuratetable[tval & 511];
-      tval >>= 9;
-      unsafe = abs(tval) >= -DBL_MIN_EXP - 1;
-      ex2_u.ieee.exponent += tval >> unsafe;
-      scale_u.d = 1.0;
-      scale_u.ieee.exponent += tval - (tval >> unsafe);
+	/* 3. Compute ex2 = 2^(t/512+e+ex).  */
+	ex2_u.d = exp2_accuratetable[tval & 511];
+	tval >>= 9;
+	unsafe = abs(tval) >= -DBL_MIN_EXP - 1;
+	ex2_u.ieee.exponent += tval >> unsafe;
+	scale_u.d = 1.0;
+	scale_u.ieee.exponent += tval - (tval >> unsafe);
 
-      /* 4. Approximate 2^x2 - 1, using a fourth-degree polynomial,
-	 with maximum error in [-2^-10-2^-30,2^-10+2^-30]
-	 less than 10^-19.  */
+	/* 4. Approximate 2^x2 - 1, using a fourth-degree polynomial,
+	   with maximum error in [-2^-10-2^-30,2^-10+2^-30]
+	   less than 10^-19.  */
 
-      x22 = (((.0096181293647031180
-	       * x + .055504110254308625)
-	      * x + .240226506959100583)
-	     * x + .69314718055994495) * ex2_u.d;
-      math_opt_barrier (x22);
+	x22 = (((.0096181293647031180
+		 * x + .055504110254308625)
+		* x + .240226506959100583)
+	       * x + .69314718055994495) * ex2_u.d;
+        math_opt_barrier (x22);
+      }
 
       /* 5. Return (2^x2-1) * 2^(t/512+e+ex) + 2^(t/512+e+ex).  */
-      libc_fesetenv (&oldenv);
-
       result = x22 * x + ex2_u.d;
 
       if (!unsafe)

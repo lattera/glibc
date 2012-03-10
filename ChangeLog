@@ -1,5 +1,29 @@
 2012-03-19  Richard Henderson  <rth@twiddle.net>
 
+	* sysdeps/generic/math_private.h (libc_feholdsetround): New.
+	(libc_feholdsetroundf, libc_feholdsetroundl): New.
+	(libc_feresetround, libc_feresetroundf, libc_feresetroundl): New.
+	(libc_feresetround_noex): New.
+	(libc_feresetround_noexf): New.
+	(libc_feresetround_noexl): New.
+	(SET_RESTORE_ROUND, SET_RESTORE_ROUNDF, SET_RESTORE_ROUNDL): New.
+	(SET_RESTORE_ROUND_NOEX, SET_RESTORE_ROUND_NOEXF): New.
+	(SET_RESTORE_ROUND_NOEXL, SET_RESTORE_ROUND_53BIT): New.
+	* sysdeps/ieee754/dbl-64/e_exp.c (__ieee754_exp): Use
+	SET_RESTORE_ROUND.
+	* sysdeps/ieee754/dbl-64/e_pow.c (__ieee754_pow): Likewise.
+	* sysdeps/ieee754/dbl-64/s_sin.c (__sin): Use SET_RESTORE_ROUND_53BIT.
+	(__cos): Likewise.
+	* sysdeps/ieee754/dbl-64/s_tan.c (__tan): Likewise.
+	* sysdeps/ieee754/dbl-64/e_exp2.c (__ieee754_exp2): Use
+	SET_RESTORE_ROUND_NOEX.
+	* sysdeps/ieee754/dbl-64/e_exp2f.c (__ieee754_exp2f): Use
+	SET_RESTORE_ROUND_NOEXF.
+	* sysdeps/ieee754/flt-32/e_expf.c (__ieee754_expf): Likewise.
+	* sysdeps/x86_64/fpu/math_private.h (libc_feholdsetround): New.
+	(libc_feholdsetroundf): New.
+	(libc_feresetround, libc_feresetroundf): New.
+
 	* sysdeps/i386/fpu/math_private.h: Include <fenv.h>, <fpu_control.h>.
 	(libc_feholdexcept_setround_53bit): Convert from macro to function.
 	(libc_feupdateenv_53bit): Likewise.  Don't force _FPU_EXTENDED.
