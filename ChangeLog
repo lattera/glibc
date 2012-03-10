@@ -4,225 +4,346 @@
 	* math/math_private.h: Move file ...
 	* sysdeps/generic/math_private.h: ... here.
 
-2012-03-09  Richard Henderson  <rth@twiddle.net>
-
 	* sysdeps/i386/fpu/math_private.h: Use include_next for math_private.h.
 	* sysdeps/powerpc/fpu/math_private.h: Likewise.
 	* sysdeps/x86_64/fpu/math_private.h: Likewise.
 
-2012-03-09  Richard Henderson  <rth@twiddle.net>
-
-	* sysdeps/i386/fpu/s_fpclassifyl.c, sysdeps/i386/fpu/s_isinfl.c,
-	sysdeps/i386/fpu/s_isnanl.c, sysdeps/i386/fpu/s_nextafterl.c,
-	sysdeps/i386/fpu/s_nexttoward.c, sysdeps/i386/fpu/s_nexttowardf.c,
-	sysdeps/ieee754/dbl-64/branred.c, sysdeps/ieee754/dbl-64/doasin.c,
-	sysdeps/ieee754/dbl-64/dosincos.c, sysdeps/ieee754/dbl-64/e_acosh.c,
-	sysdeps/ieee754/dbl-64/e_asin.c, sysdeps/ieee754/dbl-64/e_atan2.c,
-	sysdeps/ieee754/dbl-64/e_atanh.c, sysdeps/ieee754/dbl-64/e_cosh.c,
-	sysdeps/ieee754/dbl-64/e_exp.c, sysdeps/ieee754/dbl-64/e_fmod.c,
-	sysdeps/ieee754/dbl-64/e_hypot.c, sysdeps/ieee754/dbl-64/e_j0.c,
-	sysdeps/ieee754/dbl-64/e_j1.c, sysdeps/ieee754/dbl-64/e_jn.c,
-	sysdeps/ieee754/dbl-64/e_lgamma_r.c, sysdeps/ieee754/dbl-64/e_log.c,
-	sysdeps/ieee754/dbl-64/e_log10.c, sysdeps/ieee754/dbl-64/e_log2.c,
-	sysdeps/ieee754/dbl-64/e_pow.c, sysdeps/ieee754/dbl-64/e_rem_pio2.c,
-	sysdeps/ieee754/dbl-64/e_remainder.c, sysdeps/ieee754/dbl-64/e_sinh.c,
-	sysdeps/ieee754/dbl-64/e_sqrt.c, sysdeps/ieee754/dbl-64/halfulp.c,
-	sysdeps/ieee754/dbl-64/k_rem_pio2.c, sysdeps/ieee754/dbl-64/s_asinh.c,
-	sysdeps/ieee754/dbl-64/s_atan.c, sysdeps/ieee754/dbl-64/s_cbrt.c,
-	sysdeps/ieee754/dbl-64/s_ceil.c, sysdeps/ieee754/dbl-64/s_copysign.c,
-	sysdeps/ieee754/dbl-64/s_erf.c, sysdeps/ieee754/dbl-64/s_expm1.c,
-	sysdeps/ieee754/dbl-64/s_fabs.c, sysdeps/ieee754/dbl-64/s_finite.c,
-	sysdeps/ieee754/dbl-64/s_floor.c, sysdeps/ieee754/dbl-64/s_fpclassify.c,
-	sysdeps/ieee754/dbl-64/s_frexp.c, sysdeps/ieee754/dbl-64/s_ilogb.c,
-	sysdeps/ieee754/dbl-64/s_isinf.c, sysdeps/ieee754/dbl-64/s_isinf_ns.c,
-	sysdeps/ieee754/dbl-64/s_isnan.c, sysdeps/ieee754/dbl-64/s_llrint.c,
-	sysdeps/ieee754/dbl-64/s_llround.c, sysdeps/ieee754/dbl-64/s_log1p.c,
-	sysdeps/ieee754/dbl-64/s_logb.c, sysdeps/ieee754/dbl-64/s_lrint.c,
-	sysdeps/ieee754/dbl-64/s_lround.c, sysdeps/ieee754/dbl-64/s_modf.c,
-	sysdeps/ieee754/dbl-64/s_nearbyint.c, sysdeps/ieee754/dbl-64/s_remquo.c,
-	sysdeps/ieee754/dbl-64/s_rint.c, sysdeps/ieee754/dbl-64/s_round.c,
-	sysdeps/ieee754/dbl-64/s_scalbln.c, sysdeps/ieee754/dbl-64/s_scalbn.c,
-	sysdeps/ieee754/dbl-64/s_signbit.c, sysdeps/ieee754/dbl-64/s_sin.c,
-	sysdeps/ieee754/dbl-64/s_sincos.c, sysdeps/ieee754/dbl-64/s_tan.c,
-	sysdeps/ieee754/dbl-64/s_tanh.c, sysdeps/ieee754/dbl-64/s_trunc.c,
-	sysdeps/ieee754/dbl-64/sincos32.c, sysdeps/ieee754/dbl-64/slowexp.c,
-	sysdeps/ieee754/dbl-64/slowpow.c,
-	sysdeps/ieee754/dbl-64/wordsize-64/e_acosh.c,
-	sysdeps/ieee754/dbl-64/wordsize-64/e_cosh.c,
-	sysdeps/ieee754/dbl-64/wordsize-64/e_fmod.c,
-	sysdeps/ieee754/dbl-64/wordsize-64/s_ceil.c,
-	sysdeps/ieee754/dbl-64/wordsize-64/s_finite.c,
-	sysdeps/ieee754/dbl-64/wordsize-64/s_floor.c,
-	sysdeps/ieee754/dbl-64/wordsize-64/s_frexp.c,
-	sysdeps/ieee754/dbl-64/wordsize-64/s_isinf.c,
-	sysdeps/ieee754/dbl-64/wordsize-64/s_isinf_ns.c,
-	sysdeps/ieee754/dbl-64/wordsize-64/s_isnan.c,
-	sysdeps/ieee754/dbl-64/wordsize-64/s_logb.c,
-	sysdeps/ieee754/dbl-64/wordsize-64/s_lround.c,
-	sysdeps/ieee754/dbl-64/wordsize-64/s_modf.c,
-	sysdeps/ieee754/dbl-64/wordsize-64/s_nearbyint.c,
-	sysdeps/ieee754/dbl-64/wordsize-64/s_remquo.c,
-	sysdeps/ieee754/dbl-64/wordsize-64/s_rint.c,
-	sysdeps/ieee754/dbl-64/wordsize-64/s_round.c,
-	sysdeps/ieee754/dbl-64/wordsize-64/s_scalbln.c,
-	sysdeps/ieee754/dbl-64/wordsize-64/s_scalbn.c,
-	sysdeps/ieee754/dbl-64/wordsize-64/s_trunc.c,
-	sysdeps/ieee754/flt-32/e_acosf.c, sysdeps/ieee754/flt-32/e_acoshf.c,
-	sysdeps/ieee754/flt-32/e_asinf.c, sysdeps/ieee754/flt-32/e_atan2f.c,
-	sysdeps/ieee754/flt-32/e_atanhf.c, sysdeps/ieee754/flt-32/e_coshf.c,
-	sysdeps/ieee754/flt-32/e_fmodf.c, sysdeps/ieee754/flt-32/e_hypotf.c,
-	sysdeps/ieee754/flt-32/e_j0f.c, sysdeps/ieee754/flt-32/e_j1f.c,
-	sysdeps/ieee754/flt-32/e_jnf.c, sysdeps/ieee754/flt-32/e_lgammaf_r.c,
-	sysdeps/ieee754/flt-32/e_log10f.c, sysdeps/ieee754/flt-32/e_log2f.c,
-	sysdeps/ieee754/flt-32/e_logf.c, sysdeps/ieee754/flt-32/e_powf.c,
-	sysdeps/ieee754/flt-32/e_rem_pio2f.c,
-	sysdeps/ieee754/flt-32/e_remainderf.c,
-	sysdeps/ieee754/flt-32/e_sinhf.c, sysdeps/ieee754/flt-32/e_sqrtf.c,
-	sysdeps/ieee754/flt-32/k_cosf.c, sysdeps/ieee754/flt-32/k_rem_pio2f.c,
-	sysdeps/ieee754/flt-32/k_sinf.c, sysdeps/ieee754/flt-32/k_tanf.c,
-	sysdeps/ieee754/flt-32/s_asinhf.c, sysdeps/ieee754/flt-32/s_atanf.c,
-	sysdeps/ieee754/flt-32/s_cbrtf.c, sysdeps/ieee754/flt-32/s_ceilf.c,
-	sysdeps/ieee754/flt-32/s_copysignf.c, sysdeps/ieee754/flt-32/s_cosf.c,
-	sysdeps/ieee754/flt-32/s_erff.c, sysdeps/ieee754/flt-32/s_expm1f.c,
-	sysdeps/ieee754/flt-32/s_fabsf.c, sysdeps/ieee754/flt-32/s_finitef.c,
-	sysdeps/ieee754/flt-32/s_floorf.c, sysdeps/ieee754/flt-32/s_fpclassifyf.c,
-	sysdeps/ieee754/flt-32/s_frexpf.c, sysdeps/ieee754/flt-32/s_ilogbf.c,
-	sysdeps/ieee754/flt-32/s_isinf_nsf.c, sysdeps/ieee754/flt-32/s_isinff.c,
-	sysdeps/ieee754/flt-32/s_isnanf.c, sysdeps/ieee754/flt-32/s_llrintf.c,
-	sysdeps/ieee754/flt-32/s_llroundf.c, sysdeps/ieee754/flt-32/s_log1pf.c,
-	sysdeps/ieee754/flt-32/s_logbf.c, sysdeps/ieee754/flt-32/s_lrintf.c,
-	sysdeps/ieee754/flt-32/s_lroundf.c, sysdeps/ieee754/flt-32/s_modff.c,
-	sysdeps/ieee754/flt-32/s_nearbyintf.c,
-	sysdeps/ieee754/flt-32/s_nextafterf.c,
-	sysdeps/ieee754/flt-32/s_remquof.c, sysdeps/ieee754/flt-32/s_rintf.c,
-	sysdeps/ieee754/flt-32/s_roundf.c, sysdeps/ieee754/flt-32/s_scalblnf.c,
-	sysdeps/ieee754/flt-32/s_scalbnf.c, sysdeps/ieee754/flt-32/s_signbitf.c,
-	sysdeps/ieee754/flt-32/s_sincosf.c, sysdeps/ieee754/flt-32/s_sinf.c,
-	sysdeps/ieee754/flt-32/s_tanf.c, sysdeps/ieee754/flt-32/s_tanhf.c,
-	sysdeps/ieee754/flt-32/s_truncf.c, sysdeps/ieee754/k_standard.c,
-	sysdeps/ieee754/ldbl-128/e_acoshl.c, sysdeps/ieee754/ldbl-128/e_acosl.c,
-	sysdeps/ieee754/ldbl-128/e_asinl.c, sysdeps/ieee754/ldbl-128/e_atan2l.c,
-	sysdeps/ieee754/ldbl-128/e_atanhl.c, sysdeps/ieee754/ldbl-128/e_coshl.c,
-	sysdeps/ieee754/ldbl-128/e_fmodl.c, sysdeps/ieee754/ldbl-128/e_hypotl.c,
-	sysdeps/ieee754/ldbl-128/e_j0l.c, sysdeps/ieee754/ldbl-128/e_j1l.c,
-	sysdeps/ieee754/ldbl-128/e_jnl.c, sysdeps/ieee754/ldbl-128/e_lgammal_r.c,
-	sysdeps/ieee754/ldbl-128/e_log10l.c, sysdeps/ieee754/ldbl-128/e_log2l.c,
-	sysdeps/ieee754/ldbl-128/e_logl.c, sysdeps/ieee754/ldbl-128/e_powl.c,
-	sysdeps/ieee754/ldbl-128/e_rem_pio2l.c,
-	sysdeps/ieee754/ldbl-128/e_remainderl.c,
-	sysdeps/ieee754/ldbl-128/e_sinhl.c, sysdeps/ieee754/ldbl-128/k_cosl.c,
-	sysdeps/ieee754/ldbl-128/k_sincosl.c, sysdeps/ieee754/ldbl-128/k_sinl.c,
-	sysdeps/ieee754/ldbl-128/k_tanl.c, sysdeps/ieee754/ldbl-128/s_asinhl.c,
-	sysdeps/ieee754/ldbl-128/s_atanl.c, sysdeps/ieee754/ldbl-128/s_cbrtl.c,
-	sysdeps/ieee754/ldbl-128/s_ceill.c, sysdeps/ieee754/ldbl-128/s_copysignl.c,
-	sysdeps/ieee754/ldbl-128/s_cosl.c, sysdeps/ieee754/ldbl-128/s_erfl.c,
-	sysdeps/ieee754/ldbl-128/s_expm1l.c, sysdeps/ieee754/ldbl-128/s_fabsl.c,
-	sysdeps/ieee754/ldbl-128/s_finitel.c, sysdeps/ieee754/ldbl-128/s_floorl.c,
-	sysdeps/ieee754/ldbl-128/s_fpclassifyl.c,
-	sysdeps/ieee754/ldbl-128/s_frexpl.c, sysdeps/ieee754/ldbl-128/s_ilogbl.c,
-	sysdeps/ieee754/ldbl-128/s_isinf_nsl.c,
-	sysdeps/ieee754/ldbl-128/s_isinfl.c, sysdeps/ieee754/ldbl-128/s_isnanl.c,
-	sysdeps/ieee754/ldbl-128/s_llrintl.c, sysdeps/ieee754/ldbl-128/s_llroundl.c,
-	sysdeps/ieee754/ldbl-128/s_log1pl.c, sysdeps/ieee754/ldbl-128/s_logbl.c,
-	sysdeps/ieee754/ldbl-128/s_lrintl.c, sysdeps/ieee754/ldbl-128/s_lroundl.c,
-	sysdeps/ieee754/ldbl-128/s_modfl.c, sysdeps/ieee754/ldbl-128/s_nearbyintl.c,
-	sysdeps/ieee754/ldbl-128/s_nextafterl.c,
-	sysdeps/ieee754/ldbl-128/s_nexttoward.c,
-	sysdeps/ieee754/ldbl-128/s_nexttowardf.c,
-	sysdeps/ieee754/ldbl-128/s_remquol.c, sysdeps/ieee754/ldbl-128/s_rintl.c,
-	sysdeps/ieee754/ldbl-128/s_roundl.c, sysdeps/ieee754/ldbl-128/s_scalblnl.c,
-	sysdeps/ieee754/ldbl-128/s_scalbnl.c, sysdeps/ieee754/ldbl-128/s_signbitl.c,
-	sysdeps/ieee754/ldbl-128/s_sincosl.c, sysdeps/ieee754/ldbl-128/s_sinl.c,
-	sysdeps/ieee754/ldbl-128/s_tanhl.c, sysdeps/ieee754/ldbl-128/s_tanl.c,
-	sysdeps/ieee754/ldbl-128/s_truncl.c, sysdeps/ieee754/ldbl-128/w_expl.c,
-	sysdeps/ieee754/ldbl-128ibm/e_acoshl.c,
-	sysdeps/ieee754/ldbl-128ibm/e_acosl.c,
-	sysdeps/ieee754/ldbl-128ibm/e_asinl.c,
-	sysdeps/ieee754/ldbl-128ibm/e_atan2l.c,
-	sysdeps/ieee754/ldbl-128ibm/e_atanhl.c,
-	sysdeps/ieee754/ldbl-128ibm/e_coshl.c,
-	sysdeps/ieee754/ldbl-128ibm/e_fmodl.c,
-	sysdeps/ieee754/ldbl-128ibm/e_hypotl.c,
-	sysdeps/ieee754/ldbl-128ibm/e_jnl.c,
-	sysdeps/ieee754/ldbl-128ibm/e_log10l.c,
-	sysdeps/ieee754/ldbl-128ibm/e_log2l.c,
-	sysdeps/ieee754/ldbl-128ibm/e_logl.c, sysdeps/ieee754/ldbl-128ibm/e_powl.c,
-	sysdeps/ieee754/ldbl-128ibm/e_rem_pio2l.c,
-	sysdeps/ieee754/ldbl-128ibm/e_remainderl.c,
-	sysdeps/ieee754/ldbl-128ibm/e_sinhl.c, sysdeps/ieee754/ldbl-128ibm/k_cosl.c,
-	sysdeps/ieee754/ldbl-128ibm/k_sincosl.c,
-	sysdeps/ieee754/ldbl-128ibm/k_sinl.c, sysdeps/ieee754/ldbl-128ibm/k_tanl.c,
-	sysdeps/ieee754/ldbl-128ibm/s_asinhl.c,
-	sysdeps/ieee754/ldbl-128ibm/s_atanl.c,
-	sysdeps/ieee754/ldbl-128ibm/s_copysignl.c,
-	sysdeps/ieee754/ldbl-128ibm/s_cosl.c,
-	sysdeps/ieee754/ldbl-128ibm/s_ctanhl.c,
-	sysdeps/ieee754/ldbl-128ibm/s_ctanl.c,
-	sysdeps/ieee754/ldbl-128ibm/s_erfl.c,
-	sysdeps/ieee754/ldbl-128ibm/s_expm1l.c,
-	sysdeps/ieee754/ldbl-128ibm/s_fabsl.c,
-	sysdeps/ieee754/ldbl-128ibm/s_finitel.c,
-	sysdeps/ieee754/ldbl-128ibm/s_fpclassifyl.c,
-	sysdeps/ieee754/ldbl-128ibm/s_frexpl.c,
-	sysdeps/ieee754/ldbl-128ibm/s_ilogbl.c,
-	sysdeps/ieee754/ldbl-128ibm/s_isinf_nsl.c,
-	sysdeps/ieee754/ldbl-128ibm/s_isinfl.c,
-	sysdeps/ieee754/ldbl-128ibm/s_isnanl.c,
-	sysdeps/ieee754/ldbl-128ibm/s_log1pl.c,
-	sysdeps/ieee754/ldbl-128ibm/s_logbl.c,
-	sysdeps/ieee754/ldbl-128ibm/s_modfl.c,
-	sysdeps/ieee754/ldbl-128ibm/s_nexttoward.c,
-	sysdeps/ieee754/ldbl-128ibm/s_nexttowardf.c,
-	sysdeps/ieee754/ldbl-128ibm/s_remquol.c,
-	sysdeps/ieee754/ldbl-128ibm/s_scalblnl.c,
-	sysdeps/ieee754/ldbl-128ibm/s_scalbnl.c,
-	sysdeps/ieee754/ldbl-128ibm/s_signbitl.c,
-	sysdeps/ieee754/ldbl-128ibm/s_sincosl.c,
-	sysdeps/ieee754/ldbl-128ibm/s_sinl.c,
-	sysdeps/ieee754/ldbl-128ibm/s_tanhl.c,
-	sysdeps/ieee754/ldbl-128ibm/s_tanl.c,
-	sysdeps/ieee754/ldbl-96/e_acoshl.c, sysdeps/ieee754/ldbl-96/e_asinl.c,
-	sysdeps/ieee754/ldbl-96/e_atan2l.c, sysdeps/ieee754/ldbl-96/e_atanhl.c,
-	sysdeps/ieee754/ldbl-96/e_coshl.c, sysdeps/ieee754/ldbl-96/e_hypotl.c,
-	sysdeps/ieee754/ldbl-96/e_j0l.c, sysdeps/ieee754/ldbl-96/e_j1l.c,
-	sysdeps/ieee754/ldbl-96/e_jnl.c, sysdeps/ieee754/ldbl-96/e_lgammal_r.c,
-	sysdeps/ieee754/ldbl-96/e_remainderl.c, sysdeps/ieee754/ldbl-96/e_sinhl.c,
-	sysdeps/ieee754/ldbl-96/s_asinhl.c, sysdeps/ieee754/ldbl-96/s_cbrtl.c,
-	sysdeps/ieee754/ldbl-96/s_ceill.c, sysdeps/ieee754/ldbl-96/s_copysignl.c,
-	sysdeps/ieee754/ldbl-96/s_cosl.c, sysdeps/ieee754/ldbl-96/s_erfl.c,
-	sysdeps/ieee754/ldbl-96/s_fabsl.c, sysdeps/ieee754/ldbl-96/s_finitel.c,
-	sysdeps/ieee754/ldbl-96/s_floorl.c, sysdeps/ieee754/ldbl-96/s_fpclassifyl.c,
-	sysdeps/ieee754/ldbl-96/s_frexpl.c, sysdeps/ieee754/ldbl-96/s_ilogbl.c,
-	sysdeps/ieee754/ldbl-96/s_isinf_nsl.c, sysdeps/ieee754/ldbl-96/s_isinfl.c,
-	sysdeps/ieee754/ldbl-96/s_isnanl.c, sysdeps/ieee754/ldbl-96/s_llrintl.c,
-	sysdeps/ieee754/ldbl-96/s_llroundl.c, sysdeps/ieee754/ldbl-96/s_logbl.c,
-	sysdeps/ieee754/ldbl-96/s_lrintl.c, sysdeps/ieee754/ldbl-96/s_lroundl.c,
-	sysdeps/ieee754/ldbl-96/s_modfl.c, sysdeps/ieee754/ldbl-96/s_nearbyintl.c,
-	sysdeps/ieee754/ldbl-96/s_nextafterl.c,
-	sysdeps/ieee754/ldbl-96/s_nexttoward.c,
-	sysdeps/ieee754/ldbl-96/s_nexttowardf.c,
-	sysdeps/ieee754/ldbl-96/s_remquol.c, sysdeps/ieee754/ldbl-96/s_rintl.c,
-	sysdeps/ieee754/ldbl-96/s_roundl.c, sysdeps/ieee754/ldbl-96/s_scalblnl.c,
-	sysdeps/ieee754/ldbl-96/s_scalbnl.c, sysdeps/ieee754/ldbl-96/s_signbitl.c,
-	sysdeps/ieee754/ldbl-96/s_sincosl.c, sysdeps/ieee754/ldbl-96/s_sinl.c,
-	sysdeps/ieee754/ldbl-96/s_tanhl.c, sysdeps/ieee754/ldbl-96/s_tanl.c,
-	sysdeps/ieee754/ldbl-96/s_truncl.c, sysdeps/ieee754/s_lib_version.c,
-	sysdeps/ieee754/s_matherr.c, sysdeps/ieee754/s_signgam.c,
-	sysdeps/powerpc/fpu/e_hypot.c, sysdeps/powerpc/fpu/e_hypotf.c,
-	sysdeps/powerpc/fpu/e_rem_pio2f.c, sysdeps/powerpc/fpu/k_cosf.c,
-	sysdeps/powerpc/fpu/k_rem_pio2f.c, sysdeps/powerpc/fpu/k_sinf.c,
-	sysdeps/powerpc/fpu/s_cosf.c, sysdeps/powerpc/fpu/s_float_bitwise.h,
-	sysdeps/powerpc/fpu/s_isnan.c, sysdeps/powerpc/fpu/s_rint.c,
-	sysdeps/powerpc/fpu/s_rintf.c, sysdeps/powerpc/fpu/s_sinf.c,
-	sysdeps/powerpc/fpu/w_sqrt.c, sysdeps/powerpc/fpu/w_sqrtf.c,
-	sysdeps/powerpc/powerpc32/fpu/s_llrintf.c,
-	sysdeps/powerpc/powerpc32/power4/fpu/slowexp.c,
-	sysdeps/powerpc/powerpc32/power4/fpu/slowpow.c,
-	sysdeps/powerpc/powerpc64/power4/fpu/slowexp.c,
-	sysdeps/powerpc/powerpc64/power4/fpu/slowpow.c,
-	sysdeps/powerpc/powerpc64/power4/fpu/w_sqrt.c,
-	sysdeps/powerpc/powerpc64/power4/fpu/w_sqrtf.c: Use <> to include both
-	<math.h> and <math_private.h>.
+	* sysdeps/i386/fpu/s_fpclassifyl.c Use <> to include both <math.h>
+	and <math_private.h>.
+	* sysdeps/i386/fpu/s_isinfl.c: Likewise.
+	* sysdeps/i386/fpu/s_isnanl.c: Likewise.
+	* sysdeps/i386/fpu/s_nextafterl.c: Likewise.
+	* sysdeps/i386/fpu/s_nexttoward.c: Likewise.
+	* sysdeps/i386/fpu/s_nexttowardf.c: Likewise.
+	* sysdeps/ieee754/dbl-64/branred.c: Likewise.
+	* sysdeps/ieee754/dbl-64/doasin.c: Likewise.
+	* sysdeps/ieee754/dbl-64/dosincos.c: Likewise.
+	* sysdeps/ieee754/dbl-64/e_acosh.c: Likewise.
+	* sysdeps/ieee754/dbl-64/e_asin.c: Likewise.
+	* sysdeps/ieee754/dbl-64/e_atan2.c: Likewise.
+	* sysdeps/ieee754/dbl-64/e_atanh.c: Likewise.
+	* sysdeps/ieee754/dbl-64/e_cosh.c: Likewise.
+	* sysdeps/ieee754/dbl-64/e_exp.c: Likewise.
+	* sysdeps/ieee754/dbl-64/e_fmod.c: Likewise.
+	* sysdeps/ieee754/dbl-64/e_hypot.c: Likewise.
+	* sysdeps/ieee754/dbl-64/e_j0.c: Likewise.
+	* sysdeps/ieee754/dbl-64/e_j1.c: Likewise.
+	* sysdeps/ieee754/dbl-64/e_jn.c: Likewise.
+	* sysdeps/ieee754/dbl-64/e_lgamma_r.c: Likewise.
+	* sysdeps/ieee754/dbl-64/e_log.c: Likewise.
+	* sysdeps/ieee754/dbl-64/e_log10.c: Likewise.
+	* sysdeps/ieee754/dbl-64/e_log2.c: Likewise.
+	* sysdeps/ieee754/dbl-64/e_pow.c: Likewise.
+	* sysdeps/ieee754/dbl-64/e_rem_pio2.c: Likewise.
+	* sysdeps/ieee754/dbl-64/e_remainder.c: Likewise.
+	* sysdeps/ieee754/dbl-64/e_sinh.c: Likewise.
+	* sysdeps/ieee754/dbl-64/e_sqrt.c: Likewise.
+	* sysdeps/ieee754/dbl-64/halfulp.c: Likewise.
+	* sysdeps/ieee754/dbl-64/k_rem_pio2.c: Likewise.
+	* sysdeps/ieee754/dbl-64/s_asinh.c: Likewise.
+	* sysdeps/ieee754/dbl-64/s_atan.c: Likewise.
+	* sysdeps/ieee754/dbl-64/s_cbrt.c: Likewise.
+	* sysdeps/ieee754/dbl-64/s_ceil.c: Likewise.
+	* sysdeps/ieee754/dbl-64/s_copysign.c: Likewise.
+	* sysdeps/ieee754/dbl-64/s_erf.c: Likewise.
+	* sysdeps/ieee754/dbl-64/s_expm1.c: Likewise.
+	* sysdeps/ieee754/dbl-64/s_fabs.c: Likewise.
+	* sysdeps/ieee754/dbl-64/s_finite.c: Likewise.
+	* sysdeps/ieee754/dbl-64/s_floor.c: Likewise.
+	* sysdeps/ieee754/dbl-64/s_fpclassify.c: Likewise.
+	* sysdeps/ieee754/dbl-64/s_frexp.c: Likewise.
+	* sysdeps/ieee754/dbl-64/s_ilogb.c: Likewise.
+	* sysdeps/ieee754/dbl-64/s_isinf.c: Likewise.
+	* sysdeps/ieee754/dbl-64/s_isinf_ns.c: Likewise.
+	* sysdeps/ieee754/dbl-64/s_isnan.c: Likewise.
+	* sysdeps/ieee754/dbl-64/s_llrint.c: Likewise.
+	* sysdeps/ieee754/dbl-64/s_llround.c: Likewise.
+	* sysdeps/ieee754/dbl-64/s_log1p.c: Likewise.
+	* sysdeps/ieee754/dbl-64/s_logb.c: Likewise.
+	* sysdeps/ieee754/dbl-64/s_lrint.c: Likewise.
+	* sysdeps/ieee754/dbl-64/s_lround.c: Likewise.
+	* sysdeps/ieee754/dbl-64/s_modf.c: Likewise.
+	* sysdeps/ieee754/dbl-64/s_nearbyint.c: Likewise.
+	* sysdeps/ieee754/dbl-64/s_remquo.c: Likewise.
+	* sysdeps/ieee754/dbl-64/s_rint.c: Likewise.
+	* sysdeps/ieee754/dbl-64/s_round.c: Likewise.
+	* sysdeps/ieee754/dbl-64/s_scalbln.c: Likewise.
+	* sysdeps/ieee754/dbl-64/s_scalbn.c: Likewise.
+	* sysdeps/ieee754/dbl-64/s_signbit.c: Likewise.
+	* sysdeps/ieee754/dbl-64/s_sin.c: Likewise.
+	* sysdeps/ieee754/dbl-64/s_sincos.c: Likewise.
+	* sysdeps/ieee754/dbl-64/s_tan.c: Likewise.
+	* sysdeps/ieee754/dbl-64/s_tanh.c: Likewise.
+	* sysdeps/ieee754/dbl-64/s_trunc.c: Likewise.
+	* sysdeps/ieee754/dbl-64/sincos32.c: Likewise.
+	* sysdeps/ieee754/dbl-64/slowexp.c: Likewise.
+	* sysdeps/ieee754/dbl-64/slowpow.c: Likewise.
+	* sysdeps/ieee754/dbl-64/wordsize-64/e_acosh.c: Likewise.
+	* sysdeps/ieee754/dbl-64/wordsize-64/e_cosh.c: Likewise.
+	* sysdeps/ieee754/dbl-64/wordsize-64/e_fmod.c: Likewise.
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_ceil.c: Likewise.
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_finite.c: Likewise.
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_floor.c: Likewise.
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_frexp.c: Likewise.
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_isinf.c: Likewise.
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_isinf_ns.c: Likewise.
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_isnan.c: Likewise.
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_logb.c: Likewise.
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_lround.c: Likewise.
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_modf.c: Likewise.
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_nearbyint.c: Likewise.
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_remquo.c: Likewise.
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_rint.c: Likewise.
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_round.c: Likewise.
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_scalbln.c: Likewise.
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_scalbn.c: Likewise.
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_trunc.c: Likewise.
+	* sysdeps/ieee754/flt-32/e_acosf.c: Likewise.
+	* sysdeps/ieee754/flt-32/e_acoshf.c: Likewise.
+	* sysdeps/ieee754/flt-32/e_asinf.c: Likewise.
+	* sysdeps/ieee754/flt-32/e_atan2f.c: Likewise.
+	* sysdeps/ieee754/flt-32/e_atanhf.c: Likewise.
+	* sysdeps/ieee754/flt-32/e_coshf.c: Likewise.
+	* sysdeps/ieee754/flt-32/e_fmodf.c: Likewise.
+	* sysdeps/ieee754/flt-32/e_hypotf.c: Likewise.
+	* sysdeps/ieee754/flt-32/e_j0f.c: Likewise.
+	* sysdeps/ieee754/flt-32/e_j1f.c: Likewise.
+	* sysdeps/ieee754/flt-32/e_jnf.c: Likewise.
+	* sysdeps/ieee754/flt-32/e_lgammaf_r.c: Likewise.
+	* sysdeps/ieee754/flt-32/e_log10f.c: Likewise.
+	* sysdeps/ieee754/flt-32/e_log2f.c: Likewise.
+	* sysdeps/ieee754/flt-32/e_logf.c: Likewise.
+	* sysdeps/ieee754/flt-32/e_powf.c: Likewise.
+	* sysdeps/ieee754/flt-32/e_rem_pio2f.c: Likewise.
+	* sysdeps/ieee754/flt-32/e_remainderf.c: Likewise.
+	* sysdeps/ieee754/flt-32/e_sinhf.c: Likewise.
+	* sysdeps/ieee754/flt-32/e_sqrtf.c: Likewise.
+	* sysdeps/ieee754/flt-32/k_cosf.c: Likewise.
+	* sysdeps/ieee754/flt-32/k_rem_pio2f.c: Likewise.
+	* sysdeps/ieee754/flt-32/k_sinf.c: Likewise.
+	* sysdeps/ieee754/flt-32/k_tanf.c: Likewise.
+	* sysdeps/ieee754/flt-32/s_asinhf.c: Likewise.
+	* sysdeps/ieee754/flt-32/s_atanf.c: Likewise.
+	* sysdeps/ieee754/flt-32/s_cbrtf.c: Likewise.
+	* sysdeps/ieee754/flt-32/s_ceilf.c: Likewise.
+	* sysdeps/ieee754/flt-32/s_copysignf.c: Likewise.
+	* sysdeps/ieee754/flt-32/s_cosf.c: Likewise.
+	* sysdeps/ieee754/flt-32/s_erff.c: Likewise.
+	* sysdeps/ieee754/flt-32/s_expm1f.c: Likewise.
+	* sysdeps/ieee754/flt-32/s_fabsf.c: Likewise.
+	* sysdeps/ieee754/flt-32/s_finitef.c: Likewise.
+	* sysdeps/ieee754/flt-32/s_floorf.c: Likewise.
+	* sysdeps/ieee754/flt-32/s_fpclassifyf.c: Likewise.
+	* sysdeps/ieee754/flt-32/s_frexpf.c: Likewise.
+	* sysdeps/ieee754/flt-32/s_ilogbf.c: Likewise.
+	* sysdeps/ieee754/flt-32/s_isinf_nsf.c: Likewise.
+	* sysdeps/ieee754/flt-32/s_isinff.c: Likewise.
+	* sysdeps/ieee754/flt-32/s_isnanf.c: Likewise.
+	* sysdeps/ieee754/flt-32/s_llrintf.c: Likewise.
+	* sysdeps/ieee754/flt-32/s_llroundf.c: Likewise.
+	* sysdeps/ieee754/flt-32/s_log1pf.c: Likewise.
+	* sysdeps/ieee754/flt-32/s_logbf.c: Likewise.
+	* sysdeps/ieee754/flt-32/s_lrintf.c: Likewise.
+	* sysdeps/ieee754/flt-32/s_lroundf.c: Likewise.
+	* sysdeps/ieee754/flt-32/s_modff.c: Likewise.
+	* sysdeps/ieee754/flt-32/s_nearbyintf.c: Likewise.
+	* sysdeps/ieee754/flt-32/s_nextafterf.c: Likewise.
+	* sysdeps/ieee754/flt-32/s_remquof.c: Likewise.
+	* sysdeps/ieee754/flt-32/s_rintf.c: Likewise.
+	* sysdeps/ieee754/flt-32/s_roundf.c: Likewise.
+	* sysdeps/ieee754/flt-32/s_scalblnf.c: Likewise.
+	* sysdeps/ieee754/flt-32/s_scalbnf.c: Likewise.
+	* sysdeps/ieee754/flt-32/s_signbitf.c: Likewise.
+	* sysdeps/ieee754/flt-32/s_sincosf.c: Likewise.
+	* sysdeps/ieee754/flt-32/s_sinf.c: Likewise.
+	* sysdeps/ieee754/flt-32/s_tanf.c: Likewise.
+	* sysdeps/ieee754/flt-32/s_tanhf.c: Likewise.
+	* sysdeps/ieee754/flt-32/s_truncf.c: Likewise.
+	* sysdeps/ieee754/k_standard.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/e_acoshl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/e_acosl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/e_asinl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/e_atan2l.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/e_atanhl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/e_coshl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/e_fmodl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/e_hypotl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/e_j0l.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/e_j1l.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/e_jnl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/e_lgammal_r.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/e_log10l.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/e_log2l.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/e_logl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/e_powl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/e_rem_pio2l.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/e_remainderl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/e_sinhl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/k_cosl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/k_sincosl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/k_sinl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/k_tanl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_asinhl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_atanl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_cbrtl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_ceill.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_copysignl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_cosl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_erfl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_expm1l.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_fabsl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_finitel.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_floorl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_fpclassifyl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_frexpl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_ilogbl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_isinf_nsl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_isinfl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_isnanl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_llrintl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_llroundl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_log1pl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_logbl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_lrintl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_lroundl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_modfl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_nearbyintl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_nextafterl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_nexttoward.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_nexttowardf.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_remquol.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_rintl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_roundl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_scalblnl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_scalbnl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_signbitl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_sincosl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_sinl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_tanhl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_tanl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_truncl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/w_expl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/e_acoshl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/e_acosl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/e_asinl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/e_atan2l.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/e_atanhl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/e_coshl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/e_fmodl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/e_hypotl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/e_jnl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/e_log10l.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/e_log2l.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/e_logl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/e_powl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/e_rem_pio2l.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/e_remainderl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/e_sinhl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/k_cosl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/k_sincosl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/k_sinl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/k_tanl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_asinhl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_atanl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_copysignl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_cosl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_ctanhl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_ctanl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_erfl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_expm1l.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_fabsl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_finitel.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_fpclassifyl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_frexpl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_ilogbl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_isinf_nsl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_isinfl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_isnanl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_log1pl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_logbl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_modfl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_nexttoward.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_nexttowardf.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_remquol.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_scalblnl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_scalbnl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_signbitl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_sincosl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_sinl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_tanhl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_tanl.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/e_acoshl.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/e_asinl.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/e_atan2l.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/e_atanhl.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/e_coshl.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/e_hypotl.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/e_j0l.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/e_j1l.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/e_jnl.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/e_lgammal_r.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/e_remainderl.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/e_sinhl.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/s_asinhl.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/s_cbrtl.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/s_ceill.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/s_copysignl.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/s_cosl.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/s_erfl.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/s_fabsl.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/s_finitel.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/s_floorl.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/s_fpclassifyl.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/s_frexpl.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/s_ilogbl.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/s_isinf_nsl.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/s_isinfl.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/s_isnanl.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/s_llrintl.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/s_llroundl.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/s_logbl.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/s_lrintl.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/s_lroundl.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/s_modfl.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/s_nearbyintl.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/s_nextafterl.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/s_nexttoward.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/s_nexttowardf.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/s_remquol.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/s_rintl.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/s_roundl.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/s_scalblnl.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/s_scalbnl.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/s_signbitl.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/s_sincosl.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/s_sinl.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/s_tanhl.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/s_tanl.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/s_truncl.c: Likewise.
+	* sysdeps/ieee754/s_lib_version.c: Likewise.
+	* sysdeps/ieee754/s_matherr.c: Likewise.
+	* sysdeps/ieee754/s_signgam.c: Likewise.
+	* sysdeps/powerpc/fpu/e_hypot.c: Likewise.
+	* sysdeps/powerpc/fpu/e_hypotf.c: Likewise.
+	* sysdeps/powerpc/fpu/e_rem_pio2f.c: Likewise.
+	* sysdeps/powerpc/fpu/k_cosf.c: Likewise.
+	* sysdeps/powerpc/fpu/k_rem_pio2f.c: Likewise.
+	* sysdeps/powerpc/fpu/k_sinf.c: Likewise.
+	* sysdeps/powerpc/fpu/s_cosf.c: Likewise.
+	* sysdeps/powerpc/fpu/s_float_bitwise.h: Likewise.
+	* sysdeps/powerpc/fpu/s_isnan.c: Likewise.
+	* sysdeps/powerpc/fpu/s_rint.c: Likewise.
+	* sysdeps/powerpc/fpu/s_rintf.c: Likewise.
+	* sysdeps/powerpc/fpu/s_sinf.c: Likewise.
+	* sysdeps/powerpc/fpu/w_sqrt.c: Likewise.
+	* sysdeps/powerpc/fpu/w_sqrtf.c: Likewise.
+	* sysdeps/powerpc/powerpc32/fpu/s_llrintf.c: Likewise.
+	* sysdeps/powerpc/powerpc32/power4/fpu/slowexp.c: Likewise.
+	* sysdeps/powerpc/powerpc32/power4/fpu/slowpow.c: Likewise.
+	* sysdeps/powerpc/powerpc64/power4/fpu/slowexp.c: Likewise.
+	* sysdeps/powerpc/powerpc64/power4/fpu/slowpow.c: Likewise.
+	* sysdeps/powerpc/powerpc64/power4/fpu/w_sqrt.c: Likewise.
+	* sysdeps/powerpc/powerpc64/power4/fpu/w_sqrtf.c: Likewise.
 
 2012-03-09  Joseph Myers  <joseph@codesourcery.com>
 
