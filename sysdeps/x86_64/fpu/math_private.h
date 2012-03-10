@@ -108,13 +108,33 @@ libc_fesetenv (fenv_t *e)
 #define libc_fesetenv  libc_fesetenv
 #define libc_fesetenvf libc_fesetenv
 
+static __always_inline int
+libc_feupdateenv_test (fenv_t *e, int ex)
+{
+  unsigned int mxcsr, old_mxcsr, cur_ex;
+  asm volatile (STMXCSR " %0" : "=m" (*&mxcsr));
+  cur_ex = mxcsr & FE_ALL_EXCEPT;
+
+  /* Merge current exceptions with the old environment.  */
+  old_mxcsr = e->__mxcsr;
+  mxcsr = old_mxcsr | cur_ex;
+  asm volatile (LDMXCSR " %0" : : "m" (*&mxcsr));
+
+  /* Raise SIGFPE for any new exceptions since the hold.  Expect that
+     the normal environment has all exceptions masked.  */
+  if (__builtin_expect ((old_mxcsr >> 7) & cur_ex, 0))
+    __feraiseexcept (cur_ex);
+
+  /* Test for exceptions raised since the hold.  */
+  return cur_ex & ex;
+}
+#define libc_feupdateenv_test  libc_feupdateenv_test
+#define libc_feupdateenv_testf libc_feupdateenv_test
+
 static __always_inline void
 libc_feupdateenv (fenv_t *e)
 {
-  unsigned int mxcsr;
-  asm volatile (STMXCSR " %0" : "=m" (*&mxcsr));
-  asm volatile (LDMXCSR " %0" : : "m" ((e)->__mxcsr));
-  __feraiseexcept (mxcsr & FE_ALL_EXCEPT);
+  libc_feupdateenv_test (e, 0);
 }
 #define libc_feupdateenv  libc_feupdateenv
 #define libc_feupdateenvf libc_feupdateenv

@@ -149,35 +149,36 @@ __fma (double x, double y, double z)
 
   fenv_t env;
   libc_feholdexcept_setround (&env, FE_TOWARDZERO);
+
   /* Perform m2 + a2 addition with round to odd.  */
   u.d = a2 + m2;
+
+  if (__builtin_expect (adjust < 0, 0))
+    {
+      if ((u.ieee.mantissa1 & 1) == 0)
+	u.ieee.mantissa1 |= libc_fetestexcept (FE_INEXACT) != 0;
+      v.d = a1 + u.d;
+    }
+
+  /* Reset rounding mode and test for inexact simultaneously.  */
+  int j = libc_feupdateenv_test (&env, FE_INEXACT) != 0;
 
   if (__builtin_expect (adjust == 0, 1))
     {
       if ((u.ieee.mantissa1 & 1) == 0 && u.ieee.exponent != 0x7ff)
-	u.ieee.mantissa1 |= libc_fetestexcept (FE_INEXACT) != 0;
-      libc_feupdateenv (&env);
+	u.ieee.mantissa1 |= j;
       /* Result is a1 + u.d.  */
       return a1 + u.d;
     }
   else if (__builtin_expect (adjust > 0, 1))
     {
       if ((u.ieee.mantissa1 & 1) == 0 && u.ieee.exponent != 0x7ff)
-	u.ieee.mantissa1 |= libc_fetestexcept (FE_INEXACT) != 0;
-      libc_feupdateenv (&env);
+	u.ieee.mantissa1 |= j;
       /* Result is a1 + u.d, scaled up.  */
       return (a1 + u.d) * 0x1p53;
     }
   else
     {
-      if ((u.ieee.mantissa1 & 1) == 0)
-	u.ieee.mantissa1 |= libc_fetestexcept (FE_INEXACT) != 0;
-      v.d = a1 + u.d;
-      int j = libc_fetestexcept (FE_INEXACT) != 0;
-      libc_feupdateenv (&env);
-      /* Ensure the following computations are performed in default rounding
-	 mode instead of just reusing the round to zero computation.  */
-      asm volatile ("" : "=m" (u) : "m" (u));
       /* If a1 + u.d is exact, the only rounding happens during
 	 scaling down.  */
       if (j == 0)

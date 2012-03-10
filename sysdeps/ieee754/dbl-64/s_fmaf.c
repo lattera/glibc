@@ -35,12 +35,18 @@ __fmaf (float x, float y, float z)
   /* Multiplication is always exact.  */
   double temp = (double) x * (double) y;
   union ieee754_double u;
-  libc_feholdexcept_setroundf (&env, FE_TOWARDZERO);
+
+  libc_feholdexcept_setround (&env, FE_TOWARDZERO);
+
   /* Perform addition with round to odd.  */
   u.d = temp + (double) z;
+
+  /* Reset rounding mode and test for inexact simultaneously.  */
+  int j = libc_feupdateenv_test (&env, FE_INEXACT) != 0;
+
   if ((u.ieee.mantissa1 & 1) == 0 && u.ieee.exponent != 0x7ff)
-    u.ieee.mantissa1 |= libc_fetestexcept (FE_INEXACT) != 0;
-  libc_feupdateenv (&env);
+    u.ieee.mantissa1 |= j;
+
   /* And finally truncation with round to nearest.  */
   return (float) u.d;
 }

@@ -1,5 +1,14 @@
 2012-03-19  Richard Henderson  <rth@twiddle.net>
 
+	* sysdeps/generic/math_private.h (default_libc_feupdateenv_test): New.
+	(libc_feupdateenv_test, libc_feupdateenv_testf): New.
+	(libc_feupdateenv_testl): New.
+	* sysdeps/x86_64/fpu/math_private.h (libc_feupdateenv_test): New.
+	(libc_feupdateenv_testf): New.
+	(libc_feupdateenv): Use libc_feupdateenv_test.
+	* sysdeps/ieee754/dbl-64/s_fma.c (__fma): Use libc_feupdateenv_test.
+	* sysdeps/ieee754/dbl-64/s_fmaf.c (__fmaf): Likewise.
+
 	* sysdeps/generic/math_private.h (libc_feholdsetround): New.
 	(libc_feholdsetroundf, libc_feholdsetroundl): New.
 	(libc_feresetround, libc_feresetroundf, libc_feresetroundl): New.

@@ -457,6 +457,24 @@ default_libc_feupdateenv (fenv_t *e)
 # define libc_feupdateenv_53bit libc_feupdateenv
 #endif
 
+static __always_inline int
+default_libc_feupdateenv_test (fenv_t *e, int ex)
+{
+  int ret = fetestexcept (ex);
+  feupdateenv (e);
+  return ret;
+}
+
+#ifndef libc_feupdateenv_test
+# define libc_feupdateenv_test  default_libc_feupdateenv_test
+#endif
+#ifndef libc_feupdateenv_testf
+# define libc_feupdateenv_testf default_libc_feupdateenv_test
+#endif
+#ifndef libc_feupdateenv_testl
+# define libc_feupdateenv_testl default_libc_feupdateenv_test
+#endif
+
 /* Save and set the rounding mode.  The use of fenv_t to store the old mode
    allows a target-specific version of this function to avoid converting the
    rounding mode from the fpu format.  By default we have no choice but to
