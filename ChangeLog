@@ -1,6 +1,13 @@
 2012-03-09  Paul Eggert  <eggert@cs.ucla.edu>
 
 	[BZ #13673]
+	* locale/programs/charmap-kw.gperf: Replace FSF snail mail address
+	with URL.
+	* locale/programs/locfile-kw.gperf: Likewise.
+	* locale/programs/charmap-kw.h: Regenerated.
+	* locale/programs/locfile-kw.h: Likewise.
+
+	[BZ #13673]
 	* intl/plural.y: Replace FSF snail mail address with URL.
 	* intl/plural.c: Regenerated.
 

@@ -1,4 +1,4 @@
-/* ANSI-C code produced by gperf version 3.0.2 */
+/* ANSI-C code produced by gperf version 3.0.4 */
 /* Command-line: gperf -acCgopt -k'1,2,5,9,$' -L ANSI-C -N locfile_hash locfile-kw.gperf  */
 
 #if !((' ' == 32) && ('!' == 33) && ('"' == 34) && ('#' == 35) \
@@ -45,8 +45,8 @@
    GNU General Public License for more details.
 
    You should have received a copy of the GNU General Public License
-   along with this program; if not, write to the Free Software Foundation,
-   Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+   along with this program; if not, see
+   <http://www.gnu.org/licenses/>.  */
 
 #include <string.h>
 
@@ -127,6 +127,9 @@ hash (register const char *str, register unsigned int len)
 
 #ifdef __GNUC__
 __inline
+#if defined __GNUC_STDC_INLINE__ || defined __GNUC_GNU_INLINE__
+__attribute__ ((__gnu_inline__))
+#endif
 #endif
 const struct keyword_t *
 locfile_hash (register const char *str, register unsigned int len)
