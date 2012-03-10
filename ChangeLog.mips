@@ -1,3 +1,9 @@
+2012-03-10  Paul Eggert  <eggert@cs.ucla.edu>
+
+	[BZ #13673]
+	* sysdeps/mips/mips64/gmp-mparam.h: Replace FSF snail mail address
+	with URL.
+
 2012-03-09  Paul Eggert  <eggert@cs.ucla.edu>
 
 	[BZ #13673]

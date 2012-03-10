@@ -15,8 +15,7 @@ or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public
 License for more details.
 
 You should have received a copy of the GNU Lesser General Public License
-along with the GNU MP Library; see the file COPYING.LIB.  If not, write to
-the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA. */
+along with the GNU MP Library.  If not, see <http://www.gnu.org/licenses/>.  */
 
 #if defined __GMP_H__ && ! defined _LONG_LONG_LIMB
 #error "Included too late for _LONG_LONG_LIMB to take effect"
