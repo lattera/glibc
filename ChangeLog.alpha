@@ -1,3 +1,8 @@
+2012-03-11  Richard Henderson  <rth@twiddle.net>
+
+	* sysdeps/unix/sysv/linux/alpha/bits/socket.h: Remove file.
+	* sysdeps/unix/sysv/linux/alpha/bits/socket_type.h: New file.
+
 2012-03-09  Paul Eggert  <eggert@cs.ucla.edu>
 
 	[BZ #13673]
