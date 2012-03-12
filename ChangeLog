@@ -1,3 +1,12 @@
+2012-03-12  David S. Miller  <davem@davemloft.net>
+
+	* sysdeps/unix/sysv/linux/kernel-features.h
+	(__ASSUME_CLONE_THREAD_FLAGS): Set on sparc when 2.5.64 and later.
+	(__ASSUME_TGKILL): Set on sparc when 2.6.1 and later, simplify
+	expression.
+	(__ASSUME_FADVISE64_64_SYSCALL): Set on sparc when 2.6.1 and
+	later.
+
 2012-03-11  David S. Miller  <davem@davemloft.net>
 
 	* sysdeps/unix/sysv/linux/sparc/sparc64/makecontext.c
