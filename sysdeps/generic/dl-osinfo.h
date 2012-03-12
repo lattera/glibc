@@ -37,9 +37,9 @@ _dl_setup_stack_chk_guard (void *dl_random)
     {
       memcpy (ret.bytes, dl_random, sizeof (ret));
 #if BYTE_ORDER == LITTLE_ENDIAN
-      ret.num &= ~0xff;
+      ret.num &= ~(uintptr_t) 0xff;
 #elif BYTE_ORDER == BIG_ENDIAN
-      ret.num &= ~(0xff << (8 * (sizeof (ret) - 1)));
+      ret.num &= ~((uintptr_t) 0xff << (8 * (sizeof (ret) - 1)));
 #else
 # error "BYTE_ORDER unknown"
 #endif
