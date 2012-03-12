@@ -1,5 +1,8 @@
 2012-03-11  David S. Miller  <davem@davemloft.net>
 
+	* sysdeps/unix/sysv/linux/dl-osinfo.h (_dl_setup_stack_chk_guard):
+	Fix masking out of the most significant byte of random value used.
+
 	* sysdeps/sparc/fpu/libm-test-ulps: Update.
 
 2012-03-10  Andreas Schwab  <schwab@linux-m68k.org>
