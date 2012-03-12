@@ -22,13 +22,13 @@
 #undef INLINE_SYSCALL
 #define INLINE_SYSCALL(name, nr, args...) 				\
 ({	INTERNAL_SYSCALL_DECL(err);  					\
-	unsigned int resultvar = INTERNAL_SYSCALL(name, err, nr, args);	\
+	unsigned long resultvar = INTERNAL_SYSCALL(name, err, nr, args);\
 	if (INTERNAL_SYSCALL_ERROR_P (resultvar, err))			\
 	  {		     			       		   	\
 	    __set_errno (INTERNAL_SYSCALL_ERRNO (resultvar, err));	\
-	    resultvar = 0xffffffff;			    		\
+	    resultvar = (unsigned long) -1;				\
 	  } 	      							\
-	(int) resultvar;						\
+	(long) resultvar;						\
 })
 
 #undef INTERNAL_SYSCALL_DECL

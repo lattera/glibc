@@ -29,9 +29,9 @@ __makecontext (ucontext_t *ucp, void (*func) (void), int argc, ...)
   va_list ap;
   int i;
 
-  sp = (long *) ((long) ucp->uc_stack.ss_sp + ucp->uc_stack.ss_size);
+  sp = (unsigned long *) ((long) ucp->uc_stack.ss_sp + ucp->uc_stack.ss_size);
   sp -= (argc > 6 ? argc : 6) + 32;
-  sp = (long *) (((long) sp) & -16L);
+  sp = (unsigned long *) (((long) sp) & -16L);
   topsp = sp + (argc > 6 ? argc : 6) + 16;
 
   ucp->uc_mcontext.mc_gregs[MC_PC] = (long) func;

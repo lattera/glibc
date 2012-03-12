@@ -1,5 +1,10 @@
 2012-03-11  David S. Miller  <davem@davemloft.net>
 
+	* sysdeps/unix/sysv/linux/sparc/sparc64/makecontext.c
+	(__makecontext): Fix signedness of pointer casts setting up 'sp'.
+	* sysdeps/unix/sysv/linux/sparc/sysdep.h (INLINE_SYSCALL) Use 'long'
+	for 'resultvar' otherwise things get truncated on 64-bit.
+
 	* sysdeps/unix/sysv/linux/dl-osinfo.h (_dl_setup_stack_chk_guard):
 	Fix masking out of the most significant byte of random value used.
 
