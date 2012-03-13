@@ -1,6 +1,6 @@
 /* Set flags signalling availability of kernel features based on given
    kernel version number.
-   Copyright (C) 2008, 2009 Free Software Foundation, Inc.
+   Copyright (C) 2008, 2009, 2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -24,6 +24,8 @@
 # define __ASSUME_STAT64_SYSCALL	1
 # define __ASSUME_FCNTL64		1
 # define __ASSUME_VFORK_SYSCALL		1
+# define __ASSUME_NEW_GETRLIMIT_SYSCALL 1
+# define __ASSUME_VFORK_SYSCALL		1
 #endif
 
 /* Many syscalls were added in 2.6.10 for m68k.  */
@@ -35,6 +37,8 @@
 
 #include_next <kernel-features.h>
 
-/* These syscalls are not implemented yet for m68k.  */
-#undef __ASSUME_PSELECT
-#undef __ASSUME_PPOLL
+/* These syscalls were added only in 3.0 for m68k.  */
+#if __LINUX_KERNEL_VERSION < 0x030000
+# undef __ASSUME_PSELECT
+# undef __ASSUME_PPOLL
+#endif

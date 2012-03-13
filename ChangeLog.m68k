@@ -1,3 +1,10 @@
+2012-03-13  Andreas Schwab  <schwab@linux-m68k.org>
+
+	* sysdeps/unix/sysv/linux/m68k/kernel-features.h
+	(__ASSUME_NEW_GETRLIMIT_SYSCALL, __ASSUME_VFORK_SYSCALL): Define
+	for 2.4.12 or later.
+	(__ASSUME_PSELECT, __ASSUME_PPOLL): Only undefine before 3.0.
+
 2012-03-09  Richard Henderson  <rth@twiddle.net>
 
 	* sysdeps/m68k/m680x0/fpu/math_private.h: Use include_next to
