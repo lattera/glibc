@@ -1,5 +1,7 @@
 2012-03-13  David S. Miller  <davem@davemloft.net>
 
+	* sysdeps/unix/sysv/linux/sparc/sparc64/dl-fxstatat64.c: New file.
+
 	* sysdeps/unix/sysv/linux/openat.c (OPENAT_NOT_CANCEL): Declare syscall
 	'err' in the ifdef scope in which it is actually used.
 
