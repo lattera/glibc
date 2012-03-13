@@ -1,5 +1,11 @@
 2012-03-13  David S. Miller  <davem@davemloft.net>
 
+	* sysdeps/sparc/Makefile: Remove rtld-global-offsets.sym handling.
+	* sysdeps/sparc/elf/rtld-global-offsets.sym: Delete.
+	* sysdeps/sparc/sparc64/multiarch/memcpy.S: Don't include
+	rtld-global-offsets.h
+	* sysdeps/sparc/sparc64/multiarch/memset.S: Likewise.
+
 	* sysdeps/ieee754/ldbl-128/s_expm1l.c (__expm1l): Use expl for
 	large parameters.
 

@@ -18,7 +18,6 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <sysdep.h>
-#include <rtld-global-offsets.h>
 
 #if !defined NOT_IN_libc
 	.text
