@@ -102,6 +102,11 @@ __expm1l (long double x)
   ix = u.parts32.w0;
   sign = ix & 0x80000000;
   ix &= 0x7fffffff;
+  if (!sign && ix >= 0x40060000)
+    {
+      /* If num is positive and exp >= 6 use plain exp.  */
+      return __expl (x);
+    }
   if (ix >= 0x7fff0000)
     {
       /* Infinity. */
