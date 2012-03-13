@@ -84,7 +84,6 @@ OPENAT_NOT_CANCEL (fd, file, oflag, mode)
   oflag |= MORE_OFLAGS;
 #endif
 
-  INTERNAL_SYSCALL_DECL (err);
   int res;
 
 #ifdef __NR_openat
@@ -104,6 +103,7 @@ OPENAT_NOT_CANCEL (fd, file, oflag, mode)
 #endif
 
 #ifndef __ASSUME_ATFCTS
+  INTERNAL_SYSCALL_DECL (err);
   char *buf = NULL;
 
   if (fd != AT_FDCWD && file[0] != '/')

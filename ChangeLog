@@ -1,5 +1,8 @@
 2012-03-13  David S. Miller  <davem@davemloft.net>
 
+	* sysdeps/unix/sysv/linux/openat.c (OPENAT_NOT_CANCEL): Declare syscall
+	'err' in the ifdef scope in which it is actually used.
+
 	* nss/nss_db/db-init.c: Include string.h
 
 2012-03-12  David S. Miller  <davem@davemloft.net>
