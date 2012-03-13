@@ -1,3 +1,12 @@
+2012-03-13  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/ieee754/dbl-64/s_nearbyint.c (__nearbyint): Do not
+	manipulate bits before adding and subtracting TWO52[sx].
+	* sysdeps/ieee754/dbl-64/s_rint.c (__rint): Likewise.
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_nearbyint.c (__nearbyint):
+	Likewise.
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_rint.c (__rint): Likewise.
+
 2012-03-13  David S. Miller  <davem@davemloft.net>
 
 	* sysdeps/sparc/Makefile: Remove rtld-global-offsets.sym handling.
