@@ -20,9 +20,8 @@
 #include <sysdep.h>
 
 ENTRY (__copysignf)
-	sethi	%hi(0x80000000), %g1
-	st	%g1, [%sp + STACK_BIAS + 128]
-	ld	[%sp + STACK_BIAS + 128], %f7
+	fzeros	%f7
+	fnegs	%f7, %f7
 	fands	%f3, %f7, %f9
 	fandnot2s %f1, %f7, %f1
 	retl

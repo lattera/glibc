@@ -1,3 +1,9 @@
+2012-03-14  David S. Miller  <davem@davemloft.net>
+
+	* sysdeps/sparc/sparc64/fpu/s_copysign.S (__copysign): Use fzeros/fnegs
+	to load 0x80000000 into a float register instead of using the stack.
+	* sysdeps/sparc/sparc64/fpu/s_copysignf.S (__copysignf): Likewise.
+
 2012-03-14  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/Makefile (sysdep_headers): Add
