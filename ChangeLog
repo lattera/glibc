@@ -1,3 +1,9 @@
+2012-03-13  David S. Miller  <davem@davemloft.net>
+
+	[BZ #13840]
+	* sysdeps/ieee754/flt-32/e_hypotf.c (__ieee754_hypotf): Rewrite to use
+	double-precision for the calculation instead of scaling.
+
 2012-03-13  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/ieee754/dbl-64/s_nearbyint.c (__nearbyint): Do not
