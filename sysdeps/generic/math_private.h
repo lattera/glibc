@@ -370,6 +370,9 @@ extern void __docos (double __x, double __dx, double __v[]);
 #define libc_feholdexcept_setroundl(e, r) \
   do { feholdexcept (e); fesetround (r); } while (0)
 
+#define libc_feholdexcept_setround_53bit(e, r) \
+  libc_feholdexcept_setround (e, r)
+
 #define libc_fetestexcept(e) fetestexcept (e)
 #define libc_fetestexceptf(e) fetestexcept (e)
 #define libc_fetestexceptl(e) fetestexcept (e)
@@ -381,6 +384,8 @@ extern void __docos (double __x, double __dx, double __v[]);
 #define libc_feupdateenv(e) (void) feupdateenv (e)
 #define libc_feupdateenvf(e) (void) feupdateenv (e)
 #define libc_feupdateenvl(e) (void) feupdateenv (e)
+
+#define libc_feupdateenv_53bit(e) libc_feupdateenv (e)
 
 #define __nan(str) \
   (__builtin_constant_p (str) && str[0] == '\0' ? NAN : __nan (str))
