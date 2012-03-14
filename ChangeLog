@@ -1,3 +1,15 @@
+2012-03-14  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/Makefile (sysdep_headers): Add
+	bits/syscall.h.
+	($(objpfx)syscall-%.h): Rename rule to $(objpfx)bits/syscall%h.
+	($(objpfx)syscall-%.d): Rename rule to $(objpfx)bits/syscall%d.
+	($(inst_includedir)/bits/syscall.h): Remove rule.
+	($(objpfx)bits/syscall.d): Include instead of
+	$(objpfx)syscall-list.d.
+	(generated): Change syscall-list.h and syscall-list.d to
+	bits/syscall.h and bits/syscall.d.
+
 2012-03-14  Roland McGrath  <roland@hack.frob.com>
 
 	[BZ #13846]
