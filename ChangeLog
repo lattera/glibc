@@ -1,3 +1,8 @@
+2012-03-14  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #13840]
+	* math/libm-test.inc (hypot_test): Add more tests.
+
 2012-03-13  David S. Miller  <davem@davemloft.net>
 
 	[BZ #13840]

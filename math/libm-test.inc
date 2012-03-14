@@ -3557,6 +3557,19 @@ hypot_test (void)
 
   TEST_ff_f (hypot, 0.75L, 1.25L, 1.45773797371132511771853821938639577L);
 
+#if !(defined TEST_FLOAT && defined TEST_INLINE)
+  TEST_ff_f (hypot, 0x3p125L, 0x4p125L, 0x5p125L);
+  TEST_ff_f (hypot, 0x1.234566p-126L, 0x1.234566p-126L, 1.891441686191081936598531534017449451173e-38L);
+#endif
+
+#ifndef TEST_FLOAT
+  TEST_ff_f (hypot, 0x3p1021L, 0x4p1021L, 0x5p1021L);
+#endif
+
+#if defined TEST_LDOUBLE && LDBL_MAX_EXP >= 16384 && !defined TEST_INLINE
+  TEST_ff_f (hypot, 0x3p16381L, 0x4p16381L, 0x5p16381L);
+#endif
+
   END (hypot);
 }
 
