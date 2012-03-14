@@ -1,3 +1,8 @@
+2012-03-14  Roland McGrath  <roland@hack.frob.com>
+
+	[BZ #13846]
+	* manual/llio.texi (Memory-mapped I/O): Fix wrong function name.
+
 2012-03-14  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #13841]

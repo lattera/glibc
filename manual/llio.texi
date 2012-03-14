@@ -1458,7 +1458,7 @@ This corresponds with BSD's @code{MADV_DONTNEED}.
 
 @end table
 
-@code{msync} returns @math{0} for success and @math{-1} for
+@code{madvise} returns @math{0} for success and @math{-1} for
 error.  Errors include:
 @table @code
 
