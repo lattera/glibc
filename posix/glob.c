@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-2002, 2003, 2004, 2005, 2006, 2007, 2008, 2010, 2011, 2012
+/* Copyright (C) 1991-2002, 2003, 2004, 2005, 2006, 2007, 2008, 2010, 2011
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -1545,7 +1545,7 @@ glob_in_dir (const char *pattern, const char *directory, int flags,
 	{
 #ifdef _LIBC
 	  int dfd = (__builtin_expect (flags & GLOB_ALTDIRFUNC, 0)
-		     ? -1 : __dirfd ((DIR *) stream));
+		     ? -1 : dirfd ((DIR *) stream));
 #endif
 	  int fnm_flags = ((!(flags & GLOB_PERIOD) ? FNM_PERIOD : 0)
 			   | ((flags & GLOB_NOESCAPE) ? FNM_NOESCAPE : 0)
