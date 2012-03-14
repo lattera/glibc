@@ -1,5 +1,14 @@
 2012-03-14  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #13841]
+	* math/s_csqrt.c: Include <float.h>.
+	(__csqrt): Scale large or subnormal inputs.
+	* math/s_csqrtf.c: Likewise.
+	* math/s_csqrtl.c: Likewise.
+	* math/libm-test.inc (csqrt_test): Add more tests.
+	* sysdeps/i386/fpu/libm-test-ulps: Update.
+	* sysdeps/x86_64/fpu/libm-test-ulps: Likewise.
+
 	[BZ #13840]
 	* math/libm-test.inc (hypot_test): Add more tests.
 

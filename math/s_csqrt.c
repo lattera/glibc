@@ -1,5 +1,5 @@
 /* Complex square root of double value.
-   Copyright (C) 1997, 1998, 2005, 2011 Free Software Foundation, Inc.
+   Copyright (C) 1997-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Based on an algorithm by Stephen L. Moshier <moshier@world.std.com>.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
@@ -21,7 +21,7 @@
 #include <complex.h>
 #include <math.h>
 #include <math_private.h>
-
+#include <float.h>
 
 __complex__ double
 __csqrt (__complex__ double x)
@@ -83,6 +83,22 @@ __csqrt (__complex__ double x)
       else
 	{
 	  double d, r, s;
+	  int scale = 0;
+
+	  if (fabs (__real__ x) > DBL_MAX / 2.0
+	      || fabs (__imag__ x) > DBL_MAX / 2.0)
+	    {
+	      scale = 1;
+	      __real__ x = __scalbn (__real__ x, -2 * scale);
+	      __imag__ x = __scalbn (__imag__ x, -2 * scale);
+	    }
+	  else if (fabs (__real__ x) < DBL_MIN
+		   && fabs (__imag__ x) < DBL_MIN)
+	    {
+	      scale = -(DBL_MANT_DIG / 2);
+	      __real__ x = __scalbn (__real__ x, -2 * scale);
+	      __imag__ x = __scalbn (__imag__ x, -2 * scale);
+	    }
 
 	  d = __ieee754_hypot (__real__ x, __imag__ x);
 	  /* Use the identity   2  Re res  Im res = Im x
@@ -96,6 +112,12 @@ __csqrt (__complex__ double x)
 	    {
 	      s = __ieee754_sqrt (0.5 * d - 0.5 * __real__ x);
 	      r = fabs ((0.5 * __imag__ x) / s);
+	    }
+
+	  if (scale)
+	    {
+	      r = __scalbn (r, scale);
+	      s = __scalbn (s, scale);
 	    }
 
 	  __real__ res = r;
