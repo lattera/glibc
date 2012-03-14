@@ -1,5 +1,25 @@
 2012-03-14  David S. Miller  <davem@davemloft.net>
 
+	* sysdeps/sparc/configure.in: New file.
+	* sysdeps/sparc/configure: Generate.
+	* configure.in (libc_cv_sparc_as_vis3): Substitute.
+	* configure: Regenerate.
+	* config.h.in (HAVE_AS_VIS3_SUPPORT): New.
+	* config.make.in (have-as-vis3): New.
+	* sysdeps/sparc/sparc32/sparcv9/Makefile (ASFLAGS-*): If VIS3 is
+	available use -Av9d instead of -Av9a.
+	* sysdeps/sparc/sparc64/Makefile: Likewise.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/Makefile: New file.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_copysign-vis3.S: New file.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_copysign.S: New file.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_copysignf-vis3.S: New file.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_copysignf.S: New file.
+	* sysdeps/sparc/sparc64/fpu/multiarch/Makefile: New file.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_signbit-vis3.S: New file.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_signbit.S: New file.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_signbitf-vis3.S: New file.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_signbitf.S: New file.
+
 	* sysdeps/sparc/sparc64/fpu/s_copysign.S (__copysign): Use fzeros/fnegs
 	to load 0x80000000 into a float register instead of using the stack.
 	* sysdeps/sparc/sparc64/fpu/s_copysignf.S (__copysignf): Likewise.

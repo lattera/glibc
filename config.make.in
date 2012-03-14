@@ -58,6 +58,7 @@ enable-check-abi = @enable_check_abi@
 have-forced-unwind = @libc_cv_forced_unwind@
 have-fpie = @libc_cv_fpie@
 have-mfma4 = @libc_cv_cc_fma4@
+have-as-vis3 = @libc_cv_sparc_as_vis3@
 gnu89-inline-CFLAGS = @gnu89_inline@
 have-ssp = @libc_cv_ssp@
 have-selinux = @have_selinux@

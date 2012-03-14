@@ -2151,6 +2151,7 @@ AC_SUBST(libc_cv_cc_sse2avx)
 AC_SUBST(libc_cv_cc_novzeroupper)
 AC_SUBST(libc_cv_cc_fma4)
 AC_SUBST(libc_cv_as_i686)
+AC_SUBST(libc_cv_sparc_as_vis3)
 
 AC_SUBST(use_ldconfig)
 AC_SUBST(ldd_rewrite_script)
