@@ -74,8 +74,8 @@ The process has too many files open.
 
 @item ENFILE
 There are too many open files in the entire system.  @xref{Error Codes},
-for more information about @code{ENFILE}.  This error never occurs in
-the GNU system.
+for more information about @code{ENFILE}.  This error never occurs on
+@gnuhurdsystems{}.
 @end table
 @end deftypefun
 

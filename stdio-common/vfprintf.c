@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-2008, 2009, 2010, 2011   Free Software Foundation, Inc.
+/* Copyright (C) 1991-2011, 2012   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -1706,28 +1706,28 @@ do_positional:
     nargs = MAX (nargs, max_ref_arg);
     /* Calculate total size needed to represent a single argument across
        all three argument-related arrays.  */
-    bytes_per_arg = sizeof (*args_value) + sizeof (*args_size)
-                    + sizeof (*args_type);
+    bytes_per_arg = (sizeof (*args_value) + sizeof (*args_size)
+		     + sizeof (*args_type));
 
     /* Check for potential integer overflow.  */
     if (__builtin_expect (nargs > SIZE_MAX / bytes_per_arg, 0))
       {
-         __set_errno (ERANGE);
-         done = -1;
-         goto all_done;
+	 __set_errno (ERANGE);
+	 done = -1;
+	 goto all_done;
       }
 
     /* Allocate memory for all three argument arrays.  */
     if (__libc_use_alloca (nargs * bytes_per_arg))
-        args_value = alloca (nargs * bytes_per_arg);
+	args_value = alloca (nargs * bytes_per_arg);
     else
       {
-        args_value = args_malloced = malloc (nargs * bytes_per_arg);
-        if (args_value == NULL)
-          {
-            done = -1;
-            goto all_done;
-          }
+	args_value = args_malloced = malloc (nargs * bytes_per_arg);
+	if (args_value == NULL)
+	  {
+	    done = -1;
+	    goto all_done;
+	  }
       }
 
     /* Set up the remaining two arrays to each point past the end of the

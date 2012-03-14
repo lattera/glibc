@@ -42,8 +42,8 @@
  *	than 1 ulps (units in the last place)
  */
 
-#include "math.h"
-#include "math_private.h"
+#include <math.h>
+#include <math_private.h>
 
 double
 __ieee754_hypot(double x, double y)

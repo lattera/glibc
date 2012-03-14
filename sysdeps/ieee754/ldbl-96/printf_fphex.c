@@ -1,5 +1,5 @@
 /* Print floating point number in hexadecimal notation according to ISO C99.
-   Copyright (C) 1997, 1998, 1999, 2000, 2005 Free Software Foundation, Inc.
+   Copyright (C) 1997-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -58,6 +58,7 @@ do {									      \
 									      \
       /* We use a full nibble for the leading digit.  */		      \
       leading = *numstr++;						      \
+      wnumstr++;							      \
 									      \
       /* We have 3 bits from the mantissa in the leading nibble.	      \
 	 Therefore we are here using `IEEE854_LONG_DOUBLE_BIAS + 3'.  */      \

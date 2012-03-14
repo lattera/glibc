@@ -1,5 +1,5 @@
 /* Complex square root of float value.
-   Copyright (C) 1997, 1998, 2005, 2011 Free Software Foundation, Inc.
+   Copyright (C) 1997-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Based on an algorithm by Stephen L. Moshier <moshier@world.std.com>.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
@@ -21,7 +21,7 @@
 #include <complex.h>
 #include <math.h>
 #include <math_private.h>
-
+#include <float.h>
 
 __complex__ float
 __csqrtf (__complex__ float x)
@@ -83,6 +83,22 @@ __csqrtf (__complex__ float x)
       else
 	{
 	  float d, r, s;
+	  int scale = 0;
+
+	  if (fabsf (__real__ x) > FLT_MAX / 2.0f
+	      || fabsf (__imag__ x) > FLT_MAX / 2.0f)
+	    {
+	      scale = 1;
+	      __real__ x = __scalbnf (__real__ x, -2 * scale);
+	      __imag__ x = __scalbnf (__imag__ x, -2 * scale);
+	    }
+	  else if (fabsf (__real__ x) < FLT_MIN
+		   && fabsf (__imag__ x) < FLT_MIN)
+	    {
+	      scale = -(FLT_MANT_DIG / 2);
+	      __real__ x = __scalbnf (__real__ x, -2 * scale);
+	      __imag__ x = __scalbnf (__imag__ x, -2 * scale);
+	    }
 
 	  d = __ieee754_hypotf (__real__ x, __imag__ x);
 	  /* Use the identity   2  Re res  Im res = Im x
@@ -96,6 +112,12 @@ __csqrtf (__complex__ float x)
 	    {
 	      s = __ieee754_sqrtf (0.5f * d - 0.5f * __real__ x);
 	      r = fabsf ((0.5f * __imag__ x) / s);
+	    }
+
+	  if (scale)
+	    {
+	      r = __scalbnf (r, scale);
+	      s = __scalbnf (s, scale);
 	    }
 
 	  __real__ res = r;

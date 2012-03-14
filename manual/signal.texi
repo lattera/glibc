@@ -274,7 +274,7 @@ When one of these program error signals terminates a process, it also
 writes a @dfn{core dump file} which records the state of the process at
 the time of termination.  The core dump file is named @file{core} and is
 written in whichever directory is current in the process at the time.
-(On the GNU system, you can specify the file name for core dumps with
+(On @gnuhurdsystems{}, you can specify the file name for core dumps with
 the environment variable @code{COREFILE}.)  The purpose of core dump
 files is so that you can examine them with a debugger to investigate
 what caused the error.
@@ -309,7 +309,7 @@ this argument, you must define the handler to accept two arguments,
 which means you must cast it to a one-argument function type in order to
 establish the handler.  @Theglibc{} does provide this extra
 argument, but the value is meaningful only on operating systems that
-provide the information (BSD systems and GNU systems).
+provide the information (BSD systems and @gnusystems{}).
 
 @table @code
 @comment signal.h
@@ -625,7 +625,7 @@ On most operating systems, terminals and sockets are the only kinds of
 files that can generate @code{SIGIO}; other kinds, including ordinary
 files, never generate @code{SIGIO} even if you ask them to.
 
-In the GNU system @code{SIGIO} will always be generated properly
+On @gnusystems{} @code{SIGIO} will always be generated properly
 if you successfully set asynchronous mode with @code{fcntl}.
 @end deftypevr
 
@@ -759,14 +759,14 @@ process would probably not be very useful, since there is no shell
 program that will notice it stop and allow the user to continue it.
 What happens instead depends on the operating system you are using.
 Some systems may do nothing; others may deliver another signal instead,
-such as @code{SIGKILL} or @code{SIGHUP}.  In the GNU system, the process
+such as @code{SIGKILL} or @code{SIGHUP}.  On @gnuhurdsystems{}, the process
 dies with @code{SIGKILL}; this avoids the problem of many stopped,
 orphaned processes lying around the system.
 
 @ignore
-On the GNU system, it is possible to reattach to the orphaned process
+On @gnuhurdsystems{}, it is possible to reattach to the orphaned process
 group and continue it, so stop signals do stop the process as usual on
-a GNU system unless you have requested POSIX compatibility ``till it
+@gnuhurdsystems{} unless you have requested POSIX compatibility ``till it
 hurts.''
 @end ignore
 
@@ -805,7 +805,7 @@ that isn't connected.  @xref{Sending Data}.
 Resource lost.  This signal is generated when you have an advisory lock
 on an NFS file, and the NFS server reboots and forgets about your lock.
 
-In the GNU system, @code{SIGLOST} is generated when any server program
+On @gnuhurdsystems{}, @code{SIGLOST} is generated when any server program
 dies unexpectedly.  It is usually fine to ignore the signal; whatever
 call was made to the server that died just returns an error.
 @end deftypevr
@@ -864,7 +864,7 @@ reformat its display accordingly.
 @comment signal.h
 @comment BSD
 @deftypevr Macro int SIGINFO
-Information request.  In 4.4 BSD and the GNU system, this signal is sent
+Information request.  On 4.4 BSD and @gnuhurdsystems{}, this signal is sent
 to all the processes in the foreground process group of the controlling
 terminal when the user types the STATUS character in canonical mode;
 @pxref{Signal Characters}.
@@ -1223,7 +1223,7 @@ examine it with @code{sigaction}, the handler address that you get may
 not be the same as what you specified with @code{signal}.  It may not
 even be suitable for use as an action argument with @code{signal}.  But
 you can rely on using it as an argument to @code{sigaction}.  This
-problem never happens on the GNU system.
+problem never happens on @gnusystems{}.
 
 So, you're better off using one or the other of the mechanisms
 consistently within a single program.
@@ -1894,7 +1894,7 @@ could ``lose'' one of the objects.
 
 @ignore
 !!! not true
-On the GNU system, @code{malloc} and @code{free} are safe to use in
+In @theglibc{}, @code{malloc} and @code{free} are safe to use in
 signal handlers because they block signals.  As a result, the library
 functions that allocate space for a result are also safe in signal
 handlers.  The obstack allocation functions are safe as long as you

@@ -45,8 +45,8 @@
  */
 
 #include <errno.h>
-#include "math.h"
-#include "math_private.h"
+#include <math.h>
+#include <math_private.h>
 #include <math_ldbl_opt.h>
 
 long double __tanl(long double x)

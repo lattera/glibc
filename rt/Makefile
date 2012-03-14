@@ -53,8 +53,6 @@ tests := tst-shm tst-clock tst-clock_nanosleep tst-timer tst-timer2 \
 extra-libs := librt
 extra-libs-others := $(extra-libs)
 
-distribute := aio_misc.h
-
 include ../Rules
 
 CFLAGS-aio_suspend.c = -fexceptions

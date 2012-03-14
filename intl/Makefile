@@ -1,4 +1,4 @@
-# Copyright (C) 1995-2003, 2005, 2008, 2011 Free Software Foundation, Inc.
+# Copyright (C) 1995-2003,2005,2008,2011,2012 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -23,15 +23,6 @@ routines = bindtextdom dcgettext dgettext gettext	\
 	   dcigettext dcngettext dngettext ngettext \
 	   finddomain loadmsgcat localealias textdomain
 aux =	   l10nflist explodename plural plural-exp hash-string
-distribute = gmo.h gettextP.h hash-string.h loadinfo.h locale.alias \
-	     plural.y plural-exp.h plural-eval.c po2test.sed \
-	     tst-gettext.sh \
-	     tst-translit.sh translit.po \
-	     tst-gettext2.sh tstlang1.po tstlang2.po \
-	     tst-codeset.sh tstcodeset.po \
-	     tst-gettext3.sh \
-	     tst-gettext4.sh tst-gettext4-de.po tst-gettext4-fr.po \
-	     tst-gettext5.sh tst-gettext6.sh
 
 include ../Makeconfig
 

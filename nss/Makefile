@@ -1,4 +1,4 @@
-# Copyright (C) 1996-1998,2000-2002,2007,2009,2010,2011
+# Copyright (C) 1996-1998,2000-2002,2007,2009,2010,2011,2012
 # Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
@@ -22,9 +22,6 @@
 subdir	:= nss
 
 headers			:= nss.h
-distribute		:= nsswitch.h XXX-lookup.c getXXbyYY.c getXXbyYY_r.c \
-			   getXXent.c getXXent_r.c databases.def \
-			   nsswitch.conf digits_dots.c function.def
 
 # This is the trivial part which goes into libc itself.
 routines		= nsswitch getnssent getnssent_r digits_dots \
@@ -66,7 +63,6 @@ vpath %.c $(subdir-dirs) ../locale/programs ../intl
 
 libnss_files-routines	:= $(addprefix files-,$(databases)) \
 			   files-initgroups files-have_o_cloexec files-init
-distribute		+= files-XXX.c files-parse.c
 
 libnss_db-dbs		:= $(addprefix db-,\
 				       $(filter-out hosts network key alias,\
@@ -75,7 +71,6 @@ libnss_db-dbs		:= $(addprefix db-,\
 libnss_db-routines	:= $(libnss_db-dbs) db-open db-init hash-string
 generated		+= $(filter-out db-alias.c db-netgrp.c, \
 					$(addsuffix .c,$(libnss_db-dbs)))
-distribute		+= $(addprefix nss_db/, db-XXX.c nss_db.h)
 
 install-others		+= $(inst_vardbdir)/Makefile
 
@@ -117,8 +112,6 @@ $(objpfx)makedb: $(makedb-modules:%=$(objpfx)%.o)
 
 $(inst_vardbdir)/Makefile: db-Makefile $(+force)
 	$(do-install)
-
-distribute		+= nss_test1.c
 
 CFLAGS-nss_test1.c = -DNOT_IN_libc=1
 $(objpfx)/libnss_test1.so: $(objpfx)nss_test1.os $(common-objpfx)libc.so \

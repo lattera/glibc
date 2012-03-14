@@ -1,5 +1,5 @@
 /* Trace calls through PLTs and show caller, callee, and parameters.
-   Copyright (C) 2011 Free Software Foundation, Inc.
+   Copyright (C) 2011, 2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gmail.com>, 2011.
 
@@ -288,6 +288,40 @@ la_x86_64_gnu_pltenter (Elf64_Sym *sym __attribute__ ((unused)),
 
   return sym->st_value;
 }
+#elif defined __sparc__ && !defined __arch64__
+Elf32_Addr
+la_sparc32_gnu_pltenter (Elf32_Sym *sym __attribute__ ((unused)),
+			 unsigned int ndx __attribute__ ((unused)),
+			 uintptr_t *refcook, uintptr_t *defcook,
+			 La_sparc32_regs *regs, unsigned int *flags,
+			 const char *symname, long int *framesizep)
+{
+  print_enter (refcook, defcook, symname,
+	       regs->lr_reg[0], regs->lr_reg[1], regs->lr_reg[2],
+	       *flags);
+
+  /* No need to copy anything, we will not need the parameters in any case.  */
+  *framesizep = 0;
+
+  return sym->st_value;
+}
+#elif defined __sparc__ && defined __arch64__
+Elf64_Addr
+la_sparc64_gnu_pltenter (Elf64_Sym *sym __attribute__ ((unused)),
+			 unsigned int ndx __attribute__ ((unused)),
+			 uintptr_t *refcook, uintptr_t *defcook,
+			 La_sparc64_regs *regs, unsigned int *flags,
+			 const char *symname, long int *framesizep)
+{
+  print_enter (refcook, defcook, symname,
+	       regs->lr_reg[0], regs->lr_reg[1], regs->lr_reg[2],
+	       *flags);
+
+  /* No need to copy anything, we will not need the parameters in any case.  */
+  *framesizep = 0;
+
+  return sym->st_value;
+}
 #elif !defined HAVE_ARCH_PLTENTER
 # warning "pltenter for architecture not supported"
 #endif
@@ -302,7 +336,7 @@ print_exit (uintptr_t *refcook, uintptr_t *defcook, const char *symname,
   if (print_pid)
     snprintf (buf, sizeof (buf), "%5ld: ", (long int) getpid ());
 
-  fprintf (out_file, "%s%15s -> %-15s:%s%s - 0x%lu\n",
+  fprintf (out_file, "%s%15s -> %-15s:%s%s - 0x%lx\n",
 	   buf, (char *) *refcook, (char *) *defcook, " ", symname, reg);
 }
 
@@ -324,6 +358,26 @@ la_x86_64_gnu_pltexit (Elf64_Sym *sym, unsigned int ndx, uintptr_t *refcook,
 		       struct La_x86_64_retval *outregs, const char *symname)
 {
   print_exit (refcook, defcook, symname, outregs->lrv_rax);
+
+  return 0;
+}
+#elif defined __sparc__ && !defined __arch64__
+unsigned int
+la_sparc32_gnu_pltexit (Elf32_Sym *sym, unsigned int ndx, uintptr_t *refcook,
+			uintptr_t *defcook, const struct La_sparc32_regs *inregs,
+			struct La_sparc32_retval *outregs, const char *symname)
+{
+  print_exit (refcook, defcook, symname, outregs->lrv_reg[0]);
+
+  return 0;
+}
+#elif defined __sparc__ && defined __arch64__
+unsigned int
+la_sparc64_gnu_pltexit (Elf64_Sym *sym, unsigned int ndx, uintptr_t *refcook,
+			uintptr_t *defcook, const struct La_sparc64_regs *inregs,
+			struct La_sparc64_retval *outregs, const char *symname)
+{
+  print_exit (refcook, defcook, symname, outregs->lrv_reg[0]);
 
   return 0;
 }

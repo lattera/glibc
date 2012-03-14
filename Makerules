@@ -1,4 +1,4 @@
-# Copyright (C) 1991-2010, 2011 Free Software Foundation, Inc.
+# Copyright (C) 1991-2012 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -1067,6 +1067,8 @@ ifdef headers
 # It may be ignored in preference to rules from sysd-rules to find
 # headers in the sysdeps tree.
 $(inst_includedir)/%.h: $(objpfx)%.h $(+force)
+	$(do-install)
+$(inst_includedir)/%.h: $(common-objpfx)%.h $(+force)
 	$(do-install)
 $(inst_includedir)/%.h: %.h $(+force)
 	$(do-install)

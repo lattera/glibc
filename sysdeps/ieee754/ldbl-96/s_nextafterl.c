@@ -25,7 +25,7 @@ static char rcsid[] = "$NetBSD: $";
  *   Special cases:
  */
 
-#include "math.h"
+#include <math.h>
 #include <math_private.h>
 
 long double __nextafterl(long double x, long double y)

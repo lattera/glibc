@@ -37,7 +37,7 @@
 
 #ifndef __ASSEMBLER__
 # include <math.h>
-# include <math/math_private.h>
+# include <math_private.h>
 
 /* Set temporarily to non-zero if long double should be considered
    the same as double.  */

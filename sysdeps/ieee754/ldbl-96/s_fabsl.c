@@ -22,8 +22,8 @@ static char rcsid[] = "$NetBSD: $";
  * fabsl(x) returns the absolute value of x.
  */
 
-#include "math.h"
-#include "math_private.h"
+#include <math.h>
+#include <math_private.h>
 
 long double __fabsl(long double x)
 {

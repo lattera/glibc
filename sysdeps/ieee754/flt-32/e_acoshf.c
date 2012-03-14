@@ -17,8 +17,8 @@
 static char rcsid[] = "$NetBSD: e_acoshf.c,v 1.5 1995/05/12 04:57:20 jtc Exp $";
 #endif
 
-#include "math.h"
-#include "math_private.h"
+#include <math.h>
+#include <math_private.h>
 
 static const float
 one	= 1.0,

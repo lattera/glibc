@@ -31,8 +31,8 @@
  *	only cosh(0)=1 is exact for finite x.
  */
 
-#include "math.h"
-#include "math_private.h"
+#include <math.h>
+#include <math_private.h>
 
 static const long double one = 1.0L, half=0.5L, huge = 1.0e300L;
 

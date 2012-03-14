@@ -34,8 +34,8 @@ static char rcsid[] = "$NetBSD: e_cosh.c,v 1.7 1995/05/10 20:44:58 jtc Exp $";
  *	only coshl(0)=1 is exact for finite x.
  */
 
-#include "math.h"
-#include "math_private.h"
+#include <math.h>
+#include <math_private.h>
 
 static const long double one = 1.0, half=0.5, huge = 1.0e4900L;
 

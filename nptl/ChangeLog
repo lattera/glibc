@@ -1,7 +1,67 @@
+2012-03-09  Paul Eggert  <eggert@cs.ucla.edu>
+
+	[BZ #13673]
+	* pt-crti.S: Replace FSF snail mail address with URL.
+
+2012-03-09  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/pthread/pthread.h (__need_clockid_t, __need_timespec):
+	Do not define before including <time.h>.
+
+2012-03-08  David S. Miller  <davem@davemloft.net>
+
+	* sysdeps/unix/sysv/linux/sparc/sem_post.c: Update copyright year.
+
+2012-03-08  Thomas Schwinge  <thomas@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/sh/lowlevellock.S (__lll_timedlock_wait):
+	Check for timestamp before the Epoch.
+
+	* sysdeps/unix/sysv/linux/sh/sem_timedwait.S (sem_timedwait): Fix
+	updating nwaiters.
+
+	* tst-sem13.c (do_test): Add another test case.
+	* sysdeps/unix/sysv/linux/i386/i486/sem_timedwait.S (sem_timedwait):
+	Fix updating nwaiters.
+
+2012-03-07  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #10545]
+	* sysdeps/pthread/configure.in (libc_cv_forced_unwind): Change
+	link test to a compile test.
+	(libc_cv_c_cleanup): Likewise.  Declare puts rather than including
+	<stdio.h>.
+	* sysdeps/pthread/configure: Regenerated.
+
+2012-03-07  Ulrich Drepper  <drepper@gmail.com>
+
+	* Makefile (distribute): Remove variable.
+
+2012-01-23  Thomas Schwinge  <thomas@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/sem_timedwait.c (sem_timedwait): Get rid of
+	superfluous assignment.
+	* sysdeps/unix/sysv/linux/sparc/sem_timedwait.c (sem_timedwait):
+	Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/sem_timedwait.c
+	(sem_timedwait): Likewise.
+
+2012-03-06  Ulrich Drepper  <drepper@gmail.com>
+
+	* sysdeps/pthread/bits/libc-lock.h: Move information not needed in
+	installed headers to...
+	* sysdeps/pthread/bits/libc-lockP.h: ...here.  New file.
+
+2012-03-06  David S. Miller  <davem@davemloft.net>
+
+	* sysdeps/unix/sysv/linux/sparc/sem_post.c (__new_sem_post): Use
+	atomic_increment and remove unused local variable.
+	(__old_sem_post): Likewise.
+
 2012-02-27  David S. Miller  <davem@davemloft.net>
 
-	* sysdeps/unix/sysv/linux/i386/bits/pthreadtypes.h: Don't refer to non-existing
-	__pthread_attr.
+	* sysdeps/unix/sysv/linux/i386/bits/pthreadtypes.h: Don't refer to
+	non-existing __pthread_attr.
 	* sysdeps/unix/sysv/linux/powerpc/bits/pthreadtypes.h: Likewise.
 	* sysdeps/unix/sysv/linux/s390/bits/pthreadtypes.h: Likewise.
 	* sysdeps/unix/sysv/linux/sh/bits/pthreadtypes.h: Likewise.
@@ -42,8 +102,8 @@
 
 2012-02-16  Richard Henderson  <rth@twiddle.net>
 
-	* nptl/sysdeps/unix/sysv/linux/s390/s390-32/pt-initfini.c: Remove file.
-	* nptl/sysdeps/unix/sysv/linux/s390/s390-64/pt-initfini.c: Remove file.
+	* sysdeps/unix/sysv/linux/s390/s390-32/pt-initfini.c: Remove file.
+	* sysdeps/unix/sysv/linux/s390/s390-64/pt-initfini.c: Remove file.
 
 2012-02-15  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
 

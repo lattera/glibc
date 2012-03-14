@@ -39,7 +39,7 @@
 #include "powtwo.tbl"
 #include "MathLib.h"
 #include "uasncs.h"
-#include "math_private.h"
+#include <math_private.h>
 
 #ifndef SECTION
 # define SECTION

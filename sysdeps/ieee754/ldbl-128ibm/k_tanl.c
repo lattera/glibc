@@ -56,8 +56,8 @@
  *		       = 1 - 2*(tan(y) - (tan(y)^2)/(1+tan(y)))
  */
 
-#include "math.h"
-#include "math_private.h"
+#include <math.h>
+#include <math_private.h>
 static const long double
   one = 1.0L,
   pio4hi = 7.8539816339744830961566084581987569936977E-1L,

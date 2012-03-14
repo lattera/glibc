@@ -1,3 +1,12 @@
+2012-03-09  Paul Eggert  <eggert@cs.ucla.edu>
+
+	[BZ #13673]
+	Replace FSF snail mail address with URLs, as per GNU coding standards.
+
+2012-03-07  Ulrich Drepper  <drepper@gmail.com>
+
+	* Makefile (distribute): Remove variable.
+
 2012-02-10  Joseph Myers  <joseph@codesourcery.com>
 
 	Revert changes to locales from previous commit.

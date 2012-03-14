@@ -17,7 +17,7 @@
 static char rcsid[] = "$NetBSD: $";
 #endif
 
-#include "math.h"
+#include <math.h>
 #include <math_private.h>
 #include <float.h>
 

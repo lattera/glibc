@@ -1,5 +1,5 @@
 /* Return arc hyperbole cosine for float value.
-   Copyright (C) 1997, 2006, 2011 Free Software Foundation, Inc.
+   Copyright (C) 1997-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -66,10 +66,14 @@ __cacoshf (__complex__ float x)
     }
   /* The factor 16 is just a guess.  */
   else if (16.0 * fabsf (__imag__ x) < fabsf (__real__ x))
-    /* Kahan's formula which avoid cancellation through subtraction in
-       some cases.  */
-    res = 2.0 * __clogf (__csqrtf ((x + 1.0) / 2.0)
-			 + __csqrtf ((x - 1.0) / 2.0));
+    {
+      /* Kahan's formula which avoid cancellation through subtraction in
+	 some cases.  */
+      res = 2.0 * __clogf (__csqrtf ((x + 1.0) / 2.0)
+			   + __csqrtf ((x - 1.0) / 2.0));
+      if (signbit (__real__ res))
+	__real__ res = 0.0f;
+    }
   else
     {
       __complex__ float y;

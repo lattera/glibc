@@ -1,5 +1,5 @@
 /* Machine-dependent ELF dynamic relocation inline functions.  SPARC version.
-   Copyright (C) 1996-2003, 2004, 2005, 2006, 2007, 2010, 2011
+   Copyright (C) 1996-2003, 2004, 2005, 2006, 2007, 2010, 2011, 2012
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -341,10 +341,14 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 		  void *const reloc_addr_arg, int skip_ifunc)
 {
   Elf32_Addr *const reloc_addr = reloc_addr_arg;
+#if !defined RTLD_BOOTSTRAP && !defined RESOLVE_CONFLICT_FIND_MAP
   const Elf32_Sym *const refsym = sym;
+#endif
   Elf32_Addr value;
   const unsigned int r_type = ELF32_R_TYPE (reloc->r_info);
+#if !defined RESOLVE_CONFLICT_FIND_MAP
   struct link_map *sym_map = NULL;
+#endif
 
 #if !defined RTLD_BOOTSTRAP && !defined HAVE_Z_COMBRELOC
   /* This is defined in rtld.c, but nowhere in the static libc.a; make the

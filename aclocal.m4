@@ -113,3 +113,17 @@ AC_CACHE_CHECK(whether $LD is GNU ld, libc_cv_prog_ld_gnu,
 [LIBC_PROG_FOO_GNU($LD, libc_cv_prog_ld_gnu=yes, libc_cv_prog_ld_gnu=no)])
 gnu_ld=$libc_cv_prog_ld_gnu
 ])
+
+dnl Run a static link test with -nostdlib -nostartfiles.
+dnl LIBC_TRY_LINK_STATIC([code], [action-if-true], [action-if-false])
+AC_DEFUN([LIBC_TRY_LINK_STATIC],
+[cat > conftest.c <<EOF
+int _start (void) { return 0; }
+int __start (void) { return 0; }
+$1
+EOF
+AS_IF([AC_TRY_COMMAND([${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS -o conftest
+		       conftest.c -static -nostartfiles -nostdlib
+		       1>&AS_MESSAGE_LOG_FD])],
+      [$2], [$3])
+rm -f conftest*])

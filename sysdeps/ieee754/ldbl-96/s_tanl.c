@@ -48,8 +48,8 @@ static char rcsid[] = "$NetBSD: $";
  *	TRIG(x) returns trig(x) nearly rounded
  */
 
-#include "math.h"
-#include "math_private.h"
+#include <math.h>
+#include <math_private.h>
 
 long double __tanl(long double x)
 {

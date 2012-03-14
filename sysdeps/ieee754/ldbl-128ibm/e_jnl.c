@@ -56,8 +56,8 @@
  *
  */
 
-#include "math.h"
-#include "math_private.h"
+#include <math.h>
+#include <math_private.h>
 
 static const long double
   invsqrtpi = 5.6418958354775628694807945156077258584405E-1L,

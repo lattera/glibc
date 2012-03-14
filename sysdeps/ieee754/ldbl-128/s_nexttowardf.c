@@ -18,8 +18,8 @@
 static char rcsid[] = "$NetBSD: $";
 #endif
 
-#include "math.h"
-#include "math_private.h"
+#include <math.h>
+#include <math_private.h>
 
 float __nexttowardf(float x, long double y)
 {

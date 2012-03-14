@@ -18,8 +18,8 @@ static char rcsid[] = "$NetBSD: s_sinf.c,v 1.4 1995/05/10 20:48:16 jtc Exp $";
 #endif
 
 #include <errno.h>
-#include "math.h"
-#include "math_private.h"
+#include <math.h>
+#include <math_private.h>
 
 float __sinf(float x)
 {

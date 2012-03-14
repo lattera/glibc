@@ -42,7 +42,7 @@
 #include "endian.h"
 #include "mpa.h"
 #include "sincos32.h"
-#include "math_private.h"
+#include <math_private.h>
 
 #ifndef SECTION
 # define SECTION

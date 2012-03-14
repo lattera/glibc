@@ -623,7 +623,7 @@ extern char *fgets (char *__restrict __s, int __n, FILE *__restrict __stream)
      __wur;
 
 #if !defined __USE_ISOC11 \
-    || (defined __cplusplus && __cplusplus <= 201103L && !defined __USE_GNU)
+    || (defined __cplusplus && __cplusplus <= 201103L)
 /* Get a newline-terminated string from stdin, removing the newline.
    DO NOT USE THIS FUNCTION!!  There is no limit on how much it will read.
 

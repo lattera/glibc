@@ -1,4 +1,4 @@
-# Copyright (C) 1991-2007, 2009, 2010, 2011 Free Software Foundation, Inc.
+# Copyright (C) 1991-2007,2009,2010,2011,2012 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -28,13 +28,6 @@ headers	:= sys/utsname.h sys/times.h sys/wait.h sys/types.h unistd.h	      \
 	   bits/waitflags.h bits/waitstatus.h sys/unistd.h sched.h	      \
 	   bits/sched.h re_comp.h wait.h bits/environments.h cpio.h	      \
 	   sys/sysmacros.h spawn.h bits/unistd.h
-
-distribute := confstr.h TESTS TESTS2C.sed testcases.h \
-	      PTESTS PTESTS2C.sed ptestcases.h \
-	      globtest.c globtest.sh wordexp-tst.sh annexc.c fnmatch_loop.c   \
-	      spawn_int.h tst-getconf.sh regcomp.c regexec.c regex_internal.c \
-	      regex_internal.h fork.h rxspencer/tests rxspencer/COPYRIGHT     \
-	      PCRE.tests BOOST.tests
 
 routines :=								      \
 	uname								      \

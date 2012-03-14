@@ -1,5 +1,5 @@
 /* sem_timedwait -- wait on a semaphore.  SPARC version.
-   Copyright (C) 2003, 2006, 2007 Free Software Foundation, Inc.
+   Copyright (C) 2003, 2006, 2007, 2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Paul Mackerras <paulus@au.ibm.com>, 2003.
 
@@ -102,7 +102,6 @@ sem_timedwait (sem_t *sem, const struct timespec *abstime)
 	}
 
       /* Already timed out?  */
-      err = -ETIMEDOUT;
       if (sec < 0)
 	{
 	  __set_errno (ETIMEDOUT);

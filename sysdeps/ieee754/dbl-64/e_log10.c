@@ -43,8 +43,8 @@
  * shown.
  */
 
-#include "math.h"
-#include "math_private.h"
+#include <math.h>
+#include <math_private.h>
 
 static const double
 two54      =  1.80143985094819840000e+16, /* 0x43500000, 0x00000000 */

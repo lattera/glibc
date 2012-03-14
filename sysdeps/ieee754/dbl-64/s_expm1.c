@@ -109,8 +109,8 @@
  */
 
 #include <errno.h>
-#include "math.h"
-#include "math_private.h"
+#include <math.h>
+#include <math_private.h>
 #define one Q[0]
 static const double
 huge		= 1.0e+300,

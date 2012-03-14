@@ -22,7 +22,6 @@
 subdir	:= wcsmbs
 
 headers	:= wchar.h bits/wchar.h bits/wchar2.h bits/wchar-ldbl.h uchar.h
-distribute := wcwidth.h wcsmbsload.h
 
 routines := wcscat wcschr wcscmp wcscpy wcscspn wcsdup wcslen wcsncat \
 	    wcsncmp wcsncpy wcspbrk wcsrchr wcsspn wcstok wcsstr wmemchr \

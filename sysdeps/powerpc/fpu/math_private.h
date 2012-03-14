@@ -23,35 +23,49 @@
 #include <sysdep.h>
 #include <ldsodefs.h>
 #include <dl-procinfo.h>
-
-#include <math/math_private.h>
+#include_next <math_private.h>
 
 # if __WORDSIZE == 64 || defined _ARCH_PWR4
 #  define __CPU_HAS_FSQRT 1
-
-#ifndef __ieee754_sqrt
-# define __ieee754_sqrt(x)		\
-  ({ double __z;			\
-     __asm __volatile (			\
-	"	fsqrt %0,%1\n"		\
-		: "=f" (__z)		\
-		: "f"(x));		\
-     __z; })
-#endif
-#ifndef __ieee754_sqrtf
-# define __ieee754_sqrtf(x)		\
-  ({ float __z;				\
-     __asm __volatile (			\
-	"	fsqrts %0,%1\n"		\
-		: "=f" (__z)		\
-		: "f"(x));		\
-     __z; })
-#endif
-
 # else
 #  define __CPU_HAS_FSQRT ((GLRO(dl_hwcap) & PPC_FEATURE_64) != 0)
-# endif	// __WORDSIZE == 64 || defined _ARCH_PWR4
+# endif
 
+extern double __slow_ieee754_sqrt (double);
+extern __always_inline double
+__ieee754_sqrt (double __x)
+{
+  double __z;
+
+  if (__CPU_HAS_FSQRT)
+    {
+      /* Volatile is required to prevent the compiler from moving the
+         fsqrt instruction above the branch.  */
+      __asm __volatile ("fsqrt	%0,%1" : "=f" (__z) : "f" (__x));
+    }
+  else
+     __z = __slow_ieee754_sqrt(__x);
+
+  return __z;
+}
+
+extern float __slow_ieee754_sqrtf (float);
+extern __always_inline float
+__ieee754_sqrtf (float __x)
+{
+  float __z;
+
+  if (__CPU_HAS_FSQRT)
+    {
+      /* Volatile is required to prevent the compiler from moving the
+         fsqrts instruction above the branch.  */
+      __asm __volatile ("fsqrts	%0,%1" : "=f" (__z) : "f" (__x));
+    }
+  else
+     __z = __slow_ieee754_sqrtf(__x);
+
+  return __z;
+}
 
 #if defined _ARCH_PWR5X
 
@@ -161,53 +175,5 @@
 # endif
 
 #endif /* defined _ARCH_PWR6 */
-
-
-# ifndef __LIBC_INTERNAL_MATH_INLINES
-extern double __slow_ieee754_sqrt (double);
-__inline double
-__ieee754_sqrt (double __x)
-{
-  double __z;
-
-  /* If the CPU is 64-bit we can use the optional FP instructions.  */
-  if (__CPU_HAS_FSQRT)
-  {
-    /* Volatile is required to prevent the compiler from moving the
-       fsqrt instruction above the branch.  */
-     __asm __volatile (
-	"	fsqrt	%0,%1\n"
-		: "=f" (__z)
-		: "f" (__x));
-  }
-  else
-     __z = __slow_ieee754_sqrt(__x);
-
-  return __z;
-}
-
-extern float __slow_ieee754_sqrtf (float);
-
-__inline float
-__ieee754_sqrtf (float __x)
-{
-  float __z;
-
-  /* If the CPU is 64-bit we can use the optional FP instructions.  */
-  if (__CPU_HAS_FSQRT)
-  {
-    /* Volatile is required to prevent the compiler from moving the
-       fsqrts instruction above the branch.  */
-     __asm __volatile (
-	"	fsqrts	%0,%1\n"
-		: "=f" (__z)
-		: "f" (__x));
-  }
-  else
-     __z = __slow_ieee754_sqrtf(__x);
-
-  return __z;
-}
-#endif /* __LIBC_INTERNAL_MATH_INLINES */
 
 #endif /* _PPC_MATH_PRIVATE_H_ */

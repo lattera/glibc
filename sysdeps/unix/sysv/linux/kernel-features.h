@@ -273,11 +273,11 @@
    their availability with one define.  The changes were made first
    for i386 and the have to be done separately for the other archs.
    For i386 we pick 2.5.50 as the first version with support.
-   For s390*, PPC, x86-64, and SH we pick 2.5.64 as the first
+   For s390*, SPARC, PPC, x86-64, and SH we pick 2.5.64 as the first
    version with support.  */
 #if ((__LINUX_KERNEL_VERSION >= 132402 && defined __i386__)		\
      || (__LINUX_KERNEL_VERSION >= 132416				\
-	 && (defined __s390__			\
+	 && (defined __s390__ || defined __sparc__			\
 	     || defined __powerpc__ || defined __x86_64__ || defined __sh__)))
 # define __ASSUME_CLONE_THREAD_FLAGS	1
 #endif
@@ -322,11 +322,11 @@
 #endif
 
 /* The tgkill syscall was instroduced for i386 in 2.5.75.  On x86-64,
-   ppc, and ppc64 it was introduced in 2.6.0-test3. */
+   sparc, SH, ppc, and ppc64 it was introduced in 2.6.0-test3. */
 #if (__LINUX_KERNEL_VERSION >= 132427 && defined __i386__) \
-    || (__LINUX_KERNEL_VERSION >= 132609 && defined __x86_64__) \
-    || (__LINUX_KERNEL_VERSION >= 132609 && defined __powerpc__) \
-    || (__LINUX_KERNEL_VERSION >= 132609 && defined __sh__)
+    || (__LINUX_KERNEL_VERSION >= 132609 \
+        && (defined __x86_64__ || defined __powerpc__ \
+            || defined __sh__ || defined __sparc__))
 # define __ASSUME_TGKILL	1
 #endif
 
@@ -350,9 +350,10 @@
 #endif
 
 /* The fixed version of the posix_fadvise64 syscall appeared in
-   2.6.0-test3.  At least for x86.  Powerpc support appeared in
-   2.6.2, but for 32-bit userspace only.  */
-#if (__LINUX_KERNEL_VERSION >= 132609 && defined __i386__) \
+   2.6.0-test3.  At least for x86 and sparc.  Powerpc support appeared
+   in 2.6.2, but for 32-bit userspace only.  */
+#if (__LINUX_KERNEL_VERSION >= 132609				\
+     && (defined __i386__ || defined __sparc__))		\
     || (__LINUX_KERNEL_VERSION >= 132610 && defined __powerpc__ \
        && !defined __powerpc64__)
 # define __ASSUME_FADVISE64_64_SYSCALL	1

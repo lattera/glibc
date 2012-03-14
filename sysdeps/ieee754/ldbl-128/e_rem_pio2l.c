@@ -17,8 +17,8 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include "math.h"
-#include "math_private.h"
+#include <math.h>
+#include <math_private.h>
 
 /*
  * Table of constants for 2/pi, 5628 hexadecimal digits of 2/pi 

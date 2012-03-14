@@ -1,8 +1,9 @@
 GLIBC_PROVIDES dnl See aclocal.m4 in the top level source directory.
 # Local configure fragment for sysdeps/i386.
 
-AC_HEADER_CHECK([cpuid.h], ,
-  [AC_MSG_ERROR([gcc must provide the <cpuid.h> header])])
+AC_CHECK_HEADER([cpuid.h], ,
+  [AC_MSG_ERROR([gcc must provide the <cpuid.h> header])],
+  [/* No default includes.  */])
 
 AC_CACHE_CHECK(if -g produces usable source locations for assembler-with-cpp,
 	       libc_cv_cpp_asm_debuginfo, [dnl

@@ -23,8 +23,8 @@ static char rcsid[] = "$NetBSD: e_rem_pio2f.c,v 1.5 1995/05/10 20:46:03 jtc Exp 
  * use __kernel_rem_pio2f()
  */
 
-#include "math.h"
-#include "math_private.h"
+#include <math.h>
+#include <math_private.h>
 
 /*
  * Table of constants for 2/pi, 396 Hex digits (476 decimal) of 2/pi

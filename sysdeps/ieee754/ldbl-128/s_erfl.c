@@ -96,8 +96,8 @@
  *		erfc/erf(NaN) is NaN
  */
 
-#include "math.h"
-#include "math_private.h"
+#include <math.h>
+#include <math_private.h>
 
 /* Evaluate P[n] x^n  +  P[n-1] x^(n-1)  +  ...  +  P[0] */
 

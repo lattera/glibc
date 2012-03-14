@@ -112,7 +112,7 @@ this type is capable of storing all elements of the basic character set.
 Therefore it would be legitimate to define @code{wchar_t} as @code{char},
 which might make sense for embedded systems.
 
-But for GNU systems @code{wchar_t} is always 32 bits wide and, therefore,
+But in @theglibc{} @code{wchar_t} is always 32 bits wide and, therefore,
 capable of representing all UCS-4 values and, therefore, covering all of
 @w{ISO 10646}.  Some Unix systems define @code{wchar_t} as a 16-bit type
 and thereby follow Unicode very strictly.  This definition is perfectly
@@ -393,7 +393,7 @@ We already said above that the currently selected locale for the
 by the functions we are about to describe.  Each locale uses its own
 character set (given as an argument to @code{localedef}) and this is the
 one assumed as the external multibyte encoding.  The wide character
-set is always UCS-4, at least on GNU systems.
+set is always UCS-4 in @theglibc{}.
 
 A characteristic of each multibyte character set is the maximum number
 of bytes that can be necessary to represent one character.  This
@@ -537,8 +537,8 @@ Code using @code{mbsinit} often looks similar to this:
 
 The code to emit the escape sequence to get back to the initial state is
 interesting.  The @code{wcsrtombs} function can be used to determine the
-necessary output code (@pxref{Converting Strings}).  Please note that on
-GNU systems it is not necessary to perform this extra action for the
+necessary output code (@pxref{Converting Strings}).  Please note that with
+@theglibc{} it is not necessary to perform this extra action for the
 conversion from multibyte text to wide character text since the wide
 character encoding is not stateful.  But there is nothing mentioned in
 any standard that prohibits making @code{wchar_t} using a stateful

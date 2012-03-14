@@ -21,8 +21,8 @@
  * exponentiation or a multiplication.
  */
 
-#include "math.h"
-#include "math_private.h"
+#include <math.h>
+#include <math_private.h>
 
 static const long double
 two64   =  1.8446744073709551616e19L,

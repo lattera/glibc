@@ -19,8 +19,8 @@
  *	Inexact flag raised if x not equal to rint(x).
  */
 
-#include "math.h"
-#include "math_private.h"
+#include <math.h>
+#include <math_private.h>
 
 static const double
 TWO52[2]={
@@ -38,28 +38,16 @@ __rint(double x)
 	j0 = ((i0>>52)&0x7ff)-0x3ff;
 	if(j0<52) {
 	    if(j0<0) {
-		if((i0 & UINT64_C(0x7fffffffffffffff))==0) return x;
-		uint64_t i = i0 & UINT64_C(0xfffffffffffff);
-		i0 &= UINT64_C(0xfffe000000000000);
-		i0 |= (((i|-i) >> 12) & UINT64_C(0x8000000000000));
-		INSERT_WORDS64(x,i0);
 		double w = TWO52[sx]+x;
 		double t =  w-TWO52[sx];
 		EXTRACT_WORDS64(i0,t);
 		INSERT_WORDS64(t,(i0&UINT64_C(0x7fffffffffffffff))|(sx<<63));
 		return t;
-	    } else {
-		uint64_t i = UINT64_C(0x000fffffffffffff)>>j0;
-		if((i0&i)==0) return x; /* x is integral */
-		i>>=1;
-		if((i0&i)!=0)
-		    i0 = (i0&(~i))|(UINT64_C(0x4000000000000)>>j0);
 	    }
 	} else {
 	    if(j0==0x400) return x+x;	/* inf or NaN */
 	    else return x;		/* x is integral */
 	}
-	INSERT_WORDS64(x,i0);
 	double w = TWO52[sx]+x;
 	return w-TWO52[sx];
 }

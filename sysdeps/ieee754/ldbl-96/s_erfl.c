@@ -104,8 +104,8 @@
  */
 
 
-#include "math.h"
-#include "math_private.h"
+#include <math.h>
+#include <math_private.h>
 
 static const long double
 tiny = 1e-4931L,

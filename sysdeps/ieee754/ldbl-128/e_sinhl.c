@@ -53,8 +53,8 @@
  *      only sinhl(0)=0 is exact for finite x.
  */
 
-#include "math.h"
-#include "math_private.h"
+#include <math.h>
+#include <math_private.h>
 
 static const long double one = 1.0, shuge = 1.0e4931L,
 ovf_thresh = 1.1357216553474703894801348310092223067821E4L;

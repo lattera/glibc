@@ -1,4 +1,5 @@
-#ifndef _MATH_PRIVATE_H
+#ifndef X86_64_MATH_PRIVATE_H
+#define X86_64_MATH_PRIVATE_H 1
 
 #define math_opt_barrier(x) \
   ({ __typeof(x) __x;							      \
@@ -15,7 +16,7 @@
       __asm __volatile ("" : : "f" (x));				      \
   } while (0)
 
-#include <math/math_private.h>
+#include_next <math_private.h>
 
 /* We can do a few things better on x86-64.  */
 
@@ -67,7 +68,6 @@
     f = f__;								      \
   } while (0)
 
-#endif
 
 #define __isnan(d) \
   ({ long int __di; EXTRACT_WORDS64 (__di, (double) (d));		      \
@@ -90,85 +90,87 @@
   ({ int __di; GET_FLOAT_WORD (__di, (float) d);			      \
      (__di & 0x7fffffff) < 0x7f800000; })
 
+extern __always_inline double
+__ieee754_sqrt (double d)
+{
+  double res;
 #if defined __AVX__ || defined SSE2AVX
-# define __ieee754_sqrt(d) \
-  ({ double __res;							      \
-    asm ("vsqrtsd %1, %0, %0" : "=x" (__res) : "xm" ((double) (d)));	      \
-     __res; })
-# define __ieee754_sqrtf(d) \
-  ({ float __res;							      \
-    asm ("vsqrtss %1, %0, %0" : "=x" (__res) : "xm" ((float) (d)));	      \
-     __res; })
+  asm ("vsqrtsd %1, %0, %0" : "=x" (res) : "xm" (d));
 #else
-# define __ieee754_sqrt(d) \
-  ({ double __res;							      \
-    asm ("sqrtsd %1, %0" : "=x" (__res) : "xm" ((double) (d)));		      \
-     __res; })
-# define __ieee754_sqrtf(d) \
-  ({ float __res;							      \
-    asm ("sqrtss %1, %0" : "=x" (__res) : "xm" ((float) (d)));		      \
-     __res; })
+  asm ("sqrtsd %1, %0" : "=x" (res) : "xm" (d));
 #endif
-#define __ieee754_sqrtl(d) \
-  ({ long double __res;							      \
-    asm ("fsqrt" : "=t" (__res) : "0" ((long double) (d)));		      \
-     __res; })
+  return res;
+}
+
+extern __always_inline float
+__ieee754_sqrtf (float d)
+{
+  float res;
+#if defined __AVX__ || defined SSE2AVX
+  asm ("vsqrtss %1, %0, %0" : "=x" (res) : "xm" (d));
+#else
+  asm ("sqrtss %1, %0" : "=x" (res) : "xm" (d));
+#endif
+  return res;
+}
+
+extern __always_inline long double
+__ieee754_sqrtl (long double d)
+{
+  long double res;
+  asm ("fsqrt" : "=t" (res) : "0" (d));
+  return res;
+}
 
 #ifdef __SSE4_1__
-# ifndef __rint
-#  if defined __AVX__ || defined SSE2AVX
-#   define __rint(d) \
-  ({ double __res; \
-    asm ("vroundsd $4, %1, %0, %0" : "=x" (__res) : "xm" ((double) (d)));      \
-     __res; })
-#  else
-#   define __rint(d) \
-  ({ double __res; \
-    asm ("roundsd $4, %1, %0" : "=x" (__res) : "xm" ((double) (d)));	      \
-     __res; })
-#  endif
+extern __always_inline double
+__rint (double d)
+{
+  double res;
+# if defined __AVX__ || defined SSE2AVX
+  asm ("vroundsd $4, %1, %0, %0" : "=x" (res) : "xm" (d));
+# else
+  asm ("roundsd $4, %1, %0" : "=x" (res) : "xm" (d));
 # endif
-# ifndef __rintf
-#  if defined __AVX__ || defined SSE2AVX
-#   define __rintf(d) \
-  ({ float __res; \
-    asm ("vroundss $4, %1, %0, %0" : "=x" (__res) : "xm" ((float) (d)));      \
-     __res; })
-#  else
-#   define __rintf(d) \
-  ({ float __res; \
-    asm ("roundss $4, %1, %0" : "=x" (__res) : "xm" ((float) (d)));	      \
-     __res; })
-#  endif
-# endif
+  return res;
+}
 
-# ifndef __floor
-#  if defined __AVX__ || defined SSE2AVX
-#   define __floor(d) \
-  ({ double __res; \
-    asm ("vroundsd $1, %1, %0, %0" : "=x" (__res) : "xm" ((double) (d)));      \
-     __res; })
-#  else
-#   define __floor(d) \
-  ({ double __res; \
-    asm ("roundsd $1, %1, %0" : "=x" (__res) : "xm" ((double) (d)));	      \
-     __res; })
-#  endif
+extern __always_inline float
+__rintf (float d)
+{
+  float res;
+# if defined __AVX__ || defined SSE2AVX
+  asm ("vroundss $4, %1, %0, %0" : "=x" (res) : "xm" (d));
+# else
+  asm ("roundss $4, %1, %0" : "=x" (res) : "xm" (d));
 # endif
-# ifndef __floorf
-#  if defined __AVX__ || defined SSE2AVX
-#   define __floorf(d) \
-  ({ float __res; \
-    asm ("vroundss $1, %1, %0, %0" : "=x" (__res) : "xm" ((float) (d)));      \
-     __res; })
-#  else
-#   define __floorf(d) \
-  ({ float __res; \
-    asm ("roundss $1, %1, %0" : "=x" (__res) : "xm" ((float) (d)));	      \
-     __res; })
-#  endif
+  return res;
+}
+
+extern __always_inline double
+__floor (double d)
+{
+  double res;
+# if defined __AVX__ || defined SSE2AVX
+  asm ("vroundsd $1, %1, %0, %0" : "=x" (res) : "xm" (d));
+# else
+  asm ("roundsd $1, %1, %0" : "=x" (res) : "xm" (d));
 # endif
-#endif
+  return res;
+}
+
+extern __always_inline float
+__floorf (float d)
+{
+  float res;
+# if defined __AVX__ || defined SSE2AVX
+  asm ("vroundss $1, %1, %0, %0" : "=x" (res) : "xm" (d));
+# else
+  asm ("roundss $1, %1, %0" : "=x" (res) : "xm" (d));
+#  endif
+  return res;
+}
+#endif /* __SSE4_1__ */
 
 
 /* Specialized variants of the <fenv.h> interfaces which only handle
@@ -226,3 +228,5 @@
 #undef libc_feupdateenvf
 #define libc_feupdateenvf(e) libc_feupdateenv (e)
 // #define libc_feupdateenvl(e) (void) feupdateenv (e)
+
+#endif /* X86_64_MATH_PRIVATE_H */

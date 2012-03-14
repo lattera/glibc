@@ -21,7 +21,7 @@
 
 #include <math.h>
 
-#include "math_private.h"
+#include <math_private.h>
 
 static const long double two112[2] =
 {

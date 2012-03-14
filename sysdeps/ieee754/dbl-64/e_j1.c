@@ -58,8 +58,8 @@
  *	   by method mentioned above.
  */
 
-#include "math.h"
-#include "math_private.h"
+#include <math.h>
+#include <math_private.h>
 
 static double pone(double), qone(double);
 

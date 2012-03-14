@@ -1,5 +1,5 @@
 /* PLT trampolines.  Sparc 32-bit version.
-   Copyright (C) 2005 Free Software Foundation, Inc.
+   Copyright (C) 2005, 2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -48,17 +48,20 @@ _dl_runtime_resolve:
 	.size	_dl_runtime_resolve, .-_dl_runtime_resolve
 
 	/* For the profiling cases we pass in our stack frame
-	 * as the base of the La_sparc64_regs, so it looks
+	 * as the base of the La_sparc32_regs, so it looks
 	 * like:
-	 *	%l0			%sp
+	 *	%l0			%sp + (0 * 8)
+	 *	%l1			%sp + (0 * 8) + 4
 	 *	...
-	 *	%l7			%sp + (7 * 8)
-	 *	%i0			%sp + (8 * 8)
+	 *	%l6			%sp + (3 * 8)
+	 *	%l7			%sp + (3 * 8) + 4
+	 *	%i0			%sp + (4 * 8)
+	 *	%i1			%sp + (4 * 8) + 4
 	 *	...
-	 *	%i7			%sp + (15 * 8)
-	 *	%f0			%sp + (16 * 8)
-	 *	%f16			%sp + (31 * 8)
-	 *	framesize		%sp + (32 * 8)
+	 *	%i6			%sp + (7 * 8)
+	 *	%i7			%sp + (7 * 8) + 4
+	 *	struct_ret_ptr		%sp + (8 * 8)
+	 *	framesize		%sp + (9 * 8)
 	 */
 
 	.globl	_dl_profile_save_regs
@@ -74,7 +77,7 @@ _dl_profile_save_regs:
 	std	%i2, [%sp + ( 5 * 8)]
 	std	%i4, [%sp + ( 6 * 8)]
 	std	%i6, [%sp + ( 7 * 8)]
-	ld	[%sp + (8 * 8)], %l4
+	ld	[%fp + (8 * 8)], %l4
 	retl
 	 st	%l4, [%sp + (8 * 8)]
 
@@ -91,8 +94,11 @@ _dl_profile_save_regs:
 _dl_profile_invoke:
 	cfi_startproc
 
-	sub	%sp, %l0, %sp
-1:
+	add	%l0, 7, %l0
+	andn	%l0, 7, %l0
+	add	%l0, 2 * 8, %g1
+
+	sub	%sp, %g1, %sp
 	srl	%l0, 3, %l7
 	mov	%o0, %l1
 	mov	%i0, %o0
@@ -101,8 +107,10 @@ _dl_profile_invoke:
 	mov	%i3, %o3
 	mov	%i4, %o4
 	mov	%i5, %o5
+	cmp	%l0, 0
 	mov	%fp, %l2
-	mov	%sp, %l3
+	be	2f
+	 add	%sp, (11 * 8), %l3
 1:	ldd	[%l2], %g2
 	add	%l2, 0x8, %l2
 	subcc	%l7, 1, %l7
@@ -110,7 +118,7 @@ _dl_profile_invoke:
 	bne	1b
 	 add	%l3, 0x8, %l3
 
-	jmpl	%l1, %o7
+2:	jmpl	%l1, %o7
 	 nop
 
 	std	%o0, [%sp + ( 9 * 8)]
@@ -118,11 +126,12 @@ _dl_profile_invoke:
 
 	mov	%l5, %o0
 	mov	%l6, %o1
-	add	%sp, %l0, %o2
+	add	%sp, (11 * 8), %o2
 	call	_dl_call_pltexit
-	 add	%sp, (16 * 8), %o3
+	 add	%sp, ( 9 * 8), %o3
 
-	ldd	[%sp + (9 * 8)], %i0
+	ldd	[%sp + ( 9 * 8)], %i0
+	ldd	[%sp + (10 * 8)], %f0
 
 	jmpl	%i7 + 8, %g0
 	 restore
@@ -142,11 +151,7 @@ _dl_profile_invoke:
 _dl_runtime_profile:
 	cfi_startproc
 
-	cmp	%fp, 0
-	be,a	1f
-	 mov	104, %g3
-	sub	%fp, %sp, %g3
-1:	save	%sp, -104, %sp
+	save	%sp, -104, %sp
 	cfi_def_cfa_register(%fp)
 	cfi_window_save
 	cfi_register(%o7, %i7)
@@ -156,20 +161,19 @@ _dl_runtime_profile:
 	mov	%i7, %o2
 	sub	%o1, 4*12, %o1
 
-	mov	%g3, %l0
 	mov	%o0, %l5
 	mov	%o1, %l6
 
-	call _dl_profile_save_regs
+	call	_dl_profile_save_regs
 	 nop
 
 	mov	%sp, %o3
 	call	_dl_profile_fixup
 	 add	%sp, (9 * 8), %o4
 
-	ld	[%sp + (9 * 8)], %o1
-	cmp	%o1, 0
-	bgeu	1f
+	ld	[%sp + (9 * 8)], %l0
+	cmp	%l0, 0
+	bl	1f
 	 nop
 	
 	call	_dl_profile_invoke

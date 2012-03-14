@@ -120,7 +120,7 @@ The maximum number of file descriptors is controlled by the
 @item ENFILE
 The entire system, or perhaps the file system which contains the
 directory, cannot support any additional open files at the moment.
-(This problem cannot happen on the GNU system.)
+(This problem cannot happen on @gnuhurdsystems{}.)
 
 @item ENOENT
 The named file does not exist, and @code{O_CREAT} is not specified.
@@ -341,8 +341,8 @@ file can also fail with @code{EAGAIN} if the kernel cannot find enough
 physical memory to lock down the user's pages.  This is limited to
 devices that transfer with direct memory access into the user's memory,
 which means it does not include terminals, since they always use
-separate buffers inside the kernel.  This problem never happens in the
-GNU system.
+separate buffers inside the kernel.  This problem never happens on
+@gnuhurdsystems{}.
 
 Any condition that could result in @code{EAGAIN} can instead result in a
 successful @code{read} which returns fewer bytes than requested.
@@ -492,8 +492,8 @@ file can also fail with @code{EAGAIN} if the kernel cannot find enough
 physical memory to lock down the user's pages.  This is limited to
 devices that transfer with direct memory access into the user's memory,
 which means it does not include terminals, since they always use
-separate buffers inside the kernel.  This problem does not arise in the
-GNU system.
+separate buffers inside the kernel.  This problem does not arise on
+@gnuhurdsystems{}.
 
 @item EBADF
 The @var{filedes} argument is not a valid file descriptor,
@@ -687,7 +687,7 @@ file offset is not valid.  A file offset is invalid.
 @item ESPIPE
 The @var{filedes} corresponds to an object that cannot be positioned,
 such as a pipe, FIFO or terminal device.  (POSIX.1 specifies this error
-only for pipes and FIFOs, but in the GNU system, you always get
+only for pipes and FIFOs, but on @gnusystems{}, you always get
 @code{ESPIPE} if the object is not seekable.)
 @end table
 
@@ -830,7 +830,7 @@ The @code{fdopen} function returns a new stream for the file descriptor
 
 The @var{opentype} argument is interpreted in the same way as for the
 @code{fopen} function (@pxref{Opening Streams}), except that
-the @samp{b} option is not permitted; this is because GNU makes no
+the @samp{b} option is not permitted; this is because @gnusystems{} make no
 distinction between text and binary files.  Also, @code{"w"} and
 @code{"w+"} do not cause truncation of the file; these have an effect only
 when opening a file, and in this case the file has already been opened.
@@ -2154,7 +2154,7 @@ the moment.  The error status for each element of @var{list} must be
 checked to determine which request failed.
 
 Another reason could be that the system wide limit of AIO requests is
-exceeded.  This cannot be the case for the implementation on GNU systems
+exceeded.  This cannot be the case for the implementation on @gnusystems{}
 since no arbitrary limits exist.
 @item EINVAL
 The @var{mode} parameter is invalid or @var{nent} is larger than
@@ -2895,7 +2895,7 @@ The symbols in this section are defined in the header file
 @subsection File Access Modes
 
 The file access modes allow a file descriptor to be used for reading,
-writing, or both.  (In the GNU system, they can also allow none of these,
+writing, or both.  (On @gnuhurdsystems{}, they can also allow none of these,
 and allow execution of the file as a program.)  The access modes are chosen
 when the file is opened, and never change.
 
@@ -2917,13 +2917,13 @@ Open the file for write access.
 Open the file for both reading and writing.
 @end deftypevr
 
-In the GNU system (and not in other systems), @code{O_RDONLY} and
+On @gnuhurdsystems{} (and not on other systems), @code{O_RDONLY} and
 @code{O_WRONLY} are independent bits that can be bitwise-ORed together,
 and it is valid for either bit to be set or clear.  This means that
 @code{O_RDWR} is the same as @code{O_RDONLY|O_WRONLY}.  A file access
 mode of zero is permissible; it allows no operations that do input or
 output to the file, but does allow other operations such as
-@code{fchmod}.  On the GNU system, since ``read-only'' or ``write-only''
+@code{fchmod}.  On @gnuhurdsystems{}, since ``read-only'' or ``write-only''
 is a misnomer, @file{fcntl.h} defines additional names for the file
 access modes.  These names are preferred when writing GNU-specific code.
 But most programs will want to be portable to other POSIX.1 systems and
@@ -2948,8 +2948,9 @@ Open the file for executing.  Only defined on GNU.
 @end deftypevr
 
 To determine the file access mode with @code{fcntl}, you must extract
-the access mode bits from the retrieved file status flags.  In the GNU
-system, you can just test the @code{O_READ} and @code{O_WRITE} bits in
+the access mode bits from the retrieved file status flags.  On
+@gnuhurdsystems{},
+you can just test the @code{O_READ} and @code{O_WRITE} bits in
 the flags word.  But in other POSIX.1 systems, reading and writing
 access modes are not stored as distinct bit flags.  The portable way to
 extract the file access mode bits is with @code{O_ACCMODE}.
@@ -2960,7 +2961,7 @@ extract the file access mode bits is with @code{O_ACCMODE}.
 This macro stands for a mask that can be bitwise-ANDed with the file
 status flag value to produce a value representing the file access mode.
 The mode will be @code{O_RDONLY}, @code{O_WRONLY}, or @code{O_RDWR}.
-(In the GNU system it could also be zero, and it never includes the
+(On @gnuhurdsystems{} it could also be zero, and it never includes the
 @code{O_EXEC} bit.)
 @end deftypevr
 
@@ -3033,15 +3034,16 @@ If the named file is a terminal device, don't make it the controlling
 terminal for the process.  @xref{Job Control}, for information about
 what it means to be the controlling terminal.
 
-In the GNU system and 4.4 BSD, opening a file never makes it the
-controlling terminal and @code{O_NOCTTY} is zero.  However, other
-systems may use a nonzero value for @code{O_NOCTTY} and set the
+On @gnuhurdsystems{} and 4.4 BSD, opening a file never makes it the
+controlling terminal and @code{O_NOCTTY} is zero.  However, @gnulinuxsystems{}
+and some other systems use a nonzero value for @code{O_NOCTTY} and set the
 controlling terminal when you open a file that is a terminal device; so
 to be portable, use @code{O_NOCTTY} when it is important to avoid this.
 @cindex controlling terminal, setting
 @end deftypevr
 
-The following three file name translation flags exist only in the GNU system.
+The following three file name translation flags exist only on
+@gnuhurdsystems{}.
 
 @comment fcntl.h
 @comment GNU
@@ -3417,7 +3419,7 @@ function:
 The lock cannot be set because it is blocked by an existing lock on the
 file.  Some systems use @code{EAGAIN} in this case, and other systems
 use @code{EACCES}; your program should treat them alike, after
-@code{F_SETLK}.  (The GNU system always uses @code{EAGAIN}.)
+@code{F_SETLK}.  (@gnulinuxhurdsystems{} always use @code{EAGAIN}.)
 
 @item EBADF
 Either: the @var{filedes} argument is invalid; you requested a read lock
@@ -3594,7 +3596,7 @@ There is no process or process group corresponding to @var{pid}.
 @cindex generic i/o control operations
 @cindex IOCTLs
 
-The GNU system can handle most input/output operations on many different
+@gnusystems{} can handle most input/output operations on many different
 devices and objects in terms of a few file primitives - @code{read},
 @code{write} and @code{lseek}.  However, most devices also have a few
 peculiar operations which do not fit into this model. Such as:

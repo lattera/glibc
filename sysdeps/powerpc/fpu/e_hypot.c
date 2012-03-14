@@ -17,8 +17,8 @@
    License along with the GNU C Library; see the file COPYING.LIB.  If
    not, see <http://www.gnu.org/licenses/>.  */
 
-#include "math.h"
-#include "math_private.h"
+#include <math.h>
+#include <math_private.h>
 
 static const double two60   = 1.152921504606847e+18;
 static const double two500  = 3.2733906078961419e+150;

@@ -45,10 +45,6 @@ CFLAGS-simple-hash.c = -I../locale
 
 tests	= tst-iconv1 tst-iconv2 tst-iconv3 tst-iconv4 tst-iconv5
 
-distribute	= gconv_builtin.h gconv_int.h loop.c skeleton.c iconv_prog.h \
-		  iconv_charmap.c dummy-repertoire.c gconv_charset.h strtab.c \
-		  iconvconfig.h
-
 others		= iconv_prog iconvconfig
 install-others-programs	= $(inst_bindir)/iconv
 install-sbin	= iconvconfig

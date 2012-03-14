@@ -1,4 +1,4 @@
-/* Copyright (C) 2001, 2006 Free Software Foundation, Inc.
+/* Copyright (C) 2001-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2001.
 
@@ -364,7 +364,7 @@ handle_requests (void *arg)
 	  gettimeofday (&now, NULL);
 	  wakeup_time.tv_sec = now.tv_sec + optim.gai_idle_time;
 	  wakeup_time.tv_nsec = now.tv_usec * 1000;
-	  if (wakeup_time.tv_nsec > 1000000000)
+	  if (wakeup_time.tv_nsec >= 1000000000)
 	    {
 	      wakeup_time.tv_nsec -= 1000000000;
 	      ++wakeup_time.tv_sec;

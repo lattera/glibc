@@ -15,8 +15,8 @@
  */
 
 
-#include "math.h"
-#include "math_private.h"
+#include <math.h>
+#include <math_private.h>
 
 static const float
 ln2 = 0.69314718055994530942,

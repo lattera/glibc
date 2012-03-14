@@ -18,8 +18,8 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include "math.h"
-#include "math_private.h"
+#include <math.h>
+#include <math_private.h>
 
 
 #define CBRT2 1.2599210498948731648		/* 2^(1/3) */

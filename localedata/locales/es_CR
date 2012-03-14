@@ -14,7 +14,7 @@ escape_char  /
 LC_IDENTIFICATION
 title      "Spanish locale for Costa Rica"
 source     "Free Software Foundation, Inc."
-address    "59 Temple Place - Suite 330, Boston, MA 02111-1307, USA"
+address    "http:////www.gnu.org//software//libc//"
 contact    ""
 email      "bug-glibc-locales@gnu.org"
 tel        ""

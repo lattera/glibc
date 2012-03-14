@@ -58,8 +58,8 @@ directory, especially some files in the manual subdirectory.
 mandatory is @samp{--prefix}.  This option tells @code{configure}
 where you want @theglibc{} installed.  This defaults to @file{/usr/local},
 but the normal setting to install as the standard system library is
-@samp{--prefix=/usr} for GNU/Linux systems and @samp{--prefix=} (an
-empty prefix) for GNU/Hurd systems.
+@samp{--prefix=/usr} for @gnulinuxsystems{} and @samp{--prefix=} (an
+empty prefix) for @gnuhurdsystems{}.
 
 It may also be useful to set the @var{CC} and @var{CFLAGS} variables in
 the environment when running @code{configure}.  @var{CC} selects the C
@@ -104,7 +104,7 @@ relative to the build directory (that is, the current working directory).
 For example, @samp{--enable-add-ons=nptl,../glibc-libidn-@var{version}}.
 
 @item --enable-kernel=@var{version}
-This option is currently only useful on GNU/Linux systems.  The
+This option is currently only useful on @gnulinuxsystems{}.  The
 @var{version} parameter should have the form X.Y.Z and describes the
 smallest version of the Linux kernel the generated library is expected
 to support.  The higher the @var{version} number is, the less
@@ -386,10 +386,10 @@ You may also need these packages if you upgrade your source tree using
 patches, although we try to avoid this.
 
 @node Linux
-@appendixsec Specific advice for GNU/Linux systems
+@appendixsec Specific advice for @gnulinuxsystems{}
 @cindex kernel header files
 
-If you are installing @theglibc{} on a GNU/Linux system, you need to have
+If you are installing @theglibc{} on @gnulinuxsystems{}, you need to have
 the header files from a 2.6.19.1 or newer kernel around for reference.
 These headers must be installed using @samp{make headers_install}; the
 headers present in the kernel source directory are not suitable for
@@ -421,7 +421,8 @@ are not required if not compiling programs using those interfaces.
 You do not need to copy kernel headers if you did not specify an
 alternate kernel header source using @samp{--with-headers}.
 
-GNU/Linux expects some components of the @glibcadj{} installation to be in
+The Filesystem Hierarchy Standard for @gnulinuxsystems{} expects some
+components of the @glibcadj{} installation to be in
 @file{/lib} and some in @file{/usr/lib}.  This is handled automatically
 if you configure @theglibc{} with @samp{--prefix=/usr}.  If you set some other
 prefix or allow it to default to @file{/usr/local}, then all the

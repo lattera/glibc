@@ -17,8 +17,8 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <math_ldbl_opt.h>
-#include "math.h"
-#include "math_private.h"
+#include <math.h>
+#include <math_private.h>
 #include <fenv_libc.h>
 
 double

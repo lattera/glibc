@@ -23,7 +23,7 @@ dnl Iff <unwind.h> is available, make sure it is the right one and it
 dnl contains struct _Unwind_Exception.
 AC_CACHE_CHECK(dnl
 for forced unwind support, libc_cv_forced_unwind, [dnl
-AC_TRY_LINK([#include <unwind.h>], [
+AC_TRY_COMPILE([#include <unwind.h>], [
 struct _Unwind_Exception exc;
 struct _Unwind_Context *context;
 _Unwind_GetCFA (context)],
@@ -34,11 +34,11 @@ dnl Check for C cleanup handling.
   old_CFLAGS="$CFLAGS"
   CFLAGS="$CFLAGS -Werror -fexceptions"
   AC_CACHE_CHECK([for C cleanup handling], libc_cv_c_cleanup, [dnl
-  AC_TRY_LINK([
-#include <stdio.h>
+  AC_TRY_COMPILE([
+extern void some_function (void);
 void cl (void *a) { }], [
   int a __attribute__ ((cleanup (cl)));
-  puts ("test")],
+  some_function ()],
 libc_cv_c_cleanup=yes, libc_cv_c_cleanup=no)])
   CFLAGS="$old_CFLAGS"
   if test $libc_cv_c_cleanup = no; then

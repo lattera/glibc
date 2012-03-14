@@ -1,4 +1,4 @@
-# Copyright (C) 1991,1995-2001,2005,2008 Free Software Foundation, Inc.
+# Copyright (C) 1991,1995-2001,2005,2008,2012 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -29,7 +29,5 @@ routines := accept bind connect getpeername getsockname getsockopt	\
 	    sockatmark accept4
 
 aux	 := have_sock_cloexec
-
-distribute := ifreq.h
 
 include ../Rules

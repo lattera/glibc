@@ -1,5 +1,4 @@
-/* Copyright (C) 2003, 2004, 2005, 2007, 2008, 2009, 2010
-   Free Software Foundation, Inc.
+/* Copyright (C) 2003-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -243,6 +242,12 @@ __lll_timedlock_wait:
 	bt	.Lreltmo
 # endif
 
+	/* if (timeout->tv_sec < 0) return ETIMEDOUT; */
+	mov.l	@r6, r1
+	cmp/pz	r1
+	bf/s	5f
+	 mov	#ETIMEDOUT, r0
+
 	mov	r4, r2
 	mov	r5, r4
 	mov	r7, r5
@@ -278,6 +283,7 @@ __lll_timedlock_wait:
 	neg	r0, r3
 3:
 	mov	r3, r0
+5:
 	rts
 	 mov.l	@r15+, r12
 

@@ -1,5 +1,5 @@
 /* Return arc hyperbole cosine for long double value.
-   Copyright (C) 1997, 1998, 2006, 2011 Free Software Foundation, Inc.
+   Copyright (C) 1997-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -66,10 +66,14 @@ __cacoshl (__complex__ long double x)
     }
   /* The factor 16 is just a guess.  */
   else if (16.0L * fabsl (__imag__ x) < fabsl (__real__ x))
-    /* Kahan's formula which avoid cancellation through subtraction in
-       some cases.  */
-    res = 2.0L * __clogl (__csqrtl ((x + 1.0L) / 2.0L)
-			  + __csqrtl ((x - 1.0L) / 2.0L));
+    {
+      /* Kahan's formula which avoid cancellation through subtraction in
+	 some cases.  */
+      res = 2.0L * __clogl (__csqrtl ((x + 1.0L) / 2.0L)
+			    + __csqrtl ((x - 1.0L) / 2.0L));
+      if (signbit (__real__ res))
+	__real__ res = 0.0L;
+    }
   else
     {
       __complex__ long double y;

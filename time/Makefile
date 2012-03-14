@@ -1,4 +1,4 @@
-# Copyright (C) 1991-2003, 2004, 2005, 2007, 2011 Free Software Foundation, Inc.
+# Copyright (C) 1991-2005,2007,2011,2012 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -31,7 +31,6 @@ routines := offtime asctime clock ctime ctime_r difftime \
 	    strftime wcsftime strftime_l wcsftime_l	 \
 	    timespec_get
 aux :=	    era alt_digit lc-time-cleanup
-distribute := datemsk
 
 tests	:= test_time clocktest tst-posixtz tst-strptime tst_wcsftime \
 	   tst-getdate tst-mktime tst-mktime2 tst-ftime_l tst-strftime \

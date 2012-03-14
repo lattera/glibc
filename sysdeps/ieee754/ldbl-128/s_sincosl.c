@@ -20,7 +20,7 @@
 
 #include <math.h>
 
-#include "math_private.h"
+#include <math_private.h>
 
 void
 __sincosl (long double x, long double *sinx, long double *cosx)

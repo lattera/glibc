@@ -37,7 +37,7 @@
 #include "mydefs.h"
 #include "MathLib.h"
 #include "uexp.tbl"
-#include "math_private.h"
+#include <math_private.h>
 #include <fenv.h>
 
 #ifndef SECTION

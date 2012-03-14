@@ -1,4 +1,4 @@
-# Copyright (C) 1998,2000,2002-2009,2011 Free Software Foundation, Inc.
+# Copyright (C) 1998,2000,2002-2009,2011,2012 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -73,10 +73,6 @@ $(objpfx)selinux.o: sysincludes = # nothing
 endif
 
 LDLIBS-nscd = $(selinux-LIBS)
-
-distribute := nscd.h nscd-client.h dbg_log.h \
-	      $(addsuffix .c, $(filter-out xmalloc,$(all-nscd-modules))) \
-	      nscd.conf nscd.init nscd_proto.h nscd-types.h
 
 include ../Rules
 

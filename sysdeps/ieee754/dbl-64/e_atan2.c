@@ -41,7 +41,7 @@
 #include "MathLib.h"
 #include "uatan.tbl"
 #include "atnat2.h"
-#include "math_private.h"
+#include <math_private.h>
 
 #ifndef SECTION
 # define SECTION

@@ -91,8 +91,8 @@
  *
  */
 
-#include "math.h"
-#include "math_private.h"
+#include <math.h>
+#include <math_private.h>
 
 static const long double
   half = 0.5L,

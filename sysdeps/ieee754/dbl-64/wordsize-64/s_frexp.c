@@ -17,8 +17,8 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <inttypes.h>
-#include "math.h"
-#include "math_private.h"
+#include <math.h>
+#include <math_private.h>
 
 /*
  * for non-zero, finite x

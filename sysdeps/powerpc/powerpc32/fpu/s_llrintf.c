@@ -16,7 +16,7 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include "math.h"
+#include <math.h>
 
 long long int
 __llrintf (float x)

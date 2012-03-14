@@ -350,8 +350,8 @@ file name searching as the @code{execvp} function.
 @end deftypefun
 
 The size of the argument list and environment list taken together must
-not be greater than @code{ARG_MAX} bytes.  @xref{General Limits}.  In
-the GNU system, the size (which compares against @code{ARG_MAX})
+not be greater than @code{ARG_MAX} bytes.  @xref{General Limits}.  On
+@gnuhurdsystems{}, the size (which compares against @code{ARG_MAX})
 includes, for each string, the number of characters in the string, plus
 the size of a @code{char *}, plus one, rounded up to a multiple of the
 size of a @code{char *}.  Other systems may have somewhat different
@@ -366,7 +366,7 @@ usual file name errors (@pxref{File Name Errors}), the following
 @table @code
 @item E2BIG
 The combined size of the new program's argument list and environment
-list is larger than @code{ARG_MAX} bytes.  The GNU system has no
+list is larger than @code{ARG_MAX} bytes.  @gnuhurdsystems{} have no
 specific limit on the argument list size, so this error code cannot
 result, but you may get @code{ENOMEM} instead if the arguments are too
 big for available memory.
@@ -406,7 +406,7 @@ Pending alarms.  @xref{Setting an Alarm}.
 
 @item
 Current working directory and root directory.  @xref{Working
-Directory}.  In the GNU system, the root directory is not copied when
+Directory}.  On @gnuhurdsystems{}, the root directory is not copied when
 executing a setuid program; instead the system default root directory
 is used for the new program.
 

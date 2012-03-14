@@ -121,8 +121,8 @@ the buffer.  @Theglibc{} provides @code{getwd} only
 for backwards compatibility with BSD.
 
 The @var{buffer} argument should be a pointer to an array at least
-@code{PATH_MAX} bytes long (@pxref{Limits for Files}).  In the GNU
-system there is no limit to the size of a file name, so this is not
+@code{PATH_MAX} bytes long (@pxref{Limits for Files}).  On @gnuhurdsystems{}
+there is no limit to the size of a file name, so this is not
 necessarily enough space to contain the directory name.  That is why
 this function is deprecated.
 @end deftypefn
@@ -242,7 +242,7 @@ field you can count on in all POSIX systems.
 
 @item ino_t d_fileno
 This is the file serial number.  For BSD compatibility, you can also
-refer to this member as @code{d_ino}.  In the GNU system and most POSIX
+refer to this member as @code{d_ino}.  On @gnulinuxhurdsystems{} and most POSIX
 systems, for most files this the same as the @code{st_ino} member that
 @code{stat} will return for the file.  @xref{File Attributes}.
 
@@ -354,7 +354,7 @@ The process has too many files open.
 @item ENFILE
 The entire system, or perhaps the file system which contains the
 directory, cannot support any additional open files at the moment.
-(This problem cannot happen on the GNU system.)
+(This problem cannot happen on @gnuhurdsystems{}.)
 
 @item ENOMEM
 Not enough memory available.
@@ -1075,7 +1075,8 @@ The directory or file system that would contain the new link is full
 and cannot be extended.
 
 @item EPERM
-In the GNU system and some others, you cannot make links to directories.
+On @gnulinuxhurdsystems{} and some others, you cannot make links to
+directories.
 Many systems allow only privileged users to do so.  This error
 is used to report the problem.
 
@@ -1099,7 +1100,7 @@ A hardware error occurred while trying to read or write the to filesystem.
 @cindex symbolic link
 @cindex link, symbolic
 
-The GNU system supports @dfn{soft links} or @dfn{symbolic links}.  This
+@gnusystems{} support @dfn{soft links} or @dfn{symbolic links}.  This
 is a kind of ``file'' that is essentially a pointer to another file
 name.  Unlike hard links, symbolic links can be made to directories or
 across file systems with no restrictions.  You can also make a symbolic
@@ -1352,8 +1353,8 @@ The file name to be deleted doesn't exist.
 @item EPERM
 On some systems @code{unlink} cannot be used to delete the name of a
 directory, or at least can only be used this way by a privileged user.
-To avoid such problems, use @code{rmdir} to delete directories.  (In the
-GNU system @code{unlink} can never delete the name of a directory.)
+To avoid such problems, use @code{rmdir} to delete directories.  (On
+@gnulinuxhurdsystems{} @code{unlink} can never delete the name of a directory.)
 
 @item EROFS
 The directory containing the file name to be deleted is on a read-only
@@ -1381,7 +1382,7 @@ The directory to be deleted is not empty.
 @end table
 
 These two error codes are synonymous; some systems use one, and some use
-the other.  The GNU system always uses @code{ENOTEMPTY}.
+the other.  @gnulinuxhurdsystems{} always use @code{ENOTEMPTY}.
 
 The prototype for this function is declared in the header file
 @file{unistd.h}.
@@ -1458,7 +1459,7 @@ that are the current working directories of processes.
 
 @item ENOTEMPTY
 @itemx EEXIST
-The directory @var{newname} isn't empty.  The GNU system always returns
+The directory @var{newname} isn't empty.  @gnulinuxhurdsystems{} always return
 @code{ENOTEMPTY} for this, but some other systems return @code{EEXIST}.
 
 @item EINVAL
@@ -2480,16 +2481,16 @@ read_umask (void)
 @end smallexample
 
 @noindent
-However, it is better to use @code{getumask} if you just want to read
-the mask value, because it is reentrant (at least if you use the GNU
-operating system).
+However, on @gnuhurdsystems{} it is better to use @code{getumask} if
+you just want to read the mask value, because it is reentrant.
 @end deftypefun
 
 @comment sys/stat.h
 @comment GNU
 @deftypefun mode_t getumask (void)
 Return the current value of the file creation mask for the current
-process.  This function is a GNU extension.
+process.  This function is a GNU extension and is only available on
+@gnuhurdsystems{}.
 @end deftypefun
 
 @comment sys/stat.h

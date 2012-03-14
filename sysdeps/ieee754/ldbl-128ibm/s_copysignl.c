@@ -23,8 +23,8 @@ static char rcsid[] = "$NetBSD: $";
  * with the sign bit of y.
  */
 
-#include "math.h"
-#include "math_private.h"
+#include <math.h>
+#include <math_private.h>
 #include <math_ldbl_opt.h>
 
 long double __copysignl(long double x, long double y)

@@ -64,8 +64,8 @@
  *
  */
 
-#include "math.h"
-#include "math_private.h"
+#include <math.h>
+#include <math_private.h>
 
 static const long double bp[] = {
   1.0L,

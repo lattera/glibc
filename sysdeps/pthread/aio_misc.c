@@ -1,6 +1,5 @@
 /* Handle general operations.
-   Copyright (C) 1997-2001, 2003, 2004, 2006, 2007, 2009, 2011
-   Free Software Foundation, Inc.
+   Copyright (C) 1997-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -635,7 +634,7 @@ handle_fildes_io (void *arg)
 	  gettimeofday (&now, NULL);
 	  wakeup_time.tv_sec = now.tv_sec + optim.aio_idle_time;
 	  wakeup_time.tv_nsec = now.tv_usec * 1000;
-	  if (wakeup_time.tv_nsec > 1000000000)
+	  if (wakeup_time.tv_nsec >= 1000000000)
 	    {
 	      wakeup_time.tv_nsec -= 1000000000;
 	      ++wakeup_time.tv_sec;

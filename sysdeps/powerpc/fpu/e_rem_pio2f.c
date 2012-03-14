@@ -19,7 +19,7 @@
 
 #include <math.h>
 
-#include "math_private.h"
+#include <math_private.h>
 #include "s_float_bitwise.h"
 
 /* defined in sysdeps/powerpc/fpu/k_rem_pio2f.c */

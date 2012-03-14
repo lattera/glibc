@@ -1,5 +1,5 @@
 /* Get frequency of the system processor.  sparc64 version.
-   Copyright (C) 2001 Free Software Foundation, Inc.
+   Copyright (C) 2001, 2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -154,6 +154,22 @@ __get_clockfreq_via_proc_openprom (void)
   return result;
 }
 
+static void set_obp_int (struct openpromio *op, int val)
+{
+  char *cp = op->oprom_array;
+  int *ip = (int *) cp;
+
+  *ip = val;
+}
+
+static int get_obp_int (struct openpromio *op)
+{
+  char *cp = op->oprom_array;
+  int *ip = (int *) cp;
+
+  return *ip;
+}
+
 static hp_timing_t
 __get_clockfreq_via_dev_openprom (void)
 {
@@ -171,11 +187,11 @@ __get_clockfreq_via_dev_openprom (void)
 
       obp_cmd->oprom_size =
 	sizeof (obp_buf) - sizeof (unsigned int);
-      *(int *) obp_cmd->oprom_array = 0;
+      set_obp_int (obp_cmd, 0);
       ret = ioctl (obp_dev_fd, OPROMCHILD, (char *) obp_cmd);
       if (ret == 0)
 	{
-	  int cur_node = *(int *) obp_cmd->oprom_array;
+	  int cur_node = get_obp_int (obp_cmd);
 
 	  while (cur_node != 0 && cur_node != -1)
 	    {
@@ -190,15 +206,14 @@ __get_clockfreq_via_dev_openprom (void)
 		  strcpy (obp_cmd->oprom_array, "clock-frequency");
 		  ret = ioctl (obp_dev_fd, OPROMGETPROP, (char *) obp_cmd);
 		  if (ret == 0)
-		    result =
-		      (hp_timing_t) *(unsigned int *) obp_cmd->oprom_array;
+		    result = (hp_timing_t) get_obp_int (obp_cmd);
 		}
 	      obp_cmd->oprom_size = sizeof (obp_buf) - sizeof (unsigned int);
-	      *(int *) obp_cmd->oprom_array = cur_node;
+	      set_obp_int (obp_cmd, cur_node);
 	      ret = ioctl (obp_dev_fd, OPROMNEXT, (char *) obp_cmd);
 	      if (ret < 0)
 		break;
-	      cur_node = *(int *)obp_cmd->oprom_array;
+	      cur_node = get_obp_int (obp_cmd);
 	    }
 	}
     }

@@ -1,3 +1,7 @@
+2012-03-07  Ulrich Drepper  <drepper@gmail.com>
+
+	* Makefile (distribute): Remove variable.
+
 2011-09-15  Andreas Schwab  <schwab@redhat.com>
 
 	* thread_dbP.h: Include <list.h>

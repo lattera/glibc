@@ -22,8 +22,8 @@ static char rcsid[] = "$NetBSD: s_isnanf.c,v 1.4 1995/05/10 20:47:38 jtc Exp $";
  * no branching!
  */
 
-#include "math.h"
-#include "math_private.h"
+#include <math.h>
+#include <math_private.h>
 
 #undef __isnanf
 int __isnanf(float x)

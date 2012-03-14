@@ -20,7 +20,7 @@
 #ifndef _FLOAT_BITWISE_
 #define _FLOAT_BITWISE_ 1
 
-#include "math_private.h"
+#include <math_private.h>
 
 /* Returns (int)(num & 0x7FFFFFF0 == value) */
 static inline

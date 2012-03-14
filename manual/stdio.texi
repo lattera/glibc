@@ -110,7 +110,7 @@ diagnostics issued by the program.
 @end deftypevar
 @cindex standard error stream
 
-In the GNU system, you can specify what files or processes correspond to
+On @gnusystems{}, you can specify what files or processes correspond to
 these streams using the pipe and redirection facilities provided by the
 shell.  (The primitives shells use to implement these facilities are
 described in @ref{File System Interface}.)  Most other operating systems
@@ -206,7 +206,7 @@ Closing Files}).
 
 The character @samp{b} in @var{opentype} has a standard meaning; it
 requests a binary stream rather than a text stream.  But this makes no
-difference in POSIX systems (including the GNU system).  If both
+difference in POSIX systems (including @gnusystems{}).  If both
 @samp{+} and @samp{b} are specified, they can appear in either order.
 @xref{Binary Streams}.
 
@@ -2174,7 +2174,7 @@ The @samp{%p} conversion prints a pointer value.  The corresponding
 argument must be of type @code{void *}.  In practice, you can use any
 type of pointer.
 
-In the GNU system, non-null pointers are printed as unsigned integers,
+In @theglibc{}, non-null pointers are printed as unsigned integers,
 as if a @samp{%#x} conversion were used.  Null pointers print as
 @samp{(nil)}.  (Pointers might print differently in other systems.)
 
@@ -4045,7 +4045,7 @@ descriptor is not usually advisable.
 @node Binary Streams
 @section Text and Binary Streams
 
-The GNU system and other POSIX-compatible operating systems organize all
+@gnusystems{} and other POSIX-compatible operating systems organize all
 files as uniform sequences of characters.  However, some other systems
 make a distinction between files containing text and files containing
 binary data, and the input and output facilities of @w{ISO C} provide for
@@ -4108,7 +4108,7 @@ restrictions that text streams sometimes have.
 
 The @dfn{file position} of a stream describes where in the file the
 stream is currently reading or writing.  I/O on the stream advances the
-file position through the file.  In the GNU system, the file position is
+file position through the file.  On @gnusystems{}, the file position is
 represented as an integer, which counts the number of bytes from the
 beginning of the file.  @xref{File Position}.
 
@@ -4301,7 +4301,7 @@ An alias for @code{SEEK_END}.
 @node Portable Positioning
 @section Portable File-Position Functions
 
-On the GNU system, the file position is truly a character count.  You
+On @gnusystems{}, the file position is truly a character count.  You
 can specify any character count value as an argument to @code{fseek} or
 @code{fseeko} and get reliable results for any random access file.
 However, some @w{ISO C} systems do not represent file positions in this
@@ -4361,7 +4361,7 @@ This is the type of an object that can encode information about the
 file position of a stream, for use by the functions @code{fgetpos} and
 @code{fsetpos}.
 
-In the GNU system, @code{fpos_t} is an opaque data structure that
+In @theglibc{}, @code{fpos_t} is an opaque data structure that
 contains internal data to represent file offset and conversion state
 information.  In other systems, it might have a different internal
 representation.
@@ -4378,7 +4378,7 @@ This is the type of an object that can encode information about the
 file position of a stream, for use by the functions @code{fgetpos64} and
 @code{fsetpos64}.
 
-In the GNU system, @code{fpos64_t} is an opaque data structure that
+In @theglibc{}, @code{fpos64_t} is an opaque data structure that
 contains internal data to represent file offset and conversion state
 information.  In other systems, it might have a different internal
 representation.
@@ -4578,7 +4578,7 @@ This function is declared in the @file{stdio_ext.h} header.
 been known to be so thoroughly fixated on line-oriented input and output
 that flushing a line buffered stream causes a newline to be written!
 Fortunately, this ``feature'' seems to be becoming less common.  You do
-not need to worry about this in the GNU system.
+not need to worry about this with @theglibc{}.
 
 In some situations it might be useful to not flush the output pending
 for a stream but instead simply forget it.  If transmission is costly

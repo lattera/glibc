@@ -42,8 +42,8 @@
  *	than 1 ulps (units in the last place)
  */
 
-#include "math.h"
-#include "math_private.h"
+#include <math.h>
+#include <math_private.h>
 
 static const long double two600 = 0x1.0p+600L;
 static const long double two1022 = 0x1.0p+1022L;

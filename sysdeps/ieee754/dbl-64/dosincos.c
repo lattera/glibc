@@ -36,7 +36,7 @@
 #include "mydefs.h"
 #include <dla.h>
 #include "dosincos.h"
-#include "math_private.h"
+#include <math_private.h>
 
 #ifndef SECTION
 # define SECTION

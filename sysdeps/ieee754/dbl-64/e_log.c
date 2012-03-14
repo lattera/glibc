@@ -38,7 +38,7 @@
 #include <dla.h>
 #include "mpa.h"
 #include "MathLib.h"
-#include "math_private.h"
+#include <math_private.h>
 
 #ifndef SECTION
 # define SECTION

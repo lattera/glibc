@@ -1,4 +1,4 @@
-# Copyright (C) 1996-1999,2001,2002,2006,2007,2009,2011
+# Copyright (C) 1996-1999,2001,2002,2006,2007,2009,2011,2012
 #	Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
@@ -46,10 +46,6 @@ mo-installed = $(inst_msgcatdir)/%/LC_MESSAGES/$(domainname).mo
 
 # Files to install: a $(domainname).mo file for each language.
 install-others = $(LINGUAS:%=$(mo-installed))
-
-# Files to distribute: all the source and compiled binary translation files.
-distribute = $(ALL_LINGUAS:=.po) $(BROKEN_LINGUAS:=.po) $(ALL_LINGUAS:=.mo) \
-	     libc.pot header.pot
 
 
 include ../Rules

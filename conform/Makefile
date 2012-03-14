@@ -20,9 +20,6 @@
 #
 subdir	:= conform
 
-distribute = conformtest.pl $(wildcard data/*.h-data) \
-	   $(wildcard data/*/*.h-data)
-
 include ../Rules
 
 ifneq (yes,$(fast-check))

@@ -32,8 +32,8 @@ static char rcsid[] = "$NetBSD: e_sinh.c,v 1.7 1995/05/10 20:46:13 jtc Exp $";
  *	only sinh(0)=0 is exact for finite x.
  */
 
-#include "math.h"
-#include "math_private.h"
+#include <math.h>
+#include <math_private.h>
 
 static const double one = 1.0, shuge = 1.0e307;
 

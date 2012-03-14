@@ -17,8 +17,8 @@
    License along with the GNU C Library; see the file COPYING.LIB.  If
    not, see <http://www.gnu.org/licenses/>.  */
 
-#include "math.h"
-#include "math_private.h"
+#include <math.h>
+#include <math_private.h>
 
 static const float twom27   = 7.4505806e-09;
 static const float dot3     = 3.0000001e-01;

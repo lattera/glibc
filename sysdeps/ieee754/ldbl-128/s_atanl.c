@@ -59,7 +59,7 @@
     <http://www.gnu.org/licenses/>.  */
 
 
-#include "math_private.h"
+#include <math_private.h>
 
 /* arctan(k/8), k = 0, ..., 82 */
 static const long double atantbl[84] = {
