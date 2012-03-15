@@ -17,10 +17,10 @@ while (0)
 
 #include_next <math_private.h>
 
-# include <fpu_control.h>
+#include <fpu_control.h>
 
-# undef libc_feholdexcept_setround_53bit
-# define libc_feholdexcept_setround_53bit(e, r)	\
+#undef libc_feholdexcept_setround_53bit
+#define libc_feholdexcept_setround_53bit(e, r)	\
   do						\
     {						\
       fpu_control_t cw;				\
@@ -32,8 +32,8 @@ while (0)
     }						\
   while (0)
 
-# undef libc_feupdateenv_53bit
-# define libc_feupdateenv_53bit(e)		\
+#undef libc_feupdateenv_53bit
+#define libc_feupdateenv_53bit(e)		\
   do						\
     {						\
       fpu_control_t cw;				\
