@@ -1282,10 +1282,10 @@ ildouble: 1
 ldouble: 1
 
 # sin
-Test "sin (-0x1p65) == 0.0471838762123546738051061498057":
+Test "sin (-0x1p65) == 0.047183876212354673805106149805700013943218":
 float: 1
 ifloat: 1
-Test "sin (0x1p65) == -0.0471838762123546738051061498057":
+Test "sin (0x1p65) == -0.047183876212354673805106149805700013943218":
 float: 1
 ifloat: 1
 
@@ -1432,10 +1432,10 @@ float: 1
 ifloat: 1
 
 # sincos
-Test "sincos (-0x1p65, &sin_res, &cos_res) puts 0.0471838762123546738051061498057 in sin_res":
+Test "sincos (-0x1p65, &sin_res, &cos_res) puts 0.047183876212354673805106149805700013943218 in sin_res":
 float: 1
 ifloat: 1
-Test "sincos (0x1p65, &sin_res, &cos_res) puts -0.0471838762123546738051061498057 in sin_res":
+Test "sincos (0x1p65, &sin_res, &cos_res) puts -0.047183876212354673805106149805700013943218 in sin_res":
 float: 1
 ifloat: 1
 Test "sincos (M_PI_6l*2.0, &sin_res, &cos_res) puts 0.5 in cos_res":
