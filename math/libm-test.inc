@@ -2113,7 +2113,7 @@ cos_test (void)
   TEST_f_f (cos, 0.75L, 0.731688868873820886311838753000084544L);
 
 #ifndef TEST_LDOUBLE
-  /* Enable for long double once x86 and x86-64 implementation is fixed.  */
+  /* Enable for long double once x86 and x86-64 implementations are fixed.  */
   TEST_f_f (cos, 0x1p65, 0.998886220660580136106421721793L);
   TEST_f_f (cos, -0x1p65, 0.998886220660580136106421721793L);
 #endif
@@ -6396,7 +6396,7 @@ sin_test (void)
   TEST_f_f (sin, 0.75L, 0.681638760023334166733241952779893935L);
 
 #ifndef TEST_LDOUBLE
-  /* Enable for long double once x86 and x86-64 implementation is fixed.  */
+  /* Enable for long double once x86 and x86-64 implementations are fixed.  */
   TEST_f_f (sin, 0x1p65, -0.0471838762123546738051061498057L);
   TEST_f_f (sin, -0x1p65, 0.0471838762123546738051061498057L);
 #endif
@@ -6576,7 +6576,7 @@ sincos_test (void)
   TEST_extra (sincos, 0.75L, 0.681638760023334166733241952779893935L, 0.731688868873820886311838753000084544L);
 
 #ifndef TEST_LDOUBLE
-  /* Enable for long double once x86 and x86-64 implementation is fixed.  */
+  /* Enable for long double once x86 and x86-64 implementations are fixed.  */
   TEST_extra (sincos, 0x1p65, -0.0471838762123546738051061498057L, 0.998886220660580136106421721793L);
   TEST_extra (sincos, -0x1p65, 0.0471838762123546738051061498057L, 0.998886220660580136106421721793L);
 #endif
@@ -6783,6 +6783,13 @@ tan_test (void)
 
   TEST_f_f (tan, M_PI_4l, 1);
   TEST_f_f (tan, 0.75L, 0.931596459944072461165202756573936428L);
+
+#ifdef TEST_FLOAT
+  /* Enable for double and long double once x86 and x86-64
+     implementations are fixed.  */
+  TEST_f_f (tan, 0x1p65, -0.04723648723590479467984142193L);
+  TEST_f_f (tan, -0x1p65, 0.04723648723590479467984142193L);
+#endif
 
   END (tan);
 }

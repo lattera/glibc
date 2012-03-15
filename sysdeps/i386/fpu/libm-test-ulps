@@ -1518,14 +1518,16 @@ ldouble: 7
 # tan
 Test "tan (pi/4) == 1":
 double: 1
+float: 1
 idouble: 1
+ifloat: 1
 
 # tan_downward
 Test "tan_downward (1) == 1.5574077246549022305069748074583601730873":
 double: 1
-float: 1
+float: 2
 idouble: 1
-ifloat: 1
+ifloat: 2
 Test "tan_downward (10) == 0.6483608274590866712591249330098086768169":
 float: 1
 ifloat: 1
@@ -1569,6 +1571,8 @@ Test "tan_tonearest (1) == 1.5574077246549022305069748074583601730873":
 ildouble: 1
 ldouble: 1
 Test "tan_tonearest (2) == -2.1850398632615189916433061023136825434320":
+float: 1
+ifloat: 1
 ildouble: 1
 ldouble: 1
 Test "tan_tonearest (6) == -0.2910061913847491570536995888681755428312":
@@ -1629,6 +1633,8 @@ ldouble: 1
 
 # tan_upward
 Test "tan_upward (1) == 1.5574077246549022305069748074583601730873":
+float: 1
+ifloat: 1
 ildouble: 1
 ldouble: 1
 Test "tan_upward (10) == 0.6483608274590866712591249330098086768169":
@@ -2334,17 +2340,21 @@ ldouble: 27
 
 Function: "tan":
 double: 1
-idouble: 1
-
-Function: "tan_downward":
-double: 1
 float: 1
 idouble: 1
 ifloat: 1
+
+Function: "tan_downward":
+double: 1
+float: 2
+idouble: 1
+ifloat: 2
 ildouble: 1
 ldouble: 1
 
 Function: "tan_tonearest":
+float: 1
+ifloat: 1
 ildouble: 1
 ldouble: 1
 
