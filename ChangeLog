@@ -1,5 +1,12 @@
 2012-03-15  Andreas Jaeger  <aj@suse.de>
 
+	[BZ #13658]
+	* math/libm-test.inc (cos_test): Add more test cases.
+	(sin_test): Likewise.
+	(sincos_test): Likewise.
+
+2012-03-15  Andreas Jaeger  <aj@suse.de>
+
 	[BZ #13837]
 	* math/libm-test.inc (cos_test): Add a test case for large input
 	value.
