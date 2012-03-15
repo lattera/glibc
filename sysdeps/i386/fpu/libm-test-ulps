@@ -559,13 +559,18 @@ ldouble: 1
 # cos_downward
 Test "cos_downward (1) == 0.5403023058681397174009366074429766037323":
 double: 1
+float: 2
 idouble: 1
+ifloat: 2
 ildouble: 1
 ldouble: 1
 Test "cos_downward (10) == -0.8390715290764524522588639478240648345199":
 double: 1
 float: 1
 idouble: 1
+ifloat: 1
+Test "cos_downward (2) == -0.4161468365471423869975682295007621897660":
+float: 1
 ifloat: 1
 Test "cos_downward (3) == -0.9899924966004454572715727947312613023937":
 double: 1
@@ -584,6 +589,8 @@ ifloat: 1
 ildouble: 1
 ldouble: 1
 Test "cos_downward (8) == -0.1455000338086135258688413818311946826093":
+float: 1
+ifloat: 1
 ildouble: 1
 ldouble: 1
 Test "cos_downward (9) == -0.9111302618846769883682947111811653112463":
@@ -595,6 +602,9 @@ ildouble: 1
 ldouble: 1
 
 # cos_tonearest
+Test "cos_tonearest (2) == -0.4161468365471423869975682295007621897660":
+float: 1
+ifloat: 1
 Test "cos_tonearest (8) == -0.1455000338086135258688413818311946826093":
 ildouble: 1
 ldouble: 1
@@ -774,6 +784,9 @@ ildouble: 1
 ldouble: 1
 
 # csin
+Test "Imaginary part of: csin (-2 - 3 i) == -9.15449914691142957346729954460983256 + 4.16890695996656435075481305885375484 i":
+float: 1
+ifloat: 1
 Test "Real part of: csin (0.75 + 1.25 i) == 1.28722291002649188575873510790565441 + 1.17210635989270256101081285116138863 i":
 float: 1
 ifloat: 1
@@ -1268,19 +1281,31 @@ idouble: 1
 ildouble: 1
 ldouble: 1
 
+# sin
+Test "sin (-0x1p65) == 0.0471838762123546738051061498057":
+float: 1
+ifloat: 1
+Test "sin (0x1p65) == -0.0471838762123546738051061498057":
+float: 1
+ifloat: 1
+
 # sin_downward
 Test "sin_downward (1) == 0.8414709848078965066525023216302989996226":
 ildouble: 1
 ldouble: 1
 Test "sin_downward (10) == -0.5440211108893698134047476618513772816836":
 double: 1
+float: 1
 idouble: 1
+ifloat: 1
 ildouble: 1
 ldouble: 1
 Test "sin_downward (2) == 0.9092974268256816953960198659117448427023":
 double: 1
 idouble: 1
 Test "sin_downward (3) == 0.1411200080598672221007448028081102798469":
+float: 1
+ifloat: 1
 ildouble: 1
 ldouble: 1
 Test "sin_downward (4) == -0.7568024953079282513726390945118290941359":
@@ -1315,6 +1340,9 @@ ildouble: 1
 ldouble: 1
 
 # sin_tonearest
+Test "sin_tonearest (1) == 0.8414709848078965066525023216302989996226":
+float: 1
+ifloat: 1
 Test "sin_tonearest (10) == -0.5440211108893698134047476618513772816836":
 ildouble: 1
 ldouble: 1
@@ -1399,8 +1427,17 @@ ifloat: 1
 Test "sin_upward (8) == 0.9893582466233817778081235982452886721164":
 float: 1
 ifloat: 1
+Test "sin_upward (9) == 0.4121184852417565697562725663524351793439":
+float: 1
+ifloat: 1
 
 # sincos
+Test "sincos (-0x1p65, &sin_res, &cos_res) puts 0.0471838762123546738051061498057 in sin_res":
+float: 1
+ifloat: 1
+Test "sincos (0x1p65, &sin_res, &cos_res) puts -0.0471838762123546738051061498057 in sin_res":
+float: 1
+ifloat: 1
 Test "sincos (M_PI_6l*2.0, &sin_res, &cos_res) puts 0.5 in cos_res":
 double: 1
 float: 1
@@ -1986,13 +2023,15 @@ ldouble: 1
 
 Function: "cos_downward":
 double: 1
-float: 1
+float: 2
 idouble: 1
-ifloat: 1
+ifloat: 2
 ildouble: 1
 ldouble: 1
 
 Function: "cos_tonearest":
+float: 1
+ifloat: 1
 ildouble: 1
 ldouble: 1
 
@@ -2225,6 +2264,10 @@ ifloat: 1
 ildouble: 1
 ldouble: 1
 
+Function: "sin":
+float: 1
+ifloat: 1
+
 Function: "sin_downward":
 double: 1
 float: 1
@@ -2234,6 +2277,8 @@ ildouble: 1
 ldouble: 1
 
 Function: "sin_tonearest":
+float: 1
+ifloat: 1
 ildouble: 1
 ldouble: 1
 
