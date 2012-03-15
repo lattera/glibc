@@ -10,7 +10,7 @@
 	Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #13658]
-	* sysdeps/x86_64/fpu/s_sincos.S: Delete Remove files so that
+	* sysdeps/x86_64/fpu/s_sincos.S: Delete files so that
 	x86-64 and i386 use the iee754/dbl-64 sin and cos implementation.
 	* sysdeps/i386/fpu/branred.c: Likewise.
 	* sysdeps/i386/fpu/dosincos.c: Likewise.
