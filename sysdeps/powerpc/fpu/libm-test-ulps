@@ -1119,10 +1119,7 @@ ildouble: 1
 ldouble: 1
 Test "hypot (0x1.234566p-126, 0x1.234566p-126) == 1.891441686191081936598531534017449451173e-38":
 double: 1
-float: 6
 idouble: 1
-Test "hypot (0x3p125, 0x4p125) == 0x5p125":
-float: 1
 Test "hypot (12.4, -0.7) == 12.419742348374220601176836866763271":
 double: 1
 float: 1
@@ -2247,7 +2244,7 @@ ldouble: 1
 
 Function: "hypot":
 double: 1
-float: 6
+float: 1
 idouble: 1
 ifloat: 1
 ildouble: 1
