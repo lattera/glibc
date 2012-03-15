@@ -1029,9 +1029,9 @@ Test "j1 (0.75) == 0.349243602174862192523281016426251335":
 double: 1
 idouble: 1
 Test "j1 (10.0) == 0.0434727461688614366697487680258592883":
-double: 1
+double: 2
 float: 1
-idouble: 1
+idouble: 2
 ifloat: 1
 ildouble: 1
 ldouble: 1
@@ -1078,9 +1078,9 @@ Test "jn (1, 0.75) == 0.349243602174862192523281016426251335":
 double: 1
 idouble: 1
 Test "jn (1, 10.0) == 0.0434727461688614366697487680258592883":
-double: 1
+double: 2
 float: 1
-idouble: 1
+idouble: 2
 ifloat: 1
 ildouble: 1
 ldouble: 1
@@ -1797,9 +1797,9 @@ float: 2
 idouble: 1
 ifloat: 2
 Test "yn (10, 10.0) == -0.359814152183402722051986577343560609":
-double: 1
+double: 2
 float: 3
-idouble: 1
+idouble: 2
 ifloat: 3
 Test "yn (10, 2.0) == -129184.542208039282635913145923304214":
 double: 2
@@ -2168,9 +2168,9 @@ ildouble: 1
 ldouble: 1
 
 Function: "j1":
-double: 1
+double: 2
 float: 1
-idouble: 1
+idouble: 2
 ifloat: 1
 ildouble: 1
 ldouble: 1
