@@ -1,5 +1,25 @@
 2012-03-15  Andreas Jaeger  <aj@suse.de>
 
+	[BZ #13852]
+	* sysdeps/i386/fpu/e_rem_pio2f.c: Delete so that i386 uses the
+	ieee754/flt-32 implementation for sin, cos and sincos.
+	* sysdeps/i386/fpu/k_rem_pio2f.c: Likewise.
+	* sysdeps/i386/fpu/s_cosf.S: Likewise.
+	* sysdeps/i386/fpu/s_sincosf.S: Likewise.
+	* sysdeps/i386/fpu/s_sinf.S: Likewise.
+	* sysdeps/i386/fpu/s_tanf.S: Delete so that i386 uses the
+	ieee754/flt-32 implementation for tan.
+
+	* math/libm-test.inc (cos_test): Enable some large input tests for
+	float as well
+	(sin_test): Likewise.
+	(sincos_test): Likewise.
+	(tan_test): Add tests for large input.
+
+	* sysdeps/i386/fpu/libm-test-ulps: Update.
+
+2012-03-15  Andreas Jaeger  <aj@suse.de>
+
 	[BZ #13658]
 	* math/libm-test.inc (cos_test): Add more test cases.
 	(sin_test): Likewise.
