@@ -918,6 +918,42 @@ idouble: 1
 Test "Imaginary part of: csqrt (0 - 1 i) == M_SQRT_2_2 - M_SQRT_2_2 i":
 double: 1
 idouble: 1
+Test "Imaginary part of: csqrt (0x1.fffffep+127 + 1.0 i) == 1.844674352395372953599975585936590505260e+19 + 2.710505511993121390769065968615872097053e-20 i":
+float: 1
+ifloat: 1
+Test "Real part of: csqrt (0x1.fffffffffffffp+1023 + 0x1.fffffffffffffp+1023 i) == 1.473094556905565378990473658199034571917e+154 + 6.101757441282702188537080005372547713595e+153 i":
+double: 1
+idouble: 1
+Test "Imaginary part of: csqrt (0x1.fffffffffffffp+1023 + 0x1.fffffffffffffp+1023 i) == 1.473094556905565378990473658199034571917e+154 + 6.101757441282702188537080005372547713595e+153 i":
+double: 1
+idouble: 1
+Test "Imaginary part of: csqrt (0x1.fffffffffffffp+1023 + 0x1p+1023 i) == 1.379778091031440685006200821918878702861e+154 + 3.257214233483129514781233066898042490248e+153 i":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "Real part of: csqrt (0x1p-1073 + 0x1p-1073 i) == 3.453664695497464982856905711457966660085e-162 + 1.430554756764195530630723976279903095110e-162 i":
+double: 1
+idouble: 1
+Test "Imaginary part of: csqrt (0x1p-1073 + 0x1p-1073 i) == 3.453664695497464982856905711457966660085e-162 + 1.430554756764195530630723976279903095110e-162 i":
+double: 1
+idouble: 1
+Test "Real part of: csqrt (0x1p-147 + 0x1p-147 i) == 8.225610928685557596194006925540350401606e-23 + 3.407159605465907500737319471202779419102e-23 i":
+double: 1
+idouble: 1
+Test "Imaginary part of: csqrt (0x1p-147 + 0x1p-147 i) == 8.225610928685557596194006925540350401606e-23 + 3.407159605465907500737319471202779419102e-23 i":
+double: 1
+idouble: 1
+Test "Real part of: csqrt (0x1p-149 + 0x1p-149 i) == 4.112805464342778798097003462770175200803e-23 + 1.703579802732953750368659735601389709551e-23 i":
+double: 1
+float: 2
+idouble: 1
+ifloat: 2
+Test "Imaginary part of: csqrt (0x1p-149 + 0x1p-149 i) == 4.112805464342778798097003462770175200803e-23 + 1.703579802732953750368659735601389709551e-23 i":
+double: 1
+float: 2
+idouble: 1
+ifloat: 2
 
 # ctan
 Test "Real part of: ctan (-2 - 3 i) == 0.376402564150424829275122113032269084e-2 - 1.00323862735360980144635859782192726 i":
@@ -1081,6 +1117,12 @@ float: 1
 ifloat: 1
 ildouble: 1
 ldouble: 1
+Test "hypot (0x1.234566p-126, 0x1.234566p-126) == 1.891441686191081936598531534017449451173e-38":
+double: 1
+float: 6
+idouble: 1
+Test "hypot (0x3p125, 0x4p125) == 0x5p125":
+float: 1
 Test "hypot (12.4, -0.7) == 12.419742348374220601176836866763271":
 double: 1
 float: 1
@@ -2101,17 +2143,17 @@ ldouble: 1
 
 Function: Real part of "csqrt":
 double: 1
-float: 1
+float: 2
 idouble: 1
-ifloat: 1
+ifloat: 2
 ildouble: 1
 ldouble: 1
 
 Function: Imaginary part of "csqrt":
 double: 1
-float: 1
+float: 2
 idouble: 1
-ifloat: 1
+ifloat: 2
 ildouble: 1
 ldouble: 1
 
@@ -2205,7 +2247,7 @@ ldouble: 1
 
 Function: "hypot":
 double: 1
-float: 1
+float: 6
 idouble: 1
 ifloat: 1
 ildouble: 1
