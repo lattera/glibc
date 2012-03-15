@@ -1,5 +1,63 @@
 2012-03-14  David S. Miller  <davem@davemloft.net>
 
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_ceil-vis3.S: New file.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_ceil.S: New file.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_ceilf-vis3.S: New file.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_ceilf.S: New file.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_finite-vis3.S: New file.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_finite.S: New file.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_finitef-vis3.S: New file.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_finitef.S: New file.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_floor-vis3.S: New file.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_floor.S: New file.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_floorf-vis3.S: New file.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_floorf.S: New file.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_isinf-vis3.S: New file.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_isinf.S: New file.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_isinff-vis3.S: New file.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_isinff.S: New file.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_isnan-vis3.S: New file.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_isnan.S: New file.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_isnanf-vis3.S: New file.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_isnanf.S: New file.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_lrint-vis3.S: New file.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_lrint.S: New file.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_lrintf-vis3.S: New file.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_lrintf.S: New file.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_rint-vis3.S: New file.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_rint.S: New file.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_rintf-vis3.S: New file.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_rintf.S: New file.
+	* sysdeps/sparc/sparc64/fpu/multiarch/Makefile: Add new VIS3 routines.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_ceil-vis3.S: New file.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_ceil.S: New file.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_ceilf-vis3.S: New file.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_ceilf.S: New file.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_fabs-vis3.S: New file.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_fabs.S: New file.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_fabsf-vis3.S: New file.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_fabsf.S: New file.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_floor-vis3.S: New file.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_floor.S: New file.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_floorf-vis3.S: New file.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_floorf.S: New file.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_llrint-vis3.S: New file.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_llrint.S: New file.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_llrintf-vis3.S: New file.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_llrintf.S: New file.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_rint-vis3.S: New file.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_rint.S: New file.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_rintf-vis3.S: New file.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_rintf.S: New file.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/w_sqrt-vis3.S: New file.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/w_sqrt.S: New file.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/w_sqrtf-vis3.S: New file.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/w_sqrtf.S: New file.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/Makefile: Add new VIS3 routines.
+
+	* sysdeps/sparc/sparc32/sparcv9/fpu/unix/sysv/linux/multiarch/Implies:
+	New file.
+
 	* sysdeps/sparc/fpu/libm-test-ulps: Update.
 
 	* sysdeps/sparc/configure.in: New file.
