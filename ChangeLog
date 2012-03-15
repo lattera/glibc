@@ -1,5 +1,7 @@
 2012-03-14  David S. Miller  <davem@davemloft.net>
 
+	* sysdeps/sparc/fpu/libm-test-ulps: Update.
+
 	* sysdeps/sparc/configure.in: New file.
 	* sysdeps/sparc/configure: Generate.
 	* configure.in (libc_cv_sparc_as_vis3): Substitute.
