@@ -1,3 +1,32 @@
+2012-03-15  David S. Miller  <davem@davemloft.net>
+
+	* sysdeps/sparc/sparc64/fpu/s_fmax.S: New file.
+	* sysdeps/sparc/sparc64/fpu/s_fmaxf.S: New file.
+	* sysdeps/sparc/sparc64/fpu/s_fmin.S: New file.
+	* sysdeps/sparc/sparc64/fpu/s_fminf.S: New file.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/s_fmax.S: New file.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/s_fmaxf.S: New file.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/s_fmin.S: New file.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/s_fminf.S: New file.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_fmax.S: New file.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_fmaxf-vis3.S: New file.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_fmaxf.S: New file.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_fmin-vis3.S: New file.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_fmin.S: New file.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_fminf-vis3.S: New file.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_fminf.S: New file.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_fmax-vis3.S: New file.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_fmax.S: New file.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_fmaxf-vis3.S: New file.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_fmaxf.S: New file.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_fmin-vis3.S: New file.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_fmin.S: New file.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_fminf-vis3.S: New file.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_fminf.S: New file.
+	* sysdeps/sparc/sparc64/fpu/multiarch/Makefile: Add new vis3
+	fmin/fmax sysdep routines.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/Makefile: Likewise.
+
 2012-03-14  David S. Miller  <davem@davemloft.net>
 
 	* sysdeps/sparc/sparc64/fpu/multiarch/s_ceil-vis3.S: New file.
