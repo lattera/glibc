@@ -1,7 +1,7 @@
-/* float copysign function, sparc64 version.
-   Copyright (C) 2012 Free Software Foundation, Inc.
+/* Float absolute value, sparc32 vis3 version.
+   Copyright (C) 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by David S. Miller <davem@davemloft.net>, 2012.
+   Contributed by Jakub Jelinek <jakub@redhat.com>, 2006.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -19,12 +19,8 @@
 
 #include <sysdep.h>
 
-ENTRY (__copysignf)
-	fzeros	%f7
-	fnegs	%f7, %f7
-	fands	%f3, %f7, %f9
-	fandnot2s %f1, %f7, %f1
+ENTRY (__fabsf_vis3)
+	movwtos	%o0, %f0
 	retl
-	 fors	%f1, %f9, %f0
-END (__copysignf)
-weak_alias (__copysignf, copysignf)
+	 fabss	%f0, %f0
+END (__fabsf_vis3)

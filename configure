@@ -616,6 +616,7 @@ shared
 static
 ldd_rewrite_script
 use_ldconfig
+libc_cv_sparc_as_vis3
 libc_cv_as_i686
 libc_cv_cc_fma4
 libc_cv_cc_novzeroupper
@@ -7625,6 +7626,7 @@ $as_echo "$as_me: WARNING: *** During \"make install\" old headers from glibc 2.
   { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: *** be removed." >&5
 $as_echo "$as_me: WARNING: *** be removed." >&2;}
 fi
+
 
 
 

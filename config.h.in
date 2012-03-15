@@ -90,6 +90,9 @@
 /* Defined on SPARC if GCC emits GOTDATA relocations.  */
 #undef  HAVE_GCC_GOTDATA
 
+/* Define on SPARC if AS supports VIS3 instructions.  */
+#undef  HAVE_AS_VIS3_SUPPORT
+
 /* Define if the linker supports the -z combreloc option.  */
 #undef	HAVE_Z_COMBRELOC
 

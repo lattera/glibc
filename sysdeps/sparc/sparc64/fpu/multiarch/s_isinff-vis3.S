@@ -1,7 +1,6 @@
-/* float copysign function, sparc64 version.
+/* isinff().  sparc64 vis3 version.
    Copyright (C) 2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by David S. Miller <davem@davemloft.net>, 2012.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -19,12 +18,13 @@
 
 #include <sysdep.h>
 
-ENTRY (__copysignf)
-	fzeros	%f7
-	fnegs	%f7, %f7
-	fands	%f3, %f7, %f9
-	fandnot2s %f1, %f7, %f1
+ENTRY (__isinff_vis3)
+	movstouw %f1, %g1
+	sethi	%hi(0x7f800000), %o2
+	sll	%g1, 1, %o4
+	srl	%o4, 1, %o5
+	sra	%g1, 30, %o0
+	xor	%o5, %o2, %o3
 	retl
-	 fors	%f1, %f9, %f0
-END (__copysignf)
-weak_alias (__copysignf, copysignf)
+	 movrne	%o3, %g0, %o0
+END (__isinff_vis3)

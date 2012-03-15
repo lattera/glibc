@@ -1,4 +1,4 @@
-/* float copysign function, sparc64 version.
+/* float copysign function, sparc32 vis3 version.
    Copyright (C) 2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by David S. Miller <davem@davemloft.net>, 2012.
@@ -19,12 +19,11 @@
 
 #include <sysdep.h>
 
-ENTRY (__copysignf)
-	fzeros	%f7
-	fnegs	%f7, %f7
-	fands	%f3, %f7, %f9
-	fandnot2s %f1, %f7, %f1
+ENTRY (__copysignf_vis3)
+	sethi	%hi(0x80000000), %g1
+	and	%o1, %g1, %o4
+	andn	%o0, %g1, %o0
+	or	%o0, %o4, %o0
 	retl
-	 fors	%f1, %f9, %f0
-END (__copysignf)
-weak_alias (__copysignf, copysignf)
+	 movwtos %o0, %f0
+END (__copysignf_vis3)

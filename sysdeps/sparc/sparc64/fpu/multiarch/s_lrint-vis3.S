@@ -1,4 +1,4 @@
-/* float copysign function, sparc64 version.
+/* lrint(), sparc64 vis3 version.
    Copyright (C) 2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by David S. Miller <davem@davemloft.net>, 2012.
@@ -19,12 +19,34 @@
 
 #include <sysdep.h>
 
-ENTRY (__copysignf)
-	fzeros	%f7
-	fnegs	%f7, %f7
-	fands	%f3, %f7, %f9
-	fandnot2s %f1, %f7, %f1
+	/* VIS instructions are used to facilitate the formation of
+	   easier constants, and the propagation of the sign bit.  */
+
+#define TWO_FIFTYTWO	0x43300000		/* 2**52 */
+
+#define ZERO		%f10			/* 0.0 */
+#define SIGN_BIT	%f12			/* -0.0 */
+
+ENTRY (__lrint_vis3)
+	sethi	%hi(TWO_FIFTYTWO), %o2
+	sllx	%o2, 32, %o2
+	fzero	ZERO
+
+	fnegd	ZERO, SIGN_BIT
+	movxtod	%o2, %f16
+	fabsd	%f0, %f14
+
+	fcmpd	%fcc3, %f14, %f16
+
+	fmovduge %fcc3, ZERO, %f16
+	fand	%f0, SIGN_BIT, SIGN_BIT
+
+	for	%f16, SIGN_BIT, %f16
+	faddd	%f0, %f16, %f6
+	fsubd	%f6, %f16, %f0
+	fabsd	%f0, %f0
+	for	%f0, SIGN_BIT, %f0
+	fdtox	%f0, %f4
 	retl
-	 fors	%f1, %f9, %f0
-END (__copysignf)
-weak_alias (__copysignf, copysignf)
+	 movdtox %f4, %o0
+END (__lrint_vis3)

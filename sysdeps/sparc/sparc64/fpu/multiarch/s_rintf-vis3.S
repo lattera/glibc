@@ -1,4 +1,4 @@
-/* float copysign function, sparc64 version.
+/* Round float to int floating-point values, sparc64 vis3 version.
    Copyright (C) 2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by David S. Miller <davem@davemloft.net>, 2012.
@@ -19,12 +19,31 @@
 
 #include <sysdep.h>
 
-ENTRY (__copysignf)
-	fzeros	%f7
-	fnegs	%f7, %f7
-	fands	%f3, %f7, %f9
-	fandnot2s %f1, %f7, %f1
+	/* VIS instructions are used to facilitate the formation of
+	   easier constants, and the propagation of the sign bit.  */
+
+#define TWO_TWENTYTHREE	0x4b000000		/* 2**23 */
+
+#define ZERO		%f10			/* 0.0 */
+#define SIGN_BIT	%f12			/* -0.0 */
+
+ENTRY (__rintf_vis3)
+	sethi	%hi(TWO_TWENTYTHREE), %o2
+	fzeros	ZERO
+
+	fnegs	ZERO, SIGN_BIT
+	movwtos	%o2, %f16
+	fabss	%f1, %f14
+
+	fcmps	%fcc3, %f14, %f16
+
+	fmovsuge %fcc3, ZERO, %f16
+	fands	%f1, SIGN_BIT, SIGN_BIT
+
+	fors	%f16, SIGN_BIT, %f16
+	fadds	%f1, %f16, %f5
+	fsubs	%f5, %f16, %f0
+	fabss	%f0, %f0
 	retl
-	 fors	%f1, %f9, %f0
-END (__copysignf)
-weak_alias (__copysignf, copysignf)
+	 fors	%f0, SIGN_BIT, %f0
+END (__rintf_vis3)

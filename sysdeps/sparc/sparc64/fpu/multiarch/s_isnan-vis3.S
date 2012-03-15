@@ -1,7 +1,6 @@
-/* float copysign function, sparc64 version.
+/* isnan().  sparc64 vis3 version.
    Copyright (C) 2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by David S. Miller <davem@davemloft.net>, 2012.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -19,12 +18,13 @@
 
 #include <sysdep.h>
 
-ENTRY (__copysignf)
-	fzeros	%f7
-	fnegs	%f7, %f7
-	fands	%f3, %f7, %f9
-	fandnot2s %f1, %f7, %f1
+ENTRY (__isnan_vis3)
+	movdtox	%f0, %o0
+	sethi	%hi(0x7ff00000), %g1
+	sllx	%g1, 32, %g1
+	sllx	%o0, 1, %o0
+	srlx	%o0, 1, %o0
+	sub	%g1, %o0, %o0
 	retl
-	 fors	%f1, %f9, %f0
-END (__copysignf)
-weak_alias (__copysignf, copysignf)
+	 srlx	%o0, 63, %o0
+END (__isnan_vis3)

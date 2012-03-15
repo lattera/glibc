@@ -34,9 +34,7 @@ sysdep_headers += sys/mount.h sys/acct.h sys/sysctl.h \
 		  bits/a.out.h sys/inotify.h sys/signalfd.h sys/eventfd.h \
 		  sys/timerfd.h sys/fanotify.h bits/eventfd.h bits/inotify.h \
 		  bits/signalfd.h bits/timerfd.h bits/epoll.h \
-		  bits/socket_type.h
-
-install-others += $(inst_includedir)/bits/syscall.h
+		  bits/socket_type.h bits/syscall.h
 
 tests += tst-clone
 
@@ -62,7 +60,7 @@ ifndef syscall-list-includes
 syscall-list-includes := bits/wordsize.h
 endif
 
-$(objpfx)syscall-%.h $(objpfx)syscall-%.d: ../sysdeps/unix/sysv/linux/sys/syscall.h
+$(objpfx)bits/syscall%h $(objpfx)bits/syscall%d: ../sysdeps/unix/sysv/linux/sys/syscall.h
 	$(make-target-directory)
 	{ \
 	 echo '/* Generated at libc build time from kernel syscall list.  */';\
@@ -97,17 +95,11 @@ endif
 	rm -f $(foreach v,$(syscall-list-variants),$(@:.h=.d)-t$(v))
 	mv -f $(@:.h=.d)-t3 $(@:.h=.d)
 
-$(inst_includedir)/bits/syscall.h: $(objpfx)syscall-list.h $(+force)
-	$(make-target-directory)
-	if test -r $@ && cmp -s $< $@; \
-	then echo 'bits/syscall.h unchanged'; \
-	else $(INSTALL_DATA) $< $@; fi
-
 ifndef no_deps
 # Get the generated list of dependencies (probably /usr/include/asm/unistd.h).
--include $(objpfx)syscall-list.d
+-include $(objpfx)bits/syscall.d
 endif
-generated += syscall-list.h syscall-list.d
+generated += bits/syscall.h bits/syscall.d
 endif
 
 ifeq ($(subdir),time)

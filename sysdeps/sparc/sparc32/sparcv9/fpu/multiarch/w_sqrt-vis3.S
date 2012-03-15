@@ -1,7 +1,6 @@
-/* float copysign function, sparc64 version.
+/* sqrt function.  sparc32 v9 vis3 version.
    Copyright (C) 2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by David S. Miller <davem@davemloft.net>, 2012.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -19,12 +18,32 @@
 
 #include <sysdep.h>
 
-ENTRY (__copysignf)
-	fzeros	%f7
-	fnegs	%f7, %f7
-	fands	%f3, %f7, %f9
-	fandnot2s %f1, %f7, %f1
-	retl
-	 fors	%f1, %f9, %f0
-END (__copysignf)
-weak_alias (__copysignf, copysignf)
+ENTRY (__sqrt_vis3)
+	movwtos	%o0, %f0
+	fzero	%f8
+	movwtos	%o1, %f1
+	fcmpd	%f0, %f8
+	fbl	1f
+	 nop
+8:	retl
+	 fsqrtd	%f0, %f0
+1:
+#ifdef SHARED
+	SETUP_PIC_REG_LEAF(o5, g1)
+	sethi	%gdop_hix22(_LIB_VERSION), %g1
+	xor	%g1, %gdop_lox10(_LIB_VERSION), %g1
+	ld	[%o5 + %g1], %g1, %gdop(_LIB_VERSION)
+#else
+	sethi	%hi(_LIB_VERSION), %g1
+	or	%g1, %lo(_LIB_VERSION), %g1
+#endif
+	ld	[%g1], %g1
+	cmp	%g1, -1
+	be	8b
+	 mov	%o0, %o2
+	mov	%o1, %o3
+	mov	26, %o4
+	mov	%o7, %g1
+	call	__kernel_standard
+	 mov	%g1, %o7
+END (__sqrt_vis3)
