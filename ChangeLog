@@ -1,3 +1,41 @@
+2012-03-15  Andreas Jaeger  <aj@suse.de>
+
+	[BZ #13837]
+	* math/libm-test.inc (cos_test): Add a test case for large input
+	value.
+	(sin_test): Likewise.
+	(sincos_test): Likewise.
+
+2012-03-15  Andreas Jaeger  <aj@suse.de>,
+	Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #13658]
+	* sysdeps/x86_64/fpu/s_sincos.S: Delete Remove files so that
+	x86-64 and i386 use the iee754/dbl-64 sin and cos implementation.
+	* sysdeps/i386/fpu/branred.c: Likewise.
+	* sysdeps/i386/fpu/dosincos.c: Likewise.
+	* sysdeps/i386/fpu/mpa.c: Likewise.
+	* sysdeps/i386/fpu/s_cos.S: Likewise.
+	* sysdeps/i386/fpu/s_sin.S: Likewise.
+	* sysdeps/i386/fpu/s_sincos.S: Likewise.
+	* sysdeps/i386/fpu/sincos32.c: Likewise.
+
+	* sysdeps/generic/math_private.h (libc_feholdexcept_setround_53bit):
+	Define.
+	(libc_feupdateenv_53bit): Define.
+	* sysdeps/i386/fpu/math_private.h (libc_feholdexcept_setround_53bit):
+	Define.
+	(libc_feupdateenv_53bit): Define.
+
+	* sysdeps/ieee754/dbl-64/s_sin.c (__sin): Do double arithmetic in
+	53 bit (without extend i386 double precision).
+
+	* math/libm-test.inc (sincos_test): Add tests for large input.
+	(sin): Likewise.
+	(cos): Likewise.
+
+	* sysdeps/i386/fpu/libm-test-ulps: Update ULPs.
+
 2012-03-15  Andreas Schwab  <schwab@linux-m68k.org>
 
 	* sysdeps/powerpc/fpu/libm-test-ulps: Update.
