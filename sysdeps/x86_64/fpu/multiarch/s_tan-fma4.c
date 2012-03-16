@@ -1,5 +1,4 @@
 #define tan __tan_fma4
-#define __branred __branred_fma4
 #define __dbl_mp __dbl_mp_fma4
 #define __mpranred __mpranred_fma4
 #define __mptan __mptan_fma4

@@ -7,10 +7,9 @@ libm-sysdep_routines += e_exp-fma4 e_log-fma4 e_pow-fma4 s_atan-fma4 \
 			e_asin-fma4 e_atan2-fma4 s_sin-fma4 s_tan-fma4 \
 			mplog-fma4 mpa-fma4 slowexp-fma4 slowpow-fma4 \
 			sincos32-fma4 doasin-fma4 dosincos-fma4 \
-			brandred-fma4 halfulp-fma4 mpexp-fma4 \
+			halfulp-fma4 mpexp-fma4 \
 			mpatan2-fma4 mpatan-fma4 mpsqrt-fma4 mptan-fma4
 
-CFLAGS-brandred-fma4.c = -mfma4
 CFLAGS-doasin-fma4.c = -mfma4
 CFLAGS-dosincos-fma4.c = -mfma4
 CFLAGS-e_asin-fma4.c = -mfma4

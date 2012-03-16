@@ -1992,6 +1992,14 @@ if test "$libc_cv_gcc_tls_model_attr" = no; then
   AC_MSG_ERROR([support for the tls_model attribute is required])
 fi
 
+dnl Determine how to disable generation of FMA instructions.
+AC_CACHE_CHECK([for compiler option to disable generation of FMA instructions],
+	       libc_cv_cc_nofma, [dnl
+libc_cv_cc_nofma=
+for opt in -ffp-contract=off -mno-fused-madd; do
+  LIBC_TRY_CC_OPTION([$opt], [libc_cv_cc_nofma=$opt; break])
+done])
+
 if test -n "$submachine"; then
   AC_CACHE_CHECK([for compiler option for CPU variant],
 		 libc_cv_cc_submachine, [dnl
@@ -2135,6 +2143,7 @@ AC_SUBST(libc_cv_cc_avx)
 AC_SUBST(libc_cv_cc_sse2avx)
 AC_SUBST(libc_cv_cc_novzeroupper)
 AC_SUBST(libc_cv_cc_fma4)
+AC_SUBST(libc_cv_cc_nofma)
 AC_SUBST(libc_cv_as_i686)
 AC_SUBST(libc_cv_sparc_as_vis3)
 

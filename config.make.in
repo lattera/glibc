@@ -38,6 +38,7 @@ config-cflags-sse4 = @libc_cv_cc_sse4@
 config-cflags-avx = @libc_cv_cc_avx@
 config-cflags-sse2avx = @libc_cv_cc_sse2avx@
 config-cflags-novzeroupper = @libc_cv_cc_novzeroupper@
+config-cflags-nofma = @libc_cv_cc_nofma@
 config-asflags-i686 = @libc_cv_as_i686@
 
 defines = @DEFINES@

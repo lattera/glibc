@@ -1,3 +1,19 @@
+2012-03-21  Andreas Schwab  <schwab@linux-m68k.org>
+
+	* configure.in (libc_cv_cc_nofma): Check for option to disable
+	generation of FMA instructions.
+	* configure: Regenerate.
+	* config.make.in (config-cflags-nofma): Set from libc_cv_cc_nofma.
+	* sysdeps/ieee754/dbl-64/Makefile: New file.
+	* sysdeps/x86_64/fpu/multiarch/Makefile (libm-sysdep_routines):
+	Remove brandred-fma4.
+	(CFLAGS-brandred-fma4.c): Remove.
+	* sysdeps/x86_64/fpu/multiarch/brandred-fma4.c: Remove.
+	* sysdeps/x86_64/fpu/multiarch/s_sin-fma4.c (__branred): Don't
+	define.
+	* sysdeps/x86_64/fpu/multiarch/s_tan-fma4.c (__branred): Don't
+	define.
+
 2012-03-21  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* stdio-common/_itoa.c: Check _ITOA_NEEDED instead of
