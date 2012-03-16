@@ -1,3 +1,22 @@
+2012-03-16  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/generic/ldconfig.h (FLAG_X8664_LIBX32): New macro.
+	* elf/cache.c (print_entry): Handle FLAG_X8664_LIBX32.
+
+	* sysdeps/unix/sysv/linux/i386/readelflib.c (process_elf_file):
+	Move e_machine check before EI_CLASS check.  Handle x32
+	libraries.  Check EM_IA_64 only if SKIP_EM_IA_64 isn't defined.
+	* sysdeps/unix/sysv/linux/x86_64/readelflib.c: Just define
+	SKIP_EM_IA_64 and include
+	<sysdeps/unix/sysv/linux/i386/readelflib.c>.
+
+	* sysdeps/unix/sysv/linux/x86_64/dl-cache.h:
+	Don't include <sysdeps/unix/sysv/linux/sparc/dl-cache.h>.
+	(add_system_dir): New macro.
+
+	* sysdeps/unix/sysv/linux/x86_64/ldconfig.h
+	(SYSDEP_KNOWN_INTERPRETER_NAMES): Add /libx32/ld-linux-x32.so.2.
+
 2012-03-16  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #2551]
