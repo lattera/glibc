@@ -1,3 +1,7 @@
+2012-03-16  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* time/offtime.c (__offtime): Use time_t on days, rem, y and yg.
+
 2012-03-16  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/ieee754/ldbl-96/t_sincosl.c: Include generator program
