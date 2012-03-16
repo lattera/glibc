@@ -1,3 +1,45 @@
+2012-03-15  David S. Miller  <davem@davemloft.net>
+
+	* sysdeps/sparc/sparc-ifunc.h: New file.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_ceil.S: Use sparc-ifunc.h
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_ceilf.S: Likewise.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_copysign.S: Likewise.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_copysignf.S: Likewise.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_fabs.S: Likewise.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_fabsf.S: Likewise.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_floor.S: Likewise.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_floorf.S: Likewise.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_fmax.S: Likewise.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_fmaxf.S: Likewise.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_fmin.S: Likewise.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_fminf.S: Likewise.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_llrint.S: Likewise.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_llrintf.S: Likewise.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_rint.S: Likewise.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_rintf.S: Likewise.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/w_sqrt.S: Likewise.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/w_sqrtf.S: Likewise.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_ceil.S: Likewise.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_ceilf.S: Likewise.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_finite.S: Likewise.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_finitef.S: Likewise.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_floor.S: Likewise.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_floorf.S: Likewise.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_fmax.S: Likewise.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_fmaxf.S: Likewise.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_fmin.S: Likewise.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_fminf.S: Likewise.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_isinf.S: Likewise.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_isinff.S: Likewise.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_isnan.S: Likewise.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_isnanf.S: Likewise.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_lrint.S: Likewise.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_lrintf.S: Likewise.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_rint.S: Likewise.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_rintf.S: Likewise.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_signbit.S: Likewise.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_signbitf.S: Likewise.
+
 2012-03-15  Andreas Schwab  <schwab@linux-m68k.org>
 
 	* sysdeps/powerpc/fpu/e_hypotf.c: Use double precision instead of
