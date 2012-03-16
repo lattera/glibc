@@ -569,12 +569,18 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
+ildouble: 1
+ldouble: 1
 Test "cos_downward (2) == -0.4161468365471423869975682295007621897660":
 float: 1
 ifloat: 1
+ildouble: 1
+ldouble: 1
 Test "cos_downward (3) == -0.9899924966004454572715727947312613023937":
 double: 1
 idouble: 1
+ildouble: 1
+ldouble: 1
 Test "cos_downward (4) == -0.6536436208636119146391681830977503814241":
 float: 1
 ifloat: 1
@@ -649,6 +655,8 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
+ildouble: 1
+ldouble: 1
 
 # cos_upward
 Test "cos_upward (1) == 0.5403023058681397174009366074429766037323":
@@ -672,6 +680,8 @@ ldouble: 1
 Test "cos_upward (4) == -0.6536436208636119146391681830977503814241":
 double: 1
 idouble: 1
+ildouble: 1
+ldouble: 1
 Test "cos_upward (5) == 0.2836621854632262644666391715135573083344":
 double: 1
 idouble: 1
@@ -692,6 +702,11 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "cos_upward (9) == -0.9111302618846769883682947111811653112463":
+ildouble: 1
+ldouble: 1
 
 # cosh
 Test "cosh (0.75) == 1.29468328467684468784170818539018176":
@@ -1014,8 +1029,8 @@ double: 1
 float: 2
 idouble: 1
 ifloat: 2
-ildouble: 1
-ldouble: 1
+ildouble: 2
+ldouble: 2
 Test "j0 (10.0) == -0.245935764451348335197760862485328754":
 double: 3
 float: 1
@@ -1031,8 +1046,8 @@ double: 1
 float: 2
 idouble: 1
 ifloat: 2
-ildouble: 1
-ldouble: 1
+ildouble: 2
+ldouble: 2
 Test "j0 (8.0) == 0.171650807137553906090869407851972001":
 float: 1
 ifloat: 1
@@ -1065,8 +1080,8 @@ double: 1
 float: 2
 idouble: 1
 ifloat: 2
-ildouble: 1
-ldouble: 1
+ildouble: 2
+ldouble: 2
 Test "jn (0, 10.0) == -0.245935764451348335197760862485328754":
 double: 3
 float: 1
@@ -1082,8 +1097,8 @@ double: 1
 float: 2
 idouble: 1
 ifloat: 2
-ildouble: 1
-ldouble: 1
+ildouble: 2
+ldouble: 2
 Test "jn (0, 8.0) == 0.171650807137553906090869407851972001":
 float: 1
 ifloat: 1
@@ -1400,6 +1415,8 @@ ifloat: 1
 Test "sin_upward (10) == -0.5440211108893698134047476618513772816836":
 float: 1
 ifloat: 1
+ildouble: 1
+ldouble: 1
 Test "sin_upward (2) == 0.9092974268256816953960198659117448427023":
 float: 1
 ifloat: 1
@@ -1410,12 +1427,18 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
+ildouble: 1
+ldouble: 1
 Test "sin_upward (4) == -0.7568024953079282513726390945118290941359":
 float: 1
 ifloat: 1
+ildouble: 1
+ldouble: 1
 Test "sin_upward (5) == -0.9589242746631384688931544061559939733525":
 float: 1
 ifloat: 1
+ildouble: 1
+ldouble: 1
 Test "sin_upward (6) == -0.2794154981989258728115554466118947596280":
 ildouble: 1
 ldouble: 1
@@ -2209,8 +2232,8 @@ double: 3
 float: 2
 idouble: 3
 ifloat: 2
-ildouble: 1
-ldouble: 1
+ildouble: 2
+ldouble: 2
 
 Function: "j1":
 double: 2

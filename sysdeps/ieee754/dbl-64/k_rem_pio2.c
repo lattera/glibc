@@ -273,13 +273,16 @@ recompute:
 		y[0] = (ih==0)? fw: -fw;
 		break;
 	    case 1:
-	    case 2:
-		fw = 0.0;
-		for (i=jz;i>=0;i--) fw += fq[i];
-		y[0] = (ih==0)? fw: -fw;
-		fw = fq[0]-fw;
-		for (i=1;i<=jz;i++) fw += fq[i];
-		y[1] = (ih==0)? fw: -fw;
+	    case 2:;
+#if __FLT_EVAL_METHOD__ != 0
+		volatile
+#endif
+		double fv = 0.0;
+		for (i=jz;i>=0;i--) fv += fq[i];
+		y[0] = (ih==0)? fv: -fv;
+		fv = fq[0]-fv;
+		for (i=1;i<=jz;i++) fv += fq[i];
+		y[1] = (ih==0)? fv: -fv;
 		break;
 	    case 3:	/* painful */
 		for (i=jz;i>0;i--) {

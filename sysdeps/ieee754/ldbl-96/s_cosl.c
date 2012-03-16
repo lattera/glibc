@@ -68,7 +68,7 @@ long double __cosl(long double x)
 
     /* cos(Inf or NaN) is NaN */
 	else if (se==0x7fff) {
-	  if ((i0 | i1) == 0)
+	  if (i1 == 0 && i0 == 0x80000000)
 	    __set_errno (EDOM);
 	  return x-x;
 	}

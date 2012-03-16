@@ -1,3 +1,33 @@
+2012-03-16  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #13851]
+	* sysdeps/ieee754/ldbl-96/e_rem_pio2l.c: New file.
+	* sysdeps/ieee754/ldbl-96/k_cosl.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/k_sinl.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/t_sincosl.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/s_cosl.c (__cosl): Correct test for
+	infinite argument.
+	* sysdeps/ieee754/ldbl-96/s_sinl.c (__sinl): Likewise.
+	* sysdeps/ieee754/dbl-64/k_rem_pio2.c: Handle __FLT_EVAL_METHOD__
+	!= 0 for prec == 2.
+	* sysdeps/i386/fpu/e_rem_pio2l.c: Remove.
+	* sysdeps/i386/fpu/k_rem_pio2.c: Likewise.
+	* sysdeps/i386/fpu/s_cosl.S: Likewise.
+	* sysdeps/i386/fpu/s_sincosl.S: Likewise.
+	* sysdeps/i386/fpu/s_sinl.S: Likewise.
+	* sysdeps/x86_64/fpu/e_rem_pio2l.c: Likewise.
+	* sysdeps/x86_64/fpu/k_cosl.c: Likewise.
+	* sysdeps/x86_64/fpu/k_sinl.c: Likewise.
+	* sysdeps/x86_64/fpu/s_cosl.S: Likewise.
+	* sysdeps/x86_64/fpu/s_sincosl.S: Likewise.
+	* sysdeps/x86_64/fpu/s_sinl.S: Likewise.
+	* math/libm-test.inc (cos_test): Add more tests and enable more
+	tests for long double.
+	(sin_test): Likewise.
+	(sincos_test): Likewise.
+	* sysdeps/i386/fpu/libm-test-ulps: Update.
+	* sysdeps/x86_64/fpu/libm-test-ulps: Likewise.
+
 2012-03-16  David S. Miller  <davem@davemloft.net>
 
 	* sysdeps/sparc/fpu/math_private.h: New file.
