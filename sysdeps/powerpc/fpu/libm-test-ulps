@@ -1132,7 +1132,17 @@ idouble: 1
 ifloat: 1
 
 # j0
+Test "j0 (-0x1.001000001p+593) == -3.927269966354206207832593635798954916263e-90":
+ildouble: 2
+ldouble: 2
 Test "j0 (-4.0) == -3.9714980986384737228659076845169804197562E-1":
+double: 1
+float: 2
+idouble: 1
+ifloat: 2
+ildouble: 1
+ldouble: 1
+Test "j0 (0x1.d7ce3ap+107) == 2.775523647291230802651040996274861694514e-17":
 double: 1
 float: 2
 idouble: 1
@@ -1167,6 +1177,14 @@ ildouble: 1
 ldouble: 1
 
 # j1
+Test "j1 (0x1.3ffp+74) == 1.818984347516051243459364437186082741567e-12":
+double: 1
+idouble: 1
+Test "j1 (0x1.ff00000000002p+840) == 1.846591691699331493194965158699937660696e-127":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
 Test "j1 (10.0) == 0.0434727461688614366697487680258592883":
 float: 2
 ifloat: 2
@@ -1258,6 +1276,11 @@ double: 1
 float: 4
 idouble: 1
 ifloat: 4
+Test "jn (2, 0x1.ffff62p+99) == -4.43860668048170034334926693188979974489e-16":
+double: 2
+float: 2
+idouble: 2
+ifloat: 2
 Test "jn (2, 2.4048255576957729) == 0.43175480701968038399746111312430703":
 double: 2
 float: 1
@@ -1693,6 +1716,14 @@ ldouble: 1
 Test "y0 (0.75) == -0.137172769385772397522814379396581855":
 ildouble: 1
 ldouble: 1
+Test "y0 (0x1.3ffp+74) == 1.818984347516051243459467456433028748678e-12":
+double: 1
+idouble: 1
+Test "y0 (0x1.ff00000000002p+840) == 1.846591691699331493194965158699937660696e-127":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
 Test "y0 (1.0) == 0.0882569642156769579829267660235151628":
 double: 2
 float: 1
@@ -1727,6 +1758,16 @@ ldouble: 1
 Test "y1 (0.125) == -5.19993611253477499595928744876579921":
 double: 1
 idouble: 1
+Test "y1 (0x1.001000001p+593) == 3.927269966354206207832593635798954916263e-90":
+ildouble: 2
+ldouble: 2
+Test "y1 (0x1.27e204p+99) == -8.881610148467797208469612080785210013461e-16":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
 Test "y1 (1.5) == -0.412308626973911295952829820633445323":
 float: 1
 ifloat: 1
@@ -2255,8 +2296,8 @@ double: 3
 float: 2
 idouble: 3
 ifloat: 2
-ildouble: 1
-ldouble: 1
+ildouble: 2
+ldouble: 2
 
 Function: "j1":
 double: 1
