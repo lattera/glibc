@@ -1,3 +1,22 @@
+2012-03-16  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #13851]
+	[BZ #13854]
+	* sysdeps/ieee754/dbl-64/s_tan.c (tan): Use
+	libc_feholdexcept_setround_53bit and libc_feupdateenv_53bit.
+	* sysdeps/ieee754/ldbl-96/k_tanl.c: New file.
+	* sysdeps/ieee754/ldbl-96/s_tanl.c: Include <errno.h>.
+	(__tanl): Set errno for infinite argument.
+	* sysdeps/i386/fpu/mptan.c: Remove.
+	* sysdeps/i386/fpu/s_tan.S: Likewise.
+	* sysdeps/i386/fpu/s_tanl.S: Likewise.
+	* sysdeps/x86_64/fpu/k_tanl.c: Likewise.
+	* sysdeps/x86_64/fpu/s_tanl.S: Likewise.
+	* math/libm-test.inc (tan_test): Add more tests and enable more
+	tests for double and long double.
+	* sysdeps/i386/fpu/libm-test-ulps: Update.
+	* sysdeps/x86_64/fpu/libm-test-ulps: Likewise.
+
 2012-03-16  Jan Kratochvil  <jan.kratochvil@redhat.com>
 
 	* sysdeps/x86_64/elf/start.S: Include <sysdep.h>.

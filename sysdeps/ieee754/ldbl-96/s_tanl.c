@@ -48,23 +48,28 @@ static char rcsid[] = "$NetBSD: $";
  *	TRIG(x) returns trig(x) nearly rounded
  */
 
+#include <errno.h>
 #include <math.h>
 #include <math_private.h>
 
 long double __tanl(long double x)
 {
 	long double y[2],z=0.0;
-	int32_t n, se;
+	int32_t n, se, i0, i1;
 
     /* High word of x. */
-	GET_LDOUBLE_EXP(se,x);
+	GET_LDOUBLE_WORDS(se,i0,i1,x);
 
     /* |x| ~< pi/4 */
 	se &= 0x7fff;
 	if(se <= 0x3ffe) return __kernel_tanl(x,z,1);
 
     /* tan(Inf or NaN) is NaN */
-	else if (se==0x7fff) return x-x;		/* NaN */
+	else if (se==0x7fff) {
+	  if (i1 == 0 && i0 == 0x80000000)
+	    __set_errno (EDOM);
+	  return x-x;
+	}
 
     /* argument reduction needed */
 	else {

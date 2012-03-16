@@ -1539,6 +1539,12 @@ ildouble: 7
 ldouble: 7
 
 # tan
+Test "tan (0x1p16383) == 0.422722393732022337800504160054440141575":
+ildouble: 1
+ldouble: 1
+Test "tan (1e22) == -1.628778225606898878549375936939548513545":
+ildouble: 1
+ldouble: 1
 Test "tan (pi/4) == 1":
 double: 1
 idouble: 1
@@ -1547,12 +1553,19 @@ idouble: 1
 Test "tan_downward (1) == 1.5574077246549022305069748074583601730873":
 float: 1
 ifloat: 1
+ildouble: 1
+ldouble: 1
 Test "tan_downward (10) == 0.6483608274590866712591249330098086768169":
 float: 1
 ifloat: 1
+ildouble: 1
+ldouble: 1
 Test "tan_downward (2) == -2.1850398632615189916433061023136825434320":
 float: 1
 ifloat: 1
+Test "tan_downward (3) == -0.1425465430742778052956354105339134932261":
+ildouble: 1
+ldouble: 1
 Test "tan_downward (4) == 1.1578212823495775831373424182673239231198":
 ildouble: 1
 ldouble: 1
@@ -1572,6 +1585,12 @@ float: 1
 ifloat: 1
 
 # tan_tonearest
+Test "tan_tonearest (1) == 1.5574077246549022305069748074583601730873":
+ildouble: 1
+ldouble: 1
+Test "tan_tonearest (2) == -2.1850398632615189916433061023136825434320":
+ildouble: 1
+ldouble: 1
 Test "tan_tonearest (6) == -0.2910061913847491570536995888681755428312":
 ildouble: 1
 ldouble: 1
@@ -1583,9 +1602,14 @@ ildouble: 1
 ldouble: 1
 
 # tan_towardzero
+Test "tan_towardzero (1) == 1.5574077246549022305069748074583601730873":
+ildouble: 1
+ldouble: 1
 Test "tan_towardzero (10) == 0.6483608274590866712591249330098086768169":
 float: 1
 ifloat: 1
+ildouble: 1
+ldouble: 1
 Test "tan_towardzero (2) == -2.1850398632615189916433061023136825434320":
 ildouble: 1
 ldouble: 1
@@ -1636,6 +1660,8 @@ ldouble: 1
 Test "tan_upward (5) == -3.3805150062465856369827058794473439087096":
 float: 1
 ifloat: 1
+ildouble: 2
+ldouble: 2
 Test "tan_upward (6) == -0.2910061913847491570536995888681755428312":
 ildouble: 1
 ldouble: 1
@@ -2308,6 +2334,8 @@ ldouble: 27
 Function: "tan":
 double: 1
 idouble: 1
+ildouble: 1
+ldouble: 1
 
 Function: "tan_downward":
 float: 1
