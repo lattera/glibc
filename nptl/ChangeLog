@@ -1,3 +1,8 @@
+2012-03-15  David S. Miller  <davem@davemloft.net>
+
+	[BZ #13844]
+	* sysdeps/unix/sysv/linux/sparc/sparc32/libc-lowlevellock.c: New file.
+
 2012-03-09  Paul Eggert  <eggert@cs.ucla.edu>
 
 	[BZ #13673]
