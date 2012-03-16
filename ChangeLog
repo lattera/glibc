@@ -1,5 +1,9 @@
 2012-05-23  Paul Eggert  <eggert@cs.ucla.edu>
 
+	mktime: simplify computation of average
+	* time/mktime.c (ranged_convert): Use new time_t_avg function
+	instead of rolling our own (probably-slower) code.
+
 	mktime: do not assume signed right shift propagates sign bit
 	* time/mktime.c (isdst_differ): New static function.
 	(__mktime_internal): No need to normalize tm_isdst now.

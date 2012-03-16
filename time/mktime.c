@@ -319,9 +319,7 @@ ranged_convert (struct tm *(*convert) (const time_t *, struct tm *),
 	 they differ by 1.  */
       while (bad != ok + (bad < 0 ? -1 : 1))
 	{
-	  time_t mid = *t = (bad < 0
-			     ? bad + ((ok - bad) >> 1)
-			     : ok + ((bad - ok) >> 1));
+	  time_t mid = *t = time_t_avg (ok, bad);
 	  r = convert (t, tp);
 	  if (r)
 	    ok = mid;
