@@ -1,5 +1,17 @@
 2012-03-15  David S. Miller  <davem@davemloft.net>
 
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_fma-vis3.S: New file.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_fma.c: New file.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_fmaf-vis3.S: New file.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_fmaf.c: New file.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_fma-vis3.S: New file.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_fma.c: New file.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_fmaf-vis3.S: New file.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_fmaf.c: New file.
+	* sysdeps/sparc/sparc64/fpu/multiarch/Makefile: Add fma/fmaf
+	sysdep routines.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/Makefile: Likewise.
+
 	* sysdeps/sparc/sparc32/fpu/s_fma.c: New file.
 	* sysdeps/sparc/sparc64/fpu/s_fma.c: New file.
 
