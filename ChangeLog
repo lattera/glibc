@@ -1,5 +1,14 @@
 2012-03-16  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_lround.c: Moved to ...
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_llround.c: This.
+	(__lround): Renamed to ...
+	(__llround): This.  Replace long int with long long int.
+	Define lround functions as aliases of llround functions.
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_lround.c: Empty file.
+
+2012-03-16  H.J. Lu  <hongjiu.lu@intel.com>
+
 	* sysdeps/unix/sysv/linux/x86_64/makecontext.c (__makecontext):
 	Use greg_t on sp.  Use unsigned int on idx_uc_link.  Cast
 	adresses to uintptr_t.  Replace "long int" and "unsigned long
