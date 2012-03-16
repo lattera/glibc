@@ -26,7 +26,7 @@ double
 jn (int n, double x)
 {
   if (__builtin_expect (isgreater (fabs (x), X_TLOSS), 0)
-      && _LIB_VERSION != _IEEE_)
+      && _LIB_VERSION != _IEEE_ && _LIB_VERSION != _POSIX_)
     /* jn(n,|x|>X_TLOSS) */
     return __kernel_standard (n, x, 38);
 
@@ -53,7 +53,7 @@ yn (int n, double x)
       else if (x == 0.0)
 	/* d = -one/(x-x) */
 	return __kernel_standard (n, x, 12);
-      else
+      else if (_LIB_VERSION != _POSIX_)
 	/* yn(n,x>X_TLOSS) */
 	return __kernel_standard (n, x, 39);
     }

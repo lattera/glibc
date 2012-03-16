@@ -1,5 +1,40 @@
 2012-03-16  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #2551]
+	[BZ #2552]
+	[BZ #2553]
+	[BZ #2554]
+	[BZ #2562]
+	[BZ #2563]
+	[BZ #2565]
+	[BZ #2566]
+	[BZ #2576]
+	* math/w_j0.c (j0): Don't produce TLOSS errors for POSIX libm.
+	(y0): Likewise.
+	* math/w_j0f.c (j0f): Likewise.
+	(y0f): Likewise.
+	* math/w_j0l.c (__j0l): Likewise.
+	(__y0l): Likewise.
+	* math/w_j1.c (j1): Likewise.
+	(y1): Likewise.
+	* math/w_j1f.c (j1f): Likewise.
+	(y1f): Likewise.
+	* math/w_j1l.c (__j1l): Likewise.
+	(__y1l): Likewise.
+	* math/w_jn.c (jn): Likewise.
+	(yn): Likewise.
+	* math/w_jnf.c (jnf): Likewise.
+	(ynf): Likewise.
+	* math/w_jnl.c (__jnl): Likewise.
+	(__ynl): Likewise.
+	* math/libm-test.inc (j0_test): Add more tests.
+	(j1_test): Likewise.
+	(jn_test): Likewise.  Add trailing semicolon to existing test.
+	(y0_test): Likewise.
+	(y1_test): Likewise.
+	* sysdeps/i386/fpu/libm-test-ulps: Update.
+	* sysdeps/x86_64/fpu/libm-test-ulps: Likewise.
+
 	[BZ #13851]
 	[BZ #13854]
 	* sysdeps/ieee754/dbl-64/s_tan.c (tan): Use

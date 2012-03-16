@@ -26,7 +26,7 @@ long double
 __j1l (long double x)
 {
   if (__builtin_expect (isgreater (fabsl (x), X_TLOSS), 0)
-      && _LIB_VERSION != _IEEE_)
+      && _LIB_VERSION != _IEEE_ && _LIB_VERSION != _POSIX_)
     /* j1(|x|>X_TLOSS) */
     return __kernel_standard (x, x, 236);
 
@@ -51,7 +51,7 @@ __y1l (long double x)
       else if (x == 0.0L)
 	/* d = -one/(x-x) */
 	return __kernel_standard (x, x, 210);
-      else
+      else if (_LIB_VERSION != _POSIX_)
 	/* y1(x>X_TLOSS) */
 	return __kernel_standard (x, x, 237);
     }

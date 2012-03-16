@@ -26,7 +26,7 @@ float
 j0f (float x)
 {
   if (__builtin_expect (isgreater (fabsf (x), (float) X_TLOSS), 0)
-      && _LIB_VERSION != _IEEE_)
+      && _LIB_VERSION != _IEEE_ && _LIB_VERSION != _POSIX_)
     /* j0(|x|>X_TLOSS) */
     return __kernel_standard_f (x, x, 134);
 
@@ -51,7 +51,7 @@ y0f (float x)
       else if (x == 0.0f)
 	/* d = -one/(x-x) */
 	return __kernel_standard_f (x, x, 108);
-      else
+      else if (_LIB_VERSION != _POSIX_)
 	/* y0(x>X_TLOSS) */
 	return __kernel_standard_f (x, x, 135);
     }

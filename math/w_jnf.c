@@ -26,7 +26,7 @@ float
 jnf (int n, float x)
 {
   if (__builtin_expect (isgreater (fabsf (x), (float) X_TLOSS), 0)
-      && _LIB_VERSION != _IEEE_)
+      && _LIB_VERSION != _IEEE_ && _LIB_VERSION != _POSIX_)
     /* jn(n,|x|>X_TLOSS) */
     return __kernel_standard_f (n, x, 138);
 
@@ -51,7 +51,7 @@ ynf (int n, float x)
       else if (x == 0.0)
 	/* d = -one/(x-x) */
 	return __kernel_standard_f (n, x, 112);
-      else
+      else if (_LIB_VERSION != _POSIX_)
 	/* yn(n,x>X_TLOSS) */
 	return __kernel_standard_f (n, x, 139);
     }

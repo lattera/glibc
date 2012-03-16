@@ -26,7 +26,7 @@ double
 j0 (double x)
 {
   if (__builtin_expect (isgreater (fabs (x), X_TLOSS), 0)
-      && _LIB_VERSION != _IEEE_)
+      && _LIB_VERSION != _IEEE_ && _LIB_VERSION != _POSIX_)
     /* j0(|x|>X_TLOSS) */
     return __kernel_standard (x, x, 34);
 
@@ -53,7 +53,7 @@ y0 (double x)
       else if (x == 0.0)
 	/* d = -one/(x-x) */
 	return __kernel_standard (x, x, 8);
-      else
+      else if (_LIB_VERSION != _POSIX_)
 	/* y0(x>X_TLOSS) */
 	return __kernel_standard (x, x, 35);
     }
