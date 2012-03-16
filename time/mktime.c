@@ -445,7 +445,7 @@ __mktime_internal (struct tm *tp,
 
       int approx_biennia = SHR (t0, ALOG2_SECONDS_PER_BIENNIUM);
       int diff = approx_biennia - approx_requested_biennia;
-      int abs_diff = diff < 0 ? - diff : diff;
+      int approx_abs_diff = diff < 0 ? -1 - diff : diff;
 
       /* IRIX 4.0.5 cc miscalculates TIME_T_MIN / 3: it erroneously
 	 gives a positive value of 715827882.  Setting a variable
@@ -456,15 +456,15 @@ __mktime_internal (struct tm *tp,
       time_t overflow_threshold =
 	(time_t_max / 3 - time_t_min / 3) >> ALOG2_SECONDS_PER_BIENNIUM;
 
-      if (overflow_threshold < abs_diff)
+      if (overflow_threshold < approx_abs_diff)
 	{
 	  /* Overflow occurred.  Try repairing it; this might work if
 	     the time zone offset is enough to undo the overflow.  */
 	  time_t repaired_t0 = -1 - t0;
 	  approx_biennia = SHR (repaired_t0, ALOG2_SECONDS_PER_BIENNIUM);
 	  diff = approx_biennia - approx_requested_biennia;
-	  abs_diff = diff < 0 ? - diff : diff;
-	  if (overflow_threshold < abs_diff)
+	  approx_abs_diff = diff < 0 ? -1 - diff : diff;
+	  if (overflow_threshold < approx_abs_diff)
 	    return -1;
 	  guessed_offset += repaired_t0 - t0;
 	  t0 = repaired_t0;
