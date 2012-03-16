@@ -1,5 +1,11 @@
 2012-05-23  Paul Eggert  <eggert@cs.ucla.edu>
 
+	mktime: do not assume signed right shift propagates sign bit
+	* time/mktime.c (isdst_differ): New static function.
+	(__mktime_internal): No need to normalize tm_isdst now.
+	(__mktime_internal, not_equal_tm): Use isdst_differ to compare
+	tm_isdst values.
+
 	mktime: merge another wrapv change from gnulib
 	* time/mktime.c (TYPE_MAXIMUM): Rework slightly to avoid diagnostics
 	from some compilers.

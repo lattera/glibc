@@ -177,6 +177,14 @@ const unsigned short int __mon_yday[2][13] =
 # include "mktime-internal.h"
 #endif
 
+/* Return 1 if the values A and B differ according to the rules for
+   tm_isdst: A and B differ if one is zero and the other positive.  */
+static int
+isdst_differ (int a, int b)
+{
+  return (!a != !b) && (0 <= a) && (0 <= b);
+}
+
 /* Return an integer value measuring (YEAR1-YDAY1 HOUR1:MIN1:SEC1) -
    (YEAR0-YDAY0 HOUR0:MIN0:SEC0) in seconds, assuming that the clocks
    were not adjusted between the time stamps.
@@ -362,9 +370,7 @@ __mktime_internal (struct tm *tp,
   int mday = tp->tm_mday;
   int mon = tp->tm_mon;
   int year_requested = tp->tm_year;
-  /* Normalize the value.  */
-  int isdst = ((tp->tm_isdst >> (8 * sizeof (tp->tm_isdst) - 1))
-	       | (tp->tm_isdst != 0));
+  int isdst = tp->tm_isdst;
 
   /* 1 if the previous probe was DST.  */
   int dst2;
@@ -494,7 +500,7 @@ __mktime_internal (struct tm *tp,
 
   /* We have a match.  Check whether tm.tm_isdst has the requested
      value, if any.  */
-  if (isdst != tm.tm_isdst && 0 <= isdst && 0 <= tm.tm_isdst)
+  if (isdst_differ (isdst, tm.tm_isdst))
     {
       /* tm.tm_isdst has the wrong value.  Look for a neighboring
 	 time with the right value, and use its UTC offset.
@@ -532,7 +538,7 @@ __mktime_internal (struct tm *tp,
 	      time_t ot = t + delta * direction;
 	      struct tm otm;
 	      ranged_convert (convert, &ot, &otm);
-	      if (otm.tm_isdst == isdst)
+	      if (! isdst_differ (isdst, otm.tm_isdst))
 		{
 		  /* We found the desired tm_isdst.
 		     Extrapolate back to the desired time.  */
@@ -608,7 +614,7 @@ not_equal_tm (const struct tm *a, const struct tm *b)
 	  | (a->tm_mon ^ b->tm_mon)
 	  | (a->tm_year ^ b->tm_year)
 	  | (a->tm_yday ^ b->tm_yday)
-	  | (a->tm_isdst ^ b->tm_isdst));
+	  | isdst_differ (a->tm_isdst, b->tm_isdst));
 }
 
 static void
