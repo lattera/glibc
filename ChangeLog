@@ -1,3 +1,7 @@
+2012-03-16  David S. Miller  <davem@davemloft.net>
+
+	* sysdeps/sparc/fpu/math_private.h: New file.
+
 2012-03-15  David S. Miller  <davem@davemloft.net>
 
 	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_fma-vis3.S: New file.
