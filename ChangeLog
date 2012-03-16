@@ -1,3 +1,9 @@
+2012-03-16  Roland McGrath  <roland@hack.frob.com>
+
+	* aclocal.m4 (LIBC_PRECONFIGURE): New macro.
+	* configure.in: Use it for both main tree and add-ons.
+	* configure: Regenerated.
+
 2012-03-16  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* time/offtime.c (__offtime): Use time_t on days, rem, y and yg.

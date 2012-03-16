@@ -127,3 +127,17 @@ AS_IF([AC_TRY_COMMAND([${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS -o conftest
 		       1>&AS_MESSAGE_LOG_FD])],
       [$2], [$3])
 rm -f conftest*])
+
+dnl Find and source sysdeps/*/preconfigure.
+dnl LIBC_PRECONFIGURE([$srcdir], [for])
+AC_DEFUN([LIBC_PRECONFIGURE], [dnl
+if frags=`ls -d $1/sysdeps/*/preconfigure 2> /dev/null`
+then
+  AC_MSG_CHECKING($2 preconfigure fragments)
+  for frag in $frags; do
+    name=`echo "$frag" | sed 's@/[[^/]]*[$]@@;s@^.*/@@'`
+    echo $ECHO_N "$name $ECHO_C" >&AS_MESSAGE_FD
+    . "$frag"
+  done
+  AC_MSG_RESULT()
+fi])

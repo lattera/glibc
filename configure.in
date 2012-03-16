@@ -317,6 +317,9 @@ AC_ARG_WITH([cpu],
   esac
 ])
 
+dnl Let sysdeps/*/preconfigure act here, like they can in add-ons.
+LIBC_PRECONFIGURE([$srcdir], [for sysdeps])
+
 # An add-on can set this when it wants to disable the sanity check below.
 libc_config_ok=no
 
@@ -436,16 +439,7 @@ relative path required for add-on using \$libc_add_on_config_subdirs) ;;
       }
     fi
     if test -n "$libc_add_on"; then
-      if frags=`ls -d $libc_add_on_srcdir/sysdeps/*/preconfigure 2> /dev/null`
-      then
-	AC_MSG_CHECKING(add-on $libc_add_on for preconfigure fragments)
-	for frag in $frags; do
-	  name=`echo "$frag" | sed 's@/[[^/]]*$@@;s@^.*/@@'`
-	  echo $ECHO_N "$name $ECHO_C" >&AS_MESSAGE_FD
-	  . "$frag"
-	done
-	AC_MSG_RESULT()
-      fi
+      LIBC_PRECONFIGURE([$libc_add_on_srcdir], [add-on $libc_add_on for])
       use_add_ons="$use_add_ons $libc_add_on"
       add_ons_pfx="$add_ons_pfx $libc_add_on/"
       test -z "$libc_add_on_canonical" ||

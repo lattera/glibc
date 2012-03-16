@@ -3819,6 +3819,19 @@ if test "${with_cpu+set}" = set; then :
 fi
 
 
+if frags=`ls -d $srcdir/sysdeps/*/preconfigure 2> /dev/null`
+then
+  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for sysdeps preconfigure fragments" >&5
+$as_echo_n "checking for sysdeps preconfigure fragments... " >&6; }
+  for frag in $frags; do
+    name=`echo "$frag" | sed 's@/[^/]*$@@;s@^.*/@@'`
+    echo $ECHO_N "$name $ECHO_C" >&6
+    . "$frag"
+  done
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: " >&5
+$as_echo "" >&6; }
+fi
+
 # An add-on can set this when it wants to disable the sanity check below.
 libc_config_ok=no
 
@@ -3936,17 +3949,17 @@ $d-srcdir = $subdir_srcdir"
     fi
     if test -n "$libc_add_on"; then
       if frags=`ls -d $libc_add_on_srcdir/sysdeps/*/preconfigure 2> /dev/null`
-      then
-	{ $as_echo "$as_me:${as_lineno-$LINENO}: checking add-on $libc_add_on for preconfigure fragments" >&5
+then
+  { $as_echo "$as_me:${as_lineno-$LINENO}: checking add-on $libc_add_on for preconfigure fragments" >&5
 $as_echo_n "checking add-on $libc_add_on for preconfigure fragments... " >&6; }
-	for frag in $frags; do
-	  name=`echo "$frag" | sed 's@/[^/]*$@@;s@^.*/@@'`
-	  echo $ECHO_N "$name $ECHO_C" >&6
-	  . "$frag"
-	done
-	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: " >&5
+  for frag in $frags; do
+    name=`echo "$frag" | sed 's@/[^/]*$@@;s@^.*/@@'`
+    echo $ECHO_N "$name $ECHO_C" >&6
+    . "$frag"
+  done
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: " >&5
 $as_echo "" >&6; }
-      fi
+fi
       use_add_ons="$use_add_ons $libc_add_on"
       add_ons_pfx="$add_ons_pfx $libc_add_on/"
       test -z "$libc_add_on_canonical" ||
