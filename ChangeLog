@@ -1,5 +1,8 @@
 2012-03-15  David S. Miller  <davem@davemloft.net>
 
+	* sysdeps/sparc/sparc32/fpu/s_fma.c: New file.
+	* sysdeps/sparc/sparc64/fpu/s_fma.c: New file.
+
 	* sysdeps/sparc/sparc-ifunc.h: New file.
 	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_ceil.S: Use sparc-ifunc.h
 	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_ceilf.S: Likewise.
