@@ -1,5 +1,13 @@
 2012-05-23  Paul Eggert  <eggert@cs.ucla.edu>
 
+	mktime: do not assume 'long' is wide enough
+	* time/mktime.c (verify): Move decl up.
+	(long_int): New type.
+	(leapyear, ydhms_diff, guess_time_tm, __mktime_internal): Use it,
+	to remove assumption in the code that 'long' is wide enough to
+	store year values.  This assumption is not true on x32 and on
+	some non-glibc platforms.
+
 	mktime: merge wrapv change from gnulib
 	* time/mktime.c (WRAPV): New macro.
 	(time_t_avg, time_t_add_ok, time_t_int_add_ok): New static functions.

@@ -68,6 +68,17 @@
 # endif
 #endif
 
+/* Verify a requirement at compile-time (unlike assert, which is runtime).  */
+#define verify(name, assertion) struct name { char a[(assertion) ? 1 : -1]; }
+
+/* A signed type that is at least one bit wider than int.  */
+#if INT_MAX <= LONG_MAX / 2
+typedef long int long_int;
+#else
+typedef long long int long_int;
+#endif
+verify (long_int_is_wide_enough, INT_MAX == INT_MAX * (long_int) 2 / 2);
+
 /* Shift A right by B bits portably, by dividing A by 2**B and
    truncating towards minus infinity.  A and B should be free of side
    effects, and B should be in the range 0 <= B <= INT_BITS - 2, where
@@ -124,9 +135,6 @@
 #endif
 #define TIME_T_MIDPOINT (SHR (TIME_T_MIN + TIME_T_MAX, 1) + 1)
 
-/* Verify a requirement at compile-time (unlike assert, which is runtime).  */
-#define verify(name, assertion) struct name { char a[(assertion) ? 1 : -1]; }
-
 verify (time_t_is_integer, TYPE_IS_INTEGER (time_t));
 verify (twos_complement_arithmetic, TYPE_TWOS_COMPLEMENT (int));
 
@@ -136,7 +144,7 @@ verify (base_year_is_a_multiple_of_100, TM_YEAR_BASE % 100 == 0);
 
 /* Return 1 if YEAR + TM_YEAR_BASE is a leap year.  */
 static inline int
-leapyear (long int year)
+leapyear (long_int year)
 {
   /* Don't add YEAR to TM_YEAR_BASE, as that might overflow.
      Also, work even if YEAR is negative.  */
@@ -182,12 +190,10 @@ const unsigned short int __mon_yday[2][13] =
    detect overflow.  */
 
 static inline time_t
-ydhms_diff (long int year1, long int yday1, int hour1, int min1, int sec1,
+ydhms_diff (long_int year1, long_int yday1, int hour1, int min1, int sec1,
 	    int year0, int yday0, int hour0, int min0, int sec0)
 {
   verify (C99_integer_division, -1 / 2 == 0);
-  verify (long_int_year_and_yday_are_wide_enough,
-	  INT_MAX <= LONG_MAX / 2 || TIME_T_MAX <= UINT_MAX);
 
   /* Compute intervening leap days correctly even if year is negative.
      Take care to avoid integer overflow here.  */
@@ -265,7 +271,7 @@ time_t_int_add_ok (time_t a, int b)
    If overflow occurs, yield the minimal or maximal value, except do not
    yield a value equal to *T.  */
 static time_t
-guess_time_tm (long int year, long int yday, int hour, int min, int sec,
+guess_time_tm (long_int year, long_int yday, int hour, int min, int sec,
 	       const time_t *t, const struct tm *tp)
 {
   if (tp)
@@ -368,8 +374,8 @@ __mktime_internal (struct tm *tp,
   int mon_remainder = mon % 12;
   int negative_mon_remainder = mon_remainder < 0;
   int mon_years = mon / 12 - negative_mon_remainder;
-  long int lyear_requested = year_requested;
-  long int year = lyear_requested + mon_years;
+  long_int lyear_requested = year_requested;
+  long_int year = lyear_requested + mon_years;
 
   /* The other values need not be in range:
      the remaining code handles minor overflows correctly,
@@ -381,8 +387,8 @@ __mktime_internal (struct tm *tp,
   int mon_yday = ((__mon_yday[leapyear (year)]
 		   [mon_remainder + 12 * negative_mon_remainder])
 		  - 1);
-  long int lmday = mday;
-  long int yday = mon_yday + lmday;
+  long_int lmday = mday;
+  long_int yday = mon_yday + lmday;
 
   time_t guessed_offset = *offset;
 
