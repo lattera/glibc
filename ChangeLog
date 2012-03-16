@@ -1,5 +1,9 @@
 2012-05-23  Paul Eggert  <eggert@cs.ucla.edu>
 
+	mktime: merge another wrapv change from gnulib
+	* time/mktime.c (TYPE_MAXIMUM): Rework slightly to avoid diagnostics
+	from some compilers.
+
 	mktime: remove incorrect attempt at unusual arithmetics
 	* time/mktime.c (TYPE_ONES_COMPLEMENT, TYPE_SIGNED_MAGNITUDE): Remove.
 	The code didn't really work on such machines anyway.

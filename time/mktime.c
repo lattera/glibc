@@ -121,7 +121,7 @@ verify (long_int_is_wide_enough, INT_MAX == INT_MAX * (long_int) 2 / 2);
 #define TYPE_MAXIMUM(t) \
   ((t) (! TYPE_SIGNED (t) \
 	? (t) -1 \
-	: ~ (~ (t) 0 << (sizeof (t) * CHAR_BIT - 1))))
+	: ((((t) 1 << (sizeof (t) * CHAR_BIT - 2)) - 1) * 2 + 1)))
 
 #ifndef TIME_T_MIN
 # define TIME_T_MIN TYPE_MINIMUM (time_t)
