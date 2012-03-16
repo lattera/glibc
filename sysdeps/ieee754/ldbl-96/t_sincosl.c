@@ -22,8 +22,47 @@
    bits and the same for sine.
    0.1484375+82.0/128.0 is the smallest number among above defined numbers
    larger than pi/4.
-   Computed using MPFR.
- */
+   Computed using MPFR:
+
+   #include <stdio.h>
+   #include <mpfr.h>
+
+   int
+   main (void)
+   {
+     int j;
+     mpfr_t t, b, i, rs, rc, ts, tc, tsl, tcl;
+     mpfr_init2 (b, 64);
+     mpfr_init2 (i, 64);
+     mpfr_init2 (t, 64);
+     mpfr_set_str (b, "0.1484375", 0, MPFR_RNDN);
+     mpfr_set_str (i, "0x1p-7", 0, MPFR_RNDN);
+     mpfr_init2 (rs, 300);
+     mpfr_init2 (rc, 300);
+     mpfr_init2 (ts, 64);
+     mpfr_init2 (tc, 64);
+     mpfr_init2 (tsl, 64);
+     mpfr_init2 (tcl, 64);
+     for (j = 0; j <= 82; j++)
+       {
+         mpfr_mul_ui (t, i, j, MPFR_RNDN);
+         mpfr_add (t, t, b, MPFR_RNDN);
+         printf ("  /" "* x = 0.1484375 + %d/128.  *" "/\n", j);
+         mpfr_cos (rc, t, MPFR_RNDN);
+         mpfr_sin (rs, t, MPFR_RNDN);
+         mpfr_set (tc, rc, MPFR_RNDN);
+         mpfr_set (ts, rs, MPFR_RNDN);
+         mpfr_sub (tcl, rc, tc, MPFR_RNDN);
+         mpfr_sub (tsl, rs, ts, MPFR_RNDN);
+         mpfr_printf ("  %.17RaL,\n", tc);
+         mpfr_printf ("  %.17RaL,\n", tcl);
+         mpfr_printf ("  %.17RaL,\n", ts);
+         mpfr_printf ("  %.17RaL,\n", tsl);
+       }
+     return 0;
+   }
+
+*/
 
 const long double __sincosl_table[] = {
   /* x = 0.1484375 + 0/128.  */

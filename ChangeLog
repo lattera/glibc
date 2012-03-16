@@ -1,5 +1,8 @@
 2012-03-16  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/ieee754/ldbl-96/t_sincosl.c: Include generator program
+	in comment.
+
 	[BZ #13851]
 	* sysdeps/ieee754/ldbl-96/e_rem_pio2l.c: New file.
 	* sysdeps/ieee754/ldbl-96/k_cosl.c: Likewise.
