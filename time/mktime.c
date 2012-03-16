@@ -46,6 +46,28 @@
 # define mktime my_mktime
 #endif /* DEBUG */
 
+/* Some of the code in this file assumes that signed integer overflow
+   silently wraps around.  This assumption can't easily be programmed
+   around, nor can it be checked for portably at compile-time or
+   easily eliminated at run-time.
+
+   Define WRAPV to 1 if the assumption is valid and if
+     #pragma GCC optimize ("wrapv")
+   does not trigger GCC bug 51793
+   <http://gcc.gnu.org/bugzilla/show_bug.cgi?id=51793>.
+   Otherwise, define it to 0; this forces the use of slower code that,
+   while not guaranteed by the C Standard, works on all production
+   platforms that we know about.  */
+#ifndef WRAPV
+# if (((__GNUC__ == 4 && 4 <= __GNUC_MINOR__) || 4 < __GNUC__) \
+      && defined __GLIBC__)
+#  pragma GCC optimize ("wrapv")
+#  define WRAPV 1
+# else
+#  define WRAPV 0
+# endif
+#endif
+
 /* Shift A right by B bits portably, by dividing A by 2**B and
    truncating towards minus infinity.  A and B should be free of side
    effects, and B should be in the range 0 <= B <= INT_BITS - 2, where
@@ -107,9 +129,6 @@
 
 verify (time_t_is_integer, TYPE_IS_INTEGER (time_t));
 verify (twos_complement_arithmetic, TYPE_TWOS_COMPLEMENT (int));
-/* The code also assumes that signed integer overflow silently wraps
-   around, but this assumption can't be stated without causing a
-   diagnostic on some hosts.  */
 
 #define EPOCH_YEAR 1970
 #define TM_YEAR_BASE 1900
@@ -191,6 +210,53 @@ ydhms_diff (long int year1, long int yday1, int hour1, int min1, int sec1,
   return seconds;
 }
 
+/* Return the average of A and B, even if A + B would overflow.  */
+static time_t
+time_t_avg (time_t a, time_t b)
+{
+  return SHR (a, 1) + SHR (b, 1) + (a & b & 1);
+}
+
+/* Return 1 if A + B does not overflow.  If time_t is unsigned and if
+   B's top bit is set, assume that the sum represents A - -B, and
+   return 1 if the subtraction does not wrap around.  */
+static int
+time_t_add_ok (time_t a, time_t b)
+{
+  if (! TYPE_SIGNED (time_t))
+    {
+      time_t sum = a + b;
+      return (sum < a) == (TIME_T_MIDPOINT <= b);
+    }
+  else if (WRAPV)
+    {
+      time_t sum = a + b;
+      return (sum < a) == (b < 0);
+    }
+  else
+    {
+      time_t avg = time_t_avg (a, b);
+      return TIME_T_MIN / 2 <= avg && avg <= TIME_T_MAX / 2;
+    }
+}
+
+/* Return 1 if A + B does not overflow.  */
+static int
+time_t_int_add_ok (time_t a, int b)
+{
+  verify (int_no_wider_than_time_t, INT_MAX <= TIME_T_MAX);
+  if (WRAPV)
+    {
+      time_t sum = a + b;
+      return (sum < a) == (b < 0);
+    }
+  else
+    {
+      int a_odd = a & 1;
+      time_t avg = SHR (a, 1) + (SHR (b, 1) + (a_odd & b));
+      return TIME_T_MIN / 2 <= avg && avg <= TIME_T_MAX / 2;
+    }
+}
 
 /* Return a time_t value corresponding to (YEAR-YDAY HOUR:MIN:SEC),
    assuming that *T corresponds to *TP and that no clock adjustments
@@ -207,9 +273,8 @@ guess_time_tm (long int year, long int yday, int hour, int min, int sec,
       time_t d = ydhms_diff (year, yday, hour, min, sec,
 			     tp->tm_year, tp->tm_yday,
 			     tp->tm_hour, tp->tm_min, tp->tm_sec);
-      time_t t1 = *t + d;
-      if ((t1 < *t) == (TYPE_SIGNED (time_t) ? d < 0 : TIME_T_MAX / 2 < d))
-	return t1;
+      if (time_t_add_ok (*t, d))
+	return *t + d;
     }
 
   /* Overflow occurred one way or another.  Return the nearest result
@@ -457,22 +522,20 @@ __mktime_internal (struct tm *tp,
 
       for (delta = stride; delta < delta_bound; delta += stride)
 	for (direction = -1; direction <= 1; direction += 2)
-	  {
-	    time_t ot = t + delta * direction;
-	    if ((ot < t) == (direction < 0))
-	      {
-		struct tm otm;
-		ranged_convert (convert, &ot, &otm);
-		if (otm.tm_isdst == isdst)
-		  {
-		    /* We found the desired tm_isdst.
-		       Extrapolate back to the desired time.  */
-		    t = guess_time_tm (year, yday, hour, min, sec, &ot, &otm);
-		    ranged_convert (convert, &t, &tm);
-		    goto offset_found;
-		  }
-	      }
-	  }
+	  if (time_t_int_add_ok (t, delta * direction))
+	    {
+	      time_t ot = t + delta * direction;
+	      struct tm otm;
+	      ranged_convert (convert, &ot, &otm);
+	      if (otm.tm_isdst == isdst)
+		{
+		  /* We found the desired tm_isdst.
+		     Extrapolate back to the desired time.  */
+		  t = guess_time_tm (year, yday, hour, min, sec, &ot, &otm);
+		  ranged_convert (convert, &t, &tm);
+		  goto offset_found;
+		}
+	    }
     }
 
  offset_found:
@@ -483,11 +546,13 @@ __mktime_internal (struct tm *tp,
       /* Adjust time to reflect the tm_sec requested, not the normalized value.
 	 Also, repair any damage from a false match due to a leap second.  */
       int sec_adjustment = (sec == 0 && tm.tm_sec == 60) - sec;
+      if (! time_t_int_add_ok (t, sec_requested))
+	return -1;
       t1 = t + sec_requested;
+      if (! time_t_int_add_ok (t1, sec_adjustment))
+	return -1;
       t2 = t1 + sec_adjustment;
-      if (((t1 < t) != (sec_requested < 0))
-	  | ((t2 < t1) != (sec_adjustment < 0))
-	  | ! convert (&t2, &tm))
+      if (! convert (&t2, &tm))
 	return -1;
       t = t2;
     }

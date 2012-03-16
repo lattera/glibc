@@ -1,3 +1,12 @@
+2012-05-23  Paul Eggert  <eggert@cs.ucla.edu>
+
+	mktime: merge wrapv change from gnulib
+	* time/mktime.c (WRAPV): New macro.
+	(time_t_avg, time_t_add_ok, time_t_int_add_ok): New static functions.
+	(guess_time_tm, __mktime_internal): Do not assume that signed
+	integer overflow wraps around; modern compilers generate code
+	where this assumption is no longer valid.
+
 2012-05-23  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/unix/sysv/linux/i386/sysdep.h (SYSCALL_ERROR_HANDLER):
