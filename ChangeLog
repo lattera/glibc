@@ -106,9 +106,11 @@
 
 2012-03-15  David S. Miller  <davem@davemloft.net>
 
-	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_fma-vis3.S: New file.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_fma-vis3.S: New
+	file.
 	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_fma.c: New file.
-	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_fmaf-vis3.S: New file.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_fmaf-vis3.S: New
+	file.
 	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_fmaf.c: New file.
 	* sysdeps/sparc/sparc64/fpu/multiarch/s_fma-vis3.S: New file.
 	* sysdeps/sparc/sparc64/fpu/multiarch/s_fma.c: New file.
@@ -122,20 +124,26 @@
 	* sysdeps/sparc/sparc64/fpu/s_fma.c: New file.
 
 	* sysdeps/sparc/sparc-ifunc.h: New file.
-	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_ceil.S: Use sparc-ifunc.h
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_ceil.S: Use
+	sparc-ifunc.h
 	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_ceilf.S: Likewise.
-	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_copysign.S: Likewise.
-	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_copysignf.S: Likewise.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_copysign.S:
+	Likewise.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_copysignf.S:
+	Likewise.
 	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_fabs.S: Likewise.
 	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_fabsf.S: Likewise.
 	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_floor.S: Likewise.
-	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_floorf.S: Likewise.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_floorf.S:
+	Likewise.
 	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_fmax.S: Likewise.
 	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_fmaxf.S: Likewise.
 	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_fmin.S: Likewise.
 	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_fminf.S: Likewise.
-	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_llrint.S: Likewise.
-	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_llrintf.S: Likewise.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_llrint.S:
+	Likewise.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_llrintf.S:
+	Likewise.
 	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_rint.S: Likewise.
 	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_rintf.S: Likewise.
 	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/w_sqrt.S: Likewise.
@@ -253,13 +261,17 @@
 	* sysdeps/sparc/sparc64/fpu/multiarch/s_fmin.S: New file.
 	* sysdeps/sparc/sparc64/fpu/multiarch/s_fminf-vis3.S: New file.
 	* sysdeps/sparc/sparc64/fpu/multiarch/s_fminf.S: New file.
-	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_fmax-vis3.S: New file.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_fmax-vis3.S: New
+	file.
 	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_fmax.S: New file.
-	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_fmaxf-vis3.S: New file.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_fmaxf-vis3.S: New
+	file.
 	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_fmaxf.S: New file.
-	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_fmin-vis3.S: New file.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_fmin-vis3.S: New
+	file.
 	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_fmin.S: New file.
-	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_fminf-vis3.S: New file.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_fminf-vis3.S: New
+	file.
 	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_fminf.S: New file.
 	* sysdeps/sparc/sparc64/fpu/multiarch/Makefile: Add new vis3
 	fmin/fmax sysdep routines.
@@ -295,32 +307,49 @@
 	* sysdeps/sparc/sparc64/fpu/multiarch/s_rint.S: New file.
 	* sysdeps/sparc/sparc64/fpu/multiarch/s_rintf-vis3.S: New file.
 	* sysdeps/sparc/sparc64/fpu/multiarch/s_rintf.S: New file.
-	* sysdeps/sparc/sparc64/fpu/multiarch/Makefile: Add new VIS3 routines.
-	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_ceil-vis3.S: New file.
+	* sysdeps/sparc/sparc64/fpu/multiarch/Makefile: Add new VIS3
+	routines.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_ceil-vis3.S: New
+	file.
 	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_ceil.S: New file.
-	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_ceilf-vis3.S: New file.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_ceilf-vis3.S: New
+	file.
 	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_ceilf.S: New file.
-	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_fabs-vis3.S: New file.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_fabs-vis3.S: New
+	file.
 	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_fabs.S: New file.
-	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_fabsf-vis3.S: New file.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_fabsf-vis3.S: New
+	file.
 	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_fabsf.S: New file.
-	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_floor-vis3.S: New file.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_floor-vis3.S: New
+	file.
 	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_floor.S: New file.
-	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_floorf-vis3.S: New file.
-	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_floorf.S: New file.
-	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_llrint-vis3.S: New file.
-	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_llrint.S: New file.
-	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_llrintf-vis3.S: New file.
-	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_llrintf.S: New file.
-	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_rint-vis3.S: New file.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_floorf-vis3.S: New
+	file.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_floorf.S: New
+	file.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_llrint-vis3.S: New
+	file.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_llrint.S: New
+	file.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_llrintf-vis3.S:
+	New file.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_llrintf.S: New
+	file.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_rint-vis3.S: New
+	file.
 	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_rint.S: New file.
-	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_rintf-vis3.S: New file.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_rintf-vis3.S: New
+	file.
 	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_rintf.S: New file.
-	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/w_sqrt-vis3.S: New file.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/w_sqrt-vis3.S: New
+	file.
 	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/w_sqrt.S: New file.
-	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/w_sqrtf-vis3.S: New file.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/w_sqrtf-vis3.S: New
+	file.
 	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/w_sqrtf.S: New file.
-	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/Makefile: Add new VIS3 routines.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/Makefile: Add new
+	VIS3 routines.
 
 	* sysdeps/sparc/sparc32/sparcv9/fpu/unix/sysv/linux/multiarch/Implies:
 	New file.
@@ -337,18 +366,23 @@
 	available use -Av9d instead of -Av9a.
 	* sysdeps/sparc/sparc64/Makefile: Likewise.
 	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/Makefile: New file.
-	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_copysign-vis3.S: New file.
-	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_copysign.S: New file.
-	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_copysignf-vis3.S: New file.
-	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_copysignf.S: New file.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_copysign-vis3.S:
+	New file.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_copysign.S: New
+	file.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_copysignf-vis3.S:
+	New file.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_copysignf.S: New
+	file.
 	* sysdeps/sparc/sparc64/fpu/multiarch/Makefile: New file.
 	* sysdeps/sparc/sparc64/fpu/multiarch/s_signbit-vis3.S: New file.
 	* sysdeps/sparc/sparc64/fpu/multiarch/s_signbit.S: New file.
 	* sysdeps/sparc/sparc64/fpu/multiarch/s_signbitf-vis3.S: New file.
 	* sysdeps/sparc/sparc64/fpu/multiarch/s_signbitf.S: New file.
 
-	* sysdeps/sparc/sparc64/fpu/s_copysign.S (__copysign): Use fzeros/fnegs
-	to load 0x80000000 into a float register instead of using the stack.
+	* sysdeps/sparc/sparc64/fpu/s_copysign.S (__copysign): Use
+	fzeros/fnegs to load 0x80000000 into a float register instead of
+	using the stack.
 	* sysdeps/sparc/sparc64/fpu/s_copysignf.S (__copysignf): Likewise.
 
 2012-03-14  Joseph Myers  <joseph@codesourcery.com>
