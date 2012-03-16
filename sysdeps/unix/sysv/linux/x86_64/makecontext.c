@@ -52,29 +52,30 @@ void
 __makecontext (ucontext_t *ucp, void (*func) (void), int argc, ...)
 {
   extern void __start_context (void);
-  unsigned long int *sp, idx_uc_link;
+  greg_t *sp;
+  unsigned int idx_uc_link;
   va_list ap;
   int i;
 
   /* Generate room on stack for parameter if needed and uc_link.  */
-  sp = (unsigned long int *) ((uintptr_t) ucp->uc_stack.ss_sp
-			      + ucp->uc_stack.ss_size);
+  sp = (greg_t *) ((uintptr_t) ucp->uc_stack.ss_sp
+		   + ucp->uc_stack.ss_size);
   sp -= (argc > 6 ? argc - 6 : 0) + 1;
   /* Align stack and make space for trampoline address.  */
-  sp = (unsigned long int *) ((((uintptr_t) sp) & -16L) - 8);
+  sp = (greg_t *) ((((uintptr_t) sp) & -16L) - 8);
 
   idx_uc_link = (argc > 6 ? argc - 6 : 0) + 1;
 
   /* Setup context ucp.  */
   /* Address to jump to.  */
-  ucp->uc_mcontext.gregs[REG_RIP] = (long int) func;
+  ucp->uc_mcontext.gregs[REG_RIP] = (uintptr_t) func;
   /* Setup rbx.*/
-  ucp->uc_mcontext.gregs[REG_RBX] = (long int) &sp[idx_uc_link];
-  ucp->uc_mcontext.gregs[REG_RSP] = (long int) sp;
+  ucp->uc_mcontext.gregs[REG_RBX] = (uintptr_t) &sp[idx_uc_link];
+  ucp->uc_mcontext.gregs[REG_RSP] = (uintptr_t) sp;
 
   /* Setup stack.  */
-  sp[0] = (unsigned long int) &__start_context;
-  sp[idx_uc_link] = (unsigned long int) ucp->uc_link;
+  sp[0] = (uintptr_t) &__start_context;
+  sp[idx_uc_link] = (uintptr_t) ucp->uc_link;
 
   va_start (ap, argc);
   /* Handle arguments.
@@ -90,26 +91,26 @@ __makecontext (ucontext_t *ucp, void (*func) (void), int argc, ...)
     switch (i)
       {
       case 0:
-	ucp->uc_mcontext.gregs[REG_RDI] = va_arg (ap, long int);
+	ucp->uc_mcontext.gregs[REG_RDI] = va_arg (ap, greg_t);
 	break;
       case 1:
-	ucp->uc_mcontext.gregs[REG_RSI] = va_arg (ap, long int);
+	ucp->uc_mcontext.gregs[REG_RSI] = va_arg (ap, greg_t);
 	break;
       case 2:
-	ucp->uc_mcontext.gregs[REG_RDX] = va_arg (ap, long int);
+	ucp->uc_mcontext.gregs[REG_RDX] = va_arg (ap, greg_t);
 	break;
       case 3:
-	ucp->uc_mcontext.gregs[REG_RCX] = va_arg (ap, long int);
+	ucp->uc_mcontext.gregs[REG_RCX] = va_arg (ap, greg_t);
 	break;
       case 4:
-	ucp->uc_mcontext.gregs[REG_R8] = va_arg (ap, long int);
+	ucp->uc_mcontext.gregs[REG_R8] = va_arg (ap, greg_t);
 	break;
       case 5:
-	ucp->uc_mcontext.gregs[REG_R9] = va_arg (ap, long int);
+	ucp->uc_mcontext.gregs[REG_R9] = va_arg (ap, greg_t);
 	break;
       default:
 	/* Put value on stack.  */
-	sp[i - 5] = va_arg (ap, unsigned long int);
+	sp[i - 5] = va_arg (ap, greg_t);
 	break;
       }
   va_end (ap);
