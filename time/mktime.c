@@ -89,9 +89,11 @@ verify (long_int_is_wide_enough, INT_MAX == INT_MAX * (long_int) 2 / 2);
    implementations (e.g., UNICOS 9.0 on a Cray Y-MP EL) don't shift
    right in the usual way when A < 0, so SHR falls back on division if
    ordinary A >> B doesn't seem to be the usual signed shift.  */
-#define SHR(a, b)	\
-  (-1 >> 1 == -1	\
-   ? (a) >> (b)		\
+#define SHR(a, b)                                               \
+  ((-1 >> 1 == -1                                               \
+    && (long_int) -1 >> 1 == -1                                 \
+    && ((time_t) -1 >> 1 == -1 || ! TYPE_SIGNED (time_t)))      \
+   ? (a) >> (b)                                                 \
    : (a) / (1 << (b)) - ((a) % (1 << (b)) < 0))
 
 /* The extra casts in the following macros work around compiler bugs,

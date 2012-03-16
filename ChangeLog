@@ -1,5 +1,10 @@
 2012-05-23  Paul Eggert  <eggert@cs.ucla.edu>
 
+	mktime: check signed shifts on long_int and time_t, too
+	* time/mktime.c (SHR): Check that shifts work as desired
+	on the types long_int and time_t too, as SHR is used on
+	such types.
+
 	mktime: do not assume 'long' is wide enough
 	* time/mktime.c (verify): Move decl up.
 	(long_int): New type.
