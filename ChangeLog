@@ -1,5 +1,8 @@
 2012-03-16  David S. Miller  <davem@davemloft.net>
 
+	* sysdeps/unix/sysv/linux/shmat.c (shmat): Use -1l to avoid
+	warnings.
+
 	[BZ #6471]
 	* sysdeps/unix/sysv/linux/shmat.c (shmat): Test for syscall errors
 	properly.

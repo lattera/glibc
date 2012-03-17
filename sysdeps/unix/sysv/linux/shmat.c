@@ -55,7 +55,7 @@ shmat (shmid, shmaddr, shmflg)
   if (INTERNAL_SYSCALL_ERROR_P (resultvar, err))
     {
       __set_errno (INTERNAL_SYSCALL_ERRNO (resultvar, err));
-      return (void *) -1;
+      return (void *) -1l;
     }
 
   return BOUNDED_N (raddr, length);
