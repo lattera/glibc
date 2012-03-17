@@ -26,6 +26,8 @@ libc {
   GLIBC_2.16 {
     #errlist-compat	136
     _sys_errlist; sys_errlist; _sys_nerr; sys_nerr;
+
+    __getshmlba;
   }
 }
 librt {

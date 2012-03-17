@@ -1,3 +1,9 @@
+2012-03-17  David S. Miller  <davem@davemloft.net>
+
+	[BZ #6471]
+	* sysdeps/unix/sysv/linux/sparc/Versions: Add __getshmlba entry
+	for 2.16.
+
 2012-03-16  David S. Miller  <davem@davemloft.net>
 
 	* sysdeps/unix/sysv/linux/shmat.c (shmat): Use -1l to avoid
