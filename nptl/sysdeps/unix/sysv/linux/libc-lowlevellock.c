@@ -17,4 +17,4 @@
    <http://www.gnu.org/licenses/>.  */
 
 /* No difference to lowlevellock.c, except we lose a couple of functions.  */
-#include "lowlevellock.c"
+#include <lowlevellock.c>
