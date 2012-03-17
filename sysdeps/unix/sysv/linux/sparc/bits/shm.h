@@ -40,8 +40,8 @@
 __BEGIN_DECLS
 
 /* Segment low boundary address multiple.  */
-#define SHMLBA		(__getpagesize ())
-extern int __getpagesize (void) __THROW __attribute__ ((__const__));
+#define SHMLBA		(__getshmlba ())
+extern int __getshmlba (void) __attribute__ ((__const__));
 
 
 /* Type to count number of attaches.  */

@@ -35,7 +35,8 @@ shmat (shmid, shmaddr, shmflg)
      const void *shmaddr;
      int shmflg;
 {
-  void *__unbounded result;
+  INTERNAL_SYSCALL_DECL(err);
+  unsigned long resultvar;
   void *__unbounded raddr;
 
 #if __BOUNDED_POINTERS__
@@ -47,12 +48,15 @@ shmat (shmid, shmaddr, shmflg)
     length = shmds.shm_segsz;
 #endif
 
-  result = (void *__unbounded) INLINE_SYSCALL (ipc, 5, IPCOP_shmat,
-					       shmid, shmflg,
-					       (long int) __ptrvalue (&raddr),
-					       __ptrvalue ((void *) shmaddr));
-  if ((unsigned long) result <= -(unsigned long) SHMLBA)
-    result = raddr;
+  resultvar = INTERNAL_SYSCALL (ipc, err, 5, IPCOP_shmat,
+				shmid, shmflg,
+				(long int) __ptrvalue (&raddr),
+				__ptrvalue ((void *) shmaddr));
+  if (INTERNAL_SYSCALL_ERROR_P (resultvar, err))
+    {
+      __set_errno (INTERNAL_SYSCALL_ERRNO (resultvar, err));
+      return (void *) -1;
+    }
 
-  return BOUNDED_N (result, length);
+  return BOUNDED_N (raddr, length);
 }

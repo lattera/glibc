@@ -1,5 +1,14 @@
 2012-03-16  David S. Miller  <davem@davemloft.net>
 
+	[BZ #6471]
+	* sysdeps/unix/sysv/linux/shmat.c (shmat): Test for syscall errors
+	properly.
+	* sysdeps/unix/sysv/linux/sparc/getshmlba.c: New file.
+	* sysdeps/unix/sysv/linux/sparc/Makefile: Add getshmlba to
+	sysdep_routines when subdir is sysvipc.
+	* sysdeps/unix/sysv/linux/sparc/bits/shm.h (SHMLBA): Use new
+	__getshmlba helper.
+
 	* sysdeps/sparc/fpu/libm-test/ulps: Update.
 
 2012-03-16  H.J. Lu  <hongjiu.lu@intel.com>

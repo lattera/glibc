@@ -7,3 +7,7 @@ syscall-list-64bit-condition := __WORDSIZE == 64
 ifeq ($(subdir),rt)
 librt-routines += rt-sysdep
 endif
+
+ifeq ($(subdir),sysvipc)
+sysdep_routines += getshmlba
+endif
