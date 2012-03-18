@@ -1,6 +1,5 @@
 /* Store current floating-point environment and clear exceptions.
-   Copyright (C) 1997, 1999, 2003, 2004, 2005, 2007
-   Free Software Foundation, Inc.
+   Copyright (C) 1997-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -26,19 +25,9 @@
 int
 feholdexcept (fenv_t *envp)
 {
-  fenv_t temp;
-
-  /* Store the environment.  */
-  __asm__ ("fnstenv %0" : "=m" (temp));
-  *envp = temp;
-
-  /* Now set all exceptions to non-stop.  */
-  temp.__control_word |= 0x3f;
-
-  /* And clear all exceptions.  */
-  temp.__status_word &= ~0x3f;
-
-  __asm__ ("fldenv %0" : : "m" (temp));
+  /* Store the environment.  Recall that fnstenv has a side effect of
+     masking all exceptions.  Then clear all exceptions.  */
+  __asm__ volatile ("fnstenv %0; fnclex" : "=m" (*envp));
 
   /* If the CPU supports SSE we set the MXCSR as well.  */
   if ((GLRO(dl_hwcap) & HWCAP_I386_XMM) != 0)

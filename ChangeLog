@@ -1,5 +1,8 @@
 2012-03-19  Richard Henderson  <rth@twiddle.net>
 
+	* sysdeps/i386/fpu/feholdexcpt.c (feholdexcept): Avoid the fldenv.
+	* sysdeps/x86_64/fpu/feholdexcpt.c (feholdexcept): Likewise.
+
 	* sysdeps/generic/math_private.h (default_libc_feupdateenv_test): New.
 	(libc_feupdateenv_test, libc_feupdateenv_testf): New.
 	(libc_feupdateenv_testl): New.
