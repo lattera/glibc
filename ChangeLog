@@ -1,5 +1,19 @@
 2012-03-19  Richard Henderson  <rth@twiddle.net>
 
+	* sysdeps/i386/fpu/fenv_private.h: New file.
+	* sysdeps/i386/fpu/math_private.h: Use it.
+	(math_opt_barrier, math_force_eval): Remove.
+	(libc_feholdexcept_setround_53bit): Remove.
+	(libc_feupdateenv_53bit): Remove.
+	* sysdeps/x86_64/fpu/math_private.h: Likewise.
+	(math_opt_barrier, math_force_eval): Remove.
+	(libc_feholdexcept): Remove.
+	(libc_feholdexcept_setround): Remove.
+	(libc_fetestexcept, libc_fesetenv): Remove.
+	(libc_feupdateenv_test): Remove.
+	(libc_feupdateenv, libc_feholdsetround): Remove.
+	(libc_feresetround): Remove.
+
 	* sysdeps/i386/fpu/feholdexcpt.c (feholdexcept): Avoid the fldenv.
 	* sysdeps/x86_64/fpu/feholdexcpt.c (feholdexcept): Likewise.
 
