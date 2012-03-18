@@ -1,5 +1,9 @@
 2012-03-19  Richard Henderson  <rth@twiddle.net>
 
+	* sysdeps/i386/fpu/math_private.h: Include <fenv.h>, <fpu_control.h>.
+	(libc_feholdexcept_setround_53bit): Convert from macro to function.
+	(libc_feupdateenv_53bit): Likewise.  Don't force _FPU_EXTENDED.
+
 	* sysdeps/generic/math_private.h: Include <fenv.h>.
 	(default_libc_feholdexcept): New.
 	(default_libc_feholdexcept_setround): New.

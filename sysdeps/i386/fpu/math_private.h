@@ -1,5 +1,8 @@
 #ifndef _MATH_PRIVATE_H
 
+#include <fenv.h>
+#include <fpu_control.h>
+
 #define math_opt_barrier(x) \
 ({ __typeof (x) __x;					\
    __asm ("" : "=t" (__x) : "0" (x));			\
@@ -15,34 +18,31 @@ do							\
   }							\
 while (0)
 
+static __always_inline void
+libc_feholdexcept_setround_53bit (fenv_t *e, int r)
+{
+  feholdexcept (e);
+  fesetround (r);
+
+  fpu_control_t cw;
+  _FPU_GETCW (cw);
+  cw &= ~(fpu_control_t) _FPU_EXTENDED;
+  cw |= _FPU_DOUBLE;
+  _FPU_SETCW (cw);
+}
+#define libc_feholdexcept_setround_53bit libc_feholdexcept_setround_53bit
+
+static __always_inline void
+libc_feupdateenv_53bit (fenv_t *e)
+{
+  feupdateenv (e);
+
+  /* Unfortunately, feupdateenv fails to affect the rounding precision.
+     We can get that back by restoring the exact control word we saved.  */
+  _FPU_SETCW (e->__control_word);
+}
+#define libc_feupdateenv_53bit libc_feupdateenv_53bit
+
 #include_next <math_private.h>
 
-#include <fpu_control.h>
-
-#undef libc_feholdexcept_setround_53bit
-#define libc_feholdexcept_setround_53bit(e, r)	\
-  do						\
-    {						\
-      fpu_control_t cw;				\
-      libc_feholdexcept_setround (e, r);	\
-      _FPU_GETCW (cw);				\
-      cw &= ~(fpu_control_t) _FPU_EXTENDED;	\
-      cw |= _FPU_DOUBLE;			\
-      _FPU_SETCW (cw);				\
-    }						\
-  while (0)
-
-#undef libc_feupdateenv_53bit
-#define libc_feupdateenv_53bit(e)		\
-  do						\
-    {						\
-      fpu_control_t cw;				\
-      libc_feupdateenv (e);			\
-      _FPU_GETCW (cw);				\
-      cw &= ~(fpu_control_t) _FPU_EXTENDED;	\
-      cw |= _FPU_EXTENDED;			\
-      _FPU_SETCW (cw);				\
-    }						\
-  while (0)
-
-#endif
+#endif /* _MATH_PRIVATE_H */
