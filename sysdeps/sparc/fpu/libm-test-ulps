@@ -546,6 +546,15 @@ float: 1
 ifloat: 1
 ildouble: 1
 ldouble: 1
+Test "Real part of: clog (0x1.fp+16383 + 0x1.fp+16383 i) == 11356.83823118610934184548269774874545400 + pi/4 i":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog (0x1p-1074 + 0x1p-1074 i) == -744.0934983311012896593986823853525458290 + pi/4 i":
+double: 1
+idouble: 1
+Test "Real part of: clog (0x1p-147 + 0x1p-147 i) == -101.5460619520319878296245057936228672231 + pi/4 i":
+float: 1
+ifloat: 1
 
 # clog10
 Test "Imaginary part of: clog10 (-0 + inf i) == inf + pi/2*log10(e) i":
@@ -615,6 +624,42 @@ ifloat: 1
 Test "Imaginary part of: clog10 (0.75 + 1.25 i) == 0.163679467193165171449476605077428975 + 0.447486970040493067069984724340855636 i":
 ildouble: 1
 ldouble: 1
+Test "Imaginary part of: clog10 (0x1.fffffep+127 + 0x1.fffffep+127 i) == 38.68235441693561449174780668781319348761 + pi/4*log10(e) i":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+Test "Real part of: clog10 (0x1.fffffep+127 + 1.0 i) == 38.53183941910362389414093724045094697423 + 1.276276851248440096917018665609900318458e-39 i":
+float: 1
+ifloat: 1
+Test "Imaginary part of: clog10 (0x1.fffffffffffffp+1023 + 0x1.fffffffffffffp+1023 i) == 308.4052305577487344482591243175787477115 + pi/4*log10(e) i":
+double: 1
+idouble: 1
+Test "Real part of: clog10 (0x1.fp+16383 + 0x1.fp+16383 i) == 4932.212175672014259683102930239951947672 + pi/4*log10(e) i":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog10 (0x1.fp+16383 + 0x1p+16383 i) == 4932.112944269463028900262609694408579449 + 0.2069271710841128115912940666587802677383 i":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: clog10 (0x1p-1073 + 0x1p-1073 i) == -322.8546703496198318667349645920187712089 + pi/4*log10(e) i":
+double: 1
+idouble: 1
+Test "Real part of: clog10 (0x1p-1074 + 0x1p-1074 i) == -323.1557003452838130619487034867432642357 + pi/4*log10(e) i":
+double: 1
+idouble: 1
+Test "Imaginary part of: clog10 (0x1p-1074 + 0x1p-1074 i) == -323.1557003452838130619487034867432642357 + pi/4*log10(e) i":
+double: 1
+idouble: 1
+Test "Imaginary part of: clog10 (0x1p-147 + 0x1p-147 i) == -44.10089436477324509881274807713822842154 + pi/4*log10(e) i":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+Test "Imaginary part of: clog10 (0x1p-149 + 0x1p-149 i) == -44.70295435610120748924022586658721447508 + pi/4*log10(e) i":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
 Test "Imaginary part of: clog10 (3 + inf i) == inf + pi/2*log10(e) i":
 double: 1
 float: 1
@@ -1981,13 +2026,17 @@ ildouble: 1
 ldouble: 1
 
 Function: Real part of "clog":
+double: 1
 float: 1
+idouble: 1
 ifloat: 1
 ildouble: 1
 ldouble: 1
 
 Function: Real part of "clog10":
+double: 1
 float: 1
+idouble: 1
 ifloat: 1
 ildouble: 1
 ldouble: 1

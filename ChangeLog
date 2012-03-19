@@ -4,6 +4,8 @@
 
 2012-03-19  David S. Miller  <davem@davemloft.net>
 
+	* sysdeps/sparc/fpu/libm-test-ulps: Update.
+
 	* sysdeps/sparc/fpu/fenv_private.h: New file.
 	* sysdeps/sparc/fpu/math_private.h: Use it.
 	(libc_feholdexcept, libc_feholdexceptf, libc_feholdexceptl):
