@@ -1,5 +1,10 @@
 2012-03-19  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* sysdeps/x86_64/bits/mathdef.h: Don't include <bits/wordsize.h>.
+	Check __x86_64__ instead of __WORDSIZE.
+
+2012-03-19  H.J. Lu  <hongjiu.lu@intel.com>
+
 	* sysdeps/unix/sysv/linux/x86_64/ldd-rewrite.sed: Support x32.
 
 2012-03-19  David S. Miller  <davem@davemloft.net>

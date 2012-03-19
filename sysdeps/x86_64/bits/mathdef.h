@@ -1,4 +1,4 @@
-/* Copyright (C) 2001, 2004, 2010 Free Software Foundation, Inc.
+/* Copyright (C) 2001-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -22,9 +22,7 @@
 #if defined __USE_ISOC99 && defined _MATH_H && !defined _MATH_H_MATHDEF
 # define _MATH_H_MATHDEF	1
 
-# include <bits/wordsize.h>
-
-# if __WORDSIZE == 64 || (defined __FLT_EVAL_METHOD__ && __FLT_EVAL_METHOD__ == 0)
+# if defined __x86_64__ || (defined __FLT_EVAL_METHOD__ && __FLT_EVAL_METHOD__ == 0)
 /* The x86-64 architecture computes values with the precission of the
    used type.  Similarly for -m32 -mfpmath=sse.  */
 typedef float float_t;		/* `float' expressions are evaluated as `float'.  */
