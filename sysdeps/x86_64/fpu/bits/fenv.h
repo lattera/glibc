@@ -19,9 +19,6 @@
 # error "Never use <bits/fenv.h> directly; include <fenv.h> instead."
 #endif
 
-#include <bits/wordsize.h>
-
-
 /* Define bits representing the exception.  We use the bit positions
    of the appropriate bits in the FPU control word.  */
 enum
@@ -81,7 +78,7 @@ typedef struct
     unsigned int __data_offset;
     unsigned short int __data_selector;
     unsigned short int __unused5;
-#if __WORDSIZE == 64
+#ifdef __x86_64__
     unsigned int __mxcsr;
 #endif
   }
