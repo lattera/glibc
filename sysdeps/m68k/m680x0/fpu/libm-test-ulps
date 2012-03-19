@@ -463,6 +463,12 @@ ldouble: 1
 Test "Imaginary part of: clog (0.75 + 1.25 i) == 0.376885901188190075998919126749298416 + 1.03037682652431246378774332703115153 i":
 ildouble: 1
 ldouble: 1
+Test "Real part of: clog (0x1.fp+16383 + 0x1p+16383 i) == 11356.60974243783798653123798337822335902 + 0.4764674194737066993385333770295162295856 i":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: clog (0x1.fp+16383 + 0x1p+16383 i) == 11356.60974243783798653123798337822335902 + 0.4764674194737066993385333770295162295856 i":
+ildouble: 1
+ldouble: 1
 
 # clog10
 Test "Imaginary part of: clog10 (-0 + inf i) == inf + pi/2*log10(e) i":
@@ -513,6 +519,9 @@ double: 1
 idouble: 1
 ildouble: 2
 ldouble: 2
+Test "Imaginary part of: clog10 (0x1p-16440 + 0x1p-16441 i) == -4948.884673709346821106688037612752099609 + 0.2013595981366865710389502301937289472543 i":
+ildouble: 1
+ldouble: 1
 Test "Imaginary part of: clog10 (3 + inf i) == inf + pi/2*log10(e) i":
 float: 1
 ifloat: 1
@@ -988,6 +997,9 @@ float: 1
 ifloat: 1
 
 # j0
+Test "j0 (-0x1.001000001p+593) == -3.927269966354206207832593635798954916263e-90":
+ildouble: 2
+ldouble: 2
 Test "j0 (-4.0) == -3.9714980986384737228659076845169804197562E-1":
 float: 1
 ifloat: 1
@@ -996,6 +1008,9 @@ ldouble: 2
 Test "j0 (0.75) == 0.864242275166648623555731103820923211":
 float: 1
 ifloat: 1
+Test "j0 (0x1.d7ce3ap+107) == 2.775523647291230802651040996274861694514e-17":
+float: 2
+ifloat: 2
 Test "j0 (1.5) == 0.511827671735918128749051744283411720":
 float: 1
 ifloat: 1
@@ -1015,6 +1030,11 @@ ifloat: 1
 Test "j1 (-1.0) == -0.440050585744933515959682203718914913":
 float: 1
 ifloat: 1
+Test "j1 (0x1.3ffp+74) == 1.818984347516051243459364437186082741567e-12":
+float: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
 Test "j1 (1.0) == 0.440050585744933515959682203718914913":
 float: 1
 ifloat: 1
@@ -1110,6 +1130,11 @@ ldouble: 2
 Test "jn (10, 2.0) == 0.251538628271673670963516093751820639e-6":
 float: 2
 ifloat: 2
+ildouble: 1
+ldouble: 1
+Test "jn (2, 0x1.ffff62p+99) == -4.43860668048170034334926693188979974489e-16":
+float: 1
+ifloat: 1
 ildouble: 1
 ldouble: 1
 Test "jn (2, 2.4048255576957729) == 0.43175480701968038399746111312430703":
@@ -1643,6 +1668,11 @@ idouble: 1
 ifloat: 1
 ildouble: 2
 ldouble: 2
+Test "y0 (0x1.3ffp+74) == 1.818984347516051243459467456433028748678e-12":
+float: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
 Test "y0 (1.0) == 0.0882569642156769579829267660235151628":
 ildouble: 1
 ldouble: 1
@@ -1667,6 +1697,16 @@ ldouble: 1
 
 # y1
 Test "y1 (0.125) == -5.19993611253477499595928744876579921":
+ildouble: 1
+ldouble: 1
+Test "y1 (0x1.001000001p+593) == 3.927269966354206207832593635798954916263e-90":
+ildouble: 2
+ldouble: 2
+Test "y1 (0x1.27e204p+99) == -8.881610148467797208469612080785210013461e-16":
+double: 1
+float: 2
+idouble: 1
+ifloat: 2
 ildouble: 1
 ldouble: 1
 Test "y1 (1.0) == -0.781212821300288716547150000047964821":
@@ -2098,9 +2138,9 @@ ifloat: 1
 
 Function: "j0":
 double: 1
-float: 1
+float: 2
 idouble: 1
-ifloat: 1
+ifloat: 2
 ildouble: 2
 ldouble: 2
 
@@ -2283,8 +2323,8 @@ double: 1
 float: 2
 idouble: 1
 ifloat: 2
-ildouble: 1
-ldouble: 1
+ildouble: 2
+ldouble: 2
 
 Function: "yn":
 double: 1
