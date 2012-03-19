@@ -1,3 +1,9 @@
+ld {
+  GLIBC_2.3 {
+    # The alternative i386 runtime interface to TLS.
+    ___tls_get_addr;
+  }
+}
 libc {
   GLIBC_2.0 {
     # Functions from libgcc.
