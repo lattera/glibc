@@ -1,5 +1,10 @@
 2012-03-19  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* sysdeps/unix/sysv/linux/x86_64/lowlevellock.h (SYS_futex): Use
+	__NR_futex directly.
+
+2012-03-19  H.J. Lu  <hongjiu.lu@intel.com>
+
 	* unwind.c (unwind_stop): Cast _Unwind_GetCFA return to
 	_Unwind_Ptr first.
 
