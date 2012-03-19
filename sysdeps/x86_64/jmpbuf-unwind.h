@@ -28,7 +28,9 @@
   ((void *) (address) < (void *) demangle ((jmpbuf)[JB_RSP]))
 
 #define _JMPBUF_CFA_UNWINDS_ADJ(_jmpbuf, _context, _adj) \
-  _JMPBUF_UNWINDS_ADJ (_jmpbuf, (void *) _Unwind_GetCFA (_context), _adj)
+  _JMPBUF_UNWINDS_ADJ (_jmpbuf, \
+		       (void *) (_Unwind_Ptr) _Unwind_GetCFA (_context), \
+		       _adj)
 
 static inline uintptr_t __attribute__ ((unused))
 _jmpbuf_sp (__jmp_buf regs)
