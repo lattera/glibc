@@ -1,3 +1,7 @@
+2012-03-19  Richard Henderson  <rth@twiddle.net>
+
+	* sysdeps/alpha/fpu/math_private.h: New file.
+
 2012-03-11  Richard Henderson  <rth@twiddle.net>
 
 	* sysdeps/unix/sysv/linux/alpha/bits/socket.h: Remove file.
