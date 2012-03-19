@@ -12,7 +12,7 @@
 /* Direct movement of float into integer register.  */
 #define EXTRACT_WORDS64(i, d)						      \
   do {									      \
-    long int i_;							      \
+    int64_t i_;								      \
     asm (MOVD " %1, %0" : "=rm" (i_) : "x" ((double) (d)));		      \
     (i) = i_;								      \
   } while (0)
@@ -20,7 +20,7 @@
 /* And the reverse.  */
 #define INSERT_WORDS64(d, i) \
   do {									      \
-    long int i_ = i;							      \
+    int64_t i_ = i;							      \
     double d__;								      \
     asm (MOVD " %1, %0" : "=x" (d__) : "rm" (i_));			      \
     d = d__;								      \
