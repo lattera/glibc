@@ -1,5 +1,20 @@
 2012-03-19  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #13629]
+	* math/s_clog.c: Include <float.h>.
+	(__clog): Scale large or subnormal inputs.
+	* math/s_clogf.c: Likewise.
+	* math/s_clogl.c: Likewise.
+	* math/s_clog10.c: Include <float.h>.
+	(M_LOG10_2): Define.
+	(__clog10): Scale large or subnormal inputs.
+	* math/s_clog10f.c: Likewise.
+	* math/s_clog10l.c: Likewise.
+	* math/libm-test.inc (clog_test): Add more tests.
+	(clog10_test): Likewise.
+	* sysdeps/i386/fpu/libm-test-ulps: Update.
+	* sysdeps/x86_64/fpu/libm-test-ulps: Likewise.
+
 	[BZ #11451]
 	* sysdeps/ieee754/dbl-64/e_atan2.c (__ieee754_atan2): Scale large
 	x and y.

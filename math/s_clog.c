@@ -1,5 +1,5 @@
 /* Compute complex natural logarithm.
-   Copyright (C) 1997, 2011 Free Software Foundation, Inc.
+   Copyright (C) 1997-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -20,7 +20,7 @@
 #include <complex.h>
 #include <math.h>
 #include <math_private.h>
-
+#include <float.h>
 
 __complex__ double
 __clog (__complex__ double x)
@@ -40,8 +40,27 @@ __clog (__complex__ double x)
   else if (__builtin_expect (rcls != FP_NAN && icls != FP_NAN, 1))
     {
       /* Neither real nor imaginary part is NaN.  */
-      __real__ result = __ieee754_log (__ieee754_hypot (__real__ x,
-							__imag__ x));
+      double d;
+      int scale = 0;
+
+      if (fabs (__real__ x) > DBL_MAX / 2.0
+	  || fabs (__imag__ x) > DBL_MAX / 2.0)
+	{
+	  scale = -1;
+	  __real__ x = __scalbn (__real__ x, scale);
+	  __imag__ x = __scalbn (__imag__ x, scale);
+	}
+      else if (fabs (__real__ x) < DBL_MIN
+	       && fabs (__imag__ x) < DBL_MIN)
+	{
+	  scale = DBL_MANT_DIG;
+	  __real__ x = __scalbn (__real__ x, scale);
+	  __imag__ x = __scalbn (__imag__ x, scale);
+	}
+
+      d = __ieee754_hypot (__real__ x, __imag__ x);
+
+      __real__ result = __ieee754_log (d) - scale * M_LN2;
       __imag__ result = __ieee754_atan2 (__imag__ x, __real__ x);
     }
   else
