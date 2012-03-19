@@ -949,6 +949,8 @@ atan2_test (void)
   TEST_ff_f (atan2, minus_infty, minus_infty, -M_PI_34l);
   TEST_ff_f (atan2, nan_value, nan_value, nan_value);
 
+  TEST_ff_f (atan2, max_value, max_value, M_PI_4l);
+
   TEST_ff_f (atan2, 0.75L, 1, 0.643501108793284386802809228717322638L);
   TEST_ff_f (atan2, -0.75L, 1.0L, -0.643501108793284386802809228717322638L);
   TEST_ff_f (atan2, 0.75L, -1.0L, 2.49809154479650885165983415456218025L);

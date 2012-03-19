@@ -1,5 +1,10 @@
 2012-03-19  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #11451]
+	* sysdeps/ieee754/dbl-64/e_atan2.c (__ieee754_atan2): Scale large
+	x and y.
+	* math/libm-test.inc (atan2_test): Add another test.
+
 	* Makerules (common-objdir-compile): Remove.
 	* sysdeps/unix/Makefile (config-generated): Do not add
 	$(unix-generated) to variable.

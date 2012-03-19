@@ -1,7 +1,7 @@
 /*
  * IBM Accurate Mathematical Library
  * written by International Business Machines Corp.
- * Copyright (C) 2001, 2011 Free Software Foundation
+ * Copyright (C) 2001-2012 Free Software Foundation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -152,6 +152,13 @@ __ieee754_atan2(double y,double x) {
 
   /* if either x or y is extremely close to zero, scale abs(x), abs(y). */
   if (ax<twom500.d || ay<twom500.d) { ax*=two500.d;  ay*=two500.d; }
+
+  /* Likewise for large x and y.  */
+  if (ax > two500.d || ay > two500.d)
+    {
+      ax *= twom500.d;
+      ay *= twom500.d;
+    }
 
   /* x,y which are neither special nor extreme */
   if (ay<ax) {
