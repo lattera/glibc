@@ -1,3 +1,16 @@
+2012-03-19  David S. Miller  <davem@davemloft.net>
+
+	* sysdeps/sparc/fpu/fenv_private.h: New file.
+	* sysdeps/sparc/fpu/math_private.h: Use it.
+	(libc_feholdexcept, libc_feholdexceptf, libc_feholdexceptl):
+	Remove.
+	(libc_feholdexcept_setround, libc_feholdexcept_setroundf,
+	(libc_feholdexcept_setroundl): Remove.
+	(libc_fetestexcept, libc_fetestexceptf, libc_fetestexceptl):
+	Remove.
+	(libc_fesetenv, libc_fesetenvf, libc_fesetenvl): Remove.
+	(libc_feupdateenv, libc_feupdateenvf, libc_feupdateenvf): Remove.
+
 2012-03-19  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/x86_64/jmpbuf-unwind.h (_JMPBUF_CFA_UNWINDS_ADJ): Cast
