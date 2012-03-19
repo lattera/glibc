@@ -68,7 +68,7 @@ unwind_stop (int version, _Unwind_Action actions,
 	 registered with the old method which would be unwound by this
 	 step.  */
       struct _pthread_cleanup_buffer *oldp = buf->priv.data.cleanup;
-      void *cfa = (void *) _Unwind_GetCFA (context);
+      void *cfa = (void *) (_Unwind_Ptr) _Unwind_GetCFA (context);
 
       if (curp != oldp && (do_longjump || FRAME_LEFT (cfa, curp, adj)))
 	{

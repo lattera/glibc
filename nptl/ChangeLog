@@ -1,3 +1,8 @@
+2012-03-19  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* unwind.c (unwind_stop): Cast _Unwind_GetCFA return to
+	_Unwind_Ptr first.
+
 2012-03-16  David S. Miller  <davem@davemloft.net>
 
 	[BZ #13844]
