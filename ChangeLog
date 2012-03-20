@@ -1,5 +1,7 @@
 2012-03-21  Andreas Schwab  <schwab@linux-m68k.org>
 
+	* sysdeps/powerpc/fpu/libm-test-ulps: Update.
+
 	* configure.in (libc_cv_cc_nofma): Check for option to disable
 	generation of FMA instructions.
 	* configure: Regenerate.
