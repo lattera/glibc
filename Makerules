@@ -1122,14 +1122,6 @@ $(BUILD_CC) $($(basename $(<F))-CFLAGS) $(ALL_BUILD_CFLAGS) \
 	    $(firstword $(filter /%,$< $(shell pwd)/$<)) -o $(@F)
 endef
 
-# Command to compile $< in $(common-objdir) using the native libraries.
-# We must cd to $(objdir) anyway so that $(..)config.h is valid.
-define common-objdir-compile
-$(patsubst %/,cd % &&,$(objpfx)) \
-$(BUILD_CC) $($(basename $(<F))-CFLAGS) $(ALL_BUILD_CFLAGS) \
-	    $(firstword $(filter /%,$< $(shell pwd)/$<)) -o $(..)$(@F)
-endef
-
 # We always want to use configuration definitions.
 # Note that this is only used for commands running in $(objpfx).
 ALL_BUILD_CFLAGS = $(BUILD_CFLAGS) -include $(..)config.h

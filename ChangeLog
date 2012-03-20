@@ -1,3 +1,84 @@
+2012-03-19  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #13629]
+	* math/s_clog.c: Include <float.h>.
+	(__clog): Scale large or subnormal inputs.
+	* math/s_clogf.c: Likewise.
+	* math/s_clogl.c: Likewise.
+	* math/s_clog10.c: Include <float.h>.
+	(M_LOG10_2): Define.
+	(__clog10): Scale large or subnormal inputs.
+	* math/s_clog10f.c: Likewise.
+	* math/s_clog10l.c: Likewise.
+	* math/libm-test.inc (clog_test): Add more tests.
+	(clog10_test): Likewise.
+	* sysdeps/i386/fpu/libm-test-ulps: Update.
+	* sysdeps/x86_64/fpu/libm-test-ulps: Likewise.
+
+	[BZ #11451]
+	* sysdeps/ieee754/dbl-64/e_atan2.c (__ieee754_atan2): Scale large
+	x and y.
+	* math/libm-test.inc (atan2_test): Add another test.
+
+	* Makerules (common-objdir-compile): Remove.
+	* sysdeps/unix/Makefile (config-generated): Do not add
+	$(unix-generated) to variable.
+	[generic bits/local_lim.h] (mk-local_lim-CFLAGS): Remove variable.
+	[generic bits/local_lim.h] ($(common-objpfx)bits/local_lim.h):
+	Remove rule.
+	[generic bits/local_lim.h] ($(common-objpfx)mk-local_lim):
+	Likewise.
+	[generic bits/local_lim.h] (before-compile): Do not append to
+	variable.
+	[generic bits/local_lim.h] (common-generated): Likewise.
+	[generic sys/param.h] (before-compile): Do not append to variable.
+	[generic sys/param.h] ($(common-objpfx)sys/param.h): Remove rule.
+	[generic sys/param.h] ($(common-objpfx)param.h.c): Likewise.
+	[generic sys/param.h] ($(common-objpfx)param.h.dep): Likewise.
+	[generic sys/param.h] ($(common-objpfx)param.h.dep): Do not
+	include.
+	[generic sys/param.h] (sys/param.h-includes): Remove variable.
+	[generic sys/param.h] (sys/param.h-includes): Remove rule.
+	[generic sys/param.h] ($(addprefix
+	$(common-objpfx),$(sys/param.h-includes))): Likewise.
+	[generic sys/param.h] (common-generated): Do not append to
+	variable.
+	[generic sys/param.h] (sysdep_headers): Likewise.
+	[generic bits/errno.h] (before-compile): Do not append to
+	variable.
+	[generic bits/errno.h] ($(common-objpfx)bits/errno.h): Remove
+	rule.
+	[generic bits/errno.h] ($(common-objpfx)make-errnos): Likewise.
+	[generic bits/errno.h] ($(common-objpfx)make-errnos.c): Likewise.
+	[generic bits/errno.h] ($(common-objpfx)errnos): Likewise.
+	[generic bits/errno.h] (common-generated): Do not append to
+	variable.
+	[generic bits/ioctls.h] (before-compile): Do not append to
+	variable.
+	[generic bits/ioctls.h] ($(common-objpfx)bits/ioctls.h): Remove
+	rule.
+	[generic bits/ioctls.h] (ioctl-includes): Remove variable.
+	[generic bits/ioctls.h] (make-ioctls-CFLAGS): Likewise.
+	[generic bits/ioctls.h] ($(common-objpfx)make-ioctls): Remove
+	rule.
+	[generic bits/ioctls.h] ($(common-objpfx)make-ioctls.c): Likewise.
+	[generic bits/ioctls.h] (bits_termios.h): Remove variable.
+	[generic bits/ioctls.h] ($(common-objpfx)ioctls): Remove rule.
+	[generic bits/ioctls.h] (common-generated): Do not append to
+	variable.
+	[generic sys/syscall.h] (syscall.h): Remove variable.
+	[generic sys/syscall.h] ($(common-objpfx)sys/syscall.h): Remove
+	rule.
+	[generic sys/syscall.h] (before-compile): Do not append to
+	variable.
+	[generic sys/syscall.h] (common-generated): Likewise.
+	* sysdeps/unix/errnos-tmpl.c: Remove file.
+	* sysdeps/unix/errnos.awk: Likewise.
+	* sysdeps/unix/ioctls-tmpl.c: Likewise.
+	* sysdeps/unix/ioctls.awk: Likewise.
+	* sysdeps/unix/mk-local_lim.c: Likewise.
+	* sysdeps/unix/snarf-ioctls: Likewise.
+
 2012-03-19  Richard Henderson  <rth@twiddle.net>
 
 	* sysdeps/i386/fpu/fenv_private.h: New file.

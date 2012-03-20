@@ -1,5 +1,5 @@
 /* Compute complex base 10 logarithm.
-   Copyright (C) 1997, 2011 Free Software Foundation, Inc.
+   Copyright (C) 1997-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -20,7 +20,10 @@
 #include <complex.h>
 #include <math.h>
 #include <math_private.h>
+#include <float.h>
 
+/* log_10 (2).  */
+#define M_LOG10_2f 0.3010299956639811952137388947244930267682f
 
 __complex__ float
 __clog10f (__complex__ float x)
@@ -40,8 +43,27 @@ __clog10f (__complex__ float x)
   else if (__builtin_expect (rcls != FP_NAN && icls != FP_NAN, 1))
     {
       /* Neither real nor imaginary part is NaN.  */
-      __real__ result = __ieee754_log10f (__ieee754_hypotf (__real__ x,
-							    __imag__ x));
+      float d;
+      int scale = 0;
+
+      if (fabsf (__real__ x) > FLT_MAX / 2.0f
+	  || fabsf (__imag__ x) > FLT_MAX / 2.0f)
+	{
+	  scale = -1;
+	  __real__ x = __scalbnf (__real__ x, scale);
+	  __imag__ x = __scalbnf (__imag__ x, scale);
+	}
+      else if (fabsf (__real__ x) < FLT_MIN
+	       && fabsf (__imag__ x) < FLT_MIN)
+	{
+	  scale = FLT_MANT_DIG;
+	  __real__ x = __scalbnf (__real__ x, scale);
+	  __imag__ x = __scalbnf (__imag__ x, scale);
+	}
+
+      d = __ieee754_hypotf (__real__ x, __imag__ x);
+
+      __real__ result = __ieee754_log10f (d) - scale * M_LOG10_2f;
       __imag__ result = M_LOG10E * __ieee754_atan2f (__imag__ x, __real__ x);
     }
   else
