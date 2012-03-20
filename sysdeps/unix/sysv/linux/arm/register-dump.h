@@ -1,5 +1,5 @@
 /* Dump registers.
-   Copyright (C) 1998, 1999, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1998-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Philip Blundell <pb@nexus.co.uk>, 1998.
 
@@ -18,7 +18,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <sys/uio.h>
-#include <stdio-common/_itoa.h>
+#include <_itoa.h>
 #include <sys/ucontext.h>
 
 /* We will print the register dump in this format:

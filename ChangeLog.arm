@@ -1,3 +1,8 @@
+2012-03-20  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/arm/register-dump.h: Include <_itoa.h>
+	instead of <stdio-common/_itoa.h>.
+
 2012-03-09  Paul Eggert  <eggert@cs.ucla.edu>
 
 	[BZ #13673]
