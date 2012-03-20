@@ -1,5 +1,16 @@
 2012-03-19  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* sysdeps/x86_64/bits/atomic.h
+	(__arch_c_compare_and_exchange_val_64_acq): Use atomic64_t on
+	64bit integer.
+	(atomic_exchange_acq): Likewise.
+	(__arch_exchange_and_add_body): Likewise.
+	(__arch_add_body): Likewise.
+	(atomic_add_negative): Likewise.
+	(atomic_add_zero): Likewise.
+
+2012-03-19  H.J. Lu  <hongjiu.lu@intel.com>
+
 	* sysdeps/x86_64/bits/mathdef.h: Don't include <bits/wordsize.h>.
 	(fenv_t): Check __x86_64__ instead of __WORDSIZE.
 

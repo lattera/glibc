@@ -101,8 +101,8 @@ typedef uintmax_t uatomic_max_t;
 		       "lock\n"						      \
 		       "0:\tcmpxchgq %q2, %1"				      \
 		       : "=a" (ret), "=m" (*mem)			      \
-		       : "q" ((long int) (newval)), "m" (*mem),		      \
-			 "0" ((long int)oldval),			      \
+		       : "q" ((atomic64_t) (newval)), "m" (*mem),	      \
+			 "0" ((atomic64_t) (oldval)),		      \
 			 "i" (offsetof (tcbhead_t, multiple_threads)));	      \
      ret; })
 
@@ -125,7 +125,7 @@ typedef uintmax_t uatomic_max_t;
      else								      \
        __asm __volatile ("xchgq %q0, %1"				      \
 			 : "=r" (result), "=m" (*mem)			      \
-			 : "0" ((long) (newvalue)), "m" (*mem));	      \
+			 : "0" ((atomic64_t) (newvalue)), "m" (*mem));	      \
      result; })
 
 
@@ -149,7 +149,7 @@ typedef uintmax_t uatomic_max_t;
      else								      \
        __asm __volatile (lock "xaddq %q0, %1"				      \
 			 : "=r" (result), "=m" (*mem)			      \
-			 : "0" ((long) (value)), "m" (*mem),		      \
+			 : "0" ((atomic64_t) (value)), "m" (*mem),	      \
 			   "i" (offsetof (tcbhead_t, multiple_threads)));     \
      result; })
 
@@ -187,7 +187,7 @@ typedef uintmax_t uatomic_max_t;
     else								      \
       __asm __volatile (lock "addq %q1, %0"				      \
 			: "=m" (*mem)					      \
-			: "ir" ((long) (value)), "m" (*mem),		      \
+			: "ir" ((atomic64_t) (value)), "m" (*mem),	      \
 			  "i" (offsetof (tcbhead_t, multiple_threads)));      \
   } while (0)
 
@@ -218,7 +218,7 @@ typedef uintmax_t uatomic_max_t;
      else								      \
        __asm __volatile (LOCK_PREFIX "addq %q2, %0; sets %1"		      \
 			 : "=m" (*mem), "=qm" (__result)		      \
-			 : "ir" ((long) (value)), "m" (*mem));		      \
+			 : "ir" ((atomic64_t) (value)), "m" (*mem));	      \
      __result; })
 
 
@@ -239,7 +239,7 @@ typedef uintmax_t uatomic_max_t;
      else								      \
        __asm __volatile (LOCK_PREFIX "addq %q2, %0; setz %1"		      \
 			 : "=m" (*mem), "=qm" (__result)		      \
-			 : "ir" ((long) (value)), "m" (*mem));		      \
+			 : "ir" ((atomic64_t) (value)), "m" (*mem));	      \
      __result; })
 
 
