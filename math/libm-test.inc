@@ -78,8 +78,8 @@
    against.  These implemented tests should check all cases that are
    specified in ISO C99.
 
-   Exception testing: At the moment only divide-by-zero and invalid
-   exceptions are tested.  Overflow/underflow and inexact exceptions
+   Exception testing: At the moment only divide-by-zero, invalid and
+   overflow exceptions are tested.  Underflow and inexact exceptions
    aren't checked at the moment.
 
    NaN values: There exist signalling and quiet NaNs.  This implementation
@@ -132,12 +132,14 @@
 #define NO_EXCEPTION			0x0
 #define INVALID_EXCEPTION		0x1
 #define DIVIDE_BY_ZERO_EXCEPTION	0x2
+#define OVERFLOW_EXCEPTION		0x4
 /* The next flags signals that those exceptions are allowed but not required.   */
-#define INVALID_EXCEPTION_OK		0x4
-#define DIVIDE_BY_ZERO_EXCEPTION_OK	0x8
+#define INVALID_EXCEPTION_OK		0x8
+#define DIVIDE_BY_ZERO_EXCEPTION_OK	0x10
+#define OVERFLOW_EXCEPTION_OK		0x20
 #define EXCEPTIONS_OK INVALID_EXCEPTION_OK+DIVIDE_BY_ZERO_EXCEPTION_OK
 /* Some special test flags, passed togther with exceptions.  */
-#define IGNORE_ZERO_INF_SIGN		0x10
+#define IGNORE_ZERO_INF_SIGN		0x40
 
 /* Various constants (we must supply them precalculated for accuracy).  */
 #define M_PI_6l			.52359877559829887307710723054658383L
@@ -450,6 +452,11 @@ test_exceptions (const char *test_name, int exception)
   if ((exception & INVALID_EXCEPTION_OK) == 0)
     test_single_exception (test_name, exception, INVALID_EXCEPTION, FE_INVALID,
 			 "Invalid operation");
+#endif
+#ifdef FE_OVERFLOW
+  if ((exception & OVERFLOW_EXCEPTION_OK) == 0)
+    test_single_exception (test_name, exception, OVERFLOW_EXCEPTION,
+			   FE_OVERFLOW, "Overflow");
 #endif
   feclearexcept (FE_ALL_EXCEPT);
 }
@@ -3074,7 +3081,7 @@ exp10_test (void)
   TEST_f_f (exp10, nan_value, nan_value);
   TEST_f_f (exp10, 3, 1000);
   TEST_f_f (exp10, -1, 0.1L);
-  TEST_f_f (exp10, 1e6, plus_infty);
+  TEST_f_f (exp10, 1e6, plus_infty, OVERFLOW_EXCEPTION);
   TEST_f_f (exp10, -1e6, 0);
   TEST_f_f (exp10, 0.75L, 5.62341325190349080394951039776481231L);
 
@@ -3101,7 +3108,8 @@ exp2_test (void)
 
   TEST_f_f (exp2, 10, 1024);
   TEST_f_f (exp2, -1, 0.5);
-  TEST_f_f (exp2, 1e6, plus_infty);
+  /* Bug 13871: OVERFLOW exception may be missing.  */
+  TEST_f_f (exp2, 1e6, plus_infty, OVERFLOW_EXCEPTION_OK);
   TEST_f_f (exp2, -1e6, 0);
   TEST_f_f (exp2, 0.75L, 1.68179283050742908606225095246642979L);
 
@@ -3137,7 +3145,8 @@ expm1_test (void)
 #endif
 
   errno = 0;
-  TEST_f_f (expm1, 100000.0, plus_infty);
+  /* Bug 13787: OVERFLOW exception may be missing.  */
+  TEST_f_f (expm1, 100000.0, plus_infty, OVERFLOW_EXCEPTION_OK);
   check_int ("errno for expm1(large) == ERANGE", errno, ERANGE, 0, 0, 0);
 
   END (expm1);
@@ -5242,8 +5251,8 @@ nextafter_test (void)
 
   FLOAT fltmax = CHOOSE (LDBL_MAX, DBL_MAX, FLT_MAX,
 			 LDBL_MAX, DBL_MAX, FLT_MAX);
-  TEST_ff_f (nextafter, fltmax, plus_infty, plus_infty);
-  TEST_ff_f (nextafter, -fltmax, minus_infty, minus_infty);
+  TEST_ff_f (nextafter, fltmax, plus_infty, plus_infty, OVERFLOW_EXCEPTION);
+  TEST_ff_f (nextafter, -fltmax, minus_infty, minus_infty, OVERFLOW_EXCEPTION);
 
 #ifdef TEST_LDOUBLE
   // XXX Enable once gcc is fixed.
@@ -5441,10 +5450,12 @@ pow_test (void)
   TEST_ff_f (pow, minus_zero, -11.1L, plus_infty, DIVIDE_BY_ZERO_EXCEPTION);
   check_int ("errno for pow(-0,-num) == ERANGE", errno, ERANGE, 0, 0, 0);
 
-  TEST_ff_f (pow, 0x1p72L, 0x1p72L, plus_infty);
+  TEST_ff_f (pow, 0x1p72L, 0x1p72L, plus_infty, OVERFLOW_EXCEPTION);
   TEST_ff_f (pow, 10, -0x1p72L, 0);
-  TEST_ff_f (pow, max_value, max_value, plus_infty);
-  TEST_ff_f (pow, 10, -max_value, 0);
+  /* Bug 13873: OVERFLOW exception may be missing.  */
+  TEST_ff_f (pow, max_value, max_value, plus_infty, OVERFLOW_EXCEPTION_OK);
+  /* Bug 13872: spurious OVERFLOW exception may be present.  */
+  TEST_ff_f (pow, 10, -max_value, 0, OVERFLOW_EXCEPTION_OK);
 
   TEST_ff_f (pow, 0, 1, 0);
   TEST_ff_f (pow, 0, 11, 0);
@@ -6338,13 +6349,13 @@ scalbn_test (void)
 
   TEST_fi_f (scalbn, 1, 0L, 1);
 
-  TEST_fi_f (scalbn, 1, INT_MAX, plus_infty);
+  TEST_fi_f (scalbn, 1, INT_MAX, plus_infty, OVERFLOW_EXCEPTION);
   TEST_fi_f (scalbn, 1, INT_MIN, plus_zero);
-  TEST_fi_f (scalbn, max_value, INT_MAX, plus_infty);
+  TEST_fi_f (scalbn, max_value, INT_MAX, plus_infty, OVERFLOW_EXCEPTION);
   TEST_fi_f (scalbn, max_value, INT_MIN, plus_zero);
-  TEST_fi_f (scalbn, min_value, INT_MAX, plus_infty);
+  TEST_fi_f (scalbn, min_value, INT_MAX, plus_infty, OVERFLOW_EXCEPTION);
   TEST_fi_f (scalbn, min_value, INT_MIN, plus_zero);
-  TEST_fi_f (scalbn, min_value / 4, INT_MAX, plus_infty);
+  TEST_fi_f (scalbn, min_value / 4, INT_MAX, plus_infty, OVERFLOW_EXCEPTION);
   TEST_fi_f (scalbn, min_value / 4, INT_MIN, plus_zero);
 
   END (scalbn);
@@ -6369,32 +6380,32 @@ scalbln_test (void)
 
   TEST_fl_f (scalbln, 1, 0L, 1);
 
-  TEST_fi_f (scalbln, 1, INT_MAX, plus_infty);
+  TEST_fi_f (scalbln, 1, INT_MAX, plus_infty, OVERFLOW_EXCEPTION);
   TEST_fi_f (scalbln, 1, INT_MIN, plus_zero);
-  TEST_fi_f (scalbln, max_value, INT_MAX, plus_infty);
+  TEST_fi_f (scalbln, max_value, INT_MAX, plus_infty, OVERFLOW_EXCEPTION);
   TEST_fi_f (scalbln, max_value, INT_MIN, plus_zero);
-  TEST_fi_f (scalbln, min_value, INT_MAX, plus_infty);
+  TEST_fi_f (scalbln, min_value, INT_MAX, plus_infty, OVERFLOW_EXCEPTION);
   TEST_fi_f (scalbln, min_value, INT_MIN, plus_zero);
-  TEST_fi_f (scalbln, min_value / 4, INT_MAX, plus_infty);
+  TEST_fi_f (scalbln, min_value / 4, INT_MAX, plus_infty, OVERFLOW_EXCEPTION);
   TEST_fi_f (scalbln, min_value / 4, INT_MIN, plus_zero);
 
-  TEST_fi_f (scalbln, 1, LONG_MAX, plus_infty);
+  TEST_fi_f (scalbln, 1, LONG_MAX, plus_infty, OVERFLOW_EXCEPTION);
   TEST_fi_f (scalbln, 1, LONG_MIN, plus_zero);
-  TEST_fi_f (scalbln, max_value, LONG_MAX, plus_infty);
+  TEST_fi_f (scalbln, max_value, LONG_MAX, plus_infty, OVERFLOW_EXCEPTION);
   TEST_fi_f (scalbln, max_value, LONG_MIN, plus_zero);
-  TEST_fi_f (scalbln, min_value, LONG_MAX, plus_infty);
+  TEST_fi_f (scalbln, min_value, LONG_MAX, plus_infty, OVERFLOW_EXCEPTION);
   TEST_fi_f (scalbln, min_value, LONG_MIN, plus_zero);
-  TEST_fi_f (scalbln, min_value / 4, LONG_MAX, plus_infty);
+  TEST_fi_f (scalbln, min_value / 4, LONG_MAX, plus_infty, OVERFLOW_EXCEPTION);
   TEST_fi_f (scalbln, min_value / 4, LONG_MIN, plus_zero);
 
 #if LONG_MAX >= 0x100000000
-  TEST_fi_f (scalbln, 1, 0x88000000L, plus_infty);
+  TEST_fi_f (scalbln, 1, 0x88000000L, plus_infty, OVERFLOW_EXCEPTION);
   TEST_fi_f (scalbln, 1, -0x88000000L, plus_zero);
-  TEST_fi_f (scalbln, max_value, 0x88000000L, plus_infty);
+  TEST_fi_f (scalbln, max_value, 0x88000000L, plus_infty, OVERFLOW_EXCEPTION);
   TEST_fi_f (scalbln, max_value, -0x88000000L, plus_zero);
-  TEST_fi_f (scalbln, min_value, 0x88000000L, plus_infty);
+  TEST_fi_f (scalbln, min_value, 0x88000000L, plus_infty, OVERFLOW_EXCEPTION);
   TEST_fi_f (scalbln, min_value, -0x88000000L, plus_zero);
-  TEST_fi_f (scalbln, min_value / 4, 0x88000000L, plus_infty);
+  TEST_fi_f (scalbln, min_value / 4, 0x88000000L, plus_infty, OVERFLOW_EXCEPTION);
   TEST_fi_f (scalbln, min_value / 4, -0x88000000L, plus_zero);
 #endif
 

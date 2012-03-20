@@ -1,5 +1,5 @@
 #!/usr/bin/perl -w
-# Copyright (C) 1999, 2006 Free Software Foundation, Inc.
+# Copyright (C) 1999-2012 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 # Contributed by Andreas Jaeger <aj@suse.de>, 1999.
 
@@ -78,8 +78,10 @@ use vars qw ($output_dir $ulps_file);
     "M_SQRT_PIl" => "sqrt (pi)",
     "INVALID_EXCEPTION" => "invalid exception",
     "DIVIDE_BY_ZERO_EXCEPTION" => "division by zero exception",
+    "OVERFLOW_EXCEPTION" => "overflow exception",
     "INVALID_EXCEPTION_OK" => "invalid exception allowed",
     "DIVIDE_BY_ZERO_EXCEPTION_OK" => "division by zero exception allowed",
+    "OVERFLOW_EXCEPTION_OK" => "overflow exception allowed",
     "EXCEPTIONS_OK" => "exceptions allowed",
     "IGNORE_ZERO_INF_SIGN" => "sign of zero/inf not specified",
 "INVALID_EXCEPTION|IGNORE_ZERO_INF_SIGN" => "invalid exception and sign of zero/inf not specified"

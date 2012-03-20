@@ -1,3 +1,23 @@
+2012-03-20  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/gen-libm-test.pl (%beautify): Add OVERFLOW_EXCEPTION and
+	OVERFLOW_EXCEPTION_OK.
+	* math/libm-test.inc ("Philosophy"): Update comment about
+	exception testing.
+	(OVERFLOW_EXCEPTION): Define.
+	(OVERFLOW_EXCEPTION_OK): Likewise.
+	(INVALID_EXCEPTION_OK): Renumber.
+	(DIVIDE_BY_ZERO_EXCEPTION_OK): Likewise.
+	(IGNORE_ZERO_INF_SIGN): Likewise.
+	(test_exceptions): Handle FE_OVERFLOW.
+	(exp10_test): Expect overflow exceptions.
+	(exp2_test): Likewise.
+	(expm1_test): Likewise.
+	(nextafter_test): Likewise.
+	(pow_test): Likewise.
+	(scalbn_test): Likewise.
+	(scalbln_test): Likewise.
+
 2012-03-19  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/x86_64/bits/atomic.h
