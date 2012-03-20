@@ -20,8 +20,6 @@
 # error "Never use <bits/mathinline.h> directly; include <math.h> instead."
 #endif
 
-#include <bits/wordsize.h>
-
 #ifndef __extern_always_inline
 # define __MATH_INLINE __inline
 #else
@@ -38,7 +36,7 @@ __BEGIN_NAMESPACE_C99
 __MATH_INLINE int
 __NTH (__signbitf (float __x))
 {
-# if __WORDSIZE == 32
+# ifndef __x86_64__
   __extension__ union { float __f; int __i; } __u = { __f: __x };
   return __u.__i < 0;
 # else
@@ -50,7 +48,7 @@ __NTH (__signbitf (float __x))
 __MATH_INLINE int
 __NTH (__signbit (double __x))
 {
-# if __WORDSIZE == 32
+# ifndef __x86_64__
   __extension__ union { double __d; int __i[2]; } __u = { __d: __x };
   return __u.__i[1] < 0;
 # else
@@ -94,7 +92,7 @@ __NTH (lrint (double __x))
   return __res;
 }
 #  endif
-#  if __WORDSIZE == 64
+#  ifdef __x86_64__
 __MATH_INLINE long long int
 __NTH (llrintf (float __x))
 {

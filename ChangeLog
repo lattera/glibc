@@ -1,5 +1,14 @@
 2012-03-20  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* sysdeps/x86_64/fpu/bits/mathinline.h: Don't include
+	<bits/wordsize.h>.
+	(__signbitf): Check __x86_64__ instead of __WORDSIZE.
+	(__signbit): Likwise.
+	(llrintf): Likwise.
+	(llrint): Likwise.
+
+2012-03-20  H.J. Lu  <hongjiu.lu@intel.com>
+
 	* sysdeps/x86_64/bits/setjmp.h (__jmp_buf): Support x86-64 with
 	__WORDSIZE != 64.
 
