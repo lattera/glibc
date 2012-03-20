@@ -19,7 +19,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <ldsodefs.h>
-#include <stdio-common/_itoa.h>
+#include <_itoa.h>
 #include <dl-machine.h>
 
 void

@@ -1,5 +1,69 @@
 2012-03-20  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* debug/backtracesymsfd.c: Include <_itoa.h> instead of
+	<stdio-common/_itoa.h>.
+	* debug/segfault.c: Likewise.
+	* elf/dl-cache.c: Likewise.
+	* elf/dl-minimal.c: Likewise.
+	* elf/dl-misc.c: Likewise.
+	* elf/dl-sysdep.c: Likewise.
+	* elf/dl-version.c: Likewise.
+	* elf/rtld.c: Likewise.
+	* hurd/hurdsock.c: Likewise.
+	* hurd/lookup-retry.c: Likewise.
+	* malloc/malloc.c: Likewise.
+	* malloc/mtrace.c: Likewise.
+	* nscd/nscd_getgr_r.c: Likewise.
+	* nscd/nscd_getpw_r.c: Likewise.
+	* nscd/nscd_getserv_r.c: Likewise.
+	* posix/getopt_init.c: Likewise.
+	* posix/wordexp.c: Likewise.
+	* stdio-common/_itoa.c: Likewise.
+	* stdio-common/printf_fphex.c: Likewise.
+	* stdio-common/vfprintf.c: Likewise.
+	* string/_strerror.c: Likewise.
+	* sysdeps/generic/elf/backtracesymsfd.c: Likewise.
+	* sysdeps/i386/i686/hp-timing.h: Likewise.
+	* sysdeps/mach/_strerror.c: Likewise.
+	* sysdeps/mach/hurd/powerpc/register-dump.h: Likewise.
+	* sysdeps/mach/hurd/sethostid.c: Likewise.
+	* sysdeps/mach/hurd/xmknodat.c: Likewise.
+	* sysdeps/mach/xpg-strerror.c: Likewise.
+	* sysdeps/powerpc/powerpc32/dl-machine.c: Likewise.
+	* sysdeps/powerpc/powerpc32/power4/hp-timing.h: Likewise.
+	* sysdeps/powerpc/powerpc32/register-dump.h: Likewise.
+	* sysdeps/powerpc/powerpc64/dl-machine.c: Likewise.
+	* sysdeps/powerpc/powerpc64/hp-timing.h: Likewise.
+	* sysdeps/powerpc/powerpc64/register-dump.h: Likewise.
+	* sysdeps/sparc/sparc32/sparcv9/hp-timing.h: Likewise.
+	* sysdeps/sparc/sparc64/hp-timing.h: Likewise.
+	* sysdeps/unix/sysv/linux/fd_to_filename.h: Likewise.
+	* sysdeps/unix/sysv/linux/futimes.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/register-dump.h: Likewise.
+	* sysdeps/unix/sysv/linux/ptsname.c: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/register-dump.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/register-dump.h: Likewise.
+	* sysdeps/unix/sysv/linux/sh/sh3/register-dump.h: Likewise.
+	* sysdeps/unix/sysv/linux/sh/sh4/register-dump.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/register-dump.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/register-dump.h: Likewise.
+	* sysdeps/unix/sysv/linux/ttyname.c: Likewise.
+	* sysdeps/unix/sysv/linux/ttyname_r.c: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/register-dump.h: Likewise.
+
+	* stdio-common/_itoa.c: Include <_itoa.h> instead of "_itoa.h".
+
+	* stdio-common/_itoa.h: Moved to ...
+	* sysdeps/generic/_itoa.h: Here.
+
+	* stdio-common/_itowa.c: Include <_itowa.h> instead of "_itowa.h".
+
+	* stdio-common/printf_fphex.c: Include <_itoa.h> and <_itowa.h>
+	instead of "_itoa.h" and "_itowa.h".
+	* stdio-common/vfprintf.: Likewise.
+
+2012-03-20  H.J. Lu  <hongjiu.lu@intel.com>
+
 	* sysdeps/x86_64/fpu/bits/mathinline.h: Don't include
 	<bits/wordsize.h>.
 	(__signbitf): Check __x86_64__ instead of __WORDSIZE.

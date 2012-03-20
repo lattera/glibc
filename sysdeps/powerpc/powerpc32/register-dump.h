@@ -17,7 +17,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <sys/uio.h>
-#include <stdio-common/_itoa.h>
+#include <_itoa.h>
 
 /* This prints out the information in the following form: */
 static const char dumpform[] = "\

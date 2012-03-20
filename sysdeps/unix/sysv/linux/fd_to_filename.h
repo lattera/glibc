@@ -19,7 +19,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/stat.h>
-#include <stdio-common/_itoa.h>
+#include <_itoa.h>
 
 static inline const char *
 fd_to_filename (int fd)

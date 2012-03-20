@@ -23,7 +23,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ldsodefs.h>
-#include <stdio-common/_itoa.h>
+#include <_itoa.h>
 
 #include <assert.h>
 

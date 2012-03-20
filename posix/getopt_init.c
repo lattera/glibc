@@ -27,7 +27,7 @@
 #include <unistd.h>
 #include <sys/types.h>
 
-#include <stdio-common/_itoa.h>
+#include <_itoa.h>
 
 /* Variable to synchronize work.  */
 char *__getopt_nonoption_flags;

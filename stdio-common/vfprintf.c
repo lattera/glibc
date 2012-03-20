@@ -26,7 +26,7 @@
 #include <wchar.h>
 #include <bits/libc-lock.h>
 #include <sys/param.h>
-#include "_itoa.h"
+#include <_itoa.h>
 #include <locale/localeinfo.h>
 #include <stdio.h>
 
@@ -102,7 +102,7 @@
 # define ISDIGIT(Ch)	((unsigned int) ((Ch) - L'0') < 10)
 # define STR_LEN(Str)	__wcslen (Str)
 
-# include "_itowa.h"
+# include <_itowa.h>
 
 # define PUT(F, S, N)	_IO_sputn ((F), (S), (N))
 # define PAD(Padchar) \

@@ -24,7 +24,7 @@
 #include <dl-cache.h>
 #include <dl-procinfo.h>
 
-#include <stdio-common/_itoa.h>
+#include <_itoa.h>
 
 #ifndef _DL_PLATFORMS_COUNT
 # define _DL_PLATFORMS_COUNT 0

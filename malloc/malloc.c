@@ -218,7 +218,7 @@
 #include <malloc-machine.h>
 
 #include <atomic.h>
-#include <stdio-common/_itoa.h>
+#include <_itoa.h>
 #include <bits/wordsize.h>
 #include <sys/sysinfo.h>
 

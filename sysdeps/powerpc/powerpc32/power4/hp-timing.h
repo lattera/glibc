@@ -22,7 +22,7 @@
 
 #include <string.h>
 #include <sys/param.h>
-#include <stdio-common/_itoa.h>
+#include <_itoa.h>
 #include <atomic.h>
 
 /* The macros defined here use the powerpc 64-bit time base register.

@@ -30,7 +30,7 @@
 #include <sys/stat.h>
 #include <sys/uio.h>
 #include <sysdep.h>
-#include <stdio-common/_itoa.h>
+#include <_itoa.h>
 #include <bits/libc-lock.h>
 
 /* Read the whole contents of FILE into new mmap'd space with given

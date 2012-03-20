@@ -18,7 +18,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <sys/uio.h>
-#include <stdio-common/_itoa.h>
+#include <_itoa.h>
 
 /* We will print the register dump in this format:
 

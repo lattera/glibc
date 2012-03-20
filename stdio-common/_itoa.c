@@ -25,7 +25,7 @@
 #include <stdlib/gmp-impl.h>
 #include <stdlib/longlong.h>
 
-#include "_itoa.h"
+#include <_itoa.h>
 
 
 /* Canonize environment.  For some architectures not all values might

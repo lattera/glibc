@@ -26,7 +26,7 @@
 #include <sys/param.h>
 #include <sys/types.h>
 #include <ldsodefs.h>
-#include <stdio-common/_itoa.h>
+#include <_itoa.h>
 
 #include <assert.h>
 

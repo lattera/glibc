@@ -18,7 +18,7 @@
 #include <unistd.h>
 #include <hurd.h>
 #include "hurdhost.h"
-#include <stdio-common/_itoa.h>
+#include <_itoa.h>
 
 /* Set the current machine's Internet number to ID.
    This call is restricted to the super-user.  */

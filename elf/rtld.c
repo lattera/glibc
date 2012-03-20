@@ -27,7 +27,7 @@
 #include <sys/param.h>
 #include <sys/stat.h>
 #include <ldsodefs.h>
-#include <stdio-common/_itoa.h>
+#include <_itoa.h>
 #include <entry.h>
 #include <fpu_control.h>
 #include <hp-timing.h>

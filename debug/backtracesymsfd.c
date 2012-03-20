@@ -21,7 +21,7 @@
 #include <string.h>
 #include <sys/uio.h>
 
-#include <stdio-common/_itoa.h>
+#include <_itoa.h>
 #include <not-cancel.h>
 
 #if __ELF_NATIVE_CLASS == 32

@@ -31,7 +31,7 @@
 #include <string.h>
 #include <stdlib.h>
 
-#include <stdio-common/_itoa.h>
+#include <_itoa.h>
 
 #include <libc-internal.h>
 

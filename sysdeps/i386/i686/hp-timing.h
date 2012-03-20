@@ -22,7 +22,7 @@
 
 #include <string.h>
 #include <sys/param.h>
-#include <stdio-common/_itoa.h>
+#include <_itoa.h>
 
 /* The macros defined here use the timestamp counter in i586 and up versions
    of the x86 processors.  They provide a very accurate way to measure the

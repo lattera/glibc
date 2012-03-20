@@ -23,7 +23,7 @@
 #include <hurd/fd.h>
 #include <hurd/paths.h>
 #include <fcntl.h>
-#include "stdio-common/_itoa.h"
+#include <_itoa.h>
 #include <string.h>
 #include <sys/types.h>
 

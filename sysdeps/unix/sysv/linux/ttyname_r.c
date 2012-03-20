@@ -27,7 +27,7 @@
 #include <string.h>
 #include <stdlib.h>
 
-#include <stdio-common/_itoa.h>
+#include <_itoa.h>
 #include <kernel-features.h>
 
 static int getttyname_r (char *buf, size_t buflen,

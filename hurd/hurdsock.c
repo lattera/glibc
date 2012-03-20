@@ -22,7 +22,7 @@
 #include <string.h>
 #include <hurd/paths.h>
 #include <stdio.h>
-#include "stdio-common/_itoa.h"
+#include <_itoa.h>
 #include <cthreads.h>		/* For `struct mutex'.  */
 #include "hurdmalloc.h"		/* XXX */
 

@@ -42,7 +42,7 @@
 #include <kernel-features.h>
 
 #include <bits/libc-lock.h>
-#include <stdio-common/_itoa.h>
+#include <_itoa.h>
 
 /* Undefine the following line for the production version.  */
 /* #define NDEBUG 1 */

@@ -22,7 +22,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/param.h>
-#include <stdio-common/_itoa.h>
+#include <_itoa.h>
 
 /* It is critical here that we always use the `dcgettext' function for
    the message translation.  Since <libintl.h> only defines the macro

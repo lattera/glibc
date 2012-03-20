@@ -29,7 +29,7 @@
 #include <sys/stat.h>
 #include <sys/mman.h>
 #include <ldsodefs.h>
-#include <stdio-common/_itoa.h>
+#include <_itoa.h>
 #include <fpu_control.h>
 
 #include <entry.h>

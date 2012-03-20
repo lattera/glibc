@@ -24,7 +24,7 @@
 #include <stdlib/gmp-impl.h>
 #include <stdlib/longlong.h>
 
-#include "_itowa.h"
+#include <_itowa.h>
 
 
 /* Canonize environment.  For some architectures not all values might

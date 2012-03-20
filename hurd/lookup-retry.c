@@ -24,7 +24,7 @@
 #include <limits.h>
 #include <fcntl.h>
 #include <string.h>
-#include "stdio-common/_itoa.h"
+#include <_itoa.h>
 
 /* Translate the error from dir_lookup into the error the user sees.  */
 static inline error_t

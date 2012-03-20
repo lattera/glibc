@@ -26,7 +26,7 @@
 #include <termios.h>
 #include <unistd.h>
 
-#include <stdio-common/_itoa.h>
+#include <_itoa.h>
 
 /* Check if DEV corresponds to a master pseudo terminal device.  */
 #define MASTER_P(Dev)                                                         \

@@ -29,7 +29,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-#include <stdio-common/_itoa.h>
+#include <_itoa.h>
 #include <ldsodefs.h>
 
 #include <bp-checks.h>

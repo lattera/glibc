@@ -23,7 +23,7 @@
 #include <ldsodefs.h>
 #include <elf/dynamic-link.h>
 #include <dl-machine.h>
-#include <stdio-common/_itoa.h>
+#include <_itoa.h>
 
 /* The value __cache_line_size is defined in dl-sysdep.c and is initialised
    by _dl_sysdep_start via DL_PLATFORM_INIT.  */

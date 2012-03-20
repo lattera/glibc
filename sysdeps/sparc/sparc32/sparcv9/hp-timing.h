@@ -22,7 +22,7 @@
 
 #include <string.h>
 #include <sys/param.h>
-#include <stdio-common/_itoa.h>
+#include <_itoa.h>
 
 #define HP_TIMING_AVAIL		(1)
 #define HP_TIMING_INLINE	(1)
