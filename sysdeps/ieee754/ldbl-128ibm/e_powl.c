@@ -88,8 +88,8 @@ static const long double zero = 0.0L,
   one = 1.0L,
   two = 2.0L,
   two113 = 1.0384593717069655257060992658440192E34L,
-  huge = 1.0e3000L,
-  tiny = 1.0e-3000L;
+  huge = 1.0e300L,
+  tiny = 1.0e-300L;
 
 /* 3/2 log x = 3 z + z^3 + z^3 (z^2 R(z^2))
    z = (x-1)/(x+1)
