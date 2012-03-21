@@ -1,3 +1,20 @@
+2012-03-21  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* stdio-common/_itoa.c: Check _ITOA_NEEDED instead of
+	LLONG_MAX != LONG_MAX.
+	(_itoa_word): Use _ITOA_WORD_TYPE on value.
+	(_fitoa_word): Likewise.
+	* stdio-common/_itowa.c: Check _ITOA_NEEDED instead of
+	LLONG_MAX != LONG_MAX.
+	* stdio-common/_itowa.h: Include <_itoa.h>.
+	(_itowa_word): Use _ITOA_WORD_TYPE on value.
+	(_itowa): New macro.  Defined only if _ITOA_NEEDED is false.
+	* sysdeps/generic/_itoa.h (_ITOA_NEEDED): New macro.  Defined
+	only if not defined.
+	(_ITOA_WORD_TYPE): Likewise.
+	(_itoa_word): Use _ITOA_WORD_TYPE on value.
+	Check !_ITOA_NEEDED instead of LONG_MAX == LLONG_MAX.
+
 2012-03-21  David S. Miller  <davem@davemloft.net>
 
 	* sysdeps/sparc/fpu/libm-test-ulps: Update.
