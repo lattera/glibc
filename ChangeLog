@@ -1,3 +1,24 @@
+2012-03-20  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #3866]
+	* sysdeps/i386/fpu/e_pow.S (__ieee754_pow): Test for y outside the
+	range of signed 64-bit integers before using fistpll.  Remove
+	checks for whether integers fit in mantissa bits.
+	* sysdeps/i386/fpu/e_powf.S (__ieee754_powf): Test for y outside
+	the range of signed 32-bit integers before using fistpl.  Remove
+	checks for whether integers fit in mantissa bits.
+	* sysdeps/i386/fpu/e_powl.S (p64): New object.
+	(__ieee754_powl): Test for y outside the range of signed 64-bit
+	integers before using fistpll.  Reduce 64-bit values to 63-bit
+	ones as needed.
+	* sysdeps/ieee754/dbl-64/e_pow.c (__ieee754_pow): Ensure
+	divide-by-zero is raised for zero to large negative powers.
+	* sysdeps/x86_64/fpu/e_powl.S (p64): New object.
+	(__ieee754_powl): Test for y outside the range of signed 64-bit
+	integers before using fistpll.  Reduce 64-bit values to 63-bit
+	ones as needed.
+	* math/libm-test.inc (pow_test): Add more tests.
+
 2012-03-20  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* debug/backtracesymsfd.c: Include <_itoa.h> instead of

@@ -32,6 +32,9 @@ limit:	.double 0.29
 	ASM_TYPE_DIRECTIVE(p63,@object)
 p63:	.byte 0, 0, 0, 0, 0, 0, 0xe0, 0x43
 	ASM_SIZE_DIRECTIVE(p63)
+	ASM_TYPE_DIRECTIVE(p64,@object)
+p64:	.byte 0, 0, 0, 0, 0, 0, 0xf0, 0x43
+	ASM_SIZE_DIRECTIVE(p64)
 
 	.section .rodata.cst16,"aM",@progbits,16
 
@@ -243,6 +246,19 @@ ENTRY(__ieee754_powl)
 	testb	$2, %dh
 	jz	16f		// jump if x == +inf
 
+	// fistpll raises invalid exception for |y| >= 1L<<63, but y
+	// may be odd unless we know |y| >= 1L<<64.
+	fld	%st		// y : y
+	fabs			// |y| : y
+	fcompl	MO(p64)		// y
+	fnstsw
+	sahf
+	jnc	16f
+	fldl	MO(p63)		// p63 : y
+	fxch			// y : p63
+	fprem			// y%p63 : p63
+	fstp	%st(1)		// y%p63
+
 	// We must find out whether y is an odd integer.
 	fld	%st		// y : y
 	fistpll	(%esp)		// y
@@ -295,6 +311,19 @@ ENTRY(__ieee754_powl)
 	testb	$2, %dh
 	jz	25f
 
+	// fistpll raises invalid exception for |y| >= 1L<<63, but y
+	// may be odd unless we know |y| >= 1L<<64.
+	fld	%st		// y : y
+	fabs			// |y| : y
+	fcompl	MO(p64)		// y
+	fnstsw
+	sahf
+	jnc	25f
+	fldl	MO(p63)		// p63 : y
+	fxch			// y : p63
+	fprem			// y%p63 : p63
+	fstp	%st(1)		// y%p63
+
 	fld	%st		// y : y
 	fistpll	(%esp)		// y
 	fildll	(%esp)		// int(y) : y
@@ -331,6 +360,18 @@ ENTRY(__ieee754_powl)
 	// x is ±0 and y is > 0.  We must find out whether y is an odd integer.
 21:	testb	$2, %dh
 	jz	22f
+
+	// fistpll raises invalid exception for |y| >= 1L<<63, but y
+	// may be odd unless we know |y| >= 1L<<64.
+	fld	%st		// y : y
+	fcompl	MO(p64)		// y
+	fnstsw
+	sahf
+	jnc	22f
+	fldl	MO(p63)		// p63 : y
+	fxch			// y : p63
+	fprem			// y%p63 : p63
+	fstp	%st(1)		// y%p63
 
 	fld	%st		// y : y
 	fistpll	(%esp)		// y
