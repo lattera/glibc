@@ -1,4 +1,11 @@
 2012-03-21  Thomas Schwinge  <thomas@codesourcery.com>
+	    Joseph Myers  <joseph@codesourcery.com>
+
+	* configure.in (libc_cv_ssp): Use LIBC_TRY_CC_OPTION instead of a
+	link test.
+	* configure: Regenerated.
+
+2012-03-21  Thomas Schwinge  <thomas@codesourcery.com>
 
         * conform/conformtest.pl: Handle --tmpdir argument, defaulting to /tmp.
         * conform/run-conformtest.sh: Pass --tmpdir argument when invoking

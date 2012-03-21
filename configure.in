@@ -1753,18 +1753,10 @@ fi
 AC_SUBST(fno_unit_at_a_time)
 
 AC_CACHE_CHECK(for -fstack-protector, libc_cv_ssp, [dnl
-cat > conftest.c <<EOF
-int foo;
-main () { return 0;}
-EOF
-if AC_TRY_COMMAND([${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS -Werror -fstack-protector
-			    -o conftest conftest.c 1>&AS_MESSAGE_LOG_FD])
-then
-  libc_cv_ssp=yes
-else
-  libc_cv_ssp=no
-fi
-rm -f conftest*])
+LIBC_TRY_CC_OPTION([$CFLAGS $CPPFLAGS -Werror -fstack-protector],
+		   [libc_cv_ssp=yes],
+		   [libc_cv_ssp=no])
+])
 AC_SUBST(libc_cv_ssp)
 
 AC_CACHE_CHECK(for -fgnu89-inline, libc_cv_gnu89_inline, [dnl
