@@ -45,7 +45,6 @@ include ../Makeconfig	# Get objpfx defined so we can use it below.
 CPPFLAGS-zic = -DNOT_IN_libc
 
 ifeq ($(have-ksh),yes)
-install-others += $(inst_zonedir)/iso3166.tab $(inst_zonedir)/zone.tab
 install-bin-script = tzselect
 generated += tzselect
 endif
@@ -111,7 +110,3 @@ $(objpfx)tzselect: tzselect.ksh $(common-objpfx)config.make
 	    -e 's%@TZDIR@%$(zonedir)%g' < $< > $@.new
 	chmod 555 $@.new
 	mv -f $@.new $@
-
-$(addprefix $(inst_zonedir)/,iso3166.tab zone.tab): \
-    $(inst_zonedir)/%: % $(+force)
-	$(do-install)
