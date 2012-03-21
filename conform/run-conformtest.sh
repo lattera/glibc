@@ -5,6 +5,9 @@ perl="$2"
 cc="$3"
 includes="$4"
 
+scratch=${objpfx}scratch
+mkdir -p "$scratch"
+
 standards=("ISO" "ISO99" "ISO11" "POSIX" "XPG3" "XPG4" "UNIX98"
 	   "XOPEN2K" "XOPEN2K8" "POSIX2008")
 
@@ -13,7 +16,7 @@ exitval=0
 for s in ${standards[*]}; do
     echo -n $s...
     e=0
-    if ! $perl conformtest.pl --cc="$cc" --flags="$includes" --standard=$s > ${objpfx}conform-$s.out; then
+    if ! $perl conformtest.pl --tmpdir="$scratch" --cc="$cc" --flags="$includes" --standard=$s > ${objpfx}conform-$s.out; then
 	e=1
     fi
     printf "\n%s\n" $s >> ${objpfx}run-conformtest.out

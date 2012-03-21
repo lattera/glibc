@@ -3,11 +3,11 @@
 use Getopt::Long;
 use POSIX;
 
+$standard = "XOPEN2K8";
 $CC = "gcc";
-
-$standard="XOPEN2K8";
+$tmpdir = "/tmp";
 GetOptions ('headers=s' => \@headers, 'standard=s' => \$standard,
-	    'flags=s' => \$flags, 'cc=s' => \$CC);
+	    'flags=s' => \$flags, 'cc=s' => \$CC, 'tmpdir=s' => \$tmpdir);
 @headers = split(/,/,join(',',@headers));
 
 # List of the headers we are testing.
@@ -83,11 +83,6 @@ while ($#keywords >= 0) {
 while ($#knownproblems >= 0) {
   $isknown{pop (@knownproblems)} = 1;
 }
-
-$uid = getuid();
-($pwname,$pwpasswd,$pwuid,$pwgid,
- $pwquota,$pwcomment,$pwgcos,$pwdir,$pwshell,$pwexpire) = getpwuid($uid);
-$tmpdir = "$pwdir";
 
 $verbose = 1;
 
