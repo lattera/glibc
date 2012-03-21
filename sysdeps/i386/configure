@@ -223,11 +223,12 @@ else
   (eval $ac_try) 2>&5
   ac_status=$?
   $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
-  test $ac_status = 0; }; }; then
+  test $ac_status = 0; }; }; then :
   libc_cv_cc_sse4=yes
 else
   libc_cv_cc_sse4=no
 fi
+
 fi
 { $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_cc_sse4" >&5
 $as_echo "$libc_cv_cc_sse4" >&6; }
@@ -246,11 +247,12 @@ else
   (eval $ac_try) 2>&5
   ac_status=$?
   $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
-  test $ac_status = 0; }; }; then
+  test $ac_status = 0; }; }; then :
   libc_cv_as_i686=yes
 else
   libc_cv_as_i686=no
 fi
+
 fi
 { $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_as_i686" >&5
 $as_echo "$libc_cv_as_i686" >&6; }
@@ -265,11 +267,12 @@ else
   (eval $ac_try) 2>&5
   ac_status=$?
   $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
-  test $ac_status = 0; }; }; then
+  test $ac_status = 0; }; }; then :
   libc_cv_cc_avx=yes
 else
   libc_cv_cc_avx=no
 fi
+
 fi
 { $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_cc_avx" >&5
 $as_echo "$libc_cv_cc_avx" >&6; }
@@ -288,11 +291,12 @@ else
   (eval $ac_try) 2>&5
   ac_status=$?
   $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
-  test $ac_status = 0; }; }; then
+  test $ac_status = 0; }; }; then :
   libc_cv_cc_sse2avx=yes
 else
   libc_cv_cc_sse2avx=no
 fi
+
 fi
 { $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_cc_sse2avx" >&5
 $as_echo "$libc_cv_cc_sse2avx" >&6; }
@@ -311,11 +315,12 @@ else
   (eval $ac_try) 2>&5
   ac_status=$?
   $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
-  test $ac_status = 0; }; }; then
+  test $ac_status = 0; }; }; then :
   libc_cv_cc_fma4=yes
 else
   libc_cv_cc_fma4=no
 fi
+
 fi
 { $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_cc_fma4" >&5
 $as_echo "$libc_cv_cc_fma4" >&6; }
@@ -334,11 +339,12 @@ else
   (eval $ac_try) 2>&5
   ac_status=$?
   $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
-  test $ac_status = 0; }; }; then
+  test $ac_status = 0; }; }; then :
   libc_cv_cc_novzeroupper=yes
 else
   libc_cv_cc_novzeroupper=no
 fi
+
 fi
 { $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_cc_novzeroupper" >&5
 $as_echo "$libc_cv_cc_novzeroupper" >&6; }

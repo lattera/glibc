@@ -7054,10 +7054,11 @@ else
   (eval $ac_try) 2>&5
   ac_status=$?
   $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
-  test $ac_status = 0; }; }; then
+  test $ac_status = 0; }; }; then :
+
       libc_cv_cc_submachine="$opt"
       break
-    fi
+fi
   done
 fi
 { $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_cc_submachine" >&5

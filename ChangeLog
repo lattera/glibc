@@ -1,5 +1,17 @@
 2012-03-21  Joseph Myers  <joseph@codesourcery.com>
 
+	* aclocal.m4 (LIBC_TRY_CC_OPTION): New macro.
+	* configure.in (libc_cv_cc_submachine): Use LIBC_TRY_CC_OPTION.
+	* configure: Regenerated.
+	* sysdeps/i386/configure.in (libc_cv_cc_sse4): Use
+	LIBC_TRY_CC_OPTION.
+	(libc_cv_as_i686): Likewise.
+	(libc_cv_cc_avx): Likewise.
+	(libc_cv_cc_sse2avx): Likewise.
+	(libc_cv_cc_fma4): Likewise.
+	(libc_cv_cc_novzeroupper): Likewise.
+	* sysdeps/i386/configure: Regenerated.
+
 	[BZ #13883]
 	* sysdeps/i386/fpu/s_cexp.S: Remove.
 	* sysdeps/i386/fpu/s_cexpf.S: Likewise.

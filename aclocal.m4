@@ -128,6 +128,12 @@ AS_IF([AC_TRY_COMMAND([${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS -o conftest
       [$2], [$3])
 rm -f conftest*])
 
+dnl Test a compiler option or options with an empty input file.
+dnl LIBC_TRY_CC_OPTION([options], [action-if-true], [action-if-false])
+AC_DEFUN([LIBC_TRY_CC_OPTION],
+[AS_IF([AC_TRY_COMMAND([${CC-cc} $1 -xc /dev/null -S -o /dev/null])],
+	[$2], [$3])])
+
 dnl Find and source sysdeps/*/preconfigure.
 dnl LIBC_PRECONFIGURE([$srcdir], [for])
 AC_DEFUN([LIBC_PRECONFIGURE], [dnl

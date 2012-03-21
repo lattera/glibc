@@ -40,60 +40,48 @@ fi
 
 dnl Check if -msse4 works.
 AC_CACHE_CHECK(for SSE4 support, libc_cv_cc_sse4, [dnl
-if AC_TRY_COMMAND([${CC-cc} -msse4 -xc /dev/null -S -o /dev/null]); then
-  libc_cv_cc_sse4=yes
-else
-  libc_cv_cc_sse4=no
-fi])
+LIBC_TRY_CC_OPTION([-msse4], [libc_cv_cc_sse4=yes], [libc_cv_cc_sse4=no])
+])
 if test $libc_cv_cc_sse4 = yes; then
   AC_DEFINE(HAVE_SSE4_SUPPORT)
 fi
 
 dnl Check if -Wa,-mtune=i686 works.
 AC_CACHE_CHECK(for assembler -mtune=i686 support, libc_cv_as_i686, [dnl
-if AC_TRY_COMMAND([${CC-cc} -Wa,-mtune=i686 -xc /dev/null -S -o /dev/null]); then
-  libc_cv_as_i686=yes
-else
-  libc_cv_as_i686=no
-fi])
+LIBC_TRY_CC_OPTION([-Wa,-mtune=i686],
+		   [libc_cv_as_i686=yes],
+		   [libc_cv_as_i686=no])
+])
 
 dnl Check if -mavx works.
 AC_CACHE_CHECK(for AVX support, libc_cv_cc_avx, [dnl
-if AC_TRY_COMMAND([${CC-cc} -mavx -xc /dev/null -S -o /dev/null]); then
-  libc_cv_cc_avx=yes
-else
-  libc_cv_cc_avx=no
-fi])
+LIBC_TRY_CC_OPTION([-mavx], [libc_cv_cc_avx=yes], [libc_cv_cc_avx=no])
+])
 if test $libc_cv_cc_avx = yes; then
   AC_DEFINE(HAVE_AVX_SUPPORT)
 fi
 
 dnl Check if -msse2avx works.
 AC_CACHE_CHECK(for AVX encoding of SSE instructions, libc_cv_cc_sse2avx, [dnl
-if AC_TRY_COMMAND([${CC-cc} -msse2avx -xc /dev/null -S -o /dev/null]); then
-  libc_cv_cc_sse2avx=yes
-else
-  libc_cv_cc_sse2avx=no
-fi])
+LIBC_TRY_CC_OPTION([-msse2avx],
+		   [libc_cv_cc_sse2avx=yes],
+		   [libc_cv_cc_sse2avx=no])
+])
 if test $libc_cv_cc_sse2avx = yes; then
   AC_DEFINE(HAVE_SSE2AVX_SUPPORT)
 fi
 
 dnl Check if -mfma4 works.
 AC_CACHE_CHECK(for FMA4 support, libc_cv_cc_fma4, [dnl
-if AC_TRY_COMMAND([${CC-cc} -mfma4 -xc /dev/null -S -o /dev/null]); then
-  libc_cv_cc_fma4=yes
-else
-  libc_cv_cc_fma4=no
-fi])
+LIBC_TRY_CC_OPTION([-mfma4], [libc_cv_cc_fma4=yes], [libc_cv_cc_fma4=no])
+])
 if test $libc_cv_cc_fma4 = yes; then
   AC_DEFINE(HAVE_FMA4_SUPPORT)
 fi
 
 dnl Check if -mno-vzeroupper works.
 AC_CACHE_CHECK(for -mno-vzeroupper support, libc_cv_cc_novzeroupper, [dnl
-if AC_TRY_COMMAND([${CC-cc} -mno-vzeroupper -xc /dev/null -S -o /dev/null]); then
-  libc_cv_cc_novzeroupper=yes
-else
-  libc_cv_cc_novzeroupper=no
-fi])
+LIBC_TRY_CC_OPTION([-mno-vzeroupper],
+		   [libc_cv_cc_novzeroupper=yes],
+		   [libc_cv_cc_novzeroupper=no])
+])

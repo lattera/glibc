@@ -2005,10 +2005,9 @@ if test -n "$submachine"; then
 		 libc_cv_cc_submachine, [dnl
   libc_cv_cc_submachine=no
   for opt in "-march=$submachine" "-mcpu=$submachine"; do
-    if AC_TRY_COMMAND([${CC-cc} $opt -xc /dev/null -S -o /dev/null]); then
+    LIBC_TRY_CC_OPTION([$opt], [
       libc_cv_cc_submachine="$opt"
-      break
-    fi
+      break], [])
   done])
   if test "x$libc_cv_cc_submachine" = xno; then
     AC_MSG_ERROR([${CC-cc} does not support $submachine])
