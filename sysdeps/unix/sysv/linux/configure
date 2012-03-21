@@ -393,7 +393,7 @@ case "$prefix" in
   # and libc_cv_localedir.
   test -n "$libc_cv_slibdir" || \
   case $machine in
-  sparc/sparc64 | x86_64 | powerpc/powerpc64 | s390/s390-64)
+  sparc/sparc64 | x86_64* | powerpc/powerpc64 | s390/s390-64)
     libc_cv_slibdir="/lib64"
     if test "$libdir" = '${exec_prefix}/lib'; then
       libdir='${exec_prefix}/lib64';

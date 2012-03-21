@@ -1,3 +1,10 @@
+2012-03-21  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/unix/sysv/linux/configure.in: Check x86_64* instead
+	of x86_64 when setting libc_cv_slibdir, libdir and
+	libc_cv_localedir.
+	* sysdeps/unix/sysv/linux/configure: Regenerated.
+
 2012-03-21  Joseph Myers  <joseph@codesourcery.com>
 
 	* manual/lang.texi (Old Varargs): Remove section.
