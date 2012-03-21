@@ -229,7 +229,6 @@ additional variable arguments.  @xref{Calling Variadics}.
 			  variable arguments functions.
 * Argument Macros::      Detailed specification of the macros
         		  for accessing variable arguments.
-* Old Varargs::		 The pre-ISO way of defining variadic functions.
 @end menu
 
 @node Variadic Prototypes
@@ -427,9 +426,6 @@ The type @code{va_list} is used for argument pointer variables.
 This macro initializes the argument pointer variable @var{ap} to point
 to the first of the optional arguments of the current function;
 @var{last-required} must be the last required argument to the function.
-
-@xref{Old Varargs}, for an alternate definition of @code{va_start}
-found in the header file @file{varargs.h}.
 @end deftypefn
 
 @comment stdarg.h
@@ -510,68 +506,6 @@ arguments facility.
 @smallexample
 @include add.c.texi
 @end smallexample
-
-@node Old Varargs
-@subsubsection Old-Style Variadic Functions
-
-@pindex varargs.h
-Before @w{ISO C}, programmers used a slightly different facility for
-writing variadic functions.  The GNU C compiler still supports it;
-currently, it is more portable than the @w{ISO C} facility, since support
-for @w{ISO C} is still not universal.  The header file which defines the
-old-fashioned variadic facility is called @file{varargs.h}.
-
-Using @file{varargs.h} is almost the same as using @file{stdarg.h}.
-There is no difference in how you call a variadic function;
-see @ref{Calling Variadics}.  The only difference is in how you define
-them.  First of all, you must use old-style non-prototype syntax, like
-this:
-
-@smallexample
-tree
-build (va_alist)
-     va_dcl
-@{
-@end smallexample
-
-Secondly, you must give @code{va_start} only one argument, like this:
-
-@smallexample
-  va_list p;
-  va_start (p);
-@end smallexample
-
-These are the special macros used for defining old-style variadic
-functions:
-
-@comment varargs.h
-@comment Unix
-@deffn Macro va_alist
-This macro stands for the argument name list required in a variadic
-function.
-@end deffn
-
-@comment varargs.h
-@comment Unix
-@deffn Macro va_dcl
-This macro declares the implicit argument or arguments for a variadic
-function.
-@end deffn
-
-@comment varargs.h
-@comment Unix
-@deftypefn {Macro} void va_start (va_list @var{ap})
-This macro, as defined in @file{varargs.h}, initializes the argument
-pointer variable @var{ap} to point to the first argument of the current
-function.
-@end deftypefn
-
-The other argument macros, @code{va_arg} and @code{va_end}, are the same
-in @file{varargs.h} as in @file{stdarg.h}; see @ref{Argument Macros}, for
-details.
-
-It does not work to include both @file{varargs.h} and @file{stdarg.h} in
-the same compilation; they define @code{va_start} in conflicting ways.
 
 @node Null Pointer Constant
 @section Null Pointer Constant

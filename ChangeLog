@@ -1,3 +1,9 @@
+2012-03-21  Joseph Myers  <joseph@codesourcery.com>
+
+	* manual/lang.texi (Old Varargs): Remove section.
+	(How Variadic): Update menu.
+	(va_start): Do not mention varargs.h.
+
 2012-03-21  Thomas Schwinge  <thomas@codesourcery.com>
 	    Joseph Myers  <joseph@codesourcery.com>
 
