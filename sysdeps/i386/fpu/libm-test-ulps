@@ -431,15 +431,44 @@ idouble: 1
 ifloat: 1
 
 # cexp
+Test "Real part of: cexp (-10000 + 0x1p16383 i) == 1.045876464564882298442774542991176546722e-4343 + 4.421154026488516836023811173959413420548e-4344 i":
+ildouble: 1
+ldouble: 1
 Test "Real part of: cexp (-2.0 - 3.0 i) == -0.13398091492954261346140525546115575 - 0.019098516261135196432576240858800925 i":
 ildouble: 1
 ldouble: 1
 Test "Imaginary part of: cexp (-2.0 - 3.0 i) == -0.13398091492954261346140525546115575 - 0.019098516261135196432576240858800925 i":
+float: 1
+ifloat: 1
 ildouble: 1
 ldouble: 1
+Test "Imaginary part of: cexp (0 + 0x1p65 i) == 0.99888622066058013610642172179340364209972 - 0.047183876212354673805106149805700013943218 i":
+float: 1
+ifloat: 1
+Test "Imaginary part of: cexp (0 - 0x1p65 i) == 0.99888622066058013610642172179340364209972 + 0.047183876212354673805106149805700013943218 i":
+float: 1
+ifloat: 1
 Test "Real part of: cexp (0.75 + 1.25 i) == 0.667537446429131586942201977015932112 + 2.00900045494094876258347228145863909 i":
+float: 1
+ifloat: 1
 ildouble: 1
 ldouble: 1
+Test "Imaginary part of: cexp (0.75 + 1.25 i) == 0.667537446429131586942201977015932112 + 2.00900045494094876258347228145863909 i":
+ildouble: 1
+ldouble: 1
+Test "Real part of: cexp (50 + 0x1p127 i) == 4.053997150228616856622417636046265337193e21 + 3.232070315463388524466674772633810238819e21 i":
+double: 2
+idouble: 2
+Test "Imaginary part of: cexp (50 + 0x1p127 i) == 4.053997150228616856622417636046265337193e21 + 3.232070315463388524466674772633810238819e21 i":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "Real part of: cexp (500 + 0x1p1023 i) == -1.159886268932754433233243794561351783426e217 + 7.904017694554466595359379965081774849708e216 i":
+double: 1
+idouble: 1
 
 # clog
 Test "Real part of: clog (0.75 + 1.25 i) == 0.376885901188190075998919126749298416 + 1.03037682652431246378774332703115153 i":
@@ -815,18 +844,22 @@ ifloat: 1
 ildouble: 1
 ldouble: 1
 Test "Imaginary part of: cpow (0.75 + 1.25 i, 0.0 + 1.0 i) == 0.331825439177608832276067945276730566 + 0.131338600281188544930936345230903032 i":
+float: 1
+ifloat: 1
 ildouble: 1
 ldouble: 1
 Test "Real part of: cpow (0.75 + 1.25 i, 0.75 + 1.25 i) == 0.117506293914473555420279832210420483 + 0.346552747708338676483025352060418001 i":
-float: 3
-ifloat: 3
+double: 1
+float: 4
+idouble: 1
+ifloat: 4
 ildouble: 6
 ldouble: 6
 Test "Imaginary part of: cpow (0.75 + 1.25 i, 0.75 + 1.25 i) == 0.117506293914473555420279832210420483 + 0.346552747708338676483025352060418001 i":
 float: 1
 ifloat: 1
-ildouble: 1
-ldouble: 1
+ildouble: 2
+ldouble: 2
 Test "Real part of: cpow (0.75 + 1.25 i, 1.0 + 0.0 i) == 0.75 + 1.25 i":
 ildouble: 1
 ldouble: 1
@@ -834,22 +867,27 @@ Test "Imaginary part of: cpow (0.75 + 1.25 i, 1.0 + 0.0 i) == 0.75 + 1.25 i":
 float: 1
 ifloat: 1
 Test "Real part of: cpow (0.75 + 1.25 i, 1.0 + 1.0 i) == 0.0846958290317209430433805274189191353 + 0.513285749182902449043287190519090481 i":
-double: 1
+double: 2
 float: 3
-idouble: 1
+idouble: 2
 ifloat: 3
 ildouble: 3
 ldouble: 3
+Test "Real part of: cpow (2 + 0 i, 10 + 0 i) == 1024.0 + 0.0 i":
+ildouble: 1
+ldouble: 1
 Test "Real part of: cpow (2 + 3 i, 4 + 0 i) == -119.0 - 120.0 i":
 double: 1
-float: 4
+float: 5
 idouble: 1
-ifloat: 4
+ifloat: 5
+ildouble: 1
+ldouble: 1
 Test "Imaginary part of: cpow (2 + 3 i, 4 + 0 i) == -119.0 - 120.0 i":
-float: 1
-ifloat: 1
-ildouble: 2
-ldouble: 2
+float: 2
+ifloat: 2
+ildouble: 4
+ldouble: 4
 Test "Imaginary part of: cpow (e + 0 i, 0 + 2 * M_PIl i) == 1.0 + 0.0 i":
 double: 2
 float: 3
@@ -2124,10 +2162,18 @@ ildouble: 1
 ldouble: 1
 
 Function: Real part of "cexp":
+double: 2
+float: 1
+idouble: 2
+ifloat: 1
 ildouble: 1
 ldouble: 1
 
 Function: Imaginary part of "cexp":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
 ildouble: 1
 ldouble: 1
 
@@ -2212,20 +2258,20 @@ double: 1
 ldouble: 1
 
 Function: Real part of "cpow":
-double: 1
-float: 4
-idouble: 1
-ifloat: 4
-ildouble: 6
-ldouble: 6
+double: 2
+float: 5
+idouble: 2
+ifloat: 5
+ildouble: 5
+ldouble: 5
 
 Function: Imaginary part of "cpow":
 double: 2
 float: 3
 idouble: 2
 ifloat: 3
-ildouble: 2
-ldouble: 2
+ildouble: 4
+ldouble: 4
 
 Function: Real part of "csin":
 float: 1

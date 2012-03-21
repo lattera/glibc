@@ -1,3 +1,13 @@
+2012-03-21  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #13883]
+	* sysdeps/i386/fpu/s_cexp.S: Remove.
+	* sysdeps/i386/fpu/s_cexpf.S: Likewise.
+	* sysdeps/i386/fpu/s_cexpl.S: Likewise.
+	* math/libm-test.inc (cexp_test): Add more tests.
+	* sysdeps/i386/fpu/libm-test-ulps: Update.
+	* sysdeps/x86_64/fpu/libm-test-ulps: Likewise.
+
 2012-03-21  Allan McRae  <allan@archlinux.org>
 
 	* timezone/Makefile: Do not install iso3166.tab and zone.tab
