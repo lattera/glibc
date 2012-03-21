@@ -1,3 +1,8 @@
+2012-03-21  Richard Henderson  <rth@twiddle.net>
+
+	* sysdeps/alpha/hp-timing.h: Include <_itoa.h> instead
+	of <stdio-common/_itoa.h>.
+
 2012-03-19  Richard Henderson  <rth@twiddle.net>
 
 	* sysdeps/alpha/fpu/math_private.h: New file.

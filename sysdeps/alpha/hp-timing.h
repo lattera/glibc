@@ -22,7 +22,7 @@
 
 #include <string.h>
 #include <sys/param.h>
-#include <stdio-common/_itoa.h>
+#include <_itoa.h>
 
 /* The macros defined here use the timestamp counter in IA-64.  They
    provide a very accurate way to measure the time with very little
