@@ -84,10 +84,6 @@ following the bug-reporting instructions below.  Please be sure to check
 the manual in the current development sources to see if your problem has
 already been corrected.
 
-The file NOTES contains a description of the feature-test macros used
-in the GNU C library, explaining how you can tell the library what
-facilities you want it to make available.
-
 Please see http://www.gnu.org/software/libc/bugs.html for bug reporting
 information.  We are now using the Bugzilla system to track all bug reports.
 This web page gives detailed information on how to report bugs properly.

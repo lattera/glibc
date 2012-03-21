@@ -1,5 +1,4 @@
-# Copyright (C) 1991-2002,2003,2004,2005,2006,2008,2009,2011
-#	Free Software Foundation, Inc.
+# Copyright (C) 1991-2012 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -364,7 +363,7 @@ TAGS:
 
 generated := $(generated) stubs.h
 
-files-for-dist := README FAQ INSTALL NOTES configure ChangeLog NEWS
+files-for-dist := README FAQ INSTALL configure ChangeLog NEWS
 
 # Regenerate stuff, then error if these things are not committed yet.
 dist-prepare: $(files-for-dist)
@@ -399,7 +398,6 @@ makeinfo --no-validate --plaintext --no-number-sections $< -o $@
 -chmod a-w $@
 endef
 INSTALL: manual/install.texi manual/macros.texi; $(format-me)
-NOTES: manual/creature.texi manual/macros.texi; $(format-me)
 manual/dir-add.texi manual/dir-add.info: FORCE
 	$(MAKE) $(PARALLELMFLAGS) -C $(@D) $(@F)
 FAQ: scripts/gen-FAQ.pl FAQ.in

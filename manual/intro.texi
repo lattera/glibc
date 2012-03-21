@@ -548,7 +548,6 @@ The header file @file{termios.h} reserves names prefixed with @samp{c_},
 @end itemize
 
 @comment Include the section on Creature Nest Macros.
-@comment It is in a separate file so it can be formatted into ../NOTES.
 @include creature.texi
 
 @node Roadmap to the Manual,  , Using the Library, Introduction

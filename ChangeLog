@@ -1,5 +1,13 @@
 2012-03-21  Joseph Myers  <joseph@codesourcery.com>
 
+	* NOTES: Remove.
+	* Makefile (files-for-dist): Remove NOTES.
+	(NOTES): Remove rule.
+	* README: Don't refer to NOTES.
+	* manual/creature.texi: Don't include macros.texi.
+	* manual/intro.texi (creature.texi): Remove comment referring to
+	NOTES.
+
 	* aclocal.m4 (LIBC_TRY_CC_OPTION): New macro.
 	* configure.in (libc_cv_cc_submachine): Use LIBC_TRY_CC_OPTION.
 	* configure: Regenerated.

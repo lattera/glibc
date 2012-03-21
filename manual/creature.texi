@@ -1,6 +1,5 @@
 @node Feature Test Macros
 @subsection Feature Test Macros
-@include macros.texi
 
 @cindex feature test macros
 The exact set of features available when you compile a source file
