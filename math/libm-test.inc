@@ -3108,8 +3108,7 @@ exp2_test (void)
 
   TEST_f_f (exp2, 10, 1024);
   TEST_f_f (exp2, -1, 0.5);
-  /* Bug 13871: OVERFLOW exception may be missing.  */
-  TEST_f_f (exp2, 1e6, plus_infty, OVERFLOW_EXCEPTION_OK);
+  TEST_f_f (exp2, 1e6, plus_infty, OVERFLOW_EXCEPTION);
   TEST_f_f (exp2, -1e6, 0);
   TEST_f_f (exp2, 0.75L, 1.68179283050742908606225095246642979L);
 

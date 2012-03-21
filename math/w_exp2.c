@@ -2,23 +2,19 @@
  * wrapper exp2(x)
  */
 
-#include <float.h>
 #include <math.h>
 #include <math_private.h>
-
-static const double o_threshold = (double) DBL_MAX_EXP;
-static const double u_threshold = (double) (DBL_MIN_EXP - DBL_MANT_DIG - 1);
 
 double
 __exp2 (double x)
 {
-  if (__builtin_expect (islessequal (x, u_threshold)
-			|| isgreater (x, o_threshold), 0)
-      && _LIB_VERSION != _IEEE_ && __finite (x))
+  double z = __ieee754_exp2 (x);
+  if (__builtin_expect (!__finite (z), 0)
+      && __finite (x) && _LIB_VERSION != _IEEE_)
     /* exp2 overflow: 44, exp2 underflow: 45 */
-    return __kernel_standard (x, x, 44 + (x <= o_threshold));
+    return __kernel_standard (x, x, 44 + !!__signbit (x));
 
-  return __ieee754_exp2 (x);
+  return z;
 }
 weak_alias (__exp2, exp2)
 #ifdef NO_LONG_DOUBLE

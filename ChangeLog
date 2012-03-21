@@ -1,4 +1,14 @@
-2012-03-20  Joseph Myers  <joseph@codesourcery.com>
+2012-03-21  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #13871]
+	* math/w_exp2.c: Do not include <float.h>.
+	(o_threshold, u_threshold): Remove.
+	(__exp2): Calculate result before checking finiteness and calling
+	__kernel_standard.
+	* math/w_exp2f.c: Likewise.
+	* math/w_exp2l.c: Likewise.
+	* math/libm-test.inc (exp2_test): Require overflow exception for
+	1e6 input.
 
 	[BZ #3866]
 	* sysdeps/i386/fpu/e_pow.S (__ieee754_pow): Test for y outside the

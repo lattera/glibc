@@ -2,22 +2,18 @@
  * wrapper exp2f(x)
  */
 
-#include <float.h>
 #include <math.h>
 #include <math_private.h>
-
-static const float o_threshold = (float) FLT_MAX_EXP;
-static const float u_threshold = (float) (FLT_MIN_EXP - FLT_MANT_DIG - 1);
 
 float
 __exp2f (float x)
 {
-  if (__builtin_expect (islessequal (x, u_threshold)
-			|| isgreater (x, o_threshold), 0)
-      && _LIB_VERSION != _IEEE_ && __finitef (x))
+  float z = __ieee754_exp2f (x);
+  if (__builtin_expect (!__finitef (z), 0)
+      && __finitef (x) && _LIB_VERSION != _IEEE_)
     /* exp2 overflow: 144, exp2 underflow: 145 */
-    return __kernel_standard_f (x, x, 144 + (x <= o_threshold));
+    return __kernel_standard_f (x, x, 144 + !!__signbitf (x));
 
-  return __ieee754_exp2f (x);
+  return z;
 }
 weak_alias (__exp2f, exp2f)
