@@ -105,10 +105,17 @@ la_symbind64 (Elf64_Sym *sym, unsigned int ndx, uintptr_t *refcook,
   return sym->st_value;
 }
 
-#define pltenter la_x86_64_gnu_pltenter
-#define pltexit la_x86_64_gnu_pltexit
-#define La_regs La_x86_64_regs
-#define La_retval La_x86_64_retval
+#ifdef __LP64__
+# define pltenter la_x86_64_gnu_pltenter
+# define pltexit la_x86_64_gnu_pltexit
+# define La_regs La_x86_64_regs
+# define La_retval La_x86_64_retval
+#else
+# define pltenter la_x32_gnu_pltenter
+# define pltexit la_x32_gnu_pltexit
+# define La_regs La_x32_regs
+# define La_retval La_x32_retval
+#endif
 #define int_retval lrv_rax
 
 #include <tst-audit.h>
@@ -140,7 +147,8 @@ pltexit (ElfW(Sym) *sym, unsigned int ndx, uintptr_t *refcook,
 	 const char *symname)
 {
   printf ("pltexit: symname=%s, st_value=%#lx, ndx=%u, retval=%tu\n",
-	  symname, (long int) sym->st_value, ndx, outregs->int_retval);
+	  symname, (long int) sym->st_value, ndx,
+	  (ptrdiff_t) outregs->int_retval);
 
   __m128i xmm = _mm_set1_epi32 (-1);
   asm volatile ("movdqa %0, %%xmm0" : : "x" (xmm) : "xmm0" );

@@ -20,7 +20,7 @@
 #endif
 
 
-#if __ELF_NATIVE_CLASS == 32
+#ifndef __x86_64__
 /* Registers for entry into PLT on IA-32.  */
 typedef struct La_i86_regs
 {
@@ -105,6 +105,8 @@ typedef struct La_x86_64_retval
   La_x86_64_vector lrv_vector1;
 } La_x86_64_retval;
 
+#define La_x32_regs La_x86_64_regs
+#define La_x32_retval La_x86_64_retval
 
 __BEGIN_DECLS
 
@@ -123,6 +125,22 @@ extern unsigned int la_x86_64_gnu_pltexit (Elf64_Sym *__sym,
 					   const La_x86_64_regs *__inregs,
 					   La_x86_64_retval *__outregs,
 					   const char *__symname);
+
+extern Elf32_Addr la_x32_gnu_pltenter (Elf32_Sym *__sym,
+				       unsigned int __ndx,
+				       uintptr_t *__refcook,
+				       uintptr_t *__defcook,
+				       La_x32_regs *__regs,
+				       unsigned int *__flags,
+				       const char *__symname,
+				       long int *__framesizep);
+extern unsigned int la_x32_gnu_pltexit (Elf32_Sym *__sym,
+					unsigned int __ndx,
+					uintptr_t *__refcook,
+					uintptr_t *__defcook,
+					const La_x32_regs *__inregs,
+					La_x32_retval *__outregs,
+					const char *__symname);
 
 __END_DECLS
 
