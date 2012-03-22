@@ -1,5 +1,10 @@
 2012-03-22  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* sysdeps/x86_64/dl-tls.h (dl_tls_index): Replace unsigned long
+	with uint64_t.
+
+2012-03-22  H.J. Lu  <hongjiu.lu@intel.com>
+
 	* sysdeps/generic/ldsodefs.h (struct La_x32_regs): New forward
 	declaration.
 	(struct La_x32_retval): Likewise.
