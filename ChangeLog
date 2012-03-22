@@ -1,5 +1,11 @@
 2012-03-22  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* sysdeps/generic/ldsodefs.h (struct La_x32_regs): New forward
+	declaration.
+	(struct La_x32_retval): Likewise.
+
+2012-03-22  H.J. Lu  <hongjiu.lu@intel.com>
+
 	* sysdeps/x86_64/preconfigure.in: New file.
 	* sysdeps/x86_64/preconfigure: New generated file.
 

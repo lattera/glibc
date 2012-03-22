@@ -187,6 +187,8 @@ struct La_i86_regs;
 struct La_i86_retval;
 struct La_x86_64_regs;
 struct La_x86_64_retval;
+struct La_x32_regs;
+struct La_x32_retval;
 struct La_ppc32_regs;
 struct La_ppc32_retval;
 struct La_ppc64_regs;
