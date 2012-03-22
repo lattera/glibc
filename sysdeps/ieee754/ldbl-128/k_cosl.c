@@ -105,7 +105,11 @@ __kernel_cosl(long double x, long double y)
 	 cosl(h+l) = cosl(h)cosl(l) - sinl(h)sinl(l).  */
       index = 0x3ffe - (tix >> 16);
       hix = (tix + (0x200 << index)) & (0xfffffc00 << index);
-      x = fabsl (x);
+      if (signbit (x))
+	{
+	  x = -x;
+	  y = -y;
+	}
       switch (index)
 	{
 	case 0: index = ((45 << 10) + hix - 0x3ffe0000) >> 8; break;

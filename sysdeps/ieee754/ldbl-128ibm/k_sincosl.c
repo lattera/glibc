@@ -151,7 +151,11 @@ __kernel_sincosl(long double x, long double y, long double *sinx, long double *c
 
       index = 0x3fe - (tix >> 20);
       hix = (tix + (0x2000 << index)) & (0xffffc000 << index);
-      x = fabsl (x);
+      if (signbit (x))
+	{
+	  x = -x;
+	  y = -y;
+	}
       switch (index)
 	{
 	case 0: index = ((45 << 14) + hix - 0x3fe00000) >> 12; break;

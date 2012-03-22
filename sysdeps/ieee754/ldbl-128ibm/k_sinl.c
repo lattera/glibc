@@ -134,7 +134,7 @@ __kernel_sinl(long double x, long double y, int iy)
 */
       SET_LDOUBLE_WORDS64(h, ((u_int64_t)hix) << 32, 0);
       if (iy)
-	l = y - (h - x);
+	l = (ix < 0 ? -y : y) - (h - x);
       else
 	l = x - h;
       z = l * l;

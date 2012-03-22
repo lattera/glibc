@@ -123,7 +123,11 @@ __kernel_cosl(long double x, long double y)
     
       index = 0x3fe - (tix >> 20);
       hix = (tix + (0x200 << index)) & (0xfffffc00 << index);
-      x = fabsl (x);
+      if (signbit (x))
+	{
+	  x = -x;
+	  y = -y;
+	}
       switch (index)
 	{
 	case 0: index = ((45 << 14) + hix - 0x3fe00000) >> 12; break;
