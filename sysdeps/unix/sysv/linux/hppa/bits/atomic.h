@@ -79,14 +79,13 @@ typedef uintmax_t uatomic_max_t;
 	"cmpb,=,n %%r25, %%r21, 0b		\n\t"			\
 	"nop					\n\t"			\
 	"stw	%%r28, %0			\n\t"			\
-        "sub	%%r0, %%r21, %%r21		\n\t"			\
 	"stw	%%r21, %1			\n\t"			\
 	: "=m" (lws_ret), "=m" (lws_errno) 				\
         : "r" (mem), "r" (oldval), "r" (newval)				\
 	: _LWS_CLOBBER							\
      );									\
     									\
-     if(lws_errno == EFAULT || lws_errno == ENOSYS)			\
+     if(lws_errno == -EFAULT || lws_errno == -ENOSYS)			\
      	ABORT_INSTRUCTION;						\
     									\
      lws_ret;								\

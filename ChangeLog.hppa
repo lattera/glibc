@@ -1,3 +1,10 @@
+2012-03-22  Carlos O'Donell  <carlos@systemhalted.org>
+
+	[BZ #6730]
+
+	* sysdeps/unix/sysv/linux/hppa/bits/atomic.h: Don't negate %r21 and
+	check for -EFAULT and -ENOSYS instead.
+
 2012-03-09  Richard Henderson  <rth@twiddle.net>
 
 	* sysdeps/hppa/hppa1.1/s_signbit.c: Use <> to include math_private.h.
