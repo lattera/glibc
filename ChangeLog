@@ -1,5 +1,11 @@
 2012-03-22  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* include/link.h (ELFW): New macro.
+	* sysdeps/x86_64/dl-irel.h: Replace Elf64_XXX with ElfW(XXX).
+	Replace ELF64_R_TYPE with ELFW(R_TYPE).
+
+2012-03-22  H.J. Lu  <hongjiu.lu@intel.com>
+
 	* sysdeps/x86_64/dl-tls.h (dl_tls_index): Replace unsigned long
 	with uint64_t.
 

@@ -25,23 +25,23 @@
 
 #define ELF_MACHINE_IRELA	1
 
-static inline Elf64_Addr
+static inline ElfW(Addr)
 __attribute ((always_inline))
-elf_ifunc_invoke (Elf64_Addr addr)
+elf_ifunc_invoke (ElfW(Addr) addr)
 {
-  return ((Elf64_Addr (*) (void)) (addr)) ();
+  return ((ElfW(Addr) (*) (void)) (addr)) ();
 }
 
 static inline void
 __attribute ((always_inline))
-elf_irela (const Elf64_Rela *reloc)
+elf_irela (const ElfW(Rela) *reloc)
 {
-  Elf64_Addr *const reloc_addr = (void *) reloc->r_offset;
-  const unsigned long int r_type = ELF64_R_TYPE (reloc->r_info);
+  ElfW(Addr) *const reloc_addr = (void *) reloc->r_offset;
+  const unsigned long int r_type = ELFW(R_TYPE) (reloc->r_info);
 
   if (__builtin_expect (r_type == R_X86_64_IRELATIVE, 1))
     {
-      Elf64_Addr value = elf_ifunc_invoke(reloc->r_addend);
+      ElfW(Addr) value = elf_ifunc_invoke(reloc->r_addend);
       *reloc_addr = value;
     }
   else

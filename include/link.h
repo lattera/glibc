@@ -330,4 +330,9 @@ extern int __dl_iterate_phdr (int (*callback) (struct dl_phdr_info *info,
 					       size_t size, void *data),
 			      void *data);
 
+/* We use this macro to refer to ELF macros independent of the native
+   wordsize.  `ELFW(R_TYPE)' is used in place of `ELF32_R_TYPE' or
+   `ELF64_R_TYPE'.  */
+#define ELFW(type)	_ElfW (ELF, __ELF_NATIVE_CLASS, type)
+
 #endif /* include/link.h */
