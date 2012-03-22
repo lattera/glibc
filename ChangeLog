@@ -1,3 +1,15 @@
+2012-03-22  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #13892]
+	* math/s_cexp.c: Include <float.h>.
+	(__cexp): Handle exp result overflowing not necessarily
+	overflowing both real and imaginary parts of result.
+	* math/s_cexpf.c: Likewise.
+	* math/s_cexpl.c: Likewise.
+	* math/libm-test.inc (cexp_test): Add more tests.
+	* sysdeps/i386/fpu/libm-test-ulps: Update.
+	* sysdeps/x86_64/fpu/libm-test-ulps: Likewise.
+
 2012-03-22  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* include/link.h (ELFW): New macro.

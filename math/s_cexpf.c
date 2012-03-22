@@ -1,5 +1,5 @@
 /* Return value of complex exponential function for float complex value.
-   Copyright (C) 1997, 2011 Free Software Foundation, Inc.
+   Copyright (C) 1997-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -21,7 +21,7 @@
 #include <fenv.h>
 #include <math.h>
 #include <math_private.h>
-
+#include <float.h>
 
 __complex__ float
 __cexpf (__complex__ float x)
@@ -36,20 +36,35 @@ __cexpf (__complex__ float x)
       if (__builtin_expect (icls >= FP_ZERO, 1))
 	{
 	  /* Imaginary part is finite.  */
-	  float exp_val = __ieee754_expf (__real__ x);
+	  const int t = (int) ((FLT_MAX_EXP - 1) * M_LN2);
 	  float sinix, cosix;
 
 	  __sincosf (__imag__ x, &sinix, &cosix);
 
-	  if (isfinite (exp_val))
+	  if (__real__ x > t)
 	    {
-	      __real__ retval = exp_val * cosix;
-	      __imag__ retval = exp_val * sinix;
+	      float exp_t = __ieee754_expf (t);
+	      __real__ x -= t;
+	      sinix *= exp_t;
+	      cosix *= exp_t;
+	      if (__real__ x > t)
+		{
+		  __real__ x -= t;
+		  sinix *= exp_t;
+		  cosix *= exp_t;
+		}
+	    }
+	  if (__real__ x > t)
+	    {
+	      /* Overflow (original real part of x > 3t).  */
+	      __real__ retval = FLT_MAX * cosix;
+	      __imag__ retval = FLT_MAX * sinix;
 	    }
 	  else
 	    {
-	      __real__ retval = __copysignf (exp_val, cosix);
-	      __imag__ retval = __copysignf (exp_val, sinix);
+	      float exp_val = __ieee754_expf (__real__ x);
+	      __real__ retval = exp_val * cosix;
+	      __imag__ retval = exp_val * sinix;
 	    }
 	}
       else
