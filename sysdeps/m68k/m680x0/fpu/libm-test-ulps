@@ -439,6 +439,9 @@ ildouble: 1
 ldouble: 1
 
 # cexp
+Test "Real part of: cexp (-10000 + 0x1p16383 i) == 1.045876464564882298442774542991176546722e-4343 + 4.421154026488516836023811173959413420548e-4344 i":
+ildouble: 1
+ldouble: 1
 Test "Real part of: cexp (-2.0 - 3.0 i) == -0.13398091492954261346140525546115575 - 0.019098516261135196432576240858800925 i":
 float: 1
 ifloat: 1
@@ -451,6 +454,9 @@ ifloat: 2
 Test "Imaginary part of: cexp (0.75 + 1.25 i) == 0.667537446429131586942201977015932112 + 2.00900045494094876258347228145863909 i":
 float: 1
 ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: cexp (50 + 0x1p127 i) == 4.053997150228616856622417636046265337193e21 + 3.232070315463388524466674772633810238819e21 i":
 ildouble: 1
 ldouble: 1
 
@@ -1941,6 +1947,8 @@ ldouble: 1
 Function: Real part of "cexp":
 float: 2
 ifloat: 2
+ildouble: 1
+ldouble: 1
 
 Function: Imaginary part of "cexp":
 float: 1
