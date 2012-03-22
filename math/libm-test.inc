@@ -3127,6 +3127,21 @@ exp2_test (void)
   TEST_f_f (exp2, -1e6, 0);
   TEST_f_f (exp2, 0.75L, 1.68179283050742908606225095246642979L);
 
+  TEST_f_f (exp2, 100.5, 1.792728671193156477399422023278661496394e+30L);
+  TEST_f_f (exp2, 127, 0x1p127);
+  TEST_f_f (exp2, -149, 0x1p-149);
+
+#ifndef TEST_FLOAT
+  TEST_f_f (exp2, 1000.25, 1.274245659452564874772384918171765416737e+301L);
+  TEST_f_f (exp2, 1023, 0x1p1023);
+  TEST_f_f (exp2, -1074, 0x1p-1074);
+#endif
+
+#if defined TEST_LDOUBLE && LDBL_MAX_EXP >= 16384
+  TEST_f_f (exp2, 16383, 0x1p16383L);
+  TEST_f_f (exp2, -16400, 0x1p-16400L);
+#endif
+
   END (exp2);
 }
 

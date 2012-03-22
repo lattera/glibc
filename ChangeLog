@@ -1,5 +1,12 @@
 2012-03-22  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #13824]
+	* math/e_exp2l.c: Include <float.h>.
+	(__ieee754_exp2l): Handle overflow and underflow cases
+	separately.  Only pass fractional part of argument to
+	__ieee754_expl.
+	* math/libm-test.inc (exp2_test): Add more tests.
+
 	* sysdeps/ieee754/ldbl-128/k_cosl.c (__kernel_cosl): Negate y if
 	negating x to take absolute value.
 	* sysdeps/ieee754/ldbl-128/k_sincosl.c (__kernel_sincosl):
