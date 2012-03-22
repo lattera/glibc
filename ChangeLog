@@ -1,3 +1,8 @@
+2012-03-22  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/x86_64/preconfigure.in: New file.
+	* sysdeps/x86_64/preconfigure: New generated file.
+
 2012-03-22  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #13824]
