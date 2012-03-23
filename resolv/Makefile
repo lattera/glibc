@@ -55,8 +55,10 @@ subdir-dirs = nss_dns
 vpath %.c nss_dns
 
 libnss_dns-routines	:= dns-host dns-network dns-canon
-ifneq ($(build-static-nss),yes)
 libnss_dns-inhibit-o	= $(filter-out .os,$(object-suffixes))
+ifeq ($(build-static-nss),yes)
+routines                += $(libnss_dns-routines) $(libresolv-routines)
+static-only-routines    += $(libnss_dns-routines) $(libresolv-routines)
 endif
 
 ifeq (yesyes,$(build-shared)$(have-thread-library))

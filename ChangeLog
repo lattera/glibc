@@ -1,3 +1,21 @@
+2012-03-23  Daniel Jacobowitz  <dmj@google.com>
+	Paul Pluzhnikov  <ppluzhnikov@google.com>
+
+	[BZ #6528]
+	* grp/Makefile (otherlibs): Don't set it.
+	* inet/Makefile (otherlibs): Likewise.
+	* login/Makefile (otherlibs): Likewise.
+	* nscd/Makefile (otherlibs): Likewise.
+	* posix/Makefile (otherlibs): Likewise.
+	* pwd/Makefile (otherlibs): Likewise.
+	* rt/Makefile (otherlibs): Likewise.
+	* sunrpc/Makefile (otherlibs): Likewise.
+	* nss/Makefile (otherlibs): Likewise.
+	Add libnss_files to routines and static-only-routines.
+	($(objpfx)getent): Remove rule.
+	* resolv/Makefile: Add libnss_dns and libresolv to routines and
+	static-only-routines.
+
 2012-03-22  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #13892]

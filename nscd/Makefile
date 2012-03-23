@@ -46,11 +46,6 @@ extra-objs = $(nscd-modules:=.o)
 
 endif
 
-ifeq (yes,$(build-static-nss))
-otherlibs += $(nssobjdir)/libnss_files.a $(resolvobjdir)/libnss_dns.a \
-	     $(resolvobjdir)/libresolv.a
-endif
-
 all-nscd-modules := $(nscd-modules) selinux
 ifeq (yes,$(have-selinux))
 ifeq (yes,$(have-libaudit))

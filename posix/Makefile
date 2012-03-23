@@ -112,14 +112,6 @@ generated := $(addprefix wordexp-test-result, 1 2 3 4 5 6 7 8 9 10) \
 
 include ../Rules
 
-ifeq (yes,$(build-static-nss))
-# We need it for "make check" only. We can skip them if they haven't
-# been built yet during "make".
-otherlibs += $(wildcard $(nssobjdir)/libnss_files.a \
-			$(resolvobjdir)/libnss_dns.a \
-			$(resolvobjdir)/libresolv.a)
-endif
-
 ifeq (no,$(cross-compiling))
 # globtest and wordexp-test currently only works with shared libraries
 ifeq (yes,$(build-shared))

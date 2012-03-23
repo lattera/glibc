@@ -43,11 +43,6 @@ xtests			= bug-erange
 
 include ../Makeconfig
 
-ifeq (yes,$(build-static-nss))
-otherlibs += $(nssobjdir)/libnss_files.a $(resolvobjdir)/libnss_dns.a \
-	     $(resolvobjdir)/libresolv.a
-endif
-
 # Specify rules for the nss_* modules.  We have some services.
 services		:= files db
 
@@ -74,18 +69,15 @@ generated		+= $(filter-out db-alias.c db-netgrp.c, \
 
 install-others		+= $(inst_vardbdir)/Makefile
 
-# Build static module if requested
-ifneq ($(build-static-nss),yes)
+# Build static module into libc if requested
 libnss_files-inhibit-o	= $(filter-out .os,$(object-suffixes))
 libnss_db-inhibit-o	= $(filter-out .os,$(object-suffixes))
+ifeq ($(build-static-nss),yes)
+routines                += $(libnss_files-routines)
+static-only-routines    += $(libnss_files-routines)
 endif
 
 include ../Rules
-
-
-ifeq (yes,$(build-static-nss))
-$(objpfx)getent: $(objpfx)libnss_files.a
-endif
 
 ifeq (yes,$(have-selinux))
 LDLIBS-makedb		:= -lselinux

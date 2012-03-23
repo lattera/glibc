@@ -48,11 +48,6 @@ include ../Rules
 
 CFLAGS-getpt.c = -fexceptions
 
-ifeq (yes,$(build-static-nss))
-otherlibs += $(nssobjdir)/libnss_files.a $(resolvobjdir)/libnss_dns.a \
-	     $(resolvobjdir)/libresolv.a $(common-objpfx)libc.a
-endif
-
 ifeq (yesyes,$(have-fpie)$(build-shared))
 pt_chown-cflags += $(pie-ccflag)
 endif
