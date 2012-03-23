@@ -743,23 +743,6 @@ AC_SUBST(submachine)
 
 # We have now validated the configuration.
 
-
-# Look for an `elf' subdirectory of each machine directory.
-# We prepend these rather than inserting them whereever the machine appears
-# because things specified by the machine's ELF ABI should override
-# OS-specific things, and should always be the same for any OS on the
-# machine (otherwise what's the point of an ABI?).
-elf_dirs=
-for d in $add_ons_pfx ''; do
-  for m in $mach; do
-    if test -d $srcdir/${d}sysdeps$m/elf; then
-      elf_dirs="$elf_dirs ${d}sysdeps$m/elf"
-    fi
-  done
-done
-sysnames="`echo $elf_dirs | sed -e 's,//,/,g'` $sysnames"
-
-
 # Expand the list of system names into a full list of directories
 # from each element's parent name and Implies file (if present).
 set $sysnames
@@ -841,7 +824,7 @@ changequote([,])dnl
 done
 
 # Add the default directories.
-default_sysnames="sysdeps/generic/elf sysdeps/generic"
+default_sysnames="sysdeps/generic"
 sysnames="$names $default_sysnames"
 AC_SUBST(sysnames)
 # The other names were emitted during the scan.
