@@ -17,6 +17,7 @@
    License along with the GNU C Library.  If not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include <float.h>
 #include <complex.h>
 #include <math.h>
 #include "mathimpl.h"
@@ -43,26 +44,46 @@ s(__cexp) (__complex__ float_type x)
   if ((ix_cond & (__M81_COND_NAN|__M81_COND_INF)) == 0)
     {
       /* Imaginary part is finite.  */
-      float_type exp_val = m81(__ieee754_exp) (__real__ x);
+      unsigned long rx_cond = __m81_test (__real__ x);
 
-      __real__ retval = __imag__ retval = exp_val;
-      if (m81(__finite) (exp_val))
+      if ((rx_cond & (__M81_COND_NAN|__M81_COND_INF)) == 0)
 	{
-	  float_type sin_ix, cos_ix;
-	  __asm ("fsincos%.x %2,%1:%0" : "=f" (sin_ix), "=f" (cos_ix)
-		 : "f" (__imag__ x));
-	  __real__ retval *= cos_ix;
+	  const int t = (int) ((LDBL_MAX_EXP - 1) * M_LN2l);
+	  long double sin_ix, cos_ix, exp_val;
+
+	  __m81_u (__sincosl) (__imag__ x, &sin_ix, &cos_ix);
+
+	  if (__real__ x > t)
+	    {
+	      long double exp_t = __m81_u(__ieee754_expl) (t);
+	      __real__ x -= t;
+	      sin_ix *= exp_t;
+	      cos_ix *= exp_t;
+	      if (__real__ x > t)
+		{
+		  __real__ x -= t;
+		  sin_ix *= exp_t;
+		  cos_ix *= exp_t;
+		}
+	    }
+
+	  exp_val = __m81_u(__ieee754_expl) (__real__ x);
+	  __real__ retval = exp_val * cos_ix;
 	  if (ix_cond & __M81_COND_ZERO)
 	    __imag__ retval = __imag__ x;
 	  else
-	    __imag__ retval *= sin_ix;
+	    __imag__ retval = exp_val * sin_ix;
 	}
       else
 	{
 	  /* Compute the sign of the result.  */
-	  float_type remainder, pi_2;
+	  long double remainder, pi_2;
 	  int quadrant;
 
+	  if ((rx_cond & (__M81_COND_NAN|__M81_COND_NEG)) == __M81_COND_NEG)
+	    __real__ retval = __imag__ retval = 0.0;
+	  else
+	    __real__ retval = __imag__ retval = __real__ x;
 	  __asm ("fmovecr %#0,%0\n\tfscale%.w %#-1,%0" : "=f" (pi_2));
 	  __asm ("fmod%.x %2,%0\n\tfmove%.l %/fpsr,%1"
 		 : "=f" (remainder), "=dm" (quadrant)
@@ -83,7 +104,7 @@ s(__cexp) (__complex__ float_type x)
 	      __imag__ retval = -__imag__ retval;
 	      break;
 	    }
-	  if (ix_cond & __M81_COND_ZERO && !m81(__isnan) (exp_val))
+	  if (ix_cond & __M81_COND_ZERO && (rx_cond & __M81_COND_NAN) == 0)
 	    __imag__ retval = __imag__ x;
 	}
     }
