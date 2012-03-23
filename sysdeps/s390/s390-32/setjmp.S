@@ -1,5 +1,5 @@
-/*
-   Copyright (C) 2000, 2001, 2005 Free Software Foundation, Inc.
+/* setjmp for s390, ELF version.
+   Copyright (C) 2000, 2002, 2005 Free Software Foundation, Inc.
    Contributed by Martin Schwidefsky (schwidefsky@de.ibm.com).
    This file is part of the GNU C Library.
 
@@ -17,17 +17,34 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#ifndef _ASM
-#define _ASM
-#endif
-
 #include <sysdep.h>
+#define _ASM
+#define _SETJMP_H
 #include <bits/setjmp.h>
 
-/* Save the current program position in ENV and return 0.  */
-/* R2 = pointer to jmp_buf, R3 = savemask */
+	/* We include the BSD entry points here as well but we make
+	   them weak.  */
+ENTRY (setjmp)
+	.weak C_SYMBOL_NAME (setjmp)
+	lhi    %r3,1                /* second argument of one */
+	j      .Linternal_sigsetjmp /* branch relativ to __sigsetjmp */
+END (setjmp)
+
+	/* Binary compatibility entry point.  */
+ENTRY(_setjmp)
+	.weak  C_SYMBOL_NAME (_setjmp)
+	lhi    %r3,0                /* second argument of zero */
+	j      .Linternal_sigsetjmp /* branch relativ to __sigsetjmp */
+END (_setjmp)
+libc_hidden_def (_setjmp)
+
+ENTRY(__setjmp)
+	lhi    %r3,0                /* second argument of zero */
+	j      .Linternal_sigsetjmp /* branch relativ to __sigsetjmp */
+END (__setjmp)
 
 ENTRY(__sigsetjmp)
+.Linternal_sigsetjmp:
 #ifdef PTR_MANGLE
 	stm    %r6,%r13,0(%r2)      /* store registers in jmp_buf */
 	lr     %r4,%r14
@@ -58,6 +75,6 @@ ENTRY(__sigsetjmp)
 	basr   %r1,0
 .L0:    l      %r1,.L1-.L0(0,%r1)   /* load address of __sigjmp_save */
 	br     %r1                  /* tail-call __sigjmp_save */
-.L1:	.long  __sigjmp_save
+.L1:    .long  __sigjmp_save
 #endif
 END (__sigsetjmp)
