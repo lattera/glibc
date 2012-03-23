@@ -1,4 +1,4 @@
-/* Copyright (C) 2000, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 2000, 2004, 2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -32,7 +32,7 @@ __nss_getent (getent_r_function func, void **resbuf, char **buffer,
       *buffer = malloc (*buffer_size);
     }
 
-  while (buffer != NULL
+  while (*buffer != NULL
 	 && func (resbuf, *buffer, *buffer_size, &result, h_errnop) == ERANGE
 	 && (h_errnop == NULL || *h_errnop == NETDB_INTERNAL))
     {
