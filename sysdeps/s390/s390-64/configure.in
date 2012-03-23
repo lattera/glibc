@@ -1,5 +1,5 @@
 GLIBC_PROVIDES dnl See aclocal.m4 in the top level source directory.
-# Local configure fragment for sysdeps/s390/elf.
+# Local configure fragment for sysdeps/s390.
 
 # Check for support of thread-local storage handling in assembler and
 # linker.
