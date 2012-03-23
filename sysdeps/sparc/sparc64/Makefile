@@ -15,3 +15,6 @@ ASFLAGS-.og += -Wa,-Av9d
 ASFLAGS-.ob += -Wa,-Av9d
 ASFLAGS-.oS += -Wa,-Av9d
 endif
+
+# The assembler on SPARC needs the -fPIC flag even when it's assembler code.
+ASFLAGS-.os = -fPIC

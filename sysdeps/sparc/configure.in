@@ -28,3 +28,76 @@ rm -f conftest*])
 if test $libc_cv_sparc_as_vis3 = yes; then
   AC_DEFINE(HAVE_AS_VIS3_SUPPORT)
 fi
+
+# Check for support of thread-local storage handling in assembler and linker.
+AC_CACHE_CHECK(for sparc TLS support, libc_cv_sparc_tls, [dnl
+changequote(,)dnl
+cat > conftest.S <<\EOF
+	.section ".tdata", "awT", @progbits
+	.globl foo
+foo:	.word	1
+	.section ".tbss", "awT", @nobits
+	.globl bar
+bar:	.skip	4
+	.text
+baz:	sethi	%tgd_hi22(foo), %l1
+	add	%l1, %tgd_lo10(foo), %l1
+	add	%l7, %l1, %o0, %tgd_add(foo)
+	call	__tls_get_addr, %tgd_call(foo)
+	sethi	%tldm_hi22(bar), %l1
+	add	%l1, %tldm_lo10(bar), %l1
+	add	%l7, %l1, %o0, %tldm_add(bar)
+	call	__tls_get_addr, %tldm_call(bar)
+	sethi	%tldo_hix22(bar), %l1
+	xor	%l1, %tldo_lox10(bar), %l1
+	add	%o0, %l1, %l1, %tldo_add(bar)
+	sethi	%tie_hi22(foo), %l1
+	add	%l1, %tie_lo10(foo), %l1
+#ifdef __arch64__
+	ldx	[%l7 + %l1], %l1, %tie_ldx(foo)
+#else
+	ld	[%l7 + %l1], %l1, %tie_ld(foo)
+#endif
+	add	%g7, %l1, %l1, %tie_add(foo)
+	sethi	%tle_hix22(foo), %l1
+	xor	%l1, %tle_lox10(foo), %l1
+EOF
+changequote([,])dnl
+dnl
+if AC_TRY_COMMAND(${CC-cc} -c $CFLAGS conftest.S 1>&AS_MESSAGE_LOG_FD); then
+  libc_cv_sparc_tls=yes
+else
+  libc_cv_sparc_tls=no
+fi
+rm -f conftest*])
+if test $libc_cv_sparc_tls = no; then
+  AC_MSG_ERROR([the assembler must support TLS])
+fi
+
+# Check for a GCC emitting GOTDATA relocations.
+AC_CACHE_CHECK(for sparc gcc GOTDATA reloc support, libc_cv_sparc_gcc_gotdata, [dnl
+changequote(,)dnl
+cat > conftest.c <<\EOF
+int data;
+int foo(void)
+{
+	return data;
+}
+EOF
+changequote([,])dnl
+dnl
+libc_cv_sparc_gcc_gotdata=no
+if AC_TRY_COMMAND(${CC-cc} -S $CFLAGS -O2 -fPIC conftest.c 1>&AS_MESSAGE_LOG_FD); then
+  if grep -q 'gdop_hix22' conftest.s \
+     && grep -q 'gdop_lox10' conftest.s; then
+    libc_cv_sparc_gcc_gotdata=yes
+  fi
+fi
+rm -f conftest*])
+if test $libc_cv_sparc_gcc_gotdata = yes; then
+  AC_DEFINE(HAVE_GCC_GOTDATA)
+fi
+
+if test $libc_cv_sparc_gcc_gotdata = yes; then
+  AC_DEFINE(PI_STATIC_AND_HIDDEN)
+fi
