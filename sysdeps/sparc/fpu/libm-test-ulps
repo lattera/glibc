@@ -536,13 +536,22 @@ float: 1
 ifloat: 1
 ildouble: 1
 ldouble: 1
-Test "Imaginary part of: cexp (0 + 0x1p1023 i) == -0.826369834614147994500785680811743734805 + 0.5631277798508840134529434079444683477104 i":
+Test "Imaginary part of: cexp (-720 + 0.75 i) == 1.486960657116368433685753325516638551722e-313 + 1.385247284245720590980701226843815229385e-313 i":
 ildouble: 1
 ldouble: 1
+Test "Imaginary part of: cexp (-95 + 0.75 i) == 4.039714446238306526889476684000081624047e-42 + 3.763383677300535390271646960780570275931e-42 i":
+double: 1
+idouble: 1
 Test "Real part of: cexp (0.75 + 1.25 i) == 0.667537446429131586942201977015932112 + 2.00900045494094876258347228145863909 i":
 float: 1
 ifloat: 1
 Test "Imaginary part of: cexp (0.75 + 1.25 i) == 0.667537446429131586942201977015932112 + 2.00900045494094876258347228145863909 i":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: cexp (1440 + 0x1p-1074 i) == inf + 1.196295853897226111293303155636183216483e302 i plus overflow exception":
+double: 1
+idouble: 1
+Test "Imaginary part of: cexp (22730 + 0x1p-16434 i) == inf + 2.435706297811211974162115164702304105374e4924 i plus overflow exception":
 ildouble: 1
 ldouble: 1
 Test "Real part of: cexp (50 + 0x1p127 i) == 4.053997150228616856622417636046265337193e21 + 3.232070315463388524466674772633810238819e21 i":
@@ -558,7 +567,22 @@ idouble: 1
 Test "Real part of: cexp (500 + 0x1p1023 i) == -1.159886268932754433233243794561351783426e217 + 7.904017694554466595359379965081774849708e216 i":
 double: 1
 idouble: 1
-Test "Imaginary part of: cexp (500 + 0x1p1023 i) == -1.159886268932754433233243794561351783426e217 + 7.904017694554466595359379965081774849708e216 i":
+Test "Real part of: cexp (709.8125 + 0.75 i) == 1.355121963080879535248452862759108365762e308 + 1.262426823598609432507811340856186873507e308 i":
+double: 1
+idouble: 1
+Test "Imaginary part of: cexp (709.8125 + 0.75 i) == 1.355121963080879535248452862759108365762e308 + 1.262426823598609432507811340856186873507e308 i":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "Real part of: cexp (88.75 + 0.75 i) == 2.558360358486542817001900410314204322891e38 + 2.383359453227311447654736314679677655100e38 i":
+float: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: cexp (88.75 + 0.75 i) == 2.558360358486542817001900410314204322891e38 + 2.383359453227311447654736314679677655100e38 i":
+float: 2
+ifloat: 2
 ildouble: 1
 ldouble: 1
 
@@ -707,8 +731,6 @@ ifloat: 1
 Test "cos (M_PI_6l * 2.0) == 0.5":
 double: 1
 idouble: 1
-ildouble: 1
-ldouble: 1
 Test "cos (M_PI_6l * 4.0) == -0.5":
 double: 2
 float: 1
@@ -721,8 +743,6 @@ ldouble: 1
 Test "cos_downward (1) == 0.5403023058681397174009366074429766037323":
 float: 1
 ifloat: 1
-ildouble: 1
-ldouble: 1
 Test "cos_downward (10) == -0.8390715290764524522588639478240648345199":
 ildouble: 1
 ldouble: 1
@@ -739,8 +759,6 @@ ldouble: 1
 Test "cos_downward (4) == -0.6536436208636119146391681830977503814241":
 float: 1
 ifloat: 1
-ildouble: 1
-ldouble: 1
 Test "cos_downward (5) == 0.2836621854632262644666391715135573083344":
 float: 1
 ifloat: 1
@@ -766,9 +784,6 @@ float: 1
 ifloat: 1
 
 # cos_towardzero
-Test "cos_towardzero (1) == 0.5403023058681397174009366074429766037323":
-ildouble: 1
-ldouble: 1
 Test "cos_towardzero (10) == -0.8390715290764524522588639478240648345199":
 ildouble: 1
 ldouble: 1
@@ -780,9 +795,6 @@ ldouble: 1
 Test "cos_towardzero (3) == -0.9899924966004454572715727947312613023937":
 float: 1
 ifloat: 1
-ildouble: 1
-ldouble: 1
-Test "cos_towardzero (4) == -0.6536436208636119146391681830977503814241":
 ildouble: 1
 ldouble: 1
 Test "cos_towardzero (5) == 0.2836621854632262644666391715135573083344":
@@ -805,9 +817,15 @@ ildouble: 2
 ldouble: 2
 
 # cos_upward
+Test "cos_upward (1) == 0.5403023058681397174009366074429766037323":
+ildouble: 1
+ldouble: 1
 Test "cos_upward (10) == -0.8390715290764524522588639478240648345199":
 float: 1
 ifloat: 1
+Test "cos_upward (4) == -0.6536436208636119146391681830977503814241":
+ildouble: 1
+ldouble: 1
 Test "cos_upward (6) == 0.9601702866503660205456522979229244054519":
 float: 1
 ifloat: 1
@@ -885,9 +903,6 @@ ifloat: 4
 ildouble: 4
 ldouble: 4
 Test "Real part of: cpow (0.75 + 1.25 i, 1.0 + 0.0 i) == 0.75 + 1.25 i":
-ildouble: 2
-ldouble: 2
-Test "Imaginary part of: cpow (0.75 + 1.25 i, 1.0 + 0.0 i) == 0.75 + 1.25 i":
 ildouble: 1
 ldouble: 1
 Test "Real part of: cpow (0.75 + 1.25 i, 1.0 + 1.0 i) == 0.0846958290317209430433805274189191353 + 0.513285749182902449043287190519090481 i":
@@ -895,8 +910,8 @@ double: 2
 float: 3
 idouble: 2
 ifloat: 3
-ildouble: 10
-ldouble: 10
+ildouble: 11
+ldouble: 11
 Test "Real part of: cpow (2 + 0 i, 10 + 0 i) == 1024.0 + 0.0 i":
 ildouble: 2
 ldouble: 2
@@ -905,8 +920,8 @@ double: 1
 float: 4
 idouble: 1
 ifloat: 4
-ildouble: 3
-ldouble: 3
+ildouble: 2
+ldouble: 2
 Test "Imaginary part of: cpow (2 + 3 i, 4 + 0 i) == -119.0 - 120.0 i":
 float: 2
 ifloat: 2
@@ -1013,6 +1028,11 @@ ifloat: 1
 Test "Real part of: ctanh (0.75 + 1.25 i) == 1.37260757053378320258048606571226857 + 0.385795952609750664177596760720790220 i":
 double: 1
 idouble: 1
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ctanh (0.75 + 1.25 i) == 1.37260757053378320258048606571226857 + 0.385795952609750664177596760720790220 i":
+ildouble: 1
+ldouble: 1
 
 # erf
 Test "erf (1.25) == 0.922900128256458230136523481197281140":
@@ -1061,9 +1081,9 @@ ildouble: 1
 ldouble: 1
 
 # exp2
-Test "exp2 (10) == 1024":
-ildouble: 2
-ldouble: 2
+Test "exp2 (100.5) == 1.792728671193156477399422023278661496394e+30":
+ildouble: 1
+ldouble: 1
 
 # exp_downward
 Test "exp_downward (2) == e^2":
@@ -1434,15 +1454,7 @@ ifloat: 1
 ildouble: 1
 ldouble: 1
 
-# sin
-Test "sin (0x1p1023) == 0.5631277798508840134529434079444683477104":
-ildouble: 1
-ldouble: 1
-
 # sin_downward
-Test "sin_downward (1) == 0.8414709848078965066525023216302989996226":
-ildouble: 1
-ldouble: 1
 Test "sin_downward (10) == -0.5440211108893698134047476618513772816836":
 float: 1
 ifloat: 1
@@ -1465,9 +1477,10 @@ ldouble: 1
 Test "sin_downward (6) == -0.2794154981989258728115554466118947596280":
 float: 1
 ifloat: 1
+Test "sin_downward (8) == 0.9893582466233817778081235982452886721164":
 ildouble: 1
 ldouble: 1
-Test "sin_downward (8) == 0.9893582466233817778081235982452886721164":
+Test "sin_downward (9) == 0.4121184852417565697562725663524351793439":
 ildouble: 1
 ldouble: 1
 
@@ -1475,15 +1488,7 @@ ldouble: 1
 Test "sin_tonearest (1) == 0.8414709848078965066525023216302989996226":
 float: 1
 ifloat: 1
-ildouble: 1
-ldouble: 1
 Test "sin_tonearest (3) == 0.1411200080598672221007448028081102798469":
-ildouble: 1
-ldouble: 1
-Test "sin_tonearest (6) == -0.2794154981989258728115554466118947596280":
-ildouble: 1
-ldouble: 1
-Test "sin_tonearest (9) == 0.4121184852417565697562725663524351793439":
 ildouble: 1
 ldouble: 1
 
@@ -1503,12 +1508,11 @@ ldouble: 1
 Test "sin_towardzero (4) == -0.7568024953079282513726390945118290941359":
 float: 1
 ifloat: 1
+ildouble: 1
+ldouble: 1
 Test "sin_towardzero (5) == -0.9589242746631384688931544061559939733525":
 float: 1
 ifloat: 1
-ildouble: 1
-ldouble: 1
-Test "sin_towardzero (6) == -0.2794154981989258728115554466118947596280":
 ildouble: 1
 ldouble: 1
 Test "sin_towardzero (8) == 0.9893582466233817778081235982452886721164":
@@ -1517,8 +1521,8 @@ ldouble: 1
 Test "sin_towardzero (9) == 0.4121184852417565697562725663524351793439":
 float: 1
 ifloat: 1
-ildouble: 2
-ldouble: 2
+ildouble: 1
+ldouble: 1
 
 # sin_upward
 Test "sin_upward (1) == 0.8414709848078965066525023216302989996226":
@@ -1538,6 +1542,7 @@ ldouble: 1
 Test "sin_upward (4) == -0.7568024953079282513726390945118290941359":
 float: 1
 ifloat: 1
+Test "sin_upward (6) == -0.2794154981989258728115554466118947596280":
 ildouble: 1
 ldouble: 1
 Test "sin_upward (7) == 0.6569865987187890903969990915936351779369":
@@ -1546,25 +1551,16 @@ ldouble: 1
 Test "sin_upward (9) == 0.4121184852417565697562725663524351793439":
 float: 1
 ifloat: 1
-ildouble: 1
-ldouble: 1
 
 # sincos
-Test "sincos (0x1p1023, &sin_res, &cos_res) puts 0.5631277798508840134529434079444683477104 in sin_res":
-ildouble: 1
-ldouble: 1
 Test "sincos (M_PI_6l*2.0, &sin_res, &cos_res) puts 0.5 in cos_res":
 double: 1
 idouble: 1
-ildouble: 1
-ldouble: 1
 Test "sincos (M_PI_6l*2.0, &sin_res, &cos_res) puts 0.86602540378443864676372317075293616 in sin_res":
 double: 1
 float: 1
 idouble: 1
 ifloat: 1
-ildouble: 1
-ldouble: 1
 Test "sincos (pi/6, &sin_res, &cos_res) puts 0.86602540378443864676372317075293616 in cos_res":
 float: 1
 ifloat: 1
@@ -2045,9 +2041,9 @@ ldouble: 1
 
 Function: Imaginary part of "cexp":
 double: 1
-float: 1
+float: 2
 idouble: 1
-ifloat: 1
+ifloat: 2
 ildouble: 1
 ldouble: 1
 
@@ -2130,8 +2126,8 @@ double: 2
 float: 4
 idouble: 2
 ifloat: 4
-ildouble: 10
-ldouble: 10
+ildouble: 11
+ldouble: 11
 
 Function: Imaginary part of "cpow":
 double: 2
@@ -2222,8 +2218,8 @@ ildouble: 1
 ldouble: 1
 
 Function: "exp2":
-ildouble: 2
-ldouble: 2
+ildouble: 1
+ldouble: 1
 
 Function: "exp_downward":
 float: 1
@@ -2323,10 +2319,6 @@ ifloat: 1
 ildouble: 1
 ldouble: 1
 
-Function: "sin":
-ildouble: 1
-ldouble: 1
-
 Function: "sin_downward":
 float: 1
 ifloat: 1
@@ -2342,8 +2334,8 @@ ldouble: 1
 Function: "sin_towardzero":
 float: 1
 ifloat: 1
-ildouble: 2
-ldouble: 2
+ildouble: 1
+ldouble: 1
 
 Function: "sin_upward":
 float: 2
