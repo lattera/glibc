@@ -29,14 +29,24 @@
 /* Type used to represent a TLS descriptor in the GOT.  */
 struct tlsdesc
 {
-  ptrdiff_t (*entry)(struct tlsdesc *on_rax);
-  void *arg;
+  /* Anonymous union is used here to ensure that GOT entry slot is always
+     8 bytes for both x32 and x86-64.  */
+  union
+    {
+      ptrdiff_t (*entry) (struct tlsdesc *on_rax);
+      uint64_t entry_slot;
+    };
+  union
+    {
+      void *arg;
+      uint64_t arg_slot;
+    };
 };
 
 typedef struct dl_tls_index
 {
-  unsigned long int ti_module;
-  unsigned long int ti_offset;
+  uint64_t ti_module;
+  uint64_t ti_offset;
 } tls_index;
 
 /* Type used as the argument in a TLS descriptor for a symbol that

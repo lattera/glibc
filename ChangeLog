@@ -1,3 +1,9 @@
+2012-03-23  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/x86_64/dl-tlsdesc.h (tlsdesc): Use anonymous union
+	to pad to uint64_t for each field.
+	(dl_tls_index): Replace unsigned long with uint64_t.
+
 2012-03-23  Daniel Jacobowitz  <dmj@google.com>
 	Paul Pluzhnikov  <ppluzhnikov@google.com>
 
