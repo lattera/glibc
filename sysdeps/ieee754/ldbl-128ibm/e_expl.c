@@ -1,5 +1,5 @@
 /* Quad-precision floating point e^x.
-   Copyright (C) 1999,2004,2006, 2008, 2011 Free Software Foundation, Inc.
+   Copyright (C) 1999-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jj@ultra.linux.cz>
    Partly based on double-precision code
@@ -74,7 +74,7 @@ static const long double C[] = {
 
 /* Largest integer x for which e^x underflows.  */
 #define lomark C[1]
--709.08956571282405153382846025171462914L,
+-744.44007192138121808966388925909996033L,
 
 /* 3x2^96 */
 #define THREEp96 C[2]

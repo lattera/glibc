@@ -1,3 +1,8 @@
+2012-03-26  Andreas Schwab  <schwab@linux-m68k.org>
+
+	* sysdeps/ieee754/ldbl-128ibm/e_expl.c (lomark): Adjust to take
+	denormal result into account.
+
 2012-03-25  Roland McGrath  <roland@hack.frob.com>
 
 	* posix/confstr.c (confstr): Lift RESTENVS definition to function scope.
