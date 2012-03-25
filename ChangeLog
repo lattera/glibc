@@ -1,3 +1,8 @@
+2012-03-25  Roland McGrath  <roland@hack.frob.com>
+
+	* posix/confstr.c (confstr): Lift RESTENVS definition to function scope.
+	Reported by Allan McRae <allan@archlinux.org>.
+
 2012-03-23  Jeff Law  <law@redhat.com>
 
 	* nss/getnssent.c (__nss_getent): Fix typo.
