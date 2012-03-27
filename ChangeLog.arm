@@ -1,3 +1,14 @@
+2012-03-27  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/arm/elf/start.S: Moved to ...
+	* sysdeps/arm/start.S: ...here.
+	* sysdeps/arm/elf/configure.in: Merge into ...
+	* sysdeps/arm/configure.in: ...here.
+	* sysdeps/arm/configure: Regenerated.
+	* sysdeps/arm/elf/configure.in: Remove file.
+	* sysdeps/arm/elf/configure: Likewise.
+	* sysdeps/unix/arm/start.c: Likewise.
+
 2012-03-20  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/arm/register-dump.h: Include <_itoa.h>
