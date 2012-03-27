@@ -1,3 +1,120 @@
+2012-03-27  David S. Miller  <davem@davemloft.net>
+
+	* sysdeps/sparc/sparc64/Makefile (ASFLAGS-.os): Move before
+	have-as-vis3 check.
+
+2012-03-27  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/x86_64/elf/configure.in: Moved to ...
+	* sysdeps/x86_64/configure.in: ... here.
+	* sysdeps/x86_64/elf/start.S: Moved to ...
+	* sysdeps/x86_64/start.S: ... here.
+	* sysdeps/x86_64/elf/configure: Delete.
+
+	* sysdeps/x86_64/configure.in: Merge contents from
+	sysdeps/i386/configure.in (without i686 check).
+
+	* sysdeps/i386/elf/Versions: Merge into ...
+	* sysdeps/i386/Versions: ... this.
+	* sysdeps/i386/elf/Versions: Delete file.
+	* sysdeps/i386/elf/start.S: Moved to ...
+	* sysdeps/i386/start.S: ...here.
+	* sysdeps/i386/elf/configure.in: Merge into...
+	* sysdeps/i386/configure.in: ...here.
+	* sysdeps/i386/elf/configure.in: Delete file.
+	* sysdeps/i386/elf/configure: Delete file.
+
+	* sysdeps/generic/elf/backtracesyms.c: Moved to ...
+	* debug/backtracesyms.c: ... here.
+	* sysdeps/generic/elf/backtracesymsfd.c: Moved to ...
+	* debug/backtracesymsfd.c: ... here.
+	* sysdeps/generic/elf/ifunc-sel.h: Moved to ...
+	* sysdeps/generic/ifunc-sel.h: ... here.
+
+	* sysdeps/unix/i386/start.c: Delete file.
+	* sysdeps/unix/sparc/start.c: Delete file.
+	* sysdeps/unix/start.c: Delete file.
+
+	* sysdeps/sh/elf/configure.in: Moved to ...
+	* sysdeps/sh/configure.in: ... here.
+	* sysdeps/sh/elf/start.S: Moved to ...
+	* sysdeps/sh/start.S: ... here.
+	* sysdeps/sh/elf/configure: Delete file.
+
+	* sysdeps/powerpc/powerpc64/elf/bzero.S: Moved to ...
+	* sysdeps/powerpc/powerpc64/bzero.S: ... here.
+	* sysdeps/powerpc/powerpc64/elf/entry.h: Moved to ...
+	* sysdeps/powerpc/powerpc64/entry.h: ... here.
+	* sysdeps/powerpc/powerpc64/elf/start.S: Moved to ...
+	* sysdeps/powerpc/powerpc64/start.S: here.
+	* sysdeps/powerpc/powerpc64/elf/Makefile: Merge into ...
+	* sysdeps/powerpc/powerpc64/Makefile: ... this.
+	* sysdeps/powerpc/powerpc64/elf/configure.in: Merge into ...
+	* sysdeps/powerpc/powerpc64/configure.in: ... this.
+	* sysdeps/powerpc/powerpc64/elf/configure: Delete file.
+
+	* sysdeps/powerpc/powerpc32/elf/bzero.S: Moved to ...
+	* sysdeps/powerpc/powerpc32/bzero.S: ... here.
+	* sysdeps/powerpc/powerpc32/elf/start.S: Moved to ...
+	* sysdeps/powerpc/powerpc32/start.S: ... here.
+	* sysdeps/powerpc/powerpc32/elf/configure.in: Merge into ...
+	* sysdeps/powerpc/powerpc32/configure.in: ... this.
+	* sysdeps/powerpc/powerpc32/elf/configure: Delete file.
+
+	* sysdeps/powerpc/elf/ifunc-sel.h: Moved to ...
+	* sysdeps/powerpc/ifunc-sel.h: ... here.
+	* sysdeps/powerpc/elf/rtld-global-offsets.sym: Moved to ...
+	* sysdeps/powerpc/rtld-global-offsets.sym: ... here.
+
+	* sysdeps/sparc/elf/configure.in: Moved to ...
+	* sysdeps/sparc/configure.in: ... here.
+	* sysdeps/sparc/elf/configure: Delete file.
+	* sysdeps/sparc/sparc32/elf/start.S: Moved to ...
+	* sysdeps/sparc/sparc32/start.S: ... here.
+	* sysdeps/sparc/sparc64/elf/start.S: Moved to ...
+	* sysdeps/sparc/sparc64/start.S: ... here.
+	* sysdeps/sparc/sparc32/elf/Makefile: Merged into ...
+	* sysdeps/sparc/sparc32/Makefile: ... this.
+	* sysdeps/sparc/sparc64/elf/Makefile: Merged into ...
+	* sysdeps/sparc/sparc64/Makefile: ... this.
+
+	* sysdeps/s390/s390-32/elf/bsd-_setjmp.S: Moved to ...
+	* sysdeps/s390/s390-32/bsd-_setjmp.S: ... here.
+	* sysdeps/s390/s390-32/elf/bsd-setjmp.S: Moved to ...
+	* sysdeps/s390/s390-32/bsd-setjmp.S: ... here.
+	* sysdeps/s390/s390-32/elf/setjmp.S: Moved to ...
+	* sysdeps/s390/s390-32/setjmp.S: ... here.
+	* sysdeps/s390/s390-32/elf/configure.in: Moved to ...
+	* sysdeps/s390/s390-32/configure.in: ... here.
+	* sysdeps/s390/s390-32/elf/configure: Delete file.
+	* sysdeps/s390/s390-32/elf/start.S: Moved to ...
+	* sysdeps/s390/s390-32/start.S: ... here.
+
+	* sysdeps/s390/s390-64/elf/bsd-_setjmp.S: Moved to ...
+	* sysdeps/s390/s390-64/bsd-_setjmp.S: ... here.
+	* sysdeps/s390/s390-64/elf/bsd-setjmp.S: Moved to ...
+	* sysdeps/s390/s390-64/bsd-setjmp.S: ... here.
+	* sysdeps/s390/s390-64/elf/setjmp.S: Moved to ...
+	* sysdeps/s390/s390-64/setjmp.S: ... here.
+	* sysdeps/s390/s390-64/elf/configure.in: Moved to ...
+	* sysdeps/s390/s390-64/configure.in: ... here
+	* sysdeps/s390/s390-64/elf/configure: Delete file.
+	* sysdeps/s390/s390-64/elf/start.S: Moved to ...
+	* sysdeps/s390/s390-64/start.S: ... here.
+	* sysdeps/s390/s390-64/elf/configure: Delete.
+
+	* configure.in: Remove support for elf directories in sysdeps.
+
+	* configure: Regenerated.
+	* sysdeps/i386/configure: Regenerated.
+	* sysdeps/powerpc/powerpc32/configure: Regenerated.
+	* sysdeps/powerpc/powerpc64/configure: Regenerated.
+	* sysdeps/s390/s390-32/configure: Regenerated.
+	* sysdeps/s390/s390-64/configure: Regenerated.
+	* sysdeps/sh/configure: Regenerated.
+	* sysdeps/sparc/configure: Regenerated.
+	* sysdeps/x86_64/configure: Regenerated.
+
 2012-03-26  Andreas Schwab  <schwab@linux-m68k.org>
 
 	* sysdeps/powerpc/fpu/libm-test-ulps: Update.

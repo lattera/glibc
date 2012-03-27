@@ -1,5 +1,5 @@
 GLIBC_PROVIDES dnl See aclocal.m4 in the top level source directory.
-# Local configure fragment for sysdeps/i386.
+# Local configure fragment for sysdeps/x86_64.
 
 AC_CHECK_HEADER([cpuid.h], ,
   [AC_MSG_ERROR([gcc must provide the <cpuid.h> header])],
@@ -40,82 +40,83 @@ fi
 
 dnl Check if -msse4 works.
 AC_CACHE_CHECK(for SSE4 support, libc_cv_cc_sse4, [dnl
-LIBC_TRY_CC_OPTION([-msse4], [libc_cv_cc_sse4=yes], [libc_cv_cc_sse4=no])
-])
+if AC_TRY_COMMAND([${CC-cc} -msse4 -xc /dev/null -S -o /dev/null]); then
+  libc_cv_cc_sse4=yes
+else
+  libc_cv_cc_sse4=no
+fi])
 if test $libc_cv_cc_sse4 = yes; then
   AC_DEFINE(HAVE_SSE4_SUPPORT)
 fi
 
-dnl Check if -Wa,-mtune=i686 works.
-AC_CACHE_CHECK(for assembler -mtune=i686 support, libc_cv_as_i686, [dnl
-LIBC_TRY_CC_OPTION([-Wa,-mtune=i686],
-		   [libc_cv_as_i686=yes],
-		   [libc_cv_as_i686=no])
-])
-
 dnl Check if -mavx works.
 AC_CACHE_CHECK(for AVX support, libc_cv_cc_avx, [dnl
-LIBC_TRY_CC_OPTION([-mavx], [libc_cv_cc_avx=yes], [libc_cv_cc_avx=no])
-])
+if AC_TRY_COMMAND([${CC-cc} -mavx -xc /dev/null -S -o /dev/null]); then
+  libc_cv_cc_avx=yes
+else
+  libc_cv_cc_avx=no
+fi])
 if test $libc_cv_cc_avx = yes; then
   AC_DEFINE(HAVE_AVX_SUPPORT)
 fi
 
 dnl Check if -msse2avx works.
 AC_CACHE_CHECK(for AVX encoding of SSE instructions, libc_cv_cc_sse2avx, [dnl
-LIBC_TRY_CC_OPTION([-msse2avx],
-		   [libc_cv_cc_sse2avx=yes],
-		   [libc_cv_cc_sse2avx=no])
-])
+if AC_TRY_COMMAND([${CC-cc} -msse2avx -xc /dev/null -S -o /dev/null]); then
+  libc_cv_cc_sse2avx=yes
+else
+  libc_cv_cc_sse2avx=no
+fi])
 if test $libc_cv_cc_sse2avx = yes; then
   AC_DEFINE(HAVE_SSE2AVX_SUPPORT)
 fi
 
 dnl Check if -mfma4 works.
 AC_CACHE_CHECK(for FMA4 support, libc_cv_cc_fma4, [dnl
-LIBC_TRY_CC_OPTION([-mfma4], [libc_cv_cc_fma4=yes], [libc_cv_cc_fma4=no])
-])
+if AC_TRY_COMMAND([${CC-cc} -mfma4 -xc /dev/null -S -o /dev/null]); then
+  libc_cv_cc_fma4=yes
+else
+  libc_cv_cc_fma4=no
+fi])
 if test $libc_cv_cc_fma4 = yes; then
   AC_DEFINE(HAVE_FMA4_SUPPORT)
 fi
 
 dnl Check if -mno-vzeroupper works.
 AC_CACHE_CHECK(for -mno-vzeroupper support, libc_cv_cc_novzeroupper, [dnl
-LIBC_TRY_CC_OPTION([-mno-vzeroupper],
-		   [libc_cv_cc_novzeroupper=yes],
-		   [libc_cv_cc_novzeroupper=no])
-])
+if AC_TRY_COMMAND([${CC-cc} -mno-vzeroupper -xc /dev/null -S -o /dev/null]); then
+  libc_cv_cc_novzeroupper=yes
+else
+  libc_cv_cc_novzeroupper=no
+fi])
 
-# Check for support of thread-local storage handling in assembler and
-# linker.
-AC_CACHE_CHECK(for i386 TLS support, libc_cv_386_tls, [dnl
+# Check for support of thread-local storage handling in assembler and linker.
+AC_CACHE_CHECK(for x86-64 TLS support, libc_cv_x86_64_tls, [dnl
 cat > conftest.s <<\EOF
 	.section ".tdata", "awT", @progbits
 	.globl foo
-foo:	.long	1
+foo:	.quad	1
 	.section ".tbss", "awT", @nobits
 	.globl bar
-bar:	.skip	4
+bar:	.skip	8
 	.text
-baz:	leal	bar@TLSLDM(%ebx), %eax
-	leal	bar@DTPOFF(%eax), %edx
-	subl	foo@GOTTPOFF(%edx), %eax
-	subl	$bar@TPOFF, %eax
-	movl	foo@GOTNTPOFF(%edx), %ecx
-	movl	%gs:(%ecx), %eax
-	movl	%gs:bar@NTPOFF, %eax
+baz:	leaq	bar@TLSLD(%rip), %rdi
+	leaq	bar@DTPOFF(%rax), %rcx
+	addq	foo@GOTTPOFF(%rip), %rax
+	movq	$bar@TPOFF, %rdx
 EOF
 dnl
 if AC_TRY_COMMAND(${CC-cc} -c $CFLAGS conftest.s 1>&AS_MESSAGE_LOG_FD); then
-  libc_cv_386_tls=yes
+  libc_cv_x86_64_tls=yes
 else
-  libc_cv_386_tls=no
+  libc_cv_x86_64_tls=no
 fi
 rm -f conftest*])
-if test $libc_cv_386_tls = no; then
+if test $libc_cv_x86_64_tls = no; then
   AC_MSG_ERROR([the assembler must support TLS])
 fi
 
 dnl It is always possible to access static and hidden symbols in an
 dnl position independent way.
 AC_DEFINE(PI_STATIC_AND_HIDDEN)
+# work around problem with autoconf and empty lines at the end of files

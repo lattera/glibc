@@ -1,5 +1,5 @@
 /* Write formatted list with names for addresses in backtrace to a file.
-   Copyright (C) 1998, 2003, 2005 Free Software Foundation, Inc.
+   Copyright (C) 1998-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -22,7 +22,7 @@
 #include <sys/uio.h>
 
 #include <_itoa.h>
-#include <not-cancel.h>
+#include <ldsodefs.h>
 
 #if __ELF_NATIVE_CLASS == 32
 # define WORD_WIDTH 8
@@ -38,25 +38,87 @@ __backtrace_symbols_fd (array, size, fd)
      int size;
      int fd;
 {
-  struct iovec iov[3];
+  struct iovec iov[9];
   int cnt;
 
   for (cnt = 0; cnt < size; ++cnt)
     {
       char buf[WORD_WIDTH];
+      char buf2[WORD_WIDTH];
+      Dl_info info;
+      struct link_map *map;
+      size_t last = 0;
 
-      iov[0].iov_base = (void *) "[0x";
-      iov[0].iov_len = 3;
+      if (_dl_addr (array[cnt], &info, &map, NULL)
+	  && info.dli_fname != NULL && info.dli_fname[0] != '\0')
+	{
+	  /* Name of the file.  */
+	  iov[0].iov_base = (void *) info.dli_fname;
+	  iov[0].iov_len = strlen (info.dli_fname);
+	  last = 1;
 
-      iov[1].iov_base = _itoa_word ((unsigned long int) array[cnt],
-				    &buf[WORD_WIDTH], 16, 0);
-      iov[1].iov_len = &buf[WORD_WIDTH] - (char *) iov[1].iov_base;
+	  if (info.dli_sname != NULL || map->l_addr != 0)
+	    {
+	      size_t diff;
 
-      iov[2].iov_base = (void *) "]\n";
-      iov[2].iov_len = 2;
+	      iov[last].iov_base = (void *) "(";
+	      iov[last].iov_len = 1;
+	      ++last;
 
-      /* We prefer to use the non-cancelable interface if it is available.  */
-      writev_not_cancel_no_status (fd, iov, 3);
+	      if (info.dli_sname != NULL)
+		{
+		  /* We have a symbol name.  */
+		  iov[last].iov_base = (void *) info.dli_sname;
+		  iov[last].iov_len = strlen (info.dli_sname);
+		  ++last;
+		}
+	      else
+		/* We have no symbol, so describe it as relative to the file.
+		   The load bias is more useful to the user than the load
+		   address.  The use of these addresses is to calculate an
+		   address in the ELF file, so its prelinked bias is not
+		   something we want to subtract out.  */
+		info.dli_saddr = (void *) map->l_addr;
+
+	      if (array[cnt] >= (void *) info.dli_saddr)
+		{
+		  iov[last].iov_base = (void *) "+0x";
+		  diff = array[cnt] - info.dli_saddr;
+		}
+	      else
+		{
+		  iov[last].iov_base = (void *) "-0x";
+		  diff = info.dli_saddr - array[cnt];
+		}
+	      iov[last].iov_len = 3;
+	      ++last;
+
+	      iov[last].iov_base = _itoa_word ((unsigned long int) diff,
+					       &buf2[WORD_WIDTH], 16, 0);
+	      iov[last].iov_len = (&buf2[WORD_WIDTH]
+				   - (char *) iov[last].iov_base);
+	      ++last;
+
+	      iov[last].iov_base = (void *) ")";
+	      iov[last].iov_len = 1;
+	      ++last;
+	    }
+	}
+
+      iov[last].iov_base = (void *) "[0x";
+      iov[last].iov_len = 3;
+      ++last;
+
+      iov[last].iov_base = _itoa_word ((unsigned long int) array[cnt],
+				       &buf[WORD_WIDTH], 16, 0);
+      iov[last].iov_len = &buf[WORD_WIDTH] - (char *) iov[last].iov_base;
+      ++last;
+
+      iov[last].iov_base = (void *) "]\n";
+      iov[last].iov_len = 2;
+      ++last;
+
+      __writev (fd, iov, last);
     }
 }
 weak_alias (__backtrace_symbols_fd, backtrace_symbols_fd)
