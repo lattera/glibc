@@ -1,3 +1,8 @@
+2012-03-27  Andreas Schwab  <schwab@linux-m68k.org>
+
+	* sysdeps/m68k/elf/start.S: Move to ...
+	* sysdeps/m68k/start.S: ... here.
+
 2012-03-23  Andreas Schwab  <schwab@linux-m68k.org>
 
 	* sysdeps/m68k/m680x0/fpu/libm-test-ulps: Update.
