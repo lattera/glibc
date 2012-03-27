@@ -1,5 +1,7 @@
 2012-03-27  David S. Miller  <davem@davemloft.net>
 
+	* conform/Makefile: Run run-conformtest.sh using $(BASH).
+
 	* sysdeps/sparc/sparc64/Makefile (ASFLAGS-.os): Move before
 	have-as-vis3 check.
 

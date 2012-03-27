@@ -31,7 +31,7 @@ endif
 $(objpfx)run-conformtest.out: run-conformtest.sh conformtest.pl \
 			      $(wildcard data/*.h-data) \
 			      $(wildcard data/*/*.h-data)
-	-$(SHELL) -e $< $(objpfx) $(PERL) '$(CC)' \
+	-$(BASH) -e $< $(objpfx) $(PERL) '$(CC)' \
 	  '-I../include $(+sysdep-includes) $(sysincludes) -I..'
 
 generated = $(wildcard $(objpfx)conform-*.out)
