@@ -1,3 +1,9 @@
+2012-03-27  David S. Miller  <davem@davemloft.net>
+
+	* tst-cond16.c (do_test): Use a thread stack size which is either
+	PTHREAD_STACK_MIN or the page size, whichever is larger.
+	* tst-cond18.c (do_test): Likewise.
+
 2012-03-19  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/x86_64/pthreaddef.h (CURRENT_STACK_FRAME): Use

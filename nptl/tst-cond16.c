@@ -76,9 +76,15 @@ do_test (void)
   count *= 4;
 
   pthread_t th[count];
-  int i, ret;
+  pthread_attr_t attr;
+  int i, ret, sz;
+  pthread_attr_init (&attr);
+  sz = __getpagesize ();
+  if (sz < PTHREAD_STACK_MIN)
+	  sz = PTHREAD_STACK_MIN;
+  pthread_attr_setstacksize (&attr, sz);
   for (i = 0; i < count; ++i)
-    if ((ret = pthread_create (&th[i], NULL, tf, NULL)) != 0)
+    if ((ret = pthread_create (&th[i], &attr, tf, NULL)) != 0)
       {
 	errno = ret;
 	printf ("pthread_create %d failed: %m\n", i);
