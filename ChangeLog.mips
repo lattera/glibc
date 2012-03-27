@@ -1,3 +1,11 @@
+2012-03-27  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/mips/elf/start.S: Moved to ...
+	* sysdeps/mips/start.S: ...here.
+	* sysdeps/mips/elf/configure.in: Moved to ...
+	* sysdeps/mips/configure.in: ...here.  Update comment.
+	* sysdeps/mips/configure: New generated file.
+
 2012-03-20  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/mips/register-dump.h: Include <_itoa.h>
