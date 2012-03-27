@@ -81,7 +81,7 @@ $as_echo X/"$0" |
 }
 
 # This file is generated from configure.in by Autoconf.  DO NOT EDIT!
- # Local configure fragment for sysdeps/alpha/elf.
+ # Local configure fragment for sysdeps/alpha.
 
 # Check for support of thread-local storage handling in assembler and linker.
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for Alpha TLS support" >&5
