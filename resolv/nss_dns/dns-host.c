@@ -1219,7 +1219,13 @@ gaih_getanswer (const querybuf *answer1, int anslen1, const querybuf *answer2,
 				  &first);
   if ((status == NSS_STATUS_SUCCESS || status == NSS_STATUS_NOTFOUND
        || (status == NSS_STATUS_TRYAGAIN
-	   && (errno != ERANGE || *h_errnop != NO_RECOVERY)))
+	   /* We want to look at the second answer in case of an
+	      NSS_STATUS_TRYAGAIN only if the error is non-recoverable, i.e.
+	      *h_errnop is NO_RECOVERY. If not, and if the failure was due to
+	      an insufficient buffer (ERANGE), then we need to drop the results
+	      and pass on the NSS_STATUS_TRYAGAIN to the caller so that it can
+	      repeat the query with a larger buffer.  */
+	   && (*errnop != ERANGE || *h_errnop == NO_RECOVERY)))
       && answer2 != NULL && anslen2 > 0)
     {
       enum nss_status status2 = gaih_getanswer_slice(answer2, anslen2, qname,

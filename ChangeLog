@@ -2,6 +2,13 @@
 
 	* malloc/mallocbug.c: Avoid warnings about unused variables.
 
+2012-02-22  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	[BZ #13760]
+	* resolv/nss_dns/dns-host.c (gaih_getanswer): Look for errno
+	in the right place. Discard and retry query if response is
+	larger than input buffer size.
+
 2012-03-28  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #369]
