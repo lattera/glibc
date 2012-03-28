@@ -26,7 +26,7 @@ __acoshl (long double x)
 {
   if (__builtin_expect (isless (x, 1.0L), 0) && _LIB_VERSION != _IEEE_)
     /* acosh(x<1) */
-    return __kernel_standard (x, x, 229);
+    return __kernel_standard_l (x, x, 229);
 
   return __ieee754_acoshl (x);
 }

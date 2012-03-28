@@ -12,7 +12,7 @@ __exp2l (long double x)
   if (__builtin_expect (!__finitel (z), 0)
       && __finitel (x) && _LIB_VERSION != _IEEE_)
     /* exp2 overflow: 244, exp2 underflow: 245 */
-    return __kernel_standard (x, x, 244 + !!__signbitl (x));
+    return __kernel_standard_l (x, x, 244 + !!__signbitl (x));
 
   return z;
 }

@@ -1,4 +1,4 @@
-/* Copyright (C) 2011 Free Software Foundation, Inc.
+/* Copyright (C) 2011-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gmail.com>, 2011.
 
@@ -28,7 +28,7 @@ long double
 __atan2l (long double y, long double x)
 {
   if (__builtin_expect (x == 0.0L && y == 0.0L, 0) && _LIB_VERSION == _SVID_)
-    return __kernel_standard (y, x, 203); /* atan2(+-0,+-0) */
+    return __kernel_standard_l (y, x, 203); /* atan2(+-0,+-0) */
 
   return __ieee754_atan2l (y, x);
 }

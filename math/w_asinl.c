@@ -30,7 +30,7 @@ __asinl (long double x)
     {
       /* asin(|x|>1) */
       feraiseexcept (FE_INVALID);
-      return __kernel_standard (x, x, 202);
+      return __kernel_standard_l (x, x, 202);
     }
 
   return __ieee754_asinl (x);

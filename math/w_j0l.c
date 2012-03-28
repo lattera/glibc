@@ -28,7 +28,7 @@ __j0l (long double x)
   if (__builtin_expect (isgreater (fabsl (x), X_TLOSS), 0)
       && _LIB_VERSION != _IEEE_ && _LIB_VERSION != _POSIX_)
     /* j0(|x|>X_TLOSS) */
-    return __kernel_standard (x, x, 234);
+    return __kernel_standard_l (x, x, 234);
 
   return __ieee754_j0l (x);
 }
@@ -46,14 +46,14 @@ __y0l (long double x)
 	{
 	  /* d = zero/(x-x) */
 	  feraiseexcept (FE_INVALID);
-	  return __kernel_standard (x, x, 209);
+	  return __kernel_standard_l (x, x, 209);
 	}
       else if (x == 0.0L)
 	/* d = -one/(x-x) */
-	return __kernel_standard (x, x, 208);
+	return __kernel_standard_l (x, x, 208);
       else if (_LIB_VERSION != _POSIX_)
 	/* y0(x>X_TLOSS) */
-	return __kernel_standard (x, x, 235);
+	return __kernel_standard_l (x, x, 235);
     }
 
   return __ieee754_y0l (x);

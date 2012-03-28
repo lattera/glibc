@@ -26,10 +26,10 @@ __atanhl (long double x)
 {
   if (__builtin_expect (isgreaterequal (fabsl (x), 1.0L), 0)
       && _LIB_VERSION != _IEEE_)
-    return __kernel_standard (x, x,
-			      fabsl (x) > 1.0L
-			      ? 230		/* atanh(|x|>1) */
-			      : 231);		/* atanh(|x|==1) */
+    return __kernel_standard_l (x, x,
+				fabsl (x) > 1.0L
+				? 230		/* atanh(|x|>1) */
+				: 231);		/* atanh(|x|==1) */
 
   return __ieee754_atanhl (x);
 }

@@ -746,6 +746,8 @@ acos_test (void)
   /* |x| > 1: */
   TEST_f_f (acos, 1.125L, nan_value, INVALID_EXCEPTION);
   TEST_f_f (acos, -1.125L, nan_value, INVALID_EXCEPTION);
+  TEST_f_f (acos, max_value, nan_value, INVALID_EXCEPTION);
+  TEST_f_f (acos, -max_value, nan_value, INVALID_EXCEPTION);
 
   TEST_f_f (acos, 0, M_PI_2l);
   TEST_f_f (acos, minus_zero, M_PI_2l);
@@ -775,6 +777,7 @@ acosh_test (void)
 
   /* x < 1:  */
   TEST_f_f (acosh, -1.125L, nan_value, INVALID_EXCEPTION);
+  TEST_f_f (acosh, -max_value, nan_value, INVALID_EXCEPTION);
 
   TEST_f_f (acosh, 1, 0);
   TEST_f_f (acosh, 7, 2.63391579384963341725009269461593689L);
@@ -800,6 +803,8 @@ asin_test (void)
   /* asin x == NaN plus invalid exception for |x| > 1.  */
   TEST_f_f (asin, 1.125L, nan_value, INVALID_EXCEPTION);
   TEST_f_f (asin, -1.125L, nan_value, INVALID_EXCEPTION);
+  TEST_f_f (asin, max_value, nan_value, INVALID_EXCEPTION);
+  TEST_f_f (asin, -max_value, nan_value, INVALID_EXCEPTION);
 
   TEST_f_f (asin, 0, 0);
   TEST_f_f (asin, minus_zero, minus_zero);
@@ -885,6 +890,8 @@ atanh_test (void)
   /* atanh (x) == NaN plus invalid exception if |x| > 1.  */
   TEST_f_f (atanh, 1.125L, nan_value, INVALID_EXCEPTION);
   TEST_f_f (atanh, -1.125L, nan_value, INVALID_EXCEPTION);
+  TEST_f_f (atanh, max_value, nan_value, INVALID_EXCEPTION);
+  TEST_f_f (atanh, -max_value, nan_value, INVALID_EXCEPTION);
 
   TEST_f_f (atanh, 0.75L, 0.972955074527656652552676371721589865L);
 
@@ -2994,6 +3001,11 @@ exp_test (void)
   TEST_f_f (exp, 1000.0L, 0.197007111401704699388887935224332313e435L);
 #endif
 
+  /* Bug 13922: OVERFLOW exception may be missing.  */
+  TEST_f_f (exp, max_value, plus_infty, OVERFLOW_EXCEPTION_OK);
+  /* Bug 13705: spurious OVERFLOW exception may be present.  */
+  TEST_f_f (exp, -max_value, 0, OVERFLOW_EXCEPTION_OK);
+
   END (exp);
 }
 
@@ -3127,6 +3139,11 @@ exp10_test (void)
   TEST_f_f (exp10, -1, 0.1L);
   TEST_f_f (exp10, 1e6, plus_infty, OVERFLOW_EXCEPTION);
   TEST_f_f (exp10, -1e6, 0);
+#ifndef TEST_LDOUBLE /* Bug 13914: spurious exceptions.  */
+  TEST_f_f (exp10, max_value, plus_infty, OVERFLOW_EXCEPTION);
+  /* Bug 13924: spurious OVERFLOW exception may be present.  */
+  TEST_f_f (exp10, -max_value, 0, OVERFLOW_EXCEPTION_OK);
+#endif
   TEST_f_f (exp10, 0.75L, 5.62341325190349080394951039776481231L);
 
   END (exp10);
@@ -3154,6 +3171,8 @@ exp2_test (void)
   TEST_f_f (exp2, -1, 0.5);
   TEST_f_f (exp2, 1e6, plus_infty, OVERFLOW_EXCEPTION);
   TEST_f_f (exp2, -1e6, 0);
+  TEST_f_f (exp2, max_value, plus_infty, OVERFLOW_EXCEPTION);
+  TEST_f_f (exp2, -max_value, 0);
   TEST_f_f (exp2, 0.75L, 1.68179283050742908606225095246642979L);
 
   TEST_f_f (exp2, 100.5, 1.792728671193156477399422023278661496394e+30L);
@@ -3206,6 +3225,11 @@ expm1_test (void)
   /* Bug 13787: OVERFLOW exception may be missing.  */
   TEST_f_f (expm1, 100000.0, plus_infty, OVERFLOW_EXCEPTION_OK);
   check_int ("errno for expm1(large) == ERANGE", errno, ERANGE, 0, 0, 0);
+  /* Bug 13787: OVERFLOW exception may be missing.  */
+  TEST_f_f (expm1, max_value, plus_infty, OVERFLOW_EXCEPTION_OK);
+#ifndef TEST_LDOUBLE /* Bug 13923.  */
+  TEST_f_f (expm1, -max_value, -1);
+#endif
 
   END (expm1);
 }
@@ -3968,6 +3992,8 @@ lgamma_test (void)
   TEST_f_f (lgamma, -3, plus_infty, DIVIDE_BY_ZERO_EXCEPTION);
   check_int ("errno for lgamma(-integer) == ERANGE", errno, ERANGE, 0, 0, 0);
   TEST_f_f (lgamma, minus_infty, plus_infty);
+  TEST_f_f (lgamma, -max_value, plus_infty, DIVIDE_BY_ZERO_EXCEPTION);
+  TEST_f_f (lgamma, max_value, plus_infty, OVERFLOW_EXCEPTION);
 
   TEST_f_f1 (lgamma, 1, 0, 1);
 
@@ -4869,6 +4895,7 @@ log_test (void)
   TEST_f_f (log, 1, 0);
 
   TEST_f_f (log, -1, nan_value, INVALID_EXCEPTION);
+  TEST_f_f (log, -max_value, nan_value, INVALID_EXCEPTION);
   TEST_f_f (log, minus_infty, nan_value, INVALID_EXCEPTION);
   TEST_f_f (log, plus_infty, plus_infty);
   TEST_f_f (log, nan_value, nan_value);
@@ -4901,6 +4928,7 @@ log10_test (void)
 
   /* log10 (x) == NaN plus invalid exception if x < 0.  */
   TEST_f_f (log10, -1, nan_value, INVALID_EXCEPTION);
+  TEST_f_f (log10, -max_value, nan_value, INVALID_EXCEPTION);
   TEST_f_f (log10, minus_infty, nan_value, INVALID_EXCEPTION);
 
   TEST_f_f (log10, plus_infty, plus_infty);
@@ -4933,6 +4961,7 @@ log1p_test (void)
 
   TEST_f_f (log1p, -1, minus_infty, DIVIDE_BY_ZERO_EXCEPTION);
   TEST_f_f (log1p, -2, nan_value, INVALID_EXCEPTION);
+  TEST_f_f (log1p, -max_value, nan_value, INVALID_EXCEPTION);
   TEST_f_f (log1p, minus_infty, nan_value, INVALID_EXCEPTION);
 
   TEST_f_f (log1p, plus_infty, plus_infty);
@@ -4964,6 +4993,7 @@ log2_test (void)
   TEST_f_f (log2, 1, 0);
 
   TEST_f_f (log2, -1, nan_value, INVALID_EXCEPTION);
+  TEST_f_f (log2, -max_value, nan_value, INVALID_EXCEPTION);
   TEST_f_f (log2, minus_infty, nan_value, INVALID_EXCEPTION);
 
   TEST_f_f (log2, plus_infty, plus_infty);
@@ -5572,8 +5602,7 @@ pow_test (void)
   TEST_ff_f (pow, 0, -0x1p127, plus_infty, DIVIDE_BY_ZERO_EXCEPTION);
   check_int ("errno for pow(0,-num) == ERANGE", errno, ERANGE, 0, 0, 0);
   errno = 0;
-  /* Bug 13879: spurious OVERFLOW exception may be present.  */
-  TEST_ff_f (pow, 0, -max_value, plus_infty, DIVIDE_BY_ZERO_EXCEPTION|OVERFLOW_EXCEPTION_OK);
+  TEST_ff_f (pow, 0, -max_value, plus_infty, DIVIDE_BY_ZERO_EXCEPTION);
   check_int ("errno for pow(0,-num) == ERANGE", errno, ERANGE, 0, 0, 0);
   errno = 0;
   TEST_ff_f (pow, minus_zero, -2, plus_infty, DIVIDE_BY_ZERO_EXCEPTION);
@@ -5588,8 +5617,7 @@ pow_test (void)
   TEST_ff_f (pow, minus_zero, -0x1p127, plus_infty, DIVIDE_BY_ZERO_EXCEPTION);
   check_int ("errno for pow(-0,-num) == ERANGE", errno, ERANGE, 0, 0, 0);
   errno = 0;
-  /* Bug 13879: spurious OVERFLOW exception may be present.  */
-  TEST_ff_f (pow, minus_zero, -max_value, plus_infty, DIVIDE_BY_ZERO_EXCEPTION|OVERFLOW_EXCEPTION_OK);
+  TEST_ff_f (pow, minus_zero, -max_value, plus_infty, DIVIDE_BY_ZERO_EXCEPTION);
   check_int ("errno for pow(-0,-num) == ERANGE", errno, ERANGE, 0, 0, 0);
 
   TEST_ff_f (pow, 0x1p72L, 0x1p72L, plus_infty, OVERFLOW_EXCEPTION);
@@ -7083,6 +7111,7 @@ sqrt_test (void)
 
   /* sqrt (x) == NaN plus invalid exception for x < 0.  */
   TEST_f_f (sqrt, -1, nan_value, INVALID_EXCEPTION);
+  TEST_f_f (sqrt, -max_value, nan_value, INVALID_EXCEPTION);
   TEST_f_f (sqrt, minus_infty, nan_value, INVALID_EXCEPTION);
   TEST_f_f (sqrt, nan_value, nan_value);
 
@@ -7321,10 +7350,12 @@ tgamma_test (void)
   START (tgamma);
 
   TEST_f_f (tgamma, plus_infty, plus_infty);
+  TEST_f_f (tgamma, max_value, plus_infty, OVERFLOW_EXCEPTION);
   TEST_f_f (tgamma, 0, plus_infty, DIVIDE_BY_ZERO_EXCEPTION);
   TEST_f_f (tgamma, minus_zero, minus_infty, DIVIDE_BY_ZERO_EXCEPTION);
   /* tgamma (x) == NaN plus invalid exception for integer x <= 0.  */
   TEST_f_f (tgamma, -2, nan_value, INVALID_EXCEPTION);
+  TEST_f_f (tgamma, -max_value, nan_value, INVALID_EXCEPTION);
   TEST_f_f (tgamma, minus_infty, nan_value, INVALID_EXCEPTION);
   TEST_f_f (tgamma, nan_value, nan_value);
 
@@ -7468,6 +7499,7 @@ y0_test (void)
   START (y0);
 
   TEST_f_f (y0, -1.0, minus_infty, INVALID_EXCEPTION);
+  TEST_f_f (y0, -max_value, minus_infty, INVALID_EXCEPTION);
   TEST_f_f (y0, 0.0, minus_infty);
   TEST_f_f (y0, nan_value, nan_value);
   TEST_f_f (y0, plus_infty, 0);
@@ -7508,6 +7540,7 @@ y1_test (void)
   START (y1);
 
   TEST_f_f (y1, -1.0, minus_infty, INVALID_EXCEPTION);
+  TEST_f_f (y1, -max_value, minus_infty, INVALID_EXCEPTION);
   TEST_f_f (y1, 0.0, minus_infty);
   TEST_f_f (y1, plus_infty, 0);
   TEST_f_f (y1, nan_value, nan_value);
@@ -7549,6 +7582,7 @@ yn_test (void)
 
   /* yn (0, x) == y0 (x)  */
   TEST_ff_f (yn, 0, -1.0, minus_infty, INVALID_EXCEPTION);
+  TEST_ff_f (yn, 0, -max_value, minus_infty, INVALID_EXCEPTION);
   TEST_ff_f (yn, 0, 0.0, minus_infty);
   TEST_ff_f (yn, 0, nan_value, nan_value);
   TEST_ff_f (yn, 0, plus_infty, 0);

@@ -1,4 +1,4 @@
-/* Copyright (C) 2011 Free Software Foundation, Inc.
+/* Copyright (C) 2011-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gmail.com>, 2011.
 
@@ -30,12 +30,12 @@ sysv_scalbl (long double x, long double fn)
   if (__builtin_expect (__isinfl (z), 0))
     {
       if (__finitel (x))
-	return __kernel_standard (x, fn, 232); /* scalb overflow */
+	return __kernel_standard_l (x, fn, 232); /* scalb overflow */
       else
 	__set_errno (ERANGE);
     }
   else if (__builtin_expect (z == 0.0L, 0) && z != x)
-    return __kernel_standard (x, fn, 233); /* scalb underflow */
+    return __kernel_standard_l (x, fn, 233); /* scalb underflow */
 
   return z;
 }

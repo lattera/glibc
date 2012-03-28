@@ -1,4 +1,4 @@
-/* Copyright (C) 2011 Free Software Foundation, Inc.
+/* Copyright (C) 2011-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gmail.com>, 2011.
 
@@ -27,7 +27,7 @@ __remainderl (long double x, long double y)
   if (((__builtin_expect (y == 0.0L, 0) && ! __isnanl (x))
        || (__builtin_expect (__isinf_nsl (x), 0) && ! __isnanl (y)))
       && _LIB_VERSION != _IEEE_)
-    return __kernel_standard (x, y, 228); /* remainder domain */
+    return __kernel_standard_l (x, y, 228); /* remainder domain */
 
   return __ieee754_remainderl (x, y);
 }

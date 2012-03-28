@@ -33,12 +33,12 @@ __expl (long double x)
   if (__builtin_expect (isgreater (x, o_threshold), 0))
     {
       if (_LIB_VERSION != _IEEE_)
-	return __kernel_standard (x, x, 206);
+	return __kernel_standard_l (x, x, 206);
     }
   else if (__builtin_expect (isless (x, u_threshold), 0))
     {
       if (_LIB_VERSION != _IEEE_)
-	return __kernel_standard (x, x, 207);
+	return __kernel_standard_l (x, x, 207);
     }
 
   return __ieee754_expl (x);

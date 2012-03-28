@@ -30,7 +30,7 @@ __acosl (long double x)
     {
       /* acos(|x|>1) */
       feraiseexcept (FE_INVALID);
-      return __kernel_standard (x, x, 201);
+      return __kernel_standard_l (x, x, 201);
     }
 
   return __ieee754_acosl (x);

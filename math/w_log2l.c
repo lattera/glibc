@@ -30,12 +30,12 @@ __log2l (long double x)
       if (x == 0.0L)
 	{
 	  feraiseexcept (FE_DIVBYZERO);
-	  return __kernel_standard (x, x, 248); /* log2(0) */
+	  return __kernel_standard_l (x, x, 248); /* log2(0) */
 	}
       else
 	{
 	  feraiseexcept (FE_INVALID);
-	  return __kernel_standard (x, x, 249); /* log2(x<0) */
+	  return __kernel_standard_l (x, x, 249); /* log2(x<0) */
 	}
     }
 

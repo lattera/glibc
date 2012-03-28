@@ -1,3 +1,66 @@
+2012-03-28  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #13879]
+	[BZ #13910]
+	[BZ #13911]
+	[BZ #13912]
+	[BZ #13913]
+	[BZ #13915]
+	[BZ #13916]
+	[BZ #13917]
+	[BZ #13918]
+	[BZ #13919]
+	[BZ #13920]
+	[BZ #13921]
+	* sysdeps/generic/math_private.h (__kernel_standard_l): Declare.
+	* sysdeps/ieee754/k_standard.c: Include <float.h>.
+	(__kernel_standard_l): New function.
+	* math/w_acoshl.c (__acoshl): Use __kernel_standard_l instead of
+	__kernel_standard.
+	* math/w_acosl.c (__acosl): Likewise.
+	* math/w_asinl.c (__asinl): Likewise.
+	* math/w_atan2l.c (__atan2l): Likewise.
+	* math/w_atanhl.c (__atanhl): Likewise.
+	* math/w_coshl.c (__coshl): Likewise.
+	* math/w_exp10l.c (__exp10l): Likewise.
+	* math/w_exp2l.c (__exp2l): Likewise.
+	* math/w_fmodl.c (__fmodl): Likewise.
+	* math/w_hypotl.c (__hypotl): Likewise.
+	* math/w_j0l.c (__j0l, __y0l): Likewise.
+	* math/w_j1l.c (__j1l, __y1l): Likewise.
+	* math/w_jnl.c (__jnl, __ynl): Likewise.
+	* math/w_lgammal.c (__lgammal): Likewise.
+	* math/w_log10l.c (__log10l): Likewise.
+	* math/w_log2l.c (__log2l): Likewise.
+	* math/w_logl.c (__logl): Likewise.
+	* math/w_powl.c (__powl): Likewise.
+	* math/w_remainderl.c (__remainderl): Likewise.
+	* math/w_scalbl.c (sysv_scalbl): Likewise.
+	* math/w_sinhl.c (__sinhl): Likewise.
+	* math/w_sqrtl.c (__sqrtl): Likewise.
+	* math/w_tgammal.c (__tgammal): Likewise.
+	* sysdeps/ieee754/ldbl-128/w_expl.c (__expl): Likewise.
+	* sysdeps/ieee754/ldbl-96/w_expl.c (__expl): Likewise.
+	* math/libm-test.inc (acos_test): Add more tests.
+	(acosh_test): Likewise.
+	(asin_test): Likewise.
+	(atanh_test): Likewise.
+	(exp_test): Likewise.
+	(exp10_test): Likewise.
+	(exp2_test): Likewise.
+	(expm1_test): Likewise.
+	(lgamma_test): Likewise.
+	(log_test): Likewise.
+	(log10_test): Likewise.
+	(log1p_test): Likewise.
+	(log2_test): Likewise.
+	(pow_test): Do not allow some spurious overflow exceptions.
+	(sqrt_test): Add more tests.
+	(tgamma_test): Likewise.
+	(y0_test): Likewise.
+	(y1_test): Likewise.
+	(yn_test): Likewise.
+
 2012-03-27  Anton Blanchard  <anton@samba.org>
 
 	* sysdeps/unix/sysv/linux/powerpc/bits/mman.h: Define MAP_STACK and

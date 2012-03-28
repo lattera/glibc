@@ -35,10 +35,10 @@ __lgammal(long double x)
 					    : &local_signgam);
 	if(__builtin_expect(!__finitel(y), 0)
 	   && __finitel(x) && _LIB_VERSION != _IEEE_)
-		return __kernel_standard(x, x,
-					 __floorl(x)==x&&x<=0.0L
-					 ? 215 /* lgamma pole */
-					 : 214); /* lgamma overflow */
+		return __kernel_standard_l(x, x,
+					   __floorl(x)==x&&x<=0.0L
+					   ? 215 /* lgamma pole */
+					   : 214); /* lgamma overflow */
 
 	return y;
 }

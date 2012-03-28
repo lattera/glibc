@@ -29,7 +29,7 @@ __hypotl(long double x, long double y)
 	z = __ieee754_hypotl(x,y);
 	if(__builtin_expect(!__finitel(z), 0)
 	   && __finitel(x) && __finitel(y) && _LIB_VERSION != _IEEE_)
-	    return __kernel_standard(x, y, 204); /* hypot overflow */
+	    return __kernel_standard_l(x, y, 204); /* hypot overflow */
 
 	return z;
 }

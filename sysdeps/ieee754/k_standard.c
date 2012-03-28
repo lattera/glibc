@@ -16,6 +16,7 @@ static char rcsid[] = "$NetBSD: k_standard.c,v 1.6 1995/05/10 20:46:35 jtc Exp $
 
 #include <math.h>
 #include <math_private.h>
+#include <float.h>
 #include <errno.h>
 
 #include <assert.h>
@@ -997,4 +998,35 @@ float
 __kernel_standard_f(float x, float y, int type)
 {
 	return __kernel_standard(x, y, type);
+}
+
+long double
+__kernel_standard_l (long double x, long double y, int type)
+{
+  double dx, dy;
+  if (isfinite (x))
+    {
+      long double ax = fabsl (x);
+      if (ax > DBL_MAX)
+	dx = __copysignl (DBL_MAX, x);
+      else if (ax > 0 && ax < DBL_MIN)
+	dx = __copysignl (DBL_MIN, x);
+      else
+	dx = x;
+    }
+  else
+    dx = x;
+  if (isfinite (y))
+    {
+      long double ay = fabsl (y);
+      if (ay > DBL_MAX)
+	dy = __copysignl (DBL_MAX, y);
+      else if (ay > 0 && ay < DBL_MIN)
+	dy = __copysignl (DBL_MIN, y);
+      else
+	dy = y;
+    }
+  else
+    dy = y;
+  return __kernel_standard (dx, dy, type);
 }

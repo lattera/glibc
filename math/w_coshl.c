@@ -28,7 +28,7 @@ __coshl (long double x)
 	long double z = __ieee754_coshl (x);
 	if (__builtin_expect (!__finitel (z), 0) && __finitel (x)
 	    && _LIB_VERSION != _IEEE_)
-		return __kernel_standard (x, x, 205); /* cosh overflow */
+		return __kernel_standard_l (x, x, 205); /* cosh overflow */
 
 	return z;
 }
