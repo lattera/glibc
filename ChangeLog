@@ -1,3 +1,7 @@
+2012-03-28  Ulrich Drepper  <drepper@gmail.com>
+
+	* malloc/mallocbug.c: Avoid warnings about unused variables.
+
 2012-03-28  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #369]
@@ -388,9 +392,9 @@
 
 2012-03-21  Thomas Schwinge  <thomas@codesourcery.com>
 
-        * conform/conformtest.pl: Handle --tmpdir argument, defaulting to /tmp.
-        * conform/run-conformtest.sh: Pass --tmpdir argument when invoking
-        conformtest.pl
+	* conform/conformtest.pl: Handle --tmpdir argument, defaulting to /tmp.
+	* conform/run-conformtest.sh: Pass --tmpdir argument when invoking
+	conformtest.pl
 
 2012-03-21  Joseph Myers  <joseph@codesourcery.com>
 

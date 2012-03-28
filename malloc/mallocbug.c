@@ -5,12 +5,15 @@
 
 #define size_t unsigned int
 
+/* Defined as global variables to avoid warnings about unused variables.  */
+char *dummy0;
+char *dummy1;
+char *fill_info_table1;
+
+
 int
 main (int argc, char *argv[])
 {
-  char *dummy0;
-  char *dummy1;
-  char *fill_info_table1;
   char *over_top;
   size_t over_top_size = 0x3000;
   char *over_top_dup;
@@ -19,11 +22,11 @@ main (int argc, char *argv[])
   size_t i;
 
   /* Here's what memory is supposed to look like (hex):
-        size  contents
-        3000  original_info_table, later fill_info_table1
+	size  contents
+	3000  original_info_table, later fill_info_table1
       3fa000  dummy0
       3fa000  dummy1
-        6000  info_table_2
+	6000  info_table_2
 	3000  over_top
 
 	*/
