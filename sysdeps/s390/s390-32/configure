@@ -124,4 +124,3 @@ if test $libc_cv_390_tls = no; then
 fi
 
 $as_echo "#define PI_STATIC_AND_HIDDEN 1" >>confdefs.h
-
