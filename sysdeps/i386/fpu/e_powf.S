@@ -114,7 +114,7 @@ ENTRY(__ieee754_powf)
 	fucomp	%st(1)		// y : x
 	fnstsw
 	sahf
-	jne	2f
+	jne	3f
 
 	/* OK, we have an integer value for y.  */
 	popl	%edx
@@ -151,7 +151,12 @@ ENTRY(__ieee754_powf)
 
 	cfi_adjust_cfa_offset (4)
 	.align ALIGNARG(4)
-2:	/* y is a real number.  */
+2:	/* y is a large integer (so even).  */
+	fxch			// x : y
+	fabs			// |x| : y
+	fxch			// y : x
+	.align ALIGNARG(4)
+3:	/* y is a real number.  */
 	fxch			// x : y
 	fldl	MO(one)		// 1.0 : x : y
 	fldl	MO(limit)	// 0.29 : 1.0 : x : y

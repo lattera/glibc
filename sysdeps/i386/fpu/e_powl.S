@@ -117,7 +117,7 @@ ENTRY(__ieee754_powl)
 	fucomp	%st(1)		// y : x
 	fnstsw
 	sahf
-	jne	2f
+	jne	3f
 
 	/* OK, we have an integer value for y.  */
 	popl	%eax
@@ -160,7 +160,14 @@ ENTRY(__ieee754_powl)
 
 	cfi_adjust_cfa_offset (8)
 	.align ALIGNARG(4)
-2:	/* y is a real number.  */
+2:	// y is a large integer (absolute value at least 1L<<63), but
+	// may be odd unless at least 1L<<64.  So it may be necessary
+	// to adjust the sign of a negative result afterwards.
+	fxch			// x : y
+	fabs			// |x| : y
+	fxch			// y : |x|
+	.align ALIGNARG(4)
+3:	/* y is a real number.  */
 	fxch			// x : y
 	fldl	MO(one)		// 1.0 : x : y
 	fldl	MO(limit)	// 0.29 : 1.0 : x : y
@@ -190,18 +197,51 @@ ENTRY(__ieee754_powl)
 	f2xm1			// 2^fract(y*log2(x))-1 : int(y*log2(x))
 	faddl	MO(one)		// 2^fract(y*log2(x)) : int(y*log2(x))
 	fscale			// 2^fract(y*log2(x))*2^int(y*log2(x)) : int(y*log2(x))
-	addl	$8, %esp
-	cfi_adjust_cfa_offset (-8)
 	fstp	%st(1)		// 2^fract(y*log2(x))*2^int(y*log2(x))
-	ret
+	jmp	29f
 
-	cfi_adjust_cfa_offset (8)
 28:	fstp	%st(1)		// y*log2(x)
 	fldl	MO(one)		// 1 : y*log2(x)
 	fscale			// 2^(y*log2(x)) : y*log2(x)
-	addl	$8, %esp
-	cfi_adjust_cfa_offset (-8)
 	fstp	%st(1)		// 2^(y*log2(x))
+29:	testb	$2, %dh
+	jz	292f
+	// x is negative.  If y is an odd integer, negate the result.
+	fldt	24(%esp)	// y : abs(result)
+	fld	%st		// y : y : abs(result)
+	fabs			// |y| : y : abs(result)
+	fcompl	MO(p64)		// y : abs(result)
+	fnstsw
+	sahf
+	jnc	291f
+	fldl	MO(p63)		// p63 : y : abs(result)
+	fxch			// y : p63 : abs(result)
+	fprem			// y%p63 : p63 : abs(result)
+	fstp	%st(1)		// y%p63 : abs(result)
+
+	// We must find out whether y is an odd integer.
+	fld	%st		// y : y : abs(result)
+	fistpll	(%esp)		// y : abs(result)
+	fildll	(%esp)		// int(y) : y : abs(result)
+	fucompp			// abs(result)
+	fnstsw
+	sahf
+	jne	292f
+
+	// OK, the value is an integer, but is it odd?
+	popl	%eax
+	cfi_adjust_cfa_offset (-4)
+	popl	%edx
+	cfi_adjust_cfa_offset (-4)
+	andb	$1, %al
+	jz	290f		// jump if not odd
+	// It's an odd integer.
+	fchs
+290:	ret
+	cfi_adjust_cfa_offset (8)
+291:	fstp	%st(0)		// abs(result)
+292:	addl	$8, %esp
+	cfi_adjust_cfa_offset (-8)
 	ret
 
 	// pow(x,±0) = 1

@@ -1,5 +1,20 @@
 2012-03-28  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #369]
+	[BZ #2678]
+	[BZ #3866]
+	* sysdeps/i386/fpu/e_pow.S (__ieee754_pow): Take absolute value of
+	x for large integer exponent.
+	* sysdeps/i386/fpu/e_powf.S (__ieee754_powf): Likewise.
+	* sysdeps/i386/fpu/e_powl.S (__ieee754_powl): Likewise.  Adjust
+	sign of result as needed afterwards.
+	* sysdeps/x86_64/fpu/e_powl.S (__ieee754_powl): Likewise.
+	* sysdeps/ieee754/k_standard.c (__kernel_standard): Handle sign of
+	result for underflowing pow the same as for overflow.
+	(__kernel_standard_l): Handle powl overflow and underflow here
+	rather than calling __kernel_standard.
+	* math/libm-test.inc (pow_test): Add more tests.
+
 	[BZ #3868]
 	[BZ #13879]
 	[BZ #13910]

@@ -508,6 +508,9 @@ __kernel_standard(double x, double y, int type)
 		exc.type = UNDERFLOW;
 		exc.name = type < 100 ? "pow" : (type < 200 ? "powf" : "powl");
 		exc.retval =  zero;
+		y *= 0.5;
+		if (x < zero && __rint (y) != y)
+		  exc.retval = -zero;
 		if (_LIB_VERSION == _POSIX_)
 		  __set_errno (ERANGE);
 		else if (!matherr(&exc)) {
@@ -1004,6 +1007,8 @@ long double
 __kernel_standard_l (long double x, long double y, int type)
 {
   double dx, dy;
+  struct exception exc;
+
   if (isfinite (x))
     {
       long double ax = fabsl (x);
@@ -1028,5 +1033,52 @@ __kernel_standard_l (long double x, long double y, int type)
     }
   else
     dy = y;
-  return __kernel_standard (dx, dy, type);
+
+  switch (type)
+    {
+    case 221:
+      /* powl (x, y) overflow.  */
+      exc.arg1 = dx;
+      exc.arg2 = dy;
+      exc.type = OVERFLOW;
+      exc.name = "powl";
+      if (_LIB_VERSION == _SVID_)
+	{
+	  exc.retval = HUGE;
+	  y *= 0.5;
+	  if (x < zero && __rintl (y) != y)
+	    exc.retval = -HUGE;
+	}
+      else
+	{
+	  exc.retval = HUGE_VAL;
+	  y *= 0.5;
+	  if (x < zero && __rintl (y) != y)
+	    exc.retval = -HUGE_VAL;
+	}
+      if (_LIB_VERSION == _POSIX_)
+	__set_errno (ERANGE);
+      else if (!matherr (&exc))
+	__set_errno (ERANGE);
+      return exc.retval;
+
+    case 222:
+      /* powl (x, y) underflow.  */
+      exc.arg1 = dx;
+      exc.arg2 = dy;
+      exc.type = UNDERFLOW;
+      exc.name = "powl";
+      exc.retval = zero;
+      y *= 0.5;
+      if (x < zero && __rintl (y) != y)
+	exc.retval = -zero;
+      if (_LIB_VERSION == _POSIX_)
+	__set_errno (ERANGE);
+      else if (!matherr (&exc))
+	__set_errno (ERANGE);
+      return exc.retval;
+
+    default:
+      return __kernel_standard (dx, dy, type);
+    }
 }
