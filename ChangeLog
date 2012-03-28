@@ -1,3 +1,11 @@
+2012-03-27  Anton Blanchard  <anton@samba.org>
+
+	* sysdeps/unix/sysv/linux/powerpc/bits/mman.h: Define MAP_STACK and
+	MAP_HUGETLB.
+	* sysdeps/unix/sysv/linux/s390/bits/mman.h: Likewise.
+	* sysdeps/unix/sysv/linux/sh/bits/mman.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/mman.h: Likewise.
+
 2012-03-27  David S. Miller  <davem@davemloft.net>
 
 	* conform/Makefile: Run run-conformtest.sh using $(BASH).
