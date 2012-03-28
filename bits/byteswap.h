@@ -1,6 +1,5 @@
 /* Macros to swap the order of bytes in integer values.
-   Copyright (C) 1997,1998,2000-2002,2005,2008,2011
-   Free Software Foundation, Inc.
+   Copyright (C) 1997-2012  Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -82,6 +81,22 @@ __bswap_32 (unsigned int __bsx)
 	     __r.__l[1] = __bswap_32 (__w.__l[0]);			      \
 	   }								      \
 	 __r.__ll; }))
+#elif __GLIBC_HAVE_LONG_LONG
+# define __bswap_constant_64(x) \
+     ((((x) & 0xff00000000000000ull) >> 56)				      \
+      | (((x) & 0x00ff000000000000ull) >> 40)				      \
+      | (((x) & 0x0000ff0000000000ull) >> 24)				      \
+      | (((x) & 0x000000ff00000000ull) >> 8)				      \
+      | (((x) & 0x00000000ff000000ull) << 8)				      \
+      | (((x) & 0x0000000000ff0000ull) << 24)				      \
+      | (((x) & 0x000000000000ff00ull) << 40)				      \
+      | (((x) & 0x00000000000000ffull) << 56))
+
+static __inline unsigned long long int
+__bswap_64 (unsigned long long int __bsx)
+{
+  return __bswap_constant_64 (__bsx);
+}
 #endif
 
 #endif /* _BITS_BYTESWAP_H */

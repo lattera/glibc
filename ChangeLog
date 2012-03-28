@@ -1,3 +1,20 @@
+2012-04-03  Andreas Jaeger  <aj@suse.de>
+
+	[BZ #13926]
+	* sysdeps/i386/bits/byteswap.h [!__GNUC__](__bswap_constant_64):
+	New macro for this case.
+	[!__GNUC__] (__bswap_64): New inline function for this case.
+	* sysdeps/x86_64/bits/byteswap.h: Likewise.
+	* bits/byteswap.h: Likewise.
+	* sysdeps/s390/bits/byteswap.h: [!__GNUC__] (__bswap_64): Use
+	ull, guard with __GLIBC_HAVE_LONG_LONG.
+
+	* string/endian.h (htobe64,htole64,be64toh,le64toh): Guard with
+	__GLIBC_HAVE_LONG_LONG.
+
+	* string/byteswap.h (bswap_64): Guard with __GLIBC_HAVE_LONG_LONG.
+	Include <features.h> for __GLIBC_HAVE_LONG_LONG.
+
 2012-04-02 Tulio Magno Quites Machado Filho <tuliom@linux.vnet.ibm.com>
 
 	[BZ #13691]

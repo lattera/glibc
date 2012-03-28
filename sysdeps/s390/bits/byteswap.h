@@ -1,5 +1,5 @@
 /* Macros to swap the order of bytes in integer values.  s390 version.
-   Copyright (C) 2000-2003, 2008, 2011 Free Software Foundation, Inc.
+   Copyright (C) 2000-2003, 2008, 2011, 2012 Free Software Foundation, Inc.
    Contributed by Martin Schwidefsky (schwidefsky@de.ibm.com).
    This file is part of the GNU C Library.
 
@@ -150,16 +150,16 @@ __bswap_32 (unsigned int __bsx)
 	  __r.__l[1] = __bswap_32 (__w.__l[0]);		\
 	  __r.__ll; })
 # endif
-#else
+#elif __GLIBC_HAVE_LONG_LONG
 # define __bswap_constant_64(x) \
-     ((((x) & 0xff00000000000000ul) >> 56)				      \
-      | (((x) & 0x00ff000000000000ul) >>  40)				      \
-      | (((x) & 0x0000ff0000000000ul) >> 24)				      \
-      | (((x) & 0x000000ff00000000ul) >> 8)				      \
-      | (((x) & 0x00000000ff000000ul) << 8)				      \
-      | (((x) & 0x0000000000ff0000ul) << 24)				      \
-      | (((x) & 0x000000000000ff00ul) << 40)				      \
-      | (((x) & 0x00000000000000fful) << 56))
+     ((((x) & 0xff00000000000000ull) >> 56)				      \
+      | (((x) & 0x00ff000000000000ull) >> 40)				      \
+      | (((x) & 0x0000ff0000000000ull) >> 24)				      \
+      | (((x) & 0x000000ff00000000ull) >> 8)				      \
+      | (((x) & 0x00000000ff000000ull) << 8)				      \
+      | (((x) & 0x0000000000ff0000ull) << 24)				      \
+      | (((x) & 0x000000000000ff00ull) << 40)				      \
+      | (((x) & 0x00000000000000ffull) << 56))
 
 static __inline unsigned long long int
 __bswap_64 (unsigned long long int __bsx)

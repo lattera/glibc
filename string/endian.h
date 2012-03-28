@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1996, 1997, 2000, 2008 Free Software Foundation, Inc.
+/* Copyright (C) 1992-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -70,10 +70,13 @@
 #  define be32toh(x) __bswap_32 (x)
 #  define le32toh(x) (x)
 
-#  define htobe64(x) __bswap_64 (x)
-#  define htole64(x) (x)
-#  define be64toh(x) __bswap_64 (x)
-#  define le64toh(x) (x)
+#  if __GLIBC_HAVE_LONG_LONG
+#   define htobe64(x) __bswap_64 (x)
+#   define htole64(x) (x)
+#   define be64toh(x) __bswap_64 (x)
+#   define le64toh(x) (x)
+#  endif
+
 # else
 #  define htobe16(x) (x)
 #  define htole16(x) __bswap_16 (x)
@@ -85,10 +88,12 @@
 #  define be32toh(x) (x)
 #  define le32toh(x) __bswap_32 (x)
 
-#  define htobe64(x) (x)
-#  define htole64(x) __bswap_64 (x)
-#  define be64toh(x) (x)
-#  define le64toh(x) __bswap_64 (x)
+#  if __GLIBC_HAVE_LONG_LONG
+#   define htobe64(x) (x)
+#   define htole64(x) __bswap_64 (x)
+#   define be64toh(x) (x)
+#   define le64toh(x) __bswap_64 (x)
+#  endif
 # endif
 #endif
 
