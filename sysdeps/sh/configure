@@ -81,7 +81,7 @@ $as_echo X/"$0" |
 }
 
 # This file is generated from configure.in by Autoconf.  DO NOT EDIT!
- # Local configure fragment for sysdeps/sh/elf.
+ # Local configure fragment for sysdeps/sh.
 
 # Check for support of thread-local storage handling in assembler and
 # linker.
@@ -119,4 +119,3 @@ if test $libc_cv_sh_tls = no; then
 fi
 
 $as_echo "#define PI_STATIC_AND_HIDDEN 1" >>confdefs.h
-
