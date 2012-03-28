@@ -7,6 +7,9 @@ ifeq ($(subdir),string)
 sysdep_routines += align-cpy
 endif
 
+# The assembler on SPARC needs the -fPIC flag even when it's assembler code.
+ASFLAGS-.os = -fPIC
+
 ifeq ($(have-as-vis3),yes)
 ASFLAGS-.o += -Wa,-Av9d
 ASFLAGS-.os += -Wa,-Av9d
@@ -15,6 +18,3 @@ ASFLAGS-.og += -Wa,-Av9d
 ASFLAGS-.ob += -Wa,-Av9d
 ASFLAGS-.oS += -Wa,-Av9d
 endif
-
-# The assembler on SPARC needs the -fPIC flag even when it's assembler code.
-ASFLAGS-.os = -fPIC
