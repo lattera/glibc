@@ -47,6 +47,3 @@ $(divrem:%=$(sysdep_dir)/sparc/sparc32/%.S): $(sysdep_dir)/sparc/sparc32/divrem.
 	mv -f $@-tmp $@
 
 sysdep-realclean := $(sysdep-realclean) $(divrem:%=sysdeps/sparc/sparc32/%.S)
-
-# The assembler on SPARC needs the -fPIC flag even when it's assembler code.
-ASFLAGS-.os = -fPIC

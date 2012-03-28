@@ -1,3 +1,9 @@
+2012-03-28  David S. Miller  <davem@davemloft.net>
+
+	* sysdeps/sparc/Makefile: Add -fPIC to ASFLAGS-.os here....
+	* sysdeps/sparc/sparc32/Makefile: rather than here...
+	* sysdeps/sparc/sparc64/Makefile: and here.
+
 2012-03-28  Ulrich Drepper  <drepper@gmail.com>
 
 	* malloc/mallocbug.c: Avoid warnings about unused variables.

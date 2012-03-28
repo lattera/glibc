@@ -15,3 +15,6 @@ ifeq ($(subdir),csu)
 CPPFLAGS-crti.S += -fPIC
 CPPFLAGS-crtn.S += -fPIC
 endif
+
+# The assembler on SPARC needs the -fPIC flag even when it's assembler code.
+ASFLAGS-.os += -fPIC
