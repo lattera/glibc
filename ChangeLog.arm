@@ -1,3 +1,8 @@
+2012-03-28  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/arm/bits/mman.h (MAP_STACK): Define.
+	(MAP_HUGETLB): Likewise.
+
 2012-03-27  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/arm/elf/start.S: Moved to ...
