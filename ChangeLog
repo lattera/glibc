@@ -1,5 +1,8 @@
 2012-03-28  David S. Miller  <davem@davemloft.net>
 
+	* sysdeps/sparc/sparc64/multiarch/memset-niagara1.S: Unroll main
+	loop to 256 bytes instead of 64 bytes and fix test signedness.
+
 	* sysdeps/sparc/Makefile: Add -fPIC to ASFLAGS-.os here....
 	* sysdeps/sparc/sparc32/Makefile: rather than here...
 	* sysdeps/sparc/sparc64/Makefile: and here.

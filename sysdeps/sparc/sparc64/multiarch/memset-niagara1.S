@@ -1,5 +1,5 @@
 /* Set a block of memory to some byte value.  For SUN4V Niagara.
-   Copyright (C) 2006, 2008 Free Software Foundation, Inc.
+   Copyright (C) 2006, 2008, 2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by David S. Miller (davem@davemloft.net)
 
@@ -60,7 +60,7 @@ ENTRY(__bzero_niagara1)
 	wr		%g0, ASI_P, %asi
 
 	cmp		%o1, 15
-	bl,pn		%icc, 70f
+	blu,pn		%XCC, 70f
 	 andcc		%o0, 0x7, %g1
 	be,pt		%XCC, 2f
 	 mov		8, %g2
@@ -71,7 +71,7 @@ ENTRY(__bzero_niagara1)
 	bne,pt		%XCC, 1b
 	 add		%o0, 1, %o0
 2:	cmp		%o1, 128
-	bl,pn		%icc, 60f
+	blu,pn		%XCC, 60f
 	 andcc		%o0, (64 - 1), %g1
 	be,pt		%XCC, 40f
 	 mov		64, %g2
@@ -86,6 +86,51 @@ ENTRY(__bzero_niagara1)
 	wr		%g0, ASI_BLK_INIT_QUAD_LDD_P, %asi
 	andn		%o1, (64 - 1), %g1
 	sub		%o1, %g1, %o1
+
+	andn		%g1, (256 - 1), %g2
+	brz,pt		%g2, 50f
+	 and		%g1, (256 - 1), %g1
+
+45:
+	stxa		%o2, [%o0 + 0x00] %asi
+	stxa		%o2, [%o0 + 0x08] %asi
+	stxa		%o2, [%o0 + 0x10] %asi
+	stxa		%o2, [%o0 + 0x18] %asi
+	stxa		%o2, [%o0 + 0x20] %asi
+	stxa		%o2, [%o0 + 0x28] %asi
+	stxa		%o2, [%o0 + 0x30] %asi
+	stxa		%o2, [%o0 + 0x38] %asi
+	stxa		%o2, [%o0 + 0x40] %asi
+	stxa		%o2, [%o0 + 0x48] %asi
+	stxa		%o2, [%o0 + 0x50] %asi
+	stxa		%o2, [%o0 + 0x58] %asi
+	stxa		%o2, [%o0 + 0x60] %asi
+	stxa		%o2, [%o0 + 0x68] %asi
+	stxa		%o2, [%o0 + 0x70] %asi
+	stxa		%o2, [%o0 + 0x78] %asi
+	stxa		%o2, [%o0 + 0x80] %asi
+	stxa		%o2, [%o0 + 0x88] %asi
+	stxa		%o2, [%o0 + 0x90] %asi
+	stxa		%o2, [%o0 + 0x98] %asi
+	stxa		%o2, [%o0 + 0xa0] %asi
+	stxa		%o2, [%o0 + 0xa8] %asi
+	stxa		%o2, [%o0 + 0xb0] %asi
+	stxa		%o2, [%o0 + 0xb8] %asi
+	stxa		%o2, [%o0 + 0xc0] %asi
+	stxa		%o2, [%o0 + 0xc8] %asi
+	stxa		%o2, [%o0 + 0xd0] %asi
+	stxa		%o2, [%o0 + 0xd8] %asi
+	stxa		%o2, [%o0 + 0xe0] %asi
+	stxa		%o2, [%o0 + 0xe8] %asi
+	stxa		%o2, [%o0 + 0xf0] %asi
+	stxa		%o2, [%o0 + 0xf8] %asi
+	subcc		%g2, 256, %g2
+	bne,pt		%XCC, 45b
+	 add		%o0, 256, %o0
+
+	brz,pn		%g1, 55f
+	 nop
+
 50:
 	stxa		%o2, [%o0 + 0x00] %asi
 	stxa		%o2, [%o0 + 0x08] %asi
@@ -99,6 +144,7 @@ ENTRY(__bzero_niagara1)
 	bne,pt		%XCC, 50b
 	 add		%o0, 64, %o0
 
+55:
 	wr		%g0, ASI_P, %asi
 	brz,pn		%o1, 80f
 60:
@@ -115,7 +161,7 @@ ENTRY(__bzero_niagara1)
 70:
 1:	stba		%o2, [%o0 + 0x00] %asi
 	subcc		%o1, 1, %o1
-	bne,pt		%icc, 1b
+	bne,pt		%XCC, 1b
 	 add		%o0, 1, %o0
 
 	/* fallthrough */
