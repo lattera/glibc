@@ -1,3 +1,10 @@
+2012-03-28  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	[BZ #13761]
+	* nis/nss_compat/compat-initgroups.c (getgrent_next_nss,
+	_nss_compat_initgroups_dyn): Fall back to malloc/free
+	for large group memberships.
+
 2012-03-28  David S. Miller  <davem@davemloft.net>
 
 	* sysdeps/sparc/sparc32/memcpy.S: Implement mempcpy using a stub

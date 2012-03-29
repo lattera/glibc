@@ -1,4 +1,4 @@
-/* Copyright (C) 1998-2004,2006,2007,2009,2010 Free Software Foundation, Inc.
+/* Copyright (C) 1998-2004,2006,2007,2009,2010,2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@suse.de>, 1998.
 
@@ -296,6 +296,8 @@ getgrent_next_nss (ent_t *ent, char *buffer, size_t buflen, const char *user,
       if (nss_initgroups_dyn (user, group, &mystart, &mysize, &mygroups,
 			      limit, errnop) == NSS_STATUS_SUCCESS)
 	{
+	  status = NSS_STATUS_NOTFOUND;
+
 	  /* If there is no blacklist we can trust the underlying
 	     initgroups implementation.  */
 	  if (ent->blacklist.current <= 1)
@@ -308,6 +310,7 @@ getgrent_next_nss (ent_t *ent, char *buffer, size_t buflen, const char *user,
 		 overwrite the pointer with one to a bigger buffer.  */
 	      char *tmpbuf = buffer;
 	      size_t tmplen = buflen;
+	      bool use_malloc = false;
 
 	      for (int i = 0; i < mystart; i++)
 		{
@@ -315,21 +318,36 @@ getgrent_next_nss (ent_t *ent, char *buffer, size_t buflen, const char *user,
 						   tmpbuf, tmplen, errnop))
 			 == NSS_STATUS_TRYAGAIN
 			 && *errnop == ERANGE)
-		    if (tmpbuf == buffer)
-		      {
-			tmplen *= 2;
-			tmpbuf = __alloca (tmplen);
-		      }
-		    else
-		      tmpbuf = extend_alloca (tmpbuf, tmplen, 2 * tmplen);
+                    {
+                      if (__libc_use_alloca (tmplen * 2))
+                        {
+                          if (tmpbuf == buffer)
+                            {
+                              tmplen *= 2;
+                              tmpbuf = __alloca (tmplen);
+                            }
+                          else
+                            tmpbuf = extend_alloca (tmpbuf, tmplen, tmplen * 2);
+                        }
+                      else
+                        {
+                          tmplen *= 2;
+                          char *newbuf = realloc (use_malloc ? tmpbuf : NULL, tmplen);
+
+                          if (newbuf == NULL)
+                            {
+                              status = NSS_STATUS_TRYAGAIN;
+			      goto done;
+                            }
+                          use_malloc = true;
+                          tmpbuf = newbuf;
+                        }
+                    }
 
 		  if (__builtin_expect  (status != NSS_STATUS_NOTFOUND, 1))
 		    {
 		      if (__builtin_expect  (status != NSS_STATUS_SUCCESS, 0))
-			{
-			  free (mygroups);
-			  return status;
-			}
+		        goto done;
 
 		      if (!in_blacklist (grpbuf.gr_name,
 					 strlen (grpbuf.gr_name), ent)
@@ -347,11 +365,17 @@ getgrent_next_nss (ent_t *ent, char *buffer, size_t buflen, const char *user,
 			}
 		    }
 		}
+
+	      status = NSS_STATUS_NOTFOUND;
+
+ done:
+	      if (use_malloc)
+	        free (tmpbuf);
 	    }
 
 	  free (mygroups);
 
-	  return NSS_STATUS_NOTFOUND;
+	  return status;
 	}
 
       free (mygroups);
@@ -508,6 +532,7 @@ _nss_compat_initgroups_dyn (const char *user, gid_t group, long int *start,
   char *tmpbuf;
   enum nss_status status;
   ent_t intern = { true, false, false, NULL, {NULL, 0, 0} };
+  bool use_malloc = false;
 
   status = internal_setgrent (&intern);
   if (status != NSS_STATUS_SUCCESS)
@@ -521,13 +546,32 @@ _nss_compat_initgroups_dyn (const char *user, gid_t group, long int *start,
 					    user, group, start, size,
 					    groupsp, limit, errnop))
 	     == NSS_STATUS_TRYAGAIN && *errnop == ERANGE)
-	tmpbuf = extend_alloca (tmpbuf, buflen, 2 * buflen);
+        if (__libc_use_alloca (buflen * 2))
+          tmpbuf = extend_alloca (tmpbuf, buflen, 2 * buflen);
+        else
+          {
+            buflen *= 2;
+            char *newbuf = realloc (use_malloc ? tmpbuf : NULL, buflen);
+            if (newbuf == NULL)
+              {
+                status = NSS_STATUS_TRYAGAIN;
+                goto done;
+              }
+            use_malloc = true;
+            tmpbuf = newbuf;
+          }
     }
   while (status == NSS_STATUS_SUCCESS);
 
+  status = NSS_STATUS_SUCCESS;
+
+ done:
+  if (use_malloc)
+    free (tmpbuf);
+
   internal_endgrent (&intern);
 
-  return NSS_STATUS_SUCCESS;
+  return status;
 }
 
 
