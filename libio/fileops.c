@@ -1341,24 +1341,13 @@ _IO_new_file_xsputn (f, data, n)
     {
       if (count > to_do)
 	count = to_do;
-      if (count > 20)
-	{
 #ifdef _LIBC
-	  f->_IO_write_ptr = __mempcpy (f->_IO_write_ptr, s, count);
+      f->_IO_write_ptr = __mempcpy (f->_IO_write_ptr, s, count);
 #else
-	  memcpy (f->_IO_write_ptr, s, count);
-	  f->_IO_write_ptr += count;
+      memcpy (f->_IO_write_ptr, s, count);
+      f->_IO_write_ptr += count;
 #endif
-	  s += count;
-	}
-      else
-	{
-	  register char *p = f->_IO_write_ptr;
-	  register int i = (int) count;
-	  while (--i >= 0)
-	    *p++ = *s++;
-	  f->_IO_write_ptr = p;
-	}
+      s += count;
       to_do -= count;
     }
   if (to_do + must_flush > 0)
