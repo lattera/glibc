@@ -1,5 +1,17 @@
 2012-03-28  David S. Miller  <davem@davemloft.net>
 
+	* sysdeps/sparc/sparc32/memcpy.S: Implement mempcpy using a stub
+	that branches into memcpy.
+	* sysdeps/sparc/sparc64/memcpy.S: Likewise.
+	* sysdeps/sparc/sparc64/multiarch/memcpy-niagara1.S: Likewise.
+	* sysdeps/sparc/sparc64/multiarch/memcpy-niagara2.S: Likewise.
+	* sysdeps/sparc/sparc64/multiarch/memcpy-ultra3.S: Likewise.
+	* sysdeps/sparc/sparc64/multiarch/memcpy.S: Add mempcpy multiarch
+	bits.
+	* sysdeps/sparc/sparc64/rtld-memcpy.c: Include generic mempcpy
+	implementation too.
+	* sysdeps/sparc/mempcpy.S: New file.
+
 	* sysdeps/sparc/sparc64/multiarch/memcpy.S: Provide a hidden def to
 	the IFUNC routine in the libc case.
 	* sysdeps/sparc/sparc64/multiarch/memcpy.S: Likewise.

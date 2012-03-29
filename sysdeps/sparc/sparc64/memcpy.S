@@ -374,19 +374,24 @@ ENTRY(__memcpy_large)
 	 mov		%g4, %o0
 END(__memcpy_large)
 
+ENTRY(__mempcpy)
+	ba,pt		%xcc, 210f
+	 add		%o0, %o2, %g4
+END(__mempcpy)
+
 	.align		32
 ENTRY(memcpy)
+	 mov		%o0, %g4			/* IEU0		Group		*/
 210:
 #ifndef USE_BPR
-	srl		%o2, 0, %o2			/* IEU1		Group		*/
+	srl		%o2, 0, %o2			/* IEU1				*/
 #endif	
 	brz,pn		%o2, 209b			/* CTI		Group		*/
-	 mov		%o0, %g4			/* IEU0				*/
-218:	cmp		%o2, 15				/* IEU1		Group		*/
-	bleu,pn		%xcc, 208b			/* CTI				*/
-	 cmp		%o2, (64 * 6)			/* IEU1		Group		*/
-	bgeu,pn		%xcc, 200b			/* CTI				*/
-	 andcc		%o0, 7, %g2			/* IEU1		Group		*/
+218:	 cmp		%o2, 15				/* IEU1				*/
+	bleu,pn		%xcc, 208b			/* CTI		Group		*/
+	 cmp		%o2, (64 * 6)			/* IEU1				*/
+	bgeu,pn		%xcc, 200b			/* CTI		Group		*/
+	 andcc		%o0, 7, %g2			/* IEU1				*/
 	sub		%o0, %o1, %g5			/* IEU0				*/
 	andcc		%g5, 3, %o5			/* IEU1		Group		*/
 	bne,pn		%xcc, 212f			/* CTI				*/
@@ -569,3 +574,7 @@ ENTRY(memcpy)
 END(memcpy)
 
 libc_hidden_builtin_def (memcpy)
+
+libc_hidden_def (__mempcpy)
+weak_alias (__mempcpy, mempcpy)
+libc_hidden_builtin_def (mempcpy)

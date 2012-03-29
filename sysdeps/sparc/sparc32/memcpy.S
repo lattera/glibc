@@ -104,11 +104,17 @@
 	std	%t2, [%dst + offset + offset2 + 0x08];
 
 	.text
-	.align	4
+ENTRY(__mempcpy)
+	add		%o0, %o2, %g1
+	ba		101f
+	 st		%g1, [%sp + 64]
+END(__mempcpy)
 
+	.align	4
 ENTRY(memcpy)		/* %o0=dst %o1=src %o2=len */
-	sub		%o0, %o1, %o4
 	st		%o0, [%sp + 64]
+101:
+	sub		%o0, %o1, %o4
 9:	andcc		%o4, 3, %o5
 0:	bne		86f
 	 cmp		%o2, 15
@@ -641,3 +647,7 @@ ENTRY(memcpy)		/* %o0=dst %o1=src %o2=len */
 END(memcpy)
 
 libc_hidden_builtin_def (memcpy)
+
+libc_hidden_def (__mempcpy)
+weak_alias (__mempcpy, mempcpy)
+libc_hidden_builtin_def (mempcpy)

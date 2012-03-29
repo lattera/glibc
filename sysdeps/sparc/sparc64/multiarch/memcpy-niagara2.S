@@ -145,13 +145,19 @@
 
 	.text
 
+ENTRY(__mempcpy_niagara2)
+	ba,pt		%XCC, 101f
+	 add		%o0, %o2, %g5
+END(__mempcpy_niagara2)
+
 	.align		32
 ENTRY(__memcpy_niagara2)
+100:	/* %o0=dst, %o1=src, %o2=len */
+	mov		%o0, %g5
+101:
 # ifndef USE_BPR
 	srl		%o2, 0, %o2
 # endif
-100:	/* %o0=dst, %o1=src, %o2=len */
-	mov		%o0, %g5
 	cmp		%o2, 0
 	be,pn		%XCC, 85f
 218:	 or		%o0, %o1, %o3
