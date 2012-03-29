@@ -1,5 +1,5 @@
 /* Multiple versions of memcpy
-   Copyright (C) 2010, 2011 Free Software Foundation, Inc.
+   Copyright (C) 2010, 2011, 2012 Free Software Foundation, Inc.
    Contributed by David S. Miller (davem@davemloft.net)
    This file is part of the GNU C Library.
 
@@ -72,10 +72,10 @@ ENTRY(memcpy)
 	 mov	%o1, %o0
 END(memcpy)
 
-# undef libc_hidden_builtin_def
-/* IFUNC doesn't work with the hidden functions in a shared library.  */
-# define libc_hidden_builtin_def(name) \
-	.globl __GI_memcpy; __GI_memcpy = __memcpy_ultra1
+libc_hidden_builtin_def (memcpy)
+
+#undef libc_hidden_builtin_def
+#define libc_hidden_builtin_def(name)
 
 #define memcpy __memcpy_ultra1
 

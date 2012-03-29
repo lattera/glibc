@@ -1,5 +1,9 @@
 2012-03-28  David S. Miller  <davem@davemloft.net>
 
+	* sysdeps/sparc/sparc64/multiarch/memcpy.S: Provide a hidden def to
+	the IFUNC routine in the libc case.
+	* sysdeps/sparc/sparc64/multiarch/memcpy.S: Likewise.
+
 	* sysdeps/sparc/sparc32/sparcv9/multiarch/rtld-memset.c: New file.
 	* sysdeps/sparc/sparc32/sparcv9/multiarch/rtld-memcpy.c: New file.
 	* sysdeps/sparc/sparc32/sparcv9/rtld-memset.c: New file.

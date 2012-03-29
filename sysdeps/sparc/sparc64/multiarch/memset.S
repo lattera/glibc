@@ -1,5 +1,5 @@
 /* Multiple versions of memset and bzero
-   Copyright (C) 2010, 2011 Free Software Foundation, Inc.
+   Copyright (C) 2010, 2011, 2012 Free Software Foundation, Inc.
    Contributed by David S. Miller (davem@davemloft.net)
    This file is part of the GNU C Library.
 
@@ -88,10 +88,10 @@ weak_alias (__bzero, bzero)
 # undef weak_alias
 # define weak_alias(a, b)
 
-# undef libc_hidden_builtin_def
-/* IFUNC doesn't work with the hidden functions in a shared library.  */
-# define libc_hidden_builtin_def(name) \
-	.globl __GI_memset; __GI_memset = __memset_ultra1
+libc_hidden_builtin_def (memset)
+
+#undef libc_hidden_builtin_def
+#define libc_hidden_builtin_def(name)
 
 #define memset __memset_ultra1
 #define __bzero __bzero_ultra1
