@@ -1132,22 +1132,23 @@ send_dg(res_state statp,
 		    int ndg = sendmmsg (pfd[0].fd, reqs, 2, MSG_NOSIGNAL);
 		    if (__builtin_expect (ndg == 2, 1))
 		      {
-			assert (reqs[0].msg_len == buflen);
-			assert (reqs[1].msg_len == buflen2);
+			if (reqs[0].msg_len != buflen
+			    || reqs[1].msg_len != buflen2)
+			  goto fail_sendmmsg;
 
 			pfd[0].events = POLLIN;
 			nwritten += 2;
 		      }
 		    else if (ndg == 1 && reqs[0].msg_len == buflen)
 		      goto just_one;
-		    else if (errno == EINTR || errno == EAGAIN)
+		    else if (ndg < 0 && (errno == EINTR || errno == EAGAIN))
 		      goto recompute_resend;
 		    else
 		      {
 #ifndef __ASSUME_SENDMMSG
-			if (have_sendmmsg == 0)
+			if (__builtin_expect (have_sendmmsg == 0, 0))
 			  {
-			    if (errno == ENOSYS)
+			    if (ndg < 0 && errno == ENOSYS)
 			      {
 				have_sendmmsg = -1;
 				goto try_send;
@@ -1156,6 +1157,7 @@ send_dg(res_state statp,
 			  }
 #endif
 
+		      fail_sendmmsg:
 			Perror(statp, stderr, "sendmmsg", errno);
 			goto err_out;
 		      }
