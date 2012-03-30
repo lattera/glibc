@@ -1,3 +1,11 @@
+2012-03-30 Tulio Magno Quites Machado Filho <tuliom@linux.vnet.ibm.com>
+
+	[BZ #13691]
+	* iconvdata/tcvn5712-1.c (FROM_LOOP): Fix a bug when converting strings
+	with only 1 character between 0x0041 and 0x01b0.
+	* wcsmbs/Makefile (tests): Add tst-mbsnrtowcs.
+	* wcsmbs/tst-mbsnrtowcs.c: New file.
+
 2012-03-29  David S. Miller  <davem@davemloft.net>
 
 	* libio/fileops.c (_IO_new_file_xsputn): Don't try to optimize

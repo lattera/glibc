@@ -44,7 +44,7 @@ routines := wcscat wcschr wcscmp wcscpy wcscspn wcsdup wcslen wcsncat \
 strop-tests :=  wcscmp wmemcmp wcslen wcschr wcsrchr wcscpy
 tests := tst-wcstof wcsmbs-tst1 tst-wcsnlen tst-btowc tst-mbrtowc \
 	 tst-wcrtomb tst-wcpncpy tst-mbsrtowcs tst-wchar-h tst-mbrtowc2 \
-	 tst-c16c32-1 \
+	 tst-c16c32-1 tst-mbsnrtowcs \
 	 wcsatcliff $(addprefix test-,$(strop-tests))
 
 include ../Rules
@@ -85,3 +85,4 @@ tst-mbrtowc-ENV = LOCPATH=$(common-objpfx)localedata
 tst-wcrtomb-ENV = LOCPATH=$(common-objpfx)localedata
 tst-mbrtowc2-ENV = LOCPATH=$(common-objpfx)localedata
 tst-c16c32-1-ENV = LOCPATH=$(common-objpfx)localedata
+tst-mbsnrtowcs-ENV = LOCPATH=$(common-objpfx)localedata

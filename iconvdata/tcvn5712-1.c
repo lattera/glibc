@@ -1,5 +1,5 @@
 /* Conversion to and from TCVN5712-1.
-   Copyright (C) 2001, 2002, 2004, 2011 Free Software Foundation, Inc.
+   Copyright (C) 2001-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2001.
 
@@ -379,7 +379,7 @@ static const struct
     last_ch = *statep >> 3;						      \
 									      \
     /* We have to buffer ch if it is a possible match in comp_table_data.  */ \
-    must_buffer_ch = (ch >= 0x0041 && ch <= 0x01b0);			      \
+    must_buffer_ch = last_ch && (ch >= 0x0041 && ch <= 0x01b0);		      \
 									      \
     if (last_ch)							      \
       {									      \
