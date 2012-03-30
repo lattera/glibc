@@ -1171,7 +1171,7 @@ send_dg(res_state statp,
 		    else
 		      sr = send (pfd[0].fd, buf, buflen, MSG_NOSIGNAL);
 
-		    if (sr != buflen) {
+		    if (sr != (nwritten != 0 ? buflen2 : buflen)) {
 		      if (errno == EINTR || errno == EAGAIN)
 			goto recompute_resend;
 		      Perror(statp, stderr, "send", errno);
