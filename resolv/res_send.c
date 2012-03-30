@@ -1013,8 +1013,9 @@ send_dg(res_state statp,
 		seconds /= statp->nscount;
 	if (seconds <= 0)
 		seconds = 1;
-	bool single_request = (statp->options & RES_SNGLKUP) != 0;
 	bool single_request_reopen = (statp->options & RES_SNGLKUPREOP) != 0;
+	bool single_request = (((statp->options & RES_SNGLKUP) != 0)
+			       | single_request_reopen);
 	int save_gotsomewhere = *gotsomewhere;
 
 	int retval;
@@ -1100,24 +1101,89 @@ send_dg(res_state statp,
 	}
 	__set_errno (0);
 	if (pfd[0].revents & POLLOUT) {
-		ssize_t sr;
-		if (nwritten != 0)
-		  sr = send (pfd[0].fd, buf2, buflen2, MSG_NOSIGNAL);
-		else
-		  sr = send (pfd[0].fd, buf, buflen, MSG_NOSIGNAL);
+#ifndef __ASSUME_SENDMMSG
+		static int have_sendmmsg;
+#else
+# define have_sendmmsg 1
+#endif
+		if (have_sendmmsg >= 0 && nwritten == 0 && buf2 != NULL
+		    && !single_request)
+		  {
+		    struct iovec iov[2];
+		    struct mmsghdr reqs[2];
+		    reqs[0].msg_hdr.msg_name = NULL;
+		    reqs[0].msg_hdr.msg_namelen = 0;
+		    reqs[0].msg_hdr.msg_iov = &iov[0];
+		    reqs[0].msg_hdr.msg_iovlen = 1;
+		    iov[0].iov_base = (void *) buf;
+		    iov[0].iov_len = buflen;
+		    reqs[0].msg_hdr.msg_control = NULL;
+		    reqs[0].msg_hdr.msg_controllen = 0;
 
-		if (sr != buflen) {
-			if (errno == EINTR || errno == EAGAIN)
-				goto recompute_resend;
-			Perror(statp, stderr, "send", errno);
+		    reqs[1].msg_hdr.msg_name = NULL;
+		    reqs[1].msg_hdr.msg_namelen = 0;
+		    reqs[1].msg_hdr.msg_iov = &iov[1];
+		    reqs[1].msg_hdr.msg_iovlen = 1;
+		    iov[1].iov_base = (void *) buf2;
+		    iov[1].iov_len = buflen2;
+		    reqs[1].msg_hdr.msg_control = NULL;
+		    reqs[1].msg_hdr.msg_controllen = 0;
+
+		    int ndg = sendmmsg (pfd[0].fd, reqs, 2, MSG_NOSIGNAL);
+		    if (__builtin_expect (ndg == 2, 1))
+		      {
+			assert (reqs[0].msg_len == buflen);
+			assert (reqs[1].msg_len == buflen2);
+
+			pfd[0].events = POLLIN;
+			nwritten += 2;
+		      }
+		    else if (ndg == 1 && reqs[0].msg_len == buflen)
+		      goto just_one;
+		    else if (errno == EINTR || errno == EAGAIN)
+		      goto recompute_resend;
+		    else
+		      {
+#ifndef __ASSUME_SENDMMSG
+			if (have_sendmmsg == 0)
+			  {
+			    if (errno == ENOSYS)
+			      {
+				have_sendmmsg = -1;
+				goto try_send;
+			      }
+			    have_sendmmsg = 1;
+			  }
+#endif
+
+			Perror(statp, stderr, "sendmmsg", errno);
 			goto err_out;
-		}
-		if (nwritten != 0 || buf2 == NULL
-		    || single_request || single_request_reopen)
-		  pfd[0].events = POLLIN;
+		      }
+		  }
 		else
-		  pfd[0].events = POLLIN | POLLOUT;
-		++nwritten;
+		  {
+		    ssize_t sr;
+#ifndef __ASSUME_SENDMMSG
+		  try_send:
+#endif
+		    if (nwritten != 0)
+		      sr = send (pfd[0].fd, buf2, buflen2, MSG_NOSIGNAL);
+		    else
+		      sr = send (pfd[0].fd, buf, buflen, MSG_NOSIGNAL);
+
+		    if (sr != buflen) {
+		      if (errno == EINTR || errno == EAGAIN)
+			goto recompute_resend;
+		      Perror(statp, stderr, "send", errno);
+		      goto err_out;
+		    }
+		  just_one:
+		    if (nwritten != 0 || buf2 == NULL || single_request)
+		      pfd[0].events = POLLIN;
+		    else
+		      pfd[0].events = POLLIN | POLLOUT;
+		    ++nwritten;
+		  }
 		goto wait;
 	} else if (pfd[0].revents & POLLIN) {
 		int *thisanssizp;
@@ -1327,7 +1393,7 @@ send_dg(res_state statp,
 			recvresp2 = 1;
 		/* Repeat waiting if we have a second answer to arrive.  */
 		if ((recvresp1 & recvresp2) == 0) {
-			if (single_request || single_request_reopen) {
+			if (single_request) {
 				pfd[0].events = POLLOUT;
 				if (single_request_reopen) {
 					__res_iclose (statp, false);

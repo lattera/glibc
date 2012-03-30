@@ -1,5 +1,8 @@
 2012-03-30  Ulrich Drepper  <drepper@gmail.com>
 
+	* resolv/res_send.c (send_dg): Use sendmmsg if we have to write two
+	requests to save a system call.
+
 	* sysdeps/unix/sysv/linux/bits/socket.h (struct mmsghdr): Fix up
 	comments for sendmmsg.
 
