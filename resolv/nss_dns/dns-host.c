@@ -1,4 +1,4 @@
-/* Copyright (C) 1996-2004, 2007-2009, 2010, 2012 Free Software Foundation, Inc.
+/* Copyright (C) 1996-2004, 2007-2010, 2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Extended from original form by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -744,6 +744,10 @@ getanswer_r (const querybuf *answer, int anslen, const char *qname, int qtype,
 
       if ((qtype == T_A || qtype == T_AAAA) && type == T_CNAME)
 	{
+	  /* A CNAME could also have a TTL entry.  */
+	  if (ttlp != NULL && ttl < *ttlp)
+	      *ttlp = ttl;
+
 	  if (ap >= &host_data->aliases[MAX_NR_ALIASES - 1])
 	    continue;
 	  n = dn_expand (answer->buf, end_of_message, cp, tbuf, sizeof tbuf);
@@ -905,7 +909,10 @@ getanswer_r (const querybuf *answer, int anslen, const char *qname, int qtype,
 	    {
 	      register int nn;
 
-	      if (ttlp != NULL)
+	      /* We compose a single hostent out of the entire chain of
+	         entries, so the TTL of the hostent is essentially the lowest
+		 TTL in the chain.  */
+	      if (ttlp != NULL && ttl < *ttlp)
 		*ttlp = ttl;
 	      if (canonp != NULL)
 		*canonp = bp;
@@ -1081,6 +1088,11 @@ gaih_getanswer_slice (const querybuf *answer, int anslen, const char *qname,
       if (type == T_CNAME)
 	{
 	  char tbuf[MAXDNAME];
+
+	  /* A CNAME could also have a TTL entry.  */
+	  if (ttlp != NULL && ttl < *ttlp)
+	      *ttlp = ttl;
+
 	  n = dn_expand (answer->buf, end_of_message, cp, tbuf, sizeof tbuf);
 	  if (__builtin_expect (n < 0 || res_hnok (tbuf) == 0, 0))
 	    {
@@ -1161,7 +1173,10 @@ gaih_getanswer_slice (const querybuf *answer, int anslen, const char *qname,
 
       if (*firstp)
 	{
-	  if (ttlp != NULL)
+	  /* We compose a single hostent out of the entire chain of
+	     entries, so the TTL of the hostent is essentially the lowest
+	     TTL in the chain.  */
+	  if (ttlp != NULL && ttl < *ttlp)
 	    *ttlp = ttl;
 
 	  (*pat)->name = canon ?: h_name;

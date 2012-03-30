@@ -1,3 +1,10 @@
+2012-03-30  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	[BZ #13928]
+	* resolv/nss_dns/dns-host.c (getanswer_r): Also consider ttl
+	from a CNAME entry and return the minimum ttl for the query.
+	(gaih_getanswer_slice): Likewise.
+
 2012-03-30  Jeff Law  <law@redhat.com>
 
 	* crypt/md5-crypt.c (__md5_crypt_r): Avoid unbounded alloca uses
