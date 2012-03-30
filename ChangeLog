@@ -5,6 +5,8 @@
 	* crypt/sha256-crypt.c (__sha256_crypt_r): Likewise.
 	* crypt/sha512-crypt.c (__sha512_crypt_r): Likewise.
 
+	* resolv/nss_dns/dns-host.c: Update copyright year.
+
 2012-03-30  Ulrich Drepper  <drepper@gmail.com>
 
 	* resolv/res_send.c (send_dg): Use sendmmsg if we have to write two
