@@ -1,3 +1,10 @@
+2012-03-22  Liubov Dmitrieva  <liubov.dmitrieva@gmail.com>
+
+	* sysdeps/i386/i686/multiarch/memcpy-ssse3.S: Update.
+	Optimize memcpy with prefetch if
+	DATA_CACHE_SIZE_HALF <= len <  SHARED_CACHE_SIZE_HALF and
+	src, dst pointers have unequal 16 byte alignments.
+
 2012-03-30  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	[BZ #13928]
