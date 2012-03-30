@@ -236,11 +236,12 @@ struct msghdr
   };
 
 #ifdef __USE_GNU
-/* For `recvmmsg'.  */
+/* For `recvmmsg' and 'sendmmsg'.  */
 struct mmsghdr
   {
     struct msghdr msg_hdr;	/* Actual message header.  */
-    unsigned int msg_len;	/* Number of received bytes for the entry.  */
+    unsigned int msg_len;	/* Number of received or sent bytes
+				   for the entry.  */
   };
 #endif
 

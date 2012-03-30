@@ -1,4 +1,9 @@
-2012-03-30 Tulio Magno Quites Machado Filho <tuliom@linux.vnet.ibm.com>
+2012-03-30  Ulrich Drepper  <drepper@gmail.com>
+
+	* sysdeps/unix/sysv/linux/bits/socket.h (struct mmsghdr): Fix up
+	comments for sendmmsg.
+
+2012-03-30  Tulio Magno Quites Machado Filho  <tuliom@linux.vnet.ibm.com>
 
 	[BZ #13691]
 	* iconvdata/tcvn5712-1.c (FROM_LOOP): Fix a bug when converting strings
