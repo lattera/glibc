@@ -1,6 +1,6 @@
 /* One way encryption based on MD5 sum.
    Compatible with the behavior of MD5 crypt introduced in FreeBSD 2.0.
-   Copyright (C) 1996, 1997, 1999, 2000, 2001, 2002, 2004, 2009
+   Copyright (C) 1996, 1997, 1999, 2000, 2001, 2002, 2004, 2009, 2012
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
@@ -107,6 +107,8 @@ __md5_crypt_r (key, salt, buffer, buflen)
   char *cp;
   char *copied_key = NULL;
   char *copied_salt = NULL;
+  char *free_key = NULL;
+  size_t alloca_used = 0;
 
   /* Find beginning of salt string.  The prefix should normally always
      be present.  Just in case it is not.  */
@@ -119,7 +121,17 @@ __md5_crypt_r (key, salt, buffer, buflen)
 
   if ((key - (char *) 0) % __alignof__ (md5_uint32) != 0)
     {
-      char *tmp = (char *) alloca (key_len + __alignof__ (md5_uint32));
+      char *tmp;
+
+      if (__libc_use_alloca (alloca_used + key_len + __alignof__ (md5_uint32)))
+	tmp = (char *) alloca (key_len + __alignof__ (md5_uint32));
+      else
+	{
+	  free_key = tmp = (char *) malloc (key_len + __alignof__ (md5_uint32));
+	  if (tmp == NULL)
+	    return NULL;
+	}
+
       key = copied_key =
 	memcpy (tmp + __alignof__ (md5_uint32)
 		- (tmp - (char *) 0) % __alignof__ (md5_uint32),
@@ -141,7 +153,10 @@ __md5_crypt_r (key, salt, buffer, buflen)
   /* Initialize libfreebl3.  */
   NSSLOWInitContext *nss_ictx = NSSLOW_Init ();
   if (nss_ictx == NULL)
-    return NULL;
+    {
+      free (free_key);
+      return NULL;
+    }
   NSSLOWHASHContext *nss_ctx = NULL;
   NSSLOWHASHContext *nss_alt_ctx = NULL;
 #else
@@ -295,6 +310,7 @@ __md5_crypt_r (key, salt, buffer, buflen)
   if (copied_salt != NULL)
     memset (copied_salt, '\0', salt_len);
 
+  free (free_key);
   return buffer;
 }
 

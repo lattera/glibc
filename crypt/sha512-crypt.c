@@ -1,5 +1,5 @@
 /* One way encryption based on SHA512 sum.
-   Copyright (C) 2007, 2009 Free Software Foundation, Inc.
+   Copyright (C) 2007, 2009, 2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2007.
 
@@ -122,6 +122,9 @@ __sha512_crypt_r (key, salt, buffer, buflen)
   /* Default number of rounds.  */
   size_t rounds = ROUNDS_DEFAULT;
   bool rounds_custom = false;
+  size_t alloca_used = 0;
+  char *free_key = NULL;
+  char *free_pbytes = NULL;
 
   /* Find beginning of salt string.  The prefix should normally always
      be present.  Just in case it is not.  */
@@ -148,7 +151,17 @@ __sha512_crypt_r (key, salt, buffer, buflen)
 
   if ((key - (char *) 0) % __alignof__ (uint64_t) != 0)
     {
-      char *tmp = (char *) alloca (key_len + __alignof__ (uint64_t));
+      char *tmp;
+
+      if (__libc_use_alloca (alloca_used + key_len + __alignof__ (uint64_t)))
+	tmp = alloca_account (key_len + __alignof__ (uint64_t), alloca_used);
+      else
+	{
+	  free_key = tmp = (char *) malloc (key_len + __alignof__ (uint64_t));
+	  if (tmp == NULL)
+	    return NULL;
+	}
+
       key = copied_key =
 	memcpy (tmp + __alignof__ (uint64_t)
 		- (tmp - (char *) 0) % __alignof__ (uint64_t),
@@ -170,7 +183,10 @@ __sha512_crypt_r (key, salt, buffer, buflen)
   /* Initialize libfreebl3.  */
   NSSLOWInitContext *nss_ictx = NSSLOW_Init ();
   if (nss_ictx == NULL)
-    return NULL;
+    {
+      free (free_key);
+      return NULL;
+    }
   NSSLOWHASHContext *nss_ctx = NULL;
   NSSLOWHASHContext *nss_alt_ctx = NULL;
 #else
@@ -233,7 +249,18 @@ __sha512_crypt_r (key, salt, buffer, buflen)
   sha512_finish_ctx (&alt_ctx, nss_alt_ctx, temp_result);
 
   /* Create byte sequence P.  */
-  cp = p_bytes = alloca (key_len);
+  if (__libc_use_alloca (alloca_used + key_len))
+    cp = p_bytes = (char *) alloca (key_len);
+  else
+    {
+      free_pbytes = cp = p_bytes = (char *)malloc (key_len);
+      if (free_pbytes == NULL)
+	{
+	  free (free_key);
+	  return NULL;
+	}
+    }
+
   for (cnt = key_len; cnt >= 64; cnt -= 64)
     cp = mempcpy (cp, temp_result, 64);
   memcpy (cp, temp_result, cnt);
@@ -373,6 +400,8 @@ __sha512_crypt_r (key, salt, buffer, buflen)
   if (copied_salt != NULL)
     memset (copied_salt, '\0', salt_len);
 
+  free (free_key);
+  free (free_pbytes);
   return buffer;
 }
 

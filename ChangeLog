@@ -1,3 +1,10 @@
+2012-03-30  Jeff Law  <law@redhat.com>
+
+	* crypt/md5-crypt.c (__md5_crypt_r): Avoid unbounded alloca uses
+	due to long keys.
+	* crypt/sha256-crypt.c (__sha256_crypt_r): Likewise.
+	* crypt/sha512-crypt.c (__sha512_crypt_r): Likewise.
+
 2012-03-30  Ulrich Drepper  <drepper@gmail.com>
 
 	* resolv/res_send.c (send_dg): Use sendmmsg if we have to write two
