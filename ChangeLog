@@ -1,3 +1,7 @@
+2012-03-31  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* resolv/nss_dns/dns-host.c: Merge copyright years.
+
 2012-03-22  Liubov Dmitrieva  <liubov.dmitrieva@gmail.com>
 
 	* sysdeps/i386/i686/multiarch/memcpy-ssse3.S: Update.
