@@ -1120,7 +1120,7 @@ msgstr "Обязательные аргументы для длинных клю
 
 #: elf/sotruss.ksh:56
 msgid "%s: option requires an argument -- '%s'\\n"
-msgstr "%s: ключ должен использоваться с аргументом — «%c»\\n"
+msgstr "%s: ключ должен использоваться с аргументом — «%s»\\n"
 
 #: elf/sotruss.ksh:57 elf/sotruss.ksh:68 elf/sotruss.ksh:134
 msgid "Try \\`%s --help' or \\`%s --usage' for more information.\\n"

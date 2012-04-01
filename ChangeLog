@@ -1,3 +1,7 @@
+2012-04-01  Ulrich Drepper  <drepper@gmail.com>
+
+	* po/ru.po: Update from translation team.
+
 2012-03-31  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* resolv/nss_dns/dns-host.c: Merge copyright years.
