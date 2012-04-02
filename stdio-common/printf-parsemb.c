@@ -87,12 +87,15 @@ __parse_one_specmb (const UCHAR_T *format, size_t posn,
 
       n = read_int (&format);
 
-      if (n > 0 && *format == L_('$'))
+      if (n != 0 && *format == L_('$'))
 	/* Is positional parameter.  */
 	{
 	  ++format;		/* Skip the '$'.  */
-	  spec->data_arg = n - 1;
-	  *max_ref_arg = MAX (*max_ref_arg, n);
+	  if (n != -1)
+	    {
+	      spec->data_arg = n - 1;
+	      *max_ref_arg = MAX (*max_ref_arg, n);
+	    }
 	}
       else
 	/* Oops; that was actually the width and/or 0 padding flag.
@@ -160,10 +163,13 @@ __parse_one_specmb (const UCHAR_T *format, size_t posn,
 	  /* The width argument might be found in a positional parameter.  */
 	  n = read_int (&format);
 
-	  if (n > 0 && *format == L_('$'))
+	  if (n != 0 && *format == L_('$'))
 	    {
-	      spec->width_arg = n - 1;
-	      *max_ref_arg = MAX (*max_ref_arg, n);
+	      if (n != -1)
+		{
+		  spec->width_arg = n - 1;
+		  *max_ref_arg = MAX (*max_ref_arg, n);
+		}
 	      ++format;		/* Skip '$'.  */
 	    }
 	}
@@ -177,9 +183,13 @@ __parse_one_specmb (const UCHAR_T *format, size_t posn,
 	}
     }
   else if (ISDIGIT (*format))
-    /* Constant width specification.  */
-    spec->info.width = read_int (&format);
+    {
+      int n = read_int (&format);
 
+      /* Constant width specification.  */
+      if (n != -1)
+	spec->info.width = n;
+    }
   /* Get the precision.  */
   spec->prec_arg = -1;
   /* -1 means none given; 0 means explicit 0.  */
@@ -196,10 +206,13 @@ __parse_one_specmb (const UCHAR_T *format, size_t posn,
 	    {
 	      n = read_int (&format);
 
-	      if (n > 0 && *format == L_('$'))
+	      if (n != 0 && *format == L_('$'))
 		{
-		  spec->prec_arg = n - 1;
-		  *max_ref_arg = MAX (*max_ref_arg, n);
+		  if (n != -1)
+		    {
+		      spec->prec_arg = n - 1;
+		      *max_ref_arg = MAX (*max_ref_arg, n);
+		    }
 		  ++format;
 		}
 	    }
@@ -213,7 +226,12 @@ __parse_one_specmb (const UCHAR_T *format, size_t posn,
 	    }
 	}
       else if (ISDIGIT (*format))
-	spec->info.prec = read_int (&format);
+	{
+	  int n = read_int (&format);
+
+	  if (n != -1)
+	    spec->info.prec = n;
+	}
       else
 	/* "%.?" is treated like "%.0?".  */
 	spec->info.prec = 0;

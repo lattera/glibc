@@ -1,3 +1,19 @@
+2012-04-02  David S. Miller  <davem@davemloft.net>
+
+	With help from Paul Eggert, Carlos O'Donell, and Roland McGrath.
+	* stdio-common/printf-parse.h (read_int): Change return type to
+	'int', return -1 on INT_MAX overflow.
+	* stdio-common/vfprintf.c (vfprintf): Validate width and precision
+	against overflow of INT_MAX.  Set errno to EOVERFLOW when 'done'
+	overflows INT_MAX.  Check for overflow of in-format-string precision
+	values properly.  Use EOVERFLOW rather than ERANGE throughout.  Use
+	SIZE_MAX not INT_MAX for integer overflow test.
+	* stdio-common/printf-parsemb.c: If read_int signals an overflow,
+	skip the construct in the format string but do not record anything.
+	* stdio-common/bug22.c: Adjust to test both width/prevision
+	INT_MAX overflow as well as total length INT_MAX overflow.  Check
+	explicitly for proper errno values.
+
 2012-04-02  Thomas Schwinge  <thomas@codesourcery.com>
 
 	* string/test-memcmp.c [! WIDE]: #include <limits.h> for CHAR_MIN,

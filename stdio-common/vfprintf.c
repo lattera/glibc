@@ -67,10 +67,10 @@
   do {									      \
     unsigned int _val = val;						      \
     assert ((unsigned int) done < (unsigned int) INT_MAX);		      \
-    if (__builtin_expect ((unsigned int) INT_MAX - (unsigned int) done	      \
-			  < _val, 0))					      \
+    if (__builtin_expect (INT_MAX - done < _val, 0))			      \
       {									      \
 	done = -1;							      \
+	 __set_errno (EOVERFLOW);					      \
 	goto all_done;							      \
       }									      \
     done += _val;							      \
@@ -141,12 +141,17 @@
   do									      \
     {									      \
       assert ((size_t) done <= (size_t) INT_MAX);			      \
-      if ((size_t) PUT (s, (String), (Len)) != (size_t) (Len)		      \
-	  || (size_t) INT_MAX - (size_t) done < (size_t) (Len))		      \
+      if ((size_t) PUT (s, (String), (Len)) != (size_t) (Len))		      \
 	{								      \
 	  done = -1;							      \
 	  goto all_done;						      \
 	}								      \
+      if (__builtin_expect (INT_MAX - done < (Len), 0))			      \
+      {									      \
+	done = -1;							      \
+	 __set_errno (EOVERFLOW);					      \
+	goto all_done;							      \
+      }									      \
       done += (Len);							      \
     }									      \
   while (0)
@@ -1435,10 +1440,21 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 	const UCHAR_T *tmp;	/* Temporary value.  */
 
 	tmp = ++f;
-	if (ISDIGIT (*tmp) && read_int (&tmp) && *tmp == L_('$'))
-	  /* The width comes from a positional parameter.  */
-	  goto do_positional;
+	if (ISDIGIT (*tmp))
+	  {
+	    int pos = read_int (&tmp);
 
+	    if (pos == -1)
+	      {
+		__set_errno (EOVERFLOW);
+		done = -1;
+		goto all_done;
+	      }
+
+	    if (pos && *tmp == L_('$'))
+	      /* The width comes from a positional parameter.  */
+	      goto do_positional;
+	  }
 	width = va_arg (ap, int);
 
 	/* Negative width means left justified.  */
@@ -1449,9 +1465,9 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 	    left = 1;
 	  }
 
-	if (__builtin_expect (width >= (size_t) -1 / sizeof (CHAR_T) - 32, 0))
+	if (__builtin_expect (width >= INT_MAX / sizeof (CHAR_T) - 32, 0))
 	  {
-	    __set_errno (ERANGE);
+	    __set_errno (EOVERFLOW);
 	    done = -1;
 	    goto all_done;
 	  }
@@ -1481,9 +1497,10 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
     LABEL (width):
       width = read_int (&f);
 
-      if (__builtin_expect (width >= (size_t) -1 / sizeof (CHAR_T) - 32, 0))
+      if (__builtin_expect (width == -1
+			    || width >= INT_MAX / sizeof (CHAR_T) - 32, 0))
 	{
-	  __set_errno (ERANGE);
+	  __set_errno (EOVERFLOW);
 	  done = -1;
 	  goto all_done;
 	}
@@ -1518,10 +1535,21 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 	  const UCHAR_T *tmp;	/* Temporary value.  */
 
 	  tmp = ++f;
-	  if (ISDIGIT (*tmp) && read_int (&tmp) > 0 && *tmp == L_('$'))
-	    /* The precision comes from a positional parameter.  */
-	    goto do_positional;
+	  if (ISDIGIT (*tmp))
+	    {
+	      int pos = read_int (&tmp);
 
+	      if (pos == -1)
+		{
+		  __set_errno (EOVERFLOW);
+		  done = -1;
+		  goto all_done;
+		}
+
+	      if (pos && *tmp == L_('$'))
+		/* The precision comes from a positional parameter.  */
+		goto do_positional;
+	    }
 	  prec = va_arg (ap, int);
 
 	  /* If the precision is negative the precision is omitted.  */
@@ -1529,15 +1557,26 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 	    prec = -1;
 	}
       else if (ISDIGIT (*f))
-	prec = read_int (&f);
+	{
+	  prec = read_int (&f);
+
+	  /* The precision was specified in this case as an extremely
+	     large positive value.  */
+	  if (prec == -1)
+	    {
+	      __set_errno (EOVERFLOW);
+	      done = -1;
+	      goto all_done;
+	    }
+	}
       else
 	prec = 0;
       if (prec > width
 	  && prec > sizeof (work_buffer) / sizeof (work_buffer[0]) - 32)
 	{
-	  if (__builtin_expect (prec >= (size_t) -1 / sizeof (CHAR_T) - 32, 0))
+	  if (__builtin_expect (prec >= INT_MAX / sizeof (CHAR_T) - 32, 0))
 	    {
-	      __set_errno (ERANGE);
+	      __set_errno (EOVERFLOW);
 	      done = -1;
 	      goto all_done;
 	    }
@@ -1710,9 +1749,9 @@ do_positional:
 		     + sizeof (*args_type));
 
     /* Check for potential integer overflow.  */
-    if (__builtin_expect (nargs > SIZE_MAX / bytes_per_arg, 0))
+    if (__builtin_expect (nargs > INT_MAX / bytes_per_arg, 0))
       {
-	 __set_errno (ERANGE);
+	 __set_errno (EOVERFLOW);
 	 done = -1;
 	 goto all_done;
       }

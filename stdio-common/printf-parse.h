@@ -68,16 +68,27 @@ union printf_arg
 #ifndef DONT_NEED_READ_INT
 /* Read a simple integer from a string and update the string pointer.
    It is assumed that the first character is a digit.  */
-static unsigned int
+static int
 read_int (const UCHAR_T * *pstr)
 {
-  unsigned int retval = **pstr - L_('0');
+  int retval = **pstr - L_('0');
 
   while (ISDIGIT (*++(*pstr)))
-    {
-      retval *= 10;
-      retval += **pstr - L_('0');
-    }
+    if (retval >= 0)
+      {
+	if (INT_MAX / 10 < retval)
+	  retval = -1;
+	else
+	  {
+	    int digit = **pstr - L_('0');
+
+	    retval *= 10;
+	    if (INT_MAX - digit < retval)
+	      retval = -1;
+	    else
+	      retval += digit;
+	  }
+      }
 
   return retval;
 }
