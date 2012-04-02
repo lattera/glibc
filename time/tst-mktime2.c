@@ -1,4 +1,6 @@
 /* Test program from Paul Eggert and Tony Leneis.  */
+
+#include <limits.h>
 #include <time.h>
 #include <stdlib.h>
 #include <unistd.h>

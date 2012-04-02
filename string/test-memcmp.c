@@ -1,5 +1,5 @@
 /* Test and measure memcmp functions.
-   Copyright (C) 1999, 2002, 2003, 2005, 2011 Free Software Foundation, Inc.
+   Copyright (C) 1999-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Jakub Jelinek <jakub@redhat.com>, 1999.
    Added wmemcmp support by Liubov Dmitrieva <liubov.dmitrieva@gmail.com>, 2011.
@@ -44,6 +44,8 @@ simple_wmemcmp (const wchar_t *s1, const wchar_t *s2, size_t n)
   return ret;
 }
 #else
+# include <limits.h>
+
 # define MEMCMP memcmp
 # define MEMCPY memcpy
 # define SIMPLE_MEMCMP simple_memcmp

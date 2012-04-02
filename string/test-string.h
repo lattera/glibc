@@ -1,5 +1,5 @@
 /* Test and measure string and memory functions.
-   Copyright (C) 1999, 2002, 2004, 2008, 2011 Free Software Foundation, Inc.
+   Copyright (C) 1999-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Jakub Jelinek <jakub@redhat.com>, 1999.
 
@@ -44,6 +44,7 @@ extern impl_t __start_impls[], __stop_impls[];
 #include <stdlib.h>
 #include <string.h>
 #include <sys/mman.h>
+#include <sys/param.h>
 #include <unistd.h>
 #include <fcntl.h>
 #include <error.h>
