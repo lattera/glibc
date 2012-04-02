@@ -1,3 +1,9 @@
+2012-04-02 Tulio Magno Quites Machado Filho <tuliom@linux.vnet.ibm.com>
+
+	[BZ #13691]
+	* iconvdata/tcvn5712-1.c (FROM_LOOP): Test end of input using
+	inptr and inend, rather than using last_ch.
+
 2012-04-02  David S. Miller  <davem@davemloft.net>
 
 	With help from Paul Eggert, Carlos O'Donell, and Roland McGrath.
