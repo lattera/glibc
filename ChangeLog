@@ -1,5 +1,12 @@
 2012-04-28  Andreas Schwab  <schwab@linux-m68k.org>
 
+	[BZ #13941]
+	* sysdeps/ieee754/ldbl-128ibm/ldbl2mpn.c
+	(__mpn_extract_long_double): Use DBL_MIN_EXP instead of
+	LDBL_MIN_EXP.
+	* stdio-common/Makefile (tests): Add tst-sprintf3.
+	* stdio-common/tst-sprintf3.c: New file.
+
 	* elf/Makefile ($(objpfx)tst-leaks1-mem, $(objpfx)noload-mem)
 	($(objpfx)tst-unused-dep.out): Don't run when cross-compiling.
 

@@ -56,7 +56,7 @@ tests := tstscanf test_rdwr test-popen tstgetln test-fseek \
 	 tst-fwrite bug16 bug17 tst-swscanf tst-sprintf2 bug18 bug18a \
 	 bug19 bug19a tst-popen2 scanf13 scanf14 scanf15 bug20 bug21 bug22 \
 	 scanf16 scanf17 tst-setvbuf1 tst-grouping bug23 bug24 \
-	 bug-vfprintf-nargs tst-long-dbl-fphex tst-fphex-wide
+	 bug-vfprintf-nargs tst-long-dbl-fphex tst-fphex-wide tst-sprintf3
 
 test-srcs = tst-unbputc tst-printf
 

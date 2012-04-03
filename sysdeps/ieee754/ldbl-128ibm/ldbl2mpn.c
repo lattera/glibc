@@ -1,5 +1,4 @@
-/* Copyright (C) 1995,1996,1997,1998,1999,2002,2003,2006
-	Free Software Foundation, Inc.
+/* Copyright (C) 1995-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -104,7 +103,10 @@ __mpn_extract_long_double (mp_ptr res_ptr, mp_size_t size,
       else
 	{
 	  /* It is a denormal number, meaning it has no implicit leading
-  	     one bit, and its exponent is in fact the format minimum.  */
+	     one bit, and its exponent is in fact the format minimum.  We
+	     use DBL_MIN_EXP instead of LDBL_MIN_EXP below because the
+	     latter describes the properties of both parts together, but
+	     the exponent is computed from the high part only.  */
 	  int cnt;
 
 #if N == 2
@@ -115,7 +117,7 @@ __mpn_extract_long_double (mp_ptr res_ptr, mp_size_t size,
 	      res_ptr[N - 1] = res_ptr[N - 1] << cnt
 			       | (res_ptr[0] >> (BITS_PER_MP_LIMB - cnt));
 	      res_ptr[0] <<= cnt;
-	      *expt = LDBL_MIN_EXP - 1 - cnt;
+	      *expt = DBL_MIN_EXP - 1 - cnt;
 	    }
 	  else
 	    {
@@ -130,7 +132,7 @@ __mpn_extract_long_double (mp_ptr res_ptr, mp_size_t size,
 		  res_ptr[N - 1] = res_ptr[0] >> (NUM_LEADING_ZEROS - cnt);
 		  res_ptr[0] <<= BITS_PER_MP_LIMB - (NUM_LEADING_ZEROS - cnt);
 		}
-	      *expt = LDBL_MIN_EXP - 1
+	      *expt = DBL_MIN_EXP - 1
 		- (BITS_PER_MP_LIMB - NUM_LEADING_ZEROS) - cnt;
 	    }
 #else
@@ -161,7 +163,7 @@ __mpn_extract_long_double (mp_ptr res_ptr, mp_size_t size,
 
 	  for (; k >= 0; k--)
 	    res_ptr[k] = 0;
-	  *expt = LDBL_MIN_EXP - 1 - l * BITS_PER_MP_LIMB - cnt;
+	  *expt = DBL_MIN_EXP - 1 - l * BITS_PER_MP_LIMB - cnt;
 #endif
 	}
     }
