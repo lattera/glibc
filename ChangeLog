@@ -1,5 +1,8 @@
 2012-04-03  Andreas Jaeger  <aj@suse.de>
 
+	[BZ # 13938]
+	* manual/setjmp.texi (System V contexts): Fix sentence.
+
 	[BZ #13926]
 	* sysdeps/i386/bits/byteswap.h [!__GNUC__](__bswap_constant_64):
 	New macro for this case.

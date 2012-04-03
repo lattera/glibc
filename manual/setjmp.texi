@@ -216,13 +216,14 @@ blocked signals.
 @node System V contexts,, Non-Local Exits and Signals, Non-Local Exits
 @section Complete Context Control
 
-The Unix standard one more set of function to control the execution path
-and these functions are more powerful than those discussed in this
-chapter so far.  These function were part of the original @w{System V}
-API and by this route were added to the Unix API.  Beside on branded
-Unix implementations these interfaces are not widely available.  Not all
-platforms and/or architectures @theglibc{} is available on provide
-this interface.  Use @file{configure} to detect the availability.
+The Unix standard provides one more set of functions to control the
+execution path and these functions are more powerful than those
+discussed in this chapter so far.  These function were part of the
+original @w{System V} API and by this route were added to the Unix
+API.  Beside on branded Unix implementations these interfaces are not
+widely available.  Not all platforms and/or architectures @theglibc{}
+is available on provide this interface.  Use @file{configure} to
+detect the availability.
 
 Similar to the @code{jmp_buf} and @code{sigjmp_buf} types used for the
 variables to contain the state of the @code{longjmp} functions the
