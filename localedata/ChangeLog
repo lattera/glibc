@@ -1,3 +1,8 @@
+2012-04-04  Dmitry V. Levin  <ldv@altlinux.org>
+
+	[BZ #10346]
+	* locales/ru_UA (LC_TIME): Add first_weekday and first_workday.
+
 2012-03-09  Paul Eggert  <eggert@cs.ucla.edu>
 
 	[BZ #13673]
