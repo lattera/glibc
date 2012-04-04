@@ -1,5 +1,5 @@
 /* Machine-specific definition for spin locks.  i386 version.
-   Copyright (C) 1994,1997,2007,2008 Free Software Foundation, Inc.
+   Copyright (C) 1994-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,7 +21,7 @@
 
 /* The type of a spin lock variable.  */
 
-typedef __volatile int __spin_lock_t;
+typedef volatile int __spin_lock_t;
 
 /* Value to initialize `__spin_lock_t' variables to.  */
 

@@ -1,6 +1,12 @@
+2012-04-05  Thomas Schwinge  <thomas@codesourcery.com>
+
+	[BZ #13553]
+	* sysdeps/mach/i386/machine-lock.h: Use volatile instead of __volatile.
+	* sysdeps/mach/powerpc/machine-lock.h: Likewise.
+
 2012-04-03  Andreas Jaeger  <aj@suse.de>
 
-	[BZ # 13938]
+	[BZ #13938]
 	* manual/setjmp.texi (System V contexts): Fix sentence.
 
 	[BZ #13926]
