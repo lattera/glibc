@@ -1,5 +1,5 @@
 /* Map in a shared object's segments from the file.
-   Copyright (C) 1995-2007, 2009, 2010, 2011 Free Software Foundation, Inc.
+   Copyright (C) 1995-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -2194,7 +2194,8 @@ _dl_map_object (struct link_map *loader, const char *name,
 
       if (fd == -1
 	  && (__builtin_expect (! (mode & __RTLD_SECURE), 1)
-	      || ! INTUSE(__libc_enable_secure)))
+	      || ! INTUSE(__libc_enable_secure))
+	  && __builtin_expect (GLRO(dl_inhibit_cache) == 0, 1))
 	{
 	  /* Check the list of libraries in the file /etc/ld.so.cache,
 	     for compatibility with Linux's ldconfig program.  */

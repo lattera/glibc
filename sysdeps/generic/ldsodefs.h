@@ -1,5 +1,5 @@
 /* Run-time dynamic linker data structures for loaded ELF shared objects.
-   Copyright (C) 1995-2009, 2010, 2011, 2012 Free Software Foundation, Inc.
+   Copyright (C) 1995-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -559,6 +559,9 @@ struct rtld_global_ro
 
   /* Cached value of `getpagesize ()'.  */
   EXTERN size_t _dl_pagesize;
+
+  /* Do we read from ld.so.cache?  */
+  EXTERN int _dl_inhibit_cache;
 
   /* Copy of the content of `_dl_main_searchlist' at startup time.  */
   EXTERN struct r_scope_elem _dl_initial_searchlist;

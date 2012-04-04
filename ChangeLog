@@ -1,3 +1,13 @@
+2012-04-10  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* elf/dl-support.c (_dl_inhibit_cache): New variable.
+	* elf/rtld.c (_rtld_global_ro): New member _dl_inhibit_cache.
+	(dl_main): Handle --inhibit-cache.
+	* sysdeps/generic/ldsodefs.h (struct rtld_global_ro): New member
+	_dl_inhibit_cache.
+	* elf/dl-load.c (_dl_map_object): Use it.
+	* elf/Makefile: Define SYSCONFDIR when building rtld.c.
+
 2012-04-09  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #13872]

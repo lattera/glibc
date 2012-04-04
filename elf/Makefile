@@ -1,4 +1,4 @@
-# Copyright (C) 1995-2011, 2012 Free Software Foundation, Inc.
+# Copyright (C) 1995-2012 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -419,6 +419,7 @@ CFLAGS-ldconfig.c = $(SYSCONF-FLAGS) -D'LIBDIR="$(libdir)"' \
 		    -D'SLIBDIR="$(slibdir)"' -DIS_IN_ldconfig=1
 CFLAGS-dl-cache.c = $(SYSCONF-FLAGS)
 CFLAGS-cache.c = $(SYSCONF-FLAGS)
+CFLAGS-rtld.c = $(SYSCONF-FLAGS)
 
 CPPFLAGS-.os += $(if $(filter $(@F),$(patsubst %,%.os,$(all-rtld-routines))),-DNOT_IN_libc=1 -DIS_IN_rtld=1)
 
