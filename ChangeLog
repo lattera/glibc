@@ -1,3 +1,9 @@
+2012-04-05  Simon Josefsson  <simon@josefsson.org>
+
+	[BZ #12340]
+	* sysdeps/mach/hurd/ttyname_r.c (__ttyname_r): Return ERANGE instead of
+	EINVAL when BUFLEN is too smal.
+
 2012-04-05  Thomas Schwinge  <thomas@codesourcery.com>
 
 	[BZ #13553]
