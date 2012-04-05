@@ -1,6 +1,6 @@
 /* memset/bzero -- set memory area to CH/0
    Optimized version for x86-64.
-   Copyright (C) 2002-2005, 2007, 2008, 2011 Free Software Foundation, Inc.
+   Copyright (C) 2002-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -52,7 +52,7 @@ L(ck2):
 	imul   %r9,%rdx
 L(now_dw_aligned):
 	cmp    $0x90,%r8
-	jg     L(ck_mem_ops_method)
+	ja     L(ck_mem_ops_method)
 L(now_dw_aligned_small):
 	add    %r8,%rdi
 #ifndef PIC
@@ -604,7 +604,7 @@ L(aligned_now):
 	 punpcklqdq %xmm0,%xmm0
 
 	 cmp    $0xb0,%r8 # 176
-	 jge    L(byte32sse2_pre)
+	 jae    L(byte32sse2_pre)
 
 	 add    %r8,%rdi
 # ifndef PIC
@@ -864,7 +864,7 @@ L(byte32sse2_pre):
 
 	mov    __x86_64_shared_cache_size(%rip),%r9d  # The largest cache size
 	cmp    %r9,%r8
-	jg     L(sse2_nt_move_pre)
+	ja     L(sse2_nt_move_pre)
 	#jmp    L(byte32sse2)
 	.balign     16
 L(byte32sse2):
@@ -880,7 +880,7 @@ L(byte32sse2):
 	movdqa %xmm0,0x70(%rdi)
 
 	lea    0x80(%rdi),%rdi
-	jge    L(byte32sse2)
+	jae    L(byte32sse2)
 	add    %r8,%rdi
 # ifndef PIC
 	lea    L(SSExDx)(%rip),%r11
@@ -914,7 +914,7 @@ L(sse2_nt_move):
 	movntdq %xmm0,0x70(%rdi)
 
 	lea    0x80(%rdi),%rdi
-	jge    L(sse2_nt_move)
+	jae    L(sse2_nt_move)
 	sfence
 	add    %r8,%rdi
 # ifndef PIC

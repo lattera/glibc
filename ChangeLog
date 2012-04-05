@@ -1,3 +1,8 @@
+2012-04-05  Michael Matz  <matz@suse.de>
+
+	[BZ #13592]
+	* sysdeps/x86_64/memset.S: Fix size paramater comparisions.
+
 2012-04-05  Andreas Jaeger  <aj@suse.de>
 
 	[BZ #13908]
