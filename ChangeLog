@@ -1,5 +1,10 @@
 2012-04-05  Nobuhiro Iwamatsu  <iwamatsu@nigauri.org>
 
+	* sysdeps/sh/sh4/fpu/fesetround.c (fesetround): Fix return value
+	which ROUND is no valid rounding mode.
+
+2012-04-05  Nobuhiro Iwamatsu  <iwamatsu@nigauri.org>
+
 	* sysdeps/sh/sh4/fpu/fegetenv.c (fegetenv): Set fpscr register which
 	read again.
 	* sysdeps/sh/sh4/fpu/ftestexcept.c: Likewise.
