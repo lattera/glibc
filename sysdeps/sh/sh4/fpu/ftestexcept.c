@@ -26,6 +26,9 @@ fetestexcept (int excepts)
 
   /* Get current exceptions.  */
   _FPU_GETCW (temp);
+  /* When read fpscr, this was initialized.
+     We need to rewrite value of temp. */
+  _FPU_SETCW (temp);
 
   return temp & excepts & FE_ALL_EXCEPT;
 }
