@@ -1,3 +1,8 @@
+2012-04-04  Jeff Law  <law@redhat.com>
+
+	[BZ #6770]
+	* locales/ca_ES (LC_TIME): Add first_weekday and first_workday.
+
 2012-04-04  Petr Baudis  <pasky@ucw.cz>
 
 	[BZ #6770]
