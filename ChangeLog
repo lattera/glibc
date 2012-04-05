@@ -1,3 +1,15 @@
+2012-04-05  Nobuhiro Iwamatsu  <iwamatsu@nigauri.org>
+
+	* sysdeps/sh/sh4/fpu/fraiseexcpt.c (feraiseexcept): Produce
+	an exception using FPU order intentionally.
+
+2012-04-05  Nobuhiro Iwamatsu  <iwamatsu@nigauri.org>
+
+	* sysdeps/sh/sh4/fpu/fedisblxcpt.c: New file.
+	* sysdeps/sh/sh4/fpu/feenablxcpt.c: New file.
+	* sysdeps/sh/sh4/fpu/fegetexcept.c: New file.
+	* sysdeps/sh/sh4/fpu/feupdateenv.c: New file.
+
 2012-04-05  Simon Josefsson  <simon@josefsson.org>
 
 	[BZ #12340]
