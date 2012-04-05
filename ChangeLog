@@ -1,5 +1,16 @@
 2012-04-05  David S. Miller  <davem@davemloft.net>
 
+	* elf/dynamic-link.h (_ELF_DYNAMIC_DO_RELOC): Reduce down to one
+	definition.
+	* sysdeps/powerpc/powerpc32/dl-machine.h
+	(ELF_MACHINE_PLTREL_OVERLAP): Delete.
+	* sysdeps/s390/s390-32/dl-machine.h
+	(ELF_MACHINE_PLTREL_OVERLAP): Likewise.
+	* sysdeps/sparc/sparc32/dl-machine.h
+	(ELF_MACHINE_PLTREL_OVERLAP): Likewise.
+	* sysdeps/sparc/sparc64/dl-machine.h
+	(ELF_MACHINE_PLTREL_OVERLAP): Likewise.
+
 	* elf/rtld.c (dl_main): If DL_DEBUG_UNUSED is enabled, turn off
 	lazy binding.
 	* elf/dl-lookup.c (_dl_lookup_symbol_x): If DL_DEBUG_UNUSED, ignore

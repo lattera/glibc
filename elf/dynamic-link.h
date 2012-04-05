@@ -251,53 +251,12 @@ elf_get_dynamic_info (struct link_map *l, ElfW(Dyn) *temp)
 
 /* On some machines, notably SPARC, DT_REL* includes DT_JMPREL in its
    range.  Note that according to the ELF spec, this is completely legal!
-   But conditionally define things so that on machines we know this will
-   not happen we do something more optimal.  */
 
-# ifdef ELF_MACHINE_PLTREL_OVERLAP
-#  define _ELF_DYNAMIC_DO_RELOC(RELOC, reloc, map, do_lazy, skip_ifunc, test_rel) \
-  do {									      \
-    struct { ElfW(Addr) start, size;					      \
-	     __typeof (((ElfW(Dyn) *) 0)->d_un.d_val) nrelative; int lazy; }  \
-    ranges[3];								      \
-    int ranges_index;							      \
-									      \
-    ranges[0].lazy = ranges[2].lazy = 0;				      \
-    ranges[1].lazy = 1;							      \
-    ranges[0].size = ranges[1].size = ranges[2].size = 0;		      \
-    ranges[0].nrelative = ranges[1].nrelative = ranges[2].nrelative = 0;      \
-									      \
-    if ((map)->l_info[DT_##RELOC])					      \
-      {									      \
-	ranges[0].start = D_PTR ((map), l_info[DT_##RELOC]);		      \
-	ranges[0].size = (map)->l_info[DT_##RELOC##SZ]->d_un.d_val;	      \
-	if (map->l_info[VERSYMIDX (DT_##RELOC##COUNT)] != NULL)		      \
-	  ranges[0].nrelative						      \
-	    = MIN (map->l_info[VERSYMIDX (DT_##RELOC##COUNT)]->d_un.d_val,    \
-		   ranges[0].size / sizeof (ElfW(reloc)));		      \
-      }									      \
-									      \
-    if ((do_lazy)							      \
-	&& (map)->l_info[DT_PLTREL]					      \
-	&& (!test_rel || (map)->l_info[DT_PLTREL]->d_un.d_val == DT_##RELOC)) \
-      {									      \
-	ranges[1].start = D_PTR ((map), l_info[DT_JMPREL]);		      \
-	ranges[1].size = (map)->l_info[DT_PLTRELSZ]->d_un.d_val;	      \
-	ranges[2].start = ranges[1].start + ranges[1].size;		      \
-	ranges[2].size = ranges[0].start + ranges[0].size - ranges[2].start;  \
-	ranges[0].size = ranges[1].start - ranges[0].start;		      \
-      }									      \
-									      \
-    for (ranges_index = 0; ranges_index < 3; ++ranges_index)		      \
-      elf_dynamic_do_##reloc ((map),					      \
-			      ranges[ranges_index].start,		      \
-			      ranges[ranges_index].size,		      \
-			      ranges[ranges_index].nrelative,		      \
-			      ranges[ranges_index].lazy,		      \
-			      skip_ifunc);				      \
-  } while (0)
-# else
-#  define _ELF_DYNAMIC_DO_RELOC(RELOC, reloc, map, do_lazy, skip_ifunc, test_rel) \
+   We are guarenteed that we have one of two situations.  Either DT_JMPREL
+   comes immediately after DT_REL*, or there is overlap and DT_JMPREL
+   consumes precisely the very end of the DT_REL*.  */
+
+# define _ELF_DYNAMIC_DO_RELOC(RELOC, reloc, map, do_lazy, skip_ifunc, test_rel) \
   do {									      \
     struct { ElfW(Addr) start, size;					      \
 	     __typeof (((ElfW(Dyn) *) 0)->d_un.d_val) nrelative; int lazy; }  \
@@ -317,6 +276,8 @@ elf_get_dynamic_info (struct link_map *l, ElfW(Dyn) *temp)
       {									      \
 	ElfW(Addr) start = D_PTR ((map), l_info[DT_JMPREL]);		      \
 									      \
+	if (__builtin_expect (ranges[0].size, 1))			      \
+	  ranges[0].size = (start - ranges[0].start);			      \
 	if (! ELF_DURING_STARTUP					      \
 	    && ((do_lazy)						      \
 		/* This test does not only detect whether the relocation      \
@@ -352,7 +313,6 @@ elf_get_dynamic_info (struct link_map *l, ElfW(Dyn) *temp)
 				  skip_ifunc);				      \
       }									      \
   } while (0)
-# endif
 
 # if ELF_MACHINE_NO_REL || ELF_MACHINE_NO_RELA
 #  define _ELF_CHECK_REL 0

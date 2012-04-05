@@ -227,9 +227,6 @@ _dl_start_user:\n\
 /* The S390 never uses Elf32_Rel relocations.  */
 #define ELF_MACHINE_NO_REL 1
 
-/* The S390 overlaps DT_RELA and DT_PLTREL.  */
-#define ELF_MACHINE_PLTREL_OVERLAP 1
-
 /* We define an initialization functions.  This is called very early in
    _dl_sysdep_start.  */
 #define DL_PLATFORM_INIT dl_platform_init ()

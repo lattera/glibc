@@ -388,8 +388,4 @@ elf_machine_lazy_rel (struct link_map *map,
   /* elf_machine_runtime_setup handles this. */
 }
 
-/* The SVR4 ABI specifies that the JMPREL relocs must be inside the
-   DT_RELA table.  */
-#define ELF_MACHINE_PLTREL_OVERLAP 1
-
 #endif /* RESOLVE_MAP */

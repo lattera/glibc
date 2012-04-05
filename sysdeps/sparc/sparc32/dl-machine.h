@@ -204,9 +204,6 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 /* The SPARC never uses Elf32_Rel relocations.  */
 #define ELF_MACHINE_NO_REL 1
 
-/* The SPARC overlaps DT_RELA and DT_PLTREL.  */
-#define ELF_MACHINE_PLTREL_OVERLAP 1
-
 /* Undo the sub %sp, 6*4, %sp; add %sp, 22*4, %o0 below to get at the
    value we want in __libc_stack_end.  */
 #define DL_STACK_END(cookie) \
