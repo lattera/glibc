@@ -1967,7 +1967,12 @@ ERROR: ld.so: object '%s' cannot be loaded as audit interface: %s; ignored.\n",
 	      if (dyn->d_tag == DT_NEEDED)
 		{
 		  l = l->l_next;
-
+#if defined NEED_DL_SYSINFO || defined NEED_DL_SYSINFO_DSO
+		  /* Skip the VDSO since it's not part of the list
+		     of objects we brought in via DT_NEEDED entries.  */
+		  if (l == GLRO(dl_sysinfo_map))
+		    l = l->l_next;
+#endif
 		  if (!l->l_used)
 		    {
 		      if (first)
@@ -2498,6 +2503,14 @@ warning: debug option `%s' unknown; try LD_DEBUG=help\n", copy);
 	}
 
       ++dl_debug;
+    }
+
+  if (GLRO(dl_debug_mask) & DL_DEBUG_UNUSED)
+    {
+      /* In order to get an accurate picture of whether a particular
+	 DT_NEEDED entry is actually used we have to process both
+	 the PLT and non-PLT relocation entries.  */
+      GLRO(dl_lazy) = 0;
     }
 
   if (GLRO(dl_debug_mask) & DL_DEBUG_HELP)

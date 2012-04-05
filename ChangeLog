@@ -1,3 +1,13 @@
+2012-04-05  David S. Miller  <davem@davemloft.net>
+
+	* elf/rtld.c (dl_main): If DL_DEBUG_UNUSED is enabled, turn off
+	lazy binding.
+	* elf/dl-lookup (_dl_lookup_symbol_x): If DL_DEBUG_UNUSED, ignore
+	undefined symbol errors.
+
+	* elf/rtlc.c (dl_main): Skip VDSO when checking for unused
+	DT_NEEDED entries.
+
 2012-04-05  Michael Matz  <matz@suse.de>
 
 	[BZ #13592]
