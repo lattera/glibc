@@ -1,3 +1,9 @@
+2012-04-05  Andreas Jaeger  <aj@suse.de>
+
+	[BZ #13908]
+	* stdlib/stdlib.h: Don't warn about unused result of mktemp, fix
+	comment.
+
 2012-04-05  Nobuhiro Iwamatsu  <iwamatsu@nigauri.org>
 
 	* sysdeps/sh/sh4/fpu/fesetround.c (fesetround): Fix return value

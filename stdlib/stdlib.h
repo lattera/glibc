@@ -603,8 +603,9 @@ extern int clearenv (void) __THROW;
 /* Generate a unique temporary file name from TEMPLATE.
    The last six characters of TEMPLATE must be "XXXXXX";
    they are replaced with a string that makes the file name unique.
-   Returns TEMPLATE, or a null pointer if it cannot get a unique file name.  */
-extern char *mktemp (char *__template) __THROW __nonnull ((1)) __wur;
+   Always returns TEMPLATE, it's either a temporary file name or a null
+   string if it cannot get a unique file name.  */
+extern char *mktemp (char *__template) __THROW __nonnull ((1));
 #endif
 
 #if defined __USE_MISC || defined __USE_XOPEN_EXTENDED \
