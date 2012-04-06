@@ -1,5 +1,11 @@
 2012-04-06  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* bits/byteswap.h: Include <features.h>.
+	(__bswap_32): Use __builtin_bswap32 for GCC >= 4.2.
+	(__bswap_64): Use __builtin_bswap64 for GCC >= 4.2.
+
+2012-04-06  H.J. Lu  <hongjiu.lu@intel.com>
+
 	* bits/byteswap.h (__bswap_16): Removed.
 	Include <bits/byteswap-16.h> to get __bswap_16.
 	* sysdeps/i386/bits/byteswap.h: Likewise.
