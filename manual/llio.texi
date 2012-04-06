@@ -634,15 +634,15 @@ be one of the symbolic constants @code{SEEK_SET}, @code{SEEK_CUR}, or
 
 @table @code
 @item SEEK_SET
-Specifies that @var{whence} is a count of characters from the beginning
+Specifies that @var{offset} is a count of characters from the beginning
 of the file.
 
 @item SEEK_CUR
-Specifies that @var{whence} is a count of characters from the current
+Specifies that @var{offset} is a count of characters from the current
 file position.  This count may be positive or negative.
 
 @item SEEK_END
-Specifies that @var{whence} is a count of characters from the end of
+Specifies that @var{offset} is a count of characters from the end of
 the file.  A negative count specifies a position within the current
 extent of the file; a positive count specifies a position past the
 current end.  If you set the position past the current end, and

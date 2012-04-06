@@ -1,3 +1,9 @@
+2012-04-06  Robert Millan  <rmh@gnu.org>
+
+	[BZ #6486]
+	* manual/llio.texi (File Position Primitive): lseek
+	refers to WHENCE when it really means OFFSET.
+
 2012-04-06  Andreas Jaeger  <aj@suse.de>
 
 	* nss/nss_db/db-initgroups.c: Include <string.h> for strlen and
