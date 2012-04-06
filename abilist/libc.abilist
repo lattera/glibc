@@ -2493,6 +2493,8 @@ GLIBC_2.15 i.86-.*-linux.*/thread powerpc-.*-linux.*/thread powerpc64-.*-linux.*
  scandirat64 F
 GLIBC_2.16 i.86-.*-linux.*/thread powerpc-.*-linux.*/thread powerpc64-.*-linux.*/thread s390-.*-linux.*/thread s390x-.*-linux.*/thread sh[34].*-.*-linux.*/thread x86_64-.*-linux.*/thread
  GLIBC_2.16 A
+ __poll_chk F
+ __ppoll_chk F
  aligned_alloc F
  c16rtomb F
  c32rtomb F

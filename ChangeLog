@@ -1,3 +1,7 @@
+2012-04-06  Andreas Jaeger  <aj@suse.de>
+
+	* abilist/libc.abilist: Add __poll and __ppoll.
+
 2012-04-05  David S. Miller  <davem@davemloft.net>
 
 	* scripts/check-local-headers.sh: Accept a host triplet in the
