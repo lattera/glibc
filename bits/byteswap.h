@@ -27,17 +27,8 @@
 #define __bswap_constant_16(x) \
      ((((x) >> 8) & 0xffu) | (((x) & 0xffu) << 8))
 
-#ifdef __GNUC__
-# define __bswap_16(x) \
-    (__extension__							      \
-     ({ unsigned short int __bsx = (x); __bswap_constant_16 (__bsx); }))
-#else
-static __inline unsigned short int
-__bswap_16 (unsigned short int __bsx)
-{
-  return __bswap_constant_16 (__bsx);
-}
-#endif
+/* Get __bswap_16.  */
+#include <bits/byteswap-16.h>
 
 /* Swap bytes in 32 bit value.  */
 #define __bswap_constant_32(x) \

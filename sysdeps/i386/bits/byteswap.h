@@ -27,33 +27,8 @@
 #define __bswap_constant_16(x) \
      ((unsigned short int) ((((x) >> 8) & 0xff) | (((x) & 0xff) << 8)))
 
-#ifdef __GNUC__
-# if __GNUC__ >= 2
-#  define __bswap_16(x) \
-     (__extension__							      \
-      ({ register unsigned short int __v, __x = (unsigned short int) (x);     \
-	 if (__builtin_constant_p (__x))				      \
-	   __v = __bswap_constant_16 (__x);				      \
-	 else								      \
-	   __asm__ ("rorw $8, %w0"					      \
-		    : "=r" (__v)					      \
-		    : "0" (__x)						      \
-		    : "cc");						      \
-	 __v; }))
-# else
-/* This is better than nothing.  */
-#  define __bswap_16(x) \
-     (__extension__							      \
-      ({ register unsigned short int __x = (unsigned short int) (x);	      \
-	 __bswap_constant_16 (__x); }))
-# endif
-#else
-static __inline unsigned short int
-__bswap_16 (unsigned short int __bsx)
-{
-  return __bswap_constant_16 (__bsx);
-}
-#endif
+/* Get __bswap_16.  */
+#include <bits/byteswap-16.h>
 
 /* Swap bytes in 32 bit value.  */
 #define __bswap_constant_32(x) \

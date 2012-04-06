@@ -1,3 +1,16 @@
+2012-04-06  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* bits/byteswap.h (__bswap_16): Removed.
+	Include <bits/byteswap-16.h> to get __bswap_16.
+	* sysdeps/i386/bits/byteswap.h: Likewise.
+	* sysdeps/s390/bits/byteswap.h: Likewise.
+	* sysdeps/x86_64/bits/byteswap.h: Likewise.
+	* bits/byteswap-16.h: New file.
+	* sysdeps/i386/bits/byteswap-16.h: Likewise.
+	* sysdeps/s390/bits/byteswap-16.h: Likewise.
+	* sysdeps/x86_64/bits/byteswap-16.h: Likewise.
+	* string/Makefile (headers): Add bits/byteswap-16.h.
+
 2012-04-06  Paul Pluzhnikov  <ppluzhnikov@google.com>
 
 	[BZ #13895]
