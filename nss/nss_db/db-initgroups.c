@@ -1,5 +1,5 @@
 /* Initgroups handling in nss_db module.
-   Copyright (C) 2011 Free Software Foundation, Inc.
+   Copyright (C) 2011-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gmail.com>.
 
@@ -21,6 +21,7 @@
 #include <errno.h>
 #include <grp.h>
 #include <paths.h>
+#include <string.h>
 
 #include "nss_db.h"
 
