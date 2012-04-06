@@ -1,5 +1,8 @@
 2012-04-05  David S. Miller  <davem@davemloft.net>
 
+	* scripts/check-local-headers.sh: Accept a host triplet in the
+	path matched by the exclude regexp.
+
 	* elf/dynamic-link.h (_ELF_DYNAMIC_DO_RELOC): Reduce down to one
 	definition.
 	* sysdeps/powerpc/powerpc32/dl-machine.h
