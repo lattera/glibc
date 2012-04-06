@@ -1,3 +1,10 @@
+2012-04-19  Andreas Schwab  <schwab@linux-m68k.org>
+
+	* sysdeps/gnu/errlist-compat.awk (END): Correct computation of
+	ERR_MAX value.
+	* sysdeps/unix/sysv/linux/Versions (GLIBC_2.12): Adjust
+	errlist-compat value.
+
 2012-04-18  David S. Miller  <davem@davemloft.net>
 
 	* sysdeps/generic/memcopy.h (reg_char): Delete.

@@ -142,7 +142,7 @@ libc {
     fallocate;
   }
   GLIBC_2.12 {
-    #errlist-compat	134
+    #errlist-compat	135
     _sys_errlist; sys_errlist; _sys_nerr; sys_nerr;
 
     ntp_gettimex;

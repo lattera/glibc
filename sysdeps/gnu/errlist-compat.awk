@@ -1,5 +1,5 @@
 # awk script to generate errlist-compat.c
-# Copyright (C) 2002, 2004, 2006 Free Software Foundation, Inc.
+# Copyright (C) 2002-2012 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -81,7 +81,7 @@ END {
   if (highest > count) {
     printf "*** errlist.c count %d inflated to %s count %d (old errno.h?)\n", \
       count, highest_version, highest > "/dev/stderr";
-    printf "#define ERR_MAX %d\n\n", highest;
+    printf "#define ERR_MAX %d\n\n", highest - 1;
   }
 
   # same regardless of awk's ordering of the associative array.
