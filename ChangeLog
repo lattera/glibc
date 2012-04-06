@@ -1,3 +1,11 @@
+2012-04-06  Paul Pluzhnikov  <ppluzhnikov@google.com>
+
+	[BZ #13895]
+	* nss/nsswitch.c (nss_load_library, __nss_lookup_function): Avoid
+	extra indirection.
+	* nss/Makefile (tests-static, tests): Add tst-nss-static.
+	* nss/tst-nss-static.c: New.
+
 2012-04-06  Robert Millan  <rmh@gnu.org>
 
 	[BZ #6486]

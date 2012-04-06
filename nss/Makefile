@@ -75,6 +75,8 @@ libnss_db-inhibit-o	= $(filter-out .os,$(object-suffixes))
 ifeq ($(build-static-nss),yes)
 routines                += $(libnss_files-routines)
 static-only-routines    += $(libnss_files-routines)
+tests-static		= tst-nss-static
+tests			+= $(tests-static)
 endif
 
 include ../Rules
