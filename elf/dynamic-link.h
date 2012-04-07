@@ -278,13 +278,7 @@ elf_get_dynamic_info (struct link_map *l, ElfW(Dyn) *temp)
 									      \
 	if (__builtin_expect (ranges[0].size, 1))			      \
 	  ranges[0].size = (start - ranges[0].start);			      \
-	if (! ELF_DURING_STARTUP					      \
-	    && ((do_lazy)						      \
-		/* This test does not only detect whether the relocation      \
-		   sections are in the right order, it also checks whether    \
-		   there is a DT_REL/DT_RELA section.  */		      \
-		|| __builtin_expect (ranges[0].start + ranges[0].size	      \
-				     != start, 0)))			      \
+	if (! ELF_DURING_STARTUP && ((do_lazy) || ranges[0].size == 0))	      \
 	  {								      \
 	    ranges[1].start = start;					      \
 	    ranges[1].size = (map)->l_info[DT_PLTRELSZ]->d_un.d_val;	      \
@@ -293,7 +287,6 @@ elf_get_dynamic_info (struct link_map *l, ElfW(Dyn) *temp)
 	else								      \
 	  {								      \
 	    /* Combine processing the sections.  */			      \
-	    assert (ranges[0].start + ranges[0].size == start);		      \
 	    ranges[0].size += (map)->l_info[DT_PLTRELSZ]->d_un.d_val;	      \
 	  }								      \
       }									      \

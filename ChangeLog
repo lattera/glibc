@@ -1,3 +1,8 @@
+2012-04-07  Carlos O'Donell  <carlos_odonell@mentor.com>
+
+	* elf/dynamic-link.h (_ELF_DYNAMIC_DO_RELOC): Simplify
+	conditions and remove no longer applicable assertion.
+
 2012-04-06  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* bits/byteswap.h (__bswap_16): Removed.
