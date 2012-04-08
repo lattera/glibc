@@ -31,12 +31,12 @@ __exp (double x)
   if (__builtin_expect (isgreater (x, o_threshold), 0))
     {
       if (_LIB_VERSION != _IEEE_)
-	return __kernel_standard_f (x, x, 6);
+	return __kernel_standard (x, x, 6);
     }
   else if (__builtin_expect (isless (x, u_threshold), 0))
     {
       if (_LIB_VERSION != _IEEE_)
-	return __kernel_standard_f (x, x, 7);
+	return __kernel_standard (x, x, 7);
     }
 
   return __ieee754_exp (x);
