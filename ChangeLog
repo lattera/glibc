@@ -1,5 +1,9 @@
 2012-04-08  Andreas Jaeger  <aj@suse.de>
 
+	[BZ #6895]
+	* manual/filesys.texi (Directory Entries): Add description for
+	DT_LNK.
+
 	[BZ #6890]
 	* manual/filesys.texi (Directory Entries): Clarify that it's file
 	system not operating system in the description of DT_UNKNOWN.

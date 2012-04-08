@@ -277,6 +277,9 @@ A character device.
 
 @item DT_BLK
 A block device.
+
+@item DT_LNK
+A symbolic link.
 @end vtable
 
 This member is a BSD extension.  The symbol @code{_DIRENT_HAVE_D_TYPE}
