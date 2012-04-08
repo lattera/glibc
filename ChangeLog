@@ -1,3 +1,8 @@
+2012-04-08  Andreas Jaeger  <aj@suse.de>
+
+	[BZ #6578]
+	* manual/syslog.texi (closelog): Fix reference, it's openlog.
+
 2012-04-08  Stephen Compall  <s11@member.fsf.org>
 
 	[BZ #6649]

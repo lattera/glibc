@@ -435,7 +435,7 @@ done.  Please read the section on @code{openlog} for more information:
 @xref{openlog}.
 
 @code{closelog} does not flush any buffers.  You do not have to call
-@code{closelog} before re-opening a Syslog connection with @code{initlog}.
+@code{closelog} before re-opening a Syslog connection with @code{openlog}.
 Syslog connections are automatically closed on exec or exit.
 
 @end deftypefun
