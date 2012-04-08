@@ -257,7 +257,8 @@ are defined for its value:
 
 @vtable @code
 @item DT_UNKNOWN
-The type is unknown.  On some systems this is the only value returned.
+The type is unknown.  Only some filesystems have full support to
+return the type of the file, others might always return this value.
 
 @item DT_REG
 A regular file.

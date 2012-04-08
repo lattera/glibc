@@ -1,5 +1,9 @@
 2012-04-08  Andreas Jaeger  <aj@suse.de>
 
+	[BZ #6890]
+	* manual/filesys.texi (Directory Entries): Clarify that it's file
+	system not operating system in the description of DT_UNKNOWN.
+
 	[BZ #6578]
 	* manual/syslog.texi (closelog): Fix reference, it's openlog.
 
