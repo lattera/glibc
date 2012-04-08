@@ -1,3 +1,9 @@
+2012-04-08  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #13705]
+	* math/libm-test.inc (exp_test): Do not allow overflow exception
+	on underflow test.
+
 2012-04-08  Aurelien Jarno  <aurelien@aurel32.net>
 
 	[BZ #13705]

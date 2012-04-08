@@ -3003,8 +3003,7 @@ exp_test (void)
 
   /* Bug 13922: OVERFLOW exception may be missing.  */
   TEST_f_f (exp, max_value, plus_infty, OVERFLOW_EXCEPTION_OK);
-  /* Bug 13705: spurious OVERFLOW exception may be present.  */
-  TEST_f_f (exp, -max_value, 0, OVERFLOW_EXCEPTION_OK);
+  TEST_f_f (exp, -max_value, 0);
 
   END (exp);
 }
