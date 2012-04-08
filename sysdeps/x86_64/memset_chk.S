@@ -19,7 +19,7 @@
 #include <sysdep.h>
 #include "asm-syntax.h"
 
-#ifndef PIC
+#ifndef SHARED
 	/* For libc.so this is defined in memset.S.
 	   For libc.a, this is a separate source to avoid
 	   memset bringing in __chk_fail and all routines
