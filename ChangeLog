@@ -1,3 +1,8 @@
+2012-04-08  Mike Frysinger  <vapier@gentoo.org>
+
+	* sysdeps/i386/i686/memset_chk.S: Update copyright year.
+	* sysdeps/x86_64/memset_chk.S: Likewise.
+
 2012-04-08  Andreas Jaeger  <aj@suse.de>
 
 	[BZ #10153]
