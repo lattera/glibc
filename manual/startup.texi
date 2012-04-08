@@ -335,6 +335,9 @@ definition is added to the environment.  Otherwise, the @var{string} is
 interpreted as the name of an environment variable, and any definition
 for this variable in the environment is removed.
 
+If the function is successful it returns @code{0}.  Otherwise the return
+value is nonzero and @code{errno} is set to indicate the error.
+
 The difference to the @code{setenv} function is that the exact string
 given as the parameter @var{string} is put into the environment.  If the
 user should change the string after the @code{putenv} call this will
@@ -363,6 +366,10 @@ controls the action.  If replace is zero, nothing happens.  Otherwise
 the old entry is replaced by the new one.
 
 Please note that you cannot remove an entry completely using this function.
+
+If the function is successful it returns @code{0}.  Otherwise the
+environment is unchanged and the return value is @code{-1} and
+@code{errno} is set.
 
 This function was originally part of the BSD library but is now part of
 the Unix standard.

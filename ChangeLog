@@ -1,5 +1,9 @@
 2012-04-08  Andreas Jaeger  <aj@suse.de>
 
+	[BZ #10153]
+	* manual/startup.texi (Environment Access): Describe return value
+	for putenv and setenv.
+
 	[BZ #6895]
 	* manual/filesys.texi (Directory Entries): Add description for
 	DT_LNK.
