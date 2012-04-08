@@ -1,3 +1,9 @@
+2012-04-08  Stephen Compall  <s11@member.fsf.org>
+
+	[BZ #6649]
+	* manual/llio.texi (Opening and Closing Files): Add cross
+	reference to explain mode argument.
+
 2012-04-06  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* bits/byteswap.h (__bswap_16): Removed.

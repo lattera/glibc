@@ -78,11 +78,11 @@ declared in @file{unistd.h}.
 @comment fcntl.h
 @comment POSIX.1
 @deftypefun int open (const char *@var{filename}, int @var{flags}[, mode_t @var{mode}])
-The @code{open} function creates and returns a new file descriptor
-for the file named by @var{filename}.  Initially, the file position
+The @code{open} function creates and returns a new file descriptor for
+the file named by @var{filename}.  Initially, the file position
 indicator for the file is at the beginning of the file.  The argument
-@var{mode} is used only when a file is created, but it doesn't hurt
-to supply the argument in any case.
+@var{mode} (@pxref{Permission Bits}) is used only when a file is
+created, but it doesn't hurt to supply the argument in any case.
 
 The @var{flags} argument controls how the file is to be opened.  This is
 a bit mask; you create the value by the bitwise OR of the appropriate
