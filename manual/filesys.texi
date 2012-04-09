@@ -247,9 +247,11 @@ systems, for most files this the same as the @code{st_ino} member that
 @code{stat} will return for the file.  @xref{File Attributes}.
 
 @item unsigned char d_namlen
-This is the length of the file name, not including the terminating null
-character.  Its type is @code{unsigned char} because that is the integer
-type of the appropriate size
+This is the length of the file name, not including the terminating
+null character.  Its type is @code{unsigned char} because that is the
+integer type of the appropriate size.  This member is a BSD extension.
+The symbol @code{_DIRENT_HAVE_D_NAMLEN} is defined if this member is
+available.
 
 @item unsigned char d_type
 This is the type of the file, possibly unknown.  The following constants

@@ -1,5 +1,9 @@
 2012-04-09  Andreas Jaeger  <aj@suse.de>
 
+	[BZ #6894]
+	* manual/filesys.texi (Directory Entries): Mention that d_namlen
+	is an optional BSD extension.
+
 	[BZ #10254]
 	* manual/stdio.texi (Opening Streams): Document additional fopen
 	parameters.
