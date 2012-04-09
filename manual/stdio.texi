@@ -196,13 +196,31 @@ Additional characters may appear after these to specify flags for the
 call.  Always put the mode (@samp{r}, @samp{w+}, etc.) first; that is
 the only part you are guaranteed will be understood by all systems.
 
-@Theglibc{} defines one additional character for use in
-@var{opentype}: the character @samp{x} insists on creating a new
-file---if a file @var{filename} already exists, @code{fopen} fails
-rather than opening it.  If you use @samp{x} you are guaranteed that
-you will not clobber an existing file.  This is equivalent to the
-@code{O_EXCL} option to the @code{open} function (@pxref{Opening and
-Closing Files}).
+@Theglibc{} defines additional characters for use in @var{opentype}:
+
+@table @samp
+@item c
+The file is opened with cancellation in the I/O functions disabled.
+
+@item e
+The underlying file descriptor will be closed if you use any of the
+@code{exec@dots{}} functions (@pxref{Executing a File}).  (This is
+equivalent to having set @code{FD_CLOEXEC} on that descriptor.
+@xref{Descriptor Flags}.)
+
+@item m
+The file is opened and accessed using @code{mmap}.  This is only
+supported with files opened for reading.
+
+@item x
+Insist on creating a new file---if a file @var{filename} already
+exists, @code{fopen} fails rather than opening it.  If you use
+@samp{x} you are guaranteed that you will not clobber an existing
+file.  This is equivalent to the @code{O_EXCL} option to the
+@code{open} function (@pxref{Opening and Closing Files}).
+
+The @samp{x} modifier is part of @w{ISO C11}.
+@end table
 
 The character @samp{b} in @var{opentype} has a standard meaning; it
 requests a binary stream rather than a text stream.  But this makes no

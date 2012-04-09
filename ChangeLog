@@ -1,3 +1,9 @@
+2012-04-09  Andreas Jaeger  <aj@suse.de>
+
+	[BZ #10254]
+	* manual/stdio.texi (Opening Streams): Document additional fopen
+	parameters.
+
 2012-04-09  Carlos O'Donell  <carlos_odonell@mentor.com>
 
 	[BZ # 13963]
