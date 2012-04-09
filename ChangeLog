@@ -1,3 +1,19 @@
+2012-04-09  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #11521]
+	* math/s_ctan.c: Include <float.h>.
+	(__ctan): Avoid internal overflow or cancellation in calculating
+	denominator.
+	* math/s_ctanf.c: Likewise.
+	* math/s_ctanl.c: Likewise.
+	* math/s_ctanh.c: Likewise.
+	* math/s_ctanhf.c: Likewise.
+	* math/s_ctanhl.c: Likewise.
+	* math/libm-test.inc (ctan_test): Add more tests.
+	(ctanh_test): Likewise.
+	* sysdeps/i386/fpu/libm-test-ulps: Update.
+	* sysdeps/x86_64/fpu/libm-test-ulps: Likewise.
+
 2012-04-09  Andreas Jaeger  <aj@suse.de>
 
 	[BZ #6894]

@@ -1,5 +1,5 @@
 /* Complex tangent function for double.
-   Copyright (C) 1997, 2005, 2011 Free Software Foundation, Inc.
+   Copyright (C) 1997-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -20,9 +20,8 @@
 #include <complex.h>
 #include <fenv.h>
 #include <math.h>
-
 #include <math_private.h>
-
+#include <float.h>
 
 __complex__ double
 __ctan (__complex__ double x)
@@ -51,24 +50,45 @@ __ctan (__complex__ double x)
     }
   else
     {
-      double sin2rx, cos2rx;
+      double sinrx, cosrx;
       double den;
+      const int t = (int) ((DBL_MAX_EXP - 1) * M_LN2 / 2);
 
-      __sincos (2.0 * __real__ x, &sin2rx, &cos2rx);
+      /* tan(x+iy) = (sin(2x) + i*sinh(2y))/(cos(2x) + cosh(2y))
+	 = (sin(x)*cos(x) + i*sinh(y)*cosh(y)/(cos(x)^2 + sinh(y)^2). */
 
-      den = cos2rx + __ieee754_cosh (2.0 * __imag__ x);
+      __sincos (__real__ x, &sinrx, &cosrx);
 
-      if (den == 0.0)
+      if (fabs (__imag__ x) > t)
 	{
-	  __complex__ double ez = __cexp (1.0i * x);
-	  __complex__ double emz = __cexp (-1.0i * x);
+	  /* Avoid intermediate overflow when the real part of the
+	     result may be subnormal.  Ignoring negligible terms, the
+	     imaginary part is +/- 1, the real part is
+	     sin(x)*cos(x)/sinh(y)^2 = 4*sin(x)*cos(x)/exp(2y).  */
+	  double exp_2t = __ieee754_exp (2 * t);
 
-	  res = (ez - emz) / (ez + emz) * -1.0i;
+	  __imag__ res = __copysign (1.0, __imag__ x);
+	  __real__ res = 4 * sinrx * cosrx;
+	  __imag__ x = fabs (__imag__ x);
+	  __imag__ x -= t;
+	  __real__ res /= exp_2t;
+	  if (__imag__ x > t)
+	    {
+	      /* Underflow (original imaginary part of x has absolute
+		 value > 2t).  */
+	      __real__ res /= exp_2t;
+	    }
+	  else
+	    __real__ res /= __ieee754_exp (2 * __imag__ x);
 	}
       else
 	{
-	  __real__ res = sin2rx / den;
-	  __imag__ res = __ieee754_sinh (2.0 * __imag__ x) / den;
+	  double sinhix = __ieee754_sinh (__imag__ x);
+	  double coshix = __ieee754_cosh (__imag__ x);
+
+	  den = cosrx * cosrx + sinhix * sinhix;
+	  __real__ res = sinrx * cosrx / den;
+	  __imag__ res = sinhix * coshix / den;
 	}
     }
 
