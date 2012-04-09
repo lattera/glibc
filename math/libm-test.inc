@@ -5682,8 +5682,7 @@ pow_test (void)
   TEST_ff_f (pow, 0x1p72L, 0x1p72L, plus_infty, OVERFLOW_EXCEPTION);
   TEST_ff_f (pow, 10, -0x1p72L, 0);
   TEST_ff_f (pow, max_value, max_value, plus_infty, OVERFLOW_EXCEPTION);
-  /* Bug 13872: spurious OVERFLOW exception may be present.  */
-  TEST_ff_f (pow, 10, -max_value, 0, OVERFLOW_EXCEPTION_OK);
+  TEST_ff_f (pow, 10, -max_value, 0);
 
   TEST_ff_f (pow, 0, 1, 0);
   TEST_ff_f (pow, 0, 11, 0);
@@ -5997,8 +5996,7 @@ pow_test (void)
   TEST_ff_f (pow, -max_value, -0x1.ffffffffffffffffffffffffffffp+113L, plus_zero);
 # endif
 #endif
-  /* Bug 13872: spurious OVERFLOW exception may be present.  */
-  TEST_ff_f (pow, -max_value, -max_value, plus_zero, OVERFLOW_EXCEPTION_OK);
+  TEST_ff_f (pow, -max_value, -max_value, plus_zero);
 
   TEST_ff_f (pow, -max_value, 0xffffff, minus_infty, OVERFLOW_EXCEPTION);
   TEST_ff_f (pow, -max_value, 0x1fffffe, plus_infty, OVERFLOW_EXCEPTION);
@@ -6122,8 +6120,7 @@ pow_test (void)
   TEST_ff_f (pow, -min_value, 0x1.ffffffffffffffffffffffffffffp+113L, plus_zero);
 # endif
 #endif
-  /* Bug 13872: spurious OVERFLOW exception may be present.  */
-  TEST_ff_f (pow, -min_value, max_value, plus_zero, OVERFLOW_EXCEPTION_OK);
+  TEST_ff_f (pow, -min_value, max_value, plus_zero);
 
 #ifndef TEST_LDOUBLE /* Bug 13881.  */
   TEST_ff_f (pow, 0x0.ffffffp0, 10, 0.999999403953712118183885036774764444747L);

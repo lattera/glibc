@@ -1,5 +1,13 @@
 2012-04-09  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #13872]
+	* sysdeps/i386/fpu/e_powl.S (p78): New object.
+	(__ieee754_powl): Saturate large exponents rather than testing for
+	overflow of y*log2(x).
+	* sysdeps/x86_64/fpu/e_powl.S: Likewise.
+	* math/libm-test.inc (pow_test): Do not permit spurious overflow
+	exceptions.
+
 	[BZ #11521]
 	* math/s_ctan.c: Include <float.h>.
 	(__ctan): Avoid internal overflow or cancellation in calculating

@@ -35,6 +35,9 @@ p63:	.byte 0, 0, 0, 0, 0, 0, 0xe0, 0x43
 	ASM_TYPE_DIRECTIVE(p64,@object)
 p64:	.byte 0, 0, 0, 0, 0, 0, 0xf0, 0x43
 	ASM_SIZE_DIRECTIVE(p64)
+	ASM_TYPE_DIRECTIVE(p78,@object)
+p78:	.byte 0, 0, 0, 0, 0, 0, 0xd0, 0x44
+	ASM_SIZE_DIRECTIVE(p78)
 
 	.section .rodata.cst16,"aM",@progbits,16
 
@@ -151,6 +154,21 @@ ENTRY(__ieee754_powl)
 	fxch			// x : y
 	fabs			// |x| : y
 	fxch			// y : |x|
+	// If y has absolute value at least 1L<<78, then any finite
+	// nonzero x will result in 0 (underflow), 1 or infinity (overflow).
+	// Saturate y to those bounds to avoid overflow in the calculation
+	// of y*log2(x).
+	fldl	MO(p78)		// 1L<<78 : y : |x|
+	fld	%st(1)		// y : 1L<<78 : y : |x|
+	fabs			// |y| : 1L<<78 : y : |x|
+	fcomip	%st(1), %st	// 1L<<78 : y : |x|
+	fstp	%st(0)		// y : |x|
+	jc	3f
+	fstp	%st(0)		// pop y
+	fldl	MO(p78)		// 1L<<78 : |x|
+	testb	$2, %dl
+	jz	3f		// y > 0
+	fchs			// -(1L<<78) : |x|
 	.align ALIGNARG(4)
 3:	/* y is a real number.  */
 	fxch			// x : y
@@ -170,11 +188,6 @@ ENTRY(__ieee754_powl)
 
 7:	fyl2x			// log2(x) : y
 8:	fmul	%st(1)		// y*log2(x) : y
-	fxam
-	fnstsw
-	andb	$0x45, %ah
-	cmpb	$0x05, %ah      // is y*log2(x) == ±inf ?
-	je	28f
 	fst	%st(1)		// y*log2(x) : y*log2(x)
 	frndint			// int(y*log2(x)) : y*log2(x)
 	fsubr	%st, %st(1)	// int(y*log2(x)) : fract(y*log2(x))
@@ -183,13 +196,7 @@ ENTRY(__ieee754_powl)
 	faddl	MO(one)		// 2^fract(y*log2(x)) : int(y*log2(x))
 	fscale			// 2^fract(y*log2(x))*2^int(y*log2(x)) : int(y*log2(x))
 	fstp	%st(1)		// 2^fract(y*log2(x))*2^int(y*log2(x))
-	jmp	29f
-
-28:	fstp	%st(1)		// y*log2(x)
-	fldl	MO(one)		// 1 : y*log2(x)
-	fscale			// 2^(y*log2(x)) : y*log2(x)
-	fstp	%st(1)		// 2^(y*log2(x))
-29:	testb	$2, %dh
+	testb	$2, %dh
 	jz	292f
 	// x is negative.  If y is an odd integer, negate the result.
 	fldt	24(%rsp)	// y : abs(result)
