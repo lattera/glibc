@@ -1,3 +1,8 @@
+2012-04-09  Roland McGrath  <roland@hack.frob.com>
+
+	* sysdeps/i386/fpu/bits/mathinline.h (__sincos_code): Don't clobber
+	%eax without telling the compiler.
+
 2012-04-09  Carlos O'Donell  <carlos_odonell@mentor.com>
 
 	[BZ # 13963]
