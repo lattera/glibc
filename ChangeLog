@@ -1,5 +1,13 @@
 2012-04-09  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #13873]
+	* sysdeps/ieee754/dbl-64/e_pow.c (huge, tiny): New variables.
+	(__ieee754_pow): Generate overflow and underflow using huge*huge
+	and tiny*tiny rather than just returning constant infinity or zero
+	for large exponents.
+	* math/libm-test.inc (pow_test): Require overflow exceptions for
+	applicable cases of large exponents.
+
 	[BZ #706]
 	* sysdeps/i386/fpu/e_pow.S (p10): New object.
 	(__ieee754_pow): Use iterative multiplication algorithm only for

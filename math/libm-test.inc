@@ -5621,8 +5621,7 @@ pow_test (void)
 
   TEST_ff_f (pow, 0x1p72L, 0x1p72L, plus_infty, OVERFLOW_EXCEPTION);
   TEST_ff_f (pow, 10, -0x1p72L, 0);
-  /* Bug 13873: OVERFLOW exception may be missing.  */
-  TEST_ff_f (pow, max_value, max_value, plus_infty, OVERFLOW_EXCEPTION_OK);
+  TEST_ff_f (pow, max_value, max_value, plus_infty, OVERFLOW_EXCEPTION);
   /* Bug 13872: spurious OVERFLOW exception may be present.  */
   TEST_ff_f (pow, 10, -max_value, 0, OVERFLOW_EXCEPTION_OK);
 
@@ -5908,8 +5907,7 @@ pow_test (void)
   TEST_ff_f (pow, -2.0, 0x1.ffffffffffffffffffffffffffffp+113L, plus_infty, OVERFLOW_EXCEPTION);
 # endif
 #endif
-  /* Bug 13873: OVERFLOW exception may be missing.  */
-  TEST_ff_f (pow, -2.0, max_value, plus_infty, OVERFLOW_EXCEPTION_OK);
+  TEST_ff_f (pow, -2.0, max_value, plus_infty, OVERFLOW_EXCEPTION);
 
   TEST_ff_f (pow, -max_value, 0.5, nan_value, INVALID_EXCEPTION);
   TEST_ff_f (pow, -max_value, 1.5, nan_value, INVALID_EXCEPTION);
@@ -5962,8 +5960,7 @@ pow_test (void)
   TEST_ff_f (pow, -max_value, 0x1.ffffffffffffffffffffffffffffp+113L, plus_infty, OVERFLOW_EXCEPTION);
 # endif
 #endif
-  /* Bug 13873: OVERFLOW exception may be missing.  */
-  TEST_ff_f (pow, -max_value, max_value, plus_infty, OVERFLOW_EXCEPTION_OK);
+  TEST_ff_f (pow, -max_value, max_value, plus_infty, OVERFLOW_EXCEPTION);
 
   TEST_ff_f (pow, -0.5, 126, 0x1p-126);
   TEST_ff_f (pow, -0.5, 127, -0x1p-127);
@@ -5990,8 +5987,7 @@ pow_test (void)
   TEST_ff_f (pow, -0.5, -0x1.ffffffffffffffffffffffffffffp+113L, plus_infty, OVERFLOW_EXCEPTION);
 # endif
 #endif
-  /* Bug 13873: OVERFLOW exception may be missing.  */
-  TEST_ff_f (pow, -0.5, -max_value, plus_infty, OVERFLOW_EXCEPTION_OK);
+  TEST_ff_f (pow, -0.5, -max_value, plus_infty, OVERFLOW_EXCEPTION);
 
   TEST_ff_f (pow, -0.5, 0xffffff, minus_zero);
   TEST_ff_f (pow, -0.5, 0x1fffffe, plus_zero);
@@ -6044,8 +6040,7 @@ pow_test (void)
   TEST_ff_f (pow, -min_value, -0x1.ffffffffffffffffffffffffffffp+113L, plus_infty, OVERFLOW_EXCEPTION);
 # endif
 #endif
-  /* Bug 13873: OVERFLOW exception may be missing.  */
-  TEST_ff_f (pow, -min_value, -max_value, plus_infty, OVERFLOW_EXCEPTION_OK);
+  TEST_ff_f (pow, -min_value, -max_value, plus_infty, OVERFLOW_EXCEPTION);
 
   TEST_ff_f (pow, -min_value, 0xffffff, minus_zero);
   TEST_ff_f (pow, -min_value, 0x1fffffe, plus_zero);
