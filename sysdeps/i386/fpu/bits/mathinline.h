@@ -1,6 +1,5 @@
 /* Inline math functions for i387.
-   Copyright (C) 1995,1996,1997,1998,1999,2000,2001,2003,2004,2006,2007,2009,
-   2010 Free Software Foundation, Inc.
+   Copyright (C) 1995-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by John C. Bowman <bowman@math.ualberta.ca>, 1995.
 
@@ -324,22 +323,23 @@ __inline_mathcode (__pow2, __x, \
 #  define __sincos_code \
   register long double __cosr;						      \
   register long double __sinr;						      \
+  register unsigned int __swtmp;					      \
   __asm __volatile__							      \
     ("fsincos\n\t"							      \
-     "fnstsw	%%ax\n\t"						      \
-     "testl	$0x400, %%eax\n\t"					      \
+     "fnstsw	%w2\n\t"						      \
+     "testl	$0x400, %2\n\t"						      \
      "jz	1f\n\t"							      \
      "fldpi\n\t"							      \
      "fadd	%%st(0)\n\t"						      \
      "fxch	%%st(1)\n\t"						      \
      "2: fprem1\n\t"							      \
-     "fnstsw	%%ax\n\t"						      \
-     "testl	$0x400, %%eax\n\t"					      \
+     "fnstsw	%w2\n\t"						      \
+     "testl	$0x400, %2\n\t"						      \
      "jnz	2b\n\t"							      \
      "fstp	%%st(1)\n\t"						      \
      "fsincos\n\t"							      \
      "1:"								      \
-     : "=t" (__cosr), "=u" (__sinr) : "0" (__x));			      \
+     : "=t" (__cosr), "=u" (__sinr), "=a" (__swtmp) : "0" (__x));	      \
   *__sinx = __sinr;							      \
   *__cosx = __cosr
 
