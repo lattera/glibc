@@ -1,3 +1,13 @@
+2012-04-09  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #706]
+	* sysdeps/i386/fpu/e_pow.S (p10): New object.
+	(__ieee754_pow): Use iterative multiplication algorithm only for
+	integer exponents with absolute value below 1024.  Check for odd
+	integer exponents when using algorithm for real exponents.
+	* math/libm-test.inc (pow_test): Add more tests.
+	* sysdeps/x86_64/fpu/libm-test-ulps: Update.
+
 2012-04-08  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #13705]

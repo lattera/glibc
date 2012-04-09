@@ -32,6 +32,9 @@ limit:	.double 0.29
 	ASM_TYPE_DIRECTIVE(p63,@object)
 p63:	.byte 0, 0, 0, 0, 0, 0, 0xe0, 0x43
 	ASM_SIZE_DIRECTIVE(p63)
+	ASM_TYPE_DIRECTIVE(p10,@object)
+p10:	.byte 0, 0, 0, 0, 0, 0, 0x90, 0x40
+	ASM_SIZE_DIRECTIVE(p10)
 
 	.section .rodata.cst16,"aM",@progbits,16
 
@@ -116,7 +119,15 @@ ENTRY(__ieee754_pow)
 	sahf
 	jne	3f
 
-	/* OK, we have an integer value for y.  */
+	/* OK, we have an integer value for y.  If large enough that
+	   errors may propagate out of the 11 bits excess precision, use
+	   the algorithm for real exponent instead.  */
+	fld	%st		// y : y : x
+	fabs			// |y| : y : x
+	fcompl	MO(p10)		// y : x
+	fnstsw
+	sahf
+	jnc	2f
 	popl	%eax
 	cfi_adjust_cfa_offset (-4)
 	popl	%edx
@@ -157,7 +168,9 @@ ENTRY(__ieee754_pow)
 
 	cfi_adjust_cfa_offset (8)
 	.align ALIGNARG(4)
-2:	/* y is a large integer (so even).  */
+2:	// y is a large integer (absolute value at least 1L<<10), but
+	// may be odd unless at least 1L<<64.  So it may be necessary
+	// to adjust the sign of a negative result afterwards.
 	fxch			// x : y
 	fabs			// |x| : y
 	fxch			// y : x
@@ -187,9 +200,41 @@ ENTRY(__ieee754_pow)
 	f2xm1			// 2^fract(y*log2(x))-1 : int(y*log2(x))
 	faddl	MO(one)		// 2^fract(y*log2(x)) : int(y*log2(x))
 	fscale			// 2^fract(y*log2(x))*2^int(y*log2(x)) : int(y*log2(x))
-	addl	$8, %esp
-	cfi_adjust_cfa_offset (-8)
 	fstp	%st(1)		// 2^fract(y*log2(x))*2^int(y*log2(x))
+	testb	$2, %dh
+	jz	292f
+	// x is negative.  If y is an odd integer, negate the result.
+	fldl	20(%esp)	// y : abs(result)
+	fld	%st		// y : y : abs(result)
+	fabs			// |y| : y : abs(result)
+	fcompl	MO(p63)		// y : abs(result)
+	fnstsw
+	sahf
+	jnc	291f
+
+	// We must find out whether y is an odd integer.
+	fld	%st		// y : y : abs(result)
+	fistpll	(%esp)		// y : abs(result)
+	fildll	(%esp)		// int(y) : y : abs(result)
+	fucompp			// abs(result)
+	fnstsw
+	sahf
+	jne	292f
+
+	// OK, the value is an integer, but is it odd?
+	popl	%eax
+	cfi_adjust_cfa_offset (-4)
+	popl	%edx
+	cfi_adjust_cfa_offset (-4)
+	andb	$1, %al
+	jz	290f		// jump if not odd
+	// It's an odd integer.
+	fchs
+290:	ret
+	cfi_adjust_cfa_offset (8)
+291:	fstp	%st(0)		// abs(result)
+292:	addl	$8, %esp
+	cfi_adjust_cfa_offset (-8)
 	ret
 
 
