@@ -447,7 +447,7 @@ It is a good idea to verify that the problem has not already been
 reported.  Bugs are documented in two places: The file @file{BUGS}
 describes a number of well known bugs and the bug tracking system has a
 WWW interface at
-@url{http://sources.redhat.com/bugzilla/}.  The WWW
+@url{http://sourceware.org/bugzilla/}.  The WWW
 interface gives you access to open and closed reports.  A closed report
 normally includes a patch or a hint on solving the problem.
 

@@ -1,3 +1,8 @@
+2012-04-09  Carlos O'Donell  <carlos_odonell@mentor.com>
+
+	[BZ # 13963]
+	* manual/install.texi: Use sourceware.org.
+
 2012-04-09  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #13873]
