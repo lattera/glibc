@@ -1,3 +1,9 @@
+2012-04-10  David S. Miller  <davem@davemloft.net>
+
+	[BZ #13967]
+	* elf/dynamic-link.h (_ELF_DYNAMIC_DO_RELOC): Handle the case
+	where the is a gap between DT_REL(A) and DT_JMPREL.
+
 2012-04-10  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/x86_64/bits/byteswap.h: Include <features.h>.

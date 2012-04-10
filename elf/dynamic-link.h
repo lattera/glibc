@@ -252,9 +252,10 @@ elf_get_dynamic_info (struct link_map *l, ElfW(Dyn) *temp)
 /* On some machines, notably SPARC, DT_REL* includes DT_JMPREL in its
    range.  Note that according to the ELF spec, this is completely legal!
 
-   We are guarenteed that we have one of two situations.  Either DT_JMPREL
+   We are guarenteed that we have one of three situations.  Either DT_JMPREL
    comes immediately after DT_REL*, or there is overlap and DT_JMPREL
-   consumes precisely the very end of the DT_REL*.  */
+   consumes precisely the very end of the DT_REL*, or DT_JMPREL and DT_REL*
+   are completely separate and there is a gap between them.  */
 
 # define _ELF_DYNAMIC_DO_RELOC(RELOC, reloc, map, do_lazy, skip_ifunc, test_rel) \
   do {									      \
@@ -275,19 +276,20 @@ elf_get_dynamic_info (struct link_map *l, ElfW(Dyn) *temp)
 	&& (!test_rel || (map)->l_info[DT_PLTREL]->d_un.d_val == DT_##RELOC)) \
       {									      \
 	ElfW(Addr) start = D_PTR ((map), l_info[DT_JMPREL]);		      \
+	ElfW(Addr) size = (map)->l_info[DT_PLTRELSZ]->d_un.d_val;	      \
 									      \
-	if (__builtin_expect (ranges[0].size, 1))			      \
-	  ranges[0].size = (start - ranges[0].start);			      \
+	if (ranges[0].start + ranges[0].size == (start + size))		      \
+	  ranges[0].size -= size;					      \
 	if (! ELF_DURING_STARTUP && ((do_lazy) || ranges[0].size == 0))	      \
 	  {								      \
 	    ranges[1].start = start;					      \
-	    ranges[1].size = (map)->l_info[DT_PLTRELSZ]->d_un.d_val;	      \
+	    ranges[1].size = size;					      \
 	    ranges[1].lazy = (do_lazy);					      \
 	  }								      \
 	else								      \
 	  {								      \
 	    /* Combine processing the sections.  */			      \
-	    ranges[0].size += (map)->l_info[DT_PLTRELSZ]->d_un.d_val;	      \
+	    ranges[0].size += size;					      \
 	  }								      \
       }									      \
 									      \
