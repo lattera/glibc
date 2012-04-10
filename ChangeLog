@@ -1,3 +1,9 @@
+2012-04-10  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/x86_64/bits/byteswap.h: Include <features.h>.
+	(__bswap_32): Use __builtin_bswap32 for GCC >= 4.2.
+	(__bswap_64): Use __builtin_bswap64 for GCC >= 4.2.
+
 2012-04-10  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* elf/dl-support.c (_dl_inhibit_cache): New variable.

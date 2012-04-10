@@ -23,6 +23,7 @@
 #ifndef _BITS_BYTESWAP_H
 #define _BITS_BYTESWAP_H 1
 
+#include <features.h>
 #include <bits/wordsize.h>
 
 /* Swap bytes in 16 bit value.  */
@@ -37,46 +38,60 @@
      ((((x) & 0xff000000) >> 24) | (((x) & 0x00ff0000) >>  8) |		      \
       (((x) & 0x0000ff00) <<  8) | (((x) & 0x000000ff) << 24))
 
-#if defined __GNUC__ && __GNUC__ >= 2
-# if __WORDSIZE == 64 || (defined __i486__ || defined __pentium__	      \
-			  || defined __pentiumpro__ || defined __pentium4__   \
-			  || defined __k8__ || defined __athlon__	      \
-			  || defined __k6__ || defined __nocona__	      \
-			  || defined __core2__ || defined __geode__	      \
-			  || defined __amdfam10__)
+#ifdef __GNUC__
+# if __GNUC_PREREQ (4, 2)
+static __inline unsigned int
+__bswap_32 (unsigned int __bsx)
+{
+  return __builtin_bswap32 (__bsx);
+}
+# elif __GNUC__ >= 2
+#  if __WORDSIZE == 64 || (defined __i486__ || defined __pentium__	      \
+			   || defined __pentiumpro__ || defined __pentium4__  \
+			   || defined __k8__ || defined __athlon__	      \
+			   || defined __k6__ || defined __nocona__	      \
+			   || defined __core2__ || defined __geode__	      \
+			   || defined __amdfam10__)
 /* To swap the bytes in a word the i486 processors and up provide the
    `bswap' opcode.  On i386 we have to use three instructions.  */
+#   define __bswap_32(x) \
+      (__extension__							      \
+       ({ register unsigned int __v, __x = (x);				      \
+	  if (__builtin_constant_p (__x))				      \
+	    __v = __bswap_constant_32 (__x);				      \
+	  else								      \
+	    __asm__ ("bswap %0" : "=r" (__v) : "0" (__x));		      \
+	  __v; }))
+#  else
+#   define __bswap_32(x)						      \
+      (__extension__							      \
+       ({ register unsigned int __v, __x = (x);				      \
+	  if (__builtin_constant_p (__x))				      \
+	    __v = __bswap_constant_32 (__x);				      \
+	  else								      \
+	    __asm__ ("rorw $8, %w0;"					      \
+		     "rorl $16, %0;"					      \
+		     "rorw $8, %w0"					      \
+		     : "=r" (__v)					      \
+		     : "0" (__x)					      \
+		     : "cc");						      \
+	  __v; }))
+#  endif
+# else
 #  define __bswap_32(x) \
      (__extension__							      \
-      ({ register unsigned int __v, __x = (x);				      \
-	 if (__builtin_constant_p (__x))				      \
-	   __v = __bswap_constant_32 (__x);				      \
-	 else								      \
-	   __asm__ ("bswap %0" : "=r" (__v) : "0" (__x));		      \
-	 __v; }))
-# else
-#  define __bswap_32(x)							      \
-     (__extension__							      \
-      ({ register unsigned int __v, __x = (x);				      \
-	 if (__builtin_constant_p (__x))				      \
-	   __v = __bswap_constant_32 (__x);				      \
-	 else								      \
-	   __asm__ ("rorw $8, %w0;"					      \
-		    "rorl $16, %0;"					      \
-		    "rorw $8, %w0"					      \
-		    : "=r" (__v)					      \
-		    : "0" (__x)						      \
-		    : "cc");						      \
-	 __v; }))
+      ({ register unsigned int __x = (x); __bswap_constant_32 (__x); }))
 # endif
 #else
-# define __bswap_32(x) \
-     (__extension__							      \
-      ({ register unsigned int __x = (x); __bswap_constant_32 (__x); }))
+static __inline unsigned int
+__bswap_32 (unsigned int __bsx)
+{
+  return __bswap_constant_32 (__bsx);
+}
 #endif
 
 
-#if defined __GNUC__ && __GNUC__ >= 2
+#if __GNUC_PREREQ (2, 0)
 /* Swap bytes in 64 bit value.  */
 # define __bswap_constant_64(x) \
      (__extension__ ((((x) & 0xff00000000000000ull) >> 56)		      \
@@ -88,7 +103,13 @@
 		     | (((x) & 0x000000000000ff00ull) << 40)		      \
 		     | (((x) & 0x00000000000000ffull) << 56)))
 
-# if __WORDSIZE == 64
+# if __GNUC_PREREQ (4, 2)
+static __inline unsigned long long int
+__bswap_64 (unsigned long long int __bsx)
+{
+  return __builtin_bswap64 (__bsx);
+}
+# elif __WORDSIZE == 64
 #  define __bswap_64(x) \
      (__extension__							      \
       ({ register unsigned long __v, __x = (x);				      \
