@@ -29,7 +29,7 @@ static char rcsid[] = "$NetBSD: $";
 #include <math_private.h>
 #include <math_ldbl_opt.h>
 
-int __ilogbl(long double x)
+int __ieee754_ilogbl(long double x)
 {
 	int64_t hx,lx;
 	int ix;
@@ -55,4 +55,3 @@ int __ilogbl(long double x)
 	}
 	return FP_ILOGBNAN;
 }
-long_double_symbol (libm, __ilogbl, ilogbl);

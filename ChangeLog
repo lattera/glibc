@@ -1,3 +1,34 @@
+2012-04-17  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
+	[BZ #6794]
+	* math/Makefile: Add e_ilogb and w_ilogb, remove s_logb.
+	* math/libm-test.inc: Add ilogb errno and exception tests.
+	* math/w_ilogb.c: New file: ilogb wrapper.
+	* math/w_ilogbf.c: New file: ilogbf wrapper.
+	* math/w_ilogbl.c: New file: ilogbl wrapper.
+	* sysdeps/generic/math_private.h: Add __ieee754_ilogb[l|f] prototypes.
+	* sysdeps/i386/fpu/s_ilogb.S: Moved to ...
+	* sysdeps/i386/fpu/e_ilogb.S: ... here. Also fixed a FE_DIVBYZERO
+	exception being thrown with 0.0 as argument.
+	* sysdeps/i386/fpu/s_ilogbf.S: Moved to ...
+	* sysdeps/i386/fpu/e_ilogbf.S: ... here. Also fixed a FE_DIVBYZERO
+	exception being thrown with 0.0 as argument.
+	* sysdeps/i386/fpu/s_ilogbl.S: Moved to ...
+	* sysdeps/i386/fpu/e_ilogbl.S: ... here. Also fixed a FE_DIVBYZERO
+	exception being thrown with 0.0 as argument.
+	* sysdeps/x86_64/fpu/s_ilogbl.S: Moved to ...
+	* sysdeps/x86_64/fpu/e_ilogbl.S: ... here. Also fixed a FE_DIVBYZERO
+	exception being thrown with 0.0 as argument.
+	* sysdeps/ieee754/dbl-64/s_ilogb.c: Moved to ...
+	* sysdeps/ieee754/dbl-64/e_ilogb.c: ... here.
+	* sysdeps/ieee754/flt-32/e_ilogbf.c: Moved to ...
+	* sysdeps/ieee754/flt-32/e_ilogbf.c: ... here.
+	* sysdeps/ieee754/ldbl-128ibm/s_ilogbl.c: Moved to ...
+	* sysdeps/ieee754/ldbl-128ibm/e_ilogbl.c: ... here.
+	* sysdeps/ieee754/ldbl-opt/s_ilogb.c: Moved to ...
+	* sysdeps/ieee754/ldbl-opt/w_ilogb.c: ... here.
+	* sysdeps/ieee754/ldbl-opt/w_ilogbl.c: New file: ilogbl wrapper.
+
 2012-04-17  Petr Baudis  <pasky@ucw.cz>
 
 	* include/sys/uio.h: Change __vector to __iovec to avoid clash

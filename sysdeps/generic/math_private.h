@@ -213,6 +213,7 @@ extern double __ieee754_yn (int,double);
 extern double __ieee754_remainder (double,double);
 extern int32_t __ieee754_rem_pio2 (double,double*);
 extern double __ieee754_scalb (double,double);
+extern int __ieee754_ilogb (double);
 
 /* fdlibm kernel function */
 extern double __kernel_standard (double,double,int);
@@ -260,6 +261,7 @@ extern float __ieee754_ynf (int,float);
 extern float __ieee754_remainderf (float,float);
 extern int32_t __ieee754_rem_pio2f (float,float*);
 extern float __ieee754_scalbf (float,float);
+extern int __ieee754_ilogbf (float);
 
 
 /* float versions of fdlibm kernel functions */
@@ -305,6 +307,7 @@ extern long double __ieee754_ynl (int,long double);
 extern long double __ieee754_remainderl (long double,long double);
 extern int   __ieee754_rem_pio2l (long double,long double*);
 extern long double __ieee754_scalbl (long double,long double);
+extern int   __ieee754_ilogbl (long double);
 
 /* long double versions of fdlibm kernel functions */
 extern long double __kernel_sinl (long double,long double,int);

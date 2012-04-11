@@ -21,7 +21,7 @@ static char rcsid[] = "$NetBSD: s_ilogbf.c,v 1.4 1995/05/10 20:47:31 jtc Exp $";
 #include <math.h>
 #include <math_private.h>
 
-int __ilogbf(float x)
+int __ieee754_ilogbf(float x)
 {
 	int32_t hx,ix;
 
@@ -42,4 +42,4 @@ int __ilogbf(float x)
 	}
 	return FP_ILOGBNAN;
 }
-weak_alias (__ilogbf, ilogbf)
+strong_alias (__ieee754_ilogbf, __ilogbf_finite)

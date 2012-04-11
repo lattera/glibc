@@ -1,14 +1,14 @@
 /*
  * Written by J.T. Conklin <jtc@netbsd.org>.
- * Changes for long double by Ulrich Drepper <drepper@cygnus.com>
- * Adapted for x86-64 by Andreas Jaeger <aj@suse.de>.
  * Public domain.
  */
 
 #include <machine/asm.h>
 
-ENTRY(__ilogbl)
-	fldt	8(%rsp)
+RCSID("$NetBSD: s_ilogbf.S,v 1.4 1995/10/22 20:32:43 pk Exp $")
+
+ENTRY(__ieee754_ilogbf)
+	flds	4(%esp)
 /* I added the following ugly construct because ilogb(+-Inf) is
    required to return INT_MAX in ISO C99.
    -- jakub@redhat.com.  */
@@ -18,18 +18,26 @@ ENTRY(__ilogbl)
 	andb    %ah, %dh
 	cmpb    $0x05, %dh
 	je      1f		/* Is +-Inf, jump.  */
+	cmpb    $0x40, %dh
+	je      2f		/* Is +-0, jump.  */
 
 	fxtract
+	pushl	%eax
+	cfi_adjust_cfa_offset (4)
 	fstp	%st
 
-	fistpl	-4(%rsp)
+	fistpl	(%esp)
 	fwait
-	movl	-4(%rsp),%eax
+	popl	%eax
+	cfi_adjust_cfa_offset (-4)
 
 	ret
 
 1:	fstp	%st
 	movl	$0x7fffffff, %eax
 	ret
-END (__ilogbl)
-weak_alias (__ilogbl, ilogbl)
+2:	fstp	%st
+	movl	$0x80000000, %eax	/* FP_ILOGB0  */
+	ret
+END (__ieee754_ilogbf)
+weak_alias (__ieee754_ilogbf, __ilogbf_finite)

@@ -25,7 +25,7 @@ static char rcsid[] = "$NetBSD: s_ilogb.c,v 1.9 1995/05/10 20:47:28 jtc Exp $";
 #include <math.h>
 #include <math_private.h>
 
-int __ilogb(double x)
+int __ieee754_ilogb(double x)
 {
 	int32_t hx,lx,ix;
 
@@ -52,8 +52,4 @@ int __ilogb(double x)
 	}
 	return FP_ILOGBNAN;
 }
-weak_alias (__ilogb, ilogb)
-#ifdef NO_LONG_DOUBLE
-strong_alias (__ilogb, __ilogbl)
-weak_alias (__ilogb, ilogbl)
-#endif
+strong_alias (__ieee754_ilogb, __ilogb_finite)
