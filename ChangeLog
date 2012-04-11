@@ -1,3 +1,7 @@
+2012-04-11  David S. Miller  <davem@davemloft.net>
+
+	* sysdeps/sparc/fpu/libm-test-ulps: Update.
+
 2012-04-11  Mike Frysinger  <vapier@gentoo.org>
 
 	* .gitignore: Add /ports, /linuxthreads, and /linuxthreads_db.
