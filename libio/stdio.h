@@ -1,5 +1,5 @@
 /* Define ISO C stdio on top of C++ iostreams.
-   Copyright (C) 1991, 1994-2011, 2012 Free Software Foundation, Inc.
+   Copyright (C) 1991, 1994-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -713,7 +713,7 @@ extern size_t fread (void *__restrict __ptr, size_t __size,
    This function is a possible cancellation point and therefore not
    marked with __THROW.  */
 extern size_t fwrite (const void *__restrict __ptr, size_t __size,
-		      size_t __n, FILE *__restrict __s) __wur;
+		      size_t __n, FILE *__restrict __s);
 __END_NAMESPACE_STD
 
 #ifdef __USE_GNU
@@ -737,7 +737,7 @@ extern int fputs_unlocked (const char *__restrict __s,
 extern size_t fread_unlocked (void *__restrict __ptr, size_t __size,
 			      size_t __n, FILE *__restrict __stream) __wur;
 extern size_t fwrite_unlocked (const void *__restrict __ptr, size_t __size,
-			       size_t __n, FILE *__restrict __stream) __wur;
+			       size_t __n, FILE *__restrict __stream);
 #endif
 
 

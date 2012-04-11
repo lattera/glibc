@@ -1,3 +1,11 @@
+2012-04-11  Jim Meyering  <meyering@redhat.com>
+
+        [BZ #11959]
+        * libio/stdio.h (fwrite, fwrite_unlocked): Remove __wur.
+        It is not necessarily an error to ignore fwrite's return
+        value.  One can reliably use ferror to test for errors after
+        the fact.
+
 2012-04-10  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* bits/types.h (__snseconds_t): New type.
@@ -11,7 +19,7 @@
 	* sysdeps/unix/sysv/linux/sparc/bits/typesizes.h
 	(__SNSECONDS_T_TYPE): Likewise.
 
-2012-04-09  Andreas Jaeger  <aj@suse.de>
+2012-04-10  Andreas Jaeger  <aj@suse.de>
 
 	[BZ #2636]
 	* manual/time.texi (Processor Time): Return type of times is
