@@ -237,12 +237,6 @@ million independent of the actual resolution.
 @end deftypevr
 
 @comment time.h
-@comment POSIX.1
-@deftypevr Macro int CLK_TCK
-This is an obsolete name for @code{CLOCKS_PER_SEC}.
-@end deftypevr
-
-@comment time.h
 @comment ISO
 @deftp {Data Type} clock_t
 This is the type of the value returned by the @code{clock} function.
@@ -306,15 +300,22 @@ these are the actual amounts of time; not relative to any event.
 @xref{Creating a Process}.
 @end deftp
 
+@comment time.h
+@comment POSIX.1
+@deftypevr Macro int CLK_TCK
+This is an obsolete name for the number of clock ticks per second.  Use
+@code{sysconf (_SC_CLK_TCK)} instead.
+@end deftypevr
+
 @comment sys/times.h
 @comment POSIX.1
 @deftypefun clock_t times (struct tms *@var{buffer})
 The @code{times} function stores the processor time information for
 the calling process in @var{buffer}.
 
-The return value is the calling process' CPU time (the same value you
-get from @code{clock()}.  @code{times} returns @code{(clock_t)(-1)} to
-indicate failure.
+The return value is the number of clock ticks since an arbitrary point
+in the past, e.g. since system start-up.  @code{times} returns
+@code{(clock_t)(-1)} to indicate failure.
 @end deftypefun
 
 @strong{Portability Note:} The @code{clock} function described in

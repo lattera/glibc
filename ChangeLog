@@ -1,3 +1,13 @@
+2012-04-09  Andreas Jaeger  <aj@suse.de>
+
+	[BZ #2636]
+	* manual/time.texi (Processor Time): Return type of times is
+	elapsed real time since an arbitrary point in the past.
+	(CPU Time): Move CLK_TCK from here...
+	(Processor Time): ...to here.  Correct description.
+	* manual/conf.texi (Constants for Sysconf): Correct description of
+	_SC_CLK_TCK.
+
 2012-04-10  David S. Miller  <davem@davemloft.net>
 
 	[BZ #13967]

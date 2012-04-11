@@ -360,8 +360,8 @@ Inquire about the parameter corresponding to @code{_POSIX_VERSION}.
 @comment unistd.h
 @comment POSIX.1
 @item _SC_CLK_TCK
-Inquire about the parameter corresponding to @code{CLOCKS_PER_SEC};
-@pxref{CPU Time}.
+Inquire about the number of clock ticks per second; @pxref{CPU Time}.
+The corresponding parameter @code{CLK_TCK} is obsolete.
 
 @comment unistd.h
 @comment GNU
