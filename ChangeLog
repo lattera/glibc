@@ -1,3 +1,16 @@
+2012-04-10  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* bits/types.h (__snseconds_t): New type.
+	* time/time.h (struct timespec): Use __snseconds_t on tv_nsec.
+
+	* bits/typesizes.h (__SNSECONDS_T_TYPE): New macro.
+	* sysdeps/unix/bsd/bsd4.4/freebsd/bits/typesizes.h
+	(__SNSECONDS_T_TYPE): Likewise.
+	* sysdeps/unix/sysv/linux/s390/bits/typesizes.h
+	(__SNSECONDS_T_TYPE): Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/typesizes.h
+	(__SNSECONDS_T_TYPE): Likewise.
+
 2012-04-09  Andreas Jaeger  <aj@suse.de>
 
 	[BZ #2636]

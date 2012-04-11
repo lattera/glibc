@@ -120,7 +120,7 @@ typedef __timer_t timer_t;
 struct timespec
   {
     __time_t tv_sec;		/* Seconds.  */
-    long int tv_nsec;		/* Nanoseconds.  */
+    __snseconds_t tv_nsec;	/* Nanoseconds.  */
   };
 
 #endif /* timespec not defined and <time.h> or need timespec.  */

@@ -63,6 +63,7 @@
 /* size_t is unsigned long int on s390 -m31.  */
 #define __SSIZE_T_TYPE		__SLONGWORD_TYPE
 #endif
+#define __SNSECONDS_T_TYPE	__SLONGWORD_TYPE
 
 /* Number of descriptors that can fit in an `fd_set'.  */
 #define	__FD_SETSIZE		1024

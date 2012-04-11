@@ -57,6 +57,7 @@
 #define __BLKSIZE_T_TYPE	__SLONGWORD_TYPE
 #define __FSID_T_TYPE		__UQUAD_TYPE
 #define __SSIZE_T_TYPE		__SWORD_TYPE
+#define __SNSECONDS_T_TYPE	__SLONGWORD_TYPE
 
 /* Number of descriptors that can fit in an `fd_set'.  */
 #define	__FD_SETSIZE		256
