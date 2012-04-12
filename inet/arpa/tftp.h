@@ -49,17 +49,23 @@
 struct	tftphdr {
 	short	th_opcode;			/* packet type */
 	union {
-		unsigned short	tu_block;	/* block # */
-		short	tu_code;		/* error code */
-		char	tu_stuff[1];		/* request packet stuff */
-	} __attribute__ ((__packed__)) th_u;
-	char	th_data[1];			/* data or error string */
+		char	tu_padding[3];		/* sizeof() compat */
+		struct {
+			union {
+				unsigned short	tu_block;	/* block # */
+				short	tu_code;		/* error code */
+			} __attribute__ ((__packed__)) th_u3;
+			char tu_data[0];	/* data or error string */
+		} __attribute__ ((__packed__)) th_u2;
+		char	tu_stuff[0];		/* request packet stuff */
+	} __attribute__ ((__packed__)) th_u1;
 } __attribute__ ((__packed__));
 
-#define	th_block	th_u.tu_block
-#define	th_code		th_u.tu_code
-#define	th_stuff	th_u.tu_stuff
-#define	th_msg		th_data
+#define	th_block	th_u1.th_u2.th_u3.tu_block
+#define	th_code		th_u1.th_u2.th_u3.tu_code
+#define	th_stuff	th_u1.tu_stuff
+#define	th_data		th_u1.th_u2.tu_data
+#define	th_msg		th_u1.th_u2.tu_data
 
 /*
  * Error codes.

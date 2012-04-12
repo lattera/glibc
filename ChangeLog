@@ -1,3 +1,16 @@
+2012-05-08  Mike Frysinger  <vapier@gentoo.org>
+
+	* inet/arpa/tftp.h (struct tftphdr): Rename th_u to th_u1.  Add
+	a struct th_u2 inside the union, and move tu_block/tu_code into
+	a new th_u3 union of tu_block/tu_code inside of that.  Move
+	th_data[1] into the th_u2 as tu_data[0].  Change tu_stuff[1] to
+	tu_stuff[0].  Add a new tu_padding[4] to keep sizeof() the same.
+	(th_block): Change to th_u1.th_u2.th_u3.tu_block.
+	(th_code): Change to th_u1.th_u2.th_u3.tu_code.
+	(th_stuff): Change to th_u1.tu_stuff.
+	(th_data): Define.
+	(th_msg): Change to th_u1.th_u2.tu_data.
+
 2012-05-07  David S. Miller  <davem@davemloft.net>
 
 	* sysdeps/sparc/fpu/libm-test-ulps: Update.
