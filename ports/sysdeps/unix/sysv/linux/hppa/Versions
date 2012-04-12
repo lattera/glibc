@@ -27,6 +27,9 @@ libc {
     #errlist-compat	257
     _sys_errlist; sys_errlist; _sys_nerr; sys_nerr;
   }
+  GLIBC_2.17 {
+    prlimit64;
+  }
 }
 librt {
   GLIBC_2.3 {
