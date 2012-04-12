@@ -346,11 +346,11 @@ extern _IO_FILE *_IO_stderr attribute_hidden;
 typedef __ssize_t __io_read_fn (void *__cookie, char *__buf, size_t __nbytes);
 
 /* Write N bytes pointed to by BUF to COOKIE.  Write all N bytes
-   unless there is an error.  Return number of bytes written, or -1 if
-   there is an error without writing anything.  If the file has been
-   opened for append (__mode.__append set), then set the file pointer
-   to the end of the file and then do the write; if not, just write at
-   the current file pointer.  */
+   unless there is an error.  Return number of bytes written.  If
+   there is an error, return 0 and do not write anything.  If the file
+   has been opened for append (__mode.__append set), then set the file
+   pointer to the end of the file and then do the write; if not, just
+   write at the current file pointer.  */
 typedef __ssize_t __io_write_fn (void *__cookie, const char *__buf,
 				 size_t __n);
 

@@ -1,3 +1,8 @@
+2012-04-12  Roland McGrath  <roland@hack.frob.com>
+
+	[BZ #2074]
+	* libio/libio.h (__io_write_fn): Update comment.
+
 2012-04-12  Petr Baudis  <pasky@ucw.cz>
 
 	[BZ #2074]
