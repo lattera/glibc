@@ -1,3 +1,9 @@
+2012-04-12  Mike Frysinger  <vapier@gentoo.org>
+
+        [BZ #3768]
+	* locales/en_GB (LC_TIME): Set am_pm and t_fmt_ampm fields.
+	* locales/cy_GB (LC_TIME): Likewise.  Also copy date_fmt from en_GB.
+
 2012-04-04  Jeff Law  <law@redhat.com>
 
 	[BZ #6770]
