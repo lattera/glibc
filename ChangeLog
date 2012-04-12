@@ -1,3 +1,9 @@
+2012-04-12  Petr Baudis  <pasky@ucw.cz>
+
+	[BZ #2074]
+	* stdio.texi (Hook Functions): The user provided writer function
+	is not allowed to return -1.
+
 2012-04-11  David S. Miller  <davem@davemloft.net>
 
 	* sysdeps/sparc/fpu/libm-test-ulps: Update.

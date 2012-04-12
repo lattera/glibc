@@ -5021,7 +5021,8 @@ ssize_t @var{writer} (void *@var{cookie}, const char *@var{buffer}, size_t @var{
 This is very similar to the @code{write} function; see @ref{I/O
 Primitives}.  Your function should transfer up to @var{size} bytes from
 the buffer, and return the number of bytes written.  You can return a
-value of @code{-1} to indicate an error.
+value of @code{0} to indicate an error.  You must not return any
+negative value.
 
 You should define the function to perform seek operations on the cookie
 as:
