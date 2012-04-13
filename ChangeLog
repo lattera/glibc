@@ -1,3 +1,8 @@
+2012-04-13  Antoine Balestrat <merkil33@gmail.com>
+
+	* sysdeps/unix/sysv/linux/sparc/sparc64/get_clockfreq.c
+	(__get_clockfreq_via_proc_openprom): Fix test on wrong variable.
+
 2012-04-13  Chris Leonard  <cjlhomeaddress@gmail.com>
 
 	[BZ #13973]

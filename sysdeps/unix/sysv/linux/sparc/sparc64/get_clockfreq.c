@@ -126,7 +126,7 @@ __get_clockfreq_via_proc_openprom (void)
 
 		      __stpcpy (prop, "/clock-frequency");
 		      clkfreq_fd = open (node, O_RDONLY);
-		      if (fd != -1)
+		      if (clkfreq_fd != -1)
 			{
 			  if (read (clkfreq_fd, type_string,
 				    sizeof (type_string)) > 0)
