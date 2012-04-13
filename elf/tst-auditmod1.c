@@ -109,7 +109,7 @@ la_symbind64 (Elf64_Sym *sym, unsigned int ndx, uintptr_t *refcook,
 # define La_retval La_i86_retval
 # define int_retval lrv_eax
 #elif defined __x86_64__
-# ifdef __LP64__
+# ifndef __ILP32__
 #  define pltenter la_x86_64_gnu_pltenter
 #  define pltexit la_x86_64_gnu_pltexit
 #  define La_regs La_x86_64_regs

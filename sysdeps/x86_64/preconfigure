@@ -133,7 +133,7 @@ if ${libc_cv_x32+:} false; then :
 else
     cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
-#ifdef __LP64__
+#ifndef __ILP32__
 # error not x32
 #endif
 int

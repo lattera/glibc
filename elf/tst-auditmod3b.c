@@ -105,7 +105,7 @@ la_symbind64 (Elf64_Sym *sym, unsigned int ndx, uintptr_t *refcook,
   return sym->st_value;
 }
 
-#ifdef __LP64__
+# ifndef __ILP32__
 # define pltenter la_x86_64_gnu_pltenter
 # define pltexit la_x86_64_gnu_pltexit
 # define La_regs La_x86_64_regs

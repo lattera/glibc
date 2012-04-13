@@ -8,7 +8,7 @@ x86_64)
   AC_CACHE_CHECK(whether $CC compiles in -mx32 mode by default,
 		 libc_cv_x32, [dnl
   AC_TRY_COMPILE(dnl
-[#ifdef __LP64__
+[#ifndef __ILP32__
 # error not x32
 #endif], [], libc_cv_x32=yes, libc_cv_x32=no)])
   if test $libc_cv_x32 = yes; then

@@ -1,5 +1,18 @@
 2012-04-13  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* elf/tst-auditmod1.c: Check __ILP32__ instead of __LP64__.
+	* elf/tst-auditmod3b.c: Likewise.
+	* elf/tst-auditmod4b.c: Likewise.
+	* elf/tst-auditmod5b.c: Likewise.
+	* elf/tst-auditmod6b.c: Likewise.
+	* elf/tst-auditmod6c.c: Likewise.
+	* elf/tst-auditmod7b.c: Likewise.
+	* sysdeps/x86_64/ffsll.c (ffsl): Likewise.
+	* sysdeps/x86_64/preconfigure.in: Likewise.
+	* sysdeps/x86_64/preconfigure: Regenerated.
+
+2012-04-13  H.J. Lu  <hongjiu.lu@intel.com>
+
 	* sysdeps/x86_64/bits/wordsize.h (__WORDSIZE): Also check
 	__ILP32__.
 

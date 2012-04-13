@@ -36,7 +36,7 @@ ffsll (long long int x)
   return cnt + 1;
 }
 
-#ifdef __LP64__
+#ifndef __ILP32__
 #undef	ffsl
 weak_alias (ffsll, ffsl)
 #endif
