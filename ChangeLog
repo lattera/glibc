@@ -1,3 +1,9 @@
+2012-04-13  Chris Leonard  <cjlhomeaddress@gmail.com>
+
+	[BZ #13973]
+	* locale/iso-639.def: Fix gl language name. Spotted by
+	Yaron Shahrabani.
+
 2012-04-12  Roland McGrath  <roland@hack.frob.com>
 
 	[BZ #2074]
