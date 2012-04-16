@@ -1,3 +1,8 @@
+2012-04-16  Marek Polacek  <polacek@redhat.com>
+
+	* sysdeps/i386/fpu/bits/fenv.h (feraiseexcept): Reverse the
+	operands of fdivp instruction.
+
 2012-04-13  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* elf/tst-auditmod1.c: Check __ILP32__ instead of __LP64__.
