@@ -1,5 +1,9 @@
 2012-04-16  Marek Polacek  <polacek@redhat.com>
 
+	* elf/pldd-xx.c: Rename static_assert to pldd_assert.
+
+2012-04-16  Marek Polacek  <polacek@redhat.com>
+
 	* sysdeps/i386/fpu/bits/fenv.h (feraiseexcept): Reverse the
 	operands of fdivp instruction.
 
