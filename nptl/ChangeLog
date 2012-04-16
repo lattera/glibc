@@ -1,3 +1,8 @@
+2012-05-02  Allan McRae  <allan@archlinux.org>
+
+	* Makefile: (LDFLAGS-tst-tls5): Use $(no-as-needed).
+	(LDFLAGS-tst-cancel24): Likewise.
+
 2012-05-02  Paul Pluzhnikov  <ppluzhnikov@google.com>
 
 	* sysdeps/i386/pthread_spin_lock.S: New.

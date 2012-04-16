@@ -1,3 +1,27 @@
+2012-05-02  Allan McRae  <allan@archlinux.org>
+
+	* elf/Makefile: (LDFLAGS-nodel2mod3.so: Use $(no-as-needed).
+	(LDFLAGS-reldepmod5.so): Likewise.
+	(LDFLAGS-reldep6mod1.so): Likewise.
+	(LDFLAGS-reldep6mod4.so): Likewise.
+	(LDFLAGS-reldep8mod3.so): Likewise.
+	(LDFLAGS-unload4mod1.so): Likewise.
+	(LDFLAGS-unload4mod2.so): Likewise.
+	(LDFLAGS-tst-initorder): Likewise.
+	(LDFLAGS-tst-initordera2.so): Likewise.
+	(LDFLAGS-tst-initordera3.so): Likewise.
+	(LDFLAGS-tst-initordera4.so): Likewise.
+	(LDFLAGS-tst-initorderb2.so): Likewise.
+	(LDFLAGS-noload): Likewise.
+	(LDFLAGS-next): Likewise.
+	(LDFLAGS-order2mod1.so): Likewise.
+	(LDFLAGS-order2mod2.so): Likewise.
+	(LDFLAGS-tst-initorder2): Likewise.
+	(LDFLAGS-tst-initorder2a.so): Likewise.
+	(LDFLAGS-tst-initorder2b.so): Likewise.
+	(LDFLAGS-tst-initorder2c.so): Likewise.
+	* stdlib/Makefile: (LDFLAGS-tst-putenv): Likewise.
+
 2012-05-02  David S. Miller  <davem@davemloft.net>
 
 	* sysdeps/sparc/fpu/libm-test-ulps: Update.

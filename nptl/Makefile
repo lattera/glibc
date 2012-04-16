@@ -458,6 +458,7 @@ $(objpfx)tst-tls4: $(libdl) $(shared-thread-library)
 $(objpfx)tst-tls4.out: $(objpfx)tst-tls4moda.so $(objpfx)tst-tls4modb.so
 
 $(objpfx)tst-tls5: $(objpfx)tst-tls5mod.so $(shared-thread-library)
+LDFLAGS-tst-tls5 = $(no-as-needed)
 LDFLAGS-tst-tls5mod.so = -Wl,-soname,tst-tls5mod.so
 
 ifeq ($(build-shared),yes)
@@ -503,7 +504,7 @@ $(objpfx)tst-clock2: $(common-objpfx)rt/librt.a
 $(objpfx)tst-rwlock14: $(common-objpfx)rt/librt.a
 endif
 
-LDFLAGS-tst-cancel24 = -lstdc++
+LDFLAGS-tst-cancel24 = $(no-as-needed) -lstdc++
 
 extra-B-pthread.so = -B$(common-objpfx)nptl/
 $(objpfx)libpthread.so: $(addprefix $(objpfx),$(crti-objs) $(crtn-objs))

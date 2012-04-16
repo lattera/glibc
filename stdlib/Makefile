@@ -138,6 +138,7 @@ $(objpfx)tst-fmtmsg.out: tst-fmtmsg.sh $(objpfx)tst-fmtmsg
 	$(SHELL) -e $< $(common-objpfx) '$(run-program-prefix)' $(common-objpfx)stdlib/
 
 $(objpfx)tst-putenv: $(objpfx)tst-putenvmod.so
+LDFLAGS-tst-putenv = $(no-as-needed)
 
 $(objpfx)tst-putenvmod.so: $(objpfx)tst-putenvmod.os
 	$(build-module)
