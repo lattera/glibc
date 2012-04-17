@@ -1,5 +1,9 @@
 2012-04-27  Mike Frysinger  <vapier@gentoo.org>
 
+	* sysdeps/ia64/fpu/e_rem_pio2l.c: New file.
+
+2012-04-27  Mike Frysinger  <vapier@gentoo.org>
+
 	* sysdeps/ia64/bits/fenv.h: Change __const to const.
 	* sysdeps/unix/sysv/linux/ia64/swapcontext.c: Likewise.
 
