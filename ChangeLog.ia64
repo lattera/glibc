@@ -1,5 +1,10 @@
 2012-04-27  Mike Frysinger  <vapier@gentoo.org>
 
+	* sysdeps/ia64/bits/fenv.h: Change __const to const.
+	* sysdeps/unix/sysv/linux/ia64/swapcontext.c: Likewise.
+
+2012-04-27  Mike Frysinger  <vapier@gentoo.org>
+
 	* sysdeps/ia64/fpu/s_matherrf.c: Change "math.h" and "math_private.h"
 	to <math.h> and <math_private.h>.
 	* sysdeps/ia64/fpu/s_matherrl.c: Likewise.

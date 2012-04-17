@@ -1,4 +1,4 @@
-/* Copyright (C) 2001 Free Software Foundation, Inc.
+/* Copyright (C) 2001-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
      Contributed by David Mosberger-Tang <davidm@hpl.hp.com>.
 
@@ -25,7 +25,7 @@ struct rv
   };
 
 extern struct rv __getcontext (ucontext_t *__ucp) __THROW;
-extern int __setcontext (__const ucontext_t *__ucp) __THROW;
+extern int __setcontext (const ucontext_t *__ucp) __THROW;
 
 int
 __swapcontext (ucontext_t *oucp, const ucontext_t *ucp)
