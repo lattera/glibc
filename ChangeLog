@@ -1,3 +1,8 @@
+2012-04-17  Petr Baudis  <pasky@ucw.cz>
+
+	* include/sys/uio.h: Change __vector to __iovec to avoid clash
+	with altivec.
+
 2012-04-16  Marek Polacek  <polacek@redhat.com>
 
 	* elf/pldd-xx.c: Rename static_assert to pldd_assert.
