@@ -1,5 +1,12 @@
 2012-04-27  Mike Frysinger  <vapier@gentoo.org>
 
+	* sysdeps/ia64/crti.S: New file.
+	* sysdeps/ia64/crtn.S: Likewise.
+	* sysdeps/ia64/elf/initfini.c: Delete.
+	* sysdeps/unix/sysv/linux/ia64/nptl/pt-initfini.c: Likewise.
+
+2012-04-27  Mike Frysinger  <vapier@gentoo.org>
+
 	* sysdeps/ia64/elf/configure.in: Merge contents to ...
 	* sysdeps/ia64/configure.in: ... here.
 	* sysdeps/ia64/elf/configure: Delete.
