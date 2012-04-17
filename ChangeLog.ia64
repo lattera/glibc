@@ -1,5 +1,9 @@
 2012-04-27  Mike Frysinger  <vapier@gentoo.org>
 
+	* sysdeps/ia64/dl-tls.h (GET_ADDR_PARAM): Define.
+
+2012-04-27  Mike Frysinger  <vapier@gentoo.org>
+
 	* sysdeps/ia64/bits/byteswap.h (__bswap_16): Removed.
 	Include <bits/byteswap-16.h> to get __bswap_16.
 	* sysdeps/ia64/bits/byteswap-16.h: New file.
