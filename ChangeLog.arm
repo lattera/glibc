@@ -1,3 +1,8 @@
+2012-04-16  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/arm/ldsodefs.h: Undefine
+	MORE_ELF_HEADER_DATA to avoid warnings about redefinition.
+
 2012-03-28  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/arm/bits/mman.h (MAP_STACK): Define.

@@ -1,5 +1,5 @@
 /* Run-time dynamic linker data structures for loaded ELF shared objects.
-   Copyright (C) 2010 Free Software Foundation, Inc.
+   Copyright (C) 2010, 2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -23,6 +23,7 @@
 
 #undef VALID_ELF_HEADER
 #undef VALID_ELF_OSABI
+#undef MORE_ELF_HEADER_DATA
 
 #ifdef __ARM_EABI__
 #define EXTRA_OSABI ELFOSABI_ARM_AEABI
