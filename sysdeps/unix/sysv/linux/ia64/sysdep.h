@@ -1,5 +1,4 @@
-/* Copyright (C) 1999, 2000, 2002, 2003, 2004, 2005, 2006
-   Free Software Foundation, Inc.
+/* Copyright (C) 1999-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Jes Sorensen, <Jes.Sorensen@cern.ch>, April 1999.
    Based on code originally written by David Mosberger-Tang
@@ -38,11 +37,7 @@
    of the kernel.  But these symbols do not follow the SYS_* syntax
    so we have to redefine the `SYS_ify' macro here.  */
 #undef SYS_ify
-#ifdef __STDC__
-# define SYS_ify(syscall_name)	__NR_##syscall_name
-#else
-# define SYS_ify(syscall_name)	__NR_/**/syscall_name
-#endif
+#define SYS_ify(syscall_name)	__NR_##syscall_name
 
 /* This is a kludge to make syscalls.list find these under the names
    pread and pwrite, since some kernel headers define those names

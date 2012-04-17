@@ -15,16 +15,9 @@
 #include <math_private.h>
 #include "libm_support.h"
 
-#ifdef __STDC__
-	int
-	weak_function
-	 __matherrf(struct exceptionf *x)
-#else
-	int
-	weak_function
-	__matherrf(x)
-	struct exceptionf *x;
-#endif
+int
+weak_function
+__matherrf(struct exceptionf *x)
 {
 	int n=0;
 	if(x->arg1!=x->arg1) return 0;

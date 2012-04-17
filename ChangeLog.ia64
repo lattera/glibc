@@ -1,5 +1,11 @@
 2012-04-27  Mike Frysinger  <vapier@gentoo.org>
 
+	* sysdeps/ia64/fpu/s_matherrf.c: Delete __STDC__.
+	* sysdeps/ia64/fpu/s_matherrl.c,
+	sysdeps/unix/sysv/linux/ia64/sysdep.h: Likewise.
+
+2012-04-27  Mike Frysinger  <vapier@gentoo.org>
+
 	* sysdeps/ia64/fpu/e_rem_pio2l.c: New file.
 
 2012-04-27  Mike Frysinger  <vapier@gentoo.org>
