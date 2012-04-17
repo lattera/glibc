@@ -1,5 +1,10 @@
 2012-04-27  Mike Frysinger  <vapier@gentoo.org>
 
+	* sysdeps/unix/sysv/linux/ia64/bits/mman.h (MAP_STACK): Define.
+	(MAP_HUGETLB): Likewise.
+
+2012-04-27  Mike Frysinger  <vapier@gentoo.org>
+
 	* sysdeps/ia64/fpu/s_scalbn.c (__scalbn): Rename from scalbn.
 	Add weak alias from scalbn to __scalbn.
 	* sysdeps/ia64/fpu/s_scalbnf.c (__scalbnf): Rename from scalbnf.
