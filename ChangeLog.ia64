@@ -1,5 +1,10 @@
 2012-04-27  Mike Frysinger  <vapier@gentoo.org>
 
+	* sysdeps/ia64/hp-timing.h: Change stdio-common/_itoa.h to _itoa.h.
+	* sysdeps/unix/sysv/linux/ia64/register-dump.h: Likewise.
+
+2012-04-27  Mike Frysinger  <vapier@gentoo.org>
+
 	* sysdeps/ia64/crti.S: New file.
 	* sysdeps/ia64/crtn.S: Likewise.
 	* sysdeps/ia64/elf/initfini.c: Delete.
