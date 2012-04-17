@@ -1,5 +1,24 @@
 2012-04-27  Mike Frysinger  <vapier@gentoo.org>
 
+	* sysdeps/ia64/elf/stackguard-macros.h: New stub include file.
+	* sysdeps/ia64/ldsodefs.h: Move ia64 logic from
+	sysdeps/generic/ldsodefs.h.
+	* sysdeps/ia64/nptl/shlib-versions: Move ia64 logic from
+	nptl/shlib-versions.
+	* sysdeps/ia64/preconfigure: Move ia64 logic from configure.in.
+	* sysdeps/ia64/shlib-versions: Move ia64 logic from shlib-versions.
+	* sysdeps/ia64/stackguard-macros.h: Move ia64 logic from
+	elf/stackguard-macros.h.
+	* sysdeps/ia64/tls-macros.h: Move ia64 logic from elf/tls-macros.h.
+	* sysdeps/ia64/tst-audit.h: Move ia64 logic from elf/tst-auditmod1.c.
+	* sysdeps/unix/sysv/linux/ia64/configure.in: Move ia64 logic from
+	sysdeps/unix/sysv/linux/configure.
+	* sysdeps/unix/sysv/linux/ia64/configure: Generate.
+	* sysdeps/unix/sysv/linux/ia64/kernel-features.h: Move ia64 logic
+	from sysdeps/unix/sysv/linux/kernel-features.h.
+
+2012-04-27  Mike Frysinger  <vapier@gentoo.org>
+
 	* sysdeps/ia64/backtrace.c: Replace all contents with a single
 	include of sysdeps/x86_64/backtrace.c.
 	* sysdeps/unix/sysv/linux/ia64/nptl/fork.c: Change include path

@@ -1,0 +1,6 @@
+ia64-.*-linux.*		libc=6.1		GLIBC_2.2
+ia64-.*-linux.*		libm=6.1		GLIBC_2.2
+
+ia64-.*-linux.*		ld=ld-linux-ia64.so.2	GLIBC_2.2
+
+ia64-.*-.*		libBrokenLocale=1	GLIBC_2.2
