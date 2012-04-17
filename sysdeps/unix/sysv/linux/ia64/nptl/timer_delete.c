@@ -1,1 +1,1 @@
-#include "../x86_64/timer_delete.c"
+#include <nptl/sysdeps/unix/sysv/linux/x86_64/timer_delete.c>

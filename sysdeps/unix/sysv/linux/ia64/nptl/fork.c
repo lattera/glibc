@@ -1,4 +1,4 @@
-/* Copyright (C) 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2003-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jakub@redhat.com>, 2003.
 
@@ -27,4 +27,4 @@
 		  CLONE_CHILD_SETTID | CLONE_CHILD_CLEARTID | SIGCHLD,	      \
 		  NULL, 0, NULL, &THREAD_SELF->tid, NULL)
 
-#include "../fork.c"
+#include <sysdeps/unix/sysv/linux/fork.c>

@@ -1,3 +1,17 @@
+2012-04-27  Mike Frysinger  <vapier@gentoo.org>
+
+	* sysdeps/ia64/backtrace.c: Replace all contents with a single
+	include of sysdeps/x86_64/backtrace.c.
+	* sysdeps/unix/sysv/linux/ia64/nptl/fork.c: Change include path
+	prefix from ../ to sysdeps/unix/sysv/linux/, and "..." to <...>.
+	* sysdeps/unix/sysv/linux/ia64/nptl/timer_create.c,
+	sysdeps/unix/sysv/linux/ia64/nptl/timer_delete.c,
+	sysdeps/unix/sysv/linux/ia64/nptl/timer_getoverr.c,
+	sysdeps/unix/sysv/linux/ia64/nptl/timer_gettime.c,
+	sysdeps/unix/sysv/linux/ia64/nptl/timer_settime.c,
+	sysdeps/unix/sysv/linux/ia64/sysconf.c,
+	sysdeps/unix/sysv/linux/ia64/system.c: Likewise.
+
 2012-04-25  Mike Frysinger  <vapier@gentoo.org>
 
 	* sysdeps/unix/sysv/linux/ia64/nptl/bits/local_lim.h: Replace
