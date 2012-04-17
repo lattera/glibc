@@ -11,8 +11,8 @@
  */
 
 
-#include "math.h"
-#include "math_private.h"
+#include <math.h>
+#include <math_private.h>
 #include "libm_support.h"
 
 #ifdef __STDC__

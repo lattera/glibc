@@ -1,5 +1,11 @@
 2012-04-27  Mike Frysinger  <vapier@gentoo.org>
 
+	* sysdeps/ia64/fpu/s_matherrf.c: Change "math.h" and "math_private.h"
+	to <math.h> and <math_private.h>.
+	* sysdeps/ia64/fpu/s_matherrl.c: Likewise.
+
+2012-04-27  Mike Frysinger  <vapier@gentoo.org>
+
 	* sysdeps/ia64/hp-timing.h: Change stdio-common/_itoa.h to _itoa.h.
 	* sysdeps/unix/sysv/linux/ia64/register-dump.h: Likewise.
 
