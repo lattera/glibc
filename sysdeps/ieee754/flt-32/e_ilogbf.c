@@ -42,4 +42,3 @@ int __ieee754_ilogbf(float x)
 	}
 	return FP_ILOGBNAN;
 }
-strong_alias (__ieee754_ilogbf, __ilogbf_finite)

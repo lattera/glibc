@@ -40,4 +40,3 @@ ENTRY(__ieee754_ilogb)
 	movl	$0x80000000, %eax	/* FP_ILOGB0  */
 	ret
 END (__ieee754_ilogb)
-weak_alias (__ieee754_ilogb, __ilogb_finite)

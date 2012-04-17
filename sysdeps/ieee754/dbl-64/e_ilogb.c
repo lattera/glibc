@@ -52,4 +52,3 @@ int __ieee754_ilogb(double x)
 	}
 	return FP_ILOGBNAN;
 }
-strong_alias (__ieee754_ilogb, __ilogb_finite)
