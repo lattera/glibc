@@ -21,20 +21,20 @@
 // products derived from this software without specific prior written
 // permission.
 
-// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
-// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
 // LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL INTEL OR ITS 
+// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL INTEL OR ITS
 // CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-// EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, 
-// PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
-// PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY 
+// EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+// PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+// PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY
 // OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY OR TORT (INCLUDING
-// NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS 
-// SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. 
-// 
+// NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+// SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
 // Intel Corporation is the author of this code, and requests that all
-// problem reports or change requests be submitted to it directly at 
+// problem reports or change requests be submitted to it directly at
 // http://www.intel.com/software/products/opensource/libraries/num.htm.
 //
 //
@@ -82,25 +82,25 @@
 // IEEE Special Conditions:
 //
 //    Denormal fault raised on denormal inputs
-//    Underflow exceptions may occur 
+//    Underflow exceptions may occur
 //    Special error handling for the y=0 and x=0 case
 //    Inexact raised when appropriate by algorithm
 //
 //    atanl(SNaN) = QNaN
 //    atanl(QNaN) = QNaN
 //    atanl(+/-0) = +/- 0
-//    atanl(+/-Inf) = +/-pi/2 
+//    atanl(+/-Inf) = +/-pi/2
 //
 //    atan2l(Any NaN for x or y) = QNaN
-//    atan2l(+/-0,x) = +/-0 for x > 0 
-//    atan2l(+/-0,x) = +/-pi for x < 0 
-//    atan2l(+/-0,+0) = +/-0 
-//    atan2l(+/-0,-0) = +/-pi 
+//    atan2l(+/-0,x) = +/-0 for x > 0
+//    atan2l(+/-0,x) = +/-pi for x < 0
+//    atan2l(+/-0,+0) = +/-0
+//    atan2l(+/-0,-0) = +/-pi
 //    atan2l(y,+/-0) = pi/2 y > 0
 //    atan2l(y,+/-0) = -pi/2 y < 0
 //    atan2l(+/-y, Inf) = +/-0 for finite y > 0
-//    atan2l(+/-Inf, x) = +/-pi/2 for finite x 
-//    atan2l(+/-y, -Inf) = +/-pi for finite  y > 0 
+//    atan2l(+/-Inf, x) = +/-pi/2 for finite x
+//    atan2l(+/-y, -Inf) = +/-pi for finite  y > 0
 //    atan2l(+/-Inf, Inf) = +/-pi/4
 //    atan2l(+/-Inf, -Inf) = +/-3pi/4
 //
@@ -549,20 +549,20 @@ GR_SAVE_PFS   = r33
 GR_SAVE_B0    = r34
 GR_SAVE_GP    = r35
 sign_X        = r36
-sign_Y        = r37 
-swap          = r38 
-table_ptr1    = r39 
-table_ptr2    = r40 
-k             = r41 
-lookup        = r42 
-exp_ArgX      = r43 
-exp_ArgY      = r44 
-exponent_Q    = r45 
-significand_Q = r46 
-special       = r47 
-sp_exp_Q      = r48 
-sp_exp_4sig_Q = r49 
-table_base    = r50 
+sign_Y        = r37
+swap          = r38
+table_ptr1    = r39
+table_ptr2    = r40
+k             = r41
+lookup        = r42
+exp_ArgX      = r43
+exp_ArgY      = r44
+exponent_Q    = r45
+significand_Q = r46
+special       = r47
+sp_exp_Q      = r48
+sp_exp_4sig_Q = r49
+table_base    = r50
 int_temp      = r51
 
 GR_Parameter_X      = r49
@@ -572,7 +572,7 @@ GR_Parameter_TAG    = r52
 GR_temp             = r52
 
 RODATA
-.align 16 
+.align 16
 
 LOCAL_OBJECT_START(Constants_atan)
 //       double pi/2
@@ -597,7 +597,7 @@ data8 0xE36F716D2A5F89BD, 0x3FFB // Q_4
 //    Entries Tbl_lo (single precision)
 //    B = 1+Index/16+1/32  Index = 0
 //
-data8 0x3FE9A000A935BD8E 
+data8 0x3FE9A000A935BD8E
 data4 0x23ACA08F, 0x00000000
 //
 //    Entries Tbl_hi  (double precision) Index = 0,1,...,15
@@ -605,37 +605,37 @@ data4 0x23ACA08F, 0x00000000
 //    Entries Tbl_lo (single precision)
 //    Index = 0,1,...,15  B = 2^(-1)*(1+Index/16+1/32)
 //
-data8 0x3FDE77EB7F175A34 
+data8 0x3FDE77EB7F175A34
 data4 0x238729EE, 0x00000000
-data8 0x3FE0039C73C1A40B 
+data8 0x3FE0039C73C1A40B
 data4 0x249334DB, 0x00000000
-data8 0x3FE0C6145B5B43DA 
+data8 0x3FE0C6145B5B43DA
 data4 0x22CBA7D1, 0x00000000
-data8 0x3FE1835A88BE7C13 
+data8 0x3FE1835A88BE7C13
 data4 0x246310E7, 0x00000000
-data8 0x3FE23B71E2CC9E6A 
+data8 0x3FE23B71E2CC9E6A
 data4 0x236210E5, 0x00000000
-data8 0x3FE2EE628406CBCA 
+data8 0x3FE2EE628406CBCA
 data4 0x2462EAF5, 0x00000000
-data8 0x3FE39C391CD41719 
+data8 0x3FE39C391CD41719
 data4 0x24B73EF3, 0x00000000
-data8 0x3FE445065B795B55 
+data8 0x3FE445065B795B55
 data4 0x24C11260, 0x00000000
-data8 0x3FE4E8DE5BB6EC04 
+data8 0x3FE4E8DE5BB6EC04
 data4 0x242519EE, 0x00000000
-data8 0x3FE587D81F732FBA 
+data8 0x3FE587D81F732FBA
 data4 0x24D4346C, 0x00000000
-data8 0x3FE6220D115D7B8D 
+data8 0x3FE6220D115D7B8D
 data4 0x24ED487B, 0x00000000
-data8 0x3FE6B798920B3D98 
+data8 0x3FE6B798920B3D98
 data4 0x2495FF1E, 0x00000000
-data8 0x3FE748978FBA8E0F 
+data8 0x3FE748978FBA8E0F
 data4 0x223D9531, 0x00000000
-data8 0x3FE7D528289FA093 
+data8 0x3FE7D528289FA093
 data4 0x242B0411, 0x00000000
-data8 0x3FE85D69576CC2C5 
+data8 0x3FE85D69576CC2C5
 data4 0x2335B374, 0x00000000
-data8 0x3FE8E17AA99CC05D 
+data8 0x3FE8E17AA99CC05D
 data4 0x24C27CFB, 0x00000000
 //
 //    Entries Tbl_hi  (double precision) Index = 0,1,...,15
@@ -643,7 +643,7 @@ data4 0x24C27CFB, 0x00000000
 //    Entries Tbl_lo (single precision)
 //    Index = 0,1,...,15  B = 2^(-2)*(1+Index/16+1/32)
 //
-data8 0x3FD025FA510665B5 
+data8 0x3FD025FA510665B5
 data4 0x24263482, 0x00000000
 data8 0x3FD1151A362431C9
 data4 0x242C8DC9, 0x00000000
@@ -771,19 +771,19 @@ GLOBAL_IEEE754_ENTRY(atanl)
 { .mfi
       ldfd P_hi = [table_ptr1],8         // Load double precision hi part of pi
       fclass.m p8,p0 = ArgY_orig, 0x1e7  // Test y natval, nan, inf, zero
-      nop.i 999 
+      nop.i 999
 }
 ;;
 
 { .mfi
       ldfps P_lo, TWO_TO_NEG3 = [table_ptr1], 8 // Load P_lo and constant 2^-3
-      nop.f 999 
-      nop.i 999 
+      nop.f 999
+      nop.i 999
 }
 { .mfi
       nop.m 999
       fma.s1 M = f1, f1, f0              // Set M = 1.0
-      nop.i 999 
+      nop.i 999
 }
 ;;
 
@@ -803,7 +803,7 @@ GLOBAL_IEEE754_ENTRY(atanl)
 { .mfi
       nop.m 999
       fcmp.ge.s1 p6,p7 = Xsq, Ysq        // Test for |x| >= |y| using squares
-      nop.i 999 
+      nop.i 999
 }
 { .mfb
       nop.m 999
@@ -857,19 +857,19 @@ GLOBAL_IEEE754_ENTRY(atan2l)
 { .mfi
       ldfd P_hi = [table_ptr1],8         // Load double precision hi part of pi
       fclass.m p8,p0 = ArgY_orig, 0x1e7  // Test y natval, nan, inf, zero
-      nop.i 999 
+      nop.i 999
 }
 ;;
 
 { .mfi
       ldfps P_lo, TWO_TO_NEG3 = [table_ptr1], 8 // Load P_lo and constant 2^-3
       fclass.m p9,p0 = ArgX_orig, 0x1e7  // Test x natval, nan, inf, zero
-      nop.i 999 
+      nop.i 999
 }
 { .mfi
       nop.m 999
       fma.s1 M = f1, f1, f0              // Set M = 1.0
-      nop.i 999 
+      nop.i 999
 }
 ;;
 
@@ -889,7 +889,7 @@ GLOBAL_IEEE754_ENTRY(atan2l)
 { .mfi
       nop.m 999
       fcmp.ge.s1 p6,p7 = Xsq, Ysq        // Test for |x| >= |y| using squares
-      nop.i 999 
+      nop.i 999
 }
 { .mfb
       nop.m 999
@@ -995,7 +995,7 @@ ATANL_COMMON:
 }
 ;;
 
-// Create a single precision representation of the signexp of Q with the 
+// Create a single precision representation of the signexp of Q with the
 // 4 most significant bits of the significand followed by a 1 and then 18 0's
 { .mfi
       nop.m 999
@@ -1071,7 +1071,7 @@ ATANL_COMMON:
 ;;
 
 //
-//  Generate sign_exp_Q b_1 b_2 b_3 b_4 1 0 0 0 ... 0  in single precision 
+//  Generate sign_exp_Q b_1 b_2 b_3 b_4 1 0 0 0 ... 0  in single precision
 //  representation.  Note sign of Q is always 0.
 //
 { .mfi
@@ -1185,7 +1185,7 @@ ATANL_COMMON:
 //     C_hi_hold = 1 - C_hi * U_prime_hi (1)
 { .mfi
       nop.m 999
-      fnma.s1 C_hi_hold = C_hi, U_prime_hi, f1 
+      fnma.s1 C_hi_hold = C_hi, U_prime_hi, f1
       nop.i 999
 }
 ;;
@@ -1222,7 +1222,7 @@ ATANL_COMMON:
 //     C_hi_hold = 1 - C_hi * U_prime_hi (3)
 { .mfi
       nop.m 999
-      fnma.s1 C_hi_hold = C_hi, U_prime_hi, f1 
+      fnma.s1 C_hi_hold = C_hi, U_prime_hi, f1
       nop.i 999
 }
 ;;
@@ -1342,7 +1342,7 @@ ATANL_COMMON:
 ;;
 
 
-ATANL_POLY: 
+ATANL_POLY:
 // Here if 0 < V/U < 2^-3
 //
 // ***********************************************
@@ -1523,7 +1523,7 @@ ATANL_POLY:
 
 //     Create small double in case need to raise underflow
 { .mfi
-      setf.d FR_temp = GR_temp	
+      setf.d FR_temp = GR_temp
       fma.s1 poly = z8, poly1, poly2            // poly = poly2 + z8 * poly1
       nop.i 999
 }
@@ -1635,9 +1635,9 @@ ATANL_POLY:
 }
 ;;
 
-//	
+//
 //     If Res_lo is denormal test if Result equals zero
-//	
+//
 { .mfi
       nop.m 999
 (p14) fclass.m.unc p14, p0 = Result, 0x07
@@ -1657,10 +1657,10 @@ ATANL_POLY:
 ;;
 
 
-ATANL_UNSUPPORTED: 
+ATANL_UNSUPPORTED:
 { .mfb
       nop.m 999
-      fmpy.s0 Result = ArgX,ArgY 
+      fmpy.s0 Result = ArgX,ArgY
       br.ret.sptk   b0
 }
 ;;
@@ -1713,7 +1713,7 @@ ATANL_X_SPECIAL:
 
 
 // Here if x or y inf or zero
-ATANL_SPECIAL_HANDLING: 
+ATANL_SPECIAL_HANDLING:
 { .mfi
       nop.m 999
       fclass.m p6, p7 = ArgY_orig, 0x007        // Test y zero
@@ -1809,7 +1809,7 @@ ATANL_SPECIAL_HANDLING:
 ;;
 
 // Here if y not zero
-ATANL_ArgY_Not_ZERO: 
+ATANL_ArgY_Not_ZERO:
 { .mfi
       nop.m 999
       fclass.m p0, p10 = ArgY, 0x023           // Test y inf
@@ -1841,7 +1841,7 @@ ATANL_ArgY_Not_ZERO:
 ;;
 
 { .mfi
-(p6)  add table_ptr1 =  16, table_ptr1         // Point to pi/2, if x finite 
+(p6)  add table_ptr1 =  16, table_ptr1         // Point to pi/2, if x finite
       fclass.m p8, p0 = ArgX, 0x022            // Test for x=-inf
       nop.i 999
 }
@@ -1886,7 +1886,7 @@ ATANL_ArgY_Not_ZERO:
 ;;
 
 // Here if y not INF, and x=0 or INF
-ATANL_ArgY_Not_INF: 
+ATANL_ArgY_Not_INF:
 //
 //     Return +PI/2 when ArgY NOT Inf, ArgY > 0 and ArgX = +/-0
 //     Return -PI/2 when ArgY NOT Inf, ArgY < 0 and ArgX = +/-0
@@ -1953,7 +1953,7 @@ ATANL_ArgY_Not_INF:
 ;;
 
 GLOBAL_IEEE754_END(atan2l)
- 
+
 LOCAL_LIBM_ENTRY(__libm_error_region)
 .prologue
 { .mfi

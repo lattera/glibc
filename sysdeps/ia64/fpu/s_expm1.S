@@ -70,7 +70,7 @@
 // 5. x >= 709.7827
 //    Result overflows.  Set I, O, and call error support
 //
-// 6. 2^-2 <= x < 709.7827  or  -48.0 <= x < -2^-2  
+// 6. 2^-2 <= x < 709.7827  or  -48.0 <= x < -2^-2
 //    This is the main path.  The algorithm is described below:
 
 // Take the input x. w is "how many log2/128 in x?"

@@ -21,25 +21,25 @@
 // products derived from this software without specific prior written
 // permission.
 
-// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
-// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
 // LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL INTEL OR ITS 
+// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL INTEL OR ITS
 // CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-// EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, 
-// PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
-// PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY 
+// EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+// PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+// PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY
 // OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY OR TORT (INCLUDING
-// NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS 
-// SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. 
-// 
+// NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+// SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
 // Intel Corporation is the author of this code, and requests that all
-// problem reports or change requests be submitted to it directly at 
+// problem reports or change requests be submitted to it directly at
 // http://www.intel.com/software/products/opensource/libraries/num.htm.
 //
 // History
 //==============================================================
-// 05/31/01 Initial version 
+// 05/31/01 Initial version
 // 05/20/02 Cleaned up namespace and sf0 syntax
 // 02/10/03 Reordered header: .section, .global, .proc, .align
 //
@@ -50,7 +50,7 @@
 // Overview of operation
 //==============================================================
 // returns the algebraic maximum of 2 input values
-// 
+//
 // Special cases:
 //    fmax(x, nan) returns x if x is numeric  // Must special case this one
 //    fmax(nan, y) returns y if y is numeric
@@ -59,7 +59,7 @@
 //    fmax(-0,+0) returns +0
 //    fmax(-0,-0) returns -0
 //    fmax(+0,-0) returns +0                  // Must special case this one
-//  
+//
 // SNaN causes invalid to be set
 
 // floating-point registers used: 2
@@ -107,7 +107,7 @@ GLOBAL_LIBM_ENTRY(fmax)
 { .mfb
       nop.m 999
 (p10) fmerge.s  f8 = f9, f9   // If x nan, return y, else do nothing (returns x)
-      br.ret.sptk    b0           
+      br.ret.sptk    b0
 }
 ;;
 

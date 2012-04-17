@@ -257,7 +257,7 @@ LOCAL_OBJECT_END(_expf_table)
 
 .section .text
 GLOBAL_IEEE754_ENTRY(expf)
-      
+
 { .mlx
       addl            rTblAddr = @ltoff(_expf_table),gp
       movl            r64DivLn2 = 0x40571547652B82FE // 64/ln(2)
@@ -612,7 +612,7 @@ EXP_CERTAIN_UNDERFLOW:
       nop.i           0
 }
 ;;
-      
+
 { .mfb
       nop.m           0
       fma.s.s0        f8 = fTmp, fTmp, f0 // Set I,U, tiny (+0.0) result

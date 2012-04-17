@@ -21,27 +21,27 @@
 // products derived from this software without specific prior written
 // permission.
 
-// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
-// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
 // LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL INTEL OR ITS 
+// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL INTEL OR ITS
 // CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-// EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, 
-// PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
-// PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY 
+// EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+// PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+// PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY
 // OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY OR TORT (INCLUDING
-// NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS 
-// SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. 
-// 
+// NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+// SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
 // Intel Corporation is the author of this code, and requests that all
-// problem reports or change requests be submitted to it directly at 
+// problem reports or change requests be submitted to it directly at
 // http://www.intel.com/software/products/opensource/libraries/num.htm.
 //
 // History
 //==============================================================
-// 09/25/00 Initial version 
+// 09/25/00 Initial version
 // 11/22/00 Fixed accuracy bug (for mantissas near 1, 2)
-// 12/07/00 Fixed C_1l constant, eliminated rounding errors in 
+// 12/07/00 Fixed C_1l constant, eliminated rounding errors in
 //          reduced argument (x*frcpa(x)-1)
 // 05/20/02 Cleaned up namespace and sf0 syntax
 // 02/10/03 Reordered header: .section, .global, .proc, .align
@@ -57,16 +57,16 @@
 // Implementation
 //
 // Let x = 2^l * m, where     m=1.b1 b2 ... b8 b9 ... b52
-//     y=frcpa(m),   r=m*y-1, f=b1 b2 .. b8 
-// T_hi is a table that stores the 24 most significant bits of log2(1/y) 
+//     y=frcpa(m),   r=m*y-1, f=b1 b2 .. b8
+// T_hi is a table that stores the 24 most significant bits of log2(1/y)
 // (in entries 1..255) in single precision format
 // T_low is a table that stores (log2(1/y)-T_high), rounded to double
-// precision 
+// precision
 //
 // f is used as an index; T_high[255]=T_low[255]=0
-// 
+//
 // If f=0 and b9=0, r is set to 2^{-8}* 0.b9 b10 ... b52 = m-1 (fractional part of m),
-//                  and 0 is used instead of T_high[0], T_low[0] 
+//                  and 0 is used instead of T_high[0], T_low[0]
 //                  (polynomial evaluation only, for m=1+r, 0<=r<2^{-9})
 // If f=255, r is set to (m-2)/2  (T[255]=0, and only polynomial evaluation is used
 //                                 for m=2(1-r'), 0<=r'<2^{-9})
@@ -80,10 +80,10 @@
 //
 // log2l(x) is approximated as
 //     (l+T_high[f]+C1r) + (D+r*(c1+c2*r+c3*r^2...+c8*r^7)+(T_low[f]+C_1*E))
-// 
+//
 
 
-// Special values 
+// Special values
 //==============================================================
 //  log2l(0)=-inf, raises Divide by Zero
 //  log2l(+inf)=inf
@@ -101,7 +101,7 @@
 
 GR_SAVE_B0                    = r33
 GR_SAVE_PFS                   = r34
-GR_SAVE_GP                    = r35 // This reg. can safely be used 
+GR_SAVE_GP                    = r35 // This reg. can safely be used
 GR_SAVE_SP                    = r36
 
 GR_Parameter_X                = r37
@@ -127,7 +127,7 @@ LOCAL_OBJECT_START(poly_coeffs)
 
 data8 0xb8aa3b295c17f0bc, 0x00003fff  // C_1
 data8 0x3fca61762a7aded9, 0xbfc71547652b82fe // C_7, C_8
-data8 0x3fd2776c50ef9bfe, 0xbfcec709dc3a03fd // C_5, C_6 
+data8 0x3fd2776c50ef9bfe, 0xbfcec709dc3a03fd // C_5, C_6
 data8 0x3fdec709dc3a03fd, 0xbfd71547652b82fe  // C_3, C_4
 //data8 0xd871319ff0342580, 0x0000bfbd	// C_1l (low part of C1)
 data8 0x82f0025f2dc582ee, 0x0000bfbe   // C_1l (low part of C1)
@@ -345,9 +345,9 @@ LOCAL_OBJECT_END(T_low)
 GLOBAL_IEEE754_ENTRY(log2l)
 
 { .mfi
-  alloc r32=ar.pfs,1,4,4,0     
-  // normalize x 
-  // y=frcpa(x)  
+  alloc r32=ar.pfs,1,4,4,0
+  // normalize x
+  // y=frcpa(x)
   frcpa.s1 f41,p0=f1,f8
   // r26=bias-1
   mov r26=0xfffe
@@ -378,8 +378,8 @@ GLOBAL_IEEE754_ENTRY(log2l)
   getf.exp r29=f8
   // load start address for C_1...C_7 followed by T_table
   ld8 r2=[r2]
-  // will continue only for positive normal/unnormal numbers          
-  fclass.m.unc p0,p12 = f8, 0x19;; 
+  // will continue only for positive normal/unnormal numbers
+  fclass.m.unc p0,p12 = f8, 0x19;;
 }
 
 
@@ -409,7 +409,7 @@ GLOBAL_IEEE754_ENTRY(log2l)
 }
 
 {.mfb
-  add r3=16,r2 
+  add r3=16,r2
   // r=x*y-1
   fms.s1 f6=f41,f8,f1
   (p12) br.cond.spnt SPECIAL_log2l
@@ -468,10 +468,10 @@ GLOBAL_IEEE754_ENTRY(log2l)
   // add 1 to the exponent additive term, and estimate log2(1-r)
   (p10) add r29=1,r29
   nop.f 0
-  (p7) br.cond.spnt LOG2_PSEUDO_ZERO 
+  (p7) br.cond.spnt LOG2_PSEUDO_ZERO
 }
 {.mfi
-  // get T_low adress 
+  // get T_low adress
   shladd r3=r28,3,r3
   // if first 8 bits after leading 1 are all ones, use polynomial approx. only
   (p10) fms.s1 f6=f7,f36,f1
@@ -514,7 +514,7 @@ GLOBAL_IEEE754_ENTRY(log2l)
 
 .pred.rel "mutex",p8,p12
 {.mfi
-  // f8=expon - bias 
+  // f8=expon - bias
   setf.sig f8=r29
   // general case: 2^{16}+C1*r
   (p12) fma.s1 f33=f6,f14,f32
@@ -687,7 +687,7 @@ SPECIAL_log2l:
   mov FR_X=f8
   nop.i 0
 }
-{.mfi 
+{.mfi
   nop.m 0
   // x=+Infinity ?
   fclass.m p7,p0=f8,0x21
@@ -712,7 +712,7 @@ SPECIAL_log2l:
   (p7) br.ret.spnt b0;;
 }
 {.mfi
-  (p8) mov GR_Parameter_TAG = 168                          
+  (p8) mov GR_Parameter_TAG = 168
   // log2l(+/-0)=-infinity, raises Divide by Zero
   // set f8=-0
   (p8) fmerge.ns f8=f0,f8
@@ -724,12 +724,12 @@ SPECIAL_log2l:
   (p8) br.cond.sptk __libm_error_region;;
 }
 {.mfb
-  (p6) mov GR_Parameter_TAG = 169 
+  (p6) mov GR_Parameter_TAG = 169
   // x<0: return NaN, raise Invalid
   (p6) frcpa.s0 f8,p0=f0,f0
   (p6) br.cond.sptk __libm_error_region;;
-}                          
-  
+}
+
 
 {.mfb
   nop.m 0
@@ -746,7 +746,7 @@ LOG2_PSEUDO_ZERO:
   nop.i 0
 }
 {.mfi
-  mov GR_Parameter_TAG = 168                          
+  mov GR_Parameter_TAG = 168
   // log2l(+/-0)=-infinity, raises Divide by Zero
   // set f8=-0
   fmerge.ns f8=f0,f8
@@ -768,10 +768,10 @@ LOCAL_LIBM_ENTRY(__libm_error_region)
         add   GR_Parameter_Y=-32,sp             // Parameter 2 value
         nop.f 0
 .save   ar.pfs,GR_SAVE_PFS
-        mov  GR_SAVE_PFS=ar.pfs                 // Save ar.pfs 
+        mov  GR_SAVE_PFS=ar.pfs                 // Save ar.pfs
 }
 { .mfi
-.fframe 64 
+.fframe 64
         add sp=-64,sp                           // Create new stack
         nop.f 0
         mov GR_SAVE_GP=gp                       // Save gp
@@ -779,18 +779,18 @@ LOCAL_LIBM_ENTRY(__libm_error_region)
 { .mmi
         stfe [GR_Parameter_Y] = FR_Y,16         // STORE Parameter 2 on stack
         add GR_Parameter_X = 16,sp              // Parameter 1 address
-.save   b0, GR_SAVE_B0                      
-        mov GR_SAVE_B0=b0                       // Save b0 
+.save   b0, GR_SAVE_B0
+        mov GR_SAVE_B0=b0                       // Save b0
 };;
 .body
 { .mib
-        stfe [GR_Parameter_X] = FR_X                  // STORE Parameter 1 on stack 
-        add   GR_Parameter_RESULT = 0,GR_Parameter_Y  // Parameter 3 address 
-	nop.b 0                                      
+        stfe [GR_Parameter_X] = FR_X                  // STORE Parameter 1 on stack
+        add   GR_Parameter_RESULT = 0,GR_Parameter_Y  // Parameter 3 address
+	nop.b 0
 }
 { .mib
         stfe [GR_Parameter_Y] = FR_RESULT             // STORE Parameter 3 on stack
-        add   GR_Parameter_Y = -16,GR_Parameter_Y  
+        add   GR_Parameter_Y = -16,GR_Parameter_Y
         br.call.sptk b0=__libm_error_support#         // Call error handling function
 };;
 { .mmi
@@ -805,10 +805,10 @@ LOCAL_LIBM_ENTRY(__libm_error_region)
         mov   b0 = GR_SAVE_B0                  // Restore return address
 };;
 { .mib
-        mov   gp = GR_SAVE_GP                  // Restore gp 
+        mov   gp = GR_SAVE_GP                  // Restore gp
         mov   ar.pfs = GR_SAVE_PFS             // Restore ar.pfs
         br.ret.sptk     b0                     // Return
-};; 
+};;
 
 LOCAL_LIBM_END(__libm_error_region)
 .type   __libm_error_support#,@function

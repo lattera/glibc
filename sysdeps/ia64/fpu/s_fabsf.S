@@ -21,25 +21,25 @@
 // products derived from this software without specific prior written
 // permission.
 
-// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
-// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
 // LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL INTEL OR ITS 
+// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL INTEL OR ITS
 // CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-// EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, 
-// PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
-// PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY 
+// EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+// PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+// PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY
 // OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY OR TORT (INCLUDING
-// NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS 
-// SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. 
-// 
+// NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+// SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
 // Intel Corporation is the author of this code, and requests that all
-// problem reports or change requests be submitted to it directly at 
+// problem reports or change requests be submitted to it directly at
 // http://www.intel.com/software/products/opensource/libraries/num.htm.
 //
 // History
 //==============================================================
-// 02/02/00 Initial version 
+// 02/02/00 Initial version
 // 02/07/02 Added __libm_fabsf entry point to test in case compiler inlines
 // 05/20/02 Cleaned up namespace and sf0 syntax
 // 02/10/03 Reordered header: .section, .global, .proc, .align
@@ -50,7 +50,7 @@
 //
 // Overview of operation
 //==============================================================
-// returns absolute value of x 
+// returns absolute value of x
 
 // floating-point registers used: 1
 // f8, input
@@ -69,14 +69,14 @@ GLOBAL_IEEE754_ENTRY(fabsf)
 
 { .mfi
       nop.m 999
-      fcmp.eq.unc.s0 p6,p7 = f8,f1             
+      fcmp.eq.unc.s0 p6,p7 = f8,f1
       nop.i 999 ;;
 }
 
 { .mfb
       nop.m 999
-      fmerge.s       f8 = f0,f8                   
-      br.ret.sptk    b0 ;;                        
+      fmerge.s       f8 = f0,f8
+      br.ret.sptk    b0 ;;
 }
 
 GLOBAL_IEEE754_END(fabsf)

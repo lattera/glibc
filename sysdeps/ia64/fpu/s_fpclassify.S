@@ -32,7 +32,7 @@ ENTRY (__fpclassify)
 (p7)	fclass.m p7, p8 = farg0, @inf
 (p6)	br.ret.sptk.many rp
 	;;
-}	
+}
 {
 .mfb
 (p7)	mov ret0 = 1

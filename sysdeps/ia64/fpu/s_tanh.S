@@ -21,20 +21,20 @@
 // products derived from this software without specific prior written
 // permission.
 
-// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
-// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
 // LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL INTEL OR ITS 
+// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL INTEL OR ITS
 // CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-// EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, 
-// PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
-// PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY 
+// EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+// PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+// PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY
 // OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY OR TORT (INCLUDING
-// NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS 
-// SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. 
-// 
+// NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+// SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
 // Intel Corporation is the author of this code, and requests that all
-// problem reports or change requests be submitted to it directly at 
+// problem reports or change requests be submitted to it directly at
 // http://www.intel.com/software/products/opensource/libraries/num.htm.
 //
 // History
@@ -71,10 +71,10 @@
 //
 // 3. Main path: 0.25 <= |x| < 19.0625
 //    For several ranges of 0.25 <= |x| < 19.0625
-//    Return tanh(x) = sign(x)*(A0 + y*A1 + y^2*A2 + 
+//    Return tanh(x) = sign(x)*(A0 + y*A1 + y^2*A2 +
 //                                       + y^3*A3 + ... + y^19*A19)
 //    where y = (|x|/a) - b
-//    
+//
 //    For each range there is particular set of coefficients.
 //    Below is the list of ranges:
 //    1/4  <= |x| < 1/2     a = 0.25, b = 1.0
@@ -87,28 +87,28 @@
 //    8.0  <= |x| < 13.0    a = 8.0,  b = 1.0
 //    13.0 <= |x| < 16.0    a = 8.0,  b = 2.0
 //    16.0 <= |x| < 19.0625 a = 16.0, b = 1.0
-//    ( [3.25;4.0], [6.5;8.0], [13.0;16.0] subranges separated 
+//    ( [3.25;4.0], [6.5;8.0], [13.0;16.0] subranges separated
 //                               for monotonicity issues resolve )
 //
-// 4. Saturation path: 19.0625 <= |x| < +INF 
+// 4. Saturation path: 19.0625 <= |x| < +INF
 //    Return tanh(x) = sign(x)*(1.0 - tiny_value)
 //    (tiny_value ~ 2^(-63))
 //
 // Registers used
 //==============================================================================
-// Floating Point registers used: 
+// Floating Point registers used:
 // f8 = input, output
 // f32 -> f64
 //
-// General registers used:  
+// General registers used:
 // r32 -> r51, r2, r3
 //
 // Predicate registers used:
 // p6, p8, p10, p11, p12, p14, p15
 // p6           arg is zero, denormal or special IEEE
-// p8           to filter out case when signd(x) > 1.625 
+// p8           to filter out case when signd(x) > 1.625
 // p10          to filter out case when |x| < 0.25
-// p11          to filter out case when signd(x) <= 1.625 
+// p11          to filter out case when signd(x) <= 1.625
 // p12          to filter out case when |x| >= 19.0625
 // p14          set to 1 for positive x
 // p15          set to 1 for negative x
@@ -169,7 +169,7 @@ fTSqr              = f58
 fTQuadr            = f59
 fTDeg3             = f60
 fTDeg7             = f61
-fArgAbsNormSgn     = f62                          
+fArgAbsNormSgn     = f62
 fTQuadrSgn         = f63
 fTwo               = f64
 
@@ -184,7 +184,7 @@ LOCAL_OBJECT_START(tanh_data)
 
 // Main path coefficients:
 // Coefficients ##0..15 ("main" coefficient tables)
-// Polynomial coefficients for the tanh(x), 0.25 <= |x| < 0.5 
+// Polynomial coefficients for the tanh(x), 0.25 <= |x| < 0.5
 data8 0xE9D218BC9A3FB55A, 0x00003FC7 //A19
 data8 0xC8C0D38687F36EBA, 0x00003FCE //A18
 data8 0xA2663E519FAC8A43, 0x0000BFD2 //A17
@@ -202,7 +202,7 @@ data8 0x8E1C15876AA589AD, 0x0000BFEF //A6
 data8 0x942226246A8C2A86, 0x00003FF1 //A5
 data8 0x8F06D9FF7DB47261, 0x00003FF4 //A4
 //
-// Polynomial coefficients for the tanh(x), 0.5 <= |x| < 1.0 
+// Polynomial coefficients for the tanh(x), 0.5 <= |x| < 1.0
 data8 0xC4A7B8FB672A8520, 0x00003FDC //A19
 data8 0xA20724B847E13499, 0x0000BFE0 //A18
 data8 0xE17DB53F02E4D340, 0x00003FE2 //A17
@@ -220,7 +220,7 @@ data8 0xCE63E8FA6B96480B, 0x0000BFF4 //A6
 data8 0xDF017BE0D4FE45D8, 0x0000BFF4 //A5
 data8 0xA8A0C6E2226DF3CD, 0x00003FF8 //A4
 //
-// Polynomial coefficients for the tanh(x), 1.0 <= |x| < 2.0 
+// Polynomial coefficients for the tanh(x), 1.0 <= |x| < 2.0
 data8 0x8E89D2EBFDAA160B, 0x00003FE9 //A19
 data8 0xDD9226310A272046, 0x0000BFEC //A18
 data8 0xA038042D28B0D665, 0x00003FEF //A17
@@ -238,7 +238,7 @@ data8 0x9B02FE0DAF42C08F, 0x00003FF9 //A6
 data8 0xBDACE06F531D9491, 0x0000BFFA //A5
 data8 0xE3048AD1DB2F648C, 0x00003FF9 //A4
 //
-// Polynomial coefficients for the tanh(x), 2.0 <= |x| < 3.25 
+// Polynomial coefficients for the tanh(x), 2.0 <= |x| < 3.25
 data8 0x856EC3B0330A385A, 0x00003FEB //A19
 data8 0xC641D69DAE2D429C, 0x0000BFF2 //A18
 data8 0xC683EB0BE1343FFF, 0x00003FF5 //A17
@@ -256,7 +256,7 @@ data8 0xA6CAAD4A3E31A7D5, 0x0000BFF8 //A6
 data8 0x9CABD76D1D5C3878, 0x00003FFC //A5
 data8 0x92906D077941CAA9, 0x0000BFFD //A4
 //
-// Polynomial coefficients for the tanh(x), 4.0 <= |x| < 6.5 
+// Polynomial coefficients for the tanh(x), 4.0 <= |x| < 6.5
 data8 0x9232D19F71709AC9, 0x0000BFF5 //A19
 data8 0x819E31323F5DD3F8, 0x00003FF8 //A18
 data8 0xDA8E1CDB8D23DC29, 0x0000BFF9 //A17
@@ -274,7 +274,7 @@ data8 0xF4CA0B968AF2DDE2, 0x0000BFFC //A6
 data8 0xB99874B482BD17EE, 0x00003FFC //A5
 data8 0xE93FB2F99431DC1D, 0x0000BFFB //A4
 //
-// Polynomial coefficients for the tanh(x), 8.0 <= |x| < 13.0 
+// Polynomial coefficients for the tanh(x), 8.0 <= |x| < 13.0
 data8 0xAAA9EB7EADA85CEC, 0x00003FF5 //A19
 data8 0x980C80EE05A6BE78, 0x0000BFF8 //A18
 data8 0x818DA9F5396390A5, 0x00003FFA //A17
@@ -292,7 +292,7 @@ data8 0xABD91DCE40D5EECB, 0x0000BFF7 //A6
 data8 0x80E375C1B847B72F, 0x00003FF6 //A5
 data8 0xA11C7DD978CF700A, 0x0000BFF4 //A4
 //
-// Polynomial coefficients for the tanh(x), 16.0 <= |x| < 19.0625 
+// Polynomial coefficients for the tanh(x), 16.0 <= |x| < 19.0625
 data8 0xE29D17C510F86F6B, 0x00003FF3 //A19
 data8 0x88FE52EB39A3A98C, 0x0000BFF5 //A18
 data8 0xA406547E50360693, 0x00003FF5 //A17
@@ -311,7 +311,7 @@ data8 0xF358B2C46F10CBAF, 0x00003FE3 //A5
 data8 0x98176FD06229A385, 0x0000BFE1 //A4
 //
 // Binary subranges
-// Polynomial coefficients for the tanh(x), 3.25 <= |x| < 4.0 
+// Polynomial coefficients for the tanh(x), 3.25 <= |x| < 4.0
 data8 0xEF2EE841288F6706, 0x00003FE9 //A19
 data8 0xE65D5B74B85F82A6, 0x00003FEB //A18
 data8 0xE495FC21E42A79FF, 0x00003FEA //A17
@@ -329,7 +329,7 @@ data8 0xF4CA0661307243C7, 0x0000BFF6 //A6
 data8 0xB998746D57061F74, 0x00003FF7 //A5
 data8 0xE93FB2F482327C19, 0x0000BFF7 //A4
 //
-// Polynomial coefficients for the tanh(x), 6.5 <= |x| < 8.0 
+// Polynomial coefficients for the tanh(x), 6.5 <= |x| < 8.0
 data8 0xEB189B71ADC40BE2, 0x00003FEA //A19
 data8 0xA60B46F9FF6DC2DF, 0x00003FEA //A18
 data8 0xBB061CDD9F368B9D, 0x00003FEC //A17
@@ -347,7 +347,7 @@ data8 0xABD9E63CA575B950, 0x0000BFF1 //A6
 data8 0x80E38B18E8D0F460, 0x00003FF1 //A5
 data8 0xA11C80E20AAFDD3C, 0x0000BFF0 //A4
 //
-// Polynomial coefficients for the tanh(x), 13.0 <= |x| < 16.0 
+// Polynomial coefficients for the tanh(x), 13.0 <= |x| < 16.0
 data8 0xBECD0AF7E22E5594, 0x00003FE9 //A19
 data8 0xE2834E2D68C1128C, 0x00003FEA //A18
 data8 0x97B117611B317379, 0x00003FEB //A17
@@ -366,19 +366,19 @@ data8 0xF358D8A7FC012D5D, 0x00003FDE //A5
 data8 0x98176E2309B7C73A, 0x0000BFDD //A4
 //
 // Coefficients ##16..19 ("tail" coefficient tables)
-// Polynomial coefficients for the tanh(x), 0.25 <= |x| < 0.5 
+// Polynomial coefficients for the tanh(x), 0.25 <= |x| < 0.5
 data8 0x838F209ABB9BA7B3, 0x0000BFF7 //A3
 data8 0xEBC0AC78DA4FC500, 0x0000BFF8 //A2
 data8 0xF0A4D02960B60E69, 0x00003FFC //A1
 data8 0xFACBF534D0E42F8A, 0x00003FFC //A0
 //
-// Polynomial coefficients for the tanh(x), 0.5 <= |x| < 1.0 
+// Polynomial coefficients for the tanh(x), 0.5 <= |x| < 1.0
 data8 0xC0ECBDC0A0D133A6, 0x0000BFF8 //A3
 data8 0xBA13A076BF8E812F, 0x0000BFFB //A2
 data8 0xC954A37D1A1CA070, 0x00003FFD //A1
 data8 0xEC9A9EBAB4579B29, 0x00003FFD //A0
 //
-// Polynomial coefficients for the tanh(x), 1.0 <= |x| < 2.0 
+// Polynomial coefficients for the tanh(x), 1.0 <= |x| < 2.0
 data8 0xD42E9175A6EA1397, 0x00003FFB //A3
 data8 0xA3C361378A55CF56, 0x0000BFFD //A2
 data8 0xD706E07CC8622983, 0x00003FFD //A1
@@ -427,7 +427,7 @@ data8 0xE42327B9B0D7202F, 0x0000BFD8 //A2
 data8 0xE42327BB13076BD6, 0x00003FD5 //A1
 data8 0xFFFFFFFFFFF8DEE7, 0x00003FFE //A0
 //
-// Polynomial coefficients for the tanh(x), 0.0 <= |x| < 0.25 
+// Polynomial coefficients for the tanh(x), 0.0 <= |x| < 0.25
 // ('tanh_near_zero' path)
 data8 0xBF2BA5D26E479D0C //A9
 data8 0x3F4336D96F81EE26 //A8
@@ -441,7 +441,7 @@ data8 0x3FC1111111111108 //A2
 //
 // 1.0 - 2^(-63)
 // ('tanh_saturation' path)
-data8 0xFFFFFFFFFFFFFFFF, 0x00003FFE 
+data8 0xFFFFFFFFFFFFFFFF, 0x00003FFE
 LOCAL_OBJECT_END(tanh_data)
 
 // CAUTION: The order of table coefficients shouldn't be changed!
@@ -461,8 +461,8 @@ GLOBAL_LIBM_ENTRY(tanh)
 };;
 
 { .mfi
-      getf.d         rArg        = f8       // x in GR 
-      fclass.m       p6,p0       = f8, 0xEF // Filter 0, denormals and specials 
+      getf.d         rArg        = f8       // x in GR
+      fclass.m       p6,p0       = f8, 0xEF // Filter 0, denormals and specials
                             // 0xEF = @qnan|@snan|@pos|@neg|@zero|@unorm|@inf
       shl            rArgSgnd    = rArgSgnd, 52  // mask for exponent
 }
@@ -493,11 +493,11 @@ GLOBAL_LIBM_ENTRY(tanh)
       nop.f          0
 (p6)  br.cond.spnt   _tanh_spec    // Branch to zero, denorm & specs
 };;
-   
+
 { .mfi
       and            rShiftedArgMasked = rShiftedArg, rMask // bias of x << 8
       fmerge.s       fArgAbs     = f1, f8                   // |x|
-      shr            rShiftedAbsArg    = rAbsArg, 44 // Select only necessary 
+      shr            rShiftedAbsArg    = rAbsArg, 44 // Select only necessary
                                                      // bits of absolute arg
 }
 { .mfi
@@ -509,28 +509,28 @@ GLOBAL_LIBM_ENTRY(tanh)
 
 { .mfi
       sub            rIndex      = rShiftedArgMasked, rBias // index << 8
-      nop.f          0 
+      nop.f          0
       cmp.lt         p10, p0     = rShiftedArgMasked, rBias // p10=1 if |x|<0.25
 }
 { .mfb
 (p8)  cmp.gt         p8, p11     = rAbsArg, rTwo // If arg is greater than 2.0?
                                        // (then we should use binary subranges)
-      nop.f          0 
+      nop.f          0
 (p10) br.cond.spnt   tanh_near_zero    // branch out if |x| < 0.25
 };;
 
 .pred.rel "mutex",p8,p11
 { .mfi
-(p8)  add            rIndex      = 0x400, rIndex // Make pointer to binary 
+(p8)  add            rIndex      = 0x400, rIndex // Make pointer to binary
                                                  // subranges
 (p11) fms.s1         fArgAbsNorm = fArgAbsNorm, f1, f1     // |x|/b - 1.0
       addl           rSaturation = 0x40331, r0 // shifted bits of 19.0625
 }
 { .mfi
-      nop.m          0 
+      nop.m          0
 (p8)  fms.s1         fArgAbsNorm = fArgAbsNorm, f1, fTwo // |x|/b - 2.0
        // this is only for binary subranges [3.25;4], [6.5;8], [13.0;16]
-      nop.i          0 
+      nop.i          0
 }
 ;;
 
@@ -544,7 +544,7 @@ GLOBAL_LIBM_ENTRY(tanh)
       adds           rCoeffAddr2 = 16, rCoeffAddr1 // Shifted pointer to coeffs
       fmerge.s       fSignumX    = f8, f1          // signum(x)
       nop.i          0
-} 
+}
 { .mfb
       cmp.le         p12, p0     = rSaturation, rShiftedAbsArg // |x|>=19.0625?
       nop.f          0
@@ -595,15 +595,15 @@ GLOBAL_LIBM_ENTRY(tanh)
 {.mfi
       ldfe           fA12        = [rCoeffAddr2], 32 // Load A12
       nop.f          0
-      cmp.lt         p15, p14    = rArg, r0          // Arg positive (p14) 
+      cmp.lt         p15, p14    = rArg, r0          // Arg positive (p14)
                                                      // or negative (p15)?
 };;
 
 {.mfi
       ldfe           fA11        = [rCoeffAddr1], 32        // Load A11
       nop.f          0
-      add            rCoeffAddr4 = rCoeffAddr3, rCoeffAddr4 // shifted "tail" 
-                                                            // coeffs to load 
+      add            rCoeffAddr4 = rCoeffAddr3, rCoeffAddr4 // shifted "tail"
+                                                            // coeffs to load
 }
 {.mfi
       ldfe           fA10        = [rCoeffAddr2], 32 // Load A10
@@ -721,7 +721,7 @@ GLOBAL_LIBM_ENTRY(tanh)
 
 { .mfi
       nop.m          0
-      fma.s1         fA15        = fA15, fTSqr, fA13     // Polynomial  
+      fma.s1         fA15        = fA15, fTSqr, fA13     // Polynomial
       nop.i          0
 }
 { .mfi
@@ -743,19 +743,19 @@ GLOBAL_LIBM_ENTRY(tanh)
 };;
 
 { .mfi
-      nop.m          0                                       
+      nop.m          0
       fma.s1         fA7         = fA7, fTSqr, fA5  // Polynomial
       nop.i          0
 };;
 
 { .mfi
-      nop.m          0                                       
+      nop.m          0
       fma.s1         fRes        = fRes, fTQuadr, fA15 // Polynomial
       nop.i          0
 };;
 
 { .mfi
-      nop.m          0                                       
+      nop.m          0
       fma.s1         fA4         = fA4, fTSqr, fA2     // Polynomial
       nop.i          0
 };;
@@ -767,7 +767,7 @@ GLOBAL_LIBM_ENTRY(tanh)
 };;
 
 { .mfi
-      nop.m          0                                       
+      nop.m          0
       fma.s1         fA4         = fA7, fTDeg3, fA4    // Polynomial
       nop.i          0
 };;
@@ -797,7 +797,7 @@ GLOBAL_LIBM_ENTRY(tanh)
 tanh_near_zero:
 { .mfi
       adds           rCoeffAddr1 = 0xC80, rDataPtr      // address of A9
-      fma.s0         fTSqr       = fArgSqr, fArgSqr, f0 // x^4 
+      fma.s0         fTSqr       = fArgSqr, fArgSqr, f0 // x^4
       nop.i          0
 }
 { .mfi
@@ -931,51 +931,51 @@ tanh_saturation:
 
 
 
-      
+
 //  0, denormals and special IEEE numbers path /////////////////////////////////
 _tanh_spec:
 
-{ .mfi 
-      cmp.lt         p15, p14    = rArg, r0 // Is arg negative (p15) 
+{ .mfi
+      cmp.lt         p15, p14    = rArg, r0 // Is arg negative (p15)
                                             // or positive p14)
       fclass.m       p6,p0       = f8, 0x23 // To filter infinities
-                                          // 0x23 = @pos|@neg|@inf 
+                                          // 0x23 = @pos|@neg|@inf
       nop.i          0
 };;
 
-{ .mfi 
+{ .mfi
       nop.m          0
       fclass.m       p7,p0       = f8, 0xC7 // To filter NaNs & Zeros
                                  // 0xC7 = @pos|@neg|@zero|@qnan|@snan
       nop.i          0
 };;
 
-{ .mfb 
+{ .mfb
       nop.m          0
-(p6)  fmerge.s       f8          = f8, f1     // +/-1 for INF args 
+(p6)  fmerge.s       f8          = f8, f1     // +/-1 for INF args
 (p6)  br.ret.spnt    b0                       // exit for x = INF
 };;
 
-{ .mfb 
+{ .mfb
       nop.m          0
-(p7)  fma.d.s0       f8          = f8, f1, f8    // +/-0 for 0 args 
+(p7)  fma.d.s0       f8          = f8, f1, f8    // +/-0 for 0 args
                                                  // and NaNs for NaNs
 (p7)  br.ret.spnt    b0                          // exit for x = NaN or +/-0
 };;
 
-{ .mfi 
+{ .mfi
       nop.m          0
       fnorm.s0       f8          = f8            // Normalize arg
       nop.i          0
 };;
 
 .pred.rel "mutex",p14,p15
-{ .mfi 
+{ .mfi
       nop.m          0
 (p14) fnma.d.s0      f8          = f8, f8, f8  // res = r-r^2
       nop.i          0
 }
-{ .mfb 
+{ .mfb
       nop.m          0
 (p15) fma.d.s0       f8          = f8, f8, f8  // res = r+r^2
       br.ret.sptk    b0          // 0, denormals, specials return

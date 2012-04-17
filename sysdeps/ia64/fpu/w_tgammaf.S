@@ -21,25 +21,25 @@
 // products derived from this software without specific prior written
 // permission.
 
-// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
-// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,INCLUDING,BUT NOT 
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,INCLUDING,BUT NOT
 // LIMITED TO,THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL INTEL OR ITS 
+// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL INTEL OR ITS
 // CONTRIBUTORS BE LIABLE FOR ANY DIRECT,INDIRECT,INCIDENTAL,SPECIAL,
 // EXEMPLARY,OR CONSEQUENTIAL DAMAGES (INCLUDING,BUT NOT LIMITED TO,
-// PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,DATA,OR 
-// PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY 
+// PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,DATA,OR
+// PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY
 // OF LIABILITY,WHETHER IN CONTRACT,STRICT LIABILITY OR TORT (INCLUDING
-// NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS 
-// SOFTWARE,EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. 
-// 
+// NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+// SOFTWARE,EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
 // Intel Corporation is the author of this code,and requests that all
-// problem reports or change requests be submitted to it directly at 
+// problem reports or change requests be submitted to it directly at
 // http://www.intel.com/software/products/opensource/libraries/num.htm.
 //
 //*********************************************************************
 //
-// History: 
+// History:
 // 11/30/01  Initial version
 // 05/20/02  Cleaned up namespace and sf0 syntax
 // 02/10/03  Reordered header: .section, .global, .proc, .align
@@ -75,8 +75,8 @@
 // IEEE Special Conditions:
 //
 //    tgammaf(+inf) = +inf
-//    tgammaf(-inf) = QNaN 
-//    tgammaf(+/-0) = +/-inf 
+//    tgammaf(-inf) = QNaN
+//    tgammaf(+/-0) = +/-inf
 //    tgammaf(x<0, x - integer) = QNaN
 //    tgammaf(SNaN) = QNaN
 //    tgammaf(QNaN) = QNaN
@@ -86,7 +86,7 @@
 // Overview
 //
 // The method consists of three cases.
-// 
+//
 // If       2 <= x < OVERFLOW_BOUNDARY   use case tgamma_regular;
 // else if  0 < x < 2                    use case tgamma_from_0_to_2;
 // else if  -(i+1) <  x < -i, i = 0...43 use case tgamma_negatives;
@@ -111,9 +111,9 @@
 //    r = x - N, note 0 <= r < 1
 //
 //    n = N & ~0xF - index of table that contains coefficient of
-//                   polynomial approximation 
+//                   polynomial approximation
 //    i = N & 0xF  - is used in recursive formula
-//   
+//
 //
 //   Step 2: Approximation
 //   ---------------------
@@ -125,7 +125,7 @@
 //   -----------------
 //    In case when i > 0 we need to multiply P12n(r) by product
 //    R(i,x)=(x-1)*(x-2)*...*(x-i). To reduce number of fp-instructions
-//    we can calculate R as follow:  
+//    we can calculate R as follow:
 //    R(i,x) = ((x-1)*(x-2))*((x-3)*(x-4))*...*((x-(i-1))*(x-i)) if i is
 //    even or R = ((x-1)*(x-2))*((x-3)*(x-4))*...*((x-(i-2))*(x-(i-1)))*
 //    *(i-1) if i is odd. In both cases we need to calculate
@@ -147,7 +147,7 @@
 //              x_min is point of local minimum on [1; 2] interval.
 //        if 1.5  <= x < 1.75  than  GAMMA(x) = P7(x-1.5)
 //        if 1.75 <= x < 2.0   than  GAMMA(x) = P7(x-1.5)
-//    and      
+//    and
 //        if 0 < x < 1 than GAMMA(x) = GAMMA(x+1)/x
 //
 // Case -(i+1) <  x < -i, i = 0...43
@@ -158,13 +158,13 @@
 //
 //   Step 1: Reduction
 //   -----------------
-//    Note that period of sin(PI*x) is 2 and range reduction for 
-//    sin(PI*x) is like to range reduction for GAMMA(x) 
+//    Note that period of sin(PI*x) is 2 and range reduction for
+//    sin(PI*x) is like to range reduction for GAMMA(x)
 //    i.e rs = x - round(x) and |rs| <= 0.5.
 //
 //   Step 2: Approximation
 //   ---------------------
-//    To approximate sin(PI*x)/PI = sin(PI*(2*n+rs))/PI = 
+//    To approximate sin(PI*x)/PI = sin(PI*(2*n+rs))/PI =
 //    = (-1)^n*sin(PI*rs)/PI Taylor series is used.
 //    sin(PI*rs)/PI ~ S17(rs).
 //
@@ -172,7 +172,7 @@
 //   ----------------
 //    To calculate 1/x and 1/(GAMMA(x)*S12(rs)) we use frcpa
 //    instruction with following Newton-Raphson interations.
-//  
+//
 //
 //*********************************************************************
 
@@ -218,7 +218,7 @@ FR_X                    = f10
 FR_Y                    = f1
 FR_RESULT               = f8
 
-FR_iXt                  = f11 
+FR_iXt                  = f11
 FR_Xt                   = f12
 FR_r                    = f13
 FR_r2                   = f14
@@ -671,7 +671,7 @@ GLOBAL_LIBM_ENTRY(tgammaf)
 { .mfi
       nop.m         0
 (p14) fma.s1        FR_rs2 = FR_rs,FR_rs,f0
-      nop.i         0 
+      nop.i         0
 }
 { .mfb
       nop.m         0
@@ -680,12 +680,12 @@ GLOBAL_LIBM_ENTRY(tgammaf)
 (p7)  br.cond.spnt  tgammaf_overflow_near0_bound
 };;
 { .mfi
-      nop.m         0 
+      nop.m         0
 (p6)  fnma.s1       FR_Rq1 = FR_Rq1,FR_Rq0,f0
-      nop.i         0 
+      nop.i         0
 }
 { .mfi
-      nop.m         0 
+      nop.m         0
 (p10) fma.s1        FR_Rq2 = FR_Rq2,FR_Rq3,f0
       and           GR_Sig = 0x7,GR_Sig
 };;
@@ -730,24 +730,24 @@ GLOBAL_LIBM_ENTRY(tgammaf)
       nop.i         0
 };;
 { .mfi
-      nop.m         0 
+      nop.m         0
 (p9)  fma.s1        FR_Rq1 = FR_Rq1,FR_Rq2,f0
       nop.i         0
 }
 { .mfi
       nop.m         0
       fma.s1        FR_C51 = FR_C51,FR_r,FR_C50
-      nop.i         0 
+      nop.i         0
 };;
 { .mfi
 (p14) getf.exp      GR_SignExp = FR_rs
       fma.s1        FR_C01 = FR_C01,FR_C11,f0
-      nop.i         0 
+      nop.i         0
 }
 { .mfi
       nop.m         0
 (p14) fma.s1        FR_S01 = FR_S01,FR_rs2,FR_S00
-      nop.i         0 
+      nop.i         0
 };;
 { .mfi
       nop.m         0
@@ -763,7 +763,7 @@ GLOBAL_LIBM_ENTRY(tgammaf)
 { .mfi
       nop.m         0
 (p14) fma.s1        FR_S11 = FR_S11,FR_rs2,FR_S10
-(p14) tbit.z.unc    p11,p12 = GR_SignExp,17 
+(p14) tbit.z.unc    p11,p12 = GR_SignExp,17
 }
 { .mfi
       nop.m         0
@@ -788,7 +788,7 @@ GLOBAL_LIBM_ENTRY(tgammaf)
 { .mfi
       nop.m         0
 (p7)  fma.s1        FR_An = FR_Rq1,FR_An,f0
-      nop.i         0 
+      nop.i         0
 };;
 { .mfb
       nop.m         0
@@ -841,7 +841,7 @@ GLOBAL_LIBM_ENTRY(tgammaf)
 };;
 
 { .mfi
-      nop.m         0 
+      nop.m         0
 (p14) fma.s1        FR_GAMMA = FR_C01,FR_C41,f0
 (p14) tbit.z.unc    p6,p7 = GR_Sig,0
 }
@@ -954,7 +954,7 @@ tgammaf_from_0_to_1:
 { .mfi
       cmp.gt        p9,p0 = GR_Arg,GR_ExpOf05
       fma.s1        FR_r = f0,f0,FR_NormX // reduced arg for (0;1)
-      mov           GR_ExpOf025 = 0x7FA       
+      mov           GR_ExpOf025 = 0x7FA
 };;
 { .mfi
       getf.s        GR_ArgNz = f8
@@ -973,7 +973,7 @@ tgammaf_from_0_to_1:
 (p6)  mov           GR_Tbl12Offs = 0x40 // 0.25 <= x < 0.5
 }
 { .mfi
-      add           GR_ad_Ce = 0x2C0,GR_ad_Data      
+      add           GR_ad_Ce = 0x2C0,GR_ad_Data
       nop.f         0
       add           GR_ad_Co = 0x2A0,GR_ad_Data
 };;
@@ -992,7 +992,7 @@ tgammaf_from_0_to_1:
       ldfpd         FR_A7,FR_A6 = [GR_ad_Co],16
       ldfpd         FR_A5,FR_A4 = [GR_ad_Ce],16
       // jump if argument is close to 0 positive
-(p12) br.cond.spnt  tgammaf_overflow      
+(p12) br.cond.spnt  tgammaf_overflow
 };;
 { .mfi
       ldfpd         FR_A3,FR_A2 = [GR_ad_Co],16
@@ -1003,7 +1003,7 @@ tgammaf_from_0_to_1:
 { .mfb
       ldfpd         FR_A1,FR_A0 = [GR_ad_Ce],16
       nop.f         0
-      br.cond.sptk  tgamma_from_0_to_2 
+      br.cond.sptk  tgamma_from_0_to_2
 };;
 
 // here if 1 < x < 2
@@ -1023,7 +1023,7 @@ tgammaf_from_1_to_2:
 { .mfi
       nop.m         0
       nop.f         0
-      and           GR_TblOffs = GR_TblOffs,GR_TblOffsMask 
+      and           GR_TblOffs = GR_TblOffs,GR_TblOffsMask
 };;
 { .mfi
       shladd        GR_ad_Co = GR_TblOffs,3,GR_ad_Co
@@ -1106,17 +1106,17 @@ tgamma_from_0_to_2:
       nop.i         0
 };;
 { .mfi
-      nop.m         0 
+      nop.m         0
 (p10) fma.s1        FR_GAMMA = FR_A7,FR_r4,FR_A3
       nop.i         0
 }
 { .mfi
-      nop.m         0 
+      nop.m         0
 (p11) fma.s.s0      f8 = FR_A7,FR_r4,FR_A3
       nop.i         0
 };;
 { .mfb
-      nop.m         0 
+      nop.m         0
 (p10) fma.s.s0      f8 = FR_GAMMA,FR_Rcp2,f0
       br.ret.sptk   b0
 };;
@@ -1140,7 +1140,7 @@ tgammaf_overflow_near0_bound:
 { .mfi
 	  nop.m         0
 	  nop.f         0
-	  shl           r8 = r8,20 
+	  shl           r8 = r8,20
 };;
 { .mfi
       sub           r8 = r8,r0,1
@@ -1150,12 +1150,12 @@ tgammaf_overflow_near0_bound:
 .pred.rel "mutex",p14,p15
 { .mfi
       // set p8 to 0 in case of overflow and to 1 otherwise
-	  // for negative arg: 
+	  // for negative arg:
 	  //    no overflow if rounding mode either Z or +Inf, i.e.
 	  //    GR_fpsr > 1
 (p14) cmp.lt        p8,p0 = 1,GR_fpsr
       nop.f         0
-	  // for positive arg: 
+	  // for positive arg:
 	  //    no overflow if rounding mode either Z or -Inf, i.e.
 	  //    (GR_fpsr & 1) == 0
 (p15) tbit.z        p0,p8 = GR_fpsr,0
@@ -1186,7 +1186,7 @@ tgammaf_overflow:
       mov           GR_TAG = 261 // overflow
 }
 { .mfb
-      nop.m         0 
+      nop.m         0
 (p15) fma.s.s0      f8 = f9,f9,f0 // set I,O and +INF result
       br.cond.sptk  tgammaf_libm_err
 };;
@@ -1259,7 +1259,7 @@ tgammaf_spec_args:
 { .mfi
 (p7)  mov           GR_TAG = 262 // negative
 (p7)  frcpa.s0      f8,p0 = f1,f8
-      nop.i         0 
+      nop.i         0
 }
 { .mib
       nop.m         0
@@ -1283,10 +1283,10 @@ LOCAL_LIBM_ENTRY(__libm_error_region)
         add   GR_Parameter_Y=-32,sp             // Parameter 2 value
         nop.f 0
 .save   ar.pfs,GR_SAVE_PFS
-        mov  GR_SAVE_PFS=ar.pfs                 // Save ar.pfs 
+        mov  GR_SAVE_PFS=ar.pfs                 // Save ar.pfs
 }
 { .mfi
-.fframe 64 
+.fframe 64
         add sp=-64,sp                           // Create new stack
         nop.f 0
         mov GR_SAVE_GP=gp                       // Save gp
@@ -1294,18 +1294,18 @@ LOCAL_LIBM_ENTRY(__libm_error_region)
 { .mmi
         stfs [GR_Parameter_Y] = FR_Y,16         // STORE Parameter 2 on stack
         add GR_Parameter_X = 16,sp              // Parameter 1 address
-.save   b0, GR_SAVE_B0                      
-        mov GR_SAVE_B0=b0                       // Save b0 
+.save   b0, GR_SAVE_B0
+        mov GR_SAVE_B0=b0                       // Save b0
 };;
 .body
 { .mib
-        stfs [GR_Parameter_X] = FR_X           // STORE Parameter 1 on stack 
-        add   GR_Parameter_RESULT = 0,GR_Parameter_Y  // Parameter 3 address 
-        nop.b 0                                      
+        stfs [GR_Parameter_X] = FR_X           // STORE Parameter 1 on stack
+        add   GR_Parameter_RESULT = 0,GR_Parameter_Y  // Parameter 3 address
+        nop.b 0
 }
 { .mib
         stfs [GR_Parameter_Y] = FR_RESULT      // STORE Parameter 3 on stack
-        add   GR_Parameter_Y = -16,GR_Parameter_Y  
+        add   GR_Parameter_Y = -16,GR_Parameter_Y
         br.call.sptk b0=__libm_error_support# // Call error handling function
 };;
 { .mmi
@@ -1320,10 +1320,10 @@ LOCAL_LIBM_ENTRY(__libm_error_region)
         mov   b0 = GR_SAVE_B0                  // Restore return address
 };;
 { .mib
-        mov   gp = GR_SAVE_GP                  // Restore gp 
+        mov   gp = GR_SAVE_GP                  // Restore gp
         mov   ar.pfs = GR_SAVE_PFS             // Restore ar.pfs
         br.ret.sptk     b0                     // Return
-};; 
+};;
 
 LOCAL_LIBM_END(__libm_error_region)
 .type   __libm_error_support#,@function

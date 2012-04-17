@@ -21,20 +21,20 @@
 // products derived from this software without specific prior written
 // permission.
 
-// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
-// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
 // LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL INTEL OR ITS 
+// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL INTEL OR ITS
 // CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-// EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, 
-// PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
-// PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY 
+// EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+// PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+// PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY
 // OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY OR TORT (INCLUDING
-// NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS 
-// SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. 
-// 
+// NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+// SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
 // Intel Corporation is the author of this code, and requests that all
-// problem reports or change requests be submitted to it directly at 
+// problem reports or change requests be submitted to it directly at
 // http://www.intel.com/software/products/opensource/libraries/num.htm.
 //
 // History
@@ -56,7 +56,7 @@
 //    Floating-Point Registers:  f8-f15
 //                               f32-f127
 //
-//    General Purpose Registers: r32-r67 
+//    General Purpose Registers: r32-r67
 //
 //    Predicate Registers:       p6-p15
 //
@@ -65,8 +65,8 @@
 // IEEE Special Conditions:
 //
 //    tgammal(+inf) = +inf
-//    tgammal(-inf) = QNaN 
-//    tgammal(+/-0) = +/-inf 
+//    tgammal(-inf) = QNaN
+//    tgammal(+/-0) = +/-inf
 //    tgammal(x<0, x - integer) = QNaN
 //    tgammal(SNaN) = QNaN
 //    tgammal(QNaN) = QNaN
@@ -78,23 +78,23 @@
 // Algorithm description
 // ---------------------
 //
-// There are 3 main paths in the implementation 
+// There are 3 main paths in the implementation
 // (and additional special values branches)
 //
 // 1) |X| >= 13 - Stirling formula computation
 //    a) Positive arguments:
-//       TGAMMAL(X) = exp((X-0.5)*ln(X) - X + C + S(Z)), 
-//       where C = 0.5*ln(2*Pi) , Z = 1/Z, S(Z) - Bernulli polynomial 
+//       TGAMMAL(X) = exp((X-0.5)*ln(X) - X + C + S(Z)),
+//       where C = 0.5*ln(2*Pi) , Z = 1/Z, S(Z) - Bernulli polynomial
 //       (up to 'B18' term).
-//       Some of these calculation done in multiprecision. 
-//       Ln returns multiprecision result too 
+//       Some of these calculation done in multiprecision.
+//       Ln returns multiprecision result too
 //       and exp also accepts and returns pair of values.
-//     
+//
 //    b) Negative arguments
 //       TGAMMAL(-X) = PI/(X*TGAMMAL(X)*sin(PI*X)).
 //       (X*sin(PI*X))/PI calculated in parallel with TGAMMAL.
 //       Here we use polynomial of 9th degree with 2 multiprecision steps.
-//       Argument range reduction is: 
+//       Argument range reduction is:
 //       N = [x] with round to nearest, r = x - N, -0.5 <= r < 0.5
 //       After ((X-0.5)*ln(X) - X + C + S(Z)) completed we just invert
 //       its result and compute exp with negative argument (1/exp(x)=exp(-x))
@@ -108,9 +108,9 @@
 //       and first 6 multiprecision computations.
 //       Range reduction looks like
 //       N = [x] with truncate, r = x - N - 0.5, -0.5 <= r < 0.5
-//       For odd intervals we use reccurent formula: 
+//       For odd intervals we use reccurent formula:
 //       TGAMMAL(X) = TGAMMA(X-1)*(X-1)
-//       [1;2] interval is splitted to 3 subranges: 
+//       [1;2] interval is splitted to 3 subranges:
 //       [1;1.25], [1.25;1.75], [1.75;2] with the same polynomial forms
 //
 //    b) Negative arguments
@@ -121,7 +121,7 @@
 //
 // 3) 0 < |X| < 1 - Near 0 part
 //    a) Here we use reccurent formula TGAMMAL(X) = TGAMMAL(X+1)/X
-//       TGAMMAL(X+1) calculated as shown above, 
+//       TGAMMAL(X+1) calculated as shown above,
 //       1/X result obtained in parallel. Then we just multiply these values.
 //       There is only additional separated subrange: [0;0.125] with specific
 //       polynomial constants set.
@@ -136,7 +136,7 @@ RODATA
 
 .align 16
 LOCAL_OBJECT_START(Constants_Tgammal_log_80_Q)
-// log2_hi, log2_lo, Q_6, Q_5, Q_4, Q_3, Q_2, Q_1 
+// log2_hi, log2_lo, Q_6, Q_5, Q_4, Q_3, Q_2, Q_1
 data4 0x00000000,0xB1721800,0x00003FFE,0x00000000
 data4 0x4361C4C6,0x82E30865,0x0000BFE2,0x00000000
 data4 0xA51BE0AF,0x92492453,0x00003FFC,0x00000000
@@ -144,133 +144,133 @@ data4 0xA0CFD29F,0xAAAAAB73,0x0000BFFC,0x00000000
 data4 0xCCCE3872,0xCCCCCCCC,0x00003FFC,0x00000000
 data4 0xFFFFB4FB,0xFFFFFFFF,0x0000BFFC,0x00000000
 data4 0xAAAAAAAB,0xAAAAAAAA,0x00003FFD,0x00000000
-data4 0x00000000,0x80000000,0x0000BFFE,0x00000000 
+data4 0x00000000,0x80000000,0x0000BFFE,0x00000000
 LOCAL_OBJECT_END(Constants_Tgammal_log_80_Q)
 
 .align 64
 LOCAL_OBJECT_START(Constants_Tgammal_log_80_Z_G_H_h1)
-// Z1 - 16 bit fixed, G1 and H1 IEEE single, h1 IEEE double   
+// Z1 - 16 bit fixed, G1 and H1 IEEE single, h1 IEEE double
 data4 0x00008000,0x3F800000,0x00000000,0x00000000
-data4 0x00000000,0x00000000,0x00000000,0x00000000 
+data4 0x00000000,0x00000000,0x00000000,0x00000000
 data4 0x00007879,0x3F70F0F0,0x3D785196,0x00000000
 data4 0xEBA0E0D1,0x8B1D330B,0x00003FDA,0x00000000
 data4 0x000071C8,0x3F638E38,0x3DF13843,0x00000000
 data4 0x9EADD553,0xE2AF365E,0x00003FE2,0x00000000
 data4 0x00006BCB,0x3F579430,0x3E2FF9A0,0x00000000
-data4 0x752F34A2,0xF585FEC3,0x0000BFE3,0x00000000  
+data4 0x752F34A2,0xF585FEC3,0x0000BFE3,0x00000000
 data4 0x00006667,0x3F4CCCC8,0x3E647FD6,0x00000000
-data4 0x893B03F3,0xF3546435,0x00003FE2,0x00000000  
-data4 0x00006187,0x3F430C30,0x3E8B3AE7,0x00000000 
-data4 0x39CDD2AC,0xBABA62E0,0x00003FE4,0x00000000 
-data4 0x00005D18,0x3F3A2E88,0x3EA30C68,0x00000000 
+data4 0x893B03F3,0xF3546435,0x00003FE2,0x00000000
+data4 0x00006187,0x3F430C30,0x3E8B3AE7,0x00000000
+data4 0x39CDD2AC,0xBABA62E0,0x00003FE4,0x00000000
+data4 0x00005D18,0x3F3A2E88,0x3EA30C68,0x00000000
 data4 0x457978A1,0x8718789F,0x00003FE2,0x00000000
-data4 0x0000590C,0x3F321640,0x3EB9CEC8,0x00000000 
-data4 0x3185E56A,0x9442DF96,0x0000BFE4,0x00000000 
-data4 0x00005556,0x3F2AAAA8,0x3ECF9927,0x00000000 
-data4 0x2BBE2CBD,0xCBF9A4BF,0x00003FE4,0x00000000 
-data4 0x000051EC,0x3F23D708,0x3EE47FC5,0x00000000 
-data4 0x852D5935,0xF3537535,0x00003FE3,0x00000000 
-data4 0x00004EC5,0x3F1D89D8,0x3EF8947D,0x00000000 
-data4 0x46CDF32F,0xA1F1E699,0x0000BFDF,0x00000000 
-data4 0x00004BDB,0x3F17B420,0x3F05F3A1,0x00000000 
-data4 0xD8484CE3,0x84A61856,0x00003FE4,0x00000000 
+data4 0x0000590C,0x3F321640,0x3EB9CEC8,0x00000000
+data4 0x3185E56A,0x9442DF96,0x0000BFE4,0x00000000
+data4 0x00005556,0x3F2AAAA8,0x3ECF9927,0x00000000
+data4 0x2BBE2CBD,0xCBF9A4BF,0x00003FE4,0x00000000
+data4 0x000051EC,0x3F23D708,0x3EE47FC5,0x00000000
+data4 0x852D5935,0xF3537535,0x00003FE3,0x00000000
+data4 0x00004EC5,0x3F1D89D8,0x3EF8947D,0x00000000
+data4 0x46CDF32F,0xA1F1E699,0x0000BFDF,0x00000000
+data4 0x00004BDB,0x3F17B420,0x3F05F3A1,0x00000000
+data4 0xD8484CE3,0x84A61856,0x00003FE4,0x00000000
 data4 0x00004925,0x3F124920,0x3F0F4303,0x00000000
-data4 0xFF28821B,0xC7DD97E0,0x0000BFE2,0x00000000    
-data4 0x0000469F,0x3F0D3DC8,0x3F183EBF,0x00000000 
-data4 0xEF1FD32F,0xD3C4A887,0x00003FE3,0x00000000  
-data4 0x00004445,0x3F088888,0x3F20EC80,0x00000000 
-data4 0x464C76DA,0x84672BE6,0x00003FE5,0x00000000 
+data4 0xFF28821B,0xC7DD97E0,0x0000BFE2,0x00000000
+data4 0x0000469F,0x3F0D3DC8,0x3F183EBF,0x00000000
+data4 0xEF1FD32F,0xD3C4A887,0x00003FE3,0x00000000
+data4 0x00004445,0x3F088888,0x3F20EC80,0x00000000
+data4 0x464C76DA,0x84672BE6,0x00003FE5,0x00000000
 data4 0x00004211,0x3F042108,0x3F29516A,0x00000000
-data4 0x18835FB9,0x9A43A511,0x0000BFE5,0x00000000 
+data4 0x18835FB9,0x9A43A511,0x0000BFE5,0x00000000
 LOCAL_OBJECT_END(Constants_Tgammal_log_80_Z_G_H_h1)
 
 .align 64
 LOCAL_OBJECT_START(Constants_Tgammal_log_80_Z_G_H_h2)
 // Z2 - 16 bit fixed, G2 and H2 IEEE single, h2 IEEE double
-data4 0x00008000,0x3F800000,0x00000000,0x00000000 
-data4 0x00000000,0x00000000,0x00000000,0x00000000 
-data4 0x00007F81,0x3F7F00F8,0x3B7F875D,0x00000000 
+data4 0x00008000,0x3F800000,0x00000000,0x00000000
+data4 0x00000000,0x00000000,0x00000000,0x00000000
+data4 0x00007F81,0x3F7F00F8,0x3B7F875D,0x00000000
 data4 0x211398BF,0xAD08B116,0x00003FDB,0x00000000
-data4 0x00007F02,0x3F7E03F8,0x3BFF015B,0x00000000 
-data4 0xC376958E,0xB106790F,0x00003FDE,0x00000000 
-data4 0x00007E85,0x3F7D08E0,0x3C3EE393,0x00000000 
-data4 0x79A7679A,0xFD03F242,0x0000BFDA,0x00000000 
-data4 0x00007E08,0x3F7C0FC0,0x3C7E0586,0x00000000 
-data4 0x05E7AE08,0xF03F81C3,0x0000BFDF,0x00000000 
-data4 0x00007D8D,0x3F7B1880,0x3C9E75D2,0x00000000 
+data4 0x00007F02,0x3F7E03F8,0x3BFF015B,0x00000000
+data4 0xC376958E,0xB106790F,0x00003FDE,0x00000000
+data4 0x00007E85,0x3F7D08E0,0x3C3EE393,0x00000000
+data4 0x79A7679A,0xFD03F242,0x0000BFDA,0x00000000
+data4 0x00007E08,0x3F7C0FC0,0x3C7E0586,0x00000000
+data4 0x05E7AE08,0xF03F81C3,0x0000BFDF,0x00000000
+data4 0x00007D8D,0x3F7B1880,0x3C9E75D2,0x00000000
 data4 0x049EB22F,0xD1B87D3C,0x00003FDE,0x00000000
-data4 0x00007D12,0x3F7A2328,0x3CBDC97A,0x00000000 
-data4 0x3A9E81E0,0xFABC8B95,0x00003FDF,0x00000000 
+data4 0x00007D12,0x3F7A2328,0x3CBDC97A,0x00000000
+data4 0x3A9E81E0,0xFABC8B95,0x00003FDF,0x00000000
 data4 0x00007C98,0x3F792FB0,0x3CDCFE47,0x00000000
-data4 0x7C4B5443,0xF5F3653F,0x00003FDF,0x00000000 
-data4 0x00007C20,0x3F783E08,0x3CFC15D0,0x00000000 
-data4 0xF65A1773,0xE78AB204,0x00003FE0,0x00000000  
-data4 0x00007BA8,0x3F774E38,0x3D0D874D,0x00000000 
-data4 0x7B8EF695,0xDB7CBFFF,0x0000BFE0,0x00000000 
-data4 0x00007B31,0x3F766038,0x3D1CF49B,0x00000000 
-data4 0xCF773FB3,0xC0241AEA,0x0000BFE0,0x00000000 
-data4 0x00007ABB,0x3F757400,0x3D2C531D,0x00000000 
-data4 0xC9539FDF,0xFC8F4D48,0x00003FE1,0x00000000  
-data4 0x00007A45,0x3F748988,0x3D3BA322,0x00000000 
-data4 0x954665C2,0x9CD035FB,0x0000BFE1,0x00000000  
-data4 0x000079D1,0x3F73A0D0,0x3D4AE46F,0x00000000 
-data4 0xDD367A30,0xEC9017C7,0x00003FE1,0x00000000 
-data4 0x0000795D,0x3F72B9D0,0x3D5A1756,0x00000000 
-data4 0xCB11189C,0xEE6625D3,0x0000BFE1,0x00000000 
-data4 0x000078EB,0x3F71D488,0x3D693B9D,0x00000000 
-data4 0xBE11C424,0xA49C8DB5,0x0000BFE0,0x00000000 
+data4 0x7C4B5443,0xF5F3653F,0x00003FDF,0x00000000
+data4 0x00007C20,0x3F783E08,0x3CFC15D0,0x00000000
+data4 0xF65A1773,0xE78AB204,0x00003FE0,0x00000000
+data4 0x00007BA8,0x3F774E38,0x3D0D874D,0x00000000
+data4 0x7B8EF695,0xDB7CBFFF,0x0000BFE0,0x00000000
+data4 0x00007B31,0x3F766038,0x3D1CF49B,0x00000000
+data4 0xCF773FB3,0xC0241AEA,0x0000BFE0,0x00000000
+data4 0x00007ABB,0x3F757400,0x3D2C531D,0x00000000
+data4 0xC9539FDF,0xFC8F4D48,0x00003FE1,0x00000000
+data4 0x00007A45,0x3F748988,0x3D3BA322,0x00000000
+data4 0x954665C2,0x9CD035FB,0x0000BFE1,0x00000000
+data4 0x000079D1,0x3F73A0D0,0x3D4AE46F,0x00000000
+data4 0xDD367A30,0xEC9017C7,0x00003FE1,0x00000000
+data4 0x0000795D,0x3F72B9D0,0x3D5A1756,0x00000000
+data4 0xCB11189C,0xEE6625D3,0x0000BFE1,0x00000000
+data4 0x000078EB,0x3F71D488,0x3D693B9D,0x00000000
+data4 0xBE11C424,0xA49C8DB5,0x0000BFE0,0x00000000
 LOCAL_OBJECT_END(Constants_Tgammal_log_80_Z_G_H_h2)
 
 .align 64
 LOCAL_OBJECT_START(Constants_Tgammal_log_80_h3_G_H)
-// h3 IEEE double extended, H3 and G3 IEEE single   
-data4 0x112666B0,0xAAACAAB1,0x00003FD3,0x3F7FFC00 
+// h3 IEEE double extended, H3 and G3 IEEE single
+data4 0x112666B0,0xAAACAAB1,0x00003FD3,0x3F7FFC00
 data4 0x9B7FAD21,0x90051030,0x00003FD8,0x3F7FF400
-data4 0xF4D783C4,0xA6B46F46,0x00003FDA,0x3F7FEC00 
-data4 0x11C6DDCA,0xDA148D88,0x0000BFD8,0x3F7FE400 
+data4 0xF4D783C4,0xA6B46F46,0x00003FDA,0x3F7FEC00
+data4 0x11C6DDCA,0xDA148D88,0x0000BFD8,0x3F7FE400
 data4 0xCA964D95,0xCE65C1D8,0x0000BFD8,0x3F7FDC00
-data4 0x23412D13,0x883838EE,0x0000BFDB,0x3F7FD400 
-data4 0x983ED687,0xB7E5CFA1,0x00003FDB,0x3F7FCC08 
-data4 0xE3C3930B,0xDBE23B16,0x0000BFD9,0x3F7FC408 
-data4 0x48AA4DFC,0x9B92F1FC,0x0000BFDC,0x3F7FBC10 
-data4 0xCE9C8F7E,0x9A8CEB15,0x0000BFD9,0x3F7FB410 
-data4 0x0DECE74A,0x8C220879,0x00003FDC,0x3F7FAC18 
+data4 0x23412D13,0x883838EE,0x0000BFDB,0x3F7FD400
+data4 0x983ED687,0xB7E5CFA1,0x00003FDB,0x3F7FCC08
+data4 0xE3C3930B,0xDBE23B16,0x0000BFD9,0x3F7FC408
+data4 0x48AA4DFC,0x9B92F1FC,0x0000BFDC,0x3F7FBC10
+data4 0xCE9C8F7E,0x9A8CEB15,0x0000BFD9,0x3F7FB410
+data4 0x0DECE74A,0x8C220879,0x00003FDC,0x3F7FAC18
 data4 0x2F053150,0xB25CA912,0x0000BFDA,0x3F7FA420
-data4 0xD9A5BE20,0xA5876555,0x00003FDB,0x3F7F9C20 
-data4 0x2053F087,0xC919BB6E,0x00003FD9,0x3F7F9428 
-data4 0x041E9A77,0xB70BDA79,0x00003FDC,0x3F7F8C30 
-data4 0xEA1C9C30,0xF18A5C08,0x00003FDA,0x3F7F8438 
-data4 0x796D89E5,0xA3790D84,0x0000BFDD,0x3F7F7C40 
-data4 0xA2915A3A,0xE1852369,0x0000BFDD,0x3F7F7448 
-data4 0xA39ED868,0xD803858F,0x00003FDC,0x3F7F6C50 
-data4 0x9417EBB7,0xB2EEE356,0x0000BFDD,0x3F7F6458 
-data4 0x9BB0D07F,0xED5C1F8A,0x0000BFDC,0x3F7F5C68 
-data4 0xE87C740A,0xD6D201A0,0x0000BFDD,0x3F7F5470 
-data4 0x1CA74025,0xE8DEBF5E,0x00003FDC,0x3F7F4C78 
+data4 0xD9A5BE20,0xA5876555,0x00003FDB,0x3F7F9C20
+data4 0x2053F087,0xC919BB6E,0x00003FD9,0x3F7F9428
+data4 0x041E9A77,0xB70BDA79,0x00003FDC,0x3F7F8C30
+data4 0xEA1C9C30,0xF18A5C08,0x00003FDA,0x3F7F8438
+data4 0x796D89E5,0xA3790D84,0x0000BFDD,0x3F7F7C40
+data4 0xA2915A3A,0xE1852369,0x0000BFDD,0x3F7F7448
+data4 0xA39ED868,0xD803858F,0x00003FDC,0x3F7F6C50
+data4 0x9417EBB7,0xB2EEE356,0x0000BFDD,0x3F7F6458
+data4 0x9BB0D07F,0xED5C1F8A,0x0000BFDC,0x3F7F5C68
+data4 0xE87C740A,0xD6D201A0,0x0000BFDD,0x3F7F5470
+data4 0x1CA74025,0xE8DEBF5E,0x00003FDC,0x3F7F4C78
 data4 0x1F34A7EB,0x9A995A97,0x0000BFDC,0x3F7F4488
-data4 0x359EED97,0x9CB0F742,0x0000BFDA,0x3F7F3C90 
-data4 0xBBC6A1C8,0xD6F833C2,0x0000BFDD,0x3F7F34A0 
-data4 0xE71090EC,0xE1F68F2A,0x00003FDC,0x3F7F2CA8 
-data4 0xC160A74F,0xD1881CF1,0x0000BFDB,0x3F7F24B8 
-data4 0xD78CB5A4,0x9AD05AE2,0x00003FD6,0x3F7F1CC8 
-data4 0x9A77DC4B,0xE658CB8E,0x0000BFDD,0x3F7F14D8 
-data4 0x6BD6D312,0xBA281296,0x00003FDC,0x3F7F0CE0 
-data4 0xF95210D0,0xB478BBEB,0x0000BFDB,0x3F7F04F0 
-data4 0x38800100,0x39400480,0x39A00640,0x39E00C41 // H's start here 
-data4 0x3A100A21,0x3A300F22,0x3A4FF51C,0x3A6FFC1D 
+data4 0x359EED97,0x9CB0F742,0x0000BFDA,0x3F7F3C90
+data4 0xBBC6A1C8,0xD6F833C2,0x0000BFDD,0x3F7F34A0
+data4 0xE71090EC,0xE1F68F2A,0x00003FDC,0x3F7F2CA8
+data4 0xC160A74F,0xD1881CF1,0x0000BFDB,0x3F7F24B8
+data4 0xD78CB5A4,0x9AD05AE2,0x00003FD6,0x3F7F1CC8
+data4 0x9A77DC4B,0xE658CB8E,0x0000BFDD,0x3F7F14D8
+data4 0x6BD6D312,0xBA281296,0x00003FDC,0x3F7F0CE0
+data4 0xF95210D0,0xB478BBEB,0x0000BFDB,0x3F7F04F0
+data4 0x38800100,0x39400480,0x39A00640,0x39E00C41 // H's start here
+data4 0x3A100A21,0x3A300F22,0x3A4FF51C,0x3A6FFC1D
 data4 0x3A87F20B,0x3A97F68B,0x3AA7EB86,0x3AB7E101
-data4 0x3AC7E701,0x3AD7DD7B,0x3AE7D474,0x3AF7CBED 
-data4 0x3B03E1F3,0x3B0BDE2F,0x3B13DAAA,0x3B1BD766 
-data4 0x3B23CC5C,0x3B2BC997,0x3B33C711,0x3B3BBCC6 
-data4 0x3B43BAC0,0x3B4BB0F4,0x3B53AF6D,0x3B5BA620 
-data4 0x3B639D12,0x3B6B9444,0x3B7393BC,0x3B7B8B6D 
+data4 0x3AC7E701,0x3AD7DD7B,0x3AE7D474,0x3AF7CBED
+data4 0x3B03E1F3,0x3B0BDE2F,0x3B13DAAA,0x3B1BD766
+data4 0x3B23CC5C,0x3B2BC997,0x3B33C711,0x3B3BBCC6
+data4 0x3B43BAC0,0x3B4BB0F4,0x3B53AF6D,0x3B5BA620
+data4 0x3B639D12,0x3B6B9444,0x3B7393BC,0x3B7B8B6D
 LOCAL_OBJECT_END(Constants_Tgammal_log_80_h3_G_H)
 
-.align 64 
+.align 64
 LOCAL_OBJECT_START(Constants_Tgammal_stirling)
 //0.5*ln(2*Pi)=9.1893853320467266954096885e-01 + 7.2239360881843238220057778e-17
 data8 0x3FED67F1C864BEB4, 0x3C94D252F2400510
-// Bernulli numbers 
+// Bernulli numbers
 data8 0xAAAAAAAAAAAAAAAB, 0x00003FFB //B2 = 8.3333333333333333333333333333e-02
 data8 0xBF66C16C16C16C17 //B4 = -2.7777777777777777777777777778e-03
 data8 0x3F4A01A01A01A01A //B6 = 7.9365079365079365079365079365e-04
@@ -283,9 +283,9 @@ data8 0x3FC6FE96381E0680 //B18 = 1.7964437236883057316493849002e-01
 data8 0x3FE0000000000000 // 0.5
 LOCAL_OBJECT_END(Constants_Tgammal_stirling)
 
-.align 64 
+.align 64
 LOCAL_OBJECT_START(Constants_Tgammal_sin)
-// Polynomial coefficients for the sin(Pi*x)/Pi, 0 <= |x| < 0.5 
+// Polynomial coefficients for the sin(Pi*x)/Pi, 0 <= |x| < 0.5
 //A2 = 8.1174242528335360802316245099e-01 + 5.1302254650266899774269946201e-18
 data8 0x3FE9F9CB402BC46C, 0x3C57A8B3819B7CEC
 //A1 = -1.6449340668482264060656916627e+00 + -3.0210280454695477893051351574e-17
@@ -299,7 +299,7 @@ data8 0xD63402E798FEC896, 0x00003FF9 //A4 = 2.6147847817611456327417812320e-02
 data8 0xC354723906D95E92, 0x0000BFFC //A3 = -1.9075182412208257558294507774e-01
 LOCAL_OBJECT_END(Constants_Tgammal_sin)
 
-.align 64 
+.align 64
 LOCAL_OBJECT_START(Constants_Tgammal_exp_64_Arg)
 data4 0x00000000,0xB17217F4,0x00003FF2,0x00000000 // L_hi = hi part log(2)/2^12
 data4 0xF278ECE6,0xF473DE6A,0x00003FD4,0x00000000 // L_lo = lo part log(2)/2^12
@@ -312,8 +312,8 @@ data4 0xFFFFFFFF,0xFFFFFFFF,0x00003FFD,0x00000000 // A1
 LOCAL_OBJECT_END(Constants_Tgammal_exp_64_A)
 
 LOCAL_OBJECT_START(Constants_Tgammal_exp_64_T1)
-data4 0x3F800000,0x3F8164D2,0x3F82CD87,0x3F843A29 
-data4 0x3F85AAC3,0x3F871F62,0x3F88980F,0x3F8A14D5 
+data4 0x3F800000,0x3F8164D2,0x3F82CD87,0x3F843A29
+data4 0x3F85AAC3,0x3F871F62,0x3F88980F,0x3F8A14D5
 data4 0x3F8B95C2,0x3F8D1ADF,0x3F8EA43A,0x3F9031DC
 data4 0x3F91C3D3,0x3F935A2B,0x3F94F4F0,0x3F96942D
 data4 0x3F9837F0,0x3F99E046,0x3F9B8D3A,0x3F9D3EDA
@@ -331,21 +331,21 @@ data4 0x3FF5257D,0x3FF7D0DF,0x3FFA83B3,0x3FFD3E0C
 LOCAL_OBJECT_END(Constants_Tgammal_exp_64_T1)
 
 LOCAL_OBJECT_START(Constants_Tgammal_exp_64_T2)
-data4 0x3F800000,0x3F80058C,0x3F800B18,0x3F8010A4 
-data4 0x3F801630,0x3F801BBD,0x3F80214A,0x3F8026D7 
-data4 0x3F802C64,0x3F8031F2,0x3F803780,0x3F803D0E 
-data4 0x3F80429C,0x3F80482B,0x3F804DB9,0x3F805349 
-data4 0x3F8058D8,0x3F805E67,0x3F8063F7,0x3F806987 
-data4 0x3F806F17,0x3F8074A8,0x3F807A39,0x3F807FCA 
-data4 0x3F80855B,0x3F808AEC,0x3F80907E,0x3F809610 
-data4 0x3F809BA2,0x3F80A135,0x3F80A6C7,0x3F80AC5A 
-data4 0x3F80B1ED,0x3F80B781,0x3F80BD14,0x3F80C2A8 
-data4 0x3F80C83C,0x3F80CDD1,0x3F80D365,0x3F80D8FA 
-data4 0x3F80DE8F,0x3F80E425,0x3F80E9BA,0x3F80EF50 
-data4 0x3F80F4E6,0x3F80FA7C,0x3F810013,0x3F8105AA 
-data4 0x3F810B41,0x3F8110D8,0x3F81166F,0x3F811C07 
-data4 0x3F81219F,0x3F812737,0x3F812CD0,0x3F813269 
-data4 0x3F813802,0x3F813D9B,0x3F814334,0x3F8148CE 
+data4 0x3F800000,0x3F80058C,0x3F800B18,0x3F8010A4
+data4 0x3F801630,0x3F801BBD,0x3F80214A,0x3F8026D7
+data4 0x3F802C64,0x3F8031F2,0x3F803780,0x3F803D0E
+data4 0x3F80429C,0x3F80482B,0x3F804DB9,0x3F805349
+data4 0x3F8058D8,0x3F805E67,0x3F8063F7,0x3F806987
+data4 0x3F806F17,0x3F8074A8,0x3F807A39,0x3F807FCA
+data4 0x3F80855B,0x3F808AEC,0x3F80907E,0x3F809610
+data4 0x3F809BA2,0x3F80A135,0x3F80A6C7,0x3F80AC5A
+data4 0x3F80B1ED,0x3F80B781,0x3F80BD14,0x3F80C2A8
+data4 0x3F80C83C,0x3F80CDD1,0x3F80D365,0x3F80D8FA
+data4 0x3F80DE8F,0x3F80E425,0x3F80E9BA,0x3F80EF50
+data4 0x3F80F4E6,0x3F80FA7C,0x3F810013,0x3F8105AA
+data4 0x3F810B41,0x3F8110D8,0x3F81166F,0x3F811C07
+data4 0x3F81219F,0x3F812737,0x3F812CD0,0x3F813269
+data4 0x3F813802,0x3F813D9B,0x3F814334,0x3F8148CE
 data4 0x3F814E68,0x3F815402,0x3F81599C,0x3F815F37
 LOCAL_OBJECT_END(Constants_Tgammal_exp_64_T2)
 
@@ -423,7 +423,7 @@ LOCAL_OBJECT_END(Constants_Tgammal_exp_64_W2)
 
 LOCAL_OBJECT_START(Constants_Tgammal_poly)
 
-// Polynomial coefficients for the tgammal(x), 2 <= |x| < 3 
+// Polynomial coefficients for the tgammal(x), 2 <= |x| < 3
 //A5 = 2.8360780594841213109180699803e-02 + 2.2504152891014320704380000000e-19
 data8 0x3F9D0A9BC49353D2, 0x3C109AEA0F23CE2D
 //A4 = 1.0967323400216015538699565468e-01 + 9.9225166000430644587276000000e-18
@@ -452,7 +452,7 @@ data8 0xC5C7E6D62A6991D8, 0x00003FF4 //A8 = 7.5447412886334708803357581519e-04
 data8 0xD2AF690725C62D88, 0x00003FF5 //A7 = 1.6074004848394703022110823298e-03
 data8 0xAA44E635D4B7B682, 0x00003FF8 //A6 = 1.0392403425906843901680697839e-02
 //
-// Polynomial coefficients for the tgammal(x), 4 <= |x| < 5 
+// Polynomial coefficients for the tgammal(x), 4 <= |x| < 5
 //A5 = 1.1600674810589555185913468449e+00 + 3.0229979112715124660731000000e-17
 data8 0x3FF28FA2EB44D22E, 0x3C816D285234C815
 //A4 = 3.1374268565470946334983182169e+00 + 1.3694868953995008497659600000e-16
@@ -481,7 +481,7 @@ data8 0xDA38E39C13819D2A, 0x00003FF9 //A8 = 2.6638454961912040754759086920e-02
 data8 0xD696DF8D8389FE53, 0x00003FFB //A7 = 1.0477995539298934056097943975e-01
 data8 0xBDD5C153048BC435, 0x00003FFD //A6 = 3.7077144754791605130056406006e-01
 //
-// Polynomial coefficients for the tgammal(x), 6 <= |x| < 7 
+// Polynomial coefficients for the tgammal(x), 6 <= |x| < 7
 //A5 = 6.7169398121054200601065531373e+01 + 2.9481001527213915901489600000e-15
 data8 0x4050CAD76B377BA0, 0x3CEA8DDB2B2DE93E
 //A4 = 1.6115104376855398982115730178e+02 + 1.3422421925418824418257300000e-14
@@ -510,7 +510,7 @@ data8 0x84FBDE0947718B58, 0x00004000 //A8 = 2.0778727617851237754568261869e+00
 data8 0xEEC1371E265A2C3A, 0x00004001 //A7 = 7.4610858525146049022238037342e+00
 data8 0xBF514B9BE68ED59D, 0x00004003 //A6 = 2.3914694993947572859629197920e+01
 //
-// Polynomial coefficients for the tgammal(x), 8 <= |x| < 9 
+// Polynomial coefficients for the tgammal(x), 8 <= |x| < 9
 //A5 = 5.8487447114416836484451778233e+03 + 4.7365465221455983144182900000e-13
 data8 0x40B6D8BEA568B6FD, 0x3D60AA4D44C2589B
 //A4 = 1.2796464063087094473303295672e+04 + 1.2373341702514898266244200000e-12
@@ -539,7 +539,7 @@ data8 0xE5AA8BB1BF02934D, 0x00004006 //A8 = 2.2966619406617480799195651466e+02
 data8 0xBF6CFEFD67F59845, 0x00004008 //A7 = 7.6570306334640770654588802417e+02
 data8 0x8DB5D2F001635C29, 0x0000400A //A6 = 2.2673639984182571062068713002e+03
 //
-// Polynomial coefficients for the tgammal(x), 10 <= |x| < 11 
+// Polynomial coefficients for the tgammal(x), 10 <= |x| < 11
 //A5 = 7.2546009516580589115619659424e+05 + 1.0343348865365065212891728822e-10
 data8 0x412623A830B99290, 0x3DDC6E7C157611C4
 //A4 = 1.4756292870840241666883230209e+06 + 8.1516565365333844166705674775e-11
@@ -568,7 +568,7 @@ data8 0x872390769650FBE2, 0x0000400E //A8 = 3.4595564309496661629764193479e+04
 data8 0xD3E5E8D6923910C1, 0x0000400F //A7 = 1.0849181904819284819615140521e+05
 data8 0x930D70602F50B754, 0x00004011 //A6 = 3.0116351174131169193070583741e+05
 //
-// Polynomial coefficients for the tgammal(x), 12 <= |x| < 13 
+// Polynomial coefficients for the tgammal(x), 12 <= |x| < 13
 //A5 = 1.2249876249976964294910430908e+08 + 6.0051348061679753770848000000e-09
 data8 0x419D34BB29FFC39D, 0x3E39CAB72E01818D
 //A4 = 2.3482765927605420351028442383e+08 + 1.1874729051592862323641700000e-08
@@ -601,7 +601,7 @@ LOCAL_OBJECT_END(Constants_Tgammal_poly)
 
 LOCAL_OBJECT_START(Constants_Tgammal_poly_splitted)
 
-// Polynomial coefficients for the tgammal(x), 1 <= |x| < 1.25 
+// Polynomial coefficients for the tgammal(x), 1 <= |x| < 1.25
 //A5 = -9.8199506890310417350775651357e-01+ -3.2546247786122976510752200000e-17
 data8 0xBFEF6C80EC38B509, 0xBC82C2FA7A3DE3BD
 //A4 = 9.8172808683439960475425323239e-01 + 4.4847611775298520359811400000e-17
@@ -630,7 +630,7 @@ data8 0xFF83DAC83119B52C, 0x00003FFE //A8 = 9.9810569179053383842734164901e-01
 data8 0xFEF9F8AB891ABB24, 0x0000BFFE //A7 = -9.9600176036720260345608796766e-01
 data8 0xFE3F0537573C8235, 0x00003FFE //A6 = 9.9314911461918778676646301341e-01
 //
-// Polynomial coefficients for the tgammal(x), 1.25 <= |x| < 1.75 
+// Polynomial coefficients for the tgammal(x), 1.25 <= |x| < 1.75
 //A5 = -7.7523052299853054125655660300e-02+ -1.2693512521686721504433600000e-17
 data8 0xBFB3D88CFE50601B, 0xBC6D44ED60EE2170
 //A4 = 1.4464535904462152982041800442e-01 + 2.5426820829345729856648800000e-17
@@ -659,7 +659,7 @@ data8 0xD3A963578BE291E3, 0x00003FF9 //A8 = 2.5837606456090186343624210891e-02
 data8 0x9BA7EAE64C42FDF7, 0x0000BFFA //A7 = -3.8001935555045161419575037512e-02
 data8 0xF0115BA1A77607E7, 0x00003FFA //A6 = 5.8610303817173477119764956736e-02
 //
-// Polynomial coefficients for the tgammal(x), 1.75 <= |x| < 2.0 
+// Polynomial coefficients for the tgammal(x), 1.75 <= |x| < 2.0
 //A5 = 2.6698206874501426502654943818e-04 + 3.4033756836921062797887300000e-20
 data8 0x3F317F3740FE2A68, 0x3BE417093234B06E
 //A4 = 7.4249010753513894345090307070e-02 + 3.9810018444482764697014200000e-18
@@ -688,7 +688,7 @@ data8 0x89E224E42F93F005, 0x00003FF6 //A8 = 2.1039333407187324139473634747e-03
 data8 0xBAF374824937A323, 0x00003FF6 //A7 = 2.8526458211545152218493600470e-03
 data8 0xB6BF7564F52140C6, 0x00003FF8 //A6 = 1.1154045718131014476684982178e-02
 //
-// Polynomial coefficients for the tgammal(x), 0.0 <= |x| < 0.125 
+// Polynomial coefficients for the tgammal(x), 0.0 <= |x| < 0.125
 //A5 = -9.8199506890314514073736518185e-01+ -5.9363811993837985890950900000e-17
 data8 0xBFEF6C80EC38B67A, 0xBC911C46B447C81F
 //A4 = 9.8172808683440015986576554496e-01 + 2.7457414262802803699834200000e-17
@@ -739,7 +739,7 @@ GR_l_Log_Table1       = r34
 GR_l_BIAS             = r34
 GR_l_Index1           = r35
 GR_l_Index2           = r36
-GR_l_signif_Z         = r37 
+GR_l_signif_Z         = r37
 GR_l_X_0              = r38
 GR_l_X_1              = r39
 GR_l_X_2              = r40
@@ -788,33 +788,33 @@ FR_l_poly             = f51
 FR_l_rsq              = f52
 FR_l_Y_lo_res         = f53
 
-FR_l_Y0               = f55  
-FR_l_Q0               = f56  
-FR_l_E0               = f57  
-FR_l_E2               = f58  
-FR_l_E1               = f59  
-FR_l_Y1               = f60  
-FR_l_E3               = f61  
-FR_l_Y2               = f62  
+FR_l_Y0               = f55
+FR_l_Q0               = f56
+FR_l_E0               = f57
+FR_l_E2               = f58
+FR_l_E1               = f59
+FR_l_Y1               = f60
+FR_l_E3               = f61
+FR_l_Y2               = f62
 
-FR_l_Z                = f63    
-FR_l_Z2               = f64    
-FR_l_Z4               = f65    
-FR_l_Z8               = f66    
-                               
-FR_l_CH               = f67    
-FR_l_CL               = f68    
+FR_l_Z                = f63
+FR_l_Z2               = f64
+FR_l_Z4               = f65
+FR_l_Z8               = f66
 
-FR_l_B2               = f69  
-FR_l_B4               = f70  
-FR_l_B6               = f71  
-FR_l_B8               = f72  
-FR_l_B10              = f73  
-FR_l_B12              = f74  
-FR_l_B14              = f75  
-FR_l_B16              = f76  
-FR_l_B18              = f77  
-FR_l_Half             = f78  
+FR_l_CH               = f67
+FR_l_CL               = f68
+
+FR_l_B2               = f69
+FR_l_B4               = f70
+FR_l_B6               = f71
+FR_l_B8               = f72
+FR_l_B10              = f73
+FR_l_B12              = f74
+FR_l_B14              = f75
+FR_l_B16              = f76
+FR_l_B18              = f77
+FR_l_Half             = f78
 FR_l_SS               = f79
 FR_l_AbsX_m_Half      = f80
 FR_l_CXH              = f81
@@ -856,17 +856,17 @@ FR_n_TT               = f97
 FR_n_TH               = f98
 FR_n_TL               = f99
 
-FR_n_A2H              = f100     
-FR_n_A2L              = f101     
-FR_n_A1H              = f102     
-FR_n_A1L              = f103     
-FR_n_A9               = f104     
-FR_n_A8               = f105     
-FR_n_A7               = f106     
-FR_n_A6               = f107     
-FR_n_A5               = f108     
-FR_n_A4               = f109     
-FR_n_A3               = f110     
+FR_n_A2H              = f100
+FR_n_A2L              = f101
+FR_n_A1H              = f102
+FR_n_A1L              = f103
+FR_n_A9               = f104
+FR_n_A8               = f105
+FR_n_A7               = f106
+FR_n_A6               = f107
+FR_n_A5               = f108
+FR_n_A4               = f109
+FR_n_A3               = f110
 
 FR_n_PolyH            = f111
 FR_n_PolyL            = f112
@@ -881,17 +881,17 @@ FR_n_NegOne           = f116
 
 FR_n_Y0               = f117
 
-FR_n_Q0               = f118   
-FR_n_E0               = f119   
-                               
-FR_n_E2               = f120   
-FR_n_E1               = f121   
-                               
-FR_n_Y1               = f55    
-FR_n_E3               = f56    
-                               
-FR_n_Y2               = f57    
-FR_n_R0               = f58    
+FR_n_Q0               = f118
+FR_n_E0               = f119
+
+FR_n_E2               = f120
+FR_n_E1               = f121
+
+FR_n_Y1               = f55
+FR_n_E3               = f56
+
+FR_n_Y2               = f57
+FR_n_R0               = f58
 
 FR_n_E4               = f59
 FR_n_RcpResH          = f60
@@ -1020,71 +1020,71 @@ FR_p_1p5              = f34
 FR_p_AbsXM1           = f35
 FR_p_2                = f36
 
-FR_p_A20              = f37 
-FR_p_A19              = f38 
-FR_p_A18              = f39 
-FR_p_A17              = f40 
-FR_p_A16              = f41 
-FR_p_A15              = f42 
-FR_p_A14              = f43 
-FR_p_A13              = f44 
-FR_p_A12              = f45 
-FR_p_A11              = f46 
-FR_p_A10              = f47 
-FR_p_A9               = f48 
-FR_p_A8               = f49 
-FR_p_A7               = f50 
-FR_p_A6               = f51 
-FR_p_A5H              = f52 
-FR_p_A5L              = f53 
-FR_p_A4H              = f54 
-FR_p_A4L              = f55 
-FR_p_A3H              = f56 
-FR_p_A3L              = f57 
-FR_p_A2H              = f58 
-FR_p_A2L              = f59 
-FR_p_A1H              = f60 
-FR_p_A1L              = f61 
-FR_p_A0H              = f62 
-FR_p_A0L              = f63 
+FR_p_A20              = f37
+FR_p_A19              = f38
+FR_p_A18              = f39
+FR_p_A17              = f40
+FR_p_A16              = f41
+FR_p_A15              = f42
+FR_p_A14              = f43
+FR_p_A13              = f44
+FR_p_A12              = f45
+FR_p_A11              = f46
+FR_p_A10              = f47
+FR_p_A9               = f48
+FR_p_A8               = f49
+FR_p_A7               = f50
+FR_p_A6               = f51
+FR_p_A5H              = f52
+FR_p_A5L              = f53
+FR_p_A4H              = f54
+FR_p_A4L              = f55
+FR_p_A3H              = f56
+FR_p_A3L              = f57
+FR_p_A2H              = f58
+FR_p_A2L              = f59
+FR_p_A1H              = f60
+FR_p_A1L              = f61
+FR_p_A0H              = f62
+FR_p_A0L              = f63
 
 FR_p_XR               = f64
-FR_p_XR2              = f65 
-FR_p_XR2L             = f52 
+FR_p_XR2              = f65
+FR_p_XR2L             = f52
 
-FR_p_XR3              = f58 
-FR_p_XR3L             = f38 
+FR_p_XR3              = f58
+FR_p_XR3L             = f38
 
-FR_p_XR4              = f42 
-FR_p_XR6              = f40 
-FR_p_XR8              = f37 
+FR_p_XR4              = f42
+FR_p_XR6              = f40
+FR_p_XR8              = f37
 
-FR_p_Poly5H           = f66 
-FR_p_Poly5L           = f67 
-FR_p_Poly4H           = f53 
-FR_p_Poly4L           = f44 
-FR_p_Poly3H           = f41 
-FR_p_Poly3L           = f47 
-FR_p_Poly2H           = f68 
-FR_p_Poly2L           = f54 
-FR_p_Poly1H           = f55 
-FR_p_Poly1L           = f46 
-FR_p_Poly0H           = f39 
-FR_p_Poly0L           = f43 
-                            
-FR_p_Temp5H           = f69 
-FR_p_Temp5L           = f70 
-FR_p_Temp4H           = f71 
-FR_p_Temp4L           = f60 
-FR_p_Temp2H           = f72 
-FR_p_Temp2L           = f73 
-FR_p_Temp1H           = f59 
-FR_p_Temp1L           = f61 
-FR_p_Temp0H           = f49 
-FR_p_Temp0L           = f48 
-FR_p_PolyTail         = f45 
-FR_p_OddPoly0H        = f56 
-FR_p_OddPoly0L        = f51 
+FR_p_Poly5H           = f66
+FR_p_Poly5L           = f67
+FR_p_Poly4H           = f53
+FR_p_Poly4L           = f44
+FR_p_Poly3H           = f41
+FR_p_Poly3L           = f47
+FR_p_Poly2H           = f68
+FR_p_Poly2L           = f54
+FR_p_Poly1H           = f55
+FR_p_Poly1L           = f46
+FR_p_Poly0H           = f39
+FR_p_Poly0L           = f43
+
+FR_p_Temp5H           = f69
+FR_p_Temp5L           = f70
+FR_p_Temp4H           = f71
+FR_p_Temp4L           = f60
+FR_p_Temp2H           = f72
+FR_p_Temp2L           = f73
+FR_p_Temp1H           = f59
+FR_p_Temp1L           = f61
+FR_p_Temp0H           = f49
+FR_p_Temp0L           = f48
+FR_p_PolyTail         = f45
+FR_p_OddPoly0H        = f56
+FR_p_OddPoly0L        = f51
 
 FR_p_0p25             = f73
 
@@ -1092,83 +1092,83 @@ FR_p_0p25             = f73
 //=======================================================
 // Negative polynomial part registers
 // General Purpose Registers
-GR_r_sin_Table        = r47 
-GR_r_sin_Table2       = r60 
+GR_r_sin_Table        = r47
+GR_r_sin_Table2       = r60
 
 // Floating Point Registers
-FR_r_IXNS             = FR_n_IXNS 
-FR_r_IXN              = FR_n_IXN 
+FR_r_IXNS             = FR_n_IXNS
+FR_r_IXN              = FR_n_IXN
 
 FR_r_AbsX             = FR_l_AbsX
 
-FR_r_A9               = f74  
-FR_r_A8               = f75  
-FR_r_A7               = f76  
-FR_r_A6               = f77  
-FR_r_A5               = f78  
-FR_r_A4               = f79  
-FR_r_A3               = f80  
-FR_r_A2H              = f81  
-FR_r_A2L              = f82  
-FR_r_A1H              = f83  
-FR_r_A1L              = f84  
+FR_r_A9               = f74
+FR_r_A8               = f75
+FR_r_A7               = f76
+FR_r_A6               = f77
+FR_r_A5               = f78
+FR_r_A4               = f79
+FR_r_A3               = f80
+FR_r_A2H              = f81
+FR_r_A2L              = f82
+FR_r_A1H              = f83
+FR_r_A1L              = f84
 
-FR_r_XNS              = f85 
-FR_r_XS               = f86 
-FR_r_XS2              = f87 
-FR_r_XS2L             = f88 
-FR_r_XS4              = f89 
-FR_r_XS7              = f90 
-FR_r_XS8              = f91 
+FR_r_XNS              = f85
+FR_r_XS               = f86
+FR_r_XS2              = f87
+FR_r_XS2L             = f88
+FR_r_XS4              = f89
+FR_r_XS7              = f90
+FR_r_XS8              = f91
 
 FR_r_Tail             = f92
 
-FR_r_TT               = f93 
-FR_r_TH               = f94 
-FR_r_TL               = f95 
+FR_r_TT               = f93
+FR_r_TH               = f94
+FR_r_TL               = f95
 
 FR_r_ResH             = f96
 FR_r_ResL             = f97
 
-FR_r_Res3H            = f98   
-FR_r_Res3L            = f99   
-                              
-FR_r_Res1H            = f100  
-FR_r_Res1L            = f101  
+FR_r_Res3H            = f98
+FR_r_Res3L            = f99
+
+FR_r_Res1H            = f100
+FR_r_Res1L            = f101
 
 
 
-FR_r_Y0               = f102  
-FR_r_Q0               = f103  
-FR_r_E0               = f104  
-FR_r_E2               = f105  
-FR_r_E1               = f106  
-FR_r_Y1               = f107  
-FR_r_E3               = f108  
-FR_r_Y2               = f109  
-FR_r_R0               = f110  
-FR_r_E4               = f111  
-FR_r_ZH               = f112  
-FR_r_Y3               = f113  
-FR_r_R1               = f114  
+FR_r_Y0               = f102
+FR_r_Q0               = f103
+FR_r_E0               = f104
+FR_r_E2               = f105
+FR_r_E1               = f106
+FR_r_Y1               = f107
+FR_r_E3               = f108
+FR_r_Y2               = f109
+FR_r_R0               = f110
+FR_r_E4               = f111
+FR_r_ZH               = f112
+FR_r_Y3               = f113
+FR_r_R1               = f114
 FR_r_ZHN              = f115
 FR_r_ZL               = f115
 FR_r_NegOne           = f116
 
-FR_z_Y0               = f102 
-FR_z_Q0               = f103 
-FR_z_E0               = f104 
-FR_z_E2               = f105 
-FR_z_E1               = f106 
-FR_z_Y1               = f107 
-FR_z_E3               = f108 
-FR_z_Y2               = f109 
-FR_z_R0               = f110 
-FR_z_E4               = f111 
-FR_z_ZH               = f112 
-FR_z_Y3               = f113 
-FR_z_R1               = f114 
-FR_z_ZL               = f115 
+FR_z_Y0               = f102
+FR_z_Q0               = f103
+FR_z_E0               = f104
+FR_z_E2               = f105
+FR_z_E1               = f106
+FR_z_Y1               = f107
+FR_z_E3               = f108
+FR_z_Y2               = f109
+FR_z_R0               = f110
+FR_z_E4               = f111
+FR_z_ZH               = f112
+FR_z_Y3               = f113
+FR_z_R1               = f114
+FR_z_ZL               = f115
 
 
 // General Purpose Registers
@@ -1176,9 +1176,9 @@ GR_SAVE_PFS           = r32
 GR_DenOverflow        = r33
 GR_u_XN               = r34
 
-GR_SAVE_B0            = r35 
-GR_SAVE_GP            = r36 
-GR_SAVE_SP            = r37 
+GR_SAVE_B0            = r35
+GR_SAVE_GP            = r36
+GR_SAVE_SP            = r37
 
 // Floating Point Registers
 FR_u_IXN              = f34
@@ -1191,7 +1191,7 @@ GR_Parameter_RESULT   = r66
 GR_Parameter_TAG      = r67
 
 FR_RESULT             = f8
-FR_X                  = f32 
+FR_X                  = f32
 FR_Y                  = f1
 
 
@@ -1200,9 +1200,9 @@ GLOBAL_LIBM_ENTRY(tgammal)
 { .mfi
       alloc         r32            = ar.pfs,0,32,4,0
       fabs          FR_l_AbsX      = f8 // Get absolute value of X
-      addl          GR_n_sin_Table = @ltoff(Constants_Tgammal_sin), gp 
+      addl          GR_n_sin_Table = @ltoff(Constants_Tgammal_sin), gp
 }
-{ .mfi 
+{ .mfi
       addl          GR_l_Log_Table=@ltoff(Constants_Tgammal_log_80_Z_G_H_h1#),gp
       nop.f         0
       addl          GR_l_Stirling_Table = @ltoff(Constants_Tgammal_stirling), gp
@@ -1220,7 +1220,7 @@ GLOBAL_LIBM_ENTRY(tgammal)
 };;
 
 { .mfi
-      ld8           GR_n_sin_Table = [GR_n_sin_Table] 
+      ld8           GR_n_sin_Table = [GR_n_sin_Table]
       fclass.m      p6,p0          = f8,0x1EF // Check x for NaN, 0, INF, denorm
                                               // NatVal.
       addl          GR_c_NegSingularity = 0x1003E, r0
@@ -1241,9 +1241,9 @@ GLOBAL_LIBM_ENTRY(tgammal)
 };;
 
 { .mfi
-      ld8           GR_p_Table     = [GR_p_Table] 
+      ld8           GR_p_Table     = [GR_p_Table]
       fcmp.lt.s1    p15, p14       = f8,f0 // p14 - positive arg, p15 - negative
-      shl           GR_l_Index1    = GR_l_Index1,5 // Adjust Index1 ptr (x32) 
+      shl           GR_l_Index1    = GR_l_Index1,5 // Adjust Index1 ptr (x32)
 }
 { .mfb
       adds          GR_c_NegUnderflow = 1765, r0
@@ -1263,7 +1263,7 @@ GLOBAL_LIBM_ENTRY(tgammal)
       andcm         GR_c_X         = GR_c_X, GR_c_SignBit // Remove sign
 };;
 
-{ .mfi 
+{ .mfi
       addl       GR_l_Log_Table = @ltoff(Constants_Tgammal_log_80_Z_G_H_h2#), gp
       fcmp.lt.s1    p10, p0        = FR_l_AbsX, f1 // If |X|<1 then p10 = 1
       nop.i         0
@@ -1273,21 +1273,21 @@ GLOBAL_LIBM_ENTRY(tgammal)
       movl          GR_l_BIAS      = 0x000000000000FFFF // Bias for exponent
 };;
 
-{ .mfi 
+{ .mfi
       ld8           GR_l_Log_Table = [GR_l_Log_Table]
       frcpa.s1      FR_l_Y0, p0    = f1, FR_l_AbsX // y = frcpa(x)
       nop.i         0
 }
 { .mfi
-      ldfs          FR_l_G_1       = [GR_l_Index1],4  //  Load G_1 
+      ldfs          FR_l_G_1       = [GR_l_Index1],4  //  Load G_1
       fsub.s1       FR_l_W         = FR_l_AbsX, f1 // W = |X|-1
       nop.i         0
 };;
 
-{ .mfi 
+{ .mfi
       getf.exp      GR_l_N_Unbiased=  FR_l_AbsX // exponent of |X|
       fmerge.se     FR_l_S         = f1, FR_l_AbsX //  S = merging of X and 1.0
-      cmp.gtu       p11, p0        = GR_c_13, GR_c_X // If 1 <= |X| < 13 
+      cmp.gtu       p11, p0        = GR_c_13, GR_c_X // If 1 <= |X| < 13
                                                      // then p11 = 1
 }
 { .mfb
@@ -1296,150 +1296,150 @@ GLOBAL_LIBM_ENTRY(tgammal)
 (p10) br.cond.spnt  tgamma_lt_1    // Branch to |X| < 1 path ///////////////////
 };;
 
-{ .mfi 
-      ldfpd         FR_n_A2H, FR_n_A2L = [GR_n_sin_Table], 16 
+{ .mfi
+      ldfpd         FR_n_A2H, FR_n_A2L = [GR_n_sin_Table], 16
       nop.f         0
       pmpyshr2.u    GR_l_X_1       = GR_l_X_0,GR_l_Z_1,15 // Adjust Index2 (x32)
 }
-{ .mfb 
-      ldfe          FR_l_B2        = [GR_l_Stirling_Table], 16 
+{ .mfb
+      ldfe          FR_l_B2        = [GR_l_Stirling_Table], 16
       nop.f         0
 (p11) br.cond.spnt  tgamma_lt_13 // Branch to 1 <= |X| < 13 path ///////////////
 };;
 
-{ .mfi 
-      ldfe          FR_l_h_1       = [GR_l_Index1],0 
+{ .mfi
+      ldfe          FR_l_h_1       = [GR_l_Index1],0
       nop.f         0
       sub           GR_l_N         = GR_l_N_Unbiased, GR_l_BIAS  //  N - BIAS
 }
-{ .mib 
+{ .mib
       ldfpd         FR_l_B4,FR_l_B6= [GR_l_Stirling_Table], 16 // Load C
 (p15) cmp.geu.unc   p8,p0          = GR_l_N_Unbiased, GR_c_NegSingularity
 (p8)  br.cond.spnt  tgammal_singularity // Singularity for arg < to -2^63 //////
 };;
 
-{ .mmi 
-(p15) ldfpd         FR_n_A1H, FR_n_A1L = [GR_n_sin_Table], 16 
+{ .mmi
+(p15) ldfpd         FR_n_A1H, FR_n_A1L = [GR_n_sin_Table], 16
       ldfpd         FR_l_B8, FR_l_B10  = [GR_l_Stirling_Table], 16
-      add           GR_c_Table         = 0x20, GR_c_Table 
+      add           GR_c_Table         = 0x20, GR_c_Table
 };;
 
 { .mfi
-(p15) ldfe          FR_n_A9        = [GR_n_sin_Table], 16 
-      fma.s1        FR_l_Q0        = f1,FR_l_Y0,f0 // Q0 = Y0 
+(p15) ldfe          FR_n_A9        = [GR_n_sin_Table], 16
+      fma.s1        FR_l_Q0        = f1,FR_l_Y0,f0 // Q0 = Y0
       nop.i         0
 }
-{ .mfi 
-      ldfpd         FR_l_B12, FR_l_B14 = [GR_l_Stirling_Table], 16 
-      fnma.s1       FR_l_E0        = FR_l_Y0,FR_l_AbsX,f1 // e = 1-b*y 
+{ .mfi
+      ldfpd         FR_l_B12, FR_l_B14 = [GR_l_Stirling_Table], 16
+      fnma.s1       FR_l_E0        = FR_l_Y0,FR_l_AbsX,f1 // e = 1-b*y
       nop.i         0
 };;
 
-{ .mfi 
-(p15) ldfe          FR_n_A8        = [GR_n_sin_Table], 16 
+{ .mfi
+(p15) ldfe          FR_n_A8        = [GR_n_sin_Table], 16
       fcvt.xf       FR_c_XN        = FR_n_IXN // Convert to FP repr. of int X
-      extr.u        GR_l_Index2    = GR_l_X_1, 6, 4  // Extract Index2 
+      extr.u        GR_l_Index2    = GR_l_X_1, 6, 4  // Extract Index2
 }
-{ .mfi 
+{ .mfi
       ldfpd         FR_l_B16, FR_l_B18 = [GR_l_Stirling_Table], 16
       nop.f         0
       nop.i         0
 };;
 
-{ .mfi 
-(p15) ldfe          FR_n_A7        = [GR_n_sin_Table], 16 
+{ .mfi
+(p15) ldfe          FR_n_A7        = [GR_n_sin_Table], 16
       fms.s1        FR_l_CXH       = FR_l_CH, f1, FR_l_AbsX // CXH = CH+|X|
       shl           GR_l_Index2    = GR_l_Index2,5
 }
-{ .mfi 
+{ .mfi
       ldfd          FR_l_Half      = [GR_l_Stirling_Table] // Load 0.5
       nop.f         0
       nop.i         0
 };;
 
-{ .mfi 
+{ .mfi
       add           GR_l_Index2    = GR_l_Index2, GR_l_Log_Table  // Add offset
       nop.f         0
       nop.i         0
 }
-{ .mfi 
-(p15) ldfe          FR_n_A6        = [GR_n_sin_Table], 16 
+{ .mfi
+(p15) ldfe          FR_n_A6        = [GR_n_sin_Table], 16
 (p15) fma.s1        FR_n_XS        = FR_l_AbsX , f1, FR_n_XNS // xs = x - int(x)
       nop.i         0
 };;
 
-{ .mmi 
-      ld2           GR_l_Z_2       = [GR_l_Index2],4 
+{ .mmi
+      ld2           GR_l_Z_2       = [GR_l_Index2],4
       addl          GR_l_Log_Table = @ltoff(Constants_Tgammal_log_80_h3_G_H#),gp
       nop.i         0
 };;
 
-{ .mfi 
+{ .mfi
       ld8           GR_l_Log_Table = [GR_l_Log_Table]
       fma.s1        FR_l_E2        = FR_l_E0,FR_l_E0,FR_l_E0 // e2 = e+e^2
       nop.i         0
 }
-{ .mfi 
-      ldfs          FR_l_G_2       = [GR_l_Index2],4 
+{ .mfi
+      ldfs          FR_l_G_2       = [GR_l_Index2],4
       fma.s1        FR_l_E1        = FR_l_E0,FR_l_E0,f0 // e1 = e^2
       nop.i         0
 };;
 
-{ .mmi 
-      ldfs          FR_l_H_2       = [GR_l_Index2],8  
-(p15) ldfe          FR_n_A5        = [GR_n_sin_Table], 16 
+{ .mmi
+      ldfs          FR_l_H_2       = [GR_l_Index2],8
+(p15) ldfe          FR_n_A5        = [GR_n_sin_Table], 16
       nop.i         0
 };;
 
-{ .mfi 
+{ .mfi
       setf.sig      FR_l_float_N   = GR_l_N //    float_N = Make N a fp number
       nop.f         0
-      pmpyshr2.u    GR_l_X_2       = GR_l_X_1,GR_l_Z_2,15  // X_2 = X_1 * Z_2 
+      pmpyshr2.u    GR_l_X_2       = GR_l_X_1,GR_l_Z_2,15  // X_2 = X_1 * Z_2
 }
-{ .mfi 
-      ldfe          FR_l_h_2       = [GR_l_Index2],0 
+{ .mfi
+      ldfe          FR_l_h_2       = [GR_l_Index2],0
       fma.s1        FR_l_CXL       = FR_l_AbsX, f1, FR_l_CXH // CXL = |X|+CXH
       add           GR_l_Log_Table1= 0x200, GR_l_Log_Table
 };;
 
-{ .mfi 
-(p15) ldfe          FR_n_A4        = [GR_n_sin_Table], 16 
+{ .mfi
+(p15) ldfe          FR_n_A4        = [GR_n_sin_Table], 16
 (p15) fcmp.eq.unc.s1 p9,p0         = FR_l_AbsX, FR_c_XN //if argument is integer
                                                         // and negative
       nop.i         0
 }
-{ .mfi 
+{ .mfi
       ldfe          FR_c_PosOverflow = [GR_c_Table],16 //Load pos overflow value
 (p15) fma.s1        FR_n_XS2         = FR_n_XS, FR_n_XS, f0 // xs^2 = xs*xs
       nop.i         0
 };;
 
-{ .mfi 
-(p15) ldfe          FR_n_A3        = [GR_n_sin_Table], 16 
-      nop.f         0 
+{ .mfi
+(p15) ldfe          FR_n_A3        = [GR_n_sin_Table], 16
+      nop.f         0
       nop.i         0
 };;
 
-{ .mfi 
+{ .mfi
 (p15) getf.sig      GR_n_XN        = FR_n_IXN // int(x) to general reg
       fma.s1        FR_l_Y1        = FR_l_Y0,FR_l_E2,FR_l_Y0 // y1 = y+y*e2
-      nop.i         0 
+      nop.i         0
 }
-{ .mfb 
-      nop.m         0 
+{ .mfb
+      nop.m         0
       fma.s1        FR_l_E3        = FR_l_E1,FR_l_E1,FR_l_E0 // e3 = e+e1^2
 (p9)  br.cond.spnt  tgammal_singularity // Singularity for integer /////////////
                                         // and negative arguments //////////////
 };;
 
-{ .mfi 
+{ .mfi
       nop.m         0
       fms.s1        FR_l_AbsX_m_Half = FR_l_AbsX, f1, FR_l_Half // |x|-0.5
       extr.u        GR_l_Index2      = GR_l_X_2, 1, 5   //  Get Index3
 };;
 
-{ .mfi 
-      shladd        GR_l_Log_Table1= GR_l_Index2, 2, GR_l_Log_Table1 
+{ .mfi
+      shladd        GR_l_Log_Table1= GR_l_Index2, 2, GR_l_Log_Table1
       nop.f         0
       shladd        GR_l_Index3    = GR_l_Index2,4, GR_l_Log_Table  // Index3
 }
@@ -1450,10 +1450,10 @@ GLOBAL_LIBM_ENTRY(tgammal)
                                      // at underflow domain (X < -1765) //////
 };;
 
-{ .mfi 
-      addl          GR_l_Log_Table = @ltoff(Constants_Tgammal_log_80_Q#), gp 
+{ .mfi
+      addl          GR_l_Log_Table = @ltoff(Constants_Tgammal_log_80_Q#), gp
 (p15) fma.s1        FR_n_TT        = FR_n_A2L, FR_n_XS2, f0 // T=A2L*x^2
-      tbit.nz.unc   p13, p12       = GR_n_XN, 0x0 // whether [X] odd or even 
+      tbit.nz.unc   p13, p12       = GR_n_XN, 0x0 // whether [X] odd or even
 }
 { .mfi
       nop.m         0
@@ -1461,128 +1461,128 @@ GLOBAL_LIBM_ENTRY(tgammal)
       nop.i         0
 };;
 
-{ .mfi 
-      ld8           GR_l_Log_Table = [GR_l_Log_Table] 
+{ .mfi
+      ld8           GR_l_Log_Table = [GR_l_Log_Table]
 (p15) fma.s1        FR_n_A7        = FR_n_A8,  FR_n_XS2, FR_n_A7 // poly tail
-      nop.i 0 
+      nop.i 0
 }
-{ .mfi 
-      ldfe          FR_l_h_3       = [GR_l_Index3],12 
+{ .mfi
+      ldfe          FR_l_h_3       = [GR_l_Index3],12
 (p15) fma.s1        FR_n_XS4       = FR_n_XS2, FR_n_XS2, f0 // xs^4 = xs^2*xs^2
-      nop.i 0 
+      nop.i 0
 };;
 
-{ .mfi 
-      ldfs          FR_l_H_3       = [GR_l_Log_Table1], 0 
+{ .mfi
+      ldfs          FR_l_H_3       = [GR_l_Log_Table1], 0
       fma.s1        FR_l_Y2        = FR_l_Y1, FR_l_E3, FR_l_Y0 // y2 = y+y1*e3
-      nop.i         0 
+      nop.i         0
 }
-{ .mfi 
-      ldfs          FR_l_G_3       = [GR_l_Index3], 0 
+{ .mfi
+      ldfs          FR_l_G_3       = [GR_l_Index3], 0
       fnma.s1       FR_l_Z         = FR_l_AbsX,FR_l_Q0,f1 // r = a-b*q
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
+{ .mfi
       nop.m         0
       fmpy.s1       FR_l_G         = FR_l_G_1, FR_l_G_2 // G = G1 * G_2
       nop.i         0
 }
-{ .mfi 
+{ .mfi
       nop.m         0
       fadd.s1       FR_l_H         = FR_l_H_1, FR_l_H_2 // H = H_1 + H_2
       nop.i         0
 };;
 
-{ .mfi 
+{ .mfi
       ldfe          FR_l_log2_hi   = [GR_l_Log_Table],16 //  load log2_hi part
-      fadd.s1       FR_l_h         = FR_l_h_1, FR_l_h_2  //  h = h_1 + h_2 
+      fadd.s1       FR_l_h         = FR_l_h_1, FR_l_h_2  //  h = h_1 + h_2
       nop.i         0
 }
 { .mfi
-      nop.m         0 
+      nop.m         0
       fcvt.xf       FR_l_float_N   = FR_l_float_N // int(N)
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
+{ .mfi
       ldfe          FR_l_log2_lo   = [GR_l_Log_Table],16 //  Load log2_lo part
       fma.s1        FR_l_CXL       = FR_l_CXL, f1, FR_l_CL
-      nop.i 0 
-}
-{ .mfi
-      nop.m         0 
-(p15) fma.s1        FR_n_TT        = FR_n_A2H, FR_n_XS2L, FR_n_TT // T=A2H*x2L+T
-      nop.i         0 
-};;
-
-{ .mfi 
-      ldfe          FR_l_Q_6       = [GR_l_Log_Table],16 
-(p15) fma.s1        FR_n_A3        = FR_n_A4,  FR_n_XS2, FR_n_A3 // poly tail
-      nop.i         0 
-}
-{ .mfi
-      nop.m         0 
-(p15) fma.s1        FR_n_A5        = FR_n_A6,  FR_n_XS2, FR_n_A5 // poly tail
-      nop.i 0 
-};;
-
-{ .mfi 
-      ldfe          FR_l_Q_5       = [GR_l_Log_Table],16  
-(p15) fabs          FR_n_XS        = FR_n_XS // abs(xs)
-      nop.i         0 
-}
-{ .mfi
-      nop.m         0 
-      fma.s1        FR_l_Z         = FR_l_Z,FR_l_Y2,FR_l_Q0 // x_hi = q+r*y2
-      nop.i         0 
-};;
-
-{ .mfi 
-      ldfe          FR_l_Q_4       = [GR_l_Log_Table],16 
-(p15) fma.s1        FR_n_A7        = FR_n_A9,  FR_n_XS4, FR_n_A7 // poly tail
-      nop.i         0 
-}
-{ .mfi
-      nop.m         0 
-(p15) fma.s1        FR_n_XS7       = FR_n_XS4, FR_n_XS2, f0 // = x^4*x^2
-      nop.i         0 
-};;
-
-{ .mfi 
-      ldfe          FR_l_Q_3       = [GR_l_Log_Table],16  
-      fneg          FR_n_NegOne    = f1 // -1.0
-      nop.i         0 
-}
-{ .mfi
-      nop.m         0 
-(p15) fma.s1        FR_n_XS8       = FR_n_XS4, FR_n_XS4, f0 // xs^8 = xs^4*xs^4
-      nop.i         0 
-};;
-
-{ .mfi 
-      ldfe          FR_l_Q_2       = [GR_l_Log_Table],16 
-      fadd.s1       FR_l_h         = FR_l_h, FR_l_h_3 //  h = h_1 + h_2 + h_3   
-      nop.i         0 
-}
-{ .mfi
-      nop.m         0 
-(p15) fma.s1        FR_n_TH        = FR_n_A2H, FR_n_XS2, FR_n_TT // A2H*xs2+T
-      nop.i         0 
-};;
-
-{ .mfi 
-      ldfe          FR_l_Q_1       = [GR_l_Log_Table],16 
-      fmpy.s1       FR_l_G         = FR_l_G, FR_l_G_3 // G = G_1 * G_2 * G_3 
-      nop.i         0 
+      nop.i 0
 }
 { .mfi
       nop.m         0
-      fadd.s1       FR_l_H         = FR_l_H, FR_l_H_3 // H = H_1 + H_2 + H_3 
-      nop.i         0 
+(p15) fma.s1        FR_n_TT        = FR_n_A2H, FR_n_XS2L, FR_n_TT // T=A2H*x2L+T
+      nop.i         0
 };;
 
-{ .mfi 
+{ .mfi
+      ldfe          FR_l_Q_6       = [GR_l_Log_Table],16
+(p15) fma.s1        FR_n_A3        = FR_n_A4,  FR_n_XS2, FR_n_A3 // poly tail
+      nop.i         0
+}
+{ .mfi
+      nop.m         0
+(p15) fma.s1        FR_n_A5        = FR_n_A6,  FR_n_XS2, FR_n_A5 // poly tail
+      nop.i 0
+};;
+
+{ .mfi
+      ldfe          FR_l_Q_5       = [GR_l_Log_Table],16
+(p15) fabs          FR_n_XS        = FR_n_XS // abs(xs)
+      nop.i         0
+}
+{ .mfi
+      nop.m         0
+      fma.s1        FR_l_Z         = FR_l_Z,FR_l_Y2,FR_l_Q0 // x_hi = q+r*y2
+      nop.i         0
+};;
+
+{ .mfi
+      ldfe          FR_l_Q_4       = [GR_l_Log_Table],16
+(p15) fma.s1        FR_n_A7        = FR_n_A9,  FR_n_XS4, FR_n_A7 // poly tail
+      nop.i         0
+}
+{ .mfi
+      nop.m         0
+(p15) fma.s1        FR_n_XS7       = FR_n_XS4, FR_n_XS2, f0 // = x^4*x^2
+      nop.i         0
+};;
+
+{ .mfi
+      ldfe          FR_l_Q_3       = [GR_l_Log_Table],16
+      fneg          FR_n_NegOne    = f1 // -1.0
+      nop.i         0
+}
+{ .mfi
+      nop.m         0
+(p15) fma.s1        FR_n_XS8       = FR_n_XS4, FR_n_XS4, f0 // xs^8 = xs^4*xs^4
+      nop.i         0
+};;
+
+{ .mfi
+      ldfe          FR_l_Q_2       = [GR_l_Log_Table],16
+      fadd.s1       FR_l_h         = FR_l_h, FR_l_h_3 //  h = h_1 + h_2 + h_3
+      nop.i         0
+}
+{ .mfi
+      nop.m         0
+(p15) fma.s1        FR_n_TH        = FR_n_A2H, FR_n_XS2, FR_n_TT // A2H*xs2+T
+      nop.i         0
+};;
+
+{ .mfi
+      ldfe          FR_l_Q_1       = [GR_l_Log_Table],16
+      fmpy.s1       FR_l_G         = FR_l_G, FR_l_G_3 // G = G_1 * G_2 * G_3
+      nop.i         0
+}
+{ .mfi
+      nop.m         0
+      fadd.s1       FR_l_H         = FR_l_H, FR_l_H_3 // H = H_1 + H_2 + H_3
+      nop.i         0
+};;
+
+{ .mfi
       nop.m         0
       fma.s1        FR_l_Z2        = FR_l_Z, FR_l_Z, f0 // Z^2
       nop.i         0
@@ -1593,19 +1593,19 @@ GLOBAL_LIBM_ENTRY(tgammal)
       nop.i         0
 };;
 
-{ .mfi 
+{ .mfi
       nop.m         0
 (p14) fcmp.gt.unc.s1 p7,p0         = FR_l_AbsX, FR_c_PosOverflow //X > 1755.5483
               // (overflow domain, result cannot be represented by normal value)
       nop.i         0
 }
-{ .mfi 
+{ .mfi
       nop.m         0
 (p15) fma.s1        FR_n_XS7       = FR_n_XS7, FR_n_XS,  f0 // x^7 construction
       nop.i         0
 };;
 
-{ .mfi 
+{ .mfi
       nop.m         0
 (p15) fms.s1        FR_n_TL        = FR_n_A2H, FR_n_XS2, FR_n_TH // A2H*xs2+TH
       nop.i         0
@@ -1613,10 +1613,10 @@ GLOBAL_LIBM_ENTRY(tgammal)
 { .mfi
       nop.m         0
 (p15) fma.s1        FR_n_PolyH     = FR_n_TH, f1, FR_n_A1H // PolyH=TH+A1H
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
+{ .mfi
       nop.m         0
       fmpy.s1       FR_l_GS_hi     = FR_l_G, FR_l_S // GS_hi = G*S
       nop.i         0
@@ -1627,18 +1627,18 @@ GLOBAL_LIBM_ENTRY(tgammal)
 (p7)  br.cond.spnt  tgammal_overflow // Overflow path for arg > 1755.5483 //////
 };;
 
-{ .mfi 
+{ .mfi
       nop.m         0
       fma.s1        FR_l_B14       = FR_l_B16, FR_l_Z2, FR_l_B14// bernulli tail
       nop.i         0
 }
-{ .mfi 
+{ .mfi
       nop.m         0
       fma.s1        FR_l_Z4        = FR_l_Z2, FR_l_Z2, f0 // Z^4 = Z^2*Z^2
       nop.i         0
 };;
 
-{ .mfi 
+{ .mfi
       nop.m         0
       fma.s1        FR_l_B2        = FR_l_B4, FR_l_Z2, FR_l_B2 // bernulli tail
       nop.i         0
@@ -1649,7 +1649,7 @@ GLOBAL_LIBM_ENTRY(tgammal)
       nop.i         0
 };;
 
-{ .mfi 
+{ .mfi
       nop.m         0
       fma.s1        FR_l_B10       = FR_l_B12, FR_l_Z2, FR_l_B10// bernulli tail
       nop.i         0
@@ -1660,7 +1660,7 @@ GLOBAL_LIBM_ENTRY(tgammal)
       nop.i         0
 };;
 
-{ .mfi 
+{ .mfi
       nop.m         0
 (p15) fma.s1        FR_n_TL        = FR_n_TL, f1, FR_n_TT // TL = TL+T
       nop.i         0
@@ -1671,7 +1671,7 @@ GLOBAL_LIBM_ENTRY(tgammal)
       nop.i         0
 };;
 
-{ .mfi 
+{ .mfi
       nop.m         0
       fma.s1        FR_l_poly_lo   = FR_l_r, FR_l_Q_6, FR_l_Q_5 // Q_5+r*Q_6
       nop.i         0
@@ -1679,10 +1679,10 @@ GLOBAL_LIBM_ENTRY(tgammal)
 { .mfi
       nop.m         0
       fsub.s1       FR_l_r_cor     = FR_l_GS_hi, f1 //     r_cor = GS_hi -1
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
+{ .mfi
       nop.m         0
       fms.s1        FR_l_GS_lo     = FR_l_G, FR_l_S, FR_l_GS_hi // G*S-GS_hi
       nop.i         0
@@ -1690,10 +1690,10 @@ GLOBAL_LIBM_ENTRY(tgammal)
 { .mfi
       nop.m         0
       fma.s1        FR_l_poly      = FR_l_r, FR_l_Q_2, FR_l_Q_1 //poly=r*Q2+Q1
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
+{ .mfi
       nop.m         0
       fmpy.s1       FR_l_rsq       = FR_l_r, FR_l_r // rsq = r * r
       nop.i         0
@@ -1702,33 +1702,33 @@ GLOBAL_LIBM_ENTRY(tgammal)
       nop.m         0
       fma.s1        FR_l_G         = FR_l_float_N, FR_l_log2_hi, FR_l_H // Tbl =
                                                         // float_N*log2_hi + H
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m 0 
+{ .mfi
+      nop.m 0
       fma.s1        FR_l_Y_lo      = FR_l_float_N, FR_l_log2_lo, FR_l_h // Y_lo=
                                                        // float_N*log2_lo + h
-      nop.i 0 
+      nop.i 0
 }
 { .mfi
-      nop.m 0 
+      nop.m 0
       fma.s1        FR_l_B14       = FR_l_B18, FR_l_Z4, FR_l_B14 //bernulli tail
-      nop.i 0 
+      nop.i 0
 };;
 
-{ .mfi 
-      nop.m 0 
+{ .mfi
+      nop.m 0
       fma.s1        FR_l_B2        = FR_l_B6, FR_l_Z4, FR_l_B2 //bernulli tail
-      nop.i 0 
+      nop.i 0
 }
 { .mfi
-      nop.m 0 
+      nop.m 0
       fma.s1        FR_l_Z8        = FR_l_Z4, FR_l_Z4, f0 //bernulli tail
-      nop.i 0 
+      nop.i 0
 };;
 
-{ .mfi 
+{ .mfi
       nop.m         0
       fma.s1        FR_l_poly_lo   = FR_l_r, FR_l_poly_lo, FR_l_Q_4 // poly_lo =
                                                             // Q_4 + r * poly_lo
@@ -1737,10 +1737,10 @@ GLOBAL_LIBM_ENTRY(tgammal)
 { .mfi
       nop.m         0
       fsub.s1       FR_l_r_cor     = FR_l_r_cor, FR_l_r // r_cor = r_cor - r
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
+{ .mfi
       nop.m         0
 (p15) fma.s1        FR_n_PolyL     = FR_n_PolyL, f1, FR_n_TH // polyL+TH
       nop.i         0
@@ -1751,19 +1751,19 @@ GLOBAL_LIBM_ENTRY(tgammal)
       nop.i         0
 };;
 
-{ .mfi 
+{ .mfi
       nop.m         0
-      fadd.s1       FR_l_logl_YHi  = FR_l_G, FR_l_r // Y_hi = Tbl + r 
-      nop.i         0 
+      fadd.s1       FR_l_logl_YHi  = FR_l_G, FR_l_r // Y_hi = Tbl + r
+      nop.i         0
 };;
 
-{ .mfi 
+{ .mfi
       nop.m         0
       fma.s1        FR_l_B10       = FR_l_B14, FR_l_Z4, FR_l_B10 //bernulli tail
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
+{ .mfi
       nop.m         0
       fma.s1        FR_l_poly_lo   = FR_l_r, FR_l_poly_lo, FR_l_Q_3 // poly_lo =
                                                           // Q_3 + r * poly_lo
@@ -1772,18 +1772,18 @@ GLOBAL_LIBM_ENTRY(tgammal)
 { .mfi
       nop.m         0
       fadd.s1       FR_l_r_cor     = FR_l_r_cor, FR_l_GS_lo // r_cor=r_cor+GS_lo
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
+{ .mfi
       nop.m         0
 (p15) fma.s1        FR_n_PolyL     = FR_n_PolyL, f1, FR_n_TT // polyL+TT
       nop.i         0
 };;
 
-{ .mfi 
+{ .mfi
       nop.m         0
-      fsub.s1       FR_l_Y_lo_res  = FR_l_G, FR_l_logl_YHi // Y_lo = Tbl - Y_hi 
+      fsub.s1       FR_l_Y_lo_res  = FR_l_G, FR_l_logl_YHi // Y_lo = Tbl - Y_hi
       nop.i         0
 }
 { .mfi
@@ -1793,13 +1793,13 @@ GLOBAL_LIBM_ENTRY(tgammal)
       nop.i         0
 };;
 
-{ .mfi 
+{ .mfi
       nop.m         0
       fma.s1        FR_l_SS        = FR_l_B10, FR_l_Z8, FR_l_B2 // bernulli tail
       nop.i         0
 };;
 
-{ .mfi 
+{ .mfi
       nop.m         0
       fadd.s1       FR_l_r_cor     = FR_l_r_cor, FR_l_Y_lo // r_cor = r_cor+Y_lo
       nop.i         0
@@ -1808,16 +1808,16 @@ GLOBAL_LIBM_ENTRY(tgammal)
       nop.m         0
       fma.s1        FR_l_poly      = FR_l_rsq, FR_l_poly_lo, FR_l_poly //poly=
                                                             // r^2*polyLo+poly
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
+{ .mfi
       nop.m         0
 (p15) fma.s1        FR_n_TT        = FR_n_PolyL, FR_n_XS2, f0 // T=polyL*xs^2
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
+{ .mfi
       nop.m         0
       fadd.s1       FR_l_Y_lo      = FR_l_Y_lo_res, FR_l_r // Y_lo =  Y_lo + r
       nop.i         0
@@ -1829,7 +1829,7 @@ GLOBAL_LIBM_ENTRY(tgammal)
       nop.i         0
 };;
 
-{ .mfi 
+{ .mfi
       nop.m         0
       fma.s1        FR_l_SSCXH     = FR_l_SS, FR_l_Z, FR_l_CXH // SS*Z+CXH
       nop.i         0
@@ -1841,7 +1841,7 @@ GLOBAL_LIBM_ENTRY(tgammal)
       nop.i         0
 };;
 
-{ .mlx 
+{ .mlx
       nop.m         0
       movl          GR_e_rshf_2to51  = 0x4718000000000000   // 1.10000 2^(63+51)
 }
@@ -1852,14 +1852,14 @@ GLOBAL_LIBM_ENTRY(tgammal)
 
 { .mfi
       nop.m         0
-      fma.s1        FR_l_poly      = FR_l_rsq, FR_l_poly, FR_l_r_cor // poly = 
+      fma.s1        FR_l_poly      = FR_l_rsq, FR_l_poly, FR_l_r_cor // poly =
                                                         // rsq * poly + r_cor
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
+{ .mfi
       addl          GR_e_ad_Arg    = @ltoff(Constants_Tgammal_exp_64_Arg#),gp
-(p15) fma.s1        FR_n_TT        = FR_n_PolyH, FR_n_XS2L, FR_n_TT  
+(p15) fma.s1        FR_n_TT        = FR_n_PolyH, FR_n_XS2L, FR_n_TT
       mov           GR_e_exp_mask  = 0x1FFFF          // Form exponent mask
 }
 { .mlx
@@ -1868,25 +1868,25 @@ GLOBAL_LIBM_ENTRY(tgammal)
 };;
 
 
-{ .mmi 
+{ .mmi
       setf.sig      FR_e_INV_LN2_2TO63 = GR_e_sig_inv_ln2 // form 1/ln2 * 2^63
       setf.d        FR_e_RSHF_2TO51    = GR_e_rshf_2to51 //  1.1000 * 2^(63+51)
       nop.i         0
 };;
 
-{ .mfi 
+{ .mfi
       nop.m         0
       fms.s1        FR_l_SSCXL     = FR_l_CXH, f1, FR_l_SSCXH // CXH+SS*CXH
       nop.i         0
 }
 { .mfi
       nop.m         0
-      fma.s1        FR_e_expl_Input_AbsX = FR_l_XYH, f1, FR_l_SSCXH // HI EXP 
+      fma.s1        FR_e_expl_Input_AbsX = FR_l_XYH, f1, FR_l_SSCXH // HI EXP
       nop.i         0
 };;
 
 .pred.rel "mutex",p14,p15
-{ .mfi 
+{ .mfi
       nop.m         0
 (p14) fma.s1        FR_e_expl_Input_X = FR_l_XYH, f1, FR_l_SSCXH // HI EXP
       mov           GR_e_exp_bias     = 0x0FFFF  // Set exponent bias
@@ -1897,13 +1897,13 @@ GLOBAL_LIBM_ENTRY(tgammal)
       nop.i         0
 };;
 
-{ .mfi 
+{ .mfi
       nop.m         0
       fadd.s1       FR_l_logl_YLo  = FR_l_Y_lo, FR_l_poly // YLo = YLo+poly
       nop.i         0
 };;
 
-{ .mfi 
+{ .mfi
       setf.exp      FR_e_2TOM51    = GR_e_exp_2tom51 //2^-51 for scaling float_N
 (p15) fma.s1        FR_n_TH        = FR_n_PolyH, FR_n_XS2, FR_n_TT // TH=
                                                            // polyH*xs^2+T
@@ -1915,7 +1915,7 @@ GLOBAL_LIBM_ENTRY(tgammal)
       nop.b 0
 };;
 
-{ .mfi 
+{ .mfi
       add           GR_e_ad_A      = 0x20, GR_e_ad_Arg // Point to A table
       nop.f         0
       add           GR_e_ad_T1     = 0x50, GR_e_ad_Arg // Point to T1 table
@@ -1926,7 +1926,7 @@ GLOBAL_LIBM_ENTRY(tgammal)
       nop.i         0
 };;
 
-{ .mfi 
+{ .mfi
       nop.m         0
       fma.s1        FR_l_SSCXL     =   FR_l_SS, FR_l_Z,  FR_l_SSCXL
       nop.i         0
@@ -1937,22 +1937,22 @@ GLOBAL_LIBM_ENTRY(tgammal)
       nop.i         0
 };;
 
-{ .mfi 
+{ .mfi
       ldfe          FR_e_L_hi      = [GR_e_ad_Arg],16 // Get L_hi
       nop.f         0
       nop.i         0
 };;
 
-{ .mfi 
+{ .mfi
       nop.m         0
       fma.s1        FR_l_XYL       = FR_l_logl_YLo, FR_l_AbsX_m_Half, FR_l_XYL
                                                      // XYL = YLo*|x-0.5|+XYL
       nop.i         0
 };;
 
-{ .mfi 
+{ .mfi
       ldfe          FR_e_L_lo      = [GR_e_ad_Arg],16     // Get L_lo
-(p15) fms.s1        FR_n_TL        = FR_n_PolyH, FR_n_XS2, FR_n_TH // TL = 
+(p15) fms.s1        FR_n_TL        = FR_n_PolyH, FR_n_XS2, FR_n_TH // TL =
                                                           // = polyH*xs^2-TH
       add           GR_e_ad_W1     = 0x100, GR_e_ad_T2   // Point to W1 table
 }
@@ -1962,13 +1962,13 @@ GLOBAL_LIBM_ENTRY(tgammal)
       add           GR_e_ad_W2     = 0x300, GR_e_ad_T2 // Point to W2 table
 };;
 
-{ .mmi 
+{ .mmi
       getf.exp      GR_e_signexp_x = FR_e_expl_Input_X // Extract sign and exp
-      ldfe          FR_e_A3        = [GR_e_ad_A],16     // Get A3 
+      ldfe          FR_e_A3        = [GR_e_ad_A],16     // Get A3
       nop.i         0
 };;
 
-{ .mfi 
+{ .mfi
       nop.m         0
       fma.s1        FR_l_SSCXL     = FR_l_SSCXL, f1, FR_l_CXL
       nop.i         0
@@ -1979,19 +1979,19 @@ GLOBAL_LIBM_ENTRY(tgammal)
       nop.i         0
 };;
 
-{ .mfi 
+{ .mfi
       nop.m         0
       fma.s1  FR_e_N_signif=FR_e_expl_Input_X,FR_e_INV_LN2_2TO63,FR_e_RSHF_2TO51
       and           GR_e_exp_x     = GR_e_signexp_x, GR_e_exp_mask
 };;
 
-{ .mmi 
+{ .mmi
       sub           GR_e_exp_x     = GR_e_exp_x, GR_e_exp_bias // Get exponent
       ldfe          FR_e_A2        = [GR_e_ad_A],16     // Get A2 for main path
       nop.i         0
 };;
 
-{ .mfi 
+{ .mfi
       nop.m         0
 (p15) fma.s1        FR_n_PolyH     =    FR_n_Poly1H, FR_n_XS, f0//sin(Pi*x) poly
       nop.i         0
@@ -2002,13 +2002,13 @@ GLOBAL_LIBM_ENTRY(tgammal)
       nop.i         0
 };;
 
-{ .mfi 
+{ .mfi
       nop.m         0
 (p15) fma.s1        FR_n_TL        =    FR_n_TL, f1, FR_n_TT//sin(Pi*x) poly
       nop.i         0
 };;
 
-{ .mfi 
+{ .mfi
       nop.m         0
       fma.s1        FR_l_Temp      =   FR_l_XYL, f1, FR_l_SSCXL // XYL+SS*CXL
       nop.i         0
@@ -2020,19 +2020,19 @@ GLOBAL_LIBM_ENTRY(tgammal)
       nop.i         0
 };;
 
-{ .mfi 
+{ .mfi
       ldfe          FR_e_A1        = [GR_e_ad_A],16   // Get A1
       nop.f         0
       nop.i         0
 }
 { .mfi
       nop.m 0
-      fms.s1        FR_e_float_N   = FR_e_N_signif, FR_e_2TOM51, FR_e_RSHF 
+      fms.s1        FR_e_float_N   = FR_e_N_signif, FR_e_2TOM51, FR_e_RSHF
                                            // Get float N = signd*2^51-RSHIFTER
       nop.i 0
 };;
 
-{ .mfi 
+{ .mfi
       nop.m         0
 (p15) fma.s1        FR_n_Poly1L    = FR_n_Poly1L, f1, FR_n_TH //sin(Pi*x) poly
       nop.i         0
@@ -2043,54 +2043,54 @@ GLOBAL_LIBM_ENTRY(tgammal)
       nop.i         0
 };;
 
-{ .mfi 
+{ .mfi
       getf.sig      GR_e_N_fix     = FR_e_N_signif // Get N from significand
       nop.f         0
       nop.i         0
 };;
 
 .pred.rel "mutex",p14,p15
-{ .mfi 
+{ .mfi
       nop.m 0
-(p14) fma.s1        FR_e_expl_Input_Y = FR_e_expl_Input_Y, f1, FR_l_Temp   
+(p14) fma.s1        FR_e_expl_Input_Y = FR_e_expl_Input_Y, f1, FR_l_Temp
       nop.i         0
 }
-{ .mfi 
+{ .mfi
       nop.m 0
-(p15) fms.s1        FR_e_expl_Input_Y = FR_e_expl_Input_Y, f1, FR_l_Temp   
+(p15) fms.s1        FR_e_expl_Input_Y = FR_e_expl_Input_Y, f1, FR_l_Temp
       // arguments for exp computation
       nop.i         0
 };;
 
-{ .mfi 
+{ .mfi
       nop.m         0
       fnma.s1       FR_e_r         = FR_e_L_hi, FR_e_float_N, FR_e_expl_Input_X
                                                    // r = -L_hi * float_N + x
       extr.u        GR_e_M1        = GR_e_N_fix, 6, 6   // Extract index M_1
 };;
 
-{ .mfi 
+{ .mfi
       nop.m         0
 (p15) fma.s1        FR_n_Poly1L    =   FR_n_Poly1L, f1, FR_n_TL //sin(Pi*x) poly
       nop.i         0
 };;
 
 
-{ .mmf 
+{ .mmf
       nop.m         0
       nop.m         0
-      fma.s1        FR_e_r         = FR_e_r, f1, FR_e_expl_Input_Y 
+      fma.s1        FR_e_r         = FR_e_r, f1, FR_e_expl_Input_Y
                                                  // r =  r + FR_e_expl_Input_Y
 };;
 
-{ .mmi 
+{ .mmi
       shladd        GR_e_ad_W1     = GR_e_M1,3,GR_e_ad_W1 // Point to W1
       shladd        GR_e_ad_T1     = GR_e_M1,2,GR_e_ad_T1 // Point to T1
       extr.u        GR_e_M2        = GR_e_N_fix, 0, 6      // Extract index M_2
 };;
 
 
-{ .mfi 
+{ .mfi
       ldfs          FR_e_T1        = [GR_e_ad_T1],0         // Get T1
       nop.f         0
       extr          GR_e_K         = GR_e_N_fix, 12, 32 //Extract limit range K
@@ -2102,7 +2102,7 @@ GLOBAL_LIBM_ENTRY(tgammal)
       shladd        GR_e_ad_W2     = GR_e_M2,3,GR_e_ad_W2 // Point to W2
 };;
 
-{ .mfi 
+{ .mfi
       ldfs          FR_e_T2        = [GR_e_ad_T2],0         // Get T2
       nop.f         0
       add           GR_e_exp_2_k   = GR_e_exp_bias, GR_e_K // exp of 2^k
@@ -2113,27 +2113,27 @@ GLOBAL_LIBM_ENTRY(tgammal)
       sub           GR_e_exp_2_mk  = GR_e_exp_bias, GR_e_K // exp of 2^-k
 };;
 
-{ .mmi 
+{ .mmi
       ldfd          FR_e_W2        = [GR_e_ad_W2],0         // Get W2
       nop.m 0
       nop.i 0
 };;
 
-{ .mmf 
+{ .mmf
       setf.exp      FR_e_scale     = GR_e_exp_2_k     // Set scale = 2^k
       setf.exp      FR_e_2_mk      = GR_e_exp_2_mk     // Form 2^-k
-      fnma.s1       FR_e_r         = FR_e_L_lo, FR_e_float_N, FR_e_r 
+      fnma.s1       FR_e_r         = FR_e_L_lo, FR_e_float_N, FR_e_r
                                                // r = -L_lo * float_N + r
 };;
 
-{ .mfi 
+{ .mfi
       nop.m         0
-(p15) fma.s1        FR_n_PolyL     = FR_n_Tail, FR_n_XS7, FR_n_PolyL 
+(p15) fma.s1        FR_n_PolyL     = FR_n_Tail, FR_n_XS7, FR_n_PolyL
                                                                //sin(Pi*x) poly
       nop.i         0
 };;
 
-{ .mfi 
+{ .mfi
       nop.m 0
       fma.s1        FR_e_poly      = FR_e_r, FR_e_A3, FR_e_A2 // poly=r*A3+A2
       nop.i 0
@@ -2144,7 +2144,7 @@ GLOBAL_LIBM_ENTRY(tgammal)
       nop.i 0
 };;
 
-{ .mfi 
+{ .mfi
       nop.m 0
       fmpy.s1       FR_e_T         = FR_e_T1, FR_e_T2         // T = T1 * T2
       nop.i 0
@@ -2155,54 +2155,54 @@ GLOBAL_LIBM_ENTRY(tgammal)
       nop.i 0
 };;
 
-{ .mfi 
+{ .mfi
       nop.m 0
 (p15) fma.s1        FR_n_TT        = FR_n_PolyL, FR_l_AbsX, f0 //sin(Pi*x) poly
       nop.i 0
 };;
 
-{ .mfi 
+{ .mfi
       nop.m         0
-      fma.s1        FR_e_poly      = FR_e_r, FR_e_poly, FR_e_A1 
+      fma.s1        FR_e_poly      = FR_e_r, FR_e_poly, FR_e_A1
                                                  // poly = r * poly + A1
       nop.i 0
 };;
 
-{ .mfi 
+{ .mfi
       nop.m         0
       fma.s1        FR_e_T_scale   = FR_e_T, FR_e_scale, f0 // T_scale=T*scale
       nop.i         0
 }
 { .mfi
       nop.m         0
-      fma.s1        FR_e_W         = FR_e_W2, FR_e_W1_p1, FR_e_W1 
+      fma.s1        FR_e_W         = FR_e_W2, FR_e_W1_p1, FR_e_W1
                                                      // W = W2 * (W1+1.0) + W1
       nop.i         0
 };;
 
-{ .mfi 
+{ .mfi
       nop.m         0
-(p15) fma.s1        FR_n_SinxH     =    FR_n_PolyH, FR_l_AbsX, FR_n_TT 
+(p15) fma.s1        FR_n_SinxH     =    FR_n_PolyH, FR_l_AbsX, FR_n_TT
                                                               // sin(Pi*x) poly
       nop.i         0
 };;
 
-{ .mfi 
+{ .mfi
       nop.m         0
       mov           FR_e_Y_hi      = FR_e_T  // Assume Y_hi = T
       nop.i         0
 };;
 
-{ .mfi 
+{ .mfi
       nop.m 0
-      fma.s1        FR_e_poly      = FR_e_rsq, FR_e_poly, FR_e_r 
+      fma.s1        FR_e_poly      = FR_e_rsq, FR_e_poly, FR_e_r
                                                      // poly = rsq * poly + r
       nop.i 0
 };;
 
-{ .mfi 
+{ .mfi
       nop.m 0
-      fma.s1        FR_e_Wp1_T_scale = FR_e_W, FR_e_T_scale, FR_e_T_scale 
+      fma.s1        FR_e_Wp1_T_scale = FR_e_W, FR_e_T_scale, FR_e_T_scale
                                                               // (W+1)*T*scale
       nop.i 0
 }
@@ -2212,51 +2212,51 @@ GLOBAL_LIBM_ENTRY(tgammal)
       nop.i 0
 };;
 
-{ .mfi 
+{ .mfi
       nop.m 0
 (p15) fms.s1        FR_n_SinxL     =   FR_n_PolyH, FR_l_AbsX, FR_n_SinxH
                                                              // Low part of sin
       nop.i 0
 };;
 
-{ .mfi 
+{ .mfi
       nop.m         0
 (p15) frcpa.s1      FR_n_Y0, p0    = f1, FR_n_SinxH //  y = frcpa(b)
       nop.i         0
 };;
 
-{ .mfi 
+{ .mfi
       nop.m         0
       fma.s1        FR_e_result_lo = FR_e_Wp1_T_scale, FR_e_poly, FR_e_W_T_scale
                                                        // Low part of exp result
       nop.i         0
 };;
 
-{ .mfi 
+{ .mfi
       nop.m         0
 (p15) fma.s1        FR_n_SinxL     = FR_n_SinxL, f1, FR_n_TT // sin low result
       nop.i         0
 };;
 
-{ .mfi 
+{ .mfi
       nop.m         0
 (p15) fma.s1        FR_n_Q0        = f1,FR_n_Y0,f0 // q = y
       nop.i         0
 }
-{ .mfi 
+{ .mfi
       nop.m         0
-(p15) fnma.s1       FR_n_E0        = FR_n_Y0, FR_n_SinxH, f1 // e = 1-b*y 
+(p15) fnma.s1       FR_n_E0        = FR_n_Y0, FR_n_SinxH, f1 // e = 1-b*y
       nop.i         0
 };;
 
 
-{ .mfb 
+{ .mfb
       nop.m         0
 (p14) fma.s0        f8             = FR_e_Y_hi, FR_e_scale, FR_e_result_lo
 (p14) br.ret.spnt   b0 // Exit for positive Stirling path //////////////////////
 };;
 
-{ .mfi 
+{ .mfi
       nop.m 0
       fma.s1        FR_e_expl_Output_X = FR_e_Y_hi, FR_e_scale, f0 // exp result
       nop.i         0
@@ -2267,107 +2267,107 @@ GLOBAL_LIBM_ENTRY(tgammal)
       nop.i         0
 };;
 
-{ .mfi 
+{ .mfi
       nop.m         0
       fma.s1        FR_n_E2        = FR_n_E0,FR_n_E0,FR_n_E0 //  e2 = e+e^2
       nop.i         0
 }
-{ .mfi 
+{ .mfi
       nop.m         0
       fma.s1        FR_n_E1        = FR_n_E0,FR_n_E0,f0 //  e1 = e^2
       nop.i         0
 };;
 
-{ .mfi 
+{ .mfi
       nop.m         0
       fma.s1        FR_n_Y1        = FR_n_Y0,FR_n_E2,FR_n_Y0 //  y1 = y+y*e2
       nop.i         0
 }
-{ .mfi 
+{ .mfi
       nop.m         0
       fma.s1        FR_n_E3        = FR_n_E1,FR_n_E1,FR_n_E0 //  e3 = e+e1^2
       nop.i         0
 };;
 
-{ .mfi 
+{ .mfi
       nop.m         0
       fma.s1        FR_n_Y2        = FR_n_Y1,FR_n_E3,FR_n_Y0 //  y2 = y+y1*e3
       nop.i         0
 }
-{ .mfi 
+{ .mfi
       nop.m         0
       fnma.s1       FR_n_R0        = FR_n_SinxH,FR_n_Q0,f1 //  r = a-b*q
       nop.i         0
 };;
 
-{ .mfi 
+{ .mfi
       nop.m         0
       fnma.s1       FR_n_E4        = FR_n_SinxH,FR_n_Y2,f1 //  e4 = 1-b*y2
       nop.i         0
 }
-{ .mfi 
+{ .mfi
       nop.m         0
       fma.s1        FR_n_RcpResH   = FR_n_R0,FR_n_Y2,FR_n_Q0 //  x = q+r*y2
       nop.i         0
 };;
 
-{ .mfi 
+{ .mfi
       nop.m         0
       fma.s1        FR_n_Y3        = FR_n_Y2,FR_n_E4,FR_n_Y2 //  y3 = y2+y2*e4
       nop.i         0
 }
-{ .mfi 
+{ .mfi
       nop.m         0
       fnma.s1       FR_n_R1        = FR_n_SinxH,FR_n_RcpResH,f1 //  r1 = a-b*x
       nop.i         0
 };;
 
-{ .mfi 
+{ .mfi
       nop.m         0
-      fnma.s1       FR_n_R1        = FR_n_SinxL,FR_n_RcpResH,FR_n_R1  
+      fnma.s1       FR_n_R1        = FR_n_SinxL,FR_n_RcpResH,FR_n_R1
                                                           // r1 = r1 - b_lo*X
       nop.i         0
 };;
 
-{ .mfi 
+{ .mfi
       nop.m         0
       fma.s1        FR_n_RcpResL   = FR_n_R1,FR_n_Y3,f0 //  x_lo = r1*y3
       nop.i         0
 }
-{ .mfi 
+{ .mfi
       nop.m         0
       fma.s1        FR_n_Temp      = FR_n_RcpResH, FR_e_expl_Output_Y, f0
                                               // Multiplying exp and sin result
       nop.i         0
 };;
 
-{ .mfi 
+{ .mfi
       nop.m         0
       fma.s1        FR_n_Temp      = FR_n_RcpResL, FR_e_expl_Output_X, FR_n_Temp
                                               // Multiplying exp and sin result
       nop.i         0
 };;
 
-{ .mfi 
+{ .mfi
       nop.m         0
       fma.s1        FR_n_ResH      = FR_n_RcpResH, FR_e_expl_Output_X, FR_n_Temp
                                               // Multiplying exp and sin result
       nop.i         0
 };;
 
-{ .mfi 
+{ .mfi
       nop.m         0
       fms.s1        FR_n_ResL      = FR_n_RcpResH, FR_e_expl_Output_X, FR_n_ResH
                                               // Multiplying exp and sin result
       nop.i         0
 }
-{ .mfi 
+{ .mfi
       nop.m         0
 (p12) fma.s1        FR_n_ResH      = FR_n_ResH, FR_n_NegOne, f0 // Negate
       nop.i         0
 };;
 
-{ .mfi 
+{ .mfi
       nop.m         0
       fma.s1        FR_n_ResL  = FR_n_ResL, f1, FR_n_Temp
                       // Multiplying exp and sin result - low result obtained
@@ -2375,12 +2375,12 @@ GLOBAL_LIBM_ENTRY(tgammal)
 };;
 
 .pred.rel "mutex",p12,p13
-{ .mfi 
+{ .mfi
       nop.m         0
 (p13) fma.s0        f8             = FR_n_ResH, f1, FR_n_ResL // For odd
       nop.i         0
 }
-{ .mfb 
+{ .mfb
       nop.m         0
 (p12) fms.s0        f8             = FR_n_ResH, f1, FR_n_ResL // For even
       br.ret.sptk   b0 // Exit for negative Stirling path //////////////////////
@@ -2391,928 +2391,928 @@ GLOBAL_LIBM_ENTRY(tgammal)
 //------------------------------------------------------------------------------
 .align 64
 tgamma_lt_13:
-{ .mfi 
+{ .mfi
       getf.sig      GR_p_XN        = FR_p_IXN // Get significand
       fcvt.xf       FR_p_XN        = FR_p_IXN  // xn = [x]
       add           GR_r_sin_Table2= 0x40, GR_r_sin_Table // Shifted table addr.
-} 
+}
 { .mfi
       ldfpd         FR_p_0p5, FR_p_1p5 = [GR_c_Table], 16  // 0.5 & 1.5
       fms.s1        FR_p_AbsXM1    = FR_p_AbsX, f1, f1 // X-1
       add           GR_p_Table2    = 0xB0, GR_p_Table
-};; 
+};;
 
-{ .mfi 
+{ .mfi
       add           GR_r_sin_Table = -16, GR_r_sin_Table // For compensation
       fcvt.xf       FR_r_XNS       = FR_r_IXNS // Convert int repr to float
       shr.u         GR_p_X_Sgnd    = GR_p_X_Sgnd, 59 // Get only 5 bit of signd
-};; 
+};;
 
-{ .mfi 
+{ .mfi
       ldfpd         FR_r_A2H,FR_r_A2L = [GR_r_sin_Table], 16 // Load A2
       nop.f         0
-      add           GR_p_Int       = -2, GR_p_XN // int = int - 2 
-} 
+      add           GR_p_Int       = -2, GR_p_XN // int = int - 2
+}
 { .mfi
-      ldfe          FR_r_A6 = [GR_r_sin_Table2], 16 
+      ldfe          FR_r_A6 = [GR_r_sin_Table2], 16
       nop.f         0
       cmp.gtu       p11, p12 = 0x2, GR_p_XN // p11: x < 2 (splitted intervals),
                                             // p12: x > 2 (base intervals)
-};; 
+};;
 
-{ .mfi 
-      ldfpd         FR_r_A1H, FR_r_A1L = [GR_r_sin_Table], 16 
+{ .mfi
+      ldfpd         FR_r_A1H, FR_r_A1L = [GR_r_sin_Table], 16
       nop.f         0
       shr           GR_p_Int       = GR_p_Int, 1 // int/2
-} 
+}
 { .mfi
-      ldfe          FR_r_A5        = [GR_r_sin_Table2], 16 
+      ldfe          FR_r_A5        = [GR_r_sin_Table2], 16
       nop.f         0
 (p11) cmp.gtu.unc   p10, p11       = 0x1C, GR_p_X_Sgnd // sgnd(x) < 0.75
-};; 
+};;
 
-{ .mfi 
-      ldfe          FR_r_A9        = [GR_r_sin_Table], 16 
+{ .mfi
+      ldfe          FR_r_A9        = [GR_r_sin_Table], 16
       nop.f         0
       shl           GR_p_Offset    = GR_p_Int, 4 // offset = int*16
-} 
+}
 { .mfi
-      ldfe          FR_r_A4        = [GR_r_sin_Table2], 16 
+      ldfe          FR_r_A4        = [GR_r_sin_Table2], 16
       nop.f         0
 (p10) cmp.gtu.unc   p9, p10        = 0x14, GR_p_X_Sgnd // sgnd(x) < 0.25
-};; 
+};;
 
 
-{ .mfi 
-      ldfe          FR_r_A8        = [GR_r_sin_Table], 16 
+{ .mfi
+      ldfe          FR_r_A8        = [GR_r_sin_Table], 16
       nop.f         0
 (p12) tbit.nz.unc   p13, p12       = GR_p_XN, 0x0 // p13: reccurent computations
                                       // X is at [3;4], [5;6], [7;8]... interval
-} 
+}
 { .mfi
-      ldfe          FR_r_A3        = [GR_r_sin_Table2], 16 
+      ldfe          FR_r_A3        = [GR_r_sin_Table2], 16
       nop.f         0
       shladd        GR_p_Offset    = GR_p_Int, 2, GR_p_Offset // +int*4
-};; 
+};;
 
 .pred.rel "mutex",p9,p11
-{ .mfi 
-      add           GR_p_Offset    = GR_p_Int, GR_p_Offset 
+{ .mfi
+      add           GR_p_Offset    = GR_p_Int, GR_p_Offset
                                                     // +int, so offset = int*21
 (p9)  fms.s1        FR_p_XR        = FR_p_AbsX, f1, f1 // r = x-1
-      nop.i         0 
-} 
+      nop.i         0
+}
 { .mfi
-      ldfe          FR_r_A7        = [GR_r_sin_Table], 16 
-(p11) fms.s1        FR_p_XR        = FR_p_2, f1, FR_p_AbsX 
+      ldfe          FR_r_A7        = [GR_r_sin_Table], 16
+(p11) fms.s1        FR_p_XR        = FR_p_2, f1, FR_p_AbsX
                                                     // r = 2-x for 1.75 < x < 2
-      nop.i         0 
-};; 
+      nop.i         0
+};;
 
 .pred.rel "mutex",p9,p10
 .pred.rel "mutex",p10,p11
 .pred.rel "mutex",p9,p11
-{ .mfi 
+{ .mfi
 (p9)  add           GR_p_Offset    = 126, r0 // 1.0 < x < 1.25 table
-(p15) fcmp.eq.unc.s1 p7,p0         = FR_p_AbsX, FR_p_XN 
+(p15) fcmp.eq.unc.s1 p7,p0         = FR_p_AbsX, FR_p_XN
                           // If arg is integer and negative - singularity branch
-      nop.i         0 
+      nop.i         0
 }
-{ .mfi 
+{ .mfi
 (p10) add           GR_p_Offset    = 147, r0 // 1.25 < x < 1.75 table
       nop.f         0
 (p11) add           GR_p_Offset    = 168, r0 // 1.75 < x < 2.0 table
-};; 
+};;
 
-{ .mmf 
-      shladd        GR_p_Table     = GR_p_Offset, 4, GR_p_Table 
+{ .mmf
+      shladd        GR_p_Table     = GR_p_Offset, 4, GR_p_Table
       shladd        GR_p_Table2    = GR_p_Offset, 4, GR_p_Table2
       fma.s1        FR_r_XS        = FR_r_AbsX , f1, FR_r_XNS // xs = x - [x]
-};; 
+};;
 
-{ .mmb 
-      ldfpd         FR_p_A5H, FR_p_A5L = [GR_p_Table], 16 
-      ldfpd         FR_p_A2H, FR_p_A2L = [GR_p_Table2], 16 
+{ .mmb
+      ldfpd         FR_p_A5H, FR_p_A5L = [GR_p_Table], 16
+      ldfpd         FR_p_A2H, FR_p_A2L = [GR_p_Table2], 16
 (p7)  br.cond.spnt  tgammal_singularity // Singularity for integer /////////////
                                         // and negative argument ///////////////
 };;
 
-{ .mfi 
-      ldfpd         FR_p_A4H, FR_p_A4L = [GR_p_Table], 16 
+{ .mfi
+      ldfpd         FR_p_A4H, FR_p_A4L = [GR_p_Table], 16
       fma.s1        FR_p_XN        = FR_p_XN, f1, FR_p_0p5 // xn = xn+0.5
-      nop.i         0 
+      nop.i         0
 }
-{ .mfi 
-      ldfpd         FR_p_A1H, FR_p_A1L = [GR_p_Table2], 16 
+{ .mfi
+      ldfpd         FR_p_A1H, FR_p_A1L = [GR_p_Table2], 16
 (p10) fms.s1        FR_p_XR        = FR_p_AbsX, f1, FR_p_1p5 // r = x - 1.5
-      nop.i         0 
-};;
-
-{ .mmi 
-      ldfpd         FR_p_A3H, FR_p_A3L = [GR_p_Table], 16 
-      ldfpd         FR_p_A0H, FR_p_A0L = [GR_p_Table2], 16 
       nop.i         0
 };;
 
-{ .mmi 
-      ldfe         FR_p_A20        = [GR_p_Table], 16 
-      ldfe         FR_p_A12        = [GR_p_Table2], 16 
+{ .mmi
+      ldfpd         FR_p_A3H, FR_p_A3L = [GR_p_Table], 16
+      ldfpd         FR_p_A0H, FR_p_A0L = [GR_p_Table2], 16
       nop.i         0
 };;
 
-{ .mmf 
-      ldfe         FR_p_A19        = [GR_p_Table], 16 
-      ldfe         FR_p_A11        = [GR_p_Table2], 16 
+{ .mmi
+      ldfe         FR_p_A20        = [GR_p_Table], 16
+      ldfe         FR_p_A12        = [GR_p_Table2], 16
+      nop.i         0
+};;
+
+{ .mmf
+      ldfe         FR_p_A19        = [GR_p_Table], 16
+      ldfe         FR_p_A11        = [GR_p_Table2], 16
       fma.s1       FR_r_XS2        = FR_r_XS, FR_r_XS, f0 // xs2 = xs*xs
 };;
 
-{ .mmi 
-      ldfe          FR_p_A18       = [GR_p_Table], 16 
-      ldfe          FR_p_A10       = [GR_p_Table2], 16 
+{ .mmi
+      ldfe          FR_p_A18       = [GR_p_Table], 16
+      ldfe          FR_p_A10       = [GR_p_Table2], 16
       nop.i         0
 };;
 
 .pred.rel "mutex",p12,p13
-{ .mfi 
-      ldfe          FR_p_A17       = [GR_p_Table], 16 
+{ .mfi
+      ldfe          FR_p_A17       = [GR_p_Table], 16
 (p12) fms.s1        FR_p_XR        = FR_p_AbsX, f1, FR_p_XN // r = x - xn
-      nop.i         0 
+      nop.i         0
 }
-{ .mfi 
+{ .mfi
       ldfe          FR_p_A9        = [GR_p_Table2], 16
 (p13) fms.s1        FR_p_XR        = FR_p_AbsX, f1, FR_p_XN
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mmi 
-      ldfe          FR_p_A16       = [GR_p_Table], 16 
-      ldfe          FR_p_A8        = [GR_p_Table2], 16 
+{ .mmi
+      ldfe          FR_p_A16       = [GR_p_Table], 16
+      ldfe          FR_p_A8        = [GR_p_Table2], 16
 (p9)  cmp.eq        p12, p0        = r0, r0 // clear p12
 };;
 
-{ .mmi 
-      ldfe          FR_p_A15       = [GR_p_Table], 16 
-      ldfe          FR_p_A7        = [GR_p_Table2], 16 
+{ .mmi
+      ldfe          FR_p_A15       = [GR_p_Table], 16
+      ldfe          FR_p_A7        = [GR_p_Table2], 16
 (p10) cmp.eq        p12, p0        = r0, r0 // clear p12
 };;
 
-{ .mfi 
-      ldfe          FR_p_A14       = [GR_p_Table], 16 
+{ .mfi
+      ldfe          FR_p_A14       = [GR_p_Table], 16
       fma.s1        FR_r_TH        = FR_r_A2H, FR_r_XS2, f0 // sin for neg
 (p11) cmp.eq        p12, p0        = r0, r0 // clear p12
 }
-{ .mfi 
+{ .mfi
       ldfe          FR_p_A6        = [GR_p_Table2], 16
       fma.s1        FR_r_TL        = FR_r_A2L, FR_r_XS2, f0 // sin for neg
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
+{ .mfi
       ldfe          FR_p_A13       = [GR_p_Table], 16
       fms.s1        FR_r_XS2L      = FR_r_XS, FR_r_XS, FR_r_XS2 // x2Lo part
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_p_Temp5H    = FR_p_A5H, FR_p_XR, f0 // A5H*r
                                                            // 'Low poly'
-      nop.i         0 
+      nop.i         0
 }
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_p_XR2       = FR_p_XR, FR_p_XR, f0 // r^2 = r*r
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fabs          FR_r_XS        = FR_r_XS // abs(xs)
-      nop.i         0 
+      nop.i         0
 }
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_p_Temp2H    = FR_p_A2H, FR_p_XR, f0 // A2H*r
                                                            // 'High poly'
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fms.s1        FR_r_TT        = FR_r_A2H, FR_r_XS2, FR_r_TH // sin for neg
-      nop.i         0 
+      nop.i         0
 }
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_r_ResH      = FR_r_TH, f1, FR_r_A1H // sin for neg
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_r_TL        = FR_r_A2H, FR_r_XS2L, FR_r_TL // sin for neg
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fms.s1        FR_p_Temp5L    = FR_p_A5H,FR_p_XR,FR_p_Temp5H //A5H*r delta
                                                                   // 'Low poly'
-      nop.i         0 
+      nop.i         0
 }
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_p_Poly5H    = FR_p_Temp5H, f1, FR_p_A4H // A5H*r+A4H
                                                                // 'Low poly'
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fms.s1        FR_p_Temp2L    = FR_p_A2H, FR_p_XR, FR_p_Temp2H//A2H*r delta
                                                                    //'High poly'
-      nop.i         0 
+      nop.i         0
 }
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_p_Poly2H    = FR_p_Temp2H, f1, FR_p_A1H // A2H*r+A1H
                                                                //'High poly'
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_p_XR3       = FR_p_XR2, FR_p_XR,  f0 // r^3 = r^2*r
-      nop.i         0 
+      nop.i         0
 }
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fms.s1        FR_p_XR2L      = FR_p_XR, FR_p_XR, FR_p_XR2 // r^2 delta
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_p_A18       = FR_p_A19, FR_p_XR, FR_p_A18 // Poly tail
-      nop.i         0 
+      nop.i         0
 }
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_p_A14       = FR_p_A15, FR_p_XR, FR_p_A14 // Poly tail
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_p_XR4       = FR_p_XR2, FR_p_XR2, f0 // r^4 = r^2*r^2
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_p_Temp5L    = FR_p_A5L, FR_p_XR, FR_p_Temp5L// Low part
                                                                    // of A5*r+A4
-      nop.i         0 
+      nop.i         0
 }
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fms.s1        FR_p_Poly5L    = FR_p_A4H, f1, FR_p_Poly5H // Low part
                                                                // of A5*r+A4
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_p_Temp4H    = FR_p_Poly5H, FR_p_XR, f0 // (A5H*r+A4H)*r
-      nop.i         0 
+      nop.i         0
 }
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_p_Temp2L    = FR_p_A2L, FR_p_XR, FR_p_Temp2L // A2*r low
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fms.s1        FR_p_Poly2L    = FR_p_A1H, f1, FR_p_Poly2H // High poly
-      nop.i         0 
+      nop.i         0
 }
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_p_Temp1H    = FR_p_Poly2H, FR_p_XR, f0 // High poly
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fms.s1        FR_p_XR3L      = FR_p_XR2, FR_p_XR, FR_p_XR3 // x^3 delta
-      nop.i         0 
+      nop.i         0
 }
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_p_A16       = FR_p_A17, FR_p_XR, FR_p_A16 // Poly tail
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fms.s1        FR_r_ResL      = FR_r_A1H, f1, FR_r_ResH // sin for neg
-      nop.i         0 
+      nop.i         0
 }
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_r_TL        = FR_r_TL, f1, FR_r_TT // sin for neg
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_p_Temp5L    = FR_p_Temp5L, f1, FR_p_A4L // Low poly
-      nop.i         0 
+      nop.i         0
 }
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_p_Poly5L    = FR_p_Poly5L, f1, FR_p_Temp5H // Low poly
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fms.s1        FR_p_Temp4L    = FR_p_Poly5H,FR_p_XR,FR_p_Temp4H //Low poly
-      nop.i         0 
+      nop.i         0
 }
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_p_Poly4H    = FR_p_Temp4H, f1, FR_p_A3H // Low poly
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_p_Temp2L    = FR_p_Temp2L, f1, FR_p_A1L // High poly
-      nop.i         0 
+      nop.i         0
 }
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_p_Poly2L    = FR_p_Poly2L, f1, FR_p_Temp2H // High poly
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fms.s1        FR_p_Temp1L    = FR_p_Poly2H,FR_p_XR,FR_p_Temp1H //High poly
-      nop.i         0 
+      nop.i         0
 }
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_p_Poly1H    = FR_p_Temp1H, f1, FR_p_A0H // High poly
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_p_A12       = FR_p_A13, FR_p_XR, FR_p_A12 // Poly tail
-      nop.i         0 
+      nop.i         0
 }
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_p_XR3L      = FR_p_XR2L, FR_p_XR, FR_p_XR3L // x^3 low
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_p_Poly5L    = FR_p_Poly5L, f1, FR_p_Temp5L // Low poly
-      nop.i         0 
+      nop.i         0
 }
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_p_A10       = FR_p_A11, FR_p_XR, FR_p_A10 // Poly tail
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fms.s1        FR_p_Poly4L    = FR_p_A3H, f1, FR_p_Poly4H // Low poly
-      nop.i         0 
+      nop.i         0
 }
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_p_A6        = FR_p_A7, FR_p_XR, FR_p_A6 // Poly tail
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_p_A8        = FR_p_A9, FR_p_XR, FR_p_A8 // Poly tail
-      nop.i         0 
+      nop.i         0
 }
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_p_XR6       = FR_p_XR4, FR_p_XR2, f0 // Poly tail
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_p_Poly2L    = FR_p_Poly2L, f1, FR_p_Temp2L // High poly
-      nop.i         0 
+      nop.i         0
 }
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fms.s1        FR_p_Poly1L    = FR_p_A0H, f1, FR_p_Poly1H // High poly
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_r_ResL      = FR_r_ResL, f1, FR_r_TH // sin for neg
-      nop.i         0 
+      nop.i         0
 }
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_r_TT        = FR_r_TL, f1, FR_r_A1L // sin for neg
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_p_Temp4L    = FR_p_Poly5L,FR_p_XR,FR_p_Temp4L // Low poly
-      nop.i         0 
+      nop.i         0
 }
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_p_A18       = FR_p_A20, FR_p_XR2, FR_p_A18 // Poly tail
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_p_Poly4L    = FR_p_Poly4L, f1, FR_p_Temp4H // Low poly
-      nop.i         0 
+      nop.i         0
 }
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_p_A14       = FR_p_A16, FR_p_XR2, FR_p_A14 // Poly tail
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_p_A6        = FR_p_A8, FR_p_XR2, FR_p_A6 // Poly tail
-      nop.i         0 
+      nop.i         0
 }
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_p_A10       = FR_p_A12, FR_p_XR2, FR_p_A10 // Poly tail
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_p_Temp1L    = FR_p_Poly2L,FR_p_XR,FR_p_Temp1L //High poly
-      nop.i         0 
+      nop.i         0
 }
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_p_Poly1L    = FR_p_Poly1L, f1, FR_p_Temp1H // High poly
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_r_ResL      = FR_r_ResL, f1, FR_r_TT // sin for neg
-      nop.i         0 
+      nop.i         0
 }
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_r_TH        = FR_r_ResH, FR_r_XS2, f0 // sin for neg
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_p_Temp4L    = FR_p_Temp4L, f1, FR_p_A3L // Low poly
-      nop.i         0 
+      nop.i         0
 }
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_p_Poly3H    = FR_p_Poly4H, FR_p_XR3, f0 // Low poly
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_p_A14       = FR_p_A18, FR_p_XR4, FR_p_A14 // Poly tail
-      nop.i         0 
+      nop.i         0
 }
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_p_XR8       = FR_p_XR4, FR_p_XR4, f0 // Poly tail
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_r_TL        = FR_r_ResH, FR_r_XS2L, f0 // sin for neg
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_p_Temp1L    = FR_p_Temp1L, f1, FR_p_A0L // High poly
-      nop.i         0 
+      nop.i         0
 }
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_p_A6        = FR_p_A10, FR_p_XR4, FR_p_A6 // Poly tail
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fms.s1        FR_r_TT        = FR_r_ResH, FR_r_XS2, FR_r_TH // sin for neg
-      nop.i         0 
+      nop.i         0
 }
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_r_Res3H     = FR_r_TH, f1, f1 // sin for neg
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_p_Poly4L    = FR_p_Poly4L, f1, FR_p_Temp4L // Low poly
-      nop.i         0 
+      nop.i         0
 }
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_p_Poly3L    = FR_p_Poly4H, FR_p_XR3L, f0 // Low poly
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_p_Poly0H    = FR_p_Poly3H,f1,FR_p_Poly1H //Low & High add
-      nop.i         0 
+      nop.i         0
 }
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_r_A7        = FR_r_A8,  FR_r_XS2, FR_r_A7 // sin for neg
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_r_TL        = FR_r_ResL, FR_r_XS2, FR_r_TL // sin for neg
-      nop.i         0 
+      nop.i         0
 }
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_r_XS4       = FR_r_XS2, FR_r_XS2, f0 // sin for neg
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_p_Poly1L    = FR_p_Poly1L, f1, FR_p_Temp1L // High poly
-      nop.i         0 
+      nop.i         0
 }
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_p_PolyTail  = FR_p_A14, FR_p_XR8, FR_p_A6 // Poly tail
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fms.s1        FR_r_Res3L     = f1, f1, FR_r_Res3H // sin for neg
-      nop.i         0 
+      nop.i         0
 }
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_r_ResH      = FR_r_Res3H, FR_r_XS, f0 // sin for neg
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fms.s1        FR_p_Temp0L    = FR_p_Poly4H,FR_p_XR3,FR_p_Poly3H //Low poly
-      nop.i         0 
+      nop.i         0
 }
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_p_Poly3L    = FR_p_Poly4L,FR_p_XR3,FR_p_Poly3L //Low poly
-      nop.i         0 
+      nop.i         0
 };;
 
 { .mfi
-      nop.m         0 
+      nop.m         0
       fms.s1        FR_p_Poly0L    = FR_p_Poly1H,f1,FR_p_Poly0H //Low & High add
-      nop.i         0 
+      nop.i         0
 }
-{ .mfi 
-      nop.m         0 
-(p13) fma.s1        FR_p_OddPoly0H = FR_p_Poly0H, FR_p_AbsXM1, f0 
+{ .mfi
+      nop.m         0
+(p13) fma.s1        FR_p_OddPoly0H = FR_p_Poly0H, FR_p_AbsXM1, f0
                                  // Reccurent computations - multiplying by X-1
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_r_TL        = FR_r_TL, f1, FR_r_TT // sin for neg
-      nop.i         0 
+      nop.i         0
 }
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_r_A3        = FR_r_A4,  FR_r_XS2, FR_r_A3 // sin for neg
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_p_Poly1L    = FR_p_PolyTail,FR_p_XR6,FR_p_Poly1L//High
-      nop.i         0 
+      nop.i         0
 }
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_r_A5        = FR_r_A6, FR_r_XS2, FR_r_A5 // sin for neg
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_r_Res3L     = FR_r_Res3L, f1, FR_r_TH // sin for neg
-      nop.i         0 
+      nop.i         0
 }
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fms.s1        FR_r_ResL      = FR_r_Res3H, FR_r_XS, FR_r_ResH//sin for neg
-      nop.i         0 
+      nop.i         0
 };;
 
 { .mfi
-      nop.m         0 
+      nop.m         0
       fma.s1        FR_p_Poly3L    = FR_p_Poly3L, f1, FR_p_Temp0L // Low poly
-      nop.i         0 
+      nop.i         0
 }
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_r_A7        = FR_r_A9, FR_r_XS4, FR_r_A7 // sin for neg
-      nop.i         0 
+      nop.i         0
 };;
 
 { .mfi
-      nop.m         0 
+      nop.m         0
       fma.s1        FR_p_Poly0L    = FR_p_Poly0L,f1,FR_p_Poly3H //Low & High add
-      nop.i         0 
+      nop.i         0
 }
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
 (p13) fms.s1        FR_p_OddPoly0L = FR_p_Poly0H, FR_p_AbsXM1, FR_p_OddPoly0H
                        // Reccurent computations - multiplying by X-1 (low part)
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_r_A3        = FR_r_A5,  FR_r_XS4, FR_r_A3 // sin for neg
-      nop.i         0 
+      nop.i         0
 }
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_r_XS7       = FR_r_XS4, FR_r_XS2, f0 // xs^6
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_r_Res3L     = FR_r_Res3L, f1, FR_r_TL // sin for neg
-      nop.i         0 
+      nop.i         0
 }
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_r_XS8       = FR_r_XS4, FR_r_XS4, f0 // sin for neg
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_p_Temp0H    = FR_p_Poly3L,f1,FR_p_Poly1L //Low & High add
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_r_XS7       = FR_r_XS7, FR_r_XS,  f0 // xs^7
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_r_ResL      = FR_r_Res3L, FR_r_XS, FR_r_ResL//sin for neg
-      nop.i         0 
+      nop.i         0
 }
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_r_Tail      = FR_r_A7, FR_r_XS8, FR_r_A3 // sin tail res
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_p_Poly0L    = FR_p_Poly0L,f1,FR_p_Temp0H //Low & High add
-      nop.i         0 
+      nop.i         0
 };;
 
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_r_ResL      = FR_r_Tail,FR_r_XS7,FR_r_ResL //sin for neg
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
 (p13) fma.s1        FR_p_OddPoly0L  = FR_p_Poly0L, FR_p_AbsXM1, FR_p_OddPoly0L
                        // Reccurent computations - multiplying by X-1 (low part)
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_r_TT        = FR_r_ResL, FR_r_AbsX, f0 // X*sin
-      nop.i         0 
+      nop.i         0
 };;
 
 .pred.rel "mutex",p12,p13
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
 (p12) fma.s0        f8             =   FR_p_Poly0H, f1, FR_p_Poly0L // Even
-      nop.i         0 
+      nop.i         0
 }
-{ .mfb 
-      nop.m         0 
+{ .mfb
+      nop.m         0
 (p13) fma.s0        f8             =   FR_p_OddPoly0H, f1, FR_p_OddPoly0L // Odd
 (p14) br.ret.spnt   b0  // Exit for 1 <= |X| < 13 path (positive arguments)/////
 };;
 
-{ .mfi 
-      nop.m         0 
-(p13) fma.s1        FR_p_Poly0H    = FR_p_OddPoly0H, f1, f0 
+{ .mfi
+      nop.m         0
+(p13) fma.s1        FR_p_Poly0H    = FR_p_OddPoly0H, f1, f0
                                                        // Reccurent computations
-      nop.i         0 
+      nop.i         0
 }
-{ .mfi 
-      nop.m         0 
-(p13) fma.s1        FR_p_Poly0L    = FR_p_OddPoly0L, f1, f0 
+{ .mfi
+      nop.m         0
+(p13) fma.s1        FR_p_Poly0L    = FR_p_OddPoly0L, f1, f0
                                                        // Reccurent computations
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_r_Res1H     = FR_r_ResH, FR_r_AbsX, FR_r_TT // X*sin
 (p11) cmp.eq        p13, p12       = r0, r0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fms.s1        FR_r_Res1L     = FR_r_ResH,FR_r_AbsX,FR_r_Res1H// X*sin
 (p9)  cmp.eq        p13, p12       = r0, r0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_r_Res1L     = FR_r_Res1L, f1, FR_r_TT // sin for neg
 (p10) cmp.eq        p13, p12       = r0, r0
 }
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_r_TL        = FR_p_Poly0L, FR_r_Res1H, f0 // mult by sin
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_r_TL        = FR_p_Poly0H,FR_r_Res1L,FR_r_TL//mult by sin
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_r_ResH      = FR_p_Poly0H,FR_r_Res1H,FR_r_TL//mult by sin
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fms.s1        FR_r_ResL      = FR_p_Poly0H,FR_r_Res1H,FR_r_ResH//sin mult
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       frcpa.s1      FR_r_Y0,p0     = f1,FR_r_ResH //  y = frcpa(b)
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fneg          FR_r_NegOne    = f1 // Form -1.0
-      nop.i         0 
+      nop.i         0
 }
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_r_ResL      = FR_r_ResL, f1, FR_r_TL //Low result of mult
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_r_Q0        = f1,FR_r_Y0,f0 //  q = a*y
-      nop.i         0 
+      nop.i         0
 }
-{ .mfi 
-      nop.m         0 
-      fnma.s1       FR_r_E0        = FR_r_Y0,FR_r_ResH,f1 //  e = 1-b*y 
-      nop.i         0 
+{ .mfi
+      nop.m         0
+      fnma.s1       FR_r_E0        = FR_r_Y0,FR_r_ResH,f1 //  e = 1-b*y
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_r_E2        = FR_r_E0,FR_r_E0,FR_r_E0 //  e2 = e+e^2
-      nop.i         0 
+      nop.i         0
 }
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_r_E1        = FR_r_E0,FR_r_E0,f0 //  e1 = e^2
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_r_Y1        = FR_r_Y0,FR_r_E2,FR_r_Y0 //  y1 = y+y*e2
-      nop.i         0 
+      nop.i         0
 }
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_r_E3        = FR_r_E1,FR_r_E1,FR_r_E0 //  e3 = e+e1^2
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_r_Y2        = FR_r_Y1,FR_r_E3,FR_r_Y0 //  y2 = y+y1*e3
-      nop.i         0 
+      nop.i         0
 }
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fnma.s1       FR_r_R0        = FR_r_ResH,FR_r_Q0,f1 //  r = a-b*q
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fnma.s1       FR_r_E4        = FR_r_ResH,FR_r_Y2,f1 //  e4 = 1-b*y2
-      nop.i         0 
+      nop.i         0
 }
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_r_ZH        = FR_r_R0,FR_r_Y2,FR_r_Q0 //  x = q+r*y2
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_r_Y3        = FR_r_Y2,FR_r_E4,FR_r_Y2 //  y3 = y2+y2*e4
-      nop.i         0 
+      nop.i         0
 }
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fnma.s1       FR_r_R1        = FR_r_ResH,FR_r_ZH,f1 //  r1 = a-b*x
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fnma.s1       FR_r_R1        = FR_r_ResL,FR_r_ZH,FR_r_R1 // r1=r1-b_lo*X
-      nop.i         0 
+      nop.i         0
 }
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
 (p12) fma.s1        FR_r_ZHN       = FR_r_ZH,FR_r_NegOne, f0 // Negate for evens
-      nop.i         0 
+      nop.i         0
 };;
 
 .pred.rel "mutex",p13,p12
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
 (p13) fma.s0        f8             = FR_r_R1,FR_r_Y3,FR_r_ZH // Final result
-      nop.i         0 
+      nop.i         0
 }
-{ .mfb 
-      nop.m         0 
+{ .mfb
+      nop.m         0
 (p12) fnma.s0       f8             = FR_r_R1,FR_r_Y3,FR_r_ZHN // Final result
       br.ret.sptk   b0 // Exit for 1 <= |X| < 13 path (negative arguments)//////
 };;
@@ -3322,935 +3322,935 @@ tgamma_lt_13:
 //------------------------------------------------------------------------------
 .align 64
 tgamma_lt_1:
-{ .mfi 
+{ .mfi
       getf.exp      GR_p_Exp       = FR_p_AbsX // exp of abs X
       fma.s1        FR_z_Q0        = f1,FR_z_Y0,f0 // q = a*y
       add           GR_r_sin_Table2= 0x50, GR_r_sin_Table
-} 
+}
 { .mfi
-      ldfpd         FR_p_0p5, FR_p_1p5 = [GR_c_Table], 16 
-      fnma.s1       FR_z_E0        = FR_z_Y0,f8,f1 //  e = 1-b*y 
+      ldfpd         FR_p_0p5, FR_p_1p5 = [GR_c_Table], 16
+      fnma.s1       FR_z_E0        = FR_z_Y0,f8,f1 //  e = 1-b*y
       add           GR_p_Table2    = 0xB0, GR_p_Table
-};; 
+};;
 
-{ .mfi 
+{ .mfi
       ldfd          FR_p_0p25      = [GR_c_Table]
       fcvt.xf       FR_r_XNS       = FR_r_IXNS // Convert int repr to float
-      shr.u         GR_p_X_Sgnd    = GR_p_X_Sgnd, 60 
+      shr.u         GR_p_X_Sgnd    = GR_p_X_Sgnd, 60
                                        // Obtain only 4 bits of significand
 }
-{ .mfi 
+{ .mfi
       nop.m        0
       nop.f        0
       add          GR_p_Bias           = 0xffff, r0 // Set bias
-};; 
+};;
 
-{ .mfi 
-      ldfpd        FR_r_A2H, FR_r_A2L  = [GR_r_sin_Table], 16 
+{ .mfi
+      ldfpd        FR_r_A2H, FR_r_A2L  = [GR_r_sin_Table], 16
       nop.f        0
       shl          GR_p_XN             = GR_p_Exp, 4
                        // Shift exp to 4 bits left to set place for significand
-} 
+}
 { .mlx
       ldfe         FR_r_A6         = [GR_r_sin_Table2], 16
       movl         GR_p_0p75       = 0xfffec // 0.75
-};; 
+};;
 
-{ .mfi 
-      ldfpd        FR_r_A1H, FR_r_A1L = [GR_r_sin_Table], 16 
-      nop.f        0
-      or           GR_p_XN         = GR_p_XN, GR_p_X_Sgnd 
-                                 // Combine exp with 4 high bits of significand
-} 
 { .mfi
-      ldfe         FR_r_A5         = [GR_r_sin_Table2], 16 
+      ldfpd        FR_r_A1H, FR_r_A1L = [GR_r_sin_Table], 16
+      nop.f        0
+      or           GR_p_XN         = GR_p_XN, GR_p_X_Sgnd
+                                 // Combine exp with 4 high bits of significand
+}
+{ .mfi
+      ldfe         FR_r_A5         = [GR_r_sin_Table2], 16
       nop.f        0
       sub          GR_p_Exp        = GR_p_Exp, GR_p_Bias // Unbiased exp
-};; 
+};;
 
-{ .mmi 
-      ldfe         FR_r_A9         = [GR_r_sin_Table], 16 
-      ldfe         FR_r_A4         = [GR_r_sin_Table2], 16 
+{ .mmi
+      ldfe         FR_r_A9         = [GR_r_sin_Table], 16
+      ldfe         FR_r_A4         = [GR_r_sin_Table2], 16
       cmp.gtu.unc  p10, p11        = GR_p_0p75, GR_p_XN // sgnd(x) < 0.75
-};; 
+};;
 
-{ .mfi 
-      ldfe          FR_r_A8        = [GR_r_sin_Table], 16 
+{ .mfi
+      ldfe          FR_r_A8        = [GR_r_sin_Table], 16
       fma.s1        FR_z_E2        = FR_z_E0,FR_z_E0,FR_z_E0 //  e2 = e+e^2
 (p10) cmp.gt.unc    p9, p10        = -2, GR_p_Exp //  x < 0.25
-} 
+}
 { .mfi
-      ldfe          FR_r_A3        = [GR_r_sin_Table2], 16 
+      ldfe          FR_r_A3        = [GR_r_sin_Table2], 16
       fma.s1        FR_z_E1        = FR_z_E0,FR_z_E0,f0 // e1 = e^2
 (p11) add           GR_p_Offset    = 168, r0 // [0.75;1] interval
-};; 
+};;
 
-{ .mmi 
+{ .mmi
 (p10) add           GR_p_Offset    = 147, r0 // [0.25;0.75] interval
-      ldfe          FR_r_A7        = [GR_r_sin_Table], 16 
+      ldfe          FR_r_A7        = [GR_r_sin_Table], 16
 (p9)  cmp.gt.unc    p8, p9         = -3, GR_p_Exp // x < 0.125
-};; 
+};;
 
 .pred.rel "mutex",p9,p8
-{ .mmi 
+{ .mmi
 (p9)  add           GR_p_Offset    = 126, r0 // [0.125;0.25] interval
 (p8)  add           GR_p_Offset    = 189, r0 // [0.;0.125] interval
-      nop.i         0 
-};; 
+      nop.i         0
+};;
 
-{ .mmf 
+{ .mmf
       shladd        GR_p_Table     = GR_p_Offset, 4, GR_p_Table //Make addresses
       shladd        GR_p_Table2    = GR_p_Offset, 4, GR_p_Table2
       fma.s1        FR_r_XS        = FR_r_AbsX , f1, FR_r_XNS // xs = |x|-[x]
-};; 
-
-.pred.rel "mutex",p8,p11
-{ .mfi 
-      ldfpd         FR_p_A5H, FR_p_A5L = [GR_p_Table], 16 
-(p11) fms.s1        FR_p_XR            = f1, f1, FR_p_AbsX // r = 1 - |x|
-                                                 // for [0.75;1] interval
-      nop.i         0 
-}
-{ .mfi 
-      ldfpd        FR_p_A2H, FR_p_A2L = [GR_p_Table2], 16 
-(p8)  fms.s1       FR_p_XR            = FR_p_AbsX, f1, f0 // r = |x|
-                                                      // for [0.;0.125] interval
-      nop.i         0 
 };;
 
-{ .mfi 
-      ldfpd         FR_p_A4H, FR_p_A4L = [GR_p_Table], 16 
-      fma.s1        FR_z_Y1        = FR_z_Y0,FR_z_E2,FR_z_Y0 // y1 = y+y*e2
-      nop.i         0 
+.pred.rel "mutex",p8,p11
+{ .mfi
+      ldfpd         FR_p_A5H, FR_p_A5L = [GR_p_Table], 16
+(p11) fms.s1        FR_p_XR            = f1, f1, FR_p_AbsX // r = 1 - |x|
+                                                 // for [0.75;1] interval
+      nop.i         0
 }
-{ .mfi 
-      ldfpd         FR_p_A1H, FR_p_A1L = [GR_p_Table2], 16 
+{ .mfi
+      ldfpd        FR_p_A2H, FR_p_A2L = [GR_p_Table2], 16
+(p8)  fms.s1       FR_p_XR            = FR_p_AbsX, f1, f0 // r = |x|
+                                                      // for [0.;0.125] interval
+      nop.i         0
+};;
+
+{ .mfi
+      ldfpd         FR_p_A4H, FR_p_A4L = [GR_p_Table], 16
+      fma.s1        FR_z_Y1        = FR_z_Y0,FR_z_E2,FR_z_Y0 // y1 = y+y*e2
+      nop.i         0
+}
+{ .mfi
+      ldfpd         FR_p_A1H, FR_p_A1L = [GR_p_Table2], 16
       fma.s1        FR_z_E3        = FR_z_E1,FR_z_E1,FR_z_E0 // e3 = e+e1^2
-      nop.i         0 
+      nop.i         0
 };;
 
 .pred.rel "mutex",p9,p10
-{ .mfi 
-      ldfpd         FR_p_A3H, FR_p_A3L = [GR_p_Table], 16 
+{ .mfi
+      ldfpd         FR_p_A3H, FR_p_A3L = [GR_p_Table], 16
 (p9)  fms.s1        FR_p_XR        = FR_p_AbsX, f1, f0 // r = |x|
                                                   // for [0.125;0.25] interval
-      nop.i         0 
+      nop.i         0
 }
-{ .mfi 
-      ldfpd         FR_p_A0H, FR_p_A0L  = [GR_p_Table2], 16 
+{ .mfi
+      ldfpd         FR_p_A0H, FR_p_A0L  = [GR_p_Table2], 16
 (p10) fms.s1        FR_p_XR        = FR_p_AbsX, f1, FR_p_0p5 // r = |x| - 0.5
                                                  // for [0.25;0.75] interval
-      nop.i         0 
-};;
-
-{ .mmi 
-      ldfe          FR_p_A20       = [GR_p_Table], 16 
-      ldfe          FR_p_A12       = [GR_p_Table2], 16 
       nop.i         0
 };;
 
-{ .mfi 
-      ldfe          FR_p_A19       = [GR_p_Table], 16 
+{ .mmi
+      ldfe          FR_p_A20       = [GR_p_Table], 16
+      ldfe          FR_p_A12       = [GR_p_Table2], 16
+      nop.i         0
+};;
+
+{ .mfi
+      ldfe          FR_p_A19       = [GR_p_Table], 16
       fma.s1        FR_r_XS2       = FR_r_XS, FR_r_XS, f0 // xs^2
-      nop.i         0 
+      nop.i         0
 }
-{ .mfi 
-      ldfe          FR_p_A11       = [GR_p_Table2], 16 
+{ .mfi
+      ldfe          FR_p_A11       = [GR_p_Table2], 16
       nop.f         0
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mmi 
-      ldfe          FR_p_A18       = [GR_p_Table], 16 
-      ldfe          FR_p_A10       = [GR_p_Table2], 16 
+{ .mmi
+      ldfe          FR_p_A18       = [GR_p_Table], 16
+      ldfe          FR_p_A10       = [GR_p_Table2], 16
       nop.i         0
 };;
 
 .pred.rel "mutex",p12,p13
-{ .mfi 
-      ldfe          FR_p_A17       = [GR_p_Table], 16 
+{ .mfi
+      ldfe          FR_p_A17       = [GR_p_Table], 16
       fma.s1        FR_z_Y2        = FR_z_Y1,FR_z_E3,FR_z_Y0 // y2 = y+y1*e3
-      nop.i         0 
+      nop.i         0
 }
-{ .mfi 
-      ldfe          FR_p_A9        = [GR_p_Table2], 16 
+{ .mfi
+      ldfe          FR_p_A9        = [GR_p_Table2], 16
       fnma.s1       FR_z_R0        = f8,FR_z_Q0,f1 //  r = a-b*q
-      nop.i         0 
-};;
-
-{ .mmi 
-      ldfe          FR_p_A16       = [GR_p_Table], 16 
-      ldfe          FR_p_A8        = [GR_p_Table2], 16 
-      nop.i         0 
-};;
-
-{ .mmi 
-      ldfe          FR_p_A15       = [GR_p_Table], 16 
-      ldfe          FR_p_A7        = [GR_p_Table2], 16 
       nop.i         0
 };;
 
-{ .mfi 
-      ldfe          FR_p_A14       = [GR_p_Table], 16 
+{ .mmi
+      ldfe          FR_p_A16       = [GR_p_Table], 16
+      ldfe          FR_p_A8        = [GR_p_Table2], 16
+      nop.i         0
+};;
+
+{ .mmi
+      ldfe          FR_p_A15       = [GR_p_Table], 16
+      ldfe          FR_p_A7        = [GR_p_Table2], 16
+      nop.i         0
+};;
+
+{ .mfi
+      ldfe          FR_p_A14       = [GR_p_Table], 16
       fma.s1        FR_r_TH        = FR_r_A2H, FR_r_XS2, f0 // neg sin
-      nop.i         0 
+      nop.i         0
 }
-{ .mfi 
-      ldfe          FR_p_A6        = [GR_p_Table2], 16 
+{ .mfi
+      ldfe          FR_p_A6        = [GR_p_Table2], 16
       fma.s1        FR_r_TL        =   FR_r_A2L, FR_r_XS2, f0 // neg sin
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
-      ldfe          FR_p_A13       = [GR_p_Table], 16 
+{ .mfi
+      ldfe          FR_p_A13       = [GR_p_Table], 16
       fms.s1        FR_r_XS2L      = FR_r_XS, FR_r_XS, FR_r_XS2 // xs^2 delta
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_p_Temp5H     = FR_p_A5H, FR_p_XR, f0 // Low poly
-      nop.i         0 
+      nop.i         0
 }
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_p_XR2       = FR_p_XR, FR_p_XR, f0 // poly tail
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fabs          FR_r_XS        = FR_r_XS // Absolute value of xs
-      nop.i         0 
+      nop.i         0
 }
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_p_Temp2H    = FR_p_A2H, FR_p_XR, f0 // High poly
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fnma.s1       FR_z_E4        = f8,FR_z_Y2,f1 //  e4 = 1-b*y2
-      nop.i         0 
+      nop.i         0
 }
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_z_ZH        = FR_z_R0,FR_z_Y2,FR_z_Q0 // 1/x = q+r*y2
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fms.s1        FR_r_TT        = FR_r_A2H, FR_r_XS2, FR_r_TH // neg sin
-      nop.i         0 
+      nop.i         0
 }
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_r_ResH      = FR_r_TH, f1, FR_r_A1H // neg sin
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_r_TL        = FR_r_A2H, FR_r_XS2L, FR_r_TL // neg sin
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fms.s1        FR_p_Temp5L    = FR_p_A5H, FR_p_XR, FR_p_Temp5H // Low poly
-      nop.i         0 
+      nop.i         0
 }
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_p_Poly5H    = FR_p_Temp5H, f1, FR_p_A4H // Low poly
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fms.s1        FR_p_Temp2L    = FR_p_A2H, FR_p_XR, FR_p_Temp2H // High poly
-      nop.i         0 
+      nop.i         0
 }
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_p_Poly2H    = FR_p_Temp2H, f1, FR_p_A1H // High poly
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_p_XR3       = FR_p_XR2, FR_p_XR,  f0 // r^3
-      nop.i         0 
+      nop.i         0
 }
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fms.s1        FR_p_XR2L      = FR_p_XR, FR_p_XR, FR_p_XR2 // r^2 delta
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_p_A18       = FR_p_A19, FR_p_XR, FR_p_A18 // poly tail
-      nop.i         0 
+      nop.i         0
 }
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_p_A14       = FR_p_A15, FR_p_XR, FR_p_A14 // poly tail
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_p_XR4       = FR_p_XR2, FR_p_XR2, f0 // poly tail
-      nop.i         0 
+      nop.i         0
 }
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_z_Y3        = FR_z_Y2,FR_z_E4,FR_z_Y2 //  y3 = y2+y2*e4
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_p_Temp5L    = FR_p_A5L, FR_p_XR, FR_p_Temp5L // Low poly
-      nop.i         0 
+      nop.i         0
 }
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fms.s1        FR_p_Poly5L    = FR_p_A4H, f1, FR_p_Poly5H // Low poly
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_p_Temp4H    = FR_p_Poly5H, FR_p_XR, f0 // Low poly
-      nop.i         0 
+      nop.i         0
 }
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_p_Temp2L    = FR_p_A2L, FR_p_XR, FR_p_Temp2L // High poly
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fms.s1        FR_p_Poly2L    = FR_p_A1H, f1, FR_p_Poly2H // High poly
-      nop.i         0 
+      nop.i         0
 }
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_p_Temp1H    = FR_p_Poly2H, FR_p_XR, f0 // High poly
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fms.s1        FR_p_XR3L      = FR_p_XR2, FR_p_XR, FR_p_XR3 // x^3 delta
-      nop.i         0 
+      nop.i         0
 }
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_p_A16       = FR_p_A17, FR_p_XR, FR_p_A16 //poly tail
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fms.s1        FR_r_ResL      = FR_r_A1H, f1, FR_r_ResH // neg sin
-      nop.i         0 
+      nop.i         0
 }
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_r_TL        = FR_r_TL, f1, FR_r_TT // neg sin
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_p_Temp5L    = FR_p_Temp5L, f1, FR_p_A4L // Low poly
-      nop.i         0 
+      nop.i         0
 }
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_p_Poly5L    = FR_p_Poly5L, f1, FR_p_Temp5H //Low poly
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fms.s1        FR_p_Temp4L    = FR_p_Poly5H, FR_p_XR, FR_p_Temp4H//Low poly
-      nop.i         0 
+      nop.i         0
 }
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_p_Poly4H    = FR_p_Temp4H, f1, FR_p_A3H // Low poly
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_p_Temp2L    = FR_p_Temp2L, f1, FR_p_A1L // High poly
-      nop.i         0 
+      nop.i         0
 }
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_p_Poly2L    = FR_p_Poly2L, f1, FR_p_Temp2H // High poly
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fms.s1        FR_p_Temp1L    = FR_p_Poly2H,FR_p_XR,FR_p_Temp1H //High poly
-      nop.i         0 
+      nop.i         0
 }
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_p_Poly1H    = FR_p_Temp1H, f1, FR_p_A0H // High poly
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_p_A12       = FR_p_A13, FR_p_XR, FR_p_A12 // poly tail
-      nop.i         0 
+      nop.i         0
 }
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_p_XR3L      = FR_p_XR2L, FR_p_XR, FR_p_XR3L // x^3 low
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_p_Poly5L    = FR_p_Poly5L, f1, FR_p_Temp5L //Low poly
-      nop.i         0 
+      nop.i         0
 }
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_p_A10       = FR_p_A11, FR_p_XR, FR_p_A10 //poly tail
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fms.s1        FR_p_Poly4L    = FR_p_A3H, f1, FR_p_Poly4H /// Low poly
-      nop.i         0 
+      nop.i         0
 }
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_p_A6        = FR_p_A7, FR_p_XR, FR_p_A6 // poly tail
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_p_A8        = FR_p_A9, FR_p_XR, FR_p_A8 // poly tail
-      nop.i         0 
+      nop.i         0
 }
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_p_XR6       = FR_p_XR4, FR_p_XR2, f0 // r^6
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_p_Poly2L    = FR_p_Poly2L, f1, FR_p_Temp2L // High poly
-      nop.i         0 
+      nop.i         0
 }
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fms.s1        FR_p_Poly1L    = FR_p_A0H, f1, FR_p_Poly1H // High poly
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_r_ResL      = FR_r_ResL, f1, FR_r_TH // neg sin
-      nop.i         0 
+      nop.i         0
 }
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_r_TT        = FR_r_TL, f1, FR_r_A1L // neg sin
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_p_Temp4L    = FR_p_Poly5L,FR_p_XR,FR_p_Temp4L //Low poly
-      nop.i         0 
+      nop.i         0
 }
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_p_A18       = FR_p_A20, FR_p_XR2, FR_p_A18 // poly tail
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_p_Poly4L    = FR_p_Poly4L, f1, FR_p_Temp4H // Low poly
-      nop.i         0 
+      nop.i         0
 }
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_p_A14       = FR_p_A16, FR_p_XR2, FR_p_A14 // poly tail
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_p_A6        = FR_p_A8, FR_p_XR2, FR_p_A6 // poly tail
-      nop.i         0 
+      nop.i         0
 }
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_p_A10       = FR_p_A12, FR_p_XR2, FR_p_A10 // poly tail
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_p_Temp1L    = FR_p_Poly2L,FR_p_XR,FR_p_Temp1L //High poly
-      nop.i         0 
+      nop.i         0
 }
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_p_Poly1L    = FR_p_Poly1L, f1, FR_p_Temp1H // High poly
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_r_ResL      = FR_r_ResL, f1, FR_r_TT // neg sin
-      nop.i         0 
+      nop.i         0
 }
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_r_TH        = FR_r_ResH, FR_r_XS2, f0 // neg sin
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_p_Temp4L    = FR_p_Temp4L, f1, FR_p_A3L // Low poly
-      nop.i         0 
+      nop.i         0
 }
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_p_Poly3H    = FR_p_Poly4H, FR_p_XR3, f0 // Low poly
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_p_A14       = FR_p_A18, FR_p_XR4, FR_p_A14 // poly tail
-      nop.i         0 
+      nop.i         0
 }
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_p_XR8       = FR_p_XR4, FR_p_XR4, f0 // r^8
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_r_TL        = FR_r_ResH, FR_r_XS2L, f0 // neg sin
-      nop.i         0 
+      nop.i         0
 }
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fnma.s1       FR_z_R1        = f8,FR_z_ZH,f1 //  r1 = a-b*x
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_p_Temp1L    = FR_p_Temp1L, f1, FR_p_A0L // High poly
-      nop.i         0 
+      nop.i         0
 }
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_p_A6        = FR_p_A10, FR_p_XR4, FR_p_A6 // poly tail
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fms.s1        FR_r_TT        = FR_r_ResH, FR_r_XS2, FR_r_TH // neg sin
-      nop.i         0 
+      nop.i         0
 }
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_r_Res3H     = FR_r_TH, f1, f1 // neg sin
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_p_Poly4L    = FR_p_Poly4L, f1, FR_p_Temp4L // Low poly
-      nop.i         0 
+      nop.i         0
 }
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_p_Poly3L    = FR_p_Poly4H, FR_p_XR3L, f0 // Low poly
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_p_Poly0H    = FR_p_Poly3H, f1, FR_p_Poly1H // Result
-      nop.i         0 
+      nop.i         0
 }
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_r_A7        = FR_r_A8, FR_r_XS2, FR_r_A7 // neg sin
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_r_TL        = FR_r_ResL, FR_r_XS2, FR_r_TL // neg sin
-      nop.i         0 
+      nop.i         0
 }
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_r_XS4       = FR_r_XS2, FR_r_XS2, f0 // xs^4
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_p_Poly1L    = FR_p_Poly1L, f1, FR_p_Temp1L // High poly
-      nop.i         0 
+      nop.i         0
 }
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_p_PolyTail  = FR_p_A14, FR_p_XR8, FR_p_A6 // poly tail
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fms.s1        FR_r_Res3L     = f1, f1, FR_r_Res3H // neg sin
-      nop.i         0 
+      nop.i         0
 }
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_r_ResH      = FR_r_Res3H, FR_r_XS, f0 // neg sin
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fms.s1        FR_p_Temp0L    = FR_p_Poly4H,FR_p_XR3,FR_p_Poly3H //Low poly
-      nop.i         0 
+      nop.i         0
 }
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_p_Poly3L    = FR_p_Poly4L,FR_p_XR3,FR_p_Poly3L //Low poly
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fms.s1        FR_p_Poly0L    = FR_p_Poly1H, f1, FR_p_Poly0H // Result
-      nop.i         0 
+      nop.i         0
 }
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_z_ZL        = FR_z_R1,FR_z_Y3, f0 //  x_lo = r1*y3
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_r_TL        = FR_r_TL, f1, FR_r_TT // neg sin
-      nop.i         0 
+      nop.i         0
 }
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_r_A3        = FR_r_A4, FR_r_XS2, FR_r_A3 /// neg sin
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_p_Poly1L    = FR_p_PolyTail,FR_p_XR6,FR_p_Poly1L // High
-      nop.i         0 
+      nop.i         0
 }
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_r_A5        = FR_r_A6, FR_r_XS2, FR_r_A5 // neg sin
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_r_Res3L     = FR_r_Res3L, f1, FR_r_TH // neg sin
-      nop.i         0 
+      nop.i         0
 }
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fms.s1        FR_r_ResL      = FR_r_Res3H, FR_r_XS, FR_r_ResH // neg sin
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_p_Poly3L    = FR_p_Poly3L, f1, FR_p_Temp0L // Low poly
-      nop.i         0 
+      nop.i         0
 }
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_r_A7        = FR_r_A9,  FR_r_XS4, FR_r_A7 // neg sin
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_p_Poly0L    = FR_p_Poly0L, f1, FR_p_Poly3H // result
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
 (p14) fma.s1        f8             = FR_p_Poly0H, FR_z_ZH, f0 // z*poly
-      nop.i         0 
+      nop.i         0
 }
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_p_Temp1L    = FR_p_Poly0H, FR_z_ZL, f0 // z*poly low
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_r_A3        = FR_r_A5, FR_r_XS4, FR_r_A3 // sin tail
-      nop.i         0 
+      nop.i         0
 }
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_r_XS7       = FR_r_XS4, FR_r_XS2, f0  // xs^6
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_r_Res3L     = FR_r_Res3L, f1, FR_r_TL // sin low
-      nop.i         0 
+      nop.i         0
 }
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_r_XS8       = FR_r_XS4, FR_r_XS4, f0 // xs^8
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_p_Temp0H    = FR_p_Poly3L, f1, FR_p_Poly1L // result
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
 (p14) fms.s1        FR_p_Temp1H    = FR_p_Poly0H, FR_z_ZH, f8 // hi result
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_r_XS7       = FR_r_XS7, FR_r_XS,  f0 // xs^7
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_r_ResL      = FR_r_Res3L, FR_r_XS, FR_r_ResL // lo result
-      nop.i         0 
+      nop.i         0
 }
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_r_Tail      = FR_r_A7, FR_r_XS8, FR_r_A3 // tail result
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_p_Poly0L    = FR_p_Poly0L, f1, FR_p_Temp0H // lo result
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_r_ResL      = FR_r_Tail, FR_r_XS7, FR_r_ResL // lo result
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
 (p14) fma.s1        FR_p_Temp1L    = FR_p_Poly0L,FR_z_ZH,FR_p_Temp1L //hi result
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_r_TT        = FR_r_ResL, f1, f0 // for low result
-      nop.i         0 
+      nop.i         0
 };;
 
 .pred.rel "mutex",p12,p13
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
 (p14) fma.s1        FR_p_Temp1L    = FR_p_Temp1L, f1, FR_p_Temp1H // for lo res
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
+{ .mfi
 (p10) cmp.eq        p13, p12       = r0, r0 // set p13, clear p12
       fma.s1        FR_r_Res1H     = FR_r_ResH, f1, FR_r_TT // hi res
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfb 
+{ .mfb
 (p9)  cmp.eq        p13, p12       = r0, r0 // set p13, clear p12
 (p14) fma.s0        f8             =   f8, f1, FR_p_Temp1L // Final result
 (p14) br.ret.spnt   b0 // Exit for  0 < |X| < 1 path (positive arguments)///////
 };;
 
-{ .mfi 
+{ .mfi
 (p11) cmp.eq        p13, p12       = r0, r0 // set p13, clear p12
       fms.s1        FR_r_Res1L     = FR_r_ResH, f1, FR_r_Res1H // Low sin result
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_r_Res1L     = FR_r_Res1L, f1, FR_r_TT // Low sin result
-      nop.i         0 
+      nop.i         0
 }
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_r_TL        = FR_p_Poly0L,FR_r_Res1H,f0 //Low sin result
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_r_TL        = FR_p_Poly0H, FR_r_Res1L, FR_r_TL //Low sin
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_r_ResH      = FR_p_Poly0H, FR_r_Res1H, FR_r_TL //High sin
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fms.s1        FR_r_ResL      = FR_p_Poly0H,FR_r_Res1H,FR_r_ResH //Low res
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       frcpa.s1      FR_r_Y0,p0     = f1,FR_r_ResH //  y = frcpa(b)
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fneg          FR_r_NegOne    = f1 // Construct -1.0
-      nop.i         0 
+      nop.i         0
 }
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_r_ResL      = FR_r_ResL, f1, FR_r_TL // low sin
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_r_Q0        = f1,FR_r_Y0,f0 // q = a*y
-      nop.i         0 
+      nop.i         0
 }
-{ .mfi 
-      nop.m         0 
-      fnma.s1       FR_r_E0        = FR_r_Y0,FR_r_ResH,f1 // e = 1-b*y 
-      nop.i         0 
+{ .mfi
+      nop.m         0
+      fnma.s1       FR_r_E0        = FR_r_Y0,FR_r_ResH,f1 // e = 1-b*y
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_r_E2        = FR_r_E0,FR_r_E0,FR_r_E0 // e2 = e+e^2
-      nop.i         0 
+      nop.i         0
 }
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_r_E1        = FR_r_E0,FR_r_E0,f0 // e1 = e^2
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_r_Y1        = FR_r_Y0,FR_r_E2,FR_r_Y0 //  y1 = y+y*e2
-      nop.i         0 
+      nop.i         0
 }
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_r_E3        = FR_r_E1,FR_r_E1,FR_r_E0 //  e3 = e+e1^2
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_r_Y2        = FR_r_Y1,FR_r_E3,FR_r_Y0 //  y2 = y+y1*e3
-      nop.i         0 
+      nop.i         0
 }
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fnma.s1       FR_r_R0        = FR_r_ResH,FR_r_Q0,f1 //  r = a-b*q
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fnma.s1       FR_r_E4        = FR_r_ResH,FR_r_Y2,f1 //  e4 = 1-b*y2
-      nop.i         0 
+      nop.i         0
 }
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_r_ZH        = FR_r_R0,FR_r_Y2,FR_r_Q0 //  x = q+r*y2
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_r_Y3        = FR_r_Y2,FR_r_E4,FR_r_Y2 //  y3 = y2+y2*e4
-      nop.i         0 
+      nop.i         0
 }
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fnma.s1       FR_r_R1        = FR_r_ResH,FR_r_ZH,f1 //  r1 = a-b*x
-      nop.i         0 
+      nop.i         0
 };;
 
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fnma.s1       FR_r_R1        = FR_r_ResL,FR_r_ZH,FR_r_R1 // r1=r1 - b_lo*X
-      nop.i         0 
+      nop.i         0
 }
-{ .mfi 
-      nop.m         0 
+{ .mfi
+      nop.m         0
       fma.s1        FR_r_ZHN       = FR_r_ZH,FR_r_NegOne, f0 // Negate
-      nop.i         0 
+      nop.i         0
 };;
 
 .pred.rel "mutex",p13,p12
-{ .mfb 
-      nop.m         0 
+{ .mfb
+      nop.m         0
       fnma.s0       f8             = FR_r_R1,FR_r_Y3,FR_r_ZHN // Result for neg
       br.ret.sptk   b0  // Exit for  0 < |X| < 1 path (negative arguments)//////
 };;
@@ -4263,7 +4263,7 @@ tgamma_lt_1:
 .align 32
 tgammal_spec:
 { .mlx
-      nop.m         0 
+      nop.m         0
       movl          GR_DenOverflow = 0x2000000000000001
 }
 { .mfi
@@ -4283,20 +4283,20 @@ tgammal_spec:
 }
 
 { .mfi
-(p9)  cmp.ltu.unc   p10,p11        = GR_l_signif_Z, GR_DenOverflow  
+(p9)  cmp.ltu.unc   p10,p11        = GR_l_signif_Z, GR_DenOverflow
 (p9)  fnorm.s0      f8 = f8
-      nop.i         0 
+      nop.i         0
 };;
 
 { .mfb
-      nop.m         0 
+      nop.m         0
 (p9)  fcvt.fx.trunc.s1 FR_n_IXN    = FR_l_AbsX // Round by truncate
 (p11) br.cond.sptk  tgamma_lt_1 // Return to gamma ('good' denormal)////////////
 };;
 
 { .mfb
-      nop.m         0 
-      nop.f         0 
+      nop.m         0
+      nop.f         0
 (p10) br.cond.spnt  tgammal_overflow // "Bad" denormal - overflow! /////////////
 };;
 
@@ -4314,17 +4314,17 @@ tgammal_spec:
 { .mfi
 (p7)  mov           GR_Parameter_TAG = 256   // negative
 (p7)  frcpa.s0      f8,p0            = f1,f8 // Raise V flag
-      nop.i         0 
+      nop.i         0
 }
 { .mfb
       nop.m         0
-      nop.f         0 
+      nop.f         0
 (p8)  br.cond.spnt  tgammal_singularity // Branch for +ZERO ////////////////////
 };;
 
 { .mfb
-      nop.m         0 
-      nop.f         0 
+      nop.m         0
+      nop.f         0
       br.cond.spnt  tgammal_libm_err // Branch for -ZERO ///////////////////////
 };;
 
@@ -4358,7 +4358,7 @@ tgammal_overflow:
 { .mfi
       addl          r8             = 0x1FFFE, r0 // Exp of INF
       fcmp.lt.s1    p15,p14        = f8,f0 // p14 - pos arg, p15 - neg arg
-      nop.i         0 
+      nop.i         0
 };;
 
 { .mfi
@@ -4369,12 +4369,12 @@ tgammal_overflow:
 
 .pred.rel "mutex",p14,p15
 { .mfi
-      nop.m         0 
+      nop.m         0
 (p14) fma.s0        f8             = f9,f9,f0 // Set I,O and +INF result
-      nop.i         0 
+      nop.i         0
 }
 { .mfb
-      nop.m         0 
+      nop.m         0
 (p15) fnma.s0       f8             = f9,f9,f0 // Set I,O and -INF result
       br.cond.sptk  tgammal_libm_err // Call error handler /////////////////////
                                      // with overflow error ////////////////////
@@ -4389,9 +4389,9 @@ tgammal_overflow:
 .align 32
 tgammal_underflow:
 { .mfi
-      nop.m         0 
+      nop.m         0
       fcvt.fx.trunc.s1 FR_u_IXN    = f8 // Convert arg to int repres. in FR
-      nop.i         0 
+      nop.i         0
 };;
 
 { .mmi

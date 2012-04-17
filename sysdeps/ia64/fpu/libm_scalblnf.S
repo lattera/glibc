@@ -48,8 +48,8 @@
 //
 // API
 //==============================================================
-// float __libm_scalblnf  (float x, long int n, int long_int_type) 
-// input  floating point f8 and long int n (r33) 
+// float __libm_scalblnf  (float x, long int n, int long_int_type)
+// input  floating point f8 and long int n (r33)
 // input  long_int_type = 0 if long int defined as 32 bits, = 1 if 64 bits
 // output floating point f8
 //

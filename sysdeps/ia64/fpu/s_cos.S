@@ -52,7 +52,7 @@
 // 09/05/02 Work range is widened by reduction strengthen (3 parts of Pi/16)
 // 02/10/03 Reordered header: .section, .global, .proc, .align
 // 08/08/03 Improved performance
-// 10/28/04 Saved sincos_r_sincos to avoid clobber by dynamic loader 
+// 10/28/04 Saved sincos_r_sincos to avoid clobber by dynamic loader
 // 03/31/05 Reformatted delimiters between data tables
 
 // API
@@ -71,12 +71,12 @@
 //    nfloat = Round result to integer (round-to-nearest)
 //
 // r = x -  nfloat * pi/2^k
-//    Do this as ((((x -  nfloat * HIGH(pi/2^k))) - 
-//                        nfloat * LOW(pi/2^k)) - 
+//    Do this as ((((x -  nfloat * HIGH(pi/2^k))) -
+//                        nfloat * LOW(pi/2^k)) -
 //                        nfloat * LOWEST(pi/2^k) for increased accuracy.
 //    pi/2^k is stored as two numbers that when added make pi/2^k.
 //       pi/2^k = HIGH(pi/2^k) + LOW(pi/2^k)
-//    HIGH and LOW parts are rounded to zero values, 
+//    HIGH and LOW parts are rounded to zero values,
 //    and LOWEST is rounded to nearest one.
 //
 // x = (nfloat * pi/2^k) + r
@@ -508,7 +508,7 @@ _SINCOS_COMMON2:
 { .mfi
       ldfe          sincos_Pi_by_16_3   = [sincos_AD_1],16
       nop.f         999
-      dep.z         sincos_r_exp        = sincos_r_signexp, 0, 17 
+      dep.z         sincos_r_exp        = sincos_r_signexp, 0, 17
 };;
 
 // Polynomial coefficients (Q4, P4, Q3, P3, Q2, Q1, P2, P1) loading
@@ -516,7 +516,7 @@ _SINCOS_COMMON2:
 // p10 is true if f8 exp is >= 0x1001a (2^27)
 { .mmb
       ldfpd         sincos_P4,sincos_Q4 = [sincos_AD_1],16
-      cmp.ge        p10,p0              = sincos_r_exp,sincos_exp_limit 
+      cmp.ge        p10,p0              = sincos_r_exp,sincos_exp_limit
 (p10) br.cond.spnt  _SINCOS_LARGE_ARGS // Go to "large args" routine
 };;
 
@@ -542,7 +542,7 @@ _SINCOS_COMMON2:
 { .mfi
       ldfpd         sincos_P1,sincos_Q1 = [sincos_AD_1],16
       fnma.s1 sincos_r = sincos_NFLOAT, sincos_Pi_by_16_1, sincos_NORM_f8
-      nop.i         999 
+      nop.i         999
 };;
 
 // Add 2^(k-1) (which is in sincos_r_sincos) to N
@@ -551,7 +551,7 @@ _SINCOS_COMMON2:
 ;;
 // Get M (least k+1 bits of N)
       and           sincos_GR_m         = 0x1f,sincos_GR_n
-      nop.i         999 
+      nop.i         999
 };;
 
 // sincos_r          = sincos_r -sincos_Nfloat * sincos_Pi_by_16_2
@@ -566,14 +566,14 @@ _SINCOS_COMMON2:
 { .mfi
       add           sincos_AD_2         = sincos_GR_32m, sincos_AD_1
 (p8)  fclass.m.unc  p10,p0              = f8,0x0b
-      nop.i         999 
+      nop.i         999
 };;
 
 // Load Sin and Cos table value using obtained index m  (sincosf_AD_2)
 { .mfi
       ldfe          sincos_Sm           = [sincos_AD_2],16
-      nop.f         999 
-      nop.i         999 
+      nop.f         999
+      nop.i         999
 };;
 
 // get rsq = r*r
@@ -585,17 +585,17 @@ _SINCOS_COMMON2:
 { .mfi
       nop.m         999
       fmpy.s0       fp_tmp              = fp_tmp,fp_tmp // forces inexact flag
-      nop.i         999 
+      nop.i         999
 };;
 
 // sincos_r_exact = sincos_r -sincos_Nfloat * sincos_Pi_by_16_3
 { .mfi
       nop.m         999
       fnma.s1 sincos_r_exact = sincos_NFLOAT, sincos_Pi_by_16_3, sincos_r
-      nop.i         999 
+      nop.i         999
 };;
 
-// Polynomials calculation 
+// Polynomials calculation
 // P_1 = P4*r^2 + P3
 // Q_2 = Q4*r^2 + Q3
 { .mfi
@@ -606,7 +606,7 @@ _SINCOS_COMMON2:
 { .mfi
       nop.m         999
       fma.s1        sincos_Q_temp1      = sincos_rsq, sincos_Q4, sincos_Q3
-      nop.i         999 
+      nop.i         999
 };;
 
 // get rcube = r^3 and S[m]*r^2
@@ -618,10 +618,10 @@ _SINCOS_COMMON2:
 { .mfi
       nop.m         999
       fmpy.s1       sincos_rcub         = sincos_r_exact, sincos_rsq
-      nop.i         999 
+      nop.i         999
 };;
 
-// Polynomials calculation 
+// Polynomials calculation
 // Q_2 = Q_1*r^2 + Q2
 // P_1 = P_1*r^2 + P2
 { .mfi
@@ -632,10 +632,10 @@ _SINCOS_COMMON2:
 { .mfi
       nop.m         999
       fma.s1        sincos_P_temp2      = sincos_rsq, sincos_P_temp1, sincos_P2
-      nop.i         999 
+      nop.i         999
 };;
 
-// Polynomials calculation 
+// Polynomials calculation
 // Q = Q_2*r^2 + Q1
 // P = P_2*r^2 + P1
 { .mfi
@@ -646,7 +646,7 @@ _SINCOS_COMMON2:
 { .mfi
       nop.m         999
       fma.s1        sincos_P            = sincos_rsq, sincos_P_temp2, sincos_P1
-      nop.i         999 
+      nop.i         999
 };;
 
 // Get final P and Q
@@ -660,7 +660,7 @@ _SINCOS_COMMON2:
 { .mfi
       nop.m         999
       fma.s1        sincos_P            = sincos_rcub,sincos_P, sincos_r_exact
-      nop.i         999 
+      nop.i         999
 };;
 
 // If sin(denormal), force underflow to be set
@@ -701,7 +701,7 @@ _SINCOS_SPECIAL_ARGS:
 _SINCOS_UNORM:
 // Here if x=unorm
 { .mfb
-      getf.exp      sincos_r_signexp    = sincos_NORM_f8 // Get signexp of x 
+      getf.exp      sincos_r_signexp    = sincos_NORM_f8 // Get signexp of x
       fcmp.eq.s0    p11,p0              = f8, f0  // Dummy op to set denorm flag
       br.cond.sptk  _SINCOS_COMMON2     // Return to main path
 };;
@@ -750,7 +750,7 @@ _SINCOS_LARGE_ARGS:
 { .mfi
       nop.m         999
       fmpy.s0       sincos_save_tmp     = sincos_save_tmp, sincos_save_tmp
-      nop.i         999 
+      nop.i         999
 };;
 
 { .mib

@@ -1,4 +1,4 @@
-.file "logl.s" 
+.file "logl.s"
 
 
 // Copyright (c) 2000 - 2003, Intel Corporation
@@ -21,26 +21,26 @@
 // products derived from this software without specific prior written
 // permission.
 
-// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
-// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
 // LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL INTEL OR ITS 
+// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL INTEL OR ITS
 // CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-// EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, 
-// PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
-// PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY 
+// EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+// PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+// PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY
 // OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY OR TORT (INCLUDING
-// NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS 
-// SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. 
-// 
+// NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+// SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
 // Intel Corporation is the author of this code, and requests that all
-// problem reports or change requests be submitted to it directly at 
+// problem reports or change requests be submitted to it directly at
 // http://www.intel.com/software/products/opensource/libraries/num.htm.
 //
 //*********************************************************************
 //
-// History: 
-// 05/21/01 Extracted logl and log10l from log1pl.s file, and optimized 
+// History:
+// 05/21/01 Extracted logl and log10l from log1pl.s file, and optimized
 //          all paths.
 // 06/20/01 Fixed error tag for x=-inf.
 // 05/20/02 Cleaned up namespace and sf0 syntax
@@ -74,20 +74,20 @@
 // IEEE Special Conditions:
 //
 //    Denormal  fault raised on denormal inputs
-//    Overflow exceptions cannot occur  
-//    Underflow exceptions raised when appropriate for log1p 
+//    Overflow exceptions cannot occur
+//    Underflow exceptions raised when appropriate for log1p
 //    (Error Handling Routine called for underflow)
 //    Inexact raised when appropriate by algorithm
 //
 //    logl(inf) = inf
-//    logl(-inf) = QNaN 
-//    logl(+/-0) = -inf 
+//    logl(-inf) = QNaN
+//    logl(+/-0) = -inf
 //    logl(SNaN) = QNaN
 //    logl(QNaN) = QNaN
 //    logl(EM_special Values) = QNaN
 //    log10l(inf) = inf
-//    log10l(-inf) = QNaN 
-//    log10l(+/-0) = -inf 
+//    log10l(-inf) = QNaN
+//    log10l(+/-0) = -inf
 //    log10l(SNaN) = QNaN
 //    log10l(QNaN) = QNaN
 //    log10l(EM_special Values) = QNaN
@@ -106,11 +106,11 @@
 //   logl( 1 + X ) can be approximated by a simple polynomial
 //   in W = X-1. This polynomial resembles the truncated Taylor
 //   series W - W^/2 + W^3/3 - ...
-// 
+//
 // Case log_regular:
 //
 //   Here we use a table lookup method. The basic idea is that in
-//   order to compute logl(Arg) for an argument Arg in [1,2), we 
+//   order to compute logl(Arg) for an argument Arg in [1,2), we
 //   construct a value G such that G*Arg is close to 1 and that
 //   logl(1/G) is obtainable easily from a table of values calculated
 //   beforehand. Thus
@@ -128,7 +128,7 @@
 //
 //      X = 2^N * S_hi 	exactly
 //
-//   where S_hi in [1,2) 
+//   where S_hi in [1,2)
 //
 //   Step 1: Argument Reduction
 //
@@ -137,7 +137,7 @@
 //      G := G_1 * G_2 * G_3
 //      r := (G * S_hi - 1)
 //
-//   These G_j's have the property that the product is exactly 
+//   These G_j's have the property that the product is exactly
 //   representable and that |r| < 2^(-12) as a result.
 //
 //   Step 2: Approximation
@@ -160,7 +160,7 @@
 //
 // Here we compute a simple polynomial. To exploit parallelism, we split
 // the polynomial into two portions.
-// 
+//
 //       W := X - 1
 //       Wsq := W * W
 //       W4  := Wsq*Wsq
@@ -175,7 +175,7 @@
 //   Step 0. Initialization
 //   ----------------------
 //
-//   Z := X 
+//   Z := X
 //   N := unbaised exponent of Z
 //   S_hi := 2^(-N) * Z
 //
@@ -216,7 +216,7 @@
 //      		with 1.0000 in fixed point.
 //
 //
-//      Define		A_2 := 1.0 0 0 0 d_5 d_6 d_7 d_8. This is X_1 
+//      Define		A_2 := 1.0 0 0 0 d_5 d_6 d_7 d_8. This is X_1
 //      		truncated to lsb = 2^(-8). Similar to A_1,
 //      		A_2 is not needed in actual implementation. It
 //      		helps explain how some of the values are defined.
@@ -245,13 +245,13 @@
 //      Fetch		G_3 := (1/A_3) truncated to 21 sig. bits.
 //      floating pt.	Fetch is done using index_3.
 //
-//      Compute		G := G_1 * G_2 * G_3. 
+//      Compute		G := G_1 * G_2 * G_3.
 //
 //      This is done exactly since each of G_j only has 21 sig. bits.
 //
-//      Compute   
+//      Compute
 //
-//      	r := (G*S_hi - 1) 
+//      	r := (G*S_hi - 1)
 //
 //
 //  Step 2. Approximation
@@ -285,7 +285,7 @@
 //   Finally
 //
 //      Y_hi := N*log2_hi + SUM ( log1byGj_hi )
-//      Y_lo := poly_hi + [ poly_lo + 
+//      Y_lo := poly_hi + [ poly_lo +
 //              ( SUM ( log1byGj_lo ) + N*log2_lo ) ]
 //
 
@@ -294,7 +294,7 @@ RODATA
 
 // ************* DO NOT CHANGE THE ORDER OF THESE TABLES *************
 
-// P_8, P_7, P_6, P_5, P_4, P_3, P_2, and P_1 
+// P_8, P_7, P_6, P_5, P_4, P_3, P_2, and P_1
 
 LOCAL_OBJECT_START(Constants_P)
 data8  0xE3936754EFD62B15,0x00003FFB
@@ -307,7 +307,7 @@ data8  0xAAAAAAAAAAAAAAAA,0x00003FFD
 data8  0xFFFFFFFFFFFFFFFE,0x0000BFFD
 LOCAL_OBJECT_END(Constants_P)
 
-// log2_hi, log2_lo, Q_4, Q_3, Q_2, and Q_1 
+// log2_hi, log2_lo, Q_4, Q_3, Q_2, and Q_1
 
 LOCAL_OBJECT_START(Constants_Q)
 data8  0xB172180000000000,0x00003FFE
@@ -327,7 +327,7 @@ LOCAL_OBJECT_END(Constants_1_by_LN10)
 
 
 // Z1 - 16 bit fixed
- 
+
 LOCAL_OBJECT_START(Constants_Z_1)
 data4  0x00008000
 data4  0x00007879
@@ -442,7 +442,7 @@ data4  0x3F71D488,0x3D693B9D
 data8  0xBE049391B6B7C239
 LOCAL_OBJECT_END(Constants_G_H_h2)
 
-// G3 and H3 - IEEE single and h3 - IEEE double 
+// G3 and H3 - IEEE single and h3 - IEEE double
 
 LOCAL_OBJECT_START(Constants_G_H_h3)
 data4  0x3F7FFC00,0x38800100
@@ -514,64 +514,64 @@ LOCAL_OBJECT_END(Constants_G_H_h3)
 
 // Floating Point Registers
 
-FR_Input_X      = f8 
+FR_Input_X      = f8
 
-FR_Y_hi         = f34  
+FR_Y_hi         = f34
 FR_Y_lo         = f35
 
 FR_Scale        = f36
-FR_X_Prime      = f37 
-FR_S_hi         = f38  
+FR_X_Prime      = f37
+FR_S_hi         = f38
 FR_W            = f39
 FR_G            = f40
 
 FR_H            = f41
-FR_wsq          = f42 
+FR_wsq          = f42
 FR_w4           = f43
 FR_h            = f44
-FR_w6           = f45  
+FR_w6           = f45
 
 FR_G2           = f46
 FR_H2           = f47
 FR_poly_lo      = f48
-FR_P8           = f49  
+FR_P8           = f49
 FR_poly_hi      = f50
 
-FR_P7           = f51  
-FR_h2           = f52 
-FR_rsq          = f53  
+FR_P7           = f51
+FR_h2           = f52
+FR_rsq          = f53
 FR_P6           = f54
-FR_r            = f55  
+FR_r            = f55
 
-FR_log2_hi      = f56  
-FR_log2_lo      = f57  
-FR_p87          = f58  
-FR_p876         = f58  
-FR_p8765        = f58  
-FR_float_N      = f59 
-FR_Q4           = f60 
+FR_log2_hi      = f56
+FR_log2_lo      = f57
+FR_p87          = f58
+FR_p876         = f58
+FR_p8765        = f58
+FR_float_N      = f59
+FR_Q4           = f60
 
-FR_p43          = f61  
-FR_p432         = f61  
-FR_p4321        = f61  
-FR_P4           = f62  
-FR_G3           = f63  
-FR_H3           = f64  
-FR_h3           = f65  
+FR_p43          = f61
+FR_p432         = f61
+FR_p4321        = f61
+FR_P4           = f62
+FR_G3           = f63
+FR_H3           = f64
+FR_h3           = f65
 
-FR_Q3           = f66  
-FR_P3           = f67  
-FR_Q2           = f68 
-FR_P2           = f69  
-FR_1LN10_hi     = f70 
+FR_Q3           = f66
+FR_P3           = f67
+FR_Q2           = f68
+FR_P2           = f69
+FR_1LN10_hi     = f70
 
-FR_Q1           = f71 
-FR_P1           = f72 
-FR_1LN10_lo     = f73 
-FR_P5           = f74 
-FR_rcub         = f75 
+FR_Q1           = f71
+FR_P1           = f72
+FR_1LN10_lo     = f73
+FR_P5           = f74
+FR_rcub         = f75
 
-FR_Output_X_tmp = f76 
+FR_Output_X_tmp = f76
 
 FR_X                = f8
 FR_Y                = f0
@@ -581,22 +581,22 @@ FR_RESULT           = f76
 // General Purpose Registers
 
 GR_ad_p         = r33
-GR_Index1       = r34 
-GR_Index2       = r35 
-GR_signif       = r36 
-GR_X_0          = r37 
-GR_X_1          = r38 
-GR_X_2          = r39 
-GR_Z_1          = r40 
-GR_Z_2          = r41 
-GR_N            = r42 
-GR_Bias         = r43 
-GR_M            = r44 
-GR_Index3       = r45 
+GR_Index1       = r34
+GR_Index2       = r35
+GR_signif       = r36
+GR_X_0          = r37
+GR_X_1          = r38
+GR_X_2          = r39
+GR_Z_1          = r40
+GR_Z_2          = r41
+GR_N            = r42
+GR_Bias         = r43
+GR_M            = r44
+GR_Index3       = r45
 GR_ad_p2        = r46
-GR_exp_mask     = r47 
-GR_exp_2tom7    = r48 
-GR_ad_ln10      = r49 
+GR_exp_mask     = r47
+GR_exp_2tom7    = r48
+GR_ad_ln10      = r49
 GR_ad_tbl_1     = r50
 GR_ad_tbl_2     = r51
 GR_ad_tbl_3     = r52
@@ -650,7 +650,7 @@ GLOBAL_IEEE754_ENTRY(log10l)
 
 
 // Common code for logl and log10
-LOGL_BEGIN: 
+LOGL_BEGIN:
 { .mfi
       ld8    GR_ad_z_1 = [GR_ad_z_1]          // Get pointer to Constants_Z_1
       fclass.m p10, p0 =  FR_Input_X, 0x0b    // Test for denormal
@@ -741,7 +741,7 @@ LOGL_64_COMMON:
 { .mmi
       ldfe FR_log2_lo = [GR_ad_q],16          // Load log2_lo
 (p14) ldfe FR_1LN10_hi = [GR_ad_ln10],16      // If log10l, load 1/ln10_hi
-      sub GR_N = GR_N, GR_Bias 
+      sub GR_N = GR_N, GR_Bias
 }
 ;;
 
@@ -762,7 +762,7 @@ LOGL_64_COMMON:
 { .mmi
       getf.exp GR_M = FR_W                    // Get signexp of w = x - 1
       ldfe FR_Q2 = [GR_ad_q],16               // Load Q2
-      extr.u GR_Index2 = GR_X_1, 6, 4         // Extract bits 6-9 of X_1 
+      extr.u GR_Index2 = GR_X_1, 6, 4         // Extract bits 6-9 of X_1
 }
 ;;
 
@@ -1007,7 +1007,7 @@ LOGL_64_COMMON:
 
 { .mfi
       nop.m 999
-(p9)  fadd.s1 FR_Y_lo = FR_poly_hi, FR_poly_lo    // Y_lo = poly_hi + poly_lo 
+(p9)  fadd.s1 FR_Y_lo = FR_poly_hi, FR_poly_lo    // Y_lo = poly_hi + poly_lo
       nop.i 999
 }
 ;;
@@ -1041,25 +1041,25 @@ LOGL_64_COMMON:
 
 
 // Here if x=+-0
-LOGL_64_zero: 
+LOGL_64_zero:
 //
 //    If x=+-0 raise divide by zero and return -inf
-//  
+//
 { .mfi
 (p7)  mov   GR_Parameter_TAG = 0
-      fsub.s1 FR_Output_X_tmp = f0, f1 
+      fsub.s1 FR_Output_X_tmp = f0, f1
       nop.i 999
 }
 ;;
 
 { .mfb
-(p14) mov   GR_Parameter_TAG = 6 
-      frcpa.s0 FR_Output_X_tmp, p8 =  FR_Output_X_tmp, f0 
+(p14) mov   GR_Parameter_TAG = 6
+      frcpa.s0 FR_Output_X_tmp, p8 =  FR_Output_X_tmp, f0
       br.cond.sptk __libm_error_region
 }
 ;;
 
-LOGL_64_special: 
+LOGL_64_special:
 { .mfi
       nop.m 999
       fclass.m.unc p8, p0 =  FR_Input_X, 0x1E1  // Test for natval, nan, +inf
@@ -1067,21 +1067,21 @@ LOGL_64_special:
 }
 ;;
 
-//     
+//
 //    For SNaN raise invalid and return QNaN.
 //    For QNaN raise invalid and return QNaN.
 //    For +Inf return +Inf.
-//    
+//
 { .mfb
       nop.m 999
-(p8)  fmpy.s0 f8 =  FR_Input_X, f1 
+(p8)  fmpy.s0 f8 =  FR_Input_X, f1
 (p8)  br.ret.sptk   b0                          // Return for natval, nan, +inf
 }
 ;;
 
-//    
+//
 //    For -Inf raise invalid and return QNaN.
-//    
+//
 { .mmi
 (p7)  mov   GR_Parameter_TAG = 1
       nop.m 999
@@ -1091,7 +1091,7 @@ LOGL_64_special:
 
 { .mfb
 (p14) mov   GR_Parameter_TAG = 7
-      fmpy.s0 FR_Output_X_tmp =  FR_Input_X, f0 
+      fmpy.s0 FR_Output_X_tmp =  FR_Input_X, f0
       br.cond.sptk __libm_error_region
 }
 ;;
@@ -1112,23 +1112,23 @@ LOGL_64_denormal:
 }
 ;;
 
-LOGL_64_unsupported: 
-//    
+LOGL_64_unsupported:
+//
 //    Return generated NaN or other value.
-//    
+//
 { .mfb
       nop.m 999
-      fmpy.s0 f8 = FR_Input_X, f0 
+      fmpy.s0 f8 = FR_Input_X, f0
       br.ret.sptk   b0
 }
 ;;
 
 // Here if -inf < x < 0
-LOGL_64_negative: 
-//     
+LOGL_64_negative:
+//
 //    Deal with x < 0 in a special way - raise
 //    invalid and produce QNaN indefinite.
-//    
+//
 { .mfi
 (p7)  mov   GR_Parameter_TAG = 1
       frcpa.s0 FR_Output_X_tmp, p8 =  f0, f0

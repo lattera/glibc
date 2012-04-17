@@ -30,7 +30,7 @@ ENTRY (__signbit)
 (p6)	mov ret0 = 1
 (p7)	mov ret0 = 0
 	br.ret.sptk.many rp
-}	
+}
 END (__signbit)
 
 strong_alias (__signbit, __signbitf)

@@ -21,20 +21,20 @@
 // products derived from this software without specific prior written
 // permission.
 
-// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
-// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
 // LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL INTEL OR ITS 
+// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL INTEL OR ITS
 // CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-// EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, 
-// PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
-// PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY 
+// EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+// PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+// PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY
 // OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY OR TORT (INCLUDING
-// NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS 
-// SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. 
-// 
+// NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+// SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
 // Intel Corporation is the author of this code, and requests that all
-// problem reports or change requests be submitted to it directly at 
+// problem reports or change requests be submitted to it directly at
 // http://www.intel.com/software/products/opensource/libraries/num.htm.
 //
 // History
@@ -54,11 +54,11 @@
 // If x = sig * 2**n with 1 <= sig < 2
 // significand returns sig
 //
-// predicate registers used: 
+// predicate registers used:
 // p6, p7
 //
-// floating-point registers used:  
-// f8, f9, f10 
+// floating-point registers used:
+// f8, f9, f10
 
 .section .text
 GLOBAL_LIBM_ENTRY(significand)
@@ -69,12 +69,12 @@ GLOBAL_LIBM_ENTRY(significand)
 // f10 gets f8(sign) with f1(exp,significand)
 { .mfi
       nop.m 999
-      fmerge.s       f10 = f8,f1               
+      fmerge.s       f10 = f8,f1
       nop.i 999
 }
 { .mfi
       nop.m 999
-      fnorm.s0          f9  = f8                  
+      fnorm.s0          f9  = f8
       nop.i 999 ;;
 }
 
@@ -91,7 +91,7 @@ GLOBAL_LIBM_ENTRY(significand)
 //               return sign(f8) exp(f8) significand(f8), normalized.
 { .mfi
       nop.m 999
-      fclass.m.unc   p0,p6 = f8, 0xe7          
+      fclass.m.unc   p0,p6 = f8, 0xe7
       nop.i 999 ;;
 }
 
@@ -109,7 +109,7 @@ GLOBAL_LIBM_ENTRY(significand)
 
 { .mfb
       nop.m 999
-      fnorm.d.s0        f8 = f8                   
+      fnorm.d.s0        f8 = f8
       br.ret.sptk    b0 ;;
 }
 

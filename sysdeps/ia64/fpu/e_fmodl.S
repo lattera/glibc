@@ -366,7 +366,7 @@ loop64:
 
 { .mfi
        nop.m 0
-       // Final iteration (p8): is FR_ABS_A the correct remainder 
+       // Final iteration (p8): is FR_ABS_A the correct remainder
        // (quotient was not overestimated) ?
  (p8)  fcmp.lt.unc.s1 p6, p10 = FR_QREM, f0
        nop.i 0
@@ -392,7 +392,7 @@ loop64:
        nop.m 0
        // add b to estimated remainder (to cover the case when the quotient was
        // overestimated)
-       // also set correct sign by using 
+       // also set correct sign by using
        // FR_B_SGN_A = |b|*sgn(a), FR_ROUNDCONST = sgn(a)
  (p6)  fma.s0 f8 = FR_QREM, FR_ROUNDCONST, FR_B_SGN_A
        nop.b 0

@@ -693,7 +693,7 @@ EXP_CERTAIN_UNDERFLOW:
       nop.i           0
 }
 ;;
-      
+
 { .mfb
       nop.m           0
       fma.d.s0        f8 = fTmp, fTmp, f0 // Set I,U, tiny (+0.0) result

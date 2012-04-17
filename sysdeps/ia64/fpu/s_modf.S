@@ -21,27 +21,27 @@
 // products derived from this software without specific prior written
 // permission.
 
-// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
-// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
 // LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL INTEL OR ITS 
+// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL INTEL OR ITS
 // CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-// EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, 
-// PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
-// PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY 
+// EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+// PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+// PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY
 // OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY OR TORT (INCLUDING
-// NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS 
-// SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. 
-// 
+// NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+// SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
 // Intel Corporation is the author of this code, and requests that all
-// problem reports or change requests be submitted to it directly at 
+// problem reports or change requests be submitted to it directly at
 // http://www.intel.com/software/products/opensource/libraries/num.htm.
 //
 // History
 //==============================================================
 // 02/02/00 Initial version
 // 04/04/00 Improved speed, corrected result for NaN input
-// 12/22/00 Fixed so inexact flag is never set, and invalid is not set for 
+// 12/22/00 Fixed so inexact flag is never set, and invalid is not set for
 //            qnans nor for inputs larger than 2^63.
 // 05/20/02 Cleaned up namespace and sf0 syntax
 // 02/10/03 Reordered header: .section, .global, .proc, .align
@@ -78,17 +78,17 @@
 
 // CALCULATION: NOT HUGE, NOT SMALL
 // To get the integer part
-// Take the floating-point  input and truncate 
+// Take the floating-point  input and truncate
 //   then convert  this integer to fp  Call it  MODF_INTEGER_PART
 
 // Subtract  MODF_INTEGER_PART from MODF_NORM_F8 to get fraction part
-// Then put fraction part in f8 
+// Then put fraction part in f8
 //      put integer  part MODF_INTEGER_PART into *iptr
 
 // Registers used
 //==============================================================
 
-// predicate registers used: 
+// predicate registers used:
 // p6 - p13
 
 //                      0xFFFF           0x10033
@@ -99,21 +99,21 @@
 //    p13 --------------------------------------------------->|
 //
 
-// floating-point registers used: 
+// floating-point registers used:
 MODF_NORM_F8               = f9
 MODF_FRACTION_PART         = f10
 MODF_INTEGER_PART          = f11
 MODF_INT_INTEGER_PART      = f12
 
 
-// general registers used 
+// general registers used
 modf_signexp    = r14
 modf_GR_no_frac = r15
 modf_GR_FFFF    = r16
-modf_17_ones    = r17 
+modf_17_ones    = r17
 modf_exp        = r18
 // r33 = iptr
-     
+
 
 .section .text
 GLOBAL_LIBM_ENTRY(modf)
@@ -122,7 +122,7 @@ GLOBAL_LIBM_ENTRY(modf)
 
 // Assume input is normalized and get signexp
 // Normalize input just in case
-// Form exponent bias 
+// Form exponent bias
 { .mfi
       getf.exp  modf_signexp = f8
       fnorm.s0          MODF_NORM_F8  = f8
@@ -150,9 +150,9 @@ GLOBAL_LIBM_ENTRY(modf)
 // Is x unnorm?
 // qnan snan inf norm     unorm 0 -+
 // 0    0    0   0        1     0 11 = 0x0b UNORM
-// Set p13 to indicate calculation path, else p6 if nan or inf 
+// Set p13 to indicate calculation path, else p6 if nan or inf
 { .mfi
-      and       modf_exp = modf_17_ones, modf_signexp 
+      and       modf_exp = modf_17_ones, modf_signexp
       fclass.m.unc p8,p0 = f8, 0x0b
       nop.i 999 ;;
 }

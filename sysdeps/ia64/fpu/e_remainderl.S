@@ -40,7 +40,7 @@
 // History
 //====================================================================
 // 02/02/00 Initial version
-// 03/02/00 New algorithm 
+// 03/02/00 New algorithm
 // 04/04/00 Unwind support added
 // 07/21/00 Fixed quotient=2^{24*m+23}*1.q1...q23 1 bug
 // 08/15/00 Bundle added after call to __libm_error_support to properly
@@ -51,12 +51,12 @@
 //
 // API
 //====================================================================
-// long double remainderl(long double,long double);   
+// long double remainderl(long double,long double);
 //
 // Overview of operation
 //====================================================================
 //  remainder(a,b)=a-i*b,
-//  where i is an integer such that, if b!=0 and a is finite, 
+//  where i is an integer such that, if b!=0 and a is finite,
 //  |a/b-i|<=1/2. If |a/b-i|=1/2, i is even.
 //
 // Algorithm
@@ -64,16 +64,16 @@
 // a). eliminate special cases
 // b). if |a/b|<0.25 (first quotient estimate), return a
 // c). use single precision divide algorithm to get quotient q
-//     rounded to 24 bits of precision 
-// d). calculate partial remainders (using both q and q-ulp); 
-//     select one and RZ(a/b) based on the sign of |a|-|b|*q   
+//     rounded to 24 bits of precision
+// d). calculate partial remainders (using both q and q-ulp);
+//     select one and RZ(a/b) based on the sign of |a|-|b|*q
 // e). if the exponent difference (exponent(a)-exponent(b))
-//     is less than 24 (quotient estimate<2^{24}-2), use RZ(a/b) 
+//     is less than 24 (quotient estimate<2^{24}-2), use RZ(a/b)
 //     and sticky bits to round to integer; exit loop and
 //     calculate final remainder
 // f). if exponent(a)-exponent(b)>=24, select new value of a as
-//     the partial remainder calculated using RZ(a/b); 
-//     repeat from c). 
+//     the partial remainder calculated using RZ(a/b);
+//     repeat from c).
 //
 // Special cases
 //====================================================================
@@ -89,7 +89,7 @@
 
 GR_SAVE_B0                    = r33
 GR_SAVE_PFS                   = r34
-GR_SAVE_GP                    = r35 
+GR_SAVE_GP                    = r35
 GR_SAVE_SP                    = r36
 
 GR_Parameter_X                = r37
@@ -137,7 +137,7 @@ cmp.eq p11,p10=r29,r0;;
 // Y +-NAN, +-inf, +-0?     p11
 { .mfi
       nop.m 999
-(p10)  fclass.m  p11,p10 = f9, 0xe7           
+(p10)  fclass.m  p11,p10 = f9, 0xe7
       nop.i 999
 }
 // qnan snan inf norm     unorm 0 -+
@@ -146,8 +146,8 @@ cmp.eq p11,p10=r29,r0;;
 // X +-NAN, +-inf, ?        p9
 { .mfi
       nop.m 999
-      fclass.m.unc  p9,p8 = f8, 0xe3           
-      nop.i 999;; 
+      fclass.m.unc  p9,p8 = f8, 0xe3
+      nop.i 999;;
 }
 
 {.mfi
@@ -162,12 +162,12 @@ cmp.eq p11,p10=r29,r0;;
   // y0 = 1 / b in f10
   frcpa.s1 f10,p6=f13,f14
   nop.i 0;;
-} 
+}
 // Y +-NAN, +-inf, +-0?     p11
 { .mfi
       nop.m 999
 	  // pseudo-NaN ?
-(p10)  fclass.nm  p11,p0 = f9, 0xff           
+(p10)  fclass.nm  p11,p0 = f9, 0xff
       nop.i 999
 }
 
@@ -178,7 +178,7 @@ cmp.eq p11,p10=r29,r0;;
 
 { .mfi
       nop.m 999
-(p8)  fclass.nm  p9,p0 = f8, 0xff          
+(p8)  fclass.nm  p9,p0 = f8, 0xff
       nop.i 999;;
 }
 
@@ -191,9 +191,9 @@ cmp.eq p11,p10=r29,r0;;
    // set D flag if a (f8) is denormal
    fnma.s0 f6=f8,f1,f8
    nop.i 0;;
-} 
+}
 
-remloop24: 
+remloop24:
   { .mfi
   nop.m 0
   // Step (2)
@@ -210,7 +210,7 @@ remloop24:
   nop.m 0
   // r2=1.25*2^{-24}
   movl r2=0x33a00000;;
-} 
+}
 
 {.mfi
   nop.m 0
@@ -244,12 +244,12 @@ remloop24:
   // q2 = q1 + e1 * q1 in f6
   (p6) fma.s1 f6=f7,f15,f15
   nop.i 0;;
-} 
+}
 
  {.mmi
   // f15=1.25*2^{-24}
   setf.s f15=r2
-  // q<1/4 ? (i.e. expon< -2) 
+  // q<1/4 ? (i.e. expon< -2)
   (p7) cmp.gt p7,p0=r28,r29
   nop.i 0;;
 }
@@ -257,7 +257,7 @@ remloop24:
 {.mfb
   // r29= -32+bias
   mov r29=0xffdf
- // if |a/b|<1/4, set D flag before returning 
+ // if |a/b|<1/4, set D flag before returning
  (p7) fma.s0 f9=f9,f0,f8
   nop.b 0;;
 }
@@ -275,7 +275,7 @@ remloop24:
   // set f8 to current a value | sign
   fmerge.s f8=f8,f13
   nop.i 0;;
-} 
+}
   {.mfi
   getf.exp r28=f6
   // last step ? (q<2^{23})
@@ -298,7 +298,7 @@ remloop24:
   nop.m 0
   cmp.eq p11,p14=r2,r28
   nop.i 0;;
-} 
+}
 
 .pred.rel "mutex",p11,p14
   {.mfi
@@ -306,7 +306,7 @@ remloop24:
   // if exp_q=2^23, then r=a-b*2^{23}
   (p11) fnma.s1 f13=f12,f14,f13
   nop.i 0
-} 
+}
 {.mfi
   nop.m 0
   // r2=a-b*q'
@@ -327,7 +327,7 @@ remloop24:
 
 .pred.rel "mutex",p8,p9
   {.mfi
-   nop.m 0 
+   nop.m 0
   // (p8) Q=q+(last iteration ? sticky bits:0)
   // i.e. Q=q+q*x  (x=2^{-32} or 0)
   (p8) fma.s1 f11=f11,f7,f11
@@ -346,7 +346,7 @@ remloop24:
   // (p10) new a =r
   (p10) mov f13=f6
   (p12) br.cond.sptk remloop24;;
-} 
+}
 
 // last iteration
   {.mfi
@@ -366,15 +366,15 @@ remloop24:
   // save sign of a
   fmerge.s f7=f8,f8
   nop.i 0
-} {.mfi 
+} {.mfi
   nop.m 0
   // normalize
   fcvt.xf f11=f11
   nop.i 0;;
-} 
+}
   {.mfi
   nop.m 0
-  // This can be removed if sign of 0 is not important 
+  // This can be removed if sign of 0 is not important
   // get remainder using sf1
   fnma.s1 f12=f9,f11,f8
   nop.i 0
@@ -388,14 +388,14 @@ remloop24:
   {.mfi
   nop.m 0
   // f12=0?
-  // This can be removed if sign of 0 is not important 
+  // This can be removed if sign of 0 is not important
   fcmp.eq.unc.s1 p8,p0=f12,f0
   nop.i 0;;
 }
   {.mfb
   nop.m 0
   // if f8=0, set sign correctly
-  // This can be removed if sign of 0 is not important 
+  // This can be removed if sign of 0 is not important
   (p8) fmerge.s f8=f7,f8
   // return
   br.ret.sptk b0;;
@@ -403,10 +403,10 @@ remloop24:
 
 
 
-FREM_X_NAN_INF: 
+FREM_X_NAN_INF:
 
 // Y zero ?
-{.mfi 
+{.mfi
   nop.m 0
   fma.s1 f10=f9,f1,f0
   nop.i 0;;
@@ -420,20 +420,20 @@ FREM_X_NAN_INF:
   nop.m 0
   nop.i 0
   // if Y zero
-  (p11) br.cond.spnt FREM_Y_ZERO;;                        
+  (p11) br.cond.spnt FREM_Y_ZERO;;
 }
 
 // X infinity? Return QNAN indefinite
 { .mfi
       nop.m 999
-      fclass.m.unc  p8,p0 = f8, 0x23 
+      fclass.m.unc  p8,p0 = f8, 0x23
       nop.i 999
 }
 // X infinity? Return QNAN indefinite
 { .mfi
       nop.m 999
-      fclass.m.unc  p11,p0 = f8, 0x23 
-      nop.i 999;; 
+      fclass.m.unc  p11,p0 = f8, 0x23
+      nop.i 999;;
 }
 // Y NaN ?
 {.mfi
@@ -446,10 +446,10 @@ FREM_X_NAN_INF:
 	// also set Denormal flag if necessary
 (p8) fnma.s0 f9=f9,f1,f9
     nop.i 0
-} 
+}
 { .mfi
       nop.m 999
-(p8)  frcpa.s0 f8,p7 = f8,f8           
+(p8)  frcpa.s0 f8,p7 = f8,f8
       nop.i 999 ;;
 }
 
@@ -460,52 +460,52 @@ FREM_X_NAN_INF:
 }
 { .mfi
      nop.m 999
-(p8) fma.s0 f8=f8,f1,f0                     
-	 nop.i 0 ;;                        
+(p8) fma.s0 f8=f8,f1,f0
+	 nop.i 0 ;;
 }
 
 { .mfb
       nop.m 999
-      frcpa.s0 f8,p7=f8,f9                     
-	  (p11) br.cond.spnt EXP_ERROR_RETURN;;                        
+      frcpa.s0 f8,p7=f8,f9
+	  (p11) br.cond.spnt EXP_ERROR_RETURN;;
 }
 { .mib
 	nop.m 0
 	nop.i 0
-	br.ret.spnt    b0 ;;                        
+	br.ret.spnt    b0 ;;
 }
 
 
-FREM_Y_NAN_INF_ZERO: 
+FREM_Y_NAN_INF_ZERO:
 // Y INF
 { .mfi
       nop.m 999
-      fclass.m.unc  p7,p0 = f9, 0x23           
+      fclass.m.unc  p7,p0 = f9, 0x23
       nop.i 999 ;;
 }
 
 { .mfb
       nop.m 999
-(p7)  fma.s0 f8=f8,f1,f0                     
-(p7)  br.ret.spnt    b0 ;;                        
+(p7)  fma.s0 f8=f8,f1,f0
+(p7)  br.ret.spnt    b0 ;;
 }
 
 // Y NAN?
 { .mfi
       nop.m 999
-      fclass.m.unc  p9,p10 = f9, 0xc3           
+      fclass.m.unc  p9,p10 = f9, 0xc3
       nop.i 999 ;;
 }
 { .mfi
       nop.m 999
-(p10)  fclass.nm  p9,p0 = f9, 0xff           
+(p10)  fclass.nm  p9,p0 = f9, 0xff
       nop.i 999 ;;
 }
 
 { .mfb
       nop.m 999
-(p9)  fma.s0 f8=f9,f1,f0                     
-(p9)  br.ret.spnt    b0 ;;                        
+(p9)  fma.s0 f8=f9,f1,f0
+(p9)  br.ret.spnt    b0 ;;
 }
 
 FREM_Y_ZERO:
@@ -516,12 +516,12 @@ FREM_Y_ZERO:
 // X NAN?
 { .mfi
       nop.m 999
-      fclass.m.unc  p9,p10 = f8, 0xc3           
+      fclass.m.unc  p9,p10 = f8, 0xc3
       nop.i 999 ;;
 }
 { .mfi
       nop.m 999
-(p10)  fclass.nm  p9,p10 = f8, 0xff           
+(p10)  fclass.nm  p9,p10 = f8, 0xff
       nop.i 999 ;;
 }
 
@@ -532,28 +532,28 @@ FREM_Y_ZERO:
 }
 { .mfi
       nop.m 999
-(p10)  frcpa.s0   f11,p7 = f0,f0           
+(p10)  frcpa.s0   f11,p7 = f0,f0
 	  nop.i 999;;
 }
 
 { .mfi
       nop.m 999
-      fmerge.s      f10 = f8, f8             
+      fmerge.s      f10 = f8, f8
       nop.i 999
 }
 
 { .mfi
       nop.m 999
-      fma.s0 f8=f11,f1,f0                     
+      fma.s0 f8=f11,f1,f0
       nop.i 999;;
 }
 
-EXP_ERROR_RETURN: 
+EXP_ERROR_RETURN:
 
 { .mib
-      mov   GR_Parameter_TAG = 123                                 
+      mov   GR_Parameter_TAG = 123
 	  nop.i 999
-      br.sptk __libm_error_region;; 
+      br.sptk __libm_error_region;;
 }
 
 GLOBAL_IEEE754_END(remainderl)
@@ -564,10 +564,10 @@ LOCAL_LIBM_ENTRY(__libm_error_region)
         add   GR_Parameter_Y=-32,sp             // Parameter 2 value
         nop.f 0
 .save   ar.pfs,GR_SAVE_PFS
-        mov  GR_SAVE_PFS=ar.pfs                 // Save ar.pfs 
+        mov  GR_SAVE_PFS=ar.pfs                 // Save ar.pfs
 }
 { .mfi
-.fframe 64 
+.fframe 64
         add sp=-64,sp                           // Create new stack
         nop.f 0
         mov GR_SAVE_GP=gp                       // Save gp
@@ -575,18 +575,18 @@ LOCAL_LIBM_ENTRY(__libm_error_region)
 { .mmi
         stfe [GR_Parameter_Y] = FR_Y,16         // Save Parameter 2 on stack
         add GR_Parameter_X = 16,sp              // Parameter 1 address
-.save   b0, GR_SAVE_B0                      
-        mov GR_SAVE_B0=b0                       // Save b0 
+.save   b0, GR_SAVE_B0
+        mov GR_SAVE_B0=b0                       // Save b0
 };;
 .body
 { .mib
-        stfe [GR_Parameter_X] = FR_X            // Store Parameter 1 on stack 
-        add   GR_Parameter_RESULT = 0,GR_Parameter_Y  
+        stfe [GR_Parameter_X] = FR_X            // Store Parameter 1 on stack
+        add   GR_Parameter_RESULT = 0,GR_Parameter_Y
 	nop.b 0                                 // Parameter 3 address
 }
 { .mib
         stfe [GR_Parameter_Y] = FR_RESULT      // Store Parameter 3 on stack
-        add   GR_Parameter_Y = -16,GR_Parameter_Y  
+        add   GR_Parameter_Y = -16,GR_Parameter_Y
         br.call.sptk b0=__libm_error_support#  // Call error handling function
 };;
 { .mmi
@@ -601,10 +601,10 @@ LOCAL_LIBM_ENTRY(__libm_error_region)
         mov   b0 = GR_SAVE_B0                  // Restore return address
 };;
 { .mib
-        mov   gp = GR_SAVE_GP                  // Restore gp 
+        mov   gp = GR_SAVE_GP                  // Restore gp
         mov   ar.pfs = GR_SAVE_PFS             // Restore ar.pfs
         br.ret.sptk     b0                     // Return
-};; 
+};;
 
 LOCAL_LIBM_END(__libm_error_region)
 

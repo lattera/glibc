@@ -1,4 +1,4 @@
-.file "atanhl.s" 
+.file "atanhl.s"
 
 
 // Copyright (c) 2001 - 2003, Intel Corporation
@@ -21,25 +21,25 @@
 // products derived from this software without specific prior written
 // permission.
 
-// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
-// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,INCLUDING,BUT NOT 
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,INCLUDING,BUT NOT
 // LIMITED TO,THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL INTEL OR ITS 
+// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL INTEL OR ITS
 // CONTRIBUTORS BE LIABLE FOR ANY DIRECT,INDIRECT,INCIDENTAL,SPECIAL,
 // EXEMPLARY,OR CONSEQUENTIAL DAMAGES (INCLUDING,BUT NOT LIMITED TO,
-// PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,DATA,OR 
-// PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY 
+// PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,DATA,OR
+// PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY
 // OF LIABILITY,WHETHER IN CONTRACT,STRICT LIABILITY OR TORT (INCLUDING
-// NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS 
-// SOFTWARE,EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. 
-// 
+// NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+// SOFTWARE,EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
 // Intel Corporation is the author of this code,and requests that all
-// problem reports or change requests be submitted to it directly at 
+// problem reports or change requests be submitted to it directly at
 // http://www.intel.com/software/products/opensource/libraries/num.htm.
 //
 //*********************************************************************
 //
-// History: 
+// History:
 // 09/10/01  Initial version
 // 12/11/01  Corrected .restore syntax
 // 05/20/02  Cleaned up namespace and sf0 syntax
@@ -50,7 +50,7 @@
 //
 //*********************************************************************
 //
-// Function: atanhl(x) computes the principle value of the inverse 
+// Function: atanhl(x) computes the principle value of the inverse
 // hyperbolic tangent of x.
 //
 //*********************************************************************
@@ -71,10 +71,10 @@
 // IEEE Special Conditions:
 //
 //    atanhl(inf) = QNaN
-//    atanhl(-inf) = QNaN 
-//    atanhl(+/-0) = +/-0 
-//    atanhl(1) =  +inf 
-//    atanhl(-1) =  -inf 
+//    atanhl(-inf) = QNaN
+//    atanhl(+/-0) = +/-0
+//    atanhl(1) =  +inf
+//    atanhl(-1) =  -inf
 //    atanhl(|x|>1) = QNaN
 //    atanhl(SNaN) = QNaN
 //    atanhl(QNaN) = QNaN
@@ -96,8 +96,8 @@
 // Case atanhl_regular:
 //
 //   Here we use formula atanhl(x) = sign(x)*log1pl(2*|x|/(1-|x|))/2 and
-//   calculation is subdivided into two stages. The first stage is 
-//   calculating of X = 2*|x|/(1-|x|). The second one is calculating of 
+//   calculation is subdivided into two stages. The first stage is
+//   calculating of X = 2*|x|/(1-|x|). The second one is calculating of
 //   sign(x)*log1pl(X)/2. To obtain required accuracy we use precise division
 //   algorythm output of which is a pair of two extended precision values those
 //   approximate result of division with accuracy higher than working
@@ -114,7 +114,7 @@
 //
 //     y = frcpa(b)         initial approximation of 1/b
 //     q = a*y              initial approximation of a/b
-//     
+//
 //     e = 1 - b*y
 //     e2 = e + e^2
 //     e1 = e^2
@@ -131,12 +131,12 @@
 //     r1 = a - b*X
 //     r1 = r1 - b_lo*X
 //     X_lo = r1*y3         low part of a/b
-//  
+//
 //   2. special log1p algorithm overview
 //   ***********************************
 //
 //    Here we use a table lookup method. The basic idea is that in
-//    order to compute logl(Arg) = log1pl (Arg-1) for an argument Arg in [1,2), 
+//    order to compute logl(Arg) = log1pl (Arg-1) for an argument Arg in [1,2),
 //    we construct a value G such that G*Arg is close to 1 and that
 //    logl(1/G) is obtainable easily from a table of values calculated
 //    beforehand. Thus
@@ -167,7 +167,7 @@
 //      G := G_1 * G_2 * G_3
 //      r := (G * S_hi - 1) + G * S_lo
 //
-//    These G_j's have the property that the product is exactly 
+//    These G_j's have the property that the product is exactly
 //    representable and that |r| < 2^(-12) as a result.
 //
 //    Step 2: Approximation
@@ -201,7 +201,7 @@ data8  0x9249249249249249,0x00003FFC // C7
 data8  0xCCCCCCCCCCCCCCCD,0x00003FFC // C5
 data8  0xAAAAAAAAAAAAAAAA,0x00003FFD // C3
 data4  0x3f000000                    // 1/2
-data4  0x00000000                    // pad 
+data4  0x00000000                    // pad
 data4  0x00000000
 data4  0x00000000
 LOCAL_OBJECT_END(Constants_TaylorSeries)
@@ -328,7 +328,7 @@ data4  0x3F71D488,0x3D693B9D
 data8  0xBE049391B6B7C239
 LOCAL_OBJECT_END(Constants_G_H_h2)
 
-// G3 and H3 - IEEE single and h3 - IEEE double 
+// G3 and H3 - IEEE single and h3 - IEEE double
 LOCAL_OBJECT_START(Constants_G_H_h3)
 data4  0x3F7FFC00,0x38800100
 data8  0x3D355595562224CD
@@ -538,78 +538,78 @@ GLOBAL_LIBM_ENTRY(atanhl)
       alloc         r32 = ar.pfs,0,17,4,0
       fnma.s1       FR_Bp = f8,f1,f1 // b = 1 - |arg| (for x>0)
       mov           GR_ExpMask = 0x1ffff
-}                    
-{ .mfi                
+}
+{ .mfi
       addl          GR_ad_taylor = @ltoff(Constants_TaylorSeries),gp
       fma.s1        FR_Bn = f8,f1,f1 // b = 1 - |arg| (for x<0)
       mov           GR_NearZeroBound = 0xfffa  // biased exp of 1/32
-};;                    
-{ .mfi                
+};;
+{ .mfi
       getf.exp      GR_ArgExp = f8
       fcmp.lt.s1    p6,p7 = f8,f0 // is negative?
       nop.i         0
-}                    
-{ .mfi                
+}
+{ .mfi
       ld8           GR_ad_taylor = [GR_ad_taylor]
       fmerge.s      FR_abs_x =  f1,f8
       nop.i         0
-};;                    
-{ .mfi                
+};;
+{ .mfi
       nop.m         0
       fclass.m      p8,p0 = f8,0x1C7 // is arg NaT,Q/SNaN or +/-0 ?
       nop.i         0
 }
-{ .mfi                
+{ .mfi
       nop.m         0
       fma.s1        FR_x2 = f8,f8,f0
       nop.i         0
-};;                    
-{ .mfi                
+};;
+{ .mfi
       add           GR_ad_z_1 = 0x0F0,GR_ad_taylor
       fclass.m      p9,p0 = f8,0x0a // is arg -denormal ?
       add           GR_ad_taylor_2 = 0x010,GR_ad_taylor
-}                    
-{ .mfi                
+}
+{ .mfi
       add           GR_ad_05 = 0x080,GR_ad_taylor
       nop.f         0
       nop.i         0
-};;                    
-{ .mfi                
+};;
+{ .mfi
       ldfe          FR_C17 = [GR_ad_taylor],32
       fclass.m      p10,p0 = f8,0x09 // is arg +denormal ?
       add           GR_ad_tbl_1 = 0x040,GR_ad_z_1 // point to Constants_G_H_h1
-}                    
-{ .mfb                
+}
+{ .mfb
       add           GR_ad_z_2 = 0x140,GR_ad_z_1 // point to Constants_Z_2
  (p8) fma.s0        f8 =  f8,f1,f0 // NaN or +/-0
  (p8) br.ret.spnt   b0             // exit for Nan or +/-0
-};;                    
-{ .mfi                
+};;
+{ .mfi
       ldfe          FR_C15 = [GR_ad_taylor_2],32
       fclass.m      p15,p0 = f8,0x23 // is +/-INF ?
       add           GR_ad_tbl_2 = 0x180,GR_ad_z_1 // point to Constants_G_H_h2
-}                    
-{ .mfb                
+}
+{ .mfb
       ldfe          FR_C13 = [GR_ad_taylor],32
  (p9) fnma.s0       f8 =  f8,f8,f8 // -denormal
  (p9) br.ret.spnt   b0             // exit for -denormal
-};;                    
-{ .mfi                
+};;
+{ .mfi
       ldfe          FR_C11 = [GR_ad_taylor_2],32
       fcmp.eq.s0       p13,p0 = FR_abs_x,f1 // is |arg| = 1?
       nop.i         0
-}                    
-{ .mfb                
+}
+{ .mfb
       ldfe          FR_C9 = [GR_ad_taylor],32
 (p10) fma.s0        f8 =  f8,f8,f8 // +denormal
 (p10) br.ret.spnt   b0             // exit for +denormal
-};;                    
-{ .mfi                
+};;
+{ .mfi
       ldfe          FR_C7 = [GR_ad_taylor_2],32
  (p6) frcpa.s1      FR_Yn,p11 = f1,FR_Bn // y = frcpa(b)
       and           GR_ArgExp = GR_ArgExp,GR_ExpMask // biased exponent
-}                    
-{ .mfb                
+}
+{ .mfb
       ldfe          FR_C5 = [GR_ad_taylor],32
       fnma.s1       FR_B = FR_abs_x,f1,f1 // b = 1 - |arg|
 (p15) br.cond.spnt  atanhl_gt_one // |arg| > 1
@@ -639,20 +639,20 @@ GLOBAL_LIBM_ENTRY(atanhl)
       ldfs          FR_Half = [GR_ad_05]
  (p7) fnma.s1       FR_B_lo = FR_Bp,f1,f1
       nop.i         0
-};;                    
+};;
 { .mfi
       nop.m         0
- (p6) fnma.s1       FR_E0 = FR_Yn,FR_Bn,f1 // e = 1-b*y 
+ (p6) fnma.s1       FR_E0 = FR_Yn,FR_Bn,f1 // e = 1-b*y
       nop.i         0
-}                    
-{ .mfb                
+}
+{ .mfb
       nop.m         0
  (p6) fma.s1        FR_Y0 = FR_Yn,f1,f0
  (p8) br.cond.spnt  atanhl_gt_one // |arg| > 1
 };;
 { .mfi
       nop.m         0
- (p7) fnma.s1       FR_E0 = FR_Yp,FR_Bp,f1 
+ (p7) fnma.s1       FR_E0 = FR_Yp,FR_Bp,f1
       nop.i         0
 }
 { .mfi
@@ -804,11 +804,11 @@ GLOBAL_LIBM_ENTRY(atanhl)
 { .mfi
       ldfe          FR_log2_lo = [GR_ad_q],16 // load log2_lo
       nop.f         0
-      sub           GR_N = GR_N,GR_Bias 
+      sub           GR_N = GR_N,GR_Bias
 };;
 { .mfi
       ldfe          FR_Q4 = [GR_ad_q],16  // load Q4
-      fms.s1        FR_S_lo = FR_AA,f1,FR_Z // form S_lo = AA - Z 
+      fms.s1        FR_S_lo = FR_AA,f1,FR_Z // form S_lo = AA - Z
       sub           GR_minus_N = GR_Bias,GR_N // form exponent of 2^(-N)
 };;
 { .mmf
@@ -820,7 +820,7 @@ GLOBAL_LIBM_ENTRY(atanhl)
 { .mfi
       ldfe          FR_Q2 = [GR_ad_q],16 // load Q2
       nop.f         0
-      extr.u        GR_Index2 = GR_X_1,6,4 // extract bits 6-9 of X_1 
+      extr.u        GR_Index2 = GR_X_1,6,4 // extract bits 6-9 of X_1
 };;
 { .mmi
       ldfe          FR_Q1 = [GR_ad_q] // load Q1
@@ -862,17 +862,17 @@ GLOBAL_LIBM_ENTRY(atanhl)
 }
 { .mfi
       nop.m         0
-      nop.f         0 
+      nop.f         0
       nop.i         0
 };;
 { .mfi
       nop.m         0
-      nop.f         0 
+      nop.f         0
       nop.i         0
 };;
 { .mfi
       nop.m         0
-      nop.f         0 
+      nop.f         0
       nop.i         0
 };;
 
@@ -1068,7 +1068,7 @@ atanhl_near_zero:
 { .mfb
       nop.m         0
       fma.s0        f8 = FR_C17,FR_x3,f8
-      br.ret.sptk   b0 
+      br.ret.sptk   b0
 };;
 
 atanhl_eq_one:

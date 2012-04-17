@@ -80,9 +80,9 @@
 //..
 //..Suppose (v,u) = (y,x), we calculate atan(v/u) as follows:
 //..A = y * frcpa(x)    (so A = (y/x)(1 - beta))
-//..atan(y/x) = atan(A) + atan( ((y/x)-A))/(1 + (y/x)A) ), the second term is 
+//..atan(y/x) = atan(A) + atan( ((y/x)-A))/(1 + (y/x)A) ), the second term is
 //..a correction.
-//..atan(A) is approximated by a polynomial 
+//..atan(A) is approximated by a polynomial
 //..A + p1 A^3 + p2 A^5 + ... + p10 A^21,
 //..atan(G) is approximated as follows:
 //..Let G = (y - Ax)/(x + Ay), atan(G) can be approximated by G + g * p1
@@ -90,9 +90,9 @@
 //..
 //..Suppose (v,u) = (x,y), we calculate atan(v/u) as follows:
 //..Z = x * frcpa(y)    (so Z = (x/y)(1 - beta))
-//..atan(x/y) = atan(Z) + atan( ((x/y)-Z))/(1 + (x/y)Z) ), the second term is 
+//..atan(x/y) = atan(Z) + atan( ((x/y)-Z))/(1 + (x/y)Z) ), the second term is
 //..a correction.
-//..atan(Z) is approximated by a polynomial 
+//..atan(Z) is approximated by a polynomial
 //..Z + p1 Z^3 + p2 Z^5 + ... + p10 Z^21,
 //..atan(T) is approximated as follows:
 //..Let T = (x - Ay)/(y + Ax), atan(T) can be approximated by T + t * p1
@@ -103,7 +103,7 @@
 //..atan(A) ~=~ A + p1 A^3 + ... + P10 A^21
 //..
 //..This polynomial is computed as follows:
-//..Asq = A*A; Acub = A*Asq, A4 = Asq*Asq 
+//..Asq = A*A; Acub = A*Asq, A4 = Asq*Asq
 //..A5 = Asq*Acub, A6 = Asq*A4; A11 = A5 * A6
 //..
 //..poly_A1 = p9 + Asq*p10, poly_A2 = p7 + Asq*p8, poly_A3 = p5 + Asq*p6
@@ -112,7 +112,7 @@
 //..
 //..poly_A4 = p1 * A
 //,,poly_A5 = p3 + Asq * p4, poly_A4 = A + Asq*poly_A4
-//..poly_A5 = p2 + Asq * poly_A5 
+//..poly_A5 = p2 + Asq * poly_A5
 //..poly_A4 = poly_A4 + A5 * poly_A5
 //..
 //..atan_A = poly_A4 + A11 * poly_A1
@@ -132,7 +132,7 @@
 //..atan(A) ~=~ A + p1 A^3 + ... + P10 A^21
 //..
 //..This polynomial is computed as follows:
-//..Asq = A*A; Acub = A*Asq, A4 = Asq*Asq 
+//..Asq = A*A; Acub = A*Asq, A4 = Asq*Asq
 //..A5 = Asq*Acub, A6 = Asq*A4; A11 = A5 * A6
 //..
 //..poly_A1 = p9 + Asq*p10, poly_A2 = p7 + Asq*p8, poly_A3 = p5 + Asq*p6
@@ -141,7 +141,7 @@
 //..
 //..poly_A4 = p1 * A
 //,,poly_A5 = p3 + Asq * p4, poly_A4 = A + Asq*poly_A4
-//..poly_A5 = p2 + Asq * poly_A5 
+//..poly_A5 = p2 + Asq * poly_A5
 //..poly_A4 = poly_A4 + A5 * poly_A5
 //..
 //..atan_A = poly_A4 + A11 * poly_A1
@@ -154,34 +154,34 @@
 //coef_pj, j = 1,2,...,10;  atan(A) ~=~ A + p1 A^3 + p2 A^5 + ... + p10 A^21
 //
 //  coef_p1          =      -.3333332707155439167401311806315789E+00
-//  coef_p1   in dbl = BFD5 5555 1219 1621 
+//  coef_p1   in dbl = BFD5 5555 1219 1621
 //
 //  coef_p2          =       .1999967670926658391827857030875748E+00
-//  coef_p2   in dbl = 3FC9 997E 7AFB FF4E 
+//  coef_p2   in dbl = 3FC9 997E 7AFB FF4E
 //
 //  coef_p3          =      -.1427989384500152360161563301087296E+00
-//  coef_p3   in dbl = BFC2 473C 5145 EE38 
+//  coef_p3   in dbl = BFC2 473C 5145 EE38
 //
 //  coef_p4          =       .1105852823460720770079031213661163E+00
-//  coef_p4   in dbl = 3FBC 4F51 2B18 65F5 
+//  coef_p4   in dbl = 3FBC 4F51 2B18 65F5
 //
 //  coef_p5          =      -.8811839915595312348625710228448363E-01
-//  coef_p5   in dbl = BFB6 8EED 6A8C FA32 
+//  coef_p5   in dbl = BFB6 8EED 6A8C FA32
 //
 //  coef_p6          =       .6742329836955067042153645159059714E-01
-//  coef_p6   in dbl = 3FB1 42A7 3D7C 54E3 
+//  coef_p6   in dbl = 3FB1 42A7 3D7C 54E3
 //
 //  coef_p7          =      -.4468571068774672908561591262231909E-01
-//  coef_p7   in dbl = BFA6 E10B A401 393F 
+//  coef_p7   in dbl = BFA6 E10B A401 393F
 //
 //  coef_p8          =       .2252333246746511135532726960586493E-01
-//  coef_p8   in dbl = 3F97 105B 4160 F86B 
+//  coef_p8   in dbl = 3F97 105B 4160 F86B
 //
 //  coef_p9          =      -.7303884867007574742501716845542314E-02
-//  coef_p9   in dbl = BF7D EAAD AA33 6451 
+//  coef_p9   in dbl = BF7D EAAD AA33 6451
 //
 //  coef_p10         =       .1109686868355312093949039454619058E-02
-//  coef_p10  in dbl = 3F52 2E5D 33BC 9BAA 
+//  coef_p10  in dbl = 3F52 2E5D 33BC 9BAA
 //
 
 // Special values
@@ -354,333 +354,333 @@ LOCAL_OBJECT_END(atan2f_coef_table2)
 
 .section .text
 GLOBAL_IEEE754_ENTRY(atan2f)
- 
-{     .mfi 
+
+{     .mfi
      alloc      r32           = ar.pfs,1,5,4,0
      frcpa.s1  atan2f_Z0,p0     =    f1,f8   // Approx to 1/y
      nop.i  999
-} 
-{     .mfi 
+}
+{     .mfi
      addl      atan2f_GR_Addr_1    =    @ltoff(atan2f_coef_table1),gp
      fma.s1    atan2f_xsq     =    f9,f9,f0
      nop.i  999 ;;
 }
 
- 
-{     .mfi 
+
+{     .mfi
      ld8       atan2f_GR_Addr_1    =    [atan2f_GR_Addr_1]
      frcpa.s1  atan2f_A0,p0     =    f1,f9   // Approx to 1/x
      nop.i  999
-} 
-{     .mfi 
+}
+{     .mfi
      nop.m  999
      fma.s1    atan2f_ysq     =    f8,f8,f0
      nop.i  999 ;;
 }
- 
-{     .mfi 
+
+{     .mfi
      nop.m  999
      fcmp.ge.s1     p8,p9  =    f9,f0  // Set p8 if x>=0, p9 if x<0
      nop.i  999
 }
-{     .mfi 
+{     .mfi
      nop.m  999
      fma.s1    atan2f_xy     =    f9,f8,f0
      nop.i  999 ;;
 }
- 
- 
-{     .mfi 
+
+
+{     .mfi
      add   atan2f_GR_Addr_2 = 0x30, atan2f_GR_Addr_1
      fmerge.s  atan2f_sgn_Y   =    f8,f1
      nop.i  999 ;;
-} 
- 
-{     .mmf 
+}
+
+{     .mmf
      ldfpd     atan2f_coef_p1,atan2f_coef_p10 =    [atan2f_GR_Addr_1],16
      ldfpd     atan2f_coef_p9,atan2f_coef_p8 =    [atan2f_GR_Addr_2],16
      fclass.m  p10,p0 =    f9,0xe7	// Test x @inf|@snan|@qnan|@zero
-} 
+}
 ;;
- 
-{     .mfi 
+
+{     .mfi
      ldfpd     atan2f_coef_p7,atan2f_coef_p6 =    [atan2f_GR_Addr_1],16
      fma.s1    atan2f_T_denom =    atan2f_Z0,atan2f_xsq,f8
      nop.i  999
-} 
-{     .mfi 
+}
+{     .mfi
      ldfpd     atan2f_coef_p5,atan2f_coef_p4     =    [atan2f_GR_Addr_2],16
      fma.s1    atan2f_Z                      =    atan2f_Z0,f9,f0
      nop.i  999 ;;
 }
 
- 
-{     .mfi 
+
+{     .mfi
      ldfpd     atan2f_coef_p3,atan2f_coef_p2 =    [atan2f_GR_Addr_1],16
      fma.s1    atan2f_G_denom =    atan2f_A0,atan2f_ysq,f9
      nop.i  999
-} 
-{     .mfi 
+}
+{     .mfi
      ldfpd     atan2f_const_piby2,atan2f_const_pi =    [atan2f_GR_Addr_2],16
      fma.s1    atan2f_A                           =    atan2f_A0,f8,f0
      nop.i  999 ;;
 }
 
-{     .mfi 
+{     .mfi
      ldfpd     atan2f_const_piby4,atan2f_const_3piby4 = [atan2f_GR_Addr_2]
      fclass.m  p11,p0 = f8,0xe7	// Test y @inf|@snan|@qnan|@zero
      nop.i  999
-} 
-{     .mfb 
+}
+{     .mfb
      nop.m  999
      fnma.s1   atan2f_T_numer =    atan2f_Z0,atan2f_xy,f9
 (p10) br.cond.spnt ATAN2F_XY_INF_NAN_ZERO ;;   // Branch on x nan,inf,zero
-} 
+}
 
 
 // p6 if |y|>|x|, p7 if |x|>=|y| , use xsq and ysq for test
-{     .mfi 
+{     .mfi
      nop.m  999
      fcmp.gt.s1 p6,p7 = atan2f_ysq,atan2f_xsq
      nop.i  999
 }
-{     .mfb 
+{     .mfb
      nop.m  999
      fnma.s1   atan2f_G_numer =    atan2f_A0,atan2f_xy,f8
 (p11) br.cond.spnt ATAN2F_XY_INF_NAN_ZERO ;;  // Branch on y nan,inf,zero
 }
 
- 
-{     .mfi 
+
+{     .mfi
      nop.m  999
 (p8) fma.s1    atan2f_const_1 =    atan2f_sgn_Y,f0,f0
      nop.i  999
-} 
-{     .mfi 
+}
+{     .mfi
      nop.m  999
 (p9) fma.s1    atan2f_const_1 =    atan2f_sgn_Y,f1,f0
      nop.i  999 ;;
 }
 
- 
-{     .mfi 
+
+{     .mfi
      nop.m  999
 (p6) fnma.s1    atan2f_U       =    atan2f_Z,f1,f0
      nop.i  999
-} 
-{     .mfi 
+}
+{     .mfi
      nop.m  999
 (p6) fma.s1    atan2f_Usq     =    atan2f_Z,atan2f_Z,f0
      nop.i  999 ;;
-} 
+}
 
- 
-{     .mfi 
+
+{     .mfi
      nop.m  999
 (p7) fma.s1    atan2f_U       =    atan2f_A,f1,f0
      nop.i  999
-} 
-{     .mfi 
+}
+{     .mfi
      nop.m  999
 (p7) fma.s1    atan2f_Usq     =    atan2f_A,atan2f_A,f0
      nop.i  999 ;;
 }
 
 
-{     .mfi 
+{     .mfi
      nop.m  999
 (p6) frcpa.s1  atan2f_Q1,p0    =    f1,atan2f_T_denom
      nop.i  999
-} 
-{     .mfi 
+}
+{     .mfi
      nop.m  999
 (p6) fma.s1    atan2f_R_denom =   atan2f_T_denom,f1,f0
      nop.i  999 ;;
-} 
+}
 
 
-{     .mfi 
+{     .mfi
      nop.m  999
 (p7) frcpa.s1  atan2f_Q1,p0    =    f1,atan2f_G_denom
      nop.i  999
-} 
-{     .mfi 
+}
+{     .mfi
      nop.m  999
 (p7) fma.s1    atan2f_R_denom =   atan2f_G_denom,f1,f0
      nop.i  999 ;;
-} 
+}
 
 
-{     .mfi 
+{     .mfi
      nop.m  999
 (p6) fnma.s1    atan2f_R_numer =   atan2f_T_numer,f1,f0
      nop.i  999
-} 
-{     .mfi 
+}
+{     .mfi
      nop.m  999
 (p7) fma.s1    atan2f_R_numer =   atan2f_G_numer,f1,f0
      nop.i  999 ;;
-} 
+}
 
- 
-{     .mfi 
+
+{     .mfi
      nop.m  999
 (p6) fnma.s1    atan2f_p1rnum =   atan2f_T_numer,atan2f_coef_p1,f0
      nop.i  999 ;;
-} 
-{     .mfi 
+}
+{     .mfi
      nop.m  999
 (p7) fma.s1    atan2f_p1rnum =   atan2f_G_numer,atan2f_coef_p1,f0
      nop.i  999 ;;
-} 
+}
 
- 
-{     .mfi 
+
+{     .mfi
      nop.m  999
      fma.s1    atan2f_U4 =    atan2f_Usq,atan2f_Usq,f0
      nop.i  999
 }
-{     .mfi 
+{     .mfi
      nop.m  999
      fma.s1    atan2f_poly_u109 = atan2f_Usq,atan2f_coef_p10,atan2f_coef_p9
      nop.i  999 ;;
-} 
- 
-{     .mfi 
+}
+
+{     .mfi
      nop.m  999
      fma.s1    atan2f_poly_u87 =    atan2f_Usq,atan2f_coef_p8,atan2f_coef_p7
      nop.i  999
-} 
-{     .mfi 
+}
+{     .mfi
      nop.m  999
      fma.s1    atan2f_poly_u65 =    atan2f_Usq,atan2f_coef_p6,atan2f_coef_p5
      nop.i  999 ;;
 }
- 
- 
-{     .mfi 
+
+
+{     .mfi
      nop.m  999
      fma.s1    atan2f_poly_u43 =    atan2f_Usq,atan2f_coef_p4,atan2f_coef_p3
      nop.i  999
-} 
-{     .mfi 
+}
+{     .mfi
      nop.m  999
      fnma.s1   atan2f_Q_beta  =    atan2f_Q1,atan2f_R_denom,f1
      nop.i  999 ;;
 }
 
 
-{     .mfi 
+{     .mfi
      nop.m  999
      fma.s1    atan2f_poly_u21 =    atan2f_Usq,atan2f_coef_p2,atan2f_coef_p1
      nop.i  999
-} 
-{     .mfi 
+}
+{     .mfi
      nop.m  999
      fma.s1    atan2f_r  =    atan2f_Q1,atan2f_R_numer,f0
      nop.i  999 ;;
 }
 
-{     .mfi 
+{     .mfi
      nop.m  999
 (p6) fma.s1    atan2f_C  =    atan2f_sgn_Y,atan2f_const_piby2,f0
      nop.i  999
-} 
-{     .mfi 
+}
+{     .mfi
      nop.m  999
 (p7) fma.s1    atan2f_C  =    atan2f_const_1,atan2f_const_pi,f0
      nop.i  999 ;;
-} 
+}
 
-{     .mfi 
+{     .mfi
      nop.m  999
      fma.s1    atan2f_U6 =    atan2f_U4,atan2f_Usq,f0
      nop.i  999
 }
-{     .mfi 
+{     .mfi
      nop.m  999
      fma.s1    atan2f_U8 =    atan2f_U4,atan2f_U4,f0
      nop.i  999 ;;
 }
 
-{     .mfi 
+{     .mfi
      nop.m  999
      fma.s1    atan2f_poly_u10to7 = atan2f_U4,atan2f_poly_u109,atan2f_poly_u87
      nop.i  999
-} 
-{     .mfi 
+}
+{     .mfi
      nop.m  999
      fma.s1    atan2f_pR = atan2f_p1rnum,atan2f_Q1,f0
      nop.i  999 ;;
-} 
+}
 
-{     .mfi 
+{     .mfi
      nop.m  999
      fma.s1    atan2f_poly_u6to3 = atan2f_U4,atan2f_poly_u65,atan2f_poly_u43
      nop.i  999
-} 
-{     .mfi 
+}
+{     .mfi
      nop.m  999
      fma.s1    atan2f_Q2 =    atan2f_Q1,atan2f_Q_beta,atan2f_Q1
      nop.i  999 ;;
 }
 
-{     .mfi 
+{     .mfi
      nop.m  999
      fma.s1    atan2f_Q_beta2 =    atan2f_Q_beta,atan2f_Q_beta,f0
      nop.i  999
-} 
-{     .mfi 
+}
+{     .mfi
      nop.m  999
      fma.s1    atan2f_rsq     =    atan2f_r,atan2f_r,f0
      nop.i  999 ;;
 }
 
-{     .mfi 
+{     .mfi
      nop.m  999
      fma.s1    atan2f_poly_u210 = atan2f_Usq,atan2f_poly_u21,f1
      nop.i  999 ;;
-} 
- 
+}
+
 {     .mfi
      nop.m 999
      fcmp.eq.s0 p8,p0 = f8,f9      // Dummy op to set flag on denormal inputs
      nop.i 999
 }
-{     .mfi 
+{     .mfi
      nop.m  999
      fma.s1 atan2f_poly_u10to3 = atan2f_U8,atan2f_poly_u10to7,atan2f_poly_u6to3
      nop.i  999 ;;
-} 
+}
 
-{     .mfi 
+{     .mfi
      nop.m                 999
      fma.s1    atan2f_Q3 =    atan2f_Q2,atan2f_Q_beta2,atan2f_Q2
      nop.i                 999
-} 
-{     .mfi 
+}
+{     .mfi
      nop.m  999
      fma.s1    atan2f_pRC = atan2f_rsq,atan2f_pR,atan2f_C
      nop.i  999 ;;
-} 
- 
-{     .mfi 
+}
+
+{     .mfi
      nop.m  999
      fma.s1 atan2f_poly_u10to0 = atan2f_U6,atan2f_poly_u10to3,atan2f_poly_u210
      nop.i  999 ;;
-} 
+}
 
-{     .mfi 
+{     .mfi
      nop.m  999
      fma.s1    atan2f_pQRC = atan2f_R_numer,atan2f_Q3,atan2f_pRC
      nop.i  999 ;;
-} 
+}
 
-{     .mfb 
+{     .mfb
      nop.m  999
      fma.s.s0    f8 = atan2f_U,atan2f_poly_u10to0,atan2f_pQRC
      br.ret.sptk b0 ;;
-} 
+}
 
 
 

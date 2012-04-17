@@ -183,351 +183,351 @@ LOCAL_OBJECT_END(atanf_coeff_2_table)
 .section .text
 GLOBAL_LIBM_ENTRY(atanf)
 
-{     .mfi 
+{     .mfi
      alloc      r32                  = ar.pfs,1,2,0,0
      frcpa.s1  atanf_z,p0   =    f1,f8
      addl      EXP_Addr2           =    @ltoff(atanf_coeff_2_table),gp
-} 
-{     .mfi 
+}
+{     .mfi
      addl      EXP_Addr1 =    @ltoff(atanf_coeff_1_table),gp
      fma.s1    atanf_t   =    f8,f8,f0
      nop.i                 999;;
 }
 
- 
-{     .mfi 
+
+{     .mfi
      nop.m                      999
      fmerge.s  atanf_sgn_x    =    f8,f1
      nop.i                      999;;
-} 
- 
-{     .mfi 
+}
+
+{     .mfi
      ld8       EXP_Addr1      =    [EXP_Addr1]
      fmerge.s  atanf_abs_x    =    f1,f8
      nop.i                      999
-} 
-{     .mfi 
+}
+{     .mfi
      ld8       EXP_Addr2 =    [EXP_Addr2]
      nop.f                 999
      nop.i                 999;;
 }
 
- 
-{     .mfi 
+
+{     .mfi
      nop.m                      999
      fclass.m  p8,p0   =    f8,0x7	// @zero
      nop.i                      999;;
-} 
- 
-{     .mfi 
+}
+
+{     .mfi
      nop.m                      999
      fcmp.eq.unc.s0 p9,p10    =    f8,f1
      nop.i                      999;;
-} 
- 
-{     .mfi 
+}
+
+{     .mfi
      ldfpd     atanf_coeff_R4,atanf_coeff_R5 =    [EXP_Addr1],16
      fnma.s1   atanf_b                       =    f8,atanf_z,f1
      nop.i                                     999
-} 
-{     .mfi 
+}
+{     .mfi
      ldfpd     atanf_coeff_R1,atanf_coeff_R2 =    [EXP_Addr2],16
      fma.s1    atanf_zsq                     =    atanf_z,atanf_z,f0
      nop.i                                     999;;
 }
 
- 
-{     .mfi 
+
+{     .mfi
      ldfpd     atanf_coeff_R3,atanf_coeff_P1 =    [EXP_Addr1],16
      fma.s1    atanf_xcub                    =    f8,atanf_t,f0
      nop.i                                     999
-} 
-{     .mfi 
+}
+{     .mfi
      ldfpd     atanf_coeff_Q6,atanf_coeff_Q7 =    [EXP_Addr2],16
      fma.s1    atanf_tsq                     =    atanf_t,atanf_t,f0
      nop.i                                     999;;
 }
 
- 
-{     .mfi 
+
+{     .mfi
      ldfpd          atanf_coeff_Q8,atanf_coeff_Q9 =    [EXP_Addr1],16
 //     fcmp.le.s1     atanf_pred_LE1,atanf_pred_GT1 =    atanf_abs_x,f1
      fcmp.le.s1     p6,p7 =    atanf_abs_x,f1
      nop.i                                          999
-} 
-{     .mfi 
+}
+{     .mfi
      ldfpd     atanf_coeff_Q4,atanf_coeff_Q5 =    [EXP_Addr2],16
      nop.f                                     999
      nop.i                                     999;;
 }
 
- 
-{     .mfi 
+
+{     .mfi
      ldfpd     atanf_coeff_Q2,atanf_coeff_Q3 =    [EXP_Addr1],16
      fclass.m  p8,p0                  =    f8,0xe7	// @inf|@qnan|@snan|@zero
      nop.i                                     999
-} 
-{     .mfi 
+}
+{     .mfi
      ldfpd     atanf_coeff_P5,atanf_coeff_P6 =    [EXP_Addr2],16
      nop.f                                     999
      nop.i                                     999;;
 }
 
- 
-{     .mfi 
+
+{     .mfi
      ldfpd     atanf_coeff_Q0,atanf_coeff_Q1 =    [EXP_Addr1],16
      nop.f                                     999
      nop.i                                     999
-} 
-{     .mfi 
+}
+{     .mfi
      ldfpd     atanf_coeff_P7,atanf_coeff_P8 =    [EXP_Addr2],16
      nop.f                                     999
      nop.i                                     999;;
 }
 
- 
-{     .mfi 
+
+{     .mfi
      ldfpd     atanf_coeff_P3,atanf_coeff_P4 =    [EXP_Addr1],16
      fma.s1    atanf_bsq                     =    atanf_b,atanf_b,f0
      nop.i                                     999
-} 
-{     .mfi 
+}
+{     .mfi
      ldfpd     atanf_coeff_P9,atanf_coeff_P10     =    [EXP_Addr2]
      fma.s1    atanf_z4                           =    atanf_zsq,atanf_zsq,f0
      nop.i                                          999;;
 }
 
- 
-{     .mfi 
+
+{     .mfi
      ldfpd     atanf_coeff_P2,atanf_piby2    =    [EXP_Addr1]
      fma.s1    atanf_x6                      =    atanf_t,atanf_tsq,f0
      nop.i                                     999
-} 
-{     .mfi 
+}
+{     .mfi
      nop.m                 999
      fma.s1    atanf_t4  =    atanf_tsq,atanf_tsq,f0
      nop.i                 999;;
 }
 
- 
-{     .mfb 
+
+{     .mfb
      nop.m                 999
      fma.s1    atanf_x5  =    atanf_t,atanf_xcub,f0
 (p8)  br.cond.spnt   ATANF_X_INF_NAN_ZERO
-} 
+}
 ;;
- 
-{     .mfi 
+
+{     .mfi
      nop.m                      999
      fma.s1    atanf_poly_r1  =    atanf_b,atanf_coeff_R1,f1
      nop.i                      999
-} 
-{     .mfi 
+}
+{     .mfi
      nop.m                      999
      fma.s1    atanf_poly_r3  =    atanf_b,atanf_coeff_R5,atanf_coeff_R4
      nop.i                      999;;
 }
 
- 
-{     .mfi 
+
+{     .mfi
      nop.m                      999
      fma.s1    atanf_poly_r2  =    atanf_b,atanf_coeff_R3,atanf_coeff_R2
      nop.i                      999
-} 
-{     .mfi 
+}
+{     .mfi
      nop.m                 999
      fma.s1    atanf_z8  =    atanf_z4,atanf_z4,f0
      nop.i                 999;;
 }
 
- 
-{     .mfi 
+
+{     .mfi
      nop.m                      999
      fma.s1    atanf_poly_q2  =    atanf_t,atanf_coeff_Q5,atanf_coeff_Q4
      nop.i                      999
-} 
-{     .mfi 
+}
+{     .mfi
      nop.m                      999
      fma.s1    atanf_poly_q3  =    atanf_t,atanf_coeff_Q7,atanf_coeff_Q6
      nop.i                      999;;
 }
 
- 
-{     .mfi 
+
+{     .mfi
      nop.m                 999
      fma.s1    atanf_z5  =    atanf_z,atanf_z4,f0
      nop.i                 999
-} 
-{     .mfi 
+}
+{     .mfi
      nop.m                      999
      fma.s1    atanf_poly_q1  =    atanf_t,atanf_coeff_Q9,atanf_coeff_Q8
      nop.i                      999;;
 }
 
- 
-{     .mfi 
+
+{     .mfi
      nop.m                      999
      fma.s1    atanf_poly_q4  =    atanf_t,atanf_coeff_Q1,atanf_coeff_Q0
      nop.i                      999
-} 
-{     .mfi 
+}
+{     .mfi
      nop.m                      999
      fma.s1    atanf_poly_q5  =    atanf_t,atanf_coeff_Q3,atanf_coeff_Q2
      nop.i                      999;;
 }
 
- 
-{     .mfi 
+
+{     .mfi
      nop.m                      999
      fma.s1    atanf_poly_p4  =    f8,atanf_coeff_P1,f0
      nop.i                      999
-} 
-{     .mfi 
+}
+{     .mfi
      nop.m                      999
      fma.s1    atanf_poly_p5  =    atanf_t,atanf_coeff_P4,atanf_coeff_P3
      nop.i                      999;;
 }
 
- 
-{     .mfi 
+
+{     .mfi
      nop.m                      999
      fma.s1    atanf_poly_r1  =    atanf_z8,atanf_poly_r1,f0
      nop.i                      999
-} 
-{     .mfi 
+}
+{     .mfi
      nop.m                      999
      fma.s1    atanf_z8_bsq   =    atanf_z8,atanf_bsq,f0
      nop.i                      999;;
 }
 
- 
-{     .mfi 
+
+{     .mfi
      nop.m                      999
      fma.s1    atanf_poly_q2  =    atanf_tsq,atanf_poly_q3,atanf_poly_q2
      nop.i                      999
-} 
-{     .mfi 
+}
+{     .mfi
      nop.m                      999
      fma.s1    atanf_poly_r2  =    atanf_bsq,atanf_poly_r3,atanf_poly_r2
      nop.i                      999;;
 }
 
- 
-{     .mfi 
+
+{     .mfi
      nop.m                      999
      fma.s1    atanf_poly_p2  =    atanf_t,atanf_coeff_P8,atanf_coeff_P7
      nop.i                      999
-} 
-{     .mfi 
+}
+{     .mfi
      nop.m                      999
      fma.s1    atanf_poly_q1  =    atanf_poly_q1,f1,atanf_tsq
      nop.i                      999;;
 }
 
- 
-{     .mfi 
+
+{     .mfi
      nop.m                 999
      fma.s1    atanf_z13 =    atanf_z5,atanf_z8,f0
      nop.i                 999
-} 
-{     .mfi 
+}
+{     .mfi
      nop.m                      999
      fma.s1    atanf_poly_p1  =    atanf_t,atanf_coeff_P10,atanf_coeff_P9
      nop.i                      999;;
 }
 
- 
-{     .mfi 
+
+{     .mfi
      nop.m                      999
      fma.s1    atanf_poly_p4  =    atanf_t,atanf_poly_p4,f8
      nop.i                      999
-} 
-{     .mfi 
+}
+{     .mfi
      nop.m                      999
      fma.s1    atanf_poly_q4  =    atanf_tsq,atanf_poly_q5,atanf_poly_q4
      nop.i                      999;;
 }
 
- 
-{     .mfi 
+
+{     .mfi
      nop.m                      999
      fma.s1    atanf_poly_p3  =    atanf_t,atanf_coeff_P6,atanf_coeff_P5
      nop.i                      999
-} 
-{     .mfi 
+}
+{     .mfi
      nop.m                      999
      fma.s1    atanf_poly_p5  =    atanf_t,atanf_poly_p5,atanf_coeff_P2
      nop.i                      999;;
 }
 
- 
-{     .mfi 
+
+{     .mfi
      nop.m                 999
      fma.s1    atanf_x11 =    atanf_x5,atanf_x6,f0
      nop.i                 999
-} 
-{     .mfi 
+}
+{     .mfi
      nop.m                      999
      fma.s1    atanf_poly_r   =    atanf_z8_bsq,atanf_poly_r2,atanf_poly_r1
      nop.i                      999;;
 }
 
- 
-{     .mfi 
+
+{     .mfi
      nop.m                           999
      fma.s0       atanf_sgnx_piby2    =    atanf_sgn_x,atanf_piby2,f0
      nop.i                           999
-} 
-{     .mfi 
+}
+{     .mfi
      nop.m                      999
      fma.s1    atanf_poly_q2  =    atanf_t4,atanf_poly_q1,atanf_poly_q2
      nop.i                      999;;
 }
 
- 
-{     .mfi 
+
+{     .mfi
      nop.m                      999
      fma.s1    atanf_poly_p1  =    atanf_tsq,atanf_poly_p1,atanf_poly_p2
      nop.i                      999;;
-} 
- 
-{     .mfi 
+}
+
+{     .mfi
      nop.m                      999
      fma.s1    atanf_poly_p4  =    atanf_x5,atanf_poly_p5,atanf_poly_p4
      nop.i                      999;;
-} 
- 
-{     .mfi 
+}
+
+{     .mfi
      nop.m                           999
      fma.s1    atanf_z21_poly_r    =    atanf_z13,atanf_poly_r,f0
      nop.i                           999;;
-} 
- 
-{     .mfi 
+}
+
+{     .mfi
      nop.m                      999
      fma.s1    atanf_poly_q   =    atanf_t4,atanf_poly_q2,atanf_poly_q4
      nop.i                      999;;
-} 
- 
-{     .mfi 
+}
+
+{     .mfi
      nop.m                      999
      fma.s1    atanf_poly_p1  =    atanf_tsq,atanf_poly_p1,atanf_poly_p3
      nop.i                      999;;
-} 
- 
-{     .mfi 
+}
+
+{     .mfi
                     nop.m                      999
 //(atanf_pred_GT1)    fnma.s    atanf_answer   =    atanf_poly_q,atanf_z21_poly_r,atanf_sgnx_piby2
 (p7)    fnma.s.s0    atanf_answer   =    atanf_poly_q,atanf_z21_poly_r,atanf_sgnx_piby2
                     nop.i                      999;;
-} 
- 
-{     .mfb 
+}
+
+{     .mfb
                     nop.m                      999
 //(atanf_pred_LE1)    fma.s     atanf_answer   =    atanf_x11,atanf_poly_p1,atanf_poly_p4
 (p6)    fma.s.s0     atanf_answer   =    atanf_x11,atanf_poly_p1,atanf_poly_p4
                     br.ret.sptk b0
-} 
+}
 
 
 

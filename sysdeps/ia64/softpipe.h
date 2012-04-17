@@ -18,7 +18,7 @@
 
 /* The latency of a memory load assumed by the assembly implementation
    of the mem and str functions.  Since we don't have any clue about
-   where the data might be, let's assume it's in the L2 cache.  
+   where the data might be, let's assume it's in the L2 cache.
    Assuming L3 would be too pessimistic :-)
 
    Some functions define MEMLAT as 2, because they expect their data

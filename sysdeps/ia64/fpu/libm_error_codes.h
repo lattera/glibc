@@ -1,7 +1,7 @@
 /* file: libm_error_codes.h */
- 
 
-/* 
+
+/*
 // Copyright (c) 2000 - 2004, Intel Corporation
 // All rights reserved.
 //
@@ -52,7 +52,7 @@
 */
 
 #if !defined(__LIBM_ERROR_CODES_H__)
-#define __LIBM_ERROR_CODES_H__ 
+#define __LIBM_ERROR_CODES_H__
 
 typedef enum
 {
@@ -192,9 +192,9 @@ typedef enum
   tgamma_overflow, tgamma_negative, tgamma_reserve, /* 258, 259, 260 */
   tgammaf_overflow, tgammaf_negative, tgammaf_reserve, /* 261, 262, 263 */
   exp10l_underflow, exp10_underflow, exp10f_underflow, /* 264, 265, 266 */
-  nextafterl_underflow, nextafter_underflow, 
+  nextafterl_underflow, nextafter_underflow,
   nextafterf_underflow,                                /* 267, 268, 269 */
-  nexttowardl_underflow, nexttoward_underflow, 
+  nexttowardl_underflow, nexttoward_underflow,
   nexttowardf_underflow                                /* 270, 271, 272 */
 } error_types;
 

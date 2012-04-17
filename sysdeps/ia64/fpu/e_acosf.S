@@ -61,7 +61,7 @@
 
 // The acosf function returns the arc cosine in the range [0, +pi] radians.
 // acos(1) returns +0
-// acos(x) returns a Nan and raises the invalid exception for |x| >1 
+// acos(x) returns a Nan and raises the invalid exception for |x| >1
 
 // |x| <= sqrt(2)/2. get Ax and Bx
 
@@ -249,355 +249,355 @@ LOCAL_OBJECT_END(acosf_coeff_2_table)
 
 .section .text
 GLOBAL_LIBM_ENTRY(acosf)
- 
+
 // Load the addresses of the two tables.
 // Then, load the coefficients and other constants.
 
-{     .mfi 
+{     .mfi
      alloc      r32            = ar.pfs,1,8,4,0
      fnma.s1   acosf_t        =    f8,f8,f1
      dep.z ACOSF_GR_1by2 =    0x3f,24,8    // 0x3f000000
-} 
-{     .mfi 
+}
+{     .mfi
      addl ACOSF_Addr1    =    @ltoff(acosf_coeff_1_table),gp
      fma.s1    acosf_x2       =    f8,f8,f0
      addl      ACOSF_Addr2    =    @ltoff(acosf_coeff_2_table),gp ;;
 }
 
- 
-{     .mfi 
+
+{     .mfi
      ld8       ACOSF_Addr1    =    [ACOSF_Addr1]
      fmerge.s  acosf_abs_x    =    f1,f8
      dep ACOSF_GR_3by2 =    -1,r0,22,8     // 0x3fc00000
-} 
-{     .mlx 
+}
+{     .mlx
      nop.m                      999
      movl      ACOSF_GR_5by2  =    0x40200000;;
 }
 
- 
 
-{     .mfi 
+
+{     .mfi
      setf.s    acosf_1by2     =    ACOSF_GR_1by2
      fmerge.s  acosf_sgn_x    =    f8,f1
      nop.i                      999
-} 
-{     .mfi 
+}
+{     .mfi
      ld8       ACOSF_Addr2    =    [ACOSF_Addr2]
      nop.f 0
      nop.i                      999;;
 }
 
- 
-{     .mfi 
+
+{     .mfi
      setf.s    acosf_5by2     =    ACOSF_GR_5by2
      fcmp.lt.s1 p11,p12 = f8,f0
      nop.i                      999;;
 }
 
-{ .mmf 
+{ .mmf
      ldfpd     acosf_coeff_P1,acosf_coeff_P4 =    [ACOSF_Addr1],16
      setf.s    acosf_3by2     =    ACOSF_GR_3by2
      fclass.m.unc p8,p0      = f8, 0xc3 ;;	//@qnan | @snan
 }
 
- 
-{     .mfi 
+
+{     .mfi
      ldfpd     acosf_coeff_P7,acosf_coeff_P6 =    [ACOSF_Addr1],16
      fma.s1    acosf_t2                      =    acosf_t,acosf_t,f0
      nop.i                                     999
-} 
-{     .mfi 
+}
+{     .mfi
      ldfpd     acosf_coeff_P3,acosf_coeff_P8 =    [ACOSF_Addr2],16
      fma.s1    acosf_x4                      =    acosf_x2,acosf_x2,f0
      nop.i                                     999;;
 }
 
- 
-{     .mfi 
+
+{     .mfi
      ldfpd     acosf_coeff_P9,acosf_const_sqrt2by2     =    [ACOSF_Addr1]
      fclass.m.unc p10,p0      = f8, 0x07	//@zero
      nop.i                                     999
-} 
-{     .mfi 
+}
+{     .mfi
      ldfpd     acosf_coeff_P5,acosf_coeff_P2 =    [ACOSF_Addr2],16
      fma.s1    acosf_x3  =    f8,acosf_x2,f0
      nop.i                                     999;;
 }
 
- 
-{     .mfi 
+
+{     .mfi
      ldfd      acosf_const_piby2   =    [ACOSF_Addr2]
      frsqrta.s1     acosf_B,p0                   =    acosf_t
      nop.i                                               999
-} 
-{     .mfb 
+}
+{     .mfb
      nop.m                                               999
 (p8) fma.s.s0 f8                = f8,f1,f0
 (p8) br.ret.spnt   b0 ;;  // Exit if x=nan
 }
 
- 
-{     .mfb 
+
+{     .mfb
      nop.m                 999
      fcmp.eq.s1 p6,p0 = acosf_abs_x,f1
 (p10) br.cond.spnt  ACOSF_ZERO ;;     // Branch if x=0
-} 
- 
-{     .mfi 
+}
+
+{     .mfi
      nop.m                 999
      fcmp.gt.s1 p9,p0 = acosf_abs_x,f1
      nop.i                 999;;
-} 
- 
-{     .mfi 
+}
+
+{     .mfi
      nop.m                 999
      fma.s1    acosf_x8  =    acosf_x4,acosf_x4,f0
      nop.i                 999
-} 
-{     .mfb 
+}
+{     .mfb
      nop.m                      999
      fma.s1    acosf_t4  =    acosf_t2,acosf_t2,f0
 (p6) br.cond.spnt  ACOSF_ABS_ONE ;;     // Branch if |x|=1
-} 
+}
 
-{     .mfi 
+{     .mfi
      nop.m                 999
      fma.s1    acosf_x5  =    acosf_x2,acosf_x3,f0
      nop.i                 999
 }
-{     .mfb 
+{     .mfb
 (p9) mov            GR_Parameter_TAG = 59
      fma.s1    acosf_yby2     =    acosf_t,acosf_1by2,f0
 (p9) br.cond.spnt  __libm_error_region ;;    // Branch if |x|>1
 }
 
 
-{     .mfi 
+{     .mfi
      nop.m                 999
      fma.s1    acosf_Az  =    acosf_t,acosf_B,f0
      nop.i                 999
-} 
-{     .mfi 
+}
+{     .mfi
      nop.m                 999
      fma.s1    acosf_B2  =    acosf_B,acosf_B,f0
      nop.i                 999;;
 }
- 
-{     .mfi 
+
+{     .mfi
      nop.m                      999
      fma.s1    acosf_poly_p1  =    f8,acosf_coeff_P1,f0
      nop.i                      999
-} 
-{     .mfi 
+}
+{     .mfi
      nop.m                      999
      fma.s1    acosf_2poly_p1 =    acosf_coeff_P1,acosf_t,f1
      nop.i                      999;;
 }
 
-{     .mfi 
+{     .mfi
      nop.m                      999
      fma.s1    acosf_poly_p3  =    acosf_coeff_P4,acosf_x2,acosf_coeff_P3
      nop.i                      999
-} 
-{     .mfi 
+}
+{     .mfi
      nop.m                      999
      fma.s1    acosf_2poly_p6 =    acosf_coeff_P7,acosf_t,acosf_coeff_P6
      nop.i                      999;;
-} 
+}
 
-{     .mfi 
+{     .mfi
      nop.m                      999
      fma.s1    acosf_poly_p7  =    acosf_x2,acosf_coeff_P8,acosf_coeff_P7
      nop.i                      999
-} 
-{     .mfi 
+}
+{     .mfi
      nop.m                      999
      fma.s1    acosf_2poly_p2 =    acosf_coeff_P3,acosf_t,acosf_coeff_P2
      nop.i                      999;;
 }
 
- 
-{     .mfi 
+
+{     .mfi
      nop.m                      999
      fma.s1    acosf_poly_p5  =    acosf_x2,acosf_coeff_P6,acosf_coeff_P5
      nop.i                      999
-} 
-{     .mfi 
+}
+{     .mfi
      nop.m                      999
      fma.s1    acosf_2poly_p4 =    acosf_coeff_P5,acosf_t,acosf_coeff_P4
      nop.i                      999;;
 }
 
- 
-{     .mfi 
+
+{     .mfi
      nop.m                 999
      fma.s1    acosf_x11 =    acosf_x8,acosf_x3,f0
      nop.i                 999
-} 
-{     .mfi 
+}
+{     .mfi
      nop.m                 999
      fnma.s1   acosf_dz  =    acosf_B2,acosf_yby2,acosf_1by2
      nop.i                 999;;
 }
 
- 
-{     .mfi 
+
+{     .mfi
      nop.m                      999
      fma.s1    acosf_poly_p1a =    acosf_x2,acosf_poly_p1,f8
      nop.i                      999
 }
-{     .mfi 
+{     .mfi
      nop.m                      999
      fma.s1    acosf_2poly_p8 =    acosf_coeff_P9,acosf_t,acosf_coeff_P8
      nop.i                      999;;
 }
 
- 
+
 // Get the absolute value of x and determine the region in which x lies
 
-{     .mfi 
+{     .mfi
      nop.m                      999
      fcmp.le.s1     p7,p8 = acosf_abs_x,acosf_const_sqrt2by2
      nop.i                      999
-} 
-{     .mfi 
+}
+{     .mfi
      nop.m                      999
      fma.s1    acosf_poly_p2  =    acosf_x2,acosf_poly_p3,acosf_coeff_P2
      nop.i                      999;;
 }
 
- 
-{     .mfi 
+
+{     .mfi
      nop.m                      999
      fma.s1    acosf_poly_p7a =    acosf_x4,acosf_coeff_P9,acosf_poly_p7
      nop.i                      999
-} 
-{     .mfi 
+}
+{     .mfi
      nop.m                      999
      fma.s1    acosf_2poly_p2a =    acosf_2poly_p2,acosf_t2,acosf_2poly_p1
      nop.i                      999;;
 }
 
- 
-{     .mfi 
+
+{     .mfi
      nop.m                                                         999
 (p8) fma.s1    acosf_sgnx_t4  =    acosf_sgn_x,acosf_t4,f0
      nop.i                                                         999
-} 
-{     .mfi 
+}
+{     .mfi
      nop.m                      999
 (p8) fma.s1    acosf_2poly_p4a =    acosf_2poly_p6,acosf_t2,acosf_2poly_p4
      nop.i                      999;;
 }
 
- 
-{     .mfi 
+
+{     .mfi
      nop.m                 999
 (p8) fma.s1    acosf_Sz  =    acosf_5by2,acosf_dz,acosf_3by2
      nop.i                 999
-} 
-{     .mfi 
+}
+{     .mfi
      nop.m                 999
 (p8) fma.s1    acosf_d2z =    acosf_dz,acosf_dz,f0
      nop.i                 999;;
 }
 
- 
-{     .mfi 
+
+{     .mfi
      nop.m                           999
 (p8) fnma.d.s1   acosf_sgn_x_piby2 =    acosf_sgn_x,acosf_const_piby2,acosf_const_piby2
      nop.i                           999
-} 
-{     .mfi 
+}
+{     .mfi
      nop.m                      999
 (p7) fma.s1    acosf_poly_Ax  =    acosf_x5,acosf_poly_p2,acosf_poly_p1a
      nop.i                 999;;
-} 
- 
-{     .mfi 
+}
+
+{     .mfi
      nop.m                      999
 (p7) fma.s1    acosf_poly_Bx  =    acosf_x4,acosf_poly_p7a,acosf_poly_p5
      nop.i                      999
-} 
-{     .mfi 
+}
+{     .mfi
      nop.m                           999
 (p8) fma.s1    acosf_sgnx_2poly_p2 =    acosf_sgn_x,acosf_2poly_p2a,f0
      nop.i                           999;;
-} 
- 
-{     .mfi 
+}
+
+{     .mfi
      nop.m                      999
      fcmp.eq.s0 p6,p0 = f8,f0      // Only purpose is to set D if x denormal
      nop.i                      999
 }
-{     .mfi 
+{     .mfi
      nop.m                      999
 (p8) fma.s1    acosf_2poly_p4b =    acosf_2poly_p8,acosf_t4,acosf_2poly_p4a
      nop.i                      999;;
 }
 
- 
-{     .mfi 
+
+{     .mfi
      nop.m                      999
 (p8) fma.s1    acosf_Fz  =    acosf_d2z,acosf_Sz,acosf_dz
      nop.i                 999;;
-} 
+}
 
- 
-{     .mfi 
+
+{     .mfi
      nop.m                 999
 (p8) fma.d.s1  acosf_Pt  =    acosf_2poly_p4b,acosf_sgnx_t4,acosf_sgnx_2poly_p2
      nop.i                 999;;
-} 
- 
-{     .mfi 
+}
+
+{     .mfi
      nop.m                 999
 (p8) fma.d.s1  acosf_z   =    acosf_Az,acosf_Fz,acosf_Az
      nop.i                 999 ;;
-} 
- 
-{     .mfi 
+}
+
+{     .mfi
      nop.m                      999
 (p7) fma.d.s1  acosf_sinf1    =    acosf_x11,acosf_poly_Bx,acosf_poly_Ax
      nop.i                      999;;
-} 
- 
+}
+
 .pred.rel "mutex",p8,p7    //acosf_pred_GTsqrt2by2,acosf_pred_LEsqrt2by2
-{     .mfi 
+{     .mfi
       nop.m            999
 (p8)  fma.s.s0     f8   =    acosf_z,acosf_Pt,acosf_sgn_x_piby2
       nop.i            999
-} 
- 
-{     .mfb 
+}
+
+{     .mfb
       nop.m            999
 (p7)  fms.s.s0     f8   =    acosf_const_piby2,f1,acosf_sinf1
       br.ret.sptk b0 ;;
-} 
+}
 
 ACOSF_ZERO:
 // Here if x=0
-{     .mfb 
+{     .mfb
       nop.m                 999
       fma.s.s0    f8 =    acosf_const_piby2,f1,f0  // acosf(0)=pi/2
       br.ret.sptk b0 ;;
-} 
+}
 
 
 ACOSF_ABS_ONE:
 .pred.rel "mutex",p11,p12
 // Here if |x|=1
-{     .mfi 
+{     .mfi
       nop.m                 999
 (p11) fma.s.s0    f8 =    acosf_const_piby2,f1,acosf_const_piby2 // acosf(-1)=pi
       nop.i                 999
-} 
-{     .mfb 
+}
+{     .mfb
       nop.m                 999
 (p12) fma.s.s0    f8 =    f1,f0,f0 // acosf(1)=0
       br.ret.sptk b0 ;;
-} 
+}
 
 GLOBAL_LIBM_END(acosf)
 

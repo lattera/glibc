@@ -21,20 +21,20 @@
 // products derived from this software without specific prior written
 // permission.
 
-// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
-// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
 // LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL INTEL OR ITS 
+// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL INTEL OR ITS
 // CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-// EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, 
-// PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
-// PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY 
+// EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+// PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+// PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY
 // OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY OR TORT (INCLUDING
-// NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS 
-// SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. 
-// 
+// NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+// SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
 // Intel Corporation is the author of this code, and requests that all
-// problem reports or change requests be submitted to it directly at 
+// problem reports or change requests be submitted to it directly at
 // http://www.intel.com/software/products/opensource/libraries/num.htm.
 //
 // History
@@ -74,7 +74,7 @@
 // Registers used
 //==============================================================
 //
-// general registers: 
+// general registers:
 // r14  exponent bias for x negative
 // r15  exponent bias for x positive
 // r16  signexp of x
@@ -119,7 +119,7 @@ GLOBAL_LIBM_ENTRY(__libm_frexp)
 // The normalization also sets fault flags and takes faults if necessary
 { .mfi
         mov         r20 = 0x1003f
-        fnorm.s0    f9 = f8 
+        fnorm.s0    f9 = f8
         nop.i 999 ;;
 }
 
@@ -137,7 +137,7 @@ GLOBAL_LIBM_ENTRY(__libm_frexp)
 { .mfi
         setf.exp    f11 = r14
 (p7)    fcmp.lt.s0  p7,p8 = f8,f0
-(p6)    cmp.eq.unc  p10,p11 = r34, r0 ;; 
+(p6)    cmp.eq.unc  p10,p11 = r34, r0 ;;
 }
 
 // If x NAN, ZERO, INFINITY, set *y=0 and exit
@@ -161,16 +161,16 @@ GLOBAL_LIBM_ENTRY(__libm_frexp)
 { .mfi
 (p9)    add         r15 = 64, r15
 (p9)    fmpy.s0     f9 = f9, f12
-        cmp.eq      p10,p11 = r34, r0 ;; 
+        cmp.eq      p10,p11 = r34, r0 ;;
 }
 
 // true exponent stored to int pointer
-// the bias is treated as 0xfffe instead of 
+// the bias is treated as 0xfffe instead of
 // normal 0xffff because we want the significand
 // to be in the range <=0.5 sig < 1.0
 // Store the value of the exponent at the pointer in r33
 
-// If x>0 form significand result 
+// If x>0 form significand result
 { .mfi
         nop.m 999
 (p8)    fmerge.se   f8 = f10,f9
@@ -178,7 +178,7 @@ GLOBAL_LIBM_ENTRY(__libm_frexp)
 }
 
 // Get signexp of normalized x
-// If x<0 form significand result 
+// If x<0 form significand result
 { .mfi
         getf.exp    r16 = f9
 (p7)    fmerge.se   f8 = f11,f9

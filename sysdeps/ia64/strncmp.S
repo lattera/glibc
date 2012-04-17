@@ -58,5 +58,5 @@ ENTRY(strncmp)
 	sub	ret0 = val1, val2
 .restore_and_exit:
 	br.ret.sptk.many b0
-END(strncmp)	
+END(strncmp)
 libc_hidden_builtin_def (strncmp)

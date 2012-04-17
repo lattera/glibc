@@ -21,25 +21,25 @@
 // products derived from this software without specific prior written
 // permission.
 
-// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
-// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
 // LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL INTEL OR ITS 
+// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL INTEL OR ITS
 // CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-// EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, 
-// PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
-// PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY 
+// EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+// PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+// PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY
 // OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY OR TORT (INCLUDING
-// NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS 
-// SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. 
-// 
+// NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+// SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
 // Intel Corporation is the author of this code, and requests that all
-// problem reports or change requests be submitted to it directly at 
+// problem reports or change requests be submitted to it directly at
 // http://www.intel.com/software/products/opensource/libraries/num.htm.
 //
 // History
 //==============================================================
-// 02/02/00 Initial version 
+// 02/02/00 Initial version
 // 04/04/00 Unwind support added
 // 08/15/00 Bundle added after call to __libm_error_support to properly
 //          set [the previously overwritten] GR_Parameter_RESULT.
@@ -56,12 +56,12 @@
 //
 // Registers used
 //==============================================================
-// general registers: 
+// general registers:
 // r14 -> r40
 // predicate registers used:
 // p6 -> p11
 // floating-point registers used:
-// f9 -> f15; f32 -> f90; 
+// f9 -> f15; f32 -> f90;
 // f8 has input, then output
 //
 // Overview of operation
@@ -82,7 +82,7 @@
 // 1. COSH_BY_POLY   0 < |x| < 0.25
 // ===============
 // Evaluate cosh(x) by a 12th order polynomial
-// Care is take for the order of multiplication; and P2 is not exactly 1/4!, 
+// Care is take for the order of multiplication; and P2 is not exactly 1/4!,
 // P3 is not exactly 1/6!, etc.
 // cosh(x) = 1 + (P1*x^2 + P2*x^4 + P3*x^6 + P4*x^8 + P5*x^10 + P6*x^12)
 //
@@ -90,18 +90,18 @@
 // =============
 // cosh(x) = cosh(B+R)
 //         = cosh(B)cosh(R) + sinh(B)sinh(R)
-// 
+//
 // ax = |x| = M*log2/64 + R
 // B = M*log2/64
-// M = 64*N + j 
+// M = 64*N + j
 //   We will calculate M and get N as (M-j)/64
 //   The division is a shift.
 // exp(B)  = exp(N*log2 + j*log2/64)
 //         = 2^N * 2^(j*log2/64)
 // cosh(B) = 1/2(e^B + e^-B)
-//         = 1/2(2^N * 2^(j*log2/64) + 2^-N * 2^(-j*log2/64)) 
-// cosh(B) = (2^(N-1) * 2^(j*log2/64) + 2^(-N-1) * 2^(-j*log2/64)) 
-// sinh(B) = (2^(N-1) * 2^(j*log2/64) - 2^(-N-1) * 2^(-j*log2/64)) 
+//         = 1/2(2^N * 2^(j*log2/64) + 2^-N * 2^(-j*log2/64))
+// cosh(B) = (2^(N-1) * 2^(j*log2/64) + 2^(-N-1) * 2^(-j*log2/64))
+// sinh(B) = (2^(N-1) * 2^(j*log2/64) - 2^(-N-1) * 2^(-j*log2/64))
 // 2^(j*log2/64) is stored as Tjhi + Tjlo , j= -32,....,32
 // Tjhi is double-extended (80-bit) and Tjlo is single(32-bit)
 //
@@ -109,7 +109,7 @@
 // R = ax - M*log2_by_64_hi - M*log2_by_64_lo
 // exp(R) = 1 + R +R^2(1/2! + R(1/3! + R(1/4! + ... + R(1/n!)...)
 //        = 1 + p_odd + p_even
-//        where the p_even uses the A coefficients and the p_even uses 
+//        where the p_even uses the A coefficients and the p_even uses
 //        the B coefficients
 //
 // So sinh(R) = 1 + p_odd + p_even -(1 -p_odd -p_even)/2 = p_odd
@@ -173,7 +173,7 @@ GR_Parameter_RESULT   = r39
 GR_Parameter_TAG      = r40
 
 
-f_ABS_X               = f9 
+f_ABS_X               = f9
 f_X2                  = f10
 f_X4                  = f11
 f_tmp                 = f14
@@ -228,16 +228,16 @@ f_Tmjlo               = f68
 f_S_hi                = f69
 f_SC_hi_temp          = f70
 
-f_C_lo_temp1          = f71 
-f_C_lo_temp2          = f72 
-f_C_lo_temp3          = f73 
-f_C_lo_temp4          = f73 
+f_C_lo_temp1          = f71
+f_C_lo_temp2          = f72
+f_C_lo_temp3          = f73
+f_C_lo_temp4          = f73
 f_C_lo                = f74
 f_C_hi                = f75
 
-f_Y_hi                = f77 
-f_Y_lo_temp           = f78 
-f_Y_lo                = f79 
+f_Y_hi                = f77
+f_Y_lo_temp           = f78
+f_Y_lo                = f79
 f_NORM_X              = f80
 
 f_P1                  = f81
@@ -442,7 +442,7 @@ GLOBAL_IEEE754_ENTRY(coshl)
 }
 { .mfi
       nop.m           0
-      fnorm.s1        f_NORM_X = f8      
+      fnorm.s1        f_NORM_X = f8
       mov             r_exp_2tom57 = 0xffff-57
 }
 ;;
@@ -450,7 +450,7 @@ GLOBAL_IEEE754_ENTRY(coshl)
 { .mfi
       setf.d          f_RSHF_2TO57 = r_rshf_2to57 // Form const 1.100 * 2^120
       fclass.m        p10,p0 = f8, 0x0b           // Test for denorm
-      mov             r_exp_mask = 0x1ffff 
+      mov             r_exp_mask = 0x1ffff
 }
 { .mlx
       setf.sig        f_INV_LN2_2TO63 = r_sig_inv_ln2 // Form 1/ln2 * 2^63
@@ -490,7 +490,7 @@ COSH_COMMON:
       add             r_ad5 = 0x580, r_ad1 // Point to j_lo_table midpoint
 }
 { .mib
-      ldfe            f_log2by64_hi  = [r_ad1],16       
+      ldfe            f_log2by64_hi  = [r_ad1],16
       and             r_exp_x = r_exp_mask, r_signexp_x
 (p7)  br.ret.spnt     b0                  // Exit if x=0
 }
@@ -498,36 +498,36 @@ COSH_COMMON:
 
 // Get the A coefficients for COSH_BY_TBL
 { .mfi
-      ldfe            f_A1 = [r_ad3],16            
+      ldfe            f_A1 = [r_ad3],16
       fcmp.lt.s1      p8,p9 = f8,f0           // Test for x<0
       cmp.lt          p7,p0 = r_exp_x, r_exp_0_25  // Test x < 0.25
 }
 { .mfb
       add             r_ad2o = 0x30, r_ad2e  // Point to p_table odd coeffs
-(p6)  fma.s0          f8 = f8,f8,f0          // Result for x nan, inf          
+(p6)  fma.s0          f8 = f8,f8,f0          // Result for x nan, inf
 (p6)  br.ret.spnt     b0                     // Exit for x nan, inf
 }
 ;;
 
 // Calculate X2 = ax*ax for COSH_BY_POLY
 { .mfi
-      ldfe            f_log2by64_lo  = [r_ad1],16       
+      ldfe            f_log2by64_lo  = [r_ad1],16
       nop.f           0
       nop.i           0
 }
 { .mfb
-      ldfe            f_A2 = [r_ad3],16            
+      ldfe            f_A2 = [r_ad3],16
       fma.s1          f_X2 = f_NORM_X, f_NORM_X, f0
 (p7)  br.cond.spnt    COSH_BY_POLY
 }
 ;;
 
 // Here if |x| >= 0.25
-COSH_BY_TBL: 
+COSH_BY_TBL:
 // ******************************************************
 // STEP 1 (TBL and EXP) - Argument reduction
 // ******************************************************
-// Get the following constants. 
+// Get the following constants.
 // Inv_log2by64
 // log2by64_hi
 // log2by64_lo
@@ -581,20 +581,20 @@ COSH_BY_TBL:
 // Subtract RSHF constant to get rounded M as a floating point value
 // M_temp * 2^(63-6) - 2^63
 { .mfb
-      ldfe            f_B3 = [r_ad3],16            
+      ldfe            f_B3 = [r_ad3],16
       fms.s1          f_M = f_M_temp, f_2TOM57, f_RSHF
 (p6)  br.cond.spnt    COSH_HUGE  // Branch if result will overflow
 }
 ;;
 
 { .mfi
-      getf.sig        r_M = f_M_temp                 
+      getf.sig        r_M = f_M_temp
       nop.f           0
       cmp.ge          p7,p6 = r_exp_x, r_exp_32 // Test if x >= 32
 }
 ;;
 
-// Calculate j. j is the signed extension of the six lsb of M. It 
+// Calculate j. j is the signed extension of the six lsb of M. It
 // has a range of -32 thru 31.
 
 // Calculate R
@@ -637,8 +637,8 @@ COSH_BY_TBL:
 // N = (M-j)/64
 { .mfi
       ldfe            f_Tjhi = [r_ad_J_hi]
-      fnma.s1         f_R = f_M, f_log2by64_lo, f_R_temp 
-      shr             r_N = r_Mmj, 0x6            // N = (M-j)/64 
+      fnma.s1         f_R = f_M, f_log2by64_lo, f_R_temp
+      shr             r_N = r_Mmj, 0x6            // N = (M-j)/64
 }
 { .mfi
       shladd          r_ad_mJ_hi = r_mj, 4, r_ad4 // pointer to Tmjhi
@@ -713,8 +713,8 @@ COSH_BY_TBL:
 }
 ;;
 
-// 
-// If TBL, 
+//
+// If TBL,
 // Calculate S_hi and S_lo, and C_hi
 // SC_hi_temp = sneg * Tmjhi
 // S_hi = spos * Tjhi - SC_hi_temp
@@ -724,12 +724,12 @@ COSH_BY_TBL:
 
 { .mfi
       nop.m           0
-(p6)  fma.s1          f_SC_hi_temp = f_sneg, f_Tmjhi, f0   
+(p6)  fma.s1          f_SC_hi_temp = f_sneg, f_Tmjhi, f0
       nop.i           0
 }
 ;;
 
-// If TBL, 
+// If TBL,
 // C_lo_temp3 = sneg * Tmjlo
 // C_lo_temp4 = spos * Tjlo + C_lo_temp3
 // C_lo_temp4 = spos * Tjlo + (sneg * Tmjlo)
@@ -752,7 +752,7 @@ COSH_BY_TBL:
 }
 ;;
 
-// If EXP, 
+// If EXP,
 // Compute 2^(N-1) * Tjhi and 2^(N-1) * Tjlo
 { .mfi
       nop.m           0
@@ -811,7 +811,7 @@ COSH_BY_TBL:
 
 { .mfi
       nop.m           0
-(p6)  fma.s1          f_C_lo_temp2 = f_sneg, f_Tmjhi, f_C_lo_temp1       
+(p6)  fma.s1          f_C_lo_temp2 = f_sneg, f_Tmjhi, f_C_lo_temp1
       nop.i           0
 }
 ;;
@@ -836,7 +836,7 @@ COSH_BY_TBL:
 ;;
 
 // If TBL,
-// Y_hi = C_hi 
+// Y_hi = C_hi
 // Y_lo = S_hi*p_odd + (C_hi*p_even + C_lo)
 { .mfi
       nop.m           0
@@ -883,7 +883,7 @@ COSH_BY_TBL:
 
 
 // Here if 0 < |x| < 0.25
-COSH_BY_POLY: 
+COSH_BY_POLY:
 { .mmf
       ldfe            f_P6 = [r_ad2e],16
       ldfe            f_P5 = [r_ad2o],16
@@ -900,7 +900,7 @@ COSH_BY_POLY:
 
 { .mmi
       ldfe            f_P2 = [r_ad2e],16
-      ldfe            f_P1 = [r_ad2o],16                 
+      ldfe            f_P1 = [r_ad2o],16
       nop.i           0
 }
 ;;
@@ -1007,7 +1007,7 @@ COSH_DENORM:
 
 
 // Here if |x| >= overflow limit
-COSH_HUGE: 
+COSH_HUGE:
 // for COSH_HUGE, put 24000 in exponent; take sign from input
 { .mmi
       mov             r_exp_huge = 0x15dbf
@@ -1018,7 +1018,7 @@ COSH_HUGE:
 ;;
 
 { .mfi
-      alloc           r32 = ar.pfs,0,5,4,0                  
+      alloc           r32 = ar.pfs,0,5,4,0
       fma.s1          f_signed_hi_lo = f_huge, f1, f1
       nop.i           0
 }
@@ -1061,7 +1061,7 @@ LOCAL_LIBM_ENTRY(__libm_error_region)
 { .mib
         stfe [GR_Parameter_X] = f8               // STORE Parameter 1 on stack
         add   GR_Parameter_RESULT = 0,GR_Parameter_Y   // Parameter 3 address
-        nop.b 0                            
+        nop.b 0
 }
 { .mib
         stfe [GR_Parameter_Y] = f_pre_result     // STORE Parameter 3 on stack

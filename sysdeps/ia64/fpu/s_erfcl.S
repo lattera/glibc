@@ -21,20 +21,20 @@
 // products derived from this software without specific prior written
 // permission.
 
-// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
-// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
 // LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL INTEL OR ITS 
+// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL INTEL OR ITS
 // CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-// EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, 
-// PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
-// PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY 
+// EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+// PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+// PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY
 // OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY OR TORT (INCLUDING
-// NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS 
-// SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. 
-// 
+// NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+// SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
 // Intel Corporation is the author of this code, and requests that all
-// problem reports or change requests be submitted to it directly at 
+// problem reports or change requests be submitted to it directly at
 // http://www.intel.com/software/products/opensource/libraries/num.htm.
 //
 // History
@@ -53,7 +53,7 @@
 // Implementation and Algorithm Notes:
 //==============================================================
 // 1. 0 <= x <= 107.0
-//    
+//
 //    erfcl(x) ~=~ P15(z) * expl( -x^2 )/(dx + x), z = x - xc(i).
 //
 //    Comment:
@@ -62,28 +62,28 @@
 //    argument intervals [x(i),x(i+1)] with length ratio q = 2^(1/4).
 //    Values xc(i) we have in the table erfc_xc_table,xc(i)=x(i)for i = 0
 //    and xc(i)= 0.5*( x(i)+x(i+1) ) for i>0.
-// 
+//
 //    Let x(i)<= x < x(i+1).
 //    We can find i as exponent of number (x + 1)^4.
-// 
+//
 //    Let P15(z)= a0+ a1*z +..+a15*z^15 - polynomial approximation of degree 15
-//    for function      erfcl(z+xc(i)) * expl( (z+xc(i))^2)* (dx+z+xc(i)) and 
+//    for function      erfcl(z+xc(i)) * expl( (z+xc(i))^2)* (dx+z+xc(i)) and
 //    -0.5*[x(i+1)-x(i)] <= z <= 0.5*[x(i+1)-x(i)].
 //
 //    Let  Q(z)= (P(z)- S)/S, S = a0, rounded to 16 bits.
 //    Polynomial coeffitients for Q(z) we have in the table erfc_Q_table as
 //    long double values
 //
-//    We use multi precision to calculate input argument -x^2 for expl and 
-//    for u = 1/(dx + x). 
+//    We use multi precision to calculate input argument -x^2 for expl and
+//    for u = 1/(dx + x).
 //
 //    Algorithm description for expl function see below. In accordance with
 //    denotation of this algorithm we have for expl:
 //
-//    expl(X) ~=~ 2^K*T_1*(1+W_1)*T_2*(1+W_2)*(1+ poly(r)), X = -x^2. 
+//    expl(X) ~=~ 2^K*T_1*(1+W_1)*T_2*(1+W_2)*(1+ poly(r)), X = -x^2.
 //
 //    Final calculations for erfcl:
-// 
+//
 //    erfcl(x) ~=~
 //
 //         2^K*T_1*(1+W_1)*T_2*(1+W_2)*(1+ poly(r))*(1-dy)*S*(1+Q(z))*u*(1+du),
@@ -95,35 +95,35 @@
 //    1)  M = 2^K*T_1*T_2*S          without rounding error,
 //    2)  W = W_1 + (W_2 + W_1*W_2), where 1+W  ~=~ (1+W_1)(1+W_2),
 //    3)  H = W - dy,                where 1+H  ~=~ (1+W )(1-dy),
-//    4)  R = poly(r)*H + poly(r),    
+//    4)  R = poly(r)*H + poly(r),
 //    5)  R = H + R              ,   where 1+R  ~=~ (1+H )(1+poly(r)),
 //    6)  G = Q(z)*R + Q(z),
 //    7)  R1 = R + du,               where 1+R1 ~=~ (1+R)(1+du),
 //    8)  G1 = R1 + G,               where 1+G1 ~=~ (1+R1)(1+Q(z)),
 //    9)  V  = G1*M*u,
-//    10) erfcl(x) ~=~ M*u + V     
-//                     
+//    10) erfcl(x) ~=~ M*u + V
+//
 // 2. -6.5 <= x < 0
 //
 //    erfcl(x)  = 2.0 - erfl(-x)
 //
 // 3. x > 107.0
-//    erfcl(x)  ~=~ 0.0                      
+//    erfcl(x)  ~=~ 0.0
 //
-// 4. x < -6.5            
-//    erfcl(x)  ~=~ 2.0                      
+// 4. x < -6.5
+//    erfcl(x)  ~=~ 2.0
 
-// Special values 
+// Special values
 //==============================================================
 // erfcl(+0)    = 1.0
 // erfcl(-0)    = 1.0
 
-// erfcl(+qnan) = +qnan 
-// erfcl(-qnan) = -qnan 
-// erfcl(+snan) = +qnan 
-// erfcl(-snan) = -qnan 
+// erfcl(+qnan) = +qnan
+// erfcl(-qnan) = -qnan
+// erfcl(+snan) = +qnan
+// erfcl(-snan) = -qnan
 
-// erfcl(-inf)  = 2.0 
+// erfcl(-inf)  = 2.0
 // erfcl(+inf)  = +0
 
 //==============================================================
@@ -139,35 +139,35 @@
 //
 // On input, X is in register format
 //
-// On output, 
+// On output,
 //
 //   scale*(Y_hi + Y_lo)  approximates  exp(X)
 //
 // The accuracy is sufficient for a highly accurate 64 sig.
-// bit implementation.  Safe is set if there is no danger of 
-// overflow/underflow when the result is composed from scale, 
-// Y_hi and Y_lo. Thus, we can have a fast return if Safe is set. 
-// Otherwise, one must prepare to handle the possible exception 
-// appropriately.  Note that SAFE not set (false) does not mean 
+// bit implementation.  Safe is set if there is no danger of
+// overflow/underflow when the result is composed from scale,
+// Y_hi and Y_lo. Thus, we can have a fast return if Safe is set.
+// Otherwise, one must prepare to handle the possible exception
+// appropriately.  Note that SAFE not set (false) does not mean
 // that overflow/underflow will occur; only the setting of SAFE
 // guarantees the opposite.
 //
-// **** High Level Overview **** 
+// **** High Level Overview ****
 //
 // The method consists of three cases.
-// 
+//
 // If           |X| < Tiny  use case exp_tiny;
 // else if  |X| < 2^(-6)    use case exp_small;
 // else     use case exp_regular;
 //
 // Case exp_tiny:
 //
-//   1 + X     can be used to approximate exp(X) 
+//   1 + X     can be used to approximate exp(X)
 //   X + X^2/2 can be used to approximate exp(X) - 1
 //
 // Case exp_small:
 //
-//   Here, exp(X) and exp(X) - 1 can all be 
+//   Here, exp(X) and exp(X) - 1 can all be
 //   approximated by a relatively simple polynomial.
 //
 //   This polynomial resembles the truncated Taylor series
@@ -204,9 +204,9 @@
 //   r := (X - N*L_hi) - N*L_lo
 //
 //   We pick L_hi such that N*L_hi is representable in 64 sig. bits
-//   and thus the FMA   X - N*L_hi   is error free. So r is the 
-//   1 rounding error from an exact reduction with respect to 
-//   
+//   and thus the FMA   X - N*L_hi   is error free. So r is the
+//   1 rounding error from an exact reduction with respect to
+//
 //   L_hi + L_lo.
 //
 //   In particular, L_hi has 30 significant bit and can be stored
@@ -216,10 +216,10 @@
 //   Step 2: Approximation
 //
 //   exp(r) - 1 is approximated by a short polynomial of the form
-//   
+//
 //   r + A_1 r^2 + A_2 r^3 + A_3 r^4 .
 //
-//   Step 3: Composition from Table Values 
+//   Step 3: Composition from Table Values
 //
 //   The value 2^( N / 2^12 ) can be composed from a couple of tables
 //   of precalculated values. First, express N as three integers
@@ -232,8 +232,8 @@
 //   lsb's, M_1 is the next 6, and K is simply N shifted right
 //   arithmetically (sign extended) by 12 bits.
 //
-//   Now, 2^( N / 2^12 ) is simply  
-//  
+//   Now, 2^( N / 2^12 ) is simply
+//
 //      2^K * 2^( M_1 / 2^6 ) * 2^( M_2 / 2^12 )
 //
 //   Clearly, 2^K needs no tabulation. The other two values are less
@@ -244,14 +244,14 @@
 //   Define two mathematical values, delta_1 and delta_2, implicitly
 //   such that
 //
-//     T_1 = exp( [M_1 log(2)/2^6]  -  delta_1 ) 
+//     T_1 = exp( [M_1 log(2)/2^6]  -  delta_1 )
 //     T_2 = exp( [M_2 log(2)/2^12] -  delta_2 )
 //
 //   are representable as 24 significant bits. To illustrate the idea,
-//   we show how we define delta_1: 
+//   we show how we define delta_1:
 //
 //     T_1     := round_to_24_bits( exp( M_1 log(2)/2^6 ) )
-//     delta_1  = (M_1 log(2)/2^6) - log( T_1 )  
+//     delta_1  = (M_1 log(2)/2^6) - log( T_1 )
 //
 //   The last equality means mathematical equality. We then tabulate
 //
@@ -264,7 +264,7 @@
 //   T and W via
 //
 //     T := T_1 * T_2           ...exactly
-//     W := W_1 + (1 + W_1)*W_2 
+//     W := W_1 + (1 + W_1)*W_2
 //
 //   W approximates exp( delta ) - 1  where delta = delta_1 + delta_2.
 //   The mathematical product of T and (W+1) is an accurate representation
@@ -272,17 +272,17 @@
 //
 //   Step 4. Reconstruction
 //
-//   Finally, we can reconstruct exp(X), exp(X) - 1. 
+//   Finally, we can reconstruct exp(X), exp(X) - 1.
 //   Because
 //
-//  X = K * log(2) + (M_1*log(2)/2^6  - delta_1) 
+//  X = K * log(2) + (M_1*log(2)/2^6  - delta_1)
 //             + (M_2*log(2)/2^12 - delta_2)
 //             + delta_1 + delta_2 + r      ...accurately
 //   We have
 //
 //  exp(X) ~=~ 2^K * ( T + T*[exp(delta_1+delta_2+r) - 1] )
 //         ~=~ 2^K * ( T + T*[exp(delta + r) - 1]         )
-//         ~=~ 2^K * ( T + T*[(exp(delta)-1)  
+//         ~=~ 2^K * ( T + T*[(exp(delta)-1)
 //               + exp(delta)*(exp(r)-1)]   )
 //             ~=~ 2^K * ( T + T*( W + (1+W)*poly(r) ) )
 //             ~=~ 2^K * ( Y_hi  +  Y_lo )
@@ -294,7 +294,7 @@
 //  exp(X)-1 ~=~ 2^K * ( Y_hi + Y_lo ) - 1
 //       ~=~ 2^K * ( Y_hi + Y_lo - 2^(-K) )
 //
-//   and we combine Y_hi + Y_lo - 2^(-N)  into the form of two 
+//   and we combine Y_hi + Y_lo - 2^(-N)  into the form of two
 //   numbers  Y_hi + Y_lo carefully.
 //
 //   **** Algorithm Details ****
@@ -305,8 +305,8 @@
 //
 //   Case exp_tiny:
 //
-//   The important points are to ensure an accurate result under 
-//   different rounding directions and a correct setting of the SAFE 
+//   The important points are to ensure an accurate result under
+//   different rounding directions and a correct setting of the SAFE
 //   flag.
 //
 //   If expm1 is 1, then
@@ -325,11 +325,11 @@
 //   Here we compute a simple polynomial. To exploit parallelism, we split
 //   the polynomial into several portions.
 //
-//   Let r = X 
+//   Let r = X
 //
 //   If exp     ...i.e. exp( argument )
 //
-//      rsq := r * r; 
+//      rsq := r * r;
 //      r4  := rsq*rsq
 //      poly_lo := P_3 + r*(P_4 + r*(P_5 + r*P_6))
 //      poly_hi := r + rsq*(P_1 + r*P_2)
@@ -381,12 +381,12 @@
 
 // Registers used
 //==============================================================
-// Floating Point registers used: 
+// Floating Point registers used:
 // f8, input
 // f9 -> f14,  f36 -> f126
 
-// General registers used: 
-// r32 -> r71 
+// General registers used:
+// r32 -> r71
 
 // Predicate registers used:
 // p6 -> p15
@@ -590,8 +590,8 @@ data8 0xFFFFFFFFFFFFFFFF,0x00003FFD // C1
 LOCAL_OBJECT_END(Constants_exp_64_C)
 
 LOCAL_OBJECT_START(Constants_exp_64_T1)
-data4 0x3F800000,0x3F8164D2,0x3F82CD87,0x3F843A29 
-data4 0x3F85AAC3,0x3F871F62,0x3F88980F,0x3F8A14D5 
+data4 0x3F800000,0x3F8164D2,0x3F82CD87,0x3F843A29
+data4 0x3F85AAC3,0x3F871F62,0x3F88980F,0x3F8A14D5
 data4 0x3F8B95C2,0x3F8D1ADF,0x3F8EA43A,0x3F9031DC
 data4 0x3F91C3D3,0x3F935A2B,0x3F94F4F0,0x3F96942D
 data4 0x3F9837F0,0x3F99E046,0x3F9B8D3A,0x3F9D3EDA
@@ -609,21 +609,21 @@ data4 0x3FF5257D,0x3FF7D0DF,0x3FFA83B3,0x3FFD3E0C
 LOCAL_OBJECT_END(Constants_exp_64_T1)
 
 LOCAL_OBJECT_START(Constants_exp_64_T2)
-data4 0x3F800000,0x3F80058C,0x3F800B18,0x3F8010A4 
-data4 0x3F801630,0x3F801BBD,0x3F80214A,0x3F8026D7 
-data4 0x3F802C64,0x3F8031F2,0x3F803780,0x3F803D0E 
-data4 0x3F80429C,0x3F80482B,0x3F804DB9,0x3F805349 
-data4 0x3F8058D8,0x3F805E67,0x3F8063F7,0x3F806987 
-data4 0x3F806F17,0x3F8074A8,0x3F807A39,0x3F807FCA 
-data4 0x3F80855B,0x3F808AEC,0x3F80907E,0x3F809610 
-data4 0x3F809BA2,0x3F80A135,0x3F80A6C7,0x3F80AC5A 
-data4 0x3F80B1ED,0x3F80B781,0x3F80BD14,0x3F80C2A8 
-data4 0x3F80C83C,0x3F80CDD1,0x3F80D365,0x3F80D8FA 
-data4 0x3F80DE8F,0x3F80E425,0x3F80E9BA,0x3F80EF50 
-data4 0x3F80F4E6,0x3F80FA7C,0x3F810013,0x3F8105AA 
-data4 0x3F810B41,0x3F8110D8,0x3F81166F,0x3F811C07 
-data4 0x3F81219F,0x3F812737,0x3F812CD0,0x3F813269 
-data4 0x3F813802,0x3F813D9B,0x3F814334,0x3F8148CE 
+data4 0x3F800000,0x3F80058C,0x3F800B18,0x3F8010A4
+data4 0x3F801630,0x3F801BBD,0x3F80214A,0x3F8026D7
+data4 0x3F802C64,0x3F8031F2,0x3F803780,0x3F803D0E
+data4 0x3F80429C,0x3F80482B,0x3F804DB9,0x3F805349
+data4 0x3F8058D8,0x3F805E67,0x3F8063F7,0x3F806987
+data4 0x3F806F17,0x3F8074A8,0x3F807A39,0x3F807FCA
+data4 0x3F80855B,0x3F808AEC,0x3F80907E,0x3F809610
+data4 0x3F809BA2,0x3F80A135,0x3F80A6C7,0x3F80AC5A
+data4 0x3F80B1ED,0x3F80B781,0x3F80BD14,0x3F80C2A8
+data4 0x3F80C83C,0x3F80CDD1,0x3F80D365,0x3F80D8FA
+data4 0x3F80DE8F,0x3F80E425,0x3F80E9BA,0x3F80EF50
+data4 0x3F80F4E6,0x3F80FA7C,0x3F810013,0x3F8105AA
+data4 0x3F810B41,0x3F8110D8,0x3F81166F,0x3F811C07
+data4 0x3F81219F,0x3F812737,0x3F812CD0,0x3F813269
+data4 0x3F813802,0x3F813D9B,0x3F814334,0x3F8148CE
 data4 0x3F814E68,0x3F815402,0x3F81599C,0x3F815F37
 LOCAL_OBJECT_END(Constants_exp_64_T2)
 
@@ -765,7 +765,7 @@ LOCAL_OBJECT_END(erfc_s_table)
 LOCAL_OBJECT_START(erfc_Q_table)
 // Q(z)= (P(z)- S)/S
 //
-// Pol0 
+// Pol0
 data8 0x98325D50F9DC3499, 0x0000BFAA //A0 = +3.07358861423101280650e-26L
 data8 0xED35081A2494DDD9, 0x00003FF8 //A1 = +1.44779757616302832466e-02L
 data8 0x9443549BCD0F94CE, 0x0000BFFD //A2 = -2.89576190966300084405e-01L
@@ -782,7 +782,7 @@ data8 0xA8DEC641AACEB600, 0x0000BFF6 //A12 = -2.57675495383156581601e-03L
 data8 0x87F0E77BA914FBEB, 0x00003FF5 //A13 = +1.03714776726541296794e-03L
 data8 0xC306C2894C5CEF2D, 0x0000BFF3 //A14 = -3.71983348634136412407e-04L
 data8 0xBDAB416A989D0697, 0x00003FF1 //A15 = +9.04412111877987292294e-05L
-// Pol1 
+// Pol1
 data8 0x82808893DA2DD83F, 0x00003FEE //A0 = +7.77853035974467145290e-06L
 data8 0xAE9CD9DCADC86113, 0x0000BFFB //A1 = -8.52601070853077921197e-02L
 data8 0x9D429743E312AD9F, 0x0000BFFB //A2 = -7.67871682732076080494e-02L
@@ -799,7 +799,7 @@ data8 0x9078BC61927671C6, 0x0000BFF4 //A12 = -5.51115510818844954547e-04L
 data8 0xDF67AC6287A63B03, 0x00003FF2 //A13 = +2.13055585989529858265e-04L
 data8 0xA719CFEE67FCE1CE, 0x0000BFF1 //A14 = -7.96798844477905965933e-05L
 data8 0xEF926367BABBB029, 0x00003FEF //A15 = +2.85591875675765038065e-05L
-// Pol2 
+// Pol2
 data8 0x82B5E5A93B059C50, 0x00003FEF //A0 = +1.55819100856330860049e-05L
 data8 0xDC856BC2542B1938, 0x0000BFFB //A1 = -1.07676355235999875911e-01L
 data8 0xDF225EF5694F14AE, 0x0000BFF8 //A2 = -1.36190345125628043277e-02L
@@ -816,7 +816,7 @@ data8 0xB05949F947FA7AEF, 0x0000BFF2 //A12 = -1.68179306983868501372e-04L
 data8 0x82901D055A0D5CB6, 0x00003FF1 //A13 = +6.22572626227726684168e-05L
 data8 0xBB957698542D6FD0, 0x0000BFEF //A14 = -2.23617364009159182821e-05L
 data8 0x810740E1DF572394, 0x00003FEE //A15 = +7.69068800065192940487e-06L
-// Pol3 
+// Pol3
 data8 0x9526D1C87655AFA8, 0x00003FEC //A0 = +2.22253260814242012255e-06L
 data8 0xA47E21EBFE73F72F, 0x0000BFF8 //A1 = -1.00398379581527733314e-02L
 data8 0xDE65685FCDF7A913, 0x0000BFFA //A2 = -5.42959286802879105148e-02L
@@ -833,7 +833,7 @@ data8 0x8179C36354571747, 0x0000BFF1 //A12 = -6.17387951061077132522e-05L
 data8 0xB40F241C01C907E9, 0x00003FEF //A13 = +2.14647227210702861416e-05L
 data8 0xF436D84AD7D4D316, 0x0000BFED //A14 = -7.27815144835213913238e-06L
 data8 0x9EB432503FB0B7BC, 0x00003FEC //A15 = +2.36487228755136968792e-06L
-// Pol4 
+// Pol4
 data8 0xE0BA539E4AFC4741, 0x00003FED //A0 = +6.69741148991838024429e-06L
 data8 0x8583BF71139452CF, 0x0000BFFA //A1 = -3.25963476363756051657e-02L
 data8 0x8384FEF6D08AD6CE, 0x0000BFF9 //A2 = -1.60546283500634200479e-02L
@@ -850,7 +850,7 @@ data8 0xE2DCC5750FD769BA, 0x0000BFEE //A12 = -1.35220520471857266339e-05L
 data8 0x9459160B1E6F1F8D, 0x00003FED //A13 = +4.42111470121432700283e-06L
 data8 0xBE0A05701BD0DD42, 0x0000BFEB //A14 = -1.41590196994052764542e-06L
 data8 0xE905D729105081BF, 0x00003FE9 //A15 = +4.34038814785401120999e-07L
-// Pol5 
+// Pol5
 data8 0xA33649C3AB459832, 0x00003FEE //A0 = +9.72819704141525206634e-06L
 data8 0x9E4EA2F44C9A24BD, 0x0000BFFA //A1 = -3.86492123987296806210e-02L
 data8 0xE80C0B1280F357BF, 0x0000BFF2 //A2 = -2.21297306012713370124e-04L
@@ -867,7 +867,7 @@ data8 0xA878D338E6E6A079, 0x0000BFEC //A12 = -2.51042802626063073967e-06L
 data8 0xCD2C2F079D2FCB36, 0x00003FEA //A13 = +7.64327468786076941271e-07L
 data8 0xF5EF4A4B2EA426F2, 0x0000BFE8 //A14 = -2.29044563492386125272e-07L
 data8 0x8CE52181393820FC, 0x00003FE7 //A15 = +6.56093668622712763489e-08L
-// Pol6 
+// Pol6
 data8 0xB2015D7F1864B7CF, 0x00003FEC //A0 = +2.65248615880090351276e-06L
 data8 0x954EA7A861B4462A, 0x0000BFFA //A1 = -3.64519642954351295215e-02L
 data8 0x9E46F2A4D9157E69, 0x00003FF7 //A2 = +4.83023498390681965101e-03L
@@ -884,7 +884,7 @@ data8 0xD34EA4D283EC33FA, 0x0000BFE9 //A12 = -3.93590335713880681528e-07L
 data8 0xED209EBD68E1145F, 0x00003FE7 //A13 = +1.10421060667544991323e-07L
 data8 0x83A126E22A17568D, 0x0000BFE6 //A14 = -3.06473811074239684132e-08L
 data8 0x8B778496EDE9F415, 0x00003FE4 //A15 = +8.11804009754249175736e-09L
-// Pol7 
+// Pol7
 data8 0x8E152F522501B7B9, 0x00003FEE //A0 = +8.46879203970927626532e-06L
 data8 0xFD22F92EE21F491E, 0x0000BFF9 //A1 = -3.09004656656418947425e-02L
 data8 0xAF0C41847D89EC14, 0x00003FF7 //A2 = +5.34203719233189217519e-03L
@@ -901,7 +901,7 @@ data8 0xE03A81F2C976D11A, 0x0000BFE6 //A12 = -5.22072765405802337371e-08L
 data8 0xE56A19A67DD66100, 0x00003FE4 //A13 = +1.33536787408751203998e-08L
 data8 0xE964D255CB31DFFA, 0x0000BFE2 //A14 = -3.39632729387679010008e-09L
 data8 0xE22E62E932B704D4, 0x00003FE0 //A15 = +8.22842400379225526299e-10L
-// Pol8 
+// Pol8
 data8 0xB8B835882D46A6C8, 0x00003FEF //A0 = +2.20202883282415435401e-05L
 data8 0xC9D1F63F89B74E90, 0x0000BFF9 //A1 = -2.46362504515706189782e-02L
 data8 0x8E376748B1274F30, 0x00003FF7 //A2 = +4.34010070001387441657e-03L
@@ -918,7 +918,7 @@ data8 0xCA87133235F1F495, 0x0000BFE3 //A12 = -5.89433000014933371980e-09L
 data8 0xBB15B0021581C8B6, 0x00003FE1 //A13 = +1.36122047057936849125e-09L
 data8 0xAC9D6585D4AF505E, 0x0000BFDF //A14 = -3.13984547328132268695e-10L
 data8 0x975A1439C3795183, 0x00003FDD //A15 = +6.88268624429648826457e-11L
-// Pol9 
+// Pol9
 data8 0x99A7676284CDC9FE, 0x00003FEF //A0 = +1.83169747921764176475e-05L
 data8 0x9AD0AE249A02896C, 0x0000BFF9 //A1 = -1.88983346204739151909e-02L
 data8 0xCB89B4AEC19898BE, 0x00003FF6 //A2 = +3.10574208447745576452e-03L
@@ -935,7 +935,7 @@ data8 0x9CC6C178AD3F96AD, 0x0000BFE0 //A12 = -5.70349182959704086428e-10L
 data8 0x81D0E2AA27DEB74A, 0x00003FDE //A13 = +1.18066926578104076645e-10L
 data8 0xD75FB9049190BEFD, 0x0000BFDB //A14 = -2.44851795398843967972e-11L
 data8 0xA9384A51D48C8703, 0x00003FD9 //A15 = +4.80951837368635202609e-12L
-// Pol10 
+// Pol10
 data8 0xD2B3482EE449C535, 0x00003FEE //A0 = +1.25587177382575655080e-05L
 data8 0xE7939B2D0607DFCF, 0x0000BFF8 //A1 = -1.41343131436717436429e-02L
 data8 0x8810EB4AC5F0F1CE, 0x00003FF6 //A2 = +2.07620377002350121270e-03L
@@ -952,7 +952,7 @@ data8 0xD02658BF31411F4C, 0x0000BFDC //A12 = -4.73277831746128372261e-11L
 data8 0x9A4A95EE59127779, 0x00003FDA //A13 = +8.77044784978207256260e-12L
 data8 0xE518330AF013C2F6, 0x0000BFD7 //A14 = -1.62781453276882333209e-12L
 data8 0xA036A9DF71BD108A, 0x00003FD5 //A15 = +2.84596398987114375607e-13L
-// Pol11 
+// Pol11
 data8 0x9191CFBF001F3BB3, 0x00003FEE //A0 = +8.67662287973472452343e-06L
 data8 0xAA47E0CF01AE9730, 0x0000BFF8 //A1 = -1.03931136509584404513e-02L
 data8 0xAEABE7F17B01D18F, 0x00003FF5 //A2 = +1.33263784731775399430e-03L
@@ -969,7 +969,7 @@ data8 0xE7977BC1342D19BF, 0x0000BFD8 //A12 = -3.29111645807102123274e-12L
 data8 0x9BC3A7D6396C6756, 0x00003FD6 //A13 = +5.53385887288503961220e-13L
 data8 0xD0110D5683740B8C, 0x0000BFD3 //A14 = -9.24001363293241428519e-14L
 data8 0x81786D7856A5CC92, 0x00003FD1 //A15 = +1.43741041714595023996e-14L
-// Pol12 
+// Pol12
 data8 0xB85654F6033B3372, 0x00003FEF //A0 = +2.19747106911869287049e-05L
 data8 0xF78B40078736B406, 0x0000BFF7 //A1 = -7.55444170413862312647e-03L
 data8 0xDA8FDE84D88E5D5D, 0x00003FF4 //A2 = +8.33747822263358628569e-04L
@@ -986,7 +986,7 @@ data8 0xC0F093DEC2B019A1, 0x0000BFD4 //A12 = -1.71364927865227509533e-13L
 data8 0xFC1441C4CD105981, 0x00003FD1 //A13 = +2.79864052545369490865e-14L
 data8 0x9CC959853267F026, 0x0000BFCF //A14 = -4.35170017302700609509e-15L
 data8 0xB06BA14016154F1E, 0x00003FCC //A15 = +6.12081320471295704631e-16L
-// Pol13 
+// Pol13
 data8 0xA59E74BF544F2422, 0x00003FEF //A0 = +1.97433196215210145261e-05L
 data8 0xB2814F4EDAE15330, 0x0000BFF7 //A1 = -5.44754383528015875700e-03L
 data8 0x867C249D378F0A23, 0x00003FF4 //A2 = +5.13019308804593120161e-04L
@@ -1003,7 +1003,7 @@ data8 0xA90EC851E91C3319, 0x0000BFCE //A12 = -2.34614750044359490986e-15L
 data8 0xEC9CAF64237B5060, 0x00003FCC //A13 = +8.20912960028437475035e-16L
 data8 0xA9156668FCF01479, 0x0000BFCA //A14 = -1.46656639874123613261e-16L
 data8 0xBAEF58D8118DD5D4, 0x00003FC7 //A15 = +2.02675278255254907493e-17L
-// Pol14 
+// Pol14
 data8 0xC698952E9CEAA800, 0x00003FEF //A0 = +2.36744912073515619263e-05L
 data8 0x800395F8C7B4FA00, 0x0000BFF7 //A1 = -3.90667746392883642897e-03L
 data8 0xA3B2467B6B391831, 0x00003FF3 //A2 = +3.12226081793919541155e-04L
@@ -1020,7 +1020,7 @@ data8 0x95352E5597EACC23, 0x00003FCD //A12 = +1.03533666540077850452e-15L
 data8 0xCCEBE3043B689428, 0x0000BFC8 //A13 = -4.44352525147076912166e-17L
 data8 0xA779DAB4BE1F80BB, 0x0000BFBC //A14 = -8.86610526981738255206e-21L
 data8 0xB171271F3517282C, 0x00003FC1 //A15 = +3.00598445879282370850e-19L
-// Pol15 
+// Pol15
 data8 0xB7AC727D1C3FEB05, 0x00003FEE //A0 = +1.09478009914822049780e-05L
 data8 0xB6E6274485C10B0A, 0x0000BFF6 //A1 = -2.79081782038927199588e-03L
 data8 0xC5CAE2122D009506, 0x00003FF2 //A2 = +1.88629638738336219173e-04L
@@ -1037,7 +1037,7 @@ data8 0xEF402CCB4D29FAF8, 0x00003FCA //A12 = +2.07516888659313950588e-16L
 data8 0xD6B789E01141231B, 0x0000BFC6 //A13 = -1.16398290506765191078e-17L
 data8 0xB5EEE343E9CFE3EC, 0x00003FC2 //A14 = +6.16413506924643419723e-19L
 data8 0x859B41A39D600346, 0x0000BFBE //A15 = -2.82922705825870414438e-20L
-// Pol16 
+// Pol16
 data8 0x85708B69FD184E11, 0x00003FED //A0 = +3.97681079176353356199e-06L
 data8 0x824D92BC60A1F70A, 0x0000BFF6 //A1 = -1.98826630037499070532e-03L
 data8 0xEDCF7D3576BB5258, 0x00003FF1 //A2 = +1.13396885054265675352e-04L
@@ -1054,7 +1054,7 @@ data8 0x863A04008E12867C, 0x00003FC8 //A12 = +2.91057593756148904838e-17L
 data8 0xDF62F9F44F5C7170, 0x0000BFC3 //A13 = -1.51372666097522872780e-18L
 data8 0xBA4E118E88CFDD31, 0x00003FBF //A14 = +7.89032177282079635722e-20L
 data8 0x942AD897FC4D2F2A, 0x0000BFBB //A15 = -3.92195756076319409245e-21L
-// Pol17 
+// Pol17
 data8 0xCB8514540566C717, 0x00003FEF //A0 = +2.42614557068144130848e-05L
 data8 0xB94F08D6816E0CD4, 0x0000BFF5 //A1 = -1.41379340061829929314e-03L
 data8 0x8E7C342C2DABB51B, 0x00003FF1 //A2 = +6.79422240687700109911e-05L
@@ -1071,7 +1071,7 @@ data8 0x8435328C80940126, 0x00003FC5 //A12 = +3.58349966898667910204e-18L
 data8 0xC0D22F655BA5EF39, 0x0000BFC0 //A13 = -1.63325770165403860181e-19L
 data8 0x8F14B9EBD5A9AB25, 0x00003FBC //A14 = +7.57464305512080733773e-21L
 data8 0xCD4804BBF6DC1B6F, 0x0000BFB7 //A15 = -3.39609459750208886298e-22L
-// Pol18 
+// Pol18
 data8 0xE251DFE45AB0C22E, 0x00003FEE //A0 = +1.34897126299700418200e-05L
 data8 0x83943CC7D59D4215, 0x0000BFF5 //A1 = -1.00386850310061655307e-03L
 data8 0xAA57896951134BCA, 0x00003FF0 //A2 = +4.06126834109940757047e-05L
@@ -1088,7 +1088,7 @@ data8 0xF41FBBA6B343960F, 0x00003FC1 //A12 = +4.13562069721140021224e-19L
 data8 0x98F194AEE31D188D, 0x0000BFBD //A13 = -1.61935414722333263347e-20L
 data8 0xC42F5029BB622157, 0x00003FB8 //A14 = +6.49121108201931196678e-22L
 data8 0xF43BD08079E50E0F, 0x0000BFB3 //A15 = -2.52531675510242468317e-23L
-// Pol19 
+// Pol19
 data8 0x82557B149A04D08E, 0x00003FEF //A0 = +1.55370127331027842820e-05L
 data8 0xBAAB433307CE614B, 0x0000BFF4 //A1 = -7.12085701486669872724e-04L
 data8 0xCB52D9DBAC16FE82, 0x00003FEF //A2 = +2.42380662859334411743e-05L
@@ -1105,7 +1105,7 @@ data8 0xD959E428A62B1B6C, 0x00003FBE //A12 = +4.60258936838597812582e-20L
 data8 0xE7D49EC23F1A16A0, 0x0000BFB9 //A13 = -1.53412587409583783059e-21L
 data8 0xFDE429BC9947B2BE, 0x00003FB4 //A14 = +5.25034823750902928092e-23L
 data8 0x872137A062C042EF, 0x0000BFB0 //A15 = -1.74651114923000080365e-24L
-// Pol20 
+// Pol20
 data8 0x8B9B185C6A2659AC, 0x00003FEF //A0 = +1.66423130594825442963e-05L
 data8 0x84503AD52588A1E8, 0x0000BFF4 //A1 = -5.04735556466270303549e-04L
 data8 0xF26C7C2B566388E1, 0x00003FEE //A2 = +1.44495826764677427386e-05L
@@ -1122,7 +1122,7 @@ data8 0xBD5A7FAA548CC749, 0x00003FBB //A12 = +5.01214569023722089225e-21L
 data8 0xAB15D69425373A67, 0x0000BFB6 //A13 = -1.41518447770061562822e-22L
 data8 0x9EF95456F75B4DF4, 0x00003FB1 //A14 = +4.10938011540250142351e-24L
 data8 0x8FADCC45E81433E7, 0x0000BFAC //A15 = -1.16062889679749879834e-25L
-// Pol21 
+// Pol21
 data8 0xB47A917B0F7B50AE, 0x00003FEF //A0 = +2.15147474240529518138e-05L
 data8 0xBB77DC3BA0C937B3, 0x0000BFF3 //A1 = -3.57567223048598672970e-04L
 data8 0x90694DFF4EBF7370, 0x00003FEE //A2 = +8.60758700336677694536e-06L
@@ -1139,7 +1139,7 @@ data8 0xA2C1C5E19CC79E6F, 0x00003FB8 //A12 = +5.38517493921589837361e-22L
 data8 0xF86F9772306F56C1, 0x0000BFB2 //A13 = -1.28438352359240135735e-23L
 data8 0xC32F6FEEDE86528E, 0x00003FAD //A14 = +3.15338862172962186458e-25L
 data8 0x9534ED189744D7D4, 0x0000BFA8 //A15 = -7.53301543611470014315e-27L
-// Pol22 
+// Pol22
 data8 0xCBA0A2DB94A2C494, 0x00003FEF //A0 = +2.42742878212752702946e-05L
 data8 0x84C089154A49E0E8, 0x0000BFF3 //A1 = -2.53204520651046300034e-04L
 data8 0xABF5665BD0D8B0CD, 0x00003FED //A2 = +5.12476542947092361490e-06L
@@ -1156,7 +1156,7 @@ data8 0x8AB627E09CF45997, 0x00003FB5 //A12 = +5.73697507862703019314e-23L
 data8 0xB28C15C117CC604F, 0x0000BFAF //A13 = -1.15383428132352407085e-24L
 data8 0xECB8428626DA072C, 0x00003FA9 //A14 = +2.39025879246942839796e-26L
 data8 0x98B731BCFA2CE2B2, 0x0000BFA4 //A15 = -4.81885474332093262902e-28L
-// Pol23 
+// Pol23
 data8 0xC6D013811314D31B, 0x00003FED //A0 = +5.92508308918577687876e-06L
 data8 0xBBF3057B8DBACBCF, 0x0000BFF2 //A1 = -1.79242422493281965934e-04L
 data8 0xCCADECA501162313, 0x00003FEC //A2 = +3.04996061562356504918e-06L
@@ -1173,7 +1173,7 @@ data8 0xEB27A61B1D5C7697, 0x00003FB1 //A12 = +6.07861113430709162243e-24L
 data8 0xFEF9ED74D4F4C9B0, 0x0000BFAB //A13 = -1.02984099170876754831e-25L
 data8 0x8E6F410068C12043, 0x00003FA6 //A14 = +1.79777721804459361762e-27L
 data8 0x9AE2F6705481630E, 0x0000BFA0 //A15 = -3.05459905177379058768e-29L
-// Pol24 
+// Pol24
 data8 0xD2D858D5B01C9434, 0x00003FEE //A0 = +1.25673476165670766128e-05L
 data8 0x8505330F8B4FDE49, 0x0000BFF2 //A1 = -1.26858053564784963985e-04L
 data8 0xF39171C8B1D418C2, 0x00003FEB //A2 = +1.81472407620770441249e-06L
@@ -1190,7 +1190,7 @@ data8 0xC6A4DCACC554911E, 0x00003FAE //A12 = +6.41853356148678957077e-25L
 data8 0xB550CEA09DA96F44, 0x0000BFA8 //A13 = -9.15410112414783078242e-27L
 data8 0xAA9149317996F32F, 0x00003FA2 //A14 = +1.34554050666508391264e-28L
 data8 0x9C3008EFE3F52F19, 0x0000BF9C //A15 = -1.92516125328592532359e-30L
-// Pol25 
+// Pol25
 data8 0xA68E78218806283F, 0x00003FEF //A0 = +1.98550844852103406280e-05L
 data8 0xBC41423996DC8A37, 0x0000BFF1 //A1 = -8.97669395268764751516e-05L
 data8 0x90E55AE31A2F8271, 0x00003FEB //A2 = +1.07955871580069359702e-06L
@@ -1207,7 +1207,7 @@ data8 0xA76F391095A9563A, 0x00003FAB //A12 = +6.76262416498584003290e-26L
 data8 0x8098FA125C18D8DB, 0x0000BFA5 //A13 = -8.11564737276592661642e-28L
 data8 0xCB9E4D5C08923227, 0x00003F9E //A14 = +1.00391606269366059664e-29L
 data8 0x9CEC3BF7A0BE2CAF, 0x0000BF98 //A15 = -1.20888920108938909316e-31L
-// Pol26 
+// Pol26
 data8 0xC17AB25E269272F7, 0x00003FEE //A0 = +1.15322640047234590651e-05L
 data8 0x85310509E633FEF2, 0x0000BFF1 //A1 = -6.35106483144690768696e-05L
 data8 0xAC5E4C4DCB2D940C, 0x00003FEA //A2 = +6.42122148740412561597e-07L
@@ -1224,7 +1224,7 @@ data8 0x8CEEACB790B5F374, 0x00003FA8 //A12 = +7.11526399101774993883e-27L
 data8 0xB61C8A29D98F24C0, 0x0000BFA1 //A13 = -7.18303147470398859453e-29L
 data8 0xF296F69FE45BDA7D, 0x00003F9A //A14 = +7.47537230021540031251e-31L
 data8 0x9D4B25BF6FB7234B, 0x0000BF94 //A15 = -7.57340869663212138051e-33L
-// Pol27 
+// Pol27
 data8 0xC7772CC326D6FBB8, 0x00003FEE //A0 = +1.18890718679826004395e-05L
 data8 0xE0F9D5410565D55D, 0x0000BFF0 //A1 = -5.36384368533203585378e-05L
 data8 0x85C0BE825680E148, 0x00003FEA //A2 = +4.98268406609692971520e-07L
@@ -1246,7 +1246,7 @@ LOCAL_OBJECT_END(erfc_Q_table)
 
 .section .text
 GLOBAL_LIBM_ENTRY(erfcl)
- 
+
 { .mfi
       alloc          r32 = ar.pfs, 0, 36, 4, 0
       fma.s1         FR_Tmp = f1, f1, f8                   // |x|+1, if x >= 0
@@ -1278,7 +1278,7 @@ GLOBAL_LIBM_ENTRY(erfcl)
 { .mfi
       nop.m          0
       fnma.s1        FR_norm_x   = f8, f8, f0             //high bits for -x^2
-      nop.i          0         
+      nop.i          0
 }
 ;;
 
@@ -1286,7 +1286,7 @@ GLOBAL_LIBM_ENTRY(erfcl)
 { .mfi
       setf.sig       FR_INV_LN2_2TO63 = GR_sig_inv_ln2    // form 1/ln2 * 2^63
 (p6)  fma.s1         FR_AbsArg = f1, f0, f8                  // |x|, if x >= 0
-      nop.i          0    
+      nop.i          0
 }
 { .mfi
       setf.d         FR_RSHF_2TO51 = GR_rshf_2to51    //const 1.10 * 2^(63+51)
@@ -1300,9 +1300,9 @@ GLOBAL_LIBM_ENTRY(erfcl)
       fclass.m       p10,p0 = f8, 0x21                        // p10: x = +inf
       mov            GR_exp_bias = 0x0FFFF                // Set exponent bias
 }
-{ .mlx                    
+{ .mlx
       setf.d         FR_RSHF = GR_rshf      // Right shift const 1.1000 * 2^63
-      movl           GR_ERFC_XC_TB = 0x650  
+      movl           GR_ERFC_XC_TB = 0x650
 }
 ;;
 
@@ -1315,11 +1315,11 @@ GLOBAL_LIBM_ENTRY(erfcl)
 { .mfi
       ldfpd          FR_POS_ARG_ASYMP,FR_NEG_ARG_ASYMP = [GR_ad_Arg], 16
 (p7)  fma.s1         FR_Tmp = FR_Tmp1, FR_Tmp1, f0           // (|x|+1)^2, x<0
-      mov            GR_0x1 = 0x1 
+      mov            GR_0x1 = 0x1
 }
 ;;
 
-//p8: y = 1.0, x = 0.0,quick exit 
+//p8: y = 1.0, x = 0.0,quick exit
 { .mfi
       ldfpd          FR_dx,FR_dx1 = [GR_ad_Arg], 16
       fclass.m       p9,p0 = f8, 0x22                          // p9: x = -inf
@@ -1327,16 +1327,16 @@ GLOBAL_LIBM_ENTRY(erfcl)
 
 }
 { .mfb
-      nop.m          0      
-(p8)  fma.s0         f8 = f1, f1, f0     
-(p8)  br.ret.spnt    b0             
+      nop.m          0
+(p8)  fma.s0         f8 = f1, f1, f0
+(p8)  br.ret.spnt    b0
 }
 ;;
 
 { .mfi
-      ldfe           FR_UnfBound = [GR_ad_Arg], 16      
+      ldfe           FR_UnfBound = [GR_ad_Arg], 16
       fclass.m       p11,p0 = f8, 0xc3                        // p11: x = nan
-      mov            GR_BIAS = 0x0FFFF 
+      mov            GR_BIAS = 0x0FFFF
 }
 { .mfi
       nop.m          0
@@ -1359,12 +1359,12 @@ GLOBAL_LIBM_ENTRY(erfcl)
 
 { .mfi
       add            GR_ad_C = 0x20, GR_ad_Arg             // Point to C table
-      nop.f          0 
+      nop.f          0
       add            GR_ad_T1 = 0x50, GR_ad_Arg           // Point to T1 table
 }
 { .mfi
       add            GR_ad_T2 = 0x150, GR_ad_Arg          // Point to T2 table
-      nop.f          0 
+      nop.f          0
       add            GR_ERFC_XC_TB = GR_ERFC_XC_TB, GR_ad_Arg //poin.to XB_TBL
 }
 ;;
@@ -1383,14 +1383,14 @@ GLOBAL_LIBM_ENTRY(erfcl)
 
 // p9: y = 2.0, x = -inf, quick exit
 { .mfi
-      sub            GR_mBIAS = r0, GR_BIAS 
+      sub            GR_mBIAS = r0, GR_BIAS
       fma.s1         FR_2 = f1, f1, f1
-      nop.i          0      
+      nop.i          0
 }
 { .mfb
       ldfe           FR_L_lo = [GR_ad_Arg],16                      // Get L_lo
-(p9)  fma.s0         f8 = f1, f1, f1  
-(p9)  br.ret.spnt    b0 
+(p9)  fma.s0         f8 = f1, f1, f1
+(p9)  br.ret.spnt    b0
 }
 ;;
 
@@ -1400,10 +1400,10 @@ GLOBAL_LIBM_ENTRY(erfcl)
       fma.s1         FR_N_signif = FR_norm_x, FR_INV_LN2_2TO63, FR_RSHF_2TO51
       and            GR_exp_x = GR_signexp_x, GR_exp_mask
 }
-{ .mfb    
+{ .mfb
       adds           GR_ERFC_S_TB = 0x1C0, GR_ERFC_XC_TB   // pointer to S_TBL
-(p10) fma.s0         f8 = f0, f1, f0 
-(p10) br.ret.spnt    b0  
+(p10) fma.s0         f8 = f0, f1, f0
+(p10) br.ret.spnt    b0
 }
 ;;
 
@@ -1411,13 +1411,13 @@ GLOBAL_LIBM_ENTRY(erfcl)
 // p11: y = x, x = nan, quick exit
 { .mfi
       ldfe           FR_C3 = [GR_ad_C],16           // Get C3 for normal path
-      fcmp.lt.s1     p12,p0 = FR_AbsArg, FR_ch_dx          
+      fcmp.lt.s1     p12,p0 = FR_AbsArg, FR_ch_dx
       shl            GR_ShftPi_bias = GR_BIAS, 8                //  BIAS * 256
 }
 { .mfb
       sub            GR_exp_x = GR_exp_x, GR_exp_bias          // Get exponent
 (p11) fma.s0         f8 = f8, f1, f0
-(p11) br.ret.spnt    b0                     
+(p11) br.ret.spnt    b0
 
 }
 ;;
@@ -1433,7 +1433,7 @@ GLOBAL_LIBM_ENTRY(erfcl)
 { .mfi
       ldfe           FR_C1 = [GR_ad_C],16              // Get C1 for main path
 (p6)  fcmp.gt.unc.s1 p15,p0 = FR_AbsArg, FR_POS_ARG_ASYMP        // p6: x >= 0
-      nop.i          0    
+      nop.i          0
 }
 { .mfb
       nop.m          0
@@ -1448,7 +1448,7 @@ GLOBAL_LIBM_ENTRY(erfcl)
 (p7)  fcmp.gt.unc.s1 p14,p0 = FR_AbsArg,FR_NEG_ARG_ASYMP          // p7: x < 0
       shladd         GR_ShftXBi_bias = GR_mBIAS, 4, r0
 }
-;; 
+;;
 
 { .mfi
       nop.m          0
@@ -1457,7 +1457,7 @@ GLOBAL_LIBM_ENTRY(erfcl)
 }
 { .mfi
       nop.m          0
-      fms.s1         FR_float_N = FR_N_signif, FR_2TOM51, FR_RSHF  
+      fms.s1         FR_float_N = FR_N_signif, FR_2TOM51, FR_RSHF
       nop.i          0
 }
 ;;
@@ -1466,23 +1466,23 @@ GLOBAL_LIBM_ENTRY(erfcl)
 // p14: y ~=~ 2, x < -6.5,quick exit
 { .mfi
       getf.exp       GR_IndxPlusBias = FR_Tmp      // exp + bias for (|x|+1)^4
-      fcmp.lt.s1     p8,p0 = FR_NormX,FR_UnfBound   
+      fcmp.lt.s1     p8,p0 = FR_NormX,FR_UnfBound
       nop.i          0
 }
 { .mfb
       nop.m          0
 (p14) fnma.s0        FR_RESULT = FR_EpsNorm,FR_EpsNorm,FR_2
-(p14) br.ret.spnt    b0               
+(p14) br.ret.spnt    b0
 
 }
 ;;
 
 // p15: y ~=~ 0.0 (result with underflow error), x > POS_ARG_ASYMP = 107.0,
-// call __libm_error_region 
+// call __libm_error_region
 { .mfb
 (p15) mov            GR_Parameter_TAG = 207
-(p15) fma.s0         FR_RESULT = FR_EpsNorm,FR_EpsNorm,f0 
-(p15) br.cond.spnt   __libm_error_region        
+(p15) fma.s0         FR_RESULT = FR_EpsNorm,FR_EpsNorm,f0
+(p15) br.cond.spnt   __libm_error_region
 }
 ;;
 
@@ -1490,7 +1490,7 @@ GLOBAL_LIBM_ENTRY(erfcl)
       getf.sig       GR_N_fix = FR_N_signif          // Get N from significand
       nop.f          0
       shl            GR_ShftPi = GR_IndxPlusBias, 8
-     
+
 }
 { .mfi
       shladd         GR_ShftXBi = GR_IndxPlusBias, 4, GR_ShftXBi_bias
@@ -1511,7 +1511,7 @@ GLOBAL_LIBM_ENTRY(erfcl)
       fma.s1         FR_Xpdx_hi = FR_AbsArg, f1, FR_dx              //  x + dx
       add            GR_ShftA14 = 0xE0, GR_ShftPi     // pointer shift for A14
 
- 
+
 }
 { .mfi
       ldfe           FR_S  = [GR_ERFC_S_TB]
@@ -1533,14 +1533,14 @@ GLOBAL_LIBM_ENTRY(erfcl)
 }
 ;;
 
-{ .mfi              
+{ .mfi
       ldfe           FR_A14 = [GR_P_POINT_1], -32
-      nop.f          0                  
+      nop.f          0
       extr.u         GR_M2 = GR_N_fix, 0, 6               // Extract index M_2
 }
-{ .mfi              
+{ .mfi
       ldfe           FR_A15 = [GR_P_POINT_2], -32
-      nop.f          0            
+      nop.f          0
       shladd         GR_ad_W1 = GR_M1,3,GR_ad_W1                // Point to W1
 }
 ;;
@@ -1555,7 +1555,7 @@ GLOBAL_LIBM_ENTRY(erfcl)
       nop.f          0
       shladd         GR_ad_T1 = GR_M1,2,GR_ad_T1                // Point to T1
 }
-;;    
+;;
 
 { .mfi
       ldfe           FR_A8 = [GR_P_POINT_1], 32
@@ -1568,38 +1568,38 @@ GLOBAL_LIBM_ENTRY(erfcl)
       shladd         GR_ad_W2 = GR_M2,3,GR_ad_W2                // Point to W2
 }
 ;;
-  
+
 { .mfi
-      ldfe           FR_A10 = [GR_P_POINT_1], -96   
+      ldfe           FR_A10 = [GR_P_POINT_1], -96
       nop.f          0
       shladd         GR_ad_T2 = GR_M2,2,GR_ad_T2                // Point to T2
 }
 { .mfi
-      ldfe           FR_A11 = [GR_P_POINT_2], -96    
+      ldfe           FR_A11 = [GR_P_POINT_2], -96
       fnma.s1        FR_r = FR_L_lo, FR_float_N, FR_r //r = -L_lo*float_N + r
       nop.i          0
 }
-;;   
+;;
 
-{ .mfi              
+{ .mfi
       ldfe           FR_A4 = [GR_P_POINT_1], 32
 (p10) fms.s1         FR_Tmp = FR_dx,f1, FR_Xpdx_hi   //for lo  of  x+dx, x<=dx
       nop.i          0
 }
-{ .mfi              
+{ .mfi
       ldfe           FR_A5 = [GR_P_POINT_2], 32
 (p9)  fms.s1         FR_Tmp = FR_AbsArg, f1, FR_Xpdx_hi //for lo of x+dx, x>dx
       nop.i          0
 }
 ;;
 
-{ .mfi       
-      ldfe           FR_A6 = [GR_P_POINT_1], -64     
+{ .mfi
+      ldfe           FR_A6 = [GR_P_POINT_1], -64
       frcpa.s1       FR_U,p11 = f1, FR_Xpdx_hi          //  hi of  1 /(x + dx)
       nop.i          0
 }
-{ .mfi      
-      ldfe           FR_A7 = [GR_P_POINT_2], -64  
+{ .mfi
+      ldfe           FR_A7 = [GR_P_POINT_2], -64
       nop.f          0
       nop.i          0
 }
@@ -1607,17 +1607,17 @@ GLOBAL_LIBM_ENTRY(erfcl)
 
 { .mfi
       ldfe           FR_A2 = [GR_P_POINT_1], -32
-      nop.f          0            
-      nop.i          0       
+      nop.f          0
+      nop.i          0
 }
 { .mfi
       ldfe           FR_A3 = [GR_P_POINT_2], -32
-      nop.f          0      
-      nop.i          0       
+      nop.f          0
+      nop.i          0
 }
 ;;
 
-{ .mfi      
+{ .mfi
       ldfe           FR_A0 = [GR_P_POINT_1], 224
       nop.f          0
       nop.i          0
@@ -1631,37 +1631,37 @@ GLOBAL_LIBM_ENTRY(erfcl)
 
 { .mfi
       ldfd           FR_W1 = [GR_ad_W1],0                            // Get W1
-      nop.f          0            
-      nop.i          0       
+      nop.f          0
+      nop.i          0
 }
 { .mfi
       ldfd           FR_W2 = [GR_ad_W2],0                            // Get W2
       fma.s1         FR_poly = FR_r, FR_C3, FR_C2        // poly = r * A3 + A2
-      nop.i          0       
+      nop.i          0
 }
 ;;
 
 { .mfi
       ldfs           FR_T1 = [GR_ad_T1],0                            // Get T1
 (p10) fma.s1         FR_Xpdx_lo = FR_AbsArg,f1, FR_Tmp//lo of x + dx , x <= dx
-      nop.i          0 
+      nop.i          0
 }
 { .mfi
       ldfs           FR_T2 = [GR_ad_T2],0                            // Get T2
 (p9)  fma.s1         FR_Xpdx_lo = FR_dx,f1, FR_Tmp   // lo  of  x + dx, x > dx
-      nop.i          0 
+      nop.i          0
 }
 ;;
 
 { .mfi
       nop.m          0
       fnma.s1        FR_Tmp1 = FR_Xpdx_hi, FR_U, FR_2        //  N-R, iter. N1
-      nop.i          0 
+      nop.i          0
 }
 { .mfi
       nop.m          0
       fmpy.s1        FR_rsq = FR_r, FR_r                        // rsq = r * r
-      nop.i          0 
+      nop.i          0
 }
 ;;
 
@@ -1671,32 +1671,32 @@ GLOBAL_LIBM_ENTRY(erfcl)
       nop.i          0
 }
 { .mfi
-      nop.m          0 
-      fma.s1         FR_P15_0_1 = FR_A15, FR_LocArg, FR_A14 
-      nop.i          0 
+      nop.m          0
+      fma.s1         FR_P15_0_1 = FR_A15, FR_LocArg, FR_A14
+      nop.i          0
 }
 ;;
 
 { .mfi
       nop.m          0
-      fma.s1         FR_P15_1_2 = FR_A13, FR_LocArg, FR_A12 
-      nop.i          0 
+      fma.s1         FR_P15_1_2 = FR_A13, FR_LocArg, FR_A12
+      nop.i          0
 }
 { .mfi
       nop.m          0
       fma.s1         FR_poly = FR_r, FR_poly, FR_C1    // poly = r * poly + A1
-      nop.i          0 
+      nop.i          0
 }
 ;;
 
 { .mfi
       nop.m          0
-      fma.s1         FR_P15_2_1 = FR_A9, FR_LocArg, FR_A8 
-      nop.i          0 
+      fma.s1         FR_P15_2_1 = FR_A9, FR_LocArg, FR_A8
+      nop.i          0
 }
 { .mfi
       nop.m          0
-      fma.s1         FR_P15_2_2 = FR_A11, FR_LocArg, FR_A10 
+      fma.s1         FR_P15_2_2 = FR_A11, FR_LocArg, FR_A10
       nop.i          0
 }
 ;;
@@ -1711,7 +1711,7 @@ GLOBAL_LIBM_ENTRY(erfcl)
 { .mfi
       nop.m          0
       fma.s1         FR_P15_3_1 = FR_A5, FR_LocArg, FR_A4
-      nop.i          0                   
+      nop.i          0
 }
 { .mfi
       nop.m          0
@@ -1730,8 +1730,8 @@ GLOBAL_LIBM_ENTRY(erfcl)
       fma.s1         FR_W = FR_W1, FR_W2, FR_W2            // W = W1 * W2 + W2
       nop.i          0
 }
-;; 
-                      
+;;
+
 { .mfi
       nop.m          0
       fmpy.s1        FR_T = FR_T1, FR_T2                        // T = T1 * T2
@@ -1791,7 +1791,7 @@ GLOBAL_LIBM_ENTRY(erfcl)
 { .mfi
       nop.m          0
       fma.s1         FR_T_scale = FR_T, FR_scale, f0    // T_scale = T * scale
-      nop.i          0 
+      nop.i          0
 }
 ;;
 
@@ -1805,7 +1805,7 @@ GLOBAL_LIBM_ENTRY(erfcl)
 { .mfi
       nop.m          0
       fma.s1         FR_U = FR_U, FR_Tmp, f0                 //  N-R, iter. N2
-      nop.i          0 
+      nop.i          0
 }
 ;;
 
@@ -1823,15 +1823,15 @@ GLOBAL_LIBM_ENTRY(erfcl)
 
 { .mfi
       nop.m          0
-      fma.s1         FR_M =  FR_T_scale, FR_S, f0 
-      nop.i          0 
+      fma.s1         FR_M =  FR_T_scale, FR_S, f0
+      nop.i          0
 }
 ;;
 
 { .mfi
       nop.m          0
       fnma.s1        FR_Tmp = FR_Xpdx_hi, FR_U, FR_2         //  N-R, iter. N3
-      nop.i          0 
+      nop.i          0
 }
 ;;
 
@@ -1845,20 +1845,20 @@ GLOBAL_LIBM_ENTRY(erfcl)
 { .mfi
       nop.m          0
       fms.s1         FR_H = FR_W, f1, FR_xsq_lo              // H = W - xsq_lo
-      nop.i          0 
+      nop.i          0
 }
 ;;
 
 { .mfi
       nop.m          0
       fma.s1         FR_U = FR_U, FR_Tmp, f0                 //  N-R, iter. N3
-      nop.i          0 
+      nop.i          0
 }
 ;;
 
 { .mfi
       nop.m          0
-      fma.s1         FR_Q = FR_A1, FR_LocArg, FR_Q         
+      fma.s1         FR_Q = FR_A1, FR_LocArg, FR_Q
       nop.i          0
 }
 ;;
@@ -1866,12 +1866,12 @@ GLOBAL_LIBM_ENTRY(erfcl)
 { .mfi
       nop.m          0
       fnma.s1        FR_Tmp = FR_Xpdx_hi, FR_U, f1                   // for du
-      nop.i          0 
+      nop.i          0
 }
 { .mfi
       nop.m          0
-      fma.s1         FR_R = FR_H, FR_poly, FR_poly  
-      nop.i          0 
+      fma.s1         FR_R = FR_H, FR_poly, FR_poly
+      nop.i          0
 }
 ;;
 
@@ -1879,28 +1879,28 @@ GLOBAL_LIBM_ENTRY(erfcl)
       nop.m          0
       fma.s1         FR_res_pos_x_hi = FR_M, FR_U, f0                 //  M *U
       nop.i          0
- 
+
 }
-;;  
+;;
 
 { .mfi
       nop.m          0
       fma.s1         FR_R = FR_R, f1, FR_H            // R = H + P(r) + H*P(r)
-      nop.i          0 
+      nop.i          0
 }
 ;;
 
 { .mfi
       nop.m          0
       fma.s0         FR_Tmpf = f8, f1, f0                          //  flag  d
-      nop.i          0 
+      nop.i          0
 }
 ;;
 
 { .mfi
       nop.m          0
-      fnma.s1        FR_dU = FR_Xpdx_lo, FR_U, FR_Tmp 
-      nop.i          0 
+      fnma.s1        FR_dU = FR_Xpdx_lo, FR_U, FR_Tmp
+      nop.i          0
 }
 ;;
 
@@ -1908,23 +1908,23 @@ GLOBAL_LIBM_ENTRY(erfcl)
 // for -6.5 <= x < 0
 { .mfi
       nop.m          0
-      fms.s1         FR_res_pos_x_lo = FR_M, FR_U, FR_res_pos_x_hi 
-      nop.i          0                      
- 
+      fms.s1         FR_res_pos_x_lo = FR_M, FR_U, FR_res_pos_x_hi
+      nop.i          0
+
 }
 { .mfi
       nop.m          0
 (p7)  fnma.s1        FR_Tmp1 = FR_res_pos_x_hi, f1, FR_2           //p7: x < 0
-      nop.i          0                      
- 
+      nop.i          0
+
 }
 ;;
 
 { .mfi
       nop.m          0
-      fma.s1         FR_G = FR_R, FR_Q, FR_Q    
+      fma.s1         FR_G = FR_R, FR_Q, FR_Q
       nop.i          0
- 
+
 }
 ;;
 
@@ -1932,31 +1932,31 @@ GLOBAL_LIBM_ENTRY(erfcl)
       nop.m          0
       fma.s1         FR_Tmp = FR_R, f1, FR_dU                       //  R + du
       nop.i          0
- 
+
 }
 ;;
 
 { .mfi
       nop.m          0
 (p7)  fnma.s1        FR_Tmp2 = FR_Tmp1, f1, FR_2                   //p7: x < 0
-      nop.i          0                      
- 
+      nop.i          0
+
 }
 ;;
 
 { .mfi
       nop.m          0
-      fma.s1         FR_G = FR_G, f1, FR_Tmp    
+      fma.s1         FR_G = FR_G, f1, FR_Tmp
       nop.i          0
- 
+
 }
 ;;
 
 { .mfi
       nop.m          0
 (p7)  fnma.s1        FR_Tmp2 = FR_res_pos_x_hi, f1, FR_Tmp2        //p7: x < 0
-      nop.i          0                      
- 
+      nop.i          0
+
 }
 ;;
 
@@ -1964,42 +1964,42 @@ GLOBAL_LIBM_ENTRY(erfcl)
       nop.m          0
       fma.s1         FR_V = FR_G, FR_res_pos_x_hi, f0          // V = G * M *U
       nop.i          0
- 
+
 }
 ;;
 
 { .mfi
       nop.m          0
 (p7)  fma.s1         FR_res_pos_x_lo = FR_res_pos_x_lo, f1, FR_V   //p7: x < 0
-      nop.i          0                      
- 
+      nop.i          0
+
 }
 ;;
 
 { .mfi
       nop.m          0
 (p7)  fnma.s1        FR_Tmp2 = FR_res_pos_x_lo, f1, FR_Tmp2        //p7: x < 0
-      nop.i          0                      
- 
+      nop.i          0
+
 }
 ;;
 
 
-//p6: result for     0 < x < = POS_ARG_ASYMP 
+//p6: result for     0 < x < = POS_ARG_ASYMP
 //p7: result for   - NEG_ARG_ASYMP  <= x < 0
 //p8: exit   for   - NEG_ARG_ASYMP  <=   x < UnfBound
 
-ERFC_RESULT:                 
+ERFC_RESULT:
 .pred.rel "mutex",p6,p7
 { .mfi
       nop.m          0
 (p6)  fma.s0         f8 = FR_M, FR_U, FR_V                       // p6: x >= 0
-      nop.i          0         
+      nop.i          0
 }
 { .mfb
       mov            GR_Parameter_TAG = 207
 (p7)  fma.s0         f8 = FR_Tmp2, f1, FR_Tmp1                    // p7: x < 0
-(p8)  br.ret.sptk    b0                                      
+(p8)  br.ret.sptk    b0
 };;
 
 GLOBAL_LIBM_END(erfcl)
@@ -2019,7 +2019,7 @@ LOCAL_LIBM_ENTRY(__libm_error_region)
         mov  GR_SAVE_PFS=ar.pfs                                 // Save ar.pfs
 }
 { .mfi
-.fframe 64 
+.fframe 64
         add sp=-64,sp                                      // Create new stack
         nop.f 0
         mov GR_SAVE_GP=gp                                           // Save gp
@@ -2027,18 +2027,18 @@ LOCAL_LIBM_ENTRY(__libm_error_region)
 { .mmi
         stfe [GR_Parameter_Y] = FR_Y,16          // STORE Parameter 2 on stack
         add GR_Parameter_X = 16,sp                      // Parameter 1 address
-.save   b0, GR_SAVE_B0                      
+.save   b0, GR_SAVE_B0
         mov GR_SAVE_B0=b0                                           // Save b0
 };;
 .body
 { .mib
         stfe [GR_Parameter_X] = FR_X             // STORE Parameter 1 on stack
         add   GR_Parameter_RESULT = 0,GR_Parameter_Y    // Parameter 3 address
-        nop.b 0        
+        nop.b 0
 }
 { .mib
         stfe [GR_Parameter_Y] = FR_RESULT        // STORE Parameter 3 on stack
-        add   GR_Parameter_Y = -16,GR_Parameter_Y  
+        add   GR_Parameter_Y = -16,GR_Parameter_Y
         br.call.sptk b0=__libm_error_support#  // Call error handling function
 };;
 { .mmi
@@ -2056,7 +2056,7 @@ LOCAL_LIBM_ENTRY(__libm_error_region)
         mov   gp = GR_SAVE_GP                                    // Restore gp
         mov   ar.pfs = GR_SAVE_PFS                           // Restore ar.pfs
         br.ret.sptk     b0                                           // Return
-};; 
+};;
 
 LOCAL_LIBM_END(__libm_error_region)
 .type   __libm_error_support#,@function

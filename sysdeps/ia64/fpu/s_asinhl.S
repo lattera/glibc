@@ -21,25 +21,25 @@
 // products derived from this software without specific prior written
 // permission.
 
-// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
-// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
 // LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL INTEL OR ITS 
+// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL INTEL OR ITS
 // CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-// EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, 
-// PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
-// PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY 
+// EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+// PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+// PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY
 // OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY OR TORT (INCLUDING
-// NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS 
-// SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. 
-// 
+// NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+// SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
 // Intel Corporation is the author of this code, and requests that all
-// problem reports or change requests be submitted to it directly at 
+// problem reports or change requests be submitted to it directly at
 // http://www.intel.com/software/products/opensource/libraries/num.htm.
 //
 //*********************************************************************
 //
-// History: 
+// History:
 // 09/04/01 Initial version
 // 09/13/01 Performance improved, symmetry problems fixed
 // 10/10/01 Performance improved, split issues removed
@@ -56,31 +56,31 @@
 //
 // Overview of operation
 //==============================================================
-// 
+//
 // There are 6 paths:
 // 1. x = 0, [S,Q]Nan or +/-INF
 //    Return asinhl(x) = x + x;
-// 
+//
 // 2. x = + denormal
 //    Return asinhl(x) = x - x^2;
-//            
+//
 // 3. x = - denormal
 //    Return asinhl(x) = x + x^2;
-//            
+//
 // 4. 'Near 0': max denormal < |x| < 1/128
 //    Return asinhl(x) = sign(x)*(x+x^3*(c3+x^2*(c5+x^2*(c7+x^2*(c9)))));
 //
 // 5. 'Huges': |x| > 2^63
 //    Return asinhl(x) = sign(x)*(logl(2*x));
-//                    
+//
 // 6. 'Main path': 1/128 < |x| < 2^63
 //    b_hi + b_lo = x + sqrt(x^2 + 1);
 //    asinhl(x) = sign(x)*(log_special(b_hi, b_lo));
-//  
-// Algorithm description                                                      
+//
+// Algorithm description
 //==============================================================
 //
-// Main path algorithm 
+// Main path algorithm
 // ( thanks to Peter Markstein for the idea of sqrt(x^2+1) computation! )
 // *************************************************************************
 //
@@ -89,19 +89,19 @@
 //  1) p2 = (p2_hi+p2_lo) = x^2+1 obtaining
 //     ------------------------------------
 //     p2_hi = x2_hi + 1, where x2_hi = x * x;
-//     p2_lo = x2_lo + p1_lo, where 
-//                            x2_lo = FMS(x*x-x2_hi), 
+//     p2_lo = x2_lo + p1_lo, where
+//                            x2_lo = FMS(x*x-x2_hi),
 //                            p1_lo = (1 - p2_hi) + x2_hi;
 //
 //  2) g = (g_hi+g_lo) = sqrt(p2) = sqrt(p2_hi+p2_lo)
 //     ----------------------------------------------
 //     r = invsqrt(p2_hi) (8-bit reciprocal square root approximation);
 //     g = p2_hi * r (first 8 bit-approximation of sqrt);
-//     
+//
 //     h = 0.5 * r;
 //     e = 0.5 - g * h;
 //     g = g * e + g (second 16 bit-approximation of sqrt);
-//     
+//
 //     h = h * e + h;
 //     e = 0.5 - g * h;
 //     g = g * e + g (third 32 bit-approximation of sqrt);
@@ -109,7 +109,7 @@
 //     h = h * e + h;
 //     e = 0.5 - g * h;
 //     g_hi = g * e + g (fourth 64 bit-approximation of sqrt);
-//  
+//
 //     Remainder computation:
 //     h = h * e + h;
 //     d = (p2_hi - g_hi * g_hi) + p2_lo;
@@ -119,15 +119,15 @@
 //     -------------------------------------------------------------------
 //     b_hi = (g_hi + x) + gl;
 //     b_lo = (g_hi - b_hi) + x + gl;
-//     
+//
 //  Now we pass b presented as sum b_hi + b_lo to special version
 //  of logl function which accept a pair of arguments as
-//  'mutiprecision' value.   
-//  
+//  'mutiprecision' value.
+//
 //  Special log algorithm overview
 //  ================================
 //   Here we use a table lookup method. The basic idea is that in
-//   order to compute logl(Arg) = logl (Arg-1) for an argument Arg in [1,2), 
+//   order to compute logl(Arg) = logl (Arg-1) for an argument Arg in [1,2),
 //   we construct a value G such that G*Arg is close to 1 and that
 //   logl(1/G) is obtainable easily from a table of values calculated
 //   beforehand. Thus
@@ -157,7 +157,7 @@
 //      G := G_1 * G_2 * G_3
 //      r := (G * S_hi - 1) + G * S_lo
 //
-//   These G_j's have the property that the product is exactly 
+//   These G_j's have the property that the product is exactly
 //   representable and that |r| < 2^(-12) as a result.
 //
 //   Step 2: Approximation
@@ -166,7 +166,7 @@
 //
 //   Step 3: Reconstruction
 //
-//   Finally, 
+//   Finally,
 //
 //   logl( X )   =   logl( 2^N * (S_hi + S_lo) )
 //                 ~=~  N*logl(2) + logl(1/G) + logl(1 + r)
@@ -176,25 +176,25 @@
 //
 // Registers used
 //==============================================================
-// Floating Point registers used: 
+// Floating Point registers used:
 // f8, input
 // f32 -> f101 (70 registers)
 
-// General registers used:  
+// General registers used:
 // r32 -> r57 (26 registers)
 
 // Predicate registers used:
 // p6 -> p11
 // p6  for '0, NaNs, Inf' path
-// p7  for '+ denormals' path 
+// p7  for '+ denormals' path
 // p8  for 'near 0' path
 // p9  for 'huges' path
-// p10 for '- denormals' path 
+// p10 for '- denormals' path
 // p11 for negative values
 //
 // Data tables
 //==============================================================
-     
+
 RODATA
 .align 64
 
@@ -210,14 +210,14 @@ data8 0x999999999991D582, 0x00003FFB
 data8 0xAAAAAAAAAAAAAAA9, 0x0000BFFC
 LOCAL_OBJECT_END(Poly_C_near_0_35)
 
-// Q coeffs 
+// Q coeffs
 LOCAL_OBJECT_START(Constants_Q)
-data4  0x00000000,0xB1721800,0x00003FFE,0x00000000 
+data4  0x00000000,0xB1721800,0x00003FFE,0x00000000
 data4  0x4361C4C6,0x82E30865,0x0000BFE2,0x00000000
 data4  0x328833CB,0xCCCCCAF2,0x00003FFC,0x00000000
 data4  0xA9D4BAFB,0x80000077,0x0000BFFD,0x00000000
 data4  0xAAABE3D2,0xAAAAAAAA,0x00003FFD,0x00000000
-data4  0xFFFFDAB7,0xFFFFFFFF,0x0000BFFD,0x00000000 
+data4  0xFFFFDAB7,0xFFFFFFFF,0x0000BFFD,0x00000000
 LOCAL_OBJECT_END(Constants_Q)
 
 // Z1 - 16 bit fixed
@@ -332,7 +332,7 @@ data4  0x3F71D488,0x3D693B9D
 data8  0xBE049391B6B7C239
 LOCAL_OBJECT_END(Constants_G_H_h2)
 
-// G3 and H3 - IEEE single and h3 - IEEE double 
+// G3 and H3 - IEEE single and h3 - IEEE double
 LOCAL_OBJECT_START(Constants_G_H_h3)
 data4  0x3F7FFC00,0x38800100
 data8  0x3D355595562224CD
@@ -408,62 +408,62 @@ LOCAL_OBJECT_END(Constants_G_H_h3)
 FR_Arg          = f8
 FR_Res          = f8
 FR_AX           = f32
-FR_XLog_Hi      = f33 
-FR_XLog_Lo      = f34 
+FR_XLog_Hi      = f33
+FR_XLog_Lo      = f34
 
     // Special logl registers
-FR_Y_hi         = f35  
+FR_Y_hi         = f35
 FR_Y_lo         = f36
 
 FR_Scale        = f37
-FR_X_Prime      = f38 
-FR_S_hi         = f39  
+FR_X_Prime      = f38
+FR_S_hi         = f39
 FR_W            = f40
 FR_G            = f41
 
 FR_H            = f42
-FR_wsq          = f43 
+FR_wsq          = f43
 FR_w4           = f44
 FR_h            = f45
-FR_w6           = f46  
+FR_w6           = f46
 
 FR_G2           = f47
 FR_H2           = f48
 FR_poly_lo      = f49
-FR_P8           = f50  
+FR_P8           = f50
 FR_poly_hi      = f51
 
-FR_P7           = f52  
-FR_h2           = f53 
-FR_rsq          = f54  
+FR_P7           = f52
+FR_h2           = f53
+FR_rsq          = f54
 FR_P6           = f55
-FR_r            = f56  
+FR_r            = f56
 
-FR_log2_hi      = f57  
-FR_log2_lo      = f58  
- 
-FR_float_N      = f59 
-FR_Q4           = f60 
+FR_log2_hi      = f57
+FR_log2_lo      = f58
 
-FR_G3           = f61  
-FR_H3           = f62  
-FR_h3           = f63  
+FR_float_N      = f59
+FR_Q4           = f60
 
-FR_Q3           = f64  
-FR_Q2           = f65 
-FR_1LN10_hi     = f66 
+FR_G3           = f61
+FR_H3           = f62
+FR_h3           = f63
 
-FR_Q1           = f67 
-FR_1LN10_lo     = f68 
-FR_P5           = f69 
-FR_rcub         = f70 
+FR_Q3           = f64
+FR_Q2           = f65
+FR_1LN10_hi     = f66
 
-FR_Neg_One      = f71 
-FR_Z            = f72 
-FR_AA           = f73 
-FR_BB           = f74 
-FR_S_lo         = f75 
-FR_2_to_minus_N = f76 
+FR_Q1           = f67
+FR_1LN10_lo     = f68
+FR_P5           = f69
+FR_rcub         = f70
+
+FR_Neg_One      = f71
+FR_Z            = f72
+FR_AA           = f73
+FR_BB           = f74
+FR_S_lo         = f75
+FR_2_to_minus_N = f76
 
 
     // Huge & Main path prolog registers
@@ -512,22 +512,22 @@ GR_Poly_C_35    = r45
 GR_Poly_C_79    = r46
 
     // Special logl registers
-GR_Index1       = r34 
-GR_Index2       = r35 
-GR_signif       = r36 
-GR_X_0          = r37 
-GR_X_1          = r38 
-GR_X_2          = r39 
-GR_Z_1          = r40 
-GR_Z_2          = r41 
-GR_N            = r42 
-GR_Bias         = r43 
-GR_M            = r44 
-GR_Index3       = r45 
-GR_exp_2tom80   = r45 
-GR_exp_mask     = r47 
-GR_exp_2tom7    = r48 
-GR_ad_ln10      = r49 
+GR_Index1       = r34
+GR_Index2       = r35
+GR_signif       = r36
+GR_X_0          = r37
+GR_X_1          = r38
+GR_X_2          = r39
+GR_Z_1          = r40
+GR_Z_2          = r41
+GR_N            = r42
+GR_Bias         = r43
+GR_M            = r44
+GR_Index3       = r45
+GR_exp_2tom80   = r45
+GR_exp_mask     = r47
+GR_exp_2tom7    = r48
+GR_ad_ln10      = r49
 GR_ad_tbl_1     = r50
 GR_ad_tbl_2     = r51
 GR_ad_tbl_3     = r52
@@ -593,7 +593,7 @@ GLOBAL_LIBM_ENTRY(asinhl)
 { .mfb
       cmp.le    p9, p0        = GR_TwoP63, GR_ArgExp  // if arg > 2^63 ('huges')
 (p6)  fma.s0    FR_Res        = FR_Arg,f1,FR_Arg     // r = a + a
-(p6)  br.ret.spnt b0                            // return       
+(p6)  br.ret.spnt b0                            // return
 };;
 // (X^2 + 1) computation
 { .mfi
@@ -677,7 +677,7 @@ GLOBAL_LIBM_ENTRY(asinhl)
 
 { .mfi
       ldfe      FR_Q1         = [GR_ad_q]                // Load Q1
-      fma.s1    FR_GG         = FR_GG, FR_EE, FR_GG     // g = g * e + g 
+      fma.s1    FR_GG         = FR_GG, FR_EE, FR_GG     // g = g * e + g
                                               // 16 bit Newton Raphson iteration
       nop.i 0
 }
@@ -695,7 +695,7 @@ GLOBAL_LIBM_ENTRY(asinhl)
 
 { .mfi
       nop.m 0
-      fma.s1    FR_GG         = FR_GG, FR_EE, FR_GG     // g = g * e + g 
+      fma.s1    FR_GG         = FR_GG, FR_EE, FR_GG     // g = g * e + g
                                               // 32 bit Newton Raphson iteration
       nop.i 0
 }
@@ -713,7 +713,7 @@ GLOBAL_LIBM_ENTRY(asinhl)
 
 { .mfi
       nop.m 0
-      fma.s1    FR_GG         = FR_GG, FR_EE, FR_GG     // g = g * e + g 
+      fma.s1    FR_GG         = FR_GG, FR_EE, FR_GG     // g = g * e + g
                                               // 64 bit Newton Raphson iteration
       nop.i 0
 }
@@ -806,7 +806,7 @@ GLOBAL_LIBM_ENTRY(asinhl)
 { .mfi
       nop.m 0
       nop.f 0
-      extr.u    GR_Index2     = GR_X_1, 6, 4      // Extract bits 6-9 of X_1 
+      extr.u    GR_Index2     = GR_X_1, 6, 4      // Extract bits 6-9 of X_1
 };;
 
 
@@ -839,7 +839,7 @@ GLOBAL_LIBM_ENTRY(asinhl)
       pmpyshr2.u GR_X_2       = GR_X_1,GR_Z_2,15 // Get bits 30-15 of X_1 * Z_2
 };;
 
-// WE CANNOT USE GR_X_2 IN NEXT 3 CYCLES ("DEAD" ZONE!) 
+// WE CANNOT USE GR_X_2 IN NEXT 3 CYCLES ("DEAD" ZONE!)
 // BECAUSE OF POSSIBLE 10 CLOCKS STALL!
 // So we can negate Q coefficients there for negative values
 
@@ -1001,7 +1001,7 @@ GLOBAL_LIBM_ENTRY(asinhl)
 
 { .mfi
       nop.m 0
-      fadd.s0   FR_Y_lo       = FR_poly_hi, FR_poly_lo  
+      fadd.s0   FR_Y_lo       = FR_poly_hi, FR_poly_lo
 	                                                     // Y_lo=poly_hi+poly_lo
       nop.i 0
 }
@@ -1088,7 +1088,7 @@ huges_logl:
 
 { .mmi
       ldfe      FR_log2_lo    = [GR_ad_q],16      // Load log2_lo
-      sub       GR_N          = GR_N, GR_Bias 
+      sub       GR_N          = GR_N, GR_Bias
       mov       GR_exp_2tom80 = 0x0ffaf           // Exponent of 2^-80
 };;
 
@@ -1107,7 +1107,7 @@ huges_logl:
 { .mmi
       nop.m 0
       ldfe      FR_Q2         = [GR_ad_q],16      // Load Q2
-      extr.u    GR_Index2     = GR_X_1, 6, 4      // Extract bits 6-9 of X_1 
+      extr.u    GR_Index2     = GR_X_1, 6, 4      // Extract bits 6-9 of X_1
 };;
 
 { .mmi

@@ -3,9 +3,9 @@
 
 // Copyright (c) 2000 - 2003, Intel Corporation
 // All rights reserved.
-// 
+//
 // Contributed 2000 by the Intel Numerics Group, Intel Corporation
-// 
+//
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are
 // met:
@@ -21,20 +21,20 @@
 // products derived from this software without specific prior written
 // permission.
 
-// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
-// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
 // LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL INTEL OR ITS 
+// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL INTEL OR ITS
 // CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-// EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, 
-// PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
-// PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY 
+// EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+// PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+// PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY
 // OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY OR TORT (INCLUDING
-// NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS 
-// SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. 
-// 
+// NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+// SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
 // Intel Corporation is the author of this code, and requests that all
-// problem reports or change requests be submitted to it directly at 
+// problem reports or change requests be submitted to it directly at
 // http://www.intel.com/software/products/opensource/libraries/num.htm.
 //
 //********************************************************************
@@ -120,7 +120,7 @@ GLOBAL_IEEE754_ENTRY(sqrt)
   setf.s f10=r3
   // Step (1)
   // y0 = 1/sqrt(a) in f7
-  fclass.m.unc p7,p8 = f8,0x3A 
+  fclass.m.unc p7,p8 = f8,0x3A
   nop.i 0;;
 } { .mlx
   nop.m 0
@@ -238,7 +238,7 @@ GLOBAL_IEEE754_ENTRY(sqrt)
   // g2 = g1 + d * h1 in f7
   (p6) fma.d.s0 f8=f9,f6,f7
   (p6) br.ret.sptk b0 ;;
-} 
+}
 
 { .mfb
   nop.m 0
@@ -273,7 +273,7 @@ LOCAL_LIBM_ENTRY(__libm_error_region)
 //
 // This branch includes all those special values that are not negative,
 // with the result equal to frcpa(x)
-// 
+//
 
 .prologue
 // We are distinguishing between over(under)flow and letting
@@ -307,7 +307,7 @@ LOCAL_LIBM_ENTRY(__libm_error_region)
 { .mib
         stfd [GR_Parameter_X] = f15                    // STORE Parameter 1 on stack
         add   GR_Parameter_RESULT = 0,GR_Parameter_Y   // Parameter 3 address
-        nop.b 0                                
+        nop.b 0
 }
 { .mib
         stfd [GR_Parameter_Y] = f8                     // STORE Parameter 3 on stack

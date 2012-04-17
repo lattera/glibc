@@ -1471,7 +1471,7 @@ POW_POSSIBLE_UNDER:
 //   0.1...11 2^-3ffe                                   (biased, 1)
 //    largest dn                               smallest normal
 
-// Form small constant (2^-170) to correct underflow result near region of 
+// Form small constant (2^-170) to correct underflow result near region of
 // smallest denormal in round-nearest.
 
 // Put in s2 (td set, ftz set)
@@ -1482,9 +1482,9 @@ POW_POSSIBLE_UNDER:
         mov pow_GR_rcs0_mask            = 0x0c00 // Set mask for rc.s0
 }
 { .mfi
-(p12)   mov pow_GR_tmp                  = 0x2ffff - 170 
+(p12)   mov pow_GR_tmp                  = 0x2ffff - 170
         nop.f 999
-(p13)   mov pow_GR_tmp                  = 0x0ffff - 170 
+(p13)   mov pow_GR_tmp                  = 0x0ffff - 170
 }
 ;;
 

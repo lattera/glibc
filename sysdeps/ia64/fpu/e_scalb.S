@@ -378,7 +378,7 @@ SCALB_UNDERFLOW:
 SCALB_NAN_INF_ZERO:
 
 //
-//   Before entry, N has been converted to a fp integer in significand of 
+//   Before entry, N has been converted to a fp integer in significand of
 //     FR_N_float_int
 //
 //   Convert  N_float_int to floating point value

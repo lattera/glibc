@@ -21,20 +21,20 @@
 // products derived from this software without specific prior written
 // permission.
 
-// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
-// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
 // LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL INTEL OR ITS 
+// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL INTEL OR ITS
 // CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-// EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, 
-// PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
-// PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY 
+// EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+// PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+// PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY
 // OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY OR TORT (INCLUDING
-// NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS 
-// SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. 
-// 
+// NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+// SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
 // Intel Corporation is the author of this code, and requests that all
-// problem reports or change requests be submitted to it directly at 
+// problem reports or change requests be submitted to it directly at
 // http://www.intel.com/software/products/opensource/libraries/num.htm.
 //
 // History
@@ -51,23 +51,23 @@
 // Overview of operation
 //==============================================================
 // 1. 0 <= x <= 10.06
-//    
+//
 //    erfcf(x)  = P15(x) * exp( -x^2 )
 //
 //    Comment:
 //
 //    Let x(0)=0, x(i) = 2^(i), i=1,...3, x(4)= 10.06
-// 
+//
 //    Let x(i)<= x < x(i+1).
 //    We can find i as exponent of argument x (let i = 0 for 0<= x < 2  )
-// 
+//
 //    Let P15(x) - polynomial approximation of degree 15 for function
 //    erfcf(x) * exp( x^2) and x(i) <= x <= x(i+1), i = 0,1,2,3
 //    Polynomial coeffitients we have in the table erfc_p_table.
 //
 //    So we can find result for erfcf(x) as above.
 //    Algorithm description for exp function see below.
-//                     
+//
 // 2. -4.4 <= x < 0
 //
 //    erfcf(x)  = 2.0 - erfcf(-x)
@@ -77,20 +77,20 @@
 //    erfcf(x)  ~=~ 0.0
 //
 // 4. x < -4.4
-//            
+//
 //    erfcf(x)  ~=~ 2.0
 
-// Special values 
+// Special values
 //==============================================================
 // erfcf(+0)    = 1.0
 // erfcf(-0)    = 1.0
 
-// erfcf(+qnan) = +qnan 
-// erfcf(-qnan) = -qnan 
-// erfcf(+snan) = +qnan 
-// erfcf(-snan) = -qnan 
+// erfcf(+qnan) = +qnan
+// erfcf(-qnan) = -qnan
+// erfcf(+snan) = +qnan
+// erfcf(-snan) = -qnan
 
-// erfcf(-inf)  = 2.0 
+// erfcf(-inf)  = 2.0
 // erfcf(+inf)  = +0
 
 //==============================================================
@@ -123,12 +123,12 @@
 //
 // Registers used
 //==============================================================
-// Floating Point registers used: 
+// Floating Point registers used:
 // f8, input
 // f6,f7,f9 -> f11,  f32 -> f92
 
-// General registers used: 
-// r14 -> r22,r32 -> r50 
+// General registers used:
+// r14 -> r22,r32 -> r50
 
 // Predicate registers used:
 // p6 -> p15
@@ -195,10 +195,10 @@ EXP_INV_LN2_2TO63      = f7
 EXP_W_2TO56_RSH        = f9
 exp_ln2_by_128_hi      = f11
 
-EXP_RSHF_2TO56         = f32 
-exp_ln2_by_128_lo      = f33 
+EXP_RSHF_2TO56         = f32
+exp_ln2_by_128_lo      = f33
 EXP_RSHF               = f34
-EXP_Nfloat             = f35 
+EXP_Nfloat             = f35
 exp_r                  = f36
 exp_rsq                = f37
 EXP_2M                 = f38
@@ -206,7 +206,7 @@ exp_S1                 = f39
 exp_T1                 = f40
 exp_P                  = f41
 exp_S                  = f42
-EXP_NORM_f8            = f43   
+EXP_NORM_f8            = f43
 exp_S2                 = f44
 exp_T2                 = f45
 
@@ -281,19 +281,19 @@ RODATA
 
 // double-extended 1/ln(2)
 // 3fff b8aa 3b29 5c17 f0bb be87fed0691d3e88
-// 3fff b8aa 3b29 5c17 f0bc 
+// 3fff b8aa 3b29 5c17 f0bc
 // For speed the significand will be loaded directly with a movl and setf.sig
 //   and the exponent will be bias+63 instead of bias+0.  Thus subsequent
 //   computations need to scale appropriately.
-// The constant 128/ln(2) is needed for the computation of w.  This is also 
+// The constant 128/ln(2) is needed for the computation of w.  This is also
 //   obtained by scaling the computations.
 //
-// Two shifting constants are loaded directly with movl and setf.d. 
-//   1. EXP_RSHF_2TO56 = 1.1000..00 * 2^(63-7) 
+// Two shifting constants are loaded directly with movl and setf.d.
+//   1. EXP_RSHF_2TO56 = 1.1000..00 * 2^(63-7)
 //        This constant is added to x*1/ln2 to shift the integer part of
 //        x*128/ln2 into the rightmost bits of the significand.
 //        The result of this fma is EXP_W_2TO56_RSH.
-//   2. EXP_RSHF       = 1.1000..00 * 2^(63) 
+//   2. EXP_RSHF       = 1.1000..00 * 2^(63)
 //        This constant is subtracted from EXP_W_2TO56_RSH * 2^(-56) to give
 //        the integer part of w, n, as a floating-point number.
 //        The result of this fms is EXP_Nfloat.
@@ -345,7 +345,7 @@ LOCAL_OBJECT_END(exp_table_2)
 
 LOCAL_OBJECT_START(erfc_p_table)
 
-// Pol_0 
+// Pol_0
 data8 0xBEA3260C63CB0446             //A15 = -5.70673541831883454676e-07
 data8 0x3EE63D6178077654             //A14 = +1.06047480138940182343e-05
 data8 0xBF18646BC5FC70A7             //A13 = -9.30491237309283694347e-05
@@ -362,7 +362,7 @@ data8 0xBFE81270C361852B             //A3 = -7.52251035312075583309e-01
 data8 0x3FEFFFFFC67295FC             //A2 = +9.99999892800303301771e-01
 data8 0xBFF20DD74F8CD2BF             //A1 = -1.12837916445020868099e+00
 data8 0x3FEFFFFFFFFE7C1D             //A0 = +9.99999999988975570714e-01
-// Pol_1 
+// Pol_1
 data8 0xBDE8EC4BDD953B56             //A15 = -1.81338928934942767144e-10
 data8 0x3E43607F269E2A1C             //A14 = +9.02309090272196442358e-09
 data8 0xBE8C4D9E69C10E02             //A13 = -2.10875261143659275328e-07
@@ -379,7 +379,7 @@ data8 0xBFE547BFE39AE2EA             //A3 = -6.65008492032112467310e-01
 data8 0x3FEE7C91BDF13578             //A2 = +9.52706213932898128515e-01
 data8 0xBFF1CB5B61F8C589             //A1 = -1.11214769621105541214e+00
 data8 0x3FEFEA56BC81FD37             //A0 = +9.97355812243688815239e-01
-// Pol_2 
+// Pol_2
 data8 0xBD302724A12F46E0             //A15 = -5.73866382814058809406e-14
 data8 0x3D98889B75D3102E             //A14 = +5.57829983681360947356e-12
 data8 0xBDF16EA15074A1E9             //A13 = -2.53671153922423457844e-10
@@ -396,7 +396,7 @@ data8 0xBFD224DE9F62C258             //A3 = -2.83500342989133623476e-01
 data8 0x3FE28A95CB8C6D3E             //A2 = +5.79417131000276437708e-01
 data8 0xBFEC21205D358672             //A1 = -8.79043752717008257224e-01
 data8 0x3FEDAE44D5EDFE5B             //A0 = +9.27523057776805771830e-01
-// Pol_3 
+// Pol_3
 data8 0xBCA3BCA734AC82F1             //A15 = -1.36952437983096410260e-16
 data8 0x3D16740DC3990612             //A14 = +1.99425676175410093285e-14
 data8 0xBD77F4353812C46A             //A13 = -1.36162367755616790260e-12
@@ -419,8 +419,8 @@ LOCAL_OBJECT_END(erfc_p_table)
 .section .text
 GLOBAL_LIBM_ENTRY(erfcf)
 
-// Form index i for table erfc_p_table as exponent of x 
-// We use i + bias in real calculations 
+// Form index i for table erfc_p_table as exponent of x
+// We use i + bias in real calculations
 { .mlx
       getf.exp       GR_IndxPlusBias = f8          // (sign + exp + bias) of x
       movl           exp_GR_sig_inv_ln2 = 0xb8aa3b295c17f0bc //signif.of 1/ln2
@@ -445,14 +445,14 @@ GLOBAL_LIBM_ENTRY(erfcf)
 ;;
 
 // Form two constants we need
-//  1/ln2 * 2^63  to compute  w = x * 1/ln2 * 128 
+//  1/ln2 * 2^63  to compute  w = x * 1/ln2 * 128
 //  1.1000..000 * 2^(63+63-7) to right shift int(w) into the significand
 
 // p9:  x = 0,+inf,-inf,nan,unnorm.
 // p10: x!= 0,+inf,-inf,nan,unnorm.
 { .mfi
       setf.sig       EXP_INV_LN2_2TO63 = exp_GR_sig_inv_ln2 // Form 1/ln2*2^63
-      fclass.m       p9,p10 = f8,0xef       
+      fclass.m       p9,p10 = f8,0xef
       shl            GR_ShftPi_bias = GR_BIAS, 7
 }
 { .mfi
@@ -484,7 +484,7 @@ GLOBAL_LIBM_ENTRY(erfcf)
 }
 ;;
 
-// Form shift GR_ShftPi from the beginning of erfc_p_table 
+// Form shift GR_ShftPi from the beginning of erfc_p_table
 // to the polynomial with number i
 { .mfi
       ldfps          FR_UnfBound, FR_EpsNorm = [EXP_AD_TB1],8
@@ -494,11 +494,11 @@ GLOBAL_LIBM_ENTRY(erfcf)
 { .mfi
       setf.d         EXP_RSHF = exp_GR_rshf   // Form right shift 1.100 * 2^63
 (p7)  fms.s1         FR_AbsArg = f1, f0, f8                   // |x|  if x < 0
-      mov            exp_TB1_size  = 0x100 
+      mov            exp_TB1_size  = 0x100
 }
 ;;
 
-// Form pointer GR_P_POINT_3 to the beginning of erfc_p_table 
+// Form pointer GR_P_POINT_3 to the beginning of erfc_p_table
 { .mfi
       setf.d         FR_05 = GR_05
       nop.f          0
@@ -517,7 +517,7 @@ GLOBAL_LIBM_ENTRY(erfcf)
       add            GR_P_POINT_2 = GR_P_POINT_3, GR_ShftPi
 }
 { .mfi
-      ldfe           exp_ln2_by_128_hi  = [EXP_AD_TB1],16 
+      ldfe           exp_ln2_by_128_hi  = [EXP_AD_TB1],16
       fma.s1         FR_NormX = f8,f1,f0
       add            GR_P_POINT_3 = GR_P_POINT_3, GR_ShftPi
 }
@@ -526,19 +526,19 @@ GLOBAL_LIBM_ENTRY(erfcf)
 // Load coefficients for polynomial P15(x)
 { .mfi
       ldfpd          FR_A15, FR_A14 = [GR_P_POINT_1], 16
-      nop.f          0      
+      nop.f          0
       add            GR_P_POINT_3 = 0x30, GR_P_POINT_3
 }
 { .mfi
       ldfe           exp_ln2_by_128_lo  = [EXP_AD_TB1], 16
-      nop.f          0      
-      add            GR_P_POINT_2 = 0x20, GR_P_POINT_2 
+      nop.f          0
+      add            GR_P_POINT_2 = 0x20, GR_P_POINT_2
 }
 ;;
 
 // Now EXP_AD_TB1 points to the beginning of table 1
 { .mlx
-      ldfpd          FR_A13, FR_A12 = [GR_P_POINT_1] 
+      ldfpd          FR_A13, FR_A12 = [GR_P_POINT_1]
       movl           GR_1_by_6 = 0x3FC5555555555555
 }
 { .mfi
@@ -564,10 +564,10 @@ GLOBAL_LIBM_ENTRY(erfcf)
 // By adding 1.10...0*2^63 we shift and get round_int(W) in significand.
 // We actually add 1.10...0*2^56 to X * Inv_log2 to do the same thing.
 { .mfi
-      ldfpd          FR_A7, FR_A6 = [GR_P_POINT_3] 
+      ldfpd          FR_A7, FR_A6 = [GR_P_POINT_3]
       fma.s1     EXP_W_2TO56_RSH = EXP_NORM_f8,EXP_INV_LN2_2TO63,EXP_RSHF_2TO56
       add            EXP_AD_TB2 = exp_TB1_size, EXP_AD_TB1
-      
+
 }
 { .mfi
       ldfpd          FR_A5, FR_A4 = [GR_P_POINT_4], 16
@@ -581,7 +581,7 @@ GLOBAL_LIBM_ENTRY(erfcf)
       fmerge.s       FR_X = f8,f8
       nop.i          0
 }
-{ .mfi 
+{ .mfi
       ldfpd          FR_A1, FR_A0 = [GR_P_POINT_1]
       nop.f          0
       nop.i          0
@@ -601,7 +601,7 @@ GLOBAL_LIBM_ENTRY(erfcf)
       nop.m          0
 (p6)  fcmp.gt.unc.s1 p15,p0 = FR_AbsArg, FR_POS_ARG_ASYMP          //p6: x > 0
       nop.i          0
-}                       
+}
 ;;
 
 { .mfi
@@ -616,7 +616,7 @@ GLOBAL_LIBM_ENTRY(erfcf)
 }
 ;;
 
-// Nfloat = round_int(W) 
+// Nfloat = round_int(W)
 // The signficand of EXP_W_2TO56_RSH contains the rounded integer part of W,
 // as a twos complement number in the lower bits (that is, it may be negative).
 // That twos complement number (called N) is put into exp_GR_N.
@@ -629,12 +629,12 @@ GLOBAL_LIBM_ENTRY(erfcf)
       nop.m          0
       fms.s1         EXP_Nfloat = EXP_W_2TO56_RSH, EXP_2TOM56, EXP_RSHF
       nop.i          0
-} 
+}
 { .mfb
 (p15) mov            GR_Parameter_TAG = 209
 (p15) fma.s.s0       FR_RESULT = FR_EpsNorm,FR_EpsNorm,f0 //Result.for x>10.06
 (p15) br.cond.spnt   __libm_error_region
-}                   
+}
 ;;
 
 // Now we can calculate polynomial P15(x)
@@ -652,19 +652,19 @@ GLOBAL_LIBM_ENTRY(erfcf)
 
 { .mfi
       nop.m          0
-      fma.s1         FR_P15_1_2 = FR_A13, FR_AbsArg, FR_A12 
-      nop.i          0 
+      fma.s1         FR_P15_1_2 = FR_A13, FR_AbsArg, FR_A12
+      nop.i          0
 }
 ;;
 
 { .mfi
-      getf.sig       exp_GR_N        = EXP_W_2TO56_RSH 
-      fma.s1         FR_P15_2_1 = FR_A9, FR_AbsArg, FR_A8 
-      nop.i          0 
+      getf.sig       exp_GR_N        = EXP_W_2TO56_RSH
+      fma.s1         FR_P15_2_1 = FR_A9, FR_AbsArg, FR_A8
+      nop.i          0
 }
 { .mfi
       nop.m          0
-      fma.s1         FR_P15_2_2 = FR_A11, FR_AbsArg, FR_A10 
+      fma.s1         FR_P15_2_2 = FR_A11, FR_AbsArg, FR_A10
       nop.i          0
 }
 ;;
@@ -672,7 +672,7 @@ GLOBAL_LIBM_ENTRY(erfcf)
 { .mfi
       nop.m          0
       fma.s1         FR_P15_3_1 = FR_A5, FR_AbsArg, FR_A4
-      nop.i          0                   
+      nop.i          0
 }
 { .mfi
       nop.m          0
@@ -691,7 +691,7 @@ GLOBAL_LIBM_ENTRY(erfcf)
       and            exp_GR_index_1 = 0x0f, exp_GR_N
       fma.s1         FR_P15_4_1 = FR_A1, FR_AbsArg, FR_A0
       shr            r2 = exp_GR_N,  0x7
-       
+
 }
 { .mfi
       and            exp_GR_index_2_16 = 0x70, exp_GR_N
@@ -700,12 +700,12 @@ GLOBAL_LIBM_ENTRY(erfcf)
 }
 ;;
 
-// EXP_AD_T1 has address of T1                           
-// EXP_AD_T2 has address if T2                            
+// EXP_AD_T1 has address of T1
+// EXP_AD_T2 has address if T2
 
 { .mfi
       add            EXP_AD_T2 = EXP_AD_TB2, exp_GR_index_2_16
-      nop.f          0                      
+      nop.f          0
       shladd         EXP_AD_T1 = exp_GR_index_1, 4, EXP_AD_TB1
 }
 { .mfi
@@ -716,15 +716,15 @@ GLOBAL_LIBM_ENTRY(erfcf)
 ;;
 
 // Create Scale = 2^M
-// r = x - Nfloat * ln2_by_128_hi 
- 
+// r = x - Nfloat * ln2_by_128_hi
+
 { .mfi
       setf.exp       EXP_2M = exp_GR_biased_M
       fma.s1         FR_P15_7_1 = FR_P15_0_1, FR_P15_1_1, FR_P15_1_2
       nop.i          0
 }
 { .mfi
-      ldfe           exp_T2  = [EXP_AD_T2]      
+      ldfe           exp_T2  = [EXP_AD_T2]
       nop.f          0
       nop.i          0
 }
@@ -739,45 +739,45 @@ GLOBAL_LIBM_ENTRY(erfcf)
 }
 { .mfi
       nop.m          0
-      fma.s1         FR_P15_8_1 = FR_P15_1_1, FR_P15_2_2, FR_P15_2_1 
+      fma.s1         FR_P15_8_1 = FR_P15_1_1, FR_P15_2_2, FR_P15_2_1
       nop.i          0
 }
 ;;
 
 { .mfi
       nop.m          0
-      fma.s1         FR_P15_9_1 = FR_P15_1_1, FR_P15_4_2, FR_P15_4_1 
+      fma.s1         FR_P15_9_1 = FR_P15_1_1, FR_P15_4_2, FR_P15_4_1
       nop.i          0
 }
 { .mfi
       nop.m          0
-      fma.s1         FR_P15_9_2 = FR_P15_1_1, FR_P15_3_2, FR_P15_3_1 
-      nop.i          0
-}
-;;
-
-{ .mfi
-      nop.m          0
-      fma.s1         exp_P = FR_1_by_6, exp_r, FR_05 
-      nop.i          0
-}
-{ .mfi
-      nop.m          0
-      fma.s1         exp_rsq = exp_r, exp_r, f0 
+      fma.s1         FR_P15_9_2 = FR_P15_1_1, FR_P15_3_2, FR_P15_3_1
       nop.i          0
 }
 ;;
 
 { .mfi
       nop.m          0
-      fma.s1         FR_P15_13_1 = FR_P15_7_2, FR_P15_7_1, FR_P15_8_1 
+      fma.s1         exp_P = FR_1_by_6, exp_r, FR_05
+      nop.i          0
+}
+{ .mfi
+      nop.m          0
+      fma.s1         exp_rsq = exp_r, exp_r, f0
       nop.i          0
 }
 ;;
 
 { .mfi
       nop.m          0
-      fma.s1         FR_P15_14_1 = FR_P15_7_2, FR_P15_9_2, FR_P15_9_1 
+      fma.s1         FR_P15_13_1 = FR_P15_7_2, FR_P15_7_1, FR_P15_8_1
+      nop.i          0
+}
+;;
+
+{ .mfi
+      nop.m          0
+      fma.s1         FR_P15_14_1 = FR_P15_7_2, FR_P15_9_2, FR_P15_9_1
       nop.i          0
 }
 { .mfi
@@ -794,7 +794,7 @@ GLOBAL_LIBM_ENTRY(erfcf)
 }
 { .mfi
       nop.m          0
-      fma.s1         exp_S1  = EXP_2M, exp_T2, f0   
+      fma.s1         exp_S1  = EXP_2M, exp_T2, f0
       nop.i          0
 }
 ;;
@@ -816,30 +816,30 @@ GLOBAL_LIBM_ENTRY(erfcf)
 { .mfi
       nop.m          0
       fma.s1         FR_Exp = exp_S, exp_P, exp_S                 // exp(-x^2)
-      nop.i          0          
+      nop.i          0
 }
-;;   
+;;
 
 { .mfi
       nop.m          0
       fma.s.s0       FR_Tmpf = f8, f1, f0                          //  Flag  d
-      nop.i          0 
+      nop.i          0
 }
 ;;
 
-//p6: result for     0 < x < = POS_ARG_ASYMP 
+//p6: result for     0 < x < = POS_ARG_ASYMP
 //p7: result for   - NEG_ARG_ASYMP  <= x < 0
 //p8: exit   for   - NEG_ARG_ASYMP <= x <= UnfBound, x!=0
 .pred.rel "mutex",p6,p7
 { .mfi
       nop.m          0
-(p6)  fma.s.s0       f8 = FR_Exp, FR_Pol, f0 
-      nop.i          0         
+(p6)  fma.s.s0       f8 = FR_Exp, FR_Pol, f0
+      nop.i          0
 }
 { .mfb
       mov            GR_Parameter_TAG = 209
 (p7)  fnma.s.s0      f8 = FR_Exp, FR_Pol, FR_2
-(p8)  br.ret.sptk    b0 
+(p8)  br.ret.sptk    b0
 }
 ;;
 
@@ -847,7 +847,7 @@ GLOBAL_LIBM_ENTRY(erfcf)
 { .mfb
       nop.m          0
       nop.f          0
-(p10) br.cond.spnt   __libm_error_region  
+(p10) br.cond.spnt   __libm_error_region
 }
 ;;
 
@@ -921,9 +921,9 @@ GLOBAL_LIBM_END(erfcf)
 
 
 // Call via (p10) br.cond.spnt   __libm_error_region
-//          for  UnfBound < x < = POS_ARG_ASYMP 
+//          for  UnfBound < x < = POS_ARG_ASYMP
 // and
-// 
+//
 // call via (p15) br.cond.spnt   __libm_error_region
 //          for  x > POS_ARG_ASYMP
 
@@ -936,7 +936,7 @@ LOCAL_LIBM_ENTRY(__libm_error_region)
         mov  GR_SAVE_PFS=ar.pfs                                 // Save ar.pfs
 }
 { .mfi
-.fframe 64 
+.fframe 64
         add sp=-64,sp                                      // Create new stack
         nop.f 0
         mov GR_SAVE_GP=gp                                           // Save gp
@@ -944,18 +944,18 @@ LOCAL_LIBM_ENTRY(__libm_error_region)
 { .mmi
         stfs [GR_Parameter_Y] = FR_Y,16          // STORE Parameter 2 on stack
         add GR_Parameter_X = 16,sp                      // Parameter 1 address
-.save   b0, GR_SAVE_B0                      
+.save   b0, GR_SAVE_B0
         mov GR_SAVE_B0=b0                                           // Save b0
 };;
 .body
 { .mib
         stfs [GR_Parameter_X] = FR_X             // STORE Parameter 1 on stack
         add   GR_Parameter_RESULT = 0,GR_Parameter_Y    // Parameter 3 address
-        nop.b 0                                      
+        nop.b 0
 }
 { .mib
         stfs [GR_Parameter_Y] = FR_RESULT        // STORE Parameter 3 on stack
-        add   GR_Parameter_Y = -16,GR_Parameter_Y  
+        add   GR_Parameter_Y = -16,GR_Parameter_Y
         br.call.sptk b0=__libm_error_support#  // Call error handling function
 };;
 { .mmi
@@ -973,7 +973,7 @@ LOCAL_LIBM_ENTRY(__libm_error_region)
         mov   gp = GR_SAVE_GP                                    // Restore gp
         mov   ar.pfs = GR_SAVE_PFS                           // Restore ar.pfs
         br.ret.sptk     b0                                           // Return
-};; 
+};;
 
 LOCAL_LIBM_END(__libm_error_region)
 .type   __libm_error_support#,@function

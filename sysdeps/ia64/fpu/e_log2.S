@@ -21,25 +21,25 @@
 // products derived from this software without specific prior written
 // permission.
 
-// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
-// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
 // LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL INTEL OR ITS 
+// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL INTEL OR ITS
 // CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-// EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, 
-// PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
-// PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY 
+// EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+// PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+// PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY
 // OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY OR TORT (INCLUDING
-// NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS 
-// SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. 
-// 
+// NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+// SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
 // Intel Corporation is the author of this code, and requests that all
-// problem reports or change requests be submitted to it directly at 
+// problem reports or change requests be submitted to it directly at
 // http://www.intel.com/software/products/opensource/libraries/num.htm.
 //
 // History
 //=================================================================
-// 09/11/00 Initial version 
+// 09/11/00 Initial version
 // 03/19/01 Added one polynomial coefficient, to improve accuracy
 // 05/20/02 Cleaned up namespace and sf0 syntax
 // 02/10/03 Reordered header: .section, .global, .proc, .align
@@ -60,19 +60,19 @@
 // j=0 if f<128; j=1 if f>=128
 // T is a table that stores log2(1/y) (in entries 1..255) rounded to
 //   double extended precision; f is used as an index; T[255]=0
-// 
+//
 // If f=0 and b9=0, r is set to 2^{-8}* 0.b9 b10 ... b52 = m-1 (fractional part of m),
-//                  and 0 is used instead of T[0] 
+//                  and 0 is used instead of T[0]
 //                  (polynomial evaluation only, for m=1+r, 0<=r<2^{-9})
 // If f=255, r is set to (m-2)/2  (T[255]=0, and only polynomial evaluation is used
 //                                 for m=2(1-r'), 0<=r'<2^{-9})
 //
 // log2(x) is approximated as
 //     (l-j) + T[f] + (c1*r+c2*r^2+...+c7*r^7), if f>0
-// 
+//
 
 
-// Special values 
+// Special values
 //=================================================================
 //  log2(0)=-inf, raises Divide by Zero
 //  log2(+inf)=inf
@@ -90,7 +90,7 @@
 
 GR_SAVE_B0                    = r33
 GR_SAVE_PFS                   = r34
-GR_SAVE_GP                    = r35 // This reg. can safely be used 
+GR_SAVE_GP                    = r35 // This reg. can safely be used
 GR_SAVE_SP                    = r36
 
 GR_Parameter_X                = r37
@@ -388,15 +388,15 @@ LOCAL_OBJECT_END(T_table)
 GLOBAL_LIBM_ENTRY(log2)
 
 { .mfi
-  alloc r32=ar.pfs,1,4,4,0     
-  // y=frcpa(x)  
+  alloc r32=ar.pfs,1,4,4,0
+  // y=frcpa(x)
   frcpa.s1 f6,p0=f1,f8
-  // will form significand of 1.5 (to test whether the index is 128 or above) 
+  // will form significand of 1.5 (to test whether the index is 128 or above)
   mov r24=0xc
 }
 {.mfi
   nop.m 0
-  // normalize x 
+  // normalize x
   fma.s1 f7=f8,f1,f0
   // r2 = pointer to C_1...C_6 followed by T_table
   addl r2 = @ltoff(poly_coeffs), gp;;
@@ -406,7 +406,7 @@ GLOBAL_LIBM_ENTRY(log2)
   getf.sig r25=f8
   // f8 denormal ?
   fclass.m p8,p10=f8,0x9
-  // will form significand of 1.5 (to test whether the index is 128 or above) 
+  // will form significand of 1.5 (to test whether the index is 128 or above)
   shl r24=r24,60
 }
 {.mfi
@@ -420,7 +420,7 @@ GLOBAL_LIBM_ENTRY(log2)
   getf.exp r29=f8
   // load start address for C_1...C_6 followed by T_table
   ld8 r2=[r2]
-  // will continue only for positive normal/denormal numbers          
+  // will continue only for positive normal/denormal numbers
   fclass.nm.unc p12,p7 = f8, 0x19 ;;
 }
 
@@ -465,7 +465,7 @@ GLOBAL_LIBM_ENTRY(log2)
 {.mmi
   // load C_6, C_7
   ldfpd f12,f13=[r2],16
-  // r27=bias-1 (if index >=128, will add exponent+1) 
+  // r27=bias-1 (if index >=128, will add exponent+1)
   (p12) mov r27=0xfffe
   (p8) shr.u r28=r25,63-8;;
 }
@@ -513,7 +513,7 @@ GLOBAL_LIBM_ENTRY(log2)
 {.mmf
   // load T (unless first 9 bits after leading 1 are 0)
   (p12) ldfe f33=[r2]
-  // f8=expon - bias 
+  // f8=expon - bias
   setf.sig f8=r29
   // set T=0 (if first 9 bits after leading 1 are 0)
   (p8) fma.s1 f33=f0,f0,f0;;
@@ -602,7 +602,7 @@ GLOBAL_LIBM_ENTRY(log2)
 
 
 SPECIAL_LOG2:
-{.mfi 
+{.mfi
   nop.m 0
   // x=+Infinity ?
   fclass.m p7,p0=f8,0x21
@@ -627,7 +627,7 @@ SPECIAL_LOG2:
   (p7) br.ret.spnt b0;;
 }
 {.mfi
-  (p8) mov GR_Parameter_TAG = 170                          
+  (p8) mov GR_Parameter_TAG = 170
   // log2(+/-0)=-infinity, raises Divide by Zero
   // set f8=-0
   (p8) fmerge.ns f8=f0,f8
@@ -639,12 +639,12 @@ SPECIAL_LOG2:
   (p8) br.cond.sptk __libm_error_region;;
 }
 {.mfb
-  (p6) mov GR_Parameter_TAG = 171 
+  (p6) mov GR_Parameter_TAG = 171
   // x<0: return NaN, raise Invalid
   (p6) frcpa.s0 f8,p0=f0,f0
   (p6) br.cond.sptk __libm_error_region;;
-}                          
-  
+}
+
 
 {.mfb
   nop.m 0
@@ -662,10 +662,10 @@ LOCAL_LIBM_ENTRY(__libm_error_region)
         add   GR_Parameter_Y=-32,sp             // Parameter 2 value
         nop.f 0
 .save   ar.pfs,GR_SAVE_PFS
-        mov  GR_SAVE_PFS=ar.pfs                 // Save ar.pfs 
+        mov  GR_SAVE_PFS=ar.pfs                 // Save ar.pfs
 }
 { .mfi
-.fframe 64 
+.fframe 64
         add sp=-64,sp                           // Create new stack
         nop.f 0
         mov GR_SAVE_GP=gp                       // Save gp
@@ -673,18 +673,18 @@ LOCAL_LIBM_ENTRY(__libm_error_region)
 { .mmi
         stfd [GR_Parameter_Y] = FR_Y,16         // STORE Parameter 2 on stack
         add GR_Parameter_X = 16,sp              // Parameter 1 address
-.save   b0, GR_SAVE_B0                      
-        mov GR_SAVE_B0=b0                       // Save b0 
+.save   b0, GR_SAVE_B0
+        mov GR_SAVE_B0=b0                       // Save b0
 };;
 .body
 { .mib
-        stfd [GR_Parameter_X] = FR_X                  // STORE Parameter 1 on stack 
-        add   GR_Parameter_RESULT = 0,GR_Parameter_Y  // Parameter 3 address 
-	nop.b 0                                      
+        stfd [GR_Parameter_X] = FR_X                  // STORE Parameter 1 on stack
+        add   GR_Parameter_RESULT = 0,GR_Parameter_Y  // Parameter 3 address
+	nop.b 0
 }
 { .mib
         stfd [GR_Parameter_Y] = FR_RESULT             // STORE Parameter 3 on stack
-        add   GR_Parameter_Y = -16,GR_Parameter_Y  
+        add   GR_Parameter_Y = -16,GR_Parameter_Y
         br.call.sptk b0=__libm_error_support#         // Call error handling function
 };;
 { .mmi
@@ -699,10 +699,10 @@ LOCAL_LIBM_ENTRY(__libm_error_region)
         mov   b0 = GR_SAVE_B0                  // Restore return address
 };;
 { .mib
-        mov   gp = GR_SAVE_GP                  // Restore gp 
+        mov   gp = GR_SAVE_GP                  // Restore gp
         mov   ar.pfs = GR_SAVE_PFS             // Restore ar.pfs
         br.ret.sptk     b0                     // Return
-};; 
+};;
 
 LOCAL_LIBM_END(__libm_error_region)
 .type   __libm_error_support#,@function

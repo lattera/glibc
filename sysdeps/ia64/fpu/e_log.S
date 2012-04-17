@@ -1425,11 +1425,11 @@ log_log10_common:
       fnorm.s1      FR_NormX = f8
       mov           GR_bias = 0xffff
 };;
-  
+
 { .mfi
       setf.d        FR_A3 = GR_A3 // create A3
       fcmp.eq.s1    p12,p0 = f1,f8 // is x equal to 1.0?
-      dep.z         GR_xorg = GR_xorg, 44, 19 // 0x3fefe00000000000 
+      dep.z         GR_xorg = GR_xorg, 44, 19 // 0x3fefe00000000000
                                               // double precision memory
                                               // representation of 255/256
 }
@@ -1519,7 +1519,7 @@ log_core:
 { .mfi
 (p6)  getf.exp      GR_rexp = FR_r  // Get signexp of x-1
 (p7)  fcvt.xf       FR_N = FR_N
-(p8)  cmp.eq        p9,p6 = r0,r0        // Also set p9 and clear p6 if log10 
+(p8)  cmp.eq        p9,p6 = r0,r0        // Also set p9 and clear p6 if log10
                                          // and arg near 1
 };;
 

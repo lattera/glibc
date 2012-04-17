@@ -21,20 +21,20 @@
 // products derived from this software without specific prior written
 // permission.
 
-// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
-// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
 // LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL INTEL OR ITS 
+// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL INTEL OR ITS
 // CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-// EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, 
-// PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
-// PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY 
+// EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+// PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+// PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY
 // OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY OR TORT (INCLUDING
-// NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS 
-// SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. 
-// 
+// NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+// SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
 // Intel Corporation is the author of this code, and requests that all
-// problem reports or change requests be submitted to it directly at 
+// problem reports or change requests be submitted to it directly at
 // http://www.intel.com/software/products/opensource/libraries/num.htm.
 //
 //*********************************************************************
@@ -55,7 +55,7 @@
 //
 //********************************************************************
 //
-// Accuracy:       Correctly Rounded 
+// Accuracy:       Correctly Rounded
 //
 //********************************************************************
 //
@@ -77,7 +77,7 @@
 //    All faults and exceptions should be raised correctly.
 //    sqrtf(QNaN) = QNaN
 //    sqrtf(SNaN) = QNaN
-//    sqrtf(+/-0) = +/-0 
+//    sqrtf(+/-0) = +/-0
 //    sqrtf(negative) = QNaN and error handling is called
 //
 //********************************************************************
@@ -91,7 +91,7 @@
 
 GR_SAVE_B0                    = r34
 GR_SAVE_PFS                   = r33
-GR_SAVE_GP                    = r35 
+GR_SAVE_GP                    = r35
 
 GR_Parameter_X                = r37
 GR_Parameter_Y                = r38
@@ -119,12 +119,12 @@ GLOBAL_IEEE754_ENTRY(sqrtf)
   setf.exp f12 = r2
   // Step (1)
   // y0 = 1/sqrt(a) in f7
-  fclass.m.unc p7,p8 = f8,0x3A 
+  fclass.m.unc p7,p8 = f8,0x3A
   nop.i 0
 } { .mfi
   nop.m 0
-  // Make a copy of x just in case 
-  mov f13 = f8 
+  // Make a copy of x just in case
+  mov f13 = f8
   nop.i 0;;
 } { .mfi
   nop.m 0
@@ -209,7 +209,7 @@ LOCAL_LIBM_ENTRY(__libm_error_region)
 .prologue
 { .mii
         add   GR_Parameter_Y=-32,sp             // Parameter 2 value
-        mov   GR_Parameter_TAG = 50                   
+        mov   GR_Parameter_TAG = 50
 .save   ar.pfs,GR_SAVE_PFS
         mov  GR_SAVE_PFS=ar.pfs                 // Save ar.pfs
 }
@@ -248,10 +248,10 @@ LOCAL_LIBM_ENTRY(__libm_error_region)
         mov   b0 = GR_SAVE_B0                  // Restore return address
 };;
 { .mib
-        mov   gp = GR_SAVE_GP                  // Restore gp 
+        mov   gp = GR_SAVE_GP                  // Restore gp
         mov   ar.pfs = GR_SAVE_PFS             // Restore ar.pfs
         br.ret.sptk     b0                     // Return
-};; 
+};;
 
 LOCAL_LIBM_END(__libm_error_region)
 

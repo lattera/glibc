@@ -69,7 +69,7 @@
 //    nfloat = Round result to integer (round-to-nearest)
 //
 // r = x -  nfloat * pi/2^k
-//    Do this as (x -  nfloat * HIGH(pi/2^k)) - nfloat * LOW(pi/2^k) 
+//    Do this as (x -  nfloat * HIGH(pi/2^k)) - nfloat * LOW(pi/2^k)
 
 //    for increased accuracy.
 //    pi/2^k is stored as two numbers that when added make pi/2^k.
@@ -484,14 +484,14 @@ _SINCOSF_COMMON:
 // Polynomial coefficients (Q2, Q1, P2, P1) loading
 { .mmi
       ldfpd         sincosf_P2,sincosf_Q2 = [sincosf_AD_1],16
-      nop.m         999 
-      nop.i         999 
+      nop.m         999
+      nop.i         999
 };;
 
 // Select exponent (17 lsb)
 { .mmi
       ldfpd         sincosf_P1,sincosf_Q1 = [sincosf_AD_1],16
-      nop.m         999 
+      nop.m         999
       dep.z         sincosf_r_exp         = sincosf_r_signexp, 0, 17
 };;
 
@@ -507,9 +507,9 @@ _SINCOSF_COMMON:
 // Multiply x by scaled 16/pi and add large const to shift integer part of W to
 //   rightmost bits of significand
 { .mfi
-      nop.m         999 
+      nop.m         999
       fma.s1 sincosf_W_2TO61_RSH = sincosf_NORM_f8, sincosf_SIG_INV_PI_BY_16_2TO61, sincosf_RSHF_2TO61
-      nop.i         999 
+      nop.i         999
 };;
 
 // sincosf_NFLOAT = Round_Int_Nearest(sincosf_W)
@@ -517,14 +517,14 @@ _SINCOSF_COMMON:
 { .mfi
       nop.m         999
       fms.s1 sincosf_NFLOAT = sincosf_W_2TO61_RSH,sincosf_2TOM61,sincosf_RSHF
-      nop.i         999 
+      nop.i         999
 };;
 
 // get N = (int)sincosf_int_Nfloat
 { .mfi
       getf.sig      sincosf_GR_n        = sincosf_W_2TO61_RSH // integer N value
       nop.f         999
-      nop.i         999 
+      nop.i         999
 };;
 
 // Add 2^(k-1) (which is in sincosf_r_sincos=8) to N
@@ -532,12 +532,12 @@ _SINCOSF_COMMON:
 { .mfi
       add           sincosf_GR_n        = sincosf_GR_n, sincosf_r_sincos
       fnma.s1 sincosf_r = sincosf_NFLOAT, sincosf_Pi_by_16_1, sincosf_NORM_f8
-      nop.i         999 
+      nop.i         999
 };;
 
 // Get M (least k+1 bits of N)
 { .mmi
-      and           sincosf_GR_m        = 0x1f,sincosf_GR_n // Put mask 0x1F  - 
+      and           sincosf_GR_m        = 0x1f,sincosf_GR_n // Put mask 0x1F  -
       nop.m         999                                     // - select k+1 bits
       nop.i         999
 };;
@@ -546,7 +546,7 @@ _SINCOSF_COMMON:
 { .mfi
       shladd        sincosf_AD_2        = sincosf_GR_32m, 4, sincosf_AD_1
 (p8)  fclass.m.unc  p10,p0              = f8,0x0b  // If sin denormal input -
-      nop.i         999 
+      nop.i         999
 };;
 
 // Load Sin and Cos table value using obtained index m  (sincosf_AD_2)
@@ -572,10 +572,10 @@ _SINCOSF_COMMON:
 { .mfi
       nop.m         999
       fmpy.s0       fp_tmp              = fp_tmp, fp_tmp // forces inexact flag
-      nop.i         999                                
+      nop.i         999
 };;
 
-// Polynomials calculation 
+// Polynomials calculation
 // Q = Q2*r^2 + Q1
 // P = P2*r^2 + P1
 { .mfi
@@ -586,7 +586,7 @@ _SINCOSF_COMMON:
 { .mfi
       nop.m         999
       fma.s1        sincosf_P           = sincosf_rsq, sincosf_P2, sincosf_P1
-      nop.i         999 
+      nop.i         999
 };;
 
 // get rcube and S[m]*r^2
@@ -598,7 +598,7 @@ _SINCOSF_COMMON:
 { .mfi
       nop.m         999
       fmpy.s1       sincosf_rcub        = sincosf_r_exact, sincosf_rsq
-      nop.i         999 
+      nop.i         999
 };;
 
 // Get final P and Q
@@ -612,7 +612,7 @@ _SINCOSF_COMMON:
 { .mfi
       nop.m         999
       fma.s1        sincosf_P           = sincosf_rcub,sincosf_P,sincosf_r_exact
-      nop.i         999 
+      nop.i         999
 };;
 
 // If sinf(denormal) - force underflow to be set
@@ -699,8 +699,8 @@ _SINCOSF_LARGE_ARGS:
 }
 { .mfi // force inexact set
       nop.m         999
-      fmpy.s0       sincosf_save_tmp    = sincosf_save_tmp, sincosf_save_tmp 
-      nop.i         999                                               
+      fmpy.s0       sincosf_save_tmp    = sincosf_save_tmp, sincosf_save_tmp
+      nop.i         999
 };;
 
 { .mib

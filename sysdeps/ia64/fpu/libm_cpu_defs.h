@@ -1,6 +1,6 @@
 /* file: libm_cpu_defs.h */
- 
- 
+
+
 // Copyright (c) 2000 - 2004, Intel Corporation
 // All rights reserved.
 //

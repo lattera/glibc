@@ -30,7 +30,7 @@ ENTRY (__finite)
 (p6)	mov ret0 = 0
 (p7)	mov ret0 = 1
 	br.ret.sptk.many rp
-}	
+}
 END (__finite)
 
 strong_alias (__finite, __finitef)

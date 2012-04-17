@@ -52,7 +52,7 @@ ENTRY(strlen)
 	.save ar.lc, saved_lc
         mov 	saved_lc = ar.lc 	// save the loop counter
 	.body
-	mov 	str = in0	
+	mov 	str = in0
 	mov 	len = r0		// len = 0
 	and 	tmp = 7, in0		// tmp = str % 8
 	;;
@@ -74,13 +74,13 @@ ENTRY(strlen)
 	nop.b	0
 	nop.b 	0
 .l2:	ld8.s	val2 = [str], 8		// don't bomb out here
-	czx1.r	pos0 = val1	
+	czx1.r	pos0 = val1
 	;;
 	cmp.ne	p6, p0 = 8, pos0
 (p6)	br.cond.spnt .foundit
 	chk.s	val2, .recovery
 .back:
-	mov	val1 = val2	
+	mov	val1 = val2
 	br.cond.dptk	.l2
 .foundit:
 	sub	tmp = str, origadd	// tmp = crt address - orig

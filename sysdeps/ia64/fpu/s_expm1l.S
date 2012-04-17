@@ -21,20 +21,20 @@
 // products derived from this software without specific prior written
 // permission.
 
-// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
-// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
 // LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL INTEL OR ITS 
+// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL INTEL OR ITS
 // CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-// EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, 
-// PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
-// PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY 
+// EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+// PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+// PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY
 // OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY OR TORT (INCLUDING
-// NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS 
-// SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. 
-// 
+// NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+// SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
 // Intel Corporation is the author of this code, and requests that all
-// problem reports or change requests be submitted to it directly at 
+// problem reports or change requests be submitted to it directly at
 // http://www.intel.com/software/products/opensource/libraries/num.htm.
 //
 // History
@@ -51,36 +51,36 @@
 // 04/17/03 Eliminated misplaced and unused data label
 // 12/15/03 Eliminated call to error support on expm1l underflow
 //
-//********************************************************************* 
+//*********************************************************************
 //
 // Function:   Combined expl(x) and expm1l(x), where
-//                        x 
+//                        x
 //             expl(x) = e , for double-extended precision x values
 //                          x
 //             expm1l(x) = e  - 1  for double-extended precision x values
 //
-//********************************************************************* 
+//*********************************************************************
 //
 // Resources Used:
 //
-//    Floating-Point Registers: f8  (Input and Return Value) 
-//                              f9-f15,f32-f77 
+//    Floating-Point Registers: f8  (Input and Return Value)
+//                              f9-f15,f32-f77
 //
-//    General Purpose Registers: 
+//    General Purpose Registers:
 //      r14-r38
 //      r35-r38 (Used to pass arguments to error handling routine)
-//                                     
+//
 //    Predicate Registers:      p6-p15
 //
-//********************************************************************* 
+//*********************************************************************
 //
 // IEEE Special Conditions:
 //
-//    Denormal  fault raised on denormal inputs  
+//    Denormal  fault raised on denormal inputs
 //    Overflow exceptions raised when appropriate for exp and expm1
 //    Underflow exceptions raised when appropriate for exp and expm1
 //    (Error Handling Routine called for overflow and Underflow)
-//    Inexact raised when appropriate by algorithm 
+//    Inexact raised when appropriate by algorithm
 //
 //    exp(inf) = inf
 //    exp(-inf) = +0
@@ -89,13 +89,13 @@
 //    exp(0) = 1
 //    exp(EM_special Values) = QNaN
 //    exp(inf) = inf
-//    expm1(-inf) = -1 
+//    expm1(-inf) = -1
 //    expm1(SNaN) = QNaN
 //    expm1(QNaN) = QNaN
 //    expm1(0) = 0
 //    expm1(EM_special Values) = QNaN
-//    
-//********************************************************************* 
+//
+//*********************************************************************
 //
 // Implementation and Algorithm Notes:
 //
@@ -109,36 +109,36 @@
 // p6 for exp,
 // p7 for expm1,
 //
-// On output, 
+// On output,
 //
 //   scale*(Y_hi + Y_lo)  approximates  exp(X)       if exp
 //   scale*(Y_hi + Y_lo)  approximates  exp(X)-1     if expm1
 //
 // The accuracy is sufficient for a highly accurate 64 sig.
-// bit implementation.  Safe is set if there is no danger of 
-// overflow/underflow when the result is composed from scale, 
-// Y_hi and Y_lo. Thus, we can have a fast return if Safe is set. 
-// Otherwise, one must prepare to handle the possible exception 
-// appropriately.  Note that SAFE not set (false) does not mean 
+// bit implementation.  Safe is set if there is no danger of
+// overflow/underflow when the result is composed from scale,
+// Y_hi and Y_lo. Thus, we can have a fast return if Safe is set.
+// Otherwise, one must prepare to handle the possible exception
+// appropriately.  Note that SAFE not set (false) does not mean
 // that overflow/underflow will occur; only the setting of SAFE
 // guarantees the opposite.
 //
-// **** High Level Overview **** 
+// **** High Level Overview ****
 //
 // The method consists of three cases.
-// 
+//
 // If           |X| < Tiny	use case exp_tiny;
 // else if	|X| < 2^(-m)	use case exp_small; m=12 for exp, m=7 for expm1
 // else		use case exp_regular;
 //
 // Case exp_tiny:
 //
-//   1 + X     can be used to approximate exp(X) 
+//   1 + X     can be used to approximate exp(X)
 //   X + X^2/2 can be used to approximate exp(X) - 1
 //
 // Case exp_small:
 //
-//   Here, exp(X) and exp(X) - 1 can all be 
+//   Here, exp(X) and exp(X) - 1 can all be
 //   approximated by a relatively simple polynomial.
 //
 //   This polynomial resembles the truncated Taylor series
@@ -175,9 +175,9 @@
 //   r := (X - N*L_hi) - N*L_lo
 //
 //   We pick L_hi such that N*L_hi is representable in 64 sig. bits
-//   and thus the FMA   X - N*L_hi   is error free. So r is the 
-//   1 rounding error from an exact reduction with respect to 
-//   
+//   and thus the FMA   X - N*L_hi   is error free. So r is the
+//   1 rounding error from an exact reduction with respect to
+//
 //   L_hi + L_lo.
 //
 //   In particular, L_hi has 30 significant bit and can be stored
@@ -187,10 +187,10 @@
 //   Step 2: Approximation
 //
 //   exp(r) - 1 is approximated by a short polynomial of the form
-//   
+//
 //   r + A_1 r^2 + A_2 r^3 + A_3 r^4 .
 //
-//   Step 3: Composition from Table Values 
+//   Step 3: Composition from Table Values
 //
 //   The value 2^( N / 2^12 ) can be composed from a couple of tables
 //   of precalculated values. First, express N as three integers
@@ -203,8 +203,8 @@
 //   lsb's, M_1 is the next 6, and K is simply N shifted right
 //   arithmetically (sign extended) by 12 bits.
 //
-//   Now, 2^( N / 2^12 ) is simply  
-//	
+//   Now, 2^( N / 2^12 ) is simply
+//
 //      2^K * 2^( M_1 / 2^6 ) * 2^( M_2 / 2^12 )
 //
 //   Clearly, 2^K needs no tabulation. The other two values are less
@@ -215,14 +215,14 @@
 //   Define two mathematical values, delta_1 and delta_2, implicitly
 //   such that
 //
-//     T_1 = exp( [M_1 log(2)/2^6]  -  delta_1 ) 
+//     T_1 = exp( [M_1 log(2)/2^6]  -  delta_1 )
 //     T_2 = exp( [M_2 log(2)/2^12] -  delta_2 )
 //
 //   are representable as 24 significant bits. To illustrate the idea,
-//   we show how we define delta_1: 
+//   we show how we define delta_1:
 //
 //     T_1     := round_to_24_bits( exp( M_1 log(2)/2^6 ) )
-//     delta_1  = (M_1 log(2)/2^6) - log( T_1 )  
+//     delta_1  = (M_1 log(2)/2^6) - log( T_1 )
 //
 //   The last equality means mathematical equality. We then tabulate
 //
@@ -235,7 +235,7 @@
 //   T and W via
 //
 //     T := T_1 * T_2			...exactly
-//     W := W_1 + (1 + W_1)*W_2	
+//     W := W_1 + (1 + W_1)*W_2
 //
 //   W approximates exp( delta ) - 1  where delta = delta_1 + delta_2.
 //   The mathematical product of T and (W+1) is an accurate representation
@@ -243,17 +243,17 @@
 //
 //   Step 4. Reconstruction
 //
-//   Finally, we can reconstruct exp(X), exp(X) - 1. 
+//   Finally, we can reconstruct exp(X), exp(X) - 1.
 //   Because
 //
-//	X = K * log(2) + (M_1*log(2)/2^6  - delta_1) 
+//	X = K * log(2) + (M_1*log(2)/2^6  - delta_1)
 //		       + (M_2*log(2)/2^12 - delta_2)
 //		       + delta_1 + delta_2 + r 		...accurately
 //   We have
 //
 //	exp(X) ~=~ 2^K * ( T + T*[exp(delta_1+delta_2+r) - 1] )
 //	       ~=~ 2^K * ( T + T*[exp(delta + r) - 1]         )
-//	       ~=~ 2^K * ( T + T*[(exp(delta)-1)  
+//	       ~=~ 2^K * ( T + T*[(exp(delta)-1)
 //				 + exp(delta)*(exp(r)-1)]   )
 //             ~=~ 2^K * ( T + T*( W + (1+W)*poly(r) ) )
 //             ~=~ 2^K * ( Y_hi  +  Y_lo )
@@ -265,7 +265,7 @@
 //	exp(X)-1 ~=~ 2^K * ( Y_hi + Y_lo ) - 1
 //		 ~=~ 2^K * ( Y_hi + Y_lo - 2^(-K) )
 //
-//   and we combine Y_hi + Y_lo - 2^(-N)  into the form of two 
+//   and we combine Y_hi + Y_lo - 2^(-N)  into the form of two
 //   numbers  Y_hi + Y_lo carefully.
 //
 //   **** Algorithm Details ****
@@ -276,8 +276,8 @@
 //
 //   Case exp_tiny:
 //
-//   The important points are to ensure an accurate result under 
-//   different rounding directions and a correct setting of the SAFE 
+//   The important points are to ensure an accurate result under
+//   different rounding directions and a correct setting of the SAFE
 //   flag.
 //
 //   If expm1 is 1, then
@@ -296,11 +296,11 @@
 //   Here we compute a simple polynomial. To exploit parallelism, we split
 //   the polynomial into several portions.
 //
-//   Let r = X 
+//   Let r = X
 //
 //   If exp 	...i.e. exp( argument )
 //
-//      rsq := r * r; 
+//      rsq := r * r;
 //      r4  := rsq*rsq
 //      poly_lo := P_3 + r*(P_4 + r*(P_5 + r*P_6))
 //      poly_hi := r + rsq*(P_1 + r*P_2)
@@ -390,7 +390,7 @@ GR_SAVE_GP          = r34
 GR_Parameter_X      = r35
 GR_Parameter_Y      = r36
 GR_Parameter_RESULT = r37
-GR_Parameter_TAG    = r38 
+GR_Parameter_TAG    = r38
 
 // Floating Point Registers
 //
@@ -480,25 +480,25 @@ FR_RESULT           = f15
 
 // double-extended 1/ln(2)
 // 3fff b8aa 3b29 5c17 f0bb be87fed0691d3e88
-// 3fff b8aa 3b29 5c17 f0bc 
+// 3fff b8aa 3b29 5c17 f0bc
 // For speed the significand will be loaded directly with a movl and setf.sig
 //   and the exponent will be bias+63 instead of bias+0.  Thus subsequent
 //   computations need to scale appropriately.
-// The constant 2^12/ln(2) is needed for the computation of N.  This is also 
+// The constant 2^12/ln(2) is needed for the computation of N.  This is also
 //   obtained by scaling the computations.
 //
-// Two shifting constants are loaded directly with movl and setf.d. 
-//   1. RSHF_2TO51 = 1.1000..00 * 2^(63-12) 
+// Two shifting constants are loaded directly with movl and setf.d.
+//   1. RSHF_2TO51 = 1.1000..00 * 2^(63-12)
 //        This constant is added to x*1/ln2 to shift the integer part of
 //        x*2^12/ln2 into the rightmost bits of the significand.
 //        The result of this fma is N_signif.
-//   2. RSHF       = 1.1000..00 * 2^(63) 
+//   2. RSHF       = 1.1000..00 * 2^(63)
 //        This constant is subtracted from N_signif * 2^(-51) to give
 //        the integer part of N, N_fix, as a floating-point number.
 //        The result of this fms is float_N.
 
 RODATA
-.align 64 
+.align 64
 LOCAL_OBJECT_START(Constants_exp_64_Arg)
 //data8 0xB8AA3B295C17F0BC,0x0000400B // Inv_L = 2^12/log(2)
 data8 0xB17217F400000000,0x00003FF2 // L_hi = hi part log(2)/2^12
@@ -538,8 +538,8 @@ data8 0x8000000000000000, 0x00003FFE // Q1
 LOCAL_OBJECT_END(Constants_exp_64_Q)
 
 LOCAL_OBJECT_START(Constants_exp_64_T1)
-data4 0x3F800000,0x3F8164D2,0x3F82CD87,0x3F843A29 
-data4 0x3F85AAC3,0x3F871F62,0x3F88980F,0x3F8A14D5 
+data4 0x3F800000,0x3F8164D2,0x3F82CD87,0x3F843A29
+data4 0x3F85AAC3,0x3F871F62,0x3F88980F,0x3F8A14D5
 data4 0x3F8B95C2,0x3F8D1ADF,0x3F8EA43A,0x3F9031DC
 data4 0x3F91C3D3,0x3F935A2B,0x3F94F4F0,0x3F96942D
 data4 0x3F9837F0,0x3F99E046,0x3F9B8D3A,0x3F9D3EDA
@@ -557,21 +557,21 @@ data4 0x3FF5257D,0x3FF7D0DF,0x3FFA83B3,0x3FFD3E0C
 LOCAL_OBJECT_END(Constants_exp_64_T1)
 
 LOCAL_OBJECT_START(Constants_exp_64_T2)
-data4 0x3F800000,0x3F80058C,0x3F800B18,0x3F8010A4 
-data4 0x3F801630,0x3F801BBD,0x3F80214A,0x3F8026D7 
-data4 0x3F802C64,0x3F8031F2,0x3F803780,0x3F803D0E 
-data4 0x3F80429C,0x3F80482B,0x3F804DB9,0x3F805349 
-data4 0x3F8058D8,0x3F805E67,0x3F8063F7,0x3F806987 
-data4 0x3F806F17,0x3F8074A8,0x3F807A39,0x3F807FCA 
-data4 0x3F80855B,0x3F808AEC,0x3F80907E,0x3F809610 
-data4 0x3F809BA2,0x3F80A135,0x3F80A6C7,0x3F80AC5A 
-data4 0x3F80B1ED,0x3F80B781,0x3F80BD14,0x3F80C2A8 
-data4 0x3F80C83C,0x3F80CDD1,0x3F80D365,0x3F80D8FA 
-data4 0x3F80DE8F,0x3F80E425,0x3F80E9BA,0x3F80EF50 
-data4 0x3F80F4E6,0x3F80FA7C,0x3F810013,0x3F8105AA 
-data4 0x3F810B41,0x3F8110D8,0x3F81166F,0x3F811C07 
-data4 0x3F81219F,0x3F812737,0x3F812CD0,0x3F813269 
-data4 0x3F813802,0x3F813D9B,0x3F814334,0x3F8148CE 
+data4 0x3F800000,0x3F80058C,0x3F800B18,0x3F8010A4
+data4 0x3F801630,0x3F801BBD,0x3F80214A,0x3F8026D7
+data4 0x3F802C64,0x3F8031F2,0x3F803780,0x3F803D0E
+data4 0x3F80429C,0x3F80482B,0x3F804DB9,0x3F805349
+data4 0x3F8058D8,0x3F805E67,0x3F8063F7,0x3F806987
+data4 0x3F806F17,0x3F8074A8,0x3F807A39,0x3F807FCA
+data4 0x3F80855B,0x3F808AEC,0x3F80907E,0x3F809610
+data4 0x3F809BA2,0x3F80A135,0x3F80A6C7,0x3F80AC5A
+data4 0x3F80B1ED,0x3F80B781,0x3F80BD14,0x3F80C2A8
+data4 0x3F80C83C,0x3F80CDD1,0x3F80D365,0x3F80D8FA
+data4 0x3F80DE8F,0x3F80E425,0x3F80E9BA,0x3F80EF50
+data4 0x3F80F4E6,0x3F80FA7C,0x3F810013,0x3F8105AA
+data4 0x3F810B41,0x3F8110D8,0x3F81166F,0x3F811C07
+data4 0x3F81219F,0x3F812737,0x3F812CD0,0x3F813269
+data4 0x3F813802,0x3F813D9B,0x3F814334,0x3F8148CE
 data4 0x3F814E68,0x3F815402,0x3F81599C,0x3F815F37
 LOCAL_OBJECT_END(Constants_exp_64_T2)
 
@@ -652,14 +652,14 @@ GLOBAL_IEEE754_ENTRY(expm1l)
 
 //
 //    Set p7 true for expm1, p6 false
-//    
+//
 
 { .mlx
       getf.exp GR_signexp_x = f8  // Get sign and exponent of x, redo if unorm
       movl GR_sig_inv_ln2 = 0xb8aa3b295c17f0bc  // significand of 1/ln2
 }
 { .mlx
-      addl GR_ad_Arg = @ltoff(Constants_exp_64_Arg#),gp  
+      addl GR_ad_Arg = @ltoff(Constants_exp_64_Arg#),gp
       movl GR_rshf_2to51 = 0x4718000000000000 // 1.10000 2^(63+51)
 }
 ;;
@@ -667,12 +667,12 @@ GLOBAL_IEEE754_ENTRY(expm1l)
 { .mfi
       ld8  GR_ad_Arg = [GR_ad_Arg]       // Point to Arg table
       fclass.m p8, p0 =  f8, 0x1E7       // Test x for natval, nan, inf, zero
-      cmp.eq  p7, p6 =  r0, r0 
+      cmp.eq  p7, p6 =  r0, r0
 }
 { .mfb
       mov GR_exp_half = 0x0FFFE          // Exponent of 0.5, for very small path
       fnorm.s1 FR_norm_x = f8            // Normalize x
-      br.cond.sptk exp_continue 
+      br.cond.sptk exp_continue
 }
 ;;
 
@@ -682,13 +682,13 @@ GLOBAL_IEEE754_END(expm1l)
 GLOBAL_IEEE754_ENTRY(expl)
 //
 //    Set p7 false for exp, p6 true
-//    
+//
 { .mlx
       getf.exp GR_signexp_x = f8  // Get sign and exponent of x, redo if unorm
       movl GR_sig_inv_ln2 = 0xb8aa3b295c17f0bc  // significand of 1/ln2
 }
 { .mlx
-      addl GR_ad_Arg = @ltoff(Constants_exp_64_Arg#),gp  
+      addl GR_ad_Arg = @ltoff(Constants_exp_64_Arg#),gp
       movl GR_rshf_2to51 = 0x4718000000000000 // 1.10000 2^(63+51)
 }
 ;;
@@ -705,9 +705,9 @@ GLOBAL_IEEE754_ENTRY(expl)
 }
 ;;
 
-exp_continue: 
+exp_continue:
 // Form two constants we need
-//  1/ln2 * 2^63  to compute  w = x * 1/ln2 * 128 
+//  1/ln2 * 2^63  to compute  w = x * 1/ln2 * 128
 //  1.1000..000 * 2^(63+63-12) to right shift int(N) into the significand
 
 { .mfi
@@ -832,7 +832,7 @@ exp_continue:
 
 // Now we are on the main path for |x| >= 2^-m, m=12 for exp, m=7 for expm1
 //
-// float_N = round_int(N_signif) 
+// float_N = round_int(N_signif)
 // The signficand of N_signif contains the rounded integer part of X * 2^12/ln2,
 // as a twos complement number in the lower bits (that is, it may be negative).
 // That twos complement number (called N) is put into GR_N.
@@ -934,7 +934,7 @@ exp_continue:
 ;;
 
 { .mfi
-(p7)  cmp.lt.unc  p8, p9 =  10, GR_K       // If expm1, set p8 if K > 10 
+(p7)  cmp.lt.unc  p8, p9 =  10, GR_K       // If expm1, set p8 if K > 10
       fma.s1 FR_poly = FR_r, FR_poly, FR_A1 // poly = r * poly + A1
       nop.i 999
 }
@@ -1033,8 +1033,8 @@ exp_continue:
 }
 ;;
 
- 
-EXP_SMALL: 
+
+EXP_SMALL:
 // Here if 2^-60 < |x| < 2^-m, m=12 for exp, m=7 for expm1
 { .mfi
 (p7)  ldfe FR_Q3 = [GR_ad_Q],16          // Get Q3 for small path, if expm1
@@ -1146,7 +1146,7 @@ EXP_SMALL:
 ;;
 
 
-EXP_VERY_SMALL: 
+EXP_VERY_SMALL:
 //
 // Here if 0 < |x| < 2^-60
 // If exp, result = 1.0 + x
@@ -1224,8 +1224,8 @@ EXP_CERTAIN_UNDERFLOW_ZERO:
 (p7)  br.ret.sptk  b0                           // If expm1, exit
 }
 ;;
-     
-  
+
+
 EXP_OVERFLOW:
 // Here if x >= min_oflow_x
 { .mmi
@@ -1309,7 +1309,7 @@ EXP_POSSIBLE_UNDERFLOW:
 ;;
 
 
-EXP_64_SPECIAL: 
+EXP_64_SPECIAL:
 // Here if x natval, nan, inf, zero
 // If x natval, +inf, or if expm1 and x zero, just return x.
 // The other cases must be tested for, and results set.
@@ -1367,7 +1367,7 @@ EXP_64_SPECIAL:
 ;;
 
 
-EXP_64_UNSUPPORTED: 
+EXP_64_UNSUPPORTED:
 // Here if x unsupported type
 { .mfb
       nop.m 999

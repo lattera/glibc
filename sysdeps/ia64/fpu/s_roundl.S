@@ -159,7 +159,7 @@ ROUND_COMMON:
 { .mmi
       cmp.lt           p6,p0 = rExp, rExpHalf // Is |x| < 0.5?
       cmp.ge           p7,p0 = rExp, rBigexp  // Is |x| >= 2^63?
-      cmp.lt           p10,p0 = rExp, rExpHalf // Is |x| < 0.5? 
+      cmp.lt           p10,p0 = rExp, rExpHalf // Is |x| < 0.5?
 }
 ;;
 

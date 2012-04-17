@@ -51,7 +51,7 @@ ENTRY(strchr)
 	.save ar.lc, saved_lc
         mov 	saved_lc = ar.lc 	// save the loop counter
 	.body
-	mov 	ret0 = str	
+	mov 	ret0 = str
 	and 	tmp = 7, str		// tmp = str % 8
 	mux1	chrx8 = chr, @brcst
 	extr.u	chr = chr, 0, 8		// retain only the last byte
@@ -74,9 +74,9 @@ ENTRY(strchr)
 	ld8	val1 = [ret0], 8;;
 	nop.b	0
 	nop.b 	0
-.l2:	
+.l2:
 	ld8.s	val2 = [ret0], 8	// don't bomb out here
-	czx1.r	pos0 = val1	
+	czx1.r	pos0 = val1
 	xor	tmp = val1, chrx8	// if val1 contains chr, tmp will
 	;;				// contain a zero in its position
 	czx1.r	poschr = tmp
@@ -87,7 +87,7 @@ ENTRY(strchr)
 (p6)	br.cond.spnt .notfound
 	chk.s	val2, .recovery
 .back:
-	mov	val1 = val2	
+	mov	val1 = val2
 	br.cond.dptk .l2
 .foundit:
 (p6)	cmp.lt	p8, p0 = pos0, poschr	// we found chr and null in the word

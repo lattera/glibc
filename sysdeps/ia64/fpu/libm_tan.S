@@ -2,7 +2,7 @@
 
 // Copyright (C) 2000, 2001, Intel Corporation
 // All rights reserved.
-// 
+//
 // Contributed 2/2/2000 by John Harrison, Ted Kubaska, Bob Norin, Shane Story,
 // and Ping Tak Peter Tang of the Computational Software Lab, Intel Corporation.
 //
@@ -21,26 +21,26 @@
 // products derived from this software without specific prior written
 // permission.
 //
-// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
-// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
 // LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL INTEL OR ITS 
+// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL INTEL OR ITS
 // CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-// EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, 
-// PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
-// PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY 
+// EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+// PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+// PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY
 // OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY OR TORT (INCLUDING
-// NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS 
-// SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. 
-// 
+// NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+// SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
 // Intel Corporation is the author of this code, and requests that all
-// problem reports or change requests be submitted to it directly at 
+// problem reports or change requests be submitted to it directly at
 // http://developer.intel.com/opensource.
 //
 // *********************************************************************
 //
-// History:  
-// 02/02/00 Initial Version 
+// History:
+// 02/02/00 Initial Version
 // 4/04/00  Unwind support added
 // 12/28/00 Fixed false invalid flags
 //
@@ -50,7 +50,7 @@
 //
 // *********************************************************************
 //
-// Accuracy:       Very accurate for double-precision values  
+// Accuracy:       Very accurate for double-precision values
 //
 // *********************************************************************
 //
@@ -72,7 +72,7 @@
 //
 //    Denormal  fault raised on denormal inputs
 //    Overflow exceptions do not occur
-//    Underflow exceptions raised when appropriate for tan 
+//    Underflow exceptions raised when appropriate for tan
 //    (No specialized error handling for this routine)
 //    Inexact raised when appropriate by algorithm
 //
@@ -218,7 +218,7 @@
 //      tan( B + x ) =  ------------------------
 //                   1 -  tan(B)*tan(x)
 //
-//               /                         \ 
+//               /                         \
 //               |   tan(B)  +   tan(x)          |
 
 //      = tan(B) +  | ------------------------ - tan(B) |
@@ -251,7 +251,7 @@
 //      cot( B + x ) =  ------------------------
 //                   tan(B)  +  tan(x)
 //
-//               /                           \ 
+//               /                           \
 //               |   1 - tan(B)*tan(x)              |
 
 //      = cot(B) +  | ----------------------- - cot(B) |
@@ -315,7 +315,7 @@
 //                 /            (1/[sin(B)*cos(B)]) * tan(x)
 //    tan(Arg) = sgn_r * | tan(B) + --------------------------------
 //                 \                     cot(B)  -  tan(x)
-//                                        \ 
+//                                        \
 //                       + CORR  |
 
 //                                     /
@@ -335,7 +335,7 @@
 //                 /            (1/[sin(B)*cos(B)]) * tan(x)
 //    tan(Arg) = sgn_r * | -cot(B) + --------------------------------
 //                 \                     tan(B)  +  tan(x)
-//                                        \ 
+//                                        \
 //                       + CORR  |
 
 //                                     /
@@ -457,7 +457,7 @@
 //           /           (1/[sin(B)*cos(B)]) * tan(x)
 //      sgn_r * | tan(B) + --------------------------------  +
 //           \                     cot(B)  -  tan(x)
-//                                \ 
+//                                \
 //                          CORR  |
 
 //                                /
@@ -562,7 +562,7 @@
 //           /             (1/[sin(B)*cos(B)]) * tan(x)
 //      sgn_r * | -cot(B) + --------------------------------  +
 //           \                     tan(B)  +  tan(x)
-//                                \ 
+//                                \
 //                          CORR  |
 
 //                                /
@@ -913,7 +913,7 @@ data4    0xAE8C11FD, 0x800960AD, 0x00004000, 0x00000000
 data4    0x5FDBEC21, 0x8000E147, 0x00004000, 0x00000000
 data4    0xA07791FA, 0x80186650, 0x00004000, 0x00000000
 
-Arg                 = f8   
+Arg                 = f8
 Result              = f8
 fp_tmp              = f9
 U_2                 = f10
@@ -1021,15 +1021,15 @@ delta1         = r36
 table_ptr1     = r37
 table_ptr2     = r38
 i_0            = r39
-i_1            = r40 
-N_fix_gr       = r41 
-N_inc          = r42 
-exp_Arg        = r43 
-exp_r          = r44 
-sig_r          = r45 
-lookup         = r46   
-table_offset   = r47 
-Create_B       = r48 
+i_1            = r40
+N_fix_gr       = r41
+N_inc          = r42
+exp_Arg        = r43
+exp_r          = r44
+sig_r          = r45
+lookup         = r46
+table_offset   = r47
+Create_B       = r48
 gr_tmp         = r49
 
 GR_Parameter_X = r49
@@ -1042,12 +1042,12 @@ GR_Parameter_r = r50
 .proc __libm_tan
 
 
-__libm_tan: 
+__libm_tan:
 
 { .mfi
 alloc r32 = ar.pfs, 0,17,2,0
 (p0)   fclass.m.unc  p6,p0 = Arg, 0x1E7
-      addl gr_tmp = -1,r0             
+      addl gr_tmp = -1,r0
 }
 ;;
 
@@ -1073,7 +1073,7 @@ alloc r32 = ar.pfs, 0,17,2,0
 ;;
 
 //
-//     Check for NatVals, Infs , NaNs, and Zeros 
+//     Check for NatVals, Infs , NaNs, and Zeros
 //     Check for everything - if false, then must be pseudo-zero
 //     or pseudo-nan.
 //     Local table pointer
@@ -1081,12 +1081,12 @@ alloc r32 = ar.pfs, 0,17,2,0
 
 { .mbb
 (p0)   add table_ptr2 = 96, table_ptr1
-(p6)   br.cond.spnt __libm_TAN_SPECIAL 
+(p6)   br.cond.spnt __libm_TAN_SPECIAL
 (p7)   br.cond.spnt __libm_TAN_SPECIAL ;;
 }
 //
 //     Point to Inv_P_0
-//     Branch out to deal with unsupporteds and special values. 
+//     Branch out to deal with unsupporteds and special values.
 //
 
 { .mmf
@@ -1110,7 +1110,7 @@ alloc r32 = ar.pfs, 0,17,2,0
 { .mmi
 (p0)   ldfs NEGTWO_TO_24 = [table_ptr1],12 ;;
 //
-//     Do fcmp to generate Denormal exception 
+//     Do fcmp to generate Denormal exception
 //     - can't do FNORM (will generate Underflow when U is unmasked!)
 //     Normalize input argument.
 //
@@ -1668,12 +1668,12 @@ alloc r32 = ar.pfs, 0,17,2,0
 }
 
 
-TAN_LARGER_ARG: 
+TAN_LARGER_ARG:
 
 { .mmf
 (p0)  addl           table_ptr1   = @ltoff(TAN_BASE_CONSTANTS), gp
       nop.m 999
-(p0)  fmpy.s1 N_0 = Arg, Inv_P_0 
+(p0)  fmpy.s1 N_0 = Arg, Inv_P_0
 }
 ;;
 
@@ -2307,7 +2307,7 @@ TAN_LARGER_ARG:
 }
 
 
-TAN_SMALL_R: 
+TAN_SMALL_R:
 
 { .mii
 	nop.m 999
@@ -2394,7 +2394,7 @@ TAN_SMALL_R:
 (p11) ldfe P1_8 = [table_ptr1], -16 ;;
 //
 //    N even: Poly1 = P1_2 + P1_3 * rsq
-//    N odd:  poly1 =  1.0 +  S_hi * r     
+//    N odd:  poly1 =  1.0 +  S_hi * r
 //    16 bits partial  account for necessary (-1)
 //
 (p11) ldfe P1_7 = [table_ptr1], -16
@@ -2679,7 +2679,7 @@ TAN_SMALL_R:
 }
 
 
-TAN_NORMAL_R: 
+TAN_NORMAL_R:
 
 { .mfi
 (p0)  getf.sig sig_r = r
@@ -2847,7 +2847,7 @@ TAN_NORMAL_R:
 //    xsq = x * x
 //    N even: Tx = T_hi * x
 //    Load T_lo.
-//    Load C_lo - increment pointer to get SC_inv 
+//    Load C_lo - increment pointer to get SC_inv
 //    - cant get all the way, do an add later.
 //
 (p0)  add table_ptr2 = 569, table_ptr2 ;;
@@ -3216,7 +3216,7 @@ ASM_SIZE_DIRECTIVE(__libm_tan)
 
 .proc __libm_callout
 __libm_callout:
-TAN_ARG_TOO_LARGE: 
+TAN_ARG_TOO_LARGE:
 .prologue
 // (1)
 { .mfi
@@ -3258,7 +3258,7 @@ TAN_ARG_TOO_LARGE:
 // (4)
 { .mmi
         mov   gp = GR_SAVE_GP                  // Restore gp
-(p0)    mov   N_fix_gr = r8 
+(p0)    mov   N_fix_gr = r8
         nop.i 999
 }
 ;;
@@ -3304,7 +3304,7 @@ TAN_ARG_TOO_LARGE:
 .restore sp
         add   sp = 64,sp                       // Restore stack pointer
 (p6)   br.cond.spnt TAN_SMALL_R
-(p0)   br.cond.sptk TAN_NORMAL_R 
+(p0)   br.cond.sptk TAN_NORMAL_R
 }
 ;;
 .endp __libm_callout
@@ -3322,7 +3322,7 @@ __libm_TAN_SPECIAL:
 { .mfb
 	nop.m 999
 (p0)   fmpy.s0 Arg = Arg, f0
-(p0)   br.ret.sptk b0 
+(p0)   br.ret.sptk b0
 }
 .endp __libm_TAN_SPECIAL
 ASM_SIZE_DIRECTIVE(__libm_TAN_SPECIAL)

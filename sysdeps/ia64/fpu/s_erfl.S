@@ -21,20 +21,20 @@
 // products derived from this software without specific prior written
 // permission.
 
-// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
-// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
 // LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL INTEL OR ITS 
+// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL INTEL OR ITS
 // CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-// EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, 
-// PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
-// PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY 
+// EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+// PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+// PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY
 // OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY OR TORT (INCLUDING
-// NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS 
-// SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. 
-// 
+// NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+// SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
 // Intel Corporation is the author of this code, and requests that all
-// problem reports or change requests be submitted to it directly at 
+// problem reports or change requests be submitted to it directly at
 // http://www.intel.com/software/products/opensource/libraries/num.htm.
 //
 // History
@@ -68,7 +68,7 @@
 //
 // 3. Main path: 1/8 <= |x| < 6.53
 //    For several ranges of 1/8 <= |x| < 6.53
-//    Return erfl(x) = sign(x)*((A0H+A0L) + y*(A1H+A1L) + y^2*(A2H+A2L) + 
+//    Return erfl(x) = sign(x)*((A0H+A0L) + y*(A1H+A1L) + y^2*(A2H+A2L) +
 //                                       + y^3*A3 + y^4*A4 + ... + y^25*A25 )
 //    where y = (|x|/a) - b
 //
@@ -83,7 +83,7 @@
 //    4.0  <= |x| < 6.53    a = 4.0,   b = 1.5
 //    ( [3.25;4.0] subrange separated for monotonicity issues resolve )
 //
-// 4. Saturation path: 6.53 <= |x| < +INF 
+// 4. Saturation path: 6.53 <= |x| < +INF
 //    Return erfl(x) = sign(x)*(1.0 - tiny_value)
 //    (tiny_value ~ 1e-1233)
 //
@@ -109,10 +109,10 @@
 //    Multiprecision have to be performed only for first few
 //    polynomial iterations (up to 3-rd x degree)
 //    Here we use the same parallelisation way as above:
-//    Split whole polynomial to first, "multiprecision" part, and second, 
+//    Split whole polynomial to first, "multiprecision" part, and second,
 //    so called "tail", native precision part.
 //
-//    1) Multiprecision part:  
+//    1) Multiprecision part:
 //    [v1=(A0H+A0L)+y*(A1H+A1L)] + [v2=y^2*((A2H+A2L)+y*A3)]
 //    v1 and v2 terms calculated in parallel
 //
@@ -120,23 +120,23 @@
 //    v3 = x^4 * ( A4 + x*A5 + ... + x^21*A25 )
 //    v3 is splitted to 2 even parts (10 coefficient in each one).
 //    These 2 parts are also factorized using binary tree technique.
-//    
+//
 //    So Multiprecision and Tail parts cost is almost the same
 //    and we have both results ready before final summation.
 //
-// 4. Saturation path: 6.53 <= |x| < +INF 
+// 4. Saturation path: 6.53 <= |x| < +INF
 //
 //    We use formula sign(x)*(1.0 - tiny_value) instead of simple sign(x)*1.0
 //    just to meet IEEE requirements for different rounding modes in this case.
 //
 // Registers used
 //==============================================================
-// Floating Point registers used: 
+// Floating Point registers used:
 // f8 - input & output
 // f32 -> f90
 
-// General registers used:  
-// r2, r3, r32 -> r52 
+// General registers used:
+// r2, r3, r32 -> r52
 
 // Predicate registers used:
 // p0, p6 -> p11, p14, p15
@@ -201,9 +201,9 @@ fA16               = f51
 fA17               = f52
 fA18               = f53
 fA19               = f54
-fA20               = f55 
-fA21               = f56 
-fA22               = f57 
+fA20               = f55
+fA21               = f56
+fA22               = f57
 fA23               = f58
 fA24               = f59
 fA25               = f60
@@ -232,10 +232,10 @@ fRes3H             = f79
 fRes3L             = f80
 fRes4              = f81
 
-fTT                = f82 
+fTT                = f82
 fTH                = f83
 fTL                = f84
-fTT2               = f85 
+fTT2               = f85
 fTH2               = f86
 fTL2               = f87
 
@@ -252,7 +252,7 @@ RODATA
 LOCAL_OBJECT_START(erfl_data)
 ////////// Main tables ///////////
 _0p125_to_0p25_data: // exp = 2^-3
-// Polynomial coefficients for the erf(x), 1/8 <= |x| < 1/4 
+// Polynomial coefficients for the erf(x), 1/8 <= |x| < 1/4
 data8 0xACD9ED470F0BB048, 0x0000BFF4 //A3 = -6.5937529303909561891162915809e-04
 data8 0xBF6A254428DDB452 //A2H = -3.1915980570631852578089571182e-03
 data8 0xBC131B3BE3AC5079 //A2L = -2.5893976889070198978842231134e-19
@@ -275,7 +275,7 @@ data8 0x92E992C58B7C3847, 0x0000BFC6 //A14 = -7.9641369349930600223371163611e-18
 LOCAL_OBJECT_END(erfl_data)
 
 LOCAL_OBJECT_START(_0p25_to_0p5_data)
-// Polynomial coefficients for the erf(x), 1/4 <= |x| < 1/2 
+// Polynomial coefficients for the erf(x), 1/4 <= |x| < 1/2
 data8 0xF083628E8F7CE71D, 0x0000BFF6 //A3 = -3.6699405305266733332335619531e-03
 data8 0xBF978749A434FE4E //A2H = -2.2977018973732214746075186440e-02
 data8 0xBC30B3FAFBC21107 //A2L = -9.0547407100537663337591537643e-19
@@ -298,7 +298,7 @@ data8 0x9CC8FFFBDDCF9853, 0x0000BFD4 //A14 = -1.3925319209173383944263942226e-13
 LOCAL_OBJECT_END(_0p25_to_0p5_data)
 
 LOCAL_OBJECT_START(_0p5_to_1_data)
-// Polynomial coefficients for the erf(x), 1/2 <= |x| < 1 
+// Polynomial coefficients for the erf(x), 1/2 <= |x| < 1
 data8 0xDB742C8FB372DBE0, 0x00003FF6 //A3 = 3.3485993187250381721535255963e-03
 data8 0xBFBEDC5644353C26 //A2H = -1.2054957547410136142751468924e-01
 data8 0xBC6D7215B023455F //A2L = -1.2770012232203569059818773287e-17
@@ -321,7 +321,7 @@ data8 0xB989FDB3795165C7, 0x00003FE1 //A14 = 1.3499740992928183247608593000e-09
 LOCAL_OBJECT_END(_0p5_to_1_data)
 
 LOCAL_OBJECT_START(_1_to_2_data)
-// Polynomial coefficients for the erf(x), 1 <= |x| < 2.0 
+// Polynomial coefficients for the erf(x), 1 <= |x| < 2.0
 data8 0x8E15015F5B55BEAC, 0x00003FFC //A3 = 1.3875200409423426678618977531e-01
 data8 0xBFC6D5A95D0A1B7E //A2H = -1.7839543383544403942764233761e-01
 data8 0xBC7499F704C80E02 //A2L = -1.7868888188464394090788198634e-17
@@ -344,7 +344,7 @@ data8 0xEC6E63BB4507B585, 0x0000BFEE //A14 = -1.4092398243085031882423746824e-05
 LOCAL_OBJECT_END(_1_to_2_data)
 
 LOCAL_OBJECT_START(_2_to_3p25_data)
-// Polynomial coefficients for the erf(x), 2 <= |x| < 3.25 
+// Polynomial coefficients for the erf(x), 2 <= |x| < 3.25
 data8 0xCEDBA58E8EE6F055, 0x00003FF7 //A3 = 6.3128050215859026984338771121e-03
 data8 0xBF5B60D5E974CBBD //A2H = -1.6710366233609740427984435840e-03
 data8 0xBC0E11E2AEC18AF6 //A2L = -2.0376133202996259839305825162e-19
@@ -367,7 +367,7 @@ data8 0xF2F3D8D21E8762E0, 0x0000BFF7 //A14 = -7.4143227286535936033409745884e-03
 LOCAL_OBJECT_END(_2_to_3p25_data)
 
 LOCAL_OBJECT_START(_4_to_6p53_data)
-// Polynomial coefficients for the erf(x), 4 <= |x| < 6.53 
+// Polynomial coefficients for the erf(x), 4 <= |x| < 6.53
 data8 0xDF3151BE8652827E, 0x00003FD5 //A3 = 3.9646979666953349095427642209e-13
 data8 0xBD1C4A9787DF888B //A2H = -2.5127788450714750484839908889e-14
 data8 0xB99B35483E4603FD //A2L = -3.3536613901268985626466020210e-31
@@ -390,7 +390,7 @@ data8 0x965DA4A80008B7BC, 0x0000BFEE //A14 = -8.9624997201558650125662820562e-06
 LOCAL_OBJECT_END(_4_to_6p53_data)
 
 LOCAL_OBJECT_START(_3p25_to_4_data)
-// Polynomial coefficients for the erf(x), 3.25 <= |x| < 4 
+// Polynomial coefficients for the erf(x), 3.25 <= |x| < 4
 data8 0xB01D29846286CE08, 0x00003FEE //A3 = 1.0497207328743021499800978059e-05
 data8 0xBEC10B1488AEB234 //A2H = -2.0317175474986489113480084279e-06
 data8 0xBB7F19701B8B74F9 //A2L = -4.1159669348226960337518214996e-22
@@ -415,7 +415,7 @@ LOCAL_OBJECT_END(_3p25_to_4_data)
 
 //////// "Tail" tables //////////
 LOCAL_OBJECT_START(_0p125_to_0p25_data_tail)
-// Polynomial coefficients for the erf(x), 1/8 <= |x| < 1/4 
+// Polynomial coefficients for the erf(x), 1/8 <= |x| < 1/4
 data8 0x93086CBD21ED3962, 0x00003FCA //A13 = 1.2753071968462837024755878679e-16
 data8 0x83CB5045A6D4B419, 0x00003FCF //A12 = 3.6580237062957773626379648530e-15
 data8 0x8FCDB723209690EB, 0x0000BFD3 //A11 = -6.3861616307180801527566117146e-14
@@ -429,7 +429,7 @@ data8 0xCC43247F4410C54A, 0x00003FEF //A4 = 2.4349960762505993017186935493e-05
 LOCAL_OBJECT_END(_0p125_to_0p25_data_tail)
 
 LOCAL_OBJECT_START(_0p25_to_0p5_data_tail)
-// Polynomial coefficients for the erf(x), 1/4 <= |x| < 1/2 
+// Polynomial coefficients for the erf(x), 1/4 <= |x| < 1/2
 data8 0x8CEAC59AF361B78A, 0x0000BFD6 //A13 = -5.0063802958258679384986669123e-13
 data8 0x9BC67404F348C0CE, 0x00003FDB //A12 = 1.7709590771868743572061278273e-11
 data8 0xF4B5D0348AFAAC7A, 0x00003FDB //A11 = 2.7820329729584630464848160970e-11
@@ -443,7 +443,7 @@ data8 0xAA94D5E68033B764, 0x00003FF4 //A4 = 6.5071635765452563856926608000e-04
 LOCAL_OBJECT_END(_0p25_to_0p5_data_tail)
 
 LOCAL_OBJECT_START(_0p5_to_1_data_tail)
-// Polynomial coefficients for the erf(x), 1/2 <= |x| < 1 
+// Polynomial coefficients for the erf(x), 1/2 <= |x| < 1
 data8 0x9ED99EDF111CB785, 0x0000BFE4 //A13 = -9.2462916180079278241704711522e-09
 data8 0xDEAF7539AE2FB062, 0x0000BFE5 //A12 = -2.5923990465973151101298441139e-08
 data8 0xA392D5E5CC9DB1A7, 0x00003FE9 //A11 = 3.0467952847327075747032372101e-07
@@ -457,7 +457,7 @@ data8 0x9A4DAF550A2CC29A, 0x00003FF8 //A4 = 9.4179355839141698591817907680e-03
 LOCAL_OBJECT_END(_0p5_to_1_data_tail)
 
 LOCAL_OBJECT_START(_1_to_2_data_tail)
-// Polynomial coefficients for the erf(x), 1 <= |x| < 2.0 
+// Polynomial coefficients for the erf(x), 1 <= |x| < 2.0
 data8 0x969EAC5C7B46CAB9, 0x00003FEF //A13 = 1.7955281439310148162059582795e-05
 data8 0xA2ED832912E9FCD9, 0x00003FF1 //A12 = 7.7690020847111408916570845775e-05
 data8 0x85677C39C48E43E7, 0x0000BFF3 //A11 = -2.5444839340796031538582511806e-04
@@ -471,7 +471,7 @@ data8 0xB6AD4AE850DBF526, 0x0000BFFA //A4 = -4.4598858458861014323191919669e-02
 LOCAL_OBJECT_END(_1_to_2_data_tail)
 
 LOCAL_OBJECT_START(_2_to_3p25_data_tail)
-// Polynomial coefficients for the erf(x), 2 <= |x| < 3.25 
+// Polynomial coefficients for the erf(x), 2 <= |x| < 3.25
 data8 0x847C24DAC7C7558B, 0x00003FF5 //A13 = 1.0107798565424606512130100541e-03
 data8 0xCB6340EAF02C3DF8, 0x00003FF8 //A12 = 1.2413800617425931997420375435e-02
 data8 0xB5163D252DBBC107, 0x0000BFF9 //A11 = -2.2105330871844825370020459523e-02
@@ -485,7 +485,7 @@ data8 0x88E42D8F47FAB60E, 0x0000BFF9 //A4 = -1.6710366233609742619461063050e-02
 LOCAL_OBJECT_END(_2_to_3p25_data_tail)
 
 LOCAL_OBJECT_START(_4_to_6p53_data_tail)
-// Polynomial coefficients for the erf(x), 4 <= |x| < 6.53 
+// Polynomial coefficients for the erf(x), 4 <= |x| < 6.53
 data8 0xD8235ABF08B8A6D1, 0x00003FEE //A13 = 1.2882834877224764938429832586e-05
 data8 0xAEDF44F9C77844C2, 0x0000BFEC //A12 = -2.6057980393716019511497492890e-06
 data8 0xCCD5490956A4FCFD, 0x00003FEA //A11 = 7.6306293047300300284923464089e-07
@@ -499,7 +499,7 @@ data8 0xA29C398F83F8A0D1, 0x0000BFD9 //A4 = -4.6216613698438694005327544047e-12
 LOCAL_OBJECT_END(_4_to_6p53_data_tail)
 
 LOCAL_OBJECT_START(_3p25_to_4_data_tail)
-// Polynomial coefficients for the erf(x), 3.25 <= |x| < 4 
+// Polynomial coefficients for the erf(x), 3.25 <= |x| < 4
 data8 0x95BE1BEAD738160F, 0x00003FF2 //A13 = 1.4280568455209843005829620687e-04
 data8 0x8108C8FFAC0F0B21, 0x0000BFF4 //A12 = -4.9222685622046459346377033307e-04
 data8 0xD72A7FAEE7832BBE, 0x00003FF4 //A11 = 8.2079319302109644436194651098e-04
@@ -514,7 +514,7 @@ LOCAL_OBJECT_END(_3p25_to_4_data_tail)
 
 
 LOCAL_OBJECT_START(_0_to_1o8_data)
-// Polynomial coefficients for the erf(x), 0.0 <= |x| < 0.125 
+// Polynomial coefficients for the erf(x), 0.0 <= |x| < 0.125
 data8 0x3FF20DD750429B6D, 0x3C71AE3A8DDFFEDE //A1H, A1L
 data8 0xF8B0DACE42525CC2, 0x0000BFEE //A15
 data8 0xFCD02E1BF0EC2C37, 0x00003FF1 //A13
@@ -536,7 +536,7 @@ LOCAL_OBJECT_END(_denorm_data)
 GLOBAL_LIBM_ENTRY(erfl)
 
 { .mfi
-      alloc          r32         = ar.pfs, 0, 21, 0, 0 
+      alloc          r32         = ar.pfs, 0, 21, 0, 0
       fmerge.se      fArgAbsNorm = f1, f8      // normalized x (1.0 <= x < 2.0)
       addl           rSignBit    = 0x20000, r0 // Set sign bit for exponent
 }
@@ -547,26 +547,26 @@ GLOBAL_LIBM_ENTRY(erfl)
 
 { .mfi
       getf.exp       rArgExp     = f8              // Get arg exponent
-      fclass.m       p6,p0       = f8, 0xEF // Filter 0, denormals and specials 
+      fclass.m       p6,p0       = f8, 0xEF // Filter 0, denormals and specials
                             // 0xEF = @qnan|@snan|@pos|@neg|@zero|@unorm|@inf
-      addl           rBias       = 0xfffc, r0 // Value to subtract from exp 
+      addl           rBias       = 0xfffc, r0 // Value to subtract from exp
                                               // to get actual interval number
 }
 { .mfi
       ld8            rDataPtr    = [rDataPtr]  // Get real common data pointer
       fma.s1         fArgSqr     = f8, f8, f0  // x^2 (for [0;1/8] path)
-      addl           r2to4       = 0x10000, r0 // unbiased exponent 
+      addl           r2to4       = 0x10000, r0 // unbiased exponent
                                                // for [2;4] binary interval
 };;
 
 { .mfi
-      getf.sig       rArgSig     = f8              // Get arg significand 
+      getf.sig       rArgSig     = f8              // Get arg significand
       fcmp.lt.s1     p15, p14    = f8, f0          // Is arg negative/positive?
       addl           rSaturation = 0xd0e, r0       // First 12 bits of
                                                    // saturation value signif.
 }
 { .mfi
-      setf.d         f1p5        = r1p5            // 1.5 construction 
+      setf.d         f1p5        = r1p5            // 1.5 construction
       fma.s1         f2p0        = f1,f1,f1        // 2.0 construction
       addl           r3p25Sign   = 0xd00, r0       // First 12 bits of
                                                    // 3.25 value signif.
@@ -586,7 +586,7 @@ GLOBAL_LIBM_ENTRY(erfl)
 { .mfi
       sub            rInterval   = rArgExp, rBias // Get actual interval number
       nop.f          0
-      shr.u          rArgSig     = rArgSig, 52    // Leave only 12 bits of sign. 
+      shr.u          rArgSig     = rArgSig, 52    // Leave only 12 bits of sign.
 }
 { .mfi
       adds           rShiftedDataPtr = 0x10, rDataPtr // Second ptr to data
@@ -595,10 +595,10 @@ GLOBAL_LIBM_ENTRY(erfl)
 };;
 
 { .mfi
-(p8)  cmp.le         p8, p10     = r3p25Sign, rArgSig // If sign. is greater 
+(p8)  cmp.le         p8, p10     = r3p25Sign, rArgSig // If sign. is greater
                             //  than 1.25? (means arg is in [3.25;4] interval)
       nop.f          0
-      shl            rOffset     = rInterval, 8 // Make offset from 
+      shl            rOffset     = rInterval, 8 // Make offset from
                                                 // interval number
 }
 { .mfi
@@ -609,30 +609,30 @@ GLOBAL_LIBM_ENTRY(erfl)
 };;
 
 { .mfi
-(p8)  adds           rOffset     = 0x200, rOffset // Add additional offset 
+(p8)  adds           rOffset     = 0x200, rOffset // Add additional offset
                                  // if arg is in [3.25;4] (another data set)
       fma.s1         fArgCube    = fArgSqr, f8, f0  // x^3 (for [0;1/8] path)
       shl            rTailOffset = rInterval, 7  // Make offset to "tail" data
                                                  // from interval number
 }
 { .mib
-      setf.exp       fTiny       = rTiny // Construct "tiny" value 
+      setf.exp       fTiny       = rTiny // Construct "tiny" value
                                          // for saturation path
       cmp.ltu        p11, p0     = 0x5, rInterval // if arg > 8
-(p9)  br.cond.spnt   _0_to_1o8       
+(p9)  br.cond.spnt   _0_to_1o8
 };;
 
 { .mfi
-      add            rAddr1      = rDataPtr, rOffset // Get address for 
-                                                     // interval data 
+      add            rAddr1      = rDataPtr, rOffset // Get address for
+                                                     // interval data
       nop.f          0
       shl            rTailAddOffset = rInterval, 5 // Offset to interval
-                                                   // "tail" data 
+                                                   // "tail" data
 }
 { .mib
       add            rAddr2      = rShiftedDataPtr, rOffset // Get second
-                                                 // address for interval data 
-(p7)  cmp.leu        p11, p0     = rSaturation, rArgSig // if arg is 
+                                                 // address for interval data
+(p7)  cmp.leu        p11, p0     = rSaturation, rArgSig // if arg is
                                                         // in [6.53;8] interval
 (p11) br.cond.spnt   _saturation // Branch to Saturation path
 };;
@@ -660,14 +660,14 @@ GLOBAL_LIBM_ENTRY(erfl)
 .pred.rel "mutex",p8,p10
 { .mfi
       ldfe           fA18        = [rAddr1], 16 // Load A18
-(p8)  fms.s1         fArgAbsNorm = fArgAbsNorm, f1, f2p0 // Add 2.0 
+(p8)  fms.s1         fArgAbsNorm = fArgAbsNorm, f1, f2p0 // Add 2.0
                           // to normalized arg (for [3.24;4] interval)
       adds           rTailAddr2  = 0x10, rTailAddr1  // First tail
                                                      // data address
 }
 { .mfi
-      ldfe           fA25        = [rAddr2], 16 // Load A25 
-(p10) fms.s1         fArgAbsNorm = fArgAbsNorm, f1, f1p5  // Add 1.5 
+      ldfe           fA25        = [rAddr2], 16 // Load A25
+(p10) fms.s1         fArgAbsNorm = fArgAbsNorm, f1, f1p5  // Add 1.5
                                                 // to normalized arg
       nop.i          0
 };;
@@ -775,9 +775,9 @@ GLOBAL_LIBM_ENTRY(erfl)
       fma.s1         fA23        = fA24,  fArgAbsNorm, fA23 // Polynomial tail
       nop.i          0
 }
-{ .mfi 
+{ .mfi
       nop.m          0
-      fma.s1         fA21        = fA22,  fArgAbsNorm, fA21 // Polynomial tail 
+      fma.s1         fA21        = fA22,  fArgAbsNorm, fA21 // Polynomial tail
       nop.i          0
 };;
 
@@ -793,7 +793,7 @@ GLOBAL_LIBM_ENTRY(erfl)
       fma.s1         fRes3L      = fRes3L, f1, fTH // (A3*x+A2)*x^2
       nop.i          0
 }
-{ .mfi 
+{ .mfi
       nop.m          0
       fma.s1         fA19        = fA20,  fArgAbsNorm, fA19 // Polynomial tail
       nop.i          0
@@ -804,7 +804,7 @@ GLOBAL_LIBM_ENTRY(erfl)
       fma.s1         fRes1H      = fTH2, f1, fA0H // A1*x+A0
       nop.i          0
 }
-{ .mfi 
+{ .mfi
       nop.m          0
       fms.s1         fTL2        = fA1H, fArgAbsNorm, fTH2 // A1*x+A0
       nop.i          0
@@ -815,7 +815,7 @@ GLOBAL_LIBM_ENTRY(erfl)
       fma.s1         fA8         = fA9,  fArgAbsNorm, fA8 // Polynomial tail
       nop.i          0
 }
-{ .mfi 
+{ .mfi
       nop.m          0
       fma.s1         fA10        = fA11,  fArgAbsNorm, fA10 // Polynomial tail
       nop.i          0
@@ -835,7 +835,7 @@ GLOBAL_LIBM_ENTRY(erfl)
       fms.s1         fArgAbsNorm11 = fArgAbsNorm4, fArgAbsNorm4, f0 // x^8
       nop.i          0
 }
-{ .mfi 
+{ .mfi
       nop.m          0
       fma.s1         fA4         = fA5,  fArgAbsNorm, fA4 // Polynomial tail
       nop.i          0
@@ -846,7 +846,7 @@ GLOBAL_LIBM_ENTRY(erfl)
       fma.s1         fRes3L      = fRes3L, f1, fA2L // (A3*x+A2)*x^2
       nop.i          0
 }
-{ .mfi 
+{ .mfi
       nop.m          0
       fma.s1         fA6         = fA7,  fArgAbsNorm, fA6 // Polynomial tail
       nop.i          0
@@ -857,7 +857,7 @@ GLOBAL_LIBM_ENTRY(erfl)
       fma.s1         fTL2        = fTL2, f1, fTT2 // A1*x+A0
       nop.i          0
 }
-{ .mfi 
+{ .mfi
       nop.m          0
       fms.s1         fRes1L      = fA0H, f1, fRes1H // A1*x+A0
       nop.i          0
@@ -868,7 +868,7 @@ GLOBAL_LIBM_ENTRY(erfl)
       fma.s1         fA23        = fA25,  fArgAbsNorm2, fA23 // Polynomial tail
       nop.i          0
 }
-{ .mfi 
+{ .mfi
       nop.m          0
       fma.s1         fA12        = fA14,  fArgAbsNorm2, fA12 // Polynomial tail
       nop.i          0
@@ -879,7 +879,7 @@ GLOBAL_LIBM_ENTRY(erfl)
       fma.s1         fA19        = fA21,  fArgAbsNorm2, fA19  // Polynomial tail
       nop.i          0
 }
-{ .mfi 
+{ .mfi
       nop.m          0
       fma.s1         fA8         = fA10,  fArgAbsNorm2, fA8 // Polynomial tail
       nop.i          0
@@ -890,7 +890,7 @@ GLOBAL_LIBM_ENTRY(erfl)
       fma.s1         fA15        = fA17,  fArgAbsNorm2, fA15 // Polynomial tail
       nop.i          0
 }
-{ .mfi 
+{ .mfi
       nop.m          0
       fms.s1         fArgAbsNorm11 = fArgAbsNorm11, fArgAbsNorm3, f0 // x^11
       nop.i          0
@@ -901,7 +901,7 @@ GLOBAL_LIBM_ENTRY(erfl)
       fma.s1         fTT         = fRes3L, fArgAbsNorm2, f0 // (A3*x+A2)*x^2
       nop.i          0
 }
-{ .mfi 
+{ .mfi
       nop.m          0
       fma.s1         fA4         = fA6,  fArgAbsNorm2, fA4 // Polynomial tail
       nop.i          0
@@ -918,7 +918,7 @@ GLOBAL_LIBM_ENTRY(erfl)
       fma.s1         fA19        = fA23,  fArgAbsNorm4, fA19 // Polynomial tail
       nop.i          0
 }
-{ .mfi 
+{ .mfi
       nop.m          0
       fma.s1         fA8         = fA12,  fArgAbsNorm4, fA8 // Polynomial tail
       nop.i          0
@@ -961,7 +961,7 @@ GLOBAL_LIBM_ENTRY(erfl)
 
 { .mfi
       nop.m          0
-      fma.s1         fRes4       = fA15, fArgAbsNorm11, fA4 // Result of 
+      fma.s1         fRes4       = fA15, fArgAbsNorm11, fA4 // Result of
                                                       // polynomial tail
       nop.i          0
 };;
@@ -971,7 +971,7 @@ GLOBAL_LIBM_ENTRY(erfl)
       fms.s1         fRes2L      = fRes3H, fArgAbsNorm2, fRes2H // (A3*x+A2)*x^2
       nop.i          0
 }
-{ .mfi 
+{ .mfi
       nop.m          0
       fma.s1         fResH       = fRes2H, f1, fRes1H // High result
       nop.i          0
@@ -983,12 +983,12 @@ GLOBAL_LIBM_ENTRY(erfl)
       nop.i          0
 };;
 
-{ .mfi 
+{ .mfi
       nop.m          0
       fma.s1         fRes2L      = fRes2L, f1, fTT // (A3*x+A2)*x^2
       nop.i          0
 }
-{ .mfi 
+{ .mfi
       nop.m          0
       fms.s1         fResL       = fRes1H, f1, fResH // Low result
       nop.i          0
@@ -999,13 +999,13 @@ GLOBAL_LIBM_ENTRY(erfl)
       fma.s1         fRes1L      = fRes1L, f1, fRes2L // Low result
       nop.i          0
 }
-{ .mfi 
+{ .mfi
       nop.m          0
       fma.s1         fResL       = fResL, f1, fRes2H // Low result
       nop.i          0
 };;
 
-{ .mfi 
+{ .mfi
       nop.m          0
 (p15) fneg           fResH       = fResH // Invert high result if arg is neg.
       nop.i          0
@@ -1018,12 +1018,12 @@ GLOBAL_LIBM_ENTRY(erfl)
 };;
 
 .pred.rel "mutex",p14,p15
-{ .mfi 
+{ .mfi
       nop.m          0
 (p14) fma.s0         f8          = fResH, f1, fResL // Add high and low results
       nop.i          0
 }
-{ .mfb 
+{ .mfb
       nop.m          0
 (p15) fms.s0         f8          = fResH, f1, fResL // Add high and low results
       br.ret.sptk    b0          // Main path return
@@ -1033,12 +1033,12 @@ GLOBAL_LIBM_ENTRY(erfl)
 _saturation:
 
 .pred.rel "mutex",p14,p15
-{ .mfi 
+{ .mfi
       nop.m          0
 (p14) fms.s0            f8          = f1, f1, fTiny // Saturation result r = 1-tiny
       nop.i 0
 };;
-{ .mfb 
+{ .mfb
       nop.m          0
 (p15) fnma.s0           f8          = f1, f1, fTiny // Saturation result r = tiny-1
       br.ret.sptk    b0         // Saturation path return
@@ -1048,69 +1048,69 @@ _saturation:
 //  0, denormals and special IEEE numbers path /////////////////////////////////
 erfl_spec:
 
-{ .mfi 
+{ .mfi
       addl           rDataPtr    = 0xBE0, rDataPtr // Ptr to denormals coeffs
       fclass.m       p6,p0       = f8, 0x23 // To filter infinities
-                                          // 0x23 = @pos|@neg|@inf 
+                                          // 0x23 = @pos|@neg|@inf
       nop.i          0
 };;
 
-{ .mfi 
+{ .mfi
       ldfpd          fA1H, fA1L  = [rDataPtr] // Load denormals coeffs A1H, A1L
       fclass.m       p7,p0       = f8, 0xC7 // To filter NaNs & Zeros
                                  // 0xC7 = @pos|@neg|@zero|@qnan|@snan
       nop.i          0
 };;
 
-{ .mfb 
+{ .mfb
       nop.m          0
-(p6)  fmerge.s       f8          = f8, f1     // +/-1 for INF args 
+(p6)  fmerge.s       f8          = f8, f1     // +/-1 for INF args
 (p6)  br.ret.spnt    b0                       // exit for x = INF
 };;
 
-{ .mfb 
+{ .mfb
       nop.m          0
-(p7)  fma.s0         f8          = f8, f1, f8    // +/-0 for 0 args 
+(p7)  fma.s0         f8          = f8, f1, f8    // +/-0 for 0 args
                                                  // and NaNs for NaNs
 (p7)  br.ret.spnt    b0                          // exit for x = NaN or +/-0
 };;
 
-{ .mfi 
+{ .mfi
       nop.m          0
       fnorm.s0       f8          = f8            // Normalize arg
       nop.i          0
 };;
 
-{ .mfi 
+{ .mfi
       nop.m          0
       fms.s1         fRes1H      = f8, fA1H, f0   // HighRes
       nop.i          0
 }
-{ .mfi 
+{ .mfi
       nop.m          0
       fms.s1         fRes1L      = f8, fA1L, f0   // LowRes
       nop.i          0
 };;
 
-{ .mfi 
+{ .mfi
       nop.m          0
       fms.s1         fRes1Hd     = f8, fA1H, fRes1H // HighRes delta
       nop.i          0
 };;
 
-{ .mfi 
+{ .mfi
       nop.m          0
       fma.s1         fRes        = fRes1L, f1,  fRes1Hd // LowRes+HighRes delta
       nop.i          0
 };;
 
-{ .mfi 
+{ .mfi
       nop.m          0
       fma.s1         fRes        = f8, f8, fRes // r=x^2+r
       nop.i          0
 };;
 
-{ .mfb 
+{ .mfb
       nop.m          0
       fma.s0         f8          = fRes, f1, fRes1H  // res = r+ResHigh
       br.ret.sptk    b0          // 0, denormals, specials return
@@ -1120,120 +1120,120 @@ erfl_spec:
 //  0 < |x| < 1/8 path /////////////////////////////////////////////////////////
 _0_to_1o8:
 
-{ .mmi 
+{ .mmi
       adds           rAddr1      = 0xB60, rDataPtr // Ptr 1 to coeffs
       adds           rAddr2      = 0xB80, rDataPtr // Ptr 2 to coeffs
       nop.i          0
 };;
 
-{ .mmi 
+{ .mmi
       ldfpd          fA1H, fA1L  = [rAddr1], 16 // Load A1High, A1Low
       ldfe           fA13        = [rAddr2], 16 // Load A13
       nop.i          0
 };;
 
-{ .mmi 
+{ .mmi
       ldfe           fA15        = [rAddr1], 48 // Load A15
       ldfe           fA11        = [rAddr2], 32 // Load A11
       nop.i          0
 };;
 
-{ .mmi 
+{ .mmi
       ldfe           fA9         = [rAddr1], 32 // Load A9
       ldfe           fA7         = [rAddr2], 32 // Load A7
       nop.i          0
 };;
 
-{ .mmi 
+{ .mmi
       ldfe           fA5         = [rAddr1]  // Load A5
       ldfe           fA3         = [rAddr2] // Load A3
       nop.i          0
 };;
 
-{ .mfi 
+{ .mfi
       nop.m          0
       fms.s1         fRes1H      = f8, fA1H, f0 // x*(A1H+A1L)
       nop.i          0
 }
-{ .mfi 
+{ .mfi
       nop.m          0
       fms.s1         fRes1L      = f8, fA1L, f0 // x*(A1H+A1L)
       nop.i          0
 };;
 
-{ .mfi 
+{ .mfi
       nop.m          0
       fma.s1         fA11        = fA13, fArgSqr, fA11 // Polynomial tail
       nop.i          0
 }
-{ .mfi 
+{ .mfi
       nop.m          0
-      fma.s1         fArgFour    = fArgSqr, fArgSqr, f0 // a^4        
+      fma.s1         fArgFour    = fArgSqr, fArgSqr, f0 // a^4
       nop.i          0
 };;
 
 
-{ .mfi 
+{ .mfi
       nop.m          0
       fma.s1         fA3         = fA5, fArgSqr, fA3 // Polynomial tail
       nop.i          0
 }
-{ .mfi 
+{ .mfi
       nop.m          0
       fma.s1         fA7         = fA9, fArgSqr, fA7 // Polynomial tail
       nop.i          0
 };;
 
 
-{ .mfi 
+{ .mfi
       nop.m          0
       fms.s1         fRes1Hd     = f8, fA1H, fRes1H // x*(A1H+A1L) delta
       nop.i          0
 };;
 
-{ .mfi 
+{ .mfi
       nop.m          0
       fma.s1         fA11        = fA15, fArgFour, fA11 // Polynomial tail
       nop.i          0
 };;
 
-{ .mfi 
+{ .mfi
       nop.m          0
       fma.s1         fA3         = fA7, fArgFour, fA3 // Polynomial tail
       nop.i          0
 }
-{ .mfi 
+{ .mfi
       nop.m          0
       fma.s1         fArgEight   = fArgFour, fArgFour, f0 // a^8
       nop.i          0
 };;
 
-{ .mfi 
+{ .mfi
       nop.m          0
       fma.s1         f8          = fRes1L, f1,  fRes1Hd // x*(A1H+A1L)
       nop.i          0
 };;
 
-{ .mfi 
+{ .mfi
       nop.m          0
       fma.s1         fRes        = fA11, fArgEight, fA3 //Polynomial tail result
       nop.i          0
 };;
 
-{ .mfi 
+{ .mfi
       nop.m          0
       fma.s1         f8          = fRes, fArgCube, f8 // (Polynomial tail)*x^3
       nop.i          0
 };;
 
-{ .mfb 
+{ .mfb
       nop.m          0
-      fma.s0         f8          = f8, f1, fRes1H  // (Polynomial tail)*x^3 + 
+      fma.s0         f8          = f8, f1, fRes1H  // (Polynomial tail)*x^3 +
                                                    // + x*(A1H+A1L)
       br.ret.sptk    b0          // [0;1/8] interval return
 };;
 
-    
+
 GLOBAL_LIBM_END(erfl)
 
 

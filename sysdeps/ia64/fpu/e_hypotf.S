@@ -21,25 +21,25 @@
 // products derived from this software without specific prior written
 // permission.
 
-// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
-// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
 // LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL INTEL OR ITS 
+// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL INTEL OR ITS
 // CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-// EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, 
-// PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
-// PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY 
+// EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+// PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+// PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY
 // OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY OR TORT (INCLUDING
-// NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS 
-// SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. 
-// 
+// NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+// SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
 // Intel Corporation is the author of this code, and requests that all
-// problem reports or change requests be submitted to it directly at 
+// problem reports or change requests be submitted to it directly at
 // http://www.intel.com/software/products/opensource/libraries/num.htm.
 //
 //*********************************************************************
 //
-// History: 
+// History:
 // 02/02/00 hand-optimized
 // 04/04/00 Unwind support added
 // 06/26/00 new version
@@ -86,7 +86,7 @@
 //  x2 = x * x   in double-extended
 //  y2 = y * y   in double-extended
 //  temp = x2 + y2   in double-extended
-//  sqrt(temp) rounded to single precision 
+//  sqrt(temp) rounded to single precision
 //
 //*********************************************************************
 
@@ -113,7 +113,7 @@ GLOBAL_IEEE754_ENTRY(hypotf)
   // Compute x*x
   fma.s1 f10=f8,f8,f0
   // r2=bias-1
-  mov r2=0xfffe 
+  mov r2=0xfffe
 }
 {.mfi
   nop.m 0
@@ -132,8 +132,8 @@ GLOBAL_IEEE754_ENTRY(hypotf)
 {.mfi
   nop.m 0
   // if possible overflow, copy f8 to f14
-  // set Denormal, if necessary 
-  // (p8) 
+  // set Denormal, if necessary
+  // (p8)
   fma.s.s0 f14=f8,f1,f0
   nop.i 0;;
 }
@@ -211,11 +211,11 @@ GLOBAL_IEEE754_ENTRY(hypotf)
 
 { .mfi
 	 nop.m 0
-//   Identify Natvals, Infs, NaNs, and Zeros 
+//   Identify Natvals, Infs, NaNs, and Zeros
 //   and return result
      fclass.m.unc p7, p0 = f12, 0x1E7
      nop.i 0
-} 
+}
 {.mfi
   nop.m 0
   // z0=frsqrta(a)
@@ -243,7 +243,7 @@ GLOBAL_IEEE754_ENTRY(hypotf)
   // H0=0.5*z0
   (p6) fma.s1 f10=f8,f7,f0
   nop.i 0;;
-} 
+}
 
 
 {.mfi
@@ -287,7 +287,7 @@ GLOBAL_IEEE754_ENTRY(hypotf)
 
 
 {.mfi
-  // Is x^2 + y^2 well less than the overflow 
+  // Is x^2 + y^2 well less than the overflow
   // threshold?
   (p6) cmp.lt.unc p7, p8 =  r3,r2
   // P=P01+d2*P23
@@ -304,8 +304,8 @@ GLOBAL_IEEE754_ENTRY(hypotf)
 }
 
 { .mfi
-     nop.m 0  
-(p8) fsetc.s2 0x7F,0x42 
+     nop.m 0
+(p8) fsetc.s2 0x7F,0x42
      // Possible overflow path, must detect by
      // Setting widest range exponent with prevailing
      // rounding mode.
@@ -327,7 +327,7 @@ GLOBAL_IEEE754_ENTRY(hypotf)
      nop.i 0 ;;
 }
 { .mfi
-     nop.m 0 
+     nop.m 0
 (p8) fcmp.lt.unc.s1 p9, p10 =  f12, f11
      nop.i 0 ;;
 }
@@ -335,7 +335,7 @@ GLOBAL_IEEE754_ENTRY(hypotf)
      nop.m 0
      mov GR_Parameter_TAG = 47
 	 // No overflow
-(p9) br.ret.sptk b0;; 
+(p9) br.ret.sptk b0;;
 }
 GLOBAL_IEEE754_END(hypotf)
 
@@ -343,7 +343,7 @@ LOCAL_LIBM_ENTRY(__libm_error_region)
 .prologue
 { .mii
         add   GR_Parameter_Y=-32,sp             // Parameter 2 value
-        mov   GR_Parameter_TAG = 47                   
+        mov   GR_Parameter_TAG = 47
 .save   ar.pfs,GR_SAVE_PFS
         mov  GR_SAVE_PFS=ar.pfs                 // Save ar.pfs
 }
@@ -382,10 +382,10 @@ LOCAL_LIBM_ENTRY(__libm_error_region)
         mov   b0 = GR_SAVE_B0                  // Restore return address
 };;
 { .mib
-        mov   gp = GR_SAVE_GP                  // Restore gp 
+        mov   gp = GR_SAVE_GP                  // Restore gp
         mov   ar.pfs = GR_SAVE_PFS             // Restore ar.pfs
         br.ret.sptk     b0                     // Return
-};; 
+};;
 
 LOCAL_LIBM_END(__libm_error_region)
 

@@ -21,25 +21,25 @@
 // products derived from this software without specific prior written
 // permission.
 
-// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
-// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
 // LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL INTEL OR ITS 
+// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL INTEL OR ITS
 // CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-// EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, 
-// PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
-// PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY 
+// EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+// PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+// PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY
 // OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY OR TORT (INCLUDING
-// NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS 
-// SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. 
-// 
+// NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+// SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
 // Intel Corporation is the author of this code, and requests that all
-// problem reports or change requests be submitted to it directly at 
+// problem reports or change requests be submitted to it directly at
 // http://www.intel.com/software/products/opensource/libraries/num.htm.
 //
 // History
 //==============================================================
-// 08/15/01 Initial version 
+// 08/15/01 Initial version
 // 08/23/01 Corrected error tag number
 // 05/20/02 Cleaned up namespace and sf0 syntax
 // 02/10/03 Reordered header: .section, .global, .proc, .align
@@ -96,8 +96,8 @@ FR_tmp             = f39
 //
 // Overview of operation
 //==============================================================
-// nexttowardf determines the next representable value 
-// after x in the direction of y. 
+// nexttowardf determines the next representable value
+// after x in the direction of y.
 
 
 .section .text
@@ -127,14 +127,14 @@ GLOBAL_LIBM_ENTRY(nexttowardf)
 // Extract significand from x
 // Form largest normal significand
 { .mlx
-      nop.m 0 
+      nop.m 0
       movl GR_lnorm_sig = 0xffffff0000000000 ;;
 }
 
 // Move largest normal significand to fp reg for special cases
 { .mfi
       setf.sig FR_lnorm_sig = GR_lnorm_sig
-      nop.f 0 
+      nop.f 0
       addl GR_sign_mask = 0x20000, r0 ;;
 }
 
@@ -145,7 +145,7 @@ GLOBAL_LIBM_ENTRY(nexttowardf)
 // It decreases (p13 set) if x<y and x<0  or if x>y and x>=0
 { .mfi
       setf.sig FR_sden_sig = GR_sden_sig
-      fclass.m  p8,p0 = f8, 0xc3           
+      fclass.m  p8,p0 = f8, 0xc3
 (p10) cmp.lt p12,p13 = GR_exp, GR_sign_mask
 }
 { .mfi
@@ -174,7 +174,7 @@ GLOBAL_LIBM_ENTRY(nexttowardf)
 // Form new exponent in case result exponent needs incrementing or decrementing
 { .mfi
       setf.exp FR_new_exp = GR_exp
-      fclass.m  p9,p0 = f9, 0xc3           
+      fclass.m  p9,p0 = f9, 0xc3
 (p12) add GR_exp1 = 1, GR_exp
 }
 { .mib
@@ -192,7 +192,7 @@ GLOBAL_LIBM_ENTRY(nexttowardf)
 }
 { .mfb
       nop.m 999
-(p8)  fma.s0 f8 = f8,f1,f9                     
+(p8)  fma.s0 f8 = f8,f1,f9
 (p8)  br.ret.spnt    b0 ;;             // Exit if x=nan
 }
 
@@ -200,12 +200,12 @@ GLOBAL_LIBM_ENTRY(nexttowardf)
 // Is x=inf?
 { .mfi
       setf.exp FR_exp1 = GR_exp1
-      fclass.m  p6,p0 = f8, 0x23           
+      fclass.m  p6,p0 = f8, 0x23
       addl GR_exp_mask = 0x1ffff, r0
 }
 { .mfb
       setf.sig FR_snorm_sig = GR_snorm_sig
-(p9)  fma.s0 f8 = f8,f1,f9                     
+(p9)  fma.s0 f8 = f8,f1,f9
 (p9)  br.ret.spnt    b0 ;;             // Exit if y=nan
 }
 
@@ -214,14 +214,14 @@ GLOBAL_LIBM_ENTRY(nexttowardf)
 { .mfb
       setf.sig FR_lden_sig = GR_lden_sig
       mov FR_save_f8 = f8
-(p7)  br.cond.spnt NEXT_ZERO ;;   // Exit if x=0   
+(p7)  br.cond.spnt NEXT_ZERO ;;   // Exit if x=0
 }
 
 // Mask off the sign to get x_exp
 { .mfb
       and GR_x_exp = GR_exp_mask, GR_exp
       nop.f 999
-(p6)  br.cond.spnt NEXT_INF ;;   // Exit if x=inf   
+(p6)  br.cond.spnt NEXT_INF ;;   // Exit if x=inf
 }
 
 // Check 6 special cases when significand rolls over:
@@ -235,7 +235,7 @@ GLOBAL_LIBM_ENTRY(nexttowardf)
 //     Set p9, result is sig=max_den_sig, exp same, signal underflow and inexact
 //  5 sig size decr, x_sig=min_den_sig, x_exp = min_exp
 //     Set p10, result is zero, sign of x, signal underflow and inexact
-//  6 sig size decr, x_sig=min_sig, x_exp < min_exp 
+//  6 sig size decr, x_sig=min_sig, x_exp < min_exp
 //     Set p14, result is zero, sign of x, signal underflow and inexact
 //
 // Form exponent of smallest float denormal (if normalized register format)
@@ -341,7 +341,7 @@ NEXT_UNDERFLOW_TO_ZERO:
       br.cond.sptk NEXT_COMMON_FINISH ;;
 }
 
-NEXT_INF: 
+NEXT_INF:
 // Here if f8 is +- infinity
 // INF
 // if f8 is +inf, no matter what y is return  largest float
@@ -355,16 +355,16 @@ NEXT_INF:
 
 { .mfb
       nop.m 999
-      fmerge.s f8 = f8,FR_lnorm                
-      br.ret.sptk    b0 ;;                        
+      fmerge.s f8 = f8,FR_lnorm
+      br.ret.sptk    b0 ;;
 }
 
-NEXT_ZERO: 
+NEXT_ZERO:
 
 // Here if f8 is +- zero
 // ZERO
-// if f8 is zero and y is +, return + smallest float denormal 
-// if f8 is zero and y is -, return - smallest float denormal 
+// if f8 is zero and y is +, return + smallest float denormal
+// if f8 is zero and y is -, return - smallest float denormal
 
 { .mfi
       nop.m 999
@@ -382,7 +382,7 @@ NEXT_ZERO:
 // Add correct sign from direction arg
 { .mfi
       nop.m 999
-      fmerge.s f8 = f9,FR_sden                
+      fmerge.s f8 = f9,FR_sden
       nop.i 999 ;;
 }
 
@@ -393,7 +393,7 @@ NEXT_ZERO:
       br.cond.sptk NEXT_UNDERFLOW ;;
 }
 
-NEXT_UNDERFLOW: 
+NEXT_UNDERFLOW:
 // Here if result is a denorm, or input is finite and result is zero
 // Call error support to report possible range error
 { .mib
@@ -403,7 +403,7 @@ NEXT_UNDERFLOW:
 }
 ;;
 
-NEXT_OVERFLOW: 
+NEXT_OVERFLOW:
 // Here if input is finite, but result will be infinite
 // Use frcpa to generate infinity of correct sign
 // Call error support to report possible range error
@@ -462,7 +462,7 @@ LOCAL_LIBM_ENTRY(__libm_error_region)
 { .mib
         stfs [GR_Parameter_X] = FR_save_f8              // STORE Parameter 1 on stack
         add   GR_Parameter_RESULT = 0,GR_Parameter_Y           // Parameter 3 address
-        nop.b 0                                
+        nop.b 0
 }
 { .mib
         stfs [GR_Parameter_Y] = f8              // STORE Parameter 3 on stack

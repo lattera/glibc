@@ -21,20 +21,20 @@
 // products derived from this software without specific prior written
 // permission.
 
-// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
-// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
 // LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL INTEL OR ITS 
+// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL INTEL OR ITS
 // CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-// EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, 
-// PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
-// PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY 
+// EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+// PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+// PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY
 // OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY OR TORT (INCLUDING
-// NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS 
-// SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. 
-// 
+// NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+// SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
 // Intel Corporation is the author of this code, and requests that all
-// problem reports or change requests be submitted to it directly at 
+// problem reports or change requests be submitted to it directly at
 // http://www.intel.com/software/products/opensource/libraries/num.htm.
 //
 // History
@@ -85,7 +85,7 @@
 // 6. |x| = INF
 //    Return tanhf(x) = sign(x) * 1.0
 //
-// 7. x = [S,Q]NaN 
+// 7. x = [S,Q]NaN
 //    Return tanhf(x) = QNaN
 //
 // 8. x is positive denormal
@@ -96,11 +96,11 @@
 //
 // Registers used
 //==============================================================
-// Floating Point registers used: 
+// Floating Point registers used:
 // f8, input
 // f32 -> f59
 
-// General registers used:  
+// General registers used:
 // r32 -> r46, r2, r3
 
 // Predicate registers used:
@@ -220,7 +220,7 @@ data8 0xC0BE48CFADE2431E // D0
 data8 0x4090E74249760FDD // D1
 data8 0xC04B6F537FCF2F1E // D2
 data8 0x3E0DCD879C91ADEA // B0
-// Polynomial coefficients for the tanh(x), -0.3125 < x < 0.3125 
+// Polynomial coefficients for the tanh(x), -0.3125 < x < 0.3125
 data8 0xBFD555551E8245B7 // A0
 data8 0x3FC110E63F52E689 // A1
 data8 0xBFAB8CD6A5B7BAFA // A2
@@ -250,7 +250,7 @@ data8 0xBFB1DEA49A831CBC // A0
 data8 0x3FFA729FC7085674 // A1
 data8 0xBFF2F44D923A8FA4 // A2
 data8 0x3FE092FC5712227E // A3
-// Polynomial coefficients for the tanh(x), 8.0 <= |x| <= 9.125 
+// Polynomial coefficients for the tanh(x), 8.0 <= |x| <= 9.125
 data8 0x3FEFFF5769EE3041 // A0
 data8 0x3EFBBF148D850891 // A1
 data8 0xBEC86BCEF0F5C2FE // A2
@@ -275,10 +275,10 @@ GLOBAL_LIBM_ENTRY(tanhf)
 ;;
 
 { .mfi
-      getf.s         rArg = f8                    // x in GR 
+      getf.s         rArg = f8                    // x in GR
       fclass.m       p7,p0 = f8, 0x0b             // is x denormal ?
       // sign bit and 2 most bits in significand
-      shl            rMask = rMask, 20               
+      shl            rMask = rMask, 20
 }
 { .mfi
       ld8            rDataPtr = [rDataPtr]
@@ -317,7 +317,7 @@ GLOBAL_LIBM_ENTRY(tanhf)
       shr            rOffset2 = rOffset2, 21
 }
 { .mfi
-      cmp.lt         p10, p8 = rAbsArg, rBound   // |x| < 0.3125? 
+      cmp.lt         p10, p8 = rAbsArg, rBound   // |x| < 0.3125?
       nop.f          0
       adds           rCoeffAddr3 = 16, rDataPtr
 }
@@ -338,8 +338,8 @@ GLOBAL_LIBM_ENTRY(tanhf)
 { .mfi
       shladd         rCoeffAddr1 = rBias, 4, rDataPtr
       fma.s1         fArg3Sgn = fArgSqr, f8, f0  // sign(x)*|x|^3
-      // is |x| < 9.125? 
-      cmp.lt         p11, p12 = rAbsArg, rSaturation  
+      // is |x| < 9.125?
+      cmp.lt         p11, p12 = rAbsArg, rSaturation
 }
 { .mfi
       shladd         rCoeffAddr3 = rBias, 4, rCoeffAddr3
@@ -351,7 +351,7 @@ GLOBAL_LIBM_ENTRY(tanhf)
 { .mfi
 (p11) ldfpd          fC0, fC1 = [rCoeffAddr1]
 (p9)  fmerge.s       f8 = f8,f1                   // +/- inf
-(p12) adds           rDataPtr = 544, rDataPtr 
+(p12) adds           rDataPtr = 544, rDataPtr
 }
 { .mfb
 (p11) ldfpd          fC2, fC3 = [rCoeffAddr3], 16
@@ -404,7 +404,7 @@ GLOBAL_LIBM_ENTRY(tanhf)
 { .mfb
       nop.m          0
       fma.s1         fArg6Sgn = fArg3, fArg3Sgn, f0  // sign(x)*|x|^6
-(p13) br.cond.spnt   tanhf_close_to_saturation      
+(p13) br.cond.spnt   tanhf_close_to_saturation
 }
 ;;
 
@@ -440,7 +440,7 @@ GLOBAL_LIBM_ENTRY(tanhf)
 
 { .mfi
       nop.m          0
-      fma.s1         fPolATmp = fA3, fAbsArg, fA2  // A3*|x| + A2 
+      fma.s1         fPolATmp = fA3, fAbsArg, fA2  // A3*|x| + A2
       nop.i          0
 }
 { .mfi
@@ -452,7 +452,7 @@ GLOBAL_LIBM_ENTRY(tanhf)
 { .mfi
       nop.m          0
       // C3*|x|^3 + C2*x^2 + C1*|x| + C0
-      fma.s1         fPolC = fPolC, fArgSqr, fPolCTmp  
+      fma.s1         fPolC = fPolC, fArgSqr, fPolCTmp
       nop.i          0
 }
 ;;
@@ -460,31 +460,31 @@ GLOBAL_LIBM_ENTRY(tanhf)
 { .mfi
       nop.m          0
       // PolD = sign(x)*(|x|^7 + D2*x^6 + D1*|x|^5 + D0*x^4)
-      fma.d.s1       fPolD = fPolD, fArg4Sgn, fPolDTmp  
+      fma.d.s1       fPolD = fPolD, fArg4Sgn, fPolDTmp
       nop.i          0
 }
 ;;
 
 { .mfi
       nop.m          0
-      // PolA = A3|x|^3 + A2*x^2 + A1*|x| + A0 
-      fma.d.s1       fPolA = fPolATmp, fArgSqr, fPolA 
+      // PolA = A3|x|^3 + A2*x^2 + A1*|x| + A0
+      fma.d.s1       fPolA = fPolATmp, fArgSqr, fPolA
       nop.i          0
 }
-;;                 
+;;
 
 { .mfi
       nop.m          0
-      // PolC = B0*x^4 + C3*|x|^3 + C2*|x|^2 + C1*|x| + C0 
-      fma.d.s1       fPolC = fPolC, f1, fB0 
+      // PolC = B0*x^4 + C3*|x|^3 + C2*|x|^2 + C1*|x| + C0
+      fma.d.s1       fPolC = fPolC, f1, fB0
       nop.i          0
 }
-;;     
+;;
 
 { .mfi
       nop.m          0
 (p14) fma.s.s0       f8 = fPolC, fPolD, fPolA     // for positive x
-      nop.i          0                           
+      nop.i          0
 }
 { .mfb
       nop.m          0
@@ -528,7 +528,7 @@ tanhf_saturation:
       br.ret.sptk    b0                           // Exit for 9.125 <=|x|< +inf
 }
 ;;
-      
+
 // Here if  8.0 <= |x| < 9.125
 tanhf_close_to_saturation:
 { .mfi
@@ -540,7 +540,7 @@ tanhf_close_to_saturation:
       nop.m          0
       fma.s1         fPolA = fA3, fAbsArg, fA2    // A3*|x| + A2
       nop.i          0
-}    
+}
 ;;
 
 .pred.rel "mutex", p14, p15
@@ -548,7 +548,7 @@ tanhf_close_to_saturation:
       nop.m          0
       // for positive x
 (p14) fma.s.s0       f8 = fPolA, fArgSqr, fPolATmp
-      nop.i          0                           
+      nop.i          0
 }
 { .mfb
       nop.m          0

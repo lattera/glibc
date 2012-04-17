@@ -68,10 +68,10 @@
 //    Here we know result is essentially -1 + eps, where eps only affects
 //    rounded result.  Set I.
 //
-// 5. x >= 88.7228 
+// 5. x >= 88.7228
 //    Result overflows.  Set I, O, and call error support
 //
-// 6. 2^-2 <= x < 88.7228  or  -24.0 <= x < -2^-2  
+// 6. 2^-2 <= x < 88.7228  or  -24.0 <= x < -2^-2
 //    This is the main path.  The algorithm is described below:
 
 // Take the input x. w is "how many log2/128 in x?"
@@ -491,7 +491,7 @@ EXPM1_COMMON:
 
 { .mfb
       nop.m           0
-(p7)  fma.s.s0        f8 = fA8765432, fXsq, fNormX // Small path, 
+(p7)  fma.s.s0        f8 = fA8765432, fXsq, fNormX // Small path,
                                          // result=xsq*A8765432+x
 (p7)  br.ret.spnt     b0                 // Exit if 2^-40 <= |x| < 2^-2
 }

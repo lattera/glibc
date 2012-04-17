@@ -21,20 +21,20 @@
 // products derived from this software without specific prior written
 // permission.
 
-// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
-// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
 // LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL INTEL OR ITS 
+// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL INTEL OR ITS
 // CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-// EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, 
-// PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
-// PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY 
+// EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+// PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+// PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY
 // OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY OR TORT (INCLUDING
-// NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS 
-// SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. 
-// 
+// NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+// SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
 // Intel Corporation is the author of this code, and requests that all
-// problem reports or change requests be submitted to it directly at 
+// problem reports or change requests be submitted to it directly at
 // http://www.intel.com/software/products/opensource/libraries/num.htm.
 //
 // History
@@ -61,7 +61,7 @@
 //    Return erf(x) = x *Pol9(x^2)
 //
 // 3. For several subranges of 0.5 <= |x| < 5.90625
-//    Return erf(x) = sign(x)*Pol19(y), 
+//    Return erf(x) = sign(x)*Pol19(y),
 //    where y = (|x|-b)/a, Pol19(y) = A0 + A1*y^1 + A2*y^2 + ... + A19*y^19
 //
 //    For each subrange there is particular set of coefficients.
@@ -80,7 +80,7 @@
 // 6. |x| = INF
 //    Return erf(x) = sign(x) * 1.0
 //
-// 7. x = [S,Q]NaN 
+// 7. x = [S,Q]NaN
 //    Return erf(x) = QNaN
 //
 // 8. x is positive denormal
@@ -93,11 +93,11 @@
 //
 // Registers used
 //==============================================================
-// Floating Point registers used: 
+// Floating Point registers used:
 // f8, input, output
 // f32 -> f63
 
-// General registers used:  
+// General registers used:
 // r32 -> r48, r2, r3
 
 // Predicate registers used:
@@ -106,7 +106,7 @@
 // p6           to filter out case when x = denormal
 // p7           to filter out case when x = [Q,S]NaN or +/-0,
 //              used also to process denormals
-// p8           to filter out case when 3.25 <= |x| < 4.0, 
+// p8           to filter out case when 3.25 <= |x| < 4.0,
 //              used also to process denormals
 // p9           to filter out case when |x| = inf
 // p10          to filter out case when |x| < 0.5
@@ -169,7 +169,7 @@ fTSqr              = f58
 fTQuadr            = f59
 fTDeg3             = f60
 fTDeg7             = f61
-fArgAbsNormSgn     = f62                          
+fArgAbsNormSgn     = f62
 fTQuadrSgn         = f63
 
 // Data tables
@@ -180,7 +180,7 @@ RODATA
 
 LOCAL_OBJECT_START(erf_data)
 // Coefficients ##0..15
-// Polynomial coefficients for the erf(x), 0.5 <= |x| < 1.0 
+// Polynomial coefficients for the erf(x), 0.5 <= |x| < 1.0
 data8 0xB69AC40646D1F6C1, 0x00003FD2 //A19
 data8 0x90AD48C0118FA10C, 0x00003FD7 //A18
 data8 0x826FBAD055EA4AB8, 0x0000BFDB //A17
@@ -197,7 +197,7 @@ data8 0xB11E30BE912617D3, 0x00003FF0 //A7
 data8 0xCCF89D9351CE26E3, 0x0000BFF4 //A6
 data8 0xEFF75AD1F0F22809, 0x00003FF2 //A5
 data8 0xBB793EF404C09A22, 0x00003FF8 //A4
-// Polynomial coefficients for the erf(x), 1.0 <= |x| < 2.0 
+// Polynomial coefficients for the erf(x), 1.0 <= |x| < 2.0
 data8 0xBAE93FF4174EA59B, 0x00003FE6 //A19
 data8 0x8A0FD46092F95D44, 0x0000BFEA //A18
 data8 0xA37B3242B7809E12, 0x00003FEC //A17
@@ -214,7 +214,7 @@ data8 0xF84B80EFCA43895D, 0x00003FF8 //A7
 data8 0x9722D22DA628A17B, 0x00003FF7 //A6
 data8 0x8DB0A586F8F3381F, 0x0000BFFB //A5
 data8 0x8DB0A5879F87E5BE, 0x00003FFB //A4
-// Polynomial coefficients for the erf(x), 2.0 <= |x| < 3.25 
+// Polynomial coefficients for the erf(x), 2.0 <= |x| < 3.25
 data8 0x9C4AF1F3A4B21AFC, 0x00003FF6 //A19
 data8 0x8D40D5D5DB741AB8, 0x0000BFF9 //A18
 data8 0xDEBE7099E0A75BA4, 0x00003FFA //A17
@@ -231,7 +231,7 @@ data8 0xDD704DEFFB21B7E7, 0x0000BFFD //A7
 data8 0xF0C9A6BBDE469115, 0x00003FF9 //A6
 data8 0xD673A02CB5766633, 0x00003FFD //A5
 data8 0x8D162CBAD8A12649, 0x0000BFFE //A4
-// Polynomial coefficients for the erf(x), 4.0 <= |x| < 6.0  
+// Polynomial coefficients for the erf(x), 4.0 <= |x| < 6.0
 data8 0xD4428B75C6FE8FD1, 0x0000BFFC //A19
 data8 0xF76BE1935675D5C8, 0x00003FFE //A18
 data8 0xFD6BB3B14AA7A8E6, 0x0000BFFF //A17
@@ -250,12 +250,12 @@ data8 0xED3003E477A53EE7, 0x00003FF6 //A5
 data8 0xA4C07E9BB3FCB0F3, 0x0000BFF4 //A4
 //
 // Coefficients ##16..19
-// Polynomial coefficients for the erf(x), 0.5 <= |x| < 1.0 
+// Polynomial coefficients for the erf(x), 0.5 <= |x| < 1.0
 data8 0x95FA98C337005D13, 0x0000BFF9 //A3
 data8 0xE0F7E524D2808A97, 0x0000BFFB //A2
 data8 0xE0F7E524D2808A98, 0x00003FFD //A1
 data8 0x853F7AE0C76E915F, 0x00003FFE //A0
-// Polynomial coefficients for the erf(x), 1.0 <= |x| < 2.0 
+// Polynomial coefficients for the erf(x), 1.0 <= |x| < 2.0
 data8 0x8DB0A587A96ABCF0, 0x00003FFC //A3
 data8 0xD488F84B7DE18DA8, 0x0000BFFD //A2
 data8 0xD488F84B7DE12E9C, 0x00003FFD //A1
@@ -264,13 +264,13 @@ data8 0xD7BB3D3A08445636, 0x00003FFE //A0
 data8 0xC58571D23D5C4B3A, 0x00003FFD //A3
 data8 0xA94DCF467CD6AFF3, 0x0000BFFC //A2
 data8 0xA94DCF467CD10A16, 0x00003FFA //A1
-data8 0xFECD70A13CAF1997, 0x00003FFE //A0 
-// Polynomial coefficients for the erf(x), 4.0 <= |x| < 6.0 
+data8 0xFECD70A13CAF1997, 0x00003FFE //A0
+// Polynomial coefficients for the erf(x), 4.0 <= |x| < 6.0
 data8 0xB01D2B4F0D5AB8B0, 0x00003FF1 //A3
 data8 0x8858A465CE594BD1, 0x0000BFEE //A2
 data8 0x8858A447456DE61D, 0x00003FEA //A1
 data8 0xFFFFFFBDC88BB107, 0x00003FFE //A0
-// Polynomial coefficients for the erf(x), 0.0 <= |x| < 0.5 
+// Polynomial coefficients for the erf(x), 0.0 <= |x| < 0.5
 data8 0xBE839EDBB36C7FCE //A9
 data8 0x3EBB7745A18DD242 //A8
 data8 0xBF4C02DB238F2AFC //A5
@@ -282,8 +282,8 @@ data8 0xBF9B82CE3127F4E4 //A3
 data8 0x3FBCE2F21A042B25 //A2
 data8 0x906EBA8214DB688D, 0x00003FFF //A0
 // 1.0 - 2^(-63)
-data8 0xFFFFFFFFFFFFFFFF, 0x00003FFE 
-// Polynomial coefficients for the erf(x), 3.25 <= |x| < 4.0 
+data8 0xFFFFFFFFFFFFFFFF, 0x00003FFE
+// Polynomial coefficients for the erf(x), 3.25 <= |x| < 4.0
 data8 0x95E91576C7A12250, 0x00003FE7 //A14
 data8 0x8E5E0D0E1F5D3CB5, 0x0000BFEA //A13
 data8 0xED761DAFAF814DE9, 0x00003FEB //A12
@@ -300,7 +300,7 @@ data8 0xC6F1E695363BCB26, 0x0000BFF1 //A2
 data8 0xF4DAF4680DA54C02, 0x00003FEF //A1
 data8 0xFFFFB7CFB3F2ABBE, 0x00003FFE //A0
 // A = 2.0/sqrt(Pi)
-data8 0x906EBA8214DB688D, 0x00003FFF 
+data8 0x906EBA8214DB688D, 0x00003FFF
 LOCAL_OBJECT_END(erf_data)
 
 
@@ -319,7 +319,7 @@ GLOBAL_LIBM_ENTRY(erf)
 }
 ;;
 { .mfi
-      getf.d         rArg = f8                    // x in GR 
+      getf.d         rArg = f8                    // x in GR
       fclass.m       p6,p0 = f8, 0x0b             // is x denormal ?
       shl            rThreeAndQ = rThreeAndQ, 44  // bits of 3.25
 }
@@ -350,7 +350,7 @@ GLOBAL_LIBM_ENTRY(erf)
       nop.f          0
 (p6)  br.cond.spnt   erf_denormal                 // branch out if x is denormal
 }
-;;   
+;;
 { .mfi
       and            rShiftedArgMasked = rShiftedArg, rMask // bias of x << 8
       fmerge.s       fArgAbs = f1, f8             // |x|
@@ -361,15 +361,15 @@ GLOBAL_LIBM_ENTRY(erf)
 (p7)  fma.d.s0       f8 = f8,f1,f8                // NaN or +/-0
 (p7)  br.ret.spnt    b0                           // exit for x = NaN or +/-0
 }
-;;              
+;;
 { .mfi
       sub            rIndex = rShiftedArgMasked, rBias // index << 8
-      nop.f          0 
-      cmp.lt         p10, p0 = rShiftedArgMasked, rBias // p10 = 1 if |x| < 0.5 
+      nop.f          0
+      cmp.lt         p10, p0 = rShiftedArgMasked, rBias // p10 = 1 if |x| < 0.5
 }
 { .mfb
-      // p8 = 1 if 3.25 <= |x| < 4.0 
-(p8)  cmp.lt         p8, p11 = rShiftedAbsArg, rBiasedExpOf4 
+      // p8 = 1 if 3.25 <= |x| < 4.0
+(p8)  cmp.lt         p8, p11 = rShiftedAbsArg, rBiasedExpOf4
       fms.s1         fArgAbsNorm = fArgAbsNorm, f1, f1
 (p10) br.cond.spnt   erf_near_zero // branch out if |x| < 0.5
 }
@@ -387,10 +387,10 @@ GLOBAL_LIBM_ENTRY(erf)
 }
 ;;
 { .mfi
-      adds           rCoeffAddr2 = 16, rCoeffAddr1 
+      adds           rCoeffAddr2 = 16, rCoeffAddr1
       fmerge.s       fSignumX = f8, f1            // signum(x)
       nop.i          0
-} 
+}
 { .mfb
       cmp.lt         p12, p0 = rSaturation, rShiftedAbsArg // |x| > 5.90625?
       nop.f          0
@@ -436,7 +436,7 @@ GLOBAL_LIBM_ENTRY(erf)
       ldfe           fA13 = [rCoeffAddr1], 32
       nop.f          0
       // address of coefficients ##16..23
-      add            rCoeffAddr3 = rCoeffAddr3, rIndex 
+      add            rCoeffAddr3 = rCoeffAddr3, rIndex
 }
 {.mfi
       ldfe           fA12 = [rCoeffAddr2], 32
@@ -475,7 +475,7 @@ GLOBAL_LIBM_ENTRY(erf)
       ldfe           fA6 = [rCoeffAddr2], 32
       nop.f          0
 (p8)  br.cond.spnt   erf_3q_4 // branch out if  3.25 < |x| < 4.0
-}                                    
+}
 ;;
 {.mfi
       ldfe           fA5 = [rCoeffAddr1], 32
@@ -565,7 +565,7 @@ GLOBAL_LIBM_ENTRY(erf)
 ;;
 { .mfi
       nop.m          0
-      fma.s1         fA15 = fA15, fTSqr, fA13  
+      fma.s1         fA15 = fA15, fTSqr, fA13
       nop.i          0
 }
 { .mfi
@@ -587,19 +587,19 @@ GLOBAL_LIBM_ENTRY(erf)
 }
 ;;
 { .mfi
-      nop.m          0                                       
+      nop.m          0
       fma.s1         fA7 = fA7, fTSqr, fA5
       nop.i          0
 }
 ;;
 { .mfi
-      nop.m          0                                       
+      nop.m          0
       fma.s1         fRes = fRes, fTQuadr, fA15
       nop.i          0
 }
 ;;
 { .mfi
-      nop.m          0                                       
+      nop.m          0
       fma.s1         fA4 = fA4, fTSqr, fA2
       nop.i          0
 }
@@ -611,7 +611,7 @@ GLOBAL_LIBM_ENTRY(erf)
 }
 ;;
 { .mfi
-      nop.m          0                                       
+      nop.m          0
       fma.s1         fA4 = fA7, fTDeg3, fA4
       nop.i          0
 }
@@ -637,7 +637,7 @@ GLOBAL_LIBM_ENTRY(erf)
 
 // Here if  3.25 < |x| < 4.0
 .align 32
-erf_3q_4:                                   
+erf_3q_4:
 .pred.rel "mutex", p14, p15
 { .mfi
       ldfe           fA5 = [rCoeffAddr1], 32
@@ -660,7 +660,7 @@ erf_3q_4:
       fma.s1         fA15 = fA15, fArgAbs, fA14
       nop.i          0
 }
-;;      
+;;
 { .mfi
       nop.m          0
       fma.s1         fA13 = fA13, fArgAbs, fA12
@@ -671,7 +671,7 @@ erf_3q_4:
       fma.s1         fA11 = fA11, fArgAbs, fA10
       nop.i          0
 }
-;;     
+;;
 { .mfi
       nop.m          0
       fma.s1         fA9 = fA9, fArgAbs, fA8
@@ -682,7 +682,7 @@ erf_3q_4:
       fma.s1         fArgAbsNormSgn = fArgAbs, fSignumX, f0
       nop.i          0
 }
-;;     
+;;
 { .mfi
       nop.m          0
       fma.s1         fTQuadr = fTSqr, fTSqr, f0
@@ -694,24 +694,24 @@ erf_3q_4:
       fma.s1         fRes = fRes, fTSqr, fA17
       nop.i          0
 }
-;;  
+;;
 { .mfi
       nop.m          0
       fma.s1         fA15 = fA15, fTSqr, fA13
       nop.i          0
 }
-;;  
+;;
 { .mfi
       nop.m          0
       fma.s1         fA11 = fA11, fTSqr, fA9
       nop.i          0
-}  
+}
 { .mfi
       nop.m          0
       fma.s1         fA7 = fA7, fArgAbs, fA6
       nop.i          0
 }
-;; 
+;;
 { .mfi
       nop.m          0
       fma.s1         fTDeg7 = fTQuadr, fTSqr, f0
@@ -722,10 +722,10 @@ erf_3q_4:
       fma.s1         fRes = fRes, fTQuadr, fA15
       nop.i          0
 }
-;; 
+;;
 { .mfi
       nop.m          0
-      fma.s1         fA11 = fA11, fTSqr, fA7 
+      fma.s1         fA11 = fA11, fTSqr, fA7
       nop.i          0
 }
 ;;
@@ -734,7 +734,7 @@ erf_3q_4:
       fma.s1         fRes = fRes, fTDeg7, fA11
       nop.i          0
 }
-;; 
+;;
 { .mfi
       nop.m          0
       // result for negative argument
@@ -754,7 +754,7 @@ erf_3q_4:
 erf_near_zero:
 { .mfi
       adds           rCoeffAddr1 = 1280, rDataPtr // address of A9
-      fma.s1         fTSqr = fArgSqr, fArgSqr, f0 // x^4 
+      fma.s1         fTSqr = fArgSqr, fArgSqr, f0 // x^4
       nop.i          0
 }
 { .mfi
@@ -887,7 +887,7 @@ erf_saturation:
       br.ret.sptk    b0                          // Exit for 5.90625 <=|x|< +inf
 }
 ;;
-      
+
 // Here if x is double precision denormal
 .align 32
 erf_denormal:

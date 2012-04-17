@@ -21,25 +21,25 @@
 // products derived from this software without specific prior written
 // permission.
 
-// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
-// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,INCLUDING,BUT NOT 
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,INCLUDING,BUT NOT
 // LIMITED TO,THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL INTEL OR ITS 
+// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL INTEL OR ITS
 // CONTRIBUTORS BE LIABLE FOR ANY DIRECT,INDIRECT,INCIDENTAL,SPECIAL,
 // EXEMPLARY,OR CONSEQUENTIAL DAMAGES (INCLUDING,BUT NOT LIMITED TO,
-// PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,DATA,OR 
-// PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY 
+// PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,DATA,OR
+// PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY
 // OF LIABILITY,WHETHER IN CONTRACT,STRICT LIABILITY OR TORT (INCLUDING
-// NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS 
-// SOFTWARE,EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. 
-// 
+// NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+// SOFTWARE,EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
 // Intel Corporation is the author of this code,and requests that all
-// problem reports or change requests be submitted to it directly at 
+// problem reports or change requests be submitted to it directly at
 // http://www.intel.com/software/products/opensource/libraries/num.htm.
 //
 //*********************************************************************
 //
-// History: 
+// History:
 // 10/12/01  Initial version
 // 05/20/02  Cleaned up namespace and sf0 syntax
 // 02/10/03  Reordered header: .section, .global, .proc, .align
@@ -74,8 +74,8 @@
 // IEEE Special Conditions:
 //
 //    tgamma(+inf) = +inf
-//    tgamma(-inf) = QNaN 
-//    tgamma(+/-0) = +/-inf 
+//    tgamma(-inf) = QNaN
+//    tgamma(+/-0) = +/-inf
 //    tgamma(x<0, x - integer) = QNaN
 //    tgamma(SNaN) = QNaN
 //    tgamma(QNaN) = QNaN
@@ -85,7 +85,7 @@
 // Overview
 //
 // The method consists of three cases.
-// 
+//
 // If       2 <= x < OVERFLOW_BOUNDARY      use case tgamma_regular;
 // else if    0 < x < 2                     use case tgamma_from_0_to_2;
 // else    if  -(i+1) <  x < -i, i = 0...184 use case tgamma_negatives;
@@ -110,9 +110,9 @@
 //    r = x - N, note 0 <= r < 1
 //
 //    n = N & ~0xF - index of table that contains coefficient of
-//                   polynomial approximation 
+//                   polynomial approximation
 //    i = N & 0xF  - is used in recursive formula
-//   
+//
 //
 //   Step 2: Approximation
 //   ---------------------
@@ -124,7 +124,7 @@
 //   -----------------
 //    In case when i > 0 we need to multiply P22n(r) by product
 //    R(i)=(x-1)*(x-2)*...*(x-i). To reduce number of fp-instructions
-//    we can calculate R as follow:  
+//    we can calculate R as follow:
 //    R(i) = ((x-1)*(x-2))*((x-3)*(x-4))*...*((x-(i-1))*(x-i)) if i is
 //    even or R = ((x-1)*(x-2))*((x-3)*(x-4))*...*((x-(i-2))*(x-(i-1)))*
 //    *(i-1) if i is odd. In both cases we need to calculate
@@ -145,7 +145,7 @@
 //        if 1.25 <= x < 1.5 than  GAMMA(x) = P15(x-x_min) where
 //        x_min is point of local minimum on [1; 2] interval.
 //        if 1.5  <= x < 2.0 than  GAMMA(x) = P15(x-1.5)
-//    and      
+//    and
 //        if 0 < x < 1 than GAMMA(x) = GAMMA(x+1)/x
 //
 // Case -(i+1) <  x < -i, i = 0...184
@@ -156,14 +156,14 @@
 //
 //   Step 1: Reduction
 //   -----------------
-//    Note that period of sin(PI*x) is 2 and range reduction for 
-//    sin(PI*x) is like to range reduction for GAMMA(x) 
+//    Note that period of sin(PI*x) is 2 and range reduction for
+//    sin(PI*x) is like to range reduction for GAMMA(x)
 //    i.e r = x - [x] with exception of cases
 //    when r > 0.5 (in such cases r = 1 - (x - [x])).
 //
 //   Step 2: Approximation
 //   ---------------------
-//    To approximate sin(PI*x)/PI = sin(PI*(2*n+r))/PI = 
+//    To approximate sin(PI*x)/PI = sin(PI*(2*n+r))/PI =
 //    = (-1)^n*sin(PI*r)/PI Taylor series is used.
 //    sin(PI*r)/PI ~ S21(r).
 //
@@ -171,7 +171,7 @@
 //   ----------------
 //    To calculate 1/(x*GAMMA(x)*S21(r)) we use frcpa instruction
 //    with following Newton-Raphson interations.
-//  
+//
 //
 //*********************************************************************
 
@@ -807,7 +807,7 @@ GLOBAL_LIBM_ENTRY(tgamma)
 }
 { .mfb
       ldfe          FR_C01 = [GR_ad_Co],32
-(p7)  fms.s1        FR_r02 = FR_r02,f1,f1 
+(p7)  fms.s1        FR_r02 = FR_r02,f1,f1
       // jump if x is NaTVal, NaN, +/-0, +/-INF
 (p10) br.cond.spnt  tgamma_spec
 };;
@@ -882,7 +882,7 @@ GLOBAL_LIBM_ENTRY(tgamma)
 { .mfi
       ldfe          FR_C30 = [GR_ad_Co],32
       fma.s1        FR_Rq3 = FR_Rq3,FR_6,FR_X2pX // (x-5)*(x-6)
-      nop.i         0 
+      nop.i         0
 };;
 { .mfi
       ldfe          FR_C40 = [GR_ad_Ce],32
@@ -902,7 +902,7 @@ GLOBAL_LIBM_ENTRY(tgamma)
 }
 { .mfi
       ldfe          FR_C70 = [GR_ad_Co7],32
-      fma.s1        FR_rs = f0,f0,FR_r // reduced arg for sin(pi*x)  
+      fma.s1        FR_rs = f0,f0,FR_r // reduced arg for sin(pi*x)
       add           GR_ad_Co = 0x550,GR_ad_Data
 };;
 { .mfi
@@ -1036,12 +1036,12 @@ GLOBAL_LIBM_ENTRY(tgamma)
       nop.i         0
 }
 { .mfi
-      nop.m         0 
+      nop.m         0
       fma.s1        FR_C01 = FR_C01,FR_C11,f0
       nop.i         0
 };;
 { .mfi
-      nop.m         0 
+      nop.m         0
       fma.s1        FR_C21 = FR_C21,FR_C31,f0
       nop.i         0
 }
@@ -1051,9 +1051,9 @@ GLOBAL_LIBM_ENTRY(tgamma)
 (p12) cmp.lt.unc    p7,p0 = 2,GR_Sig2 // should mul by FR_Rq2?
 };;
 { .mfi
-      nop.m         0 
+      nop.m         0
       fma.s1        FR_C41 = FR_C41,FR_C51,f0
-      nop.i         0 
+      nop.i         0
 }
 { .mfi
       nop.m         0
@@ -1061,7 +1061,7 @@ GLOBAL_LIBM_ENTRY(tgamma)
 (p12) cmp.lt.unc    p9,p0 = 6,GR_Sig2 // should mul by FR_Rq4?
 };;
 { .mfi
-      nop.m         0 
+      nop.m         0
       fma.s1        FR_C61 = FR_C61,FR_C71,f0
 (p15) cmp.eq        p11,p0 = r0,r0
 }
@@ -1071,7 +1071,7 @@ GLOBAL_LIBM_ENTRY(tgamma)
 (p12) cmp.lt.unc    p8,p0 = 10,GR_Sig2 // should mul by FR_Rq6?
 };;
 { .mfi
-      nop.m         0 
+      nop.m         0
       fma.s1        FR_C81 = FR_C81,FR_C91,f0
       nop.i         0
 }
@@ -1081,8 +1081,8 @@ GLOBAL_LIBM_ENTRY(tgamma)
 (p14) cmp.ltu       p0,p11 = 0x9,GR_Tbl_Ind
 };;
 { .mfi
-      nop.m         0 
-      fcvt.xf       FR_RqLin = FR_Xt  
+      nop.m         0
+      fcvt.xf       FR_RqLin = FR_Xt
       nop.i         0
 }
 { .mfi
@@ -1101,12 +1101,12 @@ GLOBAL_LIBM_ENTRY(tgamma)
       nop.i         0
 };;
 { .mfi
-      nop.m         0 
+      nop.m         0
       fma.s1        FR_C01 = FR_C01,FR_C21,f0
       nop.i         0
 }
 { .mfi
-      nop.m         0 
+      nop.m         0
       fma.s1        FR_rs4 = FR_rs2,FR_rs2,f0
 (p12) cmp.lt.unc    p8,p0 = 4,GR_Sig2 // should mul by FR_Rq3?
 };;
@@ -1121,19 +1121,19 @@ GLOBAL_LIBM_ENTRY(tgamma)
 (p12) cmp.lt.unc    p9,p0 = 12,GR_Sig2 // should mul by FR_Rq7?
 };;
 { .mfi
-      nop.m         0 
+      nop.m         0
       fma.s1        FR_C41 = FR_C41,FR_C61,f0
       nop.i         0
 }
 { .mfi
-      nop.m         0 
+      nop.m         0
 (p9)  fma.s1        FR_Rq5 = FR_Rq5,FR_Rq7,f0
-      nop.i         0 
+      nop.i         0
 };;
 { .mfi
-      nop.m         0 
+      nop.m         0
       fma.s1        FR_C81 = FR_C81,FR_CA1,f0
-      nop.i         0 
+      nop.i         0
 }
 { .mfi
       nop.m         0
@@ -1161,12 +1161,12 @@ GLOBAL_LIBM_ENTRY(tgamma)
       mov           GR_ExpOf1 = 0x2FFFF
 }
 { .mfi
-      nop.m         0 
+      nop.m         0
 (p6)  fms.s1        FR_RqLin = FR_AbsX,f1,FR_RqLin
 (p12) cmp.lt.unc    p8,p0 = 8,GR_Sig2 // should mul by FR_Rq5?
 };;
 { .mfi
-      nop.m         0 
+      nop.m         0
       fma.s1        FR_C01 = FR_C01,FR_C41,f0
       nop.i         0
 }
@@ -1192,7 +1192,7 @@ GLOBAL_LIBM_ENTRY(tgamma)
 }
 { .mfi
       nop.m         0
-(p15) fcmp.lt.unc.s1 p0,p10 = FR_AbsX,FR_OvfBound // x >= overflow_boundary 
+(p15) fcmp.lt.unc.s1 p0,p10 = FR_AbsX,FR_OvfBound // x >= overflow_boundary
       nop.i         0
 };;
 { .mfi
@@ -1217,7 +1217,7 @@ GLOBAL_LIBM_ENTRY(tgamma)
 (p15) cmp.eq.unc    p0,p11 = r0,GR_SigRqLin
 }
 { .mfb
-      nop.m         0 
+      nop.m         0
       fma.s1        FR_GAMMA = FR_C01,FR_C81,f0
 (p11) br.cond.spnt  tgamma_positives
 };;
@@ -1233,12 +1233,12 @@ GLOBAL_LIBM_ENTRY(tgamma)
 };;
 .pred.rel "mutex",p8,p9
 { .mfi
-      nop.m         0 
+      nop.m         0
 (p9)  fma.s1        FR_GAMMA = FR_GAMMA,FR_Rq1,f0
       tbit.z        p6,p7 = GR_Sig,0 // p6 if sin<0, p7 if sin>0
 }
 { .mfi
-      nop.m         0 
+      nop.m         0
 (p8)  fma.s1        FR_GAMMA = FR_GAMMA,FR_RqLin,f0
       nop.i         0
 };;
@@ -1249,12 +1249,12 @@ GLOBAL_LIBM_ENTRY(tgamma)
 };;
 .pred.rel "mutex",p6,p7
 { .mfi
-      nop.m         0 
-(p6)  fnma.s1       FR_GAMMA = FR_GAMMA,FR_S21,f0 
-      nop.i         0 
+      nop.m         0
+(p6)  fnma.s1       FR_GAMMA = FR_GAMMA,FR_S21,f0
+      nop.i         0
 }
 { .mfi
-      nop.m         0 
+      nop.m         0
 (p7)  fma.s1        FR_GAMMA = FR_GAMMA,FR_S21,f0
       mov           GR_Sig2 = 1
 };;
@@ -1292,7 +1292,7 @@ GLOBAL_LIBM_ENTRY(tgamma)
 { .mfi
       nop.m         0
       fma.s1        FR_Rcp1 = FR_Rcp0,FR_Rcp1,FR_Rcp0
-      nop.i         0 
+      nop.i         0
 };;
 // NR method: ineration #2
 { .mfi
@@ -1340,12 +1340,12 @@ GLOBAL_LIBM_ENTRY(tgamma)
 tgamma_positives:
 .pred.rel "mutex",p8,p9
 { .mfi
-      nop.m         0 
+      nop.m         0
 (p9)  fma.d.s0      f8 = FR_GAMMA,FR_Rq1,f0
       nop.i         0
 }
 { .mfb
-      nop.m         0 
+      nop.m         0
 (p8)  fma.d.s0      f8 = FR_GAMMA,FR_RqLin,f0
       br.ret.sptk   b0
 };;
@@ -1366,7 +1366,7 @@ tgamma_from_0_to_2:
 };;
 { .mfi
 (p6)  getf.sig      GR_Sig = FR_NormX
-      nop.f         0 
+      nop.f         0
 (p6)  shl           GR_Sig2 = GR_Sig2,63
 }
 { .mfi
@@ -1375,9 +1375,9 @@ tgamma_from_0_to_2:
 (p6)  mov           GR_NzOvfBound = 0xFBFF
 };;
 { .mfi
-      cmp.eq        p8,p0 = GR_Sign_Exp,GR_ExpOf05 // r02 >= 1/2 
+      cmp.eq        p8,p0 = GR_Sign_Exp,GR_ExpOf05 // r02 >= 1/2
       nop.f         0
-      cmp.eq        p9,p10 = GR_Sign_Exp,GR_ExpOf025 // r02 >= 1/4 
+      cmp.eq        p9,p10 = GR_Sign_Exp,GR_ExpOf025 // r02 >= 1/4
 }
 { .mfi
 (p6)  cmp.ltu.unc   p11,p0 = GR_Sign_Exp,GR_NzOvfBound // p11 <- overflow
@@ -1396,83 +1396,83 @@ tgamma_from_0_to_2:
 (p11) br.cond.spnt  tgamma_ovf_near_0 //tgamma_spec_res
 };;
 { .mfi
-      ldfe          FR_A15 = [GR_ad_Co],32 
+      ldfe          FR_A15 = [GR_ad_Co],32
       nop.f         0
 (p12) cmp.eq.unc    p13,p0 = GR_Sig,GR_Sig2
 }
 { .mfb
-      ldfe          FR_A14 = [GR_ad_Ce],32 
+      ldfe          FR_A14 = [GR_ad_Ce],32
       nop.f         0
 (p13) br.cond.spnt  tgamma_ovf_near_0_boundary //tgamma_spec_res
 };;
 { .mfi
-      ldfe          FR_A13 = [GR_ad_Co],32 
+      ldfe          FR_A13 = [GR_ad_Co],32
       nop.f         0
       nop.i         0
 }
 { .mfi
-      ldfe          FR_A12 = [GR_ad_Ce],32 
+      ldfe          FR_A12 = [GR_ad_Ce],32
       nop.f         0
       nop.i         0
 };;
 .pred.rel "mutex",p9,p10
 { .mfi
-      ldfe          FR_A11 = [GR_ad_Co],32 
-(p10) fma.s1        FR_r2 = FR_r02,FR_r02,f0 
+      ldfe          FR_A11 = [GR_ad_Co],32
+(p10) fma.s1        FR_r2 = FR_r02,FR_r02,f0
       nop.i         0
 }
 { .mfi
-      ldfe          FR_A10 = [GR_ad_Ce],32 
-(p9)  fma.s1        FR_r2 = FR_r,FR_r,f0 
+      ldfe          FR_A10 = [GR_ad_Ce],32
+(p9)  fma.s1        FR_r2 = FR_r,FR_r,f0
       nop.i         0
 };;
 { .mfi
-      ldfe          FR_A9 = [GR_ad_Co],32 
+      ldfe          FR_A9 = [GR_ad_Co],32
 (p6)  fma.s1        FR_Rcp1 = FR_Rcp0,FR_Rcp1,FR_Rcp0
       nop.i         0
 }
 { .mfi
-      ldfe          FR_A8 = [GR_ad_Ce],32 
+      ldfe          FR_A8 = [GR_ad_Ce],32
 (p10) fma.s1        FR_r = f0,f0,FR_r02
       nop.i         0
 };;
 { .mfi
-      ldfe          FR_A7 = [GR_ad_Co],32 
+      ldfe          FR_A7 = [GR_ad_Co],32
       nop.f         0
       nop.i         0
 }
 { .mfi
-      ldfe          FR_A6 = [GR_ad_Ce],32 
-      nop.f         0 
-      nop.i         0
-};;
-{ .mfi
-      ldfe          FR_A5 = [GR_ad_Co],32 
-      nop.f         0
-      nop.i         0
-}
-{ .mfi
-      ldfe          FR_A4 = [GR_ad_Ce],32 
+      ldfe          FR_A6 = [GR_ad_Ce],32
       nop.f         0
       nop.i         0
 };;
 { .mfi
-      ldfe          FR_A3 = [GR_ad_Co],32 
+      ldfe          FR_A5 = [GR_ad_Co],32
       nop.f         0
       nop.i         0
 }
 { .mfi
-      ldfe          FR_A2 = [GR_ad_Ce],32 
+      ldfe          FR_A4 = [GR_ad_Ce],32
       nop.f         0
       nop.i         0
 };;
 { .mfi
-      ldfe          FR_A1 = [GR_ad_Co],32 
-      fma.s1        FR_r4 = FR_r2,FR_r2,f0 
+      ldfe          FR_A3 = [GR_ad_Co],32
+      nop.f         0
       nop.i         0
 }
 { .mfi
-      ldfe          FR_A0 = [GR_ad_Ce],32 
+      ldfe          FR_A2 = [GR_ad_Ce],32
+      nop.f         0
+      nop.i         0
+};;
+{ .mfi
+      ldfe          FR_A1 = [GR_ad_Co],32
+      fma.s1        FR_r4 = FR_r2,FR_r2,f0
+      nop.i         0
+}
+{ .mfi
+      ldfe          FR_A0 = [GR_ad_Ce],32
       nop.f         0
       nop.i         0
 };;
@@ -1493,7 +1493,7 @@ tgamma_from_0_to_2:
 };;
 { .mfi
       nop.m         0
-      fma.s1        FR_r8 = FR_r4,FR_r4,f0 
+      fma.s1        FR_r8 = FR_r4,FR_r4,f0
       nop.i         0
 };;
 { .mfi
@@ -1573,17 +1573,17 @@ tgamma_from_0_to_2:
 };;
 .pred.rel "mutex",p6,p7
 { .mfi
-      nop.m         0 
+      nop.m         0
 (p6)  fma.s1        FR_A15 = FR_A15,FR_r8,FR_A7
       nop.i         0
 }
 { .mfi
-      nop.m         0 
+      nop.m         0
 (p7)  fma.d.s0      f8 = FR_A15,FR_r8,FR_A7
       nop.i         0
 };;
 { .mfb
-      nop.m         0 
+      nop.m         0
 (p6)  fma.d.s0      f8 = FR_A15,FR_Rcp3,f0
       br.ret.sptk   b0
 };;
@@ -1606,7 +1606,7 @@ tgamma_ovf_near_0_boundary:
 { .mfi
 	  nop.m         0
 	  nop.f         0
-	  shl           r8 = r8,52 
+	  shl           r8 = r8,52
 };;
 { .mfi
       sub           r8 = r8,r0,1
@@ -1616,12 +1616,12 @@ tgamma_ovf_near_0_boundary:
 .pred.rel "mutex",p14,p15
 { .mfi
       // set p8 to 0 in case of overflow and to 1 otherwise
-	  // for negative arg: 
+	  // for negative arg:
 	  //    no overflow if rounding mode either Z or +Inf, i.e.
 	  //    GR_fpsr > 1
 (p14) cmp.lt        p8,p0 = 1,GR_fpsr
       nop.f         0
-	  // for positive arg: 
+	  // for positive arg:
 	  //    no overflow if rounding mode either Z or -Inf, i.e.
 	  //    (GR_fpsr & 1) == 0
 (p15) tbit.z        p0,p8 = GR_fpsr,0
@@ -1636,7 +1636,7 @@ tgamma_ovf_near_0_boundary:
 tgamma_ovf_near_0:
 { .mfi
       mov           r8 = 0x1FFFE
-      nop.f         0  
+      nop.f         0
       nop.i         0
 };;
 { .mfi
@@ -1646,12 +1646,12 @@ tgamma_ovf_near_0:
 };;
 .pred.rel "mutex",p14,p15
 { .mfi
-      nop.m         0 
+      nop.m         0
 (p15) fma.d.s0      f8 = f9,f9,f0 // Set I,O and +INF result
-      nop.i         0 
+      nop.i         0
 }
 { .mfb
-      nop.m         0 
+      nop.m         0
 (p14) fnma.d.s0     f8 = f9,f9,f0 // Set I,O and -INF result
       br.cond.sptk  tgamma_libm_err
 };;
@@ -1671,7 +1671,7 @@ tgamma_spec_res:
 };;
 { .mfb
 (p11) cmp.ltu.unc   p7,p8 = GR_0x30033,GR_Sign_Exp
-      nop.f         0 
+      nop.f         0
 (p10) br.cond.spnt  tgamma_singularity
 };;
 .pred.rel "mutex",p7,p8
@@ -1686,7 +1686,7 @@ tgamma_spec_res:
       mov           GR_TAG = 258 // overflow
 }
 { .mfb
-      nop.m         0 
+      nop.m         0
 (p15) fma.d.s0      f8 = f9,f9,f0 // Set I,O and +INF result
       br.cond.sptk  tgamma_libm_err
 };;
@@ -1764,7 +1764,7 @@ tgamma_spec:
 { .mfi
 (p7)  mov           GR_TAG = 259 // negative
 (p7)  frcpa.s0      f8,p0 = f1,f8
-      nop.i         0 
+      nop.i         0
 }
 { .mib
       nop.m         0
@@ -1788,10 +1788,10 @@ LOCAL_LIBM_ENTRY(__libm_error_region)
         add   GR_Parameter_Y=-32,sp             // Parameter 2 value
         nop.f 0
 .save   ar.pfs,GR_SAVE_PFS
-        mov  GR_SAVE_PFS=ar.pfs                 // Save ar.pfs 
+        mov  GR_SAVE_PFS=ar.pfs                 // Save ar.pfs
 }
 { .mfi
-.fframe 64 
+.fframe 64
         add sp=-64,sp                           // Create new stack
         nop.f 0
         mov GR_SAVE_GP=gp                       // Save gp
@@ -1799,18 +1799,18 @@ LOCAL_LIBM_ENTRY(__libm_error_region)
 { .mmi
         stfd [GR_Parameter_Y] = FR_Y,16         // STORE Parameter 2 on stack
         add GR_Parameter_X = 16,sp              // Parameter 1 address
-.save   b0, GR_SAVE_B0                      
-        mov GR_SAVE_B0=b0                       // Save b0 
+.save   b0, GR_SAVE_B0
+        mov GR_SAVE_B0=b0                       // Save b0
 };;
 .body
 { .mib
-        stfd [GR_Parameter_X] = FR_X                  // STORE Parameter 1 on stack 
-        add   GR_Parameter_RESULT = 0,GR_Parameter_Y  // Parameter 3 address 
+        stfd [GR_Parameter_X] = FR_X                  // STORE Parameter 1 on stack
+        add   GR_Parameter_RESULT = 0,GR_Parameter_Y  // Parameter 3 address
         nop.b 0
 }
 { .mib
         stfd [GR_Parameter_Y] = FR_RESULT             // STORE Parameter 3 on stack
-        add   GR_Parameter_Y = -16,GR_Parameter_Y  
+        add   GR_Parameter_Y = -16,GR_Parameter_Y
         br.call.sptk b0=__libm_error_support#         // Call error handling function
 };;
 { .mmi
@@ -1825,10 +1825,10 @@ LOCAL_LIBM_ENTRY(__libm_error_region)
         mov   b0 = GR_SAVE_B0                  // Restore return address
 };;
 { .mib
-        mov   gp = GR_SAVE_GP                  // Restore gp 
+        mov   gp = GR_SAVE_GP                  // Restore gp
         mov   ar.pfs = GR_SAVE_PFS             // Restore ar.pfs
         br.ret.sptk     b0                     // Return
-};; 
+};;
 
 LOCAL_LIBM_END(__libm_error_region)
 .type   __libm_error_support#,@function

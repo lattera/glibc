@@ -56,7 +56,7 @@
 //
 // The result is computed as
 // cbrt(x)= cbrt(1 - (1 - x*y)) * (1/cbrt(y))
-// where y = frcpa(x) = (-1)^sgn_y * 2^(3*k+j) * m_y,  
+// where y = frcpa(x) = (-1)^sgn_y * 2^(3*k+j) * m_y,
 //       m_y in [1,2),  j in {0,1,2}
 //
 //  cbrt(1 - (1 - x*y)) is approximated by a degree-6 polynomial
@@ -68,13 +68,13 @@
 // (double-extended precision) and D (single precision) as follows:
 // T_hi (1 + D)= 1/cbrt(y) to about 80 bits of accuracy
 //
-// The tables are only stored for three exponent values (i.e. 
+// The tables are only stored for three exponent values (i.e.
 // only for 2^j * m_y, where j in {0,1,2} and m_y covers the 256
 // possible mantissas for an frcpa result); the index is formed
 // by the 8 leading mantissa bits of x, which is the same index used
 // by the hardware to get frcpa(x).
 //
-// The table values are multiplied by 2^k where e is the exponent of 
+// The table values are multiplied by 2^k where e is the exponent of
 // the input number.  This multiplication is carried out in parallel with
 // the polynomial evaluation:
 // T= 2^(k) * T_hi
@@ -127,7 +127,7 @@
            GR_TMP1       = r21
            GR_SGNMASK    = r22
            GR_T_INDEX    = r23
-           GR_IX_T       = r23  
+           GR_IX_T       = r23
            GR_IX_D       = r24
            GR_D_INDEX    = r24
            GR_TMP2       = r25
@@ -817,7 +817,7 @@ GLOBAL_LIBM_ENTRY(cbrtl)
        and GR_SIGN = GR_NORMEXPSGN, GR_SGNMASK
        // eliminate leading 1 from GR_NORMSIG = 2nd table index
        shl GR_INDEX2 = GR_NORMSIG, 1
-       // eliminate sign from exponent 
+       // eliminate sign from exponent
        andcm GR_NORMEXP = GR_NORMEXPSGN, GR_SGNMASK
 }
 ;;
@@ -829,8 +829,8 @@ GLOBAL_LIBM_ENTRY(cbrtl)
  (p6)  fnma.s1 FR_R = FR_RCP, FR_XNORM, f1
        // Start computation of floor(exponent/3) by
        // computing (2^20+2)/3*exponent = exponent*0x55556
-       // 1: exponent* = 5; 
-       // (2^{16}-1)/3 = 0x5555: 
+       // 1: exponent* = 5;
+       // (2^{16}-1)/3 = 0x5555:
        // will form 0x5555*exponent by using shladd's
        shladd GR_EXP5 = GR_NORMEXP, 2, GR_NORMEXP
 }

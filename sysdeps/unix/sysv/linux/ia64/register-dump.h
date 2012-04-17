@@ -147,7 +147,7 @@ register_dump (int fd, struct sigcontext *ctx)
 
   for (i = 0; i < 3; ++i)
     ADD_MEM (bpregs[i], sizeof (bpregs[0]) - 1);
-    
+
   ADD_STRING ("\n\n IP:   ");
   ADD_MEM (spregs[0], sizeof (spregs[0]));
   ADD_STRING (" RSC:  ");
