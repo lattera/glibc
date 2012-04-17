@@ -1,6 +1,5 @@
 /* Machine-dependent ELF dynamic relocation inline functions.  PA-RISC version.
-   Copyright (C) 1995-1997,1999-2003,2011
-	Free Software Foundation, Inc.
+   Copyright (C) 1995-2012 Free Software Foundation, Inc.
    Contributed by David Huggins-Daines <dhd@debian.org>
    This file is part of the GNU C Library.
 
@@ -63,7 +62,8 @@ __hppa_init_bootstrap_fdesc_table (struct link_map *map)
 }
 
 #define ELF_MACHINE_BEFORE_RTLD_RELOC(dynamic_info)		\
-	__hppa_init_bootstrap_fdesc_table (&bootstrap_map);
+	__hppa_init_bootstrap_fdesc_table (&bootstrap_map);	\
+	_dl_fptr_init();
 
 /* Return nonzero iff ELF header is compatible with the running host.  */
 static inline int

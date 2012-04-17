@@ -1,5 +1,5 @@
 /* Function descriptors.  HPPA version.
-   Copyright (C) 2003, 2009 Free Software Foundation, Inc.
+   Copyright (C) 2003-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,6 +20,9 @@
 #define dl_hppa_fptr_h 1
 
 #include <sysdeps/generic/dl-fptr.h>
+
+/* Initialize function pointer code. Call before relocation processing.  */
+extern void _dl_fptr_init (void);
 
 /* There are currently 33 dynamic symbols in ld.so.
    ELF_MACHINE_BOOT_FPTR_TABLE_LEN needs to be at least that big.  */
