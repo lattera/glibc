@@ -53,6 +53,11 @@
 # define __ASSUME_DUP3		1
 #endif
 
+/* Support for the accept4 syscall was added in 3.3.  */
+#if __LINUX_KERNEL_VERSION >= 0x030300
+# define __ASSUME_ACCEPT4	1
+#endif
+
 #include_next <kernel-features.h>
 
 #endif /* _KERNEL_FEATURES_H */
