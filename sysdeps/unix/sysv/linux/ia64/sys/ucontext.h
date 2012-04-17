@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 2000, 2001, 2002, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 1998-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -31,7 +31,7 @@
 
 typedef struct sigcontext mcontext_t;
 
-#if defined __cplusplus && __GNUC_PREREQ (3, 5)
+#if __GNUC_PREREQ (3, 5)
 # define _SC_GR0_OFFSET	\
 	__builtin_offsetof (struct sigcontext, sc_gr[0])
 #elif defined __GNUC__
