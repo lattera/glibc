@@ -1,0 +1,35 @@
+GLIBC_PROVIDES dnl See aclocal.m4 in the top level source directory.
+# Local configure fragment for sysdeps/ia64.
+
+AC_CACHE_CHECK(if -g produces usable source locations for assembler-with-cpp,
+	       libc_cv_cpp_asm_debuginfo, [dnl
+cat > conftest.S <<EOF
+#include "confdefs.h"
+
+/* comment on
+   two lines */
+	${libc_cv_dot_text}
+	${libc_cv_asm_global_directive} foo
+foo:
+	/* Unfortunately this test only works for a real instruction,
+	   not for any of the machine-independent pseudo-ops.
+	   So we just have to assume everybody has a "nop".  */
+	nop.b	0;;
+	/* comment */
+	nop.b	0;;
+	/* comment */
+	nop.b	0;;
+EOF
+if AC_TRY_COMMAND([${CC-cc} $CPPFLAGS $ASFLAGS -g -c conftest.S 1>&AS_MESSAGE_LOG_FD]) && {
+   ac_pattern='conftest\.S'
+   AC_TRY_COMMAND([readelf --debug-dump=line conftest.o |
+		   grep $ac_pattern 1>&AS_MESSAGE_LOG_FD])
+  }; then
+  libc_cv_cpp_asm_debuginfo=yes
+else
+  libc_cv_cpp_asm_debuginfo=no
+fi
+rm -f conftest*])AC_SUBST(libc_cv_cpp_asm_debuginfo)
+if test $libc_cv_cpp_asm_debuginfo = yes; then
+  AC_DEFINE(HAVE_CPP_ASM_DEBUGINFO)
+fi
