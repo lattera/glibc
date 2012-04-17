@@ -1,3 +1,9 @@
+2012-04-25  Mike Frysinger  <vapier@gentoo.org>
+
+	* sysdeps/unix/sysv/linux/ia64/nptl/bits/local_lim.h: Replace
+	boiler license text with standard GNU Lesser General Public.
+	* sysdeps/unix/sysv/linux/ia64/nptl/unwind-forcedunwind.c: Likewise.
+
 2012-04-22  Mike Frysinger  <vapier@gentoo.org>
 
 	* sysdeps/ia64/_mcount.S: Replace FSF snail mail address with URL.
