@@ -1,3 +1,12 @@
+2012-04-17  Andreas Schwab  <schwab@linux-m68k.org>
+
+	* sysdeps/m68k/m680x0/fpu/e_ilogb.c: Renamed from s_ilogb.c.
+	Define __ieee754_ilogb instead of __ilogb.
+	* sysdeps/m68k/m680x0/fpu/e_ilogbf.c: Renamed from s_ilogbf.c and
+	adjusted.
+	* sysdeps/m68k/m680x0/fpu/e_ilogbl.c: Renamed from s_ilogbl.c and
+	adjusted.
+
 2012-03-28  Andreas Schwab  <schwab@linux-m68k.org>
 
 	* sysdeps/unix/sysv/linux/m68k/bits/mman.h (MAP_STACK)

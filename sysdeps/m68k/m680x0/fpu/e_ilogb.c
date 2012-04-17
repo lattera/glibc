@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1996-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -30,7 +30,7 @@
 #define m81(func) __m81_u(s(func))
 
 int
-s(__ilogb) (float_type x)
+s(__ieee754_ilogb) (float_type x)
 {
   float_type result;
   unsigned long x_cond;
@@ -45,6 +45,3 @@ s(__ilogb) (float_type x)
   __asm ("fgetexp%.x %1, %0" : "=f" (result) : "f" (x));
   return (int) result;
 }
-
-#define weak_aliasx(a,b) weak_alias(a,b)
-weak_aliasx (s(__ilogb), s(ilogb))

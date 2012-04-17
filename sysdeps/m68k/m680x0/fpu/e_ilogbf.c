@@ -1,3 +1,3 @@
 #define SUFF f
 #define float_type float
-#include <s_ilogb.c>
+#include <e_ilogb.c>
