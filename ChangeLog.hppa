@@ -1,5 +1,9 @@
 2012-04-17  Carlos O'Donell  <carlos@systemhalted.org>
 
+	* sysdeps/hppa/dl-irel.h: New file.
+
+2012-04-17  Carlos O'Donell  <carlos@systemhalted.org>
+
 	* sysdeps/hppa/dl-fptr.h: Add prototype for _dl_fptr_init.
 	* sysdeps/hppa/dl-fptr.c: New file.
 	* sysdeps/hppa/dl-machine.h (ELF_MACHINE_BEFORE_RTLD_RELOC):
