@@ -1,3 +1,17 @@
+2012-04-17  Carlos O'Donell  <carlos@systemhalted.org>
+
+	* sysdeps/hppa/elf/configure: Removed file.
+	* sysdeps/hppa/elf/configure.in: Move to...
+	* sysdeps/hppa/configure.in: ... here.
+	* sysdeps/hppa/configure: Regenerate.
+	* sysdeps/hppa/elf/initfini.c: Removed file.
+	* sysdeps/hppa/crti.S: New file.
+	* sysdeps/hppa/crtn.S: New file.
+	* sysdeps/hppa/elf/entry.h: Moved to ...
+	* sysdeps/hppa/entry.h: ... here.
+	* sysdeps/hppa/elf/start.S: Move to ...
+	* sysdeps/hppa/start.S: ... here.
+
 2012-03-22  Carlos O'Donell  <carlos@systemhalted.org>
 
 	[BZ #6730]
