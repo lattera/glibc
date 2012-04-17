@@ -1,6 +1,5 @@
 /* Macros to swap the order of bytes in integer values.
-   Copyright (C) 1997,1998,2000,2002,2003,2008,2011
-   Free Software Foundation, Inc.
+   Copyright (C) 1997-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -28,27 +27,8 @@
 #define __bswap_constant_16(x) \
      ((((x) >> 8) & 0xff) | (((x) & 0xff) << 8))
 
-#if defined __GNUC__ && __GNUC__ >= 2
-# define __bswap_16(x) \
-     (__extension__							      \
-      ({ register unsigned short int __v, __x = (x);			      \
-	 if (__builtin_constant_p (x))					      \
-	   __v = __bswap_constant_16 (__x);				      \
-	 else								      \
-	   __asm__ __volatile__ ("shl %0 = %1, 48 ;;"			      \
-				 "mux1 %0 = %0, @rev ;;"		      \
-				 : "=r" (__v)				      \
-				 : "r" ((unsigned short int) (__x)));	      \
-	 __v; }))
-#else
-/* This is better than nothing.  */
-static __inline unsigned short int
-__bswap_16 (unsigned short int __bsx)
-{
-  return __bswap_constant_16 (__bsx);
-}
-#endif
-
+/* Get __bswap_16.  */
+#include <bits/byteswap-16.h>
 
 /* Swap bytes in 32 bit value.  */
 #define __bswap_constant_32(x) \
