@@ -45,7 +45,7 @@
 long double __libm_scalbnl(long double, int, int);
 
 
-long double scalbnl(long double x, int n)
+long double __scalbnl(long double x, int n)
 {
 
 #ifdef SIZE_INT_64
@@ -59,3 +59,5 @@ long double scalbnl(long double x, int n)
 #endif
 
 }
+
+weak_alias (__scalbnl, scalbnl)

@@ -45,7 +45,7 @@
 double __libm_scalbn(double, int, int);
 
 
-double scalbn(double x, int n)
+double __scalbn(double x, int n)
 {
 
 #ifdef SIZE_INT_64
@@ -59,3 +59,5 @@ double scalbn(double x, int n)
 #endif
 
 }
+
+weak_alias (__scalbn, scalbn)

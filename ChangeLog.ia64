@@ -1,5 +1,14 @@
 2012-04-27  Mike Frysinger  <vapier@gentoo.org>
 
+	* sysdeps/ia64/fpu/s_scalbn.c (__scalbn): Rename from scalbn.
+	Add weak alias from scalbn to __scalbn.
+	* sysdeps/ia64/fpu/s_scalbnf.c (__scalbnf): Rename from scalbnf.
+	Add weak alias from scalbnf to __scalbnf.
+	* sysdeps/ia64/fpu/s_scalbnl.c (__scalbnl): Rename from scalbnl.
+	Add weak alias from scalbnl to __scalbnl.
+
+2012-04-27  Mike Frysinger  <vapier@gentoo.org>
+
 	* sysdeps/ia64/fpu/s_matherrf.c: Delete __STDC__.
 	* sysdeps/ia64/fpu/s_matherrl.c,
 	sysdeps/unix/sysv/linux/ia64/sysdep.h: Likewise.

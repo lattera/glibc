@@ -45,7 +45,7 @@
 float __libm_scalbnf(float, int, int);
 
 
-float scalbnf(float x, int n)
+float __scalbnf(float x, int n)
 {
 
 #ifdef SIZE_INT_64
@@ -59,3 +59,5 @@ float scalbnf(float x, int n)
 #endif
 
 }
+
+weak_alias (__scalbnf, scalbnf)
