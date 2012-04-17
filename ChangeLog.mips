@@ -1,3 +1,9 @@
+2012-04-24  Mike Frysinger  <vapier@gentoo.org>
+
+	* sysdeps/unix/sysv/linux/mips/mips64/configure.in
+	(ldd_rewrite_script): Change $dest to $dir.
+	* sysdeps/unix/sysv/linux/mips/mips64/configure: Regenerate.
+
 2012-04-21  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/mips/mips32/readahead.c: Include
