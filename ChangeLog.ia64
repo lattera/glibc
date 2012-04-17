@@ -1,5 +1,16 @@
 2012-04-27  Mike Frysinger  <vapier@gentoo.org>
 
+	* sysdeps/ia64/elf/configure.in: Merge contents to ...
+	* sysdeps/ia64/configure.in: ... here.
+	* sysdeps/ia64/elf/configure: Delete.
+	* sysdeps/ia64/configure: Regenerate.
+	* sysdeps/ia64/elf/entry.h: Move to ...
+	* sysdeps/ia64/entry.h: ... here.
+	* sysdeps/ia64/elf/start.S: Move to ...
+	* sysdeps/ia64/start.S: ... here.
+
+2012-04-27  Mike Frysinger  <vapier@gentoo.org>
+
 	* sysdeps/ia64/elf/stackguard-macros.h: New stub include file.
 	* sysdeps/ia64/ldsodefs.h: Move ia64 logic from
 	sysdeps/generic/ldsodefs.h.
