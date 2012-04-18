@@ -115,18 +115,7 @@ _wordcopy_fwd_dest_aligned (dstp, srcp, len)
     len -= 1;
   }
 
-  switch (align)
-    {
-    case 1:
-      fwd_align_merge (1);
-      break;
-    case 2:
-      fwd_align_merge (2);
-      break;
-    case 3:
-      fwd_align_merge (3);
-      break;
-    }
+  fwd_align_merge (align);
 
 }
 
@@ -224,16 +213,5 @@ _wordcopy_bwd_dest_aligned (dstp, srcp, len)
     len -= 1;
   }
 
-  switch (align)
-    {
-    case 1:
-      bwd_align_merge (1);
-      break;
-    case 2:
-      bwd_align_merge (2);
-      break;
-    case 3:
-      bwd_align_merge (3);
-      break;
-    }
+  bwd_align_merge (align);
 }

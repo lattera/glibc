@@ -1,5 +1,14 @@
 2012-04-18  Will Schmidt  <will_schmidt@vnet.ibm.com>
 
+	* sysdeps/powerpc/powerpc64/power6/wordcopy.c
+	(_wordcopy_fwd_dest_aligned): Replace switch with a parameterized
+	fwd_align_merge macro call.
+	(_wordcopy_bwd_dest_aligned): Replace switch with a parameterized
+	bwd_align_merge macro call.
+	* sysdeps/powerpc/powerpc32/power6/wordcopy.c: Likewise.
+
+2012-04-18  Will Schmidt  <will_schmidt@vnet.ibm.com>
+
 	* sysdeps/powerpc/powerpc64/power6/wordcopy.c: Add fwd_align_merge and
 	bwd_align_merge macros.
 	(_wordcopy_fwd_dest_aligned): Use fwd_align_merge macro calls.

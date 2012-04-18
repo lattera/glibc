@@ -115,30 +115,7 @@ _wordcopy_fwd_dest_aligned (dstp, srcp, len)
     len -= 1;
   }
 
-  switch (align)
-    {
-    case 1:
-      fwd_align_merge (1);
-      break;
-    case 2:
-      fwd_align_merge (2);
-      break;
-    case 3:
-      fwd_align_merge (3);
-      break;
-    case 4:
-      fwd_align_merge (4);
-      break;
-    case 5:
-      fwd_align_merge (5);
-      break;
-    case 6:
-      fwd_align_merge (6);
-      break;
-    case 7:
-      fwd_align_merge (7);
-      break;
-    }
+  fwd_align_merge (align);
 
 }
 
@@ -236,28 +213,5 @@ _wordcopy_bwd_dest_aligned (dstp, srcp, len)
     len -= 1;
   }
 
-  switch (align)
-    {
-    case 1:
-      bwd_align_merge (1);
-      break;
-    case 2:
-      bwd_align_merge (2);
-      break;
-    case 3:
-      bwd_align_merge (3);
-      break;
-    case 4:
-      bwd_align_merge (4);
-      break;
-    case 5:
-      bwd_align_merge (5);
-      break;
-    case 6:
-      bwd_align_merge (6);
-      break;
-    case 7:
-      bwd_align_merge (7);
-      break;
-    }
+  bwd_align_merge (align);
 }
