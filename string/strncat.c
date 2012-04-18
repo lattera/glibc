@@ -19,8 +19,6 @@
 
 #ifdef _LIBC
 # include <memcopy.h>
-#else
-typedef char reg_char;
 #endif
 
 #ifndef STRNCAT
@@ -31,7 +29,7 @@ typedef char reg_char;
 char *
 STRNCAT (char *s1, const char *s2, size_t n)
 {
-  reg_char c;
+  char c;
   char *s = s1;
 
   /* Find the end of S1.  */

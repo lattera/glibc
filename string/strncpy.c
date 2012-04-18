@@ -27,7 +27,7 @@
 char *
 STRNCPY (char *s1, const char *s2, size_t n)
 {
-  reg_char c;
+  char c;
   char *s = s1;
 
   --s1;

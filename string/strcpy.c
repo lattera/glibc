@@ -28,7 +28,7 @@ strcpy (dest, src)
      char *dest;
      const char *src;
 {
-  reg_char c;
+  char c;
   char *__unbounded s = (char *__unbounded) CHECK_BOUNDS_LOW (src);
   const ptrdiff_t off = CHECK_BOUNDS_LOW (dest) - s - 1;
   size_t n;

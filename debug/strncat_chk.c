@@ -27,7 +27,7 @@ __strncat_chk (s1, s2, n, s1len)
      size_t n;
      size_t s1len;
 {
-  reg_char c;
+  char c;
   char *s = s1;
 
   /* Find the end of S1.  */

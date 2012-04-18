@@ -33,8 +33,6 @@
 #if defined _LIBC
 # include <string.h>
 # include <memcopy.h>
-#else
-# define reg_char char
 #endif
 
 #if defined HAVE_LIMITS_H || defined _LIBC
@@ -71,7 +69,7 @@ MEMRCHR
   const unsigned char *char_ptr;
   const unsigned long int *longword_ptr;
   unsigned long int longword, magic_bits, charmask;
-  unsigned reg_char c;
+  unsigned char c;
 
   c = (unsigned char) c_in;
 

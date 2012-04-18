@@ -31,8 +31,8 @@
 int
 STRNCMP (const char *s1, const char *s2, size_t n)
 {
-  unsigned reg_char c1 = '\0';
-  unsigned reg_char c2 = '\0';
+  unsigned char c1 = '\0';
+  unsigned char c2 = '\0';
 
   if (n >= 4)
     {

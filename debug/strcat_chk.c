@@ -28,7 +28,7 @@ __strcat_chk (dest, src, destlen)
 {
   char *s1 = dest;
   const char *s2 = src;
-  reg_char c;
+  char c;
 
   /* Find the end of the string.  */
   do

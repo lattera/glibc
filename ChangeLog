@@ -1,3 +1,22 @@
+2012-04-18  David S. Miller  <davem@davemloft.net>
+
+	* sysdeps/generic/memcopy.h (reg_char): Delete.
+	* debug/strcat_chk.c: Use char, not reg_char.
+	* debug/strcpy_chk.c: Likewise.
+	* debug/strncat_chk.c: Likewise.
+	* debug/strncpy_chk.c: Likewise.
+	* string/memchr.c: Likewise.
+	* string/memrchr.c: Likewise.
+	* string/rawmemchr.c: Likewise.
+	* string/strcat.c: Likewise.
+	* string/strchr.c: Likewise.
+	* string/strchrnul.c: Likewise.
+	* string/strcmp.c: Likewise.
+	* string/strcpy.c: Likewise.
+	* string/strncat.c: Likewise.
+	* string/strncmp.c: Likewise.
+	* string/strncpy.c: Likewise.
+
 2012-04-18  Will Schmidt  <will_schmidt@vnet.ibm.com>
 
 	* sysdeps/powerpc/memmove.c: New file based on string/memmove.c where

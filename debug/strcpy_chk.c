@@ -28,7 +28,7 @@ __strcpy_chk (dest, src, destlen)
      const char *src;
      size_t destlen;
 {
-  reg_char c;
+  char c;
   char *s = (char *) src;
   const ptrdiff_t off = dest - s;
 

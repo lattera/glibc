@@ -61,9 +61,6 @@
 /* Type to use for unaligned operations.  */
 typedef unsigned char byte;
 
-/* Optimal type for storing bytes in registers.  */
-#define	reg_char	char
-
 #if __BYTE_ORDER == __LITTLE_ENDIAN
 #define MERGE(w0, sh_1, w1, sh_2) (((w0) >> (sh_1)) | ((w1) << (sh_2)))
 #endif
