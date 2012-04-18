@@ -1,5 +1,11 @@
 2012-04-18  Will Schmidt  <will_schmidt@vnet.ibm.com>
 
+	* sysdeps/powerpc/memmove.c: New file based on string/memmove.c where
+	__builtin_memcopy is called when src and dest ranges are known to not
+	overlap.
+
+2012-04-18  Will Schmidt  <will_schmidt@vnet.ibm.com>
+
 	* sysdeps/powerpc/powerpc64/power6/wordcopy.c
 	(_wordcopy_fwd_dest_aligned): Replace switch with a parameterized
 	fwd_align_merge macro call.
