@@ -1,3 +1,22 @@
+2012-04-18  Andreas Jaeger  <aj@suse.de>
+
+	[BZ# 6794]
+	* sysdeps/ieee754/ldbl-96/s_ilogbl.c: Moved to ...
+	* sysdeps/ieee754/ldbl-96/e_ilogbl.c: ... here.
+	Rename __ilogbl to __ieee754_ilogbl and remove weak_alias.
+
+	* sysdeps/ieee754/ldbl-128/s_ilogbl.c: Moved to ...
+	* sysdeps/ieee754/ldbl-128/e_ilogbl.c: ... here.
+	Rename __ilogbl to __ieee754_ilogbl and remove weak_alias.
+
+	* sysdeps/ieee754/ldbl-64-128/s_ilogbl.c: Moved to ...
+	* sysdeps/ieee754/ldbl-64-128/e_ilogbl.c: ... here.
+	Adjust for changed ldbl-128 files.
+
+	* sysdeps/sparc/sparc64/soft-fp/s_ilogbl.c: Moved to ...
+	* sysdeps/sparc/sparc64/soft-fp/e_ilogbl.c: ... here.
+	Rename __ilogbl to __ieee754_ilogbl and remove weak_alias.
+
 2012-04-17  David S. Miller  <davem@davemloft.net>
 
 	* sysdeps/sparc/sparc32/memcopy.h: Delete.
@@ -34,7 +53,7 @@
 	exception being thrown with 0.0 as argument.
 	* sysdeps/ieee754/dbl-64/s_ilogb.c: Moved to ...
 	* sysdeps/ieee754/dbl-64/e_ilogb.c: ... here.
-	* sysdeps/ieee754/flt-32/e_ilogbf.c: Moved to ...
+	* sysdeps/ieee754/flt-32/s_ilogbf.c: Moved to ...
 	* sysdeps/ieee754/flt-32/e_ilogbf.c: ... here.
 	* sysdeps/ieee754/ldbl-128ibm/s_ilogbl.c: Moved to ...
 	* sysdeps/ieee754/ldbl-128ibm/e_ilogbl.c: ... here.

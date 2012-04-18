@@ -1,6 +1,6 @@
 /* Software floating-point emulation.
    ilogbl(x, exp)
-   Copyright (C) 1999 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek (jj@ultra.linux.cz).
 
@@ -28,7 +28,7 @@
 #include "quad.h"
 #include <math.h>
 
-int __ilogbl(long double x)
+int __ieee754_ilogbl (long double x)
 {
   FP_DECL_EX;
   FP_DECL_Q(X);
@@ -77,5 +77,3 @@ int __ilogbl(long double x)
       return FP_ILOGBNAN;
     }
 }
-
-weak_alias (__ilogbl, ilogbl)
