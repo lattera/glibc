@@ -1,3 +1,7 @@
+2012-04-18  David S. Miller  <davem@davemloft.net>
+
+	* sysdeps/sparc/sparc64/memcopy.h: Delete.
+
 2012-04-18  Andreas Jaeger  <aj@suse.de>
 
 	[BZ# 6794]
