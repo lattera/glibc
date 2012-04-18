@@ -1,5 +1,11 @@
 2012-04-27  Mike Frysinger  <vapier@gentoo.org>
 
+	* sysdeps/ia64/fpu/s_ilogbl.S: Move to ...
+	* sysdeps/ia64/fpu/e_ilogbl.S: ... here.
+	(__ieee754_ilogbl): Rename from ilogbl.
+
+2012-04-27  Mike Frysinger  <vapier@gentoo.org>
+
 	* sysdeps/unix/sysv/linux/ia64/kernel-features.h (__ASSUME_ACCEPT4):
 	Define.
 

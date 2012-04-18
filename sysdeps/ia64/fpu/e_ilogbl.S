@@ -103,7 +103,7 @@ fNorm_x             = f10
 f2to64              = f11
 
 .section .text
-GLOBAL_LIBM_ENTRY(ilogbl)
+GLOBAL_LIBM_ENTRY(__ieee754_ilogbl)
 
 // X NORMAL
 // TrueExp_x = exp(f8) - 0xffff
@@ -204,7 +204,7 @@ ILOGB_ZERO:
 }
 ;;
 
-GLOBAL_LIBM_END(ilogbl)
+GLOBAL_LIBM_END(__ieee754_ilogbl)
 
 
 LOCAL_LIBM_ENTRY(__libm_error_region)
