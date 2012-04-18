@@ -1,3 +1,7 @@
+2012-04-17  David S. Miller  <davem@davemloft.net>
+
+	* sysdeps/sparc/sparc32/memcopy.h: Delete.
+
 2012-04-17  Andreas Schwab  <schwab@linux-m68k.org>
 
 	* sysdeps/i386/fpu/e_ilogb.S: Remove __ilogb*_finite alias.
