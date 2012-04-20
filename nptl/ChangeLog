@@ -1,3 +1,7 @@
+2012-04-20  Paul Pluzhnikov  <ppluzhnikov@google.com>
+
+	* sysdeps/x86_64/tls.h (TLS_GET_FS, TLS_SET_FS): Delete.
+
 2012-03-27  David S. Miller  <davem@davemloft.net>
 
 	* tst-cond16.c (do_test): Use a thread stack size which is either

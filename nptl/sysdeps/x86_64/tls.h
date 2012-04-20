@@ -1,5 +1,5 @@
 /* Definition for thread-local data handling.  nptl/x86_64 version.
-   Copyright (C) 2002-2007, 2008, 2009, 2011 Free Software Foundation, Inc.
+   Copyright (C) 2002-2009, 2011-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -131,13 +131,6 @@ typedef struct
 /* Return dtv of given thread descriptor.  */
 # define GET_DTV(descr) \
   (((tcbhead_t *) (descr))->dtv)
-
-
-/* Macros to load from and store into segment registers.  */
-# define TLS_GET_FS() \
-  ({ int __seg; __asm ("movl %%fs, %0" : "=q" (__seg)); __seg; })
-# define TLS_SET_FS(val) \
-  __asm ("movl %0, %%fs" :: "q" (val))
 
 
 /* Code to initially initialize the thread pointer.  This might need
