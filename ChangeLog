@@ -1,5 +1,7 @@
 2012-04-20  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/unix/getppid.S: Remove file.
+
 	* sysdeps/unix/mkdir.c: Remove file.
 	* sysdeps/unix/rmdir.c: Likewise.
 
