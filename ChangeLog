@@ -1,5 +1,19 @@
 2012-04-20  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/unix/sysv/Makefile [termio.h not in sysdep_headers]
+	(sysdep_headers): Remove variable.
+	[termio.h not in sysdep_headers] (generated): Likewise.
+	[termio.h not in sysdep_headers] ($(objpfx)termio.h): Remove rule.
+	* sysdeps/unix/sysv/sysv_termio.h: Remove file.
+	* sysdeps/unix/sysv/tcdrain.c: Likewise.
+	* sysdeps/unix/sysv/tcflow.c: Likewise.
+	* sysdeps/unix/sysv/tcflush.c: Likewise.
+	* sysdeps/unix/sysv/tcgetattr.c: Likewise.
+	* sysdeps/unix/sysv/tcgetpgrp.c: Likewise.
+	* sysdeps/unix/sysv/tcsendbrk.c: Likewise.
+	* sysdeps/unix/sysv/tcsetattr.c: Likewise.
+	* sysdeps/unix/sysv/tcsetpgrp.c: Likewise.
+
 	* sysdeps/unix/siglist.c: Remove file.
 
 	* sysdeps/unix/getppid.S: Remove file.
