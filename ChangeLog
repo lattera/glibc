@@ -1,5 +1,7 @@
 2012-04-20  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/unix/sysv/setrlimit.c: Remove file.
+
 	* sysdeps/unix/xmknod.c: Remove file.
 	* sysdeps/unix/syscalls.list (sys_mknod): Remove.
 
