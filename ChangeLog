@@ -1,5 +1,9 @@
 2012-04-20  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/unix/fxstat.c: Remove file.
+	* sysdeps/unix/xstat.c: Likewise.
+	* sysdeps/unix/syscalls.list (sys_fstat, sys_stat): Remove.
+
 	* sysdeps/unix/sysv/sigaction.c: Remove file.
 
 	* sysdeps/unix/sysv/Makefile [termio.h not in sysdep_headers]

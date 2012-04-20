@@ -56,9 +56,7 @@ swapon		-	swapon		i:s	swapon
 symlink		-	symlink		i:ss	__symlink	symlink
 sync		-	sync		i:	sync
 syncfs		-	syncfs		i:i	syncfs
-sys_fstat	fxstat	fstat		i:ip	__syscall_fstat
 sys_mknod	xmknod	mknod		i:sii	__syscall_mknod
-sys_stat	xstat	stat		i:sp	__syscall_stat
 umask		-	umask		Ei:i	__umask		umask
 uname		-	uname		i:p	__uname		uname
 unlink		-	unlink		i:s	__unlink	unlink
