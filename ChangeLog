@@ -1,5 +1,8 @@
 2012-04-20  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/unix/xmknod.c: Remove file.
+	* sysdeps/unix/syscalls.list (sys_mknod): Remove.
+
 	* sysdeps/unix/sysv/settimeofday.c: Remove file.
 
 	* sysdeps/unix/sysv/i386/time.S: Remove file.
