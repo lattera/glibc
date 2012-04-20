@@ -1,5 +1,7 @@
 2012-04-20  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/unix/sysv/direct.h: Remove file.
+
 	* sysdeps/unix/sysv/bits/dirent.h: Remove file.
 	* sysdeps/unix/sysv/bits/fcntl.h: Likewise.
 	* sysdeps/unix/sysv/bits/local_lim.h: Likewise.
