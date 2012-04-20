@@ -1,5 +1,13 @@
 2012-04-20  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/unix/sysv/bits/dirent.h: Remove file.
+	* sysdeps/unix/sysv/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/bits/local_lim.h: Likewise.
+	* sysdeps/unix/sysv/bits/signum.h: Likewise.
+	* sysdeps/unix/sysv/bits/stat.h: Likewise.
+	* sysdeps/unix/sysv/bits/utmp.h: Likewise.
+	* sysdeps/unix/sysv/bits/utsname.h: Likewise.
+
 	* sysdeps/unix/sysv/setrlimit.c: Remove file.
 
 	* sysdeps/unix/xmknod.c: Remove file.
