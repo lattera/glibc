@@ -11,6 +11,5 @@ setpgid		-	setpgrp		i:ii	__setpgid	setpgid
 setregid	-	setregid	i:ii	__setregid	setregid
 setreuid	-	setreuid	i:ii	__setreuid	setreuid
 sigaction	-	sigaction	i:ipp	__sigaction	sigaction
-sys_lstat	lxstat	lstat		i:sp	__syscall_lstat
 truncate	-	truncate	i:si	__truncate	truncate
 vhangup		-	vhangup		i:i	vhangup
