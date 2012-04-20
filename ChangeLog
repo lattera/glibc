@@ -1,5 +1,7 @@
 2012-04-20  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/unix/sysv/settimeofday.c: Remove file.
+
 	* sysdeps/unix/sysv/i386/time.S: Remove file.
 
 	* sysdeps/unix/fxstat.c: Remove file.
