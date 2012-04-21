@@ -550,6 +550,9 @@ ldouble: 1
 Test "Real part of: clog (0x1.fffffep+127 + 0x1.fffffep+127 i) == 89.06941264234832570836679262104313101776 + pi/4 i":
 ildouble: 1
 ldouble: 1
+Test "Real part of: clog (0x1.fp+16383 + 0x1.fp+16383 i) == 11356.83823118610934184548269774874545400 + pi/4 i":
+ildouble: 1
+ldouble: 1
 Test "Real part of: clog (0x1.fp+16383 + 0x1p+16383 i) == 11356.60974243783798653123798337822335902 + 0.4764674194737066993385333770295162295856 i":
 ildouble: 1
 ldouble: 1
@@ -651,6 +654,9 @@ Test "Real part of: clog10 (0x1.fffffffffffffp+1023 + 0x1p+1023 i) == 308.303170
 ildouble: 1
 ldouble: 1
 Test "Real part of: clog10 (0x1.fp+16383 + 0x1.fp+16383 i) == 4932.212175672014259683102930239951947672 + pi/4*log10(e) i":
+ildouble: 1
+ldouble: 1
+Test "Real part of: clog10 (0x1.fp+16383 + 0x1p+16383 i) == 4932.112944269463028900262609694408579449 + 0.2069271710841128115912940666587802677383 i":
 ildouble: 1
 ldouble: 1
 Test "Imaginary part of: clog10 (0x1p-1073 + 0x1p-1073 i) == -322.8546703496198318667349645920187712089 + pi/4*log10(e) i":

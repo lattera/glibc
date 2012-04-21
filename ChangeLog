@@ -1,3 +1,8 @@
+2012-04-21  Markus Trippelsdorf  <markus@trippelsdorf.de>
+
+	[BZ #13927]
+	* sysdeps/x86_64/fpu/libm-test-ulps: Update.
+
 2012-04-21  Nix  <nix@esperi.org.uk>
 
 	[BZ #7064]
