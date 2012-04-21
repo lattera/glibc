@@ -1,5 +1,6 @@
 2012-04-21  Andreas Jaeger  <aj@suse.de>
 
+	[BZ #13739]
 	* sysdeps/s390/s390-64/Makefile (distribute): Remove variable.
 
 2012-04-21  Joseph Myers  <joseph@codesourcery.com>
