@@ -51,7 +51,7 @@ libc {
     setfsgid; setfsuid;
 
     # s*
-    setresgid; setresuid; swapoff; swapon; sysctl;
+    setresgid; setresuid; swapoff; swapon; sysctl; sysinfo;
 
     # u*
     umount; uselib;
