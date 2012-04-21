@@ -25,11 +25,7 @@
 #undef VALID_ELF_OSABI
 #undef MORE_ELF_HEADER_DATA
 
-#ifdef __ARM_EABI__
 #define EXTRA_OSABI ELFOSABI_ARM_AEABI
-#else
-#define EXTRA_OSABI ELFOSABI_ARM
-#endif
 
 #define VALID_ELF_HEADER(hdr,exp,size)		\
   (memcmp (hdr, exp, size) == 0			\

@@ -1,6 +1,5 @@
 /* Startup code for ARM & ELF
-   Copyright (C) 1995, 1996, 1997, 1998, 2001, 2002, 2005, 2008
-   Free Software Foundation, Inc.
+   Copyright (C) 1995-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -58,14 +57,12 @@
 					NULL
 */
 
-#if defined(__ARM_EABI__)
 /* Tag_ABI_align8_preserved: This code preserves 8-byte
    alignment in any callee.  */
 	.eabi_attribute 25, 1
 /* Tag_ABI_align8_needed: This code may require 8-byte alignment from
    the caller.  */
 	.eabi_attribute 24, 1
-#endif
 
 #if defined(__thumb2__)
 	.thumb

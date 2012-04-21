@@ -1,4 +1,3 @@
 arm.*-.*-linux-gnueabi.*	DEFAULT			GLIBC_2.4
 
 arm.*-.*-linux-gnueabi.*	ld=ld-linux.so.3
-arm.*-.*-linux.*	ld=ld-linux.so.2

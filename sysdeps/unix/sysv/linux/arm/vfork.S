@@ -1,4 +1,4 @@
-/* Copyright (C) 1999, 2002, 2003, 2005 Free Software Foundation, Inc.
+/* Copyright (C) 1999-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Philip Blundell <philb@gnu.org>.
 
@@ -32,7 +32,6 @@ ENTRY (__vfork)
 #ifdef SAVE_PID
 	SAVE_PID
 #endif
-#ifdef __ARM_EABI__
 	/* The DO_CALL macro saves r7 on the stack, to enable generation
 	   of ARM unwind info.  Since the stack is initially shared between
 	   parent and child of vfork, that saved value could be corrupted.
@@ -51,9 +50,6 @@ ENTRY (__vfork)
 	cfi_adjust_cfa_offset (-4)
 	mov	r7, ip
 	cfi_restore (r7);
-#else
-	swi	SYS_ify(vfork)
-#endif
 #ifdef RESTORE_PID
 	RESTORE_PID
 #endif

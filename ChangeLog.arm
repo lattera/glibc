@@ -1,6 +1,16 @@
 2012-04-21  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #13556]
+	* sysdeps/arm/shlib-versions (arm.*-.*-linux.*): Remove old-ABI
+	entry.
+	* sysdeps/arm/start.S: Remove __ARM_EABI__ conditionals.
+	* sysdeps/arm/sysdep.h: Likewise.
+	* sysdeps/unix/sysv/linux/arm/clone.S: Likewise.
+	* sysdeps/unix/sysv/linux/arm/ldsodefs.h: Likewise.
+	* sysdeps/unix/sysv/linux/arm/sigaction.c: Likewise.
+	* sysdeps/unix/sysv/linux/arm/vfork.S: Likewise.
+
+	[BZ #13556]
 	* sysdeps/arm/preconfigure: Don't include /eabi in $machine.
 	* sysdeps/arm/Makefile [subdir = elf] (sysdep_routines): Add
 	setting from eabi/Makefile.

@@ -77,8 +77,8 @@
 
 /* If compiled for profiling, call `mcount' at the start of each function.  */
 #ifdef	PROF
-/* Call __gnu_mcount_nc if GCC >= 4.4 and abi = EABI.  */
-#if __GNUC_PREREQ(4,4) && defined(__ARM_EABI__)
+/* Call __gnu_mcount_nc if GCC >= 4.4.  */
+#if __GNUC_PREREQ(4,4)
 #define CALL_MCOUNT \
   str	lr,[sp, #-4]!; \
   cfi_adjust_cfa_offset (4); \
@@ -104,19 +104,17 @@
    on this system, the asm identifier `syscall_error' intrudes on the
    C name space.  Make sure we use an innocuous name.  */
 #define	syscall_error	__syscall_error
-#if __GNUC_PREREQ(4,4) && defined(__ARM_EABI__)
+#if __GNUC_PREREQ(4,4)
 #define mcount		__gnu_mcount_nc
 #else
 #define mcount		_mcount
 #endif
 
-#if defined(__ARM_EABI__)
 /* Tag_ABI_align8_preserved: This code preserves 8-byte
    alignment in any callee.  */
 	.eabi_attribute 25, 1
 /* Tag_ABI_align8_needed: This code may require 8-byte alignment from
    the caller.  */
 	.eabi_attribute 24, 1
-#endif
 
 #endif	/* __ASSEMBLER__ */

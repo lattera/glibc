@@ -1,5 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998, 1999, 2002, 2005, 2008, 2009, 2010
-   Free Software Foundation, Inc.
+/* Copyright (C) 1996-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Pat Beirne <patb@corelcomputer.com>
 
@@ -49,33 +48,19 @@ ENTRY(__clone)
 	mov	ip, r2
 #endif
 	@ new sp is already in r1
-#ifdef __ARM_EABI__
 	stmfd	sp!, {r4, r7}
 	cfi_adjust_cfa_offset (8)
 	cfi_rel_offset (r4, 0)
 	cfi_rel_offset (r7, 4)
-#else
-	str	r4, [sp, #-8]!
-	cfi_adjust_cfa_offset (8)
-	cfi_rel_offset (r4, 0)
-#endif
 	ldr	r2, [sp, #8]
 	ldr	r3, [sp, #12]
 	ldr	r4, [sp, #16]
-#ifdef __ARM_EABI__
 	ldr	r7, =SYS_ify(clone)
 	swi	0x0
-#else
-	swi	SYS_ify(clone)
-#endif
 	cfi_endproc
 	cmp	r0, #0
 	beq	1f
-#ifdef __ARM_EABI__
 	ldmfd	sp!, {r4, r7}
-#else
-	ldr	r4, [sp], #8
-#endif
 	blt	PLTJMP(C_SYMBOL_NAME(__syscall_error))
 	RETINSTR(, lr)
 
@@ -94,12 +79,8 @@ PSEUDO_END (__clone)
 	mov	r1, r0
 	tst	ip, #CLONE_VM
 	movne	r0, #-1
-#ifdef __ARM_EABI__
 	ldr	r7, =SYS_ify(getpid)
 	swieq	0x0
-#else
-	swieq	SYS_ify(getpid)
-#endif
 	str	r0, [r1, #PID_OFFSET]
 	str	r0, [r1, #TID_OFFSET]
 3:
