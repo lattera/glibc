@@ -29,7 +29,7 @@ ENTRY(__setcontext)
 	mov	r4, r0
 	add	r0, r0, #UCONTEXT_REGSPACE
 
-        /* Restore the VFP registers.  Copied from arm/eabi/__longjmp.S.  */
+        /* Restore the VFP registers.  Copied from arm/__longjmp.S.  */
 #ifdef PIC
         ldr     r2, 1f
         ldr     r1, Lrtld_global_ro

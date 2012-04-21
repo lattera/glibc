@@ -48,7 +48,7 @@ ENTRY(__getcontext)
 	add     r2, r4, #UCONTEXT_SIGMASK
 	bl      PLTJMP(__sigprocmask)
 	
-	/* Store FP regs.  Much of the FP code is copied from arm/eabi/setjmp.S.  */
+	/* Store FP regs.  Much of the FP code is copied from arm/setjmp.S.  */
 
 #ifdef PIC
         ldr     r2, 1f
