@@ -8,7 +8,7 @@
 	[BZ #13927]
 	* sysdeps/x86_64/fpu/libm-test-ulps: Update.
 
-2012-04-21  Nix  <nix@esperi.org.uk>
+2012-04-21  Nick Alcock  <nick.alcock@oracle.com>
 
 	[BZ #7064]
 	* sysdeps/unix/sysv/linux/i386/syscalls.list: Omit explicit
