@@ -1,3 +1,9 @@
+2012-04-21  Nix  <nix@esperi.org.uk>
+
+	[BZ #7064]
+	* sysdeps/unix/sysv/linux/i386/syscalls.list: Omit explicit
+	version	from __vm86.
+
 2012-04-20  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/common/lxstat.c: Remove file.

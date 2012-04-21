@@ -2,7 +2,7 @@
 
 modify_ldt	EXTRA	modify_ldt	i:ipi	__modify_ldt	modify_ldt
 vm86old		EXTRA	vm86old		i:p	__vm86old	vm86@GLIBC_2.0
-vm86		-	vm86		i:ip	__vm86		vm86@@GLIBC_2.3.4
+vm86		-	vm86		i:ip	__vm86		vm86
 oldgetrlimit	EXTRA	getrlimit	i:ip	__old_getrlimit	getrlimit@GLIBC_2.0
 oldsetrlimit	EXTRA	setrlimit	i:ip	__old_setrlimit	setrlimit@GLIBC_2.0
 waitpid		-	waitpid		Ci:ipi	__waitpid	waitpid	__libc_waitpid
