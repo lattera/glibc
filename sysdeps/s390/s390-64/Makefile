@@ -31,8 +31,6 @@ include extra-module.mk
 extra-objs      += $(addsuffix .so, $(s390x-iconv-modules))
 install-others  += $(patsubst %, $(inst_gconvdir)/%.so, $(s390x-iconv-modules))
 
-distribute += iso-8859-1_cp037_z900.c utf8-utf32-z9.c utf16-utf32-z9.c utf8-utf16-z9.c
-
 $(patsubst %, $(inst_gconvdir)/%.so, $(s390x-iconv-modules)) : \
 $(inst_gconvdir)/%.so: $(objpfx)%.so $(+force)
 	$(do-install-program)

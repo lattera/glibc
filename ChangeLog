@@ -1,3 +1,7 @@
+2012-04-21  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/s390/s390-64/Makefile (distribute): Remove variable.
+
 2012-04-21  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/Versions (GLIBC_2.0): Add sysinfo.
