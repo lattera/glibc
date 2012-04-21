@@ -1,5 +1,4 @@
-/* Copyright (C) 1992, 93, 1995-2000, 2002, 2003, 2005, 2006, 2009
-   Free Software Foundation, Inc.
+/* Copyright (C) 1992-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper, <drepper@gnu.ai.mit.edu>, August 1995.
    ARM changes by Philip Blundell, <pjb27@cam.ac.uk>, May 1997.
@@ -28,6 +27,16 @@
 #include <dl-sysdep.h>
 
 #include <tls.h>
+
+#if __NR_SYSCALL_BASE != 0
+# error Kernel headers are too old
+#endif
+
+/* Don't use stime, even if the kernel headers define it.  We have
+   settimeofday, and some EABI kernels have removed stime.  Similarly
+   use setitimer to implement alarm.  */
+#undef __NR_stime
+#undef __NR_alarm
 
 /* In order to get __set_errno() definition in INLINE_SYSCALL.  */
 #ifndef __ASSEMBLER__
@@ -163,8 +172,14 @@ __local_syscall_error:						\
 # define SYSCALL_ERROR __syscall_error
 #endif
 
+/* The ARM EABI user interface passes the syscall number in r7, instead
+   of in the swi.  This is more efficient, because the kernel does not need
+   to fetch the swi from memory to find out the number; which can be painful
+   with separate I-cache and D-cache.  Make sure to use 0 for the SWI
+   argument; otherwise the (optional) compatibility code for APCS binaries
+   may be invoked.  */
+
 /* Linux takes system call args in registers:
-	syscall number	in the SWI instruction
 	arg 1		r0
 	arg 2		r1
 	arg 3		r2
@@ -190,58 +205,111 @@ __local_syscall_error:						\
 
 */
 
+/* We must save and restore r7 (call-saved) for the syscall number.
+   We never make function calls from inside here (only potentially
+   signal handlers), so we do not bother with doubleword alignment.
+
+   Just like the APCS syscall convention, the EABI syscall convention uses
+   r0 through r6 for up to seven syscall arguments.  None are ever passed to
+   the kernel on the stack, although incoming arguments are on the stack for
+   syscalls with five or more arguments.
+
+   The assembler will convert the literal pool load to a move for most
+   syscalls.  */
+
 #undef	DO_CALL
 #define DO_CALL(syscall_name, args)		\
     DOARGS_##args;				\
-    swi SYS_ify (syscall_name); 		\
+    ldr r7, =SYS_ify (syscall_name);		\
+    swi 0x0;					\
     UNDOARGS_##args
 
-#define DOARGS_0 /* nothing */
-#define DOARGS_1 /* nothing */
-#define DOARGS_2 /* nothing */
-#define DOARGS_3 /* nothing */
-#define DOARGS_4 /* nothing */
-#define DOARGS_5 \
-  str r4, [sp, $-4]!; \
+#undef  DOARGS_0
+#define DOARGS_0 \
+  .fnstart; \
+  str r7, [sp, #-4]!; \
   cfi_adjust_cfa_offset (4); \
-  cfi_rel_offset (r4, 0); \
-  ldr r4, [sp, $4]
-#define DOARGS_6 \
-  mov ip, sp; \
-  stmfd sp!, {r4, r5}; \
+  cfi_rel_offset (r7, 0); \
+  .save { r7 }
+#undef  DOARGS_1
+#define DOARGS_1 DOARGS_0
+#undef  DOARGS_2
+#define DOARGS_2 DOARGS_0
+#undef  DOARGS_3
+#define DOARGS_3 DOARGS_0
+#undef  DOARGS_4
+#define DOARGS_4 DOARGS_0
+#undef  DOARGS_5
+#define DOARGS_5 \
+  .fnstart; \
+  stmfd sp!, {r4, r7}; \
   cfi_adjust_cfa_offset (8); \
   cfi_rel_offset (r4, 0); \
-  cfi_rel_offset (r5, 4); \
-  ldmia ip, {r4, r5}
-#define DOARGS_7 \
+  cfi_rel_offset (r7, 4); \
+  .save { r4, r7 }; \
+  ldr r4, [sp, #8]
+#undef  DOARGS_6
+#define DOARGS_6 \
+  .fnstart; \
   mov ip, sp; \
-  stmfd sp!, {r4, r5, r6}; \
+  stmfd sp!, {r4, r5, r7}; \
   cfi_adjust_cfa_offset (12); \
   cfi_rel_offset (r4, 0); \
   cfi_rel_offset (r5, 4); \
+  cfi_rel_offset (r7, 8); \
+  .save { r4, r5, r7 }; \
+  ldmia ip, {r4, r5}
+#undef  DOARGS_7
+#define DOARGS_7 \
+  .fnstart; \
+  mov ip, sp; \
+  stmfd sp!, {r4, r5, r6, r7}; \
+  cfi_adjust_cfa_offset (16); \
+  cfi_rel_offset (r4, 0); \
+  cfi_rel_offset (r5, 4); \
   cfi_rel_offset (r6, 8); \
+  cfi_rel_offset (r7, 12); \
+  .save { r4, r5, r6, r7 }; \
   ldmia ip, {r4, r5, r6}
 
-#define UNDOARGS_0 /* nothing */
-#define UNDOARGS_1 /* nothing */
-#define UNDOARGS_2 /* nothing */
-#define UNDOARGS_3 /* nothing */
-#define UNDOARGS_4 /* nothing */
-#define UNDOARGS_5 \
-  ldr r4, [sp], $4; \
+#undef  UNDOARGS_0
+#define UNDOARGS_0 \
+  ldr r7, [sp], #4; \
   cfi_adjust_cfa_offset (-4); \
-  cfi_restore (r4)
-#define UNDOARGS_6 \
-  ldmfd sp!, {r4, r5}; \
+  cfi_restore (r7); \
+  .fnend
+#undef  UNDOARGS_1
+#define UNDOARGS_1 UNDOARGS_0
+#undef  UNDOARGS_2
+#define UNDOARGS_2 UNDOARGS_0
+#undef  UNDOARGS_3
+#define UNDOARGS_3 UNDOARGS_0
+#undef  UNDOARGS_4
+#define UNDOARGS_4 UNDOARGS_0
+#undef  UNDOARGS_5
+#define UNDOARGS_5 \
+  ldmfd sp!, {r4, r7}; \
   cfi_adjust_cfa_offset (-8); \
   cfi_restore (r4); \
-  cfi_restore (r5)
-#define UNDOARGS_7 \
-  ldmfd sp!, {r4, r5, r6}; \
+  cfi_restore (r7); \
+  .fnend
+#undef  UNDOARGS_6
+#define UNDOARGS_6 \
+  ldmfd sp!, {r4, r5, r7}; \
   cfi_adjust_cfa_offset (-12); \
   cfi_restore (r4); \
   cfi_restore (r5); \
-  cfi_restore (r6)
+  cfi_restore (r7); \
+  .fnend
+#undef  UNDOARGS_7
+#define UNDOARGS_7 \
+  ldmfd sp!, {r4, r5, r6, r7}; \
+  cfi_adjust_cfa_offset (-16); \
+  cfi_restore (r4); \
+  cfi_restore (r5); \
+  cfi_restore (r6); \
+  cfi_restore (r7); \
+  .fnend
 
 #else /* not __ASSEMBLER__ */
 
@@ -260,19 +328,46 @@ __local_syscall_error:						\
 #undef INTERNAL_SYSCALL_DECL
 #define INTERNAL_SYSCALL_DECL(err) do { } while (0)
 
-#undef INTERNAL_SYSCALL_RAW
-#define INTERNAL_SYSCALL_RAW(name, err, nr, args...)		\
-  ({ unsigned int _sys_result;					\
-     {								\
-       register int _a1 asm ("a1");				\
+#if defined(__thumb__)
+/* We can not expose the use of r7 to the compiler.  GCC (as
+   of 4.5) uses r7 as the hard frame pointer for Thumb - although
+   for Thumb-2 it isn't obviously a better choice than r11.
+   And GCC does not support asms that conflict with the frame
+   pointer.
+
+   This would be easier if syscall numbers never exceeded 255,
+   but they do.  For the moment the LOAD_ARGS_7 is sacrificed.
+   We can't use push/pop inside the asm because that breaks
+   unwinding (i.e. thread cancellation) for this frame.  We can't
+   locally save and restore r7, because we do not know if this
+   function uses r7 or if it is our caller's r7; if it is our caller's,
+   then unwinding will fail higher up the stack.  So we move the
+   syscall out of line and provide its own unwind information.  */
+# undef INTERNAL_SYSCALL_RAW
+# define INTERNAL_SYSCALL_RAW(name, err, nr, args...)		\
+  ({								\
+      register int _a1 asm ("a1");				\
+      int _nametmp = name;					\
+      LOAD_ARGS_##nr (args)					\
+      register int _name asm ("ip") = _nametmp;			\
+      asm volatile ("bl      __libc_do_syscall"			\
+                    : "=r" (_a1)				\
+                    : "r" (_name) ASM_ARGS_##nr			\
+                    : "memory", "lr");				\
+      _a1; })
+#else /* ARM */
+# undef INTERNAL_SYSCALL_RAW
+# define INTERNAL_SYSCALL_RAW(name, err, nr, args...)		\
+  ({								\
+       register int _a1 asm ("r0"), _nr asm ("r7");		\
        LOAD_ARGS_##nr (args)					\
-       asm volatile ("swi	%1	@ syscall " #name	\
+       _nr = name;						\
+       asm volatile ("swi	0x0	@ syscall " #name	\
 		     : "=r" (_a1)				\
-		     : "i" (name) ASM_ARGS_##nr			\
+		     : "r" (_nr) ASM_ARGS_##nr			\
 		     : "memory");				\
-       _sys_result = _a1;					\
-     }								\
-     (int) _sys_result; })
+       _a1; })
+#endif
 
 #undef INTERNAL_SYSCALL
 #define INTERNAL_SYSCALL(name, err, nr, args...)		\
@@ -321,29 +416,18 @@ __local_syscall_error:						\
   LOAD_ARGS_5 (a1, a2, a3, a4, a5)		\
   register int _v2 asm ("v2") = _v2tmp;
 #define ASM_ARGS_6	ASM_ARGS_5, "r" (_v2)
-#define LOAD_ARGS_7(a1, a2, a3, a4, a5, a6, a7)	\
-  int _v3tmp = (int) (a7);			\
-  LOAD_ARGS_6 (a1, a2, a3, a4, a5, a6)		\
+#ifndef __thumb__
+# define LOAD_ARGS_7(a1, a2, a3, a4, a5, a6, a7)	\
+  int _v3tmp = (int) (a7);				\
+  LOAD_ARGS_6 (a1, a2, a3, a4, a5, a6)			\
   register int _v3 asm ("v3") = _v3tmp;
-#define ASM_ARGS_7	ASM_ARGS_6, "r" (_v3)
+# define ASM_ARGS_7	ASM_ARGS_6, "r" (_v3)
+#endif
 
-/* We can't implement non-constant syscalls directly since the syscall
-   number is normally encoded in the instruction.  So use SYS_syscall.  */
-#define INTERNAL_SYSCALL_NCS(number, err, nr, args...)		\
-	INTERNAL_SYSCALL_NCS_##nr (number, err, args)
-
-#define INTERNAL_SYSCALL_NCS_0(number, err, args...)		\
-	INTERNAL_SYSCALL (syscall, err, 1, number, args)
-#define INTERNAL_SYSCALL_NCS_1(number, err, args...)		\
-	INTERNAL_SYSCALL (syscall, err, 2, number, args)
-#define INTERNAL_SYSCALL_NCS_2(number, err, args...)		\
-	INTERNAL_SYSCALL (syscall, err, 3, number, args)
-#define INTERNAL_SYSCALL_NCS_3(number, err, args...)		\
-	INTERNAL_SYSCALL (syscall, err, 4, number, args)
-#define INTERNAL_SYSCALL_NCS_4(number, err, args...)		\
-	INTERNAL_SYSCALL (syscall, err, 5, number, args)
-#define INTERNAL_SYSCALL_NCS_5(number, err, args...)		\
-	INTERNAL_SYSCALL (syscall, err, 6, number, args)
+/* For EABI, non-constant syscalls are actually pretty easy...  */
+#undef INTERNAL_SYSCALL_NCS
+#define INTERNAL_SYSCALL_NCS(number, err, nr, args...)          \
+  INTERNAL_SYSCALL_RAW (number, err, nr, args)
 
 #endif	/* __ASSEMBLER__ */
 

@@ -1,3 +1,9 @@
+2012-04-21  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/mips/mips32/readahead.c: Include
+	sysdeps/unix/sysv/linux/arm/readahead.c not
+	sysdeps/unix/sysv/linux/arm/eabi/readahead.c.
+
 2012-03-28  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/mips/bits/mman.h (MAP_STACK): Define.

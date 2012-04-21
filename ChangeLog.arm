@@ -1,3 +1,164 @@
+2012-04-21  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #13556]
+	* sysdeps/unix/sysv/linux/arm/socket.S: Remove.
+	* sysdeps/unix/sysv/linux/arm/syscalls.list (syscall): Remove.
+	(oldgetrlimit): Likewise.
+	(oldsetrlimit): Likewise.
+	(syscall): Likewise.
+	(msgget): Add syscall from eabi/syscalls.list.
+	(msgrcv): Likewise.
+	(msgsnd): Likewise.
+	(shmat): Likewise.
+	(shmdt): Likewise.
+	(shmget): Likewise.
+	(semop): Likewise.
+	(semtimedop): Likewise.
+	(semget): Likewise.
+	(accept): Likewise.
+	(bind): Likewise.
+	(connect): Likewise.
+	(getpeername): Likewise.
+	(getsockname): Likewise.
+	(getsockopt): Likewise.
+	(listen): Likewise.
+	(recv): Likewise.
+	(recvfrom): Likewise.
+	(recvmsg): Likewise.
+	(send): Likewise.
+	(sendmsg): Likewise.
+	(sendto): Likewise.
+	(setsockopt): Likewise.
+	(shutdown): Likewise.
+	(socket): Likewise.
+	(socketpair): Likewise.
+	* sysdeps/unix/sysv/linux/arm/eabi/syscalls.list: Remove.
+	* sysdeps/unix/sysv/linux/arm/Makefile [subdir = csu]
+	(CFLAGS-libc-start.c): Add setting from eabi/Makefile.
+	[subdir = rt] (librt-sysdep_routines): Likewise.
+	[subdir = rt] (librt-shared-only-routines): Likewise.
+	[subdir = nptl] (libpthread-sysdep_routines): Likewise.
+	[subdir = nptl] (libpthread-shared-only-routines): Likewise.
+	[subdir = resolv] (libanl-sysdep_routines): Likewise.
+	[subdir = resolv] (libanl-shared-only-routines): Likewise.
+	[subdir = csu] (sysdep_routines): Likewise.
+	[subdir = nscd] (nscd-modules): Likewise.
+	[subdir = nss] (libnss_db-sysdep_routines): Likewise.
+	[subdir = nss] (libnss_db-shared-only-routines): Likewise.
+	[subdir = posix] (LDFLAGS-tst-rfc3484): Likewise.
+	[subdir = posix] (LDFLAGS-tst-rfc3484-2): Likewise.
+	[subdir = posix] (LDFLAGS-tst-rfc3484-3): Likewise.
+	* sysdeps/unix/sysv/linux/arm/eabi/Makefile: Remove.
+	* sysdeps/unix/sysv/linux/arm/sysdep.h (__NR_SYSCALL_BASE): Add
+	test from eabi/sysdep.h.
+	(__NR_stime): Add #undef from eabi/sysdep.h.
+	(__NR_alarm): Likewise.
+	(DO_CALL): Use definition from eabi/sysdep.h.
+	(DOARGS_0): Likewise.
+	(DOARGS_1): Likewise.
+	(DOARGS_2): Likewise.
+	(DOARGS_3): Likewise.
+	(DOARGS_4): Likewise.
+	(DOARGS_5): Likewise.
+	(DOARGS_6): Likewise.
+	(DOARGS_7): Likewise.
+	(UNDOARGS_0): Likewise.
+	(UNDOARGS_1): Likewise.
+	(UNDOARGS_2): Likewise.
+	(UNDOARGS_3): Likewise.
+	(UNDOARGS_4): Likewise.
+	(UNDOARGS_5): Likewise.
+	(UNDOARGS_6): Likewise.
+	(UNDOARGS_7): Likewise.
+	(INTERNAL_SYSCALL_RAW): Likewise.
+	[__thumb__] (LOAD_ARGS_7): Do not define.
+	[__thumb__] (ASM_ARGS_7): Likewise.
+	(INTERNAL_SYSCALL_NCS): Use definition from eabi/sysdep.h.
+	(INTERNAL_SYSCALL_NCS_0): Remove.
+	(INTERNAL_SYSCALL_NCS_1): Likewise.
+	(INTERNAL_SYSCALL_NCS_2): Likewise.
+	(INTERNAL_SYSCALL_NCS_3): Likewise.
+	(INTERNAL_SYSCALL_NCS_4): Likewise.
+	(INTERNAL_SYSCALL_NCS_5): Likewise.
+	* sysdeps/unix/sysv/linux/arm/eabi/sysdep.h: Remove.
+	* sysdeps/unix/sysv/linux/arm/eabi/____longjmp_chk.S: Move to ...
+	* sysdeps/unix/sysv/linux/arm/____longjmp_chk.S: ... here.
+	* sysdeps/unix/sysv/linux/arm/eabi/configure.in: Move to ...
+	* sysdeps/unix/sysv/linux/arm/configure.in: ... here.  Update
+	comment.
+	* sysdeps/unix/sysv/linux/arm/eabi/configure: Move to ...
+	* sysdeps/unix/sysv/linux/arm/configure: ... here.  Regenerate.
+	* sysdeps/unix/sysv/linux/arm/eabi/ftruncate64.c: Move to ...
+	* sysdeps/unix/sysv/linux/arm/ftruncate64.c: ... here.
+	* sysdeps/unix/sysv/linux/arm/eabi/getcontext.S: Move to ...
+	* sysdeps/unix/sysv/linux/arm/getcontext.S: ... here.
+	* sysdeps/unix/sysv/linux/arm/eabi/internal_accept4.S: Move to ...
+	* sysdeps/unix/sysv/linux/arm/internal_accept4.S: ... here.
+	* sysdeps/unix/sysv/linux/arm/eabi/internal_recvmmsg.S: Move to ...
+	* sysdeps/unix/sysv/linux/arm/internal_recvmmsg.S: ... here.
+	* sysdeps/unix/sysv/linux/arm/eabi/internal_sendmmsg.S: Move to ...
+	* sysdeps/unix/sysv/linux/arm/internal_sendmmsg.S: ... here.
+	* sysdeps/unix/sysv/linux/arm/eabi/libc-do-syscall.S: Move to ...
+	* sysdeps/unix/sysv/linux/arm/libc-do-syscall.S: ... here.
+	* sysdeps/unix/sysv/linux/arm/eabi/makecontext.c: Move to ...
+	* sysdeps/unix/sysv/linux/arm/makecontext.c: ... here.
+	* sysdeps/unix/sysv/linux/arm/eabi/mmap64.S: Move to ...
+	* sysdeps/unix/sysv/linux/arm/mmap64.S: ... here.
+	* sysdeps/unix/sysv/linux/arm/eabi/msgctl.c: Move to ...
+	* sysdeps/unix/sysv/linux/arm/msgctl.c: ... here.
+	* sysdeps/unix/sysv/linux/arm/eabi/oldgetrlimit.c: Move to ...
+	* sysdeps/unix/sysv/linux/arm/oldgetrlimit.c: ... here.
+	* sysdeps/unix/sysv/linux/arm/eabi/oldsetrlimit.c: Move to ...
+	* sysdeps/unix/sysv/linux/arm/oldsetrlimit.c: ... here.
+	* sysdeps/unix/sysv/linux/arm/eabi/pread.c: Move to ...
+	* sysdeps/unix/sysv/linux/arm/pread.c: ... here.
+	* sysdeps/unix/sysv/linux/arm/eabi/pread64.c: Move to ...
+	* sysdeps/unix/sysv/linux/arm/pread64.c: ... here.
+	* sysdeps/unix/sysv/linux/arm/eabi/pwrite.c: Move to ...
+	* sysdeps/unix/sysv/linux/arm/pwrite.c: ... here.
+	* sysdeps/unix/sysv/linux/arm/eabi/pwrite64.c: Move to ...
+	* sysdeps/unix/sysv/linux/arm/pwrite64.c: ... here.
+	* sysdeps/unix/sysv/linux/arm/eabi/readahead.c: Move to ...
+	* sysdeps/unix/sysv/linux/arm/readahead.c: ... here.
+	* sysdeps/unix/sysv/linux/arm/eabi/semctl.c: Move to ...
+	* sysdeps/unix/sysv/linux/arm/semctl.c: ... here.
+	* sysdeps/unix/sysv/linux/arm/eabi/setcontext.S: Move to ...
+	* sysdeps/unix/sysv/linux/arm/setcontext.S: ... here.
+	* sysdeps/unix/sysv/linux/arm/eabi/shmctl.c: Move to ...
+	* sysdeps/unix/sysv/linux/arm/shmctl.c: ... here.
+	* sysdeps/unix/sysv/linux/arm/eabi/sigrestorer.S: Move to ...
+	* sysdeps/unix/sysv/linux/arm/sigrestorer.S: ... here.
+	* sysdeps/unix/sysv/linux/arm/eabi/swapcontext.S: Move to ...
+	* sysdeps/unix/sysv/linux/arm/swapcontext.S: ... here.
+	* sysdeps/unix/sysv/linux/arm/eabi/syscall.S: Move to ...
+	* sysdeps/unix/sysv/linux/arm/syscall.S: ... here.
+	* sysdeps/unix/sysv/linux/arm/eabi/truncate64.c: Move to ...
+	* sysdeps/unix/sysv/linux/arm/truncate64.c: ... here.
+	* sysdeps/unix/sysv/linux/arm/eabi/umount.c: Move to ...
+	* sysdeps/unix/sysv/linux/arm/umount.c: ... here.
+	* sysdeps/unix/sysv/linux/arm/eabi/nptl/Makefile: Move to ...
+	* sysdeps/unix/sysv/linux/arm/nptl/Makefile: ... here.
+	* sysdeps/unix/sysv/linux/arm/eabi/nptl/configure.in: Move to ...
+	* sysdeps/unix/sysv/linux/arm/nptl/configure.in: ... here.
+	* sysdeps/unix/sysv/linux/arm/eabi/nptl/configure: Move to ...
+	* sysdeps/unix/sysv/linux/arm/nptl/configure: ... here.
+	* sysdeps/unix/sysv/linux/arm/eabi/nptl/nptl-aeabi_unwind_cpp_pr1.c:
+	Move to ...
+	* sysdeps/unix/sysv/linux/arm/nptl/nptl-aeabi_unwind_cpp_pr1.c:
+	... here.
+	* sysdeps/unix/sysv/linux/arm/eabi/nptl/rt-aeabi_unwind_cpp_pr1.c:
+	Move to ...
+	* sysdeps/unix/sysv/linux/arm/nptl/rt-aeabi_unwind_cpp_pr1.c: ... here.
+	* sysdeps/unix/sysv/linux/arm/eabi/nptl/sysdep-cancel.h: Move to ...
+	* sysdeps/unix/sysv/linux/arm/nptl/sysdep-cancel.h: ... here.
+	* sysdeps/unix/sysv/linux/arm/eabi/nptl/unwind-forcedunwind.c:
+	Move to ...
+	* sysdeps/unix/sysv/linux/arm/nptl/unwind-forcedunwind.c: ... here.
+	* sysdeps/unix/sysv/linux/arm/eabi/nptl/unwind-resume.c: Move to ...
+	* sysdeps/unix/sysv/linux/arm/nptl/unwind-resume.c: ... here.
+	* sysdeps/unix/sysv/linux/arm/eabi/nptl/unwind.h: Move to ...
+	* sysdeps/unix/sysv/linux/arm/nptl/unwind.h: ... here.
+
 2012-04-16  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/arm/ldsodefs.h: Undefine
