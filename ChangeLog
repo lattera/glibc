@@ -1,3 +1,14 @@
+2013-04-23  Paul Eggert  <eggert@cs.ucla.edu>
+
+	[BZ #13970]
+	* stdlib/stdlib.h: Remove warn_unused_result attribute from strtol etc.
+	(strtod, strtof, strtold, strtol, strtoul, strtoq)
+	(strtouq, strtoll, strtoull, strtol_l, strtoul_l, strtoll_l, strtoull_l)
+	(strtod_l, strtof_l, strtold_l): Remove __wur.
+	It is not necessarily an error to ignore strtol's return value.
+	One can reliably look at the stored endptr to decide whether
+	the number had valid syntax.
+
 2012-04-21  Andreas Jaeger  <aj@suse.de>
 
 	[BZ #13739]

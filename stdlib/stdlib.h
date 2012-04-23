@@ -163,18 +163,18 @@ __BEGIN_NAMESPACE_STD
 /* Convert a string to a floating-point number.  */
 extern double strtod (const char *__restrict __nptr,
 		      char **__restrict __endptr)
-     __THROW __nonnull ((1)) __wur;
+     __THROW __nonnull ((1));
 __END_NAMESPACE_STD
 
 #ifdef	__USE_ISOC99
 __BEGIN_NAMESPACE_C99
 /* Likewise for `float' and `long double' sizes of floating-point numbers.  */
 extern float strtof (const char *__restrict __nptr,
-		     char **__restrict __endptr) __THROW __nonnull ((1)) __wur;
+		     char **__restrict __endptr) __THROW __nonnull ((1));
 
 extern long double strtold (const char *__restrict __nptr,
 			    char **__restrict __endptr)
-     __THROW __nonnull ((1)) __wur;
+     __THROW __nonnull ((1));
 __END_NAMESPACE_C99
 #endif
 
@@ -182,11 +182,11 @@ __BEGIN_NAMESPACE_STD
 /* Convert a string to a long integer.  */
 extern long int strtol (const char *__restrict __nptr,
 			char **__restrict __endptr, int __base)
-     __THROW __nonnull ((1)) __wur;
+     __THROW __nonnull ((1));
 /* Convert a string to an unsigned long integer.  */
 extern unsigned long int strtoul (const char *__restrict __nptr,
 				  char **__restrict __endptr, int __base)
-     __THROW __nonnull ((1)) __wur;
+     __THROW __nonnull ((1));
 __END_NAMESPACE_STD
 
 #if defined __GLIBC_HAVE_LONG_LONG && defined __USE_BSD
@@ -194,12 +194,12 @@ __END_NAMESPACE_STD
 __extension__
 extern long long int strtoq (const char *__restrict __nptr,
 			     char **__restrict __endptr, int __base)
-     __THROW __nonnull ((1)) __wur;
+     __THROW __nonnull ((1));
 /* Convert a string to an unsigned quadword integer.  */
 __extension__
 extern unsigned long long int strtouq (const char *__restrict __nptr,
 				       char **__restrict __endptr, int __base)
-     __THROW __nonnull ((1)) __wur;
+     __THROW __nonnull ((1));
 #endif /* GCC and use BSD.  */
 
 #if defined __USE_ISOC99 || (defined __GLIBC_HAVE_LONG_LONG && defined __USE_MISC)
@@ -208,12 +208,12 @@ __BEGIN_NAMESPACE_C99
 __extension__
 extern long long int strtoll (const char *__restrict __nptr,
 			      char **__restrict __endptr, int __base)
-     __THROW __nonnull ((1)) __wur;
+     __THROW __nonnull ((1));
 /* Convert a string to an unsigned quadword integer.  */
 __extension__
 extern unsigned long long int strtoull (const char *__restrict __nptr,
 					char **__restrict __endptr, int __base)
-     __THROW __nonnull ((1)) __wur;
+     __THROW __nonnull ((1));
 __END_NAMESPACE_C99
 #endif /* ISO C99 or GCC and use MISC.  */
 
@@ -238,37 +238,37 @@ __END_NAMESPACE_C99
    use as an additional parameter.  */
 extern long int strtol_l (const char *__restrict __nptr,
 			  char **__restrict __endptr, int __base,
-			  __locale_t __loc) __THROW __nonnull ((1, 4)) __wur;
+			  __locale_t __loc) __THROW __nonnull ((1, 4));
 
 extern unsigned long int strtoul_l (const char *__restrict __nptr,
 				    char **__restrict __endptr,
 				    int __base, __locale_t __loc)
-     __THROW __nonnull ((1, 4)) __wur;
+     __THROW __nonnull ((1, 4));
 
 __extension__
 extern long long int strtoll_l (const char *__restrict __nptr,
 				char **__restrict __endptr, int __base,
 				__locale_t __loc)
-     __THROW __nonnull ((1, 4)) __wur;
+     __THROW __nonnull ((1, 4));
 
 __extension__
 extern unsigned long long int strtoull_l (const char *__restrict __nptr,
 					  char **__restrict __endptr,
 					  int __base, __locale_t __loc)
-     __THROW __nonnull ((1, 4)) __wur;
+     __THROW __nonnull ((1, 4));
 
 extern double strtod_l (const char *__restrict __nptr,
 			char **__restrict __endptr, __locale_t __loc)
-     __THROW __nonnull ((1, 3)) __wur;
+     __THROW __nonnull ((1, 3));
 
 extern float strtof_l (const char *__restrict __nptr,
 		       char **__restrict __endptr, __locale_t __loc)
-     __THROW __nonnull ((1, 3)) __wur;
+     __THROW __nonnull ((1, 3));
 
 extern long double strtold_l (const char *__restrict __nptr,
 			      char **__restrict __endptr,
 			      __locale_t __loc)
-     __THROW __nonnull ((1, 3)) __wur;
+     __THROW __nonnull ((1, 3));
 #endif /* GNU */
 
 
