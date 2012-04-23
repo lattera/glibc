@@ -1,3 +1,19 @@
+2012-04-23  Andreas Jaeger  <aj@suse.de>
+
+	[BZ #13739]
+	* manual/Makefile: Remove make dist support, there's no
+	need for a stand-alone documentation tar ball.
+	(TEXI2DVI): Define always, it's not in Makeconfig.
+	(dist): Removed.
+	(tar-it): Removed.
+	(edition): Removed.
+	(glibc-doc-$(edition).tar): Removed
+	(%.Z): Removed.
+	(%.gz): Removed.
+	(%.uu): Removed.
+	(ETAGS): Remove, it's in Makeconfig.
+	(move-if-change): Remove, it's in Makeconfig.
+
 2013-04-23  Paul Eggert  <eggert@cs.ucla.edu>
 
 	[BZ #13970]

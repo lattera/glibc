@@ -30,14 +30,9 @@ dvi: libc.dvi
 pdf: libc.pdf
 
 # Get glibc's configuration info.
-ifneq (,$(wildcard ../Makeconfig))
 include ../Makeconfig
-else
-MAKEINFO = makeinfo
-TEXI2DVI = texi2dvi
-AWK = gawk
-endif
 
+TEXI2DVI = texi2dvi
 TEXI2PDF = texi2dvi --pdf
 
 ifneq ($(strip $(MAKEINFO)),:)
@@ -45,10 +40,6 @@ all: info
 info: libc.info
 endif
 
-# scripts we use
-ifndef move-if-change
-move-if-change = ./move-if-change
-endif
 mkinstalldirs = $(..)scripts/mkinstalldirs
 
 chapters = $(addsuffix .texi, \
@@ -145,27 +136,6 @@ minimal-dist = summary.awk texis.awk tsort.awk libc-texinfo.sh libc.texinfo \
 	       $(filter-out summary.texi, $(nonexamples))		    \
 	       $(patsubst %.c.texi,examples/%.c, $(examples))
 
-tar-it = tar chovf $@ $^
-
-edition := $(shell sed -n 's/^@set EDITION \([0-9][0-9.]*\)[^0-9.]*.*$$/\1/p' \
-		       libc.texinfo)
-
-glibc-doc-$(edition).tar: $(doc-only-dist) $(distribute)
-	@rm -f glibc-doc-$(edition)
-	ln -s . glibc-doc-$(edition)
-	tar chovf $@ $(addprefix glibc-doc-$(edition)/,$^)
-	rm -f glibc-doc-$(edition)
-
-%.Z: %
-	compress -c $< > $@.new
-	mv -f $@.new $@
-%.gz: %
-	gzip -9 -c $< > $@.new
-	mv -f $@.new $@
-%.uu: %
-	uuencode $< < $< > $@.new
-	mv -f $@.new $@
-
 .PHONY: mostlyclean distclean realclean clean
 mostlyclean:
 	-rm -f libc.dvi libc.pdf libc.tmp libc.info*
@@ -200,17 +170,6 @@ $(inst_infodir)/libc.info: libc.info installdirs
 installdirs:
 	$(mkinstalldirs) $(inst_infodir)
 
-.PHONY: dist
-dist: # glibc-doc-$(edition).tar.gz
-
-ifneq (,$(wildcard ../Make-dist))
-dist: ../Make-dist
-	$(MAKE) -f $< $(Make-dist-args)
-endif
-
-ifndef ETAGS
-ETAGS = etags -T
-endif
 TAGS: $(minimal-dist)
 	$(ETAGS) -o $@ $^
 
