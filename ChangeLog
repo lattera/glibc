@@ -1,5 +1,7 @@
 2012-04-23  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/unix/execve.S: Remove file.
+
 	* sysdeps/unix/_exit.S: Remove file.
 
 2012-04-23  Andreas Jaeger  <aj@suse.de>
