@@ -1,5 +1,8 @@
 2012-04-23  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/unix/sysv/gethostname.c: Move to ...
+	* sysdeps/posix/gethostname.c: ... here.
+
 	* sysdeps/unix/execve.S: Remove file.
 
 	* sysdeps/unix/_exit.S: Remove file.
