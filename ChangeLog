@@ -1,3 +1,10 @@
+2012-04-24  Roland McGrath  <roland@hack.frob.com>
+
+	* sysdeps/mach/hurd/symlink.c: Don't call __mach_port_deallocate on
+	NODE when __dir_mkfile failed.
+	* sysdeps/mach/hurd/symlinkat.c: Likewise.
+	Reported by Ludovic Courtès <ludo@gnu.org>.
+
 2012-04-24  Andreas Jaeger  <aj@suse.de>
 
 	* Makerules (common-clean): Also remove gen-as-const-headers

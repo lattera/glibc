@@ -1,6 +1,5 @@
 /* Create a symbolic link named relative to an open directory.  Hurd version.
-   Copyright (C) 1991,1992,1993,1994,1995,1996,1997,2006
-	Free Software Foundation, Inc.
+   Copyright (C) 1991-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -53,19 +52,22 @@ symlinkat (from, fd, to)
   err = __dir_mkfile (dir, O_WRITE, 0777 & ~_hurd_umask, &node);
 
   if (! err)
-    /* Set the node's translator to make it a symlink.  */
-    err = __file_set_translator (node,
-				 FS_TRANS_EXCL|FS_TRANS_SET,
-				 FS_TRANS_EXCL|FS_TRANS_SET, 0,
-				 buf, sizeof (_HURD_SYMLINK) + len,
-				 MACH_PORT_NULL, MACH_MSG_TYPE_COPY_SEND);
+    {
+      /* Set the node's translator to make it a symlink.  */
+      err = __file_set_translator (node,
+                                   FS_TRANS_EXCL|FS_TRANS_SET,
+                                   FS_TRANS_EXCL|FS_TRANS_SET, 0,
+                                   buf, sizeof (_HURD_SYMLINK) + len,
+                                   MACH_PORT_NULL, MACH_MSG_TYPE_COPY_SEND);
 
-  if (! err)
-    /* Link the node, now a valid symlink, into the target directory.  */
-    err = __dir_link (dir, node, name, 1);
+      if (! err)
+        /* Link the node, now a valid symlink, into the target directory.  */
+        err = __dir_link (dir, node, name, 1);
+
+      __mach_port_deallocate (__mach_task_self (), node);
+    }
 
   __mach_port_deallocate (__mach_task_self (), dir);
-  __mach_port_deallocate (__mach_task_self (), node);
 
   if (err)
     return __hurd_fail (err);
