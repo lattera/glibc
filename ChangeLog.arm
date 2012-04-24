@@ -1,3 +1,7 @@
+2012-04-24  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/arm/fork.S: Remove file.
+
 2012-04-21  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #13556]
