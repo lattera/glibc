@@ -933,8 +933,7 @@ $(objpfx)check-localplt.out: $(objpfx)check-localplt \
 			     $(common-objpfx)crypt/libcrypt.so \
 			     $(check-data)
 	$(dir $<)$(notdir $<) $(filter-out $< $(check-data),$^) | \
-	  LC_ALL=C sort | \
-	  diff -u $(check-data) - > $@
+	  $(AWK) -f $(..)scripts/check-localplt.awk $(check-data) -
 endif
 
 $(objpfx)tst-dlopenrpathmod.so: $(libdl)

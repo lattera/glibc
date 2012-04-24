@@ -5,6 +5,11 @@
 
 2012-04-24  Roland McGrath  <roland@hack.frob.com>
 
+	* scripts/check-localplt.awk: New file.
+	* elf/Makefile ($(objpfx)check-localplt.out): Use that script instead
+	of diff.
+	* scripts/data/localplt-generic.data: Add a comment.
+
 	* sysdeps/mach/hurd/symlink.c: Don't call __mach_port_deallocate on
 	NODE when __dir_mkfile failed.
 	* sysdeps/mach/hurd/symlinkat.c: Likewise.
