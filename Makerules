@@ -1330,6 +1330,7 @@ common-clean: common-mostlyclean
 	-rm -f $(objpfx)*.d $(objpfx)*.dt
 	-rm -fr $(addprefix $(objpfx),$(generated-dirs))
 	-rm -f $(addprefix $(common-objpfx),$(common-generated))
+	-rm -f $(gen-as-const-headers:%.sym=$(common-objpfx)%.h)
 
 # Produce a file `stubs' which contains `#define __stub_FUNCTION'
 # for each function which is a stub.  We grovel over all the .d files
