@@ -537,7 +537,7 @@ endif
 ifneq ($(have-as-needed),yes)
  libgcc_eh := -lgcc_eh $(libunwind)
 else
- libgcc_eh := -Wl,--as-needed -lgcc_s$(libgcc_s_suffix) $(libunwind) -Wl,--no-as-needed
+ libgcc_eh := -Wl,--as-needed -lgcc_s $(libunwind) -Wl,--no-as-needed
 endif
 gnulib := -lgcc $(libgcc_eh)
 static-gnulib := -lgcc -lgcc_eh $(libunwind)

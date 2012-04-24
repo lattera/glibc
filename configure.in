@@ -1519,20 +1519,6 @@ fi
 rm -f conftest*])
 AC_SUBST(libc_cv_Bgroup)
 
-AC_CACHE_CHECK(for libgcc_s suffix,
-	       libc_cv_libgcc_s_suffix, [dnl
-cat > conftest.c <<EOF
-int main (void) { return 0; }
-EOF
-changequote(,)dnl
-libc_cv_libgcc_s_suffix=`${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS \
-			   -fPIC -shared -shared-libgcc -o conftest.so \
-			   conftest.c -v 2>&1 >/dev/null \
-			   | sed -n 's/^.* -lgcc_s\([^ ]*\) .*$/\1/p'`
-changequote([,])dnl
-rm -f conftest*])
-AC_SUBST(libc_cv_libgcc_s_suffix)
-
 AC_CACHE_CHECK(for --as-needed option,
 	       libc_cv_as_needed, [dnl
 cat > conftest.c <<EOF
@@ -1540,7 +1526,7 @@ int main (void) { return 0; }
 EOF
 if AC_TRY_COMMAND([${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS
 			      -fPIC -shared -o conftest.so conftest.c
-			      -lgcc_s$libc_cv_libgcc_s_suffix -Wl,--as-needed
+			      -lgcc_s -Wl,--as-needed
 			      -nostdlib 1>&AS_MESSAGE_LOG_FD])
 then
   libc_cv_as_needed=yes

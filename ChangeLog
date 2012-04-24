@@ -1,3 +1,12 @@
+2012-04-24  Joseph Myers  <joseph@codesourcery.com>
+
+	* configure.in (libc_cv_libgcc_s_suffix): Remove test.
+	(libc_cv_as_needed): Don't use $libc_cv_libgcc_s_suffix.
+	* configure: Regenerated.
+	* Makeconfig [$(have-as-needed) = yes] (libgcc_eh): Don't use
+	$(libgcc_s_suffix).
+	* config.make.in (libgcc_s_suffix): Remove variable.
+
 2012-04-23  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/gethostname.c: Move to ...
