@@ -1,5 +1,8 @@
 2012-04-24  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/unix/system.c: Remove file.
+	* sysdeps/unix/bsd/bsd4.4/system.c: Likewise.
+
 	* sysdeps/unix/getegid.S: Remove file.
 	* sysdeps/unix/geteuid.S: Likewise.
 
