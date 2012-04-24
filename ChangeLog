@@ -1,3 +1,11 @@
+2012-04-24  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
+	[BZ #13886]
+	* sysdeps/powerpc/powerpc64/fpu/s_floorl.S: Delete file. Use the
+	sysdeps/ieee754/ldbl-128ibm/s_floorl.c version instead.
+	* math/libm-test.inc (floor_test): Add more tests.
+	* sysdeps/powerpc/fpu/libm-test-ulps: Update for pow tests.
+
 2012-04-24  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/getdents.c: Remove file.
