@@ -1,5 +1,9 @@
 2012-04-24  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/unix/getdents.c: Remove file.
+	* sysdeps/unix/sysv/getdents.c: Likewise.
+	* sysdeps/unix/sysv/syscalls.list (s_getdents): Remove.
+
 	* sysdeps/unix/syscalls.list (madvise): Add syscall from
 	sysdeps/unix/mman/syscalls.list.
 	(mmap): Likewise.

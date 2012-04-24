@@ -5,7 +5,6 @@ ftime		-	ftime		i:p	ftime
 nice		-	nice		i:i	nice
 pause		-	pause		Ci:	pause
 poll		-	poll		Ci:pii	poll
-s_getdents	getdents getdents	i:ipi	__getdents
 setrlimit	-	setrlimit	i:ip	__setrlimit	setrlimit
 settimeofday	-	settimeofday	i:PP	__settimeofday	settimeofday
 signal		-	signal		i:ii	signal
