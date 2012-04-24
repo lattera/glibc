@@ -1,3 +1,8 @@
+2012-04-24  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/getegid.S: Remove file.
+	* sysdeps/unix/geteuid.S: Likewise.
+
 2012-04-24  Roland McGrath  <roland@hack.frob.com>
 
 	* sysdeps/mach/hurd/symlink.c: Don't call __mach_port_deallocate on
