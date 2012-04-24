@@ -1,2 +1,0 @@
-# 4.4 BSD has the canonical set of <sys/mman.h> system calls.
-unix/mman

@@ -1,5 +1,15 @@
 2012-04-24  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/unix/syscalls.list (madvise): Add syscall from
+	sysdeps/unix/mman/syscalls.list.
+	(mmap): Likewise.
+	(mprotect): Likewise.
+	(msync): Likewise.
+	(munmap): Likewise.
+	* sysdeps/unix/bsd/bsd4.4/Implies: Remove.
+	* sysdeps/unix/mman/syscalls.list: Remove.
+	* sysdeps/unix/sysv/linux/Implies: Don't include unix/mman.
+
 	* configure.in (libc_cv_libgcc_s_suffix): Remove test.
 	(libc_cv_as_needed): Don't use $libc_cv_libgcc_s_suffix.
 	* configure: Regenerated.

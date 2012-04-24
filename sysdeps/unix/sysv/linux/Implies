@@ -5,10 +5,5 @@ gnu
 # Linux shares most of the syscalls which are also common to BSD and SVR4.
 unix/common
 
-# Linux as of version 1.3.29 has all functions of the mmap family
-# which are described in POSIX.4.  Missing is only madvise() so
-# we define a stub here.
-unix/mman
-
 # Linux has network support in the kernel.
 unix/inet
