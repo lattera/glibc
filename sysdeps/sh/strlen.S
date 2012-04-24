@@ -1,4 +1,4 @@
-/* Copyright (C) 1999, 2000, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 1999-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Kazumoto Kojima <kkojima@rr.iij4u.or.jp>
 
@@ -17,7 +17,6 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <sysdep.h>
-#include <endian.h>
 
 /* size_t strlen (const char *s)  */
 
@@ -58,7 +57,7 @@ ENTRY(strlen)
 	add	#4, r2
 
 	add	#-4, r2
-#if __BYTE_ORDER == __BIG_ENDIAN
+#ifdef __BIG_ENDIAN__
 	swap.b	r1, r1
 	swap.w	r1, r1
 	swap.b	r1, r1
