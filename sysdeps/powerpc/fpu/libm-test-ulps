@@ -1488,6 +1488,17 @@ Test "log2 (e) == M_LOG2El":
 ildouble: 1
 ldouble: 1
 
+# pow
+Test "pow (0x0.ffffffp0, -0x1p24) == 2.7182819094701610539628664526874952929416":
+float: 1
+ifloat: 1
+Test "pow (0x0.ffffffp0, 0x1p24) == 0.3678794302077803437135155590023422899744":
+float: 1
+ifloat: 1
+Test "pow (0x1.000002p0, 0x1p24) == 7.3890552180866447284268641248075832310141":
+float: 1
+ifloat: 1
+
 # pow_downward
 Test "pow_downward (1.0625, 1.125) == 1.070582293028761362162622578677070098674":
 ildouble: 1
@@ -2448,6 +2459,8 @@ ildouble: 1
 ldouble: 1
 
 Function: "pow":
+float: 1
+ifloat: 1
 ildouble: 1
 ldouble: 1
 

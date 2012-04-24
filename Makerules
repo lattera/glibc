@@ -1114,17 +1114,15 @@ install-no-libc.a-nosubdir: install-bin-nosubdir install-bin-script-nosubdir \
 endif
 install: install-no-libc.a-nosubdir
 
-# Command to compile $< in $(objdir) using the native libraries.
+# Command to compile $< using the native libraries.
 define native-compile
 $(make-target-directory)
-$(patsubst %/,cd % &&,$(objpfx)) \
 $(BUILD_CC) $($(basename $(<F))-CFLAGS) $(ALL_BUILD_CFLAGS) \
-	    $(firstword $(filter /%,$< $(shell pwd)/$<)) -o $(@F)
+	    $< $(OUTPUT_OPTION)
 endef
 
 # We always want to use configuration definitions.
-# Note that this is only used for commands running in $(objpfx).
-ALL_BUILD_CFLAGS = $(BUILD_CFLAGS) -include $(..)config.h
+ALL_BUILD_CFLAGS = $(BUILD_CFLAGS) -include $(common-objpfx)config.h
 
 # Support the GNU standard name for this target.
 .PHONY: check
