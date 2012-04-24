@@ -1,5 +1,9 @@
 2012-04-24  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/unix/fork.S: Remove file.
+	* sysdeps/unix/i386/fork.S: Likewise.
+	* sysdeps/unix/sparc/fork.S: Likewise.
+
 	* sysdeps/unix/system.c: Remove file.
 	* sysdeps/unix/bsd/bsd4.4/system.c: Likewise.
 
