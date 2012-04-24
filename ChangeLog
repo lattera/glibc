@@ -1,3 +1,9 @@
+2012-04-24  Joseph Myers  <joseph@codesourcery.com>
+
+	* Makerules (native-compile): Do not change working directory for
+	build.  Use $(OUTPUT_OPTION) in command.
+	(ALL_BUILD_CFLAGS): Use $(common-objpfx) to find config.h.
+
 2012-04-24  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	[BZ #13886]
