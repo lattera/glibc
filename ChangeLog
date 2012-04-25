@@ -1,3 +1,9 @@
+2012-04-25  Siddhesh Poyarekar  <siddhesh@redhat.com>
+	    Paul Pluzhnikov  <ppluzhnikov@google.com>
+
+	* elf/dl-minimal.c (__strtoul_internal): Parse hexadecimal and octal
+	strings correctly.
+
 2012-04-25  Chung-Lin Tang  <cltang@codesourcery.com>
 
 	* sysdeps/sh/memcpy.S: Remove include of endian.h, change
