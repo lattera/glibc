@@ -1,5 +1,9 @@
 2012-04-25  Joseph Myers  <joseph@codesourcery.com>
 
+	* Makerules (native-compile): Use $(BUILD_LDFLAGS).
+	(ALL_BUILD_CFLAGS): Use $(BUILD_CPPFLAGS) -D_GNU_SOURCE
+	-DIS_IN_build.
+
 	* timezone/README: Update upstream location and email address for
 	tzcode and tzdata.
 	* timezone/zdump.c: Update from tzcode 2012b.

@@ -1118,11 +1118,12 @@ install: install-no-libc.a-nosubdir
 define native-compile
 $(make-target-directory)
 $(BUILD_CC) $($(basename $(<F))-CFLAGS) $(ALL_BUILD_CFLAGS) \
-	    $< $(OUTPUT_OPTION)
+	    $< $(OUTPUT_OPTION) $(BUILD_LDFLAGS)
 endef
 
 # We always want to use configuration definitions.
-ALL_BUILD_CFLAGS = $(BUILD_CFLAGS) -include $(common-objpfx)config.h
+ALL_BUILD_CFLAGS = $(BUILD_CFLAGS) $(BUILD_CPPFLAGS) -D_GNU_SOURCE \
+		   -DIS_IN_build -include $(common-objpfx)config.h
 
 # Support the GNU standard name for this target.
 .PHONY: check
