@@ -1,3 +1,21 @@
+2012-04-25  David S. Miller  <davem@davemloft.net>
+
+	* sysdeps/unix/sparc/brk.S: Delete.
+	* sysdeps/unix/sparc/dl-brk.S: Delete.
+	* sysdeps/unix/sparc/pipe.S: Delete.
+	* sysdeps/unix/sparc/sysdep.S: Delete.
+	* sysdeps/unix/sparc/sysdep.h: Delete.
+	* sysdeps/unix/sparc/vfork.S: Delete.
+	* sysdeps/sparc/sysdep.h (SPARC_PIC_THUNK, SPARC_PIC_REG,
+	SPARC_PIC_REG_LEAF, ENTRY, END, LOC): Define.
+	* sysdeps/unix/sysv/linux/sparc/sysdep.h (ret, ret_NOERRNO,
+	ret_ERRVAL, r0, r1, MOVE): Define.
+	(JUMPTARGET): Remove.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/sysdep.h: Don't include
+	sysdeps/unix/sparc/sysdep.h
+	(ENTRY, END): Remove.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/sysdep.h: Likewise.
+
 2012-04-25  Joseph Myers  <joseph@codesourcery.com>
 
 	* Makerules (native-compile): Use $(BUILD_LDFLAGS).

@@ -20,7 +20,7 @@
 #ifndef _LINUX_SPARC64_SYSDEP_H
 #define _LINUX_SPARC64_SYSDEP_H 1
 
-#include <sysdeps/unix/sparc/sysdep.h>
+#include <sysdeps/unix/sysv/linux/sparc/sysdep.h>
 
 #ifdef IS_IN_rtld
 # include <dl-sysdep.h>		/* Defines RTLD_PRIVATE_ERRNO.  */
@@ -44,25 +44,7 @@
 
 #define LOADSYSCALL(x) mov __NR_##x, %g1
 
-/* Linux/SPARC uses a different trap number */
 #undef PSEUDO
-#undef PSEUDO_NOERRNO
-#undef PSEUDO_ERRVAL
-#undef PSEUDO_END
-#undef ENTRY
-#undef END
-
-#define ENTRY(name)			\
-	.align	4;			\
-	.global	C_SYMBOL_NAME(name);	\
-	.type	name, @function;	\
-C_LABEL(name)				\
-	cfi_startproc;
-
-#define END(name)			\
-	cfi_endproc;			\
-	.size name, . - name
-
 #define PSEUDO(name, syscall_name, args)	\
 	.text;					\
 ENTRY(name);					\
@@ -73,18 +55,21 @@ ENTRY(name);					\
 	SYSCALL_ERROR_HANDLER			\
 1:
 
+#undef PSEUDO_NOERRNO
 #define	PSEUDO_NOERRNO(name, syscall_name, args)\
 	.text;					\
 ENTRY(name);					\
 	LOADSYSCALL(syscall_name);		\
 	ta		0x6d;
 
+#undef PSEUDO_ERRVAL
 #define	PSEUDO_ERRVAL(name, syscall_name, args) \
 	.text;					\
 ENTRY(name);					\
 	LOADSYSCALL(syscall_name);		\
 	ta		0x6d;
 
+#undef PSEUDO_END
 #define PSEUDO_END(name)			\
 	END(name)
 
@@ -148,8 +133,6 @@ ENTRY(name);					\
 	"f32", "f34", "f36", "f38", "f40", "f42", "f44", "f46",		\
 	"f48", "f50", "f52", "f54", "f56", "f58", "f60", "f62",		\
 	"cc", "memory"
-
-#include <sysdeps/unix/sysv/linux/sparc/sysdep.h>
 
 #endif	/* __ASSEMBLER__ */
 

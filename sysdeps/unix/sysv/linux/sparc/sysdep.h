@@ -19,6 +19,20 @@
 #ifndef _LINUX_SPARC_SYSDEP_H
 #define _LINUX_SPARC_SYSDEP_H 1
 
+#include <sysdeps/unix/sysdep.h>
+#include <sysdeps/sparc/sysdep.h>
+
+#ifdef __ASSEMBLER__
+
+#define	ret		retl; nop
+#define	ret_NOERRNO	retl; nop
+#define	ret_ERRVAL	retl; nop
+#define	r0		%o0
+#define	r1		%o1
+#define	MOVE(x,y)	mov x, y
+
+#else	/* __ASSEMBLER__ */
+
 #undef INLINE_SYSCALL
 #define INLINE_SYSCALL(name, nr, args...) 				\
 ({	INTERNAL_SYSCALL_DECL(err);  					\
@@ -165,9 +179,6 @@
 	__o0;								\
 })
 
-
-#ifdef __ASSEMBLER__
-# define JUMPTARGET(sym) sym
-#endif
+#endif	/* __ASSEMBLER__ */
 
 #endif /* _LINUX_SPARC_SYSDEP_H */
