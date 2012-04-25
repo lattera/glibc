@@ -1,3 +1,13 @@
+2012-04-25  Joseph Myers  <joseph@codesourcery.com>
+
+	* configure.in (libc_cv_as_needed): Remove test.
+	* configure: Regenerated.
+	* Makeconfig [$(have-as-needed) != yes] (as-needed): Remove
+	conditional definition.
+	[$(have-as-needed) != yes] (no-as-needed): Likewise.
+	[$(have-as-needed) != yes] (libgcc_eh): Likewise.
+	* config.make.in (have-as-needed): Remove variable.
+
 2012-04-25  Siddhesh Poyarekar  <siddhesh@redhat.com>
 	    Paul Pluzhnikov  <ppluzhnikov@google.com>
 

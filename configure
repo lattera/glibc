@@ -650,7 +650,6 @@ libc_cv_fpie
 libc_cv_z_execstack
 libc_cv_z_combreloc
 ASFLAGS_config
-libc_cv_as_needed
 libc_cv_Bgroup
 libc_cv_cc_with_libunwind
 VERSIONING
@@ -6302,34 +6301,6 @@ rm -f conftest*
 fi
 { $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_Bgroup" >&5
 $as_echo "$libc_cv_Bgroup" >&6; }
-
-
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for --as-needed option" >&5
-$as_echo_n "checking for --as-needed option... " >&6; }
-if ${libc_cv_as_needed+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  cat > conftest.c <<EOF
-int main (void) { return 0; }
-EOF
-if { ac_try='${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS
-			      -fPIC -shared -o conftest.so conftest.c
-			      -lgcc_s -Wl,--as-needed
-			      -nostdlib 1>&5'
-  { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
-  (eval $ac_try) 2>&5
-  ac_status=$?
-  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
-  test $ac_status = 0; }; }
-then
-  libc_cv_as_needed=yes
-else
-  libc_cv_as_needed=no
-fi
-rm -f conftest*
-fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_as_needed" >&5
-$as_echo "$libc_cv_as_needed" >&6; }
 
 
 ASFLAGS_config=

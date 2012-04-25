@@ -1519,23 +1519,6 @@ fi
 rm -f conftest*])
 AC_SUBST(libc_cv_Bgroup)
 
-AC_CACHE_CHECK(for --as-needed option,
-	       libc_cv_as_needed, [dnl
-cat > conftest.c <<EOF
-int main (void) { return 0; }
-EOF
-if AC_TRY_COMMAND([${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS
-			      -fPIC -shared -o conftest.so conftest.c
-			      -lgcc_s -Wl,--as-needed
-			      -nostdlib 1>&AS_MESSAGE_LOG_FD])
-then
-  libc_cv_as_needed=yes
-else
-  libc_cv_as_needed=no
-fi
-rm -f conftest*])
-AC_SUBST(libc_cv_as_needed)
-
 ASFLAGS_config=
 AC_CACHE_CHECK(whether --noexecstack is desirable for .S files,
 	       libc_cv_as_noexecstack, [dnl

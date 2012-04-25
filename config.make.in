@@ -49,7 +49,6 @@ all-warnings = @all_warnings@
 have-z-combreloc = @libc_cv_z_combreloc@
 have-z-execstack = @libc_cv_z_execstack@
 have-Bgroup = @libc_cv_Bgroup@
-have-as-needed = @libc_cv_as_needed@
 with-fp = @with_fp@
 old-glibc-headers = @old_glibc_headers@
 unwind-find-fde = @libc_cv_gcc_unwind_find_fde@

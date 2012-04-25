@@ -388,13 +388,8 @@ ifndef asm-CPPFLAGS
 asm-CPPFLAGS =
 endif
 
-ifeq ($(have-as-needed),yes)
 as-needed := -Wl,--as-needed
 no-as-needed := -Wl,--no-as-needed
-else
-as-needed :=
-no-as-needed :=
-endif
 
 # Must be supported by the linker.
 no-whole-archive = -Wl,--no-whole-archive
@@ -534,11 +529,7 @@ ifneq ($(have-cc-with-libunwind),yes)
 else
   libunwind = -lunwind
 endif
-ifneq ($(have-as-needed),yes)
- libgcc_eh := -lgcc_eh $(libunwind)
-else
- libgcc_eh := -Wl,--as-needed -lgcc_s $(libunwind) -Wl,--no-as-needed
-endif
+libgcc_eh := -Wl,--as-needed -lgcc_s $(libunwind) -Wl,--no-as-needed
 gnulib := -lgcc $(libgcc_eh)
 static-gnulib := -lgcc -lgcc_eh $(libunwind)
 libc.so-gnulib := -lgcc
