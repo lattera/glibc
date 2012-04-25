@@ -13,5 +13,5 @@ come from the tzdata package by Arthur David Olson et.al.
 Please check the ChangeLog files in the top level directory for the
 version of the tzcode and tzdata packages.
 
-These packages may be found at ftp://elsie.nci.nih.gov/pub/.  Commentary
-should be addressed to tz@elsie.nci.nih.gov.
+These packages may be found at ftp://munnari.oz.au/pub/.  Commentary
+should be addressed to tz@iana.org.
