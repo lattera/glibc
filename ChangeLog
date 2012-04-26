@@ -1,3 +1,28 @@
+2012-04-26  Joseph Myers  <joseph@codesourcery.com>
+
+	* configure.in (arm*-none*): Do not allow without
+	--enable-hacker-mode.
+	(netbsd*): Remove case setting base_os.
+	(386bsd*): Likewise.
+	(freebsd*): Likewise.
+	(bsdi*): Likewise.
+	(osf*): Likewise.
+	(sunos*): Likewise.
+	(ultrix*): Likewise.
+	(newsos*): Likewise.
+	(dynix*): Likewise.
+	(*bsd*): Likewise.
+	(sysv*): Likewise.
+	(isc*): Likewise.
+	(esix*): Likewise.
+	(sco*): Likewise.
+	(minix*): Likewise.
+	(irix4*): Likewise.
+	(irix6*): Likewise.
+	(solaris[2-9]*): Likewise.
+	(none): Likewise.
+	* configure: Regenerated.
+
 2012-04-26  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	[BZ #11521]

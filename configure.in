@@ -463,7 +463,7 @@ AC_SUBST(add_on_subdirs)
 ###
 if test -z "$enable_hacker_mode" && test x"$libc_config_ok" != xyes; then
   case "$machine-$host_os" in
-  *-linux* | *-gnu* | arm*-none*)
+  *-linux* | *-gnu*)
     ;;
   *)
     echo "*** The GNU C library is currently not available for this platform."
@@ -615,18 +615,8 @@ os="`echo $os | sed 's/\([0-9A-Z]\)[v_]\([0-9A-Z]\)/\1.\2/g'`"
 test "x$base_os" != x || case "$os" in
 gnu*)
   base_os=mach/hurd ;;
-netbsd* | 386bsd* | freebsd* | bsdi*)
-  base_os=unix/bsd/bsd4.4 ;;
-osf* | sunos* | ultrix* | newsos* | dynix* | *bsd*)
-  base_os=unix/bsd ;;
-sysv* | isc* | esix* | sco* | minix* | irix4* | linux*)
+linux*)
   base_os=unix/sysv ;;
-irix6*)
-  base_os=unix/sysv/irix6/$os ;;
-solaris[2-9]*)
-  base_os=unix/sysv/sysv4 ;;
-none)
-  base_os=standalone ;;
 esac
 
 # For sunos4.1.1, try sunos4.1.1, then sunos4.1, then sunos4, then sunos.
