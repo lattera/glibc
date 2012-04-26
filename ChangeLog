@@ -1,3 +1,13 @@
+2012-04-26  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
+	[BZ #11521]
+	* sysdeps/ieee754/ldbl-128ibm/s_ctanhl.c (__ctanhl): Avoid internal
+	overflow or cancellation in calculating denominator.
+	* sysdeps/ieee754/ldbl-128ibm/s_ctanl.c (__ctanl): Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/e_sinhl.c (__ieee754_sinhl): Breaking
+	down expression to avoid unexpected rounding in newer GCCs.
+	* sysdeps/powerpc/fpu/libm-test-ulps: Update for ctan, ctanh fix.
+
 2012-04-26  David S. Miller  <davem@davemloft.net>
 
 	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_ceil.S: Generate

@@ -54,7 +54,8 @@ __ieee754_sinhl(long double x)
 		if(shuge+x>one) return x;/* sinhl(tiny) = tiny with inexact */
 	    t = __expm1l(fabsl(x));
 	    if(ix<0x3ff0000000000000LL) return h*(2.0*t-t*t/(t+one));
-	    return h*(t+t/(t+one));
+	    w = t/(t+one);
+	    return h*(t+w);
 	}
 
     /* |x| in [40, log(maxdouble)] return 0.5*exp(|x|) */

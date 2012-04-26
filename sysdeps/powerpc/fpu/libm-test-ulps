@@ -1051,16 +1051,44 @@ ifloat: 2
 
 # ctan
 Test "Real part of: ctan (-2 - 3 i) == 0.376402564150424829275122113032269084e-2 - 1.00323862735360980144635859782192726 i":
+float: 1
+ifloat: 1
 double: 1
 idouble: 1
+ldouble: 1
+ildouble: 1
+Test "Real part of: ctan (1 + 47 i) == 2.729321264492904590777293425576722354636e-41 + 1.0 i":
+ldouble: 2
+ildouble: 2
 Test "Imaginary part of: ctan (-2 - 3 i) == 0.376402564150424829275122113032269084e-2 - 1.00323862735360980144635859782192726 i":
-ildouble: 1
-ldouble: 1
-Test "Imaginary part of: ctan (0.75 + 1.25 i) == 0.160807785916206426725166058173438663 + 0.975363285031235646193581759755216379 i":
 double: 1
 idouble: 1
 ildouble: 1
 ldouble: 1
+Test "Real part of: ctan (0.75 + 1.25 i) == 0.160807785916206426725166058173438663 + 0.975363285031235646193581759755216379 i":
+float: 1
+ifloat: 1
+Test "Imaginary part of: ctan (0.75 + 1.25 i) == 0.160807785916206426725166058173438663 + 0.975363285031235646193581759755216379 i":
+float: 1
+ifloat: 1
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "Real part of: ctan (0x1p1023 + 1 i) == -0.2254627924997545057926782581695274244229 + 0.8786063118883068695462540226219865087189 i":
+double: 1
+idouble: 1
+Test "Real part of: ctan (0x1p127 + 1 i) == 0.2446359391192790896381501310437708987204 + 0.9101334047676183761532873794426475906201 i":
+float: 1
+ifloat: 1
+Test "Imaginary part of: ctan (0x1p127 + 1 i) == 0.2446359391192790896381501310437708987204 + 0.9101334047676183761532873794426475906201 i":
+float: 1
+ifloat: 1
+double: 1
+idouble: 1
+Test "Real part of: ctan (0x3.243f6cp-1 + 0 i) == -2.287733242885645987394874673945769518150e7 + 0.0 i":
+float: 1
+ifloat: 1
 
 # ctanh
 Test "Real part of: ctanh (-2 - 3 i) == -0.965385879022133124278480269394560686 + 0.988437503832249372031403430350121098e-2 i":
@@ -1068,14 +1096,43 @@ double: 1
 float: 2
 idouble: 1
 ifloat: 2
+Test "Imaginary part of: ctanh (-2 - 3 i) == -0.965385879022133124278480269394560686 + 0.988437503832249372031403430350121098e-2 i":
+double: 1
+idouble: 1
 Test "Imaginary part of: ctanh (0 + pi/4 i) == 0.0 + 1.0 i":
 float: 1
 ifloat: 1
+double: 1
+idouble: 1
 Test "Real part of: ctanh (0.75 + 1.25 i) == 1.37260757053378320258048606571226857 + 0.385795952609750664177596760720790220 i":
 double: 1
 idouble: 1
 ildouble: 1
-ldouble: 1
+ldouble: 3
+ildouble: 3
+Test "Imaginary part of: ctanh (0.75 + 1.25 i) == 1.37260757053378320258048606571226857 + 0.385795952609750664177596760720790220 i":
+float: 1
+ifloat: 1
+ldouble: 2
+ildouble: 2
+Test "Imaginary part of: ctanh (47 + 1 i) == 1.0 + 2.729321264492904590777293425576722354636e-41 i":
+ldouble: 2
+ildouble: 2
+Test "Imaginary part of: ctanh (0 + 0x3.243f6cp-1 i) == 0.0 - 2.287733242885645987394874673945769518150e7 i":
+float: 1
+ifloat: 1
+Test "Imaginary part of: ctanh (1 + 0x1p1023 i) == 0.8786063118883068695462540226219865087189 - 0.2254627924997545057926782581695274244229 i":
+double: 1
+idouble: 1
+Test "Real part of: ctanh (1 + 0x1p127 i) == 0.9101334047676183761532873794426475906201 + 0.2446359391192790896381501310437708987204 i":
+float: 1
+ifloat: 1
+double: 1
+idouble: 1
+Test "Imaginary part of: ctanh (1 + 0x1p127 i) == 0.9101334047676183761532873794426475906201 + 0.2446359391192790896381501310437708987204 i":
+float: 1
+ifloat: 1
+double: 1
 
 # erf
 Test "erf (1.25) == 0.922900128256458230136523481197281140":
@@ -2309,12 +2366,16 @@ ildouble: 1
 ldouble: 1
 
 Function: Real part of "ctan":
+float: 1
+ifloat: 1
 double: 1
 idouble: 1
-ildouble: 1
-ldouble: 1
+ildouble: 2
+ldouble: 2
 
 Function: Imaginary part of "ctan":
+float: 1
+ifloat: 1
 double: 1
 idouble: 1
 ildouble: 1
@@ -2325,14 +2386,16 @@ double: 1
 float: 2
 idouble: 1
 ifloat: 2
-ildouble: 1
-ldouble: 1
+ildouble: 3
+ldouble: 3
 
 Function: Imaginary part of "ctanh":
 float: 1
 ifloat: 1
-ildouble: 1
-ldouble: 1
+double: 1
+idouble: 1
+ildouble: 2
+ldouble: 2
 
 Function: "erf":
 double: 1
