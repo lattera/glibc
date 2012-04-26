@@ -1,5 +1,13 @@
 2012-04-26  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/unix/i386/brk.S: Remove file.
+	* sysdeps/unix/i386/dl-brk.S: Likewise.
+	* sysdeps/unix/i386/pipe.S: Likewise.
+	* sysdeps/unix/i386/sigreturn.S: Likewise.
+	* sysdeps/unix/i386/syscall.S: Likewise.
+	* sysdeps/unix/i386/vfork.S: Likewise.
+	* sysdeps/unix/i386/wait.S: Likewise.
+
 	* sysdeps/unix/common/tcsendbrk.c: Move to ...
 	* sysdeps/unix/sysv/linux/tcsendbrk.c: ... here.
 
