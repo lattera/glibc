@@ -1,3 +1,8 @@
+2012-04-26  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* sysdeps/m68k/libgcc_s.h: Remove.
+	* sysdeps/m68k/shlib-versions: Add libgcc_s.
+
 2012-04-18  Andreas Schwab  <schwab@linux-m68k.org>
 
 	* sysdeps/m68k/m680x0/fpu/libm-test-ulps: Update.
