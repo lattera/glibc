@@ -124,3 +124,7 @@ sparc64.*-.*-.*		libBrokenLocale=1	GLIBC_2.2
 
 # The asynchronous name lookup library.
 .*-.*-.*		libanl=1
+
+# This defines the libgcc soname version this glibc is to load for
+# asynchronous cancellation to work correctly.
+.*-.*-.*		libgcc_s=1

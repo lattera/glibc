@@ -1,3 +1,8 @@
+2012-04-26  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* sysdeps/pthread/unwind-forcedunwind.c: Include gnu/lib-names.h
+	instead of libgcc_s.h.
+
 2012-04-20  Paul Pluzhnikov  <ppluzhnikov@google.com>
 
 	* sysdeps/x86_64/tls.h (TLS_GET_FS, TLS_SET_FS): Delete.

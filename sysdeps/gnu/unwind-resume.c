@@ -1,4 +1,4 @@
-/* Copyright (C) 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2003-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jakub@redhat.com>.
 
@@ -19,7 +19,7 @@
 #include <dlfcn.h>
 #include <stdio.h>
 #include <unwind.h>
-#include <libgcc_s.h>
+#include <gnu/lib-names.h>
 
 static void (*libgcc_s_resume) (struct _Unwind_Exception *exc);
 static _Unwind_Reason_Code (*libgcc_s_personality)

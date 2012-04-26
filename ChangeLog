@@ -1,3 +1,12 @@
+2012-04-26  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* shlib-versions: Add libgcc_s version information.
+	* sysdeps/generic/libgcc_s.h: Remove.
+	* sysdeps/generic/framestate.c: Include gnu/lib-names.h instead of
+	libgcc_s.h.
+	* sysdeps/gnu/unwind-resume.c: Likewise.
+	* scripts/test-installation.pl: Remove libgcc_s from link_libs.
+
 2012-04-25  David S. Miller  <davem@davemloft.net>
 
 	* sysdeps/unix/sparc/brk.S: Delete.
