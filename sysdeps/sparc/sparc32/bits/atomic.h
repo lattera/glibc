@@ -21,7 +21,6 @@
 #define _BITS_ATOMIC_H	1
 
 #include <stdint.h>
-#include <sysdep.h>
 
 typedef int8_t atomic8_t;
 typedef uint8_t uatomic8_t;
@@ -231,6 +230,10 @@ volatile unsigned char __sparc32_atomic_locks[64]
        abort ();						      \
      __v7_exchange_24_rel (mem, newval); })
 
+# define atomic_full_barrier() __asm ("" ::: "memory")
+# define atomic_read_barrier() atomic_full_barrier ()
+# define atomic_write_barrier() atomic_full_barrier ()
+
 #else
 
 /* In libc.a/libpthread.a etc. we don't know if we'll be run on
@@ -319,6 +322,35 @@ extern uint64_t _dl_hwcap __attribute__((weak));
        __acev_w24ret = __v7_exchange_24_rel (mem, newval);	      \
      __acev_w24ret; })
 
+#define atomic_full_barrier()						\
+  do {									\
+     if (__atomic_is_v9)						\
+       /* membar #LoadLoad | #LoadStore | #StoreLoad | #StoreStore */	\
+       __asm __volatile (".word 0x8143e00f" : : : "memory");		\
+     else								\
+       __asm __volatile ("" : : : "memory");				\
+  } while (0)
+
+#define atomic_read_barrier()						\
+  do {									\
+     if (__atomic_is_v9)						\
+       /* membar #LoadLoad | #LoadStore */				\
+       __asm __volatile (".word 0x8143e005" : : : "memory");		\
+     else								\
+       __asm __volatile ("" : : : "memory");				\
+  } while (0)
+
+#define atomic_write_barrier()						\
+  do {									\
+     if (__atomic_is_v9)						\
+       /* membar  #StoreLoad | #StoreStore */				\
+       __asm __volatile (".word 0x8143e00a" : : : "memory");		\
+     else								\
+       __asm __volatile ("" : : : "memory");				\
+  } while (0)
+
 #endif
+
+#include <sysdep.h>
 
 #endif	/* bits/atomic.h */

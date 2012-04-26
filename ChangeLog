@@ -1,3 +1,11 @@
+2012-04-25  David S. Miller  <davem@davemloft.net>
+
+	* sysdeps/sparc/sparc32/bits/atomic.h: Include sysdep.h to get
+	HWCAP_* values only after the memory barriers have been defined.
+	(atomic_full_barrier): Define.
+	(atomic_read_barrier): Define.
+	(atomic_write_barrier): Define.
+
 2012-04-26  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* shlib-versions: Add libgcc_s version information.
