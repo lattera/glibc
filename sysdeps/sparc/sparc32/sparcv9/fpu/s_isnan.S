@@ -17,6 +17,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <sysdep.h>
+#include <math_ldbl_opt.h>
 
 ENTRY (__isnan)
 	sethi	%hi(0x7ff00000), %g1
@@ -30,3 +31,10 @@ ENTRY (__isnan)
 END (__isnan)
 hidden_def (__isnan)
 weak_alias (__isnan, isnan)
+
+#ifndef IS_IN_libm
+# if LONG_DOUBLE_COMPAT(libc, GLIBC_2_0)
+compat_symbol (libc, __isnan, __isnanl, GLIBC_2_0);
+compat_symbol (libc, isnan, isnanl, GLIBC_2_0);
+# endif
+#endif

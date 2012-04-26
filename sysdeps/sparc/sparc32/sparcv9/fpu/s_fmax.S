@@ -18,6 +18,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <sysdep.h>
+#include <math_ldbl_opt.h>
 
 #define SIGN_BIT	%f12			/* -0.0 */
 
@@ -38,3 +39,7 @@ ENTRY (__fmax)
 	 fandnot2 %f0, %f4, %f0
 END (__fmax)
 weak_alias (__fmax, fmax)
+
+#if LONG_DOUBLE_COMPAT(libm, GLIBC_2_1)
+compat_symbol (libm, __fmax, fmaxl, GLIBC_2_1);
+#endif

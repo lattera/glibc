@@ -1,3 +1,21 @@
+2012-04-26  David S. Miller  <davem@davemloft.net>
+
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_ceil.S: Generate
+	long-double compat symbols.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_floor.S: Likewise.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_fmax.S: Likewise.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_fmin.S: Likewise.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_llrint.S: Likewise.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_rint.S: Likewise.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/s_ceil.S: Likewise.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/s_floor.S: Likewise.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/s_fmax.S: Likewise.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/s_fmin.S: Likewise.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/s_isnan.S: Likewise.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/s_llrint.S: Likewise.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/s_lrint.S: Likewise.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/s_rint.S: Likewise.
+
 2012-04-25  David S. Miller  <davem@davemloft.net>
 
 	* sysdeps/sparc/sparc32/bits/atomic.h: Include sysdep.h to get

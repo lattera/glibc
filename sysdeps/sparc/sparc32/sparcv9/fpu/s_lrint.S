@@ -18,6 +18,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <sysdep.h>
+#include <math_ldbl_opt.h>
 
 	/* We pop constants into the FPU registers using the incoming
 	   argument stack slots, since this avoid having to use any PIC
@@ -65,3 +66,7 @@ ENTRY (__lrint)
 	 ld	[%sp + 72], %o0
 END (__lrint)
 weak_alias (__lrint, lrint)
+
+#if LONG_DOUBLE_COMPAT(libm, GLIBC_2_1)
+compat_symbol (libm, __lrint, lrintl, GLIBC_2_1)
+#endif

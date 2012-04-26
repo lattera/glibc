@@ -18,6 +18,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <sysdep.h>
+#include <math_ldbl_opt.h>
 
 	/* Since changing the rounding mode is extremely expensive, we
 	   try to round up using a method that is rounding mode
@@ -85,3 +86,7 @@ ENTRY (__floor)
 	 for	%f0, SIGN_BIT, %f0
 END (__floor)
 weak_alias (__floor, floor)
+
+#if LONG_DOUBLE_COMPAT(libm, GLIBC_2_0)
+compat_symbol (libm, __floor, floorl, GLIBC_2_0)
+#endif
