@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2002-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Hartvig Ekner <hartvige@mips.com>, 2002.
 
@@ -17,12 +17,11 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <sysdep.h>
-#include <endian.h>
 
 
 /* void *memset(void *s, int c, size_t n).  */
 
-#if __BYTE_ORDER == __BIG_ENDIAN
+#if __MIPSEB
 # define SWHI	swl		/* high part is left in big-endian	*/
 #else
 # define SWHI	swr		/* high part is right in little-endian	*/
