@@ -1,3 +1,8 @@
+2012-04-26  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/mips/kernel_rt_sigframe.h (struct
+	kernel_rt_sigframe): Use siginfo_t instead of struct siginfo.
+
 2012-04-24  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/mips/fork.S: Remove file.
