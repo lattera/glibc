@@ -1,5 +1,8 @@
 2012-04-26  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/unix/common/tcsendbrk.c: Move to ...
+	* sysdeps/unix/sysv/linux/tcsendbrk.c: ... here.
+
 	* configure.in (arm*-none*): Do not allow without
 	--enable-hacker-mode.
 	(netbsd*): Remove case setting base_os.
