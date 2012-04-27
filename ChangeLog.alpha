@@ -1,5 +1,10 @@
 2012-04-26  Matt Turner  <mattst88@gmail.com>
 
+	* sysdeps/unix/sysv/linux/alpha/bits/mman.h (MAP_STACK): Define.
+	(MAP_HUGETLB): Likewise.
+
+2012-04-26  Matt Turner  <mattst88@gmail.com>
+
 	* sysdeps/alpha/bits/mathdef.h: Remove __STDC__ conditionals.
 	* sysdeps/unix/alpha/sysdep.h: Likewise.
 	* sysdeps/unix/sysv/linux/alpha/sysdep.h: Likewise.

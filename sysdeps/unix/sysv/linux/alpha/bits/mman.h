@@ -1,6 +1,5 @@
 /* Definitions for POSIX memory map interface.  Linux/Alpha version.
-   Copyright (C) 1997, 1998, 2000, 2003, 2006, 2009
-   Free Software Foundation, Inc.
+   Copyright (C) 1997-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -71,6 +70,8 @@
 # define MAP_NORESERVE	  0x10000	/* Don't check for reservations.  */
 # define MAP_POPULATE	  0x20000	/* Populate (prefault) pagetables.  */
 # define MAP_NONBLOCK	  0x40000	/* Do not block on IO.  */
+# define MAP_STACK	  0x80000	/* Allocation is for a stack.  */
+# define MAP_HUGETLB	  0x100000	/* Create huge page mapping.  */
 #endif
 
 /* Flags to `msync'.  */
