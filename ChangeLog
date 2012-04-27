@@ -1,5 +1,10 @@
 2012-04-27  Joseph Myers  <joseph@codesourcery.com>
 
+	* README: Cut down references to pre-2.6 Linux kernels and
+	Linuxthreads.  Update lists of configurations in libc and ports
+	and sort alphabetically.  Say "or newer" with Linux kernel version
+	requirements.
+
 	* config.h.in [IS_IN_build]: Allow compiling without optimization.
 
 2012-04-27  Ryan S. Arnold  <rsa@linux.vnet.ibm.com>
