@@ -5127,7 +5127,7 @@ logb_test_downward (void)
          eliminates the use of fsub in this instance and prevents the negative
          signed 0.0.  */
 
-      /* BZ #887  .*/
+      /* BZ #887  */
       TEST_f_f (logb, 1.000e+0, plus_zero);
     }
 
