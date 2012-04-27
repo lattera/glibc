@@ -1,5 +1,4 @@
-/* Copyright (C) 1992, 1995, 1996, 2000, 2003, 2004, 2006, 2010, 2012
-   Free Software Foundation, Inc.
+/* Copyright (C) 1992-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Brendan Kehoe (brendan@zen.org).
 
@@ -32,11 +31,7 @@
 #endif
 
 
-#ifdef __STDC__
 #define __LABEL(x)	x##:
-#else
-#define __LABEL(x)	x/**/:
-#endif
 
 #define LEAF(name, framesize)			\
   .globl name;					\

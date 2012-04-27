@@ -1,5 +1,4 @@
-/* Copyright (C) 1992, 1993, 1995, 1996, 1997, 2002, 2003, 2004, 2007
-   Free Software Foundation, Inc.
+/* Copyright (C) 1992-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper, <drepper@gnu.ai.mit.edu>, August 1995.
 
@@ -35,11 +34,7 @@
    of the kernel.  But these symbols do not follow the SYS_* syntax
    so we have to redefine the `SYS_ify' macro here.  */
 #undef SYS_ify
-#ifdef __STDC__
-# define SYS_ify(syscall_name)	__NR_##syscall_name
-#else
-# define SYS_ify(syscall_name)	__NR_/**/syscall_name
-#endif
+#define SYS_ify(syscall_name)	__NR_##syscall_name
 
 /* Define some aliases to make automatic syscall generation work
    properly.  The SYS_* variants are for the benefit of the files in
