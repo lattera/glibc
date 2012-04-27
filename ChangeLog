@@ -1,3 +1,11 @@
+2012-04-27  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #14027]
+	* math/fclrexcpt.c (__feclearexcept): Return zero if nothing needs
+	to be done.
+	* math/fraiseexcpt.c (__feraiseexcept): Likewise.
+	* math/fsetexcptflg.c (__fesetexceptflag): Likewise.
+
 2012-04-26  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/i386/brk.S: Remove file.
