@@ -1,26 +1,21 @@
 2012-04-26  Matt Turner  <mattst88@gmail.com>
 
+	* sysdeps/unix/sysv/linux/alpha/kernel-features.h: Correct kernel
+	version needed to define __ASSUME_ACCEPT4.
+
 	* sysdeps/unix/sysv/linux/alpha/ioperm.c (process_cpuinfo): Use "c"
 	and "e" in fopen.
 
-2012-04-26  Matt Turner  <mattst88@gmail.com>
-
 	* sysdeps/unix/sysv/linux/alpha/bits/mman.h (MAP_STACK): Define.
 	(MAP_HUGETLB): Likewise.
-
-2012-04-26  Matt Turner  <mattst88@gmail.com>
 
 	* sysdeps/alpha/bits/mathdef.h: Remove __STDC__ conditionals.
 	* sysdeps/unix/alpha/sysdep.h: Likewise.
 	* sysdeps/unix/sysv/linux/alpha/sysdep.h: Likewise.
 
-2012-04-26  Matt Turner  <mattst88@gmail.com>
-
 	* sysdeps/alpha/fpu/bits/fenv.h: Use const instead of __const.
 	* sysdeps/unix/sysv/linux/alpha/oldglob.c: Likewise.
 	* sysdeps/unix/sysv/linux/alpha/sys/acct.h: Likewise.
-
-2012-04-26  Matt Turner  <mattst88@gmail.com>
 
 	* sysdeps/unix/sysv/linux/alpha/bits/fcntl.h (O_PATH): Define.
 
