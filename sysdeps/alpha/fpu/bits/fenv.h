@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1997-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -106,15 +106,15 @@ typedef unsigned long int fenv_t;
 /* If the default argument is used we use this value.  Note that due to
    architecture-specified page mappings, no user-space pointer will ever
    have its two high bits set.  Co-opt one.  */
-#define FE_DFL_ENV	((__const fenv_t *) 0x8800000000000000UL)
+#define FE_DFL_ENV	((const fenv_t *) 0x8800000000000000UL)
 
 #ifdef __USE_GNU
 /* Floating-point environment where none of the exceptions are masked.  */
-# define FE_NOMASK_ENV	((__const fenv_t *) 0x880000000000003eUL)
+# define FE_NOMASK_ENV	((const fenv_t *) 0x880000000000003eUL)
 
 /* Floating-point environment with (processor-dependent) non-IEEE floating
    point.  In this case, mapping denormals to zero.  */
-# define FE_NONIEEE_ENV ((__const fenv_t *) 0x8800000000003000UL)
+# define FE_NONIEEE_ENV ((const fenv_t *) 0x8800000000003000UL)
 #endif
 
 /* The system calls to talk to the kernel's FP code.  */

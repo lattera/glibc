@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 2000, 2004, 2005 Free Software Foundation, Inc.
+/* Copyright (C) 1998-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -36,9 +36,9 @@ typedef struct
        are used instead of the normal file access functions.  */
     void (*gl_closedir) (void *);
     struct dirent *(*gl_readdir) (void *);
-    __ptr_t (*gl_opendir) (__const char *);
-    int (*gl_lstat) (__const char *, struct stat *);
-    int (*gl_stat) (__const char *, struct stat *);
+    __ptr_t (*gl_opendir) (const char *);
+    int (*gl_lstat) (const char *, struct stat *);
+    int (*gl_stat) (const char *, struct stat *);
   } old_glob_t;
 
 
