@@ -1,3 +1,9 @@
+2012-04-27  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/mips/configure.in (arch_minimum_kernel):
+	Change to 2.6.12.
+	* sysdeps/unix/sysv/linux/mips/configure: Regenerated.
+
 2012-04-26  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/mips/brk.S: Remove file.
