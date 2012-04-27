@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1996-1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1992-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by David Mosberger.
 
@@ -496,7 +496,7 @@ process_cpuinfo(struct cpuinfo_data *data)
       return 1;
     }
 
-  fp = fopen (PATH_CPUINFO, "r");
+  fp = fopen (PATH_CPUINFO, "rce");
   if (!fp)
     return 0;
 

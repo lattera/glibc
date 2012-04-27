@@ -1,5 +1,10 @@
 2012-04-26  Matt Turner  <mattst88@gmail.com>
 
+	* sysdeps/unix/sysv/linux/alpha/ioperm.c (process_cpuinfo): Use "c"
+	and "e" in fopen.
+
+2012-04-26  Matt Turner  <mattst88@gmail.com>
+
 	* sysdeps/unix/sysv/linux/alpha/bits/mman.h (MAP_STACK): Define.
 	(MAP_HUGETLB): Likewise.
 
