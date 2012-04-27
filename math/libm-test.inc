@@ -5101,6 +5101,40 @@ logb_test (void)
   END (logb);
 }
 
+static void
+logb_test_downward (void)
+{
+  int save_round_mode;
+  errno = 0;
+
+  FUNC(logb) (0);
+  if (errno == ENOSYS)
+    /* Function not implemented.  */
+    return;
+
+  START (logb_downward);
+
+  save_round_mode = fegetround ();
+
+  if (!fesetround (FE_DOWNWARD))
+    {
+
+      /* IEEE 754-2008 says (section 5.3.3) that "logB(1) is +0.".  Libm
+         should not return -0 from logb in any rounding mode.  PowerPC32 has
+         failed with this test for power4 logb (and logbl on all PowerPC
+         platforms) in the past due to instruction selection.  GCC PR 52775
+         provides the availability of the fcfid insn in 32-bit mode which
+         eliminates the use of fsub in this instance and prevents the negative
+         signed 0.0.  */
+
+      /* BZ #887  .*/
+      TEST_f_f (logb, 1.000e+0, plus_zero);
+    }
+
+  fesetround (save_round_mode);
+
+  END (logb_downward);
+}
 
 static void
 lround_test (void)
@@ -8210,6 +8244,7 @@ main (int argc, char **argv)
   log1p_test ();
   log2_test ();
   logb_test ();
+  logb_test_downward ();
   modf_test ();
   ilogb_test ();
   scalb_test ();

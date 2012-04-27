@@ -1,3 +1,10 @@
+2012-04-27  Ryan S. Arnold  <rsa@linux.vnet.ibm.com>
+
+	[BZ #887]
+	* math/libm-test.inc (logb_test_downward): New test to expose
+	erroneous negative sign on -0.0 result of logb[l](1) in FE_DOWNWARD
+	rounding mode.
+
 2012-04-27  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #14027]
