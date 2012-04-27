@@ -1,4 +1,5 @@
-#if !defined __ASSEMBLER__ && !defined _ISOMAC && !defined __OPTIMIZE__
+#if !defined IS_IN_build && !defined __ASSEMBLER__ && !defined _ISOMAC \
+    && !defined __OPTIMIZE__
 # error "glibc cannot be compiled without optimization"
 #endif
 

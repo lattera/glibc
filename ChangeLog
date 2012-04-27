@@ -1,3 +1,7 @@
+2012-04-27  Joseph Myers  <joseph@codesourcery.com>
+
+	* config.h.in [IS_IN_build]: Allow compiling without optimization.
+
 2012-04-27  Ryan S. Arnold  <rsa@linux.vnet.ibm.com>
 
 	[BZ #887]
