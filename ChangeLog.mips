@@ -1,3 +1,9 @@
+2012-04-28  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/mips/mips64/memcpy.S: Don't include <endian.h>.  Test
+	__MIPSEB instead of __BYTE_ORDER.
+	* sysdeps/mips/mips64/memset.S: Likewise.
+
 2012-04-27  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/mips/configure.in (arch_minimum_kernel):

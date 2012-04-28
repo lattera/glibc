@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2002-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Hartvig Ekner <hartvige@mips.com>, 2002.
    Ported to mips3 n32/n64 by Alexandre Oliva <aoliva@redhat.com>
@@ -18,7 +18,6 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <sysdep.h>
-#include <endian.h>
 #include <sys/asm.h>
 
 
@@ -26,7 +25,7 @@
 	
    This could probably be optimized further.  */
 
-#if __BYTE_ORDER == __BIG_ENDIAN
+#if __MIPSEB
 # define SDHI	sdl		/* high part is left in big-endian	*/
 #else
 # define SDHI	sdr		/* high part is right in little-endian	*/
