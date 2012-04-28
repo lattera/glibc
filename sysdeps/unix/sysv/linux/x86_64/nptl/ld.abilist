@@ -1,0 +1,15 @@
+GLIBC_2.2.5
+ GLIBC_2.2.5 A
+ __libc_memalign F
+ __libc_stack_end D 0x8
+ _dl_mcount F
+ _r_debug D 0x28
+ calloc F
+ free F
+ malloc F
+ realloc F
+GLIBC_2.3
+ GLIBC_2.3 A
+ __tls_get_addr F
+GLIBC_2.4
+ GLIBC_2.4 A

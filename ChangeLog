@@ -1,3 +1,230 @@
+2012-04-28  David S. Miller  <davem@davemloft.net>
+
+	* Makerules (%.abilist): Add vpath on sysdep_dirs.
+	(check-abi-%): Remove AWK script prerequisite and explicit
+	abilist directory.
+	(check-abi): Rewrite to just diff the symlist with the abilist.
+	(config-tls, config-abi-config): Delete, no longer used.
+	(update-abi-%): Remove AWK script and explicit abilist directory.
+	(update-abi): Rewrite to simply compare and conditionally copy the
+	symlist and the sysdep abilist file.  Remove update-abi-config
+	checks.
+	* abilist/ld.abilist: Remove.
+	* abilist/libBrokenLocale.abilist: Remove.
+	* abilist/libanl.abilist: Remove.
+	* abilist/libcrypt.abilist: Remove.
+	* abilist/libdl.abilist: Remove.
+	* abilist/librt.abilist: Remove.
+	* abilist/libthread_db.abilist: Remove.
+	* abilist/libutil.abilist: Remove.
+	* scripts/extract-abilist.awk: Remove.
+	* scripts/merge-abilist.awk: Remove.
+	* sysdeps/generic/libcidn.abilist: New file.
+	* sysdeps/generic/libnss_compat.abilist: New file.
+	* sysdeps/generic/libnss_db.abilist: New file.
+	* sysdeps/generic/libnss_dns.abilist: New file.
+	* sysdeps/generic/libnss_files.abilist: New file.
+	* sysdeps/generic/libnss_hesiod.abilist: New file.
+	* sysdeps/generic/libnss_nis.abilist: New file.
+	* sysdeps/generic/libnss_nisplus.abilist: New file.
+	* sysdeps/unix/sysv/linux/i386/nptl/ld.abilist: New file.
+	* sysdeps/unix/sysv/linux/i386/nptl/libanl.abilist: New file.
+	* sysdeps/unix/sysv/linux/i386/nptl/libBrokenLocale.abilist: New
+	file.
+	* sysdeps/unix/sysv/linux/i386/nptl/libc.abilist: New file.
+	* sysdeps/unix/sysv/linux/i386/nptl/libcrypt.abilist: New file.
+	* sysdeps/unix/sysv/linux/i386/nptl/libdl.abilist: New file.
+	* sysdeps/unix/sysv/linux/i386/nptl/libm.abilist: New file.
+	* sysdeps/unix/sysv/linux/i386/nptl/libnsl.abilist: New file.
+	* sysdeps/unix/sysv/linux/i386/nptl/libpthread.abilist: New file.
+	* sysdeps/unix/sysv/linux/i386/nptl/libresolv.abilist: New file.
+	* sysdeps/unix/sysv/linux/i386/nptl/librt.abilist: New file.
+	* sysdeps/unix/sysv/linux/i386/nptl/libthread_db.abilist: New
+	file.
+	* sysdeps/unix/sysv/linux/i386/nptl/libutil.abilist: New file.
+	* sysdeps/unix/sysv/linux/x86_64/nptl/ld.abilist: New file.
+	* sysdeps/unix/sysv/linux/x86_64/nptl/libanl.abilist: New file.
+	* sysdeps/unix/sysv/linux/x86_64/nptl/libBrokenLocale.abilist: New
+	file.
+	* sysdeps/unix/sysv/linux/x86_64/nptl/libc.abilist: New file.
+	* sysdeps/unix/sysv/linux/x86_64/nptl/libcrypt.abilist: New file.
+	* sysdeps/unix/sysv/linux/x86_64/nptl/libdl.abilist: New file.
+	* sysdeps/unix/sysv/linux/x86_64/nptl/libm.abilist: New file.
+	* sysdeps/unix/sysv/linux/x86_64/nptl/libnsl.abilist: New file.
+	* sysdeps/unix/sysv/linux/x86_64/nptl/libpthread.abilist: New
+	file.
+	* sysdeps/unix/sysv/linux/x86_64/nptl/libresolv.abilist: New file.
+	* sysdeps/unix/sysv/linux/x86_64/nptl/librt.abilist: New file.
+	* sysdeps/unix/sysv/linux/x86_64/nptl/libthread_db.abilist: New
+	file.
+	* sysdeps/unix/sysv/linux/x86_64/nptl/libutil.abilist: New file.
+	* sysdeps/unix/sysv/linux/powerpc/powercp32/fpu/nptl/ld.abilist:
+	New file.
+	* sysdeps/unix/sysv/linux/powerpc/powercp32/fpu/nptl/libanl.abilist:
+	New file.
+	* sysdeps/unix/sysv/linux/powerpc/powercp32/fpu/nptl/libBrokenLocale.abilist:
+	New file.
+	* sysdeps/unix/sysv/linux/powerpc/powercp32/fpu/nptl/libc.abilist:
+	New file.
+	* sysdeps/unix/sysv/linux/powerpc/powercp32/fpu/nptl/libcrypt.abilist:
+	New file.
+	* sysdeps/unix/sysv/linux/powerpc/powercp32/fpu/nptl/libdl.abilist:
+	New file.
+	* sysdeps/unix/sysv/linux/powerpc/powercp32/fpu/nptl/libm.abilist:
+	New file.
+	* sysdeps/unix/sysv/linux/powerpc/powercp32/fpu/nptl/libnsl.abilist:
+	New file.
+	* sysdeps/unix/sysv/linux/powerpc/powercp32/fpu/nptl/libpthread.abilist:
+	New file.
+	* sysdeps/unix/sysv/linux/powerpc/powercp32/fpu/nptl/libresolv.abilist:
+	New file.
+	* sysdeps/unix/sysv/linux/powerpc/powercp32/fpu/nptl/librt.abilist:
+	New file.
+	* sysdeps/unix/sysv/linux/powerpc/powercp32/fpu/nptl/libthread_db.abilist:
+	New file.
+	* sysdeps/unix/sysv/linux/powerpc/powercp32/fpu/nptl/libutil.abilist:
+	New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/nptl/ld.abilist: New
+	file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/nptl/libanl.abilist:
+	New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/nptl/libBrokenLocale.abilist:
+	New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/nptl/libc.abilist: New
+	file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/nptl/libcrypt.abilist:
+	New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/nptl/libdl.abilist:
+	New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/nptl/libm.abilist: New
+	file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/nptl/libnsl.abilist:
+	New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/nptl/libpthread.abilist:
+	New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/nptl/libresolv.abilist:
+	New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/nptl/librt.abilist:
+	New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/nptl/libthread_db.abilist:
+	New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/nptl/libutil.abilist:
+	New file.
+	* sysdeps/unix/sysv/linux/s390/s390-32/nptl/ld.abilist: New file.
+	* sysdeps/unix/sysv/linux/s390/s390-32/nptl/libanl.abilist: New
+	file.
+	* sysdeps/unix/sysv/linux/s390/s390-32/nptl/libBrokenLocale.abilist:
+	New file.
+	* sysdeps/unix/sysv/linux/s390/s390-32/nptl/libc.abilist: New
+	file.
+	* sysdeps/unix/sysv/linux/s390/s390-32/nptl/libcrypt.abilist: New
+	file.
+	* sysdeps/unix/sysv/linux/s390/s390-32/nptl/libdl.abilist: New
+	file.
+	* sysdeps/unix/sysv/linux/s390/s390-32/nptl/libm.abilist: New
+	file.
+	* sysdeps/unix/sysv/linux/s390/s390-32/nptl/libnsl.abilist: New
+	file.
+	* sysdeps/unix/sysv/linux/s390/s390-32/nptl/libpthread.abilist:
+	New file.
+	* sysdeps/unix/sysv/linux/s390/s390-32/nptl/libresolv.abilist: New
+	file.
+	* sysdeps/unix/sysv/linux/s390/s390-32/nptl/librt.abilist: New
+	file.
+	* sysdeps/unix/sysv/linux/s390/s390-32/nptl/libthread_db.abilist:
+	New file.
+	* sysdeps/unix/sysv/linux/s390/s390-32/nptl/libutil.abilist: New
+	file.
+	* sysdeps/unix/sysv/linux/s390/s390-64/nptl/ld.abilist: New file.
+	* sysdeps/unix/sysv/linux/s390/s390-64/nptl/libanl.abilist: New
+	file.
+	* sysdeps/unix/sysv/linux/s390/s390-64/nptl/libBrokenLocale.abilist:
+	New file.
+	* sysdeps/unix/sysv/linux/s390/s390-64/nptl/libc.abilist: New
+	file.
+	* sysdeps/unix/sysv/linux/s390/s390-64/nptl/libcrypt.abilist: New
+	file.
+	* sysdeps/unix/sysv/linux/s390/s390-64/nptl/libdl.abilist: New
+	file.
+	* sysdeps/unix/sysv/linux/s390/s390-64/nptl/libm.abilist: New
+	file.
+	* sysdeps/unix/sysv/linux/s390/s390-64/nptl/libnsl.abilist: New
+	file.
+	* sysdeps/unix/sysv/linux/s390/s390-64/nptl/libpthread.abilist:
+	New file.
+	* sysdeps/unix/sysv/linux/s390/s390-64/nptl/libresolv.abilist: New
+	file.
+	* sysdeps/unix/sysv/linux/s390/s390-64/nptl/librt.abilist: New
+	file.
+	* sysdeps/unix/sysv/linux/s390/s390-64/nptl/libthread_db.abilist:
+	New file.
+	* sysdeps/unix/sysv/linux/s390/s390-64/nptl/libutil.abilist: New
+	file.
+	* sysdeps/unix/sysv/linux/sh/nptl/ld.abilist: New file.
+	* sysdeps/unix/sysv/linux/sh/nptl/libanl.abilist: New file.
+	* sysdeps/unix/sysv/linux/sh/nptl/libBrokenLocale.abilist: New
+	file.
+	* sysdeps/unix/sysv/linux/sh/nptl/libc.abilist: New file.
+	* sysdeps/unix/sysv/linux/sh/nptl/libcrypt.abilist: New file.
+	* sysdeps/unix/sysv/linux/sh/nptl/libdl.abilist: New file.
+	* sysdeps/unix/sysv/linux/sh/nptl/libm.abilist: New file.
+	* sysdeps/unix/sysv/linux/sh/nptl/libnsl.abilist: New file.
+	* sysdeps/unix/sysv/linux/sh/nptl/libpthread.abilist: New file.
+	* sysdeps/unix/sysv/linux/sh/nptl/libresolv.abilist: New file.
+	* sysdeps/unix/sysv/linux/sh/nptl/librt.abilist: New file.
+	* sysdeps/unix/sysv/linux/sh/nptl/libthread_db.abilist: New file.
+	* sysdeps/unix/sysv/linux/sh/nptl/libutil.abilist: New file.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/nptl/ld.abilist: New file.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/nptl/libanl.abilist: New
+	file.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/nptl/libBrokenLocale.abilist:
+	New file.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/nptl/libc.abilist: New
+	file.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/nptl/libcrypt.abilist: New
+	file.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/nptl/libdl.abilist: New
+	file.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/nptl/libm.abilist: New
+	file.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/nptl/libnsl.abilist: New
+	file.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/nptl/libpthread.abilist:
+	New file.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/nptl/libresolv.abilist:
+	New file.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/nptl/librt.abilist: New
+	file.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/nptl/libthread_db.abilist:
+	New file.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/nptl/libutil.abilist: New
+	file.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/nptl/ld.abilist: New file.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/nptl/libanl.abilist: New
+	file.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/nptl/libBrokenLocale.abilist:
+	New file.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/nptl/libc.abilist: New
+	file.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/nptl/libcrypt.abilist: New
+	file.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/nptl/libdl.abilist: New
+	file.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/nptl/libm.abilist: New
+	file.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/nptl/libnsl.abilist: New
+	file.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/nptl/libpthread.abilist:
+	New file.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/nptl/libresolv.abilist:
+	New file.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/nptl/librt.abilist: New
+	file.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/nptl/libthread_db.abilist:
+	New file.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/nptl/libutil.abilist: New
+	file.
+
 2012-04-28  Joseph Myers  <joseph@codesourcery.com>
 
 	* conform/conformtest.pl: Fix typo in handling typed-constant from

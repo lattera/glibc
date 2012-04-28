@@ -1156,51 +1156,31 @@ ifeq ($(versioning),yes)
 	$(OBJDUMP) --dynamic-syms $< > $@T
 	mv -f $@T $@
 
-check-abi-%: $(..)scripts/extract-abilist.awk $(common-objpfx)config.make \
-	     $(..)abilist/%.abilist $(objpfx)%.symlist
+vpath %.abilist $(+sysdep_dirs)
+
+check-abi-%: $(common-objpfx)config.make %.abilist $(objpfx)%.symlist
 	$(check-abi)
-check-abi-%: $(..)scripts/extract-abilist.awk $(common-objpfx)config.make \
-	     $(..)abilist/%.abilist $(common-objpfx)%.symlist
+check-abi-%: $(common-objpfx)config.make %.abilist $(common-objpfx)%.symlist
 	$(check-abi)
 define check-abi
-	LC_ALL=C \
-	$(AWK) -f $< -v 'config=$(check-abi-config)' \
-	       $(patsubst %,-v 'lastversion=%',$($*-abi-frozen)) \
-	       $(filter %.abilist,$^) \
-	| { diff -p -U 0 - $(filter %.symlist,$^) $(check-abi-warn) ; }
+	diff -p -U 0 $(filter %.abilist,$^) $(filter %.symlist,$^) $(check-abi-warn)
 endef
 ifeq ($(enable-check-abi),warn)
 check-abi-warn = || echo '*** WARNING: $*.so failed ABI check'
 endif
 
-ifeq ($(firstword $(sysd-sorted-done) f)$(firstword $(generating) f),tf)
-config-tls := thread
-check-abi-config := \
-  $(config-machine)-$(config-vendor)-$(config-os)/$(config-tls)
-endif
-
-update-abi-%: $(..)scripts/merge-abilist.awk $(..)abilist/%.abilist \
-	      $(objpfx)%.symlist
+update-abi-%: $(objpfx)%.symlist %.abilist
 	$(update-abi)
-update-abi-%: $(..)scripts/merge-abilist.awk $(..)abilist/%.abilist \
-	      $(common-objpfx)%.symlist
+update-abi-%: $(common-objpfx)%.symlist %.abilist
 	$(update-abi)
-ifndef update-abi-config
 define update-abi
-	@echo 'Run $(MAKE) $@ update-abi-config=REGEXP'; exit 2
-endef
-else
-define update-abi
-LC_ALL=C $(AWK) -v config='$(update-abi-config)' -f $^ \
-	 > $(..)abilist/$*.abilist.new
-@if cmp -s $(..)abilist/$*.abilist.new $(..)abilist/$*.abilist 2> /dev/null; \
- then rm -f $(..)abilist/$*.abilist.new; \
-      echo '+++ $(..)abilist/$*.abilist is unchanged'; \
- else mv -f $(..)abilist/$*.abilist.new $(..)abilist/$*.abilist; \
-      echo '*** Now check $*.abilist changes for correctness ***'; \
+@if cmp -s $^ 2> /dev/null; \
+ then \
+      echo '+++ $(filter %.abilist,$^) is unchanged'; \
+ else cp -f $^; \
+      echo '*** Now check $(filter %.abilist,$^) changes for correctness ***'; \
  fi
 endef
-endif
 
 .PHONY: update-abi check-abi
 update-abi: $(patsubst %.so,update-abi-%,$(install-lib.so-versioned))

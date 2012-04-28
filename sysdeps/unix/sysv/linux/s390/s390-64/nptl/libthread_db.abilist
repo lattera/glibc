@@ -1,0 +1,48 @@
+GLIBC_2.2
+ GLIBC_2.2 A
+ td_init F
+ td_log F
+ td_ta_clear_event F
+ td_ta_delete F
+ td_ta_enable_stats F
+ td_ta_event_addr F
+ td_ta_event_getmsg F
+ td_ta_get_nthreads F
+ td_ta_get_ph F
+ td_ta_get_stats F
+ td_ta_map_id2thr F
+ td_ta_map_lwp2thr F
+ td_ta_new F
+ td_ta_reset_stats F
+ td_ta_set_event F
+ td_ta_setconcurrency F
+ td_ta_thr_iter F
+ td_ta_tsd_iter F
+ td_thr_clear_event F
+ td_thr_dbresume F
+ td_thr_dbsuspend F
+ td_thr_event_enable F
+ td_thr_event_getmsg F
+ td_thr_get_info F
+ td_thr_getfpregs F
+ td_thr_getgregs F
+ td_thr_getxregs F
+ td_thr_getxregsize F
+ td_thr_set_event F
+ td_thr_setfpregs F
+ td_thr_setgregs F
+ td_thr_setprio F
+ td_thr_setsigpending F
+ td_thr_setxregs F
+ td_thr_sigsetmask F
+ td_thr_tsd F
+ td_thr_validate F
+GLIBC_2.2.3
+ GLIBC_2.2.3 A
+ td_symbol_list F
+GLIBC_2.3
+ GLIBC_2.3 A
+ td_thr_tls_get_addr F
+GLIBC_2.3.3
+ GLIBC_2.3.3 A
+ td_thr_tlsbase F

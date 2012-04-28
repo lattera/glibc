@@ -1,0 +1,15 @@
+GLIBC_2.2.5
+ GLIBC_2.2.5 A
+ dladdr F
+ dlclose F
+ dlerror F
+ dlopen F
+ dlsym F
+ dlvsym F
+GLIBC_2.3.3
+ GLIBC_2.3.3 A
+ dladdr1 F
+ dlinfo F
+GLIBC_2.3.4
+ GLIBC_2.3.4 A
+ dlmopen F
