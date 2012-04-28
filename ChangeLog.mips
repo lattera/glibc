@@ -1,5 +1,64 @@
 2012-04-28  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/unix/sysv/linux/mips/mips32/nptl/ld.abilist: New file.
+	* sysdeps/unix/sysv/linux/mips/mips32/nptl/libBrokenLocale.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/nptl/libanl.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/nptl/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/nptl/libcrypt.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/nptl/libdl.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/nptl/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/nptl/libnsl.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/nptl/libpthread.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/nptl/libresolv.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/nptl/librt.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/nptl/libthread_db.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/nptl/libutil.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n32/nptl/ld.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n32/nptl/libBrokenLocale.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n32/nptl/libanl.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n32/nptl/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n32/nptl/libcrypt.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n32/nptl/libdl.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n32/nptl/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n32/nptl/libnsl.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n32/nptl/libpthread.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n32/nptl/libresolv.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n32/nptl/librt.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n32/nptl/libthread_db.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n32/nptl/libutil.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n64/nptl/ld.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n64/nptl/libBrokenLocale.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n64/nptl/libanl.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n64/nptl/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n64/nptl/libcrypt.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n64/nptl/libdl.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n64/nptl/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n64/nptl/libnsl.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n64/nptl/libpthread.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n64/nptl/libresolv.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n64/nptl/librt.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n64/nptl/libthread_db.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n64/nptl/libutil.abilist:
+	Likewise.
+
 	* sysdeps/mips/mips64/memcpy.S: Don't include <endian.h>.  Test
 	__MIPSEB instead of __BYTE_ORDER.
 	* sysdeps/mips/mips64/memset.S: Likewise.
