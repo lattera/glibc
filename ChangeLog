@@ -1,3 +1,8 @@
+2012-04-28  Joseph Myers  <joseph@codesourcery.com>
+
+	* conform/conformtest.pl: Remove duplicate typed-constant
+	handling.
+
 2012-04-28  David S. Miller  <davem@davemloft.net>
 
 	* Makerules (%.abilist): Add vpath on sysdep_dirs.
