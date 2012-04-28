@@ -1,3 +1,8 @@
+2012-04-28  Joseph Myers  <joseph@codesourcery.com>
+
+	* conform/conformtest.pl: Fix typo in handling typed-constant from
+	allow-header.
+
 2012-04-27  Joseph Myers  <joseph@codesourcery.com>
 
 	* README: Cut down references to pre-2.6 Linux kernels and
