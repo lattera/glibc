@@ -1,3 +1,21 @@
+2012-04-28  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #13986]
+	* sysdeps/unix/sysv/linux/arm/nptl/ld.abilist: New file.
+	* sysdeps/unix/sysv/linux/arm/nptl/libBrokenLocale.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/arm/nptl/libanl.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/arm/nptl/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/arm/nptl/libcrypt.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/arm/nptl/libdl.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/arm/nptl/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/arm/nptl/libnsl.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/arm/nptl/libpthread.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/arm/nptl/libresolv.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/arm/nptl/librt.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/arm/nptl/libthread_db.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/arm/nptl/libutil.abilist: Likewise.
+
 2012-04-26  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/arm/brk.S: Remove file.
