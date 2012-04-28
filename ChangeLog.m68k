@@ -1,3 +1,52 @@
+2012-04-28  Andreas Schwab  <schwab@linux-m68k.org>
+
+	* sysdeps/unix/sysv/linux/m68k/coldfire/nptl/ld.abilist: New file.
+	* sysdeps/unix/sysv/linux/m68k/coldfire/nptl/libBrokenLocale.abilist:
+	* sysdeps/unix/sysv/linux/m68k/coldfire/nptl/libanl.abilist: New
+	file.
+	* sysdeps/unix/sysv/linux/m68k/coldfire/nptl/libc.abilist: New
+	file.
+	* sysdeps/unix/sysv/linux/m68k/coldfire/nptl/libcrypt.abilist: New
+	file.
+	* sysdeps/unix/sysv/linux/m68k/coldfire/nptl/libdl.abilist: New
+	file.
+	* sysdeps/unix/sysv/linux/m68k/coldfire/nptl/libm.abilist: New
+	file.
+	* sysdeps/unix/sysv/linux/m68k/coldfire/nptl/libnsl.abilist: New
+	file.
+	* sysdeps/unix/sysv/linux/m68k/coldfire/nptl/libpthread.abilist:
+	New file.
+	* sysdeps/unix/sysv/linux/m68k/coldfire/nptl/libresolv.abilist:
+	New file.
+	* sysdeps/unix/sysv/linux/m68k/coldfire/nptl/librt.abilist: New
+	file.
+	* sysdeps/unix/sysv/linux/m68k/coldfire/nptl/libthread_db.abilist:
+	New file.
+	* sysdeps/unix/sysv/linux/m68k/coldfire/nptl/libutil.abilist: New
+	file.
+	* sysdeps/unix/sysv/linux/m68k/m680x0/nptl/ld.abilist: New file.
+	* sysdeps/unix/sysv/linux/m68k/m680x0/nptl/libBrokenLocale.abilist:
+	* sysdeps/unix/sysv/linux/m68k/m680x0/nptl/libanl.abilist: New
+	file.
+	* sysdeps/unix/sysv/linux/m68k/m680x0/nptl/libc.abilist: New file.
+	* sysdeps/unix/sysv/linux/m68k/m680x0/nptl/libcrypt.abilist: New
+	file.
+	* sysdeps/unix/sysv/linux/m68k/m680x0/nptl/libdl.abilist: New
+	file.
+	* sysdeps/unix/sysv/linux/m68k/m680x0/nptl/libm.abilist: New file.
+	* sysdeps/unix/sysv/linux/m68k/m680x0/nptl/libnsl.abilist: New
+	file.
+	* sysdeps/unix/sysv/linux/m68k/m680x0/nptl/libpthread.abilist: New
+	file.
+	* sysdeps/unix/sysv/linux/m68k/m680x0/nptl/libresolv.abilist: New
+	file.
+	* sysdeps/unix/sysv/linux/m68k/m680x0/nptl/librt.abilist: New
+	file.
+	* sysdeps/unix/sysv/linux/m68k/m680x0/nptl/libthread_db.abilist:
+	New file.
+	* sysdeps/unix/sysv/linux/m68k/m680x0/nptl/libutil.abilist: New
+	file.
+
 2012-04-26  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* sysdeps/m68k/libgcc_s.h: Remove.
