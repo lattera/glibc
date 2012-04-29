@@ -44,21 +44,21 @@ __warndecl (__warn_memset_zero_len,
 #endif
 
 
-__extern_always_inline void *
+__fortify_function void *
 __NTH (memcpy (void *__restrict __dest, const void *__restrict __src,
 	       size_t __len))
 {
   return __builtin___memcpy_chk (__dest, __src, __len, __bos0 (__dest));
 }
 
-__extern_always_inline void *
+__fortify_function void *
 __NTH (memmove (void *__dest, const void *__src, size_t __len))
 {
   return __builtin___memmove_chk (__dest, __src, __len, __bos0 (__dest));
 }
 
 #ifdef __USE_GNU
-__extern_always_inline void *
+__fortify_function void *
 __NTH (mempcpy (void *__restrict __dest, const void *__restrict __src,
 		size_t __len))
 {
@@ -72,7 +72,7 @@ __NTH (mempcpy (void *__restrict __dest, const void *__restrict __src,
    especially problematic if the intended fill value is zero.  In this
    case no work is done at all.  We detect these problems by referring
    non-existing functions.  */
-__extern_always_inline void *
+__fortify_function void *
 __NTH (memset (void *__dest, int __ch, size_t __len))
 {
   if (__builtin_constant_p (__len) && __len == 0
@@ -85,27 +85,27 @@ __NTH (memset (void *__dest, int __ch, size_t __len))
 }
 
 #ifdef __USE_BSD
-__extern_always_inline void
+__fortify_function void
 __NTH (bcopy (const void *__src, void *__dest, size_t __len))
 {
   (void) __builtin___memmove_chk (__dest, __src, __len, __bos0 (__dest));
 }
 
-__extern_always_inline void
+__fortify_function void
 __NTH (bzero (void *__dest, size_t __len))
 {
   (void) __builtin___memset_chk (__dest, '\0', __len, __bos0 (__dest));
 }
 #endif
 
-__extern_always_inline char *
+__fortify_function char *
 __NTH (strcpy (char *__restrict __dest, const char *__restrict __src))
 {
   return __builtin___strcpy_chk (__dest, __src, __bos (__dest));
 }
 
 #ifdef __USE_GNU
-__extern_always_inline char *
+__fortify_function char *
 __NTH (stpcpy (char *__restrict __dest, const char *__restrict __src))
 {
   return __builtin___stpcpy_chk (__dest, __src, __bos (__dest));
@@ -113,7 +113,7 @@ __NTH (stpcpy (char *__restrict __dest, const char *__restrict __src))
 #endif
 
 
-__extern_always_inline char *
+__fortify_function char *
 __NTH (strncpy (char *__restrict __dest, const char *__restrict __src,
 		size_t __len))
 {
@@ -126,7 +126,7 @@ extern char *__stpncpy_chk (char *__dest, const char *__src, size_t __n,
 extern char *__REDIRECT_NTH (__stpncpy_alias, (char *__dest, const char *__src,
 					       size_t __n), stpncpy);
 
-__extern_always_inline char *
+__fortify_function char *
 __NTH (stpncpy (char *__dest, const char *__src, size_t __n))
 {
   if (__bos (__dest) != (size_t) -1
@@ -136,14 +136,14 @@ __NTH (stpncpy (char *__dest, const char *__src, size_t __n))
 }
 
 
-__extern_always_inline char *
+__fortify_function char *
 __NTH (strcat (char *__restrict __dest, const char *__restrict __src))
 {
   return __builtin___strcat_chk (__dest, __src, __bos (__dest));
 }
 
 
-__extern_always_inline char *
+__fortify_function char *
 __NTH (strncat (char *__restrict __dest, const char *__restrict __src,
 		size_t __len))
 {

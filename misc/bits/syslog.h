@@ -25,7 +25,7 @@ extern void __syslog_chk (int __pri, int __flag, const char *__fmt, ...)
      __attribute__ ((__format__ (__printf__, 3, 4)));
 
 #ifdef __va_arg_pack
-__extern_always_inline void
+__fortify_function void
 syslog (int __pri, const char *__fmt, ...)
 {
   __syslog_chk (__pri, __USE_FORTIFY_LEVEL - 1, __fmt, __va_arg_pack ());
@@ -41,7 +41,7 @@ extern void __vsyslog_chk (int __pri, int __flag, const char *__fmt,
 			   __gnuc_va_list __ap)
      __attribute__ ((__format__ (__printf__, 3, 0)));
 
-__extern_always_inline void
+__fortify_function void
 vsyslog (int __pri, const char *__fmt, __gnuc_va_list __ap)
 {
   __vsyslog_chk (__pri,  __USE_FORTIFY_LEVEL - 1, __fmt, __ap);

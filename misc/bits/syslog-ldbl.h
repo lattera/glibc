@@ -1,5 +1,5 @@
 /* -mlong-double-64 compatibility mode for syslog functions.
-   Copyright (C) 2006 Free Software Foundation, Inc.
+   Copyright (C) 2006-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -26,7 +26,7 @@ __LDBL_REDIR_DECL (syslog)
 __LDBL_REDIR_DECL (vsyslog)
 #endif
 
-#if __USE_FORTIFY_LEVEL > 0 && defined __extern_always_inline
+#if __USE_FORTIFY_LEVEL > 0 && defined __fortify_function
 __LDBL_REDIR_DECL (__syslog_chk)
 
 # ifdef __USE_BSD

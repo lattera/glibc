@@ -148,7 +148,7 @@ do_test (void)
 #endif
 	  );
 
-#if defined __USE_FORTIFY_LEVEL && !defined __extern_always_inline
+#if defined __USE_FORTIFY_LEVEL && !defined __fortify_function
   printf ("Test skipped");
   if (l0 == 0)
     return 0;

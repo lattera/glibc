@@ -33,7 +33,7 @@ extern char *__REDIRECT_NTH (__realpath_chk_warn,
      __warnattr ("second argument of realpath must be either NULL or at "
 		 "least PATH_MAX bytes long buffer");
 
-__extern_always_inline __wur char *
+__fortify_function __wur char *
 __NTH (realpath (const char *__restrict __name, char *__restrict __resolved))
 {
   if (__bos (__resolved) != (size_t) -1)
@@ -60,7 +60,7 @@ extern int __REDIRECT_NTH (__ptsname_r_chk_warn,
      __nonnull ((2)) __warnattr ("ptsname_r called with buflen bigger than "
 				 "size of buf");
 
-__extern_always_inline int
+__fortify_function int
 __NTH (ptsname_r (int __fd, char *__buf, size_t __buflen))
 {
   if (__bos (__buf) != (size_t) -1)
@@ -79,7 +79,7 @@ extern int __wctomb_chk (char *__s, wchar_t __wchar, size_t __buflen)
 extern int __REDIRECT_NTH (__wctomb_alias, (char *__s, wchar_t __wchar),
 			   wctomb) __wur;
 
-__extern_always_inline __wur int
+__fortify_function __wur int
 __NTH (wctomb (char *__s, wchar_t __wchar))
 {
   /* We would have to include <limits.h> to get a definition of MB_LEN_MAX.
@@ -109,7 +109,7 @@ extern size_t __REDIRECT_NTH (__mbstowcs_chk_warn,
      __warnattr ("mbstowcs called with dst buffer smaller than len "
 		 "* sizeof (wchar_t)");
 
-__extern_always_inline size_t
+__fortify_function size_t
 __NTH (mbstowcs (wchar_t *__restrict __dst, const char *__restrict __src,
 		 size_t __len))
 {
@@ -140,7 +140,7 @@ extern size_t __REDIRECT_NTH (__wcstombs_chk_warn,
 			       size_t __len, size_t __dstlen), __wcstombs_chk)
      __warnattr ("wcstombs called with dst buffer smaller than len");
 
-__extern_always_inline size_t
+__fortify_function size_t
 __NTH (wcstombs (char *__restrict __dst, const wchar_t *__restrict __src,
 		 size_t __len))
 {

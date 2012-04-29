@@ -1,5 +1,5 @@
 /* -mlong-double-64 compatibility mode for <wchar.h> functions.
-   Copyright (C) 2006, 2007 Free Software Foundation, Inc.
+   Copyright (C) 2006-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -32,7 +32,7 @@ __LDBL_REDIR_DECL (vswprintf);
      && !defined __REDIRECT \
      && (defined __STRICT_ANSI__ || defined __USE_XOPEN2K)
 __LDBL_REDIR1_DECL (fwscanf, __nldbl___isoc99_fwscanf)
-__LDBL_REDIR1_DECL (wscanf, __nldbl___isoc99_wscanf)  
+__LDBL_REDIR1_DECL (wscanf, __nldbl___isoc99_wscanf)
 __LDBL_REDIR1_DECL (swscanf, __nldbl___isoc99_swscanf)
 # else
 __LDBL_REDIR_DECL (fwscanf);
@@ -48,7 +48,7 @@ __LDBL_REDIR1_DECL (wcstold, wcstod);
 # if !defined __USE_GNU && !defined __REDIRECT \
      && (defined __STRICT_ANSI__ || defined __USE_XOPEN2K)
 __LDBL_REDIR1_DECL (vfwscanf, __nldbl___isoc99_vfwscanf)
-__LDBL_REDIR1_DECL (vwscanf, __nldbl___isoc99_vwscanf)  
+__LDBL_REDIR1_DECL (vwscanf, __nldbl___isoc99_vwscanf)
 __LDBL_REDIR1_DECL (vswscanf, __nldbl___isoc99_vswscanf)
 # else
 __LDBL_REDIR_DECL (vfwscanf);
@@ -62,7 +62,7 @@ __END_NAMESPACE_C99
 __LDBL_REDIR1_DECL (wcstold_l, wcstod_l);
 #endif
 
-#if __USE_FORTIFY_LEVEL > 0 && defined __extern_always_inline
+#if __USE_FORTIFY_LEVEL > 0 && defined __fortify_function
 __LDBL_REDIR_DECL (__swprintf_chk)
 __LDBL_REDIR_DECL (__vswprintf_chk)
 # if __USE_FORTIFY_LEVEL > 1

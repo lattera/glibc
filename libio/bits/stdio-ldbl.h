@@ -75,7 +75,7 @@ __LDBL_REDIR_DECL (obstack_printf)
 __LDBL_REDIR_DECL (obstack_vprintf)
 #endif
 
-#if __USE_FORTIFY_LEVEL > 0 && defined __extern_always_inline
+#if __USE_FORTIFY_LEVEL > 0 && defined __fortify_function
 __LDBL_REDIR_DECL (__sprintf_chk)
 __LDBL_REDIR_DECL (__vsprintf_chk)
 # if defined __USE_BSD || defined __USE_ISOC99 || defined __USE_UNIX98

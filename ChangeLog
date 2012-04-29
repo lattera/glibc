@@ -1,3 +1,35 @@
+2012-04-29  Marek Polacek  <polacek@redhat.com>
+
+	* misc/sys/cdefs.h (__attribute_artificial__): New macro.
+	(__fortify_function): New macro.
+	(__extern_always_inline): Don't use __attribute__ ((__artificial__)).
+	* libio/bits/stdio-ldbl.h: Use __fortify_function in place of
+	__extern_always_inline.
+	* libio/bits/stdio2.h: Likewise.
+	* libio/bits/stdio.h: Likewise.
+	* string/string.h: Likewise.
+	* string/bits/string3.h: Likewise.
+	* include/stdio.h: Likewise.
+	* stdlib/bits/stdlib.h: Likewise.
+	* stdlib/stdlib.h: Likewise.
+	* rt/bits/mqueue2.h: Likewise.
+	* rt/mqueue.h: Likewise.
+	* posix/bits/unistd.h: Likewise.
+	* posix/unistd.h: Likewise.
+	* io/bits/poll2.h: Likewise.
+	* io/bits/fcntl2.h: Likewise.
+	* io/fcntl.h: Likewise.
+	* io/sys/poll.h: Likewise.
+	* misc/bits/syslog.h: Likewise.
+	* misc/bits/syslog-ldbl.h: Likewise.
+	* misc/sys/syslog.h: Likewise.
+	* socket/bits/socket2.h: Likewise.
+	* socket/sys/socket.h: Likewise.
+	* debug/tst-chk1.c: Likewise.
+	* wcsmbs/bits/wchar2.h: Likewise.
+	* wcsmbs/bits/wchar-ldbl.h: Likewise.
+	* wcsmbs/wchar.h: Likewise.
+
 2012-04-29  Andreas Jaeger  <aj@suse.de>
 
 	* Makerules (tests): Remove enable-check-abi protection.

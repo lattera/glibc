@@ -32,7 +32,7 @@ extern int __REDIRECT (__poll_chk_warn, (struct pollfd *__fds, nfds_t __nfds,
 		       __poll_chk)
   __warnattr ("poll called with fds buffer too small file nfds entries");
 
-__extern_always_inline int
+__fortify_function int
 poll (struct pollfd *__fds, nfds_t __nfds, int __timeout)
 {
   if (__bos (__fds) != (__SIZE_TYPE__) -1)
@@ -61,7 +61,7 @@ extern int __REDIRECT (__ppoll_chk_warn, (struct pollfd *__fds, nfds_t __nfds,
 		       __ppoll_chk)
   __warnattr ("ppoll called with fds buffer too small file nfds entries");
 
-__extern_always_inline int
+__fortify_function int
 ppoll (struct pollfd *__fds, nfds_t __nfds, const struct timespec *__timeout,
        const __sigset_t *__ss)
 {

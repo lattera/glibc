@@ -140,6 +140,7 @@
 /* Fortify support.  */
 #define __bos(ptr) __builtin_object_size (ptr, __USE_FORTIFY_LEVEL > 1)
 #define __bos0(ptr) __builtin_object_size (ptr, 0)
+#define __fortify_function __extern_always_inline __attribute_artificial__
 
 #if __GNUC_PREREQ (4,3)
 # define __warndecl(name, msg) \
@@ -309,26 +310,24 @@
 # define __always_inline __inline
 #endif
 
+/* Associate error messages with the source location of the call site rather
+   than with the source location inside the function.  */
+#if __GNUC_PREREQ (4,3)
+# define __attribute_artificial__ __attribute__ ((__artificial__))
+#else
+# define __attribute_artificial__ /* Ignore */
+#endif
+
 /* GCC 4.3 and above with -std=c99 or -std=gnu99 implements ISO C99
    inline semantics, unless -fgnu89-inline is used.  */
 #if !defined __cplusplus || __GNUC_PREREQ (4,3)
 # if defined __GNUC_STDC_INLINE__ || defined __cplusplus
 #  define __extern_inline extern __inline __attribute__ ((__gnu_inline__))
-#  if __GNUC_PREREQ (4,3)
-#   define __extern_always_inline \
-  extern __always_inline __attribute__ ((__gnu_inline__, __artificial__))
-#  else
-#   define __extern_always_inline \
+#  define __extern_always_inline \
   extern __always_inline __attribute__ ((__gnu_inline__))
-#  endif
 # else
 #  define __extern_inline extern __inline
-#  if __GNUC_PREREQ (4,3)
-#   define __extern_always_inline \
-  extern __always_inline __attribute__ ((__artificial__))
-#  else
-#   define __extern_always_inline extern __always_inline
-#  endif
+#  define __extern_always_inline extern __always_inline
 # endif
 #endif
 

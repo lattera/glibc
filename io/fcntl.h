@@ -263,7 +263,7 @@ extern int posix_fallocate64 (int __fd, __off64_t __offset, __off64_t __len);
 
 
 /* Define some inlines helping to catch common problems.  */
-#if __USE_FORTIFY_LEVEL > 0 && defined __extern_always_inline \
+#if __USE_FORTIFY_LEVEL > 0 && defined __fortify_function \
     && defined __va_arg_pack_len
 # include <bits/fcntl2.h>
 #endif

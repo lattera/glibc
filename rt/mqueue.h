@@ -90,7 +90,7 @@ extern int mq_timedsend (mqd_t __mqdes, const char *__msg_ptr,
 #endif
 
 /* Define some inlines helping to catch common problems.  */
-#if __USE_FORTIFY_LEVEL > 0 && defined __extern_always_inline \
+#if __USE_FORTIFY_LEVEL > 0 && defined __fortify_function \
     && defined __va_arg_pack_len
 # include <bits/mqueue2.h>
 #endif

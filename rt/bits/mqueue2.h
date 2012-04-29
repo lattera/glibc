@@ -34,7 +34,7 @@ __errordecl (__mq_open_wrong_number_of_args,
 __errordecl (__mq_open_missing_mode_and_attr,
 	     "mq_open with O_CREAT in second argument needs 4 arguments");
 
-__extern_always_inline mqd_t
+__fortify_function mqd_t
 __NTH (mq_open (const char *__name, int __oflag, ...))
 {
   if (__va_arg_pack_len () != 0 && __va_arg_pack_len () != 2)

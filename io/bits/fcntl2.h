@@ -37,7 +37,7 @@ __errordecl (__open_too_many_args,
 __errordecl (__open_missing_mode,
 	     "open with O_CREAT in second argument needs 3 arguments");
 
-__extern_always_inline int
+__fortify_function int
 open (const char *__path, int __oflag, ...)
 {
   if (__va_arg_pack_len () > 1)
@@ -69,7 +69,7 @@ __errordecl (__open64_too_many_args,
 __errordecl (__open64_missing_mode,
 	     "open64 with O_CREAT in second argument needs 3 arguments");
 
-__extern_always_inline int
+__fortify_function int
 open64 (const char *__path, int __oflag, ...)
 {
   if (__va_arg_pack_len () > 1)
@@ -113,7 +113,7 @@ __errordecl (__openat_too_many_args,
 __errordecl (__openat_missing_mode,
 	     "openat with O_CREAT in third argument needs 4 arguments");
 
-__extern_always_inline int
+__fortify_function int
 openat (int __fd, const char *__path, int __oflag, ...)
 {
   if (__va_arg_pack_len () > 1)
@@ -147,7 +147,7 @@ __errordecl (__openat64_too_many_args,
 __errordecl (__openat64_missing_mode,
 	     "openat64 with O_CREAT in third argument needs 4 arguments");
 
-__extern_always_inline int
+__fortify_function int
 openat64 (int __fd, const char *__path, int __oflag, ...)
 {
   if (__va_arg_pack_len () > 1)

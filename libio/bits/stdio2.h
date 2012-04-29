@@ -27,7 +27,7 @@ extern int __vsprintf_chk (char *__restrict __s, int __flag, size_t __slen,
 			   _G_va_list __ap) __THROW;
 
 #ifdef __va_arg_pack
-__extern_always_inline int
+__fortify_function int
 __NTH (sprintf (char *__restrict __s, const char *__restrict __fmt, ...))
 {
   return __builtin___sprintf_chk (__s, __USE_FORTIFY_LEVEL - 1,
@@ -39,7 +39,7 @@ __NTH (sprintf (char *__restrict __s, const char *__restrict __fmt, ...))
 			   __VA_ARGS__)
 #endif
 
-__extern_always_inline int
+__fortify_function int
 __NTH (vsprintf (char *__restrict __s, const char *__restrict __fmt,
 		 _G_va_list __ap))
 {
@@ -57,7 +57,7 @@ extern int __vsnprintf_chk (char *__restrict __s, size_t __n, int __flag,
 			    _G_va_list __ap) __THROW;
 
 # ifdef __va_arg_pack
-__extern_always_inline int
+__fortify_function int
 __NTH (snprintf (char *__restrict __s, size_t __n,
 		 const char *__restrict __fmt, ...))
 {
@@ -70,7 +70,7 @@ __NTH (snprintf (char *__restrict __s, size_t __n,
 			    __VA_ARGS__)
 # endif
 
-__extern_always_inline int
+__fortify_function int
 __NTH (vsnprintf (char *__restrict __s, size_t __n,
 		  const char *__restrict __fmt, _G_va_list __ap))
 {
@@ -91,14 +91,14 @@ extern int __vprintf_chk (int __flag, const char *__restrict __format,
 			  _G_va_list __ap);
 
 # ifdef __va_arg_pack
-__extern_always_inline int
+__fortify_function int
 fprintf (FILE *__restrict __stream, const char *__restrict __fmt, ...)
 {
   return __fprintf_chk (__stream, __USE_FORTIFY_LEVEL - 1, __fmt,
 			__va_arg_pack ());
 }
 
-__extern_always_inline int
+__fortify_function int
 printf (const char *__restrict __fmt, ...)
 {
   return __printf_chk (__USE_FORTIFY_LEVEL - 1, __fmt, __va_arg_pack ());
@@ -110,7 +110,7 @@ printf (const char *__restrict __fmt, ...)
   __fprintf_chk (stream, __USE_FORTIFY_LEVEL - 1, __VA_ARGS__)
 # endif
 
-__extern_always_inline int
+__fortify_function int
 vprintf (const char *__restrict __fmt, _G_va_list __ap)
 {
 #ifdef __USE_EXTERN_INLINES
@@ -120,7 +120,7 @@ vprintf (const char *__restrict __fmt, _G_va_list __ap)
 #endif
 }
 
-__extern_always_inline int
+__fortify_function int
 vfprintf (FILE *__restrict __stream,
 	  const char *__restrict __fmt, _G_va_list __ap)
 {
@@ -151,14 +151,14 @@ extern int __obstack_vprintf_chk (struct obstack *__restrict __obstack,
      __THROW __attribute__ ((__format__ (__printf__, 3, 0)));
 
 #  ifdef __va_arg_pack
-__extern_always_inline int
+__fortify_function int
 __NTH (asprintf (char **__restrict __ptr, const char *__restrict __fmt, ...))
 {
   return __asprintf_chk (__ptr, __USE_FORTIFY_LEVEL - 1, __fmt,
 			 __va_arg_pack ());
 }
 
-__extern_always_inline int
+__fortify_function int
 __NTH (__asprintf (char **__restrict __ptr, const char *__restrict __fmt,
 		   ...))
 {
@@ -166,14 +166,14 @@ __NTH (__asprintf (char **__restrict __ptr, const char *__restrict __fmt,
 			 __va_arg_pack ());
 }
 
-__extern_always_inline int
+__fortify_function int
 dprintf (int __fd, const char *__restrict __fmt, ...)
 {
   return __dprintf_chk (__fd, __USE_FORTIFY_LEVEL - 1, __fmt,
 			__va_arg_pack ());
 }
 
-__extern_always_inline int
+__fortify_function int
 __NTH (obstack_printf (struct obstack *__restrict __obstack,
 		       const char *__restrict __fmt, ...))
 {
@@ -191,20 +191,20 @@ __NTH (obstack_printf (struct obstack *__restrict __obstack,
   __obstack_printf_chk (obstack, __USE_FORTIFY_LEVEL - 1, __VA_ARGS__)
 #  endif
 
-__extern_always_inline int
+__fortify_function int
 __NTH (vasprintf (char **__restrict __ptr, const char *__restrict __fmt,
 		  _G_va_list __ap))
 {
   return __vasprintf_chk (__ptr, __USE_FORTIFY_LEVEL - 1, __fmt, __ap);
 }
 
-__extern_always_inline int
+__fortify_function int
 vdprintf (int __fd, const char *__restrict __fmt, _G_va_list __ap)
 {
   return __vdprintf_chk (__fd, __USE_FORTIFY_LEVEL - 1, __fmt, __ap);
 }
 
-__extern_always_inline int
+__fortify_function int
 __NTH (obstack_vprintf (struct obstack *__restrict __obstack,
 			const char *__restrict __fmt, _G_va_list __ap))
 {
@@ -223,7 +223,7 @@ extern char *__REDIRECT (__gets_warn, (char *__str), gets)
      __wur __warnattr ("please use fgets or getline instead, gets can't "
 		       "specify buffer size");
 
-__extern_always_inline __wur char *
+__fortify_function __wur char *
 gets (char *__str)
 {
   if (__bos (__str) != (size_t) -1)
@@ -243,7 +243,7 @@ extern char *__REDIRECT (__fgets_chk_warn,
      __wur __warnattr ("fgets called with bigger size than length "
 		       "of destination buffer");
 
-__extern_always_inline __wur char *
+__fortify_function __wur char *
 fgets (char *__restrict __s, int __n, FILE *__restrict __stream)
 {
   if (__bos (__s) != (size_t) -1)
@@ -272,7 +272,7 @@ extern size_t __REDIRECT (__fread_chk_warn,
      __wur __warnattr ("fread called with bigger size * nmemb than length "
 		       "of destination buffer");
 
-__extern_always_inline __wur size_t
+__fortify_function __wur size_t
 fread (void *__restrict __ptr, size_t __size, size_t __n,
        FILE *__restrict __stream)
 {
@@ -301,7 +301,7 @@ extern char *__REDIRECT (__fgets_unlocked_chk_warn,
      __wur __warnattr ("fgets_unlocked called with bigger size than length "
 		       "of destination buffer");
 
-__extern_always_inline __wur char *
+__fortify_function __wur char *
 fgets_unlocked (char *__restrict __s, int __n, FILE *__restrict __stream)
 {
   if (__bos (__s) != (size_t) -1)
@@ -333,7 +333,7 @@ extern size_t __REDIRECT (__fread_unlocked_chk_warn,
      __wur __warnattr ("fread_unlocked called with bigger size * nmemb than "
 		       "length of destination buffer");
 
-__extern_always_inline __wur size_t
+__fortify_function __wur size_t
 fread_unlocked (void *__restrict __ptr, size_t __size, size_t __n,
 		FILE *__restrict __stream)
 {

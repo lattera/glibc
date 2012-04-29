@@ -203,7 +203,7 @@ extern void vsyslog (int __pri, const char *__fmt, __gnuc_va_list __ap)
 
 
 /* Define some macros helping to catch buffer overflows.  */
-#if __USE_FORTIFY_LEVEL > 0 && defined __extern_always_inline
+#if __USE_FORTIFY_LEVEL > 0 && defined __fortify_function
 # include <bits/syslog.h>
 #endif
 #ifdef __LDBL_COMPAT
