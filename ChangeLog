@@ -1,3 +1,8 @@
+2012-05-04  Andreas Schwab  <schwab@linux-m68k.org>
+
+	* sysdeps/unix/make-syscalls.sh: Fix check for version aliases.
+	* sysdeps/unix/sysv/linux/i386/syscalls.list: Revert last change.
+
 2012-05-04  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #14049]

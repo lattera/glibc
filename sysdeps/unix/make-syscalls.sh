@@ -112,6 +112,14 @@ while read file srcfile caller syscall args strong weak; do
   echo ''
   echo "#### CALL=$file NUMBER=$callnum ARGS=$args SOURCE=$srcfile"
 
+  # If there are versioned aliases the entry is only generated for the
+  # shared library, unless it is a default version.
+  shared_only=f
+  case $weak in
+    *@@*) ;;
+    *@*) shared_only=t;;
+  esac
+
  case x$srcfile"$callnum" in
  x--)
   # Undefined callnum for an extra syscall.
@@ -127,30 +135,25 @@ while read file srcfile caller syscall args strong weak; do
  x-*)
   echo "ifeq (,\$(filter $file,\$(unix-syscalls)))"
 
-  case $weak in
-  *@*)
+  if test $shared_only = t; then
     # The versioned symbols are only in the shared library.
     echo "ifneq (,\$(filter .os,\$(object-suffixes)))"
-    ;;
-  esac
+  fi
   # Accumulate the list of syscall files for this directory.
   echo "unix-syscalls += $file"
   test x$caller = x- || echo "unix-extra-syscalls += $file"
 
   # Emit a compilation rule for this syscall.
-  case $weak in
-  *@*)
+  if test $shared_only = t; then
     # The versioned symbols are only in the shared library.
     echo "\
 shared-only-routines += $file
 \$(objpfx)${file}.os: \\"
-    ;;
-  *)
+  else
     echo "\
 \$(foreach p,\$(sysd-rules-targets),\
 \$(foreach o,\$(object-suffixes),\$(objpfx)\$(patsubst %,\$p,$file)\$o)): \\"
-    ;;
-  esac
+  fi
 
   echo "		\$(..)sysdeps/unix/make-syscalls.sh"
   case x"$callnum" in
@@ -226,12 +229,10 @@ shared-only-routines += $file
   echo '	) | $(compile-syscall) '"\
 \$(foreach p,\$(patsubst %$file,%,\$(basename \$(@F))),\$(\$(p)CPPFLAGS))"
 
-  case $weak in
-  *@*)
+  if test $shared_only = t; then
     # The versioned symbols are only in the shared library.
     echo endif
-    ;;
-  esac
+  fi
 
   echo endif
  ;;
