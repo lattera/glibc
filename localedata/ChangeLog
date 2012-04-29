@@ -1,3 +1,9 @@
+2012-04-29  Aurelien Jarno  <aurelien@aurel32.net>
+
+	[BZ #13758]
+	* locales/de_AT (LC_TIME): Change month name from "Feber" to
+	"Februar".
+
 2012-04-12  Mike Frysinger  <vapier@gentoo.org>
 
         [BZ #3768]
