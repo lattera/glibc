@@ -42,6 +42,7 @@
 
 2012-04-28  Andreas Schwab  <schwab@linux-m68k.org>
 
+	[BZ #14033]
 	* math/bits/math-finite.h [__NO_LONG_DOUBLE_MATH]: Redirect long
 	double functions to double *_finite functions.
 
