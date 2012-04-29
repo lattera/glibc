@@ -53,7 +53,6 @@ with-fp = @with_fp@
 old-glibc-headers = @old_glibc_headers@
 unwind-find-fde = @libc_cv_gcc_unwind_find_fde@
 have-cpp-asm-debuginfo = @libc_cv_cpp_asm_debuginfo@
-enable-check-abi = @enable_check_abi@
 have-forced-unwind = @libc_cv_forced_unwind@
 have-fpie = @libc_cv_fpie@
 have-mfma4 = @libc_cv_cc_fma4@

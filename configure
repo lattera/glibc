@@ -692,7 +692,6 @@ all_warnings
 force_install
 bindnow
 oldest_abi
-enable_check_abi
 use_default_link
 with_fp
 ac_ct_CXX
@@ -766,7 +765,6 @@ with_selinux
 with_headers
 with_default_link
 enable_sanity_checks
-enable_check_abi
 enable_shared
 enable_profile
 enable_versioning
@@ -1413,8 +1411,6 @@ Optional Features:
   --enable-FEATURE[=ARG]  include FEATURE [ARG=yes]
   --disable-sanity-checks really do not use threads (should not be used except
                           in special situations) [default=yes]
-  --enable-check-abi      do "make check-abi" in "make check" (no/warn/yes)
-                          [default=no]
   --enable-shared         build shared library [default=yes if GNU ld]
   --enable-profile        build profiled library [default=no]
   --disable-versioning    do not include versioning information in the library
@@ -3550,15 +3546,6 @@ if test "${enable_sanity_checks+set}" = set; then :
   enableval=$enable_sanity_checks; enable_sanity=$enableval
 else
   enable_sanity=yes
-fi
-
-
-
-# Check whether --enable-check-abi was given.
-if test "${enable_check_abi+set}" = set; then :
-  enableval=$enable_check_abi; enable_check_abi=$enableval
-else
-  enable_check_abi=no
 fi
 
 

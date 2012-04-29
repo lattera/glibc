@@ -1163,11 +1163,8 @@ check-abi-%: $(common-objpfx)config.make %.abilist $(objpfx)%.symlist
 check-abi-%: $(common-objpfx)config.make %.abilist $(common-objpfx)%.symlist
 	$(check-abi)
 define check-abi
-	diff -p -U 0 $(filter %.abilist,$^) $(filter %.symlist,$^) $(check-abi-warn)
+	diff -p -U 0 $(filter %.abilist,$^) $(filter %.symlist,$^)
 endef
-ifeq ($(enable-check-abi),warn)
-check-abi-warn = || echo '*** WARNING: $*.so failed ABI check'
-endif
 
 update-abi-%: $(objpfx)%.symlist %.abilist
 	$(update-abi)
@@ -1200,10 +1197,8 @@ common-generated += libc.symlist
 endif
 
 ifeq ($(build-shared),yes)
-ifneq ($(enable-check-abi),no)
 ifdef subdir
 tests: check-abi
-endif
 endif
 endif
 

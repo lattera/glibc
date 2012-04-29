@@ -104,14 +104,6 @@ AC_ARG_ENABLE([sanity-checks],
 	      [enable_sanity=$enableval],
 	      [enable_sanity=yes])
 
-AC_SUBST(enable_check_abi)
-AC_ARG_ENABLE([check-abi],
-	      AC_HELP_STRING([--enable-check-abi],
-			     [do "make check-abi" in "make check" (no/warn/yes)
-			      @<:@default=no@:>@]),
-	      [enable_check_abi=$enableval],
-	      [enable_check_abi=no])
-
 AC_ARG_ENABLE([shared],
 	      AC_HELP_STRING([--enable-shared],
 			     [build shared library @<:@default=yes if GNU ld@:>@]),
