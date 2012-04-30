@@ -872,18 +872,6 @@ CFLAGS-tst-pie1.c += $(pie-ccflag)
 
 $(objpfx)tst-pie1: $(objpfx)tst-piemod1.so
 
-check-execstack-CFLAGS = -O -Wall -D_XOPEN_SOURCE=600 -D_BSD_SOURCE -std=gnu99 \
-			 $(objpfx:%/=-I%)
-$(objpfx)check-execstack: check-execstack.c $(objpfx)check-execstack.h
-	$(native-compile)
-$(objpfx)check-execstack.h: $(first-word $(wildcard $(sysdirs:%=%/stackinfo.h)))
-	$(make-target-directory)
-	{ echo '#include <stackinfo.h>'; echo '@@@DEFAULT_STACK_PERMS@@@'; } | \
-	$(CC) $(CFLAGS) $(CPPFLAGS) -E -x c-header - | \
-	sed -n -e 's/^@@@\(.*\)@@@/#define DEFAULT_STACK_PERMS \1/p' > $@T
-	mv -f $@T $@
-generated += check-execstack.h
-
 check-localplt-CFLAGS = -O -Wall -D_GNU_SOURCE -std=gnu99
 $(objpfx)check-localplt: check-localplt.c
 	$(native-compile)
@@ -909,9 +897,32 @@ $(objpfx)check-textrel.out: $(..)scripts/check-textrel.awk \
 	LC_ALL=C $(AWK) -f $^ > $@
 generated += check-textrel.out
 
-$(objpfx)check-execstack.out: $(objpfx)check-execstack $(all-built-dso)
-	$(dir $<)$(notdir $<) $(filter-out $<, $^) > $@
-generated += check-execstack check-execstack.out
+$(objpfx)execstack-default: $(first-word $(wildcard $(sysdirs:%=%/stackinfo.h)))
+	$(make-target-directory)
+	{ echo '#include <elf.h>'; \
+	  echo '#include <stackinfo.h>'; \
+	  echo '#if (DEFAULT_STACK_PERMS & PF_X) == 0'; \
+	  echo '@@@execstack-no@@@'; \
+	  echo '#else'; \
+	  echo '@@@execstack-yes@@@'; \
+	  echo '#endif'; } | \
+	$(CC) $(CFLAGS) $(CPPFLAGS) -E -x c-header - | \
+	sed -n -e 's/^@@@\(.*\)@@@/\1/p' > $@T
+	mv -f $@T $@
+generated += execstack-default
+
+$(all-built-dso:=.phdr): %.phdr: %
+	@rm -f $@T
+	LC_ALL=C $(READELF) -W -l $< > $@T
+	test -s $@T
+	mv -f $@T $@
+generated += $(all-built-dso:=.phdr)
+
+$(objpfx)check-execstack.out: $(..)scripts/check-execstack.awk \
+			      $(objpfx)execstack-default \
+			      $(all-built-dso:=.phdr)
+	LC_ALL=C $(AWK) -f $^ > $@
+generated += check-execstack.out
 
 $(objpfx)tst-dlmodcount: $(libdl)
 $(objpfx)tst-dlmodcount.out: $(test-modules)
