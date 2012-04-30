@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 2011 Free Software Foundation, Inc.
+/* Copyright (C) 1998-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -18,13 +18,16 @@
 
 #include <math.h>
 #include <math_private.h>
-
+#include <float.h>
 
 long double
 __ieee754_exp10l (long double arg)
 {
-  /* This is a very stupid and inprecise implementation.  It'll get
-     replaced sometime (soon?).  */
-  return __ieee754_expl (M_LN10l * arg);
+  if (__finitel (arg) && arg < LDBL_MIN_10_EXP - LDBL_DIG - 10)
+    return LDBL_MIN * LDBL_MIN;
+  else
+    /* This is a very stupid and inprecise implementation.  It'll get
+       replaced sometime (soon?).  */
+    return __ieee754_expl (M_LN10l * arg);
 }
 strong_alias (__ieee754_exp10l, __exp10l_finite)

@@ -1,3 +1,18 @@
+2012-04-30  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #13884]
+	[BZ #13924]
+	* math/e_exp10.c: Include <float.h>.
+	(__ieee754_exp10): Handle underflow here rather than multiplying
+	large negative argument by M_LN10.
+	* math/e_exp10f.c (__ieee754_exp10f): Call __ieee754_exp instead
+	of __ieee754_expf.
+	* math/e_exp10l.c: Include <float.h>.
+	(__ieee754_exp10l): Handle underflow here rather than multiplying
+	large negative argument by M_LN10l.
+	* math/libm-test.inc (exp10_test): Add another test.  Do not allow
+	spurious overflow exception on underflow.
+
 2012-04-29  Marek Polacek  <polacek@redhat.com>
 
 	* misc/sys/cdefs.h (__attribute_artificial__): New macro.

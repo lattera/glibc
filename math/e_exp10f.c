@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 2011 Free Software Foundation, Inc.
+/* Copyright (C) 1998-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -23,8 +23,10 @@
 float
 __ieee754_exp10f (float arg)
 {
-  /* This is a very stupid and inprecise implementation.  It'll get
-     replaced sometime (soon?).  */
-  return __ieee754_expf (M_LN10 * arg);
+  /* The argument to exp needs to be calculated in enough precision
+     that the fractional part has as much precision as float, in
+     addition to the bits in the integer part; using double ensures
+     this.  */
+  return __ieee754_exp (M_LN10 * arg);
 }
 strong_alias (__ieee754_exp10f, __exp10f_finite)
