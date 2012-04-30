@@ -8,6 +8,7 @@ GLIBC_2.0
  realloc F
 GLIBC_2.1
  GLIBC_2.1 A
+ __libc_stack_end D 0x4
  _dl_mcount F
 GLIBC_2.3
  GLIBC_2.3 A

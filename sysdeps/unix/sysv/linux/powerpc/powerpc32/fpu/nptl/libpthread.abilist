@@ -230,13 +230,32 @@ GLIBC_2.3.2
  pthread_cond_signal F
  pthread_cond_timedwait F
  pthread_cond_wait F
+GLIBC_2.3.3
+ GLIBC_2.3.3 A
+ __pthread_cleanup_routine F
+ __pthread_register_cancel F
+ __pthread_register_cancel_defer F
+ __pthread_unregister_cancel F
+ __pthread_unregister_cancel_restore F
+ __pthread_unwind_next F
+ pthread_attr_getaffinity_np F
+ pthread_attr_setaffinity_np F
+ pthread_barrierattr_getpshared F
+ pthread_condattr_getclock F
+ pthread_condattr_setclock F
+ pthread_getaffinity_np F
+ pthread_setaffinity_np F
+ pthread_timedjoin_np F
+ pthread_tryjoin_np F
 GLIBC_2.3.4
  GLIBC_2.3.4 A
+ longjmp F
  pthread_attr_getaffinity_np F
  pthread_attr_setaffinity_np F
  pthread_getaffinity_np F
  pthread_setaffinity_np F
  pthread_setschedprio F
+ siglongjmp F
 GLIBC_2.4
  GLIBC_2.4 A
  pthread_mutex_consistent_np F
@@ -248,3 +267,7 @@ GLIBC_2.4
  pthread_mutexattr_setprioceiling F
  pthread_mutexattr_setprotocol F
  pthread_mutexattr_setrobust_np F
+GLIBC_2.6
+ GLIBC_2.6 A
+ pthread_attr_setstack F
+ pthread_attr_setstacksize F

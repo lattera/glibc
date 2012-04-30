@@ -263,9 +263,7 @@ GLIBC_2.0
  __xpg_basename F
  __xstat F
  _environ D 0x4
- _errno D 0x4
  _exit F
- _h_errno D 0x4
  _libc_intl_domainname D 0x5
  _longjmp F
  _mcleanup F
@@ -428,7 +426,6 @@ GLIBC_2.0
  erand48 F
  erand48_r F
  err F
- errno D 0x4
  error F
  error_at_line F
  error_message_count D 0x4
@@ -654,7 +651,6 @@ GLIBC_2.0
  gsignal F
  gtty F
  h_errlist D 0x14
- h_errno D 0x4
  h_nerr D 0x4
  hasmntopt F
  hcreate F
@@ -1702,7 +1698,6 @@ GLIBC_2.10
  accept4 F
  endsgent F
  fallocate F
- fallocate64 F
  fgetsgent F
  fgetsgent_r F
  getsgent F
@@ -1727,6 +1722,7 @@ GLIBC_2.11
  GLIBC_2.11 A
  __longjmp_chk F
  execvpe F
+ fallocate64 F
  mkostemps F
  mkostemps64 F
  mkstemps F
@@ -1741,7 +1737,6 @@ GLIBC_2.12
  sys_nerr D 0x4
 GLIBC_2.13
  GLIBC_2.13 A
- __fentry__ F
  fanotify_init F
  fanotify_mark F
  prlimit F
@@ -2085,6 +2080,7 @@ GLIBC_2.3.2
 GLIBC_2.3.3
  GLIBC_2.3.3 A
  _sys_siglist D 0x104
+ getcontext F
  gnu_dev_major F
  gnu_dev_makedev F
  gnu_dev_minor F
@@ -2094,12 +2090,17 @@ GLIBC_2.3.3
  inet6_option_init F
  inet6_option_next F
  inet6_option_space F
+ makecontext F
  nftw F
  nftw64 F
+ posix_fadvise64 F
+ posix_fallocate64 F
  remap_file_pages F
  sched_getaffinity F
  sched_setaffinity F
  semtimedop F
+ setcontext F
+ swapcontext F
  sys_sigabbrev D 0x104
  sys_siglist D 0x104
 GLIBC_2.3.4
@@ -2107,11 +2108,13 @@ GLIBC_2.3.4
  __chk_fail F
  __fprintf_chk F
  __gets_chk F
+ __longjmp F
  __memcpy_chk F
  __memmove_chk F
  __mempcpy_chk F
  __memset_chk F
  __printf_chk F
+ __sigsetjmp F
  __snprintf_chk F
  __sprintf_chk F
  __stpcpy_chk F
@@ -2124,22 +2127,41 @@ GLIBC_2.3.4
  __vsnprintf_chk F
  __vsprintf_chk F
  __xpg_strerror_r F
+ _longjmp F
+ _setjmp F
+ getcontext F
  getipv4sourcefilter F
  getsourcefilter F
+ longjmp F
+ makecontext F
  regexec F
  sched_getaffinity F
  sched_setaffinity F
+ setcontext F
  setipv4sourcefilter F
+ setjmp F
  setsourcefilter F
+ siglongjmp F
+ swapcontext F
  xdr_quad_t F
  xdr_u_quad_t F
 GLIBC_2.4
  GLIBC_2.4 A
+ _IO_fprintf F
+ _IO_printf F
+ _IO_sprintf F
+ _IO_sscanf F
+ _IO_vfprintf F
+ _IO_vfscanf F
+ _IO_vsprintf F
+ __asprintf F
  __confstr_chk F
  __fgets_chk F
  __fgets_unlocked_chk F
  __fgetws_chk F
  __fgetws_unlocked_chk F
+ __finitel F
+ __fprintf_chk F
  __fwprintf_chk F
  __fxstatat F
  __fxstatat64 F
@@ -2149,23 +2171,108 @@ GLIBC_2.4
  __gethostname_chk F
  __getlogin_r_chk F
  __getwd_chk F
+ __isinfl F
+ __isnanl F
  __mbsnrtowcs_chk F
  __mbsrtowcs_chk F
  __mbstowcs_chk F
+ __nldbl__IO_fprintf F
+ __nldbl__IO_printf F
+ __nldbl__IO_sprintf F
+ __nldbl__IO_sscanf F
+ __nldbl__IO_vfprintf F
+ __nldbl__IO_vfscanf F
+ __nldbl__IO_vsprintf F
+ __nldbl___asprintf F
+ __nldbl___fprintf_chk F
+ __nldbl___fwprintf_chk F
+ __nldbl___printf_chk F
+ __nldbl___printf_fp F
+ __nldbl___snprintf_chk F
+ __nldbl___sprintf_chk F
+ __nldbl___strfmon_l F
+ __nldbl___swprintf_chk F
+ __nldbl___syslog_chk F
+ __nldbl___vfprintf_chk F
+ __nldbl___vfscanf F
+ __nldbl___vfwprintf_chk F
+ __nldbl___vprintf_chk F
+ __nldbl___vsnprintf F
+ __nldbl___vsnprintf_chk F
+ __nldbl___vsprintf_chk F
+ __nldbl___vsscanf F
+ __nldbl___vstrfmon F
+ __nldbl___vstrfmon_l F
+ __nldbl___vswprintf_chk F
+ __nldbl___vsyslog_chk F
+ __nldbl___vwprintf_chk F
+ __nldbl___wprintf_chk F
+ __nldbl_asprintf F
+ __nldbl_dprintf F
+ __nldbl_fprintf F
+ __nldbl_fscanf F
+ __nldbl_fwprintf F
+ __nldbl_fwscanf F
+ __nldbl_obstack_printf F
+ __nldbl_obstack_vprintf F
+ __nldbl_printf F
+ __nldbl_printf_size F
+ __nldbl_scanf F
+ __nldbl_snprintf F
+ __nldbl_sprintf F
+ __nldbl_sscanf F
+ __nldbl_strfmon F
+ __nldbl_strfmon_l F
+ __nldbl_swprintf F
+ __nldbl_swscanf F
+ __nldbl_syslog F
+ __nldbl_vasprintf F
+ __nldbl_vdprintf F
+ __nldbl_vfprintf F
+ __nldbl_vfscanf F
+ __nldbl_vfwprintf F
+ __nldbl_vfwscanf F
+ __nldbl_vprintf F
+ __nldbl_vscanf F
+ __nldbl_vsnprintf F
+ __nldbl_vsprintf F
+ __nldbl_vsscanf F
+ __nldbl_vswprintf F
+ __nldbl_vswscanf F
+ __nldbl_vsyslog F
+ __nldbl_vwprintf F
+ __nldbl_vwscanf F
+ __nldbl_wprintf F
+ __nldbl_wscanf F
  __pread64_chk F
  __pread_chk F
+ __printf_chk F
+ __printf_fp F
  __ptsname_r_chk F
  __read_chk F
  __readlink_chk F
  __realpath_chk F
  __recv_chk F
  __recvfrom_chk F
+ __signbitl F
+ __snprintf_chk F
+ __sprintf_chk F
  __stack_chk_fail F
  __stpncpy_chk F
+ __strfmon_l F
+ __strtold_internal F
+ __strtold_l F
  __swprintf_chk F
  __syslog_chk F
  __ttyname_r_chk F
+ __vfprintf_chk F
+ __vfscanf F
  __vfwprintf_chk F
+ __vprintf_chk F
+ __vsnprintf F
+ __vsnprintf_chk F
+ __vsprintf_chk F
+ __vsscanf F
  __vswprintf_chk F
  __vsyslog_chk F
  __vwprintf_chk F
@@ -2178,6 +2285,8 @@ GLIBC_2.4
  __wcsncpy_chk F
  __wcsnrtombs_chk F
  __wcsrtombs_chk F
+ __wcstold_internal F
+ __wcstold_l F
  __wcstombs_chk F
  __wctomb_chk F
  __wmemcpy_chk F
@@ -2188,29 +2297,83 @@ GLIBC_2.4
  __xmknodat F
  _sys_errlist D 0x210
  _sys_nerr D 0x4
+ asprintf F
+ copysignl F
+ dprintf F
  eaccess F
  faccessat F
  fchmodat F
  fchownat F
  fdopendir F
+ finitel F
+ fprintf F
+ frexpl F
+ fscanf F
  futimesat F
+ fwprintf F
+ fwscanf F
  inotify_add_watch F
  inotify_init F
  inotify_rm_watch F
+ isinfl F
+ isnanl F
+ ldexpl F
  linkat F
  mkdirat F
  mkfifoat F
+ modfl F
+ obstack_printf F
+ obstack_vprintf F
  open_wmemstream F
  openat F
  openat64 F
  ppoll F
+ printf F
+ printf_size F
+ qecvt F
+ qecvt_r F
+ qfcvt F
+ qfcvt_r F
+ qgcvt F
  readlinkat F
  renameat F
+ scalbnl F
+ scanf F
+ snprintf F
+ sprintf F
+ sscanf F
+ strfmon F
+ strfmon_l F
+ strtold F
+ strtold_l F
+ swprintf F
+ swscanf F
  symlinkat F
  sys_errlist D 0x210
  sys_nerr D 0x4
+ syslog F
  unlinkat F
  unshare F
+ vasprintf F
+ vdprintf F
+ vfprintf F
+ vfscanf F
+ vfwprintf F
+ vfwscanf F
+ vprintf F
+ vscanf F
+ vsnprintf F
+ vsprintf F
+ vsscanf F
+ vswprintf F
+ vswscanf F
+ vsyslog F
+ vwprintf F
+ vwscanf F
+ wcstold F
+ wcstold_l F
+ wprintf F
+ wscanf F
 GLIBC_2.5
  GLIBC_2.5 A
  __readlinkat_chk F
@@ -2255,6 +2418,18 @@ GLIBC_2.7
  __isoc99_vswscanf F
  __isoc99_vwscanf F
  __isoc99_wscanf F
+ __nldbl___isoc99_fscanf F
+ __nldbl___isoc99_fwscanf F
+ __nldbl___isoc99_scanf F
+ __nldbl___isoc99_sscanf F
+ __nldbl___isoc99_swscanf F
+ __nldbl___isoc99_vfscanf F
+ __nldbl___isoc99_vfwscanf F
+ __nldbl___isoc99_vscanf F
+ __nldbl___isoc99_vsscanf F
+ __nldbl___isoc99_vswscanf F
+ __nldbl___isoc99_vwscanf F
+ __nldbl___isoc99_wscanf F
  __open64_2 F
  __open_2 F
  __openat64_2 F
@@ -2271,6 +2446,12 @@ GLIBC_2.8
  GLIBC_2.8 A
  __asprintf_chk F
  __dprintf_chk F
+ __nldbl___asprintf_chk F
+ __nldbl___dprintf_chk F
+ __nldbl___obstack_printf_chk F
+ __nldbl___obstack_vprintf_chk F
+ __nldbl___vasprintf_chk F
+ __nldbl___vdprintf_chk F
  __obstack_printf_chk F
  __obstack_vprintf_chk F
  __vasprintf_chk F
