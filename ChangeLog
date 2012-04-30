@@ -1,3 +1,15 @@
+2012-05-01  Roland McGrath  <roland@hack.frob.com>
+
+	* scripts/check-textrel.awk: New file.
+	* elf/Makefile ($(objpfx)check-textrel): Target removed.
+	(check-textrel-CFLAGS): Variable removed.
+	(all-built-dso): Use := to define.o
+	($(all-built-dso:=.dyn)): New static pattern rule.
+	(generated): Add those targets.
+	($(objpfx)check-textrel.out): Use the script on the .dyn files.
+	* config.make.in (READELF): New substituted variable.
+	* elf/check-textrel.c: File removed.
+
 2012-05-01  Joseph Myers  <joseph@codesourcery.com>
 
 	* conform/data/assert.h-data [ISO || ISO99 || ISO11] (*_t): Do not

@@ -872,10 +872,6 @@ CFLAGS-tst-pie1.c += $(pie-ccflag)
 
 $(objpfx)tst-pie1: $(objpfx)tst-piemod1.so
 
-check-textrel-CFLAGS = -O -Wall -D_XOPEN_SOURCE=600 -D_BSD_SOURCE
-$(objpfx)check-textrel: check-textrel.c
-	$(native-compile)
-
 check-execstack-CFLAGS = -O -Wall -D_XOPEN_SOURCE=600 -D_BSD_SOURCE -std=gnu99 \
 			 $(objpfx:%/=-I%)
 $(objpfx)check-execstack: check-execstack.c $(objpfx)check-execstack.h
@@ -895,14 +891,23 @@ $(objpfx)check-localplt: check-localplt.c
 ifeq (yes,$(build-shared))
 tests: $(objpfx)check-textrel.out $(objpfx)check-execstack.out
 
-all-built-dso = $(common-objpfx)libc.so \
-		$(filter-out $(common-objpfx)linkobj/libc.so, \
-			     $(sort $(wildcard $(common-objpfx)*/lib*.so \
-					       $(common-objpfx)iconvdata/*.so)))
+all-built-dso := $(common-objpfx)libc.so \
+		 $(filter-out $(common-objpfx)linkobj/libc.so, \
+			      $(sort $(wildcard $(addprefix $(common-objpfx), \
+							    */lib*.so \
+							    iconvdata/*.so))))
 
-$(objpfx)check-textrel.out: $(objpfx)check-textrel $(all-built-dso)
-	$(dir $<)$(notdir $<) $(filter-out $<, $^) > $@
-generated += check-textrel check-textrel.out
+$(all-built-dso:=.dyn): %.dyn: %
+	@rm -f $@T
+	LC_ALL=C $(READELF) -W -d $< > $@T
+	test -s $@T
+	mv -f $@T $@
+generated += $(all-built-dso:=.dyn)
+
+$(objpfx)check-textrel.out: $(..)scripts/check-textrel.awk \
+			    $(all-built-dso:=.dyn)
+	LC_ALL=C $(AWK) -f $^ > $@
+generated += check-textrel.out
 
 $(objpfx)check-execstack.out: $(objpfx)check-execstack $(all-built-dso)
 	$(dir $<)$(notdir $<) $(filter-out $<, $^) > $@
