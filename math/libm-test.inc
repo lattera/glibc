@@ -761,6 +761,126 @@ acos_test (void)
   END (acos);
 }
 
+
+static void
+acos_test_tonearest (void)
+{
+  int save_round_mode;
+  errno = 0;
+  FUNC(acos) (0);
+  if (errno == ENOSYS)
+    /* Function not implemented.  */
+    return;
+
+  START (acos_tonearest);
+
+  save_round_mode = fegetround ();
+
+  if (!fesetround (FE_TONEAREST))
+    {
+      TEST_f_f (acos, 0, M_PI_2l);
+      TEST_f_f (acos, minus_zero, M_PI_2l);
+      TEST_f_f (acos, 1, 0);
+      TEST_f_f (acos, -1, M_PIl);
+      TEST_f_f (acos, 0.5, M_PI_6l*2.0);
+      TEST_f_f (acos, -0.5, M_PI_6l*4.0);
+    }
+
+  fesetround (save_round_mode);
+
+  END (acos_tonearest);
+}
+
+
+static void
+acos_test_towardzero (void)
+{
+  int save_round_mode;
+  errno = 0;
+  FUNC(acos) (0);
+  if (errno == ENOSYS)
+    /* Function not implemented.  */
+    return;
+
+  START (acos_towardzero);
+
+  save_round_mode = fegetround ();
+
+  if (!fesetround (FE_TOWARDZERO))
+    {
+      TEST_f_f (acos, 0, M_PI_2l);
+      TEST_f_f (acos, minus_zero, M_PI_2l);
+      TEST_f_f (acos, 1, 0);
+      TEST_f_f (acos, -1, M_PIl);
+      TEST_f_f (acos, 0.5, M_PI_6l*2.0);
+      TEST_f_f (acos, -0.5, M_PI_6l*4.0);
+    }
+
+  fesetround (save_round_mode);
+
+  END (acos_towardzero);
+}
+
+
+static void
+acos_test_downward (void)
+{
+  int save_round_mode;
+  errno = 0;
+  FUNC(acos) (0);
+  if (errno == ENOSYS)
+    /* Function not implemented.  */
+    return;
+
+  START (acos_downward);
+
+  save_round_mode = fegetround ();
+
+  if (!fesetround (FE_DOWNWARD))
+    {
+      TEST_f_f (acos, 0, M_PI_2l);
+      TEST_f_f (acos, minus_zero, M_PI_2l);
+      TEST_f_f (acos, 1, 0);
+      TEST_f_f (acos, -1, M_PIl);
+      TEST_f_f (acos, 0.5, M_PI_6l*2.0);
+      TEST_f_f (acos, -0.5, M_PI_6l*4.0);
+    }
+
+  fesetround (save_round_mode);
+
+  END (acos_downward);
+}
+
+
+static void
+acos_test_upward (void)
+{
+  int save_round_mode;
+  errno = 0;
+  FUNC(acos) (0);
+  if (errno == ENOSYS)
+    /* Function not implemented.  */
+    return;
+
+  START (acos_upward);
+
+  save_round_mode = fegetround ();
+
+  if (!fesetround (FE_UPWARD))
+    {
+      TEST_f_f (acos, 0, M_PI_2l);
+      TEST_f_f (acos, minus_zero, M_PI_2l);
+      TEST_f_f (acos, 1, 0);
+      TEST_f_f (acos, -1, M_PIl);
+      TEST_f_f (acos, 0.5, M_PI_6l*2.0);
+      TEST_f_f (acos, -0.5, M_PI_6l*4.0);
+    }
+
+  fesetround (save_round_mode);
+
+  END (acos_upward);
+}
+
 static void
 acosh_test (void)
 {
@@ -815,6 +935,126 @@ asin_test (void)
   TEST_f_f (asin, 0.75L, 0.848062078981481008052944338998418080L);
 
   END (asin);
+}
+
+
+static void
+asin_test_tonearest (void)
+{
+  int save_round_mode;
+  errno = 0;
+  FUNC(asin) (0);
+  if (errno == ENOSYS)
+    /* Function not implemented.  */
+    return;
+
+  START (asin_tonearest);
+
+  save_round_mode = fegetround ();
+
+  if (!fesetround (FE_TONEAREST))
+    {
+      TEST_f_f (asin, 0, 0);
+      TEST_f_f (asin, minus_zero, minus_zero);
+      TEST_f_f (asin, 0.5, M_PI_6l);
+      TEST_f_f (asin, -0.5, -M_PI_6l);
+      TEST_f_f (asin, 1.0, M_PI_2l);
+      TEST_f_f (asin, -1.0, -M_PI_2l);
+    }
+
+  fesetround (save_round_mode);
+
+  END (asin_tonearest);
+}
+
+
+static void
+asin_test_towardzero (void)
+{
+  int save_round_mode;
+  errno = 0;
+  FUNC(asin) (0);
+  if (errno == ENOSYS)
+    /* Function not implemented.  */
+    return;
+
+  START (asin_towardzero);
+
+  save_round_mode = fegetround ();
+
+  if (!fesetround (FE_TOWARDZERO))
+    {
+      TEST_f_f (asin, 0, 0);
+      TEST_f_f (asin, minus_zero, minus_zero);
+      TEST_f_f (asin, 0.5, M_PI_6l);
+      TEST_f_f (asin, -0.5, -M_PI_6l);
+      TEST_f_f (asin, 1.0, M_PI_2l);
+      TEST_f_f (asin, -1.0, -M_PI_2l);
+    }
+
+  fesetround (save_round_mode);
+
+  END (asin_towardzero);
+}
+
+
+static void
+asin_test_downward (void)
+{
+  int save_round_mode;
+  errno = 0;
+  FUNC(asin) (0);
+  if (errno == ENOSYS)
+    /* Function not implemented.  */
+    return;
+
+  START (asin_downward);
+
+  save_round_mode = fegetround ();
+
+  if (!fesetround (FE_DOWNWARD))
+    {
+      TEST_f_f (asin, 0, 0);
+      TEST_f_f (asin, minus_zero, minus_zero);
+      TEST_f_f (asin, 0.5, M_PI_6l);
+      TEST_f_f (asin, -0.5, -M_PI_6l);
+      TEST_f_f (asin, 1.0, M_PI_2l);
+      TEST_f_f (asin, -1.0, -M_PI_2l);
+    }
+
+  fesetround (save_round_mode);
+
+  END (asin_downward);
+}
+
+
+static void
+asin_test_upward (void)
+{
+  int save_round_mode;
+  errno = 0;
+  FUNC(asin) (0);
+  if (errno == ENOSYS)
+    /* Function not implemented.  */
+    return;
+
+  START (asin_upward);
+
+  save_round_mode = fegetround ();
+
+  if (!fesetround (FE_UPWARD))
+    {
+      TEST_f_f (asin, 0, 0);
+      TEST_f_f (asin, minus_zero, minus_zero);
+      TEST_f_f (asin, 0.5, M_PI_6l);
+      TEST_f_f (asin, -0.5, -M_PI_6l);
+      TEST_f_f (asin, 1.0, M_PI_2l);
+      TEST_f_f (asin, -1.0, -M_PI_2l);
+    }
+
+  fesetround (save_round_mode);
+
+  END (asin_upward);
 }
 
 static void
@@ -8194,7 +8434,15 @@ main (int argc, char **argv)
 
   /* Trigonometric functions:  */
   acos_test ();
+  acos_test_tonearest ();
+  acos_test_towardzero ();
+  acos_test_downward ();
+  acos_test_upward ();
   asin_test ();
+  asin_test_tonearest ();
+  asin_test_towardzero ();
+  asin_test_downward ();
+  asin_test_upward ();
   atan_test ();
   atan2_test ();
   cos_test ();

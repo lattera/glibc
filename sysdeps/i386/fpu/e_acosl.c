@@ -18,6 +18,7 @@ __ieee754_acosl (long double x)
 	"fld1\n"
 	"fsubp\n"			/* 1 - x^2 */
 	"fsqrt\n"			/* sqrtl (1 - x^2) */
+	"fabs\n"
 	"fxch	%%st(1)\n"
 	"fpatan"
 	: "=t" (res) : "0" (x) : "st(1)");

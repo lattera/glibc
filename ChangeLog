@@ -1,5 +1,22 @@
 2012-04-30  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #14034]
+	* sysdeps/i386/fpu/e_acos.S (__ieee754_acos): Take absolute value
+	of square root.
+	* sysdeps/i386/fpu/e_acosf.S (__ieee754_acosf): Likewise.
+	* sysdeps/i386/fpu/e_acosl.c (__ieee754_acosl): Likewise.
+	* math/libm-test.inc (acos_test_tonearest): New function.
+	(acos_test_towardzero): Likewise.
+	(acos_test_downward): Likewise.
+	(acos_test_upward): Likewise.
+	(asin_test_tonearest): Likewise.
+	(asin_test_towardzero): Likewise.
+	(asin_test_downward): Likewise.
+	(asin_test_upward): Likewise.
+	(main): Call the new functions.
+	* sysdeps/i386/fpu/libm-test-ulps: Update.
+	* sysdeps/x86_64/fpu/libm-test-ulps: Update.
+
 	[BZ #13884]
 	[BZ #13924]
 	* math/e_exp10.c: Include <float.h>.

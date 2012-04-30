@@ -15,6 +15,7 @@ ENTRY(__ieee754_acos)
 	fld1				/* 1 : x^2 : x */
 	fsubp				/* 1 - x^2 : x */
 	fsqrt				/* sqrt (1 - x^2) : x */
+	fabs
 	fxch	%st(1)			/* x : sqrt (1 - x^2) */
 	fpatan				/* atan (sqrt(1 - x^2) / x) */
 	ret
