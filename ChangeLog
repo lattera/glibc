@@ -1,5 +1,15 @@
 2012-04-30  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #13942]
+	* sysdeps/i386/fpu/e_acos.S (__ieee754_acos): Calculate 1 - x^2 as
+	(1 - x) * (1 + x).
+	* sysdeps/i386/fpu/e_acosl.c (__ieee754_acosl): Likewise.
+	* sysdeps/i386/fpu/e_asin.S (__ieee754_asin): Likewise.
+	* math/libm-test.inc (acos_test): Add more tests.
+	(asin_test): Likewise.
+	* sysdeps/i386/fpu/libm-test-ulps: Update.
+	* sysdeps/x86_64/fpu/libm-test-ulps: Likewise.
+
 	[BZ #14034]
 	* sysdeps/i386/fpu/e_acos.S (__ieee754_acos): Take absolute value
 	of square root.

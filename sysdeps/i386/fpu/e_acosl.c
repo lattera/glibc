@@ -12,11 +12,13 @@ __ieee754_acosl (long double x)
 {
   long double res;
 
-  /* acosl = atanl (sqrtl(1 - x^2) / x) */
+  /* acosl = atanl (sqrtl((1-x) (1+x)) / x) */
   asm (	"fld	%%st\n"
-	"fmul	%%st(0)\n"		/* x^2 */
 	"fld1\n"
-	"fsubp\n"			/* 1 - x^2 */
+	"fsubp\n"
+	"fld1\n"
+	"fadd	%%st(2)\n"
+	"fmulp\n"			/* 1 - x^2 */
 	"fsqrt\n"			/* sqrtl (1 - x^2) */
 	"fabs\n"
 	"fxch	%%st(1)\n"

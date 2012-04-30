@@ -55,6 +55,12 @@ ldouble: 1
 Test "asin (-0.5) == -pi/6":
 ildouble: 1
 ldouble: 1
+Test "asin (-0x0.ffffffffffffffffp0) == -1.5707963264656243652399620683025688888978":
+ildouble: 1
+ldouble: 1
+Test "asin (-0x0.ffffffffffffp0) == -1.5707962425011995974432331617542781977068":
+ildouble: 1
+ldouble: 1
 Test "asin (-1.0) == -pi/2":
 ildouble: 1
 ldouble: 1
@@ -62,6 +68,12 @@ Test "asin (0.5) == pi/6":
 ildouble: 1
 ldouble: 1
 Test "asin (0.75) == 0.848062078981481008052944338998418080":
+ildouble: 1
+ldouble: 1
+Test "asin (0x0.ffffffffffffffffp0) == 1.5707963264656243652399620683025688888978":
+ildouble: 1
+ldouble: 1
+Test "asin (0x0.ffffffffffffp0) == 1.5707962425011995974432331617542781977068":
 ildouble: 1
 ldouble: 1
 Test "asin (1.0) == pi/2":
