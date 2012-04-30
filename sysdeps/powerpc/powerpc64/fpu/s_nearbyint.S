@@ -1,5 +1,5 @@
 /* Round to int floating-point values.  PowerPC64 version.
-   Copyright (C) 2011 Free Software Foundation, Inc.
+   Copyright (C) 2011-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Adhemerval Zanella <azanella@br.ibm.com>, 2011
 
@@ -62,6 +62,6 @@ weak_alias (__nearbyint, nearbyint)
 weak_alias (__nearbyint, nearbyint)
 strong_alias (__nearbyint, __nearbyintl)
 #endif
-#if LONG_DOUBLE_COMPAT(libm, GLIBC_2_0)
-compat_symbol (libm, __nearbyint, nearbyintl, GLIBC_2_0)
+#if LONG_DOUBLE_COMPAT(libm, GLIBC_2_1)
+compat_symbol (libm, __nearbyint, nearbyintl, GLIBC_2_1)
 #endif

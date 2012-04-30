@@ -1,3 +1,11 @@
+2012-05-01  Andreas Schwab  <schwab@linux-m68k.org>
+
+	[BZ #14040]
+	* sysdeps/powerpc/powerpc32/fpu/s_nearbyint.S (nearbyintl): Define
+	in version GLIBC_2.1, not GLIBC_2.0.
+	* sysdeps/powerpc/powerpc64/fpu/s_nearbyint.S (nearbyintl):
+	Likewise.
+
 2012-04-30  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #13942]
