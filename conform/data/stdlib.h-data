@@ -6,7 +6,7 @@ element ldiv_t long quot
 element ldiv_t long rem
 
 macro EXIT_FAILURE
-macro EXIT_SUCCESS 0
+macro EXIT_SUCCESS == 0
 
 macro NULL
 constant RAND_MAX >= 32767

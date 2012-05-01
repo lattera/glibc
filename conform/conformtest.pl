@@ -683,7 +683,7 @@ while ($#headers >= 0) {
 
       $res = runtest ($fnamebase, "Testing for value of macro $macro",
 		      "Macro \"$macro\" has not the right value.", $res);
-    } elsif (/^macro *([a-zA-Z0-9_]*) *([>=<!]+) ([A-Za-z0-9_]*)/) {
+    } elsif (/^macro *([a-zA-Z0-9_]*) *(?:([>=<!]+) ([A-Za-z0-9_]*))?/) {
       my($macro) = "$1";
       my($op) = $2;
       my($value) = $3;
@@ -707,7 +707,7 @@ while ($#headers >= 0) {
 			   : "Macro \"$macro\" is not available."), $res,
 			  $optional);
 
-      if ($value ne "" && ($res == 0 || !$optional)) {
+      if (defined ($op) && ($res == 0 || !$optional)) {
 	# Generate a program to test for the value of this constant.
 	open (TESTFILE, ">$fnamebase.c");
 	print TESTFILE "$prepend";
@@ -719,61 +719,6 @@ while ($#headers >= 0) {
 	$res = runtest ($fnamebase, "Testing for value of macro $macro",
 			"Macro \"$macro\" has not the right value.", $res);
       }
-    } elsif (/^macro *([a-zA-Z0-9_]*) *([A-Za-z0-9_]*)/) {
-      my($macro) = "$1";
-      my($value) = $2;
-      my($res) = $missing;
-
-      # Remember that this name is allowed.
-      push @allow, $macro;
-
-      # Generate a program to test for availability of this macro.
-      open (TESTFILE, ">$fnamebase.c");
-      print TESTFILE "$prepend";
-      print TESTFILE "#include <$h>\n";
-      print TESTFILE "#ifndef $macro\n";
-      print TESTFILE "# error \"Macro $macro not defined\"\n";
-      print TESTFILE "#endif\n";
-      close (TESTFILE);
-
-      $res = compiletest ($fnamebase, "Test availability of macro $macro",
-			  ($optional
-			   ? "NOT PRESENT"
-			   : "Macro \"$macro\" is not available."), $res,
-			  $optional);
-
-      if ($value ne "" && ($res == 0 || !$optional)) {
-	# Generate a program to test for the value of this constant.
-	open (TESTFILE, ">$fnamebase.c");
-	print TESTFILE "$prepend";
-	print TESTFILE "#include <$h>\n";
-	# Negate the value since 0 means ok
-	print TESTFILE "int main (void) { return !($macro == $value); }\n";
-	close (TESTFILE);
-
-	$res = runtest ($fnamebase, "Testing for value of macro $macro",
-			"Macro \"$macro\" has not the right value.", $res);
-      }
-    } elsif (/^macro *([^	]*)/) {
-      my($macro) = "$1";
-
-      # Remember that this name is allowed.
-      push @allow, $macro;
-
-      # Generate a program to test for availability of this macro.
-      open (TESTFILE, ">$fnamebase.c");
-      print TESTFILE "$prepend";
-      print TESTFILE "#include <$h>\n";
-      print TESTFILE "#ifndef $macro\n";
-      print TESTFILE "# error \"Macro $macro not defined\"\n";
-      print TESTFILE "#endif\n";
-      close (TESTFILE);
-
-      compiletest ($fnamebase, "Test availability of macro $macro",
-		   ($optional
-		    ? "NOT PRESENT"
-		    : "Macro \"$macro\" is not available."), $missing,
-		   $optional);
     } elsif (/^allow-header *(.*)/) {
       my($pattern) = $1;
       if ($seenheader{$pattern} != 1) {
@@ -827,7 +772,7 @@ while ($#headers >= 0) {
 	push @allow, $4;
       } elsif (/^macro-function *({([^}]*)}|([a-zA-Z0-9_]*)) ([a-zA-Z0-9_]*) ([(].*[)])/) {
 	push @allow, $4;
-      } elsif (/^macro *([^	]*)/) {
+      } elsif (/^macro *([a-zA-Z0-9_]*) *(?:([>=<!]+) ([A-Za-z0-9_]*))?/) {
 	push @allow, $1;
       } elsif (/^symbol *([a-zA-Z0-9_]*) *([A-Za-z0-9_-]*)?/) {
 	push @allow, $1;
