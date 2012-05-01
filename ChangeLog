@@ -1,5 +1,8 @@
 2012-05-01  Joseph Myers  <joseph@codesourcery.com>
 
+	* conform/conformtest.pl: Parse all "constant" and "macro" lines
+	in one place.  Also handle "macro-constant".
+
 	* conform/conformtest.pl: Only accept expected macro values with
 	"==".  Parse all "macro" lines in one place.
 	* conform/data/stdlib.h-data: Use "==" form on "macro" lines.
