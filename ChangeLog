@@ -1,5 +1,9 @@
 2012-05-01  Joseph Myers  <joseph@codesourcery.com>
 
+	* conform/conformtest.pl ($CFLAGS_namespace): Define separately
+	from $CFLAGS, without defining away __attribute__ calls.
+	(checknamespace): Use $CFLAGS_namespace.
+
 	* conform/conformtest.pl (@keywords): Only include C99 keywords
 	for standards based on C99 or C11.
 

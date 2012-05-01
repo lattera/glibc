@@ -43,7 +43,8 @@ $CFLAGS{"XOPEN2K"} = "-std=c99 -D_XOPEN_SOURCE=600";
 $CFLAGS{"XOPEN2K8"} = "-std=c99 -D_XOPEN_SOURCE=700";
 $CFLAGS{"POSIX2008"} = "-std=c99 -D_POSIX_C_SOURCE=200809L";
 
-$CFLAGS = "$flags -fno-builtin '-D__attribute__(x)=' $CFLAGS{$standard} -D_ISOMAC";
+$CFLAGS_namespace = "$flags -fno-builtin $CFLAGS{$standard} -D_ISOMAC";
+$CFLAGS = "$CFLAGS_namespace '-D__attribute__(x)='";
 
 # Check standard name for validity.
 die "unknown standard \"$standard\"" if ($CFLAGS{$standard} eq "");
@@ -262,7 +263,7 @@ sub checknamespace {
 
   undef %errors;
   $nknown = 0;
-  open (CONTENT, "$CC $CFLAGS -E $fnamebase.c -P -Wp,-dN | sed -e '/^# [1-9]/d' -e '/^[[:space:]]*\$/d' |");
+  open (CONTENT, "$CC $CFLAGS_namespace -E $fnamebase.c -P -Wp,-dN | sed -e '/^# [1-9]/d' -e '/^[[:space:]]*\$/d' |");
   loop: while (<CONTENT>) {
     chop;
     if (/^#define (.*)/) {
