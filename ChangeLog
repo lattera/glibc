@@ -1,5 +1,196 @@
 2012-05-01  Joseph Myers  <joseph@codesourcery.com>
 
+	* conform/data/math.h-data [XPG3 || XPG4 || UNIX98] (fpclassify):
+	Do not expect macro.
+	[XPG3 || XPG4 || UNIX98] (isfinite): Likewise.
+	[XPG3 || XPG4 || UNIX98] (isinf): Likewise.
+	[XPG3 || XPG4 || UNIX98] (isnan): Likewise.
+	[XPG3 || XPG4 || UNIX98] (isnormal): Likewise.
+	[XPG3 || XPG4 || UNIX98] (signbit): Likewise.
+	[XPG3 || XPG4 || UNIX98] (isgreater): Likewise.
+	[XPG3 || XPG4 || UNIX98] (isgreaterequal): Likewise.
+	[XPG3 || XPG4 || UNIX98] (isless): Likewise.
+	[XPG3 || XPG4 || UNIX98] (islessequal): Likewise.
+	[XPG3 || XPG4 || UNIX98] (islessgreater): Likewise.
+	[XPG3 || XPG4 || UNIX98] (isunordered): Likewise.
+	[XPG3 || XPG4 || UNIX98] (isnan): Expect as function.
+	[XPG3 || XPG4 || UNIX98] (HUGE_VALF): Do not expect.
+	[XPG3 || XPG4 || UNIX98] (HUGE_VALL): Likewise.
+	[XPG3 || XPG4 || UNIX98] (INFINITY): Likewise.
+	[XPG3 || XPG4 || UNIX98] (NAN): Likewise.
+	[XPG3 || XPG4 || UNIX98] (FP_INFINITE): Likewise.
+	[XPG3 || XPG4 || UNIX98] (FP_NAN): Likewise.
+	[XPG3 || XPG4 || UNIX98] (FP_NORMAL): Likewise.
+	[XPG3 || XPG4 || UNIX98] (FP_SUBNORMAL): Likewise.
+	[XPG3 || XPG4 || UNIX98] (FP_ZERO): Likewise.
+	[XPG3 || XPG4 || UNIX98] (FP_FAST_FMA): Likewise.
+	[XPG3 || XPG4 || UNIX98] (FP_FAST_FMAF): Likewise.
+	[XPG3 || XPG4 || UNIX98] (FP_FAST_FMAL): Likewise.
+	[XPG3 || XPG4 || UNIX98] (FP_ILOGB0): Likewise.
+	[XPG3 || XPG4 || UNIX98] (FP_ILOGBNAN): Likewise.
+	[XPG3 || XPG4 || UNIX98] (copysign): Likewise.
+	[XPG3 || XPG4 || UNIX98] (exp2): Likewise.
+	[XPG3 || XPG4 || UNIX98] (log2): Likewise.
+	[XPG3 || XPG4 || UNIX98] (tgama): Likewise.
+	[XPG3] (acosh): Likewise.
+	[XPG3] (asinh): Likewise.
+	[XPG3] (atanh): Likewise.
+	[XPG3] (cbrt): Likewise.
+	[XPG3] (expm1): Likewise.
+	[XPG3] (ilogb): Likewise.
+	[XPG3] (log1p): Likewise.
+	[XPG3] (logb): Likewise.
+	[XPG3] (nextafter): Likewise.
+	[XPG3 || XPG4 || UNIX98] (nexttoward): Likewise.
+	[XPG3 || XPG4 || UNIX98] (nearbyint): Likewise.
+	[XPG3] (remainder): Likewise.
+	[XPG3] (rint): Likewise.
+	[XPG3 || XPG4 || UNIX98] (round): Likewise.
+	[XPG3 || XPG4 || UNIX98] (trunc): Likewise.
+	[XPG3 || XPG4 || UNIX98] (lrint): Likewise.
+	[XPG3 || XPG4 || UNIX98] (llrint): Likewise.
+	[XPG3 || XPG4 || UNIX98] (lround): Likewise.
+	[XPG3 || XPG4 || UNIX98] (llround): Likewise.
+	[XPG3 || XPG4 || UNIX98] (remquo): Likewise.
+	[UNIX98 || XOPEN2K] (scalb): Expect.
+	[XPG3 || XPG4 || UNIX98] (scalbn): Do not expect.
+	[XPG3 || XPG4 || UNIX98] (scalbln): Likewise.
+	[XPG3 || XPG4 || UNIX98] (fdim): Likewise.
+	[XPG3 || XPG4 || UNIX98] (fmax): Likewise.
+	[XPG3 || XPG4 || UNIX98] (fmin): Likewise.
+	[XPG3 || XPG4 || UNIX98] (fma): Likewise.
+	[XPG3 || XPG4 || UNIX98] (nan): Likewise.
+	[XPG3 || XPG4 || UNIX98] (acosf): Likewise.
+	[XPG3 || XPG4 || UNIX98] (asinf): Likewise.
+	[XPG3 || XPG4 || UNIX98] (atanf): Likewise.
+	[XPG3 || XPG4 || UNIX98] (atan2f): Likewise.
+	[XPG3 || XPG4 || UNIX98] (ceilf): Likewise.
+	[XPG3 || XPG4 || UNIX98] (copysignf): Likewise.
+	[XPG3 || XPG4 || UNIX98] (cosf): Likewise.
+	[XPG3 || XPG4 || UNIX98] (coshf): Likewise.
+	[XPG3 || XPG4 || UNIX98] (expf): Likewise.
+	[XPG3 || XPG4 || UNIX98] (exp2f): Likewise.
+	[XPG3 || XPG4 || UNIX98] (fabsf): Likewise.
+	[XPG3 || XPG4 || UNIX98] (floorf): Likewise.
+	[XPG3 || XPG4 || UNIX98] (fmodf): Likewise.
+	[XPG3 || XPG4 || UNIX98] (frexpf): Likewise.
+	[XPG3 || XPG4 || UNIX98] (ldexpf): Likewise.
+	[XPG3 || XPG4 || UNIX98] (logf): Likewise.
+	[XPG3 || XPG4 || UNIX98] (log10f): Likewise.
+	[XPG3 || XPG4 || UNIX98] (log2f): Likewise.
+	[XPG3 || XPG4 || UNIX98] (modff): Likewise.
+	[XPG3 || XPG4 || UNIX98] (powf): Likewise.
+	[XPG3 || XPG4 || UNIX98] (sinf): Likewise.
+	[XPG3 || XPG4 || UNIX98] (sinhf): Likewise.
+	[XPG3 || XPG4 || UNIX98] (sqrtf): Likewise.
+	[XPG3 || XPG4 || UNIX98] (tanf): Likewise.
+	[XPG3 || XPG4 || UNIX98] (tanhf): Likewise.
+	[XPG3 || XPG4 || UNIX98] (erff): Likewise.
+	[XPG3 || XPG4 || UNIX98] (erfcf): Likewise.
+	[XPG3 || XPG4 || UNIX98] (gammaf): Likewise.
+	[XPG3 || XPG4 || UNIX98] (hypotf): Likewise.
+	[XPG3 || XPG4 || UNIX98] (j0f): Likewise.
+	[XPG3 || XPG4 || UNIX98] (j1f): Likewise.
+	[XPG3 || XPG4 || UNIX98] (jnf): Likewise.
+	[XPG3 || XPG4 || UNIX98] (lgammaf): Likewise.
+	[XPG3 || XPG4 || UNIX98] (tgammaf): Likewise.
+	[XPG3 || XPG4 || UNIX98] (y0f): Likewise.
+	[XPG3 || XPG4 || UNIX98] (y1f): Likewise.
+	[XPG3 || XPG4 || UNIX98] (ynf): Likewise.
+	[XPG3 || XPG4 || UNIX98] (acoshf): Likewise.
+	[XPG3 || XPG4 || UNIX98] (asinhf): Likewise.
+	[XPG3 || XPG4 || UNIX98] (atanhf): Likewise.
+	[XPG3 || XPG4 || UNIX98] (cbrtf): Likewise.
+	[XPG3 || XPG4 || UNIX98] (expm1f): Likewise.
+	[XPG3 || XPG4 || UNIX98] (ilogbf): Likewise.
+	[XPG3 || XPG4 || UNIX98] (log1pf): Likewise.
+	[XPG3 || XPG4 || UNIX98] (logbf): Likewise.
+	[XPG3 || XPG4 || UNIX98] (nextafterf): Likewise.
+	[XPG3 || XPG4 || UNIX98] (nexttowardf): Likewise.
+	[XPG3 || XPG4 || UNIX98] (nearbyintf): Likewise.
+	[XPG3 || XPG4 || UNIX98] (remainderf): Likewise.
+	[XPG3 || XPG4 || UNIX98] (rintf): Likewise.
+	[XPG3 || XPG4 || UNIX98] (roundf): Likewise.
+	[XPG3 || XPG4 || UNIX98] (truncf): Likewise.
+	[XPG3 || XPG4 || UNIX98] (lrintf): Likewise.
+	[XPG3 || XPG4 || UNIX98] (llrintf): Likewise.
+	[XPG3 || XPG4 || UNIX98] (lroundf): Likewise.
+	[XPG3 || XPG4 || UNIX98] (llroundf): Likewise.
+	[XPG3 || XPG4 || UNIX98] (remquof): Likewise.
+	[XPG3 || XPG4 || UNIX98] (scalbf): Likewise.
+	[XPG3 || XPG4 || UNIX98] (scalbnf): Likewise.
+	[XPG3 || XPG4 || UNIX98] (scalblnf): Likewise.
+	[XPG3 || XPG4 || UNIX98] (fdimf): Likewise.
+	[XPG3 || XPG4 || UNIX98] (fmaxf): Likewise.
+	[XPG3 || XPG4 || UNIX98] (fminf): Likewise.
+	[XPG3 || XPG4 || UNIX98] (fmaf): Likewise.
+	[XPG3 || XPG4 || UNIX98] (nanf): Likewise.
+	[XPG3 || XPG4 || UNIX98] (acosl): Likewise.
+	[XPG3 || XPG4 || UNIX98] (asinl): Likewise.
+	[XPG3 || XPG4 || UNIX98] (atanl): Likewise.
+	[XPG3 || XPG4 || UNIX98] (atan2l): Likewise.
+	[XPG3 || XPG4 || UNIX98] (ceill): Likewise.
+	[XPG3 || XPG4 || UNIX98] (copysignl): Likewise.
+	[XPG3 || XPG4 || UNIX98] (cosl): Likewise.
+	[XPG3 || XPG4 || UNIX98] (coshl): Likewise.
+	[XPG3 || XPG4 || UNIX98] (expl): Likewise.
+	[XPG3 || XPG4 || UNIX98] (exp2l): Likewise.
+	[XPG3 || XPG4 || UNIX98] (fabsl): Likewise.
+	[XPG3 || XPG4 || UNIX98] (floorl): Likewise.
+	[XPG3 || XPG4 || UNIX98] (fmodl): Likewise.
+	[XPG3 || XPG4 || UNIX98] (frexpl): Likewise.
+	[XPG3 || XPG4 || UNIX98] (ldexpl): Likewise.
+	[XPG3 || XPG4 || UNIX98] (logl): Likewise.
+	[XPG3 || XPG4 || UNIX98] (log10l): Likewise.
+	[XPG3 || XPG4 || UNIX98] (log2l): Likewise.
+	[XPG3 || XPG4 || UNIX98] (modfl): Likewise.
+	[XPG3 || XPG4 || UNIX98] (powl): Likewise.
+	[XPG3 || XPG4 || UNIX98] (sinl): Likewise.
+	[XPG3 || XPG4 || UNIX98] (sinhl): Likewise.
+	[XPG3 || XPG4 || UNIX98] (sqrtl): Likewise.
+	[XPG3 || XPG4 || UNIX98] (tanl): Likewise.
+	[XPG3 || XPG4 || UNIX98] (tanhl): Likewise.
+	[XPG3 || XPG4 || UNIX98] (erfl): Likewise.
+	[XPG3 || XPG4 || UNIX98] (erfcl): Likewise.
+	[XPG3 || XPG4 || UNIX98] (gammal): Likewise.
+	[XPG3 || XPG4 || UNIX98] (hypotl): Likewise.
+	[XPG3 || XPG4 || UNIX98] (j0l): Likewise.
+	[XPG3 || XPG4 || UNIX98] (j1l): Likewise.
+	[XPG3 || XPG4 || UNIX98] (jnl): Likewise.
+	[XPG3 || XPG4 || UNIX98] (lgammal): Likewise.
+	[XPG3 || XPG4 || UNIX98] (tgammal): Likewise.
+	[XPG3 || XPG4 || UNIX98] (y0l): Likewise.
+	[XPG3 || XPG4 || UNIX98] (y1l): Likewise.
+	[XPG3 || XPG4 || UNIX98] (ynl): Likewise.
+	[XPG3 || XPG4 || UNIX98] (acoshl): Likewise.
+	[XPG3 || XPG4 || UNIX98] (asinhl): Likewise.
+	[XPG3 || XPG4 || UNIX98] (atanhl): Likewise.
+	[XPG3 || XPG4 || UNIX98] (cbrtl): Likewise.
+	[XPG3 || XPG4 || UNIX98] (expm1l): Likewise.
+	[XPG3 || XPG4 || UNIX98] (ilogbl): Likewise.
+	[XPG3 || XPG4 || UNIX98] (log1pl): Likewise.
+	[XPG3 || XPG4 || UNIX98] (logbl): Likewise.
+	[XPG3 || XPG4 || UNIX98] (nextafterl): Likewise.
+	[XPG3 || XPG4 || UNIX98] (nexttowardl): Likewise.
+	[XPG3 || XPG4 || UNIX98] (nearbyintl): Likewise.
+	[XPG3 || XPG4 || UNIX98] (remainderl): Likewise.
+	[XPG3 || XPG4 || UNIX98] (rintl): Likewise.
+	[XPG3 || XPG4 || UNIX98] (roundl): Likewise.
+	[XPG3 || XPG4 || UNIX98] (truncl): Likewise.
+	[XPG3 || XPG4 || UNIX98] (lrintl): Likewise.
+	[XPG3 || XPG4 || UNIX98] (llrintl): Likewise.
+	[XPG3 || XPG4 || UNIX98] (lroundl): Likewise.
+	[XPG3 || XPG4 || UNIX98] (llroundl): Likewise.
+	[XPG3 || XPG4 || UNIX98] (remquol): Likewise.
+	[XPG3 || XPG4 || UNIX98] (scalbl): Likewise.
+	[XPG3 || XPG4 || UNIX98] (scalbnl): Likewise.
+	[XPG3 || XPG4 || UNIX98] (scalblnl): Likewise.
+	[XPG3 || XPG4 || UNIX98] (fdiml): Likewise.
+	[XPG3 || XPG4 || UNIX98] (fmaxl): Likewise.
+	[XPG3 || XPG4 || UNIX98] (fminl): Likewise.
+	[XPG3 || XPG4 || UNIX98] (fmal): Likewise.
+	[XPG3 || XPG4 || UNIX98] (nanl): Likewise.
+
 	* conform/conformtest.pl: Define _XOPEN_SOURCE as well as
 	_XOPEN_SOURCE_EXTENDED for XPG4.
 
