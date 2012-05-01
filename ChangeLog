@@ -3235,6 +3235,7 @@
 	* dlfcn/Makefile: Likewise.
 	* posix/Makefile: Likewise.
 
+	[BZ #6959]
 	* timezone/Makefile: Don't install timezone files, just the programs
 	and scripts.
 
