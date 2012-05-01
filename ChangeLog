@@ -1,5 +1,10 @@
 2012-05-01  Joseph Myers  <joseph@codesourcery.com>
 
+	* conform/conformtest.pl: Use -ansi for XPG3, XPG4 and UNIX98.
+	Use -std=c99 for XOPEN2K.
+	(@knownproblems): Remove.
+	(newtoken): Don't check %isknown.
+
 	* conform/data/math.h-data [XPG3 || XPG4 || UNIX98] (fpclassify):
 	Do not expect macro.
 	[XPG3 || XPG4 || UNIX98] (isfinite): Likewise.

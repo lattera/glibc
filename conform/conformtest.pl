@@ -36,10 +36,10 @@ $CFLAGS{"ISO"} = "-ansi";
 $CFLAGS{"ISO99"} = "-std=c99";
 $CFLAGS{"ISO11"} = "-std=c1x -D_ISOC11_SOURCE";
 $CFLAGS{"POSIX"} = "-D_POSIX_C_SOURCE=199912 -ansi";
-$CFLAGS{"XPG3"} = "-D_XOPEN_SOURCE";
-$CFLAGS{"XPG4"} = "-D_XOPEN_SOURCE -D_XOPEN_SOURCE_EXTENDED";
-$CFLAGS{"UNIX98"} = "-D_XOPEN_SOURCE=500";
-$CFLAGS{"XOPEN2K"} = "-D_XOPEN_SOURCE=600";
+$CFLAGS{"XPG3"} = "-ansi -D_XOPEN_SOURCE";
+$CFLAGS{"XPG4"} = "-ansi -D_XOPEN_SOURCE -D_XOPEN_SOURCE_EXTENDED";
+$CFLAGS{"UNIX98"} = "-ansi -D_XOPEN_SOURCE=500";
+$CFLAGS{"XOPEN2K"} = "-std=c99 -D_XOPEN_SOURCE=600";
 $CFLAGS{"XOPEN2K8"} = "-std=c99 -D_XOPEN_SOURCE=700";
 $CFLAGS{"POSIX2008"} = "-std=c99 -D_POSIX_C_SOURCE=200809L";
 
@@ -74,14 +74,6 @@ die "unknown standard \"$standard\"" if ($CFLAGS{$standard} eq "");
 # Make a hash table from this information.
 while ($#keywords >= 0) {
   $iskeyword{pop (@keywords)} = 1;
-}
-
-# These are symbols which are known to pollute the namespace.
-@knownproblems = ('unix', 'linux', 'i386');
-
-# Make a hash table from the known problems.
-while ($#knownproblems >= 0) {
-  $isknown{pop (@knownproblems)} = 1;
 }
 
 $verbose = 1;
@@ -239,10 +231,6 @@ sub newtoken {
 
   for ($idx = 0; $idx <= $#allow; ++$idx) {
     return if (poorfnmatch ($allow[$idx], $token));
-  }
-
-  unless ($isknown{$token}) {
-    $errors{$token} = 1;
   }
 }
 
