@@ -1,5 +1,9 @@
 2012-05-01  Joseph Myers  <joseph@codesourcery.com>
 
+	* conform/conformtest.pl: If macro or constant types start
+	"promoted:", expect the symbol to be of the following type
+	promoted by the integer promotions.
+
 	* conform/conformtest.pl: Parse all "constant" and "macro" lines
 	in one place.  Also handle "macro-constant".
 

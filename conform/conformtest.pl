@@ -437,7 +437,12 @@ while ($#headers >= 0) {
 	open (TESTFILE, ">$fnamebase.c");
 	print TESTFILE "$prepend";
 	print TESTFILE "#include <$h>\n";
-	print TESTFILE "__typeof__ (($type) 0) a;\n";
+	if ($type =~ /^promoted:/) {
+	  $type =~ s/^promoted://;
+	  print TESTFILE "__typeof__ (($type) 0 + ($type) 0) a;\n";
+	} else {
+	  print TESTFILE "__typeof__ (($type) 0) a;\n";
+	}
 	print TESTFILE "extern __typeof__ ($symbol) a;\n";
 	close (TESTFILE);
 
