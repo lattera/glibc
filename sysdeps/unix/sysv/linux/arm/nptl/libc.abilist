@@ -1421,6 +1421,7 @@ GLIBC_2.4
  printf_size F
  printf_size_info F
  profil F
+ profil_counter F
  program_invocation_name D 0x4
  program_invocation_short_name D 0x4
  pselect F

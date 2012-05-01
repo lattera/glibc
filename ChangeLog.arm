@@ -1,3 +1,11 @@
+2012-05-01  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #14043]
+	* sysdeps/unix/sysv/linux/arm/profil-counter.h: New file.  Based
+	on i386 version but without "static".
+	* sysdeps/unix/sysv/linux/arm/nptl/libc.abilist (GLIBC_2.4): Add
+	profil_counter.
+
 2012-04-28  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #13986]
