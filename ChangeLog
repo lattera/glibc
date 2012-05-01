@@ -1,5 +1,10 @@
 2012-05-01  Joseph Myers  <joseph@codesourcery.com>
 
+	* conform/data/iso646.h-data [ISO || POSIX || XPG3 || XPG4]:
+	Disable tests.
+	* conform/data/stdint.h-data [ISO || POSIX || XPG3 || XPG4 ||
+	UNIX98]: Likewise.
+
 	* conform/conformtest.pl: Handle "macro-int-constant" and test for
 	usability of symbols in #if.
 

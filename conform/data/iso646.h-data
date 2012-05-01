@@ -1,3 +1,4 @@
+#if !defined ISO && !defined POSIX && !defined XPG3 && !defined XPG4
 macro and
 macro and_eq
 macro bitand
@@ -11,3 +12,4 @@ macro xor
 macro xor_eq
 
 allow *_t
+#endif

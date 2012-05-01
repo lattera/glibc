@@ -1,3 +1,4 @@
+#if !defined ISO && !defined POSIX && !defined XPG3 && !defined XPG4 && !defined UNIX98
 type int8_t
 type int16_t
 type int32_t
@@ -112,3 +113,4 @@ macro UINTMAX_C
 // fnamtch implementation doesn't grok the right form.
 allow INT*
 allow UINT*
+#endif
