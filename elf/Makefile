@@ -872,10 +872,6 @@ CFLAGS-tst-pie1.c += $(pie-ccflag)
 
 $(objpfx)tst-pie1: $(objpfx)tst-piemod1.so
 
-check-localplt-CFLAGS = -O -Wall -D_GNU_SOURCE -std=gnu99
-$(objpfx)check-localplt: check-localplt.c
-	$(native-compile)
-
 ifeq (yes,$(build-shared))
 tests: $(objpfx)check-textrel.out $(objpfx)check-execstack.out
 
@@ -927,6 +923,13 @@ generated += check-execstack.out
 $(objpfx)tst-dlmodcount: $(libdl)
 $(objpfx)tst-dlmodcount.out: $(test-modules)
 
+$(all-built-dso:=.jmprel): %.jmprel: % Makefile
+	@rm -f $@T
+	LC_ALL=C $(READELF) -W -S -d -r $< > $@T
+	test -s $@T
+	mv -f $@T $@
+generated += $(all-built-dso:=.jmprel)
+
 check-data := $(firstword $(wildcard \
 		$(foreach D,$(add-ons) scripts,\
 			  $(patsubst %,$(..)$D/data/localplt-%.data,\
@@ -938,20 +941,24 @@ check-data := $(firstword $(wildcard \
 
 tests: $(objpfx)check-localplt.out
 
+localplt-built-dso := $(addprefix $(common-objpfx),\
+				  libc.so \
+				  math/libm.so \
+				  rt/librt.so \
+				  dlfcn/libdl.so \
+				  resolv/libresolv.so \
+				  crypt/libcrypt.so \
+		       )
 ifeq ($(have-thread-library),yes)
-thread-dso := $(filter-out %_nonshared.a, $(shared-thread-library))
+localplt-built-dso += $(filter-out %_nonshared.a, $(shared-thread-library))
 endif
 
-$(objpfx)check-localplt.out: $(objpfx)check-localplt \
-			     $(common-objpfx)libc.so \
-			     $(common-objpfx)math/libm.so $(thread-dso) \
-			     $(common-objpfx)rt/librt.so \
-			     $(common-objpfx)dlfcn/libdl.so \
-			     $(common-objpfx)resolv/libresolv.so \
-			     $(common-objpfx)crypt/libcrypt.so \
+$(objpfx)check-localplt.out: $(..)scripts/check-localplt.awk \
+			     $(..)scripts/localplt.awk \
+			     $(localplt-built-dso:=.jmprel) \
 			     $(check-data)
-	$(dir $<)$(notdir $<) $(filter-out $< $(check-data),$^) | \
-	  $(AWK) -f $(..)scripts/check-localplt.awk $(check-data) -
+	LC_ALL=C $(AWK) -f $(filter-out $< $(check-data),$^) | \
+	  LC_ALL=C $(AWK) -f $< $(check-data) -
 endif
 
 $(objpfx)tst-dlopenrpathmod.so: $(libdl)

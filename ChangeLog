@@ -1,5 +1,15 @@
 2012-05-01  Roland McGrath  <roland@hack.frob.com>
 
+	* scripts/localplt.awk: New file.
+	* elf/Makefile ($(objpfx)check-localplt): Target removed.
+	(check-localplt-CFLAGS): Variable removed.
+	($(all-built-dso:=.jmprel)): New static pattern rule.
+	(generated): Add those targets.
+	(localplt-built-dso): New variable.
+	($(objpfx)check-localplt.out): Use the script on the .jmprel files.
+
+	* elf/check-localplt.c: File removed.
+
 	* scripts/check-execstack.awk: New file.
 	* elf/Makefile ($(objpfx)check-execstack): Target removed.
 	(check-execstack-CFLAGS): Variable removed.
