@@ -338,6 +338,11 @@ while ($#headers >= 0) {
       last control if ($missing);
     }
 
+    my($optional) = 0;
+    if (/^optional-/) {
+      s/^optional-//;
+      $optional = 1;
+    }
     if (/^element *({([^}]*)}|([^{ ]*)) *({([^}]*)}|([^{ ]*)) *([A-Za-z0-9_]*) *(.*)/) {
       my($struct) = "$2$3";
       my($type) = "$5$6";
@@ -361,47 +366,12 @@ while ($#headers >= 0) {
       close (TESTFILE);
 
       $res = compiletest ($fnamebase, "Testing for member $member",
-			  "Member \"$member\" not available.", $res, 0);
+			  ($optional
+			   ? "NOT AVAILABLE."
+			   : "Member \"$member\" not available."), $res,
+			  $optional);
 
-
-      # Test the types of the members.
-      open (TESTFILE, ">$fnamebase.c");
-      print TESTFILE "$prepend";
-      print TESTFILE "#include <$h>\n";
-      print TESTFILE "$struct a;\n";
-      print TESTFILE "extern $type b$rest;\n";
-      print TESTFILE "extern __typeof__ (a.$member) b;\n";
-      close (TESTFILE);
-
-      compiletest ($fnamebase, "Testing for type of member $member",
-		   "Member \"$member\" does not have the correct type.",
-		   $res, 0);
-    } elsif (/^optional-element *({([^}]*)}|([^{ ]*)) *({([^}]*)}|([^{ ]*)) *([A-Za-z0-9_]*) *(.*)/) {
-      my($struct) = "$2$3";
-      my($type) = "$5$6";
-      my($member) = "$7";
-      my($rest) = "$8";
-      my($res) = $missing;
-
-      # Remember that this name is allowed.
-      push @allow, $member;
-
-      # Generate a program to test for the availability of this member.
-      open (TESTFILE, ">$fnamebase.c");
-      print TESTFILE "$prepend";
-      print TESTFILE "#include <$h>\n";
-      print TESTFILE "$struct a;\n";
-      print TESTFILE "$struct b;\n";
-      print TESTFILE "extern void xyzzy (__typeof__ (&b.$member), __typeof__ (&a.$member), unsigned);\n";
-      print TESTFILE "void foobarbaz (void) {\n";
-      print TESTFILE "  xyzzy (&a.$member, &b.$member, sizeof (a.$member));\n";
-      print TESTFILE "}\n";
-      close (TESTFILE);
-
-      $res = compiletest ($fnamebase, "Testing for member $member",
-			  "NOT AVAILABLE.", $res, 1);
-
-      if ($res == 0 || $missing != 0) {
+      if ($res == 0 || $missing != 0 || !$optional) {
 	# Test the types of the members.
 	open (TESTFILE, ">$fnamebase.c");
 	print TESTFILE "$prepend";
@@ -414,37 +384,6 @@ while ($#headers >= 0) {
 	compiletest ($fnamebase, "Testing for type of member $member",
 		     "Member \"$member\" does not have the correct type.",
 		     $res, 0);
-      }
-    } elsif (/^optional-constant *([a-zA-Z0-9_]*) *(?:([>=<!]+) ([A-Za-z0-9_-]*))?/) {
-      my($const) = $1;
-      my($op) = $2;
-      my($value) = $3;
-      my($res) = $missing;
-
-      # Remember that this name is allowed.
-      push @allow, $const;
-
-      # Generate a program to test for the availability of this constant.
-      open (TESTFILE, ">$fnamebase.c");
-      print TESTFILE "$prepend";
-      print TESTFILE "#include <$h>\n";
-      print TESTFILE "__typeof__ ($const) a = $const;\n";
-      close (TESTFILE);
-
-      $res = compiletest ($fnamebase, "Testing for constant $const",
-			  "NOT PRESENT", $res, 1);
-
-      if (defined ($op) && $res == 0) {
-	# Generate a program to test for the value of this constant.
-	open (TESTFILE, ">$fnamebase.c");
-	print TESTFILE "$prepend";
-	print TESTFILE "#include <$h>\n";
-	# Negate the value since 0 means ok
-	print TESTFILE "int main (void) { return !($const $op $value); }\n";
-	close (TESTFILE);
-
-	$res = runtest ($fnamebase, "Testing for value of constant $const",
-			"Constant \"$const\" has not the right value.", $res);
       }
     } elsif (/^constant *([a-zA-Z0-9_]*) *(?:([>=<!]+) ([A-Za-z0-9_-]*))?/) {
       my($const) = $1;
@@ -463,9 +402,12 @@ while ($#headers >= 0) {
       close (TESTFILE);
 
       $res = compiletest ($fnamebase, "Testing for constant $const",
-			  "Constant \"$const\" not available.", $res, 0);
+			  ($optional
+			   ? "NOT PRESENT"
+			   : "Constant \"$const\" not available."), $res,
+			  $optional);
 
-      if (defined ($op)) {
+      if (defined ($op) && ($res == 0 || !$optional)) {
 	# Generate a program to test for the value of this constant.
 	open (TESTFILE, ">$fnamebase.c");
 	print TESTFILE "$prepend";
@@ -550,33 +492,6 @@ while ($#headers >= 0) {
 	$res = runtest ($fnamebase, "Testing for value of symbol $symbol",
 			"Symbol \"$symbol\" has not the right value.", $res);
       }
-    } elsif (/^optional-type *({([^}]*)|([a-zA-Z0-9_]*))/) {
-      my($type) = "$2$3";
-      my($maybe_opaque) = 0;
-
-      # Remember that this name is allowed.
-      if ($type =~ /^struct *(.*)/) {
-	push @allow, $1;
-      } elsif ($type =~ /^union *(.*)/) {
-	push @allow, $1;
-      } else {
-	push @allow, $type;
-	$maybe_opaque = 1;
-      }
-
-      # Generate a program to test for the availability of this constant.
-      open (TESTFILE, ">$fnamebase.c");
-      print TESTFILE "$prepend";
-      print TESTFILE "#include <$h>\n";
-      if ($maybe_opaque == 1) {
-	print TESTFILE "$type *a;\n";
-      } else {
-	print TESTFILE "$type a;\n";
-      }
-      close (TESTFILE);
-
-      compiletest ($fnamebase, "Testing for type $type",
-		   "NOT AVAILABLE", $missing, 1);
     } elsif (/^type *({([^}]*)|([a-zA-Z0-9_]*))/) {
       my($type) = "$2$3";
       my($maybe_opaque) = 0;
@@ -603,7 +518,9 @@ while ($#headers >= 0) {
       close (TESTFILE);
 
       compiletest ($fnamebase, "Testing for type $type",
-		   "Type \"$type\" not available.", $missing, 0);
+		   ($optional
+		    ? "NOT AVAILABLE"
+		    : "Type \"$type\" not available."), $missing, $optional);
     } elsif (/^tag *({([^}]*)|([a-zA-Z0-9_]*))/) {
       my($type) = "$2$3";
 
@@ -625,39 +542,6 @@ while ($#headers >= 0) {
 
       compiletest ($fnamebase, "Testing for type $type",
 		   "Type \"$type\" not available.", $missing, 0);
-    } elsif (/^optional-function *({([^}]*)}|([a-zA-Z0-9_]*)) [(][*]([a-zA-Z0-9_]*) ([(].*[)])/) {
-      my($rettype) = "$2$3";
-      my($fname) = "$4";
-      my($args) = "$5";
-      my($res) = $missing;
-
-      # Remember that this name is allowed.
-      push @allow, $fname;
-
-      # Generate a program to test for availability of this function.
-      open (TESTFILE, ">$fnamebase.c");
-      print TESTFILE "$prepend";
-      print TESTFILE "#include <$h>\n";
-      # print TESTFILE "#undef $fname\n";
-      print TESTFILE "$rettype (*(*foobarbaz) $args = $fname;\n";
-      close (TESTFILE);
-
-      $res = compiletest ($fnamebase, "Test availability of function $fname",
-			  "NOT AVAILABLE", $res, 1);
-
-      if ($res == 0 || $missing == 1) {
-	# Generate a program to test for the type of this function.
-	open (TESTFILE, ">$fnamebase.c");
-	print TESTFILE "$prepend";
-	print TESTFILE "#include <$h>\n";
-	# print TESTFILE "#undef $fname\n";
-	print TESTFILE "extern $rettype (*(*foobarbaz) $args;\n";
-	print TESTFILE "extern __typeof__ (&$fname) foobarbaz;\n";
-	close (TESTFILE);
-
-	compiletest ($fnamebase, "Test for type of function $fname",
-		     "Function \"$fname\" has incorrect type.", $res, 0);
-      }
     } elsif (/^function *({([^}]*)}|([a-zA-Z0-9_]*)) [(][*]([a-zA-Z0-9_]*) ([(].*[)])/) {
       my($rettype) = "$2$3";
       my($fname) = "$4";
@@ -676,46 +560,18 @@ while ($#headers >= 0) {
       close (TESTFILE);
 
       $res = compiletest ($fnamebase, "Test availability of function $fname",
-			  "Function \"$fname\" is not available.", $res, 0);
+			  ($optional
+			   ? "NOT AVAILABLE"
+			   : "Function \"$fname\" is not available."), $res,
+			  $optional);
 
-      # Generate a program to test for the type of this function.
-      open (TESTFILE, ">$fnamebase.c");
-      print TESTFILE "$prepend";
-      print TESTFILE "#include <$h>\n";
-      # print TESTFILE "#undef $fname\n";
-      print TESTFILE "extern $rettype (*(*foobarbaz) $args;\n";
-      print TESTFILE "extern __typeof__ (&$fname) foobarbaz;\n";
-      close (TESTFILE);
-
-      compiletest ($fnamebase, "Test for type of function $fname",
-		   "Function \"$fname\" has incorrect type.", $res, 0);
-    } elsif (/^optional-function *({([^}]*)}|([a-zA-Z0-9_]*)) ([a-zA-Z0-9_]*) ([(].*[)])/) {
-      my($rettype) = "$2$3";
-      my($fname) = "$4";
-      my($args) = "$5";
-      my($res) = $missing;
-
-      # Remember that this name is allowed.
-      push @allow, $fname;
-
-      # Generate a program to test for availability of this function.
-      open (TESTFILE, ">$fnamebase.c");
-      print TESTFILE "$prepend";
-      print TESTFILE "#include <$h>\n";
-      # print TESTFILE "#undef $fname\n";
-      print TESTFILE "$rettype (*foobarbaz) $args = $fname;\n";
-      close (TESTFILE);
-
-      $res = compiletest ($fnamebase, "Test availability of function $fname",
-			  "NOT AVAILABLE", $res, 1);
-
-      if ($res == 0 || $missing != 0) {
+      if ($res == 0 || $missing == 1 || !$optional) {
 	# Generate a program to test for the type of this function.
 	open (TESTFILE, ">$fnamebase.c");
 	print TESTFILE "$prepend";
 	print TESTFILE "#include <$h>\n";
 	# print TESTFILE "#undef $fname\n";
-	print TESTFILE "extern $rettype (*foobarbaz) $args;\n";
+	print TESTFILE "extern $rettype (*(*foobarbaz) $args;\n";
 	print TESTFILE "extern __typeof__ (&$fname) foobarbaz;\n";
 	close (TESTFILE);
 
@@ -740,19 +596,24 @@ while ($#headers >= 0) {
       close (TESTFILE);
 
       $res = compiletest ($fnamebase, "Test availability of function $fname",
-			  "Function \"$fname\" is not available.", $res, 0);
+			  ($optional
+			   ? "NOT AVAILABLE"
+			   : "Function \"$fname\" is not available."), $res,
+			  $optional);
 
-      # Generate a program to test for the type of this function.
-      open (TESTFILE, ">$fnamebase.c");
-      print TESTFILE "$prepend";
-      print TESTFILE "#include <$h>\n";
-      # print TESTFILE "#undef $fname\n";
-      print TESTFILE "extern $rettype (*foobarbaz) $args;\n";
-      print TESTFILE "extern __typeof__ (&$fname) foobarbaz;\n";
-      close (TESTFILE);
+      if ($res == 0 || $missing != 0 || !$optional) {
+	# Generate a program to test for the type of this function.
+	open (TESTFILE, ">$fnamebase.c");
+	print TESTFILE "$prepend";
+	print TESTFILE "#include <$h>\n";
+	# print TESTFILE "#undef $fname\n";
+	print TESTFILE "extern $rettype (*foobarbaz) $args;\n";
+	print TESTFILE "extern __typeof__ (&$fname) foobarbaz;\n";
+	close (TESTFILE);
 
-      compiletest ($fnamebase, "Test for type of function $fname",
-		   "Function \"$fname\" has incorrect type.", $res, 0);
+	compiletest ($fnamebase, "Test for type of function $fname",
+		     "Function \"$fname\" has incorrect type.", $res, 0);
+      }
     } elsif (/^variable *({([^}]*)}|([a-zA-Z0-9_]*)) ([a-zA-Z0-9_]*) *(.*)/) {
       my($type) = "$2$3";
       my($vname) = "$4";
@@ -849,23 +710,6 @@ while ($#headers >= 0) {
 
       $res = runtest ($fnamebase, "Testing for value of macro $macro",
 		      "Macro \"$macro\" has not the right value.", $res);
-    } elsif (/^optional-macro *([^	]*)/) {
-      my($macro) = "$1";
-
-      # Remember that this name is allowed.
-      push @allow, $macro;
-
-      # Generate a program to test for availability of this macro.
-      open (TESTFILE, ">$fnamebase.c");
-      print TESTFILE "$prepend";
-      print TESTFILE "#include <$h>\n";
-      print TESTFILE "#ifndef $macro\n";
-      print TESTFILE "# error \"Macro $macro not defined\"\n";
-      print TESTFILE "#endif\n";
-      close (TESTFILE);
-
-      compiletest ($fnamebase, "Test availability of macro $macro",
-		   "NOT PRESENT", $missing, 1);
     } elsif (/^macro *([a-zA-Z0-9_]*) *([>=<!]+) ([A-Za-z0-9_]*)/) {
       my($macro) = "$1";
       my($op) = $2;
@@ -885,9 +729,12 @@ while ($#headers >= 0) {
       close (TESTFILE);
 
       $res = compiletest ($fnamebase, "Test availability of macro $macro",
-			  "Macro \"$macro\" is not available.", $res, 0);
+			  ($optional
+			   ? "NOT PRESENT"
+			   : "Macro \"$macro\" is not available."), $res,
+			  $optional);
 
-      if ($value ne "") {
+      if ($value ne "" && ($res == 0 || !$optional)) {
 	# Generate a program to test for the value of this constant.
 	open (TESTFILE, ">$fnamebase.c");
 	print TESTFILE "$prepend";
@@ -917,9 +764,12 @@ while ($#headers >= 0) {
       close (TESTFILE);
 
       $res = compiletest ($fnamebase, "Test availability of macro $macro",
-			  "Macro \"$macro\" is not available.", $res, 0);
+			  ($optional
+			   ? "NOT PRESENT"
+			   : "Macro \"$macro\" is not available."), $res,
+			  $optional);
 
-      if ($value ne "") {
+      if ($value ne "" && ($res == 0 || !$optional)) {
 	# Generate a program to test for the value of this constant.
 	open (TESTFILE, ">$fnamebase.c");
 	print TESTFILE "$prepend";
@@ -947,7 +797,10 @@ while ($#headers >= 0) {
       close (TESTFILE);
 
       compiletest ($fnamebase, "Test availability of macro $macro",
-		   "Macro \"$macro\" is not available.", $missing, 0);
+		   ($optional
+		    ? "NOT PRESENT"
+		    : "Macro \"$macro\" is not available."), $missing,
+		   $optional);
     } elsif (/^allow-header *(.*)/) {
       my($pattern) = $1;
       if ($seenheader{$pattern} != 1) {

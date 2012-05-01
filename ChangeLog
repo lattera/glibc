@@ -1,5 +1,9 @@
 2012-05-01  Joseph Myers  <joseph@codesourcery.com>
 
+	* conform/conformtest.pl: Handle "optional-" at start of lines in
+	one place rather than duplicating several cases.  Handle each
+	format of "macro" line with initial "optional-".
+
 	* conform/conformtest.pl: Only accept expected constant or
 	optional-constant values with "==".  Parse all "constant" lines in
 	one place.  Parse all "optional-constant" lines in one place.
