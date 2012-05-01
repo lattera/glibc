@@ -1,5 +1,8 @@
 2012-05-01  Roland McGrath  <roland@hack.frob.com>
 
+	* elf/Makefile ($(objpfx)check-localplt.out): Redirect the test's
+	output to the target.
+
 	* scripts/localplt.awk: New file.
 	* elf/Makefile ($(objpfx)check-localplt): Target removed.
 	(check-localplt-CFLAGS): Variable removed.

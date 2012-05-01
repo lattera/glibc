@@ -958,7 +958,8 @@ $(objpfx)check-localplt.out: $(..)scripts/check-localplt.awk \
 			     $(localplt-built-dso:=.jmprel) \
 			     $(check-data)
 	LC_ALL=C $(AWK) -f $(filter-out $< $(check-data),$^) | \
-	  LC_ALL=C $(AWK) -f $< $(check-data) -
+	  LC_ALL=C $(AWK) -f $< $(check-data) - \
+	  > $@
 endif
 
 $(objpfx)tst-dlopenrpathmod.so: $(libdl)
