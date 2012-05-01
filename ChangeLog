@@ -1,5 +1,8 @@
 2012-05-01  Joseph Myers  <joseph@codesourcery.com>
 
+	* conform/conformtest.pl (@keywords): Only include C99 keywords
+	for standards based on C99 or C11.
+
 	* conform/data/iso646.h-data [ISO || POSIX || XPG3 || XPG4]:
 	Disable tests.
 	* conform/data/stdint.h-data [ISO || POSIX || XPG3 || XPG4 ||

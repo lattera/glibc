@@ -64,12 +64,15 @@ die "unknown standard \"$standard\"" if ($CFLAGS{$standard} eq "");
 #   $mustprepend{'wordexp.h'} = "#include <stddef.h>\n";
 # }
 
-# These are the ISO C99 keywords.
+# These are the ISO C90 keywords.
 @keywords = ('auto', 'break', 'case', 'char', 'const', 'continue', 'default',
 	     'do', 'double', 'else', 'enum', 'extern', 'float', 'for', 'goto',
-	     'if', 'inline', 'int', 'long', 'register', 'restrict', 'return',
+	     'if', 'int', 'long', 'register', 'return',
 	     'short', 'signed', 'sizeof', 'static', 'struct', 'switch',
 	     'typedef', 'union', 'unsigned', 'void', 'volatile', 'while');
+if ($CFLAGS{$standard} =~ /-std=(c99|c1x)/) {
+  push (@keywords, 'inline', 'restrict');
+}
 
 # Make a hash table from this information.
 while ($#keywords >= 0) {
