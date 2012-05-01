@@ -5743,8 +5743,73 @@ nexttoward_test (void)
   TEST_ff_f (nexttoward, 1.1L, nan_value, nan_value);
   TEST_ff_f (nexttoward, nan_value, nan_value, nan_value);
 
-  /* XXX We need the hexadecimal FP number representation here for further
-     tests.  */
+#ifdef TEST_FLOAT
+  TEST_ff_f (nexttoward, 1.0, 1.1L, 0x1.000002p0);
+  TEST_ff_f (nexttoward, 1.0, LDBL_MAX, 0x1.000002p0);
+  TEST_ff_f (nexttoward, 1.0, 0x1.0000000000001p0, 0x1.000002p0);
+  TEST_ff_f (nexttoward, 1.0, 0.9L, 0x0.ffffffp0);
+  TEST_ff_f (nexttoward, 1.0, -LDBL_MAX, 0x0.ffffffp0);
+  TEST_ff_f (nexttoward, 1.0, 0x0.fffffffffffff8p0, 0x0.ffffffp0);
+  TEST_ff_f (nexttoward, -1.0, -1.1L, -0x1.000002p0);
+  TEST_ff_f (nexttoward, -1.0, -LDBL_MAX, -0x1.000002p0);
+  TEST_ff_f (nexttoward, -1.0, -0x1.0000000000001p0, -0x1.000002p0);
+  TEST_ff_f (nexttoward, -1.0, -0.9L, -0x0.ffffffp0);
+  TEST_ff_f (nexttoward, -1.0, LDBL_MAX, -0x0.ffffffp0);
+  TEST_ff_f (nexttoward, -1.0, -0x0.fffffffffffff8p0, -0x0.ffffffp0);
+  TEST_ff_f (nexttoward, -0x1.3p-145, -0xap-148L, -0x1.4p-145);
+# if LDBL_MANT_DIG >= 64
+  TEST_ff_f (nexttoward, 1.0, 0x1.000000000000002p0L, 0x1.000002p0);
+  TEST_ff_f (nexttoward, 1.0, 0x0.ffffffffffffffffp0L, 0x0.ffffffp0);
+  TEST_ff_f (nexttoward, -1.0, -0x1.000000000000002p0L, -0x1.000002p0);
+  TEST_ff_f (nexttoward, -1.0, -0x0.ffffffffffffffffp0L, -0x0.ffffffp0);
+# endif
+# if LDBL_MANT_DIG >= 106
+  TEST_ff_f (nexttoward, 1.0, 0x1.000000000000000000000000008p0L, 0x1.000002p0);
+  TEST_ff_f (nexttoward, 1.0, 0x0.ffffffffffffffffffffffffffcp0L, 0x0.ffffffp0);
+  TEST_ff_f (nexttoward, -1.0, -0x1.000000000000000000000000008p0L, -0x1.000002p0);
+  TEST_ff_f (nexttoward, -1.0, -0x0.ffffffffffffffffffffffffffcp0L, -0x0.ffffffp0);
+# endif
+# if LDBL_MANT_DIG >= 113
+  TEST_ff_f (nexttoward, 1.0, 0x1.0000000000000000000000000001p0L, 0x1.000002p0);
+  TEST_ff_f (nexttoward, 1.0, 0x0.ffffffffffffffffffffffffffff8p0L, 0x0.ffffffp0);
+  TEST_ff_f (nexttoward, -1.0, -0x1.0000000000000000000000000001p0L, -0x1.000002p0);
+  TEST_ff_f (nexttoward, -1.0, -0x0.ffffffffffffffffffffffffffff8p0L, -0x0.ffffffp0);
+# endif
+#endif
+#ifdef TEST_DOUBLE
+  TEST_ff_f (nexttoward, 1.0, 1.1L, 0x1.0000000000001p0);
+  TEST_ff_f (nexttoward, 1.0, LDBL_MAX, 0x1.0000000000001p0);
+  TEST_ff_f (nexttoward, 1.0, 0x1.0000000000001p0, 0x1.0000000000001p0);
+  TEST_ff_f (nexttoward, 1.0, 0.9L, 0x0.fffffffffffff8p0);
+  TEST_ff_f (nexttoward, 1.0, -LDBL_MAX, 0x0.fffffffffffff8p0);
+  TEST_ff_f (nexttoward, 1.0, 0x0.fffffffffffff8p0, 0x0.fffffffffffff8p0);
+  TEST_ff_f (nexttoward, -1.0, -1.1L, -0x1.0000000000001p0);
+  TEST_ff_f (nexttoward, -1.0, -LDBL_MAX, -0x1.0000000000001p0);
+  TEST_ff_f (nexttoward, -1.0, -0x1.0000000000001p0, -0x1.0000000000001p0);
+  TEST_ff_f (nexttoward, -1.0, -0.9L, -0x0.fffffffffffff8p0);
+  TEST_ff_f (nexttoward, -1.0, LDBL_MAX, -0x0.fffffffffffff8p0);
+  TEST_ff_f (nexttoward, -1.0, -0x0.fffffffffffff8p0, -0x0.fffffffffffff8p0);
+  TEST_ff_f (nexttoward, -1.0, -0x8.00346dc5d6388p-3L, -0x1.0000000000001p0);
+  TEST_ff_f (nexttoward, 0x1p-1074, 0x1p-1073L, 0x1p-1073);
+# if LDBL_MANT_DIG >= 64
+  TEST_ff_f (nexttoward, 1.0, 0x1.000000000000002p0L, 0x1.0000000000001p0);
+  TEST_ff_f (nexttoward, 1.0, 0x0.ffffffffffffffffp0L, 0x0.fffffffffffff8p0);
+  TEST_ff_f (nexttoward, -1.0, -0x1.000000000000002p0L, -0x1.0000000000001p0);
+  TEST_ff_f (nexttoward, -1.0, -0x0.ffffffffffffffffp0L, -0x0.fffffffffffff8p0);
+# endif
+# if LDBL_MANT_DIG >= 106
+  TEST_ff_f (nexttoward, 1.0, 0x1.000000000000000000000000008p0L, 0x1.0000000000001p0);
+  TEST_ff_f (nexttoward, 1.0, 0x0.ffffffffffffffffffffffffffcp0L, 0x0.fffffffffffff8p0);
+  TEST_ff_f (nexttoward, -1.0, -0x1.000000000000000000000000008p0L, -0x1.0000000000001p0);
+  TEST_ff_f (nexttoward, -1.0, -0x0.ffffffffffffffffffffffffffcp0L, -0x0.fffffffffffff8p0);
+# endif
+# if LDBL_MANT_DIG >= 113
+  TEST_ff_f (nexttoward, 1.0, 0x1.0000000000000000000000000001p0L, 0x1.0000000000001p0);
+  TEST_ff_f (nexttoward, 1.0, 0x0.ffffffffffffffffffffffffffff8p0L, 0x0.fffffffffffff8p0);
+  TEST_ff_f (nexttoward, -1.0, -0x1.0000000000000000000000000001p0L, -0x1.0000000000001p0);
+  TEST_ff_f (nexttoward, -1.0, -0x0.ffffffffffffffffffffffffffff8p0L, -0x0.fffffffffffff8p0);
+# endif
+#endif
 
   END (nexttoward);
 }

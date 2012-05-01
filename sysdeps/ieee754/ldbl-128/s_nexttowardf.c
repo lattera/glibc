@@ -46,17 +46,13 @@ float __nexttowardf(float x, long double y)
 	    return x;
 	}
 	if(hx>=0) {				/* x > 0 */
-	    if(hy<0||(ix>>23)>(iy>>48)-0x3f80
-	       || ((ix>>23)==(iy>>48)-0x3f80
-		   && (ix&0x7fffff)>((hy>>25)&0x7fffff))) {/* x > y, x -= ulp */
+	    if(x > y) {				/* x -= ulp */
 		hx -= 1;
 	    } else {				/* x < y, x += ulp */
 		hx += 1;
 	    }
 	} else {				/* x < 0 */
-	    if(hy>=0||(ix>>23)>(iy>>48)-0x3f80
-	       || ((ix>>23)==(iy>>48)-0x3f80
-		   && (ix&0x7fffff)>((hy>>25)&0x7fffff))) {/* x < y, x -= ulp */
+	    if(x < y) {				/* x < y, x -= ulp */
 		hx -= 1;
 	    } else {				/* x > y, x += ulp */
 		hx += 1;
