@@ -1,5 +1,7 @@
 2012-05-01  Joseph Myers  <joseph@codesourcery.com>
 
+	* conform/conformtest.pl: Handle "symbol" lines for allow-header.
+
 	* Makeconfig (localtime): Remove variable.
 	(inst_localtime-file): Likewise.
 

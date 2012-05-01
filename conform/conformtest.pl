@@ -1075,6 +1075,8 @@ while ($#headers >= 0) {
 	push @allow, $4;
       } elsif (/^macro *([^	]*)/) {
 	push @allow, $1;
+      } elsif (/^symbol *([a-zA-Z0-9_]*) *([A-Za-z0-9_-]*)?/) {
+	push @allow, $1;
       } elsif (/^allow-header *(.*)/) {
 	if ($seenheader{$1} != 1) {
 	  push @allowheader, $1;
