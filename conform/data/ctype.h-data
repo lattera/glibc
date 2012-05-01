@@ -12,6 +12,10 @@ function int isxdigit (int)
 function int tolower (int)
 function int toupper (int)
 
+#if !defined ISO && !defined POSIX && !defined XPG3 && !defined XPG4 && !defined UNIX98
+function int isblank (int)
+#endif
+
 #if !defined ISO && !defined ISO99 && !defined ISO11 && !defined POSIX && !defined POSIX2008
 function int isascii (int)
 function int toascii (int)
@@ -39,9 +43,9 @@ function int tolower_l (int, locale_t)
 function int toupper_l (int, locale_t)
 # endif
 
-// The following is not entirely correct.  It should be is[a-z]* but the
-// replacement fnmatch implementation does not grok it.
-allow is*
-allow to*
+allow is[abcdefghijklmnopqrstuvwxyz]*
+allow to[abcdefghijklmnopqrstuvwxyz]*
 
+#if !defined ISO && !defined ISO99 && !defined ISO11
 allow *_t
+#endif

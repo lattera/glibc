@@ -1,60 +1,62 @@
-macro FLT_RADIX
+macro-int-constant FLT_RADIX >= 2
 
-constant FLT_ROUNDS
+macro FLT_ROUNDS
 
-macro FLT_MANT_DIG
-macro DBL_MANT_DIG
-macro LDBL_MANT_DIG
+macro-int-constant FLT_MANT_DIG
+macro-int-constant DBL_MANT_DIG
+macro-int-constant LDBL_MANT_DIG
 
-constant FLT_DIG >= 6
-constant DBL_DIG >= 10
-constant LDBL_DIG >= 10
+macro-int-constant FLT_DIG >= 6
+macro-int-constant DBL_DIG >= 10
+macro-int-constant LDBL_DIG >= 10
 
-macro FLT_MIN_EXP
-macro DBL_MIN_EXP
-macro LDBL_MIN_EXP
+macro-int-constant FLT_MIN_EXP < 0
+macro-int-constant DBL_MIN_EXP < 0
+macro-int-constant LDBL_MIN_EXP < 0
 
-constant FLT_MIN_10_EXP <= -37
-constant DBL_MIN_10_EXP <= -37
-constant LDBL_MIN_10_EXP <= -37
+macro-int-constant FLT_MIN_10_EXP <= -37
+macro-int-constant DBL_MIN_10_EXP <= -37
+macro-int-constant LDBL_MIN_10_EXP <= -37
 
-macro FLT_MAX_EXP
-macro DBL_MAX_EXP
-macro LDBL_MAX_EXP
+macro-int-constant FLT_MAX_EXP
+macro-int-constant DBL_MAX_EXP
+macro-int-constant LDBL_MAX_EXP
 
-constant FLT_MAX_10_EXP >= 37
-constant DBL_MAX_10_EXP >= 37
-constant LDBL_MAX_10_EXP >= 37
+macro-int-constant FLT_MAX_10_EXP >= 37
+macro-int-constant DBL_MAX_10_EXP >= 37
+macro-int-constant LDBL_MAX_10_EXP >= 37
 
-constant FLT_MAX >= 1.0E37
-constant DBL_MAX >= 1.0E37
-constant LDBL_MAX >= 1.0E37
+macro-constant FLT_MAX >= 1.0E37
+macro-constant DBL_MAX >= 1.0E37
+macro-constant LDBL_MAX >= 1.0E37
 
-macro FLT_EPSILON
-macro DBL_EPSILON
-macro LDBL_EPSILON
+macro-constant FLT_EPSILON <= 1.0E-5
+macro-constant DBL_EPSILON <= 1.0E-9
+macro-constant LDBL_EPSILON <= 1.0E-9
 
-macro FLT_MIN
-macro DBL_MIN
-macro LDBL_MIN
+macro-constant FLT_MIN <= 1.0E-37
+macro-constant DBL_MIN <= 1.0E-37
+macro-constant LDBL_MIN <= 1.0E-37
 
 #if !defined ISO && !defined XPG3 && !defined XPG4 && !defined POSIX && !defined UNIX98
-constant DECIMAL_DIG >= 10
-constant FLT_EVAL_METHOD
+macro-int-constant DECIMAL_DIG >= 10
+macro-int-constant FLT_EVAL_METHOD
 #endif
 
 #if defined ISO11
-constant DBL_HAS_SUBNORM
-constant FLT_HAS_SUBNORM
-constant LDBL_HAS_SUBNORM
+macro-int-constant DBL_HAS_SUBNORM
+macro-int-constant FLT_HAS_SUBNORM
+macro-int-constant LDBL_HAS_SUBNORM
 
-constant DBL_DECIMAL_DIG >= 10
-constant FLT_DECIMAL_DIG >= 6
-constant LDBL_DECIMAL_DIG >= 10
+macro-int-constant DBL_DECIMAL_DIG >= 10
+macro-int-constant FLT_DECIMAL_DIG >= 6
+macro-int-constant LDBL_DECIMAL_DIG >= 10
 
-constant DBL_TRUE_MIN <= 1E-37
-constant FLT_TRUE_MIN <= 1E-37
-constant LDBL_TRUE_MIN <= 1E-37
+macro-constant DBL_TRUE_MIN <= 1E-37
+macro-constant FLT_TRUE_MIN <= 1E-37
+macro-constant LDBL_TRUE_MIN <= 1E-37
 #endif
 
+#if !defined ISO && !defined ISO99 && !defined ISO11
 allow *_t
+#endif

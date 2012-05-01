@@ -1,28 +1,29 @@
-constant CHAR_BIT >= 8
-constant SCHAR_MIN <= -127
-constant SCHAR_MAX >= 127
-constant UCHAR_MAX >= 255
+macro-int-constant CHAR_BIT >= 8
+macro-int-constant SCHAR_MIN {promoted:signed char} <= -127
+macro-int-constant SCHAR_MAX {promoted:signed char} >= 127
+macro-int-constant UCHAR_MAX {promoted:unsigned char} >= 255
 #ifdef __CHAR_UNSIGNED__
-constant CHAR_MIN == 0
-constant CHAR_MAX == UCHAR_MAX
+macro-int-constant CHAR_MIN {promoted:char} == 0
+macro-int-constant CHAR_MAX {promoted:char} == UCHAR_MAX
 #else
-constant CHAR_MIN == SCHAR_MIN
-constant CHAR_MAX == SCHAR_MAX
+macro-int-constant CHAR_MIN {promoted:char} == SCHAR_MIN
+macro-int-constant CHAR_MAX {promoted:char} == SCHAR_MAX
 #endif
-constant MB_LEN_MAX >= 1
-constant SHRT_MIN <= -32767
-constant SHRT_MAX >= 32767
-constant USHRT_MAX >= 65535
-constant INT_MAX >= 2147483647
-constant INT_MIN <= 2147483647
-constant UINT_MAX >= 4294967295
-constant LONG_MAX >= 2147483647
-constant LONG_MIN <= 2147483647
-constant ULONG_MAX >= 4294967295
+macro-int-constant MB_LEN_MAX >= 1
+macro-int-constant SHRT_MIN {promoted:short int} <= -32767
+macro-int-constant SHRT_MAX {promoted:short int} >= 32767
+macro-int-constant USHRT_MAX {promoted:unsigned short int} >= 65535
+// The ranges for int and unsigned int are from POSIX.
+macro-int-constant INT_MAX {int} >= 2147483647
+macro-int-constant INT_MIN {int} <= -2147483647
+macro-int-constant UINT_MAX {unsigned int} >= 4294967295U
+macro-int-constant LONG_MAX {long int} >= 2147483647L
+macro-int-constant LONG_MIN {long int} <= -2147483647L
+macro-int-constant ULONG_MAX {unsigned long int} >= 4294967295UL
 #if defined ISO99 || defined ISO11 || defined XOPEN2K8 || defined POSIX2008
-constant LLONG_MIN <= -9223372036854775807ll
-constant LLONG_MAX >= 9223372036854775807ll
-constant ULLONG_MAX >= 18446744073709551615ull
+macro-int-constant LLONG_MIN {long long int} <= -9223372036854775807ll
+macro-int-constant LLONG_MAX {long long int} >= 9223372036854775807ll
+macro-int-constant ULLONG_MAX {unsigned long long int} >= 18446744073709551615ull
 #endif
 
 #if !defined ISO && !defined ISO99 && !defined ISO11

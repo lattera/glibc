@@ -1,5 +1,164 @@
 2012-05-01  Joseph Myers  <joseph@codesourcery.com>
 
+	* conform/data/assert.h-data [ISO || ISO99 || ISO11] (*_t): Do not
+	allow.
+	* conform/data/ctype.h-data [C99-based standards] (isblank):
+	Expect function.
+	(is*): Change to is[abcdefghijklmnopqrstuvwxyz]*.
+	(to*): Change to to[abcdefghijklmnopqrstuvwxyz]*.
+	[ISO || ISO99 || ISO11] (*_t): Do not allow.
+	* conform/data/errno.h-data (EDOM): Use macro-int-constant.
+	Specify type.  Require positive value.
+	(EILSEQ): Likewise.
+	(ERANGE): Likewise.
+	[ISO || POSIX] (EILSEQ): Do not expect.
+	[!ISO && !ISO99 && !ISO11] (E2BIG): Use macro-int-constant.
+	Specify type.  Require positive value.
+	[!ISO && !ISO99 && !ISO11] (EACCES): Likewise.
+	[!ISO && !ISO99 && !ISO11] (EADDRINUSE): Likewise.
+	[!ISO && !ISO99 && !ISO11] (EADDRNOTAVAIL): Likewise.
+	[!ISO && !ISO99 && !ISO11] (EAFNOSUPPORT): Likewise.
+	[!ISO && !ISO99 && !ISO11] (EAGAIN): Likewise.
+	[!ISO && !ISO99 && !ISO11] (EALREADY): Likewise.
+	[!ISO && !ISO99 && !ISO11] (EBADF): Likewise.
+	[!ISO && !ISO99 && !ISO11] (EBADMSG): Likewise.
+	[!ISO && !ISO99 && !ISO11] (EBUSY): Likewise.
+	[!ISO && !ISO99 && !ISO11] (ECANCELED): Likewise.
+	[!ISO && !ISO99 && !ISO11] (ECHILD): Likewise.
+	[!ISO && !ISO99 && !ISO11] (ECONNABORTED): Likewise.
+	[!ISO && !ISO99 && !ISO11] (ECONNREFUSED): Likewise.
+	[!ISO && !ISO99 && !ISO11] (ECONNRESET): Likewise.
+	[!ISO && !ISO99 && !ISO11] (EDEADLK): Likewise.
+	[!ISO && !ISO99 && !ISO11] (EDESTADDRREQ): Likewise.
+	[!ISO && !ISO99 && !ISO11] (EDQUOT): Likewise.
+	[!ISO && !ISO99 && !ISO11] (EEXIST): Likewise.
+	[!ISO && !ISO99 && !ISO11] (EFAULT): Likewise.
+	[!ISO && !ISO99 && !ISO11] (EFBIG): Likewise.
+	[!ISO && !ISO99 && !ISO11] (EHOSTUNREACH): Likewise.
+	[!ISO && !ISO99 && !ISO11] (EIDRM): Likewise.
+	[!ISO && !ISO99 && !ISO11] (EINPROGRESS): Likewise.
+	[!ISO && !ISO99 && !ISO11] (EINTR): Likewise.
+	[!ISO && !ISO99 && !ISO11] (EINVAL): Likewise.
+	[!ISO && !ISO99 && !ISO11] (EIO): Likewise.
+	[!ISO && !ISO99 && !ISO11] (EISCONN): Likewise.
+	[!ISO && !ISO99 && !ISO11] (EISDIR): Likewise.
+	[!ISO && !ISO99 && !ISO11] (ELOOP): Likewise.
+	[!ISO && !ISO99 && !ISO11] (EMFILE): Likewise.
+	[!ISO && !ISO99 && !ISO11] (EMLINK): Likewise.
+	[!ISO && !ISO99 && !ISO11] (EMSGSIZE): Likewise.
+	[!ISO && !ISO99 && !ISO11] (EMULTIHOP): Likewise.
+	[!ISO && !ISO99 && !ISO11] (ENAMETOOLONG): Likewise.
+	[!ISO && !ISO99 && !ISO11] (ENETDOWN): Likewise.
+	[!ISO && !ISO99 && !ISO11] (ENETUNREACH): Likewise.
+	[!ISO && !ISO99 && !ISO11] (ENFILE): Likewise.
+	[!ISO && !ISO99 && !ISO11] (ENOBUFS): Likewise.
+	[!ISO && !ISO99 && !ISO11] (ENODATA): Likewise.
+	[!ISO && !ISO99 && !ISO11] (ENODEV): Likewise.
+	[!ISO && !ISO99 && !ISO11] (ENOENT): Likewise.
+	[!ISO && !ISO99 && !ISO11] (ENOEXEC): Likewise.
+	[!ISO && !ISO99 && !ISO11] (ENOLCK): Likewise.
+	[!ISO && !ISO99 && !ISO11] (ENOLINK): Likewise.
+	[!ISO && !ISO99 && !ISO11] (ENOMEM): Likewise.
+	[!ISO && !ISO99 && !ISO11] (ENOMSG): Likewise.
+	[!ISO && !ISO99 && !ISO11] (ENOPROTOOPT): Likewise.
+	[!ISO && !ISO99 && !ISO11] (ENOSPC): Likewise.
+	[!ISO && !ISO99 && !ISO11] (ENOSR): Likewise.
+	[!ISO && !ISO99 && !ISO11] (ENOSTR): Likewise.
+	[!ISO && !ISO99 && !ISO11] (ENOSYS): Likewise.
+	[!ISO && !ISO99 && !ISO11] (ENOTCONN): Likewise.
+	[!ISO && !ISO99 && !ISO11] (ENOTDIR): Likewise.
+	[!ISO && !ISO99 && !ISO11] (ENOTEMPTY): Likewise.
+	[!ISO && !ISO99 && !ISO11] (ENOTSOCK): Likewise.
+	[!ISO && !ISO99 && !ISO11] (ENOTSUP): Likewise.
+	[!ISO && !ISO99 && !ISO11] (ENOTTY): Likewise.
+	[!ISO && !ISO99 && !ISO11] (ENXIO): Likewise.
+	[!ISO && !ISO99 && !ISO11] (EOPNOTSUPP): Likewise.
+	[!ISO && !ISO99 && !ISO11] (EOVERFLOW): Likewise.
+	[!ISO && !ISO99 && !ISO11] (EPERM): Likewise.
+	[!ISO && !ISO99 && !ISO11] (EPIPE): Likewise.
+	[!ISO && !ISO99 && !ISO11] (EPROTO): Likewise.
+	[!ISO && !ISO99 && !ISO11] (EPROTONOSUPPORT): Likewise.
+	[!ISO && !ISO99 && !ISO11] (EPROTOTYPE): Likewise.
+	[!ISO && !ISO99 && !ISO11] (EROFS): Likewise.
+	[!ISO && !ISO99 && !ISO11] (ESPIPE): Likewise.
+	[!ISO && !ISO99 && !ISO11] (ESRCH): Likewise.
+	[!ISO && !ISO99 && !ISO11] (ESTALE): Likewise.
+	[!ISO && !ISO99 && !ISO11] (ETIME): Likewise.
+	[!ISO && !ISO99 && !ISO11] (ETIMEDOUT): Likewise.
+	[!ISO && !ISO99 && !ISO11] (ETXTBSY): Likewise.
+	[!ISO && !ISO99 && !ISO11] (EWOULDBLOCK): Likewise.
+	[!ISO && !ISO99 && !ISO11] (EXDEV): Likewise.
+	[XOPEN2K8 || defined POSIX2008] (ENOTRECOVERABLE): Likewise.
+	[XOPEN2K8 || defined POSIX2008] (EOWNERDEAD): Likewise.
+	* conform/data/float.h-data (FLT_RADIX): Use macro-int-constant.
+	Require >= 2.
+	(FLT_ROUNDS): Expect as macro, not constant.
+	(FLT_MANT_DIG): Use macro-int-constant.
+	(DBL_MANT_DIG): Likewise.
+	(LDBL_MANT_DIG): Likewise.
+	(FLT_DIG): Likewise.
+	(DBL_DIG): Likewise.
+	(LDBL_DIG): Likewise.
+	(FLT_MIN_EXP): Use macro-int-constant.  Require < 0.
+	(DBL_MIN_EXP): Likewise.
+	(LDBL_MIN_EXP): Likewise.
+	(FLT_MAX_EXP): Use macro-int-constant.
+	(DBL_MAX_EXP): Likewise.
+	(LDBL_MAX_EXP): Likewise.
+	(FLT_MAX_10_EXP): Likewise.
+	(DBL_MAX_10_EXP): Likewise.
+	(LDBL_MAX_10_EXP): Likewise.
+	(FLT_MAX): Use macro-constant.
+	(DBL_MAX): Likewise.
+	(LDBL_MAX): Likewise.
+	(FLT_EPSILON): Use macro-constant.  Give upper bound.
+	(DBL_EPSILON): Likewise.
+	(LDBL_EPSILON): Likewise.
+	(FLT_MIN): Likewise.
+	(DBL_MIN): Likewise.
+	(LDBL_MIN): Likewise.
+	[C99-based standards] (DECIMAL_DIG): Use macro-int-constant.
+	[C99-based standards] (FLT_EVAL_METHOD): Likewise.
+	[ISO11] (DBL_HAS_SUBNORM): Use macro-int-constant.
+	[ISO11] (FLT_HAS_SUBNORM): Likewise.
+	[ISO11] (LDBL_HAS_SUBNORM): Likewise.
+	[ISO11] (DBL_DECIMAL_DIG): Likewise.
+	[ISO11] (FLT_DECIMAL_DIG): Likewise.
+	[ISO11] (LDBL_DECIMAL_DIG): Likewise.
+	[ISO11] (DBL_TRUE_MIN): Use macro-constant.
+	[ISO11] (FLT_TRUE_MIN): Likewise.
+	[ISO11] (LDBL_TRUE_MIN): Likewise.
+	[ISO || ISO99 || ISO11] (*_t): Do not allow.
+	* conform/data/limits.h-data (CHAR_BIT): Use macro-int-constant.
+	(SCHAR_MIN): Use macro-int-constant.  Specify type.
+	(SCHAR_MAX): Likewise.
+	(UCHAR_MAX): Likewise.
+	(CHAR_MIN): Likewise.
+	(CHAR_MAX): Likewise.
+	(MB_LEN_MAX): Use macro-int-constant.
+	(SHRT_MIN): Use macro-int-constant.  Specify type.
+	(SHRT_MAX): Likewise.
+	(USHRT_MAX): Likewise.
+	(INT_MAX): Likewise.
+	(INT_MIN): Use macro-int-constant.  Specify type.  Make upper
+	bound negative.
+	(UINT_MAX): Use macro-int-constant.  Specify type.  Suffix lower
+	bound with "U".
+	(LONG_MAX): Use macro-int-constant.  Specify type.  Suffix lower
+	bound with "L".
+	(LONG_MIN): Use macro-int-constant.  Specify type.  Make upper
+	bound negative.  Suffix upper bound with "L".
+	(ULONG_MAX): Use macro-int-constant.  Specify type.  Suffix lower
+	bound with "UL".
+	[C99-based standards] (LLONG_MIN): Use macro-int-constant.
+	Specify type.
+	[C99-based standards] (LLONG_MAX): Likewise.
+	[C99-based standards] (ULLONG_MAX): Likewise.
+	* conform/data/stddef.h-data (NULL): Use macro-constant.  Require
+	== 0.
+	[ISO11] (max_align_t): Require type.
+	[ISO || ISO99 || ISO11] (*_t): Do not allow.
+
 	* conform/conformtest.pl ($CFLAGS_namespace): Define separately
 	from $CFLAGS, without defining away __attribute__ calls.
 	(checknamespace): Use $CFLAGS_namespace.
