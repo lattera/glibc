@@ -1,3 +1,12 @@
+2012-07-06  Andreas Schwab  <schwab@linux-m68k.org>
+
+	[BZ #14042]
+	* sysdeps/powerpc/powerpc32/ppc-mcount.S [SHARED]: Don't use PLT
+	for call to __mcount_internal.
+	* sysdeps/powerpc/powerpc32/Makefile (sysdep_routines)
+	(shared-only-routines) [$(subdir) = gmon]: Add compat-ppc-mcount.
+	* sysdeps/powerpc/powerpc32/compat-ppc-mcount.S: New file.
+
 2012-07-06  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #14154]

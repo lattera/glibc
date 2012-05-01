@@ -6,8 +6,9 @@ sysdep-LDFLAGS += -msoft-float
 endif
 
 ifeq ($(subdir),gmon)
-sysdep_routines += ppc-mcount
+sysdep_routines += ppc-mcount compat-ppc-mcount
 static-only-routines += ppc-mcount
+shared-only-routines += compat-ppc-mcount
 endif
 
 ifeq ($(subdir),misc)
