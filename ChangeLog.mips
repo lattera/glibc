@@ -1,3 +1,11 @@
+2012-05-01  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #14044]
+	* sysdeps/unix/sysv/linux/mips/mips64/n64/posix_fadvise.c: Copy
+	from libc version and add symbol versions.
+	* sysdeps/unix/sysv/linux/mips/mips64/n64/nptl/libc.abilis
+	(GLIBC_2.3.3): Add posix_fadvise64.
+
 2012-04-28  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/mips/mips32/nptl/ld.abilist: New file.

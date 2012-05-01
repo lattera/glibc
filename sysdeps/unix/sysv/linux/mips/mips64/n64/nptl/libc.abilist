@@ -2045,6 +2045,7 @@ GLIBC_2.3.3
  inet6_option_space F
  nftw F
  nftw64 F
+ posix_fadvise64 F
  remap_file_pages F
  sched_getaffinity F
  sched_setaffinity F
