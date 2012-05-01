@@ -385,7 +385,7 @@ while ($#headers >= 0) {
 		     "Member \"$member\" does not have the correct type.",
 		     $res, 0);
       }
-    } elsif (/^(macro|constant|macro-constant) +([a-zA-Z0-9_]*) *(?:{([^}]*)} *)?(?:([>=<!]+) ([A-Za-z0-9_-]*))?/) {
+    } elsif (/^(macro|constant|macro-constant|macro-int-constant) +([a-zA-Z0-9_]*) *(?:{([^}]*)} *)?(?:([>=<!]+) ([A-Za-z0-9_-]*))?/) {
       my($symbol_type) = $1;
       my($symbol) = $2;
       my($type) = $3;
@@ -431,6 +431,43 @@ while ($#headers >= 0) {
       }
 
       $res = $res || $mres || $cres;
+
+      if ($symbol_type eq "macro-int-constant" && ($res == 0 || !$optional)) {
+	# Test that the symbol is usable in #if.
+	open (TESTFILE, ">$fnamebase.c");
+	print TESTFILE "$prepend";
+	print TESTFILE "#include <$h>\n";
+	print TESTFILE "#if $symbol < 0\n";
+	print TESTFILE "# define conformtest_negative 1\n";
+	my($s) = "0";
+	for (my $i = 0; $i < 63; $i++) {
+	  print TESTFILE "# if $symbol & (1LL << $i)\n";
+	  print TESTFILE "#  define conformtest_bit_$i 0LL\n";
+	  print TESTFILE "# else\n";
+	  print TESTFILE "#  define conformtest_bit_$i (1LL << $i)\n";
+	  print TESTFILE "# endif\n";
+	  $s .= "|conformtest_bit_$i";
+	}
+	print TESTFILE "# define conformtest_value ~($s)\n";
+	print TESTFILE "#else\n";
+	print TESTFILE "# define conformtest_negative 0\n";
+	$s = "0";
+	for (my $i = 0; $i < 64; $i++) {
+	  print TESTFILE "# if $symbol & (1ULL << $i)\n";
+	  print TESTFILE "#  define conformtest_bit_$i (1ULL << $i)\n";
+	  print TESTFILE "# else\n";
+	  print TESTFILE "#  define conformtest_bit_$i 0ULL\n";
+	  print TESTFILE "# endif\n";
+	  $s .= "|conformtest_bit_$i";
+	}
+	print TESTFILE "# define conformtest_value ($s)\n";
+	print TESTFILE "#endif\n";
+	print TESTFILE "int main (void) { return !((($symbol < 0) == conformtest_negative) && ($symbol == conformtest_value)); }\n";
+	close (TESTFILE);
+
+	runtest ($fnamebase, "Testing for #if usability of symbol $symbol",
+		 "Symbol \"$symbol\" not usable in #if.", $res);
+      }
 
       if (defined ($type) && ($res == 0 || !$optional)) {
 	# Test the type of the symbol.
@@ -744,7 +781,7 @@ while ($#headers >= 0) {
 
       if (/^element *({([^}]*)}|([^ ]*)) *({([^}]*)}|([^ ]*)) *([A-Za-z0-9_]*) *(.*)/) {
 	push @allow, $7;
-      } elsif (/^(macro|constant|macro-constant) +([a-zA-Z0-9_]*) *(?:{([^}]*)} *)?(?:([>=<!]+) ([A-Za-z0-9_-]*))?/) {
+      } elsif (/^(macro|constant|macro-constant|macro-int-constant) +([a-zA-Z0-9_]*) *(?:{([^}]*)} *)?(?:([>=<!]+) ([A-Za-z0-9_-]*))?/) {
 	push @allow, $1;
       } elsif (/^(type|tag) *({([^}]*)|([a-zA-Z0-9_]*))/) {
 	my($type) = "$3$4";

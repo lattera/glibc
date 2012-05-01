@@ -1,5 +1,8 @@
 2012-05-01  Joseph Myers  <joseph@codesourcery.com>
 
+	* conform/conformtest.pl: Handle "macro-int-constant" and test for
+	usability of symbols in #if.
+
 	* conform/conformtest.pl: If macro or constant types start
 	"promoted:", expect the symbol to be of the following type
 	promoted by the integer promotions.
