@@ -291,13 +291,6 @@ vardbdir = /var/db
 endif
 inst_vardbdir = $(install_root)$(vardbdir)
 
-# What timezone should be the installed default (e.g., US/Eastern).
-# Run `make -C time echo-zonenames' to see a list of available zone names.
-# The local timezone can be changed with `zic -l TIMEZONE' at any time.
-ifndef localtime
-localtime = Factory
-endif
-
 # Where to install the "localtime" timezone file; this is the file whose
 # contents $(localtime) specifies.  If this is a relative pathname, it is
 # relative to $(zonedir).  It is a good idea to put this somewhere
@@ -305,7 +298,6 @@ endif
 # localizing the configuration data elsewhere.
 ifndef localtime-file
 localtime-file = $(sysconfdir)/localtime
-inst_localtime-file = $(install_root)$(localtime-file)
 endif
 
 # What to use for leap second specifications in compiling the default

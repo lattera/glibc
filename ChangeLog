@@ -1,3 +1,8 @@
+2012-05-01  Joseph Myers  <joseph@codesourcery.com>
+
+	* Makeconfig (localtime): Remove variable.
+	(inst_localtime-file): Likewise.
+
 2012-05-01  Andreas Schwab  <schwab@linux-m68k.org>
 
 	* sysdeps/unix/sysv/linux/powerpc/powerpc32/fpu/nptl/ld.abilist:
