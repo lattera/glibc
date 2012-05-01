@@ -1,5 +1,8 @@
 2012-05-01  Joseph Myers  <joseph@codesourcery.com>
 
+	* conform/conformtest.pl: Define _XOPEN_SOURCE as well as
+	_XOPEN_SOURCE_EXTENDED for XPG4.
+
 	* conform/conformtest.pl: Handle "symbol" lines for allow-header.
 
 	* Makeconfig (localtime): Remove variable.
