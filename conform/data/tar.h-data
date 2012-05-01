@@ -1,8 +1,8 @@
 #if !defined ISO && !defined ISO99 && !defined ISO11
 macro-str TMAGIC "ustar"
-constant TMAGLEN 6
+constant TMAGLEN == 6
 macro-str TVERSION "00"
-constant TVERSLEN 2
+constant TVERSLEN == 2
 
 constant REGTYPE
 constant AREGTYPE
@@ -14,20 +14,20 @@ constant DIRTYPE
 constant FIFOTYPE
 constant CONTTYPE
 
-constant TSUID 04000
-constant TSGID 02000
+constant TSUID == 04000
+constant TSGID == 02000
 # if !defined POSIX && !defined POSIX2008
-constant TSVTX 01000
+constant TSVTX == 01000
 # endif
-constant TUREAD 00400
-constant TUWRITE 00200
-constant TUEXEC 00100
-constant TGREAD 00040
-constant TGWRITE 00020
-constant TGEXEC 00010
-constant TOREAD 00004
-constant TOWRITE 00002
-constant TOEXEC 00001
+constant TUREAD == 00400
+constant TUWRITE == 00200
+constant TUEXEC == 00100
+constant TGREAD == 00040
+constant TGWRITE == 00020
+constant TGEXEC == 00010
+constant TOREAD == 00004
+constant TOWRITE == 00002
+constant TOEXEC == 00001
 
 allow *_t
 #endif

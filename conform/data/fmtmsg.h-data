@@ -44,12 +44,12 @@ constant MM_PRINT
 macro MM_CONSOLE
 constant MM_CONSOLE
 
-constant MM_NULLLBL 0
-constant MM_NULLSEV 0
-constant MM_NULLMC 0
-constant MM_NULLTXT 0
-constant MM_NULLACT 0
-constant MM_NULLTAG 0
+constant MM_NULLLBL == 0
+constant MM_NULLSEV == 0
+constant MM_NULLMC == 0
+constant MM_NULLTXT == 0
+constant MM_NULLACT == 0
+constant MM_NULLTAG == 0
 
 macro MM_OK
 macro MM_NOTOK

@@ -51,7 +51,7 @@ macro IPPROTO_UDP
 macro INADDR_ANY
 macro INADDR_BROADCAST
 
-constant INET_ADDRSTRLEN 16
+constant INET_ADDRSTRLEN == 16
 
 function uint32_t htonl (uint32_t)
 function uint16_t htons (uint16_t)
@@ -61,7 +61,7 @@ function uint16_t ntohs (uint16_t)
 allow-header inttypes.h
 allow-header sys/socket.h
 
-constant INET6_ADDRSTRLEN 46
+constant INET6_ADDRSTRLEN == 46
 
 macro IPV6_JOIN_GROUP
 macro IPV6_LEAVE_GROUP

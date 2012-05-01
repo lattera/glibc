@@ -415,7 +415,7 @@ while ($#headers >= 0) {
 		     "Member \"$member\" does not have the correct type.",
 		     $res, 0);
       }
-    } elsif (/^optional-constant *([a-zA-Z0-9_]*) ([>=<!]+) ([A-Za-z0-9_-]*)/) {
+    } elsif (/^optional-constant *([a-zA-Z0-9_]*) *(?:([>=<!]+) ([A-Za-z0-9_-]*))?/) {
       my($const) = $1;
       my($op) = $2;
       my($value) = $3;
@@ -434,7 +434,7 @@ while ($#headers >= 0) {
       $res = compiletest ($fnamebase, "Testing for constant $const",
 			  "NOT PRESENT", $res, 1);
 
-      if ($value ne "" && $res == 0) {
+      if (defined ($op) && $res == 0) {
 	# Generate a program to test for the value of this constant.
 	open (TESTFILE, ">$fnamebase.c");
 	print TESTFILE "$prepend";
@@ -446,7 +446,7 @@ while ($#headers >= 0) {
 	$res = runtest ($fnamebase, "Testing for value of constant $const",
 			"Constant \"$const\" has not the right value.", $res);
       }
-    } elsif (/^constant *([a-zA-Z0-9_]*) *([>=<!]+) ([A-Za-z0-9_-]*)/) {
+    } elsif (/^constant *([a-zA-Z0-9_]*) *(?:([>=<!]+) ([A-Za-z0-9_-]*))?/) {
       my($const) = $1;
       my($op) = $2;
       my($value) = $3;
@@ -465,7 +465,7 @@ while ($#headers >= 0) {
       $res = compiletest ($fnamebase, "Testing for constant $const",
 			  "Constant \"$const\" not available.", $res, 0);
 
-      if ($value ne "") {
+      if (defined ($op)) {
 	# Generate a program to test for the value of this constant.
 	open (TESTFILE, ">$fnamebase.c");
 	print TESTFILE "$prepend";
@@ -507,64 +507,6 @@ while ($#headers >= 0) {
       compiletest ($fnamebase, "Testing for type of constant $const",
 		   "Constant \"$const\" does not have the correct type.",
 		   $res, 0);
-
-      if ($value ne "") {
-	# Generate a program to test for the value of this constant.
-	open (TESTFILE, ">$fnamebase.c");
-	print TESTFILE "$prepend";
-	print TESTFILE "#include <$h>\n";
-	print TESTFILE "int main (void) { return $const != $value; }\n";
-	close (TESTFILE);
-
-	$res = runtest ($fnamebase, "Testing for value of constant $const",
-			"Constant \"$const\" has not the right value.", $res);
-      }
-    } elsif (/^optional-constant *([a-zA-Z0-9_]*) *([A-Za-z0-9_-]*)?/) {
-      my($const) = $1;
-      my($value) = $2;
-      my($res) = $missing;
-
-      # Remember that this name is allowed.
-      push @allow, $const;
-
-      # Generate a program to test for the availability of this constant.
-      open (TESTFILE, ">$fnamebase.c");
-      print TESTFILE "$prepend";
-      print TESTFILE "#include <$h>\n";
-      print TESTFILE "__typeof__ ($const) a = $const;\n";
-      close (TESTFILE);
-
-      $res = compiletest ($fnamebase, "Testing for constant $const",
-			  "NOT PRESENT", $res, 1);
-
-      if ($value ne "" && $res == 0) {
-	# Generate a program to test for the value of this constant.
-	open (TESTFILE, ">$fnamebase.c");
-	print TESTFILE "$prepend";
-	print TESTFILE "#include <$h>\n";
-	print TESTFILE "int main (void) { return $const != $value; }\n";
-	close (TESTFILE);
-
-	$res = runtest ($fnamebase, "Testing for value of constant $const",
-			"Constant \"$const\" has not the right value.", $res);
-      }
-    } elsif (/^constant *([a-zA-Z0-9_]*) *([A-Za-z0-9_-]*)?/) {
-      my($const) = $1;
-      my($value) = $2;
-      my($res) = $missing;
-
-      # Remember that this name is allowed.
-      push @allow, $const;
-
-      # Generate a program to test for the availability of this constant.
-      open (TESTFILE, ">$fnamebase.c");
-      print TESTFILE "$prepend";
-      print TESTFILE "#include <$h>\n";
-      print TESTFILE "__typeof__ ($const) a = $const;\n";
-      close (TESTFILE);
-
-      $res = compiletest ($fnamebase, "Testing for constant $const",
-			  "Constant \"$const\" not available.", $res, 0);
 
       if ($value ne "") {
 	# Generate a program to test for the value of this constant.
@@ -1038,7 +980,7 @@ while ($#headers >= 0) {
 
       if (/^element *({([^}]*)}|([^ ]*)) *({([^}]*)}|([^ ]*)) *([A-Za-z0-9_]*) *(.*)/) {
 	push @allow, $7;
-      } elsif (/^constant *([a-zA-Z0-9_]*) *([A-Za-z0-9_]*)?/) {
+      } elsif (/^constant *([a-zA-Z0-9_]*) *(?:([>=<!]+) ([A-Za-z0-9_-]*))?/) {
 	push @allow, $1;
       } elsif (/^typed-constant *([a-zA-Z0-9_]*) *({([^}]*)}|([^ ]*)) *([A-Za-z0-9_]*)?/) {
 	push @allow, $1;
