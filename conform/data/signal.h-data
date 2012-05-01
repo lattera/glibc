@@ -1,9 +1,9 @@
-typed-constant SIG_DFL {void(*)(int)}
-typed-constant SIG_ERR {void(*)(int)}
+constant SIG_DFL {void(*)(int)}
+constant SIG_ERR {void(*)(int)}
 #if !defined ISO && !defined ISO99 && !defined ISO11 && !defined POSIX && !defined POSIX2008
-typed-constant SIG_HOLD {void(*)(int)}
+constant SIG_HOLD {void(*)(int)}
 #endif
-typed-constant SIG_IGN {void(*)(int)}
+constant SIG_IGN {void(*)(int)}
 
 type sig_atomic_t
 #if !defined ISO && !defined ISO99 && !defined ISO11

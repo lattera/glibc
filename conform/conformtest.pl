@@ -385,10 +385,11 @@ while ($#headers >= 0) {
 		     "Member \"$member\" does not have the correct type.",
 		     $res, 0);
       }
-    } elsif (/^constant *([a-zA-Z0-9_]*) *(?:([>=<!]+) ([A-Za-z0-9_-]*))?/) {
+    } elsif (/^constant *([a-zA-Z0-9_]*) *(?:{([^}]*)} *)?(?:([>=<!]+) ([A-Za-z0-9_-]*))?/) {
       my($const) = $1;
-      my($op) = $2;
-      my($value) = $3;
+      my($type) = $2;
+      my($op) = $3;
+      my($value) = $4;
       my($res) = $missing;
 
       # Remember that this name is allowed.
@@ -407,6 +408,20 @@ while ($#headers >= 0) {
 			   : "Constant \"$const\" not available."), $res,
 			  $optional);
 
+      if (defined ($type) && ($res == 0 || !$optional)) {
+	# Test the types of the members.
+	open (TESTFILE, ">$fnamebase.c");
+	print TESTFILE "$prepend";
+	print TESTFILE "#include <$h>\n";
+	print TESTFILE "__typeof__ (($type) 0) a;\n";
+	print TESTFILE "extern __typeof__ ($const) a;\n";
+	close (TESTFILE);
+
+	compiletest ($fnamebase, "Testing for type of constant $const",
+		     "Constant \"$const\" does not have the correct type.",
+		     $res, 0);
+      }
+
       if (defined ($op) && ($res == 0 || !$optional)) {
 	# Generate a program to test for the value of this constant.
 	open (TESTFILE, ">$fnamebase.c");
@@ -414,48 +429,6 @@ while ($#headers >= 0) {
 	print TESTFILE "#include <$h>\n";
 	# Negate the value since 0 means ok
 	print TESTFILE "int main (void) { return !($const $op $value); }\n";
-	close (TESTFILE);
-
-	$res = runtest ($fnamebase, "Testing for value of constant $const",
-			"Constant \"$const\" has not the right value.", $res);
-      }
-    } elsif (/^typed-constant *([a-zA-Z0-9_]*) *({([^}]*)}|([^ ]*)) *([A-Za-z0-9_-]*)?/) {
-      my($const) = $1;
-      my($type) = "$3$4";
-      my($value) = $5;
-      my($res) = $missing;
-
-      # Remember that this name is allowed.
-      push @allow, $const;
-
-      # Generate a program to test for the availability of this constant.
-      open (TESTFILE, ">$fnamebase.c");
-      print TESTFILE "$prepend";
-      print TESTFILE "#include <$h>\n";
-      print TESTFILE "__typeof__ ($const) a = $const;\n";
-      close (TESTFILE);
-
-      $res = compiletest ($fnamebase, "Testing for constant $const",
-			  "Constant \"$const\" not available.", $res, 0);
-
-      # Test the types of the members.
-      open (TESTFILE, ">$fnamebase.c");
-      print TESTFILE "$prepend";
-      print TESTFILE "#include <$h>\n";
-      print TESTFILE "__typeof__ (($type) 0) a;\n";
-      print TESTFILE "extern __typeof__ ($const) a;\n";
-      close (TESTFILE);
-
-      compiletest ($fnamebase, "Testing for type of constant $const",
-		   "Constant \"$const\" does not have the correct type.",
-		   $res, 0);
-
-      if ($value ne "") {
-	# Generate a program to test for the value of this constant.
-	open (TESTFILE, ">$fnamebase.c");
-	print TESTFILE "$prepend";
-	print TESTFILE "#include <$h>\n";
-	print TESTFILE "int main (void) { return $const != $value; }\n";
 	close (TESTFILE);
 
 	$res = runtest ($fnamebase, "Testing for value of constant $const",
@@ -833,9 +806,7 @@ while ($#headers >= 0) {
 
       if (/^element *({([^}]*)}|([^ ]*)) *({([^}]*)}|([^ ]*)) *([A-Za-z0-9_]*) *(.*)/) {
 	push @allow, $7;
-      } elsif (/^constant *([a-zA-Z0-9_]*) *(?:([>=<!]+) ([A-Za-z0-9_-]*))?/) {
-	push @allow, $1;
-      } elsif (/^typed-constant *([a-zA-Z0-9_]*) *({([^}]*)}|([^ ]*)) *([A-Za-z0-9_]*)?/) {
+      } elsif (/^constant *([a-zA-Z0-9_]*) *(?:{([^}]*)} *)?(?:([>=<!]+) ([A-Za-z0-9_-]*))?/) {
 	push @allow, $1;
       } elsif (/^(type|tag) *({([^}]*)|([a-zA-Z0-9_]*))/) {
 	my($type) = "$3$4";
