@@ -1,3 +1,8 @@
+2012-05-02  Paul Pluzhnikov  <ppluzhnikov@google.com>
+
+	[BZ #14055]
+	* elf/dl-sysdep.c (_dl_show_auxv): Add bounds check.
+
 2012-05-02  Andreas Jaeger  <aj@suse.de>
 
 	* math/Makefile (CPPFLAGS-test-ildoubl.c): Add -frounding-math

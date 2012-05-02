@@ -1,5 +1,5 @@
 /* Operating system support for run-time dynamic linker.  Generic Unix version.
-   Copyright (C) 1995-1998,2000-2008,2009,2010
+   Copyright (C) 1995-1998,2000-2010,2012
 	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -303,7 +303,9 @@ _dl_show_auxv (void)
 	};
       unsigned int idx = (unsigned int) (av->a_type - 2);
 
-      if ((unsigned int) av->a_type < 2u || auxvars[idx].form == ignore)
+      if ((unsigned int) av->a_type < 2u
+	  || (idx < sizeof (auxvars) / sizeof (auxvars[0])
+	      && auxvars[idx].form == ignore))
 	continue;
 
       assert (AT_NULL == 0);
