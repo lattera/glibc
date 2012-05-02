@@ -8,6 +8,9 @@ libc {
     __fixsfdi; __fixunssfdi;
     __floatdidf; __floatdisf;
   }
+  GLIBC_2.16 {
+    __mcount_internal;
+  }
   GLIBC_PRIVATE {
     __mcount_internal;
   }
