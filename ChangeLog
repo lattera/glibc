@@ -1,3 +1,10 @@
+2012-05-02  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
+        [BZ #2550]
+        [BZ #2570]
+        * sysdeps/ieee754/ldbl-128ibm/s_nexttoward.c: Use floating-point
+        comparisons to determine direction to adjust input.
+
 2012-05-01  Roland McGrath  <roland@hack.frob.com>
 
 	* elf/Makefile ($(objpfx)check-localplt.out): Redirect the test's

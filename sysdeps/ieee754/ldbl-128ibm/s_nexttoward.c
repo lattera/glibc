@@ -57,11 +57,7 @@ double __nexttoward(double x, long double y)
 	    return x;
 	}
 	if(hx>=0) {				/* x > 0 */
-	    if (hy<0||(ix>>20)>(iy>>52)
-		|| ((ix>>20)==(iy>>52)
-		    && (((((int64_t)hx)<<32)|(lx))>(hy&0x000fffffffffffffLL)
-			|| (((((int64_t)hx)<<32)|(lx))==(hy&0x000fffffffffffffLL)
-			    )))) {	/* x > y, x -= ulp */
+	    if (x > y) {			/* x > 0 */
 		if(lx==0) hx -= 1;
 		lx -= 1;
 	    } else {				/* x < y, x += ulp */
@@ -69,11 +65,7 @@ double __nexttoward(double x, long double y)
 		if(lx==0) hx += 1;
 	    }
 	} else {				/* x < 0 */
-	    if (hy>=0||(ix>>20)>(iy>>52)
-		|| ((ix>>20)==(iy>>52)
-		    && (((((int64_t)hx)<<32)|(lx))>(hy&0x000fffffffffffffLL)
-			|| (((((int64_t)hx)<<32)|(lx))==(hy&0x000fffffffffffffLL)
-			   )))) {	/* x < y, x -= ulp */
+	    if (x < y) {			/* x < 0 */
 		if(lx==0) hx -= 1;
 		lx -= 1;
 	    } else {				/* x > y, x += ulp */
