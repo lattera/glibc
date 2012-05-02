@@ -1,3 +1,15 @@
+2012-05-02  Andreas Jaeger  <aj@suse.de>
+
+	* math/Makefile (CPPFLAGS-test-ildoubl.c): Add -frounding-math
+	since we manipulate rounding mode.
+	(CPPFLAGS-test-idouble.c): Likewise.
+	(CPPFLAGS-test-ifloat.c): Likewise.
+	(CFLAGS-test-ldouble.c): Likewise.
+	(CFLAGS-test-double.c): Likewise.
+	(CFLAGS-test-float.c): Likewise.
+	(CFLAGS-test-misc.c): Likewise.
+	(CFLAGS-test-test-fenv.c): Likewise.
+
 2012-05-02  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
         [BZ #2550]
