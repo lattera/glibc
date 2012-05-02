@@ -16,7 +16,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <lowlevellock.h>
-	
+
 	.globl	pthread_spin_lock
 	.type	pthread_spin_lock,@function
 	.align	16
