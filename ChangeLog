@@ -1,3 +1,7 @@
+2012-05-02  David S. Miller  <davem@davemloft.net>
+
+	* sysdeps/sparc/fpu/libm-test-ulps: Update.
+
 2012-05-02  Paul Pluzhnikov  <ppluzhnikov@google.com>
 
 	[BZ #14055]
