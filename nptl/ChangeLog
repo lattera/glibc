@@ -1,3 +1,10 @@
+2012-05-02  Paul Pluzhnikov  <ppluzhnikov@google.com>
+
+	* sysdeps/i386/pthread_spin_lock.S: New.
+	* sysdeps/i386/pthread_spin_lock.c: Delete.
+	* sysdeps/x86_64/pthread_spin_lock.S: New.
+	* sysdeps/x86_64/pthread_spin_lock.c: Delete.
+
 2012-04-28  Andreas Schwab  <schwab@linux-m68k.org>
 
 	* Makefile ($(objpfx)tst-stack3-mem, $(objpfx)tst-tls6.out): Don't

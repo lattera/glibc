@@ -1,6 +1,5 @@
-/* Copyright (C) 2002,2003,2004 Free Software Foundation, Inc.
+/* Copyright (C) 2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -16,33 +15,22 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include "pthreadP.h"
+#include <lowlevellock.h>
+	
+	.globl	pthread_spin_lock
+	.type	pthread_spin_lock,@function
+	.align	16
+pthread_spin_lock:
+1:	LOCK
+	decl	0(%rdi)
+	jne	2f
+	xor	%eax, %eax
+	ret
 
-#ifndef LOCK_PREFIX
-# ifdef UP
-#  define LOCK_PREFIX	/* nothing */
-# else
-#  define LOCK_PREFIX	"lock;"
-# endif
-#endif
-
-
-int
-pthread_spin_lock (lock)
-     pthread_spinlock_t *lock;
-{
-  asm ("\n"
-       "1:\t" LOCK_PREFIX "decl %0\n\t"
-       "jne 2f\n\t"
-       ".subsection 1\n\t"
-       ".align 16\n"
-       "2:\trep; nop\n\t"
-       "cmpl $0, %0\n\t"
-       "jg 1b\n\t"
-       "jmp 2b\n\t"
-       ".previous"
-       : "=m" (*lock)
-       : "m" (*lock));
-
-  return 0;
-}
+	.align	16
+2:	rep
+	nop
+	cmpl	$0, 0(%rdi)
+	jg	1b
+	jmp	2b
+	.size	pthread_spin_lock,.-pthread_spin_lock
