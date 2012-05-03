@@ -1,3 +1,9 @@
+2012-05-10  Andreas Schwab  <schwab@linux-m68k.org>
+
+	* sunrpc/Makefile (extra-objs) [$(build-shared) = yes]: Add
+	$(addsuffix .os,$(rpc-compat-routines)).  Move include ../Rules
+	after this.
+
 2012-05-09  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* stdlib/longlong.h: Updated from GCC.

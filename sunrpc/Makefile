@@ -107,12 +107,16 @@ librpcsvc-inhibit-o = .os # Build no shared rpcsvc library.
 omit-deps = $(librpcsvc-routines)
 endif
 
-include ../Rules
-
 ifeq (yes,$(build-shared))
 rpc-compat-routines = $(addprefix compat-,$(need-export-routines))
 rpc-compat-routines.os = $(addprefix $(objpfx), \
 				     $(addsuffix .os,$(rpc-compat-routines)))
+extra-objs += $(addsuffix .os,$(rpc-compat-routines))
+endif
+
+include ../Rules
+
+ifeq (yes,$(build-shared))
 subdir_lib: $(objpfx)librpc_compat_pic.a
 $(objpfx)librpc_compat_pic.a: $(rpc-compat-routines.os)
 	$(AR) cr$(verbose) $@ $^
