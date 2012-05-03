@@ -83,6 +83,12 @@ ldouble: 1
 Test "asin (-0x0.ffffffff8p0) == -1.5707810680058339712015850710748035974710":
 ildouble: 1
 ldouble: 1
+Test "asin (-0x0.ffffffffffffffffp0) == -1.5707963264656243652399620683025688888978":
+ildouble: 1
+ldouble: 1
+Test "asin (-0x0.ffffffffffffp0) == -1.5707962425011995974432331617542781977068":
+ildouble: 1
+ldouble: 1
 Test "asin (-0x0.ffffffp0) == -1.5704510598101804156437184421571127056013":
 ildouble: 1
 ldouble: 1
@@ -96,6 +102,12 @@ Test "asin (0.75) == 0.848062078981481008052944338998418080":
 ildouble: 1
 ldouble: 1
 Test "asin (0x0.ffffffff8p0) == 1.5707810680058339712015850710748035974710":
+ildouble: 1
+ldouble: 1
+Test "asin (0x0.ffffffffffffffffp0) == 1.5707963264656243652399620683025688888978":
+ildouble: 1
+ldouble: 1
+Test "asin (0x0.ffffffffffffp0) == 1.5707962425011995974432331617542781977068":
 ildouble: 1
 ldouble: 1
 Test "asin (0x0.ffffffp0) == 1.5704510598101804156437184421571127056013":
@@ -124,12 +136,20 @@ ldouble: 1
 Test "asin_downward (1.0) == pi/2":
 float: 1
 ifloat: 1
+ildouble: 1
+ldouble: 1
 
 # asin_tonearest
 Test "asin_tonearest (-0.5) == -pi/6":
 ildouble: 1
 ldouble: 1
+Test "asin_tonearest (-1.0) == -pi/2":
+ildouble: 1
+ldouble: 1
 Test "asin_tonearest (0.5) == pi/6":
+ildouble: 1
+ldouble: 1
+Test "asin_tonearest (1.0) == pi/2":
 ildouble: 1
 ldouble: 1
 
@@ -144,6 +164,8 @@ ldouble: 1
 Test "asin_towardzero (-1.0) == -pi/2":
 float: 1
 ifloat: 1
+ildouble: 1
+ldouble: 1
 Test "asin_towardzero (0.5) == pi/6":
 double: 1
 float: 1
@@ -154,6 +176,8 @@ ldouble: 1
 Test "asin_towardzero (1.0) == pi/2":
 float: 1
 ifloat: 1
+ildouble: 1
+ldouble: 1
 
 # asin_upward
 Test "asin_upward (-0.5) == -pi/6":
@@ -166,6 +190,8 @@ ldouble: 1
 Test "asin_upward (-1.0) == -pi/2":
 float: 1
 ifloat: 1
+ildouble: 1
+ldouble: 1
 Test "asin_upward (0.5) == pi/6":
 ildouble: 1
 ldouble: 1
@@ -990,13 +1016,21 @@ ildouble: 1
 Test "cosh_downward (22) == 1792456423.065795780980053377632656584997":
 double: 1
 float: 1
+idouble: 1
+ifloat: 1
+ildouble: 1
 ldouble: 2
 Test "cosh_downward (23) == 4872401723.124451300068625740569997090344":
 double: 1
 float: 1
+idouble: 1
+ifloat: 1
+ildouble: 1
 ldouble: 1
 Test "cosh_downward (24) == 13244561064.92173614708845674912733665919":
 float: 1
+ifloat: 1
+ildouble: 1
 ldouble: 1
 
 # cosh_tonearest
@@ -1007,20 +1041,33 @@ ldouble: 1
 Test "cosh_towardzero (22) == 1792456423.065795780980053377632656584997":
 double: 1
 float: 1
+idouble: 1
+ifloat: 1
+ildouble: 1
 ldouble: 2
 Test "cosh_towardzero (23) == 4872401723.124451300068625740569997090344":
 double: 1
 float: 1
+idouble: 1
+ifloat: 1
+ildouble: 1
 ldouble: 1
 Test "cosh_towardzero (24) == 13244561064.92173614708845674912733665919":
 float: 1
+ifloat: 1
+ildouble: 1
 ldouble: 1
 
 # cosh_upward
+Test "cosh_upward (22) == 1792456423.065795780980053377632656584997":
+ildouble: 2
 Test "cosh_upward (23) == 4872401723.124451300068625740569997090344":
+ildouble: 2
 ldouble: 1
 Test "cosh_upward (24) == 13244561064.92173614708845674912733665919":
 double: 1
+idouble: 1
+ildouble: 1
 
 # cpow
 Test "Real part of: cpow (0.75 + 1.25 i, 0.0 + 1.0 i) == 0.331825439177608832276067945276730566 + 0.131338600281188544930936345230903032 i":
@@ -1332,6 +1379,7 @@ ifloat: 1
 Test "expm1 (1) == M_El - 1.0":
 ildouble: 1
 Test "expm1 (11356.25) == 9.05128237311923300051376115753226014206e+4931":
+ildouble: 1
 ldouble: 1
 
 # gamma
@@ -1350,14 +1398,18 @@ Test "hypot (-12.4, -0.7) == 12.419742348374220601176836866763271":
 float: 1
 Test "hypot (-12.4, 0.7) == 12.419742348374220601176836866763271":
 float: 1
+ifloat: 1
 Test "hypot (0.7, -12.4) == 12.419742348374220601176836866763271":
 float: 1
+ifloat: 1
 Test "hypot (0.7, 12.4) == 12.419742348374220601176836866763271":
 float: 1
+ifloat: 1
 Test "hypot (12.4, -0.7) == 12.419742348374220601176836866763271":
 float: 1
 Test "hypot (12.4, 0.7) == 12.419742348374220601176836866763271":
 float: 1
+ifloat: 1
 
 # j0
 Test "j0 (-0x1.001000001p+593) == -3.927269966354206207832593635798954916263e-90":
@@ -1847,6 +1899,7 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
+ildouble: 4
 ldouble: 4
 Test "sinh_downward (23) == 4872401723.124451299966006944252978187305":
 double: 1
@@ -1856,14 +1909,18 @@ ifloat: 1
 Test "sinh_downward (24) == 13244561064.92173614705070540368454568168":
 float: 1
 ifloat: 1
+ildouble: 5
 ldouble: 5
 
 # sinh_tonearest
 Test "sinh_tonearest (22) == 1792456423.065795780701106568345764104225":
+ildouble: 3
 ldouble: 3
 Test "sinh_tonearest (23) == 4872401723.124451299966006944252978187305":
+ildouble: 1
 ldouble: 1
 Test "sinh_tonearest (24) == 13244561064.92173614705070540368454568168":
+ildouble: 6
 ldouble: 6
 
 # sinh_towardzero
@@ -1872,6 +1929,7 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
+ildouble: 4
 ldouble: 4
 Test "sinh_towardzero (23) == 4872401723.124451299966006944252978187305":
 double: 1
@@ -1881,16 +1939,20 @@ ifloat: 1
 Test "sinh_towardzero (24) == 13244561064.92173614705070540368454568168":
 float: 1
 ifloat: 1
+ildouble: 5
 ldouble: 5
 
 # sinh_upward
 Test "sinh_upward (22) == 1792456423.065795780701106568345764104225":
+ildouble: 16
 ldouble: 16
 Test "sinh_upward (23) == 4872401723.124451299966006944252978187305":
+ildouble: 27
 ldouble: 27
 Test "sinh_upward (24) == 13244561064.92173614705070540368454568168":
 double: 1
 idouble: 1
+ildouble: 7
 ldouble: 7
 
 # tan
@@ -2531,6 +2593,9 @@ ildouble: 1
 Function: "cosh_downward":
 double: 1
 float: 1
+idouble: 1
+ifloat: 1
+ildouble: 1
 ldouble: 2
 
 Function: "cosh_tonearest":
@@ -2539,10 +2604,15 @@ ldouble: 1
 Function: "cosh_towardzero":
 double: 1
 float: 1
+idouble: 1
+ifloat: 1
+ildouble: 1
 ldouble: 2
 
 Function: "cosh_upward":
 double: 1
+idouble: 1
+ildouble: 2
 ldouble: 1
 
 Function: Real part of "cpow":
@@ -2673,6 +2743,7 @@ ldouble: 1
 
 Function: "hypot":
 float: 1
+ifloat: 1
 
 Function: "j0":
 double: 3
@@ -2791,9 +2862,11 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
+ildouble: 5
 ldouble: 5
 
 Function: "sinh_tonearest":
+ildouble: 6
 ldouble: 6
 
 Function: "sinh_towardzero":
@@ -2801,11 +2874,13 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
+ildouble: 5
 ldouble: 5
 
 Function: "sinh_upward":
 double: 1
 idouble: 1
+ildouble: 27
 ldouble: 27
 
 Function: "tan":

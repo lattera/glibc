@@ -1,5 +1,7 @@
 2012-05-03  Andreas Jaeger  <aj@suse.de>
 
+	* sysdeps/i386/fpu/libm-test-ulps: Update.
+
 	* FAQ: Removed.
 	* FAQ.in: Likewise.
 	* scripts/gen-FAQ.pl: Likewise.
