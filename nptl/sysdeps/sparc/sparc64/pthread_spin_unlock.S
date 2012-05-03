@@ -20,8 +20,9 @@
 	.text
 ENTRY(pthread_spin_unlock)
 	membar		#StoreStore | #LoadStore
+	stb		%g0, [%o0]
 	retl
-	 stb		%g0, [%o0]
+	 clr		%o0
 END(pthread_spin_unlock)
 
 strong_alias (pthread_spin_unlock, pthread_spin_init)

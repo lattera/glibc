@@ -1,3 +1,13 @@
+2012-05-03  David S. Miller  <davem@davemloft.net>
+
+	* sysdeps/sparc/sparc64/pthread_spin_unlock.S: Fix thinko, we
+	always have to return 0, especially for the pthread_spin_init
+	alias.
+	* sysdeps/sparc/sparc32/pthread_spin_lock.S: Add missing trailing
+	newline.
+	* sysdeps/sparc/sparc32/sparcv9/pthread_spin_lock.S: Likewise.
+	* sysdeps/sparc/sparc64/pthread_spin_lock.S: Likewise.
+
 2012-05-02  David S. Miller  <davem@davemloft.net>
 
 	* sysdeps/sparc/sparc64/pthread_spin_lock.S: New.
