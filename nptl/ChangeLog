@@ -1,3 +1,24 @@
+2012-05-02  David S. Miller  <davem@davemloft.net>
+
+	* sysdeps/sparc/sparc64/pthread_spin_lock.S: New.
+	* sysdeps/sparc/sparc64/pthread_spin_lock.c: Delete.
+	* sysdeps/sparc/sparc64/pthread_spin_unlock.S: New.
+	* sysdeps/sparc/sparc64/pthread_spin_unlock.c: Delete.
+	* sysdeps/sparc/sparc64/pthread_spin_trylock.S: New.
+	* sysdeps/sparc/sparc64/pthread_spin_trylock.c: Delete.
+	* sysdeps/sparc/sparc64/pthread_spin_init.c: New.
+	* sysdeps/sparc/sparc32/pthread_spin_lock.S: New.
+	* sysdeps/sparc/sparc32/pthread_spin_lock.c: Delete.
+	* sysdeps/sparc/sparc32/pthread_spin_trylock.S: New.
+	* sysdeps/sparc/sparc32/pthread_spin_trylock.c: Delete.
+	* sysdeps/sparc/sparc32/sparcv9/pthread_spin_lock.S: New.
+	* sysdeps/sparc/sparc32/sparcv9/pthread_spin_lock.c: Delete.
+	* sysdeps/sparc/sparc32/sparcv9/pthread_spin_trylock.S: New.
+	* sysdeps/sparc/sparc32/sparcv9/pthread_spin_trylock.c: Delete.
+	* sysdeps/sparc/sparc32/sparcv9/pthread_spin_unlock.S: New.
+	* sysdeps/sparc/sparc32/sparcv9/pthread_spin_unlock.c: Delete.
+	* sysdeps/sparc/sparc32/sparcv9/pthread_spin_init.c: New.
+
 2012-05-02  Allan McRae  <allan@archlinux.org>
 
 	* Makefile: (LDFLAGS-tst-tls5): Use $(no-as-needed).
