@@ -1,3 +1,21 @@
+2012-05-03  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #13775]
+	* libio/bits/stdio-ldbl.h [__USE_XOPEN2K8] (__dprintf_chk):
+	Redirect under this condition.
+	[__USE_XOPEN2K8] (__vdprintf_chk): Likewise.
+	[__USE_GNU] (__dprintf_chk): Not under this condition.
+	[__USE_GNU] (__vdprintf_chk): Likewise.
+	* libio/bits/stdio2.h [__USE_XOPEN2K8] (__dprintf_chk): Declare
+	under this condition.
+	[__USE_XOPEN2K8] (__vdprintf_chk): Likewise.
+	[__USE_XOPEN2K8] (dprintf): Define under this condition.
+	[__USE_XOPEN2K8] (vdprintf): Likewise.
+	[__USE_GNU] (__dprintf_chk): Not under this condition.
+	[__USE_GNU] (__vdprintf_chk): Likewise.
+	[__USE_GNU] (dprintf): Likewise.
+	[__USE_GNU] (vdprintf): Likewise.
+
 2012-05-03  Roland McGrath  <roland@hack.frob.com>
 
 	* elf/Makefile (common-generated): Set this instead of generated for

@@ -87,11 +87,13 @@ __LDBL_REDIR_DECL (__fprintf_chk)
 __LDBL_REDIR_DECL (__printf_chk)
 __LDBL_REDIR_DECL (__vfprintf_chk)
 __LDBL_REDIR_DECL (__vprintf_chk)
+#  ifdef __USE_XOPEN2K8
+__LDBL_REDIR_DECL (__dprintf_chk)
+__LDBL_REDIR_DECL (__vdprintf_chk)
+#  endif
 #  ifdef __USE_GNU
 __LDBL_REDIR_DECL (__asprintf_chk)
 __LDBL_REDIR_DECL (__vasprintf_chk)
-__LDBL_REDIR_DECL (__dprintf_chk)
-__LDBL_REDIR_DECL (__vdprintf_chk)
 __LDBL_REDIR_DECL (__obstack_printf_chk)
 __LDBL_REDIR_DECL (__obstack_vprintf_chk)
 #  endif
