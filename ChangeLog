@@ -1,3 +1,13 @@
+2012-05-03  Andreas Jaeger  <aj@suse.de>
+
+	* FAQ: Removed.
+	* FAQ.in: Likewise.
+	* scripts/gen-FAQ.pl: Likewise.
+	* manual/install.texi (Installation): Point to online location of
+	FAQ.
+	* Makefile (files-for-dist): Remove FAQ.
+	(FAQ): Remove.
+
 2012-05-02  Allan McRae  <allan@archlinux.org>
 
 	* elf/Makefile: (LDFLAGS-nodel2mod3.so: Use $(no-as-needed).

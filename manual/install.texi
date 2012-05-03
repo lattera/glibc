@@ -7,10 +7,10 @@
 @c %MENU% How to install the GNU C Library
 @appendix Installing @theglibc{}
 
-Before you do anything else, you should read the file @file{FAQ} located
-at the top level of the source tree.  This file answers common questions
-and describes problems you may experience with compilation and
-installation.  It is updated more frequently than this manual.
+Before you do anything else, you should read the FAQ at
+@url{http://sourceware.org/glibc/wiki/FAQ}.  It answers common
+questions and describes problems you may experience with compilation
+and installation.
 
 Features can be added to @theglibc{} via @dfn{add-on} bundles.  These are
 separate tar files, which you unpack into the top level of the source

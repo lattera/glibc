@@ -363,7 +363,7 @@ TAGS:
 
 generated := $(generated) stubs.h
 
-files-for-dist := README FAQ INSTALL configure ChangeLog NEWS
+files-for-dist := README INSTALL configure ChangeLog NEWS
 
 # Regenerate stuff, then error if these things are not committed yet.
 dist-prepare: $(files-for-dist)
@@ -400,8 +400,6 @@ endef
 INSTALL: manual/install.texi manual/macros.texi; $(format-me)
 manual/dir-add.texi manual/dir-add.info: FORCE
 	$(MAKE) $(PARALLELMFLAGS) -C $(@D) $(@F)
-FAQ: scripts/gen-FAQ.pl FAQ.in
-	$(PERL) $^ > $@.new && rm -f $@ && mv $@.new $@ && chmod a-w $@
 FORCE:
 
 iconvdata/% localedata/% po/% manual/%: FORCE
