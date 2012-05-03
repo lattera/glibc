@@ -1,3 +1,10 @@
+2012-05-03  Andreas Jaeger  <aj@suse.de>
+	    Roland McGrath <roland@hack.frob.com>
+
+        * Makerules (.PRECIOUS): Add %.symlist pattern to prevent
+	intermediate file deletion.
+        (generated): Add .symlist files.
+
 2012-05-03  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #13775]

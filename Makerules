@@ -1158,6 +1158,13 @@ ifeq ($(versioning),yes)
 
 vpath %.abilist $(+sysdep_dirs)
 
+# The .PRECIOUS rule prevents the files built by an implicit rule whose
+# target pattern is %.symlist from being considered "intermediate files"
+# and automatically removed.  We only want these files to be removed by
+# 'make clean', which is handled by the 'generated' variable.
+.PRECIOUS: %.symlist
+generated += $(extra-libs:=.symlist)
+
 check-abi-%: $(common-objpfx)config.make %.abilist $(objpfx)%.symlist
 	$(check-abi)
 check-abi-%: $(common-objpfx)config.make %.abilist $(common-objpfx)%.symlist
