@@ -899,7 +899,7 @@ $(all-built-dso:=.dyn): %.dyn: %
 	LC_ALL=C $(READELF) -W -d $< > $@T
 	test -s $@T
 	mv -f $@T $@
-generated += $(all-built-dso:=.dyn)
+common-generated += $(all-built-dso:$(common-objpfx)%=%.dyn)
 
 $(objpfx)check-textrel.out: $(..)scripts/check-textrel.awk \
 			    $(all-built-dso:=.dyn)
@@ -925,7 +925,7 @@ $(all-built-dso:=.phdr): %.phdr: %
 	LC_ALL=C $(READELF) -W -l $< > $@T
 	test -s $@T
 	mv -f $@T $@
-generated += $(all-built-dso:=.phdr)
+common-generated += $(all-built-dso:$(common-objpfx)%=%.phdr)
 
 $(objpfx)check-execstack.out: $(..)scripts/check-execstack.awk \
 			      $(objpfx)execstack-default \
@@ -941,7 +941,7 @@ $(all-built-dso:=.jmprel): %.jmprel: % Makefile
 	LC_ALL=C $(READELF) -W -S -d -r $< > $@T
 	test -s $@T
 	mv -f $@T $@
-generated += $(all-built-dso:=.jmprel)
+common-generated += $(all-built-dso:$(common-objpfx)%=%.jmprel)
 
 check-data := $(firstword $(wildcard \
 		$(foreach D,$(add-ons) scripts,\

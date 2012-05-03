@@ -1,3 +1,9 @@
+2012-05-03  Roland McGrath  <roland@hack.frob.com>
+
+	* elf/Makefile (common-generated): Set this instead of generated for
+	.dyn, .phdr, .jmprel files.  Remove $(common-objpfx) from the
+	$(all-built-dso)-derived lists.
+
 2012-05-03  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/i386/fpu/libm-test-ulps: Update.
