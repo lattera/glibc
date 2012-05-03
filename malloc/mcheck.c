@@ -370,6 +370,10 @@ mabort (enum mcheck_status status)
 #endif
 }
 
+/* Memory barrier so that GCC does not optimize out the argument.  */
+#define malloc_opt_barrier(x) \
+({ __typeof (x) __x = x; __asm ("" : "+m" (__x)); __x; })
+
 int
 mcheck (func)
      void (*func) (enum mcheck_status);
@@ -381,6 +385,8 @@ mcheck (func)
     {
       /* We call malloc() once here to ensure it is initialized.  */
       void *p = malloc (0);
+      /* GCC might optimize out the malloc/free pair without a barrier.  */
+      p = malloc_opt_barrier (p);
       free (p);
 
       old_free_hook = __free_hook;
