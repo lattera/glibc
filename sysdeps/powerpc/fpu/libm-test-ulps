@@ -4,11 +4,112 @@
 Test "acos (2e-17) == 1.57079632679489659923132169163975144":
 ildouble: 1
 ldouble: 1
+Test "acos (-0x0.ffffffff8p0) == 3.1415773948007305904329067627145550395696":
+ldouble: 1
+ildouble: 1
+Test "acos (-0x0.ffffffp0) == 3.1412473866050770348750401337968641476999":
+ldouble: 1
+ildouble: 1
+
+# acos_downward
+Test "acos_downward (-0.5) == M_PI_6l*4.0":
+double: 1
+idouble: 1
+ldouble: 1
+ildouble: 1
+Test "acos_downward (0.5) == M_PI_6l*2.0":
+float: 1
+ifloat: 1
+double: 1
+idouble: 1
+ldouble: 1
+ildouble: 1
+
+# acos_towardzero
+Test "acos_towardzero (-0.5) == M_PI_6l*4.0":
+double: 1
+idouble: 1
+ldouble: 1
+ildouble: 1
+Test "acos_towardzero (0.5) == M_PI_6l*2.0":
+float: 1
+ifloat: 1
+double: 1
+idouble: 1
+ldouble: 1
+ildouble: 1
+
+# acos_upward
+Test "acos_upward (-0) == pi/2":
+ldouble: 2
+ildouble: 2
+Test "acos_upward (-1) == pi":
+ldouble: 2
+ildouble: 2
+Test "acos_upward (0) == pi/2":
+ldouble: 2
+ildouble: 2
 
 # asin
+Test "asin (-0x0.ffffffff8p0) == -1.5707810680058339712015850710748035974710":
+ldouble: 1
+ildouble: 1
+Test "asin (-0x0.ffffffp0) == -1.5704510598101804156437184421571127056013":
+ldouble: 1
+ildouble: 1
+Test "asin (0x0.ffffffff8p0) == 1.5707810680058339712015850710748035974710":
+ldouble: 1
+ildouble: 1
+Test "asin (0x0.ffffffp0) == 1.5704510598101804156437184421571127056013":
+ldouble: 1
+ildouble: 1
 Test "asin (0.75) == 0.848062078981481008052944338998418080":
 ildouble: 2
 ldouble: 2
+
+# asin_downward
+Test "asin_downward (-0.5) == -pi/6":
+double: 1
+idouble: 1
+ldouble: 1
+ildouble: 1
+Test "asin_downward (0.5) == pi/6":
+double: 1
+idouble: 1
+ldouble: 1
+ildouble: 1
+Test "asin_downward (-1.0) == -pi/2":
+ldouble: 1
+ildouble: 1
+Test "asin_downward (1.0) == pi/2":
+float: 1
+ifloat: 1
+
+# asin_towardzero
+Test "asin_towardzero (-0.5) == -pi/6":
+double: 1
+idouble: 1
+ldouble: 1
+ildouble: 1
+Test "asin_towardzero (0.5) == pi/6":
+double: 1
+idouble: 1
+ldouble: 1
+ildouble: 1
+Test "asin_towardzero (-1.0) == -pi/2":
+float: 1
+ifloat:1
+Test "asin_towardzero (1.0) == pi/2":
+float: 1
+ifloat: 1
+
+# asin_upward
+Test "asin_upward (-1.0) == -pi/2":
+float: 1
+ifloat: 1
+Test "asin_upward (1.0) == pi/2":
+ldouble: 1
+ildouble: 1
 
 # atan2
 Test "atan2 (-0.00756827042671106339, -.001792735857538728036) == -1.80338464113663849327153994379639112":
@@ -2061,6 +2162,30 @@ Function: "acos":
 ildouble: 1
 ldouble: 1
 
+Function: "acos_downward":
+float: 1
+ifloat: 1
+double: 1
+idouble: 1
+ldouble: 1
+ildouble: 1
+
+Function: "acos_tonearest":
+ldouble: 1
+ildouble: 1
+
+Function: "acos_towardzero":
+float: 1
+ifloat: 1
+double: 1
+idouble: 1
+ldouble: 1
+ildouble: 1
+
+Function: "acos_upward":
+ldouble: 2
+ildouble: 2
+
 Function: "acosh":
 ildouble: 1
 ldouble: 1
@@ -2068,6 +2193,32 @@ ldouble: 1
 Function: "asin":
 ildouble: 2
 ldouble: 2
+
+Function: "asin_downward":
+float: 1
+ifloat: 1
+double: 1
+idouble: 1
+ldouble: 1
+ildouble: 1
+
+Function: "asin_tonearest":
+ldouble: 1
+ildouble: 1
+
+Function: "asin_towardzero":
+float: 1
+ifloat: 1
+double: 1
+idouble: 1
+ldouble: 1
+ildouble: 1
+
+Function: "asin_upward":
+float: 1
+ifloat: 1
+ldouble: 1
+ildouble: 1
 
 Function: "asinh":
 ildouble: 1

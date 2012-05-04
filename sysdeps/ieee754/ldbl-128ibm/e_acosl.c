@@ -152,30 +152,25 @@ long double
 __ieee754_acosl (long double x)
 {
   long double z, r, w, p, q, s, t, f2;
-  int32_t ix, sign;
   ieee854_long_double_shape_type u;
 
-  u.value = x;
-  sign = u.parts32.w0;
-  ix = sign & 0x7fffffff;
-  u.parts32.w0 = ix;		/* |x| */
-  if (ix >= 0x3ff00000)		/* |x| >= 1 */
+  u.value = __builtin_fabsl (x);
+  if (u.value == 1.0L)
     {
-      if (ix == 0x3ff00000
-	  && (u.parts32.w1 | (u.parts32.w2&0x7fffffff) | u.parts32.w3) == 0)
-	{			/* |x| == 1 */
-	  if ((sign & 0x80000000) == 0)
-	    return 0.0;		/* acos(1) = 0  */
-	  else
-	    return (2.0 * pio2_hi) + (2.0 * pio2_lo);	/* acos(-1)= pi */
-	}
+      if (x > 0.0L)
+	return 0.0;		/* acos(1) = 0  */
+      else
+	return (2.0 * pio2_hi) + (2.0 * pio2_lo);	/* acos(-1)= pi */
+    }
+  else if (u.value > 1.0L)
+    {
       return (x - x) / (x - x);	/* acos(|x| > 1) is NaN */
     }
-  else if (ix < 0x3fe00000)	/* |x| < 0.5 */
+  if (u.value < 0.5L)
     {
-      if (ix < 0x3c600000)	/* |x| < 2**-57 */
+      if (u.value < 6.938893903907228e-18L)	/* |x| < 2**-57 */
 	return pio2_hi + pio2_lo;
-      if (ix < 0x3fde0000)	/* |x| < .4375 */
+      if (u.value < 0.4375L)
 	{
 	  /* Arcsine of x.  */
 	  z = x * x;
@@ -229,13 +224,13 @@ __ieee754_acosl (long double x)
 	   + Q1) * t
 	+ Q0;
       r = p / q;
-      if (sign & 0x80000000)
+      if (x < 0.0L)
 	r = pimacosr4375 - r;
       else
 	r = acosr4375 + r;
       return r;
     }
-  else if (ix < 0x3fe40000)	/* |x| < 0.625 */
+  else if (u.value < 0.625L)
     {
       t = u.value - 0.5625L;
       p = ((((((((((rS10 * t
@@ -261,7 +256,7 @@ __ieee754_acosl (long double x)
 	    + sS2) * t
 	   + sS1) * t
 	+ sS0;
-      if (sign & 0x80000000)
+      if (x < 0.0L)
 	r = pimacosr5625 - p / q;
       else
 	r = acosr5625 + p / q;
@@ -309,7 +304,7 @@ __ieee754_acosl (long double x)
 	+ qS0;
       r = s + (w + s * p / q);
 
-      if (sign & 0x80000000)
+      if (x < 0.0L)
 	w = pio2_hi + (pio2_lo - r);
       else
 	w = r;
