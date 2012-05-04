@@ -28,7 +28,7 @@
 	(malloc_opt_barrier): New.
 
 2012-05-03  Andreas Jaeger  <aj@suse.de>
-	    Roland McGrath <roland@hack.frob.com>
+	    Roland McGrath  <roland@hack.frob.com>
 
         * Makerules (.PRECIOUS): Add %.symlist pattern to prevent
 	intermediate file deletion.
