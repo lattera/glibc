@@ -1,3 +1,7 @@
+2012-05-03  Andreas Krebbel  <Andreas.Krebbel@de.ibm.com>
+
+	* sysdeps/s390/fpu/libm-test-ulps: Update.
+
 2012-05-03  Andreas Jaeger  <aj@suse.de>
 
 	* malloc/mcheck.c (mcheck): Add barrier so that malloc/free pair
