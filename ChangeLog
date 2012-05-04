@@ -1,8 +1,6 @@
 2012-05-04  Andreas Jaeger  <aj@suse.de>
 
 	[BZ #13750]
-	* manual/install.texi (Configuring and compiling): Adjust since
-	the info files are not part of the tar ball anymore.
 	* manual/.gitignore: Remove, it's not needed anymore.
 	* manual/libc-texinfo.sh: Pass OUTDIR as extra argument, create
 	all files in it.
