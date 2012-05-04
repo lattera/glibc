@@ -1,13 +1,10 @@
 #! /bin/sh
 
-OUTDIR=$1
-shift
-
 # Create libc.texinfo from the chapter files.
 
-trap "rm -f ${OUTDIR}*.$$; exit 1" 1 2 15
+trap "rm -f *.$$; exit 1" 1 2 15
 
-exec 3>${OUTDIR}incl.$$ 4>${OUTDIR}smenu.$$ 5>${OUTDIR}lmenu.$$
+exec 3>incl.$$ 4>smenu.$$ 5>lmenu.$$
 
 build_menu () {
   while IFS=: read file node; do
@@ -54,7 +51,7 @@ collect_nodes $3 | build_menu
 
 exec 3>&- 4>&- 5>&-
 
-mv -f ${OUTDIR}incl.$$ ${OUTDIR}chapters.texi
+mv -f incl.$$ chapters.texi
 
 {
  echo '@menu'
@@ -75,7 +72,7 @@ mv -f ${OUTDIR}incl.$$ ${OUTDIR}chapters.texi
   }
 
   !/^\*/ { print; }
- ' ${OUTDIR}smenu.$$
+ ' smenu.$$
  cat <<EOF
 * Free Manuals::		 Free Software Needs Free Documentation.
 * Copying::                      The GNU Lesser General Public License says
@@ -93,8 +90,8 @@ Indices
 
  --- The Detailed Node Listing ---
 EOF
- cat ${OUTDIR}lmenu.$$
- echo '@end menu'; } >${OUTDIR}top-menu.texi.$$
-mv -f ${OUTDIR}top-menu.texi.$$ ${OUTDIR}top-menu.texi
+ cat lmenu.$$
+ echo '@end menu'; } >top-menu.texi.$$
+mv -f top-menu.texi.$$ top-menu.texi
 
-rm -f ${OUTDIR}*.$$
+rm -f *.$$
