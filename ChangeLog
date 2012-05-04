@@ -1,3 +1,48 @@
+2012-05-04  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/unix/sysv/linux/x86_64/nptl/ld.abilist: Moved to ...
+	* sysdeps/unix/sysv/linux/x86_64/64/nptl/ld.abilist: Here.
+	* sysdeps/unix/sysv/linux/x86_64/nptl/libBrokenLocale.abilist:
+	Moved to ...
+	* sysdeps/unix/sysv/linux/x86_64/64/nptl/libBrokenLocale.abilist:
+	Here.
+	* sysdeps/unix/sysv/linux/x86_64/nptl/libanl.abilist: Moved
+	to ...
+	* sysdeps/unix/sysv/linux/x86_64/64/nptl/libanl.abilist: Here.
+	* sysdeps/unix/sysv/linux/x86_64/nptl/libc.abilist: Moved
+	to ...
+	* sysdeps/unix/sysv/linux/x86_64/64/nptl/libc.abilist: Here.
+	* sysdeps/unix/sysv/linux/x86_64/nptl/libcrypt.abilist: Moved
+	to ...
+	* sysdeps/unix/sysv/linux/x86_64/64/nptl/libcrypt.abilist: Here.
+	* sysdeps/unix/sysv/linux/x86_64/nptl/libdl.abilist: Moved
+	to ...
+	* sysdeps/unix/sysv/linux/x86_64/64/nptl/libdl.abilist: Here.
+	* sysdeps/unix/sysv/linux/x86_64/nptl/libm.abilist: Moved
+	to ...
+	* sysdeps/unix/sysv/linux/x86_64/64/nptl/libm.abilist: Here.
+	* sysdeps/unix/sysv/linux/x86_64/nptl/libnsl.abilist: Moved
+	to ...
+	* sysdeps/unix/sysv/linux/x86_64/64/nptl/libnsl.abilist: Here.
+	* sysdeps/unix/sysv/linux/x86_64/nptl/libpthread.abilist: Moved
+	to ...
+	* sysdeps/unix/sysv/linux/x86_64/64/nptl/libpthread.abilist:
+	Here.
+	* sysdeps/unix/sysv/linux/x86_64/nptl/libresolv.abilist: Moved
+	to ...
+	* sysdeps/unix/sysv/linux/x86_64/64/nptl/libresolv.abilist:
+	Here.
+	* sysdeps/unix/sysv/linux/x86_64/nptl/librt.abilist: Moved
+	to ...
+	* sysdeps/unix/sysv/linux/x86_64/64/nptl/librt.abilist: Here.
+	* sysdeps/unix/sysv/linux/x86_64/nptl/libthread_db.abilist:
+	Moved to ...
+	* sysdeps/unix/sysv/linux/x86_64/64/nptl/libthread_db.abilist:
+	Here.
+	* sysdeps/unix/sysv/linux/x86_64/nptl/libutil.abilist: Moved
+	to ...
+	* sysdeps/unix/sysv/linux/x86_64/64/nptl/libutil.abilist: Here.
+
 2012-05-04  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/common/bits/dirent.h: Remove file.
