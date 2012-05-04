@@ -1,6 +1,5 @@
 /* Convert string representing a number to float value, using given locale.
-   Copyright (C) 1997,1998,2002,2004,2005,2006,2007,2008,2009,2010,2011
-   Free Software Foundation, Inc.
+   Copyright (C) 1997-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -994,8 +993,20 @@ ____STRTOF_INTERNAL (nptr, endptr, group, loc)
 	      retval[idx--] |= val >> (4 - pos - 1);
 	      val <<= BITS_PER_MP_LIMB - (4 - pos - 1);
 	      if (idx < 0)
-		return round_and_return (retval, exponent, negative, val,
-					 BITS_PER_MP_LIMB - 1, dig_no > 0);
+		{
+		  int rest_nonzero = 0;
+		  while (--dig_no > 0)
+		    {
+		      if (*startp != L_('0'))
+			{
+			  rest_nonzero = 1;
+			  break;
+			}
+		      startp++;
+		    }
+		  return round_and_return (retval, exponent, negative, val,
+					   BITS_PER_MP_LIMB - 1, rest_nonzero);
+		}
 
 	      retval[idx] = val;
 	      pos = BITS_PER_MP_LIMB - 1 - (4 - pos - 1);

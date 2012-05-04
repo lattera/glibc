@@ -1,3 +1,10 @@
+2012-05-04  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #14049]
+	* stdlib/strtod_l.c (____STRTOF_INTERNAL): Check for trailing
+	nonzero digits before rounding a hex value.
+	* stdlib/tst-strtod.c (tests): Add another test.
+
 2012-05-03  Andreas Krebbel  <Andreas.Krebbel@de.ibm.com>
 
 	* sysdeps/s390/fpu/libm-test-ulps: Update.
