@@ -1,4 +1,33 @@
-2012-05-02  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+2012-05-04  Andreas Jaeger  <aj@suse.de>
+
+	[BZ #13750]
+	* manual/.gitignore: Remove, it's not needed anymore.
+	* manual/libc-texinfo.sh: Pass OUTDIR as extra argument, create
+	all files in it.
+	* manual/Makefile (dvi, pdf, info, html): Depend on files in build
+	directory.
+	(texis): Renamed to $(objpfx)texis.
+	(texis-path): New, contains path to generated files.
+	(chapters.%): Use texis-path for complete path, add extra argument
+	libc-texinfo.sh.
+	(libc.dvi, libc.pdf, libc.info, libc.pdf): Add $(objfpx) as prefix.
+	(libc/index.html, summary.texi): Add $(objpfx) as prefix.
+	(summary,texi, stamp-summary): Use complete path of
+	files. Generate files in build dir.
+	(dir-add.texi): Build in build dir.
+	(libm-err.texi,stamp-libm-err): Likewise.
+	(version.texi, stamp-version): Likewise.
+	(.%c.texi): Likewise.
+	(%.info,%.dvi,%.pdf): Add $(objpfx) as prefix, build in build dir.
+	(mostlyclean): Remove target.
+	(realclean): Remove target.
+	(generated): Add new variable with contents from mostlyclean and
+	realclean, remove entries duplicated in	common-mostlyclean, add
+	stamp-libm-err and stamp-version.
+	(generated-dirs): Add libc directory.
+	($(inst_infodir)/libc.info): Install files from build dir.
+
+2012-05-04  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	* sysdeps/ieee754/ldbl-128ibm/e_acosl.c (__ieee754_acosl): Fix
 	long double comparison inaccuracies.
