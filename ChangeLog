@@ -1,5 +1,8 @@
 2012-05-04  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/unix/common/bits/dirent.h: Remove file.
+	* sysdeps/unix/common/bits/fcntl.h: Likewise.
+
 	* sysdeps/unix/bsd/bits/dirent.h: Remove file.
 	* sysdeps/unix/bsd/bits/fcntl.h: Likewise.
 	* sysdeps/unix/bsd/bsd4.4/isatty.c: Likewise.
