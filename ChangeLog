@@ -30,9 +30,9 @@
 2012-05-03  Andreas Jaeger  <aj@suse.de>
 	    Roland McGrath  <roland@hack.frob.com>
 
-        * Makerules (.PRECIOUS): Add %.symlist pattern to prevent
+	* Makerules (.PRECIOUS): Add %.symlist pattern to prevent
 	intermediate file deletion.
-        (generated): Add .symlist files.
+	(generated): Add .symlist files.
 
 2012-05-03  Joseph Myers  <joseph@codesourcery.com>
 
@@ -117,10 +117,10 @@
 
 2012-05-02  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
-        [BZ #2550]
-        [BZ #2570]
-        * sysdeps/ieee754/ldbl-128ibm/s_nexttoward.c: Use floating-point
-        comparisons to determine direction to adjust input.
+	[BZ #2550]
+	[BZ #2570]
+	* sysdeps/ieee754/ldbl-128ibm/s_nexttoward.c: Use floating-point
+	comparisons to determine direction to adjust input.
 
 2012-05-01  Roland McGrath  <roland@hack.frob.com>
 
