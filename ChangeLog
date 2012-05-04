@@ -1,3 +1,22 @@
+2012-05-04  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/syscalls.list (adjtime): Add entry from
+	sysdeps/unix/common/syscalls.list.
+	(fchmod): Likewise.
+	(fchown): Likewise.
+	(ftruncate): Likewise.
+	(getrusage): Likewise.
+	(gettimeofday): Likewise.
+	(setpgid): Likewise.
+	(setregid): Likewise.
+	(setreuid): Likewise.
+	(sigaction): Likewise.
+	(truncate): Likewise.
+	(vhangup): Likewise.
+	* sysdeps/unix/common/syscalls.list: Remove file.
+	* sysdeps/unix/bsd/Implies: Don't include unix/common.
+	* sysdeps/unix/sysv/linux/Implies: Likewise.
+
 2012-05-04  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/unix/sysv/linux/x86_64/nptl/ld.abilist: Moved to ...

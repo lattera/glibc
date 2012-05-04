@@ -2,8 +2,5 @@
 # Hurd-based GNU systems.
 gnu
 
-# Linux shares most of the syscalls which are also common to BSD and SVR4.
-unix/common
-
 # Linux has network support in the kernel.
 unix/inet
