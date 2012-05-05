@@ -1,3 +1,12 @@
+2012-05-05  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/syscalls.list (ftime): Remove.
+	(nice): Likewise.
+	(poll): Likewise.
+	(signal): Likewise.
+	(time): Likewise.
+	(times): Likewise.
+
 2012-05-04  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/syscalls.list (adjtime): Add entry from

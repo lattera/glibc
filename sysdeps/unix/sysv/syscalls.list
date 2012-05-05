@@ -1,15 +1,9 @@
 # File name	Caller	Syscall name	# args	Strong name	Weak names
 
 alarm		-	alarm		i:i	alarm
-ftime		-	ftime		i:p	ftime
-nice		-	nice		i:i	nice
 pause		-	pause		Ci:	pause
-poll		-	poll		Ci:pii	poll
 setrlimit	-	setrlimit	i:ip	__setrlimit	setrlimit
 settimeofday	-	settimeofday	i:PP	__settimeofday	settimeofday
-signal		-	signal		i:ii	signal
 stime		-	stime		i:p	stime
-time		-	time		Ei:P	time
-times		-	times		Ei:p	__times	times
 ulimit		-	ulimit		i:ii	ulimit
 utime		-	utime		i:sP	utime
