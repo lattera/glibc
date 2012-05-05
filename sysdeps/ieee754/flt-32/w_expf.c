@@ -19,27 +19,16 @@
 #include <math.h>
 #include <math_private.h>
 
-static const float
-o_threshold=  8.8722831726e+01,  /* 0x42b17217 */
-u_threshold= -1.0397208405e+02;  /* 0xc2cff1b5 */
-
-
 /* wrapper expf */
 float
 __expf (float x)
 {
-  if (__builtin_expect (isgreater (x, o_threshold), 0))
-    {
-      if (_LIB_VERSION != _IEEE_)
-	return __kernel_standard_f (x, x, 106);
-    }
-  else if (__builtin_expect (isless (x, u_threshold), 0))
-    {
-      if (_LIB_VERSION != _IEEE_)
-	return __kernel_standard_f (x, x, 107);
-    }
+  float z = __ieee754_expf (x);
+  if (__builtin_expect (!__finitef (z) || z == 0, 0)
+      && __finitef (x) && _LIB_VERSION != _IEEE_)
+    return __kernel_standard_f (x, x, 106 + !!__signbitf (x));
 
-  return __ieee754_expf (x);
+  return z;
 }
 hidden_def (__expf)
 weak_alias (__expf, expf)

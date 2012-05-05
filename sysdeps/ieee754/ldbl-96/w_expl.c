@@ -19,29 +19,16 @@
 #include <math.h>
 #include <math_private.h>
 
-static const long double
-o_threshold=  1.135652340629414394949193107797076489134e4,
-  /* 0x400C, 0xB17217F7, 0xD1CF79AC */
-u_threshold= -1.140019167866942050398521670162263001513e4;
-  /* 0x400C, 0xB220C447, 0x69C201E8 */
-
-
 /* wrapper expl */
 long double
 __expl (long double x)
 {
-  if (__builtin_expect (isgreater (x, o_threshold), 0))
-    {
-      if (_LIB_VERSION != _IEEE_)
-	return __kernel_standard_l (x, x, 206);
-    }
-  else if (__builtin_expect (isless (x, u_threshold), 0))
-    {
-      if (_LIB_VERSION != _IEEE_)
-	return __kernel_standard_l (x, x, 207);
-    }
+  long double z = __ieee754_expl (x);
+  if (__builtin_expect (!__finitel (z) || z == 0, 0)
+      && __finitel (x) && _LIB_VERSION != _IEEE_)
+    return __kernel_standard_l (x, x, 206 + !!__signbitl (x));
 
-  return __ieee754_expl (x);
+  return z;
 }
 hidden_def (__expl)
 weak_alias (__expl, expl)

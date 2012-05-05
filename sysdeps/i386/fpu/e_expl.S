@@ -35,6 +35,10 @@ c0:	.byte 0, 0, 0, 0, 0, 0, 0xaa, 0xb8, 0xff, 0x3f
 c1:	.byte 0x20, 0xfa, 0xee, 0xc2, 0x5f, 0x70, 0xa5, 0xec, 0xed, 0x3f
 	.byte 0, 0, 0, 0, 0, 0
 	ASM_SIZE_DIRECTIVE(c1)
+	ASM_TYPE_DIRECTIVE(csat,@object)
+csat:	.byte 0, 0, 0, 0, 0, 0, 0, 0x80, 0x0e, 0x40
+	.byte 0, 0, 0, 0, 0, 0
+	ASM_SIZE_DIRECTIVE(csat)
 
 #ifdef PIC
 # define MO(op) op##@GOTOFF(%ecx)
@@ -53,12 +57,25 @@ ENTRY(__ieee754_expl)
 #ifdef PIC
 	LOAD_PIC_REG (cx)
 #endif
+	movzwl	4+8(%esp), %eax
+	andl	$0x7fff, %eax
+	cmpl	$0x400d, %eax
+	jle	3f
+	/* Overflow, underflow or infinity or NaN as argument.  */
 	fstsw	%ax
 	movb	$0x45, %dh
 	andb	%ah, %dh
 	cmpb	$0x05, %dh
 	je	1f		/* Is +-Inf, jump.    */
-	fldl2e			/* 1  log2(e)         */
+	cmpb	$0x01, %dh
+	je	2f		/* Is +-NaN, jump.    */
+	/* Overflow or underflow; saturate.  */
+	fstp	%st
+	fldt	MO(csat)
+	andb	$2, %ah
+	jz	3f
+	fchs
+3:	fldl2e			/* 1  log2(e)         */
 	fmul	%st(1), %st	/* 1  x log2(e)       */
 	frndint			/* 1  i               */
 	fld	%st(1)		/* 2  x               */

@@ -1,5 +1,28 @@
 2012-05-05  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #13787]
+	[BZ #13922]
+	[BZ #14036]
+	* sysdeps/i386/fpu/e_expl.S (csat): New constant.
+	(__ieee754_expl): Allow for and saturate large arguments.
+	* sysdeps/ieee754/dbl-64/w_exp.c (o_threshold): Remove variable.
+	(u_threshold): Likewise.
+	(__exp): Call __ieee754_exp before checking for overflow and
+	underflow.
+	* sysdeps/ieee754/flt-32/w_expf.c (o_threshold): Remove variable.
+	(u_threshold): Likewise.
+	(__expf): Call __ieee754_expf before checking for overflow and
+	underflow.
+	* sysdeps/ieee754/ldbl-96/w_expl.c (o_threshold): Remove variable.
+	(u_threshold): Likewise.
+	(__expl): Call __ieee754_expl before checking for overflow and
+	underflow.
+	* sysdeps/x86_64/fpu/e_expl.S (csat): New constant.
+	(__ieee754_expl): Allow for and saturate large arguments.
+	* math/libm-test.inc (exp_test): Add another test.  Do not allow
+	missing overflow exception on overflow.
+	(expm1_test): Do not allow missing overflow exception on overflow.
+
 	* sysdeps/i386/fpu/e_expl.c: Move to ...
 	* sysdeps/i386/fpu/e_expl.S: ... here.  Write directly in assembly
 	rather than using inline asm.
