@@ -647,6 +647,7 @@ endif
 
 +depfiles := $(sources:.c=.d) \
 	     $(patsubst %.o,%.d,$(filter %.o,$(extra-objs:.os=.o))) \
+	     $(patsubst %.oS,%.d,$(filter %.oS,$(extra-objs))) \
 	     $(patsubst %.o,%.d,$(filter %.o,$(extra-test-objs:.os=.o))) \
 	     $(addsuffix .d,$(tests) $(xtests) $(test-srcs))
 ifeq ($(build-programs),yes)

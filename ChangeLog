@@ -1,5 +1,10 @@
 2012-05-16  Andreas Schwab  <schwab@linux-m68k.org>
 
+	* Makerules (+depfiles): Also collect depfiles from .oS in
+	$(extra-objs).
+	* sysdeps/ieee754/ldbl-opt/Makefile (extra-objs): Add $(addsuffix
+	.oS, $(libnldbl-routines)).
+
 	* Makerules (native-compile-mkdep-flags): Define.
 	* sunrpc/Makefile (extra-objs): Add $(addprefix
 	cross-,$(rpcgen-objs)), don't add $(cross-rpcgen-objs).
