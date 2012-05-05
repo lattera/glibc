@@ -4050,7 +4050,7 @@ hypot_test (void)
   TEST_ff_f (hypot, 0x1.234566p-126L, 0x1.234566p-126L, 1.891441686191081936598531534017449451173e-38L);
 #endif
 
-#ifndef TEST_FLOAT
+#if !defined TEST_FLOAT && !(defined TEST_DOUBLE && defined TEST_INLINE)
   TEST_ff_f (hypot, 0x3p1021L, 0x4p1021L, 0x5p1021L);
 #endif
 

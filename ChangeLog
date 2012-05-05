@@ -1,5 +1,8 @@
 2012-05-05  Joseph Myers  <joseph@codesourcery.com>
 
+	* math/libm-test.inc (hypot_test) [TEST_DOUBLE && TEST_INLINE]:
+	Disable one test.
+
 	[BZ #13787]
 	[BZ #13922]
 	[BZ #14036]
