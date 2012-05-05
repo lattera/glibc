@@ -1,5 +1,12 @@
 2012-05-05  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/i386/fpu/e_expl.c: Move to ...
+	* sysdeps/i386/fpu/e_expl.S: ... here.  Write directly in assembly
+	rather than using inline asm.
+	* sysdeps/x86_64/fpu/e_expl.c: Remove file.
+	* sysdeps/x86_64/fpu/e_expl.S: Copy from
+	sysdeps/i386/fpu/e_expl.S, adjusted for x86_64.
+
 	* sysdeps/unix/sysv/syscalls.list (ftime): Remove.
 	(nice): Likewise.
 	(poll): Likewise.
