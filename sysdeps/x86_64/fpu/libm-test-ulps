@@ -1287,6 +1287,12 @@ idouble: 2
 ifloat: 1
 ildouble: 1
 ldouble: 1
+Test "exp10 (-305) == 1.0e-305":
+double: 1
+idouble: 1
+Test "exp10 (-36) == 1.0e-36":
+double: 1
+idouble: 1
 Test "exp10 (0.75) == 5.62341325190349080394951039776481231":
 double: 1
 float: 1
@@ -1301,6 +1307,9 @@ idouble: 6
 ifloat: 2
 ildouble: 8
 ldouble: 8
+Test "exp10 (36) == 1.0e36":
+double: 1
+idouble: 1
 
 # exp_downward
 Test "exp_downward (1) == e":

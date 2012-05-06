@@ -1,5 +1,35 @@
 2012-05-06  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #13884]
+	[BZ #13914]
+	* sysdeps/i386/fpu/e_expl.S (IEEE754_EXPL): Define conditional on
+	USE_AS_EXP10L.
+	(EXPL_FINITE): Likewise.
+	(FLDLOG): Likewise.
+	(c0): Likewise.
+	(c1): Likewise.
+	(__ieee754_expl): Change to IEEE754_EXPL.  Use FLDLOG macro.
+	Adjust comments for base varying.
+	(__expl_finite): Change alias to EXPL_FINITE.
+	* sysdeps/i386/fpu/e_exp10l.S: Define USE_AS_EXP10L and include
+	e_expl.S.
+	* sysdeps/ieee754/dbl-64/e_exp10.c: New file.
+	* sysdeps/ieee754/ldbl-128/e_exp10l.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/e_exp10l.c: Likewise.
+	* sysdeps/x86_64/fpu/e_exp10l.S: Likewise.
+	* sysdeps/x86_64/fpu/e_expl.S (IEEE754_EXPL): Define conditional on
+	USE_AS_EXP10L.
+	(EXPL_FINITE): Likewise.
+	(FLDLOG): Likewise.
+	(c0): Likewise.
+	(c1): Likewise.
+	(__ieee754_expl): Change to IEEE754_EXPL.  Use FLDLOG macro.
+	Adjust comments for base varying.
+	(__expl_finite): Change alias to EXPL_FINITE.
+	* math/libm-test.inc (exp10_test): Add more tests.  Do not disable
+	tests for bugs.
+	* sysdeps/x86_64/fpu/libm-test-ulps: Update.
+
 	[BZ #14064]
 	* math/libm-test.inc (check_float_internal): Correct ulp
 	calculation for subnormal expected results.

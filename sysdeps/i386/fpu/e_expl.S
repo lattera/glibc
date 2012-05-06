@@ -24,9 +24,29 @@
 
 #include <machine/asm.h>
 
+#ifdef USE_AS_EXP10L
+# define IEEE754_EXPL __ieee754_exp10l
+# define EXPL_FINITE __exp10l_finite
+# define FLDLOG fldl2t
+#else
+# define IEEE754_EXPL __ieee754_expl
+# define EXPL_FINITE __expl_finite
+# define FLDLOG fldl2e
+#endif
+
 	.section .rodata.cst16,"aM",@progbits,16
 
 	.p2align 4
+#ifdef USE_AS_EXP10L
+	ASM_TYPE_DIRECTIVE(c0,@object)
+c0:	.byte 0, 0, 0, 0, 0, 0, 0x9a, 0xd4, 0x00, 0x40
+	.byte 0, 0, 0, 0, 0, 0
+	ASM_SIZE_DIRECTIVE(c0)
+	ASM_TYPE_DIRECTIVE(c1,@object)
+c1:	.byte 0x58, 0x92, 0xfc, 0x15, 0x37, 0x9a, 0x97, 0xf0, 0xef, 0x3f
+	.byte 0, 0, 0, 0, 0, 0
+	ASM_SIZE_DIRECTIVE(c1)
+#else
 	ASM_TYPE_DIRECTIVE(c0,@object)
 c0:	.byte 0, 0, 0, 0, 0, 0, 0xaa, 0xb8, 0xff, 0x3f
 	.byte 0, 0, 0, 0, 0, 0
@@ -35,6 +55,7 @@ c0:	.byte 0, 0, 0, 0, 0, 0, 0xaa, 0xb8, 0xff, 0x3f
 c1:	.byte 0x20, 0xfa, 0xee, 0xc2, 0x5f, 0x70, 0xa5, 0xec, 0xed, 0x3f
 	.byte 0, 0, 0, 0, 0, 0
 	ASM_SIZE_DIRECTIVE(c1)
+#endif
 	ASM_TYPE_DIRECTIVE(csat,@object)
 csat:	.byte 0, 0, 0, 0, 0, 0, 0, 0x80, 0x0e, 0x40
 	.byte 0, 0, 0, 0, 0, 0
@@ -47,7 +68,7 @@ csat:	.byte 0, 0, 0, 0, 0, 0, 0, 0x80, 0x0e, 0x40
 #endif
 
 	.text
-ENTRY(__ieee754_expl)
+ENTRY(IEEE754_EXPL)
 	fldt	4(%esp)
 /* I added the following ugly construct because expl(+-Inf) resulted
    in NaN.  The ugliness results from the bright minds at Intel.
@@ -75,8 +96,8 @@ ENTRY(__ieee754_expl)
 	andb	$2, %ah
 	jz	3f
 	fchs
-3:	fldl2e			/* 1  log2(e)         */
-	fmul	%st(1), %st	/* 1  x log2(e)       */
+3:	FLDLOG			/* 1  log2(base)      */
+	fmul	%st(1), %st	/* 1  x log2(base)    */
 	frndint			/* 1  i               */
 	fld	%st(1)		/* 2  x               */
 	frndint			/* 2  xi              */
@@ -92,11 +113,11 @@ ENTRY(__ieee754_expl)
 	fldt	MO(c1)		/* 4                  */
 	fmul	%st(4), %st	/* 4  c1 * x          */
 	faddp	%st, %st(1)	/* 3  f = f + c1 * x  */
-	f2xm1			/* 3 2^(fract(x * log2(e))) - 1 */
+	f2xm1			/* 3 2^(fract(x * log2(base))) - 1 */
 	fld1			/* 4 1.0              */
-	faddp			/* 3 2^(fract(x * log2(e))) */
+	faddp			/* 3 2^(fract(x * log2(base))) */
 	fstp	%st(1)		/* 2  */
-	fscale			/* 2 scale factor is st(1); e^x */
+	fscale			/* 2 scale factor is st(1); base^x */
 	fstp	%st(1)		/* 1  */
 	fstp	%st(1)		/* 0  */
 	jmp	2f
@@ -105,5 +126,5 @@ ENTRY(__ieee754_expl)
 	fstp	%st
 	fldz			/* Set result to 0.  */
 2:	ret
-END(__ieee754_expl)
-strong_alias (__ieee754_expl, __expl_finite)
+END(IEEE754_EXPL)
+strong_alias (IEEE754_EXPL, EXPL_FINITE)

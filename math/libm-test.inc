@@ -3464,15 +3464,20 @@ exp10_test (void)
   TEST_f_f (exp10, nan_value, nan_value);
   TEST_f_f (exp10, 3, 1000);
   TEST_f_f (exp10, -1, 0.1L);
-#ifdef TEST_FLOAT /* Bug 13884: inaccurate results except for float.  */
   TEST_f_f (exp10, 36, 1.0e36L);
+  TEST_f_f (exp10, -36, 1.0e-36L);
+#ifndef TEST_FLOAT
+  TEST_f_f (exp10, 305, 1.0e305L);
+  TEST_f_f (exp10, -305, 1.0e-305L);
+#endif
+#if defined TEST_LDOUBLE && LDBL_MAX_10_EXP >= 4932
+  TEST_f_f (exp10, 4932, 1.0e4932L);
+  TEST_f_f (exp10, -4932, 1.0e-4932L);
 #endif
   TEST_f_f (exp10, 1e6, plus_infty, OVERFLOW_EXCEPTION);
   TEST_f_f (exp10, -1e6, 0);
-#ifndef TEST_LDOUBLE /* Bug 13914: spurious exceptions.  */
   TEST_f_f (exp10, max_value, plus_infty, OVERFLOW_EXCEPTION);
   TEST_f_f (exp10, -max_value, 0);
-#endif
   TEST_f_f (exp10, 0.75L, 5.62341325190349080394951039776481231L);
 
   END (exp10);
