@@ -503,8 +503,9 @@ check_float_internal (const char *test_name, FLOAT computed, FLOAT expected,
 	  ulp = diff / FUNC(ldexp) (1.0, FUNC(ilogb) (expected) - MANT_DIG);
 	  break;
 	case FP_SUBNORMAL:
-	  ulp = (FUNC(ldexp) (diff, MANT_DIG)
-		 / FUNC(ldexp) (1.0, FUNC(ilogb) (expected)));
+	  /* 1ulp for a subnormal value, shifted by MANT_DIG, is the
+	     least normal value.  */
+	  ulp = (FUNC(ldexp) (diff, MANT_DIG) / min_value);
 	  break;
 	default:
 	  /* It should never happen. */

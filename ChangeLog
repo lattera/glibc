@@ -1,3 +1,9 @@
+2012-05-06  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #14064]
+	* math/libm-test.inc (check_float_internal): Correct ulp
+	calculation for subnormal expected results.
+
 2012-05-06  Andreas Jaeger  <aj@suse.de>
 
 	* Makeconfig (+math-flags): New, set to -frounding-math.
