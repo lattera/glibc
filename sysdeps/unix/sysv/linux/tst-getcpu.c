@@ -31,10 +31,15 @@ do_test (void)
 	  else
 	    {
 	      int cpu2 = sched_getcpu ();
-	      if (cpu2 == -1 && errno == ENOSYS)
+	      if (cpu2 == -1)
 		{
-		  puts ("getcpu syscall not implemented");
-		  return 0;
+		  if (errno == ENOSYS)
+		    {
+		      puts ("getcpu syscall not implemented");
+		      return 0;
+		    }
+		  perror ("getcpu failed");
+		  result = 1;
 		}
 	      if (cpu2 != cpu)
 		{
