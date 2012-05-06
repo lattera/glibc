@@ -123,7 +123,7 @@
 	* sysdeps/unix/bsd/tcgetattr.c: Likewise.
 	* sysdeps/unix/bsd/tcsetattr.c: Likewise.
 
-2012-05-02  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+2012-05-04  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	* sysdeps/ieee754/ldbl-128ibm/e_acosl.c (__ieee754_acosl): Fix
 	long double comparison inaccuracies.
