@@ -79,10 +79,14 @@ CFLAGS-pread_chk.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-pread64_chk.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-recv_chk.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-recvfrom_chk.c = -fexceptions -fasynchronous-unwind-tables
-CFLAGS-tst-longjmp_chk.c = -fexceptions -fasynchronous-unwind-tables \
-			   -D_FORTIFY_SOURCE=1
-CFLAGS-tst-longjmp_chk2.c = -fexceptions -fasynchronous-unwind-tables \
-			    -D_FORTIFY_SOURCE=1
+
+# Need to make sure the settings here override what configure might have
+# set up for us, so keep the CFLAGS/CPPFLAGS split logical as the order is:
+# <user CFLAGS> <test CFLAGS> <user CPPFLAGS> <test CPPFLAGS>
+CFLAGS-tst-longjmp_chk.c = -fexceptions -fasynchronous-unwind-tables
+CPPFLAGS-tst-longjmp_chk.c = -D_FORTIFY_SOURCE=1
+CFLAGS-tst-longjmp_chk2.c = -fexceptions -fasynchronous-unwind-tables
+CPPFLAGS-tst-longjmp_chk2.c = -D_FORTIFY_SOURCE=1
 
 # We know these tests have problems with format strings, this is what
 # we are testing.  Disable that warning.

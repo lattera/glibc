@@ -66,7 +66,7 @@ CFLAGS-wcstoull_l.c = $(strtox-CFLAGS)
 CFLAGS-wcstod_l.c = $(strtox-CFLAGS)
 CFLAGS-wcstold_l.c = $(strtox-CFLAGS)
 CFLAGS-wcstof_l.c = $(strtox-CFLAGS)
-CFLAGS-tst-wchar-h.c = -D_FORTIFY_SOURCE=2
+CPPFLAGS-tst-wchar-h.c = -D_FORTIFY_SOURCE=2
 
 CFLAGS-isoc99_wscanf.c += $(exceptions)
 CFLAGS-isoc99_fwscanf.c += $(exceptions)

@@ -1,3 +1,13 @@
+2012-05-31  Mike Frysinger  <vapier@gentoo.org>
+
+	* debug/Makefile (CFLAGS-tst-longjmp_chk.c): Delete
+	-D_FORTIFY_SOURCE=1.
+	(CPPFLAGS-tst-longjmp_chk.c): Define.
+	(CFLAGS-tst-longjmp_chk2.c): Delete -D_FORTIFY_SOURCE=1.
+	(CPPFLAGS-tst-longjmp_chk2.c): Define.
+	* wcsmbs/Makefile (CPPFLAGS-tst-wchar-h.c): Rename from
+	CFLAGS-tst-wchar-h.c.
+
 2012-05-31  Marek Polacek  <polacek@redhat.com>
 
 	[BZ #14132]
