@@ -4,6 +4,8 @@
 	(+cflags): Add +math-flags so that all of glibc gets compiled with
 	it.
 
+	* sysdeps/x86_64/fpu/libm-test-ulps: Updated.
+
 2012-05-05  Joseph Myers  <joseph@codesourcery.com>
 
 	* math/libm-test.inc (hypot_test) [TEST_DOUBLE && TEST_INLINE]:
