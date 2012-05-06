@@ -1,5 +1,9 @@
 2012-05-06  Mike Frysinger  <vapier@gentoo.org>
 
+	* data/localplt-ia64-linux-gnu.data: New file.
+
+2012-05-06  Mike Frysinger  <vapier@gentoo.org>
+
 	* sysdeps/unix/sysv/linux/ia64/nptl/ld.abilist: Update symbol list.
 	* sysdeps/unix/sysv/linux/ia64/nptl/libc.abilist: Likewise.
 	* sysdeps/unix/sysv/linux/ia64/nptl/libdl.abilist: Likewise.
