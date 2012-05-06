@@ -574,6 +574,11 @@ endif
 # actually different, so allow the compiler to merge them all.
 +merge-constants = -fmerge-all-constants
 
+# We have to assume that glibc functions are called in any rounding
+# mode and also change the rounding mode in a few functions. So,
+# disable any optimization that assume default rounding mode.
++math-flags = -frounding-math
+
 # This is the program that generates makefile dependencies from C source files.
 # The -MP flag tells GCC >= 3.2 (which we now require) to produce dummy
 # targets for headers so that removed headers don't break the build.
@@ -633,7 +638,7 @@ ifeq	"$(strip $(+cflags))" ""
 +cflags	:= $(default_cflags)
 endif	# $(+cflags) == ""
 
-+cflags += $(cflags-cpu) $(+gccwarn) $(+merge-constants)
++cflags += $(cflags-cpu) $(+gccwarn) $(+merge-constants) $(+math-flags)
 +gcc-nowarn := -w
 
 # Don't duplicate options if we inherited variables from the parent.
