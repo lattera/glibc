@@ -127,6 +127,7 @@
 
 2012-05-04  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
+	[BZ #13563]
 	* sysdeps/ieee754/ldbl-128ibm/e_acosl.c (__ieee754_acosl): Fix
 	long double comparison inaccuracies.
 	* sysdeps/ieee754/ldbl-128ibm/e_asinl.c (__ieee754_asinl): Likewise.
