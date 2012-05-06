@@ -1,3 +1,81 @@
+GLIBC_2.10
+ GLIBC_2.10 A
+ __cxa_at_quick_exit F
+ __posix_getopt F
+ accept4 F
+ endsgent F
+ fallocate F
+ fallocate64 F
+ fgetsgent F
+ fgetsgent_r F
+ getsgent F
+ getsgent_r F
+ getsgnam F
+ getsgnam_r F
+ malloc_info F
+ preadv F
+ preadv64 F
+ psiginfo F
+ putsgent F
+ pwritev F
+ pwritev64 F
+ quick_exit F
+ register_printf_modifier F
+ register_printf_specifier F
+ register_printf_type F
+ setsgent F
+ sgetsgent F
+ sgetsgent_r F
+GLIBC_2.11
+ GLIBC_2.11 A
+ __longjmp_chk F
+ execvpe F
+ mkostemps F
+ mkostemps64 F
+ mkstemps F
+ mkstemps64 F
+GLIBC_2.12
+ GLIBC_2.12 A
+ _sys_errlist D 0x438
+ _sys_nerr D 0x4
+ ntp_gettimex F
+ recvmmsg F
+ sys_errlist D 0x438
+ sys_nerr D 0x4
+GLIBC_2.13
+ GLIBC_2.13 A
+ fanotify_init F
+ fanotify_mark F
+ prlimit F
+ prlimit64 F
+GLIBC_2.14
+ GLIBC_2.14 A
+ clock_adjtime F
+ name_to_handle_at F
+ open_by_handle_at F
+ sendmmsg F
+ setns F
+ syncfs F
+GLIBC_2.15
+ GLIBC_2.15 A
+ __fdelt_chk F
+ __fdelt_warn F
+ posix_spawn F
+ posix_spawnp F
+ process_vm_readv F
+ process_vm_writev F
+ scandirat F
+ scandirat64 F
+GLIBC_2.16
+ GLIBC_2.16 A
+ __poll_chk F
+ __ppoll_chk F
+ aligned_alloc F
+ c16rtomb F
+ c32rtomb F
+ mbrtoc16 F
+ mbrtoc32 F
+ timespec_get F
 GLIBC_2.2
  GLIBC_2.2 A
  _Exit F
@@ -415,15 +493,12 @@ GLIBC_2.2
  __xpg_sigpause F
  __xstat F
  __xstat64 F
- _argp_unlock_xxx F
  _authenticate F
  _dl_mcount_wrapper F
  _dl_mcount_wrapper_check F
  _environ D 0x8
- _errno D 0x4
  _exit F
  _flushlbf F
- _h_errno D 0x4
  _inb F
  _inl F
  _inw F
@@ -621,7 +696,6 @@ GLIBC_2.2
  erand48 F
  erand48_r F
  err F
- errno D 0x4
  error F
  error_at_line F
  error_message_count D 0x4
@@ -909,7 +983,6 @@ GLIBC_2.2
  gsignal F
  gtty F
  h_errlist D 0x28
- h_errno D 0x4
  h_nerr D 0x4
  hasmntopt F
  hcreate F
@@ -1209,6 +1282,7 @@ GLIBC_2.2
  pthread_cond_destroy F
  pthread_cond_init F
  pthread_cond_signal F
+ pthread_cond_timedwait F
  pthread_cond_wait F
  pthread_condattr_destroy F
  pthread_condattr_init F
@@ -1898,12 +1972,211 @@ GLIBC_2.3.2
  pthread_cond_destroy F
  pthread_cond_init F
  pthread_cond_signal F
+ pthread_cond_timedwait F
  pthread_cond_wait F
- sched_getaffinity F
- sched_setaffinity F
  strptime_l F
 GLIBC_2.3.3
  GLIBC_2.3.3 A
+ _sys_siglist D 0x208
+ gnu_dev_major F
+ gnu_dev_makedev F
+ gnu_dev_minor F
+ inet6_option_alloc F
+ inet6_option_append F
+ inet6_option_find F
+ inet6_option_init F
+ inet6_option_next F
+ inet6_option_space F
+ nftw F
+ nftw64 F
  remap_file_pages F
+ sched_getaffinity F
+ sched_setaffinity F
+ semtimedop F
  strtoll_l F
  strtoull_l F
+ sys_sigabbrev D 0x208
+ sys_siglist D 0x208
+GLIBC_2.3.4
+ GLIBC_2.3.4 A
+ __chk_fail F
+ __fprintf_chk F
+ __gets_chk F
+ __memcpy_chk F
+ __memmove_chk F
+ __mempcpy_chk F
+ __memset_chk F
+ __printf_chk F
+ __snprintf_chk F
+ __sprintf_chk F
+ __stpcpy_chk F
+ __strcat_chk F
+ __strcpy_chk F
+ __strncat_chk F
+ __strncpy_chk F
+ __vfprintf_chk F
+ __vprintf_chk F
+ __vsnprintf_chk F
+ __vsprintf_chk F
+ __xpg_strerror_r F
+ getipv4sourcefilter F
+ getsourcefilter F
+ regexec F
+ sched_getaffinity F
+ sched_setaffinity F
+ setipv4sourcefilter F
+ setsourcefilter F
+ xdr_quad_t F
+ xdr_u_quad_t F
+GLIBC_2.4
+ GLIBC_2.4 A
+ __confstr_chk F
+ __fgets_chk F
+ __fgets_unlocked_chk F
+ __fgetws_chk F
+ __fgetws_unlocked_chk F
+ __fwprintf_chk F
+ __fxstatat F
+ __fxstatat64 F
+ __getcwd_chk F
+ __getdomainname_chk F
+ __getgroups_chk F
+ __gethostname_chk F
+ __getlogin_r_chk F
+ __getwd_chk F
+ __mbsnrtowcs_chk F
+ __mbsrtowcs_chk F
+ __mbstowcs_chk F
+ __pread64_chk F
+ __pread_chk F
+ __ptsname_r_chk F
+ __read_chk F
+ __readlink_chk F
+ __realpath_chk F
+ __recv_chk F
+ __recvfrom_chk F
+ __stack_chk_fail F
+ __stpncpy_chk F
+ __swprintf_chk F
+ __syslog_chk F
+ __ttyname_r_chk F
+ __vfwprintf_chk F
+ __vswprintf_chk F
+ __vsyslog_chk F
+ __vwprintf_chk F
+ __wcpcpy_chk F
+ __wcpncpy_chk F
+ __wcrtomb_chk F
+ __wcscat_chk F
+ __wcscpy_chk F
+ __wcsncat_chk F
+ __wcsncpy_chk F
+ __wcsnrtombs_chk F
+ __wcsrtombs_chk F
+ __wcstombs_chk F
+ __wctomb_chk F
+ __wmemcpy_chk F
+ __wmemmove_chk F
+ __wmempcpy_chk F
+ __wmemset_chk F
+ __wprintf_chk F
+ __xmknodat F
+ _sys_errlist D 0x420
+ _sys_nerr D 0x4
+ eaccess F
+ faccessat F
+ fchmodat F
+ fchownat F
+ fdopendir F
+ futimesat F
+ inotify_add_watch F
+ inotify_init F
+ inotify_rm_watch F
+ linkat F
+ mkdirat F
+ mkfifoat F
+ open_wmemstream F
+ openat F
+ openat64 F
+ ppoll F
+ readlinkat F
+ renameat F
+ symlinkat F
+ sys_errlist D 0x420
+ sys_nerr D 0x4
+ unlinkat F
+ unshare F
+GLIBC_2.5
+ GLIBC_2.5 A
+ __readlinkat_chk F
+ inet6_opt_append F
+ inet6_opt_find F
+ inet6_opt_finish F
+ inet6_opt_get_val F
+ inet6_opt_init F
+ inet6_opt_next F
+ inet6_opt_set_val F
+ inet6_rth_add F
+ inet6_rth_getaddr F
+ inet6_rth_init F
+ inet6_rth_reverse F
+ inet6_rth_segments F
+ inet6_rth_space F
+ splice F
+ tee F
+ vmsplice F
+GLIBC_2.6
+ GLIBC_2.6 A
+ __sched_cpucount F
+ epoll_pwait F
+ futimens F
+ sched_getcpu F
+ strerror_l F
+ sync_file_range F
+ utimensat F
+GLIBC_2.7
+ GLIBC_2.7 A
+ __fread_chk F
+ __fread_unlocked_chk F
+ __isoc99_fscanf F
+ __isoc99_fwscanf F
+ __isoc99_scanf F
+ __isoc99_sscanf F
+ __isoc99_swscanf F
+ __isoc99_vfscanf F
+ __isoc99_vfwscanf F
+ __isoc99_vscanf F
+ __isoc99_vsscanf F
+ __isoc99_vswscanf F
+ __isoc99_vwscanf F
+ __isoc99_wscanf F
+ __open64_2 F
+ __open_2 F
+ __openat64_2 F
+ __openat_2 F
+ __sched_cpualloc F
+ __sched_cpufree F
+ eventfd F
+ eventfd_read F
+ eventfd_write F
+ mkostemp F
+ mkostemp64 F
+ signalfd F
+GLIBC_2.8
+ GLIBC_2.8 A
+ __asprintf_chk F
+ __dprintf_chk F
+ __obstack_printf_chk F
+ __obstack_vprintf_chk F
+ __vasprintf_chk F
+ __vdprintf_chk F
+ qsort_r F
+ timerfd_create F
+ timerfd_gettime F
+ timerfd_settime F
+GLIBC_2.9
+ GLIBC_2.9 A
+ dup3 F
+ epoll_create1 F
+ inotify_init1 F
+ pipe2 F

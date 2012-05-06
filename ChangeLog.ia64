@@ -1,5 +1,15 @@
 2012-05-06  Mike Frysinger  <vapier@gentoo.org>
 
+	* sysdeps/unix/sysv/linux/ia64/nptl/ld.abilist: Update symbol list.
+	* sysdeps/unix/sysv/linux/ia64/nptl/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/nptl/libdl.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/nptl/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/nptl/libpthread.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/nptl/libresolv.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/nptl/librt.abilist: Likewise.
+
+2012-05-06  Mike Frysinger  <vapier@gentoo.org>
+
 	* sysdeps/unix/sysv/linux/ia64/nptl/ld.abilist: Generated from
 	files found in glibc-2.15.
 	* sysdeps/unix/sysv/linux/ia64/nptl/libBrokenLocale.abilist: Likewise.

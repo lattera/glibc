@@ -1,3 +1,23 @@
+GLIBC_2.15
+ GLIBC_2.15 A
+ __j0_finite F
+ __j0f_finite F
+ __j0l_finite F
+ __j1_finite F
+ __j1f_finite F
+ __j1l_finite F
+ __jn_finite F
+ __jnf_finite F
+ __jnl_finite F
+ __y0_finite F
+ __y0f_finite F
+ __y0l_finite F
+ __y1_finite F
+ __y1f_finite F
+ __y1l_finite F
+ __yn_finite F
+ __ynf_finite F
+ __ynl_finite F
 GLIBC_2.2
  GLIBC_2.2 A
  _LIB_VERSION D 0x4
@@ -318,3 +338,5 @@ GLIBC_2.2.3
  GLIBC_2.2.3 A
  matherrf F
  matherrl F
+GLIBC_2.4
+ GLIBC_2.4 A

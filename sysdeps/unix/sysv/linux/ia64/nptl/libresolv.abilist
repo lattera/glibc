@@ -22,7 +22,7 @@ GLIBC_2.0
  __p_secstodate F
  __p_time F
  __p_type F
- __p_type_syms D 0x438
+ __p_type_syms D 0x450
  __putlong F
  __putshort F
  __res_close F
@@ -74,3 +74,31 @@ GLIBC_2.2
 GLIBC_2.3.2
  GLIBC_2.3.2 A
  __p_rcode F
+GLIBC_2.9
+ GLIBC_2.9 A
+ ns_datetosecs F
+ ns_format_ttl F
+ ns_get16 F
+ ns_get32 F
+ ns_initparse F
+ ns_makecanon F
+ ns_msg_getflag F
+ ns_name_compress F
+ ns_name_ntol F
+ ns_name_ntop F
+ ns_name_pack F
+ ns_name_pton F
+ ns_name_rollback F
+ ns_name_skip F
+ ns_name_uncompress F
+ ns_name_unpack F
+ ns_parse_ttl F
+ ns_parserr F
+ ns_put16 F
+ ns_put32 F
+ ns_samedomain F
+ ns_samename F
+ ns_skiprr F
+ ns_sprintrr F
+ ns_sprintrrf F
+ ns_subdomain F
