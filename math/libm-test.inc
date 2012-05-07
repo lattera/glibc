@@ -3551,6 +3551,13 @@ expm1_test (void)
   TEST_f_f (expm1, 1, M_El - 1.0);
   TEST_f_f (expm1, 0.75L, 1.11700001661267466854536981983709561L);
 
+  TEST_f_f (expm1, 50.0L, 5.1847055285870724640864533229334853848275e+21L);
+
+#ifndef TEST_FLOAT
+  TEST_f_f (expm1, 127.0L, 1.4302079958348104463583671072905261080748e+55L);
+  TEST_f_f (expm1, 500.0L, 1.4035922178528374107397703328409120821806e+217L);
+#endif
+
 #if defined TEST_LDOUBLE && LDBL_MAX_EXP >= 16384
   TEST_f_f (expm1, 11356.25L, 9.05128237311923300051376115753226014206e+4931L);
 #endif
@@ -3559,9 +3566,7 @@ expm1_test (void)
   TEST_f_f (expm1, 100000.0, plus_infty, OVERFLOW_EXCEPTION);
   check_int ("errno for expm1(large) == ERANGE", errno, ERANGE, 0, 0, 0);
   TEST_f_f (expm1, max_value, plus_infty, OVERFLOW_EXCEPTION);
-#ifndef TEST_LDOUBLE /* Bug 13923.  */
   TEST_f_f (expm1, -max_value, -1);
-#endif
 
   END (expm1);
 }

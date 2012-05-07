@@ -1358,6 +1358,9 @@ ifloat: 1
 Test "expm1 (11356.25) == 9.05128237311923300051376115753226014206e+4931":
 ildouble: 1
 ldouble: 1
+Test "expm1 (500.0) == 1.4035922178528374107397703328409120821806e+217":
+double: 1
+idouble: 1
 
 # gamma
 Test "gamma (-0.5) == log(2*sqrt(pi))":
@@ -1831,62 +1834,47 @@ Test "sincos (pi/6, &sin_res, &cos_res) puts 0.866025403784438646763723170752936
 float: 1
 ifloat: 1
 
-# sinh
-Test "sinh (0x8p-32) == 1.86264514923095703232705808926175479e-9":
-ildouble: 1
-ldouble: 1
-
 # sinh_downward
 Test "sinh_downward (22) == 1792456423.065795780701106568345764104225":
 float: 1
 ifloat: 1
-ildouble: 4
-ldouble: 4
+ildouble: 2
+ldouble: 2
 Test "sinh_downward (23) == 4872401723.124451299966006944252978187305":
 float: 1
 ifloat: 1
+ildouble: 2
+ldouble: 2
 Test "sinh_downward (24) == 13244561064.92173614705070540368454568168":
 float: 1
 ifloat: 1
-ildouble: 5
-ldouble: 5
-
-# sinh_tonearest
-Test "sinh_tonearest (22) == 1792456423.065795780701106568345764104225":
-ildouble: 3
-ldouble: 3
-Test "sinh_tonearest (23) == 4872401723.124451299966006944252978187305":
-ildouble: 1
-ldouble: 1
-Test "sinh_tonearest (24) == 13244561064.92173614705070540368454568168":
-ildouble: 6
-ldouble: 6
+ildouble: 2
+ldouble: 2
 
 # sinh_towardzero
 Test "sinh_towardzero (22) == 1792456423.065795780701106568345764104225":
 float: 1
 ifloat: 1
-ildouble: 4
-ldouble: 4
+ildouble: 2
+ldouble: 2
 Test "sinh_towardzero (23) == 4872401723.124451299966006944252978187305":
 float: 1
 ifloat: 1
+ildouble: 2
+ldouble: 2
 Test "sinh_towardzero (24) == 13244561064.92173614705070540368454568168":
 float: 1
 ifloat: 1
-ildouble: 5
-ldouble: 5
+ildouble: 2
+ldouble: 2
 
 # sinh_upward
 Test "sinh_upward (22) == 1792456423.065795780701106568345764104225":
-ildouble: 16
-ldouble: 16
+ildouble: 1
+ldouble: 1
 Test "sinh_upward (23) == 4872401723.124451299966006944252978187305":
-ildouble: 27
-ldouble: 27
-Test "sinh_upward (24) == 13244561064.92173614705070540368454568168":
-ildouble: 7
-ldouble: 7
+ildouble: 1
+ldouble: 1
 
 # tan
 Test "tan (0x1p16383) == 0.422722393732022337800504160054440141575":
@@ -2733,29 +2721,21 @@ ifloat: 1
 ildouble: 1
 ldouble: 1
 
-Function: "sinh":
-ildouble: 1
-ldouble: 1
-
 Function: "sinh_downward":
 float: 1
 ifloat: 1
-ildouble: 5
-ldouble: 5
-
-Function: "sinh_tonearest":
-ildouble: 6
-ldouble: 6
+ildouble: 2
+ldouble: 2
 
 Function: "sinh_towardzero":
 float: 1
 ifloat: 1
-ildouble: 5
-ldouble: 5
+ildouble: 2
+ldouble: 2
 
 Function: "sinh_upward":
-ildouble: 27
-ldouble: 27
+ildouble: 1
+ldouble: 1
 
 Function: "tan":
 double: 1

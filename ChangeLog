@@ -1,3 +1,26 @@
+2012-05-07  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #13885]
+	[BZ #13923]
+	* sysdeps/i386/fpu/e_expl.S (IEEE754_EXPL): Define conditional on
+	USE_AS_EXPM1L.
+	(EXPL_FINITE): Likewise.
+	(FLDLOG): Likewise.
+	(IEEE754_EXPL) [USE_AS_EXPM1L]: Support use as expm1l.
+	* sysdeps/i386/fpu/s_expm1l.S: Define USE_AS_EXPM1L and include
+	e_expl.S.
+	* sysdeps/x86_64/fpu/e_expl.S (IEEE754_EXPL): Define conditional on
+	USE_AS_EXPM1L.
+	(EXPL_FINITE): Likewise.
+	(FLDLOG): Likewise.
+	(IEEE754_EXPL) [USE_AS_EXPM1L]: Support use as expm1l.
+	* sysdeps/x86_64/fpu/s_expm1l.S: Define USE_AS_EXPM1L and include
+	e_expl.S.
+	* math/libm-test.inc (expm1_test): Add more tests.  Do not disable
+	test of -max_value argument for long double.
+	* sysdeps/i386/fpu/libm-test-ulps: Update.
+	* sysdeps/x86_64/fpu/libm-test-ulps: Likewise.
+
 2012-05-06  David S. Miller  <davem@davemloft.net>
 
 	* scripts/data/localplt-sparc-linux-gnu.data: Add '?' markers to

@@ -28,6 +28,10 @@
 # define IEEE754_EXPL __ieee754_exp10l
 # define EXPL_FINITE __exp10l_finite
 # define FLDLOG fldl2t
+#elif defined USE_AS_EXPM1L
+# define IEEE754_EXPL __expm1l
+# undef EXPL_FINITE
+# define FLDLOG fldl2e
 #else
 # define IEEE754_EXPL __ieee754_expl
 # define EXPL_FINITE __expl_finite
@@ -69,13 +73,21 @@ csat:	.byte 0, 0, 0, 0, 0, 0, 0, 0x80, 0x0e, 0x40
 
 	.text
 ENTRY(IEEE754_EXPL)
+#ifdef USE_AS_EXPM1L
+	movzwl	8+8(%rsp), %eax
+	xorb	$0x80, %ah	// invert sign bit (now 1 is "positive")
+	cmpl	$0xc006, %eax	// is num positive and exp >= 6 (number is >= 128.0)?
+	jae	HIDDEN_JUMPTARGET (__expl) // (if num is denormal, it is at least >= 64.0)
+#endif
 	fldt	8(%rsp)
 /* I added the following ugly construct because expl(+-Inf) resulted
    in NaN.  The ugliness results from the bright minds at Intel.
    For the i686 the code can be written better.
    -- drepper@cygnus.com.  */
 	fxam			/* Is NaN or +-Inf?  */
+#ifndef USE_AS_EXPM1L
 	movzwl	8+8(%rsp), %eax
+#endif
 	andl	$0x7fff, %eax
 	cmpl	$0x400d, %eax
 	jle	3f
@@ -93,7 +105,16 @@ ENTRY(IEEE754_EXPL)
 	andb	$2, %ah
 	jz	3f
 	fchs
-3:	FLDLOG			/* 1  log2(base)      */
+3:
+#ifdef USE_AS_EXPM1L
+	/* Test for +-0 as argument.  */
+	fstsw	%ax
+	movb	$0x45, %dh
+	andb	%ah, %dh
+	cmpb	$0x40, %dh
+	je	2f
+#endif
+	FLDLOG			/* 1  log2(base)      */
 	fmul	%st(1), %st	/* 1  x log2(base)    */
 	frndint			/* 1  i               */
 	fld	%st(1)		/* 2  x               */
@@ -111,17 +132,39 @@ ENTRY(IEEE754_EXPL)
 	fmul	%st(4), %st	/* 4  c1 * x          */
 	faddp	%st, %st(1)	/* 3  f = f + c1 * x  */
 	f2xm1			/* 3 2^(fract(x * log2(base))) - 1 */
+#ifdef USE_AS_EXPM1L
+	fstp	%st(1)		/* 2                  */
+	fscale			/* 2 scale factor is st(1); base^x - 2^i */
+	fxch			/* 2 i                */
+	fld1			/* 3 1.0              */
+	fscale			/* 3 2^i              */
+	fld1			/* 4 1.0              */
+	fsubrp	%st, %st(1)	/* 3 2^i - 1.0        */
+	fstp	%st(1)		/* 2                  */
+	faddp	%st, %st(1)	/* 1 base^x - 1.0     */
+#else
 	fld1			/* 4 1.0              */
 	faddp			/* 3 2^(fract(x * log2(base))) */
 	fstp	%st(1)		/* 2  */
 	fscale			/* 2 scale factor is st(1); base^x */
 	fstp	%st(1)		/* 1  */
+#endif
 	fstp	%st(1)		/* 0  */
 	jmp	2f
 1:	testl	$0x200, %eax	/* Test sign.  */
 	jz	2f		/* If positive, jump.  */
 	fstp	%st
+#ifdef USE_AS_EXPM1L
+	fld1
+	fchs
+#else
 	fldz			/* Set result to 0.  */
+#endif
 2:	ret
 END(IEEE754_EXPL)
+#ifdef USE_AS_EXPM1L
+libm_hidden_def (__expm1l)
+weak_alias (__expm1l, expm1l)
+#else
 strong_alias (IEEE754_EXPL, EXPL_FINITE)
+#endif
