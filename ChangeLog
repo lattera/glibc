@@ -1,3 +1,7 @@
+2012-05-08  Carlos O'Donell  <carlos_odonell@mentor.com>
+
+	* config.h.in: Add HAVE_ARM_PCS_VFP.
+
 2012-05-08  Roland Mc Grath  <roland@hack.frob.com>
 
         [BZ #13979]

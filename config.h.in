@@ -218,4 +218,7 @@
 
 #define HAVE_REGEX 1
 
+/* The ARM hard-float ABI is being used.  */
+#undef HAVE_ARM_PCS_VFP
+
 #endif
