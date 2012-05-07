@@ -58,21 +58,34 @@ __sparc_get_pc_thunk.reg:		   				\
 	.previous;							\
 	.endif;
 
-/* Even when v9 we use a call sequence instead of using "rd %pc" because
+/* The "-4" and "+4" offsets against _GLOBAL_OFFSET_TABLE_ are
+   critical since they represent the offset from the thunk call to the
+   instruction containing the _GLOBAL_OFFSET_TABLE_ reference.
+   Therefore these instructions cannot be moved around without
+   appropriate adjustments to those offsets.
+
+   Furthermore, these expressions are special in another regard.  When
+   the assembler sees a reference to _GLOBAL_OFFSET_TABLE_ inside of
+   a %hi() or %lo(), it emits a PC-relative relocation.  This causes
+   R_SPARC_HI22 to turn into R_SPARC_PC22, and R_SPARC_LO10 to turn into
+   R_SPARC_PC10, respectively.
+
+   Even when v9 we use a call sequence instead of using "rd %pc" because
    RDPC is extremely expensive and incurs a full pipeline flush.  */
 
-#define SETUP_PIC_REG(reg)						\
-	SPARC_PIC_THUNK(reg)						\
+#define SPARC_PIC_THUNK_CALL(reg)					\
 	sethi	%hi(_GLOBAL_OFFSET_TABLE_-4), %##reg;			\
 	call	__sparc_get_pc_thunk.reg;				\
 	 or	%##reg, %lo(_GLOBAL_OFFSET_TABLE_+4), %##reg;
 
+#define SETUP_PIC_REG(reg)						\
+	SPARC_PIC_THUNK(reg)						\
+	SPARC_PIC_THUNK_CALL(reg)
+
 #define SETUP_PIC_REG_LEAF(reg, tmp)					\
 	SPARC_PIC_THUNK(reg)						\
-	sethi	%hi(_GLOBAL_OFFSET_TABLE_-4), %##reg;			\
 	mov	%o7, %##tmp;		      				\
-	call	__sparc_get_pc_thunk.reg;				\
-	 or	%##reg, %lo(_GLOBAL_OFFSET_TABLE_+4), %##reg;		\
+	SPARC_PIC_THUNK_CALL(reg);					\
 	mov	%##tmp, %o7;
 
 #undef ENTRY
