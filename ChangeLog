@@ -1,3 +1,9 @@
+2012-05-08  Roland Mc Grath  <roland@hack.frob.com>
+
+        [BZ #13979]
+        * include/features.h: Warn if user requests __FORTIFY_SOURCE
+        checking but the checks are disabled for any reason.
+
 2012-05-08  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/x86_64/dl-machine.h: Replace Elf64_XXX with ElfW(XXX)
