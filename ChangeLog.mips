@@ -1,3 +1,11 @@
+2012-05-08  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/mips/fpu/libm-test-ulps: Move to ...
+	* sysdeps/mips/mips32/libm-test-ulps: ... here.
+	* sysdeps/mips/mips64/n32/libm-test-ulps: Move to ...
+	* sysdeps/mips/mips64/libm-test-ulps: ... here.
+	* sysdeps/mips/mips64/n64/libm-test-ulps: Remove file.
+
 2012-05-01  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #14044]
