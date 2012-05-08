@@ -1,3 +1,8 @@
+2012-05-08  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/x86_64/dl-machine.h: Replace Elf64_XXX with ElfW(XXX)
+	and ELF64_R_TYPE with ELFW(R_TYPE).
+
 2012-05-08  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/syscalls.list (pause): Remove.

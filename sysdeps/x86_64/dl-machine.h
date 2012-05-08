@@ -29,7 +29,7 @@
 
 /* Return nonzero iff ELF header is compatible with the running host.  */
 static inline int __attribute__ ((unused))
-elf_machine_matches_host (const Elf64_Ehdr *ehdr)
+elf_machine_matches_host (const ElfW(Ehdr) *ehdr)
 {
   return ehdr->e_machine == EM_X86_64;
 }
@@ -38,24 +38,24 @@ elf_machine_matches_host (const Elf64_Ehdr *ehdr)
 /* Return the link-time address of _DYNAMIC.  Conveniently, this is the
    first element of the GOT.  This must be inlined in a function which
    uses global data.  */
-static inline Elf64_Addr __attribute__ ((unused))
+static inline ElfW(Addr) __attribute__ ((unused))
 elf_machine_dynamic (void)
 {
-  Elf64_Addr addr;
+  ElfW(Addr) addr;
 
   /* This works because we have our GOT address available in the small PIC
      model.  */
-  addr = (Elf64_Addr) &_DYNAMIC;
+  addr = (ElfW(Addr)) &_DYNAMIC;
 
   return addr;
 }
 
 
 /* Return the run-time load address of the shared object.  */
-static inline Elf64_Addr __attribute__ ((unused))
+static inline ElfW(Addr) __attribute__ ((unused))
 elf_machine_load_address (void)
 {
-  Elf64_Addr addr;
+  ElfW(Addr) addr;
 
   /* The easy way is just the same as on x86:
        leaq _dl_start, %0
@@ -89,8 +89,8 @@ static inline int __attribute__ ((unused, always_inline))
 elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 {
   Elf64_Addr *got;
-  extern void _dl_runtime_resolve (Elf64_Word) attribute_hidden;
-  extern void _dl_runtime_profile (Elf64_Word) attribute_hidden;
+  extern void _dl_runtime_resolve (ElfW(Word)) attribute_hidden;
+  extern void _dl_runtime_profile (ElfW(Word)) attribute_hidden;
 
   if (l->l_info[DT_JMPREL] && lazy)
     {
@@ -105,9 +105,10 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
       if (got[1])
 	{
 	  l->l_mach.plt = got[1] + l->l_addr;
-	  l->l_mach.gotplt = (Elf64_Addr) &got[3];
+	  l->l_mach.gotplt = (ElfW(Addr)) &got[3];
 	}
-      got[1] = (Elf64_Addr) l;	/* Identify this shared object.  */
+      /* Identify this shared object.  */
+      *(ElfW(Addr) *) (got + 1) = (ElfW(Addr)) l;
 
       /* The got[2] entry contains the address of a function which gets
 	 called to get the address of a so far unresolved function and
@@ -117,7 +118,7 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 	 end in this function.  */
       if (__builtin_expect (profile, 0))
 	{
-	  got[2] = (Elf64_Addr) &_dl_runtime_profile;
+	  *(ElfW(Addr) *) (got + 2) = (ElfW(Addr)) &_dl_runtime_profile;
 
 	  if (GLRO(dl_profile) != NULL
 	      && _dl_name_match_p (GLRO(dl_profile), l))
@@ -128,12 +129,12 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
       else
 	/* This function will get called to fix up the GOT entry indicated by
 	   the offset on the stack, and then jump to the resolved address.  */
-	got[2] = (Elf64_Addr) &_dl_runtime_resolve;
+	*(ElfW(Addr) *) (got + 2) = (ElfW(Addr)) &_dl_runtime_resolve;
     }
 
   if (l->l_info[ADDRIDX (DT_TLSDESC_GOT)] && lazy)
-    *(Elf64_Addr*)(D_PTR (l, l_info[ADDRIDX (DT_TLSDESC_GOT)]) + l->l_addr)
-      = (Elf64_Addr) &_dl_tlsdesc_resolve_rela;
+    *(ElfW(Addr)*)(D_PTR (l, l_info[ADDRIDX (DT_TLSDESC_GOT)]) + l->l_addr)
+      = (ElfW(Addr)) &_dl_tlsdesc_resolve_rela;
 
   return lazy;
 }
@@ -210,7 +211,7 @@ _dl_start_user:\n\
 // XXX This is a work-around for a broken linker.  Remove!
 #define ELF_MACHINE_IRELATIVE	R_X86_64_IRELATIVE
 
-/* The x86-64 never uses Elf64_Rel relocations.  */
+/* The x86-64 never uses Elf64_Rel/Elf32_Rel relocations.  */
 #define ELF_MACHINE_NO_REL 1
 
 /* We define an initialization function.  This is called very early in
@@ -225,19 +226,19 @@ dl_platform_init (void)
     GLRO(dl_platform) = NULL;
 }
 
-static inline Elf64_Addr
+static inline ElfW(Addr)
 elf_machine_fixup_plt (struct link_map *map, lookup_t t,
-		       const Elf64_Rela *reloc,
-		       Elf64_Addr *reloc_addr, Elf64_Addr value)
+		       const ElfW(Rela) *reloc,
+		       ElfW(Addr) *reloc_addr, ElfW(Addr) value)
 {
   return *reloc_addr = value;
 }
 
 /* Return the final value of a PLT relocation.  On x86-64 the
    JUMP_SLOT relocation ignores the addend.  */
-static inline Elf64_Addr
-elf_machine_plt_value (struct link_map *map, const Elf64_Rela *reloc,
-		       Elf64_Addr value)
+static inline ElfW(Addr)
+elf_machine_plt_value (struct link_map *map, const ElfW(Rela) *reloc,
+		       ElfW(Addr) value)
 {
   return value;
 }
@@ -256,12 +257,12 @@ elf_machine_plt_value (struct link_map *map, const Elf64_Rela *reloc,
 
 auto inline void
 __attribute__ ((always_inline))
-elf_machine_rela (struct link_map *map, const Elf64_Rela *reloc,
-		  const Elf64_Sym *sym, const struct r_found_version *version,
+elf_machine_rela (struct link_map *map, const ElfW(Rela) *reloc,
+		  const ElfW(Sym) *sym, const struct r_found_version *version,
 		  void *const reloc_addr_arg, int skip_ifunc)
 {
-  Elf64_Addr *const reloc_addr = reloc_addr_arg;
-  const unsigned long int r_type = ELF64_R_TYPE (reloc->r_info);
+  ElfW(Addr) *const reloc_addr = reloc_addr_arg;
+  const unsigned long int r_type = ELFW(R_TYPE) (reloc->r_info);
 
 # if !defined RTLD_BOOTSTRAP || !defined HAVE_Z_COMBRELOC
   if (__builtin_expect (r_type == R_X86_64_RELATIVE, 0))
@@ -287,18 +288,18 @@ elf_machine_rela (struct link_map *map, const Elf64_Rela *reloc,
   else
     {
 # ifndef RTLD_BOOTSTRAP
-      const Elf64_Sym *const refsym = sym;
+      const ElfW(Sym) *const refsym = sym;
 # endif
       struct link_map *sym_map = RESOLVE_MAP (&sym, version, r_type);
-      Elf64_Addr value = (sym == NULL ? 0
-			  : (Elf64_Addr) sym_map->l_addr + sym->st_value);
+      ElfW(Addr) value = (sym == NULL ? 0
+			  : (ElfW(Addr)) sym_map->l_addr + sym->st_value);
 
       if (sym != NULL
 	  && __builtin_expect (ELFW(ST_TYPE) (sym->st_info) == STT_GNU_IFUNC,
 			       0)
 	  && __builtin_expect (sym->st_shndx != SHN_UNDEF, 1)
 	  && __builtin_expect (!skip_ifunc, 1))
-	value = ((Elf64_Addr (*) (void)) value) ();
+	value = ((ElfW(Addr) (*) (void)) value) ();
 
       switch (r_type)
 	{
@@ -411,7 +412,7 @@ elf_machine_rela (struct link_map *map, const Elf64_Rela *reloc,
 #  ifndef RESOLVE_CONFLICT_FIND_MAP
 	  /* Not needed for dl-conflict.c.  */
 	case R_X86_64_PC32:
-	  value += reloc->r_addend - (Elf64_Addr) reloc_addr;
+	  value += reloc->r_addend - (ElfW(Addr)) reloc_addr;
 	  *(unsigned int *) reloc_addr = value;
 	  if (__builtin_expect (value != (int) value, 0))
 	    {
@@ -439,7 +440,7 @@ elf_machine_rela (struct link_map *map, const Elf64_Rela *reloc,
 #  endif
 	case R_X86_64_IRELATIVE:
 	  value = map->l_addr + reloc->r_addend;
-	  value = ((Elf64_Addr (*) (void)) value) ();
+	  value = ((ElfW(Addr) (*) (void)) value) ();
 	  *reloc_addr = value;
 	  break;
 	default:
@@ -452,22 +453,22 @@ elf_machine_rela (struct link_map *map, const Elf64_Rela *reloc,
 
 auto inline void
 __attribute ((always_inline))
-elf_machine_rela_relative (Elf64_Addr l_addr, const Elf64_Rela *reloc,
+elf_machine_rela_relative (ElfW(Addr) l_addr, const ElfW(Rela) *reloc,
 			   void *const reloc_addr_arg)
 {
-  Elf64_Addr *const reloc_addr = reloc_addr_arg;
-  assert (ELF64_R_TYPE (reloc->r_info) == R_X86_64_RELATIVE);
+  ElfW(Addr) *const reloc_addr = reloc_addr_arg;
+  assert (ELFW(R_TYPE) (reloc->r_info) == R_X86_64_RELATIVE);
   *reloc_addr = l_addr + reloc->r_addend;
 }
 
 auto inline void
 __attribute ((always_inline))
 elf_machine_lazy_rel (struct link_map *map,
-		      Elf64_Addr l_addr, const Elf64_Rela *reloc,
+		      ElfW(Addr) l_addr, const ElfW(Rela) *reloc,
 		      int skip_ifunc)
 {
-  Elf64_Addr *const reloc_addr = (void *) (l_addr + reloc->r_offset);
-  const unsigned long int r_type = ELF64_R_TYPE (reloc->r_info);
+  ElfW(Addr) *const reloc_addr = (void *) (l_addr + reloc->r_offset);
+  const unsigned long int r_type = ELFW(R_TYPE) (reloc->r_info);
 
   /* Check for unexpected PLT reloc type.  */
   if (__builtin_expect (r_type == R_X86_64_JUMP_SLOT, 1))
@@ -477,7 +478,7 @@ elf_machine_lazy_rel (struct link_map *map,
       else
 	*reloc_addr =
 	  map->l_mach.plt
-	  + (((Elf64_Addr) reloc_addr) - map->l_mach.gotplt) * 2;
+	  + (((ElfW(Addr)) reloc_addr) - map->l_mach.gotplt) * 2;
     }
   else if (__builtin_expect (r_type == R_X86_64_TLSDESC, 1))
     {
@@ -490,9 +491,9 @@ elf_machine_lazy_rel (struct link_map *map,
     }
   else if (__builtin_expect (r_type == R_X86_64_IRELATIVE, 0))
     {
-      Elf64_Addr value = map->l_addr + reloc->r_addend;
+      ElfW(Addr) value = map->l_addr + reloc->r_addend;
       if (__builtin_expect (!skip_ifunc, 1))
-	value = ((Elf64_Addr (*) (void)) value) ();
+	value = ((ElfW(Addr) (*) (void)) value) ();
       *reloc_addr = value;
     }
   else
