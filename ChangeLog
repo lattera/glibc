@@ -1,3 +1,8 @@
+2012-05-08  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/syscalls.list (setrlimit): Remove.
+	(settimeofday): Likewise.
+
 2012-05-08  Mike Frysinger  <vapier@gentoo.org>
 
 	* inet/arpa/tftp.h (struct tftphdr): Rename th_u to th_u1.  Add

@@ -2,8 +2,6 @@
 
 alarm		-	alarm		i:i	alarm
 pause		-	pause		Ci:	pause
-setrlimit	-	setrlimit	i:ip	__setrlimit	setrlimit
-settimeofday	-	settimeofday	i:PP	__settimeofday	settimeofday
 stime		-	stime		i:p	stime
 ulimit		-	ulimit		i:ii	ulimit
 utime		-	utime		i:sP	utime
