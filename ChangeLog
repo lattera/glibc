@@ -1,3 +1,7 @@
+2012-05-08  David S. Miller  <davem@davemloft.net>
+
+	* sysdeps/sparc/fpu/libm-test-ulps: Update.
+
 2012-05-08  Carlos O'Donell  <carlos_odonell@mentor.com>
 
 	* config.h.in: Add HAVE_ARM_PCS_VFP.

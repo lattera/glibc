@@ -1,9 +1,18 @@
 # Begin of automatic generation
 
 # acos_downward
+Test "acos_downward (-0) == pi/2":
+float: 1
+ifloat: 1
 Test "acos_downward (-0.5) == M_PI_6l*4.0":
 double: 1
 idouble: 1
+Test "acos_downward (-1) == pi":
+float: 1
+ifloat: 1
+Test "acos_downward (0) == pi/2":
+float: 1
+ifloat: 1
 Test "acos_downward (0.5) == M_PI_6l*2.0":
 double: 1
 float: 1
@@ -13,14 +22,34 @@ ildouble: 1
 ldouble: 1
 
 # acos_towardzero
+Test "acos_towardzero (-0) == pi/2":
+float: 1
+ifloat: 1
 Test "acos_towardzero (-0.5) == M_PI_6l*4.0":
 double: 1
 idouble: 1
+Test "acos_towardzero (-1) == pi":
+float: 1
+ifloat: 1
+Test "acos_towardzero (0) == pi/2":
+float: 1
+ifloat: 1
 Test "acos_towardzero (0.5) == M_PI_6l*2.0":
 double: 1
 float: 1
 idouble: 1
 ifloat: 1
+ildouble: 1
+ldouble: 1
+
+# acos_upward
+Test "acos_upward (-0) == pi/2":
+ildouble: 1
+ldouble: 1
+Test "acos_upward (-1) == pi":
+ildouble: 1
+ldouble: 1
+Test "acos_upward (0) == pi/2":
 ildouble: 1
 ldouble: 1
 
@@ -2107,6 +2136,10 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
+ildouble: 1
+ldouble: 1
+
+Function: "acos_upward":
 ildouble: 1
 ldouble: 1
 
