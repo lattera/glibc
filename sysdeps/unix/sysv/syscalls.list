@@ -1,7 +1,5 @@
 # File name	Caller	Syscall name	# args	Strong name	Weak names
 
 alarm		-	alarm		i:i	alarm
-pause		-	pause		Ci:	pause
 stime		-	stime		i:p	stime
-ulimit		-	ulimit		i:ii	ulimit
 utime		-	utime		i:sP	utime

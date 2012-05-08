@@ -1,5 +1,8 @@
 2012-05-08  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/unix/sysv/syscalls.list (pause): Remove.
+	(ulimit): Likewise.
+
 	* sysdeps/unix/sysv/syscalls.list (setrlimit): Remove.
 	(settimeofday): Likewise.
 
