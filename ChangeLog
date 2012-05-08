@@ -1,5 +1,8 @@
 2012-05-08  David S. Miller  <davem@davemloft.net>
 
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_floor-vis3.S: Use
+	movxtod instead of popping the value on the stack.
+
 	* sysdeps/sparc/fpu/libm-test-ulps: Update.
 
 2012-05-08  Carlos O'Donell  <carlos_odonell@mentor.com>

@@ -56,10 +56,9 @@ ENTRY (__floor_vis3)
 
 	fnegd	ZERO, SIGN_BIT
 
-	stx	%o2, [%sp + 72]
+	movxtod	%o2, %f16
 	fabsd	%f0, %f14
 
-	ldd	[%sp + 72], %f16
 	fcmpd	%fcc3, %f14, %f16
 
 	fmovduge %fcc3, ZERO, %f16
