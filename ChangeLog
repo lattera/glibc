@@ -86,6 +86,14 @@
 	* math/libm-test.inc (check_float_internal): Correct ulp
 	calculation for subnormal expected results.
 
+2012-05-06  Andreas Jaeger  <aj@suse.de>
+
+	* Makeconfig (+math-flags): New, set to -frounding-math.
+	(+cflags): Add +math-flags so that all of glibc gets compiled with
+	it.
+
+	* sysdeps/x86_64/fpu/libm-test-ulps: Updated.
+
 2012-05-05  Joseph Myers  <joseph@codesourcery.com>
 
 	* math/libm-test.inc (hypot_test) [TEST_DOUBLE && TEST_INLINE]:
