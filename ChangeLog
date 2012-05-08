@@ -1,5 +1,7 @@
 2012-05-07  David S. Miller  <davem@davemloft.net>
 
+	* sysdeps/sparc/fpu/libm-test-ulps: Update.
+
 	[BZ #14074]
 	* sysdeps/sparc/sysdep.h (SPARC_PIC_THUNK_CALL): New macro.
 	(SETUP_PIC_REG): Use it.

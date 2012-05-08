@@ -1224,6 +1224,14 @@ double: 2
 float: 1
 idouble: 2
 ifloat: 1
+Test "exp10 (-305) == 1.0e-305":
+double: 1
+idouble: 1
+Test "exp10 (-36) == 1.0e-36":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
 Test "exp10 (0.75) == 5.62341325190349080394951039776481231":
 double: 1
 float: 1
@@ -1234,6 +1242,12 @@ double: 6
 float: 2
 idouble: 6
 ifloat: 2
+ildouble: 1
+ldouble: 1
+Test "exp10 (36) == 1.0e36":
+double: 1
+idouble: 1
+Test "exp10 (4932) == 1.0e4932":
 ildouble: 1
 ldouble: 1
 
@@ -1284,6 +1298,9 @@ idouble: 1
 ifloat: 1
 ildouble: 1
 ldouble: 1
+Test "expm1 (500.0) == 1.4035922178528374107397703328409120821806e+217":
+double: 1
+idouble: 1
 
 # gamma
 Test "gamma (-0.5) == log(2*sqrt(pi))":
