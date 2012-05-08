@@ -1,3 +1,7 @@
+2012-05-07  Mike Frysinger  <vapier@gentoo.org>
+
+	* sysdeps/unix/sysv/linux/ia64/sysdep.h: Include errno.h.
+
 2012-05-06  Mike Frysinger  <vapier@gentoo.org>
 
 	* data/localplt-ia64-linux-gnu.data: New file.

@@ -25,6 +25,11 @@
 #include <dl-sysdep.h>
 #include <tls.h>
 
+/* In order to get __set_errno() definition in INLINE_SYSCALL.  */
+#ifndef __ASSEMBLER__
+#include <errno.h>
+#endif
+
 /* As of GAS v2.4.90.0.7, including a ".align" directive inside a
    function will cause bad unwind info to be emitted (GAS doesn't know
    how to account for the padding introduced by the .align directive).
