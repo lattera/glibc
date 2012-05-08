@@ -1,3 +1,11 @@
+2012-05-07  Carlos O'Donell  <carlos_odonell@mentor.com>
+
+	* sysdeps/arm/configure.in: Set libc_cv_arm_pcs_vfp.
+	If libc_cv_arm_pcs_vfp equals yes then define HAVE_ARM_PCS_VFP.
+	* sysdeps/arm/configure: Regenerate.
+	* sysdeps/arm/shlib-versions: If HAVE_ARM_PCS_VFP is defined
+	then use ld=/lib/ld-linux-armhf.so.3.
+
 2012-05-01  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #14043]

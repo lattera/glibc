@@ -49,3 +49,20 @@ EOF
 if test $libc_cv_asm_cfi_directive_sections != yes; then
   AC_MSG_ERROR([need .cfi_sections in this configuration])
 fi
+
+# We check to see if the compiler and flags are
+# selecting the hard-float ABI and if they are then
+# we set libc_cv_arm_pcs_vfp to yes which causes
+# HAVE_ARM_PCS_VFP to be defined in config.h and
+# in include/libc-symbols.h and thus available to
+# shlib-versions to select the appropriate name for
+# the dynamic linker via %ifdef.
+AC_CACHE_CHECK([whether the compiler is using the ARM hard-float ABI],
+  [libc_cv_arm_pcs_vfp],
+  [AC_EGREP_CPP(yes,[#ifdef __ARM_PCS_VFP
+                      yes
+                     #endif
+  ], libc_cv_arm_pcs_vfp=yes, libc_cv_arm_pcs_vfp=no)])
+if test $libc_cv_arm_pcs_vfp = yes; then
+  AC_DEFINE(HAVE_ARM_PCS_VFP)
+fi
