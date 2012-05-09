@@ -1,4 +1,17 @@
 2012-05-09  Andreas Jaeger  <aj@suse.de>
+
+        [BZ #14053]
+        * sysdeps/x86_64/fpu/bits/mathinline.h (lrintf): Add __volatile
+	to asm.
+        (lrint): Likewise.
+        (llrintf): Likewise.
+        (llrint): Likewise.
+        (rint): Likewise.
+        (rintf): Likewise.
+        (nearbyint): Likewise.
+        (nearbyintf): Likewise.
+
+2012-05-09  Andreas Jaeger  <aj@suse.de>
 	    Pedro Alves  <palves@redhat.com>
 
 	* nscd/nscd.c (run_mode): Use enum.

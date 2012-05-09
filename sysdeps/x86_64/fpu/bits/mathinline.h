@@ -79,7 +79,11 @@ __MATH_INLINE long int
 __NTH (lrintf (float __x))
 {
   long int __res;
-  __asm ("cvtss2si %1, %0" : "=r" (__res) : "xm" (__x));
+  /* Mark as volatile since the result is dependend on the state of
+     the SSE control register (the rounding mode). Otherwise GCC might
+     remove these assembler instructions since it does not know about
+     the rounding mode change and cannot currently be told.  */
+  __asm __volatile__ ("cvtss2si %1, %0" : "=r" (__res) : "xm" (__x));
   return __res;
 }
 #  endif
@@ -88,7 +92,11 @@ __MATH_INLINE long int
 __NTH (lrint (double __x))
 {
   long int __res;
-  __asm ("cvtsd2si %1, %0" : "=r" (__res) : "xm" (__x));
+  /* Mark as volatile since the result is dependend on the state of
+     the SSE control register (the rounding mode). Otherwise GCC might
+     remove these assembler instructions since it does not know about
+     the rounding mode change and cannot currently be told.  */
+  __asm __volatile__ ("cvtsd2si %1, %0" : "=r" (__res) : "xm" (__x));
   return __res;
 }
 #  endif
@@ -97,14 +105,22 @@ __MATH_INLINE long long int
 __NTH (llrintf (float __x))
 {
   long long int __res;
-  __asm ("cvtss2si %1, %0" : "=r" (__res) : "xm" (__x));
+  /* Mark as volatile since the result is dependend on the state of
+     the SSE control register (the rounding mode). Otherwise GCC might
+     remove these assembler instructions since it does not know about
+     the rounding mode change and cannot currently be told.  */
+  __asm __volatile__ ("cvtss2si %1, %0" : "=r" (__res) : "xm" (__x));
   return __res;
 }
 __MATH_INLINE long long int
 __NTH (llrint (double __x))
 {
   long long int __res;
-  __asm ("cvtsd2si %1, %0" : "=r" (__res) : "xm" (__x));
+  /* Mark as volatile since the result is dependend on the state of
+     the SSE control register (the rounding mode). Otherwise GCC might
+     remove these assembler instructions since it does not know about
+     the rounding mode change and cannot currently be told.  */
+  __asm __volatile__ ("cvtsd2si %1, %0" : "=r" (__res) : "xm" (__x));
   return __res;
 }
 #  endif
@@ -176,14 +192,22 @@ __MATH_INLINE double
 __NTH (rint (double __x))
 {
   double __res;
-  __asm ("roundsd $4, %1, %0" : "=x" (__res) : "xm" (__x));
+  /* Mark as volatile since the result is dependend on the state of
+     the SSE control register (the rounding mode). Otherwise GCC might
+     remove these assembler instructions since it does not know about
+     the rounding mode change and cannot currently be told.  */
+  __asm __volatile__ ("roundsd $4, %1, %0" : "=x" (__res) : "xm" (__x));
   return __res;
 }
 __MATH_INLINE float
 __NTH (rintf (float __x))
 {
   float __res;
-  __asm ("roundss $4, %1, %0" : "=x" (__res) : "xm" (__x));
+  /* Mark as volatile since the result is dependend on the state of
+     the SSE control register (the rounding mode). Otherwise GCC might
+     remove these assembler instructions since it does not know about
+     the rounding mode change and cannot currently be told.  */
+  __asm __volatile__ ("roundss $4, %1, %0" : "=x" (__res) : "xm" (__x));
   return __res;
 }
 
@@ -193,14 +217,22 @@ __MATH_INLINE double
 __NTH (nearbyint (double __x))
 {
   double __res;
-  __asm ("roundsd $0xc, %1, %0" : "=x" (__res) : "xm" (__x));
+  /* Mark as volatile since the result is dependend on the state of
+     the SSE control register (the rounding mode). Otherwise GCC might
+     remove these assembler instructions since it does not know about
+     the rounding mode change and cannot currently be told.  */
+  __asm __volatile__ ("roundsd $0xc, %1, %0" : "=x" (__res) : "xm" (__x));
   return __res;
 }
 __MATH_INLINE float
 __NTH (nearbyintf (float __x))
 {
   float __res;
-  __asm ("roundss $0xc, %1, %0" : "=x" (__res) : "xm" (__x));
+  /* Mark as volatile since the result is dependend on the state of
+     the SSE control register (the rounding mode). Otherwise GCC might
+     remove these assembler instructions since it does not know about
+     the rounding mode change and cannot currently be told.  */
+  __asm __volatile__ ("roundss $0xc, %1, %0" : "=x" (__res) : "xm" (__x));
   return __res;
 }
 #   endif
