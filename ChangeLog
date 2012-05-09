@@ -1,3 +1,9 @@
+2012-05-08  Ian Wienand  <ianw@vmware.com>
+
+	[BZ #14080]
+	* time/tzset.c (__tzset_parse_tz): Update default rules for
+	daylight time changes in the Energy Policy Act of 2005.
+
 2012-05-09  Andreas Jaeger  <aj@suse.de>
 
 	[BZ #13983]

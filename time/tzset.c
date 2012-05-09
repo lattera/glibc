@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-2002,2003,2004,2007,2009 Free Software Foundation, Inc.
+/* Copyright (C) 1991-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -333,18 +333,24 @@ __tzset_parse_tz (tz)
 	}
       else if (*tz == '\0')
 	{
-	  /* United States Federal Law, the equivalent of "M4.1.0,M10.5.0".  */
+         /* Daylight time rules in the U.S. are defined in the
+            U.S. Code, Title 15, Chapter 6, Subchapter IX - Standard
+            Time.  These dates were established by Congress in the
+            Energy Policy Act of 2005 [Pub. L. no. 109-58, 119 Stat 594
+            (2005)].
+	    Below is the equivalent of "M3.2.0,M11.1.0" [/2 not needed
+	    since 2:00AM is the default].  */
 	  tzr->type = M;
 	  if (tzr == &tz_rules[0])
 	    {
-	      tzr->m = 4;
-	      tzr->n = 1;
+	      tzr->m = 3;
+	      tzr->n = 2;
 	      tzr->d = 0;
 	    }
 	  else
 	    {
-	      tzr->m = 10;
-	      tzr->n = 5;
+	      tzr->m = 11;
+	      tzr->n = 1;
 	      tzr->d = 0;
 	    }
 	}
