@@ -1,3 +1,13 @@
+2012-05-09  Alexandre Oliva  <aoliva@redhat.com>
+	    Andreas Jaeger  <aj@suse.de>
+
+        * nscd/nscd.c (go_background): Replaced with...
+        (run_mode): ... this.
+	(RUN_FOREGROUND, RUN_DAEMONIZE, RUN_DEBUG): Add.
+        (options): Add -F --foreground.
+        (main): Implement it.
+        (parse_opt): Parse it.
+
 2012-05-09  Andreas Jaeger  <aj@suse.de>
 
 	[BZ #14083]

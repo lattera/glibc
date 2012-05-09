@@ -1,4 +1,4 @@
-/* Copyright (c) 1998-2011, 2012 Free Software Foundation, Inc.
+/* Copyright (c) 1998-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@suse.de>, 1998.
 
@@ -71,7 +71,19 @@ thread_info_t thread_info;
 int do_shutdown;
 int disabled_passwd;
 int disabled_group;
-int go_background = 1;
+
+enum
+{
+  /* Running in foreground but otherwise behave like a daemon,
+     i.e., detach from terminal and use syslog.  This allows
+     better integration with services like systemd.  */
+  RUN_FOREGROUND,
+  /* Running in background as daemon.  */
+  RUN_DAEMONIZE,
+  /* Run in foreground in debug mode.  */
+  RUN_DEBUG
+};
+static int run_mode = RUN_DAEMONIZE;
 
 static const char *conffile = _PATH_NSCDCONF;
 
@@ -103,6 +115,8 @@ static const struct argp_option options[] =
     N_("Read configuration data from NAME") },
   { "debug", 'd', NULL, 0,
     N_("Do not fork and display messages on the current tty") },
+  { "foreground", 'F', NULL, 0,
+    N_("Do not fork, but otherwise behave like a deamon") },
   { "nthreads", 't', N_("NUMBER"), 0, N_("Start NUMBER threads") },
   { "shutdown", 'K', NULL, 0, N_("Shut the server down") },
   { "statistics", 'g', NULL, 0, N_("Print current configuration statistics") },
@@ -173,16 +187,22 @@ main (int argc, char **argv)
   /* Determine page size.  */
   pagesize_m1 = getpagesize () - 1;
 
-  /* Behave like a daemon.  */
-  if (go_background)
+  if ((run_mode == RUN_DAEMONIZE) || (run_mode == RUN_FOREGROUND))
     {
       int i;
+      pid_t pid;
 
-      pid_t pid = fork ();
-      if (pid == -1)
-	error (EXIT_FAILURE, errno, _("cannot fork"));
-      if (pid != 0)
-	exit (0);
+      /* Behave like a daemon.  */
+      if (run_mode == RUN_DAEMONIZE)
+	{
+	  pid = fork ();
+	  if (pid == -1)
+	    error (EXIT_FAILURE, errno, _("cannot fork"));
+	  if (pid != 0)
+	    exit (0);
+	}
+      else
+	fprintf (stderr, _("further output sent to syslog\n"));
 
       int nullfd = open (_PATH_DEVNULL, O_RDWR);
       if (nullfd != -1)
@@ -233,11 +253,14 @@ main (int argc, char **argv)
 	for (i = min_close_fd; i < getdtablesize (); i++)
 	  close (i);
 
-      pid = fork ();
-      if (pid == -1)
-	error (EXIT_FAILURE, errno, _("cannot fork"));
-      if (pid != 0)
-	exit (0);
+      if (run_mode == RUN_DAEMONIZE)
+	{
+	  pid = fork ();
+	  if (pid == -1)
+	    error (EXIT_FAILURE, errno, _("cannot fork"));
+	  if (pid != 0)
+	    exit (0);
+	}
 
       setsid ();
 
@@ -259,7 +282,7 @@ main (int argc, char **argv)
       signal (SIGTSTP, SIG_IGN);
     }
   else
-    /* In foreground mode we are not paranoid.  */
+    /* In debug mode we are not paranoid.  */
     paranoia = 0;
 
   signal (SIGINT, termination_handler);
@@ -308,7 +331,11 @@ parse_opt (int key, char *arg, struct argp_state *state)
     {
     case 'd':
       ++debug_level;
-      go_background = 0;
+      run_mode = RUN_DEBUG;
+      break;
+
+    case 'F':
+      run_mode = RUN_FOREGROUND;
       break;
 
     case 'f':
