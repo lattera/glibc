@@ -1,4 +1,4 @@
-/* Copyright (C) 1999-2011, 2012 Free Software Foundation, Inc.
+/* Copyright (C) 1999-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Andreas Jaeger <aj@suse.de>, 1999.
 
@@ -1061,7 +1061,9 @@ parse_conf (const char *filename, bool do_chroot)
 
   if (file == NULL)
     {
-      error (0, errno, _("Can't open configuration file %s"), canon);
+      error (0, errno, _("\
+Warning: ignoring configuration file that cannot be opened: %s"),
+	     canon);
       if (canon != filename)
 	free ((char *) canon);
       return;

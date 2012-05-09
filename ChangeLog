@@ -1,3 +1,9 @@
+2012-05-09  Andreas Jaeger  <aj@suse.de>
+
+	[BZ #13983]
+	* elf/ldconfig.c (parse_conf): Change string to make clear that
+	ldconfig only issued a warning if ld.so.conf does not exist.
+
 2012-05-08  David S. Miller  <davem@davemloft.net>
 
 	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_floor-vis3.S: Use
