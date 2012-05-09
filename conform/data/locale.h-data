@@ -26,15 +26,17 @@ element {struct lconv} char int_p_sep_by_space
 element {struct lconv} char int_p_sign_posn
 #endif
 
-constant NULL
+macro-constant NULL == 0
 
-macro LC_ALL
-macro LC_COLLATE
-macro LC_CTYPE
-macro LC_MESSAGES
-macro LC_MONETARY
-macro LC_NUMERIC
-macro LC_TIME
+macro-int-constant LC_ALL
+macro-int-constant LC_COLLATE
+macro-int-constant LC_CTYPE
+#if !defined ISO && !defined ISO99 && !defined ISO11
+macro-int-constant LC_MESSAGES
+#endif
+macro-int-constant LC_MONETARY
+macro-int-constant LC_NUMERIC
+macro-int-constant LC_TIME
 
 #if defined XOPEN2K8 || defined POSIX2008
 constant LC_GLOBAL_LOCALE
@@ -59,8 +61,10 @@ function locale_t newlocale (int, const char*, locale_t)
 function locale_t uselocale (locale_t)
 #endif
 
-allow LC_*
+allow LC_[ABCDEFGHIJKLMNOPQRSTUVWXYZ]*
+#if !defined ISO && !defined ISO99 && !defined ISO11
 allow *_t
+#endif
 #if defined XOPEN2K8 || defined POSIX2008
 allow LC_*_MASK
 #endif

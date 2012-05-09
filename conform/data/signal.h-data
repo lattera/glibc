@@ -1,9 +1,9 @@
-constant SIG_DFL {void(*)(int)}
-constant SIG_ERR {void(*)(int)}
+macro-constant SIG_DFL {void(*)(int)}
+macro-constant SIG_ERR {void(*)(int)}
 #if !defined ISO && !defined ISO99 && !defined ISO11 && !defined POSIX && !defined POSIX2008
-constant SIG_HOLD {void(*)(int)}
+macro-constant SIG_HOLD {void(*)(int)}
 #endif
-constant SIG_IGN {void(*)(int)}
+macro-constant SIG_IGN {void(*)(int)}
 
 type sig_atomic_t
 #if !defined ISO && !defined ISO99 && !defined ISO11
@@ -56,42 +56,42 @@ macro SIGRTMIN
 macro SIGRTMAX
 #endif
 
-constant SIGABRT
-constant SIGFPE
-constant SIGILL
-constant SIGINT
-constant SIGSEGV
-constant SIGTERM
+macro-int-constant SIGABRT {int} > 0
+macro-int-constant SIGFPE {int} > 0
+macro-int-constant SIGILL {int} > 0
+macro-int-constant SIGINT {int} > 0
+macro-int-constant SIGSEGV {int} > 0
+macro-int-constant SIGTERM {int} > 0
 
 function void (*signal (int, void(*)(int)))(int)
 function int raise (int)
 
 #if !defined ISO && !defined ISO99 && !defined ISO11
-constant SIGALRM
-constant SIGHUP
-constant SIGIO
-constant SIGKILL
-constant SIGPIPE
-constant SIGQUIT
-constant SIGUSR1
-constant SIGUSR2
-constant SIGCHLD
-constant SIGCONT
-constant SIGSTOP
-constant SIGTSTP
-constant SIGTTIN
-constant SIGTTOU
-constant SIGBUS
-constant SIGPOLL
-constant SIGPROF
-constant SIGSYS
+macro-int-constant SIGALRM {int} > 0
+macro-int-constant SIGHUP {int} > 0
+macro-int-constant SIGIO {int} > 0
+macro-int-constant SIGKILL {int} > 0
+macro-int-constant SIGPIPE {int} > 0
+macro-int-constant SIGQUIT {int} > 0
+macro-int-constant SIGUSR1 {int} > 0
+macro-int-constant SIGUSR2 {int} > 0
+macro-int-constant SIGCHLD {int} > 0
+macro-int-constant SIGCONT {int} > 0
+macro-int-constant SIGSTOP {int} > 0
+macro-int-constant SIGTSTP {int} > 0
+macro-int-constant SIGTTIN {int} > 0
+macro-int-constant SIGTTOU {int} > 0
+macro-int-constant SIGBUS {int} > 0
+macro-int-constant SIGPOLL {int} > 0
+macro-int-constant SIGPROF {int} > 0
+macro-int-constant SIGSYS {int} > 0
 # if !defined POSIX && !defined POSIX2008
-constant SIGTRAP
+macro-int-constant SIGTRAP {int} > 0
 # endif
-constant SIGURG
-constant SIGVTALRM
-constant SIGXCPU
-constant SIGXFSZ
+macro-int-constant SIGURG {int} > 0
+macro-int-constant SIGVTALRM {int} > 0
+macro-int-constant SIGXCPU {int} > 0
+macro-int-constant SIGXFSZ {int} > 0
 
 type {struct sigaction}
 

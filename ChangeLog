@@ -1,3 +1,143 @@
+2012-05-09  Joseph Myers  <joseph@codesourcery.com>
+
+	* conform/data/locale.h-data (NULL): Use macro-constant.  Require
+	== 0.
+	(LC_ALL): Use macro-int-constant.
+	(LC_COLLATE): Likewise.
+	(LC_CTYPE): Likewise.
+	(LC_MESSAGES): Likewise.
+	(LC_MONETARY): Likewise.
+	(LC_NUMERIC): Likewise.
+	(LC_TIME): Likewise.
+	[ISO || ISO99 || ISO11] (LC_MESSAGES): Do not require.
+	(LC_*): Change to LC_[ABCDEFGHIJKLMNOPQRSTUVWXYZ]*.
+	[ISO || ISO99 || ISO11] (*_t): Do not allow.
+	* conform/data/math.h-data (HUGE_VAL): Use macro-constant.
+	Specify type.
+	[C99-based standards] (float_t): Expect type.
+	[C99-based standards] (double_t): Expect type.
+	[C99-based standards] (HUGE_VALF): Use macro-constant.  Specify
+	type.
+	[C99-based standards] (HUGE_VALL): Likewise.
+	[C99-based standards] (INFINITY): Likewise.
+	[C99-based standards] (NAN): Likewise.
+	[C99-based standards] (FP_INFINITE): Use macro-int-constant.
+	[C99-based standards] (FP_NAN): Likewise.
+	[C99-based standards] (FP_NORMAL): Likewise.
+	[C99-based standards] (FP_SUBNORMAL): Likewise.
+	[C99-based standards] (FP_ZERO): Likewise.
+	[C99-based standards] (FP_FAST_FMA): Use
+	optional-macro-int-constant.  Specify type.  Require == 1.
+	[C99-based standards] (FP_FAST_FMAF): Likewise.
+	[C99-based standards] (FP_FAST_FMAL): Likewise.
+	[C99-based standards] (FP_ILOGB0): Use macro-int-constant.
+	[C99-based standards] (FP_ILOGBNAN): Likewise.
+	[C99-based standards] (MATH_ERRNO): Use macro-int-constant.
+	Specify type.
+	[C99-based standards] (MATH_ERREXCEPT): Likewise.
+	[C99-based standards] (math_errhandling): Specify type.
+	[ISO99 || ISO11] (signgam): Do not allow.
+	[non-C99-based standards] (copysignf): Do not allow.
+	[non-C99-based standards] (exp2f): Likewise.
+	[non-C99-based standards] (log2f): Likewise.
+	[non-C99-based standards] (modff): Allow.
+	[non-C99-based standards] (erff): Do not allow.
+	[non-C99-based standards] (erfcf): Likewise.
+	[non-C99-based standards] (gammaf): Likewise.
+	[non-C99-based standards] (hypotf): Likewise.
+	[non-C99-based standards] (j0f): Likewise.
+	[non-C99-based standards] (j1f): Likewise.
+	[non-C99-based standards] (jnf): Likewise.
+	[non-C99-based standards] (lgammaf): Likewise.
+	[non-C99-based standards] (tgammaf): Likewise.
+	[non-C99-based standards] (y0f): Likewise.
+	[non-C99-based standards] (y1f): Likewise.
+	[non-C99-based standards] (ynf): Likewise.
+	[non-C99-based standards] (isnanf): Likewise.
+	[non-C99-based standards] (acoshf): Likewise.
+	[non-C99-based standards] (asinhf): Likewise.
+	[non-C99-based standards] (atanhf): Likewise.
+	[non-C99-based standards] (cbrtf): Likewise.
+	[non-C99-based standards] (expm1f): Likewise.
+	[non-C99-based standards] (ilogbf): Likewise.
+	[non-C99-based standards] (log1pf): Likewise.
+	[non-C99-based standards] (logbf): Likewise.
+	[non-C99-based standards] (nextafterf): Likewise.
+	[non-C99-based standards] (remainderf): Likewise.
+	[non-C99-based standards] (rintf): Likewise.
+	[non-C99-based standards] (scalbf): Likewise.
+	[non-C99-based standards] (copysignl): Likewise.
+	[non-C99-based standards] (exp2l): Likewise.
+	[non-C99-based standards] (log2l): Likewise.
+	[non-C99-based standards] (modfl): Allow.
+	[non-C99-based standards] (erfl): Do not allow.
+	[non-C99-based standards] (erfcl): Likewise.
+	[non-C99-based standards] (gammal): Likewise.
+	[non-C99-based standards] (hypotl): Likewise.
+	[non-C99-based standards] (j0l): Likewise.
+	[non-C99-based standards] (j1l): Likewise.
+	[non-C99-based standards] (jnl): Likewise.
+	[non-C99-based standards] (lgammal): Likewise.
+	[non-C99-based standards] (tgammal): Likewise.
+	[non-C99-based standards] (y0l): Likewise.
+	[non-C99-based standards] (y1l): Likewise.
+	[non-C99-based standards] (ynl): Likewise.
+	[non-C99-based standards] (isnanl): Likewise.
+	[non-C99-based standards] (acoshl): Likewise.
+	[non-C99-based standards] (asinhl): Likewise.
+	[non-C99-based standards] (atanhl): Likewise.
+	[non-C99-based standards] (cbrtl): Likewise.
+	[non-C99-based standards] (expm1l): Likewise.
+	[non-C99-based standards] (ilogbl): Likewise.
+	[non-C99-based standards] (log1pl): Likewise.
+	[non-C99-based standards] (logbl): Likewise.
+	[non-C99-based standards] (nextafterl): Likewise.
+	[non-C99-based standards] (remainderl): Likewise.
+	[non-C99-based standards] (rintl): Likewise.
+	[non-C99-based standards] (scalbl): Likewise.
+	[ISO || ISO99 || ISO11] (*_t): Do not allow.
+	[non-C99-based standards] (FP_*): Do not allow.
+	[C99-based standards] (FP_*): Change to
+	FP_[ABCDEFGHIJKLMNOPQRSTUVWXYZ]*.
+	* conform/data/setjmp.h-data [ISO || ISO99 || ISO11] (*_t): Do not
+	allow.
+	* conform/data/signal.h-data (SIG_DFL): Use macro-constant.
+	(SIG_ERR): Likewise.
+	[X/Open-based standards] (SIG_HOLD): Likewise.
+	(SIG_IGN): Likewise.
+	(SIGABRT): Use macro-int-constant.  Specify type.  Require
+	positive value.
+	(SIGFPE): Likewise.
+	(SIGILL): Likewise.
+	(SIGINT): Likewise.
+	(SIGSEGV): Likewise.
+	(SIGTER): Likewise.
+	[!ISO && !ISO99 && !ISO11] (SIGALRM): Likewise.
+	[!ISO && !ISO99 && !ISO11] (SIGHUP): Likewise.
+	[!ISO && !ISO99 && !ISO11] (SIGIO): Likewise.
+	[!ISO && !ISO99 && !ISO11] (SIGKILL): Likewise.
+	[!ISO && !ISO99 && !ISO11] (SIGPIPE): Likewise.
+	[!ISO && !ISO99 && !ISO11] (SIGQUIT): Likewise.
+	[!ISO && !ISO99 && !ISO11] (SIGUSR1): Likewise.
+	[!ISO && !ISO99 && !ISO11] (SIGUSR2): Likewise.
+	[!ISO && !ISO99 && !ISO11] (SIGCHLD): Likewise.
+	[!ISO && !ISO99 && !ISO11] (SIGCONT): Likewise.
+	[!ISO && !ISO99 && !ISO11] (SIGSTOP): Likewise.
+	[!ISO && !ISO99 && !ISO11] (SIGTSTP): Likewise.
+	[!ISO && !ISO99 && !ISO11] (SIGTTIN): Likewise.
+	[!ISO && !ISO99 && !ISO11] (SIGTTOU): Likewise.
+	[!ISO && !ISO99 && !ISO11] (SIGBUS): Likewise.
+	[!ISO && !ISO99 && !ISO11] (SIGPOLL): Likewise.
+	[!ISO && !ISO99 && !ISO11] (SIGPROF): Likewise.
+	[!ISO && !ISO99 && !ISO11] (SIGSYS): Likewise.
+	[X/Open-based standards] (SIGTRAP): Likewise.
+	[!ISO && !ISO99 && !ISO11] (SIGURG): Likewise.
+	[!ISO && !ISO99 && !ISO11] (SIGVTALRM): Likewise.
+	[!ISO && !ISO99 && !ISO11] (SIGXCPU): Likewise.
+	[!ISO && !ISO99 && !ISO11] (SIGXFSZ): Likewise.
+	* conform/data/stdarg.h-data [ISO || ISO99 || ISO11] (*_t): Do not
+	allow.
+
 2012-05-08  Ian Wienand  <ianw@vmware.com>
 
 	[BZ #14080]

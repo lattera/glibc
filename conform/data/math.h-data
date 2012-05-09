@@ -1,4 +1,4 @@
-constant HUGE_VAL
+macro-constant HUGE_VAL {double}
 
 #if !defined ISO && !defined POSIX
 # if !defined XPG3 && !defined XPG4 && !defined UNIX98
@@ -14,6 +14,8 @@ macro isless
 macro islessequal
 macro islessgreater
 macro isunordered
+type float_t
+type double_t
 # endif
 # if defined XPG3 || defined XPG4 || defined UNIX98
 function double isnan (double)
@@ -37,28 +39,28 @@ constant M_SQRT1_2
 constant MAXFLOAT
 # endif
 # if !defined XPG3 && !defined XPG4 && !defined UNIX98
-constant HUGE_VALF
-constant HUGE_VALL
-constant INFINITY
-constant NAN
+macro-constant HUGE_VALF {float}
+macro-constant HUGE_VALL {long double}
+macro-constant INFINITY {float}
+macro-constant NAN {float}
 
-macro FP_INFINITE
-macro FP_NAN
-macro FP_NORMAL
-macro FP_SUBNORMAL
-macro FP_ZERO
+macro-int-constant FP_INFINITE
+macro-int-constant FP_NAN
+macro-int-constant FP_NORMAL
+macro-int-constant FP_SUBNORMAL
+macro-int-constant FP_ZERO
 
-optional-macro FP_FAST_FMA
-optional-macro FP_FAST_FMAF
-optional-macro FP_FAST_FMAL
+optional-macro-int-constant FP_FAST_FMA {int} == 1
+optional-macro-int-constant FP_FAST_FMAF {int} == 1
+optional-macro-int-constant FP_FAST_FMAL {int} == 1
 
-constant FP_ILOGB0
-constant FP_ILOGBNAN
+macro-int-constant FP_ILOGB0
+macro-int-constant FP_ILOGBNAN
 
-macro MATH_ERRNO == 1
-macro MATH_ERREXCEPT == 2
+macro-int-constant MATH_ERRNO {int} == 1
+macro-int-constant MATH_ERREXCEPT {int} == 2
 
-macro math_errhandling
+macro math_errhandling {int}
 # endif
 #endif
 
@@ -155,7 +157,7 @@ function double nan (const char*)
 #  endif
 # endif
 
-# if !defined POSIX && !defined POSIX2008
+# if !defined ISO99 && !defined ISO11 && !defined POSIX && !defined POSIX2008
 // variable signgam
 allow signgam
 # endif
@@ -303,11 +305,9 @@ allow asinf
 allow atanf
 allow atan2f
 allow ceilf
-allow copysignf
 allow cosf
 allow coshf
 allow expf
-allow exp2f
 allow fabsf
 allow floorf
 allow fmodf
@@ -315,49 +315,22 @@ allow frexpf
 allow ldexpf
 allow logf
 allow log10f
-allow log2f
+allow modff
 allow powf
 allow sinf
 allow sinhf
 allow sqrtf
 allow tanf
 allow tanhf
-allow erff
-allow erfcf
-allow gammaf
-allow hypotf
-allow j0f
-allow j1f
-allow jnf
-allow lgammaf
-allow tgammaf
-allow y0f
-allow y1f
-allow ynf
-allow isnanf
-allow acoshf
-allow asinhf
-allow atanhf
-allow cbrtf
-allow expm1f
-allow ilogbf
-allow log1pf
-allow logbf
-allow nextafterf
-allow remainderf
-allow rintf
-allow scalbf
 
 allow acosl
 allow asinl
 allow atanl
 allow atan2l
 allow ceill
-allow copysignl
 allow cosl
 allow coshl
 allow expl
-allow exp2l
 allow fabsl
 allow floorl
 allow fmodl
@@ -365,41 +338,18 @@ allow frexpl
 allow ldexpl
 allow logl
 allow log10l
-allow log2l
+allow modfl
 allow powl
 allow sinl
 allow sinhl
 allow sqrtl
 allow tanl
 allow tanhl
-allow erfl
-allow erfcl
-allow gammal
-allow hypotl
-allow j0l
-allow j1l
-allow jnl
-allow lgammal
-allow tgammal
-allow y0l
-allow y1l
-allow ynl
-allow isnanl
-allow acoshl
-allow asinhl
-allow atanhl
-allow cbrtl
-allow expm1l
-allow ilogbl
-allow log1pl
-allow logbl
-allow nextafterl
-allow remainderl
-allow rintl
-allow scalbl
 #endif
 
+#if !defined ISO && !defined ISO99 && !defined ISO11
 allow *_t
-// The following expressions are not entirely correct but the current
-// poorfnmatch implementation doesn't grok the right form.
-allow FP_*
+#endif
+#if !defined ISO && !defined POSIX && !defined XPG3 && !defined XPG4 && !defined UNIX98
+allow FP_[ABCDEFGHIJKLMNOPQRSTUVWXYZ]*
+#endif
