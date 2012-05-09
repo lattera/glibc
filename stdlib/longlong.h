@@ -202,7 +202,8 @@ do {									\
 UDItype __umulsidi3 (USItype, USItype);
 #endif
 
-#if defined (__arm__) && !defined (__thumb__) && W_TYPE_SIZE == 32
+#if defined (__arm__) && (defined (__thumb2__) || !defined (__thumb__)) \
+ && W_TYPE_SIZE == 32
 #define add_ssaaaa(sh, sl, ah, al, bh, bl) \
   __asm__ ("adds	%1, %4, %5\n\tadc	%0, %2, %3"		\
 	   : "=r" ((USItype) (sh)),					\
@@ -219,9 +220,12 @@ UDItype __umulsidi3 (USItype, USItype);
 	     "rI" ((USItype) (bh)),					\
 	     "r" ((USItype) (al)),					\
 	     "rI" ((USItype) (bl)) __CLOBBER_CC)
-#define umul_ppmm(xh, xl, a, b) \
-{register USItype __t0, __t1, __t2;					\
-  __asm__ ("%@ Inlined umul_ppmm\n"					\
+# if defined(__ARM_ARCH_2__) || defined(__ARM_ARCH_2A__) \
+     || defined(__ARM_ARCH_3__)
+#  define umul_ppmm(xh, xl, a, b)					\
+  do {									\
+    register USItype __t0, __t1, __t2;					\
+    __asm__ ("%@ Inlined umul_ppmm\n"					\
 	   "	mov	%2, %5, lsr #16\n"				\
 	   "	mov	%0, %6, lsr #16\n"				\
 	   "	bic	%3, %5, %2, lsl #16\n"				\
@@ -238,16 +242,50 @@ UDItype __umulsidi3 (USItype, USItype);
 	     "=r" ((USItype) (xl)),					\
 	     "=&r" (__t0), "=&r" (__t1), "=r" (__t2)			\
 	   : "r" ((USItype) (a)),					\
-	     "r" ((USItype) (b)) __CLOBBER_CC );}
-#define UMUL_TIME 20
-#define UDIV_TIME 100
+	     "r" ((USItype) (b)) __CLOBBER_CC );			\
+  } while (0)
+#  define UMUL_TIME 20
+# else
+#  define umul_ppmm(xh, xl, a, b)					\
+  do {									\
+    /* Generate umull, under compiler control.  */			\
+    register UDItype __t0 = (UDItype)(USItype)(a) * (USItype)(b);	\
+    (xl) = (USItype)__t0;						\
+    (xh) = (USItype)(__t0 >> 32);					\
+  } while (0)
+#  define UMUL_TIME 3
+# endif
+# define UDIV_TIME 100
 #endif /* __arm__ */
 
 #if defined(__arm__)
 /* Let gcc decide how best to implement count_leading_zeros.  */
 #define count_leading_zeros(COUNT,X)	((COUNT) = __builtin_clz (X))
+#define count_trailing_zeros(COUNT,X)   ((COUNT) = __builtin_ctz (X))
 #define COUNT_LEADING_ZEROS_0 32
 #endif
+
+#if defined (__AVR__)
+
+#if W_TYPE_SIZE == 16
+#define count_leading_zeros(COUNT,X)  ((COUNT) = __builtin_clz (X))
+#define count_trailing_zeros(COUNT,X) ((COUNT) = __builtin_ctz (X))
+#define COUNT_LEADING_ZEROS_0 16
+#endif /* W_TYPE_SIZE == 16 */
+
+#if W_TYPE_SIZE == 32
+#define count_leading_zeros(COUNT,X)  ((COUNT) = __builtin_clzl (X))
+#define count_trailing_zeros(COUNT,X) ((COUNT) = __builtin_ctzl (X))
+#define COUNT_LEADING_ZEROS_0 32
+#endif /* W_TYPE_SIZE == 32 */
+
+#if W_TYPE_SIZE == 64
+#define count_leading_zeros(COUNT,X)  ((COUNT) = __builtin_clzll (X))
+#define count_trailing_zeros(COUNT,X) ((COUNT) = __builtin_ctzll (X))
+#define COUNT_LEADING_ZEROS_0 64
+#endif /* W_TYPE_SIZE == 64 */
+
+#endif /* defined (__AVR__) */
 
 #if defined (__CRIS__) && __CRIS_arch_version >= 3
 #define count_leading_zeros(COUNT, X) ((COUNT) = __builtin_clz (X))
@@ -430,8 +468,8 @@ UDItype __umulsidi3 (USItype, USItype);
 	   : "0" ((UDItype) (n0)),					\
 	     "1" ((UDItype) (n1)),					\
 	     "rm" ((UDItype) (dv)))
-#define count_leading_zeros(count, x)	((count) = __builtin_clzl (x))
-#define count_trailing_zeros(count, x)	((count) = __builtin_ctzl (x))
+#define count_leading_zeros(count, x)	((count) = __builtin_clzll (x))
+#define count_trailing_zeros(count, x)	((count) = __builtin_ctzll (x))
 #define UMUL_TIME 40
 #define UDIV_TIME 40
 #endif /* x86_64 */
@@ -1366,6 +1404,36 @@ UDItype __umulsidi3 (USItype, USItype);
 	     : "g" (__xx.__ll), "g" (d));				\
   } while (0)
 #endif /* __vax__ */
+
+#ifdef _TMS320C6X
+#define add_ssaaaa(sh, sl, ah, al, bh, bl) \
+  do									\
+    {									\
+      UDItype __ll;							\
+      __asm__ ("addu .l1 %1, %2, %0"					\
+	       : "=a" (__ll) : "a" (al), "a" (bl));			\
+      (sl) = (USItype)__ll;						\
+      (sh) = ((USItype)(__ll >> 32)) + (ah) + (bh);			\
+    }									\
+  while (0)
+
+#ifdef _TMS320C6400_PLUS
+#define __umulsidi3(u,v) ((UDItype)(USItype)u*(USItype)v)
+#define umul_ppmm(w1, w0, u, v)						\
+  do {									\
+    UDItype __x = (UDItype) (USItype) (u) * (USItype) (v);		\
+    (w1) = (USItype) (__x >> 32);					\
+    (w0) = (USItype) (__x);						\
+  } while (0)
+#endif  /* _TMS320C6400_PLUS */
+
+#define count_leading_zeros(count, x)	((count) = __builtin_clz (x))
+#ifdef _TMS320C6400
+#define count_trailing_zeros(count, x)	((count) = __builtin_ctz (x))
+#endif
+#define UMUL_TIME 4
+#define UDIV_TIME 40
+#endif /* _TMS320C6X */
 
 #if defined (__xtensa__) && W_TYPE_SIZE == 32
 /* This code is not Xtensa-configuration-specific, so rely on the compiler

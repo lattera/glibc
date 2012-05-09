@@ -1,3 +1,7 @@
+2012-05-09  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* stdlib/longlong.h: Updated from GCC.
+
 2012-05-09  Andreas Jaeger  <aj@suse.de>
 
 	* nscd/nscd.c (run_modes): Make named enum, reorder so that
