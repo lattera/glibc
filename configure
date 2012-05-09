@@ -4324,48 +4324,53 @@ while test $# -gt 0; do
   test -n "$enable_debug_configure" &&
   echo "DEBUG: name/Implies $xsrcdir$name/Implies" >&2
 
-  if test -f $xsrcdir$name/Implies; then
-    # Collect more names from the `Implies' file (removing comments).
-    implied_candidate="`sed 's/#.*$//' < $xsrcdir$name/Implies`"
-    implied=
-    for x in $implied_candidate; do
-      found=no
-      if test -d $xsrcdir$name_base/$x; then
-	implied="$implied $name_base/$x";
-	found=yes
-      fi
-      for d in $add_ons_pfx ''; do
-	try="${d}sysdeps/$x"
-	case $d in
-	 /*) try_srcdir= ;;
-	 *) try_srcdir=$srcdir/ ;;
-	esac
-	test -n "$enable_debug_configure" &&
-	 echo "DEBUG: $name implied $x try($d) {$try_srcdir}$try" >&2
-	if test $try != $xsrcdir$name_base/$x && test -d $try_srcdir$try;
-	then
-	  implied="$implied $try"
+  for implies_file in Implies Implies-before Implies-after; do
+    implies_type=`echo $implies_file | sed s/-/_/`
+    eval ${implies_type}=
+    if test -f $xsrcdir$name/$implies_file; then
+      # Collect more names from the `Implies' file (removing comments).
+      implied_candidate="`sed 's/#.*$//' < $xsrcdir$name/$implies_file`"
+      for x in $implied_candidate; do
+	found=no
+	if test -d $xsrcdir$name_base/$x; then
+	  eval "${implies_type}=\"\$${implies_type} \$name_base/\$x\""
 	  found=yes
-	  case "$sysnames_add_ons" in
-	  *" $d "*) ;;
-	  *|'') sysnames_add_ons="$sysnames_add_ons $d" ;;
+	fi
+	for d in $add_ons_pfx ''; do
+	  try="${d}sysdeps/$x"
+	  case $d in
+	   /*) try_srcdir= ;;
+	   *) try_srcdir=$srcdir/ ;;
 	  esac
+	  test -n "$enable_debug_configure" &&
+	   echo "DEBUG: $name $implies_file $x try($d) {$try_srcdir}$try" >&2
+	  if test $try != $xsrcdir$name_base/$x && test -d $try_srcdir$try;
+	  then
+	    eval "${implies_type}=\"\$${implies_type} \$try\""
+	    found=yes
+	    case "$sysnames_add_ons" in
+	    *" $d "*) ;;
+	    *|'') sysnames_add_ons="$sysnames_add_ons $d" ;;
+	    esac
+	  fi
+	done
+	if test $found = no; then
+	  { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: $name/$implies_file specifies nonexistent $x" >&5
+$as_echo "$as_me: WARNING: $name/$implies_file specifies nonexistent $x" >&2;}
 	fi
       done
-      if test $found = no; then
-	{ $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: $name/Implies specifies nonexistent $x" >&5
-$as_echo "$as_me: WARNING: $name/Implies specifies nonexistent $x" >&2;}
-      fi
-    done
-  else
-    implied=
-  fi
+    fi
+  done
 
   # Add NAME to the list of names.
   names="$names $name"
 
   # Find the parent of NAME, using the empty string if it has none.
   parent="`echo $name | sed -n -e 's=/[^/]*$==' -e '/sysdeps$/q' -e p`"
+
+  test -n "$enable_debug_configure" &&
+    echo "DEBUG: $name Implies='$Implies' rest='$*' parent='$parent' \
+Implies_before='$Implies_after' Implies_after='$Implies_after'" >&2
 
   # Add the names implied by NAME, and NAME's parent (if it has one), to
   # the list of names to be processed (the argument list).  We prepend the
@@ -4374,7 +4379,7 @@ $as_echo "$as_me: WARNING: $name/Implies specifies nonexistent $x" >&2;}
   # configuration components; this ensures that for sysv4, unix/common
   # (implied by unix/sysv/sysv4) comes before unix/sysv (in ostry (here $*)
   # after sysv4).
-  sysnames="`echo $implied $* $parent`"
+  sysnames="`echo $Implies $* $Implies_before $parent $Implies_after`"
   test -n "$sysnames" && set $sysnames
 done
 

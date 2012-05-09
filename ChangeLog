@@ -1,3 +1,9 @@
+2012-05-15  Roland McGrath  <roland@hack.frob.com>
+
+	* configure.in (sysnames): Look for Implies-before and Implies-after
+	files.
+	* configure: Regenerated.
+
 2012-05-15  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/unix/sysv/linux/x86_64/sigaction.c (RESTORE2): Replace
