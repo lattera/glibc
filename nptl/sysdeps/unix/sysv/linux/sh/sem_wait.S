@@ -33,18 +33,31 @@
 	.globl	__new_sem_wait
 	.type	__new_sem_wait,@function
 	.align	5
+	cfi_startproc
 __new_sem_wait:
 .LSTARTCODE:
+#ifdef SHARED
+	cfi_personality(DW_EH_PE_pcrel | DW_EH_PE_sdata4 | DW_EH_PE_indirect,
+			DW.ref.__gcc_personality_v0)
+	cfi_lsda(DW_EH_PE_pcrel | DW_EH_PE_sdata4, .LexceptSTART)
+#else
+	cfi_personality(DW_EH_PE_absptr, __gcc_personality_v0)
+	cfi_lsda(DW_EH_PE_absptr, .LexceptSTART)
+#endif
 	mov.l	r8, @-r15
-.Lpush_r8:
+	cfi_adjust_cfa_offset (4)
+	cfi_rel_offset (r8, 0)
 	mov.l	r10, @-r15
-.Lpush_r10:
+	cfi_adjust_cfa_offset (4)
+	cfi_rel_offset (r10, 0)
 	mov.l	r12, @-r15
-.Lpush_r12:
+	cfi_adjust_cfa_offset (4)
+	cfi_rel_offset (r12, 0)
 	sts.l	pr, @-r15
-.Lpush_pr:
-	mov	r4, r8
+	cfi_adjust_cfa_offset (4)
+	cfi_rel_offset (pr, 0)
 
+	mov	r4, r8
 	mov.l	@r8, r0
 2:
 	tst	r0, r0
@@ -174,15 +187,15 @@ sem_wait_cleanup:
 	.long	_Unwind_Resume
 #endif
 .LENDCODE:
+	cfi_endproc
 	.size	sem_wait_cleanup,.-sem_wait_cleanup
 
 
 	.section .gcc_except_table,"a",@progbits
 .LexceptSTART:
-	.byte	0xff				! @LPStart format (omit)
-	.byte	0xff				! @TType format (omit)
-	.byte	0x01				! call-site format
-						! DW_EH_PE_uleb128
+	.byte	DW_EH_PE_omit			! @LPStart format (omit)
+	.byte	DW_EH_PE_omit			! @TType format (omit)
+	.byte	DW_EH_PE_uleb128		! call-site format
 	.uleb128 .Lcstend-.Lcstbegin
 .Lcstbegin:
 	.uleb128 .LcleanupSTART-.LSTARTCODE
@@ -194,91 +207,6 @@ sem_wait_cleanup:
 	.uleb128 0
 	.uleb128  0
 .Lcstend:
-
-
-	.section .eh_frame,"a",@progbits
-.LSTARTFRAME:
-	.ualong	.LENDCIE-.LSTARTCIE		! Length of the CIE.
-.LSTARTCIE:
-	.ualong	0				! CIE ID.
-	.byte	1				! Version number.
-#ifdef SHARED
-	.string	"zPLR"				! NUL-terminated augmentation
-						! string.
-#else
-	.string	"zPL"				! NUL-terminated augmentation
-						! string.
-#endif
-	.uleb128 1				! Code alignment factor.
-	.sleb128 -4				! Data alignment factor.
-	.byte	0x11				! Return address register
-						! column.
-#ifdef SHARED
-	.uleb128 7				! Augmentation value length.
-	.byte	0x9b				! Personality: DW_EH_PE_pcrel
-						! + DW_EH_PE_sdata4
-						! + DW_EH_PE_indirect
-	.ualong	DW.ref.__gcc_personality_v0-.
-	.byte	0x1b				! LSDA Encoding: DW_EH_PE_pcrel
-						! + DW_EH_PE_sdata4.
-	.byte	0x1b				! FDE Encoding: DW_EH_PE_pcrel
-						! + DW_EH_PE_sdata4.
-#else
-	.uleb128 6				! Augmentation value length.
-	.byte	0x0				! Personality: absolute
-	.ualong	__gcc_personality_v0
-	.byte	0x0				! LSDA Encoding: absolute
-#endif
-	.byte 0x0c				! DW_CFA_def_cfa
-	.uleb128 0xf
-	.uleb128 0
-	.align 4
-.LENDCIE:
-
-	.ualong	.LENDFDE-.LSTARTFDE		! Length of the FDE.
-.LSTARTFDE:
-	.ualong	.LSTARTFDE-.LSTARTFRAME		! CIE pointer.
-#ifdef SHARED
-	.ualong	.LSTARTCODE-.			! PC-relative start address
-						! of the code.
-#else
-	.ualong	.LSTARTCODE			! Start address of the code.
-#endif
-	.ualong	.LENDCODE-.LSTARTCODE		! Length of the code.
-	.uleb128 4				! Augmentation size
-#ifdef SHARED
-	.ualong	.LexceptSTART-.
-#else
-	.ualong	.LexceptSTART
-#endif
-
-	.byte	4				! DW_CFA_advance_loc4
-	.ualong	.Lpush_r8-.LSTARTCODE
-	.byte	14				! DW_CFA_def_cfa_offset
-	.uleb128 4
-	.byte   0x88				! DW_CFA_offset r8
-	.uleb128 1
-	.byte	4				! DW_CFA_advance_loc4
-	.ualong	.Lpush_r10-.Lpush_r8
-	.byte	14				! DW_CFA_def_cfa_offset
-	.uleb128 8
-	.byte   0x8a				! DW_CFA_offset r10
-	.uleb128 2
-	.byte	4				! DW_CFA_advance_loc4
-	.ualong	.Lpush_r12-.Lpush_r10
-	.byte	14				! DW_CFA_def_cfa_offset
-	.uleb128 12
-	.byte   0x8c				! DW_CFA_offset r12
-	.uleb128 3
-	.byte	4				! DW_CFA_advance_loc4
-	.ualong	.Lpush_pr-.Lpush_r12
-	.byte	14				! DW_CFA_def_cfa_offset
-	.uleb128 16
-	.byte   0x91				! DW_CFA_offset pr
-	.uleb128 4
-	.align	4
-.LENDFDE:
-
 
 #ifdef SHARED
 	.hidden	DW.ref.__gcc_personality_v0

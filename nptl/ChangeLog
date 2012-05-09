@@ -1,3 +1,12 @@
+2012-05-09  Chung-Lin Tang  <cltang@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/sh/pthread_cond_timedwait.S
+	(__pthread_cond_timedwait): Use CFI directives.
+	* sysdeps/unix/sysv/linux/sh/pthread_cond_wait.S
+	(__pthread_cond_wait): Likewise.
+	* sysdeps/unix/sysv/linux/sh/sem_timedwait.S (sem_timedwait): Likewise.
+	* sysdeps/unix/sysv/linux/sh/sem_wait.S (__new_sem_wait): Likewise.
+
 2012-05-03  David S. Miller  <davem@davemloft.net>
 
 	* sysdeps/sparc/sparc64/pthread_spin_unlock.S: Fix thinko, we
