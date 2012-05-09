@@ -1,3 +1,12 @@
+2012-05-09  Andreas Jaeger  <aj@suse.de>
+
+	[BZ #14083]
+	* string/bits/string2.h (strspn) [__GNUC_PREREQ(3, 2) &&
+	!_HAVE_STRING_ARCH_strspn]: Cast zero to size_t to avoid
+	-Wconversion warning.
+	(strspn) [!__GNUC_PREREQ(3, 2) && !_HAVE_STRING_ARCH_strspn]:
+	Likewise.
+
 2012-05-09  Joseph Myers  <joseph@codesourcery.com>
 
 	* conform/data/locale.h-data (NULL): Use macro-constant.  Require
