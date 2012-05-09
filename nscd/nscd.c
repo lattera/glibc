@@ -72,17 +72,19 @@ int do_shutdown;
 int disabled_passwd;
 int disabled_group;
 
-static enum
+typedef enum
 {
+  /* Running in background as daemon.  */
+  RUN_DAEMONIZE,
   /* Running in foreground but otherwise behave like a daemon,
      i.e., detach from terminal and use syslog.  This allows
      better integration with services like systemd.  */
   RUN_FOREGROUND,
-  /* Running in background as daemon.  */
-  RUN_DAEMONIZE,
   /* Run in foreground in debug mode.  */
   RUN_DEBUG
-} run_mode = RUN_DAEMONIZE;
+} run_modes;
+
+static run_modes run_mode = RUN_DAEMONIZE;
 
 static const char *conffile = _PATH_NSCDCONF;
 
@@ -115,7 +117,7 @@ static const struct argp_option options[] =
   { "debug", 'd', NULL, 0,
     N_("Do not fork and display messages on the current tty") },
   { "foreground", 'F', NULL, 0,
-    N_("Do not fork, but otherwise behave like a deamon") },
+    N_("Do not fork, but otherwise behave like a daemon") },
   { "nthreads", 't', N_("NUMBER"), 0, N_("Start NUMBER threads") },
   { "shutdown", 'K', NULL, 0, N_("Shut the server down") },
   { "statistics", 'g', NULL, 0, N_("Print current configuration statistics") },
@@ -200,8 +202,6 @@ main (int argc, char **argv)
 	  if (pid != 0)
 	    exit (0);
 	}
-      else
-	fprintf (stderr, _("further output sent to syslog\n"));
 
       int nullfd = open (_PATH_DEVNULL, O_RDWR);
       if (nullfd != -1)

@@ -1,5 +1,11 @@
 2012-05-09  Andreas Jaeger  <aj@suse.de>
 
+	* nscd/nscd.c (run_modes): Make named enum, reorder so that
+	default is first entry.
+	(run_mode): Set type.
+	(main): Remove informal message about syslog.
+	(options): Fix typo.
+
         [BZ #14053]
         * sysdeps/x86_64/fpu/bits/mathinline.h (lrintf): Add __volatile
 	to asm.
