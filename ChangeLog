@@ -1,3 +1,9 @@
+2012-05-09  Andreas Jaeger  <aj@suse.de>
+	    Pedro Alves  <palves@redhat.com>
+
+	* nscd/nscd.c (run_mode): Use enum.
+	(main): Cleanup coding style issue.
+
 2012-05-09  Alexandre Oliva  <aoliva@redhat.com>
 	    Andreas Jaeger  <aj@suse.de>
 

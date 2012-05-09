@@ -72,7 +72,7 @@ int do_shutdown;
 int disabled_passwd;
 int disabled_group;
 
-enum
+static enum
 {
   /* Running in foreground but otherwise behave like a daemon,
      i.e., detach from terminal and use syslog.  This allows
@@ -82,8 +82,7 @@ enum
   RUN_DAEMONIZE,
   /* Run in foreground in debug mode.  */
   RUN_DEBUG
-};
-static int run_mode = RUN_DAEMONIZE;
+} run_mode = RUN_DAEMONIZE;
 
 static const char *conffile = _PATH_NSCDCONF;
 
@@ -187,7 +186,7 @@ main (int argc, char **argv)
   /* Determine page size.  */
   pagesize_m1 = getpagesize () - 1;
 
-  if ((run_mode == RUN_DAEMONIZE) || (run_mode == RUN_FOREGROUND))
+  if (run_mode == RUN_DAEMONIZE || run_mode == RUN_FOREGROUND)
     {
       int i;
       pid_t pid;
