@@ -1,5 +1,5 @@
 /* Create simple DB database from textual input.
-   Copyright (C) 1996-2000, 2011, 2012 Free Software Foundation, Inc.
+   Copyright (C) 1996-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -32,7 +32,9 @@
 #include <string.h>
 #include <unistd.h>
 #include <sys/mman.h>
+#include <sys/param.h>
 #include <sys/stat.h>
+#include <sys/uio.h>
 #include "nss_db/nss_db.h"
 
 /* Get libc version number.  */

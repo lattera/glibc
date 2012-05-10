@@ -20,8 +20,10 @@
 #include <ctype.h>
 #include <errno.h>
 #include <grp.h>
+#include <limits.h>
 #include <paths.h>
 #include <string.h>
+#include <sys/param.h>
 
 #include "nss_db.h"
 
