@@ -1,3 +1,9 @@
+2012-05-10  Pino Toscano  <toscano.pino@tiscali.it>
+
+	* hurd/hurdselect.c (_hurd_select): Return EINVAL for negative
+	TIMEOUT values.  Return EINVAL for NFDS values either negative or
+	greater than FD_SETSIZE.
+
 2012-05-10  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
 	* sysdeps/mach/hurd/brk.c (_hurd_set_brk): When more space needs to be
