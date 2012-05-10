@@ -1,5 +1,8 @@
 2012-05-10  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
+	* sysdeps/mach/hurd/xmknodat.c (__xmknodat): Deallocate NODE port only
+	if __dir_mkfile succeeded.
+
 	* sysdeps/mach/hurd/dup3.c: Lock _hurd_dtable_lock before
 	checking for _hurd_dtablesize.  Unlock it right after having
 	finished _hurd_dtable allocation.
