@@ -135,6 +135,9 @@ extern int __libc_accept (int __fd, __SOCKADDR_ARG __addr,
 			  socklen_t *__restrict __addr_len)
      __THROW;
 libc_hidden_proto (accept)
+extern int __libc_accept4 (int __fd, __SOCKADDR_ARG __addr,
+			   socklen_t *__restrict __addr_len, int __flags)
+     __THROW;
 
 /* Return the length of a `sockaddr' structure.  */
 #ifdef _HAVE_SA_LEN
