@@ -1,3 +1,9 @@
+2012-05-10  Pino Toscano  <toscano.pino@tiscali.it>
+
+	* sysdeps/mach/nanosleep.c: Return EINVAL for invalid values of
+	REQUESTED_TIME.  Properly set the remaining time and return EINTR
+	if interrupted.
+
 2012-05-10  Thomas Schwinge  <thomas@schwinge.name>
 
 	* sysdeps/mach/hurd/Makefile ($(common-objpfx)linkobj/libc.so):
@@ -5,13 +11,13 @@
 
 2012-05-10  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
-        * sysdeps/generic/ldsodefs.h [LIBC_STACK_END_NOT_RELRO]
-        (__libc_stack_end): Do not use attribute_relro.
-        * sysdeps/mach/hurd/dl-sysdep.h (LIBC_STACK_END_NOT_RELRO): Define.
-        * sysdeps/mach/hurd/i386/init-first.c (init): Update __libc_stack_end
+	* sysdeps/generic/ldsodefs.h [LIBC_STACK_END_NOT_RELRO]
+	(__libc_stack_end): Do not use attribute_relro.
+	* sysdeps/mach/hurd/dl-sysdep.h (LIBC_STACK_END_NOT_RELRO): Define.
+	* sysdeps/mach/hurd/i386/init-first.c (init): Update __libc_stack_end
 	to libthread-provided value.
-        * sysdeps/mach/hurd/dl-sysdep.c (__libc_stack_end): Do not use
-        attribute_relro.
+	* sysdeps/mach/hurd/dl-sysdep.c (__libc_stack_end): Do not use
+	attribute_relro.
 
 2012-05-10  Thomas Schwinge  <thomas@schwinge.name>
 
@@ -36,7 +42,7 @@
 
 2012-05-10  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
-        * sysdeps/mach/hurd/setitimer.c (setitimer_locked): Use common exit
+	* sysdeps/mach/hurd/setitimer.c (setitimer_locked): Use common exit
 	path instead of returning without unlocking.
 
 	* sysdeps/mach/hurd/bits/ioctls.h (_IOIW): New macro for
@@ -63,16 +69,16 @@
 
 	* sysdeps/mach/hurd/dl-sysdep.c: Conditionalize contents on [SHARED].
 
-        * hurd/hurd/fd.h (_hurd_fd_get): Call HURD_CRITICAL_BEGIN/
-        HURD_CRITICAL_END around holding _hurd_dtable_lock.
-        * sysdeps/mach/hurd/dirfd (dirfd): Likewise.
-        * sysdeps/mach/hurd/opendir.c (_hurd_fd_opendir): Call
-        HURD_CRITICAL_BEGIN/HURD_CRITICAL_END around holding
-        d->port.lock.
+	* hurd/hurd/fd.h (_hurd_fd_get): Call HURD_CRITICAL_BEGIN/
+	HURD_CRITICAL_END around holding _hurd_dtable_lock.
+	* sysdeps/mach/hurd/dirfd (dirfd): Likewise.
+	* sysdeps/mach/hurd/opendir.c (_hurd_fd_opendir): Call
+	HURD_CRITICAL_BEGIN/HURD_CRITICAL_END around holding
+	d->port.lock.
 
-        * hurd/catch-signal.c (hurd_catch_signal): Use sigsetjmp/siglongjmp
-        instead of setjmp/longjmp to restore the signal mask.  Call sigsetjmp
-        when handler == SIG_ERR, not when handler != SIG_ERR.
+	* hurd/catch-signal.c (hurd_catch_signal): Use sigsetjmp/siglongjmp
+	instead of setjmp/longjmp to restore the signal mask.  Call sigsetjmp
+	when handler == SIG_ERR, not when handler != SIG_ERR.
 
 2012-05-10  Thomas Schwinge  <thomas@schwinge.name>
 
@@ -95,7 +101,7 @@
 
 2012-05-10  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
-        * bits/in.h (SOL_IP, SOL_IPV6, SOL_ICMPV6): New macros.
+	* bits/in.h (SOL_IP, SOL_IPV6, SOL_ICMPV6): New macros.
 
 2012-05-10  Thomas Schwinge  <thomas@schwinge.name>
 

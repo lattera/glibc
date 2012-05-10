@@ -1,5 +1,5 @@
 /* nanosleep -- sleep for a period specified with a struct timespec
-   Copyright (C) 2002 Free Software Foundation, Inc.
+   Copyright (C) 2002-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -27,6 +27,15 @@ __nanosleep (const struct timespec *requested_time,
 {
   mach_port_t recv;
   struct timeval before, after;
+
+  if (requested_time->tv_sec < 0
+      || requested_time->tv_nsec < 0
+      || requested_time->tv_nsec >= 1000000000)
+    {
+      errno = EINVAL;
+      return -1;
+    }
+
   const mach_msg_timeout_t ms
     = requested_time->tv_sec * 1000
     + (requested_time->tv_nsec + 999999) / 1000000;
@@ -35,16 +44,22 @@ __nanosleep (const struct timespec *requested_time,
 
   if (remaining && __gettimeofday (&before, NULL) < 0)
     return -1;
-  (void) __mach_msg (NULL, MACH_RCV_MSG|MACH_RCV_TIMEOUT|MACH_RCV_INTERRUPT,
-		     0, 0, recv, ms, MACH_PORT_NULL);
+  error_t err = __mach_msg (NULL, MACH_RCV_MSG|MACH_RCV_TIMEOUT|MACH_RCV_INTERRUPT,
+			    0, 0, recv, ms, MACH_PORT_NULL);
   __mach_port_destroy (mach_task_self (), recv);
-  if (remaining && __gettimeofday (&after, NULL) < 0)
-    return -1;
-
-  if (remaining)
+  if (err == EMACH_RCV_INTERRUPTED)
     {
-      timersub (&after, &before, &after);
-      TIMEVAL_TO_TIMESPEC (&after, remaining);
+      if (remaining && __gettimeofday (&after, NULL) >= 0)
+	{
+	  struct timeval req_time, elapsed, rem;
+	  TIMESPEC_TO_TIMEVAL (&req_time, requested_time);
+	  timersub (&after, &before, &elapsed);
+	  timersub (&req_time, &elapsed, &rem);
+	  TIMEVAL_TO_TIMESPEC (&rem, remaining);
+	}
+
+      errno = EINTR;
+      return -1;
     }
 
   return 0;
