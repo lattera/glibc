@@ -1,3 +1,8 @@
+2012-05-10  Roland McGrath  <roland@hack.frob.com>
+
+	* sysdeps/x86_64/dl-machine.h (elf_machine_rela): Fix typo in last
+	change.  Update copyright years.
+
 2012-05-10  Joseph Myers  <joseph@codesourcery.com>
 
 	* include/stdc-predef.h (__STDC_NO_THREADS__): Define.

@@ -1,5 +1,5 @@
 /* Machine-dependent ELF dynamic relocation inline functions.  x86-64 version.
-   Copyright (C) 2001-2006, 2008-2010, 2011 Free Software Foundation, Inc.
+   Copyright (C) 2001-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Andreas Jaeger <aj@suse.de>.
 
@@ -336,7 +336,7 @@ elf_machine_rela (struct link_map *map, const ElfW(Rela) *reloc,
 		 bits but the GOT entry is 64 bits wide and the whole
 		 64-bit entry is used as a signed quantity, so we need
 		 to sign-extend the computed value to 64 bits.  */
-	      *(Elf64_Sxword *) reloc_addr = (Elf64_Sxword) (Elf32_Sxword) value;
+	      *(Elf64_Sxword *) reloc_addr = (Elf64_Sxword) (Elf32_Sword) value;
 #   else
 	      *reloc_addr = value;
 #   endif
