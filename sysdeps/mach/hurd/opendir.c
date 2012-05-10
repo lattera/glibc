@@ -1,5 +1,4 @@
-/* Copyright (C) 1993,1994,1995,1996,1997,1998,2001,2003,2005,2006
-	Free Software Foundation, Inc.
+/* Copyright (C) 1993-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -50,9 +49,11 @@ _hurd_fd_opendir (struct hurd_fd *d)
     return NULL;
 
   /* Set the descriptor to close on exec. */
+  HURD_CRITICAL_BEGIN;
   __spin_lock (&d->port.lock);
   d->flags |= FD_CLOEXEC;
   __spin_unlock (&d->port.lock);
+  HURD_CRITICAL_END;
 
   dirp->__fd = d;
   dirp->__data = dirp->__ptr = NULL;

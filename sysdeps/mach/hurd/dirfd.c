@@ -1,5 +1,5 @@
 /* dirfd -- Return the file descriptor used by a DIR stream.  Hurd version.
-   Copyright (C) 1995, 1996 Free Software Foundation, Inc.
+   Copyright (C) 1995-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -25,6 +25,8 @@ int
 dirfd (DIR *dirp)
 {
   int fd;
+
+  HURD_CRITICAL_BEGIN;
   __mutex_lock (&_hurd_dtable_lock);
   for (fd = 0; fd < _hurd_dtablesize; ++fd)
     if (_hurd_dtable[fd] == dirp->__fd)
@@ -35,6 +37,7 @@ dirfd (DIR *dirp)
       fd = -1;
     }
   __mutex_unlock (&_hurd_dtable_lock);
+  HURD_CRITICAL_END;
 
   return fd;
 }

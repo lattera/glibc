@@ -1,5 +1,12 @@
 2012-05-10  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
+        * hurd/hurd/fd.h (_hurd_fd_get): Call HURD_CRITICAL_BEGIN/
+        HURD_CRITICAL_END around holding _hurd_dtable_lock.
+        * sysdeps/mach/hurd/dirfd (dirfd): Likewise.
+        * sysdeps/mach/hurd/opendir.c (_hurd_fd_opendir): Call
+        HURD_CRITICAL_BEGIN/HURD_CRITICAL_END around holding
+        d->port.lock.
+
         * hurd/catch-signal.c (hurd_catch_signal): Use sigsetjmp/siglongjmp
         instead of setjmp/longjmp to restore the signal mask.  Call sigsetjmp
         when handler == SIG_ERR, not when handler != SIG_ERR.
