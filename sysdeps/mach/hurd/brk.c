@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,92,93,94,95,96,97,99,2000 Free Software Foundation, Inc.
+/* Copyright (C) 1991-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -63,7 +63,7 @@ weak_alias (__brk, brk)
 int
 _hurd_set_brk (vm_address_t addr)
 {
-  error_t err;
+  error_t err = 0;
   vm_address_t pagend = round_page (addr);
   vm_address_t pagebrk = round_page (_hurd_brk);
   long int rlimit;
@@ -100,8 +100,22 @@ _hurd_set_brk (vm_address_t addr)
 
   if (pagend > _hurd_data_end)
     {
+      vm_address_t alloc_start = _hurd_data_end;
+
       /* We didn't allocate enough space!  Hopefully we can get some more!  */
-      err = __vm_allocate (__mach_task_self (), &pagebrk, pagend - pagebrk, 0);
+
+      if (_hurd_data_end > pagebrk)
+	/* First finish allocation.  */
+	err = __vm_protect (__mach_task_self (), pagebrk,
+			    alloc_start - pagebrk, 0,
+			    VM_PROT_READ|VM_PROT_WRITE|VM_PROT_EXECUTE);
+      if (! err)
+	_hurd_brk = alloc_start;
+
+      if (! err)
+	err = __vm_allocate (__mach_task_self (), &alloc_start,
+			     pagend - alloc_start, 0);
+
       if (! err)
 	_hurd_data_end = pagend;
     }
