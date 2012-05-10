@@ -1,3 +1,8 @@
+2012-05-10  Thomas Schwinge  <thomas@schwinge.name>
+
+	* sysdeps/mach/hurd/Makefile ($(common-objpfx)linkobj/libc.so):
+	Depend on against $(link-rpcuserlibs).
+
 2012-05-10  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
         * sysdeps/generic/ldsodefs.h [LIBC_STACK_END_NOT_RELRO]
