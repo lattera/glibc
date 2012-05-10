@@ -1,7 +1,12 @@
+2012-05-10  Pino Toscano  <toscano.pino@tiscali.it>
+
+	* sysdeps/mach/hurd/recvfrom.c (__recvfrom): Check also for a null
+	address port.  Set ADDR_LEN to 0 when not filling ADDRARG.
+
 2012-05-10  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
-        * sysdeps/mach/hurd/readlinkat.c: New file, heavily derived from
-        sysdeps/mach/hurd/readlink.c.
+	* sysdeps/mach/hurd/readlinkat.c: New file, heavily derived from
+	sysdeps/mach/hurd/readlink.c.
 
 	* posix/tst-sysconf.c (posix_options): Only use
 	_POSIX_PRIORITIZED_IO, _POSIX_PRIORITY_SCHEDULING, and
