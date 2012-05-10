@@ -1,5 +1,9 @@
 2012-05-10  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
+	* sysdeps/generic/paths.h (_PATH_MAN): Set to "/usr/share/man"
+	(_PATH_PRESERVE): Set to "/var/lib".
+	(_PATH_RWHODIR): Set to "/var/spool/rwho".
+
 	* sysdeps/mach/hurd/openat.c (__openat): Set type of MODE to mode_t
 	instead of int.
 
