@@ -1,5 +1,8 @@
 2012-05-10  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
+	* sysdeps/mach/hurd/openat.c (__openat): Set type of MODE to mode_t
+	instead of int.
+
 	* sysdeps/mach/hurd/xmknodat.c (__xmknodat): Deallocate NODE port only
 	if __dir_mkfile succeeded.
 

@@ -1,5 +1,5 @@
 /* openat -- Open a file named relative to an open directory.  Hurd version.
-   Copyright (C) 2006 Free Software Foundation, Inc.
+   Copyright (C) 2006-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -34,14 +34,14 @@ __openat (fd, file, oflag)
      const char *file;
      int oflag;
 {
-  int mode;
+  mode_t mode;
   io_t port;
 
   if (oflag & O_CREAT)
     {
       va_list arg;
       va_start (arg, oflag);
-      mode = va_arg (arg, int);
+      mode = va_arg (arg, mode_t);
       va_end (arg);
     }
   else
