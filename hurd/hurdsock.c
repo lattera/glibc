@@ -1,5 +1,5 @@
 /* _hurd_socket_server - Find the server for a socket domain.
-   Copyright (C) 1991,92,93,94,95,97,99 Free Software Foundation, Inc.
+   Copyright (C) 1991-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -45,6 +45,12 @@ socket_t
 _hurd_socket_server (int domain, int dead)
 {
   socket_t server;
+
+  if (domain < 0)
+    {
+      errno = EAFNOSUPPORT;
+      return MACH_PORT_NULL;
+    }
 
   HURD_CRITICAL_BEGIN;
   __mutex_lock (&lock);

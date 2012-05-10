@@ -1,3 +1,8 @@
+2012-05-10  Pino Toscano  <toscano.pino@tiscali.it>
+
+	* hurd/hurdsock.c (_hurd_socket_server): Check for negative domains,
+	and reject them.
+
 2012-05-10  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
 	* sysdeps/mach/hurd/setresgid.c (__setresgid): Handle the -1 case,
