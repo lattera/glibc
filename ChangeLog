@@ -1,3 +1,16 @@
+2012-05-09  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
+	[BZ #13954]
+	[BZ #13955]
+	[BZ #13956]
+	* sysdeps/ieee754/dbl-64/s_logb.c (__logb): Fix for subnormal number.
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_logb.c (__logb): Likewise.
+	* sysdeps/ieee754/flt-32/s_logbf.c (__logf): Likewise.
+	* sysdeps/ieee754/ldbl-128/s_logbl.c (__logbl): Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_logbl.c (__logbl): Likewise.
+	* sysdeps/ieee754/ldbl-96/s_logbl.c (__logbl): Likewise.
+	* math/libm-test.inc (logb_test) : Additional logb tests.
+
 2012-05-09  Andreas Schwab  <schwab@linux-m68k.org>
 	    Andreas Jaeger  <aj@suse.de>
 

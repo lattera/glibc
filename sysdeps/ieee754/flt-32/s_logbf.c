@@ -13,23 +13,27 @@
  * ====================================================
  */
 
-#if defined(LIBM_SCCS) && !defined(lint)
-static char rcsid[] = "$NetBSD: s_logbf.c,v 1.4 1995/05/10 20:47:51 jtc Exp $";
-#endif
-
 #include <math.h>
 #include <math_private.h>
 
-float __logbf(float x)
+float
+__logbf (float x)
 {
-	int32_t ix;
-	GET_FLOAT_WORD(ix,x);
-	ix &= 0x7fffffff;			/* high |x| */
-	if(ix==0) return (float)-1.0/fabsf(x);
-	if(ix>=0x7f800000) return x*x;
-	if((ix>>=23)==0) 			/* IEEE 754 logb */
-		return -126.0; 
-	else
-		return (float) (ix-127); 
+  int32_t ix, rix;
+
+  GET_FLOAT_WORD (ix, x);
+  ix &= 0x7fffffff;		/* high |x| */
+  if (ix == 0)
+    return (float) -1.0 / fabsf (x);
+  if (ix >= 0x7f800000)
+    return x * x;
+  if (__builtin_expect ((rix = ix >> 23) == 0, 0))
+    {
+      /* POSIX specifies that denormal number is treated as
+         though it were normalized.  */
+      int m = (ix == 0) ? 0 : __builtin_clz (ix);
+      return -126.0 + (float)(8 - m);
+    }
+  return (float) (rix - 127);
 }
 weak_alias (__logbf, logbf)

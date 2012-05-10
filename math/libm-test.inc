@@ -5376,6 +5376,22 @@ logb_test (void)
   TEST_f_f (logb, 1024, 10);
   TEST_f_f (logb, -2000, 10);
 
+  TEST_f_f (logb, 0x0.1p-127, -131);
+  TEST_f_f (logb, 0x0.01p-127, -135);
+  TEST_f_f (logb, 0x0.011p-127, -135);
+#ifndef TEST_FLOAT
+  TEST_f_f (logb, 0x0.8p-1022, -1023);
+  TEST_f_f (logb, 0x0.1p-1022, -1026);
+  TEST_f_f (logb, 0x0.00111p-1022, -1034);
+  TEST_f_f (logb, 0x0.00001p-1022, -1042);
+  TEST_f_f (logb, 0x0.000011p-1022, -1042);
+  TEST_f_f (logb, 0x0.0000000000001p-1022, -1074);
+#endif
+#if defined TEST_LDOUBLE && LDBL_MIN_EXP - LDBL_MANT_DIG <= -16400
+  TEST_f_f (logb, 0x1p-16400L, -16400);
+  TEST_f_f (logb, 0x.00000000001p-16382L, -16426);
+#endif
+
   END (logb);
 }
 
