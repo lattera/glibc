@@ -1,3 +1,10 @@
+2012-05-10  Thomas Schwinge  <thomas@schwinge.name>
+
+	* sysdeps/mach/hurd/i386/____longjmp_chk.S: New file.
+	* sysdeps/mach/hurd/i386/signal-defines.sym: New file.
+	* sysdeps/mach/hurd/i386/Makefile (gen-as-const-headers): Add
+	signal-defines.sym.
+
 2012-05-10  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
         * bits/in.h (SOL_IP, SOL_IPV6, SOL_ICMPV6): New macros.
