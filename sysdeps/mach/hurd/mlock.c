@@ -1,5 +1,5 @@
 /* mlock -- guarantee pages are resident in memory.  Mach/Hurd version.
-   Copyright (C) 2001 Free Software Foundation, Inc.
+   Copyright (C) 2001-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -39,7 +39,7 @@ mlock (const void *addr, size_t len)
   page = trunc_page ((vm_address_t) addr);
   len = round_page ((vm_address_t) addr + len) - page;
   err = __vm_wire (hostpriv, __mach_task_self (), page, len,
-		   VM_PROT_ALL); /* XXX ? */
+		   VM_PROT_READ);
   __mach_port_deallocate (__mach_task_self (), hostpriv);
 
   return err ? __hurd_fail (err) : 0;
