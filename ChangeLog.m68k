@@ -2,6 +2,7 @@
 
 	* sysdeps/unix/sysv/linux/m68k/coldfire/nptl/ld.abilist: New file.
 	* sysdeps/unix/sysv/linux/m68k/coldfire/nptl/libBrokenLocale.abilist:
+	New file.
 	* sysdeps/unix/sysv/linux/m68k/coldfire/nptl/libanl.abilist: New
 	file.
 	* sysdeps/unix/sysv/linux/m68k/coldfire/nptl/libc.abilist: New
@@ -26,6 +27,7 @@
 	file.
 	* sysdeps/unix/sysv/linux/m68k/m680x0/nptl/ld.abilist: New file.
 	* sysdeps/unix/sysv/linux/m68k/m680x0/nptl/libBrokenLocale.abilist:
+	New file.
 	* sysdeps/unix/sysv/linux/m68k/m680x0/nptl/libanl.abilist: New
 	file.
 	* sysdeps/unix/sysv/linux/m68k/m680x0/nptl/libc.abilist: New file.
