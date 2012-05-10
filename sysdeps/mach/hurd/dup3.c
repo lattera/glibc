@@ -71,15 +71,14 @@ __dup3 (int fd, int fd2, int flags)
 	  /* Get a hold of the destination descriptor.  */
 	  struct hurd_fd *d2;
 
+	  __mutex_lock (&_hurd_dtable_lock);
+
 	  if (fd2 >= _hurd_dtablesize)
 	    {
 	      /* The table is not large enough to hold the destination
 		 descriptor.  Enlarge it as necessary to allocate this
 		 descriptor.  */
 	      __mutex_unlock (&_hurd_dtable_lock);
-	      /* We still hold FD1's lock, but this is safe because
-		 _hurd_alloc_fd will only examine the cells starting
-		 at FD2.  */
 	      d2 = _hurd_alloc_fd (NULL, fd2);
 	      if (d2)
 		__spin_unlock (&d2->port.lock);
@@ -99,6 +98,7 @@ __dup3 (int fd, int fd2, int flags)
 							 MACH_PORT_NULL);
 		}
 	    }
+	  __mutex_unlock (&_hurd_dtable_lock);
 
 	  if (d2 == NULL)
 	    {
@@ -126,7 +126,6 @@ __dup3 (int fd, int fd2, int flags)
 	      _hurd_port_locked_set (&d2->port, port); /* Unlocks D2.  */
 	    }
 	}
-      __mutex_unlock (&_hurd_dtable_lock);
 
       _hurd_port_free (&d->port, &ulink, port);
       if (ctty != MACH_PORT_NULL)

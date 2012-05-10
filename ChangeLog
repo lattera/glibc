@@ -1,3 +1,9 @@
+2012-05-10  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	* sysdeps/mach/hurd/dup3.c: Lock _hurd_dtable_lock before
+	checking for _hurd_dtablesize.  Unlock it right after having
+	finished _hurd_dtable allocation.
+
 2012-05-10  Thomas Schwinge  <thomas@schwinge.name>
 
 	* sysdeps/mach/hurd/configure.in: Remove warning for --prefix=[...].
