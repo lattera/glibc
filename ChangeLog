@@ -1,3 +1,9 @@
+2012-05-10  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	* sysdeps/mach/hurd/bits/ioctls.h (_IOIW): New macro for
+	immediate-write ioctls.
+	* sysdeps/mach/hurd/ioctl.c: Handle cases with no arguments.
+
 2012-05-10  Thomas Schwinge  <thomas@schwinge.name>
 
 	* sysdeps/mach/hurd/i386/init-first.c (init): Use
