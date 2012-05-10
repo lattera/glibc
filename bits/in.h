@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 2000, 2004, 2007 Free Software Foundation, Inc.
+/* Copyright (C) 1997-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -49,7 +49,7 @@ struct ip_opts
 
 /* IPV6 socket options.  */
 #define IPV6_ADDRFORM		1
-#define IPV6_RXINFO		2
+#define IPV6_PKTINFO		2
 #define IPV6_HOPOPTS		3
 #define IPV6_DSTOPTS		4
 #define IPV6_RTHDR		5
@@ -57,8 +57,9 @@ struct ip_opts
 #define IPV6_CHECKSUM		7
 #define IPV6_HOPLIMIT		8
 
-#define IPV6_TXINFO		IPV6_RXINFO
-#define SCM_SRCINFO		IPV6_TXINFO
+#define IPV6_RXINFO		IPV6_PKTINFO
+#define IPV6_TXINFO		IPV6_PKTINFO
+#define SCM_SRCINFO		IPV6_PKTINFO
 #define SCM_SRCRT		IPV6_RXSRCRT
 
 #define IPV6_UNICAST_HOPS	16

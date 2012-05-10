@@ -1,3 +1,9 @@
+2012-05-10  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	[BZ #3906]
+	* bits/in.h (IPV6_PKTINFO): Define new macro.
+	(IPV6_RXINFO,IPV6_TXINFO,SCM_SRCINFO): Redefine to IPV6_PKTINFO.
+
 2012-05-09  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	[BZ #13954]
@@ -150,16 +156,16 @@
 	(main): Remove informal message about syslog.
 	(options): Fix typo.
 
-        [BZ #14053]
-        * sysdeps/x86_64/fpu/bits/mathinline.h (lrintf): Add __volatile
+	[BZ #14053]
+	* sysdeps/x86_64/fpu/bits/mathinline.h (lrintf): Add __volatile
 	to asm.
-        (lrint): Likewise.
-        (llrintf): Likewise.
-        (llrint): Likewise.
-        (rint): Likewise.
-        (rintf): Likewise.
-        (nearbyint): Likewise.
-        (nearbyintf): Likewise.
+	(lrint): Likewise.
+	(llrintf): Likewise.
+	(llrint): Likewise.
+	(rint): Likewise.
+	(rintf): Likewise.
+	(nearbyint): Likewise.
+	(nearbyintf): Likewise.
 
 2012-05-09  Andreas Jaeger  <aj@suse.de>
 	    Pedro Alves  <palves@redhat.com>
@@ -170,12 +176,12 @@
 2012-05-09  Alexandre Oliva  <aoliva@redhat.com>
 	    Andreas Jaeger  <aj@suse.de>
 
-        * nscd/nscd.c (go_background): Replaced with...
-        (run_mode): ... this.
+	* nscd/nscd.c (go_background): Replaced with...
+	(run_mode): ... this.
 	(RUN_FOREGROUND, RUN_DAEMONIZE, RUN_DEBUG): Add.
-        (options): Add -F --foreground.
-        (main): Implement it.
-        (parse_opt): Parse it.
+	(options): Add -F --foreground.
+	(main): Implement it.
+	(parse_opt): Parse it.
 
 2012-05-09  Andreas Jaeger  <aj@suse.de>
 
@@ -351,9 +357,9 @@
 
 2012-05-08  Roland Mc Grath  <roland@hack.frob.com>
 
-        [BZ #13979]
-        * include/features.h: Warn if user requests __FORTIFY_SOURCE
-        checking but the checks are disabled for any reason.
+	[BZ #13979]
+	* include/features.h: Warn if user requests __FORTIFY_SOURCE
+	checking but the checks are disabled for any reason.
 
 2012-05-08  H.J. Lu  <hongjiu.lu@intel.com>
 
