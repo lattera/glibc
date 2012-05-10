@@ -1,3 +1,11 @@
+2012-05-10  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/syscalls.list (alarm): Add entry from
+	sysdeps/unix/sysv/syscalls.list.
+	(stime): Likewise.
+	(utime): Likewise.
+	* sysdeps/unix/sysv/syscalls.list: Remove file.
+
 2012-05-10  Paul Eggert  <eggert@cs.ucla.edu>
 
 	[BZ #3440]

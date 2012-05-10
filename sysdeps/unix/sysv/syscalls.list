@@ -1,5 +1,0 @@
-# File name	Caller	Syscall name	# args	Strong name	Weak names
-
-alarm		-	alarm		i:i	alarm
-stime		-	stime		i:p	stime
-utime		-	utime		i:sP	utime

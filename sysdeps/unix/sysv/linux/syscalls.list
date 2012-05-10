@@ -1,6 +1,7 @@
 # File name	Caller	Syscall name	Args	Strong name	Weak names
 
 adjtimex	adjtime	adjtimex	i:p	__adjtimex	adjtimex ntp_adjtime __adjtimex_internal
+alarm		-	alarm		i:i	alarm
 bdflush		EXTRA	bdflush		i:ii	bdflush
 capget		EXTRA	capget		i:pp	capget
 capset		EXTRA	capset		i:pp	capset
@@ -71,12 +72,14 @@ setfsuid	EXTRA	setfsuid	i:i	setfsuid
 setpgid		-	setpgid		i:ii	__setpgid	setpgid
 sigaltstack	-	sigaltstack	i:PP	__sigaltstack	sigaltstack
 splice		EXTRA	splice		Ci:iPiPii	splice
+stime		-	stime		i:p	stime
 sysinfo		EXTRA	sysinfo		i:p	sysinfo
 swapon		-	swapon		i:si	__swapon	swapon
 swapoff		-	swapoff		i:s	__swapoff	swapoff
 tee		EXTRA	tee		Ci:iiii	tee
 unshare		EXTRA	unshare		i:i	unshare
 uselib		EXTRA	uselib		i:s	uselib
+utime		-	utime		i:sP	utime
 vmsplice	EXTRA	vmsplice	Ci:iPii	vmsplice
 wait4		-	wait4		i:iWiP	__wait4		wait4
 
