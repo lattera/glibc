@@ -1,5 +1,8 @@
 2012-05-10  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
+        * sysdeps/mach/hurd/readlinkat.c: New file, heavily derived from
+        sysdeps/mach/hurd/readlink.c.
+
 	* posix/tst-sysconf.c (posix_options): Only use
 	_POSIX_PRIORITIZED_IO, _POSIX_PRIORITY_SCHEDULING, and
 	_POSIX_SYNCHRONIZED_IO when they are defined
@@ -15,8 +18,6 @@
 	(_POSIX_ASYNC_IO): Undefine macro.
 	(_POSIX_PRIORITIZED_IO): Undefine macro.
 	(_POSIX_SPIN_LOCKS): Define macro to -1.
-
-2012-05-10  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
 	* bits/sigaction.h [__USE_XOPEN2K8]: Define SA_RESTART,
 	SA_NODEFER, SA_RESETHAND.
