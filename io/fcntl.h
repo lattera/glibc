@@ -1,5 +1,4 @@
-/* Copyright (C) 1991,1992,1994-2001,2003-2007,2009-2011,2012
-	Free Software Foundation, Inc.
+/* Copyright (C) 1991-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -31,6 +30,29 @@ __BEGIN_DECLS
 /* Get the definitions of O_*, F_*, FD_*: all the
    numbers and flag bits for `open', `fcntl', et al.  */
 #include <bits/fcntl.h>
+
+#if defined __USE_XOPEN || defined __USE_XOPEN2K
+/* The Single Unix specification says that some more types are
+   available here.  */
+# ifndef __mode_t_defined
+typedef __mode_t mode_t;
+#  define __mode_t_defined
+# endif
+
+# ifndef __off_t_defined
+#  ifndef __USE_FILE_OFFSET64
+typedef __off_t off_t;
+#  else
+typedef __off64_t off_t;
+#  endif
+#  define __off_t_defined
+# endif
+
+# ifndef __pid_t_defined
+typedef __pid_t pid_t;
+#  define __pid_t_defined
+# endif
+#endif	/* X/Open */
 
 /* For XPG all symbols from <sys/stat.h> should also be available.  */
 #if defined __USE_XOPEN || defined __USE_XOPEN2K8

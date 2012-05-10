@@ -1,5 +1,9 @@
 2012-05-10  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
+	* io/fcntl.h (mode_t, off_t, pid_t): Define types.
+	(__mode_t_defined, __off_t_defined, __pid_t_defined): Define macros.
+	* streams/stropts.h (t_scalar_t): Define type.
+
 	* sysdeps/generic/paths.h (_PATH_MAN): Set to "/usr/share/man"
 	(_PATH_PRESERVE): Set to "/var/lib".
 	(_PATH_RWHODIR): Set to "/var/spool/rwho".

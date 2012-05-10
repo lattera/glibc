@@ -1,4 +1,4 @@
-/* Copyright (C) 1998-2000, 2002, 2003, 2012 Free Software Foundation, Inc.
+/* Copyright (C) 1998-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -32,6 +32,7 @@ typedef __uid_t uid_t;
 # define __uid_t_defined
 #endif
 
+typedef __t_scalar_t t_scalar_t;
 typedef __t_uscalar_t t_uscalar_t;
 
 /* Get system specific contants.  */
