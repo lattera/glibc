@@ -1,3 +1,9 @@
+2012-05-10  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	* hurd/hurdchdir.c (_hurd_change_directory_port_from_name):
+	Return ENOENT when name is empty.
+	* sysdeps/mach/hurd/chroot.c (chroot): Likewise.
+
 2012-05-10  Thomas Schwinge  <thomas@schwinge.name>
 
 	* include/libc-symbols.h [NO_HIDDEN] (hidden_nolink): New macro.

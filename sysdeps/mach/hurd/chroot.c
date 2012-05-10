@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,92,93,94,95,97,99,2001 Free Software Foundation, Inc.
+/* Copyright (C) 1991-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -37,6 +37,9 @@ chroot (const char *path)
   len = strlen (path);
   if (len >= 2 && path[len - 2] == '/' && path[len - 1] == '.')
     lookup = path;
+  else if (len == 0)
+    /* Special-case empty file name according to POSIX.  */
+    return __hurd_fail (ENOENT);
   else
     {
       char *n = alloca (len + 3);
