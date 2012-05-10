@@ -1,4 +1,4 @@
-/* Copyright (C) 1994, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1994-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -19,7 +19,7 @@
 #include <hurd/fd.h>
 
 /* Allocate a new file descriptor and install PORT in it.  FLAGS are as for
-   `open'; only O_IGNORE_CTTY is meaningful.
+   `open'; only O_IGNORE_CTTY and O_CLOEXEC are meaningful.
 
    If the descriptor table is full, set errno, and return -1.
    If DEALLOC is nonzero, deallocate PORT first.  */

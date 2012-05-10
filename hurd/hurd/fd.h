@@ -1,6 +1,5 @@
 /* File descriptors.
-   Copyright (C) 1993,1994,1995,1996,1997,1998,1999,2000,2001,2002,2006,2007
-   	Free Software Foundation, Inc.
+   Copyright (C) 1993-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -199,7 +198,8 @@ extern void _hurd_port2fd (struct hurd_fd *fd, io_t port, int flags);
 
 /* Allocate a new file descriptor and install PORT in it (doing any
    appropriate ctty magic); consumes a user reference on PORT.  FLAGS are
-   as for `open'; only O_IGNORE_CTTY is meaningful, but all are saved.
+   as for `open'; only O_IGNORE_CTTY and O_CLOEXEC are meaningful, but all are
+   saved.
 
    If the descriptor table is full, set errno, and return -1.
    If DEALLOC is nonzero, deallocate PORT first.  */

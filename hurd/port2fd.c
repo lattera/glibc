@@ -1,4 +1,4 @@
-/* Copyright (C) 1994, 1997, 1999, 2007 Free Software Foundation, Inc.
+/* Copyright (C) 1994-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -22,7 +22,7 @@
 #include <fcntl.h>
 
 /* Store PORT in file descriptor D, doing appropriate ctty magic.
-   FLAGS are as for `open'; only O_IGNORE_CTTY is meaningful.
+   FLAGS are as for `open'; only O_IGNORE_CTTY and O_CLOEXEC are meaningful.
    D should be locked, and will not be unlocked.  */
 
 void
