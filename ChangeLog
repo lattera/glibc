@@ -1,3 +1,9 @@
+2012-05-10  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/x86_64/dl-machine.h (elf_machine_rela) [__ILP32__]:
+	Sign extend relocation result to 64 bits for R_X86_64_DTPOFF64
+	and R_X86_64_TPOFF64.
+
 2012-05-10  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/syscalls.list (alarm): Add entry from

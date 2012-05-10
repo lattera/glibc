@@ -328,7 +328,19 @@ elf_machine_rela (struct link_map *map, const ElfW(Rela) *reloc,
 	  /* During relocation all TLS symbols are defined and used.
 	     Therefore the offset is already correct.  */
 	  if (sym != NULL)
-	    *reloc_addr = sym->st_value + reloc->r_addend;
+	    {
+	      value = sym->st_value + reloc->r_addend;
+#   ifdef __ILP32__
+	      /* This relocation type computes a signed offset that is
+		 usually negative.  The symbol and addend values are 32
+		 bits but the GOT entry is 64 bits wide and the whole
+		 64-bit entry is used as a signed quantity, so we need
+		 to sign-extend the computed value to 64 bits.  */
+	      *(Elf64_Sxword *) reloc_addr = (Elf64_Sxword) (Elf32_Sxword) value;
+#   else
+	      *reloc_addr = value;
+#   endif
+	    }
 #  endif
 	  break;
 	case R_X86_64_TLSDESC:
@@ -378,8 +390,17 @@ elf_machine_rela (struct link_map *map, const ElfW(Rela) *reloc,
 	      /* We know the offset of the object the symbol is contained in.
 		 It is a negative value which will be added to the
 		 thread pointer.  */
-	      *reloc_addr = (sym->st_value + reloc->r_addend
-			     - sym_map->l_tls_offset);
+	      value = (sym->st_value + reloc->r_addend
+		       - sym_map->l_tls_offset);
+#  ifdef __ILP32__
+	      /* The symbol and addend values are 32 bits but the GOT
+		 entry is 64 bits wide and the whole 64-bit entry is used
+		 as a signed quantity, so we need to sign-extend the
+		 computed value to 64 bits.  */
+	      *(Elf64_Sxword *) reloc_addr = (Elf64_Sxword) (Elf32_Sword) value;
+#  else
+	      *reloc_addr = value;
+#  endif
 	    }
 	  break;
 # endif
