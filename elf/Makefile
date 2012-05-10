@@ -80,14 +80,13 @@ install-rootsbin += ldconfig
 
 ldconfig-modules := cache readlib xmalloc xstrdup chroot_canon
 extra-objs	+= $(ldconfig-modules:=.o)
+endif
+endif
 
 pldd-modules := xmalloc
 
 # To find xmalloc.c and xstrdup.c
 vpath %.c ../locale/programs
-
-endif
-endif
 
 ifeq ($(have-ksh)$(build-shared),yesyes)
 extra-objs += sotruss-lib.os sotruss-lib.so

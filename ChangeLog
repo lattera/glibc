@@ -1,5 +1,9 @@
 2012-05-10  Thomas Schwinge  <thomas@schwinge.name>
 
+	* elf/Makefile (pldd-modules): Define unconditionally.
+
+2012-05-10  Thomas Schwinge  <thomas@schwinge.name>
+
 	* sysdeps/mach/hurd/opendir.c (__opendirat): New function.
 
 2012-05-10  Samuel Thibault  <samuel.thibault@ens-lyon.org>
