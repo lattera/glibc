@@ -214,6 +214,8 @@ init (int *data)
 
       void switch_stacks (void);
 
+      __libc_stack_end = newsp;
+
       /* Copy per-thread variables from that temporary
 	 area onto the new cthread stack.  */
       memcpy (__hurd_threadvar_location_from_sp (0, newsp),
