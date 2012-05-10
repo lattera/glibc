@@ -50,3 +50,19 @@ void crash(void) __attribute__ ((noreturn));
 void tabify(FILE *f, int tab);
 char *make_argname(const char *pname, const char *vname);
 void add_type(int len, const char *type);
+
+/* This header is the last one included in all rpc_*.c files,
+   so we define stuff for cross-rpcgen here to avoid conflicts with
+   $build's C library and $host's glibc.  */
+
+#ifdef IS_IN_build
+
+/* Disable translated messages when built for $build and used in
+   building glibc.  */
+#define _(X) (X)
+#define textdomain(X) ((void) 0)
+
+/* This is used in the definition of PACKAGE for --version output.  */
+#define _libc_intl_domainname "libc"
+
+#endif
