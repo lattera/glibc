@@ -1,3 +1,7 @@
+2012-05-10  Joseph Myers  <joseph@codesourcery.com>
+
+	* include/stdc-predef.h (__STDC_NO_THREADS__): Define.
+
 2012-05-10  Maxim Kuvyrkov  <maxim@codesourcery.com>
 	    Joseph Myers  <joseph@codesourcery.com>
 	    Paul Pluzhnikov  <ppluzhnikov@google.com>
