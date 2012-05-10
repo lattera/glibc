@@ -121,38 +121,6 @@ fi
 if test -n "$sysheaders"; then
   CPPFLAGS=$OLD_CPPFLAGS
 fi
-# The Linux filesystem standard prescribes where to place "essential"
-# files.  I.e., when the installation prefix is "/usr" we have to place
-# shared library objects and the configuration files on the root partition
-# in /lib and /etc.
-case "$prefix" in
-/usr | /usr/)
-  # 64-bit libraries on bi-arch platforms go in /lib64 instead of /lib.
-  # Allow earlier configure scripts to handle libc_cv_slibdir, libdir,
-  # and libc_cv_localedir.
-  test -n "$libc_cv_slibdir" || \
-  case $machine in
-  sparc/sparc64 | x86_64* | powerpc/powerpc64 | s390/s390-64)
-    libc_cv_slibdir="/lib64"
-    if test "$libdir" = '${exec_prefix}/lib'; then
-      libdir='${exec_prefix}/lib64';
-      # Locale data can be shared between 32bit and 64bit libraries
-      libc_cv_localedir='${exec_prefix}/lib/locale'
-    fi
-    ;;
-  *)
-    libc_cv_slibdir="/lib"
-    ;;
-  esac
-  # Allow the user to override the path with --sysconfdir
-  if test $sysconfdir = '${prefix}/etc'; then
-    libc_cv_sysconfdir=/etc
-  else
-    libc_cv_sysconfdir=$sysconfdir
-   fi
-  libc_cv_rootsbindir="/sbin"
-  ;;
-esac
 
 # Under Linux the NPTL add-on should be available.
 case $add_ons in

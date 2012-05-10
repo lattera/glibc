@@ -1,5 +1,13 @@
 2012-05-10  Thomas Schwinge  <thomas@schwinge.name>
 
+	* sysdeps/mach/hurd/configure.in: Remove warning for --prefix=[...].
+	* sysdeps/mach/hurd/configure: Regenerated.
+	* sysdeps/unix/sysv/linux/configure.in: Move --prefix=/usr
+	special-casing to...
+	* sysdeps/gnu/configure.in: ... this new file.
+	* sysdeps/unix/sysv/linux/configure: Regenerated.
+	* sysdeps/gnu/configure: New generated file.
+
 	* sysdeps/mach/hurd/bits/stat.h (struct stat): Align to what is done
 	for Linux: use nsec instead of usec, as well as:
 	[__USE_MISC || __USE_XOPEN2K8] (st_atim, st_mtim, st_ctim): New

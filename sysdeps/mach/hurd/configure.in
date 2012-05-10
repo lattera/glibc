@@ -10,10 +10,6 @@ AC_DEFINE([NO_HIDDEN])
 # existing system library, because we are the only system library.
 inhibit_glue=yes
 
-if test "x$prefix" != x; then
-  AC_MSG_WARN([--prefix= (empty) is required for GNU/Hurd to work normally])
-fi
-
 case "$machine" in
   i386*)
     # The default oldest ABI is 2.2.6.
