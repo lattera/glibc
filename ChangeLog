@@ -1,3 +1,7 @@
+2012-05-10  Roland McGrath  <roland@hack.frob.com>
+
+	* math/w_ilogbf.c: Add #include <limits.h>.
+
 2012-05-10  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
         * sysdeps/mach/hurd/setitimer.c (setitimer_locked): Use common exit

@@ -18,6 +18,7 @@
 
 #include <math.h>
 #include <errno.h>
+#include <limits.h>
 #include <math_private.h>
 
 /* wrapper ilogbf */
