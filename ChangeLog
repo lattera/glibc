@@ -1,3 +1,12 @@
+2012-05-10  Paul Eggert  <eggert@cs.ucla.edu>
+
+	[BZ #3440]
+	* locale/bits/locale.h (__LC_CTYPE, __LC_NUMERIC, __LC_TIME)
+	(__LC_COLLATE, __LC_MONETARY, __LC_MESSAGES, __LC_ALL, __LC_PAPER)
+	(__LC_NAME, __LC_ADDRESS, __LC_TELEPHONE, __LC_MEASUREMENT)
+	(__LC_IDENTIFICATION): Make these macros useful in #if
+	expressions, as required by C99.
+
 2012-05-10  Andreas Schwab  <schwab@linux-m68k.org>
 
 	* sunrpc/Makefile (extra-objs) [$(build-shared) = yes]: Add
