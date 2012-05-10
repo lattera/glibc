@@ -21,6 +21,9 @@
 # error "Never use <bits/in.h> directly; include <netinet/in.h> instead."
 #endif
 
+/* To select the IP level.  */
+#define SOL_IP		0
+
 /* Options for use with `getsockopt' and `setsockopt' at the IP level.
    The first word in the comment at the right is the data type used;
    "bool" means a boolean value stored in an `int'.  */
@@ -46,6 +49,10 @@ struct ip_opts
     struct in_addr ip_dst;	/* First hop; zero without source route.  */
     char ip_opts[40];		/* Actually variable in size.  */
   };
+
+/* Socket-level values for IPv6.  */
+#define SOL_IPV6		41
+#define SOL_ICMPV6		58
 
 /* IPV6 socket options.  */
 #define IPV6_ADDRFORM		1
