@@ -1,5 +1,7 @@
 2012-05-10  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
+	* sysdeps/mach/hurd/dl-sysdep.c: Conditionalize contents on [SHARED].
+
         * hurd/hurd/fd.h (_hurd_fd_get): Call HURD_CRITICAL_BEGIN/
         HURD_CRITICAL_END around holding _hurd_dtable_lock.
         * sysdeps/mach/hurd/dirfd (dirfd): Likewise.

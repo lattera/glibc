@@ -16,6 +16,10 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+/* In the static library, this is all handled by dl-support.c
+   or by the vanilla definitions in the rest of the C library.  */
+#ifdef SHARED
+
 #include <hurd.h>
 #include <link.h>
 #include <unistd.h>
@@ -667,3 +671,5 @@ _dl_init_first (int argc, ...)
 {
   /* This no-op definition only gets used if libc is not linked in.  */
 }
+
+#endif /* SHARED */
