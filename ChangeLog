@@ -1,5 +1,15 @@
 2012-05-10  Thomas Schwinge  <thomas@schwinge.name>
 
+	* sysdeps/mach/hurd/bits/stat.h (struct stat): Align to what is done
+	for Linux: use nsec instead of usec, as well as:
+	[__USE_MISC || __USE_XOPEN2K8] (st_atim, st_mtim, st_ctim): New
+	members of type struct timespec.
+	[__USE_MISC || __USE_XOPEN2K8] (st_atime, st_mtime, st_ctime):
+	New macros.
+	(struct stat64): Likewise.
+	(_STATBUF_ST_NSEC): New macro.
+	* sysdeps/mach/hurd/xstatconv.c (xstat64_conv): Adapt to that.
+
 	* hurd/lookup-retry.c (__hurd_file_name_lookup_retry): Use
 	__strtoul_internal rather than strtoul.
 
