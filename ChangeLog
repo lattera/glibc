@@ -1,3 +1,9 @@
+2012-05-10  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	* sysdeps/mach/hurd/mkdir.c: Include <string.h>.
+	(__mkdir): When path is `/', just fail with EEXIST.
+	* sysdeps/mach/hurd/mkdirat.c: Likewise.
+
 2012-05-10  Thomas Schwinge  <thomas@schwinge.name>
 
 	* nss/makedb.c: Include <sys/param.h> (for MAX and roundup), and
