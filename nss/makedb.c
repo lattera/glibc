@@ -48,6 +48,10 @@
 # include <selinux/selinux.h>
 #endif
 
+#ifndef MAP_POPULATE
+# define MAP_POPULATE 0
+#endif
+
 #define PACKAGE _libc_intl_domainname
 
 /* List of data bases.  */
