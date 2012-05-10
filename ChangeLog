@@ -1,3 +1,13 @@
+2012-05-10  Thomas Schwinge  <thomas@schwinge.name>
+
+	* libio/fileops.c: Unconditionally include <kernel-features.h>.
+	* libio/freopen.c: Likewise.
+	* libio/freopen64.c: Likewise.
+	* misc/syslog.c: Likewise.
+	* nscd/connections.c: Likewise.
+	* nscd/netgroupcache.c: Likewise.
+	* sysdeps/posix/getcwd.c: Likewise.
+
 2012-05-10  Roland McGrath  <roland@hack.frob.com>
 
 	* math/w_ilogbf.c: Add #include <limits.h>.

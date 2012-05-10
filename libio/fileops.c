@@ -1,5 +1,4 @@
-/* Copyright (C) 1993, 1995, 1997-2005, 2006, 2007, 2008, 2009, 2011-2012
-   Free Software Foundation, Inc.
+/* Copyright (C) 1993-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Per Bothner <bothner@cygnus.com>.
 
@@ -46,6 +45,7 @@
 # include "../iconv/gconv_int.h"
 # include <shlib-compat.h>
 # include <not-cancel.h>
+# include <kernel-features.h>
 #endif
 #ifndef errno
 extern int errno;

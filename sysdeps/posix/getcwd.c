@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-1999,2011-2012 Free Software Foundation, Inc.
+/* Copyright (C) 1991-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -173,6 +173,7 @@ extern char *alloca ();
 
 #if defined _LIBC
 # include <not-cancel.h>
+# include <kernel-features.h>
 #else
 # define openat64_not_cancel_3(dfd, name, mode) openat64 (dfd, name, mode)
 # define close_not_cancel_no_status(fd) close (fd)

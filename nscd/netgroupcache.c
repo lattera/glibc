@@ -1,5 +1,5 @@
 /* Cache handling for netgroup lookup.
-   Copyright (C) 2011 Free Software Foundation, Inc.
+   Copyright (C) 2011-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gmail.com>, 2011.
 
@@ -27,9 +27,8 @@
 #include "../inet/netgroup.h"
 #include "nscd.h"
 #include "dbg_log.h"
-#ifdef HAVE_SENDFILE
-# include <kernel-features.h>
-#endif
+
+#include <kernel-features.h>
 
 
 /* This is the standard reply in case the service is disabled.  */

@@ -1,5 +1,5 @@
 /* Inner loops of cache daemon.
-   Copyright (C) 1998-2007, 2008, 2009, 2011 Free Software Foundation, Inc.
+   Copyright (C) 1998-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -56,9 +56,8 @@
 #include "dbg_log.h"
 #include "selinux.h"
 #include <resolv/resolv.h>
-#ifdef HAVE_SENDFILE
-# include <kernel-features.h>
-#endif
+
+#include <kernel-features.h>
 
 
 /* Support to run nscd as an unprivileged user */
