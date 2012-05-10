@@ -1,3 +1,9 @@
+2012-05-10  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	* sysdeps/mach/hurd/setresgid.c (__setresgid): Handle the -1 case,
+	which preserves existing values.
+	* sysdeps/mach/hurd/setresuid.c (__setresuid): Likewise.
+
 2012-05-10  Pino Toscano  <toscano.pino@tiscali.it>
 
 	* hurd/hurdselect.c (_hurd_select): Return EINVAL for negative
