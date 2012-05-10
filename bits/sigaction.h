@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,92,96,97,98,2001 Free Software Foundation, Inc.
+/* Copyright (C) 1991-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -54,6 +54,8 @@ struct sigaction
 /* Bits in `sa_flags'.  */
 #if defined __USE_UNIX98 || defined __USE_MISC
 # define SA_ONSTACK	0x0001	/* Take signal on signal stack.  */
+#endif
+#if defined __USE_UNIX98 || defined __USE_MISC || defined __USE_XOPEN2K8
 # define SA_RESTART	0x0002	/* Restart syscall on signal return.  */
 # define SA_NODEFER	0x0010	/* Don't automatically block the signal when
 				    its handler is being executed.  */
