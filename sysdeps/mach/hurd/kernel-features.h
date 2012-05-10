@@ -1,5 +1,5 @@
 /* Set flags signalling availability of certain operating system features.
-   Copyright (C) 2007-2012 Free Software Foundation, Inc.
+   Copyright (C) 2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,13 +20,6 @@
    Almost none of these are used outside of sysdeps/unix/sysv/linux code.
    But those referring to POSIX-level features like O_* flags can be.  */
 
-#include <fcntl.h>
-
-/* If a system defines the O_CLOEXEC constant but it is sometimes ignored,
-   it must override this file to define __ASSUME_O_CLOEXEC conditionally
-   (or not at all) to indicate when O_CLOEXEC actually works.  */
-#ifdef O_CLOEXEC
-# define __ASSUME_O_CLOEXEC	1
-#endif
-
+#define __ASSUME_O_CLOEXEC	1
+#define __ASSUME_DUP3		1
 #define __ASSUME_ACCEPT4	1

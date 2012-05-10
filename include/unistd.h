@@ -80,7 +80,8 @@ char *__canonicalize_directory_name_internal (const char *__thisdir,
 extern int __dup (int __fd);
 extern int __dup2 (int __fd, int __fd2);
 libc_hidden_proto (__dup2)
-libc_hidden_proto (dup3)
+extern int __dup3 (int __fd, int __fd2, int flags);
+libc_hidden_proto (__dup3)
 extern int __execve (const char *__path, char *const __argv[],
 		     char *const __envp[]);
 extern long int __pathconf (const char *__path, int __name);

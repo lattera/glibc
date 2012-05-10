@@ -1,3 +1,12 @@
+2012-05-10  Thomas Schwinge  <thomas@schwinge.name>
+
+	dup3 for GNU Hurd.
+	* include/unistd.h: Declare __dup3 and use libc_hidden_proto on it.
+	* sysdeps/mach/hurd/dup3.c: New file, copy from dup2.c.  Evolve it to
+	implement dup3 and do some further code clean-ups.
+	* sysdeps/mach/hurd/dup2.c (__dup2): Reimplement using __dup3.
+	* sysdeps/mach/hurd/kernel-features.h (__ASSUME_DUP3): Define.
+
 2012-05-10  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
 	* sysdeps/mach/hurd/dl-sysdep.c: Conditionalize contents on [SHARED].
