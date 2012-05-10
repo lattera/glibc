@@ -1,5 +1,9 @@
 2012-05-10  Thomas Schwinge  <thomas@schwinge.name>
 
+	* sysdeps/mach/hurd/bits/socket.h: New file, copy from the bsd4.4 one.
+	(SOCK_MAX, SOCK_TYPE_MASK, SOCK_CLOEXEC, SOCK_NONBLOCK): New
+	definitions.
+
 	accept4 for GNU Hurd.
 	* include/sys/socket.h (__libc_accept4): New prototype.
 	* sysdeps/mach/hurd/accept4.c: New file, copy from accept.c.  Evolve it
