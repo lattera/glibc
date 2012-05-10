@@ -1,9 +1,138 @@
 # Begin of automatic generation
 
+# acos_downward
+Test "acos_downward (-0) == pi/2":
+float: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "acos_downward (-0.5) == M_PI_6l*4.0":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+Test "acos_downward (-1) == pi":
+float: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "acos_downward (0) == pi/2":
+float: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "acos_downward (0.5) == M_PI_6l*2.0":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+
+# acos_towardzero
+Test "acos_towardzero (-0) == pi/2":
+float: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "acos_towardzero (-0.5) == M_PI_6l*4.0":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+Test "acos_towardzero (-1) == pi":
+float: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "acos_towardzero (0) == pi/2":
+float: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "acos_towardzero (0.5) == M_PI_6l*2.0":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+
+# acos_upward
+Test "acos_upward (-0) == pi/2":
+double: 1
+idouble: 1
+Test "acos_upward (-0.5) == M_PI_6l*4.0":
+ildouble: 1
+ldouble: 1
+Test "acos_upward (-1) == pi":
+double: 1
+idouble: 1
+Test "acos_upward (0) == pi/2":
+double: 1
+idouble: 1
+Test "acos_upward (0.5) == M_PI_6l*2.0":
+ildouble: 1
+ldouble: 1
+
 # acosh
 Test "acosh (7) == 2.63391579384963341725009269461593689":
 ildouble: 1
 ldouble: 1
+
+# asin_downward
+Test "asin_downward (-0.5) == -pi/6":
+ildouble: 1
+ldouble: 1
+Test "asin_downward (-1.0) == -pi/2":
+double: 1
+idouble: 1
+Test "asin_downward (0.5) == pi/6":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+Test "asin_downward (1.0) == pi/2":
+float: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+
+# asin_towardzero
+Test "asin_towardzero (-0.5) == -pi/6":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+Test "asin_towardzero (-1.0) == -pi/2":
+float: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "asin_towardzero (0.5) == pi/6":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+Test "asin_towardzero (1.0) == pi/2":
+float: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+
+# asin_upward
+Test "asin_upward (-0.5) == -pi/6":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+Test "asin_upward (-1.0) == -pi/2":
+float: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "asin_upward (0.5) == pi/6":
+ildouble: 1
+ldouble: 1
+Test "asin_upward (1.0) == pi/2":
+double: 1
+idouble: 1
 
 # asinh
 Test "asinh (0.75) == 0.693147180559945309417232121458176568":
@@ -911,6 +1040,9 @@ ldouble: 1
 Test "Real part of: ctan (1 + 47 i) == 2.729321264492904590777293425576722354636e-41 + 1.0 i":
 ildouble: 2
 ldouble: 2
+Test "Real part of: ctan (1 + 5680 i) == 4.725214596136812019616700920476949798307e-4934 + 1.0 i":
+ildouble: 1
+ldouble: 1
 
 # ctanh
 Test "Real part of: ctanh (-2 - 3 i) == -0.965385879022133124278480269394560686 + 0.988437503832249372031403430350121098e-2 i":
@@ -959,6 +1091,9 @@ ldouble: 1
 Test "Imaginary part of: ctanh (47 + 1 i) == 1.0 + 2.729321264492904590777293425576722354636e-41 i":
 ildouble: 2
 ldouble: 2
+Test "Imaginary part of: ctanh (5680 + 1 i) == 1.0 + 4.725214596136812019616700920476949798307e-4934 i":
+ildouble: 1
+ldouble: 1
 
 # erfc
 Test "erfc (0.75) == 0.288844366346484868401062165408589223":
@@ -1894,7 +2029,55 @@ float: 1
 ifloat: 1
 
 # Maximal error of functions:
+Function: "acos_downward":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+
+Function: "acos_towardzero":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+
+Function: "acos_upward":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+
 Function: "acosh":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+
+Function: "asin_downward":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+
+Function: "asin_towardzero":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+
+Function: "asin_upward":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
 ildouble: 1
 ldouble: 1
 
