@@ -1,5 +1,5 @@
 /* libc-internal interface for mutex locks.  Stub version.
-   Copyright (C) 1996,97,99,2000-2002,2003 Free Software Foundation, Inc.
+   Copyright (C) 1996-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -97,6 +97,9 @@
     }									      \
   } while (0)
 
+/* Get once control variable.  */
+#define __libc_once_get(ONCE_CONTROL) \
+  ((ONCE_CONTROL) == 1)
 
 /* Start a critical region with a cleanup function */
 #define __libc_cleanup_region_start(DOIT, FCT, ARG)			    \

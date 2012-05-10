@@ -2604,7 +2604,7 @@ getaddrinfo (const char *name, const char *service,
 	  __libc_lock_define_initialized (static, lock);
 
 	  __libc_lock_lock (lock);
-	  if (old_once && gaiconf_reload_flag)
+	  if (__libc_once_get (old_once) && gaiconf_reload_flag)
 	    gaiconf_reload ();
 	  qsort_r (order, nresults, sizeof (order[0]), rfc3484_sort, &src);
 	  __libc_lock_unlock (lock);

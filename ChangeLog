@@ -1,5 +1,12 @@
 2012-05-10  Thomas Schwinge  <thomas@schwinge.name>
 
+	[BZ #3748]
+	* bits/libc-lock.h (__libc_once_get): New macro.
+	* sysdeps/mach/bits/libc-lock.h: Likewise.
+	* sysdeps/mach/hurd/bits/libc-lock.h: Likewise.
+	* sysdeps/posix/getaddrinfo.c (getaddrinfo): Use __libc_once_get
+	instead of using implementation details.
+
 	* libio/fileops.c: Unconditionally include <kernel-features.h>.
 	* libio/freopen.c: Likewise.
 	* libio/freopen64.c: Likewise.

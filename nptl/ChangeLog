@@ -1,3 +1,8 @@
+2012-05-10  Thomas Schwinge  <thomas@schwinge.name>
+
+	[BZ #3748]
+	* sysdeps/pthread/bits/libc-lockP.h (__libc_once_get): New macro.
+
 2012-05-09  Chung-Lin Tang  <cltang@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/sh/pthread_cond_timedwait.S
