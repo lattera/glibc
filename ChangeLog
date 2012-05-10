@@ -1,3 +1,9 @@
+2012-05-10  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+        * hurd/catch-signal.c (hurd_catch_signal): Use sigsetjmp/siglongjmp
+        instead of setjmp/longjmp to restore the signal mask.  Call sigsetjmp
+        when handler == SIG_ERR, not when handler != SIG_ERR.
+
 2012-05-10  Thomas Schwinge  <thomas@schwinge.name>
 
 	* sysdeps/mach/hurd/bits/socket.h: New file, copy from the bsd4.4 one.
