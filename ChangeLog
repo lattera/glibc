@@ -1,3 +1,8 @@
+2012-05-10  Thomas Schwinge  <thomas@schwinge.name>
+
+	* hurd/lookup-retry.c (__hurd_file_name_lookup_retry): Use
+	__strtoul_internal rather than strtoul.
+
 2012-05-10  Pino Toscano  <toscano.pino@tiscali.it>
 
 	* hurd/hurdsock.c (_hurd_socket_server): Check for negative domains,
