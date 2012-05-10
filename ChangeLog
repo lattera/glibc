@@ -1,5 +1,7 @@
 2012-05-10  Thomas Schwinge  <thomas@schwinge.name>
 
+	* include/libc-symbols.h [NO_HIDDEN] (hidden_nolink): New macro.
+
 	* nss/makedb.c (MAP_POPULATE): If not defined, define to zero.
 
 2012-05-10  Samuel Thibault  <samuel.thibault@ens-lyon.org>

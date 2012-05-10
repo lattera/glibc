@@ -1,7 +1,6 @@
 /* Support macros for making weak and strong aliases for symbols,
    and for using symbol sets and linker warnings with GNU ld.
-   Copyright (C) 1995-1998,2000-2006,2008,2009,2011,2012
-   Free Software Foundation, Inc.
+   Copyright (C) 1995-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -550,6 +549,7 @@ for linking")
 # define hidden_data_weak(name)
 # define hidden_data_def(name)
 # define hidden_data_ver(local, name)
+# define hidden_nolink(name, lib, version)
 #endif
 
 #if !defined NOT_IN_libc
