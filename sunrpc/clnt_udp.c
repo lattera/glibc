@@ -239,7 +239,7 @@ fooy:
 #ifdef EXPORT_RPC_SYMBOLS
 libc_hidden_def (__libc_clntudp_bufcreate)
 #else
-libc_hidden_nolink (__libc_clntudp_bufcreate, GLIBC_PRIVATE)
+libc_hidden_nolink_sunrpc (__libc_clntudp_bufcreate, GLIBC_PRIVATE)
 #endif
 
 CLIENT *
@@ -250,7 +250,7 @@ clntudp_bufcreate (struct sockaddr_in *raddr, u_long program, u_long version,
   return __libc_clntudp_bufcreate (raddr, program, version, wait,
 				   sockp, sendsz, recvsz, 0);
 }
-libc_hidden_nolink (clntudp_bufcreate, GLIBC_2_0)
+libc_hidden_nolink_sunrpc (clntudp_bufcreate, GLIBC_2_0)
 
 CLIENT *
 clntudp_create (raddr, program, version, wait, sockp)
@@ -266,7 +266,7 @@ clntudp_create (raddr, program, version, wait, sockp)
 #ifdef EXPORT_RPC_SYMBOLS
 libc_hidden_def (clntudp_create)
 #else
-libc_hidden_nolink (clntudp_create, GLIBC_2_0)
+libc_hidden_nolink_sunrpc (clntudp_create, GLIBC_2_0)
 #endif
 
 static int

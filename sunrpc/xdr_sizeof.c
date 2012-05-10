@@ -161,5 +161,5 @@ xdr_sizeof (xdrproc_t func, void *data)
 #ifdef EXPORT_RPC_SYMBOLS
 libc_hidden_def (xdr_sizeof)
 #else
-libc_hidden_nolink (xdr_sizeof, GLIBC_2_1)
+libc_hidden_nolink_sunrpc (xdr_sizeof, GLIBC_2_1)
 #endif

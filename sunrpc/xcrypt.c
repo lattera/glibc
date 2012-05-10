@@ -127,7 +127,7 @@ xencrypt (char *secret, char *passwd)
   free (buf);
   return 1;
 }
-libc_hidden_nolink (xencrypt, GLIBC_2_0)
+libc_hidden_nolink_sunrpc (xencrypt, GLIBC_2_0)
 
 /*
  * Decrypt secret key using passwd
@@ -163,7 +163,7 @@ xdecrypt (char *secret, char *passwd)
 #ifdef EXPORT_RPC_SYMBOLS
 libc_hidden_def (xdecrypt)
 #else
-libc_hidden_nolink (xdecrypt, GLIBC_2_1)
+libc_hidden_nolink_sunrpc (xdecrypt, GLIBC_2_1)
 #endif
 
 /*

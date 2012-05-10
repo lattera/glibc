@@ -191,5 +191,5 @@ xdrstdio_putint32 (XDR *xdrs, const int32_t *ip)
 #ifdef EXPORT_RPC_SYMBOLS
 libc_hidden_def (xdrstdio_create)
 #else
-libc_hidden_nolink (xdrstdio_create, GLIBC_2_0)
+libc_hidden_nolink_sunrpc (xdrstdio_create, GLIBC_2_0)
 #endif

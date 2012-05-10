@@ -200,7 +200,7 @@ fooy:
   mem_free ((caddr_t) h, sizeof (CLIENT));
   return (CLIENT *) NULL;
 }
-libc_hidden_nolink (clntunix_create, GLIBC_2_1)
+libc_hidden_nolink_sunrpc (clntunix_create, GLIBC_2_1)
 
 static enum clnt_stat
 clntunix_call (h, proc, xdr_args, args_ptr, xdr_results, results_ptr, timeout)

@@ -84,4 +84,4 @@ pmap_getmaps (struct sockaddr_in *address)
   address->sin_port = 0;
   return head;
 }
-libc_hidden_nolink (pmap_getmaps, GLIBC_2_0)
+libc_hidden_nolink_sunrpc (pmap_getmaps, GLIBC_2_0)

@@ -45,7 +45,7 @@
    section but we cannot add const to the type because this isn't how
    the variable is declared.  So we use the section attribute.  */
 struct opaque_auth _null_auth __attribute__ ((nocommon));
-libc_hidden_nolink (_null_auth, GLIBC_2_0)
+libc_hidden_nolink_sunrpc (_null_auth, GLIBC_2_0)
 fd_set svc_fdset;
 struct rpc_createerr rpc_createerr;
 struct pollfd *svc_pollfd;

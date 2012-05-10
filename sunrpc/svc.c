@@ -115,7 +115,7 @@ xprt_register (SVCXPRT *xprt)
 					       POLLRDNORM | POLLRDBAND);
     }
 }
-libc_hidden_nolink (xprt_register, GLIBC_2_0)
+libc_hidden_nolink_sunrpc (xprt_register, GLIBC_2_0)
 
 /* De-activate a transport handle. */
 void
@@ -139,7 +139,7 @@ xprt_unregister (SVCXPRT *xprt)
 #ifdef EXPORT_RPC_SYMBOLS
 libc_hidden_def (xprt_unregister)
 #else
-libc_hidden_nolink (xprt_unregister, GLIBC_2_0)
+libc_hidden_nolink_sunrpc (xprt_unregister, GLIBC_2_0)
 #endif
 
 
@@ -218,7 +218,7 @@ pmap_it:
 #ifdef EXPORT_RPC_SYMBOLS
 libc_hidden_def (svc_register)
 #else
-libc_hidden_nolink (svc_register, GLIBC_2_0)
+libc_hidden_nolink_sunrpc (svc_register, GLIBC_2_0)
 #endif
 
 /* Remove a service program from the callout list. */
@@ -242,7 +242,7 @@ svc_unregister (rpcprog_t prog, rpcvers_t vers)
   if (! svc_is_mapped (prog, vers))
     pmap_unset (prog, vers);
 }
-libc_hidden_nolink (svc_unregister, GLIBC_2_0)
+libc_hidden_nolink_sunrpc (svc_unregister, GLIBC_2_0)
 
 /* ******************* REPLY GENERATION ROUTINES  ************ */
 
@@ -264,7 +264,7 @@ svc_sendreply (register SVCXPRT *xprt, xdrproc_t xdr_results,
 #ifdef EXPORT_RPC_SYMBOLS
 libc_hidden_def (svc_sendreply)
 #else
-libc_hidden_nolink (svc_sendreply, GLIBC_2_0)
+libc_hidden_nolink_sunrpc (svc_sendreply, GLIBC_2_0)
 #endif
 
 /* No procedure error reply */
@@ -282,7 +282,7 @@ svcerr_noproc (register SVCXPRT *xprt)
 #ifdef EXPORT_RPC_SYMBOLS
 libc_hidden_def (svcerr_noproc)
 #else
-libc_hidden_nolink (svcerr_noproc, GLIBC_2_0)
+libc_hidden_nolink_sunrpc (svcerr_noproc, GLIBC_2_0)
 #endif
 
 /* Can't decode args error reply */
@@ -300,7 +300,7 @@ svcerr_decode (register SVCXPRT *xprt)
 #ifdef EXPORT_RPC_SYMBOLS
 libc_hidden_def (svcerr_decode)
 #else
-libc_hidden_nolink (svcerr_decode, GLIBC_2_0)
+libc_hidden_nolink_sunrpc (svcerr_decode, GLIBC_2_0)
 #endif
 
 /* Some system error */
@@ -318,7 +318,7 @@ svcerr_systemerr (register SVCXPRT *xprt)
 #ifdef EXPORT_RPC_SYMBOLS
 libc_hidden_def (svcerr_systemerr)
 #else
-libc_hidden_nolink (svcerr_systemerr, GLIBC_2_0)
+libc_hidden_nolink_sunrpc (svcerr_systemerr, GLIBC_2_0)
 #endif
 
 /* Authentication error reply */
@@ -333,7 +333,7 @@ svcerr_auth (SVCXPRT *xprt, enum auth_stat why)
   rply.rjcted_rply.rj_why = why;
   SVC_REPLY (xprt, &rply);
 }
-libc_hidden_nolink (svcerr_auth, GLIBC_2_0)
+libc_hidden_nolink_sunrpc (svcerr_auth, GLIBC_2_0)
 
 /* Auth too weak error reply */
 void
@@ -341,7 +341,7 @@ svcerr_weakauth (SVCXPRT *xprt)
 {
   svcerr_auth (xprt, AUTH_TOOWEAK);
 }
-libc_hidden_nolink (svcerr_weakauth, GLIBC_2_0)
+libc_hidden_nolink_sunrpc (svcerr_weakauth, GLIBC_2_0)
 
 /* Program unavailable error reply */
 void
@@ -355,7 +355,7 @@ svcerr_noprog (register SVCXPRT *xprt)
   rply.acpted_rply.ar_stat = PROG_UNAVAIL;
   SVC_REPLY (xprt, &rply);
 }
-libc_hidden_nolink (svcerr_noprog, GLIBC_2_0)
+libc_hidden_nolink_sunrpc (svcerr_noprog, GLIBC_2_0)
 
 /* Program version mismatch error reply */
 void
@@ -372,7 +372,7 @@ svcerr_progvers (register SVCXPRT *xprt, rpcvers_t low_vers,
   rply.acpted_rply.ar_vers.high = high_vers;
   SVC_REPLY (xprt, &rply);
 }
-libc_hidden_nolink (svcerr_progvers, GLIBC_2_0)
+libc_hidden_nolink_sunrpc (svcerr_progvers, GLIBC_2_0)
 
 /* ******************* SERVER INPUT STUFF ******************* */
 
@@ -401,7 +401,7 @@ svc_getreq (int rdfds)
   readfds.fds_bits[0] = rdfds;
   svc_getreqset (&readfds);
 }
-libc_hidden_nolink (svc_getreq, GLIBC_2_0)
+libc_hidden_nolink_sunrpc (svc_getreq, GLIBC_2_0)
 
 void
 svc_getreqset (fd_set *readfds)
@@ -420,7 +420,7 @@ svc_getreqset (fd_set *readfds)
     for (mask = *maskp++; (bit = ffsl (mask)); mask ^= (1L << (bit - 1)))
       svc_getreq_common (sock + bit - 1);
 }
-libc_hidden_nolink (svc_getreqset, GLIBC_2_0)
+libc_hidden_nolink_sunrpc (svc_getreqset, GLIBC_2_0)
 
 void
 svc_getreq_poll (struct pollfd *pfdp, int pollretval)
@@ -449,7 +449,7 @@ svc_getreq_poll (struct pollfd *pfdp, int pollretval)
 #ifdef EXPORT_RPC_SYMBOLS
 libc_hidden_def (svc_getreq_poll)
 #else
-libc_hidden_nolink (svc_getreq_poll, GLIBC_2_2)
+libc_hidden_nolink_sunrpc (svc_getreq_poll, GLIBC_2_2)
 #endif
 
 
@@ -542,7 +542,7 @@ svc_getreq_common (const int fd)
     }
   while (stat == XPRT_MOREREQS);
 }
-libc_hidden_nolink (svc_getreq_common, GLIBC_2_2)
+libc_hidden_nolink_sunrpc (svc_getreq_common, GLIBC_2_2)
 
 #ifdef _RPC_THREAD_SAFE_
 

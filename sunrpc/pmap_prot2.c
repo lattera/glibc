@@ -110,4 +110,4 @@ xdr_pmaplist (xdrs, rp)
       rp = freeing ? &next : &((*rp)->pml_next);
     }
 }
-libc_hidden_nolink (xdr_pmaplist, GLIBC_2_0)
+libc_hidden_nolink_sunrpc (xdr_pmaplist, GLIBC_2_0)

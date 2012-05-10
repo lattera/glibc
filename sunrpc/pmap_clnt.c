@@ -131,7 +131,7 @@ pmap_set (u_long program, u_long version, int protocol, u_short port)
   /* (void)close(socket); CLNT_DESTROY closes it */
   return rslt;
 }
-libc_hidden_nolink (pmap_set, GLIBC_2_0)
+libc_hidden_nolink_sunrpc (pmap_set, GLIBC_2_0)
 
 /*
  * Remove the mapping between program,version and port.
@@ -162,4 +162,4 @@ pmap_unset (u_long program, u_long version)
   /* (void)close(socket); CLNT_DESTROY already closed it */
   return rslt;
 }
-libc_hidden_nolink (pmap_unset, GLIBC_2_0)
+libc_hidden_nolink_sunrpc (pmap_unset, GLIBC_2_0)

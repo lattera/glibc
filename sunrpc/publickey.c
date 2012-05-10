@@ -75,7 +75,7 @@ getpublickey (const char *name, char *key)
 
   return status == NSS_STATUS_SUCCESS;
 }
-libc_hidden_nolink (getpublickey, GLIBC_2_0)
+libc_hidden_nolink_sunrpc (getpublickey, GLIBC_2_0)
 
 
 int
@@ -118,4 +118,4 @@ getsecretkey (const char *name, char *key, const char *passwd)
 
   return status == NSS_STATUS_SUCCESS;
 }
-libc_hidden_nolink (getsecretkey, GLIBC_2_0)
+libc_hidden_nolink_sunrpc (getsecretkey, GLIBC_2_0)

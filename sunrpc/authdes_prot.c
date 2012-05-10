@@ -63,7 +63,7 @@ xdr_authdes_cred (XDR *xdrs, struct authdes_cred *cred)
       return FALSE;
     }
 }
-libc_hidden_nolink (xdr_authdes_cred, GLIBC_2_1)
+libc_hidden_nolink_sunrpc (xdr_authdes_cred, GLIBC_2_1)
 
 
 bool_t
@@ -78,4 +78,4 @@ xdr_authdes_verf (register XDR *xdrs, register struct authdes_verf *verf)
 		       sizeof (verf->adv_int_u)));
   return TRUE;
 }
-libc_hidden_nolink (xdr_authdes_verf, GLIBC_2_1)
+libc_hidden_nolink_sunrpc (xdr_authdes_verf, GLIBC_2_1)

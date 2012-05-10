@@ -63,4 +63,4 @@ xdr_authunix_parms (XDR * xdrs, struct authunix_parms *p)
     }
   return FALSE;
 }
-libc_hidden_nolink (xdr_authunix_parms, GLIBC_2_0)
+libc_hidden_nolink_sunrpc (xdr_authunix_parms, GLIBC_2_0)

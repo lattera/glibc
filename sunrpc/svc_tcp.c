@@ -187,7 +187,7 @@ svctcp_create (int sock, u_int sendsize, u_int recvsize)
 #ifdef EXPORT_RPC_SYMBOLS
 libc_hidden_def (svctcp_create)
 #else
-libc_hidden_nolink (svctcp_create, GLIBC_2_0)
+libc_hidden_nolink_sunrpc (svctcp_create, GLIBC_2_0)
 #endif
 
 /*
@@ -199,7 +199,7 @@ svcfd_create (int fd, u_int sendsize, u_int recvsize)
 {
   return makefd_xprt (fd, sendsize, recvsize);
 }
-libc_hidden_nolink (svcfd_create, GLIBC_2_0)
+libc_hidden_nolink_sunrpc (svcfd_create, GLIBC_2_0)
 
 static SVCXPRT *
 internal_function

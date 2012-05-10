@@ -139,7 +139,7 @@ callrpc (const char *host, u_long prognum, u_long versnum, u_long procnum,
     crp->valid = 0;
   return (int) clnt_stat;
 }
-libc_hidden_nolink (callrpc, GLIBC_2_0)
+libc_hidden_nolink_sunrpc (callrpc, GLIBC_2_0)
 
 #ifdef _RPC_THREAD_SAFE_
 void

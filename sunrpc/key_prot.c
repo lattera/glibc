@@ -38,7 +38,7 @@ xdr_keystatus (XDR * xdrs, keystatus * objp)
 
   return TRUE;
 }
-libc_hidden_nolink (xdr_keystatus, GLIBC_2_0)
+libc_hidden_nolink_sunrpc (xdr_keystatus, GLIBC_2_0)
 
 bool_t
 xdr_keybuf (XDR * xdrs, keybuf objp)
@@ -48,7 +48,7 @@ xdr_keybuf (XDR * xdrs, keybuf objp)
 
   return TRUE;
 }
-libc_hidden_nolink (xdr_keybuf, GLIBC_2_0)
+libc_hidden_nolink_sunrpc (xdr_keybuf, GLIBC_2_0)
 
 bool_t
 xdr_netnamestr (XDR * xdrs, netnamestr * objp)
@@ -58,7 +58,7 @@ xdr_netnamestr (XDR * xdrs, netnamestr * objp)
 
   return TRUE;
 }
-libc_hidden_nolink (xdr_netnamestr, GLIBC_2_1)
+libc_hidden_nolink_sunrpc (xdr_netnamestr, GLIBC_2_1)
 
 bool_t
 xdr_cryptkeyarg (XDR * xdrs, cryptkeyarg * objp)
@@ -71,7 +71,7 @@ xdr_cryptkeyarg (XDR * xdrs, cryptkeyarg * objp)
 
   return TRUE;
 }
-libc_hidden_nolink (xdr_cryptkeyarg, GLIBC_2_0)
+libc_hidden_nolink_sunrpc (xdr_cryptkeyarg, GLIBC_2_0)
 
 bool_t
 xdr_cryptkeyarg2 (XDR * xdrs, cryptkeyarg2 * objp)
@@ -84,7 +84,7 @@ xdr_cryptkeyarg2 (XDR * xdrs, cryptkeyarg2 * objp)
     return FALSE;
   return TRUE;
 }
-libc_hidden_nolink (xdr_cryptkeyarg2, GLIBC_2_0)
+libc_hidden_nolink_sunrpc (xdr_cryptkeyarg2, GLIBC_2_0)
 
 bool_t
 xdr_cryptkeyres (XDR * xdrs, cryptkeyres * objp)
@@ -102,7 +102,7 @@ xdr_cryptkeyres (XDR * xdrs, cryptkeyres * objp)
     }
   return TRUE;
 }
-libc_hidden_nolink (xdr_cryptkeyres, GLIBC_2_0)
+libc_hidden_nolink_sunrpc (xdr_cryptkeyres, GLIBC_2_0)
 
 bool_t
 xdr_unixcred (XDR * xdrs, unixcred * objp)
@@ -117,7 +117,7 @@ xdr_unixcred (XDR * xdrs, unixcred * objp)
     return FALSE;
   return TRUE;
 }
-libc_hidden_nolink (xdr_unixcred, GLIBC_2_1)
+libc_hidden_nolink_sunrpc (xdr_unixcred, GLIBC_2_1)
 
 bool_t
 xdr_getcredres (XDR * xdrs, getcredres * objp)
@@ -135,7 +135,7 @@ xdr_getcredres (XDR * xdrs, getcredres * objp)
     }
   return TRUE;
 }
-libc_hidden_nolink (xdr_getcredres, GLIBC_2_1)
+libc_hidden_nolink_sunrpc (xdr_getcredres, GLIBC_2_1)
 
 bool_t
 xdr_key_netstarg (XDR * xdrs, key_netstarg * objp)
@@ -148,7 +148,7 @@ xdr_key_netstarg (XDR * xdrs, key_netstarg * objp)
     return FALSE;
   return TRUE;
 }
-libc_hidden_nolink (xdr_key_netstarg, GLIBC_2_0)
+libc_hidden_nolink_sunrpc (xdr_key_netstarg, GLIBC_2_0)
 
 bool_t
 xdr_key_netstres (XDR * xdrs, key_netstres * objp)
@@ -166,4 +166,4 @@ xdr_key_netstres (XDR * xdrs, key_netstres * objp)
     }
   return TRUE;
 }
-libc_hidden_nolink (xdr_key_netstres, GLIBC_2_0)
+libc_hidden_nolink_sunrpc (xdr_key_netstres, GLIBC_2_0)

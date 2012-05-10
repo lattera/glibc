@@ -97,7 +97,7 @@ __rpc_thread_svc_fdset (void)
 		return &svc_fdset;
 	return &tvp->svc_fdset_s;
 }
-libc_hidden_nolink (__rpc_thread_svc_fdset, GLIBC_2_2_3)
+libc_hidden_nolink_sunrpc (__rpc_thread_svc_fdset, GLIBC_2_2_3)
 
 struct rpc_createerr *
 __rpc_thread_createerr (void)
@@ -109,7 +109,7 @@ __rpc_thread_createerr (void)
 		return &rpc_createerr;
 	return &tvp->rpc_createerr_s;
 }
-libc_hidden_nolink (__rpc_thread_createerr, GLIBC_2_2_3)
+libc_hidden_nolink_sunrpc (__rpc_thread_createerr, GLIBC_2_2_3)
 
 struct pollfd **
 __rpc_thread_svc_pollfd (void)
@@ -124,7 +124,7 @@ __rpc_thread_svc_pollfd (void)
 #ifdef EXPORT_RPC_SYMBOLS
 libc_hidden_def (__rpc_thread_svc_pollfd)
 #else
-libc_hidden_nolink (__rpc_thread_svc_pollfd, GLIBC_2_2_3)
+libc_hidden_nolink_sunrpc (__rpc_thread_svc_pollfd, GLIBC_2_2_3)
 #endif
 
 int *
@@ -140,7 +140,7 @@ __rpc_thread_svc_max_pollfd (void)
 #ifdef EXPORT_RPC_SYMBOLS
 libc_hidden_def (__rpc_thread_svc_max_pollfd)
 #else
-libc_hidden_nolink (__rpc_thread_svc_max_pollfd, GLIBC_2_2_3)
+libc_hidden_nolink_sunrpc (__rpc_thread_svc_max_pollfd, GLIBC_2_2_3)
 #endif
 
 #endif /* _RPC_THREAD_SAFE_ */

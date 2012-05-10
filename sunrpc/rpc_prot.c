@@ -57,7 +57,7 @@ xdr_opaque_auth (XDR *xdrs, struct opaque_auth *ap)
 		      &ap->oa_length, MAX_AUTH_BYTES);
   return FALSE;
 }
-libc_hidden_nolink (xdr_opaque_auth, GLIBC_2_0)
+libc_hidden_nolink_sunrpc (xdr_opaque_auth, GLIBC_2_0)
 
 /*
  * XDR a DES block
@@ -67,7 +67,7 @@ xdr_des_block (XDR *xdrs, des_block *blkp)
 {
   return xdr_opaque (xdrs, (caddr_t) blkp, sizeof (des_block));
 }
-libc_hidden_nolink (xdr_des_block, GLIBC_2_0)
+libc_hidden_nolink_sunrpc (xdr_des_block, GLIBC_2_0)
 
 /* * * * * * * * * * * * * * XDR RPC MESSAGE * * * * * * * * * * * * * * * */
 
@@ -95,7 +95,7 @@ xdr_accepted_reply (XDR *xdrs, struct accepted_reply *ar)
     }
   return TRUE;		/* TRUE => open ended set of problems */
 }
-libc_hidden_nolink (xdr_accepted_reply, GLIBC_2_0)
+libc_hidden_nolink_sunrpc (xdr_accepted_reply, GLIBC_2_0)
 
 /*
  * XDR the MSG_DENIED part of a reply message union
@@ -118,7 +118,7 @@ xdr_rejected_reply (XDR *xdrs, struct rejected_reply *rr)
     }
   return FALSE;
 }
-libc_hidden_nolink (xdr_rejected_reply, GLIBC_2_0)
+libc_hidden_nolink_sunrpc (xdr_rejected_reply, GLIBC_2_0)
 
 static const struct xdr_discrim reply_dscrm[3] =
 {
@@ -142,7 +142,7 @@ xdr_replymsg (xdrs, rmsg)
 		      NULL_xdrproc_t);
   return FALSE;
 }
-libc_hidden_nolink (xdr_replymsg, GLIBC_2_0)
+libc_hidden_nolink_sunrpc (xdr_replymsg, GLIBC_2_0)
 
 
 /*
@@ -167,7 +167,7 @@ xdr_callhdr (xdrs, cmsg)
     return xdr_u_long (xdrs, &(cmsg->rm_call.cb_vers));
   return FALSE;
 }
-libc_hidden_nolink (xdr_callhdr, GLIBC_2_0)
+libc_hidden_nolink_sunrpc (xdr_callhdr, GLIBC_2_0)
 
 /* ************************** Client utility routine ************* */
 
@@ -277,4 +277,4 @@ _seterr_reply (struct rpc_msg *msg,
       break;
     }
 }
-libc_hidden_nolink (_seterr_reply, GLIBC_2_0)
+libc_hidden_nolink_sunrpc (_seterr_reply, GLIBC_2_0)

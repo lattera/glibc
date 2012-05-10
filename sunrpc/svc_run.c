@@ -46,7 +46,7 @@ svc_exit (void)
   svc_pollfd = NULL;
   svc_max_pollfd = 0;
 }
-libc_hidden_nolink (svc_exit, GLIBC_2_0)
+libc_hidden_nolink_sunrpc (svc_exit, GLIBC_2_0)
 
 void
 svc_run (void)
@@ -104,5 +104,5 @@ svc_run (void)
 #ifdef EXPORT_RPC_SYMBOLS
 libc_hidden_def (svc_run)
 #else
-libc_hidden_nolink (svc_run, GLIBC_2_0)
+libc_hidden_nolink_sunrpc (svc_run, GLIBC_2_0)
 #endif

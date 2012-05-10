@@ -220,7 +220,7 @@ fooy:
 #ifdef EXPORT_RPC_SYMBOLS
 libc_hidden_def (clnttcp_create)
 #else
-libc_hidden_nolink (clnttcp_create, GLIBC_2_0)
+libc_hidden_nolink_sunrpc (clnttcp_create, GLIBC_2_0)
 #endif
 
 static enum clnt_stat

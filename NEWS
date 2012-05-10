@@ -56,6 +56,12 @@ Version 2.16
 
 * More generic and 64-bit performance optimizations to math functions.
   Implemented by Ulrich Drepper.
+
+* New configure option --enable-obsolete-rpc makes the deprecated RPC
+  headers and functions available at compile time as they were before
+  version 2.14.  This option will be removed at some time in the future
+  after the TI-RPC library becomes fully sufficient for the needs of
+  existing applications.
 
 Version 2.15
 

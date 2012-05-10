@@ -80,7 +80,7 @@ key_setsecret (char *secretkey)
     }
   return 0;
 }
-libc_hidden_nolink (key_setsecret, GLIBC_2_1)
+libc_hidden_nolink_sunrpc (key_setsecret, GLIBC_2_1)
 
 /* key_secretkey_is_set() returns 1 if the keyserver has a secret key
  * stored for the caller's effective uid; it returns 0 otherwise
@@ -109,7 +109,7 @@ key_secretkey_is_set (void)
 #ifdef EXPORT_RPC_SYMBOLS
 libc_hidden_def (key_secretkey_is_set)
 #else
-libc_hidden_nolink (key_secretkey_is_set, GLIBC_2_1)
+libc_hidden_nolink_sunrpc (key_secretkey_is_set, GLIBC_2_1)
 #endif
 
 int
@@ -133,7 +133,7 @@ key_encryptsession (char *remotename, des_block *deskey)
   *deskey = res.cryptkeyres_u.deskey;
   return 0;
 }
-libc_hidden_nolink (key_encryptsession, GLIBC_2_1)
+libc_hidden_nolink_sunrpc (key_encryptsession, GLIBC_2_1)
 
 int
 key_decryptsession (char *remotename, des_block *deskey)
@@ -155,7 +155,7 @@ key_decryptsession (char *remotename, des_block *deskey)
   *deskey = res.cryptkeyres_u.deskey;
   return 0;
 }
-libc_hidden_nolink (key_decryptsession, GLIBC_2_1)
+libc_hidden_nolink_sunrpc (key_decryptsession, GLIBC_2_1)
 
 int
 key_encryptsession_pk (char *remotename, netobj *remotekey,
@@ -180,7 +180,7 @@ key_encryptsession_pk (char *remotename, netobj *remotekey,
   *deskey = res.cryptkeyres_u.deskey;
   return 0;
 }
-libc_hidden_nolink (key_encryptsession_pk, GLIBC_2_1)
+libc_hidden_nolink_sunrpc (key_encryptsession_pk, GLIBC_2_1)
 
 int
 key_decryptsession_pk (char *remotename, netobj *remotekey,
@@ -205,7 +205,7 @@ key_decryptsession_pk (char *remotename, netobj *remotekey,
   *deskey = res.cryptkeyres_u.deskey;
   return 0;
 }
-libc_hidden_nolink (key_decryptsession_pk, GLIBC_2_1)
+libc_hidden_nolink_sunrpc (key_decryptsession_pk, GLIBC_2_1)
 
 int
 key_gendes (des_block *key)
@@ -239,7 +239,7 @@ key_gendes (des_block *key)
 #ifdef EXPORT_RPC_SYMBOLS
 libc_hidden_def (key_gendes)
 #else
-libc_hidden_nolink (key_gendes, GLIBC_2_1)
+libc_hidden_nolink_sunrpc (key_gendes, GLIBC_2_1)
 #endif
 
 int
@@ -259,7 +259,7 @@ key_setnet (struct key_netstarg *arg)
     }
   return 1;
 }
-libc_hidden_nolink (key_setnet, GLIBC_2_1)
+libc_hidden_nolink_sunrpc (key_setnet, GLIBC_2_1)
 
 int
 key_get_conv (char *pkey, des_block *deskey)
@@ -278,7 +278,7 @@ key_get_conv (char *pkey, des_block *deskey)
   *deskey = res.cryptkeyres_u.deskey;
   return 0;
 }
-libc_hidden_nolink (key_get_conv, GLIBC_2_1)
+libc_hidden_nolink_sunrpc (key_get_conv, GLIBC_2_1)
 
 /*
  * Hack to allow the keyserver to use AUTH_DES (for authenticated

@@ -95,7 +95,7 @@ authnone_create (void)
   __libc_once (authnone_private_guard, authnone_create_once);
   return &authnone_private.no_client;
 }
-libc_hidden_nolink (authnone_create, GLIBC_2_0)
+libc_hidden_nolink_sunrpc (authnone_create, GLIBC_2_0)
 
 static bool_t
 authnone_marshal (AUTH *client, XDR *xdrs)

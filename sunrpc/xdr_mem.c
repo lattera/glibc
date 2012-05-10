@@ -81,7 +81,7 @@ xdrmem_create (XDR *xdrs, const caddr_t addr, u_int size, enum xdr_op op)
 #ifdef EXPORT_RPC_SYMBOLS
 libc_hidden_def (xdrmem_create)
 #else
-libc_hidden_nolink (xdrmem_create, GLIBC_2_0)
+libc_hidden_nolink_sunrpc (xdrmem_create, GLIBC_2_0)
 #endif
 
 /*

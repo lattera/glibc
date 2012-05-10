@@ -184,7 +184,7 @@ svcunix_create (int sock, u_int sendsize, u_int recvsize, char *path)
   xprt_register (xprt);
   return xprt;
 }
-libc_hidden_nolink (svcunix_create, GLIBC_2_1)
+libc_hidden_nolink_sunrpc (svcunix_create, GLIBC_2_1)
 
 /*
  * Like svunix_create(), except the routine takes any *open* UNIX file
@@ -195,7 +195,7 @@ svcunixfd_create (int fd, u_int sendsize, u_int recvsize)
 {
   return makefd_xprt (fd, sendsize, recvsize);
 }
-libc_hidden_nolink (svcunixfd_create, GLIBC_2_1)
+libc_hidden_nolink_sunrpc (svcunixfd_create, GLIBC_2_1)
 
 static SVCXPRT *
 internal_function

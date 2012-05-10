@@ -72,7 +72,7 @@ xdr_free (xdrproc_t proc, char *objp)
 #ifdef EXPORT_RPC_SYMBOLS
 libc_hidden_def (xdr_free)
 #else
-libc_hidden_nolink (xdr_free, GLIBC_2_0)
+libc_hidden_nolink_sunrpc (xdr_free, GLIBC_2_0)
 #endif
 
 /*
@@ -86,7 +86,7 @@ xdr_void (void)
 #ifdef EXPORT_RPC_SYMBOLS
 libc_hidden_def (xdr_void)
 #else
-libc_hidden_nolink (xdr_void, GLIBC_2_0)
+libc_hidden_nolink_sunrpc (xdr_void, GLIBC_2_0)
 #endif
 
 /*
@@ -126,7 +126,7 @@ xdr_int (XDR *xdrs, int *ip)
 #ifdef EXPORT_RPC_SYMBOLS
 libc_hidden_def (xdr_int)
 #else
-libc_hidden_nolink (xdr_int, GLIBC_2_0)
+libc_hidden_nolink_sunrpc (xdr_int, GLIBC_2_0)
 #endif
 
 /*
@@ -165,7 +165,7 @@ xdr_u_int (XDR *xdrs, u_int *up)
 #ifdef EXPORT_RPC_SYMBOLS
 libc_hidden_def (xdr_u_int)
 #else
-libc_hidden_nolink (xdr_u_int, GLIBC_2_0)
+libc_hidden_nolink_sunrpc (xdr_u_int, GLIBC_2_0)
 #endif
 
 /*
@@ -193,7 +193,7 @@ xdr_long (XDR *xdrs, long *lp)
 #ifdef EXPORT_RPC_SYMBOLS
 libc_hidden_def (xdr_long)
 #else
-libc_hidden_nolink (xdr_long, GLIBC_2_0)
+libc_hidden_nolink_sunrpc (xdr_long, GLIBC_2_0)
 #endif
 
 /*
@@ -232,7 +232,7 @@ xdr_u_long (XDR *xdrs, u_long *ulp)
 #ifdef EXPORT_RPC_SYMBOLS
 libc_hidden_def (xdr_u_long)
 #else
-libc_hidden_nolink (xdr_u_long, GLIBC_2_0)
+libc_hidden_nolink_sunrpc (xdr_u_long, GLIBC_2_0)
 #endif
 
 /*
@@ -268,7 +268,7 @@ xdr_hyper (XDR *xdrs, quad_t *llp)
 #ifdef EXPORT_RPC_SYMBOLS
 libc_hidden_def (xdr_hyper)
 #else
-libc_hidden_nolink (xdr_hyper, GLIBC_2_1_1)
+libc_hidden_nolink_sunrpc (xdr_hyper, GLIBC_2_1_1)
 #endif
 
 /*
@@ -304,7 +304,7 @@ xdr_u_hyper (XDR *xdrs, u_quad_t *ullp)
 #ifdef EXPORT_RPC_SYMBOLS
 libc_hidden_def (xdr_u_hyper)
 #else
-libc_hidden_nolink (xdr_u_hyper, GLIBC_2_1_1)
+libc_hidden_nolink_sunrpc (xdr_u_hyper, GLIBC_2_1_1)
 #endif
 
 bool_t
@@ -315,7 +315,7 @@ xdr_longlong_t (XDR *xdrs, quad_t *llp)
 #ifdef EXPORT_RPC_SYMBOLS
 libc_hidden_def (xdr_longlong_t)
 #else
-libc_hidden_nolink (xdr_longlong_t, GLIBC_2_1_1)
+libc_hidden_nolink_sunrpc (xdr_longlong_t, GLIBC_2_1_1)
 #endif
 
 bool_t
@@ -326,7 +326,7 @@ xdr_u_longlong_t (XDR *xdrs, u_quad_t *ullp)
 #ifdef EXPORT_RPC_SYMBOLS
 libc_hidden_def (xdr_u_longlong_t)
 #else
-libc_hidden_nolink (xdr_u_longlong_t, GLIBC_2_1_1)
+libc_hidden_nolink_sunrpc (xdr_u_longlong_t, GLIBC_2_1_1)
 #endif
 
 /*
@@ -359,7 +359,7 @@ xdr_short (XDR *xdrs, short *sp)
 #ifdef EXPORT_RPC_SYMBOLS
 libc_hidden_def (xdr_short)
 #else
-libc_hidden_nolink (xdr_short, GLIBC_2_0)
+libc_hidden_nolink_sunrpc (xdr_short, GLIBC_2_0)
 #endif
 
 /*
@@ -392,7 +392,7 @@ xdr_u_short (XDR *xdrs, u_short *usp)
 #ifdef EXPORT_RPC_SYMBOLS
 libc_hidden_def (xdr_u_short)
 #else
-libc_hidden_nolink (xdr_u_short, GLIBC_2_0)
+libc_hidden_nolink_sunrpc (xdr_u_short, GLIBC_2_0)
 #endif
 
 
@@ -415,7 +415,7 @@ xdr_char (XDR *xdrs, char *cp)
 #ifdef EXPORT_RPC_SYMBOLS
 libc_hidden_def (xdr_char)
 #else
-libc_hidden_nolink (xdr_char, GLIBC_2_0)
+libc_hidden_nolink_sunrpc (xdr_char, GLIBC_2_0)
 #endif
 
 /*
@@ -437,7 +437,7 @@ xdr_u_char (XDR *xdrs, u_char *cp)
 #ifdef EXPORT_RPC_SYMBOLS
 libc_hidden_def (xdr_u_char)
 #else
-libc_hidden_nolink (xdr_u_char, GLIBC_2_0)
+libc_hidden_nolink_sunrpc (xdr_u_char, GLIBC_2_0)
 #endif
 
 /*
@@ -470,7 +470,7 @@ xdr_bool (XDR *xdrs, bool_t *bp)
 #ifdef EXPORT_RPC_SYMBOLS
 libc_hidden_def (xdr_bool)
 #else
-libc_hidden_nolink (xdr_bool, GLIBC_2_0)
+libc_hidden_nolink_sunrpc (xdr_bool, GLIBC_2_0)
 #endif
 
 /*
@@ -525,7 +525,7 @@ xdr_enum (XDR *xdrs, enum_t *ep)
 #ifdef EXPORT_RPC_SYMBOLS
 libc_hidden_def (xdr_enum)
 #else
-libc_hidden_nolink (xdr_enum, GLIBC_2_0)
+libc_hidden_nolink_sunrpc (xdr_enum, GLIBC_2_0)
 #endif
 
 /*
@@ -580,7 +580,7 @@ xdr_opaque (XDR *xdrs, caddr_t cp, u_int cnt)
 #ifdef EXPORT_RPC_SYMBOLS
 libc_hidden_def (xdr_opaque)
 #else
-libc_hidden_nolink (xdr_opaque, GLIBC_2_0)
+libc_hidden_nolink_sunrpc (xdr_opaque, GLIBC_2_0)
 #endif
 
 /*
@@ -648,7 +648,7 @@ xdr_bytes (xdrs, cpp, sizep, maxsize)
 #ifdef EXPORT_RPC_SYMBOLS
 libc_hidden_def (xdr_bytes)
 #else
-libc_hidden_nolink (xdr_bytes, GLIBC_2_0)
+libc_hidden_nolink_sunrpc (xdr_bytes, GLIBC_2_0)
 #endif
 
 /*
@@ -665,7 +665,7 @@ xdr_netobj (xdrs, np)
 #ifdef EXPORT_RPC_SYMBOLS
 libc_hidden_def (xdr_netobj)
 #else
-libc_hidden_nolink (xdr_netobj, GLIBC_2_0)
+libc_hidden_nolink_sunrpc (xdr_netobj, GLIBC_2_0)
 #endif
 
 /*
@@ -714,7 +714,7 @@ xdr_union (xdrs, dscmp, unp, choices, dfault)
   return ((dfault == NULL_xdrproc_t) ? FALSE :
 	  (*dfault) (xdrs, unp, LASTUNSIGNED));
 }
-libc_hidden_nolink (xdr_union, GLIBC_2_0)
+libc_hidden_nolink_sunrpc (xdr_union, GLIBC_2_0)
 
 
 /*
@@ -806,7 +806,7 @@ xdr_string (xdrs, cpp, maxsize)
 #ifdef EXPORT_RPC_SYMBOLS
 libc_hidden_def (xdr_string)
 #else
-libc_hidden_nolink (xdr_string, GLIBC_2_0)
+libc_hidden_nolink_sunrpc (xdr_string, GLIBC_2_0)
 #endif
 
 /*
@@ -827,5 +827,5 @@ xdr_wrapstring (xdrs, cpp)
 #ifdef EXPORT_RPC_SYMBOLS
 libc_hidden_def (xdr_wrapstring)
 #else
-libc_hidden_nolink (xdr_wrapstring, GLIBC_2_0)
+libc_hidden_nolink_sunrpc (xdr_wrapstring, GLIBC_2_0)
 #endif

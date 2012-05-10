@@ -127,7 +127,7 @@ xdr_array (xdrs, addrp, sizep, maxsize, elsize, elproc)
 #ifdef EXPORT_RPC_SYMBOLS
 libc_hidden_def (xdr_array)
 #else
-libc_hidden_nolink (xdr_array, GLIBC_2_0)
+libc_hidden_nolink_sunrpc (xdr_array, GLIBC_2_0)
 #endif
 
 /*
@@ -162,4 +162,4 @@ xdr_vector (xdrs, basep, nelem, elemsize, xdr_elem)
     }
   return TRUE;
 }
-libc_hidden_nolink (xdr_vector, GLIBC_2_0)
+libc_hidden_nolink_sunrpc (xdr_vector, GLIBC_2_0)

@@ -88,7 +88,7 @@ svcraw_create (void)
   xdrmem_create (&srp->xdr_stream, srp->_raw_buf, UDPMSGSIZE, XDR_FREE);
   return &srp->server;
 }
-libc_hidden_nolink (svcraw_create, GLIBC_2_0)
+libc_hidden_nolink_sunrpc (svcraw_create, GLIBC_2_0)
 
 static enum xprt_stat
 svcraw_stat (SVCXPRT *xprt)

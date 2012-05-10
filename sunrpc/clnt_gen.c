@@ -175,5 +175,5 @@ clnt_create (const char *hostname, u_long prog, u_long vers,
 #ifdef EXPORT_RPC_SYMBOLS
 libc_hidden_def (clnt_create)
 #else
-libc_hidden_nolink (clnt_create, GLIBC_2_0)
+libc_hidden_nolink_sunrpc (clnt_create, GLIBC_2_0)
 #endif

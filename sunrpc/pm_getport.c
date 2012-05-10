@@ -142,7 +142,7 @@ __libc_rpc_getport (address, program, version, protocol, timeout_sec,
 #ifdef EXPORT_RPC_SYMBOLS
 libc_hidden_def (__libc_rpc_getport)
 #else
-libc_hidden_nolink (__libc_rpc_getport, GLIBC_PRIVATE)
+libc_hidden_nolink_sunrpc (__libc_rpc_getport, GLIBC_PRIVATE)
 #endif
 
 
@@ -160,4 +160,4 @@ pmap_getport (address, program, version, protocol)
 {
   return __libc_rpc_getport (address, program, version, protocol, 5, 60);
 }
-libc_hidden_nolink (pmap_getport, GLIBC_2_0)
+libc_hidden_nolink_sunrpc (pmap_getport, GLIBC_2_0)

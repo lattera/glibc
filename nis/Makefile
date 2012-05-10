@@ -23,6 +23,12 @@ subdir	:= nis
 
 aux			:= nis_hash
 
+include ../Makeconfig
+
+ifeq ($(link-obsolete-rpc),yes)
+headers			:= $(wildcard rpcsvc/*.[hx])
+endif
+
 # These are the databases available for the nis (and perhaps later nisplus)
 # service.  This must be a superset of the services in nss.
 databases		= proto service hosts network grp pwd rpc ethers \

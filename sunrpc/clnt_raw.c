@@ -129,7 +129,7 @@ clntraw_create (u_long prog, u_long vers)
   client->cl_auth = authnone_create ();
   return client;
 }
-libc_hidden_nolink (clntraw_create, GLIBC_2_0)
+libc_hidden_nolink_sunrpc (clntraw_create, GLIBC_2_0)
 
 static enum clnt_stat
 clntraw_call (h, proc, xargs, argsp, xresults, resultsp, timeout)

@@ -49,4 +49,4 @@ xdr_pmap (xdrs, regs)
     return xdr_u_long (xdrs, &regs->pm_port);
   return FALSE;
 }
-libc_hidden_nolink (xdr_pmap, GLIBC_2_0)
+libc_hidden_nolink_sunrpc (xdr_pmap, GLIBC_2_0)

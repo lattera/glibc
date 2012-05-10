@@ -178,6 +178,9 @@
 /* Define if `.ctors' and `.dtors' sections shouldn't be used.  */
 #undef	NO_CTORS_DTORS_SECTIONS
 
+/* Define if obsolete RPC code should be made available for user-level code
+   to link against.  */
+#undef LINK_OBSOLETE_RPC
 /*
  */
 

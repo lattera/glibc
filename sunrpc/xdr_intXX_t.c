@@ -46,14 +46,14 @@ xdr_int64_t (XDR *xdrs, int64_t *ip)
       return FALSE;
     }
 }
-libc_hidden_nolink (xdr_int64_t, GLIBC_2_1_1)
+libc_hidden_nolink_sunrpc (xdr_int64_t, GLIBC_2_1_1)
 
 bool_t
 xdr_quad_t (XDR *xdrs, quad_t *ip)
 {
   return xdr_int64_t (xdrs, (int64_t *) ip);
 }
-libc_hidden_nolink (xdr_quad_t, GLIBC_2_3_4)
+libc_hidden_nolink_sunrpc (xdr_quad_t, GLIBC_2_3_4)
 
 /* XDR 64bit unsigned integers */
 bool_t
@@ -82,14 +82,14 @@ xdr_uint64_t (XDR *xdrs, uint64_t *uip)
       return FALSE;
     }
 }
-libc_hidden_nolink (xdr_uint64_t, GLIBC_2_1_1)
+libc_hidden_nolink_sunrpc (xdr_uint64_t, GLIBC_2_1_1)
 
 bool_t
 xdr_u_quad_t (XDR *xdrs, u_quad_t *ip)
 {
   return xdr_uint64_t (xdrs, (uint64_t *) ip);
 }
-libc_hidden_nolink (xdr_u_quad_t, GLIBC_2_3_4)
+libc_hidden_nolink_sunrpc (xdr_u_quad_t, GLIBC_2_3_4)
 
 /* XDR 32bit integers */
 bool_t
@@ -107,7 +107,7 @@ xdr_int32_t (XDR *xdrs, int32_t *lp)
       return FALSE;
     }
 }
-libc_hidden_nolink (xdr_int32_t, GLIBC_2_1)
+libc_hidden_nolink_sunrpc (xdr_int32_t, GLIBC_2_1)
 
 /* XDR 32bit unsigned integers */
 bool_t
@@ -128,7 +128,7 @@ xdr_uint32_t (XDR *xdrs, uint32_t *ulp)
 #ifdef EXPORT_RPC_SYMBOLS
 libc_hidden_def (xdr_uint32_t)
 #else
-libc_hidden_nolink (xdr_uint32_t, GLIBC_2_1)
+libc_hidden_nolink_sunrpc (xdr_uint32_t, GLIBC_2_1)
 #endif
 
 /* XDR 16bit integers */
@@ -153,7 +153,7 @@ xdr_int16_t (XDR *xdrs, int16_t *ip)
       return FALSE;
     }
 }
-libc_hidden_nolink (xdr_int16_t, GLIBC_2_1)
+libc_hidden_nolink_sunrpc (xdr_int16_t, GLIBC_2_1)
 
 /* XDR 16bit unsigned integers */
 bool_t
@@ -177,7 +177,7 @@ xdr_uint16_t (XDR *xdrs, uint16_t *uip)
       return FALSE;
     }
 }
-libc_hidden_nolink (xdr_uint16_t, GLIBC_2_1)
+libc_hidden_nolink_sunrpc (xdr_uint16_t, GLIBC_2_1)
 
 /* XDR 8bit integers */
 bool_t
@@ -201,7 +201,7 @@ xdr_int8_t (XDR *xdrs, int8_t *ip)
       return FALSE;
     }
 }
-libc_hidden_nolink (xdr_int8_t, GLIBC_2_1)
+libc_hidden_nolink_sunrpc (xdr_int8_t, GLIBC_2_1)
 
 /* XDR 8bit unsigned integers */
 bool_t
@@ -225,4 +225,4 @@ xdr_uint8_t (XDR *xdrs, uint8_t *uip)
       return FALSE;
     }
 }
-libc_hidden_nolink (xdr_uint8_t, GLIBC_2_1)
+libc_hidden_nolink_sunrpc (xdr_uint8_t, GLIBC_2_1)

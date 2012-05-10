@@ -1,3 +1,66 @@
+2012-05-09  Andreas Schwab  <schwab@linux-m68k.org>
+	    Andreas Jaeger  <aj@suse.de>
+
+	* configure.in (obsolete-rpc): Add new option --enable-obsolete-rpc.
+	* configure: Regenerated.
+	* config.h.in (LINK_OBSOLETE_RPC): New macro.
+	* config.make.in (link-obsolete-rpc): New substituted variable.
+	* include/libc-symbols.h (libc_hidden_nolink_sunrpc): Rename from
+	libc_hidden_nolink and define based on LINK_OBSOLETE_RPC.
+	* sunrpc/Makefile (headers) [link-obsolete-rpc]: Add rpc headers.
+	(shared-only-routines): Don't set it under [link-obsolete-rpc],
+	so that libc.a contains the symbols.
+	* nis/Makefile (headers) [link-obsolete-rpc]: Add rpc headers.
+	* sunrpc/auth_des.c: Use libc_hidden_nolink_sunrpc.
+	* sunrpc/auth_none.c: Likewise.
+	* sunrpc/auth_unix.c: Likewise.
+	* sunrpc/authdes_prot.c: Likewise.
+	* sunrpc/authuxprot.c: Likewise.
+	* sunrpc/clnt_gen.c: Likewise.
+	* sunrpc/clnt_perr.c: Likewise.
+	* sunrpc/clnt_raw.c: Likewise.
+	* sunrpc/clnt_simp.c: Likewise.
+	* sunrpc/clnt_tcp.c: Likewise.
+	* sunrpc/clnt_udp.c: Likewise.
+	* sunrpc/clnt_unix.c: Likewise.
+	* sunrpc/des_crypt.c: Likewise.
+	* sunrpc/des_soft.c: Likewise.
+	* sunrpc/get_myaddr.c: Likewise.
+	* sunrpc/key_call.c: Likewise.
+	* sunrpc/key_prot.c: Likewise.
+	* sunrpc/netname.c: Likewise.
+	* sunrpc/pm_getmaps.c: Likewise.
+	* sunrpc/pm_getport.c: Likewise.
+	* sunrpc/pmap_clnt.c: Likewise.
+	* sunrpc/pmap_prot.c: Likewise.
+	* sunrpc/pmap_prot2.c: Likewise.
+	* sunrpc/pmap_rmt.c: Likewise.
+	* sunrpc/publickey.c: Likewise.
+	* sunrpc/rpc_cmsg.c: Likewise.
+	* sunrpc/rpc_common.c: Likewise.
+	* sunrpc/rpc_dtable.c: Likewise.
+	* sunrpc/rpc_prot.c: Likewise.
+	* sunrpc/rpc_thread.c: Likewise.
+	* sunrpc/rtime.c: Likewise.
+	* sunrpc/svc.c: Likewise.
+	* sunrpc/svc_auth.c: Likewise.
+	* sunrpc/svc_raw.c: Likewise.
+	* sunrpc/svc_run.c: Likewise.
+	* sunrpc/svc_tcp.c: Likewise.
+	* sunrpc/svc_udp.c: Likewise.
+	* sunrpc/svc_unix.c: Likewise.
+	* sunrpc/svcauth_des.c: Likewise.
+	* sunrpc/xcrypt.c: Likewise.
+	* sunrpc/xdr.c: Likewise.
+	* sunrpc/xdr_array.c: Likewise.
+	* sunrpc/xdr_float.c: Likewise.
+	* sunrpc/xdr_intXX_t.c: Likewise.
+	* sunrpc/xdr_mem.c: Likewise.
+	* sunrpc/xdr_rec.c: Likewise.
+	* sunrpc/xdr_ref.c: Likewise.
+	* sunrpc/xdr_sizeof.c: Likewise.
+	* sunrpc/xdr_stdio.c: Likewise.
+
 2012-05-10  Roland McGrath  <roland@hack.frob.com>
 
 	* sysdeps/x86_64/dl-machine.h (elf_machine_rela): Fix typo in last

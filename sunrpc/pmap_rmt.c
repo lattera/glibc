@@ -104,7 +104,7 @@ pmap_rmtcall (addr, prog, vers, proc, xdrargs, argsp, xdrres, resp, tout, port_p
   addr->sin_port = 0;
   return stat;
 }
-libc_hidden_nolink (pmap_rmtcall, GLIBC_2_0)
+libc_hidden_nolink_sunrpc (pmap_rmtcall, GLIBC_2_0)
 
 
 /*
@@ -137,7 +137,7 @@ xdr_rmtcall_args (XDR *xdrs, struct rmtcallargs *cap)
     }
   return FALSE;
 }
-libc_hidden_nolink (xdr_rmtcall_args, GLIBC_2_0)
+libc_hidden_nolink_sunrpc (xdr_rmtcall_args, GLIBC_2_0)
 
 /*
  * XDR remote call results
@@ -160,7 +160,7 @@ xdr_rmtcallres (xdrs, crp)
     }
   return FALSE;
 }
-libc_hidden_nolink (xdr_rmtcallres, GLIBC_2_0)
+libc_hidden_nolink_sunrpc (xdr_rmtcallres, GLIBC_2_0)
 
 
 /*
@@ -388,4 +388,4 @@ done_broad:
   AUTH_DESTROY (unix_auth);
   return stat;
 }
-libc_hidden_nolink (clnt_broadcast, GLIBC_2_0)
+libc_hidden_nolink_sunrpc (clnt_broadcast, GLIBC_2_0)

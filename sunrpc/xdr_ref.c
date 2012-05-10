@@ -90,7 +90,7 @@ xdr_reference (xdrs, pp, size, proc)
     }
   return stat;
 }
-libc_hidden_nolink (xdr_reference, GLIBC_2_0)
+libc_hidden_nolink_sunrpc (xdr_reference, GLIBC_2_0)
 
 
 /*
@@ -137,5 +137,5 @@ xdr_pointer (xdrs, objpp, obj_size, xdr_obj)
 #ifdef EXPORT_RPC_SYMBOLS
 libc_hidden_def (xdr_pointer)
 #else
-libc_hidden_nolink (xdr_pointer, GLIBC_2_0)
+libc_hidden_nolink_sunrpc (xdr_pointer, GLIBC_2_0)
 #endif

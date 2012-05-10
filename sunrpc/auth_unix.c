@@ -149,7 +149,7 @@ no_memory:
   marshal_new_auth (auth);
   return auth;
 }
-libc_hidden_nolink (authunix_create, GLIBC_2_0)
+libc_hidden_nolink_sunrpc (authunix_create, GLIBC_2_0)
 
 /*
  * Returns an auth handle with parameters determined by doing lots of
@@ -216,7 +216,7 @@ authunix_create_default (void)
 #ifdef EXPORT_RPC_SYMBOLS
 libc_hidden_def (authunix_create_default)
 #else
-libc_hidden_nolink (authunix_create_default, GLIBC_2_0)
+libc_hidden_nolink_sunrpc (authunix_create_default, GLIBC_2_0)
 #endif
 
 /*

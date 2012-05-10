@@ -184,7 +184,7 @@ svcudp_create: xp_pad is too small for IP_PKTINFO\n"));
 #ifdef EXPORT_RPC_SYMBOLS
 libc_hidden_def (svcudp_bufcreate)
 #else
-libc_hidden_nolink (svcudp_bufcreate, GLIBC_2_0)
+libc_hidden_nolink_sunrpc (svcudp_bufcreate, GLIBC_2_0)
 #endif
 
 SVCXPRT *
@@ -196,7 +196,7 @@ svcudp_create (sock)
 #ifdef EXPORT_RPC_SYMBOLS
 libc_hidden_def (svcudp_create)
 #else
-libc_hidden_nolink (svcudp_create, GLIBC_2_0)
+libc_hidden_nolink_sunrpc (svcudp_create, GLIBC_2_0)
 #endif
 
 static enum xprt_stat
@@ -500,7 +500,7 @@ svcudp_enablecache (SVCXPRT *transp, u_long size)
   su->su_cache = (char *) uc;
   return 1;
 }
-libc_hidden_nolink (svcudp_enablecache, GLIBC_2_0)
+libc_hidden_nolink_sunrpc (svcudp_enablecache, GLIBC_2_0)
 
 
 /*

@@ -194,4 +194,4 @@ xdr_callmsg (XDR *xdrs, struct rpc_msg *cmsg)
     return xdr_opaque_auth (xdrs, &(cmsg->rm_call.cb_verf));
   return FALSE;
 }
-libc_hidden_nolink (xdr_callmsg, GLIBC_2_0)
+libc_hidden_nolink_sunrpc (xdr_callmsg, GLIBC_2_0)

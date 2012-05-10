@@ -556,7 +556,12 @@ for linking")
 # define libc_hidden_proto(name, attrs...) hidden_proto (name, ##attrs)
 # define libc_hidden_def(name) hidden_def (name)
 # define libc_hidden_weak(name) hidden_weak (name)
-# define libc_hidden_nolink(name, version) hidden_nolink (name, libc, version)
+# ifdef LINK_OBSOLETE_RPC
+   /* libc_hidden_nolink_sunrpc should only get used in sunrpc code.  */
+#  define libc_hidden_nolink_sunrpc(name, version) hidden_def (name)
+# else
+#  define libc_hidden_nolink_sunrpc(name, version) hidden_nolink (name, libc, version)
+# endif
 # define libc_hidden_ver(local, name) hidden_ver (local, name)
 # define libc_hidden_data_def(name) hidden_data_def (name)
 # define libc_hidden_data_weak(name) hidden_data_weak (name)

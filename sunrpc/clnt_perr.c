@@ -127,7 +127,7 @@ clnt_sperror (CLIENT * rpch, const char *msg)
 
   return str;
 }
-libc_hidden_nolink (clnt_sperror, GLIBC_2_0)
+libc_hidden_nolink_sunrpc (clnt_sperror, GLIBC_2_0)
 
 void
 clnt_perror (CLIENT * rpch, const char *msg)
@@ -137,7 +137,7 @@ clnt_perror (CLIENT * rpch, const char *msg)
 #ifdef EXPORT_RPC_SYMBOLS
 libc_hidden_def (clnt_perror)
 #else
-libc_hidden_nolink (clnt_perror, GLIBC_2_0)
+libc_hidden_nolink_sunrpc (clnt_perror, GLIBC_2_0)
 #endif
 
 
@@ -270,7 +270,7 @@ clnt_perrno (enum clnt_stat num)
 #ifdef EXPORT_RPC_SYMBOLS
 libc_hidden_def (clnt_perrno)
 #else
-libc_hidden_nolink (clnt_perrno, GLIBC_2_0)
+libc_hidden_nolink_sunrpc (clnt_perrno, GLIBC_2_0)
 #endif
 
 char *
@@ -308,7 +308,7 @@ clnt_spcreateerror (const char *msg)
 
   return str;
 }
-libc_hidden_nolink (clnt_spcreateerror, GLIBC_2_0)
+libc_hidden_nolink_sunrpc (clnt_spcreateerror, GLIBC_2_0)
 
 void
 clnt_pcreateerror (const char *msg)
@@ -318,7 +318,7 @@ clnt_pcreateerror (const char *msg)
 #ifdef EXPORT_RPC_SYMBOLS
 libc_hidden_def (clnt_pcreateerror)
 #else
-libc_hidden_nolink (clnt_pcreateerror, GLIBC_2_0)
+libc_hidden_nolink_sunrpc (clnt_pcreateerror, GLIBC_2_0)
 #endif
 
 struct auth_errtab

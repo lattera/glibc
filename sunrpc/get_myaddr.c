@@ -99,5 +99,5 @@ get_myaddress (struct sockaddr_in *addr)
 #ifdef EXPORT_RPC_SYMBOLS
 libc_hidden_def (get_myaddress)
 #else
-libc_hidden_nolink (get_myaddress, GLIBC_2_0)
+libc_hidden_nolink_sunrpc (get_myaddress, GLIBC_2_0)
 #endif

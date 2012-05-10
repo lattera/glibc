@@ -687,6 +687,7 @@ multi_arch
 base_machine
 add_on_subdirs
 add_ons
+link_obsolete_rpc
 libc_cv_nss_crypt
 all_warnings
 force_install
@@ -779,6 +780,7 @@ enable_kernel
 enable_all_warnings
 enable_multi_arch
 enable_nss_crypt
+enable_obsolete_rpc
 with_cpu
 '
       ac_precious_vars='build_alias
@@ -1434,6 +1436,8 @@ Optional Features:
   --enable-multi-arch     enable single DSO with optimizations for multiple
                           architectures
   --enable-nss-crypt      enable libcrypt to use nss
+  --enable-obsolete-rpc   build and install the obsolete RPC code for
+                          link-time usage
 
 Optional Packages:
   --with-PACKAGE[=ARG]    use PACKAGE [ARG=yes]
@@ -3745,6 +3749,20 @@ else
   libc_cv_nss_crypt=no
 fi
 
+
+# Check whether --enable-obsolete-rpc was given.
+if test "${enable_obsolete_rpc+set}" = set; then :
+  enableval=$enable_obsolete_rpc; link_obsolete_rpc=$enableval
+else
+  link_obsolete_rpc=no
+fi
+
+
+
+if test "$link_obsolete_rpc" = yes; then
+  $as_echo "#define LINK_OBSOLETE_RPC 1" >>confdefs.h
+
+fi
 
 # The way shlib-versions is used to generate soversions.mk uses a
 # fairly simplistic model for name recognition that can't distinguish
