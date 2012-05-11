@@ -83,7 +83,7 @@ enum
 
 
 /* Mutex initializers.  */
-#if __WORDSIZE == 64
+#ifdef __PTHREAD_MUTEX_HAVE_PREV
 # define PTHREAD_MUTEX_INITIALIZER \
   { { 0, 0, 0, 0, 0, 0, { 0, 0 } } }
 # ifdef __USE_GNU

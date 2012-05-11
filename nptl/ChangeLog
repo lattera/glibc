@@ -1,5 +1,13 @@
 2012-05-11  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* sysdeps/pthread/pthread.h (PTHREAD_MUTEX_INITIALIZER): Check
+	__PTHREAD_MUTEX_HAVE_PREV instead of __WORDSIZE.
+	(PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP): Likewise.
+	(PTHREAD_ERRORCHECK_MUTEX_INITIALIZER_NP): Likewise.
+	(PTHREAD_ADAPTIVE_MUTEX_INITIALIZER_NP): Likewise.
+
+2012-05-11  H.J. Lu  <hongjiu.lu@intel.com>
+
 	* pthread_create.c (start_thread): Check __PTHREAD_MUTEX_HAVE_PREV
 	instead of __WORDSIZE.
 
