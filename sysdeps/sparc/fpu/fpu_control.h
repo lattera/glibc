@@ -59,11 +59,11 @@
 typedef unsigned long int fpu_control_t;
 
 #if __WORDSIZE == 64
-# define _FPU_GETCW(cw) __asm__ ("stx %%fsr,%0" : "=m" (*&cw))
-# define _FPU_SETCW(cw) __asm__ ("ldx %0,%%fsr" : : "m" (*&cw))
+# define _FPU_GETCW(cw) __asm__ __volatile__ ("stx %%fsr,%0" : "=m" (*&cw))
+# define _FPU_SETCW(cw) __asm__ __volatile__ ("ldx %0,%%fsr" : : "m" (*&cw))
 #else
-# define _FPU_GETCW(cw) __asm__ ("st %%fsr,%0" : "=m" (*&cw))
-# define _FPU_SETCW(cw) __asm__ ("ld %0,%%fsr" : : "m" (*&cw))
+# define _FPU_GETCW(cw) __asm__ __volatile__ ("st %%fsr,%0" : "=m" (*&cw))
+# define _FPU_SETCW(cw) __asm__ __volatile__ ("ld %0,%%fsr" : : "m" (*&cw))
 #endif
 
 /* Default control word set at startup.  */

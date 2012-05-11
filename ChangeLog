@@ -1,3 +1,9 @@
+2012-05-11  David S. Miller  <davem@davemloft.net>
+
+	* sysdeps/sparc/fpu/bits/fenv.h (__fenv_stfsr): Add __volatile__.
+	* sysdeps/sparc/fpu/fpu_control.h (_FPU_GETCW):	Likewise.
+	(_FPU_SETCW): Likewise.
+
 2012-05-10  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/x86_64/dl-trampoline.S: Check if RTLD_SAVESPACE_SSE
