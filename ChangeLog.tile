@@ -1,5 +1,9 @@
 2012-05-12  Chris Metcalf  <cmetcalf@tilera.com>
 
+	* sysdeps/unix/sysv/linux/tile/sys/dataplane.h: Add <features.h>.
+
+2012-05-12  Chris Metcalf  <cmetcalf@tilera.com>
+
 	* sysdeps/unix/sysv/linux/tile/nptl/clone.S: Add missing CFI.
 
 2012-05-12  Chris Metcalf  <cmetcalf@tilera.com>
