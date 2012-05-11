@@ -1,3 +1,8 @@
+2012-05-10  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/x86_64/dl-trampoline.S: Check if RTLD_SAVESPACE_SSE
+	is 32-byte aligned.
+
 2012-05-11  Andreas Schwab  <schwab@linux-m68k.org>
 
 	[BZ #11837]

@@ -20,6 +20,10 @@
 #include <sysdep.h>
 #include <link-defines.h>
 
+#if (RTLD_SAVESPACE_SSE % 32) != 0
+# error RTLD_SAVESPACE_SSE must be aligned to 32 bytes
+#endif
+
 	.text
 	.globl _dl_runtime_resolve
 	.type _dl_runtime_resolve, @function
