@@ -1,4 +1,4 @@
-/* Copyright (C) 2011 Free Software Foundation, Inc.
+/* Copyright (C) 2011-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Chris Metcalf <cmetcalf@tilera.com>, 2011.
 
@@ -18,8 +18,9 @@
 
 #include <sysdep.h>
 #include <tls.h>
+#include <bits/wordsize.h>
 
-#ifdef _LP64
+#if __WORDSIZE == 64
 #define LOG_SIZEOF_DTV_T 4
 #else
 #define LOG_SIZEOF_DTV_T 3
