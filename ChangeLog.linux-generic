@@ -1,3 +1,8 @@
+2012-05-12  Chris Metcalf  <cmetcalf@tilera.com>
+
+	* sysdeps/unix/sysv/linux/generic/bits/typesizes.h
+	(__SNSECONDS_T_TYPE): New macro.
+
 2012-03-09  Paul Eggert  <eggert@cs.ucla.edu>
 
 	[BZ #13673]
