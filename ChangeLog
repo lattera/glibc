@@ -1,5 +1,10 @@
 2012-05-10  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* sysdeps/x86_64/dl-machine.h (elf_machine_rela_relative): Handle
+	R_X86_64_RELATIVE64 only if RTLD_BOOTSTRAP isn't defined.
+
+2012-05-10  H.J. Lu  <hongjiu.lu@intel.com>
+
 	* elf/elf.h (R_X86_64_RELATIVE64): New.
 	(R_X86_64_NUM): Updated.
 	* sysdeps/x86_64/dl-machine.h (elf_machine_rela): Handle
