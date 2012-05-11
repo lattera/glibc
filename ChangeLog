@@ -1,5 +1,10 @@
 2012-05-11  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* elf/stackguard-macros.h (STACK_CHK_GUARD) [__x86_64__]: Use
+	"%c1" with "i" (offsetof (tcbhead_t, stack_guard)).
+
+2012-05-11  H.J. Lu  <hongjiu.lu@intel.com>
+
 	* elf/tls-macros.h (TLS_LE): Use mov instead of movq to load
 	thread pointer.
 	(TLS_IE): Use mov/add instead of movq/addq to load thread
