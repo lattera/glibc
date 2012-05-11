@@ -13,7 +13,7 @@
 
 	* sysdeps/unix/sysv/linux/x86_64/bits/pthreadtypes.h
 	(__cleanup_fct_attribute): Check __x86_64__ instead of
-	__x86_64__.
+	__WORDSIZE.
 
 2012-05-11  H.J. Lu  <hongjiu.lu@intel.com>
 
