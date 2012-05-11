@@ -1,4 +1,4 @@
-/* Copyright (C) 2011 Free Software Foundation, Inc.
+/* Copyright (C) 2011-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Chris Metcalf <cmetcalf@tilera.com>, 2011.
 
@@ -33,3 +33,13 @@
 #define CFZ(x) __insn_clz(x)
 #define REVCZ(x) __insn_ctz(x)
 #endif
+
+/* Create eight copies of the byte in a uint64_t. */
+static inline uint64_t copy_byte(uint8_t byte)
+{
+  uint64_t word = byte;
+  word = __insn_bfins(word, word, 8, 15);
+  word = __insn_bfins(word, word, 16, 31);
+  word = __insn_bfins(word, word, 32, 63);
+  return word;
+}

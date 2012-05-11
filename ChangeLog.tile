@@ -1,5 +1,16 @@
 2012-05-12  Chris Metcalf  <cmetcalf@tilera.com>
 
+	* sysdeps/tile/tilegx/memchr.c: Use new copy_byte() function
+	to efficiently generate a large constant for masking.
+	* sysdeps/tile/tilegx/memset.c: Likewise.
+	* sysdeps/tile/tilegx/rawmemchr.c: Likewise.
+	* sysdeps/tile/tilegx/strchr.c: Likewise.
+	* sysdeps/tile/tilegx/strchrnul.c: Likewise.
+	* sysdeps/tile/tilegx/strrchr.c: Likewise.
+	* sysdeps/tile/tilegx/string-endian.h (copy_byte): New function.
+
+2012-05-12  Chris Metcalf  <cmetcalf@tilera.com>
+
 	* sysdeps/tile/tilegx/memcpy.c: Allow memcpy(p, p, n)
 	without corrupting memory at "p".
 

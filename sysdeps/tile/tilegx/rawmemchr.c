@@ -1,4 +1,4 @@
-/* Copyright (C) 2011 Free Software Foundation, Inc.
+/* Copyright (C) 2011-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Chris Metcalf <cmetcalf@tilera.com>, 2011.
 
@@ -28,7 +28,7 @@ __rawmemchr (const void *s, int c)
   const uint64_t *p = (const uint64_t *) (s_int & -8);
 
   /* Create eight copies of the byte for which we are looking. */
-  const uint64_t goal = 0x0101010101010101ULL * (uint8_t) c;
+  const uint64_t goal = copy_byte(c);
 
   /* Read the first word, but munge it so that bytes before the array
      will not match goal.  */

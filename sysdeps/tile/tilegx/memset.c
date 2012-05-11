@@ -1,4 +1,4 @@
-/* Copyright (C) 2011 Free Software Foundation, Inc.
+/* Copyright (C) 2011-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Chris Metcalf <cmetcalf@tilera.com>, 2011.
 
@@ -19,6 +19,7 @@
 #include <arch/chip.h>
 #include <string.h>
 #include <stdint.h>
+#include "string-endian.h"
 
 void *
 __memset (void *s, int c, size_t n)
@@ -71,7 +72,7 @@ __memset (void *s, int c, size_t n)
   n64 = n >> 3;
 
   /* Tile input byte out to 64 bits. */
-  v64 = 0x0101010101010101ULL * (uint8_t) c;
+  v64 = copy_byte(c);
 
   /* This must be at least 8 or the following loop doesn't work. */
 #define CACHE_LINE_SIZE_IN_DOUBLEWORDS (CHIP_L2_LINE_SIZE() / 8)
