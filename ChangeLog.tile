@@ -1,5 +1,13 @@
 2012-05-12  Chris Metcalf  <cmetcalf@tilera.com>
 
+	* sysdeps/unix/sysv/linux/tile/bits/siginfo.h: Don't name
+	siginfo_t struct.  Add forward declaration of pthread_attr_t and
+	use it in sigevent.
+	* sysdeps/unix/sysv/linux/tile/nptl/bits/pthreadtypes.h: Name
+	pthread_attr_t union.
+
+2012-05-12  Chris Metcalf  <cmetcalf@tilera.com>
+
 	* sysdeps/tile/crti.S: New file, based on compiler output
 	for sysdeps/generic/initfini.c.
 	* sysdeps/tile/crtn.S: Likewise.
