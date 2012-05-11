@@ -1,5 +1,9 @@
 2012-05-12  Chris Metcalf  <cmetcalf@tilera.com>
 
+	* sysdeps/tile/tls-macros.h: Fix buggy TLS_GD, etc., macros.
+
+2012-05-12  Chris Metcalf  <cmetcalf@tilera.com>
+
 	* sysdeps/tile/tilegx/memchr.c: Use new copy_byte() function
 	to efficiently generate a large constant for masking.
 	* sysdeps/tile/tilegx/memset.c: Likewise.
