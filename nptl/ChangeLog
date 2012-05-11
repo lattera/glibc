@@ -1,5 +1,11 @@
 2012-05-11  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* sysdeps/x86_64/tls.h (THREAD_SETMEM): Use uint64_t on 64-bit
+	integer.
+	(THREAD_SETMEM_NC): Likewise.
+
+2012-05-11  H.J. Lu  <hongjiu.lu@intel.com>
+
 	* sysdeps/x86_64/tls.h (THREAD_SELF): Replace movq/%q0 with
 	mov/%0.
 
