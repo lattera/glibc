@@ -1,4 +1,4 @@
-/* Copyright (C) 2011 Free Software Foundation, Inc.
+/* Copyright (C) 2011-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Chris Metcalf <cmetcalf@tilera.com>, 2011.
 
@@ -106,6 +106,17 @@ __memcpy (void *__restrict dstv, const void *__restrict srcv, size_t n)
           for (; (uintptr_t) dst8 & (CHIP_L2_LINE_SIZE () - 1);
                n -= sizeof (word_t))
             *dst8++ = *src8++;
+
+          /* If copying to self, return.  The test is cheap enough
+             that we do it despite the fact that the memcpy() contract
+             doesn't require us to support overlapping dst and src.
+             This is the most common case of overlap, and any close
+             overlap will cause corruption due to the wh64 below.
+             This case is particularly important since the compiler
+             will emit memcpy() calls for aggregate copies even if it
+             can't prove that src != dst.  */
+          if (__builtin_expect (dst8 == src8, 0))
+            return dstv;
 
           for (; n >= CHIP_L2_LINE_SIZE ();)
             {

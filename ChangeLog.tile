@@ -1,5 +1,10 @@
 2012-05-12  Chris Metcalf  <cmetcalf@tilera.com>
 
+	* sysdeps/tile/tilegx/memcpy.c: Allow memcpy(p, p, n)
+	without corrupting memory at "p".
+
+2012-05-12  Chris Metcalf  <cmetcalf@tilera.com>
+
 	* sysdeps/tile/__tls_get_addr.S: Use __WORDSIZE, not _LP64.
 
 2012-05-12  Chris Metcalf  <cmetcalf@tilera.com>
