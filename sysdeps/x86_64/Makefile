@@ -21,6 +21,19 @@ sysdep-dl-routines += tlsdesc dl-tlsdesc
 sysdep_routines += tlsdesc dl-tlsdesc
 sysdep-rtld-routines += tlsdesc dl-tlsdesc
 
+tests += tst-quad1 tst-quad2
+modules-names += tst-quadmod1 tst-quadmod2
+
+$(objpfx)tst-quad1: $(objpfx)tst-quadmod1.so
+$(objpfx)tst-quad2: $(objpfx)tst-quadmod2.so
+
+quad-pie-test += tst-quad1pie tst-quad2pie
+tests += $(quad-pie-test)
+tests-pie += $(quad-pie-test)
+
+$(objpfx)tst-quad1pie: $(objpfx)tst-quadmod1pie.o
+$(objpfx)tst-quad2pie: $(objpfx)tst-quadmod2pie.o
+
 tests: $(objpfx)tst-xmmymm.out
 $(objpfx)tst-xmmymm.out: ../sysdeps/x86_64/tst-xmmymm.sh $(objpfx)ld.so
 	@echo "Checking ld.so for SSE register use.  This will take a few seconds..."
