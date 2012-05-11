@@ -1,3 +1,12 @@
+2012-05-11  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* elf/tls-macros.h (TLS_LE): Use mov instead of movq to load
+	thread pointer.
+	(TLS_IE): Use mov/add instead of movq/addq to load thread
+	pointer.
+	(TLS_GD_PREFIX): New.
+	(TLS_GD): Use it.
+
 2012-05-11  David S. Miller  <davem@davemloft.net>
 
 	* sysdeps/sparc/fpu/bits/fenv.h (__fenv_stfsr): Add __volatile__.
