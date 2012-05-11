@@ -1,3 +1,9 @@
+2012-05-14  Roland McGrath  <roland@hack.frob.com>
+
+	* sysdeps/unix/sysv/linux/dl-osinfo.h (dl_fatal): Function removed.
+	* elf/rtld.c (dl_main) [DL_SYSDEP_OSCHECK]:
+	Use _dl_fatal_printf instead.
+
 2012-05-14  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/configure.in (minimum_kernel): Always

@@ -1432,7 +1432,7 @@ of this helper program; chances are you did not intend to run this program.\n\
 #endif
 
 #ifdef DL_SYSDEP_OSCHECK
-  DL_SYSDEP_OSCHECK (dl_fatal);
+  DL_SYSDEP_OSCHECK (_dl_fatal_printf);
 #endif
 
   /* Initialize the data structures for the search paths for shared

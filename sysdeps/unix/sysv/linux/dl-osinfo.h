@@ -1,5 +1,5 @@
 /* Operating system specific code for generic dynamic loader functions.  Linux.
-   Copyright (C) 2000-2002,2004-2009,2011 Free Software Foundation, Inc.
+   Copyright (C) 2000-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -25,18 +25,6 @@
 
 #ifndef MIN
 # define MIN(a,b) (((a)<(b))?(a):(b))
-#endif
-
-#ifdef SHARED
-/* This is the function used in the dynamic linker to print the fatal error
-   message.  */
-static void
-__attribute__ ((__noreturn__))
-dl_fatal (const char *str)
-{
-  _dl_dprintf (2, str);
-  _exit (1);
-}
 #endif
 
 #define DL_SYSDEP_OSCHECK(FATAL)					      \
