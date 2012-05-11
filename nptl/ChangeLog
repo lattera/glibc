@@ -1,5 +1,11 @@
 2012-05-11  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* sysdeps/unix/sysv/linux/x86_64/bits/pthreadtypes.h
+	(__cleanup_fct_attribute): Check __x86_64__ instead of
+	__x86_64__.
+
+2012-05-11  H.J. Lu  <hongjiu.lu@intel.com>
+
 	* sysdeps/pthread/pthread.h (PTHREAD_MUTEX_INITIALIZER): Check
 	__PTHREAD_MUTEX_HAVE_PREV instead of __WORDSIZE.
 	(PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP): Likewise.

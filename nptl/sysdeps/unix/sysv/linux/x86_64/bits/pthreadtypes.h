@@ -219,7 +219,7 @@ typedef union
 #endif
 
 
-#if __WORDSIZE == 32
+#ifndef __x86_64__
 /* Extra attributes for the cleanup functions.  */
 # define __cleanup_fct_attribute __attribute__ ((__regparm__ (1)))
 #endif
