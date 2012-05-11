@@ -1,4 +1,4 @@
-/* Copyright (C) 2011 Free Software Foundation, Inc.
+/* Copyright (C) 2011-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Chris Metcalf <cmetcalf@tilera.com>, 2011.
 
@@ -167,6 +167,7 @@ ENTRY (__clone)
 	   in getpid().  Otherwise (if CLONE_VM isn't set), it's a
 	   fork-like clone, and we go ahead and write the cached values
 	   from the true system pid (retrieved via __NR_getpid syscall).  */
+	cfi_def_cfa_offset (FRAME_SIZE)
 #ifdef __tilegx__
 	{
 	 moveli r0, hw1_last(CLONE_VM)
