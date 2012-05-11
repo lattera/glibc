@@ -1,3 +1,8 @@
+2012-05-11  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* pthread_create.c (start_thread): Check __PTHREAD_MUTEX_HAVE_PREV
+	instead of __WORDSIZE.
+
 2012-05-10  Thomas Schwinge  <thomas@schwinge.name>
 
 	[BZ #3748]

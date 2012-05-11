@@ -355,7 +355,7 @@ start_thread (void *arg)
 
 #ifndef __ASSUME_SET_ROBUST_LIST
   /* If this thread has any robust mutexes locked, handle them now.  */
-# if __WORDSIZE == 64
+# ifdef __PTHREAD_MUTEX_HAVE_PREV
   void *robust = pd->robust_head.list;
 # else
   __pthread_slist_t *robust = pd->robust_list.__next;
