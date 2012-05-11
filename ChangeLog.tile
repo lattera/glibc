@@ -1,5 +1,10 @@
 2012-05-12  Chris Metcalf  <cmetcalf@tilera.com>
 
+	* sysdeps/tile/stackguard-macros.h: New file.
+	* sysdeps/tile/elf/stackguard-macros.h: New stub include file.
+
+2012-05-12  Chris Metcalf  <cmetcalf@tilera.com>
+
 	* sysdeps/tile/Makefile (ELF_MACHINE_PLTREL_OVERLAP):
 	Remove variable no longer used by core.
 
