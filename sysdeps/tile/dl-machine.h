@@ -1,4 +1,4 @@
-/* Copyright (C) 2011 Free Software Foundation, Inc.
+/* Copyright (C) 2011-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Chris Metcalf <cmetcalf@tilera.com>, 2011.
    Based on work contributed by by Carl Pederson & Martin Schwidefsky.
@@ -223,9 +223,6 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 
 /* TILE never uses Elf32_Rel relocations.  */
 #define ELF_MACHINE_NO_REL 1
-
-/* TILE overlaps DT_RELA and DT_PLTREL.  */
-#define ELF_MACHINE_PLTREL_OVERLAP 1
 
 /* We define an initialization functions.  This is called very early in
    _dl_sysdep_start.  */

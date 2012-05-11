@@ -1,5 +1,10 @@
 2012-05-12  Chris Metcalf  <cmetcalf@tilera.com>
 
+	* sysdeps/tile/Makefile (ELF_MACHINE_PLTREL_OVERLAP):
+	Remove variable no longer used by core.
+
+2012-05-12  Chris Metcalf  <cmetcalf@tilera.com>
+
 	* sysdeps/unix/sysv/linux/tile/bits/siginfo.h: Don't name
 	siginfo_t struct.  Add forward declaration of pthread_attr_t and
 	use it in sigevent.
