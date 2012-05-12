@@ -50,12 +50,12 @@ MEMMOVE (a1, a2, len)
   unsigned long int srcp = (long int) src;
 
   /* If there is no overlap between ranges, call the builtin memcpy.  */
-  if ( (dstp >= (srcp + len)) || (srcp > (dstp + len)) )
-    return __builtin_memcpy (dest, src, len);
+  if (dstp >= srcp + len || srcp > dstp + len)
+    __builtin_memcpy (dest, src, len);
 
   /* This test makes the forward copying code be used whenever possible.
      Reduces the working set.  */
-  if (dstp - srcp >= len)      /* *Unsigned* compare!  */
+  else if (dstp - srcp >= len)      /* *Unsigned* compare!  */
     {
       /* Copy from the beginning to the end.  */
 
