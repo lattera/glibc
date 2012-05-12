@@ -1,3 +1,10 @@
+2012-05-12  Thomas Schwinge  <thomas@codesourcery.com>
+
+	* io/dup3.c (dup3): Rename to __dup3, add weak alias for dup3.
+	* sysdeps/unix/syscalls.list (dup3): Likewise.
+	* libio/freopen.c (freopen): Invoke __dup3 instead of dup3.
+	* libio/freopen64.c (freopen64): Invoke __dup3 instead of dup3.
+
 2012-05-11  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* elf/stackguard-macros.h (STACK_CHK_GUARD) [__x86_64__]: Use

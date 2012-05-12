@@ -73,9 +73,9 @@ freopen64 (filename, mode, fp)
 	  else
 	    newfd =
 # endif
-	      dup3 (_IO_fileno (result), fd,
-		    (result->_flags2 & _IO_FLAGS2_CLOEXEC) != 0
-		    ? O_CLOEXEC : 0);
+	      __dup3 (_IO_fileno (result), fd,
+                      (result->_flags2 & _IO_FLAGS2_CLOEXEC) != 0
+                      ? O_CLOEXEC : 0);
 #else
 # define newfd 1
 #endif

@@ -10,7 +10,7 @@ chroot		-	chroot		i:s	chroot
 close		-	close		Ci:i	__libc_close	__close close
 dup		-	dup		i:i	__dup		dup
 dup2		-	dup2		i:ii	__dup2		dup2
-dup3		-	dup3		i:iii	dup3
+dup3		-	dup3		i:iii	__dup3		dup3
 fchdir		-	fchdir		i:i	__fchdir	fchdir
 fchmod		-	fchmod		i:ii	__fchmod	fchmod
 fchown		-	fchown		i:iii	__fchown	fchown

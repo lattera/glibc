@@ -24,7 +24,7 @@
    open the same file as FD is which setting flags according to
    FLAGS.  Return FD2 or -1.  */
 int
-dup3 (fd, fd2, flags)
+__dup3 (fd, fd2, flags)
      int fd;
      int fd2;
      int flags;
@@ -42,7 +42,8 @@ dup3 (fd, fd2, flags)
   __set_errno (ENOSYS);
   return -1;
 }
-libc_hidden_def (dup3)
+libc_hidden_def (__dup3)
+weak_alias (__dup3, dup3)
 stub_warning (dup3)
 
 #include <stub-tag.h>
