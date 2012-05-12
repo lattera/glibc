@@ -369,6 +369,11 @@ compile-command.s = $(COMPILE.s) $< $(OUTPUT_OPTION) $(compile-mkdep-flags)
 compile-command.c = $(compile.c) $(OUTPUT_OPTION) $(compile-mkdep-flags)
 compile-command.cc = $(compile.cc) $(OUTPUT_OPTION) $(compile-mkdep-flags)
 
+# Like compile-mkdep-flags, but for use with $(BUILD_CC).  We don't want to
+# track system includes here, they may spuriously trigger an install rule,
+# and would cause the check-local-headers test to fail.
+native-compile-mkdep-flags = -MMD -MP -MF $@.dt -MT $@
+
 # GCC can grok options after the file name, and it looks nicer that way.
 compile.c = $(CC) $< -c $(CFLAGS) $(CPPFLAGS)
 compile.cc = $(CXX) $< -c $(CXXFLAGS) $(CPPFLAGS)

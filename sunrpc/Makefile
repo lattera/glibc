@@ -91,7 +91,7 @@ install-bin := rpcgen
 rpcgen-objs = rpc_main.o rpc_hout.o rpc_cout.o rpc_parse.o \
 	      rpc_scan.o rpc_util.o rpc_svcout.o rpc_clntout.o \
 	      rpc_tblout.o rpc_sample.o
-extra-objs = $(rpcgen-objs)
+extra-objs = $(rpcgen-objs) $(addprefix cross-,$(rpcgen-objs))
 others += rpcgen
 
 all: # Make this the default target; it will be defined in Rules.
@@ -157,15 +157,13 @@ $(objpfx)tst-xdrmem2: $(common-objpfx)linkobj/libc.so
 $(objpfx)rpcgen: $(addprefix $(objpfx),$(rpcgen-objs))
 
 cross-rpcgen-objs := $(addprefix $(objpfx)cross-,$(rpcgen-objs))
-extra-objs += $(cross-rpcgen-objs)
 
 # When generic makefile support for build system programs is
 # available, it should replace this code.  See
 # <http://sourceware.org/bugzilla/show_bug.cgi?id=14087>.
-$(cross-rpcgen-objs): $(objpfx)cross-%.o: %.c
-	$(make-target-directory)
+$(cross-rpcgen-objs): $(objpfx)cross-%.o: %.c $(before-compile)
 	$(BUILD_CC) $($(basename $(<F))-CFLAGS) $(ALL_BUILD_CFLAGS) $< \
-		$(OUTPUT_OPTION) $(compile-mkdep-flags) -c
+		$(OUTPUT_OPTION) $(native-compile-mkdep-flags) -c
 
 $(objpfx)cross-rpcgen: $(cross-rpcgen-objs)
 	$(BUILD_CC) $^ $(BUILD_LDFLAGS) -o $@

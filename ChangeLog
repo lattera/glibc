@@ -1,3 +1,12 @@
+2012-05-16  Andreas Schwab  <schwab@linux-m68k.org>
+
+	* Makerules (native-compile-mkdep-flags): Define.
+	* sunrpc/Makefile (extra-objs): Add $(addprefix
+	cross-,$(rpcgen-objs)), don't add $(cross-rpcgen-objs).
+	($(cross-rpcgen-objs)): Use $(native-compile-mkdep-flags) instead
+	of $(compile-mkdep-flags).  Depend on $(before-compile) instead of
+	calling $(make-target-directory).
+
 2012-05-15  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* bits/types.h (__snseconds_t): Removed.
