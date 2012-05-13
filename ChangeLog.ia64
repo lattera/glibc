@@ -1,3 +1,7 @@
+2012-05-14  Mike Frysinger  <vapier@gentoo.org>
+
+	* sysdeps/ia64/fpu/libm-symbols.h: Delete __ELF__ checks.
+
 2012-05-07  Mike Frysinger  <vapier@gentoo.org>
 
 	* sysdeps/unix/sysv/linux/ia64/sysdep.h: Include errno.h.

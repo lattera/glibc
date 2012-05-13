@@ -3,13 +3,8 @@
 
 /* Support for compatible assembler handling.  */
 
-#ifdef __ELF__
-# define ASM_SIZE_DIRECTIVE(name) .size name,.-name
-# define ASM_TYPE_DIRECTIVE(name,T) .type name,T
-#else
-# define ASM_SIZE_DIRECTIVE(name)
-# define ASM_TYPE_DIRECTIVE(name,T)
-#endif
+#define ASM_SIZE_DIRECTIVE(name) .size name,.-name
+#define ASM_TYPE_DIRECTIVE(name,T) .type name,T
 
 #define LOCAL_LIBM_ENTRY(name)			\
 	.proc name;				\
