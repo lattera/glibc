@@ -1,3 +1,13 @@
+2012-05-14  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/unix/sysv/linux/x86_64/bits/pthreadtypes.h: Define x32
+	__SIZEOF_PTHREAD_XXX_T.
+	(__pthread_internal_list): Check __x86_64__ instead of __WORDSIZE.
+	(pthread_mutex_t): Likewise.
+	(pthread_rwlock_t): Likewise.
+	(__PTHREAD_RWLOCK_INT_FLAGS_SHARED): New.  Defined if __x86_64__
+	is defined.
+
 2012-05-11  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/x86_64/x32/tls.h: New file.
