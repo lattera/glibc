@@ -1,3 +1,8 @@
+2012-05-14  Andreas Schwab  <schwab@linux-m68k.org>
+
+	* sysdeps/unix/sysv/linux/m68k/configure.in (arch_minimum_kernel)
+	[$machine != m68k/coldfire]: Don't set.
+
 2012-05-10  Andreas Schwab  <schwab@linux-m68k.org>
 
 	* sysdeps/m68k/m680x0/fpu/libm-test-ulps: Update.
