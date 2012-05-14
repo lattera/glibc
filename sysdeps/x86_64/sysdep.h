@@ -95,4 +95,60 @@ lose:									      \
 
 #define atom_text_section .section ".text.atom", "ax"
 
+/* Long and pointer size in bytes.  */
+#define LP_SIZE	8
+
+/* Instruction to operate on long and pointer.  */
+#define LP_OP(insn) insn##q
+
+/* Assembler address directive. */
+#define ASM_ADDR .quad
+
+/* Registers to hold long and pointer.  */
+#define RAX_LP	rax
+#define RBP_LP	rbp
+#define RBX_LP	rbx
+#define RCX_LP	rcx
+#define RDI_LP	rdi
+#define RDX_LP	rdx
+#define RSI_LP	rsi
+#define RSP_LP	rsp
+#define R8_LP	r8
+#define R9_LP	r9
+#define R10_LP	r10
+#define R11_LP	r11
+#define R12_LP	r12
+#define R13_LP	r13
+#define R14_LP	r14
+#define R15_LP	r15
+
+#else	/* __ASSEMBLER__ */
+
+/* Long and pointer size in bytes.  */
+#define LP_SIZE "8"
+
+/* Instruction to operate on long and pointer.  */
+#define LP_OP(insn) #insn "q"
+
+/* Assembler address directive. */
+#define ASM_ADDR ".quad"
+
+/* Registers to hold long and pointer.  */
+#define RAX_LP	"rax"
+#define RBP_LP	"rbp"
+#define RBX_LP	"rbx"
+#define RCX_LP	"rcx"
+#define RDI_LP	"rdi"
+#define RDX_LP	"rdx"
+#define RSI_LP	"rsi"
+#define RSP_LP	"rsp"
+#define R8_LP	"r8"
+#define R9_LP	"r9"
+#define R10_LP	"r10"
+#define R11_LP	"r11"
+#define R12_LP	"r12"
+#define R13_LP	"r13"
+#define R14_LP	"r14"
+#define R15_LP	"r15"
+
 #endif	/* __ASSEMBLER__ */

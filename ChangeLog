@@ -1,5 +1,27 @@
 2012-05-14  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* sysdeps/x86_64/sysdep.h (LP_SIZE): New macro.
+	(LP_OP): Likewise.
+	(ASM_ADDR): Likewise.
+	(RAX_LP): Likewise.
+	(RBP_LP): Likewise.
+	(RBX_LP): Likewise.
+	(RCX_LP): Likewise.
+	(RDI_LP): Likewise.
+	(RSI_LP): Likewise.
+	(RSP_LP): Likewise.
+	(R8_LP): Likewise.
+	(R9_LP): Likewise.
+	(R10_LP): Likewise.
+	(R10_LP): Likewise.
+	(R11_LP): Likewise.
+	(R12_LP): Likewise.
+	(R13_LP): Likewise.
+	(R14_LP): Likewise.
+	(R15_LP): Likewise.
+
+2012-05-14  H.J. Lu  <hongjiu.lu@intel.com>
+
 	* sysdeps/x86_64/x32/dl-machine.h: New file.
 
 2012-05-14  Andreas Jaeger  <aj@suse.de>
