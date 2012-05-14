@@ -1,5 +1,10 @@
 2012-05-14  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* sysdeps/x86_64/dl-machine.h (elf_machine_load_address): Remove
+	the `q' suffix from lea and replace .quad with ASM_ADDR.
+
+2012-05-14  H.J. Lu  <hongjiu.lu@intel.com>
+
 	* sysdeps/unix/sysv/linux/x86_64/sysdep.h (PTR_MANGLE): Remove
 	the `q' suffix from xor/rol instructions.  Use $2*LP_SIZE+1
 	instead of $17.
