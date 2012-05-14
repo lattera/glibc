@@ -632,6 +632,7 @@ libc_cv_localedir
 libc_cv_slibdir
 old_glibc_headers
 libc_cv_gcc_unwind_find_fde
+CPPUNDEFS
 sizeof_long_double
 EGREP
 GREP
@@ -7540,6 +7541,40 @@ _ACEOF
 
 
 sizeof_long_double=$ac_cv_sizeof_long_double
+
+
+CPPUNDEFS=
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for _FORTIFY_SOURCE predefine" >&5
+$as_echo_n "checking for _FORTIFY_SOURCE predefine... " >&6; }
+if ${libc_cv_predef_fortify_source+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+int
+main ()
+{
+
+#ifdef _FORTIFY_SOURCE
+# error bogon
+#endif
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_compile "$LINENO"; then :
+  libc_cv_predef_fortify_source=no
+else
+  libc_cv_predef_fortify_source=yes
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_predef_fortify_source" >&5
+$as_echo "$libc_cv_predef_fortify_source" >&6; }
+if test $libc_cv_predef_fortify_source = yes; then
+  CPPUNDEFS="${CPPUNDEFS:+$CPPUNDEFS }-U_FORTIFY_SOURCE"
+fi
 
 
 ### End of automated tests.

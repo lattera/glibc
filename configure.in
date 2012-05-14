@@ -2036,6 +2036,22 @@ AC_CHECK_SIZEOF(long double, 0)
 sizeof_long_double=$ac_cv_sizeof_long_double
 AC_SUBST(sizeof_long_double)
 
+CPPUNDEFS=
+dnl Check for silly hacked compilers predefining _FORTIFY_SOURCE.
+dnl Since we are building the implementations of the fortified functions here,
+dnl having the macro defined interacts very badly.
+AC_CACHE_CHECK([for _FORTIFY_SOURCE predefine], libc_cv_predef_fortify_source,
+[AC_TRY_COMPILE([], [
+#ifdef _FORTIFY_SOURCE
+# error bogon
+#endif],
+		[libc_cv_predef_fortify_source=no],
+		[libc_cv_predef_fortify_source=yes])])
+if test $libc_cv_predef_fortify_source = yes; then
+  CPPUNDEFS="${CPPUNDEFS:+$CPPUNDEFS }-U_FORTIFY_SOURCE"
+fi
+AC_SUBST(CPPUNDEFS)
+
 ### End of automated tests.
 ### Now run sysdeps configure fragments.
 

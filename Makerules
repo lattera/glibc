@@ -1233,7 +1233,7 @@ $(stdio_lim:h=st): $(..)stdio-common/stdio_lim.h.in $(..)Rules \
 	  echo '#define _LIBC 1';					\
 	  echo '#include "$(..)misc/sys/uio.h"'; } |			\
 	$(CC) -E -dM -MD -MP -MF $(@:st=dT) -MT '$(@:st=h) $(@:st=d)' 	\
-	      $(+includes) -xc - -o $(@:st=hT)
+	      $(CPPUNDEFS) $(+includes) -xc - -o $(@:st=hT)
 	sed $(sed-remove-objpfx) $(sed-remove-dotdot)			\
 	    $(@:st=dT) > $(@:st=dt)
 	mv -f $(@:st=dt) $(@:st=d)

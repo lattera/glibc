@@ -1,3 +1,14 @@
+2012-05-16  Roland McGrath  <roland@hack.frob.com>
+
+	[BZ #10375]
+	* configure.in: Check for _FORTIFY_SOURCE being predefined.
+	(CPPUNDEFS): New substituted variable; add -U_FORTIFY_SOURCE if needed.
+	* configure: Regenerated.
+	* config.make.in (CPPUNDEFS): New substituted variable.
+	* Makeconfig (CPPFLAGS): Put $(CPPUNDEFS) at the beginning.
+	* Makerules ($(stdio_lim:h=st)): Use $(CPPUNDEFS).
+	* time/ctime.c: Don't #undef __OPTIMIZE__ and ctime.
+
 2012-05-16  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/unix/sysv/linux/bits/mqueue.h: Include <bits/types.h>.
