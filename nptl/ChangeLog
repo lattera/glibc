@@ -1,5 +1,11 @@
 2012-05-14  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* shlib-versions: Move x86_64-.*-linux.* entry to ...
+	* sysdeps/x86_64/64/shlib-versions: Here.  New file.
+	* sysdeps/x86_64/x32/shlib-versions: New file.
+
+2012-05-14  H.J. Lu  <hongjiu.lu@intel.com>
+
 	* sysdeps/unix/sysv/linux/x86_64/bits/pthreadtypes.h: Define x32
 	__SIZEOF_PTHREAD_XXX_T.
 	(__pthread_internal_list): Check __x86_64__ instead of __WORDSIZE.

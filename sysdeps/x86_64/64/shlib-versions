@@ -1,0 +1,4 @@
+# Configuration		DEFAULT			Earliest symbol set
+# -------------		---------------		------------------------------
+x86_64-.*-linux.*	DEFAULT			GLIBC_2.2.5
+x86_64-.*-linux.*	ld=ld-linux-x86-64.so.2	GLIBC_2.2.5

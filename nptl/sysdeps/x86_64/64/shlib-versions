@@ -1,0 +1,3 @@
+# Configuration		DEFAULT			Earliest symbol set
+# -------------		---------------		------------------------------
+x86_64-.*-linux.*	libpthread=0		GLIBC_2.2.5
