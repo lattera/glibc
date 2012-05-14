@@ -28,10 +28,6 @@
    translate it here.  */
 #include <kernel_sigaction.h>
 
-/* The variable is shared between all wrappers around signal handling
-   functions which have RT equivalents.  */
-int __libc_missing_rt_sigs;
-
 #define SA_RESTORER	0x04000000
 
 extern void __default_sa_restorer_v1(void);
@@ -69,97 +65,42 @@ __libc_sigaction (sig, act, oact)
      const struct sigaction *act;
      struct sigaction *oact;
 {
-#ifndef __ASSUME_REALTIME_SIGNALS
-  struct old_kernel_sigaction k_sigact, k_osigact;
-#endif
   int result;
 
-#ifdef __NR_rt_sigaction
-  /* First try the RT signals.  */
-# ifndef __ASSUME_REALTIME_SIGNALS
-  if (!__libc_missing_rt_sigs)
-# endif
-    {
-      struct kernel_sigaction kact, koact;
-# ifndef __ASSUME_REALTIME_SIGNALS
-      int saved_errno = errno;
-# endif
+  struct kernel_sigaction kact, koact;
 
-      if (act)
-	{
-	  kact.k_sa_handler = act->sa_handler;
-	  memcpy (&kact.sa_mask, &act->sa_mask, sizeof (sigset_t));
-	  kact.sa_flags = act->sa_flags;
-# ifdef HAVE_SA_RESTORER
-	  if (kact.sa_flags & SA_RESTORER)
-	    kact.sa_restorer = act->sa_restorer;
-	  else
-	    {
-	      kact.sa_restorer = choose_restorer (kact.sa_flags);
-	      kact.sa_flags |= SA_RESTORER;
-	    }
-# endif
-	}
-
-      /* XXX The size argument hopefully will have to be changed to the
-	 real size of the user-level sigset_t.  */
-      result = INLINE_SYSCALL (rt_sigaction, 4, sig,
-			       act ? __ptrvalue (&kact) : NULL,
-			       oact ? __ptrvalue (&koact) : NULL, _NSIG / 8);
-
-# ifndef __ASSUME_REALTIME_SIGNALS
-      if (result >= 0 || errno != ENOSYS)
-# endif
-	{
-	  if (oact && result >= 0)
-	    {
-	      oact->sa_handler = koact.k_sa_handler;
-	      memcpy (&oact->sa_mask, &koact.sa_mask, sizeof (sigset_t));
-	      oact->sa_flags = koact.sa_flags;
-# ifdef HAVE_SA_RESTORER
-	      oact->sa_restorer = koact.sa_restorer;
-# endif
-	    }
-	  return result;
-	}
-
-# ifndef __ASSUME_REALTIME_SIGNALS
-      __set_errno (saved_errno);
-      __libc_missing_rt_sigs = 1;
-# endif
-    }
-#endif
-
-#ifndef __ASSUME_REALTIME_SIGNALS
   if (act)
     {
-      k_sigact.k_sa_handler = act->sa_handler;
-      k_sigact.sa_mask = act->sa_mask.__val[0];
-      k_sigact.sa_flags = act->sa_flags;
-# ifdef HAVE_SA_RESTORER
-      if (k_sigact.sa_flags & SA_RESTORER)
-	k_sigact.sa_restorer = act->sa_restorer;
+      kact.k_sa_handler = act->sa_handler;
+      memcpy (&kact.sa_mask, &act->sa_mask, sizeof (sigset_t));
+      kact.sa_flags = act->sa_flags;
+#ifdef HAVE_SA_RESTORER
+      if (kact.sa_flags & SA_RESTORER)
+	kact.sa_restorer = act->sa_restorer;
       else
 	{
-	  k_sigact.sa_restorer = choose_restorer (k_sigact.sa_flags);
-	  k_sigact.sa_flags |= SA_RESTORER;
+	  kact.sa_restorer = choose_restorer (kact.sa_flags);
+	  kact.sa_flags |= SA_RESTORER;
 	}
-# endif
+#endif
     }
-  result = INLINE_SYSCALL (sigaction, 3, sig,
-			   act ? __ptrvalue (&k_sigact) : NULL,
-			   oact ? __ptrvalue (&k_osigact) : NULL);
+
+  /* XXX The size argument hopefully will have to be changed to the
+     real size of the user-level sigset_t.  */
+  result = INLINE_SYSCALL (rt_sigaction, 4, sig,
+			   act ? __ptrvalue (&kact) : NULL,
+			   oact ? __ptrvalue (&koact) : NULL, _NSIG / 8);
+
   if (oact && result >= 0)
     {
-      oact->sa_handler = k_osigact.k_sa_handler;
-      oact->sa_mask.__val[0] = k_osigact.sa_mask;
-      oact->sa_flags = k_osigact.sa_flags;
-# ifdef HAVE_SA_RESTORER
-      oact->sa_restorer = k_osigact.sa_restorer;
-# endif
+      oact->sa_handler = koact.k_sa_handler;
+      memcpy (&oact->sa_mask, &koact.sa_mask, sizeof (sigset_t));
+      oact->sa_flags = koact.sa_flags;
+#ifdef HAVE_SA_RESTORER
+      oact->sa_restorer = koact.sa_restorer;
+#endif
     }
   return result;
-#endif
 }
 libc_hidden_def (__libc_sigaction)
 
