@@ -1,3 +1,9 @@
+2012-05-14  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #14104]
+	* sysdeps/unix/sysv/linux/check_pf.c (cache): Use
+	libc_freeres_ptr.
+
 2012-05-14  Liubov Dmitrieva  <liubov.dmitrieva@gmail.com>
 
 	* sysdeps/i386/i686/fpu/multiarch/Makefile: New file.

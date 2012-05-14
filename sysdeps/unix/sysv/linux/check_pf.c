@@ -61,7 +61,7 @@ static struct cached_data noai6ai_cached =
     .in6ailen = 0
   };
 
-static struct cached_data *cache;
+libc_freeres_ptr (static struct cached_data *cache);
 __libc_lock_define_initialized (static, lock);
 
 
