@@ -14,7 +14,7 @@
    Lesser General Public License for more details.
 
    You should have received a copy of the GNU Lesser General Public
-   License along with the GNU C Library.  If not, see
+   License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
 #include <alloca.h>
@@ -786,7 +786,8 @@ _dl_lookup_symbol_x (const char *undef_name, struct link_map *undef_map,
   if (__builtin_expect (current_value.s == NULL, 0))
     {
       if ((*ref == NULL || ELFW(ST_BIND) ((*ref)->st_info) != STB_WEAK)
-	  && skip_map == NULL)
+	  && skip_map == NULL
+	  && !(GLRO(dl_debug_mask) & DL_DEBUG_UNUSED))
 	{
 	  /* We could find no value for a strong reference.  */
 	  const char *reference_name = undef_map ? undef_map->l_name : "";

@@ -1,3 +1,9 @@
+2012-05-14  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/arm/sigaction.c
+	[!__ASSUME_REALTIME_SIGNALS]: Remove conditional code.
+	[__ASSUME_REALTIME_SIGNALS]: Make code unconditional.
+
 2012-05-07  Carlos O'Donell  <carlos_odonell@mentor.com>
 
 	* sysdeps/arm/configure.in: Set libc_cv_arm_pcs_vfp.
