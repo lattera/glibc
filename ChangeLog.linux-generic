@@ -1,3 +1,9 @@
+2012-05-14  Chris Metcalf  <cmetcalf@tilera.com>
+
+	* sysdeps/unix/sysv/linux/generic/bits/stat.h,
+	sysdeps/unix/sysv/linux/generic/bits/statfs.h:
+	Use "__aligned__" instead of "aligned" in public headers.
+
 2012-05-12  Chris Metcalf  <cmetcalf@tilera.com>
 
 	* sysdeps/unix/sysv/linux/generic/wordsize-32/syscalls.list:

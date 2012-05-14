@@ -38,10 +38,10 @@
 # define __field64(type, type64, name) type name
 #elif __BYTE_ORDER == __LITTLE_ENDIAN
 # define __field64(type, type64, name) \
-  type name __attribute__((aligned(8))); int __##name##_pad
+  type name __attribute__((__aligned__(8))); int __##name##_pad
 #else
 # define __field64(type, type64, name) \
-  int __##name##_pad __attribute__((aligned(8))); type name
+  int __##name##_pad __attribute__((__aligned__(8))); type name
 #endif
 
 struct statfs
@@ -58,7 +58,7 @@ struct statfs
     __SWORD_TYPE f_frsize;
     __SWORD_TYPE f_flags;
     __SWORD_TYPE f_spare[4];
-  } __attribute__((aligned(8)));
+  } __attribute__((__aligned__(8)));
 
 #undef __field64
 
@@ -77,7 +77,7 @@ struct statfs64
     __SWORD_TYPE f_frsize;
     __SWORD_TYPE f_flags;
     __SWORD_TYPE f_spare[4];
-  } __attribute__((aligned(8)));
+  } __attribute__((__aligned__(8)));
 #endif
 
 /* Tell code we have these members.  */
