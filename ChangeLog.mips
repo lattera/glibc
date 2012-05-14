@@ -1,3 +1,21 @@
+2012-05-14  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/mips/pread.c [!__ASSUME_PREAD_SYSCALL]:
+	Remove conditional code.
+	[__ASSUME_PREAD_SYSCALL]: Make code unconditional.
+	* sysdeps/unix/sysv/linux/mips/pread64.c
+	[!__ASSUME_PREAD_SYSCALL]: Remove conditional code.
+	[__ASSUME_PREAD_SYSCALL]: Make code unconditional.
+	* sysdeps/unix/sysv/linux/mips/pwrite.c
+	[!__ASSUME_PWRITE_SYSCALL]: Remove conditional code.
+	[__ASSUME_PWRITE_SYSCALL]: Make code unconditional.
+	* sysdeps/unix/sysv/linux/mips/pwrite64.c
+	[!__ASSUME_PWRITE_SYSCALL]: Remove conditional code.
+	[__ASSUME_PWRITE_SYSCALL]: Make code unconditional.
+	* sysdeps/unix/sysv/linux/mips/sigaction.c
+	[!__ASSUME_REALTIME_SIGNALS]: Remove conditional code.
+	[__ASSUME_REALTIME_SIGNALS]: Make code unconditional.
+
 2012-05-11  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/mips/dl-lookup.c: Update from generic version.

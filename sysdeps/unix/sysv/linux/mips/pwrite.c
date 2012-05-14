@@ -1,5 +1,4 @@
-/* Copyright (C) 1997, 1998, 2000, 2002, 2003, 2004
-   Free Software Foundation, Inc.
+/* Copyright (C) 1997-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -38,12 +37,6 @@
 # define __NR_pwrite __NR_pwrite64
 #endif
 
-#if defined __NR_pwrite || __ASSUME_PWRITE_SYSCALL > 0
-
-# if __ASSUME_PWRITE_SYSCALL == 0
-static ssize_t __emulate_pwrite (int fd, const void *buf, size_t count,
-				 off_t offset) internal_function;
-# endif
 
 ssize_t
 __libc_pwrite (fd, buf, count, offset)
@@ -60,7 +53,6 @@ __libc_pwrite (fd, buf, count, offset)
 
   if (SINGLE_THREAD_P)
     {
-      /* First try the syscall.  */
 #if _MIPS_SIM == _ABIN32 || _MIPS_SIM == _ABI64
       result = INLINE_SYSCALL (pwrite, 4, fd, CHECK_N (buf, count), count,
 			       offset);
@@ -68,28 +60,17 @@ __libc_pwrite (fd, buf, count, offset)
       result = INLINE_SYSCALL (pwrite, 6, fd, CHECK_N (buf, count), count, 0,
 			       __LONG_LONG_PAIR (offset >> 31, offset));
 #endif
-# if __ASSUME_PWRITE_SYSCALL == 0
-      if (result == -1 && errno == ENOSYS)
-        /* No system call available.  Use the emulation.  */
-        result = __emulate_pwrite (fd, buf, count, offset);
-# endif
       return result;
     }
 
   int oldtype = LIBC_CANCEL_ASYNC ();
 
-  /* First try the syscall.  */
 #if _MIPS_SIM == _ABIN32 || _MIPS_SIM == _ABI64
   result = INLINE_SYSCALL (pwrite, 4, fd, CHECK_N (buf, count), count, offset);
 #else
   result = INLINE_SYSCALL (pwrite, 6, fd, CHECK_N (buf, count), count, 0,
 			   __LONG_LONG_PAIR (offset >> 31, offset));
 #endif
-# if __ASSUME_PWRITE_SYSCALL == 0
-  if (result == -1 && errno == ENOSYS)
-    /* No system call available.  Use the emulation.  */
-    result = __emulate_pwrite (fd, buf, count, offset);
-# endif
 
   LIBC_CANCEL_RESET (oldtype);
 
@@ -98,11 +79,3 @@ __libc_pwrite (fd, buf, count, offset)
 
 strong_alias (__libc_pwrite, __pwrite)
 weak_alias (__libc_pwrite, pwrite)
-
-# define __libc_pwrite(fd, buf, count, offset) \
-     static internal_function __emulate_pwrite (fd, buf, count, offset)
-#endif
-
-#if __ASSUME_PWRITE_SYSCALL == 0
-# include <sysdeps/posix/pwrite.c>
-#endif
