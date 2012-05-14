@@ -48,7 +48,7 @@ Version 2.16
 
   Implemented by Ulrich Drepper.
 
-* Support for the IA-64 is removed and could live in ports.
+* Support for the IA-64 has been moved to ports.
 
 * Remove support for anything but ELF binary format
 
@@ -989,68 +989,6 @@ Version 2.2
   Masahide Washizawa.
 
 * IA-64 port by Jes Sorensen and HJ Lu.
-
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Compiling the GNU C Library for Linux/ia64
-******************************************
-
-   Please refer to the file INSTALL in the same directory as you found
-this file for general information about configuring and compiling
-glibc.
-
-   For general inquiries about glibc under Linux/ia64 please use the
-following mailing list linux-ia64@linuxia64.org or one of the relevant
-glibc mailing lists.
-
-Recommended Tools for Compilation
-=================================
-
-   In order for glibc-2.2 to build correctly on the ia64 you need at
-least the following versions of the GNU tools (the :
-
-   * The Cygnus toolchain snapshot for the ia64 as of August 4
-     including the provided set of patches.  It is however recommend
-     you use the October 24 toolchain snapshot or a more recent version.
-
-   OR alternatively you can try the following (the Cygnus toolchain is
-   the recommended solution):
-
-   * GCC and binutils, GAS and GNU LD out of CVS from
-     sources.redhat.com as of August 28, 2000 or later.  The CVS tree
-     may require special patches to work properly on the ia64.
-
-Configuring and compiling GNU Libc for Linux/ia64
-=================================================
-
-   The library requires Linux kernel version 2.4.0-test4-000728 or
-later to funtion properly. Besides that it support for debug libraries
-is currently untested. Hence the following options
-are required for configuring the library:
-
-   --disable-debug --enable-kernel=2.4.0
-
-   It is also important that you make sure the library picks up the
-appropriate kernel header files, if you do not have recent enough
-kernel headers in /usr/src/linux/include, you should use the
---with-headers=<path> option to specify the location.
-
-   As an example I personally use the following options to configure
-the library:
-
-   --disable-debug
-   --disable-cvs
-   --enable-kernel=2.4.0
-   --host=ia64-linux
-   --enable-add-ons=yes
-   --prefix=/usr
-   --with-headers=/home/jes/linux/include
-
-
-Good luck
-
-Jes Sorensen <jes@linuxcare.com>,
-November 14th, 2000
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Version 2.1.3
 
