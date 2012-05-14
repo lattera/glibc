@@ -1,0 +1,6 @@
+GLIBC_2.12
+ GLIBC_2.12 A
+ gai_cancel F
+ gai_error F
+ gai_suspend F
+ getaddrinfo_a F
