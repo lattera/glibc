@@ -886,6 +886,7 @@ concat (const char *str, @dots{})
     @{
       char *newp;
       char *wp;
+      const char *s;
 
       va_start (ap, str);
 

@@ -1,3 +1,9 @@
+2012-05-14  Andreas Jaeger  <aj@suse.de>
+
+	* manual/string.texi (Copying and Concatenation): Add missing
+	variable in concat example.
+	Reported by David C. Rankin <drankinatty@suddenlinkmail.com>.
+
 2012-05-14  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/ieee754/dbl-64/wordsize-64/s_logb.c (__logb): Replace
