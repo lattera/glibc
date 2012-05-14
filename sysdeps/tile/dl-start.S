@@ -77,6 +77,7 @@ ENTRY (_start)
 	 ST_PTR r52, r0
 	 SHL_PTR_ADD sp, r4, sp
 	}
+	andi sp, sp, -8
 
 .Lno_skip:
 	/* Call_dl_init (_dl_loaded, argc, argv, envp).  See elf/start.s
