@@ -290,35 +290,8 @@ __NTH (__signbitl (long double __x))
 #if !defined __NO_MATH_INLINES && defined __OPTIMIZE__
 /* Miscellaneous functions */
 
-__inline_mathcode (__sgn, __x, \
-  return __x == 0.0 ? 0.0 : (__x > 0.0 ? 1.0 : -1.0))
-
 /* __FAST_MATH__ is defined by gcc -ffast-math.  */
 #ifdef __FAST_MATH__
-__inline_mathcode (__pow2, __x, \
-  register long double __value;						      \
-  register long double __exponent;					      \
-  __extension__ long long int __p = (long long int) __x;		      \
-  if (__x == (long double) __p)						      \
-    {									      \
-      __asm __volatile__						      \
-	("fscale"							      \
-	 : "=t" (__value) : "0" (1.0), "u" (__x));			      \
-      return __value;							      \
-    }									      \
-  __asm __volatile__							      \
-    ("fld	%%st(0)\n\t"						      \
-     "frndint			# int(x)\n\t"				      \
-     "fxch\n\t"								      \
-     "fsub	%%st(1)		# fract(x)\n\t"				      \
-     "f2xm1			# 2^(fract(x)) - 1\n\t"			      \
-     : "=t" (__value), "=u" (__exponent) : "0" (__x));			      \
-  __value += 1.0;							      \
-  __asm __volatile__							      \
-    ("fscale"								      \
-     : "=t" (__value) : "0" (__value), "u" (__exponent));		      \
-  return __value)
-
 # ifdef __USE_GNU
 #  define __sincos_code \
   register long double __cosr;						      \
@@ -733,16 +706,6 @@ __NTH (__finite (double __x))
 	     | 0x800fffffu) + 1) >> 31));
 }
 
-/* Miscellaneous functions */
-# ifdef __FAST_MATH__
-__inline_mathcode (__coshm1, __x, \
-  register long double __exm1 = __expm1l (__fabsl (__x));		      \
-  return 0.5 * (__exm1 / (__exm1 + 1.0)) * __exm1)
-
-__inline_mathcode (__acosh1p, __x, \
-  return log1pl (__x + __libc_sqrtl (__x) * __libc_sqrtl (__x + 2.0)))
-
-# endif /* __FAST_MATH__ */
 #endif /* __USE_MISC  */
 
 /* Undefine some of the large macros which are not used anymore.  */

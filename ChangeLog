@@ -124,6 +124,12 @@
 
 2012-05-14  Andreas Jaeger  <aj@suse.de>
 
+	* sysdeps/i386/fpu/bits/mathinline.h (__pow2): Remove,
+	it's not used in glibc.
+	(__coshm1): Likewise.
+	(__acosh1p): Likewise.
+	(__sgn): Likewise.
+
 	* manual/string.texi (Copying and Concatenation): Add missing
 	variable in concat example.
 	Reported by David C. Rankin <drankinatty@suddenlinkmail.com>.
