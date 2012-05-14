@@ -1,3 +1,11 @@
+2012-05-15  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
+	* sysdeps/ieee754/dbl-64/wordsize-64/e_log10.c: New file.
+	* sysdeps/ieee754/dbl-64/wordsize-64/e_log2.c: New file.
+	* sysdeps/ieee754/dbl-64/e_log2.c: Fixing indents.
+	* sysdeps/ieee754/dbl-64/e_log10.c: Likewise and also
+	remove unused global constant.
+
 2012-05-15  Chris Metcalf  <cmetcalf@tilera.com>
 
 	* sysdeps/unix/sysv/linux/getsysstats.c: Remove duplicate

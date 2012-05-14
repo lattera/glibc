@@ -1,4 +1,3 @@
-/* Adapted for log2 by Ulrich Drepper <drepper@cygnus.com>.  */
 /*
  * ====================================================
  * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.
@@ -58,14 +57,14 @@
 #include <math_private.h>
 
 static const double ln2 = 0.69314718055994530942;
-static const double two54 = 1.80143985094819840000e+16;	/* 43500000 00000000 */
-static const double Lg1 = 6.666666666666735130e-01;	/* 3FE55555 55555593 */
-static const double Lg2 = 3.999999999940941908e-01;	/* 3FD99999 9997FA04 */
-static const double Lg3 = 2.857142874366239149e-01;	/* 3FD24924 94229359 */
-static const double Lg4 = 2.222219843214978396e-01;	/* 3FCC71C5 1D8E78AF */
-static const double Lg5 = 1.818357216161805012e-01;	/* 3FC74664 96CB03DE */
-static const double Lg6 = 1.531383769920937332e-01;	/* 3FC39A09 D078C69F */
-static const double Lg7 = 1.479819860511658591e-01;	/* 3FC2F112 DF3E5244 */
+static const double two54 = 1.80143985094819840000e+16;	/* 4350000000000000 */
+static const double Lg1 = 6.666666666666735130e-01;	/* 3FE5555555555593 */
+static const double Lg2 = 3.999999999940941908e-01;	/* 3FD999999997FA04 */
+static const double Lg3 = 2.857142874366239149e-01;	/* 3FD2492494229359 */
+static const double Lg4 = 2.222219843214978396e-01;	/* 3FCC71C51D8E78AF */
+static const double Lg5 = 1.818357216161805012e-01;	/* 3FC7466496CB03DE */
+static const double Lg6 = 1.531383769920937332e-01;	/* 3FC39A09D078C69F */
+static const double Lg7 = 1.479819860511658591e-01;	/* 3FC2F112DF3E5244 */
 
 static const double zero = 0.0;
 
@@ -73,32 +72,33 @@ double
 __ieee754_log2 (double x)
 {
   double hfsq, f, s, z, R, w, t1, t2, dk;
-  int32_t k, hx, i, j;
-  u_int32_t lx;
+  int64_t hx, i, j;
+  int32_t k;
 
-  EXTRACT_WORDS (hx, lx, x);
+  EXTRACT_WORDS64 (hx, x);
 
   k = 0;
-  if (hx < 0x00100000)
+  if (hx < INT64_C(0x0010000000000000))
     {				/* x < 2**-1022  */
-      if (__builtin_expect (((hx & 0x7fffffff) | lx) == 0, 0))
+      if (__builtin_expect ((hx & UINT64_C(0x7fffffffffffffff)) == 0, 0))
 	return -two54 / (x - x);	/* log(+-0)=-inf */
       if (__builtin_expect (hx < 0, 0))
 	return (x - x) / (x - x);	/* log(-#) = NaN */
       k -= 54;
       x *= two54;		/* subnormal number, scale up x */
-      GET_HIGH_WORD (hx, x);
+      EXTRACT_WORDS64 (hx, x);
     }
-  if (__builtin_expect (hx >= 0x7ff00000, 0))
+  if (__builtin_expect (hx >= UINT64_C(0x7ff0000000000000), 0))
     return x + x;
-  k += (hx >> 20) - 1023;
-  hx &= 0x000fffff;
-  i = (hx + 0x95f64) & 0x100000;
-  SET_HIGH_WORD (x, hx | (i ^ 0x3ff00000));	/* normalize x or x/2 */
-  k += (i >> 20);
+  k += (hx >> 52) - 1023;
+  hx &= UINT64_C(0x000fffffffffffff);
+  i = (hx + UINT64_C(0x95f6400000000)) & UINT64_C(0x10000000000000);
+  /* normalize x or x/2 */
+  INSERT_WORDS64 (x, hx | (i ^ UINT64_C(0x3ff0000000000000)));
+  k += (i >> 52);
   dk = (double) k;
   f = x - 1.0;
-  if ((0x000fffff & (2 + hx)) < 3)
+  if ((UINT64_C(0x000fffffffffffff) & (2 + hx)) < 3)
     {				/* |f| < 2**-20 */
       if (f == zero)
 	return dk;
@@ -107,9 +107,9 @@ __ieee754_log2 (double x)
     }
   s = f / (2.0 + f);
   z = s * s;
-  i = hx - 0x6147a;
+  i = hx - UINT64_C(0x6147a00000000);
   w = z * z;
-  j = 0x6b851 - hx;
+  j = UINT64_C(0x6b85100000000) - hx;
   t1 = w * (Lg2 + w * (Lg4 + w * Lg6));
   t2 = z * (Lg1 + w * (Lg3 + w * (Lg5 + w * Lg7)));
   i |= j;
