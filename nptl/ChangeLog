@@ -1,5 +1,12 @@
 2012-05-14  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* sysdeps/pthread/pthread.h (__PTHREAD_RWLOCK_INT_FLAGS_SHARED):
+	New.
+	(PTHREAD_RWLOCK_WRITER_NONRECURSIVE_INITIALIZER_NP): Check
+	__PTHREAD_RWLOCK_INT_FLAGS_SHARED instead of __WORDSIZE.
+
+2012-05-14  H.J. Lu  <hongjiu.lu@intel.com>
+
 	* shlib-versions: Move x86_64-.*-linux.* entry to ...
 	* sysdeps/x86_64/64/shlib-versions: Here.  New file.
 	* sysdeps/x86_64/x32/shlib-versions: New file.
