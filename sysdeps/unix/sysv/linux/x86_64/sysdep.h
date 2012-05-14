@@ -342,33 +342,33 @@
 /* We cannot use the thread descriptor because in ld.so we use setjmp
    earlier than the descriptor is initialized.  */
 # ifdef __ASSEMBLER__
-#  define PTR_MANGLE(reg)	xorq __pointer_chk_guard_local(%rip), reg;    \
-				rolq $17, reg
-#  define PTR_DEMANGLE(reg)	rorq $17, reg;				      \
-				xorq __pointer_chk_guard_local(%rip), reg
+#  define PTR_MANGLE(reg)	xor __pointer_chk_guard_local(%rip), reg;    \
+				rol $2*LP_SIZE+1, reg
+#  define PTR_DEMANGLE(reg)	ror $2*LP_SIZE+1, reg;			     \
+				xor __pointer_chk_guard_local(%rip), reg
 # else
-#  define PTR_MANGLE(reg)	asm ("xorq __pointer_chk_guard_local(%%rip), %0\n" \
-				     "rolq $17, %0"			      \
+#  define PTR_MANGLE(reg)	asm ("xor __pointer_chk_guard_local(%%rip), %0\n" \
+				     "rol $2*" LP_SIZE "+1, %0"			  \
 				     : "=r" (reg) : "0" (reg))
-#  define PTR_DEMANGLE(reg)	asm ("rorq $17, %0\n"			      \
-				     "xorq __pointer_chk_guard_local(%%rip), %0" \
+#  define PTR_DEMANGLE(reg)	asm ("ror $2*" LP_SIZE "+1, %0\n"		  \
+				     "xor __pointer_chk_guard_local(%%rip), %0"   \
 				     : "=r" (reg) : "0" (reg))
 # endif
 #else
 # ifdef __ASSEMBLER__
-#  define PTR_MANGLE(reg)	xorq %fs:POINTER_GUARD, reg;		      \
-				rolq $17, reg
-#  define PTR_DEMANGLE(reg)	rorq $17, reg;				      \
-				xorq %fs:POINTER_GUARD, reg
+#  define PTR_MANGLE(reg)	xor %fs:POINTER_GUARD, reg;		      \
+				rol $2*LP_SIZE+1, reg
+#  define PTR_DEMANGLE(reg)	ror $2*LP_SIZE+1, reg;			      \
+				xor %fs:POINTER_GUARD, reg
 # else
-#  define PTR_MANGLE(var)	asm ("xorq %%fs:%c2, %0\n"		      \
-				     "rolq $17, %0"			      \
+#  define PTR_MANGLE(var)	asm ("xor %%fs:%c2, %0\n"		      \
+				     "rol $2*" LP_SIZE "+1, %0"		      \
 				     : "=r" (var)			      \
 				     : "0" (var),			      \
 				       "i" (offsetof (tcbhead_t,	      \
 						      pointer_guard)))
-#  define PTR_DEMANGLE(var)	asm ("rorq $17, %0\n"			      \
-				     "xorq %%fs:%c2, %0"		      \
+#  define PTR_DEMANGLE(var)	asm ("ror $2*" LP_SIZE "+1, %0\n"	      \
+				     "xor %%fs:%c2, %0"			      \
 				     : "=r" (var)			      \
 				     : "0" (var),			      \
 				       "i" (offsetof (tcbhead_t,	      \
