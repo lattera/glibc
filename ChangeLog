@@ -1,3 +1,9 @@
+2012-05-14  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/configure.in (minimum_kernel): Always
+	set if not set by the user.  Do not allow for being unset.
+	* sysdeps/unix/sysv/linux/configure: Regenerated.
+
 2012-05-14  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/x86_64/dl-machine.h (elf_machine_load_address): Remove

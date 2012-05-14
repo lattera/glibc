@@ -331,17 +331,14 @@ $as_echo "$as_me: WARNING: minimum kernel version reset to $arch_minimum_kernel"
     minimum_kernel=$arch_minimum_kernel
   fi
 else
-  if test $arch_minimum_kernel != '2.2.0'; then
-    minimum_kernel=$arch_minimum_kernel
-  fi
+  minimum_kernel=$arch_minimum_kernel
 fi
 
-if test -n "$minimum_kernel"; then
-  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for kernel header at least $minimum_kernel" >&5
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for kernel header at least $minimum_kernel" >&5
 $as_echo_n "checking for kernel header at least $minimum_kernel... " >&6; }
-  decnum=`echo "$minimum_kernel.0.0.0" | sed 's/\([0-9]*\)\.\([0-9]*\)\.\([0-9]*\).*/(\1 * 65536 + \2 * 256 + \3)/'`;
-  abinum=`echo "$minimum_kernel.0.0.0" | sed 's/\([0-9]*\)\.\([0-9]*\)\.\([0-9]*\).*/\1,\2,\3/'`;
-  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+decnum=`echo "$minimum_kernel.0.0.0" | sed 's/\([0-9]*\)\.\([0-9]*\)\.\([0-9]*\).*/(\1 * 65536 + \2 * 256 + \3)/'`;
+abinum=`echo "$minimum_kernel.0.0.0" | sed 's/\([0-9]*\)\.\([0-9]*\)\.\([0-9]*\).*/\1,\2,\3/'`;
+cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
 #include <linux/version.h>
 #if LINUX_VERSION_CODE < $decnum
@@ -356,21 +353,20 @@ else
 fi
 rm -f conftest*
 
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_minimum_kernel" >&5
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_minimum_kernel" >&5
 $as_echo "$libc_minimum_kernel" >&6; }
-  if test "$libc_minimum_kernel" = ok; then
-    cat >>confdefs.h <<_ACEOF
+if test "$libc_minimum_kernel" = ok; then
+  cat >>confdefs.h <<_ACEOF
 #define __LINUX_KERNEL_VERSION $decnum
 _ACEOF
 
-    cat >>confdefs.h <<_ACEOF
+  cat >>confdefs.h <<_ACEOF
 #define __ABI_TAG_VERSION $abinum
 _ACEOF
 
-  else
-    as_fn_error $? "*** The available kernel headers are older than the requested
+else
+  as_fn_error $? "*** The available kernel headers are older than the requested
 *** compatible kernel version" "$LINENO" 5
-  fi
 fi
 
 # The result of the above test for the use of the FDE code is invalid if
