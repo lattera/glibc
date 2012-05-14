@@ -34,6 +34,7 @@ config-sysdirs = @sysnames@
 cflags-cpu = @libc_cv_cc_submachine@
 asflags-cpu = @libc_cv_cc_submachine@
 
+config-extra-cflags = @libc_extra_cflags@
 config-cflags-sse4 = @libc_cv_cc_sse4@
 config-cflags-avx = @libc_cv_cc_avx@
 config-cflags-sse2avx = @libc_cv_cc_sse2avx@

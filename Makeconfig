@@ -668,7 +668,7 @@ CPPFLAGS = $(CPPUNDEFS) $(CPPFLAGS-config) $($(subdir)-CPPFLAGS) \
 	   $(foreach lib,$(libof-$(basename $(@F))) \
 			 $(libof-$(<F)) $(libof-$(@F)),$(CPPFLAGS-$(lib))) \
 	   $(CPPFLAGS-$(<F)) $(CPPFLAGS-$(@F)) $(CPPFLAGS-$(basename $(@F)))
-override CFLAGS	= -std=gnu99 $(gnu89-inline-CFLAGS) \
+override CFLAGS	= -std=gnu99 $(gnu89-inline-CFLAGS) $(config-extra-cflags) \
 		  $(filter-out %frame-pointer,$(+cflags)) $(+gccwarn-c) \
 		  $(sysdep-CFLAGS) $(CFLAGS-$(suffix $@)) $(CFLAGS-$(<F)) \
 		  $(CFLAGS-$(@F)) \

@@ -1,6 +1,15 @@
 2012-05-16  Roland McGrath  <roland@hack.frob.com>
 
 	[BZ #10375]
+	* configure.in (NM): Add AC_CHECK_TOOL for it.
+	(libc_extra_cflags): New substituted variable.
+	Check for -fstack-protector being used implicitly.
+	* configure: Regenerated.
+	* config.make.in (config-extra-cflags): New variable,
+	gets @libc_extra_cflags@.
+	* Makeconfig (CFLAGS): Add $(config-extra-cflags) near the front.
+
+	[BZ #10375]
 	* configure.in: Check for _FORTIFY_SOURCE being predefined.
 	(CPPUNDEFS): New substituted variable; add -U_FORTIFY_SOURCE if needed.
 	* configure: Regenerated.

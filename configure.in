@@ -927,6 +927,7 @@ AC_CHECK_PROG_VER(SED, sed, --version,
   SED=: aux_missing="$aux_missing sed")
 
 AC_CHECK_TOOL(READELF, readelf, false)
+AC_CHECK_TOOL(NM, nm, false)
 
 AC_CHECK_PROGS(AUTOCONF, autoconf, no)
 case "x$AUTOCONF" in
@@ -2051,6 +2052,39 @@ if test $libc_cv_predef_fortify_source = yes; then
   CPPUNDEFS="${CPPUNDEFS:+$CPPUNDEFS }-U_FORTIFY_SOURCE"
 fi
 AC_SUBST(CPPUNDEFS)
+
+dnl Check for silly hacked compilers inserting -fstack-protector.
+dnl This breaks badly for the early startup code we compile, since
+dnl the compiled code can refer to a magic machine-dependent location
+dnl for the canary value before we have sufficient setup for that to
+dnl work.  It's also questionable to build all of libc with this flag
+dnl even when you're doing that for most applications you build, since
+dnl libc's code is so heavily-used and performance-sensitive.  If we
+dnl ever really want to make that work, it should be enabled explicitly
+dnl in the libc build, not inherited from implicit compiler settings.
+AC_CACHE_CHECK([whether $CC implicitly enables -fstack-protector],
+	       libc_cv_predef_stack_protector, [
+AC_TRY_COMPILE([extern void foobar (char *);],
+	       [char large_array[2048]; foobar (large_array);], [
+libc_undefs=`$NM -u conftest.o |
+  LC_ALL=C $AWK '$1 == "U" { print $2 | "sort -u"; next } { exit(1) }' \
+    2>&AS_MESSAGE_LOG_FD` || {
+  AC_MSG_ERROR([confusing output from $NM -u])
+}
+echo >&AS_MESSAGE_LOG_FD "libc_undefs='$libc_undefs'"
+case "$libc_undefs" in
+foobar) libc_cv_predef_stack_protector=no ;;
+'__stack_chk_fail
+foobar') libc_cv_predef_stack_protector=yes ;;
+*) AC_MSG_ERROR([unexpected symbols in test: $libc_undefs]) ;;
+esac],
+	       [AC_MSG_ERROR([test compilation failed])])
+])
+libc_extra_cflags=
+if test $libc_cv_predef_stack_protector = yes; then
+  libc_extra_cflags=-fno-stack-protector
+fi
+AC_SUBST(libc_extra_cflags)
 
 ### End of automated tests.
 ### Now run sysdeps configure fragments.
