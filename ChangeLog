@@ -1,3 +1,8 @@
+2012-05-14  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/getcwd.c (__getcwd): Remove unused
+	variable.
+
 2012-05-14  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #13717]

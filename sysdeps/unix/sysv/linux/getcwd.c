@@ -49,7 +49,6 @@ char *
 __getcwd (char *buf, size_t size)
 {
   char *path;
-  int n;
   char *result;
 
 #ifndef NO_ALLOCATION
