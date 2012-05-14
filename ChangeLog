@@ -1,3 +1,127 @@
+2012-05-14  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #13717]
+	* sysdeps/unix/sysv/linux/configure.in (arch_minimum_kernel): Set
+	to 2.2.0 where earlier.
+	* sysdeps/unix/sysv/linux/configure: Regenerated.
+	* sysdeps/unix/sysv/linux/getcwd.c [!__ASSUME_GETCWD_SYSCALL]:
+	Remove conditional code.
+	[__ASSUME_GETCWD_SYSCALL]: Make code unconditional.
+	* sysdeps/unix/sysv/linux/i386/chown.c [!__ASSUME_LCHOWN_SYSCALL]:
+	Remove conditional code.
+	[!__NR_lchown]: Likewise.
+	[__ASSUME_LCHOWN_SYSCALL]: Make code unconditional.
+	[__NR_lchown]: Likewise.
+	* sysdeps/unix/sysv/linux/i386/fchownat.c (fchownat): Remove
+	comment referencing __ASSUME_LCHOWN_SYSCALL.
+	* sysdeps/unix/sysv/linux/i386/sigaction.c
+	[!__ASSUME_REALTIME_SIGNALS]: Remove conditional code.
+	[__ASSUME_REALTIME_SIGNALS]: Make code unconditional.
+	* sysdeps/unix/sysv/linux/if_index.c [!__ASSUME_SIOCGIFNAME]:
+	Remove conditional code.
+	[__ASSUME_SIOCGIFNAME ]: Make code unconditional.
+	(__protocol_available): Remove #if 0 code.
+	* sysdeps/unix/sysv/linux/ifreq.c [!__ASSUME_SIOCGIFNAME]: Remove
+	conditional code.
+	[__ASSUME_SIOCGIFNAME]: Make code unconditional.
+	* sysdeps/unix/sysv/linux/kernel-features.h
+	(__ASSUME_GETCWD_SYSCALL): Don't define.
+	(__ASSUME_REALTIME_SIGNALS): Likewise.
+	(__ASSUME_PREAD_SYSCALL): Likewise.
+	(__ASSUME_PWRITE_SYSCALL): Likewise.
+	(__ASSUME_POLL_SYSCALL): Likewise.
+	(__ASSUME_LCHOWN_SYSCALL): Likewise.
+	(__ASSUME_SETRESUID_SYSCALL): Define for all kernel versions for
+	non-SPARC.
+	(__ASSUME_SIOCGIFNAME): Don't define.
+	(__ASSUME_MSG_NOSIGNAL): Likewise.
+	(__ASSUME_SENDFILE): Define unconditionally.
+	(__ASSUME_PROC_SELF_FD_SYMLINK): Don't define.
+	* sysdeps/unix/sysv/linux/poll.c [!__ASSUME_POLL_SYSCALL]: Remove
+	conditional code.
+	[__ASSUME_POLL_SYSCALL]: Make code unconditional.
+	* sysdeps/unix/sysv/linux/powerpc/chown.c (__chown)
+	[!__ASSUME_LCHOWN_SYSCALL]: Remove conditional code.
+	(__chown) [__ASSUME_LCHOWN_SYSCALL]: Make code unconditional.
+	* sysdeps/unix/sysv/linux/powerpc/fchownat.c (fchownat)
+	[!__ASSUME_LCHOWN_SYSCALL]: Remove conditional code.
+	(fchownat) [__ASSUME_LCHOWN_SYSCALL]: Make code unconditional.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/pread.c
+	[!__ASSUME_PREAD_SYSCALL]: Remove conditional code.
+	[__ASSUME_PREAD_SYSCALL]: Make code unconditional.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/pread64.c
+	[!__ASSUME_PREAD_SYSCALL]: Remove conditional code.
+	[__ASSUME_PREAD_SYSCALL]: Make code unconditional.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/pwrite.c
+	[!__ASSUME_PWRITE_SYSCALL]: Remove conditional code.
+	[__ASSUME_PWRITE_SYSCALL]: Make code unconditional.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/pwrite64.c
+	[!__ASSUME_PWRITE_SYSCALL]: Remove conditional code.
+	[__ASSUME_PWRITE_SYSCALL]: Make code unconditional.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/pread.c
+	[!__ASSUME_PREAD_SYSCALL]: Remove conditional code.
+	[__ASSUME_PREAD_SYSCALL]: Make code unconditional.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/pread64.c
+	[!__ASSUME_PREAD_SYSCALL]: Remove conditional code.
+	[__ASSUME_PREAD_SYSCALL]: Make code unconditional.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/pwrite.c
+	[!__ASSUME_PWRITE_SYSCALL]: Remove conditional code.
+	[__ASSUME_PWRITE_SYSCALL]: Make code unconditional.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/pwrite64.c
+	[!__ASSUME_PWRITE_SYSCALL]: Remove conditional code.
+	[__ASSUME_PWRITE_SYSCALL]: Make code unconditional.
+	* sysdeps/unix/sysv/linux/pread.c [!__ASSUME_PREAD_SYSCALL]:
+	Remove conditional code.
+	[__ASSUME_PREAD_SYSCALL]: Make code unconditional.
+	* sysdeps/unix/sysv/linux/pread64.c [!__ASSUME_PREAD_SYSCALL]:
+	Remove conditional code.
+	[__ASSUME_PREAD_SYSCALL]: Make code unconditional.
+	* sysdeps/unix/sysv/linux/ptsname.c (__ptsname_internal)
+	[__LINUX_KERNEL_VERSION < 131443]: Remove conditional code.
+	* sysdeps/unix/sysv/linux/pwrite.c [!__ASSUME_PWRITE_SYSCALL]:
+	Remove conditional code.
+	[__ASSUME_PWRITE_SYSCALL]: Make code unconditional.
+	* sysdeps/unix/sysv/linux/pwrite64.c [!__ASSUME_PWRITE_SYSCALL]:
+	Remove conditional code.
+	[__ASSUME_PWRITE_SYSCALL]: Make code unconditional.
+	* sysdeps/unix/sysv/linux/sh/pread.c [!__ASSUME_PREAD_SYSCALL]:
+	Remove conditional code.
+	[__ASSUME_PREAD_SYSCALL]: Make code unconditional.
+	* sysdeps/unix/sysv/linux/sh/pread64.c [!__ASSUME_PREAD_SYSCALL]:
+	Remove conditional code.
+	[__ASSUME_PREAD_SYSCALL]: Make code unconditional.
+	* sysdeps/unix/sysv/linux/sh/pwrite.c [!__ASSUME_PWRITE_SYSCALL]:
+	Remove conditional code.
+	[__ASSUME_PWRITE_SYSCALL]: Make code unconditional.
+	* sysdeps/unix/sysv/linux/sh/pwrite64.c
+	[!__ASSUME_PWRITE_SYSCALL]: Remove conditional code.
+	[__ASSUME_PWRITE_SYSCALL]: Make code unconditional.
+	* sysdeps/unix/sysv/linux/sigaction.c
+	[!__ASSUME_REALTIME_SIGNALS]: Remove conditional code.
+	[__ASSUME_REALTIME_SIGNALS]: Make code unconditional.
+	* sysdeps/unix/sysv/linux/sigpending.c
+	[!__ASSUME_REALTIME_SIGNALS]: Remove conditional code.
+	[__ASSUME_REALTIME_SIGNALS]: Make code unconditional.
+	* sysdeps/unix/sysv/linux/sigprocmask.c
+	[!__ASSUME_REALTIME_SIGNALS]: Remove conditional code.
+	[__ASSUME_REALTIME_SIGNALS]: Make code unconditional.
+	* sysdeps/unix/sysv/linux/sigsuspend.c
+	[!__ASSUME_REALTIME_SIGNALS]: Remove conditional code.
+	[__ASSUME_REALTIME_SIGNALS]: Make code unconditional.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/sigaction.c
+	(__libc_missing_rt_sigs): Remove.
+	(__libc_sigaction) [__NR_rt_sigaction]: Make code unconditional.
+	(__libc_sigaction): Do not handle ENOSYS from rt_sigaction.
+	* sysdeps/unix/sysv/linux/syslog.c [!__ASSUME_MSG_NOSIGNAL]:
+	Remove conditional code.
+	[__ASSUME_MSG_NOSIGNAL]: Make code unconditional.
+	* sysdeps/unix/sysv/linux/testrtsig.h (kernel_has_rtsig): Always
+	return 1.
+	* sysdeps/unix/sysv/linux/ttyname.c (ttyname)
+	[!__ASSUME_PROC_SELF_FD_SYMLINK]: Remove conditional code.
+	* sysdeps/unix/sysv/linux/ttyname_r.c (__ttyname_r)
+	[!__ASSUME_PROC_SELF_FD_SYMLINK]: Likewise.
+
 2012-05-14  Andreas Jaeger  <aj@suse.de>
 
 	* manual/string.texi (Copying and Concatenation): Add missing

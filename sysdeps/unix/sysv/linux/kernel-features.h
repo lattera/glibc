@@ -35,60 +35,16 @@
    version given by __LINUX_KERNEL_VERSION.  We are not always exactly
    recording the correct versions in which the features were
    introduced.  If somebody cares these values can afterwards be
-   corrected.  Most of the numbers here are set corresponding to
-   2.2.0.  */
+   corrected.  */
 
-/* `getcwd' system call.  */
-#if __LINUX_KERNEL_VERSION >= 131584
-# define __ASSUME_GETCWD_SYSCALL	1
-#endif
-
-/* Real-time signal became usable in 2.1.70.  */
-#if __LINUX_KERNEL_VERSION >= 131398
-# define __ASSUME_REALTIME_SIGNALS	1
-#endif
-
-/* When were the `pread'/`pwrite' syscalls introduced?  */
-#if __LINUX_KERNEL_VERSION >= 131584
-# define __ASSUME_PREAD_SYSCALL		1
-# define __ASSUME_PWRITE_SYSCALL	1
-#endif
-
-/* When was `poll' introduced?  */
-#if __LINUX_KERNEL_VERSION >= 131584
-# define __ASSUME_POLL_SYSCALL		1
-#endif
-
-/* The `lchown' syscall was introduced in 2.1.80.  */
-#if __LINUX_KERNEL_VERSION >= 131408
-# define __ASSUME_LCHOWN_SYSCALL	1
-#endif
-
-/* When did the `setresuid' syscall became available?  */
-#if __LINUX_KERNEL_VERSION >= 131584 && !defined __sparc__
+/* When did the `setresuid' syscall became available?  By 2.2.0 except
+   on SPARC.  */
+#if !defined __sparc__
 # define __ASSUME_SETRESUID_SYSCALL	1
 #endif
 
-/* The SIOCGIFNAME ioctl is available starting with 2.1.50.  */
-#if __LINUX_KERNEL_VERSION >= 131408
-# define __ASSUME_SIOCGIFNAME		1
-#endif
-
-/* MSG_NOSIGNAL was at least available with Linux 2.2.0.  */
-#if __LINUX_KERNEL_VERSION >= 131584
-# define __ASSUME_MSG_NOSIGNAL		1
-#endif
-
 /* The sendfile syscall was introduced in 2.2.0.  */
-#if __LINUX_KERNEL_VERSION >= 131584
-# define __ASSUME_SENDFILE		1
-#endif
-
-/* Only very old kernels had no real symlinks for terminal descriptors
-   in /proc/self/fd.  */
-#if __LINUX_KERNEL_VERSION >= 131584
-# define __ASSUME_PROC_SELF_FD_SYMLINK	1
-#endif
+#define __ASSUME_SENDFILE		1
 
 /* On x86 another `getrlimit' syscall was added in 2.3.25.  */
 #if __LINUX_KERNEL_VERSION >= 131865 && defined __i386__

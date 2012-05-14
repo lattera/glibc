@@ -1,5 +1,5 @@
 /* Test whether RT signals are really available.
-   Copyright (C) 1997, 1999, 2006 Free Software Foundation, Inc.
+   Copyright (C) 1997-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -25,11 +25,5 @@
 static int
 kernel_has_rtsig (void)
 {
-#if __ASSUME_REALTIME_SIGNALS
   return 1;
-#else
-  struct utsname name;
-
-  return uname (&name) == 0 && __strverscmp (name.release, "2.1.70") >= 0;
-#endif
 }

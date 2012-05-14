@@ -38,27 +38,6 @@
 #endif
 
 
-#if __ASSUME_GETCWD_SYSCALL > 0
-/* Kernel 2.1.92 introduced a third way to get the current working
-   directory: a syscall.  We've got to be careful that even when
-   compiling under 2.1.92+ the libc still runs under older kernels. */
-# define no_syscall_getcwd 0
-# define have_new_dcache 1
-#else
-# if __NR_getcwd
-/* Kernel 2.1.92 introduced a third way to get the current working
-   directory: a syscall.  We've got to be careful that even when
-   compiling under 2.1.92+ the libc still runs under older kernels.
-   An additional problem is that the system call does not return
-   the path of directories longer than one page.  */
-static int no_syscall_getcwd;
-static int have_new_dcache;
-# else
-#  define no_syscall_getcwd 1
-static int have_new_dcache = 1;
-# endif
-#endif
-
 /* The "proc" filesystem provides an easy method to retrieve the value.
    For each process, the corresponding directory contains a symbolic link
    named `cwd'.  Reading the content of this link immediate gives us the
@@ -72,9 +51,6 @@ __getcwd (char *buf, size_t size)
   char *path;
   int n;
   char *result;
-
-  if (no_syscall_getcwd && !have_new_dcache)
-    return generic_getcwd (buf, size);
 
 #ifndef NO_ALLOCATION
   size_t alloc_size = size;
@@ -101,138 +77,59 @@ __getcwd (char *buf, size_t size)
 #endif
     path = buf;
 
-#if defined __NR_getcwd || __LINUX_GETCWD_SYSCALL > 0
-  if (!no_syscall_getcwd)
+  int retval;
+
+  retval = INLINE_SYSCALL (getcwd, 2, CHECK_STRING (path), alloc_size);
+  if (retval >= 0)
     {
-      int retval;
+#ifndef NO_ALLOCATION
+      if (buf == NULL && size == 0)
+	/* Ensure that the buffer is only as large as necessary.  */
+	buf = realloc (path, (size_t) retval);
 
-      retval = INLINE_SYSCALL (getcwd, 2, CHECK_STRING (path), alloc_size);
-      if (retval >= 0)
-	{
-# ifndef NO_ALLOCATION
-	  if (buf == NULL && size == 0)
-	    /* Ensure that the buffer is only as large as necessary.  */
-	    buf = realloc (path, (size_t) retval);
-
-	  if (buf == NULL)
-	    /* Either buf was NULL all along, or `realloc' failed but
-	       we still have the original string.  */
-	    buf = path;
-# endif
-
-	  return buf;
-	}
-
-      /* The system call cannot handle paths longer than a page.
-	 Neither can the magic symlink in /proc/self.  Just use the
-	 generic implementation right away.  */
-      if (errno == ENAMETOOLONG)
-	{
-# ifndef NO_ALLOCATION
-	  if (buf == NULL && size == 0)
-	    {
-	      free (path);
-	      path = NULL;
-	    }
-# endif
-
-	  result = generic_getcwd (path, size);
-
-# ifndef NO_ALLOCATION
-	  if (result == NULL && buf == NULL && size != 0)
-	    free (path);
-# endif
-
-	  return result;
-	}
-
-# if __ASSUME_GETCWD_SYSCALL
-      /* It should never happen that the `getcwd' syscall failed because
-	 the buffer is too small if we allocated the buffer ourselves
-	 large enough.  */
-      assert (errno != ERANGE || buf != NULL || size != 0);
-
-#  ifndef NO_ALLOCATION
       if (buf == NULL)
+	/* Either buf was NULL all along, or `realloc' failed but
+	   we still have the original string.  */
+	buf = path;
+#endif
+
+      return buf;
+    }
+
+  /* The system call cannot handle paths longer than a page.
+     Neither can the magic symlink in /proc/self.  Just use the
+     generic implementation right away.  */
+  if (errno == ENAMETOOLONG)
+    {
+#ifndef NO_ALLOCATION
+      if (buf == NULL && size == 0)
+	{
+	  free (path);
+	  path = NULL;
+	}
+#endif
+
+      result = generic_getcwd (path, size);
+
+#ifndef NO_ALLOCATION
+      if (result == NULL && buf == NULL && size != 0)
 	free (path);
-#  endif
-
-      return NULL;
-# else
-      if (errno == ENOSYS)
-	{
-	   no_syscall_getcwd = 1;
-	   have_new_dcache = 1;	/* Now we will try the /proc method.  */
-	}
-      else if (errno != ERANGE || buf != NULL)
-	{
-#  ifndef NO_ALLOCATION
-	  if (buf == NULL)
-	    free (path);
-#  endif
-	  return NULL;
-	}
-# endif
-    }
 #endif
 
-  n = __readlink ("/proc/self/cwd", path, alloc_size - 1);
-  if (n != -1)
-    {
-      if (path[0] == '/')
-	{
-	  if ((size_t) n >= alloc_size - 1)
-	    {
-#ifndef NO_ALLOCATION
-	      if (buf == NULL)
-		free (path);
-#endif
-	      return NULL;
-	    }
-
-	  path[n] = '\0';
-#ifndef NO_ALLOCATION
-	  if (buf == NULL && size == 0)
-	    /* Ensure that the buffer is only as large as necessary.  */
-	    buf = realloc (path, (size_t) n + 1);
-	  if (buf == NULL)
-	    /* Either buf was NULL all along, or `realloc' failed but
-	       we still have the original string.  */
-	    buf = path;
-#endif
-
-	  return buf;
-	}
-#ifndef have_new_dcache
-      else
-	have_new_dcache = 0;
-#endif
+      return result;
     }
 
-#if __ASSUME_GETCWD_SYSCALL == 0
-  /* Set to have_new_dcache only if error indicates that proc doesn't
-     exist.  */
-  if (errno != EACCES && errno != ENAMETOOLONG)
-    have_new_dcache = 0;
-#endif
+  /* It should never happen that the `getcwd' syscall failed because
+     the buffer is too small if we allocated the buffer ourselves
+     large enough.  */
+  assert (errno != ERANGE || buf != NULL || size != 0);
 
 #ifndef NO_ALLOCATION
-  /* Don't put restrictions on the length of the path unless the user does.  */
-  if (buf == NULL && size == 0)
-    {
-      free (path);
-      path = NULL;
-    }
-#endif
-
-  result = generic_getcwd (path, size);
-
-#ifndef NO_ALLOCATION
-  if (result == NULL && buf == NULL && size != 0)
+  if (buf == NULL)
     free (path);
 #endif
 
-  return result;
+  return NULL;
 }
 weak_alias (__getcwd, getcwd)
 

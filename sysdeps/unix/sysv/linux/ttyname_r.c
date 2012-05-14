@@ -1,5 +1,4 @@
-/* Copyright (C) 1991-1993,1995-2001,2003,2006,2010
-   Free Software Foundation, Inc.
+/* Copyright (C) 1991-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -141,12 +140,7 @@ __ttyname_r (int fd, char *buf, size_t buflen)
       return ERANGE;
     }
 
-  if (__builtin_expect (ret != -1
-#ifndef __ASSUME_PROC_SELF_FD_SYMLINK
-			/* This is for Linux 2.0.  */
-			&& buf[0] != '['
-#endif
-			, 1))
+  if (__builtin_expect (ret != -1, 1))
     {
 #define UNREACHABLE_LEN strlen ("(unreachable)")
       if (ret > UNREACHABLE_LEN

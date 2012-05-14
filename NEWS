@@ -63,6 +63,10 @@ Version 2.16
   version 2.14.  This option will be removed at some time in the future
   after the TI-RPC library becomes fully sufficient for the needs of
   existing applications.
+
+* Compatibility code for Linux kernel versions before 2.2 has been removed.
+  Note that glibc is not expected to work with any Linux kernel version
+  before 2.6.
 
 Version 2.15
 

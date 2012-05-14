@@ -1,5 +1,4 @@
-/* Copyright (C) 1997,1998,1999,2000,2002,2003,2006
-	Free Software Foundation, Inc.
+/* Copyright (C) 1997-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -34,28 +33,15 @@
 # define __NR_pwrite __NR_pwrite64
 #endif
 
-#if defined __NR_pwrite || __ASSUME_PWRITE_SYSCALL > 0
-
-# if __ASSUME_PWRITE_SYSCALL == 0
-static ssize_t __emulate_pwrite64 (int fd, const void *buf, size_t count,
-				   off64_t offset) internal_function;
-# endif
-
 
 static ssize_t
 do_pwrite64 (int fd, const void *buf, size_t count, off64_t offset)
 {
   ssize_t result;
 
-  /* First try the syscall.  */
   result = INLINE_SYSCALL (pwrite, 5, fd, CHECK_N (buf, count), count,
 			   __LONG_LONG_PAIR ((off_t) (offset >> 32),
 					     (off_t) (offset & 0xffffffff)));
-# if __ASSUME_PWRITE_SYSCALL == 0
-  if (result == -1 && errno == ENOSYS)
-    /* No system call available.  Use the emulation.  */
-    result = __emulate_pwrite64 (fd, buf, count, offset);
-# endif
 
   return result;
 }
@@ -83,11 +69,3 @@ __libc_pwrite64 (fd, buf, count, offset)
 weak_alias (__libc_pwrite64, __pwrite64)
 libc_hidden_weak (__pwrite64)
 weak_alias (__libc_pwrite64, pwrite64)
-
-# define __libc_pwrite64(fd, buf, count, offset) \
-     static internal_function __emulate_pwrite64 (fd, buf, count, offset)
-#endif
-
-#if __ASSUME_PWRITE_SYSCALL == 0
-# include <sysdeps/posix/pwrite64.c>
-#endif

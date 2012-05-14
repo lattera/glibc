@@ -1,5 +1,4 @@
-/* Copyright (C) 1991-1993,1996-2002,2006,2009,2010
-   Free Software Foundation, Inc.
+/* Copyright (C) 1991-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -155,12 +154,7 @@ ttyname (int fd)
       return NULL;
     }
 
-  if (__builtin_expect (len != -1
-#ifndef __ASSUME_PROC_SELF_FD_SYMLINK
-			/* This is for Linux 2.0.  */
-			&& ttyname_buf[0] != '['
-#endif
-			, 1))
+  if (__builtin_expect (len != -1, 1))
     {
       if ((size_t) len >= buflen)
 	return NULL;

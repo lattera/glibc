@@ -41,11 +41,11 @@ test -n "$arch_minimum_kernel" ||
 case "$machine" in
   i386*)
     libc_cv_gcc_unwind_find_fde=yes
-    arch_minimum_kernel=2.0.10
+    arch_minimum_kernel=2.2.0
     ;;
   powerpc/powerpc32)
     libc_cv_gcc_unwind_find_fde=yes
-    arch_minimum_kernel=2.0.10
+    arch_minimum_kernel=2.2.0
     ;;
   powerpc/powerpc64)
     arch_minimum_kernel=2.4.21
@@ -68,13 +68,13 @@ case "$machine" in
     ;;
   sparc*)
     libc_cv_gcc_unwind_find_fde=yes
-    arch_minimum_kernel=2.0.10
+    arch_minimum_kernel=2.2.0
     ;;
   x86_64*)
     arch_minimum_kernel=2.4.0
     ;;
   *)
-    arch_minimum_kernel=2.0.10
+    arch_minimum_kernel=2.2.0
     ;;
 esac
 if test -n "$minimum_kernel"; then
@@ -87,7 +87,7 @@ if test -n "$minimum_kernel"; then
     minimum_kernel=$arch_minimum_kernel
   fi
 else
-  if test $arch_minimum_kernel != '2.0.10'; then
+  if test $arch_minimum_kernel != '2.2.0'; then
     minimum_kernel=$arch_minimum_kernel
   fi
 fi
