@@ -1,3 +1,10 @@
+2012-05-14  Liubov Dmitrieva  <liubov.dmitrieva@gmail.com>
+
+	* sysdeps/i386/i686/fpu/multiarch/Makefile: New file.
+	* sysdeps/i386/i686fpu/multiarch/e_expf.c: New file.
+	* sysdeps/i386/i686fpu/multiarch/e_expf-ia32.S: New file.
+	* sysdeps/i386/i686/fpu/multiarch/e_expf-sse2.S: New file.
+
 2012-05-14  Mike Frysinger  <vapier@gentoo.org>
 
 	* NEWS: Update ia64 info.
