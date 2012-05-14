@@ -203,10 +203,10 @@ system such as @file{/etc/passwd}, @file{/etc/nsswitch.conf} and others.
 These files must all contain correct and sensible content.
 
 To format the @cite{GNU C Library Reference Manual} for printing, type
-@w{@code{make dvi}}.  You need a working @TeX{} installation to do this.
-The distribution already includes the on-line formatted version of the
-manual, as Info files.  You can regenerate those with @w{@code{make
-info}}, but it shouldn't be necessary.
+@w{@code{make dvi}}.  You need a working @TeX{} installation to do
+this.  The distribution builds the on-line formatted version of the
+manual, as Info files, as part of the build process.  You can build
+them manually with @w{@code{make info}}.
 
 The library has a number of special-purpose configuration parameters
 which you can find in @file{Makeconfig}.  These can be overwritten with

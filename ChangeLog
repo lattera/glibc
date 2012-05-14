@@ -1,5 +1,58 @@
 2012-05-14  Andreas Jaeger  <aj@suse.de>
 
+	* manual/Makefile (subdir): Remove export of subdir.
+	(all): Remove target.
+	(.PHONY): Remove all from list.
+	(mkinstalldirs): Remove.
+	(.PHONY): Remove installdirs from list.
+	($(inst_infodir)/libc.info): Use make-target-directory.
+	(installdirs): Remove.
+	(subdir_%): Remove.
+	(glibc-targets): Remove.
+	(lib): Remove.
+	(stubs): Remove.
+	($(objpfx)stubs ../po/manual.pot): Remove.
+	($(objpfx)stamp%): Remove.
+	(make-target-directory): Remove.
+	(subdir_install): Remove.
+	(routines): Remove.
+	(aux): Remove.
+	(sources): Remove.
+	(objects): Remove.
+	(headers): Remove.
+
+	[BZ #13750]
+	* manual/.gitignore: Remove, it's not needed anymore.
+	* manual/libc-texinfo.sh: Pass OUTDIR as extra argument, create
+	all files in it.
+	* manual/Makefile (dvi, pdf, info, html): Depend on files in build
+	directory.
+	(texis): Renamed to $(objpfx)texis.
+	(texis-path): New, contains path to generated files.
+	(chapters.%): Use texis-path for complete path, add extra argument
+	libc-texinfo.sh.
+	(libc.dvi, libc.pdf, libc.info, libc.pdf): Add $(objfpx) as prefix.
+	(libc/index.html, summary.texi): Add $(objpfx) as prefix.
+	(summary,texi, stamp-summary): Use complete path of
+	files. Generate files in build dir.
+	(dir-add.texi): Build in build dir.
+	(libm-err.texi,stamp-libm-err): Likewise.
+	(version.texi, stamp-version): Likewise.
+	(.%c.texi): Likewise.
+	(%.info,%.dvi,%.pdf): Add $(objpfx) as prefix, build in build dir.
+	(mostlyclean): Remove target.
+	(realclean): Remove target.
+	(generated): Add new variable with contents from mostlyclean and
+	realclean, remove entries duplicated in	common-mostlyclean, add
+	stamp-libm-err and stamp-version.
+	(generated-dirs): Add libc directory.
+	($(inst_infodir)/libc.info): Install files from build dir.
+
+	* manual/install.texi (Configuring and compiling): Adjust since
+	the info files are not part of the tar ball anymore.
+
+2012-05-14  Andreas Jaeger  <aj@suse.de>
+
 	* sysdeps/unix/sysv/linux/getcwd.c (__getcwd): Remove unused
 	variable.
 
