@@ -238,6 +238,7 @@
 
 2012-05-14  H.J. Lu  <hongjiu.lu@intel.com>
 
+	[BZ #14103]
 	* sysdeps/ieee754/dbl-64/wordsize-64/s_logb.c (__logb): Replace
 	__builtin_clzl with __builtin_clzll.
 
