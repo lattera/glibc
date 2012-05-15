@@ -1,5 +1,10 @@
 2012-05-15  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* sysdeps/unix/sysv/linux/x86_64/pthread_cond_broadcast.S: Use
+	LP_OP(cmp) and R8_LP on dep_mutex pointer.
+
+2012-05-15  H.J. Lu  <hongjiu.lu@intel.com>
+
 	* sysdeps/unix/sysv/linux/x86_64/cancellation.S: Use LP_OP(mov)
 	to update pointer in memory.  Load pointer into RDI_LP.
 
