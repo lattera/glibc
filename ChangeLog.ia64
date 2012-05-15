@@ -1,5 +1,13 @@
 2012-05-14  Mike Frysinger  <vapier@gentoo.org>
 
+	[BZ #14109]
+	* sysdeps/unix/sysv/linux/ia64/bits/setjmp.h (__jmp_buf): Use
+	__aligned__ in attribute.
+	* sysdeps/unix/sysv/linux/ia64/bits/sigcontext.h (ia64_fpreg):
+	Likewise.
+
+2012-05-14  Mike Frysinger  <vapier@gentoo.org>
+
 	* sysdeps/ia64/fpu/libm-symbols.h: Delete __ELF__ checks.
 
 2012-05-07  Mike Frysinger  <vapier@gentoo.org>

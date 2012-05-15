@@ -1,5 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998, 2000, 2001, 2003, 2004, 2007
-   Free Software Foundation, Inc.
+/* Copyright (C) 1996-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jes Sorensen <jes@linuxcare.com>, July 2000
 
@@ -34,7 +33,7 @@ struct ia64_fpreg
       {
 	unsigned long bits[2];
       } u;
-  } __attribute__ ((aligned (16)));
+  } __attribute__ ((__aligned__ (16)));
 
 struct sigcontext
 {

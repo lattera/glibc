@@ -1,5 +1,5 @@
 /* Define the machine-dependent type `jmp_buf'.  Linux/IA-64 version.
-   Copyright (C) 1999,2000,2003,2005,2006 Free Software Foundation, Inc.
+   Copyright (C) 1999-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by David Mosberger-Tang <davidm@hpl.hp.com>.
 
@@ -29,6 +29,6 @@
 #define _JBLEN	70
 
 /* the __jmp_buf element type should be __float80 per ABI... */
-typedef long __jmp_buf[_JBLEN] __attribute__ ((aligned (16))); /* guarantees 128-bit alignment! */
+typedef long __jmp_buf[_JBLEN] __attribute__ ((__aligned__ (16))); /* guarantees 128-bit alignment! */
 
 #endif  /* bits/setjmp.h */
