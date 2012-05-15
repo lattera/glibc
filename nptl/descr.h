@@ -131,6 +131,21 @@ struct pthread
 #else
     struct
     {
+      /* multiple_threads is enabled either when the process has spawned at
+	 least one thread or when a single-threaded process cancels itself.
+	 This enables additional code to introduce locking before doing some
+	 compare_and_exchange operations and also enable cancellation points.
+	 The concepts of multiple threads and cancellation points ideally
+	 should be separate, since it is not necessary for multiple threads to
+	 have been created for cancellation points to be enabled, as is the
+	 case is when single-threaded process cancels itself.
+
+	 Since enabling multiple_threads enables additional code in
+	 cancellation points and compare_and_exchange operations, there is a
+	 potential for an unneeded performance hit when it is enabled in a
+	 single-threaded, self-canceling process.  This is OK though, since a
+	 single-threaded process will enable async cancellation only when it
+	 looks to cancel itself and is hence going to end anyway.  */
       int multiple_threads;
       int gscope_flag;
 # ifndef __ASSUME_PRIVATE_FUTEX

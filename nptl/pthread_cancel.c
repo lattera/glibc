@@ -95,6 +95,14 @@ pthread_cancel (th)
 
 	  break;
 	}
+
+	/* A single-threaded process should be able to kill itself, since there is
+	   nothing in the POSIX specification that says that it cannot.  So we set
+	   multiple_threads to true so that cancellation points get executed.  */
+	THREAD_SETMEM (THREAD_SELF, header.multiple_threads, 1);
+#ifndef TLS_MULTIPLE_THREADS_IN_TCB
+	__pthread_multiple_threads = *__libc_multiple_threads_ptr = 1;
+#endif
     }
   /* Mark the thread as canceled.  This has to be done
      atomically since other bits could be modified as well.  */

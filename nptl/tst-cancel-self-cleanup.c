@@ -1,6 +1,5 @@
-/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -16,13 +15,9 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <pthreadP.h>
-
-#ifndef NOT_IN_libc
-# ifndef TLS_MULTIPLE_THREADS_IN_TCB
-/* Variable set to a nonzero value either if more than one thread runs or ran,
-   or if a single-threaded process is trying to cancel itself.  See
-   nptl/descr.h for more context on the single-threaded process case.  */
-int __libc_multiple_threads attribute_hidden;
-# endif
-#endif
+static void
+cleanup (void *cleanup_should_fail)
+{
+  printf ("Main thread got cancelled and is being cleaned up now\n");
+  exit (*(int *)cleanup_should_fail);
+}

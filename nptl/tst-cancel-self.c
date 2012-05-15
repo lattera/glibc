@@ -1,4 +1,4 @@
-/* Copyright (C) 2004 Free Software Foundation, Inc.
+/* Copyright (C) 2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -15,30 +15,34 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <pthreadP.h>
+#include <pthread.h>
+#include <stdio.h>
 #include <stdlib.h>
-#include <tls.h>
+#include <string.h>
 #include <unistd.h>
+#include "tst-cancel-self-cleanup.c"
 
-/* Default stack size.  */
-size_t __default_stacksize attribute_hidden
-#ifdef SHARED
-;
-#else
-  = PTHREAD_STACK_MIN;
-#endif
 
-/* Flag whether the machine is SMP or not.  */
-int __is_smp attribute_hidden;
+static int
+do_test (void)
+{
+  int ret = 0, should_fail = 0;
 
-#ifndef TLS_MULTIPLE_THREADS_IN_TCB
-/* Variable set to a nonzero value either if more than one thread runs or ran,
-   or if a single-threaded process is trying to cancel itself.  See
-   nptl/descr.h for more context on the single-threaded process case.  */
-int __pthread_multiple_threads attribute_hidden;
-#endif
+  pthread_cleanup_push (cleanup, &should_fail);
+  if ((ret = pthread_cancel (pthread_self ())) != 0)
+    {
+      printf ("cancel failed: %s\n", strerror (ret));
+      exit (1);
+    }
 
-/* Table of the key information.  */
-struct pthread_key_struct __pthread_keys[PTHREAD_KEYS_MAX]
-  __attribute__ ((nocommon));
-hidden_data_def (__pthread_keys)
+  /* The write syscall within this printf should give us our cancellation
+     point.  */
+  printf ("Could not cancel self.\n");
+  pthread_cleanup_pop (0);
+
+  return 1;
+}
+
+
+#define TEST_FUNCTION do_test ()
+#include "../test-skeleton.c"

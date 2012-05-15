@@ -378,7 +378,9 @@ extern int *__libc_pthread_init (unsigned long int *ptr,
 				 const struct pthread_functions *functions)
      internal_function;
 
-/* Variable set to a nonzero value if more than one thread runs or ran.  */
+/* Variable set to a nonzero value either if more than one thread runs or ran,
+   or if a single-threaded process is trying to cancel itself.  See
+   nptl/descr.h for more context on the single-threaded process case.  */
 extern int __pthread_multiple_threads attribute_hidden;
 /* Pointer to the corresponding variable in libc.  */
 extern int *__libc_multiple_threads_ptr attribute_hidden;
