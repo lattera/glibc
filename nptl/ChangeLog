@@ -1,5 +1,10 @@
 2012-05-15  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* sysdeps/unix/sysv/linux/x86_64/cancellation.S: Use LP_OP(mov)
+	to update pointer in memory.  Load pointer into RDI_LP.
+
+2012-05-15  H.J. Lu  <hongjiu.lu@intel.com>
+
 	* sysdeps/unix/sysv/linux/x86_64/lowlevellock.h
 	(LLL_STUB_UNWIND_INFO_START): Align label to LP_SIZE instead
 	of 8.

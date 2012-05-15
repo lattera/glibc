@@ -72,10 +72,10 @@ ENTRY(__pthread_enable_asynccancel)
 
 3:	subq	$8, %rsp
 	cfi_adjust_cfa_offset(8)
-	movq	$TCB_PTHREAD_CANCELED, %fs:RESULT
+	LP_OP(mov) $TCB_PTHREAD_CANCELED, %fs:RESULT
 	lock
 	orl	$TCB_EXITING_BITMASK, %fs:CANCELHANDLING
-	movq	%fs:CLEANUP_JMP_BUF, %rdi
+	mov	%fs:CLEANUP_JMP_BUF, %RDI_LP
 #ifdef SHARED
 	call	__pthread_unwind@PLT
 #else
@@ -106,7 +106,7 @@ ENTRY(__pthread_disable_asynccancel)
 	/* Performance doesn't matter in this loop.  We will
 	   delay until the thread is canceled.  And we will unlikely
 	   enter the loop twice.  */
-4:	movq	%fs:0, %rdi
+4:	mov	%fs:0, %RDI_LP
 	movl	$__NR_futex, %eax
 	xorq	%r10, %r10
 	addq	$CANCELHANDLING, %rdi
