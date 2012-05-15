@@ -49,8 +49,6 @@
    But not all systems have support for the /proc filesystem.  If it
    is not available we simply return 1 since there is no way.  */
 
-#include <not-cancel.h>
-
 
 /* Other architectures use different formats for /proc/cpuinfo.  This
    provides a hook for alternative parsers.  */

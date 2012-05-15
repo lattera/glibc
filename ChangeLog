@@ -1,3 +1,8 @@
+2012-05-15  Chris Metcalf  <cmetcalf@tilera.com>
+
+	* sysdeps/unix/sysv/linux/getsysstats.c: Remove duplicate
+	include of <not-cancel.h>.
+
 2012-05-15  Roland McGrath  <roland@hack.frob.com>
 
 	* nscd/nscd-client.h (__nscd_acquire_maplock): Fix formatting.
