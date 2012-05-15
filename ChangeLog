@@ -1,5 +1,13 @@
 2012-05-15  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* sysdeps/unix/sysv/linux/x86_64/x32/Makefile: New file.
+	* sysdeps/unix/sysv/linux/x86_64/x32/getcpu.c: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/x32/sched_getcpu-static.c:
+	Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/x32/sched_getcpu.S: Likewise.
+
+2012-05-15  H.J. Lu  <hongjiu.lu@intel.com>
+
 	* sysdeps/x86_64/stackinfo.h (stackinfo_get_sp): Use RSP_LP.
 	(stackinfo_sub_sp): Likewise.
 
