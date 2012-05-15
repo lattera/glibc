@@ -1,3 +1,18 @@
+2012-05-15  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/powerpc32/power7/fpu/s_logb.c: New file. Optimized
+	logb for POWER7.
+	* sysdeps/powerpc/powerpc32/power7/fpu/s_logbf.c: New file. Optimized
+	logbf for POWER7.
+	* sysdeps/powerpc/powerpc32/power7/fpu/s_logbl.c: New file. Optimized
+	logbl for POWER7.
+	* sysdeps/powerpc/powerpc64/power7/fpu/s_logb.c: New file. Use
+	powerpc32/power7/fpu/s_logb.c via #include.
+	* sysdeps/powerpc/powerpc64/power7/fpu/s_logbf.c: New file. Use
+	powerpc32/power7/fpu/s_logbf.c via #include.
+	* sysdeps/powerpc/powerpc64/power7/fpu/s_logbl.c: New file. Use
+	powerpc32/power7/fpu/s_logbl.c via #include.
+
 2012-05-15  Joseph Myers  <joseph@codesourcery.com>
 
 	* README.libm: Remove file.
