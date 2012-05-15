@@ -1,5 +1,10 @@
 2012-05-15  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* sysdeps/unix/sysv/linux/x86_64/clone.S: Load pointer to TID
+	into R10_LP.
+
+2012-05-15  H.J. Lu  <hongjiu.lu@intel.com>
+
 	* sysdeps/unix/sysv/linux/x86_64/x32/dl-cache.h: New.
 
 2012-05-15  H.J. Lu  <hongjiu.lu@intel.com>

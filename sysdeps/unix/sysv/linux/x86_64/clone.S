@@ -72,7 +72,7 @@ ENTRY (BP_SYM (__clone))
 	movq	%rdx, %rdi
 	movq	%r8, %rdx
 	movq	%r9, %r8
-	movq	8(%rsp), %r10
+	mov	8(%rsp), %R10_LP
 	movl	$SYS_ify(clone),%eax
 
 	/* End FDE now, because in the child the unwind info will be
