@@ -1,3 +1,16 @@
+2012-05-15  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/unix/sysv/linux/x86_64/Makefile (gen-as-const-headers):
+	Add sigaltstack-offsets.sym.
+	* sysdeps/unix/sysv/linux/x86_64/____longjmp_chk.S: Include
+	<sigaltstack-offsets.h>.
+	(CALL_FAIL): Use RSP_LP to operate on stack.  Use RDI_LP on
+	longjmp_msg pointer.
+	(____longjmp_chk): Use R8_LP and RDX_LP on SP and PC.  Use
+	R*_LP, sizeSS, oSS_FLAGS, oSS_SP and oSS_SIZE for alternate
+	signal stack.
+	* sysdeps/unix/sysv/linux/x86_64/sigaltstack-offsets.sym: New.
+
 2012-05-15  Joseph Myers  <joseph@codesourcery.com>
 
 	* elf/stackguard-macros.h: Remove file.

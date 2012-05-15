@@ -19,6 +19,8 @@
 #include <jmpbuf-offsets.h>
 #include <asm-syntax.h>
 
+#include <sigaltstack-offsets.h>
+
 	.section .rodata.str1.1,"aMS",@progbits,1
 	.type	longjmp_msg,@object
 longjmp_msg:
@@ -29,18 +31,18 @@ longjmp_msg:
 //#define __longjmp ____longjmp_chk
 
 #ifdef PIC
-# define CALL_FAIL	subq	$8, %rsp;				      \
+# define CALL_FAIL	sub	$8, %RSP_LP;				      \
 			cfi_remember_state;				      \
 			cfi_def_cfa_offset(16);				      \
-			leaq	longjmp_msg(%rip), %rdi;		      \
+			lea	longjmp_msg(%rip), %RDI_LP;		      \
 			call	HIDDEN_JUMPTARGET(__fortify_fail);	      \
 			nop;						      \
 			cfi_restore_state
 #else
-# define CALL_FAIL	subq	$8, %rsp;				      \
+# define CALL_FAIL	sub	$8, %RSP_LP;				      \
 			cfi_remember_state;				      \
 			cfi_def_cfa_offset(16);				      \
-			movq	$longjmp_msg, %rdi;			      \
+			mov	$longjmp_msg, %RDI_LP;			      \
 			call	HIDDEN_JUMPTARGET(__fortify_fail);	      \
 			nop;						      \
 			cfi_restore_state
@@ -52,16 +54,16 @@ longjmp_msg:
 	.text
 ENTRY(____longjmp_chk)
 	/* Restore registers.  */
-	movq	(JB_RSP*8)(%rdi), %r8
+	mov	(JB_RSP*8)(%rdi), %R8_LP
 	movq	(JB_RBP*8)(%rdi), %r9
-	movq	(JB_PC*8)(%rdi), %rdx
+	mov	(JB_PC*8)(%rdi), %RDX_LP
 #ifdef PTR_DEMANGLE
-	PTR_DEMANGLE (%r8)
+	PTR_DEMANGLE (%R8_LP)
 	PTR_DEMANGLE (%r9)
-	PTR_DEMANGLE (%rdx)
+	PTR_DEMANGLE (%RDX_LP)
 #endif
 
-	cmpq	%r8, %rsp
+	cmp	%R8_LP, %RSP_LP
 	jbe	.Lok
 
 	/* Save function parameters.  */
@@ -71,19 +73,19 @@ ENTRY(____longjmp_chk)
 	cfi_register (%rsi, %rbx)
 
 	xorl	%edi, %edi
-	leaq	-24(%rsp), %rsi
+	lea	-sizeSS(%rsp), %RSI_LP
 	movl	$__NR_sigaltstack, %eax
 	syscall
 	/* Without working sigaltstack we cannot perform the test.  */
 	testl	%eax, %eax
 	jne	.Lok2
-	testl	$1, -16(%rsp)
+	testl	$1, (-sizeSS + oSS_FLAGS)(%rsp)
 	jz	.Lfail
 
-	movq	-24(%rsp), %rax
-	addq	-8(%rsp), %rax
-	subq	%r8, %rax
-	cmpq	-8(%rsp), %rax
+	mov	(-sizeSS + oSS_SP)(%rsp), %RAX_LP
+	add	(-sizeSS + oSS_SIZE)(%rsp), %RAX_LP
+	sub	%R8_LP, %RAX_LP
+	cmp	(-sizeSS + oSS_SIZE)(%rsp), %RAX_LP
 	jae	.Lok2
 
 .Lfail:	CALL_FAIL
@@ -110,7 +112,7 @@ ENTRY(____longjmp_chk)
 	movq	(JB_R15*8)(%rdi), %r15
 	/* Set return value for setjmp.  */
 	movl	%esi, %eax
-	movq	%r8,%rsp
+	mov	%R8_LP, %RSP_LP
 	movq	%r9,%rbp
 	jmpq	*%rdx
 END (____longjmp_chk)
