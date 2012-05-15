@@ -1,4 +1,4 @@
-/* Copyright (C) 2002-2007, 2009, 2011 Free Software Foundation, Inc.
+/* Copyright (C) 2002-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -580,17 +580,6 @@ extern void __wait_lookup_done (void) attribute_hidden;
 # define PTHREAD_STATIC_FN_REQUIRE(name)
 #else
 # define PTHREAD_STATIC_FN_REQUIRE(name) __asm (".globl " #name);
-#endif
-
-
-#ifndef __NR_set_robust_list
-/* XXX For the time being...  Once we can rely on the kernel headers
-   having the definition remove these lines.  */
-# if defined __i386__
-#  define __NR_set_robust_list  311
-# elif defined __x86_64__
-#  define __NR_set_robust_list  273
-# endif
 #endif
 
 #endif	/* pthreadP.h */

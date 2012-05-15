@@ -1,3 +1,8 @@
+2012-05-15  Joseph Myers  <joseph@codesourcery.com>
+
+	* pthreadP.h [!__NR_set_robust_list] (__NR_set_robust_list): Do
+	not define.
+
 2012-05-15  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/unix/sysv/linux/x86_64/lowlevellock.h (lll_lock): Load
