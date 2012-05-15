@@ -1,5 +1,11 @@
 2012-05-15  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* sysdeps/unix/sysv/linux/x86_64/pthread_once.S
+	(__gcc_personality_v0): Replace 8-byte data alignment with
+	LP_SIZE alignment and .quad with ASM_ADDR.
+
+2012-05-15  H.J. Lu  <hongjiu.lu@intel.com>
+
 	* sysdeps/unix/sysv/linux/x86_64/pthread_cond_wait.S: Use
 	LP_OP(cmp), RSI_LP and R8_LP on dep_mutex pointer.  Load
 	__vdso_clock_gettime pointer into RAX_LP.
