@@ -1,5 +1,18 @@
 2012-05-15  Joseph Myers  <joseph@codesourcery.com>
 
+	* elf/stackguard-macros.h: Remove file.
+	* sysdeps/generic/stackguard-macros.h: New file.
+	* sysdeps/i386/stackguard-macros.h: Likewise.
+	* sysdeps/powerpc/powerpc32/stackguard-macros.h: Likewise.
+	* sysdeps/powerpc/powerpc64/stackguard-macros.h: Likewise.
+	* sysdeps/s390/s390-32/stackguard-macros.h: Likewise.
+	* sysdeps/s390/s390-64/stackguard-macros.h: Likewise.
+	* sysdeps/sparc/sparc32/stackguard-macros.h: Likewise.
+	* sysdeps/sparc/sparc64/stackguard-macros.h: Likewise.
+	* sysdeps/x86_64/stackguard-macros.h: Likewise.
+	* nptl/tst-stackguard1.c: Include <stackguard-macros.h> not
+	<elf/stackguard-macros.h>.
+
 	[BZ #14109]
 	* sysdeps/unix/sysv/linux/powerpc/sys/procfs.h (elf_vrreg_t): Use
 	__aligned__ in attribute.

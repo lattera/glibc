@@ -1,4 +1,4 @@
-/* Copyright (C) 2005 Free Software Foundation, Inc.
+/* Copyright (C) 2005-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jakub@redhat.com>, 2005.
 
@@ -23,7 +23,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/wait.h>
-#include <elf/stackguard-macros.h>
+#include <stackguard-macros.h>
 #include <unistd.h>
 
 static const char *command;
