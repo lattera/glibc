@@ -45,7 +45,7 @@ sem_post:
 #endif
 	jnz	0b
 
-	cmpq	$0, NWAITERS(%rdi)
+	LP_OP(cmp) $0, NWAITERS(%rdi)
 	je	2f
 
 	movl	$SYS_futex, %eax
