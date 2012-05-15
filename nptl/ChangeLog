@@ -1,5 +1,17 @@
 2012-05-15  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* sysdeps/unix/sysv/linux/x86_64/lowlevellock.h (lll_lock): Load
+	futex pointer into RDI_LP.  Use RSP_LP to operate on stack.
+	(lll_robust_lock): Likewise.
+	(lll_cond_lock): Likewise.
+	(lll_robust_cond_lock): Likewise.
+	(lll_timedlock): Likewise.
+	(lll_robust_timedlock): Likewise.
+	(lll_unlock): Likewise.
+	(lll_robust_unlock): Likewise.
+
+2012-05-15  H.J. Lu  <hongjiu.lu@intel.com>
+
 	* sysdeps/unix/sysv/linux/x86_64/pthread_cond_signal.S: Use
 	LP_OP(cmp) and RCX_LP on dep_mutex pointer.
 

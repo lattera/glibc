@@ -1,4 +1,5 @@
-/* Copyright (C) 2002-2004, 2006-2008, 2009 Free Software Foundation, Inc.
+/* Copyright (C) 2002-2004, 2006-2008, 2009, 2012
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -298,10 +299,10 @@ LLL_STUB_UNWIND_INFO_END
 			   ".subsection 1\n\t"				      \
 			   ".type _L_lock_%=, @function\n"		      \
 			   "_L_lock_%=:\n"				      \
-			   "1:\tleaq %2, %%rdi\n"			      \
-			   "2:\tsubq $128, %%rsp\n"			      \
+			   "1:\tlea %2, %%" RDI_LP "\n"			      \
+			   "2:\tsub $128, %%" RSP_LP "\n"		      \
 			   "3:\tcallq __lll_lock_wait_private\n"	      \
-			   "4:\taddq $128, %%rsp\n"			      \
+			   "4:\tadd $128, %%" RSP_LP "\n"		      \
 			   "5:\tjmp 24f\n"				      \
 			   "6:\t.size _L_lock_%=, 6b-1b\n\t"		      \
 			   ".previous\n"				      \
@@ -316,10 +317,10 @@ LLL_STUB_UNWIND_INFO_END
 			   ".subsection 1\n\t"				      \
 			   ".type _L_lock_%=, @function\n"		      \
 			   "_L_lock_%=:\n"				      \
-			   "1:\tleaq %2, %%rdi\n"			      \
-			   "2:\tsubq $128, %%rsp\n"			      \
+			   "1:\tlea %2, %%" RDI_LP "\n"			      \
+			   "2:\tsub $128, %%" RSP_LP "\n"		      \
 			   "3:\tcallq __lll_lock_wait\n"		      \
-			   "4:\taddq $128, %%rsp\n"			      \
+			   "4:\tadd $128, %%" RSP_LP "\n"		      \
 			   "5:\tjmp 24f\n"				      \
 			   "6:\t.size _L_lock_%=, 6b-1b\n\t"		      \
 			   ".previous\n"				      \
@@ -338,10 +339,10 @@ LLL_STUB_UNWIND_INFO_END
 		      ".subsection 1\n\t"				      \
 		      ".type _L_robust_lock_%=, @function\n"		      \
 		      "_L_robust_lock_%=:\n"				      \
-		      "1:\tleaq %2, %%rdi\n"				      \
-		      "2:\tsubq $128, %%rsp\n"				      \
+		      "1:\tlea %2, %%" RDI_LP "\n"			      \
+		      "2:\tsub $128, %%" RSP_LP "\n"			      \
 		      "3:\tcallq __lll_robust_lock_wait\n"		      \
-		      "4:\taddq $128, %%rsp\n"				      \
+		      "4:\tadd $128, %%" RSP_LP "\n"			      \
 		      "5:\tjmp 24f\n"					      \
 		      "6:\t.size _L_robust_lock_%=, 6b-1b\n\t"		      \
 		      ".previous\n"					      \
@@ -361,10 +362,10 @@ LLL_STUB_UNWIND_INFO_END
 			 ".subsection 1\n\t"				      \
 			 ".type _L_cond_lock_%=, @function\n"		      \
 			 "_L_cond_lock_%=:\n"				      \
-			 "1:\tleaq %2, %%rdi\n"				      \
-			 "2:\tsubq $128, %%rsp\n"			      \
+			 "1:\tlea %2, %%" RDI_LP "\n"			      \
+			 "2:\tsub $128, %%" RSP_LP "\n"			      \
 			 "3:\tcallq __lll_lock_wait\n"			      \
-			 "4:\taddq $128, %%rsp\n"			      \
+			 "4:\tadd $128, %%" RSP_LP "\n"			      \
 			 "5:\tjmp 24f\n"				      \
 			 "6:\t.size _L_cond_lock_%=, 6b-1b\n\t"		      \
 			 ".previous\n"					      \
@@ -383,10 +384,10 @@ LLL_STUB_UNWIND_INFO_END
 		      ".subsection 1\n\t"				      \
 		      ".type _L_robust_cond_lock_%=, @function\n"	      \
 		      "_L_robust_cond_lock_%=:\n"			      \
-		      "1:\tleaq %2, %%rdi\n"				      \
-		      "2:\tsubq $128, %%rsp\n"				      \
+		      "1:\tlea %2, %%" RDI_LP "\n"			      \
+		      "2:\tsub $128, %%" RSP_LP "\n"			      \
 		      "3:\tcallq __lll_robust_lock_wait\n"		      \
-		      "4:\taddq $128, %%rsp\n"				      \
+		      "4:\tadd $128, %%" RSP_LP "\n"			      \
 		      "5:\tjmp 24f\n"					      \
 		      "6:\t.size _L_robust_cond_lock_%=, 6b-1b\n\t"	      \
 		      ".previous\n"					      \
@@ -406,11 +407,11 @@ LLL_STUB_UNWIND_INFO_END
 		       ".subsection 1\n\t"				      \
 		       ".type _L_timedlock_%=, @function\n"		      \
 		       "_L_timedlock_%=:\n"				      \
-		       "1:\tleaq %4, %%rdi\n"				      \
+		       "1:\tlea %4, %%" RDI_LP "\n"			      \
 		       "0:\tmov %8, %%" RDX_LP "\n"			      \
-		       "2:\tsubq $128, %%rsp\n"				      \
+		       "2:\tsub $128, %%" RSP_LP "\n"			      \
 		       "3:\tcallq __lll_timedlock_wait\n"		      \
-		       "4:\taddq $128, %%rsp\n"				      \
+		       "4:\tadd $128, %%" RSP_LP "\n"			      \
 		       "5:\tjmp 24f\n"					      \
 		       "6:\t.size _L_timedlock_%=, 6b-1b\n\t"		      \
 		       ".previous\n"					      \
@@ -430,11 +431,11 @@ LLL_STUB_UNWIND_INFO_END
 		       ".subsection 1\n\t"				      \
 		       ".type _L_robust_timedlock_%=, @function\n"	      \
 		       "_L_robust_timedlock_%=:\n"			      \
-		       "1:\tleaq %4, %%rdi\n"				      \
+		       "1:\tlea %4, %%" RDI_LP "\n"			      \
 		       "0:\tmov %8, %%" RDX_LP "\n"			      \
-		       "2:\tsubq $128, %%rsp\n"				      \
+		       "2:\tsub $128, %%" RSP_LP "\n"			      \
 		       "3:\tcallq __lll_robust_timedlock_wait\n"	      \
-		       "4:\taddq $128, %%rsp\n"				      \
+		       "4:\tadd $128, %%" RSP_LP "\n"			      \
 		       "5:\tjmp 24f\n"					      \
 		       "6:\t.size _L_robust_timedlock_%=, 6b-1b\n\t"	      \
 		       ".previous\n"					      \
@@ -468,10 +469,10 @@ LLL_STUB_UNWIND_INFO_END
 			   ".subsection 1\n\t"				      \
 			   ".type _L_unlock_%=, @function\n"		      \
 			   "_L_unlock_%=:\n"				      \
-			   "1:\tleaq %0, %%rdi\n"			      \
-			   "2:\tsubq $128, %%rsp\n"			      \
+			   "1:\tlea %0, %%" RDI_LP "\n"			      \
+			   "2:\tsub $128, %%" RSP_LP "\n"		      \
 			   "3:\tcallq __lll_unlock_wake_private\n"	      \
-			   "4:\taddq $128, %%rsp\n"			      \
+			   "4:\tadd $128, %%" RSP_LP "\n"		      \
 			   "5:\tjmp 24f\n"				      \
 			   "6:\t.size _L_unlock_%=, 6b-1b\n\t"		      \
 			   ".previous\n"				      \
@@ -485,10 +486,10 @@ LLL_STUB_UNWIND_INFO_END
 			   ".subsection 1\n\t"				      \
 			   ".type _L_unlock_%=, @function\n"		      \
 			   "_L_unlock_%=:\n"				      \
-			   "1:\tleaq %0, %%rdi\n"			      \
-			   "2:\tsubq $128, %%rsp\n"			      \
+			   "1:\tlea %0, %%" RDI_LP "\n"			      \
+			   "2:\tsub $128, %%" RSP_LP "\n"		      \
 			   "3:\tcallq __lll_unlock_wake\n"		      \
-			   "4:\taddq $128, %%rsp\n"			      \
+			   "4:\tadd $128, %%" RSP_LP "\n"		      \
 			   "5:\tjmp 24f\n"				      \
 			   "6:\t.size _L_unlock_%=, 6b-1b\n\t"		      \
 			   ".previous\n"				      \
@@ -508,10 +509,10 @@ LLL_STUB_UNWIND_INFO_END
 			".subsection 1\n\t"				      \
 			".type _L_robust_unlock_%=, @function\n"	      \
 			"_L_robust_unlock_%=:\n"			      \
-			"1:\tleaq %0, %%rdi\n"				      \
-			"2:\tsubq $128, %%rsp\n"			      \
+			"1:\tlea %0, %%" RDI_LP "\n"			      \
+			"2:\tsub $128, %%" RSP_LP "\n"			      \
 			"3:\tcallq __lll_unlock_wake\n"			      \
-			"4:\taddq $128, %%rsp\n"			      \
+			"4:\tadd $128, %%" RSP_LP "\n"			      \
 			"5:\tjmp 24f\n"					      \
 			"6:\t.size _L_robust_unlock_%=, 6b-1b\n\t"	      \
 			".previous\n"					      \
