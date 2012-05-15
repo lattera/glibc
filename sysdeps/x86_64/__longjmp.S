@@ -25,13 +25,13 @@
 	.text
 ENTRY(__longjmp)
 	/* Restore registers.  */
-	movq (JB_RSP*8)(%rdi),%r8
+	mov (JB_RSP*8)(%rdi),%R8_LP
 	movq (JB_RBP*8)(%rdi),%r9
-	movq (JB_PC*8)(%rdi),%rdx
+	mov (JB_PC*8)(%rdi),%RDX_LP
 #ifdef PTR_DEMANGLE
-	PTR_DEMANGLE (%r8)
+	PTR_DEMANGLE (%R8_LP)
 	PTR_DEMANGLE (%r9)
-	PTR_DEMANGLE (%rdx)
+	PTR_DEMANGLE (%RDX_LP)
 #endif
 	/* We add unwind information for the target here.  */
 	cfi_def_cfa(%rdi, 0)
@@ -50,7 +50,7 @@ ENTRY(__longjmp)
 	movq (JB_R15*8)(%rdi),%r15
 	/* Set return value for setjmp.  */
 	mov %esi, %eax
-	movq %r8,%rsp
+	mov %R8_LP,%RSP_LP
 	movq %r9,%rbp
 	jmpq *%rdx
 END (__longjmp)

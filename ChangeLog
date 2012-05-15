@@ -1,3 +1,8 @@
+2012-05-15  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/x86_64/__longjmp.S: Use R*_LP on SP and PC.
+	* sysdeps/x86_64/setjmp.S: Likewise.
+
 2012-05-15  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	* sysdeps/ieee754/dbl-64/wordsize-64/e_log10.c: New file.
