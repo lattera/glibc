@@ -323,7 +323,8 @@ struct locked_map_ptr
 
 /* Try acquiring lock for mapptr, returns true if it succeeds, false
    if not.  */
-static inline bool __nscd_acquire_maplock (volatile struct locked_map_ptr *mapptr)
+static inline bool
+__nscd_acquire_maplock (volatile struct locked_map_ptr *mapptr)
 {
   int cnt = 0;
   while (__builtin_expect (atomic_compare_and_exchange_val_acq (&mapptr->lock,

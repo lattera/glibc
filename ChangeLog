@@ -1,3 +1,7 @@
+2012-05-15  Roland McGrath  <roland@hack.frob.com>
+
+	* nscd/nscd-client.h (__nscd_acquire_maplock): Fix formatting.
+
 2012-05-15  Jeff Law  <law@redhat.com>
 	    Andreas Jaeger  <aj@suse.de>
 
