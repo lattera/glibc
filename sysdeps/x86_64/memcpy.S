@@ -254,7 +254,7 @@ L(32after):
 
 L(fasttry):				/* first 1/2 L1 */
 #ifndef NOT_IN_libc			/* only up to this algorithm outside of libc.so */
-	movq	__x86_64_data_cache_size_half(%rip), %r11
+	mov	__x86_64_data_cache_size_half(%rip), %R11_LP
 	cmpq	%rdx, %r11		/* calculate the smaller of */
 	cmovaq	%rdx, %r11		/* remaining bytes and 1/2 L1 */
 #endif
@@ -303,7 +303,7 @@ L(fastafter):
 /* Handle large blocks smaller than 1/2 L2. */
 
 L(pretry):				/* first 1/2 L2 */
-	movq	__x86_64_shared_cache_size_half (%rip), %r8
+	mov	__x86_64_shared_cache_size_half (%rip), %R8_LP
 	cmpq	%rdx, %r8		/* calculate the lesser of */
 	cmovaq	%rdx, %r8		/* remaining bytes and 1/2 L2 */
 

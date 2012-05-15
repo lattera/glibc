@@ -1,5 +1,11 @@
 2012-05-15  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* sysdeps/x86_64/memcpy.S: Load __x86_64_data_cache_size_half
+	into R11_LP and load __x86_64_shared_cache_size_half into
+	R8_LP.
+
+2012-05-15  H.J. Lu  <hongjiu.lu@intel.com>
+
 	* sysdeps/x86_64/multiarch/memcmp-sse4.S: Load cache size into
 	R8_LP.
 
