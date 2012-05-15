@@ -1,5 +1,12 @@
 2012-05-15  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* sysdeps/unix/sysv/linux/x86_64/sem_wait.S: Use LP_OP(op)
+	on NWAITERS.
+	(__gcc_personality_v0): Replace 8-byte data alignment with
+	LP_SIZE alignment and .quad with ASM_ADDR.
+
+2012-05-15  H.J. Lu  <hongjiu.lu@intel.com>
+
 	* sysdeps/unix/sysv/linux/x86_64/sem_timedwait.S: Use LP_OP(op)
 	on NWAITERS.
 	(__gcc_personality_v0): Replace 8-byte data alignment with
