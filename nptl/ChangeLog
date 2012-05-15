@@ -1,5 +1,10 @@
 2012-05-15  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* sysdeps/unix/sysv/linux/x86_64/pthread_cond_signal.S: Use
+	LP_OP(cmp) and RCX_LP on dep_mutex pointer.
+
+2012-05-15  H.J. Lu  <hongjiu.lu@intel.com>
+
 	* sysdeps/unix/sysv/linux/x86_64/sem_wait.S: Use LP_OP(op)
 	on NWAITERS.
 	(__gcc_personality_v0): Replace 8-byte data alignment with
