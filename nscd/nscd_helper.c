@@ -1,4 +1,4 @@
-/* Copyright (C) 1998-2007, 2008, 2009 Free Software Foundation, Inc.
+/* Copyright (C) 1998-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -419,7 +419,6 @@ __nscd_get_mapping (request_type type, const char *key,
   return result;
 }
 
-
 struct mapped_database *
 __nscd_get_map_ref (request_type type, const char *name,
 		    volatile struct locked_map_ptr *mapptr, int *gc_cyclep)
@@ -428,16 +427,8 @@ __nscd_get_map_ref (request_type type, const char *name,
   if (cur == NO_MAPPING)
     return cur;
 
-  int cnt = 0;
-  while (__builtin_expect (atomic_compare_and_exchange_val_acq (&mapptr->lock,
-								1, 0) != 0, 0))
-    {
-      // XXX Best number of rounds?
-      if (__builtin_expect (++cnt > 5, 0))
-	return NO_MAPPING;
-
-      atomic_delay ();
-    }
+  if (!__nscd_acquire_maplock (mapptr))
+    return NO_MAPPING;
 
   cur = mapptr->mapped;
 

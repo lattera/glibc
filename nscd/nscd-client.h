@@ -1,5 +1,4 @@
-/* Copyright (c) 1998, 1999, 2000, 2003, 2004, 2005, 2006, 2007, 2009, 2011
-   Free Software Foundation, Inc.
+/* Copyright (c) 1998-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@suse.de>, 1998.
 
@@ -321,6 +320,24 @@ struct locked_map_ptr
   struct mapped_database *mapped;
 };
 #define libc_locked_map_ptr(class, name) class struct locked_map_ptr name
+
+/* Try acquiring lock for mapptr, returns true if it succeeds, false
+   if not.  */
+static inline bool __nscd_acquire_maplock (volatile struct locked_map_ptr *mapptr)
+{
+  int cnt = 0;
+  while (__builtin_expect (atomic_compare_and_exchange_val_acq (&mapptr->lock,
+								1, 0) != 0, 0))
+    {
+      // XXX Best number of rounds?
+      if (__builtin_expect (++cnt > 5, 0))
+	return false;
+
+      atomic_delay ();
+    }
+
+  return true;
+}
 
 
 /* Open socket connection to nscd server.  */

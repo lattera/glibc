@@ -1,3 +1,14 @@
+2012-05-15  Jeff Law  <law@redhat.com>
+	    Andreas Jaeger  <aj@suse.de>
+
+	[BZ #13594]
+	* nscd/nscd-client.h (__nscd_acquire_maplock): New function, split
+	out from...
+	* nscd/nscd_helper.c (__nscd_get_map_ref): ... here.
+	* nscd/nscd-client.h: Add __nscd_acquire_maplock.
+	* nscd/nscd_gethst_r.c (__nscd_get_nl_timestamp): Add locking to
+	code changing __hst_map_handle.map.
+
 2012-05-15  Roland McGrath  <roland@hack.frob.com>
 
 	* configure.in (sysnames): Look for Implies-before and Implies-after

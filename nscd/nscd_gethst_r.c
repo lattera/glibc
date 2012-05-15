@@ -1,5 +1,4 @@
-/* Copyright (C) 1998-2005, 2006, 2007, 2008, 2009, 2011
-   Free Software Foundation, Inc.
+/* Copyright (C) 1998-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -100,7 +99,16 @@ libc_freeres_fn (hst_map_free)
 uint32_t
 __nscd_get_nl_timestamp (void)
 {
+  uint32_t retval;
   if (__nss_not_use_nscd_hosts != 0)
+    return 0;
+
+  /* __nscd_get_mapping can change hst_map_handle.mapped to NO_MAPPING.
+   However, __nscd_get_mapping assumes the prior value was not NO_MAPPING.
+   Thus we have to acquire the lock to prevent this thread from changing
+   hst_map_handle.mapped to NO_MAPPING while another thread is inside
+    __nscd_get_mapping.  */
+  if (!__nscd_acquire_maplock (&__hst_map_handle))
     return 0;
 
   struct mapped_database *map = __hst_map_handle.mapped;
@@ -112,9 +120,14 @@ __nscd_get_nl_timestamp (void)
     map = __nscd_get_mapping (GETFDHST, "hosts", &__hst_map_handle.mapped);
 
   if (map == NO_MAPPING)
-    return 0;
+    retval = 0;
+  else
+    retval = map->head->extra_data[NSCD_HST_IDX_CONF_TIMESTAMP];
 
-  return map->head->extra_data[NSCD_HST_IDX_CONF_TIMESTAMP];
+  /* Release the lock.  */
+  __hst_map_handle.lock = 0;
+
+  return retval;
 }
 
 
