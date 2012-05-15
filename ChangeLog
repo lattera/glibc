@@ -1,5 +1,10 @@
 2012-05-14  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* sysdeps/x86_64/start.S: Simulate popping 4-byte argument
+	count for x32.  Use R*_LP and omit operand-size suffix.
+
+2012-05-14  H.J. Lu  <hongjiu.lu@intel.com>
+
 	* shlib-versions: Move x86_64-.*-linux.* entries to ...
 	* sysdeps/x86_64/64/shlib-versions: Here.  New file.
 	* sysdeps/x86_64/x32/shlib-versions: New file.

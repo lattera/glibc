@@ -44,13 +44,13 @@
 		before this code runs.
 
    %rsp		The stack contains the arguments and environment:
-		0(%rsp)			argc
-		8(%rsp)			argv[0]
+		0(%rsp)				argc
+		LP_SIZE(%rsp)			argv[0]
 		...
-		(8*argc)(%rsp)		NULL
-		(8*(argc+1))(%rsp)	envp[0]
+		(LP_SIZE*argc)(%rsp)		NULL
+		(LP_SIZE*(argc+1))(%rsp)	envp[0]
 		...
-					NULL
+						NULL
 */
 
 #include <sysdep.h>
@@ -81,14 +81,21 @@ _start:
 	rtld_fini:	%r9
 	stack_end:	stack.	*/
 
-	movq %rdx, %r9		/* Address of the shared library termination
+	mov %RDX_LP, %R9_LP	/* Address of the shared library termination
 				   function.  */
+#ifdef __ILP32__
+	mov (%rsp), %esi	/* Simulate popping 4-byte argument count.  */
+	add $4, %esp
+#else
 	popq %rsi		/* Pop the argument count.  */
-	movq %rsp, %rdx		/* argv starts just at the current stack top.  */
+#endif
+	/* argv starts just at the current stack top.  */
+	mov %RSP_LP, %RDX_LP
 	/* Align the stack to a 16 byte boundary to follow the ABI.  */
-	andq  $~15, %rsp
+	and  $~15, %RSP_LP
 
-	pushq %rax		/* Push garbage because we push 8 more bytes.  */
+	/* Push garbage because we push 8 more bytes.  */
+	pushq %rax
 
 	/* Provide the highest stack address to the user code (for stacks
 	   which grow downwards).  */
@@ -96,20 +103,20 @@ _start:
 
 #ifdef SHARED
 	/* Pass address of our own entry points to .fini and .init.  */
-	movq __libc_csu_fini@GOTPCREL(%rip), %r8
-	movq __libc_csu_init@GOTPCREL(%rip), %rcx
+	mov __libc_csu_fini@GOTPCREL(%rip), %R8_LP
+	mov __libc_csu_init@GOTPCREL(%rip), %RCX_LP
 
-	movq BP_SYM (main)@GOTPCREL(%rip), %rdi
+	mov BP_SYM (main)@GOTPCREL(%rip), %RDI_LP
 
 	/* Call the user's main function, and exit with its value.
 	   But let the libc call main.	  */
 	call BP_SYM (__libc_start_main)@PLT
 #else
 	/* Pass address of our own entry points to .fini and .init.  */
-	movq $__libc_csu_fini, %r8
-	movq $__libc_csu_init, %rcx
+	mov $__libc_csu_fini, %R8_LP
+	mov $__libc_csu_init, %RCX_LP
 
-	movq $BP_SYM (main), %rdi
+	mov $BP_SYM (main), %RDI_LP
 
 	/* Call the user's main function, and exit with its value.
 	   But let the libc call main.	  */
