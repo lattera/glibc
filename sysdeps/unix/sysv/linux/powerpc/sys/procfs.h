@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1999, 2002, 2006 Free Software Foundation, Inc.
+/* Copyright (C) 1996-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -52,7 +52,7 @@ typedef elf_fpreg_t elf_fpregset_t[ELF_NFPREG];
 /* Altivec registers */
 typedef struct {
   unsigned int u[4];
-} __attribute__ ((aligned (16))) elf_vrreg_t;
+} __attribute__ ((__aligned__ (16))) elf_vrreg_t;
 typedef elf_vrreg_t elf_vrregset_t[ELF_NVRREG];
 #endif
 

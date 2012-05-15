@@ -1,4 +1,4 @@
-/* Copyright (C) 2000, 2001, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 2000-2012 Free Software Foundation, Inc.
    Contributed by Denis Joseph Barrow (djbarrow@de.ibm.com).
    This file is part of the GNU C Library.
 
@@ -33,7 +33,7 @@ typedef struct
 {
   unsigned long mask;
   unsigned long addr;
-} __attribute__ ((aligned(8))) __psw_t;
+} __attribute__ ((__aligned__(8))) __psw_t;
 
 /* Type for a general-purpose register.  */
 typedef unsigned long greg_t;
@@ -49,7 +49,7 @@ typedef unsigned long greg_t;
 # define NGREG 36
 #endif
 /* Must match kernels psw_t alignment.  */
-typedef greg_t gregset_t[NGREG] __attribute__ ((aligned(8)));
+typedef greg_t gregset_t[NGREG] __attribute__ ((__aligned__(8)));
 
 typedef union
   {
