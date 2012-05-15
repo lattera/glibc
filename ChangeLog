@@ -1,3 +1,8 @@
+2012-05-15  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/x86_64/multiarch/memcmp-sse4.S: Load cache size into
+	R8_LP.
+
 2012-05-15  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/powerpc32/power7/fpu/s_logb.c: New file. Optimized
