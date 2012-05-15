@@ -8,6 +8,12 @@
 
 2012-05-15  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* sysdeps/x86_64/Implies (wordsize-64): Moved to ....
+	* sysdeps/x86_64/64/Implies-after: Here.  New file.
+	* sysdeps/x86_64/x32/Implies-after: New file.
+
+2012-05-15  H.J. Lu  <hongjiu.lu@intel.com>
+
 	* sysdeps/x86_64/dl-trampoline.h: Use R*_LP to pass arguments
 	and access return value for _dl_profile_fixup.  Use R10_LP to
 	load frame size.
