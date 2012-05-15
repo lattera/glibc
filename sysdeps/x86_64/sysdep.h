@@ -16,6 +16,9 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#ifndef _X86_64_SYSDEP_H
+#define _X86_64_SYSDEP_H 1
+
 #include <sysdeps/generic/sysdep.h>
 
 #ifdef	__ASSEMBLER__
@@ -152,3 +155,5 @@ lose:									      \
 #define R15_LP	"r15"
 
 #endif	/* __ASSEMBLER__ */
+
+#endif	/* _X86_64_SYSDEP_H */
