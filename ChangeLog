@@ -1,5 +1,9 @@
 2012-05-15  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* sysdeps/unix/sysv/linux/x86_64/x32/init-first.c: New.
+
+2012-05-15  H.J. Lu  <hongjiu.lu@intel.com>
+
 	* sysdeps/x86_64/sysdep.h: Allowed to be include more than once.
 	* sysdeps/x86_64/x32/sysdep.h: New file.
 
