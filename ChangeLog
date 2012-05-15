@@ -1,5 +1,10 @@
 2012-05-15  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* sysdeps/x86_64/stackinfo.h (stackinfo_get_sp): Use RSP_LP.
+	(stackinfo_sub_sp): Likewise.
+
+2012-05-15  H.J. Lu  <hongjiu.lu@intel.com>
+
 	* sysdeps/x86_64/multiarch/strcmp-sse42.S: Load pointers into
 	RAX_LP.
 
