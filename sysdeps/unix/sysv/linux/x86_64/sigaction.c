@@ -146,7 +146,7 @@ asm									\
    ".LSTARTAUGMNT_" #name ":\n"						\
    "	.byte 0x1b\n"	/* DW_EH_PE_pcrel|DW_EH_PE_sdata4. */		\
    ".LENDAUGMNT_" #name ":\n"						\
-   "	.align 8\n"							\
+   "	.align " LP_SIZE "\n"						\
    ".LENDCIE_" #name ":\n"						\
    "	.long .LENDFDE_" #name "-.LSTARTFDE_" #name "\n" /* FDE len */	\
    ".LSTARTFDE_" #name ":\n"						\
@@ -177,7 +177,7 @@ asm									\
    /* do_expr (49 |* rflags *|, oEFL) */				\
    /* `cs'/`ds'/`fs' are unaligned and a different size.  */		\
    /* gas: Error: register save offset not a multiple of 8  */		\
-   "	.align 8\n"							\
+   "	.align " LP_SIZE "\n"						\
    ".LENDFDE_" #name ":\n"						\
    "	.previous\n"							\
    );
