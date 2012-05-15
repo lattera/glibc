@@ -106,9 +106,9 @@ L(144bytesormore):
 	and	$0xf, %r9
 	jz	L(shl_0)
 #ifdef DATA_CACHE_SIZE
-	mov	$DATA_CACHE_SIZE, %rcx
+	mov	$DATA_CACHE_SIZE, %RCX_LP
 #else
-	mov	__x86_64_data_cache_size(%rip), %rcx
+	mov	__x86_64_data_cache_size(%rip), %RCX_LP
 #endif
 	cmp	%rcx, %rdx
 	jae	L(gobble_mem_fwd)
@@ -122,9 +122,9 @@ L(144bytesormore):
 	ALIGN (4)
 L(copy_backward):
 #ifdef DATA_CACHE_SIZE
-	mov	$DATA_CACHE_SIZE, %rcx
+	mov	$DATA_CACHE_SIZE, %RCX_LP
 #else
-	mov	__x86_64_data_cache_size(%rip), %rcx
+	mov	__x86_64_data_cache_size(%rip), %RCX_LP
 #endif
 	shl	$1, %rcx
 	cmp	%rcx, %rdx
@@ -156,9 +156,9 @@ L(shl_0):
 	shr	$8, %r9
 	add	%rdx, %r9
 #ifdef DATA_CACHE_SIZE
-	cmp	$DATA_CACHE_SIZE_HALF, %r9
+	cmp	$DATA_CACHE_SIZE_HALF, %R9_LP
 #else
-	cmp	__x86_64_data_cache_size_half(%rip), %r9
+	cmp	__x86_64_data_cache_size_half(%rip), %R9_LP
 #endif
 	jae	L(gobble_mem_fwd)
 	sub	$0x80, %rdx
@@ -1478,9 +1478,9 @@ L(gobble_mem_fwd):
 	add	$16, %rdi
 
 #ifdef SHARED_CACHE_SIZE_HALF
-	mov	$SHARED_CACHE_SIZE_HALF, %rcx
+	mov	$SHARED_CACHE_SIZE_HALF, %RCX_LP
 #else
-	mov	__x86_64_shared_cache_size_half(%rip), %rcx
+	mov	__x86_64_shared_cache_size_half(%rip), %RCX_LP
 #endif
 #ifdef USE_AS_MEMMOVE
 	mov	%rsi, %r9
@@ -1585,9 +1585,9 @@ L(gobble_mem_bwd):
 
 
 #ifdef SHARED_CACHE_SIZE_HALF
-	mov	$SHARED_CACHE_SIZE_HALF, %rcx
+	mov	$SHARED_CACHE_SIZE_HALF, %RCX_LP
 #else
-	mov	__x86_64_shared_cache_size_half(%rip), %rcx
+	mov	__x86_64_shared_cache_size_half(%rip), %RCX_LP
 #endif
 #ifdef USE_AS_MEMMOVE
 	mov	%rdi, %r9
