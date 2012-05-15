@@ -1,3 +1,12 @@
+2012-05-15  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/unix/sysv/linux/x86_64/lowlevellock.h
+	(LLL_STUB_UNWIND_INFO_START): Align label to LP_SIZE instead
+	of 8.
+	(LLL_STUB_UNWIND_INFO_END): Likewise.
+	(lll_timedlock): Load timeout pointer into RDX_LP.
+	(lll_robust_timedlock): Likewise.
+
 2012-05-15  Siddhesh Poyarekar  <siddhesh@redhat.com>
 	    Jakub Jelinek  <jakub@redhat.com>
 
