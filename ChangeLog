@@ -11,6 +11,10 @@
 
 2012-05-16  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* sysdeps/x86_64/x32/ffs.c: New file.
+
+2012-05-16  H.J. Lu  <hongjiu.lu@intel.com>
+
 	* sysdeps/unix/sysv/linux/x86_64/bits/shm.h (shmatt_t): Use
 	__syscall_ulong_t.
 	(shmid_ds): Add __unused1 and __unused2 only if __x86_64__ isn't
