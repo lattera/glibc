@@ -1,5 +1,9 @@
 2012-05-16  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* sysdeps/unix/sysv/linux/x86_64/bits/ipctypes.h: New file.
+
+2012-05-16  H.J. Lu  <hongjiu.lu@intel.com>
+
 	* sysdeps/unix/sysv/linux/bits/ipc.h (ipc_perm): Use
 	__syscall_ulong_t.
 
