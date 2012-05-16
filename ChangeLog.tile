@@ -1,3 +1,13 @@
+2012-05-16  Chris Metcalf  <cmetcalf@tilera.com>
+
+	* sysdeps/unix/sysv/linux/tile/ucontext_i: Fix tilegx32 offset bug.
+	* sysdeps/unix/sysv/linux/tile/getcontext.S: Fix tilegx32 bug
+	where we accessed "uc_flags" as an 8-byte field.
+	* sysdeps/unix/sysv/linux/tile/setcontext.S: Likewise,
+	and also fix frame code not to access stack below "sp".
+	* sysdeps/unix/sysv/linux/tile/swapcontext.S: Fix frame code not
+	to access stack below "sp", and add frame unwind to error path.
+
 2012-05-15  Chris Metcalf  <cmetcalf@tilera.com>
 
 	* sysdeps/tile/sotruss-lib.c: New file.

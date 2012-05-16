@@ -37,7 +37,7 @@ ENTRY (__setcontext)
 #if UC_FLAGS_OFFSET != 0
 # error "Add offset to r0 prior to load."
 #endif
-	LD r10, r0
+	LD_PTR r10, r0
 	{
 	 BEQZ r10, .Lsigreturn
 	 addi r10, r10, -1  /* Confirm that it has value "1".  */
@@ -51,13 +51,13 @@ ENTRY (__setcontext)
 	 ADDI_PTR r11, sp, -(2 * REGSIZE)
 	 move r10, sp
 	}
+	ADDI_PTR sp, sp, -(3 * REGSIZE)
+	cfi_def_cfa_offset (3 * REGSIZE)
 	cfi_offset (lr, 0)
 	{
 	 ST r11, r10
-	 ADDI_PTR r10, sp, -REGSIZE
-	 ADDI_PTR sp, sp, -(3 * REGSIZE)
+	 ADDI_PTR r10, sp, (2 * REGSIZE)
 	}
-	cfi_def_cfa_offset (3 * REGSIZE)
 	{
 	 ST r10, r0
 	 ADDLI_PTR r1, r0, UC_SIGMASK_OFFSET
@@ -72,13 +72,13 @@ ENTRY (__setcontext)
 	 moveli TREG_SYSCALL_NR_NAME, __NR_rt_sigprocmask
 	}
 	swint1
+	ADDI_PTR r11, sp, 2 * REGSIZE  /* Restore uc_context to r11. */
 	{
+	 LD r11, r11
 	 ADDI_PTR sp, sp, 3 * REGSIZE
-	 ADDI_PTR r11, sp, 2 * REGSIZE  /* Restore uc_context to r11. */
 	}
 	cfi_def_cfa_offset (0)
 	LD lr, sp
-	LD r11, r11
 	{
 	 ADDI_PTR r10, r11, UC_REG(0)
 	 BNEZ r1, .Lsyscall_error

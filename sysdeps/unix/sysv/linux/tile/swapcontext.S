@@ -31,17 +31,17 @@ ENTRY (__swapcontext)
 	 ADDI_PTR r11, sp, -(3 * REGSIZE)
 	 move r10, sp
 	}
+	ADDI_PTR sp, sp, -(4 * REGSIZE)
+	cfi_def_cfa_offset (4 * REGSIZE)
 	cfi_offset (lr, 0)
 	{
 	 ST r11, r10
-	 ADDI_PTR r10, sp, -(2 * REGSIZE)
+	 ADDI_PTR r10, sp, (2 * REGSIZE)
 	}
 	{
 	 ST r10, r0
-	 ADDI_PTR r10, sp, -REGSIZE
-	 ADDI_PTR sp, sp, -(4 * REGSIZE)
+	 ADDI_PTR r10, sp, (3 * REGSIZE)
 	}
-	cfi_def_cfa_offset (4 * REGSIZE)
 	ST r10, r1
 
 	/* Save the current context.  */
@@ -80,6 +80,9 @@ ENTRY (__swapcontext)
 	}
 
 .Lerror:
+	ADDI_PTR sp, sp, 4 * REGSIZE
+	cfi_def_cfa_offset (0)
+	LD lr, sp
 	jrp lr
 END (__swapcontext)
 

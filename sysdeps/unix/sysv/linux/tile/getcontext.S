@@ -32,7 +32,7 @@ ENTRY (__getcontext)
 	   swapcontext() will assume those registers are all dead.
 	   Save value "1" to uc_flags to later recognize getcontext().  */
 	{ movei r11, 1; ADDI_PTR r10, r0, UC_FLAGS_OFFSET }
-	{ ST r10, r11; addli r10, r0, UC_REG(30) }
+	{ ST_PTR r10, r11; addli r10, r0, UC_REG(30) }
 	{ ST r10, r30; ADDI_PTR r10, r10, REGSIZE }
 	{ ST r10, r31; ADDI_PTR r10, r10, REGSIZE }
 	{ ST r10, r32; ADDI_PTR r10, r10, REGSIZE }
