@@ -1,5 +1,9 @@
 2012-05-15  Chris Metcalf  <cmetcalf@tilera.com>
 
+	* sysdeps/tile/bits/fenv.h (__FE_UNDEFINED): New symbol.
+
+2012-05-15  Chris Metcalf  <cmetcalf@tilera.com>
+
 	* sysdeps/tile/ldsodefs.h (ARCH_PLTEXIT_MEMBERS): Add proper
         const qualifier to "inregs" argument.
 

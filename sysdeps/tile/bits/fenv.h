@@ -28,6 +28,8 @@
    floating-point support also acts this way.  */
 enum
   {
+    __FE_UNDEFINED = 0,
+
     FE_TONEAREST = 1,
 #define FE_TONEAREST	FE_TONEAREST
   };
