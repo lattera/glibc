@@ -1,5 +1,5 @@
 /* Machine-dependent ELF dynamic relocation functions.  PowerPC version.
-   Copyright (C) 1995-2006, 2008, 2011 Free Software Foundation, Inc.
+   Copyright (C) 1995-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -235,16 +235,21 @@ __elf_machine_runtime_setup (struct link_map *map, int lazy, int profile)
       if (lazy)
 	{
 	  Elf32_Word *tramp = plt + PLT_TRAMPOLINE_ENTRY_WORDS;
-	  Elf32_Word dlrr = (Elf32_Word)(profile
-					 ? _dl_prof_resolve
-					 : _dl_runtime_resolve);
+	  Elf32_Word dlrr;
 	  Elf32_Word offset;
 
+#ifndef PROF
+	  dlrr = (Elf32_Word) (profile
+			       ? _dl_prof_resolve
+			       : _dl_runtime_resolve);
 	  if (profile && GLRO(dl_profile) != NULL
 	      && _dl_name_match_p (GLRO(dl_profile), map))
 	    /* This is the object we are looking for.  Say that we really
 	       want profiling and the timers are started.  */
 	    GL(dl_profile_map) = map;
+#else
+	  dlrr = (Elf32_Word) _dl_runtime_resolve;
+#endif
 
 	  /* For the long entries, subtract off data_words.  */
 	  tramp[0] = OPCODE_ADDIS_HI (11, 11, -data_words);
