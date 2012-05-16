@@ -58,6 +58,8 @@
 #define __FSID_T_TYPE		struct { int __val[2]; }
 #define __SSIZE_T_TYPE		__SWORD_TYPE
 #define __SNSECONDS_T_TYPE	__SLONGWORD_TYPE
+#define __SYSCALL_SLONG_TYPE	__SLONGWORD_TYPE
+#define __SYSCALL_ULONG_TYPE	__ULONGWORD_TYPE
 
 /* Number of descriptors that can fit in an `fd_set'.  */
 #define	__FD_SETSIZE		1024

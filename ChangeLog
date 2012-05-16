@@ -1,5 +1,22 @@
 2012-05-15  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* bits/types.h (__syscall_slong_t): New type.
+	(__syscall_ulong_t): Likewise.
+
+	* bits/typesizes.h (__SYSCALL_SLONG_TYPE): New macro.
+	(__SYSCALL_ULONG_TYPE): Likewise.
+	* sysdeps/unix/bsd/bsd4.4/freebsd/bits/typesizes.h
+	(__SYSCALL_SLONG_TYPE): Likewise.
+	(__SYSCALL_ULONG_TYPE): Likewise.
+	* sysdeps/unix/sysv/linux/s390/bits/typesizes.h
+	(__SYSCALL_SLONG_TYPE): Likewise.
+	(__SYSCALL_ULONG_TYPE): Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/typesizes.h
+	(__SYSCALL_SLONG_TYPE): Likewise.
+	(__SYSCALL_ULONG_TYPE): Likewise.
+
+2012-05-15  H.J. Lu  <hongjiu.lu@intel.com>
+
 	* sysdeps/unix/sysv/linux/x86_64/Makefile (gen-as-const-headers):
 	Add sigaltstack-offsets.sym.
 	* sysdeps/unix/sysv/linux/x86_64/____longjmp_chk.S: Include

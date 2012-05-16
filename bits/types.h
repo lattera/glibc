@@ -179,6 +179,11 @@ __STD_TYPE __FSFILCNT64_T_TYPE __fsfilcnt64_t;
 
 __STD_TYPE __SSIZE_T_TYPE __ssize_t; /* Type of a byte count, or error.  */
 
+/* Signed long type used in system calls.  */
+__STD_TYPE __SYSCALL_SLONG_TYPE __syscall_slong_t;
+/* Unsigned long type used in system calls.  */
+__STD_TYPE __SYSCALL_ULONG_TYPE __syscall_ulong_t;
+
 /* These few don't really vary by system, they always correspond
    to one of the other defined types.  */
 typedef __off64_t __loff_t;	/* Type of file sizes and offsets (LFS).  */
