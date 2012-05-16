@@ -1,5 +1,10 @@
 2012-05-16  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* sysdeps/unix/sysv/linux/bits/mqueue.h: Include <bits/types.h>.
+	(mq_attr): Use __syscall_slong_t.
+
+2012-05-16  H.J. Lu  <hongjiu.lu@intel.com>
+
 	* sysdeps/unix/sysv/linux/x86_64/bits/stat.h (_STAT_VER_SVR4):
 	Check __x86_64__ instead of __WORDSIZE.
 	(_STAT_VER_LINUX): Likewise.

@@ -1,4 +1,4 @@
-/* Copyright (C) 2004 Free Software Foundation, Inc.
+/* Copyright (C) 2004-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -19,13 +19,15 @@
 # error "Never use <bits/mqueue.h> directly; include <mqueue.h> instead."
 #endif
 
+#include <bits/types.h>
+
 typedef int mqd_t;
 
 struct mq_attr
 {
-  long int mq_flags;	/* Message queue flags.  */
-  long int mq_maxmsg;	/* Maximum number of messages.  */
-  long int mq_msgsize;	/* Maximum message size.  */
-  long int mq_curmsgs;	/* Number of messages currently queued.  */
-  long int __pad[4];
+  __syscall_slong_t mq_flags;	/* Message queue flags.  */
+  __syscall_slong_t mq_maxmsg;	/* Maximum number of messages.  */
+  __syscall_slong_t mq_msgsize;	/* Maximum message size.  */
+  __syscall_slong_t mq_curmsgs;	/* Number of messages currently queued.  */
+  __syscall_slong_t __pad[4];
 };
