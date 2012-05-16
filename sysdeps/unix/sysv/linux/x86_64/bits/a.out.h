@@ -2,9 +2,7 @@
 # error "Never use <bits/a.out.h> directly; include <a.out.h> instead."
 #endif
 
-#include <bits/wordsize.h>
-
-#if __WORDSIZE == 64
+#ifdef __x86_64__
 
 /* Signal to users of this header that this architecture really doesn't
    support a.out binary format.  */
