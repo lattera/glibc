@@ -1,3 +1,11 @@
+2012-05-16  Paul Pluzhnikov  <ppluzhnikov@google.com>
+
+	[BZ #208]
+	* malloc.c (int_mallinfo): Add parameter to accumulate statistics
+	in instead of returning them.  Return void.
+	(__libc_mallinfo): Accumulate over all arenas.
+	(__malloc_stats): Adjust for change in int_mallinfo interface.
+
 2012-05-16  Roland McGrath  <roland@hack.frob.com>
 
 	[BZ #10375]

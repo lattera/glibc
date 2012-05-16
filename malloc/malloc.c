@@ -4513,12 +4513,12 @@ __malloc_usable_size(void* m)
 
 /*
   ------------------------------ mallinfo ------------------------------
+  Accumulate malloc statistics for arena AV into M.
 */
 
-static struct mallinfo
-int_mallinfo(mstate av)
+static void
+int_mallinfo(mstate av, struct mallinfo *m)
 {
-  struct mallinfo mi;
   size_t i;
   mbinptr b;
   mchunkptr p;
@@ -4558,29 +4558,40 @@ int_mallinfo(mstate av)
     }
   }
 
-  mi.smblks = nfastblocks;
-  mi.ordblks = nblocks;
-  mi.fordblks = avail;
-  mi.uordblks = av->system_mem - avail;
-  mi.arena = av->system_mem;
-  mi.hblks = mp_.n_mmaps;
-  mi.hblkhd = mp_.mmapped_mem;
-  mi.fsmblks = fastavail;
-  mi.keepcost = chunksize(av->top);
-  mi.usmblks = mp_.max_total_mem;
-  return mi;
+  m->smblks += nfastblocks;
+  m->ordblks += nblocks;
+  m->fordblks += avail;
+  m->uordblks += av->system_mem - avail;
+  m->arena += av->system_mem;
+  m->fsmblks += fastavail;
+  if (av == &main_arena)
+    {
+      m->hblks = mp_.n_mmaps;
+      m->hblkhd = mp_.mmapped_mem;
+      m->usmblks = mp_.max_total_mem;
+      m->keepcost = chunksize(av->top);
+    }
 }
 
 
 struct mallinfo __libc_mallinfo()
 {
   struct mallinfo m;
+  mstate ar_ptr;
 
   if(__malloc_initialized < 0)
     ptmalloc_init ();
-  (void)mutex_lock(&main_arena.mutex);
-  m = int_mallinfo(&main_arena);
-  (void)mutex_unlock(&main_arena.mutex);
+
+  memset(&m, 0, sizeof (m));
+  ar_ptr = &main_arena;
+  do {
+    (void)mutex_lock(&ar_ptr->mutex);
+    int_mallinfo(ar_ptr, &m);
+    (void)mutex_unlock(&ar_ptr->mutex);
+
+    ar_ptr = ar_ptr->next;
+  } while (ar_ptr != &main_arena);
+
   return m;
 }
 
@@ -4593,7 +4604,6 @@ __malloc_stats()
 {
   int i;
   mstate ar_ptr;
-  struct mallinfo mi;
   unsigned int in_use_b = mp_.mmapped_mem, system_b = in_use_b;
 #if THREAD_STATS
   long stat_lock_direct = 0, stat_lock_loop = 0, stat_lock_wait = 0;
@@ -4605,8 +4615,11 @@ __malloc_stats()
   int old_flags2 = ((_IO_FILE *) stderr)->_flags2;
   ((_IO_FILE *) stderr)->_flags2 |= _IO_FLAGS2_NOTCANCEL;
   for (i=0, ar_ptr = &main_arena;; i++) {
+    struct mallinfo mi;
+
+    memset(&mi, 0, sizeof(mi));
     (void)mutex_lock(&ar_ptr->mutex);
-    mi = int_mallinfo(ar_ptr);
+    int_mallinfo(ar_ptr, &mi);
     fprintf(stderr, "Arena %d:\n", i);
     fprintf(stderr, "system bytes     = %10u\n", (unsigned int)mi.arena);
     fprintf(stderr, "in use bytes     = %10u\n", (unsigned int)mi.uordblks);
