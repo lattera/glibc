@@ -1,5 +1,13 @@
 2012-05-16  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* sysdeps/unix/sysv/linux/x86_64/sigcontextinfo.h: Include
+	<stdint.h>.
+	(GET_PC): Cast to uintptr_t first.
+	(GET_FRAME): Likewise.
+	(GET_STACK): Likewise.
+
+2012-05-16  H.J. Lu  <hongjiu.lu@intel.com>
+
 	* sysdeps/unix/sysv/linux/x86_64/x32/alphasort.c: New file.
 	* sysdeps/unix/sysv/linux/x86_64/x32/alphasort64.c: Likewise.
 	* sysdeps/unix/sysv/linux/x86_64/x32/fseeko.c: Likewise.
