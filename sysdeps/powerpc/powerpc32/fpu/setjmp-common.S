@@ -1,5 +1,5 @@
 /* setjmp for PowerPC.
-   Copyright (C) 1995-2000, 2003-2005, 2006, 2011 Free Software Foundation, Inc.
+   Copyright (C) 1995-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -90,7 +90,13 @@ ENTRY (BP_SYM (__sigsetjmp))
 	mtlr	r6
 	cfi_same_value (lr)
 #  ifdef SHARED
+#   ifdef IS_IN_rtld
+	/* Inside ld.so we use the local alias to avoid runtime GOT
+	   relocations.  */
+	lwz     r5,_rtld_local_ro@got(r5)
+#   else
 	lwz     r5,_rtld_global_ro@got(r5)
+#   endif
 	lwz     r5,RTLD_GLOBAL_RO_DL_HWCAP_OFFSET+4(r5)
 #  else
 	lwz     r5,_dl_hwcap@got(r5)

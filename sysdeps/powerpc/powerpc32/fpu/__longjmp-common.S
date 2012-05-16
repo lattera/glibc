@@ -1,6 +1,5 @@
 /* longjmp for PowerPC.
-   Copyright (C) 1995-99, 2000, 2003-2006, 2009, 2011
-	Free Software Foundation, Inc.
+   Copyright (C) 1995-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -38,7 +37,13 @@ ENTRY (BP_SYM (__longjmp))
 	addis	r5,r5,_GLOBAL_OFFSET_TABLE_-got_label@ha
 	addi	r5,r5,_GLOBAL_OFFSET_TABLE_-got_label@l
 #  ifdef SHARED
+#   ifdef IS_IN_rtld
+	/* Inside ld.so we use the local alias to avoid runtime GOT
+	   relocations.  */
+	lwz     r5,_rtld_local_ro@got(r5)
+#   else
 	lwz     r5,_rtld_global_ro@got(r5)
+#   endif
 	mtlr    r6
 	cfi_same_value (lr)
 	lwz     r5,RTLD_GLOBAL_RO_DL_HWCAP_OFFSET+4(r5)

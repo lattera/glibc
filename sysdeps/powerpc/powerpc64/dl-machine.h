@@ -1,6 +1,6 @@
 /* Machine-dependent ELF dynamic relocation inline functions.
    PowerPC64 version.
-   Copyright 1995-2005, 2006, 2008, 2010, 2011 Free Software Foundation, Inc.
+   Copyright 1995-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -161,8 +161,8 @@ BODY_PREFIX "_start:\n"							\
 "	.popsection\n"							\
 "	.pushsection	\".toc\",\"aw\"\n"				\
 DL_STARTING_UP_DEF							\
-".LC__rtld_global:\n"							\
-"	.tc _rtld_global[TC],_rtld_global\n"				\
+".LC__rtld_local:\n"							\
+"	.tc _rtld_local[TC],_rtld_local\n"				\
 ".LC__dl_argc:\n"							\
 "	.tc _dl_argc[TC],_dl_argc\n"					\
 ".LC__dl_argv:\n"							\
@@ -181,7 +181,7 @@ BODY_PREFIX "_dl_start_user:\n"						\
 /* the address of _start in r30.  */					\
 "	mr	30,3\n"							\
 /* &_dl_argc in 29, &_dl_argv in 27, and _dl_loaded in 28.  */		\
-"	ld	28,.LC__rtld_global@toc(2)\n"				\
+"	ld	28,.LC__rtld_local@toc(2)\n"				\
 "	ld	29,.LC__dl_argc@toc(2)\n"				\
 "	ld	27,.LC__dl_argv@toc(2)\n"				\
 /* _dl_init (_dl_loaded, _dl_argc, _dl_argv, _dl_argv+_dl_argc+1).  */	\
@@ -734,7 +734,7 @@ elf_machine_rela (struct link_map *map,
 	  _dl_error_printf ("%s: Symbol `%s' has different size" \
 			    " in shared object," \
 			    " consider re-linking\n",
-			    _dl_argv[0] ?: "<program name unknown>",
+			    rtld_progname ?: "<program name unknown>",
 			    strtab + refsym->st_name);
 	}
       memcpy (reloc_addr_arg, (char *) value,

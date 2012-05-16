@@ -1,5 +1,5 @@
 /* longjmp for PowerPC64.
-   Copyright (C) 1995, 1996,1997,1999-2006,2009 Free Software Foundation, Inc.
+   Copyright (C) 1995-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -31,7 +31,13 @@
 	.section	".toc","aw"
 .LC__dl_hwcap:
 # ifdef SHARED
+#  ifdef IS_IN_rtld
+	/* Inside ld.so we use the local alias to avoid runtime GOT
+	   relocations.  */
+	.tc _rtld_local_ro[TC],_rtld_local_ro
+#  else
 	.tc _rtld_global_ro[TC],_rtld_global_ro
+#  endif
 # else
 	.tc _dl_hwcap[TC],_dl_hwcap
 # endif

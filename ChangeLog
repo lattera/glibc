@@ -1,5 +1,19 @@
 2012-05-18  Andreas Schwab  <schwab@linux-m68k.org>
 
+	* sysdeps/powerpc/powerpc32/dl-start.S (_dl_start_user): Use
+	INTUSE on _dl_argv, and _rtld_local instead of _rtld_global.
+	* sysdeps/powerpc/powerpc32/fpu/__longjmp-common.S [IS_IN_rtld]:
+	Refer to _rtld_local_ro instead of _rtld_global_ro.
+	* sysdeps/powerpc/powerpc32/fpu/setjmp-common.S [IS_IN_rtld]:
+	Likewise.
+	* sysdeps/powerpc/powerpc64/__longjmp-common.S [IS_IN_rtld]:
+	Likewise.
+	* sysdeps/powerpc/powerpc64/setjmp-common.S [IS_IN_rtld]:
+	Likewise.
+	* sysdeps/powerpc/powerpc64/dl-trampoline.S [SHARED]: Likewise.
+	* sysdeps/powerpc/powerpc64/dl-machine.h: Use _rtld_local instead
+	of _rtld_global, and rtld_progname instead of _dl_argv[0].
+
 	* sysdeps/powerpc/powerpc32/dl-machine.c
 	(__elf_machine_runtime_setup) [PROF]: Don't reference
 	_dl_prof_resolve.

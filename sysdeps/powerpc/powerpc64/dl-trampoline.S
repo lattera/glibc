@@ -1,5 +1,5 @@
 /* PLT trampolines.  PPC64 version.
-   Copyright (C) 2005, 2006 Free Software Foundation, Inc.
+   Copyright (C) 2005-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -169,7 +169,7 @@ END(_dl_runtime_resolve)
 	.section	".toc","aw"
 .LC__dl_hwcap:
 # ifdef SHARED
-	.tc _rtld_global_ro[TC],_rtld_global_ro
+	.tc _rtld_local_ro[TC],_rtld_local_ro
 # else
 	.tc _dl_hwcap[TC],_dl_hwcap
 # endif
@@ -217,7 +217,7 @@ EALIGN(_dl_profile_resolve, 4, 0)
 	std	r0,FRAME_SIZE+8(r1)
 	ld	r12,.LC__dl_hwcap@toc(r2)
 #ifdef SHARED
-	/* Load _rtld-global._dl_hwcap.  */
+	/* Load _rtld_local_ro._dl_hwcap.  */
 	ld	r12,RTLD_GLOBAL_RO_DL_HWCAP_OFFSET(r12)
 #else
 	ld	r12,0(r12) /* Load extern _dl_hwcap.  */
