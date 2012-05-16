@@ -1,5 +1,4 @@
-/* Copyright (C) 1992, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2003, 2004,
-	2007, 2009, 2010 Free Software Foundation, Inc.
+/* Copyright (C) 1992-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -77,12 +76,12 @@ struct stat
 # define st_mtime st_mtim.tv_sec
 # define st_ctime st_ctim.tv_sec
 #else
-    __time_t st_atime;		/* Time of last access.  */
-    long int __reserved0;
-    __time_t st_mtime;		/* Time of last modification.  */
-    long int __reserved1;
-    __time_t st_ctime;		/* Time of last status change.  */
-    long int __reserved2;
+    __time_t st_atime;			/* Time of last access.  */
+    unsigned long int st_atimensec;	/* Nscecs of last access.  */
+    __time_t st_mtime;			/* Time of last modification.  */
+    unsigned long int st_mtimensec;	/* Nsecs of last modification.  */
+    __time_t st_ctime;			/* Time of last status change.  */
+    unsigned long int st_ctimensec;	/* Nsecs of last status change.  */
 #endif
     __blksize_t st_blksize;	/* Optimal block size for I/O.  */
 #ifndef __USE_FILE_OFFSET64
@@ -118,12 +117,12 @@ struct stat64
     struct timespec st_mtim;            /* Time of last modification.  */
     struct timespec st_ctim;            /* Time of last status change.  */
 # else
-    __time_t st_atime;		/* Time of last access.  */
-    long int __reserved0;
-    __time_t st_mtime;		/* Time of last modification.  */
-    long int __reserved1;
-    __time_t st_ctime;		/* Time of last status change.  */
-    long int __reserved2;
+    __time_t st_atime;			/* Time of last access.  */
+    unsigned long int st_atimensec;	/* Nscecs of last access.  */
+    __time_t st_mtime;			/* Time of last modification.  */
+    unsigned long int st_mtimensec;	/* Nsecs of last modification.  */
+    __time_t st_ctime;			/* Time of last status change.  */
+    unsigned long int st_ctimensec;	/* Nsecs of last status change.  */
 # endif
     __blksize_t st_blksize;	/* Optimal block size for I/O.  */
     long int st_pad3;
@@ -168,12 +167,12 @@ struct stat
 # define st_mtime st_mtim.tv_sec
 # define st_ctime st_ctim.tv_sec
 #else
-    __time_t st_atime;
-    int __reserved0;
-    __time_t st_mtime;
-    int __reserved1;
-    __time_t st_ctime;
-    int __reserved2;
+    __time_t st_atime;			/* Time of last access.  */
+    unsigned long int st_atimensec;	/* Nscecs of last access.  */
+    __time_t st_mtime;			/* Time of last modification.  */
+    unsigned long int st_mtimensec;	/* Nsecs of last modification.  */
+    __time_t st_ctime;			/* Time of last status change.  */
+    unsigned long int st_ctimensec;	/* Nsecs of last status change.  */
 #endif
     __blksize_t st_blksize;
     unsigned int st_pad4;
@@ -209,12 +208,12 @@ struct stat64
     struct timespec st_mtim;            /* Time of last modification.  */
     struct timespec st_ctim;            /* Time of last status change.  */
 # else
-    __time_t st_atime;
-    int __reserved0;
-    __time_t st_mtime;
-    int __reserved1;
-    __time_t st_ctime;
-    int __reserved2;
+    __time_t st_atime;			/* Time of last access.  */
+    unsigned long int st_atimensec;	/* Nscecs of last access.  */
+    __time_t st_mtime;			/* Time of last modification.  */
+    unsigned long int st_mtimensec;	/* Nsecs of last modification.  */
+    __time_t st_ctime;			/* Time of last status change.  */
+    unsigned long int st_ctimensec;	/* Nsecs of last status change.  */
 # endif
     __blksize_t st_blksize;
     unsigned int st_pad3;

@@ -1,3 +1,11 @@
+2012-05-16  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/mips/bits/stat.h (struct stat)
+	[!__USE_MISC && !__USE_XOPEN2K8]: Declare nanoseconds fields with
+	type unsigned long and names st_atimensec, st_mtimensec and
+	st_ctimensec.
+	(struct stat64) [!__USE_MISC && !__USE_XOPEN2K8]: Likewise.
+
 2012-05-14  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/mips/pread.c [!__ASSUME_PREAD_SYSCALL]:
