@@ -1,5 +1,14 @@
 2012-05-16  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* sysdeps/unix/sysv/linux/x86_64/bits/stat.h (_STAT_VER_SVR4):
+	Check __x86_64__ instead of __WORDSIZE.
+	(_STAT_VER_LINUX): Likewise.
+	(stat): Check __x86_64__ instead of __WORDSIZE.  Use
+	__syscall_ulong_t and __syscall_slong_t.
+	(stat64): Likewise.
+
+2012-05-16  H.J. Lu  <hongjiu.lu@intel.com>
+
 	* sysdeps/unix/sysv/linux/x86_64/bits/typesizes.h: New file.
 
 2012-05-16  H.J. Lu  <hongjiu.lu@intel.com>

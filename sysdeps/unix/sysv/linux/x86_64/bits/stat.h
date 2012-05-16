@@ -1,4 +1,4 @@
-/* Copyright (C) 1999-2003,2009,2010 Free Software Foundation, Inc.
+/* Copyright (C) 1999-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -25,7 +25,7 @@
 /* Versions of the `struct stat' data structure.  */
 #define _STAT_VER_KERNEL	0
 
-#if __WORDSIZE == 32
+#ifndef __x86_64__
 # define _STAT_VER_SVR4		2
 # define _STAT_VER_LINUX	3
 
@@ -45,15 +45,15 @@
 struct stat
   {
     __dev_t st_dev;		/* Device.  */
-#if __WORDSIZE == 32
+#ifndef __x86_64__
     unsigned short int __pad1;
 #endif
-#if __WORDSIZE == 64 || !defined __USE_FILE_OFFSET64
+#if defined __x86_64__ || !defined __USE_FILE_OFFSET64
     __ino_t st_ino;		/* File serial number.	*/
 #else
     __ino_t __st_ino;			/* 32bit file serial number.	*/
 #endif
-#if __WORDSIZE == 32
+#ifndef __x86_64__
     __mode_t st_mode;			/* File mode.  */
     __nlink_t st_nlink;			/* Link count.  */
 #else
@@ -62,20 +62,20 @@ struct stat
 #endif
     __uid_t st_uid;		/* User ID of the file's owner.	*/
     __gid_t st_gid;		/* Group ID of the file's group.*/
-#if __WORDSIZE == 64
+#ifdef __x86_64__
     int __pad0;
 #endif
     __dev_t st_rdev;		/* Device number, if device.  */
-#if __WORDSIZE == 32
+#ifndef __x86_64__
     unsigned short int __pad2;
 #endif
-#if __WORDSIZE == 64 || !defined __USE_FILE_OFFSET64
+#if defined __x86_64__ || !defined __USE_FILE_OFFSET64
     __off_t st_size;			/* Size of file, in bytes.  */
 #else
     __off64_t st_size;			/* Size of file, in bytes.  */
 #endif
     __blksize_t st_blksize;	/* Optimal block size for I/O.  */
-#if __WORDSIZE == 64 || !defined __USE_FILE_OFFSET64
+#if defined __x86_64__  || !defined __USE_FILE_OFFSET64
     __blkcnt_t st_blocks;		/* Number 512-byte blocks allocated. */
 #else
     __blkcnt64_t st_blocks;		/* Number 512-byte blocks allocated. */
@@ -95,14 +95,14 @@ struct stat
 # define st_ctime st_ctim.tv_sec
 #else
     __time_t st_atime;			/* Time of last access.  */
-    unsigned long int st_atimensec;	/* Nscecs of last access.  */
+    __syscall_ulong_t st_atimensec;	/* Nscecs of last access.  */
     __time_t st_mtime;			/* Time of last modification.  */
-    unsigned long int st_mtimensec;	/* Nsecs of last modification.  */
+    __syscall_ulong_t st_mtimensec;	/* Nsecs of last modification.  */
     __time_t st_ctime;			/* Time of last status change.  */
-    unsigned long int st_ctimensec;	/* Nsecs of last status change.  */
+    __syscall_ulong_t st_ctimensec;	/* Nsecs of last status change.  */
 #endif
-#if __WORDSIZE == 64
-    long int __unused[3];
+#ifdef __x86_64__
+    __syscall_slong_t __unused[3];
 #else
 # ifndef __USE_FILE_OFFSET64
     unsigned long int __unused4;
@@ -118,7 +118,7 @@ struct stat
 struct stat64
   {
     __dev_t st_dev;		/* Device.  */
-# if __WORDSIZE == 64
+# ifdef __x86_64__
     __ino64_t st_ino;		/* File serial number.  */
     __nlink_t st_nlink;		/* Link count.  */
     __mode_t st_mode;		/* File mode.  */
@@ -130,7 +130,7 @@ struct stat64
 # endif
     __uid_t st_uid;		/* User ID of the file's owner.	*/
     __gid_t st_gid;		/* Group ID of the file's group.*/
-# if __WORDSIZE == 64
+# ifdef __x86_64__
     int __pad0;
     __dev_t st_rdev;		/* Device number, if device.  */
     __off_t st_size;		/* Size of file, in bytes.  */
@@ -156,14 +156,14 @@ struct stat64
 #  define st_ctime st_ctim.tv_sec
 # else
     __time_t st_atime;			/* Time of last access.  */
-    unsigned long int st_atimensec;	/* Nscecs of last access.  */
+    __syscall_ulong_t st_atimensec;	/* Nscecs of last access.  */
     __time_t st_mtime;			/* Time of last modification.  */
-    unsigned long int st_mtimensec;	/* Nsecs of last modification.  */
+    __syscall_ulong_t st_mtimensec;	/* Nsecs of last modification.  */
     __time_t st_ctime;			/* Time of last status change.  */
-    unsigned long int st_ctimensec;	/* Nsecs of last status change.  */
+    __syscall_ulong_t st_ctimensec;	/* Nsecs of last status change.  */
 # endif
-# if __WORDSIZE == 64
-    long int __unused[3];
+# ifdef __x86_64__
+    __syscall_slong_t __unused[3];
 # else
     __ino64_t st_ino;			/* File serial number.		*/
 # endif
