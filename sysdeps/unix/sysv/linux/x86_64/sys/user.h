@@ -1,4 +1,4 @@
-/* Copyright (C) 2001, 2002, 2004, 2011 Free Software Foundation, Inc.
+/* Copyright (C) 2001-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -22,9 +22,7 @@
    too much into it.  Don't use it for anything other than GDB unless
    you know what you are doing.  */
 
-#include <bits/wordsize.h>
-
-#if __WORDSIZE == 64
+#ifdef __x86_64__
 
 struct user_fpregs_struct
 {
@@ -32,8 +30,8 @@ struct user_fpregs_struct
   unsigned short int	swd;
   unsigned short int	ftw;
   unsigned short int	fop;
-  unsigned long int	rip;
-  unsigned long int	rdp;
+  __extension__ unsigned long long int rip;
+  __extension__ unsigned long long int rdp;
   unsigned int		mxcsr;
   unsigned int		mxcr_mask;
   unsigned int		st_space[32];   /* 8*16 bytes for each FP-reg = 128 bytes */
@@ -43,33 +41,33 @@ struct user_fpregs_struct
 
 struct user_regs_struct
 {
-  unsigned long int r15;
-  unsigned long int r14;
-  unsigned long int r13;
-  unsigned long int r12;
-  unsigned long int rbp;
-  unsigned long int rbx;
-  unsigned long int r11;
-  unsigned long int r10;
-  unsigned long int r9;
-  unsigned long int r8;
-  unsigned long int rax;
-  unsigned long int rcx;
-  unsigned long int rdx;
-  unsigned long int rsi;
-  unsigned long int rdi;
-  unsigned long int orig_rax;
-  unsigned long int rip;
-  unsigned long int cs;
-  unsigned long int eflags;
-  unsigned long int rsp;
-  unsigned long int ss;
-  unsigned long int fs_base;
-  unsigned long int gs_base;
-  unsigned long int ds;
-  unsigned long int es;
-  unsigned long int fs;
-  unsigned long int gs;
+  __extension__ unsigned long long int r15;
+  __extension__ unsigned long long int r14;
+  __extension__ unsigned long long int r13;
+  __extension__ unsigned long long int r12;
+  __extension__ unsigned long long int rbp;
+  __extension__ unsigned long long int rbx;
+  __extension__ unsigned long long int r11;
+  __extension__ unsigned long long int r10;
+  __extension__ unsigned long long int r9;
+  __extension__ unsigned long long int r8;
+  __extension__ unsigned long long int rax;
+  __extension__ unsigned long long int rcx;
+  __extension__ unsigned long long int rdx;
+  __extension__ unsigned long long int rsi;
+  __extension__ unsigned long long int rdi;
+  __extension__ unsigned long long int orig_rax;
+  __extension__ unsigned long long int rip;
+  __extension__ unsigned long long int cs;
+  __extension__ unsigned long long int eflags;
+  __extension__ unsigned long long int rsp;
+  __extension__ unsigned long long int ss;
+  __extension__ unsigned long long int fs_base;
+  __extension__ unsigned long long int gs_base;
+  __extension__ unsigned long long int ds;
+  __extension__ unsigned long long int es;
+  __extension__ unsigned long long int fs;
+  __extension__ unsigned long long int gs;
 };
 
 struct user
@@ -77,18 +75,24 @@ struct user
   struct user_regs_struct	regs;
   int				u_fpvalid;
   struct user_fpregs_struct	i387;
-  unsigned long int		u_tsize;
-  unsigned long int		u_dsize;
-  unsigned long int		u_ssize;
-  unsigned long int		start_code;
-  unsigned long int		start_stack;
-  long int			signal;
+  __extension__ unsigned long long int	u_tsize;
+  __extension__ unsigned long long int	u_dsize;
+  __extension__ unsigned long long int	u_ssize;
+  __extension__ unsigned long long int	start_code;
+  __extension__ unsigned long long int	start_stack;
+  __extension__ long long int		signal;
   int				reserved;
   struct user_regs_struct*	u_ar0;
+# ifdef __ILP32__
+  unsigned int			pad0;
+# endif
   struct user_fpregs_struct*	u_fpstate;
-  unsigned long int		magic;
+# ifdef __ILP32__
+  unsigned int			pad1;
+# endif
+  __extension__ unsigned long long int	magic;
   char				u_comm [32];
-  unsigned long int		u_debugreg [8];
+  __extension__ unsigned long long int	u_debugreg [8];
 };
 
 #else
@@ -161,7 +165,7 @@ struct user
   char				u_comm [32];
   int				u_debugreg [8];
 };
-#endif  /* __WORDSIZE */
+#endif  /* __x86_64__ */
 
 #define PAGE_SHIFT		12
 #define PAGE_SIZE		(1UL << PAGE_SHIFT)

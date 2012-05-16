@@ -1,3 +1,13 @@
+2012-05-16  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/unix/sysv/linux/x86_64/sys/user.h: Don't
+	include <bits/wordsize.h>.  Check __x86_64__ instead of
+	__WORDSIZE.
+	(user_regs_struct): Use "__extension__ unsigned long long"
+	instead of "unsigned long" if __x86_64__ is defined.
+	(user): Likewise.  Pad after pointer field if __ILP32__ is
+	defined.
+
 2012-05-16  Joseph Myers  <joseph@codesourcery.com>
 
 	* configure.in (makeinfo): Require version 4.5 or later.  Allow
