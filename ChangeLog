@@ -1,5 +1,11 @@
 2012-05-15  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* sysdeps/mach/hurd/bits/typesizes.h
+	(__SYSCALL_SLONG_TYPE): New macro.
+	(__SYSCALL_ULONG_TYPE): Likewise.
+
+2012-05-15  H.J. Lu  <hongjiu.lu@intel.com>
+
 	* bits/types.h (__syscall_slong_t): New type.
 	(__syscall_ulong_t): Likewise.
 
