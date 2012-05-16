@@ -1,4 +1,4 @@
-/* Copyright (C) 2001, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 2001, 2002, 2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,10 +17,9 @@
 
 #ifndef _SYS_REG_H
 #define _SYS_REG_H	1
-#include <bits/wordsize.h>
 
 
-#if __WORDSIZE == 64
+#ifdef __x86_64__
 /* Index into an array of 8 byte longs returned from ptrace for
    location of the users' stored general purpose registers.  */
 

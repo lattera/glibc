@@ -1,5 +1,11 @@
 2012-05-16  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* sysdeps/unix/sysv/linux/x86_64/sys/reg.h: Don't
+	include <bits/wordsize.h>.  Check __x86_64__ instead of
+	__WORDSIZE.
+
+2012-05-16  H.J. Lu  <hongjiu.lu@intel.com>
+
 	* sysdeps/unix/sysv/linux/x86_64/sys/procfs.h (elf_greg_t): Use
 	"unsigned long long int" if __x86_64__ is defined.
 	(elf_fpregset_t): Check __x86_64__ instead of __WORDSIZE.
