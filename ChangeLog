@@ -1,5 +1,10 @@
 2012-05-16  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* sysdeps/x86_64/x32/divdi3.c: New dummy file.
+	* sysdeps/x86_64/x32/symbol-hacks.h: Likewise.
+
+2012-05-16  H.J. Lu  <hongjiu.lu@intel.com>
+
 	* sysvipc/sys/msg.h (msgbuf): Replace long int with
 	__syscall_slong_t.
 
