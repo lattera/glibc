@@ -1,3 +1,7 @@
+2012-05-15  Mike Frysinger  <vapier@gentoo.org>
+
+	* sysdeps/ia64/elf/stackguard-macros.h: Delete unused file.
+
 2012-05-14  Mike Frysinger  <vapier@gentoo.org>
 
 	[BZ #14109]
