@@ -1,5 +1,10 @@
 2012-05-16  Chris Metcalf  <cmetcalf@tilera.com>
 
+	* sysdeps/unix/sysv/linux/generic/not-cancel.h: Add
+	multiple-inclusion guard.
+
+2012-05-16  Chris Metcalf  <cmetcalf@tilera.com>
+
 	* sysdeps/unix/sysv/linux/generic/bits/typesizes.h:
 	Remove now-unused __SNSECONDS_T_TYPE, and add new
 	__SYSCALL_ULONG_TYPE and __SYSCALL_SLONG_TYPE types.

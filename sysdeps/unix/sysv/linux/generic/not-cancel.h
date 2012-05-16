@@ -17,6 +17,9 @@
    License along with the GNU C Library.  If not, see
    <http://www.gnu.org/licenses/>.  */
 
+#ifndef _LINUX_GENERIC_NOT_CANCEL_H
+#define _LINUX_GENERIC_NOT_CANCEL_H
+
 #include <sysdeps/unix/sysv/linux/not-cancel.h>
 #include <fcntl.h>
 
@@ -27,3 +30,5 @@
 #undef open_not_cancel_2
 #define open_not_cancel_2(name, flags) \
   INLINE_SYSCALL (openat, 3, AT_FDCWD, (const char *) (name), (flags))
+
+#endif
