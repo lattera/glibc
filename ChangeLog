@@ -11,6 +11,10 @@
 
 2012-05-16  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* sysdeps/x86_64/x32/gmp-mparam.h: New file.
+
+2012-05-16  H.J. Lu  <hongjiu.lu@intel.com>
+
 	* sysdeps/x86_64/x32/ffs.c: New file.
 
 2012-05-16  H.J. Lu  <hongjiu.lu@intel.com>
