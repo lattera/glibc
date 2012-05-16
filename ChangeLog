@@ -1,3 +1,7 @@
+2012-05-16  Joseph Myers  <joseph@codesourcery.com>
+
+	* include/stdc-predef.h (__STDC_ISO_10646__): Increase to 201103L.
+
 2012-05-16  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/unix/sysv/linux/x86_64/bits/shm.h (shmatt_t): Use
