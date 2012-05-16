@@ -1,3 +1,35 @@
+2012-05-16  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/unix/sysv/linux/x86_64/x32/alphasort.c: New file.
+	* sysdeps/unix/sysv/linux/x86_64/x32/alphasort64.c: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/x32/fseeko.c: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/x32/fseeko64.c: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/x32/ftello.c: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/x32/ftello64.c: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/x32/ftw.c: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/x32/ftw64.c: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/x32/glob.c: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/x32/iofgetpos.c: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/x32/iofgetpos64.c: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/x32/iofopen.c: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/x32/iofopen64.c: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/x32/iofsetpos.c: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/x32/iofsetpos64.c: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/x32/lockf.c: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/x32/lockf64.c: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/x32/mkostemp.c: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/x32/mkostemp64.c: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/x32/mkstemp.c: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/x32/mkstemp64.c: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/x32/scandir.c: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/x32/scandir64.c: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/x32/scandirat.c: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/x32/scandirat64.c: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/x32/tmpfile.c: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/x32/tmpfile64.c: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/x32/versionsort.c: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/x32/versionsort64.c: Likewise.
+
 2012-05-16  Andreas Schwab  <schwab@linux-m68k.org>
 
 	* Makerules (+depfiles): Also collect depfiles from .oS in
