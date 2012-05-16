@@ -1,5 +1,9 @@
 2012-05-15  Chris Metcalf  <cmetcalf@tilera.com>
 
+	* sysdeps/tile/sotruss-lib.c: New file.
+
+2012-05-15  Chris Metcalf  <cmetcalf@tilera.com>
+
 	* sysdeps/tile/math_private.h (feraiseexcept): Use statement
 	expression syntax to avoid compiler warning.
 
