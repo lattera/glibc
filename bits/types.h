@@ -1,5 +1,6 @@
 /* bits/types.h -- definitions of __*_t types underlying *_t types.
-   Copyright (C) 2002, 2003, 2004, 2005, 2007 Free Software Foundation, Inc.
+   Copyright (C) 2002, 2003, 2004, 2005, 2007, 2012
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -148,7 +149,6 @@ __STD_TYPE __ID_T_TYPE __id_t;		/* General type for IDs.  */
 __STD_TYPE __TIME_T_TYPE __time_t;	/* Seconds since the Epoch.  */
 __STD_TYPE __USECONDS_T_TYPE __useconds_t; /* Count of microseconds.  */
 __STD_TYPE __SUSECONDS_T_TYPE __suseconds_t; /* Signed count of microseconds.  */
-__STD_TYPE __SNSECONDS_T_TYPE __snseconds_t; /* Signed count of nanoseconds.  */
 
 __STD_TYPE __DADDR_T_TYPE __daddr_t;	/* The type of a disk address.  */
 __STD_TYPE __SWBLK_T_TYPE __swblk_t;	/* Type of a swap block maybe?  */
