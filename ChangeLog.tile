@@ -1,3 +1,7 @@
+2012-05-16  Chris Metcalf  <cmetcalf@tilera.com>
+
+	* sysdeps/tile/elf/stackguard-macros.h: Delete unused file.
+
 2012-05-14  Chris Metcalf  <cmetcalf@tilera.com>
 
 	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx32/nptl/ld.abilist:
