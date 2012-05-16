@@ -32,7 +32,7 @@ struct La_tile_retval;
 
 #define ARCH_PLTEXIT_MEMBERS \
   ElfW(Addr) (*tile_gnu_pltexit) (ElfW(Sym) *, unsigned int, uintptr_t *, \
-                                  uintptr_t *, struct La_tile_regs *,   \
+                                  uintptr_t *, const struct La_tile_regs *, \
                                   struct La_tile_retval *, const char *)
 
 #include_next <ldsodefs.h>

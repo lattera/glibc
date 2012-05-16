@@ -1,3 +1,8 @@
+2012-05-15  Chris Metcalf  <cmetcalf@tilera.com>
+
+	* sysdeps/tile/ldsodefs.h (ARCH_PLTEXIT_MEMBERS): Add proper
+        const qualifier to "inregs" argument.
+
 2012-05-16  Chris Metcalf  <cmetcalf@tilera.com>
 
 	* sysdeps/tile/elf/stackguard-macros.h: Delete unused file.
