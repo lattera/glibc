@@ -1,5 +1,11 @@
 2012-05-16  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* sysdeps/unix/sysv/linux/x86_64/sys/debugreg.h: Don't include
+	<bits/wordsize.h>.  Check __x86_64__ instead of __WORDSIZE.
+	(DR_CONTROL_RESERVED): Use ULL instead of UL suffix.
+
+2012-05-16  H.J. Lu  <hongjiu.lu@intel.com>
+
 	* sysdeps/unix/sysv/linux/x86_64/sigcontextinfo.h: Include
 	<stdint.h>.
 	(GET_PC): Cast to uintptr_t first.
