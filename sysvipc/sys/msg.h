@@ -51,7 +51,7 @@ typedef __ssize_t ssize_t;
 /* Template for struct to be used as argument for `msgsnd' and `msgrcv'.  */
 struct msgbuf
   {
-    long int mtype;		/* type of received/sent message */
+    __syscall_slong_t mtype;	/* type of received/sent message */
     char mtext[1];		/* text of the message */
   };
 #endif
