@@ -1,5 +1,12 @@
 2012-05-16  Joseph Myers  <joseph@codesourcery.com>
 
+	* configure.in (makeinfo): Require version 4.5 or later.  Allow
+	versions 5 to 9.
+	* configure: Regenerated.
+	* manual/install.texi (texinfo): Increase version requirement to
+	4.5 or later.
+	* INSTALL: Regenerated.
+
 	* include/stdc-predef.h (__STDC_ISO_10646__): Increase to 201103L.
 
 2012-05-16  H.J. Lu  <hongjiu.lu@intel.com>

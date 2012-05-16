@@ -919,7 +919,7 @@ AC_CHECK_PROG_VER(MSGFMT, gnumsgfmt gmsgfmt msgfmt, --version,
   MSGFMT=: aux_missing="$aux_missing msgfmt")
 AC_CHECK_PROG_VER(MAKEINFO, makeinfo, --version,
   [GNU texinfo.* \([0-9][0-9.]*\)],
-  [4.*],
+  [4.[5-9]*|4.[1-9][0-9]*|[5-9].*],
   MAKEINFO=: aux_missing="$aux_missing makeinfo")
 AC_CHECK_PROG_VER(SED, sed, --version,
   [GNU sed version \([0-9]*\.[0-9.]*\)],

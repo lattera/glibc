@@ -334,7 +334,7 @@ No other assembler or linker has the necessary functionality at the
 moment.
 
 @item
-GNU @code{texinfo} 3.12f
+GNU @code{texinfo} 4.5 or later
 
 To correctly translate and install the Texinfo documentation you need
 this version of the @code{texinfo} package.  Earlier versions do not
