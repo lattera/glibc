@@ -1370,8 +1370,11 @@ efficiently using @code{strxfrm}.)
 /* @r{This is the comparison function used with @code{qsort}.} */
 
 int
-compare_elements (char **p1, char **p2)
+compare_elements (const void *v1, const void *v2)
 @{
+  char * const *p1 = v1;
+  char * const *p1 = v2;
+
   return strcoll (*p1, *p2);
 @}
 
@@ -1462,8 +1465,11 @@ struct sorter @{ char *input; char *transformed; @};
    @r{to sort an array of @code{struct sorter}.} */
 
 int
-compare_elements (struct sorter *p1, struct sorter *p2)
+compare_elements (const void *v1, const void *v2)
 @{
+  const struct sorter *p1 = v1;
+  const struct sorter *p2 = v2;
+
   return strcmp (p1->transformed, p2->transformed);
 @}
 

@@ -53,8 +53,11 @@ int count = sizeof (muppets) / sizeof (struct critter);
 /* This is the comparison function used for sorting and searching. */
 
 int
-critter_cmp (const struct critter *c1, const struct critter *c2)
+critter_cmp (const void *v1, const void *v2)
 {
+  const struct critter *c1 = v1;
+  const struct critter *c2 = v2;
+
   return strcmp (c1->name, c2->name);
 }
 

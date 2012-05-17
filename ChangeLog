@@ -1,3 +1,9 @@
+2012-05-17  Andreas Jaeger  <aj@suse.de>
+
+	* manual/examples/search.c (critter_cmp): Change signature to
+	avoid warnings.
+	* manual/string.texi (Collation Functions): Likewise.
+
 2012-05-16  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* bits/types.h: Fold copyright years.
