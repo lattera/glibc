@@ -1,5 +1,9 @@
 2012-05-17  Chris Metcalf  <cmetcalf@tilera.com>
 
+	* data/c++-types-tilepro-linux-gnu.data: Renamed from
+	data/c++-types-tile-linux-gnu.data.
+	* data/c++-types-tilegx-linux-gnu.data: New file.
+
 	* sysdeps/tile/libm-test-ulps: Improved fma() and exp10().
 
 	* sysdeps/tile/s_fma.c: Use ieee754/dbl-64 without rounding or
