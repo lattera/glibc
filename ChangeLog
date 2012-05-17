@@ -1,3 +1,8 @@
+2012-05-17  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/x86_64/Makefile (tests): Add tst-mallocalign1.
+	* sysdeps/x86_64/tst-mallocalign1.c: New file.
+
 2012-05-17  Andreas Jaeger  <aj@suse.de>
 	    Carlos O'Donell  <carlos_odonell@mentor.com>
 

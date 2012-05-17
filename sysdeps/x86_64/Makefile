@@ -11,6 +11,10 @@ ifeq ($(subdir),gmon)
 sysdep_routines += _mcount
 endif
 
+ifeq ($(subdir),malloc)
+tests += tst-mallocalign1
+endif
+
 ifeq ($(subdir),string)
 sysdep_routines += cacheinfo strcasecmp_l-nonascii strncase_l-nonascii
 gen-as-const-headers += locale-defines.sym
