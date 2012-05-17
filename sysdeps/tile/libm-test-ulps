@@ -625,25 +625,16 @@ idouble: 1
 # exp10
 Test "exp10 (-1) == 0.1":
 double: 1
-float: 1
 idouble: 1
-ifloat: 1
 Test "exp10 (-305) == 1.0e-305":
 double: 1
 idouble: 1
 Test "exp10 (-36) == 1.0e-36":
 double: 1
 idouble: 1
-Test "exp10 (0.75) == 5.62341325190349080394951039776481231":
-double: 1
-float: 1
-idouble: 1
-ifloat: 1
 Test "exp10 (3) == 1000":
 double: 1
-float: 2
 idouble: 1
-ifloat: 2
 Test "exp10 (36) == 1.0e36":
 double: 1
 idouble: 1
@@ -656,6 +647,26 @@ Test "expm1 (1) == M_El - 1.0":
 float: 1
 ifloat: 1
 Test "expm1 (500.0) == 1.4035922178528374107397703328409120821806e+217":
+double: 1
+idouble: 1
+
+# fma
+Test "fma (-0x1.fffffffffffffp-711, 0x1.fffffffffffffp-275, 0x1.fffffe00007ffp-983) == 0x1.7ffffe00007ffp-983":
+double: 1
+idouble: 1
+Test "fma (0x1.0000002p+0, 0x1.ffffffcp-1, -0x1p-300) == 0x1.fffffffffffffp-1":
+double: 1
+idouble: 1
+Test "fma (0x1.153d650bb9f06p-907, 0x1.2d01230d48407p-125, -0x0.b278d5acfc3cp-1022) == -0x0.b22757123bbe9p-1022":
+double: 1
+idouble: 1
+Test "fma (0x1.4000004p-967, 0x1p-106, 0x0.000001p-1022) == 0x0.0000010000003p-1022":
+double: 1
+idouble: 1
+Test "fma (0x1.7ff8p+13, 0x1.000002p+0, 0x1.ffffp-24) == 0x1.7ff802p+13":
+float: 1
+ifloat: 1
+Test "fma (0x1.7fffff8p-968, 0x1p-106, 0x0.000001p-1022) == 0x0.0000010000001p-1022":
 double: 1
 idouble: 1
 
@@ -811,9 +822,7 @@ float: 1
 idouble: 3
 ifloat: 1
 Test "jn (3, 2.0) == 0.128943249474402051098793332969239835":
-double: 1
 float: 1
-idouble: 1
 ifloat: 1
 Test "jn (3, 2.4048255576957729) == 0.19899990535769083404042146764530813":
 double: 3
@@ -1243,11 +1252,15 @@ ifloat: 1
 
 Function: "exp10":
 double: 1
-float: 2
 idouble: 1
-ifloat: 2
 
 Function: "expm1":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+
+Function: "fma":
 double: 1
 float: 1
 idouble: 1

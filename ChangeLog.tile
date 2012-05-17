@@ -1,5 +1,7 @@
 2012-05-17  Chris Metcalf  <cmetcalf@tilera.com>
 
+	* sysdeps/tile/libm-test-ulps: Improved fma() and exp10().
+
 	* sysdeps/tile/s_fma.c: Use ieee754/dbl-64 without rounding or
 	exception support; it's still much better than the generic version.
 
