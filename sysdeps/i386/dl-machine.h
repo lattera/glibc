@@ -1,5 +1,5 @@
 /* Machine-dependent ELF dynamic relocation inline functions.  i386 version.
-   Copyright (C) 1995-2005, 2006, 2009, 2011 Free Software Foundation, Inc.
+   Copyright (C) 1995-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -333,7 +333,9 @@ elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
   else
 # endif	/* !RTLD_BOOTSTRAP and have no -z combreloc */
     {
+# ifndef RTLD_BOOTSTRAP
       const Elf32_Sym *const refsym = sym;
+# endif
       struct link_map *sym_map = RESOLVE_MAP (&sym, version, r_type);
       Elf32_Addr value = sym_map == NULL ? 0 : sym_map->l_addr + sym->st_value;
 

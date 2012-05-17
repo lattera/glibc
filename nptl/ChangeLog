@@ -1,3 +1,9 @@
+2012-05-17  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/i386/i686/dl-sysdep.h
+	(HAVE_DL_DISCOVER_OSVERSION): Don't declare _dl_discover_osversion
+	only for older kernels.
+
 2012-05-15  Joseph Myers  <joseph@codesourcery.com>
 
 	* pthreadP.h [!__NR_set_robust_list] (__NR_set_robust_list): Do

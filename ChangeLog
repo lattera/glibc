@@ -1,3 +1,8 @@
+2012-05-17  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/i386/dl-machine.h (elf_machine_rel): Declare refsym only
+	when it is used.
+
 2012-05-17  Chris Metcalf  <cmetcalf@tilera.com>
 
 	* stdio-common/bug22.c (TIMEOUT): Bump up from 30 to 60.
