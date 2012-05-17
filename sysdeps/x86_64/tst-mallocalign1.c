@@ -26,7 +26,7 @@ test (size_t s)
 {
   void *p = malloc (s);
 
-  printf ("malloc: %d, %p: %ld\n", s, p,
+  printf ("malloc: %ld, %p: %ld\n", (unsigned long) s, p,
 	  ((unsigned long) p) & ALIGN_MASK);
   return p;
 }

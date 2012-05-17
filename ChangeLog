@@ -1,3 +1,7 @@
+2012-05-17  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/x86_64/tst-mallocalign1.c (test): Cast to unsigned long.
+
 2012-05-17  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/i386/dl-machine.h (elf_machine_rel): Declare refsym only
