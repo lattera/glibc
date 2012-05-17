@@ -1,3 +1,7 @@
+2012-05-17  David S. Miller  <davem@davemloft.net>
+
+	* crypt/sha512c-test.c (TIMEOUT): Increase to 32.
+
 2012-05-17  Andreas Jaeger  <aj@suse.de>
 
 	* elf/tst-relsort1.c (do_test): Fix function declaration to avoid
