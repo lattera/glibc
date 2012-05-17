@@ -3,7 +3,7 @@
 
 
 static int
-do_test ()
+do_test (void)
 {
   const char lib[] = "$ORIGIN/tst-relsort1mod1.so";
   void *h = dlopen (lib, RTLD_NOW);
