@@ -1,5 +1,7 @@
 2012-05-17  Chris Metcalf  <cmetcalf@tilera.com>
 
+	* sysdeps/tile/stackguard-macros.h: Support tilegx32.
+
 	* data/c++-types-tilepro-linux-gnu.data: Renamed from
 	data/c++-types-tile-linux-gnu.data.
 	* data/c++-types-tilegx-linux-gnu.data: New file.
