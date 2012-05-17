@@ -1,3 +1,33 @@
+2012-05-17  Andreas Jaeger  <aj@suse.de>
+	    Carlos O'Donell  <carlos_odonell@mentor.com>
+
+	[BZ #14059]
+	* sysdeps/x86_64/multiarch/init-arch.h
+	(bit_YMM_Usable): Rename to...
+	(bit_AVX_Usable): ... this.
+	(bit_FMA4_Usable): New macro.
+	(bit_XMM_state): New macro.
+	(bit_YMM_state): New macro.
+	[__ASSEMBLER__] (index_YMM_Usable): Rename to...
+	[__ASSEMBLER__] (index_AVX_Usable): ... this.
+	[__ASSEMBLER__] (index_FMA4_Usable): New macro.
+	(CPUID_OSXSAVE): New macro.
+	(CPUID_AVX): New macro.
+	(CPUID_FMA4): New macro.
+	(index_YMM_Usable): Rename to...
+	(index_AVX_Usable): ... this.
+	(HAS_AVX): Use HAS_ARCH_FEATURE.
+	(HAS_FMA4): Likewise.
+	(HAS_YMM_USABLE): Remove.
+	* sysdeps/x86_64/multiarch/init-arch.c (__init_cpu_features):
+	Enable AVX or FMA4 IFF YMM and XMM states are usable and the features
+	are present.
+	* sysdeps/x86_64/multiarch/strcmp.S: Use bit_AVX_Usable.
+	* sysdeps/i386/i686/multiarch/Makefile: Add test-multiarch to tests.
+	* sysdeps/x86_64/multiarch/Makefile: Likewise.
+	* sysdeps/i386/i686/multiarch/test-multiarch.c: New file.
+	* sysdeps/x86_64/multiarch/test-multiarch.c: New file.
+
 2012-05-17  Chris Metcalf  <cmetcalf@tilera.com>
 
 	* math/libm-test.c: Support platforms without multiple rounding modes.

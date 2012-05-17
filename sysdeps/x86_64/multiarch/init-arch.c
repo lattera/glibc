@@ -1,6 +1,6 @@
 /* Initialize CPU feature data.
    This file is part of the GNU C Library.
-   Copyright (C) 2008, 2009, 2010, 2011, 2012 Free Software Foundation, Inc.
+   Copyright (C) 2008-2012 Free Software Foundation, Inc.
    Contributed by Ulrich Drepper <drepper@redhat.com>.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -143,16 +143,23 @@ __init_cpu_features (void)
   else
     kind = arch_kind_other;
 
-  if (__cpu_features.cpuid[COMMON_CPUID_INDEX_1].ecx & bit_AVX)
+  /* Can we call xgetbv?  */
+  if (CPUID_OSXSAVE)
     {
-      /* Reset the AVX bit in case OSXSAVE is disabled.  */
-      if ((__cpu_features.cpuid[COMMON_CPUID_INDEX_1].ecx & bit_OSXSAVE) != 0
-	  && ({ unsigned int xcrlow;
-		unsigned int xcrhigh;
-		asm ("xgetbv"
-		     : "=a" (xcrlow), "=d" (xcrhigh) : "c" (0));
-		(xcrlow & 6) == 6; }))
-	__cpu_features.feature[index_YMM_Usable] |= bit_YMM_Usable;
+      unsigned int xcrlow;
+      unsigned int xcrhigh;
+      asm ("xgetbv" : "=a" (xcrlow), "=d" (xcrhigh) : "c" (0));
+      /* Is YMM and XMM state usable?  */
+      if ((xcrlow & (bit_YMM_state | bit_XMM_state)) ==
+	  (bit_YMM_state | bit_XMM_state))
+	{
+	  /* Determine if AVX is usable.  */
+	  if (CPUID_AVX)
+	    __cpu_features.feature[index_AVX_Usable] |= bit_AVX_Usable;
+	  /* Determine if FMA4 is usable.  */
+	  if (CPUID_FMA4)
+	    __cpu_features.feature[index_FMA4_Usable] |= bit_FMA4_Usable;
+	}
     }
 
   __cpu_features.family = family;

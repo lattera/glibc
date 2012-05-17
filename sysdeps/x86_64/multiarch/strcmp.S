@@ -1,5 +1,5 @@
 /* strcmp with SSE4.2
-   Copyright (C) 2009, 2010, 2011 Free Software Foundation, Inc.
+   Copyright (C) 2009-2012 Free Software Foundation, Inc.
    Contributed by Intel Corporation.
    This file is part of the GNU C Library.
 
@@ -83,6 +83,7 @@
 	.text
 ENTRY(STRCMP)
 	.type	STRCMP, @gnu_indirect_function
+	/* Manually inlined call to __get_cpu_features.  */
 	cmpl	$0, __cpu_features+KIND_OFFSET(%rip)
 	jne	1f
 	call	__init_cpu_features
@@ -100,13 +101,14 @@ END(STRCMP)
 # ifdef USE_AS_STRCASECMP_L
 ENTRY(__strcasecmp)
 	.type	__strcasecmp, @gnu_indirect_function
+	/* Manually inlined call to __get_cpu_features.  */
 	cmpl	$0, __cpu_features+KIND_OFFSET(%rip)
 	jne	1f
 	call	__init_cpu_features
 1:
 #  ifdef HAVE_AVX_SUPPORT
 	leaq	__strcasecmp_avx(%rip), %rax
-	testl	$bit_AVX, __cpu_features+CPUID_OFFSET+index_AVX(%rip)
+	testl	$bit_AVX_Usable, __cpu_features+FEATURE_OFFSET+index_AVX_Usable(%rip)
 	jnz	2f
 #  endif
 	leaq	__strcasecmp_sse42(%rip), %rax
@@ -123,13 +125,14 @@ weak_alias (__strcasecmp, strcasecmp)
 # ifdef USE_AS_STRNCASECMP_L
 ENTRY(__strncasecmp)
 	.type	__strncasecmp, @gnu_indirect_function
+	/* Manually inlined call to __get_cpu_features.  */
 	cmpl	$0, __cpu_features+KIND_OFFSET(%rip)
 	jne	1f
 	call	__init_cpu_features
 1:
 #  ifdef HAVE_AVX_SUPPORT
 	leaq	__strncasecmp_avx(%rip), %rax
-	testl	$bit_AVX, __cpu_features+CPUID_OFFSET+index_AVX(%rip)
+	testl	$bit_AVX_Usable, __cpu_features+FEATURE_OFFSET+index_AVX_Usable(%rip)
 	jnz	2f
 #  endif
 	leaq	__strncasecmp_sse42(%rip), %rax
