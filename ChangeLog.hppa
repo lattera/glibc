@@ -1,3 +1,8 @@
+2012-05-17  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* sysdeps/hppa/libgcc_s.h: Remove.
+	* sysdeps/hppa/shlib-versions: Add libgcc_s.
+
 2012-04-17  Carlos O'Donell  <carlos@systemhalted.org>
 
 	* sysdeps/hppa/dl-irel.h: New file.
