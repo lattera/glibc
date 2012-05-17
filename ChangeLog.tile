@@ -1,5 +1,12 @@
 2012-05-17  Chris Metcalf  <cmetcalf@tilera.com>
 
+	* sysdeps/tile/fegetenv.c: Version fegetenv() like fesetenv().
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx32/nptl/libm.abilist:
+	Add fegetenv.
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx64/nptl/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilepro/nptl/libm.abilist: Likewise.
+
 	* sysdeps/tile/stackguard-macros.h: Support tilegx32.
 
 	* data/c++-types-tilepro-linux-gnu.data: Renamed from
