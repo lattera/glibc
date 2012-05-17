@@ -1,3 +1,12 @@
+2012-05-17  Chris Metcalf  <cmetcalf@tilera.com>
+
+	* math/libm-test.c: Support platforms without multiple rounding modes.
+	* math/bug-nextafter.c: Support platforms without FP exceptions.
+	* math/bug-nexttoward.c: Likewise.
+	* math/test-fenv.c: Likewise.
+	* math/test-misc.c: Likewise.
+	* stdlib/bug-getcontext.c: Likewise.
+
 2012-05-17  Andreas Jaeger  <aj@suse.de>
 
 	* manual/examples/search.c (critter_cmp): Change signature to

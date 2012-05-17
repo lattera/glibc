@@ -4,6 +4,12 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+#if !defined(FE_OVERFLOW) && !defined(FE_UNDERFLOW)
+/* If there's no support for the exceptions this test is checking,
+   then just return success and allow the test to be compiled.  */
+# define fetestexcept(e) 1
+#endif
+
 float zero = 0.0;
 float inf = INFINITY;
 

@@ -664,9 +664,11 @@ feholdexcept_tests (void)
     }
 #endif
   test_exceptions ("feholdexcept_tests 0 test", NO_EXC, 0);
+#ifdef FE_INVALID
   feraiseexcept (FE_INVALID);
   test_exceptions ("feholdexcept_tests FE_INVALID test",
 		   INVALID_EXC, 0);
+#endif
   res = feupdateenv (&saved);
   if (res != 0)
     {
@@ -684,7 +686,9 @@ feholdexcept_tests (void)
   test_exceptions ("feholdexcept_tests FE_DIVBYZERO|FE_INVALID test",
 		   DIVBYZERO_EXC | INVALID_EXC, 0);
   feclearexcept (FE_ALL_EXCEPT);
+#ifdef FE_INVALID
   feraiseexcept (FE_INVALID);
+#endif
 #if defined FE_TONEAREST && defined FE_UPWARD
   res = fesetround (FE_UPWARD);
   if (res != 0)
@@ -708,9 +712,11 @@ feholdexcept_tests (void)
     }
 #endif
   test_exceptions ("feholdexcept_tests 0 2nd test", NO_EXC, 0);
+#ifdef FE_INEXACT
   feraiseexcept (FE_INEXACT);
   test_exceptions ("feholdexcept_tests FE_INEXACT test",
 		   INEXACT_EXC, 0);
+#endif
   res = feupdateenv (&saved2);
   if (res != 0)
     {

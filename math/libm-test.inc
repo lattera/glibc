@@ -128,6 +128,22 @@
 #include <string.h>
 #include <argp.h>
 
+/* Allow platforms without all rounding modes to test properly,
+   assuming they provide an __FE_UNDEFINED in <bits/fenv.h> which
+   causes fesetround() to return failure.  */
+#ifndef FE_TONEAREST
+# define FE_TONEAREST	__FE_UNDEFINED
+#endif
+#ifndef FE_TOWARDZERO
+# define FE_TOWARDZERO	__FE_UNDEFINED
+#endif
+#ifndef FE_UPWARD
+# define FE_UPWARD	__FE_UNDEFINED
+#endif
+#ifndef FE_DOWNWARD
+# define FE_DOWNWARD	__FE_UNDEFINED
+#endif
+
 /* Possible exceptions */
 #define NO_EXCEPTION			0x0
 #define INVALID_EXCEPTION		0x1

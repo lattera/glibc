@@ -1186,12 +1186,14 @@ main (void)
   (void) &f2;
   feclearexcept (FE_ALL_EXCEPT);
   f2 += f1;
+#if defined(FE_OVERFLOW) && defined(FE_INEXACT)
   int fe = fetestexcept (FE_ALL_EXCEPT);
   if (fe != (FE_OVERFLOW | FE_INEXACT))
     {
       printf ("float overflow test failed: %x\n", fe);
       result = 1;
     }
+#endif
 
   volatile double d1 = DBL_MAX;
   volatile double d2 = DBL_MAX / 2;
@@ -1199,12 +1201,14 @@ main (void)
   (void) &d2;
   feclearexcept (FE_ALL_EXCEPT);
   d2 += d1;
+#if defined(FE_OVERFLOW) && defined(FE_INEXACT)
   fe = fetestexcept (FE_ALL_EXCEPT);
   if (fe != (FE_OVERFLOW | FE_INEXACT))
     {
       printf ("double overflow test failed: %x\n", fe);
       result = 1;
     }
+#endif
 
 #ifndef NO_LONG_DOUBLE
   volatile long double ld1 = LDBL_MAX;
@@ -1213,12 +1217,14 @@ main (void)
   (void) &ld2;
   feclearexcept (FE_ALL_EXCEPT);
   ld2 += ld1;
+# if defined(FE_OVERFLOW) && defined(FE_INEXACT)
   fe = fetestexcept (FE_ALL_EXCEPT);
   if (fe != (FE_OVERFLOW | FE_INEXACT))
     {
       printf ("long double overflow test failed: %x\n", fe);
       result = 1;
     }
+# endif
 #endif
 
 #if !defined NO_LONG_DOUBLE && LDBL_MANT_DIG == 113

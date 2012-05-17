@@ -9,6 +9,9 @@
 static int
 do_test (void)
 {
+#if FE_ALL_EXCEPT == 0
+  printf("Skipping test; no support for FP exceptions.\n");
+#else
   int except_mask =  FE_DIVBYZERO | FE_INVALID | FE_OVERFLOW | FE_UNDERFLOW;
   int status = feenableexcept (except_mask);
 
@@ -41,6 +44,7 @@ do_test (void)
 
   printf("\nAt end fegetexcept() returned %d, expected: %d.\n",
 	 mask, except_mask);
+#endif
   return 0;
 }
 
