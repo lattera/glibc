@@ -1,4 +1,4 @@
-/* Copyright (C) 2002 Free Software Foundation, Inc.
+/* Copyright (C) 2002-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -22,8 +22,6 @@
 # error "Never use <bits/sigcontext.h> directly; include <signal.h> instead."
 #endif
 
-#include <bits/wordsize.h>
-
 struct _fpreg
 {
   unsigned short significand[4];
@@ -44,7 +42,7 @@ struct _xmmreg
 
 
 
-#if __WORDSIZE == 32
+#ifndef __x86_64__
 
 struct _fpstate
 {
@@ -103,7 +101,7 @@ struct sigcontext
   unsigned long cr2;
 };
 
-#else /* __WORDSIZE == 64 */
+#else /* __x86_64__ */
 
 struct _fpstate
 {
@@ -123,36 +121,40 @@ struct _fpstate
 
 struct sigcontext
 {
-  unsigned long r8;
-  unsigned long r9;
-  unsigned long r10;
-  unsigned long r11;
-  unsigned long r12;
-  unsigned long r13;
-  unsigned long r14;
-  unsigned long r15;
-  unsigned long rdi;
-  unsigned long rsi;
-  unsigned long rbp;
-  unsigned long rbx;
-  unsigned long rdx;
-  unsigned long rax;
-  unsigned long rcx;
-  unsigned long rsp;
-  unsigned long rip;
-  unsigned long eflags;
+  __uint64_t r8;
+  __uint64_t r9;
+  __uint64_t r10;
+  __uint64_t r11;
+  __uint64_t r12;
+  __uint64_t r13;
+  __uint64_t r14;
+  __uint64_t r15;
+  __uint64_t rdi;
+  __uint64_t rsi;
+  __uint64_t rbp;
+  __uint64_t rbx;
+  __uint64_t rdx;
+  __uint64_t rax;
+  __uint64_t rcx;
+  __uint64_t rsp;
+  __uint64_t rip;
+  __uint64_t eflags;
   unsigned short cs;
   unsigned short gs;
   unsigned short fs;
   unsigned short __pad0;
-  unsigned long err;
-  unsigned long trapno;
-  unsigned long oldmask;
-  unsigned long cr2;
-  struct _fpstate * fpstate;
-  unsigned long __reserved1 [8];
+  __uint64_t err;
+  __uint64_t trapno;
+  __uint64_t oldmask;
+  __uint64_t cr2;
+  __extension__ union
+    {
+      struct _fpstate * fpstate;
+      __uint64_t __fpstate_word;
+    };
+  __uint64_t __reserved1 [8];
 };
 
-#endif /* __WORDSIZE == 64 */
+#endif /* __x86_64__ */
 
 #endif /* _BITS_SIGCONTEXT_H */
