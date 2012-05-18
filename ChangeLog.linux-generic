@@ -1,3 +1,8 @@
+2012-05-18  Chris Metcalf  <cmetcalf@tilera.com>
+
+	* sysdeps/unix/sysv/linux/generic/bits/typesizes.h
+	(__FSWORD_T_TYPE): New macro.
+
 2012-05-16  Chris Metcalf  <cmetcalf@tilera.com>
 
 	* sysdeps/unix/sysv/linux/generic/not-cancel.h: Add
