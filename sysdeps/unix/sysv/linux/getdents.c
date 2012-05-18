@@ -1,5 +1,4 @@
-/* Copyright (C) 1993, 1995-2004, 2006, 2007, 2010
-   Free Software Foundation, Inc.
+/* Copyright (C) 19932-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -99,7 +98,17 @@ __GETDENTS (int fd, char *buf, size_t nbytes)
   ssize_t retval;
 
 #ifdef __ASSUME_GETDENTS32_D_TYPE
-  if (sizeof (DIRENT_TYPE) == sizeof (struct dirent))
+  /* The d_ino and d_off fields in kernel_dirent and dirent must have
+     the same sizes and alignments.  */
+  if (sizeof (DIRENT_TYPE) == sizeof (struct dirent)
+      && (sizeof (((struct kernel_dirent *) 0)->d_ino)
+	  == sizeof (((struct dirent *) 0)->d_ino))
+      && (sizeof (((struct kernel_dirent *) 0)->d_off)
+	  == sizeof (((struct dirent *) 0)->d_off))
+      && (offsetof (struct kernel_dirent, d_off)
+	  == offsetof (struct dirent, d_off))
+      && (offsetof (struct kernel_dirent, d_reclen)
+	  == offsetof (struct dirent, d_reclen)))
     {
       retval = INLINE_SYSCALL (getdents, 3, fd, CHECK_N(buf, nbytes), nbytes);
 

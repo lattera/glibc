@@ -1,5 +1,9 @@
 2012-05-18  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* sysdeps/unix/sysv/linux/getdents.c (__GETDENTS): Use
+	getdents system call only if kernel and user dirents have the
+	same d_ino and d_off.
+
 	* stdio-common/_itoa.c: Check _ITOA_NEEDED instead of
 	LLONG_MAX != LONG_MAX.
 	(_itoa_word): Use _ITOA_WORD_TYPE on value.
