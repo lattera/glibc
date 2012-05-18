@@ -1,3 +1,10 @@
+2012-05-18  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/unix/x86_64/sysdep.S: Use RAX_LP to access return
+	value.  Use "or" to set return value to -1.
+	* sysdeps/unix/sysv/linux/x86_64/sysdep.S: Use RAX_LP to
+	negate return value.
+
 2012-05-18  Tulio Magno Quites Machado Filho  <tuliom@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/powerpc32/power4/Makefile (CFLAGS-wordcopy.c,

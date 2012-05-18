@@ -1,4 +1,4 @@
-/* Copyright (C) 2001,2002,2004,2005,2011,2012 Free Software Foundation, Inc.
+/* Copyright (C) 2001-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -34,7 +34,7 @@ __syscall_error:
 	/* We translate the system's EWOULDBLOCK error into EAGAIN.
 	   The GNU C library always defines EWOULDBLOCK==EAGAIN.
 	   EWOULDBLOCK_sys is the original number.  */
-	cmpq $EWOULDBLOCK_sys, %rax /* Is it the old EWOULDBLOCK?  */
+	cmp $EWOULDBLOCK_sys, %RAX_LP /* Is it the old EWOULDBLOCK?  */
 	jne notb		/* Branch if not.  */
 	movl $EAGAIN, %eax	/* Yes; translate it to EAGAIN.  */
 notb:
@@ -45,7 +45,7 @@ notb:
 #else
 	movl %eax, %fs:C_SYMBOL_NAME(errno@TPOFF)
 #endif
-	movq $-1, %rax
+	or $-1, %RAX_LP
 	ret
 
 #undef	__syscall_error
