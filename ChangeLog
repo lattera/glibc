@@ -1,3 +1,20 @@
+2012-05-17  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* bits/types.h (__fsword_t): New type.
+	* bits/typesizes.h (__FSWORD_T_TYPE): New macro.
+	sysdeps/mach/hurd/bits/typesizes.h (__FSWORD_T_TYPE): Likewise.
+	* sysdeps/unix/bsd/bsd4.4/freebsd/bits/typesizes.h
+	(__FSWORD_T_TYPE): Likewise.
+	* sysdeps/unix/sysv/linux/s390/bits/typesizes.h
+	(__FSWORD_T_TYPE): Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/typesizes.h
+	(__FSWORD_T_TYPE): Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/bits/typesizes.h
+	(__FSWORD_T_TYPE): Likewise.
+	* sysdeps/unix/sysv/linux/bits/statfs.h (statfs): Replace
+	__SWORD_TYPE with __fsword_t.
+	(statfs64): Likewise.
+
 2012-05-17  David S. Miller  <davem@davemloft.net>
 
 	* crypt/sha512c-test.c (TIMEOUT): Increase to 32.
