@@ -1,3 +1,15 @@
+2012-05-18  Tulio Magno Quites Machado Filho  <tuliom@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/powerpc32/power4/Makefile (CFLAGS-wordcopy.c,
+	CFLAGS-memmove.c): remove -ftree-loop-linear which causes a build
+	failure if the compiler has Graphite support disabled.
+	* sysdeps/powerpc/powerpc32/power4/fpu/Makefile (CFLAGS-mpa.c):
+	Likewise.
+	* sysdeps/powerpc/powerpc64/power4/Makefile (CFLAGS-wordcopy.c,
+	CFLAGS-memmove.c): Likewise.
+	* sysdeps/powerpc/powerpc64/power4/fpu/Makefile (CFLAGS-mpa.c):
+	Likewise.
+
 2012-05-18  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/x86_64/x32/_itoa.h: New file.
