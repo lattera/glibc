@@ -145,6 +145,7 @@ GLIBC_2.12
  feclearexcept F
  fedisableexcept F
  feenableexcept F
+ fegetenv F
  fegetexcept F
  fegetexceptflag F
  fegetround F
