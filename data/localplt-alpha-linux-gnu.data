@@ -1,0 +1,20 @@
+libc.so: _OtsAddX ?
+libc.so: _OtsConvertFloatXT ?
+libc.so: _OtsCvtQX ?
+libc.so: _OtsDivX ?
+libc.so: _OtsEqlX ?
+libc.so: _OtsGeqX ?
+libc.so: _OtsLssX ?
+libc.so: _OtsMulX ?
+libc.so: _OtsNeqX ?
+libc.so: _OtsSubX ?
+libc.so: _Unwind_Find_FDE
+libc.so: calloc ?
+libc.so: free ?
+libc.so: malloc ?
+libc.so: memalign ?
+libc.so: realloc ?
+libm.so: matherr
+# We used to offer inline functions that used this, so it must be exported.
+# Ought to reorg things such that carg isn't thus forced to use a plt.
+libm.so: __atan2
