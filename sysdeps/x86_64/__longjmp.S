@@ -1,4 +1,4 @@
-/* Copyright (C) 2001,2004,2005,2006,2009 Free Software Foundation, Inc.
+/* Copyright (C) 2001-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -26,12 +26,20 @@
 ENTRY(__longjmp)
 	/* Restore registers.  */
 	mov (JB_RSP*8)(%rdi),%R8_LP
-	movq (JB_RBP*8)(%rdi),%r9
+	mov (JB_RBP*8)(%rdi),%R9_LP
 	mov (JB_PC*8)(%rdi),%RDX_LP
 #ifdef PTR_DEMANGLE
 	PTR_DEMANGLE (%R8_LP)
-	PTR_DEMANGLE (%r9)
+	PTR_DEMANGLE (%R9_LP)
 	PTR_DEMANGLE (%RDX_LP)
+# ifdef __ILP32__
+	/* We ignored the high bits of the %rbp value because only the low
+	   bits are mangled.  But we cannot presume that %rbp is being used
+	   as a pointer and truncate it, so recover the high bits.  */
+	movl (JB_RBP*8 + 4)(%rdi), %eax
+	shlq $32, %rax
+	orq %rax, %r9
+# endif
 #endif
 	/* We add unwind information for the target here.  */
 	cfi_def_cfa(%rdi, 0)

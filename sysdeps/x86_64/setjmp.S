@@ -1,5 +1,5 @@
 /* setjmp for x86-64.
-   Copyright (C) 2001, 2003, 2005, 2006 Free Software Foundation, Inc.
+   Copyright (C) 2001-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -24,9 +24,16 @@ ENTRY (__sigsetjmp)
 	/* Save registers.  */
 	movq %rbx, (JB_RBX*8)(%rdi)
 #ifdef PTR_MANGLE
-	movq %rbp, %rax
-	PTR_MANGLE (%rax)
-	movq %rax, (JB_RBP*8)(%rdi)
+# ifdef __ILP32__
+	/* Save the high bits of %rbp first, since PTR_MANGLE will
+	   only handle the low bits but we cannot presume %rbp is
+	   being used as a pointer and truncate it.  Here we write all
+	   of %rbp, but the low bits will be overwritten below.  */
+	movq %rbp, (JB_RBP*8)(%rdi)
+# endif
+	mov %RBP_LP, %RAX_LP
+	PTR_MANGLE (%RAX_LP)
+	mov %RAX_LP, (JB_RBP*8)(%rdi)
 #else
 	movq %rbp, (JB_RBP*8)(%rdi)
 #endif
