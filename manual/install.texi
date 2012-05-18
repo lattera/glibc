@@ -50,8 +50,8 @@ $ ../glibc-@var{version}/configure @var{args@dots{}}
 @end smallexample
 
 Please note that even though you're building in a separate build
-directory, the compilation needs to modify a few files in the source
-directory, especially some files in the manual subdirectory.
+directory, the compilation may need to create or modify files and
+directories in the source directory.
 
 @noindent
 @code{configure} takes many options, but the only one that is usually

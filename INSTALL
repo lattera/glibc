@@ -31,8 +31,8 @@ at the top level of the source tree.  In the scenario above, you'd type
      $ ../glibc-VERSION/configure ARGS...
 
    Please note that even though you're building in a separate build
-directory, the compilation needs to modify a few files in the source
-directory, especially some files in the manual subdirectory.
+directory, the compilation may need to create or modify files and
+directories in the source directory.
 
 `configure' takes many options, but the only one that is usually
 mandatory is `--prefix'.  This option tells `configure' where you want

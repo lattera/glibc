@@ -1,3 +1,10 @@
+2012-05-18  Andreas Jaeger  <aj@suse.de>
+	    Carlos O'Donell  <carlos_odonell@mentor.com>
+
+	* manual/install.texi (Configuring and compiling): Update
+	description about files modified in the source directory.
+        * INSTALL: Regenerated.
+
 2012-05-18  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/unix/x86_64/sysdep.S: Use RAX_LP to access return
