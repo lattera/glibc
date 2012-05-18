@@ -1,5 +1,10 @@
 2012-05-18  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* stdio-common/_itoa.c: Check _ITOA_NEEDED instead of
+	LLONG_MAX != LONG_MAX.
+	(_itoa_word): Use _ITOA_WORD_TYPE on value.
+	(_fitoa_word): Likewise.
+
 	* sysdeps/unix/sysv/linux/x86_64/sigcontextinfo.h: Fold copyright
 	years.
 	* sysdeps/unix/sysv/linux/x86_64/sys/debugreg.h: Likewise.

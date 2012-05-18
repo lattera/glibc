@@ -79,7 +79,7 @@ struct base_table_t
 
 
 /* We do not compile _itoa if we always can use _itoa_word.  */
-#if LLONG_MAX != LONG_MAX
+#if _ITOA_NEEDED
 /* Local variables.  */
 const struct base_table_t _itoa_base_table[] attribute_hidden =
 {
@@ -169,7 +169,7 @@ extern const char _itoa_upper_digits_internal[] attribute_hidden;
 
 
 char *
-_itoa_word (unsigned long value, char *buflim,
+_itoa_word (_ITOA_WORD_TYPE value, char *buflim,
 	    unsigned int base, int upper_case)
 {
   const char *digits = (upper_case
@@ -204,7 +204,7 @@ _itoa_word (unsigned long value, char *buflim,
 #undef SPECIAL
 
 
-#if LLONG_MAX != LONG_MAX
+#if _ITOA_NEEDED
 char *
 _itoa (value, buflim, base, upper_case)
      unsigned long long int value;
@@ -470,7 +470,8 @@ _itoa (value, buflim, base, upper_case)
 #endif
 
 char *
-_fitoa_word (unsigned long value, char *buf, unsigned int base, int upper_case)
+_fitoa_word (_ITOA_WORD_TYPE value, char *buf, unsigned int base,
+	     int upper_case)
 {
   char tmpbuf[sizeof (value) * 4];	      /* Worst case length: base 2.  */
   char *cp = _itoa_word (value, tmpbuf + sizeof (value) * 4, base, upper_case);
@@ -479,7 +480,7 @@ _fitoa_word (unsigned long value, char *buf, unsigned int base, int upper_case)
   return buf;
 }
 
-#if LLONG_MAX != LONG_MAX
+#if _ITOA_NEEDED
 char *
 _fitoa (unsigned long long value, char *buf, unsigned int base, int upper_case)
 {
