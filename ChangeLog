@@ -1,5 +1,8 @@
 2012-05-17  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* sysdeps/unix/sysv/linux/pselect.c (data): Use __syscall_ulong_t
+	on both fields and cast pointer to __syscall_ulong_t.
+
 	* bits/types.h (__fsword_t): New type.
 	* bits/typesizes.h (__FSWORD_T_TYPE): New macro.
 	sysdeps/mach/hurd/bits/typesizes.h (__FSWORD_T_TYPE): Likewise.
