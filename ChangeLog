@@ -1,5 +1,7 @@
 2012-05-18  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* sysdeps/x86_64/x32/_itoa.h: New file.
+
 	* sysdeps/unix/sysv/linux/getdents.c (__GETDENTS): Use
 	getdents system call only if kernel and user dirents have the
 	same d_ino and d_off.
