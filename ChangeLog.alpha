@@ -1,3 +1,8 @@
+2012-05-18  Richard Henderson  <rth@twiddle.net>
+
+	* sysdeps/unix/sysv/linux/alpha/bits/typesizes.h (__FSWORD_T_TYPE,
+	__SYSCALL_SLONG_TYPE, __SYSCALL_ULONG_TYPE): New.
+
 2012-04-26  Matt Turner  <mattst88@gmail.com>
 
 	* sysdeps/unix/sysv/linux/alpha/kernel-features.h: Correct kernel
