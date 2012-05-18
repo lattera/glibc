@@ -82,14 +82,16 @@ struct user
   __extension__ unsigned long long int	start_stack;
   __extension__ long long int		signal;
   int				reserved;
-  struct user_regs_struct*	u_ar0;
-# ifdef __ILP32__
-  unsigned int			pad0;
-# endif
-  struct user_fpregs_struct*	u_fpstate;
-# ifdef __ILP32__
-  unsigned int			pad1;
-# endif
+  __extension__ union
+    {
+      struct user_regs_struct*	u_ar0;
+      __extension__ unsigned long long int	__u_ar0_word;
+    };
+  __extension__ union
+    {
+      struct user_fpregs_struct*	u_fpstate;
+      __extension__ unsigned long long int	__u_fpstate_word;
+    };
   __extension__ unsigned long long int	magic;
   char				u_comm [32];
   __extension__ unsigned long long int	u_debugreg [8];

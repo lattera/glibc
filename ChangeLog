@@ -1,3 +1,8 @@
+2012-05-18  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/unix/sysv/linux/x86_64/sys/user.h (user): Use
+	anonymous union.
+
 2012-05-18  Andreas Schwab  <schwab@linux-m68k.org>
 
 	* sysdeps/powerpc/powerpc32/dl-start.S (_dl_start_user): Use
