@@ -1,3 +1,24 @@
+2012-05-18  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/x86_64/fpu/bits/mathinline.h (lrintf): Make inline
+	function only available for GCCs before 3.4 since GCC 3.4
+	introduced a builtin.
+	(lrint): Likewise.
+	(llrintf): Likewise.
+	(llrint): Likewise.
+	(fmaxf): Likewise.
+	(fmax): Likewise.
+	(fminf): Likewise.
+	(fmin): Likewise.
+	(rint): Likewise.
+	(rintf): Likewise.
+	(nearbyint): Likewise.
+	(nearbyintf): Likewise.
+	(ceil): Likewise.
+	(ceilf): Likewise.
+	(floor): Likewise.
+	(floorf): Likewise.
+
 2012-05-17  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/unix/sysv/linux/pselect.c (data): Use __syscall_ulong_t

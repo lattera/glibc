@@ -1,5 +1,5 @@
 /* Inline math functions for x86-64.
-   Copyright (C) 2002-2004,2007,2009,2011,2012 Free Software Foundation, Inc.
+   Copyright (C) 2002-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -68,7 +68,10 @@ __END_NAMESPACE_C99
 #endif
 
 
-#if __GNUC_PREREQ (2, 8) && !defined __NO_MATH_INLINES && defined __OPTIMIZE__
+#if __GNUC_PREREQ (2, 8) && !__GNUC_PREREQ (3, 4) \
+    && !defined __NO_MATH_INLINES && defined __OPTIMIZE__
+/* GCC 3.4 introduced builtins for all functions below, so
+   there's no need to define any of these inline functions.  */
 
 # ifdef __USE_ISOC99
 __BEGIN_NAMESPACE_C99
