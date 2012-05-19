@@ -1,3 +1,7 @@
+2012-05-19  David S. Miller  <davem@davemloft.net>
+
+	* sysdeps/sparc/fpu/libm-test-ulps: Update.
+
 2012-05-19  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #14123]
