@@ -1,5 +1,8 @@
 2012-05-19  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* sysdeps/unix/sysv/linux/wordsize-64/preadv.c: New file.
+	* sysdeps/unix/sysv/linux/wordsize-64/pwritev.c: Likewise.
+
 	* sysdeps/x86_64/x32/_itoa.h: Add comment.
 
 2012-05-19  Joseph Myers  <joseph@codesourcery.com>
