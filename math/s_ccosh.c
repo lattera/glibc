@@ -1,5 +1,5 @@
 /* Complex cosine hyperbole function for double.
-   Copyright (C) 1997, 2011 Free Software Foundation, Inc.
+   Copyright (C) 1997-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -20,9 +20,8 @@
 #include <complex.h>
 #include <fenv.h>
 #include <math.h>
-
 #include <math_private.h>
-
+#include <float.h>
 
 __complex__ double
 __ccosh (__complex__ double x)
@@ -37,14 +36,44 @@ __ccosh (__complex__ double x)
       if (__builtin_expect (icls >= FP_ZERO, 1))
 	{
 	  /* Imaginary part is finite.  */
-	  double sinh_val = __ieee754_sinh (__real__ x);
-	  double cosh_val = __ieee754_cosh (__real__ x);
+	  const int t = (int) ((DBL_MAX_EXP - 1) * M_LN2);
 	  double sinix, cosix;
 
 	  __sincos (__imag__ x, &sinix, &cosix);
 
-	  __real__ retval = cosh_val * cosix;
-	  __imag__ retval = sinh_val * sinix;
+	  if (fabs (__real__ x) > t)
+	    {
+	      double exp_t = __ieee754_exp (t);
+	      double rx = fabs (__real__ x);
+	      if (signbit (__real__ x))
+		sinix = -sinix;
+	      rx -= t;
+	      sinix *= exp_t / 2.0;
+	      cosix *= exp_t / 2.0;
+	      if (rx > t)
+		{
+		  rx -= t;
+		  sinix *= exp_t;
+		  cosix *= exp_t;
+		}
+	      if (rx > t)
+		{
+		  /* Overflow (original real part of x > 3t).  */
+		  __real__ retval = DBL_MAX * cosix;
+		  __imag__ retval = DBL_MAX * sinix;
+		}
+	      else
+		{
+		  double exp_val = __ieee754_exp (rx);
+		  __real__ retval = exp_val * cosix;
+		  __imag__ retval = exp_val * sinix;
+		}
+	    }
+	  else
+	    {
+	      __real__ retval = __ieee754_cosh (__real__ x) * cosix;
+	      __imag__ retval = __ieee754_sinh (__real__ x) * sinix;
+	    }
 	}
       else
 	{

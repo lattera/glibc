@@ -1,5 +1,5 @@
 /* Complex sine function for long double.
-   Copyright (C) 1997, 2011 Free Software Foundation, Inc.
+   Copyright (C) 1997-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -20,9 +20,8 @@
 #include <complex.h>
 #include <fenv.h>
 #include <math.h>
-
 #include <math_private.h>
-
+#include <float.h>
 
 __complex__ long double
 __csinl (__complex__ long double x)
@@ -40,14 +39,44 @@ __csinl (__complex__ long double x)
       if (__builtin_expect (rcls >= FP_ZERO, 1))
 	{
 	  /* Real part is finite.  */
-	  long double sinh_val = __ieee754_sinhl (__imag__ x);
-	  long double cosh_val = __ieee754_coshl (__imag__ x);
+	  const int t = (int) ((LDBL_MAX_EXP - 1) * M_LN2l);
 	  long double sinix, cosix;
 
 	  __sincosl (__real__ x, &sinix, &cosix);
 
-	  __real__ retval = cosh_val * sinix;
-	  __imag__ retval = sinh_val * cosix;
+	  if (fabsl (__imag__ x) > t)
+	    {
+	      long double exp_t = __ieee754_expl (t);
+	      long double ix = fabsl (__imag__ x);
+	      if (signbit (__imag__ x))
+		cosix = -cosix;
+	      ix -= t;
+	      sinix *= exp_t / 2.0L;
+	      cosix *= exp_t / 2.0L;
+	      if (ix > t)
+		{
+		  ix -= t;
+		  sinix *= exp_t;
+		  cosix *= exp_t;
+		}
+	      if (ix > t)
+		{
+		  /* Overflow (original imaginary part of x > 3t).  */
+		  __real__ retval = LDBL_MAX * sinix;
+		  __imag__ retval = LDBL_MAX * cosix;
+		}
+	      else
+		{
+		  long double exp_val = __ieee754_expl (ix);
+		  __real__ retval = exp_val * sinix;
+		  __imag__ retval = exp_val * cosix;
+		}
+	    }
+	  else
+	    {
+	      __real__ retval = __ieee754_coshl (__imag__ x) * sinix;
+	      __imag__ retval = __ieee754_sinhl (__imag__ x) * cosix;
+	    }
 
 	  if (negate)
 	    __real__ retval = -__real__ retval;

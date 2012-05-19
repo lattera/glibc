@@ -1,5 +1,5 @@
 /* Complex sine function for float.
-   Copyright (C) 1997, 2011 Free Software Foundation, Inc.
+   Copyright (C) 1997-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -20,9 +20,8 @@
 #include <complex.h>
 #include <fenv.h>
 #include <math.h>
-
 #include <math_private.h>
-
+#include <float.h>
 
 __complex__ float
 __csinf (__complex__ float x)
@@ -40,14 +39,44 @@ __csinf (__complex__ float x)
       if (__builtin_expect (rcls >= FP_ZERO, 1))
 	{
 	  /* Real part is finite.  */
-	  float sinh_val = __ieee754_sinhf (__imag__ x);
-	  float cosh_val = __ieee754_coshf (__imag__ x);
+	  const int t = (int) ((FLT_MAX_EXP - 1) * M_LN2);
 	  float sinix, cosix;
 
 	  __sincosf (__real__ x, &sinix, &cosix);
 
-	  __real__ retval = cosh_val * sinix;
-	  __imag__ retval = sinh_val * cosix;
+	  if (fabsf (__imag__ x) > t)
+	    {
+	      float exp_t = __ieee754_expf (t);
+	      float ix = fabsf (__imag__ x);
+	      if (signbit (__imag__ x))
+		cosix = -cosix;
+	      ix -= t;
+	      sinix *= exp_t / 2.0f;
+	      cosix *= exp_t / 2.0f;
+	      if (ix > t)
+		{
+		  ix -= t;
+		  sinix *= exp_t;
+		  cosix *= exp_t;
+		}
+	      if (ix > t)
+		{
+		  /* Overflow (original imaginary part of x > 3t).  */
+		  __real__ retval = FLT_MAX * sinix;
+		  __imag__ retval = FLT_MAX * cosix;
+		}
+	      else
+		{
+		  float exp_val = __ieee754_expf (ix);
+		  __real__ retval = exp_val * sinix;
+		  __imag__ retval = exp_val * cosix;
+		}
+	    }
+	  else
+	    {
+	      __real__ retval = __ieee754_coshf (__imag__ x) * sinix;
+	      __imag__ retval = __ieee754_sinhf (__imag__ x) * cosix;
+	    }
 
 	  if (negate)
 	    __real__ retval = -__real__ retval;

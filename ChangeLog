@@ -1,3 +1,24 @@
+2012-05-19  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #14123]
+	* math/s_ccosh.c: Include <float.h>
+	(__ccosh): Avoid internal overflow calculating sinh and cosh
+	values before multiplying by sin and cos values.
+	* math/s_ccoshf.c: Likewise.
+	* math/s_ccoshl.c: Likewise.
+	* math/s_csin.c: Likewise.
+	* math/s_csinf.c: Likewise.
+	* math/s_csinl.c: Likewise.
+	* math/s_csinh.c: Likewise.
+	* math/s_csinhf.c: Likewise.
+	* math/s_csinhl.c: Likewise.
+	* math/libm-test.inc (ccos_test): Add more tests.
+	(ccosh_test): Likewise.
+	(csin_test): Likewise.
+	(csinh_test): Likewise.
+	* sysdeps/i386/fpu/libm-test-ulps: Update.
+	* sysdeps/x86_64/fpu/libm-test-ulps: Likewise.
+
 2012-05-19  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/unix/sysv/linux/wordsize-64/preadv.c: New file.
