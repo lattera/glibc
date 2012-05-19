@@ -1,4 +1,8 @@
 2012-05-18  Andreas Jaeger  <aj@suse.de>
+
+	* csu/.gitignore: Delete.
+
+2012-05-18  Andreas Jaeger  <aj@suse.de>
 	    Carlos O'Donell  <carlos_odonell@mentor.com>
 
 	* manual/install.texi (Configuring and compiling): Update
