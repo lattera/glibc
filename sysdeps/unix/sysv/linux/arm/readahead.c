@@ -1,5 +1,5 @@
 /* Provide kernel hint to read ahead.
-   Copyright (C) 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
+   Copyright (C) 2002-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -25,8 +25,6 @@
 #include <sys/syscall.h>
 
 
-#ifdef __NR_readahead
-
 ssize_t
 __readahead (int fd, off64_t offset, size_t count)
 {
@@ -35,16 +33,5 @@ __readahead (int fd, off64_t offset, size_t count)
 					   (off_t) (offset & 0xffffffff)),
 			 count);
 }
-#else
-ssize_t
-__readahead (int fd, off64_t offset, size_t count)
-{
-  __set_errno (ENOSYS);
-  return -1;
-}
-stub_warning (readahead)
-
-# include <stub-tag.h>
-#endif
 
 weak_alias (__readahead, readahead)

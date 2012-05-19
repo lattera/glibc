@@ -48,14 +48,9 @@ extern void __default_rt_sa_restorer_v2(void);
 #endif
 
 /* When RT signals are in use we need to use a different return stub.  */
-#ifdef __NR_rt_sigreturn
 #define choose_restorer(flags)					\
   (flags & SA_SIGINFO) ? __default_rt_sa_restorer		\
   : __default_sa_restorer
-#else
-#define choose_restorer(flags)					\
-  __default_sa_restorer
-#endif
 
 /* If ACT is not NULL, change the action for SIG to *ACT.
    If OACT is not NULL, put the old action for SIG in *OACT.  */

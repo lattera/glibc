@@ -1,4 +1,4 @@
-/* Copyright (C) 1999, 2005, 2009, 2010 Free Software Foundation, Inc.
+/* Copyright (C) 1999-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -88,8 +88,6 @@ ENTRY(__default_sa_restorer_v2)
 END(__default_sa_restorer_v2)
 #undef OFFSET
 
-#ifdef __NR_rt_sigreturn
-
 #ifndef __ASSUME_SIGFRAME_V2
 #define OFFSET 168
 	.fnstart
@@ -117,5 +115,3 @@ ENTRY(__default_rt_sa_restorer_v2)
 	.fnend
 END(__default_rt_sa_restorer_v2)
 #undef OFFSET
-
-#endif /* __NR_rt_sigreturn */

@@ -28,16 +28,6 @@
 
 #include <tls.h>
 
-#if __NR_SYSCALL_BASE != 0
-# error Kernel headers are too old
-#endif
-
-/* Don't use stime, even if the kernel headers define it.  We have
-   settimeofday, and some EABI kernels have removed stime.  Similarly
-   use setitimer to implement alarm.  */
-#undef __NR_stime
-#undef __NR_alarm
-
 /* In order to get __set_errno() definition in INLINE_SYSCALL.  */
 #ifndef __ASSEMBLER__
 #include <errno.h>
@@ -48,7 +38,6 @@
    of the kernel.  But these symbols do not follow the SYS_* syntax
    so we have to redefine the `SYS_ify' macro here.  */
 #undef SYS_ify
-#define SWI_BASE  (0x900000)
 #define SYS_ify(syscall_name)	(__NR_##syscall_name)
 
 

@@ -8,12 +8,3 @@
 #else
 #define __BYTE_ORDER __LITTLE_ENDIAN
 #endif
-
-/* FPA floating point units are always big-endian, irrespective of the
-   CPU endianness.  VFP floating point units use the same endianness
-   as the rest of the system.  */
-#ifdef __VFP_FP__
-#define __FLOAT_WORD_ORDER __BYTE_ORDER
-#else
-#define __FLOAT_WORD_ORDER __BIG_ENDIAN
-#endif

@@ -1,5 +1,23 @@
 2012-05-19  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/arm/bits/endian.h (__FLOAT_WORD_ORDER): Remove
+	definitions.
+	* sysdeps/arm/bits/huge_val.h: Remove file.
+	* sysdeps/arm/bits/string.h: Remove file.
+	* sysdeps/unix/sysv/linux/arm/readahead.c [__NR_readahead]: Make
+	code unconditional.
+	[!__NR_readahead]: Remove conditional code.
+	* sysdeps/unix/sysv/linux/arm/sigaction.c [__NR_rt_sigreturn]:
+	Make code unconditional.
+	[!__NR_rt_sigreturn]: Remove conditional code.
+	* sysdeps/unix/sysv/linux/arm/sigrestorer.S [__NR_rt_sigreturn]:
+	Make code unconditional.
+	* sysdeps/unix/sysv/linux/arm/sysdep.h [__NR_SYSCALL_BASE != 0]:
+	Remove conditional #error.
+	(__NR_stime): Remove #undef.
+	(__NR_alarm): Likewise.
+	(SWI_BASE): Remove.
+
 	* sysdeps/unix/sysv/linux/arm/ftruncate64.c (kernel-features.h):
 	Don't include.
 	[__NR_ftruncate64]: Make code unconditional.
