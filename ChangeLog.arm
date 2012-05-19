@@ -1,3 +1,31 @@
+2012-05-19  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/arm/ftruncate64.c (kernel-features.h):
+	Don't include.
+	[__NR_ftruncate64]: Make code unconditional.
+	[!__NR_ftruncate64]: Remove conditional code.
+	[!__ASSUME_TRUNCATE64_SYSCALL]: Likewise.
+	* sysdeps/unix/sysv/linux/arm/mmap.S (kernel-features.h): Don't
+	include.
+	[__ASSUME_MMAP2_SYSCALL]:
+	Make code unconditional.
+	[!__ASSUME_MMAP2_SYSCALL]: Remove conditional code.
+	* sysdeps/unix/sysv/linux/arm/posix_fadvise64.c
+	(kernel-features.h): Don't include.
+	[__NR_arm_fadvise64_64]: Make code unconditional.
+	[!__ASSUME_FADVISE64_64_SYSCALL]: Remove conditional code.
+	* sysdeps/unix/sysv/linux/arm/truncate64.c (kernel-features.h):
+	Don't include.
+	[__NR_truncate64]: Make code unconditional.
+	[!__NR_truncate64]: Remove conditional code.
+	[!__ASSUME_TRUNCATE64_SYSCALL]: Likewise.
+	* sysdeps/unix/sysv/linux/arm/vfork.S (kernel-features.h): Don't
+	include.
+	[__NR_vfork]: Make code unconditional.
+	[__ASSUME_VFORK_SYSCALL]: Likewise.
+	[!__ASSUME_VFORK_SYSCALL]: Remove conditional code.
+	[!__NR_vfork]: Likewise.
+
 2012-05-16  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/arm/kernel-features.h

@@ -19,7 +19,6 @@
 #include <sysdep.h>
 #define _ERRNO_H	1
 #include <bits/errno.h>
-#include <kernel-features.h>
 
 /* Clone the calling process, but without copying the whole address space.
    The calling process is suspended until the new process exits or is
@@ -27,8 +26,6 @@
    and the process ID of the new process to the old process.  */
 
 ENTRY (__vfork)
-
-#ifdef __NR_vfork
 #ifdef SAVE_PID
 	SAVE_PID
 #endif
@@ -56,25 +53,7 @@ ENTRY (__vfork)
 	cmn	a1, #4096
 	RETINSTR(cc, lr)
 
-# ifdef __ASSUME_VFORK_SYSCALL
 	b	PLTJMP(SYSCALL_ERROR)
-# else
-	/* Check if vfork syscall is known at all.  */
-	cmn	a1, #ENOSYS
-	bne	PLTJMP(SYSCALL_ERROR)
-# endif
-#endif
-
-#ifndef __ASSUME_VFORK_SYSCALL
-	/* If we don't have vfork, fork is close enough.  */
-	DO_CALL (fork, 0)
-	cmn	a1, #4096
-	RETINSTR(cc, lr)
-    	b	PLTJMP(SYSCALL_ERROR)
-#elif !defined __NR_vfork
-# error "__NR_vfork not available and __ASSUME_VFORK_SYSCALL defined"
-#endif
-
 PSEUDO_END (__vfork)
 libc_hidden_def (__vfork)
 

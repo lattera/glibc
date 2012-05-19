@@ -1,4 +1,4 @@
-/* Copyright (C) 2003, 2004, 2005 Free Software Foundation, Inc.
+/* Copyright (C) 2003-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -18,7 +18,6 @@
 #include <errno.h>
 #include <fcntl.h>
 #include <sysdep.h>
-#include <kernel-features.h>
 
 int __posix_fadvise64_l64 (int fd, off64_t offset, off64_t len, int advise);
 int __posix_fadvise64_l32 (int fd, off64_t offset, size_t len, int advise);
@@ -29,34 +28,13 @@ int __posix_fadvise64_l32 (int fd, off64_t offset, size_t len, int advise);
 int
 __posix_fadvise64_l64 (int fd, off64_t offset, off64_t len, int advise)
 {
-#ifdef __NR_arm_fadvise64_64
   INTERNAL_SYSCALL_DECL (err);
   int ret = INTERNAL_SYSCALL (arm_fadvise64_64, err, 6, fd, advise,
 			      __LONG_LONG_PAIR ((long)(offset >> 32), (long)offset),
 			      __LONG_LONG_PAIR ((long)(len >> 32), (long)len));
   if (!INTERNAL_SYSCALL_ERROR_P (ret, err))
     return 0;
-# ifndef __ASSUME_FADVISE64_64_SYSCALL
-  if (INTERNAL_SYSCALL_ERRNO (ret, err) != ENOSYS)
-# endif
-   return INTERNAL_SYSCALL_ERRNO (ret, err);
-#endif
-#ifndef __ASSUME_FADVISE64_64_SYSCALL
-# ifdef __NR_fadvise64
-  if (len != (off_t) len)
-    return EOVERFLOW;
-
-  INTERNAL_SYSCALL_DECL (err2);
-  int ret2 = INTERNAL_SYSCALL (fadvise64, err2, 6, fd, 0,
-			       __LONG_LONG_PAIR ((long)(offset >> 32), (long)offset),
-			       (off_t) len, advise);
-  if (!INTERNAL_SYSCALL_ERROR_P (ret2, err2))
-    return 0;
-  return INTERNAL_SYSCALL_ERRNO (ret2, err2);
-# else
-  return ENOSYS;
-# endif
-#endif
+  return INTERNAL_SYSCALL_ERRNO (ret, err);
 }
 
 #include <shlib-compat.h>

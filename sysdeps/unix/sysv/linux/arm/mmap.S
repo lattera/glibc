@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 2000, 2003, 2005, 2009 Free Software Foundation, Inc.
+/* Copyright (C) 1998-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,20 +16,12 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <sysdep.h>
-#include <kernel-features.h>
 
 #define	EINVAL		22
 
 	.text
 
 ENTRY (__mmap)
-# ifdef __ASSUME_MMAP2_SYSCALL
-	/* This code is actually a couple of cycles slower than the
-	   sys_mmap version below, so it might seem like a loss.  But the
-	   code path inside the kernel is sufficiently much shorter to
-	   make it a net gain to use mmap2 when it's known to be
-	   available.  */
-
 	/* shuffle args */
 	str	r5, [sp, #-4]!
 	cfi_adjust_cfa_offset (4)
@@ -66,38 +58,6 @@ ENTRY (__mmap)
 .Linval:
 	mov	r0, #-EINVAL
 	b	2b
-# else
-	/* Because we can only get five args through the syscall interface, and
-	   mmap() takes six, we need to build a parameter block and pass its
-	   address instead.  The 386 port does a similar trick.  */
-
-	/* This code previously moved sp into ip and stored the args using
-	   stmdb ip!, {a1-a4}.  It did not modify sp, so the stack never had
-	   to be restored after the syscall completed.  It saved an
-	   instruction and meant no stack cleanup work was required.
-
-	   This will not work in the case of a mmap call being interrupted
-	   by a signal.  If the signal handler uses any stack the arguments
-	   to mmap will be trashed.  The results of a restart of mmap are
-	   then unpredictable. */
-
-	/* store args on the stack */
-	stmdb	sp!, {a1-a4}
-	cfi_adjust_cfa_offset (16)
-
-	/* do the syscall */
-	mov	a1, sp
-	DO_CALL (mmap, 0)
-
-	/* pop args off the stack. */
-	add	sp, sp, #16
-	cfi_adjust_cfa_offset (-16)
-
-	cmn	r0, $4096
-	RETINSTR(cc, lr)
-	b	PLTJMP(syscall_error);
-#endif
-
 PSEUDO_END (__mmap)
 
 weak_alias (__mmap, mmap)
