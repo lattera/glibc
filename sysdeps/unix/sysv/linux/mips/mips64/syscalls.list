@@ -2,6 +2,9 @@
 
 lseek		-	lseek		Ci:iii	__libc_lseek	__lseek lseek __llseek llseek __libc_lseek64 __lseek64 lseek64
 
+ftruncate	-	ftruncate	i:ii	__ftruncate	ftruncate ftruncate64 __ftruncate64
+truncate	-	truncate	i:si	truncate	truncate64
+
 # Semaphore and shm system calls.  msgctl, shmctl, and semctl have C
 # wrappers (to set __IPC_64).
 msgget		-	msgget		i:ii	__msgget	msgget

@@ -2,8 +2,6 @@
 
 readahead	-	readahead	i:iii	__readahead	readahead
 sync_file_range	-	sync_file_range	Ci:iiii	sync_file_range
-ftruncate	-	ftruncate	i:ii	__ftruncate	ftruncate ftruncate64 __ftruncate64
-truncate	-	truncate	i:si	truncate	truncate64
 
 prlimit64	EXTRA	prlimit64	i:iipp	prlimit64
 
