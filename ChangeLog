@@ -1,3 +1,37 @@
+2012-05-19  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/powerpc/soft-fp/Makefile: Remove file.
+	* sysdeps/powerpc/soft-fp/Subdirs: Likewise.
+	* sysdeps/powerpc/soft-fp/Versions: Likewise.
+	* sysdeps/powerpc/soft-fp/q_add.c: Likewise.
+	* sysdeps/powerpc/soft-fp/q_cmp.c: Likewise.
+	* sysdeps/powerpc/soft-fp/q_cmpe.c: Likewise.
+	* sysdeps/powerpc/soft-fp/q_div.c: Likewise.
+	* sysdeps/powerpc/soft-fp/q_dtoq.c: Likewise.
+	* sysdeps/powerpc/soft-fp/q_feq.c: Likewise.
+	* sysdeps/powerpc/soft-fp/q_fge.c: Likewise.
+	* sysdeps/powerpc/soft-fp/q_fgt.c: Likewise.
+	* sysdeps/powerpc/soft-fp/q_fle.c: Likewise.
+	* sysdeps/powerpc/soft-fp/q_flt.c: Likewise.
+	* sysdeps/powerpc/soft-fp/q_fne.c: Likewise.
+	* sysdeps/powerpc/soft-fp/q_itoq.c: Likewise.
+	* sysdeps/powerpc/soft-fp/q_lltoq.c: Likewise.
+	* sysdeps/powerpc/soft-fp/q_mul.c: Likewise.
+	* sysdeps/powerpc/soft-fp/q_neg.c: Likewise.
+	* sysdeps/powerpc/soft-fp/q_qtod.c: Likewise.
+	* sysdeps/powerpc/soft-fp/q_qtoi.c: Likewise.
+	* sysdeps/powerpc/soft-fp/q_qtoll.c: Likewise.
+	* sysdeps/powerpc/soft-fp/q_qtos.c: Likewise.
+	* sysdeps/powerpc/soft-fp/q_qtou.c: Likewise.
+	* sysdeps/powerpc/soft-fp/q_qtoull.c: Likewise.
+	* sysdeps/powerpc/soft-fp/q_sqrt.c: Likewise.
+	* sysdeps/powerpc/soft-fp/q_stoq.c: Likewise.
+	* sysdeps/powerpc/soft-fp/q_sub.c: Likewise.
+	* sysdeps/powerpc/soft-fp/q_ulltoq.c: Likewise.
+	* sysdeps/powerpc/soft-fp/q_util.c: Likewise.
+	* sysdeps/powerpc/soft-fp/q_utoq.c: Likewise.
+	* sysdeps/powerpc/soft-fp/sfp-machine.h: Likewise.
+
 2012-05-18  Andreas Jaeger  <aj@suse.de>
 
 	* csu/.gitignore: Delete.
