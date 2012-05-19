@@ -1,4 +1,4 @@
-/* Copyright (C) 1995-1997,1999,2007,2009,2011 Free Software Foundation, Inc.
+/* Copyright (C) 1995-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -18,32 +18,33 @@
 #ifndef	_BITS_TIMEX_H
 #define	_BITS_TIMEX_H	1
 
+#include <bits/types.h>
+
 /* These definitions from linux/timex.h as of 2.6.30.  */
 
 struct timex
 {
-  unsigned int modes;	/* mode selector */
-  long int offset;	/* time offset (usec) */
-  long int freq;	/* frequency offset (scaled ppm) */
-  long int maxerror;	/* maximum error (usec) */
-  long int esterror;	/* estimated error (usec) */
-  int status;		/* clock command/status */
-  long int constant;	/* pll time constant */
-  long int precision;	/* clock precision (usec) (read only) */
-  long int tolerance;	/* clock frequency tolerance (ppm) (read only) */
-  struct timeval time;	/* (read only) */
-  long int tick;	/* (modified) usecs between clock ticks */
+  unsigned int modes;		/* mode selector */
+  __syscall_slong_t offset;	/* time offset (usec) */
+  __syscall_slong_t freq;	/* frequency offset (scaled ppm) */
+  __syscall_slong_t maxerror;	/* maximum error (usec) */
+  __syscall_slong_t esterror;	/* estimated error (usec) */
+  int status;			/* clock command/status */
+  __syscall_slong_t constant;	/* pll time constant */
+  __syscall_slong_t precision;	/* clock precision (usec) (ro) */
+  __syscall_slong_t tolerance;	/* clock frequency tolerance (ppm) (ro) */
+  struct timeval time;		/* (read only) */
+  __syscall_slong_t tick;	/* (modified) usecs between clock ticks */
+  __syscall_slong_t ppsfreq;	/* pps frequency (scaled ppm) (ro) */
+  __syscall_slong_t jitter;	/* pps jitter (us) (ro) */
+  int shift;			/* interval duration (s) (shift) (ro) */
+  __syscall_slong_t stabil;	/* pps stability (scaled ppm) (ro) */
+  __syscall_slong_t jitcnt;	/* jitter limit exceeded (ro) */
+  __syscall_slong_t calcnt;	/* calibration intervals (ro) */
+  __syscall_slong_t errcnt;	/* calibration errors (ro) */
+  __syscall_slong_t stbcnt;	/* stability limit exceeded (ro) */
 
-  long int ppsfreq;	/* pps frequency (scaled ppm) (ro) */
-  long int jitter;	/* pps jitter (us) (ro) */
-  int shift;		/* interval duration (s) (shift) (ro) */
-  long int stabil;	/* pps stability (scaled ppm) (ro) */
-  long int jitcnt;	/* jitter limit exceeded (ro) */
-  long int calcnt;	/* calibration intervals (ro) */
-  long int errcnt;	/* calibration errors (ro) */
-  long int stbcnt;	/* stability limit exceeded (ro) */
-
-  int tai;		/* TAI offset (ro) */
+  int tai;			/* TAI offset (ro) */
 
   /* ??? */
   int  :32; int  :32; int  :32; int  :32;

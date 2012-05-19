@@ -36,6 +36,11 @@
 
 	* csu/.gitignore: Delete.
 
+2012-05-18  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/unix/sysv/linux/bits/timex.h: Include <bits/types.h>.
+	(timex): Use __syscall_slong_t.
+
 2012-05-18  Andreas Jaeger  <aj@suse.de>
 	    Carlos O'Donell  <carlos_odonell@mentor.com>
 
