@@ -125,6 +125,7 @@ int _dl_debug_fd = STDERR_FILENO;
 
 int _dl_correct_cache_id = _DL_CACHE_DEFAULT_ID;
 
+ElfW(auxv_t) *_dl_auxv;
 ElfW(Phdr) *_dl_phdr;
 size_t _dl_phnum;
 uint64_t _dl_hwcap __attribute__ ((nocommon));
@@ -187,6 +188,7 @@ _dl_aux_init (ElfW(auxv_t) *av)
   uid_t uid = 0;
   gid_t gid = 0;
 
+  _dl_auxv = av;
   for (; av->a_type != AT_NULL; ++av)
     switch (av->a_type)
       {

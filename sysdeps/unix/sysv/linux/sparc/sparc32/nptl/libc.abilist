@@ -1753,6 +1753,7 @@ GLIBC_2.15
  scandirat64 F
 GLIBC_2.16
  GLIBC_2.16 A
+ __getauxval F
  __getshmlba F
  __poll_chk F
  __ppoll_chk F
@@ -1761,6 +1762,7 @@ GLIBC_2.16
  aligned_alloc F
  c16rtomb F
  c32rtomb F
+ getauxval F
  mbrtoc16 F
  mbrtoc32 F
  sys_errlist D 0x220

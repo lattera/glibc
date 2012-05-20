@@ -61,7 +61,6 @@ int __libc_multiple_libcs = 0;	/* Defining this here avoids the inclusion
 /* This variable contains the lowest stack address ever used.  */
 void *__libc_stack_end attribute_relro = NULL;
 rtld_hidden_data_def(__libc_stack_end)
-static ElfW(auxv_t) *_dl_auxv attribute_relro;
 void *_dl_random attribute_relro = NULL;
 
 #ifndef DL_FIND_ARG_COMPONENTS
@@ -111,12 +110,12 @@ _dl_sysdep_start (void **start_argptr,
 
   __libc_stack_end = DL_STACK_END (start_argptr);
   DL_FIND_ARG_COMPONENTS (start_argptr, _dl_argc, INTUSE(_dl_argv), _environ,
-			  _dl_auxv);
+			  GLRO(dl_auxv));
 
   user_entry = (ElfW(Addr)) ENTRY_POINT;
   GLRO(dl_platform) = NULL; /* Default to nothing known about the platform.  */
 
-  for (av = _dl_auxv; av->a_type != AT_NULL; set_seen (av++))
+  for (av = GLRO(dl_auxv); av->a_type != AT_NULL; set_seen (av++))
     switch (av->a_type)
       {
       case AT_PHDR:
@@ -240,7 +239,7 @@ _dl_sysdep_start (void **start_argptr,
   if (__builtin_expect (INTUSE(__libc_enable_secure), 0))
     __libc_check_standard_fds ();
 
-  (*dl_main) (phdr, phnum, &user_entry, _dl_auxv);
+  (*dl_main) (phdr, phnum, &user_entry, GLRO(dl_auxv));
   return user_entry;
 }
 
@@ -265,7 +264,7 @@ _dl_show_auxv (void)
      close by (otherwise the array will be too large).  In case we have
      to support a platform where these requirements are not fulfilled
      some alternative implementation has to be used.  */
-  for (av = _dl_auxv; av->a_type != AT_NULL; ++av)
+  for (av = GLRO(dl_auxv); av->a_type != AT_NULL; ++av)
     {
       static const struct
       {

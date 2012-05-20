@@ -146,4 +146,7 @@ libc {
   GLIBC_2.14 {
     syncfs;
   }
+  GLIBC_2.16 {
+    __getauxval; getauxval;
+  }
 }

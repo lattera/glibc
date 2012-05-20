@@ -1,3 +1,33 @@
+2012-05-20  Richard Henderson  <rth@twiddle.net>
+
+	* misc/getauxval.c: New file.
+	* misc/sys/auxv.h: New file.
+	* misc/Makefile (headers): Add sys/auxv.h, bits/hwcap.h.
+	(routines): Add getauxval.
+	* misc/Versions (GLIBC_2.16): Add __getauxval, getauxval.
+	* sysdeps/generic/ldsodefs.h (struct rtld_global_ro): Add _dl_auxv.
+	* elf/dl-sysdep.c (_dl_auxv): Remove.
+	(_dl_sysdep_start, _dl_show_auxv): Use GLRO to access _dl_auxv.
+	* elf/dl-support.c (_dl_auxv): New variable.
+	(_dl_aux_init): Initialize it.
+	* manual/startup.texi (Auxiliary Vector): New node.
+	* sysdeps/generic/bits/hwcap.h: New file.
+	* sysdeps/powerpc/bits/hwcap.h: New file, split out from ...
+	* sysdeps/powerpc/sysdep.h: ... here.  Include it.
+	* sysdeps/sparc/bits/hwcap.h: New file, split out from ...
+	* sysdeps/sparc/sysdep.h: ... here.  Include it.
+	* sysdeps/unix/sysv/linux/s390/bits/hwcap.h: New file.
+	* sysdeps/unix/sysv/linux/i386/nptl/libc.abilist: Update.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/fpu/nptl/libc.abilist: Update.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/nptl/libc.abilist: Update.
+	* sysdeps/unix/sysv/linux/s390/s390-32/nptl/libc.abilist: Update.
+	* sysdeps/unix/sysv/linux/s390/s390-64/nptl/libc.abilist: Update.
+	* sysdeps/unix/sysv/linux/sh/nptl/libc.abilist: Update.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/nptl/libc.abilist: Update.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/nptl/libc.abilist: Update.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/nptl/libc.abilist: Update.
+	* sysdeps/unix/sysv/linux/x86_64/64/nptl/libc.abilist: Update.
+
 2012-05-19  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/fpu/libm-test-ulps: Update.
