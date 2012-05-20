@@ -1,4 +1,21 @@
+2012-05-20  Richard Henderson  <rth@twiddle.net>
+
+	* sysdeps/alpha/add_n.S: Rename from add_n.s.
+	* sysdeps/alpha/addmul_1.S: Rename from addmul_1.s.
+	* sysdeps/alpha/alphaev5/add_n.S: Rename from add_n.s.
+	* sysdeps/alpha/alphaev5/lshift.S: Rename from lshift.s.
+	* sysdeps/alpha/alphaev5/rshift.S: Rename from rshift.s.
+	* sysdeps/alpha/alphaev5/sub_n.S: Rename from sub_n.s.
+	* sysdeps/alpha/alphaev6/addmul_1.S: Rename from addmul_1.s.
+	* sysdeps/alpha/lshift.S: Rename from lshift.s.
+	* sysdeps/alpha/mul_1.S: Rename from mul_1.s.
+	* sysdeps/alpha/rshift.S: Rename from rshift.s.
+	* sysdeps/alpha/sub_n.S: Rename from sub_n.s.
+	* sysdeps/alpha/submul_1.S: Rename from submul_1.s.
+
 2012-05-18  Richard Henderson  <rth@twiddle.net>
+
+	* data/localplt-alpha-linux-gnu.data: New file.
 
 	* sysdeps/unix/sysv/linux/alpha/bits/typesizes.h (__FSWORD_T_TYPE,
 	__SYSCALL_SLONG_TYPE, __SYSCALL_ULONG_TYPE): New.
