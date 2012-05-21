@@ -1,5 +1,8 @@
 2012-05-21  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/mips/bits/wordsize.h (__WORDSIZE_COMPAT32): Rename to
+	__WORDSIZE_TIME64_COMPAT32.
+
 	* sysdeps/unix/sysv/linux/mips/mips32/nptl/libc.abilist: Update.
 	* sysdeps/unix/sysv/linux/mips/mips64/n32/nptl/libc.abilist: Update.
 	* sysdeps/unix/sysv/linux/mips/mips64/n64/nptl/libc.abilist: Update.

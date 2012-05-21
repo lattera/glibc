@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2002-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,5 +17,5 @@
 
 #define __WORDSIZE	_MIPS_SZPTR
 #if _MIPS_SIM == _ABI64
-# define __WORDSIZE_COMPAT32	1
+# define __WORDSIZE_TIME64_COMPAT32	1
 #endif
