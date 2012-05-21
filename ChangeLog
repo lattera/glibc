@@ -4,6 +4,10 @@
 	* misc/sys/auxv.h: Include <sys/cdefs.h>.
 	(getauxval): Use unsigned long int.
 
+2012-05-21  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/unix/sysv/linux/x86_64/x32/syscalls.list: New file.
+
 2012-05-21  Roland McGrath  <roland@hack.frob.com>
 
 	* malloc/malloc.c [!SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_16)]

@@ -1,0 +1,6 @@
+# File name	Caller	Syscall name	# args	Strong name	Weak names
+
+fallocate	-	fallocate	Ci:iiii	fallocate	fallocate64
+posix_fadvise	-	fadvise64	Vi:iiii	posix_fadvise	posix_fadvise64
+preadv		-	preadv		Ci:ipii	preadv		preadv64
+pwritev		-	pwritev		Ci:ipii	pwritev		pwritev64
