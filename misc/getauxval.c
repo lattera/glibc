@@ -19,8 +19,8 @@
 #include <ldsodefs.h>
 
 
-unsigned long
-__getauxval (unsigned long type)
+unsigned long int
+__getauxval (unsigned long int type)
 {
   ElfW(auxv_t) *p;
 

@@ -20,14 +20,15 @@
 #define _SYS_AUXV_H 1
 
 #include <elf.h>
+#include <sys/cdefs.h>
 #include <bits/hwcap.h>
 
 __BEGIN_DECLS
 
 /* Return the value associated with an Elf*_auxv_t type from the auxv list
-   passed to the program on startup.  If __type was not present in the auxv
+   passed to the program on startup.  If TYPE was not present in the auxv
    list, returns zero.  */
-extern unsigned long getauxval (unsigned long __type)
+extern unsigned long int getauxval (unsigned long int __type)
   __THROW __attribute_const__;
 
 __END_DECLS

@@ -1,3 +1,9 @@
+2012-05-21  Richard Henderson  <rth@twiddle.net>
+
+	* misc/getauxval.c (__getauxval): Use unsigned long int.
+	* misc/sys/auxv.h: Include <sys/cdefs.h>.
+	(getauxval): Use unsigned long int.
+
 2012-05-21  Roland McGrath  <roland@hack.frob.com>
 
 	* malloc/malloc.c [!SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_16)]
