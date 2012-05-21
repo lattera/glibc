@@ -1,3 +1,10 @@
+2012-05-21  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/unix/sysv/linux/bits/statvfs.h (_STATVFSBUF_F_UNUSED):
+	Don't define if [__SYSCALL_WORDSIZE != 32].
+	* sysdeps/x86_64/bits/wordsize.h (__SYSCALL_WORDSIZE):
+	New macro.
+
 2012-05-21  Bruno Haible  <bruno@clisp.org>
 	    Andreas Jaeger  <aj@suse.de>
 

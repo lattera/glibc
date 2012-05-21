@@ -1,4 +1,4 @@
-/* Copyright (C) 1997,1998,2000,2001,2002,2006 Free Software Foundation, Inc.
+/* Copyright (C) 1997-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,7 +21,8 @@
 
 #include <bits/types.h>  /* For __fsblkcnt_t and __fsfilcnt_t.  */
 
-#if __WORDSIZE == 32
+#if (__WORDSIZE == 32 \
+     && (!defined __SYSCALL_WORDSIZE || __SYSCALL_WORDSIZE == 32))
 #define _STATVFSBUF_F_UNUSED
 #endif
 

@@ -6,3 +6,8 @@
 #else
 # define __WORDSIZE	32
 #endif
+
+#ifdef __x86_64__
+/* Both x86-64 and x32 use the 64-bit system call interface.  */
+# define __SYSCALL_WORDSIZE		64
+#endif
