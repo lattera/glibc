@@ -43,6 +43,7 @@
 
 #include <wchar.h>
 #include <libio/iolibio.h>
+#include <shlib-compat.h>
 
 struct proglst_
   {
@@ -121,7 +122,9 @@ __registerrpc (u_long prognum, u_long versnum, u_long procnum,
   free (buf);
   return -1;
 }
-compat_symbol (libc, __registerrpc, registerrpc, GLIBC_2_0);
+
+libc_sunrpc_symbol (__registerrpc, registerrpc, GLIBC_2_0)
+
 
 static void
 universal (struct svc_req *rqstp, SVCXPRT *transp_l)

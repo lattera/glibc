@@ -1,5 +1,9 @@
 2012-05-21  Andreas Jaeger  <aj@suse.de>
 
+	* include/shlib-compat.h (libc_sunrpc_symbol): New macro.
+	* sunrpc/svc_simple.c: Use it for registerrpc.
+	* sunrpc/xcrypt.c: Use it for passwd2des.
+
 	* malloc/malloc.c: Include shlib-compat.h for SHLIB_COMPAT.
 
 2012-05-21  H.J. Lu  <hongjiu.lu@intel.com>

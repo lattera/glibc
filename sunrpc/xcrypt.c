@@ -47,6 +47,7 @@ static char sccsid[] = "@(#)xcrypt.c 1.3 89/03/24 Copyr 1986 Sun Micro";
 #include <string.h>
 #include <sys/types.h>
 #include <rpc/des_crypt.h>
+#include <shlib-compat.h>
 
 static const char hex[16] =
 {
@@ -89,7 +90,7 @@ passwd2des_internal (char *pw, char *key)
 
 #ifdef _LIBC
 libc_hidden_def (passwd2des_internal)
-compat_symbol (libc, passwd2des_internal, passwd2des, GLIBC_2_1);
+libc_sunrpc_symbol(passwd2des_internal, passwd2des, GLIBC_2_1)
 #else
 void passwd2des (char *pw, char *key)
 {

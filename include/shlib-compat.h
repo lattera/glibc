@@ -91,4 +91,14 @@
 #endif
 
 
+# ifdef LINK_OBSOLETE_RPC
+/* Export the symbol for both static and dynamic linking.  */
+#  define libc_sunrpc_symbol(name, aliasname, version) \
+  strong_alias (name, aliasname)
+# else
+/* Export the symbol only for shared-library compatibility.  */
+#  define libc_sunrpc_symbol(name, aliasname, version) \
+  compat_symbol (libc, name, aliasname, version);
+# endif
+
 #endif	/* shlib-compat.h */
