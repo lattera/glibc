@@ -112,30 +112,32 @@
 
 # define ret_ERRVAL ret
 
-# ifndef PIC
-#  define SYSCALL_ERROR_HANDLER	/* Nothing here; code in sysdep.S is used.  */
-# elif RTLD_PRIVATE_ERRNO
-#  define SYSCALL_ERROR_HANDLER			\
-0:						\
-  leaq rtld_errno(%rip), %rcx;			\
+# if defined PIC && defined RTLD_PRIVATE_ERRNO
+#  define SYSCALL_SET_ERRNO			\
+  lea rtld_errno(%rip), %RCX_LP;		\
   xorl %edx, %edx;				\
-  subq %rax, %rdx;				\
-  movl %edx, (%rcx);				\
-  orq $-1, %rax;				\
-  jmp L(pseudo_end);
+  sub %RAX_LP, %RDX_LP;				\
+  movl %edx, (%rcx)
 # else
 #  ifndef NOT_IN_libc
 #   define SYSCALL_ERROR_ERRNO __libc_errno
 #  else
 #   define SYSCALL_ERROR_ERRNO errno
 #  endif
-#  define SYSCALL_ERROR_HANDLER			\
-0:						\
+#  define SYSCALL_SET_ERRNO			\
   movq SYSCALL_ERROR_ERRNO@GOTTPOFF(%rip), %rcx;\
   xorl %edx, %edx;				\
-  subq %rax, %rdx;				\
-  movl %edx, %fs:(%rcx);			\
-  orq $-1, %rax;				\
+  sub %RAX_LP, %RDX_LP;				\
+  movl %edx, %fs:(%rcx)
+# endif
+
+# ifndef PIC
+#  define SYSCALL_ERROR_HANDLER	/* Nothing here; code in sysdep.S is used.  */
+# else
+#  define SYSCALL_ERROR_HANDLER			\
+0:						\
+  SYSCALL_SET_ERRNO;				\
+  or $-1, %RAX_LP;				\
   jmp L(pseudo_end);
 # endif	/* PIC */
 
