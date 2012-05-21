@@ -1,3 +1,9 @@
+2012-05-19  Andreas Jaeger  <aj@suse.de>
+	    Roland McGrath  <roland@hack.frob.com>
+
+	* manual/contrib.texi: Completely rewritten. It contains now an
+	alphabetical list of contributors and their contributions.
+
 2012-05-21  Richard Henderson  <rth@twiddle.net>
 
 	* misc/getauxval.c (__getauxval): Use unsigned long int.
