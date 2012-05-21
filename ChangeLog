@@ -1,3 +1,9 @@
+2012-05-21  Joseph Myers  <joseph@codesourcery.com>
+
+	* configure.in (libc_cv_predef_stack_protector): Only consider
+	"foobar" and "__stack_chk_fail" lines in libc_undefs.
+	* configure: Regenerated.
+
 2012-05-21  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/unix/sysv/linux/x86_64/sysdep.h (SYSCALL_SET_ERRNO):
