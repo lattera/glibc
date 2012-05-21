@@ -1,3 +1,20 @@
+2012-05-21  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/gnu/bits/utmp.h (struct lastlog): Check
+	[__WORDSIZE_TIME64_COMPAT32] instead of
+	[__WORDSIZE == 64 && __WORDSIZE_COMPAT32].
+	(struct utmp): Likewise.
+	* sysdeps/gnu/bits/utmpx.h (struct utmpx): Likewise.
+	* sysdeps/powerpc/powerpc32/bits/wordsize.h (__WORDSIZE_COMPAT32):
+	Renamed to ...
+	(__WORDSIZE_TIME64_COMPAT32): This.
+	* sysdeps/powerpc/powerpc64/bits/wordsize.h: Likewise.
+	* sysdeps/sparc/sparc32/bits/wordsize.h: Likewise.
+	* sysdeps/sparc/sparc64/bits/wordsize.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/bits/wordsize.h: Likewise.
+	* sysdeps/x86_64/bits/wordsize.h (__WORDSIZE_COMPAT32): Removed.
+	(__WORDSIZE_TIME64_COMPAT32): New macro.
+
 2012-05-21  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/i386/i686/multiarch/wcschr-c.c: Redefine libc_hidden_def
