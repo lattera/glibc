@@ -1,3 +1,8 @@
+2012-05-21  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/i386/i686/multiarch/wcschr-c.c: Redefine libc_hidden_def
+	only if [SHARED]. Add prototype for __wcschr_ia32.
+
 2012-05-21  Roland McGrath  <roland@hack.frob.com>
 
 	* sysdeps/x86_64/setjmp.S [PTR_MANGLE] [__ILP32__]: Preserve high bits
