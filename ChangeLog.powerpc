@@ -1,5 +1,8 @@
 2012-05-21  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/nofpu/nptl/libm.abilist
+	(__fe_nomask_env): Remove.
+
 	* sysdeps/unix/sysv/linux/powerpc/powerpc32/nofpu/nptl/libc.abilist:
 	Update.
 

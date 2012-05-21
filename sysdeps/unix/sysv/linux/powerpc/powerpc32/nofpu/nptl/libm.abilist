@@ -163,7 +163,6 @@ GLIBC_2.1
  __clog10l F
  __fe_dfl_env D 0x8
  __fe_enabled_env D 0x8
- __fe_nomask_env F
  __fe_nonieee_env D 0x8
  __finite F
  __finitef F
