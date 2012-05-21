@@ -243,7 +243,7 @@ $(common-objpfx)sysd-rules: $(common-objpfx)config.make $(..)Makerules \
 	   /*) ;;							      \
 	   *) dir="\$$(..)$$dir" ;;					      \
 	   esac;							      \
-	   asm='.S .s';							      \
+	   asm='.S';							      \
 	   $(check-inhibit-asm)						      \
 	   for o in $(all-object-suffixes); do				      \
 	     set $(subst :, ,$(sysd-rules-patterns));			      \
