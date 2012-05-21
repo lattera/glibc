@@ -1,5 +1,5 @@
 /* Linux/ARM version of processor capability information handling macros.
-   Copyright (C) 2001, 2002, 2004, 2006 Free Software Foundation, Inc.
+   Copyright (C) 2001-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Philip Blundell <philb@gnu.org>, 2001.
 
@@ -23,7 +23,7 @@
 #include <ldsodefs.h>
 #include <sysdep.h>
 
-#define _DL_HWCAP_COUNT 15
+#define _DL_HWCAP_COUNT 19
 
 /* The kernel provides platform data but it is not interesting.  */
 #define _DL_HWCAP_PLATFORM 	0

@@ -40,23 +40,8 @@
 #undef SYS_ify
 #define SYS_ify(syscall_name)	(__NR_##syscall_name)
 
-
-/* The following must match the kernel's <asm/procinfo.h>.  */
-#define HWCAP_ARM_SWP		1
-#define HWCAP_ARM_HALF		2
-#define HWCAP_ARM_THUMB		4
-#define HWCAP_ARM_26BIT		8
-#define HWCAP_ARM_FAST_MULT	16
-#define HWCAP_ARM_FPA		32
-#define HWCAP_ARM_VFP		64
-#define HWCAP_ARM_EDSP		128
-#define HWCAP_ARM_JAVA		256
-#define HWCAP_ARM_IWMMXT	512
-#define HWCAP_ARM_CRUNCH	1024
-#define HWCAP_ARM_THUMBEE	2048
-#define HWCAP_ARM_NEON		4096
-#define HWCAP_ARM_VFPv3		8192
-#define HWCAP_ARM_VFPv3D16	16384
+#define _SYS_AUXV_H 1
+#include <bits/hwcap.h>
 
 #ifdef __ASSEMBLER__
 

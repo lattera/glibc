@@ -1,5 +1,5 @@
 /* Data for Linux/ARM version of processor capability information.
-   Copyright (C) 2001, 2002, 2003, 2006 Free Software Foundation, Inc.
+   Copyright (C) 2001-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Philip Blundell <philb@gnu.org>, 2001.
 
@@ -46,12 +46,13 @@
 #if !defined PROCINFO_DECL && defined SHARED
   ._dl_arm_cap_flags
 #else
-PROCINFO_CLASS const char _dl_arm_cap_flags[15][10]
+PROCINFO_CLASS const char _dl_arm_cap_flags[19][10]
 #endif
 #ifndef PROCINFO_DECL
 = {
     "swp", "half", "thumb", "26bit", "fastmult", "fpa", "vfp", "edsp",
     "java", "iwmmxt", "crunch", "thumbee", "neon", "vfpv3", "vfpv3d16",
+    "tls", "vfpv4", "idiva", "idivt",
   }
 #endif
 #if !defined SHARED || defined PROCINFO_DECL

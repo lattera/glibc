@@ -1,5 +1,32 @@
 2012-05-21  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/unix/sysv/linux/arm/bits/hwcap.h: New file.  Macros
+	taken from sysdeps/unix/sysv/linux/arm/sysdep.h.
+	(HWCAP_ARM_TLS): New macro.
+	(HWCAP_ARM_VFPv4): Likewise.
+	(HWCAP_ARM_IDIVA): Likewise.
+	(HWCAP_ARM_IDIVT): Likewise.
+	* sysdeps/unix/sysv/linux/arm/sysdep.h: Include <bits/hwcap.h>.
+	(HWCAP_ARM_SWP): Remove macro.  Moved to <bits/hwcap.h>.
+	(HWCAP_ARM_HALF): Likewise.
+	(HWCAP_ARM_THUMB): Likewise.
+	(HWCAP_ARM_26BIT): Likewise.
+	(HWCAP_ARM_FAST_MULT): Likewise.
+	(HWCAP_ARM_FPA): Likewise.
+	(HWCAP_ARM_VFP): Likewise.
+	(HWCAP_ARM_EDSP): Likewise.
+	(HWCAP_ARM_JAVA): Likewise.
+	(HWCAP_ARM_IWMMXT): Likewise.
+	(HWCAP_ARM_CRUNCH): Likewise.
+	(HWCAP_ARM_THUMBEE): Likewise.
+	(HWCAP_ARM_NEON): Likewise.
+	(HWCAP_ARM_VFPv3): Likewise.
+	(HWCAP_ARM_VFPv3D16): Likewise.
+	* sysdeps/unix/sysv/linux/arm/dl-procinfo.c (_dl_arm_cap_flags):
+	Add "tls", "vfpv4", "idiva" and "idivt".
+	* sysdeps/unix/sysv/linux/arm/dl-procinfo.h (_DL_HWCAP_COUNT):
+	Increase to 19.
+
 	* sysdeps/unix/sysv/linux/arm/nptl/libc.abilist: Update.
 
 2012-05-19  Joseph Myers  <joseph@codesourcery.com>
