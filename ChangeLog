@@ -1,3 +1,16 @@
+2012-05-21  Bruno Haible  <bruno@clisp.org>
+	    Andreas Jaeger  <aj@suse.de>
+
+	[BZ #13691], Revert breakage of iconv() converter for TCVN-5712.
+	* iconvdata/tcvn5712-1.c (BODY for FROM_LOOP): Don't consider
+	inptr and inend for must_buffer_ch.
+	* wcsmbs/tst-mbsnrtowcs.c: Remove file.
+	* wcsmbs/Makefile (tests): Remove tst-mbsnrtowcs.
+	* stdio-common/Makefile (tests): Remove bug15.
+	(bug15-ENV): Remove macro.
+	* stdio-common/bug15.c: Remove, we do not support vi_VN.TCVN5712-1
+	anymore.
+
 2012-05-19  Andreas Jaeger  <aj@suse.de>
 	    Roland McGrath  <roland@hack.frob.com>
 
