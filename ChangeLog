@@ -3,7 +3,8 @@
 	* sysdeps/unix/sysv/linux/x86_64/sysdep.h (SYSCALL_SET_ERRNO):
 	New macro.  Use R*LP on int and pointer.
 	(SYSCALL_ERROR_HANDLER): Use SYSCALL_SET_ERRNO.
-	* sysdeps/unix/sysv/linux/x86_64/x32/llseek.S: New file.
+	* sysdeps/unix/sysv/linux/x86_64/x32/lseek.S: New file.
+	* sysdeps/unix/sysv/linux/x86_64/x32/llseek.S: Likewise.
 	* sysdeps/unix/sysv/linux/x86_64/x32/sysdep.h: Likewise.
 
 	* sysdeps/gnu/bits/utmp.h (struct lastlog): Check
