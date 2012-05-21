@@ -1,3 +1,7 @@
+2012-05-21  Andreas Jaeger  <aj@suse.de>
+
+	* malloc/malloc.c: Include shlib-compat.h for SHLIB_COMPAT.
+
 2012-05-21  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/unix/sysv/linux/bits/statvfs.h (_STATVFSBUF_F_UNUSED):

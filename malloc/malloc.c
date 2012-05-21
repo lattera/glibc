@@ -228,6 +228,8 @@
 #include <stdio.h>    /* needed for malloc_stats */
 #include <errno.h>
 
+#include <shlib-compat.h>
+
 /* For uintptr_t.  */
 #include <stdint.h>
 
