@@ -12,6 +12,12 @@ ldouble: 1
 ildouble: 1
 
 # acos_downward
+Test "acos_downward (-0) == pi/2":
+float: 1
+ifloat: 1
+Test "acos_downward (0) == pi/2":
+float: 1
+ifloat: 1
 Test "acos_downward (-0.5) == M_PI_6l*4.0":
 double: 1
 idouble: 1
@@ -24,8 +30,17 @@ double: 1
 idouble: 1
 ldouble: 1
 ildouble: 1
+Test "acos_downward (-1) == pi":
+float: 1
+ifloat: 1
 
 # acos_towardzero
+Test "acos_towardzero (-0) == pi/2":
+float: 1
+ifloat: 1
+Test "acos_towardzero (0) == pi/2":
+float: 1
+ifloat: 1
 Test "acos_towardzero (-0.5) == M_PI_6l*4.0":
 double: 1
 idouble: 1
@@ -38,6 +53,9 @@ double: 1
 idouble: 1
 ldouble: 1
 ildouble: 1
+Test "acos_towardzero (-1) == pi":
+float: 1
+ifloat: 1
 
 # acos_upward
 Test "acos_upward (-0) == pi/2":
@@ -1412,6 +1430,11 @@ ildouble: 1
 ldouble: 1
 
 # exp10
+Test "exp10 (-305) == 1.0e-305":
+double: 1
+idouble: 1
+ldouble: 1
+ildouble: 1
 Test "exp10 (-1) == 0.1":
 double: 2
 float: 1
@@ -1426,13 +1449,19 @@ idouble: 1
 ifloat: 1
 ildouble: 1
 ldouble: 1
+Test "exp10 (-36) == 1.0e-36":
+double: 1
+idouble: 1
+Test "exp10 (36) == 1.0e36":
+double: 1
+idouble: 1
 Test "exp10 (3) == 1000":
-double: 6
-float: 2
-idouble: 6
-ifloat: 2
-ildouble: 8
-ldouble: 8
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
 
 # exp2
 Test "exp2 (10) == 1024":
@@ -1475,6 +1504,9 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
+Test "expm1 (500.0) == 1.4035922178528374107397703328409120821806e+217":
+double: 1
+idouble: 1
 
 # hypot
 Test "hypot (-0.7, -12.4) == 12.419742348374220601176836866763271":
@@ -2723,12 +2755,12 @@ ildouble: 1
 ldouble: 1
 
 Function: "exp10":
-double: 6
-float: 2
-idouble: 6
-ifloat: 2
-ildouble: 8
-ldouble: 8
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
 
 Function: "exp2":
 ildouble: 2
@@ -2761,6 +2793,8 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
+ldouble: 1
+ildouble: 1
 
 Function: "gamma":
 ildouble: 1

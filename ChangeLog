@@ -1,3 +1,7 @@
+2012-05-21  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/fpu/libm-test-ulps: Update.
+
 2012-05-20  Richard Henderson  <rth@twiddle.net>
 
 	* misc/getauxval.c: New file.
