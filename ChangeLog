@@ -1,3 +1,13 @@
+2012-05-22  Paul Pluzhnikov  <ppluzhnikov@google.com>
+
+	[BZ #14122]
+	* nss/nsswitch.c (defconfig_entries): New variable.
+	(__nss_database_lookup): Don't leak defconfig entries.
+	(nss_parse_service_list): Don't leak on error paths.
+	(free_database_entries): New function.
+	(free_defconfig): New function.
+	(free_mem): Move common code to free_database_entries.
+
 2012-05-22  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/unix/sysv/linux/x86_64/x32/Makefile (sysdep_routines):
