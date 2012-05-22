@@ -16,7 +16,7 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include "math_private.h"
+#include <math_ldbl_opt.h>
 
 /* This implementation avoids FP to INT conversions by using VSX
    bitwise instructions over FP values.  */
@@ -66,10 +66,12 @@ __logb (double x)
   /* Test to avoid logb_downward (0.0) == -0.0.  */
   return ret == -0.0 ? 0.0 : ret;
 }
-
 weak_alias (__logb, logb)
-
 #ifdef NO_LONG_DOUBLE
 strong_alias (__logb, __logbl)
 weak_alias (__logb, logbl)
+#endif
+
+#if LONG_DOUBLE_COMPAT (libm, GLIBC_2_0)
+compat_symbol (libm, logb, logbl, GLIBC_2_0);
 #endif

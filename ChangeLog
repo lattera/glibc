@@ -1,3 +1,14 @@
+2012-05-22  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/powerpc32/power6/fpu/s_copysign.S: Add compat symbol
+	copysignl for GLIBC_2_0.
+	* sysdeps/powerpc/powerpc32/power7/fpu/s_finite.S: Add compat symbol
+	finitel for GLIBC_2.0 and __finitel for GLIBC_2_1.
+	* sysdeps/powerpc/powerpc32/power7/fpu/s_logb.c: Add compat symbol
+	logbl for GLIBC_2_0.
+	* sysdeps/powerpc/powerpc64/power6/fpu/s_copysign.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power7/fpu/s_finite.S: Likewise.
+
 2012-05-22  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/unix/sysv/linux/x86_64/bits/fcntl.h: Don't include

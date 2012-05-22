@@ -47,9 +47,12 @@ strong_alias (__copysign, __copysignl)
 weak_alias (__copysign, copysignl)
 #endif
 
-#ifndef IS_IN_libm
-# if LONG_DOUBLE_COMPAT(libc, GLIBC_2_0)
-compat_symbol (libc, __copysign, __copysignl, GLIBC_2_0);
+#ifdef IS_IN_libm
+# if LONG_DOUBLE_COMPAT (libm, GLIBC_2_0)
+compat_symbol (libm, copysign, copysignl, GLIBC_2_0)
+# endif
+#else
+# if LONG_DOUBLE_COMPAT (libc, GLIBC_2_0)
 compat_symbol (libc, copysign, copysignl, GLIBC_2_0);
 # endif
 #endif
