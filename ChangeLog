@@ -1,5 +1,8 @@
 2012-05-22  Paul Eggert  <eggert@cs.ucla.edu>
 
+	mktime: merge time_r change from gnulib
+	* time/mktime.c [!_LIBC]: Do not include "time_r.h".
+
 	mktime: merge DEBUG change from gnulib
 	* time/mktime.c (mktime) [DEBUG]: #undef before #define-ing, in
 	case system <time.h> has a #define.

@@ -141,11 +141,10 @@ const unsigned short int __mon_yday[2][13] =
 
 
 #ifndef _LIBC
-/* Portable standalone applications should supply a "time_r.h" that
+/* Portable standalone applications should supply a <time.h> that
    declares a POSIX-compliant localtime_r, for the benefit of older
    implementations that lack localtime_r or have a nonstandard one.
    See the gnulib time_r module for one way to implement this.  */
-# include "time_r.h"
 # undef __localtime_r
 # define __localtime_r localtime_r
 # define __mktime_internal mktime_internal
