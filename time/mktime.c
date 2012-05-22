@@ -662,6 +662,6 @@ main (int argc, char **argv)
 
 /*
 Local Variables:
-compile-command: "gcc -DDEBUG -Wall -W -O -g mktime.c -o mktime"
+compile-command: "gcc -DDEBUG -I. -Wall -W -O2 -g mktime.c -o mktime"
 End:
 */

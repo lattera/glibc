@@ -1,5 +1,7 @@
 2012-05-22  Paul Eggert  <eggert@cs.ucla.edu>
 
+	* time/mktime.c (compile-command): Add "-I.".
+
 	mktime: merge mktime-internal.h change from gnulib
 	* time/mktime.c [!_LIBC]: Include "mktime-internal.h".
 
