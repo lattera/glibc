@@ -21,7 +21,7 @@
    mktime.  */
 /* #define DEBUG 1 */
 
-#ifdef HAVE_CONFIG_H
+#ifndef _LIBC
 # include <config.h>
 #endif
 
