@@ -1,3 +1,16 @@
+2012-05-22  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/unix/sysv/linux/wordsize-64/posix_fallocate.c
+	(posix_fallocate): Use INTERNAL_SYSCALL_TYPES if it is defined.
+	* sysdeps/unix/sysv/linux/x86_64/sysdep.h (INLINE_SYSCALL_TYPES):
+	New macro.
+	(INTERNAL_SYSCALL_NCS_TYPES): Likewise.
+	(INTERNAL_SYSCALL_TYPES): Likewise.
+	(LOAD_ARGS_TYPES_[1-6]): Likewise.
+	(LOAD_REGS_TYPES_[1-6]): Likewise.
+	(LOAD_ARGS_[1-6]): Use LOAD_ARGS_TYPES_[1-6].
+	(LOAD_REGS_[1-6]): Use LOAD_REGS_TYPES_[1-6].
+
 2012-05-22  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/powerpc32/power6/fpu/s_copysign.S: Add compat symbol

@@ -38,7 +38,13 @@ posix_fallocate (int fd, __off_t offset, __off_t len)
 # endif
     {
       INTERNAL_SYSCALL_DECL (err);
+# ifdef INTERNAL_SYSCALL_TYPES
+      int res = INTERNAL_SYSCALL_TYPES (fallocate, err, 4, int, fd,
+					int, 0, off_t, offset,
+					off_t, len);
+# else
       int res = INTERNAL_SYSCALL (fallocate, err, 4, fd, 0, offset, len);
+# endif
 
       if (! INTERNAL_SYSCALL_ERROR_P (res, err))
 	return 0;
