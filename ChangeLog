@@ -1,5 +1,12 @@
 2012-05-22  Paul Eggert  <eggert@cs.ucla.edu>
 
+	mktime: merge comment-quoting-style change from gnulib
+	* time/mktime.c: Quote 'like this' in comments.
+	The GNU coding standards suggest that we no longer quote `like this',
+	as "`" and "'" are typically rendered asymmetrically nowadays.
+	The typical gnulib style is to quote 'like this' when quoting
+	code, and "like this" when quoting English.
+
 	* time/mktime.c (compile-command): Add "-I.".
 
 	mktime: merge mktime-internal.h change from gnulib
