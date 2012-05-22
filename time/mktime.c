@@ -42,6 +42,7 @@
 # include <stdio.h>
 # include <stdlib.h>
 /* Make it work even if the system's libc has its own mktime routine.  */
+# undef mktime
 # define mktime my_mktime
 #endif /* DEBUG */
 

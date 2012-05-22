@@ -1,5 +1,9 @@
 2012-05-22  Paul Eggert  <eggert@cs.ucla.edu>
 
+	mktime: merge DEBUG change from gnulib
+	* time/mktime.c (mktime) [DEBUG]: #undef before #define-ing, in
+	case system <time.h> has a #define.
+
 	mktime: merge <sys/types.h> change from gnulib
 	* time/mktime.c: Do not include <sys/types.h>; no longer needed,
 	since <time.t> is now guaranteed to define time_t.
