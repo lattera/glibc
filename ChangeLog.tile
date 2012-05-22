@@ -1,5 +1,7 @@
 2012-05-22  Chris Metcalf  <cmetcalf@tilera.com>
 
+	* sysdeps/tile/bits/libm-test-ulps: Update.
+
 	* sysdeps/tile/bits/wordsize.h (__WORDSIZE_COMPAT32): Rename to
 	__WORDSIZE_TIME64_COMPAT32.
 
