@@ -1,5 +1,8 @@
 2012-05-22  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* sysdeps/unix/sysv/linux/x86_64/sysdep.h (SYSCALL_SET_ERRNO):
+	Use "neg %eax".
+
 	* sysdeps/unix/sysv/linux/bits/resource.h (RLIM_INFINITY): Use
 	__rlim_t cast.
 	(struct rusage): Use anonymous union to pad each field to

@@ -115,9 +115,8 @@
 # if defined PIC && defined RTLD_PRIVATE_ERRNO
 #  define SYSCALL_SET_ERRNO			\
   lea rtld_errno(%rip), %RCX_LP;		\
-  xorl %edx, %edx;				\
-  sub %RAX_LP, %RDX_LP;				\
-  movl %edx, (%rcx)
+  neg %eax;					\
+  movl %eax, (%rcx)
 # else
 #  ifndef NOT_IN_libc
 #   define SYSCALL_ERROR_ERRNO __libc_errno
@@ -126,9 +125,8 @@
 #  endif
 #  define SYSCALL_SET_ERRNO			\
   movq SYSCALL_ERROR_ERRNO@GOTTPOFF(%rip), %rcx;\
-  xorl %edx, %edx;				\
-  sub %RAX_LP, %RDX_LP;				\
-  movl %edx, %fs:(%rcx)
+  neg %eax;					\
+  movl %eax, %fs:(%rcx);
 # endif
 
 # ifndef PIC
