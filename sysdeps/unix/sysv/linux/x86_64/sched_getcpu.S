@@ -1,4 +1,4 @@
-/* Copyright (C) 2007, 2011 Free Software Foundation, Inc.
+/* Copyright (C) 2007-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -59,13 +59,17 @@ ENTRY (sched_getcpu)
 # endif
 #endif
 
+	/* Local variable is result if the call is successful.  */
+	movl	(%rsp), %edx
+	/* Restore stack pointer before we might jump to
+	SYSCALL_ERROR_LABEL which returns to the caller.  */
+	add	$0x8, %rsp
+	cfi_adjust_cfa_offset(-8)
+
 	cmpq	$-4095, %rax
 	jae	SYSCALL_ERROR_LABEL
 
-	movl	(%rsp), %eax
-
+	movl	%edx, %eax
 L(pseudo_end):
-	add	$0x8, %rsp
-	cfi_adjust_cfa_offset(-8)
 	ret
 PSEUDO_END(sched_getcpu)
