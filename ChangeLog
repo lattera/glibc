@@ -1,5 +1,8 @@
 2012-05-22  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* sysdeps/unix/sysv/linux/x86_64/bits/fcntl.h: Don't include
+	<bits/wordsize.h>.  Check __x86_64__ instead of __WORDSIZE.
+
 	* sysdeps/unix/sysv/linux/i386/sysdep.h (SYSCALL_ERROR_HANDLER):
 	Use "neg %eax".
 
