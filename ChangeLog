@@ -1,3 +1,7 @@
+2012-05-22  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* time/mktime.c: Update copyright years.
+
 2012-05-22  Paul Eggert  <eggert@cs.ucla.edu>
 
 	mktime: merge comment-quoting-style change from gnulib
