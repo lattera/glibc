@@ -720,6 +720,10 @@ CFLAGS-.op = -pg
 libtype.op = lib%_p.a
 endif
 
+# Convenience variable for when we want to treat shared-library cases
+# differently from the rest.
+object-suffixes-noshared := $(filter-out .os,$(object-suffixes))
+
 bppfx = BP-
 ifeq (yes,$(build-bounded))
 # Under --enable-bounded, we build the library with `-fbounded-pointers -g'

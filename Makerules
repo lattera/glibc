@@ -366,6 +366,7 @@ compile.c = $(CC) $< -c $(CFLAGS) $(CPPFLAGS)
 compile.cc = $(CXX) $< -c $(CXXFLAGS) $(CPPFLAGS)
 compile.S = $(CC) $< -c $(CPPFLAGS) $(S-CPPFLAGS) \
 		  $(ASFLAGS) $(ASFLAGS-$(suffix $@))
+COMPILE.c = $(CC) -c $(CFLAGS) $(CPPFLAGS)
 COMPILE.S = $(CC) -c $(CPPFLAGS) $(S-CPPFLAGS) \
 		  $(ASFLAGS) $(ASFLAGS-$(suffix $@))
 
@@ -373,6 +374,9 @@ COMPILE.S = $(CC) -c $(CPPFLAGS) $(S-CPPFLAGS) \
 # empty if make was configured to work with a cc that can't grok -c and -o
 # together.  You can't compile the C library with such a compiler.
 OUTPUT_OPTION = -o $@
+
+# This is the end of the pipeline for compiling generated C code.
+compile-stdin.c = $(COMPILE.c) -o $@ -x c - $(compile-mkdep-flags)
 
 # We need the $(CFLAGS) to be in there to have the right predefines during
 # the dependency run for C sources.  But having it for assembly sources can

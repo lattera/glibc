@@ -1,5 +1,18 @@
 2012-05-24  Roland McGrath  <roland@hack.frob.com>
 
+	* sysdeps/unix/sysv/linux/x86_64/x32/syscalls.list: New file.
+
+	* sysdeps/unix/make-syscalls.sh: Support "syscall:vdso_name@VDSOVER"
+	in the third column, to generate for the shared library an IFUNC
+	that uses _dl_vdso_vsym.
+	* Makerules (COMPILE.c, compile-stdin.c): New variables.
+	* Makeconfig (object-suffixes-noshared): New variable.
+
+	* sysdeps/unix/sysv/linux/dl-vdso.h (PREPARE_VERSION_KNOWN): New macro.
+	(VDSO_NAME_LINUX_2_6, VDSO_HASH_LINUX_2_6): New macros.
+	(VDSO_NAME_LINUX_2_6_15, VDSO_HASH_LINUX_2_6_15): New macros.
+	(VDSO_NAME_LINUX_2_6_29, VDSO_HASH_LINUX_2_6_29): New macros.
+
 	[BZ #14132]
 	* include/sys/time.h (__gettimeofday): Remove macro.
 	(__gettimeofday, gettimeofday): Add libc_hidden_proto.

@@ -1,6 +1,8 @@
 # File name	Caller	Syscall name	# args	Strong name	Weak names
 
 fallocate	-	fallocate	Ci:iiii	fallocate	fallocate64
+gettimeofday	-	gettimeofday:__vdso_gettimeofday@LINUX_2.6	i:pP	__gettimeofday	gettimeofday
 posix_fadvise	-	fadvise64	Vi:iiii	posix_fadvise	posix_fadvise64
 preadv		-	preadv		Ci:ipii	preadv		preadv64
 pwritev		-	pwritev		Ci:ipii	pwritev		pwritev64
+time		-	time:__vdso_time@LINUX_2.6			Ei:P	time

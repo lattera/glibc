@@ -64,9 +64,66 @@ done`
 # Any calls left?
 test -n "$calls" || exit 0
 
+# This uses variables $weak and $strong.
+emit_weak_aliases()
+{
+  # A shortcoming in the current gas is that it will only allow one
+  # version-alias per symbol.  So we create new strong aliases as needed.
+  vcount=""
+
+  for name in $weak; do
+    case $name in
+      *@@*)
+	base=`echo $name | sed 's/@@.*//'`
+	ver=`echo $name | sed 's/.*@@//'`
+	if test -z "$vcount" ; then
+	  source=$strong
+	  vcount=1
+	else
+	  source="${strong}_${vcount}"
+	  vcount=`expr $vcount + 1`
+	  echo "	 echo 'strong_alias ($strong, $source)'; \\"
+	fi
+	echo "	 echo 'default_symbol_version($source, $base, $ver)'; \\"
+	;;
+      *@*)
+	base=`echo $name | sed 's/@.*//'`
+	ver=`echo $name | sed 's/.*@//'`
+	if test -z "$vcount" ; then
+	  source=$strong
+	  vcount=1
+	else
+	  source="${strong}_${vcount}"
+	  vcount=`expr $vcount + 1`
+	  echo "	 echo 'strong_alias ($strong, $source)'; \\"
+	fi
+	echo "	 echo 'symbol_version ($source, $base, $ver)'; \\"
+	;;
+      !*)
+	name=`echo $name | sed 's/.//'`
+	echo "	 echo 'strong_alias ($strong, $name)'; \\"
+	echo "	 echo 'libc_hidden_def ($name)'; \\"
+	;;
+      *)
+	echo "	 echo 'weak_alias ($strong, $name)'; \\"
+	echo "	 echo 'libc_hidden_weak ($name)'; \\"
+	;;
+    esac
+  done
+}
+
+
 # Emit rules to compile the syscalls remaining in $calls.
 echo "$calls" |
 while read file srcfile caller syscall args strong weak; do
+
+  vdso_syscall=
+  case x"$syscall" in
+  *:*@*)
+    vdso_syscall="${syscall#*:}"
+    syscall="${syscall%:*}"
+    ;;
+  esac
 
   case x"$syscall" in
   x-) callnum=_ ;;
@@ -144,13 +201,14 @@ while read file srcfile caller syscall args strong weak; do
   # Emit a compilation rule for this syscall.
   if test $shared_only = t; then
     # The versioned symbols are only in the shared library.
-    echo "\
-shared-only-routines += $file
-\$(objpfx)${file}.os: \\"
+    echo "shared-only-routines += $file"
+    test -n "$vdso_syscall" || echo "\$(objpfx)${file}.os: \\"
   else
+    object_suffixes='$(object-suffixes)'
+    test -z "$vdso_syscall" || object_suffixes='$(object-suffixes-noshared)'
     echo "\
 \$(foreach p,\$(sysd-rules-targets),\
-\$(foreach o,\$(object-suffixes),\$(objpfx)\$(patsubst %,\$p,$file)\$o)): \\"
+\$(foreach o,${object_suffixes},\$(objpfx)\$(patsubst %,\$p,$file)\$o)): \\"
   fi
 
   echo "		\$(..)sysdeps/unix/make-syscalls.sh"
@@ -178,54 +236,42 @@ shared-only-routines += $file
   esac
 
   # Append any weak aliases or versions defined for this syscall function.
-
-  # A shortcoming in the current gas is that it will only allow one
-  # version-alias per symbol.  So we create new strong aliases as needed.
-  vcount=""
-
-  for name in $weak; do
-    case $name in
-      *@@*)
-	base=`echo $name | sed 's/@@.*//'`
-	ver=`echo $name | sed 's/.*@@//'`
-	if test -z "$vcount" ; then
-	  source=$strong
-	  vcount=1
-	else
-	  source="${strong}_${vcount}"
-	  vcount=`expr $vcount + 1`
-	  echo "	 echo 'strong_alias ($strong, $source)'; \\"
-	fi
-	echo "	 echo 'default_symbol_version($source, $base, $ver)'; \\"
-	;;
-      *@*)
-	base=`echo $name | sed 's/@.*//'`
-	ver=`echo $name | sed 's/.*@//'`
-	if test -z "$vcount" ; then
-	  source=$strong
-	  vcount=1
-	else
-	  source="${strong}_${vcount}"
-	  vcount=`expr $vcount + 1`
-	  echo "	 echo 'strong_alias ($strong, $source)'; \\"
-	fi
-	echo "	 echo 'symbol_version ($source, $base, $ver)'; \\"
-	;;
-      !*)
-	name=`echo $name | sed 's/.//'`
-	echo "	 echo 'strong_alias ($strong, $name)'; \\"
-	echo "	 echo 'libc_hidden_def ($name)'; \\"
-	;;
-      *)
-	echo "	 echo 'weak_alias ($strong, $name)'; \\"
-	echo "	 echo 'libc_hidden_weak ($name)'; \\"
-	;;
-    esac
-  done
+  emit_weak_aliases
 
   # And finally, pipe this all into the compiler.
   echo '	) | $(compile-syscall) '"\
 \$(foreach p,\$(patsubst %$file,%,\$(basename \$(@F))),\$(\$(p)CPPFLAGS))"
+
+  if test -n "$vdso_syscall"; then
+    # In the shared library, we're going to emit an IFUNC using a vDSO function.
+    # $vdso_syscall looks like "name@KERNEL_X.Y" where "name" is the symbol
+    # name in the vDSO and KERNEL_X.Y is its symbol version.
+    vdso_symbol="${vdso_syscall%@*}"
+    vdso_symver="${vdso_syscall#*@}"
+    vdso_symver="${vdso_symver//./_}"
+    echo "\
+\$(foreach p,\$(sysd-rules-targets),\$(objpfx)\$(patsubst %,\$p,$file).os): \\
+		\$(..)sysdeps/unix/make-syscalls.sh\
+	\$(make-target-directory)
+	(echo '#include <dl-vdso.h>'; \\
+	 echo 'extern void *${strong}_ifunc (void) __asm (\"${strong}\");'; \\
+	 echo 'void *'; \\
+	 echo '${strong}_ifunc (void)'; \\
+	 echo '{'; \\
+	 echo '  PREPARE_VERSION_KNOWN (symver, ${vdso_symver});'; \\
+	 echo '  return _dl_vdso_vsym (\"${vdso_symbol}\", &symver);'; \\
+	 echo '}'; \\
+	 echo 'asm (\".type ${strong}, %gnu_indirect_function\");'; \\"
+    # This is doing "libc_hidden_def (${strong})", but the compiler
+    # doesn't know that we've defined ${strong} in the same file, so
+    # we can't do it the normal way.
+    echo "\
+	 echo 'asm (\".globl __GI_${strong}\\n\"'; \\
+	 echo '     \"__GI_${strong} = ${strong}\");'; \\"
+    emit_weak_aliases
+    echo '	) | $(compile-stdin.c) '"\
+\$(foreach p,\$(patsubst %$file,%,\$(basename \$(@F))),\$(\$(p)CPPFLAGS))"
+  fi
 
   if test $shared_only = t; then
     # The versioned symbols are only in the shared library.
