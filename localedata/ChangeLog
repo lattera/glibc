@@ -1,3 +1,9 @@
+2012-04-20  Chandan Kumar  <chandankumar.093047@gmail.com>
+
+	[BZ#13968]
+	* locales/mag_IN: New file.
+	* SUPPORTED (SUPPORTED-LOCALES): Add appropriate entry.
+
 2012-05-21  Bruno Haible  <bruno@clisp.org>
 	    Andreas Jaeger  <aj@suse.de>
 
