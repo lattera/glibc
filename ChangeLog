@@ -1,3 +1,14 @@
+2012-05-22  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/unix/sysv/linux/Makefile: Include
+	$(firstword $(wildcard $(sysdirs:=/sysctl.mk))).
+	(sysdep_routines): Replace sysctl with $(sysctl).
+	* sysdeps/unix/sysv/linux/bits/sysctl.h: New file.
+	* sysdeps/unix/sysv/linux/sysctl.mk: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/bits/sysctl.h: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/x32/sysctl.mk: Likewise.
+	* sysdeps/unix/sysv/linux/sys/sysctl.h: Include <bits/sysctl.h>.
+
 2012-05-22  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/x86_64/sched_getcpu.S: Rearrange code so

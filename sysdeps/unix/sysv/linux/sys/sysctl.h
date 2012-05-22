@@ -60,6 +60,8 @@
 # undef __undef__LINUX_COMPILER_H
 #endif
 
+#include <bits/sysctl.h>
+
 __BEGIN_DECLS
 
 /* Read or write system parameters.  */
