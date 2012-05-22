@@ -1,5 +1,9 @@
 2012-05-22  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* sysdeps/unix/sysv/linux/x86_64/x32/Makefile (sysdep_routines):
+	Add arch_prctl.
+	* sysdeps/unix/sysv/linux/x86_64/x32/arch_prctl.c: New file.
+
 	* sysdeps/unix/sysv/linux/wordsize-64/posix_fallocate.c
 	(posix_fallocate): Use INTERNAL_SYSCALL_TYPES if it is defined.
 	* sysdeps/unix/sysv/linux/x86_64/sysdep.h (INLINE_SYSCALL_TYPES):
