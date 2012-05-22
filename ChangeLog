@@ -1,3 +1,10 @@
+2012-05-21  David S. Miller  <davem@davemloft.net>
+
+	* Makefules (o-iterator): Remove .s cases.
+	(compile-command.s): Delete.
+	(COMPILE.s): Delete.
+	* sysdeps/unix/make-syscalls.sh: Remove .s file tests.
+
 2012-05-21  Joseph Myers  <joseph@codesourcery.com>
 
 	* configure.in (libc_cv_predef_stack_protector): Only consider

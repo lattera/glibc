@@ -54,11 +54,9 @@ while read file caller rest; do
   for dir in $sysdirs; do
      { test -f $dir/$file.c && srcfile=$dir/$file.c; } ||
      { test -f $dir/$file.S && srcfile=$dir/$file.S; } ||
-     { test -f $dir/$file.s && srcfile=$dir/$file.s; } ||
      { test x$caller != x- &&
 	{ { test -f $dir/$caller.c && srcfile=$dir/$caller.c; } ||
-	  { test -f $dir/$caller.S && srcfile=$dir/$caller.S; } ||
-	  { test -f $dir/$caller.s && srcfile=$dir/$caller.s; }; }; } && break;
+	  { test -f $dir/$caller.S && srcfile=$dir/$caller.S; }; }; } && break;
   done;
   echo $file $srcfile $caller $rest;
 done`

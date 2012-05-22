@@ -275,12 +275,6 @@ object-suffixes-left := $(all-object-suffixes)
 include $(o-iterator)
 
 define o-iterator-doit
-$(objpfx)%$o: %.s $(before-compile); $$(compile-command.s)
-endef
-object-suffixes-left := $(all-object-suffixes)
-include $(o-iterator)
-
-define o-iterator-doit
 $(objpfx)%$o: %.c $(before-compile); $$(compile-command.c)
 endef
 object-suffixes-left := $(all-object-suffixes)
@@ -299,12 +293,6 @@ ifdef objpfx
 # Generated source files will end up there.
 define o-iterator-doit
 $(objpfx)%$o: $(objpfx)%.S $(before-compile); $$(compile-command.S)
-endef
-object-suffixes-left := $(all-object-suffixes)
-include $(o-iterator)
-
-define o-iterator-doit
-$(objpfx)%$o: $(objpfx)%.s $(before-compile); $$(compile-command.s)
 endef
 object-suffixes-left := $(all-object-suffixes)
 include $(o-iterator)
@@ -365,7 +353,6 @@ endif # sysd-sorted-done
 # Generate .dT files as we compile.
 compile-mkdep-flags = -MD -MP -MF $@.dt -MT $@
 compile-command.S = $(compile.S) $(OUTPUT_OPTION) $(compile-mkdep-flags)
-compile-command.s = $(COMPILE.s) $< $(OUTPUT_OPTION) $(compile-mkdep-flags)
 compile-command.c = $(compile.c) $(OUTPUT_OPTION) $(compile-mkdep-flags)
 compile-command.cc = $(compile.cc) $(OUTPUT_OPTION) $(compile-mkdep-flags)
 
@@ -381,7 +368,6 @@ compile.S = $(CC) $< -c $(CPPFLAGS) $(S-CPPFLAGS) \
 		  $(ASFLAGS) $(ASFLAGS-$(suffix $@))
 COMPILE.S = $(CC) -c $(CPPFLAGS) $(S-CPPFLAGS) \
 		  $(ASFLAGS) $(ASFLAGS-$(suffix $@))
-COMPILE.s = $(filter-out -pipe,$(CC)) -c $(ASFLAGS)
 
 # We need this for the output to go in the right place.  It will default to
 # empty if make was configured to work with a cc that can't grok -c and -o
