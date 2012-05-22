@@ -1,3 +1,9 @@
+2012-05-22  Roland McGrath  <roland@hack.frob.com>
+
+	* sysdeps/unix/sysv/linux/dl-vdso.h (CHECK_HASH): Macro removed.
+	(PREPARE_VERSION): Just use assert instead, it will be elided
+	under [NDEBUG] anyway.
+
 2012-05-22  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/unix/sysv/linux/Makefile: Include
