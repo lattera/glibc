@@ -32,7 +32,6 @@
 # define LEAP_SECONDS_POSSIBLE 1
 #endif
 
-#include <sys/types.h>		/* Some systems define `time_t' here.  */
 #include <time.h>
 
 #include <limits.h>

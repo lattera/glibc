@@ -1,5 +1,9 @@
 2012-05-22  Paul Eggert  <eggert@cs.ucla.edu>
 
+	mktime: merge <sys/types.h> change from gnulib
+	* time/mktime.c: Do not include <sys/types.h>; no longer needed,
+	since <time.t> is now guaranteed to define time_t.
+
 	mktime: merge HAVE_CONFIG_H change from gnulib
 	* time/mktime.c: Include <config.h> if !_LIBC, not if HAVE_CONFIG_H.
 
