@@ -148,6 +148,7 @@ const unsigned short int __mon_yday[2][13] =
 # undef __localtime_r
 # define __localtime_r localtime_r
 # define __mktime_internal mktime_internal
+# include "mktime-internal.h"
 #endif
 
 /* Return an integer value measuring (YEAR1-YDAY1 HOUR1:MIN1:SEC1) -

@@ -1,5 +1,8 @@
 2012-05-22  Paul Eggert  <eggert@cs.ucla.edu>
 
+	mktime: merge mktime-internal.h change from gnulib
+	* time/mktime.c [!_LIBC]: Include "mktime-internal.h".
+
 	mktime: merge time_r change from gnulib
 	* time/mktime.c [!_LIBC]: Do not include "time_r.h".
 
