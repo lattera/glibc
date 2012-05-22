@@ -1,3 +1,10 @@
+2012-05-22  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/unix/sysv/linux/bits/resource.h (RLIM_INFINITY): Use
+	__rlim_t cast.
+	(struct rusage): Use anonymous union to pad each field to
+	__syscall_slong_t.
+
 2012-05-21  David S. Miller  <davem@davemloft.net>
 
 	* Makefules (o-iterator): Remove .s cases.
