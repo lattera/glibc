@@ -12,10 +12,6 @@ extern char *__dcgettext (const char *__domainname,
 			  const char *__msgid, int __category)
      __attribute_format_arg__ (2);
 libc_hidden_proto (__dcgettext)
-extern char *__dcgettext_internal (const char *__domainname,
-				   const char *__msgid, int __category)
-     __attribute_format_arg__ (2)
-     attribute_hidden;
 
 extern char *__ngettext (const char *__msgid1, const char *__msgid2,
 			 unsigned long int __n)
@@ -28,12 +24,6 @@ extern char *__dcngettext (const char *__domainname,
 			   const char *__msgid1, const char *__msgid2,
 			   unsigned long int __n, int __category)
      __attribute_format_arg__ (2) __attribute_format_arg__ (3);
-extern char *__dcngettext_internal (const char *__domainname,
-				    const char *__msgid1,
-				    const char *__msgid2,
-				    unsigned long int __n, int __category)
-     __attribute_format_arg__ (2) __attribute_format_arg__ (3)
-     attribute_hidden;
 
 extern char *__textdomain (const char *__domainname);
 extern char *__bindtextdomain (const char *__domainname,

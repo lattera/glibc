@@ -1,5 +1,5 @@
 /* Routines for dealing with '\0' separated arg vectors.
-   Copyright (C) 1995, 1996, 1997, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1995-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Miles Bader <miles@gnu.ai.mit.edu>
 
@@ -34,5 +34,5 @@ __argz_count (const char *argz, size_t len)
     }
   return count;
 }
-INTDEF(__argz_count)
+libc_hidden_def (__argz_count)
 weak_alias (__argz_count, argz_count)

@@ -1,6 +1,23 @@
 2012-05-24  Andreas Schwab  <schwab@linux-m68k.org>
 
 	[BZ #14132]
+	* argp/argp-help.c (dgettext) [_LIBC]: Remove use of INTUSE.
+	* argp/argp-parse.c (dgettext) [_LIBC]: Likewise.
+	* intl/dgettext.c (DCGETTEXT): Likewise.
+	* intl/gettext.c (DCGETTEXT): Likewise.
+	* intl/l10nflist.c (__argz_count, __argz_stringify): Likewise.
+	* posix/regex_internal.h (gettext): Likewise.
+	* include/libintl.h (__dcgettext_internal, __dcngettext_internal):
+	Remove declaration.
+	* include/argz.h (__argz_count_internal)
+	(__argz_stringify_internal): Remove declaration.
+	(__argz_count, __argz_stringify): Declare hidden proto.
+	* intl/dcgettext.c: Remove use of INTDEF.
+	* string/argz-count.c: Replace INTDEF with libc_hidden_def.
+	* string/argz-stringify.c: Likewise.
+	* include/libio.h (_IO_free_backup_area, _IO_free_wbackup_area)
+	(_IO_padn, _IO_putc, _IO_sgetn, _IO_vfprintf, _IO_vfscanf):
+	Declare hidden proto.
 	* include/libio.h (_IO_free_backup_area, _IO_free_wbackup_area)
 	(_IO_padn, _IO_putc, _IO_sgetn, _IO_vfprintf, _IO_vfscanf):
 	Declare hidden proto.

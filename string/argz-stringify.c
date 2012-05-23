@@ -1,5 +1,5 @@
 /* Routines for dealing with '\0' separated arg vectors.
-   Copyright (C) 1995,96,97,2000,2001, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1995-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Miles Bader <miles@gnu.org>
 
@@ -36,5 +36,5 @@ __argz_stringify (char *argz, size_t len, int sep)
 	*argz++ = sep;
       }
 }
-INTDEF(__argz_stringify)
+libc_hidden_def (__argz_stringify)
 weak_alias (__argz_stringify, argz_stringify)
