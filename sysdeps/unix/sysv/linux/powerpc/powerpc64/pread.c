@@ -27,6 +27,8 @@
 #include <kernel-features.h>
 
 
+/* Consider moving to syscalls.list.  */
+
 ssize_t
 __libc_pread (fd, buf, count, offset)
      int fd;

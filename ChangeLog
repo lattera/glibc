@@ -1,5 +1,12 @@
 2012-05-23  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/unix/sysv/linux/powerpc/chown.c: Add comment suggesting
+	move to syscalls.list.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/pread.c: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/pread64.c: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/pwrite.c: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/pwrite64.c: Likewise.
+
 	* manual/install.texi (Running make install): Do not mention Linux
 	kernel version for which pt_chown is not needed.
 	(Linux): Do not mention problems with nscd with 2.0 kernels.

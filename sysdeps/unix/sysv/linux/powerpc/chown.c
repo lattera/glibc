@@ -25,6 +25,8 @@
 
 #include <kernel-features.h>
 
+/* Consider moving to syscalls.list.  */
+
 /*
   In Linux 2.1.x the chown functions have been changed.  A new function lchown
   was introduced.  The new chown now follows symlinks - the old chown and the
