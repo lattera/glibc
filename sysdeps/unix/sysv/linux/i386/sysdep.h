@@ -115,7 +115,7 @@
   negl %eax;								      \
   movl %eax, rtld_errno@GOTOFF(%ecx);					      \
   orl $-1, %eax;							      \
-  jmp L(pseudo_end);
+  ret;
 
 # elif defined _LIBC_REENTRANT
 
@@ -131,7 +131,7 @@
   negl %eax;								      \
   SYSCALL_ERROR_HANDLER_TLS_STORE (%eax, %ecx);				      \
   orl $-1, %eax;							      \
-  jmp L(pseudo_end);
+  ret;
 #  ifndef NO_TLS_DIRECT_SEG_REFS
 #   define SYSCALL_ERROR_HANDLER_TLS_STORE(src, destoff)		      \
   movl src, %gs:(destoff)
@@ -149,7 +149,7 @@
   movl errno@GOT(%ecx), %ecx;						      \
   movl %eax, (%ecx);							      \
   orl $-1, %eax;							      \
-  jmp L(pseudo_end);
+  ret;
 # endif	/* _LIBC_REENTRANT */
 #endif	/* PIC */
 

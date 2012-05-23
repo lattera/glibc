@@ -136,7 +136,7 @@
 0:						\
   SYSCALL_SET_ERRNO;				\
   or $-1, %RAX_LP;				\
-  jmp L(pseudo_end);
+  ret;
 # endif	/* PIC */
 
 /* The Linux/x86-64 kernel expects the system call parameters in
