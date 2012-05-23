@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1995, 1996, 1997, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1993-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -32,7 +32,7 @@ fflush_unlocked (fp)
      _IO_FILE *fp;
 {
   if (fp == NULL)
-    return INTUSE(_IO_flush_all) ();
+    return _IO_flush_all ();
   else
     {
       CHECK_FILE (fp, EOF);

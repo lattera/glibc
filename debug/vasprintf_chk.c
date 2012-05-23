@@ -1,5 +1,4 @@
-/* Copyright (C) 1995,1997,1999-2002,2004,2006,2008,2009
-   Free Software Foundation, Inc.
+/* Copyright (C) 1995-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -64,7 +63,7 @@ __vasprintf_chk (char **result_ptr, int flags, const char *format,
   if (flags > 0)
     sf._sbf._f._flags2 |= _IO_FLAGS2_FORTIFY;
 
-  ret = INTUSE(_IO_vfprintf) (&sf._sbf._f, format, args);
+  ret = _IO_vfprintf (&sf._sbf._f, format, args);
   if (ret < 0)
     {
       free (sf._sbf._f._IO_buf_base);

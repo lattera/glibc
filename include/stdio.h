@@ -116,13 +116,8 @@ extern int __fxprintf (FILE *__fp, const char *__fmt, ...)
 extern const char *const _sys_errlist_internal[] attribute_hidden;
 extern int _sys_nerr_internal attribute_hidden;
 
-extern int __asprintf_internal (char **__restrict __ptr,
-				const char *__restrict __fmt, ...)
-     attribute_hidden __attribute__ ((__format__ (__printf__, 2, 3)));
+libc_hidden_proto (__asprintf)
 #  if !defined NOT_IN_libc
-#    define __asprintf(ptr, fmt, args...) \
-  INTUSE(__asprintf) (ptr, fmt, ##args)
-
 extern _IO_FILE *_IO_new_fopen (const char*, const char*);
 #   define fopen(fname, mode) _IO_new_fopen (fname, mode)
 extern _IO_FILE *_IO_new_fdopen (int, const char*);

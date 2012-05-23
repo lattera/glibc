@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1997-2003, 2004, 2006 Free Software Foundation, Inc.
+/* Copyright (C) 1993-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -46,7 +46,7 @@ _IO_str_init_static_internal (sf, ptr, size, pstart)
     end = ptr + size;
   else
     end = (char *) -1;
-  INTUSE(_IO_setb) (fp, ptr, end, 0);
+  _IO_setb (fp, ptr, end, 0);
 
   fp->_IO_write_base = ptr;
   fp->_IO_read_base = ptr;
@@ -131,7 +131,7 @@ _IO_str_overflow (fp, c)
 	    }
 	  memset (new_buf + old_blen, '\0', new_size - old_blen);
 
-	  INTUSE(_IO_setb) (fp, new_buf, new_buf + new_size, 1);
+	  _IO_setb (fp, new_buf, new_buf + new_size, 1);
 	  fp->_IO_read_base = new_buf + (fp->_IO_read_base - old_buf);
 	  fp->_IO_read_ptr = new_buf + (fp->_IO_read_ptr - old_buf);
 	  fp->_IO_read_end = new_buf + (fp->_IO_read_end - old_buf);
@@ -148,7 +148,7 @@ _IO_str_overflow (fp, c)
     fp->_IO_read_end = fp->_IO_write_ptr;
   return c;
 }
-INTDEF(_IO_str_overflow)
+libc_hidden_def (_IO_str_overflow)
 
 int
 _IO_str_underflow (fp)
@@ -167,7 +167,7 @@ _IO_str_underflow (fp)
   else
     return EOF;
 }
-INTDEF(_IO_str_underflow)
+libc_hidden_def (_IO_str_underflow)
 
 /* The size of the valid part of the buffer.  */
 
@@ -210,7 +210,7 @@ enlarge_userbuf (_IO_FILE *fp, _IO_off64_t offset, int reading)
       fp->_IO_buf_base = NULL;
     }
 
-  INTUSE(_IO_setb) (fp, newbuf, newbuf + newsize, 1);
+  _IO_setb (fp, newbuf, newbuf + newsize, 1);
 
   if (reading)
     {
@@ -320,7 +320,7 @@ _IO_str_seekoff (fp, offset, dir, mode)
     }
   return new_pos;
 }
-INTDEF(_IO_str_seekoff)
+libc_hidden_def (_IO_str_seekoff)
 
 int
 _IO_str_pbackfail (fp, c)
@@ -329,9 +329,9 @@ _IO_str_pbackfail (fp, c)
 {
   if ((fp->_flags & _IO_NO_WRITES) && c != EOF)
     return EOF;
-  return INTUSE(_IO_default_pbackfail) (fp, c);
+  return _IO_default_pbackfail (fp, c);
 }
-INTDEF(_IO_str_pbackfail)
+libc_hidden_def (_IO_str_pbackfail)
 
 void
 _IO_str_finish (fp, dummy)
@@ -342,24 +342,24 @@ _IO_str_finish (fp, dummy)
     (((_IO_strfile *) fp)->_s._free_buffer) (fp->_IO_buf_base);
   fp->_IO_buf_base = NULL;
 
-  INTUSE(_IO_default_finish) (fp, 0);
+  _IO_default_finish (fp, 0);
 }
 
 const struct _IO_jump_t _IO_str_jumps =
 {
   JUMP_INIT_DUMMY,
   JUMP_INIT(finish, _IO_str_finish),
-  JUMP_INIT(overflow, INTUSE(_IO_str_overflow)),
-  JUMP_INIT(underflow, INTUSE(_IO_str_underflow)),
-  JUMP_INIT(uflow, INTUSE(_IO_default_uflow)),
-  JUMP_INIT(pbackfail, INTUSE(_IO_str_pbackfail)),
-  JUMP_INIT(xsputn, INTUSE(_IO_default_xsputn)),
-  JUMP_INIT(xsgetn, INTUSE(_IO_default_xsgetn)),
-  JUMP_INIT(seekoff, INTUSE(_IO_str_seekoff)),
+  JUMP_INIT(overflow, _IO_str_overflow),
+  JUMP_INIT(underflow, _IO_str_underflow),
+  JUMP_INIT(uflow, _IO_default_uflow),
+  JUMP_INIT(pbackfail, _IO_str_pbackfail),
+  JUMP_INIT(xsputn, _IO_default_xsputn),
+  JUMP_INIT(xsgetn, _IO_default_xsgetn),
+  JUMP_INIT(seekoff, _IO_str_seekoff),
   JUMP_INIT(seekpos, _IO_default_seekpos),
   JUMP_INIT(setbuf, _IO_default_setbuf),
   JUMP_INIT(sync, _IO_default_sync),
-  JUMP_INIT(doallocate, INTUSE(_IO_default_doallocate)),
+  JUMP_INIT(doallocate, _IO_default_doallocate),
   JUMP_INIT(read, _IO_default_read),
   JUMP_INIT(write, _IO_default_write),
   JUMP_INIT(seek, _IO_default_seek),

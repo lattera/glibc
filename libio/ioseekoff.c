@@ -1,5 +1,4 @@
-/* Copyright (C) 1993, 1997, 1998, 1999, 2001, 2002, 2003
-   Free Software Foundation, Inc.
+/* Copyright (C) 1993-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -62,9 +61,9 @@ _IO_seekoff_unlocked (fp, offset, dir, mode)
 	    abort ();
 	}
       if (_IO_fwide (fp, 0) < 0)
-	INTUSE(_IO_free_backup_area) (fp);
+	_IO_free_backup_area (fp);
       else
-	INTUSE(_IO_free_wbackup_area) (fp);
+	_IO_free_wbackup_area (fp);
     }
 
   return _IO_SEEKOFF (fp, offset, dir, mode);

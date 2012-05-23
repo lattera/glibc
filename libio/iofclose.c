@@ -52,11 +52,11 @@ _IO_new_fclose (fp)
 
   /* First unlink the stream.  */
   if (fp->_IO_file_flags & _IO_IS_FILEBUF)
-    INTUSE(_IO_un_link) ((struct _IO_FILE_plus *) fp);
+    _IO_un_link ((struct _IO_FILE_plus *) fp);
 
   _IO_acquire_lock (fp);
   if (fp->_IO_file_flags & _IO_IS_FILEBUF)
-    status = INTUSE(_IO_file_close_it) (fp);
+    status = _IO_file_close_it (fp);
   else
     status = fp->_flags & _IO_ERR_SEEN ? -1 : 0;
   _IO_release_lock (fp);
@@ -77,7 +77,7 @@ _IO_new_fclose (fp)
   else
     {
       if (_IO_have_backup (fp))
-	INTUSE(_IO_free_backup_area) (fp);
+	_IO_free_backup_area (fp);
     }
   if (fp != _IO_stdin && fp != _IO_stdout && fp != _IO_stderr)
     {

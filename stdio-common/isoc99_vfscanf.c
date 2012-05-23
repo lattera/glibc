@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1997, 2006, 2007 Free Software Foundation, Inc.
+/* Copyright (C) 1991-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -27,7 +27,7 @@ __isoc99_vfscanf (FILE *stream, const char *format, _IO_va_list args)
 
   _IO_acquire_lock_clear_flags2 (stream);
   stream->_flags2 |= _IO_FLAGS2_SCANF_STD;
-  done = INTUSE(_IO_vfscanf) (stream, format, args, NULL);
+  done = _IO_vfscanf (stream, format, args, NULL);
   _IO_release_lock (stream);
   return done;
 }

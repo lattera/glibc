@@ -1,5 +1,5 @@
 /* Open a stdio stream on an anonymous temporary file.  Hurd version.
-   Copyright (C) 2001,2002,2003 Free Software Foundation, Inc.
+   Copyright (C) 2001-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -56,7 +56,7 @@ __tmpfile (void)
 
   /* Open a stream on the unnamed file.
      It will cease to exist when this stream is closed.  */
-  if ((f = INTUSE(_IO_fdopen) (fd, "w+b")) == NULL)
+  if ((f = _IO_fdopen (fd, "w+b")) == NULL)
     __close (fd);
 
   return f;

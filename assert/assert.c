@@ -1,5 +1,4 @@
-/* Copyright (C) 1991,1994-1996,1998,2001,2002,2005,2009,2011
-   Free Software Foundation, Inc.
+/* Copyright (C) 1991-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -31,7 +30,7 @@ extern const char *__progname;
 
 #include <wchar.h>
 #include <libio/iolibio.h>
-#define fflush(s) INTUSE(_IO_fflush) (s)
+#define fflush(s) _IO_fflush (s)
 
 /* This function, when passed a string containing an asserted
    expression, a filename, and a line number, prints a message

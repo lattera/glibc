@@ -42,8 +42,8 @@
 #include <rpc/clnt.h>
 
 #include <libio/iolibio.h>
-#define fflush(s) INTUSE(_IO_fflush) (s)
-#define __fdopen(fd,m) INTUSE(_IO_fdopen) (fd,m)
+#define fflush(s) _IO_fflush (s)
+#define __fdopen(fd,m) _IO_fdopen (fd,m)
 
 /*
  * returns pid, or -1 for failure

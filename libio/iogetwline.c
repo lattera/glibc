@@ -1,4 +1,4 @@
-/* Copyright (C) 1993,1997-2000,2002,2005 Free Software Foundation, Inc.
+/* Copyright (C) 1993-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -85,7 +85,7 @@ _IO_getwline_info (fp, buf, n, delim, extract_delim, eof)
  	      if (extract_delim > 0)
 		*ptr++ = wc;
 	      else if (extract_delim < 0)
-		INTUSE(_IO_sputbackc) (fp, wc);
+		_IO_sputbackc (fp, wc);
 	      if (extract_delim > 0)
 		++len;
 	      return ptr - buf;

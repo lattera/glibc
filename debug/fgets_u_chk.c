@@ -1,5 +1,4 @@
-/* Copyright (C) 1993, 1995, 1996, 1997, 1998, 1999, 2002, 2003, 2005
-   Free Software Foundation, Inc.
+/* Copyright (C) 1993-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -46,7 +45,7 @@ __fgets_unlocked_chk (buf, size, n, fp)
      case. We return an error only when there is a new error. */
   int old_error = fp->_IO_file_flags & _IO_ERR_SEEN;
   fp->_IO_file_flags &= ~_IO_ERR_SEEN;
-  count = INTUSE(_IO_getline) (fp, buf, MIN ((size_t) n - 1, size), '\n', 1);
+  count = _IO_getline (fp, buf, MIN ((size_t) n - 1, size), '\n', 1);
   /* If we read in some bytes and errno is EAGAIN, that error will
      be reported for next read. */
   if (count == 0 || ((fp->_IO_file_flags & _IO_ERR_SEEN)

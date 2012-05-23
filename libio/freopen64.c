@@ -50,11 +50,11 @@ freopen64 (filename, mode, fp)
   const char *gfilename = (filename == NULL && fd >= 0
 			   ? fd_to_filename (fd) : filename);
   fp->_flags2 |= _IO_FLAGS2_NOCLOSE;
-  INTUSE(_IO_file_close_it) (fp);
+  _IO_file_close_it (fp);
   _IO_JUMPS ((struct _IO_FILE_plus *) fp) = &_IO_file_jumps;
   if (_IO_vtable_offset (fp) == 0 && fp->_wide_data != NULL)
     fp->_wide_data->_wide_vtable = &_IO_wfile_jumps;
-  result = INTUSE(_IO_file_fopen) (fp, gfilename, mode, 0);
+  result = _IO_file_fopen (fp, gfilename, mode, 0);
   fp->_flags2 &= ~_IO_FLAGS2_NOCLOSE;
   if (result != NULL)
     result = __fopen_maybe_mmap (result);

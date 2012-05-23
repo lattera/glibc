@@ -1,5 +1,4 @@
-/* Copyright (C) 1993, 1995, 1996, 1997, 1998, 1999, 2000, 2002, 2003
-   Free Software Foundation, Inc.
+/* Copyright (C) 1993-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -44,7 +43,7 @@ _IO_setbuffer (fp, buf, size)
     (void) _IO_WSETBUF (fp, buf, size);
   _IO_release_lock (fp);
 }
-INTDEF(_IO_setbuffer)
+libc_hidden_def (_IO_setbuffer)
 
 #ifdef weak_alias
 weak_alias (_IO_setbuffer, setbuffer)

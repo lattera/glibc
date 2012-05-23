@@ -2,7 +2,7 @@
 
 # include <stdio-common/stdio_ext.h>
 
-extern int __fsetlocking_internal (FILE *__fp, int __type) attribute_hidden;
+libc_hidden_proto (__fsetlocking)
 
 #define __fsetlocking(fp, type) \
   ({ int __result = ((fp->_flags & _IO_USER_LOCK)			\

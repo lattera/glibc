@@ -126,7 +126,7 @@ _IO_file_doallocate (fp)
 #endif
     }
   ALLOC_BUF (p, size, EOF);
-  INTUSE(_IO_setb) (fp, p, p + size, 1);
+  _IO_setb (fp, p, p + size, 1);
   return 1;
 }
-INTDEF(_IO_file_doallocate)
+libc_hidden_def (_IO_file_doallocate)

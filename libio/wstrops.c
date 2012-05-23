@@ -1,4 +1,4 @@
-/* Copyright (C) 1993,1997-1999,2001-2004, 2006 Free Software Foundation, Inc.
+/* Copyright (C) 1993-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -48,7 +48,7 @@ _IO_wstr_init_static (fp, ptr, size, pstart)
     /* Even for misaligned ptr make sure there is integral number of wide
        characters.  */
     end = ptr + (-1 - (_IO_size_t) ptr) / sizeof (wchar_t);
-  INTUSE(_IO_wsetb) (fp, ptr, end, 0);
+  _IO_wsetb (fp, ptr, end, 0);
 
   fp->_wide_data->_IO_write_base = ptr;
   fp->_wide_data->_IO_read_base = ptr;
@@ -115,7 +115,7 @@ _IO_wstr_overflow (fp, c)
 
 	  wmemset (new_buf + old_wblen, L'\0', new_size - old_wblen);
 
-	  INTUSE(_IO_wsetb) (fp, new_buf, new_buf + new_size, 1);
+	  _IO_wsetb (fp, new_buf, new_buf + new_size, 1);
 	  fp->_wide_data->_IO_read_base =
 	    new_buf + (fp->_wide_data->_IO_read_base - old_buf);
 	  fp->_wide_data->_IO_read_ptr =
@@ -202,7 +202,7 @@ enlarge_userbuf (_IO_FILE *fp, _IO_off64_t offset, int reading)
       wd->_IO_buf_base = NULL;
     }
 
-  INTUSE(_IO_wsetb) (fp, newbuf, newbuf + newsize, 1);
+  _IO_wsetb (fp, newbuf, newbuf + newsize, 1);
 
   if (reading)
     {
@@ -326,7 +326,7 @@ _IO_wstr_pbackfail (fp, c)
 {
   if ((fp->_flags & _IO_NO_WRITES) && c != WEOF)
     return WEOF;
-  return INTUSE(_IO_wdefault_pbackfail) (fp, c);
+  return _IO_wdefault_pbackfail (fp, c);
 }
 
 void
@@ -338,7 +338,7 @@ _IO_wstr_finish (fp, dummy)
     (((_IO_strfile *) fp)->_s._free_buffer) (fp->_wide_data->_IO_buf_base);
   fp->_wide_data->_IO_buf_base = NULL;
 
-  INTUSE(_IO_wdefault_finish) (fp, 0);
+  _IO_wdefault_finish (fp, 0);
 }
 
 const struct _IO_jump_t _IO_wstr_jumps =
@@ -347,15 +347,15 @@ const struct _IO_jump_t _IO_wstr_jumps =
   JUMP_INIT(finish, _IO_wstr_finish),
   JUMP_INIT(overflow, (_IO_overflow_t) _IO_wstr_overflow),
   JUMP_INIT(underflow, (_IO_underflow_t) _IO_wstr_underflow),
-  JUMP_INIT(uflow, (_IO_underflow_t) INTUSE(_IO_wdefault_uflow)),
+  JUMP_INIT(uflow, (_IO_underflow_t) _IO_wdefault_uflow),
   JUMP_INIT(pbackfail, (_IO_pbackfail_t) _IO_wstr_pbackfail),
-  JUMP_INIT(xsputn, INTUSE(_IO_wdefault_xsputn)),
-  JUMP_INIT(xsgetn, INTUSE(_IO_wdefault_xsgetn)),
+  JUMP_INIT(xsputn, _IO_wdefault_xsputn),
+  JUMP_INIT(xsgetn, _IO_wdefault_xsgetn),
   JUMP_INIT(seekoff, _IO_wstr_seekoff),
   JUMP_INIT(seekpos, _IO_default_seekpos),
   JUMP_INIT(setbuf, _IO_default_setbuf),
   JUMP_INIT(sync, _IO_default_sync),
-  JUMP_INIT(doallocate, INTUSE(_IO_wdefault_doallocate)),
+  JUMP_INIT(doallocate, _IO_wdefault_doallocate),
   JUMP_INIT(read, _IO_default_read),
   JUMP_INIT(write, _IO_default_write),
   JUMP_INIT(seek, _IO_default_seek),

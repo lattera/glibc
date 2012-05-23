@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1997, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1993-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -69,4 +69,4 @@ _IO_padn (fp, pad, count)
     }
   return written;
 }
-INTDEF(_IO_padn)
+libc_hidden_def (_IO_padn)

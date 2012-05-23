@@ -1,5 +1,4 @@
-/* Copyright (C) 1991, 1995, 1996, 1997, 2002, 2004, 2006
-   Free Software Foundation, Inc.
+/* Copyright (C) 1991-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -31,7 +30,7 @@ __scanf (const char *format, ...)
   int done;
 
   va_start (arg, format);
-  done = INTUSE(_IO_vfscanf) (stdin, format, arg, NULL);
+  done = _IO_vfscanf (stdin, format, arg, NULL);
   va_end (arg);
 
   return done;

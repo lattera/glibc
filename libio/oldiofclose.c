@@ -1,5 +1,4 @@
-/* Copyright (C) 1993,1995,1997-2002,2004,2005,2012
-   Free Software Foundation, Inc.
+/* Copyright (C) 1993-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -49,7 +48,7 @@ _IO_old_fclose (fp)
 
   /* First unlink the stream.  */
   if (fp->_IO_file_flags & _IO_IS_FILEBUF)
-    INTUSE(_IO_un_link) ((struct _IO_FILE_plus *) fp);
+    _IO_un_link ((struct _IO_FILE_plus *) fp);
 
   _IO_acquire_lock (fp);
   if (fp->_IO_file_flags & _IO_IS_FILEBUF)
@@ -59,7 +58,7 @@ _IO_old_fclose (fp)
   _IO_release_lock (fp);
   _IO_FINISH (fp);
   if (_IO_have_backup (fp))
-    INTUSE(_IO_free_backup_area) (fp);
+    _IO_free_backup_area (fp);
   if (fp != _IO_stdin && fp != _IO_stdout && fp != _IO_stderr)
     {
       fp->_IO_file_flags = 0;

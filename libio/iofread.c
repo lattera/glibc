@@ -1,5 +1,4 @@
-/* Copyright (C) 1993, 1995, 1997, 1998, 1999, 2002, 2003
-   Free Software Foundation, Inc.
+/* Copyright (C) 1993-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -40,11 +39,11 @@ _IO_fread (buf, size, count, fp)
   if (bytes_requested == 0)
     return 0;
   _IO_acquire_lock (fp);
-  bytes_read = INTUSE(_IO_sgetn) (fp, (char *) buf, bytes_requested);
+  bytes_read = _IO_sgetn (fp, (char *) buf, bytes_requested);
   _IO_release_lock (fp);
   return bytes_requested == bytes_read ? count : bytes_read / size;
 }
-INTDEF(_IO_fread)
+libc_hidden_def (_IO_fread)
 
 #ifdef weak_alias
 weak_alias (_IO_fread, fread)

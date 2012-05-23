@@ -1,4 +1,4 @@
-/* Copyright (C) 2005 Free Software Foundation, Inc.
+/* Copyright (C) 2005-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.org>.
 
@@ -47,7 +47,7 @@ __fxprintf (FILE *fp, const char *fmt, ...)
       res = __vfwprintf (fp, wfmt, ap);
     }
   else
-    res = INTUSE(_IO_vfprintf) (fp, fmt, ap);
+    res = _IO_vfprintf (fp, fmt, ap);
 
   va_end (ap);
 

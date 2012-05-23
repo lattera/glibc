@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1997, 1998, 2002, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 1991-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,7 +17,7 @@
 
 #include <stdio.h>
 #include <libio/iolibio.h>
-#define fwrite(p, n, m, s) INTUSE(_IO_fwrite) (p, n, m, s)
+#define fwrite(p, n, m, s) _IO_fwrite (p, n, m, s)
 
 /* Write the word (int) W to STREAM.  */
 int

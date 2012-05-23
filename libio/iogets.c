@@ -1,4 +1,4 @@
-/* Copyright (C) 1993,1996,1997,1998,2002,2003 Free Software Foundation, Inc.
+/* Copyright (C) 1993-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -52,7 +52,7 @@ _IO_gets (buf)
       int old_error = _IO_stdin->_IO_file_flags & _IO_ERR_SEEN;
       _IO_stdin->_IO_file_flags &= ~_IO_ERR_SEEN;
       buf[0] = (char) ch;
-      count = INTUSE(_IO_getline) (_IO_stdin, buf + 1, INT_MAX, '\n', 0) + 1;
+      count = _IO_getline (_IO_stdin, buf + 1, INT_MAX, '\n', 0) + 1;
       if (_IO_stdin->_IO_file_flags & _IO_ERR_SEEN)
 	{
 	  retval = NULL;

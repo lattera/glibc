@@ -1,5 +1,4 @@
-/* Copyright (C) 1993, 1997-2002, 2003, 2004, 2007, 2008, 2012
-   Free Software Foundation, Inc.
+/* Copyright (C) 1993-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Per Bothner <bothner@cygnus.com>.
 
@@ -300,7 +299,7 @@ _IO_new_popen (command, mode)
   new_f->fpx.file.file._lock = &new_f->lock;
 #endif
   fp = &new_f->fpx.file.file;
-  INTUSE(_IO_init) (fp, 0);
+  _IO_init (fp, 0);
   _IO_JUMPS (&new_f->fpx.file) = &_IO_proc_jumps;
   _IO_new_file_init (&new_f->fpx.file);
 #if  !_IO_UNIFIED_JUMPTABLES
@@ -308,7 +307,7 @@ _IO_new_popen (command, mode)
 #endif
   if (_IO_new_proc_open (fp, command, mode) != NULL)
     return (_IO_FILE *) &new_f->fpx.file;
-  INTUSE(_IO_un_link) (&new_f->fpx.file);
+  _IO_un_link (&new_f->fpx.file);
   free (new_f);
   return NULL;
 }
@@ -367,20 +366,20 @@ static const struct _IO_jump_t _IO_proc_jumps = {
   JUMP_INIT(finish, _IO_new_file_finish),
   JUMP_INIT(overflow, _IO_new_file_overflow),
   JUMP_INIT(underflow, _IO_new_file_underflow),
-  JUMP_INIT(uflow, INTUSE(_IO_default_uflow)),
-  JUMP_INIT(pbackfail, INTUSE(_IO_default_pbackfail)),
+  JUMP_INIT(uflow, _IO_default_uflow),
+  JUMP_INIT(pbackfail, _IO_default_pbackfail),
   JUMP_INIT(xsputn, _IO_new_file_xsputn),
-  JUMP_INIT(xsgetn, INTUSE(_IO_default_xsgetn)),
+  JUMP_INIT(xsgetn, _IO_default_xsgetn),
   JUMP_INIT(seekoff, _IO_new_file_seekoff),
   JUMP_INIT(seekpos, _IO_default_seekpos),
   JUMP_INIT(setbuf, _IO_new_file_setbuf),
   JUMP_INIT(sync, _IO_new_file_sync),
-  JUMP_INIT(doallocate, INTUSE(_IO_file_doallocate)),
-  JUMP_INIT(read, INTUSE(_IO_file_read)),
+  JUMP_INIT(doallocate, _IO_file_doallocate),
+  JUMP_INIT(read, _IO_file_read),
   JUMP_INIT(write, _IO_new_file_write),
-  JUMP_INIT(seek, INTUSE(_IO_file_seek)),
+  JUMP_INIT(seek, _IO_file_seek),
   JUMP_INIT(close, _IO_new_proc_close),
-  JUMP_INIT(stat, INTUSE(_IO_file_stat)),
+  JUMP_INIT(stat, _IO_file_stat),
   JUMP_INIT(showmanyc, _IO_default_showmanyc),
   JUMP_INIT(imbue, _IO_default_imbue)
 };

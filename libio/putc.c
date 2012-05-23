@@ -1,5 +1,4 @@
-/* Copyright (C) 1991, 1995, 1996, 1997, 1998, 2002, 2003
-   Free Software Foundation, Inc.
+/* Copyright (C) 1991-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -33,7 +32,7 @@ _IO_putc (c, fp)
   _IO_release_lock (fp);
   return result;
 }
-INTDEF(_IO_putc)
+libc_hidden_def (_IO_putc)
 
 #undef putc
 

@@ -1,5 +1,4 @@
-/* Copyright (C) 1993, 1995-2000, 2001, 2002, 2003, 2004
-   Free Software Foundation, Inc.
+/* Copyright (C) 1993-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -61,7 +60,7 @@ _IO_ftell (fp)
     }
   return pos;
 }
-INTDEF(_IO_ftell)
+libc_hidden_def (_IO_ftell)
 
 #ifdef weak_alias
 weak_alias (_IO_ftell, ftell)

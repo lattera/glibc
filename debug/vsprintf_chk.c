@@ -1,5 +1,4 @@
-/* Copyright (C) 1994, 1997, 1999-2003, 2004, 2006, 2009
-   Free Software Foundation, Inc.
+/* Copyright (C) 1994-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -40,16 +39,16 @@ static const struct _IO_jump_t _IO_str_chk_jumps =
   JUMP_INIT_DUMMY,
   JUMP_INIT(finish, _IO_str_finish),
   JUMP_INIT(overflow, _IO_str_chk_overflow),
-  JUMP_INIT(underflow, INTUSE(_IO_str_underflow)),
-  JUMP_INIT(uflow, INTUSE(_IO_default_uflow)),
-  JUMP_INIT(pbackfail, INTUSE(_IO_str_pbackfail)),
-  JUMP_INIT(xsputn, INTUSE(_IO_default_xsputn)),
-  JUMP_INIT(xsgetn, INTUSE(_IO_default_xsgetn)),
-  JUMP_INIT(seekoff, INTUSE(_IO_str_seekoff)),
+  JUMP_INIT(underflow, _IO_str_underflow),
+  JUMP_INIT(uflow, _IO_default_uflow),
+  JUMP_INIT(pbackfail, _IO_str_pbackfail),
+  JUMP_INIT(xsputn, _IO_default_xsputn),
+  JUMP_INIT(xsgetn, _IO_default_xsgetn),
+  JUMP_INIT(seekoff, _IO_str_seekoff),
   JUMP_INIT(seekpos, _IO_default_seekpos),
   JUMP_INIT(setbuf, _IO_default_setbuf),
   JUMP_INIT(sync, _IO_default_sync),
-  JUMP_INIT(doallocate, INTUSE(_IO_default_doallocate)),
+  JUMP_INIT(doallocate, _IO_default_doallocate),
   JUMP_INIT(read, _IO_default_read),
   JUMP_INIT(write, _IO_default_write),
   JUMP_INIT(seek, _IO_default_seek),
@@ -83,7 +82,7 @@ ___vsprintf_chk (char *s, int flags, size_t slen, const char *format,
   if (flags > 0)
     f._sbf._f._flags2 |= _IO_FLAGS2_FORTIFY;
 
-  ret = INTUSE(_IO_vfprintf) (&f._sbf._f, format, args);
+  ret = _IO_vfprintf (&f._sbf._f, format, args);
 
   *f._sbf._f._IO_write_ptr = '\0';
   return ret;

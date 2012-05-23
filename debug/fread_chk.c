@@ -1,5 +1,4 @@
-/* Copyright (C) 1993, 1995, 1997, 1998, 1999, 2002, 2003, 2007
-   Free Software Foundation, Inc.
+/* Copyright (C) 1993-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -49,7 +48,7 @@ __fread_chk (void *__restrict ptr, size_t ptrlen,
 
   size_t bytes_read;
   _IO_acquire_lock (stream);
-  bytes_read = INTUSE(_IO_sgetn) (stream, (char *) ptr, bytes_requested);
+  bytes_read = _IO_sgetn (stream, (char *) ptr, bytes_requested);
   _IO_release_lock (stream);
   return bytes_requested == bytes_read ? n : bytes_read / size;
 }

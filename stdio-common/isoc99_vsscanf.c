@@ -1,4 +1,4 @@
-/* Copyright (C) 1993,1997-2003,2006,2007,2009 Free Software Foundation, Inc.
+/* Copyright (C) 1993-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -40,7 +40,7 @@ __isoc99_vsscanf (const char *string, const char *format, _IO_va_list args)
   _IO_JUMPS (&sf._sbf) = &_IO_str_jumps;
   _IO_str_init_static_internal (&sf, (char*)string, 0, NULL);
   sf._sbf._f._flags2 |= _IO_FLAGS2_SCANF_STD;
-  ret = INTUSE(_IO_vfscanf) (&sf._sbf._f, format, args, NULL);
+  ret = _IO_vfscanf (&sf._sbf._f, format, args, NULL);
   return ret;
 }
 libc_hidden_def (__isoc99_vsscanf)

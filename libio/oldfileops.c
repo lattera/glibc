@@ -1,5 +1,4 @@
-/* Copyright (C) 1993, 1995, 1997-2004, 2005, 2007, 2011-2012
-   Free Software Foundation, Inc.
+/* Copyright (C) 1993-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Per Bothner <bothner@cygnus.com>.
 
@@ -123,7 +122,7 @@ _IO_old_file_init (fp)
   fp->file._old_offset = _IO_pos_BAD;
   fp->file._IO_file_flags |= CLOSED_FILEBUF_FLAGS;
 
-  INTUSE(_IO_link_in) (fp);
+  _IO_link_in (fp);
   fp->file._vtable_offset = ((int) sizeof (struct _IO_FILE)
 			     - (int) sizeof (struct _IO_FILE_complete));
   fp->file._fileno = -1;
@@ -150,17 +149,17 @@ _IO_old_file_close_it (fp)
 
   write_status = _IO_old_do_flush (fp);
 
-  INTUSE(_IO_unsave_markers) (fp);
+  _IO_unsave_markers (fp);
 
   close_status = ((fp->_flags2 & _IO_FLAGS2_NOCLOSE) == 0
 		  ? _IO_SYSCLOSE (fp) : 0);
 
   /* Free buffer. */
-  INTUSE(_IO_setb) (fp, NULL, NULL, 0);
+  _IO_setb (fp, NULL, NULL, 0);
   _IO_setg (fp, NULL, NULL, NULL);
   _IO_setp (fp, NULL, NULL);
 
-  INTUSE(_IO_un_link) ((struct _IO_FILE_plus *) fp);
+  _IO_un_link ((struct _IO_FILE_plus *) fp);
   fp->_flags = _IO_MAGIC|CLOSED_FILEBUF_FLAGS;
   fp->_fileno = -1;
   fp->_old_offset = _IO_pos_BAD;
@@ -180,7 +179,7 @@ _IO_old_file_finish (fp, dummy)
       if (!(fp->_flags & _IO_DELETE_DONT_CLOSE))
 	_IO_SYSCLOSE (fp);
     }
-  INTUSE(_IO_default_finish) (fp, 0);
+  _IO_default_finish (fp, 0);
 }
 
 _IO_FILE *
@@ -229,7 +228,7 @@ _IO_old_file_fopen (fp, filename, mode)
     if (_IO_SEEKOFF (fp, (_IO_off_t)0, _IO_seek_end, _IOS_INPUT|_IOS_OUTPUT)
 	== _IO_pos_BAD && errno != ESPIPE)
       return NULL;
-  INTUSE(_IO_link_in) ((struct _IO_FILE_plus *) fp);
+  _IO_link_in ((struct _IO_FILE_plus *) fp);
   return fp;
 }
 
@@ -311,8 +310,7 @@ old_do_write (fp, data, to_do)
     }
   count = _IO_SYSWRITE (fp, data, to_do);
   if (fp->_cur_column && count)
-    fp->_cur_column = INTUSE(_IO_adjust_column) (fp->_cur_column - 1, data,
-						 count) + 1;
+    fp->_cur_column = _IO_adjust_column (fp->_cur_column - 1, data, count) + 1;
   _IO_setg (fp, fp->_IO_buf_base, fp->_IO_buf_base, fp->_IO_buf_base);
   fp->_IO_write_base = fp->_IO_write_ptr = fp->_IO_buf_base;
   fp->_IO_write_end = ((fp->_flags & (_IO_LINE_BUF+_IO_UNBUFFERED))
@@ -349,15 +347,15 @@ _IO_old_file_underflow (fp)
 	  free (fp->_IO_save_base);
 	  fp->_flags &= ~_IO_IN_BACKUP;
 	}
-      INTUSE(_IO_doallocbuf) (fp);
+      _IO_doallocbuf (fp);
     }
 
   /* Flush all line buffered files before reading. */
   /* FIXME This can/should be moved to genops ?? */
   if (fp->_flags & (_IO_LINE_BUF|_IO_UNBUFFERED))
-    INTUSE(_IO_flush_all_linebuffered) ();
+    _IO_flush_all_linebuffered ();
 
-  INTUSE(_IO_switch_to_get_mode) (fp);
+  _IO_switch_to_get_mode (fp);
 
   /* This is very tricky. We have to adjust those
      pointers before we call _IO_SYSREAD () since
@@ -403,7 +401,7 @@ _IO_old_file_overflow (f, ch)
       /* Allocate a buffer if needed. */
       if (f->_IO_write_base == 0)
 	{
-	  INTUSE(_IO_doallocbuf) (f);
+	  _IO_doallocbuf (f);
 	  _IO_setg (f, f->_IO_buf_base, f->_IO_buf_base, f->_IO_buf_base);
 	}
       /* Otherwise must be currently reading.
@@ -500,7 +498,7 @@ _IO_old_file_seekoff (fp, offset, dir, mode)
      FIXME: simulate mem-papped files. */
 
   if (fp->_IO_write_ptr > fp->_IO_write_base || _IO_in_put_mode (fp))
-    if (INTUSE(_IO_switch_to_get_mode) (fp))
+    if (_IO_switch_to_get_mode (fp))
       return EOF;
 
   if (fp->_IO_buf_base == NULL)
@@ -511,7 +509,7 @@ _IO_old_file_seekoff (fp, offset, dir, mode)
 	  free (fp->_IO_read_base);
 	  fp->_flags &= ~_IO_IN_BACKUP;
 	}
-      INTUSE(_IO_doallocbuf) (fp);
+      _IO_doallocbuf (fp);
       _IO_setp (fp, fp->_IO_buf_base, fp->_IO_buf_base);
       _IO_setg (fp, fp->_IO_buf_base, fp->_IO_buf_base, fp->_IO_buf_base);
     }
@@ -597,7 +595,7 @@ _IO_old_file_seekoff (fp, offset, dir, mode)
     }
 
 #ifdef TODO
-  INTUSE(_IO_unsave_markers) (fp);
+  _IO_unsave_markers (fp);
 #endif
 
   if (fp->_flags & _IO_NO_READS)
@@ -637,7 +635,7 @@ _IO_old_file_seekoff (fp, offset, dir, mode)
   return offset;
  dumb:
 
-  INTUSE(_IO_unsave_markers) (fp);
+  _IO_unsave_markers (fp);
   result = _IO_SYSSEEK (fp, offset, dir);
   if (result != EOF)
     {
@@ -772,7 +770,7 @@ _IO_old_file_xsputn (f, data, n)
 	 buffer, but it's somewhat messier for line-buffered files,
 	 so we let _IO_default_xsputn handle the general case. */
       if (to_do)
-	to_do -= INTUSE(_IO_default_xsputn) (f, s+do_write, to_do);
+	to_do -= _IO_default_xsputn (f, s+do_write, to_do);
     }
   return n - to_do;
 }
@@ -784,20 +782,20 @@ const struct _IO_jump_t _IO_old_file_jumps =
   JUMP_INIT(finish, _IO_old_file_finish),
   JUMP_INIT(overflow, _IO_old_file_overflow),
   JUMP_INIT(underflow, _IO_old_file_underflow),
-  JUMP_INIT(uflow, INTUSE(_IO_default_uflow)),
-  JUMP_INIT(pbackfail, INTUSE(_IO_default_pbackfail)),
+  JUMP_INIT(uflow, _IO_default_uflow),
+  JUMP_INIT(pbackfail, _IO_default_pbackfail),
   JUMP_INIT(xsputn, _IO_old_file_xsputn),
-  JUMP_INIT(xsgetn, INTUSE(_IO_default_xsgetn)),
+  JUMP_INIT(xsgetn, _IO_default_xsgetn),
   JUMP_INIT(seekoff, _IO_old_file_seekoff),
   JUMP_INIT(seekpos, _IO_default_seekpos),
   JUMP_INIT(setbuf, _IO_old_file_setbuf),
   JUMP_INIT(sync, _IO_old_file_sync),
-  JUMP_INIT(doallocate, INTUSE(_IO_file_doallocate)),
-  JUMP_INIT(read, INTUSE(_IO_file_read)),
+  JUMP_INIT(doallocate, _IO_file_doallocate),
+  JUMP_INIT(read, _IO_file_read),
   JUMP_INIT(write, _IO_old_file_write),
-  JUMP_INIT(seek, INTUSE(_IO_file_seek)),
-  JUMP_INIT(close, INTUSE(_IO_file_close)),
-  JUMP_INIT(stat, INTUSE(_IO_file_stat))
+  JUMP_INIT(seek, _IO_file_seek),
+  JUMP_INIT(close, _IO_file_close),
+  JUMP_INIT(stat, _IO_file_stat)
 };
 
 compat_symbol (libc, _IO_old_do_write, _IO_do_write, GLIBC_2_0);

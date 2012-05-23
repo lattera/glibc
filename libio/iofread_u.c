@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1995, 1997, 1998, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1993-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -41,7 +41,7 @@ fread_unlocked (buf, size, count, fp)
   CHECK_FILE (fp, 0);
   if (bytes_requested == 0)
     return 0;
-  bytes_read = INTUSE(_IO_sgetn) (fp, (char *) buf, bytes_requested);
+  bytes_read = _IO_sgetn (fp, (char *) buf, bytes_requested);
   return bytes_requested == bytes_read ? count : bytes_read / size;
 }
 libc_hidden_def (fread_unlocked)

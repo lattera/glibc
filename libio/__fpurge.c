@@ -1,4 +1,4 @@
-/* Copyright (C) 2000, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 2000-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -25,7 +25,7 @@ __fpurge (FILE *fp)
     {
       /* Wide-char stream.  */
       if (_IO_in_backup (fp))
-	INTUSE(_IO_free_wbackup_area) (fp);
+	_IO_free_wbackup_area (fp);
 
       fp->_wide_data->_IO_read_end = fp->_wide_data->_IO_read_ptr;
       fp->_wide_data->_IO_write_ptr = fp->_wide_data->_IO_write_base;
@@ -34,7 +34,7 @@ __fpurge (FILE *fp)
     {
       /* Byte stream.  */
       if (_IO_in_backup (fp))
-	INTUSE(_IO_free_backup_area) (fp);
+	_IO_free_backup_area (fp);
 
       fp->_IO_read_end = fp->_IO_read_ptr;
       fp->_IO_write_ptr = fp->_IO_write_base;

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-2007, 2010, 2011, 2012 Free Software Foundation, Inc.
+/* Copyright (C) 1991-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -77,9 +77,9 @@
 #ifdef COMPILE_WSCANF
 # define ungetc(c, s)	((void) (c == WEOF				      \
 				 || (--read_in,				      \
-				     INTUSE(_IO_sputbackwc) (s, c))))
+				     _IO_sputbackwc (s, c))))
 # define ungetc_not_eof(c, s)	((void) (--read_in,			      \
-					 INTUSE(_IO_sputbackwc) (s, c)))
+					 _IO_sputbackwc (s, c)))
 # define inchar()	(c == WEOF ? ((errno = inchar_errno), WEOF)	      \
 			 : ((c = _IO_getwc_unlocked (s)),		      \
 			    (void) (c != WEOF				      \
@@ -109,9 +109,9 @@
 #else
 # define ungetc(c, s)	((void) ((int) c == EOF				      \
 				 || (--read_in,				      \
-				     INTUSE(_IO_sputbackc) (s, (unsigned char) c))))
+				     _IO_sputbackc (s, (unsigned char) c))))
 # define ungetc_not_eof(c, s)	((void) (--read_in,			      \
-					 INTUSE(_IO_sputbackc) (s, (unsigned char) c)))
+					 _IO_sputbackc (s, (unsigned char) c)))
 # define inchar()	(c == EOF ? ((errno = inchar_errno), EOF)	      \
 			 : ((c = _IO_getc_unlocked (s)),		      \
 			    (void) (c != EOF				      \
@@ -2941,6 +2941,7 @@ ___vfscanf (FILE *s, const char *format, va_list argptr)
   return _IO_vfscanf_internal (s, format, argptr, NULL);
 }
 ldbl_strong_alias (_IO_vfscanf_internal, _IO_vfscanf)
+ldbl_hidden_def (_IO_vfscanf_internal, _IO_vfscanf)
 ldbl_strong_alias (___vfscanf, __vfscanf)
 ldbl_hidden_def (___vfscanf, __vfscanf)
 ldbl_weak_alias (___vfscanf, vfscanf)

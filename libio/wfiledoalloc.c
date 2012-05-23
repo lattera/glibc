@@ -1,5 +1,4 @@
-/* Copyright (C) 1993, 1997, 1999, 2000, 2002, 2006, 2012
-   Free Software Foundation, Inc.
+/* Copyright (C) 1993-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -87,7 +86,7 @@ _IO_wfile_doallocate (fp)
 
   /* Allocate room for the external buffer.  */
   if (fp->_IO_buf_base == NULL)
-    INTUSE(_IO_file_doallocate) (fp);
+    _IO_file_doallocate (fp);
 
   /* If narrow buffer is user allocated (set by setvbuf etc.),
      use that size as the size of the wide buffer, when it is
@@ -97,6 +96,6 @@ _IO_wfile_doallocate (fp)
   if ((fp->_flags & _IO_USER_BUF))
     size = (size + sizeof (wchar_t) - 1) / sizeof (wchar_t);
   ALLOC_WBUF (p, size * sizeof (wchar_t), EOF);
-  INTUSE(_IO_wsetb) (fp, p, p + size, 1);
+  _IO_wsetb (fp, p, p + size, 1);
   return 1;
 }

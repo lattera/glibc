@@ -1,5 +1,5 @@
 /* Print floating point number in hexadecimal notation according to ISO C99.
-   Copyright (C) 1997-2002,2004,2006,2011 Free Software Foundation, Inc.
+   Copyright (C) 1997-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -36,7 +36,7 @@
    the GNU I/O library.	 */
 #include <libioP.h>
 #define PUT(f, s, n) _IO_sputn (f, s, n)
-#define PAD(f, c, n) (wide ? _IO_wpadn (f, c, n) : INTUSE(_IO_padn) (f, c, n))
+#define PAD(f, c, n) (wide ? _IO_wpadn (f, c, n) : _IO_padn (f, c, n))
 /* We use this file GNU C library and GNU I/O library.	So make
    names equal.	 */
 #undef putc

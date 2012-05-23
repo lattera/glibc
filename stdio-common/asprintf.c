@@ -1,5 +1,4 @@
-/* Copyright (C) 1991, 1995, 1997, 1998, 2002, 2004, 2006
-   Free Software Foundation, Inc.
+/* Copyright (C) 1991-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -38,7 +37,7 @@ ___asprintf (char **string_ptr, const char *format, ...)
 
   return done;
 }
-INTDEF2(___asprintf, __asprintf)
+ldbl_hidden_def (___asprintf, __asprintf)
 
 ldbl_strong_alias (___asprintf, __asprintf)
 ldbl_weak_alias (___asprintf, asprintf)

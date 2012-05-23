@@ -1,5 +1,4 @@
-/* Copyright (C) 1995, 1997-2000, 2001, 2002, 2003, 2006, 2010
-   Free Software Foundation, Inc.
+/* Copyright (C) 1995-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -43,13 +42,13 @@ _IO_vdprintf (d, format, arg)
 #endif
   _IO_no_init (&tmpfil.file, _IO_USER_LOCK, 0, &wd, &_IO_wfile_jumps);
   _IO_JUMPS (&tmpfil) = &_IO_file_jumps;
-  INTUSE(_IO_file_init) (&tmpfil);
+  _IO_file_init (&tmpfil);
 #if  !_IO_UNIFIED_JUMPTABLES
   tmpfil.vtable = NULL;
 #endif
-  if (INTUSE(_IO_file_attach) (&tmpfil.file, d) == NULL)
+  if (_IO_file_attach (&tmpfil.file, d) == NULL)
     {
-      INTUSE(_IO_un_link) (&tmpfil);
+      _IO_un_link (&tmpfil);
       return EOF;
     }
   tmpfil.file._flags |= _IO_DELETE_DONT_CLOSE;
@@ -57,7 +56,7 @@ _IO_vdprintf (d, format, arg)
   _IO_mask_flags (&tmpfil.file, _IO_NO_READS,
 		  _IO_NO_READS+_IO_NO_WRITES+_IO_IS_APPENDING);
 
-  done = INTUSE(_IO_vfprintf) (&tmpfil.file, format, arg);
+  done = _IO_vfprintf (&tmpfil.file, format, arg);
 
   if (done != EOF && _IO_do_flush (&tmpfil.file) == EOF)
     done = EOF;

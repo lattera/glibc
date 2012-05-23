@@ -1,4 +1,4 @@
-/* Copyright (C) 1993,1997-1999,2002,2003,2004 Free Software Foundation, Inc.
+/* Copyright (C) 1993-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -38,12 +38,12 @@ _IO_seekpos_unlocked (fp, pos, mode)
   if (_IO_fwide (fp, 0) <= 0)
     {
       if (_IO_have_backup (fp))
-	INTUSE(_IO_free_backup_area) (fp);
+	_IO_free_backup_area (fp);
     }
   else
     {
       if (_IO_have_wbackup (fp))
-	INTUSE(_IO_free_wbackup_area) (fp);
+	_IO_free_wbackup_area (fp);
     }
 
   return _IO_SEEKOFF (fp, pos, 0, mode);

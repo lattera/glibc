@@ -40,10 +40,10 @@
 #include <rpc/xdr.h>
 
 #include <libio/iolibio.h>
-#define fflush(s) INTUSE(_IO_fflush) (s)
-#define fread(p, m, n, s) INTUSE(_IO_fread) (p, m, n, s)
-#define ftell(s) INTUSE(_IO_ftell) (s)
-#define fwrite(p, m, n, s) INTUSE(_IO_fwrite) (p, m, n, s)
+#define fflush(s) _IO_fflush (s)
+#define fread(p, m, n, s) _IO_fread (p, m, n, s)
+#define ftell(s) _IO_ftell (s)
+#define fwrite(p, m, n, s) _IO_fwrite (p, m, n, s)
 
 static bool_t xdrstdio_getlong (XDR *, long *);
 static bool_t xdrstdio_putlong (XDR *, const long *);

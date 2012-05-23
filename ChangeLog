@@ -1,3 +1,171 @@
+2012-05-24  Andreas Schwab  <schwab@linux-m68k.org>
+
+	[BZ #14132]
+	* include/libio.h (_IO_free_backup_area, _IO_free_wbackup_area)
+	(_IO_padn, _IO_putc, _IO_sgetn, _IO_vfprintf, _IO_vfscanf):
+	Declare hidden proto.
+	* include/stdio.h (__asprintf_internal): Don't declare.
+	(__asprintf): Don't define as macro.  Declare hidden proto.
+	* include/stdio_ext.h (__fsetlocking_internal): Don't declare.
+	(__fsetlocking): Declare hidden proto.
+	* libio/iolibio.h (_IO_fdopen, _IO_fflush, _IO_ftell, _IO_fread)
+	(_IO_fwrite, _IO_setbuffer, _IO_setvbuf, _IO_vsprintf): Declare
+	hidden proto.
+	(_IO_vprintf, _IO_freopen, _IO_freopen64, _IO_setbuf)
+	(_IO_setlinebuf): Remove use of INTUSE.
+	(_IO_setbuffer_internal, _IO_fread_internal, _IO_fdopen_internal)
+	(_IO_vsprintf_internal, _IO_fflush_internal, _IO_fwrite_internal)
+	(_IO_ftell_internal, _IO_fputs_internal, _IO_setvbuf_internal):
+	Remove declaration.
+	* libio/libioP.h (INTUSE, INTDEF, INTDEF2): Don't define.
+	(_IO_do_flush): Remove use of INTUSE.
+	(_IO_switch_to_get_mode, _IO_init, _IO_sputbackc, _IO_un_link)
+	(_IO_link_in, _IO_doallocbuf, _IO_unsave_markers, _IO_setb)
+	(_IO_adjust_column, _IO_least_wmarker)
+	(_IO_switch_to_main_wget_area, _IO_switch_to_wbackup_area)
+	(_IO_switch_to_wget_mode, _IO_wsetb, _IO_sputbackwc)
+	(_IO_wdoallocbuf, _IO_default_uflow, _IO_wdefault_uflow)
+	(_IO_default_doallocate, _IO_wdefault_doallocate)
+	(_IO_default_finish, _IO_wdefault_finish, _IO_default_pbackfail)
+	(_IO_wdefault_pbackfail, _IO_default_xsputn, _IO_wdefault_xsputn)
+	(_IO_default_xsgetn, _IO_wdefault_xsgetn, _IO_do_write)
+	(_IO_wdo_write, _IO_flush_all, _IO_flush_all_linebuffered)
+	(_IO_file_doallocate, _IO_file_setbuf, _IO_file_seekoff)
+	(_IO_file_xsputn, _IO_file_xsgetn, _IO_file_stat, _IO_file_close)
+	(_IO_file_underflow, _IO_file_overflow, _IO_file_init)
+	(_IO_file_attach, _IO_file_fopen, _IO_file_read, _IO_file_sync)
+	(_IO_file_close_it, _IO_file_seek, _IO_file_finish)
+	(_IO_wfile_xsputn, _IO_wfile_sync, _IO_wfile_underflow)
+	(_IO_wfile_overflow, _IO_wfile_seekoff, _IO_str_underflow)
+	(_IO_str_overflow, _IO_str_pbackfail, _IO_str_seekoff)
+	(_IO_getline, _IO_getline_info, _IO_list_all): Declare hidden
+	proto.
+	(_IO_flush_all_internal, _IO_adjust_column_internal)
+	(_IO_default_uflow_internal, _IO_default_finish_internal)
+	(_IO_default_pbackfail_internal, _IO_default_xsputn_internal)
+	(_IO_default_xsgetn_internal, _IO_default_doallocate_internal)
+	(_IO_wdefault_finish_internal, _IO_wdefault_pbackfail_internal)
+	(_IO_wdefault_xsputn_internal, _IO_wdefault_xsgetn_internal)
+	(_IO_wdefault_doallocate_internal, _IO_wdefault_uflow_internal)
+	(_IO_file_doallocate_internal, _IO_file_setbuf_internal)
+	(_IO_file_seekoff_internal, _IO_file_xsputn_internal)
+	(_IO_file_xsgetn_internal, _IO_file_stat_internal)
+	(_IO_file_close_internal, _IO_file_close_it_internal)
+	(_IO_file_underflow_internal, _IO_file_overflow_internal)
+	(_IO_file_init_internal, _IO_file_attach_internal)
+	(_IO_file_fopen_internal, _IO_file_read_internal)
+	(_IO_file_sync_internal, _IO_file_seek_internal)
+	(_IO_file_finish_internal, _IO_wfile_xsputn_internal)
+	(_IO_wfile_seekoff_internal, _IO_wfile_sync_internal)
+	(_IO_str_underflow_internal, _IO_str_overflow_internal)
+	(_IO_str_pbackfail_internal, _IO_str_seekoff_internal)
+	(_IO_file_jumps_internal, _IO_wfile_jumps_internal)
+	(_IO_list_all_internal, _IO_link_in_internal)
+	(_IO_sputbackc_internal, _IO_wdoallocbuf_internal)
+	(_IO_sgetn_internal, _IO_flush_all_linebuffered_internal)
+	(_IO_switch_to_wget_mode_internal, _IO_unsave_markers_internal)
+	(_IO_switch_to_main_wget_area_internal, _IO_wdo_write_internal)
+	(_IO_do_write_internal, _IO_padn_internal)
+	(_IO_getline_info_internal, _IO_getline_internal)
+	(_IO_free_wbackup_area_internal, _IO_free_backup_area_internal)
+	(_IO_switch_to_wbackup_area_internal, _IO_setb_internal)
+	(_IO_sputbackwc_internal, _IO_switch_to_get_mode_internal)
+	(_IO_vfscanf_internal, _IO_vfprintf_internal)
+	(_IO_doallocbuf_internal, _IO_wsetb_internal, _IO_putc_internal)
+	(_IO_init_internal, _IO_un_link_internal): Don't declare.
+	* libio/fileops.c: Replace INTDEF with libc_hidden_def and INTDEF2
+	with libc_hidden_ver, remove use of INTUSE.
+	* libio/genops.c: Likewise.
+	* libio/freopen.c: Likewise.
+	* libio/freopen64.c: Likewise.
+	* libio/iofclose.c: Likewise.
+	* libio/iofdopen.c: Likewise.
+	* libio/iofflush.c: Likewise.
+	* libio/iofflush_u.c: Likewise.
+	* libio/iofgets.c: Likewise.
+	* libio/iofgets_u.c: Likewise.
+	* libio/iofopen.c: Likewise.
+	* libio/iofopncook.c: Likewise.
+	* libio/iofread.c: Likewise.
+	* libio/iofread_u.c: Likewise.
+	* libio/ioftell.c: Likewise.
+	* libio/iofwrite.c: Likewise.
+	* libio/iogetline.c: Likewise.
+	* libio/iogets.c: Likewise.
+	* libio/iogetwline.c: Likewise.
+	* libio/iopadn.c: Likewise.
+	* libio/iopopen.c: Likewise.
+	* libio/ioseekoff.c: Likewise.
+	* libio/ioseekpos.c: Likewise.
+	* libio/iosetbuffer.c: Likewise.
+	* libio/iosetvbuf.c: Likewise.
+	* libio/ioungetc.c: Likewise.
+	* libio/ioungetwc.c: Likewise.
+	* libio/iovdprintf.c: Likewise.
+	* libio/iovsprintf.c: Likewise.
+	* libio/iovsscanf.c: Likewise.
+	* libio/memstream.c: Likewise.
+	* libio/obprintf.c: Likewise.
+	* libio/oldfileops.c: Likewise.
+	* libio/oldiofclose.c: Likewise.
+	* libio/oldiofdopen.c: Likewise.
+	* libio/oldiofopen.c: Likewise.
+	* libio/oldiopopen.c: Likewise.
+	* libio/oldstdfiles.c: Likewise.
+	* libio/putc.c: Likewise.
+	* libio/setbuf.c: Likewise.
+	* libio/setlinebuf.c: Likewise.
+	* libio/stdfiles.c: Likewise.
+	* libio/strops.c: Likewise.
+	* libio/vasprintf.c: Likewise.
+	* libio/vscanf.c: Likewise.
+	* libio/vsnprintf.c: Likewise.
+	* libio/vswprintf.c: Likewise.
+	* libio/wfiledoalloc.c: Likewise.
+	* libio/wfileops.c: Likewise.
+	* libio/wgenops.c: Likewise.
+	* libio/wmemstream.c: Likewise.
+	* libio/wstrops.c: Likewise.
+	* libio/__fpurge.c: Likewise.
+	* libio/__fsetlocking.c: Likewise.
+	* assert/assert.c: Likewise.
+	* debug/fgets_chk.c: Likewise.
+	* debug/fgets_u_chk.c: Likewise.
+	* debug/fread_chk.c: Likewise.
+	* debug/fread_u_chk.c: Likewise.
+	* debug/gets_chk.c: Likewise.
+	* debug/obprintf_chk.c: Likewise.
+	* debug/vasprintf_chk.c: Likewise.
+	* debug/vdprintf_chk.c: Likewise.
+	* debug/vsnprintf_chk.c: Likewise.
+	* debug/vsprintf_chk.c: Likewise.
+	* malloc/mtrace.c: Likewise.
+	* misc/error.c: Likewise.
+	* misc/syslog.c: Likewise.
+	* stdio-common/asprintf.c: Likewise.
+	* stdio-common/fxprintf.c: Likewise.
+	* stdio-common/getw.c: Likewise.
+	* stdio-common/isoc99_fscanf.c: Likewise.
+	* stdio-common/isoc99_scanf.c: Likewise.
+	* stdio-common/isoc99_vfscanf.c: Likewise.
+	* stdio-common/isoc99_vscanf.c: Likewise.
+	* stdio-common/isoc99_vsscanf.c: Likewise.
+	* stdio-common/printf-prs.c: Likewise.
+	* stdio-common/printf_fp.c: Likewise.
+	* stdio-common/printf_fphex.c: Likewise.
+	* stdio-common/printf_size.c: Likewise.
+	* stdio-common/putw.c: Likewise.
+	* stdio-common/scanf.c: Likewise.
+	* stdio-common/sprintf.c: Likewise.
+	* stdio-common/tmpfile.c: Likewise.
+	* stdio-common/vfprintf.c: Likewise.
+	* stdio-common/vfscanf.c: Likewise.
+	* stdlib/strfmon_l.c: Likewise.
+	* sunrpc/openchild.c: Likewise.
+	* sunrpc/xdr_stdio.c: Likewise.
+	* sysdeps/ieee754/ldbl-opt/nldbl-compat.c: Likewise.
+	* sysdeps/mach/hurd/tmpfile.c: Likewise.
+
 2012-05-24  Roland McGrath  <roland@hack.frob.com>
 
 	* sysdeps/unix/sysv/linux/x86_64/x32/syscalls.list: New file.

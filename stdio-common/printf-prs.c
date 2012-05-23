@@ -1,5 +1,4 @@
-/* Copyright (C) 1991, 1992, 1995, 1996, 1999, 2000, 2002-2005, 2007, 2009
-   Free Software Foundation, Inc.
+/* Copyright (C) 1991-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -37,7 +36,7 @@
 # define PUT(F, S, N)	_IO_sputn (F, S, N)
 # define PAD(Padchar)							      \
   if (width > 0)							      \
-    done += INTUSE(_IO_padn) (s, Padchar, width)
+    done += _IO_padn (s, Padchar, width)
 #else
 # define vfprintf	vfwprintf
 # define CHAR_T		wchar_t

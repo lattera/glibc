@@ -1,4 +1,4 @@
-/* Copyright (C) 1993,1996,1997,1998,2002,2003 Free Software Foundation, Inc.
+/* Copyright (C) 1993-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -36,7 +36,7 @@ _IO_ungetc (c, fp)
   if (c == EOF)
     return EOF;
   _IO_acquire_lock (fp); 
-  result = INTUSE(_IO_sputbackc) (fp, (unsigned char) c);
+  result = _IO_sputbackc (fp, (unsigned char) c);
   _IO_release_lock (fp);
   return result;
 }

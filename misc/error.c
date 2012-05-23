@@ -1,5 +1,5 @@
 /* Error handler for noninteractive utilities
-   Copyright (C) 1990-1998, 2000-2006, 2011 Free Software Foundation, Inc.
+   Copyright (C) 1990-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -69,9 +69,9 @@ extern void __error_at_line (int status, int errnum, const char *file_name,
 # define error_at_line __error_at_line
 
 # include <libio/iolibio.h>
-# define fflush(s) INTUSE(_IO_fflush) (s)
+# define fflush(s) _IO_fflush (s)
 # undef putc
-# define putc(c, fp) INTUSE(_IO_putc) (c, fp)
+# define putc(c, fp) _IO_putc (c, fp)
 
 # include <bits/libc-lock.h>
 

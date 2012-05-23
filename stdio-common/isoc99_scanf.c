@@ -1,5 +1,4 @@
-/* Copyright (C) 1991, 1995, 1996, 1997, 2002, 2004, 2006, 2007
-   Free Software Foundation, Inc.
+/* Copyright (C) 1991-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -33,7 +32,7 @@ __isoc99_scanf (const char *format, ...)
   stdin->_flags2 |= _IO_FLAGS2_SCANF_STD;
 
   va_start (arg, format);
-  done = INTUSE(_IO_vfscanf) (stdin, format, arg, NULL);
+  done = _IO_vfscanf (stdin, format, arg, NULL);
   va_end (arg);
 
   _IO_release_lock (stdin);

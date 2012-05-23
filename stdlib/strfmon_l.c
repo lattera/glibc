@@ -1,5 +1,5 @@
 /* Formatting a monetary value according to the given locale.
-   Copyright (C) 1996,1997,2002,2004,2006,2009,2010 Free Software Foundation, Inc.
+   Copyright (C) 1996-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -515,10 +515,9 @@ __vstrfmon_l (char *s, size_t maxsize, __locale_t loc, const char *format,
 #ifdef _IO_MTSAFE_IO
       f._sbf._f._lock = NULL;
 #endif
-      INTUSE(_IO_init) (&f._sbf._f, 0);
+      _IO_init (&f._sbf._f, 0);
       _IO_JUMPS (&f._sbf) = &_IO_str_jumps;
-      INTUSE(_IO_str_init_static) (&f, dest,
-				   (s + maxsize) - dest, dest);
+      _IO_str_init_static_internal (&f, dest, (s + maxsize) - dest, dest);
       /* We clear the last available byte so we can find out whether
 	 the numeric representation is too long.  */
       s[maxsize - 1] = '\0';

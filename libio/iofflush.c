@@ -1,5 +1,4 @@
-/* Copyright (C) 1993, 1995, 1996, 1997, 1998, 2002, 2003
-   Free Software Foundation, Inc.
+/* Copyright (C) 1993-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -33,7 +32,7 @@ _IO_fflush (fp)
      _IO_FILE *fp;
 {
   if (fp == NULL)
-    return INTUSE(_IO_flush_all) ();
+    return _IO_flush_all ();
   else
     {
       int result;
@@ -44,7 +43,7 @@ _IO_fflush (fp)
       return result;
     }
 }
-INTDEF(_IO_fflush)
+libc_hidden_def (_IO_fflush)
 
 #ifdef weak_alias
 weak_alias (_IO_fflush, fflush)
