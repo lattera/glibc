@@ -244,9 +244,9 @@ well.
 permissions on a pseudoterminal so it can be used by the calling
 process.  This means programs like `xterm' and `screen' do not have to
 be setuid to get a pty.  (There may be other reasons why they need
-privileges.)  If you are using a 2.1 or newer Linux kernel with the
-`devptsfs' or `devfs' filesystems providing pty slaves, you don't need
-this program; otherwise you do.  The source for `pt_chown' is in
+privileges.)  If you are using a Linux kernel with the `devptsfs' or
+`devfs' filesystems providing pty slaves, you don't need this program;
+otherwise you do.  The source for `pt_chown' is in
 `login/programs/pt_chown.c'.
 
    After installation you might want to configure the timezone and
@@ -376,11 +376,6 @@ in `/usr/lib'.  This is handled automatically if you configure the GNU
 C Library with `--prefix=/usr'.  If you set some other prefix or allow
 it to default to `/usr/local', then all the components are installed
 there.
-
-   You cannot use `nscd' with 2.0 kernels, due to bugs in the
-kernel-side thread support.  `nscd' happens to hit these bugs
-particularly hard, but you might have problems with any threaded
-program.
 
 Reporting Bugs
 ==============
