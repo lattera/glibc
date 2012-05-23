@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1996-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -37,6 +37,12 @@
 
 /* Stop system and switch power off if possible.  */
 #define RB_POWER_OFF	0x4321fedc
+
+/* Suspend system using software suspend.  */
+#define RB_SW_SUSPEND	0xd000fce2
+
+/* Reboot system into new kernel.  */
+#define RB_KEXEC	0x45584543
 
 __BEGIN_DECLS
 
