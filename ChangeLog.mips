@@ -1,3 +1,10 @@
+2012-05-23  Steve Ellcey  <sellcey@mips.com>
+
+	* sysdeps/unix/sysv/linux/mips/Makefile
+	(syscall-list-o32-options): Use -D_MIPS_SIM=1.
+	(syscall-list-n32-options): Use -D_MIPS_SIM=2.
+	(syscall-list-n64-options): Use -D_MIPS_SIM=3.
+
 2012-05-23  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/mips/bits/mman.h (MADV_DONTDUMP):
