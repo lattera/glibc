@@ -1,3 +1,8 @@
+2012-05-23  Chris Metcalf  <cmetcalf@tilera.com>
+
+	* sysdeps/unix/sysv/linux/tile/bits/mman.h (MADV_DONTDUMP): Define.
+	(MADV_DODUMP): Likewise.
+
 2012-05-22  Chris Metcalf  <cmetcalf@tilera.com>
 
 	* sysdeps/tile/bits/libm-test-ulps: Update.
