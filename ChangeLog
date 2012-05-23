@@ -1,4 +1,9 @@
 2012-05-23  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/syscalls.list: Add poll.
+	* sysdeps/unix/sysv/linux/poll.c: Remove file.
+
+2012-05-23  Andreas Jaeger  <aj@suse.de>
 	    Maximilian Attems  <max@stro.at>
 
 	* sysdeps/unix/sysv/linux/sys/reboot.h (RB_SW_SUSPEND, RB_KEXEC):
