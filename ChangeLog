@@ -1,3 +1,9 @@
+2012-05-23  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/unix/sysv/linux/x86_64/x32/sched_getcpu.S: Rearrange
+	code so that pseudo_end is just ret and the stack pointer is
+	correct also for static library in error case.
+
 2012-05-23  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/powerpc/chown.c: Add comment suggesting

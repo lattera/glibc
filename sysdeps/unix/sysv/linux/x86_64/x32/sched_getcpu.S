@@ -33,14 +33,18 @@ ENTRY (sched_getcpu)
 
 	call	__getcpu
 
+	/* Local variable is result if the call is successful.  */
+	mov	(%rsp), %edx
+	/* Restore stack pointer before we might jump to
+	   SYSCALL_ERROR_LABEL which returns to the caller.  */
+	add	$0x8, %esp
+	cfi_adjust_cfa_offset(-8)
+
 	cmp	$-4095, %eax
 	jae	SYSCALL_ERROR_LABEL
 
-	mov	(%rsp), %eax
-
+	mov	%edx, %eax
 L(pseudo_end):
-	add	$0x8, %esp
-	cfi_adjust_cfa_offset(-8)
 	ret
 PSEUDO_END(sched_getcpu)
 #endif
