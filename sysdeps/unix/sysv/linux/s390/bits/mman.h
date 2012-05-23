@@ -97,6 +97,9 @@
 # define MADV_UNMERGEABLE 13	/* KSM may not merge identical pages.  */
 # define MADV_HUGEPAGE	  14	/* Worth backing with hugepages.  */
 # define MADV_NOHUGEPAGE  15	/* Not worth backing with hugepages.  */
+# define MADV_DONTDUMP	  16    /* Explicity exclude from the core dump,
+                                   overrides the coredump filter bits.  */
+# define MADV_DODUMP	  17	/* Clear the MADV_DONTDUMP flag.  */
 # define MADV_HWPOISON	  100	/* Poison a page for testing.  */
 #endif
 
