@@ -1,5 +1,10 @@
 2012-05-24  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #10846]
+	[BZ #14036]
+	* math/libm-test.inc (exp_test): Add test from bug 14036.
+	(pow_test): Add test from bug 10846.
+
 	* math/gen-libm-test.pl (%beautify): Remove entries for exceptions
 	and other flags.
 	(special_function): Do not include flags in test name.

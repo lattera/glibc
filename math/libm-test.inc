@@ -3501,6 +3501,7 @@ exp_test (void)
 
 #if !(defined TEST_LDOUBLE && LDBL_MAX_EXP > 1024)
   TEST_f_f (exp, 710, plus_infty, OVERFLOW_EXCEPTION);
+  TEST_f_f (exp, -1234, plus_zero, UNDERFLOW_EXCEPTION);
 #endif
   TEST_f_f (exp, 1e5, plus_infty, OVERFLOW_EXCEPTION);
   TEST_f_f (exp, max_value, plus_infty, OVERFLOW_EXCEPTION);
@@ -6731,6 +6732,8 @@ pow_test (void)
   TEST_ff_f (pow, 0x1.0000000000001p0L, 0x1.23456789abcdfp61L, 9.8826311568044974397135026217687399395481e+252L);
   TEST_ff_f (pow, 0x1.0000000000001p0L, -0x1.23456789abcdfp61L, 1.0118762747828234466621210689458255908670e-253L);
 #endif
+
+  TEST_ff_f (pow, 2.0L, -100000.0L, plus_zero, UNDERFLOW_EXCEPTION);
 
   END (pow);
 }
