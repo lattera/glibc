@@ -1,5 +1,9 @@
 2012-05-24  Richard Henderson  <rth@twiddle.net>
 
+	* sysdeps/unix/sysv/linux/alpha/msgctl.c: Remove __ASSUME_32BITUIDS.
+	* sysdeps/unix/sysv/linux/alpha/semctl.c: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/shmctl.c: Likewise.
+
 	* sysdeps/unix/sysv/linux/alpha/bits/mman.h (MADV_HUGEPAGE): New.
 	(MADV_NOHUGEPAGE, MADV_DONTDUMP, MADV_DODUMP): New.
 
