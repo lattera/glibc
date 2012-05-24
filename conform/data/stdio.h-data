@@ -1,10 +1,10 @@
-constant BUFSIZ
-constant FILENAME_MAX
-constant FOPEN_MAX >= 8
+macro-int-constant BUFSIZ >= 256
+macro-int-constant FILENAME_MAX
+macro-int-constant FOPEN_MAX >= 8
 
-constant _IOFBF
-constant _IOLBF
-constant _IONBF
+macro-int-constant _IOFBF
+macro-int-constant _IOLBF
+macro-int-constant _IONBF
 
 #if !defined ISO && !defined ISO99 && !defined ISO11
 constant L_ctermid
@@ -12,25 +12,25 @@ constant L_ctermid
 constant L_cuserid
 # endif
 #endif
-constant L_tmpnam
+macro-int-constant L_tmpnam
 
-constant SEEK_CUR
-constant SEEK_END
-constant SEEK_SET
+macro-int-constant SEEK_CUR
+macro-int-constant SEEK_END
+macro-int-constant SEEK_SET
 
-constant TMP_MAX >= 10000
+macro-int-constant TMP_MAX >= 10000
 
-constant EOF
+macro-int-constant EOF < 0
 
-constant NULL
+macro-constant NULL == 0
 
 #if !defined ISO && !defined ISO99 && !defined ISO11 && !defined POSIX && !defined POSIX2008
 constant P_tmpdir
 #endif
 
-macro stdin
-macro stdout
-macro stderr
+macro stdin {FILE *}
+macro stdout {FILE *}
+macro stderr {FILE *}
 
 type FILE
 type fpos_t

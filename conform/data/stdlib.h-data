@@ -5,14 +5,14 @@ type ldiv_t
 element ldiv_t long quot
 element ldiv_t long rem
 
-macro EXIT_FAILURE
-macro EXIT_SUCCESS == 0
+macro-int-constant EXIT_FAILURE
+macro-int-constant EXIT_SUCCESS == 0
 
-macro NULL
-constant RAND_MAX >= 32767
+macro-constant NULL == 0
+macro-int-constant RAND_MAX >= 32767
 macro MB_CUR_MAX
 
-#if defined XOPEN2K || defined XOPEN2K8 || defined POSIX2008
+#if defined ISO99 || defined ISO11 || defined XOPEN2K || defined XOPEN2K8 || defined POSIX2008
 type lldiv_t
 element lldiv_t {long long} quot
 element lldiv_t {long long} rem
@@ -151,8 +151,16 @@ function void srand48 (long int)
 function void srandom (unsigned)
 #endif
 function double strtod (const char*, char**)
+#if !defined ISO && !defined POSIX && !defined XPG3 && !defined XPG4 && !defined UNIX98
+function float strtof (const char*, char**)
+function {long double} strtold (const char*, char**)
+#endif
 function {long int} strtol (const char*, char**, int)
 function {unsigned long int} strtoul (const char*, char**, int)
+#if !defined ISO && !defined POSIX && !defined XPG3 && !defined XPG4 && !defined UNIX98
+function {long long int} strtoll (const char*, char**, int)
+function {unsigned long long int} strtoull (const char*, char**, int)
+#endif
 function int system (const char*)
 #if defined XPG3 || defined XPG4 || defined UNIX98
 function int ttyslot (void)
@@ -169,10 +177,14 @@ function {void*} valloc (size_t)
 function size_t wcstombs (char*, const wchar_t*, size_t)
 function int wctomb (char*, wchar_t)
 
+#if !defined ISO && !defined ISO99 && !defined ISO11
 allow-header stddef.h
 allow-header limits.h
 allow-header math.h
 allow-header sys/wait.h
+#endif
 
-allow str*
+allow str[abcdefghijklmnopqrstuvwxyz]*
+#if !defined ISO && !defined ISO99 && !defined ISO11
 allow *_t
+#endif

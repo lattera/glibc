@@ -1,3 +1,38 @@
+2012-05-24  Joseph Myers  <joseph@codesourcery.com>
+
+	* conform/data/stdio.h-data (BUFSIZ): Use macro-int-constant.
+	Require >= 256.
+	(FILENAME_MAX): Use macro-int-constant.
+	(FOPEN_MAX): Use macro-int-constant.  Require >= 8.
+	(_IOFBF): Use macro-int-constant.
+	(_IOLBF): Likewise.
+	(_IONBF): Likewise.
+	(SEEK_CUR): Likewise.
+	(SEEK_END): Likewise.
+	(SEEK_SET): Likewise.
+	(TMP_MAX): Likewise.
+	(EOF): Use macro-int-constant.  Require < 0.
+	(NULL): Use macro-constant.  Require == 0.
+	(stdin): Require type to be FILE *.
+	(stdout): Likewise.
+	(stderr): Likewise.
+	* conform/data/stdlib.h-data (EXIT_FAILURE): Use
+	macro-int-constant.
+	(EXIT_SUCCESS): Likewise.
+	(NULL): Use macro-constant.  Require == 0.
+	(RAND_MAX): Use macro-int-constant.
+	[ISO99 || ISO11] (lldiv_t): Require also for these standards.
+	[C99-based standards] (strtof): Require function.
+	[C99-based standards] (strtold): Likewise.
+	[C99-based standards] (strtoll): Likewise.
+	[C99-based standards] (strtoull): Likewise.
+	[ISO || ISO99 || ISO11] (stddef.h): Do not allow header.
+	[ISO || ISO99 || ISO11] (limits.h): Likewise.
+	[ISO || ISO99 || ISO11] (math.h): Likewise.
+	[ISO || ISO99 || ISO11] (sys/wait.h): Likewise.
+	(str*): Change to str[abcdefghijklmnopqrstuvwxyz]*.
+	[ISO || ISO99 || ISO11] (*_t): Do not allow.
+
 2012-05-24  Andreas Schwab  <schwab@linux-m68k.org>
 
 	[BZ #14132]
