@@ -102,6 +102,10 @@
 # define MADV_DOFORK      11 /* Do inherit across fork.  */
 # define MADV_MERGEABLE   12 /* KSM may merge identical pages.  */
 # define MADV_UNMERGEABLE 13 /* KSM may not merge identical pages.  */
+# define MADV_HUGEPAGE    14 /* Worth backing with hugepages.  */
+# define MADV_NOHUGEPAGE  15 /* Not worth backing with hugepages.  */
+# define MADV_DONTDUMP    16 /* Exclude from the core dump.  */
+# define MADV_DODUMP      17 /* Clear MADV_DONTDUMP.  */
 # define MADV_HWPOISON   100 /* Poison a page for testing.  */
 #endif
 
