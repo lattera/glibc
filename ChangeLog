@@ -1,3 +1,14 @@
+2012-05-24  Daniel Jacobowitz  <drow@false.org>
+	    H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #12495]
+	* malloc/malloc.c (SMALLBIN_CORRECTION): New.
+	(MIN_LARGE_SIZE, smallbin_index): Use it to handle 16-byte alignment.
+	(largebin_index_32_big): New.
+	(largebin_index): Use it for 16-byte alignment.
+	(sYSMALLOc): Handle MALLOC_ALIGNMENT > 2 * SIZE_SZ.  Don't update
+	correction with front_misalign.
+
 2012-05-24  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/unix/sysv/linux/x86_64/x32/nptl/ld.abilist: New file.

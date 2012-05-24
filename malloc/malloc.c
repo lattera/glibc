@@ -1472,18 +1472,23 @@ typedef struct malloc_chunk* mbinptr;
 
     The bins top out around 1MB because we expect to service large
     requests via mmap.
+
+    Bin 0 does not exist.  Bin 1 is the unordered list; if that would be
+    a valid chunk size the small bins are bumped up one.
 */
 
 #define NBINS             128
 #define NSMALLBINS         64
 #define SMALLBIN_WIDTH    MALLOC_ALIGNMENT
-#define MIN_LARGE_SIZE    (NSMALLBINS * SMALLBIN_WIDTH)
+#define SMALLBIN_CORRECTION (MALLOC_ALIGNMENT > 2 * SIZE_SZ)
+#define MIN_LARGE_SIZE    ((NSMALLBINS - SMALLBIN_CORRECTION) * SMALLBIN_WIDTH)
 
 #define in_smallbin_range(sz)  \
   ((unsigned long)(sz) < (unsigned long)MIN_LARGE_SIZE)
 
 #define smallbin_index(sz) \
-  (SMALLBIN_WIDTH == 16 ? (((unsigned)(sz)) >> 4) : (((unsigned)(sz)) >> 3))
+  ((SMALLBIN_WIDTH == 16 ? (((unsigned)(sz)) >> 4) : (((unsigned)(sz)) >> 3)) \
+   + SMALLBIN_CORRECTION)
 
 #define largebin_index_32(sz)                                                \
 (((((unsigned long)(sz)) >>  6) <= 38)?  56 + (((unsigned long)(sz)) >>  6): \
@@ -1492,6 +1497,14 @@ typedef struct malloc_chunk* mbinptr;
  ((((unsigned long)(sz)) >> 15) <=  4)? 119 + (((unsigned long)(sz)) >> 15): \
  ((((unsigned long)(sz)) >> 18) <=  2)? 124 + (((unsigned long)(sz)) >> 18): \
 					126)
+
+#define largebin_index_32_big(sz)                                            \
+(((((unsigned long)(sz)) >>  6) <= 45)?  49 + (((unsigned long)(sz)) >>  6): \
+ ((((unsigned long)(sz)) >>  9) <= 20)?  91 + (((unsigned long)(sz)) >>  9): \
+ ((((unsigned long)(sz)) >> 12) <= 10)? 110 + (((unsigned long)(sz)) >> 12): \
+ ((((unsigned long)(sz)) >> 15) <=  4)? 119 + (((unsigned long)(sz)) >> 15): \
+ ((((unsigned long)(sz)) >> 18) <=  2)? 124 + (((unsigned long)(sz)) >> 18): \
+                                        126)
 
 // XXX It remains to be seen whether it is good to keep the widths of
 // XXX the buckets the same or whether it should be scaled by a factor
@@ -1505,7 +1518,9 @@ typedef struct malloc_chunk* mbinptr;
 					126)
 
 #define largebin_index(sz) \
-  (SIZE_SZ == 8 ? largebin_index_64 (sz) : largebin_index_32 (sz))
+  (SIZE_SZ == 8 ? largebin_index_64 (sz)                                     \
+   : MALLOC_ALIGNMENT == 16 ? largebin_index_32_big (sz)                     \
+   : largebin_index_32 (sz))
 
 #define bin_index(sz) \
  ((in_smallbin_range(sz)) ? smallbin_index(sz) : largebin_index(sz))
@@ -2273,8 +2288,12 @@ static void* sysmalloc(INTERNAL_SIZE_T nb, mstate av)
       is no following chunk whose prev_size field could be used.
 
       See the front_misalign handling below, for glibc there is no
-      need for further alignments.  */
-    size = (nb + SIZE_SZ + pagemask) & ~pagemask;
+      need for further alignments unless we have have high alignment.
+    */
+    if (MALLOC_ALIGNMENT == 2 * SIZE_SZ)
+      size = (nb + SIZE_SZ + pagemask) & ~pagemask;
+    else
+      size = (nb + SIZE_SZ + MALLOC_ALIGN_MASK + pagemask) & ~pagemask;
     tried_mmap = true;
 
     /* Don't try if size wraps around 0 */
@@ -2290,14 +2309,29 @@ static void* sysmalloc(INTERNAL_SIZE_T nb, mstate av)
 	  returned start address to meet alignment requirements here
 	  and in memalign(), and still be able to compute proper
 	  address argument for later munmap in free() and realloc().
+	*/
 
-	  For glibc, chunk2mem increases the address by 2*SIZE_SZ and
-	  MALLOC_ALIGN_MASK is 2*SIZE_SZ-1.  Each mmap'ed area is page
-	  aligned and therefore definitely MALLOC_ALIGN_MASK-aligned.  */
-	assert (((INTERNAL_SIZE_T)chunk2mem(mm) & MALLOC_ALIGN_MASK) == 0);
-
-	p = (mchunkptr)mm;
-	set_head(p, size|IS_MMAPPED);
+	if (MALLOC_ALIGNMENT == 2 * SIZE_SZ)
+	  {
+	    /* For glibc, chunk2mem increases the address by 2*SIZE_SZ and
+	       MALLOC_ALIGN_MASK is 2*SIZE_SZ-1.  Each mmap'ed area is page
+	       aligned and therefore definitely MALLOC_ALIGN_MASK-aligned.  */
+	    assert (((INTERNAL_SIZE_T)chunk2mem(mm) & MALLOC_ALIGN_MASK) == 0);
+	    front_misalign = 0;
+	  }
+	else
+	  front_misalign = (INTERNAL_SIZE_T)chunk2mem(mm) & MALLOC_ALIGN_MASK;
+	if (front_misalign > 0) {
+	  correction = MALLOC_ALIGNMENT - front_misalign;
+	  p = (mchunkptr)(mm + correction);
+	  p->prev_size = correction;
+	  set_head(p, (size - correction) |IS_MMAPPED);
+	}
+	else
+	  {
+	    p = (mchunkptr)mm;
+	    set_head(p, size|IS_MMAPPED);
+	  }
 
 	/* update statistics */
 
@@ -2565,8 +2599,24 @@ static void* sysmalloc(INTERNAL_SIZE_T nb, mstate av)
 
       /* handle non-contiguous cases */
       else {
-	/* MORECORE/mmap must correctly align */
-	assert(((unsigned long)chunk2mem(brk) & MALLOC_ALIGN_MASK) == 0);
+	if (MALLOC_ALIGNMENT == 2 * SIZE_SZ)
+	  /* MORECORE/mmap must correctly align */
+	  assert(((unsigned long)chunk2mem(brk) & MALLOC_ALIGN_MASK) == 0);
+	else {
+	  front_misalign = (INTERNAL_SIZE_T)chunk2mem(brk) & MALLOC_ALIGN_MASK;
+	  if (front_misalign > 0) {
+
+	    /*
+	      Skip over some bytes to arrive at an aligned position.
+	      We don't need to specially mark these wasted front bytes.
+	      They will never be accessed anyway because
+	      prev_inuse of av->top (and any chunk created from its start)
+	      is always true after initialization.
+	    */
+
+	    aligned_brk += MALLOC_ALIGNMENT - front_misalign;
+	  }
+	}
 
 	/* Find out current end of memory */
 	if (snd_brk == (char*)(MORECORE_FAILURE)) {
