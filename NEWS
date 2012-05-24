@@ -71,6 +71,10 @@ Version 2.16
   Note that glibc is not expected to work with any Linux kernel version
   before 2.6.
 
+* New header <sys/auxv.h> and function getauxval allowing easy access to
+  the AT_* key-value pairs passed from the Linux kernel.  The header also
+  defines the HWCAP_* bits associated with the AT_HWCAP key.
+
 * New locales: mag_IN
 
 Version 2.15
