@@ -1,5 +1,31 @@
 2012-05-24  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* sysdeps/unix/sysv/linux/x86_64/x32/nptl/ld.abilist: New file.
+	* sysdeps/unix/sysv/linux/x86_64/x32/nptl/libBrokenLocale.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/x32/nptl/libanl.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/x32/nptl/libc.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/x32/nptl/libcrypt.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/x32/nptl/libdl.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/x32/nptl/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/x32/nptl/libnsl.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/x32/nptl/libpthread.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/x32/nptl/libresolv.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/x32/nptl/librt.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/x32/nptl/libthread_db.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/x32/nptl/libutil.abilist:
+	Likewise.
+
 	* scripts/data/c++-types-x32-linux-gnu.data: New file.
 	* sysdeps/x86_64/x32/shlib-versions: Add x32 ABI entry.
 
