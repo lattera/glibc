@@ -1,3 +1,43 @@
+2012-05-24  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/gen-libm-test.pl (%beautify): Add entries for underflow
+	exceptions.
+	* math/libm-test.inc ("Philosophy"): Update comment about
+	exception testing.
+	(UNDERFLOW_EXCEPTION): New macro.
+	(UNDERFLOW_EXCEPTION_OK): Likewise.
+	(UNDERFLOW_EXCEPTION_FLOAT): Likewise.
+	(UNDERFLOW_EXCEPTION_OK_FLOAT): Likewise.
+	(UNDERFLOW_EXCEPTION_DOUBLE): Likewise.
+	(UNDERFLOW_EXCEPTION_LDOUBLE_IBM): Likewise.
+	(INVALID_EXCEPTION_OK): Update value.
+	(DIVIDE_BY_ZERO_EXCEPTION_OK): Likewise.
+	(OVERFLOW_EXCEPTION_OK): Likewise.
+	(IGNORE_ZERO_INF_SIGN): Likewise.
+	(test_exceptions): Handle underflow exceptions.
+	(acos_test): Update for underflow exception expectations.
+	(cexp_test): Likewise.
+	(clog_test): Likewise.
+	(clog10_test): Likewise.
+	(csqrt_test): Likewise.
+	(ctan_test): Likewise.
+	(ctanh_test): Likewise.
+	(exp_test): Likewise.
+	(exp10_test): Likewise.
+	(exp2_test): Likewise.
+	(expm1_test): Likewise.
+	(fma_test): Likewise.
+	(j0_test): Likewise.
+	(jn_test): Likewise.
+	(nexttoward_test): Likewise.
+	(pow_test): Likewise.
+	(scalbn_test): Likewise.
+	(scalbln_test): Likewise.
+	(tan_test): Likewise.
+	(y1_test): Likewise.
+	* sysdeps/i386/fpu/libm-test-ulps: Update.
+	* sysdeps/x86_64/fpu/libm-test-ulps: Likewise.
+
 2012-05-23  David S. Miller  <davem@davemloft.net>
 
 	* sysdeps/unix/sysv/linux/sparc/sparc32/sigaction.c
