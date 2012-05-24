@@ -30,11 +30,9 @@ static void __sigreturn_stub (void);
 int
 __libc_sigaction (int sig, const struct sigaction *act, struct sigaction *oact)
 {
-  struct old_kernel_sigaction k_sigact, k_osigact;
-  int ret;
-
   struct kernel_sigaction kact, koact;
   unsigned long stub = 0;
+  int ret;
 
   if (act)
     {
