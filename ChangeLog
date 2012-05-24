@@ -1,5 +1,15 @@
 2012-05-24  Joseph Myers  <joseph@codesourcery.com>
 
+	* math/gen-libm-test.pl (%beautify): Remove entries for exceptions
+	and other flags.
+	(special_function): Do not include flags in test name.
+	(parse_args): Likewise.
+	* sysdeps/i386/fpu/libm-test-ulps: Update.
+	* sysdeps/powerpc/fpu/libm-test-ulps: Likewise.
+	* sysdeps/s390/fpu/libm-test-ulps: Likewise.
+	* sysdeps/sparc/fpu/libm-test-ulps: Likewise.
+	* sysdeps/x86_64/fpu/libm-test-ulps: Likewise.
+
 	* math/gen-libm-test.pl (%beautify): Add entries for underflow
 	exceptions.
 	* math/libm-test.inc ("Philosophy"): Update comment about

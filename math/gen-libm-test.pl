@@ -76,21 +76,6 @@ use vars qw ($output_dir $ulps_file);
     "M_LOG_2_SQRT_PIl" => "log(2*sqrt(pi))",
     "M_2_SQRT_PIl" => "2 sqrt (pi)",
     "M_SQRT_PIl" => "sqrt (pi)",
-    "INVALID_EXCEPTION" => "invalid exception",
-    "DIVIDE_BY_ZERO_EXCEPTION" => "division by zero exception",
-    "OVERFLOW_EXCEPTION" => "overflow exception",
-    "UNDERFLOW_EXCEPTION" => "underflow exception",
-    "UNDERFLOW_EXCEPTION_FLOAT" => "underflow exception for float",
-    "UNDERFLOW_EXCEPTION_DOUBLE" => "underflow exception for double",
-    "UNDERFLOW_EXCEPTION_LDOUBLE_IBM" => "underflow exception for IBM long double",
-    "INVALID_EXCEPTION_OK" => "invalid exception allowed",
-    "DIVIDE_BY_ZERO_EXCEPTION_OK" => "division by zero exception allowed",
-    "OVERFLOW_EXCEPTION_OK" => "overflow exception allowed",
-    "UNDERFLOW_EXCEPTION_OK" => "underflow exception allowed",
-    "UNDERFLOW_EXCEPTION_OK_FLOAT" => "underflow exception allowed for float",
-    "EXCEPTIONS_OK" => "exceptions allowed",
-    "IGNORE_ZERO_INF_SIGN" => "sign of zero/inf not specified",
-"INVALID_EXCEPTION|IGNORE_ZERO_INF_SIGN" => "invalid exception and sign of zero/inf not specified"
   );
 
 
@@ -223,9 +208,6 @@ sub special_functions {
   $str = 'sincos (' . &beautify ($args[1]) . ', &sin_res, &cos_res)';
   # handle sin
   $test = $str . ' puts ' . &beautify ($args[2]) . ' in sin_res';
-  if ($#args == 4) {
-    $test .= " plus " . &beautify ($args[4]);
-  }
 
   $cline = "  check_float (\"$test\", sin_res, $args[2]";
   $cline .= &new_test ($test, $args[4]);
@@ -318,11 +300,6 @@ sub parse_args {
     die ("wrong number of arguments");
   }
 
-
-  # check for exceptions
-  if ($current_arg <= $#args) {
-    $str .= " plus " . &beautify ($args[$current_arg]);
-  }
 
   # Put the C program line together
   # Reset some variables to start again
