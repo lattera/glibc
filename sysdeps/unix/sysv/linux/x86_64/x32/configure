@@ -1,0 +1,18 @@
+# Local configure fragment for sysdeps/unix/sysv/linux/86_64/x32.
+
+case "$machine" in
+x86_64/x32)
+  test -n "$arch_minimum_kernel" || arch_minimum_kernel=3.4.0
+  test -n "$libc_cv_slibdir" ||
+  case "$prefix" in
+  /usr | /usr/)
+    libc_cv_slibdir="/libx32"
+    if test "$libdir" = '${exec_prefix}/lib'; then
+      libdir='${exec_prefix}/libx32';
+      # Locale data can be shared.
+      libc_cv_localedir='${exec_prefix}/lib/locale'
+    fi
+    ;;
+  esac
+  ;;
+esac

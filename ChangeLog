@@ -1,3 +1,7 @@
+2012-05-23  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/unix/sysv/linux/x86_64/x32/configure: New file.
+
 2012-05-23  Paul Eggert  <eggert@cs.ucla.edu>
 
 	mktime: avoid signed integer overflow
