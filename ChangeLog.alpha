@@ -1,5 +1,19 @@
 2012-05-24  Richard Henderson  <rth@twiddle.net>
 
+	* sysdeps/unix/sysv/linux/alpha/nptl/ld.abilist: New file.
+	* sysdeps/unix/sysv/linux/alpha/nptl/libBrokenLocale.abilist: New file.
+	* sysdeps/unix/sysv/linux/alpha/nptl/libanl.abilist: New file.
+	* sysdeps/unix/sysv/linux/alpha/nptl/libc.abilist: New file.
+	* sysdeps/unix/sysv/linux/alpha/nptl/libcrypt.abilist: New file.
+	* sysdeps/unix/sysv/linux/alpha/nptl/libdl.abilist: New file.
+	* sysdeps/unix/sysv/linux/alpha/nptl/libm.abilist: New file.
+	* sysdeps/unix/sysv/linux/alpha/nptl/libnsl.abilist: New file.
+	* sysdeps/unix/sysv/linux/alpha/nptl/libpthread.abilist: New file.
+	* sysdeps/unix/sysv/linux/alpha/nptl/libresolv.abilist: New file.
+	* sysdeps/unix/sysv/linux/alpha/nptl/librt.abilist: New file.
+	* sysdeps/unix/sysv/linux/alpha/nptl/libthread_db.abilist: New file.
+	* sysdeps/unix/sysv/linux/alpha/nptl/libutil.abilist: New file.
+
 	* sysdeps/alpha/ldiv.S (imaxdiv): Re-add alias.
 
 	* sysdeps/unix/sysv/linux/alpha/msgctl.c: Remove __ASSUME_32BITUIDS.
