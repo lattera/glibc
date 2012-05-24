@@ -1,3 +1,8 @@
+2012-05-23  David S. Miller  <davem@davemloft.net>
+
+	* sysdeps/unix/sysv/linux/sparc/sparc32/sigaction.c
+	(__libc_sigaction): Remove unused local variables.
+
 2012-05-23  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/unix/sysv/linux/x86_64/x32/configure: New file.
