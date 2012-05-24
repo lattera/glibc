@@ -1,3 +1,8 @@
+2012-05-24  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* scripts/data/c++-types-x32-linux-gnu.data: New file.
+	* sysdeps/x86_64/x32/shlib-versions: Add x32 ABI entry.
+
 2012-05-24  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #10846]
