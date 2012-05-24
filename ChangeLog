@@ -1,3 +1,23 @@
+2012-05-24  Roland McGrath  <roland@hack.frob.com>
+
+	[BZ #14132]
+	* include/sys/time.h (__gettimeofday): Remove macro.
+	(__gettimeofday, gettimeofday): Add libc_hidden_proto.
+	* time/gettimeofday.c (__gettimeofday): Remove #undef.
+	Remove INTDEF.
+	(__gettimeofday): Add libc_hidden_def.
+	(gettimeofday): Add libc_hidden_weak.
+	* sysdeps/mach/gettimeofday.c: Likewise.
+	* sysdeps/posix/gettimeofday.c: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/gettimeofday.c: Likewise.
+	* sysdeps/unix/sysv/linux/s390/gettimeofday.c: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/gettimeofday.c
+	(__gettimeofday_internal): Remove strong_alias.
+	(__gettimeofday): Add libc_hidden_def.
+	(gettimeofday): Add libc_hidden_weak.
+	* sysdeps/unix/syscalls.list (gettimeofday):
+	Remove __gettimeofday_internal alias.
+
 2012-05-24  Daniel Jacobowitz  <drow@false.org>
 	    H.J. Lu  <hongjiu.lu@intel.com>
 
@@ -535,7 +555,7 @@
 
 	* manual/install.texi (Configuring and compiling): Update
 	description about files modified in the source directory.
-        * INSTALL: Regenerated.
+	* INSTALL: Regenerated.
 
 2012-05-18  H.J. Lu  <hongjiu.lu@intel.com>
 

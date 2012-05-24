@@ -26,7 +26,7 @@ getpid		-	getpid		Ei:	__getpid	getpid
 getpriority	-	getpriority	i:ii	getpriority
 getrlimit	-	getrlimit	i:ip	__getrlimit	getrlimit
 getrusage	-	getrusage	i:ip	__getrusage	getrusage
-gettimeofday	-	gettimeofday	i:PP	__gettimeofday	gettimeofday __gettimeofday_internal
+gettimeofday	-	gettimeofday	i:pP	__gettimeofday	gettimeofday
 getuid		-	getuid		Ei:	__getuid	getuid
 ioctl		-	ioctl		i:iiI	__ioctl		ioctl
 kill		-	kill		i:ii	__kill		kill

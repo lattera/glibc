@@ -1,4 +1,4 @@
-/* Copyright (C) 2005 Free Software Foundation, Inc.
+/* Copyright (C) 2005-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -22,7 +22,6 @@
 #include <time.h>
 #include <hp-timing.h>
 
-#undef __gettimeofday
 #include <bits/libc-vdso.h>
 
 /* Get the current time of day and timezone information,
@@ -36,6 +35,6 @@ __gettimeofday (tv, tz)
 {
   return INLINE_VSYSCALL (gettimeofday, 2, CHECK_1 (tv), CHECK_1 (tz));
 }
-
-INTDEF (__gettimeofday)
+libc_hidden_def (__gettimeofday)
 weak_alias (__gettimeofday, gettimeofday)
+libc_hidden_weak (gettimeofday)

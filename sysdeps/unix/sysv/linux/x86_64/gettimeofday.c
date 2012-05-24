@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2007, 2011 Free Software Foundation, Inc.
+/* Copyright (C) 2002-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -15,13 +15,14 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <dl-vdso.h>
-
-
-#define VSYSCALL_ADDR_vgettimeofday	0xffffffffff600000ul
-
+#include <sys/time.h>
 
 #ifdef SHARED
+
+# include <dl-vdso.h>
+
+# define VSYSCALL_ADDR_vgettimeofday	0xffffffffff600000ul
+
 void *gettimeofday_ifunc (void) __asm__ ("__gettimeofday");
 
 void *
@@ -33,9 +34,16 @@ gettimeofday_ifunc (void)
   return (_dl_vdso_vsym ("__vdso_gettimeofday", &linux26)
 	  ?: (void *) VSYSCALL_ADDR_vgettimeofday);
 }
-__asm (".type __gettimeofday, %gnu_indirect_function");
+asm (".type __gettimeofday, %gnu_indirect_function");
+
+/* This is doing "libc_hidden_def (__gettimeofday)" but the compiler won't
+   let us do it in C because it doesn't know we're defining __gettimeofday
+   here in this file.  */
+asm (".globl __GI___gettimeofday\n"
+     "__GI___gettimeofday = __gettimeofday");
+
 #else
-# include <sys/time.h>
+
 # include <sysdep.h>
 # include <errno.h>
 
@@ -44,7 +52,8 @@ __gettimeofday (struct timeval *tv, struct timezone *tz)
 {
   return INLINE_SYSCALL (gettimeofday, 2, tv, tz);
 }
-#endif
+libc_hidden_def (__gettimeofday)
 
+#endif
 weak_alias (__gettimeofday, gettimeofday)
-strong_alias (__gettimeofday, __gettimeofday_internal)
+libc_hidden_weak (gettimeofday)
