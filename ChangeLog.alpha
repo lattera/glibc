@@ -1,5 +1,7 @@
 2012-05-24  Richard Henderson  <rth@twiddle.net>
 
+	* sysdeps/alpha/ldiv.S (imaxdiv): Re-add alias.
+
 	* sysdeps/unix/sysv/linux/alpha/msgctl.c: Remove __ASSUME_32BITUIDS.
 	* sysdeps/unix/sysv/linux/alpha/semctl.c: Likewise.
 	* sysdeps/unix/sysv/linux/alpha/shmctl.c: Likewise.
