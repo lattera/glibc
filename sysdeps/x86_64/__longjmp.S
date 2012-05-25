@@ -18,6 +18,7 @@
 #include <sysdep.h>
 #include <jmpbuf-offsets.h>
 #include <asm-syntax.h>
+#include <stap-probe.h>
 
 /* Jump to the position specified by ENV, causing the
    setjmp call there to return VAL, or 1 if VAL is 0.
@@ -41,6 +42,7 @@ ENTRY(__longjmp)
 	orq %rax, %r9
 # endif
 #endif
+	LIBC_PROBE (longjmp, 3, LP_SIZE@%RDI_LP, -4@%esi, LP_SIZE@%RDX_LP)
 	/* We add unwind information for the target here.  */
 	cfi_def_cfa(%rdi, 0)
 	cfi_register(%rsp,%r8)
@@ -60,5 +62,7 @@ ENTRY(__longjmp)
 	mov %esi, %eax
 	mov %R8_LP,%RSP_LP
 	movq %r9,%rbp
+	LIBC_PROBE (longjmp_target, 3,
+		    LP_SIZE@%RDI_LP, -4@%eax, LP_SIZE@%RDX_LP)
 	jmpq *%rdx
 END (__longjmp)

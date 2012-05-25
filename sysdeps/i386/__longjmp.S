@@ -1,6 +1,5 @@
 /* longjmp for i386.
-   Copyright (C) 1995-1998,2000,2002,2005,2006,2009
-   Free Software Foundation, Inc.
+   Copyright (C) 1995-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,6 +19,7 @@
 #include <sysdep.h>
 #include <jmpbuf-offsets.h>
 #include <asm-syntax.h>
+#include <stap-probe.h>
 
 	.text
 ENTRY (__longjmp)
@@ -32,6 +32,7 @@ ENTRY (__longjmp)
 	movl (JB_SP*4)(%eax), %ecx
 	PTR_DEMANGLE (%edx)
 	PTR_DEMANGLE (%ecx)
+	LIBC_PROBE (longjmp, 3, 4@%eax, -4@8(%esp), 4@%edx)
 	cfi_def_cfa(%eax, 0)
 	cfi_register(%eip, %edx)
 	cfi_register(%esp, %ecx)
@@ -49,6 +50,7 @@ ENTRY (__longjmp)
 	cfi_restore(%edi)
 	cfi_restore(%ebp)
 
+	LIBC_PROBE (longjmp_target, 3, 4@%eax, -4@8(%esp), 4@%edx)
 	movl 8(%esp), %eax	/* Second argument is return value.  */
 	movl %ecx, %esp
 #else
@@ -56,12 +58,14 @@ ENTRY (__longjmp)
 	movl 8(%esp), %eax	/* Second argument is return value.  */
 	/* Save the return address now.  */
 	movl (JB_PC*4)(%ecx), %edx
+	LIBC_PROBE (longjmp, 3, 4@%ecx, -4@%eax, 4@%edx)
      	/* Restore registers.  */
 	movl (JB_BX*4)(%ecx), %ebx
 	movl (JB_SI*4)(%ecx), %esi
 	movl (JB_DI*4)(%ecx), %edi
 	movl (JB_BP*4)(%ecx), %ebp
 	movl (JB_SP*4)(%ecx), %esp
+	LIBC_PROBE (longjmp_target, 3, 4@%ecx, -4@%ecx, 4@%edx)
 #endif
 	/* Jump to saved PC.  */
      	jmp *%edx

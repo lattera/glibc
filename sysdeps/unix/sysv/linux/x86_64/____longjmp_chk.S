@@ -18,6 +18,7 @@
 #include <sysdep.h>
 #include <jmpbuf-offsets.h>
 #include <asm-syntax.h>
+#include <stap-probe.h>
 
 #include <sigaltstack-offsets.h>
 
@@ -103,7 +104,9 @@ ENTRY(____longjmp_chk)
 	movl	%ebx, %esi
 	cfi_restore (%rsi)
 
-.Lok:	/* We add unwind information for the target here.  */
+.Lok:
+	LIBC_PROBE (longjmp, 3, LP_SIZE@%RDI_LP, -4@%esi, LP_SIZE@%RDX_LP)
+	/* We add unwind information for the target here.  */
 	cfi_def_cfa(%rdi, 0)
 	cfi_register(%rsp,%r8)
 	cfi_register(%rbp,%r9)
@@ -122,5 +125,7 @@ ENTRY(____longjmp_chk)
 	movl	%esi, %eax
 	mov	%R8_LP, %RSP_LP
 	movq	%r9,%rbp
+	LIBC_PROBE (longjmp_target, 3,
+		    LP_SIZE@%RDI_LP, -4@%eax, LP_SIZE@%RDX_LP)
 	jmpq	*%rdx
 END (____longjmp_chk)

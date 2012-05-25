@@ -19,6 +19,7 @@
 #include <sysdep.h>
 #include <jmpbuf-offsets.h>
 #include <asm-syntax.h>
+#include <stap-probe.h>
 
 ENTRY (__sigsetjmp)
 	/* Save registers.  */
@@ -47,6 +48,7 @@ ENTRY (__sigsetjmp)
 #endif
 	movq %rdx, (JB_RSP*8)(%rdi)
 	mov (%rsp), %RAX_LP	/* Save PC we are returning to now.  */
+	LIBC_PROBE (setjmp, 3, LP_SIZE@%RDI_LP, -4@%esi, LP_SIZE@%RAX_LP)
 #ifdef PTR_MANGLE
 	PTR_MANGLE (%RAX_LP)
 #endif

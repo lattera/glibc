@@ -1,5 +1,5 @@
 /* BSD `_setjmp' entry point to `sigsetjmp (..., 0)'.  i386 version.
-   Copyright (C) 1994-1997,2000-2002,2005, 2006 Free Software Foundation, Inc.
+   Copyright (C) 1994-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -24,6 +24,7 @@
 #include <jmpbuf-offsets.h>
 #include "bp-sym.h"
 #include "bp-asm.h"
+#include <stap-probe.h>
 
 #define PARMS	LINKAGE		/* no space for saved regs */
 #define JMPBUF	PARMS
@@ -46,6 +47,7 @@ ENTRY (BP_SYM (_setjmp))
 #endif
      	movl %ecx, (JB_SP*4)(%edx)
 	movl PCOFF(%esp), %ecx	/* Save PC we are returning to now.  */
+	LIBC_PROBE (setjmp, 3, 4@%edx, -4@$0, 4@%ecx)
 #ifdef PTR_MANGLE
 	PTR_MANGLE (%ecx)
 #endif

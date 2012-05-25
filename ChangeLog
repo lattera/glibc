@@ -1,5 +1,14 @@
 2012-05-25  Roland McGrath  <roland@hack.frob.com>
 
+	* sysdeps/x86_64/__longjmp.S: Add a static probe here.
+	* sysdeps/x86_64/setjmp.S: Likewise.
+	* sysdeps/i386/bsd-setjmp.S: Likewise.
+	* sysdeps/i386/bsd-_setjmp.S: Likewise.
+	* sysdeps/i386/setjmp.S: Likewise.
+	* sysdeps/i386/__longjmp.S: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/____longjmp_chk.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/____longjmp_chk.S: Likewise.
+
 	* include/stap-probe.h: New file.
 	* configure.in: Handle --enable-systemtap.
 	* configure: Regenerated.
