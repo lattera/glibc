@@ -1,3 +1,11 @@
+2012-05-24  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #14153]
+	* sysdeps/ieee754/flt-32/e_acosf.c (__ieee754_acosf): Return pi/2
+	for |x| <= 2**-26, not 2**-57.
+	* math/libm-test.inc (acos_test): Do not allow spurious underflow
+	exception.
+
 2012-05-24  Jeff Law  <law@redhat.com>
 
 	* stdio-common/Makefile (tests): Add bug25.
