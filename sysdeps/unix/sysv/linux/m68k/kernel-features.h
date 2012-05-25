@@ -24,7 +24,6 @@
 # define __ASSUME_STAT64_SYSCALL	1
 # define __ASSUME_FCNTL64		1
 # define __ASSUME_VFORK_SYSCALL		1
-# define __ASSUME_NEW_GETRLIMIT_SYSCALL 1
 #endif
 
 /* Many syscalls were added in 2.6.10 for m68k.  */
