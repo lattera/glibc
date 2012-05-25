@@ -83,7 +83,6 @@ fchownat (int fd, const char *file, uid_t owner, gid_t group, int flag)
       file = buf;
     }
 
-# if __ASSUME_32BITUIDS > 0
   INTERNAL_SYSCALL_DECL (err);
 
   if (flag & AT_SYMLINK_NOFOLLOW)
@@ -98,15 +97,6 @@ fchownat (int fd, const char *file, uid_t owner, gid_t group, int flag)
       __atfct_seterrno (INTERNAL_SYSCALL_ERRNO (result, err), fd, buf);
       return -1;
     }
-# else
-  /* Don't inline the rest to avoid unnecessary code duplication.  */
-  if (flag & AT_SYMLINK_NOFOLLOW)
-    result = __lchown (file, owner, group);
-  else
-    result = __chown (file, owner, group);
-  if (result < 0)
-    __atfct_seterrno (errno, fd, buf);
-# endif
 
   return result;
 

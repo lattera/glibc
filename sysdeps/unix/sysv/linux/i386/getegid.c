@@ -1,4 +1,4 @@
-/* Copyright (C) 2000, 2003, 2006 Free Software Foundation, Inc.
+/* Copyright (C) 2000-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,41 +20,14 @@
 
 #include <sysdep.h>
 #include <sys/syscall.h>
-#include <kernel-features.h>
 
-#ifdef __NR_getegid32
-# if __ASSUME_32BITUIDS == 0
-/* This variable is shared with all files that need to check for 32bit
-   uids.  */
-extern int __libc_missing_32bit_uids attribute_hidden;
-# endif
-#endif /* __NR_getegid32 */
+/* Consider moving to syscalls.list.  */
 
 gid_t
 __getegid (void)
 {
   INTERNAL_SYSCALL_DECL (err);
-#if __ASSUME_32BITUIDS > 0
-  /* No error checking.  */
   return INTERNAL_SYSCALL (getegid32, err, 0);
-#else
-# ifdef __NR_getegid32
-  if (__libc_missing_32bit_uids <= 0)
-    {
-      int result;
-
-      result = INTERNAL_SYSCALL (getegid32, err, 0);
-      if (! INTERNAL_SYSCALL_ERROR_P (result, err)
-	  || INTERNAL_SYSCALL_ERRNO (result, err) != ENOSYS)
-	return result;
-
-      __libc_missing_32bit_uids = 1;
-    }
-# endif /* __NR_getegid32 */
-
-  /* No error checking.  */
-  return INTERNAL_SYSCALL (getegid, err, 0);
-#endif
 }
 
 weak_alias (__getegid, getegid)

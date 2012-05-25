@@ -1,4 +1,4 @@
-/* Copyright (C) 1998,2000,2002,2003,2004,2006 Free Software Foundation, Inc.
+/* Copyright (C) 1998-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -18,12 +18,7 @@
 #include <errno.h>
 #include <unistd.h>
 #include <setxid.h>
-#include <kernel-features.h>
 
-
-#if defined __NR_setresgid || __ASSUME_SETRESGID_SYSCALL > 0
-
-extern int __setresgid (gid_t rgid, gid_t egid, gid_t sgid);
 
 int
 setegid (gid_t gid)
@@ -36,25 +31,14 @@ setegid (gid_t gid)
       return -1;
     }
 
-# if __ASSUME_32BITUIDS > 0 && defined __NR_setresgid32
+#ifdef __NR_setresgid32
   result = INLINE_SETXID_SYSCALL (setresgid32, 3, -1, gid, -1);
-# else
-  /* First try the syscall.  */
+#else
   result = INLINE_SETXID_SYSCALL (setresgid, 3, -1, gid, -1);
-#  if __ASSUME_SETRESGID_SYSCALL == 0
-  if (result == -1 && errno == ENOSYS)
-    /* No system call available.  Use emulation.  This may not work
-       since `setregid' also sets the saved group ID when GID is not
-       equal to the real group ID, making it impossible to switch back. */
-    result = __setregid (-1, gid);
-#  endif
-# endif
+#endif
 
   return result;
 }
 #ifndef setegid
 libc_hidden_def (setegid)
-#endif
-#else
-# include <sysdeps/unix/bsd/setegid.c>
 #endif

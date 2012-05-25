@@ -1,4 +1,4 @@
-/* Copyright (C) 1999, 2001, 2002, 2007, 2008 Free Software Foundation, Inc.
+/* Copyright (C) 1999-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -36,15 +36,8 @@ __opensock (void)
     const char procname[15];
   } afs[] =
     {
-      /* The 2.2 kernels cannot handle ioctl(SIOCGIFCONF) on AF_UNIX sockets.
-	 Give the kernel a chance to user inet sockets on old kernels.  */
-#if __LINUX_KERNEL_VERSION < 132096
-      { AF_INET, "" },
-      { AF_UNIX, "net/unix" },
-#else
       { AF_UNIX, "net/unix" },
       { AF_INET, "" },
-#endif
       { AF_INET6, "net/if_inet6" },
       { AF_AX25, "net/ax25" },
       { AF_NETROM, "net/nr" },

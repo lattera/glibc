@@ -1,4 +1,4 @@
-/* Copyright (C) 2000,2001,2002,2003,2004,2006 Free Software Foundation, Inc.
+/* Copyright (C) 2000-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -24,7 +24,6 @@
 #include <bp-checks.h>
 
 #include <linux/posix_types.h>
-#include <kernel-features.h>
 
 /*
   In Linux 2.1.x the chown functions have been changed.  A new function lchown
@@ -38,58 +37,12 @@
 
 /* Running under Linux > 2.1.80.  */
 
-#ifdef __NR_chown32
-# if __ASSUME_32BITUIDS == 0
-/* This variable is shared with all files that need to check for 32bit
-   uids.  */
-extern int __libc_missing_32bit_uids;
-# endif
-#endif /* __NR_chown32 */
+/* Consider moving to syscalls.list.  */
 
 int
 __real_chown (const char *file, uid_t owner, gid_t group)
 {
-#if __ASSUME_32BITUIDS > 0
   return INLINE_SYSCALL (chown32, 3, CHECK_STRING (file), owner, group);
-#else
-  static int __libc_old_chown;
-  int result;
-
-  if (!__libc_old_chown)
-    {
-      int saved_errno = errno;
-# ifdef __NR_chown32
-      if (__libc_missing_32bit_uids <= 0)
-	{
-	  int result;
-	  int saved_errno = errno;
-
-	  result = INLINE_SYSCALL (chown32, 3, CHECK_STRING (file), owner, group);
-	  if (result == 0 || errno != ENOSYS)
-	    return result;
-
-	  __set_errno (saved_errno);
-	  __libc_missing_32bit_uids = 1;
-	}
-# endif /* __NR_chown32 */
-      if (((owner + 1) > (uid_t) ((__kernel_uid_t) -1U))
-	  || ((group + 1) > (gid_t) ((__kernel_gid_t) -1U)))
-	{
-	  __set_errno (EINVAL);
-	  return -1;
-	}
-
-      result = INLINE_SYSCALL (chown, 3, CHECK_STRING (file), owner, group);
-
-      if (result >= 0 || errno != ENOSYS)
-	return result;
-
-      __set_errno (saved_errno);
-      __libc_old_chown = 1;
-    }
-
-  return __lchown (file, owner, group);
-#endif
 }
 
 

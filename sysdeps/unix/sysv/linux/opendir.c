@@ -1,4 +1,4 @@
-/* Copyright (C) 2000, 2006 Free Software Foundation, Inc.
+/* Copyright (C) 2000-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -15,11 +15,6 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <kernel-features.h>
-
-
-#ifdef __ASSUME_O_DIRECTORY
-# define O_DIRECTORY_WORKS	1
-#endif
+#define O_DIRECTORY_WORKS	1
 
 #include <sysdeps/unix/opendir.c>

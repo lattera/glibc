@@ -1,4 +1,4 @@
-/* Copyright (C) 1995,1997,1998,2000,2004,2006 Free Software Foundation, Inc.
+/* Copyright (C) 1995-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, August 1995.
 
@@ -25,7 +25,6 @@
 #include <sys/syscall.h>
 #include <bp-checks.h>
 
-#include <kernel-features.h>
 #include <shlib-compat.h>
 
 struct __old_msqid_ds
@@ -52,14 +51,6 @@ int __old_msgctl (int, int, struct __old_msqid_ds *);
 #endif
 int __new_msgctl (int, int, struct msqid_ds *);
 
-#ifdef __NR_getuid32
-# if __ASSUME_32BITUIDS == 0
-/* This variable is shared with all files that need to check for 32bit
-   uids.  */
-extern int __libc_missing_32bit_uids;
-# endif
-#endif
-
 #if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_2)
 int
 attribute_compat_text_section
@@ -74,85 +65,8 @@ compat_symbol (libc, __old_msgctl, msgctl, GLIBC_2_0);
 int
 __new_msgctl (int msqid, int cmd, struct msqid_ds *buf)
 {
-#if __ASSUME_32BITUIDS > 0
   return INLINE_SYSCALL (ipc, 5, IPCOP_msgctl,
 			 msqid, cmd | __IPC_64, 0, CHECK_1 (buf));
-#else
-  switch (cmd) {
-    case MSG_STAT:
-    case IPC_STAT:
-    case IPC_SET:
-      break;
-    default:
-      return INLINE_SYSCALL (ipc, 5, IPCOP_msgctl,
-			     msqid, cmd, 0, CHECK_1 (buf));
-  }
-
-  {
-    int result;
-    struct __old_msqid_ds old;
-
-#ifdef __NR_getuid32
-    if (__libc_missing_32bit_uids <= 0)
-      {
-	if (__libc_missing_32bit_uids < 0)
-	  {
-	    int save_errno = errno;
-
-	    /* Test presence of new IPC by testing for getuid32 syscall.  */
-	    result = INLINE_SYSCALL (getuid32, 0);
-	    if (result == -1 && errno == ENOSYS)
-	      __libc_missing_32bit_uids = 1;
-	    else
-	      __libc_missing_32bit_uids = 0;
-	    __set_errno(save_errno);
-	  }
-	if (__libc_missing_32bit_uids <= 0)
-	  {
-	    result = INLINE_SYSCALL (ipc, 5, IPCOP_msgctl,
-				     msqid, cmd | __IPC_64, 0, CHECK_1 (buf));
-	    return result;
-	  }
-      }
-#endif
-    if (cmd == IPC_SET)
-      {
-	old.msg_perm.uid = buf->msg_perm.uid;
-	old.msg_perm.gid = buf->msg_perm.gid;
-	old.msg_perm.mode = buf->msg_perm.mode;
-	old.msg_qbytes = buf->msg_qbytes;
-	if (old.msg_perm.uid != buf->msg_perm.uid ||
-	    old.msg_perm.gid != buf->msg_perm.gid ||
-	    old.msg_qbytes != buf->msg_qbytes)
-	  {
-	    __set_errno (EINVAL);
-	    return -1;
-	  }
-      }
-    result = INLINE_SYSCALL (ipc, 5, IPCOP_msgctl,
-			     msqid, cmd, 0, __ptrvalue (&old));
-    if (result != -1 && cmd != IPC_SET)
-      {
-	memset(buf, 0, sizeof(*buf));
-	buf->msg_perm.__key = old.msg_perm.__key;
-	buf->msg_perm.uid = old.msg_perm.uid;
-	buf->msg_perm.gid = old.msg_perm.gid;
-	buf->msg_perm.cuid = old.msg_perm.cuid;
-	buf->msg_perm.cgid = old.msg_perm.cgid;
-	buf->msg_perm.mode = old.msg_perm.mode;
-	buf->msg_perm.__seq = old.msg_perm.__seq;
-	buf->msg_stime = old.msg_stime;
-	buf->msg_rtime = old.msg_rtime;
-	buf->msg_ctime = old.msg_ctime;
-	buf->__msg_cbytes = old.__msg_cbytes;
-	buf->msg_qnum = old.msg_qnum;
-	buf->msg_qbytes = old.msg_qbytes;
-	buf->msg_lspid = old.msg_lspid;
-	buf->msg_lrpid = old.msg_lrpid;
-      }
-    return result;
-  }
-#endif
 }
 
 versioned_symbol (libc, __new_msgctl, msgctl, GLIBC_2_2);

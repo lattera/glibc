@@ -24,7 +24,6 @@
 #include <bp-checks.h>
 
 #include <linux/posix_types.h>
-#include <kernel-features.h>
 
 /*
   In Linux 2.1.x the chown functions have been changed.  A new function lchown
@@ -41,44 +40,12 @@ extern int __chown_is_lchown (const char *__file, uid_t __owner,
 extern int __real_chown (const char *__file, uid_t __owner, gid_t __group);
 
 
-#ifdef __NR_chown32
-#  if __ASSUME_32BITUIDS == 0
-/* This variable is shared with all files that need to check for 32bit
-   uids.  */
-extern int __libc_missing_32bit_uids;
-# endif
-#endif /* __NR_chown32 */
+/* Consider moving to syscalls.list.  */
 
 int
 __real_chown (const char *file, uid_t owner, gid_t group)
 {
-#if __ASSUME_32BITUIDS
   return INLINE_SYSCALL (chown32, 3, CHECK_STRING (file), owner, group);
-#else
-  /* !__ASSUME_32BITUIDS */
-# ifdef __NR_chown32
-  if (__libc_missing_32bit_uids <= 0)
-    {
-      int result;
-      int saved_errno = errno;
-
-      result = INLINE_SYSCALL (chown32, 3, CHECK_STRING (file), owner, group);
-      if (result == 0 || errno != ENOSYS)
-	return result;
-
-      __set_errno (saved_errno);
-      __libc_missing_32bit_uids = 1;
-    }
-# endif /* __NR_chown32 */
-  if (((owner + 1) > (uid_t) ((__kernel_uid_t) -1U))
-      || ((group + 1) > (gid_t) ((__kernel_gid_t) -1U)))
-    {
-      __set_errno (EINVAL);
-      return -1;
-    }
-
-  return INLINE_SYSCALL (chown, 3, CHECK_STRING (file), owner, group);
-#endif
 }
 
 

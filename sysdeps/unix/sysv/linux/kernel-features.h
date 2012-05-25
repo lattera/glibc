@@ -37,91 +37,58 @@
    introduced.  If somebody cares these values can afterwards be
    corrected.  */
 
-/* When did the `setresuid' syscall became available?  By 2.2.0 except
-   on SPARC.  */
-#if !defined __sparc__
-# define __ASSUME_SETRESUID_SYSCALL	1
-#endif
-
 /* The sendfile syscall was introduced in 2.2.0.  */
 #define __ASSUME_SENDFILE		1
 
 /* On x86 another `getrlimit' syscall was added in 2.3.25.  */
-#if __LINUX_KERNEL_VERSION >= 131865 && defined __i386__
+#ifdef __i386__
 # define __ASSUME_NEW_GETRLIMIT_SYSCALL	1
 #endif
 
 /* On x86 the truncate64/ftruncate64 syscalls were introduced in 2.3.31.  */
-#if __LINUX_KERNEL_VERSION >= 131871 && defined __i386__
+#ifdef __i386__
 # define __ASSUME_TRUNCATE64_SYSCALL	1
 #endif
 
 /* On x86 the mmap2 syscall was introduced in 2.3.31.  */
-#if __LINUX_KERNEL_VERSION >= 131871 && defined __i386__
+#ifdef __i386__
 # define __ASSUME_MMAP2_SYSCALL	1
 #endif
 
 /* On x86 the stat64/lstat64/fstat64 syscalls were introduced in 2.3.34.  */
-#if __LINUX_KERNEL_VERSION >= 131874 && defined __i386__
+#ifdef __i386__
 # define __ASSUME_STAT64_SYSCALL	1
 #endif
 
 /* On sparc the truncate64/ftruncate64/mmap2/stat64/lstat64/fstat64
    syscalls were introduced in 2.3.35.  */
-#if __LINUX_KERNEL_VERSION >= 131875 \
-    && (defined __sparc__ && !defined __arch64__)
+#if defined __sparc__ && !defined __arch64__
 # define __ASSUME_TRUNCATE64_SYSCALL	1
 # define __ASSUME_MMAP2_SYSCALL		1
 # define __ASSUME_STAT64_SYSCALL	1
 #endif
 
 /* I know for sure that getrlimit are in 2.3.35 on powerpc.  */
-#if __LINUX_KERNEL_VERSION >= 131875 && defined __powerpc__
+#ifdef __powerpc__
 # define __ASSUME_NEW_GETRLIMIT_SYSCALL	1
 #endif
 
 /* I know for sure that these are in 2.3.35 on powerpc. But PowerPC64 does not
    support separate 64-bit syscalls, already 64-bit.  */
-#if __LINUX_KERNEL_VERSION >= 131875 && defined __powerpc__ \
-    && !defined __powerpc64__
+#if defined __powerpc__ && !defined __powerpc64__
 # define __ASSUME_TRUNCATE64_SYSCALL	1
 # define __ASSUME_STAT64_SYSCALL	1
 #endif
 
-/* Linux 2.3.39 introduced 32bit UID/GIDs.  Some platforms had 32
-   bit type all along.  */
-#if __LINUX_KERNEL_VERSION >= 131879 || defined __powerpc__
-# define __ASSUME_32BITUIDS		1
-#endif
-
-/* Linux 2.3.39 sparc added setresuid.  */
-#if __LINUX_KERNEL_VERSION >= 131879 && defined __sparc__
-# define __ASSUME_SETRESUID_SYSCALL	1
-#endif
-
-#if __LINUX_KERNEL_VERSION >= 131879
-# define __ASSUME_SETRESGID_SYSCALL	1
-#endif
-
-/* Linux 2.3.39 introduced IPC64.  Except for powerpc.  */
-#if __LINUX_KERNEL_VERSION >= 131879 && !defined __powerpc__
+/* Linux 2.3.39 introduced IPC64.  Except for powerpc.  Linux 2.4.0 on
+   PPC introduced a correct IPC64.  But PowerPC64 does not support a
+   separate 64-bit syscall, already 64-bit.  */
+#ifndef __powerpc64__
 # define __ASSUME_IPC64		1
 #endif
 
-/* We can use the LDTs for threading with Linux 2.3.99 and newer.  */
-#if __LINUX_KERNEL_VERSION >= 131939
-# define __ASSUME_LDT_WORKS		1
-#endif
-
-/* Linux 2.4.0 on PPC introduced a correct IPC64.  But PowerPC64 does not
-   support a separate 64-bit syscall, already 64-bit.  */
-#if __LINUX_KERNEL_VERSION >= 132096 && defined __powerpc__ \
-    && !defined __powerpc64__
-# define __ASSUME_IPC64			1
-#endif
-
 /* SH kernels got stat64, mmap2, and truncate64 during 2.4.0-test.  */
-#if __LINUX_KERNEL_VERSION >= 132096 && defined __sh__
+#ifdef __sh__
 # define __ASSUME_TRUNCATE64_SYSCALL	1
 # define __ASSUME_MMAP2_SYSCALL		1
 # define __ASSUME_STAT64_SYSCALL	1
@@ -161,12 +128,6 @@
    2.4.1 for the earliest version we know the syscall is available.  */
 #if __LINUX_KERNEL_VERSION >= 132097
 # define __ASSUME_GETDENTS64_SYSCALL	1
-#endif
-
-/* When did O_DIRECTORY become available?  Early in 2.3 but when?
-   Be safe, use 2.3.99.  */
-#if __LINUX_KERNEL_VERSION >= 131939
-# define __ASSUME_O_DIRECTORY		1
 #endif
 
 /* Starting with one of the 2.4.0 pre-releases the Linux kernel passes

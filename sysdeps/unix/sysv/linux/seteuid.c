@@ -1,4 +1,4 @@
-/* Copyright (C) 1998,1999,2002,2003,2004,2006 Free Software Foundation, Inc.
+/* Copyright (C) 1998-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -18,12 +18,7 @@
 #include <errno.h>
 #include <unistd.h>
 #include <setxid.h>
-#include <kernel-features.h>
 
-
-#if defined __NR_setresuid || __ASSUME_SETRESUID_SYSCALL > 0
-
-extern int __setresuid (uid_t ruid, uid_t euid, uid_t suid);
 
 int
 seteuid (uid_t uid)
@@ -36,25 +31,14 @@ seteuid (uid_t uid)
       return -1;
     }
 
-# if __ASSUME_32BITUIDS > 0 && defined __NR_setresuid32
+#ifdef __NR_setresuid32
   result = INLINE_SETXID_SYSCALL (setresuid32, 3, -1, uid, -1);
-# else
-  /* First try the syscall.  */
+#else
   result = INLINE_SETXID_SYSCALL (setresuid, 3, -1, uid, -1);
-#  if __ASSUME_SETRESUID_SYSCALL == 0
-  if (result == -1 && errno == ENOSYS)
-    /* No system call available.  Use emulation.  This may not work
-       since `setreuid' also sets the saved user ID when UID is not
-       equal to the real user ID, making it impossible to switch back.  */
-    result = __setreuid (-1, uid);
-#  endif
-# endif
+#endif
 
   return result;
 }
 #ifndef seteuid
 libc_hidden_def (seteuid)
-#endif
-#else
-# include <sysdeps/unix/bsd/seteuid.c>
 #endif
