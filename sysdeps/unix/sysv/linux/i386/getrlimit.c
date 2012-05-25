@@ -1,4 +1,4 @@
-/* Copyright (C) 1999, 2000, 2003, 2006 Free Software Foundation, Inc.
+/* Copyright (C) 1999-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -23,58 +23,15 @@
 #include <shlib-compat.h>
 #include <bp-checks.h>
 
-#include <kernel-features.h>
-
 extern int __new_getrlimit (enum __rlimit_resource resource,
 			    struct rlimit *__unbounded rlimits);
 
-
-/* Linux 2.3.25 introduced a new system call since the types used for
-   the limits are now unsigned.  */
-#if defined __NR_ugetrlimit && !defined __ASSUME_NEW_GETRLIMIT_SYSCALL
-int __have_no_new_getrlimit;
-#endif
+/* Consider moving to syscalls.list.  */
 
 int
 __new_getrlimit (enum __rlimit_resource resource, struct rlimit *rlimits)
 {
-#ifdef __ASSUME_NEW_GETRLIMIT_SYSCALL
   return INLINE_SYSCALL (ugetrlimit, 2, resource, CHECK_1 (rlimits));
-#else
-  int result;
-
-# ifdef __NR_ugetrlimit
-  if (__have_no_new_getrlimit <= 0)
-    {
-      result = INLINE_SYSCALL (ugetrlimit, 2, resource, CHECK_1 (rlimits));
-
-      /* If the system call is available remember this fact and return.  */
-      if (result != -1 || errno != ENOSYS)
-	{
-	  __have_no_new_getrlimit = -1;
-	  return result;
-	}
-
-      /* Remember that the system call is not available.  */
-      __have_no_new_getrlimit = 1;
-    }
-# endif
-
-  /* Fall back to the old system call.  */
-  result = INLINE_SYSCALL (getrlimit, 2, resource, CHECK_1 (rlimits));
-
-  if (result == -1)
-    return result;
-
-  /* We might have to correct the limits values.  Since the old values
-     were signed the infinity value is too small.  */
-  if (rlimits->rlim_cur == RLIM_INFINITY >> 1)
-    rlimits->rlim_cur = RLIM_INFINITY;
-  if (rlimits->rlim_max == RLIM_INFINITY >> 1)
-    rlimits->rlim_max = RLIM_INFINITY;
-
-  return result;
-#endif
 }
 
 weak_alias (__new_getrlimit, __getrlimit);

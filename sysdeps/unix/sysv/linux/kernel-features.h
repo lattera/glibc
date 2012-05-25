@@ -40,11 +40,6 @@
 /* The sendfile syscall was introduced in 2.2.0.  */
 #define __ASSUME_SENDFILE		1
 
-/* On x86 another `getrlimit' syscall was added in 2.3.25.  */
-#ifdef __i386__
-# define __ASSUME_NEW_GETRLIMIT_SYSCALL	1
-#endif
-
 /* On x86 the truncate64/ftruncate64 syscalls were introduced in 2.3.31.  */
 #ifdef __i386__
 # define __ASSUME_TRUNCATE64_SYSCALL	1
@@ -66,11 +61,6 @@
 # define __ASSUME_TRUNCATE64_SYSCALL	1
 # define __ASSUME_MMAP2_SYSCALL		1
 # define __ASSUME_STAT64_SYSCALL	1
-#endif
-
-/* I know for sure that getrlimit are in 2.3.35 on powerpc.  */
-#ifdef __powerpc__
-# define __ASSUME_NEW_GETRLIMIT_SYSCALL	1
 #endif
 
 /* I know for sure that these are in 2.3.35 on powerpc. But PowerPC64 does not

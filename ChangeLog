@@ -1,3 +1,16 @@
+2012-05-25  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/kernel-features.h
+	(__ASSUME_NEW_GETRLIMIT_SYSCALL): Remove all definitions.
+	* sysdeps/unix/sysv/linux/i386/getrlimit.c: Do not include
+	kernel-features.h.
+	[!__ASSUME_NEW_GETRLIMIT_SYSCALL]: Remove conditional code.
+	[__ASSUME_NEW_GETRLIMIT_SYSCALL]: Make code unconditional.
+	* sysdeps/unix/sysv/linux/i386/setrlimit.c Do not include
+	kernel-features.h.
+	[!__ASSUME_NEW_GETRLIMIT_SYSCALL]: Remove conditional code.
+	[__ASSUME_NEW_GETRLIMIT_SYSCALL]: Make code unconditional.
+
 2012-05-25  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* configure.in: Define the default includes to being none.
