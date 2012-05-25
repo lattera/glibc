@@ -1,3 +1,7 @@
+2012-05-25  Mike Frysinger  <vapier@gentoo.org>
+
+	* sysdeps/unix/sysv/linux/ia64/nptl/libc.abilist: Update.
+
 2012-05-24  Mike Frysinger  <vapier@gentoo.org>
 
 	* sysdeps/unix/sysv/linux/ia64/bits/mman.h (MADV_DONTDUMP): Define.
