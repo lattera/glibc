@@ -25,6 +25,7 @@
 #include <sys/param.h>
 #include <tls.h>
 #include <dl-tlsdesc.h>
+#include <dl-irel.h>
 
 #define CLEAR_CACHE(BEG,END)						\
   INTERNAL_SYSCALL_ARM (cacheflush, , 3, (BEG), (END), 0)
@@ -377,7 +378,7 @@ elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
 	  && __builtin_expect (ELFW(ST_TYPE) (sym->st_info) == STT_GNU_IFUNC, 0)
 	  && __builtin_expect (sym->st_shndx != SHN_UNDEF, 1)
 	  && __builtin_expect (!skip_ifunc, 1))
-	value = ((Elf32_Addr (*) (void)) value) ();
+	value = elf_ifunc_invoke (value);
 
       switch (r_type)
 	{
@@ -551,7 +552,7 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 	  && __builtin_expect (ELFW(ST_TYPE) (sym->st_info) == STT_GNU_IFUNC, 0)
 	  && __builtin_expect (sym->st_shndx != SHN_UNDEF, 1)
 	  && __builtin_expect (!skip_ifunc, 1))
-	value = ((Elf32_Addr (*) (void)) value) ();
+	value = elf_ifunc_invoke (value);
 
       switch (r_type)
 	{

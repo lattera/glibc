@@ -1,3 +1,9 @@
+2012-05-25  Richard Henderson  <rth@twiddle.net>
+
+	* sysdeps/arm/dl-irel.h (elf_ifunc_invoke): Pass dl_hwcap.
+	* sysdeps/arm/dl-machine.h (elf_machine_rel): Use elf_ifunc_invoke.
+	(elf_machine_rela): Likewise.
+
 2012-05-23  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/arm/bits/mman.h (MADV_DONTDUMP): Define.

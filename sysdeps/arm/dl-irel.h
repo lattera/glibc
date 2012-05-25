@@ -29,7 +29,7 @@ static inline Elf32_Addr
 __attribute ((always_inline))
 elf_ifunc_invoke (Elf32_Addr addr)
 {
-  return ((Elf32_Addr (*) (void)) (addr)) ();
+  return ((Elf32_Addr (*) (unsigned long int)) (addr)) (GLRO(dl_hwcap));
 }
 
 static inline void
