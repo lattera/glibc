@@ -5,6 +5,11 @@ AC_CONFIG_SRCDIR([include/features.h])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_AUX_DIR([scripts])
 
+# Glibc should not depend on any header files
+AC_DEFUN([_AC_INCLUDES_DEFAULT_REQUIREMENTS],
+  [m4_divert_text([DEFAULTS],
+    [ac_includes_default='/* none */'])])
+
 dnl This is here so we can set $subdirs directly based on configure fragments.
 AC_CONFIG_SUBDIRS()
 

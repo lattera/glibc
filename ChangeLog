@@ -1,3 +1,8 @@
+2012-05-25  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* configure.in: Define the default includes to being none.
+	* configure: Regenerated.
+
 2012-05-25  Roland McGrath  <roland@hack.frob.com>
 
 	* sysdeps/x86_64/__longjmp.S: Add a static probe here.
