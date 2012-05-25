@@ -1,6 +1,6 @@
 /* Set flags signalling availability of kernel features based on given
    kernel version number.
-   Copyright (C) 1999-2003, 2004, 2005, 2006 Free Software Foundation, Inc.
+   Copyright (C) 1999-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -18,10 +18,6 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <sgidefs.h>
-
-/* Linux 2.3.39 introduced 32bit UID/GIDs.  Some platforms had 32
-   bit type all along.  */
-#define __ASSUME_32BITUIDS		1
 
 /* MIPS platforms had IPC64 all along.  */
 #define __ASSUME_IPC64		1
