@@ -22,11 +22,6 @@
 # define __ASSUME_UTIMES	1
 #endif
 
-/* The new getrlimit syscall was added sometime before 2.4.6.  */
-#if __LINUX_KERNEL_VERSION >= 132102
-#define __ASSUME_NEW_GETRLIMIT_SYSCALL	1
-#endif
-
 /* On ARM the truncate64/ftruncate64/mmap2/stat64/lstat64/fstat64
    syscalls were introduced in 2.3.35.  */
 #if __LINUX_KERNEL_VERSION >= 131875
