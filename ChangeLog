@@ -1,3 +1,8 @@
+2012-05-24  Jeff Law  <law@redhat.com>
+
+	* stdio-common/Makefile (tests): Add bug25.
+	* stdio-common/bug25.c: New test.
+
 2012-05-24  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #13576]
