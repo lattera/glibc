@@ -1,3 +1,7 @@
+2012-05-24  Roland McGrath  <roland@hack.frob.com>
+
+	* pthread_create.c (start_thread): Define pthread_start LIBC_PROBE.
+
 2012-05-17  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/i386/i686/dl-sysdep.h

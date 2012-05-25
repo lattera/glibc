@@ -252,6 +252,7 @@ else
 fi
 AC_SUBST(libc_cv_nss_crypt)
 
+
 AC_ARG_ENABLE([obsolete-rpc],
               AC_HELP_STRING([--enable-obsolete-rpc],
                              [build and install the obsolete RPC code for link-time usage]),
@@ -261,6 +262,29 @@ AC_SUBST(link_obsolete_rpc)
 
 if test "$link_obsolete_rpc" = yes; then
   AC_DEFINE(LINK_OBSOLETE_RPC)
+fi
+
+AC_ARG_ENABLE([systemtap],
+              [AS_HELP_STRING([--enable-systemtap],
+	       [enable systemtap static probe points @<:@default=no@:>@])],
+              [systemtap=$enableval],
+	      [systemtap=no])
+if test "x$systemtap" != xno; then
+  AC_CACHE_CHECK([for systemtap static probe support], libc_cv_sdt, [dnl
+  old_CFLAGS="$CFLAGS"
+  CFLAGS="-std=gnu99 $CFLAGS"
+  AC_COMPILE_IFELSE([#include <sys/sdt.h>
+void foo (int i, void *p)
+{
+  asm ("" STAP_PROBE_ASM (foo, bar, STAP_PROBE_ASM_TEMPLATE (2)) ""
+       :: STAP_PROBE_ASM_OPERANDS (2, i, p));
+}], [libc_cv_sdt=yes], [libc_cv_sdt=no])
+  CFLAGS="$old_CFLAGS"])
+  if test $libc_cv_sdt = yes; then
+    AC_DEFINE([USE_STAP_PROBE])
+  elif test "x$systemtap" != xauto; then
+    AC_MSG_FAILURE([systemtap support needs sys/sdt.h with asm support])
+  fi
 fi
 
 # The way shlib-versions is used to generate soversions.mk uses a

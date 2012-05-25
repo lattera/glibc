@@ -1,3 +1,13 @@
+2012-05-25  Roland McGrath  <roland@hack.frob.com>
+
+	* include/stap-probe.h: New file.
+	* configure.in: Handle --enable-systemtap.
+	* configure: Regenerated.
+	* config.h.in (USE_STAP_PROBE): New #undef.
+	* extra-lib.mk (CPPFLAGS-$(lib)): Add -DIN_LIB=$(lib).
+	* elf/Makefile (CPPFLAGS-.os): Add -DIN_LIB=rtld.
+	* elf/rtld-Rules (rtld-CPPFLAGS): Likewise.
+
 2012-05-25  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #13717]

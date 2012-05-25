@@ -101,4 +101,4 @@ ifneq (,$(cpp-srcs-left))
 include $(patsubst %,$(..)cppflags-iterator.mk,$(cpp-srcs-left))
 endif
 
-CPPFLAGS-$(lib) := -DNOT_IN_libc=1 -DIS_IN_$(lib)=1
+CPPFLAGS-$(lib) := -DNOT_IN_libc=1 -DIS_IN_$(lib)=1 -DIN_LIB=$(lib)

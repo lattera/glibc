@@ -181,6 +181,10 @@
 /* Define if obsolete RPC code should be made available for user-level code
    to link against.  */
 #undef LINK_OBSOLETE_RPC
+
+/* Define if Systemtap <sys/sdt.h> probes should be defined.  */
+#undef USE_STAP_PROBE
+
 /*
  */
 

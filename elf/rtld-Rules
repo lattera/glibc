@@ -1,7 +1,6 @@
 # Subroutine makefile for compiling libc modules linked into dynamic linker.
 
-# Copyright (C) 2002,2003,2005,2006,2008,2010,2011
-#   Free Software Foundation, Inc.
+# Copyright (C) 2002-2012 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -130,6 +129,6 @@ ifdef rtld-depfiles
 endif
 
 # This here is the whole point of all the shenanigans.
-rtld-CPPFLAGS := -DNOT_IN_libc=1 -DIS_IN_rtld=1
+rtld-CPPFLAGS := -DNOT_IN_libc=1 -DIS_IN_rtld=1 -DIN_LIB=rtld
 
 endif

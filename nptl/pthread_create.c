@@ -31,6 +31,8 @@
 
 #include <shlib-compat.h>
 
+#include <stap-probe.h>
+
 
 /* Local function to start thread and handle cleanup.  */
 static int start_thread (void *arg);
@@ -298,6 +300,8 @@ start_thread (void *arg)
 
 	  CANCEL_RESET (oldtype);
 	}
+
+      LIBC_PROBE (pthread_start, 3, (pthread_t) pd, pd->start_routine, pd->arg);
 
       /* Run the code the user provided.  */
 #ifdef CALL_THREAD_FCT

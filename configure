@@ -784,6 +784,7 @@ enable_all_warnings
 enable_multi_arch
 enable_nss_crypt
 enable_obsolete_rpc
+enable_systemtap
 with_cpu
 '
       ac_precious_vars='build_alias
@@ -1441,6 +1442,7 @@ Optional Features:
   --enable-nss-crypt      enable libcrypt to use nss
   --enable-obsolete-rpc   build and install the obsolete RPC code for
                           link-time usage
+  --enable-systemtap      enable systemtap static probe points [default=no]
 
 Optional Packages:
   --with-PACKAGE[=ARG]    use PACKAGE [ARG=yes]
@@ -3753,6 +3755,7 @@ else
 fi
 
 
+
 # Check whether --enable-obsolete-rpc was given.
 if test "${enable_obsolete_rpc+set}" = set; then :
   enableval=$enable_obsolete_rpc; link_obsolete_rpc=$enableval
@@ -3765,6 +3768,51 @@ fi
 if test "$link_obsolete_rpc" = yes; then
   $as_echo "#define LINK_OBSOLETE_RPC 1" >>confdefs.h
 
+fi
+
+# Check whether --enable-systemtap was given.
+if test "${enable_systemtap+set}" = set; then :
+  enableval=$enable_systemtap; systemtap=$enableval
+else
+  systemtap=no
+fi
+
+if test "x$systemtap" != xno; then
+  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for systemtap static probe support" >&5
+$as_echo_n "checking for systemtap static probe support... " >&6; }
+if ${libc_cv_sdt+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+    old_CFLAGS="$CFLAGS"
+  CFLAGS="-std=gnu99 $CFLAGS"
+  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+#include <sys/sdt.h>
+void foo (int i, void *p)
+{
+  asm ("" STAP_PROBE_ASM (foo, bar, STAP_PROBE_ASM_TEMPLATE (2)) ""
+       :: STAP_PROBE_ASM_OPERANDS (2, i, p));
+}
+_ACEOF
+if ac_fn_c_try_compile "$LINENO"; then :
+  libc_cv_sdt=yes
+else
+  libc_cv_sdt=no
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+  CFLAGS="$old_CFLAGS"
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_sdt" >&5
+$as_echo "$libc_cv_sdt" >&6; }
+  if test $libc_cv_sdt = yes; then
+    $as_echo "#define USE_STAP_PROBE 1" >>confdefs.h
+
+  elif test "x$systemtap" != xauto; then
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
+$as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
+as_fn_error $? "systemtap support needs sys/sdt.h with asm support
+See \`config.log' for more details" "$LINENO" 5; }
+  fi
 fi
 
 # The way shlib-versions is used to generate soversions.mk uses a
