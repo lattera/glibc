@@ -76,6 +76,12 @@ Version 2.16
   defines the HWCAP_* bits associated with the AT_HWCAP key.
 
 * New locales: mag_IN
+
+* New configure option --enable-systemtap builds SystemTap static probes
+  into libc for setjmp and longjmp and into libpthread for various operations.
+  So far the setjmp/longjmp probes and some of the libpthread probes are
+  provided only for i*86 and x86_64.
+  Implemented by Roland McGrath and Rayson Ho.
 
 Version 2.15
 
