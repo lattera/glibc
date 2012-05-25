@@ -545,7 +545,7 @@ resolve_ifunc (Elf64_Addr value,
       value = (Elf64_Addr) &opd;
     }
 #endif
-  return ((Elf64_Addr (*) (void)) value) ();
+  return ((Elf64_Addr (*) (unsigned long int)) value) (GLRO(dl_hwcap));
 }
 
 /* Perform the relocation specified by RELOC and SYM (which is fully
