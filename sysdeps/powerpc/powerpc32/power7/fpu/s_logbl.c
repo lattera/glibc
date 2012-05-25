@@ -56,14 +56,12 @@ __logbl (long double x)
     return (xh * xh);
   else if (__builtin_expect (ret == two10m1, 0))
     {
+      /* POSIX specifies that denormal number is treated as
+         though it were normalized.  */
       int64_t lx, hx;
-      int m1, m2, ma;
 
       GET_LDOUBLE_WORDS64 (hx, lx, x);
-      m1 = (hx == 0) ? 0 : __builtin_clzll (hx);
-      m2 = (lx == 0) ? 0 : __builtin_clzll (lx);
-      ma = (m1 == 0) ? m2 + 64 : m1;
-      return -1022.0 + (double)(11 - ma);
+      return (long double) (-1023 - (__builtin_clzll (hx) - 12));
     }
   /* Test to avoid logb_downward (0.0) == -0.0.  */
   return ret == -0.0 ? 0.0 : ret;

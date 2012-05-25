@@ -38,10 +38,12 @@ __logbl (long double x)
     {
       /* POSIX specifies that denormal number is treated as
          though it were normalized.  */
-      int m1 = (ix == 0) ? 0 : __builtin_clz (ix);
-      int m2 = (lx == 0) ? 0 : __builtin_clz (lx);
-      int ma = (m1 == 0) ? m2 + 32 : m1;
-      return -16382.0 - (long double)(ma);
+      int ma;
+      if (ix == 0)
+	ma = __builtin_clz (lx) + 32;
+      else
+	ma = __builtin_clz (ix);
+      es -= ma - 1;
     }
   return (long double) (es - 16383);
 }

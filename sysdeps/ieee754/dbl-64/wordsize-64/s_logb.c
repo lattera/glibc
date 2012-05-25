@@ -36,8 +36,8 @@ __logb (double x)
     return x * x;
   if (__builtin_expect (ex == 0, 0))
     {
-      int m = (ix == 0) ? 0 : __builtin_clzll (ix);
-      return -1022.0 + (double)(11 -m);
+      int m = __builtin_clzll (ix);
+      ex -= m - 12;
     }
   return (double) (ex - 1023);
 }

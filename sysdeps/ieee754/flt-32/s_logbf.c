@@ -31,8 +31,7 @@ __logbf (float x)
     {
       /* POSIX specifies that denormal number is treated as
          though it were normalized.  */
-      int m = (ix == 0) ? 0 : __builtin_clz (ix);
-      return -126.0 + (float)(8 - m);
+      rix -= __builtin_clz (ix) - 9;
     }
   return (float) (rix - 127);
 }

@@ -41,10 +41,12 @@ __logbl (long double x)
     {
       /* POSIX specifies that denormal number is treated as
          though it were normalized.  */
-      int m1 = (hx == 0) ? 0 : __builtin_clzll (hx);
-      int m2 = (lx == 0) ? 0 : __builtin_clzll (lx);
-      int ma = (m1 == 0) ? m2 + 64 : m1;
-      return -16382.0 + (long double)(15 - ma);
+      int ma;
+      if (hx == 0)
+	ma = __builtin_clzll (lx) + 64;
+      else
+	ma = __builtin_clzll (hx);
+      ex -= ma - 16;
     }
   return (long double) (ex - 16383);
 }

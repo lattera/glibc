@@ -30,7 +30,7 @@ __logbl (long double x)
 
   GET_LDOUBLE_WORDS64 (hx, lx, x);
   hx &= 0x7fffffffffffffffLL;	/* high |x| */
-  if ((hx | (lx & 0x7fffffffffffffffLL)) == 0)
+  if (hx == 0)
     return -1.0 / fabs (x);
   if (hx >= 0x7ff0000000000000LL)
     return x * x;
@@ -38,10 +38,7 @@ __logbl (long double x)
     {
       /* POSIX specifies that denormal number is treated as
          though it were normalized.  */
-      int m1 = (hx == 0) ? 0 : __builtin_clzll (hx);
-      int m2 = (lx == 0) ? 0 : __builtin_clzll (lx);
-      int ma = (m1 == 0) ? m2 + 64 : m1;
-      return -1022.0 + (long double)(11 - ma);
+      rhx -= __builtin_clzll (hx) - 12;
     }
   return (long double) (rhx - 1023);
 }

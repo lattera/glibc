@@ -1,3 +1,16 @@
+2012-05-26  Andreas Schwab  <schwab@linux-m68k.org>
+
+	* sysdeps/ieee754/dbl-64/s_logb.c (__logb): Optimize
+	handling of denormals.
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_logb.c (__logb): Likewise.
+	* sysdeps/ieee754/flt-32/s_logbf.c (__logbf): Likewise.
+	* sysdeps/ieee754/ldbl-96/s_logbl.c (__logbl): Likewise.
+	* sysdeps/ieee754/ldbl-128/s_logbl.c (__logbl): Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_logbl.c (__logbl): Likewise.
+	* sysdeps/powerpc/powerpc32/power7/fpu/s_logb.c (_logb): Likewise.
+	* sysdeps/powerpc/powerpc32/power7/fpu/s_logbl.c (_logbl):
+	Likewise.
+
 2012-05-25  Marek Polacek  <polacek@redhat.com>
 
 	[BZ #14152]

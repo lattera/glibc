@@ -55,13 +55,14 @@ __logb (double x)
       /* POSIX specifies that denormal numbers are treated as
          though they were normalized.  */
       int32_t lx, ix;
-      int m1, m2, ma;
+      int ma;
 
-      EXTRACT_WORDS (ix , lx, x);
-      m1 = (ix == 0) ? 0 : __builtin_clz (ix);
-      m2 = (lx == 0) ? 0 : __builtin_clz (lx);
-      ma = (m1 == 0) ? m2 + 32 : m1;
-      return -1022.0 + (double)(11 - ma);
+      EXTRACT_WORDS (ix, lx, x);
+      if (ix == 0)
+	ma = __builtin_clz (lx) + 32;
+      else
+	ma = __builtin_clz (ix);
+      return (double) (-1023 - (ma - 12));
     }
   /* Test to avoid logb_downward (0.0) == -0.0.  */
   return ret == -0.0 ? 0.0 : ret;
