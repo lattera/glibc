@@ -1,3 +1,10 @@
+2012-05-24  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #13576]
+	* malloc/malloc.c (sYSMALLOc): Free the old top chunk with a
+	multiple of MALLOC_ALIGNMENT in size.
+	(_int_free): Check chunk size is a multiple of MALLOC_ALIGNMENT.
+
 2012-05-24  Joseph Myers  <joseph@codesourcery.com>
 
 	* conform/data/stdio.h-data (BUFSIZ): Use macro-int-constant.

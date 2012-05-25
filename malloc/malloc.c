@@ -2396,11 +2396,12 @@ static void* sysmalloc(INTERNAL_SIZE_T nb, mstate av)
       top(av) = chunk_at_offset(heap, sizeof(*heap));
       set_head(top(av), (heap->size - sizeof(*heap)) | PREV_INUSE);
 
-      /* Setup fencepost and free the old top chunk. */
+      /* Setup fencepost and free the old top chunk with a multiple of
+	 MALLOC_ALIGNMENT in size. */
       /* The fencepost takes at least MINSIZE bytes, because it might
 	 become the top chunk again later.  Note that a footer is set
 	 up, too, although the chunk is marked in use. */
-      old_size -= MINSIZE;
+      old_size = (old_size - MINSIZE) & ~MALLOC_ALIGN_MASK;
       set_head(chunk_at_offset(old_top, old_size + 2*SIZE_SZ), 0|PREV_INUSE);
       if (old_size >= MINSIZE) {
 	set_head(chunk_at_offset(old_top, old_size), (2*SIZE_SZ)|PREV_INUSE);
@@ -3809,8 +3810,9 @@ _int_free(mstate av, mchunkptr p, int have_lock)
       malloc_printerr (check_action, errstr, chunk2mem(p));
       return;
     }
-  /* We know that each chunk is at least MINSIZE bytes in size.  */
-  if (__builtin_expect (size < MINSIZE, 0))
+  /* We know that each chunk is at least MINSIZE bytes in size or a
+     multiple of MALLOC_ALIGNMENT.  */
+  if (__builtin_expect (size < MINSIZE || !aligned_OK (size), 0))
     {
       errstr = "free(): invalid size";
       goto errout;
