@@ -1,4 +1,4 @@
-/* Copyright (C) 2003, 2004, 2007 Free Software Foundation, Inc.
+/* Copyright (C) 2003-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Martin Schwidefsky <schwidefsky@de.ibm.com>, 2003.
 
@@ -25,6 +25,7 @@
 
 #include <shlib-compat.h>
 #include <kernel-features.h>
+#include <stap-probe.h>
 
 
 int
@@ -33,6 +34,8 @@ __pthread_cond_signal (cond)
 {
   int pshared = (cond->__data.__mutex == (void *) ~0l)
 		? LLL_SHARED : LLL_PRIVATE;
+
+  LIBC_PROBE (cond_signal, 1, cond);
 
   /* Make sure we are alone.  */
   lll_lock (cond->__data.__lock, pshared);

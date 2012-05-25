@@ -1,4 +1,4 @@
-/* Copyright (C) 2003, 2007 Free Software Foundation, Inc.
+/* Copyright (C) 2003-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Martin Schwidefsky <schwidefsky@de.ibm.com>, 2003.
 
@@ -21,11 +21,14 @@
 #include <lowlevellock.h>
 #include <pthread.h>
 #include <pthreadP.h>
+#include <stap-probe.h>
 
 /* Unlock RWLOCK.  */
 int
 __pthread_rwlock_unlock (pthread_rwlock_t *rwlock)
 {
+  LIBC_PROBE (rwlock_unlock, 1, rwlock);
+
   lll_lock (rwlock->__data.__lock, rwlock->__data.__shared);
   if (rwlock->__data.__writer)
     rwlock->__data.__writer = 0;

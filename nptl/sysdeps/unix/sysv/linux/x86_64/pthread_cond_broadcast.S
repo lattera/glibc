@@ -1,5 +1,4 @@
-/* Copyright (C) 2002, 2003, 2004, 2005, 2006, 2007, 2009
-   Free Software Foundation, Inc.
+/* Copyright (C) 2002-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -24,7 +23,7 @@
 #include <kernel-features.h>
 #include <pthread-pi-defines.h>
 #include <pthread-errnos.h>
-
+#include <stap-probe.h>
 
 	.text
 
@@ -33,6 +32,8 @@
 	.type	__pthread_cond_broadcast, @function
 	.align	16
 __pthread_cond_broadcast:
+
+	LIBC_PROBE (cond_broadcast, 1, %rdi)
 
 	/* Get internal lock.  */
 	movl	$1, %esi

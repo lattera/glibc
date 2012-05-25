@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2004, 2007 Free Software Foundation, Inc.
+/* Copyright (C) 2002-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -19,6 +19,7 @@
 #include <errno.h>
 #include <shlib-compat.h>
 #include "pthreadP.h"
+#include <stap-probe.h>
 
 
 int
@@ -27,6 +28,8 @@ __pthread_cond_destroy (cond)
 {
   int pshared = (cond->__data.__mutex == (void *) ~0l)
 		? LLL_SHARED : LLL_PRIVATE;
+
+  LIBC_PROBE (cond_destroy, 1, cond);
 
   /* Make sure we are alone.  */
   lll_lock (cond->__data.__lock, pshared);
@@ -50,13 +53,13 @@ __pthread_cond_destroy (cond)
   if (nwaiters >= (1 << COND_NWAITERS_SHIFT))
     {
       /* Wake everybody on the associated mutex in case there are
-         threads that have been requeued to it.
-         Without this, pthread_cond_destroy could block potentially
-         for a long time or forever, as it would depend on other
-         thread's using the mutex.
-         When all threads waiting on the mutex are woken up, pthread_cond_wait
-         only waits for threads to acquire and release the internal
-         condvar lock.  */
+	 threads that have been requeued to it.
+	 Without this, pthread_cond_destroy could block potentially
+	 for a long time or forever, as it would depend on other
+	 thread's using the mutex.
+	 When all threads waiting on the mutex are woken up, pthread_cond_wait
+	 only waits for threads to acquire and release the internal
+	 condvar lock.  */
       if (cond->__data.__mutex != NULL
 	  && cond->__data.__mutex != (void *) ~0l)
 	{

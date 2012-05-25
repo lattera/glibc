@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2005, 2006 Free Software Foundation, Inc.
+/* Copyright (C) 2002-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -21,6 +21,8 @@
 
 #include <atomic.h>
 #include "pthreadP.h"
+
+#include <stap-probe.h>
 
 
 static void
@@ -53,6 +55,8 @@ pthread_join (threadid, thread_return)
 
   struct pthread *self = THREAD_SELF;
   int result = 0;
+
+  LIBC_PROBE (pthread_join, 1, threadid);
 
   /* During the wait we change to asynchronous cancellation.  If we
      are canceled the thread we are waiting for must be marked as
@@ -108,6 +112,8 @@ pthread_join (threadid, thread_return)
       /* Free the TCB.  */
       __free_tcb (pd);
     }
+
+  LIBC_PROBE (pthread_join_ret, 3, threadid, result, pd->result);
 
   return result;
 }

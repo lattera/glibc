@@ -1,5 +1,4 @@
-/* Copyright (C) 2002-2004, 2006-2008, 2009, 2012
-   Free Software Foundation, Inc.
+/* Copyright (C) 2002-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -19,6 +18,8 @@
 
 #ifndef _LOWLEVELLOCK_H
 #define _LOWLEVELLOCK_H	1
+
+#include <stap-probe.h>
 
 #ifndef __ASSEMBLER__
 # include <time.h>
@@ -227,6 +228,7 @@ LLL_STUB_UNWIND_INFO_END
   do {									      \
     int __ignore;							      \
     register __typeof (nr) _nr __asm ("edx") = (nr);			      \
+    LIBC_PROBE (lll_futex_wake, 3, futex, nr, private);                       \
     __asm __volatile ("syscall"						      \
 		      : "=a" (__ignore)					      \
 		      : "0" (SYS_futex), "D" (futex),			      \
@@ -286,7 +288,7 @@ LLL_STUB_UNWIND_INFO_END
 			      "je 0f\n\t"				      \
 			      "lock; cmpxchgl %4, %2\n\t"		      \
 			      "jnz 1f\n\t"				      \
-		  	      "jmp 24f\n"				      \
+			      "jmp 24f\n"				      \
 			      "0:\tcmpxchgl %4, %2\n\t"			      \
 			      "jnz 1f\n\t"
 #endif

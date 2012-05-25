@@ -1,4 +1,4 @@
-/* Copyright (C) 2002-2007, 2009, 2010, 2011 Free Software Foundation, Inc.
+/* Copyright (C) 2002-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -20,6 +20,8 @@
 #include <pthread-errnos.h>
 #include <kernel-features.h>
 #include <lowlevellock.h>
+
+#include <stap-probe.h>
 
 	.text
 
@@ -86,7 +88,8 @@ __lll_lock_wait_private:
 	cmpl	%edx, %eax	/* NB:	 %edx == 2 */
 	jne	2f
 
-1:	movl	$SYS_futex, %eax
+1:	LIBC_PROBE (lll_lock_wait_private, 1, %rdi)
+	movl	$SYS_futex, %eax
 	syscall
 
 2:	movl	%edx, %eax
@@ -125,7 +128,8 @@ __lll_lock_wait:
 	cmpl	%edx, %eax	/* NB:	 %edx == 2 */
 	jne	2f
 
-1:	movl	$SYS_futex, %eax
+1:	LIBC_PROBE (lll_lock_wait, 2, %rdi, %rsi)
+	movl	$SYS_futex, %eax
 	syscall
 
 2:	movl	%edx, %eax

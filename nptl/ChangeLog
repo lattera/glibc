@@ -1,3 +1,32 @@
+2012-05-25  Rayson Ho  <rho@redhat.com>
+	    Roland McGrath  <roland@hack.frob.com>
+
+	* DESIGN-systemtap-probes.txt: New file.
+	* pthread_cond_broadcast.c: SystemTap probes.
+	* pthread_cond_init.c: Likewise.
+	* pthread_cond_signal.c: Likewise.
+	* pthread_cond_wait.c: Likewise.
+	* pthread_cond_destroy.c: Likewise.
+	* pthread_create.c: Likewise.
+	* pthread_join.c: Likewise.
+	* pthread_mutex_destroy.c: Likewise.
+	* pthread_mutex_init.c: Likewise.
+	* pthread_mutex_lock.c: Likewise.
+	* pthread_mutex_timedlock.c: Likewise.
+	* pthread_mutex_unlock.c: Likewise.
+	* pthread_rwlock_destroy.c: Likewise.
+	* pthread_rwlock_rdlock.c: Likewise.
+	* pthread_rwlock_unlock.c: Likewise.
+	* pthread_rwlock_wrlock.c: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/lowlevellock.S: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/lowlevellock.h: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/pthread_cond_broadcast.S: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/pthread_cond_signal.S: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/pthread_cond_timedwait.S: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/pthread_cond_wait.S: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/pthread_rwlock_rdlock.S: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/pthread_rwlock_wrlock.S: Likewise.
+
 2012-05-24  Roland McGrath  <roland@hack.frob.com>
 
 	* pthread_create.c (start_thread): Define pthread_start LIBC_PROBE.

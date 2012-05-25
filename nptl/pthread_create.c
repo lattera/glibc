@@ -1,4 +1,4 @@
-/* Copyright (C) 2002-2007,2008,2009,2010,2011 Free Software Foundation, Inc.
+/* Copyright (C) 2002-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -559,6 +559,8 @@ __pthread_create_2_1 (newthread, attr, start_routine, arg)
 
   /* Pass the descriptor to the caller.  */
   *newthread = (pthread_t) pd;
+
+  LIBC_PROBE (pthread_create, 4, newthread, attr, start_routine, arg);
 
   /* Start the thread.  */
   return create_thread (pd, iattr, STACK_VARIABLES_ARGS);

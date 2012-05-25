@@ -1,4 +1,4 @@
-/* Copyright (C) 2002-2005,2007,2009,2010,2011 Free Software Foundation, Inc.
+/* Copyright (C) 2002-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -22,6 +22,7 @@
 #include <lowlevelcond.h>
 #include <pthread-pi-defines.h>
 #include <pthread-errnos.h>
+#include <stap-probe.h>
 
 #include <kernel-features.h>
 
@@ -66,6 +67,8 @@ __pthread_cond_timedwait:
 	subq	$FRAME_SIZE, %rsp
 	cfi_adjust_cfa_offset(FRAME_SIZE)
 	cfi_remember_state
+
+	LIBC_PROBE (cond_timedwait, 3, %rdi, %rsi, %rdx)
 
 	cmpq	$1000000000, 8(%rdx)
 	movl	$EINVAL, %eax

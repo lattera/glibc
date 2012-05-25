@@ -1,4 +1,4 @@
-/* Copyright (C) 2003,2004,2006,2007,2011 Free Software Foundation, Inc.
+/* Copyright (C) 2003-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Martin Schwidefsky <schwidefsky@de.ibm.com>, 2003.
 
@@ -24,6 +24,7 @@
 #include <pthreadP.h>
 
 #include <shlib-compat.h>
+#include <stap-probe.h>
 
 
 struct _condvar_cleanup_buffer
@@ -43,7 +44,7 @@ __condvar_cleanup (void *arg)
     (struct _condvar_cleanup_buffer *) arg;
   unsigned int destroying;
   int pshared = (cbuffer->cond->__data.__mutex == (void *) ~0l)
-  		? LLL_SHARED : LLL_PRIVATE;
+		? LLL_SHARED : LLL_PRIVATE;
 
   /* We are going to modify shared data.  */
   lll_lock (cbuffer->cond->__data.__lock, pshared);
@@ -98,7 +99,9 @@ __pthread_cond_wait (cond, mutex)
   struct _condvar_cleanup_buffer cbuffer;
   int err;
   int pshared = (cond->__data.__mutex == (void *) ~0l)
-  		? LLL_SHARED : LLL_PRIVATE;
+		? LLL_SHARED : LLL_PRIVATE;
+
+  LIBC_PROBE (cond_wait, 2, cond, mutex);
 
   /* Make sure we are alone.  */
   lll_lock (cond->__data.__lock, pshared);

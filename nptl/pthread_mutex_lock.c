@@ -1,4 +1,4 @@
-/* Copyright (C) 2002-2007, 2008, 2009 Free Software Foundation, Inc.
+/* Copyright (C) 2002-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -23,6 +23,7 @@
 #include <not-cancel.h>
 #include "pthreadP.h"
 #include <lowlevellock.h>
+#include <stap-probe.h>
 
 
 #ifndef LLL_MUTEX_LOCK
@@ -47,6 +48,9 @@ __pthread_mutex_lock (mutex)
   assert (sizeof (mutex->__size) >= sizeof (mutex->__data));
 
   unsigned int type = PTHREAD_MUTEX_TYPE (mutex);
+
+  LIBC_PROBE (mutex_entry, 1, mutex);
+
   if (__builtin_expect (type & ~PTHREAD_MUTEX_KIND_MASK_NP, 0))
     return __pthread_mutex_lock_full (mutex);
 
@@ -125,6 +129,8 @@ __pthread_mutex_lock (mutex)
 #ifndef NO_INCR
   ++mutex->__data.__nusers;
 #endif
+
+  LIBC_PROBE (mutex_acquired, 1, mutex);
 
   return 0;
 }
@@ -465,6 +471,8 @@ __pthread_mutex_lock_full (pthread_mutex_t *mutex)
 #ifndef NO_INCR
   ++mutex->__data.__nusers;
 #endif
+
+  LIBC_PROBE (mutex_acquired, 1, mutex);
 
   return 0;
 }

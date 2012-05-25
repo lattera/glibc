@@ -22,6 +22,7 @@
 #include <lowlevellock.h>
 #include <pthread.h>
 #include <pthreadP.h>
+#include <stap-probe.h>
 
 #include <shlib-compat.h>
 #include <kernel-features.h>
@@ -31,6 +32,8 @@ int
 __pthread_cond_broadcast (cond)
      pthread_cond_t *cond;
 {
+  LIBC_PROBE (cond_broadcast, 1, cond);
+
   int pshared = (cond->__data.__mutex == (void *) ~0l)
 		? LLL_SHARED : LLL_PRIVATE;
   /* Make sure we are alone.  */

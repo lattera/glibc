@@ -1,4 +1,4 @@
-/* Copyright (C) 2002-2007, 2009, 2011 Free Software Foundation, Inc.
+/* Copyright (C) 2002-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -23,6 +23,7 @@
 #include <tcb-offsets.h>
 #include <pthread-pi-defines.h>
 #include <pthread-errnos.h>
+#include <stap-probe.h>
 
 #include <kernel-features.h>
 
@@ -54,20 +55,22 @@ __pthread_cond_wait:
 	   rsp + 32
 		    +--------------------------+
 	   rsp + 24 | old wake_seq value       |
-	            +--------------------------+
+		    +--------------------------+
 	   rsp + 16 | mutex pointer            |
-	            +--------------------------+
+		    +--------------------------+
 	   rsp +  8 | condvar pointer          |
-	            +--------------------------+
+		    +--------------------------+
 	   rsp +  4 | old broadcast_seq value  |
-	            +--------------------------+
+		    +--------------------------+
 	   rsp +  0 | old cancellation mode    |
-	            +--------------------------+
+		    +--------------------------+
 	*/
+
+	LIBC_PROBE (cond_wait, 2, %rdi, %rsi)
 
 	LP_OP(cmp) $-1, dep_mutex(%rdi)
 
-		/* Prepare structure passed to cancellation handler.  */
+	/* Prepare structure passed to cancellation handler.  */
 	movq	%rdi, 8(%rsp)
 	movq	%rsi, 16(%rsp)
 
@@ -406,15 +409,15 @@ __condvar_cleanup1:
 	   rsp + 32
 		    +--------------------------+
 	   rsp + 24 | unused                   |
-	            +--------------------------+
+		    +--------------------------+
 	   rsp + 16 | mutex pointer            |
-	            +--------------------------+
+		    +--------------------------+
 	   rsp +  8 | condvar pointer          |
-	            +--------------------------+
+		    +--------------------------+
 	   rsp +  4 | old broadcast_seq value  |
-	            +--------------------------+
+		    +--------------------------+
 	   rsp +  0 | old cancellation mode    |
-	            +--------------------------+
+		    +--------------------------+
 	*/
 
 	movq	%rax, 24(%rsp)
