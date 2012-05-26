@@ -1,3 +1,9 @@
+2012-05-25  Marek Polacek  <polacek@redhat.com>
+
+	[BZ #14152]
+	* math/libm-test.inc (fma_test): Don't always expect underflow
+	exception.
+
 2012-05-26  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	[BZ #12416]
