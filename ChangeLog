@@ -1,5 +1,7 @@
 2012-05-26  Andreas Schwab  <schwab@linux-m68k.org>
 
+	* sysdeps/powerpc/powerpc32/dl-irel.h: Include <ldsodefs.h>.
+
 	* sysdeps/ieee754/dbl-64/s_logb.c (__logb): Optimize
 	handling of denormals.
 	* sysdeps/ieee754/dbl-64/wordsize-64/s_logb.c (__logb): Likewise.
