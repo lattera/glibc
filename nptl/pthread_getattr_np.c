@@ -1,4 +1,4 @@
-/* Copyright (C) 2002-2004, 2006, 2007, 2011 Free Software Foundation, Inc.
+/* Copyright (C) 2002-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -84,6 +84,18 @@ pthread_getattr_np (thread_id, attr)
 	    ret = errno;
 	  else
 	    {
+	      /* We consider the main process stack to have ended with
+	         the page containing __libc_stack_end.  There is stuff below
+		 it in the stack too, like the program arguments, environment
+		 variables and auxv info, but we ignore those pages when
+		 returning size so that the output is consistent when the
+		 stack is marked executable due to a loaded DSO requiring
+		 it.  */
+	      void *stack_end = (void *) ((uintptr_t) __libc_stack_end
+					  & -(uintptr_t) GLRO(dl_pagesize));
+#if _STACK_GROWS_DOWN
+	      stack_end += GLRO(dl_pagesize);
+#endif
 	      /* We need no locking.  */
 	      __fsetlocking (fp, FSETLOCKING_BYCALLER);
 
@@ -109,7 +121,7 @@ pthread_getattr_np (thread_id, attr)
 		    {
 		      /* Found the entry.  Now we have the info we need.  */
 		      iattr->stacksize = rl.rlim_cur;
-		      iattr->stackaddr = (void *) to;
+		      iattr->stackaddr = stack_end;
 
 		      /* The limit might be too high.  */
 		      if ((size_t) iattr->stacksize

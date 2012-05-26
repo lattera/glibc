@@ -1,3 +1,10 @@
+2012-05-26  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	[BZ #12416]
+	* elf/tst-execstack.c: Include stackinfo.h.
+	(do_test): Adjust test case to ensure that pthread_getattr_np
+	behaviour remains the same after marking stack executable.
+
 2012-05-25  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/kernel-features.h

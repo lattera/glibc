@@ -1,3 +1,10 @@
+2012-05-26  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	[BZ #12416]
+	* nptl/pthread_getattr_np.c (pthread_getattr_np): Use
+	__libc_stack_end rounded to the end of containing page as the
+	real stack end.
+
 2012-05-25  Rayson Ho  <rho@redhat.com>
 
 	* sysdeps/unix/sysv/linux/i386/lowlevellock.h: Low-level SystemTap

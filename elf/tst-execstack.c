@@ -7,6 +7,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <error.h>
+#include <stackinfo.h>
 
 static void
 print_maps (void)
@@ -45,7 +46,6 @@ waiter_thread (void *arg)
   return 0;
 }
 #endif
-
 
 static bool allow_execstack = true;
 
@@ -107,6 +107,35 @@ do_test (void)
 
   print_maps ();
 
+#if USE_PTHREADS
+  void *old_stack_addr, *new_stack_addr;
+  size_t stack_size;
+  pthread_t me = pthread_self ();
+  pthread_attr_t attr;
+  int ret = 0;
+
+  ret = pthread_getattr_np (me, &attr);
+  if (ret)
+    {
+      printf ("before execstack: pthread_getattr_np returned error: %s\n",
+	      strerror (ret));
+      return 1;
+    }
+
+  ret = pthread_attr_getstack (&attr, &old_stack_addr, &stack_size);
+  if (ret)
+    {
+      printf ("before execstack: pthread_attr_getstack returned error: %s\n",
+	      strerror (ret));
+      return 1;
+    }
+# if _STACK_GROWS_DOWN
+    old_stack_addr += stack_size;
+# else
+    old_stack_addr -= stack_size;
+# endif
+#endif
+
   /* Loading this module should force stacks to become executable.  */
   void *h = dlopen ("tst-execstack-mod.so", RTLD_LAZY);
   if (h == NULL)
@@ -128,6 +157,46 @@ do_test (void)
   (*((void (*) (void)) f)) ();
 
   print_maps ();
+
+#if USE_PTHREADS
+  ret = pthread_getattr_np (me, &attr);
+  if (ret)
+    {
+      printf ("after execstack: pthread_getattr_np returned error: %s\n",
+	      strerror (ret));
+      return 1;
+    }
+
+  ret = pthread_attr_getstack (&attr, &new_stack_addr, &stack_size);
+  if (ret)
+    {
+      printf ("after execstack: pthread_attr_getstack returned error: %s\n",
+	      strerror (ret));
+      return 1;
+    }
+
+# if _STACK_GROWS_DOWN
+    new_stack_addr += stack_size;
+# else
+    new_stack_addr -= stack_size;
+# endif
+
+  /* It is possible that the dlopen'd module may have been mmapped just below
+     the stack.  The stack size is taken as MIN(stack rlimit size, end of last
+     vma) in pthread_getattr_np.  If rlimit is set high enough, it is possible
+     that the size may have changed.  A subsequent call to
+     pthread_attr_getstack returns the size and (bottom - size) as the
+     stacksize and stackaddr respectively.  If the size changes due to the
+     above, then both stacksize and stackaddr can change, but the stack bottom
+     should remain the same, which is computed as stackaddr + stacksize.  */
+  if (old_stack_addr != new_stack_addr)
+    {
+      printf ("Stack end changed, old: %p, new: %p\n",
+	      old_stack_addr, new_stack_addr);
+      return 1;
+    }
+  printf ("Stack address remains the same: %p\n", old_stack_addr);
+#endif
 
   /* Test that growing the stack region gets new executable pages too.  */
   deeper ((void (*) (void)) f);
