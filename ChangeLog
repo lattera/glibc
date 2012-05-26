@@ -11,7 +11,7 @@
 	* sysdeps/powerpc/powerpc32/power7/fpu/s_logbl.c (_logbl):
 	Likewise.
 
-2012-05-25  Marek Polacek  <polacek@redhat.com>
+2012-05-26  Marek Polacek  <polacek@redhat.com>
 
 	[BZ #14152]
 	* math/libm-test.inc (fma_test): Don't always expect underflow
