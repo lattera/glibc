@@ -1,7 +1,6 @@
 # Configuration		DEFAULT			Earliest symbol set
 # -------------		---------------		------------------------------
 x86_64-.*-linux.*	DEFAULT			GLIBC_2.16
-x86_64-.*-linux.*	ld=ld-linux-x32.so.2	GLIBC_2.16
 
 # Configuration		ABI			Identifier for ABI data files
 # -------------		----------		-----------------------------

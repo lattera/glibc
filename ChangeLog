@@ -1,3 +1,49 @@
+2012-05-30  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #14112]
+	* Makeconfig (default-abi): New macro.
+	(abi-includes): Likewise.
+	($(common-objpfx)soversions.mk): Remove WORDSIZE check.  Use
+	$(abi-$(default-abi)-lib-soname) for soname if defined.
+	($(common-objpfx)gnu/lib-names.stmp): Generate from
+	abi-variants.
+	* Makefile (installed-stubs): Likewise.
+	* include/stubs-biarch.h: Removed.
+	* scripts/lib-names.awk: Only handle one library at a time.
+	* scripts/soversions.awk: Remove WORDSIZE support.
+	* shlib-versions: Remove WORDSIZE and i.86/s390x/powerpc64 ld
+	entries.
+	* sysdeps/unix/sysv/linux/Makefile (syscall-list-variants):
+	Removed.
+	(syscall-list-default-condition): Likewise.
+	(syscall-list-default-condition): Likewise.
+	(syscall-list-includes): Likewise.
+	($(objpfx)bits/syscall%h $(objpfx)bits/syscall%d): Replace
+	syscall-list-* with abi-*.  Handle undefined abi-variants.
+	* sysdeps/unix/sysv/linux/i386/Makefile (default-abi): New macro.
+	* sysdeps/unix/sysv/linux/i386/Implies: New file.
+	* sysdeps/unix/sysv/linux/x86/Makefile: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/64/Makefile: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/Implies: Add unix/sysv/linux/x86.
+	* sysdeps/unix/sysv/linux/x86_64/Makefile (syscall-list-variants):
+	Removed.
+	(syscall-list-32-options): Likewise.
+	(syscall-list-32-condition): Likewise.
+	(syscall-list-64-options): Likewise.
+	(syscall-list-64-condition): Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/x32/Makefile (default-abi): New
+	macro.
+	* sysdeps/unix/sysv/linux/powerpc/Makefile (syscall-list-*):
+	Renamed to ...
+	(abi-*): This.
+	(abi-64-ld-soname): New macro.
+	* sysdeps/unix/sysv/linux/s390/Makefile: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/Makefile (syscall-list-*):
+	Renamed to ...
+	(abi-*): This.
+	* sysdeps/x86_64/64/shlib-versions: Remove ld entry.
+	* sysdeps/x86_64/x32/shlib-versions: Likewise.
+
 2012-05-30  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/kernel-features.h

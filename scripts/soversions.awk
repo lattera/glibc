@@ -7,17 +7,6 @@ BEGIN {
 
 { thiscf = $1 }
 
-$2 ~ /WORDSIZE[3264]/ {
-  if ((config ~ thiscf) && !othercf) {
-    othercf = $3;
-    sub(/@CPU@/, cpu, othercf);
-    sub(/@VENDOR@/, vendor, othercf);
-    sub(/@OS@/, os, othercf);
-    configs[othercf] = $2;
-  }
-  next;
-}
-
 $2 == "ABI" {
   if ((config ~ thiscf) && !abiname) {
     abiname = $3;

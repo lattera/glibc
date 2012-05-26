@@ -43,24 +43,13 @@ tests += tst-clone
 # Generate the list of SYS_* macros for the system calls (__NR_* macros).
 
 # If there is more than one syscall list for different architecture
-# variants, the CPU/Makefile defines syscall-list-variants to be a
-# list of names for those variants (e.g. 32bit 64bit), and, for each
-# variant, defines syscall-list-$(variant)-options to be compiler
-# options to cause <asm/unistd.h> to define the desired list of
-# syscalls and syscall-list-$(variant)-condition to be the condition
-# for those options to use in a C #if condition.
-# syscall-list-includes may be defined to a list of headers to include
+# variants, the CPU/Makefile defines abi-variants to be a list of names
+# for those variants (e.g. 32 64), and, for each variant, defines
+# abi-$(variant)-options to be compiler options to cause <asm/unistd.h>
+# to define the desired list of syscalls and abi-$(variant)-condition to
+# be the condition for those options to use in a C #if condition.
+# abi-includes may be defined to a list of headers to include
 # in the generated header, if the default does not suffice.
-
-ifndef syscall-list-variants
-syscall-list-variants := default
-syscall-list-default-options :=
-syscall-list-default-condition :=
-endif
-
-ifndef syscall-list-includes
-syscall-list-includes := bits/wordsize.h
-endif
 
 $(objpfx)bits/syscall%h $(objpfx)bits/syscall%d: ../sysdeps/unix/sysv/linux/sys/syscall.h
 	$(make-target-directory)
@@ -71,31 +60,41 @@ $(objpfx)bits/syscall%h $(objpfx)bits/syscall%d: ../sysdeps/unix/sysv/linux/sys/
 	 echo '# error "Never use <bits/syscall.h> directly; include <sys/syscall.h> instead."'; \
 	 echo '#endif'; \
 	 echo ''; \
-	 $(foreach h,$(syscall-list-includes), echo '#include <$(h)>';) \
+	 $(foreach h,$(abi-includes), echo '#include <$(h)>';) \
 	 echo ''; \
-	 $(foreach v,$(syscall-list-variants),\
+	 $(if $(abi-variants), \
+	 $(foreach v,$(abi-variants),\
 	 $(CC) -E -MD -MP -MF $(@:.h=.d)-t$(v) -MT '$(@:.d=.h) $(@:.h=.d)' \
-	       -x c $(sysincludes) $< $(syscall-list-$(v)-options) \
+	       -x c $(sysincludes) $< $(abi-$(v)-options) \
 	       -D_LIBC -dM | \
 	 sed -n 's@^#define __NR_\([^ ]*\) .*$$@#define SYS_\1 __NR_\1@p' | \
 	 LC_ALL=C sort > $(@:.d=.h).new$(v); \
-	 $(if $(syscall-list-$(v)-condition),\
-	 echo '#if $(syscall-list-$(v)-condition)';) \
+	 $(if $(abi-$(v)-condition),\
+	 echo '#if $(abi-$(v)-condition)';) \
 	 cat $(@:.d=.h).new$(v); \
-	 $(if $(syscall-list-$(v)-condition),echo '#endif';) \
+	 $(if $(abi-$(v)-condition),echo '#endif';) \
 	 rm -f $(@:.d=.h).new$(v); \
-	 ) \
+	 ), \
+	 $(CC) -E -MD -MP -MF $(@:.h=.d)-t$(v) -MT '$(@:.d=.h) $(@:.h=.d)' \
+	       -x c $(sysincludes) $< \
+	       -D_LIBC -dM | \
+	 sed -n 's@^#define __NR_\([^ ]*\) .*$$@#define SYS_\1 __NR_\1@p' | \
+	 LC_ALL=C sort;) \
 	} > $(@:.d=.h).new
 	mv -f $(@:.d=.h).new $(@:.d=.h)
+ifdef abi-variants
 ifneq (,$(objpfx))
 	sed $(sed-remove-objpfx) \
-	 $(foreach v,$(syscall-list-variants),$(@:.h=.d)-t$(v)) > $(@:.h=.d)-t3
+	 $(foreach v,$(abi-variants),$(@:.h=.d)-t$(v)) > $(@:.h=.d)-t3
 else
-	cat $(foreach v,$(syscall-list-variants),$(@:.h=.d)-t$(v)) \
+	cat $(foreach v,$(abi-variants),$(@:.h=.d)-t$(v)) \
 	 > $(@:.h=.d)-t3
 endif
-	rm -f $(foreach v,$(syscall-list-variants),$(@:.h=.d)-t$(v))
+	rm -f $(foreach v,$(abi-variants),$(@:.h=.d)-t$(v))
 	mv -f $(@:.h=.d)-t3 $(@:.h=.d)
+else
+	mv -f $(@:.h=.d)-t $(@:.h=.d)
+endif
 
 ifndef no_deps
 # Get the generated list of dependencies (probably /usr/include/asm/unistd.h).

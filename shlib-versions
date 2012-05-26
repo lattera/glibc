@@ -18,28 +18,12 @@
 # library has no third column.  The defaults must precede the entries they
 # apply to.
 #
-# An entry with WORDSIZE* in the second column gives an alternate
-# configuration tuple whose macros will be conditionally defined in
-# gnu/lib-names.h; @CPU@, @VENDOR@, @OS@ can be used in the third
-# column to compose the alternate tuple matched against the patterns here.
-
 # Configuration		DEFAULT			Earliest symbol set
 # -------------		---------------		------------------------------
 
 s390x-.*-linux.*        DEFAULT			GLIBC_2.2
 powerpc64-.*-linux.*	DEFAULT			GLIBC_2.3
 .*-.*-gnu-gnu.*		DEFAULT			GLIBC_2.2.6
-
-# Configuration		WORDSIZE[32|64]		Alternate configuration
-# -------------		----------		-----------------------
-x86_64-.*-.*		WORDSIZE32		i686-@VENDOR@-@OS@
-i.86-.*-.*		WORDSIZE64		x86_64-@VENDOR@-@OS@
-s390x-.*-.*		WORDSIZE32		s390-@VENDOR@-@OS@
-s390-.*-.*		WORDSIZE64		s390x-@VENDOR@-@OS@
-powerpc64-.*-.*		WORDSIZE32		powerpc-@VENDOR@-@OS@
-powerpc.*-.*-.*		WORDSIZE64		powerpc64-@VENDOR@-@OS@
-sparc64.*-.*-.*		WORDSIZE32		sparc-@VENDOR@-@OS@
-sparc.*-.*-.*		WORDSIZE64		sparc64-@VENDOR@-@OS@
 
 # Configuration		ABI			Identifier for ABI data files
 # -------------		----------		-----------------------------
@@ -70,12 +54,9 @@ sparc64.*-.*-linux.*	libc=6			GLIBC_2.2
 .*-.*-gnu-gnu.*		libc=0.3
 
 # The dynamic loader also requires different names.
-i.86-.*-linux.*		ld=ld-linux.so.2
 sparc64.*-.*-linux.*	ld=ld-linux.so.2	GLIBC_2.2
 sparc.*-.*-linux.*	ld=ld-linux.so.2
 sh.*-.*-linux.*		ld=ld-linux.so.2	GLIBC_2.2
-s390x-.*-linux.*	ld=ld64.so.1		GLIBC_2.2
-powerpc64.*-.*-linux.*	ld=ld64.so.1		GLIBC_2.3
 # We use the ELF ABI standard name for the default.
 .*-.*-.*		ld=ld.so.1
 
