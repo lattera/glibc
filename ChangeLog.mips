@@ -1,3 +1,22 @@
+2012-05-26  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/mips/mips32/nptl/libcidn.abilist: New
+	file.
+	* sysdeps/unix/sysv/linux/mips/mips32/nptl/libnss_compat.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/nptl/libnss_db.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/nptl/libnss_dns.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/nptl/libnss_files.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/nptl/libnss_hesiod.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/nptl/libnss_nis.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/nptl/libnss_nisplus.abilist:
+	Likewise.
+
 2012-05-25  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/mips/kernel-features.h
