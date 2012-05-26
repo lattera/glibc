@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2006, 2007, 2009 Free Software Foundation, Inc.
+/* Copyright (C) 2002-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -231,7 +231,7 @@ sem_open (const char *name, int oflag, ...)
   int fd;
 
   /* Determine where the shmfs is mounted.  */
-  INTUSE(__pthread_once) (&__namedsem_once, __where_is_shmfs);
+  __pthread_once (&__namedsem_once, __where_is_shmfs);
 
   /* If we don't know the mount points there is nothing we can do.  Ever.  */
   if (mountpoint.dir == NULL)

@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2007 Free Software Foundation, Inc.
+/* Copyright (C) 2002-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -51,3 +51,4 @@ __pthread_once (once_control, init_routine)
   return 0;
 }
 strong_alias (__pthread_once, pthread_once)
+hidden_def (__pthread_once)

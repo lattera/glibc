@@ -408,23 +408,14 @@ extern int __pthread_setschedparam (pthread_t thread_id, int policy,
 extern int __pthread_setcancelstate (int state, int *oldstate);
 extern int __pthread_mutex_init (pthread_mutex_t *__mutex,
 				 const pthread_mutexattr_t *__mutexattr);
-extern int __pthread_mutex_init_internal (pthread_mutex_t *__mutex,
-					  const pthread_mutexattr_t *__mutexattr)
-     attribute_hidden;
 extern int __pthread_mutex_destroy (pthread_mutex_t *__mutex);
-extern int __pthread_mutex_destroy_internal (pthread_mutex_t *__mutex)
-     attribute_hidden;
 extern int __pthread_mutex_trylock (pthread_mutex_t *_mutex);
 extern int __pthread_mutex_lock (pthread_mutex_t *__mutex);
-extern int __pthread_mutex_lock_internal (pthread_mutex_t *__mutex)
-     attribute_hidden;
 extern int __pthread_mutex_cond_lock (pthread_mutex_t *__mutex)
      attribute_hidden internal_function;
 extern void __pthread_mutex_cond_lock_adjust (pthread_mutex_t *__mutex)
      attribute_hidden internal_function;
 extern int __pthread_mutex_unlock (pthread_mutex_t *__mutex);
-extern int __pthread_mutex_unlock_internal (pthread_mutex_t *__mutex)
-     attribute_hidden;
 extern int __pthread_mutex_unlock_usercnt (pthread_mutex_t *__mutex,
 					   int __decr)
      attribute_hidden internal_function;
@@ -467,13 +458,10 @@ extern int __pthread_rwlock_init (pthread_rwlock_t *__restrict __rwlock,
 				  __attr);
 extern int __pthread_rwlock_destroy (pthread_rwlock_t *__rwlock);
 extern int __pthread_rwlock_rdlock (pthread_rwlock_t *__rwlock);
-extern int __pthread_rwlock_rdlock_internal (pthread_rwlock_t *__rwlock);
 extern int __pthread_rwlock_tryrdlock (pthread_rwlock_t *__rwlock);
 extern int __pthread_rwlock_wrlock (pthread_rwlock_t *__rwlock);
-extern int __pthread_rwlock_wrlock_internal (pthread_rwlock_t *__rwlock);
 extern int __pthread_rwlock_trywrlock (pthread_rwlock_t *__rwlock);
 extern int __pthread_rwlock_unlock (pthread_rwlock_t *__rwlock);
-extern int __pthread_rwlock_unlock_internal (pthread_rwlock_t *__rwlock);
 extern int __pthread_cond_broadcast (pthread_cond_t *cond);
 extern int __pthread_cond_destroy (pthread_cond_t *cond);
 extern int __pthread_cond_init (pthread_cond_t *cond,
@@ -486,17 +474,10 @@ extern int __pthread_cond_timedwait (pthread_cond_t *cond,
 extern int __pthread_condattr_destroy (pthread_condattr_t *attr);
 extern int __pthread_condattr_init (pthread_condattr_t *attr);
 extern int __pthread_key_create (pthread_key_t *key, void (*destr) (void *));
-extern int __pthread_key_create_internal (pthread_key_t *key,
-					  void (*destr) (void *));
 extern void *__pthread_getspecific (pthread_key_t key);
-extern void *__pthread_getspecific_internal (pthread_key_t key);
 extern int __pthread_setspecific (pthread_key_t key, const void *value);
-extern int __pthread_setspecific_internal (pthread_key_t key,
-					   const void *value);
 extern int __pthread_once (pthread_once_t *once_control,
 			   void (*init_routine) (void));
-extern int __pthread_once_internal (pthread_once_t *once_control,
-				    void (*init_routine) (void));
 extern int __pthread_atfork (void (*prepare) (void), void (*parent) (void),
 			     void (*child) (void));
 extern pthread_t __pthread_self (void);
@@ -507,6 +488,20 @@ extern int __pthread_setcanceltype (int type, int *oldtype);
 extern int __pthread_enable_asynccancel (void) attribute_hidden;
 extern void __pthread_disable_asynccancel (int oldtype)
      internal_function attribute_hidden;
+
+#if defined NOT_IN_libc && defined IS_IN_libpthread
+hidden_proto (__pthread_mutex_init)
+hidden_proto (__pthread_mutex_destroy)
+hidden_proto (__pthread_mutex_lock)
+hidden_proto (__pthread_mutex_unlock)
+hidden_proto (__pthread_rwlock_rdlock)
+hidden_proto (__pthread_rwlock_wrlock)
+hidden_proto (__pthread_rwlock_unlock)
+hidden_proto (__pthread_key_create)
+hidden_proto (__pthread_getspecific)
+hidden_proto (__pthread_setspecific)
+hidden_proto (__pthread_once)
+#endif
 
 extern int __pthread_cond_broadcast_2_0 (pthread_cond_2_0_t *cond);
 extern int __pthread_cond_destroy_2_0 (pthread_cond_2_0_t *cond);

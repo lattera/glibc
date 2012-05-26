@@ -1,4 +1,4 @@
-/* Copyright (C) 2002-2007, 2008, 2009, 2011 Free Software Foundation, Inc.
+/* Copyright (C) 2002-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -115,21 +115,21 @@ static const struct pthread_functions pthread_functions =
     .ptr___pthread_exit = __pthread_exit,
     .ptr_pthread_getschedparam = __pthread_getschedparam,
     .ptr_pthread_setschedparam = __pthread_setschedparam,
-    .ptr_pthread_mutex_destroy = INTUSE(__pthread_mutex_destroy),
-    .ptr_pthread_mutex_init = INTUSE(__pthread_mutex_init),
-    .ptr_pthread_mutex_lock = INTUSE(__pthread_mutex_lock),
-    .ptr_pthread_mutex_unlock = INTUSE(__pthread_mutex_unlock),
+    .ptr_pthread_mutex_destroy = __pthread_mutex_destroy,
+    .ptr_pthread_mutex_init = __pthread_mutex_init,
+    .ptr_pthread_mutex_lock = __pthread_mutex_lock,
+    .ptr_pthread_mutex_unlock = __pthread_mutex_unlock,
     .ptr_pthread_self = __pthread_self,
     .ptr_pthread_setcancelstate = __pthread_setcancelstate,
     .ptr_pthread_setcanceltype = __pthread_setcanceltype,
     .ptr___pthread_cleanup_upto = __pthread_cleanup_upto,
-    .ptr___pthread_once = __pthread_once_internal,
-    .ptr___pthread_rwlock_rdlock = __pthread_rwlock_rdlock_internal,
-    .ptr___pthread_rwlock_wrlock = __pthread_rwlock_wrlock_internal,
-    .ptr___pthread_rwlock_unlock = __pthread_rwlock_unlock_internal,
-    .ptr___pthread_key_create = __pthread_key_create_internal,
-    .ptr___pthread_getspecific = __pthread_getspecific_internal,
-    .ptr___pthread_setspecific = __pthread_setspecific_internal,
+    .ptr___pthread_once = __pthread_once,
+    .ptr___pthread_rwlock_rdlock = __pthread_rwlock_rdlock,
+    .ptr___pthread_rwlock_wrlock = __pthread_rwlock_wrlock,
+    .ptr___pthread_rwlock_unlock = __pthread_rwlock_unlock,
+    .ptr___pthread_key_create = __pthread_key_create,
+    .ptr___pthread_getspecific = __pthread_getspecific,
+    .ptr___pthread_setspecific = __pthread_setspecific,
     .ptr__pthread_cleanup_push_defer = __pthread_cleanup_push_defer,
     .ptr__pthread_cleanup_pop_restore = __pthread_cleanup_pop_restore,
     .ptr_nthreads = &__nptl_nthreads,
@@ -442,12 +442,12 @@ __pthread_initialize_minimal_internal (void)
 
   /* Make __rtld_lock_{,un}lock_recursive use pthread_mutex_{,un}lock,
      keep the lock count from the ld.so implementation.  */
-  GL(dl_rtld_lock_recursive) = (void *) INTUSE (__pthread_mutex_lock);
-  GL(dl_rtld_unlock_recursive) = (void *) INTUSE (__pthread_mutex_unlock);
+  GL(dl_rtld_lock_recursive) = (void *) __pthread_mutex_lock;
+  GL(dl_rtld_unlock_recursive) = (void *) __pthread_mutex_unlock;
   unsigned int rtld_lock_count = GL(dl_load_lock).mutex.__data.__count;
   GL(dl_load_lock).mutex.__data.__count = 0;
   while (rtld_lock_count-- > 0)
-    INTUSE (__pthread_mutex_lock) (&GL(dl_load_lock).mutex);
+    __pthread_mutex_lock (&GL(dl_load_lock).mutex);
 
   GL(dl_make_stack_executable_hook) = &__make_stacks_executable;
 #endif

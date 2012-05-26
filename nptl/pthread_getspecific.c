@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2002-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -65,4 +65,4 @@ __pthread_getspecific (key)
   return result;
 }
 strong_alias (__pthread_getspecific, pthread_getspecific)
-strong_alias (__pthread_getspecific, __pthread_getspecific_internal)
+hidden_def (__pthread_getspecific)

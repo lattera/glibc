@@ -179,8 +179,5 @@ __pthread_rwlock_wrlock:
 	cfi_endproc
 	.size	__pthread_rwlock_wrlock,.-__pthread_rwlock_wrlock
 
-	.globl	pthread_rwlock_wrlock
-pthread_rwlock_wrlock = __pthread_rwlock_wrlock
-
-	.globl	__pthread_rwlock_wrlock_internal
-__pthread_rwlock_wrlock_internal = __pthread_rwlock_wrlock
+strong_alias (__pthread_rwlock_wrlock, pthread_rwlock_wrlock)
+hidden_def (__pthread_rwlock_wrlock)

@@ -247,8 +247,6 @@ __pthread_rwlock_wrlock:
 	.long	__lll_lock_wait-.Lwait5b
 .Lwake5:
 	.long	__lll_unlock_wake-.Lwake5b
-	.globl	pthread_rwlock_wrlock
-pthread_rwlock_wrlock = __pthread_rwlock_wrlock
 
-	.globl	__pthread_rwlock_wrlock_internal
-__pthread_rwlock_wrlock_internal = __pthread_rwlock_wrlock
+strong_alias (__pthread_rwlock_wrlock, pthread_rwlock_wrlock)
+hidden_def (__pthread_rwlock_wrlock)

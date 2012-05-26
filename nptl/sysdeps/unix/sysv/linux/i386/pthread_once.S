@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2007, 2012 Free Software Foundation, Inc.
+/* Copyright (C) 2002-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -174,8 +174,5 @@ __pthread_once:
 	cfi_endproc
 	.size	__pthread_once,.-__pthread_once
 
-	.globl	__pthread_once_internal
-__pthread_once_internal = __pthread_once
-
-	.globl	pthread_once
-pthread_once = __pthread_once
+hidden_def (__pthread_once)
+strong_alias (__pthread_once, pthread_once)

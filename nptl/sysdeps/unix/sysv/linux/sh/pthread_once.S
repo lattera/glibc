@@ -1,4 +1,4 @@
-/* Copyright (C) 2003, 2004, 2007 Free Software Foundation, Inc.
+/* Copyright (C) 2003-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -253,8 +253,5 @@ __pthread_once:
 	.long	HIDDEN_JUMPTARGET(__pthread_unwind_next)-.Lunext0
 	.size	__pthread_once,.-__pthread_once
 
-	.globl	__pthread_once_internal
-__pthread_once_internal = __pthread_once
-
-	.globl	pthread_once
-pthread_once = __pthread_once
+hidden_def (__pthread_once)
+strong_alias (__pthread_once, pthread_once)

@@ -478,7 +478,7 @@ __pthread_mutex_lock_full (pthread_mutex_t *mutex)
 }
 #ifndef __pthread_mutex_lock
 strong_alias (__pthread_mutex_lock, pthread_mutex_lock)
-strong_alias (__pthread_mutex_lock, __pthread_mutex_lock_internal)
+hidden_def (__pthread_mutex_lock)
 #endif
 
 

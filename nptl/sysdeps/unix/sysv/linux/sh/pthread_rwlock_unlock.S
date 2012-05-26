@@ -217,8 +217,5 @@ __pthread_rwlock_unlock:
 	.long	__lll_unlock_wake-.Lwake9b
 	.size	__pthread_rwlock_unlock,.-__pthread_rwlock_unlock
 
-	.globl	pthread_rwlock_unlock
-pthread_rwlock_unlock = __pthread_rwlock_unlock
-
-	.globl	__pthread_rwlock_unlock_internal
-__pthread_rwlock_unlock_internal = __pthread_rwlock_unlock
+strong_alias (__pthread_rwlock_unlock, pthread_rwlock_unlock)
+hidden_def (__pthread_rwlock_unlock)

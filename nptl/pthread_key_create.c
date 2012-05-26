@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2006 Free Software Foundation, Inc.
+/* Copyright (C) 2002-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -50,4 +50,4 @@ __pthread_key_create (key, destr)
   return EAGAIN;
 }
 strong_alias (__pthread_key_create, pthread_key_create)
-strong_alias (__pthread_key_create, __pthread_key_create_internal)
+hidden_def (__pthread_key_create)

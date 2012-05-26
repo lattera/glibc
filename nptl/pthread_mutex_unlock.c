@@ -297,4 +297,4 @@ __pthread_mutex_unlock (mutex)
   return __pthread_mutex_unlock_usercnt (mutex, 1);
 }
 strong_alias (__pthread_mutex_unlock, pthread_mutex_unlock)
-strong_alias (__pthread_mutex_unlock, __pthread_mutex_unlock_internal)
+hidden_def (__pthread_mutex_unlock)
