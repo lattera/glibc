@@ -1,3 +1,7 @@
+2012-05-27  Ulrich Drepper  <drepper@gmail.com>
+
+	* po/h.po: Update from translation team.
+
 2012-05-26  Andreas Schwab  <schwab@linux-m68k.org>
 
 	* sysdeps/powerpc/powerpc32/dl-irel.h: Include <ldsodefs.h>.
