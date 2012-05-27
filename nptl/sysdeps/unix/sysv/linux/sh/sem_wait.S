@@ -1,4 +1,4 @@
-/* Copyright (C) 2003, 2004, 2007, 2011 Free Software Foundation, Inc.
+/* Copyright (C) 2003-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -71,11 +71,20 @@ __new_sem_wait:
 7:
 	mov	#0, r0
 9:
+	cfi_remember_state
 	lds.l	@r15+, pr
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (pr)
 	mov.l	@r15+, r12
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (r12)
 	mov.l	@r15+, r10
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (r10)
 	rts
 	 mov.l	@r15+, r8
+	/* Omit CFI for restore in delay slot.  */
+	cfi_restore_state
 
 .Lafter_ret:
 1:

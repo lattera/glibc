@@ -1,5 +1,4 @@
-/* Copyright (C) 2003, 2004, 2005, 2006, 2007
-   Free Software Foundation, Inc.
+/* Copyright (C) 2003-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -115,6 +114,8 @@ __lll_robust_lock_wait:
 
 3:
 	mov.l	@r15+, r8
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (r8)
 	ret
 	 mov	r4, r0
 	cfi_endproc
@@ -231,12 +232,22 @@ __lll_robust_timedlock_wait:
 	mov	#0, r0
 
 6:
+	cfi_remember_state
 	add	#8, r15
+	cfi_adjust_cfa_offset (-8)
 	mov.l	@r15+, r8
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (r8)
 	mov.l	@r15+, r9
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (r9)
 	mov.l	@r15+, r10
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (r10)
 	rts
 	 mov.l	@r15+, r11
+	/* Omit CFI for restore in delay slot.  */
+	cfi_restore_state
 
 7:
 	/* Check whether the time expired.  */
@@ -248,6 +259,12 @@ __lll_robust_timedlock_wait:
 	bra	6b
 	 mov	#ETIMEDOUT, r0
 3:
+	/* Restore initial state for invalid timeout case.  */
+	cfi_restore (r8)
+	cfi_restore (r9)
+	cfi_restore (r10)
+	cfi_restore (r11)
+	cfi_def_cfa_offset (0)
 	rts
 	 mov	#EINVAL, r0
 	cfi_endproc

@@ -209,6 +209,7 @@ ENTRY(__swapcontext)
 	mov.l	@(oR7,r0), r7
 	mov.l	@(oR8,r0), r8
 	mov.l	@r15+, r0
+	cfi_adjust_cfa_offset(-4)
 	jmp	@r0
 	 mov.l	@r15+, r0
 

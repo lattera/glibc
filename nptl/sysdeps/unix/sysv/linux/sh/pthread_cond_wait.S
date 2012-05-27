@@ -1,4 +1,4 @@
-/* Copyright (C) 2003, 2004, 2006, 2007 Free Software Foundation, Inc.
+/* Copyright (C) 2003-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -285,14 +285,28 @@ __pthread_cond_wait:
 	/* We return the result of the mutex_lock operation.  */
 
 14:
+	cfi_remember_state
 	add	#48, r15
+	cfi_adjust_cfa_offset (-48)
 	lds.l	@r15+, pr
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (pr)
 	mov.l	@r15+, r12
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (r12)
 	mov.l	@r15+, r11
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (r11)
 	mov.l	@r15+, r10
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (r10)
 	mov.l	@r15+, r9
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (r9)
 	rts
 	 mov.l	@r15+, r8
+	/* Omit CFI for restore in delay slot.  */
+	cfi_restore_state
 
 #ifndef __ASSUME_PRIVATE_FUTEX
 .Lpfoff0:

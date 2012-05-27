@@ -165,6 +165,8 @@ __lll_lock_wait_private:
 	bf	1b
 
 	mov.l	@r15+, r8
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (r8)
 	rts
 	 mov	r2, r0
 	cfi_endproc
@@ -208,7 +210,11 @@ __lll_lock_wait:
 	bf	1b
 
 	mov.l	@r15+, r8
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (r8)
 	mov.l	@r15+, r9
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (r9)
 	ret
 	 mov	r2, r0
 	cfi_endproc
@@ -286,6 +292,7 @@ __lll_timedlock_wait:
 5:
 	rts
 	 mov.l	@r15+, r12
+	/* Omit CFI for restore in delay slot.  */
 
 # ifndef __ASSUME_FUTEX_CLOCK_REALTIME
 	.align	2
@@ -305,6 +312,8 @@ __lll_timedlock_wait:
 	mov.l	.L1g, r0
 	cmp/hs	r0, r1
 	bt	3f
+
+	cfi_remember_state
 
 	mov.l	r11, @-r15
 	cfi_adjust_cfa_offset(4)
@@ -386,17 +395,32 @@ __lll_timedlock_wait:
 2:	mov	#ETIMEDOUT, r3
 
 6:
-	mov	r3, r0
 	add	#8, r15
+	cfi_adjust_cfa_offset (-8)
 	mov.l	@r15+, r8
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (r8)
 	mov.l	@r15+, r9
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (r9)
 	mov.l	@r15+, r10
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (r10)
 	mov.l	@r15+, r11
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (r11)
+	mov.l	@r15+, r12
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (r12)
 	rts
-	 mov.l	@r15+, r12
+	 mov	r3, r0
+
+	cfi_restore_state
 
 3:
 	mov.l	@r15+, r12
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (r12)
 	rts
 	 mov	#EINVAL, r0
 # endif
@@ -521,10 +545,16 @@ __lll_timedwait_tid:
 4:
 	mov	#0, r0
 3:
+	cfi_remember_state
 	add	#8, r15
+	cfi_adjust_cfa_offset (-8)
 	mov.l	@r15+, r8
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (r8)
 	rts
 	 mov.l	@r15+, r9
+	/* Omit CFI for restore in delay slot.  */
+	cfi_restore_state
 1:
 	/* Check whether the time expired.  */
 	mov	#-ETIMEDOUT, r1

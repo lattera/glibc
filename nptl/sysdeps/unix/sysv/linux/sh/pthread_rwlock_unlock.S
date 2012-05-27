@@ -1,4 +1,4 @@
-/* Copyright (C) 2003, 2007 Free Software Foundation, Inc.
+/* Copyright (C) 2003-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -27,10 +27,17 @@
 	.globl	__pthread_rwlock_unlock
 	.type	__pthread_rwlock_unlock,@function
 	.align	5
+	cfi_startproc
 __pthread_rwlock_unlock:
 	mov.l	r12, @-r15
+	cfi_adjust_cfa_offset (4)
+	cfi_rel_offset (r12, 0)
 	mov.l	r8, @-r15
+	cfi_adjust_cfa_offset (4)
+	cfi_rel_offset (r8, 0)
 	sts.l	pr, @-r15
+	cfi_adjust_cfa_offset (4)
+	cfi_rel_offset (pr, 0)
 	mov	r4, r8
 
 	/* Get the lock.  */
@@ -108,11 +115,19 @@ __pthread_rwlock_unlock:
 	trapa	#0x14
 	SYSCALL_INST_PAD
 
+	cfi_remember_state
 	lds.l	@r15+, pr
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (pr)
 	mov.l	@r15+, r8
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (r8)
 	mov.l	@r15+, r12
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (r12)
 	rts
 	 mov	#0, r0
+	cfi_restore_state
 6:
 #if MUTEX == 0
 	DEC (@r8, r2)
@@ -122,11 +137,19 @@ __pthread_rwlock_unlock:
 	tst	r2, r2
 	bf	3f
 4:
+	cfi_remember_state
 	lds.l	@r15+, pr
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (pr)
 	mov.l	@r15+, r8
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (r8)
 	mov.l	@r15+, r12
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (r12)
 	rts
 	 mov	#0, r0
+	cfi_restore_state
 
 1:
 	mov	r8, r5
@@ -159,7 +182,9 @@ __pthread_rwlock_unlock:
 
 7:
 	mov.l	r4, @-r15
+	cfi_adjust_cfa_offset (4)
 	mov.l	r6, @-r15
+	cfi_adjust_cfa_offset (4)
 	mov	r8, r4
 #if MUTEX != 0
 	add	#MUTEX, r4
@@ -173,8 +198,11 @@ __pthread_rwlock_unlock:
 .Lwake9b:
 
 	mov.l	@r15+, r6
+	cfi_adjust_cfa_offset (-4)
 	bra	8b
 	 mov.l	@r15+, r4
+
+	cfi_endproc
 
 #ifndef __ASSUME_PRIVATE_FUTEX
 .Lpfoff:

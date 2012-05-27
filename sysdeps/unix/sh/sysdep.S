@@ -1,4 +1,4 @@
-/* Copyright (C) 1999, 2000, 2005 Free Software Foundation, Inc.
+/* Copyright (C) 1999-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -41,13 +41,15 @@ skip:
 	sts.l	pr, @-r15
 	cfi_adjust_cfa_offset (4)
 	cfi_rel_offset (pr, 0)
-	jsr	@r1
-	 mov.l	r0, @-r15
+	mov.l	r0, @-r15
 	cfi_adjust_cfa_offset (4)
+	jsr	@r1
+	 nop
 	mov.l	@r15+, r1
 	cfi_adjust_cfa_offset (-4)
 	lds.l	@r15+, pr
 	cfi_adjust_cfa_offset (-4)
+	cfi_restore (pr)
 	mov.l	r1, @r0
 #endif
 #else
@@ -77,10 +79,15 @@ skip:
 	jsr	@r1
 	 nop
 	lds.l	@r15+, pr
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (pr)
 	mov.l	@r15+, r1
+	cfi_adjust_cfa_offset (-4)
 	mov.l	r1, @r0
 #endif
 	mov.l	@r15+, r12
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (r12)
 #endif
 	/* And just kick back a -1.  */
 	rts

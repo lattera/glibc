@@ -170,14 +170,27 @@ sem_timedwait:
 	mov	#0, r0
 
 10:
+	cfi_remember_state
 	add	#8, r15
+	cfi_adjust_cfa_offset (-8)
 	lds.l	@r15+, pr
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (pr)
 	mov.l	@r15+, r12
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (r12)
 	mov.l	@r15+, r10
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (r10)
 	mov.l	@r15+, r9
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (r9)
 	mov.l	@r15+, r8
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (r8)
 	rts
 	 nop
+	cfi_restore_state
 
 3:
 	neg	r0, r0

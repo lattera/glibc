@@ -1,3 +1,14 @@
+2012-05-27  Chung-Lin Tang  <cltang@codesourcery.com>
+
+	* sysdeps/sh/_mcount.S (_mount): Add CFI directives.
+	* sysdeps/unix/sh/sysdep.S (__syscall_error): Likewise.
+	* sysdeps/unix/sysv/linux/sh/sh3/setcontext.S (__setcontext): Likewise.
+	* sysdeps/unix/sysv/linux/sh/sh3/swapcontext.S (__swapcontext):
+	Likewise.
+	* sysdeps/unix/sysv/linux/sh/sh4/setcontext.S (__setcontext): Likewise.
+	* sysdeps/unix/sysv/linux/sh/sh4/swapcontext.S (__swapcontext):
+	Likewise.
+
 2012-05-27  Ulrich Drepper  <drepper@gmail.com>
 
 	* po/h.po: Update from translation team.

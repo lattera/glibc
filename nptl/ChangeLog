@@ -1,3 +1,36 @@
+2012-05-27  Chung-Lin Tang  <cltang@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/sh/lowlevellock.S (__lll_lock_wait_private)
+	(__lll_lock_wait, __lll_timedlock_wait, __lll_timedwait_tid): Add CFI
+	directives.
+	* sysdeps/unix/sysv/linux/sh/lowlevelrobustlock.S
+	(__lll_robust_lock_wait, __lll_robust_timedlock_wait): Likewise.
+	* sysdeps/unix/sysv/linux/sh/pthread_barrier_wait.S
+	(pthread_barrier_wait): Likewise.
+	* sysdeps/unix/sysv/linux/sh/pthread_cond_broadcast.S
+	(__pthread_cond_broadcast): Likewise.
+	* sysdeps/unix/sysv/linux/sh/pthread_cond_signal.S
+	(__pthread_cond_signal): Likewise.
+	* sysdeps/unix/sysv/linux/sh/pthread_cond_timedwait.S
+	(__pthread_cond_timedwait): Likewise.
+	* sysdeps/unix/sysv/linux/sh/pthread_cond_wait.S (__pthread_cond_wait):
+	Likewise.
+	* sysdeps/unix/sysv/linux/sh/pthread_rwlock_rdlock.S
+	(__pthread_rwlock_rdlock): Likewise.
+	* sysdeps/unix/sysv/linux/sh/pthread_rwlock_timedrdlock.S
+	(pthread_rwlock_timedrdlock): Likewise.
+	* sysdeps/unix/sysv/linux/sh/pthread_rwlock_timedwrlock.S
+	(pthread_rwlock_timedwrlock): Likewise.
+	* sysdeps/unix/sysv/linux/sh/pthread_rwlock_unlock.S
+	(__pthread_rwlock_unlock): Likewise.
+	* sysdeps/unix/sysv/linux/sh/pthread_rwlock_wrlock.S
+	(__pthread_rwlock_wrlock): Likewise.
+	* sysdeps/unix/sysv/linux/sh/sem_post.S (__new_sem_post): Likewise.
+	* sysdeps/unix/sysv/linux/sh/sem_timedwait.S (sem_timedwait): Likewise.
+	* sysdeps/unix/sysv/linux/sh/sem_trywait.S (__new_sem_trywait):
+	Likewise.
+	* sysdeps/unix/sysv/linux/sh/sem_wait.S (__new_sem_wait): Likewise.
+
 2012-05-26  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	[BZ #12416]

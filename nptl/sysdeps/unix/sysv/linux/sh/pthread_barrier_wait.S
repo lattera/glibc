@@ -1,4 +1,4 @@
-/* Copyright (C) 2003, 2004, 2007, 2008 Free Software Foundation, Inc.
+/* Copyright (C) 2003-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -25,10 +25,17 @@
 	.globl	pthread_barrier_wait
 	.type	pthread_barrier_wait,@function
 	.align	5
+	cfi_startproc
 pthread_barrier_wait:
 	mov.l	r9, @-r15
+	cfi_adjust_cfa_offset (4)
+	cfi_rel_offset (r9, 0)
 	mov.l	r8, @-r15
+	cfi_adjust_cfa_offset (4)
+	cfi_rel_offset (r8, 0)
 	sts.l	pr, @-r15
+	cfi_adjust_cfa_offset (4)
+	cfi_rel_offset (pr, 0)
 	mov	r4, r8
 
 	/* Get the mutex.  */
@@ -98,11 +105,19 @@ pthread_barrier_wait:
 	bf	9f
 
 10:
-	mov	#0, r0		/* != PTHREAD_BARRIER_SERIAL_THREAD */
+	cfi_remember_state
 	lds.l	@r15+, pr
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (pr)
 	mov.l	@r15+, r8
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (r8)
+	mov.l	@r15+, r9
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (r9)
 	rts
-	 mov.l	@r15+, r9
+	 mov	#0, r0		/* != PTHREAD_BARRIER_SERIAL_THREAD */
+	cfi_restore_state
 
 3:
 	/* The necessary number of threads arrived.  */
@@ -140,11 +155,19 @@ pthread_barrier_wait:
 	tst	r2, r2
 	bf	4f
 5:
-	mov	#-1, r0		/* == PTHREAD_BARRIER_SERIAL_THREAD */
+	cfi_remember_state
 	lds.l	@r15+, pr
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (pr)
 	mov.l	@r15+, r8
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (r8)
+	mov.l	@r15+, r9
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (r9)
 	rts
-	 mov.l	@r15+, r9
+	 mov	#-1, r0		/* == PTHREAD_BARRIER_SERIAL_THREAD */
+	cfi_restore_state
 
 1:
 	mov.l	@(PRIVATE,r8), r6
@@ -200,6 +223,7 @@ pthread_barrier_wait:
 .Lwake2b:
 	bra	10b
 	 mov	r9, r6
+	cfi_endproc
 
 	.align	2
 .Lall:
