@@ -82,6 +82,27 @@ Version 2.16
   So far the setjmp/longjmp probes and some of the libpthread probes are
   provided only for i*86 and x86_64.
   Implemented by Roland McGrath and Rayson Ho.
+
+* Optimized expf for x86-32 and x86-64.  Implemented by Liubov Dmitrieva.
+
+* More optimized functions for PowerPC.  Implemented by Adhemerval Zanella.
+
+* More optimized functions for SPARC.  Implemented by David S. Miller.
+
+* Improved support for cross-compilation, especially bootstrap builds
+  without a previously built glibc.
+
+* Ports for the TILE-Gx and TILEPro families of processors.  Contributed by
+  Chris Metcalf from Tilera.
+
+* Support for the old ARM ABI has been removed from ports.  Only the EABI is
+  now supported for ARM processors.
+
+* The hard-float variant of the ARM EABI now uses /lib/ld-linux-armhf.so.3
+  as the name of the dynamic linker, to distinguish it from the
+  /lib/ld-linux.so.3 dynamic linker used for the base EABI.
+
+* Support for CRIS has been removed from ports.
 
 Version 2.15
 
