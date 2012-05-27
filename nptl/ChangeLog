@@ -1,5 +1,8 @@
 2012-05-27  Chung-Lin Tang  <cltang@codesourcery.com>
 
+	* sysdeps/unix/sysv/linux/sh/sysdep-cancel.h (PSEUDO, LOAD_ARGS_1)
+	(LOAD_ARGS_2 ,LOAD_ARGS_3 ,LOAD_ARGS_4): Add CFI restores.
+
 	* sysdeps/unix/sysv/linux/sh/lowlevellock.S (__lll_lock_wait_private)
 	(__lll_lock_wait, __lll_timedlock_wait, __lll_timedwait_tid): Add CFI
 	directives.
