@@ -60,6 +60,14 @@ feraiseexcept (int excepts)
     __asm__ __volatile__ ("fmul %1, %0" : "+d" (d) : "d" (x));
   }
 
+  {
+    /* Restore flag fields.  */
+    fpu_control_t cw;
+    _FPU_GETCW (cw);
+    cw |= (excepts & FE_ALL_EXCEPT);
+    _FPU_SETCW (cw);
+  }
+
   return 0;
 }
 libm_hidden_def (feraiseexcept)

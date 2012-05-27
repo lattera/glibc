@@ -1,3 +1,8 @@
+2012-05-27  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
+
+	* sysdeps/sh/sh4/fpu/fraiseexcpt.c (feraiseexcept): Restore fpscr flag
+	fields.
+
 2012-05-27  Chung-Lin Tang  <cltang@codesourcery.com>
 
 	* sysdeps/sh/_mcount.S (_mount): Add CFI directives.
