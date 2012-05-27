@@ -23,7 +23,7 @@
 int
 feenableexcept (int excepts)
 {
-  unsigned int temp, old_flag;
+  fpu_control_t temp, old_flag;
 
   /* Get current exceptions.  */
   _FPU_GETCW (temp);

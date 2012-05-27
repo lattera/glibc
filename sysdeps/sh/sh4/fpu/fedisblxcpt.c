@@ -23,7 +23,7 @@
 int
 fedisableexcept (int excepts)
 {
-  unsigned int temp, old_exc;
+  fpu_control_t temp, old_exc;
 
   /* Get the current control register contents.  */
   _FPU_GETCW (temp);

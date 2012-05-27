@@ -1,5 +1,5 @@
 /* Install given floating-point environment.
-   Copyright (C) 1997, 1998, 1999, 2000, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1997-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -26,7 +26,7 @@ fesetenv (const fenv_t *envp)
       _FPU_SETCW (_FPU_DEFAULT);
   else
     {
-      unsigned long int temp = envp->__fpscr;
+      fpu_control_t temp = envp->__fpscr;
       _FPU_SETCW (temp);
     }
   return 0;

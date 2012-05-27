@@ -23,7 +23,7 @@
 int
 feupdateenv (const fenv_t *envp)
 {
-  unsigned int temp;
+  fpu_control_t temp;
 
   _FPU_GETCW (temp);
   temp = (temp & FE_ALL_EXCEPT);

@@ -22,7 +22,7 @@
 int
 fegetenv (fenv_t *envp)
 {
-  unsigned long int temp;
+  fpu_control_t temp;
   _FPU_GETCW (temp);
   /* When read fpscr, this was initialized.
      We need to rewrite value of temp. */

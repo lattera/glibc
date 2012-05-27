@@ -23,7 +23,7 @@
 int
 fegetexcept (void)
 {
-  unsigned int temp;
+  fpu_control_t temp;
 
   /* Get current exceptions.  */
   _FPU_GETCW (temp);

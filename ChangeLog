@@ -1,3 +1,19 @@
+2012-05-27  Thomas Schwinge  <thomas@codesourcery.com>
+
+	* sysdeps/sh/sh4/fpu/fclrexcpt.c (feclearexcept): Use fpu_control_t for
+	the temporary FPU control word.
+	* sysdeps/sh/sh4/fpu/fedisblxcpt.c (fedisableexcept): Likewise.
+	* sysdeps/sh/sh4/fpu/feenablxcpt.c (feenableexcept): Likewise.
+	* sysdeps/sh/sh4/fpu/fegetenv.c (fegetenv): Likewise.
+	* sysdeps/sh/sh4/fpu/fegetexcept.c (fegetexcept): Likewise.
+	* sysdeps/sh/sh4/fpu/fegetround.c (fegetround): Likewise.
+	* sysdeps/sh/sh4/fpu/feholdexcpt.c (feholdexcept): Likewise.
+	* sysdeps/sh/sh4/fpu/fesetenv.c (fesetenv): Likewise.
+	* sysdeps/sh/sh4/fpu/fesetround.c (fesetround): Likewise.
+	* sysdeps/sh/sh4/fpu/feupdateenv.c (feupdateenv): Likewise.
+	* sysdeps/sh/sh4/fpu/fsetexcptflg.c (fesetexceptflag): Likewise.
+	* sysdeps/sh/sh4/fpu/ftestexcept.c (fetestexcept): Likewise.
+
 2012-05-27  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
 
 	* sysdeps/sh/sh4/fpu/fraiseexcpt.c (feraiseexcept): Restore fpscr flag
