@@ -248,7 +248,6 @@ GLIBC_2.2
  _Qp_uitoq F
  _Qp_uxtoq F
  _Qp_xtoq F
- __Qp_handle_exceptions F
  __adjtimex F
  __after_morecore_hook D 0x8
  __align_cpy_1 F

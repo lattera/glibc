@@ -1,3 +1,28 @@
+2012-05-27  David S. Miller  <davem@davemloft.net>
+
+	* sysdeps/sparc/sparc32/soft-fp/q_util.c (___Q_numbers): Delete.
+	(___Q_zero): New.
+	(__Q_simulate_exceptions): Return void.  Change to simulate
+	exceptions by writing into the %fsr.
+	* sysdeps/sparc/sparc64/soft-fp/qp_util.c
+	(__Qp_handle_exceptions): Likewise.
+	(numbers): Delete.
+	* sysdeps/sparc/sparc64/soft-fp/Versions: Remove entry for
+	__Qp_handle_exceptions.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/nptl/libc.abilist: Remove
+	__Qp_handle_exceptions.
+	* sysdeps/sparc/sparc32/soft-fp/sfp-machine.h (_FP_DECL_EX): Mark
+	as unused and give dummy FP_RND_NEAREST initializer.
+	(FP_INHIBIT_RESULTS): Define.
+	(___Q_simulate_exceptions): Update declaration.
+	(FP_HANDLE_EXCEPTIONS): Use ___Q_zero and tidy inline asm
+	formatting.
+	* sysdeps/sparc/sparc64/soft-fp/sfp-machine.h (_FP_DECL_EX): Mark
+	as unused and give dummy FP_RND_NEAREST initializer.
+	(__Qp_handle_exceptions): Update declaration.
+	(FP_HANDLE_EXCEPTIONS, QP_NO_EXCEPTIONS): Tidy inline asm
+	formatting.
+
 2012-05-27  Thomas Schwinge  <thomas@codesourcery.com>
 
 	* sysdeps/sh/sh4/fpu/fclrexcpt.c (feclearexcept): Use fpu_control_t for

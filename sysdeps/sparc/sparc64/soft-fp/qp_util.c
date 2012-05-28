@@ -1,7 +1,7 @@
 /* Software floating-point emulation.
    Helper routine for _Qp_* routines.
    Simulate exceptions using double arithmetics.
-   Copyright (C) 1999 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek (jj@ultra.linux.cz).
 
@@ -21,36 +21,21 @@
 
 #include "soft-fp.h"
 
-static unsigned long numbers [] = {
-0x7fef000000000000UL, /* A huge double number */
-0x0010100000000000UL, /* Very tiny number */
-0x0010000000000000UL, /* Minimum normalized number */
-0x0000000000000000UL, /* Zero */
-};
-
-double __Qp_handle_exceptions(int exceptions)
+void __Qp_handle_exceptions(int exceptions)
 {
-  double d, *p = (double *)numbers;
-  if (exceptions & FP_EX_INVALID)
-    d = p[3]/p[3];
-  if (exceptions & FP_EX_OVERFLOW)
-    {
-      d = p[0] + p[0];
-      exceptions &= ~FP_EX_INEXACT;
-    }
-  if (exceptions & FP_EX_UNDERFLOW)
-    {
-      if (exceptions & FP_EX_INEXACT)
-        {
-	  d = p[2] * p[2];
-	  exceptions &= ~FP_EX_INEXACT;
-	}
-      else
-	d = p[1] - p[2];
-    }
-  if (exceptions & FP_EX_DIVZERO)
-    d = 1.0/p[3];
-  if (exceptions & FP_EX_INEXACT)
-    d = p[0] - p[2];
-  return d;
+  fpu_control_t fcw;
+  int tem, ou;
+
+  _FPU_GETCW(fcw);
+
+  tem = (fcw >> 23) & 0x1f;
+
+  ou = exceptions & (FP_EX_OVERFLOW | FP_EX_UNDERFLOW);
+  if (ou & tem)
+    exceptions &= ~FP_EX_INVALID;
+
+  fcw &= ~0x1f;
+  fcw |= (exceptions | (exceptions << 5));
+
+  _FPU_SETCW(fcw);
 }

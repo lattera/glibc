@@ -184,15 +184,18 @@
 #define FP_EX_DIVZERO		(1 << 1)
 #define FP_EX_INEXACT		(1 << 0)
 
-#define _FP_DECL_EX	fpu_control_t _fcw
+#define _FP_DECL_EX \
+  fpu_control_t _fcw __attribute__ ((unused)) = (FP_RND_NEAREST << 30)
 
 #define FP_INIT_ROUNDMODE					\
 do {								\
   _FPU_GETCW(_fcw);						\
 } while (0)
 
+#define FP_INHIBIT_RESULTS ((_fcw >> 23) & _fex)
+
 /* Simulate exceptions using double arithmetics. */
-extern double ___Q_simulate_exceptions(int exc);
+extern void ___Q_simulate_exceptions(int exc);
 
 #define FP_HANDLE_EXCEPTIONS					\
 do {								\
@@ -201,11 +204,10 @@ do {								\
       /* This is the common case, so we do it inline.		\
        * We need to clear cexc bits if any.			\
        */							\
-      extern unsigned long long ___Q_numbers[];			\
-      __asm__ __volatile__("\
-      	ldd [%0], %%f30\n\
-      	faddd %%f30, %%f30, %%f30\
-      	" : : "r" (___Q_numbers) : "f30");			\
+      extern unsigned long long ___Q_zero;			\
+      __asm__ __volatile__("ldd [%0], %%f30\n\t"		\
+			   "faddd %%f30, %%f30, %%f30"		\
+			   : : "r" (&___Q_zero) : "f30");	\
     }								\
   else								\
     ___Q_simulate_exceptions (_fex);			        \
