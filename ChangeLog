@@ -1,3 +1,24 @@
+2012-06-01  Andreas Schwab  <schwab@linux-m68k.org>
+
+	[BZ #14132]
+	* elf/dl-reloc.c: Include <_itoa.h>.
+	(_dl_reloc_bad_type): Remove use of INTUSE.
+	* elf/dl-minimal.c (_itoa, _itoa_lower_digits): Likewise.
+	* stdio-common/_itoa.c (_itoa_word, _itoa): Likewise.
+	* stdio-common/psiginfo.c (psiginfo): Likewise.
+	* stdio-common/psignal.c (psignal): Likewise.
+	* string/strsignal.c (strsignal): Likewise.
+	* include/signal.h (_sys_siglist): Declare hidden proto.
+	* stdio-common/itoa-digits.c: Include <_itoa.h>.  Replace
+	INTVARDEF with libc_hidden_data_def.
+	* stdio-common/itoa-udigits.c: Likewise.
+	* sysdeps/generic/_itoa.h (_itoa_upper_digits_internal)
+	(_itoa_lower_digits_internal): Remove declaration.
+	(_itoa_upper_digits, _itoa_lower_digits): Declare hidden proto.
+	* sysdeps/gnu/siglist.c (_sys_siglist_internal)
+	(_sys_sigabbrev_internal): Remove aliases.
+	(_sys_siglist): Define hidden alias.
+
 2012-05-31  Markus Trippelsdorf  <markus@trippelsdorf.de>
 
 	* sysdeps/unix/sysv/linux/Makefile (sysdep_headers): Add

@@ -1,5 +1,5 @@
 /* Relocate a shared object and resolve its references to other loaded objects.
-   Copyright (C) 1995-2006, 2008-2010, 2011 Free Software Foundation, Inc.
+   Copyright (C) 1995-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -24,6 +24,7 @@
 #include <sys/mman.h>
 #include <sys/param.h>
 #include <sys/types.h>
+#include <_itoa.h>
 #include "dynamic-link.h"
 
 /* Statistics function.  */
@@ -338,8 +339,7 @@ void
 internal_function __attribute_noinline__
 _dl_reloc_bad_type (struct link_map *map, unsigned int type, int plt)
 {
-  extern const char INTUSE(_itoa_lower_digits)[] attribute_hidden;
-#define DIGIT(b)	INTUSE(_itoa_lower_digits)[(b) & 0xf];
+#define DIGIT(b)	_itoa_lower_digits[(b) & 0xf];
 
   /* XXX We cannot translate these messages.  */
   static const char msg[2][32

@@ -1,5 +1,5 @@
 /* Define list of all signal numbers and their names.
-   Copyright (C) 1997-2000, 2002, 2003, 2006 Free Software Foundation, Inc.
+   Copyright (C) 1997-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -28,7 +28,7 @@ const char *const __new_sys_siglist[NSIG] =
 #include <siglist.h>
 #undef init_sig
 };
-strong_alias (__new_sys_siglist, _sys_siglist_internal)
+libc_hidden_ver (__new_sys_siglist, _sys_siglist)
 
 const char *const __new_sys_sigabbrev[NSIG] =
 {
@@ -36,7 +36,6 @@ const char *const __new_sys_sigabbrev[NSIG] =
 #include <siglist.h>
 #undef init_sig
 };
-strong_alias (__new_sys_sigabbrev, _sys_sigabbrev_internal)
 
 #if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_1)
 declare_symbol_alias (__old_sys_siglist, __new_sys_siglist, object,

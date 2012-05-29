@@ -1,4 +1,4 @@
-/* Copyright (C) 2009, 2010 Free Software Foundation, Inc.
+/* Copyright (C) 2009-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -24,11 +24,6 @@
 #include <string.h>
 #include <unistd.h>
 #include <not-cancel.h>
-
-
-/* Defined in sys_siglist.c.  */
-extern const char *const _sys_siglist[];
-extern const char *const _sys_siglist_internal[] attribute_hidden;
 
 
 #define MF(l) MF1 (l)
@@ -84,7 +79,7 @@ psiginfo (const siginfo_t *pinfo, const char *s)
 
   const char *desc;
   if (pinfo->si_signo >= 0 && pinfo->si_signo < NSIG
-      && ((desc = INTUSE(_sys_siglist)[pinfo->si_signo]) != NULL
+      && ((desc = _sys_siglist[pinfo->si_signo]) != NULL
 #ifdef SIGRTMIN
 	  || (pinfo->si_signo >= SIGRTMIN && pinfo->si_signo < SIGRTMAX)
 #endif
