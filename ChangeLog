@@ -1,6 +1,18 @@
 2012-08-21  Maxim Kuvyrkov  <maxim@codesourcery.com>
 
 	[BZ #11607]
+	* NEWS: Add an entry.
+	* string/str-two-way.h (AVAILABLE1, AVAILABLE2, RET0_IF_0): New macros,
+	define their defaults.
+	(two_way_short_needle): Detect end-of-string on-the-fly.
+	* string/strcasestr.c, string/strstr.c (AVAILABLE): Update.
+	(AVAILABLE1, AVAILABLE2, RET0_IF_0, AVAILABLE_USES_J): Define.
+	* string/bug-strcasestr1.c: New test.
+	* string/Makefile: Run it.
+
+2012-08-21  Maxim Kuvyrkov  <maxim@codesourcery.com>
+
+	[BZ #11607]
 	* string/str-two-way.h (two_way_short_needle): Optimize matching of
 	the first character.
 

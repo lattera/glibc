@@ -75,6 +75,16 @@
 # define CMP_FUNC memcmp
 #endif
 
+#ifndef AVAILABLE1
+# define AVAILABLE1(h, h_l, j, n_l) AVAILABLE (h, h_l, j, n_l)
+#endif
+#ifndef AVAILABLE2
+# define AVAILABLE2(h, h_l, j, n_l) (1)
+#endif
+#ifndef RET0_IF_0
+# define RET0_IF_0(a) /* nothing */
+#endif
+
 /* Perform a critical factorization of NEEDLE, of length NEEDLE_LEN.
    Return the index of the first byte in the right half, and set
    *PERIOD to the global period of the right half.
@@ -266,37 +276,58 @@ two_way_short_needle (const unsigned char *haystack, size_t haystack_len,
 	 required, and any mismatch results in a maximal shift.  */
       period = MAX (suffix, needle_len - suffix) + 1;
       j = 0;
-      while (AVAILABLE (haystack, haystack_len, j, needle_len))
+      while (AVAILABLE1 (haystack, haystack_len, j, needle_len))
 	{
+	  unsigned char haystack_char;
+
 	  /* TODO: The first-character loop can be sped up by adapting
 	     longword-at-a-time implementation of memchr/strchr.  */
 	  if (needle_suffix
-	      != CANON_ELEMENT (haystack[suffix + j]))
+	      != (haystack_char = CANON_ELEMENT (haystack[suffix + j])))
 	    {
+	      RET0_IF_0 (haystack_char);
 	      ++j;
 	      continue;
 	    }
 
 	  /* Scan for matches in right half.  */
 	  i = suffix + 1;
-	  while (i < needle_len && (CANON_ELEMENT (needle[i])
-				    == CANON_ELEMENT (haystack[i + j])))
-	    ++i;
+	  while (i < needle_len)
+	    {
+	      if (CANON_ELEMENT (needle[i])
+		  != (haystack_char = CANON_ELEMENT (haystack[i + j])))
+		{
+		  RET0_IF_0 (haystack_char);
+		  break;
+		}
+	      ++i;
+	    }
 	  if (needle_len <= i)
 	    {
 	      /* Scan for matches in left half.  */
 	      i = suffix - 1;
-	      while (i != SIZE_MAX && (CANON_ELEMENT (needle[i])
-				       == CANON_ELEMENT (haystack[i + j])))
-		--i;
+	      while (i != SIZE_MAX)
+		{
+		  if (CANON_ELEMENT (needle[i])
+		      != (haystack_char = CANON_ELEMENT (haystack[i + j])))
+		    {
+		      RET0_IF_0 (haystack_char);
+		      break;
+		    }
+		  --i;
+		}
 	      if (i == SIZE_MAX)
 		return (RETURN_TYPE) (haystack + j);
 	      j += period;
 	    }
 	  else
 	    j += i - suffix + 1;
+
+	  if (!AVAILABLE2 (haystack, haystack_len, j, needle_len))
+	    break;
 	}
     }
+ ret0: __attribute__ ((unused))
   return NULL;
 }
 
@@ -433,6 +464,9 @@ two_way_long_needle (const unsigned char *haystack, size_t haystack_len,
 }
 
 #undef AVAILABLE
+#undef AVAILABLE1
+#undef AVAILABLE2
 #undef CANON_ELEMENT
 #undef CMP_FUNC
+#undef RET0_IF_0
 #undef RETURN_TYPE
