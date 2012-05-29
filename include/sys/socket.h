@@ -57,8 +57,7 @@ extern ssize_t __libc_recvfrom (int __fd, void *__restrict __buf, size_t __n,
 extern int __libc_connect (int __fd, __CONST_SOCKADDR_ARG __addr,
 			   socklen_t __len);
 extern int __connect (int __fd, __CONST_SOCKADDR_ARG __addr, socklen_t __len);
-extern int __connect_internal (int __fd, __CONST_SOCKADDR_ARG __addr,
-			       socklen_t __len) attribute_hidden;
+libc_hidden_proto (__connect)
 
 /* Read N bytes into BUF from socket FD.
    Returns the number read or -1 for errors.
@@ -144,17 +143,8 @@ extern int __libc_accept4 (int __fd, __SOCKADDR_ARG __addr,
 # define SA_LEN(_x)      (_x)->sa_len
 #else
 extern int __libc_sa_len (sa_family_t __af);
-extern int __libc_sa_len_internal (sa_family_t __af) attribute_hidden;
-# ifndef NOT_IN_libc
-#  define SA_LEN(_x)      INTUSE(__libc_sa_len)((_x)->sa_family)
-# else
-#  define SA_LEN(_x)      __libc_sa_len((_x)->sa_family)
-# endif
-#endif
-
-
-#ifndef NOT_IN_libc
-# define __connect(fd, addr, len) INTUSE(__connect) (fd, addr, len)
+libc_hidden_proto (__libc_sa_len)
+# define SA_LEN(_x)      __libc_sa_len((_x)->sa_family)
 #endif
 
 #ifdef SOCK_CLOEXEC

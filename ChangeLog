@@ -1,3 +1,20 @@
+2012-05-30  Andreas Schwab  <schwab@linux-m68k.org>
+
+	[BZ #14132]
+	* include/sys/socket.h (__connect_internal)
+	(__libc_sa_len_internal): Remove declaration.
+	(__connect, __libc_sa_len): Declare hidden_proto.
+	(SA_LEN): Remove use of INTUSE.
+	* socket/connect.c: Add libc_hidden_def.
+	* sysdeps/mach/hurd/connect.c: Replace INTDEF by libc_hidden_def.
+	* sysdeps/unix/sysv/linux/sa_len.c: Likewise.
+	* sysdeps/unix/inet/syscalls.list: Remove __connect_internal
+	alias.
+	* sysdeps/unix/sysv/linux/s390/s390-64/syscalls.list: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/syscalls.list: Likewise.
+	* sysdeps/unix/sysv/linux/connect.S: Use libc_hidden_weak instead
+	of adding _internal alias.
+
 2012-05-30  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #14117]

@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 1999, 2002, 2007 Free Software Foundation, Inc.
+/* Copyright (C) 1998-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -60,4 +60,4 @@ __libc_sa_len (sa_family_t af)
     }
   return 0;
 }
-INTDEF(__libc_sa_len)
+libc_hidden_def (__libc_sa_len)

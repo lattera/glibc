@@ -2,7 +2,7 @@
 
 accept		-	accept		Ci:iBN	__libc_accept	accept
 bind		-	bind		i:ipi	__bind		bind
-connect		-	connect		Ci:ipi	__libc_connect	__connect __connect_internal connect
+connect		-	connect		Ci:ipi	__libc_connect	__connect connect
 gethostid	-	gethostid	i:	gethostid
 gethostname	-	gethostname	i:bn	__gethostname	gethostname
 getpeername	-	getpeername	i:ibN	__getpeername	getpeername
