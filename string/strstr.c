@@ -38,6 +38,7 @@
 #define AVAILABLE1(h, h_l, j, n_l) (true)
 #define AVAILABLE2(h, h_l, j, n_l) AVAILABLE (h, h_l, j, n_l)
 #define RET0_IF_0(a) if (!a) goto ret0
+#define AVAILABLE1_USES_J (0)
 #include "str-two-way.h"
 
 #undef strstr

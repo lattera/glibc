@@ -84,6 +84,9 @@
 #ifndef RET0_IF_0
 # define RET0_IF_0(a) /* nothing */
 #endif
+#ifndef AVAILABLE1_USES_J
+# define AVAILABLE1_USES_J (1)
+#endif
 
 /* Perform a critical factorization of NEEDLE, of length NEEDLE_LEN.
    Return the index of the first byte in the right half, and set
@@ -295,12 +298,17 @@ two_way_short_needle (const unsigned char *haystack, size_t haystack_len,
 	      != (haystack_char = CANON_ELEMENT (*phaystack++)))
 	    {
 	      RET0_IF_0 (haystack_char);
+#if AVAILABLE1_USES_J
 	      ++j;
+#endif
 	      continue;
 	    }
 
-	  /* Calculate J.  */
+#if !AVAILABLE1_USES_J
+	  /* Calculate J if it wasn't kept up-to-date in the first-character
+	     loop.  */
 	  j = phaystack - &haystack[suffix] - 1;
+#endif
 
 	  /* Scan for matches in right half.  */
 	  i = suffix + 1;
@@ -497,6 +505,7 @@ two_way_long_needle (const unsigned char *haystack, size_t haystack_len,
 #undef AVAILABLE
 #undef AVAILABLE1
 #undef AVAILABLE2
+#undef AVAILABLE1_USES_J
 #undef CANON_ELEMENT
 #undef CMP_FUNC
 #undef RET0_IF_0
