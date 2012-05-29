@@ -258,14 +258,27 @@ two_way_short_needle (const unsigned char *haystack, size_t haystack_len,
     }
   else
     {
+      /* The comparison always starts from needle[suffix], so cache it
+	 and use an optimized first-character loop.  */
+      unsigned char needle_suffix = CANON_ELEMENT (needle[suffix]);
+
       /* The two halves of needle are distinct; no extra memory is
 	 required, and any mismatch results in a maximal shift.  */
       period = MAX (suffix, needle_len - suffix) + 1;
       j = 0;
       while (AVAILABLE (haystack, haystack_len, j, needle_len))
 	{
+	  /* TODO: The first-character loop can be sped up by adapting
+	     longword-at-a-time implementation of memchr/strchr.  */
+	  if (needle_suffix
+	      != CANON_ELEMENT (haystack[suffix + j]))
+	    {
+	      ++j;
+	      continue;
+	    }
+
 	  /* Scan for matches in right half.  */
-	  i = suffix;
+	  i = suffix + 1;
 	  while (i < needle_len && (CANON_ELEMENT (needle[i])
 				    == CANON_ELEMENT (haystack[i + j])))
 	    ++i;

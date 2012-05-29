@@ -1,3 +1,9 @@
+2012-08-21  Maxim Kuvyrkov  <maxim@codesourcery.com>
+
+	[BZ #11607]
+	* string/str-two-way.h (two_way_short_needle): Optimize matching of
+	the first character.
+
 2012-08-21  Roland McGrath  <roland@hack.frob.com>
 
 	* csu/elf-init.c (__libc_csu_irel): Function removed.
