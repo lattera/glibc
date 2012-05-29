@@ -1,5 +1,11 @@
 2012-08-21  Maxim Kuvyrkov  <maxim@codesourcery.com>
 
+	* string/str-two-way.h (two_way_short_needle): Use pointers instead of
+	array references.
+	* string/strcasestr.c (TOLOWER): Make side-effect safe.
+
+2012-08-21  Maxim Kuvyrkov  <maxim@codesourcery.com>
+
 	[BZ #11607]
 	* NEWS: Add an entry.
 	* string/str-two-way.h (AVAILABLE1, AVAILABLE2, RET0_IF_0): New macros,

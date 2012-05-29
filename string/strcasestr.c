@@ -36,7 +36,7 @@
 #include <stdbool.h>
 #include <strings.h>
 
-#define TOLOWER(Ch) (isupper (Ch) ? tolower (Ch) : (Ch))
+#define TOLOWER(Ch) tolower (Ch)
 
 /* Two-Way algorithm.  */
 #define RETURN_TYPE char *
