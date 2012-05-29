@@ -6,3 +6,6 @@ GLIBC_2.0
  logout F
  logwtmp F
  openpty F
+GLIBC_2.9
+ GLIBC_2.9 A
+ login F

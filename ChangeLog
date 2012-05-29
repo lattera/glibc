@@ -1,3 +1,18 @@
+2012-05-29  Andreas Krebbel  <Andreas.Krebbel@de.ibm.com>
+
+	* sysdeps/unix/sysv/linux/s390/s390-32/nptl/ld.abilist: Refreshed.
+	* sysdeps/unix/sysv/linux/s390/s390-32/nptl/libc.abilist: Refreshed.
+	* sysdeps/unix/sysv/linux/s390/s390-32/nptl/libm.abilist: Refreshed.
+	* sysdeps/unix/sysv/linux/s390/s390-32/nptl/libpthread.abilist:
+	Refreshed.
+	* sysdeps/unix/sysv/linux/s390/s390-32/nptl/librt.abilist: Refreshed.
+	* sysdeps/unix/sysv/linux/s390/s390-32/nptl/libutil.abilist: Refreshed.
+	* sysdeps/unix/sysv/linux/s390/s390-64/nptl/ld.abilist: Refreshed.
+	* sysdeps/unix/sysv/linux/s390/s390-64/nptl/libc.abilist: Refreshed.
+	* sysdeps/unix/sysv/linux/s390/s390-64/nptl/libm.abilist: Refreshed.
+	* sysdeps/unix/sysv/linux/s390/s390-64/nptl/libpthread.abilist:
+	Refreshed.
+
 2012-05-27  David S. Miller  <davem@davemloft.net>
 
 	* sysdeps/sparc/sparc32/soft-fp/q_util.c (___Q_numbers): Delete.
