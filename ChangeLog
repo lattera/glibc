@@ -1,5 +1,8 @@
 2012-05-30  Richard Henderson  <rth@twiddle.net>
 
+	* sysdeps/unix/make-syscalls.sh: Protect symbol_version output
+	with #ifndef NOT_IN_libc.
+
 	* scripts/abilist.awk: Accept 8 fields.  Handle Alpha functions
 	marked to avoid plt entry.
 

@@ -76,6 +76,7 @@ emit_weak_aliases()
       *@@*)
 	base=`echo $name | sed 's/@@.*//'`
 	ver=`echo $name | sed 's/.*@@//'`
+	echo "	 echo '#ifndef NOT_IN_libc'; \\"
 	if test -z "$vcount" ; then
 	  source=$strong
 	  vcount=1
@@ -85,10 +86,14 @@ emit_weak_aliases()
 	  echo "	 echo 'strong_alias ($strong, $source)'; \\"
 	fi
 	echo "	 echo 'default_symbol_version($source, $base, $ver)'; \\"
+	echo "	 echo '#else'; \\"
+	echo "	 echo 'strong_alias ($strong, $base)'; \\"
+	echo "	 echo '#endif'; \\"
 	;;
       *@*)
 	base=`echo $name | sed 's/@.*//'`
 	ver=`echo $name | sed 's/.*@//'`
+	echo "	 echo '#ifndef NOT_IN_libc'; \\"
 	if test -z "$vcount" ; then
 	  source=$strong
 	  vcount=1
@@ -98,6 +103,7 @@ emit_weak_aliases()
 	  echo "	 echo 'strong_alias ($strong, $source)'; \\"
 	fi
 	echo "	 echo 'symbol_version ($source, $base, $ver)'; \\"
+	echo "	 echo '#endif'; \\"
 	;;
       !*)
 	name=`echo $name | sed 's/.//'`
