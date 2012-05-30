@@ -18,4 +18,30 @@
 
 #include_next <math_private.h>
 
+#ifdef __alpha_fix__
+extern __always_inline double
+__ieee754_sqrt (double d)
+{
+  double ret;
+# ifdef _IEEE_FP_INEXACT
+  asm ("sqrtt/suid %1,%0" : "=f"(ret) : "f"(d));
+# else
+  asm ("sqrtt/sud %1,%0" : "=f"(ret) : "f"(d));
+# endif
+  return ret;
+}
+
+extern __always_inline float
+__ieee754_sqrtf (float d)
+{
+  float ret;
+# ifdef _IEEE_FP_INEXACT
+  asm ("sqrts/suid %1,%0" : "=f"(ret) : "f"(d));
+# else
+  asm ("sqrts/sud %1,%0" : "=f"(ret) : "f"(d));
+# endif
+  return ret;
+}
+#endif /* FIX */
+
 #endif /* ALPHA_MATH_PRIVATE_H */
