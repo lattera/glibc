@@ -1,5 +1,7 @@
 2012-05-30  Richard Henderson  <rth@twiddle.net>
 
+	* sysdeps/alpha/Implies: Include ieee754/dbl-64/wordsize-64.
+
 	* sysdeps/alpha/alphaev6/fpu/e_sqrt.S: Use dynamic rounding.
 	* sysdeps/alpha/alphaev6/fpu/e_sqrtf.S: Likewise.
 	* sysdeps/alpha/fpu/math_private.h (__ieee754_sqrt): New.
