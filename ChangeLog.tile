@@ -1,5 +1,7 @@
 2012-05-30  Chris Metcalf  <cmetcalf@tilera.com>
 
+	* sysdeps/tile/libm-test-ulps: Account for new tests.
+
 	* sysdeps/unix/sysv/linux/tile/tilegx/Makefile: New file.
 
 	* sysdeps/unix/sysv/linux/tile/nptl/pthread_once.c: Replace

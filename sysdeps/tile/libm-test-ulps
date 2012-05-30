@@ -366,6 +366,9 @@ idouble: 1
 Test "Imaginary part of: ccos (0.75 - 89.5 i) == 2.708024460708609732016532185663087200560e38 + 2.522786001038096774676288412995370563339e38 i":
 float: 1
 ifloat: 1
+Test "Imaginary part of: ccos (0x1p-1074 + 1440 i) == inf - 5.981479269486130556466515778180916082415e301 i":
+double: 1
+idouble: 1
 Test "Imaginary part of: ccos (0x1p-1074 + 1440 i) == inf - 5.981479269486130556466515778180916082415e301 i plus overflow exception":
 double: 1
 idouble: 1
@@ -397,6 +400,9 @@ ifloat: 1
 Test "Imaginary part of: ccosh (0.75 + 1.25 i) == 0.408242591877968807788852146397499084 + 0.780365930845853240391326216300863152 i":
 float: 1
 ifloat: 1
+Test "Imaginary part of: ccosh (1440 + 0x1p-1074 i) == inf + 5.981479269486130556466515778180916082415e301 i":
+double: 1
+idouble: 1
 Test "Imaginary part of: ccosh (1440 + 0x1p-1074 i) == inf + 5.981479269486130556466515778180916082415e301 i plus overflow exception":
 double: 1
 idouble: 1
@@ -423,6 +429,9 @@ idouble: 1
 Test "Real part of: cexp (0.75 + 1.25 i) == 0.667537446429131586942201977015932112 + 2.00900045494094876258347228145863909 i":
 float: 1
 ifloat: 1
+Test "Imaginary part of: cexp (1440 + 0x1p-1074 i) == inf + 1.196295853897226111293303155636183216483e302 i":
+double: 1
+idouble: 1
 Test "Imaginary part of: cexp (1440 + 0x1p-1074 i) == inf + 1.196295853897226111293303155636183216483e302 i plus overflow exception":
 double: 1
 idouble: 1
@@ -597,6 +606,9 @@ idouble: 1
 Test "Real part of: csin (0.75 - 89.5 i) == 2.522786001038096774676288412995370563339e38 - 2.708024460708609732016532185663087200560e38 i":
 float: 1
 ifloat: 1
+Test "Real part of: csin (0x1p-1074 + 1440 i) == 5.981479269486130556466515778180916082415e301 + inf i":
+double: 1
+idouble: 1
 Test "Real part of: csin (0x1p-1074 + 1440 i) == 5.981479269486130556466515778180916082415e301 + inf i plus overflow exception":
 double: 1
 idouble: 1
@@ -623,6 +635,9 @@ ifloat: 1
 Test "Imaginary part of: csinh (0.75 + 1.25 i) == 0.259294854551162779153349830618433028 + 1.22863452409509552219214606515777594 i":
 float: 1
 ifloat: 1
+Test "Imaginary part of: csinh (1440 + 0x1p-1074 i) == inf + 5.981479269486130556466515778180916082415e301 i":
+double: 1
+idouble: 1
 Test "Imaginary part of: csinh (1440 + 0x1p-1074 i) == inf + 5.981479269486130556466515778180916082415e301 i plus overflow exception":
 double: 1
 idouble: 1
