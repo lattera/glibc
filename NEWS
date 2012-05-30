@@ -30,6 +30,12 @@ Version 2.16
   14036, 14040, 14043, 14044, 14049, 14053, 14055, 14059, 14064, 14075,
   14080, 14083, 14103, 14104, 14109, 14112, 14122, 14123, 14153
 
+* Support for the x32 ABI on x86-64 added.  The x32 target is selected by
+  configuring glibc with:
+	BUILD_CC='gcc' CC='gcc -mx32' CXX='g++ -mx32'
+  Visit <http://sites.google.com/site/x32abi/> for more x32 ABI info.
+  Implemented by H.J. Lu.
+
 * ISO C11 support:
 
   + define static_assert
