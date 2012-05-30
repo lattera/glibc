@@ -1,5 +1,8 @@
 2012-05-30  Richard Henderson  <rth@twiddle.net>
 
+	* sysdeps/unix/sysv/linux/alpha/syscalls.list: Remove
+	__connect_internal alias.
+
 	* sysdeps/unix/sysv/linux/alpha/ioperm.c (process_cpuinfo): Use
 	fgets_unlocked.
 
