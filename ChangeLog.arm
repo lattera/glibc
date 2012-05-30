@@ -1,5 +1,10 @@
 2012-05-30  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/arm/start.S [!__USING_SJLJ_EXCEPTIONS__]: Make code
+	unconditional.
+	* sysdeps/unix/sysv/linux/arm/nptl/pthread_once.c
+	[__USING_SJLJ_EXCEPTIONS__ && !__PIC__]: Remove conditional code.
+
 	* sysdeps/unix/sysv/linux/arm/nptl/pthread_once.c: Replace
 	_internal alias by hidden_def.
 

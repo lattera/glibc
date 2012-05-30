@@ -87,12 +87,3 @@ __pthread_once (pthread_once_t *once_control, void (*init_routine) (void))
 }
 weak_alias (__pthread_once, pthread_once)
 hidden_def (__pthread_once)
-
-#if defined(__USING_SJLJ_EXCEPTIONS__) && !defined(__PIC__)
-/* When statically linked, if pthread_create is used, this file
-   will be brought in.  The exception handling code in GCC assumes
-   that if pthread_create is available, so are these.  */
-const void *include_pthread_getspecific attribute_hidden = pthread_getspecific;
-const void *include_pthread_setspecific attribute_hidden = pthread_setspecific;
-const void *include_pthread_key_create attribute_hidden = pthread_key_create;
-#endif

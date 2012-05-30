@@ -73,10 +73,8 @@
 	.globl _start
 	.type _start,#function
 _start:
-#if !defined(__USING_SJLJ_EXCEPTIONS__)
        /* Protect against unhandled exceptions.  */
        .fnstart
-#endif
 	/* Clear the frame pointer and link register since this is the outermost frame. */
 	mov fp, #0
 	mov lr, #0
@@ -138,11 +136,8 @@ _start:
 	.word main(GOT)
 #endif
 
-
-#if !defined(__USING_SJLJ_EXCEPTIONS__)
        .cantunwind
        .fnend
-#endif
 
 /* Define a symbol for the first piece of initialized data.  */
 	.data
