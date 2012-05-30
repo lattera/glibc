@@ -46,12 +46,12 @@
 #define FP_EX_INVALID         (1 << (31 - 2))
 #define FP_EX_OVERFLOW        (1 << (31 - 3))
 #define FP_EX_UNDERFLOW       (1 << (31 - 4))
-#define FP_EX_DENORM          FP_EX_UNDERFLOW
 #define FP_EX_DIVZERO         (1 << (31 - 5))
 #define FP_EX_INEXACT         (1 << (31 - 6))
 
 #define FP_HANDLE_EXCEPTIONS  __simulate_exceptions (_fex)
 #define FP_ROUNDMODE          __sim_round_mode
+#define FP_TRAPPING_EXCEPTIONS (~__sim_disabled_exceptions & 0x3e000000)
 
 extern int __sim_exceptions;
 libc_hidden_proto (__sim_exceptions);
