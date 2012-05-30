@@ -1,5 +1,18 @@
 2012-05-30  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/unix/sysv/linux/mips/Makefile (syscall-list-variants):
+	Rename to abi-variants.
+	(syscall-list-includes): Rename to abi-includes.
+	(syscall-list-o32-options): Rename to abi-o32-options.
+	(syscall-list-o32-condition): Rename to abi-o32-condition.
+	(syscall-list-n32-options): Rename to abi-n32-options.
+	(syscall-list-n32-condition): Rename to abi-n32-condition.
+	(syscall-list-n64-options): Rename to abi-n64-options.
+	(syscall-list-n64-condition): Rename to abi-n64-condition.
+	* sysdeps/unix/sysv/linux/mips/mips32/Makefile: New file.
+	* sysdeps/unix/sysv/linux/mips/mips64/n32/Makefile: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n64/Makefile: Likewise.
+
 	* sysdeps/unix/sysv/linux/mips/nptl/pthread_once.c: Replace
 	_internal alias by hidden_def.
 
