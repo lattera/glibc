@@ -1,3 +1,8 @@
+2012-05-30  Richard Henderson  <rth@twiddle.net>
+
+	* scripts/abilist.awk: Accept 8 fields.  Handle Alpha functions
+	marked to avoid plt entry.
+
 2012-05-30  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #14112]

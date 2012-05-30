@@ -37,14 +37,15 @@ $4 == "*UND*" { next }
 # Skip locals.
 $2 == "l" { next }
 
-$2 == "g" || $2 == "w" && NF == 7 {
+# If the target uses ST_OTHER, it will be output before the symbol name.
+$2 == "g" || $2 == "w" && (NF == 7 || NF == 8) {
   weak = $2;
   type = $3;
   size = $5;
   sub(/^0*/, "", size);
   size = " 0x" size;
   version = $6;
-  symbol = $7;
+  symbol = $NF;
   gsub(/[()]/, "", version);
 
   if (version == "GLIBC_PRIVATE") next;
@@ -59,6 +60,12 @@ $2 == "g" || $2 == "w" && NF == 7 {
     if (seen_opd < 0)
       type = "O";
     seen_opd = 1;
+  }
+  else if (type == "D" && NF == 8 && $7 == "0x80") {
+    # Alpha functions avoiding plt entry in users
+    type = "F";
+    size = "";
+    seen_opd = -1;
   }
   else if ($4 == "*ABS*") {
     type = "A";
