@@ -1,5 +1,8 @@
 2012-05-30  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/unix/sysv/linux/arm/syscalls.list: Remove
+	__connect_internal alias.
+
 	* sysdeps/arm/libm-test-ulps: Regenerate.
 
 	* sysdeps/unix/sysv/linux/arm/Makefile (default-abi-prog): New
