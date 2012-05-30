@@ -1,5 +1,8 @@
 2012-05-30  Richard Henderson  <rth@twiddle.net>
 
+	* sysdeps/unix/sysv/linux/alpha/ioperm.c (process_cpuinfo): Use
+	fgets_unlocked.
+
 	* sysdeps/alpha/Implies: Include ieee754/dbl-64/wordsize-64.
 
 	* sysdeps/alpha/alphaev6/fpu/e_sqrt.S: Use dynamic rounding.

@@ -504,7 +504,7 @@ process_cpuinfo(struct cpuinfo_data *data)
 
   while (1)
     {
-      if (fgets (dummy, 256, fp) == NULL)
+      if (fgets_unlocked (dummy, 256, fp) == NULL)
 	break;
       if (!got_type &&
 	  sscanf (dummy, "system type : %256[^\n]\n", data->systype) == 1)
