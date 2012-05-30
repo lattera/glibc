@@ -1,5 +1,8 @@
 2012-05-30  Chris Metcalf  <cmetcalf@tilera.com>
 
+	* sysdeps/unix/sysv/linux/tile/nptl/pthread_once.c: Replace
+	_internal alias by hidden_def.
+
 	* sysdeps/unix/sysv/linux/tile/kernel-features.h
 	(__ASSUME_NEW_GETRLIMIT_SYSCALL, __ASSUME_TRUNCATE64_SYSCALL): Remove.
 
