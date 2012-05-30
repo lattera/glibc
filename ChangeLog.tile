@@ -1,5 +1,8 @@
 2012-05-30  Chris Metcalf  <cmetcalf@tilera.com>
 
+	* sysdeps/unix/sysv/linux/tile/tilegx/Makefile: Remove test
+	that $(subdir) is "misc" when setting abi- variables.
+
 	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx64/Makefile: New file.
 	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx32/Makefile: New file.
 
