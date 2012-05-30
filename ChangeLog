@@ -1,3 +1,15 @@
+2012-05-30  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #14117]
+	* sysdeps/i386/bits/byteswap.h: Removed.
+	* sysdeps/i386/bits/byteswap-16.h: Likewise.
+	* sysdeps/x86_64/bits/byteswap.h: Renamed to ...
+	* sysdeps/x86/bits/byteswap.h: This.
+	* sysdeps/x86_64/bits/byteswap-16.h: Renamed to ...
+	* sysdeps/x86/bits/byteswap-16.h: This.
+	* sysdeps/i386/Implies: Add x86.
+	* sysdeps/x86_64/Implies: Likewise.
+
 2012-05-30  David S. Miller  <davem@davemloft.net>
 
 	* soft-fp/soft-fp.h (FP_CUR_EXCEPTIONS): Define.
