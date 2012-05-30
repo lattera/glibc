@@ -1,6 +1,10 @@
 2012-05-30  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #14117]
+	* sysdeps/i386/bits/endian.h: Removed.
+	* sysdeps/x86_64/bits/endian.h: Renamed to ...
+	* sysdeps/x86/bits/endian.h: This.
+
 	* sysdeps/i386/bits/byteswap.h: Removed.
 	* sysdeps/i386/bits/byteswap-16.h: Likewise.
 	* sysdeps/x86_64/bits/byteswap.h: Renamed to ...
