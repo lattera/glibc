@@ -69,6 +69,7 @@ do {						\
   if (__builtin_expect (_fex, 0))		\
     _FPU_SETCW (_fcw | _fex | (_fex << 10));	\
 } while (0)
+#define FP_TRAPPING_EXCEPTIONS ((_fcw >> 5) & 0x7c)
 #else
 #define FP_INIT_ROUNDMODE	_fcw = FP_RND_NEAREST
 #endif

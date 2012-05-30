@@ -1,5 +1,8 @@
 2012-05-30  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/mips/mips64/soft-fp/sfp-machine.h
+	(FP_TRAPPING_EXCEPTIONS): Define.
+
 	* sysdeps/unix/sysv/linux/mips/Makefile (syscall-list-variants):
 	Rename to abi-variants.
 	(syscall-list-includes): Rename to abi-includes.
