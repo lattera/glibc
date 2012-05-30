@@ -1,3 +1,8 @@
+2012-05-30  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/mips/nptl/pthread_once.c: Replace
+	_internal alias by hidden_def.
+
 2012-05-26  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/mips/mips32/nptl/libcidn.abilist: New
