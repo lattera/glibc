@@ -20,7 +20,7 @@ socketpair	-	socketpair	i:iiif	__socketpair	socketpair
 bind		-	bind		i:ipi	__bind		bind
 listen		-	listen		i:ii	__listen	listen
 accept		-	accept		Ci:iBN	__libc_accept	__accept accept
-connect		-	connect		Ci:ipi	__libc_connect	__connect_internal __connect connect
+connect		-	connect		Ci:ipi	__libc_connect	__connect connect
 getsockname	-	getsockname	i:ipp	__getsockname	getsockname
 getpeername	-	getpeername	i:ipp	__getpeername	getpeername
 sendto		-	sendto		Ci:ibnibn	__libc_sendto	__sendto sendto
