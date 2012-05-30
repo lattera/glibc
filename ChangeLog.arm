@@ -1,5 +1,17 @@
 2012-05-30  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/unix/sysv/linux/arm/Makefile (default-abi-prog): New
+	variable.
+	(default-abi): Likewise.
+	(abi-includes): Likewise.
+	(abi-variants): Likewise.
+	(abi-soft-options): Likewise.
+	(abi-soft-condition): Likewise.
+	(abi-soft-ld-soname): Likewise.
+	(abi-hard-options): Likewise.
+	(abi-hard-condition): Likewise.
+	(abi-hard-ld-soname): Likewise.
+
 	* sysdeps/unix/sysv/linux/arm/kernel-features.h
 	(__ASSUME_TRUNCATE64_SYSCALL): Remove.
 

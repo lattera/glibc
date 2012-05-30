@@ -65,3 +65,29 @@ LDFLAGS-tst-rfc3484 += $(common-objpfx)csu/libc-do-syscall.o
 LDFLAGS-tst-rfc3484-2 += $(common-objpfx)csu/libc-do-syscall.o
 LDFLAGS-tst-rfc3484-3 += $(common-objpfx)csu/libc-do-syscall.o
 endif
+
+define default-abi-prog
+echo '#ifdef __ARM_PCS_VFP';
+echo 'hard';
+echo '#else';
+echo 'soft';
+echo '#endif'
+endef
+default-abi := $(strip $(shell \
+    ($(default-abi-prog)) | $(CC) $(CFLAGS) $(CPPFLAGS) -E -P -))
+ifeq ($(default-abi),hard)
+# OK.
+else
+ifneq ($(default-abi),soft)
+Unknown ABI, must be "hard" or "soft".
+endif
+endif
+
+abi-includes :=
+abi-variants := soft hard
+abi-soft-options := -U__ARM_PCS_VFP
+abi-soft-condition := !defined __ARM_PCS_VFP
+abi-soft-ld-soname := ld-linux.so.3
+abi-hard-options := -D__ARM_PCS_VFP
+abi-hard-condition := defined __ARM_PCS_VFP
+abi-hard-ld-soname := ld-linux-armhf.so.3
