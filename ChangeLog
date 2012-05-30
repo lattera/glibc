@@ -1,6 +1,10 @@
 2012-05-30  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #14117]
+	* sysdeps/i386/bits/setjmp.h: Removed.
+	* sysdeps/x86_64/bits/setjmp.h: Renamed to ...
+	* sysdeps/x86/bits/setjmp.h: This.
+
 	* sysdeps/i386/bits/mathdef.h: Removed.
 	* sysdeps/x86_64/bits/mathdef.h: Renamed to ...
 	* sysdeps/x86/bits/mathdef.h: This.
