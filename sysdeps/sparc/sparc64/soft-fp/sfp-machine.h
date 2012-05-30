@@ -1,6 +1,6 @@
 /* Machine-dependent software floating-point definitions.
    Sparc64 userland (_Q_* and _Qp_*) version.
-   Copyright (C) 1997, 1998, 1999, 2006 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 1999, 2006, 2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Richard Henderson (rth@cygnus.com),
 		  Jakub Jelinek (jj@ultra.linux.cz) and
@@ -100,6 +100,7 @@ do {								\
   _FPU_GETCW(_fcw);						\
 } while (0)
 
+#define FP_TRAPPING_EXCEPTIONS ((_fcw >> 23) & 0x1f)
 #define FP_INHIBIT_RESULTS ((_fcw >> 23) & _fex)
 
 /* Simulate exceptions using double arithmetics. */

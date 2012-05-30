@@ -128,6 +128,13 @@
 #define FP_CLEAR_EXCEPTIONS				\
   _fex = 0
 
+#define FP_CUR_EXCEPTIONS				\
+  (_fex)
+
+#ifndef FP_TRAPPING_EXCEPTIONS
+#define FP_TRAPPING_EXCEPTIONS 0
+#endif
+
 #define _FP_ROUND_NEAREST(wc, X)			\
 do {							\
     if ((_FP_FRAC_LOW_##wc(X) & 15) != _FP_WORK_ROUND)	\

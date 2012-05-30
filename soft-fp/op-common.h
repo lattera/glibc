@@ -1,5 +1,5 @@
 /* Software floating-point emulation. Common operations.
-   Copyright (C) 1997,1998,1999,2006,2007 Free Software Foundation, Inc.
+   Copyright (C) 1997,1998,1999,2006,2007,2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Richard Henderson (rth@cygnus.com),
 		  Jakub Jelinek (jj@ultra.linux.cz),
@@ -146,7 +146,11 @@ do {								\
   if (!_FP_EXP_NORMAL(fs, wc, X) && !_FP_FRAC_ZEROP_##wc(X))	\
     {								\
       if (X##_e == 0)						\
-	FP_SET_EXCEPTION(FP_EX_UNDERFLOW);			\
+	{							\
+	  if ((FP_CUR_EXCEPTIONS & FP_EX_INEXACT)		\
+	      || (FP_TRAPPING_EXCEPTIONS & FP_EX_UNDERFLOW))	\
+	    FP_SET_EXCEPTION(FP_EX_UNDERFLOW);			\
+	}							\
       else							\
 	{							\
 	  if (!_FP_KEEPNANFRACP)				\
@@ -226,13 +230,16 @@ do {								\
 	      {							\
 	        X##_e = 1;					\
 	        _FP_FRAC_SET_##wc(X, _FP_ZEROFRAC_##wc);	\
+		FP_SET_EXCEPTION(FP_EX_INEXACT);		\
 	      }							\
 	    else						\
 	      {							\
 		X##_e = 0;					\
 		_FP_FRAC_SRL_##wc(X, _FP_WORKBITS);		\
-		FP_SET_EXCEPTION(FP_EX_UNDERFLOW);		\
 	      }							\
+	    if ((FP_CUR_EXCEPTIONS & FP_EX_INEXACT)		\
+		|| (FP_TRAPPING_EXCEPTIONS & FP_EX_UNDERFLOW))	\
+	      FP_SET_EXCEPTION(FP_EX_UNDERFLOW);		\
 	  }							\
 	else							\
 	  {							\

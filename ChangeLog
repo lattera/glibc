@@ -1,3 +1,16 @@
+2012-05-30  David S. Miller  <davem@davemloft.net>
+
+	* soft-fp/soft-fp.h (FP_CUR_EXCEPTIONS): Define.
+	(FP_TRAPPING_EXCEPTIONS): Provide default implementation.
+	* sysdeps/sparc/sparc32/soft-fp/sfp-machine.h
+	(FP_TRAPPING_EXCEPTIONS): Define.
+	* sysdeps/sparc/sparc64/soft-fp/sfp-machine.h
+	(FP_TRAPPING_EXCEPTIONS): Define.
+	* soft-fp/op-common.h (_FP_PACK_SEMIRAW): Signal underflow for
+	subnormals only when inexact has been signalled or underflow
+	exceptions are enabled.
+	(_FP_PACK_CANONICAL): Likewise.
+
 2012-05-30  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #14183]
