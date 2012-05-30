@@ -6490,23 +6490,17 @@ $as_echo_n "checking for -fpie... " >&6; }
 if ${libc_cv_fpie+:} false; then :
   $as_echo_n "(cached) " >&6
 else
-  cat > conftest.c <<EOF
-int foo;
-main () { return 0;}
-EOF
-if { ac_try='${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS -pie -fpie
-			    -o conftest conftest.c 1>&5'
+  if { ac_try='${CC-cc} -fpie -xc /dev/null -S -o /dev/null'
   { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
   (eval $ac_try) 2>&5
   ac_status=$?
   $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
-  test $ac_status = 0; }; }
-then
+  test $ac_status = 0; }; }; then :
   libc_cv_fpie=yes
 else
   libc_cv_fpie=no
 fi
-rm -f conftest*
+
 fi
 { $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_fpie" >&5
 $as_echo "$libc_cv_fpie" >&6; }

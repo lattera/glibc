@@ -1,3 +1,9 @@
+2012-05-30  Joseph Myers  <joseph@codesourcery.com>
+
+	* configure.in (libc_cv_fpie): Weaken to a compile test using
+	LIBC_TRY_CC_OPTION.
+	* configure: Regenerated.
+
 2012-05-29  Andreas Krebbel  <Andreas.Krebbel@de.ibm.com>
 
 	* sysdeps/unix/sysv/linux/s390/s390-32/nptl/ld.abilist: Refreshed.
