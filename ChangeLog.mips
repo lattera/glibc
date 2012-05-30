@@ -1,5 +1,8 @@
 2012-05-30  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/unix/sysv/linux/mips/syscalls.list: Remove
+	__connect_internal alias.
+
 	* sysdeps/mips/mips64/soft-fp/sfp-machine.h
 	(FP_TRAPPING_EXCEPTIONS): Define.
 
