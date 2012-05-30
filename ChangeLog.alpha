@@ -1,5 +1,8 @@
 2012-05-30  Richard Henderson  <rth@twiddle.net>
 
+	* sysdeps/unix/sysv/linux/alpha/nptl/pthread_once.c: Replace
+	_internal alias by hidden_def.
+
 	* sysdeps/unix/sysv/linux/alpha/adjtime.c: Remove __ASSUME_TIMEVAL64.
 	* sysdeps/unix/sysv/linux/alpha/getitimer.S: Remove file.
 	* sysdeps/unix/sysv/linux/alpha/getrusage.S: Remove file.
