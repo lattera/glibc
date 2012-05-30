@@ -1,3 +1,46 @@
+2012-05-30  Andreas Schwab  <schwab@linux-m68k.org>
+
+	[BZ #14132]
+	* nptl-init.c (pthread_functions): Remove use of INTUSE and
+	_internal aliases.
+	(__pthread_initialize_minimal_internal): Likewise.
+	* sem_open.c: Likewise.
+	* sem_unlink.c: Likewise.
+	* pthreadP.h: Replace _internal aliases by hidden_proto
+	declarations.
+	* pthread_getspecific.c: Replace _internal alias by hidden_def.
+	* pthread_key_create.c: Likewise.
+	* pthread_mutex_destroy.c: Likewise.
+	* pthread_mutex_init.c: Likewise.
+	* pthread_mutex_lock.c: Likewise.
+	* pthread_mutex_unlock.c: Likewise.
+	* pthread_once.c: Likewise.
+	* pthread_rwlock_rdlock.c: Likewise.
+	* pthread_rwlock_unlock.c: Likewise.
+	* pthread_rwlock_wrlock.c: Likewise.
+	* pthread_setspecific.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_rwlock_rdlock.S:
+	Likewise.
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_rwlock_unlock.S:
+	Likewise.
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_rwlock_wrlock.S:
+	Likewise.
+	* sysdeps/unix/sysv/linux/i386/pthread_once.S: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/pthread_once.c: Likewise.
+	* sysdeps/unix/sysv/linux/s390/pthread_once.c: Likewise.
+	* sysdeps/unix/sysv/linux/sh/pthread_once.S: Likewise.
+	* sysdeps/unix/sysv/linux/sh/pthread_rwlock_rdlock.S: Likewise.
+	* sysdeps/unix/sysv/linux/sh/pthread_rwlock_unlock.S: Likewise.
+	* sysdeps/unix/sysv/linux/sh/pthread_rwlock_wrlock.S: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/pthread_once.c: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/pthread_once.S: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/pthread_rwlock_rdlock.S:
+	Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/pthread_rwlock_unlock.S:
+	Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/pthread_rwlock_wrlock.S:
+	Likewise.
+
 2012-05-27  Chung-Lin Tang  <cltang@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/sh/sysdep-cancel.h (PSEUDO, LOAD_ARGS_1)
