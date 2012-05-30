@@ -22,10 +22,9 @@
 # define __ASSUME_UTIMES	1
 #endif
 
-/* On ARM the truncate64/ftruncate64/mmap2/stat64/lstat64/fstat64
-   syscalls were introduced in 2.3.35.  */
+/* On ARM the mmap2/stat64/lstat64/fstat64 syscalls were introduced in
+   2.3.35.  */
 #if __LINUX_KERNEL_VERSION >= 131875
-# define __ASSUME_TRUNCATE64_SYSCALL	1
 # define __ASSUME_MMAP2_SYSCALL		1
 # define __ASSUME_STAT64_SYSCALL	1
 #endif

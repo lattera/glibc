@@ -1,5 +1,8 @@
 2012-05-30  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/unix/sysv/linux/arm/kernel-features.h
+	(__ASSUME_TRUNCATE64_SYSCALL): Remove.
+
 	* sysdeps/arm/start.S [!__USING_SJLJ_EXCEPTIONS__]: Make code
 	unconditional.
 	* sysdeps/unix/sysv/linux/arm/nptl/pthread_once.c
