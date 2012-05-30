@@ -40,11 +40,6 @@
 /* The sendfile syscall was introduced in 2.2.0.  */
 #define __ASSUME_SENDFILE		1
 
-/* On x86 the truncate64/ftruncate64 syscalls were introduced in 2.3.31.  */
-#ifdef __i386__
-# define __ASSUME_TRUNCATE64_SYSCALL	1
-#endif
-
 /* On x86 the mmap2 syscall was introduced in 2.3.31.  */
 #ifdef __i386__
 # define __ASSUME_MMAP2_SYSCALL	1
@@ -55,10 +50,9 @@
 # define __ASSUME_STAT64_SYSCALL	1
 #endif
 
-/* On sparc the truncate64/ftruncate64/mmap2/stat64/lstat64/fstat64
-   syscalls were introduced in 2.3.35.  */
+/* On sparc the mmap2/stat64/lstat64/fstat64 syscalls were introduced
+   in 2.3.35.  */
 #if defined __sparc__ && !defined __arch64__
-# define __ASSUME_TRUNCATE64_SYSCALL	1
 # define __ASSUME_MMAP2_SYSCALL		1
 # define __ASSUME_STAT64_SYSCALL	1
 #endif
@@ -66,7 +60,6 @@
 /* I know for sure that these are in 2.3.35 on powerpc. But PowerPC64 does not
    support separate 64-bit syscalls, already 64-bit.  */
 #if defined __powerpc__ && !defined __powerpc64__
-# define __ASSUME_TRUNCATE64_SYSCALL	1
 # define __ASSUME_STAT64_SYSCALL	1
 #endif
 
@@ -77,9 +70,8 @@
 # define __ASSUME_IPC64		1
 #endif
 
-/* SH kernels got stat64, mmap2, and truncate64 during 2.4.0-test.  */
+/* SH kernels got stat64 and mmap2 during 2.4.0-test.  */
 #ifdef __sh__
-# define __ASSUME_TRUNCATE64_SYSCALL	1
 # define __ASSUME_MMAP2_SYSCALL		1
 # define __ASSUME_STAT64_SYSCALL	1
 #endif

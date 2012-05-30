@@ -1,5 +1,4 @@
-/* Copyright (C) 1997,1998,1999,2000,2002,2005,2006,2011
-	Free Software Foundation, Inc.
+/* Copyright (C) 1997-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -24,55 +23,15 @@
 #include <sys/syscall.h>
 #include <bp-checks.h>
 
-#include <kernel-features.h>
-
-#ifdef __NR_truncate64
-#ifndef __ASSUME_TRUNCATE64_SYSCALL
-/* The variable is shared between all wrappers around *truncate64 calls.  */
-int __have_no_truncate64;
-#endif
-
-
 /* Truncate the file referenced by FD to LENGTH bytes.  */
 int
 truncate64 (path, length)
      const char *path;
      off64_t length;
 {
-#ifndef __ASSUME_TRUNCATE64_SYSCALL
-  if (! __have_no_truncate64)
-#endif
-    {
-#ifndef __ASSUME_TRUNCATE64_SYSCALL
-      int saved_errno = errno;
-#endif
-      /* On PPC32 64bit values are aligned in odd/even register pairs.  */
-      int result = INLINE_SYSCALL (truncate64, 4, CHECK_STRING (path), 0,
-				   (long) (length >> 32),
-				   (long) length);
-
-#ifndef __ASSUME_TRUNCATE64_SYSCALL
-      if (result != -1 || errno != ENOSYS)
-#endif
-	return result;
-
-#ifndef __ASSUME_TRUNCATE64_SYSCALL
-      __set_errno (saved_errno);
-      __have_no_truncate64 = 1;
-#endif
-    }
-
-#ifndef __ASSUME_TRUNCATE64_SYSCALL
-  if ((off_t) length != length)
-    {
-      __set_errno (EINVAL);
-      return -1;
-    }
-  return __truncate (path, (off_t) length);
-#endif
+  /* On PPC32 64bit values are aligned in odd/even register pairs.  */
+  int result = INLINE_SYSCALL (truncate64, 4, CHECK_STRING (path), 0,
+			       (long) (length >> 32),
+			       (long) length);
+  return result;
 }
-
-#else
-/* Use the generic implementation.  */
-# include <misc/truncate64.c>
-#endif

@@ -1,5 +1,32 @@
 2012-05-30  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/unix/sysv/linux/kernel-features.h
+	(__ASSUME_TRUNCATE64_SYSCALL): Remove all definitions.
+	* sysdeps/unix/sysv/linux/ftruncate64.c: Do not
+	include <kernel-features.h>.
+	[!__NR_ftruncate64]: Remove conditional code.
+	[!__ASSUME_TRUNCATE64_SYSCALL]: Likewise.
+	[__NR_ftruncate64]: Make code unconditional.
+	[__ASSUME_TRUNCATE64_SYSCALL]: Likewise.
+	* sysdeps/unix/sysv/linux/truncate64.c: Do not
+	include <kernel-features.h>.
+	[!__NR_ftruncate64]: Remove conditional code.
+	[!__ASSUME_TRUNCATE64_SYSCALL]: Likewise.
+	[__NR_ftruncate64]: Make code unconditional.
+	[__ASSUME_TRUNCATE64_SYSCALL]: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/ftruncate64.c: Do not
+	include <kernel-features.h>.
+	[!__NR_ftruncate64]: Remove conditional code.
+	[!__ASSUME_TRUNCATE64_SYSCALL]: Likewise.
+	[__NR_ftruncate64]: Make code unconditional.
+	[__ASSUME_TRUNCATE64_SYSCALL]: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/truncate64.c: Do not
+	include <kernel-features.h>.
+	[!__NR_ftruncate64]: Remove conditional code.
+	[!__ASSUME_TRUNCATE64_SYSCALL]: Likewise.
+	[__NR_ftruncate64]: Make code unconditional.
+	[__ASSUME_TRUNCATE64_SYSCALL]: Likewise.
+
 	* configure.in (libc_cv_fpie): Weaken to a compile test using
 	LIBC_TRY_CC_OPTION.
 	* configure: Regenerated.
