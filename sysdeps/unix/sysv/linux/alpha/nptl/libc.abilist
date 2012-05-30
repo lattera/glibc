@@ -124,6 +124,10 @@ GLIBC_2.0
  __deregister_frame F
  __deregister_frame_info F
  __dgettext F
+ __divl F
+ __divlu F
+ __divq F
+ __divqu F
  __dup2 F
  __environ D 0x8
  __errno_location F
@@ -195,6 +199,10 @@ GLIBC_2.0
  __register_frame_info F
  __register_frame_info_table F
  __register_frame_table F
+ __reml F
+ __remlu F
+ __remq F
+ __remqu F
  __res_randomid F
  __sbrk F
  __sched_get_priority_max F
@@ -1333,14 +1341,6 @@ GLIBC_2.0
  xencrypt F
  xprt_register F
  xprt_unregister F
-__divl GLIBC_2.0 g ? D .text 0000000000000060
-__divlu GLIBC_2.0 g ? D .text 0000000000000060
-__divq GLIBC_2.0 g ? D .text 00000000000001c4
-__divqu GLIBC_2.0 g ? D .text 000000000000018c
-__reml GLIBC_2.0 g ? D .text 0000000000000064
-__remlu GLIBC_2.0 g ? D .text 0000000000000064
-__remq GLIBC_2.0 g ? D .text 00000000000001c0
-__remqu GLIBC_2.0 g ? D .text 00000000000001b4
 GLIBC_2.1
  GLIBC_2.1 A
  _IO_2_1_stderr_ D 0xe0
@@ -1440,8 +1440,6 @@ GLIBC_2.1
  __towctrans_l F
  __towlower_l F
  __towupper_l F
- __utimes F
- __wait4 F
  __wcscasecmp_l F
  __wcscoll_l F
  __wcsncasecmp_l F

@@ -1,6 +1,6 @@
 /* Set flags signalling availability of kernel features based on given
    kernel version number.
-   Copyright (C) 2010 Free Software Foundation, Inc.
+   Copyright (C) 2010-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -19,11 +19,6 @@
 
 #ifndef _KERNEL_FEATURES_H
 #define _KERNEL_FEATURES_H 1
-
-/* alpha switched to a 64-bit timeval sometime before 2.2.0.  */
-#if __LINUX_KERNEL_VERSION >= 131584
-# define __ASSUME_TIMEVAL64	1
-#endif
 
 /* The tgkill syscall was introduced for alpha 2.6.0-test1 which unfortunately
    cannot be distinguished from 2.6.0.  */

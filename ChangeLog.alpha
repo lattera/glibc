@@ -1,3 +1,22 @@
+2012-05-30  Richard Henderson  <rth@twiddle.net>
+
+	* sysdeps/unix/sysv/linux/alpha/adjtime.c: Remove __ASSUME_TIMEVAL64.
+	* sysdeps/unix/sysv/linux/alpha/getitimer.S: Remove file.
+	* sysdeps/unix/sysv/linux/alpha/getrusage.S: Remove file.
+	* sysdeps/unix/sysv/linux/alpha/gettimeofday.S: Remove file.
+	* sysdeps/unix/sysv/linux/alpha/select.S: Remove file.
+	* sysdeps/unix/sysv/linux/alpha/setitimer.S: Remove file.
+	* sysdeps/unix/sysv/linux/alpha/settimeofday.S: Remove file.
+	* sysdeps/unix/sysv/linux/alpha/utimes.S: Remove file.
+	* sysdeps/unix/sysv/linux/alpha/wait4.S: Remove file.
+	* sysdeps/unix/sysv/linux/alpha/syscalls.list (getitimer): New.
+	(getrusage, gettimeofday, select, setitimer): New.
+	(settimeofday, utimes, wait4): New.
+	* sysdeps/unix/sysv/linux/alpha/kernel-features.h: Remove
+	__ASSUME_TIMEVAL64.
+	* sysdeps/unix/sysv/linux/alpha/nptl/ld.abilist: Update.
+	* sysdeps/unix/sysv/linux/alpha/nptl/libc.abilist: Update.
+
 2012-05-24  Richard Henderson  <rth@twiddle.net>
 
 	* sysdeps/unix/sysv/linux/alpha/nptl/ld.abilist: New file.

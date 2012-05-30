@@ -9,9 +9,7 @@ GLIBC_2.0
 GLIBC_2.1
  GLIBC_2.1 A
  __libc_stack_end D 0x8
- __setitimer F
  _dl_mcount F
- setitimer F
 GLIBC_2.3
  GLIBC_2.3 A
  __tls_get_addr F
