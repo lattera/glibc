@@ -1,5 +1,8 @@
 2012-05-30  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/unix/sysv/linux/mips/Makefile [subdir = misc]: Move ABI
+	settings out of conditional.
+
 	* sysdeps/unix/sysv/linux/mips/syscalls.list: Remove
 	__connect_internal alias.
 
