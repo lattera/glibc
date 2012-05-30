@@ -1,6 +1,13 @@
 2012-05-30  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #14117]
+	* sysdeps/i386/bits/link.h: Removed.
+	* sysdeps/i386/bits/linkmap.h: Likewise.
+	* sysdeps/x86_64/bits/link.h: Renamed to ...
+	* sysdeps/x86/bits/link.h: This.
+	* sysdeps/x86_64/bits/linkmap.h: Renamed to ...
+	* sysdeps/x86/bits/linkmap.h: This.
+
 	* sysdeps/i386/bits/endian.h: Removed.
 	* sysdeps/x86_64/bits/endian.h: Renamed to ...
 	* sysdeps/x86/bits/endian.h: This.
