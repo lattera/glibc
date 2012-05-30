@@ -1,5 +1,7 @@
 2012-05-30  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/arm/libm-test-ulps: Regenerate.
+
 	* sysdeps/unix/sysv/linux/arm/Makefile (default-abi-prog): New
 	variable.
 	(default-abi): Likewise.
