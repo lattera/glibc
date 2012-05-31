@@ -1,6 +1,9 @@
 2012-05-30  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #14117]
+	* sysdeps/x86_64/bits/xtitypes.h: Renamed to ...
+	* sysdeps/x86/bits/xtitypes.h: This.
+
 	* sysdeps/x86_64/bits/wordsize.h: Renamed to ...
 	* sysdeps/x86/bits/wordsize.h: This.
 
