@@ -79,7 +79,7 @@
 #define UNEVEN_VISCHUNK(dest, f0, f1, left)			\
 	subcc		%left, 8, %left;			\
 	bl,pn		%xcc, 205f;				\
-	 fsrc1		%f0, %f1;				\
+	 fsrc2		%f0, %f1;				\
 	ba,a,pt		%xcc, 204f;
 
 	/* Macros for non-VIS memcpy code. */
@@ -162,7 +162,7 @@ ENTRY(__memcpy_large)
 3:	andcc		%o0, 0x38, %g5			/* IEU1		Group		*/
 201:	be,pt		%icc, 202f			/* CTI				*/
 	 mov		64, %g1				/* IEU0				*/
-	fmovd		%f0, %f2			/* FPU				*/
+	fsrc2		%f0, %f2			/* FPU				*/
 	sub		%g1, %g5, %g5			/* IEU0		Group		*/
 	alignaddr	%o1, %g0, %g1			/* GRU		Group		*/
 	ldd		[%g1], %f4			/* Load		Group		*/
@@ -193,7 +193,7 @@ ENTRY(__memcpy_large)
 	andn		%o1, (0x40 - 1), %o1		/* IEU1				*/
 	and		%g2, 7, %g2			/* IEU0		Group		*/
 	andncc		%g3, 0x7, %g3			/* IEU1				*/
-	fmovd		%f0, %f2			/* FPU				*/
+	fsrc2		%f0, %f2			/* FPU				*/
 	sub		%g3, 0x10, %g3			/* IEU0		Group		*/
 	sub		%o2, %g6, %o2			/* IEU1				*/
 	alignaddr	%g1, %g0, %g0			/* GRU		Group		*/
@@ -541,7 +541,7 @@ ENTRY(memcpy)
 	 stb		%g5, [%o0 - 1]			/* Store			*/
 2:	andn		%o2, 7, %g5 			/* IEU0		Group		*/
 	and		%o2, 7, %o2			/* IEU1				*/
-	fmovd		%f0, %f2			/* FPU				*/
+	fsrc2		%f0, %f2			/* FPU				*/
 	alignaddr	%o1, %g0, %g1			/* GRU		Group		*/
 	ldd		[%g1], %f4			/* Load		Group		*/
 1:	ldd		[%g1 + 0x8], %f6		/* Load		Group		*/

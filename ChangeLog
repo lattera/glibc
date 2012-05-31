@@ -1,3 +1,10 @@
+2012-05-31  David S. Miller  <davem@davemloft.net>
+
+	* sysdeps/sparc/sparc64/memcpy.S: Use fsrc2 to move 64-bit
+	values between float registers.
+	* sysdeps/sparc/sparc64/memset.S: Likewise.
+	* sysdeps/sparc/sparc64/multiarch/memcpy-niagara2.S: Likewise.
+
 2012-05-31  Mike Frysinger  <vapier@gentoo.org>
 
 	* debug/Makefile (CFLAGS-tst-longjmp_chk.c): Delete

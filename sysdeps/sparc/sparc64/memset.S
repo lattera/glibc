@@ -109,16 +109,16 @@ ENTRY(memset)
 	membar		#StoreStore | #LoadStore
 	andcc		%o3, 0xc0, %g5
 	and		%o2, 0x3f, %o2
-	fmovd		%f0, %f2
-	fmovd		%f0, %f4
+	fsrc2		%f0, %f2
+	fsrc2		%f0, %f4
 	andn		%o3, 0xff, %o3
-	fmovd		%f0, %f6
+	fsrc2		%f0, %f6
 	cmp		%g5, 64
-	fmovd		%f0, %f8
-	fmovd		%f0, %f10
-	fmovd		%f0, %f12
+	fsrc2		%f0, %f8
+	fsrc2		%f0, %f10
+	fsrc2		%f0, %f12
 	brz,pn		%g5, 10f
-	 fmovd		%f0, %f14
+	 fsrc2		%f0, %f14
 	be,pn		%icc, 2f
 	 stda		%f0, [%o0 + 0x00] %asi
 	cmp		%g5, 128
