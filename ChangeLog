@@ -1,3 +1,19 @@
+2012-05-31  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/math.h (M_El): Use two more decimal places.
+	(M_LOG2El): Likewise.
+	(M_LOG10El): Likewise.
+	(M_LN2l): Likewise.
+	(M_LN10l): Likewise.
+	(M_PIl): Likewise.
+	(M_PI_2l): Likewise.
+	(M_PI_4l): Likewise.
+	(M_1_PIl): Likewise.
+	(M_2_PIl): Likewise.
+	(M_2_SQRTPIl): Likewise.
+	(M_SQRT2l): Likewise.
+	(M_SQRT1_2l): Likewise.
+
 2012-05-31  David S. Miller  <davem@davemloft.net>
 
 	* sysdeps/sparc/sparc64/memcpy.S: Use fsrc2 to move 64-bit
