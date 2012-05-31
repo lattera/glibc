@@ -1,6 +1,9 @@
 2012-05-31  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #14117]
+	* sysdeps/unix/sysv/linux/x86_64/bits/ipctypes.h: Renamed to ...
+	* sysdeps/unix/sysv/linux/x86/bits/ipctypes.h: This.
+
 	* sysdeps/unix/sysv/linux/x86_64/bits/epoll.h: Renamed to ...
 	* sysdeps/unix/sysv/linux/x86/bits/epoll.h: This.
 
