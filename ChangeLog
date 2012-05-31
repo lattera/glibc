@@ -1,3 +1,8 @@
+2012-05-31  Markus Trippelsdorf  <markus@trippelsdorf.de>
+
+	* sysdeps/unix/sysv/linux/Makefile (sysdep_headers): Add
+	bits/sysctl.h.
+
 2012-05-31  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #14117]
