@@ -1,5 +1,9 @@
 2012-05-30  Richard Henderson  <rth@twiddle.net>
 
+	* sysdeps/alpha/Makefile (CFLAGS-s_fma.c): Set -mieee-with-inexact.
+	(CFLAGS-s_fmaf.c): Likewise.
+	* sysdeps/alpha/fpu/libm-test-ulps: Regenerate.
+
 	* sysdeps/unix/sysv/linux/alpha/brk.S: Fix error path for PIC.
 
 	* sysdeps/alpha/fpu/libm-test-ulps: Regenerate.

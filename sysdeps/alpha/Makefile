@@ -37,6 +37,12 @@ ifeq ($(subdir),elf)
 CFLAGS-rtld.c = -mbuild-constants
 endif
 
+ifeq ($(subdir),math)
+# The fma routines rely on inexact being raised for correct results.
+CFLAGS-s_fma.c = -mieee-with-inexact
+CFLAGS-s_fmaf.c = -mieee-with-inexact
+endif
+
 # Build everything with full IEEE math support, and with dynamic rounding;
 # there are a number of math routines that are defined to work with the
 # "current" rounding mode, and it's easiest to set this with all of them.

@@ -1615,20 +1615,6 @@ Test "expm1 (500.0) == 1.4035922178528374107397703328409120821806e+217":
 double: 1
 idouble: 1
 
-# fma
-Test "fma (-0x1.19cab66d73e17p-959, 0x1.c7108a8c5ff51p-107, -0x0.80b0ad65d9b64p-1022) == -0x0.80b0ad65d9d59p-1022":
-double: 1
-idouble: 1
-Test "fma (0x1.0000002p+0, 0x1.ffffffcp-1, -0x1p-300) == 0x1.fffffffffffffp-1":
-double: 1
-idouble: 1
-Test "fma (0x1.153d650bb9f06p-907, 0x1.2d01230d48407p-125, -0x0.b278d5acfc3cp-1022) == -0x0.b22757123bbe9p-1022":
-double: 1
-idouble: 1
-Test "fma (0x1.4000004p-967, 0x1p-106, 0x0.000001p-1022) == 0x0.0000010000003p-1022":
-double: 1
-idouble: 1
-
 # gamma
 Test "gamma (-0.5) == log(2*sqrt(pi))":
 ildouble: 1
