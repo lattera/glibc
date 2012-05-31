@@ -1,6 +1,9 @@
 2012-05-31  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #14117]
+	* sysdeps/unix/sysv/linux/x86_64/bits/sysctl.h: Renamed to ...
+	* sysdeps/unix/sysv/linux/x86/bits/sysctl.h: This.
+
 	* sysdeps/unix/sysv/linux/i386/sys/ucontext.h: Removed.
 	* sysdeps/unix/sysv/linux/x86_64/sys/ucontext.h: Renamed to ...
 	* sysdeps/unix/sysv/linux/x86/sys/ucontext.h: This.
