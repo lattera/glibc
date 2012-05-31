@@ -1,3 +1,10 @@
+2012-05-31  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #14117]
+	* sysdeps/unix/sysv/linux/i386/sys/elf.h: Error when compiling
+	for x86-64.
+	* sysdeps/unix/sysv/linux/i386/sys/vm86.h: Likewise.
+
 2012-05-31  Joseph Myers  <joseph@codesourcery.com>
 
 	* math/math.h (M_El): Use two more decimal places.
