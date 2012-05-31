@@ -1,5 +1,7 @@
 2012-05-31  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/mips/mips64/libm-test-ulps: Remove sqrt ulps.
+
 	* sysdeps/mips/mips32/libm-test-ulps: Regenerate.
 	* sysdeps/mips/mips64/libm-test-ulps: Likewise.
 

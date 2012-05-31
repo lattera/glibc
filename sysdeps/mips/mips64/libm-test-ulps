@@ -1932,11 +1932,6 @@ Test "sinh_towardzero (24) == 13244561064.92173614705070540368454568168":
 float: 1
 ifloat: 1
 
-# sqrt
-Test "sqrt (2) == M_SQRT2l":
-ildouble: 1
-ldouble: 1
-
 # tan_downward
 Test "tan_downward (1) == 1.5574077246549022305069748074583601730873":
 float: 1
@@ -2679,10 +2674,6 @@ ifloat: 1
 Function: "sinh_towardzero":
 float: 1
 ifloat: 1
-
-Function: "sqrt":
-ildouble: 1
-ldouble: 1
 
 Function: "tan":
 double: 1
