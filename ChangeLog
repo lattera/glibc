@@ -1,3 +1,13 @@
+2012-05-31  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #14117]
+	* sysdeps/unix/sysv/linux/x86_64/bits/stat.h (_STAT_VER_KERNEL):
+	Defined to 1 if __x86_64__ isn't defined.
+	(_STAT_VER_LINUX_OLD): New.
+	(st_atime): Remove duplicate.
+	(st_mtime): Likewise.
+	(st_ctime): Likewise.
+
 2012-05-31  David S. Miller  <davem@davemloft.net>
 
 	* sysdeps/sparc/fpu/libm-test-ulps: Remove sqrt(2) and sqrt test

@@ -23,9 +23,9 @@
 #define _BITS_STAT_H	1
 
 /* Versions of the `struct stat' data structure.  */
-#define _STAT_VER_KERNEL	0
-
 #ifndef __x86_64__
+# define _STAT_VER_LINUX_OLD	1
+# define _STAT_VER_KERNEL	1
 # define _STAT_VER_SVR4		2
 # define _STAT_VER_LINUX	3
 
@@ -34,6 +34,7 @@
 # define _MKNOD_VER_SVR4	2
 # define _MKNOD_VER		_MKNOD_VER_LINUX /* The bits defined below.  */
 #else
+# define _STAT_VER_KERNEL	0
 # define _STAT_VER_LINUX	1
 
 /* x86-64 versions of the `xmknod' interface.  */
@@ -151,9 +152,6 @@ struct stat64
     struct timespec st_atim;		/* Time of last access.  */
     struct timespec st_mtim;		/* Time of last modification.  */
     struct timespec st_ctim;		/* Time of last status change.  */
-#  define st_atime st_atim.tv_sec	/* Backward compatibility.  */
-#  define st_mtime st_mtim.tv_sec
-#  define st_ctime st_ctim.tv_sec
 # else
     __time_t st_atime;			/* Time of last access.  */
     __syscall_ulong_t st_atimensec;	/* Nscecs of last access.  */
