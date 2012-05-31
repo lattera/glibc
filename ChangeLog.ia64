@@ -1,3 +1,8 @@
+2012-05-30  Mike Frysinger  <vapier@gentoo.org>
+
+	* sysdeps/unix/sysv/linux/ia64/syscalls.list: Remove
+	__connect_internal alias.
+
 2012-05-25  Mike Frysinger  <vapier@gentoo.org>
 
 	* sysdeps/unix/sysv/linux/ia64/nptl/libc.abilist: Update.
