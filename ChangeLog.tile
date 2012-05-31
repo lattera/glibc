@@ -1,8 +1,5 @@
 2012-05-30  Chris Metcalf  <cmetcalf@tilera.com>
 
-	* sysdeps/unix/sysv/linux/generic/syscalls.list: Remove
-	__connect_internal alias.
-
 	* sysdeps/unix/sysv/linux/tile/tilegx/Makefile: Remove test
 	that $(subdir) is "misc" when setting abi- variables.
 
