@@ -1,6 +1,10 @@
 2012-05-31  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #14117]
+	* sysdeps/unix/sysv/linux/i386/sys/procfs.h: Removed.
+	* sysdeps/unix/sysv/linux/x86_64/sys/procfs.h: Renamed to ...
+	* sysdeps/unix/sysv/linux/x86/sys/procfs.h: This.
+
 	* sysdeps/unix/sysv/linux/x86_64/sys/io.h (insb): Replace addr
 	with __addr.
 	(insw): Likewise.
