@@ -1,3 +1,11 @@
+2012-05-30  David S. Miller  <davem@davemloft.net>
+
+	* sysdeps/sparc/sparc32/soft-fp/q_util.c
+	(___Q_simulate_exceptions): Use real FP ops rather than writing
+	into the %fsr.
+	* sysdeps/sparc/sparc32/soft-fp/q_util.c (__Qp_handle_exceptions):
+	Likewise.
+
 2012-05-30  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #14117]
