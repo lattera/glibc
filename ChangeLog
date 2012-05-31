@@ -1,6 +1,13 @@
 2012-05-31  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #14117]
+	* sysdeps/unix/sysv/linux/x86_64/bits/msq.h: Renamed to ...
+	* sysdeps/unix/sysv/linux/x86/bits/msq.h: This.
+	* sysdeps/unix/sysv/linux/x86_64/bits/sem.h: Renamed to ...
+	* sysdeps/unix/sysv/linux/x86/bits/sem.h: This.
+	* sysdeps/unix/sysv/linux/x86_64/bits/shm.h: Renamed to ...
+	* sysdeps/unix/sysv/linux/x86/bits/shm.h: This.
+
 	* sysdeps/unix/sysv/linux/x86_64/bits/ipctypes.h: Renamed to ...
 	* sysdeps/unix/sysv/linux/x86/bits/ipctypes.h: This.
 
