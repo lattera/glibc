@@ -1,3 +1,17 @@
+2012-05-30  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #14117]
+	* sysdeps/unix/sysv/linux/i386/bits/pthreadtypes.h: Removed.
+	* sysdeps/unix/sysv/linux/i386/bits/semaphore.h: Likewise.
+	* sysdeps/unix/sysv/linux/i386/Implies: New file.
+	* sysdeps/unix/sysv/linux/x86_64/Implies: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/bits/pthreadtypes.h: Renamed
+	to ...
+	* sysdeps/unix/sysv/linux/x86/bits/pthreadtypes.h: This.
+	* sysdeps/unix/sysv/linux/x86_64/bits/semaphore.h: Renamed
+	to ...
+	* sysdeps/unix/sysv/linux/x86/bits/semaphore.h: This.
+
 2012-05-30  Andreas Schwab  <schwab@linux-m68k.org>
 
 	[BZ #14132]
