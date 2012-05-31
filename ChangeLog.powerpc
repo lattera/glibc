@@ -1,3 +1,7 @@
+2012-05-31  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/powerpc/nofpu/libm-test-ulps: Regenerated.
+
 2012-05-30  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/powerpc/soft-fp/sfp-machine.h (FP_EX_DENORM): Remove.
