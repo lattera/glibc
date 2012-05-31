@@ -166,7 +166,7 @@ outsw (unsigned short int __port, const void *__addr,
        unsigned long int __count)
 {
   __asm__ __volatile__ ("cld ; rep ; outsw":"=S" (____addr), "=c" (__count)
-  			:"d" (__port), "0" (__addr), "1" (__count));
+			:"d" (__port), "0" (__addr), "1" (__count));
 }
 
 static __inline void
