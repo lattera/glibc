@@ -1,3 +1,12 @@
+2012-05-31  Marek Polacek  <polacek@redhat.com>
+
+	[BZ #14132]
+	* include/mntent.h (__setmntent_internal, __getmntent_r_internal
+	__endmntent_internal): Remove declaration.
+	(__setmntent, __endmntent, __getmntent_r) [NOT_IN_libc]: Remove macro.
+	(__setmntent, __endmntent, __getmntent_r): Declare hidden proto.
+	* misc/mntent_r.c: Replace INTDEF with libc_hidden_def.
+
 2012-05-30  David S. Miller  <davem@davemloft.net>
 
 	* sysdeps/sparc/sparc32/soft-fp/q_util.c

@@ -1,6 +1,5 @@
 /* Utilities for reading/writing fstab, mtab, etc.
-   Copyright (C) 1995-2000, 2001, 2002, 2003, 2006, 2010, 2011
-   Free Software Foundation, Inc.
+   Copyright (C) 1995-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -49,7 +48,7 @@ __setmntent (const char *file, const char *mode)
 
   return result;
 }
-INTDEF(__setmntent)
+libc_hidden_def (__setmntent)
 weak_alias (__setmntent, setmntent)
 
 
@@ -61,7 +60,7 @@ __endmntent (FILE *stream)
     fclose (stream);
   return 1;		/* SunOS 4.x says to always return 1 */
 }
-INTDEF(__endmntent)
+libc_hidden_def (__endmntent)
 weak_alias (__endmntent, endmntent)
 
 
@@ -178,7 +177,7 @@ __getmntent_r (FILE *stream, struct mntent *mp, char *buffer, int bufsiz)
 
   return mp;
 }
-INTDEF(__getmntent_r)
+libc_hidden_def (__getmntent_r)
 weak_alias (__getmntent_r, getmntent_r)
 
 
