@@ -1,6 +1,14 @@
 2012-05-31  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #14117]
+	* sysdeps/unix/sysv/linux/x86_64/sys/io.h (insb): Replace addr
+	with __addr.
+	(insw): Likewise.
+	(insl): Likewise.
+	(outsb): Likewise.
+	(outsw): Likewise.
+	(outsl): Likewise.
+
 	* sysdeps/unix/sysv/linux/i386/bits/mman.h: Removed.
 	* sysdeps/unix/sysv/linux/x86_64/bits/mman.h: Renamed to ...
 	* sysdeps/unix/sysv/linux/x86/bits/mman.h: This.
