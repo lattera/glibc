@@ -1,5 +1,7 @@
 2012-05-30  Richard Henderson  <rth@twiddle.net>
 
+	* sysdeps/unix/sysv/linux/alpha/brk.S: Fix error path for PIC.
+
 	* sysdeps/alpha/fpu/libm-test-ulps: Regenerate.
 
 	* sysdeps/unix/sysv/linux/alpha/syscalls.list: Remove

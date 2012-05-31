@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1993-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Brendan Kehoe <brendan@zen.org>, 1993.
 
@@ -36,16 +36,22 @@ __curbrk: .skip 8
 #endif
 
 	.text
-LEAF(__brk, 8)
+	.align	4
+	.globl	__brk
+	.ent	__brk
+	.usepv	__brk, std
+
+	cfi_startproc
+__brk:
 	ldgp	gp, 0(t12)
-	subq	sp, 8, sp
+	subq	sp, 16, sp
+	cfi_adjust_cfa_offset (16)
 #ifdef PROF
 	.set noat
 	lda	AT, _mcount
 	jsr	AT, (AT), _mcount
 	.set at
 #endif
-	.prologue 1
 
 	/* Save the requested brk across the system call.  */
 	stq	a0, 0(sp)
@@ -54,27 +60,25 @@ LEAF(__brk, 8)
 	call_pal PAL_callsys
 
 	ldq	a0, 0(sp)
+	addq	sp, 16, sp
+	cfi_adjust_cfa_offset (-16)
 
 	/* Be prepared for an OSF-style brk.  */
-	bne	a3, $err1
+	bne	a3, SYSCALL_ERROR_LABEL
 	beq	v0, $ok
 
 	/* Correctly handle the brk(0) query case.  */
 	cmoveq	a0, v0, a0
 	xor	a0, v0, t0
-	bne	t0, $err0
+	lda	v0, ENOMEM
+	bne	t0, SYSCALL_ERROR_LABEL
 
 	/* Update __curbrk and return cleanly.  */
-	mov	zero, v0
+	lda	v0, 0
 $ok:	stq	a0, __curbrk
-	addq	sp, 8, sp
 	ret
 
-	/* What a horrible way to die.  */
-$err0:	ldi	v0, ENOMEM
-$err1:	addq	sp, 8, sp
-	SYSCALL_ERROR_HANDLER
-
-	END(__brk)
+PSEUDO_END(__brk)
+	cfi_endproc
 
 weak_alias (__brk, brk)
