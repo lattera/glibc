@@ -90,4 +90,4 @@ __pthread_once (once_control, init_routine)
   return 0;
 }
 weak_alias (__pthread_once, pthread_once)
-strong_alias (__pthread_once, __pthread_once_internal)
+hidden_def (__pthread_once)
