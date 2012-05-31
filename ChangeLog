@@ -1,6 +1,9 @@
 2012-05-31  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #14117]
+	* sysdeps/unix/sysv/linux/x86_64/bits/stat.h: Renamed to ...
+	* sysdeps/unix/sysv/linux/x86/bits/stat.h: This.
+
 	* sysdeps/unix/sysv/linux/x86_64/bits/stat.h (_STAT_VER_KERNEL):
 	Defined to 1 if __x86_64__ isn't defined.
 	(_STAT_VER_LINUX_OLD): New.
