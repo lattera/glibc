@@ -1,5 +1,8 @@
 2012-06-01  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/mips/mips64/n32/s_fma.c: New file.
+	* sysdeps/mips/mips64/n64/s_fma.c: Likewise.
+
 	* sysdeps/unix/sysv/linux/mips/Makefile (abi-n32-condition): Fix
 	typo.
 
