@@ -1,5 +1,9 @@
 2012-05-31  H.J. Lu  <hongjiu.lu@intel.com>
 
+	[BZ #14183]
+	* sysdeps/unix/sysv/linux/x86_64/bits/typesizes.h (__FSWORD_T_TYPE):
+	Defined with __SWORD_TYPE if __x86_64__ isn't defined.
+
 	[BZ #14117]
 	* sysdeps/unix/sysv/linux/x86_64/bits/siginfo.h: Renamed to ...
 	* sysdeps/unix/sysv/linux/x86/bits/siginfo.h: This.
