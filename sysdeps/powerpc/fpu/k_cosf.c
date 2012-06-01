@@ -18,6 +18,7 @@
    not, see <http://www.gnu.org/licenses/>.  */
 
 #include <math.h>
+#include <fenv.h>
 #include <math_private.h>
 
 static const float twom27   = 7.4505806e-09;
@@ -40,8 +41,8 @@ __kernel_cosf (float x, float y)
   ix = __builtin_fabsf (x);
   if (ix < twom27)
     {				/* |x| < 2**-27 */
-      if (x == 0.0)
-	return one;
+      __feraiseexcept (FE_INEXACT);
+      return one;
     }
   z = x * x;
   r = z * (C1 + z * (C2 + z * (C3 + z * (C4 + z * (C5 + z * C6)))));

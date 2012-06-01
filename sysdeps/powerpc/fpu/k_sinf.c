@@ -18,6 +18,7 @@
    not, see <http://www.gnu.org/licenses/>.  */
 
 #include <math.h>
+#include <fenv.h>
 #include <math_private.h>
 
 
@@ -39,8 +40,8 @@ __kernel_sinf (float x, float y, int iy)
   ix = __builtin_fabsf (x);
   if (ix < twom27)
     {				/* |x| < 2**-27 */
-      if (x == 0.0)
-	return x;
+      __feraiseexcept (FE_INEXACT);
+      return x;
     }
   z = x * x;
   v = z * x;

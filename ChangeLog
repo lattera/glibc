@@ -1,3 +1,8 @@
+2012-06-01  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/fpu/k_cosf.c: Fix underflow generation.
+	* sysdeps/powerpc/fpu/k_sinf.c: Likewise.
+
 2012-05-31  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #14117]
