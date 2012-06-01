@@ -1,3 +1,8 @@
+2012-06-01  Joseph Myers  <joseph@codesourcery.com>
+
+	* Makeconfig [abi-variants && !default-abi] (default-abi): Remove
+	definition.  Document in comment.
+
 2012-06-01  David S. Miller  <davem@davemloft.net>
 
 	* stdlib/longlong.h: Updated from GCC.

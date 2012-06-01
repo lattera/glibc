@@ -797,13 +797,8 @@ ifeq (yes, $(build-shared))
 # defines abi-$(variant)-condition to be the condition for those options
 # to use in a C #if condition.  abi-includes may be defined to a list of
 # headers to include in the generated header, if the default does not
-# suffice.
-
-ifdef abi-variants
-ifndef default-abi
-default-abi = $(firstword $(abi-variants))
-endif
-endif
+# suffice.  default-abi is defined to be the ABI for the current glibc
+# build.
 
 ifndef abi-includes
 abi-includes := bits/wordsize.h
