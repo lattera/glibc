@@ -1,3 +1,8 @@
+2012-06-01  Aurelien Jarno  <aurelien@aurel32.net>
+
+	* sysdeps/ieee754/dbl-64/s_fma.c (__fma): Ensure a1 + u.d
+	computation is not scheduled after fetestexcept.
+
 2012-06-01  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #14117]
