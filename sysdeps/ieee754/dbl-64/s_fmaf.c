@@ -1,5 +1,5 @@
 /* Compute x * y + z as ternary operation.
-   Copyright (C) 2010, 2011 Free Software Foundation, Inc.
+   Copyright (C) 2010-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jakub@redhat.com>, 2010.
 
@@ -40,6 +40,8 @@ __fmaf (float x, float y, float z)
 
   /* Perform addition with round to odd.  */
   u.d = temp + (double) z;
+  /* Ensure the addition is not scheduled after fetestexcept call.  */
+  math_force_eval (u.d);
 
   /* Reset rounding mode and test for inexact simultaneously.  */
   int j = libc_feupdateenv_test (&env, FE_INEXACT) != 0;

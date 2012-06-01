@@ -1,5 +1,5 @@
 /* Compute x * y + z as ternary operation.
-   Copyright (C) 2010 Free Software Foundation, Inc.
+   Copyright (C) 2010-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jakub@redhat.com>, 2010.
 
@@ -21,6 +21,7 @@
 #include <math.h>
 #include <fenv.h>
 #include <ieee754.h>
+#include <math_private.h>
 
 /* This implementation uses rounding to odd to avoid problems with
    double rounding.  See a paper by Boldo and Melquiond:
@@ -174,6 +175,8 @@ __fmal (long double x, long double y, long double z)
       if ((u.ieee.mantissa1 & 1) == 0)
 	u.ieee.mantissa1 |= fetestexcept (FE_INEXACT) != 0;
       v.d = a1 + u.d;
+      /* Ensure the addition is not scheduled after fetestexcept call.  */
+      math_force_eval (v.d);
       int j = fetestexcept (FE_INEXACT) != 0;
       feupdateenv (&env);
       /* Ensure the following computations are performed in default rounding

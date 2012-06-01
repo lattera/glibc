@@ -1,3 +1,13 @@
+2012-06-01  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/ieee754/dbl-64/s_fmaf.c (__fmaf): Ensure temp + (double)
+	z computation is not scheduled after fetestexcept.
+	* sysdeps/ieee754/ldbl-128/s_fmal.c: Include <math_private.h>.
+	Use math_force_eval instead of asm to ensure calculation scheduled
+	before exception test.
+	* sysdeps/ieee754/ldbl-96/s_fmal.c: Include <math_private.h>.
+	Ensure a1 + u.d computation is not scheduled after fetestexcept.
+
 2012-06-01  Aurelien Jarno  <aurelien@aurel32.net>
 
 	* sysdeps/ieee754/dbl-64/s_fma.c (__fma): Ensure a1 + u.d
