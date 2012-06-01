@@ -54,7 +54,9 @@
 #define DR_LEN_1 (0x0)	      /* Settings for data length to trap on */
 #define DR_LEN_2 (0x4)
 #define DR_LEN_4 (0xC)
-#define DR_LEN_8 (0x8)
+#ifdef __x86_64__
+# define DR_LEN_8 (0x8)
+#endif
 
 /* The low byte to the control register determine which registers are
    enabled.  There are 4 fields of two bits.  One bit is "local", meaning

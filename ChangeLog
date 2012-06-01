@@ -1,3 +1,9 @@
+2012-06-01  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #14117]
+	* sysdeps/unix/sysv/linux/x86_64/sys/debugreg.h (DR_LEN_8):
+	Define only if __x86_64__ is defined.
+
 2012-06-01  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #14048]
