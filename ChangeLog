@@ -1,6 +1,11 @@
 2012-05-31  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #14117]
+	* sysdeps/unix/sysv/linux/i386/bits/wchar.h: Include
+	<bits/wordsize.h>.
+	(__WCHAR_MIN): Support __WORDSIZE == 64.
+	(__WCHAR_MAX): Likewise.
+
 	* sysdeps/unix/sysv/linux/x86_64/bits/typesizes.h: Renamed to ...
 	* sysdeps/unix/sysv/linux/x86/bits/typesizes.h: This.
 

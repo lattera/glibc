@@ -1,5 +1,5 @@
-/* wchar_t type related definitions.
-   Copyright (C) 2000 Free Software Foundation, Inc.
+/* wchar_t type related definitions.  i386/x86-64 version.
+   Copyright (C) 2000-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -19,7 +19,14 @@
 #ifndef _BITS_WCHAR_H
 #define _BITS_WCHAR_H	1
 
-#define __WCHAR_MIN	(-2147483647l - 1l)
-#define __WCHAR_MAX	(2147483647l)
+#include <bits/wordsize.h>
+
+#if __WORDSIZE == 64
+# define __WCHAR_MIN	(-2147483647 - 1)
+# define __WCHAR_MAX	(2147483647)
+#else
+# define __WCHAR_MIN	(-2147483647l - 1l)
+# define __WCHAR_MAX	(2147483647l)
+#endif
 
 #endif	/* bits/wchar.h */
