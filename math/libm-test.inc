@@ -4123,6 +4123,14 @@ fmod_test (void)
   TEST_ff_f (fmod, 6.5, -2.25L, 2.0L);
   TEST_ff_f (fmod, -6.5, -2.25L, -2.0L);
 
+  TEST_ff_f (fmod, 0x0.fffffep-126L, 0x1p-149L, plus_zero);
+#ifndef TEST_FLOAT
+  TEST_ff_f (fmod, 0x0.fffffffffffffp-1022L, 0x1p-1074L, plus_zero);
+#endif
+#if defined TEST_LDOUBLE && LDBL_MIN_EXP <= -16381
+  TEST_ff_f (fmod, 0x0.fffffffffffffffep-16382L, 0x1p-16445L, plus_zero);
+#endif
+
   END (fmod);
 }
 

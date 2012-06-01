@@ -1,5 +1,10 @@
 2012-06-01  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #14048]
+	* sysdeps/ieee754/dbl-64/wordsize-64/e_fmod.c (__ieee754_fmod):
+	Use int64_t for variable i.
+	* math/libm-test.inc (fmod_test): Add more tests.
+
 	* sysdeps/ieee754/dbl-64/s_fmaf.c (__fmaf): Ensure temp + (double)
 	z computation is not scheduled after fetestexcept.
 	* sysdeps/ieee754/ldbl-128/s_fmal.c: Include <math_private.h>.

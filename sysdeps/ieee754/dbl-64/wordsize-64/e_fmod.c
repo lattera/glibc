@@ -24,8 +24,8 @@ static const double one = 1.0, Zero[] = {0.0, -0.0,};
 double
 __ieee754_fmod (double x, double y)
 {
-	int32_t n,i,ix,iy;
-	int64_t hx,hy,hz,sx;
+	int32_t n,ix,iy;
+	int64_t hx,hy,hz,sx,i;
 
 	EXTRACT_WORDS64(hx,x);
 	EXTRACT_WORDS64(hy,y);
