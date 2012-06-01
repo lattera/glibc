@@ -41,6 +41,8 @@ ifeq ($(subdir),math)
 # The fma routines rely on inexact being raised for correct results.
 CFLAGS-s_fma.c = -mieee-with-inexact
 CFLAGS-s_fmaf.c = -mieee-with-inexact
+# This test tries to check for inexact being raised by arithmetic.
+CFLAGS-test-misc.c += -mieee-with-inexact
 endif
 
 # Build everything with full IEEE math support, and with dynamic rounding;

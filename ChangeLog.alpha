@@ -1,5 +1,7 @@
 2012-06-01  Richard Henderson  <rth@twiddle.net>
 
+	* sysdeps/alpha/Makefile (CFLAGS-test-misc.c): Set -mieee-with-inexact.
+
 	* sysdeps/alpha/fpu/libm-test-ulps: Regenerate.
 
 2012-05-30  Richard Henderson  <rth@twiddle.net>
