@@ -1,3 +1,7 @@
+2012-06-01  Richard Henderson  <rth@twiddle.net>
+
+	* sysdeps/alpha/fpu/libm-test-ulps: Regenerate.
+
 2012-05-30  Richard Henderson  <rth@twiddle.net>
 
 	* sysdeps/alpha/Makefile (CFLAGS-s_fma.c): Set -mieee-with-inexact.
