@@ -1,3 +1,9 @@
+2012-06-01  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #14117]
+	* sysdeps/unix/sysv/linux/i386/bits/wchar.h: Renamed to ...
+	* sysdeps/unix/sysv/linux/x86/bits/wchar.h: This.
+
 2012-06-01  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/fpu/k_cosf.c: Fix underflow generation.
