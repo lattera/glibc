@@ -1,3 +1,6 @@
+# See Makeconfig regarding the use of default-abi.
+default-abi := 64
+
 ifeq ($(subdir),misc)
 sysdep_headers += sys/elf.h
 endif

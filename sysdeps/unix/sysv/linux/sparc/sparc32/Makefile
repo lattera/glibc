@@ -1,3 +1,6 @@
+# See Makeconfig regarding the use of default-abi.
+default-abi := 32
+
 asm-CPPFLAGS = -D__ASSEMBLY__
 ASFLAGS-.os += -fPIC
 LD += -melf32_sparc

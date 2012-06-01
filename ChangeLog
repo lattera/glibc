@@ -1,5 +1,17 @@
 2012-06-01  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/Makefile
+	(default-abi): New variable.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/Makefile: New file.
+	* sysdeps/unix/sysv/linux/s390/s390-32/Makefile (default-abi): New
+	variable.
+	* sysdeps/unix/sysv/linux/s390/s390-64/Makefile (default-abi):
+	Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/Makefile (default-abi):
+	Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/Makefile (default-abi):
+	Likewise.
+
 	* Makeconfig [abi-variants && !default-abi] (default-abi): Remove
 	definition.  Document in comment.
 
