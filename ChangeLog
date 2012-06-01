@@ -1,6 +1,19 @@
 2012-06-01  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #14117]
+	* sysdeps/unix/sysv/linux/i386/Makefile (sysdep_headers):
+	Don't add sys/elf.h sys/perm.h sys/reg.h sys/vm86.h
+	sys/debugreg.h sys/io.h here.
+	* sysdeps/unix/sysv/linux/x86/Makefile (sysdep_headers): Add
+	sys/elf.h sys/perm.h sys/reg.h sys/vm86.h sys/debugreg.h
+	sys/io.h.
+	* sysdeps/unix/sysv/linux/x86_64/Makefile (sysdep_headers):
+	Don't add sys/perm.h sys/reg.h sys/debugreg.h sys/io.h here.
+	* sysdeps/unix/sysv/linux/i386/sys/elf.h: Renamed to ...
+	* sysdeps/unix/sysv/linux/x86/sys/elf.h: This.
+	* sysdeps/unix/sysv/linux/i386/sys/vm86.h: Renamed to ...
+	* sysdeps/unix/sysv/linux/x86/sys/vm86.h: This.
+
 	* sysdeps/unix/sysv/linux/x86_64/sys/debugreg.h (DR_LEN_8):
 	Define only if __x86_64__ is defined.
 
