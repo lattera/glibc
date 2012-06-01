@@ -1,3 +1,8 @@
+2012-06-01  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/mips/Makefile (abi-n32-condition): Fix
+	typo.
+
 2012-05-31  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/mips/mips64/libm-test-ulps: Remove sqrt ulps.
