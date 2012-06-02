@@ -1,3 +1,7 @@
+2012-06-01  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/unix/sysv/linux/x86_64/sys/io.h (outsw): Fix a typo.
+
 2012-06-01  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/powerpc/powerpc32/Makefile
