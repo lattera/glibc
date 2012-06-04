@@ -1,6 +1,9 @@
 2012-06-04  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #14117]
+	* sysdeps/unix/sysv/linux/x86_64/bits/sigcontext.h: Renamed to ...
+	* sysdeps/unix/sysv/linux/x86/bits/sigcontext.h: This.
+
 	* sysdeps/unix/sysv/linux/x86_64/bits/sigcontext.h (FP_XSTATE_MAGIC1):
 	New macro from Linux kernel 3.4.0.
 	(FP_XSTATE_MAGIC2): Likewise.
