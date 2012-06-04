@@ -369,6 +369,12 @@
 # endif
 #endif
 
+#if __GNUC__ >= 3
+# define __glibc_unlikely(cond) __builtin_expect((cond), 0)
+#else
+# define __glibc_unlikely(cond) (cond)
+#endif
+
 #include <bits/wordsize.h>
 
 #if defined __LONG_DOUBLE_MATH_OPTIONAL && defined __NO_LONG_DOUBLE_MATH

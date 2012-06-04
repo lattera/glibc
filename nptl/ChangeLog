@@ -1,3 +1,12 @@
+2012-06-04  Siddhesh Poyarekar  <siddhesh@redhat.com>
+	    Jakub Jelinek  <jakub@redhat.com>
+
+	[BZ #14188]
+	* sysdeps/pthread/pthread.h
+	[!(defined __GNUC__ && defined __EXCEPTIONS)]
+	(pthread_cleanup_push, pthread_cleanup_push_defer_np): Use
+	__libc_unlikely instead of __builtin_expect.
+
 2012-05-30  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #14117]

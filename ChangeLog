@@ -1,3 +1,10 @@
+2012-06-04  Siddhesh Poyarekar  <siddhesh@redhat.com>
+	    Jakub Jelinek  <jakub@redhat.com>
+
+	[BZ #14188]
+	* misc/sys/cdefs.h (__glibc_unlikely): New macro to wrap cases
+	where __builtin_expect is unavailable.
+
 2012-06-03  David S. Miller  <davem@davemloft.net>
 
 	* stdlib/longlong.h: Updated from GCC.

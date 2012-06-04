@@ -659,7 +659,7 @@ __pthread_cleanup_routine (struct __pthread_cleanup_frame *__frame)
     void *__cancel_arg = (arg);						      \
     int __not_first_call = __sigsetjmp ((struct __jmp_buf_tag *) (void *)     \
 					__cancel_buf.__cancel_jmp_buf, 0);    \
-    if (__builtin_expect (__not_first_call, 0))				      \
+    if (__glibc_unlikely (__not_first_call))				      \
       {									      \
 	__cancel_routine (__cancel_arg);				      \
 	__pthread_unwind_next (&__cancel_buf);				      \
@@ -694,7 +694,7 @@ extern void __pthread_unregister_cancel (__pthread_unwind_buf_t *__buf)
     void *__cancel_arg = (arg);						      \
     int __not_first_call = __sigsetjmp ((struct __jmp_buf_tag *) (void *)     \
 					__cancel_buf.__cancel_jmp_buf, 0);    \
-    if (__builtin_expect (__not_first_call, 0))				      \
+    if (__glibc_unlikely (__not_first_call))			      \
       {									      \
 	__cancel_routine (__cancel_arg);				      \
 	__pthread_unwind_next (&__cancel_buf);				      \
