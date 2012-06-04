@@ -123,6 +123,8 @@ d_fmt   "<U0025><U0064><U002E><U0025><U006D><U002E><U0025><U0059>"
 t_fmt   "<U0025><U0054>"
 am_pm   "";""
 t_fmt_ampm ""
+first_workday 2
+first_weekday 2
 END LC_TIME
 
 LC_NAME

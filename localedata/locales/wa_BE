@@ -162,8 +162,8 @@ d_fmt   "<U0025><U0064><U002F><U0025><U006D><U002F><U0025><U0059>"
 t_fmt   "<U0025><U0048><U003A><U0025><U004D><U003A><U0025><U0053>"
 am_pm   "<U0041><U004D>";"<U0050><U004D>"
 t_fmt_ampm "<U0025><U0049><U003A><U0025><U004D><U003A><U0025><U0053><U0020><U0025><U0070>"
-% prumî djoû del samwinne (1=londi)
-first_weekday 1
+first_weekday 2
+first_workday 2
 END LC_TIME
 
 LC_NAME

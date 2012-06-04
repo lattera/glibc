@@ -66,6 +66,8 @@ END LC_NUMERIC
 
 LC_TIME
 copy "tr_TR"
+first_workday 2
+first_weekday 2
 END LC_TIME
 
 LC_PAPER

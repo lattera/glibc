@@ -141,6 +141,8 @@ d_fmt   "<U0025><U0064><U002E><U0025><U006D><U002E><U0025><U0059>"
 t_fmt   "<U0025><U0054>"
 am_pm   "<U0020>";"<U0020>"
 t_fmt_ampm "<U0025><U0049><U0065><U0025><U004D><U003A><U0025><U0053><U0020><U0025><U0070>"
+first_workday 2
+first_weekday 2
 END LC_TIME
 
 LC_PAPER

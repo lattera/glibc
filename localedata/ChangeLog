@@ -1,3 +1,13 @@
+2012-06-01  Jeff Law  <law@redhat.com>
+
+	[BZ#14199]
+	* locales/en_ES: Fix first_weekday and first_workday.
+	* locales/{ast_ES, br_FR, cy_GB, de_DE, de_LU}: Likewise.
+	* locales/{el_GR, en_IE, eu_ES, fr_LU, fy_NL}: Likewise.
+	* locales/{ga_IE, gd_GB, gl_ES, gv_GB, it_IT}: Likewise.
+	* locales/{kw_GB, lij_IT, lt_LT, lv_LV, mt_MT}: Likewise.
+	* locales/{nl_BE, oc_FR, tr_CY, wa_BE}: Likewise.
+
 2012-04-20  Chandan Kumar  <chandankumar.093047@gmail.com>
 
 	[BZ#13968]
