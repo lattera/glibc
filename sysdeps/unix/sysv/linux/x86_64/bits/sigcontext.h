@@ -22,6 +22,19 @@
 # error "Never use <bits/sigcontext.h> directly; include <signal.h> instead."
 #endif
 
+#define FP_XSTATE_MAGIC1	0x46505853U
+#define FP_XSTATE_MAGIC2	0x46505845U
+#define FP_XSTATE_MAGIC2_SIZE	sizeof(FP_XSTATE_MAGIC2)
+
+struct _fpx_sw_bytes
+{
+  __uint32_t magic1;
+  __uint32_t extended_size;
+  __uint64_t xstate_bv;
+  __uint32_t xstate_size;
+  __uint32_t padding[7];
+};
+
 struct _fpreg
 {
   unsigned short significand[4];
@@ -74,6 +87,8 @@ struct _fpstate
    their benefit.  */
 # define sigcontext_struct sigcontext
 #endif
+
+#define X86_FXSR_MAGIC		0x0000
 
 struct sigcontext
 {
@@ -156,5 +171,24 @@ struct sigcontext
 };
 
 #endif /* __x86_64__ */
+
+struct _xsave_hdr
+{
+  __uint64_t xstate_bv;
+  __uint64_t reserved1[2];
+  __uint64_t reserved2[5];
+};
+
+struct _ymmh_state
+{
+  __uint32_t ymmh_space[64];
+};
+
+struct _xstate
+{
+  struct _fpstate fpstate;
+  struct _xsave_hdr xstate_hdr;
+  struct _ymmh_state ymmh;
+};
 
 #endif /* _BITS_SIGCONTEXT_H */

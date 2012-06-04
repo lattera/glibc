@@ -1,6 +1,16 @@
 2012-06-04  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #14117]
+	* sysdeps/unix/sysv/linux/x86_64/bits/sigcontext.h (FP_XSTATE_MAGIC1):
+	New macro from Linux kernel 3.4.0.
+	(FP_XSTATE_MAGIC2): Likewise.
+	(FP_XSTATE_MAGIC2_SIZE): Likewise.
+	(X86_FXSR_MAGIC): New macro from Linux i386 kernel.
+	(struct _fpx_sw_bytes): New struct.
+	(struct _xsave_hdr): Likewise.
+	(struct _ymmh_state): Likewise.
+	(struct _xstate): Likewise.
+
 	* sysdeps/unix/sysv/linux/i386/sys/debugreg.h: Removed.
 	* sysdeps/unix/sysv/linux/i386/sys/reg.h: Likewise.
 	* sysdeps/unix/sysv/linux/x86_64/sys/debugreg.h: Renamed to ...
