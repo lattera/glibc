@@ -3480,7 +3480,8 @@ END LC_MESSAGES
 LC_MONETARY
 % ISO-4217 (2004-10-25): TRY 949 2
 int_curr_symbol           "<U0054><U0052><U0059><U0020>"
-currency_symbol           "<U0059><U0054><U004C>"
+% TL
+currency_symbol           "<U0054><U004C>"
 mon_decimal_point         "<U002C>"
 mon_thousands_sep         "<U002E>"
 mon_grouping              3;3

@@ -1,3 +1,9 @@
+2012-06-04  Petr Baudis  <pasky@ucw.cz>
+
+	[BZ#13996]
+	* locales/tr_TR: Change currency from YTL to TL.
+	Patch by <gokcen@pardus.org.tr>.
+
 2012-06-04  Serkan Kaba  <serkan@gentoo.org>
 
 	[BZ#13223]
