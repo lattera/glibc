@@ -1,3 +1,8 @@
+2012-06-04  Serkan Kaba  <serkan@gentoo.org>
+
+	[BZ#13223]
+	* locales/tr_TR: Fix first_weekday and first_workday.
+
 2012-06-01  Jeff Law  <law@redhat.com>
 
 	[BZ#14199]
