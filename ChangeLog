@@ -1,6 +1,13 @@
 2012-06-04  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #14117]
+	* sysdeps/unix/sysv/linux/i386/sys/debugreg.h: Removed.
+	* sysdeps/unix/sysv/linux/i386/sys/reg.h: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/sys/debugreg.h: Renamed to ...
+	* sysdeps/unix/sysv/linux/x86/sys/debugreg.h: This.
+	* sysdeps/unix/sysv/linux/x86_64/sys/reg.h: Renamed to ...
+	* sysdeps/unix/sysv/linux/x86/sys/reg.h: This.
+
 	* sysdeps/unix/sysv/linux/i386/sys/io.h: Removed.
 	* sysdeps/unix/sysv/linux/x86_64/sys/io.h: Renamed to ...
 	* sysdeps/unix/sysv/linux/x86/sys/io.h: This.
