@@ -1,0 +1,28 @@
+@node Platform, Contributors, Maintenance, Top
+@c %MENU% Describe all platform-specific facilities provided
+@appendix Platform-specific facilities
+
+@Theglibc{} can provide machine-specific functionality.
+
+@menu
+* PowerPC::           Facilities Specific to the PowerPC Architecture
+@end menu
+
+@node PowerPC
+@appendixsec PowerPC-specific Facilities
+
+Facilities specific to PowerPC that are not specific to a particular
+operating system are declared in @file{sys/platform/ppc.h}.
+
+@deftypefun {uint64_t} __ppc_get_timebase (void)
+Read the current value of the Time Base Register.
+
+The @dfn{Time Base Register} is a 64-bit register that stores a monotonically
+incremented value updated at a system-dependent frequency that may be
+different from the processor frequency.  More information is available in
+@cite{Power ISA 2.06b - Book II - Section 5.2}.
+
+@code{__ppc_get_timebase} uses the processor's time base facility directly
+without requiring assistance from the operating system, so it is very
+efficient.
+@end deftypefun

@@ -1,4 +1,4 @@
-@node Contributors, Free Manuals, Maintenance, Top
+@node Contributors, Free Manuals, Platform, Top
 @c %MENU% Who wrote what parts of the GNU C Library
 @appendix Contributors to @theglibc{}
 

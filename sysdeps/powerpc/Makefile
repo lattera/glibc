@@ -26,3 +26,8 @@ gen-as-const-headers += rtld-global-offsets.sym
 # get offset to __locale_struct.__ctype_tolower
 gen-as-const-headers += locale-defines.sym
 endif
+
+ifeq ($(subdir),misc)
+sysdep_headers += sys/platform/ppc.h
+tests += test-gettimebase
+endif

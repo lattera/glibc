@@ -1,3 +1,17 @@
+2012-06-04  Tulio Magno Quites Machado Filho  <tuliom@linux.vnet.ibm.com>
+
+	[BZ #13743]
+	* sysdeps/powerpc/sys/platform/ppc.h: New file for PowerPC features.
+	* sysdeps/powerpc/Makefile (tests): Add test-gettimebase.
+	(sysdep_headers): Include sys/platform/ppc.h.
+	* sysdeps/powerpc/test-gettimebase.c: Test for
+	__ppc_get_timebase() to catch future ISA opcode/insn changes.
+	* manual/Makefile (appendices): Include platform.texi.
+	* manual/contrib.texi (Contributors): Update @node pointers.
+	* manual/maint.texi (Maintenance): Likewise.
+	(Platform): New node.
+	* manual/platform.texi: New file.  Document the new features.
+
 2012-06-04  Siddhesh Poyarekar  <siddhesh@redhat.com>
 	    Jakub Jelinek  <jakub@redhat.com>
 

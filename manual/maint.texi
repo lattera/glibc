@@ -1,4 +1,4 @@
-@node Maintenance, Contributors, Installation, Top
+@node Maintenance, Platform, Installation, Top
 @c %MENU% How to enhance and port the GNU C Library
 @appendix Library Maintenance
 
@@ -103,6 +103,85 @@ being built in.  These files will be removed by @w{@samp{make clean}}.
 This variable is used for secondary object files needed to build
 @code{others} or @code{tests}.
 @end table
+
+@menu
+* Platform: Adding Platform-specific.             Adding platform-specific
+                                         features.
+@end menu
+
+@node Adding Platform-specific
+@appendixsubsec Platform-specific types, macros and functions
+
+It's sometimes necessary to provide nonstandard, platform-specific
+features to developers.  The C library is traditionally the
+lowest library layer, so it makes sense for it to provide these
+low-level features.  However, including these features in the C
+library may be a disadvantage if another package provides them
+as well as there will be two conflicting versions of them.  Also,
+the features won't be available to projects that do not use
+@theglibc{} but use other GNU tools, like GCC.
+
+The current guidelines are:
+@itemize @bullet
+@item
+If the header file provides features that only make sense on a particular
+machine architecture and have nothing to do with an operating system, then
+the features should ultimately be provided as GCC built-in functions.  Until
+then, @theglibc{} may provide them in the header file.  When the GCC built-in
+functions become available, those provided in the header file should be made
+conditionally available prior to the GCC version in which the built-in
+function was made available.
+
+@item
+If the header file provides features that are specific to an operating system,
+both GCC and @theglibc{} could provide it, but @theglibc{} is preferred
+as it already has a lot of information about the operating system.
+
+@item
+If the header file provides features that are specific to an operating system
+but used by @theglibc{}, then @theglibc{} should provide them.
+@end itemize
+
+The general solution for providing low-level features is to export them as
+follows:
+
+@itemize @bullet
+@item
+A nonstandard, low-level header file that defines macros and inline
+functions should be called @file{sys/platform/@var{name}.h}.
+
+@item
+Each header file's name should include the platform name, to avoid
+users thinking there is anything in common between different the
+header files for different platforms.  For example, a
+@file{sys/platform/@var{arch}.h} name such as
+@file{sys/platform/ppc.h} is better than @file{sys/platform.h}.
+
+@item
+A platform-specific header file provided by @theglibc{} should coordinate
+with GCC such that compiler built-in versions of the functions and macros are
+preferred if available.  This means that user programs will only ever need to
+include @file{sys/platform/@var{arch}.h}, keeping the same names of types,
+macros, and functions for convenience and portability.
+
+@item
+Each included symbol must have the prefix @code{__@var{arch}_}, such as
+@code{__ppc_get_timebase}.
+@end itemize
+
+
+The easiest way to provide a header file is to add it to the
+@code{sysdep_headers} variable.  For example, the combination of
+Linux-specific header files on PowerPC could be provided like this:
+
+@smallexample
+sysdep_headers += sys/platform/ppc.h
+@end smallexample
+
+Then ensure that you have added a @file{sys/platform/ppc.h}
+header file in the machine-specific directory, e.g.,
+@file{sysdeps/powerpc/sys/platform/ppc.h}.
+
 
 @node Porting
 @appendixsec Porting @theglibc{}

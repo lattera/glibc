@@ -45,7 +45,8 @@ chapters = $(addsuffix .texi, \
 		       resource setjmp signal startup process job nss	\
 		       users sysinfo conf crypt debug)
 add-chapters = $(wildcard $(foreach d, $(add-ons), ../$d/$d.texi))
-appendices = lang.texi header.texi install.texi maint.texi contrib.texi
+appendices = lang.texi header.texi install.texi maint.texi platform.texi \
+	     contrib.texi
 licenses = freemanuals.texi lgpl-2.1.texi fdl-1.3.texi
 
 -include $(objpfx)texis
