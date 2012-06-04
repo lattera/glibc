@@ -1,6 +1,5 @@
-/* Optimized, inlined string functions.  i486 version.
-   Copyright (C) 1997,1998,1999,2000,2001,2002,2003,2004,2007,2011,2012
-   Free Software Foundation, Inc.
+/* Optimized, inlined string functions.  i486/x86-64 version.
+   Copyright (C) 2001-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -24,25 +23,34 @@
 /* The ix86 processors can access unaligned multi-byte variables.  */
 #define _STRING_ARCH_unaligned	1
 
+/* Enable inline functions only for i486 or bette when compiling for
+   ia32.  */
+#if !defined __x86_64__ && (defined __i486__ || defined __pentium__	      \
+			    || defined __pentiumpro__ || defined __pentium4__ \
+			    || defined __nocona__ || defined __atom__ 	      \
+			    || defined __core2__ || defined __corei7__	      \
+			    || defined __k6__ || defined __geode__	      \
+			    || defined __k8__ || defined __athlon__	      \
+			    || defined __amdfam10__)
 
 /* We only provide optimizations if the user selects them and if
    GNU CC is used.  */
-#if !defined __NO_STRING_INLINES && defined __USE_STRING_INLINES \
+# if !defined __NO_STRING_INLINES && defined __USE_STRING_INLINES \
     && defined __GNUC__ && __GNUC__ >= 2 && !__BOUNDED_POINTERS__
 
-#ifndef __STRING_INLINE
-# ifndef __extern_inline
-#  define __STRING_INLINE inline
-# else
-#  define __STRING_INLINE __extern_inline
+# ifndef __STRING_INLINE
+#  ifndef __extern_inline
+#   define __STRING_INLINE inline
+#  else
+#   define __STRING_INLINE __extern_inline
+#  endif
 # endif
-#endif
 
 /* The macros are used in some of the optimized implementations below.  */
-#define __STRING_SMALL_GET16(src, idx) \
+# define __STRING_SMALL_GET16(src, idx) \
   ((((const unsigned char *) (src))[idx + 1] << 8)			      \
    | ((const unsigned char *) (src))[idx])
-#define __STRING_SMALL_GET32(src, idx) \
+# define __STRING_SMALL_GET32(src, idx) \
   (((((const unsigned char *) (src))[idx + 3] << 8			      \
      | ((const unsigned char *) (src))[idx + 2]) << 8			      \
     | ((const unsigned char *) (src))[idx + 1]) << 8			      \
@@ -50,12 +58,12 @@
 
 
 /* Copy N bytes of SRC to DEST.  */
-#define _HAVE_STRING_ARCH_memcpy 1
-#define memcpy(dest, src, n) \
+# define _HAVE_STRING_ARCH_memcpy 1
+# define memcpy(dest, src, n) \
   (__extension__ (__builtin_constant_p (n)				      \
 		  ? __memcpy_c ((dest), (src), (n))			      \
 		  : __memcpy_g ((dest), (src), (n))))
-#define __memcpy_c(dest, src, n) \
+# define __memcpy_c(dest, src, n) \
   ((n) == 0								      \
    ? (dest)								      \
    : (((n) % 4 == 0)							      \
@@ -139,11 +147,11 @@ __memcpy_g (void *__dest, const void *__src, size_t __n)
   return __dest;
 }
 
-#define _HAVE_STRING_ARCH_memmove 1
-#ifndef _FORCE_INLINES
+# define _HAVE_STRING_ARCH_memmove 1
+# ifndef _FORCE_INLINES
 /* Copy N bytes of SRC to DEST, guaranteeing
    correct behavior for overlapping strings.  */
-#define memmove(dest, src, n) __memmove_g (dest, src, n)
+#  define memmove(dest, src, n) __memmove_g (dest, src, n)
 
 __STRING_INLINE void *__memmove_g (void *, const void *, size_t)
      __asm__ ("memmove");
@@ -173,12 +181,12 @@ __memmove_g (void *__dest, const void *__src, size_t __n)
 	 "m" ( *(struct { __extension__ char __x[__n]; } *)__src));
   return __dest;
 }
-#endif
+# endif
 
 /* Compare N bytes of S1 and S2.  */
-#define _HAVE_STRING_ARCH_memcmp 1
-#ifndef _FORCE_INLINES
-# ifndef __PIC__
+# define _HAVE_STRING_ARCH_memcmp 1
+# ifndef _FORCE_INLINES
+#  ifndef __PIC__
 /* gcc has problems to spill registers when using PIC.  */
 __STRING_INLINE int
 memcmp (const void *__s1, const void *__s2, size_t __n)
@@ -200,13 +208,13 @@ memcmp (const void *__s1, const void *__s2, size_t __n)
      : "cc");
   return __res;
 }
+#  endif
 # endif
-#endif
 
 /* Set N bytes of S to C.  */
-#define _HAVE_STRING_ARCH_memset 1
-#define _USE_STRING_ARCH_memset 1
-#define memset(s, c, n) \
+# define _HAVE_STRING_ARCH_memset 1
+# define _USE_STRING_ARCH_memset 1
+# define memset(s, c, n) \
   (__extension__ (__builtin_constant_p (n) && (n) <= 16			      \
 		  ? ((n) == 1						      \
 		     ? __memset_c1 ((s), (c))				      \
@@ -219,11 +227,11 @@ memcmp (const void *__s1, const void *__s2, size_t __n)
 			? __memset_gcn ((s), (c), (n))			      \
 			: memset ((s), (c), (n))))))
 
-#define __memset_c1(s, c) ({ void *__s = (s);				      \
-			     *((unsigned char *) __s) = (unsigned char) (c);  \
-			     __s; })
+# define __memset_c1(s, c) ({ void *__s = (s);				      \
+			      *((unsigned char *) __s) = (unsigned char) (c); \
+			      __s; })
 
-#define __memset_gc(s, c, n) \
+# define __memset_gc(s, c, n) \
   ({ void *__s = (s);							      \
      union {								      \
        unsigned int __ui;						      \
@@ -300,7 +308,7 @@ memcmp (const void *__s1, const void *__s2, size_t __n)
 									      \
      __s; })
 
-#define __memset_ccn(s, c, n) \
+# define __memset_ccn(s, c, n) \
   (((n) % 4 == 0)							      \
    ? __memset_ccn_by4 (s, ((unsigned int) ((unsigned char) (c))) * 0x01010101,\
 		       n)						      \
@@ -318,7 +326,7 @@ __memset_ccn_by4 (void *__s, unsigned int __c, size_t __n)
 {
   register void *__tmp = __s;
   register unsigned long int __d0;
-#ifdef __i686__
+# ifdef __i686__
   __asm__ __volatile__
     ("cld\n\t"
      "rep; stosl"
@@ -326,7 +334,7 @@ __memset_ccn_by4 (void *__s, unsigned int __c, size_t __n)
        "=m" ( *(struct { __extension__ char __x[__n]; } *)__s)
      : "0" ((unsigned int) __c), "1" (__tmp), "2" (__n / 4)
      : "cc");
-#else
+# else
   __asm__ __volatile__
     ("1:\n\t"
      "movl	%0,(%1)\n\t"
@@ -337,7 +345,7 @@ __memset_ccn_by4 (void *__s, unsigned int __c, size_t __n)
        "=m" ( *(struct { __extension__ char __x[__n]; } *)__s)
      : "0" ((unsigned int) __c), "1" (__tmp), "2" (__n / 4)
      : "cc");
-#endif
+# endif
   return __s;
 }
 
@@ -349,7 +357,7 @@ __memset_ccn_by2 (void *__s, unsigned int __c, size_t __n)
 {
   register unsigned long int __d0, __d1;
   register void *__tmp = __s;
-#ifdef __i686__
+# ifdef __i686__
   __asm__ __volatile__
     ("cld\n\t"
      "rep; stosl\n"
@@ -358,7 +366,7 @@ __memset_ccn_by2 (void *__s, unsigned int __c, size_t __n)
        "=m" ( *(struct { __extension__ char __x[__n]; } *)__s)
      : "0" ((unsigned int) __c), "1" (__tmp), "2" (__n / 4)
      : "cc");
-#else
+# else
   __asm__ __volatile__
     ("1:\tmovl	%0,(%1)\n\t"
      "leal	4(%1),%1\n\t"
@@ -373,7 +381,7 @@ __memset_ccn_by2 (void *__s, unsigned int __c, size_t __n)
   return __s;
 }
 
-#define __memset_gcn(s, c, n) \
+# define __memset_gcn(s, c, n) \
   (((n) % 4 == 0)							      \
    ? __memset_gcn_by4 (s, c, n)						      \
    : (((n) % 2 == 0)							      \
@@ -431,19 +439,19 @@ __memset_gcn_by2 (void *__s, int __c, size_t __n)
 
 
 /* Search N bytes of S for C.  */
-#define _HAVE_STRING_ARCH_memchr 1
-#ifndef _FORCE_INLINES
+# define _HAVE_STRING_ARCH_memchr 1
+# ifndef _FORCE_INLINES
 __STRING_INLINE void *
 memchr (const void *__s, int __c, size_t __n)
 {
   register unsigned long int __d0;
-#ifdef __i686__
+#  ifdef __i686__
   register unsigned long int __d1;
-#endif
+#  endif
   register unsigned char *__res;
   if (__n == 0)
     return NULL;
-#ifdef __i686__
+#  ifdef __i686__
   __asm__ __volatile__
     ("cld\n\t"
      "repne; scasb\n\t"
@@ -452,7 +460,7 @@ memchr (const void *__s, int __c, size_t __n)
      : "a" (__c), "0" (__s), "1" (__n), "2" (1),
        "m" ( *(struct { __extension__ char __x[__n]; } *)__s)
      : "cc");
-#else
+#  else
   __asm__ __volatile__
     ("cld\n\t"
      "repne; scasb\n\t"
@@ -463,26 +471,26 @@ memchr (const void *__s, int __c, size_t __n)
      : "a" (__c), "0" (__s), "1" (__n),
        "m" ( *(struct { __extension__ char __x[__n]; } *)__s)
      : "cc");
-#endif
+#  endif
   return __res - 1;
 }
-#endif
+# endif
 
-#define _HAVE_STRING_ARCH_memrchr 1
-#ifndef _FORCE_INLINES
+# define _HAVE_STRING_ARCH_memrchr 1
+# ifndef _FORCE_INLINES
 __STRING_INLINE void *__memrchr (const void *__s, int __c, size_t __n);
 
 __STRING_INLINE void *
 __memrchr (const void *__s, int __c, size_t __n)
 {
   register unsigned long int __d0;
-# ifdef __i686__
+#  ifdef __i686__
   register unsigned long int __d1;
-# endif
+#  endif
   register void *__res;
   if (__n == 0)
     return NULL;
-# ifdef __i686__
+#  ifdef __i686__
   __asm__ __volatile__
     ("std\n\t"
      "repne; scasb\n\t"
@@ -493,7 +501,7 @@ __memrchr (const void *__s, int __c, size_t __n)
      : "a" (__c), "0" (__s + __n - 1), "1" (__n), "2" (-1),
        "m" ( *(struct { __extension__ char __x[__n]; } *)__s)
      : "cc");
-# else
+#  else
   __asm__ __volatile__
     ("std\n\t"
      "repne; scasb\n\t"
@@ -505,19 +513,19 @@ __memrchr (const void *__s, int __c, size_t __n)
      : "a" (__c), "0" (__s + __n - 1), "1" (__n),
        "m" ( *(struct { __extension__ char __x[__n]; } *)__s)
      : "cc");
-# endif
+#  endif
   return __res;
 }
-# ifdef __USE_GNU
-#  define memrchr(s, c, n) __memrchr ((s), (c), (n))
+#  ifdef __USE_GNU
+#   define memrchr(s, c, n) __memrchr ((s), (c), (n))
+#  endif
 # endif
-#endif
 
 /* Return pointer to C in S.  */
-#define _HAVE_STRING_ARCH_rawmemchr 1
+# define _HAVE_STRING_ARCH_rawmemchr 1
 __STRING_INLINE void *__rawmemchr (const void *__s, int __c);
 
-#ifndef _FORCE_INLINES
+# ifndef _FORCE_INLINES
 __STRING_INLINE void *
 __rawmemchr (const void *__s, int __c)
 {
@@ -532,19 +540,19 @@ __rawmemchr (const void *__s, int __c)
      : "cc");
   return __res - 1;
 }
-# ifdef __USE_GNU
+#  ifdef __USE_GNU
 __STRING_INLINE void *
 rawmemchr (const void *__s, int __c)
 {
   return __rawmemchr (__s, __c);
 }
-# endif	/* use GNU */
-#endif
+#  endif /* use GNU */
+# endif
 
 
 /* Return the length of S.  */
-#define _HAVE_STRING_ARCH_strlen 1
-#define strlen(str) \
+# define _HAVE_STRING_ARCH_strlen 1
+# define strlen(str) \
   (__extension__ (__builtin_constant_p (str)				      \
 		  ? __builtin_strlen (str)				      \
 		  : __strlen_g (str)))
@@ -570,8 +578,8 @@ __strlen_g (const char *__str)
 
 
 /* Copy SRC to DEST.  */
-#define _HAVE_STRING_ARCH_strcpy 1
-#define strcpy(dest, src) \
+# define _HAVE_STRING_ARCH_strcpy 1
+# define strcpy(dest, src) \
   (__extension__ (__builtin_constant_p (src)				      \
 		  ? (sizeof ((src)[0]) == 1 && strlen (src) + 1 <= 8	      \
 		     ? __strcpy_a_small ((dest), (src), strlen (src) + 1)     \
@@ -580,7 +588,7 @@ __strlen_g (const char *__str)
 					strlen (src) + 1))		      \
 		  : __strcpy_g ((dest), (src))))
 
-#define __strcpy_a_small(dest, src, srclen) \
+# define __strcpy_a_small(dest, src, srclen) \
   (__extension__ ({ char *__dest = (dest);				      \
 		    union {						      \
 		      unsigned int __ui;				      \
@@ -654,16 +662,16 @@ __strcpy_g (char *__dest, const char *__src)
 }
 
 
-#ifdef __USE_GNU
-# define _HAVE_STRING_ARCH_stpcpy 1
+# ifdef __USE_GNU
+#  define _HAVE_STRING_ARCH_stpcpy 1
 /* Copy SRC to DEST.  */
-# define __stpcpy(dest, src) \
+#  define __stpcpy(dest, src) \
   (__extension__ (__builtin_constant_p (src)				      \
 		  ? (strlen (src) + 1 <= 8				      \
 		     ? __stpcpy_a_small ((dest), (src), strlen (src) + 1)     \
 		     : __stpcpy_c ((dest), (src), strlen (src) + 1))	      \
 		  : __stpcpy_g ((dest), (src))))
-# define __stpcpy_c(dest, src, srclen) \
+#  define __stpcpy_c(dest, src, srclen) \
   ((srclen) % 4 == 0							      \
    ? __mempcpy_by4 (dest, src, srclen) - 1				      \
    : ((srclen) % 2 == 0							      \
@@ -671,9 +679,9 @@ __strcpy_g (char *__dest, const char *__src)
       : __mempcpy_byn (dest, src, srclen) - 1))
 
 /* In glibc itself we use this symbol for namespace reasons.  */
-# define stpcpy(dest, src) __stpcpy ((dest), (src))
+#  define stpcpy(dest, src) __stpcpy ((dest), (src))
 
-# define __stpcpy_a_small(dest, src, srclen) \
+#  define __stpcpy_a_small(dest, src, srclen) \
   (__extension__ ({ union {						      \
 		      unsigned int __ui;				      \
 		      unsigned short int __usi;				      \
@@ -826,19 +834,19 @@ __stpcpy_g (char *__dest, const char *__src)
      : "cc");
   return __tmp - 1;
 }
-#endif
+# endif
 
 
 /* Copy no more than N characters of SRC to DEST.  */
-#define _HAVE_STRING_ARCH_strncpy 1
-#define strncpy(dest, src, n) \
+# define _HAVE_STRING_ARCH_strncpy 1
+# define strncpy(dest, src, n) \
   (__extension__ (__builtin_constant_p (src)				      \
 		  ? ((strlen (src) + 1 >= ((size_t) (n))		      \
 		      ? (char *) memcpy ((char *) (dest),		      \
 					 (const char *) (src), n)	      \
 		      : __strncpy_cg ((dest), (src), strlen (src) + 1, n)))   \
 		  : __strncpy_gg ((dest), (src), n)))
-#define __strncpy_cg(dest, src, srclen, n) \
+# define __strncpy_cg(dest, src, srclen, n) \
   (((srclen) % 4 == 0)							      \
    ? __strncpy_by4 (dest, src, srclen, n)				      \
    : (((srclen) % 2 == 0)						      \
@@ -962,8 +970,8 @@ __strncpy_gg (char *__dest, const char *__src, size_t __n)
 
 
 /* Append SRC onto DEST.  */
-#define _HAVE_STRING_ARCH_strcat 1
-#define strcat(dest, src) \
+# define _HAVE_STRING_ARCH_strcat 1
+# define strcat(dest, src) \
   (__extension__ (__builtin_constant_p (src)				      \
 		  ? __strcat_c ((dest), (src), strlen (src) + 1)	      \
 		  : __strcat_g ((dest), (src))))
@@ -974,7 +982,7 @@ __STRING_INLINE char *__strcat_c (char *__dest, const char __src[],
 __STRING_INLINE char *
 __strcat_c (char *__dest, const char __src[], size_t __srclen)
 {
-#ifdef __i686__
+# ifdef __i686__
   register unsigned long int __d0;
   register char *__tmp;
   __asm__ __volatile__
@@ -985,7 +993,7 @@ __strcat_c (char *__dest, const char __src[], size_t __srclen)
        "m" ( *(struct { __extension__ char __x[__srclen]; } *)__src)
      : "cc");
   --__tmp;
-#else
+# else
   register char *__tmp = __dest - 1;
   __asm__ __volatile__
     ("1:\n\t"
@@ -997,7 +1005,7 @@ __strcat_c (char *__dest, const char __src[], size_t __srclen)
      : "0" (__tmp),
        "m" ( *(struct { __extension__ char __x[__srclen]; } *)__src)
      : "cc");
-#endif
+# endif
   (void) memcpy (__tmp, __src, __srclen);
   return __dest;
 }
@@ -1031,8 +1039,8 @@ __strcat_g (char *__dest, const char *__src)
 
 
 /* Append no more than N characters from SRC onto DEST.  */
-#define _HAVE_STRING_ARCH_strncat 1
-#define strncat(dest, src, n) \
+# define _HAVE_STRING_ARCH_strncat 1
+# define strncat(dest, src, n) \
   (__extension__ ({ char *__dest = (dest);				      \
 		    __builtin_constant_p (src) && __builtin_constant_p (n)    \
 		    ? (strlen (src) < ((size_t) (n))			      \
@@ -1050,7 +1058,7 @@ __strncat_g (char *__dest, const char __src[], size_t __n)
 {
   register char *__tmp = __dest;
   register char __dummy;
-#ifdef __i686__
+# ifdef __i686__
   __asm__ __volatile__
     ("repne; scasb\n"
      "movl %4, %3\n\t"
@@ -1068,7 +1076,7 @@ __strncat_g (char *__dest, const char __src[], size_t __n)
      : "=&a" (__dummy), "=&D" (__tmp), "=&S" (__src), "=&c" (__n)
      :  "g" (__n), "0" (0), "1" (__tmp), "2" (__src), "3" (0xffffffff)
      : "memory", "cc");
-#else
+# else
   --__tmp;
   __asm__ __volatile__
     ("1:\n\t"
@@ -1096,8 +1104,8 @@ __strncat_g (char *__dest, const char __src[], size_t __n)
 
 
 /* Compare S1 and S2.  */
-#define _HAVE_STRING_ARCH_strcmp 1
-#define strcmp(s1, s2) \
+# define _HAVE_STRING_ARCH_strcmp 1
+# define strcmp(s1, s2) \
   (__extension__ (__builtin_constant_p (s1) && __builtin_constant_p (s2)      \
 		  && (sizeof ((s1)[0]) != 1 || strlen (s1) >= 4)	      \
 		  && (sizeof ((s2)[0]) != 1 || strlen (s2) >= 4)	      \
@@ -1124,7 +1132,7 @@ __strncat_g (char *__dest, const char __src[], size_t __n)
 					  strlen (s2)))			      \
 			: __strcmp_gg ((s1), (s2))))))
 
-#define __strcmp_cc(s1, s2, l) \
+# define __strcmp_cc(s1, s2, l) \
   (__extension__ ({ register int __result = (s1)[0] - (s2)[0];		      \
 		    if (l > 0 && __result == 0)				      \
 		      {							      \
@@ -1138,7 +1146,7 @@ __strncat_g (char *__dest, const char __src[], size_t __n)
 		      }							      \
 		    __result; }))
 
-#define __strcmp_cg(s1, s2, l1) \
+# define __strcmp_cg(s1, s2, l1) \
   (__extension__ ({ const unsigned char *__s2 = (s2);			      \
 		    register int __result = (s1)[0] - __s2[0];		      \
 		    if (l1 > 0 && __result == 0)			      \
@@ -1153,7 +1161,7 @@ __strncat_g (char *__dest, const char __src[], size_t __n)
 		      }							      \
 		    __result; }))
 
-#define __strcmp_gc(s1, s2, l2) \
+# define __strcmp_gc(s1, s2, l2) \
   (__extension__ ({ const unsigned char *__s1 = (s1);			      \
 		    register int __result = __s1[0] - (s2)[0];		      \
 		    if (l2 > 0 && __result == 0)			      \
@@ -1200,8 +1208,8 @@ __strcmp_gg (const char *__s1, const char *__s2)
 
 
 /* Compare N characters of S1 and S2.  */
-#define _HAVE_STRING_ARCH_strncmp 1
-#define strncmp(s1, s2, n) \
+# define _HAVE_STRING_ARCH_strncmp 1
+# define strncmp(s1, s2, n) \
   (__extension__ (__builtin_constant_p (s1) && strlen (s1) < ((size_t) (n))   \
 		  ? strcmp ((s1), (s2))					      \
 		  : (__builtin_constant_p (s2) && strlen (s2) < ((size_t) (n))\
@@ -1244,9 +1252,9 @@ __strncmp_g (const char *__s1, const char *__s2, size_t __n)
 
 
 /* Find the first occurrence of C in S.  */
-#define _HAVE_STRING_ARCH_strchr 1
-#define _USE_STRING_ARCH_strchr 1
-#define strchr(s, c) \
+# define _HAVE_STRING_ARCH_strchr 1
+# define _USE_STRING_ARCH_strchr 1
+# define strchr(s, c) \
   (__extension__ (__builtin_constant_p (c)				      \
 		  ? ((c) == '\0'					      \
 		     ? (char *) __rawmemchr ((s), (c))			      \
@@ -1304,8 +1312,8 @@ __strchr_g (const char *__s, int __c)
 
 
 /* Find the first occurrence of C in S or the final NUL byte.  */
-#define _HAVE_STRING_ARCH_strchrnul 1
-#define __strchrnul(s, c) \
+# define _HAVE_STRING_ARCH_strchrnul 1
+# define __strchrnul(s, c) \
   (__extension__ (__builtin_constant_p (c)				      \
 		  ? ((c) == '\0'					      \
 		     ? (char *) __rawmemchr ((s), c)			      \
@@ -1360,29 +1368,29 @@ __strchrnul_g (const char *__s, int __c)
      : "cc");
   return __res;
 }
-#ifdef __USE_GNU
-# define strchrnul(s, c) __strchrnul ((s), (c))
-#endif
+# ifdef __USE_GNU
+#  define strchrnul(s, c) __strchrnul ((s), (c))
+# endif
 
 
-#if defined __USE_BSD || defined __USE_XOPEN_EXTENDED
+# if defined __USE_BSD || defined __USE_XOPEN_EXTENDED
 /* Find the first occurrence of C in S.  This is the BSD name.  */
-# define _HAVE_STRING_ARCH_index 1
-# define index(s, c) \
+#  define _HAVE_STRING_ARCH_index 1
+#  define index(s, c) \
   (__extension__ (__builtin_constant_p (c)				      \
 		  ? __strchr_c ((s), ((c) & 0xff) << 8)			      \
 		  : __strchr_g ((s), (c))))
-#endif
+# endif
 
 
 /* Find the last occurrence of C in S.  */
-#define _HAVE_STRING_ARCH_strrchr 1
-#define strrchr(s, c) \
+# define _HAVE_STRING_ARCH_strrchr 1
+# define strrchr(s, c) \
   (__extension__ (__builtin_constant_p (c)				      \
 		  ? __strrchr_c ((s), ((c) & 0xff) << 8)		      \
 		  : __strrchr_g ((s), (c))))
 
-#ifdef __i686__
+# ifdef __i686__
 __STRING_INLINE char *__strrchr_c (const char *__s, int __c);
 
 __STRING_INLINE char *
@@ -1427,7 +1435,7 @@ __strrchr_g (const char *__s, int __c)
      : "cc");
   return __res - 1;
 }
-#else
+# else
 __STRING_INLINE char *__strrchr_c (const char *__s, int __c);
 
 __STRING_INLINE char *
@@ -1476,23 +1484,23 @@ __strrchr_g (const char *__s, int __c)
      : "cc");
   return __res;
 }
-#endif
+# endif
 
 
-#if defined __USE_BSD || defined __USE_XOPEN_EXTENDED
+# if defined __USE_BSD || defined __USE_XOPEN_EXTENDED
 /* Find the last occurrence of C in S.  This is the BSD name.  */
-# define _HAVE_STRING_ARCH_rindex 1
-# define rindex(s, c) \
+#  define _HAVE_STRING_ARCH_rindex 1
+#  define rindex(s, c) \
   (__extension__ (__builtin_constant_p (c)				      \
 		  ? __strrchr_c ((s), ((c) & 0xff) << 8)		      \
 		  : __strrchr_g ((s), (c))))
-#endif
+# endif
 
 
 /* Return the length of the initial segment of S which
    consists entirely of characters not in REJECT.  */
-#define _HAVE_STRING_ARCH_strcspn 1
-#define strcspn(s, reject) \
+# define _HAVE_STRING_ARCH_strcspn 1
+# define strcspn(s, reject) \
   (__extension__ (__builtin_constant_p (reject) && sizeof ((reject)[0]) == 1  \
 		  ? ((reject)[0] == '\0'				      \
 		     ? strlen (s)					      \
@@ -1503,7 +1511,7 @@ __strrchr_g (const char *__s, int __c)
 
 __STRING_INLINE size_t __strcspn_c1 (const char *__s, int __reject);
 
-#ifndef _FORCE_INLINES
+# ifndef _FORCE_INLINES
 __STRING_INLINE size_t
 __strcspn_c1 (const char *__s, int __reject)
 {
@@ -1524,7 +1532,7 @@ __strcspn_c1 (const char *__s, int __reject)
      : "cc");
   return (__res - 1) - __s;
 }
-#endif
+# endif
 
 __STRING_INLINE size_t __strcspn_cg (const char *__s, const char __reject[],
 				     size_t __reject_len);
@@ -1552,7 +1560,7 @@ __strcspn_cg (const char *__s, const char __reject[], size_t __reject_len)
 }
 
 __STRING_INLINE size_t __strcspn_g (const char *__s, const char *__reject);
-#ifdef __PIC__
+# ifdef __PIC__
 
 __STRING_INLINE size_t
 __strcspn_g (const char *__s, const char *__reject)
@@ -1581,7 +1589,7 @@ __strcspn_g (const char *__s, const char *__reject)
      : "memory", "cc");
   return (__res - 1) - __s;
 }
-#else
+# else
 __STRING_INLINE size_t
 __strcspn_g (const char *__s, const char *__reject)
 {
@@ -1607,13 +1615,13 @@ __strcspn_g (const char *__s, const char *__reject)
      : "memory", "cc");
   return (__res - 1) - __s;
 }
-#endif
+# endif
 
 
 /* Return the length of the initial segment of S which
    consists entirely of characters in ACCEPT.  */
-#define _HAVE_STRING_ARCH_strspn 1
-#define strspn(s, accept) \
+# define _HAVE_STRING_ARCH_strspn 1
+# define strspn(s, accept) \
   (__extension__ (__builtin_constant_p (accept) && sizeof ((accept)[0]) == 1  \
 		  ? ((accept)[0] == '\0'				      \
 		     ? ((void) (s), 0)					      \
@@ -1622,7 +1630,7 @@ __strcspn_g (const char *__s, const char *__reject)
 			: __strspn_cg ((s), (accept), strlen (accept))))      \
 		  : __strspn_g ((s), (accept))))
 
-#ifndef _FORCE_INLINES
+# ifndef _FORCE_INLINES
 __STRING_INLINE size_t __strspn_c1 (const char *__s, int __accept);
 
 __STRING_INLINE size_t
@@ -1643,7 +1651,7 @@ __strspn_c1 (const char *__s, int __accept)
      : "cc");
   return (__res - 1) - __s;
 }
-#endif
+# endif
 
 __STRING_INLINE size_t __strspn_cg (const char *__s, const char __accept[],
 				    size_t __accept_len);
@@ -1675,7 +1683,7 @@ __strspn_cg (const char *__s, const char __accept[], size_t __accept_len)
 }
 
 __STRING_INLINE size_t __strspn_g (const char *__s, const char *__accept);
-#ifdef __PIC__
+# ifdef __PIC__
 
 __STRING_INLINE size_t
 __strspn_g (const char *__s, const char *__accept)
@@ -1703,7 +1711,7 @@ __strspn_g (const char *__s, const char *__accept)
      : "memory", "cc");
   return (__res - 1) - __s;
 }
-#else
+# else
 __STRING_INLINE size_t
 __strspn_g (const char *__s, const char *__accept)
 {
@@ -1728,12 +1736,12 @@ __strspn_g (const char *__s, const char *__accept)
      : "memory", "cc");
   return (__res - 1) - __s;
 }
-#endif
+# endif
 
 
 /* Find the first occurrence in S of any character in ACCEPT.  */
-#define _HAVE_STRING_ARCH_strpbrk 1
-#define strpbrk(s, accept) \
+# define _HAVE_STRING_ARCH_strpbrk 1
+# define strpbrk(s, accept) \
   (__extension__ (__builtin_constant_p (accept) && sizeof ((accept)[0]) == 1  \
 		  ? ((accept)[0] == '\0'				      \
 		     ? ((void) (s), (char *) 0)				      \
@@ -1772,7 +1780,7 @@ __strpbrk_cg (const char *__s, const char __accept[], size_t __accept_len)
 }
 
 __STRING_INLINE char *__strpbrk_g (const char *__s, const char *__accept);
-#ifdef __PIC__
+# ifdef __PIC__
 
 __STRING_INLINE char *
 __strpbrk_g (const char *__s, const char *__accept)
@@ -1805,7 +1813,7 @@ __strpbrk_g (const char *__s, const char *__accept)
      : "memory", "cc");
   return __res;
 }
-#else
+# else
 __STRING_INLINE char *
 __strpbrk_g (const char *__s, const char *__accept)
 {
@@ -1835,12 +1843,12 @@ __strpbrk_g (const char *__s, const char *__accept)
      : "memory", "cc");
   return __res;
 }
-#endif
+# endif
 
 
 /* Find the first occurrence of NEEDLE in HAYSTACK.  */
-#define _HAVE_STRING_ARCH_strstr 1
-#define strstr(haystack, needle) \
+# define _HAVE_STRING_ARCH_strstr 1
+# define strstr(haystack, needle) \
   (__extension__ (__builtin_constant_p (needle) && sizeof ((needle)[0]) == 1  \
 		  ? ((needle)[0] == '\0'				      \
 		     ? (haystack)					      \
@@ -1883,7 +1891,7 @@ __strstr_cg (const char *__haystack, const char __needle[],
 
 __STRING_INLINE char *__strstr_g (const char *__haystack,
 				  const char *__needle);
-#ifdef __PIC__
+# ifdef __PIC__
 
 __STRING_INLINE char *
 __strstr_g (const char *__haystack, const char *__needle)
@@ -1915,7 +1923,7 @@ __strstr_g (const char *__haystack, const char *__needle)
      : "memory", "cc");
   return __res;
 }
-#else
+# else
 __STRING_INLINE char *
 __strstr_g (const char *__haystack, const char *__needle)
 {
@@ -1944,32 +1952,34 @@ __strstr_g (const char *__haystack, const char *__needle)
      : "memory", "cc");
   return __res;
 }
-#endif
+# endif
 
 
 /* Bit find functions.  We define only the i686 version since for the other
    processors gcc generates good code.  */
-#if defined __USE_BSD || defined __USE_XOPEN_EXTENDED
-# ifdef __i686__
-#  define _HAVE_STRING_ARCH_ffs 1
-#  define ffs(word) (__builtin_constant_p (word)			      \
-		     ? __builtin_ffs (word)				      \
-		     : ({ int __cnt, __tmp;				      \
-			  __asm__ __volatile__				      \
-			    ("bsfl %2,%0\n\t"				      \
-			     "cmovel %1,%0"				      \
-			     : "=&r" (__cnt), "=r" (__tmp)		      \
-			     : "rm" (word), "1" (-1));			      \
-			  __cnt + 1; }))
+# if defined __USE_BSD || defined __USE_XOPEN_EXTENDED
+#  ifdef __i686__
+#   define _HAVE_STRING_ARCH_ffs 1
+#   define ffs(word) (__builtin_constant_p (word)			      \
+		      ? __builtin_ffs (word)				      \
+		      : ({ int __cnt, __tmp;				      \
+			   __asm__ __volatile__				      \
+			     ("bsfl %2,%0\n\t"				      \
+			      "cmovel %1,%0"				      \
+			      : "=&r" (__cnt), "=r" (__tmp)		      \
+			      : "rm" (word), "1" (-1));			      \
+			   __cnt + 1; }))
 
-#  ifndef ffsl
-#   define ffsl(word) ffs(word)
-#  endif
-# endif	/* i686 */
-#endif	/* BSD || X/Open */
+#   ifndef ffsl
+#    define ffsl(word) ffs(word)
+#   endif
+#  endif /* i686 */
+# endif	/* BSD || X/Open */
 
-#ifndef _FORCE_INLINES
-# undef __STRING_INLINE
+# ifndef _FORCE_INLINES
+#  undef __STRING_INLINE
+# endif
+
+# endif	/* use string inlines && GNU CC */
+
 #endif
-
-#endif	/* use string inlines && GNU CC */

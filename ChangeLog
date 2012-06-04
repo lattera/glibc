@@ -1,6 +1,9 @@
 2012-06-04  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #14117]
+	* sysdeps/i386/i486/bits/string.h: Define inline functions only
+	if not compiling for x86-64, but compiling for >= i486.
+
 	* sysdeps/unix/sysv/linux/x86_64/bits/sigcontext.h: Renamed to ...
 	* sysdeps/unix/sysv/linux/x86/bits/sigcontext.h: This.
 
