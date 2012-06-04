@@ -23,7 +23,7 @@
 /* The ix86 processors can access unaligned multi-byte variables.  */
 #define _STRING_ARCH_unaligned	1
 
-/* Enable inline functions only for i486 or bette when compiling for
+/* Enable inline functions only for i486 or better when compiling for
    ia32.  */
 #if !defined __x86_64__ && (defined __i486__ || defined __pentium__	      \
 			    || defined __pentiumpro__ || defined __pentium4__ \
