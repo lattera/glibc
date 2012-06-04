@@ -1,3 +1,13 @@
+2012-06-04  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #14117]
+	* sysdeps/unix/sysv/linux/i386/sys/io.h: Removed.
+	* sysdeps/unix/sysv/linux/x86_64/sys/io.h: Renamed to ...
+	* sysdeps/unix/sysv/linux/x86/sys/io.h: This.
+	* sysdeps/unix/sysv/linux/i386/sys/perm.h: Removed.
+	* sysdeps/unix/sysv/linux/x86_64/sys/perm.h: Renamed to ...
+	* sysdeps/unix/sysv/linux/x86/sys/perm.h: This.
+
 2012-06-04  Tulio Magno Quites Machado Filho  <tuliom@linux.vnet.ibm.com>
 
 	[BZ #13743]
