@@ -1,3 +1,9 @@
+2012-06-05  Richard Henderson  <rth@twiddle.net>
+
+	* sysdeps/unxi/alpha/getppid.S: New file.
+	* sysdeps/unxi/alpha/getegid.S: New file.
+	* sysdeps/unxi/alpha/geteuid.S: New file.
+
 2012-06-01  Richard Henderson  <rth@twiddle.net>
 
 	* sysdeps/alpha/Makefile (CFLAGS-test-misc.c): Set -mieee-with-inexact.
