@@ -1,5 +1,8 @@
 2012-06-05  Richard Henderson  <rth@twiddle.net>
 
+	* sysdeps/unix/sysv/linux/alpha/rt_sigaction.S: Use .cfi_signal_frame
+	instead of a hack using extra nops.
+
 	* sysdeps/unxi/alpha/getppid.S: New file.
 	* sysdeps/unxi/alpha/getegid.S: New file.
 	* sysdeps/unxi/alpha/geteuid.S: New file.

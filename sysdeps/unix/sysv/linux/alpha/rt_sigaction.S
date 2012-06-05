@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 2003, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 1998-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Richard Henderson <rth@cygnus.com>, 1998
 
@@ -28,7 +28,7 @@
 	.text
 
 ENTRY(__syscall_rt_sigaction)
-	.frame	sp,0,ra,0
+	cfi_startproc
 	ldgp	gp,0(pv)
 #ifdef PROF
 	.set noat
@@ -39,18 +39,12 @@ ENTRY(__syscall_rt_sigaction)
 	.prologue 1
 
 	beq	a1, 0f
-	ldl	t0, 8(a1)			# sa_flags
+	ldl	t0, 8(a1)				# sa_flags
 
-	/* The unwinder will subtract one from the return address when
-	   attempting to find the call instruction that led us here.
-	   Since we didn't get here via a normal call, if we do nothing
-	   we would pick up the wrong symbol and the wrong FDE.  Account
-	   for this by adding a nop to the start of the function and 
-	   then skipping it here by adding 4.  */
-	ldah	a4, __syscall_sigreturn+4(gp)		!gprelhigh
-	ldah	t1, __syscall_rt_sigreturn+4(gp)	!gprelhigh
-	lda	a4, __syscall_sigreturn+4(a4)		!gprellow
-	lda	t1, __syscall_rt_sigreturn+4(t1)	!gprellow
+	ldah	a4, __syscall_sigreturn(gp)		!gprelhigh
+	ldah	t1, __syscall_rt_sigreturn(gp)		!gprelhigh
+	lda	a4, __syscall_sigreturn(a4)		!gprellow
+	lda	t1, __syscall_rt_sigreturn(t1)		!gprellow
 	and	t0, 0x40, t0				# SA_SIGINFO
 	cmovne	t0, t1, a4
 
@@ -58,7 +52,7 @@ ENTRY(__syscall_rt_sigaction)
 	callsys
 	bne	a3, SYSCALL_ERROR_LABEL
 	ret
-
+	cfi_endproc
 PSEUDO_END(__syscall_rt_sigaction)
 
 /* To enable unwinding through the signal frame without special hackery
@@ -90,26 +84,23 @@ PSEUDO_END(__syscall_rt_sigaction)
 	.endm
 
 	.align	4
-	nop
-	nop
-	nop
 
 	cfi_startproc
 	cfi_return_column (64)
+	.cfi_signal_frame
 	SIGCONTEXT_REGS -648
 
 	cfi_def_cfa_offset (648)
 __syscall_sigreturn:
-	nop
 	mov	sp, a0
 	ldi	v0, __NR_sigreturn
 	callsys
 	.size	__syscall_sigreturn, .-__syscall_sigreturn
 	.type	__syscall_sigreturn, @function
 
+	.align 4
 	cfi_def_cfa_offset (176 + 648)
 __syscall_rt_sigreturn:
-	nop
 	mov	sp,a0
 	ldi	v0,__NR_rt_sigreturn
 	callsys
