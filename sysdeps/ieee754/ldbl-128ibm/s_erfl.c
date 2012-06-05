@@ -72,6 +72,8 @@
  *              z=1/x^2
  *         The interval is partitioned into several segments
  *         of width 1/8 in 1/x.
+ *	erf(x) = 1.0 - erfc(x) if x < 25.6283 else
+ *	erf(x) = sign(x)*(1.0 - tiny)
  *
  *      Note1:
  *	   To compute exp(-x*x-0.5625+R/S), let s be a single
@@ -84,6 +86,9 @@
  *			  exp(-x*x)
  *		erfc(x) ~ ---------- * ( 1 + Poly(1/x^2) )
  *			  x*sqrt(pi)
+ *
+ *      Note3:
+ * 	   For x higher than 25.6283, erf(x) underflows.
  *
  *      5. For inf > x >= 107
  *	erf(x)  = sign(x) *(1 - tiny)  (raise inexact)
@@ -770,9 +775,19 @@ __erfl (long double x)
 
   if (ix >= 0x3ff00000) /* |x| >= 1.0 */
     {
-      y = __erfcl (x);
-      return (one - y);
-      /*    return (one - __erfcl (x)); */
+      if (ix >= 0x4039A0DE)
+	{
+	/* __erfcl (x) underflows if x > 25.6283 */
+	  if (sign)
+	    return one-tiny;
+	  else
+	    return tiny-one;
+	}
+      else
+	{
+	  y = __erfcl (x);
+	  return (one - y);
+	}
     }
   u.parts32.w0 = ix;
   a = u.value;

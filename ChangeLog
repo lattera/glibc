@@ -1,3 +1,8 @@
+2012-06-05  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
+	* sysdeps/ieee754/ldbl-128ibm/s_erfl.c: Fix spurious underflow for
+	values higher than 25.6283.
+
 2012-06-04  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	* sysdeps/ieee754/ldbl-128ibm/e_fmodl.c (__ieee754_fmodl): Fix
