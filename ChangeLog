@@ -1,3 +1,10 @@
+2012-06-04  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
+	* sysdeps/ieee754/ldbl-128ibm/e_fmodl.c (__ieee754_fmodl): Fix
+	subnormal exponent extraction and add some __builtin_expect.
+	* sysdeps/ieee754/ldbl-128ibm/math_ldbl.h (ldbl_extract_mantissa):
+	Fix for subnormal mantissa calculation.
+
 2012-06-04  Mike Frysinger  <vapier@gentoo.org>
 
 	* sysdeps/unix/sysv/linux/tst-getcpu.c (do_test): Call perror when

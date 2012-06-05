@@ -6,20 +6,20 @@
 #include <ieee754.h>
   
 static inline void
-ldbl_extract_mantissa (int64_t *hi64, u_int64_t *lo64, int *exp, long double x)
+ldbl_extract_mantissa (int64_t *hi64, uint64_t *lo64, int *exp, long double x)
 {
   /* We have 105 bits of mantissa plus one implicit digit.  Since
      106 bits are representable we use the first implicit digit for
      the number before the decimal point and the second implicit bit
      as bit 53 of the mantissa.  */
-  unsigned long long hi, lo;
+  uint64_t hi, lo;
   int ediff;
   union ibm_extended_long_double eldbl;
   eldbl.d = x;
   *exp = eldbl.ieee.exponent - IBM_EXTENDED_LONG_DOUBLE_BIAS;
 
-  lo = ((long long)eldbl.ieee.mantissa2 << 32) | eldbl.ieee.mantissa3;
-  hi = ((long long)eldbl.ieee.mantissa0 << 32) | eldbl.ieee.mantissa1;
+  lo = ((int64_t)eldbl.ieee.mantissa2 << 32) | eldbl.ieee.mantissa3;
+  hi = ((int64_t)eldbl.ieee.mantissa0 << 32) | eldbl.ieee.mantissa1;
   /* If the lower double is not a denomal or zero then set the hidden
      53rd bit.  */
   if (eldbl.ieee.exponent2 > 0x001)
@@ -31,8 +31,8 @@ ldbl_extract_mantissa (int64_t *hi64, u_int64_t *lo64, int *exp, long double x)
       ediff = eldbl.ieee.exponent - eldbl.ieee.exponent2;
       if (ediff > 53)
 	lo = lo >> (ediff-53);
+      hi |= (1ULL << 52);
     }
-  hi |= (1ULL << 52);
   
   if ((eldbl.ieee.negative != eldbl.ieee.negative2)
       && ((eldbl.ieee.exponent2 != 0) && (lo != 0LL)))

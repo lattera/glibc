@@ -27,8 +27,8 @@ static const long double one = 1.0, Zero[] = {0.0, -0.0,};
 long double
 __ieee754_fmodl (long double x, long double y)
 {
-	int64_t n,hx,hy,hz,ix,iy,sx,i;
-	u_int64_t lx,ly,lz;
+	int64_t n,hx,hy,hz,ix,iy,sx;
+	u_int64_t lx,ly,lz, i;
 	int temp;
 
 	GET_LDOUBLE_WORDS64(hx,lx,x);
@@ -38,41 +38,42 @@ __ieee754_fmodl (long double x, long double y)
 	hy &= 0x7fffffffffffffffLL;		/* |y| */
 
     /* purge off exception values */
-	if((hy|(ly&0x7fffffffffffffff))==0||(hx>=0x7ff0000000000000LL)|| /* y=0,or x not finite */
-	  (hy>0x7ff0000000000000LL))	/* or y is NaN */
+	if(__builtin_expect((hy|(ly&0x7fffffffffffffff))==0 ||
+			    (hx>=0x7ff0000000000000LL)|| /* y=0,or x not finite */
+			    (hy>0x7ff0000000000000LL),0))	/* or y is NaN */
 	    return (x*y)/(x*y);
-	if(hx<=hy) {
+	if(__builtin_expect(hx<=hy,0)) {
 	    if((hx<hy)||(lx<ly)) return x;	/* |x|<|y| return x */
 	    if(lx==ly)
 		return Zero[(u_int64_t)sx>>63];	/* |x|=|y| return x*0*/
 	}
 
     /* determine ix = ilogb(x) */
-	if(hx<0x0010000000000000LL) {	/* subnormal x */
+	if(__builtin_expect(hx<0x0010000000000000LL,0)) {	/* subnormal x */
 	    if(hx==0) {
 		for (ix = -1043, i=lx; i>0; i<<=1) ix -=1;
 	    } else {
-		for (ix = -1022, i=hx<<19; i>0; i<<=1) ix -=1;
+		for (ix = -1022, i=(hx<<11); i>0; i<<=1) ix -=1;
 	    }
 	} else ix = (hx>>52)-0x3ff;
 
     /* determine iy = ilogb(y) */
-	if(hy<0x0010000000000000LL) {	/* subnormal y */
+	if(__builtin_expect(hy<0x0010000000000000LL,0)) {	/* subnormal y */
 	    if(hy==0) {
 		for (iy = -1043, i=ly; i>0; i<<=1) iy -=1;
 	    } else {
-		for (iy = -1022, i=hy<<19; i>0; i<<=1) iy -=1;
+		for (iy = -1022, i=(hy<<11); i>0; i<<=1) iy -=1;
 	    }
 	} else iy = (hy>>52)-0x3ff;
 
     /* Make the IBM extended format 105 bit mantissa look like the ieee854 112
-       bit mantissa so the following operatations will give the correct
+       bit mantissa so the following operations will give the correct
        result.  */
 	ldbl_extract_mantissa(&hx, &lx, &temp, x);
 	ldbl_extract_mantissa(&hy, &ly, &temp, y);
 
     /* set up {hx,lx}, {hy,ly} and align y to x */
-	if(ix >= -1022)
+	if(__builtin_expect(ix >= -1022, 1))
 	    hx = 0x0001000000000000LL|(0x0000ffffffffffffLL&hx);
 	else {		/* subnormal x, shift x to normal */
 	    n = -1022-ix;
@@ -84,7 +85,7 @@ __ieee754_fmodl (long double x, long double y)
 		lx = 0;
 	    }
 	}
-	if(iy >= -1022)
+	if(__builtin_expect(iy >= -1022, 1))
 	    hy = 0x0001000000000000LL|(0x0000ffffffffffffLL&hy);
 	else {		/* subnormal y, shift y to normal */
 	    n = -1022-iy;
@@ -118,7 +119,7 @@ __ieee754_fmodl (long double x, long double y)
 	    hx = hx+hx+(lx>>63); lx = lx+lx;
 	    iy -= 1;
 	}
-	if(iy>= -1022) {	/* normalize output */
+	if(__builtin_expect(iy>= -1022,0)) {	/* normalize output */
 	    x = ldbl_insert_mantissa((sx>>63), iy, hx, lx);
 	} else {		/* subnormal output */
 	    n = -1022 - iy;
