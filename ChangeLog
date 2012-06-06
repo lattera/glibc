@@ -1,6 +1,12 @@
 2012-06-06  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #14117]
+	* sysdeps/i386/fpu/bits/fenv.h: Removed.
+	* sysdeps/i386/fpu/Implies: New file.
+	* sysdeps/x86_64/fpu/Implies: Likewise.
+	* sysdeps/x86_64/fpu/bits/fenv.h: Renamed to ...
+	* sysdeps/x86/fpu/bits/fenv.h: This.
+
 	* sysdeps/x86_64/fpu/bits/fenv.h (feraiseexcept): Check
 	__SSE_MATH__.
 
