@@ -1,5 +1,9 @@
 2012-06-06  Richard Henderson  <rth@twiddle.net>
 
+	[BZ #13718]
+	* sysdeps/alpha/stxncmp.S: Bound count to LONG_MAX at startup.
+	* sysdeps/alpha/alphaev6/stxncmp.S: Likewise.
+
 	* sysdeps/alpha/fpu/e_sqrt.c: Include <math_private.h> before
 	redefining __ieee758_sqrt.
 

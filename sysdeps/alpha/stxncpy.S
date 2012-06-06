@@ -123,16 +123,19 @@ $a_eoc:
 	.align 3
 __stxncpy:
 	/* Are source and destination co-aligned?  */
-	xor	a0, a1, t1	# e0    :
-	and	a0, 7, t0	# .. e1 : find dest misalignment
-	and	t1, 7, t1	# e0    :
-	addq	a2, t0, a2	# .. e1 : bias count by dest misalignment
-	subq	a2, 1, a2	# e0    :
-	and	a2, 7, t2	# e1    :
-	srl	a2, 3, a2	# e0    : a2 = loop counter = (count - 1)/8
-	addq	zero, 1, t10	# .. e1 :
-	sll	t10, t2, t10	# e0    : t10 = bitmask of last count byte
-	bne	t1, $unaligned	# .. e1 :
+	lda	t2, -1
+	xor	a0, a1, t1
+	srl	t2, 1, t2
+	and	a0, 7, t0		# find dest misalignment
+	cmovlt	a2, t2, a2		# bound neg count to LONG_MAX
+	and	t1, 7, t1
+	addq	a2, t0, a2		# bias count by dest misalignment
+	subq	a2, 1, a2
+	and	a2, 7, t2
+	srl	a2, 3, a2		# a2 = loop counter = (count - 1)/8
+	addq	zero, 1, t10
+	sll	t10, t2, t10		# t10 = bitmask of last count byte
+	bne	t1, $unaligned
 
 	/* We are co-aligned; take care of a partial first word.  */
 

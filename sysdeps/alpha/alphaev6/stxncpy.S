@@ -143,18 +143,25 @@ $a_eoc:
 	.align 4
 __stxncpy:
 	/* Are source and destination co-aligned?  */
+	lda	t2, -1		# E :
 	xor	a0, a1, t1	# E :
 	and	a0, 7, t0	# E : find dest misalignment
-	and	t1, 7, t1	# E : (stall)
-	addq	a2, t0, a2	# E : bias count by dest misalignment (stall)
+	nop			# E :
 
-	subq	a2, 1, a2	# E :
+	srl	t2, 1, t2	# U :
+	and	t1, 7, t1	# E :
+	cmovlt	a2, t2, a2	# E : bound count to LONG_MAX (stall)
+	nop			# E :
+
+	addq	a2, t0, a2	# E : bias count by dest misalignment
+	subq	a2, 1, a2	# E : (stall)
 	and	a2, 7, t2	# E : (stall)
-	srl	a2, 3, a2	# U : a2 = loop counter = (count - 1)/8 (stall)
-	addq	zero, 1, t10	# E :
+	lda	t10, 1		# E :
 
+	srl	a2, 3, a2	# U : a2 = loop counter = (count - 1)/8
 	sll	t10, t2, t10	# U : t10 = bitmask of last count byte
-	bne	t1, $unaligned	# U :
+	nop			# E :
+	bne	t1, $unaligned	# U : (stall)
 
 	/* We are co-aligned; take care of a partial first word.  */
 	ldq_u	t1, 0(a1)	# L : load first src word
