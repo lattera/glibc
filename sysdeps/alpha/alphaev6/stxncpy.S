@@ -1,4 +1,4 @@
-/* Copyright (C) 2000, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 2000-2012 Free Software Foundation, Inc.
    Contributed by Richard Henderson (rth@tamu.edu)
    EV6 optimized by Rick Gorton <rick.gorton@alpha-processor.com>.
    This file is part of the GNU C Library.
@@ -49,22 +49,19 @@
 	.set noat
 	.set noreorder
 
-/* There is a problem with either gdb (as of 4.16) or gas (as of 2.7) that
-   doesn't like putting the entry point for a procedure somewhere in the
-   middle of the procedure descriptor.  Work around this by putting the
-   aligned copy in its own procedure descriptor */
+	.text
+	.type	__stxncpy, @function
+	.globl	__stxncpy
+	.usepv	__stxncpy, no
 
-
-	.ent stxncpy_aligned
-	.align 4
-stxncpy_aligned:
-	.frame sp, 0, t9, 0
-	.prologue 0
+	cfi_startproc
+	cfi_return_column (t9)
 
 	/* On entry to this basic block:
 	   t0 == the first destination word for masking back in
 	   t1 == the first source word.  */
-
+	.align 4
+stxncpy_aligned:
 	/* Create the 1st output word and detect 0's in the 1st input word.  */
 	lda	t2, -1		# E : build a mask against false zero
 	mskqh	t2, a1, t2	# U :   detection in the src word (stall)
@@ -111,7 +108,6 @@ $a_loop:
 	   On entry to this basic block we have:
 	   t0 == the source word containing the null
 	   t7 == the cmpbge mask that found it.  */
-
 $a_eos:
 	negq	t7, t8		# E : find low bit set
 	and	t7, t8, t8	# E : (stall)
@@ -144,15 +140,8 @@ $a_eoc:
 	nop
 	nop
 
-	.end stxncpy_aligned
-
 	.align 4
-	.ent __stxncpy
-	.globl __stxncpy
 __stxncpy:
-	.frame sp, 0, t9, 0
-	.prologue 0
-
 	/* Are source and destination co-aligned?  */
 	xor	a0, a1, t1	# E :
 	and	a0, 7, t0	# E : find dest misalignment
@@ -166,16 +155,14 @@ __stxncpy:
 
 	sll	t10, t2, t10	# U : t10 = bitmask of last count byte
 	bne	t1, $unaligned	# U :
+
 	/* We are co-aligned; take care of a partial first word.  */
 	ldq_u	t1, 0(a1)	# L : load first src word
 	addq	a1, 8, a1	# E :
-
-	beq	t0, stxncpy_aligned     # U : avoid loading dest word if not needed
+	beq	t0, stxncpy_aligned # U : avoid loading dest word if not needed
 	ldq_u	t0, 0(a0)	# L :
-	nop
-	nop
 
-	br	stxncpy_aligned	# .. e1 :
+	br	stxncpy_aligned	# U :
 	nop
 	nop
 	nop
@@ -231,7 +218,7 @@ $u_head:
 
 	extqh	t2, a1, t0	# U : position lo-bits of hi word (stall)
 	cmpbge	zero, t2, t7	# E :
-	nop			
+	nop
 	bne	t7, $u_eos	# U :
 
 	/* Unaligned copy main loop.  In order to avoid reading too much,
@@ -314,7 +301,7 @@ $u_final:
 1:	stq_u	t0, 0(a0)	# L :
 	ret	(t9)		# L0 : Latency=3
 
-        /* Got to end-of-count before end of string.  
+        /* Got to end-of-count before end of string.
            On entry to this basic block:
            t1 == the shifted high-order bits from the previous source word  */
 $u_eoc:
@@ -325,7 +312,7 @@ $u_eoc:
 
 	ldq_u	t2, 8(a1)	# L : load final src word
 	nop
-	extqh	t2, a1, t0	# U : extract low bits for last word (stall)	
+	extqh	t2, a1, t0	# U : extract low bits for last word (stall)
 	or	t1, t0, t1	# E : (stall)
 
 1:	cmpbge	zero, t1, t7	# E :
@@ -394,9 +381,5 @@ $unaligned:
 	stq_u	t0, 0(a0)	# L : (stall)
 
 	ret	(t9)		# L0 : Latency=3
-	nop
-	nop
-	nop
 
-	.end __stxncpy
-
+	cfi_endproc

@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1996-2012 Free Software Foundation, Inc.
    Contributed by Richard Henderson (rth@tamu.edu)
    This file is part of the GNU C Library.
 
@@ -43,22 +43,18 @@
 	.set noreorder
 
 	.text
+	.type	__stxcpy, @function
+	.globl	__stxcpy
+	.usepv	__stxcpy, no
 
-/* There is a problem with either gdb (as of 4.16) or gas (as of 2.7) that
-   doesn't like putting the entry point for a procedure somewhere in the
-   middle of the procedure descriptor.  Work around this by putting the
-   aligned copy in its own procedure descriptor */
-
-	.ent stxcpy_aligned
-	.align 3
-stxcpy_aligned:
-	.frame sp, 0, t9
-	.prologue 0
+	cfi_startproc
+	cfi_return_column (t9)
 
 	/* On entry to this basic block:
 	   t0 == the first destination word for masking back in
 	   t1 == the first source word.  */
-
+	.align 3
+stxcpy_aligned:
 	/* Create the 1st output word and detect 0's in the 1st input word.  */
 	lda	t2, -1		# e1    : build a mask against false zero
 	mskqh	t2, a1, t2	# e0    :   detection in the src word
@@ -72,7 +68,6 @@ stxcpy_aligned:
 	/* On entry to this basic block:
 	   t0 == the first destination word for masking back in
 	   t1 == a source word not containing a null.  */
-
 $a_loop:
 	stq_u	t1, 0(a0)	# e0    :
 	addq	a0, 8, a0	# .. e1 :
@@ -106,15 +101,8 @@ $a_eos:
 1:	stq_u	t1, 0(a0)	# e0    :
 	ret	(t9)		# .. e1 :
 
-	.end stxcpy_aligned
-
 	.align 3
-	.ent __stxcpy
-	.globl __stxcpy
 __stxcpy:
-	.frame sp, 0, t9
-	.prologue 0
-
 	/* Are source and destination co-aligned?  */
 	xor	a0, a1, t0	# e0    :
 	unop			#       :
@@ -303,4 +291,4 @@ $unaligned:
 	stq_u	t1, 0(a0)	# .. e0 :
 	ret	(t9)
 
-	.end __stxcpy
+	cfi_endproc

@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 1996-2012 Free Software Foundation, Inc.
    Contributed by Richard Henderson (rth@tamu.edu)
    This file is part of the GNU C Library.
 
@@ -37,11 +37,11 @@
 	.set noreorder
 
 	.text
+	.type	memset, @function
+	.globl	memset
+	.usepv	memset, USEPV_PROF
 
-/* There is a problem with either gdb (as of 4.16) or gas (as of 2.7) that
-   doesn't like putting the entry point for a procedure somewhere in the
-   middle of the procedure descriptor.  Work around this by putting the main
-   loop in its own procedure descriptor.  */
+	cfi_startproc
 
 	/* On entry to this basic block:
 	   t3 == loop counter
@@ -49,12 +49,8 @@
 	   a0 == possibly misaligned destination pointer
 	   a1 == replicated source character  */
 
-	.ent memset_loop
 	.align 3
 memset_loop:
-	.frame sp, 0, ra, 0
-	.prologue 0
-
 	beq	t3, $tail
 	blbc	t3, 0f		# skip single store if count even
 
@@ -80,19 +76,14 @@ $tail:	bne	t4, 1f		# is there a tail to do?
 	stq_u	t0, 0(a0)	# e0    :
 	ret			# .. e1 :
 
-	.end memset_loop
-
-ENTRY(memset)
+memset:
 #ifdef PROF
 	ldgp	gp, 0(pv)
 	lda	AT, _mcount
 	jsr	AT, (AT), _mcount
-	.prologue 1
-#else
-	.prologue 0
 #endif
 
-	zapnot	a1, 1, a1	# e0    : zero extend input character
+	and	a1, 0xff, a1	# e0    : zero extend input character
 	mov	a0, v0		# .. e1 : move return value in place
 	sll	a1, 8, t0	# e0    : begin replicating the char
 	beq	a2, $done	# .. e1 : early exit for zero-length store
@@ -132,5 +123,5 @@ $oneq:
 
 $done:	ret
 
-	END(memset)
+	cfi_endproc
 libc_hidden_builtin_def (memset)

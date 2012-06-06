@@ -36,23 +36,19 @@
 	.set noreorder
 
 	.text
+	.type	__bzero, @function
+	.globl	__bzero
+	.usepv	__bzero, USEPV_PROF
 
-/* There is a problem with either gdb (as of 4.16) or gas (as of 2.7) that
-   doesn't like putting the entry point for a procedure somewhere in the
-   middle of the procedure descriptor.  Work around this by putting the main
-   loop in its own procedure descriptor.  */
+	cfi_startproc
 
 	/* On entry to this basic block:
 	   t3 == loop counter
 	   t4 == bytes in partial final word
 	   a0 == possibly misaligned destination pointer  */
 
-	.ent bzero_loop
 	.align 3
 bzero_loop:
-	.frame sp, 0, ra, 0
-	.prologue 0
-
 	beq	t3, $tail	#
 	blbc	t3, 0f		# skip single store if count even
 
@@ -75,16 +71,11 @@ $tail:	bne	t4, 1f		# is there a tail to do?
 	stq_u	t0, 0(a0)	#
 	ret			#
 
-	.end bzero_loop
-
-ENTRY(__bzero)
+__bzero:
 #ifdef PROF
 	ldgp	gp, 0(pv)
 	lda	AT, _mcount
 	jsr	AT, (AT), _mcount
-	.prologue 1
-#else
-	.prologue 0
 #endif
 
 	mov	a0, v0		# e0    : move return value in place
@@ -115,5 +106,5 @@ $oneq:
 
 $done:	ret
 
-	END(__bzero)
+	cfi_endproc
 weak_alias (__bzero, bzero)

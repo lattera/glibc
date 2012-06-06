@@ -1,4 +1,4 @@
-/* Copyright (C) 2000 Free Software Foundation, Inc.
+/* Copyright (C) 2000-2012 Free Software Foundation, Inc.
    Contributed by Richard Henderson (rth@tamu.edu)
    EV6 optimized by Rick Gorton <rick.gorton@alpha-processor.com>.
    This file is part of the GNU C Library.
@@ -41,24 +41,20 @@
 	.arch ev6
 	.set noat
 	.set noreorder
+
 	.text
+	.type	__stxcpy, @function
+	.globl	__stxcpy
+	.usepv	__stxcpy, no
 
-/* There is a problem with either gdb (as of 4.16) or gas (as of 2.7) that
-   doesn't like putting the entry point for a procedure somewhere in the
-   middle of the procedure descriptor.  Work around this by putting the
-   aligned copy in its own procedure descriptor */
-
-
-	.ent stxcpy_aligned
-	.align 4
-stxcpy_aligned:
-	.frame sp, 0, t9
-	.prologue 0
+	cfi_startproc
+	cfi_return_column (t9)
 
 	/* On entry to this basic block:
 	   t0 == the first destination word for masking back in
 	   t1 == the first source word.  */
-
+	.align 4
+stxcpy_aligned:
 	/* Create the 1st output word and detect 0's in the 1st input word.  */
 	lda	t2, -1		# E : build a mask against false zero
 	mskqh	t2, a1, t2	# U :   detection in the src word (stall)
@@ -115,15 +111,8 @@ $a_eos:
 	nop
 	nop
 
-	.end stxcpy_aligned
-
 	.align 4
-	.ent __stxcpy
-	.globl __stxcpy
 __stxcpy:
-	.frame sp, 0, t9
-	.prologue 0
-
 	/* Are source and destination co-aligned?  */
 	xor	a0, a1, t0	# E :
 	unop			# E :
@@ -321,7 +310,5 @@ $unaligned:
 	or	t0, t1, t1	# e1    : and put it there
 	stq_u	t1, 0(a0)	# .. e0 : (stall)
 	ret	(t9)		# e1    :
-	nop
 
-	.end __stxcpy
-
+	cfi_endproc

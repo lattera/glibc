@@ -71,6 +71,12 @@
 	.prologue 1
 #endif /* PROF */
 
+#ifdef PROF
+# define USEPV_PROF	std
+#else
+# define USEPV_PROF	no
+#endif
+
 #if RTLD_PRIVATE_ERRNO
 # define SYSCALL_ERROR_LABEL	$syscall_error
 # define SYSCALL_ERROR_HANDLER			\
