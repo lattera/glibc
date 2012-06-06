@@ -70,11 +70,11 @@
 static const long double C[] = {
 /* Smallest integer x for which e^x overflows.  */
 #define himark C[0]
- 709.08956571282405153382846025171462914L,
+ 709.78271289338399678773454114191496482L,
 
 /* Largest integer x for which e^x underflows.  */
 #define lomark C[1]
--744.44007192138121808966388925909996033L,
+-744.44007192138126231410729844608163411L,
 
 /* 3x2^96 */
 #define THREEp96 C[2]
@@ -138,14 +138,12 @@ __ieee754_expl (long double x)
   if (isless (x, himark) && isgreater (x, lomark))
     {
       int tval1, tval2, unsafe, n_i, exponent2;
-      long double x22, n, result, xl;
-      union ibm_extended_long_double ex2_u, scale_u;
+      long double x22, n, xl;
+      union ibm_extended_long_double ex2_u, scale_u, result;
       fenv_t oldenv;
 
       feholdexcept (&oldenv);
-#ifdef FE_TONEAREST
       fesetround (FE_TONEAREST);
-#endif
 
       n = __roundl (x*M_1_LN2);
       x = x-n*M_LN2_0;
@@ -166,7 +164,7 @@ __ieee754_expl (long double x)
 		* __expl_table[T_EXPL_RES2 + tval2];
       n_i = (int)n;
       /* 'unsafe' is 1 iff n_1 != 0.  */
-      unsafe = fabsl(n_i) >= -LDBL_MIN_EXP - 1;
+      unsafe = abs (n_i) >= -LDBL_MIN_EXP - 1;
       ex2_u.ieee.exponent += n_i >> unsafe;
       /* Fortunately, there are no subnormal lowpart doubles in
 	 __expl_table, only normal values and zeros.
@@ -204,7 +202,7 @@ __ieee754_expl (long double x)
       /* Return result.  */
       fesetenv (&oldenv);
 
-      result = x22 * ex2_u.d + ex2_u.d;
+      result.d = x22 * ex2_u.d + ex2_u.d;
 
       /* Now we can test whether the result is ultimate or if we are unsure.
 	 In the later case we should probably call a mpn based routine to give
@@ -235,10 +233,22 @@ __ieee754_expl (long double x)
 	    return __ieee754_expl_proc2 (origx);
 	  }
        */
-      if (!unsafe)
-	return result;
-      else
-	return result * scale_u.d;
+      if (unsafe)
+	{
+	  /* The scale with denormal number might generated underflow for
+	     first high double multiplication. The exception holding is
+	     to avoid it.  */
+	  if (result.ieee.exponent + scale_u.ieee.exponent
+	      < IBM_EXTENDED_LONG_DOUBLE_BIAS)
+	    {
+	      feholdexcept (&oldenv);
+	      result.d *= scale_u.d;
+	      fesetenv (&oldenv);
+	    }
+	  else
+	    result.d *= scale_u.d;
+	}
+      return result.d;
     }
   /* Exceptional cases:  */
   else if (isless (x, himark))
