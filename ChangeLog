@@ -1,5 +1,10 @@
 2012-06-05  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
+	* sysdeps/ieee754/ldbl-128ibm/e_fmodl.c: Fix for wrong ldbl128-ibm
+	fmodl commit.
+
+2012-06-05  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
 	* sysdeps/ieee754/ldbl-128ibm/s_erfl.c: Fix spurious underflow for
 	values higher than 25.6283.
 

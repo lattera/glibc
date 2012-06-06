@@ -27,8 +27,8 @@ static const long double one = 1.0, Zero[] = {0.0, -0.0,};
 long double
 __ieee754_fmodl (long double x, long double y)
 {
-	int64_t n,hx,hy,hz,ix,iy,sx;
-	u_int64_t lx,ly,lz, i;
+	int64_t n,hx,hy,hz,ix,iy,sx, i;
+	u_int64_t lx,ly,lz;
 	int temp;
 
 	GET_LDOUBLE_WORDS64(hx,lx,x);
