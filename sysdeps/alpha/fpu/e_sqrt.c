@@ -16,7 +16,8 @@
    License along with the GNU C Library.  If not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <features.h>
+#include <math.h>
+#include <math_private.h>
 
 #if !defined(_IEEE_FP_INEXACT)
 

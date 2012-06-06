@@ -1,5 +1,8 @@
 2012-06-06  Richard Henderson  <rth@twiddle.net>
 
+	* sysdeps/alpha/fpu/e_sqrt.c: Include <math_private.h> before
+	redefining __ieee758_sqrt.
+
 	* sysdeps/alpha/alphaev6/stxcpy.S: Use cfi markup instead of
 	dual ecoff procedure descriptors.
 	* sysdeps/alpha/alphaev6/stxncpy.S: Likewise.
