@@ -1,4 +1,4 @@
-/* Copyright (C) 1997-2001,2004,2011,2012 Free Software Foundation, Inc.
+/* Copyright (C) 1997-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -109,7 +109,12 @@ __NTH (feraiseexcept (int __excepts))
 	  /* One example of a invalid operation is 0.0 / 0.0.  */
 	  float __f = 0.0;
 
+# ifdef __SSE_MATH__
 	  __asm__ __volatile__ ("divss %0, %0 " : : "x" (__f));
+# else
+	  __asm__ __volatile__ ("fdiv %%st, %%st(0); fwait"
+				: "=t" (__f) : "0" (__f));
+# endif
 	  (void) &__f;
 	}
       if ((FE_DIVBYZERO & __excepts) != 0)
@@ -117,7 +122,12 @@ __NTH (feraiseexcept (int __excepts))
 	  float __f = 1.0;
 	  float __g = 0.0;
 
+# ifdef __SSE_MATH__
 	  __asm__ __volatile__ ("divss %1, %0" : : "x" (__f), "x" (__g));
+# else
+	  __asm__ __volatile__ ("fdivp %%st, %%st(1); fwait"
+				: "=t" (__f) : "0" (__f), "u" (__g) : "st(1)");
+# endif
 	  (void) &__f;
 	}
 

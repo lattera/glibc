@@ -1,3 +1,9 @@
+2012-06-06  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #14117]
+	* sysdeps/x86_64/fpu/bits/fenv.h (feraiseexcept): Check
+	__SSE_MATH__.
+
 2012-06-06  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	[BZ #14134]
