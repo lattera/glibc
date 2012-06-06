@@ -1,5 +1,8 @@
 2012-06-06  Richard Henderson  <rth@twiddle.net>
 
+	* sysdeps/alpha/strncmp.S: Bound count to LONG_MAX at startup.
+	Re-organize checks vs s2 end-of-count.
+
 	[BZ #13718]
 	* sysdeps/alpha/stxncmp.S: Bound count to LONG_MAX at startup.
 	* sysdeps/alpha/alphaev6/stxncmp.S: Likewise.
