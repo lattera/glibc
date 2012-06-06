@@ -1,3 +1,7 @@
+2012-06-06  Richard Henderson  <rth@twiddle.net>
+
+	* sysdeps/alpha/_mcount.S: Move .prologue after stack alloc.
+
 2012-06-05  Richard Henderson  <rth@twiddle.net>
 
 	* sysdeps/unix/sysv/linux/alpha/rt_sigaction.S: Use .cfi_signal_frame

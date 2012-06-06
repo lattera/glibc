@@ -38,9 +38,8 @@
 	.set	noreorder
 
 LEAF(_mcount, 0xb0)
-	.prologue 0
-
 	subq	 sp, 0xb0, sp
+	.prologue 0
 	stq	 a0, 0x00(sp)
 	mov	 ra, a0		# a0 = caller-pc
 	stq	 a1, 0x08(sp)
