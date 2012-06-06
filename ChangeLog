@@ -1,3 +1,10 @@
+2012-06-06  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	[BZ #14134]
+	* iconvdata/ibm930.c (BODY) [FROM_LOOP]: Check for invalid
+	character 0xffff that matches the last element of the
+	conversion table.
+
 2012-06-05  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	* sysdeps/ieee754/ldbl-128ibm/e_fmodl.c: Fix for wrong ldbl128-ibm
