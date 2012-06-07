@@ -28,5 +28,5 @@ ENTRY(pthread_spin_lock)
 2:	orcc		%g1, 0x0, %g0
 	bne,a		2b
 	 ldub		[%o0], %g1
-	ba,a,pt		%xcc, 1b
+	ba,a		1b
 END(pthread_spin_lock)
