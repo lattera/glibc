@@ -1,3 +1,8 @@
+2012-06-08  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/nofpu/nptl/libc.abilist:
+	Update.
+
 2012-05-31  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/powerpc/nofpu/libm-test-ulps: Regenerated.

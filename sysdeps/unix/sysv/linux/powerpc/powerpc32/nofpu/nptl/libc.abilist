@@ -1762,6 +1762,7 @@ GLIBC_2.15
 GLIBC_2.16
  GLIBC_2.16 A
  __getauxval F
+ __mcount_internal F
  __poll_chk F
  __ppoll_chk F
  aligned_alloc F
