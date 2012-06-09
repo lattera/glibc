@@ -11,7 +11,6 @@ GLIBC_2.10
  accept4 F
  endsgent F
  fallocate F
- fallocate64 F
  fgetsgent F
  fgetsgent_r F
  getsgent F
@@ -36,6 +35,7 @@ GLIBC_2.11
  GLIBC_2.11 A
  __longjmp_chk F
  execvpe F
+ fallocate64 F
  mkostemps F
  mkostemps64 F
  mkstemps F
@@ -50,9 +50,7 @@ GLIBC_2.12
  sys_nerr D 0x4
 GLIBC_2.13
  GLIBC_2.13 A
- __fentry__ F
  fanotify_init F
- fanotify_mark F
  prlimit F
  prlimit64 F
 GLIBC_2.14
@@ -210,6 +208,7 @@ GLIBC_2.2
  _IO_wdefault_xsputn F
  _IO_wdo_write F
  _IO_wdoallocbuf F
+ _IO_wfile_jumps D 0x54
  _IO_wfile_overflow F
  _IO_wfile_seekoff F
  _IO_wfile_sync F
@@ -265,6 +264,7 @@ GLIBC_2.2
  __finitef F
  __finitel F
  __flbf F
+ __fork F
  __fpending F
  __fpu_control D 0x4
  __fpurge F
@@ -503,7 +503,7 @@ GLIBC_2.2
  _longjmp F
  _mcleanup F
  _mcount F
- _nl_default_dirname D 0x20
+ _nl_default_dirname D 0x12
  _nl_domain_bindings D 0x4
  _nl_msg_cat_cntr D 0x4
  _null_auth D 0xc
@@ -514,6 +514,7 @@ GLIBC_2.2
  _obstack_free F
  _obstack_memory_used F
  _obstack_newchunk F
+ _res D 0x200
  _res_hconf D 0x30
  _rpc_dtablesize F
  _seterr_reply F
@@ -1949,6 +1950,9 @@ GLIBC_2.3
 GLIBC_2.3.2
  GLIBC_2.3.2 A
  __register_atfork F
+ epoll_create F
+ epoll_ctl F
+ epoll_wait F
  lchmod F
  pthread_cond_broadcast F
  pthread_cond_destroy F
@@ -1959,6 +1963,7 @@ GLIBC_2.3.2
  strptime_l F
 GLIBC_2.3.3
  GLIBC_2.3.3 A
+ _sys_siglist D 0x104
  gnu_dev_major F
  gnu_dev_makedev F
  gnu_dev_minor F
@@ -1970,10 +1975,14 @@ GLIBC_2.3.3
  inet6_option_space F
  nftw F
  nftw64 F
+ posix_fadvise64 F
+ posix_fallocate64 F
  remap_file_pages F
  sched_getaffinity F
  sched_setaffinity F
  semtimedop F
+ sys_sigabbrev D 0x104
+ sys_siglist D 0x104
 GLIBC_2.3.4
  GLIBC_2.3.4 A
  __chk_fail F
@@ -2058,6 +2067,7 @@ GLIBC_2.4
  __wmemset_chk F
  __wprintf_chk F
  __xmknodat F
+ _sys_errlist D 0x210
  _sys_nerr D 0x4
  eaccess F
  faccessat F
@@ -2078,6 +2088,7 @@ GLIBC_2.4
  readlinkat F
  renameat F
  symlinkat F
+ sys_errlist D 0x210
  sys_nerr D 0x4
  unlinkat F
  unshare F
