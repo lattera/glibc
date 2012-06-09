@@ -1,3 +1,11 @@
+2012-06-23  Andreas Schwab  <schwab@linux-m68k.org>
+	    Thomas Schwinge  <thomas@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/sh/syscalls.list: Add fanotify_mark.
+	* sysdeps/unix/sysv/linux/sh/Versions (GLIBC_2.16): Add fanotify_mark.
+	* sysdeps/unix/sysv/linux/sh/nptl/libc.abilist (GLIBC_2.16): Add
+	fanotify_mark.
+
 2012-06-23  Thomas Schwinge  <thomas@codesourcery.com>
 
 	* sysdeps/mach/start.c: Remove file.

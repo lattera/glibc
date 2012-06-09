@@ -79,6 +79,7 @@ GLIBC_2.16
  aligned_alloc F
  c16rtomb F
  c32rtomb F
+ fanotify_mark F
  getauxval F
  mbrtoc16 F
  mbrtoc32 F

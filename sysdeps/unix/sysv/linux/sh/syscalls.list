@@ -3,3 +3,5 @@
 waitpid		-	waitpid		Ci:ipi	__waitpid	waitpid	__libc_waitpid
 
 prlimit64	EXTRA	prlimit64	i:iipp	prlimit64
+
+fanotify_mark	EXTRA	fanotify_mark	i:iiiiis	__fanotify_mark	fanotify_mark@@GLIBC_2.16
