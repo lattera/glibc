@@ -27,9 +27,6 @@ fegetexcept (void)
 
   /* Get current exceptions.  */
   _FPU_GETCW (temp);
-  /* When read fpscr, this was initialized.
-     We need to rewrite value of temp. */
-  _FPU_SETCW (temp);
 
   return (temp >> 5) & FE_ALL_EXCEPT;
 }

@@ -1,3 +1,10 @@
+2012-06-09  Thomas Schwinge  <thomas@codesourcery.com>
+
+	* sysdeps/sh/sh4/fpu/fegetenv.c (fegetenv): Do not re-write fpscr after
+	reading it.
+	* sysdeps/sh/sh4/fpu/fegetexcept.c (fegetexcept): Likewise.
+	* sysdeps/sh/sh4/fpu/ftestexcept.c (fetestexcept): Likewise.
+
 2012-06-09  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
 
 	* sysdeps/unix/sysv/linux/sh/nptl/ld.abilist: New file.
