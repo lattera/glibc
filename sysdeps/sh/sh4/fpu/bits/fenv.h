@@ -1,4 +1,4 @@
-/* Copyright (C) 1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1999-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -39,19 +39,17 @@ enum
 #define FE_ALL_EXCEPT \
 	(FE_INEXACT | FE_DIVBYZERO | FE_UNDERFLOW | FE_OVERFLOW | FE_INVALID)
 
-/* The SH FPU supports all of the four defined rounding modes.  We
-   use again the bit positions in the FPU control word as the values
-   for the appropriate macros.  */
+/* The SH FPU supports two of the four defined rounding modes: round to nearest
+   and round to zero.  We use again the bit positions in the FPU control word
+   as the values for the appropriate macros.  */
 enum
   {
+    __FE_UNDEFINED = -1,
+
     FE_TONEAREST = 0x0,
 #define FE_TONEAREST	FE_TONEAREST
     FE_TOWARDZERO = 0x1,
 #define FE_TOWARDZERO	FE_TOWARDZERO
-    FE_UPWARD = 0x2,
-#define FE_UPWARD	FE_UPWARD
-    FE_DOWNWARD = 0x3
-#define FE_DOWNWARD	FE_DOWNWARD
   };
 
 

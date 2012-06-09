@@ -1,5 +1,10 @@
 2012-06-09  Thomas Schwinge  <thomas@codesourcery.com>
 
+	* sysdeps/sh/sh4/fpu/bits/fenv.h (__FE_UNDEFINED): Define.
+	(FE_UPWARD, FE_DOWNWARD): Don't define.
+	* sysdeps/sh/sh4/fpu/fegetround.c (fegetround): Adapt to that.
+	* sysdeps/sh/sh4/fpu/fesetround.c (fesetround): Likewise.
+
 	* sysdeps/sh/sh4/fpu/fegetenv.c (fegetenv): Do not re-write fpscr after
 	reading it.
 	* sysdeps/sh/sh4/fpu/fegetexcept.c (fegetexcept): Likewise.

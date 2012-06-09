@@ -28,5 +28,5 @@ fegetround (void)
   /* Get control word.  */
   _FPU_GETCW (cw);
 
-  return cw & 0x3;
+  return cw & 0x1;
 }
