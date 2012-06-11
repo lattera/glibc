@@ -1,3 +1,8 @@
+2012-06-11  Roland McGrath  <roland@hack.frob.com>
+
+	[BZ #14218]
+	* manual/argp.texi (Argp): Reword argp_parse description slightly.
+
 2012-06-09  Thomas Schwinge  <thomas@codesourcery.com>
 
 	* sysdeps/sh/sh4/fpu/bits/fenv.h (__FE_UNDEFINED): Define.
