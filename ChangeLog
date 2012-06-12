@@ -1,3 +1,29 @@
+2012-06-12  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #14050]
+	[BZ #14117]
+	* sysdeps/i386/fpu/bits/mathinline.h (__MATH_INLINE): Check
+	__extern_always_inline instead of __extern_inline.
+	(__signbitf): Support __SSE2_MATH__ and C++ namespace.
+	(__signbit): Likewise.
+	(__signbitl): Support C++ namespace.
+	(lrintf): New inline function.
+	(lrint): Likewise.
+	(llrintf): Likewise.
+	(llrint): Likewise.
+	(fmaxf): Likewise.
+	(fmax): Likewise.
+	(fminf): Likewise.
+	(fmin): Likewise.
+	(rint): Likewise.
+	(rintf): Likewise.
+	(ceil): Likewise.
+	(ceilf): Likewise.
+	(floor): Likewise.
+	(floorf): Likewise.
+	(nearbyint): Likewise.
+	(nearbyintf): Likewise.
+
 2012-06-12  Thomas Schwinge  <thomas@codesourcery.com>
 
 	* sysdeps/unix/Makefile ($(objpfx)stub-syscalls.c): Fix case for

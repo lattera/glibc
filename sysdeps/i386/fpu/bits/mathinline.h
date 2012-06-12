@@ -1,7 +1,6 @@
-/* Inline math functions for i387.
+/* Inline math functions for i387 and SSE.
    Copyright (C) 1995-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by John C. Bowman <bowman@math.ualberta.ca>, 1995.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -21,10 +20,10 @@
 # error "Never use <bits/mathinline.h> directly; include <math.h> instead."
 #endif
 
-#ifndef __extern_inline
+#ifndef __extern_always_inline
 # define __MATH_INLINE __inline
 #else
-# define __MATH_INLINE __extern_inline
+# define __MATH_INLINE __extern_always_inline
 #endif
 
 
@@ -121,18 +120,32 @@
 /* The gcc, version 2.7 or below, has problems with all this inlining
    code.  So disable it for this version of the compiler.  */
 # if __GNUC_PREREQ (2, 8)
+__BEGIN_NAMESPACE_C99
+
 /* Test for negative number.  Used in the signbit() macro.  */
 __MATH_INLINE int
 __NTH (__signbitf (float __x))
 {
+#  ifdef __SSE2_MATH__
+  int __m;
+  __asm ("pmovmskb %1, %0" : "=r" (__m) : "x" (__x));
+  return (__m & 0x8) != 0;
+#  else
   __extension__ union { float __f; int __i; } __u = { __f: __x };
   return __u.__i < 0;
+#  endif
 }
 __MATH_INLINE int
 __NTH (__signbit (double __x))
 {
+#  ifdef __SSE2_MATH__
+  int __m;
+  __asm ("pmovmskb %1, %0" : "=r" (__m) : "x" (__x));
+  return (__m & 0x80) != 0;
+#  else
   __extension__ union { double __d; int __i[2]; } __u = { __d: __x };
   return __u.__i[1] < 0;
+#  endif
 }
 __MATH_INLINE int
 __NTH (__signbitl (long double __x))
@@ -140,6 +153,8 @@ __NTH (__signbitl (long double __x))
   __extension__ union { long double __l; int __i[3]; } __u = { __l: __x };
   return (__u.__i[2] & 0x8000) != 0;
 }
+
+__END_NAMESPACE_C99
 # endif
 #endif
 
@@ -147,6 +162,224 @@ __NTH (__signbitl (long double __x))
 /* The gcc, version 2.7 or below, has problems with all this inlining
    code.  So disable it for this version of the compiler.  */
 #if __GNUC_PREREQ (2, 8)
+# if !__GNUC_PREREQ (3, 4) && !defined __NO_MATH_INLINES \
+     && defined __OPTIMIZE__
+/* GCC 3.4 introduced builtins for all functions below, so
+   there's no need to define any of these inline functions.  */
+
+#  ifdef __USE_ISOC99
+__BEGIN_NAMESPACE_C99
+
+/* Round to nearest integer.  */
+#   ifdef __SSE_MATH__
+__MATH_INLINE long int
+__NTH (lrintf (float __x))
+{
+  long int __res;
+  /* Mark as volatile since the result is dependent on the state of
+     the SSE control register (the rounding mode).  Otherwise GCC might
+     remove these assembler instructions since it does not know about
+     the rounding mode change and cannot currently be told.  */
+  __asm __volatile__ ("cvtss2si %1, %0" : "=r" (__res) : "xm" (__x));
+  return __res;
+}
+#   endif
+#   ifdef __SSE2_MATH__
+__MATH_INLINE long int
+__NTH (lrint (double __x))
+{
+  long int __res;
+  /* Mark as volatile since the result is dependent on the state of
+     the SSE control register (the rounding mode).  Otherwise GCC might
+     remove these assembler instructions since it does not know about
+     the rounding mode change and cannot currently be told.  */
+  __asm __volatile__ ("cvtsd2si %1, %0" : "=r" (__res) : "xm" (__x));
+  return __res;
+}
+#   endif
+#   ifdef __x86_64__
+__MATH_INLINE long long int
+__NTH (llrintf (float __x))
+{
+  long long int __res;
+  /* Mark as volatile since the result is dependent on the state of
+     the SSE control register (the rounding mode).  Otherwise GCC might
+     remove these assembler instructions since it does not know about
+     the rounding mode change and cannot currently be told.  */
+  __asm __volatile__ ("cvtss2si %1, %0" : "=r" (__res) : "xm" (__x));
+  return __res;
+}
+__MATH_INLINE long long int
+__NTH (llrint (double __x))
+{
+  long long int __res;
+  /* Mark as volatile since the result is dependent on the state of
+     the SSE control register (the rounding mode).  Otherwise GCC might
+     remove these assembler instructions since it does not know about
+     the rounding mode change and cannot currently be told.  */
+  __asm __volatile__ ("cvtsd2si %1, %0" : "=r" (__res) : "xm" (__x));
+  return __res;
+}
+#   endif
+
+#   if defined __FINITE_MATH_ONLY__ && __FINITE_MATH_ONLY__ > 0 \
+       && defined __SSE2_MATH__
+/* Determine maximum of two values.  */
+__MATH_INLINE float
+__NTH (fmaxf (float __x, float __y))
+{
+#    ifdef __AVX__
+  float __res;
+  __asm ("vmaxss %2, %1, %0" : "=x" (__res) : "x" (x), "xm" (__y));
+  return __res;
+#    else
+  __asm ("maxss %1, %0" : "+x" (__x) : "xm" (__y));
+  return __x;
+#    endif
+}
+__MATH_INLINE double
+__NTH (fmax (double __x, double __y))
+{
+#    ifdef __AVX__
+  float __res;
+  __asm ("vmaxsd %2, %1, %0" : "=x" (__res) : "x" (x), "xm" (__y));
+  return __res;
+#    else
+  __asm ("maxsd %1, %0" : "+x" (__x) : "xm" (__y));
+  return __x;
+#    endif
+}
+
+/* Determine minimum of two values.  */
+__MATH_INLINE float
+__NTH (fminf (float __x, float __y))
+{
+#    ifdef __AVX__
+  float __res;
+  __asm ("vminss %2, %1, %0" : "=x" (__res) : "x" (x), "xm" (__y));
+  return __res;
+#    else
+  __asm ("minss %1, %0" : "+x" (__x) : "xm" (__y));
+  return __x;
+#    endif
+}
+__MATH_INLINE double
+__NTH (fmin (double __x, double __y))
+{
+#    ifdef __AVX__
+  float __res;
+  __asm ("vminsd %2, %1, %0" : "=x" (__res) : "x" (x), "xm" (__y));
+  return __res;
+#    else
+  __asm ("minsd %1, %0" : "+x" (__x) : "xm" (__y));
+  return __x;
+#    endif
+}
+#   endif
+
+__END_NAMESPACE_C99
+#  endif
+
+#  if defined __SSE4_1__ && defined __SSE2_MATH__
+#   if defined __USE_MISC || defined __USE_XOPEN_EXTENDED || defined __USE_ISOC99
+__BEGIN_NAMESPACE_C99
+
+/* Round to nearest integer.  */
+__MATH_INLINE double
+__NTH (rint (double __x))
+{
+  double __res;
+  /* Mark as volatile since the result is dependent on the state of
+     the SSE control register (the rounding mode).  Otherwise GCC might
+     remove these assembler instructions since it does not know about
+     the rounding mode change and cannot currently be told.  */
+  __asm __volatile__ ("roundsd $4, %1, %0" : "=x" (__res) : "xm" (__x));
+  return __res;
+}
+__MATH_INLINE float
+__NTH (rintf (float __x))
+{
+  float __res;
+  /* Mark as volatile since the result is dependent on the state of
+     the SSE control register (the rounding mode).  Otherwise GCC might
+     remove these assembler instructions since it does not know about
+     the rounding mode change and cannot currently be told.  */
+  __asm __volatile__ ("roundss $4, %1, %0" : "=x" (__res) : "xm" (__x));
+  return __res;
+}
+
+#    ifdef __USE_ISOC99
+/* Round to nearest integer without raising inexact exception.  */
+__MATH_INLINE double
+__NTH (nearbyint (double __x))
+{
+  double __res;
+  /* Mark as volatile since the result is dependent on the state of
+     the SSE control register (the rounding mode).  Otherwise GCC might
+     remove these assembler instructions since it does not know about
+     the rounding mode change and cannot currently be told.  */
+  __asm __volatile__ ("roundsd $0xc, %1, %0" : "=x" (__res) : "xm" (__x));
+  return __res;
+}
+__MATH_INLINE float
+__NTH (nearbyintf (float __x))
+{
+  float __res;
+  /* Mark as volatile since the result is dependent on the state of
+     the SSE control register (the rounding mode).  Otherwise GCC might
+     remove these assembler instructions since it does not know about
+     the rounding mode change and cannot currently be told.  */
+  __asm __volatile__ ("roundss $0xc, %1, %0" : "=x" (__res) : "xm" (__x));
+  return __res;
+}
+#    endif
+
+__END_NAMESPACE_C99
+#   endif
+
+__BEGIN_NAMESPACE_STD
+/* Smallest integral value not less than X.  */
+__MATH_INLINE double
+__NTH (ceil (double __x))
+{
+  double __res;
+  __asm ("roundsd $2, %1, %0" : "=x" (__res) : "xm" (__x));
+  return __res;
+}
+__END_NAMESPACE_STD
+
+__BEGIN_NAMESPACE_C99
+__MATH_INLINE float
+__NTH (ceilf (float __x))
+{
+  float __res;
+  __asm ("roundss $2, %1, %0" : "=x" (__res) : "xm" (__x));
+  return __res;
+}
+__END_NAMESPACE_C99
+
+__BEGIN_NAMESPACE_STD
+/* Largest integer not greater than X.  */
+__MATH_INLINE double
+__NTH (floor (double __x))
+{
+  double __res;
+  __asm ("roundsd $1, %1, %0" : "=x" (__res) : "xm" (__x));
+  return __res;
+}
+__END_NAMESPACE_STD
+
+__BEGIN_NAMESPACE_C99
+__MATH_INLINE float
+__NTH (floorf (float __x))
+{
+  float __res;
+  __asm ("roundss $1, %1, %0" : "=x" (__res) : "xm" (__x));
+  return __res;
+}
+__END_NAMESPACE_C99
+#  endif
+# endif
 
 #if ((!defined __NO_MATH_INLINES || defined __LIBC_INTERNAL_MATH_INLINES) \
      && defined __OPTIMIZE__)
