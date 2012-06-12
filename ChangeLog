@@ -1,3 +1,8 @@
+2012-06-12  Thomas Schwinge  <thomas@codesourcery.com>
+
+	* sysdeps/unix/Makefile ($(objpfx)stub-syscalls.c): Fix case for
+	non-default versions.
+
 2012-06-11  Roland McGrath  <roland@hack.frob.com>
 
 	[BZ #14218]

@@ -51,9 +51,9 @@ $(objpfx)stub-syscalls.c: $(common-objpfx)sysd-syscalls \
 		 echo "strong_alias (_no_syscall, $${call}_$${ver})"; \
 		 echo "default_symbol_version \
 		         ($${call}_$${ver}, $$call, $$ver);" ;; \
-	   *@@*) ver=$${call##*@}; call=$${call%%*@}; \
-		 echo "strong_alias (_no_syscall, $${call}_$${ver})"; \
-		 echo "symbol_version ($${call}_$${ver}, $$call, $$ver);" ;; \
+	   *@*) ver=$${call##*@}; call=$${call%%*@}; \
+		echo "strong_alias (_no_syscall, $${call}_$${ver})"; \
+		echo "symbol_version ($${call}_$${ver}, $$call, $$ver);" ;; \
 	   *) echo "weak_alias (_no_syscall, $$call)"; \
 	      echo "stub_warning ($$call)"; \
 	      echo "weak_alias (_no_syscall, __GI_$$call)" ;; \
