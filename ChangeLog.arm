@@ -1,3 +1,8 @@
+2012-06-12  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/arm/setcontext.S (__startcontext): Use
+	HIDDEN_JUMPTARGET for _exit jump.
+
 2012-05-30  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/arm/syscalls.list: Remove
