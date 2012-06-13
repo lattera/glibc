@@ -1,3 +1,8 @@
+2012-06-13  Joseph Myers  <joseph@codesourcery.com>
+
+	* data/localplt-powerpcsoft-linux-gnu.data: Allow abort and
+	soft-fp symbols to be absent.
+
 2012-06-08  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/powerpc/powerpc32/nofpu/nptl/libc.abilist:
