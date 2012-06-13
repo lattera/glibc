@@ -56,6 +56,7 @@ libc.pot: header.pot libc.pot.files
 	set `date -R`; disp="$$6"; \
 	sed -e 's/VERSION/$(version)/' \
 	    -e "s/DATE/`date +'%Y-%m-%d %H:%M'$$disp`/" \
+	    -e "s/CHARSET/UTF-8/" \
 	    $< > $@.new
 	egrep -v '\.ksh$$' $(word 2,$^) > $(objdir)/tmp-libc.pot-files
 	cd ..; $(XGETTEXT) --keyword=_ --keyword=N_ \

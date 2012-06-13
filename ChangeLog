@@ -1,3 +1,7 @@
+2012-06-13  Carlos O'Donell  <carlos_odonell@mentor.com>
+
+	* po/Makefile (libc.pot): Use UTF-8 charset.
+
 2012-06-13  Paul Pluzhnikov  <ppluzhnikov@google.com>
 
 	[BZ #14210]
