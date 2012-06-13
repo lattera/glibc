@@ -1,5 +1,5 @@
 /* Checking macros for select functions.
-   Copyright (C) 2011 Free Software Foundation, Inc.
+   Copyright (C) 2011, 2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,14 +21,15 @@
 #endif
 
 /* Helper functions to issue warnings and errors when needed.  */
-extern unsigned long int __fdelt_chk (unsigned long int __d);
-extern unsigned long int __fdelt_warn (unsigned long int __d)
+extern long int __fdelt_chk (long int __d);
+extern long int __fdelt_warn (long int __d)
   __warnattr ("bit outside of fd_set selected");
 #undef __FD_ELT
 #define	__FD_ELT(d) \
   __extension__								    \
-  ({ unsigned long int __d = (d);					    \
+  ({ long int __d = (d);						    \
      (__builtin_constant_p (__d)					    \
-      ? (__d >= __FD_SETSIZE						    \
-	 ? __fdelt_warn (__d) : (__d / __NFDBITS))			    \
+      ? (0 <= __d && __d < __FD_SETSIZE					    \
+	 ? (__d / __NFDBITS)						    \
+	 : __fdelt_warn (__d))						    \
       : __fdelt_chk (__d)); })

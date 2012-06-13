@@ -1,3 +1,12 @@
+2012-06-13  Paul Pluzhnikov  <ppluzhnikov@google.com>
+
+	[BZ #14210]
+	Suppress sign-conversion warning from FD_SET.
+	See <http://sourceware.org/ml/libc-alpha/2012-05/msg01794.html>.
+	* debug/fdelt_chk.c (__fdelt_chk): Accept and return long int,
+	not unsigned long int.
+	* misc/bits/select2.h (__fdelt_chk, __fdelt_warn, __FD_ELT): Likewise.
+
 2012-06-12  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #14050]
