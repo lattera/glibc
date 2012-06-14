@@ -51,6 +51,7 @@ licenses = freemanuals.texi lgpl-2.1.texi fdl-1.3.texi
 
 -include $(objpfx)texis
 $(objpfx)texis: texis.awk $(chapters) $(add-chapters) $(appendices) $(licenses)
+	$(make-target-directory)
 	$(AWK) -f $^ > $@.T
 	mv -f $@.T $@
 

@@ -1,3 +1,7 @@
+2012-06-14  Roland McGrath  <roland@hack.frob.com>
+
+	* manual/Makefile ($(objpfx)texis): Do $(make-target-directory).
+
 2012-06-14  Joseph Myers  <joseph@codesourcery.com>
 
 	* libm_test.inc (csqrt_test): Allow more spurious underflow
