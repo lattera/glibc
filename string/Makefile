@@ -56,7 +56,7 @@ tests		:= tester inl-tester noinl-tester testcopy test-ffs	\
 		   tst-strtok tst-strxfrm bug-strcoll1 tst-strfry	\
 		   bug-strtok1 $(addprefix test-,$(strop-tests))	\
 		   bug-envz1 tst-strxfrm2 tst-endian tst-svc2		\
-		   bug-strstr1 bug-strchr1
+		   bug-strstr1 bug-strchr1 tst-strtok_r
 
 
 include ../Rules

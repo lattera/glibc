@@ -1,6 +1,6 @@
 /* strtok (str, delim) -- Return next DELIM separated token from STR.
    For AMD x86-64.
-   Copyright (C) 1998,2000-2003,2005,2006 Free Software Foundation, Inc.
+   Copyright (C) 1998-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Based on i686 version contributed by Ulrich Drepper
    <drepper@cygnus.com>, 1998.
@@ -45,9 +45,9 @@
 	.bss
 	.local save_ptr
 	ASM_TYPE_DIRECTIVE (save_ptr, @object)
-	.size save_ptr, 8
+	.size save_ptr, LP_SIZE
 save_ptr:
-	.space 8
+	.space LP_SIZE
 
 # ifdef PIC
 #  define SAVE_PTR save_ptr(%rip)
@@ -79,13 +79,12 @@ ENTRY (BP_SYM (FUNCTION))
 
 #ifdef USE_AS_STRTOK_R
 	/* The value is stored in the third argument.  */
-	movq %rdx, %rax
-	movq %rdx, %r9		/* Save value - see def. of SAVE_PTR.  */
-	movq (%rax), %rax
+	mov %RDX_LP, %R9_LP	/* Save value - see def. of SAVE_PTR.  */
+	mov (%rdx), %RAX_LP
 #else
 	/* The value is in the local variable defined above.  But
 	   we have to take care for PIC code.  */
-	movq SAVE_PTR, %rax
+	mov SAVE_PTR, %RAX_LP
 #endif
 	movq %r8, %rdx		/* Get start of string.  */
 
@@ -194,7 +193,7 @@ L(8):	cmpq %rax, %rdx
 	cmovne %rcx, %rdx
 
 	/* Store the pointer to the next character.  */
-	movq %rdx, SAVE_PTR
+	mov %RDX_LP, SAVE_PTR
 
 L(epilogue):
 	/* Remove the stopset table.  */
@@ -205,7 +204,7 @@ L(epilogue):
 L(returnNULL):
 	xorl %eax, %eax
 	/* Store the pointer to the next character.  */
-	movq %rdx, SAVE_PTR
+	mov %RDX_LP, SAVE_PTR
 	jmp L(epilogue)
 
 END (BP_SYM (FUNCTION))

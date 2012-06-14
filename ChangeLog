@@ -1,3 +1,11 @@
+2012-06-14  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #14229]
+	* string/Makefile (tests): Add tst-strtok_r.
+	* string/tst-strtok_r.c: New file.
+	* sysdeps/x86_64/strtok.S: Use LP_SIZE on save_ptr and use
+	RAX_LP/RDX_LP on SAVE_PTR.
+
 2012-06-14  Roland McGrath  <roland@hack.frob.com>
 
 	* manual/Makefile ($(objpfx)texis): Do $(make-target-directory).
