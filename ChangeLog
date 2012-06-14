@@ -1,3 +1,12 @@
+2012-06-14  Joseph Myers  <joseph@codesourcery.com>
+
+	* libm_test.inc (csqrt_test): Allow more spurious underflow
+	exceptions.
+	(j0_test): Likewise.
+	(j1_test): Likewise.
+	(y0_test): Likewise.
+	(y1_test): Likewise.
+
 2012-06-13  Carlos O'Donell  <carlos_odonell@mentor.com>
 
 	* po/Makefile (libc.pot): Use UTF-8 charset.
