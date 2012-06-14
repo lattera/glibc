@@ -194,8 +194,9 @@
 /* We need to use a frame pointer for the functions in which we
    adjust $sp around the syscall, or debug information and unwind
    information will be $sp relative and thus wrong during the syscall.  As
-   of GCC 3.4.3, this is sufficient.  */
-#define FORCE_FRAME_POINTER alloca (4)
+   of GCC 4.7, this is sufficient.  */
+#define FORCE_FRAME_POINTER						\
+  void *volatile __fp_force __attribute__ ((unused)) = alloca (4)
 
 #define internal_syscall5(ncs_init, cs_init, input, err, arg1, arg2, arg3, arg4, arg5)\
 ({									\

@@ -1,3 +1,9 @@
+2012-06-14  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/mips/mips32/sysdep.h
+	(FORCE_FRAME_POINTER): Assign result of alloca to a volatile
+	variable.
+
 2012-06-01  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/mips/mips64/n32/s_fma.c: New file.
