@@ -117,6 +117,11 @@ Version 2.16
   platform-specific functionality.  PowerPC added the first instance with a
   function to provide time base register access.  Contributed by Tulio
   Magno Quites Machado Filho.
+
+* ix86 configurations now install header files that are consistent with
+  what x86-64 configurations install.  These same header files can be used
+  for -m32, -m64, or -mx32 builds.
+  Contributed by H.J. Lu.
 
 Version 2.15
 
