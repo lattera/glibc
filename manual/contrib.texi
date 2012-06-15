@@ -50,7 +50,8 @@ committee.
 Thomas Bushnell for his contributions to Hurd.
 
 @item
-Liubov Dmitrieva for optimzed string functions on x86-64 and x86.
+Liubov Dmitrieva for optimzed string and math functions on x86-64 and
+x86.
 
 @item
 Ulrich Drepper for his many contributions in almost all parts of
@@ -78,6 +79,11 @@ and wide-character support functions (@file{wctype.h}, @file{wchar.h}, etc.).
 @item
 Paul Eggert for the @code{mktime} function and for his direction as
 part of @theglibc{} steering committee.
+
+@item
+Tulio Magno Quites Machado Filho for adding a new class of installed
+headers for low-level platform-specific functionality and one such for
+PowerPC.
 
 @item
 Mike Frysinger for his maintaining of the IA64 architecture and for
@@ -231,6 +237,9 @@ Siddhesh Poyarekar for various fixes.
 
 @item
 Pravin Satpute for writing sorting rules for some Indian languages.
+
+@item
+Will Schmidt for optimized string functions on PowerPC.
 
 @item
 Martin Schwidefsky for porting to Linux on s390

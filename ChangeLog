@@ -1,3 +1,9 @@
+2012-06-15  Andreas Jaeger  <aj@suse.de>
+
+	* manual/contrib.texi (Contributors): Update entry of Liubov
+	Dmitrieva and add entries for Will Schmidt and Tulio Magno Quites
+	Machado Filho.
+
 2012-06-15  Cyril Hrubis  <metan@ucw.cz>
 
 	* string/string.h: Add __wur to GNU version of strerror_r.
