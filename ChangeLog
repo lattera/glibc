@@ -1,3 +1,7 @@
+2012-06-15  Cyril Hrubis  <metan@ucw.cz>
+
+	* string/string.h: Add __wur to GNU version of strerror_r.
+
 2012-06-14  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #14229]
