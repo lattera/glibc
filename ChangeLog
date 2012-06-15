@@ -1,3 +1,8 @@
+2012-06-15  Chung-Lin Tang  <cltang@codesourcery.com>
+
+	* string/endian.h: Add !__ASSEMBLER__ condition for including
+	conversion interfaces.
+
 2012-06-15  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #14241]
