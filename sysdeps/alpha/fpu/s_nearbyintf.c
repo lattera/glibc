@@ -1,4 +1,4 @@
-/* Copyright (C) 2007 Free Software Foundation, Inc.
+/* Copyright (C) 2007-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Richard Henderson.
 
@@ -18,22 +18,29 @@
 
 #include <math.h>
 
-#ifdef _IEEE_FP_INEXACT
-#error "Don't compile with -mieee-with-inexact"
-#endif
-
 float
 __nearbyintf (float x)
 {
-  float two23 = copysignf (0x1.0p23, x);
-  float r;
+  if (isless (fabsf (x), 16777216.0f))	/* 1 << FLT_MANT_DIG */
+    {
+      /* Note that Alpha S_Floating is stored in registers in a
+	 restricted T_Floating format, so we don't even need to
+	 convert back to S_Floating in the end.  The initial
+	 conversion to T_Floating is needed to handle denormals.  */
 
-  r = x + two23;
-  r = r - two23;
+      float tmp1, tmp2, new_x;
 
-  /* nearbyint(-0.1) == -0, and in general we'll always have the same sign
-     as our input.  */
-  return copysign (r, x);
+      __asm ("cvtst/s %3,%2\n\t"
+	     "cvttq/svd %2,%1\n\t"
+	     "cvtqt/d %1,%0\n\t"
+	     : "=f"(new_x), "=&f"(tmp1), "=&f"(tmp2)
+	     : "f"(x));
+
+      /* nearbyintf(-0.1) == -0, and in general we'll always have the same
+	 sign as our input.  */
+      x = copysignf(new_x, x);
+    }
+  return x;
 }
 
 weak_alias (__nearbyintf, nearbyintf)

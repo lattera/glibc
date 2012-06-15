@@ -1,4 +1,4 @@
-/* Copyright (C) 2007 Free Software Foundation, Inc.
+/* Copyright (C) 2000-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Richard Henderson.
 
@@ -19,22 +19,23 @@
 #include <math.h>
 #include <math_ldbl_opt.h>
 
-#ifdef _IEEE_FP_INEXACT
-#error "Don't compile with -mieee-with-inexact"
-#endif
 
 double
 __nearbyint (double x)
 {
-  double two52 = copysign (0x1.0p52, x);
-  double r;
-  
-  r = x + two52;
-  r = r - two52;
+  if (isless (fabs (x), 9007199254740992.0))	/* 1 << DBL_MANT_DIG */
+    {
+      double tmp1, new_x;
+      __asm ("cvttq/svd %2,%1\n\t"
+	     "cvtqt/d %1,%0\n\t"
+	     : "=f"(new_x), "=&f"(tmp1)
+	     : "f"(x));
 
-  /* nearbyint(-0.1) == -0, and in general we'll always have the same sign
-     as our input.  */
-  return copysign (r, x);
+      /* nearbyint(-0.1) == -0, and in general we'll always have the same
+	 sign as our input.  */
+      x = copysign(new_x, x);
+    }
+  return x;
 }
 
 weak_alias (__nearbyint, nearbyint)
@@ -42,6 +43,6 @@ weak_alias (__nearbyint, nearbyint)
 strong_alias (__nearbyint, __nearbyintl)
 weak_alias (__nearbyint, nearbyintl)
 #endif
-#if LONG_DOUBLE_COMPAT(libm, GLIBC_2_1)
-compat_symbol (libm, __nearbyint, nearbyintl, GLIBC_2_1);
+#if LONG_DOUBLE_COMPAT(libm, GLIBC_2_0)
+compat_symbol (libm, __nearbyint, nearbyintl, GLIBC_2_0);
 #endif
