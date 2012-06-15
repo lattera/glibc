@@ -1,6 +1,5 @@
 /* Bit values & structures for resource limits.  Alpha/Linux version.
-   Copyright (C) 1994, 1996, 1997, 1998, 1999, 2000, 2004, 2005
-   Free Software Foundation, Inc.
+   Copyright (C) 1994-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -99,7 +98,13 @@ enum __rlimit_resource
   __RLIMIT_RTPRIO = 14,
 #define RLIMIT_RTPRIO __RLIMIT_RTPRIO
 
-  __RLIMIT_NLIMITS = 15,
+  /* Maximum CPU time in µs that a process scheduled under a real-time
+     scheduling policy may consume without making a blocking system
+     call before being forcibly descheduled.  */
+  __RLIMIT_RTTIME = 15,
+#define RLIMIT_RTTIME __RLIMIT_RTTIME
+
+  __RLIMIT_NLIMITS = 16,
   __RLIM_NLIMITS = __RLIMIT_NLIMITS
 #define RLIMIT_NLIMITS __RLIMIT_NLIMITS
 #define RLIM_NLIMITS __RLIM_NLIMITS
@@ -157,10 +162,11 @@ enum __rusage_who
 #define RUSAGE_SELF RUSAGE_SELF
 
   /* All of its terminated child processes.  */
-  RUSAGE_CHILDREN = -1,
+  RUSAGE_CHILDREN = -1
 #define RUSAGE_CHILDREN RUSAGE_CHILDREN
 
 #ifdef __USE_GNU
+  ,
   /* The calling thread.  */
   RUSAGE_THREAD = 1
 # define RUSAGE_THREAD RUSAGE_THREAD
@@ -230,3 +236,31 @@ enum __priority_which
   PRIO_USER = 2			/* WHO is a user ID.  */
 #define PRIO_USER PRIO_USER
 };
+
+
+__BEGIN_DECLS
+
+#ifdef __USE_GNU
+/* Modify and return resource limits of a process atomically.  */
+# ifndef __USE_FILE_OFFSET64
+extern int prlimit (__pid_t __pid, enum __rlimit_resource __resource,
+		    const struct rlimit *__new_limit,
+		    struct rlimit *__old_limit) __THROW;
+# else
+#  ifdef __REDIRECT_NTH
+extern int __REDIRECT_NTH (prlimit, (__pid_t __pid,
+				     enum __rlimit_resource __resource,
+				     const struct rlimit *__new_limit,
+				     struct rlimit *__old_limit), prlimit64);
+#  else
+#   define prlimit prlimit64
+#  endif
+# endif
+# ifdef __USE_LARGEFILE64
+extern int prlimit64 (__pid_t __pid, enum __rlimit_resource __resource,
+		      const struct rlimit64 *__new_limit,
+		      struct rlimit64 *__old_limit) __THROW;
+# endif
+#endif
+
+__END_DECLS

@@ -1,5 +1,4 @@
-/* Copyright (C) 1995, 1996, 1997, 2000, 2002, 2004
-   Free Software Foundation, Inc.
+/* Copyright (C) 1995-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -30,6 +29,7 @@
 #define SHM_RDONLY	010000		/* attach read-only else read-write */
 #define SHM_RND		020000		/* round attach address to SHMLBA */
 #define SHM_REMAP	040000		/* take-over region on attach */
+#define SHM_EXEC	0100000		/* execution access */
 
 /* Commands for `shmctl'.  */
 #define SHM_LOCK	11		/* lock segment (root only) */
