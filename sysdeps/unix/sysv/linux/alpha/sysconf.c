@@ -28,30 +28,6 @@ static long int linux_sysconf (int name);
 
 extern long __libc_alpha_cache_shape[4];
 
-static inline unsigned long
-implver (void)
-{
-  unsigned long i;
-#if __GNUC_PREREQ(3,3)
-  i = __builtin_alpha_implver ();
-#else
-  asm ("implver %0" : "=r" (i));
-#endif
-  return i;
-}
-
-static inline unsigned long
-amask (unsigned long x)
-{
-  unsigned long r;
-#if __GNUC_PREREQ(3,3)
-  r = __builtin_alpha_amask (x);
-#else
-  asm ("amask %1,%0" : "=r"(r) : "Ir"(x));
-#endif
-  return r;
-}
-
 /* Get the value of the system variable NAME.  */
 long int
 __sysconf (int name)
@@ -79,7 +55,7 @@ __sysconf (int name)
 	 pages or have the kernel do the timings from KSEG.  Fortunately,
 	 kernels beginning with 2.6.5 will pass us this info in auxvec.  */
 
-      switch (implver())
+      switch (__builtin_alpha_implver ())
 	{
 	case 0: /* EV4 */
 	  /* EV4/LCA45 had 8k L1 caches; EV45 had 16k L1 caches.  */
@@ -89,7 +65,7 @@ __sysconf (int name)
 	  break;
 
 	case 1: /* EV5 */
-	  if (amask (1 << 8))
+	  if (__builtin_alpha_amask (1 << 8))
 	    {
 	      /* MAX insns not present; either EV5 or EV56.  */
 	      shape_l1i = shape_l1d = CSHAPE(8*1024, 5, 1);

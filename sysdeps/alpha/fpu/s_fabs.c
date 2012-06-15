@@ -1,4 +1,4 @@
-/* Copyright (C) 2000, 2006 Free Software Foundation, Inc.
+/* Copyright (C) 2000, 2006, 2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Richard Henderson.
 
@@ -22,12 +22,7 @@
 double
 __fabs (double x)
 {
-#if __GNUC_PREREQ (2, 8)
   return __builtin_fabs (x);
-#else
-  __asm ("cpys $f31, %1, %0" : "=f" (x) : "f" (x));
-  return x;
-#endif
 }
 
 weak_alias (__fabs, fabs)

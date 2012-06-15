@@ -1,5 +1,5 @@
 /* Compatibility macros for old and new Alpha complex float ABI.
-   Copyright (C) 2004 Free Software Foundation, Inc.
+   Copyright (C) 2004-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -25,35 +25,20 @@
    follow the official Tru64 ABI, which passes the components of a complex
    as separate parameters.  */
 
-#if __GNUC_PREREQ(3,4)
-  typedef union { double d; _Complex float cf; } c1_compat;
+typedef union { double d; _Complex float cf; } c1_compat;
 # define c1_cfloat_decl(x)	double x
 # define c1_cfloat_real(x)	__real__ c1_cfloat_value (x)
 # define c1_cfloat_imag(x)	__imag__ c1_cfloat_value (x)
 # define c1_cfloat_value(x)	(((c1_compat *)(void *)&x)->cf)
 # define c1_cfloat_rettype	double
 # define c1_cfloat_return(x)	({ c1_compat _; _.cf = (x); _.d; })
+
 # define c2_cfloat_decl(x)	_Complex float x
 # define c2_cfloat_real(x)	__real__ x
 # define c2_cfloat_imag(x)	__imag__ x
 # define c2_cfloat_value(x)	x
 # define c2_cfloat_rettype	_Complex float
 # define c2_cfloat_return(x)	x
-#else
-# define c1_cfloat_decl(x)	_Complex float x
-# define c1_cfloat_real(x)	__real__ x
-# define c1_cfloat_imag(x)	__imag__ x
-# define c1_cfloat_value(x)	x
-# define c1_cfloat_rettype	_Complex float
-# define c1_cfloat_return(x)	x
-# define c2_cfloat_decl(x)	float x ## r, float x ## i
-# define c2_cfloat_real(x)	x ## r
-# define c2_cfloat_imag(x)	x ## i
-# define c2_cfloat_value(x) \
-    ({ _Complex float _; __real__ _ = x##r; __imag__ _ = x##i; _; })
-# define c2_cfloat_rettype	double _Complex
-# define c2_cfloat_return(x)	x
-#endif
 
 /* Get the proper symbol versions defined for each function.  */
 
