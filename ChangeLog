@@ -1,3 +1,11 @@
+2012-06-15  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #14241]
+	* sysdeps/ieee754/dbl-64/e_pow.c (__ieee754_pow): Use 0.0 instead
+	of ABS(x) in calculating zero to negative powers other than odd
+	integers.
+	* math/libm-test.inc (pow_test): Add more tests.
+
 2012-06-15  Andreas Jaeger  <aj@suse.de>
 
 	* manual/contrib.texi (Contributors): Update entry of Liubov

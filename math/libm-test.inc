@@ -6290,6 +6290,8 @@ pow_test (void)
   TEST_ff_f (pow, minus_zero, 11.1L, 0);
   TEST_ff_f (pow, 0, plus_infty, 0);
   TEST_ff_f (pow, minus_zero, plus_infty, 0);
+  TEST_ff_f (pow, 0, minus_infty, plus_infty, DIVIDE_BY_ZERO_EXCEPTION_OK);
+  TEST_ff_f (pow, minus_zero, minus_infty, plus_infty, DIVIDE_BY_ZERO_EXCEPTION_OK);
 
 #ifndef TEST_INLINE
   /* pow (x, +inf) == +inf for |x| > 1.  */

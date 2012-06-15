@@ -112,12 +112,12 @@ __ieee754_pow(double x, double y) {
     if (((v.i[HIGH_HALF] & 0x7fffffff) == 0x7ff00000 && v.i[LOW_HALF] != 0)
 	|| (v.i[HIGH_HALF] & 0x7fffffff) > 0x7ff00000)
       return y;
-    if (ABS(y) > 1.0e20) return (y>0)?0:1.0/ABS(x);
+    if (ABS(y) > 1.0e20) return (y>0)?0:1.0/0.0;
     k = checkint(y);
     if (k == -1)
       return y < 0 ? 1.0/x : x;
     else
-      return y < 0 ? 1.0/ABS(x) : 0.0;                               /* return 0 */
+      return y < 0 ? 1.0/0.0 : 0.0;                               /* return 0 */
   }
 
   qx = u.i[HIGH_HALF]&0x7fffffff;  /*   no sign   */
