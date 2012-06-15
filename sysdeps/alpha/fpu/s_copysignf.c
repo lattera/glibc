@@ -1,4 +1,4 @@
-/* Copyright (C) 2000 Free Software Foundation, Inc.
+/* Copyright (C) 2000, 2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Richard Henderson.
 
@@ -21,8 +21,7 @@
 float
 __copysignf (float x, float y)
 {
-  __asm ("cpys %1, %2, %0" : "=f" (x) : "f" (y), "f" (x));
-  return x;
+  return __builtin_copysignf (x, y);
 }
 
 weak_alias (__copysignf, copysignf)
