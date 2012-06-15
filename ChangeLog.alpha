@@ -1,5 +1,7 @@
 2012-06-15  Richard Henderson  <rth@twiddle.net>
 
+	* sysdeps/alpha/soft-fp/sfp-machine.h (FP_TRAPPING_EXCEPTIONS): New.
+
 	* sysdeps/alpha/fpu/s_rint.c (__rint): Handle inexact regardless
 	of -mieee-with-inexact.
 	* sysdeps/alpha/fpu/s_rintf.c (__rintf): Likewise.
