@@ -1,3 +1,10 @@
+2012-06-15  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #14050]
+	[BZ #14117]
+	* sysdeps/i386/fpu/bits/mathinline.h: Disable x87 inline
+	functions if __x86_64__ is defined.
+
 2012-06-15  Chung-Lin Tang  <cltang@codesourcery.com>
 
 	* string/endian.h: Add !__ASSEMBLER__ condition for including
