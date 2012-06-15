@@ -1,5 +1,4 @@
-/* Copyright (C) 1996,1997,1998,1999,2000,2001,2004,2010,2012
-   Free Software Foundation, Inc.
+/* Copyright (C) 1996-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -153,8 +152,7 @@ struct stat64
 #define	__S_IWRITE	0200	/* Write by owner.  */
 #define	__S_IEXEC	0100	/* Execute by owner.  */
 
-#if defined __USE_ATFILE || defined __USE_GNU
-/* XXX This will change to the macro for the next 2008 POSIX revision.  */
+#ifdef __USE_ATFILE
 # define UTIME_NOW	((1l << 30) - 1l)
 # define UTIME_OMIT	((1l << 30) - 2l)
 #endif
