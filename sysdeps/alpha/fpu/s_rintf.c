@@ -1,4 +1,4 @@
-/* Copyright (C) 2000, 2007 Free Software Foundation, Inc.
+/* Copyright (C) 2000-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Richard Henderson.
 
@@ -32,11 +32,7 @@ __rintf (float x)
       float tmp1, tmp2, new_x;
 
       __asm ("cvtst/s %3,%2\n\t"
-#ifdef _IEEE_FP_INEXACT
 	     "cvttq/svid %2,%1\n\t"
-#else
-	     "cvttq/svd %2,%1\n\t"
-#endif
 	     "cvtqt/d %1,%0\n\t"
 	     : "=f"(new_x), "=&f"(tmp1), "=&f"(tmp2)
 	     : "f"(x));

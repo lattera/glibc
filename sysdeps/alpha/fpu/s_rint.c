@@ -1,4 +1,4 @@
-/* Copyright (C) 2000, 2006, 2007 Free Software Foundation, Inc.
+/* Copyright (C) 2000-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Richard Henderson.
 
@@ -26,12 +26,7 @@ __rint (double x)
   if (isless (fabs (x), 9007199254740992.0))	/* 1 << DBL_MANT_DIG */
     {
       double tmp1, new_x;
-      __asm (
-#ifdef _IEEE_FP_INEXACT
-	     "cvttq/svid %2,%1\n\t"
-#else
-	     "cvttq/svd %2,%1\n\t"
-#endif
+      __asm ("cvttq/svid %2,%1\n\t"
 	     "cvtqt/d %1,%0\n\t"
 	     : "=f"(new_x), "=&f"(tmp1)
 	     : "f"(x));

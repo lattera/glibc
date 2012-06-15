@@ -1,3 +1,33 @@
+2012-06-15  Richard Henderson  <rth@twiddle.net>
+
+	* sysdeps/alpha/fpu/s_rint.c (__rint): Handle inexact regardless
+	of -mieee-with-inexact.
+	* sysdeps/alpha/fpu/s_rintf.c (__rintf): Likewise.
+
+	[BZ #13848]
+	* sysdeps/alpha/fpu/s_nearbyint.c (__nearbyint): Fix corner cases
+	similar to BZ#5350.
+	* sysdeps/alpha/fpu/s_nearbyintf.c (__nearbyintf): Likewise.
+
+	* sysdeps/alpha/fpu/s_copysign.c (__copysign): Use builtin.
+	* sysdeps/alpha/fpu/s_copysignf.c (__copysignf): Use builtin.
+
+	* sysdeps/unix/sysv/linux/alpha/bits/resource.h (RLIMIT_RTTIME): New.
+	(prlimit, prlimit64): New declarations.
+	* sysdeps/unix/sysv/linux/alpha/bits/shm.h (SHM_EXEC): New.
+	* sysdeps/unix/sysv/linux/alpha/bits/stat.h: Use only __USE_ATFILE
+	to protect UTIME_NOW and UTIME_OMIT.
+
+	* sysdeps/alpha/fpu/cfloat-compat.h: Remove __GNUC_PREREQ check.
+	* sysdeps/alpha/fpu/s_fabs.c (__fabs): Likewise.
+	* sysdeps/alpha/fpu/s_fabsf.c (__fabsf): Likewise.
+	* sysdeps/unix/sysv/linux/alpha/sysconf.c (implver): Remove.
+	(amask): Remove.
+	(__sysconf): Use builtins directly.
+
+	* sysdeps/alpha/bits/mathdef.h (float_t): Define as float
+	regardless of __GNUC__.
+
 2012-06-06  Richard Henderson  <rth@twiddle.net>
 
 	* sysdeps/alpha/strncmp.S: Bound count to LONG_MAX at startup.
