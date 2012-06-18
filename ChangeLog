@@ -1,6 +1,10 @@
 2012-06-18  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #14117]
+	* sysdeps/i386/fpu_control.h: Removed.
+	* sysdeps/x86_64/fpu_control.h: Moved to ...
+	* sysdeps/x86/fpu_control.h: Here.
+
 	* sysdeps/x86_64/fpu_control.h (_FPU_GETCW): Add __volatile__.
 	(_FPU_SETCW): Likewise.
 
