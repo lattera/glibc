@@ -1,3 +1,9 @@
+2012-06-18  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #14117]
+	* sysdeps/x86_64/fpu_control.h (_FPU_GETCW): Add __volatile__.
+	(_FPU_SETCW): Likewise.
+
 2012-06-15  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #14117]
