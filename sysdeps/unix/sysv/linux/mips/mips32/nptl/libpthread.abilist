@@ -262,4 +262,4 @@ GLIBC_2.4
  pthread_mutexattr_setprotocol F
  pthread_mutexattr_setrobust_np F
 _gp_disp
-  A
+ _gp_disp A

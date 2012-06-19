@@ -1,3 +1,46 @@
+2012-06-19  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/mips/mips32/nptl/ld.abilist: Update
+	_gp_disp entry.
+	* sysdeps/unix/sysv/linux/mips/mips32/nptl/libBrokenLocale.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/nptl/libanl.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/nptl/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/nptl/libcidn.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/nptl/libcrypt.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/nptl/libdl.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/nptl/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/nptl/libnsl.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/nptl/libnss_compat.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/nptl/libnss_db.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/nptl/libnss_dns.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/nptl/libnss_files.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/nptl/libnss_hesiod.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/nptl/libnss_nis.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/nptl/libnss_nisplus.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/nptl/libpthread.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/nptl/libresolv.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/nptl/librt.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/nptl/libthread_db.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/nptl/libutil.abilist:
+	Likewise.
+
 2012-06-14  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/mips/mips32/sysdep.h

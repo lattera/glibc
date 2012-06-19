@@ -49,4 +49,4 @@ GLIBC_2.7
  GLIBC_2.7 A
  __mq_open_2 F
 _gp_disp
-  A
+ _gp_disp A

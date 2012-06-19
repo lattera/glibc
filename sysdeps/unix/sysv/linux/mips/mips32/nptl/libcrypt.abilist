@@ -8,4 +8,4 @@ GLIBC_2.0
  setkey F
  setkey_r F
 _gp_disp
-  A
+ _gp_disp A

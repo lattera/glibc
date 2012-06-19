@@ -124,4 +124,4 @@ GLIBC_2.2
  xdr_obj_p F
  xdr_ypall F
 _gp_disp
-  A
+ _gp_disp A

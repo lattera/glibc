@@ -2241,4 +2241,4 @@ GLIBC_2.9
  inotify_init1 F
  pipe2 F
 _gp_disp
-  A
+ _gp_disp A

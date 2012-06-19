@@ -373,4 +373,4 @@ GLIBC_2.4
  GLIBC_2.4 A
  exp2l F
 _gp_disp
-  A
+ _gp_disp A

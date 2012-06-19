@@ -7,4 +7,4 @@ GLIBC_2.0
  logwtmp F
  openpty F
 _gp_disp
-  A
+ _gp_disp A

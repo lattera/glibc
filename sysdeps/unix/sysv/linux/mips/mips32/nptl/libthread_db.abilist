@@ -47,4 +47,4 @@ GLIBC_2.3.3
  GLIBC_2.3.3 A
  td_thr_tlsbase F
 _gp_disp
-  A
+ _gp_disp A

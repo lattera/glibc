@@ -5,4 +5,4 @@ GLIBC_2.2.3
  gai_suspend F
  getaddrinfo_a F
 _gp_disp
-  A
+ _gp_disp A
