@@ -2,7 +2,7 @@ comment_char    %
 escape_char     /
 % Magahi language locale for India.
 % Contributed by Chandan Kumar <chandankumar.093047@gmail.com>,
-# Rajesh Ranjan <rajeshkajha@yahoo.com>
+% Rajesh Ranjan <rajeshkajha@yahoo.com>
 % and Pravin Satpute <psatpute@redhat.com>
 
 LC_IDENTIFICATION

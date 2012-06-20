@@ -1,3 +1,7 @@
+2012-06-20  Petr Baudis  <pasky@ucw.cz>
+
+	* locales/mag_IN: Fix comment character.
+
 2012-06-04  Petr Baudis  <pasky@ucw.cz>
 
 	[BZ#13996]
