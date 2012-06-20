@@ -1,6 +1,8 @@
 2012-06-20  Petr Baudis  <pasky@ucw.cz>
 
 	* locales/mag_IN: Fix comment character.
+	* locales/tr_CY (LC_TIME): Remove redundant first_weekday
+	and first_workday.
 
 2012-06-04  Petr Baudis  <pasky@ucw.cz>
 
