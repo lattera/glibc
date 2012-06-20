@@ -1,3 +1,13 @@
+2012-06-20  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	[BZ #12416]
+	* Makefile (tests): Add test case.
+	* pthread_getattr_np.c (pthread_getattr_np): Deduct pages below
+	the __libc_stack_end page from stacksize.  Truncate stacksize to
+	make it page aligned when it is computed from RLIMIT_STACK.
+	* tst-pthread-getattr.c: New test case. Verify that stackaddr is
+	accessible.
+
 2012-06-07  Carlos Sánchez de La Lama  <csanchezdll@gmail.com>
 
 	[BZ #14205]
