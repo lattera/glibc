@@ -160,7 +160,7 @@ GET_PC_THUNK(reg):							      \
     call 0f;								      \
 0:  popl %ebx;								      \
     cfi_adjust_cfa_offset (-4);						      \
-    addl $_GLOBAL_OFFSET_TABLE+[.-0b], %ebx;
+    addl $_GLOBAL_OFFSET_TABLE_+[.-0b], %ebx;
 
 #else
 #define JUMPTARGET(name)	name

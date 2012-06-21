@@ -1,3 +1,8 @@
+2012-06-21  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #14278]
+	* sysdeps/i386/sysdep.h (SYSCALL_PIC_SETUP): Fix a typo.
+
 2012-06-21  Jeff Law  <law@redhat.com>
 
 	[BZ #13882]
