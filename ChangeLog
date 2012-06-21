@@ -1,5 +1,10 @@
 2012-06-21  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #14273]
+	* sysdeps/ieee754/dbl-64/wordsize-64/e_cosh.c (__ieee754_cosh):
+	Clear sign bit of 64-bit integer value before comparing against
+	overflow value.
+
 	* sysdeps/mach/configure: Regenerated.
 
 2012-06-21  H.J. Lu  <hongjiu.lu@intel.com>

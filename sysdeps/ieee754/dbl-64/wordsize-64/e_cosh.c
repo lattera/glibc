@@ -67,6 +67,7 @@ __ieee754_cosh (double x)
     /* |x| in [log(maxdouble), overflowthresold] */
 	int64_t fix;
 	EXTRACT_WORDS64(fix, x);
+	fix &= UINT64_C(0x7fffffffffffffff);
 	if (fix <= UINT64_C(0x408633ce8fb9f87d)) {
 	    w = __ieee754_exp(half*fabs(x));
 	    t = half*w;
