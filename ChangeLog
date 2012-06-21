@@ -1,3 +1,8 @@
+2012-06-21  Carlos O'Donell  <carlos_odonell@mentor.com>
+
+	* scripts/list-sources.sh: Scan PORTS for translations.
+	* po/libc.pot: Regenerated.
+
 2012-06-21  Andreas Jaeger  <aj@suse.de>
 
 	[BZ #12194]
