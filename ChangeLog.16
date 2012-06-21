@@ -12017,7 +12017,7 @@
 	* sysdeps/generic/bits/byteswap.h: Make sure result of all the
 	functions and macros is unsigned.
 
-2005-02-11  Barry deFrese  <bddebian@comcast.net>
+2005-02-11  Barry deFreese  <bddebian@comcast.net>
 
 	[BZ #722]
 	* sysdeps/mach/hurd/setresgid.c: Use weak_alias.
