@@ -1,5 +1,5 @@
 /* Call the termination functions of loaded shared objects.
-   Copyright (C) 1995,96,1998-2002,2004-2005,2009,2011
+   Copyright (C) 1995, 1996, 1998-2002, 2004-2005, 2009, 2011-2012
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -38,7 +38,7 @@ _dl_sort_fini (struct link_map **maps, size_t nmaps, char *used, Lmid_t ns)
   /* We can skip looking for the binary itself which is at the front
      of the search list for the main namespace.  */
   unsigned int i = ns == LM_ID_BASE;
-  char seen[nmaps];
+  uint16_t seen[nmaps];
   memset (seen, 0, nmaps * sizeof (seen[0]));
   while (1)
     {
@@ -78,13 +78,13 @@ _dl_sort_fini (struct link_map **maps, size_t nmaps, char *used, Lmid_t ns)
 		      used[k] = here_used;
 		    }
 
-		  if (seen[i + 1] > 1)
+		  if (seen[i + 1] > nmaps - i)
 		    {
 		      ++i;
 		      goto next_clear;
 		    }
 
-		  char this_seen = seen[i];
+		  uint16_t this_seen = seen[i];
 		  memmove (&seen[i], &seen[i + 1], (k - i) * sizeof (seen[0]));
 		  seen[k] = this_seen;
 

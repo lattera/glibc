@@ -1,5 +1,5 @@
 /* Load the dependencies of a mapped object.
-   Copyright (C) 1996-2003, 2004, 2005, 2006, 2007, 2010, 2011
+   Copyright (C) 1996-2003, 2004-2007, 2010-2012
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -632,7 +632,7 @@ Filters not supported with LD_TRACE_PRELINKING"));
       /* We can skip looking for the binary itself which is at the front
 	 of the search list.  */
       i = 1;
-      char seen[nlist];
+      uint16_t seen[nlist];
       memset (seen, 0, nlist * sizeof (seen[0]));
       while (1)
 	{
@@ -658,13 +658,13 @@ Filters not supported with LD_TRACE_PRELINKING"));
 			       (k - i) * sizeof (l_initfini[0]));
 		      l_initfini[k] = thisp;
 
-		      if (seen[i + 1] > 1)
+		      if (seen[i + 1] > nlist - i)
 			{
 			  ++i;
 			  goto next_clear;
 			}
 
-		      char this_seen = seen[i];
+		      uint16_t this_seen = seen[i];
 		      memmove (&seen[i], &seen[i + 1],
 			       (k - i) * sizeof (seen[0]));
 		      seen[k] = this_seen;

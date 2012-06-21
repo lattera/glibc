@@ -1,5 +1,5 @@
 /* Load a shared object at runtime, relocate it, and run its initializer.
-   Copyright (C) 1996-2007, 2009, 2010, 2011, 2012 Free Software Foundation, Inc.
+   Copyright (C) 1996-2007, 2009-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -325,7 +325,7 @@ dl_open_worker (void *a)
   while (l != NULL);
   if (nmaps > 1)
     {
-      char seen[nmaps];
+      uint16_t seen[nmaps];
       memset (seen, '\0', nmaps);
       size_t i = 0;
       while (1)
@@ -351,13 +351,13 @@ dl_open_worker (void *a)
 			       (k - i) * sizeof (maps[0]));
 		      maps[k] = thisp;
 
-		      if (seen[i + 1] > 1)
+		      if (seen[i + 1] > nmaps - i)
 			{
 			  ++i;
 			  goto next_clear;
 			}
 
-		      char this_seen = seen[i];
+		      uint16_t this_seen = seen[i];
 		      memmove (&seen[i], &seen[i + 1],
 			       (k - i) * sizeof (seen[0]));
 		      seen[k] = this_seen;

@@ -1,3 +1,11 @@
+2012-06-21  Jeff Law  <law@redhat.com>
+
+	[BZ #13882]
+	* elf/dl-deps.c (_dl_map_object_deps): Fix cycle detection.  Use
+	uint16_t for elements in the "seen" array to avoid char overflows.
+        * elf/dl-fini.c (_dl_sort_fini): Likewise.
+	* elf/dl-open.c (dl_open_worker): Likewise.
+
 2012-06-21  Carlos O'Donell  <carlos_odonell@mentor.com>
 
 	* scripts/list-sources.sh: Scan PORTS for translations.
