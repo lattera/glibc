@@ -1,3 +1,7 @@
+2012-06-21  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/mach/configure: Regenerated.
+
 2012-06-21  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #14278]
