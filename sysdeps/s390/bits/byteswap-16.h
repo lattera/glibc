@@ -28,7 +28,7 @@
 # if __WORDSIZE == 64
 #  define __bswap_16(x) \
      (__extension__							      \
-      ({ unsigned short int __v, __x = (x);				      \
+      ({ unsigned short int __v, __x = (unsigned short int) (x);	      \
 	 if (__builtin_constant_p (x))					      \
 	   __v = __bswap_constant_16 (__x);				      \
 	 else {								      \
@@ -41,7 +41,7 @@
 # else
 #  define __bswap_16(x) \
      (__extension__							      \
-      ({ unsigned short int __v, __x = (x);				      \
+      ({ unsigned short int __v, __x = (unsigned short int) (x);	      \
 	 if (__builtin_constant_p (x))					      \
 	   __v = __bswap_constant_16 (__x);				      \
 	 else {								      \

@@ -27,7 +27,7 @@
 
 /* Swap bytes in 16 bit value.  */
 #define __bswap_constant_16(x) \
-     ((((x) >> 8) & 0xffu) | (((x) & 0xffu) << 8))
+	((unsigned short int)((((x) >> 8) & 0xffu) | (((x) & 0xffu) << 8)))
 
 /* Get __bswap_16.  */
 #include <bits/byteswap-16.h>

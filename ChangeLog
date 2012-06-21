@@ -1,3 +1,12 @@
+2012-06-21  Andreas Jaeger  <aj@suse.de>
+
+	[BZ #12194]
+	* sysdeps/s390/bits/byteswap-16.h (__bswap_16): Avoid -Wconversion
+	warning.
+	* sysdeps/s390/bits/byteswap.h (__bswap_constant_16): Likewise.
+	* bits/byteswap-16.h (__bswap_16): Likewise.
+	* bits/byteswap.h (__bswap_constant_16): Likewise.
+
 2012-06-18  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #14117]

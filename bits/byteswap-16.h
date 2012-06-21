@@ -23,7 +23,8 @@
 #ifdef __GNUC__
 # define __bswap_16(x) \
     (__extension__							      \
-     ({ unsigned short int __bsx = (x); __bswap_constant_16 (__bsx); }))
+     ({ unsigned short int __bsx = (unsigned short int) (x);		      \
+       __bswap_constant_16 (__bsx); }))
 #else
 static __inline unsigned short int
 __bswap_16 (unsigned short int __bsx)
