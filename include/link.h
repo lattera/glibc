@@ -1,6 +1,6 @@
 /* Data structure for communication from the run-time dynamic linker for
    loaded ELF shared objects.
-   Copyright (C) 1995-2006, 2007, 2009, 2010, 2011 Free Software Foundation, Inc.
+   Copyright (C) 1995-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -191,6 +191,9 @@ struct link_map
 						 during LD_TRACE_PRELINKING=1
 						 contains any DT_SYMBOLIC
 						 libraries.  */
+    unsigned int l_free_initfini:1; /* Nonzero if l_initfini can be
+				       freed, ie. not allocated with
+				       the dummy malloc in ld.so.  */
 
     /* Collected information about own RPATH directories.  */
     struct r_search_path_struct l_rpath_dirs;
@@ -239,9 +242,6 @@ struct link_map
 
     /* List of object in order of the init and fini calls.  */
     struct link_map **l_initfini;
-    /* The init and fini list generated at startup, saved when the
-       object is also loaded dynamically.  */
-    struct link_map **l_orig_initfini;
 
     /* List of the dependencies introduced through symbol binding.  */
     struct link_map_reldeps

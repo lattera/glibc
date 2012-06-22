@@ -1,5 +1,5 @@
 /* Close a shared object opened by `_dl_open'.
-   Copyright (C) 1996-2007, 2009, 2010, 2011 Free Software Foundation, Inc.
+   Copyright (C) 1996-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -118,17 +118,8 @@ _dl_close_worker (struct link_map *map)
   if (map->l_direct_opencount > 0 || map->l_type != lt_loaded
       || dl_close_state != not_pending)
     {
-      if (map->l_direct_opencount == 0)
-	{
-	  if (map->l_type == lt_loaded)
-	    dl_close_state = rerun;
-	  else if (map->l_type == lt_library)
-	    {
-	      struct link_map **oldp = map->l_initfini;
-	      map->l_initfini = map->l_orig_initfini;
-	      _dl_scope_free (oldp);
-	    }
-	}
+      if (map->l_direct_opencount == 0 && map->l_type == lt_loaded)
+	dl_close_state = rerun;
 
       /* There are still references to this object.  Do nothing more.  */
       if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_FILES, 0))

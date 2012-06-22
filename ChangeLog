@@ -1,3 +1,14 @@
+2012-06-22  Andreas Schwab  <schwab@redhat.com>
+
+	[BZ #13579]
+	* include/link.h (struct link_map): Add l_free_initfini.
+	* elf/dl-deps.c (_dl_map_object_deps): Set it when assigning
+	l_initfini.
+	* elf/dl-close.c (_dl_close_worker): Don't free l_initfini.
+	* elf/rtld.c (dl_main): Clear it on all objects loaded on startup.
+	* elf/dl-libc.c (free_mem): Free l_initfini if l_free_initfini is
+	set.
+
 2012-06-22  Carlos O'Donell  <carlos_odonell@mentor.com>
 
 	* configure.in: Use AC_LANG_SOURCE.
