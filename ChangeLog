@@ -1,3 +1,16 @@
+2012-06-22  Nobuhiro Iwamatsu  <iwamatsu@nigauri.org>
+	    Kaz Kojima  <kkojima@rr.iij4u.or.jp>
+
+	* sysdeps/unix/sysv/linux/sh/bits/atomic.h
+	(__arch_compare_and_exchange_val_8_acq): Remove explicit nop.
+	(__arch_compare_and_exchange_val_16_acq): Likewise.
+	(__arch_compare_and_exchange_val_32_acq): Likewise.
+	(atomic_exchange_and_add): Fix gUSA sequence.
+	(atomic_add): Likewise.
+	(atomic_add_negative): Likewise.
+	(atomic_add_zero): Likewise.
+	(atomic_bit_test_set): Likewise.
+
 2012-06-22  Andreas Schwab  <schwab@redhat.com>
 
 	[BZ #13579]
