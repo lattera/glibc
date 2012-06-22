@@ -25,11 +25,17 @@ case "$prefix" in
     libc_cv_slibdir=/lib
     ;;
   esac
-  # Allow the user to override the path with --sysconfdir
+  # Allow the user to override the path with --sysconfdir.
   if test "$sysconfdir" = '${prefix}/etc'; then
     libc_cv_sysconfdir=/etc
   else
     libc_cv_sysconfdir=$sysconfdir
+   fi
+  # Allow the user to override the path with --localstatedir.
+  if test "$localstatedir" = '${prefix}/var'; then
+    libc_cv_localstatedir=/var
+  else
+    libc_cv_localstatedir=$localstatedir
    fi
   libc_cv_rootsbindir=/sbin
   ;;

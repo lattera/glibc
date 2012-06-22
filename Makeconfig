@@ -287,7 +287,7 @@ inst_sysconfdir = $(install_root)$(sysconfdir)
 
 # Directory for the database files and Makefile for nss_db.
 ifndef vardbdir
-vardbdir = /var/db
+vardbdir = $(localstatedir)/db
 endif
 inst_vardbdir = $(install_root)$(vardbdir)
 

@@ -18,6 +18,7 @@ rootsbindir = @libc_cv_rootsbindir@
 infodir = @infodir@
 includedir = @includedir@
 datarootdir = @datarootdir@
+localstatedir = @libc_cv_localstatedir@
 
 # Should we use and build ldconfig?
 use-ldconfig = @use_ldconfig@

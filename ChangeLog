@@ -1,3 +1,14 @@
+2012-06-22  Roland McGrath  <roland@hack.frob.com>
+
+	* configure.in (libc_cv_localstatedir): New substituted variable.
+	* configure: Regenerated.
+	* config.make.in (localstatedir): New variable, substituted from
+	libc_cv_localstatedir.
+	* Makeconfig (vardbdir): Use $(localstatedir) in place of /var.
+	* sysdeps/gnu/configure.in (libc_cv_localstatedir): Change
+	${prefix}/var to /var when we change ${prefix}/etc to /etc.
+	* sysdeps/gnu/configure: Regenerated.
+
 2012-06-21  Jeff Law  <law@redhat.com>
 
 	[BZ #14277]

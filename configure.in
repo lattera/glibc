@@ -2119,6 +2119,7 @@ AC_SUBST(libc_extra_cflags)
 use_ldconfig=no
 ldd_rewrite_script=no
 libc_cv_sysconfdir=$sysconfdir
+libc_cv_localstatedir=$localstatedir
 libc_cv_gcc_unwind_find_fde=no
 libc_cv_idn=no
 
@@ -2159,6 +2160,7 @@ AC_SUBST(old_glibc_headers)
 AC_SUBST(libc_cv_slibdir)
 AC_SUBST(libc_cv_localedir)
 AC_SUBST(libc_cv_sysconfdir)
+AC_SUBST(libc_cv_localstatedir)
 AC_SUBST(libc_cv_rootsbindir)
 AC_SUBST(libc_cv_forced_unwind)
 

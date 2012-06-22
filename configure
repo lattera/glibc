@@ -592,6 +592,7 @@ libc_cv_cc_sse4
 libc_cv_cpp_asm_debuginfo
 libc_cv_forced_unwind
 libc_cv_rootsbindir
+libc_cv_localstatedir
 libc_cv_sysconfdir
 libc_cv_localedir
 libc_cv_slibdir
@@ -7448,6 +7449,7 @@ fi
 use_ldconfig=no
 ldd_rewrite_script=no
 libc_cv_sysconfdir=$sysconfdir
+libc_cv_localstatedir=$localstatedir
 libc_cv_gcc_unwind_find_fde=no
 libc_cv_idn=no
 
@@ -7489,6 +7491,7 @@ $as_echo "$as_me: WARNING: *** During \"make install\" old headers from glibc 2.
   { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: *** be removed." >&5
 $as_echo "$as_me: WARNING: *** be removed." >&2;}
 fi
+
 
 
 
