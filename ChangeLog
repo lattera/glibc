@@ -1,3 +1,8 @@
+2012-06-22  Carlos O'Donell  <carlos_odonell@mentor.com>
+
+	* configure.in: Use AC_LANG_SOURCE.
+	* configure: Regenerate.
+
 2012-06-22  Roland McGrath  <roland@hack.frob.com>
 
 	* configure.in (libc_cv_localstatedir): New substituted variable.
