@@ -1,5 +1,9 @@
 2012-06-23  Thomas Schwinge  <thomas@codesourcery.com>
 
+	* sysdeps/sh/____longjmp_chk.S (CALL_FAIL): Don't plan for the call to
+	__fortify_fail returning.
+	* sysdeps/unix/sysv/linux/sh/____longjmp_chk.S (CALL_FAIL): Likewise.
+
 	* sysdeps/unix/sysv/linux/sh/____longjmp_chk.S: New file, based on
 	sysdeps/sh/____longjmp_chk.S.
 	* sysdeps/unix/sysv/linux/sh/sigaltstack-offsets.sym: New file, based

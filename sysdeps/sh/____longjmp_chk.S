@@ -1,4 +1,4 @@
-/* Copyright (C) 2009 Free Software Foundation, Inc.
+/* Copyright (C) 2009-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -33,31 +33,27 @@ longjmp_msg:
 	add	r0, r12;				\
 	bsrf	r1;					\
 	 add	r12, r4;				\
+	/* Unreachable.	 */				\
 .Lfail0:						\
-	bra	0f;					\
-	 nop;						\
 	.align	2;					\
 .Lgot:							\
 	.long	_GLOBAL_OFFSET_TABLE_;			\
 .Lstr:							\
 	.long	longjmp_msg@GOTOFF;			\
 .Lfail:							\
-	.long	__GI___fortify_fail@PLT-(.Lfail0-.);	\
-0:
+	.long	__GI___fortify_fail@PLT-(.Lfail0-.);
 #else
 # define CALL_FAIL \
 	mov.l	.Lfail, r1;				\
 	mov.l	.Lstr, r4;				\
 	jsr	@r1;					\
 	 nop;						\
-	bra	0f;					\
-	 nop;						\
+	/* Unreachable.	 */				\
 	.align	2;					\
 .Lstr:							\
 	.long	longjmp_msg;				\
 .Lfail:							\
-	.long	__fortify_fail;				\
-0:
+	.long	__fortify_fail;
 #endif
 
 #define CHECK_SP(reg) \

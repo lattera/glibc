@@ -38,30 +38,26 @@ longjmp_msg:
 	bsrf	r1;					\
 	 add	r12, r4;				\
 .Lfail0:						\
-	bra	0f;					\
-	 nop;						\
+	/* Unreachable.	 */				\
 	.align	2;					\
 .Lgot:							\
 	.long	_GLOBAL_OFFSET_TABLE_;			\
 .Lstr:							\
 	.long	longjmp_msg@GOTOFF;			\
 .Lfail:							\
-	.long	__GI___fortify_fail@PLT-(.Lfail0-.);	\
-0:
+	.long	__GI___fortify_fail@PLT-(.Lfail0-.);
 #else
 # define CALL_FAIL \
 	mov.l	.Lfail, r1;				\
 	mov.l	.Lstr, r4;				\
 	jsr	@r1;					\
 	 nop;						\
-	bra	0f;					\
-	 nop;						\
+	/* Unreachable.	 */				\
 	.align	2;					\
 .Lstr:							\
 	.long	longjmp_msg;				\
 .Lfail:							\
-	.long	__fortify_fail;				\
-0:
+	.long	__fortify_fail;
 #endif
 
 #define CHECK_SP(reg) \
