@@ -48,7 +48,7 @@ init (int *data)
 
 #ifdef SHARED
 /* This function is called to initialize the shared C library.
-   It is called just before the user _start code from sh/sh[34]/elf/start.S,
+   It is called just before the user _start code from sh/sh[34]/start.S,
    with the stack set up as that code gets it.  */
 
 /* NOTE!  The linker notices the magical name `_init' and sets the DT_INIT

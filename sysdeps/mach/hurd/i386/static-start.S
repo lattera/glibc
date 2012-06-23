@@ -1,5 +1,5 @@
 /* Startup code for statically linked Hurd/i386 binaries.
-   Copyright (C) 1998 Free Software Foundation, Inc.
+   Copyright (C) 1998-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -24,4 +24,4 @@ _start:
 	jmp _start1
 
 #define _start _start1
-#include <sysdeps/i386/elf/start.S>
+#include <sysdeps/i386/start.S>

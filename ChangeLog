@@ -1,5 +1,10 @@
 2012-06-23  Thomas Schwinge  <thomas@codesourcery.com>
 
+	* sysdeps/mach/start.c: Remove file.
+	* sysdeps/mach/hurd/i386/static-start.S: Fix start.S include.
+	* sysdeps/i386/init-first.c: Fix comment regarding start.S.
+	* sysdeps/sh/init-first.c: Likewise.
+
 	* sysdeps/sh/____longjmp_chk.S (CALL_FAIL): Preserve r12 and pr
 	registers for frame unwinding purposes, add CFI directives.
 	* sysdeps/unix/sysv/linux/sh/____longjmp_chk.S (CALL_FAIL): Likewise.
