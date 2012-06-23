@@ -1,5 +1,12 @@
 2012-06-23  Thomas Schwinge  <thomas@codesourcery.com>
 
+	* sysdeps/unix/sysv/linux/sh/____longjmp_chk.S: New file, based on
+	sysdeps/sh/____longjmp_chk.S.
+	* sysdeps/unix/sysv/linux/sh/sigaltstack-offsets.sym: New file, based
+	on sysdeps/unix/sysv/linux/x86_64/sigaltstack-offsets.sym.
+	* sysdeps/unix/sysv/linux/sh/Makefile [subdir=misc]
+	(gen-as-const-headers): Append sigaltstack-offsets.sym.
+
 	* sysdeps/sh/abort-instr.h: New file.
 	* sysdeps/unix/sysv/linux/sh/makecontext.S (.Lexitcode): Terminate the
 	process in case exit returns.
