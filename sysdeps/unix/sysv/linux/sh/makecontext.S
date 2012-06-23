@@ -36,7 +36,7 @@ ENTRY(__makecontext)
 	mov.l	@(oSS_SP,r4), r1	/* r1 <- ucb->stack_base */
 	mov.l	@(oSS_SIZE,r4), r2	/* r2 <- ucb->stack_size */
 	add	r1, r2			/* r2 <- stack_top */
-	cmp/gt	r6, r3			/* 4 > argc? */
+	cmp/gt	r3, r6			/* argc > 4? */
 	bf/s	1f
 	 shlr2	r2			/* r2 <- stack_top / 4 */
 	sub	r6, r2

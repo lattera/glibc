@@ -1,5 +1,8 @@
 2012-06-23  Thomas Schwinge  <thomas@codesourcery.com>
 
+	* sysdeps/unix/sysv/linux/sh/makecontext.S (__makecontext): Fix
+	calculation of ARGC > 4.
+
 	* sysdeps/unix/sysv/linux/sh/makecontext.S: Add comments and give more
 	meaningful names to some local labels.
 
