@@ -97,8 +97,12 @@ ENTRY(__makecontext)
 	cfi_endproc
 
 	.align	5
+	cfi_startproc
 .Lexitcode:
 #ifdef PIC
+	mov.l	r12, @-r15
+	cfi_adjust_cfa_offset (4)
+	cfi_rel_offset (r12, 0)
 	mova	.Lgot, r0
 	mov.l	.Lgot, r12
 	add	r0, r12
@@ -107,6 +111,9 @@ ENTRY(__makecontext)
 	bt/s	2f
 	 mov	r8, r4		/* r4 <- ucb->uc_link */
 	mov.l	.Lsetcontext, r1
+	sts.l	pr, @-r15
+	cfi_adjust_cfa_offset (4)
+	cfi_rel_offset (pr, 0)
 #ifdef PIC
 	bsrf	r1
 .LPCS0:
@@ -115,6 +122,10 @@ ENTRY(__makecontext)
 	jsr	@r1
 	 nop
 #endif
+        /* Restore to keep CFI/CFA balanced.  */
+	lds.l	@r15+, pr
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (pr)
 	/* If this returns (which can happen if the syscall fails) we'll exit
 	   the program with the return error value (-1).  */
 
@@ -143,7 +154,6 @@ ENTRY(__makecontext)
 .Lexit:
 	.long	HIDDEN_JUMPTARGET(exit)
 #endif
-	cfi_startproc
 PSEUDO_END(__makecontext)
 
 weak_alias (__makecontext, makecontext)

@@ -1,5 +1,12 @@
 2012-06-23  Thomas Schwinge  <thomas@codesourcery.com>
 
+	* sysdeps/sh/____longjmp_chk.S (CALL_FAIL): Preserve r12 and pr
+	registers for frame unwinding purposes, add CFI directives.
+	* sysdeps/unix/sysv/linux/sh/____longjmp_chk.S (CALL_FAIL): Likewise.
+	* sysdeps/unix/sysv/linux/sh/makecontext.S (.Lexitcode): Likewise
+	* sysdeps/unix/sysv/linux/sh/sysdep.h (SYSCALL_ERROR_HANDLER):
+	Likewise.
+
 	* sysdeps/sh/____longjmp_chk.S (CALL_FAIL): Don't plan for the call to
 	__fortify_fail returning.
 	* sysdeps/unix/sysv/linux/sh/____longjmp_chk.S (CALL_FAIL): Likewise.
