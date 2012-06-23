@@ -1,3 +1,8 @@
+2012-06-23  Thomas Schwinge  <thomas@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/sh/lowlevelrobustlock.S
+	(__lll_robust_timedlock_wait): Simplify CFI directives.
+
 2012-06-20  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	[BZ #12416]

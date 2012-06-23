@@ -139,6 +139,8 @@ __lll_robust_timedlock_wait:
 	cmp/hs	r0, r1
 	bt	3f
 
+	cfi_remember_state
+
 	mov.l	r11, @-r15
 	cfi_adjust_cfa_offset(4)
 	cfi_rel_offset (r11, 0)
@@ -258,13 +260,9 @@ __lll_robust_timedlock_wait:
 8:
 	bra	6b
 	 mov	#ETIMEDOUT, r0
+
+	cfi_restore_state
 3:
-	/* Restore initial state for invalid timeout case.  */
-	cfi_restore (r8)
-	cfi_restore (r9)
-	cfi_restore (r10)
-	cfi_restore (r11)
-	cfi_def_cfa_offset (0)
 	rts
 	 mov	#EINVAL, r0
 	cfi_endproc
