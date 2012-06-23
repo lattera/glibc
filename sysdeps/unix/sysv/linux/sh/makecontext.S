@@ -17,6 +17,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <sysdep.h>
+#include <abort-instr.h>
 
 #include "ucontext_i.h"
 
@@ -124,9 +125,9 @@ ENTRY(__makecontext)
 #endif
 	jsr	@r1
 	 mov	r0, r4
-0:
-	bra	0b
-	 nop
+	/* The 'exit' call should never return.  In case it does cause the
+	   process to terminate.  */
+	ABORT_INSTRUCTION_ASM
 
 	.align	2
 #ifdef PIC
