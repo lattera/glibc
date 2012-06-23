@@ -1,3 +1,8 @@
+2012-06-23  Thomas Schwinge  <thomas@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/sh/makecontext.S: Add comments and give more
+	meaningful names to some local labels.
+
 2012-06-22  Nobuhiro Iwamatsu  <iwamatsu@nigauri.org>
 	    Kaz Kojima  <kkojima@rr.iij4u.or.jp>
 
