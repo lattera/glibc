@@ -97,22 +97,26 @@ ENTRY(__makecontext)
 
 	.align	5
 .Lexitcode:
-	tst	r8, r8		/* ucb->uc_link == NULL? */
-	bt/s	2f
-	 mov	r8, r4		/* r4 <- ucb->uc_link */
 #ifdef PIC
 	mova	.Lgot, r0
 	mov.l	.Lgot, r12
 	add	r0, r12
+#endif
+	tst	r8, r8		/* ucb->uc_link == NULL? */
+	bt/s	2f
+	 mov	r8, r4		/* r4 <- ucb->uc_link */
 	mov.l	.Lsetcontext, r1
+#ifdef PIC
 	bsrf	r1
 .LPCS0:
 	 nop
 #else
-	mov.l	.Lsetcontext, r1
 	jsr	@r1
 	 nop
 #endif
+	/* If this returns (which can happen if the syscall fails) we'll exit
+	   the program with the return error value (-1).  */
+
 2:
 	mov.l	.Lexit, r1
 #ifdef PIC
