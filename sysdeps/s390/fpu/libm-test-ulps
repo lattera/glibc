@@ -1,9 +1,18 @@
 # Begin of automatic generation
 
 # acos_downward
+Test "acos_downward (-0) == pi/2":
+float: 1
+ifloat: 1
 Test "acos_downward (-0.5) == M_PI_6l*4.0":
 double: 1
 idouble: 1
+Test "acos_downward (-1) == pi":
+float: 1
+ifloat: 1
+Test "acos_downward (0) == pi/2":
+float: 1
+ifloat: 1
 Test "acos_downward (0.5) == M_PI_6l*2.0":
 double: 1
 float: 1
@@ -13,14 +22,34 @@ ildouble: 1
 ldouble: 1
 
 # acos_towardzero
+Test "acos_towardzero (-0) == pi/2":
+float: 1
+ifloat: 1
 Test "acos_towardzero (-0.5) == M_PI_6l*4.0":
 double: 1
 idouble: 1
+Test "acos_towardzero (-1) == pi":
+float: 1
+ifloat: 1
+Test "acos_towardzero (0) == pi/2":
+float: 1
+ifloat: 1
 Test "acos_towardzero (0.5) == M_PI_6l*2.0":
 double: 1
 float: 1
 idouble: 1
 ifloat: 1
+ildouble: 1
+ldouble: 1
+
+# acos_upward
+Test "acos_upward (-0) == pi/2":
+ildouble: 1
+ldouble: 1
+Test "acos_upward (-1) == pi":
+ildouble: 1
+ldouble: 1
+Test "acos_upward (0) == pi/2":
 ildouble: 1
 ldouble: 1
 
@@ -551,6 +580,38 @@ double: 1
 idouble: 1
 
 # ccos
+Test "Imaginary part of: ccos (-0.75 + 11357.25 i) == 9.001213196851067077465606717616495588201e4931 + 8.385498349388321535962327491346664141020e4931 i":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ccos (-0.75 + 710.5 i) == 1.347490911916428129246890157395342279438e308 + 1.255317763348154410745082950806112487736e308 i":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "Real part of: ccos (-0.75 + 89.5 i) == 2.708024460708609732016532185663087200560e38 + 2.522786001038096774676288412995370563339e38 i":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ccos (-0.75 + 89.5 i) == 2.708024460708609732016532185663087200560e38 + 2.522786001038096774676288412995370563339e38 i":
+float: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ccos (-0.75 - 11357.25 i) == 9.001213196851067077465606717616495588201e4931 - 8.385498349388321535962327491346664141020e4931 i":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ccos (-0.75 - 710.5 i) == 1.347490911916428129246890157395342279438e308 - 1.255317763348154410745082950806112487736e308 i":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "Real part of: ccos (-0.75 - 89.5 i) == 2.708024460708609732016532185663087200560e38 - 2.522786001038096774676288412995370563339e38 i":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ccos (-0.75 - 89.5 i) == 2.708024460708609732016532185663087200560e38 - 2.522786001038096774676288412995370563339e38 i":
+float: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
 Test "Real part of: ccos (-2 - 3 i) == -4.18962569096880723013255501961597373 - 9.10922789375533659797919726277886212 i":
 ildouble: 1
 ldouble: 1
@@ -567,14 +628,84 @@ ifloat: 1
 Test "Imaginary part of: ccos (0.75 + 1.25 i) == 1.38173873063425888530729933139078645 - 1.09193013555397466170919531722024128 i":
 float: 1
 ifloat: 1
+Test "Imaginary part of: ccos (0.75 + 11357.25 i) == 9.001213196851067077465606717616495588201e4931 - 8.385498349388321535962327491346664141020e4931 i":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ccos (0.75 + 710.5 i) == 1.347490911916428129246890157395342279438e308 - 1.255317763348154410745082950806112487736e308 i":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "Real part of: ccos (0.75 + 89.5 i) == 2.708024460708609732016532185663087200560e38 - 2.522786001038096774676288412995370563339e38 i":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ccos (0.75 + 89.5 i) == 2.708024460708609732016532185663087200560e38 - 2.522786001038096774676288412995370563339e38 i":
+float: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ccos (0.75 - 11357.25 i) == 9.001213196851067077465606717616495588201e4931 + 8.385498349388321535962327491346664141020e4931 i":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ccos (0.75 - 710.5 i) == 1.347490911916428129246890157395342279438e308 + 1.255317763348154410745082950806112487736e308 i":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "Real part of: ccos (0.75 - 89.5 i) == 2.708024460708609732016532185663087200560e38 + 2.522786001038096774676288412995370563339e38 i":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ccos (0.75 - 89.5 i) == 2.708024460708609732016532185663087200560e38 + 2.522786001038096774676288412995370563339e38 i":
+float: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ccos (0x1p-1074 + 1440 i) == inf - 5.981479269486130556466515778180916082415e301 i":
+double: 1
+idouble: 1
+Test "Imaginary part of: ccos (0x1p-16434 + 22730 i) == inf - 1.217853148905605987081057582351152052687e4924 i":
+ildouble: 1
+ldouble: 1
 
 # ccosh
+Test "Imaginary part of: ccosh (-11357.25 + 0.75 i) == 9.001213196851067077465606717616495588201e4931 - 8.385498349388321535962327491346664141020e4931 i":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ccosh (-11357.25 - 0.75 i) == 9.001213196851067077465606717616495588201e4931 + 8.385498349388321535962327491346664141020e4931 i":
+ildouble: 1
+ldouble: 1
 Test "Real part of: ccosh (-2 - 3 i) == -3.72454550491532256547397070325597253 + 0.511822569987384608834463849801875634 i":
 float: 1
 ifloat: 1
 ildouble: 1
 ldouble: 1
 Test "Imaginary part of: ccosh (-2 - 3 i) == -3.72454550491532256547397070325597253 + 0.511822569987384608834463849801875634 i":
+float: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ccosh (-710.5 + 0.75 i) == 1.347490911916428129246890157395342279438e308 - 1.255317763348154410745082950806112487736e308 i":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ccosh (-710.5 - 0.75 i) == 1.347490911916428129246890157395342279438e308 + 1.255317763348154410745082950806112487736e308 i":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "Real part of: ccosh (-89.5 + 0.75 i) == 2.708024460708609732016532185663087200560e38 - 2.522786001038096774676288412995370563339e38 i":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ccosh (-89.5 + 0.75 i) == 2.708024460708609732016532185663087200560e38 - 2.522786001038096774676288412995370563339e38 i":
+float: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "Real part of: ccosh (-89.5 - 0.75 i) == 2.708024460708609732016532185663087200560e38 + 2.522786001038096774676288412995370563339e38 i":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ccosh (-89.5 - 0.75 i) == 2.708024460708609732016532185663087200560e38 + 2.522786001038096774676288412995370563339e38 i":
 float: 1
 ifloat: 1
 ildouble: 1
@@ -587,6 +718,44 @@ ifloat: 1
 Test "Imaginary part of: ccosh (0.75 + 1.25 i) == 0.408242591877968807788852146397499084 + 0.780365930845853240391326216300863152 i":
 float: 1
 ifloat: 1
+Test "Imaginary part of: ccosh (11357.25 + 0.75 i) == 9.001213196851067077465606717616495588201e4931 + 8.385498349388321535962327491346664141020e4931 i":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ccosh (11357.25 - 0.75 i) == 9.001213196851067077465606717616495588201e4931 - 8.385498349388321535962327491346664141020e4931 i":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ccosh (1440 + 0x1p-1074 i) == inf + 5.981479269486130556466515778180916082415e301 i":
+double: 1
+idouble: 1
+Test "Imaginary part of: ccosh (22730 + 0x1p-16434 i) == inf + 1.217853148905605987081057582351152052687e4924 i":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ccosh (710.5 + 0.75 i) == 1.347490911916428129246890157395342279438e308 + 1.255317763348154410745082950806112487736e308 i":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ccosh (710.5 - 0.75 i) == 1.347490911916428129246890157395342279438e308 - 1.255317763348154410745082950806112487736e308 i":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "Real part of: ccosh (89.5 + 0.75 i) == 2.708024460708609732016532185663087200560e38 + 2.522786001038096774676288412995370563339e38 i":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ccosh (89.5 + 0.75 i) == 2.708024460708609732016532185663087200560e38 + 2.522786001038096774676288412995370563339e38 i":
+float: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "Real part of: ccosh (89.5 - 0.75 i) == 2.708024460708609732016532185663087200560e38 - 2.522786001038096774676288412995370563339e38 i":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ccosh (89.5 - 0.75 i) == 2.708024460708609732016532185663087200560e38 - 2.522786001038096774676288412995370563339e38 i":
+float: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
 
 # cexp
 Test "Imaginary part of: cexp (-10000 + 0x1p16383 i) == 1.045876464564882298442774542991176546722e-4343 + 4.421154026488516836023811173959413420548e-4344 i":
@@ -656,6 +825,9 @@ float: 1
 ifloat: 1
 ildouble: 1
 ldouble: 1
+Test "Imaginary part of: clog (0x1.fffffffffffffp+1023 + 0x1p+1023 i) == 709.8942846690411016323109979483151967689 + 0.4636476090008061606231772164674799632783 i":
+double: 1
+idouble: 1
 Test "Real part of: clog (0x1.fp+16383 + 0x1.fp+16383 i) == 11356.83823118610934184548269774874545400 + pi/4 i":
 ildouble: 1
 ldouble: 1
@@ -743,6 +915,9 @@ Test "Real part of: clog10 (0x1.fffffep+127 + 1.0 i) == 38.531839419103623894140
 float: 1
 ifloat: 1
 Test "Imaginary part of: clog10 (0x1.fffffffffffffp+1023 + 0x1.fffffffffffffp+1023 i) == 308.4052305577487344482591243175787477115 + pi/4*log10(e) i":
+double: 1
+idouble: 1
+Test "Imaginary part of: clog10 (0x1.fffffffffffffp+1023 + 0x1p+1023 i) == 308.3031705664207720674749211936626341569 + 0.2013595981366865903254995612594728746470 i":
 double: 1
 idouble: 1
 Test "Real part of: clog10 (0x1.fp+16383 + 0x1.fp+16383 i) == 4932.212175672014259683102930239951947672 + pi/4*log10(e) i":
@@ -981,9 +1156,9 @@ ildouble: 2
 ldouble: 2
 Test "Real part of: cpow (2 + 3 i, 4 + 0 i) == -119.0 - 120.0 i":
 double: 1
-float: 4
+float: 5
 idouble: 1
-ifloat: 4
+ifloat: 5
 ildouble: 2
 ldouble: 2
 Test "Imaginary part of: cpow (2 + 3 i, 4 + 0 i) == -119.0 - 120.0 i":
@@ -998,26 +1173,166 @@ ildouble: 1
 ldouble: 1
 
 # csin
+Test "Real part of: csin (-0.75 + 11357.25 i) == -8.385498349388321535962327491346664141020e4931 + 9.001213196851067077465606717616495588201e4931 i":
+ildouble: 1
+ldouble: 1
+Test "Real part of: csin (-0.75 + 710.5 i) == -1.255317763348154410745082950806112487736e308 + 1.347490911916428129246890157395342279438e308 i":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "Real part of: csin (-0.75 + 89.5 i) == -2.522786001038096774676288412995370563339e38 + 2.708024460708609732016532185663087200560e38 i":
+float: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: csin (-0.75 + 89.5 i) == -2.522786001038096774676288412995370563339e38 + 2.708024460708609732016532185663087200560e38 i":
+ildouble: 1
+ldouble: 1
+Test "Real part of: csin (-0.75 - 11357.25 i) == -8.385498349388321535962327491346664141020e4931 - 9.001213196851067077465606717616495588201e4931 i":
+ildouble: 1
+ldouble: 1
+Test "Real part of: csin (-0.75 - 710.5 i) == -1.255317763348154410745082950806112487736e308 - 1.347490911916428129246890157395342279438e308 i":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "Real part of: csin (-0.75 - 89.5 i) == -2.522786001038096774676288412995370563339e38 - 2.708024460708609732016532185663087200560e38 i":
+float: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: csin (-0.75 - 89.5 i) == -2.522786001038096774676288412995370563339e38 - 2.708024460708609732016532185663087200560e38 i":
+ildouble: 1
+ldouble: 1
 Test "Imaginary part of: csin (-2 - 3 i) == -9.15449914691142957346729954460983256 + 4.16890695996656435075481305885375484 i":
 ildouble: 1
 ldouble: 1
 Test "Real part of: csin (0.75 + 1.25 i) == 1.28722291002649188575873510790565441 + 1.17210635989270256101081285116138863 i":
 ildouble: 1
 ldouble: 1
+Test "Real part of: csin (0.75 + 11357.25 i) == 8.385498349388321535962327491346664141020e4931 + 9.001213196851067077465606717616495588201e4931 i":
+ildouble: 1
+ldouble: 1
+Test "Real part of: csin (0.75 + 710.5 i) == 1.255317763348154410745082950806112487736e308 + 1.347490911916428129246890157395342279438e308 i":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "Real part of: csin (0.75 + 89.5 i) == 2.522786001038096774676288412995370563339e38 + 2.708024460708609732016532185663087200560e38 i":
+float: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: csin (0.75 + 89.5 i) == 2.522786001038096774676288412995370563339e38 + 2.708024460708609732016532185663087200560e38 i":
+ildouble: 1
+ldouble: 1
+Test "Real part of: csin (0.75 - 11357.25 i) == 8.385498349388321535962327491346664141020e4931 - 9.001213196851067077465606717616495588201e4931 i":
+ildouble: 1
+ldouble: 1
+Test "Real part of: csin (0.75 - 710.5 i) == 1.255317763348154410745082950806112487736e308 - 1.347490911916428129246890157395342279438e308 i":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "Real part of: csin (0.75 - 89.5 i) == 2.522786001038096774676288412995370563339e38 - 2.708024460708609732016532185663087200560e38 i":
+float: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: csin (0.75 - 89.5 i) == 2.522786001038096774676288412995370563339e38 - 2.708024460708609732016532185663087200560e38 i":
+ildouble: 1
+ldouble: 1
+Test "Real part of: csin (0x1p-1074 + 1440 i) == 5.981479269486130556466515778180916082415e301 + inf i":
+double: 1
+idouble: 1
+Test "Real part of: csin (0x1p-16434 + 22730 i) == 1.217853148905605987081057582351152052687e4924 + inf i":
+ildouble: 1
+ldouble: 1
 
 # csinh
+Test "Imaginary part of: csinh (-11357.25 + 0.75 i) == -9.001213196851067077465606717616495588201e4931 + 8.385498349388321535962327491346664141020e4931 i":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: csinh (-11357.25 - 0.75 i) == -9.001213196851067077465606717616495588201e4931 - 8.385498349388321535962327491346664141020e4931 i":
+ildouble: 1
+ldouble: 1
 Test "Real part of: csinh (-2 - 3 i) == 3.59056458998577995201256544779481679 - 0.530921086248519805267040090660676560 i":
 ildouble: 1
 ldouble: 1
 Test "Imaginary part of: csinh (-2 - 3 i) == 3.59056458998577995201256544779481679 - 0.530921086248519805267040090660676560 i":
 double: 1
 idouble: 1
+Test "Imaginary part of: csinh (-710.5 + 0.75 i) == -1.347490911916428129246890157395342279438e308 + 1.255317763348154410745082950806112487736e308 i":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: csinh (-710.5 - 0.75 i) == -1.347490911916428129246890157395342279438e308 - 1.255317763348154410745082950806112487736e308 i":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "Real part of: csinh (-89.5 + 0.75 i) == -2.708024460708609732016532185663087200560e38 + 2.522786001038096774676288412995370563339e38 i":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: csinh (-89.5 + 0.75 i) == -2.708024460708609732016532185663087200560e38 + 2.522786001038096774676288412995370563339e38 i":
+float: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "Real part of: csinh (-89.5 - 0.75 i) == -2.708024460708609732016532185663087200560e38 - 2.522786001038096774676288412995370563339e38 i":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: csinh (-89.5 - 0.75 i) == -2.708024460708609732016532185663087200560e38 - 2.522786001038096774676288412995370563339e38 i":
+float: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
 Test "Real part of: csinh (0.75 + 1.25 i) == 0.259294854551162779153349830618433028 + 1.22863452409509552219214606515777594 i":
 float: 1
 ifloat: 1
 Test "Imaginary part of: csinh (0.75 + 1.25 i) == 0.259294854551162779153349830618433028 + 1.22863452409509552219214606515777594 i":
 float: 1
 ifloat: 1
+Test "Imaginary part of: csinh (11357.25 + 0.75 i) == 9.001213196851067077465606717616495588201e4931 + 8.385498349388321535962327491346664141020e4931 i":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: csinh (11357.25 - 0.75 i) == 9.001213196851067077465606717616495588201e4931 - 8.385498349388321535962327491346664141020e4931 i":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: csinh (1440 + 0x1p-1074 i) == inf + 5.981479269486130556466515778180916082415e301 i":
+double: 1
+idouble: 1
+Test "Imaginary part of: csinh (22730 + 0x1p-16434 i) == inf + 1.217853148905605987081057582351152052687e4924 i":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: csinh (710.5 + 0.75 i) == 1.347490911916428129246890157395342279438e308 + 1.255317763348154410745082950806112487736e308 i":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: csinh (710.5 - 0.75 i) == 1.347490911916428129246890157395342279438e308 - 1.255317763348154410745082950806112487736e308 i":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "Real part of: csinh (89.5 + 0.75 i) == 2.708024460708609732016532185663087200560e38 + 2.522786001038096774676288412995370563339e38 i":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: csinh (89.5 + 0.75 i) == 2.708024460708609732016532185663087200560e38 + 2.522786001038096774676288412995370563339e38 i":
+float: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "Real part of: csinh (89.5 - 0.75 i) == 2.708024460708609732016532185663087200560e38 - 2.522786001038096774676288412995370563339e38 i":
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: csinh (89.5 - 0.75 i) == 2.708024460708609732016532185663087200560e38 - 2.522786001038096774676288412995370563339e38 i":
+float: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
 
 # csqrt
 Test "Real part of: csqrt (-2 + 3 i) == 0.89597747612983812471573375529004348 + 1.6741492280355400404480393008490519 i":
@@ -1223,12 +1538,26 @@ idouble: 1
 Test "exp10 (-1) == 0.1":
 double: 2
 idouble: 2
+Test "exp10 (-305) == 1.0e-305":
+double: 1
+idouble: 1
+Test "exp10 (-36) == 1.0e-36":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
 Test "exp10 (0.75) == 5.62341325190349080394951039776481231":
 double: 1
 idouble: 1
 Test "exp10 (3) == 1000":
 double: 6
 idouble: 6
+ildouble: 1
+ldouble: 1
+Test "exp10 (36) == 1.0e36":
+double: 1
+idouble: 1
+Test "exp10 (4932) == 1.0e4932":
 ildouble: 1
 ldouble: 1
 
@@ -1279,6 +1608,9 @@ idouble: 1
 ifloat: 1
 ildouble: 1
 ldouble: 1
+Test "expm1 (500.0) == 1.4035922178528374107397703328409120821806e+217":
+double: 1
+idouble: 1
 
 # gamma
 Test "gamma (-0.5) == log(2*sqrt(pi))":
@@ -2094,6 +2426,10 @@ ifloat: 1
 ildouble: 1
 ldouble: 1
 
+Function: "acos_upward":
+ildouble: 1
+ldouble: 1
+
 Function: "asin_downward":
 double: 1
 float: 1
@@ -2217,7 +2553,9 @@ ildouble: 1
 ldouble: 1
 
 Function: Imaginary part of "ccos":
+double: 1
 float: 1
+idouble: 1
 ifloat: 1
 ildouble: 1
 ldouble: 1
@@ -2231,7 +2569,9 @@ ildouble: 1
 ldouble: 1
 
 Function: Imaginary part of "ccosh":
+double: 1
 float: 1
+idouble: 1
 ifloat: 1
 ildouble: 1
 ldouble: 1
@@ -2259,6 +2599,10 @@ idouble: 1
 ifloat: 1
 ildouble: 1
 ldouble: 1
+
+Function: Imaginary part of "clog":
+double: 1
+idouble: 1
 
 Function: Real part of "clog10":
 double: 1
@@ -2328,9 +2672,9 @@ ldouble: 1
 
 Function: Real part of "cpow":
 double: 2
-float: 4
+float: 5
 idouble: 2
-ifloat: 4
+ifloat: 5
 ildouble: 11
 ldouble: 11
 
@@ -2343,6 +2687,10 @@ ildouble: 1
 ldouble: 1
 
 Function: Real part of "csin":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
 ildouble: 1
 ldouble: 1
 
@@ -2361,6 +2709,8 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
+ildouble: 1
+ldouble: 1
 
 Function: Real part of "csqrt":
 double: 1

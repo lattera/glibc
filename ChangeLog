@@ -1,3 +1,7 @@
+2012-06-25  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/s390/fpu/libm-test-ulps: Update.
+
 2012-06-23  Andreas Schwab  <schwab@linux-m68k.org>
 	    Thomas Schwinge  <thomas@codesourcery.com>
 
