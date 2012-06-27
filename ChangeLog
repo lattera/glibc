@@ -1,3 +1,7 @@
+2012-06-27  Andreas Jaeger  <aj@suse.de>
+
+	* manual/contrib.texi (Contributors): Add Samuel Thibault.
+
 2012-06-25  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/s390/fpu/libm-test-ulps: Update.

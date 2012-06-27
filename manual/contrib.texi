@@ -278,6 +278,9 @@ Ian Lance Taylor for contributing the port to the MIPS DECStation
 running Ultrix 4 (@code{mips-dec-ultrix4}).
 
 @item
+Samuel Thibault for improving the Hurd port.
+
+@item
 Tom Quinn for contributing the startup code to support SunOS shared
 libraries and the port to SGI machines running Irix 4
 (@code{mips-sgi-irix4}).
