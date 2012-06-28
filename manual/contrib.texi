@@ -236,15 +236,32 @@ Marek Polacek for various fixes.
 Siddhesh Poyarekar for various fixes.
 
 @item
+Tom Quinn for contributing the startup code to support SunOS shared
+libraries and the port to SGI machines running Irix 4
+(@code{mips-sgi-irix4}).
+
+@item
 Pravin Satpute for writing sorting rules for some Indian languages.
+
+@item
+Douglas C. Schmidt for writing the quick sort function used as a
+fallback by @code{qsort}.
 
 @item
 Will Schmidt for optimized string functions on PowerPC.
 
 @item
+Andreas Schwab for the port to Linux/m68k
+(@code{m68k-@var{anything}-linux}) and for his direction as part of
+@theglibc{} steering committee.
+
+@item
 Martin Schwidefsky for porting to Linux on s390
 (@code{s390-@var{anything}-linux}) and s390x
 (@code{s390x-@var{anything}-linux}).
+
+@item
+Thomas Schwinge for his contribution to Hurd and the SH architecture.
 
 @item
 Carlos Eduardo Seo for optimized functions on PowerPC.
@@ -259,18 +276,6 @@ Jes Sorensen for porting to Linux on IA64 (@code{ia64-@var{anything}-linux}).
 Richard Stallman for his contribution to the @code{getopt} function.
 
 @item
-Douglas C. Schmidt for writing the quick sort function used as a
-fallback by @code{qsort}.
-
-@item
-Andreas Schwab for the port to Linux/m68k
-(@code{m68k-@var{anything}-linux}) and for his direction as part of
-@theglibc{} steering committee.
-
-@item
-Thomas Schwinge for his contribution to Hurd and the SH architecture.
-
-@item
 Alfred M. Szmidt for various fixes.
 
 @item
@@ -279,11 +284,6 @@ running Ultrix 4 (@code{mips-dec-ultrix4}).
 
 @item
 Samuel Thibault for improving the Hurd port.
-
-@item
-Tom Quinn for contributing the startup code to support SunOS shared
-libraries and the port to SGI machines running Irix 4
-(@code{mips-sgi-irix4}).
 
 @item
 Tim Waugh for the implementation of the POSIX.2 @code{wordexp}
