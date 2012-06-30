@@ -12,7 +12,9 @@ implement the operating system behavior seen by user applications.
 In GNU/Hurd systems, it works with a microkernel and Hurd servers.
 
 The GNU C Library implements much of the POSIX.1 functionality in the
-GNU/Hurd system, using configurations i[34567]86-*-gnu.
+GNU/Hurd system, using configurations i[34567]86-*-gnu.  The current
+GNU/Hurd support requires out-of-tree patches that will eventually be
+incorporated into an official GNU C Library release.
 
 When working with Linux kernels, the GNU C Library version from
 version 2.4 on is intended primarily for use with Linux kernel version
@@ -34,7 +36,7 @@ installed for the pthread library to work correctly.
 The GNU C Library supports these configurations for using Linux kernels:
 
 	i[4567]86-*-linux-gnu
-	x86_64-*-linux-gnu
+	x86_64-*-linux-gnu	Can build either x86_64 or x32
 	powerpc-*-linux-gnu	Hardware floating point required
 	powerpc64-*-linux-gnu
 	s390-*-linux-gnu
@@ -52,7 +54,7 @@ Currently these configurations have code in the `ports' add-on:
 	alpha*-*-linux-gnu	Requires Linux 2.6.9 or newer for NPTL
 	am33*-*-linux-gnu	Not currently functional
 	arm-*-linux-gnueabi	Requires Linux 2.6.16-rc1 or newer for NPTL
-	hppa-*-linux-gnu	Requires Linux 2.6.9 or newer for NPTL
+	hppa-*-linux-gnu	Not currently functional without patches.
 	ia64-*-linux-gnu
 	m68k-*-linux-gnu
 	mips-*-linux-gnu	Requires Linux 2.6.12 or newer for NPTL

@@ -1,5 +1,5 @@
-GNU C Library NEWS -- history of user-visible changes.  2012-1-27
-Copyright (C) 1992-2009, 2010, 2011, 2012 Free Software Foundation, Inc.
+GNU C Library NEWS -- history of user-visible changes.
+Copyright (C) 1992-2012 Free Software Foundation, Inc.
 See the end for copying conditions.
 
 Please send GNU C library bug reports via <http://sources.redhat.com/bugzilla/>
@@ -123,6 +123,17 @@ Version 2.16
   what x86-64 configurations install.  These same header files can be used
   for -m32, -m64, or -mx32 builds.
   Contributed by H.J. Lu.
+
+* Math library bug fixes.  A thorough audit of all open math library bugs was
+  conducted by Joseph Myers.  Significant progress was made on many math
+  library bugs resulting in more accurate exceptions and function results.
+  Many thanks to all those that contributed including Andreas Jaeger for his
+  patch review and work on the x87 trigonometric instruction issues.
+
+* Timezone data is no longer installed.  Timezone-related binaries and scripts
+  will continue to be installed.  Users should obtain their timezone data from
+  their distribution provider or from the tzdata package at
+  <ftp://munnari.oz.au/pub/>.
 
 Version 2.15
 
@@ -2087,7 +2098,7 @@ Version 1.04
 ----------------------------------------------------------------------
 Copyright information:
 
-Copyright (C) 1992-2009, 2010, 2011 Free Software Foundation, Inc.
+Copyright (C) 1992-2012 Free Software Foundation, Inc.
 
    Permission is granted to anyone to make or distribute verbatim copies
    of this document as received, in any medium, provided that the

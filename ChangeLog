@@ -1,3 +1,9 @@
+2012-06-30  Carlos O'Donell  <carlos_odonell@mentor.com>
+
+	* NEWS: Update copyright. Remove last-updated date.
+	Mention math library bug fixes and timezone data changes.
+	* README: Mention GNU/Hurd, x32, and HPPA support status.
+
 2012-06-28  Thomas Schwinge  <thomas@codesourcery.com>
 
 	* manual/contrib.texi (Contributors): Sort alphabetically by last name.
