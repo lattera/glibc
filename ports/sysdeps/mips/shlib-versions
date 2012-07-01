@@ -1,0 +1,21 @@
+mips.*-.*-linux.*	libm=6			GLIBC_2.0 GLIBC_2.2
+
+# Working mips versions were never released between 2.0 and 2.2.
+mips.*-.*-linux.*	libc=6			GLIBC_2.0 GLIBC_2.2
+
+mips.*-.*-linux.*	ld=ld.so.1		GLIBC_2.0 GLIBC_2.2
+mips.*-.*-linux.*	libdl=2			GLIBC_2.0 GLIBC_2.2
+
+mips.*-.*-linux.*	libresolv=2		GLIBC_2.0 GLIBC_2.2
+
+mips.*-.*-linux.*	libnss_files=2		GLIBC_2.0 GLIBC_2.2
+mips.*-.*-linux.*	libnss_dns=2		GLIBC_2.0 GLIBC_2.2
+mips.*-.*-linux.*	libnss_compat=2		GLIBC_2.0 GLIBC_2.2
+mips.*-.*-linux.*	libnss_nis=2		GLIBC_2.0 GLIBC_2.2
+mips.*-.*-linux.*	libnss_nisplus=2	GLIBC_2.0 GLIBC_2.2
+mips.*-.*-linux.*	libnss_ldap=2		GLIBC_2.0 GLIBC_2.2
+mips.*-.*-linux.*	libnss_hesiod=2		GLIBC_2.0 GLIBC_2.2
+
+mips.*-.*-linux.*	libnsl=1		GLIBC_2.0 GLIBC_2.2
+
+mips.*-.*-linux.*	librt=1			GLIBC_2.0 GLIBC_2.2

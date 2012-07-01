@@ -1,0 +1,4 @@
+unix/sysv/linux/tile/tilegx
+unix/sysv/linux/tile
+unix/sysv/linux/generic
+unix/sysv/linux/wordsize-64

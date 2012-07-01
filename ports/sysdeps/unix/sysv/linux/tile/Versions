@@ -1,0 +1,11 @@
+libc {
+  GLIBC_2.12 {
+    _flush_cache;
+    cacheflush;
+    fallocate64;
+    set_dataplane;
+  }
+  GLIBC_PRIVATE {
+    __syscall_error;
+  }
+}

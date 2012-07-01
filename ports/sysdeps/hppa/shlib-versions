@@ -1,0 +1,9 @@
+hppa.*-.*-.*		libm=6			GLIBC_2.2
+
+hppa.*-.*-.*		libc=6			GLIBC_2.2
+
+hppa.*-.*-.*		ld=ld.so.1		GLIBC_2.2
+
+hppa-.*-.*		libBrokenLocale=1	GLIBC_2.2
+
+hppa.*-.*-.*		libgcc_s=4

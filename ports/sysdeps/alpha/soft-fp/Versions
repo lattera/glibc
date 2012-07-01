@@ -1,0 +1,8 @@
+libc {
+  GLIBC_2.3.4 {
+    _OtsAddX; _OtsSubX; _OtsMulX; _OtsDivX;
+    _OtsEqlX; _OtsNeqX; _OtsLssX; _OtsLeqX; _OtsGtrX; _OtsGeqX;
+    _OtsCvtQX; _OtsCvtQUX; _OtsCvtXQ; _OtsNintXQ;
+    _OtsConvertFloatTX; _OtsConvertFloatXT;
+  }
+}

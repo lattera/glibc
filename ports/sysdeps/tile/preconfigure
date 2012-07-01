@@ -1,0 +1,17 @@
+# This is a -*- sh -*-
+case "$machine" in
+    tilepro)
+	base_machine=tile machine=tile/tilepro ;;
+    tilegx)
+	base_machine=tile
+	if $CC $CFLAGS $CPPFLAGS -E -dM -xc /dev/null | grep -q __LP64__; then
+	    machine=tile/tilegx/tilegx64
+	else
+	    machine=tile/tilegx/tilegx32
+	fi ;;
+esac
+case "$machine" in
+    tile*)
+	libc_commonpagesize=0x10000
+	libc_relro_required=yes ;;
+esac

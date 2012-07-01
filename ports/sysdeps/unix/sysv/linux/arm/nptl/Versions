@@ -1,0 +1,8 @@
+libc {
+  GLIBC_PRIVATE {
+    # A copy of sigaction lives in NPTL, and needs these.
+    __default_sa_restorer; __default_rt_sa_restorer;
+    __default_sa_restorer_v1; __default_rt_sa_restorer_v1;
+    __default_sa_restorer_v2; __default_rt_sa_restorer_v2;
+  }
+}

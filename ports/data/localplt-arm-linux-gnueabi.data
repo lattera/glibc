@@ -1,0 +1,13 @@
+libc.so: __signbit
+libc.so: calloc
+libc.so: free
+libc.so: fscanf
+libc.so: malloc
+libc.so: memalign
+libc.so: raise
+libc.so: realloc
+libm.so: __signbit
+libm.so: __signbitf
+libm.so: matherr
+libpthread.so: __errno_location
+libpthread.so: raise

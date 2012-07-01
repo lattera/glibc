@@ -1,0 +1,10 @@
+# File name	Caller	Syscall name	# args	Strong name	Weak names
+
+sync_file_range	-	sync_file_range	Ci:iiii	sync_file_range
+
+prlimit		EXTRA	prlimit64	i:iipp	prlimit		prlimit64
+
+fanotify_mark	EXTRA	fanotify_mark	i:iiiis	fanotify_mark
+
+fstatfs		-	fstatfs		i:ip	__fstatfs	fstatfs fstatfs64 __fstatfs64
+statfs		-	statfs		i:sp	__statfs	statfs statfs64 __statfs64

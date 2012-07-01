@@ -1,0 +1,11 @@
+GLIBC_2.0
+ GLIBC_2.0 A
+ crypt F
+ crypt_r F
+ encrypt F
+ encrypt_r F
+ fcrypt F
+ setkey F
+ setkey_r F
+_gp_disp
+ _gp_disp A

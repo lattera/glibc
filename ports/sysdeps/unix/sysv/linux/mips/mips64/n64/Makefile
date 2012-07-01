@@ -1,0 +1,1 @@
+default-abi := n64

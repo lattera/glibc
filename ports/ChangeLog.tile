@@ -1,0 +1,371 @@
+2012-05-30  Chris Metcalf  <cmetcalf@tilera.com>
+
+	* sysdeps/unix/sysv/linux/tile/tilegx/Makefile: Remove test
+	that $(subdir) is "misc" when setting abi- variables.
+
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx64/Makefile: New file.
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx32/Makefile: New file.
+
+	* sysdeps/tile/libm-test-ulps: Account for new tests.
+
+	* sysdeps/unix/sysv/linux/tile/tilegx/Makefile: New file.
+
+	* sysdeps/unix/sysv/linux/tile/nptl/pthread_once.c: Replace
+	_internal alias by hidden_def.
+
+	* sysdeps/unix/sysv/linux/tile/kernel-features.h
+	(__ASSUME_NEW_GETRLIMIT_SYSCALL, __ASSUME_TRUNCATE64_SYSCALL): Remove.
+
+2012-05-23  Chris Metcalf  <cmetcalf@tilera.com>
+
+	* sysdeps/unix/sysv/linux/tile/bits/mman.h (MADV_DONTDUMP): Define.
+	(MADV_DODUMP): Likewise.
+
+2012-05-22  Chris Metcalf  <cmetcalf@tilera.com>
+
+	* sysdeps/tile/bits/libm-test-ulps: Update.
+
+	* sysdeps/tile/bits/wordsize.h (__WORDSIZE_COMPAT32): Rename to
+	__WORDSIZE_TIME64_COMPAT32.
+
+	* sysdeps/unix/sysv/linux/tile/tilepro/nptl/libc.abilist: Update.
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx32/nptl/libc.abilist:
+	Update.
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx64/nptl/libc.abilist:
+	Update.
+
+2012-05-17  Chris Metcalf  <cmetcalf@tilera.com>
+
+	* sysdeps/tile/fegetenv.c: Version fegetenv() like fesetenv().
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx32/nptl/libm.abilist:
+	Add fegetenv.
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx64/nptl/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilepro/nptl/libm.abilist: Likewise.
+
+	* sysdeps/tile/stackguard-macros.h: Support tilegx32.
+
+	* data/c++-types-tilepro-linux-gnu.data: Renamed from
+	data/c++-types-tile-linux-gnu.data.
+	* data/c++-types-tilegx-linux-gnu.data: New file.
+
+	* sysdeps/tile/libm-test-ulps: Improved fma() and exp10().
+
+	* sysdeps/tile/s_fma.c: Use ieee754/dbl-64 without rounding or
+	exception support; it's still much better than the generic version.
+
+2012-05-16  Chris Metcalf  <cmetcalf@tilera.com>
+
+	* sysdeps/unix/sysv/linux/tile/ucontext_i: Fix tilegx32 offset bug.
+	* sysdeps/unix/sysv/linux/tile/getcontext.S: Fix tilegx32 bug
+	where we accessed "uc_flags" as an 8-byte field.
+	* sysdeps/unix/sysv/linux/tile/setcontext.S: Likewise,
+	and also fix frame code not to access stack below "sp".
+	* sysdeps/unix/sysv/linux/tile/swapcontext.S: Fix frame code not
+	to access stack below "sp", and add frame unwind to error path.
+
+2012-05-15  Chris Metcalf  <cmetcalf@tilera.com>
+
+	* sysdeps/tile/sotruss-lib.c: New file.
+
+	* sysdeps/tile/math_private.h (feraiseexcept): Use statement
+	expression syntax to avoid compiler warning.
+
+	* sysdeps/tile/libm-test-ulps: New file.
+
+	* sysdeps/tile/bits/fenv.h (__FE_UNDEFINED): New symbol.
+
+	* sysdeps/tile/ldsodefs.h (ARCH_PLTEXIT_MEMBERS): Add proper
+	const qualifier to "inregs" argument.
+
+	* sysdeps/tile/elf/stackguard-macros.h: Delete unused file.
+
+2012-05-14  Chris Metcalf  <cmetcalf@tilera.com>
+
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx32/nptl/ld.abilist:
+	New file.
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx32/nptl/libBrokenLocale.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx32/nptl/libanl.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx32/nptl/libc.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx32/nptl/libcrypt.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx32/nptl/libdl.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx32/nptl/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx32/nptl/libnsl.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx32/nptl/libpthread.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx32/nptl/libresolv.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx32/nptl/librt.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx32/nptl/libthread_db.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx32/nptl/libutil.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx64/nptl/ld.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx64/nptl/libBrokenLocale.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx64/nptl/libanl.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx64/nptl/libc.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx64/nptl/libcrypt.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx64/nptl/libdl.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx64/nptl/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx64/nptl/libnsl.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx64/nptl/libpthread.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx64/nptl/libresolv.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx64/nptl/librt.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx64/nptl/libthread_db.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx64/nptl/libutil.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilepro/nptl/ld.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilepro/nptl/libBrokenLocale.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilepro/nptl/libanl.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilepro/nptl/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilepro/nptl/libcrypt.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilepro/nptl/libdl.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilepro/nptl/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilepro/nptl/libnsl.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilepro/nptl/libpthread.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilepro/nptl/libresolv.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilepro/nptl/librt.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilepro/nptl/libthread_db.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilepro/nptl/libutil.abilist: Likewise.
+
+	* sysdeps/tile/dl-start.S: Align stack for tilegx32.
+
+2012-05-12  Chris Metcalf  <cmetcalf@tilera.com>
+
+	* sysdeps/unix/sysv/linux/tile/sys/dataplane.h: Add <features.h>.
+
+	* sysdeps/unix/sysv/linux/tile/nptl/clone.S: Add missing CFI.
+
+	* sysdeps/tile/tls-macros.h: Fix buggy TLS_GD, etc., macros.
+
+	* sysdeps/tile/tilegx/memchr.c: Use new copy_byte() function
+	to efficiently generate a large constant for masking.
+	* sysdeps/tile/tilegx/memset.c: Likewise.
+	* sysdeps/tile/tilegx/rawmemchr.c: Likewise.
+	* sysdeps/tile/tilegx/strchr.c: Likewise.
+	* sysdeps/tile/tilegx/strchrnul.c: Likewise.
+	* sysdeps/tile/tilegx/strrchr.c: Likewise.
+	* sysdeps/tile/tilegx/string-endian.h (copy_byte): New function.
+
+	* sysdeps/tile/tilegx/memcpy.c: Allow memcpy(p, p, n)
+	without corrupting memory at "p".
+
+	* sysdeps/tile/__tls_get_addr.S: Use __WORDSIZE, not _LP64.
+
+	* sysdeps/tile/stackguard-macros.h: New file.
+	* sysdeps/tile/elf/stackguard-macros.h: New stub include file.
+
+	* sysdeps/tile/Makefile (ELF_MACHINE_PLTREL_OVERLAP):
+	Remove variable no longer used by core.
+
+	* sysdeps/unix/sysv/linux/tile/bits/siginfo.h: Don't name
+	siginfo_t struct.  Add forward declaration of pthread_attr_t and
+	use it in sigevent.
+	* sysdeps/unix/sysv/linux/tile/nptl/bits/pthreadtypes.h: Name
+	pthread_attr_t union.
+
+	* sysdeps/tile/crti.S: New file, based on compiler output
+	for sysdeps/generic/initfini.c.
+	* sysdeps/tile/crtn.S: Likewise.
+	* sysdeps/tile/Makefile (CFLAGS-initfini.s): Remove variable.
+	* sysdeps/unix/sysv/linux/tile/nptl/Makefile
+	(CFLAGS-pt-initfini.s): Likewise.
+	* sysdeps/tile/elf/start.S: Moved to ...
+	* sysdeps/tile/start.S: ...here.
+
+2012-04-15  Mike Frysinger  <vapier@gentoo.org>
+
+	* sysdeps/unix/sysv/linux/tile/tilegx/register-dump.h: Include
+	<_itoa.h> instead of <stdio-common/_itoa.h>.
+	* sysdeps/unix/sysv/linux/tile/tilepro/register-dump.h: Likewise.
+
+2012-03-09  Richard Henderson  <rth@twiddle.net>
+
+	* sysdeps/tile/math_private.h: Use include_next to
+	chain math_private.h.
+
+2012-03-09  Paul Eggert  <eggert@cs.ucla.edu>
+
+	[BZ #13673]
+	Replace FSF snail mail address with URLs, as per GNU coding standards.
+
+2012-01-31  Chris Metcalf  <cmetcalf@tilera.com>
+
+	* sysdeps/tile/bits/fenv.h: Use const instead of __const.
+	* sysdeps/unix/sysv/linux/tile/sys/cachectl.h: Likewise.
+
+2012-01-31  Chris Metcalf  <cmetcalf@tilera.com>
+
+	* sysdeps/tile/sysdep.h: Use <feedback.h> not <feedback-asm.h>
+	to reflect change from gcc community giveback.
+
+2012-01-31  Chris Metcalf  <cmetcalf@tilera.com>
+
+	* sysdeps/tile/math_private.h: Ignore feraiseexcept() internally.
+
+2012-01-30  Chris Metcalf  <cmetcalf@tilera.com>
+
+	* sysdeps/tile/sysdep.h: Don't check HAVE_ELF or NO_UNDERSCORES.
+
+2012-01-07  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/tile/backtrace.c: Use x86_64 version of backtrace.c.
+
+2011-12-03  Chris Metcalf  <cmetcalf@tilera.com>
+
+	* data/c++-types-tile-linux-gnu.data: New file.
+	* sysdeps/tile/Implies: New file.
+	* sysdeps/tile/Makefile: New file.
+	* sysdeps/tile/Versions: New file.
+	* sysdeps/tile/__longjmp.S: New file.
+	* sysdeps/tile/__tls_get_addr.S: New file.
+	* sysdeps/tile/_mcount.S: New file.
+	* sysdeps/tile/abort-instr.h: New file.
+	* sysdeps/tile/backtrace.c: New file.
+	* sysdeps/tile/bits/atomic.h: New file.
+	* sysdeps/tile/bits/byteswap.h: New file.
+	* sysdeps/tile/bits/endian.h: New file.
+	* sysdeps/tile/bits/fenv.h: New file.
+	* sysdeps/tile/bits/link.h: New file.
+	* sysdeps/tile/bits/mathdef.h: New file.
+	* sysdeps/tile/bits/mathinline.h: New file.
+	* sysdeps/tile/bits/setjmp.h: New file.
+	* sysdeps/tile/bsd-_setjmp.S: New file.
+	* sysdeps/tile/bsd-setjmp.S: New file.
+	* sysdeps/tile/bzero.S: New file.
+	* sysdeps/tile/dl-lookupcfg.h: New file.
+	* sysdeps/tile/dl-machine.h: New file.
+	* sysdeps/tile/dl-runtime.c: New file.
+	* sysdeps/tile/dl-start.S: New file.
+	* sysdeps/tile/dl-tls.c: New file.
+	* sysdeps/tile/dl-tls.h: New file.
+	* sysdeps/tile/dl-trampoline.S: New file.
+	* sysdeps/tile/elf/start.S: New file.
+	* sysdeps/tile/fegetenv.c: New file.
+	* sysdeps/tile/fegetround.c: New file.
+	* sysdeps/tile/feholdexcpt.c: New file.
+	* sysdeps/tile/fesetenv.c: New file.
+	* sysdeps/tile/fesetround.c: New file.
+	* sysdeps/tile/feupdateenv.c: New file.
+	* sysdeps/tile/ffs.c: New file.
+	* sysdeps/tile/ffsll.c: New file.
+	* sysdeps/tile/gccframe.h: New file.
+	* sysdeps/tile/jmpbuf-offsets.h: New file.
+	* sysdeps/tile/jmpbuf-unwind.h: New file.
+	* sysdeps/tile/ldsodefs.h: New file.
+	* sysdeps/tile/machine-gmon.h: New file.
+	* sysdeps/tile/nptl/Makefile: New file.
+	* sysdeps/tile/nptl/pthread_spin_lock.c: New file.
+	* sysdeps/tile/nptl/pthread_spin_trylock.c: New file.
+	* sysdeps/tile/nptl/pthreaddef.h: New file.
+	* sysdeps/tile/nptl/tcb-offsets.sym: New file.
+	* sysdeps/tile/nptl/tls.h: New file.
+	* sysdeps/tile/preconfigure: New file.
+	* sysdeps/tile/s_fma.c: New file.
+	* sysdeps/tile/s_fmaf.c: New file.
+	* sysdeps/tile/setjmp.S: New file.
+	* sysdeps/tile/shlib-versions: New file.
+	* sysdeps/tile/stackinfo.h: New file.
+	* sysdeps/tile/sysdep.h: New file.
+	* sysdeps/tile/tilegx/bits/atomic.h: New file.
+	* sysdeps/tile/tilegx/bits/wordsize.h: New file.
+	* sysdeps/tile/tilegx/memchr.c: New file.
+	* sysdeps/tile/tilegx/memcpy.c: New file.
+	* sysdeps/tile/tilegx/memset.c: New file.
+	* sysdeps/tile/tilegx/memusage.h: New file.
+	* sysdeps/tile/tilegx/rawmemchr.c: New file.
+	* sysdeps/tile/tilegx/strchr.c: New file.
+	* sysdeps/tile/tilegx/strchrnul.c: New file.
+	* sysdeps/tile/tilegx/string-endian.h: New file.
+	* sysdeps/tile/tilegx/strlen.c: New file.
+	* sysdeps/tile/tilegx/strrchr.c: New file.
+	* sysdeps/tile/tilegx/tilegx32/Implies: New file.
+	* sysdeps/tile/tilegx/tilegx64/Implies: New file.
+	* sysdeps/tile/tilepro/Implies: New file.
+	* sysdeps/tile/tilepro/bits/atomic.h: New file.
+	* sysdeps/tile/tilepro/bits/wordsize.h: New file.
+	* sysdeps/tile/tilepro/memchr.c: New file.
+	* sysdeps/tile/tilepro/memcpy.S: New file.
+	* sysdeps/tile/tilepro/memset.c: New file.
+	* sysdeps/tile/tilepro/memusage.h: New file.
+	* sysdeps/tile/tilepro/rawmemchr.c: New file.
+	* sysdeps/tile/tilepro/strchr.c: New file.
+	* sysdeps/tile/tilepro/strchrnul.c: New file.
+	* sysdeps/tile/tilepro/strlen.c: New file.
+	* sysdeps/tile/tilepro/strrchr.c: New file.
+	* sysdeps/tile/tls-macros.h: New file.
+	* sysdeps/tile/tst-audit.h: New file.
+	* sysdeps/unix/sysv/linux/tile/Makefile: New file.
+	* sysdeps/unix/sysv/linux/tile/Versions: New file.
+	* sysdeps/unix/sysv/linux/tile/bits/environments.h: New file.
+	* sysdeps/unix/sysv/linux/tile/bits/local_lim.h: New file.
+	* sysdeps/unix/sysv/linux/tile/bits/mman.h: New file.
+	* sysdeps/unix/sysv/linux/tile/bits/mman.h~: New file.
+	* sysdeps/unix/sysv/linux/tile/bits/sigaction.h: New file.
+	* sysdeps/unix/sysv/linux/tile/bits/siginfo.h: New file.
+	* sysdeps/unix/sysv/linux/tile/cacheflush.c: New file.
+	* sysdeps/unix/sysv/linux/tile/configure: New file.
+	* sysdeps/unix/sysv/linux/tile/configure.in: New file.
+	* sysdeps/unix/sysv/linux/tile/getcontext.S: New file.
+	* sysdeps/unix/sysv/linux/tile/kernel-features.h: New file.
+	* sysdeps/unix/sysv/linux/tile/makecontext.c: New file.
+	* sysdeps/unix/sysv/linux/tile/nptl/Makefile: New file.
+	* sysdeps/unix/sysv/linux/tile/nptl/bits/pthreadtypes.h: New file.
+	* sysdeps/unix/sysv/linux/tile/nptl/bits/semaphore.h: New file.
+	* sysdeps/unix/sysv/linux/tile/nptl/clone.S: New file.
+	* sysdeps/unix/sysv/linux/tile/nptl/createthread.c: New file.
+	* sysdeps/unix/sysv/linux/tile/nptl/fork.c: New file.
+	* sysdeps/unix/sysv/linux/tile/nptl/lowlevellock.h: New file.
+	* sysdeps/unix/sysv/linux/tile/nptl/pt-vfork.S: New file.
+	* sysdeps/unix/sysv/linux/tile/nptl/pthread_once.c: New file.
+	* sysdeps/unix/sysv/linux/tile/nptl/sysdep-cancel.h: New file.
+	* sysdeps/unix/sysv/linux/tile/nptl/vfork.S: New file.
+	* sysdeps/unix/sysv/linux/tile/nptl/waitpid.S: New file.
+	* sysdeps/unix/sysv/linux/tile/profil-counter.h: New file.
+	* sysdeps/unix/sysv/linux/tile/set_dataplane.c: New file.
+	* sysdeps/unix/sysv/linux/tile/setcontext.S: New file.
+	* sysdeps/unix/sysv/linux/tile/sigcontextinfo.h: New file.
+	* sysdeps/unix/sysv/linux/tile/swapcontext.S: New file.
+	* sysdeps/unix/sysv/linux/tile/sys/cachectl.h: New file.
+	* sysdeps/unix/sysv/linux/tile/sys/dataplane.h: New file.
+	* sysdeps/unix/sysv/linux/tile/sys/procfs.h: New file.
+	* sysdeps/unix/sysv/linux/tile/sys/ptrace.h: New file.
+	* sysdeps/unix/sysv/linux/tile/sys/reg.h: New file.
+	* sysdeps/unix/sysv/linux/tile/sys/ucontext.h: New file.
+	* sysdeps/unix/sysv/linux/tile/sys/user.h: New file.
+	* sysdeps/unix/sysv/linux/tile/syscall.S: New file.
+	* sysdeps/unix/sysv/linux/tile/sysdep.c: New file.
+	* sysdeps/unix/sysv/linux/tile/sysdep.h: New file.
+	* sysdeps/unix/sysv/linux/tile/tilegx/ioctl.S: New file.
+	* sysdeps/unix/sysv/linux/tile/tilegx/ldconfig.h: New file.
+	* sysdeps/unix/sysv/linux/tile/tilegx/register-dump.h: New file.
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx32/Implies: New file.
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx64/Implies: New file.
+	* sysdeps/unix/sysv/linux/tile/tilepro/Implies: New file.
+	* sysdeps/unix/sysv/linux/tile/tilepro/ldconfig.h: New file.
+	* sysdeps/unix/sysv/linux/tile/tilepro/register-dump.h: New file.
+	* sysdeps/unix/sysv/linux/tile/ucontext_i.h: New file.

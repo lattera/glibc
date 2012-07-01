@@ -1,0 +1,7 @@
+# File name	Caller	Syscall name	# args	Strong name	Weak names
+
+# rlimit APIs
+getrlimit	-	getrlimit	i:ip	__getrlimit	getrlimit	
+setrlimit	-	setrlimit	i:ip	__setrlimit	setrlimit	
+prlimit64	EXTRA	prlimit64	i:iipp	prlimit64
+fanotify_mark	EXTRA	fanotify_mark	i:iiiiis	fanotify_mark

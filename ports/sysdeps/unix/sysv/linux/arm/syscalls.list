@@ -1,0 +1,38 @@
+# File name	Caller	Syscall name	# args	Strong name	Weak names
+
+chown		-	chown32		i:sii	__chown		chown
+
+prlimit64	EXTRA	prlimit64	i:iipp	prlimit64
+
+fanotify_mark	EXTRA	fanotify_mark	i:iiiiis	fanotify_mark
+
+# Semaphore and shm system calls.  msgctl, shmctl, and semctl have C
+# wrappers (to set __IPC_64).
+msgget		-	msgget		i:ii	__msgget	msgget
+msgrcv		-	msgrcv		Ci:ibnii __msgrcv	msgrcv
+msgsnd		-	msgsnd		Ci:ibni	__msgsnd	msgsnd
+shmat		-	shmat		i:ipi	__shmat		shmat
+shmdt		-	shmdt		i:s	__shmdt		shmdt
+shmget		-	shmget		i:iii	__shmget	shmget
+semop		-	semop		i:ipi	__semop		semop
+semtimedop	-	semtimedop	i:ipip	semtimedop
+semget		-	semget		i:iii	__semget	semget
+
+# proper socket implementations:
+accept		-	accept		Ci:iBN	__libc_accept	__accept accept
+bind		-	bind		i:ipi	__bind		bind
+connect		-	connect		Ci:ipi	__libc_connect	__connect connect
+getpeername	-	getpeername	i:ipp	__getpeername	getpeername
+getsockname	-	getsockname	i:ipp	__getsockname	getsockname
+getsockopt	-	getsockopt	i:iiiBN	__getsockopt	getsockopt
+listen		-	listen		i:ii	__listen	listen
+recv		-	recv		Ci:ibni	__libc_recv	__recv recv
+recvfrom	-	recvfrom	Ci:ibniBN	__libc_recvfrom	__recvfrom recvfrom
+recvmsg		-	recvmsg		Ci:ipi	__libc_recvmsg	__recvmsg recvmsg
+send		-	send		Ci:ibni	__libc_send	__send send
+sendmsg		-	sendmsg		Ci:ipi	__libc_sendmsg	__sendmsg sendmsg
+sendto		-	sendto		Ci:ibnibn	__libc_sendto	__sendto sendto
+setsockopt	-	setsockopt	i:iiibn	__setsockopt	setsockopt
+shutdown	-	shutdown	i:ii	__shutdown	shutdown
+socket		-	socket		i:iii	__socket	socket
+socketpair	-	socketpair	i:iiif	__socketpair	socketpair

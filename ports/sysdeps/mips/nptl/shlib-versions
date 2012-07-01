@@ -1,0 +1,1 @@
+mips.*-.*-linux.*	libpthread=0		GLIBC_2.0 GLIBC_2.2

@@ -1,0 +1,5 @@
+GLIBC_2.0
+ GLIBC_2.0 A
+ __ctype_get_mb_cur_max F
+_gp_disp
+ _gp_disp A

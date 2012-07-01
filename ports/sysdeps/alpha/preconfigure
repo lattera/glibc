@@ -1,0 +1,7 @@
+case "$machine" in
+alpha*)		base_machine=alpha machine=alpha/$machine
+		# Parameters to allow auto-detection of -z relro.
+		libc_commonpagesize=0x2000
+		libc_relro_required=yes ;;
+esac
+

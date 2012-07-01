@@ -1,0 +1,70 @@
+# File name	Caller	Syscall name	# args	Strong name	Weak names
+
+oldmsgctl	EXTRA	msgctl		i:iip	__old_msgctl	msgctl@GLIBC_2.0
+msgget		-	msgget		i:ii	__msgget	msgget
+msgrcv		-	msgrcv		Ci:ibnii __msgrcv	msgrcv
+msgsnd		-	msgsnd		Ci:ibni	__msgsnd	msgsnd
+shmat		-	osf_shmat	i:ipi	__shmat		shmat
+oldshmctl	EXTRA	shmctl		i:iip	__old_shmctl	shmctl@GLIBC_2.0
+shmdt		-	shmdt		i:s	__shmdt		shmdt
+shmget		-	shmget		i:iii	__shmget	shmget
+semop		-	semop		i:ipi	__semop		semop
+semtimedop	-	semtimedop	i:ipip	semtimedop
+semget		-	semget		i:iii	__semget	semget
+oldsemctl	EXTRA	semctl		i:iiii	__old_semctl	semctl@GLIBC_2.0
+
+sigstack	-	sigstack	2	sigstack
+vfork		-	vfork		0	__vfork		vfork
+
+getpriority	-	getpriority	i:ii	__getpriority	getpriority
+
+# proper socket implementations:
+accept		-	accept		Ci:iBN	__libc_accept	__accept accept
+bind		-	bind		i:ipi	__bind		bind
+connect		-	connect		Ci:ipi	__libc_connect	__connect connect
+getpeername	-	getpeername	i:ipp	__getpeername	getpeername
+getsockname	-	getsockname	i:ipp	__getsockname	getsockname
+getsockopt	-	getsockopt	i:iiiBN	__getsockopt	getsockopt
+listen		-	listen		i:ii	__listen	listen
+recv		-	recv		Ci:ibni	__libc_recv	__recv recv
+recvfrom	-	recvfrom	Ci:ibniBN	__libc_recvfrom	__recvfrom recvfrom
+recvmsg		-	recvmsg		Ci:ipi	__libc_recvmsg	__recvmsg recvmsg
+send		-	send		Ci:ibni	__libc_send	__send send
+sendmsg		-	sendmsg		Ci:ipi	__libc_sendmsg	__sendmsg sendmsg
+sendto		-	sendto		Ci:ibnibn	__libc_sendto	__sendto sendto
+setsockopt	-	setsockopt	i:iiibn	__setsockopt	setsockopt
+shutdown	-	shutdown	i:ii	__shutdown	shutdown
+socket		-	socket		i:iii	__socket	socket
+socketpair	-	socketpair	i:iiif	__socketpair	socketpair
+
+ptrace		-	ptrace		4	__ptrace	ptrace
+
+# access pci space protected from machine checks:
+pciconfig_read	EXTRA	pciconfig_read	5	pciconfig_read
+pciconfig_write	EXTRA	pciconfig_write	5	pciconfig_write
+pciconfig_iobase EXTRA	pciconfig_iobase 3	__pciconfig_iobase pciconfig_iobase
+
+# support old timeval32 entry points
+osf_select	-	osf_select	C:5	__select_tv32  __select@GLIBC_2.0 select@GLIBC_2.0
+osf_gettimeofday -	osf_gettimeofday 2	__gettimeofday_tv32  __gettimeofday@GLIBC_2.0 gettimeofday@GLIBC_2.0
+osf_settimeofday -	osf_settimeofday 2	__settimeofday_tv32  settimeofday@GLIBC_2.0
+osf_getitimer	-	osf_getitimer	2	__getitimer_tv32  getitimer@GLIBC_2.0
+osf_setitimer	-	osf_setitimer	3	__setitimer_tv32  setitimer@GLIBC_2.0
+osf_utimes	-	osf_utimes	2	__utimes_tv32  utimes@GLIBC_2.0
+osf_getrusage	-	osf_getrusage	2	__getrusage_tv32  getrusage@GLIBC_2.0
+osf_wait4	-	osf_wait4	4	__wait4_tv32  wait4@GLIBC_2.0
+
+# support new timeval64 entry points
+select		-	select		C:5	__GI___select select@@GLIBC_2.1 __select@@GLIBC_2.1
+gettimeofday	-	gettimeofday	2	__GI___gettimeofday gettimeofday@@GLIBC_2.1 __gettimeofday@@GLIBC_2.1
+settimeofday	-	settimeofday	2	__settimeofday settimeofday@@GLIBC_2.1
+getitimer	-	getitimer	2	__getitimer getitimer@@GLIBC_2.1
+setitimer	-	setitimer	3	__setitimer setitimer@@GLIBC_2.1
+utimes		-	utimes		2	__utimes utimes@@GLIBC_2.1
+getrusage	-	getrusage	2	__getrusage getrusage@@GLIBC_2.1
+wait4		-	wait4		4	__wait4 wait4@@GLIBC_2.1
+
+# avoid 64-bit aliases on 32-bit statfs syscalls
+fstatfs		-	fstatfs		i:ip	__fstatfs	fstatfs
+statfs		-	statfs		i:sp	__statfs	statfs
+

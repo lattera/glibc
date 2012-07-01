@@ -1,0 +1,13 @@
+libc {
+  GLIBC_2.0 {
+    # functions with special/multiple interfaces
+    __divqu; __remqu; __divqs; __remqs; __divlu; __remlu; __divls;
+    __remls; __divl; __reml; __divq; __remq; __divqu; __remqu;
+  }
+}
+libm {
+  GLIBC_2.0 {
+    # used in inline functions.
+    __atan2;
+  }
+}
