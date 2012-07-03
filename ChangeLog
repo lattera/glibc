@@ -1,3 +1,13 @@
+2012-07-03  Andreas Jaeger  <aj@suse.de>
+
+	* po/bg.po: Update from translation team.
+	* po/cs.po: Likewise.
+	* po/de.po: Likewise.
+	* po/hr.po: Likewise.
+	* po/nl.pl: Likewise.
+	* po/pl.po: Likewise.
+	* po/vi.po: Likewise.
+
 2012-07-03  Joseph Myers  <joseph@codesourcery.com>
 
 	* Makeconfig [!+link] (+link-before-libc): New variable.
