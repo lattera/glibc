@@ -1,3 +1,16 @@
+2012-07-03  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/powerpc/dl-procinfo.c (_dl_powerpc_platforms): Add
+	"ppca2".
+	* sysdeps/powerpc/dl-procinfo.h (_DL_PLATFORMS_COUNT): Increase to
+	13.
+	(PPC_PLATFORM_PPCA2): Define.
+	(PPC_PLATFORM_PPC405): Increase value.
+	(PPC_PLATFORM_PPC440): Likewise.
+	(PPC_PLATFORM_PPC464): Likewise.
+	(PPC_PLATFORM_PPC476): Likewise.
+	(_dl_string_platform): Handle ppca2.
+
 2012-06-13  Joseph Myers  <joseph@codesourcery.com>
 
 	* data/localplt-powerpcsoft-linux-gnu.data: Allow abort and

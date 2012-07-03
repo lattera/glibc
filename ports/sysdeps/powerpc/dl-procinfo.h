@@ -1,5 +1,5 @@
 /* Processor capability information handling macros.  PowerPC version.
-   Copyright (C) 2005, 2006, 2008 Free Software Foundation, Inc.
+   Copyright (C) 2005-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -30,7 +30,7 @@
 #define HWCAP_IMPORTANT                (PPC_FEATURE_HAS_ALTIVEC \
                                + PPC_FEATURE_HAS_DFP)
 
-#define _DL_PLATFORMS_COUNT    12
+#define _DL_PLATFORMS_COUNT    13
 
 #define _DL_FIRST_PLATFORM     32
 /* Mask to filter out platforms.  */
@@ -46,10 +46,11 @@
 #define PPC_PLATFORM_CELL_BE         5
 #define PPC_PLATFORM_POWER6X         6
 #define PPC_PLATFORM_POWER7          7
-#define PPC_PLATFORM_PPC405          8
-#define PPC_PLATFORM_PPC440          9
-#define PPC_PLATFORM_PPC464          10
-#define PPC_PLATFORM_PPC476          11
+#define PPC_PLATFORM_PPCA2           8
+#define PPC_PLATFORM_PPC405          9
+#define PPC_PLATFORM_PPC440          10
+#define PPC_PLATFORM_PPC464          11
+#define PPC_PLATFORM_PPC476          12
 
 static inline const char *
 __attribute__ ((unused))
@@ -126,6 +127,10 @@ _dl_string_platform (const char *str)
                       GLRO(dl_powerpc_platforms)[PPC_PLATFORM_CELL_BE] + 3)
               == 0)
        return _DL_FIRST_PLATFORM + PPC_PLATFORM_CELL_BE;
+      else if (strcmp (str + 3,
+                      GLRO(dl_powerpc_platforms)[PPC_PLATFORM_PPCA2] + 3)
+              == 0)
+       return _DL_FIRST_PLATFORM + PPC_PLATFORM_PPCA2;
       else if (strcmp (str + 3,
                       GLRO(dl_powerpc_platforms)[PPC_PLATFORM_PPC405] + 3)
               == 0)

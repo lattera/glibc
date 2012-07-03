@@ -1,5 +1,5 @@
 /* Data for processor capability information.  PowerPC version.
-   Copyright (C) 2005, 2006, 2008 Free Software Foundation, Inc.
+   Copyright (C) 2005-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -67,7 +67,7 @@ PROCINFO_CLASS const char _dl_powerpc_cap_flags[25][10]
 #if !defined PROCINFO_DECL && defined SHARED
   ._dl_powerpc_platforms
 #else
-PROCINFO_CLASS const char _dl_powerpc_platforms[12][12]
+PROCINFO_CLASS const char _dl_powerpc_platforms[13][12]
 #endif
 #ifndef PROCINFO_DECL
 = {
@@ -79,6 +79,7 @@ PROCINFO_CLASS const char _dl_powerpc_platforms[12][12]
     [PPC_PLATFORM_CELL_BE] = "ppc-cell-be",
     [PPC_PLATFORM_POWER6X] = "power6x",
     [PPC_PLATFORM_POWER7] = "power7",
+    [PPC_PLATFORM_PPCA2] = "ppca2",
     [PPC_PLATFORM_PPC405] = "ppc405",
     [PPC_PLATFORM_PPC440] = "ppc440",
     [PPC_PLATFORM_PPC464] = "ppc464",
