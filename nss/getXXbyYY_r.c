@@ -51,7 +51,7 @@
 |*								   *|
 |* EXTRA_VARIABLES - names of optional parameter		   *|
 |*								   *|
-|* FUNCTION_NAME - alternative name of the non-reentrant function  *|
+|* FUNCTION2_NAME - alternative name of the non-reentrant function *|
 |*								   *|
 |* NEED_H_ERRNO  - an extra parameter will be passed to point to   *|
 |*		   the global `h_errno' variable.		   *|
