@@ -38,5 +38,4 @@ autom4te*.cache
 
 /linuxthreads
 /linuxthreads_db
-/ports
 /rtkaio

@@ -1,3 +1,7 @@
+2012-07-03  Mike Frysinger  <vapier@gentoo.org>
+
+	* .gitignore: Delete /ports entry.
+
 2012-07-03  Andreas Jaeger  <aj@suse.de>
 
 	* po/bg.po: Update from translation team.
