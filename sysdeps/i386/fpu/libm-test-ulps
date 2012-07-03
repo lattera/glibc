@@ -1656,8 +1656,8 @@ Test "j1 (0.75) == 0.349243602174862192523281016426251335":
 double: 1
 idouble: 1
 Test "j1 (0x1.3ffp+74) == 1.818984347516051243459364437186082741567e-12":
-float: 1
-ifloat: 1
+float: 2
+ifloat: 2
 ildouble: 1
 ldouble: 1
 Test "j1 (0x1.ff00000000002p+840) == 1.846591691699331493194965158699937660696e-127":
@@ -2359,8 +2359,8 @@ float: 1
 idouble: 1
 ifloat: 1
 Test "y0 (0x1.3ffp+74) == 1.818984347516051243459467456433028748678e-12":
-float: 1
-ifloat: 1
+float: 2
+ifloat: 2
 ildouble: 1
 ldouble: 1
 Test "y0 (0x1.ff00000000002p+840) == 1.846591691699331493194965158699937660696e-127":
@@ -2956,9 +2956,9 @@ ldouble: 2
 
 Function: "j1":
 double: 2
-float: 1
+float: 2
 idouble: 2
-ifloat: 1
+ifloat: 2
 ildouble: 1
 ldouble: 1
 
@@ -3128,9 +3128,9 @@ ldouble: 1
 
 Function: "y0":
 double: 2
-float: 1
+float: 2
 idouble: 2
-ifloat: 1
+ifloat: 2
 ildouble: 1
 ldouble: 1
 

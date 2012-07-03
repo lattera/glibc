@@ -88,7 +88,7 @@ recompute:
 	    iq[jz-1] -= i<<(8-q0);
 	    ih = iq[jz-1]>>(7-q0);
 	} 
-	else if(q0==0) ih = iq[jz-1]>>8;
+	else if(q0==0) ih = iq[jz-1]>>7;
 	else if(z>=(float)0.5) ih=2;
 
 	if(ih>0) {	/* q > 0.5 */
@@ -166,24 +166,33 @@ recompute:
 		y[0] = (ih==0)? fw: -fw; 
 		break;
 	    case 1:
-	    case 2:
-		fw = 0.0;
-		for (i=jz;i>=0;i--) fw += fq[i]; 
-		y[0] = (ih==0)? fw: -fw; 
-		fw = fq[0]-fw;
-		for (i=1;i<=jz;i++) fw += fq[i];
-		y[1] = (ih==0)? fw: -fw; 
+	    case 2:;
+#if __FLT_EVAL_METHOD__ != 0
+		volatile
+#endif
+		float fv = 0.0;
+		for (i=jz;i>=0;i--) fv += fq[i];
+		y[0] = (ih==0)? fv: -fv;
+		fv = fq[0]-fv;
+		for (i=1;i<=jz;i++) fv += fq[i];
+		y[1] = (ih==0)? fv: -fv;
 		break;
 	    case 3:	/* painful */
 		for (i=jz;i>0;i--) {
-		    fw      = fq[i-1]+fq[i]; 
-		    fq[i]  += fq[i-1]-fw;
-		    fq[i-1] = fw;
+#if __FLT_EVAL_METHOD__ != 0
+		    volatile
+#endif
+		    float fv = fq[i-1]+fq[i];
+		    fq[i]  += fq[i-1]-fv;
+		    fq[i-1] = fv;
 		}
 		for (i=jz;i>1;i--) {
-		    fw      = fq[i-1]+fq[i]; 
-		    fq[i]  += fq[i-1]-fw;
-		    fq[i-1] = fw;
+#if __FLT_EVAL_METHOD__ != 0
+		    volatile
+#endif
+		    float fv = fq[i-1]+fq[i];
+		    fq[i]  += fq[i-1]-fv;
+		    fq[i-1] = fv;
 		}
 		for (fw=0.0,i=jz;i>=2;i--) fw += fq[i]; 
 		if(ih==0) {

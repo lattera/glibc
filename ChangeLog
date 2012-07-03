@@ -1,5 +1,14 @@
 2012-07-03  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #14283]
+	* sysdeps/ieee754/flt-32/k_rem_pio2f.c (__kernel_rem_pio2f): Shift
+	by 7 not 8 to examine high bit of fractional part.  Use volatile
+	variables when splitting into final array of floats if
+	__FLT_EVAL_METHOD__ != 0.
+	* math/libm-test.inc (cos_test): Add another test.
+	(sin_test): Likewise.
+	* sysdeps/i386/fpu/libm-test-ulps: Update.
+
 	[BZ #14273]
 	* math/libm-test.inc (cosh_test): Add more tests.
 
