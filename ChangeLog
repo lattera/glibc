@@ -1,5 +1,8 @@
 2012-07-03  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #14273]
+	* math/libm-test.inc (cosh_test): Add more tests.
+
 	* version.h (RELEASE): Set to "development".
 	(VERSION): Set to "2.16.90".
 
