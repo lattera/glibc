@@ -1,5 +1,4 @@
-# Copyright (C) 1991-2000,2002,2003,2004,2005,2006,2011
-#	Free Software Foundation, Inc.
+# Copyright (C) 1991-2012 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -103,27 +102,44 @@ xtests: tests $(xtests:%=$(objpfx)%.out) $(xtests-bp.out)
 endif
 
 ifeq ($(build-programs),yes)
-binaries-all = $(others) $(sysdep-others) $(tests) $(xtests) $(test-srcs)
-binaries-static = $(others-static) $(tests-static) $(xtests-static)
+binaries-all-notests = $(others) $(sysdep-others)
+binaries-all-tests = $(tests) $(xtests) $(test-srcs)
+binaries-all = $(binaries-all-notests) $(binaries-all-tests)
+binaries-static-notests = $(others-static)
+binaries-static-tests = $(tests-static) $(xtests-static)
+binaries-static = $(binaries-static-notests) $(binaries-static-tests)
 ifeq (yesyes,$(have-fpie)$(build-shared))
 binaries-pie = $(others-pie) $(tests-pie) $(xtests-pie)
 else
 binaries-pie =
 endif
 else
-binaries-all = $(tests) $(xtests) $(test-srcs)
+binaries-all-notests =
+binaries-all-tests = $(tests) $(xtests) $(test-srcs)
+binaries-all = $(binaries-all-tests)
+binaries-static-notests =
+binaries-static-tests =
 binaries-static =
 binaries-pie =
 endif
 
-binaries-shared = $(filter-out $(binaries-pie) $(binaries-static), \
-			       $(binaries-all))
+binaries-shared-tests = $(filter-out $(binaries-pie) $(binaries-static), \
+				     $(binaries-all-tests))
+binaries-shared-notests = $(filter-out $(binaries-pie) $(binaries-static), \
+				       $(binaries-all-notests))
 
-ifneq "$(strip $(binaries-shared))" ""
-$(addprefix $(objpfx),$(binaries-shared)): %: %.o \
+ifneq "$(strip $(binaries-shared-notests))" ""
+$(addprefix $(objpfx),$(binaries-shared-notests)): %: %.o \
   $(sort $(filter $(common-objpfx)lib%,$(link-libc))) \
   $(addprefix $(csu-objpfx),start.o) $(+preinit) $(+postinit)
 	$(+link)
+endif
+
+ifneq "$(strip $(binaries-shared-tests))" ""
+$(addprefix $(objpfx),$(binaries-shared-tests)): %: %.o \
+  $(sort $(filter $(common-objpfx)lib%,$(link-libc))) \
+  $(addprefix $(csu-objpfx),start.o) $(+preinit) $(+postinit)
+	$(+link-tests)
 endif
 
 ifneq "$(strip $(binaries-pie))" ""
@@ -133,11 +149,18 @@ $(addprefix $(objpfx),$(binaries-pie)): %: %.o \
 	$(+link-pie)
 endif
 
-ifneq "$(strip $(binaries-static))" ""
-$(addprefix $(objpfx),$(binaries-static)): %: %.o \
+ifneq "$(strip $(binaries-static-notests))" ""
+$(addprefix $(objpfx),$(binaries-static-notests)): %: %.o \
   $(sort $(filter $(common-objpfx)lib%,$(link-libc-static))) \
   $(addprefix $(csu-objpfx),start.o) $(+preinit) $(+postinit)
 	$(+link-static)
+endif
+
+ifneq "$(strip $(binaries-static-tests))" ""
+$(addprefix $(objpfx),$(binaries-static-tests)): %: %.o \
+  $(sort $(filter $(common-objpfx)lib%,$(link-libc-static-tests))) \
+  $(addprefix $(csu-objpfx),start.o) $(+preinit) $(+postinit)
+	$(+link-static-tests)
 endif
 
 ifeq ($(build-bounded),yes)

@@ -71,6 +71,8 @@ others		= sprof sln pldd
 install-bin	= sprof pldd
 others-static   = sln
 install-rootsbin = sln
+sln-modules	:= static-stubs
+extra-objs	+= $(sln-modules:=.o)
 
 ifeq (yes,$(use-ldconfig))
 ifeq (yes,$(build-shared))
@@ -78,7 +80,7 @@ others-static	+= ldconfig
 others		+= ldconfig
 install-rootsbin += ldconfig
 
-ldconfig-modules := cache readlib xmalloc xstrdup chroot_canon
+ldconfig-modules := cache readlib xmalloc xstrdup chroot_canon static-stubs
 extra-objs	+= $(ldconfig-modules:=.o)
 endif
 endif
@@ -410,6 +412,8 @@ $(objpfx)ldd: ldd.bash.in $(common-objpfx)soversions.mk \
 	mv -f $@.new $@
 
 $(objpfx)sprof: $(libdl)
+
+$(objpfx)sln: $(sln-modules:%=$(objpfx)%.o)
 
 $(objpfx)ldconfig: $(ldconfig-modules:%=$(objpfx)%.o)
 

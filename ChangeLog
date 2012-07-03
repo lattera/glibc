@@ -1,5 +1,52 @@
 2012-07-03  Joseph Myers  <joseph@codesourcery.com>
 
+	* Makeconfig [!+link] (+link-before-libc): New variable.
+	[!+link] (+link-after-libc): Likewise.
+	[!+link] (+link-tests): Likewise.
+	[!+link] (+link): Define in terms of $(+link-before-libc) and
+	$(+link-after-libc).
+	[!+link-static] (+link-static-before-libc): New variable.
+	[!+link-static] (+link-static-after-libc): Likewise.
+	[!+link-static] (+link-static-tests): Likewise.
+	[!+link-static] (+link-static): Define in terms of
+	$(+link-static-before-libc) and $(+link-static-after-libc).
+	[build-shared] (link-libc-before-gnulib): New variable.
+	[build-shared] (link-libc-tests): Likewise.
+	[build-shared] (link-libc): Define in terms of
+	$(link-libc-before-gnulib).
+	[!build-shared] (link-libc-tests): New variable.
+	(link-libc-static-tests): New variable.
+	[!gnulib] (gnulib-arch): New variable.
+	[!gnulib] (gnulib-tests): Likewise.
+	[!gnulib] (static-gnulib-arch): Likewise.
+	[!gnulib] (static-gnulib-tests): Likewise.
+	[!gnulib] (gnulib): Use $(gnulib-arch).  Do not use $(libgcc_eh).
+	Define with "=" instead of ":=".
+	[!gnulib] (static-gnulib): Use $(static-gnulib-arch).  Do not use
+	-lgcc_eh $(libunwind).  Define with "=" instead of ":=".
+	* Rules (binaries-all-notests): New variable.
+	(binaries-all-tests): Likewise.
+	(binaries-static-notests): Likewise.
+	(binaries-static-tests): Likewise.
+	(binaries-all): Define using $(binaries-all-notests) and
+	$(binaries-all-tests).
+	(binaries-static): Define using $(binaries-static-notests) and
+	$(binaries-static-tests).
+	(binaries-shared-tests): New variable.
+	(binaries-shared-notests): Likewise.
+	(binaries-shared): Remove variable.
+	($(addprefix $(objpfx),$(binaries-shared-notests))): New rule.
+	($(addprefix $(objpfx),$(binaries-shared-tests))): Likewise.
+	($(addprefix $(objpfx),$(binaries-shared))): Remove rule.
+	($(addprefix $(objpfx),$(binaries-static-notests))): New rule.
+	($(addprefix $(objpfx),$(binaries-static-tests))): Likewise.
+	($(addprefix $(objpfx),$(binaries-static))): Remove rule.
+	* elf/Makefile (sln-modules): New variable.
+	(extra-objs): Add $(sln-modules:=.o).
+	(ldconfig-modules): Add static-stubs.
+	($(objpfx)sln): Depend on $(sln-modules:%=$(objpfx)%.o).
+	* elf/static-stubs.c: New file.
+
 	[BZ #14283]
 	* sysdeps/ieee754/flt-32/k_rem_pio2f.c (__kernel_rem_pio2f): Shift
 	by 7 not 8 to examine high bit of fractional part.  Use volatile
