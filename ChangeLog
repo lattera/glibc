@@ -1,3 +1,8 @@
+2012-07-03  Joseph Myers  <joseph@codesourcery.com>
+
+	* version.h (RELEASE): Set to "development".
+	(VERSION): Set to "2.16.90".
+
 2012-06-30  Carlos O'Donell  <carlos_odonell@mentor.com>
 
 	* NEWS: Update copyright. Remove last-updated date.

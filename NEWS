@@ -5,6 +5,11 @@ See the end for copying conditions.
 Please send GNU C library bug reports via <http://sources.redhat.com/bugzilla/>
 using `glibc' in the "product" field.
 
+Version 2.17
+
+* The following bugs are resolved with this release:
+
+
 Version 2.16
 
 * The following bugs are resolved with this release:
