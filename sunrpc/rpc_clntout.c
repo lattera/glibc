@@ -31,7 +31,7 @@
  */
 #include <stdio.h>
 #include <string.h>
-#include <rpc/types.h>
+#include "rpc/types.h"
 #include "rpc_parse.h"
 #include "rpc_util.h"
 #include "proto.h"

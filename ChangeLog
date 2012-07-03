@@ -1,3 +1,7 @@
+2012-07-06  Mike Frysinger  <vapier@gentoo.org>
+
+	* sunrpc/rpc_clntout.c: Change <rpc/types.h> to "rpc/types.h".
+
 2012-07-05  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #14157]
