@@ -1,5 +1,10 @@
 2012-07-04  Andreas Schwab  <schwab@linux-m68k.org>
 
+	* catgets/Makefile ($(objpfx)de.msg): Use xopen-msg.awk instead of
+	xopen-msg.sed.
+	* catgets/xopen-msg.awk: New file.
+	* catgets/xopen-msg.sed: Removed.
+
 	* intl/Makefile ($(objpfx)msgs.h): Use po2test.awk instead of
 	po2text.sed.
 	* intl/po2test.awk: New file.
