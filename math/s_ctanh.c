@@ -83,10 +83,22 @@ __ctanh (__complex__ double x)
 	}
       else
 	{
-	  double sinhrx = __ieee754_sinh (__real__ x);
-	  double coshrx = __ieee754_cosh (__real__ x);
+	  double sinhrx, coshrx;
+	  if (fabs (__real__ x) > DBL_MIN)
+	    {
+	      sinhrx = __ieee754_sinh (__real__ x);
+	      coshrx = __ieee754_cosh (__real__ x);
+	    }
+	  else
+	    {
+	      sinhrx = __real__ x;
+	      coshrx = 1.0;
+	    }
 
-	  den = sinhrx * sinhrx + cosix * cosix;
+	  if (fabs (sinhrx) > fabs (cosix) * DBL_EPSILON)
+	    den = sinhrx * sinhrx + cosix * cosix;
+	  else
+	    den = cosix * cosix;
 	  __real__ res = sinhrx * coshrx / den;
 	  __imag__ res = sinix * cosix / den;
 	}

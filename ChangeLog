@@ -1,3 +1,25 @@
+2012-07-04  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #14328]
+	* math/s_ctan.c (__ctan): Do not call sinh and cosh for subnormals
+	or multiply small sinh result by itself.
+	* math/s_ctanf.c (__ctanf): Likewise.
+	* math/s_ctanh.c (__ctanh): Likewise.
+	* math/s_ctanhf.c (__ctanhf): Likewise.
+	* math/s_ctanhl.c (__ctanhl): Likewise.
+	* math/s_ctanl.c (__ctanl): Likewise.
+	* math/libm-test.inc (ctan_test_tonearest): New function.
+	(ctan_test_towardzero): Likewise.
+	(ctan_test_downward): Likewise.
+	(ctan_test_upward): Likewise.
+	(ctanh_test_tonearest): Likewise.
+	(ctanh_test_towardzero): Likewise.
+	(ctanh_test_downward): Likewise.
+	(ctanh_test_upward): Likewise.
+	(main): Call these new functions.
+	* sysdeps/i386/fpu/libm-test-ulps: Update.
+	* sysdeps/x86_64/fpu/libm-test-ulps: Likewise.
+
 2012-07-03  Mike Frysinger  <vapier@gentoo.org>
 
 	* .gitignore: Delete /ports entry.

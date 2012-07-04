@@ -83,10 +83,22 @@ __ctanl (__complex__ long double x)
 	}
       else
 	{
-	  long double sinhix = __ieee754_sinhl (__imag__ x);
-	  long double coshix = __ieee754_coshl (__imag__ x);
+	  long double sinhix, coshix;
+	  if (fabsl (__imag__ x) > LDBL_MIN)
+	    {
+	      sinhix = __ieee754_sinhl (__imag__ x);
+	      coshix = __ieee754_coshl (__imag__ x);
+	    }
+	  else
+	    {
+	      sinhix = __imag__ x;
+	      coshix = 1.0L;
+	    }
 
-	  den = cosrx * cosrx + sinhix * sinhix;
+	  if (fabsl (sinhix) > fabsl (cosrx) * LDBL_EPSILON)
+	    den = cosrx * cosrx + sinhix * sinhix;
+	  else
+	    den = cosrx * cosrx;
 	  __real__ res = sinrx * cosrx / den;
 	  __imag__ res = sinhix * coshix / den;
 	}

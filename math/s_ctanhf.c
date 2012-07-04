@@ -83,10 +83,22 @@ __ctanhf (__complex__ float x)
 	}
       else
 	{
-	  float sinhrx = __ieee754_sinhf (__real__ x);
-	  float coshrx = __ieee754_coshf (__real__ x);
+	  float sinhrx, coshrx;
+	  if (fabsf (__real__ x) > FLT_MIN)
+	    {
+	      sinhrx = __ieee754_sinhf (__real__ x);
+	      coshrx = __ieee754_coshf (__real__ x);
+	    }
+	  else
+	    {
+	      sinhrx = __real__ x;
+	      coshrx = 1.0f;
+	    }
 
-	  den = sinhrx * sinhrx + cosix * cosix;
+	  if (fabsf (sinhrx) > fabsf (cosix) * FLT_EPSILON)
+	    den = sinhrx * sinhrx + cosix * cosix;
+	  else
+	    den = cosix * cosix;
 	  __real__ res = sinhrx * coshrx / den;
 	  __imag__ res = sinix * cosix / den;
 	}

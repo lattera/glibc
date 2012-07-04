@@ -3319,6 +3319,138 @@ ctan_test (void)
 
 
 static void
+ctan_test_tonearest (void)
+{
+  int save_round_mode;
+  errno = 0;
+  FUNC(ctan) (BUILD_COMPLEX (0.7L, 1.2L));
+  if (errno == ENOSYS)
+    /* Function not implemented.  */
+    return;
+
+  START (ctan_tonearest);
+
+  save_round_mode = fegetround ();
+
+  if (!fesetround (FE_TONEAREST))
+    {
+      TEST_c_c (ctan, 0x1.921fb6p+0, 0x1p-149, -2.287733242885645987394874673945769518150e7L, 7.334008549954377778731880988481078535821e-31L);
+
+#ifndef TEST_FLOAT
+      TEST_c_c (ctan, 0x1.921fb54442d18p+0, 0x1p-1074, 1.633123935319536975596773704152891653086e16L, 1.317719414943508315995636961402669067843e-291L);
+#endif
+
+#if defined TEST_LDOUBLE && LDBL_MIN_EXP <= -16381
+      TEST_c_c (ctan, 0x1.921fb54442d1846ap+0L, 0x1p-16445L, -3.986797629811710706723242948653362815645e19L, 5.793882568875674066286163141055208625180e-4912L);
+#endif
+    }
+
+  fesetround (save_round_mode);
+
+  END (ctan_tonearest, complex);
+}
+
+
+static void
+ctan_test_towardzero (void)
+{
+  int save_round_mode;
+  errno = 0;
+  FUNC(ctan) (BUILD_COMPLEX (0.7L, 1.2L));
+  if (errno == ENOSYS)
+    /* Function not implemented.  */
+    return;
+
+  START (ctan_towardzero);
+
+  save_round_mode = fegetround ();
+
+  if (!fesetround (FE_TOWARDZERO))
+    {
+      TEST_c_c (ctan, 0x1.921fb6p+0, 0x1p-149, -2.287733242885645987394874673945769518150e7L, 7.334008549954377778731880988481078535821e-31L);
+
+#ifndef TEST_FLOAT
+      TEST_c_c (ctan, 0x1.921fb54442d18p+0, 0x1p-1074, 1.633123935319536975596773704152891653086e16L, 1.317719414943508315995636961402669067843e-291L);
+#endif
+
+#if defined TEST_LDOUBLE && LDBL_MIN_EXP <= -16381
+      TEST_c_c (ctan, 0x1.921fb54442d1846ap+0L, 0x1p-16445L, -3.986797629811710706723242948653362815645e19L, 5.793882568875674066286163141055208625180e-4912L);
+#endif
+    }
+
+  fesetround (save_round_mode);
+
+  END (ctan_towardzero, complex);
+}
+
+
+static void
+ctan_test_downward (void)
+{
+  int save_round_mode;
+  errno = 0;
+  FUNC(ctan) (BUILD_COMPLEX (0.7L, 1.2L));
+  if (errno == ENOSYS)
+    /* Function not implemented.  */
+    return;
+
+  START (ctan_downward);
+
+  save_round_mode = fegetround ();
+
+  if (!fesetround (FE_DOWNWARD))
+    {
+      TEST_c_c (ctan, 0x1.921fb6p+0, 0x1p-149, -2.287733242885645987394874673945769518150e7L, 7.334008549954377778731880988481078535821e-31L);
+
+#ifndef TEST_FLOAT
+      TEST_c_c (ctan, 0x1.921fb54442d18p+0, 0x1p-1074, 1.633123935319536975596773704152891653086e16L, 1.317719414943508315995636961402669067843e-291L);
+#endif
+
+#if defined TEST_LDOUBLE && LDBL_MIN_EXP <= -16381
+      TEST_c_c (ctan, 0x1.921fb54442d1846ap+0L, 0x1p-16445L, -3.986797629811710706723242948653362815645e19L, 5.793882568875674066286163141055208625180e-4912L);
+#endif
+    }
+
+  fesetround (save_round_mode);
+
+  END (ctan_downward, complex);
+}
+
+
+static void
+ctan_test_upward (void)
+{
+  int save_round_mode;
+  errno = 0;
+  FUNC(ctan) (BUILD_COMPLEX (0.7L, 1.2L));
+  if (errno == ENOSYS)
+    /* Function not implemented.  */
+    return;
+
+  START (ctan_upward);
+
+  save_round_mode = fegetround ();
+
+  if (!fesetround (FE_UPWARD))
+    {
+      TEST_c_c (ctan, 0x1.921fb6p+0, 0x1p-149, -2.287733242885645987394874673945769518150e7L, 7.334008549954377778731880988481078535821e-31L);
+
+#ifndef TEST_FLOAT
+      TEST_c_c (ctan, 0x1.921fb54442d18p+0, 0x1p-1074, 1.633123935319536975596773704152891653086e16L, 1.317719414943508315995636961402669067843e-291L);
+#endif
+
+#if defined TEST_LDOUBLE && LDBL_MIN_EXP <= -16381
+      TEST_c_c (ctan, 0x1.921fb54442d1846ap+0L, 0x1p-16445L, -3.986797629811710706723242948653362815645e19L, 5.793882568875674066286163141055208625180e-4912L);
+#endif
+    }
+
+  fesetround (save_round_mode);
+
+  END (ctan_upward, complex);
+}
+
+
+static void
 ctanh_test (void)
 {
   errno = 0;
@@ -3404,6 +3536,138 @@ ctanh_test (void)
   TEST_c_c (ctanh, -50000, -50000, -1.0, minus_zero, UNDERFLOW_EXCEPTION);
 
   END (ctanh, complex);
+}
+
+
+static void
+ctanh_test_tonearest (void)
+{
+  int save_round_mode;
+  errno = 0;
+  FUNC(ctanh) (BUILD_COMPLEX (0.7L, 1.2L));
+  if (errno == ENOSYS)
+    /* Function not implemented.  */
+    return;
+
+  START (ctanh_tonearest);
+
+  save_round_mode = fegetround ();
+
+  if (!fesetround (FE_TONEAREST))
+    {
+      TEST_c_c (ctanh, 0x1p-149, 0x1.921fb6p+0, 7.334008549954377778731880988481078535821e-31L, -2.287733242885645987394874673945769518150e7L);
+
+#ifndef TEST_FLOAT
+      TEST_c_c (ctanh, 0x1p-1074, 0x1.921fb54442d18p+0, 1.317719414943508315995636961402669067843e-291L, 1.633123935319536975596773704152891653086e16L);
+#endif
+
+#if defined TEST_LDOUBLE && LDBL_MIN_EXP <= -16381
+      TEST_c_c (ctanh, 0x1p-16445L, 0x1.921fb54442d1846ap+0L, 5.793882568875674066286163141055208625180e-4912L, -3.986797629811710706723242948653362815645e19L);
+#endif
+    }
+
+  fesetround (save_round_mode);
+
+  END (ctanh_tonearest, complex);
+}
+
+
+static void
+ctanh_test_towardzero (void)
+{
+  int save_round_mode;
+  errno = 0;
+  FUNC(ctanh) (BUILD_COMPLEX (0.7L, 1.2L));
+  if (errno == ENOSYS)
+    /* Function not implemented.  */
+    return;
+
+  START (ctanh_towardzero);
+
+  save_round_mode = fegetround ();
+
+  if (!fesetround (FE_TOWARDZERO))
+    {
+      TEST_c_c (ctanh, 0x1p-149, 0x1.921fb6p+0, 7.334008549954377778731880988481078535821e-31L, -2.287733242885645987394874673945769518150e7L);
+
+#ifndef TEST_FLOAT
+      TEST_c_c (ctanh, 0x1p-1074, 0x1.921fb54442d18p+0, 1.317719414943508315995636961402669067843e-291L, 1.633123935319536975596773704152891653086e16L);
+#endif
+
+#if defined TEST_LDOUBLE && LDBL_MIN_EXP <= -16381
+      TEST_c_c (ctanh, 0x1p-16445L, 0x1.921fb54442d1846ap+0L, 5.793882568875674066286163141055208625180e-4912L, -3.986797629811710706723242948653362815645e19L);
+#endif
+    }
+
+  fesetround (save_round_mode);
+
+  END (ctanh_towardzero, complex);
+}
+
+
+static void
+ctanh_test_downward (void)
+{
+  int save_round_mode;
+  errno = 0;
+  FUNC(ctanh) (BUILD_COMPLEX (0.7L, 1.2L));
+  if (errno == ENOSYS)
+    /* Function not implemented.  */
+    return;
+
+  START (ctanh_downward);
+
+  save_round_mode = fegetround ();
+
+  if (!fesetround (FE_DOWNWARD))
+    {
+      TEST_c_c (ctanh, 0x1p-149, 0x1.921fb6p+0, 7.334008549954377778731880988481078535821e-31L, -2.287733242885645987394874673945769518150e7L);
+
+#ifndef TEST_FLOAT
+      TEST_c_c (ctanh, 0x1p-1074, 0x1.921fb54442d18p+0, 1.317719414943508315995636961402669067843e-291L, 1.633123935319536975596773704152891653086e16L);
+#endif
+
+#if defined TEST_LDOUBLE && LDBL_MIN_EXP <= -16381
+      TEST_c_c (ctanh, 0x1p-16445L, 0x1.921fb54442d1846ap+0L, 5.793882568875674066286163141055208625180e-4912L, -3.986797629811710706723242948653362815645e19L);
+#endif
+    }
+
+  fesetround (save_round_mode);
+
+  END (ctanh_downward, complex);
+}
+
+
+static void
+ctanh_test_upward (void)
+{
+  int save_round_mode;
+  errno = 0;
+  FUNC(ctanh) (BUILD_COMPLEX (0.7L, 1.2L));
+  if (errno == ENOSYS)
+    /* Function not implemented.  */
+    return;
+
+  START (ctanh_upward);
+
+  save_round_mode = fegetround ();
+
+  if (!fesetround (FE_UPWARD))
+    {
+      TEST_c_c (ctanh, 0x1p-149, 0x1.921fb6p+0, 7.334008549954377778731880988481078535821e-31L, -2.287733242885645987394874673945769518150e7L);
+
+#ifndef TEST_FLOAT
+      TEST_c_c (ctanh, 0x1p-1074, 0x1.921fb54442d18p+0, 1.317719414943508315995636961402669067843e-291L, 1.633123935319536975596773704152891653086e16L);
+#endif
+
+#if defined TEST_LDOUBLE && LDBL_MIN_EXP <= -16381
+      TEST_c_c (ctanh, 0x1p-16445L, 0x1.921fb54442d1846ap+0L, 5.793882568875674066286163141055208625180e-4912L, -3.986797629811710706723242948653362815645e19L);
+#endif
+    }
+
+  fesetround (save_round_mode);
+
+  END (ctanh_upward, complex);
 }
 
 
@@ -8909,7 +9173,15 @@ main (int argc, char **argv)
   csinh_test ();
   csqrt_test ();
   ctan_test ();
+  ctan_test_tonearest ();
+  ctan_test_towardzero ();
+  ctan_test_downward ();
+  ctan_test_upward ();
   ctanh_test ();
+  ctanh_test_tonearest ();
+  ctanh_test_towardzero ();
+  ctanh_test_downward ();
+  ctanh_test_upward ();
 
   /* Bessel functions:  */
   j0_test ();
