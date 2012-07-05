@@ -1,3 +1,17 @@
+2012-07-05  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #14157]
+	[BZ #14331]
+	* math/s_csqrt.c (__csqrt): Avoid multiplying by 0.5 where this
+	could result in spurious underflow.  Scale down values above
+	DBL_MAX / 4.0 instead of DBL_MAX / 2.0.
+	* math/s_csqrtf.c (__csqrtf): Likewise.
+	* math/s_csqrtl.c (__csqrtl): Likewise.
+	* math/libm-test.inc (csqrt_test): Add more tests.  Do not allow
+	spurious underflow.
+	* sysdeps/i386/fpu/libm-test-ulps: Update.
+	* sysdeps/x86_64/fpu/libm-test-ulps: Likewise.
+
 2012-07-04  Andreas Schwab  <schwab@linux-m68k.org>
 
 	* catgets/Makefile ($(objpfx)de.msg): Use xopen-msg.awk instead of

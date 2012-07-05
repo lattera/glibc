@@ -75,7 +75,11 @@ __csqrtl (__complex__ long double x)
 	}
       else if (__builtin_expect (rcls == FP_ZERO, 0))
 	{
-	  long double r = __ieee754_sqrtl (0.5 * fabsl (__imag__ x));
+	  long double r;
+	  if (fabsl (__imag__ x) >= 2.0L * LDBL_MIN)
+	    r = __ieee754_sqrtl (0.5L * fabsl (__imag__ x));
+	  else
+	    r = 0.5L * __ieee754_sqrtl (2.0L * fabsl (__imag__ x));
 
 	  __real__ res = r;
 	  __imag__ res = __copysignl (r, __imag__ x);
@@ -85,11 +89,19 @@ __csqrtl (__complex__ long double x)
 	  long double d, r, s;
 	  int scale = 0;
 
-	  if (fabsl (__real__ x) > LDBL_MAX / 2.0L
-	      || fabsl (__imag__ x) > LDBL_MAX / 2.0L)
+	  if (fabsl (__real__ x) > LDBL_MAX / 4.0L)
 	    {
 	      scale = 1;
 	      __real__ x = __scalbnl (__real__ x, -2 * scale);
+	      __imag__ x = __scalbnl (__imag__ x, -2 * scale);
+	    }
+	  else if (fabsl (__imag__ x) > LDBL_MAX / 4.0L)
+	    {
+	      scale = 1;
+	      if (fabsl (__real__ x) >= 4.0L * LDBL_MIN)
+		__real__ x = __scalbnl (__real__ x, -2 * scale);
+	      else
+		__real__ x = 0.0L;
 	      __imag__ x = __scalbnl (__imag__ x, -2 * scale);
 	    }
 	  else if (fabsl (__real__ x) < LDBL_MIN
@@ -105,13 +117,13 @@ __csqrtl (__complex__ long double x)
 	     to avoid cancellation error in  d +/- Re x.  */
 	  if (__real__ x > 0)
 	    {
-	      r = __ieee754_sqrtl (0.5L * d + 0.5L * __real__ x);
-	      s = (0.5L * __imag__ x) / r;
+	      r = __ieee754_sqrtl (0.5L * (d + __real__ x));
+	      s = 0.5L * (__imag__ x / r);
 	    }
 	  else
 	    {
-	      s = __ieee754_sqrtl (0.5L * d - 0.5L * __real__ x);
-	      r = fabsl ((0.5L * __imag__ x) / s);
+	      s = __ieee754_sqrtl (0.5L * (d - __real__ x));
+	      r = fabsl (0.5L * (__imag__ x / s));
 	    }
 
 	  if (scale)

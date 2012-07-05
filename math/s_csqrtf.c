@@ -75,7 +75,11 @@ __csqrtf (__complex__ float x)
 	}
       else if (__builtin_expect (rcls == FP_ZERO, 0))
 	{
-	  float r = __ieee754_sqrtf (0.5 * fabsf (__imag__ x));
+	  float r;
+	  if (fabsf (__imag__ x) >= 2.0f * FLT_MIN)
+	    r = __ieee754_sqrtf (0.5f * fabsf (__imag__ x));
+	  else
+	    r = 0.5f * __ieee754_sqrtf (2.0f * fabsf (__imag__ x));
 
 	  __real__ res = r;
 	  __imag__ res = __copysignf (r, __imag__ x);
@@ -85,11 +89,19 @@ __csqrtf (__complex__ float x)
 	  float d, r, s;
 	  int scale = 0;
 
-	  if (fabsf (__real__ x) > FLT_MAX / 2.0f
-	      || fabsf (__imag__ x) > FLT_MAX / 2.0f)
+	  if (fabsf (__real__ x) > FLT_MAX / 4.0f)
 	    {
 	      scale = 1;
 	      __real__ x = __scalbnf (__real__ x, -2 * scale);
+	      __imag__ x = __scalbnf (__imag__ x, -2 * scale);
+	    }
+	  else if (fabsf (__imag__ x) > FLT_MAX / 4.0f)
+	    {
+	      scale = 1;
+	      if (fabsf (__real__ x) >= 4.0f * FLT_MIN)
+		__real__ x = __scalbnf (__real__ x, -2 * scale);
+	      else
+		__real__ x = 0.0f;
 	      __imag__ x = __scalbnf (__imag__ x, -2 * scale);
 	    }
 	  else if (fabsf (__real__ x) < FLT_MIN
@@ -105,13 +117,13 @@ __csqrtf (__complex__ float x)
 	     to avoid cancellation error in  d +/- Re x.  */
 	  if (__real__ x > 0)
 	    {
-	      r = __ieee754_sqrtf (0.5f * d + 0.5f * __real__ x);
-	      s = (0.5f * __imag__ x) / r;
+	      r = __ieee754_sqrtf (0.5f * (d + __real__ x));
+	      s = 0.5f * (__imag__ x / r);
 	    }
 	  else
 	    {
-	      s = __ieee754_sqrtf (0.5f * d - 0.5f * __real__ x);
-	      r = fabsf ((0.5f * __imag__ x) / s);
+	      s = __ieee754_sqrtf (0.5f * (d - __real__ x));
+	      r = fabsf (0.5f * (__imag__ x / s));
 	    }
 
 	  if (scale)
