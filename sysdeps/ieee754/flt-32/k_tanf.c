@@ -56,6 +56,8 @@ float __kernel_tanf(float x, float y, int iy)
 	    z = pio4-x;
 	    w = pio4lo-y;
 	    x = z+w; y = 0.0;
+	    if (fabsf (x) < 0x1p-13f)
+		return (1 - ((hx >> 30) & 2)) * iy * (1.0f - 2 * iy * x);
 	}
 	z	=  x*x;
 	w 	=  z*z;

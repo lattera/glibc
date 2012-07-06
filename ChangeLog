@@ -1,5 +1,13 @@
 2012-07-06  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #14154]
+	* sysdeps/ieee754/flt-32/k_tanf.c (__kernel_tanf): Use linear
+	approximation for values within 0x1p-13f of an odd multiple of
+	pi/4.
+	* math/libm-test.inc (tan_test): Do not allow spurious underflow
+	exception.  Add more tests.
+	* sysdeps/i386/fpu/libm-test-ulps: Update.
+
 	[BZ #6778]
 	* sysdeps/i386/fpu/s_expm1.S (__expm1): Check for large negative
 	inputs and return -1 for them.  Do not check for +Inf in case not
