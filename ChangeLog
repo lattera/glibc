@@ -1,3 +1,24 @@
+2012-07-06  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #6778]
+	* sysdeps/i386/fpu/s_expm1.S (__expm1): Check for large negative
+	inputs and return -1 for them.  Do not check for +Inf in case not
+	reachable for +Inf.
+	* sysdeps/i386/fpu/s_expm1f.S (__expm1f): Likewise.
+	* sysdeps/i386/fpu/e_expl.S [USE_AS_EXPM1L] (csat): Do not define.
+	(IEEE754_EXPL) [USE_AS_EXPM1L]: Check for large negative inputs
+	and return -1 for them.  Do not check for +Inf in case not
+	reachable for +Inf.
+	* sysdeps/x86_64/fpu/e_expl.S [USE_AS_EXPM1L] (csat): Do not
+	define.
+	(IEEE754_EXPL) [USE_AS_EXPM1L]: Check for large negative inputs
+	and return -1 for them.  Do not check for +Inf in case not
+	reachable for +Inf.
+	* math/libm-test.inc (expm1_test): Add more tests.  Do not allow
+	spurious underflow.
+	* sysdeps/i386/fpu/libm-test-ulps: Update.
+	* sysdeps/x86_64/fpu/libm-test-ulps: Likewise.
+
 2012-07-06  Mike Frysinger  <vapier@gentoo.org>
 
 	* sunrpc/rpc_clntout.c: Change <rpc/types.h> to "rpc/types.h".

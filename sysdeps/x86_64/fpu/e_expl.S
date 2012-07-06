@@ -60,10 +60,12 @@ c1:	.byte 0x20, 0xfa, 0xee, 0xc2, 0x5f, 0x70, 0xa5, 0xec, 0xed, 0x3f
 	.byte 0, 0, 0, 0, 0, 0
 	ASM_SIZE_DIRECTIVE(c1)
 #endif
+#ifndef USE_AS_EXPM1L
 	ASM_TYPE_DIRECTIVE(csat,@object)
 csat:	.byte 0, 0, 0, 0, 0, 0, 0, 0x80, 0x0e, 0x40
 	.byte 0, 0, 0, 0, 0, 0
 	ASM_SIZE_DIRECTIVE(csat)
+#endif
 
 #ifdef PIC
 # define MO(op) op##(%rip)
@@ -85,9 +87,26 @@ ENTRY(IEEE754_EXPL)
    For the i686 the code can be written better.
    -- drepper@cygnus.com.  */
 	fxam			/* Is NaN or +-Inf?  */
-#ifndef USE_AS_EXPM1L
+#ifdef USE_AS_EXPM1L
+	xorb	$0x80, %ah
+	cmpl	$0xc006, %eax
+	fstsw	%ax
+	movb	$0x45, %dh
+	jb	4f
+
+	/* Below -64.0 (may be -NaN or -Inf). */
+	andb	%ah, %dh
+	cmpb	$0x01, %dh
+	je	2f		/* Is +-NaN, jump.  */
+	jmp	1f		/* -large, possibly -Inf.  */
+
+4:	/* In range -64.0 to 64.0 (may be +-0 but not NaN or +-Inf).  */
+	/* Test for +-0 as argument.  */
+	andb	%ah, %dh
+	cmpb	$0x40, %dh
+	je	2f
+#else
 	movzwl	8+8(%rsp), %eax
-#endif
 	andl	$0x7fff, %eax
 	cmpl	$0x400d, %eax
 	jle	3f
@@ -105,16 +124,8 @@ ENTRY(IEEE754_EXPL)
 	andb	$2, %ah
 	jz	3f
 	fchs
-3:
-#ifdef USE_AS_EXPM1L
-	/* Test for +-0 as argument.  */
-	fstsw	%ax
-	movb	$0x45, %dh
-	andb	%ah, %dh
-	cmpb	$0x40, %dh
-	je	2f
 #endif
-	FLDLOG			/* 1  log2(base)      */
+3:	FLDLOG			/* 1  log2(base)      */
 	fmul	%st(1), %st	/* 1  x log2(base)    */
 	frndint			/* 1  i               */
 	fld	%st(1)		/* 2  x               */
@@ -151,13 +162,16 @@ ENTRY(IEEE754_EXPL)
 #endif
 	fstp	%st(1)		/* 0  */
 	jmp	2f
-1:	testl	$0x200, %eax	/* Test sign.  */
-	jz	2f		/* If positive, jump.  */
-	fstp	%st
+1:
 #ifdef USE_AS_EXPM1L
+	/* For expm1l, only negative sign gets here.  */
+	fstp	%st
 	fld1
 	fchs
 #else
+	testl	$0x200, %eax	/* Test sign.  */
+	jz	2f		/* If positive, jump.  */
+	fstp	%st
 	fldz			/* Set result to 0.  */
 #endif
 2:	ret

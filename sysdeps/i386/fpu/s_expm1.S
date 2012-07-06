@@ -51,19 +51,31 @@ ENTRY(__expm1)
 	jae	HIDDEN_JUMPTARGET (__exp)
 
 	fldl	4(%esp)		// x
-	fxam			// Is NaN or +-Inf?
+	fxam			// Is NaN, +-Inf or +-0?
+	xorb	$0x80, %ah
+	cmpl	$0xc043, %eax	// is num <= -38.0?
 	fstsw	%ax
 	movb	$0x45, %ch
+	jb	4f
+
+	// Below -38.0 (may be -NaN or -Inf).
+	andb	%ah, %ch
+#ifdef	PIC
+	LOAD_PIC_REG (dx)
+#endif
+	cmpb	$0x01, %ch
+	je	5f		// If -NaN, jump.
+	jmp	2f		// -large, possibly -Inf.
+
+4:	// In range -38.0 to 704.0 (may be +-0 but not NaN or +-Inf).
 	andb	%ah, %ch
 	cmpb	$0x40, %ch
 	je	3f		// If +-0, jump.
 #ifdef	PIC
 	LOAD_PIC_REG (dx)
 #endif
-	cmpb	$0x05, %ch
-	je	2f		// If +-Inf, jump.
 
-	fldt	MO(l2e)		// log2(e) : x
+5:	fldt	MO(l2e)		// log2(e) : x
 	fmulp			// log2(e)*x
 	fld	%st		// log2(e)*x : log2(e)*x
 	frndint			// int(log2(e)*x) : log2(e)*x
@@ -79,9 +91,7 @@ ENTRY(__expm1)
 	fsubrp	%st, %st(1)	// 2^(log2(e)*x)
 	ret
 
-2:	testl	$0x200, %eax	// Test sign.
-	jz	3f		// If positive, jump.
-	fstp	%st
+2:	fstp	%st
 	fldl	MO(minus1)	// Set result to -1.0.
 3:	ret
 END(__expm1)
