@@ -1,5 +1,5 @@
 /* k_rem_pio2f.c -- float version of e_rem_pio2.c
-   Copyright (C) 2011 Free Software Foundation, Inc.
+   Copyright (C) 2011-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Adhemerval Zanella <azanella@br.ibm.com>, 2011
 
@@ -153,7 +153,7 @@ recompute:
       ih = iq[jz - 1] >> (7 - q0);
     }
   else if (q0 == 0)
-    ih = iq[jz - 1] >> 8;
+    ih = iq[jz - 1] >> 7;
   else if (z >= 0.5)
     ih = 2;
 
