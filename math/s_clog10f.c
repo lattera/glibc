@@ -43,25 +43,30 @@ __clog10f (__complex__ float x)
   else if (__builtin_expect (rcls != FP_NAN && icls != FP_NAN, 1))
     {
       /* Neither real nor imaginary part is NaN.  */
+      float absx = fabsf (__real__ x), absy = fabsf (__imag__ x);
       float d;
       int scale = 0;
 
-      if (fabsf (__real__ x) > FLT_MAX / 2.0f
-	  || fabsf (__imag__ x) > FLT_MAX / 2.0f)
+      if (absx > FLT_MAX / 2.0f)
 	{
 	  scale = -1;
-	  __real__ x = __scalbnf (__real__ x, scale);
-	  __imag__ x = __scalbnf (__imag__ x, scale);
+	  absx = __scalbnf (absx, scale);
+	  absy = (absy >= FLT_MIN * 2.0f ? __scalbnf (absy, scale) : 0.0f);
 	}
-      else if (fabsf (__real__ x) < FLT_MIN
-	       && fabsf (__imag__ x) < FLT_MIN)
+      else if (absy > FLT_MAX / 2.0f)
+	{
+	  scale = -1;
+	  absx = (absx >= FLT_MIN * 2.0f ? __scalbnf (absx, scale) : 0.0f);
+	  absy = __scalbnf (absy, scale);
+	}
+      else if (absx < FLT_MIN && absy < FLT_MIN)
 	{
 	  scale = FLT_MANT_DIG;
-	  __real__ x = __scalbnf (__real__ x, scale);
-	  __imag__ x = __scalbnf (__imag__ x, scale);
+	  absx = __scalbnf (absx, scale);
+	  absy = __scalbnf (absy, scale);
 	}
 
-      d = __ieee754_hypotf (__real__ x, __imag__ x);
+      d = __ieee754_hypotf (absx, absy);
 
       __real__ result = __ieee754_log10f (d) - scale * M_LOG10_2f;
       __imag__ result = M_LOG10E * __ieee754_atan2f (__imag__ x, __real__ x);

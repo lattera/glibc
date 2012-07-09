@@ -1,3 +1,18 @@
+2012-07-09  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #14337]
+	* math/s_clog.c (__clog): Avoid scaling a value down where that
+	could result in underflow.
+	* math/s_clog10.c (__clog10): Likewise.
+	* math/s_clog10f.c (__clog10f): Likewise.
+	* math/s_clog10l.c (__clog10l): Likewise.
+	* math/s_clogf.c (__clogf): Likewise.
+	* math/s_clogl.c (__clogl): Likewise.
+	* math/libm-test.inc (clog_test): Add more tests.
+	(clog10_test): Likewise.
+	* sysdeps/i386/fpu/libm-test-ulps: Update.
+	* sysdeps/x86_64/fpu/libm-test-ulps: Likewise.
+
 2012-07-06  Andreas Schwab  <schwab@linux-m68k.org>
 
 	[BZ #14283]
