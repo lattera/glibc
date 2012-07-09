@@ -727,7 +727,7 @@ for @code{catopen} presented in the description above.
 
 Sun Microsystems tried to standardize a different approach to message
 translation in the Uniforum group.  There never was a real standard
-defined but still the interface was used in Sun's operation systems.
+defined but still the interface was used in Sun's operating systems.
 Since this approach fits better in the development process of free
 software it is also used throughout the GNU project and the GNU
 @file{gettext} package provides support for this outside @theglibc{}.

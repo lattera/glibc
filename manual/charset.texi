@@ -204,7 +204,7 @@ defined in @file{wchar.h}.
 
 These internal representations present problems when it comes to storing
 and transmittal.  Because each single wide character consists of more
-than one byte, they are effected by byte-ordering.  Thus, machines with
+than one byte, they are affected by byte-ordering.  Thus, machines with
 different endianesses would see different values when accessing the same
 data.  This byte ordering concern also applies for communication protocols
 that are all byte-based and therefore require that the sender has to
@@ -225,7 +225,7 @@ fulfill one requirement: they are "filesystem safe."  This means that
 the character @code{'/'} is used in the encoding @emph{only} to
 represent itself.  Things are a bit different for character sets like
 EBCDIC (Extended Binary Coded Decimal Interchange Code, a character set
-family used by IBM), but if the operation system does not understand
+family used by IBM), but if the operating system does not understand
 EBCDIC directly the parameters-to-system calls have to be converted
 first anyhow.
 
@@ -257,7 +257,7 @@ state changes that cover more than the next character.  This has the
 big advantage that whenever one can identify the beginning of the byte
 sequence of a character one can interpret a text correctly.  Examples of
 character sets using this policy are the various EUC character sets
-(used by Sun's operations systems, EUC-JP, EUC-KR, EUC-TW, and EUC-CN)
+(used by Sun's operating systems, EUC-JP, EUC-KR, EUC-TW, and EUC-CN)
 or Shift_JIS (SJIS, a Japanese encoding).
 
 But there are also character sets using a state that is valid for more
@@ -2225,7 +2225,7 @@ become clear that this is the name for the representation used in the
 intermediate step of the triangulation.  We have said that this is UCS-4
 but actually that is not quite right.  The UCS-4 specification also
 includes the specification of the byte ordering used.  Since a UCS-4 value
-consists of four bytes, a stored value is effected by byte ordering.  The
+consists of four bytes, a stored value is affected by byte ordering.  The
 internal representation is @emph{not} the same as UCS-4 in case the byte
 ordering of the processor (or at least the running process) is not the
 same as the one required for UCS-4.  This is done for performance reasons

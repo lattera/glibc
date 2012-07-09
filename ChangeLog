@@ -1,3 +1,12 @@
+2012-07-09  Roland McGrath  <roland@hack.frob.com>
+
+	[BZ #14336]
+	* manual/charset.texi (Extended Char Intro): Word use fix, "operating
+	system".
+	* manual/message.texi (The Uniforum approach): Likewise.
+	* manual/charset.texi (Extended Char Intro): Spelling fix, "affected".
+	(glibc iconv Implementation): Likewise.
+
 2012-07-09  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #14337]
