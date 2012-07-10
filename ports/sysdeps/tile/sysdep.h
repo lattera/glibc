@@ -30,7 +30,7 @@
 
 /* Define an entry point visible from C.  */
 #define	ENTRY(name)							      \
-  ASM_GLOBAL_DIRECTIVE C_SYMBOL_NAME(name);				      \
+  .globl C_SYMBOL_NAME(name);						      \
   ASM_TYPE_DIRECTIVE (C_SYMBOL_NAME(name),@function)			      \
   .align 8;								      \
   C_LABEL(name)								      \

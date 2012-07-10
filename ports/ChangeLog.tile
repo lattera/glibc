@@ -1,3 +1,8 @@
+2012-07-10  Chris Metcalf  <cmetcalf@tilera.com>
+
+	* sysdeps/tile/sysdep.h (ENTRY): Use .globl, not
+	ASM_GLOBAL_DIRECTIVE.
+
 2012-05-30  Chris Metcalf  <cmetcalf@tilera.com>
 
 	* sysdeps/unix/sysv/linux/tile/tilegx/Makefile: Remove test
