@@ -63,7 +63,7 @@
 #define	ENTRY(name)							      \
   STABS_CURRENT_FILE1("")						      \
   STABS_CURRENT_FILE(name)						      \
-  ASM_GLOBAL_DIRECTIVE C_SYMBOL_NAME(name);				      \
+  .globl C_SYMBOL_NAME(name);				      \
   ASM_TYPE_DIRECTIVE (C_SYMBOL_NAME(name),@function)			      \
   .align ALIGNARG(4);							      \
   STABS_FUN(name)							      \

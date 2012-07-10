@@ -37,7 +37,7 @@
 #endif /* PROF */
 
 #define	ENTRY(name)							      \
-  ASM_GLOBAL_DIRECTIVE C_SYMBOL_NAME(name);				      \
+  .globl C_SYMBOL_NAME(name);				      \
   ASM_TYPE_DIRECTIVE (C_SYMBOL_NAME(name),@function)			      \
   .align ALIGNARG(2);							      \
   C_LABEL(name)								      \
@@ -64,7 +64,7 @@ GOT_LABEL:			;					      \
    past a 2^align boundary.  */
 #ifdef PROF
 # define EALIGN(name, alignt, words)					      \
-  ASM_GLOBAL_DIRECTIVE C_SYMBOL_NAME(name);				      \
+  .globl C_SYMBOL_NAME(name);				      \
   ASM_TYPE_DIRECTIVE (C_SYMBOL_NAME(name),@function)			      \
   .align ALIGNARG(2);							      \
   C_LABEL(name)								      \
@@ -76,7 +76,7 @@ GOT_LABEL:			;					      \
   0:
 #else /* PROF */
 # define EALIGN(name, alignt, words)					      \
-  ASM_GLOBAL_DIRECTIVE C_SYMBOL_NAME(name);				      \
+  .globl C_SYMBOL_NAME(name);				      \
   ASM_TYPE_DIRECTIVE (C_SYMBOL_NAME(name),@function)			      \
   .align ALIGNARG(alignt);						      \
   EALIGN_W_##words;							      \

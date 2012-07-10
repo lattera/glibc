@@ -1,5 +1,5 @@
 /* S/390-specific implemetation of profiling support.
-   Copyright (C) 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 2000-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Martin Schwidefsky (schwidefsky@de.ibm.com)
 
@@ -47,7 +47,7 @@
  * _mcount may not modify any register.
  */
 
-	ASM_GLOBAL_DIRECTIVE C_SYMBOL_NAME(_mcount)
+	.globl C_SYMBOL_NAME(_mcount)
 	ASM_TYPE_DIRECTIVE(C_SYMBOL_NAME(_mcount), @function)
 	cfi_startproc
 	.align ALIGNARG(4)

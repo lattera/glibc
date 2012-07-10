@@ -13,7 +13,7 @@ cat > conftest.S <<EOF
 /* comment on
    two lines */
 	${libc_cv_dot_text}
-	${libc_cv_asm_global_directive} foo
+	.globl foo
 foo:
 	/* Unfortunately this test only works for a real instruction,
 	   not for any of the machine-independent pseudo-ops.

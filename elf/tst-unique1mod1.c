@@ -5,7 +5,7 @@
 # define _S(s) #s
 
 asm (".data;"
-     S (ASM_GLOBAL_DIRECTIVE) " var\n"
+     ".globl var\n"
      ".type var, " S (ASM_TYPE_DIRECTIVE_PREFIX) "gnu_unique_object\n"
      ".size var, 4\n"
      "var:.zero 4\n"

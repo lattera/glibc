@@ -1,3 +1,43 @@
+2012-07-10  Marek Polacek  <polacek@redhat.com>
+
+	[BZ #14151]
+	* configure.in (libc_cv_asm_global_directive): Remove test.  Replace
+	libc_cv_asm_global_directive with .globl.
+	* configure: Regenerated.
+	* sysdeps/i386/configure.in: Replace libc_cv_asm_global_directive
+	with .globl.
+	* sysdeps/i386/configure: Regenerated.
+	* sysdeps/x86_64/configure.in: Replace libc_cv_asm_global_directive
+	with .globl.
+	* sysdeps/x86_64/configure: Regenerated.
+	* config.h.in: Do not undefine ASM_GLOBAL_DIRECTIVE.
+	* include/libc-symbols.h: Replace ASM_GLOBAL_DIRECTIVE with .globl.
+	* elf/tst-unique2mod2.c: Likewise.
+	* elf/tst-unique2mod1.c: Likewise.
+	* elf/tst-unique1mod2.c: Likewise.
+	* elf/tst-unique1mod1.c: Likewise.
+	* sysdeps/s390/s390-32/sysdep.h: Likewise.
+	* sysdeps/s390/s390-32/s390-mcount.S: Likewise.
+	* sysdeps/s390/s390-64/sysdep.h: Likewise.
+	* sysdeps/s390/s390-64/s390x-mcount.S: Likewise.
+	* sysdeps/mach/sysdep.h: Likewise.
+	* sysdeps/i386/sysdep.h: Likewise.
+	* sysdeps/i386/i386-mcount.S: Likewise.
+	* sysdeps/x86_64/_mcount.S: Likewise.
+	* sysdeps/x86_64/sysdep.h: Likewise.
+	* sysdeps/sh/_mcount.S: Likewise.
+	* sysdeps/sh/sysdep.h: Likewise.
+	* sysdeps/powerpc/powerpc32/gprsave1.S: Likewise.
+	* sysdeps/powerpc/powerpc32/fpu/fprrest.S: Likewise.
+	* sysdeps/powerpc/powerpc32/fpu/fprsave.S: Likewise.
+	* sysdeps/powerpc/powerpc32/sysdep.h: Likewise.
+	* sysdeps/powerpc/powerpc32/gprrest1.S: Likewise.
+	* sysdeps/powerpc/powerpc32/gprsave0.S: Likewise.
+	* sysdeps/powerpc/powerpc32/gprrest0.S: Likewise.
+	* locale/localeinfo.h: Likewise.
+	(_NL_CURRENT_DEFINE_STRINGIFY): Delete macro.
+	(_NL_CURRENT_DEFINE_STRINGIFY_1): Likewise.
+
 2012-07-09  Roland McGrath  <roland@hack.frob.com>
 
 	[BZ #14336]

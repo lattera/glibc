@@ -27,7 +27,6 @@
    It should define for us the following symbols:
 
    * HAVE_ASM_SET_DIRECTIVE if we have `.set B, A' instead of `A = B'.
-   * ASM_GLOBAL_DIRECTIVE with `.globl' or `.global'.
    * ASM_TYPE_DIRECTIVE_PREFIX with `@' or `#' or whatever for .type,
      or leave it undefined if there is no .type directive.
    * HAVE_ASM_WEAK_DIRECTIVE if we have weak symbols using `.weak'.
@@ -117,32 +116,32 @@
 # ifdef HAVE_ASM_SET_DIRECTIVE
 #  ifdef HAVE_ASM_GLOBAL_DOT_NAME
 #   define strong_alias(original, alias)				\
-  ASM_GLOBAL_DIRECTIVE C_SYMBOL_NAME (alias) ASM_LINE_SEP		\
+  .globl C_SYMBOL_NAME (alias) ASM_LINE_SEP		\
   .set C_SYMBOL_NAME (alias),C_SYMBOL_NAME (original) ASM_LINE_SEP	\
-  ASM_GLOBAL_DIRECTIVE C_SYMBOL_DOT_NAME (alias) ASM_LINE_SEP		\
+  .globl C_SYMBOL_DOT_NAME (alias) ASM_LINE_SEP		\
   .set C_SYMBOL_DOT_NAME (alias),C_SYMBOL_DOT_NAME (original)
 #   define strong_data_alias(original, alias)				\
-  ASM_GLOBAL_DIRECTIVE C_SYMBOL_NAME (alias) ASM_LINE_SEP		\
+  .globl C_SYMBOL_NAME (alias) ASM_LINE_SEP		\
   .set C_SYMBOL_NAME (alias),C_SYMBOL_NAME (original)
 #  else
 #   define strong_alias(original, alias)				\
-  ASM_GLOBAL_DIRECTIVE C_SYMBOL_NAME (alias) ASM_LINE_SEP		\
+  .globl C_SYMBOL_NAME (alias) ASM_LINE_SEP		\
   .set C_SYMBOL_NAME (alias),C_SYMBOL_NAME (original)
 #   define strong_data_alias(original, alias) strong_alias(original, alias)
 #  endif
 # else
 #  ifdef HAVE_ASM_GLOBAL_DOT_NAME
 #   define strong_alias(original, alias)				\
-  ASM_GLOBAL_DIRECTIVE C_SYMBOL_NAME (alias) ASM_LINE_SEP		\
+  .globl C_SYMBOL_NAME (alias) ASM_LINE_SEP		\
   C_SYMBOL_NAME (alias) = C_SYMBOL_NAME (original) ASM_LINE_SEP		\
-  ASM_GLOBAL_DIRECTIVE C_SYMBOL_DOT_NAME (alias) ASM_LINE_SEP		\
+  .globl C_SYMBOL_DOT_NAME (alias) ASM_LINE_SEP		\
   C_SYMBOL_DOT_NAME (alias) = C_SYMBOL_DOT_NAME (original)
 #   define strong_data_alias(original, alias)				\
-  ASM_GLOBAL_DIRECTIVE C_SYMBOL_NAME (alias) ASM_LINE_SEP		\
+  .globl C_SYMBOL_NAME (alias) ASM_LINE_SEP		\
   C_SYMBOL_NAME (alias) = C_SYMBOL_NAME (original)
 #  else
 #   define strong_alias(original, alias)				\
-  ASM_GLOBAL_DIRECTIVE C_SYMBOL_NAME (alias) ASM_LINE_SEP		\
+  .globl C_SYMBOL_NAME (alias) ASM_LINE_SEP		\
   C_SYMBOL_NAME (alias) = C_SYMBOL_NAME (original)
 #   define strong_data_alias(original, alias) strong_alias(original, alias)
 #  endif
@@ -265,8 +264,7 @@ for linking")
 #  define declare_symbol_alias_1_paste_1(a,b)	a##b
 # else /* Not __ASSEMBLER__.  */
 #  define declare_symbol_alias_1(symbol, original, type, size) \
-    asm (declare_symbol_alias_1_stringify (ASM_GLOBAL_DIRECTIVE) \
-	 " " __SYMBOL_PREFIX #symbol \
+    asm (".globl " __SYMBOL_PREFIX #symbol \
 	 "\n\t" declare_symbol_alias_1_alias (symbol, original) \
 	 "\n\t.type " __SYMBOL_PREFIX #symbol ", " \
 	 declare_symbol_alias_1_stringify (ASM_TYPE_DIRECTIVE_PREFIX) #type \
@@ -785,14 +783,12 @@ for linking")
 
 #ifdef HAVE_ASM_SET_DIRECTIVE
 # define libc_ifunc_hidden_def1(local, name)				\
-    __asm__ (declare_symbol_alias_1_stringify (ASM_GLOBAL_DIRECTIVE)	\
-	     " " #local "\n\t"						\
+    __asm__ (".globl " #local "\n\t"					\
 	     ".hidden " #local "\n\t"					\
 	     ".set " #local ", " #name);
 #else
 # define libc_ifunc_hidden_def1(local, name)				\
-    __asm__ (declare_symbol_alias_1_stringify (ASM_GLOBAL_DIRECTIVE)	\
-	     " " #local "\n\t"						\
+    __asm__ (".globl " #local "\n\t"					\
 	     ".hidden " #local "\n\t"					\
 	     #local " = " #name);
 #endif

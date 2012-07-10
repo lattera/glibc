@@ -1,5 +1,5 @@
 /* 64 bit S/390-specific implemetation of profiling support.
-   Copyright (C) 2001 Free Software Foundation, Inc.
+   Copyright (C) 2001-2012 Free Software Foundation, Inc.
    Contributed by Martin Schwidefsky (schwidefsky@de.ibm.com)
    This file is part of the GNU C Library.
 
@@ -43,7 +43,7 @@
    parameter. &.LP0 was loaded to %r1 and the return address is in %r14.
    _mcount may not modify any register.  */
 
-	ASM_GLOBAL_DIRECTIVE C_SYMBOL_NAME(_mcount)
+	.globl C_SYMBOL_NAME(_mcount)
 	ASM_TYPE_DIRECTIVE(C_SYMBOL_NAME(_mcount), @function)
 	cfi_startproc
 	.align ALIGNARG(4)

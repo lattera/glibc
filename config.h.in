@@ -37,10 +37,6 @@
 /* Define if the assembler supports the `.set' directive.  */
 #undef	HAVE_ASM_SET_DIRECTIVE
 
-/* Define to the name of the assembler's directive for
-   declaring a symbol global (default `.globl').  */
-#undef	ASM_GLOBAL_DIRECTIVE
-
 /* Define to the prefix before `object' or `function' in the
    assembler's `.type' directive, if it has one.  */
 #undef	ASM_TYPE_DIRECTIVE_PREFIX

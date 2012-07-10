@@ -581,34 +581,13 @@ else
   AC_MSG_RESULT(yes)
 fi
 
-AC_CACHE_CHECK(for assembler global-symbol directive,
-	       libc_cv_asm_global_directive, [dnl
-libc_cv_asm_global_directive=UNKNOWN
-for ac_globl in .globl .global .EXPORT; do
-  cat > conftest.s <<EOF
-	${libc_cv_dot_text}
-	${ac_globl} foo
-foo:
-EOF
-  if AC_TRY_COMMAND(${CC-cc} $ASFLAGS -c conftest.s 1>&AS_MESSAGE_LOG_FD); then
-    libc_cv_asm_global_directive=${ac_globl}
-  fi
-  rm -f conftest*
-  test $libc_cv_asm_global_directive != UNKNOWN && break
-done])
-if test $libc_cv_asm_global_directive = UNKNOWN; then
-  AC_MSG_ERROR(cannot determine asm global directive)
-else
-  AC_DEFINE_UNQUOTED(ASM_GLOBAL_DIRECTIVE, ${libc_cv_asm_global_directive})
-fi
-
 AC_CACHE_CHECK(for assembler .type directive prefix,
 	       libc_cv_asm_type_prefix, [dnl
 libc_cv_asm_type_prefix=no
 for ac_try_prefix in '@' '%' '#'; do
   cat > conftest.s <<EOF
 	${libc_cv_dot_text}
-	${libc_cv_asm_global_directive} foo
+	.globl foo
 	.type foo, ${ac_try_prefix}object
 	.size foo, 1
 foo:
@@ -1121,7 +1100,7 @@ cat > conftest.s <<EOF
 ${libc_cv_dot_text}
 foo:
 .set glibc_conftest_frobozz,foo
-$libc_cv_asm_global_directive glibc_conftest_frobozz
+.globl glibc_conftest_frobozz
 EOF
 # The alpha-dec-osf1 assembler gives only a warning for `.set'
 # (but it doesn't work), so we must do a linking check to be sure.
@@ -1778,7 +1757,7 @@ AC_CACHE_CHECK(for assembler .weak directive, libc_cv_asm_weak_directive,
 	       [dnl
 cat > conftest.s <<EOF
 ${libc_cv_dot_text}
-${libc_cv_asm_global_directive} foo
+.globl foo
 foo:
 .weak foo
 .weak bar; bar = foo
@@ -1796,11 +1775,11 @@ if test $libc_cv_asm_weak_directive = no; then
 		 [dnl
 cat > conftest.s <<EOF
 ${libc_cv_dot_text}
-${libc_cv_asm_global_directive} foo
+.globl foo
 foo:
 .weakext bar foo
 .weakext baz
-${libc_cv_asm_global_directive} baz
+.globl baz
 baz:
 EOF
   if AC_TRY_COMMAND(${CC-cc} $ASFLAGS -c conftest.s 1>&AS_MESSAGE_LOG_FD); then

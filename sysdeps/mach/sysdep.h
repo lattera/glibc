@@ -31,7 +31,7 @@
    work right.  */
 #undef ENTRY
 #define ENTRY(name) \
-  ASM_GLOBAL_DIRECTIVE name; \
+  .globl name; \
   .align ALIGN; \
   .type name,@function; \
   name:

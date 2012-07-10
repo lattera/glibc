@@ -255,11 +255,8 @@ extern __thread struct __locale_data *const *_nl_current_##category \
 #define _NL_CURRENT_DEFINE(category) \
   __thread struct __locale_data *const *_nl_current_##category \
     attribute_hidden = &_nl_global_locale.__locales[category]; \
-  asm (_NL_CURRENT_DEFINE_STRINGIFY (ASM_GLOBAL_DIRECTIVE) \
-       " " __SYMBOL_PREFIX "_nl_current_" #category "_used\n" \
+  asm (".globl " __SYMBOL_PREFIX "_nl_current_" #category "_used\n" \
        _NL_CURRENT_DEFINE_ABS (_nl_current_##category##_used, 1));
-#define _NL_CURRENT_DEFINE_STRINGIFY(x) _NL_CURRENT_DEFINE_STRINGIFY_1 (x)
-#define _NL_CURRENT_DEFINE_STRINGIFY_1(x) #x
 #ifdef HAVE_ASM_SET_DIRECTIVE
 # define _NL_CURRENT_DEFINE_ABS(sym, val) ".set " #sym ", " #val
 #else
