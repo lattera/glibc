@@ -1,5 +1,8 @@
 2012-07-10  Chris Metcalf  <cmetcalf@tilera.com>
 
+	* sysdeps/unix/sysv/linux/tile/makecontext.c (__makecontext):
+	Correct typo in comment.
+
 	* sysdeps/tile/sysdep.h (ENTRY): Use .globl, not
 	ASM_GLOBAL_DIRECTIVE.
 

@@ -61,7 +61,7 @@ __makecontext (ucontext_t *ucp, void (*func) (void), int argc, ...)
   /* Set the return address to trampoline.  */
   ucp->uc_mcontext.lr = (long) __startcontext;
 
-  /* Pass ucp->uc_link to __start_context in r30.  */
+  /* Pass ucp->uc_link to __startcontext in r30.  */
   ucp->uc_mcontext.gregs[30] = (long) ucp->uc_link;
 }
 weak_alias (__makecontext, makecontext)
