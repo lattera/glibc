@@ -60,12 +60,12 @@
 #define	LOG_PRIMASK	0x07	/* mask to extract priority part (internal) */
 				/* extract priority */
 #define	LOG_PRI(p)	((p) & LOG_PRIMASK)
-#define	LOG_MAKEPRI(fac, pri)	(((fac) << 3) | (pri))
+#define	LOG_MAKEPRI(fac, pri)	((fac) | (pri))
 
 #ifdef SYSLOG_NAMES
 #define	INTERNAL_NOPRI	0x10	/* the "no priority" priority */
 				/* mark "facility" */
-#define	INTERNAL_MARK	LOG_MAKEPRI(LOG_NFACILITIES, 0)
+#define	INTERNAL_MARK	LOG_MAKEPRI(LOG_NFACILITIES << 3, 0)
 typedef struct _code {
 	char	*c_name;
 	int	c_val;
