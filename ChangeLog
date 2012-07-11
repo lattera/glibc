@@ -2,6 +2,9 @@
 
 	* po/fr.po: Update from translation team.
 
+	* po/sv.po: Update from translation team
+	* po/fr.po: Another update from translation team.
+
 2012-07-11  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	* sysdeps/ieee754/ldbl-128ibm/s_ctanhl.c: Do not call sinh and cosh

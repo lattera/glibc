@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libc-2.16-pre1\n"
 "POT-Creation-Date: 2012-06-21 07:51-0700\n"
-"PO-Revision-Date: 2012-07-06 17:16+0100\n"
+"PO-Revision-Date: 2012-07-11 16:10+0100\n"
 "Last-Translator: kerb <y.kerb@laposte.net>\n"
 "Language-Team: French <traduc@traduc.org>\n"
 "Language: fr\n"
@@ -98,7 +98,7 @@ msgstr "(ERREUR DU PROGRAMME) L'option aurait dû être reconnue ! ?"
 #: assert/assert-perr.c:36
 #, c-format
 msgid "%s%s%s:%u: %s%sUnexpected error: %s.\n"
-msgstr "%s%s%s : %u : %s%s Erreur imprévue : %s.\n"
+msgstr "%s%s%s : %u : %s%s erreur imprévue : %s.\n"
 
 #: assert/assert.c:101
 #, c-format
@@ -106,7 +106,7 @@ msgid ""
 "%s%s%s:%u: %s%sAssertion `%s' failed.\n"
 "%n"
 msgstr ""
-"%s%s%s :%u : %s%s L'assertion « %s » a échoué.\n"
+"%s%s%s :%u : %s%s l'assertion « %s » a échoué.\n"
 "%n"
 
 #: catgets/gencat.c:109 catgets/gencat.c:113 nscd/nscd.c:115 nss/makedb.c:118
@@ -982,7 +982,7 @@ msgstr "attention : vous n'avez pas la permission d'exécution pour"
 
 #: elf/ldd.bash.in:184
 msgid "\tnot a dynamic executable"
-msgstr "\t n'est pas un exécutable dynamique"
+msgstr "\tn'est pas un exécutable dynamique"
 
 #: elf/ldd.bash.in:192
 msgid "exited with unknown exit code"
@@ -2879,7 +2879,7 @@ msgstr "échec d'évaluation par stat() de « %s » :  %s : ignoré"
 #: locale/programs/locarchive.c:1287
 #, c-format
 msgid "\"%s\" is no directory; ignored"
-msgstr "« %s » n'est pas un dossier; ignoré"
+msgstr "« %s » n'est pas un dossier ; ignoré"
 
 #: locale/programs/locarchive.c:1294
 #, c-format
@@ -3766,21 +3766,21 @@ msgstr "yp_update : ne peut obtenir l'adresse du serveur\n"
 #: nscd/aicache.c:82 nscd/hstcache.c:493
 #, c-format
 msgid "Haven't found \"%s\" in hosts cache!"
-msgstr "N'a pas trouvé « %s » dans la cache de la liste des hôtes!"
+msgstr "N'a pas trouvé « %s » dans la cache de la liste des hôtes !"
 
 #: nscd/aicache.c:84 nscd/hstcache.c:495
 #, c-format
 msgid "Reloading \"%s\" in hosts cache!"
-msgstr "Recharge \"%s\" dans le cache hôte!"
+msgstr "Recharge « %s » dans le cache hôte !"
 
 #: nscd/cache.c:151
 #, c-format
 msgid "add new entry \"%s\" of type %s for %s to cache%s"
-msgstr "ajoute une nouvelle entrée \"%s\" de type %s pour %s au cache%s"
+msgstr "ajoute une nouvelle entrée « %s » de type %s pour %s au cache%s"
 
 #: nscd/cache.c:153
 msgid " (first)"
-msgstr " (first)"
+msgstr " (premier)"
 
 #: nscd/cache.c:285 nscd/connections.c:1002
 #, c-format
@@ -3795,12 +3795,12 @@ msgstr "écourte %s cache; time %ld"
 #: nscd/cache.c:360
 #, c-format
 msgid "considering %s entry \"%s\", timeout %<PRIu64>"
-msgstr "considering %s entry \"%s\", timeout %<PRIu64>"
+msgstr "considérant %s entrée « %s », timeout %<PRIu64>"
 
 #: nscd/connections.c:570
 #, c-format
 msgid "invalid persistent database file \"%s\": %s"
-msgstr "fichier de base de données reste invalide \"%s\" : %s"
+msgstr "fichier persistant de base de données invalide \"%s\" : %s"
 
 #: nscd/connections.c:578
 msgid "uninitialized header"
@@ -3826,7 +3826,7 @@ msgstr "la taille suggérée de la table pour la base de donnée %s est plus gra
 #: nscd/connections.c:635 nscd/connections.c:720
 #, c-format
 msgid "cannot create read-only descriptor for \"%s\"; no mmap"
-msgstr "ne peut créer le descripteur read-only pour \"%s\" ; pas de mmap"
+msgstr "ne peut créer le descripteur en lecture seule pour « %s » ; pas de mmap"
 
 #: nscd/connections.c:651
 #, c-format
@@ -3950,7 +3950,7 @@ msgstr "re-exec a échoué : %s; désactive le mode paranoïa"
 #: nscd/connections.c:1534
 #, c-format
 msgid "cannot change current working directory to \"/\": %s"
-msgstr "ne peut établir le dossier de travail courant à \"/\" : %s"
+msgstr "ne peut établir le dossier de travail courant à « / » : %s"
 
 #: nscd/connections.c:1727
 #, c-format
@@ -4025,12 +4025,12 @@ msgstr "Écriture écourtée dans %s : %s"
 #: nscd/grpcache.c:435 nscd/initgrcache.c:77
 #, c-format
 msgid "Haven't found \"%s\" in group cache!"
-msgstr "N'a pas trouvé « %s » dans la cache du groupe!"
+msgstr "N'a pas trouvé « %s » dans la cache du groupe !"
 
 #: nscd/grpcache.c:437 nscd/initgrcache.c:79
 #, c-format
 msgid "Reloading \"%s\" in group cache!"
-msgstr "Recharge \"%s\" dans le cache groupe!"
+msgstr "Recharge « %s » dans le cache groupe !"
 
 #: nscd/grpcache.c:516
 #, c-format
@@ -4050,22 +4050,22 @@ msgstr "plus de mémoire disponible pour la base de données '%s'"
 #: nscd/netgroupcache.c:77
 #, c-format
 msgid "Haven't found \"%s\" in netgroup cache!"
-msgstr "N'a pas trouvé \"%s\" dans le cache du netgroupe!"
+msgstr "N'a pas trouvé « %s » dans le cache du netgroupe !"
 
 #: nscd/netgroupcache.c:79
 #, c-format
 msgid "Reloading \"%s\" in netgroup cache!"
-msgstr "Recharge \"%s\" dans le cache netgroupe!"
+msgstr "Recharge « %s » dans le cache netgroupe !"
 
 #: nscd/netgroupcache.c:467
 #, c-format
 msgid "Haven't found \"%s (%s,%s,%s)\" in netgroup cache!"
-msgstr "N'a pas trouvé \"%s (%s,%s,%s)\" dans la cache du groupe!"
+msgstr "N'a pas trouvé « %s (%s,%s,%s) » dans le cache du groupe !"
 
 #: nscd/netgroupcache.c:470
 #, c-format
 msgid "Reloading \"%s (%s,%s,%s)\" in netgroup cache!"
-msgstr "Recharge \"%s (%s,%s,%s)\" dans le cache netgroupe!"
+msgstr "Recharge « %s (%s,%s,%s) » dans le cache netgroupe !"
 
 #: nscd/nscd.c:116
 msgid "Read configuration data from NAME"
@@ -4085,7 +4085,7 @@ msgstr "NUMÉRO"
 
 #: nscd/nscd.c:121
 msgid "Start NUMBER threads"
-msgstr "Démarrage du NOMBRE de « threads »"
+msgstr "Démarrage du NOMBRE de fils (thread)"
 
 #: nscd/nscd.c:122
 msgid "Shut the server down"
@@ -4113,7 +4113,7 @@ msgstr "Utiliser une cache séparée pour chaque usager"
 
 #: nscd/nscd.c:132
 msgid "Name Service Cache Daemon."
-msgstr "« Daemon » de la cache du service de noms."
+msgstr "« Daemon » du cache du service de noms."
 
 #: nscd/nscd.c:164 nss/getent.c:999 nss/makedb.c:207
 #, c-format
@@ -4138,7 +4138,7 @@ msgstr "ne peut fourcher"
 #: nscd/nscd.c:268
 #, c-format
 msgid "cannot change current working directory to \"/\""
-msgstr "ne peut établir le dossier de travail courant à \"/\""
+msgstr "ne peut établir le dossier de travail courant à « / »"
 
 #: nscd/nscd.c:276
 msgid "Could not create log file"
@@ -4147,7 +4147,7 @@ msgstr "N'a pu créé le fichier journal"
 #: nscd/nscd.c:346 nscd/nscd.c:371 nscd/nscd_stat.c:173
 #, c-format
 msgid "Only root is allowed to use this option!"
-msgstr "Seul ROOT est autorisé à utiliser cette option!"
+msgstr "Seul ROOT est autorisé à utiliser cette option !"
 
 #: nscd/nscd.c:386
 #, c-format
@@ -4230,12 +4230,12 @@ msgstr "non"
 #: nscd/nscd_stat.c:169
 #, c-format
 msgid "Only root or %s is allowed to use this option!"
-msgstr "Seul ROOT ou %s est autorisé à utiliser cette option!"
+msgstr "Seul ROOT ou %s est autorisé à utiliser cette option !"
 
 #: nscd/nscd_stat.c:180
 #, c-format
 msgid "nscd not running!\n"
-msgstr "nscd n'est pas en exécution!\n"
+msgstr "nscd n'est pas en exécution !\n"
 
 #: nscd/nscd_stat.c:204
 #, c-format
@@ -4345,12 +4345,12 @@ msgstr ""
 #: nscd/pwdcache.c:428
 #, c-format
 msgid "Haven't found \"%s\" in password cache!"
-msgstr "N'a pas trouvé \"%s\" dans le cache des mots de passe!"
+msgstr "N'a pas trouvé « %s » dans le cache des mots de passe !"
 
 #: nscd/pwdcache.c:430
 #, c-format
 msgid "Reloading \"%s\" in password cache!"
-msgstr "Recharge \"%s\" dans le cache des mots de passe!"
+msgstr "Recharge « %s » dans le cache des mots de passe !"
 
 #: nscd/pwdcache.c:511
 #, c-format
@@ -4462,12 +4462,12 @@ msgstr ""
 #: nscd/servicescache.c:387
 #, c-format
 msgid "Haven't found \"%s\" in services cache!"
-msgstr "N'a pas trouvé \"%s\" dans le cache des services!"
+msgstr "N'a pas trouvé « %s » dans le cache des services !"
 
 #: nscd/servicescache.c:389
 #, c-format
 msgid "Reloading \"%s\" in services cache!"
-msgstr "Recharge \"%s\" dans le cache des services!"
+msgstr "Recharge « %s » dans le cache des services !"
 
 #: nss/getent.c:53
 msgid "database [key ...]"
@@ -5037,7 +5037,7 @@ msgstr "Erreur inconnue"
 #: string/strsignal.c:60
 #, c-format
 msgid "Real-time signal %d"
-msgstr "Signal de Temps-Réel %d"
+msgstr "Signal de temps-Réel %d"
 
 #: string/strsignal.c:64
 #, c-format
@@ -5270,12 +5270,12 @@ msgstr "Le fichier « %s » existe déjà et peut avoir été écrasé.\n"
 #: sunrpc/rpc_main.c:1179
 #, c-format
 msgid "Cannot specify more than one input file!\n"
-msgstr "Ne peut spécifier plus d'un fichier d'entrée!\n"
+msgstr "Ne peut spécifier plus d'un fichier d'entrée !\n"
 
 #: sunrpc/rpc_main.c:1349
 #, c-format
 msgid "This implementation doesn't support newstyle or MT-safe code!\n"
-msgstr "Cette implantation ne supporte pas le nouveau style ou le code MT-safe!\n"
+msgstr "Cette implantation ne supporte pas le nouveau style ou le code MT-safe !\n"
 
 #: sunrpc/rpc_main.c:1358
 #, c-format
@@ -5295,17 +5295,17 @@ msgstr "Ne peut utiliser la table des sémaphores avec « newstyle » !\n"
 #: sunrpc/rpc_main.c:1393
 #, c-format
 msgid "\"infile\" is required for template generation flags.\n"
-msgstr "\"fichier_d_entrée\" est requis pour la génération du gabarit des indicateurs.\n"
+msgstr "« fichier-en-entrée » est requis pour la génération du gabarit des indicateurs.\n"
 
 #: sunrpc/rpc_main.c:1398
 #, c-format
 msgid "Cannot have more than one file generation flag!\n"
-msgstr "Ne peut avoir plus d'un fichier de génération de sémaphores!\n"
+msgstr "Ne peut avoir plus d'un fichier de génération de sémaphores !\n"
 
 #: sunrpc/rpc_main.c:1407
 #, c-format
 msgid "usage: %s infile\n"
-msgstr "usage : %s fichier_d_entrée\n"
+msgstr "usage : %s fichier-en-entrée\n"
 
 #: sunrpc/rpc_main.c:1408
 #, c-format
@@ -6790,7 +6790,7 @@ msgstr ""
 
 #: timezone/zic.c:496
 msgid "wild compilation-time specification of zic_t"
-msgstr "compilation sauvage-specification du temps de zic_t"
+msgstr "spécification « sauvage » du temps de compilation de zic_t"
 
 #: timezone/zic.c:515
 #, c-format
@@ -6922,7 +6922,7 @@ msgstr "La ligne \"Zone %s\" et l'option -l sont mutuellement exclusifs"
 #: timezone/zic.c:1007
 #, c-format
 msgid "\"Zone %s\" line and -p option are mutually exclusive"
-msgstr "La ligne \"Zone %s\" et l'option -p sont mutuellement exclusifs"
+msgstr "La ligne « Zone %s » et l'option -p sont mutuellement exclusifs"
 
 #: timezone/zic.c:1019
 #, c-format
