@@ -1,5 +1,5 @@
 /* Low-level functions for atomic operations. Mips version.
-   Copyright (C) 2005 Free Software Foundation, Inc.
+   Copyright (C) 2005-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -78,17 +78,141 @@ typedef uintmax_t uatomic_max_t;
 #define MIPS_SYNC_STR_1(X) MIPS_SYNC_STR_2(X)
 #define MIPS_SYNC_STR MIPS_SYNC_STR_1(MIPS_SYNC)
 
+#if __GNUC_PREREQ (4, 8)
+/* The __atomic_* builtins are available in GCC 4.7 and later, but MIPS
+   support for their efficient implementation was added only in GCC 4.8.  */
+
+/* Compare and exchange.
+   For all "bool" routines, we return FALSE if exchange succesful.  */
+
+# define __arch_compare_and_exchange_bool_8_int(mem, newval, oldval, model) \
+  (abort (), 0)
+
+# define __arch_compare_and_exchange_bool_16_int(mem, newval, oldval, model) \
+  (abort (), 0)
+
+# define __arch_compare_and_exchange_bool_32_int(mem, newval, oldval, model) \
+  ({									\
+    typeof (*mem) __oldval = (oldval);					\
+    !__atomic_compare_exchange_n (mem, (void *) &__oldval, newval, 0,	\
+				  model, __ATOMIC_RELAXED);		\
+  })
+
+# define __arch_compare_and_exchange_val_8_int(mem, newval, oldval, model) \
+  (abort (), (typeof(*mem)) 0)
+
+# define __arch_compare_and_exchange_val_16_int(mem, newval, oldval, model) \
+  (abort (), (typeof(*mem)) 0)
+
+# define __arch_compare_and_exchange_val_32_int(mem, newval, oldval, model) \
+  ({									\
+    typeof (*mem) __oldval = (oldval);					\
+    __atomic_compare_exchange_n (mem, (void *) &__oldval, newval, 0,	\
+				 model, __ATOMIC_RELAXED);		\
+    __oldval;								\
+  })
+
+# if _MIPS_SIM == _ABIO32
+  /* We can't do an atomic 64-bit operation in O32.  */
+#  define __arch_compare_and_exchange_bool_64_int(mem, newval, oldval, model) \
+  (abort (), 0)
+#  define __arch_compare_and_exchange_val_64_int(mem, newval, oldval, model) \
+  (abort (), (typeof(*mem)) 0)
+# else
+#  define __arch_compare_and_exchange_bool_64_int(mem, newval, oldval, model) \
+  __arch_compare_and_exchange_bool_32_int (mem, newval, oldval, model)
+#  define __arch_compare_and_exchange_val_64_int(mem, newval, oldval, model) \
+  __arch_compare_and_exchange_val_32_int (mem, newval, oldval, model)
+# endif
+
+/* Compare and exchange with "acquire" semantics, ie barrier after.  */
+
+# define atomic_compare_and_exchange_bool_acq(mem, new, old)	\
+  __atomic_bool_bysize (__arch_compare_and_exchange_bool, int,	\
+			mem, new, old, __ATOMIC_ACQUIRE)
+
+# define atomic_compare_and_exchange_val_acq(mem, new, old)	\
+  __atomic_val_bysize (__arch_compare_and_exchange_val, int,	\
+		       mem, new, old, __ATOMIC_ACQUIRE)
+
+/* Compare and exchange with "release" semantics, ie barrier before.  */
+
+# define atomic_compare_and_exchange_bool_rel(mem, new, old)	\
+  __atomic_bool_bysize (__arch_compare_and_exchange_bool, int,	\
+			mem, new, old, __ATOMIC_RELEASE)
+
+# define atomic_compare_and_exchange_val_rel(mem, new, old)	 \
+  __atomic_val_bysize (__arch_compare_and_exchange_val, int,    \
+                       mem, new, old, __ATOMIC_RELEASE)
+
+
+/* Atomic exchange (without compare).  */
+
+# define __arch_exchange_8_int(mem, newval, model)	\
+  (abort (), (typeof(*mem)) 0)
+
+# define __arch_exchange_16_int(mem, newval, model)	\
+  (abort (), (typeof(*mem)) 0)
+
+# define __arch_exchange_32_int(mem, newval, model)	\
+  __atomic_exchange_n (mem, newval, model)
+
+# if _MIPS_SIM == _ABIO32
+/* We can't do an atomic 64-bit operation in O32.  */
+#  define __arch_exchange_64_int(mem, newval, model)	\
+  (abort (), (typeof(*mem)) 0)
+# else
+#  define __arch_exchange_64_int(mem, newval, model)	\
+  __atomic_exchange_n (mem, newval, model)
+# endif
+
+# define atomic_exchange_acq(mem, value)				\
+  __atomic_val_bysize (__arch_exchange, int, mem, value, __ATOMIC_ACQUIRE)
+
+# define atomic_exchange_rel(mem, value)				\
+  __atomic_val_bysize (__arch_exchange, int, mem, value, __ATOMIC_RELEASE)
+
+
+/* Atomically add value and return the previous (unincremented) value.  */
+
+# define __arch_exchange_and_add_8_int(mem, value, model)	\
+  (abort (), (typeof(*mem)) 0)
+
+# define __arch_exchange_and_add_16_int(mem, value, model)	\
+  (abort (), (typeof(*mem)) 0)
+
+# define __arch_exchange_and_add_32_int(mem, value, model)	\
+  __atomic_fetch_add (mem, value, model)
+
+# if _MIPS_SIM == _ABIO32
+/* We can't do an atomic 64-bit operation in O32.  */
+#  define __arch_exchange_and_add_64_int(mem, value, model)	\
+  (abort (), (typeof(*mem)) 0)
+# else
+#  define __arch_exchange_and_add_64_int(mem, value, model)	\
+  __atomic_fetch_add (mem, value, model)
+# endif
+
+/* ??? Barrier semantics for atomic_exchange_and_add appear to be
+   undefined.  Use full barrier for now, as that's safe.  */
+# define atomic_exchange_and_add(mem, value)				\
+  __atomic_val_bysize (__arch_exchange_and_add, int, mem, value,	\
+		       __ATOMIC_ACQ_REL)
+#else /* !__GNUC_PREREQ (4, 8) */
+/* This implementation using inline assembly will be removed once glibc
+   requires GCC 4.8 or later to build.  */
+
 /* Compare and exchange.  For all of the "xxx" routines, we expect a
    "__prev" and a "__cmp" variable to be provided by the enclosing scope,
    in which values are returned.  */
 
-#define __arch_compare_and_exchange_xxx_8_int(mem, newval, oldval, rel, acq) \
+# define __arch_compare_and_exchange_xxx_8_int(mem, newval, oldval, rel, acq) \
   (abort (), __prev = __cmp = 0)
 
-#define __arch_compare_and_exchange_xxx_16_int(mem, newval, oldval, rel, acq) \
+# define __arch_compare_and_exchange_xxx_16_int(mem, newval, oldval, rel, acq) \
   (abort (), __prev = __cmp = 0)
 
-#define __arch_compare_and_exchange_xxx_32_int(mem, newval, oldval, rel, acq) \
+# define __arch_compare_and_exchange_xxx_32_int(mem, newval, oldval, rel, acq) \
      __asm__ __volatile__ (						      \
      ".set	push\n\t"						      \
      MIPS_PUSH_MIPS2							      \
@@ -107,12 +231,12 @@ typedef uintmax_t uatomic_max_t;
 	      : "r" (oldval), "r" (newval), "m" (*mem)			      \
 	      : "memory")
 
-#if _MIPS_SIM == _ABIO32
+# if _MIPS_SIM == _ABIO32
 /* We can't do an atomic 64-bit operation in O32.  */
-#define __arch_compare_and_exchange_xxx_64_int(mem, newval, oldval, rel, acq) \
+# define __arch_compare_and_exchange_xxx_64_int(mem, newval, oldval, rel, acq) \
   (abort (), __prev = __cmp = 0)
-#else
-#define __arch_compare_and_exchange_xxx_64_int(mem, newval, oldval, rel, acq) \
+# else
+# define __arch_compare_and_exchange_xxx_64_int(mem, newval, oldval, rel, acq) \
      __asm__ __volatile__ ("\n"						      \
      ".set	push\n\t"						      \
      MIPS_PUSH_MIPS2							      \
@@ -130,26 +254,26 @@ typedef uintmax_t uatomic_max_t;
 	      : "=&r" (__prev), "=&r" (__cmp), "=m" (*mem)		      \
 	      : "r" (oldval), "r" (newval), "m" (*mem)			      \
 	      : "memory")
-#endif
+# endif
 
 /* For all "bool" routines, we return FALSE if exchange succesful.  */
 
-#define __arch_compare_and_exchange_bool_8_int(mem, new, old, rel, acq)	\
+# define __arch_compare_and_exchange_bool_8_int(mem, new, old, rel, acq) \
 ({ typeof (*mem) __prev; int __cmp;					\
    __arch_compare_and_exchange_xxx_8_int(mem, new, old, rel, acq);	\
    !__cmp; })
 
-#define __arch_compare_and_exchange_bool_16_int(mem, new, old, rel, acq) \
+# define __arch_compare_and_exchange_bool_16_int(mem, new, old, rel, acq) \
 ({ typeof (*mem) __prev; int __cmp;					\
    __arch_compare_and_exchange_xxx_16_int(mem, new, old, rel, acq);	\
    !__cmp; })
 
-#define __arch_compare_and_exchange_bool_32_int(mem, new, old, rel, acq) \
+# define __arch_compare_and_exchange_bool_32_int(mem, new, old, rel, acq) \
 ({ typeof (*mem) __prev; int __cmp;					\
    __arch_compare_and_exchange_xxx_32_int(mem, new, old, rel, acq);	\
    !__cmp; })
 
-#define __arch_compare_and_exchange_bool_64_int(mem, new, old, rel, acq) \
+# define __arch_compare_and_exchange_bool_64_int(mem, new, old, rel, acq) \
 ({ typeof (*mem) __prev; int __cmp;					\
    __arch_compare_and_exchange_xxx_64_int(mem, new, old, rel, acq);	\
    !__cmp; })
@@ -157,43 +281,43 @@ typedef uintmax_t uatomic_max_t;
 /* For all "val" routines, return the old value whether exchange
    successful or not.  */
 
-#define __arch_compare_and_exchange_val_8_int(mem, new, old, rel, acq)	\
+# define __arch_compare_and_exchange_val_8_int(mem, new, old, rel, acq)	\
 ({ typeof (*mem) __prev; int __cmp;					\
    __arch_compare_and_exchange_xxx_8_int(mem, new, old, rel, acq);	\
    (typeof (*mem))__prev; })
 
-#define __arch_compare_and_exchange_val_16_int(mem, new, old, rel, acq) \
+# define __arch_compare_and_exchange_val_16_int(mem, new, old, rel, acq) \
 ({ typeof (*mem) __prev; int __cmp;					\
    __arch_compare_and_exchange_xxx_16_int(mem, new, old, rel, acq);	\
    (typeof (*mem))__prev; })
 
-#define __arch_compare_and_exchange_val_32_int(mem, new, old, rel, acq) \
+# define __arch_compare_and_exchange_val_32_int(mem, new, old, rel, acq) \
 ({ typeof (*mem) __prev; int __cmp;					\
    __arch_compare_and_exchange_xxx_32_int(mem, new, old, rel, acq);	\
    (typeof (*mem))__prev; })
 
-#define __arch_compare_and_exchange_val_64_int(mem, new, old, rel, acq) \
+# define __arch_compare_and_exchange_val_64_int(mem, new, old, rel, acq) \
 ({ typeof (*mem) __prev; int __cmp;					\
    __arch_compare_and_exchange_xxx_64_int(mem, new, old, rel, acq);	\
    (typeof (*mem))__prev; })
 
 /* Compare and exchange with "acquire" semantics, ie barrier after.  */
 
-#define atomic_compare_and_exchange_bool_acq(mem, new, old)	\
+# define atomic_compare_and_exchange_bool_acq(mem, new, old)	\
   __atomic_bool_bysize (__arch_compare_and_exchange_bool, int,	\
 		        mem, new, old, "", MIPS_SYNC_STR)
 
-#define atomic_compare_and_exchange_val_acq(mem, new, old)	\
+# define atomic_compare_and_exchange_val_acq(mem, new, old)	\
   __atomic_val_bysize (__arch_compare_and_exchange_val, int,	\
 		       mem, new, old, "", MIPS_SYNC_STR)
 
 /* Compare and exchange with "release" semantics, ie barrier before.  */
 
-#define atomic_compare_and_exchange_bool_rel(mem, new, old)	\
+# define atomic_compare_and_exchange_bool_rel(mem, new, old)	\
   __atomic_bool_bysize (__arch_compare_and_exchange_bool, int,	\
 		        mem, new, old, MIPS_SYNC_STR, "")
 
-#define atomic_compare_and_exchange_val_rel(mem, new, old)	\
+# define atomic_compare_and_exchange_val_rel(mem, new, old)	\
   __atomic_val_bysize (__arch_compare_and_exchange_val, int,	\
 		       mem, new, old, MIPS_SYNC_STR, "")
 
@@ -201,13 +325,13 @@ typedef uintmax_t uatomic_max_t;
 
 /* Atomic exchange (without compare).  */
 
-#define __arch_exchange_xxx_8_int(mem, newval, rel, acq) \
-  (abort (), 0)
+# define __arch_exchange_xxx_8_int(mem, newval, rel, acq) \
+  (abort (), (typeof(*mem)) 0)
 
-#define __arch_exchange_xxx_16_int(mem, newval, rel, acq) \
-  (abort (), 0)
+# define __arch_exchange_xxx_16_int(mem, newval, rel, acq) \
+  (abort (), (typeof(*mem)) 0)
 
-#define __arch_exchange_xxx_32_int(mem, newval, rel, acq) \
+# define __arch_exchange_xxx_32_int(mem, newval, rel, acq) \
 ({ typeof (*mem) __prev; int __cmp;					      \
      __asm__ __volatile__ ("\n"						      \
      ".set	push\n\t"						      \
@@ -226,12 +350,12 @@ typedef uintmax_t uatomic_max_t;
 	      : "memory");						      \
   __prev; })
 
-#if _MIPS_SIM == _ABIO32
+# if _MIPS_SIM == _ABIO32
 /* We can't do an atomic 64-bit operation in O32.  */
-#define __arch_exchange_xxx_64_int(mem, newval, rel, acq) \
-  (abort (), 0)
-#else
-#define __arch_exchange_xxx_64_int(mem, newval, rel, acq) \
+#  define __arch_exchange_xxx_64_int(mem, newval, rel, acq) \
+  (abort (), (typeof(*mem)) 0)
+# else
+#  define __arch_exchange_xxx_64_int(mem, newval, rel, acq) \
 ({ typeof (*mem) __prev; int __cmp;					      \
      __asm__ __volatile__ ("\n"						      \
      ".set	push\n\t"						      \
@@ -249,24 +373,24 @@ typedef uintmax_t uatomic_max_t;
 	      : "r" (newval), "m" (*mem)				      \
 	      : "memory");						      \
   __prev; })
-#endif
+# endif
 
-#define atomic_exchange_acq(mem, value) \
+# define atomic_exchange_acq(mem, value) \
   __atomic_val_bysize (__arch_exchange_xxx, int, mem, value, "", MIPS_SYNC_STR)
 
-#define atomic_exchange_rel(mem, value) \
+# define atomic_exchange_rel(mem, value) \
   __atomic_val_bysize (__arch_exchange_xxx, int, mem, value, MIPS_SYNC_STR, "")
 
 
 /* Atomically add value and return the previous (unincremented) value.  */
 
-#define __arch_exchange_and_add_8_int(mem, newval, rel, acq) \
+# define __arch_exchange_and_add_8_int(mem, newval, rel, acq) \
   (abort (), (typeof(*mem)) 0)
 
-#define __arch_exchange_and_add_16_int(mem, newval, rel, acq) \
+# define __arch_exchange_and_add_16_int(mem, newval, rel, acq) \
   (abort (), (typeof(*mem)) 0)
 
-#define __arch_exchange_and_add_32_int(mem, value, rel, acq) \
+# define __arch_exchange_and_add_32_int(mem, value, rel, acq) \
 ({ typeof (*mem) __prev; int __cmp;					      \
      __asm__ __volatile__ ("\n"						      \
      ".set	push\n\t"						      \
@@ -285,12 +409,12 @@ typedef uintmax_t uatomic_max_t;
 	      : "memory");						      \
   __prev; })
 
-#if _MIPS_SIM == _ABIO32
+# if _MIPS_SIM == _ABIO32
 /* We can't do an atomic 64-bit operation in O32.  */
-#define __arch_exchange_and_add_64_int(mem, value, rel, acq) \
+#  define __arch_exchange_and_add_64_int(mem, value, rel, acq) \
   (abort (), (typeof(*mem)) 0)
-#else
-#define __arch_exchange_and_add_64_int(mem, value, rel, acq) \
+# else
+#  define __arch_exchange_and_add_64_int(mem, value, rel, acq) \
 ({ typeof (*mem) __prev; int __cmp;					      \
      __asm__ __volatile__ (						      \
      ".set	push\n\t"						      \
@@ -308,13 +432,14 @@ typedef uintmax_t uatomic_max_t;
 	      : "r" (value), "m" (*mem)					      \
 	      : "memory");						      \
   __prev; })
-#endif
+# endif
 
 /* ??? Barrier semantics for atomic_exchange_and_add appear to be 
    undefined.  Use full barrier for now, as that's safe.  */
-#define atomic_exchange_and_add(mem, value) \
+# define atomic_exchange_and_add(mem, value) \
   __atomic_val_bysize (__arch_exchange_and_add, int, mem, value,	      \
 		       MIPS_SYNC_STR, MIPS_SYNC_STR)
+#endif /* __GNUC_PREREQ (4, 8) */
 
 /* TODO: More atomic operations could be implemented efficiently; only the
    basic requirements are done.  */
