@@ -1336,20 +1336,100 @@ ldouble: 1
 Test "Real part of: ctan (0x1p1023 + 1 i) == -0.2254627924997545057926782581695274244229 + 0.8786063118883068695462540226219865087189 i":
 double: 1
 idouble: 1
+Test "Imaginary part of: ctan (0x1p1023 + 1 i) == -0.2254627924997545057926782581695274244229 + 0.8786063118883068695462540226219865087189 i":
+ildouble: 1
+ldouble: 1
 Test "Real part of: ctan (0x1p127 + 1 i) == 0.2446359391192790896381501310437708987204 + 0.9101334047676183761532873794426475906201 i":
 float: 1
 ifloat: 1
+ildouble: 1
+ldouble: 1
 Test "Imaginary part of: ctan (0x1p127 + 1 i) == 0.2446359391192790896381501310437708987204 + 0.9101334047676183761532873794426475906201 i":
 double: 1
 float: 1
 idouble: 1
 ifloat: 1
+ildouble: 2
+ldouble: 2
 Test "Real part of: ctan (0x3.243f6cp-1 + 0 i) == -2.287733242885645987394874673945769518150e7 + 0.0 i":
 float: 1
 ifloat: 1
+ildouble: 2
+ldouble: 2
 Test "Real part of: ctan (1 + 47 i) == 2.729321264492904590777293425576722354636e-41 + 1.0 i":
 ildouble: 2
 ldouble: 2
+
+# ctan_downward
+Test "Real part of: ctan_downward (0x1.921fb54442d18p+0 + 0x1p-1074 i) == 1.633123935319536975596773704152891653086e16 + 1.317719414943508315995636961402669067843e-291 i":
+ildouble: 3
+ldouble: 3
+Test "Real part of: ctan_downward (0x1.921fb6p+0 + 0x1p-149 i) == -2.287733242885645987394874673945769518150e7 + 7.334008549954377778731880988481078535821e-31 i":
+double: 2
+float: 1
+idouble: 2
+ifloat: 1
+ildouble: 4
+ldouble: 4
+Test "Imaginary part of: ctan_downward (0x1.921fb6p+0 + 0x1p-149 i) == -2.287733242885645987394874673945769518150e7 + 7.334008549954377778731880988481078535821e-31 i":
+float: 1
+ifloat: 1
+ildouble: 10
+ldouble: 10
+
+# ctan_tonearest
+Test "Real part of: ctan_tonearest (0x1.921fb6p+0 + 0x1p-149 i) == -2.287733242885645987394874673945769518150e7 + 7.334008549954377778731880988481078535821e-31 i":
+float: 1
+ifloat: 1
+ildouble: 2
+ldouble: 2
+Test "Imaginary part of: ctan_tonearest (0x1.921fb6p+0 + 0x1p-149 i) == -2.287733242885645987394874673945769518150e7 + 7.334008549954377778731880988481078535821e-31 i":
+float: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+
+# ctan_towardzero
+Test "Real part of: ctan_towardzero (0x1.921fb54442d18p+0 + 0x1p-1074 i) == 1.633123935319536975596773704152891653086e16 + 1.317719414943508315995636961402669067843e-291 i":
+ldouble: 4
+ildouble: 4
+Test "Imaginary part of: ctan_towardzero (0x1.921fb54442d18p+0 + 0x1p-1074 i) == 1.633123935319536975596773704152891653086e16 + 1.317719414943508315995636961402669067843e-291 i":
+ildouble: 13
+ldouble: 13
+Test "Real part of: ctan_towardzero (0x1.921fb6p+0 + 0x1p-149 i) == -2.287733242885645987394874673945769518150e7 + 7.334008549954377778731880988481078535821e-31 i":
+float: 1
+ifloat: 1
+ildouble: 2
+ldouble: 2
+Test "Imaginary part of: ctan_towardzero (0x1.921fb6p+0 + 0x1p-149 i) == -2.287733242885645987394874673945769518150e7 + 7.334008549954377778731880988481078535821e-31 i":
+float: 1
+ifloat: 1
+ildouble: 10
+ldouble: 10
+
+# ctan_upward
+Test "Real part of: ctan_upward (0x1.921fb54442d18p+0 + 0x1p-1074 i) == 1.633123935319536975596773704152891653086e16 + 1.317719414943508315995636961402669067843e-291 i":
+double: 1
+idouble: 1
+ildouble: 6
+ldouble: 6
+Test "Imaginary part of: ctan_upward (0x1.921fb54442d18p+0 + 0x1p-1074 i) == 1.633123935319536975596773704152891653086e16 + 1.317719414943508315995636961402669067843e-291 i":
+ildouble: 10
+ldouble: 10
+Test "Real part of: ctan_upward (0x1.921fb6p+0 + 0x1p-149 i) == -2.287733242885645987394874673945769518150e7 + 7.334008549954377778731880988481078535821e-31 i":
+double: 2
+float: 1
+idouble: 2
+ifloat: 1
+ildouble: 6
+ldouble: 6
+Test "Imaginary part of: ctan_upward (0x1.921fb6p+0 + 0x1p-149 i) == -2.287733242885645987394874673945769518150e7 + 7.334008549954377778731880988481078535821e-31 i":
+double: 1
+float: 2
+idouble: 1
+ifloat: 2
+ildouble: 1
+ldouble: 1
 
 # ctanh
 Test "Real part of: ctanh (-2 - 3 i) == -0.965385879022133124278480269394560686 + 0.988437503832249372031403430350121098e-2 i":
@@ -1357,12 +1437,19 @@ double: 1
 float: 2
 idouble: 1
 ifloat: 2
+idouble: 2
+ildouble: 2
+ldouble: 2
 Test "Imaginary part of: ctanh (-2 - 3 i) == -0.965385879022133124278480269394560686 + 0.988437503832249372031403430350121098e-2 i":
 double: 1
 idouble: 1
+ildouble: 2
+ldouble: 2
 Test "Imaginary part of: ctanh (0 + 0x3.243f6cp-1 i) == 0.0 - 2.287733242885645987394874673945769518150e7 i":
 float: 1
 ifloat: 1
+ildouble: 2
+ldouble: 2
 Test "Imaginary part of: ctanh (0 + pi/4 i) == 0.0 + 1.0 i":
 double: 1
 float: 1
@@ -1378,21 +1465,99 @@ float: 1
 ifloat: 1
 ildouble: 2
 ldouble: 2
+Test "Real part of: ctanh (1 + 0x1p1023 i) == 0.8786063118883068695462540226219865087189 - 0.2254627924997545057926782581695274244229 i":
+ildouble: 1
+ldouble: 1
 Test "Imaginary part of: ctanh (1 + 0x1p1023 i) == 0.8786063118883068695462540226219865087189 - 0.2254627924997545057926782581695274244229 i":
-double: 1
 idouble: 1
+double: 1
 Test "Real part of: ctanh (1 + 0x1p127 i) == 0.9101334047676183761532873794426475906201 + 0.2446359391192790896381501310437708987204 i":
 double: 1
 float: 1
 idouble: 1
 ifloat: 1
+ildouble: 2
+ldouble: 2
 Test "Imaginary part of: ctanh (1 + 0x1p127 i) == 0.9101334047676183761532873794426475906201 + 0.2446359391192790896381501310437708987204 i":
 double: 1
 float: 1
 ifloat: 1
+ildouble: 1
+ldouble: 1
 Test "Imaginary part of: ctanh (47 + 1 i) == 1.0 + 2.729321264492904590777293425576722354636e-41 i":
 ildouble: 2
 ldouble: 2
+
+# ctanh_downward
+Test "Imaginary part of: ctanh_downward (0x1p-1074 + 0x1.921fb54442d18p+0 i) == 1.317719414943508315995636961402669067843e-291 + 1.633123935319536975596773704152891653086e16 i":
+ildouble: 3
+ldouble: 3
+Test "Real part of: ctanh_downward (0x1p-149 + 0x1.921fb6p+0 i) == 7.334008549954377778731880988481078535821e-31 - 2.287733242885645987394874673945769518150e7 i":
+float: 1
+ifloat: 1
+ildouble: 10
+ldouble: 10
+Test "Imaginary part of: ctanh_downward (0x1p-149 + 0x1.921fb6p+0 i) == 7.334008549954377778731880988481078535821e-31 - 2.287733242885645987394874673945769518150e7 i":
+double: 2
+float: 1
+idouble: 2
+ifloat: 1
+ildouble: 4
+ldouble: 4
+
+# ctanh_tonearest
+Test "Real part of: ctanh_tonearest (0x1p-149 + 0x1.921fb6p+0 i) == 7.334008549954377778731880988481078535821e-31 - 2.287733242885645987394874673945769518150e7 i":
+float: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ctanh_tonearest (0x1p-149 + 0x1.921fb6p+0 i) == 7.334008549954377778731880988481078535821e-31 - 2.287733242885645987394874673945769518150e7 i":
+float: 1
+ifloat: 1
+ildouble: 2
+ldouble: 2
+
+# ctanh_towardzero
+Test "Real part of: ctanh_towardzero (0x1p-1074 + 0x1.921fb54442d18p+0 i) == 1.317719414943508315995636961402669067843e-291 + 1.633123935319536975596773704152891653086e16 i":
+ildouble: 13
+ldouble: 13
+Test "Imaginary part of: ctanh_towardzero (0x1p-1074 + 0x1.921fb54442d18p+0 i) == 1.317719414943508315995636961402669067843e-291 + 1.633123935319536975596773704152891653086e16 i":
+ildouble: 4
+ldouble: 4
+Test "Real part of: ctanh_towardzero (0x1p-149 + 0x1.921fb6p+0 i) == 7.334008549954377778731880988481078535821e-31 - 2.287733242885645987394874673945769518150e7 i":
+float: 1
+ifloat: 1
+ildouble: 10
+ldouble: 10
+Test "Imaginary part of: ctanh_towardzero (0x1p-149 + 0x1.921fb6p+0 i) == 7.334008549954377778731880988481078535821e-31 - 2.287733242885645987394874673945769518150e7 i":
+float: 1
+ifloat: 1
+ildouble: 2
+ldouble: 2
+
+# ctanh_upward
+Test "Real part of: ctanh_upward (0x1p-1074 + 0x1.921fb54442d18p+0 i) == 1.317719414943508315995636961402669067843e-291 + 1.633123935319536975596773704152891653086e16 i":
+ildouble: 10
+ldouble: 10
+Test "Imaginary part of: ctanh_upward (0x1p-1074 + 0x1.921fb54442d18p+0 i) == 1.317719414943508315995636961402669067843e-291 + 1.633123935319536975596773704152891653086e16 i":
+double: 1
+idouble: 1
+ildouble: 6
+ldouble: 6
+Test "Real part of: ctanh_upward (0x1p-149 + 0x1.921fb6p+0 i) == 7.334008549954377778731880988481078535821e-31 - 2.287733242885645987394874673945769518150e7 i":
+double: 1
+float: 2
+idouble: 1
+ifloat: 2
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ctanh_upward (0x1p-149 + 0x1.921fb6p+0 i) == 7.334008549954377778731880988481078535821e-31 - 2.287733242885645987394874673945769518150e7 i":
+double: 2
+float: 1
+idouble: 2
+ifloat: 1
+ildouble: 3
+ldouble: 3
 
 # erf
 Test "erf (1.25) == 0.922900128256458230136523481197281140":
@@ -2714,8 +2879,62 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
+ildouble: 2
+ldouble: 2
+
+Function: Real part of "ctan_downward":
+double: 2
+float: 1
+idouble: 2
+ifloat: 1
+ildouble: 4
+ldouble: 4
+
+Function: Imaginary part of "ctan_downward":
+float: 1
+ifloat: 1
+ildouble: 10
+ldouble: 10
+
+Function: Real part of "ctan_tonearest":
+float: 1
+ifloat: 1
+ildouble: 2
+ldouble: 2
+
+Function: Imaginary part of "ctan_tonearest":
+float: 1
+ifloat: 1
 ildouble: 1
 ldouble: 1
+
+Function: Real part of "ctan_towardzero":
+float: 1
+ifloat: 1
+ildouble: 4
+ldouble: 4
+
+Function: Imaginary part of "ctan_towardzero":
+float: 1
+ifloat: 1
+ildouble: 13
+ldouble: 13
+
+Function: Real part of "ctan_upward":
+double: 2
+float: 1
+idouble: 2
+ifloat: 1
+ildouble: 6
+ldouble: 6
+
+Function: Imaginary part of "ctan_upward":
+double: 1
+float: 2
+idouble: 1
+ifloat: 2
+ildouble: 10
+ldouble: 10
 
 Function: Real part of "ctanh":
 double: 1
@@ -2732,6 +2951,60 @@ idouble: 1
 ifloat: 1
 ildouble: 2
 ldouble: 2
+
+Function: Real part of "ctanh_downward":
+float: 1
+ifloat: 1
+ildouble: 10
+ldouble: 10
+
+Function: Imaginary part of "ctanh_downward":
+double: 2
+float: 1
+idouble: 2
+ifloat: 1
+ildouble: 4
+ldouble: 4
+
+Function: Real part of "ctanh_tonearest":
+float: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+
+Function: Imaginary part of "ctanh_tonearest":
+float: 1
+ifloat: 1
+ildouble: 2
+ldouble: 2
+
+Function: Real part of "ctanh_towardzero":
+float: 1
+ifloat: 1
+ildouble: 13
+ldouble: 13
+
+Function: Imaginary part of "ctanh_towardzero":
+float: 1
+ifloat: 1
+ildouble: 4
+ldouble: 4
+
+Function: Real part of "ctanh_upward":
+double: 1
+float: 2
+idouble: 1
+ifloat: 2
+ildouble: 10
+ldouble: 10
+
+Function: Imaginary part of "ctanh_upward":
+double: 2
+float: 1
+idouble: 2
+ifloat: 1
+ildouble: 6
+ldouble: 6
 
 Function: "erf":
 double: 1

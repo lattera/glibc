@@ -25,6 +25,8 @@
 
 #include <math_private.h>
 
+/* IBM long double GCC builtin sets LDBL_EPSILON == LDBL_DENORM_MIN  */
+static const long double ldbl_eps =  0x1p-106L;
 
 __complex__ long double
 __ctanhl (__complex__ long double x)
@@ -35,8 +37,8 @@ __ctanhl (__complex__ long double x)
     {
       if (__isinfl (__real__ x))
 	{
-	  __real__ res = __copysignl (1.0, __real__ x);
-	  __imag__ res = __copysignl (0.0, __imag__ x);
+	  __real__ res = __copysignl (1.0L, __real__ x);
+	  __imag__ res = __copysignl (0.0L, __imag__ x);
 	}
       else if (__imag__ x == 0.0)
 	{
@@ -57,7 +59,7 @@ __ctanhl (__complex__ long double x)
     {
       long double sinix, cosix;
       long double den;
-      const int t = (int) ((LDBL_MAX_EXP - 1) * M_LN2l / 2);
+      const int t = (int) ((LDBL_MAX_EXP - 1) * M_LN2l / 2.0L);
 
       /* tanh(x+iy) = (sinh(2x) + i*sin(2y))/(cosh(2x) + cos(2y))
         = (sinh(x)*cosh(x) + i*sin(y)*cos(y))/(sinh(x)^2 + cos(y)^2).  */
@@ -71,7 +73,7 @@ __ctanhl (__complex__ long double x)
 	     the real part is +/- 1, the imaginary part is
 	     sin(y)*cos(y)/sinh(x)^2 = 4*sin(y)*cos(y)/exp(2x).  */
 	  long double exp_2t = __ieee754_expl (2 * t);
-	  __real__ res = __copysignl (1.0, __real__ x);
+	  __real__ res = __copysignl (1.0L, __real__ x);
 	  __imag__ res = 4 * sinix * cosix;
 	  __real__ x = fabsl (__real__ x);
 	  __real__ x -= t;
@@ -83,22 +85,34 @@ __ctanhl (__complex__ long double x)
 	      __imag__ res /= exp_2t;
 	    }
 	  else
-	    __imag__ res /= __ieee754_expl (2 * __real__ x);
+	    __imag__ res /= __ieee754_expl (2.0L * __real__ x);
 	}
       else
 	{
-	  long double sinhrx = __ieee754_sinhl (__real__ x);
-	  long double coshrx = __ieee754_coshl (__real__ x);
+	  long double sinhrx, coshrx;
+	  if (fabs (__real__ x) > LDBL_MIN)
+	    {
+	      sinhrx = __ieee754_sinhl (__real__ x);
+	      coshrx = __ieee754_coshl (__real__ x);
+	    }
+	  else
+	    {
+	      sinhrx = __real__ x;
+	      coshrx = 1.0L;
+	    }
 
-	  den = sinhrx * sinhrx + cosix * cosix;
-	  __real__ res = sinhrx * coshrx / den;
-	  __imag__ res = sinix * cosix / den;
+	  if (fabsl (sinhrx) > fabsl (cosix) * ldbl_eps)
+	    den = sinhrx * sinhrx + cosix * cosix;
+	  else
+	    den = cosix * cosix;
+	  __real__ res = sinhrx * (coshrx / den);
+	  __imag__ res = sinix * (cosix / den);
 	}
       /* __gcc_qmul does not respect -0.0 so we need the following fixup.  */
-      if ((__real__ res == 0.0) && (__real__ x == 0.0))
+      if ((__real__ res == 0.0L) && (__real__ x == 0.0L))
         __real__ res = __real__ x;
 
-      if ((__real__ res == 0.0) && (__imag__ x == 0.0))
+      if ((__real__ res == 0.0L) && (__imag__ x == 0.0L))
         __imag__ res = __imag__ x;
     }
 

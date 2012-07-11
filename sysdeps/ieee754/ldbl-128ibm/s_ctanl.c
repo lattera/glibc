@@ -25,6 +25,8 @@
 
 #include <math_private.h>
 
+/* IBM long double GCC builtin sets LDBL_EPSILON == LDBL_DENORM_MIN  */
+static const long double ldbl_eps = 0x1p-106L;
 
 __complex__ long double
 __ctanl (__complex__ long double x)
@@ -55,7 +57,7 @@ __ctanl (__complex__ long double x)
     {
       long double sinrx, cosrx;
       long double den;
-      const int t = (int) ((LDBL_MAX_EXP - 1) * M_LN2l / 2);
+      const int t = (int) ((LDBL_MAX_EXP - 1) * M_LN2l / 2.0L);
 
       /* tan(x+iy) = (sin(2x) + i*sinh(2y))/(cos(2x) + cosh(2y))
         = (sin(x)*cos(x) + i*sinh(y)*cosh(y)/(cos(x)^2 + sinh(y)^2). */
@@ -70,7 +72,7 @@ __ctanl (__complex__ long double x)
 	    sin(x)*cos(x)/sinh(y)^2 = 4*sin(x)*cos(x)/exp(2y).  */
 	  long double exp_2t = __ieee754_expl (2 * t);
 
-	  __imag__ res = __copysignl (1.0, __imag__ x);
+	  __imag__ res = __copysignl (1.0L, __imag__ x);
 	  __real__ res = 4 * sinrx * cosrx;
 	  __imag__ x = fabsl (__imag__ x);
 	  __imag__ x -= t;
@@ -82,23 +84,35 @@ __ctanl (__complex__ long double x)
 	      __real__ res /= exp_2t;
 	    }
 	  else
-	    __real__ res /= __ieee754_expl (2 * __imag__ x);
+	    __real__ res /= __ieee754_expl (2.0L * __imag__ x);
 	}
       else
 	{
-	  long double sinhix = __ieee754_sinhl (__imag__ x);
-	  long double coshix = __ieee754_coshl (__imag__ x);
+	  long double sinhix, coshix;
+	  if (fabsl (__imag__ x) > LDBL_MIN)
+	    {
+	      sinhix = __ieee754_sinhl (__imag__ x);
+	      coshix = __ieee754_coshl (__imag__ x);
+	    }
+	  else
+	    {
+	      sinhix = __imag__ x;
+	      coshix = 1.0L;
+	    }
 
-	  den = cosrx * cosrx + sinhix * sinhix;
-	  __real__ res = sinrx * cosrx / den;
-	  __imag__ res = sinhix * coshix / den;
+	  if (fabsl (sinhix) > fabsl (cosrx) * ldbl_eps)
+	    den = cosrx * cosrx + sinhix * sinhix;
+	  else
+	    den = cosrx * cosrx;
+	  __real__ res = sinrx * (cosrx / den);
+	  __imag__ res = sinhix * (coshix / den);
 	}
 
       /* __gcc_qmul does not respect -0.0 so we need the following fixup.  */
-      if ((__real__ res == 0.0) && (__real__ x == 0.0))
+      if ((__real__ res == 0.0L) && (__real__ x == 0.0L))
         __real__ res = __real__ x;
 
-      if ((__real__ res == 0.0) && (__imag__ x == 0.0))
+      if ((__real__ res == 0.0L) && (__imag__ x == 0.0L))
         __imag__ res = __imag__ x;
     }
 

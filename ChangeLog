@@ -1,3 +1,10 @@
+2012-07-11  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
+	* sysdeps/ieee754/ldbl-128ibm/s_ctanhl.c: Do not call sinh and cosh
+	for subnormals or multiply small sinh result by itself.
+	* sysdeps/ieee754/ldbl-128ibm/s_ctanl.c: Likewise.
+	* sysdeps/powerpc/fpu/libm-test-ulps: Update.
+
 2012-07-11  David S. Miller  <davem@davemloft.net>
 
 	* sysdeps/sparc/fpu/libm-test-ulps: Update.
