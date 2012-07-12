@@ -1,5 +1,4 @@
-/* Copyright (C) 1996-1999,2001,2002,2003,2004,2007,2010,2011
-   Free Software Foundation, Inc.
+/* Copyright (C) 1996-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -197,5 +196,9 @@ extern int __nss_hostname_digits_dots (const char *name,
 				       enum nss_status *status, int af,
 				       int *h_errnop);
 libc_hidden_proto (__nss_hostname_digits_dots)
+
+/* Maximum number of aliases we allow.  */
+#define MAX_NR_ALIASES  48
+#define MAX_NR_ADDRS    48
 
 #endif	/* nsswitch.h */

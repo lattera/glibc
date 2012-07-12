@@ -1,3 +1,17 @@
+2012-07-12  Jeroen van Bemmel  <jvb127@gmail.com>
+
+	[BZ #14307]
+	* sysdeps/posix/getaddrinfo.c (gaih_inet): Increase the size of
+	the temporary buffer used to invoke __gethostbyname2_r,
+	__gethostbyaddr_r and gethostbyname4_r to make room for struct
+	host_data / struct gaih_addrtuple.
+	* resolv/nss_dns/dns-host.c (global scope): Move definition of
+	implementation constants MAX_NR_ALIASES and MAX_NR_ADDRS to
+	header file nss/nsswitch.h.
+	* nss/nsswitch.h (global scope): Add definition of implementation
+	constants MAX_NR_ALIASES and MAX_NR_ADDRS (moved from
+	resolv/nss_dns/dns-host.c).
+
 2012-07-11  Andreas Jaeger  <aj@suse.de>
 
 	* po/fr.po: Update from translation team.

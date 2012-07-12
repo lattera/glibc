@@ -568,7 +568,9 @@ gaih_inet (const char *name, const struct gaih_service *service,
 	     IPv6 scope ids. */
 	  if (req->ai_family == AF_INET)
 	    {
-	      size_t tmpbuflen = 512;
+	      /* Allocate additional room for struct host_data.  */
+	      size_t tmpbuflen = (512 + MAX_NR_ALIASES * sizeof(char*)
+				  + 16 * sizeof(char));
 	      assert (tmpbuf == NULL);
 	      tmpbuf = alloca_account (tmpbuflen, alloca_used);
 	      int rc;
@@ -811,7 +813,7 @@ gaih_inet (const char *name, const struct gaih_service *service,
 	  old_res_options = _res.options;
 	  _res.options &= ~RES_USE_INET6;
 
-	  size_t tmpbuflen = 1024;
+	  size_t tmpbuflen = 1024 + sizeof(struct gaih_addrtuple);
 	  malloc_tmpbuf = !__libc_use_alloca (alloca_used + tmpbuflen);
 	  assert (tmpbuf == NULL);
 	  if (!malloc_tmpbuf)
@@ -1113,7 +1115,9 @@ gaih_inet (const char *name, const struct gaih_service *service,
 		struct hostent *h = NULL;
 		int herrno;
 		struct hostent th;
-		size_t tmpbuf2len = 512;
+		/* Add room for struct host_data.  */
+		size_t tmpbuf2len = (512 + (MAX_NR_ALIASES+MAX_NR_ADDRS+1)
+				     * sizeof(char*) + 16 * sizeof(char));
 
 		do
 		  {

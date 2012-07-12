@@ -88,10 +88,6 @@
 
 #define RESOLVSORT
 
-/* Maximum number of aliases we allow.  */
-#define MAX_NR_ALIASES	48
-#define MAX_NR_ADDRS	48
-
 #if PACKETSZ > 65536
 # define MAXPACKET	PACKETSZ
 #else
