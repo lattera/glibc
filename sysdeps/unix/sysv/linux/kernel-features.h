@@ -76,25 +76,16 @@
 # define __ASSUME_STAT64_SYSCALL	1
 #endif
 
-/* The changed st_ino field appeared in 2.4.0-test6.  But we cannot
-   distinguish this version from other 2.4.0 releases.  Therefore play
-   save and assume it available is for 2.4.1 and up.  However, SH is lame,
+/* The changed st_ino field appeared in 2.4.0-test6.  However, SH is lame,
    and still does not have a 64-bit inode field.  */
-#if __LINUX_KERNEL_VERSION >= 132097 && !defined __sh__
+#ifndef __sh__
 # define __ASSUME_ST_INO_64_BIT		1
 #endif
 
 /* To support locking of large files a new fcntl() syscall was introduced
-   in 2.4.0-test7.  We test for 2.4.1 for the earliest version we know
-   the syscall is available.  */
-#if __LINUX_KERNEL_VERSION >= 132097 && (defined __i386__ || defined __sparc__)
+   in 2.4.0-test7.  */
+#if defined __i386__ || defined __sparc__
 # define __ASSUME_FCNTL64		1
-#endif
-
-/* The AT_CLKTCK auxiliary vector entry was introduction in the 2.4.0
-   series.  */
-#if __LINUX_KERNEL_VERSION >= 132097
-# define __ASSUME_AT_CLKTCK		1
 #endif
 
 /* Arm got fcntl64 in 2.4.4, PowerPC and SH have it also in 2.4.4 (I
@@ -106,23 +97,9 @@
 # define __ASSUME_FCNTL64		1
 #endif
 
-/* The getdents64 syscall was introduced in 2.4.0-test7.  We test for
-   2.4.1 for the earliest version we know the syscall is available.  */
-#if __LINUX_KERNEL_VERSION >= 132097
-# define __ASSUME_GETDENTS64_SYSCALL	1
-#endif
-
-/* Starting with one of the 2.4.0 pre-releases the Linux kernel passes
-   up the page size information.  */
-#if __LINUX_KERNEL_VERSION >= 132097
-# define __ASSUME_AT_PAGESIZE		1
-#endif
-
-/* Starting with at least 2.4.0 the kernel passes the uid/gid unconditionally
-   up to the child.  */
-#if __LINUX_KERNEL_VERSION >= 132097
-# define __ASSUME_AT_XID		1
-#endif
+/* The getdents64 syscall was introduced in 2.4.0-test7 (but later for
+   MIPS n32).  */
+#define __ASSUME_GETDENTS64_SYSCALL	1
 
 /* Starting with 2.4.5 kernels PPC passes the AUXV in the standard way
    and the vfork syscall made it into the official kernel.  */
@@ -164,7 +141,7 @@
 #endif
 
 /* The vfork syscall on x86 and arm was definitely available in 2.4.  */
-#if __LINUX_KERNEL_VERSION >= 132097 && defined __i386__
+#ifdef __i386__
 # define __ASSUME_VFORK_SYSCALL		1
 #endif
 

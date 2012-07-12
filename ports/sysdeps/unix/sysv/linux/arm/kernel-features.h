@@ -24,10 +24,8 @@
 
 /* On ARM the mmap2/stat64/lstat64/fstat64 syscalls were introduced in
    2.3.35.  */
-#if __LINUX_KERNEL_VERSION >= 131875
-# define __ASSUME_MMAP2_SYSCALL		1
-# define __ASSUME_STAT64_SYSCALL	1
-#endif
+#define __ASSUME_MMAP2_SYSCALL		1
+#define __ASSUME_STAT64_SYSCALL	1
 
 /* Arm got fcntl64 in 2.4.4.  */
 #if __LINUX_KERNEL_VERSION >= 132100
@@ -35,9 +33,7 @@
 #endif
 
 /* The vfork syscall on arm was definitely available in 2.4.  */
-#if __LINUX_KERNEL_VERSION >= 132097
-# define __ASSUME_VFORK_SYSCALL		1
-#endif
+#define __ASSUME_VFORK_SYSCALL		1
 
 /* The signal frame layout changed in 2.6.18.  */
 #if __LINUX_KERNEL_VERSION >= 132626
