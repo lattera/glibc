@@ -1,3 +1,10 @@
+2012-07-12  Marek Polacek  <polacek@redhat.com>
+
+	[BZ #14173]
+	* math/libm-test.inc (yn_test): Add test for BZ #14173.
+	* sysdeps/ieee754/ldbl-96/e_jnl.c (__ieee754_ynl): Correct
+	loop condition.
+
 2012-07-12  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #13717]

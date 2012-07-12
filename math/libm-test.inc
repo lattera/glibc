@@ -9015,8 +9015,11 @@ yn_test (void)
   TEST_ff_f (yn, 10, 2.0, -129184.542208039282635913145923304214L);
   TEST_ff_f (yn, 10, 10.0, -0.359814152183402722051986577343560609L);
 
-  END (yn);
+  /* Check whether yn returns correct value for LDBL_MIN, DBL_MIN,
+     and FLT_MIN.  See Bug 14173.  */
+  TEST_ff_f (yn, 10, min_value, minus_infty, OVERFLOW_EXCEPTION);
 
+  END (yn);
 }
 
 
