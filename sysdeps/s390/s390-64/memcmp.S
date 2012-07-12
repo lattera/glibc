@@ -1,4 +1,4 @@
-/* Set a block of memory to some byte value.  For IBM S390
+/* memcmp - compare two memory blocks.  64 bit S/390 version.
    Copyright (C) 2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -21,45 +21,44 @@
 #include "asm-syntax.h"
 
 /* INPUT PARAMETERS
-     %r2 = address to memory area
-     %r3 = byte to fill memory with
-     %r4 = number of bytes to fill.  */
+     %r2 = address of first memory area
+     %r3 = address of second memory area
+     %r4 = number of bytes to compare.  */
 
        .text
-
 #ifdef USE_MULTIARCH
-ENTRY(memset_g5)
+ENTRY(memcmp_z900)
 #else
-ENTRY(memset)
+ENTRY(memcmp)
 #endif
-	.machine "g5"
-        basr    %r5,0
-.L_G5_19:
-        ltr     %r4,%r4
-        je      .L_G5_4
-        stc     %r3,0(%r2)
-        chi     %r4,1
-        lr      %r1,%r2
-        je      .L_G5_4
-        ahi     %r4,-2
-        lr      %r3,%r4
-        srl     %r3,8
-        ltr     %r3,%r3
-        jne     .L_G5_14
-        ex      %r4,.L_G5_20-.L_G5_19(%r5)
-.L_G5_4:
+	.machine "z900"
+        ltgr    %r4,%r4
+        je      .L_Z900_4
+        aghi    %r4,-1
+        srlg    %r1,%r4,8
+        ltgr    %r1,%r1
+        jne     .L_Z900_12
+.L_Z900_3:
+        larl    %r1,.L_Z900_15
+        ex      %r4,0(%r1)
+.L_Z900_4:
+        ipm     %r2
+        sllg    %r2,%r2,34
+        srag    %r2,%r2,62
         br      %r14
-.L_G5_14:
-        mvc     1(256,%r1),0(%r1)
-        la      %r1,256(%r1)
-        brct    %r3,.L_G5_14
-        ex      %r4,.L_G5_20-.L_G5_19(%r5)
-        j       .L_G5_4
-.L_G5_20:
-        mvc     1(1,%r1),0(%r1)
+.L_Z900_12:
+        clc     0(256,%r3),0(%r2)
+        jne     .L_Z900_4
+        la      %r3,256(%r3)
+        la      %r2,256(%r2)
+        brctg   %r1,.L_Z900_12
+        j       .L_Z900_3
+.L_Z900_15:
+        clc     0(1,%r3),0(%r2)
 #ifdef USE_MULTIARCH
-END(memset_g5)
+END(memcmp_z900)
 #else
-END(memset)
-libc_hidden_builtin_def (memset)
+END(memcmp)
+libc_hidden_builtin_def (memcmp)
+weak_alias (memcmp, bcmp)
 #endif

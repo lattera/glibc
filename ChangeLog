@@ -1,3 +1,29 @@
+2012-07-19  Andreas Krebbel  <Andreas.Krebbel@de.ibm.com>
+
+	* elf/elf.h (R_390_IRELATIVE): New definition.
+	* sysdeps/s390/s390-64/dl-machine.h (elf_machine_rela): Invoke the
+	resolver function for IFUNC symbols.  Support R_390_IRELATIVE.
+	(elf_machine_lazy_rel): Support R_390_IRELATIVE.
+	* sysdeps/s390/s390-32/dl-machine.h (elf_machine_rela):
+	(elf_machine_lazy_rel): Likewise.
+	* sysdeps/s390/dl-irel.h: New file.
+	* sysdeps/s390/s390-64/memcpy.S: New asm code.
+	* sysdeps/s390/s390-64/memset.S: New asm code.
+	* sysdeps/s390/s390-64/memcmp.S: New asm code.
+	* sysdeps/s390/s390-64/multiarch/memset.S: New file.
+	* sysdeps/s390/s390-64/multiarch/ifunc-resolve.c: New file.
+	* sysdeps/s390/s390-64/multiarch/memcmp.S: New file.
+	* sysdeps/s390/s390-64/multiarch/memcpy.S: New file.
+	* sysdeps/s390/s390-64/multiarch/Makefile: New file.
+	* sysdeps/s390/s390-32/multiarch/ifunc-resolve.c: New file.
+	* sysdeps/s390/s390-32/multiarch/Makefile: New file.
+	* sysdeps/s390/s390-32/multiarch/memcmp.S: New file.
+	* sysdeps/s390/s390-32/multiarch/memcpy.S: New file.
+	* sysdeps/s390/s390-32/multiarch/memset.S: New file.
+	* sysdeps/s390/s390-32/memcpy.S: New asm code.
+	* sysdeps/s390/s390-32/memset.S: New asm code.
+	* sysdeps/s390/s390-32/memcmp.S: New asm code.
+
 2012-07-17  Marek Polacek  <polacek@redhat.com>
 
 	[BZ #14349]

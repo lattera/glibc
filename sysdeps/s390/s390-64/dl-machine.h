@@ -1,6 +1,6 @@
 /* Machine-dependent ELF dynamic relocation inline functions.
    64 bit S/390 Version.
-   Copyright (C) 2001-2005, 2006, 2011 Free Software Foundation, Inc.
+   Copyright (C) 2001-2012 Free Software Foundation, Inc.
    Contributed by Martin Schwidefsky (schwidefsky@de.ibm.com).
    This file is part of the GNU C Library.
 
@@ -26,6 +26,9 @@
 #include <sys/param.h>
 #include <string.h>
 #include <link.h>
+#include <dl-irel.h>
+
+#define ELF_MACHINE_IRELATIVE       R_390_IRELATIVE
 
 /* This is an older, now obsolete value.  */
 #define EM_S390_OLD	0xA390
@@ -280,8 +283,21 @@ elf_machine_rela (struct link_map *map, const Elf64_Rela *reloc,
       struct link_map *sym_map = RESOLVE_MAP (&sym, version, r_type);
       Elf64_Addr value = sym == NULL ? 0 : sym_map->l_addr + sym->st_value;
 
+      if (sym != NULL
+	  && __builtin_expect (ELFW(ST_TYPE) (sym->st_info) == STT_GNU_IFUNC,
+			       0)
+	  && __builtin_expect (sym->st_shndx != SHN_UNDEF, 1)
+	  && __builtin_expect (!skip_ifunc, 1))
+	value = elf_ifunc_invoke (value);
+
       switch (r_type)
 	{
+	case R_390_IRELATIVE:
+	  value = map->l_addr + reloc->r_addend;
+	  if (__builtin_expect (!skip_ifunc, 1))
+	    value = elf_ifunc_invoke (value);
+	  *reloc_addr = value;
+	  break;
 	case R_390_GLOB_DAT:
 	case R_390_JMP_SLOT:
 	  *reloc_addr = value + reloc->r_addend;
@@ -425,6 +441,13 @@ elf_machine_lazy_rel (struct link_map *map,
 	*reloc_addr =
 	  map->l_mach.plt
 	  + (((Elf64_Addr) reloc_addr) - map->l_mach.gotplt) * 4;
+    }
+  else if (__builtin_expect (r_type == R_390_IRELATIVE, 1))
+    {
+      Elf64_Addr value = map->l_addr + reloc->r_addend;
+      if (__builtin_expect (!skip_ifunc, 1))
+	value = elf_ifunc_invoke (value);
+      *reloc_addr = value;
     }
   else
     _dl_reloc_bad_type (map, r_type, 1);

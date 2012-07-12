@@ -2627,8 +2627,9 @@ typedef Elf32_Addr Elf32_Conflict;
 #define R_390_GOTPLT20		59	/* 20 bit offset to jump slot.  */
 #define R_390_TLS_GOTIE20	60	/* 20 bit GOT offset for static TLS
 					   block offset.  */
+#define R_390_IRELATIVE         61      /* STT_GNU_IFUNC relocation.  */
 /* Keep this the last entry.  */
-#define R_390_NUM		61
+#define R_390_NUM		62
 
 
 /* CRIS relocations.  */

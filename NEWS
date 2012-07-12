@@ -12,6 +12,11 @@ Version 2.17
   6778, 14042, 14151, 14154, 14157, 14173, 14283, 14328, 14331, 14337,
   14347, 14349
 
+* Support for STT_GNU_IFUNC symbols added for s390 and s390x.
+  Optimized versions of memcpy, memset, and memcmp added for System z10 and
+  zEnterprise z196.
+  Implemented by Andreas Krebbel.
+
 
 Version 2.16
 

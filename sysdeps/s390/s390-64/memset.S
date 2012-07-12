@@ -17,27 +17,48 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+
+#include "sysdep.h"
+#include "asm-syntax.h"
+
 /* INPUT PARAMETERS
      %r2 = address of memory area
      %r3 = byte to fill memory with
      %r4 = number of bytes to fill.  */
 
-#include "sysdep.h"
-#include "asm-syntax.h"
+       .text
 
-	.text
+#ifdef USE_MULTIARCH
+ENTRY(memset_z900)
+#else
 ENTRY(memset)
-	ltgr	%r4,%r4
-	jz	.L1
-	lgr	%r0,%r2		    # save source address
-	lgr	%r1,%r3		    # move pad byte to R1
-	lgr	%r3,%r4
-	sgr	%r4,%r4		    # no source for MVCLE, only a pad byte
-	sgr	%r5,%r5
-.L0:	mvcle	%r2,%r4,0(%r1)	    # thats it, MVCLE is your friend
-	jo	.L0
-	lgr	%r2,%r0		    # return value is source address
-.L1:
-	br	%r14
+#endif
+	.machine "z900"
+        ltgr    %r4,%r4
+        je      .L_Z900_4
+        stc     %r3,0(%r2)
+        cghi    %r4,1
+        lgr     %r1,%r2
+        je      .L_Z900_4
+        aghi    %r4,-2
+        srlg    %r3,%r4,8
+        ltgr    %r3,%r3
+        jne     .L_Z900_14
+.L_Z900_3:
+        larl    %r3,.L_Z900_18
+        ex      %r4,0(%r3)
+.L_Z900_4:
+        br      %r14
+.L_Z900_14:
+        mvc     1(256,%r1),0(%r1)
+        la      %r1,256(%r1)
+        brctg   %r3,.L_Z900_14
+        j       .L_Z900_3
+.L_Z900_18:
+        mvc     1(1,%r1),0(%r1)
+#ifdef USE_MULTIARCH
+END(memset_z900)
+#else
 END(memset)
 libc_hidden_builtin_def (memset)
+#endif
