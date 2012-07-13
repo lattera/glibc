@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libc-2.16-pre1\n"
 "POT-Creation-Date: 2012-06-21 07:51-0700\n"
-"PO-Revision-Date: 2012-07-11 16:10+0100\n"
+"PO-Revision-Date: 2012-07-12 08:16+0100\n"
 "Last-Translator: kerb <y.kerb@laposte.net>\n"
 "Language-Team: French <traduc@traduc.org>\n"
 "Language: fr\n"
@@ -6790,7 +6790,7 @@ msgstr ""
 
 #: timezone/zic.c:496
 msgid "wild compilation-time specification of zic_t"
-msgstr "spécification « sauvage » du temps de compilation de zic_t"
+msgstr "spécification approximative de zic_t au moment de la compilation"
 
 #: timezone/zic.c:515
 #, c-format
