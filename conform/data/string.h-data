@@ -1,4 +1,4 @@
-constant NULL
+macro-constant NULL == 0
 
 type size_t
 #if defined XOPEN2K8 || defined POSIX2008
@@ -61,8 +61,13 @@ function size_t strxfrm (char*, const char*, size_t)
 function size_t strxfrm_l (char*, const char*, size_t, locale_t)
 #endif
 
+#if !defined ISO && !defined ISO99 && !defined ISO11
 allow-header stddef.h
+#endif
 
-allow str*
-allow wcs*
+allow str[abcdefghijklmnopqrstuvwxyz]*
+allow mem[abcdefghijklmnopqrstuvwxyz]*
+allow wcs[abcdefghijklmnopqrstuvwxyz]*
+#if !defined ISO && !defined ISO99 && !defined ISO11
 allow *_t
+#endif

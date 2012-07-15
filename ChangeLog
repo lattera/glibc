@@ -1,3 +1,13 @@
+2012-07-15  Joseph Myers  <joseph@codesourcery.com>
+
+	* conform/data/string.h-data (NULL): Use macro-constant.  Require
+	equal to 0.
+	[ISO || ISO99 || ISO11] (stddef.h): Do not allow header.
+	(str*): Change to str[abcdefghijklmnopqrstuvwxyz]*.
+	(wcs*): Change to wcs[abcdefghijklmnopqrstuvwxyz]*.
+	(mem[abcdefghijklmnopqrstuvwxyz]*): Allow.
+	[ISO || ISO99 || ISO11] (*_t): Do not allow.
+
 2012-07-13  Andreas Jaeger  <aj@suse.de>
 
 	* po/fr.po: Update from translation team.
