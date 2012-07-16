@@ -1,3 +1,8 @@
+2012-07-16  Andreas Schwab  <schwab@linux-m68k.org>
+
+	* stdlib/bug-getcontext.c (do_test): Don't test FE_ALL_EXCEPT in
+	preprocessor.  Test for each exception mask separately.
+
 2012-07-16  Andreas Jaeger  <aj@suse.de>
 
 	* po/ru.po: Update from translation team.
