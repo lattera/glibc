@@ -1,3 +1,7 @@
+2012-07-16  Andreas Jaeger  <aj@suse.de>
+
+	* po/ru.po: Update from translation team.
+
 2012-07-15  Joseph Myers  <joseph@codesourcery.com>
 
 	* conform/data/string.h-data (NULL): Use macro-constant.  Require
