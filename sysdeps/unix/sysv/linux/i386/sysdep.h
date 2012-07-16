@@ -1,5 +1,4 @@
-/* Copyright (C) 1992,1993,1995-2000,2002-2006,2007,2011-2012
-	Free Software Foundation, Inc.
+/* Copyright (C) 1992-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper, <drepper@gnu.org>, August 1995.
 
@@ -70,8 +69,7 @@
   ENTRY (name)								      \
     DO_CALL (syscall_name, args);					      \
     cmpl $-4095, %eax;							      \
-    jae SYSCALL_ERROR_LABEL;						      \
-  L(pseudo_end):
+    jae SYSCALL_ERROR_LABEL
 
 #undef	PSEUDO_END
 #define	PSEUDO_END(name)						      \

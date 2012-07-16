@@ -1,4 +1,4 @@
-/* Copyright (C) 2003, 2005 Free Software Foundation, Inc.
+/* Copyright (C) 2003-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2003.
 
@@ -65,7 +65,6 @@ ENTRY (BP_SYM (semtimedop))
 	ja SYSCALL_ERROR_LABEL
 
 	/* Successful; return the syscall's value.  */
-L(pseudo_end):
 	ret
 
 #ifdef PIC

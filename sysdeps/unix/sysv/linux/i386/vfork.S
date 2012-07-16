@@ -1,4 +1,4 @@
-/* Copyright (C) 1999, 2002, 2004, 2005, 2008 Free Software Foundation, Inc.
+/* Copyright (C) 1999-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Andreas Schwab <schwab@gnu.org>.
 
@@ -57,7 +57,6 @@ ENTRY (__vfork)
 	/* Branch forward if it failed.  */
 # ifdef __ASSUME_VFORK_SYSCALL
 	jae	SYSCALL_ERROR_LABEL
-.Lpseudo_end:
 # else
 	jae	.Lerror
 # endif
@@ -79,7 +78,6 @@ ENTRY (__vfork)
 	int	$0x80
 	cmpl	$-4095, %eax
 	jae	SYSCALL_ERROR_LABEL
-.Lpseudo_end:
 	ret
 #endif
 PSEUDO_END (__vfork)

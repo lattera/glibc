@@ -1,3 +1,29 @@
+2012-07-25  Andreas Schwab  <schwab@linux-m68k.org>
+
+	* sysdeps/unix/sysv/linux/i386/accept4.S: Remove pseudo_end label.
+	* sysdeps/unix/sysv/linux/i386/call_sync_file_range.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/clone.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/epoll_pwait.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/getcontext.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/mmap.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/mmap64.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/semtimedop.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/setcontext.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/socket.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/swapcontext.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/syscall.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/sysdep.h (PSEUDO): Likewise.
+	* sysdeps/unix/sysv/linux/i386/vfork.S: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/clone.S: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/getcontext.S: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/setcontext.S: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/sched_getcpu.S: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/syscall.S: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/sysdep.h (PSEUDO): Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/swapcontext.S: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/vfork.S: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/x32/sched_getcpu.S: Likewise.
+
 2012-07-25  Florian Weimer  <fweimer@redhat.com>
 
 	* Versions.def: Add GLIBC_2.17.

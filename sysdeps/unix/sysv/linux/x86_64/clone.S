@@ -1,4 +1,4 @@
-/* Copyright (C) 2001, 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
+/* Copyright (C) 2001-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -84,7 +84,6 @@ ENTRY (BP_SYM (__clone))
 	jl	SYSCALL_ERROR_LABEL
 	jz	L(thread_start)
 
-L(pseudo_end):
 	ret
 
 L(thread_start):

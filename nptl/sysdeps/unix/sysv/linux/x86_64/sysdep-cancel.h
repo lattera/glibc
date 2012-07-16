@@ -1,4 +1,4 @@
-/* Copyright (C) 2002-2006, 2009 Free Software Foundation, Inc.
+/* Copyright (C) 2002-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jakub@redhat.com>, 2002.
 
@@ -56,8 +56,7 @@
     movq %rdx, %rax;							      \
     addq $8,%rsp; cfi_adjust_cfa_offset (-8);				      \
     cmpq $-4095, %rax;							      \
-    jae SYSCALL_ERROR_LABEL;						      \
-  L(pseudo_end):
+    jae SYSCALL_ERROR_LABEL
 
 
 # ifdef IS_IN_libpthread

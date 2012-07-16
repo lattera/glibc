@@ -1,3 +1,11 @@
+2012-07-25  Andreas Schwab  <schwab@linux-m68k.org>
+
+	* sysdeps/unix/sysv/linux/i386/pt-vfork.S: Remove pseudo_end
+	label.
+	* sysdeps/unix/sysv/linux/i386/sysdep-cancel.h (PSEUDO): Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/sysdep-cancel.h (PSEUDO):
+	Likewise.
+
 2012-07-25  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* tst-pthread-getattr.c: Revert last change.

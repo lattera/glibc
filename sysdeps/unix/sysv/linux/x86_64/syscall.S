@@ -1,4 +1,4 @@
-/* Copyright (C) 2001, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2001-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -37,7 +37,6 @@ ENTRY (syscall)
 	syscall			/* Do the system call.  */
 	cmpq $-4095, %rax	/* Check %rax for error.  */
 	jae SYSCALL_ERROR_LABEL	/* Jump to error handler if error.  */
-L(pseudo_end):
 	ret			/* Return to caller.  */
 
 PSEUDO_END (syscall)

@@ -1,5 +1,5 @@
 /* Install given context.
-   Copyright (C) 2001, 2002, 2003, 2005 Free Software Foundation, Inc.
+   Copyright (C) 2001-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2001.
 
@@ -89,7 +89,6 @@ ENTRY(__setcontext)
 	/* The following 'ret' will pop the address of the code and jump
 	   to it.  */
 
-L(pseudo_end):
 	ret
 PSEUDO_END(__setcontext)
 

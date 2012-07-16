@@ -44,7 +44,6 @@ ENTRY (sched_getcpu)
 	jae	SYSCALL_ERROR_LABEL
 
 	mov	%edx, %eax
-L(pseudo_end):
 	ret
 PSEUDO_END(sched_getcpu)
 #endif

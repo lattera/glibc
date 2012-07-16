@@ -1,5 +1,4 @@
-/* Copyright (C) 1995,96,97,98,99,2000,2002,2005,2006
-	Free Software Foundation, Inc.
+/* Copyright (C) 1995-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -100,7 +99,6 @@ L(do_syscall):
 	ja SYSCALL_ERROR_LABEL
 
 	/* Successful; return the syscall's value.  */
-L(pseudo_end):
 	ret
 
 	cfi_adjust_cfa_offset (16)
@@ -151,9 +149,6 @@ L(einval):
 	ja SYSCALL_ERROR_LABEL
 
 	/* Successful; return the syscall's value.  */
-#ifndef __NR_mmap2
-L(pseudo_end):
-#endif
 	ret
 
 	cfi_register (ebx, edx)

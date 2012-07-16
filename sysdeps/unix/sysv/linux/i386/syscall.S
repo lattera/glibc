@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996, 1998, 2002, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 1995-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -30,7 +30,6 @@ ENTRY (syscall)
 	POPARGS_6		/* Restore register contents.  */
 	cmpl $-4095, %eax	/* Check %eax for error.  */
 	jae SYSCALL_ERROR_LABEL	/* Jump to error handler if error.  */
-L(pseudo_end):
 	ret			/* Return to caller.  */
 
 PSEUDO_END (syscall)
