@@ -1,3 +1,23 @@
+2012-07-17  Marek Polacek  <polacek@redhat.com>
+
+	[BZ #14349]
+	* sysdeps/s390/s390-32/configure.in: Remove TLS check.
+	* sysdeps/s390/s390-64/configure.in: Likewise.
+	* sysdeps/sparc/configure.in: Likewise.
+	* sysdeps/powerpc/powerpc32/configure.in: Likewise.
+	* sysdeps/powerpc/powerpc64/configure.in: Likewise.
+	* sysdeps/i386/configure.in: Likewise.
+	* sysdeps/x86_64/configure.in: Likewise.
+	* sysdeps/sh/configure.in: Likewise.
+	* sysdeps/s390/s390-32/configure: Regenerated.
+	* sysdeps/s390/s390-64/configure: Likewise.
+	* sysdeps/x86_64/configure: Likewise.
+	* sysdeps/sh/configure: Likewise.
+	* sysdeps/powerpc/powerpc64/configure: Likewise.
+	* sysdeps/powerpc/powerpc32/configure: Likewise.
+	* sysdeps/sparc/configure: Likwise.
+	* sysdeps/i386/configure: Likewise.
+
 2012-07-17  Joseph Myers  <joseph@codesourcery.com>
 
 	* Makefile [CXX] (check-data): Remove.

@@ -349,45 +349,4 @@ fi
 { $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_cc_novzeroupper" >&5
 $as_echo "$libc_cv_cc_novzeroupper" >&6; }
 
-# Check for support of thread-local storage handling in assembler and
-# linker.
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for i386 TLS support" >&5
-$as_echo_n "checking for i386 TLS support... " >&6; }
-if ${libc_cv_386_tls+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  cat > conftest.s <<\EOF
-	.section ".tdata", "awT", @progbits
-	.globl foo
-foo:	.long	1
-	.section ".tbss", "awT", @nobits
-	.globl bar
-bar:	.skip	4
-	.text
-baz:	leal	bar@TLSLDM(%ebx), %eax
-	leal	bar@DTPOFF(%eax), %edx
-	subl	foo@GOTTPOFF(%edx), %eax
-	subl	$bar@TPOFF, %eax
-	movl	foo@GOTNTPOFF(%edx), %ecx
-	movl	%gs:(%ecx), %eax
-	movl	%gs:bar@NTPOFF, %eax
-EOF
-if { ac_try='${CC-cc} -c $CFLAGS conftest.s 1>&5'
-  { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
-  (eval $ac_try) 2>&5
-  ac_status=$?
-  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
-  test $ac_status = 0; }; }; then
-  libc_cv_386_tls=yes
-else
-  libc_cv_386_tls=no
-fi
-rm -f conftest*
-fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_386_tls" >&5
-$as_echo "$libc_cv_386_tls" >&6; }
-if test $libc_cv_386_tls = no; then
-  as_fn_error $? "the assembler must support TLS" "$LINENO" 5
-fi
-
 $as_echo "#define PI_STATIC_AND_HIDDEN 1" >>confdefs.h
