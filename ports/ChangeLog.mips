@@ -1,5 +1,8 @@
 2012-07-17  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/mips/configure.in: Remove TLS check.
+	* sysdeps/mips/configure: Regenerated.
+
 	* sysdeps/unix/sysv/linux/mips/mips32/nptl/c++-types.data: New
 	file.
 	* sysdeps/unix/sysv/linux/mips/mips64/n32/nptl/c++-types.data:
