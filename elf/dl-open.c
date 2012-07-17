@@ -45,7 +45,7 @@ weak_extern (BP_SYM (_dl_sysdep_start))
 
 extern int __libc_multiple_libcs;	/* Defined in init-first.c.  */
 
-/* We must be carefull not to leave us in an inconsistent state.  Thus we
+/* We must be careful not to leave us in an inconsistent state.  Thus we
    catch any error and re-raise it after cleaning up.  */
 
 struct dl_open_args
@@ -54,7 +54,7 @@ struct dl_open_args
   int mode;
   /* This is the caller of the dlopen() function.  */
   const void *caller_dlopen;
-  /* This is the caller if _dl_open().  */
+  /* This is the caller of _dl_open().  */
   const void *caller_dl_open;
   struct link_map *map;
   /* Namespace ID.  */
@@ -511,7 +511,7 @@ dl_open_worker (void *a)
 TLS generation counter wrapped!  Please report this."));
 
   /* We need a second pass for static tls data, because _dl_update_slotinfo
-     must not be run while calls to _dl_add_to_slotinfo are still pending. */
+     must not be run while calls to _dl_add_to_slotinfo are still pending.  */
   for (unsigned int i = first_static_tls; i < new->l_searchlist.r_nlist; ++i)
     {
       struct link_map *imap = new->l_searchlist.r_list[i];
@@ -522,7 +522,7 @@ TLS generation counter wrapped!  Please report this."));
 	{
 	  /* For static TLS we have to allocate the memory here and
 	     now.  This includes allocating memory in the DTV.  But we
-	     cannot change any DTV other than our own. So, if we
+	     cannot change any DTV other than our own.  So, if we
 	     cannot guarantee that there is room in the DTV we don't
 	     even try it and fail the load.
 
