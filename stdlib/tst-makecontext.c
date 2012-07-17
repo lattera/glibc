@@ -35,7 +35,9 @@ cf (int i)
       printf ("i %d thr %d\n", i, thr);
       exit (1);
     }
-  exit (0);
+
+  /* Since uc_link below has been set to NULL, setcontext is supposed to
+     terminate the process normally after this function returns.  */
 }
 
 int

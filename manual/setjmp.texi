@@ -354,7 +354,8 @@ specified parameters passed.  If this function returns execution is
 resumed in the context which was referenced by the @code{uc_link}
 element of the context structure passed to @code{makecontext} at the
 time of the call.  If @code{uc_link} was a null pointer the application
-terminates in this case.
+terminates normally with an exit status value of @code{EXIT_SUCCESS}
+(@pxref{Program Termination}).
 
 Since the context contains information about the stack no two threads
 should use the same context at the same time.  The result in most cases
