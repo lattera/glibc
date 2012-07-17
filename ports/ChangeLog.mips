@@ -1,3 +1,12 @@
+2012-07-17  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/mips/mips32/nptl/c++-types.data: New
+	file.
+	* sysdeps/unix/sysv/linux/mips/mips64/n32/nptl/c++-types.data:
+	Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n64/nptl/c++-types.data:
+	Likewise.
+
 2012-07-11  Tom de Vries  <vries@codesourcery.com>
             Maxim Kuvyrkov  <maxim@codesourcery.com>
 
