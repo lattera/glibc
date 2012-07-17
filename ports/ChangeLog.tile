@@ -1,5 +1,8 @@
 2012-07-17  Chris Metcalf  <cmetcalf@tilera.com>
 
+	* sysdeps/unix/sysv/linux/tile/setcontext.S: Ensure exit status is
+	zero if uc_link is NULL.
+
 	* sysdeps/tile/libm-test-ulps: Account for new tests.
 
 	* data/c++-types-tilepro-linux-gnu.data: Move to ...

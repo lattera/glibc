@@ -196,6 +196,9 @@ ENTRY (__startcontext)
 	 move r0, r30
 	 jal __setcontext
 	}
-1:	j HIDDEN_JUMPTARGET(exit)
+1:	{
+	 movei r0, 0
+	 j HIDDEN_JUMPTARGET(exit)
+	}
 END (__startcontext)
 .hidden __startcontext
