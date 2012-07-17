@@ -1,3 +1,13 @@
+2012-07-17  Chris Metcalf  <cmetcalf@tilera.com>
+
+	* data/c++-types-tilepro-linux-gnu.data: Move to ...
+	* sysdeps/unix/sysv/linux/tile/tilepro/nptl/c++-types.data: ... here.
+	* data/c++-types-tilegx-linux-gnu.data: Move to ...
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx64/nptl/c++-types.data:
+	... here.
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx32/nptl/c++-types.data:
+	New file.
+
 2012-07-10  Chris Metcalf  <cmetcalf@tilera.com>
 
 	* sysdeps/unix/sysv/linux/tile/makecontext.c (__makecontext):
