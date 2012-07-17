@@ -1,3 +1,8 @@
+2012-07-17  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/alpha/nptl/c++-types.data: Move from
+	../scripts/data/c++-types-alpha-linux-gnu.data.
+
 2012-06-15  Richard Henderson  <rth@twiddle.net>
 
 	* sysdeps/alpha/soft-fp/sfp-machine.h (FP_TRAPPING_EXCEPTIONS): New.

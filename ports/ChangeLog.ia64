@@ -1,3 +1,8 @@
+2012-07-17  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/ia64/nptl/c++-types.data: Move from
+	../scripts/data/c++-types-ia64-linux-gnu.data.
+
 2012-05-30  Mike Frysinger  <vapier@gentoo.org>
 
 	* sysdeps/unix/sysv/linux/ia64/syscalls.list: Remove

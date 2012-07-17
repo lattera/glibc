@@ -1,3 +1,8 @@
+2012-07-17  Joseph Myers  <joseph@codesourcery.com>
+
+	* data/c++-types-arm-linux-gnueabi.data: Move to ...
+	* sysdeps/unix/sysv/linux/arm/nptl/c++-types.data: ... here.
+
 2012-07-12  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/arm/kernel-features.h

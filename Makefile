@@ -272,21 +272,11 @@ tests-clean:
 
 tests: $(objpfx)c++-types-check.out $(objpfx)check-local-headers.out
 ifneq ($(CXX),no)
-check-data := $(firstword $(wildcard \
-		$(foreach D,$(add-ons) scripts,\
-			  $(patsubst %,$D/data/c++-types-%.data,\
-				     $(abi-name) \
-				     $(addsuffix -$(config-os),\
-						 $(config-machine) \
-						 $(base-machine))))))
-ifneq (,$(check-data))
-$(objpfx)c++-types-check.out: $(check-data) scripts/check-c++-types.sh
+
+vpath c++-types.data $(+sysdep_dirs)
+
+$(objpfx)c++-types-check.out: c++-types.data scripts/check-c++-types.sh
 	scripts/check-c++-types.sh $< $(CXX) $(filter-out -std=gnu99 -Wstrict-prototypes,$(CFLAGS)) $(CPPFLAGS) > $@
-else
-$(objpfx)c++-types-check.out:
-	@echo 'WARNING C++ tests not run; create a c++-types-XXX file'
-	@echo "not run" > $@
-endif
 endif
 
 $(objpfx)check-local-headers.out: scripts/check-local-headers.sh

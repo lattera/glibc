@@ -1,3 +1,9 @@
+2012-07-17  Joseph Myers  <joseph@codesourcery.com>
+
+	* data/c++-types-powerpcsoft-linux-gnu.data: Move to ...
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/nofpu/nptl/c++-types.data:
+	... here.
+
 2012-07-03  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/powerpc/dl-procinfo.c (_dl_powerpc_platforms): Add
