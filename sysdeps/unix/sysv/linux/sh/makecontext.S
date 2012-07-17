@@ -128,6 +128,7 @@ ENTRY(__makecontext)
 	cfi_restore (pr)
 	/* If this returns (which can happen if the syscall fails) we'll exit
 	   the program with the return error value (-1).  */
+	mov	r0, r4
 
 2:
 	mov.l	.Lexit, r1
@@ -135,7 +136,7 @@ ENTRY(__makecontext)
 	add	r12, r1
 #endif
 	jsr	@r1
-	 mov	r0, r4
+	 nop
 	/* The 'exit' call should never return.  In case it does cause the
 	   process to terminate.  */
 	ABORT_INSTRUCTION_ASM

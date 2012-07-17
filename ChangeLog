@@ -1,5 +1,8 @@
 2012-07-17  Thomas Schwinge  <thomas@codesourcery.com>
 
+	* sysdeps/unix/sysv/linux/sh/makecontext.S (.Lexitcode): Preserve
+	zero value for regular exit case.
+
 	* sysdeps/unix/sysv/linux/x86_64/__start_context.S
 	(__start_context): Preserve zero value for regular exit case.
 
