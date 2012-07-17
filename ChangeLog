@@ -1,3 +1,19 @@
+2012-07-17  Joseph Myers  <joseph@codesourcery.com>
+
+	* elf/tls-macros.h (TLS_LE): Move architecture-specific
+	definitions to architecture-specific files.
+	(TLS_IE): Likewise.
+	(TLS_LD): Likewise.
+	(TLS_GD): Likewise.
+	* sysdeps/i386/tls-macros.h: New file.
+	* sysdeps/powerpc/tls-macros.h: Likewise.
+	* sysdeps/s390/s390-32/tls-macros.h: Likewise.
+	* sysdeps/s390/s390-64/tls-macros.h: Likewise.
+	* sysdeps/sh/tls-macros.h: Likewise.
+	* sysdeps/sparc/sparc32/tls-macros.h: Likewise.
+	* sysdeps/sparc/sparc64/tls-macros.h: Likewise.
+	* sysdeps/x86_64/tls-macros.h: Likewise.
+
 2012-07-17  Thomas Schwinge  <thomas@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/sh/makecontext.S (.Lexitcode): Preserve
