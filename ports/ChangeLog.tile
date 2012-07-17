@@ -1,5 +1,7 @@
 2012-07-17  Chris Metcalf  <cmetcalf@tilera.com>
 
+	* sysdeps/tile/libm-test-ulps: Account for new tests.
+
 	* data/c++-types-tilepro-linux-gnu.data: Move to ...
 	* sysdeps/unix/sysv/linux/tile/tilepro/nptl/c++-types.data: ... here.
 	* data/c++-types-tilegx-linux-gnu.data: Move to ...

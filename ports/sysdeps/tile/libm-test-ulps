@@ -460,13 +460,43 @@ float: 2
 ifloat: 2
 
 # clog
+Test "Real part of: clog (-0x1.fp+127 + 0x1p-149 i) == 88.69109041335841930424871526389807508374 + pi i":
+float: 1
+ifloat: 1
+Test "Real part of: clog (-0x1.fp+127 - 0x1p-149 i) == 88.69109041335841930424871526389807508374 - pi i":
+float: 1
+ifloat: 1
+Test "Real part of: clog (-0x1p-149 + 0x1.fp+127 i) == 88.69109041335841930424871526389807508374 + pi/2 i":
+float: 1
+ifloat: 1
+Test "Imaginary part of: clog (-0x1p-149 + 0x1.fp+127 i) == 88.69109041335841930424871526389807508374 + pi/2 i":
+float: 1
+ifloat: 1
+Test "Real part of: clog (-0x1p-149 - 0x1.fp+127 i) == 88.69109041335841930424871526389807508374 - pi/2 i":
+float: 1
+ifloat: 1
+Test "Imaginary part of: clog (-0x1p-149 - 0x1.fp+127 i) == 88.69109041335841930424871526389807508374 - pi/2 i":
+float: 1
+ifloat: 1
 Test "Real part of: clog (0.75 + 1.25 i) == 0.376885901188190075998919126749298416 + 1.03037682652431246378774332703115153 i":
+float: 1
+ifloat: 1
+Test "Real part of: clog (0x1.fp+127 + 0x1p-149 i) == 88.69109041335841930424871526389807508374 + +0 i":
+float: 1
+ifloat: 1
+Test "Real part of: clog (0x1.fp+127 - 0x1p-149 i) == 88.69109041335841930424871526389807508374 - 0 i":
 float: 1
 ifloat: 1
 Test "Real part of: clog (0x1p-1074 + 0x1p-1074 i) == -744.0934983311012896593986823853525458290 + pi/4 i":
 double: 1
 idouble: 1
 Test "Real part of: clog (0x1p-147 + 0x1p-147 i) == -101.5460619520319878296245057936228672231 + pi/4 i":
+float: 1
+ifloat: 1
+Test "Real part of: clog (0x1p-149 + 0x1.fp+127 i) == 88.69109041335841930424871526389807508374 + pi/2 i":
+float: 1
+ifloat: 1
+Test "Real part of: clog (0x1p-149 - 0x1.fp+127 i) == 88.69109041335841930424871526389807508374 - pi/2 i":
 float: 1
 ifloat: 1
 
@@ -477,6 +507,34 @@ ifloat: 1
 Test "Imaginary part of: clog10 (-0 - inf i) == inf - pi/2*log10(e) i":
 float: 1
 ifloat: 1
+Test "Imaginary part of: clog10 (-0x1.fp+1023 + 0x1p-1074 i) == 308.2409272754311106024666378243768099991 + 1.364376353841841347485783625431355770210 i":
+double: 1
+idouble: 1
+Test "Imaginary part of: clog10 (-0x1.fp+1023 - 0x1p-1074 i) == 308.2409272754311106024666378243768099991 - 1.364376353841841347485783625431355770210 i":
+double: 1
+idouble: 1
+Test "Imaginary part of: clog10 (-0x1.fp+127 + 0x1p-149 i) == 38.51805116050395969095658815123105801479 + 1.364376353841841347485783625431355770210 i":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+Test "Imaginary part of: clog10 (-0x1.fp+127 - 0x1p-149 i) == 38.51805116050395969095658815123105801479 - 1.364376353841841347485783625431355770210 i":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+Test "Imaginary part of: clog10 (-0x1p-1074 + 0x1.fp+1023 i) == 308.2409272754311106024666378243768099991 + 0.6821881769209206737428918127156778851051 i":
+double: 1
+idouble: 1
+Test "Imaginary part of: clog10 (-0x1p-1074 - 0x1.fp+1023 i) == 308.2409272754311106024666378243768099991 - 0.6821881769209206737428918127156778851051 i":
+double: 1
+idouble: 1
+Test "Imaginary part of: clog10 (-0x1p-149 + 0x1.fp+127 i) == 38.51805116050395969095658815123105801479 + 0.6821881769209206737428918127156778851051 i":
+double: 1
+idouble: 1
+Test "Imaginary part of: clog10 (-0x1p-149 - 0x1.fp+127 i) == 38.51805116050395969095658815123105801479 - 0.6821881769209206737428918127156778851051 i":
+double: 1
+idouble: 1
 Test "Imaginary part of: clog10 (-2 - 3 i) == 0.556971676153418384603252578971164214 - 0.937554462986374708541507952140189646 i":
 double: 1
 idouble: 1
@@ -513,14 +571,30 @@ ifloat: 1
 Test "Real part of: clog10 (0x1.fffffep+127 + 1.0 i) == 38.53183941910362389414093724045094697423 + 1.276276851248440096917018665609900318458e-39 i":
 float: 1
 ifloat: 1
+Test "Imaginary part of: clog10 (0x1p-1074 + 0x1.fp+1023 i) == 308.2409272754311106024666378243768099991 + 0.6821881769209206737428918127156778851051 i":
+double: 1
+idouble: 1
 Test "Real part of: clog10 (0x1p-1074 + 0x1p-1074 i) == -323.1557003452838130619487034867432642357 + pi/4*log10(e) i":
+double: 1
+idouble: 1
+Test "Imaginary part of: clog10 (0x1p-1074 - 0x1.fp+1023 i) == 308.2409272754311106024666378243768099991 - 0.6821881769209206737428918127156778851051 i":
 double: 1
 idouble: 1
 Test "Imaginary part of: clog10 (0x1p-147 + 0x1p-147 i) == -44.10089436477324509881274807713822842154 + pi/4*log10(e) i":
 float: 1
 ifloat: 1
+Test "Imaginary part of: clog10 (0x1p-149 + 0x1.fp+127 i) == 38.51805116050395969095658815123105801479 + 0.6821881769209206737428918127156778851051 i":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
 Test "Imaginary part of: clog10 (0x1p-149 + 0x1p-149 i) == -44.70295435610120748924022586658721447508 + pi/4*log10(e) i":
 float: 1
+ifloat: 1
+Test "Imaginary part of: clog10 (0x1p-149 - 0x1.fp+127 i) == 38.51805116050395969095658815123105801479 - 0.6821881769209206737428918127156778851051 i":
+double: 1
+float: 1
+idouble: 1
 ifloat: 1
 Test "Imaginary part of: clog10 (3 + inf i) == inf + pi/2*log10(e) i":
 float: 1
@@ -655,12 +729,18 @@ float: 1
 ifloat: 1
 
 # csqrt
+Test "Real part of: csqrt (-0x1.000002p-126 - 0x1.000002p-126 i) == 4.934094449071842328766868579214125217132e-20 - 1.191195773697904627170323731331667740087e-19 i":
+double: 1
+idouble: 1
 Test "Real part of: csqrt (-2 + 3 i) == 0.89597747612983812471573375529004348 + 1.6741492280355400404480393008490519 i":
 float: 1
 ifloat: 1
 Test "Real part of: csqrt (-2 - 3 i) == 0.89597747612983812471573375529004348 - 1.6741492280355400404480393008490519 i":
 float: 1
 ifloat: 1
+Test "Imaginary part of: csqrt (0x1.000002p-126 + 0x1.000002p-126 i) == 1.191195773697904627170323731331667740087e-19 + 4.934094449071842328766868579214125217132e-20 i":
+double: 1
+idouble: 1
 Test "Imaginary part of: csqrt (0x1.fffffep+127 + 1.0 i) == 1.844674352395372953599975585936590505260e+19 + 2.710505511993121390769065968615872097053e-20 i":
 float: 1
 ifloat: 1
@@ -691,6 +771,14 @@ Test "Imaginary part of: ctan (0x1p127 + 1 i) == 0.24463593911927908963815013104
 double: 1
 idouble: 1
 Test "Real part of: ctan (0x3.243f6cp-1 + 0 i) == -2.287733242885645987394874673945769518150e7 + 0.0 i":
+float: 1
+ifloat: 1
+
+# ctan_tonearest
+Test "Real part of: ctan_tonearest (0x1.921fb6p+0 + 0x1p-149 i) == -2.287733242885645987394874673945769518150e7 + 7.334008549954377778731880988481078535821e-31 i":
+float: 1
+ifloat: 1
+Test "Imaginary part of: ctan_tonearest (0x1.921fb6p+0 + 0x1p-149 i) == -2.287733242885645987394874673945769518150e7 + 7.334008549954377778731880988481078535821e-31 i":
 float: 1
 ifloat: 1
 
@@ -727,6 +815,14 @@ idouble: 1
 Test "Real part of: ctanh (1 + 0x1p127 i) == 0.9101334047676183761532873794426475906201 + 0.2446359391192790896381501310437708987204 i":
 double: 1
 idouble: 1
+
+# ctanh_tonearest
+Test "Real part of: ctanh_tonearest (0x1p-149 + 0x1.921fb6p+0 i) == 7.334008549954377778731880988481078535821e-31 - 2.287733242885645987394874673945769518150e7 i":
+float: 1
+ifloat: 1
+Test "Imaginary part of: ctanh_tonearest (0x1p-149 + 0x1.921fb6p+0 i) == 7.334008549954377778731880988481078535821e-31 - 2.287733242885645987394874673945769518150e7 i":
+float: 1
+ifloat: 1
 
 # erf
 Test "erf (1.25) == 0.922900128256458230136523481197281140":
@@ -1291,6 +1387,10 @@ float: 1
 idouble: 1
 ifloat: 1
 
+Function: Imaginary part of "clog":
+float: 1
+ifloat: 1
+
 Function: Real part of "clog10":
 double: 1
 float: 1
@@ -1363,6 +1463,14 @@ Function: Imaginary part of "ctan":
 double: 1
 idouble: 1
 
+Function: Real part of "ctan_tonearest":
+float: 1
+ifloat: 1
+
+Function: Imaginary part of "ctan_tonearest":
+float: 1
+ifloat: 1
+
 Function: Real part of "ctanh":
 double: 1
 float: 1
@@ -1374,6 +1482,14 @@ double: 1
 float: 2
 idouble: 1
 ifloat: 2
+
+Function: Real part of "ctanh_tonearest":
+float: 1
+ifloat: 1
+
+Function: Imaginary part of "ctanh_tonearest":
+float: 1
+ifloat: 1
 
 Function: "erf":
 double: 1
