@@ -1,5 +1,8 @@
 2012-07-17  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/arm/configure.in: Remove TLS check.
+	* sysdeps/arm/configure: Regenerated.
+
 	* data/c++-types-arm-linux-gnueabi.data: Move to ...
 	* sysdeps/unix/sysv/linux/arm/nptl/c++-types.data: ... here.
 
