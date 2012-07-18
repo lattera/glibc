@@ -18,6 +18,8 @@
 	* sysdeps/sparc/configure: Likwise.
 	* sysdeps/i386/configure: Likewise.
 
+	* elf/dl-open.c: Comment fixes.
+
 2012-07-17  Joseph Myers  <joseph@codesourcery.com>
 
 	* Makefile [CXX] (check-data): Remove.
