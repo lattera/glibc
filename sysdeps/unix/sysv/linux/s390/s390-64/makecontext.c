@@ -80,10 +80,10 @@ __makecontext (ucontext_t *ucp, void (*func) (void), int argc, ...)
   sp -= 20;
   *sp = 0;
 
-  /* Pass (*func) to __start_context in %r7.  */
+  /* Pass (*func) to __makecontext_ret in %r7.  */
   ucp->uc_mcontext.gregs[7] = (long int) func;
 
-  /* Pass ucp->uc_link to __start_context in %r8.  */
+  /* Pass ucp->uc_link to __makecontext_ret in %r8.  */
   ucp->uc_mcontext.gregs[8] = (long int) ucp->uc_link;
 
   /* Pass address of setcontext in %r9.  */
@@ -92,13 +92,5 @@ __makecontext (ucontext_t *ucp, void (*func) (void), int argc, ...)
   /* Set stack pointer.  */
   ucp->uc_mcontext.gregs[15] = (long int) sp;
 }
-
-asm (".text\n"
-     ".type __makecontext_ret,@function\n"
-     "__makecontext_ret:\n"
-     "      basr  %r14,%r7\n"
-     "      lgr   %r2,%r8\n"
-     "      br    %r9\n"
-     ".size __makecontext_ret, .-__makecontext_ret");
 
 weak_alias (__makecontext, makecontext)

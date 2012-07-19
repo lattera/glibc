@@ -1,5 +1,20 @@
 2012-07-19  Andreas Krebbel  <Andreas.Krebbel@de.ibm.com>
 
+	* sysdeps/unix/sysv/linux/s390/s390-32/makecontext.c: Move
+	__makecontext_ret to ...
+	* sysdeps/unix/sysv/linux/s390/s390-32/__makecontext_ret.S:
+	... here and call exit if uc_link is NULL.  New file.
+	* sysdeps/unix/sysv/linux/s390/s390-32/Makefile: Add
+	__makecontext_ret.S.
+	* sysdeps/unix/sysv/linux/s390/s390-64/makecontext.c: Move
+	__makecontext_ret to ...
+	* sysdeps/unix/sysv/linux/s390/s390-64/__makecontext_ret.S:
+	... here and call exit if uc_link is NULL.  New file.
+	* sysdeps/unix/sysv/linux/s390/s390-64/Makefile: Add
+	__makecontext_ret.S.
+
+2012-07-19  Andreas Krebbel  <Andreas.Krebbel@de.ibm.com>
+
 	* elf/elf.h (R_390_IRELATIVE): New definition.
 	* sysdeps/s390/s390-64/dl-machine.h (elf_machine_rela): Invoke the
 	resolver function for IFUNC symbols.  Support R_390_IRELATIVE.

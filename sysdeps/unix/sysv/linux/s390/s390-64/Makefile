@@ -12,3 +12,7 @@ sysdep_routines += framestate
 shared-only-routines += framestate
 endif
 endif
+
+ifeq ($(subdir),stdlib)
+sysdep_routines += __makecontext_ret
+endif
