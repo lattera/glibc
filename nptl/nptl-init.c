@@ -229,7 +229,9 @@ sigcancel_handler (int sig, siginfo_t *si, void *ctx)
 
 struct xid_command *__xidcmd attribute_hidden;
 
-/* For asynchronous cancellation we use a signal.  This is the handler.  */
+/* We use the SIGSETXID signal in the setuid, setgid, etc. implementations to
+   tell each thread to call the respective setxid syscall on itself.  This is
+   the handler.  */
 static void
 sighandler_setxid (int sig, siginfo_t *si, void *ctx)
 {
