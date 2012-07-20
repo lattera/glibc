@@ -7,6 +7,9 @@
 	* sysdeps/mach/hurd/llistxattr.c: New file, copied from listxattr.c
 	with O_NOLINK passed to __file_name_lookup.
 
+	* sysdeps/mach/hurd/lremovexattr.c: New file, copied from removexattr.c
+	with O_NOLINK passed to __file_name_lookup.
+
 2012-07-20  Joseph Myers  <joseph@codesourcery.com>
 
 	* elf/Makefile (check-data): Remove.
