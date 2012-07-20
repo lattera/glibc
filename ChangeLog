@@ -10,6 +10,9 @@
 	* sysdeps/mach/hurd/lremovexattr.c: New file, copied from removexattr.c
 	with O_NOLINK passed to __file_name_lookup.
 
+	* sysdeps/mach/hurd/getgroups.c: Return -1 and set EINVAL for
+	negative N or less than NGIDS.
+
 2012-07-20  Joseph Myers  <joseph@codesourcery.com>
 
 	* elf/Makefile (check-data): Remove.
