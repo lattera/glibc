@@ -1,3 +1,11 @@
+2012-07-20  Joseph Myers  <joseph@codesourcery.com>
+
+	* manual/lang.texi (__va_copy): Document primarily as ISO C99
+	va_copy.  Document allowing for unavailable va_copy only as
+	pre-C99 compatibility.
+	* manual/string.texi (Copying and Concatenation): Use va_copy
+	instead of __va_copy in concat example.
+
 2012-07-20  Pino Toscano  <toscano.pino@tiscali.it>
 
 	* sysdeps/mach/hurd/sendto.c (create_address_port): New subroutine.

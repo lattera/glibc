@@ -463,28 +463,33 @@ assign the value of one variable of type @code{va_list} to another variable
 of the same type.
 
 @comment stdarg.h
-@comment GNU
-@deftypefn {Macro} void __va_copy (va_list @var{dest}, va_list @var{src})
-The @code{__va_copy} macro allows copying of objects of type
+@comment ISO
+@deftypefn {Macro} void va_copy (va_list @var{dest}, va_list @var{src})
+@deftypefnx {Macro} void __va_copy (va_list @var{dest}, va_list @var{src})
+The @code{va_copy} macro allows copying of objects of type
 @code{va_list} even if this is not an integral type.  The argument pointer
 in @var{dest} is initialized to point to the same argument as the
 pointer in @var{src}.
 
-This macro is a GNU extension but it will hopefully also be available in
-the next update of the ISO C standard.
+This macro was added in ISO C99.  When building for strict conformance
+to ISO C90 (@samp{gcc -ansi}), it is not available.  The macro
+@code{__va_copy} is available as a GNU extension in any standards
+mode; before GCC 3.0, it was the only macro for this functionality.
 @end deftypefn
 
-If you want to use @code{__va_copy} you should always be prepared for the
+If you want to use @code{va_copy} and be portable to pre-C99 systems,
+you should always be prepared for the
 possibility that this macro will not be available.  On architectures where a
-simple assignment is invalid, hopefully @code{__va_copy} @emph{will} be available,
-so one should always write something like this:
+simple assignment is invalid, hopefully @code{va_copy} @emph{will} be available,
+so one should always write something like this if concerned about
+pre-C99 portability:
 
 @smallexample
 @{
   va_list ap, save;
   @dots{}
-#ifdef __va_copy
-  __va_copy (save, ap);
+#ifdef va_copy
+  va_copy (save, ap);
 #else
   save = ap;
 #endif

@@ -824,7 +824,6 @@ to use @code{strcat}/@code{wcscat}.  A lot of time is wasted finding the
 end of the destination string so that the actual copying can start.
 This is a common example:
 
-@cindex __va_copy
 @cindex va_copy
 @smallexample
 /* @r{This function concatenates arbitrarily many strings.  The last}
@@ -838,9 +837,7 @@ concat (const char *str, @dots{})
   char *result;
 
   va_start (ap, str);
-  /* @r{Actually @code{va_copy}, but this is the name more gcc versions}
-     @r{understand.}  */
-  __va_copy (ap2, ap);
+  va_copy (ap2, ap);
 
   /* @r{Determine how much space we need.}  */
   for (s = str; s != NULL; s = va_arg (ap, const char *))
