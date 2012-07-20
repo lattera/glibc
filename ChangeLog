@@ -13,6 +13,10 @@
 	* sysdeps/mach/hurd/getgroups.c: Return -1 and set EINVAL for
 	negative N or less than NGIDS.
 
+	* sysdeps/mach/hurd/getlogin_r.c: Make LOGIN non-static and change its
+	type to string_t.  Set ERANGE as errno and return it if NAME is not big
+	enough.  Use memcpy instead of strncpy.
+
 2012-07-20  Joseph Myers  <joseph@codesourcery.com>
 
 	* elf/Makefile (check-data): Remove.
