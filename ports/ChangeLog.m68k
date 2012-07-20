@@ -1,3 +1,8 @@
+2012-07-20  Joseph Myers  <joseph@codesourcery.com>
+
+	* data/localplt-m68k-linux-gnu.data: Move to ...
+	* sysdeps/unix/sysv/linux/m68k/nptl/localplt.data: ... here.
+
 2012-07-17  Joseph Myers  <joseph@codesourcery.com>
 
 	* data/c++-types-m68k-linux-gnu.data: Move to ...

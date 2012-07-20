@@ -1,3 +1,8 @@
+2012-07-20  Joseph Myers  <joseph@codesourcery.com>
+
+	* data/localplt-ia64-linux-gnu.data: Move to ...
+	* sysdeps/unix/sysv/linux/ia64/nptl/localplt.data: ... here.
+
 2012-07-17  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/ia64/nptl/c++-types.data: Move from

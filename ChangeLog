@@ -1,3 +1,32 @@
+2012-07-20  Joseph Myers  <joseph@codesourcery.com>
+
+	* elf/Makefile (check-data): Remove.
+	(localplt.data): New vpath directive.
+	($(objpfx)check-localplt.out): Use localplt.data from vpath
+	instead of $(check-data).
+	* scripts/data/localplt-generic.data: Move to ...
+	* sysdeps/generic/localplt.data: ... here.
+	* scripts/data/localplt-i386-linux-gnu.data: Move to ...
+	* sysdeps/unix/sysv/linux/i386/nptl/localplt.data: ... here.
+	* scripts/data/localplt-powerpc-linux-gnu.data: Move to ...
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/fpu/nptl/localplt.data:
+	... here.
+	* scripts/data/localplt-powerpc64-linux-gnu.data: Move to ...
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/nptl/localplt.data:
+	... here.
+	* scripts/data/localplt-s390-linux-gnu.data: Move to ...
+	* sysdeps/unix/sysv/linux/s390/s390-32/nptl/localplt.data:
+	... here.
+	* scripts/data/localplt-s390x-linux-gnu.data: Move to ...
+	* sysdeps/unix/sysv/linux/s390/s390-64/nptl/localplt.data:
+	... here.
+	* scripts/data/localplt-sparc-linux-gnu.data: Move to ...
+	* sysdeps/unix/sysv/linux/sparc/sparc32/nptl/localplt.data:
+	... here.
+	* scripts/data/localplt-sparc64-linux-gnu.data: Move to ...
+	* sysdeps/unix/sysv/linux/sparc/sparc64/nptl/localplt.data:
+	... here.
+
 2012-07-19 Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/tls-macros.h: Split PowerPC definitions in

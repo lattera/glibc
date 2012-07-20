@@ -1,3 +1,8 @@
+2012-07-20  Joseph Myers  <joseph@codesourcery.com>
+
+	* data/localplt-arm-linux-gnueabi.data: Move to ...
+	* sysdeps/unix/sysv/linux/arm/nptl/localplt.data: ... here.
+
 2012-07-17  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/arm/configure.in: Remove TLS check.
