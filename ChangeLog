@@ -1,3 +1,9 @@
+2012-07-20  Pino Toscano  <toscano.pino@tiscali.it>
+
+	* sysdeps/mach/hurd/sendto.c (create_address_port): New subroutine.
+	(__sendto): Use create_address_port.  Initialize APORT and deallocate
+	it if not null.
+
 2012-07-20  Joseph Myers  <joseph@codesourcery.com>
 
 	* elf/Makefile (check-data): Remove.

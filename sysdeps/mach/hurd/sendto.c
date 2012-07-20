@@ -33,37 +33,50 @@ __sendto (int fd,
 	  const struct sockaddr_un *addr,
 	  socklen_t addr_len)
 {
-  addr_port_t aport;
+  addr_port_t aport = MACH_PORT_NULL;
   error_t err;
   size_t wrote;
 
-  if (addr->sun_family == AF_LOCAL)
-    {
-      /* For the local domain, we must look up the name as a file and talk
-	 to it with the ifsock protocol.  */
-      file_t file = __file_name_lookup (addr->sun_path, 0, 0);
-      if (file == MACH_PORT_NULL)
-	return -1;
-      err = __ifsock_getsockaddr (file, &aport);
-      __mach_port_deallocate (__mach_task_self (), file);
-      if (err == MIG_BAD_ID || err == EOPNOTSUPP)
-	/* The file did not grok the ifsock protocol.  */
-	err = ENOTSOCK;
-      if (err)
-	return __hurd_fail (err);
-    }
-  else
-    err = EIEIO;
-
   /* Get an address port for the desired destination address.  */
+  error_t create_address_port (io_t port,
+			       const struct sockaddr_un *addr,
+			       socklen_t addr_len,
+			       addr_port_t *aport)
+    {
+      error_t err_port;
+
+      if (addr->sun_family == AF_LOCAL)
+	{
+	  /* For the local domain, we must look up the name as a file and talk
+	     to it with the ifsock protocol.  */
+	  file_t file = __file_name_lookup (addr->sun_path, 0, 0);
+	  if (file == MACH_PORT_NULL)
+	    return errno;
+	  err_port = __ifsock_getsockaddr (file, aport);
+	  __mach_port_deallocate (__mach_task_self (), file);
+	  if (err_port == MIG_BAD_ID || err_port == EOPNOTSUPP)
+	    /* The file did not grok the ifsock protocol.  */
+	    err_port = ENOTSOCK;
+	}
+      else
+	{
+	  err_port = __socket_create_address (port,
+					      addr->sun_family,
+					      (char *) addr,
+					      addr_len,
+					      aport);
+	}
+
+      return err_port;
+    }
+
   err = HURD_DPORT_USE (fd,
 			({
-			  if (err)
-			    err = __socket_create_address (port,
-							   addr->sun_family,
-							   (char *) addr,
-							   addr_len,
-							   &aport);
+			  if (addr != NULL)
+			    err = create_address_port (port, addr, addr_len,
+						       &aport);
+			  else
+			    err = 0;
 			  if (! err)
 			    {
 			      /* Send the data.  */
@@ -72,11 +85,12 @@ __sendto (int fd,
 						   NULL,
 						   MACH_MSG_TYPE_COPY_SEND, 0,
 						   NULL, 0, &wrote);
-			      __mach_port_deallocate (__mach_task_self (),
-						      aport);
 			    }
 			  err;
 			}));
+
+  if (aport != MACH_PORT_NULL)
+    __mach_port_deallocate (__mach_task_self (), aport);
 
   return err ? __hurd_sockfail (fd, flags, err) : wrote;
 }
