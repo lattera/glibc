@@ -23,16 +23,38 @@
 #include <sys/resource.h>
 #include <pthread.h>
 #include <alloca.h>
+#include <assert.h>
+
+/* There is an obscure bug in the kernel due to which RLIMIT_STACK is sometimes
+   returned as unlimited when it is not, which may cause this test to fail.
+   There is also the other case where RLIMIT_STACK is intentionally set as
+   unlimited or very high, which may result in a vma that is too large and again
+   results in a test case failure.  To avoid these problems, we cap the stack
+   size to one less than 8M.  See the following mailing list threads for more
+   information about this problem:
+   <http://sourceware.org/ml/libc-alpha/2012-06/msg00599.html>
+   <http://sourceware.org/ml/libc-alpha/2012-06/msg00713.html>.  */
+#define MAX_STACK_SIZE (8192 * 1024 - 1)
+
+#define _MIN(l,o) ((l) < (o) ? (l) : (o))
 
 /* Move the stack pointer so that stackaddr is accessible and then check if it
    really is accessible.  This will segfault if it fails.  */
-static void
+static void *
 allocate_and_test (void *stackaddr)
 {
   void *mem = &mem;
-  /* FIXME:  The difference will be negative for _STACK_GROWSUP.  */
+  /* FIXME:  mem >= stackaddr for _STACK_GROWSUP.  */
   mem = alloca ((size_t) (mem - stackaddr));
-  *(int *)(mem) = 0;
+  assert (mem <= stackaddr);
+
+  /* We don't access mem here because the compiler may move the stack pointer
+     beyond what we expect, thus making our alloca send the stack pointer
+     beyond stackaddr.  Using only stackaddr without the assert may make the
+     compiler think that this instruction is independent of the above alloca
+     and hence reshuffle to do this dereference before the alloca.  */
+  *(int *)stackaddr = 42;
+  return stackaddr;
 }
 
 static int
@@ -77,17 +99,20 @@ check_stack_top (void)
       return 1;
     }
 
+  printf ("current rlimit_stack is %zu\n", stack_limit.rlim_cur);
+
   if (get_self_pthread_attr ("check_stack_top", &stackaddr, &stacksize))
     return 1;
 
-  /* Reduce the rlimit to a page less that what is currently being returned so
-     that we ensure that pthread_getattr_np uses rlimit.  The figure is
-     intentionally unaligned so to verify that pthread_getattr_np returns an
-     aligned stacksize that correctly fits into the rlimit.  We don't bother
-     about the case where the stack is limited by the vma below it and not by
-     the rlimit because the stacksize returned in that case is computed from
-     the end of that vma and is hence safe.  */
-  stack_limit.rlim_cur = stacksize - 4095;
+  /* Reduce the rlimit to a page less that what is currently being returned
+     (subject to a maximum of MAX_STACK_SIZE) so that we ensure that
+     pthread_getattr_np uses rlimit.  The figure is intentionally unaligned so
+     to verify that pthread_getattr_np returns an aligned stacksize that
+     correctly fits into the rlimit.  We don't bother about the case where the
+     stack is limited by the vma below it and not by the rlimit because the
+     stacksize returned in that case is computed from the end of that vma and is
+     hence safe.  */
+  stack_limit.rlim_cur = _MIN(stacksize - 4095, MAX_STACK_SIZE);
   printf ("Adjusting RLIMIT_STACK to %zu\n", stack_limit.rlim_cur);
   if ((ret = setrlimit (RLIMIT_STACK, &stack_limit)))
     {
@@ -100,7 +125,10 @@ check_stack_top (void)
 
   printf ("Adjusted rlimit: stacksize=%zu, stackaddr=%p\n", stacksize,
           stackaddr);
-  allocate_and_test (stackaddr);
+
+  /* So that the compiler does not optimize out this call.  */
+  stackaddr = allocate_and_test (stackaddr);
+  assert (*(int *)stackaddr == 42);
 
   puts ("Stack top tests done");
 

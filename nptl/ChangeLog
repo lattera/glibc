@@ -1,3 +1,13 @@
+2012-07-20  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* tst-pthread-getattr.c (MAX_STACK_SIZE): New max cap for stack
+	size.
+	(_MIN): New macro.
+	(allocate_and_test): Return STACKADDR.  Access STACKADDR instead
+	of MEM to test.
+	(check_stack_top): Read valued written into STACKADDR in
+	allocate_and_test.  Cap stack size to MAX_STACK_SIZE.
+
 2012-07-19  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* nptl-init.c (sighandler_setxid): Fix the comment that
