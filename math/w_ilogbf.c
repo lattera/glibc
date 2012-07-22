@@ -35,5 +35,4 @@ __ilogbf (float x)
     }
   return r;
 }
-
 weak_alias (__ilogbf, ilogbf)

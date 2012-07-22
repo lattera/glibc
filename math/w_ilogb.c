@@ -18,6 +18,7 @@
 
 #include <math.h>
 #include <errno.h>
+#include <limits.h>
 #include <math_private.h>
 
 /* wrapper ilogb */
@@ -34,7 +35,6 @@ __ilogb (double x)
     }
   return r;
 }
-
 weak_alias (__ilogb, ilogb)
 #ifdef NO_LONG_DOUBLE
 strong_alias (__ilogb, __ilogbl)
