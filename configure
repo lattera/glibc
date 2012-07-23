@@ -4322,7 +4322,7 @@ $as_echo "$as_me: WARNING: $name/$implies_file specifies nonexistent $x" >&2;}
 
   test -n "$enable_debug_configure" &&
     echo "DEBUG: $name Implies='$Implies' rest='$*' parent='$parent' \
-Implies_before='$Implies_after' Implies_after='$Implies_after'" >&2
+Implies_before='$Implies_before' Implies_after='$Implies_after'" >&2
 
   # Add the names implied by NAME, and NAME's parent (if it has one), to
   # the list of names to be processed (the argument list).  We prepend the

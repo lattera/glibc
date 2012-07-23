@@ -1,3 +1,9 @@
+2012-07-23  Thomas Schwinge  <thomas@codesourcery.com>
+
+	* configure.in <sysdeps resolving>: Correct printing
+	Implies_before.
+	* configure: Regenerate.
+
 2012-07-22  Thomas Schwinge  <thomas@codesourcery.com>
 
 	* math/w_ilogb.c: Include <limits.h>.
