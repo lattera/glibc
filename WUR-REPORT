@@ -4,17 +4,6 @@ lssek:   Probably should be __wur but lseek(fd,SEEK_SET,0) will succeed if
          the descriptor is fine.
 lseek64: same
 
-setuid:  will always succeed given correct privileges, so there might
-         be places which don't check for it.
-setreuid: same
-seteuid: same
-setgid:  same
-setregid: same
-setegid: same
-setresuid: same
-setresgid: same
-
-
 <stdio.h>:
 
 setvbuf:   if stream and buffer are fine and other parameters constant,

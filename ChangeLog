@@ -1,3 +1,12 @@
+2012-08-01  Florian Weimer  <fweimer@redhat.com>
+
+	* posix/unistd.h (setuid, setreuid, seteuid, setresuid):
+	Declare with warn_unused_result.
+	(setgid, setregid, setegid, setresgid): Likewise.
+	* sysdeps/unix/sysv/linux/sys/fsuid.h (setfsuid, setfsgid):
+	Likewise.
+	* WUR-REPORT: Remove set*id functions.
+
 2012-07-31  Pino Toscano  <toscano.pino@tiscali.it>
 
 	* sysdeps/mach/hurd/renameat.c: New file, mostly copied from rename.c.

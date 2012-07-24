@@ -719,34 +719,34 @@ extern int group_member (__gid_t __gid) __THROW;
    If the calling process is the super-user, set the real
    and effective user IDs, and the saved set-user-ID to UID;
    if not, the effective user ID is set to UID.  */
-extern int setuid (__uid_t __uid) __THROW;
+extern int setuid (__uid_t __uid) __THROW __wur;
 
 #if defined __USE_BSD || defined __USE_XOPEN_EXTENDED
 /* Set the real user ID of the calling process to RUID,
    and the effective user ID of the calling process to EUID.  */
-extern int setreuid (__uid_t __ruid, __uid_t __euid) __THROW;
+extern int setreuid (__uid_t __ruid, __uid_t __euid) __THROW __wur;
 #endif
 
 #if defined __USE_BSD || defined __USE_XOPEN2K
 /* Set the effective user ID of the calling process to UID.  */
-extern int seteuid (__uid_t __uid) __THROW;
+extern int seteuid (__uid_t __uid) __THROW __wur;
 #endif /* Use BSD.  */
 
 /* Set the group ID of the calling process to GID.
    If the calling process is the super-user, set the real
    and effective group IDs, and the saved set-group-ID to GID;
    if not, the effective group ID is set to GID.  */
-extern int setgid (__gid_t __gid) __THROW;
+extern int setgid (__gid_t __gid) __THROW __wur;
 
 #if defined __USE_BSD || defined __USE_XOPEN_EXTENDED
 /* Set the real group ID of the calling process to RGID,
    and the effective group ID of the calling process to EGID.  */
-extern int setregid (__gid_t __rgid, __gid_t __egid) __THROW;
+extern int setregid (__gid_t __rgid, __gid_t __egid) __THROW __wur;
 #endif
 
 #if defined __USE_BSD || defined __USE_XOPEN2K
 /* Set the effective group ID of the calling process to GID.  */
-extern int setegid (__gid_t __gid) __THROW;
+extern int setegid (__gid_t __gid) __THROW __wur;
 #endif /* Use BSD.  */
 
 #ifdef __USE_GNU
@@ -763,12 +763,12 @@ extern int getresgid (__gid_t *__rgid, __gid_t *__egid, __gid_t *__sgid)
 /* Set the real user ID, effective user ID, and saved-set user ID,
    of the calling process to RUID, EUID, and SUID, respectively.  */
 extern int setresuid (__uid_t __ruid, __uid_t __euid, __uid_t __suid)
-     __THROW;
+     __THROW __wur;
 
 /* Set the real group ID, effective group ID, and saved-set group ID,
    of the calling process to RGID, EGID, and SGID, respectively.  */
 extern int setresgid (__gid_t __rgid, __gid_t __egid, __gid_t __sgid)
-     __THROW;
+     __THROW __wur;
 #endif
 
 
