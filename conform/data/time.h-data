@@ -1,8 +1,8 @@
-constant NULL
-constant CLOCKS_PER_SEC
+macro-constant NULL == 0
+macro CLOCKS_PER_SEC {clock_t}
 
 #ifdef ISO11
-macro TIME_UTC
+macro-int-constant TIME_UTC > 0
 #endif
 
 #if !defined ISO && !defined ISO99

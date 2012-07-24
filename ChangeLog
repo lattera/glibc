@@ -1,3 +1,11 @@
+2012-07-24  Joseph Myers  <joseph@codesourcery.com>
+
+	* conform/data/time.h-data (NULL): Use macro-constant.  Require
+	equal to 0.
+	(CLOCKS_PER_SEC): Use macro instead of constant.  Specify type as
+	clock_t.
+	[ISO11] (TIME_UTC): Use macro-int-constant.  Require value > 0.
+
 2012-07-23  Thomas Schwinge  <thomas@codesourcery.com>
 
 	* configure.in <sysdeps resolving>: Correct printing
