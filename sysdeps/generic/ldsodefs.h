@@ -182,28 +182,6 @@ enum allowmask
   };
 
 
-/* Type for list of auditing interfaces.  */
-struct La_i86_regs;
-struct La_i86_retval;
-struct La_x86_64_regs;
-struct La_x86_64_retval;
-struct La_x32_regs;
-struct La_x32_retval;
-struct La_ppc32_regs;
-struct La_ppc32_retval;
-struct La_ppc64_regs;
-struct La_ppc64_retval;
-struct La_sh_regs;
-struct La_sh_retval;
-struct La_s390_32_regs;
-struct La_s390_32_retval;
-struct La_s390_64_regs;
-struct La_s390_64_retval;
-struct La_sparc32_regs;
-struct La_sparc32_retval;
-struct La_sparc64_regs;
-struct La_sparc64_retval;
-
 struct audit_ifaces
 {
   void (*activity) (uintptr_t *, unsigned int);
@@ -219,98 +197,12 @@ struct audit_ifaces
   };
   union
   {
-    Elf32_Addr (*i86_gnu_pltenter) (Elf32_Sym *, unsigned int, uintptr_t *,
-				    uintptr_t *, struct La_i86_regs *,
-				    unsigned int *, const char *name,
-				    long int *framesizep);
-    Elf64_Addr (*x86_64_gnu_pltenter) (Elf64_Sym *, unsigned int, uintptr_t *,
-				       uintptr_t *, struct La_x86_64_regs *,
-				       unsigned int *, const char *name,
-				       long int *framesizep);
-    Elf32_Addr (*x32_gnu_pltenter) (Elf32_Sym *, unsigned int, uintptr_t *,
-				    uintptr_t *, struct La_x32_regs *,
-				    unsigned int *, const char *name,
-				    long int *framesizep);
-    Elf32_Addr (*ppc32_gnu_pltenter) (Elf32_Sym *, unsigned int, uintptr_t *,
-				      uintptr_t *, struct La_ppc32_regs *,
-				      unsigned int *, const char *name,
-				      long int *framesizep);
-    Elf64_Addr (*ppc64_gnu_pltenter) (Elf64_Sym *, unsigned int, uintptr_t *,
-				      uintptr_t *, struct La_ppc64_regs *,
-				      unsigned int *, const char *name,
-				      long int *framesizep);
-    uintptr_t (*sh_gnu_pltenter) (Elf32_Sym *, unsigned int, uintptr_t *,
-				  uintptr_t *, const struct La_sh_regs *,
-				  unsigned int *, const char *name,
-				  long int *framesizep);
-    Elf32_Addr (*s390_32_gnu_pltenter) (Elf32_Sym *, unsigned int, uintptr_t *,
-					uintptr_t *, struct La_s390_32_regs *,
-					unsigned int *, const char *name,
-					long int *framesizep);
-    Elf64_Addr (*s390_64_gnu_pltenter) (Elf64_Sym *, unsigned int, uintptr_t *,
-					uintptr_t *, struct La_s390_64_regs *,
-					unsigned int *, const char *name,
-					long int *framesizep);
-    Elf32_Addr (*sparc32_gnu_pltenter) (Elf32_Sym *, unsigned int,
-					uintptr_t *, uintptr_t *,
-					const struct La_sparc32_regs *,
-					unsigned int *, const char *name,
-					long int *framesizep);
-    Elf64_Addr (*sparc64_gnu_pltenter) (Elf64_Sym *, unsigned int,
-					uintptr_t *, uintptr_t *,
-					const struct La_sparc64_regs *,
-					unsigned int *, const char *name,
-					long int *framesizep);
 #ifdef ARCH_PLTENTER_MEMBERS
     ARCH_PLTENTER_MEMBERS;
 #endif
   };
   union
   {
-    unsigned int (*i86_gnu_pltexit) (Elf32_Sym *, unsigned int, uintptr_t *,
-				     uintptr_t *, const struct La_i86_regs *,
-				     struct La_i86_retval *, const char *);
-    unsigned int (*x86_64_gnu_pltexit) (Elf64_Sym *, unsigned int, uintptr_t *,
-					uintptr_t *,
-					const struct La_x86_64_regs *,
-					struct La_x86_64_retval *,
-					const char *);
-    unsigned int (*x32_gnu_pltexit) (Elf32_Sym *, unsigned int, uintptr_t *,
-				     uintptr_t *,
-				     const struct La_x32_regs *,
-				     struct La_x86_64_retval *,
-				     const char *);
-    unsigned int (*ppc32_gnu_pltexit) (Elf32_Sym *, unsigned int, uintptr_t *,
-				       uintptr_t *,
-				       const struct La_ppc32_regs *,
-				       struct La_ppc32_retval *, const char *);
-    unsigned int (*ppc64_gnu_pltexit) (Elf64_Sym *, unsigned int, uintptr_t *,
-				       uintptr_t *,
-				       const struct La_ppc64_regs *,
-				       struct La_ppc64_retval *, const char *);
-    unsigned int (*sh_gnu_pltexit) (Elf32_Sym *, unsigned int, uintptr_t *,
-				    uintptr_t *, const struct La_sh_regs *,
-				    struct La_sh_retval *, const char *);
-    unsigned int (*s390_32_gnu_pltexit) (Elf32_Sym *, unsigned int,
-					 uintptr_t *, uintptr_t *,
-					 const struct La_s390_32_regs *,
-					 struct La_s390_32_retval *,
-					 const char *);
-    unsigned int (*s390_64_gnu_pltexit) (Elf64_Sym *, unsigned int,
-					 uintptr_t *, uintptr_t *,
-					 const struct La_s390_64_regs *,
-					 struct La_s390_64_retval *,
-					 const char *);
-    unsigned int (*sparc32_gnu_pltexit) (Elf32_Sym *, unsigned int,
-					 uintptr_t *, uintptr_t *,
-					 const struct La_sparc32_regs *,
-					 struct La_sparc32_retval *,
-					 const char *);
-    unsigned int (*sparc64_gnu_pltexit) (Elf64_Sym *, unsigned int,
-					 uintptr_t *, uintptr_t *,
-					 const struct La_sparc32_regs *,
-					 struct La_sparc32_retval *,
-					 const char *);
 #ifdef ARCH_PLTEXIT_MEMBERS
     ARCH_PLTEXIT_MEMBERS;
 #endif

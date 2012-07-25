@@ -1,3 +1,34 @@
+2012-07-25  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/generic/ldsodefs.h (struct La_i86_regs): Remove.
+	(struct La_i86_retval): Likewise.
+	(struct La_x86_64_regs): Likewise.
+	(struct La_x86_64_retval): Likewise.
+	(struct La_x32_regs): Likewise.
+	(struct La_x32_retval): Likewise.
+	(struct La_ppc32_regs): Likewise.
+	(struct La_ppc32_retval): Likewise.
+	(struct La_ppc64_regs): Likewise.
+	(struct La_ppc64_retval): Likewise.
+	(struct La_sh_regs): Likewise.
+	(struct La_sh_retval): Likewise.
+	(struct La_s390_32_regs): Likewise.
+	(struct La_s390_32_retval): Likewise.
+	(struct La_s390_64_regs): Likewise.
+	(struct La_s390_64_retval): Likewise.
+	(struct La_sparc32_regs): Likewise.
+	(struct La_sparc32_retval): Likewise.
+	(struct La_sparc64_regs): Likewise.
+	(struct La_sparc64_retval): Likewise.
+	(struct audit_ifaces): Remove architecture-specific pltenter and
+	pltexit members.
+	* sysdeps/i386/ldsodefs.h: New file.
+	* sysdeps/powerpc/ldsodefs.h: Likewise.
+	* sysdeps/s390/ldsodefs.h: Likewise.
+	* sysdeps/sh/ldsodefs.h: Likewise.
+	* sysdeps/sparc/ldsodefs.h: Likewise.
+	* sysdeps/x86_64/ldsodefs.h: Likewise.
+
 2012-07-25  Marek Polacek  <polacek@redhat.com>
 
 	[BZ #6808]
