@@ -1,4 +1,4 @@
-/* Copyright (C) 2004, 2005, 2006, 2007 Free Software Foundation, Inc.
+/* Copyright (C) 2004-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 2004.
 
@@ -43,7 +43,3 @@
 
 /* Some variables normally defined in libc.  */
 service_user *__nss_hosts_database;
-
-#if defined NEED_NETLINK && __ASSUME_NETLINK_SUPPORT == 0
-int __no_netlink_support attribute_hidden;
-#endif

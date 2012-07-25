@@ -1,5 +1,5 @@
 /* getifaddrs -- get names and addresses of all network interfaces
-   Copyright (C) 2003-2008, 2009, 2010, 2011 Free Software Foundation, Inc.
+   Copyright (C) 2003-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -35,17 +35,6 @@
 #include <kernel-features.h>
 
 #include "netlinkaccess.h"
-
-
-/* We don't know if we have NETLINK support compiled into our
-   Kernel, so include the old implementation as fallback.  */
-#if __ASSUME_NETLINK_SUPPORT == 0
-int __no_netlink_support attribute_hidden;
-
-# define getifaddrs fallback_getifaddrs
-# include "sysdeps/gnu/ifaddrs.c"
-# undef getifaddrs
-#endif
 
 
 /* There is a problem with this type.  The address length for
@@ -274,9 +263,6 @@ __netlink_open (struct netlink_handle *h)
     close_and_out:
       __netlink_close (h);
     out:
-#if __ASSUME_NETLINK_SUPPORT == 0
-      __no_netlink_support = 1;
-#endif
       return -1;
     }
   /* Determine the ID the kernel assigned for this netlink connection.
@@ -340,17 +326,8 @@ getifaddrs_internal (struct ifaddrs **ifap)
 
   *ifap = NULL;
 
-  if (! __no_netlink_support && __netlink_open (&nh) < 0)
-    {
-#if __ASSUME_NETLINK_SUPPORT != 0
-      return -1;
-#endif
-    }
-
-#if __ASSUME_NETLINK_SUPPORT == 0
-  if (__no_netlink_support)
-    return fallback_getifaddrs (ifap);
-#endif
+  if (__netlink_open (&nh) < 0)
+    return -1;
 
   /* Tell the kernel that we wish to get a list of all
      active interfaces, collect all data for every interface.  */
@@ -859,11 +836,9 @@ getifaddrs (struct ifaddrs **ifap)
 libc_hidden_def (getifaddrs)
 
 
-#if __ASSUME_NETLINK_SUPPORT != 0
 void
 freeifaddrs (struct ifaddrs *ifa)
 {
   free (ifa);
 }
 libc_hidden_def (freeifaddrs)
-#endif

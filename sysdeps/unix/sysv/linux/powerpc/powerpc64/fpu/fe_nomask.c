@@ -1,5 +1,5 @@
 /* Procedure definition for FE_NOMASK_ENV for Linux/ppc64.
-   Copyright (C) 2003, 2006, 2008 Free Software Foundation, Inc.
+   Copyright (C) 2003-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -30,11 +30,6 @@ __fe_nomask_env (void)
   int result;
   INTERNAL_SYSCALL_DECL (err);
   result = INTERNAL_SYSCALL (prctl, err, 2, PR_SET_FPEXC, PR_FP_EXC_PRECISE);
-# ifndef __ASSUME_NEW_PRCTL_SYSCALL
-  if (INTERNAL_SYSCALL_ERROR_P (result, err)
-      && INTERNAL_SYSCALL_ERRNO (result, err) == EINVAL)
-    __set_errno (ENOSYS);
-# endif
 #else
   __set_errno (ENOSYS);
 #endif

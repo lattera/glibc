@@ -18,12 +18,10 @@
    <http://www.gnu.org/licenses/>.  */
 
 /* These features were surely available with 2.4.12.  */
-#if __LINUX_KERNEL_VERSION >= 132108
-# define __ASSUME_MMAP2_SYSCALL		1
-# define __ASSUME_STAT64_SYSCALL	1
-# define __ASSUME_FCNTL64		1
-# define __ASSUME_VFORK_SYSCALL		1
-#endif
+#define __ASSUME_MMAP2_SYSCALL		1
+#define __ASSUME_STAT64_SYSCALL	1
+#define __ASSUME_FCNTL64		1
+#define __ASSUME_VFORK_SYSCALL		1
 
 /* Many syscalls were added in 2.6.10 for m68k.  */
 #if __LINUX_KERNEL_VERSION >= 132618

@@ -1,5 +1,5 @@
 /* Determine protocol families for which interfaces exist.  Linux version.
-   Copyright (C) 2003, 2006-2008, 2010, 2011 Free Software Foundation, Inc.
+   Copyright (C) 2003-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -289,16 +289,6 @@ out_fail:
 }
 
 
-/* We don't know if we have NETLINK support compiled into our
-   Kernel.  */
-#if __ASSUME_NETLINK_SUPPORT == 0
-/* Define in ifaddrs.h.  */
-extern int __no_netlink_support attribute_hidden;
-#else
-# define __no_netlink_support 0
-#endif
-
-
 void
 attribute_hidden
 __check_pf (bool *seen_ipv4, bool *seen_ipv6,
@@ -307,12 +297,10 @@ __check_pf (bool *seen_ipv4, bool *seen_ipv6,
   *in6ai = NULL;
   *in6ailen = 0;
 
-  if (! __no_netlink_support)
-    {
-      struct cached_data *olddata = NULL;
-      struct cached_data *data = NULL;
+  struct cached_data *olddata = NULL;
+  struct cached_data *data = NULL;
 
-      __libc_lock_lock (lock);
+  __libc_lock_lock (lock);
 
 #ifdef IS_IN_nscd
 # define cache_valid() nl_timestamp != 0 && cache->timestamp == nl_timestamp
@@ -321,90 +309,59 @@ __check_pf (bool *seen_ipv4, bool *seen_ipv6,
       ({ uint32_t val = __nscd_get_nl_timestamp ();			      \
 	 val != 0 && cache->timestamp == val; })
 #endif
-      if (cache != NULL && cache_valid ())
+  if (cache != NULL && cache_valid ())
+    {
+      data = cache;
+      atomic_increment (&cache->usecnt);
+    }
+  else
+    {
+      int fd = __socket (PF_NETLINK, SOCK_RAW, NETLINK_ROUTE);
+
+      if (__builtin_expect (fd >= 0, 1))
 	{
-	  data = cache;
-	  atomic_increment (&cache->usecnt);
+	  struct sockaddr_nl nladdr;
+	  memset (&nladdr, '\0', sizeof (nladdr));
+	  nladdr.nl_family = AF_NETLINK;
+
+	  socklen_t addr_len = sizeof (nladdr);
+
+	  if (__bind (fd, (struct sockaddr *) &nladdr, sizeof (nladdr)) == 0
+	      && __getsockname (fd, (struct sockaddr *) &nladdr,
+				&addr_len) == 0)
+	    data = make_request (fd, nladdr.nl_pid);
+
+	  close_not_cancel_no_status (fd);
 	}
-      else
-	{
-	  int fd = __socket (PF_NETLINK, SOCK_RAW, NETLINK_ROUTE);
-
-	  if (__builtin_expect (fd >= 0, 1))
-	    {
-	      struct sockaddr_nl nladdr;
-	      memset (&nladdr, '\0', sizeof (nladdr));
-	      nladdr.nl_family = AF_NETLINK;
-
-	      socklen_t addr_len = sizeof (nladdr);
-
-	      if(__bind (fd, (struct sockaddr *) &nladdr, sizeof (nladdr)) == 0
-		 && __getsockname (fd, (struct sockaddr *) &nladdr,
-				   &addr_len) == 0)
-		data = make_request (fd, nladdr.nl_pid);
-
-	      close_not_cancel_no_status (fd);
-	    }
-
-	  if (data != NULL)
-	    {
-	      olddata = cache;
-	      cache = data;
-	    }
-	}
-
-      __libc_lock_unlock (lock);
 
       if (data != NULL)
 	{
-	  /* It worked.  */
-	  *seen_ipv4 = data->seen_ipv4;
-	  *seen_ipv6 = data->seen_ipv6;
-	  *in6ailen = data->in6ailen;
-	  *in6ai = data->in6ai;
-
-	  if (olddata != NULL && olddata->usecnt > 0
-	      && atomic_add_zero (&olddata->usecnt, -1))
-	    free (olddata);
-
-	  return;
+	  olddata = cache;
+	  cache = data;
 	}
-
-#if __ASSUME_NETLINK_SUPPORT == 0
-      /* Remember that there is no netlink support.  */
-      __no_netlink_support = 1;
-#else
-      /* We cannot determine what interfaces are available.  Be
-	 pessimistic.  */
-      *seen_ipv4 = true;
-      *seen_ipv6 = true;
-#endif
     }
 
-#if __ASSUME_NETLINK_SUPPORT == 0
-  /* No netlink.  Get the interface list via getifaddrs.  */
-  struct ifaddrs *ifa = NULL;
-  if (getifaddrs (&ifa) != 0)
+  __libc_lock_unlock (lock);
+
+  if (data != NULL)
     {
-      /* We cannot determine what interfaces are available.  Be
-	 pessimistic.  */
-      *seen_ipv4 = true;
-      *seen_ipv6 = true;
+      /* It worked.  */
+      *seen_ipv4 = data->seen_ipv4;
+      *seen_ipv6 = data->seen_ipv6;
+      *in6ailen = data->in6ailen;
+      *in6ai = data->in6ai;
+
+      if (olddata != NULL && olddata->usecnt > 0
+	  && atomic_add_zero (&olddata->usecnt, -1))
+	free (olddata);
+
       return;
     }
 
-  struct ifaddrs *runp;
-  for (runp = ifa; runp != NULL; runp = runp->ifa_next)
-    if (runp->ifa_addr != NULL)
-      {
-	if (runp->ifa_addr->sa_family == PF_INET)
-	  *seen_ipv4 = true;
-	else if (runp->ifa_addr->sa_family == PF_INET6)
-	  *seen_ipv6 = true;
-      }
-
-  (void) freeifaddrs (ifa);
-#endif
+  /* We cannot determine what interfaces are available.  Be
+     pessimistic.  */
+  *seen_ipv4 = true;
+  *seen_ipv6 = true;
 }
 
 

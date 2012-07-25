@@ -74,90 +74,13 @@ if_freenameindex (struct if_nameindex *ifn)
 libc_hidden_def (if_freenameindex)
 
 
-#if __ASSUME_NETLINK_SUPPORT == 0
-static struct if_nameindex *
-if_nameindex_ioctl (void)
-{
-  int fd = __opensock ();
-  struct ifconf ifc;
-  unsigned int nifs, i;
-  int rq_len;
-  struct if_nameindex *idx = NULL;
-# define RQ_IFS	4
-
-  if (fd < 0)
-    return NULL;
-
-  ifc.ifc_buf = NULL;
-
-  /* We may be able to get the needed buffer size directly, rather than
-     guessing.  */
-  ifc.ifc_buf = NULL;
-  ifc.ifc_len = 0;
-  if (__ioctl (fd, SIOCGIFCONF, &ifc) < 0 || ifc.ifc_len == 0)
-    rq_len = RQ_IFS * sizeof (struct ifreq);
-  else
-    rq_len = ifc.ifc_len;
-
-  /* Read all the interfaces out of the kernel.  */
-  ifc.ifc_buf = alloca (rq_len);
-  ifc.ifc_len = rq_len;
-  if (__ioctl (fd, SIOCGIFCONF, &ifc) < 0)
-    {
-      close_not_cancel_no_status (fd);
-      return NULL;
-    }
-
-  nifs = ifc.ifc_len / sizeof (struct ifreq);
-
-  idx = malloc ((nifs + 1) * sizeof (struct if_nameindex));
-  if (idx == NULL)
-    {
-      close_not_cancel_no_status (fd);
-      __set_errno (ENOBUFS);
-      return NULL;
-    }
-
-  for (i = 0; i < nifs; ++i)
-    {
-      struct ifreq *ifr = &ifc.ifc_req[i];
-      idx[i].if_name = __strdup (ifr->ifr_name);
-      if (idx[i].if_name == NULL
-	  || __ioctl (fd, SIOCGIFINDEX, ifr) < 0)
-	{
-	  int saved_errno = errno;
-	  unsigned int j;
-
-	  for (j =  0; j < i; ++j)
-	    free (idx[j].if_name);
-	  free (idx);
-	  close_not_cancel_no_status (fd);
-	  if (saved_errno == EINVAL)
-	    saved_errno = ENOSYS;
-	  else if (saved_errno == ENOMEM)
-	    saved_errno = ENOBUFS;
-	  __set_errno (saved_errno);
-	  return NULL;
-	}
-      idx[i].if_index = ifr->ifr_ifindex;
-    }
-
-  idx[i].if_index = 0;
-  idx[i].if_name = NULL;
-
-  close_not_cancel_no_status (fd);
-  return idx;
-}
-#endif
-
-
 static struct if_nameindex *
 if_nameindex_netlink (void)
 {
   struct netlink_handle nh = { 0, 0, 0, NULL, NULL };
   struct if_nameindex *idx = NULL;
 
-  if (__no_netlink_support || __netlink_open (&nh) < 0)
+  if (__netlink_open (&nh) < 0)
     return NULL;
 
 
@@ -274,10 +197,6 @@ if_nameindex (void)
   return NULL;
 #else
   struct if_nameindex *result = if_nameindex_netlink ();
-# if __ASSUME_NETLINK_SUPPORT == 0
-  if (__no_netlink_support)
-    result = if_nameindex_ioctl ();
-# endif
   return result;
 #endif
 }

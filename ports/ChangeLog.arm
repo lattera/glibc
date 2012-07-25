@@ -1,3 +1,8 @@
+2012-07-25  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/arm/kernel-features.h
+	(__ASSUME_FCNTL64): Define unconditionally.
+
 2012-07-25  Florian Weimer  <fweimer@redhat.com>
 
 	* sysdeps/unix/sysv/linux/arm/nptl/libc.abilist: Add

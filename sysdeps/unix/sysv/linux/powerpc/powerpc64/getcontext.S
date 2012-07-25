@@ -1,5 +1,5 @@
 /* Save current context.
-   Copyright (C) 2002, 2004, 2006 Free Software Foundation, Inc.
+   Copyright (C) 2002-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -30,7 +30,6 @@
 #if SHLIB_COMPAT (libc, GLIBC_2_3, GLIBC_2_3_4)
 ENTRY(__novec_getcontext)
 	CALL_MCOUNT 1
-#ifdef __ASSUME_NEW_RT_SIGRETURN_SYSCALL
   std  r0,(SIGCONTEXT_GP_REGS+(PT_R0*8))(r3)
   std  r1,(SIGCONTEXT_GP_REGS+(PT_R1*8))(r3)
   mflr  r0
@@ -137,18 +136,6 @@ ENTRY(__novec_getcontext)
   li  r3,SIG_BLOCK
   bl  JUMPTARGET(__sigprocmask)
   nop
-#else
-  /* If the kernel is not at least 2.4.21 then generate a ENOSYS stub.  */
-  mflr r0
-  std  r0,FRAME_LR_SAVE(r1)
-  cfi_offset (lr, FRAME_LR_SAVE)
-  stdu r1,-128(r1)
-  cfi_adjust_cfa_offset(128)
-  li   r3,ENOSYS
-  bl   JUMPTARGET(__syscall_error)
-  nop
-  li   r3,-1
-#endif
 
   ld    r0,128+FRAME_LR_SAVE(r1)
   addi  r1,r1,128
@@ -172,7 +159,6 @@ compat_symbol (libc, __novec_getcontext, getcontext, GLIBC_2_3)
 	.machine	"altivec"
 ENTRY(__getcontext)
 	CALL_MCOUNT 1
-#ifdef __ASSUME_NEW_RT_SIGRETURN_SYSCALL
   std  r0,(SIGCONTEXT_GP_REGS+(PT_R0*8))(r3)
   std  r1,(SIGCONTEXT_GP_REGS+(PT_R1*8))(r3)
   mflr  r0
@@ -388,18 +374,6 @@ L(has_no_vec):
   li  r3,SIG_BLOCK
   bl  JUMPTARGET(__sigprocmask)
   nop
-#else
-  /* If the kernel is not at least 2.4.21 then generate a ENOSYS stub.  */
-  mflr r0
-  std  r0,FRAME_LR_SAVE(r1)
-  cfi_offset (lr, FRAME_LR_SAVE)
-  stdu r1,-128(r1)
-  cfi_adjust_cfa_offset (128)
-  li   r3,ENOSYS
-  bl   JUMPTARGET(__syscall_error)
-  nop
-  li   r3,-1
-#endif
 
   ld    r0,128+FRAME_LR_SAVE(r1)
   addi  r1,r1,128

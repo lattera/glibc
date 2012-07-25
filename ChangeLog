@@ -1,3 +1,95 @@
+2012-07-25  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #13717]
+	* sysdeps/unix/sysv/linux/configure.in (arch_minimum_kernel):
+	Change to 2.4.21 where previously 2.4.1.
+	* sysdeps/unix/sysv/linux/configure: Regenerated.
+	* sysdeps/unix/sysv/linux/kernel-features.h [(__powerpc__ ||
+	__sh__) && !__powerpc64__] (__ASSUME_FCNTL64): Do not condition on
+	Linux kernel version.
+	(__ASSUME_STD_AUXV): Remove.
+	[__powerpc__] (__ASSUME_VFORK_SYSCALL): Do not condition on Linux
+	kernel version.
+	[__powerpc__ && !__powerpc64] (__ASSUME_MMAP2_SYSCALL): Likewise.
+	(__ASSUME_NEW_PRCTL_SYSCALL): Remove.
+	(__ASSUME_FIXED_CLONE_SYSCALL): Likewise.
+	(__ASSUME_NEW_RT_SIGRETURN_SYSCALL): Likewise.
+	(__ASSUME_NETLINK_SUPPORT): Likewise.
+	* nscd/gai.c [NEED_NETLINK && __ASSUME_NETLINK_SUPPORT == 0]
+	(__no_netlink_support): Remove conditional definition.
+	* sysdeps/unix/sysv/linux/check_pf.c (__no_netlink_support):
+	Remove.
+	(__check_pf) [!__ASSUME_NETLINK_SUPPORT]: Remove conditional code.
+	[__ASSUME_NETLINK_SUPPORT]: Make code unconditional.
+	* sysdeps/unix/sysv/linux/if_index.c [!__ASSUME_NETLINK_SUPPORT]
+	(if_nameindex_ioctl): Remove.
+	(if_nameindex_netlink): Do not handle __no_netlink_support.
+	(if_nameindex) [!__ASSUME_NETLINK_SUPPORT]: Remove conditional
+	code.
+	* sysdeps/unix/sysv/linux/ifaddrs.c [!__ASSUME_NETLINK_SUPPORT]:
+	Remove conditional code.
+	(__netlink_open) [!__ASSUME_NETLINK_SUPPORT]: Remove conditional
+	code.
+	(getifaddrs_internal) [__ASSUME_NETLINK_SUPPORT]: Make code
+	unconditional.
+	[!__ASSUME_NETLINK_SUPPORT]: Remove conditional code.
+	[__ASSUME_NETLINK_SUPPORT] (freeifaddrs): Make code unconditional.
+	* sysdeps/unix/sysv/linux/netlinkaccess.h (__no_netlink_support):
+	Remove.
+	* sysdeps/unix/sysv/linux/powerpc/dl-sysdep.c
+	[!__ASSUME_STD_AUXV]: Remove conditional code.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/clone.S (__clone)
+	[!__ASSUME_FIXED_CLONE_SYSCALL]: Remove conditional code.
+	[__ASSUME_FIXED_CLONE_SYSCALL]: Make code unconditional.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/fpu/fe_mask.c
+	[!__ASSUME_NEW_PRCTL_SYSCALL] (fe_mask_handler): Remove.
+	(__fe_mask_env) [!__ASSUME_NEW_PRCTL_SYSCALL]: Remove conditional
+	code.
+	[__ASSUME_NEW_PRCTL_SYSCALL]: Make code unconditional.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/fpu/fe_nomask.c
+	[!__ASSUME_NEW_PRCTL_SYSCALL] (fe_nomask_handler): Remove.
+	(__fe_nomask_env) [!__ASSUME_NEW_PRCTL_SYSCALL]: Remove
+	conditional code.
+	[__ASSUME_NEW_PRCTL_SYSCALL]: Make code unconditional.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/fpu/fe_mask.c
+	(__fe_mask_env) [!__ASSUME_NEW_PRCTL_SYSCALL]: Remove conditional
+	code.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/fpu/fe_nomask.c
+	(__fe_nomask_env) [!__ASSUME_NEW_PRCTL_SYSCALL]: Remove
+	conditional code.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/getcontext.S
+	(__novec_getcontext) [__ASSUME_NEW_RT_SIGRETURN_SYSCALL]: Make
+	code unconditional.
+	(__novec_getcontext) [!__ASSUME_NEW_RT_SIGRETURN_SYSCALL]: Remove
+	conditional code.
+	(__getcontext) [__ASSUME_NEW_RT_SIGRETURN_SYSCALL]: Make code
+	unconditional.
+	(__getcontext) [!__ASSUME_NEW_RT_SIGRETURN_SYSCALL]: Remove
+	conditional code.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/makecontext.S
+	(__makecontext) [__ASSUME_NEW_RT_SIGRETURN_SYSCALL]: Make code
+	unconditional.
+	(__makecontext) [!__ASSUME_NEW_RT_SIGRETURN_SYSCALL]: Remove
+	conditional code.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/setcontext.S
+	(__novec_setcontext) [__ASSUME_NEW_RT_SIGRETURN_SYSCALL]: Make
+	code unconditional.
+	(__novec_setcontext) [!__ASSUME_NEW_RT_SIGRETURN_SYSCALL]: Remove
+	conditional code.
+	(__setcontext) [__ASSUME_NEW_RT_SIGRETURN_SYSCALL]: Make code
+	unconditional.
+	(__setcontext) [!__ASSUME_NEW_RT_SIGRETURN_SYSCALL]: Remove
+	conditional code.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/swapcontext.S
+	(__novec_swapcontext) [__ASSUME_NEW_RT_SIGRETURN_SYSCALL]: Make
+	code unconditional.
+	(__novec_swapcontext) [!__ASSUME_NEW_RT_SIGRETURN_SYSCALL]: Remove
+	conditional code.
+	(__swapcontext) [__ASSUME_NEW_RT_SIGRETURN_SYSCALL]: Make code
+	unconditional.
+	(__swapcontext) [!__ASSUME_NEW_RT_SIGRETURN_SYSCALL]: Remove
+	conditional code.
+
 2012-07-25  Andreas Schwab  <schwab@linux-m68k.org>
 
 	* sysdeps/unix/sysv/linux/i386/accept4.S: Remove pseudo_end label.

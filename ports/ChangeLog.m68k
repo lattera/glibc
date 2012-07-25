@@ -1,3 +1,11 @@
+2012-07-25  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/m68k/kernel-features.h
+	(__ASSUME_MMAP2_SYSCALL): Define unconditionally.
+	(__ASSUME_STAT64_SYSCALL): Likewise.
+	(__ASSUME_FCNTL64): Likewise.
+	(__ASSUME_VFORK_SYSCALL): Likewise.
+
 2012-07-25  Florian Weimer  <fweimer@redhat.com>
 
 	* sysdeps/unix/sysv/linux/m68k/coldfire/nptl/libc.abilist:

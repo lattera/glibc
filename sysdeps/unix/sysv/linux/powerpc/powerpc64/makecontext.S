@@ -1,5 +1,5 @@
 /* Create new context.
-   Copyright (C) 2002, 2004, 2006 Free Software Foundation, Inc.
+   Copyright (C) 2002-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -26,7 +26,6 @@
 
 ENTRY(__makecontext)
 	CALL_MCOUNT 3
-#ifdef __ASSUME_NEW_RT_SIGRETURN_SYSCALL
   /* Save parameters into the parameter save area of callers frame.  */
   std  r3,FRAME_PARM1_SAVE(r1) /* ucontext_t *ucp  */
   std  r4,FRAME_PARM2_SAVE(r1) /* void (*func)(void)  */
@@ -166,22 +165,6 @@ L(gotexitcodeaddr):
   addi  r1,r1,128
   mtlr  r0
   blr
-#else
-  /* If the kernel is not at least 2.4.21 then generate a ENOSYS stub.  */
-  mflr r0
-  std  r0,FRAME_LR_SAVE(r1)
-  cfi_offset (lr, FRAME_LR_SAVE)
-  stdu r1,-128(r1)
-  cfi_adjust_cfa_offset (128)
-  li   r3,ENOSYS
-  bl   JUMPTARGET(__syscall_error)
-  nop
-  li   r3,-1
-  ld   r0,128+FRAME_LR_SAVE(r1)
-  addi r1,r1,128
-  mtlr r0
-  blr
-#endif
 END(__makecontext)
 
 weak_alias (__makecontext, makecontext)

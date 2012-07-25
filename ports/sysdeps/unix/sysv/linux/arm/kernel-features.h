@@ -28,9 +28,7 @@
 #define __ASSUME_STAT64_SYSCALL	1
 
 /* Arm got fcntl64 in 2.4.4.  */
-#if __LINUX_KERNEL_VERSION >= 132100
-# define __ASSUME_FCNTL64		1
-#endif
+#define __ASSUME_FCNTL64		1
 
 /* The vfork syscall on arm was definitely available in 2.4.  */
 #define __ASSUME_VFORK_SYSCALL		1
