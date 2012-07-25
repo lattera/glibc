@@ -37,7 +37,7 @@ __tmpfile (void)
   FILE *f;
 
   /* Get a port to the directory that will contain the file.  */
-  const char *dirname = __secure_getenv ("TMPDIR") ?: P_tmpdir;
+  const char *dirname = __libc_secure_getenv ("TMPDIR") ?: P_tmpdir;
   file_t dir = __file_name_lookup (dirname, 0, 0);
   if (dir == MACH_PORT_NULL)
     return NULL;

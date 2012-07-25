@@ -102,7 +102,7 @@ ruserpass(host, aname, apass)
 	int t, usedefault = 0;
 	struct stat64 stb;
 
-	hdir = __secure_getenv("HOME");
+	hdir = __libc_secure_getenv("HOME");
 	if (hdir == NULL) {
 		/* If we can't get HOME, fail instead of trying ".",
 		   which is no improvement. This really should call

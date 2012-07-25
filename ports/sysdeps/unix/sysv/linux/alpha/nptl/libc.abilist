@@ -1811,6 +1811,9 @@ GLIBC_2.16
  sys_errlist D 0x460
  sys_nerr D 0x4
  timespec_get F
+GLIBC_2.17
+ GLIBC_2.17 A
+ secure_getenv F
 GLIBC_2.2
  GLIBC_2.2 A
  _IO_adjust_wcolumn F

@@ -1,3 +1,66 @@
+2012-07-25  Florian Weimer  <fweimer@redhat.com>
+
+	* Versions.def: Add GLIBC_2.17.
+
+	* stdlib/stdlib.h: Rename __secure_getenv to secure_getenv.
+	* include/stdlib.h: Rename __secure_getenv to secure_getenv.
+	Introduce __libc_secure_getenv.
+	* stdlib/Versions: Add secure_getenv and __libc_secure_getenv.
+	* stdlib/secure-getenv.c: Likewise.  Update copyright years.
+	* stdlib/tst-secure-getenv.c: New.
+	* stdlib/Makefile (tests): Add testcase.
+
+	* manual/startup.texi (Environment Access): Document
+	secure_getenv.
+
+	* hesiod/hesiod.c (hesiod_init): Rename __secure_getenv to
+	__libc_secure_getenv.
+	* inet/ruserpass.c (ruserpass): Likewise.
+	* malloc/mtrace.c (mtrace): Likewise.
+	* sysdeps/mach/hurd/tmpfile.c (__tmpfile): Likewise.
+	* sysdeps/posix/libc_fatal.c (__libc_fatal): Likewise.  Update
+	copyright years.
+	* sysdeps/posix/sysconf.c (__sysconf__check_spec): Likewise.
+	* sysdeps/posix/tempname.c: Likewise.  Evaluate
+	HAVE_SECURE_GETENV.
+	* sysdeps/unix/sysv/linux/libc_fatal.c (__libc_message): Rename
+	__secure_getenv to __libc_secure_getenv.  Update copyright years.
+
+	* sysdeps/unix/sysv/linux/i386/nptl/libc.abilist: Add secure_getenv.
+	* sysdeps/unix/sysv/linux/libc_fatal.c: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/fpu/nptl/libc.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/nptl/libc.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/nptl/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/nptl/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sh/nptl/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/nptl/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/nptl/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/64/nptl/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/x32/nptl/libc.abilist: Likewise.
+	* ports/sysdeps/unix/sysv/linux/alpha/nptl/libc.abilist: Likewise.
+	* ports/sysdeps/unix/sysv/linux/arm/nptl/libc.abilist: Likewise.
+	* ports/sysdeps/unix/sysv/linux/ia64/nptl/libc.abilist: Likewise.
+	* ports/sysdeps/unix/sysv/linux/m68k/coldfire/nptl/libc.abilist:
+	Likewise.
+	* ports/sysdeps/unix/sysv/linux/m68k/m680x0/nptl/libc.abilist:
+	Likewise.
+	* ports/sysdeps/unix/sysv/linux/mips/mips32/nptl/libc.abilist:
+	Likewise.
+	* ports/sysdeps/unix/sysv/linux/mips/mips64/n32/nptl/libc.abilist:
+	Likewise.
+	* ports/sysdeps/unix/sysv/linux/mips/mips64/n64/nptl/libc.abilist:
+	Likewise.
+	* ports/sysdeps/unix/sysv/linux/powerpc/powerpc32/nofpu/nptl/libc.abilist:
+	Likewise.
+	* ports/sysdeps/unix/sysv/linux/tile/tilegx/tilegx32/nptl/libc.abilist:
+	Likewise.
+	* ports/sysdeps/unix/sysv/linux/tile/tilegx/tilegx64/nptl/libc.abilist:
+	Likewise.
+	* ports/sysdeps/unix/sysv/linux/tile/tilepro/nptl/libc.abilist:
+	Likewise.
+
 2012-07-25  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/generic/ldsodefs.h (struct La_i86_regs): Remove.

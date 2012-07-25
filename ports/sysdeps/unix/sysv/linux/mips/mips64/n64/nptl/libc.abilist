@@ -1388,6 +1388,9 @@ GLIBC_2.16
  mbrtoc16 F
  mbrtoc32 F
  timespec_get F
+GLIBC_2.17
+ GLIBC_2.17 A
+ secure_getenv F
 GLIBC_2.2
  GLIBC_2.2 A
  _Exit F

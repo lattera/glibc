@@ -2242,3 +2242,6 @@ GLIBC_2.9
  pipe2 F
 _gp_disp
  _gp_disp A
+GLIBC_2.17
+ GLIBC_2.17 A
+ secure_getenv F

@@ -87,7 +87,7 @@ hesiod_init(void **context) {
 	ctx->classes[0] = C_IN;
 	ctx->classes[1] = C_HS;
 
-	configname = __secure_getenv("HESIOD_CONFIG");
+	configname = __libc_secure_getenv("HESIOD_CONFIG");
 	if (!configname)
 	  configname = _PATH_HESIOD_CONF;
 	if (parse_config_file(ctx, configname) < 0) {
@@ -109,7 +109,7 @@ hesiod_init(void **context) {
 	 * The default RHS can be overridden by an environment
 	 * variable.
 	 */
-	if ((cp = __secure_getenv("HES_DOMAIN")) != NULL) {
+	if ((cp = __libc_secure_getenv("HES_DOMAIN")) != NULL) {
 		free(ctx->RHS);
 		ctx->RHS = malloc(strlen(cp)+2);
 		if (!ctx->RHS)

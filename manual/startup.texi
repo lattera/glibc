@@ -310,10 +310,14 @@ character, since this is assumed to terminate the string.
 
 The value of an environment variable can be accessed with the
 @code{getenv} function.  This is declared in the header file
-@file{stdlib.h}.  Modifications of enviroment variables are not
-allowed in Multi-threaded programs.  The @code{getenv} function
-can be safely used in multi-threaded programs
+@file{stdlib.h}.
 @pindex stdlib.h
+
+Libraries should use @code{secure_getenv} instead of @code{getenv}, so
+that they do not accidentally use untrusted environment variables.
+Modifications of environment variables are not allowed in
+multi-threaded programs.  The @code{getenv} and @code{secure_getenv}
+functions can be safely used in multi-threaded programs.
 
 @comment stdlib.h
 @comment ISO
@@ -324,6 +328,18 @@ systems not using @theglibc{}, it might be overwritten by subsequent
 calls to @code{getenv} (but not by any other library function).  If the
 environment variable @var{name} is not defined, the value is a null
 pointer.
+@end deftypefun
+
+@comment stdlib.h
+@comment GNU
+@deftypefun {char *} secure_getenv (const char *@var{name})
+This function is similar to @code{getenv}, but it returns a null
+pointer if the environment is untrusted.  This happens when the
+program file has SUID or SGID bits set.  General-purpose libraries
+should always prefer this function over @code{getenv} to avoid
+vulnerabilities if the library is referenced from a SUID/SGID program.
+
+This function is a GNU extension.
 @end deftypefun
 
 

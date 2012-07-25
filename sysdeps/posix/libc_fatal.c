@@ -1,5 +1,4 @@
-/* Copyright (C) 1993-1995,1997,2000,2004,2005,2009,2011
-	Free Software Foundation, Inc.
+/* Copyright (C) 1993-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -61,7 +60,7 @@ __libc_message (int do_abort, const char *fmt, ...)
 
   /* Open a descriptor for /dev/tty unless the user explicitly
      requests errors on standard error.  */
-  const char *on_2 = __secure_getenv ("LIBC_FATAL_STDERR_");
+  const char *on_2 = __libc_secure_getenv ("LIBC_FATAL_STDERR_");
   if (on_2 == NULL || *on_2 == '\0')
     fd = open_not_cancel_2 (_PATH_TTY, O_RDWR | O_NOCTTY | O_NDELAY);
 

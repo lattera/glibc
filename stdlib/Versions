@@ -6,7 +6,7 @@ libc {
     # functions used in inline functions or macros
     __strto*_internal;
 
-    # functions used in other libraries
+    # compatibility symbol
     __secure_getenv;
 
     # a*
@@ -103,11 +103,16 @@ libc {
   GLIBC_2.13 {
     __fentry__;
   }
+  GLIBC_2.17 {
+    secure_getenv;
+  }
   GLIBC_PRIVATE {
     # functions which have an additional interface since they are
     # are cancelable.
     __libc_system;
     # Variable which needs a dynamic symbol table entry.
     __abort_msg;
+    # Used from other libraries
+    __libc_secure_getenv;
   }
 }

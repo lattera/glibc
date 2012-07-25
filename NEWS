@@ -17,6 +17,10 @@ Version 2.17
   zEnterprise z196.
   Implemented by Andreas Krebbel.
 
+* The new function secure_getenv allows secure access to the environment,
+  returning NULL if running in a SUID/SGID process.  This function replaces
+  the internal function __secure_getenv.
+
 
 Version 2.16
 

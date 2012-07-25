@@ -33,12 +33,13 @@ libc_hidden_proto (__strtold_l)
 libc_hidden_proto (exit)
 libc_hidden_proto (abort)
 libc_hidden_proto (getenv)
+extern __typeof (secure_getenv) __libc_secure_getenv;
+libc_hidden_proto (__libc_secure_getenv)
 libc_hidden_proto (bsearch)
 libc_hidden_proto (qsort)
 libc_hidden_proto (qsort_r)
 libc_hidden_proto (lrand48_r)
 libc_hidden_proto (wctomb)
-libc_hidden_proto (__secure_getenv)
 
 extern long int __random (void);
 extern void __srandom (unsigned int __seed);

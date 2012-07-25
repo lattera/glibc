@@ -309,7 +309,7 @@ mtrace ()
   /* When compiling the GNU libc we use the secure getenv function
      which prevents the misuse in case of SUID or SGID enabled
      programs.  */
-  mallfile = __secure_getenv (mallenv);
+  mallfile = __libc_secure_getenv (mallenv);
 #else
   mallfile = getenv (mallenv);
 #endif

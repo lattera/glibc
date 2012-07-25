@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1994, 1996, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1991-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -18,13 +18,20 @@
 #include <stdlib.h>
 #include <unistd.h>
 
+#include <shlib-compat.h>
+
 /* Some programs and especially the libc itself have to be careful
    what values to accept from the environment.  This special version
    checks for SUID or SGID first before doing any work.  */
 char *
-__secure_getenv (name)
+__libc_secure_getenv (name)
      const char *name;
 {
   return __libc_enable_secure ? NULL : getenv (name);
 }
-libc_hidden_def (__secure_getenv)
+weak_alias (__libc_secure_getenv, secure_getenv)
+libc_hidden_weak (__libc_secure_getenv)
+
+#if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_16)
+compat_symbol (libc, __libc_secure_getenv, __secure_getenv, GLIBC_2_0);
+#endif
