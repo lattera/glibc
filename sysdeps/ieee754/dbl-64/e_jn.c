@@ -36,6 +36,7 @@
  *
  */
 
+#include <errno.h>
 #include <math.h>
 #include <math_private.h>
 
@@ -276,6 +277,9 @@ __ieee754_yn(int n, double x)
 		GET_HIGH_WORD(high,b);
 		a = temp;
 	    }
+	    /* If B is +-Inf, set up errno accordingly.  */
+	    if (! __finite (b))
+	      __set_errno (ERANGE);
 	}
 	if(sign>0) return b; else return -b;
 }

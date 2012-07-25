@@ -56,6 +56,7 @@
  *
  */
 
+#include <errno.h>
 #include <math.h>
 #include <math_private.h>
 
@@ -387,6 +388,9 @@ __ieee754_ynl (int n, long double x)
 	  a = temp;
 	}
     }
+  /* If B is +-Inf, set up errno accordingly.  */
+  if (! __finitel (b))
+    __set_errno (ERANGE);
   if (sign > 0)
     return b;
   else

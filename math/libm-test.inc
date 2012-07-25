@@ -9019,6 +9019,10 @@ yn_test (void)
      and FLT_MIN.  See Bug 14173.  */
   TEST_ff_f (yn, 10, min_value, minus_infty, OVERFLOW_EXCEPTION);
 
+  errno = 0;
+  TEST_ff_f (yn, 10, min_value, minus_infty, OVERFLOW_EXCEPTION);
+  check_int ("errno for yn(10,-min) == ERANGE", errno, ERANGE, 0, 0, 0);
+
   END (yn);
 }
 

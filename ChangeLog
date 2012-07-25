@@ -1,3 +1,14 @@
+2012-07-25  Marek Polacek  <polacek@redhat.com>
+
+	[BZ #6808]
+	* math/libm-test.inc (yn_test): Add another test.
+	* sysdeps/ieee754/ldbl-128ibm/e_jnl.c (__ieee754_ynl): Set errno
+	to ERANGE when the result is +-Inf.
+	* sysdeps/ieee754/ldbl-96/e_jnl.c (__ieee754_ynl): Likewise.
+	* sysdeps/ieee754/flt-32/e_jnf.c (__ieee754_ynf): Likewise.
+	* sysdeps/ieee754/ldbl-128/e_jnl.c (__ieee754_ynl): Likewise.
+	* sysdeps/ieee754/dbl-64/e_jn.c (__ieee754_yn): Likewise.
+
 2012-07-24  Joseph Myers  <joseph@codesourcery.com>
 
 	* conform/data/time.h-data (NULL): Use macro-constant.  Require
