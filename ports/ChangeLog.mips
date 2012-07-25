@@ -1,3 +1,12 @@
+2012-07-25  Florian Weimer  <fweimer@redhat.com>
+
+	* sysdeps/unix/sysv/linux/mips/mips32/nptl/libc.abilist: Add
+	secure_getenv.
+	* sysdeps/unix/sysv/linux/mips/mips64/n32/nptl/libc.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n64/nptl/libc.abilist:
+	Likewise.
+
 2012-07-17  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/mips/configure.in: Remove TLS check.

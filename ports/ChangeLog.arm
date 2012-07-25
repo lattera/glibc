@@ -1,3 +1,8 @@
+2012-07-25  Florian Weimer  <fweimer@redhat.com>
+
+	* sysdeps/unix/sysv/linux/arm/nptl/libc.abilist: Add
+	secure_getenv.
+
 2012-07-20  Joseph Myers  <joseph@codesourcery.com>
 
 	* data/localplt-arm-linux-gnueabi.data: Move to ...

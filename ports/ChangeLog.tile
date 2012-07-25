@@ -1,3 +1,10 @@
+2012-07-25  Florian Weimer  <fweimer@redhat.com>
+
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx64/nptl/libc.abilist:
+	Add secure_getenv.
+	* sysdeps/unix/sysv/linux/tile/tilepro/nptl/libc.abilist:
+	Likewise.
+
 2012-07-17  Chris Metcalf  <cmetcalf@tilera.com>
 
 	* sysdeps/unix/sysv/linux/tile/setcontext.S: Ensure exit status is

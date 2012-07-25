@@ -1,3 +1,10 @@
+2012-07-25  Florian Weimer  <fweimer@redhat.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/nofpu/nptl/libc.abilist:
+	Add secure_getenv.
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx32/nptl/libc.abilist:
+	Likewise.
+
 2012-07-20  Joseph Myers  <joseph@codesourcery.com>
 
 	* data/localplt-powerpcsoft-linux-gnu.data: Move to ...

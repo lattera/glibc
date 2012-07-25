@@ -1,3 +1,10 @@
+2012-07-25  Florian Weimer  <fweimer@redhat.com>
+
+	* sysdeps/unix/sysv/linux/m68k/coldfire/nptl/libc.abilist:
+	Add secure_getenv.
+	* sysdeps/unix/sysv/linux/m68k/m680x0/nptl/libc.abilist:
+	Likewise.
+
 2012-07-20  Joseph Myers  <joseph@codesourcery.com>
 
 	* data/localplt-m68k-linux-gnu.data: Move to ...
