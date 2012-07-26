@@ -1,3 +1,22 @@
+2012-07-27  Gary Benson  <gbenson@redhat.com>
+
+	[BZ #14298]
+	* elf/rtld.c: Include <stap-probe.h>.
+	(dl_main): Added static probes "init_start" and "init_complete".
+	* elf/dl-load.c: Include <stap-probe.h>.
+	(lose): Take new parameter "nsid".
+	Added static probe "map_failed".
+	(_dl_map_object_from_fd): Pass namespace id to lose.
+	Added static probe "map_start".
+	(open_verify): Pass namespace id to lose.
+	* elf/dl-open.c: Include <stap-probe.h>.
+	(dl_open_worker) Added static probes "map_complete", "reloc_start"
+	and "reloc_complete".
+	* elf/dl-close.c: Include <stap-probe.h>.
+	(_dl_close_worker): Added static probes "unmap_start" and
+	"unmap_complete".
+	* elf/rtld-debugger-interface.txt: New file documenting the above.
+
 2012-07-26  Roland McGrath  <roland@hack.frob.com>
 
 	* sunrpc/rpc_hout.c (pdeclaration): Call f_print with a "%s" format

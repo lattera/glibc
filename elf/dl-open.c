@@ -32,6 +32,7 @@
 #include <caller.h>
 #include <sysdep-cancel.h>
 #include <tls.h>
+#include <stap-probe.h>
 
 #include <dl-dst.h>
 
@@ -291,6 +292,7 @@ dl_open_worker (void *a)
   struct r_debug *r = _dl_debug_initialize (0, args->nsid);
   r->r_state = RT_CONSISTENT;
   _dl_debug_state ();
+  LIBC_PROBE (map_complete, 3, args->nsid, r, new);
 
   /* Print scope information.  */
   if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_SCOPES, 0))
@@ -376,9 +378,18 @@ dl_open_worker (void *a)
 	}
     }
 
+  int relocation_in_progress = 0;
+
   for (size_t i = nmaps; i-- > 0; )
     {
       l = maps[i];
+
+      if (! relocation_in_progress)
+	{
+	  /* Notify the debugger that relocations are about to happen.  */
+	  LIBC_PROBE (reloc_start, 2, args->nsid, r);
+	  relocation_in_progress = 1;
+	}
 
 #ifdef SHARED
       if (__builtin_expect (GLRO(dl_profile) != NULL, 0))
@@ -543,6 +554,10 @@ cannot load any more object with static TLS"));
 	  assert (imap->l_need_tls_init == 0);
 	}
     }
+
+  /* Notify the debugger all new objects have been relocated.  */
+  if (relocation_in_progress)
+    LIBC_PROBE (reloc_complete, 3, args->nsid, r, new);
 
   /* Run the initializer functions of new objects.  */
   _dl_init (new, args->argc, args->argv, args->env);

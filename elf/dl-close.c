@@ -31,6 +31,7 @@
 #include <sys/mman.h>
 #include <sysdep-cancel.h>
 #include <tls.h>
+#include <stap-probe.h>
 
 
 /* Type of the constructor functions.  */
@@ -468,6 +469,7 @@ _dl_close_worker (struct link_map *map)
   struct r_debug *r = _dl_debug_initialize (0, nsid);
   r->r_state = RT_DELETE;
   _dl_debug_state ();
+  LIBC_PROBE (unmap_start, 2, nsid, r);
 
   if (unload_global)
     {
@@ -737,6 +739,7 @@ _dl_close_worker (struct link_map *map)
   /* Notify the debugger those objects are finalized and gone.  */
   r->r_state = RT_CONSISTENT;
   _dl_debug_state ();
+  LIBC_PROBE (unmap_complete, 2, nsid, r);
 
   /* Recheck if we need to retry, release the lock.  */
  out:

@@ -9,8 +9,8 @@ Version 2.17
 
 * The following bugs are resolved with this release:
 
-  6778, 6808, 14042, 14151, 14154, 14157, 14173, 14283, 14328, 14331, 14337,
-  14347, 14349
+  6778, 6808, 14042, 14151, 14154, 14157, 14173, 14283, 14298, 14328, 14331,
+  14337, 14347, 14349
 
 * Support for STT_GNU_IFUNC symbols added for s390 and s390x.
   Optimized versions of memcpy, memset, and memcmp added for System z10 and
@@ -20,6 +20,9 @@ Version 2.17
 * The new function secure_getenv allows secure access to the environment,
   returning NULL if running in a SUID/SGID process.  This function replaces
   the internal function __secure_getenv.
+
+* SystemTap static probes have been added into the dynamic linker.
+  Implemented by Gary Benson.
 
 
 Version 2.16

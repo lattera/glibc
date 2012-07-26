@@ -35,6 +35,7 @@
 #include <stackinfo.h>
 #include <caller.h>
 #include <sysdep.h>
+#include <stap-probe.h>
 
 #include <dl-dst.h>
 
@@ -882,7 +883,7 @@ _dl_init_paths (const char *llp)
 static void
 __attribute__ ((noreturn, noinline))
 lose (int code, int fd, const char *name, char *realname, struct link_map *l,
-      const char *msg, struct r_debug *r)
+      const char *msg, struct r_debug *r, Lmid_t nsid)
 {
   /* The file might already be closed.  */
   if (fd != -1)
@@ -896,6 +897,7 @@ lose (int code, int fd, const char *name, char *realname, struct link_map *l,
     {
       r->r_state = RT_CONSISTENT;
       _dl_debug_state ();
+      LIBC_PROBE (map_failed, 2, nsid, r);
     }
 
   _dl_signal_error (code, name, NULL, msg);
@@ -934,7 +936,7 @@ _dl_map_object_from_fd (const char *name, int fd, struct filebuf *fbp,
       errval = errno;
     call_lose:
       lose (errval, fd, name, realname, l, errstring,
-	    make_consistent ? r : NULL);
+	    make_consistent ? r : NULL, nsid);
     }
 
   /* Look again to see if the real name matched another already loaded.  */
@@ -1041,6 +1043,7 @@ _dl_map_object_from_fd (const char *name, int fd, struct filebuf *fbp,
 	 linking has not been used before.  */
       r->r_state = RT_ADD;
       _dl_debug_state ();
+      LIBC_PROBE (map_start, 2, nsid, r);
       make_consistent = true;
     }
   else
@@ -1736,7 +1739,7 @@ open_verify (const char *name, struct filebuf *fbp, struct link_map *loader,
 	      name = strdupa (realname);
 	      free (realname);
 	    }
-	  lose (errval, fd, name, NULL, NULL, errstring, NULL);
+	  lose (errval, fd, name, NULL, NULL, errstring, NULL, 0);
 	}
 
       /* See whether the ELF header is what we expect.  */
