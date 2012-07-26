@@ -643,7 +643,7 @@ h_output (const char *infile, const char *define, int extend,
     }
   else if (tblflag)
     {
-      fprintf (fout, rpcgen_table_dcl);
+      fprintf (fout, "%s", rpcgen_table_dcl);
     }
 
   if (Cflag)

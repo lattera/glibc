@@ -1,3 +1,10 @@
+2012-07-26  Roland McGrath  <roland@hack.frob.com>
+
+	* sunrpc/rpc_hout.c (pdeclaration): Call f_print with a "%s" format
+	rather than a string variable.
+	* sunrpc/rpc_main.c (h_output): Likewise.
+	* sunrpc/rpc_svcout.c (write_real_program): Likewise.
+
 2012-07-26  Pino Toscano  <toscano.pino@tiscali.it>
 
 	* inet/check_native.c: New file.
