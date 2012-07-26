@@ -44,20 +44,20 @@ __clog10f (__complex__ float x)
     {
       /* Neither real nor imaginary part is NaN.  */
       float absx = fabsf (__real__ x), absy = fabsf (__imag__ x);
-      float d;
       int scale = 0;
+
+      if (absx < absy)
+	{
+	  float t = absx;
+	  absx = absy;
+	  absy = t;
+	}
 
       if (absx > FLT_MAX / 2.0f)
 	{
 	  scale = -1;
 	  absx = __scalbnf (absx, scale);
 	  absy = (absy >= FLT_MIN * 2.0f ? __scalbnf (absy, scale) : 0.0f);
-	}
-      else if (absy > FLT_MAX / 2.0f)
-	{
-	  scale = -1;
-	  absx = (absx >= FLT_MIN * 2.0f ? __scalbnf (absx, scale) : 0.0f);
-	  absy = __scalbnf (absy, scale);
 	}
       else if (absx < FLT_MIN && absy < FLT_MIN)
 	{
@@ -66,9 +66,29 @@ __clog10f (__complex__ float x)
 	  absy = __scalbnf (absy, scale);
 	}
 
-      d = __ieee754_hypotf (absx, absy);
+      if (absx == 1.0f && scale == 0)
+	{
+	  float absy2 = absy * absy;
+	  if (absy2 <= FLT_MIN * 2.0f * (float) M_LN10)
+	    {
+#if __FLT_EVAL_METHOD__ == 0
+	      __real__ result
+		= (absy2 / 2.0f - absy2 * absy2 / 4.0f) * (float) M_LOG10E;
+#else
+	      volatile float force_underflow = absy2 * absy2 / 4.0f;
+	      __real__ result
+		= (absy2 / 2.0f - force_underflow) * (float) M_LOG10E;
+#endif
+	    }
+	  else
+	    __real__ result = __log1pf (absy2) * ((float) M_LOG10E / 2.0f);
+	}
+      else
+	{
+	  float d = __ieee754_hypotf (absx, absy);
+	  __real__ result = __ieee754_log10f (d) - scale * M_LOG10_2f;
+	}
 
-      __real__ result = __ieee754_log10f (d) - scale * M_LOG10_2f;
       __imag__ result = M_LOG10E * __ieee754_atan2f (__imag__ x, __real__ x);
     }
   else
