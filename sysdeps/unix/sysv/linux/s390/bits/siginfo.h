@@ -1,5 +1,5 @@
 /* siginfo_t, sigevent and constants.  S/390 version.
-   Copyright (C) 2001, 2002, 2003, 2009, 2011, 2012 Free Software Foundation, Inc.
+   Copyright (C) 2001-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -104,6 +104,14 @@ typedef struct
 	    long int si_band;	/* Band event for SIGPOLL.  */
 	    int si_fd;
 	  } _sigpoll;
+
+	/* SIGSYS.  */
+	struct
+	  {
+	    void *_call_addr;	/* Calling user insn.  */
+	    int _syscall;	/* Triggering system call number.  */
+	    unsigned int _arch; /* AUDIT_ARCH_* of syscall.  */
+	  } _sigsys;
       } _sifields;
   } siginfo_t;
 
@@ -123,6 +131,9 @@ typedef struct
 # define si_trapno	_sifields._sigfault.si_trapno
 # define si_band	_sifields._sigpoll.si_band
 # define si_fd		_sifields._sigpoll.si_fd
+# define si_call_addr 	_sifields._sigsys._call_addr
+# define si_syscall	_sifields._sigsys._syscall
+# define si_arch	_sifields._sigsys._arch
 
 
 /* Values for `si_code'.  Positive values are reserved for kernel-generated

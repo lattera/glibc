@@ -1,3 +1,21 @@
+2012-07-26  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/sys/epoll.h (EPOLLWAKEUP): Add new
+	value.
+
+	* sysdeps/unix/sysv/linux/bits/siginfo.h (siginfo_t): Add
+	_sigsys.
+	(si_call_addr, si_syscall, si_arch): Define new macro.
+	* sysdeps/unix/sysv/linux/s390/bits/siginfo.h (siginfo_t): Add
+	_sigsys.
+	(si_call_addr, si_syscall, si_arch): Define new marcro.
+	* sysdeps/unix/sysv/linux/sparc/bits/siginfo.h (siginfo_t): Add
+	_sigsys.
+	(si_call_addr, si_syscall, si_arch): Define new macro.
+	* sysdeps/unix/sysv/linux/x86/bits/siginfo.h (struct): Add
+	_sigsys.
+	(si_call_addr, si_syscall, si_arch): Define new macro.
+
 2012-07-25  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #13717]

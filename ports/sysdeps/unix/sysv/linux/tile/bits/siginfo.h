@@ -104,6 +104,14 @@ typedef struct
 	    long int si_band;	/* Band event for SIGPOLL.  */
 	    int si_fd;
 	  } _sigpoll;
+
+	/* SIGSYS.  */
+	struct
+	  {
+	    void *_call_addr;	/* Calling user insn.  */
+	    int _syscall;	/* Triggering system call number.  */
+	    unsigned int _arch; /* AUDIT_ARCH_* of syscall.  */
+	  } _sigsys;
       } _sifields;
   } siginfo_t;
 
@@ -123,6 +131,9 @@ typedef struct
 # define si_trapno	_sifields._sigfault.si_trapno
 # define si_band	_sifields._sigpoll.si_band
 # define si_fd		_sifields._sigpoll.si_fd
+# define si_call_addr 	_sifields._sigsys._call_addr
+# define si_syscall	_sifields._sigsys._syscall
+# define si_arch	_sifields._sigsys._arch
 
 
 /* Values for `si_code'.  Positive values are reserved for kernel-generated
