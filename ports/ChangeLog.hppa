@@ -1,3 +1,8 @@
+2012-07-26  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/hppa/sys/epoll.h (EPOLLWAKEUP): Add new
+	value.
+
 2012-05-19  Carlos O'Donell  <carlos@systemhalted.org>
 
 	* sysdeps/hppa/add_n.s: Rename this...
