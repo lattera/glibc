@@ -1,3 +1,10 @@
+2012-07-26  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/ia64/sys/ptrace.h (__ptrace_eventcodes):
+	Add new value PTRACE_EVENT_SECCOMP from Linux 3.5.
+	(__ptrace_setoptions): Add new value PTRACE_O_TRACESECCOMP, adjust
+	PTRACE_O_MASK.
+
 2012-07-25  Florian Weimer  <fweimer@redhat.com>
 
 	* sysdeps/unix/sysv/linux/ia64/nptl/libc.abilist: Add

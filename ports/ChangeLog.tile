@@ -1,5 +1,10 @@
 2012-07-26  Andreas Jaeger  <aj@suse.de>
 
+	* sysdeps/unix/sysv/linux/tile/sys/ptrace.h (__ptrace_eventcodes):
+	Add new value PTRACE_EVENT_SECCOMP from Linux 3.5.
+	(__ptrace_setoptions): Add new value PTRACE_O_TRACESECCOMP, adjust
+	PTRACE_O_MASK.
+
 	* sysdeps/unix/sysv/linux/tile/bits/siginfo.h (siginfo_t): Add
 	_sigsys.
 	(si_call_addr, si_syscall, si_arch): Define new macro.

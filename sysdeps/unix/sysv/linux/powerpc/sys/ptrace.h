@@ -1,5 +1,5 @@
 /* `ptrace' debugger support interface.  Linux version.
-   Copyright (C) 2001, 2006, 2007, 2011 Free Software Foundation, Inc.
+   Copyright (C) 2001-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -126,7 +126,8 @@ enum __ptrace_flags
 };
 
 /* Options set using PTRACE_SETOPTIONS.  */
-enum __ptrace_setoptions {
+enum __ptrace_setoptions
+{
   PTRACE_O_TRACESYSGOOD	= 0x00000001,
   PTRACE_O_TRACEFORK	= 0x00000002,
   PTRACE_O_TRACEVFORK   = 0x00000004,
@@ -134,17 +135,20 @@ enum __ptrace_setoptions {
   PTRACE_O_TRACEEXEC	= 0x00000010,
   PTRACE_O_TRACEVFORKDONE = 0x00000020,
   PTRACE_O_TRACEEXIT	= 0x00000040,
-  PTRACE_O_MASK		= 0x0000007f
+  PTRACE_O_TRACESECCOMP = 0x00000080,
+  PTRACE_O_MASK		= 0x000000ff
 };
 
 /* Wait extended result codes for the above trace options.  */
-enum __ptrace_eventcodes {
+enum __ptrace_eventcodes
+{
   PTRACE_EVENT_FORK	= 1,
   PTRACE_EVENT_VFORK	= 2,
   PTRACE_EVENT_CLONE	= 3,
   PTRACE_EVENT_EXEC	= 4,
   PTRACE_EVENT_VFORK_DONE = 5,
-  PTRACE_EVENT_EXIT	= 6
+  PTRACE_EVENT_EXIT	= 6,
+  PTRACE_EVENT_SECCOMP  = 7
 };
 
 /* Perform process tracing functions.  REQUEST is one of the values
