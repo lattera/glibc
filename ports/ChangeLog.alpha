@@ -1,3 +1,7 @@
+2012-07-26  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/alpha/tst-audit.h (int_retval): Define.
+
 2012-07-26  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/alpha/bits/siginfo.h (siginfo_t): Add

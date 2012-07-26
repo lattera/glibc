@@ -1,3 +1,60 @@
+2012-07-26  Joseph Myers  <joseph@codesourcery.com>
+
+	* elf/tst-auditmod1.c (pltenter): Remove all definitions of macro.
+	(pltexit): Likewise.
+	(La_regs): Likewise.
+	(La_retval): Likewise.
+	(int_retval): Likewise.
+	Update #error for removed macros to refer only to definitions in
+	tst-audit.h.
+	* elf/tst-auditmod3b.c (pltenter): Remove all definitions of
+	macro.
+	(pltexit): Likewise.
+	(La_regs): Likewise.
+	(La_retval): Likewise.
+	(int_retval): Likewise.
+	* elf/tst-auditmod4b.c (pltenter): Remove all definitions of
+	macro.
+	(pltexit): Likewise.
+	(La_regs): Likewise.
+	(La_retval): Likewise.
+	(int_retval): Likewise.
+	* elf/tst-auditmod5b.c (pltenter): Remove all definitions of
+	macro.
+	(pltexit): Likewise.
+	(La_regs): Likewise.
+	(La_retval): Likewise.
+	(int_retval): Likewise.
+	* elf/tst-auditmod6b.c (pltenter): Remove all definitions of
+	macro.
+	(pltexit): Likewise.
+	(La_regs): Likewise.
+	(La_retval): Likewise.
+	(int_retval): Likewise.
+	* elf/tst-auditmod6c.c (pltenter): Remove all definitions of
+	macro.
+	(pltexit): Likewise.
+	(La_regs): Likewise.
+	(La_retval): Likewise.
+	(int_retval): Likewise.
+	* elf/tst-auditmod7b.c (pltenter): Remove all definitions of
+	macro.
+	(pltexit): Likewise.
+	(La_regs): Likewise.
+	(La_retval): Likewise.
+	(int_retval): Likewise.
+	* sysdeps/generic/tst-audit.h: Update comment to refer only to
+	macro definitions in tst-audit.h.
+	* sysdeps/i386/tst-audit.h: New file.
+	* sysdeps/powerpc/powerpc32/tst-audit.h: Likewise.
+	* sysdeps/powerpc/powerpc64/tst-audit.h: Likewise.
+	* sysdeps/s390/s390-32/tst-audit.h: Likewise.
+	* sysdeps/s390/s390-64/tst-audit.h: Likewise.
+	* sysdeps/sh/tst-audit.h: Likewise.
+	* sysdeps/sparc/sparc32/tst-audit.h: Likewise.
+	* sysdeps/sparc/sparc64/tst-audit.h: Likewise.
+	* sysdeps/x86_64/tst-audit.h: Likewise.
+
 2012-07-26  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/s390/sys/ptrace.h: Add __THROW for

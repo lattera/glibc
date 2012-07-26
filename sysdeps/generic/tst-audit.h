@@ -1,5 +1,5 @@
-/* Some machines have these macros defined in elf/tst-auditmod1.c directly.
-   New machines can supply a tst-audit.h to define these macros used there.
+/* Machines can supply a tst-audit.h to define these macros used in
+   elf/tst-auditmod1.c.
 
 
 # define pltenter la_CPU_gnu_pltenter

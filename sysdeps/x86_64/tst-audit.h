@@ -1,4 +1,5 @@
-/* Definitions for testing PLT entry/exit auditing.  Alpha version.
+/* Definitions for testing PLT entry/exit auditing.  x86_64 version.
+
    Copyright (C) 2012 Free Software Foundation, Inc.
 
    This file is part of the GNU C Library.
@@ -17,8 +18,15 @@
    License along with the GNU C Library.  If not, see
    <http://www.gnu.org/licenses/>.  */
 
-#define pltenter la_alpha_gnu_pltenter
-#define pltexit la_alpha_gnu_pltexit
-#define La_regs La_alpha_regs
-#define La_retval La_alpha_retval
-#define int_retval lrv_r0
+#ifndef __ILP32__
+# define pltenter la_x86_64_gnu_pltenter
+# define pltexit la_x86_64_gnu_pltexit
+# define La_regs La_x86_64_regs
+# define La_retval La_x86_64_retval
+#else
+# define pltenter la_x32_gnu_pltenter
+# define pltexit la_x32_gnu_pltexit
+# define La_regs La_x32_regs
+# define La_retval La_x32_retval
+#endif
+#define int_retval lrv_rax
