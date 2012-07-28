@@ -1,3 +1,14 @@
+2012-07-28  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* tst-pthread-getattr.c (MAX_STACK_SIZE): New macro.
+	(pagesize): New static variable.
+	(allocate_and_test): Return MEM.  Rename parameter to TARGET.
+	(check_stack_top): New local variables MEM and PAGEMASK.  Cap
+	stack size to MAX_STACK_SIZE.  Call allocate_and_test for
+	halfway up the stack top page.  Verify that the top page was
+	written into.
+	(do_test): Get pagesize using sysconf.
+
 2012-07-25  Andreas Schwab  <schwab@linux-m68k.org>
 
 	* sysdeps/unix/sysv/linux/i386/pt-vfork.S: Remove pseudo_end

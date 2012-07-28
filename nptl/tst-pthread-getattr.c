@@ -21,18 +21,37 @@
 #include <stdio.h>
 #include <string.h>
 #include <sys/resource.h>
+#include <sys/param.h>
 #include <pthread.h>
 #include <alloca.h>
+#include <assert.h>
+#include <unistd.h>
+#include <inttypes.h>
 
-/* Move the stack pointer so that stackaddr is accessible and then check if it
-   really is accessible.  This will segfault if it fails.  */
-static void
-allocate_and_test (void *stackaddr)
+/* There is an obscure bug in the kernel due to which RLIMIT_STACK is sometimes
+   returned as unlimited when it is not, which may cause this test to fail.
+   There is also the other case where RLIMIT_STACK is intentionally set as
+   unlimited or very high, which may result in a vma that is too large and again
+   results in a test case failure.  To avoid these problems, we cap the stack
+   size to one less than 8M.  See the following mailing list threads for more
+   information about this problem:
+   <http://sourceware.org/ml/libc-alpha/2012-06/msg00599.html>
+   <http://sourceware.org/ml/libc-alpha/2012-06/msg00713.html>.  */
+#define MAX_STACK_SIZE (8192 * 1024 - 1)
+
+static size_t pagesize;
+
+/* Check if the page in which TARGET lies is accessible.  This will segfault
+   if it fails.  */
+static volatile char *
+allocate_and_test (char *target)
 {
-  void *mem = &mem;
-  /* FIXME:  The difference will be negative for _STACK_GROWSUP.  */
-  mem = alloca ((size_t) (mem - stackaddr));
-  *(int *)(mem) = 0;
+  volatile char *mem = (char *) &mem;
+  /* FIXME:  mem >= target for _STACK_GROWSUP.  */
+  mem = alloca ((size_t) (mem - target));
+
+  *mem = 42;
+  return mem;
 }
 
 static int
@@ -42,13 +61,13 @@ get_self_pthread_attr (const char *id, void **stackaddr, size_t *stacksize)
   int ret;
   pthread_t me = pthread_self ();
 
-  if ((ret = pthread_getattr_np (me, &attr)))
+  if ((ret = pthread_getattr_np (me, &attr)) < 0)
     {
       printf ("%s: pthread_getattr_np failed: %s\n", id, strerror (ret));
       return 1;
     }
 
-  if ((ret = pthread_attr_getstack (&attr, stackaddr, stacksize)))
+  if ((ret = pthread_attr_getstack (&attr, stackaddr, stacksize)) < 0)
     {
       printf ("%s: pthread_attr_getstack returned error: %s\n", id,
 	      strerror (ret));
@@ -65,8 +84,10 @@ check_stack_top (void)
 {
   struct rlimit stack_limit;
   void *stackaddr;
+  volatile void *mem;
   size_t stacksize = 0;
   int ret;
+  uintptr_t pagemask = ~(pagesize - 1);
 
   puts ("Verifying that stack top is accessible");
 
@@ -77,19 +98,22 @@ check_stack_top (void)
       return 1;
     }
 
+  printf ("current rlimit_stack is %zu\n", (size_t) stack_limit.rlim_cur);
+
   if (get_self_pthread_attr ("check_stack_top", &stackaddr, &stacksize))
     return 1;
 
-  /* Reduce the rlimit to a page less that what is currently being returned so
-     that we ensure that pthread_getattr_np uses rlimit.  The figure is
-     intentionally unaligned so to verify that pthread_getattr_np returns an
-     aligned stacksize that correctly fits into the rlimit.  We don't bother
-     about the case where the stack is limited by the vma below it and not by
-     the rlimit because the stacksize returned in that case is computed from
-     the end of that vma and is hence safe.  */
-  stack_limit.rlim_cur = stacksize - 4095;
-  printf ("Adjusting RLIMIT_STACK to %zu\n", stack_limit.rlim_cur);
-  if ((ret = setrlimit (RLIMIT_STACK, &stack_limit)))
+  /* Reduce the rlimit to a page less that what is currently being returned
+     (subject to a maximum of MAX_STACK_SIZE) so that we ensure that
+     pthread_getattr_np uses rlimit.  The figure is intentionally unaligned so
+     to verify that pthread_getattr_np returns an aligned stacksize that
+     correctly fits into the rlimit.  We don't bother about the case where the
+     stack is limited by the vma below it and not by the rlimit because the
+     stacksize returned in that case is computed from the end of that vma and is
+     hence safe.  */
+  stack_limit.rlim_cur = MIN (stacksize - pagesize + 1, MAX_STACK_SIZE);
+  printf ("Adjusting RLIMIT_STACK to %zu\n", (size_t) stack_limit.rlim_cur);
+  if ((ret = setrlimit (RLIMIT_STACK, &stack_limit)) < 0)
     {
       perror ("setrlimit failed");
       return 1;
@@ -100,7 +124,23 @@ check_stack_top (void)
 
   printf ("Adjusted rlimit: stacksize=%zu, stackaddr=%p\n", stacksize,
           stackaddr);
-  allocate_and_test (stackaddr);
+
+  /* A lot of targets tend to write stuff on top of the user stack during
+     context switches, so we cannot possibly safely go up to the very top of
+     stack and test access there.  It is however sufficient to simply check if
+     the top page is accessible, so we target our access halfway up the top
+     page.  Thanks Chris Metcalf for this idea.  */
+  mem = allocate_and_test (stackaddr + pagesize / 2);
+
+  /* Before we celebrate, make sure we actually did test the same page.  */
+  if (((uintptr_t) stackaddr & pagemask) != ((uintptr_t) mem & pagemask))
+    {
+      printf ("We successfully wrote into the wrong page.\n"
+	      "Expected %#" PRIxPTR ", but got %#" PRIxPTR "\n",
+	      (uintptr_t) stackaddr & pagemask, (uintptr_t) mem & pagemask);
+
+      return 1;
+    }
 
   puts ("Stack top tests done");
 
@@ -112,6 +152,7 @@ check_stack_top (void)
 static int
 do_test (void)
 {
+  pagesize = sysconf (_SC_PAGESIZE);
   return check_stack_top ();
 }
 
