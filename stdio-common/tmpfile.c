@@ -58,6 +58,10 @@ tmpfile (void)
   return f;
 }
 
+#if !defined O_LARGEFILE || O_LARGEFILE == 0
+weak_alias (__new_tmpfile, tmpfile64)
+#endif
+
 #ifndef FLAGS /* Not for tmpfile64.  */
 # undef tmpfile
 # include <shlib-compat.h>

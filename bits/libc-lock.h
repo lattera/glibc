@@ -129,12 +129,12 @@
 typedef int __libc_key_t;
 
 /* Create key for thread specific data.  */
-#define __libc_key_create(KEY,DEST) -1
+#define __libc_key_create(KEY,DEST)	((void) (KEY), (void) (DEST), -1)
 
 /* Set thread-specific data associated with KEY to VAL.  */
-#define __libc_setspecific(KEY,VAL) ((void)0)
+#define __libc_setspecific(KEY,VAL)	((void) (KEY), (void) (VAL))
 
 /* Get thread-specific data associated with KEY.  */
-#define __libc_getspecific(KEY) 0
+#define __libc_getspecific(KEY)		((void) (KEY), (void *) 0)
 
 #endif	/* bits/libc-lock.h */

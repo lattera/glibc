@@ -415,7 +415,9 @@ __nss_lookup_function (service_user *ni, const char *fct_name)
     {
       /* The search found an existing structure in the tree.  */
       result = ((known_function *) *found)->fct_ptr;
+#ifdef PTR_DEMANGLE
       PTR_DEMANGLE (result);
+#endif
     }
   else
     {
@@ -503,7 +505,9 @@ __nss_lookup_function (service_user *ni, const char *fct_name)
 	  /* Remember function pointer for later calls.  Even if null, we
 	     record it so a second try needn't search the library again.  */
 	  known->fct_ptr = result;
+#ifdef PTR_MANGLE
 	  PTR_MANGLE (known->fct_ptr);
+#endif
 	}
     }
 

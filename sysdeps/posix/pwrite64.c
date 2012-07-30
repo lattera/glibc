@@ -1,6 +1,6 @@
 /* Write block to given position in file without changing file pointer.
    POSIX version.
-   Copyright (C) 1997, 1998, 1999, 2000, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1997-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -56,7 +56,6 @@ __libc_pwrite64 (int fd, const void *buf, size_t nbyte, off64_t offset)
   return result;
 }
 #ifndef __libc_pwrite64
-libc_hidden_def (__libc_pwrite64)
 weak_alias (__libc_pwrite64, __pwrite64)
 libc_hidden_weak (__pwrite64)
 weak_alias (__libc_pwrite64, pwrite64)

@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1996, 1997, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1992-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -15,9 +15,12 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#ifndef _SYS_STAT_H
+#if !defined _SYS_STAT_H && !defined _FCNTL_H
 # error "Never include <bits/stat.h> directly; use <sys/stat.h> instead."
 #endif
+
+#ifndef _BITS_STAT_H
+#define _BITS_STAT_H	1
 
 /* This structure needs to be defined in accordance with the
    implementation of __stat, __fstat, and __lstat.  */
@@ -96,3 +99,5 @@ struct stat64
     __time_t st_ctime;		/* Time of last status change.  */
   };
 #endif
+
+#endif	/* bits/stat.h */

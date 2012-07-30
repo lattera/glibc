@@ -1,5 +1,5 @@
 /* Load needed message catalogs.
-   Copyright (C) 1995-2005, 2007 Free Software Foundation, Inc.
+   Copyright (C) 1995-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -27,6 +27,7 @@
 # include <config.h>
 #endif
 
+#include <assert.h>
 #include <ctype.h>
 #include <errno.h>
 #include <fcntl.h>
@@ -835,11 +836,13 @@ _nl_load_domain (domain_file, domainbinding)
       fd = -1;
       use_mmap = 1;
     }
+
+  assert (MAP_FAILED == (void *) -1);
 #endif
 
   /* If the data is not yet available (i.e. mmap'ed) we try to load
      it manually.  */
-  if (data == MAP_FAILED)
+  if (data == (struct mo_file_header *) -1)
     {
       size_t to_read;
       char *read_ptr;

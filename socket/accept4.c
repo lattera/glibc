@@ -1,4 +1,4 @@
-/* Copyright (C) 2008 Free Software Foundation, Inc.
+/* Copyright (C) 2008-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -25,7 +25,7 @@
    new socket's descriptor, or -1 for errors.  The operation can be influenced
    by the FLAGS parameter.  */
 int
-accept4 (fd, addr, addr_len, flags)
+__libc_accept4 (fd, addr, addr_len, flags)
      int fd;
      __SOCKADDR_ARG addr;
      socklen_t *addr_len;
@@ -34,7 +34,8 @@ accept4 (fd, addr, addr_len, flags)
   __set_errno (ENOSYS);
   return -1;
 }
-libc_hidden_def (accept4)
+libc_hidden_def (__libc_accept4)
+weak_alias (__libc_accept4, accept4)
 
 
 stub_warning (accept4)

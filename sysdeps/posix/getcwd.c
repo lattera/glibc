@@ -401,8 +401,10 @@ __getcwd (buf, size)
 	      goto lose;
 	    }
 
+#ifdef _DIRENT_HAVE_D_TYPE
 	  if (d->d_type != DT_DIR && d->d_type != DT_UNKNOWN)
 	    continue;
+#endif
 	  if (d->d_name[0] == '.'
 	      && (d->d_name[1] == '\0'
 		  || (d->d_name[1] == '.' && d->d_name[2] == '\0')))

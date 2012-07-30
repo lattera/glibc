@@ -27,6 +27,7 @@
 #include <libintl.h>
 #include <locale.h>
 #include <search.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

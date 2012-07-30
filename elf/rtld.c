@@ -133,8 +133,10 @@ struct rtld_global _rtld_global =
     ._dl_nns = 1,
     ._dl_ns =
     {
+#ifdef _LIBC_REENTRANT
       [LM_ID_BASE] = { ._ns_unique_sym_table
 		       = { .lock = _RTLD_LOCK_RECURSIVE_INITIALIZER } }
+#endif
     }
   };
 /* If we would use strong_alias here the compiler would see a

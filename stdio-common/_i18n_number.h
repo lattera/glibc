@@ -1,4 +1,4 @@
-/* Copyright (C) 2000, 2004, 2008 Free Software Foundation, Inc.
+/* Copyright (C) 2000-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.org>, 2000.
 
@@ -16,6 +16,7 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include <stdbool.h>
 #include <wchar.h>
 #include <wctype.h>
 

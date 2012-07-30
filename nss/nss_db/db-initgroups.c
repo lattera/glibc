@@ -22,6 +22,7 @@
 #include <grp.h>
 #include <limits.h>
 #include <paths.h>
+#include <stdlib.h>
 #include <string.h>
 #include <sys/param.h>
 

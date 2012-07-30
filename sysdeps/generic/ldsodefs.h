@@ -272,7 +272,7 @@ struct rtld_global
     /* Search table for unique objects.  */
     struct unique_sym_table
     {
-      __rtld_lock_recursive_t lock;
+      __rtld_lock_define_recursive (, lock)
       struct unique_sym
       {
 	uint32_t hashval;

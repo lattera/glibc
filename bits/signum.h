@@ -1,4 +1,5 @@
-/* Copyright (C) 1991, 1993, 1996, 1998 Free Software Foundation, Inc.
+/* Signal number constants.  Generic version.
+   Copyright (C) 1991-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -27,37 +28,49 @@
 # define SIG_HOLD ((__sighandler_t)  2)	/* Add signal to hold mask.  */
 #endif
 
-/* Signals in the 1-15 range are defined with their historical numbers.
-   Signals in the 20-25 range are relatively new and have no ingrained
-   numbers. */
+/* We define here all the signal names listed in POSIX (1003.1-2008).
+   Signals in the 1-15 range are defined with their historical numbers.
+   For other signals specified by POSIX, we use the BSD numbers.  */
 
-/* ANSI signals.  */
-#define	SIGINT	2	/* Interactive attention signal.  */
-#define	SIGILL	4	/* Illegal instruction.  */
-#define	SIGABRT	6	/* Abnormal termination.  */
-#define	SIGFPE	8	/* Erroneous arithmetic operation.  */
-#define	SIGSEGV	11	/* Invalid access to storage.  */
-#define	SIGTERM	15	/* Termination request.  */
+/* ISO C99 signals.  */
+#define	SIGINT		2	/* Interactive attention signal.  */
+#define	SIGILL		4	/* Illegal instruction.  */
+#define	SIGABRT		6	/* Abnormal termination.  */
+#define	SIGFPE		8	/* Erroneous arithmetic operation.  */
+#define	SIGSEGV		11	/* Invalid access to storage.  */
+#define	SIGTERM		15	/* Termination request.  */
 
 /* Historical signals specified by POSIX. */
-#define	SIGHUP	1	/* Hangup.  */
-#define	SIGQUIT	3	/* Quit.  */
-#define	SIGKILL	9	/* Kill (cannot be blocked, caught, or ignored).  */
-#define	SIGPIPE	13	/* Broken pipe.  */
-#define	SIGALRM	14	/* Alarm clock.  */
+#define	SIGHUP		1	/* Hangup.  */
+#define	SIGQUIT		3	/* Quit.  */
+#define	SIGTRAP		5	/* Trace/breakpoint trap.  */
+#define	SIGKILL		9	/* Killed.  */
+#define SIGBUS		10	/* Bus error.  */
+#define	SIGSYS		12	/* Bad system call.  */
+#define	SIGPIPE		13	/* Broken pipe.  */
+#define	SIGALRM		14	/* Alarm clock.  */
 
-/* New(er) POSIX signals. */
-#define	SIGSTOP	20	/* Stop (cannot be blocked, caught, or ignored).  */
-#define	SIGCONT	21	/* Continue.  */
-#define	SIGTSTP	22	/* Keyboard stop.  */
-#define	SIGTTIN	23	/* Background read from control terminal.  */
-#define	SIGTTOU	24	/* Background write to control terminal.  */
-#define	SIGCHLD	25	/* Child terminated or stopped.  */
+/* New(er) POSIX signals (1003.1-2008).  */
+#define	SIGURG		16 /* High bandwidth data is available at a socket.  */
+#define	SIGSTOP		17	/* Stopped (signal).  */
+#define	SIGTSTP		18	/* Stopped.  */
+#define	SIGCONT		19	/* Continued.  */
+#define	SIGCHLD		20	/* Child terminated or stopped.  */
+#define	SIGTTIN		21	/* Background read from control terminal.  */
+#define	SIGTTOU		22	/* Background write to control terminal.  */
+#define	SIGPOLL 	23	/* Pollable event occurred (System V).  */
+#define	SIGIO		SIGPOLL /* I/O now possible (4.2 BSD).  */
+#define	SIGXCPU		24	/* CPU time limit exceeded.  */
+#define	SIGXFSZ		25	/* File size limit exceeded.  */
+#define	SIGVTALRM	26	/* Virtual timer expired.  */
+#define	SIGPROF		27	/* Profiling timer expired.  */
+#define	SIGUSR1		30	/* User-defined signal 1.  */
+#define	SIGUSR2		31	/* User-defined signal 2.  */
 
-#define	_NSIG	26
+#define	_NSIG		32
 
 /* Archaic names for compatibility. */
-#define	SIGIOT  SIGABRT	/* IOT instruction, abort() on a PDP11 */
-#define	SIGCLD  SIGCHLD	/* Old System V name */
+#define	SIGIOT		SIGABRT	/* IOT instruction, abort() on a PDP11 */
+#define	SIGCLD		SIGCHLD	/* Old System V name */
 
 #endif	/* <signal.h> included.  */

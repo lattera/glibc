@@ -518,6 +518,8 @@ extern int bindresvport6 (int __sockfd, struct sockaddr_in6 *__sock_in)
 
 
 #ifdef __USE_GNU
+struct cmsghdr;			/* Forward declaration.  */
+
 /* IPv6 packet information.  */
 struct in6_pktinfo
   {

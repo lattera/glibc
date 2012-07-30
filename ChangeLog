@@ -1,3 +1,86 @@
+2012-07-30  Roland McGrath  <roland@hack.frob.com>
+
+	* sysdeps/generic/sys/param.h (MAXSYMLINKS): Define to SYMLOOP_MAX
+	rather than to 1.
+	(NBBY, NGROUPS, CANBSIZ, NCARGS): New macros.
+	(MAXPATHLEN): Removed.
+	(NOGROUP, NODEV): New macros.
+	(setbit, clrbit, isset, isclr): New macros.
+	(howmany, roundup, powerof2): New macros.
+	(DEV_BSIZE): New macro.
+
+	* include/unistd.h: Add attribute_hidden on __libc_pwrite64.
+	* sysdeps/posix/pwrite64.c: Remove libc_hidden_def (__libc_pwrite64).
+
+	* sysdeps/ieee754/k_standard.c (__kernel_standard_l): Conditionalize
+	definition on [!__NO_LONG_DOUBLE_MATH].
+
+	* nss/nsswitch.c (__nss_lookup_function): Conditionalize use of
+	PTR_MANGLE and PTR_DEMANGLE.
+
+	* socket/accept4.c (accept4): Rename to __libc_accept4.
+	Define accept4 as a weak alias.
+
+	* sysdeps/posix/getcwd.c (__getcwd): Conditionalize d_type field use
+	on [_DIRENT_HAVE_D_TYPE].
+	* io/ftw.c (ftw_dir): Likewise.
+
+	* io/xmknod.c (__xmknod): Don't check PATH for being null.
+
+	* libio/genops.c (flush_cleanup): Move inside [_IO_MTSAFE_IO].
+
+	* bits/signum.h (SIGSTOP, SIGCONT, SIGTSTP, SIGTTIN, SIGTTOU, SIGCHLD):
+	Use the BSD numbers rather than the arbitrary ones we had.
+	(SIGBUS, SIGIO, SIGPOLL, SIGPROF, SIGSYS): New macros.
+	(SIGTRAP, SIGURG, SIGUSR1, SIGUSR2, SIGVTALRM): New macros.
+	(SIGXCPU, SIGXFSZ): New macros.
+	(_NSIG): Now 32.
+
+	* elf/rtld.c (_rtld_global): Conditionalize .dl_ns[LM_ID_BASE]
+	initializer on [_LIBC_REENTRANT].
+
+	* iconv/iconv_charmap.c (charmap_conversion): Move ST, ADDR
+	definitions inside [_POSIX_MAPPED_FILES].
+
+	* posix/regex.c: Include <sys/param.h> for MIN/MAX.
+
+	* dirent/opendir.c: Include <fcntl.h>.
+
+	* bits/libc-lock.h (__libc_setspecific): Evaluate arguments.
+	(__libc_getspecific): Likewise.
+	(__libc_key_create): Likewise.
+
+	* stdio-common/tmpfile64.c: Include <fcntl.h> first.
+	[defined O_LARGEFILE && O_LARGEFILE != 0]: Conditionalize on this.
+	* stdio-common/tmpfile.c [!defined O_LARGEFILE || O_LARGEFILE == 0]
+	(tmpfile64): Define as alias.
+	* sysdeps/wordsize-64/tmpfile.c: File removed.
+	* sysdeps/wordsize-64/tmpfile64.c: File removed.
+	* sysdeps/unix/sysv/linux/x86_64/x32/tmpfile64.c: File removed.
+	* sysdeps/unix/sysv/linux/x86_64/x32/tmpfile.c: File removed.
+
+	* stdio-common/vfscanf.c: Include <stdbool.h>.
+	* nss/makedb.c: Likewise.
+	* stdio-common/_i18n_number.h: Likewise.
+	* argp/argp-help.c: Likewise.
+	* posix/wordexp.c: Likewise.
+	* sysdeps/posix/spawni.c: Likewise.
+	* nss/nss_files/files-initgroups.c: Likewise.
+	* stdio-common/reg-modifier.c: Include <stdlib.h>.
+	* nss/nss_files/files-initgroups.c: Likewise.
+	* nss/nss_db/db-netgrp.c: Likewise.
+	* nss/nss_db/db-initgroups.c: Likewise.
+	* io/fchmodat.c: Include <sys/stat.h>.
+
+	* sysdeps/generic/ldsodefs.h (struct rtld_global): Use
+	__rtld_lock_define_recursive macro instead of __rtld_lock_recursive_t.
+
+	* intl/loadmsgcat.c (_nl_load_domain): Don't use MAP_FAILED outside of
+	[HAVE_MMAP].
+
+	* bits/stat.h: Fix inclusion guard to accept _FCNTL_H too.
+	Add multiple inclusion protection.
+
 2012-07-27  David S. Miller  <davem@davemloft.net>
 
 	* sysdeps/sparc/fpu/libm-test-ulps: Update.

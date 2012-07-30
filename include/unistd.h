@@ -44,7 +44,7 @@ extern ssize_t __pwrite64 (int __fd, const void *__buf, size_t __n,
 			   __off64_t __offset);
 libc_hidden_proto (__pwrite64)
 extern ssize_t __libc_pwrite64 (int __fd, const void *__buf, size_t __n,
-				__off64_t __offset);
+				__off64_t __offset) attribute_hidden;
 extern ssize_t __libc_read (int __fd, void *__buf, size_t __n);
 libc_hidden_proto (__libc_read)
 extern ssize_t __libc_write (int __fd, const void *__buf, size_t __n);

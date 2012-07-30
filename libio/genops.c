@@ -45,15 +45,15 @@ static int _IO_list_all_stamp;
 
 static _IO_FILE *run_fp;
 
+#ifdef _IO_MTSAFE_IO
 static void
 flush_cleanup (void *not_used)
 {
   if (run_fp != NULL)
     _IO_funlockfile (run_fp);
-#ifdef _IO_MTSAFE_IO
   _IO_lock_unlock (list_all_lock);
-#endif
 }
+#endif
 
 void
 _IO_un_link (fp)

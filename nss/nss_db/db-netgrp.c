@@ -1,5 +1,5 @@
 /* Netgroup file parser in nss_db modules.
-   Copyright (C) 1996, 1997, 1999, 2000, 2011 Free Software Foundation, Inc.
+   Copyright (C) 1996-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -25,6 +25,7 @@
 #include <string.h>
 #include <bits/libc-lock.h>
 #include <paths.h>
+#include <stdlib.h>
 
 #include "nsswitch.h"
 #include "nss_db.h"

@@ -1003,6 +1003,7 @@ __kernel_standard_f(float x, float y, int type)
 	return __kernel_standard(x, y, type);
 }
 
+#ifndef __NO_LONG_DOUBLE_MATH
 long double
 __kernel_standard_l (long double x, long double y, int type)
 {
@@ -1082,3 +1083,4 @@ __kernel_standard_l (long double x, long double y, int type)
       return __kernel_standard (dx, dy, type);
     }
 }
+#endif
