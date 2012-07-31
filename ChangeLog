@@ -1,3 +1,9 @@
+2012-07-31  Florian Weimer  <fweimer@redhat.com>
+
+	* stdlib/tst-secure-getenv.c: Use printf for error reporting.
+	Exit with zero in case no suitable GID is found, and write a
+	message to standard error.
+
 2012-07-30  Roland McGrath  <roland@hack.frob.com>
 
 	* sysdeps/generic/sys/param.h (MAXSYMLINKS): Define to SYMLOOP_MAX
