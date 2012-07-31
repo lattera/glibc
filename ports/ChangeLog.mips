@@ -1,3 +1,12 @@
+2012-07-31  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/mips/fcntl.c: Remove.
+	* sysdeps/unix/sysv/linux/mips/lockf64.c: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/fcntl.c: New file.
+	* sysdeps/unix/sysv/linux/mips/mips32/lockf64.c: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n32/fcntl.c: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n32/lockf64.c: Likewise.
+
 2012-07-27  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/mips/mips64/syscalls.list (mmap): New.
