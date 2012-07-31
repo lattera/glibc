@@ -34,7 +34,6 @@ __libc_accept4 (fd, addr, addr_len, flags)
   __set_errno (ENOSYS);
   return -1;
 }
-libc_hidden_def (__libc_accept4)
 weak_alias (__libc_accept4, accept4)
 
 

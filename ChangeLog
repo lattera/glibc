@@ -1,5 +1,9 @@
 2012-07-31  Roland McGrath  <roland@hack.frob.com>
 
+	* include/sys/socket.h (__libc_accept, __libc_accept4):
+	Add attribute_hidden.
+	* socket/accept4.c (__libc_accept4): Remove libc_hidden_def.
+
 	* nss/getXXbyYY_r.c (INTERNAL (REENTRANT_NAME)): Conditionalize
 	use of PTR_MANGLE.
 	* inet/getnetgrent_r.c (setup): Likewise.
