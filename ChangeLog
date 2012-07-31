@@ -1,3 +1,19 @@
+2012-07-31  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #13629]
+	* math/s_clog.c (__clog): Use __log1p if larger part has absolute
+	value between 1.0 and 2.0 and smaller part has absolute value less
+	than 1.0.
+	* math/s_clog10.c (__clog10): Likewise.
+	* math/s_clog10f.c (__clog10f): Likewise.
+	* math/s_clog10l.c (__clog10l): Likewise.
+	* math/s_clogf.c (__clogf): Likewise.
+	* math/s_clogl.c (__clogl): Likewise.
+	* math/libm-test.inc (clog_test): Add more tests.
+	(clog10_test): Likewise.
+	* sysdeps/i386/fpu/libm-test-ulps: Update.
+	* sysdeps/x86_64/fpu/libm-test-ulps: Likewise.
+
 2012-07-31  Florian Weimer  <fweimer@redhat.com>
 
 	* stdlib/tst-secure-getenv.c: Use printf for error reporting.

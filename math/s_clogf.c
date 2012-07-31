@@ -78,6 +78,13 @@ __clogf (__complex__ float x)
 	  else
 	    __real__ result = __log1pf (absy2) / 2.0f;
 	}
+      else if (absx > 1.0f && absx < 2.0f && absy < 1.0f && scale == 0)
+	{
+	  float d2m1 = (absx - 1.0f) * (absx + 1.0f);
+	  if (absy >= FLT_EPSILON)
+	    d2m1 += absy * absy;
+	  __real__ result = __log1pf (d2m1) / 2.0f;
+	}
       else
 	{
 	  float d = __ieee754_hypotf (absx, absy);

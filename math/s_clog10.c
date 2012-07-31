@@ -81,6 +81,13 @@ __clog10 (__complex__ double x)
 	  else
 	    __real__ result = __log1p (absy2) * (M_LOG10E / 2.0);
 	}
+      else if (absx > 1.0 && absx < 2.0 && absy < 1.0 && scale == 0)
+	{
+	  double d2m1 = (absx - 1.0) * (absx + 1.0);
+	  if (absy >= DBL_EPSILON)
+	    d2m1 += absy * absy;
+	  __real__ result = __log1p (d2m1) * (M_LOG10E / 2.0);
+	}
       else
 	{
 	  double d = __ieee754_hypot (absx, absy);

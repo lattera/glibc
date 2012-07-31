@@ -22,6 +22,13 @@
 #include <math_private.h>
 #include <float.h>
 
+/* To avoid spurious underflows, use this definition to treat IBM long
+   double as approximating an IEEE-style format.  */
+#if LDBL_MANT_DIG == 106
+# undef LDBL_EPSILON
+# define LDBL_EPSILON 0x1p-106L
+#endif
+
 /* log_10 (2).  */
 #define M_LOG10_2l 0.3010299956639811952137388947244930267682L
 
@@ -74,6 +81,13 @@ __clog10l (__complex__ long double x)
 	      = (absy2 / 2.0L - absy2 * absy2 / 4.0L) * M_LOG10El;
 	  else
 	    __real__ result = __log1pl (absy2) * (M_LOG10El / 2.0L);
+	}
+      else if (absx > 1.0L && absx < 2.0L && absy < 1.0L && scale == 0)
+	{
+	  long double d2m1 = (absx - 1.0L) * (absx + 1.0L);
+	  if (absy >= LDBL_EPSILON)
+	    d2m1 += absy * absy;
+	  __real__ result = __log1pl (d2m1) * (M_LOG10El / 2.0L);
 	}
       else
 	{
