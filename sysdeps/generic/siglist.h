@@ -1,5 +1,5 @@
 /* Canonical list of all signal names.
-   Copyright (C) 1996,97,98,99 Free Software Foundation, Inc.
+   Copyright (C) 1996-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -50,7 +50,6 @@
   init_sig (SIGXFSZ, "XFSZ", N_("File size limit exceeded"))
   init_sig (SIGVTALRM, "VTALRM", N_("Virtual timer expired"))
   init_sig (SIGPROF, "PROF", N_("Profiling timer expired"))
-  init_sig (SIGWINCH, "WINCH", N_("Window changed"))
   init_sig (SIGUSR1, "USR1", N_("User defined signal 1"))
   init_sig (SIGUSR2, "USR2", N_("User defined signal 2"))
 
@@ -71,4 +70,7 @@
 #endif
 #ifdef SIGLOST
   init_sig (SIGLOST, "LOST", N_("Resource lost"))
+#endif
+#ifdef SIGWINCH
+  init_sig (SIGWINCH, "WINCH", N_("Window changed"))
 #endif

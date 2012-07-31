@@ -1,3 +1,7 @@
+2012-07-31  Roland McGrath  <roland@hack.frob.com>
+
+	* sysdeps/generic/siglist.h: Put SIGWINCH under #ifdef.
+
 2012-07-31  David S. Miller  <davem@davemloft.net>
 
 	* sysdeps/sparc/fpu/libm-test-ulps: Update.
