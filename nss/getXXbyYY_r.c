@@ -1,4 +1,4 @@
-/* Copyright (C) 1996-2004,2006,2007,2009,2010 Free Software Foundation, Inc.
+/* Copyright (C) 1996-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -204,7 +204,9 @@ INTERNAL (REENTRANT_NAME) (ADD_PARAMS, LOOKUP_TYPE *resbuf, char *buffer,
       if (no_more)
 	{
 	  void *tmp_ptr = (service_user *) -1l;
+#ifdef PTR_MANGLE
 	  PTR_MANGLE (tmp_ptr);
+#endif
 	  startp = tmp_ptr;
 	}
       else
@@ -225,10 +227,14 @@ INTERNAL (REENTRANT_NAME) (ADD_PARAMS, LOOKUP_TYPE *resbuf, char *buffer,
 #endif /* need _res_hconf */
 
 	  void *tmp_ptr = fct.l;
+#ifdef PTR_MANGLE
 	  PTR_MANGLE (tmp_ptr);
+#endif
 	  start_fct = tmp_ptr;
 	  tmp_ptr = nip;
+#ifdef PTR_MANGLE
 	  PTR_MANGLE (tmp_ptr);
+#endif
 	  startp = tmp_ptr;
 	}
 
@@ -240,9 +246,11 @@ INTERNAL (REENTRANT_NAME) (ADD_PARAMS, LOOKUP_TYPE *resbuf, char *buffer,
   else
     {
       fct.l = start_fct;
-      PTR_DEMANGLE (fct.l);
       nip = startp;
+#ifdef PTR_DEMANGLE
+      PTR_DEMANGLE (fct.l);
       PTR_DEMANGLE (nip);
+#endif
       no_more = nip == (service_user *) -1l;
     }
 

@@ -1,5 +1,4 @@
-/* Copyright (C) 1996,1997,1998,1999,2002,2004,2005,2007,2011
-	Free Software Foundation, Inc.
+/* Copyright (C) 1996-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -57,14 +56,18 @@ setup (void **fctp, service_user **nipp)
 	 same result every time.  So we need no locking.  */
       no_more = __nss_netgroup_lookup (nipp, "setnetgrent", fctp);
       startp = no_more ? (service_user *) -1 : *nipp;
+#ifdef PTR_MANGLE
       PTR_MANGLE (startp);
+#endif
       atomic_write_barrier ();
       startp_initialized = true;
     }
   else
     {
       service_user *nip = startp;
+#ifdef PTR_DEMANGLE
       PTR_DEMANGLE (nip);
+#endif
       if (nip == (service_user *) -1)
 	/* No services at all.  */
 	return 1;
