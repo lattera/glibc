@@ -1,5 +1,21 @@
 2012-08-01  Roland McGrath  <roland@hack.frob.com>
 
+	* misc/mkstemp.c [!defined O_LARGEFILE || O_LARGEFILE == 0]:
+	Define mkstemp64 as an alias.
+	* misc/mkostemp.c [!defined O_LARGEFILE || O_LARGEFILE == 0]:
+	Define mkostemp64 as an alias.
+	* misc/mkstemp64.c [defined O_LARGEFILE && O_LARGEFILE != 0]:
+	Conditionalize body on this.
+	* misc/mkostemp64.c: Likewise.
+	* sysdeps/wordsize-64/mkstemp64.c: File removed.
+	* sysdeps/wordsize-64/mkostemp64.c: File removed.
+	* sysdeps/wordsize-64/mkostemp.c: File removed.
+	* sysdeps/wordsize-64/mkstemp.c: File removed.
+	* sysdeps/unix/sysv/linux/x86_64/x32/mkstemp64.c: File removed.
+	* sysdeps/unix/sysv/linux/x86_64/x32/mkostemp64.c: File removed.
+	* sysdeps/unix/sysv/linux/x86_64/x32/mkostemp.c: File removed.
+	* sysdeps/unix/sysv/linux/x86_64/x32/mkstemp.c: File removed.
+
 	[BZ #14138]
 	* sysdeps/unix/sysv/linux/syscalls.list: Add getrlimit/ugetrlimit line.
 	* sysdeps/unix/sysv/linux/i386/getrlimit.c: File removed.
