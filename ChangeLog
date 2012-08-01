@@ -1,5 +1,8 @@
 2012-08-01  Roland McGrath  <roland@hack.frob.com>
 
+	* sysdeps/generic/sys/param.h (NGROUPS): Define only if [NGROUPS_MAX].
+	(MAXSYMLINKS): Define only if [SYMLOOP_MAX].
+
 	* misc/mkstemp.c [!defined O_LARGEFILE || O_LARGEFILE == 0]:
 	Define mkstemp64 as an alias.
 	* misc/mkostemp.c [!defined O_LARGEFILE || O_LARGEFILE == 0]:
