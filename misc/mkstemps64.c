@@ -1,4 +1,4 @@
-/* Copyright (C) 2000, 2007, 2009 Free Software Foundation, Inc.
+/* Copyright (C) 2000-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,6 +20,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+/* If O_LARGEFILE is zero, mkstemps.c defines mkstemps64 as an alias.  */
+#if defined O_LARGEFILE && O_LARGEFILE != 0
+
 /* Generate a unique temporary file name from TEMPLATE.  The last six
    characters before a suffix of length SUFFIXLEN of TEMPLATE must be
    "XXXXXX"; they are replaced with a string that makes the filename
@@ -37,3 +40,5 @@ mkstemps64 (template, suffixlen)
 
   return __gen_tempname (template, suffixlen, O_LARGEFILE, __GT_FILE);
 }
+
+#endif
