@@ -1,6 +1,5 @@
 /* Machine-dependent ELF dynamic relocation inline functions.  ARM version.
-   Copyright (C) 1995,1996,1997,1998,1999,2000,2001,2002,2003,2004,2005,
-	2006, 2009, 2010, 2011 Free Software Foundation, Inc.
+   Copyright (C) 1995-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -27,8 +26,9 @@
 #include <dl-tlsdesc.h>
 #include <dl-irel.h>
 
-#define CLEAR_CACHE(BEG,END)						\
-  INTERNAL_SYSCALL_ARM (cacheflush, , 3, (BEG), (END), 0)
+#ifndef CLEAR_CACHE
+# error CLEAR_CACHE definition required to handle TEXTREL
+#endif
 
 /* Return nonzero iff ELF header is compatible with the running host.  */
 static inline int __attribute__ ((unused))

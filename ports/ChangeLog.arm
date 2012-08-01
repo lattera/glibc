@@ -1,5 +1,9 @@
 2012-08-01  Roland McGrath  <roland@hack.frob.com>
 
+	* sysdeps/arm/dl-machine.h (CLEAR_CACHE): Don't define it.
+	Instead, #error if it's not defined.
+	* sysdeps/unix/sysv/linux/arm/dl-machine.h: New file.
+
 	[BZ #14138]
 	* sysdeps/unix/sysv/linux/arm/getrlimit.c: File removed.
 
