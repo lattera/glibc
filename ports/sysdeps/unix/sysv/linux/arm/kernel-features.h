@@ -30,9 +30,6 @@
 /* Arm got fcntl64 in 2.4.4.  */
 #define __ASSUME_FCNTL64		1
 
-/* The vfork syscall on arm was definitely available in 2.4.  */
-#define __ASSUME_VFORK_SYSCALL		1
-
 /* The signal frame layout changed in 2.6.18.  */
 #if __LINUX_KERNEL_VERSION >= 132626
 # define __ASSUME_SIGFRAME_V2	1

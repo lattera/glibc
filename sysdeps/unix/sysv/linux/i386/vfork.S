@@ -28,8 +28,6 @@
 
 ENTRY (__vfork)
 
-#ifdef __NR_vfork
-
 	/* Pop the return PC value into ECX.  */
 	popl	%ecx
 	cfi_adjust_cfa_offset (-4)
@@ -55,31 +53,10 @@ ENTRY (__vfork)
 
 	cmpl	$-4095, %eax
 	/* Branch forward if it failed.  */
-# ifdef __ASSUME_VFORK_SYSCALL
 	jae	SYSCALL_ERROR_LABEL
-# else
-	jae	.Lerror
-# endif
 
 	ret
 
-# ifndef __ASSUME_VFORK_SYSCALL
-.Lerror:
-	/* Check if vfork syscall is known at all.  */
-	cmpl	$-ENOSYS, %eax
-	jne	SYSCALL_ERROR_LABEL
-# endif
-#endif
-
-#ifndef __ASSUME_VFORK_SYSCALL
-	/* If we don't have vfork, fork is close enough.  */
-
-	movl	$SYS_ify (fork), %eax
-	int	$0x80
-	cmpl	$-4095, %eax
-	jae	SYSCALL_ERROR_LABEL
-	ret
-#endif
 PSEUDO_END (__vfork)
 libc_hidden_def (__vfork)
 

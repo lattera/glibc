@@ -36,8 +36,6 @@
 
 ENTRY (__vfork)
 
-#ifdef __NR_vfork
-
 	/* SAVE_PID clobbers call-clobbered registers and
 	   saves data in D1 and A1.  */
 
@@ -66,27 +64,8 @@ ENTRY (__vfork)
 	cfi_adjust_cfa_offset (4)
 	cfi_rel_offset (%pc, 0)
 
-# ifdef __ASSUME_VFORK_SYSCALL
-#  ifndef PIC
+#ifndef PIC
 	jbra	SYSCALL_ERROR_LABEL
-#  endif
-# else
-	/* Check if vfork syscall is known at all.  */
-	movel	#-ENOSYS,%d1
-	cmpl	%d0,%d1
-	jne	SYSCALL_ERROR_LABEL
-
-# endif
-#endif
-
-#ifndef __ASSUME_VFORK_SYSCALL
-	/* If we don't have vfork, fork is close enough.  */
-
-	movel	#SYS_ify (fork), %d0
-	trap	#0
-	tstl	%d0
-	jmi	SYSCALL_ERROR_LABEL
-	rts
 #endif
 
 PSEUDO_END (__vfork)

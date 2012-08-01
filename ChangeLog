@@ -1,3 +1,20 @@
+2012-08-01  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/kernel-features.h
+	(__ASSUME_VFORK_SYSCALL): Remove all definitions.
+	* sysdeps/unix/sysv/linux/i386/vfork.S (__vfork) [__NR_vfork]:
+	Make code unconditional.
+	(__vfork) [__ASSUME_VFORK_SYSCALL]: Likewise.
+	(__vfork) [!__ASSUME_VFORK_SYSCALL]: Remove conditional code.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/vfork.S (__vfork)
+	[__NR_vfork]: Make code unconditional.
+	(__vfork) [__ASSUME_VFORK_SYSCALL]: Likewise.
+	(__vfork) [!__ASSUME_VFORK_SYSCALL]: Remove conditional code.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/vfork.S (__vfork)
+	[__NR_vfork]: Make code unconditional.
+	(__vfork) [__ASSUME_VFORK_SYSCALL]: Likewise.
+	(__vfork) [!__ASSUME_VFORK_SYSCALL]: Remove conditional code.
+
 2012-08-01  Roland McGrath  <roland@hack.frob.com>
 
 	* sysdeps/generic/sys/param.h (NGROUPS): Define only if [NGROUPS_MAX].

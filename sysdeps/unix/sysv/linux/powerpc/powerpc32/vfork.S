@@ -1,4 +1,4 @@
-/* Copyright (C) 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2003-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -26,32 +26,8 @@
    and the process ID of the new process to the old process.  */
 
 ENTRY (__vfork)
-
-#ifdef __NR_vfork
-
 	DO_CALL (SYS_ify (vfork))
-
-# ifdef __ASSUME_VFORK_SYSCALL
 	PSEUDO_RET
-# else
-	bnslr+
-	/* Check if vfork syscall is known at all.  */
-	cmpwi	r3,ENOSYS
-	bne-	.Lsyscall_error
-
-# endif
-#endif
-
-#ifndef __ASSUME_VFORK_SYSCALL
-	/* If we don't have vfork, fork is close enough.  */
-
-	DO_CALL (SYS_ify (fork))
-	bnslr+
-
-.Lsyscall_error:
-	b	__syscall_error@local
-#endif
-
 PSEUDO_END (__vfork)
 libc_hidden_def (__vfork)
 

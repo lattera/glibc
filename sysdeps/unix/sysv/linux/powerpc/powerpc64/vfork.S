@@ -1,4 +1,4 @@
-/* Copyright (C) 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2003-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -27,29 +27,8 @@
 
 ENTRY (__vfork)
 	CALL_MCOUNT 0
-
-#ifdef __NR_vfork
-
 	DO_CALL (SYS_ify (vfork))
-
-# ifdef __ASSUME_VFORK_SYSCALL
 	PSEUDO_RET
-# else
-	bnslr+
-	/* Check if vfork syscall is known at all.  */
-	cmpdi	r3,ENOSYS
-	bne	.Local_syscall_error
-
-# endif
-#endif
-
-#ifndef __ASSUME_VFORK_SYSCALL
-	/* If we don't have vfork, fork is close enough.  */
-
-	DO_CALL (SYS_ify (fork))
-	PSEUDO_RET
-#endif
-
 PSEUDO_END (__vfork)
 libc_hidden_def (__vfork)
 
