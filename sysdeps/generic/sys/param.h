@@ -35,8 +35,12 @@
    for the values which are not statically limited, such as NOFILE.  */
 
 #define NBBY            CHAR_BIT
-#define NGROUPS         NGROUPS_MAX
-#define MAXSYMLINKS     SYMLOOP_MAX
+#ifdef NGROUPS_MAX
+# define NGROUPS         NGROUPS_MAX
+#endif
+#ifdef SYMLOOP_MAX
+# define MAXSYMLINKS     SYMLOOP_MAX
+#endif
 #define CANBSIZ         MAX_CANON /* XXX ? */
 
 /* ARG_MAX is unlimited, but we define NCARGS for BSD programs that want to
