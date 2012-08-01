@@ -82,20 +82,6 @@
 # define __ASSUME_ST_INO_64_BIT		1
 #endif
 
-/* To support locking of large files a new fcntl() syscall was introduced
-   in 2.4.0-test7.  */
-#if defined __i386__ || defined __sparc__
-# define __ASSUME_FCNTL64		1
-#endif
-
-/* Arm got fcntl64 in 2.4.4, PowerPC and SH have it also in 2.4.4 (I
-   don't know when it got introduced).  But PowerPC64 does not support
-   separate FCNTL64 call, FCNTL is already 64-bit */
-#if (defined __powerpc__ || defined __sh__) \
-    && !defined __powerpc64__
-# define __ASSUME_FCNTL64		1
-#endif
-
 /* The getdents64 syscall was introduced in 2.4.0-test7 (but later for
    MIPS n32).  */
 #define __ASSUME_GETDENTS64_SYSCALL	1

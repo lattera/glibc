@@ -1,3 +1,8 @@
+2012-08-01  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/hppa/kernel-features.h
+	(__ASSUME_FCNTL64): Remove.
+
 2012-07-26  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/hppa/sys/epoll.h (EPOLLWAKEUP): Add new

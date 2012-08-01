@@ -1,4 +1,4 @@
-/* Copyright (C) 2011 Free Software Foundation, Inc.
+/* Copyright (C) 2011-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Chris Metcalf <cmetcalf@tilera.com>, 2011.
 
@@ -20,7 +20,6 @@
 /* TILE glibc support starts with 2.6.36, guaranteeing many kernel features. */
 #define __ASSUME_MMAP2_SYSCALL		1
 #define __ASSUME_STAT64_SYSCALL		1
-#define __ASSUME_FCNTL64		1
 #define __ASSUME_CLONE_THREAD_FLAGS	1
 #define __ASSUME_TGKILL			1
 #define __ASSUME_UTIMES			1

@@ -22,10 +22,6 @@
 /* MIPS platforms had IPC64 all along.  */
 #define __ASSUME_IPC64		1
 
-#if _MIPS_SIM == _ABIN32
-# define __ASSUME_FCNTL64		1
-#endif
-
 /* Support for the eventfd2 and signalfd4 syscalls was added in 2.6.27.  */
 #if __LINUX_KERNEL_VERSION >= 0x02061c
 # define __ASSUME_EVENTFD2	1

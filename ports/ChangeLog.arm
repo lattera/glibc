@@ -1,6 +1,9 @@
 2012-08-01  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/arm/kernel-features.h
+	(__ASSUME_FCNTL64): Remove.
+
+	* sysdeps/unix/sysv/linux/arm/kernel-features.h
 	(__ASSUME_VFORK_SYSCALL): Remove.
 
 2012-08-01  Roland McGrath  <roland@hack.frob.com>

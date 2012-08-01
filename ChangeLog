@@ -1,5 +1,22 @@
 2012-08-01  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/unix/sysv/linux/kernel-features.h (__ASSUME_FCNTL64):
+	Remove all definitions.
+	* sysdeps/unix/sysv/linux/i386/fcntl.c: Do not include
+	<kernel-features.h>.
+	[!__ASSUME_FCNTL64] (__have_no_fcntl64): Remove.
+	(miss_F_GETOWN_EX): Remove all definitions.
+	[NO_CANCELLATION && !__ASSUME_FCNTL64] (__fcntl_nocancel): Remove
+	macro definition.
+	[!__ASSUME_FCNTL64]: Remove conditional code.
+	[__ASSUME_FCNTL64]: Make code unconditional.
+	* sysdeps/unix/sysv/linux/i386/lockf64.c: Do not include
+	<kernel-features.h>.
+	[__NR_fcntl64 && !__ASSUME_FCNTL64] (__have_no_fcntl64): Remove.
+	(lockf64) [!__ASSUME_FCNTL64]: Remove conditional code.
+	(lockf64) [__NR_fcntl64]: Make code unconditional.
+	(lockf64) [__ASSUME_FCNTL64]: Likewise.
+
 	* sysdeps/unix/sysv/linux/kernel-features.h
 	(__ASSUME_VFORK_SYSCALL): Remove all definitions.
 	* sysdeps/unix/sysv/linux/i386/vfork.S (__vfork) [__NR_vfork]:

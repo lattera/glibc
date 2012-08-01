@@ -1,3 +1,8 @@
+2012-08-01  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/mips/kernel-features.h
+	(__ASSUME_FCNTL64): Remove.
+
 2012-08-01  Steve Ellcey  <sellcey@mips.com>
 
 	* sysdeps/mips/sys/asm.h [_MIPS_ISA != _MIPS_ISA_MIPS4 &&

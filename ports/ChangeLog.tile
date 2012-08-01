@@ -1,3 +1,8 @@
+2012-08-01  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/tile/kernel-features.h
+	(__ASSUME_FCNTL64): Remove.
+
 2012-07-26  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/tile/sys/ptrace.h (__ptrace_eventcodes):
