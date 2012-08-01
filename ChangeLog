@@ -1,3 +1,17 @@
+2012-08-01  Roland McGrath  <roland@hack.frob.com>
+
+	[BZ #14138]
+	* sysdeps/unix/sysv/linux/syscalls.list: Add getrlimit/ugetrlimit line.
+	* sysdeps/unix/sysv/linux/i386/getrlimit.c: File removed.
+	* sysdeps/unix/sysv/linux/powerpc/getrlimit.c: File removed.
+	* sysdeps/unix/sysv/linux/sh/getrlimit.c: File removed.
+
+	* sysdeps/unix/make-syscalls.sh: Emit uses of the versioned_symbol and
+	compat_symbol macros from <shlib-compat.h> rather than the underlying
+	default_symbol_version and symbol_version macros, so that DEFAULT
+	lines in shlib-versions are respected.
+	* sysdeps/unix/Makefile ($(objpfx)stub-syscalls.c): Likewise.
+
 2012-08-01  Florian Weimer  <fweimer@redhat.com>
 
 	* posix/unistd.h (setuid, setreuid, seteuid, setresuid):

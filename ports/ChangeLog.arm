@@ -1,3 +1,8 @@
+2012-08-01  Roland McGrath  <roland@hack.frob.com>
+
+	[BZ #14138]
+	* sysdeps/unix/sysv/linux/arm/getrlimit.c: File removed.
+
 2012-07-30  Roland McGrath  <roland@hack.frob.com>
 
 	* sysdeps/arm/preconfigure: Don't refuse configurations with

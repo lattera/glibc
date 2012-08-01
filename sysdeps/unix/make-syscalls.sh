@@ -64,18 +64,30 @@ done`
 # Any calls left?
 test -n "$calls" || exit 0
 
-# This uses variables $weak and $strong.
+# This uses variables $weak, $strong, and $any_versioned.
 emit_weak_aliases()
 {
   # A shortcoming in the current gas is that it will only allow one
   # version-alias per symbol.  So we create new strong aliases as needed.
   vcount=""
 
+  # We use the <shlib-compat.h> macros to generate the versioned aliases
+  # so that the version sets can be mapped to the configuration's
+  # minimum version set as per shlib-versions DEFAULT lines.  But note
+  # we don't generate any "#if SHLIB_COMPAT (...)" conditionals.  To do
+  # that we'd need to change the syscalls.list format so that it can
+  # list the "obsoleted" version set too.  If it ever arises that we
+  # have a syscall entry point that is obsoleted by a newer version set,
+  # we'll have to revamp all this.
+  if [ $any_versioned = t ]; then
+    echo "	 echo '#include <shlib-compat.h>'; \\"
+  fi
+
   for name in $weak; do
     case $name in
       *@@*)
 	base=`echo $name | sed 's/@@.*//'`
-	ver=`echo $name | sed 's/.*@@//'`
+	ver=`echo $name | sed 's/.*@@//;s/\./_/g'`
 	echo "	 echo '#ifndef NOT_IN_libc'; \\"
 	if test -z "$vcount" ; then
 	  source=$strong
@@ -85,14 +97,14 @@ emit_weak_aliases()
 	  vcount=`expr $vcount + 1`
 	  echo "	 echo 'strong_alias ($strong, $source)'; \\"
 	fi
-	echo "	 echo 'default_symbol_version($source, $base, $ver)'; \\"
+	echo "	 echo 'versioned_symbol (libc, $source, $base, $ver)'; \\"
 	echo "	 echo '#else'; \\"
 	echo "	 echo 'strong_alias ($strong, $base)'; \\"
 	echo "	 echo '#endif'; \\"
 	;;
       *@*)
 	base=`echo $name | sed 's/@.*//'`
-	ver=`echo $name | sed 's/.*@//'`
+	ver=`echo $name | sed 's/.*@//;s/\./_/g'`
 	echo "	 echo '#ifndef NOT_IN_libc'; \\"
 	if test -z "$vcount" ; then
 	  source=$strong
@@ -102,7 +114,7 @@ emit_weak_aliases()
 	  vcount=`expr $vcount + 1`
 	  echo "	 echo 'strong_alias ($strong, $source)'; \\"
 	fi
-	echo "	 echo 'symbol_version ($source, $base, $ver)'; \\"
+	echo "	 echo 'compat_symbol (libc, $source, $base, $ver)'; \\"
 	echo "	 echo '#endif'; \\"
 	;;
       !*)
@@ -175,10 +187,11 @@ while read file srcfile caller syscall args strong weak; do
 
   # If there are versioned aliases the entry is only generated for the
   # shared library, unless it is a default version.
+  any_versioned=f
   shared_only=f
   case $weak in
-    *@@*) ;;
-    *@*) shared_only=t;;
+    *@@*) any_versioned=t ;;
+    *@*) any_versioned=t shared_only=t ;;
   esac
 
  case x$srcfile"$callnum" in

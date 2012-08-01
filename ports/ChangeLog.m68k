@@ -1,3 +1,8 @@
+2012-08-01  Roland McGrath  <roland@hack.frob.com>
+
+	[BZ #14138]
+	* sysdeps/unix/sysv/linux/m68k/getrlimit.c: File removed.
+
 2012-08-01  Andreas Schwab  <schwab@linux-m68k.org>
 
 	* sysdeps/m68k/m680x0/fpu/libm-test-ulps: Update.

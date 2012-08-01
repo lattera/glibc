@@ -25,6 +25,7 @@ getpmsg		-	getpmsg		i:ipppp	getpmsg
 getppid		-	getppid		Ei:	__getppid	getppid
 getresuid	-	getresuid	i:ppp	getresuid
 getresgid	-	getresgid	i:ppp	getresgid
+getrlimit	-	ugetrlimit	i:ip	__new_getrlimit __getrlimit getrlimit@@GLIBC_2.2
 getsid		-	getsid		i:i	getsid
 init_module	EXTRA	init_module	5	init_module
 inotify_add_watch	EXTRA	inotify_add_watch	i:isi	inotify_add_watch

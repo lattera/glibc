@@ -37,23 +37,29 @@ $(objpfx)stub-syscalls.c: $(common-objpfx)sysd-syscalls \
 			  $(..)sysdeps/unix/Makefile
 	$(make-target-directory)
 	(for call in $(unix-stub-syscalls); do \
+	   call=$${call%%@*}; \
 	   echo "#define $$call RENAMED_$$call"; \
 	 done; \
 	 echo '#include <errno.h>'; \
+	 echo '#include <shlib-compat.h>'; \
 	 for call in $(unix-stub-syscalls); do \
+	   call=$${call%%@*}; \
 	   echo "#undef $$call"; \
 	 done; \
 	 echo 'long int _no_syscall (void)'; \
 	 echo '{ __set_errno (ENOSYS); return -1L; }'; \
 	 for call in $(unix-stub-syscalls); do \
 	   case $$call in \
-	   *@@*) ver=$${call##*@}; call=$${call%%*@}; \
-		 echo "strong_alias (_no_syscall, $${call}_$${ver})"; \
-		 echo "default_symbol_version \
-		         ($${call}_$${ver}, $$call, $$ver);" ;; \
-	   *@*) ver=$${call##*@}; call=$${call%%*@}; \
-		echo "strong_alias (_no_syscall, $${call}_$${ver})"; \
-		echo "symbol_version ($${call}_$${ver}, $$call, $$ver);" ;; \
+	   *@@*) \
+	     ver=$${call##*@}; call=$${call%%@*}; ver=$${ver//./_}; \
+	     echo "strong_alias (_no_syscall, __$${call}_$${ver})"; \
+	     echo "versioned_symbol (libc, __$${call}_$${ver}, $$call, $$ver);"\
+	     ;; \
+	   *@*) \
+	     ver=$${call##*@}; call=$${call%%@*}; ver=$${ver//./_}; \
+	     echo "strong_alias (_no_syscall, __$${call}_$${ver})"; \
+	     echo "compat_symbol (libc, __$${call}_$${ver}, $$call, $$ver);" \
+	     ;; \
 	   *) echo "weak_alias (_no_syscall, $$call)"; \
 	      echo "stub_warning ($$call)"; \
 	      echo "weak_alias (_no_syscall, __GI_$$call)" ;; \
