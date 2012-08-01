@@ -25,7 +25,11 @@
    in files containing the exception.  */
 
 #include "libioP.h"
+#include <fcntl.h>
 #include <stdlib.h>
+
+/* iofopen.c defines _IO_fopen64/fopen64 as aliases if O_LARGEFILE==0.  */
+#if !defined _LIBC || (defined O_LARGEFILE && O_LARGEFILE != 0)
 
 _IO_FILE *
 _IO_fopen64 (filename, mode)
@@ -42,4 +46,6 @@ _IO_fopen64 (filename, mode)
 
 #ifdef weak_alias
 weak_alias (_IO_fopen64, fopen64)
+#endif
+
 #endif

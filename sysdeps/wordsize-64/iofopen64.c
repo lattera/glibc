@@ -1,1 +1,0 @@
-/* Defined in iofopen.c.  */

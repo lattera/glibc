@@ -25,6 +25,7 @@
    in files containing the exception.  */
 
 #include "libioP.h"
+#include <fcntl.h>
 #include <stdlib.h>
 #include <stddef.h>
 #ifdef _LIBC
@@ -106,4 +107,9 @@ _IO_new_fopen (filename, mode)
 strong_alias (_IO_new_fopen, __new_fopen)
 versioned_symbol (libc, _IO_new_fopen, _IO_fopen, GLIBC_2_1);
 versioned_symbol (libc, __new_fopen, fopen, GLIBC_2_1);
+
+# if !defined O_LARGEFILE || O_LARGEFILE == 0
+weak_alias (_IO_new_fopen, _IO_fopen64)
+weak_alias (_IO_new_fopen, fopen64)
+# endif
 #endif

@@ -1,3 +1,14 @@
+2012-08-01  Roland McGrath  <roland@hack.frob.com>
+
+	* libio/iofopen.c: Include <fcntl.h>.
+	[_LIBC] [!defined O_LARGEFILE || O_LARGEFILE == 0]
+	(_IO_fopen64, fopen64): Define as aliases.
+	* libio/iofopen64.c: Include <fcntl.h>.
+	[!defined _LIBC || (defined O_LARGEFILE && O_LARGEFILE != 0)]:
+	Conditionalize body on this.
+	* sysdeps/wordsize-64/iofopen.c: File removed.
+	* sysdeps/wordsize-64/iofopen64.c: File removed.
+
 2012-08-01  Marek Polacek  <polacek@redhat.com>
 
 	* libc/Makeconfig: Use elf in place of binfmt-subdir.
