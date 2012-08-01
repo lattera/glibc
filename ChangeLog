@@ -9,9 +9,12 @@
 	Define mkstemps64 as an alias.
 	* misc/mkostemp.c [!defined O_LARGEFILE || O_LARGEFILE == 0]:
 	Define mkostemp64 as an alias.
+	* misc/mkostemps.c [!defined O_LARGEFILE || O_LARGEFILE == 0]:
+	Define mkostemps64 as an alias.
 	* misc/mkstemp64.c [defined O_LARGEFILE && O_LARGEFILE != 0]:
 	Conditionalize body on this.
 	* misc/mkostemp64.c: Likewise.
+	* misc/mkostemps64.c: Likewise.
 	* misc/mkstemps64.c: Likewise.
 	* sysdeps/wordsize-64/mkstemp64.c: File removed.
 	* sysdeps/wordsize-64/mkostemp64.c: File removed.
