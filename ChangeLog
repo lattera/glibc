@@ -1,3 +1,16 @@
+2012-08-03  Roland McGrath  <roland@hack.frob.com>
+
+	* sysdeps/mach/hurd/sys/param.h (MAXSYMLINKS): Macro removed.
+	* sysdeps/mach/hurd/bits/local_lim.h (SYMLOOP_MAX): Macro removed.
+	* sysdeps/mach/hurd/eloop-threshold.h: New file.
+	* hurd/lookup-retry.c (__hurd_file_name_lookup_retry): Use
+	__eloop_threshold instead of SYMLOOP_MAX.
+
+	* sysdeps/generic/eloop-threshold.h: New file.
+	* stdlib/canonicalize.c (__realpath): Use __eloop_threshold instead
+	of MAXSYMLINKS.
+	* elf/chroot_canon.c (chroot_canon): Likewise.
+
 2012-08-03  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #13717]

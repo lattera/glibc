@@ -24,6 +24,7 @@
 #include <fcntl.h>
 #include <string.h>
 #include <_itoa.h>
+#include <eloop-threshold.h>
 
 /* Translate the error from dir_lookup into the error the user sees.  */
 static inline error_t
@@ -103,7 +104,7 @@ __hurd_file_name_lookup_retry (error_t (*use_init_port)
 	  /* Fall through.  */
 
 	case FS_RETRY_NORMAL:
-	  if (nloops++ >= SYMLOOP_MAX)
+	  if (nloops++ >= __eloop_threshold ())
 	    {
 	      __mach_port_deallocate (__mach_task_self (), *result);
 	      return ELOOP;
@@ -180,7 +181,7 @@ __hurd_file_name_lookup_retry (error_t (*use_init_port)
 	      dirport = INIT_PORT_CRDIR;
 	      if (*result != MACH_PORT_NULL)
 		__mach_port_deallocate (__mach_task_self (), *result);
-	      if (nloops++ >= SYMLOOP_MAX)
+	      if (nloops++ >= __eloop_threshold ())
 		return ELOOP;
 	      file_name = &retryname[1];
 	      break;

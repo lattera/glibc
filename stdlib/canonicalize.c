@@ -1,5 +1,5 @@
 /* Return the canonical absolute name of a given file.
-   Copyright (C) 1996-2002,2004,2005,2006,2008 Free Software Foundation, Inc.
+   Copyright (C) 1996-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,11 +21,11 @@
 #include <string.h>
 #include <unistd.h>
 #include <limits.h>
-#include <sys/param.h>
 #include <sys/stat.h>
 #include <errno.h>
 #include <stddef.h>
 
+#include <eloop-threshold.h>
 #include <shlib-compat.h>
 
 /* Return the canonical absolute name of file NAME.  A canonical name
@@ -166,7 +166,7 @@ __realpath (const char *name, char *resolved)
 	      char *buf = __alloca (path_max);
 	      size_t len;
 
-	      if (++num_links > MAXSYMLINKS)
+	      if (++num_links > __eloop_threshold ())
 		{
 		  __set_errno (ELOOP);
 		  goto error;
