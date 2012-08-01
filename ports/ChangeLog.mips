@@ -1,3 +1,11 @@
+2012-08-01  Steve Ellcey  <sellcey@mips.com>
+
+	* sysdeps/mips/sys/asm.h [_MIPS_ISA != _MIPS_ISA_MIPS4 &&
+	_MIPS_ISA != _MIPS_ISA_MIPS5 && _MIPS_ISA != _MIPS_ISA_MIPS32 &&
+	_MIPS_ISA != _MIPS_ISA_MIPS64] (PREF): Define as function-like
+	macro.
+	(PREFX): Likewise.
+
 2012-07-31  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/mips/fcntl.c: Remove.

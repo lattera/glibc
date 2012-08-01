@@ -233,8 +233,8 @@ symbol		=	value
 # define PREFX(hint,addr)                                \
 		prefx	hint,addr
 #else
-# define PREF
-# define PREFX
+# define PREF(hint,addr)
+# define PREFX(hint,addr)
 #endif
 
 /*
