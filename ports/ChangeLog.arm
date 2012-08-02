@@ -1,3 +1,8 @@
+2012-08-02  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/arm/sysdep.h (ASM_TYPE_DIRECTIVE): Remove.
+	(ENTRY): Do not use ASM_TYPE_DIRECTIVE.
+
 2012-08-01  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/arm/kernel-features.h
