@@ -1,3 +1,7 @@
+2012-08-02  Chris Metcalf  <cmetcalf@tilera.com>
+
+	* sysdeps/tile/sysdep.h: Do not define ASM_TYPE_DIRECTIVE.
+
 2012-08-01  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/tile/kernel-features.h

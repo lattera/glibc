@@ -24,14 +24,13 @@
 
 #include <feedback.h>
 
-/* Make use of .type and .size directives.  */
-#define ASM_TYPE_DIRECTIVE(name,typearg) .type name,typearg;
+/* Make use of .size directive.  */
 #define ASM_SIZE_DIRECTIVE(name) .size name,.-name;
 
 /* Define an entry point visible from C.  */
 #define	ENTRY(name)							      \
   .globl C_SYMBOL_NAME(name);						      \
-  ASM_TYPE_DIRECTIVE (C_SYMBOL_NAME(name),@function)			      \
+  .type C_SYMBOL_NAME(name),@function					      \
   .align 8;								      \
   C_LABEL(name)								      \
   cfi_startproc;							      \
