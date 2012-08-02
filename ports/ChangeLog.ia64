@@ -1,3 +1,10 @@
+2012-08-03  Mike Frysinger  <vapier@gentoo.org>
+
+	[BZ #12194]
+	* sysdeps/ia64/bits/byteswap-16.h (__bswap_16): Avoid -Wconversion
+	warning.
+	* sysdeps/ia64/bits/byteswap.h (__bswap_constant_16): Likewise.
+
 2012-08-03  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/ia64/configure.in (arch_minimum_kernel):
