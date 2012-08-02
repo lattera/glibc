@@ -22,12 +22,12 @@
 	.section .rodata.cst16,"aM",@progbits,16
 
 	.align ALIGNARG(4)
-	ASM_TYPE_DIRECTIVE(signmask,@object)
+	.type signmask,@object
 signmask:
 	.byte 0, 0, 0, 0, 0, 0, 0, 0x80
 	.byte 0, 0, 0, 0, 0, 0, 0, 0
 	ASM_SIZE_DIRECTIVE(signmask)
-	ASM_TYPE_DIRECTIVE(othermask,@object)
+	.type othermask,@object
 othermask:
 	.byte 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x7f
 	.byte 0, 0, 0, 0, 0, 0, 0, 0

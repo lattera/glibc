@@ -27,13 +27,13 @@
 	.section .rodata
 
 	.align ALIGNARG(4)
-	ASM_TYPE_DIRECTIVE(minus1,@object)
+	.type minus1,@object
 minus1:	.double -1.0
 	ASM_SIZE_DIRECTIVE(minus1)
-	ASM_TYPE_DIRECTIVE(one,@object)
+	.type one,@object
 one:	.double 1.0
 	ASM_SIZE_DIRECTIVE(one)
-	ASM_TYPE_DIRECTIVE(l2e,@object)
+	.type l2e,@object
 l2e:	.tfloat 1.442695040888963407359924681002
 	ASM_SIZE_DIRECTIVE(l2e)
 

@@ -147,8 +147,6 @@
 
 /* This seems to always be the case on PPC.  */
 #define ALIGNARG(log2) log2
-/* For ELF we need the `.type' directive to make shared libs work right.  */
-#define ASM_TYPE_DIRECTIVE(name,typearg) .type name,typearg;
 #define ASM_SIZE_DIRECTIVE(name) .size name,.-name
 
 #endif	/* __ASSEMBLER__ */

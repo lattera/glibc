@@ -24,7 +24,7 @@
 	.section .rodata
 
 	.align ALIGNARG(4)
-	ASM_TYPE_DIRECTIVE(two25,@object)
+	.type two25,@object
 two25:	.byte 0, 0, 0, 0x4c
 	ASM_SIZE_DIRECTIVE(two25)
 

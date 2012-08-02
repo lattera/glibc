@@ -25,20 +25,20 @@
 	/* Please note that we use double values for 0.5 and 1.0.  These
 	   numbers have exact representations and so we don't get accuracy
 	   problems.  The advantage is that the code is simpler.  */
-	ASM_TYPE_DIRECTIVE(half,@object)
+	.type half,@object
 half:	.double 0.5
 	ASM_SIZE_DIRECTIVE(half)
-	ASM_TYPE_DIRECTIVE(one,@object)
+	.type one,@object
 one:	.double 1.0
 	ASM_SIZE_DIRECTIVE(one)
 	/* It is not important that this constant is precise.  It is only
 	   a value which is known to be on the safe side for using the
 	   fyl2xp1 instruction.  */
-	ASM_TYPE_DIRECTIVE(limit,@object)
+	.type limit,@object
 limit:	.double 0.29
 	ASM_SIZE_DIRECTIVE(limit)
 	.align ALIGNARG(4)
-	ASM_TYPE_DIRECTIVE(ln2_2,@object)
+	.type ln2_2,@object
 ln2_2:	.tfloat 0.3465735902799726547086160
 	ASM_SIZE_DIRECTIVE(ln2_2)
 

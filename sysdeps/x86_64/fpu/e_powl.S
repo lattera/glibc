@@ -23,34 +23,34 @@
 	.section .rodata.cst8,"aM",@progbits,8
 
 	.p2align 3
-	ASM_TYPE_DIRECTIVE(one,@object)
+	.type one,@object
 one:	.double 1.0
 	ASM_SIZE_DIRECTIVE(one)
-	ASM_TYPE_DIRECTIVE(limit,@object)
+	.type limit,@object
 limit:	.double 0.29
 	ASM_SIZE_DIRECTIVE(limit)
-	ASM_TYPE_DIRECTIVE(p63,@object)
+	.type p63,@object
 p63:	.byte 0, 0, 0, 0, 0, 0, 0xe0, 0x43
 	ASM_SIZE_DIRECTIVE(p63)
-	ASM_TYPE_DIRECTIVE(p64,@object)
+	.type p64,@object
 p64:	.byte 0, 0, 0, 0, 0, 0, 0xf0, 0x43
 	ASM_SIZE_DIRECTIVE(p64)
-	ASM_TYPE_DIRECTIVE(p78,@object)
+	.type p78,@object
 p78:	.byte 0, 0, 0, 0, 0, 0, 0xd0, 0x44
 	ASM_SIZE_DIRECTIVE(p78)
 
 	.section .rodata.cst16,"aM",@progbits,16
 
 	.p2align 3
-	ASM_TYPE_DIRECTIVE(infinity,@object)
+	.type infinity,@object
 inf_zero:
 infinity:
 	.byte 0, 0, 0, 0, 0, 0, 0xf0, 0x7f
 	ASM_SIZE_DIRECTIVE(infinity)
-	ASM_TYPE_DIRECTIVE(zero,@object)
+	.type zero,@object
 zero:	.double 0.0
 	ASM_SIZE_DIRECTIVE(zero)
-	ASM_TYPE_DIRECTIVE(minf_mzero,@object)
+	.type minf_mzero,@object
 minf_mzero:
 minfinity:
 	.byte 0, 0, 0, 0, 0, 0, 0xf0, 0xff

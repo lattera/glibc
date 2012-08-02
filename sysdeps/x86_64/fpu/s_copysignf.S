@@ -22,7 +22,7 @@
 	.section .rodata
 
 	.align ALIGNARG(4)
-	ASM_TYPE_DIRECTIVE(mask,@object)
+	.type mask,@object
 mask:
 	.byte 0xff, 0xff, 0xff, 0x7f
 	ASM_SIZE_DIRECTIVE(mask)

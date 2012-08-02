@@ -27,8 +27,6 @@
    It should define for us the following symbols:
 
    * HAVE_ASM_SET_DIRECTIVE if we have `.set B, A' instead of `A = B'.
-   * ASM_TYPE_DIRECTIVE_PREFIX with `@' or `#' or whatever for .type,
-     or leave it undefined if there is no .type directive.
    * HAVE_ASM_WEAK_DIRECTIVE if we have weak symbols using `.weak'.
    * HAVE_ASM_WEAKEXT_DIRECTIVE if we have weak symbols using `.weakext'.
 
@@ -252,37 +250,26 @@ for linking")
    thinks it is.  */
 #define declare_symbol_alias(symbol, original, type, size) \
   declare_symbol_alias_1 (symbol, original, type, size)
-#ifdef ASM_TYPE_DIRECTIVE_PREFIX
-# ifdef __ASSEMBLER__
-#  define declare_symbol_alias_1(symbol, original, type, size) \
-    strong_alias (original, symbol); \
-    .type C_SYMBOL_NAME (symbol), \
-	  declare_symbol_alias_1_paste (ASM_TYPE_DIRECTIVE_PREFIX, type); \
-    .size C_SYMBOL_NAME (symbol), size
-#  define declare_symbol_alias_1_paste(a, b) \
-  declare_symbol_alias_1_paste_1 (a,b)
-#  define declare_symbol_alias_1_paste_1(a,b)	a##b
-# else /* Not __ASSEMBLER__.  */
-#  define declare_symbol_alias_1(symbol, original, type, size) \
-    asm (".globl " __SYMBOL_PREFIX #symbol \
-	 "\n\t" declare_symbol_alias_1_alias (symbol, original) \
-	 "\n\t.type " __SYMBOL_PREFIX #symbol ", " \
-	 declare_symbol_alias_1_stringify (ASM_TYPE_DIRECTIVE_PREFIX) #type \
-	 "\n\t.size " __SYMBOL_PREFIX #symbol ", " #size);
-#  define declare_symbol_alias_1_stringify(x) \
-  declare_symbol_alias_1_stringify_1 (x)
-#  define declare_symbol_alias_1_stringify_1(x) #x
-#  ifdef HAVE_ASM_SET_DIRECTIVE
-#   define declare_symbol_alias_1_alias(symbol, original) \
-	 ".set " __SYMBOL_PREFIX #symbol ", " __SYMBOL_PREFIX #original
-#  else
-#   define declare_symbol_alias_1_alias(symbol, original) \
-	 __SYMBOL_PREFIX #symbol " = " __SYMBOL_PREFIX #original
-#  endif /* HAVE_ASM_SET_DIRECTIVE */
-# endif /* __ASSEMBLER__ */
-#else
-# define declare_symbol_1(symbol, type, size) /* Nothing.  */
-#endif
+#ifdef __ASSEMBLER__
+# define declare_symbol_alias_1(symbol, original, type, size) \
+   strong_alias (original, symbol); \
+   .type C_SYMBOL_NAME (symbol), %##type; \
+   .size C_SYMBOL_NAME (symbol), size
+#else /* Not __ASSEMBLER__.  */
+# define declare_symbol_alias_1(symbol, original, type, size) \
+   asm (".globl " __SYMBOL_PREFIX #symbol \
+	"\n\t" declare_symbol_alias_1_alias (symbol, original) \
+	"\n\t.type " __SYMBOL_PREFIX #symbol ", " \
+	"%" #type \
+	"\n\t.size " __SYMBOL_PREFIX #symbol ", " #size);
+# ifdef HAVE_ASM_SET_DIRECTIVE
+#  define declare_symbol_alias_1_alias(symbol, original) \
+     ".set " __SYMBOL_PREFIX #symbol ", " __SYMBOL_PREFIX #original
+# else
+#  define declare_symbol_alias_1_alias(symbol, original) \
+     __SYMBOL_PREFIX #symbol " = " __SYMBOL_PREFIX #original
+# endif /* HAVE_ASM_SET_DIRECTIVE */
+#endif /* __ASSEMBLER__ */
 
 
 /*

@@ -12,7 +12,7 @@
 	.section .rodata
 
 	.align ALIGNARG(4)
-	ASM_TYPE_DIRECTIVE(zero_nan,@object)
+	.type zero_nan,@object
 zero_nan:
 	.double 0.0
 nan:	.byte 0, 0, 0, 0, 0, 0, 0xff, 0x7f

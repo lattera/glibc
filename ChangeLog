@@ -1,3 +1,84 @@
+2012-08-02  Marek Polacek  <polacek@redhat.com>
+
+	[BZ#14150]
+	* configure.in (libc_cv_asm_type_prefix): Remove test.  Replace
+	libc_cv_asm_type_prefix with %.
+	* configure: Regenerated.
+	* include/libc-symbols.h: Remove comment about ASM_TYPE_DIRECTIVE_PREFIX.
+	Replace ASM_TYPE_DIRECTIVE_PREFIX with %.
+	(declare_symbol_alias_1_paste) [__ASSEMBLER__]: Do not define.
+	(declare_symbol_alias_1_paste_1) [__ASSEMBLER__]: Likewise.
+	(declare_symbol_alias_1_stringify) [!__ASSEMBLER__]: Likewise.
+	(declare_symbol_alias_1_stringify_1) [!__ASSEMBLER__]: Likewise.
+	* elf/tst-unique2mod2.c: Replace ASM_TYPE_DIRECTIVE_PREFIX with %.
+	[HAVE_ASM_UNIQUE_OBJECT]: Do not define S.
+	[HAVE_ASM_UNIQUE_OBJECT]: Do not define _S.
+	* elf/tst-unique2mod1.c: Likewise.
+	* elf/tst-unique1mod2.c: Likewise.
+	* elf/tst-unique1mod1.c: Likewise.
+	* config.h.in: Do not undef ASM_TYPE_DIRECTIVE_PREFIX.
+	* sysdeps/s390/s390-32/sysdep.h: Do not define ASM_TYPE_DIRECTIVE.
+	Replace ASM_TYPE_DIRECTIVE with .type.
+	* sysdeps/s390/s390-64/sysdep.h: Likewise.
+	* sysdeps/i386/sysdep.h: Likewise.
+	* sysdeps/x86_64/sysdep.h: Likewise.
+	* sysdeps/sh/sysdep.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/sysdep.h: Do not define ASM_TYPE_DIRECTIVE.
+	* sysdeps/powerpc/sysdep.h: Likewise.
+	* sysdeps/powerpc/powerpc32/sysdep.h: Replace ASM_TYPE_DIRECTIVE with .type.
+	* sysdeps/s390/s390-32/s390-mcount.S: Likewise.
+	* sysdeps/s390/s390-64/s390x-mcount.S: Likewise.
+	* sysdeps/i386/fpu/e_powf.S: Likewise.
+	* sysdeps/i386/fpu/e_expl.S: Likewise.
+	* sysdeps/i386/fpu/e_atanhf.S: Likewise.
+	* sysdeps/i386/fpu/e_acosh.S: Likewise.
+	* sysdeps/i386/fpu/e_pow.S: Likewise.
+	* sysdeps/i386/fpu/s_asinhl.S: Likewise.
+	* sysdeps/i386/fpu/e_acoshl.S: Likewise.
+	* sysdeps/i386/fpu/s_expm1.S: Likewise.
+	* sysdeps/i386/fpu/s_frexpf.S: Likewise.
+	* sysdeps/i386/fpu/e_log2.S: Likewise.
+	* sysdeps/i386/fpu/e_log2l.S: Likewise.
+	* sysdeps/i386/fpu/e_scalb.S: Likewise.
+	* sysdeps/i386/fpu/e_powl.S: Likewise.
+	* sysdeps/i386/fpu/e_log10f.S: Likewise.
+	* sysdeps/i386/fpu/s_cbrtf.S: Likewise.
+	* sysdeps/i386/fpu/e_logl.S: Likewise.
+	* sysdeps/i386/fpu/s_cbrt.S: Likewise.
+	* sysdeps/i386/fpu/s_frexpl.S: Likewise.
+	* sysdeps/i386/fpu/s_expm1f.S: Likewise.
+	* sysdeps/i386/fpu/e_log2f.S: Likewise.
+	* sysdeps/i386/fpu/e_acoshf.S: Likewise.
+	* sysdeps/i386/fpu/e_log.S: Likewise.
+	* sysdeps/i386/fpu/e_scalbf.S: Likewise.
+	* sysdeps/i386/fpu/e_logf.S: Likewise.
+	* sysdeps/i386/fpu/e_log10l.S: Likewise.
+	* sysdeps/i386/fpu/e_atanh.S: Likewise.
+	* sysdeps/i386/fpu/s_asinhf.S: Likewise.
+	* sysdeps/i386/fpu/e_log10.S: Likewise.
+	* sysdeps/i386/fpu/s_frexp.S: Likewise.
+	* sysdeps/i386/fpu/e_atanhl.S: Likewise.
+	* sysdeps/i386/fpu/s_asinh.S: Likewise.
+	* sysdeps/i386/fpu/s_cbrtl.S: Likewise.
+	* sysdeps/i386/fpu/e_scalbl.S: Likewise.
+	* sysdeps/i386/i686/fpu/multiarch/e_expf-sse2.S: Likewise.
+	* sysdeps/i386/i686/fpu/e_logl.S: Likewise.
+	* sysdeps/i386/i686/strtok.S: Likewise.
+	* sysdeps/i386/i386-mcount.S: Likewise.
+	* sysdeps/i386/strtok.S: Likewise.
+	* sysdeps/x86_64/fpu/e_expl.S: Likewise.
+	* sysdeps/x86_64/fpu/e_log2l.S: Likewise.
+	* sysdeps/x86_64/fpu/e_powl.S: Likewise.
+	* sysdeps/x86_64/fpu/e_logl.S: Likewise.
+	* sysdeps/x86_64/fpu/e_expf.S: Likewise.
+	* sysdeps/x86_64/fpu/e_log10l.S: Likewise.
+	* sysdeps/x86_64/fpu/s_copysignf.S: Likewise.
+	* sysdeps/x86_64/fpu/s_copysign.S: Likewise.
+	* sysdeps/x86_64/fpu/e_scalbl.S: Likewise.
+	* sysdeps/x86_64/_mcount.S: Likewise.
+	* sysdeps/x86_64/strtok.S: Likewise.
+	* sysdeps/sh/_mcount.S: Likewise.
+
 2012-08-01  Roland McGrath  <roland@hack.frob.com>
 
 	* libio/iofopen.c: Include <fcntl.h>.

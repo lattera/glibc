@@ -243,82 +243,82 @@ L(DP_T): /* table of double precision values 2^(j/K) for j=[0..K-1] */
 	.long	0xee615a27, 0x3ffefa1b
 	.long	0x5b6e4540, 0x3fff5076
 	.long	0x819e90d8, 0x3fffa7c1
-	ASM_TYPE_DIRECTIVE(L(DP_T), @object)
+	.type L(DP_T), @object
 	ASM_SIZE_DIRECTIVE(L(DP_T))
 
 	.section .rodata.cst8,"aM",@progbits,8
 	.p2align 3
 L(DP_KLN2): /* double precision K/log(2) */
 	.long	0x652b82fe, 0x40571547
-	ASM_TYPE_DIRECTIVE(L(DP_KLN2), @object)
+	.type L(DP_KLN2), @object
 	ASM_SIZE_DIRECTIVE(L(DP_KLN2))
 
 	.p2align 3
 L(DP_NLN2K): /* double precision -log(2)/K */
 	.long	0xfefa39ef, 0xbf862e42
-	ASM_TYPE_DIRECTIVE(L(DP_NLN2K), @object)
+	.type L(DP_NLN2K), @object
 	ASM_SIZE_DIRECTIVE(L(DP_NLN2K))
 
 	.p2align 3
 L(DP_RS): /* double precision 2^23+2^22 */
 	.long	0x00000000, 0x41680000
-	ASM_TYPE_DIRECTIVE(L(DP_RS), @object)
+	.type L(DP_RS), @object
 	ASM_SIZE_DIRECTIVE(L(DP_RS))
 
 	.p2align 3
 L(DP_P3): /* double precision polynomial coefficient P3 */
 	.long	0xeb78fa85, 0x3fa56420
-	ASM_TYPE_DIRECTIVE(L(DP_P3), @object)
+	.type L(DP_P3), @object
 	ASM_SIZE_DIRECTIVE(L(DP_P3))
 
 	.p2align 3
 L(DP_P1): /* double precision polynomial coefficient P1 */
 	.long	0x008d6118, 0x3fe00000
-	ASM_TYPE_DIRECTIVE(L(DP_P1), @object)
+	.type L(DP_P1), @object
 	ASM_SIZE_DIRECTIVE(L(DP_P1))
 
 	.p2align 3
 L(DP_P2): /* double precision polynomial coefficient P2 */
 	.long	0xda752d4f, 0x3fc55550
-	ASM_TYPE_DIRECTIVE(L(DP_P2), @object)
+	.type L(DP_P2), @object
 	ASM_SIZE_DIRECTIVE(L(DP_P2))
 
 	.p2align 3
 L(DP_P0): /* double precision polynomial coefficient P0 */
 	.long	0xffffe7c6, 0x3fefffff
-	ASM_TYPE_DIRECTIVE(L(DP_P0), @object)
+	.type L(DP_P0), @object
 	ASM_SIZE_DIRECTIVE(L(DP_P0))
 
 	.p2align 2
 L(SP_INF_0):
 	.long	0x7f800000	/* single precision Inf */
 	.long	0		/* single precision zero */
-	ASM_TYPE_DIRECTIVE(L(SP_INF_0), @object)
+	.type L(SP_INF_0), @object
 	ASM_SIZE_DIRECTIVE(L(SP_INF_0))
 
 	.section .rodata.cst4,"aM",@progbits,4
 	.p2align 2
 L(SP_RS): /* single precision 2^23+2^22 */
 	.long	0x4b400000
-	ASM_TYPE_DIRECTIVE(L(SP_RS), @object)
+	.type L(SP_RS), @object
 	ASM_SIZE_DIRECTIVE(L(SP_RS))
 
 	.p2align 2
 L(SP_SMALL): /* single precision small value 2^(-100) */
 	.long	0x0d800000
-	ASM_TYPE_DIRECTIVE(L(SP_SMALL), @object)
+	.type L(SP_SMALL), @object
 	ASM_SIZE_DIRECTIVE(L(SP_SMALL))
 
 	.p2align 2
 L(SP_LARGE): /* single precision large value 2^100 */
 	.long	0x71800000
-	ASM_TYPE_DIRECTIVE(L(SP_LARGE), @object)
+	.type L(SP_LARGE), @object
 	ASM_SIZE_DIRECTIVE(L(SP_LARGE))
 
 	.p2align 2
 L(SP_ONE): /* single precision 1.0 */
 	.long	0x3f800000
-	ASM_TYPE_DIRECTIVE(L(SP_ONE), @object)
+	.type L(SP_ONE), @object
 	ASM_SIZE_DIRECTIVE(L(SP_ONE))
 
 strong_alias (__ieee754_expf_sse2, __expf_finite_sse2)

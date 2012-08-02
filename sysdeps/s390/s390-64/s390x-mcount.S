@@ -44,7 +44,7 @@
    _mcount may not modify any register.  */
 
 	.globl C_SYMBOL_NAME(_mcount)
-	ASM_TYPE_DIRECTIVE(C_SYMBOL_NAME(_mcount), @function)
+	.type C_SYMBOL_NAME(_mcount), @function
 	cfi_startproc
 	.align ALIGNARG(4)
 C_LABEL(_mcount)

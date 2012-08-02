@@ -581,29 +581,7 @@ else
   AC_MSG_RESULT(yes)
 fi
 
-AC_CACHE_CHECK(for assembler .type directive prefix,
-	       libc_cv_asm_type_prefix, [dnl
-libc_cv_asm_type_prefix=no
-for ac_try_prefix in '@' '%' '#'; do
-  cat > conftest.s <<EOF
-	${libc_cv_dot_text}
-	.globl foo
-	.type foo, ${ac_try_prefix}object
-	.size foo, 1
-foo:
-	.byte 1
-EOF
-  if AC_TRY_COMMAND(${CC-cc} $ASFLAGS -c conftest.s 1>&AS_MESSAGE_LOG_FD); then
-    libc_cv_asm_type_prefix=${ac_try_prefix}
-  fi
-  rm -f conftest*
-  test "x$libc_cv_asm_type_prefix" != xno && break
-done])
-if test "x$libc_cv_asm_type_prefix" != xno; then
-  AC_DEFINE_UNQUOTED(ASM_TYPE_DIRECTIVE_PREFIX, ${libc_cv_asm_type_prefix})
-fi
-
-if test x"$libc_cv_asm_gnu_indirect_function" != xyes -o x"$libc_cv_asm_type_prefix" = xno; then
+if test x"$libc_cv_asm_gnu_indirect_function" != xyes; then
   if test x"$multi_arch" = xyes; then
     AC_MSG_ERROR([--enable-multi-arch support requires assembler and linker support])
   else
@@ -1125,7 +1103,7 @@ AC_CACHE_CHECK(for assembler gnu_unique_object symbol type,
 cat > conftest.s <<EOF
 ${libc_cv_dot_text}
 _sym:
-.type _sym, ${libc_cv_asm_type_prefix}gnu_unique_object
+.type _sym, %gnu_unique_object
 EOF
 if ${CC-cc} -c $ASFLAGS conftest.s 1>&AS_MESSAGE_LOG_FD 2>&AS_MESSAGE_LOG_FD; then
   libc_cv_asm_unique_object=yes

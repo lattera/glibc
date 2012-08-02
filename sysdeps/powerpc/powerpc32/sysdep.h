@@ -30,15 +30,15 @@
 # define CALL_MCOUNT							      \
   mflr  r0;								      \
   stw   r0,4(r1);							      \
-  cfi_offset (lr, 4);	       						      \
+  cfi_offset (lr, 4);							      \
   bl    JUMPTARGET(_mcount);
 #else  /* PROF */
 # define CALL_MCOUNT		/* Do nothing.  */
 #endif /* PROF */
 
 #define	ENTRY(name)							      \
-  .globl C_SYMBOL_NAME(name);				      \
-  ASM_TYPE_DIRECTIVE (C_SYMBOL_NAME(name),@function)			      \
+  .globl C_SYMBOL_NAME(name);						      \
+  .type C_SYMBOL_NAME(name),@function;					      \
   .align ALIGNARG(2);							      \
   C_LABEL(name)								      \
   cfi_startproc;							      \
@@ -46,7 +46,7 @@
 
 /* helper macro for accessing the 32-bit powerpc GOT. */
 
-#define	SETUP_GOT_ACCESS(regname,GOT_LABEL)			      	      \
+#define	SETUP_GOT_ACCESS(regname,GOT_LABEL)				      \
 	bcl	20,31,GOT_LABEL	;					      \
 GOT_LABEL:			;					      \
 	mflr	(regname)
@@ -64,8 +64,8 @@ GOT_LABEL:			;					      \
    past a 2^align boundary.  */
 #ifdef PROF
 # define EALIGN(name, alignt, words)					      \
-  .globl C_SYMBOL_NAME(name);				      \
-  ASM_TYPE_DIRECTIVE (C_SYMBOL_NAME(name),@function)			      \
+  .globl C_SYMBOL_NAME(name);						      \
+  .type C_SYMBOL_NAME(name),@function;					      \
   .align ALIGNARG(2);							      \
   C_LABEL(name)								      \
   cfi_startproc;							      \
@@ -76,8 +76,8 @@ GOT_LABEL:			;					      \
   0:
 #else /* PROF */
 # define EALIGN(name, alignt, words)					      \
-  .globl C_SYMBOL_NAME(name);				      \
-  ASM_TYPE_DIRECTIVE (C_SYMBOL_NAME(name),@function)			      \
+  .globl C_SYMBOL_NAME(name);						      \
+  .type C_SYMBOL_NAME(name),@function;					      \
   .align ALIGNARG(alignt);						      \
   EALIGN_W_##words;							      \
   C_LABEL(name)								      \
@@ -89,7 +89,7 @@ GOT_LABEL:			;					      \
   cfi_endproc;								      \
   ASM_SIZE_DIRECTIVE(name)
 
-#define DO_CALL(syscall)				      		      \
+#define DO_CALL(syscall)						      \
     li 0,syscall;							      \
     sc
 

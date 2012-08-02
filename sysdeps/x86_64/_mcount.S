@@ -25,7 +25,7 @@
 #include <sysdep.h>
 
 	.globl C_SYMBOL_NAME(_mcount)
-	ASM_TYPE_DIRECTIVE(C_SYMBOL_NAME(_mcount), @function)
+	.type C_SYMBOL_NAME(_mcount), @function
 	.align ALIGNARG(4)
 C_LABEL(_mcount)
 	/* Allocate space for 7 registers.  */
@@ -66,7 +66,7 @@ C_LABEL(_mcount)
 weak_alias (_mcount, mcount)
 
 	.globl C_SYMBOL_NAME(__fentry__)
-	ASM_TYPE_DIRECTIVE(C_SYMBOL_NAME(__fentry__), @function)
+	.type C_SYMBOL_NAME(__fentry__), @function
 	.align ALIGNARG(4)
 C_LABEL(__fentry__)
 	/* Allocate space for 7 registers.  */

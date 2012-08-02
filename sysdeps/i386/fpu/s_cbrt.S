@@ -23,25 +23,25 @@
         .section .rodata
 
         .align ALIGNARG(4)
-        ASM_TYPE_DIRECTIVE(f7,@object)
+        .type f7,@object
 f7:	.double -0.145263899385486377
 	ASM_SIZE_DIRECTIVE(f7)
-        ASM_TYPE_DIRECTIVE(f6,@object)
+        .type f6,@object
 f6:	.double 0.784932344976639262
 	ASM_SIZE_DIRECTIVE(f6)
-        ASM_TYPE_DIRECTIVE(f5,@object)
+        .type f5,@object
 f5:	.double -1.83469277483613086
 	ASM_SIZE_DIRECTIVE(f5)
-        ASM_TYPE_DIRECTIVE(f4,@object)
+        .type f4,@object
 f4:	.double 2.44693122563534430
 	ASM_SIZE_DIRECTIVE(f4)
-        ASM_TYPE_DIRECTIVE(f3,@object)
+        .type f3,@object
 f3:	.double -2.11499494167371287
 	ASM_SIZE_DIRECTIVE(f3)
-        ASM_TYPE_DIRECTIVE(f2,@object)
+        .type f2,@object
 f2:	.double 1.50819193781584896
 	ASM_SIZE_DIRECTIVE(f2)
-        ASM_TYPE_DIRECTIVE(f1,@object)
+        .type f1,@object
 f1:	.double 0.354895765043919860
 	ASM_SIZE_DIRECTIVE(f1)
 
@@ -50,7 +50,7 @@ f1:	.double 0.354895765043919860
 #define SQR_CBRT2	1.5874010519681994748
 #define ONE_SQR_CBRT2	0.629960524947436582364439673883
 
-	ASM_TYPE_DIRECTIVE(factor,@object)
+	.type factor,@object
 factor:	.double ONE_SQR_CBRT2
 	.double ONE_CBRT2
 	.double 1.0
@@ -58,7 +58,7 @@ factor:	.double ONE_SQR_CBRT2
 	.double SQR_CBRT2
 	ASM_SIZE_DIRECTIVE(factor)
 
-        ASM_TYPE_DIRECTIVE(two54,@object)
+        .type two54,@object
 two54:  .byte 0, 0, 0, 0, 0, 0, 0x50, 0x43
         ASM_SIZE_DIRECTIVE(two54)
 

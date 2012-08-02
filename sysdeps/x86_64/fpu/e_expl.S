@@ -42,26 +42,26 @@
 
 	.p2align 4
 #ifdef USE_AS_EXP10L
-	ASM_TYPE_DIRECTIVE(c0,@object)
+	.type c0,@object
 c0:	.byte 0, 0, 0, 0, 0, 0, 0x9a, 0xd4, 0x00, 0x40
 	.byte 0, 0, 0, 0, 0, 0
 	ASM_SIZE_DIRECTIVE(c0)
-	ASM_TYPE_DIRECTIVE(c1,@object)
+	.type c1,@object
 c1:	.byte 0x58, 0x92, 0xfc, 0x15, 0x37, 0x9a, 0x97, 0xf0, 0xef, 0x3f
 	.byte 0, 0, 0, 0, 0, 0
 	ASM_SIZE_DIRECTIVE(c1)
 #else
-	ASM_TYPE_DIRECTIVE(c0,@object)
+	.type c0,@object
 c0:	.byte 0, 0, 0, 0, 0, 0, 0xaa, 0xb8, 0xff, 0x3f
 	.byte 0, 0, 0, 0, 0, 0
 	ASM_SIZE_DIRECTIVE(c0)
-	ASM_TYPE_DIRECTIVE(c1,@object)
+	.type c1,@object
 c1:	.byte 0x20, 0xfa, 0xee, 0xc2, 0x5f, 0x70, 0xa5, 0xec, 0xed, 0x3f
 	.byte 0, 0, 0, 0, 0, 0
 	ASM_SIZE_DIRECTIVE(c1)
 #endif
 #ifndef USE_AS_EXPM1L
-	ASM_TYPE_DIRECTIVE(csat,@object)
+	.type csat,@object
 csat:	.byte 0, 0, 0, 0, 0, 0, 0, 0x80, 0x0e, 0x40
 	.byte 0, 0, 0, 0, 0, 0
 	ASM_SIZE_DIRECTIVE(csat)

@@ -44,7 +44,7 @@
 #else
 	.bss
 	.local save_ptr
-	ASM_TYPE_DIRECTIVE (save_ptr, @object)
+	.type save_ptr, @object
 	.size save_ptr, LP_SIZE
 save_ptr:
 	.space LP_SIZE

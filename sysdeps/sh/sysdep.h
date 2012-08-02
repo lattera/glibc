@@ -23,8 +23,6 @@
 /* Syntactic details of assembler.  */
 
 #define ALIGNARG(log2) log2
-/* For ELF we need the `.type' directive to make shared libs work right.  */
-#define ASM_TYPE_DIRECTIVE(name,typearg) .type name,@##typearg;
 #define ASM_SIZE_DIRECTIVE(name) .size name,.-name
 
 #ifdef SHARED
@@ -36,8 +34,8 @@
 
 /* Define an entry point visible from C.  */
 #define	ENTRY(name)							      \
-  .globl C_SYMBOL_NAME(name);				      \
-  ASM_TYPE_DIRECTIVE (C_SYMBOL_NAME(name),function)			      \
+  .globl C_SYMBOL_NAME(name);						      \
+  .type C_SYMBOL_NAME(name),@function;					      \
   .align ALIGNARG(5);							      \
   C_LABEL(name)								      \
   cfi_startproc;							      \

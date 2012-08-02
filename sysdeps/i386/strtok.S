@@ -1,6 +1,6 @@
 /* strtok (str, delim) -- Return next DELIM separated token from STR.
    For Intel 80x86, x>=3.
-   Copyright (C) 1996-1998,2000,2001,2005,2006 Free Software Foundation, Inc.
+   Copyright (C) 1996-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -43,7 +43,7 @@
 #else
 	.bss
 	.local save_ptr
-	ASM_TYPE_DIRECTIVE (save_ptr, @object)
+	.type save_ptr, @object
 	.size save_ptr, 4
 save_ptr:
 # if __BOUNDED_POINTERS__

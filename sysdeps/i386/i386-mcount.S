@@ -27,7 +27,7 @@
      - some (future) systems might want to pass parameters in registers.  */
 
 	.globl C_SYMBOL_NAME(_mcount)
-	ASM_TYPE_DIRECTIVE(C_SYMBOL_NAME(_mcount), @function)
+	.type C_SYMBOL_NAME(_mcount), @function
 	.align ALIGNARG(4)
 C_LABEL(_mcount)
 	/* Save the caller-clobbered registers.  */
@@ -55,7 +55,7 @@ weak_alias (_mcount, mcount)
 
 	/* Same as above, but doesn't require a frame pointer */
 	.globl C_SYMBOL_NAME(__fentry__)
-	ASM_TYPE_DIRECTIVE(C_SYMBOL_NAME(__fentry__), @function)
+	.type C_SYMBOL_NAME(__fentry__), @function
 	.align ALIGNARG(4)
 C_LABEL(__fentry__)
 	/* Save the caller-clobbered registers.  */
