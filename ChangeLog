@@ -4,8 +4,8 @@
 	* configure.in (libc_cv_asm_type_prefix): Remove test.  Replace
 	libc_cv_asm_type_prefix with %.
 	* configure: Regenerated.
-	* include/libc-symbols.h: Remove comment about ASM_TYPE_DIRECTIVE_PREFIX.
-	Replace ASM_TYPE_DIRECTIVE_PREFIX with %.
+	* include/libc-symbols.h: Remove comment about
+	ASM_TYPE_DIRECTIVE_PREFIX.  Replace ASM_TYPE_DIRECTIVE_PREFIX with %.
 	(declare_symbol_alias_1_paste) [__ASSEMBLER__]: Do not define.
 	(declare_symbol_alias_1_paste_1) [__ASSEMBLER__]: Likewise.
 	(declare_symbol_alias_1_stringify) [!__ASSEMBLER__]: Likewise.
@@ -23,9 +23,11 @@
 	* sysdeps/i386/sysdep.h: Likewise.
 	* sysdeps/x86_64/sysdep.h: Likewise.
 	* sysdeps/sh/sysdep.h: Likewise.
-	* sysdeps/unix/sysv/linux/powerpc/powerpc64/sysdep.h: Do not define ASM_TYPE_DIRECTIVE.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/sysdep.h:
+	Do not define ASM_TYPE_DIRECTIVE.
 	* sysdeps/powerpc/sysdep.h: Likewise.
-	* sysdeps/powerpc/powerpc32/sysdep.h: Replace ASM_TYPE_DIRECTIVE with .type.
+	* sysdeps/powerpc/powerpc32/sysdep.h:
+	Replace ASM_TYPE_DIRECTIVE with .type.
 	* sysdeps/s390/s390-32/s390-mcount.S: Likewise.
 	* sysdeps/s390/s390-64/s390x-mcount.S: Likewise.
 	* sysdeps/i386/fpu/e_powf.S: Likewise.
