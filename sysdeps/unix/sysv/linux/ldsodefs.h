@@ -41,9 +41,7 @@ extern void _dl_non_dynamic_init (void) internal_function;
 
 /* We can assume that the kernel always provides the AT_SECURE value
    in the auxiliary vector from 2.5.74 or so on.  */
-#if __ASSUME_AT_SECURE
-# define HAVE_AUX_SECURE
-#endif
+#define HAVE_AUX_SECURE
 
 /* Starting with one of the 2.4.0 pre-releases the Linux kernel passes
    up the page size information.  */

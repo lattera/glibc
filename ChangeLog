@@ -1,3 +1,17 @@
+2012-08-03  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/kernel-features.h (__ASSUME_AT_SECURE):
+	Remove.
+	(__ASSUME_CORRECT_SI_PID): Likewise.
+	(__ASSUME_BRK_PAGE_ROUNDED): Likewise.
+	(__ASSUME_TMPFS_NAME): Likewise.
+	* sysdeps/unix/sysv/linux/dl-sysdep.c (frob_brk)
+	[!__ASSUME_BRK_PAGE_ROUNDED]: Remove conditional code.
+	* sysdeps/unix/sysv/linux/ldsodefs.h [__ASSUME_AT_SECURE]
+	(HAVE_AUX_SECURE): Make definition unconditional.
+	* sysdeps/unix/sysv/linux/shm_open.c (where_is_shmfs)
+	[!__ASSUME_TMPFS_NAME]: Remove conditional code.
+
 2012-08-03  Roland McGrath  <roland@hack.frob.com>
 
 	* sysdeps/mach/hurd/sys/param.h (MAXSYMLINKS): Macro removed.

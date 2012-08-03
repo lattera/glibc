@@ -1,3 +1,9 @@
+2012-08-03  Joseph Myers  <joseph@codesourcery.com>
+
+	* nptl-init.c (sigcancel_handler) [__ASSUME_CORRECT_SI_PID]: Make
+	code unconditional.
+	(sighandler_setxid) [__ASSUME_CORRECT_SI_PID]: Likewise.
+
 2012-07-28  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* tst-pthread-getattr.c (MAX_STACK_SIZE): New macro.

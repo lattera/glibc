@@ -115,15 +115,6 @@
 /* The statfs64 syscalls are available in 2.5.74 (but not for alpha).  */
 #define __ASSUME_STATFS64	1
 
-/* Starting with at least 2.5.74 the kernel passes the setuid-like exec
-   flag unconditionally up to the child.  */
-#define __ASSUME_AT_SECURE	1
-
-/* Starting with the 2.5.75 kernel the kernel fills in the correct value
-   in the si_pid field passed as part of the siginfo_t struct to signal
-   handlers.  */
-#define __ASSUME_CORRECT_SI_PID	1
-
 /* The tgkill syscall was instroduced for i386 in 2.5.75.  On x86-64,
    sparc, SH, ppc, and ppc64 it was introduced in 2.6.0-test3. */
 #if defined __i386__ \
@@ -189,10 +180,6 @@
 # define __ASSUME_GETDENTS32_D_TYPE	1
 #endif
 
-/* Starting with version 2.5.3, the initial location returned by `brk'
-   after exec is always rounded up to the next page.  */
-#define __ASSUME_BRK_PAGE_ROUNDED	1
-
 /* Starting with version 2.6.9, the waitid system call is available.
    Except for powerpc{,64} and s390{,x}, where it is available in 2.6.12.  */
 #if (__LINUX_KERNEL_VERSION >= 0x020609 \
@@ -207,11 +194,6 @@
     && defined __arch64__
 # define __ASSUME_STAT64_SYSCALL	1
 #endif
-
-/* Early kernel used "shm" as the filesystem name for the filesystem used
-   for shm_open etc.  Later it is "tmpfs".  2.4.20 is a safe bet for the
-   cutover.  */
-#define __ASSUME_TMPFS_NAME	1
 
 /* pselect/ppoll were introduced just after 2.6.16-rc1.  Due to the way
    the kernel versions are advertised we can only rely on 2.6.17 to have
