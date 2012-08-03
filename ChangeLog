@@ -1,3 +1,27 @@
+2012-08-03  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #13717]
+	* sysdeps/unix/sysv/linux/configure.in (arch_minimum_kernel):
+	Change to 2.6.0 everywhere.
+	* sysdeps/unix/sysv/linux/configure: Regenerated.
+	* sysdeps/unix/sysv/linux/kernel-features.h
+	(__ASSUME_SET_THREAD_AREA_SYSCALL): Remove.
+	(__ASSUME_CLONE_THREAD_FLAGS): Condition on architectures, not
+	kernel versions.
+	(__ASSUME_POSIX_TIMERS): Define unconditionally.
+	(__ASSUME_FUTEX_REQUEUE): Remove.
+	(__ASSUME_STATFS64): Define unconditionally.
+	(__ASSUME_AT_SECURE): Likewise.
+	(__ASSUME_CORRECT_SI_PID): Likewise.
+	(__ASSUME_TGKILL): Define without depending on kernel version for
+	i386.
+	(__ASSUME_UTIMES): Likewise.
+	(__ASSUME_SWAPCONTEXT_SYSCALL): Condition on architecture, not
+	kernel version.
+	(__ASSUME_BRK_PAGE_ROUNDED): Define unconditionally.
+	(__ASSUME_TMPFS_NAME): Likewise.
+	* README: Update reference to Linux kernel versions.
+
 2012-08-02  Marek Polacek  <polacek@redhat.com>
 
 	[BZ#14150]

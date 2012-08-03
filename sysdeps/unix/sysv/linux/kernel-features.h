@@ -92,62 +92,41 @@
 # define __ASSUME_MMAP2_SYSCALL		1
 #endif
 
-/* On x86, the set_thread_area syscall was introduced in 2.5.29, but its
-   semantics was changed in 2.5.30, and again after 2.5.31.  */
-#if __LINUX_KERNEL_VERSION >= 132384 && defined __i386__
-# define __ASSUME_SET_THREAD_AREA_SYSCALL	1
-#endif
-
 /* The late 2.5 kernels saw a lot of new CLONE_* flags.  Summarize
    their availability with one define.  The changes were made first
    for i386 and the have to be done separately for the other archs.
    For i386 we pick 2.5.50 as the first version with support.
    For s390*, SPARC, PPC, x86-64, and SH we pick 2.5.64 as the first
    version with support.  */
-#if ((__LINUX_KERNEL_VERSION >= 132402 && defined __i386__)		\
-     || (__LINUX_KERNEL_VERSION >= 132416				\
-	 && (defined __s390__ || defined __sparc__			\
-	     || defined __powerpc__ || defined __x86_64__ || defined __sh__)))
+#if (defined __i386__ || defined __s390__ || defined __sparc__		\
+     || defined __powerpc__ || defined __x86_64__ || defined __sh__)
 # define __ASSUME_CLONE_THREAD_FLAGS	1
 #endif
 
 /* Beginning with 2.5.63 support for realtime and monotonic clocks and
    timers based on them is available.  */
-#if __LINUX_KERNEL_VERSION >= 132415
-# define __ASSUME_POSIX_TIMERS		1
-#endif
+#define __ASSUME_POSIX_TIMERS		1
 
 /* Beginning with 2.6.12 the clock and timer supports CPU clocks.  */
 #if __LINUX_KERNEL_VERSION >= 0x2060c
 # define __ASSUME_POSIX_CPU_TIMERS	1
 #endif
 
-/* The requeue futex functionality was introduced in 2.5.70.  */
-#if __LINUX_KERNEL_VERSION >= 132422
-# define __ASSUME_FUTEX_REQUEUE	1
-#endif
-
-/* The statfs64 syscalls are available in 2.5.74.  */
-#if __LINUX_KERNEL_VERSION >= 132426
-# define __ASSUME_STATFS64	1
-#endif
+/* The statfs64 syscalls are available in 2.5.74 (but not for alpha).  */
+#define __ASSUME_STATFS64	1
 
 /* Starting with at least 2.5.74 the kernel passes the setuid-like exec
    flag unconditionally up to the child.  */
-#if __LINUX_KERNEL_VERSION >= 132426
-# define __ASSUME_AT_SECURE	1
-#endif
+#define __ASSUME_AT_SECURE	1
 
 /* Starting with the 2.5.75 kernel the kernel fills in the correct value
    in the si_pid field passed as part of the siginfo_t struct to signal
    handlers.  */
-#if __LINUX_KERNEL_VERSION >= 132427
-# define __ASSUME_CORRECT_SI_PID	1
-#endif
+#define __ASSUME_CORRECT_SI_PID	1
 
 /* The tgkill syscall was instroduced for i386 in 2.5.75.  On x86-64,
    sparc, SH, ppc, and ppc64 it was introduced in 2.6.0-test3. */
-#if (__LINUX_KERNEL_VERSION >= 132427 && defined __i386__) \
+#if defined __i386__ \
     || (__LINUX_KERNEL_VERSION >= 132609 \
         && (defined __x86_64__ || defined __powerpc__ \
             || defined __sh__ || defined __sparc__))
@@ -158,7 +137,7 @@
    forever.  For x86 it was introduced after 2.5.75, for x86-64,
    ppc, and ppc64 it was introduced in 2.6.0-test3.  */
 #if defined __sparc__ \
-    || (__LINUX_KERNEL_VERSION > 132427 && defined __i386__) \
+    || defined __i386__ \
     || (__LINUX_KERNEL_VERSION > 132609 && defined __x86_64__) \
     || (__LINUX_KERNEL_VERSION >= 132609 && defined __powerpc__) \
     || (__LINUX_KERNEL_VERSION >= 132609 && defined __sh__)
@@ -192,7 +171,7 @@
 /* Starting with 2.6.0 PowerPC adds signal/swapcontext support for Vector
    SIMD (AKA Altivec, VMX) instructions and register state.  This changes
    the overall size of the sigcontext and adds the swapcontext syscall.  */
-#if __LINUX_KERNEL_VERSION >= 132608 && defined __powerpc__
+#ifdef __powerpc__
 # define __ASSUME_SWAPCONTEXT_SYSCALL	1
 #endif
 
@@ -212,9 +191,7 @@
 
 /* Starting with version 2.5.3, the initial location returned by `brk'
    after exec is always rounded up to the next page.  */
-#if __LINUX_KERNEL_VERSION >= 132355
-# define __ASSUME_BRK_PAGE_ROUNDED	1
-#endif
+#define __ASSUME_BRK_PAGE_ROUNDED	1
 
 /* Starting with version 2.6.9, the waitid system call is available.
    Except for powerpc{,64} and s390{,x}, where it is available in 2.6.12.  */
@@ -234,9 +211,7 @@
 /* Early kernel used "shm" as the filesystem name for the filesystem used
    for shm_open etc.  Later it is "tmpfs".  2.4.20 is a safe bet for the
    cutover.  */
-#if __LINUX_KERNEL_VERSION >= 0x02041a
-# define __ASSUME_TMPFS_NAME	1
-#endif
+#define __ASSUME_TMPFS_NAME	1
 
 /* pselect/ppoll were introduced just after 2.6.16-rc1.  Due to the way
    the kernel versions are advertised we can only rely on 2.6.17 to have

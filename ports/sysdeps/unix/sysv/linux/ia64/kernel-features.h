@@ -22,9 +22,7 @@
 
 /* The late 2.5 kernels saw a lot of new CLONE_* flags.  Summarize
    their availability with one define.  */
-#if __LINUX_KERNEL_VERSION >= 132416
-# define __ASSUME_CLONE_THREAD_FLAGS   1
-#endif
+#define __ASSUME_CLONE_THREAD_FLAGS   1
 
 /* The utimes syscall has been available for some architectures
    forever.  */

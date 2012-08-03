@@ -16,14 +16,8 @@ GNU/Hurd system, using configurations i[34567]86-*-gnu.  The current
 GNU/Hurd support requires out-of-tree patches that will eventually be
 incorporated into an official GNU C Library release.
 
-When working with Linux kernels, the GNU C Library version from
-version 2.4 on is intended primarily for use with Linux kernel version
-2.6.0 and later.  We only support using the NPTL implementation of
-pthreads, which is now the default configuration.  The library is
-unlikely to build without NPTL, or to work on Linux kernels prior to
-2.6.  The old LinuxThreads add-on implementation of pthreads for older
-Linux kernels is no longer supported, and we are not distributing it
-with this release.
+When working with Linux kernels, this version of the GNU C Library
+requires Linux kernel version 2.6.0 or later.
 
 All Linux kernel versions prior to 2.6.16 are known to have some bugs that
 may cause some of the tests related to pthreads in "make check" to fail.
