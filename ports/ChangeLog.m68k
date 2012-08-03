@@ -1,3 +1,12 @@
+2012-08-03  Andreas Schwab  <schwab@linux-m68k.org>
+
+	* sysdeps/m68k/sysdep.h (ALIGNARG, ASM_TYPE_DIRECTIVE)
+	(ASM_SIZE_DIRECTIVE): Remove.
+	(ENTRY, END): Use .p2align.  Use .type and .size instead of
+	ASM_TYPE_DIRECTIVE and ASM_SIZE_DIRECTIVE.
+	* sysdeps/m68k/asm-syntax.h (ALIGNARG, PROLOG, EPILOG, ALIGN)
+	(GLOBL): Remove unused macros.
+
 2012-08-01  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/m68k/kernel-features.h

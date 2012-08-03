@@ -1,5 +1,5 @@
 /* Assembler macros for m68k.
-   Copyright (C) 1998, 2003, 2010, 2012 Free Software Foundation, Inc.
+   Copyright (C) 1998-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,14 +20,6 @@
 
 #ifdef __ASSEMBLER__
 
-/* Syntactic details of assembler.  */
-
-/* ELF uses byte-counts for .align, most others use log2 of count of bytes.  */
-# define ALIGNARG(log2) 1<<log2
-/* For ELF we need the `.type' directive to make shared libs work right.  */
-# define ASM_TYPE_DIRECTIVE(name,typearg) .type name,typearg
-# define ASM_SIZE_DIRECTIVE(name) .size name,.-name
-
 /* Define an entry point visible from C.
 
    There is currently a bug in gdb which prevents us from specifying
@@ -35,8 +27,8 @@
    the current source file.  */
 # define ENTRY(name)							      \
   .globl C_SYMBOL_NAME(name);						      \
-  ASM_TYPE_DIRECTIVE (C_SYMBOL_NAME(name),@function);			      \
-  .align ALIGNARG(2);							      \
+  .type C_SYMBOL_NAME(name),@function;					      \
+  .p2align 2;								      \
   C_LABEL(name)								      \
   cfi_startproc;							      \
   CALL_MCOUNT
@@ -44,7 +36,7 @@
 # undef END
 # define END(name)							      \
   cfi_endproc;								      \
-  ASM_SIZE_DIRECTIVE(name)
+  .size name,.-name
 
 
 /* If compiled for profiling, call `_mcount' at the start of each function.  */
