@@ -1,3 +1,7 @@
+2012-08-03  David S. Miller  <davem@davemloft.net>
+
+	* sysdeps/sparc/fpu/libm-test-ulps: Update.
+
 2012-08-03  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/kernel-features.h (__ASSUME_AT_SECURE):
