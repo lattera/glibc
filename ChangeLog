@@ -1,3 +1,12 @@
+2012-08-07	Allan McRae	<allan@archlinux.org>
+
+	[BZ #14303]
+	* sunrpc/rpc_main.c (SVR4_CPP): Remove.
+	(SUNOS_CPP): Likewise.
+	(find_cpp): Fall back to selecting system cpp when /lib/cpp is
+	not found.
+	(open_input): Call CPP using execvp.
+
 2012-08-07  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/kernel-features.h
