@@ -66,6 +66,9 @@
    for all ABI purposes, even if possibly expressed as different base types
    for C type-checking purposes.  */
 # define __OFF_T_MATCHES_OFF64_T	1
+
+/* Same for ino_t and ino64_t.  */
+# define __INO_T_MATCHES_INO64_T	1
 #endif
 
 /* Number of descriptors that can fit in an `fd_set'.  */

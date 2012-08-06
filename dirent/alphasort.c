@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1997, 1998, 2009 Free Software Foundation, Inc.
+/* Copyright (C) 1992-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -15,7 +15,15 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+/* We need to avoid the header declaration of alphasort64, because
+   the types don't match alphasort and then the compiler will
+   complain about the mismatch when we do the alias below.  */
+#define alphasort64     __renamed_alphasort64
+
 #include <dirent.h>
+
+#undef  alphasort64
+
 #include <string.h>
 
 int
@@ -23,3 +31,7 @@ alphasort (const struct dirent **a, const struct dirent **b)
 {
   return strcoll ((*a)->d_name, (*b)->d_name);
 }
+
+#ifdef _DIRENT_MATCHES_DIRENT64
+weak_alias (alphasort, alphasort64)
+#endif

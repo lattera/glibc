@@ -1,5 +1,4 @@
-/* Copyright (C) 1992-1998,2000,2002,2003,2009,2011
-   Free Software Foundation, Inc.
+/* Copyright (C) 1992-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,7 +15,15 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+/* We need to avoid the header declaration of scandir64, because
+   the types don't match scandir and then the compiler will
+   complain about the mismatch when we do the alias below.  */
+#define scandir64       __renamed_scandir64
+
 #include <dirent.h>
+
+#undef  scandir64
+
 #include <fcntl.h>
 
 #ifndef SCANDIR
@@ -35,3 +42,7 @@ SCANDIR (dir, namelist, select, cmp)
 {
   return SCANDIRAT (AT_FDCWD, dir, namelist, select, cmp);
 }
+
+#ifdef _DIRENT_MATCHES_DIRENT64
+weak_alias (scandir, scandir64)
+#endif

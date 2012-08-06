@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1996-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -50,5 +50,8 @@ struct dirent64
 #define _DIRENT_HAVE_D_RECLEN
 #define _DIRENT_HAVE_D_OFF
 #define _DIRENT_HAVE_D_TYPE
+
+/* Inform libc code that these two types are effectively identical.  */
+#define _DIRENT_MATCHES_DIRENT64	1
 
 #endif /* bits/dirent.h */

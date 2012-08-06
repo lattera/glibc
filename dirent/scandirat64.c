@@ -1,4 +1,4 @@
-/* Copyright (C) 2000, 2009, 2011 Free Software Foundation, Inc.
+/* Copyright (C) 2000-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,9 +17,14 @@
 
 #include <dirent.h>
 
+/* scandirat.c defines scandirat64 as an alias if _DIRENT_MATCHES_DIRENT64.  */
+#ifndef _DIRENT_MATCHES_DIRENT64
+
 #define SCANDIRAT scandirat64
 #define READDIR __readdir64
 #define DIRENT_TYPE struct dirent64
 #define SKIP_SCANDIR_CANCEL 1
 
 #include "scandirat.c"
+
+#endif

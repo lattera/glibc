@@ -1,5 +1,48 @@
 2012-08-06  Roland McGrath  <roland@hack.frob.com>
 
+	* dirent/alphasort.c [_DIRENT_MATCHES_DIRENT64]:
+	Define alphasort64 as an alias.
+	* dirent/versionsort.c [_DIRENT_MATCHES_DIRENT64]:
+	Define versionsort64 as an alias.
+	* dirent/scandir.c [_DIRENT_MATCHES_DIRENT64]:
+	Define scandir64 as an alias.
+	* dirent/scandirat.c [_DIRENT_MATCHES_DIRENT64]:
+	Define scandirat64 as an alias.
+	* dirent/alphasort64.c (alphasort64):
+	Conditionalize on [!_DIRENT_MATCHES_DIRENT64].
+	* dirent/versionsort64.c: Likewise.
+	* dirent/scandir64.c: Likewise.
+	* dirent/scandirat64.c: Likewise.
+	* sysdeps/wordsize-64/alphasort.c: File removed.
+	* sysdeps/wordsize-64/alphasort64.c: File removed.
+	* sysdeps/wordsize-64/scandir.c: File removed.
+	* sysdeps/wordsize-64/scandir64.c: File removed.
+	* sysdeps/wordsize-64/scandirat.c: File removed.
+	* sysdeps/wordsize-64/scandirat64.c: File removed.
+	* sysdeps/wordsize-64/versionsort.c: File removed.
+	* sysdeps/wordsize-64/versionsort64.c: File removed.
+	* sysdeps/unix/sysv/linux/x86_64/x32/alphasort.c: File removed.
+	* sysdeps/unix/sysv/linux/x86_64/x32/alphasort64.c: File removed.
+	* sysdeps/unix/sysv/linux/x86_64/x32/scandir.c: File removed.
+	* sysdeps/unix/sysv/linux/x86_64/x32/scandir64.c: File removed.
+	* sysdeps/unix/sysv/linux/x86_64/x32/scandirat.c: File removed.
+	* sysdeps/unix/sysv/linux/x86_64/x32/scandirat64.c: File removed.
+	* sysdeps/unix/sysv/linux/x86_64/x32/versionsort.c: File removed.
+	* sysdeps/unix/sysv/linux/x86_64/x32/versionsort64.c: File removed.
+
+	* bits/typesizes.h [__LP64__] (__INO_T_MATCHES_INO64_T): New macros.
+	* sysdeps/unix/sysv/linux/s390/bits/typesizes.h:
+	[__s390x__] (__INO_T_MATCHES_INO64_T): New macro.
+	* sysdeps/unix/sysv/linux/sparc/bits/typesizes.h
+	[defined __arch64__ || defined __sparcv9]
+	(__INO_T_MATCHES_INO64_T): New macro.
+	* sysdeps/unix/sysv/linux/x86/bits/typesizes.h
+	[__x86_64__] (__INO_T_MATCHES_INO64_T): New macro.
+	* bits/dirent.h (_DIRENT_MATCHES_DIRENT64): New macro.
+	* sysdeps/unix/sysv/linux/bits/dirent.h
+	[defined __OFF_T_MATCHES_OFF64_T && defined __INO_T_MATCHES_INO64_T]
+	(_DIRENT_MATCHES_DIRENT64): New macro.
+
 	* io/lockf.c [__OFF_T_MATCHES_OFF64_T]:
 	Define lockf64 as an alias.
 	* libio/fseeko.c [__OFF_T_MATCHES_OFF64_T]:

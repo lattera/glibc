@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1997, 1998, 2000, 2009 Free Software Foundation, Inc.
+/* Copyright (C) 1992-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -18,8 +18,13 @@
 #include <dirent.h>
 #include <string.h>
 
+/* alphasort.c defines alphasort64 as an alias if _DIRENT_MATCHES_DIRENT64.  */
+#ifndef _DIRENT_MATCHES_DIRENT64
+
 int
 alphasort64 (const struct dirent64 **a, const struct dirent64 **b)
 {
   return strcoll ((*a)->d_name, (*b)->d_name);
 }
+
+#endif
