@@ -1,3 +1,8 @@
+2012-08-02  Roland McGrath  <roland@hack.frob.com>
+
+	* sysdeps/unix/sysv/linux/generic/bits/typesizes.h
+	[__LP64__] (__OFF_T_MATCHES_OFF64_T): New macro.
+
 2012-05-30  Chris Metcalf  <cmetcalf@tilera.com>
 
 	* sysdeps/unix/sysv/linux/generic/syscalls.list: Remove

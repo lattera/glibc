@@ -73,6 +73,13 @@
 #define __FSID_T_TYPE		struct { int __val[2]; }
 #define __SSIZE_T_TYPE		__SWORD_TYPE
 
+#ifdef __x86_64__
+/* Tell the libc code that off_t and off64_t are actually the same type
+   for all ABI purposes, even if possibly expressed as different base types
+   for C type-checking purposes.  */
+# define __OFF_T_MATCHES_OFF64_T	1
+#endif
+
 /* Number of descriptors that can fit in an `fd_set'.  */
 #define __FD_SETSIZE		1024
 

@@ -1,5 +1,4 @@
-/* Copyright (C) 1993, 1995-2001, 2002, 2003, 2004, 2007
-   Free Software Foundation, Inc.
+/* Copyright (C) 1993-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -63,3 +62,7 @@ ftello (fp)
   return pos;
 }
 libc_hidden_def (ftello)
+
+#ifdef __OFF_T_MATCHES_OFF64_T
+weak_alias (ftello, ftello64)
+#endif

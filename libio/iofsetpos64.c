@@ -1,5 +1,4 @@
-/* Copyright (C) 1993, 1995, 1997, 1998, 1999, 2000, 2002, 2003
-   Free Software Foundation, Inc.
+/* Copyright (C) 1993-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -28,6 +27,8 @@
 #include <libioP.h>
 #include <errno.h>
 #include <shlib-compat.h>
+
+#ifndef __OFF_T_MATCHES_OFF64_T
 
 int
 _IO_new_fsetpos64 (fp, posp)
@@ -68,3 +69,5 @@ _IO_new_fsetpos64 (fp, posp)
 strong_alias (_IO_new_fsetpos64, __new_fsetpos64)
 versioned_symbol (libc, __new_fsetpos64, fsetpos64, GLIBC_2_2);
 versioned_symbol (libc, _IO_new_fsetpos64, _IO_fsetpos64, GLIBC_2_2);
+
+#endif

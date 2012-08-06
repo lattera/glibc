@@ -1,1 +1,0 @@
-/* Defined in fseeko.c.  */

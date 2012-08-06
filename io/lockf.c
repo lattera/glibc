@@ -1,4 +1,4 @@
-/* Copyright (C) 1994,1996,1997,1998,2000,2003 Free Software Foundation, Inc.
+/* Copyright (C) 1994-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -15,9 +15,17 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+/* We need to avoid the header declaration of lockf64, because
+   the types don't match lockf and then the compiler will
+   complain about the mismatch when we do the alias below.  */
+#define lockf64	__renamed_lockf64
+
+#include <fcntl.h>
+
+#undef	lockf64
+
 #include <sys/types.h>
 #include <unistd.h>
-#include <fcntl.h>
 #include <errno.h>
 #include <string.h>
 
@@ -71,3 +79,7 @@ lockf (int fd, int cmd, off_t len)
      the fcntl() function will take care of it.  */
   return __fcntl (fd, cmd, &fl);
 }
+
+#ifdef __OFF_T_MATCHES_OFF64_T
+weak_alias (lockf, lockf64)
+#endif
