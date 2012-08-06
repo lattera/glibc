@@ -1,3 +1,8 @@
+2012-08-06  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/unix/sysv/linux/x86_64/x32/iofopen.c: Removed.
+	* sysdeps/unix/sysv/linux/x86_64/x32/iofopen64.c: Likewise.
+
 2012-08-03  David S. Miller  <davem@davemloft.net>
 
 	* sysdeps/sparc/fpu/libm-test-ulps: Update.
