@@ -1,3 +1,11 @@
+2012-08-07  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/arm/configure.in (arch_minimum_kernel):
+	Remove.
+	* sysdeps/unix/sysv/linux/arm/configure: Regenerated.
+	* sysdeps/unix/sysv/linux/arm/kernel-features.h (__ASSUME_UTIMES):
+	Define unconditionally.
+
 2012-08-02  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/arm/sysdep.h (ASM_TYPE_DIRECTIVE): Remove.

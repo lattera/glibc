@@ -1,3 +1,25 @@
+2012-08-07  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/configure.in (arch_minimum_kernel):
+	Change from 2.6.0 to 2.6.16.
+	* sysdeps/unix/sysv/linux/configure: Regenerated.
+	* sysdeps/unix/sysv/linux/kernel-features.h
+	(__ASSUME_POSIX_CPU_TIMERS): Define unconditionally.
+	(__ASSUME_TGKILL): Define conditional on architectures, not kernel
+	version.
+	(__ASSUME_UTIMES): Likewise.
+	(__ASSUME_CLONE_STOPPED): Remove.
+	(__ASSUME_FADVISE64_64_SYSCALL): Define conditional on
+	architectures, not kernel version.
+	(__ASSUME_PROT_GROWSUPDOWN): Define unconditionally.
+	(__ASSUME_NO_CLONE_DETACHED): Likewise.
+	(__ASSUME_GETDENTS32_D_TYPE): Likewise.
+	(__ASSUME_WAITID_SYSCALL): Likewise.
+	[__sparc__ && __arch64__] (__ASSUME_STAT64_SYSCALL): Do not
+	condition definition on __LINUX_KERNEL_VERSION >= 0x02060c.
+	* README: State 2.6.16 as minimum Linux kernel version.  Do not
+	refer to older versions.
+
 2012-08-06  Roland McGrath  <roland@hack.frob.com>
 
 	* dirent/alphasort.c [_DIRENT_MATCHES_DIRENT64]:

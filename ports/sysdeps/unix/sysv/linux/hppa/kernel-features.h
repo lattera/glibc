@@ -1,6 +1,6 @@
 /* Set flags signalling availability of kernel features based on given
    kernel version number.
-   Copyright (C) 2006 Free Software Foundation, Inc.
+   Copyright (C) 2006-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -30,8 +30,6 @@
 #define __ASSUME_GETDENTS64_SYSCALL	1
 
 /* PA-RISC 2.6.9 kernels had the first LWS CAS support */
-#if __LINUX_KERNEL_VERSION >= 0x020609
-# define __ASSUME_LWS_CAS		1
-#endif
+#define __ASSUME_LWS_CAS		1
 
 #include_next <kernel-features.h>

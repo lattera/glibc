@@ -20,23 +20,16 @@
 #ifndef _KERNEL_FEATURES_H
 #define _KERNEL_FEATURES_H 1
 
-/* The tgkill syscall was introduced for alpha 2.6.0-test1 which unfortunately
-   cannot be distinguished from 2.6.0.  */
-#if __LINUX_KERNEL_VERSION >= 132609
-# define __ASSUME_TGKILL	1
-#endif
+/* The tgkill syscall was introduced for alpha 2.6.0-test1.  */
+#define __ASSUME_TGKILL	1
 
 /* Starting with version 2.6.4, the stat64 syscalls are available.  */
-#if __LINUX_KERNEL_VERSION >= 0x020604 && defined __alpha__
-# define __ASSUME_STAT64_SYSCALL   1
-#endif
+#define __ASSUME_STAT64_SYSCALL   1
 
 #define __ASSUME_UTIMES	1
 
 /* Starting with version 2.6.9, SSI_IEEE_RAISE_EXCEPTION exists.  */
-#if __LINUX_KERNEL_VERSION >= 0x020609
-# define __ASSUME_IEEE_RAISE_EXCEPTION	1
-#endif
+#define __ASSUME_IEEE_RAISE_EXCEPTION	1
 
 /* Support for the O_CLOEXEC flag was added for alpha in 2.6.23.  */
 #if __LINUX_KERNEL_VERSION >= 0x020617

@@ -108,19 +108,15 @@
 #define __ASSUME_POSIX_TIMERS		1
 
 /* Beginning with 2.6.12 the clock and timer supports CPU clocks.  */
-#if __LINUX_KERNEL_VERSION >= 0x2060c
-# define __ASSUME_POSIX_CPU_TIMERS	1
-#endif
+#define __ASSUME_POSIX_CPU_TIMERS	1
 
 /* The statfs64 syscalls are available in 2.5.74 (but not for alpha).  */
 #define __ASSUME_STATFS64	1
 
 /* The tgkill syscall was instroduced for i386 in 2.5.75.  On x86-64,
    sparc, SH, ppc, and ppc64 it was introduced in 2.6.0-test3. */
-#if defined __i386__ \
-    || (__LINUX_KERNEL_VERSION >= 132609 \
-        && (defined __x86_64__ || defined __powerpc__ \
-            || defined __sh__ || defined __sparc__))
+#if (defined __i386__ || defined __x86_64__ || defined __powerpc__	\
+     || defined __sh__ || defined __sparc__)
 # define __ASSUME_TGKILL	1
 #endif
 
@@ -129,35 +125,23 @@
    ppc, and ppc64 it was introduced in 2.6.0-test3.  */
 #if defined __sparc__ \
     || defined __i386__ \
-    || (__LINUX_KERNEL_VERSION > 132609 && defined __x86_64__) \
-    || (__LINUX_KERNEL_VERSION >= 132609 && defined __powerpc__) \
-    || (__LINUX_KERNEL_VERSION >= 132609 && defined __sh__)
+    || defined __x86_64__ \
+    || defined __powerpc__ \
+    || defined __sh__
 # define __ASSUME_UTIMES	1
-#endif
-
-// XXX Disabled for now since the semantics we want is not achieved.
-#if 0
-/* The CLONE_STOPPED flag was introduced in the 2.6.0-test1 series.  */
-#if __LINUX_KERNEL_VERSION >= 132609
-# define __ASSUME_CLONE_STOPPED	1
-#endif
 #endif
 
 /* The fixed version of the posix_fadvise64 syscall appeared in
    2.6.0-test3.  At least for x86 and sparc.  Powerpc support appeared
    in 2.6.2, but for 32-bit userspace only.  */
-#if (__LINUX_KERNEL_VERSION >= 132609				\
-     && (defined __i386__ || defined __sparc__))		\
-    || (__LINUX_KERNEL_VERSION >= 132610 && defined __powerpc__ \
-       && !defined __powerpc64__)
+#if (defined __i386__ || defined __sparc__			\
+     || (defined __powerpc__ && !defined __powerpc64__))
 # define __ASSUME_FADVISE64_64_SYSCALL	1
 #endif
 
 /* The PROT_GROWSDOWN/PROT_GROWSUP flags were introduced in the 2.6.0-test
    series.  */
-#if __LINUX_KERNEL_VERSION >= 132609
-# define __ASSUME_PROT_GROWSUPDOWN	1
-#endif
+#define __ASSUME_PROT_GROWSUPDOWN	1
 
 /* Starting with 2.6.0 PowerPC adds signal/swapcontext support for Vector
    SIMD (AKA Altivec, VMX) instructions and register state.  This changes
@@ -168,30 +152,19 @@
 
 /* The CLONE_DETACHED flag is not necessary in 2.6.2 kernels, it is
    implied.  */
-#if __LINUX_KERNEL_VERSION >= 132610
-# define __ASSUME_NO_CLONE_DETACHED	1
-#endif
+#define __ASSUME_NO_CLONE_DETACHED	1
 
 /* Starting with version 2.6.4-rc1 the getdents syscall returns d_type
    information as well and in between 2.6.5 and 2.6.8 most compat wrappers
    were fixed too.  Except s390{,x} which was fixed in 2.6.11.  */
-#if (__LINUX_KERNEL_VERSION >= 0x020608 && !defined __s390__) \
-    || (__LINUX_KERNEL_VERSION >= 0x02060b && defined __s390__)
-# define __ASSUME_GETDENTS32_D_TYPE	1
-#endif
+#define __ASSUME_GETDENTS32_D_TYPE	1
 
 /* Starting with version 2.6.9, the waitid system call is available.
    Except for powerpc{,64} and s390{,x}, where it is available in 2.6.12.  */
-#if (__LINUX_KERNEL_VERSION >= 0x020609 \
-     && !defined __powerpc__ && !defined __s390__) \
-    || (__LINUX_KERNEL_VERSION >= 0x02060c \
-	&& (defined __powerpc__ || defined __s390__))
-# define __ASSUME_WAITID_SYSCALL	1
-#endif
+#define __ASSUME_WAITID_SYSCALL	1
 
 /* On sparc64 stat64/lstat64/fstat64 syscalls were introduced in 2.6.12.  */
-#if __LINUX_KERNEL_VERSION >= 0x02060c && defined __sparc__ \
-    && defined __arch64__
+#if defined __sparc__ && defined __arch64__
 # define __ASSUME_STAT64_SYSCALL	1
 #endif
 

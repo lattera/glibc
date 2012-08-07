@@ -1,3 +1,9 @@
+2012-08-07  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/am33/configure.in (arch_minimum_kernel):
+	Change to 2.6.25.
+	* sysdeps/unix/sysv/linux/am33/configure: Regenerated.
+
 2012-08-01  Roland McGrath  <roland@hack.frob.com>
 
 	[BZ #14138]

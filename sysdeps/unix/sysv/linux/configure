@@ -284,34 +284,34 @@ test -n "$arch_minimum_kernel" ||
 case "$machine" in
   i386*)
     libc_cv_gcc_unwind_find_fde=yes
-    arch_minimum_kernel=2.6.0
+    arch_minimum_kernel=2.6.16
     ;;
   powerpc/powerpc32)
     libc_cv_gcc_unwind_find_fde=yes
-    arch_minimum_kernel=2.6.0
+    arch_minimum_kernel=2.6.16
     ;;
   s390/s390-32)
     libc_cv_gcc_unwind_find_fde=yes
-    arch_minimum_kernel=2.6.0
+    arch_minimum_kernel=2.6.16
     ;;
   s390/s390-64)
     libc_cv_gcc_unwind_find_fde=yes
-    arch_minimum_kernel=2.6.0
+    arch_minimum_kernel=2.6.16
     ;;
   sh*)
-    arch_minimum_kernel=2.6.0
+    arch_minimum_kernel=2.6.16
     libc_cv_gcc_unwind_find_fde=yes
     ;;
   sparc/sparc64*)
     libc_cv_gcc_unwind_find_fde=yes
-    arch_minimum_kernel=2.6.0
+    arch_minimum_kernel=2.6.16
     ;;
   sparc*)
     libc_cv_gcc_unwind_find_fde=yes
-    arch_minimum_kernel=2.6.0
+    arch_minimum_kernel=2.6.16
     ;;
   *)
-    arch_minimum_kernel=2.6.0
+    arch_minimum_kernel=2.6.16
     ;;
 esac
 if test -n "$minimum_kernel"; then

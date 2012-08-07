@@ -22,11 +22,9 @@
 #define __ASSUME_STAT64_SYSCALL	1
 
 /* Many syscalls were added in 2.6.10 for m68k.  */
-#if __LINUX_KERNEL_VERSION >= 132618
-# define __ASSUME_TGKILL	1
-# define __ASSUME_UTIMES	1
-# define __ASSUME_FADVISE64_64_SYSCALL	1
-#endif
+#define __ASSUME_TGKILL	1
+#define __ASSUME_UTIMES	1
+#define __ASSUME_FADVISE64_64_SYSCALL	1
 
 #include_next <kernel-features.h>
 

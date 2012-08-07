@@ -17,12 +17,7 @@ GNU/Hurd support requires out-of-tree patches that will eventually be
 incorporated into an official GNU C Library release.
 
 When working with Linux kernels, this version of the GNU C Library
-requires Linux kernel version 2.6.0 or later.
-
-All Linux kernel versions prior to 2.6.16 are known to have some bugs that
-may cause some of the tests related to pthreads in "make check" to fail.
-If you see such problems, please try the test suite on the most recent
-Linux kernel version that you can use, before pursuing those bugs further.
+requires Linux kernel version 2.6.16 or later.
 
 Also note that the shared version of the libgcc_s library must be
 installed for the pthread library to work correctly.
@@ -35,7 +30,7 @@ The GNU C Library supports these configurations for using Linux kernels:
 	powerpc64-*-linux-gnu
 	s390-*-linux-gnu
 	s390x-*-linux-gnu
-	sh[34]-*-linux-gnu	Requires Linux 2.6.11 or newer
+	sh[34]-*-linux-gnu
 	sparc*-*-linux-gnu
 	sparc64*-*-linux-gnu
 
@@ -45,14 +40,14 @@ add-on.  You can find glibc-ports-VERSION distributed separately in the
 same place where you got the main glibc distribution files.
 Currently these configurations have code in the `ports' add-on:
 
-	alpha*-*-linux-gnu	Requires Linux 2.6.9 or newer for NPTL
+	alpha*-*-linux-gnu
 	am33*-*-linux-gnu	Not currently functional
-	arm-*-linux-gnueabi	Requires Linux 2.6.16-rc1 or newer for NPTL
+	arm-*-linux-gnueabi
 	hppa-*-linux-gnu	Not currently functional without patches.
 	ia64-*-linux-gnu
 	m68k-*-linux-gnu
-	mips-*-linux-gnu	Requires Linux 2.6.12 or newer for NPTL
-	mips64-*-linux-gnu	Requires Linux 2.6.12 or newer for NPTL
+	mips-*-linux-gnu
+	mips64-*-linux-gnu
 	powerpc-*-linux-gnu	Software floating point (--without-fp)
 	tilegx-*-linux-gnu
 	tilepro-*-linux-gnu

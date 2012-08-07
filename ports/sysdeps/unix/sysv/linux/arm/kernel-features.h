@@ -18,9 +18,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 /* The utimes syscall was added before 2.6.1.  */
-#if __LINUX_KERNEL_VERSION >= 132609
-# define __ASSUME_UTIMES	1
-#endif
+#define __ASSUME_UTIMES	1
 
 /* On ARM the mmap2/stat64/lstat64/fstat64 syscalls were introduced in
    2.3.35.  */
