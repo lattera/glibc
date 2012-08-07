@@ -1,5 +1,8 @@
 2012-08-07  Roland McGrath  <roland@hack.frob.com>
 
+	* sysdeps/unix/bsd/bsd4.4/bits/fcntl.h: Renamed to ...
+	* bits/fcntl.h: ... here.
+
 	* sysdeps/unix/bsd/bsd4.4/bits/fcntl.h (O_NOCTTY): Define to 0x8000,
 	not 0.
 	(O_ASYNC, O_FSYNC, O_SYNC): Move outside [__USE_MISC].
