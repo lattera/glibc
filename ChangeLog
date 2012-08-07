@@ -1,5 +1,8 @@
 2012-08-07  Roland McGrath  <roland@hack.frob.com>
 
+	* sysdeps/unix/bsd/bsd4.4/bits/dirent.h: Renamed to ...
+	* bits/dirent.h: ... here.
+
 	* sysdeps/unix/bsd/bsd4.4/bits/dirent.h
 	[__INO_T_MATCHES_INO64_T] (_DIRENT_MATCHES_DIRENT64): New macro.
 
