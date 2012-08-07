@@ -97,7 +97,6 @@ __GETDENTS (int fd, char *buf, size_t nbytes)
 {
   ssize_t retval;
 
-#ifdef __ASSUME_GETDENTS32_D_TYPE
   /* The d_ino and d_off fields in kernel_dirent and dirent must have
      the same sizes and alignments.  */
   if (sizeof (DIRENT_TYPE) == sizeof (struct dirent)
@@ -135,7 +134,6 @@ __GETDENTS (int fd, char *buf, size_t nbytes)
 
       return retval;
     }
-#endif
 
   off64_t last_offset = -1;
 
@@ -293,11 +291,7 @@ __GETDENTS (int fd, char *buf, size_t nbytes)
 	DIRENT_SET_DP_INO(dp, kdp->d_ino);
 	dp->d_off = kdp->d_off;
 	dp->d_reclen = new_reclen;
-#ifdef __ASSUME_GETDENTS32_D_TYPE
 	dp->d_type = *((char *) kdp + kdp->d_reclen - 1);
-#else
-	dp->d_type = DT_UNKNOWN;
-#endif
 	memcpy (dp->d_name, kdp->d_name,
 		kdp->d_reclen - offsetof (struct kernel_dirent, d_name));
 

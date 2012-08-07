@@ -1,3 +1,24 @@
+2012-08-07  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/kernel-features.h
+	(__ASSUME_PROT_GROWSUPDOWN): Remove.
+	(__ASSUME_NO_CLONE_DETACHED): Likewise.
+	(__ASSUME_GETDENTS32_D_TYPE): Likewise.
+	(__ASSUME_WAITID_SYSCALL): Likewise.
+	* sysdeps/unix/sysv/linux/dl-execstack.c
+	(_dl_make_stack_executable) [PROT_GROWSDOWN || PROT_GROWSUP]: Make
+	code unconditional.
+	(_dl_make_stack_executable) [!__ASSUME_PROT_GROWSUPDOWN]: Remove
+	conditional code.
+	* sysdeps/unix/sysv/linux/getdents.c (__GETDENTS)
+	[__ASSUME_GETDENTS32_D_TYPE]: Make code unconditional.
+	(__GETDENTS) [!__ASSUME_GETDENTS32_D_TYPE]: Remove conditional
+	code.
+	* sysdeps/unix/sysv/linux/waitid.c [__NR_waitid]: Make code
+	unconditional.
+	[__ASSUME_WAITID_SYSCALL]: Likewise.
+	[!__ASSUME_WAITID_SYSCALL]: Remove conditional code.
+
 2012-08-07  Roland McGrath  <roland@hack.frob.com>
 
 	* sysdeps/unix/closedir.c: Renamed to ...

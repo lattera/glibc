@@ -139,29 +139,12 @@
 # define __ASSUME_FADVISE64_64_SYSCALL	1
 #endif
 
-/* The PROT_GROWSDOWN/PROT_GROWSUP flags were introduced in the 2.6.0-test
-   series.  */
-#define __ASSUME_PROT_GROWSUPDOWN	1
-
 /* Starting with 2.6.0 PowerPC adds signal/swapcontext support for Vector
    SIMD (AKA Altivec, VMX) instructions and register state.  This changes
    the overall size of the sigcontext and adds the swapcontext syscall.  */
 #ifdef __powerpc__
 # define __ASSUME_SWAPCONTEXT_SYSCALL	1
 #endif
-
-/* The CLONE_DETACHED flag is not necessary in 2.6.2 kernels, it is
-   implied.  */
-#define __ASSUME_NO_CLONE_DETACHED	1
-
-/* Starting with version 2.6.4-rc1 the getdents syscall returns d_type
-   information as well and in between 2.6.5 and 2.6.8 most compat wrappers
-   were fixed too.  Except s390{,x} which was fixed in 2.6.11.  */
-#define __ASSUME_GETDENTS32_D_TYPE	1
-
-/* Starting with version 2.6.9, the waitid system call is available.
-   Except for powerpc{,64} and s390{,x}, where it is available in 2.6.12.  */
-#define __ASSUME_WAITID_SYSCALL	1
 
 /* On sparc64 stat64/lstat64/fstat64 syscalls were introduced in 2.6.12.  */
 #if defined __sparc__ && defined __arch64__

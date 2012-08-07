@@ -1,4 +1,4 @@
-/* Copyright (C) 2002-2007, 2008, 2010 Free Software Foundation, Inc.
+/* Copyright (C) 2002-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -179,18 +179,11 @@ create_thread (struct pthread *pd, const struct pthread_attr *attr,
 	sys_exit() in the location pointed to by the seventh parameter
 	to CLONE.
 
-     CLONE_DETACHED
-	No signal is generated if the thread exists and it is
-	automatically reaped.
-
      The termination signal is chosen to be zero which means no signal
      is sent.  */
   int clone_flags = (CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGNAL
 		     | CLONE_SETTLS | CLONE_PARENT_SETTID
 		     | CLONE_CHILD_CLEARTID | CLONE_SYSVSEM
-#if __ASSUME_NO_CLONE_DETACHED == 0
-		     | CLONE_DETACHED
-#endif
 		     | 0);
 
   if (__builtin_expect (THREAD_GETMEM (THREAD_SELF, report_events), 0))

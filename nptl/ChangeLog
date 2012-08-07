@@ -1,3 +1,8 @@
+2012-08-07  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/pthread/createthread.c (create_thread)
+	[!__ASSUME_NO_CLONE_DETACHED]: Remove conditional code.
+
 2012-08-03  Joseph Myers  <joseph@codesourcery.com>
 
 	* nptl-init.c (sigcancel_handler) [__ASSUME_CORRECT_SI_PID]: Make
