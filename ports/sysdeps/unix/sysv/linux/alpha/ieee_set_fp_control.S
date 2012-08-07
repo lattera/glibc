@@ -1,5 +1,4 @@
-/* Copyright (C) 1993, 1995, 1996, 1997, 2003, 2004
-   Free Software Foundation, Inc.
+/* Copyright (C) 1993-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by David Mosberger <davidm@azstarnet.com>, 1995.
 
@@ -21,40 +20,27 @@
 #include "kernel_sysinfo.h"
 
 
-LEAF(__ieee_set_fp_control, 16)
-#ifdef PROF
-	ldgp	gp, 0(pv)
-	lda	sp, -16(sp)
-	.set noat
-	lda	AT, _mcount
-	jsr	AT, (AT), _mcount
-	.set at
-	.prologue 1
-#elif defined PIC
-	lda	sp, -16(sp)
-	.prologue 0
-#else
-	ldgp	gp, 0(pv)
-	lda	sp, -16(sp)
-	.prologue 1
-#endif
+ENTRY(__ieee_set_fp_control)
+	cfi_startproc
+	PSEUDO_PROLOGUE
 
+	lda	sp, -16(sp)
+	cfi_adjust_cfa_offset(16)
+
+	ldi	v0, __NR_osf_setsysinfo
 	stq	a0, 0(sp)
 	mov	sp, a1
 	ldi	a0, SSI_IEEE_FP_CONTROL
-	ldi	v0, __NR_osf_setsysinfo
 	call_pal PAL_callsys
 
-	bne	a3, $error
-
 	lda	sp, 16(sp)
+	cfi_adjust_cfa_offset(-16)
+
+	bne	a3, SYSCALL_ERROR_LABEL
 	ret
 
-$error:
-	lda	sp, 16(sp)
-	SYSCALL_ERROR_HANDLER
-
-	END(__ieee_set_fp_control)
+PSEUDO_END(__ieee_set_fp_control)
+	cfi_endproc
 
 libc_hidden_def(__ieee_set_fp_control)
 weak_alias (__ieee_set_fp_control, ieee_set_fp_control)
