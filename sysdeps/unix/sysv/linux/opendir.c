@@ -17,4 +17,4 @@
 
 #define O_DIRECTORY_WORKS	1
 
-#include <sysdeps/unix/opendir.c>
+#include <sysdeps/posix/opendir.c>

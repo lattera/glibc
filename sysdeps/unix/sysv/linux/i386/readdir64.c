@@ -1,4 +1,4 @@
-/* Copyright (C) 2000, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 2000-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -19,7 +19,7 @@
 #define __GETDENTS __getdents64
 #define DIRENT_TYPE struct dirent64
 
-#include <sysdeps/unix/readdir.c>
+#include <sysdeps/posix/readdir.c>
 
 #include <shlib-compat.h>
 
@@ -37,7 +37,7 @@ versioned_symbol (libc, __readdir64, readdir64, GLIBC_2_2);
 #define __GETDENTS __old_getdents64
 #define DIRENT_TYPE struct __old_dirent64
 
-#include <sysdeps/unix/readdir.c>
+#include <sysdeps/posix/readdir.c>
 
 compat_symbol (libc, __old_readdir64, readdir64, GLIBC_2_1);
 #endif
