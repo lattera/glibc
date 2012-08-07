@@ -1,5 +1,5 @@
 /* xstat using old-style Unix stat system call.
-   Copyright (C) 2004 Free Software Foundation, Inc.
+   Copyright (C) 2004-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -37,7 +37,6 @@ __xstat (int vers, const char *name, struct stat *buf)
   int result;
   struct kernel_stat kbuf;
 
-#if __ASSUME_STAT64_SYSCALL > 0
   if (vers == _STAT_VER_KERNEL64)
     {
       result = INTERNAL_SYSCALL (stat64, err, 2, name, buf);
@@ -46,22 +45,6 @@ __xstat (int vers, const char *name, struct stat *buf)
       __set_errno (INTERNAL_SYSCALL_ERRNO (result, err));
       return -1;
     }
-#elif defined __NR_stat64
-  if (vers == _STAT_VER_KERNEL64 && !__libc_missing_axp_stat64)
-    {
-      int errno_out;
-      result = INTERNAL_SYSCALL (stat64, err, 2, name, buf);
-      if (__builtin_expect (!INTERNAL_SYSCALL_ERROR_P (result, err), 1))
-	return result;
-      errno_out = INTERNAL_SYSCALL_ERRNO (result, err);
-      if (errno_out != ENOSYS)
-	{
-	  __set_errno (errno_out);
-	  return -1;
-	}
-      __libc_missing_axp_stat64 = 1;
-    }
-#endif
 
   result = INTERNAL_SYSCALL (stat, err, 2, name, &kbuf);
   if (__builtin_expect (!INTERNAL_SYSCALL_ERROR_P (result, err), 1))

@@ -23,9 +23,6 @@
 /* The tgkill syscall was introduced for alpha 2.6.0-test1.  */
 #define __ASSUME_TGKILL	1
 
-/* Starting with version 2.6.4, the stat64 syscalls are available.  */
-#define __ASSUME_STAT64_SYSCALL   1
-
 #define __ASSUME_UTIMES	1
 
 /* Starting with version 2.6.9, SSI_IEEE_RAISE_EXCEPTION exists.  */

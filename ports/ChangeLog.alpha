@@ -1,3 +1,15 @@
+2012-08-08  Richard Henderson  <rth@redhat.com>
+
+	* sysdeps/unix/sysv/linux/alpha/kernel-features.h
+	(__ASSUME_STAT64_SYSCALL): Remove.
+	* sysdeps/unix/sysv/linux/alpha/fxstat.c: Remove test
+	for __ASSUME_STAT64_SYSCALL.
+	* sysdeps/unsx/sysv/linux/alpha/fxstatat.c: Likewise.
+	* sysdeps/unsx/sysv/linux/alpha/lxstat.c: Likewise.
+	* sysdeps/unsx/sysv/linux/alpha/xstat.c: Likewise.
+	* sysdeps/unsx/sysv/linux/alpha/xstatconv.c: Likewise.
+	* sysdeps/unsx/sysv/linux/alpha/xstatconv.h: Likewise.
+
 2012-08-07  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/alpha/kernel-features.h

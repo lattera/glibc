@@ -1,4 +1,4 @@
-/* Copyright (C) 2005, 2006, 2009 Free Software Foundation, Inc.
+/* Copyright (C) 2005-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -31,9 +31,6 @@
 
 #ifdef __ASSUME_ATFCTS
 # define __have_atfcts 1
-#endif
-#ifdef __ASSUME_STAT64_SYSCALL
-# define __libc_missing_axp_stat64 0
 #endif
 
 /* Get information about the file NAME in BUF.  */
@@ -99,38 +96,14 @@ __fxstatat (int vers, int fd, const char *file, struct stat *st, int flag)
       file = buf;
     }
 
-#ifdef __NR_stat64
-  if (!__libc_missing_axp_stat64)
-    {
-      if (flag & AT_SYMLINK_NOFOLLOW)
-	result = INTERNAL_SYSCALL (lstat64, err, 2, file, st);
-      else
-	result = INTERNAL_SYSCALL (stat64, err, 2, file, st);
-
-      if (__builtin_expect (!INTERNAL_SYSCALL_ERROR_P (result, err), 1))
-	return result;
-      errno_out = INTERNAL_SYSCALL_ERRNO (result, err);
-# if __ASSUME_STAT64_SYSCALL == 0
-      if (errno_out == ENOSYS)
-	__libc_missing_axp_stat64 = 1;
-      else
-# endif
-	goto fail;
-    }
-#endif /* __NR_stat64 */
-
-  struct kernel_stat kst;
-
   if (flag & AT_SYMLINK_NOFOLLOW)
-    result = INTERNAL_SYSCALL (lstat, err, 2, file, &kst);
+    result = INTERNAL_SYSCALL (lstat64, err, 2, file, st);
   else
-    result = INTERNAL_SYSCALL (stat, err, 2, file, &kst);
-
+    result = INTERNAL_SYSCALL (stat64, err, 2, file, st);
   if (__builtin_expect (!INTERNAL_SYSCALL_ERROR_P (result, err), 1))
-    return __xstat_conv (vers, &kst, st);
-  errno_out = INTERNAL_SYSCALL_ERRNO (result, err);
+    return result;
 
- fail:
+  errno_out = INTERNAL_SYSCALL_ERRNO (result, err);
   __atfct_seterrno (errno_out, fd, buf);
 
   return -1;
