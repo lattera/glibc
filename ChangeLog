@@ -1,5 +1,20 @@
 2012-08-07  Roland McGrath  <roland@hack.frob.com>
 
+	* sysdeps/unix/bsd/bsd4.4/bits/fcntl.h (O_NOCTTY): Define to 0x8000,
+	not 0.
+	(O_ASYNC, O_FSYNC, O_SYNC): Move outside [__USE_MISC].
+	[__USE_XOPEN2K8] (O_DIRECTORY, O_NOFOLLOW, O_CLOEXEC): New macros.
+	(FCREAT, FEXCL, FTRUNC, FNOCTTY, FNONBLOCK): Macros removed.
+	(struct flock): Move l_start, l_len to the beginning.
+	Use __pid_t for l_pid.
+	[__USE_XOPEN2K] (POSIX_FADV_NORMAL, POSIX_FADV_RANDOM): New macros.
+	[__USE_XOPEN2K] (POSIX_FADV_SEQUENTIAL, POSIX_FADV_WILLNEED): Likewise.
+	[__USE_XOPEN2K] (POSIX_FADV_DONTNEED, POSIX_FADV_NOREUSE): Likewise.
+	(F_GETLK64, F_SETLK64, F_SETLKW64): New macros.
+	[__USE_XOPEN2K8] (F_DUPFD_CLOEXEC): New macro.
+	[__USE_LARGEFILE64] (struct flock64): New type.
+	(F_GETOWN, F_SETOWN): Also define for [__USE_XOPEN2K8].
+
 	* sysdeps/unix/bsd/bsd4.4/bits/dirent.h: Renamed to ...
 	* bits/dirent.h: ... here.
 
