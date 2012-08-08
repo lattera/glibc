@@ -1,3 +1,26 @@
+2012-08-08  Joseph Myers  <joseph@codesourcery.com>
+
+	* allocatestack.c (setxid_signal_thread) [__ASSUME_TGKILL]: Make
+	code unconditional.
+	(setxid_signal_thread) [!__ASSUME_TGKILL]: Remove conditional code.
+	* pthread_cancel.c (pthread_cancel) [__ASSUME_TGKILL]: Make code
+	unconditional.
+	(pthread_cancel) [!__ASSUME_TGKILL]: Remove conditional code.
+	* sysdeps/pthread/createthread.c (do_clone) [__ASSUME_TGKILL]:
+	Make code unconditional.
+	(do_clone) [!__ASSUME_TGKILL]: Remove conditional code.
+	* sysdeps/unix/sysv/linux/pt-raise.c (raise) [__ASSUME_TGKILL ||
+	__NR_tgkill]: Make code unconditional.
+	(raise) [__ASSUME_TGKILL]: Likewise.
+	(raise) [!__ASSUME_TGKILL]: Remove conditional code.
+	* sysdeps/unix/sysv/linux/pthread_kill.c (__pthread_kill)
+	[__ASSUME_TGKILL]: Make code unconditional.
+	(__pthread_kill) [!__ASSUME_TGKILL]: Remove conditional code.
+	* sysdeps/unix/sysv/linux/raise.c (raise) [__ASSUME_TGKILL ||
+	__NR_tgkill]: Make code unconditional.
+	(raise) [__ASSUME_TGKILL]: Likewise.
+	(raise) [!__ASSUME_TGKILL]: Remove conditional code.
+
 2012-08-07  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/pthread/createthread.c (create_thread)

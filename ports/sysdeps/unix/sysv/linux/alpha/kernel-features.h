@@ -20,9 +20,6 @@
 #ifndef _KERNEL_FEATURES_H
 #define _KERNEL_FEATURES_H 1
 
-/* The tgkill syscall was introduced for alpha 2.6.0-test1.  */
-#define __ASSUME_TGKILL	1
-
 #define __ASSUME_UTIMES	1
 
 /* Support for the O_CLOEXEC flag was added for alpha in 2.6.23.  */

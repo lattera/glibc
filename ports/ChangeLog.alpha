@@ -1,3 +1,8 @@
+2012-08-08  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/alpha/kernel-features.h
+	(__ASSUME_TGKILL): Remove.
+
 2012-08-08  Richard Henderson  <rth@redhat.com>
 
 	* sysdeps/unix/sysv/linux/alpha/kernel-features.h

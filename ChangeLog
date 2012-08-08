@@ -1,3 +1,8 @@
+2012-08-08  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/kernel-features.h (__ASSUME_TGKILL):
+	Remove.
+
 2012-08-08  Roland McGrath  <roland@hack.frob.com>
 
 	* sysdeps/posix/fdopendir.c: Include <stddef.h>.

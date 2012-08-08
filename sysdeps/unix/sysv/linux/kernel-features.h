@@ -113,13 +113,6 @@
 /* The statfs64 syscalls are available in 2.5.74 (but not for alpha).  */
 #define __ASSUME_STATFS64	1
 
-/* The tgkill syscall was instroduced for i386 in 2.5.75.  On x86-64,
-   sparc, SH, ppc, and ppc64 it was introduced in 2.6.0-test3. */
-#if (defined __i386__ || defined __x86_64__ || defined __powerpc__	\
-     || defined __sh__ || defined __sparc__)
-# define __ASSUME_TGKILL	1
-#endif
-
 /* The utimes syscall has been available for some architectures
    forever.  For x86 it was introduced after 2.5.75, for x86-64,
    ppc, and ppc64 it was introduced in 2.6.0-test3.  */

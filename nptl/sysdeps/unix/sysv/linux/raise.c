@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 2002-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -29,9 +29,7 @@ raise (sig)
      int sig;
 {
   struct pthread *pd = THREAD_SELF;
-#if __ASSUME_TGKILL || defined __NR_tgkill
   pid_t pid = THREAD_GETMEM (pd, pid);
-#endif
   pid_t selftid = THREAD_GETMEM (pd, tid);
   if (selftid == 0)
     {
@@ -44,31 +42,18 @@ raise (sig)
 #endif
       THREAD_SETMEM (pd, tid, selftid);
 
-#if __ASSUME_TGKILL || defined __NR_tgkill
       /* We do not set the PID field in the TID here since we might be
 	 called from a signal handler while the thread executes fork.  */
       pid = selftid;
-#endif
     }
-#if __ASSUME_TGKILL || defined __NR_tgkill
   else
     /* raise is an async-safe function.  It could be called while the
        fork/vfork function temporarily invalidated the PID field.  Adjust for
        that.  */
     if (__builtin_expect (pid <= 0, 0))
       pid = (pid & INT_MAX) == 0 ? selftid : -pid;
-#endif
 
-#if __ASSUME_TGKILL
   return INLINE_SYSCALL (tgkill, 3, pid, selftid, sig);
-#else
-# ifdef __NR_tgkill
-  int res = INLINE_SYSCALL (tgkill, 3, pid, selftid, sig);
-  if (res != -1 || errno != ENOSYS)
-    return res;
-# endif
-  return INLINE_SYSCALL (tkill, 2, selftid, sig);
-#endif
 }
 libc_hidden_def (raise)
 weak_alias (raise, gsignal)
