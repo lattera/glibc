@@ -1,5 +1,7 @@
 2012-08-08  Andreas Schwab  <schwab@linux-m68k.org>
 
+	* sysdeps/m68k/coldfire/fpu/bits/mathinline.h: New file.
+
 	* sysdeps/unix/sysv/linux/m68k/coldfire/nptl/bits/atomic.h
 	(atomic_compare_and_exchange_val_acq) [!SHARED]: Add cast to avoid
 	warning.
