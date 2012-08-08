@@ -22,7 +22,9 @@
 #define CLEAR_CACHE(BEG,END)                                            \
   INTERNAL_SYSCALL_ARM (cacheflush, , 3, (BEG), (END), 0)
 
-/* The rest is just machine-specific.  */
-#include <sysdeps/arm/dl-machine.h>
-
 #endif
+
+/* The rest is just machine-specific.
+   This #include is outside the #ifndef because the parts of
+   dl-machine.h used only by dynamic-link.h are outside the guard.  */
+#include <sysdeps/arm/dl-machine.h>

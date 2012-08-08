@@ -1,5 +1,8 @@
 2012-08-08  Roland McGrath  <roland@hack.frob.com>
 
+	* sysdeps/unix/sysv/linux/arm/dl-machine.h: Move #include outside of
+	[!dl_machine_h].
+
 	* sysdeps/unix/sysv/linux/arm/nptl/bits/atomic.h
 	[!__GCC_HAVE_SYNC_COMPARE_AND_SWAP_4]
 	(__arch_compare_and_exchange_val_32_acq): Use uint32_t rather than
