@@ -1,3 +1,9 @@
+2012-08-08  Andreas Schwab  <schwab@linux-m68k.org>
+
+	* sysdeps/unix/sysv/linux/m68k/coldfire/nptl/bits/atomic.h
+	(atomic_compare_and_exchange_val_acq) [!SHARED]: Add cast to avoid
+	warning.
+
 2012-08-07  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/m68k/configure.in (arch_minimum_kernel):

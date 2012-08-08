@@ -1,4 +1,4 @@
-/* Copyright (C) 2010 Free Software Foundation, Inc.
+/* Copyright (C) 2010-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Maxim Kuvyrkov <maxim@codesourcery.com>, 2010.
 
@@ -42,8 +42,8 @@ typedef uintmax_t uatomic_max_t;
 #ifdef SHARED
 # define atomic_compare_and_exchange_val_acq(mem, newval, oldval)	\
   ({									\
-    /* Use temporary variables to workaround call-clobberness of */	\
-    /* the registers.  */						\
+    /* Use temporary variables to workaround call-clobberness of 	\
+       the registers.  */						\
     __typeof (mem) _mem = mem;						\
     __typeof (oldval) _oldval = oldval;					\
     __typeof (newval) _newval = newval;					\
@@ -65,13 +65,13 @@ typedef uintmax_t uatomic_max_t;
 #else
 # define atomic_compare_and_exchange_val_acq(mem, newval, oldval)	\
   ({									\
-    /* Use temporary variables to workaround call-clobberness of */	\
-    /* the registers.  */						\
+    /* Use temporary variables to workaround call-clobberness of 	\
+       the registers.  */						\
     __typeof (mem) _mem = mem;						\
     __typeof (oldval) _oldval = oldval;					\
     __typeof (newval) _newval = newval;					\
     register __typeof (oldval) _d0 asm ("d0")				\
-      = SYS_ify (atomic_cmpxchg_32);					\
+      = (__typeof (oldval)) SYS_ify (atomic_cmpxchg_32);		\
     register __typeof (mem) _a0 asm ("a0") = _mem;			\
     register __typeof (oldval) _d2 asm ("d2") = _oldval;		\
     register __typeof (newval) _d1 asm ("d1") = _newval;		\
