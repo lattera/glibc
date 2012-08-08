@@ -25,9 +25,6 @@
 
 #define __ASSUME_UTIMES	1
 
-/* Starting with version 2.6.9, SSI_IEEE_RAISE_EXCEPTION exists.  */
-#define __ASSUME_IEEE_RAISE_EXCEPTION	1
-
 /* Support for the O_CLOEXEC flag was added for alpha in 2.6.23.  */
 #if __LINUX_KERNEL_VERSION >= 0x020617
 # define __ASSUME_O_CLOEXEC    1
