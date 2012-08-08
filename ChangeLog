@@ -1,5 +1,7 @@
 2012-08-08  Roland McGrath  <roland@hack.frob.com>
 
+	* sysdeps/posix/fdopendir.c: Include <stddef.h>.
+
 	* sysdeps/unix/sysv/linux/readdir64_r.c: Update #include for
 	sysdeps/unix -> sysdeps/posix move.
 	* sysdeps/unix/sysv/linux/i386/readdir64_r.c: Likewise.
