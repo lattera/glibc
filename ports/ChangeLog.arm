@@ -1,5 +1,10 @@
 2012-08-08  Roland McGrath  <roland@hack.frob.com>
 
+	* sysdeps/unix/sysv/linux/arm/nptl/bits/atomic.h
+	[!__GCC_HAVE_SYNC_COMPARE_AND_SWAP_4]
+	(__arch_compare_and_exchange_val_32_acq): Use uint32_t rather than
+	__typeof (...) for non-pointer variables derived from the arguments.
+
 	* sysdeps/arm/dl-irel.h: Include <ldsodefs.h>.
 
 	* sysdeps/arm/dl-machine.h (elf_machine_load_address): Use proper type

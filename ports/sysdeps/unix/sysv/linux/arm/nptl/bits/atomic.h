@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
+/* Copyright (C) 2002-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -74,17 +74,24 @@ void __arm_link_error (void);
 
 /* It doesn't matter what register is used for a_oldval2, but we must
    specify one to work around GCC PR rtl-optimization/21223.  Otherwise
-   it may cause a_oldval or a_tmp to be moved to a different register.  */
+   it may cause a_oldval or a_tmp to be moved to a different register.
 
+   We use the union trick rather than simply using __typeof (...) in the
+   declarations of A_OLDVAL et al because when NEWVAL or OLDVAL is of the
+   form *PTR and PTR has a 'volatile ... *' type, then __typeof (*PTR) has
+   a 'volatile ...' type and this triggers -Wvolatile-register-var to
+   complain about 'register volatile ... asm ("reg")'.  */
 #elif defined __thumb2__
 /* Thumb-2 has ldrex/strex.  However it does not have barrier instructions,
    so we still need to use the kernel helper.  */
 #define __arch_compare_and_exchange_val_32_acq(mem, newval, oldval) \
-  ({ register __typeof (oldval) a_oldval asm ("r0");			      \
-     register __typeof (oldval) a_newval asm ("r1") = (newval);		      \
+  ({ union { __typeof (oldval) a; uint32_t v; } oldval_arg = { .a = (oldval) };\
+     union { __typeof (newval) a; uint32_t v; } newval_arg = { .a = (newval) };\
+     register uint32_t a_oldval asm ("r0");				      \
+     register uint32_t a_newval asm ("r1") = newval_arg.v;		      \
      register __typeof (mem) a_ptr asm ("r2") = (mem);			      \
-     register __typeof (oldval) a_tmp asm ("r3");			      \
-     register __typeof (oldval) a_oldval2 asm ("r4") = (oldval);	      \
+     register uint32_t a_tmp asm ("r3");				      \
+     register uint32_t a_oldval2 asm ("r4") = oldval_arg.v;		      \
      __asm__ __volatile__						      \
 	     ("0:\tldr\t%[tmp],[%[ptr]]\n\t"				      \
 	      "cmp\t%[tmp], %[old2]\n\t"				      \
@@ -100,14 +107,16 @@ void __arm_link_error (void);
 	      : [new] "r" (a_newval), [ptr] "r" (a_ptr),		      \
 		[old2] "r" (a_oldval2)					      \
 	      : "ip", "lr", "cc", "memory");				      \
-     a_tmp; })
+     (__typeof (oldval)) a_tmp; })
 #else
-#define __arch_compare_and_exchange_val_32_acq(mem, newval, oldval) \
-  ({ register __typeof (oldval) a_oldval asm ("r0");			      \
-     register __typeof (oldval) a_newval asm ("r1") = (newval);		      \
+#define __arch_compare_and_exchange_val_32_acq(mem, newval, oldval)	      \
+  ({ union { __typeof (oldval) a; uint32_t v; } oldval_arg = { .a = (oldval) };\
+     union { __typeof (newval) a; uint32_t v; } newval_arg = { .a = (newval) };\
+     register uint32_t a_oldval asm ("r0");				      \
+     register uint32_t a_newval asm ("r1") = newval_arg.v;		      \
      register __typeof (mem) a_ptr asm ("r2") = (mem);			      \
-     register __typeof (oldval) a_tmp asm ("r3");			      \
-     register __typeof (oldval) a_oldval2 asm ("r4") = (oldval);	      \
+     register uint32_t a_tmp asm ("r3");				      \
+     register uint32_t a_oldval2 asm ("r4") = oldval_arg.v;		      \
      __asm__ __volatile__						      \
 	     ("0:\tldr\t%[tmp],[%[ptr]]\n\t"				      \
 	      "cmp\t%[tmp], %[old2]\n\t"				      \
@@ -123,7 +132,7 @@ void __arm_link_error (void);
 	      : [new] "r" (a_newval), [ptr] "r" (a_ptr),		      \
 		[old2] "r" (a_oldval2)					      \
 	      : "ip", "lr", "cc", "memory");				      \
-     a_tmp; })
+     (__typeof (oldval)) a_tmp; })
 #endif
 
 #define __arch_compare_and_exchange_val_64_acq(mem, newval, oldval) \
