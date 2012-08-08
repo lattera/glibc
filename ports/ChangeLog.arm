@@ -1,5 +1,7 @@
 2012-08-08  Roland McGrath  <roland@hack.frob.com>
 
+	* sysdeps/arm/dl-irel.h: Include <ldsodefs.h>.
+
 	* sysdeps/arm/dl-machine.h (elf_machine_load_address): Use proper type
 	for __dl_start declaration.
 
