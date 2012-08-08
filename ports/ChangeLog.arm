@@ -1,5 +1,8 @@
 2012-08-08  Roland McGrath  <roland@hack.frob.com>
 
+	* sysdeps/arm/ldsodefs.h (ARCH_PLTEXIT_MEMBERS): Use const on
+	`struct La_arm_regs *' parameter.
+
 	* sysdeps/unix/sysv/linux/arm/dl-machine.h: Move #include outside of
 	[!dl_machine_h].
 
