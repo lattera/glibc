@@ -1,3 +1,23 @@
+2012-08-09  Roland McGrath  <roland@hack.frob.com>
+
+	* sysdeps/arm/arm-features.h: New file.
+	* sysdeps/unix/sysv/linux/arm/arm-features.h: New file.
+	* sysdeps/arm/fclrexcpt.c: Use ARM_HAVE_VFP instead of hwcap bits.
+	* sysdeps/arm/fedisblxcpt.c: Likewise.
+	* sysdeps/arm/feenablxcpt.c: Likewise.
+	* sysdeps/arm/fegetenv.c: Likewise.
+	* sysdeps/arm/fegetexcept.c: Likewise.
+	* sysdeps/arm/fegetround.c: Likewise.
+	* sysdeps/arm/feholdexcpt.c: Likewise.
+	* sysdeps/arm/fesetenv.c: Likewise.
+	* sysdeps/arm/fesetround.c: Likewise.
+	* sysdeps/arm/feupdateenv.c: Likewise.
+	* sysdeps/arm/fgetexcptflg.c: Likewise.
+	* sysdeps/arm/fraiseexcpt.c: Likewise.
+	* sysdeps/arm/fsetexcptflg.c: Likewise.
+	* sysdeps/arm/ftestexcept.c: Likewise.
+	* sysdeps/arm/setfpucw.c: Likewise.
+
 2012-08-08  Roland McGrath  <roland@hack.frob.com>
 
 	* sysdeps/arm/sotruss-lib.c: New file.

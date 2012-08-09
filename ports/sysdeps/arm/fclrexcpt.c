@@ -1,5 +1,5 @@
 /* Clear given exceptions in current floating-point environment.
-   Copyright (C) 1997,98,99,2000,01,05,11 Free Software Foundation, Inc.
+   Copyright (C) 1997-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -18,16 +18,13 @@
 
 #include <fenv.h>
 #include <fpu_control.h>
+#include <arm-features.h>
 
-#include <unistd.h>
-#include <ldsodefs.h>
-#include <dl-procinfo.h>
-#include <sysdep.h>
 
 int
 __feclearexcept (int excepts)
 {
-  if (GLRO (dl_hwcap) & HWCAP_ARM_VFP)
+  if (ARM_HAVE_VFP)
     {
       unsigned long int temp;
 

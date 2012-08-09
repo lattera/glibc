@@ -1,5 +1,5 @@
 /* Return current rounding direction.
-   Copyright (C) 2004, 2005 Free Software Foundation, Inc.
+   Copyright (C) 2004-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -18,16 +18,13 @@
 
 #include <fenv.h>
 #include <fpu_control.h>
+#include <arm-features.h>
 
-#include <unistd.h>
-#include <ldsodefs.h>
-#include <dl-procinfo.h>
-#include <sysdep.h>
 
 int
 fegetround (void)
 {
-  if (GLRO (dl_hwcap) & HWCAP_ARM_VFP)
+  if (ARM_HAVE_VFP)
     {
       unsigned int temp;
 

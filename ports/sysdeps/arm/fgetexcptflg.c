@@ -1,5 +1,5 @@
 /* Store current representation for exceptions.
-   Copyright (C) 1997, 1999, 2000, 2008 Free Software Foundation, Inc.
+   Copyright (C) 1997-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -19,16 +19,13 @@
 
 #include <fenv.h>
 #include <fpu_control.h>
+#include <arm-features.h>
 
-#include <unistd.h>
-#include <ldsodefs.h>
-#include <dl-procinfo.h>
-#include <sysdep.h>
 
 int
 __fegetexceptflag (fexcept_t *flagp, int excepts)
 {
-  if (GLRO (dl_hwcap) & HWCAP_ARM_VFP)
+  if (ARM_HAVE_VFP)
     {
       unsigned long temp;
 

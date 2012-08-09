@@ -1,5 +1,5 @@
 /* Raise given exceptions.
-   Copyright (C) 2004, 2005, 2011 Free Software Foundation, Inc.
+   Copyright (C) 2004-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -19,16 +19,13 @@
 #include <fpu_control.h>
 #include <fenv.h>
 #include <float.h>
+#include <arm-features.h>
 
-#include <unistd.h>
-#include <ldsodefs.h>
-#include <dl-procinfo.h>
-#include <sysdep.h>
 
 int
 feraiseexcept (int excepts)
 {
-  if (GLRO (dl_hwcap) & HWCAP_ARM_VFP)
+  if (ARM_HAVE_VFP)
     {
       int fpscr;
       const float fp_zero = 0.0, fp_one = 1.0, fp_max = FLT_MAX,

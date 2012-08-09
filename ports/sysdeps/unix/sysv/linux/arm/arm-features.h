@@ -1,5 +1,5 @@
-/* Set the FPU control word.
-   Copyright (C) 1996-2012 Free Software Foundation, Inc.
+/* Macros to test for CPU features on ARM.  Linux version.
+   Copyright (C) 2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,28 +16,15 @@
    License along with the GNU C Library.  If not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <math.h>
-#include <fpu_control.h>
-#include <arm-features.h>
+#ifndef _LINUX_ARM_FEATURES_H
+#define _LINUX_ARM_FEATURES_H 1
 
+#ifndef __ASSEMBLER__
+# include <ldsodefs.h>
 
-void
-__setfpucw (fpu_control_t set)
-{
-  if (ARM_HAVE_VFP)
-    {
-      fpu_control_t cw;
+# define ARM_HAVE_VFP	(GLRO (dl_hwcap) & HWCAP_ARM_VFP)
+#endif
 
-      /* Fetch the current control word.  */
-      _FPU_GETCW (cw);
+#include_next <arm-features.h>
 
-      /* Preserve the reserved bits, and set the rest as the user
-	 specified (or the default, if the user gave zero).  */
-      cw &= _FPU_RESERVED;
-      cw |= set & ~_FPU_RESERVED;
-
-      _FPU_SETCW (cw);
-    }
-
-  /* Do nothing if a VFP unit isn't present.  */
-}
+#endif  /* arm-features.h */
