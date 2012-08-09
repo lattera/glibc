@@ -2734,8 +2734,23 @@ typedef Elf32_Addr Elf32_Conflict;
 #define R_MN10300_GLOB_DAT	21	/* Create GOT entry.  */
 #define R_MN10300_JMP_SLOT	22	/* Create PLT entry.  */
 #define R_MN10300_RELATIVE	23	/* Adjust by program base.  */
-
-#define R_MN10300_NUM		24
+#define R_MN10300_TLS_GD	24	/* 32-bit offset for global dynamic.  */
+#define R_MN10300_TLS_LD	25	/* 32-bit offset for local dynamic.  */
+#define R_MN10300_TLS_LDO	26	/* Module-relative offset.  */
+#define R_MN10300_TLS_GOTIE	27	/* GOT offset for static TLS block
+					   offset.  */
+#define R_MN10300_TLS_IE	28	/* GOT address for static TLS block
+					   offset.  */
+#define R_MN10300_TLS_LE	29	/* Offset relative to static TLS
+					   block.  */
+#define R_MN10300_TLS_DTPMOD	30	/* ID of module containing symbol.  */
+#define R_MN10300_TLS_DTPOFF	31	/* Offset in module TLS block.  */
+#define R_MN10300_TLS_TPOFF	32	/* Offset in static TLS block.  */
+#define R_MN10300_SYM_DIFF	33	/* Adjustment for next reloc as needed
+					   by linker relaxation.  */
+#define R_MN10300_ALIGN		34	/* Alignment requirement for linker
+					   relaxation.  */
+#define R_MN10300_NUM		35
 
 
 /* M32R relocs.  */

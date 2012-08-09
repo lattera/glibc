@@ -1,3 +1,19 @@
+2012-08-08  Mark Salter  <msalter@redhat.com>
+
+	* elf/elf.h
+	(R_MN10300_TLS_GD): Define.
+	(R_MN10300_TLS_LD): Likewise.
+	(R_MN10300_TLS_LDO): Likewise.
+	(R_MN10300_TLS_GOTIE): Likewise.
+	(R_MN10300_TLS_IE): Likewise.
+	(R_MN10300_TLS_LE): Likewise.
+	(R_MN10300_TLS_DTPMOD): Likewise.
+	(R_MN10300_TLS_DTPOFF): Likewise.
+	(R_MN10300_TLS_TPOFF): Likewise.
+	(R_MN10300_SYM_DIFF): Likewise.
+	(R_MN10300_ALIGN): Likewise.
+	(R_MN10300_NUM): Update.
+
 2012-08-08  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/kernel-features.h (__ASSUME_TGKILL):
