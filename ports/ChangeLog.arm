@@ -1,5 +1,12 @@
 2012-08-09  Roland McGrath  <roland@hack.frob.com>
 
+	* sysdeps/arm/arm-features.h: Document ARM_ASSUME_NO_IWMMXT.
+	* sysdeps/arm/setjmp.S: Include <arm-features.h>.
+	[!ARM_ASSUME_NO_IWMMXT || __SOFTFP__]: Conditionalize hwcap
+	fetching bits on this.
+	[!ARM_ASSUME_NO_IWMMXT]: Conditionalize iWMMXt register use on this.
+	* sysdeps/arm/__longjmp.S: Likewise.
+
 	* sysdeps/arm/__longjmp.S: Use .Lxxx rather than Lxxx for local labels.
 	[__SOFTFP__]: Conditionalize HWCAP_ARM_VFP check on this.
 	* sysdeps/arm/setjmp.S: Likewise.

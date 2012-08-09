@@ -21,6 +21,7 @@
 #define _ASM
 #include <bits/setjmp.h>
 #include <rtld-global-offsets.h>
+#include <arm-features.h>
 
 /* __longjmp(jmpbuf, val) */
 
@@ -46,23 +47,29 @@ ENTRY (__longjmp)
 	cfi_restore (sp)
 	cfi_restore (lr)
 
-#ifdef IS_IN_rtld
+#if !defined ARM_ASSUME_NO_IWMMXT || defined __SOFTFP__
+# define NEED_HWCAP 1
+#endif
+
+#ifdef NEED_HWCAP
+# ifdef IS_IN_rtld
 	ldr	a2, 1f
 	ldr	a3, .Lrtld_local_ro
 0:	add	a2, pc, a2
 	add	a2, a2, a3
 	ldr	a2, [a2, #RTLD_GLOBAL_RO_DL_HWCAP_OFFSET]
-#else
-#ifdef PIC
+# else
+#  ifdef PIC
 	ldr	a2, 1f
 	ldr	a3, .Lrtld_global_ro
 0:	add	a2, pc, a2
 	ldr	a2, [a2, a3]
 	ldr	a2, [a2, #RTLD_GLOBAL_RO_DL_HWCAP_OFFSET]
-#else
+#  else
 	ldr	a2, .Lhwcap
 	ldr	a2, [a2, #0]
-#endif
+#  endif
+# endif
 #endif
 
 #ifdef __SOFTFP__
@@ -79,6 +86,7 @@ ENTRY (__longjmp)
 	mcr	p10, 7, a3, cr1, cr0, 0
 .Lno_vfp:
 
+#ifndef ARM_ASSUME_NO_IWMMXT
 	tst	a2, #HWCAP_ARM_IWMMXT
 	beq	.Lno_iwmmxt
 
@@ -91,22 +99,25 @@ ENTRY (__longjmp)
 	ldcl	p1, cr14, [r12], #8
 	ldcl	p1, cr15, [r12], #8
 .Lno_iwmmxt:
+#endif
 
 	DO_RET(lr)
 
-#ifdef IS_IN_rtld
+#ifdef NEED_HWCAP
+# ifdef IS_IN_rtld
 1:	.long	_GLOBAL_OFFSET_TABLE_ - 0b - 8
 .Lrtld_local_ro:
 	.long	C_SYMBOL_NAME(_rtld_local_ro)(GOTOFF)
-#else
-#ifdef PIC
+# else
+#  ifdef PIC
 1:	.long	_GLOBAL_OFFSET_TABLE_ - 0b - 8
 .Lrtld_global_ro:
 	.long	C_SYMBOL_NAME(_rtld_global_ro)(GOT)
-#else
+#  else
 .Lhwcap:
 	.long	C_SYMBOL_NAME(_dl_hwcap)
-#endif
+#  endif
+# endif
 #endif
 
 END (__longjmp)

@@ -31,4 +31,9 @@
 # define ARM_HAVE_VFP	1
 #endif
 
+/* An OS-specific arm-features.h file may define ARM_ASSUME_NO_IWMMXT
+   to indicate at compile time that iWMMXt hardware is never present
+   at runtime (or that we never care about its state) and so need not
+   be checked for.  */
+
 #endif  /* arm-features.h */

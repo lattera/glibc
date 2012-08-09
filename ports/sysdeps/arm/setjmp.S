@@ -21,6 +21,7 @@
 #define _ASM
 #include <bits/setjmp.h>
 #include <rtld-global-offsets.h>
+#include <arm-features.h>
 
 ENTRY (__sigsetjmp)
 	mov	ip, r0
@@ -28,24 +29,30 @@ ENTRY (__sigsetjmp)
 	/* Save registers */
 	stmia	ip!, {v1-v6, sl, fp, sp, lr}
 
+#if !defined ARM_ASSUME_NO_IWMMXT || defined __SOFTFP__
+# define NEED_HWCAP 1
+#endif
+
+#ifdef NEED_HWCAP
 	/* Check if we have a VFP unit.  */
-#ifdef IS_IN_rtld
+# ifdef IS_IN_rtld
 	ldr	a3, 1f
 	ldr	a4, .Lrtld_local_ro
 0:	add	a3, pc, a3
 	add	a3, a3, a4
 	ldr	a3, [a3, #RTLD_GLOBAL_RO_DL_HWCAP_OFFSET]
-#else
-#ifdef PIC
+# else
+#  ifdef PIC
 	ldr	a3, 1f
 	ldr	a4, .Lrtld_global_ro
 0:	add	a3, pc, a3
 	ldr	a3, [a3, a4]
 	ldr	a3, [a3, #RTLD_GLOBAL_RO_DL_HWCAP_OFFSET]
-#else
+#  else
 	ldr	a3, .Lhwcap
 	ldr	a3, [a3, #0]
-#endif
+#  endif
+# endif
 #endif
 
 #ifdef __SOFTFP__
@@ -64,6 +71,7 @@ ENTRY (__sigsetjmp)
 	str	a4, [ip], #4
 .Lno_vfp:
 
+#ifndef ARM_ASSUME_NO_IWMMXT
 	tst	a3, #HWCAP_ARM_IWMMXT
 	beq	.Lno_iwmmxt
 
@@ -76,23 +84,26 @@ ENTRY (__sigsetjmp)
 	stcl	p1, cr14, [r12], #8
 	stcl	p1, cr15, [r12], #8
 .Lno_iwmmxt:
+#endif
 
 	/* Make a tail call to __sigjmp_save; it takes the same args.  */
 	B	PLTJMP(C_SYMBOL_NAME(__sigjmp_save))
 
-#ifdef IS_IN_rtld
+#ifdef NEED_HWCAP
+# ifdef IS_IN_rtld
 1:	.long	_GLOBAL_OFFSET_TABLE_ - 0b - 8
 .Lrtld_local_ro:
 	.long	C_SYMBOL_NAME(_rtld_local_ro)(GOTOFF)
-#else
-#ifdef PIC
+# else
+#  ifdef PIC
 1:	.long	_GLOBAL_OFFSET_TABLE_ - 0b - 8
 .Lrtld_global_ro:
 	.long	C_SYMBOL_NAME(_rtld_global_ro)(GOT)
-#else
+#  else
 .Lhwcap:
 	.long	C_SYMBOL_NAME(_dl_hwcap)
-#endif
+#  endif
+# endif
 #endif
 
 END (__sigsetjmp)
