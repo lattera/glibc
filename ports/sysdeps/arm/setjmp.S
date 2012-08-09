@@ -1,5 +1,5 @@
 /* setjmp for ARM.
-   Copyright (C) 1997, 1998, 2005, 2006, 2008 Free Software Foundation, Inc.
+   Copyright (C) 1997-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -31,25 +31,27 @@ ENTRY (__sigsetjmp)
 	/* Check if we have a VFP unit.  */
 #ifdef IS_IN_rtld
 	ldr	a3, 1f
-	ldr	a4, Lrtld_local_ro
+	ldr	a4, .Lrtld_local_ro
 0:	add	a3, pc, a3
 	add	a3, a3, a4
 	ldr	a3, [a3, #RTLD_GLOBAL_RO_DL_HWCAP_OFFSET]
 #else
 #ifdef PIC
 	ldr	a3, 1f
-	ldr	a4, Lrtld_global_ro
+	ldr	a4, .Lrtld_global_ro
 0:	add	a3, pc, a3
 	ldr	a3, [a3, a4]
 	ldr	a3, [a3, #RTLD_GLOBAL_RO_DL_HWCAP_OFFSET]
 #else
-	ldr	a3, Lhwcap
+	ldr	a3, .Lhwcap
 	ldr	a3, [a3, #0]
 #endif
 #endif
 
+#ifdef __SOFTFP__
 	tst	a3, #HWCAP_ARM_VFP
-	beq	Lno_vfp
+	beq	.Lno_vfp
+#endif
 
 	/* Store the VFP registers.
 	   Don't use VFP instructions directly because this code
@@ -60,10 +62,10 @@ ENTRY (__sigsetjmp)
 	/* Following instruction is vmrs a4, fpscr.  */
 	mrc	p10, 7, a4, cr1, cr0, 0
 	str	a4, [ip], #4
-Lno_vfp:
+.Lno_vfp:
 
 	tst	a3, #HWCAP_ARM_IWMMXT
-	beq	Lno_iwmmxt
+	beq	.Lno_iwmmxt
 
 	/* Save the call-preserved iWMMXt registers.  */
 	/* Following instructions are wstrd wr10, [ip], #8 (etc.)  */
@@ -73,22 +75,22 @@ Lno_vfp:
 	stcl	p1, cr13, [r12], #8
 	stcl	p1, cr14, [r12], #8
 	stcl	p1, cr15, [r12], #8
-Lno_iwmmxt:
+.Lno_iwmmxt:
 
 	/* Make a tail call to __sigjmp_save; it takes the same args.  */
 	B	PLTJMP(C_SYMBOL_NAME(__sigjmp_save))
 
 #ifdef IS_IN_rtld
 1:	.long	_GLOBAL_OFFSET_TABLE_ - 0b - 8
-Lrtld_local_ro:
+.Lrtld_local_ro:
 	.long	C_SYMBOL_NAME(_rtld_local_ro)(GOTOFF)
 #else
 #ifdef PIC
 1:	.long	_GLOBAL_OFFSET_TABLE_ - 0b - 8
-Lrtld_global_ro:
+.Lrtld_global_ro:
 	.long	C_SYMBOL_NAME(_rtld_global_ro)(GOT)
 #else
-Lhwcap:
+.Lhwcap:
 	.long	C_SYMBOL_NAME(_dl_hwcap)
 #endif
 #endif
