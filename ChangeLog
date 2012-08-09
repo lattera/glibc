@@ -1,3 +1,33 @@
+2012-08-09  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #14166]
+	* sysdeps/i386/i686/multiarch/strstr-c.c (strstr): Redefined
+	to __redirect_strstr.
+	(__strstr_sse42): Use typeof __redirect_strstr.
+	(__strstr_ia32): Likewise.
+	(__libc_strstr): New prototype.
+	(strstr): Renamed to ...
+	(__libc_strstr): This.
+	(strstr): New strong alias of __libc_strstr.
+	* sysdeps/x86_64/multiarch/strstr-c.c: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/time.c (time): Redefined to
+	__redirect_time.
+	Include <time.h>.
+	(__libc_time): New prototype.
+	(time_ifunc): Replace time with __libc_time.
+	(time): New strong alias and hidden definition of __libc_time.
+	(__GI_time): Remove strong alias.
+	* sysdeps/x86_64/multiarch/memmove.c: Don't include <string.h>.
+	Include <stddef.h>.
+	(memmove): Redefined to __redirect_memmove.
+	(__memmove_sse2): Use typeof __redirect_memmove.
+	(__memmove_ssse3): Likewise.
+	(__memmove_ssse3_back): Likewise.
+	(__libc_memmove): New prototype.
+	(memmove): Renamed to ...
+	(__libc_memmove): This.
+	(memmove): New strong alias of __libc_memmove.
+
 2012-08-08  Mark Salter  <msalter@redhat.com>
 
 	* elf/elf.h

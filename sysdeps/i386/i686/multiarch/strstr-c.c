@@ -7,9 +7,20 @@
   __hidden_ver1 (__strstr_ia32, __GI_strstr, __strstr_ia32);
 #endif
 
+/* Redefine strstr so that the compiler won't complain about the type
+   mismatch with the IFUNC selector in strong_alias, below.  */
+#undef strstr
+#define strstr __redirect_strstr
+
 #include "string/strstr.c"
 
-extern char *__strstr_sse42 (const char *, const char *) attribute_hidden;
-extern __typeof (__strstr_ia32) __strstr_ia32 attribute_hidden;
+extern __typeof (__redirect_strstr) __strstr_sse42 attribute_hidden;
+extern __typeof (__redirect_strstr) __strstr_ia32 attribute_hidden;
 
-libc_ifunc (strstr, HAS_SSE4_2 ? __strstr_sse42 : __strstr_ia32);
+/* Avoid DWARF definition DIE on ifunc symbol so that GDB can handle
+   ifunc symbol properly.  */
+extern __typeof (__redirect_strstr) __libc_strstr;
+libc_ifunc (__libc_strstr, HAS_SSE4_2 ? __strstr_sse42 : __strstr_ia32)
+
+#undef strstr
+strong_alias (__libc_strstr, strstr)

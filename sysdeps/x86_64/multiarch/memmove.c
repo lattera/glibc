@@ -17,7 +17,7 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <string.h>
+#include <stddef.h>
 
 #ifndef NOT_IN_libc
 #include <shlib-compat.h>
@@ -29,20 +29,31 @@
 # define libc_hidden_builtin_def(name) \
   __hidden_ver1 (__memmove_sse2, __GI_memmove, __memmove_sse2);
 #endif
-#endif
 
-extern __typeof (memmove) __memmove_sse2 attribute_hidden;
-extern __typeof (memmove) __memmove_ssse3 attribute_hidden;
-extern __typeof (memmove) __memmove_ssse3_back attribute_hidden;
+/* Redefine memmove so that the compiler won't complain about the type
+   mismatch with the IFUNC selector in strong_alias, below.  */
+#undef memmove
+#define memmove __redirect_memmove
+#endif
 
 #include "string/memmove.c"
 
 #ifndef NOT_IN_libc
-libc_ifunc (memmove,
+extern __typeof (__redirect_memmove) __memmove_sse2 attribute_hidden;
+extern __typeof (__redirect_memmove) __memmove_ssse3 attribute_hidden;
+extern __typeof (__redirect_memmove) __memmove_ssse3_back attribute_hidden;
+
+/* Avoid DWARF definition DIE on ifunc symbol so that GDB can handle
+   ifunc symbol properly.  */
+extern __typeof (__redirect_memmove) __libc_memmove;
+libc_ifunc (__libc_memmove,
 	    HAS_SSSE3
 	    ? (HAS_FAST_COPY_BACKWARD
 	       ? __memmove_ssse3_back : __memmove_ssse3)
-	    : __memmove_sse2);
+	    : __memmove_sse2)
+
+#undef memmove
+strong_alias (__libc_memmove, memmove)
 
 #if SHLIB_COMPAT (libc, GLIBC_2_2_5, GLIBC_2_14)
 compat_symbol (libc, memmove, memcpy, GLIBC_2_2_5);

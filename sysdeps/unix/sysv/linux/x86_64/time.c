@@ -16,11 +16,20 @@
    <http://www.gnu.org/licenses/>.  */
 
 #ifdef SHARED
+/* Redefine time so that the compiler won't complain about the type
+   mismatch with the IFUNC selector in strong_alias, below.  */
+#undef time
+#define time __redirect_time
+#include <time.h>
+
 #include <dl-vdso.h>
 
 #define VSYSCALL_ADDR_vtime	0xffffffffff600400
 
-void *time_ifunc (void) __asm__ ("time");
+/* Avoid DWARF definition DIE on ifunc symbol so that GDB can handle
+   ifunc symbol properly.  */
+extern __typeof (__redirect_time) __libc_time;
+void *time_ifunc (void) __asm__ ("__libc_time");
 
 void *
 time_ifunc (void)
@@ -30,7 +39,11 @@ time_ifunc (void)
   /* If the vDSO is not available we fall back on the old vsyscall.  */
   return _dl_vdso_vsym ("__vdso_time", &linux26) ?: (void *) VSYSCALL_ADDR_vtime;
 }
-__asm (".type time, %gnu_indirect_function");
+__asm (".type __libc_time, %gnu_indirect_function");
+
+#undef time
+strong_alias (__libc_time, time)
+libc_hidden_ver (__libc_time, time)
 
 #else
 
@@ -45,5 +58,3 @@ time (time_t *t)
 }
 
 #endif
-
-strong_alias (time, __GI_time)
