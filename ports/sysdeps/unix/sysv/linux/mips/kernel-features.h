@@ -22,6 +22,9 @@
 /* MIPS platforms had IPC64 all along.  */
 #define __ASSUME_IPC64		1
 
+/* MIPS had the utimes syscall by 2.6.0.  */
+#define __ASSUME_UTIMES		1
+
 /* Support for the eventfd2 and signalfd4 syscalls was added in 2.6.27.  */
 #if __LINUX_KERNEL_VERSION >= 0x02061c
 # define __ASSUME_EVENTFD2	1

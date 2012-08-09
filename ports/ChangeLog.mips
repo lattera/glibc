@@ -1,3 +1,8 @@
+2012-08-09  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/mips/kernel-features.h
+	(__ASSUME_UTIMES): Define.
+
 2012-08-07  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/mips/configure.in (arch_minimum_kernel):
