@@ -778,7 +778,7 @@ get_free_list (void)
   return result;
 }
 
-/* Lock and return an arena that can be reused for memory allocation. 
+/* Lock and return an arena that can be reused for memory allocation.
    Avoid AVOID_ARENA as we have already failed to allocate memory in
    it and it is currently locked.  */
 static mstate

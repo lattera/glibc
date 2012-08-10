@@ -2865,8 +2865,8 @@ __libc_malloc(size_t bytes)
       victim = _int_malloc(ar_ptr, bytes);
       (void)mutex_unlock(&ar_ptr->mutex);
     } else {
-      /* ... or sbrk() has failed and there is still a chance to mmap() 
- 	 Grab ar_ptr->next prior to releasing its lock.  */
+      /* ... or sbrk() has failed and there is still a chance to mmap()
+	 Grab ar_ptr->next prior to releasing its lock.  */
       mstate prev = ar_ptr->next ? ar_ptr : 0;
       (void)mutex_unlock(&ar_ptr->mutex);
       ar_ptr = arena_get2(prev, bytes, ar_ptr);
@@ -3046,7 +3046,7 @@ __libc_memalign(size_t alignment, size_t bytes)
       (void)mutex_unlock(&ar_ptr->mutex);
     } else {
       /* ... or sbrk() has failed and there is still a chance to mmap()
- 	 Grab ar_ptr->next prior to releasing its lock.  */
+	 Grab ar_ptr->next prior to releasing its lock.  */
       mstate prev = ar_ptr->next ? ar_ptr : 0;
       (void)mutex_unlock(&ar_ptr->mutex);
       ar_ptr = arena_get2(prev, bytes, ar_ptr);
@@ -3096,7 +3096,7 @@ __libc_valloc(size_t bytes)
       (void)mutex_unlock(&ar_ptr->mutex);
     } else {
       /* ... or sbrk() has failed and there is still a chance to mmap()
- 	 Grab ar_ptr->next prior to releasing its lock.  */
+	 Grab ar_ptr->next prior to releasing its lock.  */
       mstate prev = ar_ptr->next ? ar_ptr : 0;
       (void)mutex_unlock(&ar_ptr->mutex);
       ar_ptr = arena_get2(prev, bytes, ar_ptr);
@@ -3144,7 +3144,7 @@ __libc_pvalloc(size_t bytes)
       (void)mutex_unlock(&ar_ptr->mutex);
     } else {
       /* ... or sbrk() has failed and there is still a chance to mmap()
- 	 Grab ar_ptr->next prior to releasing its lock.  */
+	 Grab ar_ptr->next prior to releasing its lock.  */
       mstate prev = ar_ptr->next ? ar_ptr : 0;
       (void)mutex_unlock(&ar_ptr->mutex);
       ar_ptr = arena_get2(prev, bytes + 2*pagesz + MINSIZE, ar_ptr);
@@ -3232,7 +3232,7 @@ __libc_calloc(size_t n, size_t elem_size)
       (void)mutex_unlock(&main_arena.mutex);
     } else {
       /* ... or sbrk() has failed and there is still a chance to mmap()
- 	 Grab av->next prior to releasing its lock.  */
+	 Grab av->next prior to releasing its lock.  */
       mstate prev = av->next ? av : 0;
       (void)mutex_unlock(&av->mutex);
       av = arena_get2(prev, sz, av);
