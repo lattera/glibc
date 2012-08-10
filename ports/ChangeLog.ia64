@@ -1,3 +1,10 @@
+2012-08-10  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/ia64/nptl/dl-sysdep.h
+	(_dl_discover_osversion): Do not condition on
+	__LINUX_KERNEL_VERSION < 0x020617.
+	(HAVE_DL_DISCOVER_OSVERSION): Likewise.
+
 2012-08-03  Mike Frysinger  <vapier@gentoo.org>
 
 	[BZ #12194]

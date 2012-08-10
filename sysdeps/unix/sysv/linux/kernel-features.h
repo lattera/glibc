@@ -210,6 +210,13 @@
 # define __ASSUME_O_CLOEXEC	1
 #endif
 
+/* From 2.6.23 onwards the value of ARG_MAX depends on the stack
+   size.  */
+#define __LINUX_ARG_MAX_STACK_BASED_MIN_KERNEL	0x020617
+#if __LINUX_KERNEL_VERSION >= __LINUX_ARG_MAX_STACK_BASED_MIN_KERNEL
+# define __ASSUME_ARG_MAX_STACK_BASED	1
+#endif
+
 /* Support for ADJ_OFFSET_SS_READ was added in 2.6.24.  */
 #if __LINUX_KERNEL_VERSION >= 0x020618
 # define __ASSUME_ADJ_OFFSET_SS_READ	1

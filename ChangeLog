@@ -1,3 +1,14 @@
+2012-08-10  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/kernel-features.h
+	(__LINUX_ARG_MAX_STACK_BASED_MIN_KERNEL): Define.
+	[__LINUX_KERNEL_VERSION >= __LINUX_ARG_MAX_STACK_BASED_MIN_KERNEL]
+	(__ASSUME_ARG_MAX_STACK_BASED): Define.
+	* sysdeps/unix/sysv/linux/sysconf.c (__sysconf)
+	[__LINUX_KERNEL_VERSION < 0x020617]: Change condition to
+	!__ASSUME_ARG_MAX_STACK_BASED.  Compare version with
+	__LINUX_ARG_MAX_STACK_BASED_MIN_KERNEL.
+
 2012-08-09  Jeff Law <law@redhat.com>
 
 	[BZ #13939]
