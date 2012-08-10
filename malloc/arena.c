@@ -120,14 +120,14 @@ int __malloc_initialized = -1;
   if(ptr) \
     (void)mutex_lock(&ptr->mutex); \
   else \
-    ptr = arena_get2(ptr, (size)); \
+    ptr = arena_get2(ptr, (size), NULL); \
 } while(0)
 #else
 # define arena_lock(ptr, size) do { \
   if(ptr && !mutex_trylock(&ptr->mutex)) { \
     THREAD_STAT(++(ptr->stat_lock_direct)); \
   } else \
-    ptr = arena_get2(ptr, (size)); \
+    ptr = arena_get2(ptr, (size), NULL); \
 } while(0)
 #endif
 
@@ -778,9 +778,11 @@ get_free_list (void)
   return result;
 }
 
-
+/* Lock and return an arena that can be reused for memory allocation. 
+   Avoid AVOID_ARENA as we have already failed to allocate memory in
+   it and it is currently locked.  */
 static mstate
-reused_arena (void)
+reused_arena (mstate avoid_arena)
 {
   mstate result;
   static mstate next_to_use;
@@ -797,6 +799,11 @@ reused_arena (void)
     }
   while (result != next_to_use);
 
+  /* Avoid AVOID_ARENA as we have already failed to allocate memory
+     in that arena and it is currently locked.   */
+  if (result == avoid_arena)
+    result = result->next;
+
   /* No arena available.  Wait for the next in line.  */
   (void)mutex_lock(&result->mutex);
 
@@ -811,7 +818,7 @@ reused_arena (void)
 
 static mstate
 internal_function
-arena_get2(mstate a_tsd, size_t size)
+arena_get2(mstate a_tsd, size_t size, mstate avoid_arena)
 {
   mstate a;
 
@@ -856,7 +863,7 @@ arena_get2(mstate a_tsd, size_t size)
 	    catomic_decrement (&narenas);
 	}
       else
-	a = reused_arena ();
+	a = reused_arena (avoid_arena);
     }
 #else
   if(!a_tsd)

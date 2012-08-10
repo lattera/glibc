@@ -1,3 +1,17 @@
+2012-08-09  Jeff Law <law@redhat.com>
+
+	[BZ #13939]
+	* malloc.c/arena.c (reused_arena): New parameter, avoid_arena.
+	When avoid_arena is set, don't retry in the that arena.  Pick the
+	next one, whatever it might be.
+	(arena_get2): New parameter avoid_arena, pass through to reused_arena.
+	(arena_lock): Pass in new parameter to arena_get2.
+	* malloc/malloc.c (__libc_memalign): Pass in new parameter to
+	arena_get2.
+	(__libc_malloc): Unify retrying after main arena failure with
+	__libc_memalign version.
+	(__libc_valloc, __libc_pvalloc, __libc_calloc): Likewise.
+
 2012-08-09  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #14166]
