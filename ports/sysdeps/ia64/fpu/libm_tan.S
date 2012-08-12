@@ -689,7 +689,7 @@
 .align 128
 
 TAN_BASE_CONSTANTS:
-ASM_TYPE_DIRECTIVE(TAN_BASE_CONSTANTS,@object)
+.type TAN_BASE_CONSTANTS, @object
 data4    0x4B800000, 0xCB800000, 0x38800000, 0xB8800000 // two**24, -two**24
                                                         // two**-14, -two**-14
 data4    0x4E44152A, 0xA2F9836E, 0x00003FFE, 0x00000000 // two_by_pi

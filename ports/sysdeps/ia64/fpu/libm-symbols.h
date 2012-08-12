@@ -4,7 +4,6 @@
 /* Support for compatible assembler handling.  */
 
 #define ASM_SIZE_DIRECTIVE(name) .size name,.-name
-#define ASM_TYPE_DIRECTIVE(name,T) .type name,T
 
 #define LOCAL_LIBM_ENTRY(name)			\
 	.proc name;				\
@@ -18,7 +17,7 @@
 #define RODATA		.rodata
 #define LOCAL_OBJECT_START(name)		\
    name:;					\
-   ASM_TYPE_DIRECTIVE(name, @object)
+   .type name, @object
 #define LOCAL_OBJECT_END(name)			\
    ASM_SIZE_DIRECTIVE(name)
 
@@ -42,7 +41,7 @@
  .hidden __##name;				\
 	LOCAL_LIBM_END(__##name);		\
  ASM_SIZE_DIRECTIVE(__##name);			\
- ASM_TYPE_DIRECTIVE(__##name, @function)
+ .type __##name, @function
 
 #define GLOBAL_IEEE754_ENTRY(name)		\
 	WEAK_LIBM_ENTRY(name);			\
@@ -52,7 +51,7 @@
 #define GLOBAL_IEEE754_END(name)			\
 	WEAK_LIBM_END(name);				\
  ASM_SIZE_DIRECTIVE(__ieee754_##name);			\
- ASM_TYPE_DIRECTIVE(__ieee754_##name, @function)
+ .type __ieee754_##name, @function
 
 #if defined ASSEMBLER && !defined NOT_IN_libc
 # define __libm_error_support	HIDDEN_JUMPTARGET(__libm_error_support)

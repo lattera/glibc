@@ -1,3 +1,11 @@
+2012-08-12  Mike Frysinger  <vapier@gentoo.org>
+
+	* sysdeps/ia64/fpu/libm-symbols.h (ASM_TYPE_DIRECTIVE): Remove.
+	(LOCAL_OBJECT_START): Do not use ASM_TYPE_DIRECTIVE.
+	(WEAK_LIBM_END): Likewise.
+	(GLOBAL_IEEE754_END): Likewise.
+	* sysdeps/ia64/fpu/libm_tan.S: Likewise.
+
 2012-08-10  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/ia64/nptl/dl-sysdep.h
