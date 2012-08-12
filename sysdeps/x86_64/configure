@@ -72,6 +72,10 @@ $as_echo X/"$0" |
   chmod +x "$as_me.lineno" ||
     { $as_echo "$as_me: error: cannot create $as_me.lineno; rerun with a POSIX shell" >&2; as_fn_exit 1; }
 
+  # If we had to re-execute with $CONFIG_SHELL, we're ensured to have
+  # already done that, so ensure we don't try to do so again and fall
+  # in an infinite loop.  This has already happened in practice.
+  _as_can_reexec=no; export _as_can_reexec
   # Don't try to exec as it changes $[0], causing all sort of problems
   # (the dirname of $[0] is not the place where we might find the
   # original and so on.  Autoconf is especially sensitive to this).
@@ -162,56 +166,6 @@ else
 fi
 
 
-
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking if -g produces usable source locations for assembler-with-cpp" >&5
-$as_echo_n "checking if -g produces usable source locations for assembler-with-cpp... " >&6; }
-if ${libc_cv_cpp_asm_debuginfo+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  cat > conftest.S <<EOF
-#include "confdefs.h"
-
-/* comment on
-   two lines */
-	${libc_cv_dot_text}
-	.globl foo
-foo:
-	/* Unfortunately this test only works for a real instruction,
-	   not for any of the machine-independent pseudo-ops.
-	   So we just have to assume everybody has a "nop".  */
-	nop
-	/* comment */
-	nop
-	/* comment */
-	nop
-EOF
-if { ac_try='${CC-cc} $CPPFLAGS $ASFLAGS -g -c conftest.S 1>&5'
-  { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
-  (eval $ac_try) 2>&5
-  ac_status=$?
-  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
-  test $ac_status = 0; }; } && {
-   ac_pattern='conftest\.S'
-   { ac_try='readelf --debug-dump=line conftest.o |
-		   grep $ac_pattern 1>&5'
-  { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
-  (eval $ac_try) 2>&5
-  ac_status=$?
-  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
-  test $ac_status = 0; }; }
-  }; then
-  libc_cv_cpp_asm_debuginfo=yes
-else
-  libc_cv_cpp_asm_debuginfo=no
-fi
-rm -f conftest*
-fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_cpp_asm_debuginfo" >&5
-$as_echo "$libc_cv_cpp_asm_debuginfo" >&6; }
-if test $libc_cv_cpp_asm_debuginfo = yes; then
-  $as_echo "#define HAVE_CPP_ASM_DEBUGINFO 1" >>confdefs.h
-
-fi
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for SSE4 support" >&5
 $as_echo_n "checking for SSE4 support... " >&6; }

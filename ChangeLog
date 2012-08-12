@@ -1,3 +1,19 @@
+2012-08-14  Mike Frysinger  <vapier@gentoo.org>
+
+	* config.h.in (HAVE_CPP_ASM_DEBUGINFO): Delete.
+	* sysdeps/i386/configure.in: Remove assembler-with-cpp debug check.
+	* sysdeps/i386/configure: Regenerated.
+	* sysdeps/i386/sysdep.h (ENTRY): Remove calls to STABS_CURRENT_FILE1,
+	STABS_CURRENT_FILE, and STABS_FUN.
+	(END): Remove call to STABS_FUN_END.
+	(STABS_CURRENT_FILE1): Delete.
+	(STABS_CURRENT_FILE): Likewise.
+	(STABS_FUN): Likewise.
+	(STABS_FUN_END): Likewise.
+	(STABS_FUN2): Likewise.
+	* sysdeps/x86_64/configure.in: Remove assembler-with-cpp debug check.
+	* sysdeps/x86_64/configure: Regenerated.
+
 2012-08-14  Roland McGrath  <roland@hack.frob.com>
 
 	* elf/dl-open.c: Include <atomic.h>.

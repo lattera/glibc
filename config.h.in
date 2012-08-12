@@ -46,9 +46,6 @@
 /* On powerpc64, use overlapping .opd entries.  */
 #undef  USE_PPC64_OVERLAPPING_OPD
 
-/* Define if the assembler generates debugging information directly.  */
-#undef	HAVE_CPP_ASM_DEBUGINFO
-
 /* Define if _Unwind_Find_FDE should be exported from glibc.  */
 #undef  EXPORT_UNWIND_FIND_FDE
 
