@@ -817,6 +817,9 @@ float: 1
 ifloat: 1
 ildouble: 1
 ldouble: 1
+Test "Real part of: clog (0x1.234566p-30 + 1.0 i) == 5.614163921211322622623353961365728040115e-19 + 1.570796325735258575254858696548386439740 i":
+ildouble: 1
+ldouble: 1
 Test "Real part of: clog (0x1.fffffep+127 + 0x1.fffffep+127 i) == 89.06941264234832570836679262104313101776 + pi/4 i":
 ildouble: 1
 ldouble: 1

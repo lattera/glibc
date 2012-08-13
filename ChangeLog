@@ -1,3 +1,7 @@
+2012-08-13  Markus Trippelsdorf  <markus@trippelsdorf.de>
+
+	* sysdeps/x86_64/fpu/libm-test-ulps: Update.
+
 2012-08-13  Jeff Law <law@redhat.com>
 
 	* manual/stdio.texi (snprintf): Clarify handling of the trailing
