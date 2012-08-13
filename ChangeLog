@@ -1,3 +1,8 @@
+2012-08-13  Jeff Law <law@redhat.com>
+
+	* manual/stdio.texi (snprintf): Clarify handling of the trailing
+	null byte in the output string.
+
 2012-08-10  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/kernel-features.h

@@ -2341,6 +2341,8 @@ The @code{snprintf} function is similar to @code{sprintf}, except that
 the @var{size} argument specifies the maximum number of characters to
 produce.  The trailing null character is counted towards this limit, so
 you should allocate at least @var{size} characters for the string @var{s}.
+If @var{size} is zero, nothing, not even the null byte, shall be written and
+@var{s} may be a null pointer.
 
 The return value is the number of characters which would be generated
 for the given input, excluding the trailing null.  If this value is
