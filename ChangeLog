@@ -1,6 +1,7 @@
 2012-08-14  Roland McGrath  <roland@hack.frob.com>
 
 	* elf/dl-open.c: Include <atomic.h>.
+	* elf/dl-lookup.c: Likewise.
 
 2012-08-14  Joseph Myers  <joseph@codesourcery.com>
 
