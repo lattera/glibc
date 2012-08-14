@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2005 Free Software Foundation, Inc.
+/* Copyright (C) 2002-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -32,7 +32,7 @@
    return.  It might still be in the kernel when the cancellation
    request comes.  Therefore we have to use the clone() calls ability
    to have the kernel write the PID into the user-level variable.  */
-#if defined __ASSUME_CLONE_THREAD_FLAGS && !defined FORK
+#ifndef FORK
 # define FORK() \
   INLINE_SYSCALL (clone, 3, CLONE_PARENT_SETTID | SIGCHLD, 0, &pid)
 #endif

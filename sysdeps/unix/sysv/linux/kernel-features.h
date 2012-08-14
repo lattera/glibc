@@ -92,17 +92,6 @@
 # define __ASSUME_MMAP2_SYSCALL		1
 #endif
 
-/* The late 2.5 kernels saw a lot of new CLONE_* flags.  Summarize
-   their availability with one define.  The changes were made first
-   for i386 and the have to be done separately for the other archs.
-   For i386 we pick 2.5.50 as the first version with support.
-   For s390*, SPARC, PPC, x86-64, and SH we pick 2.5.64 as the first
-   version with support.  */
-#if (defined __i386__ || defined __s390__ || defined __sparc__		\
-     || defined __powerpc__ || defined __x86_64__ || defined __sh__)
-# define __ASSUME_CLONE_THREAD_FLAGS	1
-#endif
-
 /* Beginning with 2.5.63 support for realtime and monotonic clocks and
    timers based on them is available.  */
 #define __ASSUME_POSIX_TIMERS		1

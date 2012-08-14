@@ -1,3 +1,8 @@
+2012-08-14  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/tile/kernel-features.h
+	(__ASSUME_CLONE_THREAD_FLAGS): Remove.
+
 2012-08-08  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/tile/kernel-features.h

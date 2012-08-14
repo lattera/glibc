@@ -1,3 +1,10 @@
+2012-08-14  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/ia64/kernel-features.h
+	(__ASSUME_CLONE_THREAD_FLAGS): Remove.
+	* sysdeps/unix/sysv/linux/ia64/system.c (FORK): Define
+	unconditionally.
+
 2012-08-12  Mike Frysinger  <vapier@gentoo.org>
 
 	* sysdeps/ia64/configure.in: Remove TLS check.

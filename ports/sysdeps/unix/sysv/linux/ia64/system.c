@@ -25,10 +25,8 @@
    return.  It might still be in the kernel when the cancellation
    request comes.  Therefore we have to use the clone() calls ability
    to have the kernel write the PID into the user-level variable.  */
-#ifdef __ASSUME_CLONE_THREAD_FLAGS
-# define FORK() \
+#define FORK() \
   INLINE_SYSCALL (clone2, 6, CLONE_PARENT_SETTID | SIGCHLD, NULL, 0, \
 		  &pid, NULL, NULL)
-#endif
 
 #include <sysdeps/unix/sysv/linux/system.c>
