@@ -1,5 +1,5 @@
 /* Load a shared object at runtime, relocate it, and run its initializer.
-   Copyright (C) 1996-2007, 2009-2012 Free Software Foundation, Inc.
+   Copyright (C) 1996-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -33,6 +33,7 @@
 #include <sysdep-cancel.h>
 #include <tls.h>
 #include <stap-probe.h>
+#include <atomic.h>
 
 #include <dl-dst.h>
 

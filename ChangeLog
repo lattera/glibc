@@ -1,3 +1,7 @@
+2012-08-14  Roland McGrath  <roland@hack.frob.com>
+
+	* elf/dl-open.c: Include <atomic.h>.
+
 2012-08-14  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/kernel-features.h
