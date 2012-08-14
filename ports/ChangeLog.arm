@@ -1,3 +1,20 @@
+2012-08-14  Roland McGrath  <roland@hack.frob.com>
+
+	* sysdeps/unix/sysv/linux/arm/nptl/bits/atomic.h
+	[!__GCC_HAVE_SYNC_COMPARE_AND_SWAP_4]
+	(atomic_full_barrier): Renamed to ...
+	(__arm_assisted_full_barrier): ... this.
+	(__arch_compare_and_exchange_val_32_acq): Renamed to ...
+	(__arm_assisted_compare_and_exchange_val_32_acq): ... this.
+	(atomic8_t, uatomic8_t, atomic_fast8_t, uatomic_fast8_t,
+	atomic32_t, uatomic32_t, atomic_fast32_t, uatomic_fast32_t,
+	atomicptr_t, uatomicptr_t, atomic_max_t, uatomic_max_t,
+	atomic_full_barrier, __arch_compare_and_exchange_val_32_acq,
+	__arch_compare_and_exchange_val_8_acq,
+	__arch_compare_and_exchange_val_16_acq,
+	__arch_compare_and_exchange_val_64_acq): Types and macros moved to ...
+	* sysdeps/arm/bits/atomic.h: ... this new file.
+
 2012-08-12  Mike Frysinger  <vapier@gentoo.org>
 
 	* sysdeps/arm/dl-machine.h (elf_machine_rel) [R_ARM_ABS32]: Fix style.

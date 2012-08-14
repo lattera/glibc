@@ -1,4 +1,5 @@
-/* Copyright (C) 2002-2012 Free Software Foundation, Inc.
+/* Atomic operations.  ARM/Linux version.
+   Copyright (C) 2002-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -15,41 +16,17 @@
    License along with the GNU C Library.  If not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <stdint.h>
-#include <sysdep.h>
-
-
-typedef int8_t atomic8_t;
-typedef uint8_t uatomic8_t;
-typedef int_fast8_t atomic_fast8_t;
-typedef uint_fast8_t uatomic_fast8_t;
-
-typedef int32_t atomic32_t;
-typedef uint32_t uatomic32_t;
-typedef int_fast32_t atomic_fast32_t;
-typedef uint_fast32_t uatomic_fast32_t;
-
-typedef intptr_t atomicptr_t;
-typedef uintptr_t uatomicptr_t;
-typedef intmax_t atomic_max_t;
-typedef uintmax_t uatomic_max_t;
-
-void __arm_link_error (void);
-
-/* Use the atomic builtins provided by GCC in case the backend provides
-   a pattern to do this efficiently.  */
-
-#ifdef __GCC_HAVE_SYNC_COMPARE_AND_SWAP_4
-#define atomic_full_barrier() __sync_synchronize ()
-#elif defined __thumb2__
-#define atomic_full_barrier() \
+/* If the compiler doesn't provide a primitive, we'll use this macro
+   to get assistance from the kernel.  */
+#ifdef __thumb2__
+# define __arm_assisted_full_barrier() \
      __asm__ __volatile__						      \
 	     ("movw\tip, #0x0fa0\n\t"					      \
 	      "movt\tip, #0xffff\n\t"					      \
 	      "blx\tip"							      \
 	      : : : "ip", "lr", "cc", "memory");
 #else
-#define atomic_full_barrier() \
+# define __arm_assisted_full_barrier() \
      __asm__ __volatile__						      \
 	     ("mov\tip, #0xffff0fff\n\t"				      \
 	      "mov\tlr, pc\n\t"						      \
@@ -60,19 +37,9 @@ void __arm_link_error (void);
 /* Atomic compare and exchange.  This sequence relies on the kernel to
    provide a compare and exchange operation which is atomic on the
    current architecture, either via cleverness on pre-ARMv6 or via
-   ldrex / strex on ARMv6.  */
+   ldrex / strex on ARMv6.
 
-#define __arch_compare_and_exchange_val_8_acq(mem, newval, oldval) \
-  ({ __arm_link_error (); oldval; })
-
-#define __arch_compare_and_exchange_val_16_acq(mem, newval, oldval) \
-  ({ __arm_link_error (); oldval; })
-
-#ifdef __GCC_HAVE_SYNC_COMPARE_AND_SWAP_4
-#define __arch_compare_and_exchange_val_32_acq(mem, newval, oldval) \
-  __sync_val_compare_and_swap ((mem), (oldval), (newval))
-
-/* It doesn't matter what register is used for a_oldval2, but we must
+   It doesn't matter what register is used for a_oldval2, but we must
    specify one to work around GCC PR rtl-optimization/21223.  Otherwise
    it may cause a_oldval or a_tmp to be moved to a different register.
 
@@ -81,10 +48,10 @@ void __arm_link_error (void);
    form *PTR and PTR has a 'volatile ... *' type, then __typeof (*PTR) has
    a 'volatile ...' type and this triggers -Wvolatile-register-var to
    complain about 'register volatile ... asm ("reg")'.  */
-#elif defined __thumb2__
+#ifdef __thumb2__
 /* Thumb-2 has ldrex/strex.  However it does not have barrier instructions,
    so we still need to use the kernel helper.  */
-#define __arch_compare_and_exchange_val_32_acq(mem, newval, oldval) \
+# define __arm_assisted_compare_and_exchange_val_32_acq(mem, newval, oldval) \
   ({ union { __typeof (oldval) a; uint32_t v; } oldval_arg = { .a = (oldval) };\
      union { __typeof (newval) a; uint32_t v; } newval_arg = { .a = (newval) };\
      register uint32_t a_oldval asm ("r0");				      \
@@ -109,7 +76,7 @@ void __arm_link_error (void);
 	      : "ip", "lr", "cc", "memory");				      \
      (__typeof (oldval)) a_tmp; })
 #else
-#define __arch_compare_and_exchange_val_32_acq(mem, newval, oldval)	      \
+# define __arm_assisted_compare_and_exchange_val_32_acq(mem, newval, oldval) \
   ({ union { __typeof (oldval) a; uint32_t v; } oldval_arg = { .a = (oldval) };\
      union { __typeof (newval) a; uint32_t v; } newval_arg = { .a = (newval) };\
      register uint32_t a_oldval asm ("r0");				      \
@@ -135,5 +102,4 @@ void __arm_link_error (void);
      (__typeof (oldval)) a_tmp; })
 #endif
 
-#define __arch_compare_and_exchange_val_64_acq(mem, newval, oldval) \
-  ({ __arm_link_error (); oldval; })
+#include <sysdeps/arm/bits/atomic.h>
