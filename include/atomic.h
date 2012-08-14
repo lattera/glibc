@@ -198,8 +198,12 @@
 
 
 /* Add VALUE to *MEM and return the old value of *MEM.  */
-#ifndef atomic_exchange_and_add
-# define atomic_exchange_and_add(mem, value) \
+#ifndef atomic_exchange_and_add_acq
+# ifdef atomic_exchange_and_add
+#  define atomic_exchange_and_add_acq(mem, value) \
+  atomic_exchange_and_add (mem, value)
+# else
+#  define atomic_exchange_and_add_acq(mem, value) \
   ({ __typeof (*(mem)) __atg6_oldval;					      \
      __typeof (mem) __atg6_memp = (mem);				      \
      __typeof (*(mem)) __atg6_value = (value);				      \
@@ -213,8 +217,18 @@
 						   __atg6_oldval), 0));	      \
 									      \
      __atg6_oldval; })
+# endif
 #endif
 
+#ifndef atomic_exchange_and_add_rel
+# define atomic_exchange_and_add_rel(mem, value) \
+  atomic_exchange_and_add_acq(mem, value)
+#endif
+
+#ifndef atomic_exchange_and_add
+# define atomic_exchange_and_add(mem, value) \
+  atomic_exchange_and_add_acq(mem, value)
+#endif
 
 #ifndef catomic_exchange_and_add
 # define catomic_exchange_and_add(mem, value) \
