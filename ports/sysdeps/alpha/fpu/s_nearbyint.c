@@ -43,6 +43,6 @@ weak_alias (__nearbyint, nearbyint)
 strong_alias (__nearbyint, __nearbyintl)
 weak_alias (__nearbyint, nearbyintl)
 #endif
-#if LONG_DOUBLE_COMPAT(libm, GLIBC_2_0)
-compat_symbol (libm, __nearbyint, nearbyintl, GLIBC_2_0);
+#if LONG_DOUBLE_COMPAT(libm, GLIBC_2_1)
+compat_symbol (libm, __nearbyint, nearbyintl, GLIBC_2_1);
 #endif

@@ -1,9 +1,14 @@
+2012-08-13  Richard Henderson  <rth@twiddle.net>
+
+	* sysdeps/alpha/fpu/s_nearbyint.c (nearbyintl): Do compat
+	with GLIBC_2_1.
+
 2012-08-08  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/alpha/kernel-features.h
 	(__ASSUME_TGKILL): Remove.
 
-2012-08-08  Richard Henderson  <rth@redhat.com>
+2012-08-08  Richard Henderson  <rth@twiddle.net>
 
 	* sysdeps/unix/sysv/linux/alpha/kernel-features.h
 	(__ASSUME_IEEE_RAISE_EXCEPTION): Remove.
