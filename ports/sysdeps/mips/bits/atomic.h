@@ -193,11 +193,13 @@ typedef uintmax_t uatomic_max_t;
   __atomic_fetch_add (mem, value, model)
 # endif
 
-/* ??? Barrier semantics for atomic_exchange_and_add appear to be
-   undefined.  Use full barrier for now, as that's safe.  */
-# define atomic_exchange_and_add(mem, value)				\
+# define atomic_exchange_and_add_acq(mem, value)			\
   __atomic_val_bysize (__arch_exchange_and_add, int, mem, value,	\
-		       __ATOMIC_ACQ_REL)
+		       __ATOMIC_ACQUIRE)
+
+# define atomic_exchange_and_add_rel(mem, value)			\
+  __atomic_val_bysize (__arch_exchange_and_add, int, mem, value,	\
+		       __ATOMIC_RELEASE)
 #else /* !__GNUC_PREREQ (4, 8) */
 /* This implementation using inline assembly will be removed once glibc
    requires GCC 4.8 or later to build.  */
@@ -434,11 +436,13 @@ typedef uintmax_t uatomic_max_t;
   __prev; })
 # endif
 
-/* ??? Barrier semantics for atomic_exchange_and_add appear to be 
-   undefined.  Use full barrier for now, as that's safe.  */
-# define atomic_exchange_and_add(mem, value) \
-  __atomic_val_bysize (__arch_exchange_and_add, int, mem, value,	      \
-		       MIPS_SYNC_STR, MIPS_SYNC_STR)
+# define atomic_exchange_and_add_acq(mem, value)			\
+  __atomic_val_bysize (__arch_exchange_and_add, int, mem, value,	\
+		       "", MIPS_SYNC_STR)
+
+# define atomic_exchange_and_add_rel(mem, value)			\
+  __atomic_val_bysize (__arch_exchange_and_add, int, mem, value,	\
+		       MIPS_SYNC_STR, "")
 #endif /* __GNUC_PREREQ (4, 8) */
 
 /* TODO: More atomic operations could be implemented efficiently; only the

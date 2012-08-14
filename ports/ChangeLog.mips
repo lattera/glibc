@@ -1,3 +1,14 @@
+2012-08-13  Maxim Kuvyrkov  <maxim@codesourcery.com>
+
+        [__GNUC_PREREQ (4, 8)]
+        (atomic_exchange_and_add): Split into ...
+        (atomic_exchange_and_add_acq, atomic_exchange_and_add_rel): ... these.
+        New atomic macros.
+        [!__GNUC_PREREQ (4, 8)]
+        (atomic_exchange_and_add): Split into ...
+        (atomic_exchange_and_add_acq, atomic_exchange_and_add_rel): ... these.
+        New atomic macros.
+
 2012-08-09  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/mips/kernel-features.h
