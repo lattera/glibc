@@ -1,5 +1,8 @@
 2012-08-14  Roland McGrath  <roland@hack.frob.com>
 
+	* sysdeps/unix/sysv/linux/arm/nptl/bits/atomic.h: Renamed to ...
+	* sysdeps/unix/sysv/linux/arm/bits/atomic.h: ... this.
+
 	* sysdeps/unix/sysv/linux/arm/nptl/bits/atomic.h
 	[!__GCC_HAVE_SYNC_COMPARE_AND_SWAP_4]
 	(atomic_full_barrier): Renamed to ...
