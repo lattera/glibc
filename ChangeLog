@@ -1,8 +1,8 @@
 2012-08-13  Maxim Kuvyrkov  <maxim@codesourcery.com>
 
-        * include/atomic.h (atomic_exchange_and_add): Split into ...
-        (atomic_exchange_and_add_acq, atomic_exchange_and_add_rel): ... these.
-        New atomic macros.
+	* include/atomic.h (atomic_exchange_and_add): Split into ...
+	(atomic_exchange_and_add_acq, atomic_exchange_and_add_rel): ... these.
+	New atomic macros.
 
 2012-08-13  Markus Trippelsdorf  <markus@trippelsdorf.de>
 
