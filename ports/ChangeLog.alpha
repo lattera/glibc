@@ -1,5 +1,8 @@
 2012-08-13  Richard Henderson  <rth@twiddle.net>
 
+	* configure.in: Don't test toolchain support for TLS or GPREL.
+	* configure: Rebuild.
+
 	* sysdeps/alpha/fpu/s_nearbyint.c (nearbyintl): Do compat
 	with GLIBC_2_1.
 
