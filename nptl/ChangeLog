@@ -1,3 +1,8 @@
+2012-08-15  Maxim Kuvyrkov  <maxim@codesourcery.com>
+
+	* pthread_spin_lock.c: New file.
+	* pthread_spin_trylock.c: New file.
+
 2012-08-08  Joseph Myers  <joseph@codesourcery.com>
 
 	* allocatestack.c (setxid_signal_thread) [__ASSUME_TGKILL]: Make

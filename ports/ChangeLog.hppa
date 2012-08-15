@@ -1,3 +1,8 @@
+2012-08-15  Maxim Kuvyrkov  <maxim@codesourcery.com>
+
+	* sysdeps/hppa/nptl/pthread_spin_lock.c: Use generic code.
+	* sysdeps/hppa/nptl/pthread_spin_trylock.c: Remove, use generic version.
+
 2012-08-12  Mike Frysinger  <vapier@gentoo.org>
 
 	* sysdeps/unix/sysv/linux/hppa/syscalls.list: Add prlimit64.

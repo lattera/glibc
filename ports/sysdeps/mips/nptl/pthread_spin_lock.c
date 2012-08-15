@@ -1,4 +1,4 @@
-/* Copyright (C) 2005 Free Software Foundation, Inc.
+/* Copyright (C) 2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -15,26 +15,9 @@
    License along with the GNU C Library.  If not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <sys/asm.h>
-#include <sysdep.h>
-#define _ERRNO_H 1
-#include <bits/errno.h>
-#include <sgidefs.h>
+#define SPIN_LOCK_READS_BETWEEN_CMPXCHG 1000
 
-ENTRY (pthread_spin_trylock)
-	.set	push
-#if _MIPS_SIM == _ABIO32
-	.set	mips2
-#endif
-	ll	a2, 0(a0)
-	li	a1, 1
-	bnez	a2, 1f
-	sc	a1, 0(a0)
-	beqz	a1, 1f
-	MIPS_SYNC
-	.set	pop
-	li	v0, 0
-	ret
-1:	li	v0, EBUSY
-	ret
-PSEUDO_END (pthread_spin_trylock)
+/* We can't use the normal "#include <nptl/pthread_spin_lock.c>" because
+   it will resolve to this very file.  Using "sysdeps/.." as reference to the
+   top level directory does the job.  */
+#include <sysdeps/../nptl/pthread_spin_lock.c>

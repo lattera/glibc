@@ -1,4 +1,4 @@
-/* Copyright (C) 2010 Free Software Foundation, Inc.
+/* Copyright (C) 2010-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Maxim Kuvyrkov <maxim@codesourcery.com>, 2010.
 
@@ -16,15 +16,9 @@
    License along with the GNU C Library.  If not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <atomic.h>
-#include "pthreadP.h"
+#define SPIN_LOCK_READS_BETWEEN_CMPXCHG 1000
 
-int
-pthread_spin_lock (pthread_spinlock_t *lock)
-{
-  while (atomic_compare_and_exchange_val_acq(lock, 1, 0) != 0)
-   while (*lock != 0)
-    ;
-
-  return 0;
-}
+/* We can't use the normal "#include <nptl/pthread_spin_lock.c>" because
+   it will resolve to this very file.  Using "sysdeps/.." as reference to the
+   top level directory does the job.  */
+#include <sysdeps/../nptl/pthread_spin_lock.c>

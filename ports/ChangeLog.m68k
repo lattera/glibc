@@ -1,3 +1,8 @@
+2012-08-15  Maxim Kuvyrkov  <maxim@codesourcery.com>
+
+	* sysdeps/m68k/nptl/pthread_spin_lock.c: Use generic code.
+	* sysdeps/m68k/nptl/pthread_spin_trylock.c: Remove, use generic version.
+
 2012-08-10  Andreas Schwab  <schwab@linux-m68k.org>
 
 	* sysdeps/m68k/ldsodefs.h (m68k_gnu_pltenter): Remove const on

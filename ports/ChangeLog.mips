@@ -1,3 +1,9 @@
+2012-08-15  Maxim Kuvyrkov  <maxim@codesourcery.com>
+
+	* sysdeps/mips/nptl/pthread_spin_lock.S: Remove, use generic version.
+	* sysdeps/mips/nptl/pthread_spin_lock.c: New file.
+	* sysdeps/mips/nptl/pthread_spin_trylock.S: Remove, use generic version.
+
 2012-08-15  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/mips/dl-lookup.c: Update from generic version.
