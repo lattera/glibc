@@ -2445,7 +2445,7 @@ L(less16bytes_sncmp):
 # endif
 	jne	L(neq_sncmp)
 	test	%cl, %cl
-	je	L(eq)
+	je	L(eq_sncmp)
 
 	cmp	$1, REM
 	je	L(eq_sncmp)

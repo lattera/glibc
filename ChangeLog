@@ -1,3 +1,13 @@
+2012-08-15  Liubov Dmitrieva  <liubov.dmitrieva@gmail.com>
+
+	[BZ #14195]
+        * sysdeps/i386/i686/multiarch/strcmp-sssse3.S: Fix
+        segmentation fault for a case of two empty input strings.
+	* string/test-strncasecmp.c (check1): Renamed to...
+	(bz12205): ...this.
+	(bz14195): Add new testcase for two empty input strings and N > 0.
+	(test_main): Call new testcase, adapt for renamed function.
+
 2012-08-15  Andreas Jaeger  <aj@suse.de>
 
 	[BZ #14090]

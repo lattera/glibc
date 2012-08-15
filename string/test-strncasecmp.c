@@ -1,5 +1,5 @@
 /* Test and measure strncasecmp functions.
-   Copyright (C) 1999, 2002, 2003, 2005, 2010 Free Software Foundation, Inc.
+   Copyright (C) 1999-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Jakub Jelinek <jakub@redhat.com>, 1999.
 
@@ -251,9 +251,9 @@ do_random_tests (void)
     }
 }
 
-
+/* Regression test for BZ #12205 */
 static void
-check1 (void)
+bz12205 (void)
 {
   static char cp [4096+16] __attribute__ ((aligned(4096)));
   static char gotrel[4096] __attribute__ ((aligned(4096)));
@@ -270,6 +270,15 @@ check1 (void)
     check_result (impl, s1, s2, n, exp_result);
 }
 
+/* Regression test for BZ #14195 */
+static void
+bz14195 (void)
+{
+  const char *empty_string  = "";
+  FOR_EACH_IMPL (impl, 0)
+    check_result (impl, empty_string, "", 5, 0);
+}
+
 int
 test_main (void)
 {
@@ -277,7 +286,8 @@ test_main (void)
 
   test_init ();
 
-  check1 ();
+  bz12205 ();
+  bz14195 ();
 
   printf ("%23s", "");
   FOR_EACH_IMPL (impl, 0)
