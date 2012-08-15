@@ -44,6 +44,10 @@
 # define O_NOFOLLOW	0x00000100	/* Do not follow links.	 */
 # define O_CLOEXEC	0x00400000      /* Set close_on_exec.  */
 #endif
+#if defined __USE_POSIX199309 || defined __USE_UNIX98
+# define O_DSYNC	0x00010000	/* Synchronize data.  */
+# define O_RSYNC	0x00020000	/* Synchronize read operations.	 */
+#endif
 
 /* All opens support large file sizes, so there is no flag bit for this.  */
 #ifdef __USE_LARGEFILE64

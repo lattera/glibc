@@ -1,5 +1,8 @@
 2012-08-15  Roland McGrath  <roland@hack.frob.com>
 
+	* bits/fcntl.h [__USE_POSIX199309 || __USE_UNIX98]:
+	(O_DSYNC, O_RSYNC): New macros (with NetBSD values).
+
 	* misc/lseek.c: File moved to ...
 	* io/lseek.c: ... here.
 
