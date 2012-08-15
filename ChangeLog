@@ -1,5 +1,8 @@
 2012-08-15  Roland McGrath  <roland@hack.frob.com>
 
+	* misc/lseek.c: File moved to ...
+	* io/lseek.c: ... here.
+
 	* rt/clock_nanosleep.c: Include <time.h>, not <sys/time.h>.
 
 	* crypt/sha512.c (sha512_process_block) [!USE_TOTAL128]: Avoid
