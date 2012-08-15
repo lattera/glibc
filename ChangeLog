@@ -1,5 +1,11 @@
 2012-08-15  Roland McGrath  <roland@hack.frob.com>
 
+	* sysdeps/x86_64/multiarch/memmove.c: Don't include <stddef.h>.
+	[!NOT_IN_libc]: Move #define and #undef of memmove to just before
+	and after including <string.h>.  Move declarations of
+	__memmove_sse2, __memmove_ssse3, and __memmove_ssse3_back
+	to before #include "string/memmove.c".
+
 	* include/dirent.h: Declare __getdirentries.
 
 	* sysdeps/posix/system.c (do_system): Cast SUB_REF () to void when not
