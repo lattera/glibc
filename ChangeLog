@@ -1,5 +1,9 @@
 2012-08-15  Roland McGrath  <roland@hack.frob.com>
 
+	* sysdeps/x86_64/multiarch/strstr-c.c: Add copyright header.
+	Move #define and #undef of memmove to just before and after
+	including <string.h>.
+
 	* sysdeps/x86_64/multiarch/memmove.c: Don't include <stddef.h>.
 	[!NOT_IN_libc]: Move #define and #undef of memmove to just before
 	and after including <string.h>.  Move declarations of
