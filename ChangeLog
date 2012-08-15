@@ -1,3 +1,8 @@
+2012-08-15  Roland McGrath  <roland@hack.frob.com>
+
+	* crypt/sha512.c (sha512_process_block) [!USE_TOTAL128]: Avoid
+	shifting LEN more than 31 bits at once.
+
 2012-08-15  Liubov Dmitrieva  <liubov.dmitrieva@gmail.com>
 
 	[BZ #14195]

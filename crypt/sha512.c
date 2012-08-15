@@ -125,7 +125,7 @@ sha512_process_block (const void *buffer, size_t len, struct sha512_ctx *ctx)
 #else
   uint64_t lolen = len;
   ctx->total[TOTAL128_low] += lolen;
-  ctx->total[TOTAL128_high] += ((len >> 63 >> 1)
+  ctx->total[TOTAL128_high] += ((len >> 31 >> 31 >> 2)
 				+ (ctx->total[TOTAL128_low] < lolen));
 #endif
 
