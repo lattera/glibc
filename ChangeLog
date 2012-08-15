@@ -1,3 +1,11 @@
+2012-08-15  Andreas Jaeger  <aj@suse.de>
+
+	[BZ #14090]
+	* crypt/md5test2.c: New test, based on test supplied by Serge
+	Belyshev <belyshev@depni.sinp.msu.ru>.
+	* crypt/Makefile (xtests): Add md5test-giant..
+	* crypt/Makefile ($(objpfx)md5test-giant): Add.
+
 2012-08-15  Paul Eggert  <eggert@cs.ucla.edu>
 
 	[BZ #14090]
