@@ -932,8 +932,12 @@ init_word_char (re_dfa_t *dfa)
     {
       if (sizeof (dfa->word_char[0]) == 8)
 	{
-	  dfa->word_char[0] = UINT64_C (0x03ff000000000000);
-	  dfa->word_char[1] = UINT64_C (0x07fffffe87fffffe);
+          /* The extra temporaries here avoid "implicitly truncated"
+             warnings in the case when this is dead code, i.e. 32-bit.  */
+          const uint64_t wc0 = UINT64_C (0x03ff000000000000);
+          const uint64_t wc1 = UINT64_C (0x07fffffe87fffffe);
+	  dfa->word_char[0] = wc0;
+	  dfa->word_char[1] = wc1;
 	  i = 2;
 	}
       else if (sizeof (dfa->word_char[0]) == 4)

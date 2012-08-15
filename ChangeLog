@@ -1,5 +1,8 @@
 2012-08-15  Roland McGrath  <roland@hack.frob.com>
 
+	* posix/regcomp.c (init_word_char): Use temporaries to hold the 64-bit
+	constants, which avoids warnings in 32-bit builds.
+
 	* bits/fcntl.h [__USE_POSIX199309 || __USE_UNIX98]:
 	(O_DSYNC, O_RSYNC): New macros (with NetBSD values).
 
