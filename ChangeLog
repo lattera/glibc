@@ -1,3 +1,11 @@
+2012-08-15  Paul Eggert  <eggert@cs.ucla.edu>
+
+	[BZ #14090]
+	* crypt/md5.c (md5_process_block): Don't assume the buffer
+	length is less than 2**32.
+	* crypt/sha512.c (sha512_process_block): Don't assume the buffer
+	length is less than 2**64.
+
 2012-08-15  Roland McGrath  <roland@hack.frob.com>
 
 	* string/str-two-way.h: Include <sys/param.h>.

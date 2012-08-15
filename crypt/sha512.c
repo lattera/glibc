@@ -1,6 +1,6 @@
 /* Functions to compute SHA512 message digest of files or memory blocks.
    according to the definition of SHA512 in FIPS 180-2.
-   Copyright (C) 2007, 2011 Free Software Foundation, Inc.
+   Copyright (C) 2007-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -123,9 +123,10 @@ sha512_process_block (const void *buffer, size_t len, struct sha512_ctx *ctx)
 #ifdef USE_TOTAL128
   ctx->total128 += len;
 #else
-  ctx->total[TOTAL128_low] += len;
-  if (ctx->total[TOTAL128_low] < len)
-    ++ctx->total[TOTAL128_high];
+  uint64_t lolen = len;
+  ctx->total[TOTAL128_low] += lolen;
+  ctx->total[TOTAL128_high] += ((len >> 63 >> 1)
+				+ (ctx->total[TOTAL128_low] < lolen));
 #endif
 
   /* Process all bytes in the buffer with 128 bytes in each round of

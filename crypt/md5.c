@@ -1,7 +1,6 @@
 /* Functions to compute MD5 message digest of files or memory blocks.
    according to the definition of MD5 in RFC 1321 from April 1992.
-   Copyright (C) 1995,1996,1997,1999,2000,2001,2005,2011
-	Free Software Foundation, Inc.
+   Copyright (C) 1995-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -312,13 +311,13 @@ md5_process_block (buffer, len, ctx)
   md5_uint32 B = ctx->B;
   md5_uint32 C = ctx->C;
   md5_uint32 D = ctx->D;
+  md5_uint32 lolen = len;
 
   /* First increment the byte count.  RFC 1321 specifies the possible
      length of the file up to 2^64 bits.  Here we only compute the
      number of bytes.  Do a double word increment.  */
-  ctx->total[0] += len;
-  if (ctx->total[0] < len)
-    ++ctx->total[1];
+  ctx->total[0] += lolen;
+  ctx->total[1] += (len >> 31 >> 1) + (ctx->total[0] < lolen);
 
   /* Process all bytes in the buffer with 64 bytes in each round of
      the loop.  */
