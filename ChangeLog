@@ -1,5 +1,8 @@
 2012-08-15  Roland McGrath  <roland@hack.frob.com>
 
+	* string/str-two-way.h: Include <sys/param.h>.
+	(MAX): Macro removed.
+
 	* sysdeps/x86_64/multiarch/strstr-c.c: Add copyright header.
 	Move #define and #undef of memmove to just before and after
 	including <string.h>.

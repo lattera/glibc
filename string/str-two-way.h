@@ -1,5 +1,5 @@
 /* Byte-wise substring search, using the Two-Way algorithm.
-   Copyright (C) 2008, 2010 Free Software Foundation, Inc.
+   Copyright (C) 2008-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Eric Blake <ebb9@byu.net>, 2008.
 
@@ -43,6 +43,7 @@
 
 #include <limits.h>
 #include <stdint.h>
+#include <sys/param.h>                  /* Defines MAX.  */
 
 /* We use the Two-Way string matching algorithm, which guarantees
    linear complexity with constant space.  Additionally, for long
@@ -65,10 +66,6 @@
 # define LONG_NEEDLE_THRESHOLD 32U
 #else
 # define LONG_NEEDLE_THRESHOLD SIZE_MAX
-#endif
-
-#ifndef MAX
-# define MAX(a, b) ((a < b) ? (b) : (a))
 #endif
 
 #ifndef CANON_ELEMENT
