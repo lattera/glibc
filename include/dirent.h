@@ -30,6 +30,10 @@ extern int __scandir64 (const char * __dir,
 			int (*__selector) (const struct dirent64 *),
 			int (*__cmp) (const struct dirent64 **,
 				      const struct dirent64 **));
+extern __ssize_t __getdirentries (int __fd, char *__restrict __buf,
+				size_t __nbytes,
+				__off_t *__restrict __basep)
+     __THROW __nonnull ((2, 4));
 extern __ssize_t __getdents (int __fd, char *__buf, size_t __nbytes)
      internal_function;
 extern __ssize_t __getdents64 (int __fd, char *__buf, size_t __nbytes)

@@ -1,5 +1,7 @@
 2012-08-15  Roland McGrath  <roland@hack.frob.com>
 
+	* include/dirent.h: Declare __getdirentries.
+
 	* sysdeps/posix/system.c (do_system): Cast SUB_REF () to void when not
 	using its value, to avoid warnings in the [!_LIBC_REENTRANT] case.
 
