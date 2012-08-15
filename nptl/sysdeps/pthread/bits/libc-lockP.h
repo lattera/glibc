@@ -176,9 +176,12 @@ typedef pthread_key_t __libc_key_t;
 
 /* Lock the named lock variable.  */
 #if !defined NOT_IN_libc || defined IS_IN_libpthread
-# define __libc_lock_lock(NAME) \
+# ifndef __libc_lock_lock
+#  define __libc_lock_lock(NAME) \
   ({ lll_lock (NAME, LLL_PRIVATE); 0; })
+# endif
 #else
+# undef __libc_lock_lock
 # define __libc_lock_lock(NAME) \
   __libc_maybe_call (__pthread_mutex_lock, (&(NAME)), 0)
 #endif
@@ -189,9 +192,12 @@ typedef pthread_key_t __libc_key_t;
 
 /* Try to lock the named lock variable.  */
 #if !defined NOT_IN_libc || defined IS_IN_libpthread
-# define __libc_lock_trylock(NAME) \
+# ifndef __libc_lock_trylock
+#  define __libc_lock_trylock(NAME) \
   lll_trylock (NAME)
+# endif
 #else
+# undef __libc_lock_trylock
 # define __libc_lock_trylock(NAME) \
   __libc_maybe_call (__pthread_mutex_trylock, (&(NAME)), 0)
 #endif

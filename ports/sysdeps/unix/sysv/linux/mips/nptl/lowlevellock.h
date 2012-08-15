@@ -1,5 +1,4 @@
-/* Copyright (C) 2003, 2004, 2005, 2006, 2007, 2008,
-   2009 Free Software Foundation, Inc.
+/* Copyright (C) 2003-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -290,5 +289,41 @@ extern int __lll_timedwait_tid (int *, const struct timespec *)
       __res = __lll_timedwait_tid (&(tid), (abstime));	\
     __res;						\
   })
+
+/* Implement __libc_lock_lock using exchange_and_add, which expands into
+   a single instruction on XLP processors.  We enable this for all MIPS
+   processors as atomic_exchange_and_add_acq and
+   atomic_compare_and_exchange_acq take the same time to execute.
+   This is a simplified expansion of ({ lll_lock (NAME, LLL_PRIVATE); 0; }).
+
+   Note: __lll_lock_wait_private() resets lock value to '2', which prevents
+   unbounded increase of the lock value and [with billions of threads]
+   overflow.  */
+#define __libc_lock_lock(NAME)						\
+  ({									\
+    int *__futex = &(NAME);						\
+    if (__builtin_expect (atomic_exchange_and_add_acq (__futex, 1), 0))	\
+      __lll_lock_wait_private (__futex);				\
+    0;									\
+  })
+
+#ifdef _MIPS_ARCH_XLP
+/* The generic version using a single atomic_compare_and_exchange_acq takes
+   less time for non-XLP processors, so we use below for XLP only.  */
+# define __libc_lock_trylock(NAME)					\
+  ({									\
+  int *__futex = &(NAME);						\
+  int __result = atomic_exchange_and_add_acq (__futex, 1);		\
+  /* If __result == 0, we succeeded in acquiring the lock.		\
+     If __result == 1, we switched the lock to 'contended' state, which	\
+     will cause a [possibly unnecessary] call to lll_futex_wait.  This is \
+     unlikely, so we accept the possible inefficiency.			\
+     If __result >= 2, we need to set the lock to 'contended' state to avoid \
+     unbounded increase from subsequent trylocks.  */			\
+  if (__result >= 2)							\
+    __result = atomic_exchange_acq (__futex, 2);			\
+  __result;								\
+  })
+#endif
 
 #endif	/* lowlevellock.h */

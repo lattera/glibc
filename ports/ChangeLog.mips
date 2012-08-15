@@ -1,3 +1,9 @@
+2012-08-15  Tom de Vries  <vries@codesourcery.com>
+	    Maxim Kuvyrkov  <maxim@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/mips/nptl/lowlevellock.h (__libc_lock_lock)
+	(__libc_lock_trylock): Define versions optimized for MIPS.
+
 2012-08-15  Maxim Kuvyrkov  <maxim@codesourcery.com>
 
 	* sysdeps/mips/nptl/pthread_spin_lock.S: Remove, use generic version.
