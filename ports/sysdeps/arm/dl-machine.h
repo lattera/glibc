@@ -416,7 +416,7 @@ elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
 	    struct unaligned
 	      {
 		Elf32_Addr x;
-	      } __attribute__((packed, may_alias));
+	      } __attribute__ ((packed, may_alias));
 # ifndef RTLD_BOOTSTRAP
 	   /* This is defined in rtld.c, but nowhere in the static
 	      libc.a; make the reference weak so static programs can
