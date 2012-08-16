@@ -92,10 +92,6 @@
 # define __ASSUME_MMAP2_SYSCALL		1
 #endif
 
-/* Beginning with 2.5.63 support for realtime and monotonic clocks and
-   timers based on them is available.  */
-#define __ASSUME_POSIX_TIMERS		1
-
 /* Beginning with 2.6.12 the clock and timer supports CPU clocks.  */
 #define __ASSUME_POSIX_CPU_TIMERS	1
 

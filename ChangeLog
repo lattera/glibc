@@ -1,3 +1,24 @@
+2012-08-16  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/kernel-features.h
+	(__ASSUME_POSIX_TIMERS): Remove.
+	* sysdeps/unix/sysv/linux/clock_getcpuclockid.c
+	[!__ASSUME_POSIX_TIMERS]: Remove conditional code.
+	* sysdeps/unix/sysv/linux/clock_getres.c [__ASSUME_POSIX_TIMERS]:
+	Make code unconditional.
+	[!__ASSUME_POSIX_TIMERS]: Remove conditional code.
+	* sysdeps/unix/sysv/linux/clock_gettime.c [__ASSUME_POSIX_TIMERS]:
+	Make code unconditional.
+	[!__ASSUME_POSIX_TIMERS]: Remove conditional code.
+	* sysdeps/unix/sysv/linux/clock_nanosleep.c
+	[__ASSUME_POSIX_TIMERS]: Make code unconditional.
+	[!__ASSUME_POSIX_TIMERS]: Remove conditional code.
+	* sysdeps/unix/sysv/linux/clock_settime.c [__ASSUME_POSIX_TIMERS]:
+	Make code unconditional.
+	[!__ASSUME_POSIX_TIMERS]: Remove conditional code.
+	[__ASSUME_POSIX_CPU_TIMERS <= 0 && __NR_clock_settime]
+	(__libc_missing_posix_timers): Remove.
+
 2012-08-15  Roland McGrath  <roland@hack.frob.com>
 
 	* elf/dl-load.c (_dl_map_object_from_fd) [SHARED]: Conditionalize

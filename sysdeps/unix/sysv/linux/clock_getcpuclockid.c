@@ -1,5 +1,5 @@
 /* clock_getcpuclockid -- Get a clockid_t for process CPU time.  Linux version.
-   Copyright (C) 2004, 2005, 2006 Free Software Foundation, Inc.
+   Copyright (C) 2004-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -37,11 +37,6 @@ clock_getcpuclockid (pid_t pid, clockid_t *clock_id)
 
 # if !(__ASSUME_POSIX_CPU_TIMERS > 0)
   extern int __libc_missing_posix_cpu_timers attribute_hidden;
-#  if !(__ASSUME_POSIX_TIMERS > 0)
-  extern int __libc_missing_posix_timers attribute_hidden;
-  if (__libc_missing_posix_timers && !__libc_missing_posix_cpu_timers)
-    __libc_missing_posix_cpu_timers = 1;
-#  endif
   if (!__libc_missing_posix_cpu_timers)
 # endif
     {
@@ -53,33 +48,24 @@ clock_getcpuclockid (pid_t pid, clockid_t *clock_id)
 	  return 0;
 	}
 
-# if !(__ASSUME_POSIX_TIMERS > 0)
-      if (INTERNAL_SYSCALL_ERRNO (r, err) == ENOSYS)
+      if (INTERNAL_SYSCALL_ERRNO (r, err) == EINVAL)
 	{
-	  /* The kernel doesn't support these calls at all.  */
-	  __libc_missing_posix_timers = 1;
-	  __libc_missing_posix_cpu_timers = 1;
+# if !(__ASSUME_POSIX_CPU_TIMERS > 0)
+	  if (pidclock == MAKE_PROCESS_CPUCLOCK (0, CPUCLOCK_SCHED)
+	      || INTERNAL_SYSCALL_ERROR_P (INTERNAL_SYSCALL
+					   (clock_getres, err, 2,
+					    MAKE_PROCESS_CPUCLOCK
+					    (0, CPUCLOCK_SCHED), NULL),
+					   err))
+	    /* The kernel doesn't support these clocks at all.  */
+	    __libc_missing_posix_cpu_timers = 1;
+	  else
+# endif
+	    /* The clock_getres system call checked the PID for us.  */
+	    return ESRCH;
 	}
       else
-# endif
-	if (INTERNAL_SYSCALL_ERRNO (r, err) == EINVAL)
-	  {
-# if !(__ASSUME_POSIX_CPU_TIMERS > 0)
-	    if (pidclock == MAKE_PROCESS_CPUCLOCK (0, CPUCLOCK_SCHED)
-		|| INTERNAL_SYSCALL_ERROR_P (INTERNAL_SYSCALL
-					     (clock_getres, err, 2,
-					      MAKE_PROCESS_CPUCLOCK
-					      (0, CPUCLOCK_SCHED), NULL),
-					     err))
-	      /* The kernel doesn't support these clocks at all.  */
-	      __libc_missing_posix_cpu_timers = 1;
-	    else
-# endif
-	      /* The clock_getres system call checked the PID for us.  */
-	      return ESRCH;
-	  }
-	else
-	  return INTERNAL_SYSCALL_ERRNO (r, err);
+	return INTERNAL_SYSCALL_ERRNO (r, err);
     }
 #endif
 

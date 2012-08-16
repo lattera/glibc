@@ -1,5 +1,5 @@
 /* pthread_getcpuclockid -- Get POSIX clockid_t for a pthread_t.  Linux version
-   Copyright (C) 2000,2001,2002,2003,2004,2005 Free Software Foundation, Inc.
+   Copyright (C) 2000-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -27,9 +27,6 @@
 #if !(__ASSUME_POSIX_CPU_TIMERS > 0)
 int __libc_missing_posix_cpu_timers attribute_hidden;
 #endif
-#if !(__ASSUME_POSIX_TIMERS > 0)
-int __libc_missing_posix_timers attribute_hidden;
-#endif
 
 int
 pthread_getcpuclockid (threadid, clockid)
@@ -51,10 +48,6 @@ pthread_getcpuclockid (threadid, clockid)
   const clockid_t tidclock = MAKE_THREAD_CPUCLOCK (pd->tid, CPUCLOCK_SCHED);
 
 # if !(__ASSUME_POSIX_CPU_TIMERS > 0)
-#  if !(__ASSUME_POSIX_TIMERS > 0)
-  if (__libc_missing_posix_timers && !__libc_missing_posix_cpu_timers)
-    __libc_missing_posix_cpu_timers = 1;
-#  endif
   if (!__libc_missing_posix_cpu_timers)
     {
       INTERNAL_SYSCALL_DECL (err);
@@ -67,20 +60,11 @@ pthread_getcpuclockid (threadid, clockid)
 	}
 
 # if !(__ASSUME_POSIX_CPU_TIMERS > 0)
-#  if !(__ASSUME_POSIX_TIMERS > 0)
-      if (INTERNAL_SYSCALL_ERRNO (r, err) == ENOSYS)
+      if (INTERNAL_SYSCALL_ERRNO (r, err) == EINVAL)
 	{
-	  /* The kernel doesn't support these calls at all.  */
-	  __libc_missing_posix_timers = 1;
+	  /* The kernel doesn't support these clocks at all.  */
 	  __libc_missing_posix_cpu_timers = 1;
 	}
-      else
-#  endif
-	if (INTERNAL_SYSCALL_ERRNO (r, err) == EINVAL)
-	  {
-	    /* The kernel doesn't support these clocks at all.  */
-	    __libc_missing_posix_cpu_timers = 1;
-	  }
       else
 	return INTERNAL_SYSCALL_ERRNO (r, err);
     }

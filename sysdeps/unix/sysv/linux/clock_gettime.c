@@ -1,5 +1,5 @@
 /* clock_gettime -- Get current time from a POSIX clockid_t.  Linux version.
-   Copyright (C) 2003,2004,2005,2006,2007,2010,2011 Free Software Foundation, Inc.
+   Copyright (C) 2003-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -40,67 +40,14 @@
   INTERNAL_VSYSCALL (clock_gettime, err, 2, id, tp)
 #endif
 
-#ifdef __ASSUME_POSIX_TIMERS
-
-/* This means the REALTIME and MONOTONIC clock are definitely
-   supported in the kernel.  */
-# define SYSDEP_GETTIME \
+/* The REALTIME and MONOTONIC clock are definitely supported in the
+   kernel.  */
+#define SYSDEP_GETTIME \
   SYSDEP_GETTIME_CPUTIME;						      \
   case CLOCK_REALTIME:							      \
   case CLOCK_MONOTONIC:							      \
     retval = SYSCALL_GETTIME (clock_id, tp);				      \
     break
-
-# define __libc_missing_posix_timers 0
-#elif defined __NR_clock_gettime
-/* Is the syscall known to exist?  */
-int __libc_missing_posix_timers attribute_hidden;
-
-static inline int
-maybe_syscall_gettime (clockid_t clock_id, struct timespec *tp)
-{
-  int e = EINVAL;
-
-  if (!__libc_missing_posix_timers)
-    {
-      INTERNAL_SYSCALL_DECL (err);
-      int r = INTERNAL_GETTIME (clock_id, tp);
-      if (!INTERNAL_SYSCALL_ERROR_P (r, err))
-	return 0;
-
-      e = INTERNAL_SYSCALL_ERRNO (r, err);
-      if (e == ENOSYS)
-	{
-	  __libc_missing_posix_timers = 1;
-	  e = EINVAL;
-	}
-    }
-
-  return e;
-}
-
-/* The REALTIME and MONOTONIC clock might be available.  Try the
-   syscall first.  */
-# define SYSDEP_GETTIME \
-  SYSDEP_GETTIME_CPUTIME;						      \
-  case CLOCK_REALTIME:							      \
-  case CLOCK_MONOTONIC:							      \
-  case CLOCK_MONOTONIC_RAW:						      \
-  case CLOCK_REALTIME_COARSE:						      \
-  case CLOCK_MONOTONIC_COARSE:						      \
-    retval = maybe_syscall_gettime (clock_id, tp);			      \
-    if (retval == 0)							      \
-      break;								      \
-    /* Fallback code.  */						      \
-    if (retval == EINVAL && clock_id == CLOCK_REALTIME)			      \
-      retval = realtime_gettime (tp);					      \
-    else								      \
-      {									      \
-	__set_errno (retval);						      \
-	retval = -1;							      \
-      }									      \
-    break
-#endif
 
 #ifdef __NR_clock_gettime
 /* We handled the REALTIME clock here.  */
@@ -131,34 +78,23 @@ maybe_syscall_gettime_cpu (clockid_t clock_id, struct timespec *tp)
 	return 0;
 
       e = INTERNAL_SYSCALL_ERRNO (r, err);
-# ifndef __ASSUME_POSIX_TIMERS
-      if (e == ENOSYS)
+      if (e == EINVAL)
 	{
-	  __libc_missing_posix_timers = 1;
-	  __libc_missing_posix_cpu_timers = 1;
-	  e = EINVAL;
-	}
-      else
-# endif
-	{
-	  if (e == EINVAL)
-	    {
 # ifdef HAVE_CLOCK_GETRES_VSYSCALL
-	      /* Check whether the kernel supports CPU clocks at all.
-		 If not, record it for the future.  */
-	      r = INTERNAL_VSYSCALL (clock_getres, err, 2,
-				     MAKE_PROCESS_CPUCLOCK (0, CPUCLOCK_SCHED),
-				     NULL);
+	  /* Check whether the kernel supports CPU clocks at all.
+	     If not, record it for the future.  */
+	  r = INTERNAL_VSYSCALL (clock_getres, err, 2,
+				 MAKE_PROCESS_CPUCLOCK (0, CPUCLOCK_SCHED),
+				 NULL);
 # else
-	      /* Check whether the kernel supports CPU clocks at all.
-		 If not, record it for the future.  */
-	      r = INTERNAL_SYSCALL (clock_getres, err, 2,
-				    MAKE_PROCESS_CPUCLOCK (0, CPUCLOCK_SCHED),
-				    NULL);
+	  /* Check whether the kernel supports CPU clocks at all.
+	     If not, record it for the future.  */
+	  r = INTERNAL_SYSCALL (clock_getres, err, 2,
+				MAKE_PROCESS_CPUCLOCK (0, CPUCLOCK_SCHED),
+				NULL);
 # endif
-	      if (INTERNAL_SYSCALL_ERROR_P (r, err))
-		__libc_missing_posix_cpu_timers = 1;
-	    }
+	  if (INTERNAL_SYSCALL_ERROR_P (r, err))
+	    __libc_missing_posix_cpu_timers = 1;
 	}
     }
 

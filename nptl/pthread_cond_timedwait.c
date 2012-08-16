@@ -1,4 +1,4 @@
-/* Copyright (C) 2003,2004,2007,2010,2011 Free Software Foundation, Inc.
+/* Copyright (C) 2003-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Martin Schwidefsky <schwidefsky@de.ibm.com>, 2003.
 
@@ -113,23 +113,9 @@ __pthread_cond_timedwait (cond, mutex, abstime)
 				(cond->__data.__nwaiters
 				 & ((1 << COND_NWAITERS_SHIFT) - 1)),
 				&rt);
-# ifndef __ASSUME_POSIX_TIMERS
-	if (__builtin_expect (INTERNAL_SYSCALL_ERROR_P (ret, err), 0))
-	  {
-	    struct timeval tv;
-	    (void) gettimeofday (&tv, NULL);
-
-	    /* Convert the absolute timeout value to a relative timeout.  */
-	    rt.tv_sec = abstime->tv_sec - tv.tv_sec;
-	    rt.tv_nsec = abstime->tv_nsec - tv.tv_usec * 1000;
-	  }
-	else
-# endif
-	  {
-	    /* Convert the absolute timeout value to a relative timeout.  */
-	    rt.tv_sec = abstime->tv_sec - rt.tv_sec;
-	    rt.tv_nsec = abstime->tv_nsec - rt.tv_nsec;
-	  }
+	/* Convert the absolute timeout value to a relative timeout.  */
+	rt.tv_sec = abstime->tv_sec - rt.tv_sec;
+	rt.tv_nsec = abstime->tv_nsec - rt.tv_nsec;
 #else
 	/* Get the current time.  So far we support only one clock.  */
 	struct timeval tv;

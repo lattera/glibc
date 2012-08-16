@@ -32,7 +32,6 @@
 #endif
 
 #if __ASSUME_POSIX_CPU_TIMERS <= 0 && defined __NR_clock_settime
-extern int __libc_missing_posix_timers attribute_hidden;
 extern int __libc_missing_posix_cpu_timers attribute_hidden;
 
 static int
@@ -48,26 +47,15 @@ maybe_syscall_settime_cpu (clockid_t clock_id, const struct timespec *tp)
 	return 0;
 
       e = INTERNAL_SYSCALL_ERRNO (r, err);
-# ifndef __ASSUME_POSIX_TIMERS
-      if (e == ENOSYS)
+      if (e == EINVAL)
 	{
-	  __libc_missing_posix_timers = 1;
-	  __libc_missing_posix_cpu_timers = 1;
-	  e = EINVAL;
-	}
-      else
-# endif
-	{
-	  if (e == EINVAL)
-	    {
-	      /* Check whether the kernel supports CPU clocks at all.
-		 If not, record it for the future.  */
-	      r = INTERNAL_VSYSCALL (clock_getres, err, 2,
-				     MAKE_PROCESS_CPUCLOCK (0, CPUCLOCK_SCHED),
-				     NULL);
-	      if (INTERNAL_SYSCALL_ERROR_P (r, err))
-		__libc_missing_posix_cpu_timers = 1;
-	    }
+	  /* Check whether the kernel supports CPU clocks at all.
+	     If not, record it for the future.  */
+	  r = INTERNAL_VSYSCALL (clock_getres, err, 2,
+				 MAKE_PROCESS_CPUCLOCK (0, CPUCLOCK_SCHED),
+				 NULL);
+	  if (INTERNAL_SYSCALL_ERROR_P (r, err))
+	    __libc_missing_posix_cpu_timers = 1;
 	}
     }
 
@@ -76,53 +64,11 @@ maybe_syscall_settime_cpu (clockid_t clock_id, const struct timespec *tp)
 #endif
 
 
-#ifdef __ASSUME_POSIX_TIMERS
-/* This means the REALTIME clock is definitely supported in the
-   kernel.  */
-# define SYSDEP_SETTIME \
+/* The REALTIME clock is definitely supported in the kernel.  */
+#define SYSDEP_SETTIME \
   case CLOCK_REALTIME:							      \
     retval = INLINE_SYSCALL (clock_settime, 2, clock_id, tp);		      \
     break
-#elif defined __NR_clock_settime
-/* Is the syscall known to exist?  */
-extern int __libc_missing_posix_timers attribute_hidden;
-
-/* The REALTIME clock might be available.  Try the syscall first.  */
-# define SYSDEP_SETTIME \
-  case CLOCK_REALTIME:							      \
-  case CLOCK_REALTIME_COARSE:						      \
-    {									      \
-      int e = EINVAL;							      \
-									      \
-      if (!__libc_missing_posix_timers)					      \
-	{								      \
-	  INTERNAL_SYSCALL_DECL (err);					      \
-	  int r = INTERNAL_SYSCALL (clock_settime, err, 2, clock_id, tp);     \
-	  if (!INTERNAL_SYSCALL_ERROR_P (r, err))			      \
-	    {								      \
-	      retval = 0;						      \
-	      break;							      \
-	    }								      \
-									      \
-	  e = INTERNAL_SYSCALL_ERRNO (r, err);				      \
-	  if (e == ENOSYS)						      \
-	    {								      \
-	      __libc_missing_posix_timers = 1;				      \
-	      e = EINVAL;						      \
-	    }								      \
-	}								      \
-									      \
-      /* Fallback code.  */						      \
-      if (e == EINVAL && clock_id == CLOCK_REALTIME)			      \
-	HANDLE_REALTIME;						      \
-      else								      \
-	{								      \
-	  __set_errno (e);						      \
-	  retval = -1;							      \
-	}								      \
-    }									      \
-    break
-#endif
 
 #ifdef __NR_clock_settime
 /* We handled the REALTIME clock here.  */

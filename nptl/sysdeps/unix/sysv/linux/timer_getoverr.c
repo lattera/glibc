@@ -1,4 +1,4 @@
-/* Copyright (C) 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2003-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2003.
 
@@ -23,58 +23,20 @@
 #include "kernel-posix-timers.h"
 
 
-#ifdef __NR_timer_getoverrun
-# ifndef __ASSUME_POSIX_TIMERS
-static int compat_timer_getoverrun (timer_t timerid);
-#  define timer_getoverrun static compat_timer_getoverrun
-#  include <nptl/sysdeps/pthread/timer_getoverr.c>
-#  undef timer_getoverrun
-# endif
-
-# ifdef timer_getoverrun_alias
-#  define timer_getoverrun timer_getoverrun_alias
-# endif
+#ifdef timer_getoverrun_alias
+# define timer_getoverrun timer_getoverrun_alias
+#endif
 
 
 int
 timer_getoverrun (timerid)
      timer_t timerid;
 {
-# undef timer_getoverrun
-# ifndef __ASSUME_POSIX_TIMERS
-  if (__no_posix_timers >= 0)
-# endif
-    {
-      struct timer *kt = (struct timer *) timerid;
+#undef timer_getoverrun
+  struct timer *kt = (struct timer *) timerid;
 
-      /* Get the information from the kernel.  */
-      int res = INLINE_SYSCALL (timer_getoverrun, 1, kt->ktimerid);
+  /* Get the information from the kernel.  */
+  int res = INLINE_SYSCALL (timer_getoverrun, 1, kt->ktimerid);
 
-# ifndef __ASSUME_POSIX_TIMERS
-      if (res != -1 || errno != ENOSYS)
-	{
-	  /* We know the syscall support is available.  */
-	  __no_posix_timers = 1;
-# endif
-	  return res;
-# ifndef __ASSUME_POSIX_TIMERS
-	}
-# endif
-
-# ifndef __ASSUME_POSIX_TIMERS
-      __no_posix_timers = -1;
-# endif
-    }
-
-# ifndef __ASSUME_POSIX_TIMERS
-  return compat_timer_getoverrun (timerid);
-# endif
+  return res;
 }
-#else
-# ifdef timer_getoverrun_alias
-#  define timer_getoverrun timer_getoverrun_alias
-# endif
-/* The new system calls are not available.  Use the userlevel
-   implementation.  */
-# include <nptl/sysdeps/pthread/timer_getoverr.c>
-#endif

@@ -1,3 +1,42 @@
+2012-08-16  Joseph Myers  <joseph@codesourcery.com>
+
+	* pthread_cond_timedwait.c (__pthread_cond_timedwait)
+	[!__ASSUME_POSIX_TIMERS]: Remove conditional code.
+	* pthread_condattr_setclock.c (pthread_condattr_setclock)
+	[!__ASSUME_POSIX_TIMERS]: Likewise.
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_cond_timedwait.S
+	(__pthread_cond_timedwait) [!__ASSUME_POSIX_TIMERS]: Likewise.
+	* sysdeps/unix/sysv/linux/pthread_getcpuclockid.c
+	[!__ASSUME_POSIX_TIMERS]: Likewise.
+	* sysdeps/unix/sysv/linux/sh/pthread_cond_timedwait.S
+	(__pthread_cond_timedwait) [!__ASSUME_POSIX_TIMERS]: Likewise.
+	* sysdeps/unix/sysv/linux/timer_create.c [__NR_timer_create]: Make
+	code unconditional.
+	[!__NR-timer_create]: Remove conditional code.
+	(timer_create) [!__ASSUME_POSIX_TIMERS]: Likewise.
+	* sysdeps/unix/sysv/linux/timer_delete.c [__NR_timer_delete]: Make
+	code unconditional.
+	[!__NR_timer_delete]: Remove conditional code.
+	(timer_delete) [!__ASSUME_POSIX_TIMERS]: Likewise.
+	* sysdeps/unix/sysv/linux/timer_getoverr.c
+	[__NR_timer_getoverrun]: Make code unconditional.
+	[!__NR_timer_getoverrun]: Remove conditional code.
+	(timer_getoverrun) [!__ASSUME_POSIX_TIMERS]: Likewise.
+	* sysdeps/unix/sysv/linux/timer_gettime.c [__NR_timer_gettime]:
+	Make code unconditional.
+	[!__NR_timer_gettime]: Remove conditional code.
+	(timer_gettime) [!__ASSUME_POSIX_TIMERS]: Likewise.
+	* sysdeps/unix/sysv/linux/timer_routines.c [__NR_timer_create]:
+	Make code unconditional.
+	[!__ASSUME_POSIX_TIMERS]: Remove conditional code.
+	* sysdeps/unix/sysv/linux/timer_settime.c [__NR_timer_settime]:
+	Make code unconditional.
+	[!__NR_timer_settime]: Remove conditional code.
+	(timer_settime) [!__ASSUME_POSIX_TIMERS]: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/pthread_cond_timedwait.S
+	(__pthread_cond_timedwait) [!__ASSUME_POSIX_TIMERS]: Remove
+	conditional code.
+
 2012-08-15  Tom de Vries  <vries@codesourcery.com>
 	    Maxim Kuvyrkov  <maxim@codesourcery.com>
 

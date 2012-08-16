@@ -1,4 +1,4 @@
-/* Copyright (C) 2003, 2004, 2007, 2008 Free Software Foundation, Inc.
+/* Copyright (C) 2003-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2003.
 
@@ -30,32 +30,8 @@ pthread_condattr_setclock (attr, clock_id)
      pthread_condattr_t *attr;
      clockid_t clock_id;
 {
-  /* Only a few clocks are allowed.  CLOCK_REALTIME is always allowed.
-     CLOCK_MONOTONIC only if the kernel has the necessary support.  */
-  if (clock_id == CLOCK_MONOTONIC)
-    {
-#ifndef __ASSUME_POSIX_TIMERS
-# ifdef __NR_clock_getres
-      /* Check whether the clock is available.  */
-      static int avail;
-
-      if (avail == 0)
-	{
-	  struct timespec ts;
-
-	  INTERNAL_SYSCALL_DECL (err);
-	  int val;
-	  val = INTERNAL_SYSCALL (clock_getres, err, 2, CLOCK_MONOTONIC, &ts);
-	  avail = INTERNAL_SYSCALL_ERROR_P (val, err) ? -1 : 1;
-	}
-
-      if (avail < 0)
-# endif
-	/* Not available.  */
-	return EINVAL;
-#endif
-    }
-  else if (clock_id != CLOCK_REALTIME)
+  /* Only a few clocks are allowed.  */
+  if (clock_id != CLOCK_MONOTONIC && clock_id != CLOCK_REALTIME)
     /* If more clocks are allowed some day the storing of the clock ID
        in the pthread_cond_t structure needs to be adjusted.  */
     return EINVAL;

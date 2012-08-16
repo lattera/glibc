@@ -122,10 +122,6 @@ __pthread_cond_timedwait:
 	leal	4(%esp), %ecx
 	movl	$__NR_clock_gettime, %eax
 	ENTER_KERNEL
-# ifndef __ASSUME_POSIX_TIMERS
-	cmpl	$-ENOSYS, %eax
-	je	19f
-# endif
 	movl	%edx, %ebx
 
 	/* Compute relative timeout.  */
@@ -482,30 +478,6 @@ __pthread_cond_timedwait:
 	call	__lll_unlock_wake
 	jmp	11b
 
-#if defined __NR_clock_gettime && !defined __ASSUME_POSIX_TIMERS
-	/* clock_gettime not available.  */
-19:	leal	4(%esp), %ebx
-	xorl	%ecx, %ecx
-	movl	$__NR_gettimeofday, %eax
-	ENTER_KERNEL
-	movl	%edx, %ebx
-
-	/* Compute relative timeout.  */
-	movl	8(%esp), %eax
-	movl	$1000, %edx
-	mul	%edx		/* Milli seconds to nano seconds.  */
-	movl	(%ebp), %ecx
-	movl	4(%ebp), %edx
-	subl	4(%esp), %ecx
-	subl	%eax, %edx
-	jns	20f
-	addl	$1000000000, %edx
-	subl	$1, %ecx
-20:	testl	%ecx, %ecx
-	movl	$-ETIMEDOUT, %esi
-	js	6b
-	jmp	21b
-#endif
 	.size	__pthread_cond_timedwait, .-__pthread_cond_timedwait
 versioned_symbol (libpthread, __pthread_cond_timedwait, pthread_cond_timedwait,
 		  GLIBC_2_3_2)

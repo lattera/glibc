@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2007, 2011 Free Software Foundation, Inc.
+/* Copyright (C) 2003-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2003.
 
@@ -39,7 +39,6 @@ struct thread_start_data
 };
 
 
-#ifdef __NR_timer_create
 /* Helper thread to call the user-provided function.  */
 static void *
 timer_sigev_thread (void *arg)
@@ -196,8 +195,3 @@ __start_helper_thread (void)
      be created.  */
   pthread_atfork (NULL, NULL, reset_helper_control);
 }
-#endif
-
-#ifndef __ASSUME_POSIX_TIMERS
-# include <nptl/sysdeps/pthread/timer_routines.c>
-#endif

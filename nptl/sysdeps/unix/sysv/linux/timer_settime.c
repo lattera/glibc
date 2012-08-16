@@ -1,4 +1,4 @@
-/* Copyright (C) 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2003-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2003.
 
@@ -24,19 +24,9 @@
 #include "kernel-posix-timers.h"
 
 
-#ifdef __NR_timer_settime
-# ifndef __ASSUME_POSIX_TIMERS
-static int compat_timer_settime (timer_t timerid, int flags,
-				 const struct itimerspec *value,
-				 struct itimerspec *ovalue);
-#  define timer_settime static compat_timer_settime
-#  include <nptl/sysdeps/pthread/timer_settime.c>
-#  undef timer_settime
-# endif
-
-# ifdef timer_settime_alias
-#  define timer_settime timer_settime_alias
-# endif
+#ifdef timer_settime_alias
+# define timer_settime timer_settime_alias
+#endif
 
 
 int
@@ -46,42 +36,12 @@ timer_settime (timerid, flags, value, ovalue)
      const struct itimerspec *value;
      struct itimerspec *ovalue;
 {
-# undef timer_settime
-# ifndef __ASSUME_POSIX_TIMERS
-  if (__no_posix_timers >= 0)
-# endif
-    {
-      struct timer *kt = (struct timer *) timerid;
+#undef timer_settime
+  struct timer *kt = (struct timer *) timerid;
 
-      /* Delete the kernel timer object.  */
-      int res = INLINE_SYSCALL (timer_settime, 4, kt->ktimerid, flags,
-				value, ovalue);
+  /* Delete the kernel timer object.  */
+  int res = INLINE_SYSCALL (timer_settime, 4, kt->ktimerid, flags,
+			    value, ovalue);
 
-# ifndef __ASSUME_POSIX_TIMERS
-      if (res != -1 || errno != ENOSYS)
-	{
-	  /* We know the syscall support is available.  */
-	  __no_posix_timers = 1;
-# endif
-	  return res;
-# ifndef __ASSUME_POSIX_TIMERS
-	}
-# endif
-
-# ifndef __ASSUME_POSIX_TIMERS
-      __no_posix_timers = -1;
-# endif
-    }
-
-# ifndef __ASSUME_POSIX_TIMERS
-  return compat_timer_settime (timerid, flags, value, ovalue);
-# endif
+  return res;
 }
-#else
-# ifdef timer_settime_alias
-#  define timer_settime timer_settime_alias
-# endif
-/* The new system calls are not available.  Use the userlevel
-   implementation.  */
-# include <nptl/sysdeps/pthread/timer_settime.c>
-#endif

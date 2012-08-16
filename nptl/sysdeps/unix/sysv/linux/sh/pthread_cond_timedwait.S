@@ -158,10 +158,6 @@ __pthread_cond_timedwait:
 	mov.w	.L__NR_clock_gettime, r3
 	trapa	#0x12
 	SYSCALL_INST_PAD
-# ifndef __ASSUME_POSIX_TIMERS
-	cmp/eq	#-ENOSYS, r0
-	bt	19f
-# endif
 
 	/* Compute relative timeout.  */
 	mov.l	@r13, r2
@@ -172,24 +168,6 @@ __pthread_cond_timedwait:
 .L__NR_clock_gettime:
 	.word	__NR_clock_gettime
 
-# ifndef __ASSUME_POSIX_TIMERS
-19:	
-	mov	r15, r4
-	add	#16, r4
-	mov	#0, r5
-	mov	#__NR_gettimeofday, r3
-	trapa	#0x12
-	SYSCALL_INST_PAD
-
-	/* Compute relative timeout.  */
-	mov.l	@(20,r15), r0
-	mov.w	.L1k, r1
-	dmulu.l	r0, r1		/* Micro seconds to nano seconds.  */
-	mov.l	@r13, r2
-	mov.l	@(4,r13), r3
-	mov.l	@(16,r15), r0
-	sts	macl, r1
-#endif
 0:	
 #else
 	mov	r15, r4

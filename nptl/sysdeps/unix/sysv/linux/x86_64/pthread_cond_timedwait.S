@@ -457,10 +457,6 @@ __pthread_cond_timedwait:
 	movl	$__NR_clock_gettime, %eax
 	syscall
 #  endif
-#  ifndef __ASSUME_POSIX_TIMERS
-	cmpq	$-ENOSYS, %rax
-	je	19f
-#  endif
 
 	/* Compute relative timeout.  */
 	movq	(%r13), %rcx
@@ -604,32 +600,6 @@ __pthread_cond_timedwait:
 	subq	$cond_lock, %rdi
 # endif
 	jmp	6b
-
-# if defined __NR_clock_gettime && !defined __ASSUME_POSIX_TIMERS
-	/* clock_gettime not available.  */
-19:	leaq	32(%rsp), %rdi
-	xorl	%esi, %esi
-	/* This call works because we directly jump to a system call entry
-	   which preserves all the registers.  */
-	call	JUMPTARGET(__gettimeofday)
-
-	/* Compute relative timeout.  */
-	movq	40(%rsp), %rax
-	movl	$1000, %edx
-	mul	%rdx		/* Milli seconds to nano seconds.  */
-	movq	(%r13), %rcx
-	movq	8(%r13), %rdx
-	subq	32(%rsp), %rcx
-	subq	%rax, %rdx
-	jns	20f
-	addq	$1000000000, %rdx
-	decq	%rcx
-20:	testq	%rcx, %rcx
-	movq	8(%rsp), %rdi
-	movq	$-ETIMEDOUT, %r14
-	js	6b
-	jmp	21b
-# endif
 #endif
 	.size	__pthread_cond_timedwait, .-__pthread_cond_timedwait
 versioned_symbol (libpthread, __pthread_cond_timedwait, pthread_cond_timedwait,
