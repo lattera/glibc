@@ -1,5 +1,5 @@
 /* Look up a symbol in a shared object loaded by `dlopen'.
-   Copyright (C) 1999-2002,2004,2006,2007,2009 Free Software Foundation, Inc.
+   Copyright (C) 1999-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -19,6 +19,7 @@
 #include <assert.h>
 #include <stddef.h>
 #include <setjmp.h>
+#include <stdlib.h>
 #include <libintl.h>
 
 #include <dlfcn.h>
