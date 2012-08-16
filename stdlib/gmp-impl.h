@@ -1,6 +1,6 @@
 /* Include file for internal GNU MP types and definitions.
 
-Copyright (C) 1991, 1993, 1994, 1995, 1996, 2011 Free Software Foundation, Inc.
+Copyright (C) 1991-2012 Free Software Foundation, Inc.
 
 This file is part of the GNU MP Library.
 
@@ -216,7 +216,8 @@ extern mp_size_t __gmp_default_fp_limb_precision;
    has to be set.  Put the quotient in Q and the remainder in R.  */
 #define udiv_qrnnd_preinv(q, r, nh, nl, d, di) \
   do {									\
-    mp_limb_t _q, _ql, _r;						\
+    mp_limb_t _ql __attribute__ ((unused));				\
+    mp_limb_t _q, _r;							\
     mp_limb_t _xh, _xl;							\
     umul_ppmm (_q, _ql, (nh), (di));					\
     _q += (nh);			/* DI is 2**BITS_PER_MP_LIMB too small */\

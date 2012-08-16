@@ -3,7 +3,7 @@
    Return the single-limb remainder.
    There are no constraints on the value of the divisor.
 
-Copyright (C) 1991, 1993, 1994, Free Software Foundation, Inc.
+Copyright (C) 1991-2012 Free Software Foundation, Inc.
 
 This file is part of the GNU MP Library.
 
@@ -49,7 +49,7 @@ mpn_mod_1 (dividend_ptr, dividend_size, divisor_limb)
 {
   mp_size_t i;
   mp_limb_t n1, n0, r;
-  mp_limb_t dummy;
+  mp_limb_t dummy __attribute__ ((unused));
 
   /* Botch: Should this be handled at all?  Rely on callers?  */
   if (dividend_size == 0)

@@ -1,5 +1,5 @@
 /* Internal function for converting integers to ASCII.
-   Copyright (C) 1994-1996,1999,2000,2002,2007 Free Software Foundation, Inc.
+   Copyright (C) 1994-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Torbjorn Granlund <tege@matematik.su.se>
    and Ulrich Drepper <drepper@gnu.org>.
@@ -102,7 +102,7 @@ _itowa (value, buflim, base, upper_case)
     {
 # define RUN_2N(BITS) \
       do								      \
-        {								      \
+	{								      \
 	  /* `unsigned long long int' always has 64 bits.  */		      \
 	  mp_limb_t work_hi = value >> (64 - BITS_PER_MP_LIMB);		      \
 									      \
@@ -296,7 +296,8 @@ _itowa (value, buflim, base, upper_case)
 	    if (brec->flag)
 	      while (ti != 0)
 		{
-		  mp_limb_t quo, rem, x, dummy;
+		  mp_limb_t quo, rem, x;
+		  mp_limb_t dummy __attribute__ ((unused));
 
 		  umul_ppmm (x, dummy, ti, base_multiplier);
 		  quo = (x + ((ti - x) >> 1)) >> (brec->post_shift - 1);
@@ -308,7 +309,8 @@ _itowa (value, buflim, base, upper_case)
 	    else
 	      while (ti != 0)
 		{
-		  mp_limb_t quo, rem, x, dummy;
+		  mp_limb_t quo, rem, x;
+		  mp_limb_t dummy __attribute__ ((unused));
 
 		  umul_ppmm (x, dummy, ti, base_multiplier);
 		  quo = x >> brec->post_shift;

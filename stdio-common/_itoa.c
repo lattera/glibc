@@ -206,7 +206,7 @@ _itoa (value, buflim, base, upper_case)
     {
 # define RUN_2N(BITS) \
       do								      \
-        {								      \
+	{								      \
 	  /* `unsigned long long int' always has 64 bits.  */		      \
 	  mp_limb_t work_hi = value >> (64 - BITS_PER_MP_LIMB);		      \
 									      \
@@ -264,7 +264,8 @@ _itoa (value, buflim, base, upper_case)
 	if (brec->flag)
 	  while (value != 0)
 	    {
-	      mp_limb_t quo, rem, x, dummy;
+	      mp_limb_t quo, rem, x;
+	      mp_limb_t __attribute__ ((unused));
 
 	      umul_ppmm (x, dummy, value, base_multiplier);
 	      quo = (x + ((value - x) >> 1)) >> (brec->post_shift - 1);
@@ -275,7 +276,8 @@ _itoa (value, buflim, base, upper_case)
 	else
 	  while (value != 0)
 	    {
-	      mp_limb_t quo, rem, x, dummy;
+	      mp_limb_t quo, rem, x;
+	      mp_limb_t __attribute__ ((unused));
 
 	      umul_ppmm (x, dummy, value, base_multiplier);
 	      quo = x >> brec->post_shift;
@@ -401,7 +403,8 @@ _itoa (value, buflim, base, upper_case)
 	    if (brec->flag)
 	      while (ti != 0)
 		{
-		  mp_limb_t quo, rem, x, dummy;
+		  mp_limb_t quo, rem, x;
+		  mp_limb_t dummy __attribute__ ((unused));
 
 		  umul_ppmm (x, dummy, ti, base_multiplier);
 		  quo = (x + ((ti - x) >> 1)) >> (brec->post_shift - 1);
@@ -413,7 +416,8 @@ _itoa (value, buflim, base, upper_case)
 	    else
 	      while (ti != 0)
 		{
-		  mp_limb_t quo, rem, x, dummy;
+		  mp_limb_t quo, rem, x;
+		  mp_limb_t dummy __attribute__ ((unused));
 
 		  umul_ppmm (x, dummy, ti, base_multiplier);
 		  quo = x >> brec->post_shift;
