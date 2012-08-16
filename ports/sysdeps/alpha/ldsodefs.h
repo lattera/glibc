@@ -26,7 +26,7 @@ struct La_alpha_retval;
 #define ARCH_PLTENTER_MEMBERS						\
     Elf64_Addr (*alpha_gnu_pltenter) (Elf64_Sym *, unsigned int,	\
 				     uintptr_t *, uintptr_t *,		\
-				     const struct La_alpha_regs *,	\
+				     struct La_alpha_regs *,		\
 				     unsigned int *, const char *name,  \
 				     long int *framesizep);
 

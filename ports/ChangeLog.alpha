@@ -1,3 +1,8 @@
+2012-08-16  Carlos O'Donell  <carlos_odonell@mentor.com>
+
+	* sysdeps/alpha/ldsodefs.h (ARCH_PLTENTER_MEMBERS)
+	<alpha_gnu_pltenter>: struct La_alpha_regs is not const.
+
 2012-08-13  Richard Henderson  <rth@twiddle.net>
 
 	* configure.in: Don't test toolchain support for TLS or GPREL.

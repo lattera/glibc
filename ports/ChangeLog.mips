@@ -1,3 +1,9 @@
+2012-08-16  Carlos O'Donell  <carlos_odonell@mentor.com>
+
+	* sysdeps/mips/ldsodefs.h (ARCH_PLTENTER_MEMBERS)
+	<mips_o32_gnu_pltenter, mips_n32_gnu_pltenter, mips_n64_gnu_pltenter>:
+	struct La_mips_32_regs and struct La_mips_64_regs are not constant.
+
 2012-08-15  Tom de Vries  <vries@codesourcery.com>
 	    Maxim Kuvyrkov  <maxim@codesourcery.com>
 

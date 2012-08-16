@@ -29,17 +29,17 @@ struct La_mips_64_retval;
 #define ARCH_PLTENTER_MEMBERS						    \
     Elf32_Addr (*mips_o32_gnu_pltenter) (Elf32_Sym *, unsigned int,	    \
 					 uintptr_t *, uintptr_t *,	    \
-					 const struct La_mips_32_regs *,    \
+					 struct La_mips_32_regs *,	    \
 					 unsigned int *, const char *name,  \
 					 long int *framesizep);		    \
     Elf32_Addr (*mips_n32_gnu_pltenter) (Elf32_Sym *, unsigned int,	    \
 					 uintptr_t *, uintptr_t *,	    \
-					 const struct La_mips_64_regs *,    \
+					 struct La_mips_64_regs *,	    \
 					 unsigned int *, const char *name,  \
 					 long int *framesizep);		    \
     Elf64_Addr (*mips_n64_gnu_pltenter) (Elf64_Sym *, unsigned int,	    \
 					 uintptr_t *, uintptr_t *,	    \
-					 const struct La_mips_64_regs *,    \
+					 struct La_mips_64_regs *,	    \
 					 unsigned int *, const char *name,  \
 					 long int *framesizep);
 

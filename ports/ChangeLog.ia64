@@ -1,3 +1,8 @@
+2012-08-16  Carlos O'Donell  <carlos_odonell@mentor.com>
+
+	* sysdeps/ia64/ldsodefs.h (ARCH_PLTENTER_MEMBERS)
+	<ia64_gnu_pltenter>: struct La_ia64_regs is not constant.
+
 2012-08-14  Mike Frysinger  <vapier@gentoo.org>
 
 	* sysdeps/ia64/configure.in: Remove assembler-with-cpp debug check.

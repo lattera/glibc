@@ -26,7 +26,7 @@ struct La_sh_retval;
 
 #define ARCH_PLTENTER_MEMBERS						\
     uintptr_t (*sh_gnu_pltenter) (Elf32_Sym *, unsigned int, uintptr_t *, \
-				  uintptr_t *, const struct La_sh_regs *, \
+				  uintptr_t *, struct La_sh_regs *, \
 				  unsigned int *, const char *name,	\
 				  long int *framesizep)
 
