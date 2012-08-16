@@ -1,3 +1,7 @@
+2012-08-16  Joseph Myers  <joseph@codesourcery.com>
+
+	* stdlib/longlong.h: Update from GCC.
+
 2012-08-16  Roland McGrath  <roland@hack.frob.com>
 
 	* stdlib/gmp-impl.h (udiv_qrnnd_preinv): Use __attribute__ ((unused))
