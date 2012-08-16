@@ -171,19 +171,16 @@ __internal_setnetgrent_reuse (const char *group, struct __netgrent *datap,
   return status == NSS_STATUS_SUCCESS;
 }
 
-int internal_setnetgrent (const char *group, struct __netgrent *datap);
-libc_hidden_proto (internal_setnetgrent)
-
 int
-internal_setnetgrent (const char *group, struct __netgrent *datap)
+internal_function
+__internal_setnetgrent (const char *group, struct __netgrent *datap)
 {
   /* Free list of all netgroup names from last run.  */
   free_memory (datap);
 
   return __internal_setnetgrent_reuse (group, datap, &errno);
 }
-libc_hidden_def (internal_setnetgrent)
-strong_alias (internal_setnetgrent, __internal_setnetgrent)
+libc_hidden_def (__internal_setnetgrent)
 
 int
 setnetgrent (const char *group)
@@ -204,7 +201,7 @@ setnetgrent (const char *group)
 	goto out;
     }
 
-  result = internal_setnetgrent (group, &dataset);
+  result = __internal_setnetgrent (group, &dataset);
 
  out:
   __libc_lock_unlock (lock);
@@ -212,18 +209,15 @@ setnetgrent (const char *group)
   return result;
 }
 
-void internal_endnetgrent (struct __netgrent *datap);
-libc_hidden_proto (internal_endnetgrent)
-
 void
-internal_endnetgrent (struct __netgrent *datap)
+internal_function
+__internal_endnetgrent (struct __netgrent *datap)
 {
   endnetgrent_hook (datap);
   /* Now free list of all netgroup names from last run.  */
   free_memory (datap);
 }
-libc_hidden_def (internal_endnetgrent)
-strong_alias (internal_endnetgrent, __internal_endnetgrent)
+libc_hidden_def (__internal_endnetgrent)
 
 
 void
@@ -231,16 +225,10 @@ endnetgrent (void)
 {
   __libc_lock_lock (lock);
 
-  internal_endnetgrent (&dataset);
+  __internal_endnetgrent (&dataset);
 
   __libc_lock_unlock (lock);
 }
-
-
-int internal_getnetgrent_r (char **hostp, char **userp, char **domainp,
-			    struct __netgrent *datap,
-			    char *buffer, size_t buflen, int *errnop);
-libc_hidden_proto (internal_getnetgrent_r)
 
 
 static enum nss_status
@@ -263,7 +251,8 @@ nscd_getnetgrent (struct __netgrent *datap, char *buffer, size_t buflen,
 
 
 int
-internal_getnetgrent_r (char **hostp, char **userp, char **domainp,
+internal_function
+__internal_getnetgrent_r (char **hostp, char **userp, char **domainp,
 			  struct __netgrent *datap,
 			  char *buffer, size_t buflen, int *errnop)
 {
@@ -361,8 +350,7 @@ internal_getnetgrent_r (char **hostp, char **userp, char **domainp,
 
   return status == NSS_STATUS_SUCCESS ? 1 : 0;
 }
-libc_hidden_def (internal_getnetgrent_r)
-strong_alias (internal_getnetgrent_r, __internal_getnetgrent_r)
+libc_hidden_def (__internal_getnetgrent_r)
 
 /* The real entry point.  */
 int
@@ -373,8 +361,8 @@ __getnetgrent_r (char **hostp, char **userp, char **domainp,
 
   __libc_lock_lock (lock);
 
-  status = internal_getnetgrent_r (hostp, userp, domainp, &dataset,
-				   buffer, buflen, &errno);
+  status = __internal_getnetgrent_r (hostp, userp, domainp, &dataset,
+                                     buffer, buflen, &errno);
 
   __libc_lock_unlock (lock);
 

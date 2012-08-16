@@ -1,3 +1,19 @@
+2012-08-16  Roland McGrath  <roland@hack.frob.com>
+
+	* inet/getnetgrent_r.c (internal_setnetgrent): Renamed to ...
+	(__internal_setnetgrent): ... this.  Add internal_function to
+	definition.  Add libc_hidden_def.
+	(setnetgrent): Update caller.
+	(internal_endnetgrent): Renamed to ...
+	(__internal_endnetgrent): ... this.  Add internal_function to
+	definition.  Add libc_hidden_def.
+	(endnetgrent): Update caller.
+	(internal_getnetgrent_r): Renamed to ...
+	(__internal_getnetgrent_r): ... this.  Add internal_function to
+	definition.  Add libc_hidden_def.
+	(__getnetgrent_r): Update caller.
+	* inet/netgroup.h: Update declarations.  Add libc_hidden_proto uses.
+
 2012-08-16  Joseph Myers  <joseph@codesourcery.com>
 
 	* stdlib/longlong.h: Update from GCC.
