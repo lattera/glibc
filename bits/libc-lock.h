@@ -44,6 +44,7 @@
 /* Initialize the named lock variable, leaving it in a consistent, unlocked
    state.  */
 #define __libc_lock_init(NAME)
+#define __rtld_lock_initialize(NAME)
 #define __libc_rwlock_init(NAME)
 
 /* Same as last but this time we initialize a recursive mutex.  */
