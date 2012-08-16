@@ -1194,9 +1194,11 @@ _dl_map_object_from_fd (const char *name, int fd, struct filebuf *fbp,
 	       was executed directly.  The setup will happen later.  */
 	    break;
 
+# ifdef _LIBC_REENTRANT
 	  /* In a static binary there is no way to tell if we dynamically
 	     loaded libpthread.  */
 	  if (GL(dl_error_catch_tsd) == &_dl_initial_error_catch_tsd)
+# endif
 #endif
 	    {
 	      /* We have not yet loaded libpthread.

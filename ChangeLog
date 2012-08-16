@@ -1,5 +1,8 @@
 2012-08-15  Roland McGrath  <roland@hack.frob.com>
 
+	* elf/dl-load.c (_dl_map_object_from_fd) [SHARED]: Conditionalize
+	check of GL(dl_error_catch_tsd) on [_LIBC_REENTRANT].
+
 	* bits/libc-lock.h (__rtld_lock_initialize): New macro.
 
 	* elf/dl-sym.c: Include <stdlib.h>.
