@@ -1,5 +1,12 @@
 2012-08-17  Roland McGrath  <roland@hack.frob.com>
 
+	* sysdeps/posix/getaddrinfo.c
+	(save_gaiconf_mtime, check_gaiconf_mtime): New functions.
+	(gaiconf_init, gaiconf_reload): Use them.
+	[!_STATBUF_ST_NSEC]
+	(gaiconf_mtime, save_gaiconf_mtime, check_gaiconf_mtime):
+	Define using time_t rather than struct timespec.
+
 	* sysdeps/generic/malloc-machine.h (MUTEX_INITIALIZER): New macro.
 	(atomic_full_barrier, atomic_read_barrier, atomic_write_barrier):
 	Macros removed.
