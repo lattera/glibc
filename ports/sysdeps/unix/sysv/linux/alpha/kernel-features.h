@@ -82,4 +82,9 @@
 #undef __ASSUME_STATFS64
 #define __ASSUME_STATFS64 0
 
+/* Support for fsyncdata was added for alpha after 2.6.21.  */
+#if __LINUX_KERNEL_VERSION >= 0x020616
+# define __ASSUME_FDATASYNC	1
+#endif
+
 #endif /* _KERNEL_FEATURES_H */
