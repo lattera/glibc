@@ -1,3 +1,8 @@
+2012-08-16  Gary Benson  <gbenson@redhat.com>
+
+	* elf/dl-close.c (_dl_close_worker): Also set r->r_map when
+	unmapping the first object in a namespace.
+
 2012-08-16  Roland McGrath  <roland@hack.frob.com>
 
 	* inet/getnetgrent_r.c (internal_setnetgrent): Renamed to ...

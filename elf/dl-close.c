@@ -641,7 +641,7 @@ _dl_close_worker (struct link_map *map)
 #ifdef SHARED
 	      assert (nsid != LM_ID_BASE);
 #endif
-	      ns->_ns_loaded = imap->l_next;
+	      r->r_map = ns->_ns_loaded = imap->l_next;
 	    }
 
 	  --ns->_ns_nloaded;
