@@ -1,5 +1,15 @@
 2012-08-17  Roland McGrath  <roland@hack.frob.com>
 
+	* bits/param.h: New file.
+	* misc/sys/param.h: New file.
+	* include/sys/param.h: New file.
+	* misc/Makefile (headers): Add bits/param.h.
+	* sysdeps/generic/sys/param.h: File removed.
+	* sysdeps/unix/sysv/linux/bits/param.h: New file.
+	* sysdeps/unix/sysv/linux/sys/param.h: File removed.
+	* sysdeps/mach/hurd/bits/param.h: New file.
+	* sysdeps/mach/hurd/sys/param.h: New file.
+
 	* elf/dl-close.c (_dl_close_worker): Add a cast and a comment to the
 	last change.
 
