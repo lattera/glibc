@@ -66,9 +66,9 @@ endif
 # spurious test failures.
 codeset_mo = $(objpfx)domaindir/de_DE/LC_MESSAGES/codeset.mo
 
-$(codeset_mo):
+$(codeset_mo): tstcodeset.po
 	$(make-target-directory)
-	msgfmt -o $@T tstcodeset.po
+	msgfmt -o $@T $<
 	mv -f $@T $@
 
 $(objpfx)mtrace-tst-gettext: $(objpfx)tst-gettext.out

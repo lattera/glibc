@@ -1,3 +1,7 @@
+2012-08-17  Roland McGrath  <roland@hack.frob.com>
+
+	* intl/Makefile ($(codeset_mo)): Depend on the input file.
+
 2012-08-17  Jeff Law <law@redhat.com>
 
 	* intl/Makefile (codeset_mo): New variable.
