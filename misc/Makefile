@@ -95,7 +95,6 @@ CFLAGS-getsysstats.c = -fexceptions
 CFLAGS-getusershell.c = -fexceptions
 CFLAGS-err.c = -fexceptions
 CFLAGS-tst-tsearch.c = $(stack-align-test-flags)
-CFLAGS-mntent_r.c = -D_IO_MTSAFE_IO
 
 include ../Rules
 

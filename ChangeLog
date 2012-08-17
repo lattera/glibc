@@ -1,5 +1,11 @@
 2012-08-17  Roland McGrath  <roland@hack.frob.com>
 
+	* libio/genops.c (_IO_unbuffer_write): Conditionalize locking code on
+	[_IO_MTSAFE_IO].
+	* libio/libioP.h [!_IO_MTSAFE_IO && !NOT_IN_libc]
+	(_IO_acquire_lock, _IO_acquire_lock_clear_flags2, _IO_release_lock):
+	New macros.
+
 	* Makeconfig [$(libc-reentrant) = yes] (libio-mtsafe): New variable.
 	* libio/Makefile (CPPFLAGS): Append $(libio-mtsafe) unconditionally
 	rather than -D_IO_MTSAFE_IO conditionally.

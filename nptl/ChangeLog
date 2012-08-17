@@ -1,8 +1,13 @@
 2012-08-15  Roland McGrath  <roland@hack.frob.com>
 
+2012-08-15  Roland McGrath  <roland@hack.frob.com>
+
+2012-08-15  Roland McGrath  <roland@hack.frob.com>
+
 	* Makefile (CFLAGS-flockfile.c): Use $(libio-mtsafe) instead
 	of -D_IO_MTSAFE_IO.
 	(CFLAGS-ftrylockfile.c, CFLAGS-funlockfile.c): Likewise.
+	* sysdeps/unix/sysv/linux/Makefile (CFLAGS-fork.c): Likewise.
 
 2012-08-16  Joseph Myers  <joseph@codesourcery.com>
 

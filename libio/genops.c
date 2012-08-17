@@ -952,6 +952,7 @@ _IO_unbuffer_write (void)
 	  /* Iff stream is un-orientated, it wasn't used. */
 	  && fp->_mode != 0)
 	{
+#ifdef _IO_MTSAFE_IO
 	  int cnt;
 #define MAXTRIES 2
 	  for (cnt = 0; cnt < MAXTRIES; ++cnt)
@@ -961,6 +962,7 @@ _IO_unbuffer_write (void)
 	      /* Give the other thread time to finish up its use of the
 		 stream.  */
 	      __sched_yield ();
+#endif
 
 	  if (! dealloc_buffers && !(fp->_flags & _IO_USER_BUF))
 	    {
@@ -974,8 +976,10 @@ _IO_unbuffer_write (void)
 
 	  _IO_SETBUF (fp, NULL, 0);
 
+#ifdef _IO_MTSAFE_IO
 	  if (cnt < MAXTRIES && fp->_lock != NULL)
 	    _IO_lock_unlock (*fp->_lock);
+#endif
 	}
 
       /* Make sure that never again the wide char functions can be

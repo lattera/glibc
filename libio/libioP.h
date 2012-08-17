@@ -933,3 +933,17 @@ _IO_acquire_lock_clear_flags2_fct (_IO_FILE **p)
   if ((fp->_flags & _IO_USER_LOCK) == 0)
     _IO_funlockfile (fp);
 }
+
+#if !defined _IO_MTSAFE_IO && !defined NOT_IN_libc
+# define _IO_acquire_lock(_fp)						      \
+  do {									      \
+    _IO_FILE *_IO_acquire_lock_file = NULL
+# define _IO_acquire_lock_clear_flags2(_fp)				      \
+  do {									      \
+    _IO_FILE *_IO_acquire_lock_file = (_fp)
+# define _IO_release_lock(_fp)						      \
+    if (_IO_acquire_lock_file != NULL)					      \
+      _IO_acquire_lock_file->_flags2 &= ~(_IO_FLAGS2_FORTIFY		      \
+                                          | _IO_FLAGS2_SCANF_STD);	      \
+  } while (0)
+#endif
