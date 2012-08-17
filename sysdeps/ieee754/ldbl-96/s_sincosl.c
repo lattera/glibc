@@ -1,5 +1,5 @@
 /* Compute sine and cosine of argument.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -25,7 +25,7 @@
 void
 __sincosl (long double x, long double *sinx, long double *cosx)
 {
-  int32_t se, i0, i1;
+  int32_t se, i0, i1 __attribute__ ((unused));
 
   /* High word of x. */
   GET_LDOUBLE_WORDS (se, i0, i1, x);

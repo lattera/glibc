@@ -1,3 +1,8 @@
+2012-08-17  Marek Polacek  <polacek@redhat.com>
+
+	* sysdeps/ieee754/ldbl-96/s_sincosl.c (__sincosl): Use __attribute__
+	((unused)) on I1, which is set by GET_LDOUBLE_WORDS but never used.
+
 2012-08-17  Roland McGrath  <roland@hack.frob.com>
 
 	* configure.in: Add AC_SUBST for sysheaders.
