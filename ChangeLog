@@ -14,6 +14,8 @@
 
 	* sysdeps/unix/time.c: Moved ...
 	* sysdeps/posix/time.c: ... here.
+	* sysdeps/unix/sysv/linux/time.c: Adjust #include.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/time.c: Likewise.
 
 	* sysdeps/unix/nice.c: Moved ...
 	* sysdeps/posix/nice.c: ... here.
