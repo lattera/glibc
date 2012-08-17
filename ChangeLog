@@ -1,5 +1,10 @@
 2012-08-17  Roland McGrath  <roland@hack.frob.com>
 
+	* elf/dl-iteratephdr.c (__dl_iterate_phdr): Use NULL rather than 0 for
+	__libc_cleanup_push argument.
+
+2012-08-17  Roland McGrath  <roland@hack.frob.com>
+
 	* bits/param.h: New file.
 	* misc/sys/param.h: New file.
 	* include/sys/param.h: New file.

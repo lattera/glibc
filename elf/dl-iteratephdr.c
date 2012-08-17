@@ -1,5 +1,5 @@
 /* Get loaded objects program headers.
-   Copyright (C) 2001-2004, 2006-2009, 2010, 2011 Free Software Foundation, Inc.
+   Copyright (C) 2001-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jakub@redhat.com>, 2001.
 
@@ -39,7 +39,7 @@ __dl_iterate_phdr (int (*callback) (struct dl_phdr_info *info,
 
   /* Make sure nobody modifies the list of loaded objects.  */
   __rtld_lock_lock_recursive (GL(dl_load_write_lock));
-  __libc_cleanup_push (cancel_handler, 0);
+  __libc_cleanup_push (cancel_handler, NULL);
 
   /* We have to determine the namespace of the caller since this determines
      which namespace is reported.  */
