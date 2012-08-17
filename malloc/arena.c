@@ -141,6 +141,8 @@ int __malloc_initialized = -1;
 
 /**************************************************************************/
 
+#ifndef NO_THREADS
+
 /* atfork support.  */
 
 static __malloc_ptr_t (*save_malloc_hook) (size_t __size,
@@ -276,7 +278,7 @@ ptmalloc_unlock_all (void)
   (void)mutex_unlock(&list_lock);
 }
 
-#ifdef __linux__
+# ifdef __linux__
 
 /* In NPTL, unlocking a mutex in the child process after a
    fork() is currently unsafe, whereas re-initializing it is safe and
@@ -311,11 +313,13 @@ ptmalloc_unlock_all2 (void)
   atfork_recursive_cntr = 0;
 }
 
-#else
+# else
 
-#define ptmalloc_unlock_all2 ptmalloc_unlock_all
+#  define ptmalloc_unlock_all2 ptmalloc_unlock_all
 
-#endif
+# endif
+
+#endif  /* !NO_THREADS */
 
 /* Initialization routine. */
 #include <string.h>

@@ -1,9 +1,16 @@
 2012-08-17  Roland McGrath  <roland@hack.frob.com>
 
+	* sysdeps/generic/malloc-machine.h (MUTEX_INITIALIZER): New macro.
+	(atomic_full_barrier, atomic_read_barrier, atomic_write_barrier):
+	Macros removed.
+	* malloc/arena.c (save_malloc_hook, save_free_hook): Conditionalize on
+	[!NO_THREADS].
+	(malloc_atfork, free_atfork, atfork_recursive_cntr): Likewise.
+	(ptmalloc_lock_all, ptmalloc_unlock_all, ptmalloc_unlock_all2):
+	Likewise.
+
 	* elf/dl-iteratephdr.c (__dl_iterate_phdr): Use NULL rather than 0 for
 	__libc_cleanup_push argument.
-
-2012-08-17  Roland McGrath  <roland@hack.frob.com>
 
 	* bits/param.h: New file.
 	* misc/sys/param.h: New file.
