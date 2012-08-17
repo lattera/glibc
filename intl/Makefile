@@ -61,6 +61,16 @@ ifneq (no,$(PERL))
 tests: $(objpfx)mtrace-tst-gettext
 endif
 endif
+
+# Multiple tests use this data.  Create it once to avoid racing and
+# spurious test failures.
+codeset_mo = $(objpfx)domaindir/de_DE/LC_MESSAGES/codeset.mo
+
+$(codeset_mo):
+	$(make-target-directory)
+	msgfmt -o $@T tstcodeset.po
+	mv -f $@T $@
+
 $(objpfx)mtrace-tst-gettext: $(objpfx)tst-gettext.out
 	$(common-objpfx)malloc/mtrace $(objpfx)tst-gettext.mtrace > $@
 $(objpfx)tst-gettext.out: tst-gettext.sh $(objpfx)tst-gettext
@@ -70,16 +80,14 @@ $(objpfx)tst-translit.out: tst-translit.sh $(objpfx)tst-translit
 	$(SHELL) -e $< $(common-objpfx) $(common-objpfx)intl/
 $(objpfx)tst-gettext2.out: tst-gettext2.sh $(objpfx)tst-gettext2
 	$(SHELL) -e $< $(common-objpfx) $(common-objpfx)intl/
-$(objpfx)tst-codeset.out: tst-codeset.sh $(objpfx)tst-codeset
-	$(SHELL) -e $< $(common-objpfx) $(common-objpfx)intl/
-$(objpfx)tst-gettext3.out: tst-gettext3.sh $(objpfx)tst-gettext3
-	$(SHELL) -e $< $(common-objpfx) $(common-objpfx)intl/
 $(objpfx)tst-gettext4.out: tst-gettext4.sh $(objpfx)tst-gettext4
-	$(SHELL) -e $< $(common-objpfx) '$(run-program-prefix)' $(common-objpfx)intl/
-$(objpfx)tst-gettext5.out: tst-gettext5.sh $(objpfx)tst-gettext5
 	$(SHELL) -e $< $(common-objpfx) '$(run-program-prefix)' $(common-objpfx)intl/
 $(objpfx)tst-gettext6.out: tst-gettext6.sh $(objpfx)tst-gettext6
 	$(SHELL) -e $< $(common-objpfx) '$(run-program-prefix)' $(common-objpfx)intl/
+
+$(objpfx)tst-codeset.out: $(codeset_mo)
+$(objpfx)tst-gettext3.out: $(codeset_mo)
+$(objpfx)tst-gettext5.out: $(codeset_mo)
 endif
 endif
 
@@ -95,6 +103,11 @@ CFLAGS-tst-gettext3.c = -DOBJPFX=\"$(objpfx)\"
 CFLAGS-tst-gettext4.c = -DOBJPFX=\"$(objpfx)\"
 CFLAGS-tst-gettext5.c = -DOBJPFX=\"$(objpfx)\"
 CFLAGS-tst-gettext6.c = -DOBJPFX=\"$(objpfx)\"
+
+LOCPATH-ENV = LOCPATH=$(common-objpfx)localedata
+tst-codeset-ENV = $(LOCPATH-ENV)
+tst-gettext3-ENV = $(LOCPATH-ENV)
+tst-gettext5-ENV = $(LOCPATH-ENV)
 
 ifeq ($(have-thread-library),yes)
 ifeq (yes,$(build-shared))
