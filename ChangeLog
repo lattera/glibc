@@ -1,5 +1,8 @@
 2012-08-17  Roland McGrath  <roland@hack.frob.com>
 
+	* elf/dl-close.c (_dl_close_worker): Add a cast and a comment to the
+	last change.
+
 	* libio/genops.c (_IO_unbuffer_write): Conditionalize locking code on
 	[_IO_MTSAFE_IO].
 	* libio/libioP.h [!_IO_MTSAFE_IO && !NOT_IN_libc]
