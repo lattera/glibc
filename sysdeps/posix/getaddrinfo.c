@@ -1885,7 +1885,7 @@ save_gaiconf_mtime (const struct stat64 *st)
 static inline bool
 check_gaiconf_mtime (const struct stat64 *st)
 {
-  return st->mtime == gaiconf_mtime;
+  return st->st_mtime == gaiconf_mtime;
 }
 
 #endif
