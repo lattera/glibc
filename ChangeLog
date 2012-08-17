@@ -1,5 +1,22 @@
 2012-08-17  Roland McGrath  <roland@hack.frob.com>
 
+	* sysdeps/unix/mkfifo.c: Moved ...
+	* sysdeps/posix/mkfifo.c: ... here.
+	* sysdeps/unix/mkfifoat.c: Moved ...
+	* sysdeps/posix/mkfifoat.c: ... here.
+
+	* sysdeps/unix/utime.c: Moved ...
+	* sysdeps/posix/utime.c: ... here.
+
+	* sysdeps/unix/time.c: Moved ...
+	* sysdeps/posix/time.c: ... here.
+
+	* sysdeps/unix/nice.c: Moved ...
+	* sysdeps/posix/nice.c: ... here.
+
+	* sysdeps/unix/alarm.c: Moved ...
+	* sysdeps/posix/alarm.c: ... here.
+
 	* intl/Makefile ($(codeset_mo)): Depend on the input file.
 
 2012-08-17  Jeff Law <law@redhat.com>
