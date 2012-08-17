@@ -1,5 +1,9 @@
 2012-08-17  Roland McGrath  <roland@hack.frob.com>
 
+	* configure.in: Add AC_SUBST for sysheaders.
+	* configure: Regenerated.
+	* config.make.in (sysheaders): New substituted variable.
+
 	* sysdeps/unix/mkfifo.c: Moved ...
 	* sysdeps/posix/mkfifo.c: ... here.
 	* sysdeps/unix/mkfifoat.c: Moved ...

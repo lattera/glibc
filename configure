@@ -661,6 +661,7 @@ force_install
 bindnow
 oldest_abi
 use_default_link
+sysheaders
 with_fp
 ac_ct_CXX
 CXXFLAGS
@@ -3474,6 +3475,7 @@ if test "${with_headers+set}" = set; then :
 else
   sysheaders=''
 fi
+
 
 
 

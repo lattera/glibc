@@ -95,6 +95,7 @@ AC_ARG_WITH([headers],
 			    @<:@default=compiler default@:>@]),
 	    [sysheaders=$withval],
 	    [sysheaders=''])
+AC_SUBST(sysheaders)
 
 AC_SUBST(use_default_link)
 AC_ARG_WITH([default-link],
