@@ -1005,6 +1005,13 @@ endif
 sysd-rules-targets := $(sort $(foreach p,$(sysd-rules-patterns),\
 					 $(firstword $(subst :, ,$p))))
 
+# A sysdeps Makeconfig fragment may set libc-reentrant to yes.
+ifeq (yes,$(libc-reentrant))
+defines += -D_LIBC_REENTRANT
+
+libio-mtsafe = -D_IO_MTSAFE_IO
+endif
+
 endif # Makeconfig not yet included
 
 # Local Variables:

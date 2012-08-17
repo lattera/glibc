@@ -100,10 +100,8 @@ CFLAGS-system.c = -fexceptions
 CFLAGS-system.os = -fomit-frame-pointer
 CFLAGS-fmtmsg.c = -fexceptions
 
-ifneq (,$(filter %REENTRANT, $(defines)))
-CFLAGS-strfmon.c = -D_IO_MTSAFE_IO
-CFLAGS-strfmon_l.c = -D_IO_MTSAFE_IO
-endif
+CFLAGS-strfmon.c = $(libio-mtsafe)
+CFLAGS-strfmon_l.c = $(libio-mtsafe)
 
 CFLAGS-tst-bsearch.c = $(stack-align-test-flags)
 CFLAGS-tst-qsort.c = $(stack-align-test-flags)

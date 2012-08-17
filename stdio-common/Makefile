@@ -123,9 +123,7 @@ scanf13-ENV = LOCPATH=$(common-objpfx)localedata
 bug14-ENV = LOCPATH=$(common-objpfx)localedata
 tst-grouping-ENV = LOCPATH=$(common-objpfx)localedata
 
-ifneq (,$(filter %REENTRANT, $(defines)))
-CPPFLAGS += -D_IO_MTSAFE_IO
-endif
+CPPFLAGS += $(libio-mtsafe)
 
 $(objpfx)tst-setvbuf1.out: tst-setvbuf1.expect $(objpfx)tst-setvbuf1
 	$(built-program-cmd) > $@ 2>&1

@@ -1,4 +1,4 @@
-# Copyright (C) 2009 Free Software Foundation, Inc.
+# Copyright (C) 2009-2012 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -29,8 +29,8 @@ tests = tst-gshadow
 CFLAGS-getsgent_r.c = -fexceptions
 CFLAGS-getsgent.c = -fexceptions
 CFLAGS-fgetsgent.c = -fexceptions
-CFLAGS-fgetsgent_r.c = -fexceptions -D_IO_MTSAFE_IO
-CFLAGS-putsgent.c = -fexceptions -D_IO_MTSAFE_IO
+CFLAGS-fgetsgent_r.c = -fexceptions $(libio-mtsafe)
+CFLAGS-putsgent.c = -fexceptions $(libio-mtsafe)
 CFLAGS-getsgnam.c = -fexceptions
 CFLAGS-getsgnam_r.c = -fexceptions
 

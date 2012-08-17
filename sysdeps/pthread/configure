@@ -1,3 +1,0 @@
-# Local configure fragment for sysdeps/pthread.
-
-DEFINES="$DEFINES -D_LIBC_REENTRANT"

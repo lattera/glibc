@@ -1,5 +1,4 @@
-# Copyright (C) 1991,1992,1996-2000,2003,2004,2012
-# Free Software Foundation, Inc.
+# Copyright (C) 1991-2012 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -44,8 +43,8 @@ CFLAGS-getgrnam_r.c = -DUSE_NSCD=1 -fexceptions
 CFLAGS-getgrent_r.c = -fexceptions
 CFLAGS-getgrent.c = -fexceptions
 CFLAGS-fgetgrent.c = -fexceptions
-CFLAGS-fgetgrent_r.c = -fexceptions -D_IO_MTSAFE_IO
-CFLAGS-putgrent.c = -fexceptions -D_IO_MTSAFE_IO
+CFLAGS-fgetgrent_r.c = -fexceptions $(libio-mtsafe)
+CFLAGS-putgrent.c = -fexceptions $(libio-mtsafe)
 CFLAGS-initgroups.c = -DUSE_NSCD=1 -fexceptions
 CFLAGS-getgrgid.c = -fexceptions
 

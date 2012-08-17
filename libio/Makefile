@@ -70,13 +70,13 @@ routines += oldiofopen oldiofdopen oldiofclose oldiopopen oldpclose \
 	    oldiofsetpos64
 endif
 
-ifneq (,$(filter %REENTRANT, $(defines)))
+ifeq (yes,$(libc-reentrant))
 routines += clearerr_u feof_u ferror_u fputc_u getc_u getchar_u		      \
 	    iofflush_u putc_u putchar_u peekc iofread_u iofwrite_u iofgets_u  \
 	    iofputs_u
-
-CPPFLAGS += -D_IO_MTSAFE_IO
 endif
+
+CPPFLAGS += $(libio-mtsafe)
 
 # Support for exception handling.
 CFLAGS-fileops.c = $(exceptions)

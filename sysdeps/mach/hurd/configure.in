@@ -1,8 +1,5 @@
 GLIBC_PROVIDES dnl See aclocal.m4 in the top level source directory.
 
-# GNU libc on the Hurd is always reentrant.
-DEFINES="$DEFINES -D_LIBC_REENTRANT"
-
 dnl We need this setting because of the need for PLT calls in ld.so.
 AC_DEFINE([NO_HIDDEN])
 

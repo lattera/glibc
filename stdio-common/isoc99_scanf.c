@@ -28,13 +28,17 @@ __isoc99_scanf (const char *format, ...)
   va_list arg;
   int done;
 
+#ifdef _IO_MTSAFE_IO
   _IO_acquire_lock_clear_flags2 (stdin);
+#endif
   stdin->_flags2 |= _IO_FLAGS2_SCANF_STD;
 
   va_start (arg, format);
   done = _IO_vfscanf (stdin, format, arg, NULL);
   va_end (arg);
 
+#ifdef _IO_MTSAFE_IO
   _IO_release_lock (stdin);
+#endif
   return done;
 }

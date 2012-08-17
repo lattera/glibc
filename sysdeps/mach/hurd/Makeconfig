@@ -2,3 +2,6 @@
 # See Makefile in this directory for the rule that builds this.
 # We must define this variable earlier than sysdeps Makefiles are included.
 static-start-installed-name = crt0.o
+
+# GNU libc on the Hurd is always reentrant.
+libc-reentrant = yes

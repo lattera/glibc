@@ -341,9 +341,9 @@ extra-objs += $(crti-objs) $(crtn-objs)
 extra-objs += pt-crti.o
 endif
 
-CFLAGS-flockfile.c = -D_IO_MTSAFE_IO
-CFLAGS-ftrylockfile.c = -D_IO_MTSAFE_IO
-CFLAGS-funlockfile.c = -D_IO_MTSAFE_IO
+CFLAGS-flockfile.c = $(libio-mtsafe)
+CFLAGS-ftrylockfile.c = $(libio-mtsafe)
+CFLAGS-funlockfile.c = $(libio-mtsafe)
 
 link-libc-static := $(common-objpfx)libc.a $(static-gnulib) \
 		    $(common-objpfx)libc.a

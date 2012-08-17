@@ -1,3 +1,43 @@
+2012-08-17  Roland McGrath  <roland@hack.frob.com>
+
+	* Makeconfig [$(libc-reentrant) = yes] (libio-mtsafe): New variable.
+	* libio/Makefile (CPPFLAGS): Append $(libio-mtsafe) unconditionally
+	rather than -D_IO_MTSAFE_IO conditionally.
+	* stdio-common/Makefile (CPPFLAGS): Likewise.
+	* wcsmbs/Makefile (CPPFLAGS): Likewise.
+	* stdlib/Makefile (CFLAGS-strfmon.c, CFLAGS-strfmon_l.c):
+	Use $(libio-mtsafe).
+	* debug/Makefile (CFLAGS-sprintf_chk.c): Use $(libio-mtsafe) instead
+	of -D_IO_MTSAFE_IO.
+	(CFLAGS-snprintf_chk.c, CFLAGS-vsprintf_chk.c): Likewise.
+	(CFLAGS-vsnprintf_chk.c, CFLAGS-asprintf_chk.c): Likewise.
+	(CFLAGS-vasprintf_chk.c, CFLAGS-obprintf_chk.c): Likewise.
+	(CFLAGS-dprintf_chk.c, CFLAGS-vdprintf_chk.c): Likewise.
+	(CFLAGS-printf_chk.c, CFLAGS-fprintf_chk.c): Likewise.
+	(CFLAGS-vprintf_chk.c, CFLAGS-vfprintf_chk.c): Likewise.
+	(CFLAGS-gets_chk.c, CFLAGS-fgets_chk.c): Likewise.
+	(CFLAGS-fgets_u_chk.c, CFLAGS-fread_chk.c): Likewise.
+	(CFLAGS-fread_u_chk.c): Likewise.
+	(CFLAGS-swprintf_chk.c, CFLAGS-vswprintf_chk.c): Likewise.
+	(CFLAGS-wprintf_chk.c, CFLAGS-fwprintf_chk.c): Likewise.
+	(CFLAGS-vwprintf_chk.c, CFLAGS-vfwprintf_chk.c): Likewise.
+	(CFLAGS-fgetws_chk.c, CFLAGS-fgetws_u_chk.c): Likewise.
+	* grp/Makefile (CFLAGS-fgetgrent_r.c, CFLAGS-putgrent.c): Likewise.
+	* gshadow/Makefile (CFLAGS-fgetsgent_r.c, CFLAGS-putsgent.c): Likewise.
+	* misc/Makefile (CFLAGS-mntent_r.c): Likewise.
+	* pwd/Makefile (CFLAGS-fgetpwent_r.c): Likewise.
+	* shadow/Makefile (CFLAGS-fgetspent_r.c, CFLAGS-putspent.c): Likewise.
+
+	* libio/Makefile: Test [$(libc-reentrant) = yes]
+	instead of [$(filter %REENTRANT, $(defines)) nonempty].
+
+	* Makeconfig
+	[$(libc-reentrant) = yes] (defines): Append -D_LIBC_REENTRANT.
+	* sysdeps/pthread/configure: File removed.
+	* sysdeps/pthread/Makeconfig: New file.
+	* sysdeps/mach/hurd/Makeconfig (libc-reentrant): New variable.
+	* sysdeps/mach/hurd/configure.in: Don't touch DEFINES here.
+
 2012-08-16  Gary Benson  <gbenson@redhat.com>
 
 	* elf/dl-close.c (_dl_close_worker): Also set r->r_map when
