@@ -1,3 +1,7 @@
+2012-08-17  Mike Frysinger  <vapier@gentoo.org>
+
+	* sysdeps/unix/sysv/linux/nice.c: Adjust #include.
+
 2012-08-17  Marek Polacek  <polacek@redhat.com>
 
 	* sysdeps/ieee754/ldbl-96/s_sincosl.c (__sincosl): Use __attribute__
