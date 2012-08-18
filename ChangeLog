@@ -1,5 +1,12 @@
 2012-08-18  Mike Frysinger  <vapier@gentoo.org>
 
+	* include/sys/socket.h (__have_sock_cloexec): Add attribute_hidden.
+	* include/unistd.h (__have_sock_cloexec): Likewise.
+	(__have_pipe2): Likewise.
+	(__have_dup3): Likewise.
+
+2012-08-18  Mike Frysinger  <vapier@gentoo.org>
+
 	[BZ #9685]
 	* include/unistd.h (__have_pipe2): Change define into an extern int.
 	(__have_dup3): Likewise.

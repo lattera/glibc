@@ -148,7 +148,7 @@ libc_hidden_proto (__libc_sa_len)
 #endif
 
 #ifdef SOCK_CLOEXEC
-extern int __have_sock_cloexec;
+extern int __have_sock_cloexec attribute_hidden;
 /* At lot of other functionality became available at the same time as
    SOCK_CLOEXEC.  Avoid defining separate variables for all of them
    unless it is really necessary.  */
