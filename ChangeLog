@@ -1,3 +1,7 @@
+2012-08-18  Andreas Jaeger  <aj@suse.de>
+
+	* stdio-common/_itoa.c (_itoa): Add missing DUMMY variable.
+
 2012-08-18  Mike Frysinger  <vapier@gentoo.org>
 
 	* include/sys/socket.h (__have_sock_cloexec): Add attribute_hidden.
