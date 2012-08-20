@@ -1,4 +1,4 @@
-/* Copyright (C) 2000, 2001, 2007 Free Software Foundation, Inc.
+/* Copyright (C) 2000-2012 Free Software Foundation, Inc.
    Contributed by Martin Schwidefsky (schwidefsky@de.ibm.com).
    This file is part of the GNU C Library.
 
@@ -40,8 +40,8 @@ ENTRY(__mmap)
 	cfi_adjust_cfa_offset (120)
 	st      %r1,0(%r15)             /* store back chain */
 
-	/* Store parameters on stack, because old_mmap/mmap2
-	 * take only one parameter: a pointer to the parameter area
+	/* Store parameters on stack, because mmap2
+	 * takes only one parameter: a pointer to the parameter area
 	 */
 	st      %r6,0x70(%r15)          /* Store 'fd'.      */
 	st      %r5,0x6C(%r15)          /* Store 'flags'.   */
@@ -50,10 +50,6 @@ ENTRY(__mmap)
 	st      %r2,0x60(%r15)          /* Store 'start'.   */
 	l       %r1,216(%r15)           /* Load offset.     */
 
-#ifdef __ASSUME_MMAP2_SYSCALL
-	/* I don't think it is worthwhile trying to use mmap2 whenever 
-	 * it is available.  Only use it when we are sure the syscall
-	 * exists.  */
 	tml     %r1,0x0fff              /* Offset page aligned ?  */
 	lhi     %r2,-EINVAL
 	jnz     1f                      /* No -> EINVAL.  */
@@ -61,11 +57,6 @@ ENTRY(__mmap)
 	st      %r1,0x74(%r15)          /* Store page offset.  */
 	la      %r2,0x60(%r15)          /* Load address of parameter list.  */
 	svc     SYS_ify(mmap2)          /* Do the system call trap.  */
-#else	
-	st      %r1,0x74(%r15)          /* Store offset unmodified.  */
-	la      %r2,0x60(%r15)          /* Load address of parameter list.  */
-	svc     SYS_ify(mmap)           /* Do the system call trap.  */
-#endif
 
 1:	l       %r15,0(%r15)            /* Load back chain.  */
 	cfi_adjust_cfa_offset (-120)

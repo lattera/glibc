@@ -37,8 +37,6 @@
 	.text
 ENTRY (BP_SYM (__mmap64))
 
-#ifdef __NR_mmap2
-
 	/* Save registers.  */
 	pushl %ebp
 	cfi_adjust_cfa_offset (4)
@@ -88,12 +86,6 @@ L(do_syscall):
 	cfi_adjust_cfa_offset (-4)
 	cfi_restore (ebp)
 
-#ifndef __ASSUME_MMAP2_SYSCALL
-2:
-	cmp $-ENOSYS, %eax
-	je 3f
-#endif
-
 	/* If 0 > %eax > -4096 there was an error.  */
 	cmpl $-4096, %eax
 	ja SYSCALL_ERROR_LABEL
@@ -122,42 +114,6 @@ L(einval):
 	cfi_restore (ebp)
 	movl $-EINVAL, %eax
 	jmp SYSCALL_ERROR_LABEL
-#endif
-
-#if !defined __ASSUME_MMAP2_SYSCALL || !defined __NR_mmap2
-3:
-	/* Save registers.  */
-	movl %ebx, %edx
-	cfi_register (ebx, edx)
-
-	cmpl $0, OFFHI-SVRSP(%esp)
-	jne L(einval2)
-
-	movl $SYS_ify(mmap), %eax	/* System call number in %eax.  */
-
-	lea ADDR-SVRSP(%esp), %ebx	/* Address of args is 1st arg.  */
-
-	/* Do the system call trap.  */
-	ENTER_KERNEL
-
-	/* Restore registers.  */
-	movl %edx, %ebx
-	cfi_restore (ebx)
-
-	/* If 0 > %eax > -4096 there was an error.  */
-	cmpl $-4096, %eax
-	ja SYSCALL_ERROR_LABEL
-
-	/* Successful; return the syscall's value.  */
-	ret
-
-	cfi_register (ebx, edx)
-L(einval2):
-	movl %edx, %ebx
-	cfi_restore (ebx)
-	movl $-EINVAL, %eax
-	jmp SYSCALL_ERROR_LABEL
-#endif
 
 PSEUDO_END (BP_SYM (__mmap64))
 

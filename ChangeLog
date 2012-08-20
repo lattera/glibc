@@ -1,3 +1,25 @@
+2012-08-20  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/kernel-features.h
+	(__ASSUME_MMAP2_SYSCALL): Remove all definitions.
+	* sysdeps/unix/sysv/linux/mmap64.c [__NR_mmap2]: Make code
+	unconditional.
+	[!__ASSUME_MMAP2_SYSCALL]: Remove conditional code.
+	* sysdeps/unix/sysv/linux/i386/mmap.S (__mmap)
+	[__ASSUME_MMAP2_SYSCALL]: Make code unconditional.
+	(__mmap) [!__ASSUME_MMAP2_SYSCALL]: Remove conditional code.
+	* sysdeps/unix/sysv/linux/i386/mmap64.S (__mmap64) [__NR_mmap2]:
+	Make code unconditional.
+	(__mmap64) [!__ASSUME_MMAP2_SYSCALL]: Remove conditional code.
+	(__mmap64) [!__NR_mmap2]: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/mmap.S (__mmap)
+	[__ASSUME_MMAP2_SYSCALL]: Make code unconditional.
+	(__mmap) [!__ASSUME_MMAP2_SYSCALL]: Remove conditional code.
+	* sysdeps/unix/sysv/linux/s390/s390-32/mmap64.S (__mmap64)
+	[__NR_mmap2]: Make code unconditional.
+	(__mmap64) [!__ASSUME_MMAP2_SYSCALL]: Remove conditional code.
+	(__mmap64) [!__NR_mmap2]: Likewise.
+
 2012-08-20  Andreas Krebbel  <Andreas.Krebbel@de.ibm.com>
 
 	* sysdeps/unix/sysv/linux/s390/s390-32/getrlimit.c: Remove.

@@ -40,20 +40,14 @@
 /* The sendfile syscall was introduced in 2.2.0.  */
 #define __ASSUME_SENDFILE		1
 
-/* On x86 the mmap2 syscall was introduced in 2.3.31.  */
-#ifdef __i386__
-# define __ASSUME_MMAP2_SYSCALL	1
-#endif
-
 /* On x86 the stat64/lstat64/fstat64 syscalls were introduced in 2.3.34.  */
 #ifdef __i386__
 # define __ASSUME_STAT64_SYSCALL	1
 #endif
 
-/* On sparc the mmap2/stat64/lstat64/fstat64 syscalls were introduced
-   in 2.3.35.  */
+/* On sparc the stat64/lstat64/fstat64 syscalls were introduced in
+   2.3.35.  */
 #if defined __sparc__ && !defined __arch64__
-# define __ASSUME_MMAP2_SYSCALL		1
 # define __ASSUME_STAT64_SYSCALL	1
 #endif
 
@@ -70,9 +64,8 @@
 # define __ASSUME_IPC64		1
 #endif
 
-/* SH kernels got stat64 and mmap2 during 2.4.0-test.  */
+/* SH kernels got stat64 during 2.4.0-test.  */
 #ifdef __sh__
-# define __ASSUME_MMAP2_SYSCALL		1
 # define __ASSUME_STAT64_SYSCALL	1
 #endif
 
@@ -85,12 +78,6 @@
 /* The getdents64 syscall was introduced in 2.4.0-test7 (but later for
    MIPS n32).  */
 #define __ASSUME_GETDENTS64_SYSCALL	1
-
-/* Starting with 2.4.5 kernels the mmap2 syscall made it into the official
-   kernel.  But PowerPC64 does not support a separate MMAP2 call.  */
-#if defined __powerpc__ && !defined __powerpc64__
-# define __ASSUME_MMAP2_SYSCALL		1
-#endif
 
 /* Beginning with 2.6.12 the clock and timer supports CPU clocks.  */
 #define __ASSUME_POSIX_CPU_TIMERS	1

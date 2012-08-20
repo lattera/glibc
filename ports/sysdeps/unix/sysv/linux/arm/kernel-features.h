@@ -20,9 +20,8 @@
 /* The utimes syscall was added before 2.6.1.  */
 #define __ASSUME_UTIMES	1
 
-/* On ARM the mmap2/stat64/lstat64/fstat64 syscalls were introduced in
+/* On ARM the stat64/lstat64/fstat64 syscalls were introduced in
    2.3.35.  */
-#define __ASSUME_MMAP2_SYSCALL		1
 #define __ASSUME_STAT64_SYSCALL	1
 
 /* The signal frame layout changed in 2.6.18.  */

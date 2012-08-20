@@ -18,7 +18,6 @@
    <http://www.gnu.org/licenses/>.  */
 
 /* These features were surely available with 2.4.12.  */
-#define __ASSUME_MMAP2_SYSCALL		1
 #define __ASSUME_STAT64_SYSCALL	1
 
 /* Many syscalls were added in 2.6.10 for m68k.  */

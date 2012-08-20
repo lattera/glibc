@@ -23,7 +23,6 @@
    and expect the final version here.  */
 #define __ASSUME_32BITUIDS		1
 #define __ASSUME_TRUNCATE64_SYSCALL	1
-#define __ASSUME_MMAP2_SYSCALL		1
 #define __ASSUME_STAT64_SYSCALL		1
 #define __ASSUME_IPC64			1
 #define __ASSUME_ST_INO_64_BIT		1

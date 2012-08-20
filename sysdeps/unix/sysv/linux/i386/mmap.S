@@ -25,10 +25,6 @@
 
 ENTRY (__mmap)
 
-/* I don't think it is worthwhile trying to use mmap2 whenever it
-   is available.  Only use it when we are sure the syscall exists.  */
-#ifdef __ASSUME_MMAP2_SYSCALL
-
 	/* Save registers.  */
 	pushl %ebp
 	cfi_adjust_cfa_offset (4)
@@ -72,25 +68,6 @@ L(skip):
 	popl %ebp
 	cfi_adjust_cfa_offset (-4)
 	cfi_restore (ebp)
-
-#else
-
-	/* Save registers.  */
-	movl %ebx, %edx
-	cfi_register (ebx, edx)
-
-	movl $SYS_ify(mmap), %eax	/* System call number in %eax.  */
-
-	lea 4(%esp), %ebx		/* Address of args is 1st arg.  */
-
-	/* Do the system call trap.  */
-	int $0x80
-
-	/* Restore registers.  */
-	movl %edx, %ebx
-	cfi_restore (ebx)
-
-#endif
 
 	/* If 0 > %eax > -4096 there was an error.  */
 	cmpl $-4096, %eax
