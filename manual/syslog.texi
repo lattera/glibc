@@ -379,7 +379,7 @@ default default facility is @code{LOG_USER}.  The default for all the
 connection options in @var{options} is as if those bits were off.
 @code{syslog} leaves the Syslog connection open.
 
-If the @file{dev/log} socket is not open and connected, @code{syslog}
+If the @file{/dev/log} socket is not open and connected, @code{syslog}
 opens and connects it, the same as @code{openlog} with the
 @code{LOG_NDELAY} option would.
 
@@ -422,7 +422,7 @@ The symbols referred to in this section are declared in the file
 @deftypefun void closelog (void)
 
 @code{closelog} closes the current Syslog connection, if there is one.
-This includes closing the @file{dev/log} socket, if it is open.
+This includes closing the @file{/dev/log} socket, if it is open.
 @code{closelog} also sets the identification string for Syslog messages
 back to the default, if @code{openlog} was called with a non-NULL argument
 to @var{ident}.  The default identification string is the program name
