@@ -420,7 +420,7 @@ _dl_important_hwcaps (const char *platform, size_t platform_len, size_t *sz,
   /* Create temporary data structure to generate result table.  */
   temp = (struct r_strlenpair *) alloca (cnt * sizeof (*temp));
   m = 0;
-#if defined NEED_DL_SYSINFO || defined NEED_DL_SYSINFO_DSO
+#if (defined NEED_DL_SYSINFO || defined NEED_DL_SYSINFO_DSO) && defined SHARED
   if (dsocaps != NULL)
     {
       const ElfW(Word) mask = ((const ElfW(Word) *) dsocaps)[-1];

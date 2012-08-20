@@ -1,3 +1,8 @@
+2012-08-20  Roland McGrath  <roland@hack.frob.com>
+
+	* elf/dl-sysdep.c (_dl_important_hwcaps): Fix conditional on using
+	DSOCAPS to match condition on defining it.
+
 2012-08-20  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/kernel-features.h
