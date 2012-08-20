@@ -1,5 +1,5 @@
 /* Jump to a new context.
-   Copyright (C) 2002, 2004, 2005, 2006 Free Software Foundation, Inc.
+   Copyright (C) 2002-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -32,7 +32,6 @@
 /* Size of ucontext in GLIBC_2.3.4 and later.  */
 #define _UC_SIZE_2_3_4	1184
 
-#ifdef __ASSUME_SWAPCONTEXT_SYSCALL
 	.section ".text";
 ENTRY (__setcontext)
 	mr	r4,r3
@@ -46,9 +45,6 @@ ENTRY (__setcontext)
 1:
 	b	__syscall_error@local
 END(__setcontext)
-#else
-# include "setcontext-common.S"
-#endif
 
 versioned_symbol (libc, __setcontext, setcontext, GLIBC_2_3_4)
 

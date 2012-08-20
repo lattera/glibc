@@ -1,5 +1,17 @@
 2012-08-20  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/unix/sysv/linux/kernel-features.h
+	(__ASSUME_SWAPCONTEXT_SYSCALL): Remove.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/getcontext.S
+	[__ASSUME_SWAPCONTEXT_SYSCALL]: Make code unconditional.
+	[!__ASSUME_SWAPCONTEXT_SYSCALL]: Remove conditional code.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/setcontext.S
+	[__ASSUME_SWAPCONTEXT_SYSCALL]: Make code unconditional.
+	[!__ASSUME_SWAPCONTEXT_SYSCALL]: Remove conditional code.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/swapcontext.S
+	[__ASSUME_SWAPCONTEXT_SYSCALL]: Make code unconditional.
+	[!__ASSUME_SWAPCONTEXT_SYSCALL]: Remove conditional code.
+
 	* sysdeps/unix/sysv/linux/kernel-features.h [__s390__ &&
 	__LINUX_KERNEL_VERSION >= 0x020616] (__ASSUME_UTIMES): Define.
 

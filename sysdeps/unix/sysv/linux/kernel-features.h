@@ -106,13 +106,6 @@
 # define __ASSUME_FADVISE64_64_SYSCALL	1
 #endif
 
-/* Starting with 2.6.0 PowerPC adds signal/swapcontext support for Vector
-   SIMD (AKA Altivec, VMX) instructions and register state.  This changes
-   the overall size of the sigcontext and adds the swapcontext syscall.  */
-#ifdef __powerpc__
-# define __ASSUME_SWAPCONTEXT_SYSCALL	1
-#endif
-
 /* On sparc64 stat64/lstat64/fstat64 syscalls were introduced in 2.6.12.  */
 #if defined __sparc__ && defined __arch64__
 # define __ASSUME_STAT64_SYSCALL	1

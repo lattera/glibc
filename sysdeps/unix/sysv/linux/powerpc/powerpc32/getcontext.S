@@ -32,7 +32,6 @@
 /* Size of ucontext in GLIBC_2.3.4 and later.  */
 #define _UC_SIZE_2_3_4	1184
 
-#ifdef __ASSUME_SWAPCONTEXT_SYSCALL
 	.section ".text";
 ENTRY (__getcontext)
 	li	r4,0
@@ -45,9 +44,6 @@ ENTRY (__getcontext)
 1:
 	b	__syscall_error@local
 END(__getcontext)
-#else
-# include "getcontext-common.S"
-#endif
 
 versioned_symbol (libc, __getcontext, getcontext, GLIBC_2_3_4)
 
