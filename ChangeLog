@@ -1,5 +1,8 @@
 2012-08-20  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/unix/sysv/linux/kernel-features.h [__s390__ &&
+	__LINUX_KERNEL_VERSION >= 0x020616] (__ASSUME_UTIMES): Define.
+
 	* sysdeps/unix/sysv/linux/kernel-features.h
 	(__ASSUME_MMAP2_SYSCALL): Remove all definitions.
 	* sysdeps/unix/sysv/linux/mmap64.c [__NR_mmap2]: Make code

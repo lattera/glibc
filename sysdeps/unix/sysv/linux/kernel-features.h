@@ -87,12 +87,14 @@
 
 /* The utimes syscall has been available for some architectures
    forever.  For x86 it was introduced after 2.5.75, for x86-64,
-   ppc, and ppc64 it was introduced in 2.6.0-test3.  */
+   ppc, and ppc64 it was introduced in 2.6.0-test3, for s390 it was
+   introduced in 2.6.21-rc5.  */
 #if defined __sparc__ \
     || defined __i386__ \
     || defined __x86_64__ \
     || defined __powerpc__ \
-    || defined __sh__
+    || defined __sh__ \
+    || (defined __s390__ && __LINUX_KERNEL_VERSION >= 0x020616)
 # define __ASSUME_UTIMES	1
 #endif
 
