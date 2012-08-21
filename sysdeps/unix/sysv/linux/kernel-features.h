@@ -98,14 +98,6 @@
 # define __ASSUME_UTIMES	1
 #endif
 
-/* The fixed version of the posix_fadvise64 syscall appeared in
-   2.6.0-test3.  At least for x86 and sparc.  Powerpc support appeared
-   in 2.6.2, but for 32-bit userspace only.  */
-#if (defined __i386__ || defined __sparc__			\
-     || (defined __powerpc__ && !defined __powerpc64__))
-# define __ASSUME_FADVISE64_64_SYSCALL	1
-#endif
-
 /* On sparc64 stat64/lstat64/fstat64 syscalls were introduced in 2.6.12.  */
 #if defined __sparc__ && defined __arch64__
 # define __ASSUME_STAT64_SYSCALL	1

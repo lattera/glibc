@@ -1,3 +1,36 @@
+2012-08-21  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/kernel-features.h
+	(__ASSUME_FADVISE64_64_SYSCALL): Remove.
+	* sysdeps/unix/sysv/linux/i386/posix_fadvise64.S: Do not include
+	<kernel-features.h>.
+	[__NR_fadvise64_64]: Make code unconditional.
+	[!__ASSUME_FADVISE64_64_SYSCALL]: Remove conditional code.
+	[__NR_fadvise64 && (!__ASSUME_FADVISE64_64_SYSCALL ||
+	!__NR_fadvise64_64)]: Likewise.
+	[!(__NR_fadvise64 && (!__ASSUME_FADVISE64_64_SYSCALL ||
+	!__NR_fadvise64_64))]: Likewise.
+	[__NR_fadvise64]: Make code unconditional.
+	[!__NR_fadvise64]: Remove conditional code.
+	* sysdeps/unix/sysv/linux/posix_fadvise64.c: Do not include
+	<kernel-features.h>.
+	(__posix_fadvise64_l64) [__NR_fadvise64_64]: Make code
+	unconditional.
+	(_posix_fadvise64_l64) [!__ASSUME_FADVISE64_64_SYSCALL]: Remove
+	conditional code.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/posix_fadvise64.c: Do
+	not include <kernel-features.h>.
+	(__posix_fadvise64_l64) [__NR_fadvise64_64]: Make code
+	unconditional.
+	(_posix_fadvise64_l64) [!__ASSUME_FADVISE64_64_SYSCALL]: Remove
+	conditional code.
+	* sysdeps/unix/sysv/linux/s390/s390-32/posix_fadvise64.c: Do not
+	include <kernel-features.h>.
+	(__posix_fadvise64_l64) [__NR_fadvise64_64]: Make code
+	unconditional.
+	(_posix_fadvise64_l64) [!__ASSUME_FADVISE64_64_SYSCALL]: Remove
+	conditional code.
+
 2012-08-21  Will Schmidt  <will_schmidt@vnet.ibm.com>
 
 	* sysdeps/powerpc/powerpc64/power7/memchr.S: Unrolled short loop and

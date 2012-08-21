@@ -22,7 +22,6 @@
 
 /* Many syscalls were added in 2.6.10 for m68k.  */
 #define __ASSUME_UTIMES	1
-#define __ASSUME_FADVISE64_64_SYSCALL	1
 
 #include_next <kernel-features.h>
 
