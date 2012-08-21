@@ -1,4 +1,4 @@
-/* Copyright (C) 1998-2006, 2007, 2009 Free Software Foundation, Inc.
+/* Copyright (C) 1998-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -43,6 +43,38 @@ uintptr_t __stack_chk_guard attribute_relro;
 #ifdef HAVE_PTR_NTHREADS
 /* We need atomic operations.  */
 # include <atomic.h>
+#endif
+
+
+#ifndef SHARED
+# include <link.h>
+# include <dl-irel.h>
+
+# ifdef ELF_MACHINE_IRELA
+#  define IREL_T	ElfW(Rela)
+#  define IPLT_START	__rela_iplt_start
+#  define IPLT_END	__rela_iplt_end
+#  define IREL		elf_irela
+# elif defined ELF_MACHINE_IREL
+#  define IREL_T	ElfW(Rel)
+#  define IPLT_START	__rel_iplt_start
+#  define IPLT_END	__rel_iplt_end
+#  define IREL		elf_irel
+# endif
+
+/* We use weak references for these so that we'll still work with a linker
+   that doesn't define them.  Such a linker doesn't support IFUNC at all
+   and so uses won't work, but a statically-linked program that doesn't
+   use any IFUNC symbols won't have a problem.  */
+extern const IREL_T IPLT_START[] __attribute__ ((weak));
+extern const IREL_T IPLT_END[] __attribute__ ((weak));
+
+static void
+apply_irel (void)
+{
+  for (const IREL_T *ipltent = IPLT_START; ipltent < IPLT_END; ++ipltent)
+    IREL (ipltent);
+}
 #endif
 
 
@@ -136,8 +168,8 @@ LIBC_START_MAIN (int (*main) (int, char **, char ** MAIN_AUXVEC_DECL),
     }
 # endif
 
-  /* Performe IREL{,A} relocations.  */
-  __libc_csu_irel ();
+  /* Perform IREL{,A} relocations.  */
+  apply_irel ();
 
   /* Initialize the thread library at least a bit since the libgcc
      functions are using thread functions if these are available and
