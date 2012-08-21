@@ -1,3 +1,9 @@
+2012-08-21  Will Schmidt  <will_schmidt@vnet.ibm.com>
+
+	* sysdeps/powerpc/powerpc64/power7/memchr.S: Unrolled short loop and
+	slight instruction rearrangements per scrollpipe analysis.
+	* sysdeps/powerpc/powerpc64/power7/memchr.S: Likewise.
+
 2012-08-20  Roland McGrath  <roland@hack.frob.com>
 
 	* manual/syslog.texi (syslog; vsyslog, closelog):
