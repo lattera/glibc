@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1996-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -24,5 +24,8 @@
 #define	GETFUNC_NAME		getaliasent
 #define	ENDFUNC_NAME		endaliasent
 #define DATABASE_NAME		aliases
+
+/* There is no nscd support for the aliases file.  */
+#undef	USE_NSCD
 
 #include "../nss/getXXent_r.c"

@@ -32,6 +32,9 @@
 /* nscd uses 1MB or 2MB thread stacks.  */
 #define __libc_use_alloca(size) (size <= __MAX_ALLOCA_CUTOFF)
 
+/* We are nscd, so we don't want to be talking to ourselves.  */
+#undef  USE_NSCD
+
 #include <getaddrinfo.c>
 
 /* Support code.  */

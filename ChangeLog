@@ -1,5 +1,45 @@
 2012-08-22  Roland McGrath  <roland@hack.frob.com>
 
+	* shadow/getspent.c: #undef USE_NSCD before #include that gets the code.
+	* shadow/getspent_r.c: Likewise.
+	* shadow/getspnam.c: Likewise.
+	* shadow/getspnam_r.c: Likewise.
+	* gshadow/getsgent.c: Likewise.
+	* gshadow/getsgent_r.c: Likewise.
+	* gshadow/getsgnam.c: Likewise.
+	* gshadow/getsgnam_r.c: Likewise.
+	* inet/getnetbyad.c: Likewise.
+	* inet/getnetbyad_r.c: Likewise.
+	* inet/getnetbynm.c: Likewise.
+	* inet/getnetbynm_r.c: Likewise.
+	* inet/getnetent.c: Likewise.
+	* inet/getnetent_r.c: Likewise.
+	* inet/getproto.c: Likewise.
+	* inet/getproto_r.c: Likewise.
+	* inet/getprtent.c: Likewise.
+	* inet/getprtent_r.c: Likewise.
+	* inet/getprtname.c: Likewise.
+	* inet/getprtname_r.c: Likewise.
+	* inet/getrpcbyname.c: Likewise.
+	* inet/getrpcbyname_r.c: Likewise.
+	* inet/getrpcbynumber.c: Likewise.
+	* inet/getrpcbynumber_r.c: Likewise.
+	* inet/getrpcent.c: Likewise.
+	* inet/getrpcent_r.c: Likewise.
+	* inet/getaliasent.c: Likewise.
+	* inet/getaliasent_r.c: Likewise.
+	* inet/getaliasname.c: Likewise.
+	* inet/getaliasname_r.c: Likewise.
+	* nscd/getgrgid_r.c: Likewise.
+	* nscd/getgrnam_r.c: Likewise.
+	* nscd/gethstbyad_r.c: Likewise.
+	* nscd/gethstbynm3_r.c: Likewise.
+	* nscd/getpwnam_r.c: Likewise.
+	* nscd/getpwuid_r.c: Likewise.
+	* nscd/getsrvbynm_r.c: Likewise.
+	* nscd/getsrvbypt_r.c: Likewise.
+	* nscd/gai.c: Likewise.
+
 	* configure.in (build_nscd): New substituted variable, set
 	by --disable-build-nscd and defaults to $use_nscd.
 	* configure: Regenerated.

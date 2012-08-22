@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1996-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -25,5 +25,8 @@
 #define DATABASE_NAME		protocols
 #define STAYOPEN		int stayopen
 #define STAYOPEN_VAR		stayopen
+
+/* There is no nscd support for the protocols file.  */
+#undef	USE_NSCD
 
 #include "../nss/getXXent_r.c"
