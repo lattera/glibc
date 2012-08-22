@@ -293,6 +293,13 @@ void foo (int i, void *p)
   fi
 fi
 
+AC_ARG_ENABLE([build-nscd],
+	      [AS_HELP_STRING([--disable-build-nscd],
+	       [disable building and installing the nscd daemon])],
+	      [build_nscd=$enableval],
+	      [build_nscd=default])
+AC_SUBST(build_nscd)
+
 # Note the use of $use_nscd is near the bottom of the file.
 AC_ARG_ENABLE([nscd],
 	      [AS_HELP_STRING([--disable-nscd],
@@ -2111,6 +2118,9 @@ AC_SUBST(libc_cv_gcc_unwind_find_fde)
 AC_SUBST(use_nscd)
 if test "x$use_nscd" != xno; then
   AC_DEFINE([USE_NSCD])
+fi
+if test "x$build_nscd" = xdefault; then
+  build_nscd=$use_nscd
 fi
 
 # Test for old glibc 2.0.x headers so that they can be removed properly

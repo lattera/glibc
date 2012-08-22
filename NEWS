@@ -36,6 +36,8 @@ Version 2.17
 
 * New configure option --disable-nscd builds the C library such that it
   never attempts to contact the Name Service Caching Daemon (nscd).
+  New configure option --disable-build-nscd avoids building nscd itself;
+  this is the default if --disable-nscd is used.
 
 
 Version 2.16

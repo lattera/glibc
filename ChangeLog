@@ -1,5 +1,13 @@
 2012-08-22  Roland McGrath  <roland@hack.frob.com>
 
+	* configure.in (build_nscd): New substituted variable, set
+	by --disable-build-nscd and defaults to $use_nscd.
+	* configure: Regenerated.
+	* config.make.in (build-nscd): New substituted variable.
+	* nscd/Makefile (others, others-pie, install-sbin, extra-objs):
+	Change conditional to require [$(build-nscd) = yes] as well.
+	* NEWS: Mention --disable-build-nscd in the --disable-nscd item.
+
 	[BZ# 13696]
 	* configure.in (use_nscd): New substituted variable, set by
 	--disable-nscd.  If enabled, define USE_NSCD.

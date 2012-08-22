@@ -38,7 +38,7 @@ nscd-modules := nscd connections pwdcache getpwnam_r getpwuid_r grpcache \
 		xmalloc xstrdup aicache initgrcache gai res_hconf \
 		netgroupcache
 
-ifeq ($(have-thread-library),yes)
+ifeq ($(build-nscd)$(have-thread-library),yesyes)
 
 others += nscd
 others-pie += nscd

@@ -655,6 +655,7 @@ multi_arch
 base_machine
 add_on_subdirs
 add_ons
+build_nscd
 link_obsolete_rpc
 libc_cv_nss_crypt
 all_warnings
@@ -751,6 +752,7 @@ enable_multi_arch
 enable_nss_crypt
 enable_obsolete_rpc
 enable_systemtap
+enable_build_nscd
 enable_nscd
 with_cpu
 '
@@ -1410,6 +1412,7 @@ Optional Features:
   --enable-obsolete-rpc   build and install the obsolete RPC code for
                           link-time usage
   --enable-systemtap      enable systemtap static probe points [default=no]
+  --disable-build-nscd    disable building and installing the nscd daemon
   --disable-nscd          library functions will not contact the nscd daemon
 
 Optional Packages:
@@ -3755,6 +3758,15 @@ as_fn_error $? "systemtap support needs sys/sdt.h with asm support
 See \`config.log' for more details" "$LINENO" 5; }
   fi
 fi
+
+# Check whether --enable-build-nscd was given.
+if test "${enable_build_nscd+set}" = set; then :
+  enableval=$enable_build_nscd; build_nscd=$enableval
+else
+  build_nscd=default
+fi
+
+
 
 # Note the use of $use_nscd is near the bottom of the file.
 # Check whether --enable-nscd was given.
@@ -7422,6 +7434,9 @@ fi
 if test "x$use_nscd" != xno; then
   $as_echo "#define USE_NSCD 1" >>confdefs.h
 
+fi
+if test "x$build_nscd" = xdefault; then
+  build_nscd=$use_nscd
 fi
 
 # Test for old glibc 2.0.x headers so that they can be removed properly
