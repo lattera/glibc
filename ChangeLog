@@ -1,3 +1,11 @@
+2012-09-19  Dmitry V. Levin  <ldv@altlinux.org>
+
+	[BZ #14579]
+	* elf/rtld.c (dl_main): Limit the check for self loading to normal
+	mode only.
+	* elf/tst-rtld-load-self.sh: New test.
+	* elf/Makefile: Run it.
+
 2012-09-18  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/wordsize-64/Makefile [$(subdir) = misc]

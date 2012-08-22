@@ -1093,7 +1093,8 @@ of this helper program; chances are you did not intend to run this program.\n\
       /* Now the map for the main executable is available.  */
       main_map = GL(dl_ns)[LM_ID_BASE]._ns_loaded;
 
-      if (GL(dl_rtld_map).l_info[DT_SONAME] != NULL
+      if (__builtin_expect (mode, normal) == normal
+	  && GL(dl_rtld_map).l_info[DT_SONAME] != NULL
 	  && main_map->l_info[DT_SONAME] != NULL
 	  && strcmp ((const char *) D_PTR (&GL(dl_rtld_map), l_info[DT_STRTAB])
 		     + GL(dl_rtld_map).l_info[DT_SONAME]->d_un.d_val,
