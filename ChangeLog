@@ -1,3 +1,8 @@
+2012-08-22  Roland McGrath  <roland@hack.frob.com>
+
+	* csu/libc-start.c (apply_irel): Move extern declarations inside here.
+	Conditionalize whole body on [IREL].
+
 2012-08-22  Jeff Law <law@redhat.com>
 
 	[BZ #14505]

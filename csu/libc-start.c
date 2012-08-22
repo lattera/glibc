@@ -62,18 +62,19 @@ uintptr_t __stack_chk_guard attribute_relro;
 #  define IREL		elf_irel
 # endif
 
-/* We use weak references for these so that we'll still work with a linker
-   that doesn't define them.  Such a linker doesn't support IFUNC at all
-   and so uses won't work, but a statically-linked program that doesn't
-   use any IFUNC symbols won't have a problem.  */
-extern const IREL_T IPLT_START[] __attribute__ ((weak));
-extern const IREL_T IPLT_END[] __attribute__ ((weak));
-
 static void
 apply_irel (void)
 {
+# ifdef IREL
+  /* We use weak references for these so that we'll still work with a linker
+     that doesn't define them.  Such a linker doesn't support IFUNC at all
+     and so uses won't work, but a statically-linked program that doesn't
+     use any IFUNC symbols won't have a problem.  */
+  extern const IREL_T IPLT_START[] __attribute__ ((weak));
+  extern const IREL_T IPLT_END[] __attribute__ ((weak));
   for (const IREL_T *ipltent = IPLT_START; ipltent < IPLT_END; ++ipltent)
     IREL (ipltent);
+# endif
 }
 #endif
 
