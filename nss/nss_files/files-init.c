@@ -1,5 +1,5 @@
 /* Initialization in nss_files module.
-   Copyright (C) 2011 Free Software Foundation, Inc.
+   Copyright (C) 2011-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -15,6 +15,8 @@
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
+
+#ifdef USE_NSCD
 
 #include <nscd/nscd.h>
 
@@ -55,3 +57,5 @@ _nss_files_init (void (*cb) (size_t, struct traced_file *))
 
   cb (netgrdb, &netgr_traced_file.file);
 }
+
+#endif

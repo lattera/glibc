@@ -182,6 +182,21 @@ __internal_setnetgrent (const char *group, struct __netgrent *datap)
 }
 libc_hidden_def (__internal_setnetgrent)
 
+static int
+nscd_setnetgrent (const char *group)
+{
+#ifdef USE_NSCD
+  if (__nss_not_use_nscd_netgroup > 0
+      && ++__nss_not_use_nscd_netgroup > NSS_NSCD_RETRY)
+    __nss_not_use_nscd_netgroup = 0;
+
+  if (!__nss_not_use_nscd_netgroup
+      && !__nss_database_custom[NSS_DBSIDX_netgroup])
+    return __nscd_setnetgrent (group, &dataset);
+#endif
+  return -1;
+}
+
 int
 setnetgrent (const char *group)
 {
@@ -189,21 +204,10 @@ setnetgrent (const char *group)
 
   __libc_lock_lock (lock);
 
-  if (__nss_not_use_nscd_netgroup > 0
-      && ++__nss_not_use_nscd_netgroup > NSS_NSCD_RETRY)
-    __nss_not_use_nscd_netgroup = 0;
+  result = nscd_setnetgrent (group);
+  if (result < 0)
+    result = __internal_setnetgrent (group, &dataset);
 
-  if (!__nss_not_use_nscd_netgroup
-      && !__nss_database_custom[NSS_DBSIDX_netgroup])
-    {
-      result = __nscd_setnetgrent (group, &dataset);
-      if (result >= 0)
-	goto out;
-    }
-
-  result = __internal_setnetgrent (group, &dataset);
-
- out:
   __libc_lock_unlock (lock);
 
   return result;
@@ -230,7 +234,7 @@ endnetgrent (void)
   __libc_lock_unlock (lock);
 }
 
-
+#ifdef USE_NSCD
 static enum nss_status
 nscd_getnetgrent (struct __netgrent *datap, char *buffer, size_t buflen,
 		  int *errnop)
@@ -248,7 +252,7 @@ nscd_getnetgrent (struct __netgrent *datap, char *buffer, size_t buflen,
 
   return NSS_STATUS_SUCCESS;
 }
-
+#endif
 
 int
 internal_function
@@ -267,9 +271,14 @@ __internal_getnetgrent_r (char **hostp, char **userp, char **domainp,
   int no_more = datap->nip == NULL;
   if (! no_more)
     {
+#ifdef USE_NSCD
+      /* This bogus function pointer is a special marker left by
+         __nscd_setnetgrent to tell us to use the data it left
+         before considering any modules.  */
       if (datap->nip == (service_user *) -1l)
 	fct = nscd_getnetgrent;
       else
+#endif
 	{
 	  fct = __nss_lookup_function (datap->nip, "getnetgrent_r");
 	  no_more = fct == NULL;
@@ -375,6 +384,7 @@ int
 innetgr (const char *netgroup, const char *host, const char *user,
 	 const char *domain)
 {
+#ifdef USE_NSCD
   if (__nss_not_use_nscd_netgroup > 0
       && ++__nss_not_use_nscd_netgroup > NSS_NSCD_RETRY)
     __nss_not_use_nscd_netgroup = 0;
@@ -386,6 +396,7 @@ innetgr (const char *netgroup, const char *host, const char *user,
       if (result >= 0)
 	return result;
     }
+#endif
 
   union
   {

@@ -78,6 +78,29 @@ __bump_nl_timestamp (void)
 }
 #endif
 
+static inline uint32_t
+get_nl_timestamp (void)
+{
+#ifdef IS_IN_nscd
+  return nl_timestamp;
+#elif defined USE_NSCD
+  return __nscd_get_nl_timestamp ();
+#else
+  return 0;
+#endif
+}
+
+static inline bool
+cache_valid_p (void)
+{
+  if (cache != NULL)
+    {
+      uint32_t timestamp = get_nl_timestamp ();
+      return timestamp != 0 && cache->timestamp == timestamp;
+    }
+  return false;
+}
+
 
 static struct cached_data *
 make_request (int fd, pid_t pid)
@@ -253,11 +276,7 @@ make_request (int fd, pid_t pid)
       if (result == NULL)
 	goto out_fail;
 
-#ifdef IS_IN_nscd
-      result->timestamp = nl_timestamp;
-#else
-      result->timestamp = __nscd_get_nl_timestamp ();
-#endif
+      result->timestamp = get_nl_timestamp ();
       result->usecnt = 2;
       result->seen_ipv4 = seen_ipv4;
       result->seen_ipv6 = true;
@@ -302,14 +321,7 @@ __check_pf (bool *seen_ipv4, bool *seen_ipv6,
 
   __libc_lock_lock (lock);
 
-#ifdef IS_IN_nscd
-# define cache_valid() nl_timestamp != 0 && cache->timestamp == nl_timestamp
-#else
-# define cache_valid() \
-      ({ uint32_t val = __nscd_get_nl_timestamp ();			      \
-	 val != 0 && cache->timestamp == val; })
-#endif
-  if (cache != NULL && cache_valid ())
+  if (cache_valid_p ())
     {
       data = cache;
       atomic_increment (&cache->usecnt);

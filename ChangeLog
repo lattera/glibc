@@ -1,3 +1,42 @@
+2012-08-22  Roland McGrath  <roland@hack.frob.com>
+
+	[BZ# 13696]
+	* configure.in (use_nscd): New substituted variable, set by
+	--disable-nscd.  If enabled, define USE_NSCD.
+	* configure: Regenerated.
+	* config.h.in: Add USE_NSCD.
+	* config.make.in (use-nscd): New substituted variable.
+	* inet/Makefile (CFLAGS-gethstbyad_r.c): Likewise.
+	(CFLAGS-gethstbynm_r.c, CFLAGS-gethstbynm2_r.c): Likewise.
+	(CFLAGS-getsrvbynm_r.c, CFLAGS-getsrvbypt_r.c): Variables removed.
+	* grp/Makefile (CFLAGS-getgrgid_r.c): Remove -DUSE_NSCD.
+	(CFLAGS-getgrnam_r.c): Likewise.
+	(CFLAGS-initgroups.c): Likewise.
+	* posix/Makefile (CFLAGS-getaddrinfo.c): Remove -DUSE_NSCD.
+	* pwd/Makefile (CFLAGS-getpwuid_r.c, CFLAGS-getpwnam_r.c):
+	Variables removed.
+	* inet/getnetgrent_r.c
+	(nscd_setnetgrent): New function, broken out of ...
+	(setnetgrent): ... here.  Call it.
+	(innetgr): Conditionalize nscd bits on [USE_NSCD].
+	(nscd_getnetgrent): Conditionalize on [USE_NSCD].
+	(__internal_getnetgrent_r): Conditionalize its use on [USE_NSCD].
+	* nscd/Makefile (routines, aux): Move definitions after include of
+	Makeconfig.  Conditionalize on [$(use-nscd) != no].
+	* nss/nsswitch.c (nss_load_all_libraries, __nss_disable_nscd):
+	Conditionalize on [USE_NSCD].
+	(is_nscd, nscd_init_cb): Likewise.
+	(nss_load_library): Conditionalize init callback on [USE_NSCD].
+	* nss/nss_files/files-init.c: Conditionalize body on [USE_NSCD].
+	* nss/nss_db/db-init.c: Likewise.
+	* nscd/nscd.c (main): Conditionalize __nss_disable_nscd call on
+	[USE_NSCD].
+	* sysdeps/unix/sysv/linux/check_pf.c (get_nl_timestamp): New function.
+	(make_request): Use it.
+	(cache_valid_p): New function.
+	(__check_pf): Use it.
+	* NEWS: Add item for --disable-nscd.
+
 2012-08-22  Dmitry V. Levin  <ldv@altlinux.org>
 
 	* configure.in (SED): Update AC_CHECK_PROG_VER's version extract regexp

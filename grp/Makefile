@@ -38,14 +38,14 @@ include ../Rules
 
 ifeq ($(have-thread-library),yes)
 
-CFLAGS-getgrgid_r.c = -DUSE_NSCD=1 -fexceptions
-CFLAGS-getgrnam_r.c = -DUSE_NSCD=1 -fexceptions
+CFLAGS-getgrgid_r.c = -fexceptions
+CFLAGS-getgrnam_r.c = -fexceptions
 CFLAGS-getgrent_r.c = -fexceptions
 CFLAGS-getgrent.c = -fexceptions
 CFLAGS-fgetgrent.c = -fexceptions
 CFLAGS-fgetgrent_r.c = -fexceptions $(libio-mtsafe)
 CFLAGS-putgrent.c = -fexceptions $(libio-mtsafe)
-CFLAGS-initgroups.c = -DUSE_NSCD=1 -fexceptions
+CFLAGS-initgroups.c = -fexceptions
 CFLAGS-getgrgid.c = -fexceptions
 
 endif

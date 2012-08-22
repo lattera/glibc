@@ -20,11 +20,13 @@
 #
 subdir	:= nscd
 
+include ../Makeconfig
+
+ifneq ($(use-nscd),no)
 routines := nscd_getpw_r nscd_getgr_r nscd_gethst_r nscd_getai \
 	    nscd_initgroups nscd_getserv_r nscd_netgroup
 aux	:= nscd_helper
-
-include ../Makeconfig
+endif
 
 # To find xmalloc.c
 vpath %.c ../locale/programs

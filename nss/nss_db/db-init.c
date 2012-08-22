@@ -16,6 +16,8 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#ifdef USE_NSCD
+
 #include <paths.h>
 #include <nscd/nscd.h>
 #include <string.h>
@@ -51,3 +53,5 @@ _nss_db_init (void (*cb) (size_t, struct traced_file *))
   strcpy (serv_traced_file.file.fname, _PATH_VARDB "services.db");
   cb (servdb, &serv_traced_file.file);
 }
+
+#endif

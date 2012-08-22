@@ -305,8 +305,10 @@ main (int argc, char **argv)
 # endif
 #endif
 
+#ifdef USE_NSCD
   /* Make sure we do not get recursive calls.  */
   __nss_disable_nscd (register_traced_file);
+#endif
 
   /* Init databases.  */
   nscd_init ();

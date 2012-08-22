@@ -56,11 +56,11 @@ include ../Rules
 
 ifeq ($(have-thread-library),yes)
 
-CFLAGS-gethstbyad_r.c = -DUSE_NSCD=1 -fexceptions
+CFLAGS-gethstbyad_r.c = -fexceptions
 CFLAGS-gethstbyad.c = -fexceptions
-CFLAGS-gethstbynm_r.c = -DUSE_NSCD=1 -fexceptions
+CFLAGS-gethstbynm_r.c = -fexceptions
 CFLAGS-gethstbynm.c = -fexceptions
-CFLAGS-gethstbynm2_r.c = -DUSE_NSCD=1 -fexceptions
+CFLAGS-gethstbynm2_r.c = -fexceptions
 CFLAGS-gethstbynm2.c = -fexceptions
 CFLAGS-gethstent_r.c = -fexceptions
 CFLAGS-gethstent.c = -fexceptions
@@ -77,8 +77,6 @@ CFLAGS-getrpcent_r.c = -fexceptions
 CFLAGS-getrpcent.c = -fexceptions
 CFLAGS-getservent_r.c = -fexceptions
 CFLAGS-getservent.c = -fexceptions
-CFLAGS-getsrvbynm_r.c = -DUSE_NSCD=1
-CFLAGS-getsrvbypt_r.c = -DUSE_NSCD=1
 CFLAGS-getprtent_r.c = -fexceptions
 CFLAGS-getprtent.c = -fexceptions
 CFLAGS-either_ntoh.c = -fexceptions

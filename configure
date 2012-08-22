@@ -597,6 +597,7 @@ libc_cv_sysconfdir
 libc_cv_localedir
 libc_cv_slibdir
 old_glibc_headers
+use_nscd
 libc_cv_gcc_unwind_find_fde
 libc_extra_cflags
 CPPUNDEFS
@@ -750,6 +751,7 @@ enable_multi_arch
 enable_nss_crypt
 enable_obsolete_rpc
 enable_systemtap
+enable_nscd
 with_cpu
 '
       ac_precious_vars='build_alias
@@ -1408,6 +1410,7 @@ Optional Features:
   --enable-obsolete-rpc   build and install the obsolete RPC code for
                           link-time usage
   --enable-systemtap      enable systemtap static probe points [default=no]
+  --disable-nscd          library functions will not contact the nscd daemon
 
 Optional Packages:
   --with-PACKAGE[=ARG]    use PACKAGE [ARG=yes]
@@ -3752,6 +3755,15 @@ as_fn_error $? "systemtap support needs sys/sdt.h with asm support
 See \`config.log' for more details" "$LINENO" 5; }
   fi
 fi
+
+# Note the use of $use_nscd is near the bottom of the file.
+# Check whether --enable-nscd was given.
+if test "${enable_nscd+set}" = set; then :
+  enableval=$enable_nscd; use_nscd=$enableval
+else
+  use_nscd=yes
+fi
+
 
 # The way shlib-versions is used to generate soversions.mk uses a
 # fairly simplistic model for name recognition that can't distinguish
@@ -7403,6 +7415,14 @@ if test x$libc_cv_gcc_unwind_find_fde = xyes; then
 
 fi
 
+
+# This is far from the AC_ARG_ENABLE that sets it so that a sysdeps
+# configure fragment can override the value to prevent this AC_DEFINE.
+
+if test "x$use_nscd" != xno; then
+  $as_echo "#define USE_NSCD 1" >>confdefs.h
+
+fi
 
 # Test for old glibc 2.0.x headers so that they can be removed properly
 # Search only in includedir.
