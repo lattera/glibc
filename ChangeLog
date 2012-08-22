@@ -1,3 +1,13 @@
+2012-08-22  Will Schmidt  <will_schmidt@vnet.ibm.com>
+
+	[BZ #14252]
+	* powerpc32/power6/wcschr.c: New file.
+	* powerpc32/power6/wcscpy.c: New file.
+	* powerpc32/power6/wcsrchr.c: New file.
+	* powerpc64/power6/wcschr.c: New file.
+	* powerpc64/power6/wcscpy.c: New file.
+	* powerpc64/power6/wcsrchr.c: New file.
+
 2012-08-21  Maxim Kuvyrkov  <maxim@codesourcery.com>
 
 	* string/str-two-way.h (AVAILABLE1_USES_J): New macro, define default.
