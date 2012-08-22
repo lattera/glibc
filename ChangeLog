@@ -1,3 +1,9 @@
+2012-08-22  Dmitry V. Levin  <ldv@altlinux.org>
+
+	* configure.in (SED): Update AC_CHECK_PROG_VER's version extract regexp
+	to support sed >= 4.2.1-20-ga9bf076.
+	* configure: Regenerated.
+
 2012-08-22  Roland McGrath  <roland@hack.frob.com>
 
 	* csu/libc-start.c (apply_irel): Move extern declarations inside here.
