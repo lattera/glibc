@@ -12,15 +12,12 @@
 
 	* string/str-two-way.h (AVAILABLE1_USES_J): New macro, define default.
 	(two_way_short_needle): Use it.
-	* string/{strstr.c, strcasestr.c} (AVAILABLE1_USES_J): Define.
-
-2012-08-21  Maxim Kuvyrkov  <maxim@codesourcery.com>
+	* string/strstr.c (AVAILABLE1_USES_J): Define.
+	* string/strcasestr.c: Likewise.
 
 	* string/str-two-way.h (two_way_short_needle): Use pointers instead of
 	array references.
 	* string/strcasestr.c (TOLOWER): Make side-effect safe.
-
-2012-08-21  Maxim Kuvyrkov  <maxim@codesourcery.com>
 
 	[BZ #11607]
 	* NEWS: Add an entry.
