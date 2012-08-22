@@ -832,8 +832,13 @@ gaih_inet (const char *name, const struct gaih_service *service,
 	  while (!no_more)
 	    {
 	      no_data = 0;
-	      nss_gethostbyname4_r fct4
-		= __nss_lookup_function (nip, "gethostbyname4_r");
+	      nss_gethostbyname4_r fct4 = NULL;
+
+	      /* gethostbyname4_r sends out parallel A and AAAA queries and
+		 is thus only suitable for PF_UNSPEC.  */
+	      if (req->ai_family == PF_UNSPEC)
+		fct4 = __nss_lookup_function (nip, "gethostbyname4_r");
+
 	      if (fct4 != NULL)
 		{
 		  int herrno;

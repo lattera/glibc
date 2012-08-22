@@ -1,3 +1,9 @@
+2012-08-22  Jeff Law <law@redhat.com>
+
+	[BZ #14505]
+	* sysdeps/posix/getaddrinfo.c (gaih_inet): Only use gethostbyname4_r
+	if the family is PF_UNSPEC.
+
 2012-08-22  Mike Frysinger  <vapier@gentoo.org>
 
 	* Makerules (lib-version): Rename from V.
