@@ -1,3 +1,12 @@
+2012-08-22  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/mips/kernel-features.h [_MIPS_SIM ==
+	_ABIO32] (__ASSUME_STAT64_SYSCALL): Define.
+	* sysdeps/unix/sysv/linux/mips/mips64/fxstat64.c: New file.  Based
+	on version from ../sysdeps/unix/sysv/linux/.
+	* sysdeps/unix/sysv/linux/mips/mips64/lxstat64.c: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/xstat64.c: Likewise.
+
 2012-08-16  Carlos O'Donell  <carlos_odonell@mentor.com>
 
 	* sysdeps/mips/ldsodefs.h (ARCH_PLTENTER_MEMBERS)
