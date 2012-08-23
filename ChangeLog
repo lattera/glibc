@@ -1,5 +1,9 @@
 2012-10-02  Dmitry V. Levin  <ldv@altlinux.org>
 
+	* nscd/Makefile: Remove nscd-cflags and all its users.
+	(CPPFLAGS-nonlib): Add preprocessor flags for nscd modules.
+	(CFLAGS-nonlib): Add compiler flags for nscd modules.
+
 	[BZ #10631]
 	* malloc.c (malloc_printerr): Clarify error message.
 

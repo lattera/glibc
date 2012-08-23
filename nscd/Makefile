@@ -1,4 +1,4 @@
-# Copyright (C) 1998,2000,2002-2009,2011,2012 Free Software Foundation, Inc.
+# Copyright (C) 1998-2012 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -79,48 +79,21 @@ CFLAGS-nscd_gethst_r.c = -fexceptions
 CFLAGS-nscd_getai.c = -fexceptions
 CFLAGS-nscd_initgroups.c = -fexceptions
 
-nscd-cflags = -DIS_IN_nscd=1 -D_FORTIFY_SOURCE=2
+CPPFLAGS-nonlib += -DIS_IN_nscd=1 -D_FORTIFY_SOURCE=2
+
 ifeq (yesyes,$(have-fpie)$(build-shared))
-nscd-cflags += $(pie-ccflag)
+CFLAGS-nonlib += $(pie-ccflag)
 endif
 ifeq (yes,$(have-ssp))
-nscd-cflags += -fstack-protector
+CFLAGS-nonlib += -fstack-protector
 endif
-
-CFLAGS-nscd.c += $(nscd-cflags)
-CFLAGS-connections.c += $(nscd-cflags)
-CFLAGS-pwdcache.c += $(nscd-cflags)
-CFLAGS-getpwnam_r.c += $(nscd-cflags)
-CFLAGS-getpwuid_r.c += $(nscd-cflags)
-CFLAGS-grpcache.c += $(nscd-cflags)
-CFLAGS-getgrnam_r.c += $(nscd-cflags)
-CFLAGS-getgrgid_r.c += $(nscd-cflags)
-CFLAGS-hstcache.c += $(nscd-cflags)
-CFLAGS-gethstbyad_r.c += $(nscd-cflags)
-CFLAGS-gethstbynm3_r.c += $(nscd-cflags)
-CFLAGS-dbg_log.c += $(nscd-cflags)
-CFLAGS-nscd_conf.c += $(nscd-cflags)
-CFLAGS-nscd_stat.c += $(nscd-cflags)
-CFLAGS-cache.c += $(nscd-cflags)
-CFLAGS-xmalloc.c += $(nscd-cflags)
-CFLAGS-xstrdup.c += $(nscd-cflags)
-CFLAGS-mem.c += $(nscd-cflags)
-CFLAGS-nscd_setup_thread.c += $(nscd-cflags)
-CFLAGS-aicache.c += $(nscd-cflags)
-CFLAGS-selinux.c += $(nscd-cflags)
-CFLAGS-initgrcache.c += $(nscd-cflags)
-CFLAGS-gai.c += $(nscd-cflags)
-CFLAGS-servicescache.c += $(nscd-cflags)
-CFLAGS-getsrvbynm_r.c += $(nscd-cflags)
-CFLAGS-getsrvbypt_r.c += $(nscd-cflags)
-CFLAGS-res_hconf.c += $(nscd-cflags)
-CFLAGS-netgroupcache.c += $(nscd-cflags)
 
 ifeq (yesyes,$(have-fpie)$(build-shared))
 LDFLAGS-nscd = -Wl,-z,now
 endif
 
-# This makes sure -DNOT_IN_libc is passed for all these modules.
+# This makes sure CPPFLAGS-nonlib and CFLAGS-nonlib are passed
+# for all these modules.
 cpp-srcs-left := $(nscd-modules:=.c)
 lib := nonlib
 include $(patsubst %,$(..)cppflags-iterator.mk,$(cpp-srcs-left))
