@@ -1,3 +1,9 @@
+2012-08-23  Roland McGrath  <roland@hack.frob.com>
+
+	* posix/tst-rfc3484.c: #undef USE_NSCD before including getaddrinfo.c.
+	* posix/tst-rfc3484-2.c: Likewise.
+	* posix/tst-rfc3484-3.c: Likewise.
+
 2012-08-23  Steve McIntyre  <steve.mcintyre@linaro.org>
 
 	* elf/elf.h (EF_ARM_ABI_FLOAT_SOFT): New macro.
