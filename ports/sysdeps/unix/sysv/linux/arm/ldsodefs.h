@@ -27,10 +27,22 @@
 
 #define EXTRA_OSABI ELFOSABI_ARM_AEABI
 
+#ifdef __ARM_PCS_VFP
+# define VALID_FLOAT_ABI(x) \
+  ((EF_ARM_EABI_VERSION ((x)) != EF_ARM_EABI_VER5)	\
+   || !((x) & EF_ARM_ABI_FLOAT_SOFT))
+#else
+# define VALID_FLOAT_ABI(x) \
+  ((EF_ARM_EABI_VERSION ((x)) != EF_ARM_EABI_VER5)	\
+   || !((x) & EF_ARM_ABI_FLOAT_HARD))
+#endif
+
+#undef VALID_ELF_HEADER
 #define VALID_ELF_HEADER(hdr,exp,size)		\
-  (memcmp (hdr, exp, size) == 0			\
-   || memcmp (hdr, expected2, size) == 0	\
-   || memcmp (hdr, expected3, size) == 0)
+  ((memcmp (hdr, exp, size) == 0		\
+    || memcmp (hdr, expected2, size) == 0	\
+    || memcmp (hdr, expected3, size) == 0)	\
+   && VALID_FLOAT_ABI (ehdr->e_flags))
 #define VALID_ELF_OSABI(osabi)		(osabi == ELFOSABI_SYSV		\
 					 || osabi == EXTRA_OSABI	\
 					 || osabi == ELFOSABI_LINUX)

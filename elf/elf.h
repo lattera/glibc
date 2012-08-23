@@ -2250,6 +2250,9 @@ typedef Elf32_Addr Elf32_Conflict;
 #define EF_ARM_VFP_FLOAT	0x400
 #define EF_ARM_MAVERICK_FLOAT	0x800
 
+#define EF_ARM_ABI_FLOAT_SOFT	0x200   /* NB conflicts with EF_ARM_SOFT_FLOAT */
+#define EF_ARM_ABI_FLOAT_HARD	0x400   /* NB conflicts with EF_ARM_VFP_FLOAT */
+
 
 /* Other constants defined in the ARM ELF spec. version B-01.  */
 /* NB. These conflict with values defined above.  */

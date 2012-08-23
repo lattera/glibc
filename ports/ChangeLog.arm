@@ -1,3 +1,9 @@
+2012-08-23  Steve McIntyre  <steve.mcintyre@linaro.org>
+
+	* sysdeps/unix/sysv/linux/arm/ldsodefs.h (VALID_FLOAT_ABI): Define
+	depending on __ARM_PCS_VFP.
+	(VALID_ELF_HEADER): Also check VALID_FLOAT_ABI.
+
 2012-08-20  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/arm/kernel-features.h
