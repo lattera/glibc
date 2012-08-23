@@ -1,3 +1,8 @@
+2012-08-23  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/dl-fxstatat64.c: Use <> instead of "" in
+	#include of fxstatat64.c.
+
 2012-08-22  Roland McGrath  <roland@hack.frob.com>
 
 	* shadow/getspent.c: #undef USE_NSCD before #include that gets the code.

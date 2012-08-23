@@ -3,4 +3,4 @@
    function in this case.  */
 #undef __ASSUME_ATFCTS
 #define __ASSUME_ATFCTS 1
-#include "fxstatat64.c"
+#include <fxstatat64.c>
