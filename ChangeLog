@@ -1,3 +1,7 @@
+2012-08-25  Marek Polacek  <polacek@redhat.com>
+
+	* time/time.h: Fix some typos in comments.
+
 2012-08-23  Roland McGrath  <roland@hack.frob.com>
 
 	* posix/tst-rfc3484.c: #undef USE_NSCD before including getaddrinfo.c.
@@ -935,7 +939,7 @@
 
 2012-08-02  Marek Polacek  <polacek@redhat.com>
 
-	[BZ#14150]
+	[BZ# 14150]
 	* configure.in (libc_cv_asm_type_prefix): Remove test.  Replace
 	libc_cv_asm_type_prefix with %.
 	* configure: Regenerated.
