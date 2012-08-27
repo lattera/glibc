@@ -1,3 +1,20 @@
+2012-08-27  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #14459]
+	* stdlib/strtod_l.c: Include <stdint.h>.
+	(NDEBUG): Do not define.
+	(round_and_return): Change EXPONENT parameter to type intmax_t.
+	Rearrange calculations to avoid internal overflow possibilities.
+	(str_to_mpn): Change EXPONENT parameter to type intmax_t *.
+	Rearrange calculations to avoid internal overflow possibilities.
+	Assert that number fits inside MPNSIZE limbs.
+	(____STRTOF_INTERNAL): Change EXPONENT variable to type intmax_t.
+	Change DIG_NO, INT_NO and LEAD_ZERO to type size_t.  Rearrange
+	calculations and add assertions to avoid internal overflow
+	possibilities.  Add casts to avoid signed/unsigned operations.
+	* stdlib/tst-strtod-overflow.c: New file.
+	* stdlib/Makefile (tests): Add tst-strtod-overflow.
+
 2012-08-25  Marek Polacek  <polacek@redhat.com>
 
 	* time/time.h: Fix some typos in comments.
