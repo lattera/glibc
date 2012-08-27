@@ -1,3 +1,8 @@
+2012-08-27  Mike Frysinger  <vapier@gentoo.org>
+
+	[BZ #5400]
+	* NEWS: Add fixed bug number.
+
 2012-08-27  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #14519]
