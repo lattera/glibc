@@ -183,7 +183,7 @@ round_and_return (mp_limb_t *retval, intmax_t exponent, int negative,
       if (exponent < MIN_EXP - 1 - MANT_DIG)
 	{
 	  __set_errno (ERANGE);
-	  return 0.0;
+	  return negative ? -0.0 : 0.0;
 	}
 
       mp_size_t shift = MIN_EXP - 1 - exponent;

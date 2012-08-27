@@ -1,5 +1,11 @@
 2012-08-27  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #14519]
+	* stdlib/strtod_l.c (round_and_return): Return -0.0 for
+	underflowing exponent in case of negative sign.
+	* stdlib/tst-strtod-round-data: Add more tests.
+	* stdlib/tst-strtod-round.c (tests): Regenerated.
+
 	[BZ #3479]
 	* stdlib/strtod_l.c (NDIG): Remove.
 	(HEXNDIG): Likewise.
