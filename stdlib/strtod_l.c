@@ -153,17 +153,18 @@ extern const mp_limb_t _tens_in_limb[MAX_DIG_PER_LIMB + 1];
 #endif
 #define SWAP(x, y)		({ typeof(x) _tmp = x; x = y; y = _tmp; })
 
-#define NDIG			(MAX_10_EXP - MIN_10_EXP + 2 * MANT_DIG)
-#define HEXNDIG			((MAX_EXP - MIN_EXP + 7) / 8 + 2 * MANT_DIG)
 #define	RETURN_LIMB_SIZE		howmany (MANT_DIG, BITS_PER_MP_LIMB)
 
 #define RETURN(val,end)							      \
     do { if (endptr != NULL) *endptr = (STRING_TYPE *) (end);		      \
 	 return val; } while (0)
 
-/* Maximum size necessary for mpn integers to hold floating point numbers.  */
-#define	MPNSIZE		(howmany (MAX_EXP + 2 * MANT_DIG, BITS_PER_MP_LIMB) \
-			 + 2)
+/* Maximum size necessary for mpn integers to hold floating point
+   numbers.  The largest number we need to hold is 10^n where 2^-n is
+   1/4 ulp of the smallest representable value (that is, n = MANT_DIG
+   - MIN_EXP + 2).  Approximate using 10^3 < 2^10.  */
+#define	MPNSIZE		(howmany (1 + ((MANT_DIG - MIN_EXP + 2) * 10) / 3, \
+				  BITS_PER_MP_LIMB) + 2)
 /* Declare an mpn integer variable that big.  */
 #define	MPN_VAR(name)	mp_limb_t name[MPNSIZE]; mp_size_t name##size
 /* Copy an mpn integer value.  */
@@ -1281,23 +1282,60 @@ ____STRTOF_INTERNAL (nptr, endptr, group, loc)
     int expbit;
     int neg_exp;
     int more_bits;
+    int need_frac_digits;
     mp_limb_t cy;
     mp_limb_t *psrc = den;
     mp_limb_t *pdest = num;
     const struct mp_power *ttab = &_fpioconst_pow10[0];
 
-    assert (dig_no > int_no && exponent <= 0);
+    assert (dig_no > int_no
+	    && exponent <= 0
+	    && exponent >= MIN_10_EXP - (DIG + 1));
 
-
-    /* For the fractional part we need not process too many digits.  One
-       decimal digits gives us log_2(10) ~ 3.32 bits.  If we now compute
-			ceil(BITS / 3) =: N
-       digits we should have enough bits for the result.  The remaining
-       decimal digits give us the information that more bits are following.
-       This can be used while rounding.  (Two added as a safety margin.)  */
-    if ((intmax_t) dig_no > (intmax_t) int_no + (MANT_DIG - bits + 2) / 3 + 2)
+    /* We need to compute MANT_DIG - BITS fractional bits that lie
+       within the mantissa of the result, the following bit for
+       rounding, and to know whether any subsequent bit is 0.
+       Computing a bit with value 2^-n means looking at n digits after
+       the decimal point.  */
+    if (bits > 0)
       {
-	dig_no = int_no + (MANT_DIG - bits + 2) / 3 + 2;
+	/* The bits required are those immediately after the point.  */
+	assert (int_no > 0 && exponent == 0);
+	need_frac_digits = 1 + MANT_DIG - bits;
+      }
+    else
+      {
+	/* The number is in the form .123eEXPONENT.  */
+	assert (int_no == 0 && *startp != L_('0'));
+	/* The number is at least 10^(EXPONENT-1), and 10^3 <
+	   2^10.  */
+	int neg_exp_2 = ((1 - exponent) * 10) / 3 + 1;
+	/* The number is at least 2^-NEG_EXP_2.  We need up to
+	   MANT_DIG bits following that bit.  */
+	need_frac_digits = neg_exp_2 + MANT_DIG;
+	/* However, we never need bits beyond 1/4 ulp of the smallest
+	   representable value.  (That 1/4 ulp bit is only needed to
+	   determine tinyness on machines where tinyness is determined
+	   after rounding.)  */
+	if (need_frac_digits > MANT_DIG - MIN_EXP + 2)
+	  need_frac_digits = MANT_DIG - MIN_EXP + 2;
+	/* At this point, NEED_FRAC_DIGITS is the total number of
+	   digits needed after the point, but some of those may be
+	   leading 0s.  */
+	need_frac_digits += exponent;
+	/* Any cases underflowing enough that none of the fractional
+	   digits are needed should have been caught earlier (such
+	   cases are on the order of 10^-n or smaller where 2^-n is
+	   the least subnormal).  */
+	assert (need_frac_digits > 0);
+      }
+
+    if (need_frac_digits > (intmax_t) dig_no - (intmax_t) int_no)
+      need_frac_digits = (intmax_t) dig_no - (intmax_t) int_no;
+
+    if ((intmax_t) dig_no > (intmax_t) int_no + need_frac_digits)
+      {
+	dig_no = int_no + need_frac_digits;
 	more_bits = 1;
       }
     else

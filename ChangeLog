@@ -1,5 +1,42 @@
 2012-08-27  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #3479]
+	* stdlib/strtod_l.c (NDIG): Remove.
+	(HEXNDIG): Likewise.
+	(MPNSIZE): Increase to represent 10^n where 2^-n is 1/4 ulp of the
+	smallest representable value.
+	(____STRTOF_INTERNAL): Use all fractional decimal digits that may
+	lie within an exact representation of 1/2 ulp of the result.
+	* stdlib/fpioconst.c (__tens): Include 10^2^9 and 10^2^10
+	unconditionally.
+	(TENS_P9_IDX): Define unconditionally.
+	(TENS_P9_SIZE): Likewise.
+	(TENS_P10_IDX): Likewise.
+	(TENS_P10_SIZE): Likewise.
+	[BITS_PER_MP_LIMB == 32]: Change condition for larger powers of 10
+	to !defined __NO_LONG_DOUBLE_MATH && __LDBL_MAX_EXP__ > 1024.
+	[!__NO_LONG_DOUBLE_MATH && __LDBL_MAX_EXP__ > 1024] (__tens): Add
+	entries for 10^2^13 and 10^2^14.
+	[!__NO_LONG_DOUBLE_MATH && __LDBL_MAX_EXP__ > 1024]
+	(TENS_P13_IDX): Define.
+	(TENS_P13_SIZE): Likewise.
+	(TENS_P14_IDX): Likewise.
+	(TENS_P14_SIZE): Likewise.
+	(_fpioconst_pow10): Change array size to
+	FPIOCONST_POW10_ARRAY_SIZE.  Make entries for 10^2^9 and 10^2^10
+	unconditional.
+	(_fpioconst_pow10) [!__NO_LONG_DOUBLE_MATH && __LDBL_MAX_EXP__ >
+	1024]: Add entries for 10^2^13 and 10^2^14.
+	[LAST_POW10 > _LAST_POW10]: Remove #error.
+	* stdlib/fpioconst.h (FPIOCONST_POW10_ARRAY_SIZE): Define.
+	(_fpioconst_pow10): Change array size to
+	FPIOCONST_POW10_ARRAY_SIZE.
+	* stdlib/gen-fpioconst.c: New file.
+	* stdlib/gen-tst-strtod-round.c: Likewise.
+	* stdlib/tst-strtod-round-data: Likewise.
+	* stdlib/tst-strtod-round.c: Likewise.
+	* stdlib/Makefile (tests): Add tst-strtod-round.
+
 	[BZ #14459]
 	* stdlib/strtod_l.c: Include <stdint.h>.
 	(NDEBUG): Do not define.

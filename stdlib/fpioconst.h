@@ -1,6 +1,5 @@
 /* Header file for constants used in floating point <-> decimal conversions.
-   Copyright (C) 1995, 1996, 1997, 1998, 1999, 2002, 2003
-   Free Software Foundation, Inc.
+   Copyright (C) 1995-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -41,6 +40,13 @@
 #define DBL_MAX_10_EXP_LOG	8 /* = floor(log_2(DBL_MAX_10_EXP)) */
 #define FLT_MAX_10_EXP_LOG	5 /* = floor(log_2(FLT_MAX_10_EXP)) */
 
+/* For strtold, we need powers of 10 up to floor (log_2 (LDBL_MANT_DIG
+   - LDBL_MIN_EXP + 2)).  */
+#if !defined __NO_LONG_DOUBLE_MATH && __LDBL_MAX_EXP__ > 1024
+# define FPIOCONST_POW10_ARRAY_SIZE	15
+#else
+# define FPIOCONST_POW10_ARRAY_SIZE	11
+#endif
 
 /* The array with the number representation. */
 extern const mp_limb_t __tens[] attribute_hidden;
@@ -54,7 +60,7 @@ struct mp_power
     int p_expo;			/* Exponent of the number 10^(2^i).  */
     int m_expo;			/* Exponent of the number 10^-(2^i-1).  */
   };
-extern const struct mp_power _fpioconst_pow10[LDBL_MAX_10_EXP_LOG + 1]
+extern const struct mp_power _fpioconst_pow10[FPIOCONST_POW10_ARRAY_SIZE]
      attribute_hidden;
 
 /* The constants in the array `_fpioconst_pow10' have an offset.  */
