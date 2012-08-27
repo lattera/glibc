@@ -85,7 +85,7 @@ extern fpu_control_t __fpu_control;
 #define _FPU_RC_UP      0x2
 #define _FPU_RC_DOWN    0x3
 
-#define _FPU_RESERVED 0xfe3c0000  /* Reserved bits in cw */
+#define _FPU_RESERVED 0xfebc0000  /* Reserved bits in cw */
 
 
 /* The fdlibm code requires strict IEEE double precision arithmetic,
