@@ -40,33 +40,11 @@
 /* The sendfile syscall was introduced in 2.2.0.  */
 #define __ASSUME_SENDFILE		1
 
-/* On x86 the stat64/lstat64/fstat64 syscalls were introduced in 2.3.34.  */
-#ifdef __i386__
-# define __ASSUME_STAT64_SYSCALL	1
-#endif
-
-/* On sparc the stat64/lstat64/fstat64 syscalls were introduced in
-   2.3.35.  */
-#if defined __sparc__ && !defined __arch64__
-# define __ASSUME_STAT64_SYSCALL	1
-#endif
-
-/* I know for sure that these are in 2.3.35 on powerpc. But PowerPC64 does not
-   support separate 64-bit syscalls, already 64-bit.  */
-#if defined __powerpc__ && !defined __powerpc64__
-# define __ASSUME_STAT64_SYSCALL	1
-#endif
-
 /* Linux 2.3.39 introduced IPC64.  Except for powerpc.  Linux 2.4.0 on
    PPC introduced a correct IPC64.  But PowerPC64 does not support a
    separate 64-bit syscall, already 64-bit.  */
 #ifndef __powerpc64__
 # define __ASSUME_IPC64		1
-#endif
-
-/* SH kernels got stat64 during 2.4.0-test.  */
-#ifdef __sh__
-# define __ASSUME_STAT64_SYSCALL	1
 #endif
 
 /* The changed st_ino field appeared in 2.4.0-test6.  However, SH is lame,
@@ -96,11 +74,6 @@
     || defined __sh__ \
     || (defined __s390__ && __LINUX_KERNEL_VERSION >= 0x020616)
 # define __ASSUME_UTIMES	1
-#endif
-
-/* On sparc64 stat64/lstat64/fstat64 syscalls were introduced in 2.6.12.  */
-#if defined __sparc__ && defined __arch64__
-# define __ASSUME_STAT64_SYSCALL	1
 #endif
 
 /* pselect/ppoll were introduced just after 2.6.16-rc1.  Due to the way

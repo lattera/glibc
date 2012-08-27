@@ -1,3 +1,38 @@
+2012-08-27  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/kernel-features.h
+	(__ASSUME_STAT64_SYSCALL): Remove all definitions.
+	* sysdeps/unix/sysv/linux/fxstat64.c [!__ASSUME_STAT64_SYSCALL]:
+	Remove conditional code.
+	[__ASSUME_STAT64_SYSCALL]: Make code unconditional.
+	* sysdeps/unix/sysv/linux/fxstatat64.c [!__ASSUME_STAT64_SYSCALL]:
+	Remove conditional code.
+	[__ASSUME_STAT64_SYSCALL]: Make code unconditional.
+	* sysdeps/unix/sysv/linux/i386/fxstat.c
+	[!__ASSUME_STAT64_SYSCALL]: Remove conditional code.
+	[__ASSUME_STAT64_SYSCALL]: Make code unconditional.
+	* sysdeps/unix/sysv/linux/i386/fxstatat.c
+	[!__ASSUME_STAT64_SYSCALL]: Remove conditional code.
+	[__ASSUME_STAT64_SYSCALL]: Make code unconditional.
+	* sysdeps/unix/sysv/linux/i386/lxstat.c
+	[!__ASSUME_STAT64_SYSCALL]: Remove conditional code.
+	[__ASSUME_STAT64_SYSCALL]: Make code unconditional.
+	* sysdeps/unix/sysv/linux/i386/xstat.c [!__ASSUME_STAT64_SYSCALL]:
+	Remove conditional code.
+	[__ASSUME_STAT64_SYSCALL]: Make code unconditional.
+	* sysdeps/unix/sysv/linux/lxstat64.c [!__ASSUME_STAT64_SYSCALL]:
+	Remove conditional code.
+	[__ASSUME_STAT64_SYSCALL]: Make code unconditional.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/xstat.c: Do not include
+	<kernel-features.h>.
+	[__NR_stat64 && !__ASSUME_STAT64_SYSCALL] (__have_no_stat64):
+	Remove.
+	* sysdeps/unix/sysv/linux/xstat64.c [!__ASSUME_STAT64_SYSCALL]:
+	Remove conditional code.
+	[__ASSUME_STAT64_SYSCALL]: Make code unconditional.
+	* sysdeps/unix/sysv/linux/xstatconv.c [!__ASSUME_STAT64_SYSCALL]:
+	Remove conditional.
+
 2012-08-27  Mike Frysinger  <vapier@gentoo.org>
 
 	[BZ #5400]

@@ -25,12 +25,6 @@
 /* MIPS had the utimes syscall by 2.6.0.  */
 #define __ASSUME_UTIMES		1
 
-/* MIPS o32 had the stat64 syscalls by 2.6.0, but for n32 and n64 the
-   plain stat syscalls are 64-bit.  */
-#if _MIPS_SIM == _ABIO32
-# define __ASSUME_STAT64_SYSCALL	1
-#endif
-
 /* Support for the eventfd2 and signalfd4 syscalls was added in 2.6.27.  */
 #if __LINUX_KERNEL_VERSION >= 0x02061c
 # define __ASSUME_EVENTFD2	1

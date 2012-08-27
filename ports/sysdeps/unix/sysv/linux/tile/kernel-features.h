@@ -18,7 +18,6 @@
 
 
 /* TILE glibc support starts with 2.6.36, guaranteeing many kernel features. */
-#define __ASSUME_STAT64_SYSCALL		1
 #define __ASSUME_UTIMES			1
 #define __ASSUME_O_CLOEXEC		1
 #define __ASSUME_SOCK_CLOEXEC		1
