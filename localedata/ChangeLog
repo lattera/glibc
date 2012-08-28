@@ -1,5 +1,9 @@
 2012-11-07  Dmitry V. Levin  <ldv@altlinux.org>
 
+	[BZ#14807]
+	* locales/ru_RU (abmon): Change back from genitive to nominative,
+	apply fixed three-letter abbreviation form, remove trailing dots.
+
 	[BZ#10873]
 	* locales/ru_RU (abday): Remove trailing dots.
 
