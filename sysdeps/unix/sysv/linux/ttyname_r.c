@@ -128,12 +128,6 @@ __ttyname_r (int fd, char *buf, size_t buflen)
   *_fitoa_word (fd, __stpcpy (procname, "/proc/self/fd/"), 10, 0) = '\0';
 
   ssize_t ret = __readlink (procname, buf, buflen - 1);
-  if (__builtin_expect (ret == -1 && errno == ENOENT, 0))
-    {
-      __set_errno (EBADF);
-      return EBADF;
-    }
-
   if (__builtin_expect (ret == -1 && errno == ENAMETOOLONG, 0))
     {
       __set_errno (ERANGE);

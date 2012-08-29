@@ -148,12 +148,6 @@ ttyname (int fd)
     }
 
   ssize_t len = __readlink (procname, ttyname_buf, buflen);
-  if (__builtin_expect (len == -1 && errno == ENOENT, 0))
-    {
-      __set_errno (EBADF);
-      return NULL;
-    }
-
   if (__builtin_expect (len != -1, 1))
     {
       if ((size_t) len >= buflen)

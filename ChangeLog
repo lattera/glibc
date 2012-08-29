@@ -1,3 +1,10 @@
+2012-08-29  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	[BZ #14516]
+	* sysdeps/unix/sysv/linux/ttyname.c (ttyname): Don't return
+	failure if reading from procfs failed.
+	* sysdeps/unix/sysv/linux/ttyname_r.c (ttyname_r): Likewise.
+
 2012-08-27  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/kernel-features.h
