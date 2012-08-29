@@ -25,6 +25,11 @@ if ($ENV{CC}) {
 } else {
   $CC= "gcc";
 }
+if ($ENV{LD_SO}) {
+  $LD_SO = $ENV{LD_SO};
+} else {
+  $LD_SO = "";
+}
 
 sub usage {
   print "Usage: test-installation [soversions.mk]\n";
@@ -112,6 +117,8 @@ while (<SOVERSIONS>) {
       $link_libs .= " -l$name";
       $versions{$name} = $version;
     }
+  } elsif ($LD_SO ne "") {
+    ($ld_so_name, $ld_so_version) = split ('\.so\.', $LD_SO);
   } else {
     if (/^ld\.so/) {
       ($ld_so_name, $ld_so_version)= /=(.*)\.so\.(.*)$/;

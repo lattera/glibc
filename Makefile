@@ -111,7 +111,7 @@ install:
 ifneq (no,$(PERL))
 ifeq (/usr,$(prefix))
 ifeq (,$(install_root))
-	CC="$(CC)" $(PERL) scripts/test-installation.pl $(common-objpfx)
+	LD_SO=$(ld.so-version) CC="$(CC)" $(PERL) scripts/test-installation.pl $(common-objpfx)
 endif
 endif
 endif

@@ -1,3 +1,12 @@
+2012-08-29  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #14476]
+	* Makefile (install): Also pass LD_SO=$(ld.so-version) to
+	scripts/test-installation.pl.
+
+	* scripts/test-installation.pl: Use LD_SO to get $ld_so_name
+	and $ld_so_version if it is set.
+
 2012-08-29  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	[BZ #14516]
