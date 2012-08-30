@@ -28,11 +28,6 @@
 #undef isnanf
 #undef __GI___isnanf
 
-/* The hidden_proto in include/math.h was obscured by the macro hackery.  */
-__typeof (__isnan) __isnanf;
-hidden_proto (__isnanf)
-
-
 int
 __isnan (double x)
 {
@@ -45,8 +40,11 @@ weak_alias (__isnan, isnan)
 /* It turns out that the 'double' version will also always work for
    single-precision.  */
 strong_alias (__isnan, __isnanf)
-hidden_def (__isnanf)
-weak_alias (__isnanf, isnanf)
+weak_alias (__isnan, isnanf)
+
+/* ??? GCC 4.8 fails to look through chains of aliases with asm names
+   attached.  Work around this for now.  */
+hidden_ver (__isnan, __isnanf)
 
 #ifdef NO_LONG_DOUBLE
 strong_alias (__isnan, __isnanl)
