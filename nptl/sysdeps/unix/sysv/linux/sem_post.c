@@ -1,5 +1,5 @@
 /* sem_post -- post to a POSIX semaphore.  Generic futex-using version.
-   Copyright (C) 2003, 2004, 2007, 2008 Free Software Foundation, Inc.
+   Copyright (C) 2003-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jakub@redhat.com>, 2003.
 
@@ -40,7 +40,7 @@ __new_sem_post (sem_t *sem)
 	  return -1;
 	}
     }
-  while (atomic_compare_and_exchange_bool_acq (&isem->value, cur + 1, cur));
+  while (atomic_compare_and_exchange_bool_rel (&isem->value, cur + 1, cur));
 
   atomic_full_barrier ();
   if (isem->nwaiters > 0)

@@ -1,6 +1,10 @@
-2012-08-15  Roland McGrath  <roland@hack.frob.com>
+2012-08-31  Joseph Myers  <joseph@codesourcery.com>
 
-2012-08-15  Roland McGrath  <roland@hack.frob.com>
+	[BZ #14532]
+	* sysdeps/unix/sysv/linux/sem_post.c (__new_sem_post): Use
+	atomic_compare_and_exchange_bool_rel.
+	* tst-sem14.c: New file.
+	* Makefile (tests): Add tst-sem14.
 
 2012-08-15  Roland McGrath  <roland@hack.frob.com>
 
