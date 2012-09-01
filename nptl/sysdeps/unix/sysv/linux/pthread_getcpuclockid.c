@@ -24,10 +24,6 @@
 #include <kernel-posix-cpu-timers.h>
 
 
-#if !(__ASSUME_POSIX_CPU_TIMERS > 0)
-int __libc_missing_posix_cpu_timers attribute_hidden;
-#endif
-
 int
 pthread_getcpuclockid (threadid, clockid)
      pthread_t threadid;
@@ -40,55 +36,10 @@ pthread_getcpuclockid (threadid, clockid)
     /* Not a valid thread handle.  */
     return ESRCH;
 
-#ifdef __NR_clock_getres
-  /* The clockid_t value is a simple computation from the TID.
-     But we do a clock_getres call to validate it if we aren't
-     yet sure we have the kernel support.  */
+  /* The clockid_t value is a simple computation from the TID.  */
 
   const clockid_t tidclock = MAKE_THREAD_CPUCLOCK (pd->tid, CPUCLOCK_SCHED);
 
-# if !(__ASSUME_POSIX_CPU_TIMERS > 0)
-  if (!__libc_missing_posix_cpu_timers)
-    {
-      INTERNAL_SYSCALL_DECL (err);
-      int r = INTERNAL_SYSCALL (clock_getres, err, 2, tidclock, NULL);
-      if (!INTERNAL_SYSCALL_ERROR_P (r, err))
-# endif
-	{
-	  *clockid = tidclock;
-	  return 0;
-	}
-
-# if !(__ASSUME_POSIX_CPU_TIMERS > 0)
-      if (INTERNAL_SYSCALL_ERRNO (r, err) == EINVAL)
-	{
-	  /* The kernel doesn't support these clocks at all.  */
-	  __libc_missing_posix_cpu_timers = 1;
-	}
-      else
-	return INTERNAL_SYSCALL_ERRNO (r, err);
-    }
-# endif
-#endif
-
-#ifdef CLOCK_THREAD_CPUTIME_ID
-  /* We need to store the thread ID in the CLOCKID variable together
-     with a number identifying the clock.  We reserve the low 3 bits
-     for the clock ID and the rest for the thread ID.  This is
-     problematic if the thread ID is too large.  But 29 bits should be
-     fine.
-
-     If some day more clock IDs are needed the ID part can be
-     enlarged.  The IDs are entirely internal.  */
-  if (pd->tid >= 1 << (8 * sizeof (*clockid) - CLOCK_IDFIELD_SIZE))
-    return ERANGE;
-
-  /* Store the number.  */
-  *clockid = CLOCK_THREAD_CPUTIME_ID | (pd->tid << CLOCK_IDFIELD_SIZE);
-
+  *clockid = tidclock;
   return 0;
-#else
-  /* We don't have a timer for that.  */
-  return ENOENT;
-#endif
 }

@@ -1,3 +1,11 @@
+2012-09-01  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/pthread_getcpuclockid.c
+	[!__ASSUME_POSIX_CPU_TIMERS]: Remove conditional code.
+	[__NR_clock_getres]: Make code unconditional.
+	(pthread_getcpuclockid): Remove code left unreachable by removal
+	of conditionals.
+
 2012-08-31  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #14532]

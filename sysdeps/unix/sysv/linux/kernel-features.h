@@ -57,9 +57,6 @@
    MIPS n32).  */
 #define __ASSUME_GETDENTS64_SYSCALL	1
 
-/* Beginning with 2.6.12 the clock and timer supports CPU clocks.  */
-#define __ASSUME_POSIX_CPU_TIMERS	1
-
 /* The statfs64 syscalls are available in 2.5.74 (but not for alpha).  */
 #define __ASSUME_STATFS64	1
 

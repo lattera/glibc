@@ -1,3 +1,26 @@
+2012-09-01  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/kernel-features.h
+	(__ASSUME_POSIX_CPU_TIMERS): Remove.
+	* sysdeps/unix/sysv/linux/clock_getcpuclockid.c
+	[__NR_clock_getres]: Make code unconditional.
+	[!__ASSUME_POSIX_CPU_TIMERS]: Remoce conditional code.
+	(clock_getcpuclockid): Remove code left unreachable by removal of
+	conditionals.
+	* sysdeps/unix/sysv/linux/clock_getres.c [__NR_clock_getres]: Make
+	code unconditional.
+	[__ASSUME_POSIX_CPU_TIMERS]: Likewise.
+	[!__ASSUME_POSIX_CPU_TIMERS]: Remove conditional code.
+	* sysdeps/unix/sysv/linux/clock_gettime.c [__NR_clock_gettime]:
+	Make code unconditional.
+	[__ASSUME_POSIX_CPU_TIMERS]: Likewise.
+	[!__ASSUME_POSIX_CPU_TIMERS]: Remove conditional code.
+	* sysdeps/unix/sysv/linux/clock_settime.c
+	[__ASSUME_POSIX_CPU_TIMERS <= 0 && __NR_clock_settime]: Remove
+	conditional code.
+	[__ASSUME_POSIX_CPU_TIMERS]: Make code unconditional.
+	[!__ASSUME_POSIX_CPU_TIMERS]: Remove conditional code.
+
 2012-08-29  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #14476]
