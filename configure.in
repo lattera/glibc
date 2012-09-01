@@ -926,6 +926,9 @@ AC_CHECK_PROG_VER(SED, sed, --version,
   [GNU sed[^0-9]* \([0-9]*\.[0-9.]*\)],
   [3.0[2-9]*|3.[1-9]*|[4-9]*],
   SED=: aux_missing="$aux_missing sed")
+AC_CHECK_PROG_VER(AWK, gawk, --version,
+  [GNU Awk[^0-9]*\([0-9][0-9.]*\)],
+  [[3-9].*], critic_missing="$critic_missing gawk")
 
 AC_CHECK_TOOL(READELF, readelf, false)
 AC_CHECK_TOOL(NM, nm, false)
@@ -1043,7 +1046,6 @@ else
 fi
 AC_SUBST(libc_cv_have_ksh)
 
-AC_PROG_AWK
 AC_PATH_PROG(PERL, perl, no)
 if test "$PERL" != no &&
    (eval `$PERL -V:apiversion`; test `expr "$apiversion" \< 5` -ne 0); then

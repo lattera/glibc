@@ -1,3 +1,9 @@
+2012-09-01  Allan McRae  <allan@archlinux.org>
+
+        [BZ #13412]
+        * configure.in (AWK): Require gawk version 3.0 or later.
+        * configure: Regenerated.
+
 2012-09-01  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/kernel-features.h
