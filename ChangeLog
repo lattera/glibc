@@ -1,8 +1,16 @@
+2012-09-02  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #14538]
+	* sysdeps/x86_64/dl-machine.h (elf_machine_dynamic): Use the
+	first element of the GOT.
+	(elf_machine_load_address): Return the difference between
+	the runtime address of _DYNAMIC and elf_machine_dynamic ().
+
 2012-09-01  Allan McRae  <allan@archlinux.org>
 
-        [BZ #13412]
-        * configure.in (AWK): Require gawk version 3.0 or later.
-        * configure: Regenerated.
+	[BZ #13412]
+	* configure.in (AWK): Require gawk version 3.0 or later.
+	* configure: Regenerated.
 
 2012-09-01  Joseph Myers  <joseph@codesourcery.com>
 
