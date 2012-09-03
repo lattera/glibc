@@ -2556,6 +2556,9 @@ ifloat: 1
 Test "sincos (-0x1p65, &sin_res, &cos_res) puts 0.047183876212354673805106149805700013943218 in sin_res":
 float: 1
 ifloat: 1
+Test "sincos (0x1p+50, &sin_res, &cos_res) puts 8.68095904660550604334592502063501320395739e-01 in cos_res":
+float: 1
+ifloat: 1
 Test "sincos (0x1p65, &sin_res, &cos_res) puts -0.047183876212354673805106149805700013943218 in sin_res":
 float: 1
 ifloat: 1
