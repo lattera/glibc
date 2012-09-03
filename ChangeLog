@@ -1,3 +1,10 @@
+2012-09-03  Andreas Krebbel  <Andreas.Krebbel@de.ibm.com>
+
+	* sysdeps/s390/s390-32/multiarch/ifunc-resolve.c
+	(IFUNC_RESOLVE): Make pointers to the specialized implementations
+	hidden.
+	* sysdeps/s390/s390-64/multiarch/ifunc-resolve.c: Likewise.
+
 2012-09-02  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #14538]
