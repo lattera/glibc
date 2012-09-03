@@ -1,4 +1,4 @@
-/* Multiple versions of expf
+/* Multiple versions of sinf
    Copyright (C) 2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -18,16 +18,11 @@
 
 #include <init-arch.h>
 
-extern double __ieee754_expf_sse2 (double);
-extern double __ieee754_expf_ia32 (double);
+extern float __sinf_sse2 (float);
+extern float __sinf_ia32 (float);
+float __sinf (float);
 
-double __ieee754_expf (double);
-libm_ifunc (__ieee754_expf,
-	    HAS_SSE2 ? __ieee754_expf_sse2 : __ieee754_expf_ia32);
-
-extern double __expf_finite_sse2 (double);
-extern double __expf_finite_ia32 (double);
-
-double __expf_finite (double);
-libm_ifunc (__expf_finite,
-	    HAS_SSE2 ? __expf_finite_sse2 : __expf_finite_ia32);
+libm_ifunc (__sinf, HAS_SSE2 ? __sinf_sse2 : __sinf_ia32);
+weak_alias (__sinf, sinf);
+#define SINF __sinf_ia32
+#include <sysdeps/ieee754/flt-32/s_sinf.c>

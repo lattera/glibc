@@ -23,7 +23,13 @@ static char rcsid[] = "$NetBSD: s_cosf.c,v 1.4 1995/05/10 20:47:03 jtc Exp $";
 
 static const float one=1.0;
 
-float __cosf(float x)
+#ifndef COSF
+# define COSF_FUNC __cosf
+#else
+# define COSF_FUNC COSF
+#endif
+
+float COSF_FUNC(float x)
 {
 	float y[2],z=0.0;
 	int32_t n,ix;
@@ -53,4 +59,7 @@ float __cosf(float x)
 	    }
 	}
 }
+
+#ifndef COSF
 weak_alias (__cosf, cosf)
+#endif

@@ -1,3 +1,31 @@
+2012-09-03  Liubov Dmitrieva  <liubov.dmitrieva@gmail.com>
+
+	* sysdeps/i386/i686/fpu/multiarch/Makefile (sysdep_routines):
+	Add s_sinf-sse2, s_conf-sse2.
+
+	* sysdeps/i386/i686/fpu/multiarch/s_sinf-sse2.S: New file.
+	* sysdeps/i386/i686/fpu/multiarch/s_cosf-sse2.S: New file.
+	* sysdeps/i386/i686/fpu/multiarch/s_sinf.c: New file.
+	* sysdeps/i386/i686/fpu/multiarch/s_cosf.c: New file.
+
+	* sysdeps/ieee754/flt-32/s_sinf.c (SINF, SINF_FUNC): Add macros
+	for using routine as __sinf_ia32.
+	Use macro for function declaration and weak_alias.
+	* sysdeps/ieee754/flt-32/s_cosf.c (COSF, COSF_FUNC): Add macros
+	for using routine as __cosf_ia32.
+	Use macro for function declaration and weak_alias.
+
+	* sysdeps/i386/i686/fpu/multiarch/e_expf-sse2.S: Fix Copyright.
+	* sysdeps/i386/i686/fpu/multiarch/e_expf.c: Fix Copyright.
+
+	* sysdeps/x86_64/fpu/s_sinf.S: New file.
+	* sysdeps/x86_64/fpu/s_cosf.S: New file.
+	* sysdeps/x86_64/fpu/libm-test-ulps: Update.
+
+	* math/libm-test.inc (cos_test): Add more test cases.
+	(sin_test): Likewise.
+	(sincos_test): Likewise.
+
 2012-09-03  Andreas Krebbel  <Andreas.Krebbel@de.ibm.com>
 
 	* sysdeps/s390/s390-32/multiarch/ifunc-resolve.c
