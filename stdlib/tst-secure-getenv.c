@@ -228,9 +228,10 @@ alternative_main (int argc, char **argv)
     {
       if (getgid () == getegid ())
 	{
-	  printf ("SGID failed: GID and EGID match (%jd)\n",
+	  /* This can happen if the file system is mounted nosuid. */
+	  fprintf (stderr, "SGID failed: GID and EGID match (%jd)\n",
 		  (intmax_t) getgid ());
-	  exit (2);
+	  exit (MAGIC_STATUS);
 	}
       if (getenv ("PATH") == NULL)
 	{
