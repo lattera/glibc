@@ -1,3 +1,10 @@
+2012-09-04  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #9914]
+	* libio/iogetdelim.c: Include <limits.h>.
+	(_IO_getdelim): Avoid integer overflow in testing whether cur_len
+	+ len + 1 would overflow.
+
 2012-09-03  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/x86_64/fpu/libm-test-ulps: Update.

@@ -29,6 +29,7 @@
 #include "libioP.h"
 #include <string.h>
 #include <errno.h>
+#include <limits.h>
 
 /* Read up to (and including) a TERMINATOR from FP into *LINEPTR
    (and null-terminate it).  *LINEPTR is a pointer returned from malloc (or
@@ -89,7 +90,7 @@ _IO_getdelim (lineptr, n, delimiter, fp)
       t = (char *) memchr ((void *) fp->_IO_read_ptr, delimiter, len);
       if (t != NULL)
 	len = (t - fp->_IO_read_ptr) + 1;
-      if (__builtin_expect (cur_len + len + 1 < 0, 0))
+      if (__builtin_expect (len >= SSIZE_MAX - cur_len, 0))
 	{
 	  __set_errno (EOVERFLOW);
 	  result = -1;
