@@ -3,6 +3,8 @@
 	* stdlib/tst-secure-getenv.c (alternative_main): Only warn on SGID
 	failures.
 
+	* stdlib/tst-secure-getenv.c: Fix whitespace in comments.
+
 2012-09-04  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #9914]

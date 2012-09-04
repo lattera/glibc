@@ -18,7 +18,7 @@
 /* Test that secure_getenv works by invoking the test as a SGID
    program with a group ID from the supplementary group list.  This
    test can fail spuriously if the user is not a member of a suitable
-   supplementary group. */
+   supplementary group.  */
 
 #include <errno.h>
 #include <fcntl.h>
@@ -36,7 +36,7 @@ static char MAGIC_ARGUMENT[] = "run-actual-test";
 static const char *test_dir;
 
 /* Return a GID which is not our current GID, but is present in the
-   supplementary group list. */
+   supplementary group list.  */
 static gid_t
 choose_gid (void)
 {
@@ -60,7 +60,7 @@ choose_gid (void)
 
 /* Copies the executable into a restricted directory, so that we can
    safely make it SGID with the TARGET group ID.  Then runs the
-   executable. */
+   executable.  */
 static int
 run_executable_sgid (gid_t target)
 {
@@ -152,7 +152,7 @@ run_executable_sgid (gid_t target)
     }
   if (kid == 0)
     {
-      /* Child process. */
+      /* Child process.  */
       char *args[] = { execname, MAGIC_ARGUMENT, NULL };
       execve (execname, args, environ);
       printf ("execve (%s): %m\n", execname);
@@ -228,7 +228,7 @@ alternative_main (int argc, char **argv)
     {
       if (getgid () == getegid ())
 	{
-	  /* This can happen if the file system is mounted nosuid. */
+	  /* This can happen if the file system is mounted nosuid.  */
 	  fprintf (stderr, "SGID failed: GID and EGID match (%jd)\n",
 		  (intmax_t) getgid ());
 	  exit (MAGIC_STATUS);
