@@ -65,6 +65,8 @@ size_t _dl_tls_static_size = 2048;
 size_t _dl_tls_static_used;
 /* Alignment requirement of the static TLS block.  */
 size_t _dl_tls_static_align;
+/* Initial dtv of the main thread, not allocated with normal malloc.  */
+void *_dl_initial_dtv = &static_dtv[1];
 
 /* Generation counter for the dtv.  */
 size_t _dl_tls_generation;

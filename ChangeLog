@@ -1,5 +1,12 @@
 2012-09-06  H.J. Lu  <hongjiu.lu@intel.com>
 
+	[BZ #14545]
+	* csu/libc-tls.c (_dl_initial_dtv): New variable.
+	* elf/dl-tls.c (_dl_deallocate_tls): Always check dtv before
+	freeing dtv[-1].
+
+2012-09-06  H.J. Lu  <hongjiu.lu@intel.com>
+
 	[BZ #14544]
 	* Makeconfig (link-static-before-libc): Replace $(+prector)
 	with $(+prectorT).
