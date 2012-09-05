@@ -1,3 +1,15 @@
+2012-09-06  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #14544]
+	* Makeconfig (link-static-before-libc): Replace $(+prector)
+	with $(+prectorT).
+	(link-static-after-libc): Replace $(+postctor) with
+	$(+postctorT).
+	(link-bounded): Replace $(+prector)/$(+postctor) with
+	$(+prectorT)/$(+postctorT).
+	(+prectorT): New macro.
+	(+postctorT): Likewise.
+
 2012-09-06  Joseph Myers  <joseph@codesourcery.com>
 
 	* stdlib/gen-tst-strtod-round.c: Include <assert.h>.

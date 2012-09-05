@@ -445,13 +445,13 @@ ifndef +link-static
 +link-static-before-libc = $(CC) -nostdlib -nostartfiles -static -o $@ \
 	      $(sysdep-LDFLAGS) $(LDFLAGS) $(LDFLAGS-$(@F))  \
 	      $(addprefix $(csu-objpfx),$(static-start-installed-name)) \
-	      $(+preinit) $(+prector) \
+	      $(+preinit) $(+prectorT) \
 	      $(filter-out $(addprefix $(csu-objpfx),start.o \
 						     $(start-installed-name))\
 			   $(+preinit) $(link-extra-libs-static) \
 			   $(common-objpfx)libc% $(+postinit),$^) \
 	      $(link-extra-libs-static) $(link-libc-static)
-+link-static-after-libc = $(+postctor) $(+postinit)
++link-static-after-libc = $(+postctorT) $(+postinit)
 +link-static = $(+link-static-before-libc) $(link-libc-static) \
 	       $(+link-static-after-libc)
 +link-static-tests = $(+link-static-before-libc) $(link-libc-static-tests) \
@@ -462,12 +462,12 @@ ifndef +link-bounded
 +link-bounded = $(CC) -nostdlib -nostartfiles -static -fbounded-pointers -o $@ \
 	      $(sysdep-LDFLAGS) $(LDFLAGS)  \
 	      $(addprefix $(csu-objpfx),b$(static-start-installed-name)) \
-	      $(+preinit) $(+prector) \
+	      $(+preinit) $(+prectorT) \
 	      $(filter-out $(addprefix $(csu-objpfx),start.ob \
 						     $(start-installed-name))\
 			   $(+preinit) $(link-extra-libs-bounded) \
 			   $(common-objpfx)libc% $(+postinit),$^) \
-	      $(link-extra-libs-bounded) $(link-libc-bounded) $(+postctor) $(+postinit)
+	      $(link-extra-libs-bounded) $(link-libc-bounded) $(+postctorT) $(+postinit)
 endif
 ifndef config-LDFLAGS
 ifeq (yes,$(build-shared))
@@ -579,6 +579,9 @@ endif
 # Variants of the two previous definitions for linking PIE programs.
 +prectorS = `$(CC) $(sysdep-LDFLAGS) --print-file-name=crtbeginS.o`
 +postctorS = `$(CC) $(sysdep-LDFLAGS) --print-file-name=crtendS.o`
+# Variants of the two previous definitions for statically linking programs.
++prectorT = `$(CC) $(sysdep-LDFLAGS) --print-file-name=crtbeginT.o`
++postctorT = `$(CC) $(sysdep-LDFLAGS) --print-file-name=crtendS.o`
 +interp = $(addprefix $(elf-objpfx),interp.os)
 csu-objpfx = $(common-objpfx)csu/
 elf-objpfx = $(common-objpfx)elf/
