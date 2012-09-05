@@ -1,3 +1,9 @@
+2012-09-05  Alexandre Oliva  <aoliva@redhat.com>
+
+	* malloc/mcheck.c (mcheck_check_all): Fix typo.
+	* malloc/memusage.c (mmap): Likewise.
+	(mmap64, mremap): Likewise.  Adjust name in comment.
+
 2012-09-05  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* libio/fileops.c: Fix typos in comments.

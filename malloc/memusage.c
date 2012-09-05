@@ -564,7 +564,7 @@ free (void *ptr)
 }
 
 
-/* `mmap' replacement.  We do not have to keep track of the sizesince
+/* `mmap' replacement.  We do not have to keep track of the size since
    `munmap' will get it as a parameter.  */
 void *
 mmap (void *start, size_t len, int prot, int flags, int fd, off_t offset)
@@ -616,7 +616,7 @@ mmap (void *start, size_t len, int prot, int flags, int fd, off_t offset)
 }
 
 
-/* `mmap' replacement.  We do not have to keep track of the sizesince
+/* `mmap64' replacement.  We do not have to keep track of the size since
    `munmap' will get it as a parameter.  */
 void *
 mmap64 (void *start, size_t len, int prot, int flags, int fd, off64_t offset)
@@ -668,7 +668,7 @@ mmap64 (void *start, size_t len, int prot, int flags, int fd, off64_t offset)
 }
 
 
-/* `mmap' replacement.  We do not have to keep track of the sizesince
+/* `mremap' replacement.  We do not have to keep track of the size since
    `munmap' will get it as a parameter.  */
 void *
 mremap (void *start, size_t old_len, size_t len, int flags,  ...)

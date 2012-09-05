@@ -122,7 +122,7 @@ checkhdr (const struct hdr *hdr)
 void
 mcheck_check_all (void)
 {
-  /* Walk through all the active blocks and test whether they were tempered
+  /* Walk through all the active blocks and test whether they were tampered
      with.  */
   struct hdr *runp = root;
 
