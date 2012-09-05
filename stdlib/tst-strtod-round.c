@@ -39,26 +39,22 @@ struct test {
 	      ld106exact, ld106d, ld106n, ld106z, ld106u,		      \
 	      ld113d, ld113n, ld113z, ld113u)				      \
   { s, fn, dn, true, ld53n }
-#elif LDBL_MANT_DIG == 64 && LDBL_MAX_EXP == 16384
-# if defined __i386__ || defined __x86_64__ || defined __ia64__
+#elif LDBL_MANT_DIG == 64 && LDBL_MAX_EXP == 16384 && LDBL_MIN_EXP == -16381
 /* This is for the Intel extended float format.  */
-#  define TEST(s, fd, fn, fz, fu, dd, dn, dz, du, ld53d, ld53n, ld53z, ld53u, \
-	       ld64id, ld64in, ld64iz, ld64iu,				      \
-	       ld64md, ld64mn, ld64mz, ld64mu,				      \
-	       ld106exact, ld106d, ld106n, ld106z, ld106u,		      \
-	       ld113d, ld113n, ld113z, ld113u)				      \
+# define TEST(s, fd, fn, fz, fu, dd, dn, dz, du, ld53d, ld53n, ld53z, ld53u,  \
+	      ld64id, ld64in, ld64iz, ld64iu,				      \
+	      ld64md, ld64mn, ld64mz, ld64mu,				      \
+	      ld106exact, ld106d, ld106n, ld106z, ld106u,		      \
+	      ld113d, ld113n, ld113z, ld113u)				      \
   { s, fn, dn, true, ld64in }
-# elif defined __mc68000__
+#elif LDBL_MANT_DIG == 64 && LDBL_MAX_EXP == 16384 && LDBL_MIN_EXP == -16382
 /* This is for the Motorola extended float format.  */
-#  define TEST(s, fd, fn, fz, fu, dd, dn, dz, du, ld53d, ld53n, ld53z, ld53u, \
-	       ld64id, ld64in, ld64iz, ld64iu,				      \
-	       ld64md, ld64mn, ld64mz, ld64mu,				      \
-	       ld106exact, ld106d, ld106n, ld106z, ld106u,		      \
-	       ld113d, ld113n, ld113z, ld113u)				      \
+# define TEST(s, fd, fn, fz, fu, dd, dn, dz, du, ld53d, ld53n, ld53z, ld53u,  \
+	      ld64id, ld64in, ld64iz, ld64iu,				      \
+	      ld64md, ld64mn, ld64mz, ld64mu,				      \
+	      ld106exact, ld106d, ld106n, ld106z, ld106u,		      \
+	      ld113d, ld113n, ld113z, ld113u)				      \
   { s, fn, dn, true, ld64mn }
-# else
-#  error "unknown long double format"
-# endif
 #elif LDBL_MANT_DIG == 106 && LDBL_MAX_EXP == 1024
 # define TEST(s, fd, fn, fz, fu, dd, dn, dz, du, ld53d, ld53n, ld53z, ld53u,  \
 	      ld64id, ld64in, ld64iz, ld64iu,				      \
