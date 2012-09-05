@@ -1,5 +1,11 @@
 2012-09-05  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
+	* libio/fileops.c: Fix typos in comments.
+	* libio/oldfileops.c: Likewise.
+	* libio/wfileops.c: Likewise.
+
+2012-09-05  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
 	[BZ #1349]
 	* malloc/Makefile (tests): Add tst-malloc-usable test case.
 	(tst-malloc-usable-ENV): Set environment for test case.

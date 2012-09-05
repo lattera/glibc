@@ -76,7 +76,7 @@ extern int errno;
    to _IO_buf_base, though not necessarily if we have switched from
    get mode to put mode.  (The reason is to maintain the invariant
    that _IO_read_end corresponds to the external file position.)
-   _IO_write_base is non-NULL and usually equal to _IO_base_base.
+   _IO_write_base is non-NULL and usually equal to _IO_buf_base.
    We also have _IO_write_end == _IO_buf_end, but only in fully buffered mode.
    The un-flushed character are those between _IO_write_base and _IO_write_ptr.
 
@@ -492,10 +492,10 @@ _IO_old_file_seekoff (fp, offset, dir, mode)
   /* Flush unwritten characters.
      (This may do an unneeded write if we seek within the buffer.
      But to be able to switch to reading, we would need to set
-     egptr to ptr.  That can't be done in the current design,
+     egptr to pptr.  That can't be done in the current design,
      which assumes file_ptr() is eGptr.  Anyway, since we probably
      end up flushing when we close(), it doesn't make much difference.)
-     FIXME: simulate mem-papped files. */
+     FIXME: simulate mem-mapped files. */
 
   if (fp->_IO_write_ptr > fp->_IO_write_base || _IO_in_put_mode (fp))
     if (_IO_switch_to_get_mode (fp))

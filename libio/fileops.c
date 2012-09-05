@@ -101,7 +101,7 @@ extern struct __gconv_trans_data __libio_translit attribute_hidden;
    to _IO_buf_base, though not necessarily if we have switched from
    get mode to put mode.  (The reason is to maintain the invariant
    that _IO_read_end corresponds to the external file position.)
-   _IO_write_base is non-NULL and usually equal to _IO_base_base.
+   _IO_write_base is non-NULL and usually equal to _IO_buf_base.
    We also have _IO_write_end == _IO_buf_end, but only in fully buffered mode.
    The un-flushed character are those between _IO_write_base and _IO_write_ptr.
 
