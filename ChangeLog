@@ -1,3 +1,13 @@
+2012-09-05  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	[BZ #1349]
+	* malloc/Makefile (tests): Add tst-malloc-usable test case.
+	(tst-malloc-usable-ENV): Set environment for test case.
+	* malloc/hooks.c (malloc_check_get_size): New function to get
+	requested size.
+	* malloc/malloc.c (musable): Use malloc_check_get_size.
+	* malloc/tst-malloc-usable.c: New test case.
+
 2012-09-05  Andreas Schwab  <schwab@linux-m68k.org>
 
 	* stdlib/tst-strtod-overflow.c (TIMEOUT): Define.

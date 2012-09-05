@@ -1,5 +1,4 @@
-# Copyright (C) 1991-2003, 2005, 2006, 2007, 2009, 2011, 2012
-# Free Software Foundation, Inc.
+# Copyright (C) 1991-2012 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -26,7 +25,7 @@ all:
 dist-headers := malloc.h
 headers := $(dist-headers) obstack.h mcheck.h
 tests := mallocbug tst-malloc tst-valloc tst-calloc tst-obstack \
-	 tst-mallocstate tst-mcheck tst-mallocfork tst-trim1
+	 tst-mallocstate tst-mcheck tst-mallocfork tst-trim1 tst-malloc-usable
 test-srcs = tst-mtrace
 
 routines = malloc morecore mcheck mtrace obstack
@@ -116,6 +115,7 @@ endif
 endif
 
 tst-mcheck-ENV = MALLOC_CHECK_=3
+tst-malloc-usable-ENV = MALLOC_CHECK_=3
 
 CPPFLAGS-malloc.c += -DPER_THREAD
 # Uncomment this for test releases.  For public releases it is too expensive.

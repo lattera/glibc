@@ -1,5 +1,5 @@
 /* Malloc implementation for multiple threads without lock contention.
-   Copyright (C) 2001-2009, 2011, 2012 Free Software Foundation, Inc.
+   Copyright (C) 2001-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Wolfram Gloger <wg@malloc.de>, 2001.
 
@@ -88,6 +88,35 @@ __malloc_check_init()
    usage, unlike in the MALLOC_DEBUG code. */
 
 #define MAGICBYTE(p) ( ( ((size_t)p >> 3) ^ ((size_t)p >> 11)) & 0xFF )
+
+/* Visualize the chunk as being partitioned into blocks of 256 bytes from the
+   highest address of the chunk, downwards.  The beginning of each block tells
+   us the size of the previous block, up to the actual size of the requested
+   memory.  Our magic byte is right at the end of the requested size, so we
+   must reach it with this iteration, otherwise we have witnessed a memory
+   corruption.  */
+static size_t
+malloc_check_get_size(mchunkptr p)
+{
+  size_t size;
+  unsigned char c;
+  unsigned char magic = MAGICBYTE(p);
+
+  assert(using_malloc_checking == 1);
+
+  for (size = chunksize(p) - 1 + (chunk_is_mmapped(p) ? 0 : SIZE_SZ);
+       (c = ((unsigned char*)p)[size]) != magic;
+       size -= c) {
+    if(c<=0 || size<(c+2*SIZE_SZ)) {
+      malloc_printerr(check_action, "malloc_check_get_size: memory corruption",
+		      chunk2mem(p));
+      return 0;
+    }
+  }
+
+  /* chunk2mem size.  */
+  return size - 2*SIZE_SZ;
+}
 
 /* Instrument a chunk with overrun detector byte(s) and convert it
    into a user pointer with requested size sz. */
