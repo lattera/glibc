@@ -1,3 +1,11 @@
+2012-09-05  Andreas Schwab  <schwab@linux-m68k.org>
+
+	* stdlib/gen-tst-strtod-round.c (formats): Add Motorola extended
+	float format.
+	* stdlib/tst-strtod-round.c (TEST) [LDBL_MANT_DIG == 64 &&
+	LDBL_MAX_EXP]: Add case for Motorola extended float format.
+	(test): Regenerate.
+
 2012-09-04  David S. Miller  <davem@davemloft.net>
 
 	* sysdeps/sparc/sparc32/sparcv9/addmul_1.S: New file.

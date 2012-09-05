@@ -85,11 +85,14 @@ round_for_all (const char *s)
     int emin;
     int emax;
     bool need_exact;
-  } formats[6] = {
+  } formats[7] = {
     { "f", 24, -148, 128, false },
     { "", 53, -1073, 1024, false },
     { "L", 53, -1073, 1024, false },
+    /* This is the Intel extended float format.  */
     { "L", 64, -16444, 16384, false },
+    /* This is the Motorola extended float format.  */
+    { "L", 64, -16445, 16384, false },
     { "L", 106, -1073, 1024, true },
     { "L", 113, -16493, 16384, false },
   };
@@ -103,11 +106,11 @@ round_for_all (const char *s)
     }
   mpfr_printf ("\",\n");
   int i;
-  for (i = 0; i < 6; i++)
+  for (i = 0; i < 7; i++)
     {
       round_str (s, formats[i].suffix, formats[i].prec,
 		 formats[i].emin, formats[i].emax, formats[i].need_exact);
-      if (i < 5)
+      if (i < 6)
 	mpfr_printf (",\n");
     }
   mpfr_printf ("),\n");
