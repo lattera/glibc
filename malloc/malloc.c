@@ -4769,8 +4769,10 @@ int __libc_mallopt(int param_number, int value)
     if((unsigned long)value > HEAP_MAX_SIZE/2)
       res = 0;
     else
-      mp_.mmap_threshold = value;
-      mp_.no_dyn_threshold = 1;
+      {
+	mp_.mmap_threshold = value;
+	mp_.no_dyn_threshold = 1;
+      }
     break;
 
   case M_MMAP_MAX:

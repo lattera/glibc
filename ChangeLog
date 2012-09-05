@@ -1,5 +1,10 @@
 2012-09-05  Alexandre Oliva  <aoliva@redhat.com>
 
+	* malloc/malloc.c (__libc_mallopt) <M_MMAP_THRESHOLD>: Do not
+	change internal state upon failure.
+
+2012-09-05  Alexandre Oliva  <aoliva@redhat.com>
+
 	* malloc/mcheck.c (mcheck_check_all): Fix typo.
 	* malloc/memusage.c (mmap): Likewise.
 	(mmap64, mremap): Likewise.  Adjust name in comment.
