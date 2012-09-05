@@ -14,7 +14,7 @@
 
 2012-09-05  Allan McRae  <allan@archlinux.org>
 
-	[BS #13966]
+	[BZ #13966]
 	* configure.in (CXX_SYSINCLUDES): Use compiler output to
 	determine header location.
 	* configure: Regenerated.
