@@ -223,8 +223,9 @@ Carlos O'Donell for his maintainership of the HPPA architecture and
 maintaining @theglibc{} web pages.
 
 @item
-Alexandra Oliva for adding TLS descriptors for LD and GD on x86 and
-x86-64.
+Alexandre Oliva for adding TLS descriptors for LD and GD on x86 and
+x86-64, for the am33 port, for completing the MIPS n64/n32/o32 multilib
+port, and for various fixes.
 
 @item
 Paul Pluzhnikov for various fixes.

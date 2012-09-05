@@ -1,5 +1,9 @@
 2012-09-05  Alexandre Oliva  <aoliva@redhat.com>
 
+	* manual/contrib.texi (Contributors): Fix typo.  Complete entry.
+
+2012-09-05  Alexandre Oliva  <aoliva@redhat.com>
+
 	* malloc/malloc.c (__libc_mallopt) <M_MMAP_THRESHOLD>: Do not
 	change internal state upon failure.
 
