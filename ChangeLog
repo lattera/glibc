@@ -1,5 +1,10 @@
 2012-09-05  Alexandre Oliva  <aoliva@redhat.com>
 
+	* malloc/arena.c: Fold copyright years.
+	* malloc/mcheck.c, malloc/memusage.c: Likewise.
+
+2012-09-05  Alexandre Oliva  <aoliva@redhat.com>
+
 	* malloc/malloc.c (__libc_mallopt) <M_MMAP_MAX>: Fix indentation.
 
 2012-09-05  Alexandre Oliva  <aoliva@redhat.com>

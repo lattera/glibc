@@ -1,6 +1,5 @@
 /* Standard debugging hooks for `malloc'.
-   Copyright (C) 1990-1997,1999,2000-2002,2007,2010,2012
-   Free Software Foundation, Inc.
+   Copyright (C) 1990-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written May 1989 by Mike Haertel.
 
