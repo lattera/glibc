@@ -1,3 +1,9 @@
+2012-09-04  David S. Miller  <davem@davemloft.net>
+
+	* sysdeps/sparc/sparc32/sparcv9/addmul_1.S: New file.
+	* sysdeps/sparc/sparc32/sparcv9/submul_1.S: New file.
+	* sysdeps/sparc/sparc32/sparcv9/mul_1.S: New file.
+
 2012-09-04  Florian Weimer  <fweimer@redhat.com>
 
 	* stdlib/tst-secure-getenv.c (alternative_main): Only warn on SGID
