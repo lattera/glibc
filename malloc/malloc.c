@@ -4776,8 +4776,8 @@ int __libc_mallopt(int param_number, int value)
     break;
 
   case M_MMAP_MAX:
-      mp_.n_mmaps_max = value;
-      mp_.no_dyn_threshold = 1;
+    mp_.n_mmaps_max = value;
+    mp_.no_dyn_threshold = 1;
     break;
 
   case M_CHECK_ACTION:
