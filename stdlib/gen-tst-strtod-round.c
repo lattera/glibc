@@ -18,6 +18,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #define _GNU_SOURCE
+#include <assert.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -65,7 +66,19 @@ round_str (const char *s, const char *suffix,
   mpfr_init (f);
   int r = string_to_fp (f, s, MPFR_RNDD);
   if (need_exact)
-    mpfr_printf ("\t%s,\n", r ? "false" : "true");
+    {
+      assert (prec == 106 && emin == -1073 && emax == 1024);
+      /* The maximum value in IBM long double has discontiguous
+	 mantissa bits.  */
+      mpfr_t max_value;
+      mpfr_init2 (max_value, 107);
+      mpfr_set_str (max_value, "0x1.fffffffffffff7ffffffffffffcp+1023", 0,
+		    MPFR_RNDN);
+      if (mpfr_cmpabs (f, max_value) > 0)
+	r = 1;
+      mpfr_printf ("\t%s,\n", r ? "false" : "true");
+      mpfr_clear (max_value);
+    }
   print_fp (f, suffix, ",\n");
   string_to_fp (f, s, MPFR_RNDN);
   print_fp (f, suffix, ",\n");

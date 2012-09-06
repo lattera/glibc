@@ -1,3 +1,10 @@
+2012-09-06  Joseph Myers  <joseph@codesourcery.com>
+
+	* stdlib/gen-tst-strtod-round.c: Include <assert.h>.
+	(round_str): Handle values above the maximum for IBM long double
+	as inexact.
+	* stdlib/tst-strtod-round.c (tests): Regenerated.
+
 2012-09-06  Andreas Krebbel  <Andreas.Krebbel@de.ibm.com>
 
 	* sysdeps/s390/s390-32/multiarch/Makefile: Remove -mzarch
