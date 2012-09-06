@@ -41,7 +41,8 @@
   void *resolve_##FUNC (unsigned long int dl_hwcap)			\
   {									\
     if ((dl_hwcap & HWCAP_S390_STFLE)					\
-	&& (dl_hwcap & HWCAP_S390_HIGH_GPRS)) /* Implies zarch */	\
+	&& (dl_hwcap & HWCAP_S390_ZARCH)				\
+	&& (dl_hwcap & HWCAP_S390_HIGH_GPRS))				\
       {									\
 	/* We want just 1 double word to be returned.  */		\
 	register unsigned long reg0 asm("0") = 0;			\

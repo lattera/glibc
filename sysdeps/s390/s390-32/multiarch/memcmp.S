@@ -31,6 +31,7 @@
 
 ENTRY(memcmp_z196)
 	.machine "z196"
+	.machinemode "zarch_nohighgprs"
         ltr     %r4,%r4
         je      .L_Z196_4
         ahi     %r4,-1
@@ -64,6 +65,7 @@ END(memcmp_z196)
 
 ENTRY(memcmp_z10)
 	.machine "z10"
+	.machinemode "zarch_nohighgprs"
         ltr     %r4,%r4
         je      .L_Z10_4
         ahi     %r4,-1

@@ -31,6 +31,7 @@
 
 ENTRY(memset_z196)
 	.machine "z196"
+	.machinemode "zarch_nohighgprs"
         llgfr   %r4,%r4
         ltgr    %r4,%r4
         je      .L_Z196_4
@@ -62,6 +63,7 @@ END(memset_z196)
 
 ENTRY(memset_z10)
 	.machine "z10"
+	.machinemode "zarch_nohighgprs"
         llgfr   %r4,%r4
         cgije   %r4,0,.L_Z10_4
         stc     %r3,0(%r2)
