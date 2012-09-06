@@ -1,3 +1,15 @@
+2012-09-05  Jeff Law  <law@redhat.com>
+
+	[BZ#14510]
+	* locales/es_DO: Fix LC_NUMERIC decimal_point and thousands_sep.
+	* locales/es_GT: Likewise.
+	* locales/es_HN: Likewise.
+	* locales/es_MX: Likewise.
+	* locales/es_NI: Likewise.
+	* locales/es_PA: Likewise.
+	* locales/es_PR: Likewise.
+	* locales/es_SV: Likewise.
+
 2012-06-20  Petr Baudis  <pasky@ucw.cz>
 
 	* locales/mag_IN: Fix comment character.

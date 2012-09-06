@@ -69,7 +69,9 @@ n_sign_posn          1
 END LC_MONETARY
 
 LC_NUMERIC
-copy "es_ES"
+decimal_point        "<U002E>"
+thousands_sep        "<U002C>"
+grouping             3;3
 END LC_NUMERIC
 
 LC_TIME
