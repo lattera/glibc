@@ -348,8 +348,9 @@ CFLAGS-funlockfile.c = $(libio-mtsafe)
 link-libc-static := $(common-objpfx)libc.a $(static-gnulib) \
 		    $(common-objpfx)libc.a
 
-tests-static += tst-locale1 tst-locale2 tst-stackguard1-static
-tests += tst-stackguard1-static
+tests-static += tst-locale1 tst-locale2 tst-stackguard1-static \
+		tst-cancel21-static
+tests += tst-stackguard1-static tst-cancel21-static
 xtests-static += tst-setuid1-static
 
 # These tests are linked with libc before libpthread

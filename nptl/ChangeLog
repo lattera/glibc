@@ -1,3 +1,10 @@
+2012-09-06  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #14545]
+	* Makefile (tests-static): Add tst-cancel21-static.
+	(tests): Likewise.
+	* tst-cancel21-static.c: New file.
+
 2012-09-01  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/pthread_getcpuclockid.c
