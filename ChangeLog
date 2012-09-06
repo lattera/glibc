@@ -2,6 +2,12 @@
 
 	* sysdeps/sparc/fpu/libm-test-ulps: Update.
 
+	* sysdeps/sparc/bits/hwcap.h (HWCAP_SPARC_PAUSE,
+	HWCAP_SPARC_CBCOND, HWCAP_SPARC_CRYPTO): Define.
+	* sysdeps/sparc/dl-procinfo.h (_DL_HWCAP_COUNT): Increase to 27.
+	* sysdeps/sparc/dl-procinfo.c (_dl_sparc_cap_flags): Add new
+	entries.
+
 2012-09-05  Alexandre Oliva  <aoliva@redhat.com>
 
 	* malloc/arena.c: Fold copyright years.

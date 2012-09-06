@@ -24,7 +24,7 @@
 #include <ldsodefs.h>
 #include <sysdep.h>
 
-#define _DL_HWCAP_COUNT 24
+#define _DL_HWCAP_COUNT 27
 
 static inline int
 __attribute__ ((unused))
