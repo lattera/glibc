@@ -1,3 +1,10 @@
+2012-09-06  Petr Machata  <pmachata@redhat.com>
+
+	* elf/elf.h (NT_S390_HIGH_GPRS): New macro.
+	(NT_S390_TIMER, NT_S390_TODCMP, NT_S390_TODPREG): Likewise.
+	(NT_S390_CTRS, NT_S390_PREFIX, NT_S390_LAST_BREAK): Likewise.
+	(NT_S390_SYSTEM_CALL, NT_ARM_VFP): Likewise.
+
 2012-09-06  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #14545]
