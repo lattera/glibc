@@ -1,3 +1,13 @@
+2012-09-06  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* csu/libc-tls.c (static_dtv): Renamed to ...
+	(_dl_static_dtv): This.  Make it global.
+	(_dl_initial_dtv): Removed.
+	(__libc_setup_tls): Updated.
+	* elf/dl-tls.c (DL_INITIAL_DTV): New macro.
+	(_dl_deallocate_tls): Replace GL(dl_initial_dtv) with
+	DL_INITIAL_DTV.
+
 2012-09-06  Petr Machata  <pmachata@redhat.com>
 
 	* elf/elf.h (NT_S390_HIGH_GPRS): New macro.

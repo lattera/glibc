@@ -32,7 +32,7 @@ extern ElfW(Phdr) *_dl_phdr;
 extern size_t _dl_phnum;
 
 
-static dtv_t static_dtv[2 + TLS_SLOTINFO_SURPLUS];
+dtv_t _dl_static_dtv[2 + TLS_SLOTINFO_SURPLUS];
 
 
 static struct
@@ -65,8 +65,6 @@ size_t _dl_tls_static_size = 2048;
 size_t _dl_tls_static_used;
 /* Alignment requirement of the static TLS block.  */
 size_t _dl_tls_static_align;
-/* Initial dtv of the main thread, not allocated with normal malloc.  */
-void *_dl_initial_dtv = &static_dtv[1];
 
 /* Generation counter for the dtv.  */
 size_t _dl_tls_generation;
@@ -165,33 +163,33 @@ __libc_setup_tls (size_t tcbsize, size_t tcbalign)
 		       & ~(max_align - 1));
 
   /* Initialize the dtv.  [0] is the length, [1] the generation counter.  */
-  static_dtv[0].counter = (sizeof (static_dtv) / sizeof (static_dtv[0])) - 2;
-  // static_dtv[1].counter = 0;		would be needed if not already done
+  _dl_static_dtv[0].counter = (sizeof (_dl_static_dtv) / sizeof (_dl_static_dtv[0])) - 2;
+  // _dl_static_dtv[1].counter = 0;		would be needed if not already done
 
   /* Initialize the TLS block.  */
 #if TLS_TCB_AT_TP
-  static_dtv[2].pointer.val = ((char *) tlsblock + tcb_offset
+  _dl_static_dtv[2].pointer.val = ((char *) tlsblock + tcb_offset
 			       - roundup (memsz, align ?: 1));
   static_map.l_tls_offset = roundup (memsz, align ?: 1);
 #elif TLS_DTV_AT_TP
-  static_dtv[2].pointer.val = (char *) tlsblock + tcb_offset;
+  _dl_static_dtv[2].pointer.val = (char *) tlsblock + tcb_offset;
   static_map.l_tls_offset = tcb_offset;
 #else
 # error "Either TLS_TCB_AT_TP or TLS_DTV_AT_TP must be defined"
 #endif
-  static_dtv[2].pointer.is_static = true;
+  _dl_static_dtv[2].pointer.is_static = true;
   /* sbrk gives us zero'd memory, so we don't need to clear the remainder.  */
-  memcpy (static_dtv[2].pointer.val, initimage, filesz);
+  memcpy (_dl_static_dtv[2].pointer.val, initimage, filesz);
 
   /* Install the pointer to the dtv.  */
 
   /* Initialize the thread pointer.  */
 #if TLS_TCB_AT_TP
-  INSTALL_DTV ((char *) tlsblock + tcb_offset, static_dtv);
+  INSTALL_DTV ((char *) tlsblock + tcb_offset, _dl_static_dtv);
 
   const char *lossage = TLS_INIT_TP ((char *) tlsblock + tcb_offset, 0);
 #elif TLS_DTV_AT_TP
-  INSTALL_DTV (tlsblock, static_dtv);
+  INSTALL_DTV (tlsblock, _dl_static_dtv);
   const char *lossage = TLS_INIT_TP (tlsblock, 0);
 #else
 # error "Either TLS_TCB_AT_TP or TLS_DTV_AT_TP must be defined"
