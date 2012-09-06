@@ -76,6 +76,8 @@ ENTRY (__tls_get_addr)
 	 ADD_PTR r28, r28, r27	/* pointer into module array */
 	}
 	LD_PTR r26, r28		/* r26 = module TLS pointer */
+	CMPEQI r25, r26, -1     /* check r26 == TLS_DTV_UNALLOCATED */
+	BNEZ r25, .Lslowpath
 	{
 	 ADD_PTR r0, r26, r29
 	 jrp lr
