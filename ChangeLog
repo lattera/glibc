@@ -1,5 +1,11 @@
 2012-09-06  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* elf/dl-tls.c (DL_INITIAL_DTV): Removed.
+	(_dl_initial_dtv): New.  Defined if SHARED isn't defined.
+	(_dl_deallocate_tls): Restore GL(dl_initial_dtv).
+
+2012-09-06  H.J. Lu  <hongjiu.lu@intel.com>
+
 	* csu/libc-tls.c (static_dtv): Renamed to ...
 	(_dl_static_dtv): This.  Make it global.
 	(_dl_initial_dtv): Removed.

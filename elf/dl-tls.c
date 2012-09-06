@@ -466,9 +466,7 @@ rtld_hidden_def (_dl_allocate_tls)
 
 #ifndef SHARED
 extern dtv_t _dl_static_dtv[];
-# define DL_INITIAL_DTV	(&_dl_static_dtv[1])
-#else
-# define DL_INITIAL_DTV	GL(dl_initial_dtv)
+# define _dl_initial_dtv (&_dl_static_dtv[1])
 #endif
 
 void
@@ -484,7 +482,7 @@ _dl_deallocate_tls (void *tcb, bool dealloc_tcb)
       free (dtv[1 + cnt].pointer.val);
 
   /* The array starts with dtv[-1].  */
-  if (dtv != DL_INITIAL_DTV)
+  if (dtv != GL(dl_initial_dtv))
     free (dtv - 1);
 
   if (dealloc_tcb)
