@@ -1187,6 +1187,12 @@ idouble: 1
 ifloat: 1
 
 # cos
+Test "cos (0x1p+120) == -9.25879022854837867303861764107414946730833e-01":
+float: 1
+ifloat: 1
+Test "cos (0x1p+127) == 7.81914638714960072263910298466369236613162e-01":
+float: 1
+ifloat: 1
 Test "cos (M_PI_6l * 2.0) == 0.5":
 double: 1
 idouble: 1
@@ -2490,6 +2496,12 @@ float: 1
 ifloat: 1
 
 # sincos
+Test "sincos (0x1p+120, &sin_res, &cos_res) puts -9.25879022854837867303861764107414946730833e-01 in cos_res":
+float: 1
+ifloat: 1
+Test "sincos (0x1p+127, &sin_res, &cos_res) puts 7.81914638714960072263910298466369236613162e-01 in cos_res":
+float: 1
+ifloat: 1
 Test "sincos (M_PI_6l*2.0, &sin_res, &cos_res) puts 0.5 in cos_res":
 double: 1
 idouble: 1
