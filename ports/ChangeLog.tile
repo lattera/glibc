@@ -1,5 +1,6 @@
 2012-09-06  Chris Metcalf  <cmetcalf@tilera.com>
 
+	[BZ #14237]
 	* sysdeps/tile/__tls_get_addr.S: Fix TLS module initialization bug.
 
 2012-08-27  Joseph Myers  <joseph@codesourcery.com>
