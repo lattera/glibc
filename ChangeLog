@@ -1,3 +1,9 @@
+2012-09-07  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #10014]
+	* manual/examples/inetcli.c (SERVERHOST): Use www.gnu.org as
+	example host name.
+
 2012-09-07  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* malloc/arena.c (arena_get_retry): New function that gets

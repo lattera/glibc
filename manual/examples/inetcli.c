@@ -26,7 +26,7 @@
 
 #define PORT		5555
 #define MESSAGE		"Yow!!! Are we having fun yet?!?"
-#define SERVERHOST 	"mescaline.gnu.org"
+#define SERVERHOST 	"www.gnu.org"
 
 void
 write_to_server (int filedes)
