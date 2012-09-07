@@ -917,6 +917,27 @@ arena_get2(mstate a_tsd, size_t size, mstate avoid_arena)
   return a;
 }
 
+/* If we don't have the main arena, then maybe the failure is due to running
+   out of mmapped areas, so we can try allocating on the main arena.
+   Otherwise, it is likely that sbrk() has failed and there is still a chance
+   to mmap(), so try one of the other arenas.  */
+static mstate
+arena_get_retry (mstate ar_ptr, size_t bytes)
+{
+  if(ar_ptr != &main_arena) {
+    (void)mutex_unlock(&ar_ptr->mutex);
+    ar_ptr = &main_arena;
+    (void)mutex_lock(&ar_ptr->mutex);
+  } else {
+    /* Grab ar_ptr->next prior to releasing its lock.  */
+    mstate prev = ar_ptr->next ? ar_ptr : 0;
+    (void)mutex_unlock(&ar_ptr->mutex);
+    ar_ptr = arena_get2(prev, bytes, ar_ptr);
+  }
+
+  return ar_ptr;
+}
+
 #ifdef PER_THREAD
 static void __attribute__ ((section ("__libc_thread_freeres_fn")))
 arena_thread_freeres (void)

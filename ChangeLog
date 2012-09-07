@@ -1,3 +1,14 @@
+2012-09-07  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* malloc/arena.c (arena_get_retry): New function that gets
+	another arena for the caller to try its request on.
+	* malloc/malloc.c (__libc_malloc): Use get_another_arena if the
+	current arena cannot fulfill the request.
+	(__libc_memalign): Likewise.
+	(__libc_memalign): Likewise.
+	(__libc_pvalloc): Likewise.
+	(__libc_calloc): Likewise.
+
 2012-09-05  John Tobey  <john.tobey@gmail.com>
 
 	[BZ #13542]

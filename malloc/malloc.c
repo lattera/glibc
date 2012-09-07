@@ -2858,23 +2858,10 @@ __libc_malloc(size_t bytes)
     return 0;
   victim = _int_malloc(ar_ptr, bytes);
   if(!victim) {
-    /* Maybe the failure is due to running out of mmapped areas. */
-    if(ar_ptr != &main_arena) {
-      (void)mutex_unlock(&ar_ptr->mutex);
-      ar_ptr = &main_arena;
-      (void)mutex_lock(&ar_ptr->mutex);
+    ar_ptr = arena_get_retry(ar_ptr, bytes);
+    if (__builtin_expect(ar_ptr != NULL, 1)) {
       victim = _int_malloc(ar_ptr, bytes);
       (void)mutex_unlock(&ar_ptr->mutex);
-    } else {
-      /* ... or sbrk() has failed and there is still a chance to mmap()
-	 Grab ar_ptr->next prior to releasing its lock.  */
-      mstate prev = ar_ptr->next ? ar_ptr : 0;
-      (void)mutex_unlock(&ar_ptr->mutex);
-      ar_ptr = arena_get2(prev, bytes, ar_ptr);
-      if(ar_ptr) {
-	victim = _int_malloc(ar_ptr, bytes);
-	(void)mutex_unlock(&ar_ptr->mutex);
-      }
     }
   } else
     (void)mutex_unlock(&ar_ptr->mutex);
@@ -3038,23 +3025,10 @@ __libc_memalign(size_t alignment, size_t bytes)
     return 0;
   p = _int_memalign(ar_ptr, alignment, bytes);
   if(!p) {
-    /* Maybe the failure is due to running out of mmapped areas. */
-    if(ar_ptr != &main_arena) {
-      (void)mutex_unlock(&ar_ptr->mutex);
-      ar_ptr = &main_arena;
-      (void)mutex_lock(&ar_ptr->mutex);
+    ar_ptr = arena_get_retry (ar_ptr, bytes);
+    if (__builtin_expect(ar_ptr != NULL, 1)) {
       p = _int_memalign(ar_ptr, alignment, bytes);
       (void)mutex_unlock(&ar_ptr->mutex);
-    } else {
-      /* ... or sbrk() has failed and there is still a chance to mmap()
-	 Grab ar_ptr->next prior to releasing its lock.  */
-      mstate prev = ar_ptr->next ? ar_ptr : 0;
-      (void)mutex_unlock(&ar_ptr->mutex);
-      ar_ptr = arena_get2(prev, bytes, ar_ptr);
-      if(ar_ptr) {
-	p = _int_memalign(ar_ptr, alignment, bytes);
-	(void)mutex_unlock(&ar_ptr->mutex);
-      }
     }
   } else
     (void)mutex_unlock(&ar_ptr->mutex);
@@ -3088,23 +3062,10 @@ __libc_valloc(size_t bytes)
     return 0;
   p = _int_valloc(ar_ptr, bytes);
   if(!p) {
-    /* Maybe the failure is due to running out of mmapped areas. */
-    if(ar_ptr != &main_arena) {
-      (void)mutex_unlock(&ar_ptr->mutex);
-      ar_ptr = &main_arena;
-      (void)mutex_lock(&ar_ptr->mutex);
+    ar_ptr = arena_get_retry (ar_ptr, bytes);
+    if (__builtin_expect(ar_ptr != NULL, 1)) {
       p = _int_memalign(ar_ptr, pagesz, bytes);
       (void)mutex_unlock(&ar_ptr->mutex);
-    } else {
-      /* ... or sbrk() has failed and there is still a chance to mmap()
-	 Grab ar_ptr->next prior to releasing its lock.  */
-      mstate prev = ar_ptr->next ? ar_ptr : 0;
-      (void)mutex_unlock(&ar_ptr->mutex);
-      ar_ptr = arena_get2(prev, bytes, ar_ptr);
-      if(ar_ptr) {
-	p = _int_memalign(ar_ptr, pagesz, bytes);
-	(void)mutex_unlock(&ar_ptr->mutex);
-      }
     }
   } else
     (void)mutex_unlock (&ar_ptr->mutex);
@@ -3136,23 +3097,10 @@ __libc_pvalloc(size_t bytes)
   arena_get(ar_ptr, bytes + 2*pagesz + MINSIZE);
   p = _int_pvalloc(ar_ptr, bytes);
   if(!p) {
-    /* Maybe the failure is due to running out of mmapped areas. */
-    if(ar_ptr != &main_arena) {
-      (void)mutex_unlock(&ar_ptr->mutex);
-      ar_ptr = &main_arena;
-      (void)mutex_lock(&ar_ptr->mutex);
+    ar_ptr = arena_get_retry (ar_ptr, bytes + 2*pagesz + MINSIZE);
+    if (__builtin_expect(ar_ptr != NULL, 1)) {
       p = _int_memalign(ar_ptr, pagesz, rounded_bytes);
       (void)mutex_unlock(&ar_ptr->mutex);
-    } else {
-      /* ... or sbrk() has failed and there is still a chance to mmap()
-	 Grab ar_ptr->next prior to releasing its lock.  */
-      mstate prev = ar_ptr->next ? ar_ptr : 0;
-      (void)mutex_unlock(&ar_ptr->mutex);
-      ar_ptr = arena_get2(prev, bytes + 2*pagesz + MINSIZE, ar_ptr);
-      if(ar_ptr) {
-	p = _int_memalign(ar_ptr, pagesz, rounded_bytes);
-	(void)mutex_unlock(&ar_ptr->mutex);
-      }
     }
   } else
     (void)mutex_unlock(&ar_ptr->mutex);
@@ -3225,22 +3173,10 @@ __libc_calloc(size_t n, size_t elem_size)
 	 av == arena_for_chunk(mem2chunk(mem)));
 
   if (mem == 0) {
-    /* Maybe the failure is due to running out of mmapped areas. */
-    if(av != &main_arena) {
+    av = arena_get_retry (av, sz);
+    if (__builtin_expect(av != NULL, 1)) {
+      mem = _int_malloc(av, sz);
       (void)mutex_unlock(&av->mutex);
-      (void)mutex_lock(&main_arena.mutex);
-      mem = _int_malloc(&main_arena, sz);
-      (void)mutex_unlock(&main_arena.mutex);
-    } else {
-      /* ... or sbrk() has failed and there is still a chance to mmap()
-	 Grab av->next prior to releasing its lock.  */
-      mstate prev = av->next ? av : 0;
-      (void)mutex_unlock(&av->mutex);
-      av = arena_get2(prev, sz, av);
-      if(av) {
-	mem = _int_malloc(av, sz);
-	(void)mutex_unlock(&av->mutex);
-      }
     }
     if (mem == 0) return 0;
   } else
