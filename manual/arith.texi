@@ -1966,10 +1966,10 @@ negated imaginary part.  In other words, @samp{conj(a + bi) = a + -bi}.
 These functions return the argument of the complex number @var{z}.
 The argument of a complex number is the angle in the complex plane
 between the positive real axis and a line passing through zero and the
-number.  This angle is measured in the usual fashion and ranges from @math{0}
-to @math{2@pi{}}.
+number.  This angle is measured in the usual fashion and ranges from
+@math{-@pi{}} to @math{@pi{}}.
 
-@code{carg} has a branch cut along the positive real axis.
+@code{carg} has a branch cut along the negative real axis.
 @end deftypefun
 
 @comment complex.h

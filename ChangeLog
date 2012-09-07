@@ -1,3 +1,9 @@
+2012-09-05  John Tobey  <john.tobey@gmail.com>
+
+	[BZ #13542]
+	* manual/arith.texi (Operations on Complex): Fix description
+	of carg branch cut.
+
 2012-09-06  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #10014]
