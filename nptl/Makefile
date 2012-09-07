@@ -507,7 +507,7 @@ $(objpfx)tst-clock2: $(common-objpfx)rt/librt.a
 $(objpfx)tst-rwlock14: $(common-objpfx)rt/librt.a
 endif
 
-LDFLAGS-tst-cancel24 = $(no-as-needed) -lstdc++
+LDLIBS-tst-cancel24 = $(no-as-needed) -lstdc++
 
 extra-B-pthread.so = -B$(common-objpfx)nptl/
 $(objpfx)libpthread.so: $(addprefix $(objpfx),$(crti-objs) $(crtn-objs))
