@@ -193,10 +193,13 @@ free_derivation (void *p)
       }
 
   /* Free the name strings.  */
-  free ((char *) deriv->steps[0].__from_name);
-  free ((char *) deriv->steps[deriv->nsteps - 1].__to_name);
+  if (deriv->steps != NULL)
+    {
+      free ((char *) deriv->steps[0].__from_name);
+      free ((char *) deriv->steps[deriv->nsteps - 1].__to_name);
+      free ((struct __gconv_step *) deriv->steps);
+    }
 
-  free ((struct __gconv_step *) deriv->steps);
   free (deriv);
 }
 

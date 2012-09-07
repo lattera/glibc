@@ -1,5 +1,8 @@
 2012-09-07  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* iconv/gconv_db.c (free_derivation): Check if deriv->steps
+	is NULL.
+
 	* debug/Makefile (LDFLAGS-tst-chk4): Renamed to ...
 	(LDLIBS-tst-chk4): This.
 	(LDFLAGS-tst-chk5): Renamed to ...
