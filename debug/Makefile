@@ -114,12 +114,12 @@ tst-lfschk3-ENV = LOCPATH=$(common-objpfx)localedata
 tst-lfschk4-ENV = LOCPATH=$(common-objpfx)localedata
 tst-lfschk5-ENV = LOCPATH=$(common-objpfx)localedata
 tst-lfschk6-ENV = LOCPATH=$(common-objpfx)localedata
-LDFLAGS-tst-chk4 = -lstdc++
-LDFLAGS-tst-chk5 = -lstdc++
-LDFLAGS-tst-chk6 = -lstdc++
-LDFLAGS-tst-lfschk4 = -lstdc++
-LDFLAGS-tst-lfschk5 = -lstdc++
-LDFLAGS-tst-lfschk6 = -lstdc++
+LDLIBS-tst-chk4 = -lstdc++
+LDLIBS-tst-chk5 = -lstdc++
+LDLIBS-tst-chk6 = -lstdc++
+LDLIBS-tst-lfschk4 = -lstdc++
+LDLIBS-tst-lfschk5 = -lstdc++
+LDLIBS-tst-lfschk6 = -lstdc++
 
 tests = backtrace-tst tst-longjmp_chk tst-chk1 tst-chk2 tst-chk3 \
 	tst-lfschk1 tst-lfschk2 tst-lfschk3 test-strcpy_chk test-stpcpy_chk \
