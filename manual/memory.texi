@@ -16,8 +16,8 @@ and allocation of real memory.
 @menu
 * Memory Concepts::             An introduction to concepts and terminology.
 * Memory Allocation::           Allocating storage for your program data
-* Locking Pages::               Preventing page faults
 * Resizing the Data Segment::   @code{brk}, @code{sbrk}
+* Locking Pages::               Preventing page faults
 @end menu
 
 Memory mapped I/O is not discussed in this chapter.  @xref{Memory-mapped I/O}.
