@@ -1,5 +1,7 @@
 2012-09-07  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* scripts/check-local-headers.sh: Add "shopt -s nullglob".
+
 	* iconv/gconv_db.c (free_derivation): Check if deriv->steps
 	is NULL.
 
