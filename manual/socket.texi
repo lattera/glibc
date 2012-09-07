@@ -809,7 +809,7 @@ numeric host addresses as sequences of up to eight numbers separated by
 colons, as in @samp{5f03:1200:836f:c100::1}.
 
 Each computer also has one or more @dfn{host names}, which are strings
-of words separated by periods, as in @samp{mescaline.gnu.org}.
+of words separated by periods, as in @samp{www.gnu.org}.
 
 Programs that let the user specify a host typically accept both numeric
 addresses and host names.  To open a connection a program needs a

@@ -1,5 +1,9 @@
 2012-09-06  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #10014]
+	* manual/socket.texi (Host Addresses): Use www.gnu.org as example
+	host name.
+
 	[BZ #10038]
 	* manual/memory.texi (Memory): Make order of menu items match
 	order of sections.
