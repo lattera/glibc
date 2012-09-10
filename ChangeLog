@@ -1,3 +1,13 @@
+2012-09-10  Liubov Dmitrieva  <liubov.dmitrieva@gmail.com>
+
+	* sysdeps/i386/i686/fpu/multiarch/s_sinf-sse2.S: Fix
+	unwind info if defined PIC. Fix special cases description.
+	* sysdeps/i386/i686/fpu/multiarch/s_cosf-sse2.S: Likewise.
+
+	* sysdeps/x86_64/fpu/s_sinf.S: Fix special cases description, fix
+	DP_HI_MASK entry.
+	* sysdeps/x86_64/fpu/s_cosf.S: Likewise.
+
 2012-09-07  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* scripts/check-local-headers.sh: Add "shopt -s nullglob".

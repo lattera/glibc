@@ -50,12 +50,12 @@
  *  9) if x is NaN, return x-x.
  *
  * Special cases:
- *  sin(+-0)==+-0 not raising inexact/underflow,
- *  sin(subnormal) raises inexact/underflow
- *  sin(min_normalized) raises inexact/underflow
- *  sin(normalized) raises inexact
- *  sin(Inf) = NaN, raises invalid, sets errno to EDOM
- *  sin(NaN) = NaN
+ *  sin(+-0) = +-0 not raising inexact/underflow,
+ *  sin(subnormal) raises inexact/underflow,
+ *  sin(min_normalized) raises inexact/underflow,
+ *  sin(normalized) raises inexact,
+ *  sin(Inf) = NaN, raises invalid, sets errno to EDOM,
+ *  sin(NaN) = NaN.
  */
 
 	.text
@@ -168,7 +168,6 @@ L(sin_poly):
 	cvtsd2ss %xmm3, %xmm0 		/* SP result */
 	ret
 
-
 	.p2align	4
 L(large_args):
 	/* Here if |x|>=9*Pi/4 */
@@ -262,7 +261,6 @@ L(very_large_skip2):
 
 	jmp	L(reconstruction)	/* end of very_large_args peth */
 
-
 	.p2align	4
 L(arg_less_pio4):
 	/* Here if |x|<Pi/4 */
@@ -340,7 +338,6 @@ L(arg_inf_or_nan):
 
 	/* Here if x is Inf. Set errno to EDOM.  */
 	call	JUMPTARGET(__errno_location)
-	lea	(%rax), %rax
 	movl	$EDOM, (%rax)
 
 	.p2align	4
@@ -350,8 +347,6 @@ L(skip_errno_setting):
 	subss	%xmm0, %xmm0		/* Result is NaN */
 	ret
 END(__sinf)
-
-
 
 	.section .rodata, "a"
 	.p2align 3
@@ -545,8 +540,8 @@ L(DP_ABS_MASK): /* Mask for getting DP absolute value */
 	.p2align 3
 L(DP_HI_MASK): /* Mask for getting high 21 bits of DP value */
 	.long	0x00000000,0xffffffff
-	.type L(DP_ABS_MASK),@object
-	ASM_SIZE_DIRECTIVE(L(DP_ABS_MASK))
+	.type L(DP_HI_MASK),@object
+	ASM_SIZE_DIRECTIVE(L(DP_HI_MASK))
 
 	.p2align 4
 L(SP_ABS_MASK): /* Mask for getting SP absolute value */

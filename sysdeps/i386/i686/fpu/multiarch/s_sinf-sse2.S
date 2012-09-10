@@ -50,25 +50,29 @@
  *  9) if x is NaN, return x-x.
  *
  * Special cases:
- *  sin(+-0)==+-0 not raising inexact/underflow,
- *  sin(subnormal) raises inexact/underflow
- *  sin(min_normalized) raises inexact/underflow
- *  sin(normalized) raises inexact
- *  sin(Inf) = NaN, raises invalid, sets errno to EDOM
- *  sin(NaN) = NaN
+ *  sin(+-0) = +-0 not raising inexact/underflow,
+ *  sin(subnormal) raises inexact/underflow,
+ *  sin(min_normalized) raises inexact/underflow,
+ *  sin(normalized) raises inexact,
+ *  sin(Inf) = NaN, raises invalid, sets errno to EDOM,
+ *  sin(NaN) = NaN.
  */
 
 #ifdef	PIC
 # define MO1(symbol)			L(symbol)##@GOTOFF(%ebx)
 # define MO2(symbol,reg2,_scale)	L(symbol)##@GOTOFF(%ebx,reg2,_scale)
-# define SAVE_BX			pushl	%ebx
-# define RESTORE_BX			popl	%ebx
+# define CFI_PUSH(REG)	cfi_adjust_cfa_offset(4); cfi_rel_offset(REG,0)
+# define CFI_POP(REG)	cfi_adjust_cfa_offset(-4); cfi_restore(REG)
+# define PUSH(REG)			pushl REG; CFI_PUSH(REG)
+# define POP(REG)			popl REG; CFI_POP(REG)
+# define ENTRANCE			PUSH(%ebx); LOAD_PIC_REG(bx)
+# define RETURN				POP(%ebx); ret; CFI_PUSH(%ebx)
 # define ARG_X				8(%esp)
 #else
 # define MO1(symbol)			L(symbol)
 # define MO2(symbol,reg2,_scale)	L(symbol)(,reg2,_scale)
-# define SAVE_BX
-# define RESTORE_BX
+# define ENTRANCE
+# define RETURN				ret
 # define ARG_X				4(%esp)
 #endif
 
@@ -76,11 +80,7 @@
 ENTRY(__sinf_sse2)
 	/* Input: single precision x on stack at address ARG_X */
 
-#ifdef	PIC
-	SAVE_BX
-	LOAD_PIC_REG(bx)
-#endif
-
+	ENTRANCE
 	movl	ARG_X, %eax		/* Bits of x */
 	cvtss2sd ARG_X, %xmm0		/* DP x */
 	andl	$0x7fffffff, %eax	/* |x| */
@@ -145,8 +145,7 @@ L(reconstruction):
 	fldl	0(%esp)			/* ...to FPU.  */
 	/* Return back 4 bytes of stack frame */
 	lea	8(%esp), %esp
-	RESTORE_BX
-	ret
+	RETURN
 
 	.p2align	4
 L(sin_poly):
@@ -186,9 +185,7 @@ L(sin_poly):
 	fldl	0(%esp)			/* ...to FPU.  */
 	/* Return back 4 bytes of stack frame */
 	lea	8(%esp), %esp
-	RESTORE_BX
-	ret
-
+	RETURN
 
 	.p2align	4
 L(large_args):
@@ -281,10 +278,6 @@ L(very_large_skip2):
 
 	jmp	L(reconstruction)	/* end of very_large_args peth */
 
-
-
-
-
 	.p2align	4
 L(arg_less_pio4):
 	/* Here if |x|<Pi/4 */
@@ -320,8 +313,7 @@ L(epilogue):
 	flds	0(%esp)			/* ...to FPU.  */
 	/* Return back 4 bytes of stack frame */
 	lea	4(%esp), %esp
-	RESTORE_BX
-	ret
+	RETURN
 
 	.p2align	4
 L(arg_less_2pn5):
@@ -375,7 +367,6 @@ L(skip_errno_setting):
 	subss	%xmm3, %xmm3		/* Result is NaN */
 	jmp	L(epilogue)
 END(__sinf_sse2)
-
 
 	.section .rodata, "a"
 	.p2align 3
@@ -569,7 +560,7 @@ L(DP_ABS_MASK): /* Mask for getting DP absolute value */
 	.p2align 3
 L(DP_HI_MASK): /* Mask for getting high 21 bits of DP value */
 	.long	0x00000000,0xffffffff
-	.type L(DP_ABS_MASK), @object
-	ASM_SIZE_DIRECTIVE(L(DP_ABS_MASK))
+	.type L(DP_HI_MASK), @object
+	ASM_SIZE_DIRECTIVE(L(DP_HI_MASK))
 
 weak_alias (__sinf, sinf)
