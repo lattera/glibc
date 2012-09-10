@@ -1,5 +1,10 @@
 2012-09-10  Joseph Myers  <joseph@codesourcery.com>
 
+	* libioP.h [_G_USING_THUNKS]: Make code unconditional.
+	[!_G_USING_THUNKS]: Remove conditional code.
+	* sysdeps/gnu/_G_config.h (_G_USING_THUNKS): Remove.
+	* sysdeps/mach/hurd/_G_config.h (_G_USING_THUNKS): Likewise.
+
 	* libio/libioP.h [__GNUC__] (VTABLE_LABEL): Remove.
 	[!builtinbuf_vtable && __cplusplus] (builtinbuf_vtable): Likewise.
 	* sysdeps/generic/_G_config.h (_G_NAMES_HAVE_UNDERSCORE): Remove.

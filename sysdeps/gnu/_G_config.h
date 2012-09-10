@@ -83,7 +83,4 @@ typedef unsigned int _G_uint32_t __attribute__ ((__mode__ (__SI__)));
 
 #define _G_BUFSIZ 8192
 
-/* These are the vtbl details for ELF.  */
-#define _G_USING_THUNKS	1
-
 #endif	/* _G_config.h */
