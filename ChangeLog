@@ -1,5 +1,11 @@
 2012-09-10  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* libio/Makefile: Include ../Makeconfig before tests.
+	(tests): Add tst-fopenloc and depend on $(objpfx)tst-fopenloc.check
+	only if $(build-shared) is yes.
+
+2012-09-10  H.J. Lu  <hongjiu.lu@intel.com>
+
 	* iconv/gconv_db.c: Update copyright years.
 
 2012-09-10  Liubov Dmitrieva  <liubov.dmitrieva@gmail.com>
