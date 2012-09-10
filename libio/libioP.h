@@ -862,30 +862,6 @@ extern int _IO_vscanf (const char *, _IO_va_list) __THROW;
 # endif
 #endif
 
-/* VTABLE_LABEL defines NAME as of the CLASS class.
-   CNLENGTH is strlen(#CLASS).  */
-#ifdef __GNUC__
-# if _G_VTABLE_LABEL_HAS_LENGTH
-#  define VTABLE_LABEL(NAME, CLASS, CNLENGTH) \
-  extern char NAME[] asm (_G_VTABLE_LABEL_PREFIX #CNLENGTH #CLASS);
-# else
-#  define VTABLE_LABEL(NAME, CLASS, CNLENGTH) \
-  extern char NAME[] asm (_G_VTABLE_LABEL_PREFIX #CLASS);
-# endif
-#endif /* __GNUC__ */
-
-#if !defined(builtinbuf_vtable) && defined(__cplusplus)
-# ifdef __GNUC__
-VTABLE_LABEL(builtinbuf_vtable, builtinbuf, 10)
-# else
-#  if _G_VTABLE_LABEL_HAS_LENGTH
-#   define builtinbuf_vtable _G_VTABLE_LABEL_PREFIX_ID##10builtinbuf
-#  else
-#   define builtinbuf_vtable _G_VTABLE_LABEL_PREFIX_ID##builtinbuf
-#  endif
-# endif
-#endif /* !defined(builtinbuf_vtable) && defined(__cplusplus) */
-
 #define _IO_va_start(args, last) va_start(args, last)
 
 extern struct _IO_fake_stdiobuf _IO_stdin_buf, _IO_stdout_buf, _IO_stderr_buf;

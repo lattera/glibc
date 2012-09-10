@@ -1,3 +1,19 @@
+2012-09-10  Joseph Myers  <joseph@codesourcery.com>
+
+	* libio/libioP.h [__GNUC__] (VTABLE_LABEL): Remove.
+	[!builtinbuf_vtable && __cplusplus] (builtinbuf_vtable): Likewise.
+	* sysdeps/generic/_G_config.h (_G_NAMES_HAVE_UNDERSCORE): Remove.
+	(_G_VTABLE_LABEL_PREFIX): Likewise.
+	(_G_VTABLE_LABEL_HAS_LENGTH): Likewise.
+	* sysdeps/gnu/_G_config.h (_G_NAMES_HAVE_UNDERSCORE): Remove.
+	(_G_VTABLE_LABEL_HAS_LENGTH): Likewise.
+	(_G_VTABLE_LABEL_PREFIX): Likewise.
+	(_G_VTABLE_LABEL_PREFIX_ID): Likewise.
+	* sysdeps/mach/hurd/_G_config.h (_G_NAMES_HAVE_UNDERSCORE): Remove.
+	(_G_VTABLE_LABEL_HAS_LENGTH): Likewise.
+	(_G_VTABLE_LABEL_PREFIX): Likewise.
+	(_G_VTABLE_LABEL_PREFIX_ID): Likewise.
+
 2012-09-10  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* libio/Makefile: Include ../Makeconfig before tests.
