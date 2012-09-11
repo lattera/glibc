@@ -1,3 +1,7 @@
+2012-09-11  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* csu/libc-tls.c: Update copyright years.
+
 2012-09-10  Joseph Myers  <joseph@codesourcery.com>
 
 	* libioP.h [_G_USING_THUNKS]: Make code unconditional.
