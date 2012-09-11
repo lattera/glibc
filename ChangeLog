@@ -1,3 +1,30 @@
+2012-09-11  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/generic/_G_config.h (_G_int16_t): Remove.
+	(_G_int32_t): Likewise.
+	(_G_uint16_t): Likewise.
+	(_G_uint32_t): Likewise.
+	(_G_HAVE_BOOL): Likewise.
+	(_G_HAVE_ATEXIT): Likewise.
+	(_G_HAVE_LONG_DOUBLE_IO): Likewise.
+	(_G_HAVE_IO_FILE_OPEN): Likewise.
+	* sysdeps/gnu/_G_config.h (_G_int16_t): Remove.
+	(_G_int32_t): Likewise.
+	(_G_uint16_t): Likewise.
+	(_G_uint32_t): Likewise.
+	(_G_HAVE_BOOL): Likewise.
+	(_G_HAVE_ATEXIT): Likewise.
+	(_G_HAVE_LONG_DOUBLE_IO): Likewise.
+	(_G_HAVE_IO_FILE_OPEN): Likewise.
+	* sysdeps/mach/hurd/_G_config.h (_G_int16_t): Remove.
+	(_G_int32_t): Likewise.
+	(_G_uint16_t): Likewise.
+	(_G_uint32_t): Likewise.
+	(_G_HAVE_BOOL): Likewise.
+	(_G_HAVE_ATEXIT): Likewise.
+	(_G_HAVE_LONG_DOUBLE_IO): Likewise.
+	(_G_HAVE_IO_FILE_OPEN): Likewise.
+
 2012-09-11  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* csu/libc-tls.c: Update copyright years.

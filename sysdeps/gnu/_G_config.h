@@ -50,16 +50,8 @@ typedef union
 } _G_iconv_t;
 #endif
 
-typedef int _G_int16_t __attribute__ ((__mode__ (__HI__)));
-typedef int _G_int32_t __attribute__ ((__mode__ (__SI__)));
-typedef unsigned int _G_uint16_t __attribute__ ((__mode__ (__HI__)));
-typedef unsigned int _G_uint32_t __attribute__ ((__mode__ (__SI__)));
-
-#define _G_HAVE_BOOL 1
-
 
 /* These library features are always available in the GNU C library.  */
-#define _G_HAVE_ATEXIT 1
 #define _G_HAVE_SYS_WAIT 1
 #define _G_NEED_STDARG_H 1
 #define _G_va_list __gnuc_va_list
@@ -67,8 +59,6 @@ typedef unsigned int _G_uint32_t __attribute__ ((__mode__ (__SI__)));
 #define _G_HAVE_PRINTF_FP 1
 #define _G_HAVE_MMAP 1
 #define _G_HAVE_MREMAP 1
-#define _G_HAVE_LONG_DOUBLE_IO 1
-#define _G_HAVE_IO_FILE_OPEN 1
 #define _G_HAVE_IO_GETLINE_INFO 1
 
 #define _G_IO_IO_FILE_VERSION 0x20001
