@@ -1,3 +1,7 @@
+2012-09-12  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/arm/get-rounding-mode.h: New file.
+
 2012-08-27  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/arm/kernel-features.h

@@ -150,3 +150,4 @@ else
 link-libm = $(common-objpfx)math/libm.a
 endif
 $(objpfx)bug-getcontext: $(link-libm)
+$(objpfx)tst-strtod-round: $(link-libm)

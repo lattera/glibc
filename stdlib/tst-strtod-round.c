@@ -17,6 +17,7 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include <fenv.h>
 #include <float.h>
 #include <math.h>
 #include <stdbool.h>
@@ -24,12 +25,16 @@
 #include <stdlib.h>
 #include <string.h>
 
-struct test {
-  const char *s;
+struct test_results {
   float f;
   double d;
-  bool ld_ok;
   long double ld;
+};
+
+struct test {
+  const char *s;
+  bool ld_ok;
+  struct test_results rd, rn, rz, ru;
 };
 
 #if LDBL_MANT_DIG == 53 && LDBL_MAX_EXP == 1024
@@ -38,7 +43,14 @@ struct test {
 	      ld64md, ld64mn, ld64mz, ld64mu,				      \
 	      ld106exact, ld106d, ld106n, ld106z, ld106u,		      \
 	      ld113d, ld113n, ld113z, ld113u)				      \
-  { s, fn, dn, true, ld53n }
+  {									\
+    s,									\
+    true,								\
+    { fd, dd, ld53d },							\
+    { fn, dn, ld53n },							\
+    { fz, dz, ld53z },							\
+    { fu, du, ld53u }							\
+  }
 #elif LDBL_MANT_DIG == 64 && LDBL_MAX_EXP == 16384 && LDBL_MIN_EXP == -16381
 /* This is for the Intel extended float format.  */
 # define TEST(s, fd, fn, fz, fu, dd, dn, dz, du, ld53d, ld53n, ld53z, ld53u,  \
@@ -46,7 +58,14 @@ struct test {
 	      ld64md, ld64mn, ld64mz, ld64mu,				      \
 	      ld106exact, ld106d, ld106n, ld106z, ld106u,		      \
 	      ld113d, ld113n, ld113z, ld113u)				      \
-  { s, fn, dn, true, ld64in }
+  {									\
+    s,									\
+    true,								\
+    { fd, dd, ld64id },							\
+    { fn, dn, ld64in },							\
+    { fz, dz, ld64iz },							\
+    { fu, du, ld64iu }							\
+  }
 #elif LDBL_MANT_DIG == 64 && LDBL_MAX_EXP == 16384 && LDBL_MIN_EXP == -16382
 /* This is for the Motorola extended float format.  */
 # define TEST(s, fd, fn, fz, fu, dd, dn, dz, du, ld53d, ld53n, ld53z, ld53u,  \
@@ -54,21 +73,42 @@ struct test {
 	      ld64md, ld64mn, ld64mz, ld64mu,				      \
 	      ld106exact, ld106d, ld106n, ld106z, ld106u,		      \
 	      ld113d, ld113n, ld113z, ld113u)				      \
-  { s, fn, dn, true, ld64mn }
+  {									\
+    s,									\
+    true,								\
+    { fd, dd, ld64md },							\
+    { fn, dn, ld64mn },							\
+    { fz, dz, ld64mz },							\
+    { fu, du, ld64mu }							\
+  }
 #elif LDBL_MANT_DIG == 106 && LDBL_MAX_EXP == 1024
 # define TEST(s, fd, fn, fz, fu, dd, dn, dz, du, ld53d, ld53n, ld53z, ld53u,  \
 	      ld64id, ld64in, ld64iz, ld64iu,				      \
 	      ld64md, ld64mn, ld64mz, ld64mu,				      \
 	      ld106exact, ld106d, ld106n, ld106z, ld106u,		      \
 	      ld113d, ld113n, ld113z, ld113u)				      \
-  { s, fn, dn, ld106exact, ld106n }
+  {									\
+    s,									\
+    ld106exact,								\
+    { fd, dd, ld106d },							\
+    { fn, dn, ld106n },							\
+    { fz, dz, ld106z },							\
+    { fu, du, ld106u }							\
+  }
 #elif LDBL_MANT_DIG == 113 && LDBL_MAX_EXP == 16384
 # define TEST(s, fd, fn, fz, fu, dd, dn, dz, du, ld53d, ld53n, ld53z, ld53u,  \
 	      ld64id, ld64in, ld64iz, ld64iu,				      \
 	      ld64md, ld64mn, ld64mz, ld64mu,				      \
 	      ld106exact, ld106d, ld106n, ld106z, ld106u,		      \
 	      ld113d, ld113n, ld113z, ld113u)				      \
-  { s, fn, dn, true, ld113n }
+  {									\
+    s,									\
+    true,								\
+    { fd, dd, ld113d },							\
+    { fn, dn, ld113n },							\
+    { fz, dz, ld113z },							\
+    { fu, du, ld113u }							\
+  }
 #else
 # error "unknown long double format"
 #endif
@@ -6819,38 +6859,73 @@ static const struct test tests[] = {
 };
 
 static int
+test_in_one_mode (const char *s, const struct test_results *expected,
+		  bool ld_ok, const char *mode_name)
+{
+  int result = 0;
+  float f = strtof (s, NULL);
+  double d = strtod (s, NULL);
+  long double ld = strtold (s, NULL);
+  if (f != expected->f
+      || copysignf (1.0f, f) != copysignf (1.0f, expected->f))
+    {
+      printf ("strtof (%s) returned %a not %a (%s)\n", s, f,
+	      expected->f, mode_name);
+      result = 1;
+    }
+  if (d != expected->d
+      || copysign (1.0, d) != copysign (1.0, expected->d))
+    {
+      printf ("strtod (%s) returned %a not %a (%s)\n", s, d,
+	      expected->d, mode_name);
+      result = 1;
+    }
+  if (ld != expected->ld
+      || copysignl (1.0L, ld) != copysignl (1.0L, expected->ld))
+    {
+      printf ("strtold (%s) returned %La not %La (%s)\n", s, ld,
+	      expected->ld, mode_name);
+      if (ld_ok)
+	result = 1;
+      else
+	printf ("ignoring this inexact long double result\n");
+    }
+  return result;
+}
+
+static int
 do_test (void)
 {
+  int save_round_mode = fegetround ();
   int result = 0;
   for (size_t i = 0; i < sizeof (tests) / sizeof (tests[0]); i++)
     {
-      float f = strtof (tests[i].s, NULL);
-      double d = strtod (tests[i].s, NULL);
-      long double ld = strtold (tests[i].s, NULL);
-      if (f != tests[i].f
-	  || copysignf (1.0f, f) != copysignf (1.0f, tests[i].f))
+      result |= test_in_one_mode (tests[i].s, &tests[i].rn, tests[i].ld_ok,
+				  "default rounding mode");
+#ifdef FE_DOWNWARD
+      if (!fesetround (FE_DOWNWARD))
 	{
-	  printf ("strtof (%s) returned %a not %a\n", tests[i].s, f,
-		  tests[i].f);
-	  result = 1;
+	  result |= test_in_one_mode (tests[i].s, &tests[i].rd, tests[i].ld_ok,
+				      "FE_DOWNWARD");
+	  fesetround (save_round_mode);
 	}
-      if (d != tests[i].d
-	  || copysign (1.0, d) != copysign (1.0, tests[i].d))
+#endif
+#ifdef FE_TOWARDZERO
+      if (!fesetround (FE_TOWARDZERO))
 	{
-	  printf ("strtod (%s) returned %a not %a\n", tests[i].s, d,
-		  tests[i].d);
-	  result = 1;
+	  result |= test_in_one_mode (tests[i].s, &tests[i].rz, tests[i].ld_ok,
+				      "FE_TOWARDZERO");
+	  fesetround (save_round_mode);
 	}
-      if (ld != tests[i].ld
-	  || copysignl (1.0L, ld) != copysignl (1.0L, tests[i].ld))
+#endif
+#ifdef FE_UPWARD
+      if (!fesetround (FE_UPWARD))
 	{
-	  printf ("strtold (%s) returned %La not %La\n", tests[i].s, ld,
-		  tests[i].ld);
-	  if (tests[i].ld_ok)
-	    result = 1;
-	  else
-	    printf ("ignoring this inexact long double result\n");
+	  result |= test_in_one_mode (tests[i].s, &tests[i].ru, tests[i].ld_ok,
+				      "FE_UPWARD");
+	  fesetround (save_round_mode);
 	}
+#endif
     }
   return result;
 }

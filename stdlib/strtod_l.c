@@ -61,6 +61,7 @@ extern unsigned long long int ____strtoull_l_internal (const char *, char **,
 #include <stdlib.h>
 #include <string.h>
 #include <stdint.h>
+#include <rounding-mode.h>
 
 /* The gmp headers need some configuration frobs.  */
 #define HAVE_ALLOCA 1
@@ -126,6 +127,8 @@ extern unsigned long long int ____strtoull_l_internal (const char *, char **,
 #define	MIN_EXP		PASTE(FLT,_MIN_EXP)
 #define MAX_10_EXP	PASTE(FLT,_MAX_10_EXP)
 #define MIN_10_EXP	PASTE(FLT,_MIN_10_EXP)
+#define MAX_VALUE	PASTE(FLT,_MAX)
+#define MIN_VALUE	PASTE(FLT,_MIN)
 
 /* Extra macros required to get FLT expanded before the pasting.  */
 #define PASTE(a,b)	PASTE1(a,b)
@@ -172,6 +175,34 @@ extern const mp_limb_t _tens_in_limb[MAX_DIG_PER_LIMB + 1];
 	memcpy (dst, src, (dst##size = src##size) * sizeof (mp_limb_t))
 
 
+/* Set errno and return an overflowing value with sign specified by
+   NEGATIVE.  */
+static FLOAT
+overflow_value (int negative)
+{
+  __set_errno (ERANGE);
+#if FLT_EVAL_METHOD != 0
+  volatile
+#endif
+  FLOAT result = (negative ? -MAX_VALUE : MAX_VALUE) * MAX_VALUE;
+  return result;
+}
+
+
+/* Set errno and return an underflowing value with sign specified by
+   NEGATIVE.  */
+static FLOAT
+underflow_value (int negative)
+{
+  __set_errno (ERANGE);
+#if FLT_EVAL_METHOD != 0
+  volatile
+#endif
+  FLOAT result = (negative ? -MIN_VALUE : MIN_VALUE) * MIN_VALUE;
+  return result;
+}
+
+
 /* Return a floating point number of the needed type according to the given
    multi-precision number after possible rounding.  */
 static FLOAT
@@ -181,10 +212,7 @@ round_and_return (mp_limb_t *retval, intmax_t exponent, int negative,
   if (exponent < MIN_EXP - 1)
     {
       if (exponent < MIN_EXP - 1 - MANT_DIG)
-	{
-	  __set_errno (ERANGE);
-	  return negative ? -0.0 : 0.0;
-	}
+	return underflow_value (negative);
 
       mp_size_t shift = MIN_EXP - 1 - exponent;
 
@@ -237,9 +265,14 @@ round_and_return (mp_limb_t *retval, intmax_t exponent, int negative,
   if (exponent > MAX_EXP)
     goto overflow;
 
-  if ((round_limb & (((mp_limb_t) 1) << round_bit)) != 0
-      && (more_bits || (retval[0] & 1) != 0
-	  || (round_limb & ((((mp_limb_t) 1) << round_bit) - 1)) != 0))
+  int mode = get_rounding_mode ();
+
+  if (round_away (negative,
+		  (retval[0] & 1) != 0,
+		  (round_limb & (((mp_limb_t) 1) << round_bit)) != 0,
+		  (more_bits
+		   || (round_limb & ((((mp_limb_t) 1) << round_bit) - 1)) != 0),
+		  mode))
     {
       mp_limb_t cy = __mpn_add_1 (retval, retval, RETURN_LIMB_SIZE, 1);
 
@@ -263,7 +296,7 @@ round_and_return (mp_limb_t *retval, intmax_t exponent, int negative,
 
   if (exponent > MAX_EXP)
   overflow:
-    return negative ? -FLOAT_HUGE_VAL : FLOAT_HUGE_VAL;
+    return overflow_value (negative);
 
   return MPN2FLOAT (retval, exponent, negative);
 }
@@ -914,9 +947,9 @@ ____STRTOF_INTERNAL (nptr, endptr, group, loc)
 		  else
 		    {
 		      /* Overflow or underflow.  */
-		      __set_errno (ERANGE);
-		      result = (exp_negative ? (negative ? -0.0 : 0.0) :
-				negative ? -FLOAT_HUGE_VAL : FLOAT_HUGE_VAL);
+		      result = (exp_negative
+				? underflow_value (negative)
+				: overflow_value (negative));
 		    }
 
 		  /* Accept all following digits as part of the exponent.  */
@@ -1112,16 +1145,10 @@ ____STRTOF_INTERNAL (nptr, endptr, group, loc)
   }
 
   if (__builtin_expect (exponent > MAX_10_EXP + 1 - (intmax_t) int_no, 0))
-    {
-      __set_errno (ERANGE);
-      return negative ? -FLOAT_HUGE_VAL : FLOAT_HUGE_VAL;
-    }
+    return overflow_value (negative);
 
   if (__builtin_expect (exponent < MIN_10_EXP - (DIG + 1), 0))
-    {
-      __set_errno (ERANGE);
-      return negative ? -0.0 : 0.0;
-    }
+    return underflow_value (negative);
 
   if (int_no > 0)
     {
@@ -1182,10 +1209,7 @@ ____STRTOF_INTERNAL (nptr, endptr, group, loc)
       /* Now we know the exponent of the number in base two.
 	 Check it against the maximum possible exponent.  */
       if (__builtin_expect (bits > MAX_EXP, 0))
-	{
-	  __set_errno (ERANGE);
-	  return negative ? -FLOAT_HUGE_VAL : FLOAT_HUGE_VAL;
-	}
+	return overflow_value (negative);
 
       /* We have already the first BITS bits of the result.  Together with
 	 the information whether more non-zero bits follow this is enough

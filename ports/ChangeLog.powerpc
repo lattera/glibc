@@ -1,3 +1,7 @@
+2012-09-12  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/powerpc/nofpu/get-rounding-mode.h: New file.
+
 2012-07-25  Florian Weimer  <fweimer@redhat.com>
 
 	* sysdeps/unix/sysv/linux/powerpc/powerpc32/nofpu/nptl/libc.abilist:

@@ -1,3 +1,30 @@
+2012-09-12  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #14518]
+	* include/rounding-mode.h: New file.
+	* sysdeps/generic/get-rounding-mode.h: Likewise.
+	* sysdeps/s390/fpu/get-rounding-mode.h: Likewise.
+	* stdlib/strtod_l.c: Include <rounding-mode.h>.
+	(MAX_VALUE): New macro.
+	(MIN_VALUE): Likewise.
+	(overflow_value): New function.
+	(underflow_value): Likewise.
+	(round_and_return): Use overflow_value and underflow_value to
+	determine return values in overflow and underflow cases.  Use
+	round_away to determine rounding depending on rounding mode.
+	(____STRTOF_INTERNAL): Use overflow_value and underflow_value to
+	determine return values in overflow and underflow cases.
+	* stdlib/tst-strtod-round.c: Include <fenv.h>.
+	(struct test_results): New structure.
+	(struct test): Use struct test_results to store expected results
+	for all rounding modes.
+	(TEST): Include expected results for all rounding modes.
+	(test_in_one_mode): New function.
+	(do_test): Use test_in_one_mode to compute and check results.
+	Check results for all rounding modes.
+	* stdlib/Makefile ($(objpfx)tst-strtod-round): Depend on
+	$(link-libm).
+
 2012-12-09  Allan McRae  <allan@archlinux.org>
 
         * sysdeps/i386/fpu/libm-test-ulps: Update
