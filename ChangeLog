@@ -1,3 +1,7 @@
+2012-12-09  Allan McRae  <allan@archlinux.org>
+
+        * sysdeps/i386/fpu/libm-test-ulps: Update
+
 2012-09-11  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/generic/_G_config.h (_G_int16_t): Remove.
