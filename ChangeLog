@@ -1,3 +1,12 @@
+2012-09-13  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #14576]
+	* bits/libc-lock.h (__rtld_lock_init_recursive): Removed.
+	* sysdeps/mach/bits/libc-lock.h (__rtld_lock_init_recursive):
+	Likewise.
+	* sysdeps/mach/hurd/bits/libc-lock.h (__rtld_lock_init_recursive):
+	Likewise.
+
 2012-09-13  Joseph Myers  <joseph@codesourcery.com>
 
 	* libio/libio.h [!_G_HAVE_PRINTF_FP] (_IO_USE_DTOA): Remove.

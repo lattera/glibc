@@ -137,7 +137,6 @@ void *__libc_getspecific (__libc_key_t key);
 #define __libc_lock_lock_recursive __libc_lock_lock
 
 #define __rtld_lock_define_initialized_recursive __libc_lock_define_initialized
-#define __rtld_lock_init_recursive __libc_lock_init
 #define __rtld_lock_fini_recursive __libc_lock_fini
 #define __rtld_lock_trylock_recursive __libc_lock_trylock
 #define __rtld_lock_unlock_recursive __libc_lock_unlock

@@ -1,3 +1,9 @@
+2012-09-13  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #14576]
+	* sysdeps/pthread/bits/libc-lockP.h (__rtld_lock_init_recursive):
+	Removed.
+
 2012-09-07  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* Makefile (LDFLAGS-tst-cancel24): Renamed to ...

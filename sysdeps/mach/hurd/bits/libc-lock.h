@@ -119,8 +119,6 @@ typedef struct __libc_lock_recursive_opaque__ __libc_lock_recursive_t;
   })
 
 
-#define __rtld_lock_init_recursive(NAME) \
-  __libc_lock_init_recursive (NAME)
 #define __rtld_lock_initialize(NAME) \
   (void) ((NAME) = (__rtld_lock_recursive_t) _RTLD_LOCK_RECURSIVE_INITIALIZER)
 #define __rtld_lock_trylock_recursive(NAME) \
