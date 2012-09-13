@@ -1,3 +1,7 @@
+2012-12-13  Richard Henderson  <rth@redhat.com>
+
+	* sysdeps/alpha/fpu/get-rounding-mode.h: New file.
+
 2012-08-30  Richard Henderson  <rth@redhat.com>
 
 	* sysdeps/alpha/fpu/s_isnan.c: Define all aliases in terms of
