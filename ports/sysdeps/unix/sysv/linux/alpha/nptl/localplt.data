@@ -1,12 +1,18 @@
 libc.so: _OtsAddX ?
+libc.so: _OtsConvertFloatTX ?
 libc.so: _OtsConvertFloatXT ?
+libc.so: _OtsCvtQUX ?
 libc.so: _OtsCvtQX ?
+libc.so: _OtsCvtXQ ?
 libc.so: _OtsDivX ?
 libc.so: _OtsEqlX ?
 libc.so: _OtsGeqX ?
+libc.so: _OtsGtrX ?
+libc.so: _OtsLeqX ?
 libc.so: _OtsLssX ?
 libc.so: _OtsMulX ?
 libc.so: _OtsNeqX ?
+libc.so: _OtsNintXQ ?
 libc.so: _OtsSubX ?
 libc.so: _Unwind_Find_FDE
 libc.so: calloc ?
