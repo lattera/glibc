@@ -1,3 +1,10 @@
+2012-09-13  Joseph Myers  <joseph@codesourcery.com>
+
+	* libio/libio.h [!_G_HAVE_PRINTF_FP] (_IO_USE_DTOA): Remove.
+	* sysdeps/generic/_G_config.h (_G_HAVE_PRINTF_FP): Likewise.
+	* sysdeps/gnu/_G_config.h (_G_HAVE_PRINTF_FP): Likewise.
+	* sysdeps/mach/hurd/_G_config.h (_G_HAVE_PRINTF_FP): Likewise.
+
 2012-09-12  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #14518]

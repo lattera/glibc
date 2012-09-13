@@ -56,7 +56,6 @@ typedef union
 #define _G_NEED_STDARG_H 1
 #define _G_va_list __gnuc_va_list
 
-#define _G_HAVE_PRINTF_FP 1
 #define _G_HAVE_MMAP 1
 #define _G_HAVE_IO_GETLINE_INFO 1
 
