@@ -57,7 +57,7 @@ tests := tstscanf test_rdwr test-popen tstgetln test-fseek \
 	 bug19 bug19a tst-popen2 scanf13 scanf14 scanf15 bug20 bug21 bug22 \
 	 scanf16 scanf17 tst-setvbuf1 tst-grouping bug23 bug24 \
 	 bug-vfprintf-nargs tst-long-dbl-fphex tst-fphex-wide tst-sprintf3 \
-	 bug25
+	 bug25 tst-printf-round
 
 test-srcs = tst-unbputc tst-printf
 
@@ -128,3 +128,10 @@ CPPFLAGS += $(libio-mtsafe)
 $(objpfx)tst-setvbuf1.out: tst-setvbuf1.expect $(objpfx)tst-setvbuf1
 	$(built-program-cmd) > $@ 2>&1
 	cmp tst-setvbuf1.expect $@
+
+ifeq ($(build-shared),yes)
+link-libm = $(common-objpfx)math/libm.so
+else
+link-libm = $(common-objpfx)math/libm.a
+endif
+$(objpfx)tst-printf-round: $(link-libm)

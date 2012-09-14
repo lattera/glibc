@@ -1,3 +1,15 @@
+2012-09-14  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #5044]
+	* stdio-common/printf_fp.c: Include <stdbool.h> and
+	<rounding-mode.h>.
+	(___printf_fp): Determine rounding using get_rounding_mode and
+	round_away.
+	* stdio-common/tst-printf-round.c: New file.
+	* stdio-common/Makefile (tests): Add tst-printf-round.
+	(link-libm): New variable.
+	($(objpfx)tst-printf-round): Depend in $(link-libm).
+
 2012-09-13  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #14576]

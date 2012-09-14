@@ -39,6 +39,8 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <wchar.h>
+#include <stdbool.h>
+#include <rounding-mode.h>
 
 #ifdef COMPILE_WPRINTF
 # define CHAR_T        wchar_t
@@ -196,9 +198,6 @@ ___printf_fp (FILE *fp,
 
   /* Temporary bignum value.  */
   MPN_VAR(tmp);
-
-  /* Digit which is result of last hack_digit() call.  */
-  wchar_t digit;
 
   /* The type of output format that will be used: 'e'/'E' or 'f'.  */
   int type;
@@ -955,33 +954,30 @@ ___printf_fp (FILE *fp,
       }
 
     /* Do rounding.  */
-    digit = hack_digit ();
-    if (digit > L'4')
+    wchar_t last_digit = wcp[-1] != decimalwc ? wcp[-1] : wcp[-2];
+    wchar_t next_digit = hack_digit ();
+    bool more_bits;
+    if (next_digit != L'0' && next_digit != L'5')
+      more_bits = true;
+    else if (fracsize == 1 && frac[0] == 0)
+      /* Rest of the number is zero.  */
+      more_bits = false;
+    else if (scalesize == 0)
+      {
+	/* Here we have to see whether all limbs are zero since no
+	   normalization happened.  */
+	size_t lcnt = fracsize;
+	while (lcnt >= 1 && frac[lcnt - 1] == 0)
+	  --lcnt;
+	more_bits = lcnt > 0;
+      }
+    else
+      more_bits = true;
+    int rounding_mode = get_rounding_mode ();
+    if (round_away (is_neg, (last_digit - L'0') & 1, next_digit >= L'5',
+		    more_bits, rounding_mode))
       {
 	wchar_t *wtp = wcp;
-
-	if (digit == L'5'
-	    && ((*(wcp - 1) != decimalwc && (*(wcp - 1) & 1) == 0)
-		|| ((*(wcp - 1) == decimalwc && (*(wcp - 2) & 1) == 0))))
-	  {
-	    /* This is the critical case.	 */
-	    if (fracsize == 1 && frac[0] == 0)
-	      /* Rest of the number is zero -> round to even.
-		 (IEEE 754-1985 4.1 says this is the default rounding.)  */
-	      goto do_expo;
-	    else if (scalesize == 0)
-	      {
-		/* Here we have to see whether all limbs are zero since no
-		   normalization happened.  */
-		size_t lcnt = fracsize;
-		while (lcnt >= 1 && frac[lcnt - 1] == 0)
-		  --lcnt;
-		if (lcnt == 0)
-		  /* Rest of the number is zero -> round to even.
-		     (IEEE 754-1985 4.1 says this is the default rounding.)  */
-		  goto do_expo;
-	      }
-	  }
 
 	if (fracdig_no > 0)
 	  {
@@ -1076,7 +1072,6 @@ ___printf_fp (FILE *fp,
 	  }
       }
 
-  do_expo:
     /* Now remove unnecessary '0' at the end of the string.  */
     while (fracdig_no > fracdig_min + added_zeros && *(wcp - 1) == L'0')
       {
