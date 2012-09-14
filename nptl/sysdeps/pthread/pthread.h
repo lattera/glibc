@@ -731,7 +731,7 @@ extern void __pthread_unwind_next (__pthread_unwind_buf_t *__buf)
 
 /* Function used in the macros.  */
 struct __jmp_buf_tag;
-extern int __sigsetjmp (struct __jmp_buf_tag *__env, int __savemask) __THROW;
+extern int __sigsetjmp (struct __jmp_buf_tag *__env, int __savemask) __THROWNL;
 
 
 /* Mutex handling.  */
