@@ -801,11 +801,7 @@ endif
 
 # The assembler can generate debug information too.
 ifndef ASFLAGS
-ifeq ($(have-cpp-asm-debuginfo),yes)
 ASFLAGS := $(filter -g% -fdebug-prefix-map=%,$(CFLAGS))
-else
-ASFLAGS :=
-endif
 endif
 ASFLAGS += $(ASFLAGS-config) $(asflags-cpu)
 
