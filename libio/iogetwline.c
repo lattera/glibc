@@ -32,8 +32,6 @@
 # define wmemcpy __wmemcpy
 #endif
 
-#if defined _LIBC || !_G_HAVE_IO_GETLINE_INFO
-
 _IO_size_t
 _IO_getwline (fp, buf, n, delim, extract_delim)
      _IO_FILE *fp;
@@ -122,5 +120,3 @@ _IO_getwline_info (fp, buf, n, delim, extract_delim, eof)
     }
   return ptr - buf;
 }
-
-#endif /* Defined _LIBC || !_G_HAVE_IO_GETLINE_INFO */

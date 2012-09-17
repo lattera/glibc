@@ -27,8 +27,6 @@
 #include "libioP.h"
 #include <string.h>
 
-#if defined _LIBC || !_G_HAVE_IO_GETLINE_INFO
-
 _IO_size_t
 _IO_getline (fp, buf, n, delim, extract_delim)
      _IO_FILE *fp;
@@ -117,5 +115,3 @@ _IO_getline_info (fp, buf, n, delim, extract_delim, eof)
   return ptr - buf;
 }
 libc_hidden_def (_IO_getline_info)
-
-#endif /* Defined _LIBC || !_G_HAVE_IO_GETLINE_INFO */

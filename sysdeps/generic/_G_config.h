@@ -57,7 +57,6 @@ typedef union
 #define _G_va_list __gnuc_va_list
 
 #define _G_HAVE_MMAP 1
-#define _G_HAVE_IO_GETLINE_INFO 1
 
 #define _G_IO_IO_FILE_VERSION 0x20001
 
