@@ -1,3 +1,7 @@
+2012-09-17  Chris Metcalf  <cmetcalf@tilera.com>
+
+	* sysdeps/tile/libm-test-ulps: Account for new tests.
+
 2012-09-06  Chris Metcalf  <cmetcalf@tilera.com>
 
 	* sysdeps/unix/sysv/linux/tile/sys/procfs.h: Fix type of prfpregset_t.
