@@ -132,6 +132,6 @@ do_test (void)
 #endif
 
 /* This needs on a fast machine 90s.  */
-#define TIMEOUT 180
+#define TIMEOUT 480
 #define TEST_FUNCTION do_test ()
 #include "../test-skeleton.c"
