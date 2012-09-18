@@ -1,3 +1,9 @@
+2012-09-18  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/wordsize-64/Makefile [$(subdir) = misc]
+	(tst-writev-ENV): Remove.
+	* sysdeps/wordsize-64/tst-writev.c (TIMEOUT): Define.
+
 2012-09-17  Chris Metcalf  <cmetcalf@tilera.com>
 
 	* crypt/md5test-giant.c (TIMEOUT): Increase to 8 minutes for tilegx.
