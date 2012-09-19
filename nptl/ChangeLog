@@ -1,3 +1,9 @@
+2012-09-19  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/i386/tls.h (THREAD_SETMEM): Cast to uint64_t for
+	64-bit store.
+	(THREAD_SETMEM_NC): Likewise.
+
 2012-09-14  Jeff Law  <law@redhat.com>
 
 	[BZ #14583]

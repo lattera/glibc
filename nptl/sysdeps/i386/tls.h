@@ -343,7 +343,7 @@ union user_desc_init
 									      \
 	 asm volatile ("movl %%eax,%%gs:%P1\n\t"			      \
 		       "movl %%edx,%%gs:%P2" :				      \
-		       : "A" (value),					      \
+		       : "A" ((uint64_t) (value)),			      \
 			 "i" (offsetof (struct pthread, member)),	      \
 			 "i" (offsetof (struct pthread, member) + 4));	      \
        }})
@@ -370,7 +370,7 @@ union user_desc_init
 									      \
 	 asm volatile ("movl %%eax,%%gs:%P1(,%2,8)\n\t"			      \
 		       "movl %%edx,%%gs:4+%P1(,%2,8)" :			      \
-		       : "A" (value),					      \
+		       : "A" ((uint64_t) (value)),			      \
 			 "i" (offsetof (struct pthread, member)),	      \
 			 "r" (idx));					      \
        }})
