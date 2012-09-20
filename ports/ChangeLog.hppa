@@ -1,3 +1,11 @@
+2012-09-20  Carlos O'Donell  <carlos@systemhalted.org>
+	    Andreas Schwab  <schwab@linux-m68k.org>
+
+	* sysdeps/unix/sysv/linux/hppa/Versions: Add new errlist-compat
+	entry value of 260 for GLIBC_2.17.
+	* sysdeps/unix/sysv/linux/hppa/bits/errno.h (EHWPOISON): Define if
+	not defined.
+
 2012-08-27  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/hppa/kernel-features.h

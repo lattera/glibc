@@ -28,6 +28,8 @@ libc {
     _sys_errlist; sys_errlist; _sys_nerr; sys_nerr;
   }
   GLIBC_2.17 {
+    #errlist-compat	260
+    _sys_errlist; sys_errlist; _sys_nerr; sys_nerr;
     prlimit64;
   }
 }
