@@ -1,4 +1,9 @@
 2012-09-20  Carlos O'Donell  <carlos@systemhalted.org>
+
+	* sysdeps/unix/sysv/linux/hppa/syscalls.list: Use __prlimit64 as
+	the strong name.
+
+2012-09-20  Carlos O'Donell  <carlos@systemhalted.org>
 	    Andreas Schwab  <schwab@linux-m68k.org>
 
 	* sysdeps/unix/sysv/linux/hppa/Versions: Add new errlist-compat
