@@ -1,3 +1,10 @@
+2012-09-20  Joseph Myers  <joseph@codesourcery.com>
+
+	* libio/libio.h [_G_NEED_STDARG_H]: Make code unconditional.
+	* sysdeps/generic/_G_config.h (_G_NEED_STDARG_H): Remove.
+	* sysdeps/gnu/_G_config.h (_G_NEED_STDARG_H): Remove.
+	* sysdeps/mach/hurd/_G_config.h (_G_NEED_STDARG_H): Remove.
+
 2012-09-19  Dmitry V. Levin  <ldv@altlinux.org>
 
 	[BZ #14579]

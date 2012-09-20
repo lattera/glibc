@@ -47,15 +47,13 @@
 #define _IO_va_list _G_va_list
 #define _IO_wint_t _G_wint_t
 
-#ifdef _G_NEED_STDARG_H
 /* This define avoids name pollution if we're using GNU stdarg.h */
-# define __need___va_list
-# include <stdarg.h>
-# ifdef __GNUC_VA_LIST
-#  undef _IO_va_list
-#  define _IO_va_list __gnuc_va_list
-# endif /* __GNUC_VA_LIST */
-#endif
+#define __need___va_list
+#include <stdarg.h>
+#ifdef __GNUC_VA_LIST
+# undef _IO_va_list
+# define _IO_va_list __gnuc_va_list
+#endif /* __GNUC_VA_LIST */
 
 #ifndef __P
 # include <sys/cdefs.h>

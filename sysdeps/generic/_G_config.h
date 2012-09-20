@@ -53,7 +53,6 @@ typedef union
 
 /* These library features are always available in the GNU C library.  */
 #define _G_HAVE_SYS_WAIT 1
-#define _G_NEED_STDARG_H 1
 #define _G_va_list __gnuc_va_list
 
 #define _G_HAVE_MMAP 1
