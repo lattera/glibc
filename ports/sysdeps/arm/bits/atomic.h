@@ -58,7 +58,7 @@ void __arm_link_error (void);
   __sync_val_compare_and_swap ((mem), (oldval), (newval))
 #else
 # define __arch_compare_and_exchange_val_32_acq(mem, newval, oldval) \
-  __arm_assisted_compare_and_exchange_val_32_acq ((mem), (oldval), (newval))
+  __arm_assisted_compare_and_exchange_val_32_acq ((mem), (newval), (oldval))
 #endif
 
 /* We don't support atomic operations on any non-word types.

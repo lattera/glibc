@@ -1,3 +1,9 @@
+2012-09-21  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/arm/bits/atomic.h [!__GCC_HAVE_SYNC_COMPARE_AND_SWAP_4]
+	(__arch_compare_and_exchange_val_32_acq): Correct order of
+	arguments of __arm_assisted_compare_and_exchange_val_32_acq.
+
 2012-09-12  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/arm/get-rounding-mode.h: New file.
