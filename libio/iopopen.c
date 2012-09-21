@@ -29,7 +29,6 @@
 # define _POSIX_SOURCE
 #endif
 #include "libioP.h"
-#if _IO_HAVE_SYS_WAIT
 #include <signal.h>
 #include <unistd.h>
 #include <stdlib.h>
@@ -50,8 +49,6 @@
 #endif
 extern _IO_pid_t _IO_fork (void) __THROW;
 #endif
-
-#endif /* _IO_HAVE_SYS_WAIT */
 
 #ifndef _IO_dup2
 #ifdef _LIBC
@@ -114,7 +111,6 @@ _IO_new_proc_open (fp, command, mode)
      const char *command;
      const char *mode;
 {
-#if _IO_HAVE_SYS_WAIT
   int read_or_write;
   int parent_end, child_end;
   int pipe_fds[2];
@@ -273,9 +269,6 @@ _IO_new_proc_open (fp, command, mode)
 
   _IO_mask_flags (fp, read_or_write, _IO_NO_READS|_IO_NO_WRITES);
   return fp;
-#else /* !_IO_HAVE_SYS_WAIT */
-  return NULL;
-#endif
 }
 
 _IO_FILE *
@@ -317,7 +310,6 @@ _IO_new_proc_close (fp)
      _IO_FILE *fp;
 {
   /* This is not name-space clean. FIXME! */
-#if _IO_HAVE_SYS_WAIT
   int wstatus;
   _IO_proc_file **ptr = &proc_file_chain;
   _IO_pid_t wait_pid;
@@ -356,9 +348,6 @@ _IO_new_proc_close (fp)
   if (wait_pid == -1)
     return -1;
   return wstatus;
-#else /* !_IO_HAVE_SYS_WAIT */
-  return -1;
-#endif
 }
 
 static const struct _IO_jump_t _IO_proc_jumps = {

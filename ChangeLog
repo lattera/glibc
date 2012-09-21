@@ -1,3 +1,14 @@
+2012-09-21  Joseph Myers  <joseph@codesourcery.com>
+
+	* libio/iopopen.c [_IO_HAVE_SYS_WAIT]: Make code unconditional.
+	[!_IO_HAVE_SYS_WAIT]: Remove conditional code.
+	* libio/libio.h (_IO_HAVE_SYS_WAIT): Remove.
+	* libio/oldiopopen.c [_IO_HAVE_SYS_WAIT]: Make code unconditional.
+	[!_IO_HAVE_SYS_WAIT]: Remove conditional code.
+	* sysdeps/generic/_G_config.h (_G_HAVE_SYS_WAIT): Remove.
+	* sysdeps/gnu/_G_config.h (_G_HAVE_SYS_WAIT): Likewise.
+	* sysdeps/mach/hurd/_G_config.h (_G_HAVE_SYS_WAIT): Likewise.
+
 2012-09-20  Joseph Myers  <joseph@codesourcery.com>
 
 	* libio/libio.h [_G_NEED_STDARG_H]: Make code unconditional.

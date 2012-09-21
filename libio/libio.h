@@ -41,7 +41,6 @@
 #define _IO_pid_t _G_pid_t
 #define _IO_uid_t _G_uid_t
 #define _IO_iconv_t _G_iconv_t
-#define _IO_HAVE_SYS_WAIT _G_HAVE_SYS_WAIT
 #define _IO_HAVE_ST_BLKSIZE _G_HAVE_ST_BLKSIZE
 #define _IO_BUFSIZ _G_BUFSIZ
 #define _IO_va_list _G_va_list
