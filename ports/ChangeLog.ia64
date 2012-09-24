@@ -1,3 +1,7 @@
+2012-09-24  Mike Frysinger  <vapier@gentoo.org>
+
+	* sysdeps/ia64/Makeconfig: New file.
+
 2012-08-16  Carlos O'Donell  <carlos_odonell@mentor.com>
 
 	* sysdeps/ia64/ldsodefs.h (ARCH_PLTENTER_MEMBERS)

@@ -1,0 +1,2 @@
+# ia64 does not provide crtbeginT.o, so use crtbegin.o.
++prectorT = $(+prector)
