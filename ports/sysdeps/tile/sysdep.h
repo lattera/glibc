@@ -66,7 +66,7 @@
 #define REGSIZE		4
 #endif
 
-/* Support a limited form of shared assembly between tile and tilegx.
+/* Support a limited form of shared assembly between tilepro and tilegx.
    The presumption is that LD/ST are used for manipulating registers.
    Since opcode parsing is case-insensitive, we don't need to provide
    definitions for these on tilegx.  */
@@ -86,7 +86,7 @@
 #endif
 
 /* Provide "pointer-oriented" instruction variants.  These differ not
-   just for tile vs tilegx, but also for tilegx -m64 vs -m32.  */
+   just for tilepro vs tilegx, but also for tilegx -m64 vs -m32.  */
 #if defined __tilegx__ && __WORDSIZE == 32
 #define ADD_PTR		addx
 #define ADDI_PTR	addxi
