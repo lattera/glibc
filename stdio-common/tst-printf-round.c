@@ -68,6 +68,99 @@ test_dec_in_one_mode (double d, const char *fmt, const char *expected,
     }
 }
 
+struct hex_test
+{
+  double d;
+  const char *fmt;
+  const char *rd[4], *rn[4], *rz[4], *ru[4];
+};
+
+static const struct hex_test hex_tests[] =
+  {
+    {
+      0x1.fffffp+4, "%.1a",
+      { "0x1.fp+4", "0x3.fp+3", "0x7.fp+2", "0xf.fp+1" },
+      { "0x2.0p+4", "0x4.0p+3", "0x8.0p+2", "0x1.0p+5" },
+      { "0x1.fp+4", "0x3.fp+3", "0x7.fp+2", "0xf.fp+1" },
+      { "0x2.0p+4", "0x4.0p+3", "0x8.0p+2", "0x1.0p+5" }
+    },
+    {
+      -0x1.fffffp+4, "%.1a",
+      { "-0x2.0p+4", "-0x4.0p+3", "-0x8.0p+2", "-0x1.0p+5" },
+      { "-0x2.0p+4", "-0x4.0p+3", "-0x8.0p+2", "-0x1.0p+5" },
+      { "-0x1.fp+4", "-0x3.fp+3", "-0x7.fp+2", "-0xf.fp+1" },
+      { "-0x1.fp+4", "-0x3.fp+3", "-0x7.fp+2", "-0xf.fp+1" }
+    },
+    {
+      0x1.88p+4, "%.1a",
+      { "0x1.8p+4", "0x3.1p+3", "0x6.2p+2", "0xc.4p+1" },
+      { "0x1.8p+4", "0x3.1p+3", "0x6.2p+2", "0xc.4p+1" },
+      { "0x1.8p+4", "0x3.1p+3", "0x6.2p+2", "0xc.4p+1" },
+      { "0x1.9p+4", "0x3.1p+3", "0x6.2p+2", "0xc.4p+1" }
+    },
+    {
+      -0x1.88p+4, "%.1a",
+      { "-0x1.9p+4", "-0x3.1p+3", "-0x6.2p+2", "-0xc.4p+1" },
+      { "-0x1.8p+4", "-0x3.1p+3", "-0x6.2p+2", "-0xc.4p+1" },
+      { "-0x1.8p+4", "-0x3.1p+3", "-0x6.2p+2", "-0xc.4p+1" },
+      { "-0x1.8p+4", "-0x3.1p+3", "-0x6.2p+2", "-0xc.4p+1" }
+    },
+    {
+      0x1.78p+4, "%.1a",
+      { "0x1.7p+4", "0x2.fp+3", "0x5.ep+2", "0xb.cp+1" },
+      { "0x1.8p+4", "0x2.fp+3", "0x5.ep+2", "0xb.cp+1" },
+      { "0x1.7p+4", "0x2.fp+3", "0x5.ep+2", "0xb.cp+1" },
+      { "0x1.8p+4", "0x2.fp+3", "0x5.ep+2", "0xb.cp+1" }
+    },
+    {
+      -0x1.78p+4, "%.1a",
+      { "-0x1.8p+4", "-0x2.fp+3", "-0x5.ep+2", "-0xb.cp+1" },
+      { "-0x1.8p+4", "-0x2.fp+3", "-0x5.ep+2", "-0xb.cp+1" },
+      { "-0x1.7p+4", "-0x2.fp+3", "-0x5.ep+2", "-0xb.cp+1" },
+      { "-0x1.7p+4", "-0x2.fp+3", "-0x5.ep+2", "-0xb.cp+1" }
+    },
+    {
+      64.0 / 3.0, "%.1a",
+      { "0x1.5p+4", "0x2.ap+3", "0x5.5p+2", "0xa.ap+1" },
+      { "0x1.5p+4", "0x2.bp+3", "0x5.5p+2", "0xa.bp+1" },
+      { "0x1.5p+4", "0x2.ap+3", "0x5.5p+2", "0xa.ap+1" },
+      { "0x1.6p+4", "0x2.bp+3", "0x5.6p+2", "0xa.bp+1" }
+    },
+    {
+      -64.0 / 3.0, "%.1a",
+      { "-0x1.6p+4", "-0x2.bp+3", "-0x5.6p+2", "-0xa.bp+1" },
+      { "-0x1.5p+4", "-0x2.bp+3", "-0x5.5p+2", "-0xa.bp+1" },
+      { "-0x1.5p+4", "-0x2.ap+3", "-0x5.5p+2", "-0xa.ap+1" },
+      { "-0x1.5p+4", "-0x2.ap+3", "-0x5.5p+2", "-0xa.ap+1" }
+    },
+  };
+
+static int
+test_hex_in_one_mode (double d, const char *fmt, const char *expected[4],
+		      const char *mode_name)
+{
+  char buf[100];
+  int ret = snprintf (buf, sizeof buf, fmt, d);
+  if (ret <= 0 || ret >= (int) sizeof buf)
+    {
+      printf ("snprintf for %a returned %d\n", d, ret);
+      return 1;
+    }
+  if (strcmp (buf, expected[0]) == 0
+      || strcmp (buf, expected[1]) == 0
+      || strcmp (buf, expected[2]) == 0
+      || strcmp (buf, expected[3]) == 0)
+    return 0;
+  else
+    {
+      printf ("snprintf (\"%s\", %a) returned \"%s\" not "
+	      "\"%s\" or \"%s\" or \"%s\" or \"%s\" (%s)\n",
+	      fmt, d, buf, expected[0], expected[1], expected[2], expected[3],
+	      mode_name);
+      return 1;
+    }
+}
+
 static int
 do_test (void)
 {
@@ -103,6 +196,37 @@ do_test (void)
 	}
 #endif
     }
+
+  for (size_t i = 0; i < sizeof (hex_tests) / sizeof (hex_tests[0]); i++)
+    {
+      result |= test_hex_in_one_mode (hex_tests[i].d, hex_tests[i].fmt,
+				      hex_tests[i].rn, "default rounding mode");
+#ifdef FE_DOWNWARD
+      if (!fesetround (FE_DOWNWARD))
+	{
+	  result |= test_hex_in_one_mode (hex_tests[i].d, hex_tests[i].fmt,
+					  hex_tests[i].rd, "FE_DOWNWARD");
+	  fesetround (save_round_mode);
+	}
+#endif
+#ifdef FE_TOWARDZERO
+      if (!fesetround (FE_TOWARDZERO))
+	{
+	  result |= test_hex_in_one_mode (hex_tests[i].d, hex_tests[i].fmt,
+					  hex_tests[i].rz, "FE_TOWARDZERO");
+	  fesetround (save_round_mode);
+	}
+#endif
+#ifdef FE_UPWARD
+      if (!fesetround (FE_UPWARD))
+	{
+	  result |= test_hex_in_one_mode (hex_tests[i].d, hex_tests[i].fmt,
+					  hex_tests[i].ru, "FE_UPWARD");
+	  fesetround (save_round_mode);
+	}
+#endif
+    }
+
   return result;
 }
 

@@ -28,6 +28,8 @@
 #include <_itoa.h>
 #include <_itowa.h>
 #include <locale/localeinfo.h>
+#include <stdbool.h>
+#include <rounding-mode.h>
 
 /* #define NDEBUG 1*/		/* Undefine this for debugging assertions.  */
 #include <assert.h>
@@ -343,21 +345,33 @@ __printf_fphex (FILE *fp,
 	  --numend;
 	}
 
+      bool do_round_away = false;
+
+      if (precision != -1 && precision < numend - numstr)
+	{
+	  char last_digit = precision > 0 ? numstr[precision - 1] : leading;
+	  char next_digit = numstr[precision];
+	  int last_digit_value = (last_digit >= 'A' && last_digit <= 'F'
+				  ? last_digit - 'A' + 10
+				  : (last_digit >= 'a' && last_digit <= 'f'
+				     ? last_digit - 'a' + 10
+				     : last_digit - '0'));
+	  int next_digit_value = (next_digit >= 'A' && next_digit <= 'F'
+				  ? next_digit - 'A' + 10
+				  : (next_digit >= 'a' && next_digit <= 'f'
+				     ? next_digit - 'a' + 10
+				     : next_digit - '0'));
+	  bool more_bits = ((next_digit_value & 7) != 0
+			    || precision + 1 < numend - numstr);
+	  int rounding_mode = get_rounding_mode ();
+	  do_round_away = round_away (negative, last_digit_value & 1,
+				      next_digit_value >= 8, more_bits,
+				      rounding_mode);
+	}
+
       if (precision == -1)
 	precision = numend - numstr;
-      else if (precision < numend - numstr
-	       && (numstr[precision] > '8'
-		   || (('A' < '0' || 'a' < '0')
-		       && numstr[precision] < '0')
-		   || (numstr[precision] == '8'
-		       && (precision + 1 < numend - numstr
-			   /* Round to even.  */
-			   || (precision > 0
-			       && ((numstr[precision - 1] & 1)
-				   ^ (isdigit (numstr[precision - 1]) == 0)))
-			   || (precision == 0
-			       && ((leading & 1)
-				   ^ (isdigit (leading) == 0)))))))
+      else if (do_round_away)
 	{
 	  /* Round up.  */
 	  int cnt = precision;

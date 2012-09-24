@@ -1,3 +1,16 @@
+2012-09-24  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #5044]
+	* stdio-common/printf_fphex.c: Include <stdbool.h> and
+	<rounding-mode.h>.
+	(__printf_fphex): Determine rounding using get_rounding_mode and
+	round_away.
+	* stdio-common/tst-printf-round.c (struct hex_test): New
+	structure.
+	(hex_tests): New variable.
+	(test_hex_in_one_mode): New function.
+	(do_test): Also run tests for hex float output.
+
 2012-09-21  Joseph Myers  <joseph@codesourcery.com>
 
 	* libio/iopopen.c [_IO_HAVE_SYS_WAIT]: Make code unconditional.
