@@ -1,3 +1,9 @@
+2012-09-24  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/x86_64/tls.h (THREAD_SETMEM): Add "()" when casting
+	to uint64_t for 64-bit store.
+	(THREAD_SETMEM_NC): Likewise.
+
 2012-09-19  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/i386/tls.h (THREAD_SETMEM): Cast to uint64_t for
