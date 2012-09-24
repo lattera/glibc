@@ -1,3 +1,11 @@
+2012-09-24  Dmitry V. Levin  <ldv@altlinux.org>
+
+	* io/ftwtest-sh: Add copyright header.
+	* posix/globtest.sh: Likewise.
+	* posix/tst-getconf.sh: Likewise.
+	* posix/wordexp-tst.sh: Likewise.
+	* sysdeps/x86_64/tst-xmmymm.sh: Likewise.
+
 2012-09-24  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #13679]

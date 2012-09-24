@@ -1,3 +1,7 @@
+2012-09-24  Dmitry V. Levin  <ldv@altlinux.org>
+
+	* sort-test.sh: Add copyright header.
+
 2012-09-05  Jeff Law  <law@redhat.com>
 
 	[BZ#14510]
