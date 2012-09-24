@@ -581,7 +581,7 @@ endif
 +postctorS = `$(CC) $(sysdep-LDFLAGS) --print-file-name=crtendS.o`
 # Variants of the two previous definitions for statically linking programs.
 +prectorT = `$(CC) $(sysdep-LDFLAGS) --print-file-name=crtbeginT.o`
-+postctorT = `$(CC) $(sysdep-LDFLAGS) --print-file-name=crtendS.o`
++postctorT = `$(CC) $(sysdep-LDFLAGS) --print-file-name=crtend.o`
 +interp = $(addprefix $(elf-objpfx),interp.os)
 csu-objpfx = $(common-objpfx)csu/
 elf-objpfx = $(common-objpfx)elf/
