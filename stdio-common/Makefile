@@ -1,4 +1,4 @@
-# Copyright (C) 1991-2009, 2011, 2012 Free Software Foundation, Inc.
+# Copyright (C) 1991-2012 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -68,12 +68,12 @@ ifeq ($(cross-compiling),no)
 tests: do-tst-unbputc do-tst-printf
 
 do-tst-unbputc: $(objpfx)tst-unbputc.out
-$(objpfx)tst-unbputc.out: $(objpfx)tst-unbputc tst-unbputc.sh
-	$(SHELL) -e tst-unbputc.sh $(common-objpfx) '$(run-program-prefix)'
+$(objpfx)tst-unbputc.out: tst-unbputc.sh $(objpfx)tst-unbputc
+	$(SHELL) $< $(common-objpfx) '$(run-program-prefix)'
 
 do-tst-printf: $(objpfx)tst-printf.out
-$(objpfx)tst-printf.out: $(objpfx)tst-printf tst-printf.sh
-	$(SHELL) -e tst-printf.sh $(common-objpfx) '$(run-program-prefix)'
+$(objpfx)tst-printf.out: tst-printf.sh $(objpfx)tst-printf
+	$(SHELL) $< $(common-objpfx) '$(run-program-prefix)'
 endif
 
 CFLAGS-vfprintf.c = -Wno-uninitialized

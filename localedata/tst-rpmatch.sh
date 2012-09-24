@@ -1,6 +1,6 @@
 #! /bin/sh -f
 #
-# Copyright (C) 1998, 1999, 2000 Free Software Foundation, Inc.
+# Copyright (C) 1998-2012 Free Software Foundation, Inc.
 # This file is part of the GNU C Library and contains tests for
 # the rpmatch(3)-implementation.
 # contributed by Jochen Hein <jochen.hein@delphi.central.de>
@@ -17,6 +17,8 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, see <http://www.gnu.org/licenses/>.
+
+set -e
 
 common_objpfx=$1
 tst_rpmatch=$2

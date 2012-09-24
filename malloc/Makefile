@@ -109,7 +109,7 @@ ifeq (yes,$(build-shared))
 ifneq ($(PERL),no)
 tests: $(objpfx)tst-mtrace.out
 $(objpfx)tst-mtrace.out: tst-mtrace.sh $(objpfx)tst-mtrace
-	$(SHELL) -e $< $(common-objpfx)
+	$(SHELL) $< $(common-objpfx)
 endif
 endif
 endif

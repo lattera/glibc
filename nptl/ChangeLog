@@ -1,5 +1,9 @@
 2012-09-24  Dmitry V. Levin  <ldv@altlinux.org>
 
+	* tst-tls6.sh: Add "set -e".
+	* Makefile: Do not specify -e option when running testsuite
+	shell scripts.
+
 	* tst-tls6.sh: Add copyright header.
 
 2012-09-24  H.J. Lu  <hongjiu.lu@intel.com>

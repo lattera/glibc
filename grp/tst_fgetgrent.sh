@@ -1,8 +1,7 @@
 #! /bin/sh
-# Copyright (C) 1999 Free Software Foundation, Inc.
+# Copyright (C) 1999-2012 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 # Contributed by Andreas Jaeger <aj@arthur.rhein-neckar.de>, 1999.
-#
 
 # The GNU C Library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -17,6 +16,8 @@
 # You should have received a copy of the GNU Lesser General Public
 # License along with the GNU C Library; if not, see
 # <http://www.gnu.org/licenses/>.
+
+set -e
 
 common_objpfx=$1; shift
 elf_objpfx=$1; shift

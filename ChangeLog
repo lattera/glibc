@@ -1,5 +1,38 @@
 2012-09-24  Dmitry V. Levin  <ldv@altlinux.org>
 
+	* catgets/test-gencat.sh: Add "set -e".
+	* elf/tst-pathopt.sh: Likewise.
+	* grp/tst_fgetgrent.sh: Likewise.
+	* iconvdata/run-iconv-test.sh: Likewise.
+	* intl/tst-gettext.sh: Likewise.
+	* intl/tst-gettext2.sh: Likewise.
+	* intl/tst-gettext4.sh: Likewise.
+	* intl/tst-gettext6.sh: Likewise.
+	* intl/tst-translit.sh: Likewise.
+	* io/ftwtest-sh: Likewise.
+	* libio/test-freopen.sh: Likewise.
+	* malloc/tst-mtrace.sh: Likewise.
+	* posix/globtest.sh: Likewise.
+	* posix/tst-getconf.sh: Likewise.
+	* posix/wordexp-tst.sh: Likewise.
+	* stdio-common/tst-printf.sh: Likewise.
+	* stdio-common/tst-unbputc.sh: Likewise.
+	* stdlib/tst-fmtmsg.sh: Likewise.
+	* sysdeps/x86_64/tst-xmmymm.sh: Likewise.
+	* catgets/Makefile: Do not specify -e option when running
+	testsuite shell scripts.
+	* elf/Makefile: Likewise.
+	* grp/Makefile: Likewise.
+	* iconvdata/Makefile: Likewise.
+	* intl/Makefile: Likewise.
+	* io/Makefile: Likewise.
+	* libio/Makefile: Likewise.
+	* malloc/Makefile: Likewise.
+	* posix/Makefile: Likewise.
+	* stdio-common/Makefile: Likewise.
+	* stdlib/Makefile: Likewise.
+	* sysdeps/x86_64/Makefile: Likewise.
+
 	* io/ftwtest-sh: Add copyright header.
 	* posix/globtest.sh: Likewise.
 	* posix/tst-getconf.sh: Likewise.

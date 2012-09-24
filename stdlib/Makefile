@@ -1,4 +1,4 @@
-# Copyright (C) 1991-2009, 2011, 2012 Free Software Foundation, Inc.
+# Copyright (C) 1991-2012 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -135,7 +135,7 @@ $(objpfx)isomac: isomac.c
 	$(native-compile)
 
 $(objpfx)tst-fmtmsg.out: tst-fmtmsg.sh $(objpfx)tst-fmtmsg
-	$(SHELL) -e $< $(common-objpfx) '$(run-program-prefix)' $(common-objpfx)stdlib/
+	$(SHELL) $< $(common-objpfx) '$(run-program-prefix)' $(common-objpfx)stdlib/
 
 $(objpfx)tst-putenv: $(objpfx)tst-putenvmod.so
 LDFLAGS-tst-putenv = $(no-as-needed)

@@ -1,5 +1,19 @@
 2012-09-24  Dmitry V. Levin  <ldv@altlinux.org>
 
+	* gen-locale.sh: Add "set -e".
+	* sort-test.sh: Likewise.
+	* tst-ctype.sh: Likewise.
+	* tst-fmon.sh: Likewise.
+	* tst-langinfo.sh: Likewise.
+	* tst-locale.sh: Likewise.
+	* tst-mbswcs.sh: Likewise.
+	* tst-numeric.sh: Likewise.
+	* tst-rpmatch.sh: Likewise.
+	* tst-trans.sh: Likewise.
+	* tst-wctype.sh: Likewise.
+	* Makefile: Do not specify -e option when running testsuite
+	shell scripts.
+
 	* sort-test.sh: Add copyright header.
 
 2012-09-05  Jeff Law  <law@redhat.com>
