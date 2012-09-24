@@ -1,4 +1,4 @@
-/* Return current rounding direction.
+/* Return current rounding direction within libc.  IA64 version.
    Copyright (C) 1999-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Christian Boissat <Christian.Boissat@cern.ch>, 1999.
@@ -17,10 +17,21 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <get-rounding-mode.h>
+#ifndef IA64_GET_ROUNDING_MODE_H
+#define IA64_GET_ROUNDING_MODE_H	1
 
-int
-fegetround (void)
+#include <fenv.h>
+
+/* Return the floating-point rounding mode.  */
+
+static inline int
+get_rounding_mode (void)
 {
-  return get_rounding_mode ();
+  fenv_t fpsr;
+
+  __asm__ __volatile__ ("mov.m %0=ar.fpsr" : "=r" (fpsr));
+
+  return (fpsr >> 10) & 3;
 }
+
+#endif /* get-rounding-mode.h */
