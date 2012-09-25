@@ -39,7 +39,15 @@ __cexpl (__complex__ long double x)
 	  const int t = (int) ((LDBL_MAX_EXP - 1) * M_LN2l);
 	  long double sinix, cosix;
 
-	  __sincosl (__imag__ x, &sinix, &cosix);
+	  if (__builtin_expect (icls != FP_SUBNORMAL, 1))
+	    {
+	      __sincosl (__imag__ x, &sinix, &cosix);
+	    }
+	  else
+	    {
+	      sinix = __imag__ x;
+	      cosix = 1.0;
+	    }
 
 	  if (__real__ x > t)
 	    {
@@ -95,7 +103,15 @@ __cexpl (__complex__ long double x)
 	    {
 	      long double sinix, cosix;
 
-	      __sincosl (__imag__ x, &sinix, &cosix);
+	      if (__builtin_expect (icls != FP_SUBNORMAL, 1))
+	        {
+		  __sincosl (__imag__ x, &sinix, &cosix);
+	        }
+	      else
+		{
+		  sinix = __imag__ x;
+		  cosix = 1.0;
+		}
 
 	      __real__ retval = __copysignl (value, cosix);
 	      __imag__ retval = __copysignl (value, sinix);

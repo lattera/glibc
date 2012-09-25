@@ -53,11 +53,20 @@ __ctanhl (__complex__ long double x)
       long double sinix, cosix;
       long double den;
       const int t = (int) ((LDBL_MAX_EXP - 1) * M_LN2l / 2);
+      int icls = fpclassify (__imag__ x);
 
       /* tanh(x+iy) = (sinh(2x) + i*sin(2y))/(cosh(2x) + cos(2y))
 	 = (sinh(x)*cosh(x) + i*sin(y)*cos(y))/(sinh(x)^2 + cos(y)^2).  */
 
-      __sincosl (__imag__ x, &sinix, &cosix);
+      if (__builtin_expect (icls != FP_SUBNORMAL, 1))
+	{
+	  __sincosl (__imag__ x, &sinix, &cosix);
+	}
+      else
+	{
+	  sinix = __imag__ x;
+	  cosix = 1.0;
+	}
 
       if (fabsl (__real__ x) > t)
 	{

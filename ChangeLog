@@ -1,3 +1,25 @@
+2012-09-25  Liubov Dmitrieva  <liubov.dmitrieva@gmail.com>
+
+	* math/s_ccoshf.c (__ccoshf): Fix wrong using of sincosf for
+	subnormal argument.
+	* math/s_cexpf.c (__cexpf): Likewise.
+	* math/s_csinf.c (__csinf): Likewise.
+	* math/s_csinhf.c (__csinhf): Likewise.
+	* math/s_ctanf.c (__ctanf): Likewise.
+	* math/s_ctanhf.c (__ctanhf): Likewise.
+	* math/s_ccosh.c (__ccoshf): Likewise.
+	* math/s_cexp.c (__cexpl): Likewise.
+	* math/s_csin.c (__csin): Likewise.
+	* math/s_csinh.c (__csinh): Likewise.
+	* math/s_ctan.c (__ctan): Likewise.
+	* math/s_ctanh.c (ctanh): Likewise.
+	* math/s_ccoshl.c (__ccoshl): Likewise.
+	* math/s_cexpl.c (__cexpl): Likewise.
+	* math/s_csinl.c (__csinl): Likewise.
+	* math/s_csinhl.c (__csinhl): Likewise.
+	* math/s_ctanl.c (__ctanl): Likewise.
+	* math/s_ctanhl.c (__ctanhl): Likewise.
+
 2012-09-25  Joseph Myers  <joseph@codesourcery.com>
 
 	* libio/libio.h (_IO_size_t): Define to size_t, not _G_size_t.

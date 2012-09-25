@@ -42,7 +42,15 @@ __csinl (__complex__ long double x)
 	  const int t = (int) ((LDBL_MAX_EXP - 1) * M_LN2l);
 	  long double sinix, cosix;
 
-	  __sincosl (__real__ x, &sinix, &cosix);
+	  if (__builtin_expect (rcls != FP_SUBNORMAL, 1))
+	    {
+	      __sincosl (__real__ x, &sinix, &cosix);
+	    }
+	  else
+	    {
+	      sinix = __real__ x;
+	      cosix = 1.0;
+	    }
 
 	  if (fabsl (__imag__ x) > t)
 	    {
@@ -115,7 +123,15 @@ __csinl (__complex__ long double x)
 	  /* Real part is finite.  */
 	  long double sinix, cosix;
 
-	  __sincosl (__real__ x, &sinix, &cosix);
+	  if (__builtin_expect (rcls != FP_SUBNORMAL, 1))
+	    {
+	      __sincosl (__real__ x, &sinix, &cosix);
+	    }
+	  else
+	    {
+	      sinix = __real__ x;
+	      cosix = 1.0;
+	    }
 
 	  __real__ retval = __copysignl (HUGE_VALL, sinix);
 	  __imag__ retval = __copysignl (HUGE_VALL, cosix);

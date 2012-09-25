@@ -42,7 +42,15 @@ __csinf (__complex__ float x)
 	  const int t = (int) ((FLT_MAX_EXP - 1) * M_LN2);
 	  float sinix, cosix;
 
-	  __sincosf (__real__ x, &sinix, &cosix);
+	  if (__builtin_expect (rcls != FP_SUBNORMAL, 1))
+	    {
+	      __sincosf (__real__ x, &sinix, &cosix);
+	    }
+	  else
+	    {
+	      sinix = __real__ x;
+	      cosix = 1.0f;
+	    }
 
 	  if (fabsf (__imag__ x) > t)
 	    {
@@ -115,7 +123,15 @@ __csinf (__complex__ float x)
 	  /* Real part is finite.  */
 	  float sinix, cosix;
 
-	  __sincosf (__real__ x, &sinix, &cosix);
+	  if (__builtin_expect (rcls != FP_SUBNORMAL, 1))
+	    {
+	      __sincosf (__real__ x, &sinix, &cosix);
+	    }
+	  else
+	    {
+	      sinix = __real__ x;
+	      cosix = 1.0f;
+	    }
 
 	  __real__ retval = __copysignf (HUGE_VALF, sinix);
 	  __imag__ retval = __copysignf (HUGE_VALF, cosix);

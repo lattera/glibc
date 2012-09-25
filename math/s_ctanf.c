@@ -57,7 +57,15 @@ __ctanf (__complex__ float x)
       /* tan(x+iy) = (sin(2x) + i*sinh(2y))/(cos(2x) + cosh(2y))
 	 = (sin(x)*cos(x) + i*sinh(y)*cosh(y)/(cos(x)^2 + sinh(y)^2). */
 
-      __sincosf (__real__ x, &sinrx, &cosrx);
+      if (__builtin_expect (fpclassify(__real__ x) != FP_SUBNORMAL, 1))
+	{
+	  __sincosf (__real__ x, &sinrx, &cosrx);
+	}
+      else
+	{
+	  sinrx = __real__ x;
+	  cosrx = 1.0f;
+	}
 
       if (fabsf (__imag__ x) > t)
 	{

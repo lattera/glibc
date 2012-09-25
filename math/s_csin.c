@@ -42,7 +42,15 @@ __csin (__complex__ double x)
 	  const int t = (int) ((DBL_MAX_EXP - 1) * M_LN2);
 	  double sinix, cosix;
 
-	  __sincos (__real__ x, &sinix, &cosix);
+	  if (__builtin_expect (rcls != FP_SUBNORMAL, 1))
+	    {
+	      __sincos (__real__ x, &sinix, &cosix);
+	    }
+	  else
+	    {
+	      sinix = __real__ x;
+	      cosix = 1.0;
+	    }
 
 	  if (fabs (__imag__ x) > t)
 	    {
@@ -115,7 +123,15 @@ __csin (__complex__ double x)
 	  /* Real part is finite.  */
 	  double sinix, cosix;
 
-	  __sincos (__real__ x, &sinix, &cosix);
+	  if (__builtin_expect (rcls != FP_SUBNORMAL, 1))
+	    {
+	      __sincos (__real__ x, &sinix, &cosix);
+	    }
+	  else
+	    {
+	      sinix = __real__ x;
+	      cosix = 1.0;
+	    }
 
 	  __real__ retval = __copysign (HUGE_VAL, sinix);
 	  __imag__ retval = __copysign (HUGE_VAL, cosix);

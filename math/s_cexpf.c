@@ -39,7 +39,15 @@ __cexpf (__complex__ float x)
 	  const int t = (int) ((FLT_MAX_EXP - 1) * M_LN2);
 	  float sinix, cosix;
 
-	  __sincosf (__imag__ x, &sinix, &cosix);
+	  if (__builtin_expect (icls != FP_SUBNORMAL, 1))
+	    {
+	      __sincosf (__imag__ x, &sinix, &cosix);
+	    }
+	  else
+	    {
+	      sinix = __imag__ x;
+	      cosix = 1.0f;
+	    }
 
 	  if (__real__ x > t)
 	    {
@@ -95,7 +103,15 @@ __cexpf (__complex__ float x)
 	    {
 	      float sinix, cosix;
 
-	      __sincosf (__imag__ x, &sinix, &cosix);
+	      if (__builtin_expect (icls != FP_SUBNORMAL, 1))
+		{
+		  __sincosf (__imag__ x, &sinix, &cosix);
+		}
+	      else
+		{
+		  sinix = __imag__ x;
+		  cosix = 1.0f;
+		}
 
 	      __real__ retval = __copysignf (value, cosix);
 	      __imag__ retval = __copysignf (value, sinix);

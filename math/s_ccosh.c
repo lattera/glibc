@@ -39,7 +39,15 @@ __ccosh (__complex__ double x)
 	  const int t = (int) ((DBL_MAX_EXP - 1) * M_LN2);
 	  double sinix, cosix;
 
-	  __sincos (__imag__ x, &sinix, &cosix);
+	  if (__builtin_expect (icls != FP_SUBNORMAL, 1))
+	    {
+	      __sincos (__imag__ x, &sinix, &cosix);
+	    }
+	  else
+	    {
+	      sinix = __imag__ x;
+	      cosix = 1.0;
+	    }
 
 	  if (fabs (__real__ x) > t)
 	    {
@@ -92,7 +100,15 @@ __ccosh (__complex__ double x)
 	  /* Imaginary part is finite.  */
 	  double sinix, cosix;
 
-	  __sincos (__imag__ x, &sinix, &cosix);
+	  if (__builtin_expect (icls != FP_SUBNORMAL, 1))
+	    {
+	      __sincos (__imag__ x, &sinix, &cosix);
+	    }
+	  else
+	    {
+	      sinix = __imag__ x;
+	      cosix = 1.0;
+	    }
 
 	  __real__ retval = __copysign (HUGE_VAL, cosix);
 	  __imag__ retval = (__copysign (HUGE_VAL, sinix)
