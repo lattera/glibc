@@ -1,3 +1,35 @@
+2012-09-25  Joseph Myers  <joseph@codesourcery.com>
+
+	* libio/libio.h (_IO_size_t): Define to size_t, not _G_size_t.
+	(_IO_ssize_t): Define to __ssize_t, not _G_ssize_t.
+	(_IO_off_t): Define to __off_t, not _G_off_t.
+	(_IO_pid_t): Define to __pid_t, not _G_pid_t.
+	(_IO_uid_t): Define to __uid_t, not _G_uid_t.
+	(_IO_wint_t): Define to wint_t, not _G_wint_t.
+	* libio/libioP.h (struct _IO_jump_t): Use size_t not _G_size_t as
+	type of __dummy and __dummy2 fields.
+	* sysdeps/generic/_G_config.h (_G_size_t): Remove.
+	(_G_ssize_t): Likewise.
+	(_G_off_t): Likewise.
+	(_G_pid_t): Likewise.
+	(_G_uid_t): Likewise.
+	(_G_wchar_t): Likewise.
+	(_G_wint_t): Likewise.
+	* sysdeps/gnu/_G_config.h (_G_size_t): Remove.
+	(_G_ssize_t): Likewise.
+	(_G_off_t): Likewise.
+	(_G_pid_t): Likewise.
+	(_G_uid_t): Likewise.
+	(_G_wchar_t): Likewise.
+	(_G_wint_t): Likewise.
+	* sysdeps/mach/hurd/_G_config.h (_G_size_t): Remove.
+	(_G_ssize_t): Likewise.
+	(_G_off_t): Likewise.
+	(_G_pid_t): Likewise.
+	(_G_uid_t): Likewise.
+	(_G_wchar_t): Likewise.
+	(_G_wint_t): Likewise.
+
 2012-09-25  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* malloc/arena.c: Include malloc-sysdep.h.

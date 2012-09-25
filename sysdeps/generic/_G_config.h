@@ -18,7 +18,6 @@
 # define __need_wint_t
 #endif
 #include <wchar.h>
-#define _G_size_t	size_t
 typedef struct
 {
   __off_t __pos;
@@ -29,13 +28,7 @@ typedef struct
   __off64_t __pos;
   __mbstate_t __state;
 } _G_fpos64_t;
-#define _G_ssize_t	__ssize_t
-#define _G_off_t	__off_t
 #define _G_off64_t	__off_t
-#define	_G_pid_t	__pid_t
-#define	_G_uid_t	__uid_t
-#define _G_wchar_t	wchar_t
-#define _G_wint_t	wint_t
 #define _G_stat64	stat
 #if defined _LIBC || defined _GLIBCPP_USE_WCHAR_T
 # include <gconv.h>

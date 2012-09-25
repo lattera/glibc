@@ -282,8 +282,8 @@ typedef void (*_IO_imbue_t) (_IO_FILE *, void *);
 
 struct _IO_jump_t
 {
-    JUMP_FIELD(_G_size_t, __dummy);
-    JUMP_FIELD(_G_size_t, __dummy2);
+    JUMP_FIELD(size_t, __dummy);
+    JUMP_FIELD(size_t, __dummy2);
     JUMP_FIELD(_IO_finish_t, __finish);
     JUMP_FIELD(_IO_overflow_t, __overflow);
     JUMP_FIELD(_IO_underflow_t, __underflow);

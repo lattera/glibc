@@ -34,17 +34,17 @@
 #define _IO_pos_t _G_fpos_t /* obsolete */
 #define _IO_fpos_t _G_fpos_t
 #define _IO_fpos64_t _G_fpos64_t
-#define _IO_size_t _G_size_t
-#define _IO_ssize_t _G_ssize_t
-#define _IO_off_t _G_off_t
+#define _IO_size_t size_t
+#define _IO_ssize_t __ssize_t
+#define _IO_off_t __off_t
 #define _IO_off64_t _G_off64_t
-#define _IO_pid_t _G_pid_t
-#define _IO_uid_t _G_uid_t
+#define _IO_pid_t __pid_t
+#define _IO_uid_t __uid_t
 #define _IO_iconv_t _G_iconv_t
 #define _IO_HAVE_ST_BLKSIZE _G_HAVE_ST_BLKSIZE
 #define _IO_BUFSIZ _G_BUFSIZ
 #define _IO_va_list _G_va_list
-#define _IO_wint_t _G_wint_t
+#define _IO_wint_t wint_t
 
 /* This define avoids name pollution if we're using GNU stdarg.h */
 #define __need___va_list
