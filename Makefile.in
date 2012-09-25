@@ -3,6 +3,8 @@ srcdir = @srcdir@
 # Uncomment the line below if you want to do parallel build.
 # PARALLELMFLAGS = -j 4
 
+.PHONY: all install
+
 all .DEFAULT:
 	$(MAKE) -r PARALLELMFLAGS="$(PARALLELMFLAGS)" -C $(srcdir) objdir=`pwd` $@
 

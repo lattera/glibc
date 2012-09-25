@@ -1,3 +1,8 @@
+2012-09-25  Roland McGrath  <roland@hack.frob.com>
+
+	* Makefile.in (all, install): Declare with .PHONY.
+	Reported by Michael Hope <michael.hope@linaro.org>.
+
 2012-09-25  Tulio Magno Quites Machado Filho  <tuliom@linux.vnet.ibm.com>
 
 	* manual/platform.texi (PowerPC): Document __ppc_get_timebase_freq.
