@@ -21,9 +21,14 @@
 
 #include <math_private.h>
 
+#ifndef SINCOSF
+# define SINCOSF_FUNC __sincosf
+#else
+# define SINCOSF_FUNC SINCOSF
+#endif
 
 void
-__sincosf (float x, float *sinx, float *cosx)
+SINCOSF_FUNC (float x, float *sinx, float *cosx)
 {
   int32_t ix;
 
@@ -70,4 +75,7 @@ __sincosf (float x, float *sinx, float *cosx)
 	}
     }
 }
+
+#ifndef SINCOSF
 weak_alias (__sincosf, sincosf)
+#endif

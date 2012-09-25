@@ -1,6 +1,18 @@
 2012-09-25  Liubov Dmitrieva  <liubov.dmitrieva@gmail.com>
 
-	* math/s_ccoshf.c (__ccoshf): Fix wrong using of sincosf for
+	* sysdeps/i386/i686/fpu/multiarch/Makefile (sysdep_routines):
+	Add s_sincosf-sse2.
+	* sysdeps/i386/i686/fpu/multiarch/s_sincosf.c: New file.
+	* sysdeps/i386/i686/fpu/multiarch/s_sincosf-sse2.S: New file.
+	* sysdeps/ieee754/flt-32/s_sincosf.c (SINCOSF, SINCOSF_FUNC): Add
+	macros for using routine as __sincosf_ia32.
+	Use macro for function declaration and weak_alias.
+	* sysdeps/i386/fpu/libm-test-ulps: Update.
+
+	* sysdeps/x86_64/fpu/s_sincosf.S: New file.
+	* sysdeps/x86_64/fpu/libm-test-ulps: Update.
+
+	* math/s_ccoshf.c (__ccoshf): Fix wrong usage of sincos for
 	subnormal argument.
 	* math/s_cexpf.c (__cexpf): Likewise.
 	* math/s_csinf.c (__csinf): Likewise.

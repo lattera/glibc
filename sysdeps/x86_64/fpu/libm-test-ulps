@@ -1579,6 +1579,9 @@ ildouble: 1
 ldouble: 1
 
 # ctan
+Test "Real part of: ctan (0x1p127 + 1 i) == 0.2446359391192790896381501310437708987204 + 0.9101334047676183761532873794426475906201 i":
+float: 1
+ifloat: 1
 Test "Real part of: ctan (-2 - 3 i) == 0.376402564150424829275122113032269084e-2 - 1.00323862735360980144635859782192726 i":
 double: 1
 float: 1
@@ -1612,6 +1615,8 @@ Test "Imaginary part of: ctan (0x1p1023 + 1 i) == -0.225462792499754505792678258
 ildouble: 1
 ldouble: 1
 Test "Imaginary part of: ctan (0x1p127 + 1 i) == 0.2446359391192790896381501310437708987204 + 0.9101334047676183761532873794426475906201 i":
+float: 2
+ifloat: 2
 double: 1
 idouble: 1
 Test "Real part of: ctan (0x3.243f6cp-1 + 0 i) == -2.287733242885645987394874673945769518150e7 + 0.0 i":
@@ -1757,6 +1762,8 @@ idouble: 1
 ildouble: 1
 ldouble: 1
 Test "Real part of: ctanh (1 + 0x1p127 i) == 0.9101334047676183761532873794426475906201 + 0.2446359391192790896381501310437708987204 i":
+float: 2
+ifloat: 2
 double: 1
 idouble: 1
 Test "Imaginary part of: ctanh (45 + 1 i) == 1.000000000000000000000000000000000000001 + 1.490158918874345552942703234806348520895e-39 i":
@@ -1765,6 +1772,9 @@ ldouble: 1
 Test "Imaginary part of: ctanh (47 + 1 i) == 1.0 + 2.729321264492904590777293425576722354636e-41 i":
 ildouble: 2
 ldouble: 2
+Test "Imaginary part of: ctanh (1 + 0x1p127 i) == 0.9101334047676183761532873794426475906201 + 0.2446359391192790896381501310437708987204 i":
+float: 1
+ifloat: 1
 
 # ctanh_downward
 Test "Real part of: ctanh_downward (0x1p-1074 + 0x1.921fb54442d18p+0 i) == 1.317719414943508315995636961402669067843e-291 + 1.633123935319536975596773704152891653086e16 i":
@@ -2399,8 +2409,8 @@ ifloat: 2
 ildouble: 1
 ldouble: 1
 Test "sin_upward (3) == 0.1411200080598672221007448028081102798469":
-float: 1
-ifloat: 1
+float: 2
+ifloat: 2
 ildouble: 1
 ldouble: 1
 Test "sin_upward (4) == -0.7568024953079282513726390945118290941359":
@@ -2430,12 +2440,6 @@ ifloat: 1
 Test "sincos (0.80190127184058835, &sin_res, &cos_res) puts 0.69534156199418473 in cos_res":
 double: 1
 idouble: 1
-Test "sincos (0x1p+120, &sin_res, &cos_res) puts -9.25879022854837867303861764107414946730833e-01 in cos_res":
-float: 1
-ifloat: 1
-Test "sincos (0x1p+127, &sin_res, &cos_res) puts 7.81914638714960072263910298466369236613162e-01 in cos_res":
-float: 1
-ifloat: 1
 Test "sincos (M_PI_6l*2.0, &sin_res, &cos_res) puts 0.5 in cos_res":
 double: 1
 float: 1
@@ -2705,6 +2709,8 @@ Test "y1 (0x1.001000001p+593) == 3.927269966354206207832593635798954916263e-90":
 ildouble: 2
 ldouble: 2
 Test "y1 (0x1.27e204p+99) == -8.881610148467797208469612080785210013461e-16":
+float: 1
+ifloat: 1
 double: 1
 idouble: 1
 ildouble: 1
@@ -3085,8 +3091,8 @@ ildouble: 1
 ldouble: 1
 
 Function: "cos_upward":
-float: 1
-ifloat: 1
+float: 2
+ifloat: 2
 ildouble: 1
 ldouble: 1
 
@@ -3174,17 +3180,17 @@ ldouble: 1
 
 Function: Real part of "ctan":
 double: 1
-float: 1
+float: 2
 idouble: 1
-ifloat: 1
+ifloat: 2
 ildouble: 2
 ldouble: 2
 
 Function: Imaginary part of "ctan":
 double: 1
-float: 1
+float: 2
 idouble: 1
-ifloat: 1
+ifloat: 2
 ildouble: 1
 ldouble: 1
 
@@ -3242,9 +3248,9 @@ ldouble: 4
 
 Function: Real part of "ctanh":
 double: 1
-float: 1
+float: 2
 idouble: 1
-ifloat: 1
+ifloat: 2
 ildouble: 1
 ldouble: 1
 
@@ -3445,8 +3451,8 @@ ildouble: 1
 ldouble: 1
 
 Function: "sin_upward":
-float: 1
-ifloat: 1
+float: 2
+ifloat: 2
 ildouble: 1
 ldouble: 1
 
