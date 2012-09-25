@@ -30,4 +30,7 @@ libc {
   GLIBC_2.11 {
     fallocate64;
   }
+  GLIBC_2.17 {
+    __ppc_get_timebase_freq;
+  }
 }

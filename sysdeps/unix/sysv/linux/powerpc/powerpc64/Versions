@@ -19,4 +19,7 @@ libc {
     setcontext; 
     swapcontext;
   }
+  GLIBC_2.17 {
+    __ppc_get_timebase_freq;
+  }
 }

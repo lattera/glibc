@@ -16,3 +16,9 @@ endif
 ifeq ($(subdir),elf)
 sysdep_routines += dl-vdso
 endif
+
+ifeq ($(subdir),misc)
+sysdep_headers += bits/ppc.h
+sysdep_routines += get_clockfreq get_timebase_freq
+tests += test-gettimebasefreq
+endif

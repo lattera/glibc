@@ -1,3 +1,23 @@
+2012-09-25  Tulio Magno Quites Machado Filho  <tuliom@linux.vnet.ibm.com>
+
+	* manual/platform.texi (PowerPC): Document __ppc_get_timebase_freq.
+	* sysdeps/powerpc/sys/platform/ppc.h: Include the operating
+	system header.
+	* sysdeps/unix/sysv/linux/powerpc/Makefile (sysdep_headers):
+	Likewise.
+	(sydep_routines): Add the new and the internal functions.
+	* sysdeps/unix/sysv/linux/powerpc/bits/ppc.h: New file.
+	* sysdeps/unix/sysv/linux/powerpc/get_timebase_freq.c: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/Versions
+	(GLIBC_2.17): Add the new function.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/fpu/nptl/libc.abilist
+	(GLIBC_2.17): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/Versions
+	(GLIBC_2.17): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/nptl/libc.abilist
+	(GLIBC_2.17): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/test-gettimebasefreq.c: New file.
+
 2012-09-25  Alan Modra  <amodra@gmail.com>
 
 	* sysdeps/unix/sysv/linux/powerpc/pthread_once.c (__pthread_once):

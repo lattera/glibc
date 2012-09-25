@@ -26,3 +26,11 @@ different from the processor frequency.  More information is available in
 without requiring assistance from the operating system, so it is very
 efficient.
 @end deftypefun
+
+@deftypefun {uint64_t} __ppc_get_timebase_freq (void)
+Read the current frequency at which the Time Base Register is updated.
+
+This frequency is not related to the processor clock or the bus clock.
+It is also possible that this frequency is not constant.  More information is
+available in @cite{Power ISA 2.06b - Book II - Section 5.2}.
+@end deftypefun
