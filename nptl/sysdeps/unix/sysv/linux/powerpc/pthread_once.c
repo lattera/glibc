@@ -28,6 +28,7 @@ clear_once_control (void *arg)
 {
   pthread_once_t *once_control = (pthread_once_t *) arg;
 
+  __asm __volatile (__lll_rel_instr);
   *once_control = 0;
   lll_futex_wake (once_control, INT_MAX, LLL_PRIVATE);
 }
@@ -47,15 +48,15 @@ __pthread_once (pthread_once_t *once_control, void (*init_routine) (void))
 	 oldval = *once_control;
 	 if ((oldval & 2) == 0)
 	   *once_control = newval;
-	 Do this atomically.
+	 Do this atomically with an acquire barrier.
       */
       newval = __fork_generation | 1;
-      __asm __volatile ("1:	lwarx	%0,0,%3\n"
+      __asm __volatile ("1:	lwarx	%0,0,%3" MUTEX_HINT_ACQ "\n"
 			"	andi.	%1,%0,2\n"
 			"	bne	2f\n"
 			"	stwcx.	%4,0,%3\n"
 			"	bne	1b\n"
-			"2:	isync"
+			"2:	" __lll_acq_instr
 			: "=&r" (oldval), "=&r" (tmp), "=m" (*once_control)
 			: "r" (once_control), "r" (newval), "m" (*once_control)
 			: "cr0");
@@ -87,8 +88,18 @@ __pthread_once (pthread_once_t *once_control, void (*init_routine) (void))
   pthread_cleanup_pop (0);
 
 
-  /* Add one to *once_control to take the bottom 2 bits from 01 to 10.  */
-  atomic_increment (once_control);
+  /* Add one to *once_control to take the bottom 2 bits from 01 to 10.
+     A release barrier is needed to ensure memory written by init_routine
+     is seen in other threads before *once_control changes.  */
+  int tmp;
+  __asm __volatile (__lll_rel_instr "\n"
+		    "1:	lwarx	%0,0,%2" MUTEX_HINT_REL "\n"
+		    "	addi	%0,%0,1\n"
+		    "	stwcx.	%0,0,%2\n"
+		    "	bne-	1b"
+		    : "=&b" (tmp), "=m" (*once_control)
+		    : "r" (once_control), "m" (*once_control)
+		    : "cr0");
 
   /* Wake up all other threads.  */
   lll_futex_wake (once_control, INT_MAX, LLL_PRIVATE);

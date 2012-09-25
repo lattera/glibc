@@ -1,3 +1,11 @@
+2012-09-25  Alan Modra  <amodra@gmail.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/pthread_once.c (__pthread_once):
+	Add release barrier before setting once_control to say
+	initialisation is done.  Add hints on lwarx.  Use macro in
+	place of isync.
+	(clear_once_control): Add release barrier.
+
 2012-09-25  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #13629]
