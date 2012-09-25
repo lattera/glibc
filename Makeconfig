@@ -411,22 +411,6 @@ LDFLAGS.so += $(hashstyle-LDFLAGS)
 LDFLAGS-rtld += $(hashstyle-LDFLAGS)
 endif
 
-# Commands for linking programs with the C library.
-ifndef +link
-+link-before-libc = $(CC) -nostdlib -nostartfiles -o $@ \
-	      $(sysdep-LDFLAGS) $(config-LDFLAGS) $(LDFLAGS) $(LDFLAGS-$(@F)) \
-	      $(combreloc-LDFLAGS) $(relro-LDFLAGS) $(hashstyle-LDFLAGS) \
-	      $(addprefix $(csu-objpfx),$(start-installed-name)) \
-	      $(+preinit) $(+prector) \
-	      $(filter-out $(addprefix $(csu-objpfx),start.o \
-						     $(start-installed-name))\
-			   $(+preinit) $(link-extra-libs) \
-			   $(common-objpfx)libc% $(+postinit),$^) \
-	      $(link-extra-libs)
-+link-after-libc = $(+postctor) $(+postinit)
-+link = $(+link-before-libc) $(link-libc) $(+link-after-libc)
-+link-tests = $(+link-before-libc) $(link-libc-tests) $(+link-after-libc)
-endif
 # Command for linking PIE programs with the C library.
 ifndef +link-pie
 +link-pie = $(CC) -pie -Wl,-O1 -nostdlib -nostartfiles -o $@ \
@@ -456,6 +440,27 @@ ifndef +link-static
 	       $(+link-static-after-libc)
 +link-static-tests = $(+link-static-before-libc) $(link-libc-static-tests) \
 		     $(+link-static-after-libc)
+endif
+# Commands for linking programs with the C library.
+ifndef +link
+ifeq (yes,$(build-shared))
++link-before-libc = $(CC) -nostdlib -nostartfiles -o $@ \
+	      $(sysdep-LDFLAGS) $(config-LDFLAGS) $(LDFLAGS) $(LDFLAGS-$(@F)) \
+	      $(combreloc-LDFLAGS) $(relro-LDFLAGS) $(hashstyle-LDFLAGS) \
+	      $(addprefix $(csu-objpfx),$(start-installed-name)) \
+	      $(+preinit) $(+prector) \
+	      $(filter-out $(addprefix $(csu-objpfx),start.o \
+						     $(start-installed-name))\
+			   $(+preinit) $(link-extra-libs) \
+			   $(common-objpfx)libc% $(+postinit),$^) \
+	      $(link-extra-libs)
++link-after-libc = $(+postctor) $(+postinit)
++link = $(+link-before-libc) $(link-libc) $(+link-after-libc)
++link-tests = $(+link-before-libc) $(link-libc-tests) $(+link-after-libc)
+else
++link = $(+link-static)
++link-tests = $(+link-static-tests)
+endif
 endif
 # Command for statically linking bounded-pointer programs with the C library.
 ifndef +link-bounded
@@ -568,7 +573,14 @@ gnulib-arch =
 gnulib = -lgcc $(gnulib-arch)
 gnulib-tests := -lgcc $(libgcc_eh)
 static-gnulib-arch =
+# By default, elf/static-stubs.o, instead of -lgcc_eh, is used to
+# statically link programs.  When --disable-shared is used, we use
+# -lgcc_eh since elf/static-stubs.o isn't sufficient.
+ifeq (yes,$(build-shared))
 static-gnulib = -lgcc $(static-gnulib-arch)
+else
+static-gnulib = -lgcc -lgcc_eh $(static-gnulib-arch)
+endif
 static-gnulib-tests := -lgcc -lgcc_eh $(libunwind)
 libc.so-gnulib := -lgcc
 endif

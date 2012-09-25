@@ -1,5 +1,12 @@
 2012-09-24  H.J. Lu  <hongjiu.lu@intel.com>
 
+	[BZ #13679]
+	* Makeconfig (+link): Defined as $(+link-static) if
+	$(build-shared) isn't yes.
+	(link-tests): Defined as $(+link-static-tests) if $(build-shared)
+	isn't yes.
+	(static-gnulib): Add -lgcc_eh if $(build-shared) isn't yes.
+
 	* Makeconfig (+postctorT): Replace crtendS.o with crtend.o.
 
 	[BZ #14562]
