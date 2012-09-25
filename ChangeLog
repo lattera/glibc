@@ -1,5 +1,27 @@
 2012-09-25  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #13629]
+	* math/s_clog.c (__clog): Handle more values close to |z| = 1
+	specially.
+	* math/s_clog10.c (__clog10): Likewise.
+	* math/s_clog10f.c (__clog10f): Likewise.
+	* math/s_clog10l.c (__clog10l): Likewise.
+	* math/s_clogf.c (__clogf): Likewise.
+	* math/s_clogl.c (__clogl): Likewise.
+	* math/Makefile (libm-calls): Add x2y2m1.
+	* sysdeps/generic/math_private.h (__x2y2m1f): Declare.
+	(__x2y2m1): Likewise.
+	(__x2y2m1l): Likewise.
+	* sysdeps/ieee754/dbl-64/x2y2m1.c: New file.
+	* sysdeps/ieee754/dbl-64/x2y2m1f.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/x2y2m1l.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/x2y2m1l.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/x2y2m1.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/x2y2m1l.c: Likewise.
+	* math/libm-test.inc (clog_test, clog10_test): Add more tests.
+	* sysdeps/i386/fpu/libm-test-ulps: Update.
+	* sysdeps/x86_64/fpu/libm-test-ulps: Likewise.
+
 	[BZ #14621]
 	* posix/glob.c (next_brace_sub): Use size_t instead of unsigned
 	int as type of variable DEPTH.

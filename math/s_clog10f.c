@@ -90,6 +90,19 @@ __clog10f (__complex__ float x)
 	    d2m1 += absy * absy;
 	  __real__ result = __log1pf (d2m1) * ((float) M_LOG10E / 2.0f);
 	}
+      else if (absx < 1.0f
+	       && absx >= 0.75f
+	       && absy < FLT_EPSILON / 2.0f
+	       && scale == 0)
+	{
+	  float d2m1 = (absx - 1.0f) * (absx + 1.0f);
+	  __real__ result = __log1pf (d2m1) * ((float) M_LOG10E / 2.0f);
+	}
+      else if (absx < 1.0f && (absx >= 0.75f || absy >= 0.5f) && scale == 0)
+	{
+	  float d2m1 = __x2y2m1f (absx, absy);
+	  __real__ result = __log1pf (d2m1) * ((float) M_LOG10E / 2.0f);
+	}
       else
 	{
 	  float d = __ieee754_hypotf (absx, absy);
