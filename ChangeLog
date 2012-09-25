@@ -1,5 +1,15 @@
 2012-09-25  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
+	* malloc/arena.c: Include malloc-sysdep.h.
+	(shrink_heap): Use check_may_shrink_heap to decide if madvise
+	is sufficient to shrink the heap or an unmap is needed.
+	* sysdeps/generic/malloc-sysdep.h: New file.  Define
+	new function check_may_shrink_heap.
+	* sysdeps/unix/sysv/linux/malloc-sysdep.h: New file.  Define
+	new function check_may_shrink_heap.
+
+2012-09-25  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
 	* libio/fileops.c (_IO_new_file_seekoff): Fix typos in
 	comments.
 

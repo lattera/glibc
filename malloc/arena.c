@@ -19,6 +19,9 @@
 
 #include <stdbool.h>
 
+/* Get the implementation for check_may_shrink_heap.  */
+#include <malloc-sysdep.h>
+
 /* Compile-time constants.  */
 
 #define HEAP_MIN_SIZE (32*1024)
@@ -621,9 +624,9 @@ shrink_heap(heap_info *h, long diff)
   new_size = (long)h->size - diff;
   if(new_size < (long)sizeof(*h))
     return -1;
-  /* Try to re-map the extra heap space freshly to save memory, and
-     make it inaccessible. */
-  if (__builtin_expect (__libc_enable_secure, 0))
+  /* Try to re-map the extra heap space freshly to save memory, and make it
+     inaccessible.  See malloc-sysdep.h to know when this is true.  */
+  if (__builtin_expect (check_may_shrink_heap (), 0))
     {
       if((char *)MMAP((char *)h + new_size, diff, PROT_NONE,
 		      MAP_FIXED) == (char *) MAP_FAILED)
