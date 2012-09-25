@@ -984,10 +984,10 @@ _IO_new_file_seekoff (fp, offset, dir, mode)
   /* Flush unwritten characters.
      (This may do an unneeded write if we seek within the buffer.
      But to be able to switch to reading, we would need to set
-     egptr to ptr.  That can't be done in the current design,
+     egptr to pptr.  That can't be done in the current design,
      which assumes file_ptr() is eGptr.  Anyway, since we probably
      end up flushing when we close(), it doesn't make much difference.)
-     FIXME: simulate mem-papped files. */
+     FIXME: simulate mem-mapped files. */
 
   if (fp->_IO_write_ptr > fp->_IO_write_base || _IO_in_put_mode (fp))
     if (_IO_switch_to_get_mode (fp))
