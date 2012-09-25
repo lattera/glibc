@@ -1,3 +1,11 @@
+2012-09-25  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #14621]
+	* posix/glob.c (next_brace_sub): Use size_t instead of unsigned
+	int as type of variable DEPTH.
+	(glob): Use size_t instead of int as type of variables NEWCOUNT
+	and OLD_PATHC.
+
 2012-09-25  Liubov Dmitrieva  <liubov.dmitrieva@gmail.com>
 
 	* sysdeps/i386/i686/fpu/multiarch/Makefile (sysdep_routines):
