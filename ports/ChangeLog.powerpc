@@ -1,3 +1,8 @@
+2012-09-26  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/nofpu/nptl/libc.abilist:
+	Add __ppc_get_timebase_freq.
+
 2012-09-12  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/powerpc/nofpu/get-rounding-mode.h: New file.
