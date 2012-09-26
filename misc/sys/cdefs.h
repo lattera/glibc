@@ -320,7 +320,7 @@
 
 /* GCC 4.3 and above with -std=c99 or -std=gnu99 implements ISO C99
    inline semantics, unless -fgnu89-inline is used.  */
-#if !defined __cplusplus || __GNUC_PREREQ (4,3)
+#if (!defined __cplusplus || __GNUC_PREREQ (4,3)) && defined __GNUC__
 # if defined __GNUC_STDC_INLINE__ || defined __cplusplus
 #  define __extern_inline extern __inline __attribute__ ((__gnu_inline__))
 #  define __extern_always_inline \
@@ -329,6 +329,13 @@
 #  define __extern_inline extern __inline
 #  define __extern_always_inline extern __always_inline
 # endif
+#elif defined __GNUC__ /* C++ and GCC <4.3.  */
+# define __extern_inline extern __inline
+# define __extern_always_inline \
+  extern __always_inline
+#else /* Not GCC.  */
+# define __extern_inline  /* Ignore */
+# define __extern_always_inline /* Ignore */
 #endif
 
 /* GCC 4.3 and above allow passing all anonymous arguments of an

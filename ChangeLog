@@ -1,3 +1,10 @@
+2012-09-26  Marek Polacek  <polacek@redhat.com>
+
+	[BZ #14530]
+	[BZ #13741]
+	* misc/sys/cdefs.h: Define __extern_inline and __extern_always_inline
+	for C++ and GCC <4.3 as well as for non GCC compilers.
+
 2012-09-26  Markus Trippelsdorf  <markus@trippelsdorf.de>
 
 	* sysdeps/x86_64/fpu/libm-test-ulps: Update.
