@@ -1,3 +1,7 @@
+2012-09-27  Steve Ellcey  <sellcey@mips.com>
+
+	* sysdeps/ieee754/ldbl-128/bits/huge_vall.h: Remove.
+
 2012-09-27  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/x86_64/multiarch/strncmp-ssse3.S: Empty if not in
