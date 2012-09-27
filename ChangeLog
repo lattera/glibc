@@ -1,3 +1,8 @@
+2012-09-28  Pino Toscano  <toscano.pino@tiscali.it>
+
+	* rt/tst-aio2.c: Include <pthread.h>.
+	* rt/tst-aio3.c: Likewise.
+
 2012-09-27  Steve Ellcey  <sellcey@mips.com>
 
 	* sysdeps/ieee754/ldbl-128/bits/huge_vall.h: Remove.
