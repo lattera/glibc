@@ -116,6 +116,7 @@ CFLAGS-scanf17.c = -I../libio -I../stdlib -I../wcsmbs -I../time -I../string \
 
 # We know the test has a format string problem.
 CFLAGS-tst-sprintf.c = -Wno-format
+tst-sprintf-ENV = LOCPATH=$(common-objpfx)localedata
 tst-sscanf-ENV = LOCPATH=$(common-objpfx)localedata
 tst-swprintf-ENV = LOCPATH=$(common-objpfx)localedata
 test-vfprintf-ENV = LOCPATH=$(common-objpfx)localedata

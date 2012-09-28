@@ -1168,42 +1168,9 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 	else if (!is_long && spec != L_('S'))				      \
 	  {								      \
 	    if (prec != -1)						      \
-	      {								      \
-		/* Search for the end of the string, but don't search past    \
-		   the length (in bytes) specified by the precision.  Also    \
-		   don't use incomplete characters.  */			      \
-		if (_NL_CURRENT_WORD (LC_CTYPE, _NL_CTYPE_MB_CUR_MAX) == 1)   \
-		  len = __strnlen (string, prec);			      \
-		else							      \
-		  {							      \
-		    /* In case we have a multibyte character set the	      \
-		       situation is more complicated.  We must not copy	      \
-		       bytes at the end which form an incomplete character. */\
-		    size_t ignore_size = (unsigned) prec > 1024 ? 1024 : prec;\
-		    wchar_t ignore[ignore_size];			      \
-		    const char *str2 = string;				      \
-		    const char *strend = string + prec;			      \
-		    if (strend < string)				      \
-		      strend = (const char *) UINTPTR_MAX;		      \
-									      \
-		    mbstate_t ps;					      \
-		    memset (&ps, '\0', sizeof (ps));			      \
-									      \
-		    while (str2 != NULL && str2 < strend)		      \
-		      if (__mbsnrtowcs (ignore, &str2, strend - str2,	      \
-					ignore_size, &ps) == (size_t) -1)     \
-			{						      \
-			  /* Conversion function has set errno.  */	      \
-			  done = -1;					      \
-			  goto all_done;				      \
-			}						      \
-									      \
-		    if (str2 == NULL)					      \
-		      len = strlen (string);				      \
-		    else						      \
-		      len = str2 - string - (ps.__count & 7);		      \
-		  }							      \
-	      }								      \
+	      /* Search for the end of the string, but don't search past      \
+		 the length (in bytes) specified by the precision.  */	      \
+	      len = __strnlen (string, prec);				      \
 	    else							      \
 	      len = strlen (string);					      \
 	  }								      \

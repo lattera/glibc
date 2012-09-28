@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <locale.h>
 #include <string.h>
 
 
@@ -55,6 +56,18 @@ main (void)
       || strcmp (buf, "%67108863\"7") != 0)
     {
       printf ("sprintf (buf, \"%%*\\\"%%d\", 0x3ffffff, 7) produced `%s' output", buf);
+      result = 1;
+    }
+
+  if (setlocale (LC_ALL, "de_DE.UTF-8") == NULL)
+    {
+      puts ("cannot set locale");
+      result = 1;
+    }
+  else if (sprintf (buf, "%.8s\n", "Foo: \277") != 7
+	   || strcmp (buf, "Foo: \277\n") != 0)
+    {
+      printf ("sprintf (buf, \"%%.8s\\n\", \"Foo: \\277\") produced '%s' output\n", buf);
       result = 1;
     }
 
