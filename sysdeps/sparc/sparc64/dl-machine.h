@@ -458,7 +458,14 @@ elf_machine_rela (struct link_map *map, const Elf64_Rela *reloc,
       break;
     case R_SPARC_JMP_IREL:
       value = ((Elf64_Addr (*) (int)) value) (GLRO(dl_hwcap));
-      /* Fall thru */
+      /* 'high' is always zero, for large PLT entries the linker
+	 emits an R_SPARC_IRELATIVE.  */
+#ifdef RESOLVE_CONFLICT_FIND_MAP
+      sparc64_fixup_plt (NULL, reloc, reloc_addr, value, 0, 0);
+#else
+      sparc64_fixup_plt (map, reloc, reloc_addr, value, 0, 0);
+#endif
+      break;
     case R_SPARC_JMP_SLOT:
 #ifdef RESOLVE_CONFLICT_FIND_MAP
       /* R_SPARC_JMP_SLOT conflicts against .plt[32768+]
