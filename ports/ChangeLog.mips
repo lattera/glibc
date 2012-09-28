@@ -1,6 +1,6 @@
 2012-09-28  H.J. Lu  <hongjiu.lu@intel.com>
 
-	* sysdeps/mips/dl-trampoline.c (VERSYMIDX): Likewise.
+	* sysdeps/mips/dl-trampoline.c (VERSYMIDX): Removed.
 
 2012-08-27  Joseph Myers  <joseph@codesourcery.com>
 
