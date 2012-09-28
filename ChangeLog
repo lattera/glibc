@@ -1,5 +1,7 @@
 2012-09-28  Roland McGrath  <roland@hack.frob.com>
 
+	* elf/dl-sysdep.c: Conditionalize whole contents on [SHARED].
+
 	* Makeconfig (nssobjdir, resolvobjdir): Remove variables.
 	(elfobjdir): Move out of conditionals.
 
