@@ -1,5 +1,12 @@
 2012-09-28  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
+	[BZ #5298]
+	* libio/fileops.c (_IO_new_file_seekoff): Don't flush buffer
+	for ftell.  Compute offsets from write pointers instead.
+	* libio/wfileops.c (_IO_wfile_seekoff): Likewise.
+
+2012-09-28  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
 	[BZ #14543]
 	* libio/Makefile (tests): New test case tst-fseek.
 	* libio/tst-fseek.c: New test case to verify that fseek/ftell
