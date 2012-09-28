@@ -35,7 +35,7 @@
 2012-09-27  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/x86_64/multiarch/strncmp-ssse3.S: Empty if not in
-	libc.a.
+	libc.so.
 
 2012-09-26  Marek Polacek  <polacek@redhat.com>
 
