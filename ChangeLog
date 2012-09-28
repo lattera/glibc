@@ -5,8 +5,6 @@
 
 2012-09-28  David S. Miller  <davem@davemloft.net>
 
-	* sysdeps/sparc/fpu/libm-test-ulps: Update.
-
 	* sysdeps/sparc/sparc64/multiarch/memcpy-niagara4.S: New file.
 	* sysdeps/sparc/sparc32/sparcv9/multiarch/memcpy-niagara4.S: New
 	file.
