@@ -20,12 +20,6 @@
 #ifndef _ARM_DL_TLSDESC_H
 # define _ARM_DL_TLSDESC_H 1
 
-/* Use this to access DT_TLSDESC_PLT and DT_TLSDESC_GOT.  */
-#ifndef ADDRIDX
-# define ADDRIDX(tag) (DT_NUM + DT_THISPROCNUM + DT_VERSIONTAGNUM \
-		       + DT_EXTRANUM + DT_VALNUM + DT_ADDRTAGIDX (tag))
-#endif
-
 /* Type used to represent a TLS descriptor in the GOT.  */
 struct tlsdesc
 {
