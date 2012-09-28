@@ -1,5 +1,8 @@
 2012-09-28  Roland McGrath  <roland@hack.frob.com>
 
+	* nss/Makefile ($(objpfx)/libnss_test1.so$(libnss_test1.so-version)):
+	Conditionalize target on [libnss_test1.so-version].
+
 	* elf/dl-sysdep.c: Conditionalize whole contents on [SHARED].
 
 	* Makeconfig (nssobjdir, resolvobjdir): Remove variables.

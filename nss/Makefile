@@ -111,6 +111,8 @@ CFLAGS-nss_test1.c = -DNOT_IN_libc=1
 $(objpfx)/libnss_test1.so: $(objpfx)nss_test1.os $(common-objpfx)libc.so \
 			   $(common-objpfx)libc_nonshared.a
 	$(build-module)
+ifdef libnss_test1.so-version
 $(objpfx)/libnss_test1.so$(libnss_test1.so-version): $(objpfx)/libnss_test1.so
 	$(make-link)
+endif
 $(objpfx)tst-nss-test1.out: $(objpfx)/libnss_test1.so$(libnss_test1.so-version)
