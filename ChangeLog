@@ -5,6 +5,8 @@
 	pass reloc->r_addend in as the 'high' argument to
 	sparc64_fixup_plt when handling R_SPARC_JMP_IREL relocations.
 
+	* sysdeps/sparc/fpu/libm-test-ulps: Update.
+
 2012-09-28  Pino Toscano  <toscano.pino@tiscali.it>
 
 	* rt/tst-aio2.c: Include <pthread.h>.
