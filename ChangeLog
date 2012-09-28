@@ -1,3 +1,14 @@
+2012-09-28  David S. Miller  <davem@davemloft.net>
+
+	* sysdeps/sparc/sparc64/multiarch/memcpy-niagara4.S: New file.
+	* sysdeps/sparc/sparc32/sparcv9/multiarch/memcpy-niagara4.S: New
+	file.
+	* sysdeps/sparc/sparc64/multiarch/Makefile: Add to
+	sysdep_routines.
+	* sysdeps/sparc/sparc32/sparcv9/multiarch/Makefile: Likewise.
+	* sysdeps/sparc/sparc64/multiarch/memcpy.S: Use Niagara-4 memcpy
+	when HWCAP_SPARC_CRYPTO is present.
+
 2012-09-28  Pino Toscano  <toscano.pino@tiscali.it>
 
 	* io/tst-mknodat.c: Create a FIFO instead of a socket.

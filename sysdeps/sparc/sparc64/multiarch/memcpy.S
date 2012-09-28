@@ -26,8 +26,19 @@ ENTRY(memcpy)
 # ifdef SHARED
 	SETUP_PIC_REG_LEAF(o3, o5)
 # endif
-	andcc	%o0, HWCAP_SPARC_N2, %g0
+	set	HWCAP_SPARC_CRYPTO, %o1
+	andcc	%o0, %o1, %g0
 	be	1f
+	 andcc	%o0, HWCAP_SPARC_N2, %g0
+# ifdef SHARED
+	sethi	%gdop_hix22(__memcpy_niagara4), %o1
+	xor	%o1, %gdop_lox10(__memcpy_niagara4), %o1
+# else
+	set	__memcpy_niagara4, %o1
+# endif
+	ba	10f
+	 nop
+1:	be	1f
 	 andcc	%o0, HWCAP_SPARC_BLKINIT, %g0
 # ifdef SHARED
 	sethi	%gdop_hix22(__memcpy_niagara2), %o1
@@ -77,8 +88,19 @@ ENTRY(__mempcpy)
 # ifdef SHARED
 	SETUP_PIC_REG_LEAF(o3, o5)
 # endif
-	andcc	%o0, HWCAP_SPARC_N2, %g0
+	set	HWCAP_SPARC_CRYPTO, %o1
+	andcc	%o0, %o1, %g0
 	be	1f
+	 andcc	%o0, HWCAP_SPARC_N2, %g0
+# ifdef SHARED
+	sethi	%gdop_hix22(__mempcpy_niagara4), %o1
+	xor	%o1, %gdop_lox10(__mempcpy_niagara4), %o1
+# else
+	set	__mempcpy_niagara4, %o1
+# endif
+	ba	10f
+	 nop
+1:	be	1f
 	 andcc	%o0, HWCAP_SPARC_BLKINIT, %g0
 # ifdef SHARED
 	sethi	%gdop_hix22(__mempcpy_niagara2), %o1
