@@ -46,8 +46,10 @@ static name_database *nss_parse_file (const char *fname) internal_function;
 static name_database_entry *nss_getline (char *line) internal_function;
 static service_user *nss_parse_service_list (const char *line)
      internal_function;
+#if !defined DO_STATIC_NSS || defined SHARED
 static service_library *nss_new_service (name_database *database,
 					 const char *name) internal_function;
+#endif
 
 
 /* Declare external database variables.  */
@@ -433,7 +435,9 @@ __nss_lookup_function (service_user *ni, const char *fct_name)
       known_function *known = malloc (sizeof *known);
       if (! known)
 	{
+#if !defined DO_STATIC_NSS || defined SHARED
 	remove_from_tree:
+#endif
 	  /* Oops.  We can't instantiate this node properly.
 	     Remove it from the tree.  */
 	  __tdelete (&fct_name, &ni->known, &known_compare);

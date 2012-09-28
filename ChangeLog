@@ -1,7 +1,9 @@
 2012-09-28  Roland McGrath  <roland@hack.frob.com>
 
-	* nss/nsswitch.c (nss_new_service): Conditionalize definition on
-	[!DO_STATIC_NSS || SHARED], matching its only caller.
+	* nss/nsswitch.c (nss_new_service): Conditionalize definition and
+	declaration on [!DO_STATIC_NSS || SHARED], matching its only caller.
+	(__nss_lookup_function): Conditionalize label remove_from_tree on
+	[!DO_STATIC_NSS || SHARED], matching its only use.
 
 2012-09-28  David S. Miller  <davem@davemloft.net>
 
