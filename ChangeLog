@@ -1,3 +1,12 @@
+2012-09-28  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	[BZ #14543]
+	* libio/Makefile (tests): New test case tst-fseek.
+	* libio/tst-fseek.c: New test case to verify that fseek/ftell
+	combination works in wide mode.
+	* libio/wfileops.c (_IO_wfile_seekoff): Adjust internal buffer
+	state when the external buffer state changes.
+
 2012-09-27  David S. Miller  <davem@davemloft.net>
 
 	[BZ #14376]

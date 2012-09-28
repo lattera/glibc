@@ -545,6 +545,57 @@ _IO_wfile_sync (fp)
 }
 libc_hidden_def (_IO_wfile_sync)
 
+/* Adjust the internal buffer pointers to reflect the state in the external
+   buffer.  The content between fp->_IO_read_base and fp->_IO_read_ptr is
+   assumed to be converted and available in the range
+   fp->_wide_data->_IO_read_base and fp->_wide_data->_IO_read_end.
+
+   Returns 0 on success and -1 on error with the _IO_ERR_SEEN flag set.  */
+static inline int
+adjust_wide_data (_IO_FILE *fp, bool do_convert)
+{
+  struct _IO_codecvt *cv = fp->_codecvt;
+
+  int clen = (*cv->__codecvt_do_encoding) (cv);
+
+  /* Take the easy way out for constant length encodings if we don't need to
+     convert.  */
+  if (!do_convert && clen > 0)
+    {
+      fp->_wide_data->_IO_read_end += ((fp->_IO_read_ptr - fp->_IO_read_base)
+				       / clen);
+      goto done;
+    }
+
+  enum __codecvt_result status;
+  const char *read_stop = (const char *) fp->_IO_read_base;
+  do
+    {
+
+      fp->_wide_data->_IO_last_state = fp->_wide_data->_IO_state;
+      status = (*cv->__codecvt_do_in) (cv, &fp->_wide_data->_IO_state,
+				       fp->_IO_read_base, fp->_IO_read_ptr,
+				       &read_stop,
+				       fp->_wide_data->_IO_read_base,
+				       fp->_wide_data->_IO_buf_end,
+				       &fp->_wide_data->_IO_read_end);
+
+      /* Should we return EILSEQ?  */
+      if (__builtin_expect (status == __codecvt_error, 0))
+	{
+	  fp->_flags |= _IO_ERR_SEEN;
+	  return -1;
+	}
+    }
+  while (__builtin_expect (status == __codecvt_partial, 0));
+
+done:
+  /* Now seek to _IO_read_end to behave as if we have read it all in.  */
+  fp->_wide_data->_IO_read_ptr = fp->_wide_data->_IO_read_end;
+
+  return 0;
+}
+
 _IO_off64_t
 _IO_wfile_seekoff (fp, offset, dir, mode)
      _IO_FILE *fp;
@@ -693,6 +744,10 @@ _IO_wfile_seekoff (fp, offset, dir, mode)
 		     fp->_wide_data->_IO_buf_base);
 	  _IO_wsetp (fp, fp->_wide_data->_IO_buf_base,
 		     fp->_wide_data->_IO_buf_base);
+
+	  if (adjust_wide_data (fp, false))
+	    goto dumb;
+
 	  _IO_mask_flags (fp, 0, _IO_EOF_SEEN);
 	  goto resync;
 	}
@@ -733,6 +788,10 @@ _IO_wfile_seekoff (fp, offset, dir, mode)
   _IO_wsetg (fp, fp->_wide_data->_IO_buf_base,
 	     fp->_wide_data->_IO_buf_base, fp->_wide_data->_IO_buf_base);
   _IO_wsetp (fp, fp->_wide_data->_IO_buf_base, fp->_wide_data->_IO_buf_base);
+
+  if (adjust_wide_data (fp, true))
+    goto dumb;
+
   fp->_offset = result + count;
   _IO_mask_flags (fp, 0, _IO_EOF_SEEN);
   return offset;
