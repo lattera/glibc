@@ -1,5 +1,8 @@
 2012-09-28  Roland McGrath  <roland@hack.frob.com>
 
+	* Makeconfig (nssobjdir, resolvobjdir): Remove variables.
+	(elfobjdir): Move out of conditionals.
+
 	* nss/nsswitch.c (nss_new_service): Conditionalize definition and
 	declaration on [!DO_STATIC_NSS || SHARED], matching its only caller.
 	(__nss_lookup_function): Conditionalize label remove_from_tree on

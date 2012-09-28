@@ -494,14 +494,13 @@ link-libc-tests = $(link-libc-before-gnulib) $(gnulib-tests)
 rpath-dirs = math elf dlfcn nss nis rt resolv crypt
 rpath-link = \
 $(common-objdir):$(subst $(empty) ,:,$(patsubst ../$(subdir),.,$(rpath-dirs:%=$(common-objpfx)%)))
-elfobjdir := $(patsubst ../$(subdir),.,$(common-objpfx)elf)
 else
-nssobjdir := $(patsubst ../$(subdir),.,$(common-objpfx)nss)
-resolvobjdir := $(patsubst ../$(subdir),.,$(common-objpfx)resolv)
 link-libc = $(common-objpfx)libc.a $(otherlibs) $(gnulib) $(common-objpfx)libc.a $(gnulib)
 link-libc-tests = $(common-objpfx)libc.a $(otherlibs) $(gnulib-tests) $(common-objpfx)libc.a $(gnulib-tests)
 endif
 endif
+
+elfobjdir := $(patsubst ../$(subdir),.,$(common-objpfx)elf)
 
 # Differences in the linkers on the various platforms.
 LDFLAGS-rpath-ORIGIN = -Wl,-rpath,'$$ORIGIN'
