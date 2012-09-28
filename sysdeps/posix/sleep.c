@@ -1,4 +1,5 @@
-/* Copyright (C) 1991, 1992, 1993, 1996, 1997 Free Software Foundation, Inc.
+/* Sleep for a given number of seconds.  POSIX.1 version.
+   Copyright (C) 1991-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -15,19 +16,11 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <signal.h>
 #include <time.h>
 #include <unistd.h>
 #include <errno.h>
+#include <sys/param.h>
 
-
-/* SIGALRM signal handler for `sleep'.  This does nothing but return,
-   but SIG_IGN isn't supposed to break `pause'.  */
-static void
-sleep_handler (int sig)
-{
-  return;
-}
 
 /* Make the process sleep for SECONDS seconds, or until a signal arrives
    and is not ignored.  The function returns the number of seconds less
@@ -39,67 +32,44 @@ sleep_handler (int sig)
 unsigned int
 __sleep (unsigned int seconds)
 {
-  unsigned int remaining, slept;
-  time_t before, after;
-  sigset_t set, oset;
-  struct sigaction act, oact;
-  int save = errno;
-
-  if (seconds == 0)
-    return 0;
-
-  /* Block SIGALRM signals while frobbing the handler.  */
-  if (sigemptyset (&set) < 0 ||
-      sigaddset (&set, SIGALRM) < 0 ||
-      sigprocmask (SIG_BLOCK, &set, &oset))
-    return seconds;
-
-  act.sa_handler = sleep_handler;
-  act.sa_flags = 0;
-  act.sa_mask = oset;	/* execute handler with original mask */
-  if (sigaction (SIGALRM, &act, &oact) < 0)
-    return seconds;
-
-  before = time ((time_t *) NULL);
-  remaining = alarm (seconds);
-
-  if (remaining > 0 && remaining < seconds)
+  /* This is not necessary but some buggy programs depend on it.  */
+  if (__builtin_expect (seconds == 0, 0))
     {
-      /* The user's alarm will expire before our own would.
-	 Restore the user's signal action state and let his alarm happen.  */
-      (void) sigaction (SIGALRM, &oact, (struct sigaction *) NULL);
-      alarm (remaining);	/* Restore sooner alarm.  */
-      sigsuspend (&oset);	/* Wait for it to go off.  */
-      after = time ((time_t *) NULL);
-    }
-  else
-    {
-      /* Atomically restore the old signal mask
-	 (which had better not block SIGALRM),
-	 and wait for a signal to arrive.  */
-      sigsuspend (&oset);
-
-      after = time ((time_t *) NULL);
-
-      /* Restore the old signal action state.  */
-      (void) sigaction (SIGALRM, &oact, (struct sigaction *) NULL);
+#ifdef CANCELLATION_P
+      CANCELLATION_P (THREAD_SELF);
+#endif
+      return 0;
     }
 
-  /* Notice how long we actually slept.  */
-  slept = after - before;
+  int save_errno = errno;
 
-  /* Restore the user's alarm if we have not already past it.
-     If we have, be sure to turn off the alarm in case a signal
-     other than SIGALRM was what woke us up.  */
-  (void) alarm (remaining > slept ? remaining - slept : 0);
+  const unsigned int max
+    = (unsigned int) (((unsigned long int) (~((time_t) 0))) >> 1);
+  struct timespec ts = { 0, 0 };
+  do
+    {
+      if (sizeof (ts.tv_sec) <= sizeof (seconds))
+        {
+          /* Since SECONDS is unsigned assigning the value to .tv_sec can
+             overflow it.  In this case we have to wait in steps.  */
+          ts.tv_sec += MIN (seconds, max);
+          seconds -= (unsigned int) ts.tv_sec;
+        }
+      else
+        {
+          ts.tv_sec = (time_t) seconds;
+          seconds = 0;
+        }
 
-  /* Restore the original signal mask.  */
-  (void) sigprocmask (SIG_SETMASK, &oset, (sigset_t *) NULL);
+      if (__nanosleep (&ts, &ts) < 0)
+        /* We were interrupted.
+           Return the number of (whole) seconds we have not yet slept.  */
+        return seconds + ts.tv_sec;
+    }
+  while (seconds > 0);
 
-  /* Restore the `errno' value we started with.
-     Some of the calls we made might have failed, but we didn't care.  */
-  __set_errno (save);
+  __set_errno (save_errno);
 
-  return slept > seconds ? 0 : seconds - slept;
+  return 0;
 }
 weak_alias (__sleep, sleep)

@@ -1,5 +1,8 @@
 2012-09-28  Roland McGrath  <roland@hack.frob.com>
 
+	* sysdeps/posix/sleep.c (__sleep): Rewritten using __nanosleep
+	instead of SIGALRM.
+
 	* sysdeps/gnu/_G_config.h: Moved to ...
 	* sysdeps/unix/sysv/linux/_G_config.h: ... here.
 	* sysdeps/mach/hurd/_G_config.h: Moved to ...
