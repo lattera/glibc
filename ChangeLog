@@ -1,3 +1,7 @@
+2012-09-28  Pino Toscano  <toscano.pino@tiscali.it>
+
+	* sysdeps/pthread/aio_fsync.c: Fix the file mode checking.
+
 2012-09-28  Dmitry V. Levin  <ldv@altlinux.org>
 
 	[BZ #11438]

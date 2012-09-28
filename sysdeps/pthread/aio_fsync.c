@@ -46,7 +46,7 @@ aio_fsync (int op, struct aiocb *aiocbp)
 
   flags = fcntl (aiocbp->aio_fildes, F_GETFL);
   if (__builtin_expect (flags == -1, 0)
-      || __builtin_expect ((flags & (O_RDWR | O_WRONLY)) == 0, 0))
+      || __builtin_expect ((flags & O_ACCMODE) == O_RDONLY, 0))
     {
       __set_errno (EBADF);
       return -1;
