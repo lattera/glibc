@@ -1,3 +1,12 @@
+2012-09-28  Dmitry V. Levin  <ldv@altlinux.org>
+
+	[BZ #11438]
+	* sysdeps/posix/getaddrinfo.c (default_scopes): Map RFC 1918 addresses
+	to global scope.
+	* posix/tst-rfc3484.c: Verify 10/8, 172.16/12 and 196.128/16
+	addresses are in the same scope as 192.0.2/24.
+	* posix/gai.conf: Document new scope table defaults.
+
 2012-09-28  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	[BZ #5298]

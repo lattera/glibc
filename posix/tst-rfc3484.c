@@ -71,6 +71,9 @@ service_user *__nss_hosts_database attribute_hidden;
 
 struct sockaddr_in addrs[] =
 {
+  { .sin_family = AF_INET, .sin_addr = { h (0x0aa85f19) } },
+  { .sin_family = AF_INET, .sin_addr = { h (0xac105f19) } },
+  { .sin_family = AF_INET, .sin_addr = { h (0xc0000219) } },
   { .sin_family = AF_INET, .sin_addr = { h (0xc0a86d1d) } },
   { .sin_family = AF_INET, .sin_addr = { h (0xc0a85d03) } },
   { .sin_family = AF_INET, .sin_addr = { h (0xc0a82c3d) } },
@@ -86,7 +89,7 @@ static size_t order[naddrs];
 
 static int expected[naddrs] =
   {
-    6, 1, 0, 3, 2, 4, 5
+    9, 4, 3, 6, 5, 7, 8, 2, 0, 1
   };
 
 

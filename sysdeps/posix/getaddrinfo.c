@@ -1369,10 +1369,6 @@ static const struct scopeentry
     /* Link-local addresses: scope 2.  */
     { { { 169, 254, 0, 0 } }, htonl_c (0xffff0000), 2 },
     { { { 127, 0, 0, 0 } }, htonl_c (0xff000000), 2 },
-    /* Site-local addresses: scope 5.  */
-    { { { 10, 0, 0, 0 } }, htonl_c (0xff000000), 5 },
-    { { { 172, 16, 0, 0 } }, htonl_c (0xfff00000), 5 },
-    { { { 192, 168, 0, 0 } }, htonl_c (0xffff0000), 5 },
     /* Default: scope 14.  */
     { { { 0, 0, 0, 0 } }, htonl_c (0x00000000), 14 }
   };
