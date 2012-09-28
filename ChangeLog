@@ -1,3 +1,7 @@
+2012-09-28  Pino Toscano  <toscano.pino@tiscali.it>
+
+	* io/tst-mknodat.c: Create a FIFO instead of a socket.
+
 2012-09-28  Andreas Schwab  <schwab@linux-m68k.org>
 
 	[BZ #6530]

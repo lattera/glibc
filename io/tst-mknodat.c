@@ -80,8 +80,8 @@ do_test (void)
       }
   closedir (dir);
 
-  /* Create a new directory.  */
-  int e = mknodat (dir_fd, "some-sock", 0777 | S_IFSOCK, 0);
+  /* Create a new fifo.  */
+  int e = mknodat (dir_fd, "some-fifo", 0777 | S_IFIFO, 0);
   if (e == -1)
     {
       if (errno == ENOSYS)
@@ -90,19 +90,19 @@ do_test (void)
 	  return 0;
 	}
 
-      puts ("socket creation failed");
+      puts ("fifo creation failed");
       return 1;
     }
 
   struct stat64 st1;
-  if (fstatat64 (dir_fd, "some-sock", &st1, 0) != 0)
+  if (fstatat64 (dir_fd, "some-fifo", &st1, 0) != 0)
     {
       puts ("fstat64 failed");
       return 1;
     }
-  if (!S_ISSOCK (st1.st_mode))
+  if (!S_ISFIFO (st1.st_mode))
     {
-      puts ("mknodat did not create a Unix domain socket");
+      puts ("mknodat did not create a fifo");
       return 1;
     }
 
@@ -124,15 +124,15 @@ do_test (void)
       puts ("2nd fdopendir failed");
       return 1;
     }
-  bool has_some_sock = false;
+  bool has_some_fifo = false;
   while ((d = readdir64 (dir)) != NULL)
-    if (strcmp (d->d_name, "some-sock") == 0)
+    if (strcmp (d->d_name, "some-fifo") == 0)
       {
-	has_some_sock = true;
+	has_some_fifo = true;
 #ifdef _DIRENT_HAVE_D_TYPE
-	if (d->d_type != DT_UNKNOWN && d->d_type != DT_SOCK)
+	if (d->d_type != DT_UNKNOWN && d->d_type != DT_FIFO)
 	  {
-	    puts ("d_type for some-sock wrong");
+	    puts ("d_type for some-fifo wrong");
 	    return 1;
 	  }
 #endif
@@ -144,13 +144,13 @@ do_test (void)
       }
   closedir (dir);
 
-  if (!has_some_sock)
+  if (!has_some_fifo)
     {
-      puts ("some-sock not in directory list");
+      puts ("some-fifo not in directory list");
       return 1;
     }
 
-  if (unlinkat (dir_fd, "some-sock", 0) != 0)
+  if (unlinkat (dir_fd, "some-fifo", 0) != 0)
     {
       puts ("unlinkat failed");
       return 1;
