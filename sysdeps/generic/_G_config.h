@@ -28,8 +28,8 @@ typedef struct
   __off64_t __pos;
   __mbstate_t __state;
 } _G_fpos64_t;
-#define _G_off64_t	__off_t
-#define _G_stat64	stat
+#define _G_off64_t	__off64_t
+#define _G_stat64	stat64
 #if defined _LIBC || defined _GLIBCPP_USE_WCHAR_T
 # include <gconv.h>
 typedef union
@@ -50,6 +50,11 @@ typedef union
 #define _G_HAVE_MMAP 1
 
 #define _G_IO_IO_FILE_VERSION 0x20001
+
+#define _G_OPEN64	__open64
+#define _G_LSEEK64	__lseek64
+#define _G_MMAP64	__mmap64
+#define _G_FSTAT64(fd,buf) __fxstat64 (_STAT_VER, fd, buf)
 
 /* This is defined by <bits/stat.h> if `st_blksize' exists.  */
 #define _G_HAVE_ST_BLKSIZE defined (_STATBUF_ST_BLKSIZE)

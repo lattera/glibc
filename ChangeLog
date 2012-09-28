@@ -1,5 +1,10 @@
 2012-09-28  Roland McGrath  <roland@hack.frob.com>
 
+	* sysdeps/gnu/_G_config.h: Moved to ...
+	* sysdeps/unix/sysv/linux/_G_config.h: ... here.
+	* sysdeps/mach/hurd/_G_config.h: Moved to ...
+	* sysdeps/generic/_G_config.h: ... here.
+
 	* io/open.c (__open): Renamed to __libc_open.  Make __open an alias.
 
 	* posix/Makefile ($(objpfx)config-name.h): Do $(make-target-directory).
