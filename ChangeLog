@@ -1,5 +1,7 @@
 2012-09-28  Roland McGrath  <roland@hack.frob.com>
 
+	* io/open.c (__open): Renamed to __libc_open.  Make __open an alias.
+
 	* posix/Makefile ($(objpfx)config-name.h): Do $(make-target-directory).
 
 	* nss/Makefile ($(objpfx)/libnss_test1.so$(libnss_test1.so-version)):

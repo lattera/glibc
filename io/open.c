@@ -1,4 +1,5 @@
-/* Copyright (C) 1991,1995,1996,1997,2002,2007 Free Software Foundation, Inc.
+/* Open a file by name.  Stub version.
+   Copyright (C) 1991-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -26,7 +27,7 @@ extern char **__libc_argv attribute_hidden;
 /* Open FILE with access OFLAG.  If OFLAG includes O_CREAT,
    a third argument is the file protection.  */
 int
-__open (file, oflag)
+__libc_open (file, oflag)
      const char *file;
      int oflag;
 {
@@ -49,10 +50,12 @@ __open (file, oflag)
   __set_errno (ENOSYS);
   return -1;
 }
-libc_hidden_def (__open)
-stub_warning (open)
+libc_hidden_def (__libc_open)
+weak_alias (__libc_open, __open)
+libc_hidden_weak (__open)
+weak_alias (__libc_open, open)
 
-weak_alias (__open, open)
+stub_warning (open)
 
 
 int
