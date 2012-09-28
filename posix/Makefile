@@ -129,6 +129,7 @@ endif
 # it will say by examining the system, and write the results in config-name.h.
 uname.c: $(objpfx)config-name.h
 $(objpfx)config-name.h: $(..)scripts/config-uname.sh $(common-objpfx)config.make
+	$(make-target-directory)
 	$< '$(config-os)' '$(config-release)' \
 	   '$(config-machine)-$(config-vendor)' > $@.new
 	mv -f $@.new $@

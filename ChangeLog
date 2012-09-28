@@ -1,5 +1,7 @@
 2012-09-28  Roland McGrath  <roland@hack.frob.com>
 
+	* posix/Makefile ($(objpfx)config-name.h): Do $(make-target-directory).
+
 	* nss/Makefile ($(objpfx)/libnss_test1.so$(libnss_test1.so-version)):
 	Conditionalize target on [libnss_test1.so-version].
 
