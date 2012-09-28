@@ -7,12 +7,12 @@
 	* elf/dynamic-link.h (VERSYMIDX): Likewise.
 	* elf/rtld.c (VALIDX): Likewise.
 	(ADDRIDX): Likewise.
-	* sysdeps/generic/ldsodefs.h (VERSYMIDX): New macro.
-	(VALIDX): Likewise.
-	(ADDRIDX): Likewise.
 	* sysdeps/sparc/sparc32/dl-machine.h (VALIDX): Likewise.
 	* sysdeps/sparc/sparc64/dl-machine.h (VALIDX): Likewise.
 	* sysdeps/x86_64/dl-tlsdesc.h (ADDRIDX): Likewise.
+	* sysdeps/generic/ldsodefs.h (VERSYMIDX): New macro.
+	(VALIDX): Likewise.
+	(ADDRIDX): Likewise.
 
 2012-09-28  Pino Toscano  <toscano.pino@tiscali.it>
 
