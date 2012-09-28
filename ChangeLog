@@ -1,3 +1,7 @@
+2012-09-28  David S. Miller  <davem@davemloft.net>
+
+	* sysdeps/sparc/fpu/libm-test-ulps: Fix garbage in file.
+
 2012-09-28  Roland McGrath  <roland@hack.frob.com>
 
 	* sysdeps/posix/sleep.c (__sleep): Rewritten using __nanosleep
