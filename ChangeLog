@@ -1,3 +1,8 @@
+2012-09-28  Roland McGrath  <roland@hack.frob.com>
+
+	* nss/nsswitch.c (nss_new_service): Conditionalize definition on
+	[!DO_STATIC_NSS || SHARED], matching its only caller.
+
 2012-09-28  David S. Miller  <davem@davemloft.net>
 
 	* sysdeps/sparc/fpu/libm-test-ulps: Update.

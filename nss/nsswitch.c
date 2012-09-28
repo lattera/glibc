@@ -786,6 +786,7 @@ nss_getline (char *line)
 }
 
 
+#if !defined DO_STATIC_NSS || defined SHARED
 static service_library *
 internal_function
 nss_new_service (name_database *database, const char *name)
@@ -810,6 +811,7 @@ nss_new_service (name_database *database, const char *name)
 
   return *currentp;
 }
+#endif
 
 
 #if defined SHARED && defined USE_NSCD
