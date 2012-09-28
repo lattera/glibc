@@ -62,16 +62,9 @@ LEAF(__syscall, 0)
 	ldq	a5,0(sp)	/* arg6 -> a5 */
 
 	call_pal PAL_callsys	/* Invoke system call */
-	bne	a3, $error
+	bne	a3, SYSCALL_ERROR_LABEL
 	ret
 
-$error:
-#ifndef PROF
-	br	gp, 2f
-2:	ldgp	gp, 0(gp)
-#endif
-	SYSCALL_ERROR_HANDLER
-
-END(__syscall)
+PSEUDO_END(__syscall)
 
 weak_alias (__syscall, syscall)

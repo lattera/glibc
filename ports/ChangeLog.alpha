@@ -1,4 +1,21 @@
-2012-12-13  Richard Henderson  <rth@redhat.com>
+2012-09-28  Richard Henderson  <rth@redhat.com>
+
+	* sysdeps/unix/alpha/sysdep.h (PSEUDO_END): Merge versions and
+	move $syscall_error label...
+	(SYSCALL_ERROR_HANDLER): ... here.
+	(SYSCALL_ERROR_FALLTHRU): New.
+	(PSEUDO_PROF): Split out of ...
+	(PSEUDO_PROLOGUE): ... here.
+	* sysdeps/unix/sysv/linux/alpha/syscall.S (__syscall): Use
+	SYSCALL_ERROR_LABEL and PSEUDO_END.
+	* sysdeps/unix/sysv/linux/alpha/clone.S (__clone): Likewise.
+	Use USEPV_PROF and cfi markup.
+	(thread_start): Use cfi markup and cfi_undefined on ra.
+	* sysdeps/unix/sysv/linux/alpha/nptl/sysdep-cancel.h
+	(PSEUDO_PROF): Remove.
+	(PSEUDO): Use SYSCALL_ERROR_FALLTHRU.
+
+2012-09-13  Richard Henderson  <rth@redhat.com>
 
 	* sysdeps/unix/sysv/linux/alpha/setfpucw.c (__setfpucw): Rewrite
 	with the assumption of being used at program startup only.

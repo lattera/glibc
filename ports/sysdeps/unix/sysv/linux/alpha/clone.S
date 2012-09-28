@@ -35,89 +35,84 @@
    we don't bother checking FLAGS.  */
 
         .text
-ENTRY(__clone)
+	.align	4
+	.globl	__clone
+	.ent	__clone
+	.usepv	__clone, USEPV_PROF
+
+	cfi_startproc
+__clone:
 #ifdef PROF
 	ldgp	gp,0(pv)
-	.set noat
 	lda	AT, _mcount
 	jsr	AT, (AT), _mcount
-	.set at
-	.prologue 1
-#else
-	.prologue 0
 #endif
 
 	/* Sanity check arguments.  */
-	ldiq	v0,EINVAL
-	beq	a0,$error		/* no NULL function pointers */
-	beq	a1,$error		/* no NULL stack pointers */
+	ldiq	v0, EINVAL
+	beq	a0, SYSCALL_ERROR_LABEL	/* no NULL function pointers */
+	beq	a1, SYSCALL_ERROR_LABEL	/* no NULL stack pointers */
 
 	/* Save the fn ptr and arg on the new stack.  */
-	subq	a1,32,a1
-	stq	a0,0(a1)
-	stq	a3,8(a1)
+	subq	a1, 32, a1
+	stq	a0, 0(a1)
+	stq	a3, 8(a1)
 #ifdef RESET_PID
-	stq	a2,16(a1)
+	stq	a2, 16(a1)
 #endif
 
 	/* The syscall is of the form clone(flags, usp, ptid, ctid, tls).
 	   Shift the flags, ptid, ctid, tls arguments into place; the
 	   child_stack argument is already correct.  */
-	mov	a2,a0
-	mov	a4,a2
-	ldq	a3,0(sp)
-	mov	a5,a4
+	mov	a2, a0
+	mov	a4, a2
+	ldq	a3, 0(sp)
+	mov	a5, a4
 
 	/* Do the system call.  */
-	ldiq	v0,__NR_clone
+	ldiq	v0, __NR_clone
 	call_pal PAL_callsys
 
-	bne	a3,$error
-	beq	v0,thread_start
+	bne	a3, SYSCALL_ERROR_LABEL
+	beq	v0, thread_start
 
 	/* Successful return from the parent.  */
 	ret
 
-	/* Something bad happened -- no child created.  */
-$error:
-#ifndef PROF
-	br	gp,1f
-1:	ldgp	gp,0(gp)
-#endif
-	SYSCALL_ERROR_HANDLER
-
-	END(__clone)
+PSEUDO_END(__clone)
+	cfi_endproc
 
 /* Load up the arguments to the function.  Put this block of code in
    its own function so that we can terminate the stack trace with our
    debug info.  */
 
 	.ent thread_start
+	cfi_startproc
 thread_start:
-	.frame	fp,0,fp,0
 	mov	0, fp
-	.prologue 0
+	cfi_def_cfa_register(fp)
+	cfi_undefined(ra)
 
 #ifdef RESET_PID
 	/* Check and see if we need to reset the PID.  */
-	ldq	t0,16(sp)
-	lda	t1,CLONE_THREAD
-	and	t0,t1,t2
-	beq	t2,2f
+	ldq	t0, 16(sp)
+	lda	t1, CLONE_THREAD
+	and	t0, t1, t2
+	beq	t2, 2f
 1:
 #endif
 
 	/* Load up the arguments.  */
-	ldq	pv,0(sp)
-	ldq	a0,8(sp)
-	addq	sp,32,sp
+	ldq	pv, 0(sp)
+	ldq	a0, 8(sp)
+	addq	sp, 32, sp
 
 	/* Call the user's function.  */
-	jsr	ra,(pv)
-	ldgp	gp,0(ra)
+	jsr	ra, (pv)
+	ldgp	gp, 0(ra)
 
 	/* Call _exit rather than doing it inline for breakpoint purposes.  */
-	mov	v0,a0
+	mov	v0, a0
 #ifdef PIC
 	bsr	ra, HIDDEN_JUMPTARGET(_exit)	!samegp
 #else
@@ -142,7 +137,7 @@ thread_start:
 	stl	v0, TID_OFFSET(s0)
 	br	1b
 #endif
-
+	cfi_endproc
 	.end thread_start
 
 weak_alias (__clone, clone)

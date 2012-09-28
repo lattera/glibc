@@ -23,16 +23,6 @@
 
 #if !defined NOT_IN_libc || defined IS_IN_libpthread || defined IS_IN_librt
 
-# ifdef PROF
-#  define PSEUDO_PROF				\
-	.set noat;				\
-	lda	AT, _mcount;			\
-	jsr	AT, (AT), _mcount;		\
-	.set at
-# else
-#  define PSEUDO_PROF
-# endif
-
 /* ??? Assumes that nothing comes between PSEUDO and PSEUDO_END
    besides "ret".  */
 
@@ -88,7 +78,7 @@ __LABEL($multi_error)						\
 	addq	sp, 64, sp;					\
 	cfi_restore(ra);					\
 	cfi_def_cfa_offset(0);					\
-__LABEL($syscall_error)						\
+	SYSCALL_ERROR_FALLTHRU;					\
 	SYSCALL_ERROR_HANDLER;					\
 	cfi_endproc;						\
 	.previous

@@ -52,13 +52,20 @@
 #define END(sym)	.end sym
 
 #ifdef PROF
+# define PSEUDO_PROF				\
+	.set noat;				\
+	lda	AT, _mcount;			\
+	jsr	AT, (AT), _mcount;		\
+	.set at
+#else
+# define PSEUDO_PROF
+#endif
+
+#ifdef PROF
 # define PSEUDO_PROLOGUE			\
 	.frame sp, 0, ra;			\
 	ldgp	gp,0(pv);			\
-	.set noat;				\
-	lda	AT,_mcount;			\
-	jsr	AT,(AT),_mcount;		\
-	.set at;				\
+	PSEUDO_PROF;				\
 	.prologue 1
 #elif defined PIC
 # define PSEUDO_PROLOGUE			\
@@ -80,16 +87,21 @@
 #if RTLD_PRIVATE_ERRNO
 # define SYSCALL_ERROR_LABEL	$syscall_error
 # define SYSCALL_ERROR_HANDLER			\
+$syscall_error:					\
 	stl	v0, rtld_errno(gp)	!gprel;	\
 	lda	v0, -1;				\
 	ret
+# define SYSCALL_ERROR_FALLTHRU
 #elif defined(PIC)
-# define SYSCALL_ERROR_LABEL	__syscall_error !samegp
+# define SYSCALL_ERROR_LABEL		__syscall_error !samegp
 # define SYSCALL_ERROR_HANDLER
+# define SYSCALL_ERROR_FALLTHRU		br SYSCALL_ERROR_LABEL
 #else
-# define SYSCALL_ERROR_LABEL	$syscall_error
-# define SYSCALL_ERROR_HANDLER \
-	jmp	$31, __syscall_error
+# define SYSCALL_ERROR_LABEL		$syscall_error
+# define SYSCALL_ERROR_HANDLER			\
+$syscall_error:					\
+	jmp $31, __syscall_error
+# define SYSCALL_ERROR_FALLTHRU
 #endif /* RTLD_PRIVATE_ERRNO */
 
 /* Overridden by specific syscalls.  */
@@ -108,14 +120,9 @@ __LABEL(name)					\
 	bne	a3, SYSCALL_ERROR_LABEL
 
 #undef PSEUDO_END
-#if defined(PIC) && !RTLD_PRIVATE_ERRNO
-# define PSEUDO_END(sym)  END(sym)
-#else
-# define PSEUDO_END(sym)			\
-$syscall_error:					\
+#define PSEUDO_END(sym)				\
 	SYSCALL_ERROR_HANDLER;			\
 	END(sym)
-#endif
 
 #define PSEUDO_NOERRNO(name, syscall_name, args)	\
 	.globl name;					\
