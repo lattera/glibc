@@ -32,14 +32,6 @@
 			    (void *) (l_addr + relative->r_offset))
 #endif
 
-#ifndef VERSYMIDX
-# define VERSYMIDX(sym)	(DT_NUM + DT_THISPROCNUM + DT_VERSIONTAGIDX (sym))
-#endif
-#ifndef VALIDX
-# define VALIDX(tag) (DT_NUM + DT_THISPROCNUM + DT_VERSIONTAGNUM \
-		      + DT_EXTRANUM + DT_VALTAGIDX (tag))
-#endif
-
 /* Perform the relocations in MAP on the running program image as specified
    by RELTAG, SZTAG.  If LAZY is nonzero, this is the first pass on PLT
    relocations; they should be set up to call _dl_runtime_resolve, rather

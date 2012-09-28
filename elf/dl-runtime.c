@@ -36,10 +36,6 @@
 # define PLTREL  ElfW(Rel)
 #endif
 
-#ifndef VERSYMIDX
-# define VERSYMIDX(sym)	(DT_NUM + DT_THISPROCNUM + DT_VERSIONTAGIDX (sym))
-#endif
-
 /* The fixup functions might have need special attributes.  If none
    are provided define the macro as empty.  */
 #ifndef ARCH_FIXUP_ATTRIBUTE

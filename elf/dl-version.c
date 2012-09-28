@@ -28,11 +28,6 @@
 #include <assert.h>
 
 
-#ifndef VERSYMIDX
-# define VERSYMIDX(tag)	(DT_NUM + DT_THISPROCNUM + DT_VERSIONTAGIDX (tag))
-#endif
-
-
 #define make_string(string, rest...) \
   ({									      \
     const char *all[] = { string, ## rest };				      \

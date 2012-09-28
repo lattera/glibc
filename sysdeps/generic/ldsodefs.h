@@ -41,6 +41,12 @@
 
 __BEGIN_DECLS
 
+#define VERSYMIDX(sym)	(DT_NUM + DT_THISPROCNUM + DT_VERSIONTAGIDX (sym))
+#define VALIDX(tag)	(DT_NUM + DT_THISPROCNUM + DT_VERSIONTAGNUM \
+			 + DT_EXTRANUM + DT_VALTAGIDX (tag))
+#define ADDRIDX(tag)	(DT_NUM + DT_THISPROCNUM + DT_VERSIONTAGNUM \
+			 + DT_EXTRANUM + DT_VALNUM + DT_ADDRTAGIDX (tag))
+
 /* We use this macro to refer to ELF types independent of the native wordsize.
    `ElfW(TYPE)' is used in place of `Elf32_TYPE' or `Elf64_TYPE'.  */
 #define ELFW(type)	_ElfW (ELF, __ELF_NATIVE_CLASS, type)

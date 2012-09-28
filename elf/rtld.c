@@ -254,15 +254,6 @@ RTLD_START
 # error "sysdeps/MACHINE/dl-machine.h fails to define RTLD_START"
 #endif
 
-#ifndef VALIDX
-# define VALIDX(tag) (DT_NUM + DT_THISPROCNUM + DT_VERSIONTAGNUM \
-		      + DT_EXTRANUM + DT_VALTAGIDX (tag))
-#endif
-#ifndef ADDRIDX
-# define ADDRIDX(tag) (DT_NUM + DT_THISPROCNUM + DT_VERSIONTAGNUM \
-		       + DT_EXTRANUM + DT_VALNUM + DT_ADDRTAGIDX (tag))
-#endif
-
 /* This is the second half of _dl_start (below).  It can be inlined safely
    under DONT_USE_BOOTSTRAP_MAP, where it is careful not to make any GOT
    references.  When the tools don't permit us to avoid using a GOT entry

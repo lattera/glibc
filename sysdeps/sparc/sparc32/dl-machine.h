@@ -29,11 +29,6 @@
 #include <tls.h>
 #include <dl-plt.h>
 
-#ifndef VALIDX
-# define VALIDX(tag) (DT_NUM + DT_THISPROCNUM + DT_VERSIONTAGNUM \
-		      + DT_EXTRANUM + DT_VALTAGIDX (tag))
-#endif
-
 /* Return nonzero iff ELF header is compatible with the running host.  */
 static inline int
 elf_machine_matches_host (const Elf32_Ehdr *ehdr)

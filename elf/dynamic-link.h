@@ -88,10 +88,6 @@ elf_machine_lazy_rel (struct link_map *map,
 
 #include <dl-machine.h>
 
-#ifndef VERSYMIDX
-# define VERSYMIDX(sym)	(DT_NUM + DT_THISPROCNUM + DT_VERSIONTAGIDX (sym))
-#endif
-
 
 /* Read the dynamic section at DYN and fill in INFO with indices DT_*.  */
 #ifndef RESOLVE_MAP

@@ -27,11 +27,6 @@
 #include <sysdep.h>
 #include <dl-plt.h>
 
-#ifndef VALIDX
-# define VALIDX(tag) (DT_NUM + DT_THISPROCNUM + DT_VERSIONTAGNUM \
-		      + DT_EXTRANUM + DT_VALTAGIDX (tag))
-#endif
-
 #define ELF64_R_TYPE_ID(info)	((info) & 0xff)
 #define ELF64_R_TYPE_DATA(info) ((info) >> 8)
 
