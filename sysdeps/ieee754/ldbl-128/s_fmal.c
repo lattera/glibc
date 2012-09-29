@@ -129,6 +129,11 @@ __fmal (long double x, long double y, long double z)
       y = v.d;
       z = w.d;
     }
+
+  /* Ensure correct sign of exact 0 + 0.  */
+  if (__builtin_expect ((x == 0 || y == 0) && z == 0, 0))
+    return x * y + z;
+
   /* Multiplication m1 + m2 = x * y using Dekker's algorithm.  */
 #define C ((1LL << (LDBL_MANT_DIG + 1) / 2) + 1)
   long double x1 = x * C;

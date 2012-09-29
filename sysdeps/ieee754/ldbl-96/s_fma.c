@@ -1,5 +1,5 @@
 /* Compute x * y + z as ternary operation.
-   Copyright (C) 2010 Free Software Foundation, Inc.
+   Copyright (C) 2010-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jakub@redhat.com>, 2010.
 
@@ -37,6 +37,10 @@ __fma (double x, double y, double z)
 	return (z + x) + y;
       return (x * y) + z;
     }
+
+  /* Ensure correct sign of exact 0 + 0.  */
+  if (__builtin_expect ((x == 0 || y == 0) && z == 0, 0))
+    return x * y + z;
 
   /* Multiplication m1 + m2 = x * y using Dekker's algorithm.  */
 #define C ((1ULL << (LDBL_MANT_DIG + 1) / 2) + 1)

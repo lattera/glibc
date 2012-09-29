@@ -4546,6 +4546,36 @@ fma_test (void)
   TEST_fff_f (fma, minus_infty, minus_infty, plus_infty, plus_infty);
   TEST_fff_f (fma, plus_infty, minus_infty, minus_infty, minus_infty);
 
+  TEST_fff_f (fma, plus_zero, plus_zero, plus_zero, plus_zero);
+  TEST_fff_f (fma, plus_zero, plus_zero, minus_zero, plus_zero);
+  TEST_fff_f (fma, plus_zero, minus_zero, plus_zero, plus_zero);
+  TEST_fff_f (fma, plus_zero, minus_zero, minus_zero, minus_zero);
+  TEST_fff_f (fma, minus_zero, plus_zero, plus_zero, plus_zero);
+  TEST_fff_f (fma, minus_zero, plus_zero, minus_zero, minus_zero);
+  TEST_fff_f (fma, minus_zero, minus_zero, plus_zero, plus_zero);
+  TEST_fff_f (fma, minus_zero, minus_zero, minus_zero, plus_zero);
+  TEST_fff_f (fma, 1.0, plus_zero, plus_zero, plus_zero);
+  TEST_fff_f (fma, 1.0, plus_zero, minus_zero, plus_zero);
+  TEST_fff_f (fma, 1.0, minus_zero, plus_zero, plus_zero);
+  TEST_fff_f (fma, 1.0, minus_zero, minus_zero, minus_zero);
+  TEST_fff_f (fma, -1.0, plus_zero, plus_zero, plus_zero);
+  TEST_fff_f (fma, -1.0, plus_zero, minus_zero, minus_zero);
+  TEST_fff_f (fma, -1.0, minus_zero, plus_zero, plus_zero);
+  TEST_fff_f (fma, -1.0, minus_zero, minus_zero, plus_zero);
+  TEST_fff_f (fma, plus_zero, 1.0, plus_zero, plus_zero);
+  TEST_fff_f (fma, plus_zero, 1.0, minus_zero, plus_zero);
+  TEST_fff_f (fma, plus_zero, -1.0, plus_zero, plus_zero);
+  TEST_fff_f (fma, plus_zero, -1.0, minus_zero, minus_zero);
+  TEST_fff_f (fma, minus_zero, 1.0, plus_zero, plus_zero);
+  TEST_fff_f (fma, minus_zero, 1.0, minus_zero, minus_zero);
+  TEST_fff_f (fma, minus_zero, -1.0, plus_zero, plus_zero);
+  TEST_fff_f (fma, minus_zero, -1.0, minus_zero, plus_zero);
+
+  TEST_fff_f (fma, 1.0, 1.0, -1.0, plus_zero);
+  TEST_fff_f (fma, 1.0, -1.0, 1.0, plus_zero);
+  TEST_fff_f (fma, -1.0, 1.0, 1.0, plus_zero);
+  TEST_fff_f (fma, -1.0, -1.0, -1.0, plus_zero);
+
 #if defined (TEST_FLOAT) && FLT_MANT_DIG == 24
   TEST_fff_f (fma, 0x1.7ff8p+13, 0x1.000002p+0, 0x1.ffffp-24, 0x1.7ff802p+13);
   TEST_fff_f (fma, 0x1.fffp+0, 0x1.00001p+0, -0x1.fffp+0, 0x1.fffp-20);
@@ -4604,6 +4634,147 @@ fma_test (void)
 #endif
 
   END (fma);
+}
+
+
+static void
+fma_test_towardzero (void)
+{
+  int save_round_mode;
+  START (fma_towardzero);
+
+  save_round_mode = fegetround ();
+
+  if (!fesetround (FE_TOWARDZERO))
+    {
+      TEST_fff_f (fma, plus_zero, plus_zero, plus_zero, plus_zero);
+      TEST_fff_f (fma, plus_zero, plus_zero, minus_zero, plus_zero);
+      TEST_fff_f (fma, plus_zero, minus_zero, plus_zero, plus_zero);
+      TEST_fff_f (fma, plus_zero, minus_zero, minus_zero, minus_zero);
+      TEST_fff_f (fma, minus_zero, plus_zero, plus_zero, plus_zero);
+      TEST_fff_f (fma, minus_zero, plus_zero, minus_zero, minus_zero);
+      TEST_fff_f (fma, minus_zero, minus_zero, plus_zero, plus_zero);
+      TEST_fff_f (fma, minus_zero, minus_zero, minus_zero, plus_zero);
+      TEST_fff_f (fma, 1.0, plus_zero, plus_zero, plus_zero);
+      TEST_fff_f (fma, 1.0, plus_zero, minus_zero, plus_zero);
+      TEST_fff_f (fma, 1.0, minus_zero, plus_zero, plus_zero);
+      TEST_fff_f (fma, 1.0, minus_zero, minus_zero, minus_zero);
+      TEST_fff_f (fma, -1.0, plus_zero, plus_zero, plus_zero);
+      TEST_fff_f (fma, -1.0, plus_zero, minus_zero, minus_zero);
+      TEST_fff_f (fma, -1.0, minus_zero, plus_zero, plus_zero);
+      TEST_fff_f (fma, -1.0, minus_zero, minus_zero, plus_zero);
+      TEST_fff_f (fma, plus_zero, 1.0, plus_zero, plus_zero);
+      TEST_fff_f (fma, plus_zero, 1.0, minus_zero, plus_zero);
+      TEST_fff_f (fma, plus_zero, -1.0, plus_zero, plus_zero);
+      TEST_fff_f (fma, plus_zero, -1.0, minus_zero, minus_zero);
+      TEST_fff_f (fma, minus_zero, 1.0, plus_zero, plus_zero);
+      TEST_fff_f (fma, minus_zero, 1.0, minus_zero, minus_zero);
+      TEST_fff_f (fma, minus_zero, -1.0, plus_zero, plus_zero);
+      TEST_fff_f (fma, minus_zero, -1.0, minus_zero, plus_zero);
+
+      TEST_fff_f (fma, 1.0, 1.0, -1.0, plus_zero);
+      TEST_fff_f (fma, 1.0, -1.0, 1.0, plus_zero);
+      TEST_fff_f (fma, -1.0, 1.0, 1.0, plus_zero);
+      TEST_fff_f (fma, -1.0, -1.0, -1.0, plus_zero);
+    }
+
+  fesetround (save_round_mode);
+
+  END (fma_towardzero);
+}
+
+
+static void
+fma_test_downward (void)
+{
+  int save_round_mode;
+  START (fma_downward);
+
+  save_round_mode = fegetround ();
+
+  if (!fesetround (FE_DOWNWARD))
+    {
+      TEST_fff_f (fma, plus_zero, plus_zero, plus_zero, plus_zero);
+      TEST_fff_f (fma, plus_zero, plus_zero, minus_zero, minus_zero);
+      TEST_fff_f (fma, plus_zero, minus_zero, plus_zero, minus_zero);
+      TEST_fff_f (fma, plus_zero, minus_zero, minus_zero, minus_zero);
+      TEST_fff_f (fma, minus_zero, plus_zero, plus_zero, minus_zero);
+      TEST_fff_f (fma, minus_zero, plus_zero, minus_zero, minus_zero);
+      TEST_fff_f (fma, minus_zero, minus_zero, plus_zero, plus_zero);
+      TEST_fff_f (fma, minus_zero, minus_zero, minus_zero, minus_zero);
+      TEST_fff_f (fma, 1.0, plus_zero, plus_zero, plus_zero);
+      TEST_fff_f (fma, 1.0, plus_zero, minus_zero, minus_zero);
+      TEST_fff_f (fma, 1.0, minus_zero, plus_zero, minus_zero);
+      TEST_fff_f (fma, 1.0, minus_zero, minus_zero, minus_zero);
+      TEST_fff_f (fma, -1.0, plus_zero, plus_zero, minus_zero);
+      TEST_fff_f (fma, -1.0, plus_zero, minus_zero, minus_zero);
+      TEST_fff_f (fma, -1.0, minus_zero, plus_zero, plus_zero);
+      TEST_fff_f (fma, -1.0, minus_zero, minus_zero, minus_zero);
+      TEST_fff_f (fma, plus_zero, 1.0, plus_zero, plus_zero);
+      TEST_fff_f (fma, plus_zero, 1.0, minus_zero, minus_zero);
+      TEST_fff_f (fma, plus_zero, -1.0, plus_zero, minus_zero);
+      TEST_fff_f (fma, plus_zero, -1.0, minus_zero, minus_zero);
+      TEST_fff_f (fma, minus_zero, 1.0, plus_zero, minus_zero);
+      TEST_fff_f (fma, minus_zero, 1.0, minus_zero, minus_zero);
+      TEST_fff_f (fma, minus_zero, -1.0, plus_zero, plus_zero);
+      TEST_fff_f (fma, minus_zero, -1.0, minus_zero, minus_zero);
+
+      TEST_fff_f (fma, 1.0, 1.0, -1.0, minus_zero);
+      TEST_fff_f (fma, 1.0, -1.0, 1.0, minus_zero);
+      TEST_fff_f (fma, -1.0, 1.0, 1.0, minus_zero);
+      TEST_fff_f (fma, -1.0, -1.0, -1.0, minus_zero);
+    }
+
+  fesetround (save_round_mode);
+
+  END (fma_downward);
+}
+
+
+static void
+fma_test_upward (void)
+{
+  int save_round_mode;
+  START (fma_upward);
+
+  save_round_mode = fegetround ();
+
+  if (!fesetround (FE_UPWARD))
+    {
+      TEST_fff_f (fma, plus_zero, plus_zero, plus_zero, plus_zero);
+      TEST_fff_f (fma, plus_zero, plus_zero, minus_zero, plus_zero);
+      TEST_fff_f (fma, plus_zero, minus_zero, plus_zero, plus_zero);
+      TEST_fff_f (fma, plus_zero, minus_zero, minus_zero, minus_zero);
+      TEST_fff_f (fma, minus_zero, plus_zero, plus_zero, plus_zero);
+      TEST_fff_f (fma, minus_zero, plus_zero, minus_zero, minus_zero);
+      TEST_fff_f (fma, minus_zero, minus_zero, plus_zero, plus_zero);
+      TEST_fff_f (fma, minus_zero, minus_zero, minus_zero, plus_zero);
+      TEST_fff_f (fma, 1.0, plus_zero, plus_zero, plus_zero);
+      TEST_fff_f (fma, 1.0, plus_zero, minus_zero, plus_zero);
+      TEST_fff_f (fma, 1.0, minus_zero, plus_zero, plus_zero);
+      TEST_fff_f (fma, 1.0, minus_zero, minus_zero, minus_zero);
+      TEST_fff_f (fma, -1.0, plus_zero, plus_zero, plus_zero);
+      TEST_fff_f (fma, -1.0, plus_zero, minus_zero, minus_zero);
+      TEST_fff_f (fma, -1.0, minus_zero, plus_zero, plus_zero);
+      TEST_fff_f (fma, -1.0, minus_zero, minus_zero, plus_zero);
+      TEST_fff_f (fma, plus_zero, 1.0, plus_zero, plus_zero);
+      TEST_fff_f (fma, plus_zero, 1.0, minus_zero, plus_zero);
+      TEST_fff_f (fma, plus_zero, -1.0, plus_zero, plus_zero);
+      TEST_fff_f (fma, plus_zero, -1.0, minus_zero, minus_zero);
+      TEST_fff_f (fma, minus_zero, 1.0, plus_zero, plus_zero);
+      TEST_fff_f (fma, minus_zero, 1.0, minus_zero, minus_zero);
+      TEST_fff_f (fma, minus_zero, -1.0, plus_zero, plus_zero);
+      TEST_fff_f (fma, minus_zero, -1.0, minus_zero, plus_zero);
+
+      TEST_fff_f (fma, 1.0, 1.0, -1.0, plus_zero);
+      TEST_fff_f (fma, 1.0, -1.0, 1.0, plus_zero);
+      TEST_fff_f (fma, -1.0, 1.0, 1.0, plus_zero);
+      TEST_fff_f (fma, -1.0, -1.0, -1.0, plus_zero);
+    }
+
+  fesetround (save_round_mode);
+
+  END (fma_upward);
 }
 
 
@@ -9539,6 +9710,9 @@ main (int argc, char **argv)
 
   /* Multiply and add:  */
   fma_test ();
+  fma_test_towardzero ();
+  fma_test_downward ();
+  fma_test_upward ();
 
   /* Complex functions:  */
   cabs_test ();

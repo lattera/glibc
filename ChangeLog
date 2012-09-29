@@ -1,3 +1,21 @@
+2012-09-29  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #14638]
+	* sysdeps/ieee754/dbl-64/s_fma.c (__fma): Use x * y + z for exact
+	0 + 0.
+	* sysdeps/ieee754/dbl-64/s_fmaf.c (__fmaf): Use original rounding
+	mode for addition resulting in exact zero.
+	* sysdeps/ieee754/ldbl-128/s_fma.c (__fma): Likewise.
+	* sysdeps/ieee754/ldbl-128/s_fmal.c (__fmal): Use x * y + z for
+	exact 0 + 0.
+	* sysdeps/ieee754/ldbl-96/s_fma.c (__fma): Likewise.
+	* sysdeps/ieee754/ldbl-96/s_fmal.c (__fmal): Likewise.
+	* math/libm-test.inc (fma_test): Add more tests.
+	(fma_test_towardzero): New function.
+	(fma_test_downward): Likewise.
+	(fma_test_upward): Likewise.
+	(main): Call the new functions.
+
 2012-09-28  David S. Miller  <davem@davemloft.net>
 
 	* sysdeps/sparc/fpu/libm-test-ulps: Fix garbage in file.

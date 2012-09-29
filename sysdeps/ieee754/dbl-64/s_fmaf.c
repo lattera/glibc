@@ -32,8 +32,15 @@ float
 __fmaf (float x, float y, float z)
 {
   fenv_t env;
+
   /* Multiplication is always exact.  */
   double temp = (double) x * (double) y;
+
+  /* Ensure correct sign of an exact zero result by performing the
+     addition in the original rounding mode in that case.  */
+  if (temp == -z)
+    return (float) temp + z;
+
   union ieee754_double u;
 
   libc_feholdexcept_setround (&env, FE_TOWARDZERO);
