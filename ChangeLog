@@ -1,3 +1,12 @@
+2012-10-01  Patsy Franklin <pfrankli@redhat.com>
+            Honza Horak <hhorak@redhat.com>
+
+	* nis/yp_xdr.c (xdr_domainname): Use YPMAXDOMAIN as maxsize.
+	(xdr_mapname): Use YPMAXMAP as maxsize.
+	(xdr_peername): Use YPMAXPEER as maxsize.
+	(xdr_keydat): Use YPAXRECORD as maxsize.
+	(xdr_valdat): Use YPMAXRECORD as maxsize.
+
 2012-10-01  Roland McGrath  <roland@hack.frob.com>
 
 	* io/openat.c [!__ASSUME_ATFCTS] (__have_atfcts): New global variable.

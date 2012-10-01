@@ -49,21 +49,21 @@ libnsl_hidden_def (xdr_ypxfrstat)
 bool_t
 xdr_domainname (XDR *xdrs, domainname *objp)
 {
-  return xdr_string (xdrs, objp, ~0);
+  return xdr_string (xdrs, objp, YPMAXDOMAIN);
 }
 libnsl_hidden_def (xdr_domainname)
 
 bool_t
 xdr_mapname (XDR *xdrs, mapname *objp)
 {
-  return xdr_string (xdrs, objp, ~0);
+  return xdr_string (xdrs, objp, YPMAXMAP);
 }
 libnsl_hidden_def (xdr_mapname)
 
 bool_t
 xdr_peername (XDR *xdrs, peername *objp)
 {
-  return xdr_string (xdrs, objp, ~0);
+  return xdr_string (xdrs, objp, YPMAXPEER);
 }
 libnsl_hidden_def (xdr_peername)
 
@@ -71,7 +71,7 @@ bool_t
 xdr_keydat (XDR *xdrs, keydat *objp)
 {
   return xdr_bytes (xdrs, (char **) &objp->keydat_val,
-		    (u_int *) &objp->keydat_len, ~0);
+		    (u_int *) &objp->keydat_len, YPMAXRECORD);
 }
 libnsl_hidden_def (xdr_keydat)
 
@@ -79,7 +79,7 @@ bool_t
 xdr_valdat (XDR *xdrs, valdat *objp)
 {
   return xdr_bytes (xdrs, (char **) &objp->valdat_val,
-		    (u_int *) &objp->valdat_len, ~0);
+		    (u_int *) &objp->valdat_len, YPMAXRECORD);
 }
 libnsl_hidden_def (xdr_valdat)
 
