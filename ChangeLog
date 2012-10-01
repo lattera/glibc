@@ -1,5 +1,7 @@
 2012-10-01  Roland McGrath  <roland@hack.frob.com>
 
+	* io/openat.c [!__ASSUME_ATFCTS] (__have_atfcts): New global variable.
+
 	* sysdeps/unix/sysv/linux/init-first.c: Moved to ...
 	* csu/init-first.c: ... here.
 	* sysdeps/unix/sysv/linux/powerpc/init-first.c: Update #include.
