@@ -150,7 +150,6 @@ __STD_TYPE __USECONDS_T_TYPE __useconds_t; /* Count of microseconds.  */
 __STD_TYPE __SUSECONDS_T_TYPE __suseconds_t; /* Signed count of microseconds.  */
 
 __STD_TYPE __DADDR_T_TYPE __daddr_t;	/* The type of a disk address.  */
-__STD_TYPE __SWBLK_T_TYPE __swblk_t;	/* Type of a swap block maybe?  */
 __STD_TYPE __KEY_T_TYPE __key_t;	/* Type of an IPC key.  */
 
 /* Clock ID used in clock and timer functions.  */

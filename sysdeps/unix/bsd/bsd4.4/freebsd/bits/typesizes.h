@@ -51,7 +51,6 @@
 #define __USECONDS_T_TYPE	__U32_TYPE
 #define __SUSECONDS_T_TYPE	__SLONGWORD_TYPE
 #define __DADDR_T_TYPE		__S32_TYPE
-#define __SWBLK_T_TYPE		__S32_TYPE
 #define __KEY_T_TYPE		__S32_TYPE
 #define __CLOCKID_T_TYPE	__S32_TYPE
 #define __TIMER_T_TYPE		__S32_TYPE

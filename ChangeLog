@@ -1,3 +1,17 @@
+2012-10-01  Roland McGrath  <roland@hack.frob.com>
+
+	* bits/types.h (__swblk_t): Type removed.
+	* bits/typesizes.h (__SWBLK_T_TYPE): Macro removed.
+	* sysdeps/mach/hurd/bits/typesizes.h (__SWBLK_T_TYPE): Likewise.
+	* sysdeps/unix/bsd/bsd4.4/freebsd/bits/typesizes.h
+	(__SWBLK_T_TYPE): Likewise.
+	* sysdeps/unix/sysv/linux/x86/bits/typesizes.h
+	(__SWBLK_T_TYPE): Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/typesizes.h
+	(__SWBLK_T_TYPE): Likewise.
+	* sysdeps/unix/sysv/linux/s390/bits/typesizes.h
+	(__SWBLK_T_TYPE): Likewise.
+
 2012-10-01  Patsy Franklin <pfrankli@redhat.com>
             Honza Horak <hhorak@redhat.com>
 
