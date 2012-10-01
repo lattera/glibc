@@ -214,6 +214,7 @@ static int ignore_max_ulp;	/* Should we ignore max_ulp?  */
 
 static FLOAT minus_zero, plus_zero;
 static FLOAT plus_infty, minus_infty, nan_value, max_value, min_value;
+static FLOAT min_subnorm_value;
 
 static FLOAT max_error, real_max_error, imag_max_error;
 
@@ -4576,6 +4577,15 @@ fma_test (void)
   TEST_fff_f (fma, -1.0, 1.0, 1.0, plus_zero);
   TEST_fff_f (fma, -1.0, -1.0, -1.0, plus_zero);
 
+  TEST_fff_f (fma, min_value, min_value, plus_zero, plus_zero, UNDERFLOW_EXCEPTION);
+  TEST_fff_f (fma, min_value, min_value, minus_zero, plus_zero, UNDERFLOW_EXCEPTION);
+  TEST_fff_f (fma, min_value, -min_value, plus_zero, minus_zero, UNDERFLOW_EXCEPTION);
+  TEST_fff_f (fma, min_value, -min_value, minus_zero, minus_zero, UNDERFLOW_EXCEPTION);
+  TEST_fff_f (fma, -min_value, min_value, plus_zero, minus_zero, UNDERFLOW_EXCEPTION);
+  TEST_fff_f (fma, -min_value, min_value, minus_zero, minus_zero, UNDERFLOW_EXCEPTION);
+  TEST_fff_f (fma, -min_value, -min_value, plus_zero, plus_zero, UNDERFLOW_EXCEPTION);
+  TEST_fff_f (fma, -min_value, -min_value, minus_zero, plus_zero, UNDERFLOW_EXCEPTION);
+
 #if defined (TEST_FLOAT) && FLT_MANT_DIG == 24
   TEST_fff_f (fma, 0x1.7ff8p+13, 0x1.000002p+0, 0x1.ffffp-24, 0x1.7ff802p+13);
   TEST_fff_f (fma, 0x1.fffp+0, 0x1.00001p+0, -0x1.fffp+0, 0x1.fffp-20);
@@ -4676,6 +4686,15 @@ fma_test_towardzero (void)
       TEST_fff_f (fma, 1.0, -1.0, 1.0, plus_zero);
       TEST_fff_f (fma, -1.0, 1.0, 1.0, plus_zero);
       TEST_fff_f (fma, -1.0, -1.0, -1.0, plus_zero);
+
+      TEST_fff_f (fma, min_value, min_value, plus_zero, plus_zero, UNDERFLOW_EXCEPTION);
+      TEST_fff_f (fma, min_value, min_value, minus_zero, plus_zero, UNDERFLOW_EXCEPTION);
+      TEST_fff_f (fma, min_value, -min_value, plus_zero, minus_zero, UNDERFLOW_EXCEPTION);
+      TEST_fff_f (fma, min_value, -min_value, minus_zero, minus_zero, UNDERFLOW_EXCEPTION);
+      TEST_fff_f (fma, -min_value, min_value, plus_zero, minus_zero, UNDERFLOW_EXCEPTION);
+      TEST_fff_f (fma, -min_value, min_value, minus_zero, minus_zero, UNDERFLOW_EXCEPTION);
+      TEST_fff_f (fma, -min_value, -min_value, plus_zero, plus_zero, UNDERFLOW_EXCEPTION);
+      TEST_fff_f (fma, -min_value, -min_value, minus_zero, plus_zero, UNDERFLOW_EXCEPTION);
     }
 
   fesetround (save_round_mode);
@@ -4723,6 +4742,15 @@ fma_test_downward (void)
       TEST_fff_f (fma, 1.0, -1.0, 1.0, minus_zero);
       TEST_fff_f (fma, -1.0, 1.0, 1.0, minus_zero);
       TEST_fff_f (fma, -1.0, -1.0, -1.0, minus_zero);
+
+      TEST_fff_f (fma, min_value, min_value, plus_zero, plus_zero, UNDERFLOW_EXCEPTION);
+      TEST_fff_f (fma, min_value, min_value, minus_zero, plus_zero, UNDERFLOW_EXCEPTION);
+      TEST_fff_f (fma, min_value, -min_value, plus_zero, -min_subnorm_value, UNDERFLOW_EXCEPTION);
+      TEST_fff_f (fma, min_value, -min_value, minus_zero, -min_subnorm_value, UNDERFLOW_EXCEPTION);
+      TEST_fff_f (fma, -min_value, min_value, plus_zero, -min_subnorm_value, UNDERFLOW_EXCEPTION);
+      TEST_fff_f (fma, -min_value, min_value, minus_zero, -min_subnorm_value, UNDERFLOW_EXCEPTION);
+      TEST_fff_f (fma, -min_value, -min_value, plus_zero, plus_zero, UNDERFLOW_EXCEPTION);
+      TEST_fff_f (fma, -min_value, -min_value, minus_zero, plus_zero, UNDERFLOW_EXCEPTION);
     }
 
   fesetround (save_round_mode);
@@ -4770,6 +4798,15 @@ fma_test_upward (void)
       TEST_fff_f (fma, 1.0, -1.0, 1.0, plus_zero);
       TEST_fff_f (fma, -1.0, 1.0, 1.0, plus_zero);
       TEST_fff_f (fma, -1.0, -1.0, -1.0, plus_zero);
+
+      TEST_fff_f (fma, min_value, min_value, plus_zero, min_subnorm_value, UNDERFLOW_EXCEPTION);
+      TEST_fff_f (fma, min_value, min_value, minus_zero, min_subnorm_value, UNDERFLOW_EXCEPTION);
+      TEST_fff_f (fma, min_value, -min_value, plus_zero, minus_zero, UNDERFLOW_EXCEPTION);
+      TEST_fff_f (fma, min_value, -min_value, minus_zero, minus_zero, UNDERFLOW_EXCEPTION);
+      TEST_fff_f (fma, -min_value, min_value, plus_zero, minus_zero, UNDERFLOW_EXCEPTION);
+      TEST_fff_f (fma, -min_value, min_value, minus_zero, minus_zero, UNDERFLOW_EXCEPTION);
+      TEST_fff_f (fma, -min_value, -min_value, plus_zero, min_subnorm_value, UNDERFLOW_EXCEPTION);
+      TEST_fff_f (fma, -min_value, -min_value, minus_zero, min_subnorm_value, UNDERFLOW_EXCEPTION);
     }
 
   fesetround (save_round_mode);
@@ -9431,6 +9468,12 @@ initialize (void)
 		      LDBL_MAX, DBL_MAX, FLT_MAX);
   min_value = CHOOSE (LDBL_MIN, DBL_MIN, FLT_MIN,
 		      LDBL_MIN, DBL_MIN, FLT_MIN);
+  min_subnorm_value = CHOOSE (__LDBL_DENORM_MIN__,
+			      __DBL_DENORM_MIN__,
+			      __FLT_DENORM_MIN__,
+			      __LDBL_DENORM_MIN__,
+			      __DBL_DENORM_MIN__,
+			      __FLT_DENORM_MIN__);
 
   (void) &plus_zero;
   (void) &nan_value;
@@ -9439,6 +9482,7 @@ initialize (void)
   (void) &minus_infty;
   (void) &max_value;
   (void) &min_value;
+  (void) &min_subnorm_value;
 
   /* Clear all exceptions.  From now on we must not get random exceptions.  */
   feclearexcept (FE_ALL_EXCEPT);

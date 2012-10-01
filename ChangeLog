@@ -1,3 +1,17 @@
+2012-10-01  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #14645]
+	* sysdeps/ieee754/dbl-64/s_fma.c (__fma): Compute result as x * y
+	if x * y might underflow to zero and z is zero.
+	* sysdeps/ieee754/ldbl-128/s_fmal.c (__fmal): Likewise.
+	* sysdeps/ieee754/ldbl-96/s_fmal.c (__fmal): Likewise.
+	* math/libm-test.inc (min_subnorm_value): New variable.
+	(fma_test): Add more tests.
+	(fma_test_towardzero): Likewise.
+	(fma_test_downward): Likewise
+	(fma_test_upward): Likewise.
+	(initialize): Set min_subnorm_value.
+
 2012-09-29  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #14638]
