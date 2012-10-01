@@ -1,4 +1,5 @@
-/* Copyright (C) 2008 Free Software Foundation, Inc.
+/* Initialization code run first thing by the ELF startup code.  Linux/s390.
+   Copyright (C) 2008-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -46,4 +47,4 @@ _libc_vdso_platform_setup (void)
 # define VDSO_SETUP _libc_vdso_platform_setup
 #endif
 
-#include "../init-first.c"
+#include <csu/init-first.c>

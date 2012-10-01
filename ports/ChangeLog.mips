@@ -1,3 +1,7 @@
+2012-09-28  Roland McGrath  <roland@hack.frob.com>
+
+	* sysdeps/mips/init-first.c: File removed.
+
 2012-09-28  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/mips/dl-trampoline.c (VERSYMIDX): Removed.

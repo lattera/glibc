@@ -1,3 +1,14 @@
+2012-10-01  Roland McGrath  <roland@hack.frob.com>
+
+	* sysdeps/unix/sysv/linux/init-first.c: Moved to ...
+	* csu/init-first.c: ... here.
+	* sysdeps/unix/sysv/linux/powerpc/init-first.c: Update #include.
+	* sysdeps/unix/sysv/linux/s390/init-first.c: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/init-first.c: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/x32/init-first.c: Likewise.
+	* sysdeps/i386/init-first.c: File removed.
+	* sysdeps/sh/init-first.c: File removed.
+
 2012-10-01  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #14645]

@@ -1,4 +1,5 @@
-/* Copyright (C) 2010 Free Software Foundation, Inc.
+/* Initialization code run first thing by the ELF startup code.  Linux/m68k.
+   Copyright (C) 2010-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Maxim Kuvyrkov <maxim@codesourcery.com>, 2010.
 
@@ -70,4 +71,4 @@ _libc_vdso_platform_setup (void)
 
 #endif /* SHARED */
 
-#include <sysdeps/unix/sysv/linux/init-first.c>
+#include <csu/init-first.c>
