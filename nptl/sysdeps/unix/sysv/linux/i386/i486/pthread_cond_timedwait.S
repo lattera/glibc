@@ -200,9 +200,11 @@ __pthread_cond_timedwait:
 42:	leal	(%ebp), %esi
 	movl	28(%esp), %edx
 	addl	$cond_futex, %ebx
+.Ladd_cond_futex_pi:
 	movl	$SYS_futex, %eax
 	ENTER_KERNEL
 	subl	$cond_futex, %ebx
+.Lsub_cond_futex_pi:
 	movl	%eax, %esi
 	/* Set the pi-requeued flag only if the kernel has returned 0. The
 	   kernel does not hold the mutex on ETIMEDOUT or any other error.  */
@@ -638,7 +640,15 @@ __condvar_tw_cleanup:
 	.uleb128 .Lcstend-.Lcstbegin
 .Lcstbegin:
 	.long	.LcleanupSTART-.LSTARTCODE
-	.long	.Ladd_cond_futex-.LcleanupSTART
+	.long	.Ladd_cond_futex_pi-.LcleanupSTART
+	.long	__condvar_tw_cleanup-.LSTARTCODE
+	.uleb128  0
+	.long	.Ladd_cond_futex_pi-.LSTARTCODE
+	.long	.Lsub_cond_futex_pi-.Ladd_cond_futex_pi
+	.long	__condvar_tw_cleanup2-.LSTARTCODE
+	.uleb128  0
+	.long	.Lsub_cond_futex_pi-.LSTARTCODE
+	.long	.Ladd_cond_futex-.Lsub_cond_futex_pi
 	.long	__condvar_tw_cleanup-.LSTARTCODE
 	.uleb128  0
 	.long	.Ladd_cond_futex-.LSTARTCODE

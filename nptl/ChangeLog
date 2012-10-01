@@ -1,3 +1,19 @@
+2012-10-01  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	[BZ #14477]
+	* Makefile (tests): Add tst-cond-except.
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_cond_timedwait.S
+	(__pthread_cond_timedwait): Mark instructions where %ebx is
+	incremented in PI case.
+	(.gcc_except_table): Add entry to jump to __condvar_tw_cleanup2
+	for the marked PI case instructions.
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_cond_wait.S
+	(__pthread_cond_wait): Mark instructions where %ebx is
+	incremented in PI case.
+	(.gcc_except_table): Add entry to jump to __condvar_w_cleanup2
+	for the marked PI case instructions.
+	* tst-cond-except.c: New test case.
+
 2012-09-24  Dmitry V. Levin  <ldv@altlinux.org>
 
 	* tst-tls6.sh: Add "set -e".
