@@ -1,3 +1,15 @@
+2012-10-02  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #14648]
+	* sysdeps/x86_64/multiarch/init-arch.c (__init_cpu_features):
+	Set bit_FMA_Usable if FMA is supported.
+	* sysdeps/x86_64/multiarch/init-arch.h (bit_FMA_Usable): New
+	macro.
+	(bit_FMA4_Usable): Updated.
+	(index_FMA_Usable): New macro.
+	(CPUID_FMA): Likewise
+	(HAS_FMA): Defined with bit_FMA_Usable.
+
 2012-10-01  Roland McGrath  <roland@hack.frob.com>
 
 	* bits/types.h (__swblk_t): Type removed.

@@ -156,6 +156,9 @@ __init_cpu_features (void)
 	  /* Determine if AVX is usable.  */
 	  if (CPUID_AVX)
 	    __cpu_features.feature[index_AVX_Usable] |= bit_AVX_Usable;
+	  /* Determine if FMA is usable.  */
+	  if (CPUID_FMA)
+	    __cpu_features.feature[index_FMA_Usable] |= bit_FMA_Usable;
 	  /* Determine if FMA4 is usable.  */
 	  if (CPUID_FMA4)
 	    __cpu_features.feature[index_FMA4_Usable] |= bit_FMA4_Usable;
