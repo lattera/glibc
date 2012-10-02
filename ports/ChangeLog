@@ -1,14 +1,3 @@
-2012-10-02  Siddhesh Poyarekar  <siddhesh@redhat.com>
-
-	* sysdeps/unix/sysv/linux/alpha/nptl/lowlevellock.h: Fix clone
-	flag name in comment to CLONE_CHILD_CLEARTID.
-	* sysdeps/unix/sysv/linux/arm/nptl/lowlevellock.h: Likewise.
-	* sysdeps/unix/sysv/linux/hppa/nptl/lowlevellock.h: Likewise.
-	* sysdeps/unix/sysv/linux/ia64/nptl/lowlevellock.h: Likewise.
-	* sysdeps/unix/sysv/linux/m68k/nptl/lowlevellock.h: Likewise.
-	* sysdeps/unix/sysv/linux/mips/nptl/lowlevellock.h: Likewise.
-	* sysdeps/unix/sysv/linux/tile/nptl/lowlevellock.h: Likewise.
-
 2012-07-03  Joseph Myers  <joseph@codesourcery.com>
 
 	* .gitignore: Remove file.
