@@ -1090,7 +1090,7 @@ _dl_map_object_from_fd (const char *name, int fd, struct filebuf *fbp,
     struct loadcmd
       {
 	ElfW(Addr) mapstart, mapend, dataend, allocend;
-	off_t mapoff;
+	ElfW(Off) mapoff;
 	int prot;
       } loadcmds[l->l_phnum], *c;
     size_t nloadcmds = 0;
@@ -1347,7 +1347,7 @@ cannot allocate TLS data structures for initial thread");
 	  l->l_text_end = l->l_addr + c->mapend;
 
 	if (l->l_phdr == 0
-	    && (ElfW(Off)) c->mapoff <= header->e_phoff
+	    && c->mapoff <= header->e_phoff
 	    && ((size_t) (c->mapend - c->mapstart + c->mapoff)
 		>= header->e_phoff + header->e_phnum * sizeof (ElfW(Phdr))))
 	  /* Found the program header in this segment.  */

@@ -1,3 +1,8 @@
+2012-10-02  Roland McGrath  <roland@hack.frob.com>
+
+	* elf/dl-load.c (_dl_map_object_from_fd: struct loadcmd):
+	Make 'mapoff' field ElfW(Off) rather than off_t.
+
 2012-10-02  Dmitry V. Levin  <ldv@altlinux.org>
 
 	* nscd/Makefile: Remove nscd-cflags and all its users.
