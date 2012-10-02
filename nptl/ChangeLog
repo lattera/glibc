@@ -1,3 +1,14 @@
+2012-10-02  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* pthread_create.c (start_thread): Fix clone flag name in
+	comment to CLONE_CHILD_CLEARTID.
+	* sysdeps/unix/sysv/linux/i386/lowlevellock.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/lowlevellock.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/lowlevellock.h: Likewise.
+	* sysdeps/unix/sysv/linux/sh/lowlevellock.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/lowlevellock.h: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/lowlevellock.h: Likewise.
+
 2012-10-01  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	[BZ #14477]

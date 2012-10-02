@@ -268,7 +268,7 @@ __lll_robust_timedlock (int *futex, const struct timespec *abstime,
     1  -  taken by one user
    >1  -  taken by more users */
 
-/* The kernel notifies a process which uses CLONE_CLEARTID via futex
+/* The kernel notifies a process which uses CLONE_CHILD_CLEARTID via futex
    wakeup when the clone terminates.  The memory location contains the
    thread ID while the clone is running and is reset to zero
    afterwards.	*/

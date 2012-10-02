@@ -420,7 +420,7 @@ start_thread (void *arg)
   /* We cannot call '_exit' here.  '_exit' will terminate the process.
 
      The 'exit' implementation in the kernel will signal when the
-     process is really dead since 'clone' got passed the CLONE_CLEARTID
+     process is really dead since 'clone' got passed the CLONE_CHILD_CLEARTID
      flag.  The 'tid' field in the TCB will be set to zero.
 
      The exit code is zero since in case all threads exit by calling
