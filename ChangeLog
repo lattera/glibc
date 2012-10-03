@@ -1,3 +1,8 @@
+2012-10-02  Alexandre Oliva <aoliva@redhat.com>
+
+	* scripts/check-local-headers.sh: Exclude sys/sdt.h and
+	sys/sdt-config.h.
+
 2012-10-02  Roland McGrath  <roland@hack.frob.com>
 
 	* elf/dl-load.c (_dl_map_object_from_fd: struct loadcmd):
