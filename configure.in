@@ -2156,6 +2156,9 @@ AC_SUBST(libc_cv_cc_nofma)
 AC_SUBST(libc_cv_as_i686)
 AC_SUBST(libc_cv_sparc_as_vis3)
 
+if test x$use_ldconfig = xyes; then
+  AC_DEFINE(USE_LDCONFIG)
+fi
 AC_SUBST(use_ldconfig)
 AC_SUBST(ldd_rewrite_script)
 

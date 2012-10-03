@@ -177,6 +177,9 @@
 /* Define if library functions should try to contact the nscd daemon.  */
 #undef USE_NSCD
 
+/* Define if the dynamic linker should consult an ld.so.cache file.  */
+#undef USE_LDCONFIG
+
 /*
  */
 

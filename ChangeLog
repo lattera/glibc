@@ -1,3 +1,17 @@
+2012-10-03  Roland McGrath  <roland@hack.frob.com>
+
+	* sysdeps/mach/hurd/dl-cache.c: File removed.
+	* config.h.in (USE_LDCONFIG): New #undef.
+	* configure.in (use_ldconfig): If set, define USE_LDCONFIG.
+	* configure: Regenerated.
+	* elf/Makefile (dl-routines): Add dl-cache only under
+	[$(use-ldconfig) = yes].
+	* elf/dl-load.c (_dl_map_object): Conditionalize code consulting the
+	cache on [USE_LDCONFIG].
+	* elf/dl-open.c (_dl_open): Call _dl_unload_cache only under
+	[USE_LDCONFIG].
+	* elf/rtld.c (dl_main): Likewise.
+
 2012-10-03  Pino Toscano  <toscano.pino@tiscali.it>
 
 	* sysdeps/posix/sysconf.c (__sysconf): Return 0 also for

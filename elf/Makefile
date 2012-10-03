@@ -19,6 +19,8 @@
 
 subdir		:= elf
 
+include ../Makeconfig
+
 headers		= elf.h bits/elfclass.h link.h bits/link.h
 routines	= $(dl-routines) dl-support dl-iteratephdr \
 		  dl-addr enbl-secure dl-profstub \
@@ -26,10 +28,13 @@ routines	= $(dl-routines) dl-support dl-iteratephdr \
 
 # The core dynamic linking functions are in libc for the static and
 # profiled libraries.
-dl-routines	= $(addprefix dl-,load cache lookup object reloc deps \
+dl-routines	= $(addprefix dl-,load lookup object reloc deps \
 				  runtime error init fini debug misc \
 				  version profile conflict tls origin scope \
 				  execstack caller open close trampoline)
+ifeq (yes,$(use-ldconfig))
+dl-routines += dl-cache
+endif
 all-dl-routines = $(dl-routines) $(sysdep-dl-routines)
 # But they are absent from the shared libc, because that code is in ld.so.
 elide-routines.os = $(all-dl-routines) dl-support enbl-secure dl-origin \
@@ -44,8 +49,6 @@ all-rtld-routines = $(rtld-routines) $(sysdep-rtld-routines)
 CFLAGS-dl-runtime.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-dl-lookup.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-dl-iterate-phdr.c = $(uses-callbacks)
-
-include ../Makeconfig
 
 ifeq ($(unwind-find-fde),yes)
 routines += unwind-dw2-fde-glibc

@@ -654,8 +654,8 @@ no more namespaces available for dlmopen()"));
   int errcode = _dl_catch_error (&objname, &errstring, &malloced,
 				 dl_open_worker, &args);
 
-#ifndef MAP_COPY
-  /* We must munmap() the cache file.  */
+#if defined USE_LDCONFIG && !defined MAP_COPY
+  /* We must unmap the cache file.  */
   _dl_unload_cache ();
 #endif
 

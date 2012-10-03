@@ -2197,6 +2197,7 @@ _dl_map_object (struct link_map *loader, const char *name,
 			&loader->l_runpath_dirs, &realname, &fb, loader,
 			LA_SER_RUNPATH, &found_other_class);
 
+#ifdef USE_LDCONFIG
       if (fd == -1
 	  && (__builtin_expect (! (mode & __RTLD_SECURE), 1)
 	      || ! INTUSE(__libc_enable_secure))
@@ -2208,22 +2209,22 @@ _dl_map_object (struct link_map *loader, const char *name,
 
 	  if (cached != NULL)
 	    {
-#ifdef SHARED
+# ifdef SHARED
 	      // XXX Correct to unconditionally default to namespace 0?
 	      l = (loader
 		   ?: GL(dl_ns)[LM_ID_BASE]._ns_loaded
 		   ?: &GL(dl_rtld_map));
-#else
+# else
 	      l = loader;
-#endif
+# endif
 
 	      /* If the loader has the DF_1_NODEFLIB flag set we must not
 		 use a cache entry from any of these directories.  */
 	      if (
-#ifndef SHARED
+# ifndef SHARED
 		  /* 'l' is always != NULL for dynamically linked objects.  */
 		  l != NULL &&
-#endif
+# endif
 		  __builtin_expect (l->l_flags_1 & DF_1_NODEFLIB, 0))
 		{
 		  const char *dirp = system_dirs;
@@ -2261,6 +2262,7 @@ _dl_map_object (struct link_map *loader, const char *name,
 		}
 	    }
 	}
+#endif
 
       /* Finally, try the default path.  */
       if (fd == -1

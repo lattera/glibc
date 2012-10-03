@@ -2400,7 +2400,7 @@ ERROR: ld.so: object '%s' cannot be loaded as audit interface: %s; ignored.\n",
   _dl_debug_state ();
   LIBC_PROBE (init_complete, 2, LM_ID_BASE, r);
 
-#ifndef MAP_COPY
+#if defined USE_LDCONFIG && !defined MAP_COPY
   /* We must munmap() the cache file.  */
   _dl_unload_cache ();
 #endif
