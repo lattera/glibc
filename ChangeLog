@@ -1,3 +1,7 @@
+2012-10-03  Roland McGrath  <roland@hack.frob.com>
+
+	* sysdeps/unix/bsd/confstr.h: File removed.
+
 2012-10-02  Alexandre Oliva <aoliva@redhat.com>
 
 	* scripts/check-local-headers.sh: Exclude sys/sdt.h and
