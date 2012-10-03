@@ -1227,6 +1227,7 @@ __sysconf (name)
     case _SC_LEVEL3_CACHE_LINESIZE:
     case _SC_LEVEL4_CACHE_SIZE:
     case _SC_LEVEL4_CACHE_ASSOC:
+    case _SC_LEVEL4_CACHE_LINESIZE:
       /* In general we cannot determine these values.  Therefore we
 	 return zero which indicates that no information is
 	 available.  */

@@ -1,3 +1,8 @@
+2012-10-03  Pino Toscano  <toscano.pino@tiscali.it>
+
+	* sysdeps/posix/sysconf.c (__sysconf): Return 0 also for
+	_SC_LEVEL4_CACHE_LINESIZE.
+
 2012-10-03  Roland McGrath  <roland@hack.frob.com>
 
 	* sysdeps/unix/bsd/confstr.h: File removed.
