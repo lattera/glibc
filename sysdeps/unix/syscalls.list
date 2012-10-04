@@ -41,7 +41,7 @@ kill		-	kill		i:ii	__kill		kill
 link		-	link		i:ss	__link		link
 listen		-	listen		i:ii	__listen	listen
 lseek		-	lseek		i:iii	__libc_lseek	__lseek lseek
-madvise		-	madvise		i:pii	madvise
+madvise		-	madvise		i:pii	__madvise	madvise
 mkdir		-	mkdir		i:si	__mkdir		mkdir
 mmap		-	mmap		b:aniiii __mmap		mmap
 mprotect	-	mprotect	i:aii	__mprotect	mprotect

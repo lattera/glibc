@@ -10,11 +10,12 @@ extern void *__mmap64 (void *__addr, size_t __len, int __prot,
 extern int __munmap (void *__addr, size_t __len);
 extern int __mprotect (void *__addr, size_t __len, int __prot);
 
+extern int __madvise (void *__addr, size_t __len, int __advice);
+libc_hidden_proto (__madvise)
+
 /* This one is Linux specific.  */
 extern void *__mremap (void *__addr, size_t __old_len,
 		       size_t __new_len, int __flags, ...);
-
-libc_hidden_proto (madvise);
 #endif
 
 #endif

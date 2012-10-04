@@ -4450,7 +4450,7 @@ static int mtrim(mstate av, size_t pad)
 		       content.  */
 		    memset (paligned_mem, 0x89, size & ~psm1);
 #endif
-		    madvise (paligned_mem, size & ~psm1, MADV_DONTNEED);
+		    __madvise (paligned_mem, size & ~psm1, MADV_DONTNEED);
 
 		    result = 1;
 		  }

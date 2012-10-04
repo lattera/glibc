@@ -1,3 +1,18 @@
+2012-10-04  Roland McGrath  <roland@hack.frob.com>
+
+	* misc/Versions (GLIBC_PRIVATE): New set, add __madvise.
+	* misc/madvise.c (madvise): Renamed to __madvise.
+	Make madvise a weak alias.
+	* include/sys/mman.h: Declare __madvise.
+	Replace libc_hidden_proto (madvise) with libc_hidden_proto (__madvise).
+	* sysdeps/unix/syscalls.list
+	(madvise): Make __madvise the strong name, and madvise a weak alias.
+	* sysdeps/unix/sysv/linux/syscalls.list
+	(madvise, mmap): Remove redundant entries.
+	* malloc/arena.c (shrink_heap): Use __madvise, not madvise.
+	* malloc/malloc.c (mtrim): Likewise.
+	* sysdeps/mach/hurd/malloc-machine.h (madvise): Renamed to __madvise.
+
 2012-10-03  Roland McGrath  <roland@hack.frob.com>
 
 	* sysdeps/mach/hurd/dl-cache.c: File removed.

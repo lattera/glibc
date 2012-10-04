@@ -399,7 +399,7 @@ start_thread (void *arg)
 #endif
   assert (freesize < pd->stackblock_size);
   if (freesize > PTHREAD_STACK_MIN)
-    madvise (pd->stackblock, freesize - PTHREAD_STACK_MIN, MADV_DONTNEED);
+    __madvise (pd->stackblock, freesize - PTHREAD_STACK_MIN, MADV_DONTNEED);
 
   /* If the thread is detached free the TCB.  */
   if (IS_DETACHED (pd))

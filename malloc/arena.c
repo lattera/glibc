@@ -634,7 +634,7 @@ shrink_heap(heap_info *h, long diff)
       h->mprotect_size = new_size;
     }
   else
-    madvise ((char *)h + new_size, diff, MADV_DONTNEED);
+    __madvise ((char *)h + new_size, diff, MADV_DONTNEED);
   /*fprintf(stderr, "shrink %p %08lx\n", h, new_size);*/
 
   h->size = new_size;

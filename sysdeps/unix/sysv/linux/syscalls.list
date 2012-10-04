@@ -36,11 +36,9 @@ ioperm		-	ioperm		i:iii	ioperm
 iopl		-	iopl		i:i	iopl
 klogctl		EXTRA	syslog		i:isi	klogctl
 lchown		-	lchown		i:sii	__lchown	lchown
-madvise		-	madvise		i:pii	madvise
 mincore		-	mincore		i:anV	mincore
 mlock		-	mlock		i:bn	mlock
 mlockall	-	mlockall	i:i	mlockall
-mmap		-	mmap		b:aniiii	__mmap		mmap
 mount		EXTRA	mount		i:sssip	__mount	mount
 mremap		EXTRA	mremap		b:ainip	__mremap	mremap
 munlock		-	munlock		i:ai	munlock

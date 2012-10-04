@@ -1,3 +1,7 @@
+2012-10-04  Roland McGrath  <roland@hack.frob.com>
+
+	* pthread_create.c (start_thread): Use __madvise, not madvise.
+
 2012-10-02  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/i386/tls.h: Update copyright years.

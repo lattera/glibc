@@ -1,4 +1,5 @@
-/* Copyright (C) 1994,1995,1996,1997,2000,2007 Free Software Foundation, Inc.
+/* Advise system about intentions for a memory region.  Stub version.
+   Copyright (C) 1994-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -23,11 +24,13 @@
    for the region starting at ADDR and extending LEN bytes.  */
 
 int
-madvise (__ptr_t addr, size_t len, int advice)
+__madvise (void *addr, size_t len, int advice)
 {
   __set_errno (ENOSYS);
   return -1;
 }
-libc_hidden_def (madvise)
+libc_hidden_def (__madvise)
+weak_alias (__madvise, madvise)
+
 stub_warning (madvise)
 #include <stub-tag.h>

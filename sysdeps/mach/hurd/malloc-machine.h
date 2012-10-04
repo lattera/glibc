@@ -66,8 +66,9 @@ __libc_tsd_define (static, void *, MALLOC)	/* declaration/common definition */
 
 #include <sys/mman.h>
 
-#undef	madvise
-#define madvise(addr, len, advice)	((void) (addr), (void) (len), (void) (advice))
+#undef	__madvise
+#define __madvise(addr, len, advice)	\
+  ((void) (addr), (void) (len), (void) (advice))
 
 #include <sysdeps/generic/malloc-machine.h>
 
