@@ -57,8 +57,9 @@ IMPL (simple_strcasestr, 0)
 IMPL (strcasestr, 1)
 
 
-static void
-do_one_test (impl_t *impl, const char *s1, const char *s2, char *exp_result)
+static int
+check_result (impl_t *impl, const char *s1, const char *s2,
+	      char *exp_result)
 {
   char *result = CALL (impl, s1, s2);
   if (result != exp_result)
@@ -66,8 +67,16 @@ do_one_test (impl_t *impl, const char *s1, const char *s2, char *exp_result)
       error (0, 0, "Wrong result in function %s %s %s", impl->name,
 	     result, exp_result);
       ret = 1;
-      return;
+      return -1;
     }
+  return 0;
+}
+
+static void
+do_one_test (impl_t *impl, const char *s1, const char *s2, char *exp_result)
+{
+  if (check_result (impl, s1, s2, exp_result) < 0)
+    return;
 
   if (HP_TIMING_AVAIL)
     {
@@ -136,11 +145,24 @@ do_test (size_t align1, size_t align2, size_t len1, size_t len2,
     putchar ('\n');
 }
 
+static void
+check1 (void)
+{
+  const char s1[] = "AOKB";
+  const char s2[] = "OK";
+  char *exp_result;
+
+  exp_result = stupid_strcasestr (s1, s2);
+  FOR_EACH_IMPL (impl, 0)
+    check_result (impl, s1, s2, exp_result);
+}
 
 static int
 test_main (void)
 {
   test_init ();
+
+  check1 ();
 
   printf ("%23s", "");
   FOR_EACH_IMPL (impl, 0)

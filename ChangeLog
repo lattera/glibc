@@ -1,5 +1,29 @@
 2012-10-05  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* string/Makefile (tests): Remove bug-strstr1, bug-strcasestr1
+	and bug-strchr1.
+	* string/bug-strcasestr1.c (do_test): Moved to ...
+	* string/test-strcasestr.c (check1): Here.  New function.
+	(do_one_test): Break out result checking code into ...
+	(check_result): This.  New function.
+	(do_one_test): Call check_result.
+	(test_main): Call check1.
+	* string/bug-strchr1.c (do_test): Moved to ...
+	* string/test-strchr.c (check1): Here.  New function.
+	(do_one_test): Break out result checking code into ...
+	(check_result): This.  New function.
+	(do_one_test): Call check_result.
+	(test_main): Call check1.
+	* string/bug-strstr1.c (main): Moved to ...
+	* string/test-strchr.c (check1): Here.  New function.
+	(do_one_test): Break out result checking code into ...
+	(check_result): This.  New function.
+	(do_one_test): Call check_result.
+	(test_main): Call check1.
+	* string/bug-strcasestr1.c: Removed.
+	* string/bug-strchr1.c: Likewise.
+	* string/bug-strstr1.c: Likewise.
+
 	* elf/Makefile (dl-routines): Add hwcaps.
 	* elf/dl-support.c (_dl_important_hwcaps): Removed.
 	* elf/dl-sysdep.c (_DL_FIRST_EXTRA): Likewise.
