@@ -42,11 +42,10 @@
    cbrt, ceil, copysign, cos, cosh, erf, erfc, exp, exp10, exp2, expm1,
    fabs, fdim, floor, fma, fmax, fmin, fmod, fpclassify,
    frexp, gamma, hypot,
-   ilogb, isfinite, isinf, isnan, isnormal,
-   isless, islessequal, isgreater, isgreaterequal, islessgreater, isunordered,
+   ilogb, isfinite, isnormal,
    j0, j1, jn,
    ldexp, lgamma, log, log10, log1p, log2, logb,
-   modf, nearbyint, nextafter,
+   modf, nearbyint, nextafter, nexttoward,
    pow, remainder, remquo, rint, lrint, llrint,
    round, lround, llround,
    scalb, scalbn, scalbln, signbit, sin, sincos, sinh, sqrt, tan, tanh, tgamma, trunc,
@@ -54,10 +53,17 @@
 
    and for the following complex math functions:
    cabs, cacos, cacosh, carg, casin, casinh, catan, catanh,
-   ccos, ccosh, cexp, clog, cpow, cproj, csin, csinh, csqrt, ctan, ctanh.
+   ccos, ccosh, cexp, cimag, clog, clog10, conj, cpow, cproj, creal,
+   csin, csinh, csqrt, ctan, ctanh.
 
-   At the moment the following functions aren't tested:
-   drem, nan
+   At the moment the following functions and macros aren't tested:
+   drem (alias for remainder),
+   finite (functions equivalent to isfinite macro),
+   isinf, isnan,
+   isless, islessequal, isgreater, isgreaterequal, islessgreater, isunordered,
+   lgamma_r,
+   nan,
+   pow10 (alias for exp10).
 
    Parameter handling is primitive in the moment:
    --verbose=[0..3] for different levels of output:
@@ -83,8 +89,9 @@
    aren't checked at the moment.
 
    NaN values: There exist signalling and quiet NaNs.  This implementation
-   only uses quiet NaN as parameter but does not differenciate
-   between the two kinds of NaNs as result.
+   only uses quiet NaN as parameter but does not differentiate
+   between the two kinds of NaNs as result.  Where the sign of a NaN is
+   significant, this is not tested.
 
    Inline functions: Inlining functions should give an improvement in
    speed - but not in precission.  The inlined functions return

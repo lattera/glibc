@@ -1,5 +1,13 @@
 2012-10-05  Joseph Myers  <joseph@codesourcery.com>
 
+	* math/libm-test.inc: List nexttoward, cimag, clog10, conf and
+	creal in comment listing functions tested.  List finite, isinf,
+	isnan, isless, islessequal, isgreater, isgreaterequal,
+	islessgreater, isunordered, lgamma_r and pow10 as functions and
+	macros not tested.  Mention which functions not tested are aliases
+	for other functions.  Fix typo.  Note that signs of NaNs are not
+	tested.
+
 	* scripts/config.guess: Update from config.git.
 	* scripts/config.sub: Likewise.
 
