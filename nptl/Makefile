@@ -351,8 +351,12 @@ link-libc-static := $(common-objpfx)libc.a $(static-gnulib) \
 		    $(common-objpfx)libc.a
 
 tests-static += tst-locale1 tst-locale2 tst-stackguard1-static \
-		tst-cancel21-static
-tests += tst-stackguard1-static tst-cancel21-static
+		tst-cancel21-static tst-cancel24-static tst-cond8-static \
+		tst-mutex8-static tst-mutexpi8-static tst-sem11-static \
+		tst-sem12-static
+tests += tst-stackguard1-static tst-cancel21-static tst-cancel24-static \
+	 tst-cond8-static tst-mutex8-static tst-mutexpi8-static \
+	 tst-sem11-static tst-sem12-static
 xtests-static += tst-setuid1-static
 
 # These tests are linked with libc before libpthread
@@ -510,6 +514,7 @@ $(objpfx)tst-rwlock14: $(common-objpfx)rt/librt.a
 endif
 
 LDLIBS-tst-cancel24 = $(no-as-needed) -lstdc++
+LDLIBS-tst-cancel24-static = $(LDLIBS-tst-cancel24)
 
 extra-B-pthread.so = -B$(common-objpfx)nptl/
 $(objpfx)libpthread.so: $(addprefix $(objpfx),$(crti-objs) $(crtn-objs))

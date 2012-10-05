@@ -1,3 +1,18 @@
+2012-10-05  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #14557]
+	* Makefile (tests-static): Add tst-cancel24-static,
+	tst-cond8-static tst-mutex8-static, tst-mutexpi8-static,
+	tst-sem11-static and tst-sem12-static.
+	(tests): Likewise.
+	(LDLIBS-tst-cancel24-static): New macro.
+	* tst-cancel24-static.cc: New file.
+	* tst-cond8-static.c: Likewise.
+	* tst-mutex8-static.c: Likewise.
+	* tst-mutexpi8-static.c: Likewise.
+	* tst-sem11-static.c: Likewise.
+	* tst-sem12-static.c: Likewise.
+
 2012-10-05  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	[BZ #14417]
