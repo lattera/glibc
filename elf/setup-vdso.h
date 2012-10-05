@@ -106,6 +106,8 @@ setup_vdso (struct link_map *main_map __attribute__ ((unused)),
       GL(dl_rtld_map).l_next = l;
       l->l_prev = &GL(dl_rtld_map);
       *first_preload = &l->l_next;
+# else
+      GL(dl_nns) = 1;
 # endif
 
       /* We have a prelinked DSO preloaded by the system.  */

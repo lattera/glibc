@@ -1,6 +1,9 @@
 2012-10-05  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #14557]
+	* elf/setup-vdso.h (setup_vdso): Set GL(dl_nns) to 1 for vDSO
+	if IS_IN_rtld isn't defined.
+
 	* elf/dl-support.c (_dl_sysinfo_map): New.
 	Include "get-dynamic-info.h" and "setup-vdso.h".
 	(_dl_non_dynamic_init): Call setup_vdso.
