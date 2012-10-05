@@ -1,3 +1,14 @@
+2012-10-05  David S. Miller  <davem@davemloft.net>
+
+	* sysdeps/sparc/sparc64/multiarch/memset-niagara4.S: New file.
+	* sysdeps/sparc/sparc32/sparcv9/multiarch/memset-niagara4.S: New
+	file.
+	* sysdeps/sparc/sparc64/multiarch/Makefile: Add to
+	sysdep_routines.
+	* sysdeps/sparc/sparc32/sparcv9/multiarch/Makefile: Likewise.
+	* sysdeps/sparc/sparc64/multiarch/memset.S: Use Niagara-4 memset
+	and bzero when HWCAP_SPARC_CRYPTO is present.
+
 2012-10-05  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #14602]
