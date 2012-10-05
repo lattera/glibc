@@ -103,7 +103,7 @@ __pthread_cond_timedwait:
 	mov	%RSI_LP, dep_mutex(%rdi)
 
 22:
-	xorl	%r15d, %r15d
+	xorb	%r15b, %r15b
 
 #ifndef __ASSUME_FUTEX_CLOCK_REALTIME
 #  ifdef PIC
@@ -190,18 +190,39 @@ __pthread_cond_timedwait:
 	movl	$SYS_futex, %eax
 	syscall
 
-	movl	$1, %r15d
+	cmpl	$0, %eax
+	sete	%r15b
+
 #ifdef __ASSUME_REQUEUE_PI
 	jmp	62f
 #else
-	cmpq	$-4095, %rax
-	jnae	62f
+	je	62f
+
+	/* When a futex syscall with FUTEX_WAIT_REQUEUE_PI returns
+	   successfully, it has already locked the mutex for us and the
+	   pi_flag (%r15b) is set to denote that fact.  However, if another
+	   thread changed the futex value before we entered the wait, the
+	   syscall may return an EAGAIN and the mutex is not locked.  We go
+	   ahead with a success anyway since later we look at the pi_flag to
+	   decide if we got the mutex or not.  The sequence numbers then make
+	   sure that only one of the threads actually wake up.  We retry using
+	   normal FUTEX_WAIT only if the kernel returned ENOSYS, since normal
+	   and PI futexes don't mix.
+
+	   Note that we don't check for EAGAIN specifically; we assume that the
+	   only other error the futex function could return is EAGAIN (barring
+	   the ETIMEOUT of course, for the timeout case in futex) since
+	   anything else would mean an error in our function.  It is too
+	   expensive to do that check for every call (which is  quite common in
+	   case of a large number of threads), so it has been skipped.  */
+	cmpl    $-ENOSYS, %eax
+	jne     62f
 
 	subq	$cond_futex, %rdi
 #endif
 
 61:	movl	$(FUTEX_WAIT_BITSET|FUTEX_PRIVATE_FLAG), %esi
-60:	xorl	%r15d, %r15d
+60:	xorb	%r15b, %r15b
 	xorl	%eax, %eax
 	/* The following only works like this because we only support
 	   two clocks, represented using a single bit.  */
@@ -248,7 +269,23 @@ __pthread_cond_timedwait:
 	ja	39f
 
 45:	cmpq	$-ETIMEDOUT, %r14
-	jne	38b
+	je	99f
+
+	/* We need to go back to futex_wait.  If we're using requeue_pi, then
+	   release the mutex we had acquired and go back.  */
+	test	%r15b, %r15b
+	jz	38b
+
+	/* Adjust the mutex values first and then unlock it.  The unlock
+	   should always succeed or else the kernel did not lock the
+	   mutex correctly.  */
+	movq	%r8, %rdi
+	callq	__pthread_mutex_cond_lock_adjust
+	xorl	%esi, %esi
+	callq	__pthread_mutex_unlock_usercnt
+	/* Reload cond_var.  */
+	movq	8(%rsp), %rdi
+	jmp	38b
 
 99:	incq	wakeup_seq(%rdi)
 	incl	cond_futex(%rdi)
@@ -298,7 +335,7 @@ __pthread_cond_timedwait:
 	/* If requeue_pi is used the kernel performs the locking of the
 	   mutex. */
 41:	movq	16(%rsp), %rdi
-	testl	%r15d, %r15d
+	testb	%r15b, %r15b
 	jnz	64f
 
 	callq	__pthread_mutex_cond_lock

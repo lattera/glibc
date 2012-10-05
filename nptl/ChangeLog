@@ -1,3 +1,22 @@
+2012-10-05  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	[BZ #14417]
+	* Makefile (tests): New test case tst-cond24.
+	(LDFLAGS-tst-cond24): Link tst-cond24 against librt.
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_cond_timedwait.S
+	(__pthread_cond_timedwait): Unlock mutex before going back to
+	wait in PI case.
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_cond_wait.S
+	(__pthread_cond_wait): Likewise.  Revert handling of EAGAIN
+	return from futex_wait.
+	* sysdeps/unix/sysv/linux/x86_64/pthread_cond_timedwait.S
+	(__pthread_cond_timedwait): Unlock mutex before going back to
+	wait in PI case.  Set requeue_pi flag only if wait returned 0.
+	* sysdeps/unix/sysv/linux/x86_64/pthread_cond_wait.S
+	(__pthread_cond_wait): Likewise.  Revert handling of EAGAIN
+	return from futex_wait.
+	* tst-cond24.c: New test case.
+
 2012-10-04  Roland McGrath  <roland@hack.frob.com>
 
 	* pthread_create.c (start_thread): Use __madvise, not madvise.

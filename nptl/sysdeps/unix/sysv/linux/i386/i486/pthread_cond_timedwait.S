@@ -212,8 +212,23 @@ __pthread_cond_timedwait:
 	sete	24(%esp)
 	je	41f
 
-	/* Normal and PI futexes dont mix. Use normal futex functions only
-	   if the kernel does not support the PI futex functions.  */
+	/* When a futex syscall with FUTEX_WAIT_REQUEUE_PI returns
+	   successfully, it has already locked the mutex for us and the
+	   pi_flag (24(%esp)) is set to denote that fact.  However, if another
+	   thread changed the futex value before we entered the wait, the
+	   syscall may return an EAGAIN and the mutex is not locked.  We go
+	   ahead with a success anyway since later we look at the pi_flag to
+	   decide if we got the mutex or not.  The sequence numbers then make
+	   sure that only one of the threads actually wake up.  We retry using
+	   normal FUTEX_WAIT only if the kernel returned ENOSYS, since normal
+	   and PI futexes don't mix.
+
+	   Note that we don't check for EAGAIN specifically; we assume that the
+	   only other error the futex function could return is EAGAIN (barring
+	   the ETIMEOUT of course, for the timeout case in futex) since
+	   anything else would mean an error in our function.  It is too
+	   expensive to do that check for every call (which is  quite common in
+	   case of a large number of threads), so it has been skipped.  */
 	cmpl	$-ENOSYS, %eax
 	jne	41f
 	xorl	%ecx, %ecx
@@ -273,9 +288,24 @@ __pthread_cond_timedwait:
 	jne	9f
 
 15:	cmpl	$-ETIMEDOUT, %esi
-	jne	8b
+	je	28f
 
-	addl	$1, wakeup_seq(%ebx)
+	/* We need to go back to futex_wait.  If we're using requeue_pi, then
+	   release the mutex we had acquired and go back.  */
+	movl	24(%esp), %edx
+	test	%edx, %edx
+	jz	8b
+
+	/* Adjust the mutex values first and then unlock it.  The unlock
+	   should always succeed or else the kernel did not lock the mutex
+	   correctly.  */
+	movl	dep_mutex(%ebx), %eax
+	call	__pthread_mutex_cond_lock_adjust
+	xorl	%edx, %edx
+	call	__pthread_mutex_unlock_usercnt
+	jmp	8b
+
+28:	addl	$1, wakeup_seq(%ebx)
 	adcl	$0, wakeup_seq+4(%ebx)
 	addl	$1, cond_futex(%ebx)
 	movl	$ETIMEDOUT, %esi

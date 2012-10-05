@@ -136,7 +136,6 @@ __pthread_cond_wait:
 	cmpl	$PI_BIT, %eax
 	jne	18f
 
-90:
 	movl	$(FUTEX_WAIT_REQUEUE_PI|FUTEX_PRIVATE_FLAG), %ecx
 	movl	%ebp, %edx
 	xorl	%esi, %esi
@@ -152,11 +151,22 @@ __pthread_cond_wait:
 	sete	16(%esp)
 	je	19f
 
-	cmpl	$-EAGAIN, %eax
-	je	91f
+	/* When a futex syscall with FUTEX_WAIT_REQUEUE_PI returns
+	   successfully, it has already locked the mutex for us and the
+	   pi_flag (16(%esp)) is set to denote that fact.  However, if another
+	   thread changed the futex value before we entered the wait, the
+	   syscall may return an EAGAIN and the mutex is not locked.  We go
+	   ahead with a success anyway since later we look at the pi_flag to
+	   decide if we got the mutex or not.  The sequence numbers then make
+	   sure that only one of the threads actually wake up.  We retry using
+	   normal FUTEX_WAIT only if the kernel returned ENOSYS, since normal
+	   and PI futexes don't mix.
 
-	/* Normal and PI futexes dont mix. Use normal futex functions only
-	   if the kernel does not support the PI futex functions.  */
+	   Note that we don't check for EAGAIN specifically; we assume that the
+	   only other error the futex function could return is EAGAIN since
+	   anything else would mean an error in our function.  It is too
+	   expensive to do that check for every call (which is 	quite common in
+	   case of a large number of threads), so it has been skipped.  */
 	cmpl	$-ENOSYS, %eax
 	jne	19f
 	xorl	%ecx, %ecx
@@ -206,12 +216,12 @@ __pthread_cond_wait:
 	cmpl	8(%esp), %edx
 	jne	7f
 	cmpl	4(%esp), %edi
-	je	8b
+	je	22f
 
 7:	cmpl	%ecx, %edx
 	jne	9f
 	cmp	%eax, %edi
-	je	8b
+	je	22f
 
 9:	addl	$1, woken_seq(%ebx)
 	adcl	$0, woken_seq+4(%ebx)
@@ -287,6 +297,22 @@ __pthread_cond_wait:
 	jmp	20b
 
 	cfi_adjust_cfa_offset(-FRAME_SIZE);
+
+	/* We need to go back to futex_wait.  If we're using requeue_pi, then
+	   release the mutex we had acquired and go back.  */
+22:	movl	16(%esp), %edx
+	test	%edx, %edx
+	jz	8b
+
+	/* Adjust the mutex values first and then unlock it.  The unlock
+	   should always succeed or else the kernel did not lock the mutex
+	   correctly.  */
+	movl	dep_mutex(%ebx), %eax
+	call    __pthread_mutex_cond_lock_adjust
+	xorl	%edx, %edx
+	call	__pthread_mutex_unlock_usercnt
+	jmp	8b
+
 	/* Initial locking failed.  */
 1:
 #if cond_lock == 0
@@ -399,77 +425,6 @@ __pthread_cond_wait:
 #endif
 	call	__lll_unlock_wake
 	jmp	11b
-
-91:
-.LcleanupSTART2:
-	/* FUTEX_WAIT_REQUEUE_PI returned EAGAIN.  We need to
-	   call it again.  */
-
-	/* Get internal lock.  */
-	movl	$1, %edx
-	xorl	%eax, %eax
-	LOCK
-#if cond_lock == 0
-	cmpxchgl %edx, (%ebx)
-#else
-	cmpxchgl %edx, cond_lock(%ebx)
-#endif
-	jz	92f
-
-#if cond_lock == 0
-	movl	%ebx, %edx
-#else
-	leal	cond_lock(%ebx), %edx
-#endif
-#if (LLL_SHARED-LLL_PRIVATE) > 255
-	xorl	%ecx, %ecx
-#endif
-	cmpl	$-1, dep_mutex(%ebx)
-	setne	%cl
-	subl	$1, %ecx
-	andl	$(LLL_SHARED-LLL_PRIVATE), %ecx
-#if LLL_PRIVATE != 0
-	addl	$LLL_PRIVATE, %ecx
-#endif
-	call	__lll_lock_wait
-
-92:
-	/* Increment the cond_futex value again, so it can be used as a new
-	   expected value. */
-	addl	$1, cond_futex(%ebx)
-	movl	cond_futex(%ebx), %ebp
-
-	/* Unlock.  */
-	LOCK
-#if cond_lock == 0
-	subl	$1, (%ebx)
-#else
-	subl	$1, cond_lock(%ebx)
-#endif
-	je	93f
-#if cond_lock == 0
-	movl	%ebx, %eax
-#else
-	leal	cond_lock(%ebx), %eax
-#endif
-#if (LLL_SHARED-LLL_PRIVATE) > 255
-	xorl	%ecx, %ecx
-#endif
-	cmpl	$-1, dep_mutex(%ebx)
-	setne	%cl
-	subl	$1, %ecx
-	andl	$(LLL_SHARED-LLL_PRIVATE), %ecx
-#if LLL_PRIVATE != 0
-	addl	$LLL_PRIVATE, %ecx
-#endif
-	call	__lll_unlock_wake
-
-93:
-	/* Set the rest of SYS_futex args for FUTEX_WAIT_REQUEUE_PI. */
-	xorl	%ecx, %ecx
-	movl	dep_mutex(%ebx), %edi
-	jmp	90b
-.LcleanupEND2:
 
 	.size	__pthread_cond_wait, .-__pthread_cond_wait
 versioned_symbol (libpthread, __pthread_cond_wait, pthread_cond_wait,
@@ -649,10 +604,6 @@ __condvar_w_cleanup:
 	.uleb128  0
 	.long	.Lsub_cond_futex-.LSTARTCODE
 	.long	.LcleanupEND-.Lsub_cond_futex
-	.long	__condvar_w_cleanup-.LSTARTCODE
-	.uleb128  0
-	.long	.LcleanupSTART2-.LSTARTCODE
-	.long	.LcleanupEND2-.LcleanupSTART2
 	.long	__condvar_w_cleanup-.LSTARTCODE
 	.uleb128  0
 	.long	.LcallUR-.LSTARTCODE
