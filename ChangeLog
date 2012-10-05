@@ -1,3 +1,18 @@
+2012-10-05  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #14557]
+	* elf/dl-support.c (_dl_sysinfo_map): New.
+	Include "get-dynamic-info.h" and "setup-vdso.h".
+	(_dl_non_dynamic_init): Call setup_vdso.
+	* elf/dynamic-link.h: Don't include <assert.h>.
+	(elf_get_dynamic_info): Moved to ...
+	* elf/get-dynamic-info.h: Here.  New file.
+	* elf/dynamic-link.h: Include "get-dynamic-info.h".
+	* elf/rtld.c (dl_main): Break out vDSO setup code into ...
+	* elf/setup-vdso.h: Here.  New file.
+	* elf/rtld.c: Include "setup-vdso.h".
+	(dl_main): Call setup_vdso.
+
 2012-10-05  Joseph Myers  <joseph@codesourcery.com>
 
 	* math/libm-test.inc: List nexttoward, cimag, clog10, conf and
