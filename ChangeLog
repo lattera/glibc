@@ -1,3 +1,8 @@
+2012-10-05  Joseph Myers  <joseph@codesourcery.com>
+
+	* scripts/config.guess: Update from config.git.
+	* scripts/config.sub: Likewise.
+
 2012-10-04  Roland McGrath  <roland@hack.frob.com>
 
 	* misc/Versions (GLIBC_PRIVATE): New set, add __madvise.
