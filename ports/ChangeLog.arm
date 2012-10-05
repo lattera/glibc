@@ -1,3 +1,9 @@
+2012-10-05  Roland McGrath  <roland@hack.frob.com>
+
+	* sysdeps/arm/dl-machine.h (fix_bad_pc24): Rewritten, replaced with ...
+	(relocate_pc24): ... this new function.
+	(elf_machine_rel, elf_machine_rela): Update callers.
+
 2012-10-02  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* sysdeps/unix/sysv/linux/arm/nptl/lowlevellock.h: Fix clone
