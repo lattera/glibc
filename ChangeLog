@@ -1,5 +1,9 @@
 2012-10-05  H.J. Lu  <hongjiu.lu@intel.com>
 
+	[BZ #14602]
+	* string/test-strstr.c (check2): New function.
+	(test_main): Call check2.
+
 	* string/Makefile (tests): Remove bug-strstr1, bug-strcasestr1
 	and bug-strchr1.
 	* string/bug-strcasestr1.c (do_test): Moved to ...

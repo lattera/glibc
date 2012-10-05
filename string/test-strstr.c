@@ -156,12 +156,24 @@ check1 (void)
     check_result (impl, s1, s2, exp_result);
 }
 
+static void
+check2 (void)
+{
+  const char s1[] = ", enable_static, \0, enable_shared, ";
+  char *exp_result;
+
+  exp_result = stupid_strstr (s1, s1 + 18);
+  FOR_EACH_IMPL (impl, 0)
+    check_result (impl, s1, s1 + 18, exp_result);
+}
+
 static int
 test_main (void)
 {
   test_init ();
 
   check1 ();
+  check2 ();
 
   printf ("%23s", "");
   FOR_EACH_IMPL (impl, 0)
