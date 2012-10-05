@@ -28,7 +28,7 @@ routines	= $(dl-routines) dl-support dl-iteratephdr \
 
 # The core dynamic linking functions are in libc for the static and
 # profiled libraries.
-dl-routines	= $(addprefix dl-,load lookup object reloc deps \
+dl-routines	= $(addprefix dl-,load lookup object reloc deps hwcaps \
 				  runtime error init fini debug misc \
 				  version profile conflict tls origin scope \
 				  execstack caller open close trampoline)

@@ -646,26 +646,6 @@ _dl_show_auxv (void)
 }
 
 
-/* Return an array of useful/necessary hardware capability names.  */
-const struct r_strlenpair *
-internal_function
-_dl_important_hwcaps (const char *platform, size_t platform_len, size_t *sz,
-		      size_t *max_capstrlen)
-{
-  struct r_strlenpair *result;
-
-  /* Return an empty array.  Hurd has no hardware capabilities.  */
-  result = (struct r_strlenpair *) malloc (sizeof (*result));
-  if (result == NULL)
-    _dl_signal_error (ENOMEM, NULL, NULL, "cannot create capability list");
-
-  result[0].str = (char *) result;	/* Does not really matter.  */
-  result[0].len = 0;
-
-  *sz = 1;
-  return result;
-}
-
 void weak_function
 _dl_init_first (int argc, ...)
 {

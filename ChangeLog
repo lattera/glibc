@@ -1,5 +1,12 @@
 2012-10-05  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* elf/Makefile (dl-routines): Add hwcaps.
+	* elf/dl-support.c (_dl_important_hwcaps): Removed.
+	* elf/dl-sysdep.c (_DL_FIRST_EXTRA): Likewise.
+	(_dl_important_hwcaps): Moved to ...
+	* elf/dl-hwcaps.c: Here.  New file.
+	* sysdeps/mach/hurd/dl-sysdep.c (_dl_important_hwcaps): Removed.
+
 	[BZ #14557]
 	* elf/setup-vdso.h (setup_vdso): Set GL(dl_nns) to 1 for vDSO
 	if IS_IN_rtld isn't defined.

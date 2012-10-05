@@ -335,23 +335,6 @@ _dl_non_dynamic_init (void)
 	}
 }
 
-
-const struct r_strlenpair *
-internal_function
-_dl_important_hwcaps (const char *platform, size_t platform_len, size_t *sz,
-		      size_t *max_capstrlen)
-{
-  static struct r_strlenpair result;
-  static char buf[1];
-
-  result.str = buf;	/* Does not really matter.  */
-  result.len = 0;
-
-  *sz = 1;
-  return &result;
-}
-
-
 #ifdef DL_SYSINFO_IMPLEMENTATION
 DL_SYSINFO_IMPLEMENTATION
 #endif
