@@ -161,10 +161,15 @@ check2 (void)
 {
   const char s1[] = ", enable_static, \0, enable_shared, ";
   char *exp_result;
+  char *s2 = (void *) buf1 + page_size - 18;
 
+  strcpy (s2, s1);
   exp_result = stupid_strstr (s1, s1 + 18);
   FOR_EACH_IMPL (impl, 0)
-    check_result (impl, s1, s1 + 18, exp_result);
+    {
+      check_result (impl, s1, s1 + 18, exp_result);
+      check_result (impl, s2, s1 + 18, exp_result);
+    }
 }
 
 static int

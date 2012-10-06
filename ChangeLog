@@ -1,3 +1,7 @@
+2012-10-06  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* string/test-strstr.c (check2): Add a test for page boundary.
+
 2012-10-05  David S. Miller  <davem@davemloft.net>
 
 	* sysdeps/sparc/sparc64/multiarch/memset-niagara4.S: New file.
