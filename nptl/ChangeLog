@@ -1,3 +1,10 @@
+2012-10-05  David S. Miller  <davem@davemloft.net>
+
+	[BZ #14568]
+	* sysdeps/sparc/tls.h (DB_THREAD_SELF_INCLUDE): Delete.
+	(DB_THREAD_SELF): Use constants for the register offsets.  Correct
+	the case of a 64-bit debugger with a 32-bit inferior.
+
 2012-10-05  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #14557]
