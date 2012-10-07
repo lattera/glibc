@@ -64,6 +64,9 @@ ENTRY(__memcpy_niagara4)
 100:	/* %o0=dst, %o1=src, %o2=len */
 	mov		%o0, %o3
 101:
+#ifndef __arch64__
+	srl		%o2, 0, %o2
+#endif
 	brz,pn		%o2, .Lexit
 	 cmp		%o2, 3
 	ble,pn		%icc, .Ltiny
