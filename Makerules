@@ -1149,7 +1149,7 @@ ifeq ($(versioning),yes)
 	mv -f $@T $@
 
 %.dynsym: %.so
-	$(OBJDUMP) --dynamic-syms $< > $@T
+	LC_ALL=C $(OBJDUMP) --dynamic-syms $< > $@T
 	mv -f $@T $@
 
 vpath %.abilist $(+sysdep_dirs)
