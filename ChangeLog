@@ -1,3 +1,8 @@
+2012-10-08  Andreas Schwab  <schwab@linux-m68k.org>
+
+	* sysdeps/unix/sysv/linux/powerpc/get_timebase_freq.c: Include
+	<stdint.h>.
+
 2012-10-06  David S. Miller  <davem@davemloft.net>
 
 	* sysdeps/sparc/sparc64/multiarch/memcpy-niagara4.S: On 32-bit, clear
