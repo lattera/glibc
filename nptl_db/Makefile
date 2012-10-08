@@ -60,6 +60,6 @@ $(objpfx)libthread_db.so: $(common-objpfx)libc.so \
 tests: $(objpfx)db-symbols.out
 $(objpfx)db-symbols.out: $(objpfx)db-symbols.v.i \
 			 $(common-objpfx)nptl/libpthread.so
-	readelf -W -s $(filter %.so,$^) | $(AWK) -f $< > $@
+	LC_ALL=C readelf -W -s $(filter %.so,$^) | $(AWK) -f $< > $@
 
 $(objpfx)db-symbols.v.i: db-symbols.awk

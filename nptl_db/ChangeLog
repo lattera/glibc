@@ -1,3 +1,9 @@
+2012-10-08  Jonathan Nieder  <jrnieder@gmail.com>
+
+	[BZ #14661]
+	* Makefile ($(objpfx)db-symbols.out): Force C locale when running
+	readelf -s.
+
 2012-03-07  Ulrich Drepper  <drepper@gmail.com>
 
 	* Makefile (distribute): Remove variable.
