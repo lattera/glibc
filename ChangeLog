@@ -1,3 +1,17 @@
+2012-10-08  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/gen-libm-test.pl (parse_args): Handle isinf and isnan as
+	type-generic.
+	* math/libm-test.inc: Update comment listing what functions and
+	macros are tested.
+	(finite_test): New function.
+	(isinf_test): Likewise.
+	(isnan_test): Likewise.
+	(fpclassify_test): Test subnormal input.
+	(isfinite_test): Likewise.
+	(isnormal_test): Likewise.
+	(main): Call the new functions.
+
 2012-10-08  Jonathan Nieder  <jrnieder@gmail.com>
 
 	[BZ #14660]

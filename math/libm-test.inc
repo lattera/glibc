@@ -40,9 +40,9 @@
 /* This testsuite has currently tests for:
    acos, acosh, asin, asinh, atan, atan2, atanh,
    cbrt, ceil, copysign, cos, cosh, erf, erfc, exp, exp10, exp2, expm1,
-   fabs, fdim, floor, fma, fmax, fmin, fmod, fpclassify,
+   fabs, fdim, finite, floor, fma, fmax, fmin, fmod, fpclassify,
    frexp, gamma, hypot,
-   ilogb, isfinite, isnormal,
+   ilogb, isfinite, isinf, isnan, isnormal,
    j0, j1, jn,
    ldexp, lgamma, log, log10, log1p, log2, logb,
    modf, nearbyint, nextafter, nexttoward,
@@ -58,8 +58,6 @@
 
    At the moment the following functions and macros aren't tested:
    drem (alias for remainder),
-   finite (functions equivalent to isfinite macro),
-   isinf, isnan,
    isless, islessequal, isgreater, isgreaterequal, islessgreater, isunordered,
    lgamma_r,
    nan,
@@ -4414,6 +4412,23 @@ fdim_test (void)
 
 
 static void
+finite_test (void)
+{
+  START (finite);
+
+  TEST_f_b (finite, 0, 1);
+  TEST_f_b (finite, minus_zero, 1);
+  TEST_f_b (finite, 10, 1);
+  TEST_f_b (finite, min_subnorm_value, 1);
+  TEST_f_b (finite, plus_infty, 0);
+  TEST_f_b (finite, minus_infty, 0);
+  TEST_f_b (finite, nan_value, 0);
+
+  END (finite);
+}
+
+
+static void
 floor_test (void)
 {
   START (floor);
@@ -4964,6 +4979,7 @@ fpclassify_test (void)
   TEST_f_i (fpclassify, plus_zero, FP_ZERO);
   TEST_f_i (fpclassify, minus_zero, FP_ZERO);
   TEST_f_i (fpclassify, 1000, FP_NORMAL);
+  TEST_f_i (fpclassify, min_subnorm_value, FP_SUBNORMAL);
 
   END (fpclassify);
 }
@@ -5113,11 +5129,44 @@ isfinite_test (void)
   TEST_f_b (isfinite, 0, 1);
   TEST_f_b (isfinite, minus_zero, 1);
   TEST_f_b (isfinite, 10, 1);
+  TEST_f_b (isfinite, min_subnorm_value, 1);
   TEST_f_b (isfinite, plus_infty, 0);
   TEST_f_b (isfinite, minus_infty, 0);
   TEST_f_b (isfinite, nan_value, 0);
 
   END (isfinite);
+}
+
+static void
+isinf_test (void)
+{
+  START (isinf);
+
+  TEST_f_b (isinf, 0, 0);
+  TEST_f_b (isinf, minus_zero, 0);
+  TEST_f_b (isinf, 10, 0);
+  TEST_f_b (isinf, min_subnorm_value, 0);
+  TEST_f_b (isinf, plus_infty, 1);
+  TEST_f_b (isinf, minus_infty, 1);
+  TEST_f_b (isinf, nan_value, 0);
+
+  END (isinf);
+}
+
+static void
+isnan_test (void)
+{
+  START (isnan);
+
+  TEST_f_b (isnan, 0, 0);
+  TEST_f_b (isnan, minus_zero, 0);
+  TEST_f_b (isnan, 10, 0);
+  TEST_f_b (isnan, min_subnorm_value, 0);
+  TEST_f_b (isnan, plus_infty, 0);
+  TEST_f_b (isnan, minus_infty, 0);
+  TEST_f_b (isnan, nan_value, 1);
+
+  END (isnan);
 }
 
 static void
@@ -5128,6 +5177,7 @@ isnormal_test (void)
   TEST_f_b (isnormal, 0, 0);
   TEST_f_b (isnormal, minus_zero, 0);
   TEST_f_b (isnormal, 10, 1);
+  TEST_f_b (isnormal, min_subnorm_value, 0);
   TEST_f_b (isnormal, plus_infty, 0);
   TEST_f_b (isnormal, minus_infty, 0);
   TEST_f_b (isnormal, nan_value, 0);
@@ -9627,8 +9677,11 @@ main (int argc, char **argv)
 
   /* Keep the tests a wee bit ordered (according to ISO C99).  */
   /* Classification macros:  */
+  finite_test ();
   fpclassify_test ();
   isfinite_test ();
+  isinf_test ();
+  isnan_test ();
   isnormal_test ();
   signbit_test ();
 
