@@ -1,3 +1,8 @@
+2012-10-09  Roland McGrath  <roland@hack.frob.com>
+
+	* dlfcn/dlerror.c (check_free): Call _dl_addr only if SHARED is
+	defined.  Don't check if MAP is NULL.
+
 2012-10-09  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/generic/_G_config.h (_G_off64_t): Remove.

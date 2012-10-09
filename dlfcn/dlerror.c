@@ -1,5 +1,5 @@
 /* Return error detail for failing <dlfcn.h> functions.
-   Copyright (C) 1995-2000,2002,2003,2004,2005 Free Software Foundation, Inc.
+   Copyright (C) 1995-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -190,11 +190,14 @@ check_free (struct dl_action_result *rec)
     {
       /* We can free the string only if the allocation happened in the
 	 C library used by the dynamic linker.  This means, it is
-	 always the C library in the base namespave.  */
+	 always the C library in the base namespace.  When we're statically
+         linked, the dynamic linker is part of the program and so always
+	 uses the same C library we use here.  */
+#ifdef SHARED
       struct link_map *map = NULL;
       Dl_info info;
-      if (_dl_addr (check_free, &info, &map, NULL) != 0
-	  && map != NULL && map->l_ns == 0)
+      if (_dl_addr (check_free, &info, &map, NULL) != 0 && map->l_ns == 0)
+#endif
 	free ((char *) rec->errstring);
     }
 }
