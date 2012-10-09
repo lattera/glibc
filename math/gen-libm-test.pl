@@ -320,7 +320,9 @@ sub parse_args {
   }
   # Special handling for some macros:
   $cline .= " (\"$str\", ";
-  if ($args[0] =~ /fpclassify|isnormal|isfinite|isinf|isnan|signbit/) {
+  if ($args[0] =~ /fpclassify|isnormal|isfinite|isinf|isnan|signbit
+      |isgreater|isgreaterequal|isless|islessequal
+      |islessgreater|isunordered/x) {
     $c_call = "$args[0] (";
   } else {
     $c_call = " FUNC($args[0]) (";

@@ -1,3 +1,17 @@
+2012-10-09  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/gen-libm-test.pl (parse_args): Handle comparison macros as
+	type-generic.
+	* math/libm-test.inc: Update comment listing what functions and
+	macros are tested.
+	(isgreater_test): New function.
+	(isgreaterequal_test): Likewise.
+	(isless_test): Likewise.
+	(islessequal_test): Likewise.
+	(islessgreater_test): Likewise.
+	(isunordered_test): Likewise.
+	(main): Call the new functions.
+
 2012-10-09  Roland McGrath  <roland@hack.frob.com>
 
 	* aclocal.m4 (GLIBC_PROVIDES): Provide _AS_BASENAME_PREPARE,

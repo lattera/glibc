@@ -43,6 +43,7 @@
    fabs, fdim, finite, floor, fma, fmax, fmin, fmod, fpclassify,
    frexp, gamma, hypot,
    ilogb, isfinite, isinf, isnan, isnormal,
+   isless, islessequal, isgreater, isgreaterequal, islessgreater, isunordered,
    j0, j1, jn,
    ldexp, lgamma, log, log10, log1p, log2, logb,
    modf, nearbyint, nextafter, nexttoward,
@@ -58,7 +59,6 @@
 
    At the moment the following functions and macros aren't tested:
    drem (alias for remainder),
-   isless, islessequal, isgreater, isgreaterequal, islessgreater, isunordered,
    lgamma_r,
    nan,
    pow10 (alias for exp10).
@@ -5138,6 +5138,56 @@ isfinite_test (void)
 }
 
 static void
+isgreater_test (void)
+{
+  START (isgreater);
+
+  TEST_ff_i (isgreater, minus_zero, minus_zero, 0);
+  TEST_ff_i (isgreater, minus_zero, plus_zero, 0);
+  TEST_ff_i (isgreater, minus_zero, (FLOAT) 1, 0);
+  TEST_ff_i (isgreater, minus_zero, nan_value, 0);
+  TEST_ff_i (isgreater, plus_zero, minus_zero, 0);
+  TEST_ff_i (isgreater, plus_zero, plus_zero, 0);
+  TEST_ff_i (isgreater, plus_zero, (FLOAT) 1, 0);
+  TEST_ff_i (isgreater, plus_zero, nan_value, 0);
+  TEST_ff_i (isgreater, (FLOAT) 1, minus_zero, 1);
+  TEST_ff_i (isgreater, (FLOAT) 1, plus_zero, 1);
+  TEST_ff_i (isgreater, (FLOAT) 1, (FLOAT) 1, 0);
+  TEST_ff_i (isgreater, (FLOAT) 1, nan_value, 0);
+  TEST_ff_i (isgreater, nan_value, minus_zero, 0);
+  TEST_ff_i (isgreater, nan_value, plus_zero, 0);
+  TEST_ff_i (isgreater, nan_value, (FLOAT) 1, 0);
+  TEST_ff_i (isgreater, nan_value, nan_value, 0);
+
+  END (isgreater);
+}
+
+static void
+isgreaterequal_test (void)
+{
+  START (isgreaterequal);
+
+  TEST_ff_i (isgreaterequal, minus_zero, minus_zero, 1);
+  TEST_ff_i (isgreaterequal, minus_zero, plus_zero, 1);
+  TEST_ff_i (isgreaterequal, minus_zero, (FLOAT) 1, 0);
+  TEST_ff_i (isgreaterequal, minus_zero, nan_value, 0);
+  TEST_ff_i (isgreaterequal, plus_zero, minus_zero, 1);
+  TEST_ff_i (isgreaterequal, plus_zero, plus_zero, 1);
+  TEST_ff_i (isgreaterequal, plus_zero, (FLOAT) 1, 0);
+  TEST_ff_i (isgreaterequal, plus_zero, nan_value, 0);
+  TEST_ff_i (isgreaterequal, (FLOAT) 1, minus_zero, 1);
+  TEST_ff_i (isgreaterequal, (FLOAT) 1, plus_zero, 1);
+  TEST_ff_i (isgreaterequal, (FLOAT) 1, (FLOAT) 1, 1);
+  TEST_ff_i (isgreaterequal, (FLOAT) 1, nan_value, 0);
+  TEST_ff_i (isgreaterequal, nan_value, minus_zero, 0);
+  TEST_ff_i (isgreaterequal, nan_value, plus_zero, 0);
+  TEST_ff_i (isgreaterequal, nan_value, (FLOAT) 1, 0);
+  TEST_ff_i (isgreaterequal, nan_value, nan_value, 0);
+
+  END (isgreaterequal);
+}
+
+static void
 isinf_test (void)
 {
   START (isinf);
@@ -5151,6 +5201,81 @@ isinf_test (void)
   TEST_f_b (isinf, nan_value, 0);
 
   END (isinf);
+}
+
+static void
+isless_test (void)
+{
+  START (isless);
+
+  TEST_ff_i (isless, minus_zero, minus_zero, 0);
+  TEST_ff_i (isless, minus_zero, plus_zero, 0);
+  TEST_ff_i (isless, minus_zero, (FLOAT) 1, 1);
+  TEST_ff_i (isless, minus_zero, nan_value, 0);
+  TEST_ff_i (isless, plus_zero, minus_zero, 0);
+  TEST_ff_i (isless, plus_zero, plus_zero, 0);
+  TEST_ff_i (isless, plus_zero, (FLOAT) 1, 1);
+  TEST_ff_i (isless, plus_zero, nan_value, 0);
+  TEST_ff_i (isless, (FLOAT) 1, minus_zero, 0);
+  TEST_ff_i (isless, (FLOAT) 1, plus_zero, 0);
+  TEST_ff_i (isless, (FLOAT) 1, (FLOAT) 1, 0);
+  TEST_ff_i (isless, (FLOAT) 1, nan_value, 0);
+  TEST_ff_i (isless, nan_value, minus_zero, 0);
+  TEST_ff_i (isless, nan_value, plus_zero, 0);
+  TEST_ff_i (isless, nan_value, (FLOAT) 1, 0);
+  TEST_ff_i (isless, nan_value, nan_value, 0);
+
+  END (isless);
+}
+
+static void
+islessequal_test (void)
+{
+  START (islessequal);
+
+  TEST_ff_i (islessequal, minus_zero, minus_zero, 1);
+  TEST_ff_i (islessequal, minus_zero, plus_zero, 1);
+  TEST_ff_i (islessequal, minus_zero, (FLOAT) 1, 1);
+  TEST_ff_i (islessequal, minus_zero, nan_value, 0);
+  TEST_ff_i (islessequal, plus_zero, minus_zero, 1);
+  TEST_ff_i (islessequal, plus_zero, plus_zero, 1);
+  TEST_ff_i (islessequal, plus_zero, (FLOAT) 1, 1);
+  TEST_ff_i (islessequal, plus_zero, nan_value, 0);
+  TEST_ff_i (islessequal, (FLOAT) 1, minus_zero, 0);
+  TEST_ff_i (islessequal, (FLOAT) 1, plus_zero, 0);
+  TEST_ff_i (islessequal, (FLOAT) 1, (FLOAT) 1, 1);
+  TEST_ff_i (islessequal, (FLOAT) 1, nan_value, 0);
+  TEST_ff_i (islessequal, nan_value, minus_zero, 0);
+  TEST_ff_i (islessequal, nan_value, plus_zero, 0);
+  TEST_ff_i (islessequal, nan_value, (FLOAT) 1, 0);
+  TEST_ff_i (islessequal, nan_value, nan_value, 0);
+
+  END (islessequal);
+}
+
+static void
+islessgreater_test (void)
+{
+  START (islessgreater);
+
+  TEST_ff_i (islessgreater, minus_zero, minus_zero, 0);
+  TEST_ff_i (islessgreater, minus_zero, plus_zero, 0);
+  TEST_ff_i (islessgreater, minus_zero, (FLOAT) 1, 1);
+  TEST_ff_i (islessgreater, minus_zero, nan_value, 0);
+  TEST_ff_i (islessgreater, plus_zero, minus_zero, 0);
+  TEST_ff_i (islessgreater, plus_zero, plus_zero, 0);
+  TEST_ff_i (islessgreater, plus_zero, (FLOAT) 1, 1);
+  TEST_ff_i (islessgreater, plus_zero, nan_value, 0);
+  TEST_ff_i (islessgreater, (FLOAT) 1, minus_zero, 1);
+  TEST_ff_i (islessgreater, (FLOAT) 1, plus_zero, 1);
+  TEST_ff_i (islessgreater, (FLOAT) 1, (FLOAT) 1, 0);
+  TEST_ff_i (islessgreater, (FLOAT) 1, nan_value, 0);
+  TEST_ff_i (islessgreater, nan_value, minus_zero, 0);
+  TEST_ff_i (islessgreater, nan_value, plus_zero, 0);
+  TEST_ff_i (islessgreater, nan_value, (FLOAT) 1, 0);
+  TEST_ff_i (islessgreater, nan_value, nan_value, 0);
+
+  END (islessgreater);
 }
 
 static void
@@ -5183,6 +5308,31 @@ isnormal_test (void)
   TEST_f_b (isnormal, nan_value, 0);
 
   END (isnormal);
+}
+
+static void
+isunordered_test (void)
+{
+  START (isunordered);
+
+  TEST_ff_i (isunordered, minus_zero, minus_zero, 0);
+  TEST_ff_i (isunordered, minus_zero, plus_zero, 0);
+  TEST_ff_i (isunordered, minus_zero, (FLOAT) 1, 0);
+  TEST_ff_i (isunordered, minus_zero, nan_value, 1);
+  TEST_ff_i (isunordered, plus_zero, minus_zero, 0);
+  TEST_ff_i (isunordered, plus_zero, plus_zero, 0);
+  TEST_ff_i (isunordered, plus_zero, (FLOAT) 1, 0);
+  TEST_ff_i (isunordered, plus_zero, nan_value, 1);
+  TEST_ff_i (isunordered, (FLOAT) 1, minus_zero, 0);
+  TEST_ff_i (isunordered, (FLOAT) 1, plus_zero, 0);
+  TEST_ff_i (isunordered, (FLOAT) 1, (FLOAT) 1, 0);
+  TEST_ff_i (isunordered, (FLOAT) 1, nan_value, 1);
+  TEST_ff_i (isunordered, nan_value, minus_zero, 1);
+  TEST_ff_i (isunordered, nan_value, plus_zero, 1);
+  TEST_ff_i (isunordered, nan_value, (FLOAT) 1, 1);
+  TEST_ff_i (isunordered, nan_value, nan_value, 1);
+
+  END (isunordered);
 }
 
 static void
@@ -9817,6 +9967,14 @@ main (int argc, char **argv)
   fma_test_towardzero ();
   fma_test_downward ();
   fma_test_upward ();
+
+  /* Comparison macros:  */
+  isgreater_test ();
+  isgreaterequal_test ();
+  isless_test ();
+  islessequal_test ();
+  islessgreater_test ();
+  isunordered_test ();
 
   /* Complex functions:  */
   cabs_test ();
