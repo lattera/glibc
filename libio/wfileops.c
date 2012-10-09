@@ -787,7 +787,7 @@ _IO_wfile_seekoff (fp, offset, dir, mode)
       break;
     case _IO_seek_end:
       {
-	struct _G_stat64 st;
+	struct stat64 st;
 	if (_IO_SYSSTAT (fp, &st) == 0 && S_ISREG (st.st_mode))
 	  {
 	    offset += st.st_size;

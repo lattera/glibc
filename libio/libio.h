@@ -37,7 +37,7 @@
 #define _IO_size_t size_t
 #define _IO_ssize_t __ssize_t
 #define _IO_off_t __off_t
-#define _IO_off64_t _G_off64_t
+#define _IO_off64_t __off64_t
 #define _IO_pid_t __pid_t
 #define _IO_uid_t __uid_t
 #define _IO_iconv_t _G_iconv_t

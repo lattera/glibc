@@ -28,8 +28,6 @@ typedef struct
   __off64_t __pos;
   __mbstate_t __state;
 } _G_fpos64_t;
-#define _G_off64_t	__off64_t
-#define _G_stat64	stat64
 #if defined _LIBC || defined _GLIBCPP_USE_WCHAR_T
 # include <gconv.h>
 typedef union

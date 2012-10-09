@@ -1,3 +1,21 @@
+2012-10-09  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/generic/_G_config.h (_G_off64_t): Remove.
+	(_G_stat64): Likewise.
+	* sysdeps/unix/sysv/linux/_G_config.h (_G_off64_t): Remove.
+	(_G_stat64): Likewise.
+	* libio/filedoalloc.c (_IO_file_doallocate): Use struct stat64
+	instead of struct _G_stat64.
+	* libio/fileops.c (mmap_remap_check): Likewise.
+	(decide_maybe_mmap): Likewise.
+	(_IO_new_file_seekoff): Likewise.
+	(_IO_file_stat): Likewise.
+	* libio/libio.h (_IO_off64_t): Define to __off64_t, not
+	_G_off64_t.
+	* libio/oldfileops.c (_IO_old_file_seekoff): Use struct stat64
+	instead of struct _G_stat64.
+	* libio/wfileops.c (_IO_wfile_seekoff): Likewise.
+
 2012-10-08  Maxim Kuvyrkov  <maxim@codesourcery.com>
 
 	[BZ #14602]

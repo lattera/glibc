@@ -96,7 +96,7 @@ _IO_file_doallocate (fp)
 {
   _IO_size_t size;
   char *p;
-  struct _G_stat64 st;
+  struct stat64 st;
 
 #ifndef _LIBC
   /* If _IO_cleanup_registration_needed is non-zero, we should call the
