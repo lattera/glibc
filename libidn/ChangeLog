@@ -1,3 +1,9 @@
+2012-10-09  Roland McGrath  <roland@hack.frob.com>
+
+	* configure.in: If $shared != yes, just disable the add-on entirely
+	and issue a warning.
+	* configure: Regenerated.
+
 2012-03-07  Ulrich Drepper  <drepper@gmail.com>
 
 	* Makefile (distribute): Remove variable.
