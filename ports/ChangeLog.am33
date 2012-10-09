@@ -1,3 +1,7 @@
+2012-10-09  Roland McGrath  <roland@hack.frob.com>
+
+	* sysdeps/unix/sysv/linux/am33/configure: Regenerated.
+
 2012-08-07  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/am33/configure.in (arch_minimum_kernel):

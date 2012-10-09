@@ -4,3 +4,4 @@
 # With required gcc+binutils, we can always access static and hidden
 # symbols in a position independent way.
 $as_echo "#define PI_STATIC_AND_HIDDEN 1" >>confdefs.h
+

@@ -1,5 +1,23 @@
 2012-10-09  Roland McGrath  <roland@hack.frob.com>
 
+	* aclocal.m4 (GLIBC_PROVIDES): Provide _AS_BASENAME_PREPARE,
+	_AS_ME_PREPARE, _AS_VAR_ARITH_PREPARE, AS_SHELL_FN_as_fn_set_status,
+	AS_SHELL_FN_as_fn_exit, AS_SHELL_FN_ac_fn_c_try_compile.
+	* sysdeps/i386/configure: Regenerated.
+	* sysdeps/ieee754/ldbl-opt/configure: Regenerated.
+	* sysdeps/mach/configure: Regenerated.
+	* sysdeps/mach/hurd/configure: Regenerated.
+	* sysdeps/powerpc/configure: Regenerated.
+	* sysdeps/powerpc/powerpc32/configure: Regenerated.
+	* sysdeps/powerpc/powerpc64/configure: Regenerated.
+	* sysdeps/s390/s390-32/configure: Regenerated.
+	* sysdeps/s390/s390-64/configure: Regenerated.
+	* sysdeps/sh/configure: Regenerated.
+	* sysdeps/sparc/configure: Regenerated.
+	* sysdeps/unix/sysv/linux/configure: Regenerated.
+	* sysdeps/unix/sysv/linux/powerpc/configure: Regenerated.
+	* sysdeps/x86_64/configure: Regenerated.
+
 	* dlfcn/dlerror.c (check_free): Call _dl_addr only if SHARED is
 	defined.  Don't check if MAP is NULL.
 

@@ -1,3 +1,7 @@
+2012-10-09  Roland McGrath  <roland@hack.frob.com>
+
+	* sysdeps/ia64/configure: Regenerated.
+
 2012-10-02  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* sysdeps/unix/sysv/linux/ia64/nptl/lowlevellock.h: Fix clone

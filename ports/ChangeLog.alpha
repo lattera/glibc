@@ -1,3 +1,7 @@
+2012-10-09  Roland McGrath  <roland@hack.frob.com>
+
+	* sysdeps/alpha/configure: Regenerated.
+
 2012-10-02  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* sysdeps/unix/sysv/linux/alpha/nptl/lowlevellock.h: Fix clone

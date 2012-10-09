@@ -1,3 +1,7 @@
+2012-10-09  Roland McGrath  <roland@hack.frob.com>
+
+	* sysdeps/arm/configure: Regenerated.
+
 2012-10-05  Roland McGrath  <roland@hack.frob.com>
 
 	* sysdeps/arm/dl-machine.h (fix_bad_pc24): Rewritten, replaced with ...

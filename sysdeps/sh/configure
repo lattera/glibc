@@ -2,3 +2,4 @@
  # Local configure fragment for sysdeps/sh.
 
 $as_echo "#define PI_STATIC_AND_HIDDEN 1" >>confdefs.h
+
