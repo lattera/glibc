@@ -1,3 +1,16 @@
+2012-10-08  Maxim Kuvyrkov  <maxim@codesourcery.com>
+
+	[BZ #14602]
+	* string/str-two-way.h (AVAILABLE1, AVAILABLE2, AVAILABLE1_USES_J):
+	Replace with ...
+	(CHECK_EOL): New macro.
+	(two_way_short_needle): Check beginning of haystack for EOL.  Use
+	CHECK_EOL.
+	* string/strcasestr.c (AVAILABLE1, AVAILABLE2, AVAILABLE1_USES_J):
+	Replace with CHECK_EOL.
+	* string/strstr.c (AVAILABLE1, AVAILABLE2, AVAILABLE1_USES_J):
+	Replace with CHECK_EOL.
+
 2012-10-08  Joseph Myers  <joseph@codesourcery.com>
 
 	* math/gen-libm-test.pl (parse_args): Handle isinf and isnan as

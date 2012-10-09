@@ -75,17 +75,16 @@
 # define CMP_FUNC memcmp
 #endif
 
-#ifndef AVAILABLE1
-# define AVAILABLE1(h, h_l, j, n_l) AVAILABLE (h, h_l, j, n_l)
+/* Check for end-of-line in strstr and strcasestr routines.
+   We piggy-back matching procedure for detecting EOL where possible,
+   and use AVAILABLE macro otherwise.  */
+#ifndef CHECK_EOL
+# define CHECK_EOL (0)
 #endif
-#ifndef AVAILABLE2
-# define AVAILABLE2(h, h_l, j, n_l) (1)
-#endif
+
+/* Return NULL if argument is '\0'.  */
 #ifndef RET0_IF_0
 # define RET0_IF_0(a) /* nothing */
-#endif
-#ifndef AVAILABLE1_USES_J
-# define AVAILABLE1_USES_J (1)
 #endif
 
 /* Perform a critical factorization of NEEDLE, of length NEEDLE_LEN.
@@ -283,11 +282,23 @@ two_way_short_needle (const unsigned char *haystack, size_t haystack_len,
 	 and use an optimized first-character loop.  */
       unsigned char needle_suffix = CANON_ELEMENT (needle[suffix]);
 
+#if CHECK_EOL
+      /* We start matching from the SUFFIX'th element, so make sure we
+	 don't hit '\0' before that.  */
+      if (haystack_len < suffix + 1
+	  && !AVAILABLE (haystack, haystack_len, 0, suffix + 1))
+	return NULL;
+#endif
+
       /* The two halves of needle are distinct; no extra memory is
 	 required, and any mismatch results in a maximal shift.  */
       period = MAX (suffix, needle_len - suffix) + 1;
       j = 0;
-      while (AVAILABLE1 (haystack, haystack_len, j, needle_len))
+      while (1
+#if !CHECK_EOL
+	     && AVAILABLE (haystack, haystack_len, j, needle_len)
+#endif
+	     )
 	{
 	  unsigned char haystack_char;
 	  const unsigned char *pneedle;
@@ -298,13 +309,13 @@ two_way_short_needle (const unsigned char *haystack, size_t haystack_len,
 	      != (haystack_char = CANON_ELEMENT (*phaystack++)))
 	    {
 	      RET0_IF_0 (haystack_char);
-#if AVAILABLE1_USES_J
+#if CHECK_EOL
 	      ++j;
 #endif
 	      continue;
 	    }
 
-#if !AVAILABLE1_USES_J
+#if !CHECK_EOL
 	  /* Calculate J if it wasn't kept up-to-date in the first-character
 	     loop.  */
 	  j = phaystack - &haystack[suffix] - 1;
@@ -346,8 +357,10 @@ two_way_short_needle (const unsigned char *haystack, size_t haystack_len,
 	  else
 	    j += i - suffix + 1;
 
-	  if (!AVAILABLE2 (haystack, haystack_len, j, needle_len))
+#if CHECK_EOL
+	  if (!AVAILABLE (haystack, haystack_len, j, needle_len))
 	    break;
+#endif
 
 	  phaystack = &haystack[suffix + j];
 	}
