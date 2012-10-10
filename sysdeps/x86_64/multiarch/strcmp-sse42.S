@@ -1,5 +1,5 @@
 /* strcmp with SSE4.2
-   Copyright (C) 2009, 2010, 2011 Free Software Foundation, Inc.
+   Copyright (C) 2009-2012 Free Software Foundation, Inc.
    Contributed by Intel Corporation.
    This file is part of the GNU C Library.
 
@@ -48,6 +48,8 @@
 	.section .text.SECTION,"ax",@progbits
 	.align	16
 	.type	STRCMP_SSE42, @function
+	.globl	STRCMP_SSE42
+	.hidden	STRCMP_SSE42
 #ifdef USE_AS_STRCASECMP_L
 ENTRY (GLABEL(__strcasecmp))
 	movq	__libc_tsd_LOCALE@gottpoff(%rip),%rax

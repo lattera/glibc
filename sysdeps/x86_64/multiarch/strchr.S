@@ -1,5 +1,5 @@
-/* strchr with SSE4.2
-   Copyright (C) 2009, 2010 Free Software Foundation, Inc.
+/* Multiple versions of strchr
+   Copyright (C) 2009-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -82,6 +82,8 @@ END(strchr)
 	.section .text.sse4.2,"ax",@progbits
 	.align	16
 	.type	__strchr_sse42, @function
+	.globl	__strchr_sse42
+	.hidden	__strchr_sse42
 __strchr_sse42:
 	cfi_startproc
 	CALL_MCOUNT
@@ -164,6 +166,8 @@ L(loop_exit):
 # define ENTRY(name) \
 	.type __strchr_sse2, @function; \
 	.align 16; \
+	.globl __strchr_sse2; \
+	.hidden __strchr_sse2; \
 	__strchr_sse2: cfi_startproc; \
 	CALL_MCOUNT
 # undef END

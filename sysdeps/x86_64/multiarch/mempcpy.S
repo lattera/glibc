@@ -1,5 +1,6 @@
 /* Multiple versions of mempcpy
-   Copyright (C) 2010 Free Software Foundation, Inc.
+   All versions must be listed in ifunc-impl-list.c.
+   Copyright (C) 2010-2012 Free Software Foundation, Inc.
    Contributed by Intel Corporation.
    This file is part of the GNU C Library.
 
@@ -43,6 +44,8 @@ END(__mempcpy)
 # define ENTRY(name) \
 	.type __mempcpy_sse2, @function; \
 	.p2align 4; \
+	.globl __mempcpy_sse2; \
+	.hidden __mempcpy_sse2; \
 	__mempcpy_sse2: cfi_startproc; \
 	CALL_MCOUNT
 # undef END

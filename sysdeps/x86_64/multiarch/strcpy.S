@@ -1,5 +1,6 @@
 /* Multiple versions of strcpy
-   Copyright (C) 2009, 2011 Free Software Foundation, Inc.
+   All versions must be listed in ifunc-impl-list.c.
+   Copyright (C) 2009-2012 Free Software Foundation, Inc.
    Contributed by Intel Corporation.
    This file is part of the GNU C Library.
 
@@ -77,6 +78,8 @@ END(STRCPY)
 # define ENTRY(name) \
 	.type STRCPY_SSE2, @function; \
 	.align 16; \
+	.globl STRCPY_SSE2; \
+	.hidden STRCPY_SSE2; \
 	STRCPY_SSE2: cfi_startproc; \
 	CALL_MCOUNT
 # undef END

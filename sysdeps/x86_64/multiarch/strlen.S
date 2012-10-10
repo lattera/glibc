@@ -1,5 +1,6 @@
-/* strlen(str) -- determine the length of the string STR.
-   Copyright (C) 2009, 2010, 2011 Free Software Foundation, Inc.
+/* Multiple versions of strlen(str) -- determine the length of the string STR.
+   All versions must be listed in ifunc-impl-list.c.
+   Copyright (C) 2009-2012 Free Software Foundation, Inc.
    Contributed by Ulrich Drepper <drepper@redhat.com>.
    This file is part of the GNU C Library.
 
@@ -49,6 +50,8 @@ END(strlen)
 # define ENTRY(name) \
 	.type __strlen_sse2, @function; \
 	.align 16; \
+	.globl __strlen_sse2; \
+	.hidden __strlen_sse2; \
 	__strlen_sse2: cfi_startproc; \
 	CALL_MCOUNT
 # undef END

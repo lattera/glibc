@@ -1,4 +1,4 @@
-/* strcmp with SSE4.2
+/* Multiple versions of strcmp
    Copyright (C) 2009-2012 Free Software Foundation, Inc.
    Contributed by Intel Corporation.
    This file is part of the GNU C Library.
@@ -171,6 +171,8 @@ weak_alias (__strncasecmp, strncasecmp)
 # define ENTRY(name) \
 	.type STRCMP_SSE2, @function; \
 	.align 16; \
+	.globl STRCMP_SSE2; \
+	.hidden STRCMP_SSE2; \
 	STRCMP_SSE2: cfi_startproc; \
 	CALL_MCOUNT
 # undef END
@@ -181,6 +183,8 @@ weak_alias (__strncasecmp, strncasecmp)
 #  define ENTRY2(name) \
 	.type __strcasecmp_sse2, @function; \
 	.align 16; \
+	.globl __strcasecmp_sse2; \
+	.hidden __strcasecmp_sse2; \
 	__strcasecmp_sse2: cfi_startproc; \
 	CALL_MCOUNT
 #  define END2(name) \
@@ -191,6 +195,8 @@ weak_alias (__strncasecmp, strncasecmp)
 #  define ENTRY2(name) \
 	.type __strncasecmp_sse2, @function; \
 	.align 16; \
+	.globl __strncasecmp_sse2; \
+	.hidden __strncasecmp_sse2; \
 	__strncasecmp_sse2: cfi_startproc; \
 	CALL_MCOUNT
 #  define END2(name) \

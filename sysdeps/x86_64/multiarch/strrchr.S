@@ -1,5 +1,6 @@
-/* strrchr with SSE4.2
-   Copyright (C) 2009 Free Software Foundation, Inc.
+/* Multiple versions of strrchr
+   All versions must be listed in ifunc-impl-list.c.
+   Copyright (C) 2009-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -87,6 +88,8 @@ END(strrchr)
 	.section .text.sse4.2,"ax",@progbits
 	.align	16
 	.type	__strrchr_sse42, @function
+	.globl	__strrchr_sse42
+	.hidden	__strrchr_sse42
 __strrchr_sse42:
 	cfi_startproc
 	CALL_MCOUNT
@@ -265,6 +268,8 @@ L(psrldq_table):
 # define ENTRY(name) \
 	.type __strrchr_sse2, @function; \
 	.align 16; \
+	.globl __strrchr_sse2; \
+	.hidden __strrchr_sse2; \
 	__strrchr_sse2: cfi_startproc; \
 	CALL_MCOUNT
 # undef END

@@ -1,5 +1,6 @@
 /* multiple version of strnlen
-   Copyright (C) 2011 Free Software Foundation, Inc.
+   All versions must be listed in ifunc-impl-list.c.
+   Copyright (C) 2011-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -40,6 +41,8 @@ END(__strnlen)
 # define ENTRY(name) \
 	.type __strnlen_sse2, @function; \
 	.align 16; \
+	.globl __strnlen_sse2; \
+	.hidden __strnlen_sse2; \
 	__strnlen_sse2: cfi_startproc; \
 	CALL_MCOUNT
 # undef END

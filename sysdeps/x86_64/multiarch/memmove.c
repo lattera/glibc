@@ -1,4 +1,5 @@
 /* Multiple versions of memmove.
+   All versions must be listed in ifunc-impl-list.c.
    Copyright (C) 2010-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 

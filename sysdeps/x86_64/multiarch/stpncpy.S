@@ -1,3 +1,5 @@
+/* Multiple versions of stpncpy
+   All versions must be listed in ifunc-impl-list.c.  */
 #define STRCPY __stpncpy
 #define USE_AS_STPCPY
 #define USE_AS_STRNCPY

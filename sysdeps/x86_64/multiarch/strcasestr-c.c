@@ -1,3 +1,6 @@
+/* Multiple versions of strcasestr
+   All versions must be listed in ifunc-impl-list.c.  */
+
 #include "init-arch.h"
 
 #define STRCASESTR __strcasestr_sse2

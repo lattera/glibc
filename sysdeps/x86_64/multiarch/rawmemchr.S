@@ -1,4 +1,6 @@
-/* Copyright (C) 2009, 2011 Free Software Foundation, Inc.
+/* Multiple versions of rawmemchr
+   All versions must be listed in ifunc-impl-list.c.
+   Copyright (C) 2009-2012 Free Software Foundation, Inc.
    Contributed by Ulrich Drepper <drepper@redhat.com>.
    This file is part of the GNU C Library.
 
@@ -44,6 +46,8 @@ strong_alias (rawmemchr, __rawmemchr)
 	.section .text.sse4.2,"ax",@progbits
 	.align	16
 	.type	__rawmemchr_sse42, @function
+	.globl __rawmemchr_sse42
+	.hidden __rawmemchr_sse42
 __rawmemchr_sse42:
 	cfi_startproc
 	CALL_MCOUNT
@@ -81,6 +85,8 @@ __rawmemchr_sse42:
 # define ENTRY(name) \
 	.type __rawmemchr_sse2, @function; \
 	.align 16; \
+	.globl __rawmemchr_sse2; \
+	.hidden __rawmemchr_sse2; \
 	__rawmemchr_sse2: cfi_startproc; \
 	CALL_MCOUNT
 # undef END

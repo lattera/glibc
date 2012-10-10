@@ -1,5 +1,58 @@
 2012-10-11  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* sysdeps/x86_64/multiarch/ifunc-impl-list.c: New file.
+	* sysdeps/x86_64/multiarch/memcmp.S (__memcmp_sse2): Make it
+	global and hidden.
+	* sysdeps/x86_64/multiarch/memcpy.S (__memcpy_sse2): Likewise.
+	* sysdeps/x86_64/multiarch/mempcpy.S (__mempcpy_sse2): Likewise.
+	* sysdeps/x86_64/multiarch/rawmemchr.S (__rawmemchr_sse42):
+	Likewise.
+	(__rawmemchr_sse2): Likewise.
+	* sysdeps/x86_64/multiarch/strcat.S (STRCAT_SSE2): Likewise.
+	* sysdeps/x86_64/multiarch/strchr.S (__strchr_sse42): Likewise.
+	(__strchr_sse2): Likewise.
+	* sysdeps/x86_64/multiarch/strcmp-sse42.S (STRCMP_SSE42): Likewise.
+	* sysdeps/x86_64/multiarch/strcmp.S (STRCMP_SSE2): Likewise.
+	(__strcasecmp_sse2): Likewise.
+	(__strncasecmp_sse2): Likewise.
+	* sysdeps/x86_64/multiarch/strcpy.S (STRCPY_SSE2): Likewise.
+	* sysdeps/x86_64/multiarch/strlen.S (__strlen_sse2): Likewise.
+	* sysdeps/x86_64/multiarch/strnlen.S (__strnlen_sse2): Likewise.
+	* sysdeps/x86_64/multiarch/strrchr.S (__strrchr_sse42): Likewise.
+	(__strrchr_sse2): Likewise.
+	* sysdeps/x86_64/multiarch/memcmp.S: Add comments for
+	ifunc-impl-list.c.
+	* sysdeps/x86_64/multiarch/memcpy.S: Likewise.
+	* sysdeps/x86_64/multiarch/memcpy_chk.S: Likewise.
+	* sysdeps/x86_64/multiarch/memmove.c: Likewise.
+	* sysdeps/x86_64/multiarch/memmove_chk.c: Likewise.
+	* sysdeps/x86_64/multiarch/mempcpy.S: Likewise.
+	* sysdeps/x86_64/multiarch/mempcpy_chk.S: Likewise.
+	* sysdeps/x86_64/multiarch/memset.S: Likewise.
+	* sysdeps/x86_64/multiarch/memset_chk.S: Likewise.
+	* sysdeps/x86_64/multiarch/rawmemchr.S: Likewise.
+	* sysdeps/x86_64/multiarch/stpcpy.S: Likewise.
+	* sysdeps/x86_64/multiarch/stpncpy.S: Likewise.
+	* sysdeps/x86_64/multiarch/strcasecmp_l.S: Likewise.
+	* sysdeps/x86_64/multiarch/strcasestr-c.c: Likewise.
+	* sysdeps/x86_64/multiarch/strcat.S: Likewise.
+	* sysdeps/x86_64/multiarch/strchr.S: Likewise.
+	* sysdeps/x86_64/multiarch/strcmp.S: Likewise.
+	* sysdeps/x86_64/multiarch/strcpy.S: Likewise.
+	* sysdeps/x86_64/multiarch/strcspn.S: Likewise.
+	* sysdeps/x86_64/multiarch/strlen.S: Likewise.
+	* sysdeps/x86_64/multiarch/strncase_l.S: Likewise.
+	* sysdeps/x86_64/multiarch/strncat.S: Likewise.
+	* sysdeps/x86_64/multiarch/strncmp.S: Likewise.
+	* sysdeps/x86_64/multiarch/strncpy.S: Likewise.
+	* sysdeps/x86_64/multiarch/strnlen.S: Likewise.
+	* sysdeps/x86_64/multiarch/strpbrk.S: Likewise.
+	* sysdeps/x86_64/multiarch/strrchr.S: Likewise.
+	* sysdeps/x86_64/multiarch/strspn.S: Likewise.
+	* sysdeps/x86_64/multiarch/strstr-c.c: Likewise.
+	* sysdeps/x86_64/multiarch/wcscpy.S: Likewise.
+	* sysdeps/x86_64/multiarch/wmemcmp.S: Likewise.
+
 	* sysdeps/i386/i686/multiarch/bcopy.S (__bcopy_ia32): Make it
 	global and hidden.
 	* sysdeps/i386/i686/multiarch/bzero.S (__bzero_ia32): Likewise.
