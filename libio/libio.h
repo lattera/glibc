@@ -31,7 +31,6 @@
 
 #include <_G_config.h>
 /* ALL of these should be defined in _G_config.h */
-#define _IO_pos_t _G_fpos_t /* obsolete */
 #define _IO_fpos_t _G_fpos_t
 #define _IO_fpos64_t _G_fpos64_t
 #define _IO_size_t size_t
