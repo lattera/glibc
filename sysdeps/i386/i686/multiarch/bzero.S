@@ -1,4 +1,5 @@
 /* Multiple versions of bzero
+   All versions must be listed in ifunc-impl-list.c.
    Copyright (C) 2010, 2012 Free Software Foundation, Inc.
    Contributed by Intel Corporation.
    This file is part of the GNU C Library.
@@ -67,6 +68,8 @@ END(__bzero)
 # define ENTRY(name) \
 	.type __bzero_ia32, @function; \
 	.p2align 4; \
+	.globl __bzero_ia32; \
+	.hidden __bzero_ia32; \
 	__bzero_ia32: cfi_startproc; \
 	CALL_MCOUNT
 # undef END

@@ -1,3 +1,6 @@
+/* Multiple versions of strstr
+   All versions must be listed in ifunc-impl-list.c.  */
+
 #include "init-arch.h"
 
 #define STRSTR __strstr_ia32

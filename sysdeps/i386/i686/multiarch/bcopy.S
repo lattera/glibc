@@ -1,4 +1,5 @@
 /* Multiple versions of bcopy
+   All versions must be listed in ifunc-impl-list.c.
    Copyright (C) 2010, 2012 Free Software Foundation, Inc.
    Contributed by Intel Corporation.
    This file is part of the GNU C Library.
@@ -67,6 +68,8 @@ END(bcopy)
 # define ENTRY(name) \
 	.type __bcopy_ia32, @function; \
 	.p2align 4; \
+	.globl __bcopy_ia32; \
+	.hidden __bcopy_ia32; \
 	__bcopy_ia32: cfi_startproc; \
 	CALL_MCOUNT
 # undef END

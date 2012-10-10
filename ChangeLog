@@ -1,5 +1,61 @@
 2012-10-11  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* sysdeps/i386/i686/multiarch/bcopy.S (__bcopy_ia32): Make it
+	global and hidden.
+	* sysdeps/i386/i686/multiarch/bzero.S (__bzero_ia32): Likewise.
+	* sysdeps/i386/i686/multiarch/memcmp.S (__memcmp_ia32): Likewise.
+	* sysdeps/i386/i686/multiarch/memcpy.S (__memcpy_ia32): Likewise.
+	* sysdeps/i386/i686/multiarch/memmove.S (__memmove_ia32):
+	Likewise.
+	* sysdeps/i386/i686/multiarch/mempcpy.S (__mempcpy_ia32):
+	Likewise.
+	* sysdeps/i386/i686/multiarch/strcat.S (STRCAT_IA32): Likewise.
+	* sysdeps/i386/i686/multiarch/strcmp.S (__STRCMP_IA32): Likewise.
+	* sysdeps/i386/i686/multiarch/strcpy.S (STRCPY_IA32): Likewise.
+	* sysdeps/i386/i686/multiarch/bcopy.S: Add comments for
+	ifunc-impl-list.c.
+	* sysdeps/i386/i686/multiarch/bzero.S: Likewise.
+	* sysdeps/i386/i686/multiarch/memchr.S: Likewise.
+	* sysdeps/i386/i686/multiarch/memcmp.S: Likewise.
+	* sysdeps/i386/i686/multiarch/memcpy.S: Likewise.
+	* sysdeps/i386/i686/multiarch/memcpy_chk.S: Likewise.
+	* sysdeps/i386/i686/multiarch/memmove.S: Likewise.
+	* sysdeps/i386/i686/multiarch/memmove_chk.S: Likewise.
+	* sysdeps/i386/i686/multiarch/mempcpy.S: Likewise.
+	* sysdeps/i386/i686/multiarch/mempcpy_chk.S: Likewise.
+	* sysdeps/i386/i686/multiarch/memrchr.S: Likewise.
+	* sysdeps/i386/i686/multiarch/memset.S: Likewise.
+	* sysdeps/i386/i686/multiarch/memset_chk.S: Likewise.
+	* sysdeps/i386/i686/multiarch/rawmemchr.S: Likewise.
+	* sysdeps/i386/i686/multiarch/stpcpy.S: Likewise.
+	* sysdeps/i386/i686/multiarch/stpncpy.S: Likewise.
+	* sysdeps/i386/i686/multiarch/strcasecmp.S: Likewise.
+	* sysdeps/i386/i686/multiarch/strcasecmp_l.S: Likewise.
+	* sysdeps/i386/i686/multiarch/strcasestr-c.c: Likewise.
+	* sysdeps/i386/i686/multiarch/strcat.S: Likewise.
+	* sysdeps/i386/i686/multiarch/strchr.S: Likewise.
+	* sysdeps/i386/i686/multiarch/strcmp.S: Likewise.
+	* sysdeps/i386/i686/multiarch/strcpy.S: Likewise.
+	* sysdeps/i386/i686/multiarch/strcspn.S: Likewise.
+	* sysdeps/i386/i686/multiarch/strlen.S: Likewise.
+	* sysdeps/i386/i686/multiarch/strncase.S: Likewise.
+	* sysdeps/i386/i686/multiarch/strncase_l.S: Likewise.
+	* sysdeps/i386/i686/multiarch/strncat.S: Likewise.
+	* sysdeps/i386/i686/multiarch/strncmp.S: Likewise.
+	* sysdeps/i386/i686/multiarch/strncpy.S: Likewise.
+	* sysdeps/i386/i686/multiarch/strnlen.S: Likewise.
+	* sysdeps/i386/i686/multiarch/strpbrk.S: Likewise.
+	* sysdeps/i386/i686/multiarch/strrchr.S: Likewise.
+	* sysdeps/i386/i686/multiarch/strspn.S: Likewise.
+	* sysdeps/i386/i686/multiarch/strstr-c.c: Likewise.
+	* sysdeps/i386/i686/multiarch/wcschr.S: Likewise.
+	* sysdeps/i386/i686/multiarch/wcscmp.S: Likewise.
+	* sysdeps/i386/i686/multiarch/wcscpy.S: Likewise.
+	* sysdeps/i386/i686/multiarch/wcslen.S: Likewise.
+	* sysdeps/i386/i686/multiarch/wcsrchr.S: Likewise.
+	* sysdeps/i386/i686/multiarch/wmemcmp.S: Likewise.
+	* sysdeps/i386/i686/multiarch/ifunc-impl-list.c: New file.
+
 	* Rules [$(multi-arch) = no] (tests): Filter out $(tests-ifunc).
 	[$(multi-arch) = no] (xtests): Filter out $(xtests-ifunc).
 	* include/ifunc-impl-list.h: New file.

@@ -1,4 +1,5 @@
 /* Multiple versions of strcmp
+   All versions must be listed in ifunc-impl-list.c.
    Copyright (C) 2010-2012 Free Software Foundation, Inc.
    Contributed by Intel Corporation.
    This file is part of the GNU C Library.
@@ -95,6 +96,8 @@ END(STRCMP)
 # define ENTRY(name) \
 	.type __STRCMP_IA32, @function; \
 	.p2align 4; \
+	.globl __STRCMP_IA32; \
+	.hidden __STRCMP_IA32; \
 	__STRCMP_IA32: cfi_startproc; \
 	CALL_MCOUNT
 # undef END

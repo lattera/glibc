@@ -1,4 +1,5 @@
 /* Multiple versions of memcpy
+   All versions must be listed in ifunc-impl-list.c.
    Copyright (C) 2010, 2012 Free Software Foundation, Inc.
    Contributed by Intel Corporation.
    This file is part of the GNU C Library.
@@ -51,6 +52,8 @@ END(memcpy)
 # define ENTRY(name) \
 	.type __memcpy_ia32, @function; \
 	.p2align 4; \
+	.globl __memcpy_ia32; \
+	.hidden __memcpy_ia32; \
 	__memcpy_ia32: cfi_startproc; \
 	CALL_MCOUNT
 # undef END
