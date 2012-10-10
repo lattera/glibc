@@ -1,5 +1,19 @@
 2012-10-11  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* Rules [$(multi-arch) = no] (tests): Filter out $(tests-ifunc).
+	[$(multi-arch) = no] (xtests): Filter out $(xtests-ifunc).
+	* include/ifunc-impl-list.h: New file.
+	* misc/ifunc-impl-list.c: Likewise.
+	* misc/Makefile (routines): Add ifunc-impl-list.
+	* misc/Versions (GLIBC_PRIVATE): Add __libc_ifunc_impl_list.
+	* string/test-string.h: Include <ifunc-impl-list.h>.
+	[TEST_IFUNC && TEST_NAME] (func_list, func_count, impl_count,
+	impl_array): New variables.
+	(FOR_EACH_IMPL): Support func_list if TEST_IFUNC and TEST_NAME
+	are defined.
+	(test_init): Call __libc_ifunc_impl_list to initialize
+	func_list if TEST_IFUNC and TEST_NAME are defined.
+
 	* string/Makefile (strop-tests): Add bcopy and bzero.
 	* string/test-bcopy.c: New file.
 	* string/test-bzero.c: Likewise.

@@ -50,6 +50,7 @@ extern impl_t __start_impls[], __stop_impls[];
 #include <error.h>
 #include <errno.h>
 #include <time.h>
+#include <ifunc-impl-list.h>
 #define GL(x) _##x
 #define GLRO(x) _##x
 #include <hp-timing.h>
@@ -106,9 +107,57 @@ size_t iterations = 100000;
 #define CALL(impl, ...)	\
   (* (proto_t) (impl)->fn) (__VA_ARGS__)
 
-#define FOR_EACH_IMPL(impl, notall) \
+#if defined TEST_IFUNC && defined TEST_NAME
+/* Increase size of FUNC_LIST if assert is triggered at run-time.  */
+static struct libc_ifunc_impl func_list[32];
+static int func_count;
+static int impl_count = -1;
+static impl_t *impl_array;
+
+# define FOR_EACH_IMPL(impl, notall) \
+  impl_t *impl;								\
+  int count;								\
+  if (impl_count == -1)							\
+    {									\
+      impl_count = 0;							\
+      if (func_count != 0)						\
+	{								\
+	  int f;							\
+	  impl_t *skip = NULL, *a;					\
+	  for (impl = __start_impls; impl < __stop_impls; ++impl)	\
+	    if (strcmp (impl->name, TEST_NAME) == 0)			\
+	      skip = impl;						\
+	    else							\
+	      impl_count++;						\
+	  a = impl_array = malloc ((impl_count + func_count) *		\
+				   sizeof (impl_t));			\
+	  for (impl = __start_impls; impl < __stop_impls; ++impl)	\
+	    if (impl != skip)						\
+	      *a++ = *impl;						\
+	  for (f = 0; f < func_count; f++)				\
+	    if (func_list[f].usable)					\
+	      {								\
+		a->name = func_list[f].name;				\
+		a->fn = func_list[f].fn;				\
+		a->test = 1;						\
+		a++;							\
+	      }								\
+	  impl_count = a - impl_array;					\
+	}								\
+      else								\
+        {								\
+	  impl_count = __stop_impls - __start_impls;			\
+	  impl_array = __start_impls;					\
+        }								\
+    }									\
+  impl = impl_array;							\
+  for (count = 0; count < impl_count; ++count, ++impl)			\
+    if (!notall || impl->test)
+#else
+# define FOR_EACH_IMPL(impl, notall) \
   for (impl_t *impl = __start_impls; impl < __stop_impls; ++impl)	\
     if (!notall || impl->test)
+#endif
 
 #define HP_TIMING_BEST(best_time, start, end)	\
   do									\
@@ -127,6 +176,12 @@ size_t iterations = 100000;
 static void
 test_init (void)
 {
+#if defined TEST_IFUNC && defined TEST_NAME
+  func_count = __libc_ifunc_impl_list (TEST_NAME, func_list,
+				       (sizeof func_list
+					/ sizeof func_list[0]));
+#endif
+
   page_size = 2 * getpagesize ();
 #ifdef MIN_PAGE_SIZE
   if (page_size < MIN_PAGE_SIZE)
