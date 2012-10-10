@@ -1,5 +1,10 @@
 2012-10-10  Alexandre Oliva <aoliva@redhat.com>
 
+	* NEWS: Add note about FIPS mode.  Wording suggested by Roland
+	McGrath.
+
+2012-10-10  Alexandre Oliva <aoliva@redhat.com>
+
 	* crypt/crypt-entry.c: Include fips-private.h.
 	(__crypt_r, __crypt): Disable MD5 and DES if FIPS is enabled.
 	* crypt/md5c-test.c (main): Tolerate disabled MD5.

@@ -48,6 +48,12 @@ Version 2.17
   the tty file descriptor in /dev/pts or /dev if /proc is not available.  This
   allows creation of chroots without the procfs mounted on /proc.
 
+* The `crypt' function now fails if passed salt bytes that violate the
+  specification for those values.  On Linux, the `crypt' function will
+  consult /proc/sys/crypto/fips_enabled to determine if "FIPS mode" is
+  enabled, and fail on encrypted strings using the MD5 or DES algorithm
+  when the mode is enabled.
+
 
 Version 2.16
 
