@@ -434,7 +434,7 @@ ifndef +link-static
 						     $(start-installed-name))\
 			   $(+preinit) $(link-extra-libs-static) \
 			   $(common-objpfx)libc% $(+postinit),$^) \
-	      $(link-extra-libs-static) $(link-libc-static)
+	      $(link-extra-libs-static)
 +link-static-after-libc = $(+postctorT) $(+postinit)
 +link-static = $(+link-static-before-libc) $(link-libc-static) \
 	       $(+link-static-after-libc)

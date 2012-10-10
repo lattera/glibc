@@ -1,5 +1,8 @@
 2012-10-10  Joseph Myers  <joseph@codesourcery.com>
 
+	* Makeconfig (+link-static-before-libc): Don't include
+	$(link-static-libc).
+
 	* libio/libio.h (_IO_pos_t): Remove.
 
 2012-10-10  Alexandre Oliva <aoliva@redhat.com>
