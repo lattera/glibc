@@ -1,3 +1,7 @@
+2012-10-09  Maxim Kuvyrkov  <maxim@codesourcery.com>
+
+	* NEWS: Add entry for BZ #14602.
+
 2012-10-09  Joseph Myers  <joseph@codesourcery.com>
 
 	* math/gen-libm-test.pl (parse_args): Handle comparison macros as
