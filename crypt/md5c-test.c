@@ -9,7 +9,10 @@ main (int argc, char *argv[])
   int result = 0;
 
   cp = crypt ("Hello world!", salt);
-  result |= strcmp ("$1$saltstri$YMyguxXMBpd2TEZ.vS/3q1", cp);
+
+  /* MD5 is disabled in FIPS mode.  */
+  if (cp)
+    result |= strcmp ("$1$saltstri$YMyguxXMBpd2TEZ.vS/3q1", cp);
 
   return result;
 }
