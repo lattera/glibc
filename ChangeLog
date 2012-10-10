@@ -1,3 +1,16 @@
+2012-10-10  Alexandre Oliva <aoliva@redhat.com>
+
+	* crypt/crypt-private.h: Include stdbool.h.
+	(_ufc_setup_salt_r): Return bool.
+	* crypt/crypt-entry.c: Include errno.h.
+	(__crypt_r): Return NULL with EINVAL for bad salt.
+	* crypt/crypt_util.c (bad_for_salt): New.
+	(_ufc_setup_salt_r): Check that salt is long enough and within
+	the specified alphabet.
+	* crypt/badsalttest.c: New file.
+	* crypt/Makefile (tests): Add it.
+	($(objpfx)badsalttest): New.
+
 2012-10-09  Maxim Kuvyrkov  <maxim@codesourcery.com>
 
 	* NEWS: Add entry for BZ #14602.

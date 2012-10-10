@@ -596,23 +596,55 @@ shuffle_sb(k, saltbits)
 #endif
 
 /*
- * Setup the unit for a new salt
- * Hopefully we'll not see a new salt in each crypt call.
+ * Return false iff C is in the specified alphabet for crypt salt.
  */
 
-void
+static bool
+bad_for_salt (char c)
+{
+  switch (c)
+    {
+    case '0' ... '9':
+    case 'A' ... 'Z':
+    case 'a' ... 'z':
+    case '.': case '/':
+      return false;
+
+    default:
+      return true;
+    }
+}
+
+/*
+ * Setup the unit for a new salt
+ * Hopefully we'll not see a new salt in each crypt call.
+ * Return false if an unexpected character was found in s[0] or s[1].
+ */
+
+bool
 _ufc_setup_salt_r(s, __data)
      const char *s;
      struct crypt_data * __restrict __data;
 {
   ufc_long i, j, saltbits;
+  char s0, s1;
 
   if(__data->initialized == 0)
     __init_des_r(__data);
 
-  if(s[0] == __data->current_salt[0] && s[1] == __data->current_salt[1])
-    return;
-  __data->current_salt[0] = s[0]; __data->current_salt[1] = s[1];
+  s0 = s[0];
+  if(bad_for_salt (s0))
+    return false;
+
+  s1 = s[1];
+  if(bad_for_salt (s1))
+    return false;
+
+  if(s0 == __data->current_salt[0] && s1 == __data->current_salt[1])
+    return true;
+
+  __data->current_salt[0] = s0;
+  __data->current_salt[1] = s1;
 
   /*
    * This is the only crypt change to DES:
@@ -646,6 +678,8 @@ _ufc_setup_salt_r(s, __data)
   shuffle_sb((LONGG)__data->sb3, __data->current_saltbits ^ saltbits);
 
   __data->current_saltbits = saltbits;
+
+  return true;
 }
 
 void

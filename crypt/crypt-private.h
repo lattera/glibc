@@ -26,6 +26,7 @@
 #define CRYPT_PRIVATE_H	1
 
 #include <features.h>
+#include <stdbool.h>
 
 /* crypt.c */
 extern void _ufc_doit_r (ufc_long itr, struct crypt_data * __restrict __data,
@@ -36,7 +37,7 @@ extern void _ufc_doit_r (ufc_long itr, struct crypt_data * __restrict __data,
 extern void __init_des_r (struct crypt_data * __restrict __data);
 extern void __init_des (void);
 
-extern void _ufc_setup_salt_r (const char *s,
+extern bool _ufc_setup_salt_r (const char *s,
 			       struct crypt_data * __restrict __data);
 extern void _ufc_mk_keytab_r (const char *key,
 			      struct crypt_data * __restrict __data);

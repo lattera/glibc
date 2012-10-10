@@ -27,6 +27,7 @@
 #include <stdio.h>
 #endif
 #include <string.h>
+#include <errno.h>
 
 #ifndef STATIC
 #define STATIC static
@@ -108,7 +109,11 @@ __crypt_r (key, salt, data)
   /*
    * Hack DES tables according to salt
    */
-  _ufc_setup_salt_r (salt, data);
+  if (!_ufc_setup_salt_r (salt, data))
+    {
+      __set_errno (EINVAL);
+      return NULL;
+    }
 
   /*
    * Setup key schedule
