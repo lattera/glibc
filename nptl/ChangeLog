@@ -1,3 +1,21 @@
+2012-10-10  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	[BZ #14652]
+	* Makefile (tests): New test case tst-cond25.
+	(LDFLAGS-tst-cond25): Link tst-cond25 against librt.
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_cond_timedwait.S
+	(__condvar_tw_cleanup): Lock mutex only if we don't already
+	own it.
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_cond_wait.S
+	(__condvar_w_cleanup): Likewise.
+	* sysdeps/unix/sysv/linux/pthread-pi-defines.sym: Add TID_MASK.
+	* sysdeps/unix/sysv/linux/x86_64/pthread_cond_timedwait.S
+	(__condvar_cleanup2): Lock mutex only if we don't already
+	own it.
+	* sysdeps/unix/sysv/linux/x86_64/pthread_cond_wait.S
+	(__condvar_cleanup1): Likewise.
+	* tst-cond25.c: New test case.
+
 2012-10-09  Roland McGrath  <roland@hack.frob.com>
 
 	* sysdeps/pthread/configure: Regenerated.

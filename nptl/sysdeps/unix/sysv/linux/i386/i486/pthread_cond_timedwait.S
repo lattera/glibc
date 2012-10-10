@@ -649,10 +649,24 @@ __condvar_tw_cleanup:
 	movl	$0x7fffffff, %edx
 	ENTER_KERNEL
 
+	/* Lock the mutex only if we don't own it already.  This only happens
+	   in case of PI mutexes, if we got cancelled after a successful
+	   return of the futex syscall and before disabling async
+	   cancellation.  */
 5:	movl	24+FRAME_SIZE(%esp), %eax
-	call	__pthread_mutex_cond_lock
+	movl	MUTEX_KIND(%eax), %ebx
+	andl	$(ROBUST_BIT|PI_BIT), %ebx
+	cmpl	$PI_BIT, %ebx
+	jne	8f
 
-	movl	%esi, (%esp)
+	movl	(%eax), %ebx
+	andl	$TID_MASK, %ebx
+	cmpl	%ebx, %gs:TID
+	je	9f
+
+8:	call	__pthread_mutex_cond_lock
+
+9:	movl	%esi, (%esp)
 .LcallUR:
 	call	_Unwind_Resume
 	hlt

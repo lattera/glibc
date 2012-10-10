@@ -206,7 +206,7 @@ tests = tst-typesizes \
 	tst-cond1 tst-cond2 tst-cond3 tst-cond4 tst-cond5 tst-cond6 tst-cond7 \
 	tst-cond8 tst-cond9 tst-cond10 tst-cond11 tst-cond12 tst-cond13 \
 	tst-cond14 tst-cond15 tst-cond16 tst-cond17 tst-cond18 tst-cond19 \
-	tst-cond20 tst-cond21 tst-cond22 tst-cond23 tst-cond24 \
+	tst-cond20 tst-cond21 tst-cond22 tst-cond23 tst-cond24 tst-cond25 \
 	tst-cond-except \
 	tst-robust1 tst-robust2 tst-robust3 tst-robust4 tst-robust5 \
 	tst-robust6 tst-robust7 tst-robust8 tst-robust9 \
@@ -276,6 +276,7 @@ gen-as-const-headers = pthread-errnos.sym
 LDFLAGS-pthread.so = -Wl,--enable-new-dtags,-z,nodelete,-z,initfirst
 
 LDFLAGS-tst-cond24 = -lrt
+LDFLAGS-tst-cond25 = -lrt
 
 include ../Makeconfig
 
