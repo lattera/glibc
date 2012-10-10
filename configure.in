@@ -973,10 +973,9 @@ if test -n "$sysheaders"; then
 -isystem `echo $sysheaders | sed 's/:/ -isystem /g'`"
   if test -n "$CXX"; then
     CXX_SYSINCLUDES=
-    cxxversion=`$CXX -dumpversion 2>&AS_MESSAGE_LOG_FD` &&
     cxxmachine=`$CXX -dumpmachine 2>&AS_MESSAGE_LOG_FD` &&
-    cxxplus=`$CXX -print-prog-name=cc1plus`
-    cxxheaders=`$cxxplus -v /dev/null 2>&1 | sed -n '/ \//{p;q;}' | sed 's/ //'`
+    cxxheaders=`$CXX -v -S -x c++ /dev/null -o /dev/null 2>&1 \
+	| sed -n -e '1,/#include/d' -e '/^ \//{p;q;}' | sed 's/ //'`
     test "x$cxxheaders" != x && test "x$i" != "x$cxxheaders" &&
     CXX_SYSINCLUDES="$CXX_SYSINCLUDES -isystem $cxxheaders \
 -isystem $cxxheaders/$cxxmachine -isystem $cxxheaders/backward"

@@ -1,5 +1,8 @@
 2012-10-10  Joseph Myers  <joseph@codesourcery.com>
 
+	* configure.in: Run $CXX, not cc1plus, to locate C++ headers.
+	* configure: Regenerated.
+
 	* Makeconfig (+link-static-before-libc): Don't include
 	$(link-static-libc).
 
