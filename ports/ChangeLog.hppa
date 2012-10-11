@@ -1,3 +1,7 @@
+2012-10-10  Carlos O'Donell  <carlos@systemhalted.org>
+
+	* sysdeps/hppa/nptl/shlib-versions: New file.
+
 2012-10-02  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* sysdeps/unix/sysv/linux/hppa/nptl/lowlevellock.h: Fix clone
