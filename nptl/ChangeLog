@@ -1,6 +1,8 @@
 2012-10-10  Carlos O'Donell  <carlos@systemhalted.org>
 
-	* sysdeps/pthread/pthread.h: Fix formatting.
+	* sysdeps/pthread/pthread.h [!(defined __GNUC__ &&
+	defined __EXCEPTIONS) && defined __USE_GNU]
+	(pthread_cleanup_push_defer_np): Fix formatting.
 
 2012-10-10  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
