@@ -1,3 +1,7 @@
+2012-10-11  Chris Metcalf  <cmetcalf@tilera.com>
+
+	* sysdeps/unix/sysv/linux/tile/tilegx/sched_getcpu.c: New file.
+
 2012-10-02  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* sysdeps/unix/sysv/linux/tile/nptl/lowlevellock.h: Fix clone
