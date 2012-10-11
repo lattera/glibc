@@ -1,3 +1,8 @@
+2012-10-31  Andreas Schwab  <schwab@linux-m68k.org>
+
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/nofpu/nptl/libc.abilist:
+	Fix sort order.
+
 2012-10-30  Jason Gunthorpe  <jgunthorpe@obsidianresearch.com>
 	    Ryan S. Arnold  <rsa@linux.vnet.ibm.com>
 
