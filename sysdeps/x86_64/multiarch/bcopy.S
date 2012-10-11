@@ -3,5 +3,5 @@
 	.text
 ENTRY(bcopy)
 	xchg	%rdi, %rsi
-	jmp	HIDDEN_BUILTIN_JUMPTARGET(memmove)
+	jmp	__libc_memmove	/* Branch to IFUNC memmove.  */
 END(bcopy)

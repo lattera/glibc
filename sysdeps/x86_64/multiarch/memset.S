@@ -1,5 +1,5 @@
 /* Multiple versions of memset
-   Copyright (C) 2010 Free Software Foundation, Inc.
+   Copyright (C) 2010-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -32,6 +32,11 @@ ENTRY(memset)
 	leaq	__memset_sse2(%rip), %rax
 2:	ret
 END(memset)
+
+/* Define internal IFUNC memset for bzero.  */
+	.globl __libc_memset
+	.hidden __libc_memset
+	__libc_memset = memset
 
 # define USE_SSE2 1
 

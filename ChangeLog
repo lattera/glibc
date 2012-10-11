@@ -1,3 +1,19 @@
+2012-10-11  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* string/Makefile (strop-tests): Add bcopy and bzero.
+	* string/test-bcopy.c: New file.
+	* string/test-bzero.c: Likewise.
+	* string/test-memmove.c: Support bcopy test if TEST_BCOPY is
+	defined.
+	* string/test-memset.c: Support bzero test if TEST_BZERO is
+	defined.
+	* sysdeps/x86_64/multiarch/bcopy.S (bcopy): Jump to
+	__libc_memmove.
+	* sysdeps/x86_64/multiarch/bzero.S (__bzero): Jump to
+	__libc_memset.
+	* sysdeps/x86_64/multiarch/memset.S (__libc_memset): New alias
+	of memset.
+
 2012-10-10  Joseph Myers  <joseph@codesourcery.com>
 
 	* configure.in: Run $CXX, not cc1plus, to locate C++ headers.
