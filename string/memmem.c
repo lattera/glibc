@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,92,93,94,96,97,98,2000,2004,2008 Free Software Foundation, Inc.
+/* Copyright (C) 1991-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -73,5 +73,6 @@ memmem (const void *haystack_start, size_t haystack_len,
   else
     return two_way_long_needle (haystack, haystack_len, needle, needle_len);
 }
+libc_hidden_def (memmem)
 
 #undef LONG_NEEDLE_THRESHOLD

@@ -1,3 +1,10 @@
+2012-10-12  Andreas Schwab  <schwab@linux-m68k.org>
+
+	* include/string.h (memmem): Declare libc hidden alias.
+	* string/memmem.c (memmem): Define libc hidden alias.
+	* sysdeps/unix/sysv/linux/powerpc/get_clockfreq.c: Use __open,
+	__read, __close instead of open, read, close.
+
 2012-10-11  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/x86_64/multiarch/ifunc-impl-list.c: New file.

@@ -89,6 +89,7 @@ libc_hidden_proto (__strtok_r)
 extern char *__strsep_g (char **__stringp, const char *__delim);
 libc_hidden_proto (__strsep_g)
 libc_hidden_proto (strnlen)
+libc_hidden_proto (memmem)
 
 libc_hidden_builtin_proto (memchr)
 libc_hidden_builtin_proto (memcpy)
