@@ -1,4 +1,4 @@
-/* Copyright (C) 2002-2011, 2012 Free Software Foundation, Inc.
+/* Copyright (C) 2002-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -694,7 +694,7 @@ extern void __pthread_unregister_cancel (__pthread_unwind_buf_t *__buf)
     void *__cancel_arg = (arg);						      \
     int __not_first_call = __sigsetjmp ((struct __jmp_buf_tag *) (void *)     \
 					__cancel_buf.__cancel_jmp_buf, 0);    \
-    if (__glibc_unlikely (__not_first_call))			      \
+    if (__glibc_unlikely (__not_first_call))				      \
       {									      \
 	__cancel_routine (__cancel_arg);				      \
 	__pthread_unwind_next (&__cancel_buf);				      \

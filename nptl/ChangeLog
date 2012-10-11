@@ -1,3 +1,7 @@
+2012-10-10  Carlos O'Donell  <carlos@systemhalted.org>
+
+	* sysdeps/pthread/pthread.h: Fix formatting.
+
 2012-10-10  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	[BZ #14652]
