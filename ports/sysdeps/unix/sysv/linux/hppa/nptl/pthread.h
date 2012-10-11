@@ -1,4 +1,4 @@
-/* Copyright (C) 2002-2011, 2012 Free Software Foundation, Inc.
+/* Copyright (C) 2002-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,7 +21,6 @@
 #include <features.h>
 #include <endian.h>
 #include <sched.h>
-#define __need_timespec
 #include <time.h>
 
 #include <bits/pthreadtypes.h>
@@ -84,7 +83,7 @@ enum
 
 
 /* Mutex initializers.  */
-#if __WORDSIZE == 64
+#ifdef __PTHREAD_MUTEX_HAVE_PREV
 # define PTHREAD_MUTEX_INITIALIZER \
   { { 0, 0, 0, 0, 0, 0, { 0, 0 } } }
 # ifdef __USE_GNU
@@ -119,11 +118,20 @@ enum
   PTHREAD_RWLOCK_DEFAULT_NP = PTHREAD_RWLOCK_PREFER_READER_NP
 };
 
+/* Define __PTHREAD_RWLOCK_INT_FLAGS_SHARED to 1 if pthread_rwlock_t
+   has the shared field.  All 64-bit architectures have the shared field
+   in pthread_rwlock_t.  */
+#ifndef __PTHREAD_RWLOCK_INT_FLAGS_SHARED
+# if __WORDSIZE == 64
+#  define __PTHREAD_RWLOCK_INT_FLAGS_SHARED 1
+# endif
+#endif
+
 /* Read-write lock initializers.  */
 # define PTHREAD_RWLOCK_INITIALIZER \
   { { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } }
 # ifdef __USE_GNU
-#  if __WORDSIZE == 64
+#  ifdef __PTHREAD_RWLOCK_INT_FLAGS_SHARED
 #   define PTHREAD_RWLOCK_WRITER_NONRECURSIVE_INITIALIZER_NP \
   { { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,					      \
 	PTHREAD_RWLOCK_PREFER_WRITER_NONRECURSIVE_NP } }
@@ -651,7 +659,7 @@ __pthread_cleanup_routine (struct __pthread_cleanup_frame *__frame)
     void *__cancel_arg = (arg);						      \
     int __not_first_call = __sigsetjmp ((struct __jmp_buf_tag *) (void *)     \
 					__cancel_buf.__cancel_jmp_buf, 0);    \
-    if (__builtin_expect (__not_first_call, 0))				      \
+    if (__glibc_unlikely (__not_first_call))				      \
       {									      \
 	__cancel_routine (__cancel_arg);				      \
 	__pthread_unwind_next (&__cancel_buf);				      \
@@ -686,7 +694,7 @@ extern void __pthread_unregister_cancel (__pthread_unwind_buf_t *__buf)
     void *__cancel_arg = (arg);						      \
     int __not_first_call = __sigsetjmp ((struct __jmp_buf_tag *) (void *)     \
 					__cancel_buf.__cancel_jmp_buf, 0);    \
-    if (__builtin_expect (__not_first_call, 0))				      \
+    if (__glibc_unlikely (__not_first_call))				      \
       {									      \
 	__cancel_routine (__cancel_arg);				      \
 	__pthread_unwind_next (&__cancel_buf);				      \
@@ -723,7 +731,7 @@ extern void __pthread_unwind_next (__pthread_unwind_buf_t *__buf)
 
 /* Function used in the macros.  */
 struct __jmp_buf_tag;
-extern int __sigsetjmp (struct __jmp_buf_tag *__env, int __savemask) __THROW;
+extern int __sigsetjmp (struct __jmp_buf_tag *__env, int __savemask) __THROWNL;
 
 
 /* Mutex handling.  */

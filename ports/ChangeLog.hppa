@@ -1,5 +1,7 @@
 2012-10-10  Carlos O'Donell  <carlos@systemhalted.org>
 
+	* sysdeps/unix/sysv/linux/hppa/nptl/pthread.h: Update.
+
 	* sysdeps/unix/sysv/linux/hppa/nptl/pt-initfini.c: Removed.
 
 	* sysdeps/hppa/nptl/shlib-versions: New file.
