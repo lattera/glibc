@@ -1,3 +1,9 @@
+2012-10-16  Maxim Kuvyrkov  <maxim@codesourcery.com>
+
+	* NEWS: Mention BZ #14716.
+	* string/str-two-way.h (two_way_short_needle): Fix thinko introduced
+	when removing AVAILABLE1_USES_J macro.
+
 2012-10-12  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/x86/bits/byteswap.h: Include <bits/types.h>.

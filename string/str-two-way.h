@@ -309,13 +309,13 @@ two_way_short_needle (const unsigned char *haystack, size_t haystack_len,
 	      != (haystack_char = CANON_ELEMENT (*phaystack++)))
 	    {
 	      RET0_IF_0 (haystack_char);
-#if CHECK_EOL
+#if !CHECK_EOL
 	      ++j;
 #endif
 	      continue;
 	    }
 
-#if !CHECK_EOL
+#if CHECK_EOL
 	  /* Calculate J if it wasn't kept up-to-date in the first-character
 	     loop.  */
 	  j = phaystack - &haystack[suffix] - 1;
