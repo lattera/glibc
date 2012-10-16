@@ -1,3 +1,9 @@
+2012-10-19  Florian Pritz  <bluewind@xinu.at>
+
+	[BZ #13758]
+	* locales/de_AT (LC_TIME): Change month name from "FebruAr" to
+	"Februar".
+
 2012-10-19  Pravin Satpute  <psatpute@redhat.com>
 
 	[BZ #14694]
