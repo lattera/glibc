@@ -1,3 +1,16 @@
+2012-10-16  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	[BZ #14652]
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_cond_timedwait.S
+	(__condvar_tw_cleanup):  Adjust the mutex data structure if it
+	was locked by FUTEX_WAIT_REQUEUE_PI.
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_cond_wait
+	(__condvar_w_cleanup): Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/pthread_cond_timedwait.S
+	(__condvar_cleanup2): Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/pthread_cond_wait.S
+	(__condvar_cleanup1): Likewise.
+
 2012-10-10  Carlos O'Donell  <carlos@systemhalted.org>
 
 	* sysdeps/pthread/pthread.h [!(defined __GNUC__ &&

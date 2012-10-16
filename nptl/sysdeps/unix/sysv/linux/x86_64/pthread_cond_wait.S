@@ -508,7 +508,11 @@ __condvar_cleanup1:
 	movl	(%rdi), %eax
 	andl	$TID_MASK, %eax
 	cmpl	%eax, %fs:TID
-	je	8f
+	jne	7f
+	/* We managed to get the lock.  Fix it up before returning.  */
+	callq	__pthread_mutex_cond_lock_adjust
+	jmp	8f
+
 
 7:	callq	__pthread_mutex_cond_lock
 
