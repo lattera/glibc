@@ -1,5 +1,4 @@
-/* Copyright (C) 1991-1996,98,2000-2003,2005,2007,2009,2011
-   Free Software Foundation, Inc.
+/* Copyright (C) 1991-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -33,6 +32,11 @@
 #include <not-cancel.h>
 #include <kernel-features.h>
 
+/* The st_blksize value of the directory is used as a hint for the
+   size of the buffer which receives struct dirent values from the
+   kernel.  st_blksize is limited to MAX_DIR_BUFFER_SIZE, in case the
+   file system provides a bogus value.  */
+#define MAX_DIR_BUFFER_SIZE 1048576U
 
 /* opendir() must not accidentally open something other than a directory.
    Some OS's have kernel support for that, some don't.  In the worst
@@ -192,8 +196,11 @@ __alloc_dir (int fd, bool close_fd, int flags, const struct stat64 *statp)
 				   ? sizeof (struct dirent64) : BUFSIZ);
   size_t allocation = default_allocation;
 #ifdef _STATBUF_ST_BLKSIZE
-  if (statp != NULL && default_allocation < statp->st_blksize)
-    allocation = statp->st_blksize;
+  /* Increase allocation if requested, but not if the value appears to
+     be bogus.  */
+  if (statp != NULL)
+    allocation = MIN (MAX ((size_t) statp->st_blksize, default_allocation),
+		      MAX_DIR_BUFFER_SIZE);
 #endif
 
   DIR *dirp = (DIR *) malloc (sizeof (DIR) + allocation);

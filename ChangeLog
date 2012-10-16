@@ -1,3 +1,9 @@
+2012-10-16  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #14700]
+	* sysdeps/posix/opendir.c (MAX_DIR_BUFFER_SIZE): New constant.
+	(__alloc_dir): Limit buffer to MAX_DIR_BUFFER_SIZE.
+
 2012-10-16  Maxim Kuvyrkov  <maxim@codesourcery.com>
 
 	* NEWS: Mention BZ #14716.
