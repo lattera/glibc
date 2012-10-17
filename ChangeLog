@@ -1,3 +1,9 @@
+2012-10-17  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/libm-test.inc (gamma_test): Do not call feclearexcept.
+	(lgamma_test): Likewise.
+	(tgamma_test): Likewise.
+
 2012-10-16  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #14700]
