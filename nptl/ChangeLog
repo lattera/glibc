@@ -1,6 +1,6 @@
 2012-10-17  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
-	* tst-cond25 (do_test_wait): Don't check for return value from
+	* tst-cond25.c (do_test_wait): Don't check for return value from
 	pthread_cancel.
 
 2012-10-16  Siddhesh Poyarekar  <siddhesh@redhat.com>
