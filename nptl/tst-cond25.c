@@ -228,11 +228,7 @@ do_test_wait (thr_func f)
 
       for (j = 0; j < NUM; j++)
         {
-          if ((ret = pthread_cancel (w[j])) != 0)
-	    {
-	      printf ("waiter[%d]: cancel failed: %s\n", j, strerror (ret));
-	      goto out;
-	    }
+          pthread_cancel (w[j]);
 
           if ((ret = pthread_join (w[j], &thr_ret)) != 0)
 	    {
