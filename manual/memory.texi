@@ -706,7 +706,10 @@ to zero disables all use of @code{mmap}.
 If non-zero, memory blocks are filled with values depending on some
 low order bits of this parameter when they are allocated (except when
 allocated by @code{calloc}) and freed.  This can be used to debug the
-use of uninitialized or freed heap memory.
+use of uninitialized or freed heap memory.  Note that this option does not
+guarantee that the freed block will have any specific values.  It only
+guarantees that the content the block had before it was freed will be
+overwritten.
 @end table
 
 @end deftypefun

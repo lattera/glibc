@@ -1,3 +1,10 @@
+2012-10-18  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	[BZ #12140]
+	* manual/memory.texi (Malloc Tunable Parameters): Add note
+	about free list pointers overwriting some perturb bytes.
+	Wording suggested by Roland McGrath.
+
 2012-10-17  Joseph Myers  <joseph@codesourcery.com>
 
 	* math/libm-test.inc (gamma_test): Do not call feclearexcept.
