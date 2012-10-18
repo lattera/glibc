@@ -1,5 +1,4 @@
-/* Copyright (C) 1993, 1995, 1997, 1998, 1999, 2000, 2002, 2003, 2004
-   Free Software Foundation, Inc.
+/* Copyright (C) 1993-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -37,7 +36,6 @@ _IO_old_fsetpos64 (fp, posp)
      _IO_FILE *fp;
      const _IO_fpos64_t *posp;
 {
-#ifdef _G_LSEEK64
   int result;
   CHECK_FILE (fp, EOF);
   _IO_acquire_lock (fp);
@@ -56,10 +54,6 @@ _IO_old_fsetpos64 (fp, posp)
     result = 0;
   _IO_release_lock (fp);
   return result;
-#else
-  __set_errno (ENOSYS);
-  return EOF;
-#endif
 }
 
 #ifdef weak_alias

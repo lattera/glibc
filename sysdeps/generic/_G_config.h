@@ -49,11 +49,6 @@ typedef union
 
 #define _G_IO_IO_FILE_VERSION 0x20001
 
-#define _G_OPEN64	__open64
-#define _G_LSEEK64	__lseek64
-#define _G_MMAP64	__mmap64
-#define _G_FSTAT64(fd,buf) __fxstat64 (_STAT_VER, fd, buf)
-
 /* This is defined by <bits/stat.h> if `st_blksize' exists.  */
 #define _G_HAVE_ST_BLKSIZE defined (_STATBUF_ST_BLKSIZE)
 

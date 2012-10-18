@@ -36,12 +36,7 @@ _IO_fopen64 (filename, mode)
      const char *filename;
      const char *mode;
 {
-#ifdef _G_OPEN64
   return __fopen_internal (filename, mode, 0);
-#else
-  __set_errno (ENOSYS);
-  return NULL;
-#endif
 }
 
 #ifdef weak_alias

@@ -671,13 +671,8 @@ mmap_remap_check (_IO_FILE *fp)
 #else
 	  (void) __munmap (fp->_IO_buf_base,
 			   fp->_IO_buf_end - fp->_IO_buf_base);
-# ifdef _G_MMAP64
-	  p = _G_MMAP64 (NULL, st.st_size, PROT_READ, MAP_SHARED,
-			 fp->_fileno, 0);
-# else
-	  p = __mmap (NULL, st.st_size, PROT_READ, MAP_SHARED,
-		      fp->_fileno, 0);
-# endif
+	  p = __mmap64 (NULL, st.st_size, PROT_READ, MAP_SHARED,
+			fp->_fileno, 0);
 	  if (p == MAP_FAILED)
 	    goto punt;
 #endif
@@ -704,13 +699,8 @@ mmap_remap_check (_IO_FILE *fp)
 
       if (fp->_offset < fp->_IO_buf_end - fp->_IO_buf_base)
 	{
-	  if (
-# ifdef _G_LSEEK64
-	      _G_LSEEK64
-# else
-	      __lseek
-# endif
-	      (fp->_fileno, fp->_IO_buf_end - fp->_IO_buf_base, SEEK_SET)
+	  if (__lseek64 (fp->_fileno, fp->_IO_buf_end - fp->_IO_buf_base,
+			 SEEK_SET)
 	      != fp->_IO_buf_end - fp->_IO_buf_base)
 	    fp->_flags |= _IO_ERR_SEEN;
 	  else
@@ -775,24 +765,14 @@ decide_maybe_mmap (_IO_FILE *fp)
       /* Try to map the file.  */
       void *p;
 
-# ifdef _G_MMAP64
-      p = _G_MMAP64 (NULL, st.st_size, PROT_READ, MAP_SHARED, fp->_fileno, 0);
-# else
-      p = __mmap (NULL, st.st_size, PROT_READ, MAP_SHARED, fp->_fileno, 0);
-# endif
+      p = __mmap64 (NULL, st.st_size, PROT_READ, MAP_SHARED, fp->_fileno, 0);
       if (p != MAP_FAILED)
 	{
 	  /* OK, we managed to map the file.  Set the buffer up and use a
 	     special jump table with simplified underflow functions which
 	     never tries to read anything from the file.  */
 
-	  if (
-# ifdef _G_LSEEK64
-	      _G_LSEEK64
-# else
-	      __lseek
-# endif
-	      (fp->_fileno, st.st_size, SEEK_SET) != st.st_size)
+	  if (__lseek64 (fp->_fileno, st.st_size, SEEK_SET) != st.st_size)
 	    {
 	      (void) __munmap (p, st.st_size);
 	      fp->_offset = _IO_pos_BAD;
@@ -944,13 +924,8 @@ _IO_file_sync_mmap (_IO_FILE *fp)
       if (_IO_in_backup (fp))
 	delta -= eGptr () - Gbase ();
 #endif
-      if (
-# ifdef _G_LSEEK64
-	  _G_LSEEK64
-# else
-	  __lseek
-# endif
-	  (fp->_fileno, fp->_IO_read_ptr - fp->_IO_buf_base, SEEK_SET)
+      if (__lseek64 (fp->_fileno, fp->_IO_read_ptr - fp->_IO_buf_base,
+		     SEEK_SET)
 	  != fp->_IO_read_ptr - fp->_IO_buf_base)
 	{
 	  fp->_flags |= _IO_ERR_SEEN;
@@ -1236,11 +1211,7 @@ _IO_file_seek (fp, offset, dir)
      _IO_off64_t offset;
      int dir;
 {
-#ifdef _G_LSEEK64
-  return _G_LSEEK64 (fp->_fileno, offset, dir);
-#else
-  return lseek (fp->_fileno, offset, dir);
-#endif
+  return __lseek64 (fp->_fileno, offset, dir);
 }
 libc_hidden_def (_IO_file_seek)
 
@@ -1249,11 +1220,7 @@ _IO_file_stat (fp, st)
      _IO_FILE *fp;
      void *st;
 {
-#ifdef _G_FSTAT64
-  return _G_FSTAT64 (fp->_fileno, (struct stat64 *) st);
-#else
-  return fstat (fp->_fileno, (struct stat *) st);
-#endif
+  return __fxstat64 (_STAT_VER, fp->_fileno, (struct stat64 *) st);
 }
 libc_hidden_def (_IO_file_stat)
 

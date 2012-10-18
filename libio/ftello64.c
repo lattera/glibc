@@ -35,7 +35,6 @@ off64_t
 ftello64 (fp)
      _IO_FILE *fp;
 {
-#ifdef _G_LSEEK64
   _IO_off64_t pos;
   CHECK_FILE (fp, -1L);
   _IO_acquire_lock (fp);
@@ -55,10 +54,6 @@ ftello64 (fp)
       return -1L;
     }
   return pos;
-#else
-  __set_errno (ENOSYS);
-  return -1;
-#endif
 }
 
 #endif

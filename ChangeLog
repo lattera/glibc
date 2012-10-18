@@ -1,3 +1,59 @@
+2012-10-18  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/generic/_G_config.h (_G_OPEN64): Remove.
+	(_G_LSEEK64): Likewise.
+	(_G_MMAP64): Likewise.
+	(_G_FSTAT64): Likewise.
+	* sysdeps/unix/sysv/linux/_G_config.h (_G_OPEN64): Remove.
+	(_G_LSEEK64): Likewise.
+	(_G_MMAP64): Likewise.
+	(_G_FSTAT64): Likewise.
+	* libio/fileops.c (mmap_remap_check) [_G_MMAP64]: Make code
+	unconditional.  Call __mmap64 directly.
+	(mmap_remap_check) [!_G_MMAP64]: Remove conditional code.
+	(mmap_remap_check) [_G_LSEEK64]: Make code unconditional.  Call
+	__lseek64 directly.
+	(mmap_remap_check) [!_G_LSEEK64]: Remove conditional code.
+	(decide_maybe_mmap) [_G_MMAP64]: Make code unconditional.  Call
+	__mmap64 directly.
+	(decide_maybe_mmap) [!_G_MMAP64]: Remove conditional code.
+	(decide_maybe_mmap) [_G_LSEEK64]: Make code unconditional.  Call
+	__lseek64 directly.
+	(decide_maybe_mmap) [!_G_LSEEK64]: Remove conditional code.
+	(_IO_file_sync_mmap) [_G_LSEEK64]: Make code unconditional.  Call
+	__lseek64 directly.
+	(_IO_file_sync_mmap) [!_G_LSEEK64]: Remove conditional code.
+	(_IO_file_seek) [_G_LSEEK64]: Make code unconditional.  Call
+	__lseek64 directly.
+	(_IO_file_seek) [!_G_LSEEK64]: Remove conditional code.
+	(_IO_file_stat) [_G_FSTAT64]: Make code unconditional.  Call
+	__fxstat64 directly.
+	(_IO_file_stat) [!_G_FSTAT64]: Remove conditional code.
+	* libio/freopen64.c (freopen64) [_G_OPEN64]: Make code
+	unconditional.
+	(freopen64) [!_G_OPEN64]: Remove conditional code.
+	* libio/fseeko64.c (fseeko64) [_G_LSEEK64]: Make code
+	unconditional.
+	(fseeko64) [!_G_LSEEK64]: Remove conditional code.
+	* libio/ftello64.c (ftello64) [_G_LSEEK64]: Make code
+	unconditional.
+	(ftello64) [!_G_LSEEK64]: Remove conditional code.
+	* libio/iofgetpos64.c (_IO_new_fgetpos64) [_G_LSEEK64]: Make code
+	unconditional.
+	(_IO_new_fgetpos64) [!_G_LSEEK64]: Remove conditional code.
+	* libio/iofopen64.c (_IO_fopen64) [_G_OPEN64]: Make code
+	unconditional.
+	(_IO_fopen64) [!_G_OPEN64]: Remove conditional code.
+	* libio/iofsetpos64.c (_IO_new_fsetpos64) [_G_LSEEK64]: Make code
+	unconditional.
+	(_IO_new_fsetpos64) [!_G_LSEEK64]: Remove conditional code.
+	* libio/oldiofgetpos64.c (_IO_old_fgetpos64) [_G_LSEEK64]: Make code
+	unconditional.
+	(_IO_old_fgetpos64) [!_G_LSEEK64]: Remove conditional code.
+	* libio/oldiofsetpos64.c (_IO_old_fsetpos64) [_G_LSEEK64]: Make code
+	unconditional.
+	(_IO_old_fsetpos64) [!_G_LSEEK64]: Remove conditional code.
+
 2012-10-18  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	[BZ #12140]

@@ -35,7 +35,6 @@ _IO_new_fsetpos64 (fp, posp)
      _IO_FILE *fp;
      const _IO_fpos64_t *posp;
 {
-#ifdef _G_LSEEK64
   int result;
   CHECK_FILE (fp, EOF);
   _IO_acquire_lock (fp);
@@ -60,10 +59,6 @@ _IO_new_fsetpos64 (fp, posp)
     }
   _IO_release_lock (fp);
   return result;
-#else
-  __set_errno (ENOSYS);
-  return EOF;
-#endif
 }
 
 strong_alias (_IO_new_fsetpos64, __new_fsetpos64)
