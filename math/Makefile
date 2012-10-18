@@ -126,6 +126,9 @@ CFLAGS-test-float.c = -fno-inline -ffloat-store -fno-builtin -frounding-math
 CFLAGS-test-double.c = -fno-inline -ffloat-store -fno-builtin -frounding-math
 CFLAGS-test-ldouble.c = -fno-inline -ffloat-store -fno-builtin -frounding-math
 CFLAGS-test-tgmath.c = -fno-builtin
+# The following testcase uses very long lines (>3 million), so it may take a
+# while to compile it. See: http://llvm.org/bugs/show_bug.cgi?id=14106 and
+# http://gcc.gnu.org/bugzilla/show_bug.cgi?id=54402
 CFLAGS-test-tgmath2.c = -fno-builtin
 CFLAGS-test-tgmath-ret.c = -fno-builtin
 CFLAGS-test-powl.c = -fno-builtin
