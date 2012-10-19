@@ -1,3 +1,9 @@
+2012-10-19  Pravin Satpute  <psatpute@redhat.com>
+
+	[BZ #14694]
+	* locales/mr_IN: Fix Wednesday in DAY and August, September and
+	October in ABMON and MON.
+
 2012-09-24  Dmitry V. Levin  <ldv@altlinux.org>
 
 	* gen-locale.sh: Add "set -e".
