@@ -20,18 +20,7 @@
 set -e
 
 common_objpfx=$1; shift
-elf_objpfx=$1; shift
-if [ $# -eq 0 ]; then
-  # Static case.
-  runit() {
-    "$@"
-  }
-else
-  rtld_installed_name=$1; shift
-  runit() {
-    ${elf_objpfx}${rtld_installed_name} --library-path ${common_objpfx} "$@"
-  }
-fi
+run_getconf=$1; shift
 
 logfile=$common_objpfx/posix/tst-getconf.out
 
@@ -45,7 +34,7 @@ rm -f $logfile
 result=0
 while read name; do
   echo -n "getconf $name: " >> $logfile
-  runit ${common_objpfx}posix/getconf "$name" 2>> $logfile >> $logfile
+  ${run_getconf} "$name" 2>> $logfile >> $logfile
   if test $? -ne 0; then
     echo "*** $name FAILED" >> $logfile
     result=1
@@ -223,7 +212,7 @@ EOF
 
 while read name; do
   echo -n "getconf $name /: " >> $logfile
-  runit ${common_objpfx}posix/getconf "$name" / 2>> $logfile >> $logfile
+  ${run_getconf} "$name" / 2>> $logfile >> $logfile
   if test $? -ne 0; then
     echo "*** $name FAILED" >> $logfile
     result=1

@@ -277,7 +277,7 @@ $(objpfx)tst-boost-mem: $(objpfx)tst-boost.out
 	$(common-objpfx)malloc/mtrace $(objpfx)tst-boost.mtrace > $@
 
 $(objpfx)tst-getconf.out: tst-getconf.sh $(objpfx)getconf
-	$(SHELL) $< $(common-objpfx) $(elf-objpfx) $(rtld-installed-name)
+	$(SHELL) $< $(common-objpfx) '$(built-program-cmd)'
 
 ifeq (yes,$(build-shared))
 $(objpfx)tst-regex: $(common-objpfx)rt/librt.so

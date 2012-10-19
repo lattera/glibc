@@ -1,3 +1,13 @@
+2012-10-19  Joseph Myers  <joseph@codesourcery.com>
+
+	* posix/Makefile ($(objpfx)tst-getconf.out): Pass
+	$(built-program-cmd) to tst-getconf.sh, not $(elf-objpfx) and
+	$(rtld-installed-name).
+	* posix/tst-getconf.sh (elf_objpfx): Remove variable.
+	(rtld_installed_name): Likwise.
+	(runit): Remove function.
+	(run_getconf): New variable,  Use it for running getconf binary.
+
 2012-10-19  Jim Blandy  <jimb@codesourcery.com>
 	    Joseph Myers  <joseph@codesourcery.com>
 
