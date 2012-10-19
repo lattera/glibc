@@ -304,7 +304,8 @@ $(objpfx)iconv-test.out: run-iconv-test.sh $(objpfx)gconv-modules \
 $(objpfx)tst-tables.out: tst-tables.sh $(objpfx)gconv-modules \
 			 $(addprefix $(objpfx),$(modules.so)) \
 			 $(objpfx)tst-table-from $(objpfx)tst-table-to
-	$(SHELL) $< $(common-objpfx) $(common-objpfx)iconvdata/ > $@
+	$(SHELL) $< $(common-objpfx) $(common-objpfx)iconvdata/ \
+		'$(run-program-prefix)' > $@
 
 do-tests-clean common-mostlyclean: tst-tables-clean
 

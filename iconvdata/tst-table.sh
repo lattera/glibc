@@ -1,5 +1,5 @@
 #!/bin/sh
-# Copyright (C) 2000, 2001, 2002 Free Software Foundation, Inc.
+# Copyright (C) 2000-2012 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 # Contributed by Bruno Haible <haible@clisp.cons.org>, 2000.
 #
@@ -23,8 +23,9 @@
 
 common_objpfx=$1
 objpfx=$2
-charset=$3
-charmap=$4
+run_program_prefix=$3
+charset=$4
+charmap=$5
 
 GCONV_PATH=${common_objpfx}iconvdata
 export GCONV_PATH
@@ -59,12 +60,12 @@ else
 fi
 
 # iconv in one direction.
-${common_objpfx}elf/ld.so --library-path $common_objpfx \
+${run_program_prefix} \
 ${objpfx}tst-table-from ${charset} \
   > ${objpfx}tst-${charset}.table
 
 # iconv in the other direction.
-${common_objpfx}elf/ld.so --library-path $common_objpfx \
+${run_program_prefix} \
 ${objpfx}tst-table-to ${charset} | sort \
   > ${objpfx}tst-${charset}.inverse.table
 

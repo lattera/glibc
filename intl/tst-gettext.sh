@@ -20,8 +20,9 @@
 set -e
 
 common_objpfx=$1
-objpfx=$2
-malloc_trace=$3
+run_program_prefix=$2
+objpfx=$3
+malloc_trace=$4
 
 LC_ALL=C
 export LC_ALL
@@ -53,7 +54,7 @@ export LOCPATH
 
 # Now run the test.
 MALLOC_TRACE=$malloc_trace LOCPATH=${objpfx}localedir:$LOCPATH \
-${common_objpfx}elf/ld.so --library-path $common_objpfx \
+${run_program_prefix} \
 ${objpfx}tst-gettext > ${objpfx}tst-gettext.out ${objpfx}domaindir
 
 exit $?

@@ -1,5 +1,5 @@
 #!/bin/sh
-# Copyright (C) 2000-2004,2007,2011 Free Software Foundation, Inc.
+# Copyright (C) 2000-2012 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 # Contributed by Bruno Haible <haible@clisp.cons.org>, 2000.
 #
@@ -23,6 +23,7 @@
 
 common_objpfx=$1
 objpfx=$2
+run_program_prefix=$3
 
 status=0
 
@@ -261,7 +262,8 @@ while read charset charmap; do
   if test "$charset" = GB18030; then echo "This might take a while" 1>&2; fi
   case ${charset} in \#*) continue;; esac
   echo -n "Testing ${charset}" 1>&2
-  if ${SHELL} tst-table.sh ${common_objpfx} ${objpfx} ${charset} ${charmap}; then
+  if ${SHELL} tst-table.sh ${common_objpfx} ${objpfx} "${run_program_prefix}" \
+      ${charset} ${charmap}; then
     echo 1>&2
   else
     echo "failed: ./tst-table.sh ${common_objpfx} ${objpfx} ${charset} ${charmap}"

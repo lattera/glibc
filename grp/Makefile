@@ -55,8 +55,7 @@ ifeq (no,$(cross-compiling))
 ifeq (yes,$(build-shared))
 tests: $(objpfx)tst_fgetgrent.out
 $(objpfx)tst_fgetgrent.out: tst_fgetgrent.sh $(objpfx)tst_fgetgrent
-	$(SHELL) $< $(common-objpfx) $(elf-objpfx) \
-		 $(rtld-installed-name)
+	$(SHELL) $< $(common-objpfx) '$(run-program-prefix)'
 
 endif
 endif

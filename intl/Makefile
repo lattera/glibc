@@ -74,12 +74,14 @@ $(codeset_mo): tstcodeset.po
 $(objpfx)mtrace-tst-gettext: $(objpfx)tst-gettext.out
 	$(common-objpfx)malloc/mtrace $(objpfx)tst-gettext.mtrace > $@
 $(objpfx)tst-gettext.out: tst-gettext.sh $(objpfx)tst-gettext
-	$(SHELL) $< $(common-objpfx) $(common-objpfx)intl/ \
-	  $(objpfx)tst-gettext.mtrace
+	$(SHELL) $< $(common-objpfx) '$(run-program-prefix)' \
+	  $(common-objpfx)intl/ $(objpfx)tst-gettext.mtrace
 $(objpfx)tst-translit.out: tst-translit.sh $(objpfx)tst-translit
-	$(SHELL) $< $(common-objpfx) $(common-objpfx)intl/
+	$(SHELL) $< $(common-objpfx) '$(run-program-prefix)' \
+	  $(common-objpfx)intl/
 $(objpfx)tst-gettext2.out: tst-gettext2.sh $(objpfx)tst-gettext2
-	$(SHELL) $< $(common-objpfx) $(common-objpfx)intl/
+	$(SHELL) $< $(common-objpfx) '$(run-program-prefix)' \
+	  $(common-objpfx)intl/
 $(objpfx)tst-gettext4.out: tst-gettext4.sh $(objpfx)tst-gettext4
 	$(SHELL) $< $(common-objpfx) '$(run-program-prefix)' $(common-objpfx)intl/
 $(objpfx)tst-gettext6.out: tst-gettext6.sh $(objpfx)tst-gettext6

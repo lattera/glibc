@@ -20,7 +20,8 @@
 set -e
 
 common_objpfx=$1
-objpfx=$2
+run_program_prefix=$2
+objpfx=$3
 
 LC_ALL=C
 export LC_ALL
@@ -66,7 +67,7 @@ LOCPATH=${objpfx}domaindir
 export LOCPATH
 
 # Now run the test.
-${common_objpfx}elf/ld.so --library-path $common_objpfx \
+${run_program_prefix} \
 ${objpfx}tst-gettext2 > ${objpfx}tst-gettext2.out ${objpfx}domaindir &&
 cmp ${objpfx}tst-gettext2.out - <<EOF
 String1 - Lang1: 1st string

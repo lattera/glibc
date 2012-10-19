@@ -1,5 +1,41 @@
 2012-10-19  Joseph Myers  <joseph@codesourcery.com>
 
+	* grp/Makefile ($(objpfx)tst_fgetgrent.out): Pass
+	$(run-program-prefix) to tst_fgetgrent.sh, not $(elf-objpfx) and
+	$(rtld-installed-name).
+	* grp/tst_fgetgrent.sh (elf_objpfx): Remove variable.
+	(rtld_installed_name): Likewise.
+	(library_path): Likewise.
+	(run_program_prefix): New variable.  Use it to run tst_fgetgrent.
+	* iconvdata/Makefile ($(objpfx)tst-tables.out): Pass
+	$(run-program-prefix) to tst-tables.sh.
+	* iconvdata/tst-table.sh (run_program_prefix): New variable.  Use
+	it to run tst-table-from and tst-table-to.
+	* iconvdata/tst-tables.sh (run_program_prefix): New variable.
+	Pass it to tst-table.sh.
+	* intl/Makefile ($(objpfx)tst-gettext.out): Pass
+	$(run-program-prefix) to tst-gettext.sh.
+	($(objpfx)tst-translit.out): Pass $(run-program-prefix) to
+	tst-translit.sh.
+	($(objpfx)tst-gettext2.out): Pass $(run-program-prefix) to
+	tst-gettext2.sh.
+	* intl/tst-gettext.sh (run_program_prefix): New variable.  Use it
+	to run tst-gettext.
+	* intl/tst-gettext2.sh (run_program_prefix): New variable.  Use it
+	to run tst-gettext2.
+	* intl/tst-translit.sh (run_program_prefix): New variable.  Use it
+	to run tst-translit.
+	* malloc/Makefile ($(objpfx)tst-mtrace.out): Pass
+	$(run-program-prefix) to tst-mtrace.sh.
+	* malloc/tst-mtrace.sh (run_program_prefix): New variable.  Use it
+	to run tst-mtrace.
+	* posix/Makefile ($(objpfx)wordexp-tst.out): Pass
+	$(run-program-prefix) to wordexp-tst.sh, not $(elf-objpfx) and
+	$(rtld-installed-name).
+	* posix/wordexp-tst.sh (elf_objpfx): Remove variable.
+	(rtld_installed_name): Likewise.
+	(run_program_prefix): New variable.  Use it to run wordexp-test.
+
 	* Makeconfig (ARCH): Remove all definitions.
 	(machine): Likewise.
 	[ARCH]: Remove conditional code.
