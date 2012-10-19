@@ -1,5 +1,12 @@
 2012-10-19  Joseph Myers  <joseph@codesourcery.com>
 
+	* io/Makefile ($(objpfx)ftwtest.out): Depend on ftwtest-sh.  Pass
+	script to $(SHELL) as $<.  Pass $(common-objpfx) to script
+	directly.  Pass built executable to script as
+	$(built-program-cmd).
+	* io/ftwtest-sh (ldso): Remove variable.  Run ftwtest directly as
+	$testprogram without using LD_LIBRARY_PATH and $ldso.
+
 	* grp/Makefile ($(objpfx)tst_fgetgrent.out): Pass
 	$(run-program-prefix) to tst_fgetgrent.sh, not $(elf-objpfx) and
 	$(rtld-installed-name).

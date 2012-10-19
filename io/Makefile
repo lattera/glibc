@@ -101,7 +101,6 @@ tst-statvfs-ARGS = $(objpfx)tst-statvfs tst-statvfs.c /tmp
 ifeq ($(cross-compiling),no)
 tests: $(objpfx)ftwtest.out
 
-$(objpfx)ftwtest.out: $(objpfx)ftwtest
-	$(SHELL) ftwtest-sh $(shell cd $(common-objpfx). && pwd)/ \
-		 $(shell cd $(<D) && pwd)/$(<F) > $@
+$(objpfx)ftwtest.out: ftwtest-sh $(objpfx)ftwtest
+	$(SHELL) $< $(common-objpfx) '$(built-program-cmd)' > $@
 endif
