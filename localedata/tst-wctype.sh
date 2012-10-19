@@ -20,12 +20,11 @@
 set -e
 
 common_objpfx=$1
-run_program_prefix=$2
+tst_wctype=$2
 
 # Run the test program.
 LOCPATH=${common_objpfx}localedata GCONV_PATH=${common_objpfx}iconvdata \
-LC_ALL=ja_JP.EUC-JP ${run_program_prefix} \
-  ${common_objpfx}localedata/tst-wctype < tst-wctype.input \
+LC_ALL=ja_JP.EUC-JP ${tst_wctype} < tst-wctype.input \
     > ${common_objpfx}localedata/tst-wctype.out
 
 exit $?
