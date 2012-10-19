@@ -44,7 +44,7 @@ LANG=C
 export LANG
 
 # First create our scenario:
-tmp=`echo ${TMPDIR:-/tmp} | sed 's|\(.\)/*$|\1|'`
+tmp=`pwd | sed 's|\(.\)/*$|\1|'`
 tmpdir=$tmp/ftwtest.d
 
 [ -f ${objpfx}elf/ld.so ] && ldso=${objpfx}elf/ld.so
@@ -71,7 +71,7 @@ ln -s $tmpdir/foo/lvl1/lvl2/lvl3/lvl4 $tmpdir/foo/lvl1/link@1
 echo > $tmpdir/bar/xo
 chmod a-x,a+r $tmpdir/bar
 
-testout=${TMPDIR:-/tmp}/ftwtest.out
+testout=$tmp/ftwtest.out
 
 LD_LIBRARY_PATH=$objpfx $ldso $testprogram $tmpdir |
     sort > $testout
