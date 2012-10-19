@@ -7529,18 +7529,12 @@ $as_echo "$libc_cv_pic_default" >&6; }
 
 
 
-if test "`(cd $srcdir; pwd)`" = "`pwd`"; then
-  config_makefile=
-else
-  config_makefile=Makefile
-fi
-
 VERSION=`sed -n -e 's/^#define VERSION "\([^"]*\)"/\1/p' < $srcdir/version.h`
 RELEASE=`sed -n -e 's/^#define RELEASE "\([^"]*\)"/\1/p' < $srcdir/version.h`
 
 
 
-ac_config_files="$ac_config_files config.make ${config_makefile}"
+ac_config_files="$ac_config_files config.make Makefile"
 
 ac_config_commands="$ac_config_commands default"
 
@@ -8259,7 +8253,7 @@ do
   case $ac_config_target in
     "config.h") CONFIG_HEADERS="$CONFIG_HEADERS config.h" ;;
     "config.make") CONFIG_FILES="$CONFIG_FILES config.make" ;;
-    "${config_makefile}") CONFIG_FILES="$CONFIG_FILES ${config_makefile}" ;;
+    "Makefile") CONFIG_FILES="$CONFIG_FILES Makefile" ;;
     "default") CONFIG_COMMANDS="$CONFIG_COMMANDS default" ;;
 
   *) as_fn_error $? "invalid argument: \`$ac_config_target'" "$LINENO" 5;;

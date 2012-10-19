@@ -1,5 +1,16 @@
 2012-10-19  Joseph Myers  <joseph@codesourcery.com>
 
+	* Makeconfig (ARCH): Remove all definitions.
+	(machine): Likewise.
+	[ARCH]: Remove conditional code.
+	[!objdir]: Give error.
+	[!objdir] (objpfx): Remove.
+	[!objdir] (common-objpfx): Likewise.
+	[!objdir] (common-objdir): Likewise.
+	* configure.in (config_makefile): Remove.  Hardcode Makefile in
+	AC_CONFIG_FILES call.
+	* configure: Regenerated.
+
 	[BZ #13888]
 	* io/ftwtest-sh (tmp): Set to use the working directory, not /tmp
 	or TMPDIR.

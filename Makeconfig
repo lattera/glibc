@@ -33,31 +33,6 @@ ifdef subdir
 .. := ../
 endif
 
-# If config.make exists, the source directory was configured,
-# so don't try to be clever and find another directory to build in.
-ifneq (,$(wildcard $(..)config.make))
-ARCH =
-machine =
-else	# Not configured.
-ifndef ARCH
-ifdef machine
-ARCH = $(machine)
-endif # machine
-endif # ARCH
-endif # config.make
-
-# Directory for object files and libc.a.  If this is not defined, the
-# object files live in the subdirectories where their sources live, and
-# libc.a lives in the parent directory (this probably doesn't work any
-# more).
-ifdef ARCH
-ifeq ($(filter /%,$(ARCH)),)
-objdir := $(..)$(ARCH)
-else
-objdir = $(ARCH)
-endif
-endif
-
 # $(common-objdir) is the place to put objects and
 # such that are not specific to a single subdir.
 ifdef objdir
@@ -65,15 +40,7 @@ objpfx := $(patsubst %//,%/,$(objdir)/$(subdir)/)
 common-objpfx = $(objdir)/
 common-objdir = $(objdir)
 else
-objpfx :=
-ifdef ..
-common-objpfx = $(..)
-common-objdir = ..
-else
-# This is a kludge.  make wizards might grok.
-common-objpfx = sysdeps/../
-common-objdir = .
-endif
+objdir must be defined by the build-directory Makefile.
 endif
 
 # Root of the sysdeps tree.

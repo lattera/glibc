@@ -2185,18 +2185,12 @@ AC_SUBST(DEFINES)
 dnl See sysdeps/mach/configure.in for this variable.
 AC_SUBST(mach_interface_list)
 
-if test "`(cd $srcdir; pwd)`" = "`pwd`"; then
-  config_makefile=
-else
-  config_makefile=Makefile
-fi
-
 VERSION=`sed -n -e 's/^#define VERSION "\([^"]*\)"/\1/p' < $srcdir/version.h`
 RELEASE=`sed -n -e 's/^#define RELEASE "\([^"]*\)"/\1/p' < $srcdir/version.h`
 AC_SUBST(VERSION)
 AC_SUBST(RELEASE)
 
-AC_CONFIG_FILES([config.make ${config_makefile}])
+AC_CONFIG_FILES([config.make Makefile])
 AC_CONFIG_COMMANDS([default],[[
 case $CONFIG_FILES in *config.make*)
 echo "$config_vars" >> config.make;;
