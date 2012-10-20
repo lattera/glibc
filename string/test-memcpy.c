@@ -1,5 +1,5 @@
 /* Test and measure memcpy functions.
-   Copyright (C) 1999, 2002, 2003, 2005 Free Software Foundation, Inc.
+   Copyright (C) 1999-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Jakub Jelinek <jakub@redhat.com>, 1999.
 
@@ -21,6 +21,7 @@
 # define MEMCPY_RESULT(dst, len) dst
 # define MIN_PAGE_SIZE 131072
 # define TEST_MAIN
+# define TEST_NAME "memcpy"
 # include "test-string.h"
 
 char *simple_memcpy (char *, const char *, size_t);

@@ -1,5 +1,5 @@
 /* Test and measure strstr functions.
-   Copyright (C) 2010 Free Software Foundation, Inc.
+   Copyright (C) 2010-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Ulrich Drepper <drepper@redhat.com>, 2010.
 
@@ -18,6 +18,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #define TEST_MAIN
+#define TEST_NAME "strstr"
 #include "test-string.h"
 
 

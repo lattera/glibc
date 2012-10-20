@@ -1,7 +1,6 @@
-/* Test and measure mempcpy functions.
-   Copyright (C) 1999-2012 Free Software Foundation, Inc.
+/* Test and measure IFUNC implementations of strchrnul function.
+   Copyright (C) 2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Written by Jakub Jelinek <jakub@redhat.com>, 1999.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -17,22 +16,5 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#define MEMCPY_RESULT(dst, len) (dst) + (len)
-#define TEST_MAIN
-#define TEST_NAME "mempcpy"
-#include "test-string.h"
-
-char *simple_mempcpy (char *, const char *, size_t);
-
-IMPL (simple_mempcpy, 0)
-IMPL (mempcpy, 1)
-
-char *
-simple_mempcpy (char *dst, const char *src, size_t n)
-{
-  while (n--)
-    *dst++ = *src++;
-  return dst;
-}
-
-#include "test-memcpy.c"
+#define TEST_IFUNC 1
+#include "test-strchrnul.c"

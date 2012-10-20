@@ -58,6 +58,8 @@ tests		:= tester inl-tester noinl-tester testcopy test-ffs	\
 		   bug-envz1 tst-strxfrm2 tst-endian tst-svc2		\
 		   tst-strtok_r
 
+tests-ifunc := $(strop-tests:%=test-%-ifunc)
+tests += $(tests-ifunc)
 
 include ../Rules
 

@@ -1,5 +1,5 @@
 /* Test and measure strncat functions.
-   Copyright (C) 2011 Free Software Foundation, Inc.
+   Copyright (C) 2011-2012 Free Software Foundation, Inc.
    Contributed by Intel Corporation.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,6 +17,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #define TEST_MAIN
+#define TEST_NAME "strncat"
 #include "test-string.h"
 
 typedef char *(*proto_t) (char *, const char *, size_t);

@@ -1,5 +1,5 @@
 /* Test and measure strcspn functions.
-   Copyright (C) 1999, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1999-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Jakub Jelinek <jakub@redhat.com>, 1999.
 
@@ -20,6 +20,7 @@
 #define STRPBRK_RESULT(s, pos) (pos)
 #define RES_TYPE size_t
 #define TEST_MAIN
+#define TEST_NAME "strcspn"
 #include "test-string.h"
 
 typedef size_t (*proto_t) (const char *, const char *);

@@ -19,6 +19,7 @@
 
 #include <ctype.h>
 #define TEST_MAIN
+#define TEST_NAME "strncasecmp"
 #include "test-string.h"
 
 typedef int (*proto_t) (const char *, const char *, size_t);

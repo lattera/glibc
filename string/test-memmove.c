@@ -18,6 +18,11 @@
    <http://www.gnu.org/licenses/>.  */
 
 #define TEST_MAIN
+#ifdef TEST_BCOPY
+# define TEST_NAME "bcopy"
+#else
+# define TEST_NAME "memmove"
+#endif
 #include "test-string.h"
 
 char *simple_memmove (char *, const char *, size_t);

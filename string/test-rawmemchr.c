@@ -1,5 +1,5 @@
 /* Test and measure memchr functions.
-   Copyright (C) 1999,2002,2003,2005,2009,2011 Free Software Foundation, Inc.
+   Copyright (C) 1999-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Jakub Jelinek <jakub@redhat.com>, 1999.
 
@@ -20,6 +20,7 @@
 #include <assert.h>
 
 #define TEST_MAIN
+#define TEST_NAME "rawmemchr"
 #include "test-string.h"
 
 typedef char *(*proto_t) (const char *, int);

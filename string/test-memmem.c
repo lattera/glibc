@@ -1,5 +1,5 @@
 /* Test and measure memmem functions.
-   Copyright (C) 2008 Free Software Foundation, Inc.
+   Copyright (C) 2008-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Ulrich Drepper <drepper@redhat.com>, 2008.
 
@@ -18,6 +18,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #define TEST_MAIN
+#define TEST_NAME "memmem"
 #define BUF1PAGES 20
 #define ITERATIONS 500
 #include "test-string.h"

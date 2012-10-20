@@ -1,5 +1,5 @@
 /* Test and measure strcpy functions.
-   Copyright (C) 1999, 2002, 2003, 2005, 2011, 2012 Free Software Foundation, Inc.
+   Copyright (C) 1999-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Jakub Jelinek <jakub@redhat.com>, 1999.
    Added wcscpy support by Liubov Dmitrieva <liubov.dmitrieva@gmail.com>, 2011
@@ -42,6 +42,11 @@
 #ifndef STRCPY_RESULT
 # define STRCPY_RESULT(dst, len) dst
 # define TEST_MAIN
+# ifndef WIDE
+#  define TEST_NAME "strcpy"
+# else
+#  define TEST_NAME "wcscpy"
+# endif
 # include "test-string.h"
 # ifndef WIDE
 #  define SIMPLE_STRCPY simple_strcpy

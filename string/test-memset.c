@@ -18,6 +18,11 @@
    <http://www.gnu.org/licenses/>.  */
 
 #define TEST_MAIN
+#ifdef TEST_BZERO
+# define TEST_NAME "bzero"
+#else
+# define TEST_NAME "memset"
+#endif
 #define MIN_PAGE_SIZE 131072
 #include "test-string.h"
 

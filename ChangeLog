@@ -1,5 +1,65 @@
 2012-10-20  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* string/Makefile (tests-ifunc): New variable.
+	(tests): Add $(tests-ifunc).
+	* string/test-memccpy.c (TEST_NAME): New macro.
+	* string/test-memchr.c (TEST_NAME): Likewise.
+	* string/test-memcmp.c (TEST_NAME): Likewise.
+	* string/test-memcpy.c (TEST_NAME): Likewise.
+	* string/test-memmem.c (TEST_NAME): Likewise.
+	* string/test-memmove.c (TEST_NAME): Likewise.
+	* string/test-memset.c (TEST_NAME): Likewise.
+	* string/test-rawmemchr.c (TEST_NAME): Likewise.
+	* string/test-stpcpy.c (TEST_NAME): Likewise.
+	* string/test-stpncpy.c (TEST_NAME): Likewise.
+	* string/test-strcasecmp.c (TEST_NAME): Likewise.
+	* string/test-strcasestr.c (TEST_NAME): Likewise.
+	* string/test-strcat.c (TEST_NAME): Likewise.
+	* string/test-strchr.c (TEST_NAME): Likewise.
+	* string/test-strcmp.c(TEST_NAME): Likewise.
+	* string/test-strcpy.c (TEST_NAME): Likewise.
+	* string/test-strcspn.c (TEST_NAME): Likewise.
+	* string/test-strlen.c (TEST_NAME): Likewise.
+	* string/test-strncasecmp.c (TEST_NAME): Likewise.
+	* string/test-strncmp.c (TEST_NAME): Likewise.
+	* string/test-strncpy.c (TEST_NAME): Likewise.
+	* string/test-strnlen.c (TEST_NAME): Likewise.
+	* string/test-strpbrk.c (TEST_NAME): Likewise.
+	* string/test-strrchr.c (TEST_NAME): Likewise.
+	* string/test-strspn.c (TEST_NAME): Likewise.
+	* string/test-strstr.c (TEST_NAME): Likewise.
+	* string/test-bcopy-ifunc.c: New file.
+	* string/test-bzero-ifunc.c: Likewise.
+	* string/test-memccpy-ifunc.c: Likewise.
+	* string/test-memchr-ifunc.c: Likewise.
+	* string/test-memcmp-ifunc.c: Likewise.
+	* string/test-memcpy-ifunc.c: Likewise.
+	* string/test-memmem-ifunc.c: Likewise.
+	* string/test-memmove-ifunc.c: Likewise.
+	* string/test-mempcpy-ifunc.c: Likewise.
+	* string/test-memset-ifunc.c: Likewise.
+	* string/test-rawmemchr-ifunc.c: Likewise.
+	* string/test-stpcpy-ifunc.c: Likewise.
+	* string/test-stpncpy-ifunc.c: Likewise.
+	* string/test-strcasecmp-ifunc.c: Likewise.
+	* string/test-strcasestr-ifunc.c: Likewise.
+	* string/test-strcat-ifunc.c: Likewise.
+	* string/test-strchr-ifunc.c: Likewise.
+	* string/test-strchrnul-ifunc.c: Likewise.
+	* string/test-strcmp-ifunc.c: Likewise.
+	* string/test-strcpy-ifunc.c: Likewise.
+	* string/test-strcspn-ifunc.c: Likewise.
+	* string/test-strlen-ifunc.c: Likewise.
+	* string/test-strncasecmp-ifunc.c: Likewise.
+	* string/test-strncat-ifunc.c: Likewise.
+	* string/test-strncmp-ifunc.c: Likewise.
+	* string/test-strncpy-ifunc.c: Likewise.
+	* string/test-strnlen-ifunc.c: Likewise.
+	* string/test-strpbrk-ifunc.c: Likewise.
+	* string/test-strrchr-ifunc.c: Likewise.
+	* string/test-strspn-ifunc.c: Likewise.
+	* string/test-strstr-ifunc.c: Likewise.
+
 	* debug/Makefile (tests-ifunc): New variable.
 	(tests): Add $(tests-ifunc).
 	* debug/test-stpcpy_chk.c (TEST_NAME): New macro.

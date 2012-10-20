@@ -19,6 +19,11 @@
    <http://www.gnu.org/licenses/>.  */
 
 #define TEST_MAIN
+#ifdef WIDE
+# define TEST_NAME "wmemcmp"
+#else
+# define TEST_NAME "memcmp"
+#endif
 #include "test-string.h"
 #ifdef WIDE
 # include <inttypes.h>

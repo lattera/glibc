@@ -1,5 +1,5 @@
 /* Test and measure stpncpy functions.
-   Copyright (C) 1999, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1999-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Jakub Jelinek <jakub@redhat.com>, 1999.
 
@@ -19,6 +19,7 @@
 
 #define STRNCPY_RESULT(dst, len, n) ((dst) + ((len) > (n) ? (n) : (len)))
 #define TEST_MAIN
+#define TEST_NAME "stpncpy"
 #include "test-string.h"
 
 char *simple_stpncpy (char *, const char *, size_t);

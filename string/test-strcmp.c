@@ -19,6 +19,11 @@
    <http://www.gnu.org/licenses/>.  */
 
 #define TEST_MAIN
+#ifdef WIDE
+# define TEST_NAME "wcscmp"
+#else
+# define TEST_NAME "strcmp"
+#endif
 #include "test-string.h"
 
 #ifdef WIDE

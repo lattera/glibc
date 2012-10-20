@@ -1,5 +1,5 @@
 /* Test and measure strpbrk functions.
-   Copyright (C) 1999, 2002, 2003, 2005 Free Software Foundation, Inc.
+   Copyright (C) 1999-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Jakub Jelinek <jakub@redhat.com>, 1999.
 
@@ -21,6 +21,7 @@
 # define STRPBRK_RESULT(s, pos) ((s)[(pos)] ? (s) + (pos) : NULL)
 # define RES_TYPE char *
 # define TEST_MAIN
+# define TEST_NAME "strpbrk"
 # include "test-string.h"
 
 typedef char *(*proto_t) (const char *, const char *);
