@@ -1,5 +1,5 @@
 /* Test and measure __strcpy_chk functions.
-   Copyright (C) 1999, 2002, 2003, 2004 Free Software Foundation, Inc.
+   Copyright (C) 1999-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Jakub Jelinek <jakub@redhat.com>, 1999.
 
@@ -20,6 +20,7 @@
 #ifndef STRCPY_RESULT
 # define STRCPY_RESULT(dst, len) dst
 # define TEST_MAIN
+# define TEST_NAME "strcpy_chk"
 # include "../string/test-string.h"
 
 extern void __attribute__ ((noreturn)) __chk_fail (void);

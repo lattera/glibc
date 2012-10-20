@@ -1,3 +1,12 @@
+2012-10-20  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* debug/Makefile (tests-ifunc): New variable.
+	(tests): Add $(tests-ifunc).
+	* debug/test-stpcpy_chk.c (TEST_NAME): New macro.
+	* debug/test-strcpy_chk.c (TEST_NAME): Likewise.
+	* debug/test-stpcpy_chk-ifunc.c: New file.
+	* debug/test-strcpy_chk-ifunc.c: Likewise.
+
 2012-10-20  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	[BZ #13601]
