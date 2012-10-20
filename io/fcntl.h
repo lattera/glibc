@@ -27,6 +27,9 @@
 /* This must be early so <bits/fcntl.h> can define types winningly.  */
 __BEGIN_DECLS
 
+/* Get __mode_t, __dev_t and __off_t  .*/
+#include <bits/types.h>
+
 /* Get the definitions of O_*, F_*, FD_*: all the
    numbers and flag bits for `open', `fcntl', et al.  */
 #include <bits/fcntl.h>
@@ -56,7 +59,6 @@ typedef __pid_t pid_t;
 
 /* For XPG all symbols from <sys/stat.h> should also be available.  */
 #if defined __USE_XOPEN || defined __USE_XOPEN2K8
-# include <bits/types.h>         /* For __mode_t and __dev_t.  */
 # define __need_timespec
 # include <time.h>
 # include <bits/stat.h>
