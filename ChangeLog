@@ -1,5 +1,14 @@
 2012-10-20  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* wcsmbs/Makefile (tests-ifunc): New variable.
+	(tests): Add $(tests-ifunc).
+	* wcsmbs/test-wcschr-ifunc.c: New file.
+	* wcsmbs/test-wcscmp-ifunc.c: Likewise.
+	* wcsmbs/test-wcscpy-ifunc.c: Likewise.
+	* wcsmbs/test-wcslen-ifunc.c: Likewise.
+	* wcsmbs/test-wcsrchr-ifunc.c: Likewise.
+	* wcsmbs/test-wmemcmp-ifunc.c: Likewise.
+
 	* string/Makefile (tests-ifunc): New variable.
 	(tests): Add $(tests-ifunc).
 	* string/test-memccpy.c (TEST_NAME): New macro.
