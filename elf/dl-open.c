@@ -189,9 +189,11 @@ dl_open_worker (void *a)
     {
       const void *caller_dlopen = args->caller_dlopen;
 
+#ifdef SHARED
       /* We have to find out from which object the caller is calling.
 	 By default we assume this is the main application.  */
       call_map = GL(dl_ns)[LM_ID_BASE]._ns_loaded;
+#endif
 
       struct link_map *l;
       for (Lmid_t ns = 0; ns < GL(dl_nns); ++ns)

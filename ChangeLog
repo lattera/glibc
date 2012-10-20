@@ -1,3 +1,15 @@
+2012-10-20  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #14683]
+	* elf/Makefile (tests-static): Add tst-leaks1-static.
+	(tests): Also depend on $(objpfx)tst-leaks1-static-mem.
+	($(objpfx)tst-leaks1-static): New rule.
+	($(objpfx)tst-leaks1-static-mem): Likewise.
+	(tst-leaks1-static-ENV): New macro.
+	* elf/dl-open.c (dl_open_worker): Check the main application
+	only if SHARED is defined.
+	* elf/tst-leaks1-static.c: New file.
+
 2012-10-20  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/bits/fcntl-linux.h: New file, contains

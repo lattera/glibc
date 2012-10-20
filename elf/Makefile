@@ -119,7 +119,8 @@ tests = tst-tls1 tst-tls2 tst-tls9 tst-leaks1
 ifeq (yes,$(have-initfini-array))
 tests += tst-array1 tst-array2 tst-array3 tst-array4 tst-array5
 endif
-tests-static = tst-tls1-static tst-tls2-static tst-stackguard1-static
+tests-static = tst-tls1-static tst-tls2-static tst-stackguard1-static \
+	       tst-leaks1-static
 ifeq (yes,$(build-shared))
 tests-static += tst-tls9-static
 tst-tls9-static-ENV = \
@@ -161,7 +162,8 @@ endif
 endif
 endif
 ifeq ($(cross-compiling),no)
-tests: $(objpfx)tst-leaks1-mem $(objpfx)noload-mem
+tests: $(objpfx)tst-leaks1-mem $(objpfx)tst-leaks1-static-mem \
+       $(objpfx)noload-mem
 endif
 tlsmod17a-suffixes = 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19
 tlsmod18a-suffixes = 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19
@@ -1051,7 +1053,12 @@ $(objpfx)tst-leaks1: $(libdl)
 $(objpfx)tst-leaks1-mem: $(objpfx)tst-leaks1.out
 	$(common-objpfx)malloc/mtrace $(objpfx)tst-leaks1.mtrace > $@
 
+$(objpfx)tst-leaks1-static: $(common-objpfx)dlfcn/libdl.a
+$(objpfx)tst-leaks1-static-mem: $(objpfx)tst-leaks1-static.out
+	$(common-objpfx)malloc/mtrace $(objpfx)tst-leaks1-static.mtrace > $@
+
 tst-leaks1-ENV = MALLOC_TRACE=$(objpfx)tst-leaks1.mtrace
+tst-leaks1-static-ENV = MALLOC_TRACE=$(objpfx)tst-leaks1-static.mtrace
 
 $(objpfx)tst-addr1: $(libdl)
 
