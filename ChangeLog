@@ -1,3 +1,9 @@
+2012-10-20  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	[BZ #13601]
+	* elf/dl-load.c (open_verify): Retry read if the entire ELF
+	header is not read in.
+
 2012-10-19  Joseph Myers  <joseph@codesourcery.com>
 
 	* io/Makefile ($(objpfx)ftwtest.out): Depend on ftwtest-sh.  Pass

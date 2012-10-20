@@ -1722,10 +1722,20 @@ open_verify (const char *name, struct filebuf *fbp, struct link_map *loader,
       /* We successfully openened the file.  Now verify it is a file
 	 we can use.  */
       __set_errno (0);
-      fbp->len = __libc_read (fd, fbp->buf, sizeof (fbp->buf));
+      fbp->len = 0;
+      assert (sizeof (fbp->buf) > sizeof (ElfW(Ehdr)));
+      /* Read in the header.  */
+      do
+        {
+          ssize_t retlen = __libc_read (fd, fbp->buf + fbp->len,
+					sizeof (fbp->buf) - fbp->len);
+	  if (retlen <= 0)
+	    break;
+	  fbp->len += retlen;
+	}
+      while (__builtin_expect (fbp->len < sizeof (ElfW(Ehdr)), 0));
 
       /* This is where the ELF header is loaded.  */
-      assert (sizeof (fbp->buf) > sizeof (ElfW(Ehdr)));
       ehdr = (ElfW(Ehdr) *) fbp->buf;
 
       /* Now run the tests.  */
