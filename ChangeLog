@@ -1,3 +1,13 @@
+2012-10-20  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/bits/fcntl-linux.h: New file, contains
+	generic values for Linux.
+	* sysdeps/unix/sysv/linux/x86/bits/fcntl.h: Remove all definitions
+	and declarations that are provided by <bits/fcntl-linux.h> and
+	include <bits/fcntl-linux.h>.
+	* sysdeps/unix/sysv/linux/sparc/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/bits/fcntl.h: Likewise.
+
 2012-10-20  Roland McGrath  <roland@hack.frob.com>
 
 	* io/fcntl.h: Move include of <bits/types.h> to the top and
