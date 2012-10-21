@@ -1,3 +1,11 @@
+2012-10-21  Jim Blandy  <jimb@codesourcery.com>
+	    Joseph Myers  <joseph@codesourcery.com>
+
+	* Makefile ($(objpfx)tst-cancel-wrappers.out): Pass $(NM) to
+	tst-cancel-wrappers.sh.
+	* tst-cancel-wrappers.sh: Use nm program given as first argument,
+	not hardcoded "nm".
+
 2012-10-17  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* tst-cond25.c (do_test_wait): Don't check for return value from

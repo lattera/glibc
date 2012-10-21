@@ -111,6 +111,7 @@ CPPFLAGS-config = @CPPFLAGS@
 CPPUNDEFS = @CPPUNDEFS@
 ASFLAGS-config = @ASFLAGS_config@
 AR = @AR@
+NM = @NM@
 MAKEINFO = @MAKEINFO@
 AS = $(CC) -c
 MIG = @MIG@

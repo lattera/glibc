@@ -1,6 +1,6 @@
 #! /bin/sh
 # Test whether all cancelable functions are cancelable.
-# Copyright (C) 2002, 2003, 2007 Free Software Foundation, Inc.
+# Copyright (C) 2002-2012 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 # Contributed by Jakub Jelinek <jakub@redhat.com>, 2002.
 
@@ -18,8 +18,9 @@
 # License along with the GNU C Library; if not, see
 # <http://www.gnu.org/licenses/>.
 
+NM="$1"; shift
 while [ $# -gt 0 ]; do
-  ( nm -P $1; echo 'end[end]:' ) | gawk ' BEGIN {
+  ( $NM -P $1; echo 'end[end]:' ) | gawk ' BEGIN {
 C["accept"]=1
 C["close"]=1
 C["connect"]=1

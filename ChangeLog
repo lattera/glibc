@@ -1,3 +1,8 @@
+2012-10-21  Jim Blandy  <jimb@codesourcery.com>
+	    Joseph Myers  <joseph@codesourcery.com>
+
+	* config.make.in (NM): New variable.
+
 2012-10-21  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/sh/bits/fcntl.h: Remove all
