@@ -135,7 +135,11 @@
    since this is a superset.  */
 #if defined __USE_POSIX199309 || defined __USE_UNIX98
 # define O_DSYNC	__O_DSYNC	/* Synchronize data.  */
-# define O_RSYNC	__O_SYNC	/* Synchronize read operations.	 */
+# if defined __O_RSYNC
+#  define O_RSYNC	__O_RSYNC	/* Synchronize read operations.	 */
+# else
+#  define O_RSYNC	O_SYNC		/* Synchronize read operations.	 */
+# endif
 #endif
 
 /* Values for the second argument to `fcntl'.  */
