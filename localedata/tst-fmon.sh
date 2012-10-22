@@ -48,7 +48,7 @@ while IFS="	" read locale format value expect; do
 	LOCPATH=${common_objpfx}localedata \
 	GCONV_PATH=${common_objpfx}/iconvdata \
 	${run_program_prefix} ${common_objpfx}localedata/tst-fmon \
-	"$locale" "$format" "$value" "$expect" ||
+	"$locale" "$format" "$value" "$expect" < /dev/null ||
 	errcode=$?
     fi
 done < $datafile

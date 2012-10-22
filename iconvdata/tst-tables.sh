@@ -263,7 +263,7 @@ while read charset charmap; do
   case ${charset} in \#*) continue;; esac
   echo -n "Testing ${charset}" 1>&2
   if ${SHELL} tst-table.sh ${common_objpfx} ${objpfx} "${run_program_prefix}" \
-      ${charset} ${charmap}; then
+      ${charset} ${charmap} < /dev/null; then
     echo 1>&2
   else
     echo "failed: ./tst-table.sh ${common_objpfx} ${objpfx} ${charset} ${charmap}"

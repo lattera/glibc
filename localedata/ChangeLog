@@ -1,3 +1,10 @@
+2012-10-22  Jim Blandy  <jimb@codesourcery.com>
+	    Joseph Myers  <joseph@codesourcery.com>
+
+	* tst-fmon.sh: Redirect test program stdin in loop from /dev/null.
+	* tst-numeric.sh: Likewise.
+	* tst-rpmatch.sh: Likewise.
+
 2012-10-19  Jim Blandy  <jimb@codesourcery.com>
 	    Joseph Myers  <joseph@codesourcery.com>
 

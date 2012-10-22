@@ -33,7 +33,7 @@ while IFS="	" read locale format value expect; do
 	if LOCPATH=${common_objpfx}localedata \
 	    GCONV_PATH=${common_objpfx}/iconvdata \
 	    ${run_program_prefix} ${common_objpfx}localedata/tst-numeric \
-	    "$locale" "$format" "$value" "$expect"
+	    "$locale" "$format" "$value" "$expect" < /dev/null
 	then
 	    echo "Locale: \"${locale}\" Format: \"${format}\"" \
 		 "Value: \"${value}\" Expect: \"${expect}\"  passed"

@@ -28,7 +28,7 @@ while IFS=\& read locale string result dummy; do
     if [ "$locale" != "#" ]; then
 	LOCPATH=${common_objpfx}localedata \
 	GCONV_PATH=${common_objpfx}/iconvdata \
-	${tst_rpmatch} $locale $string $result \
+	${tst_rpmatch} $locale $string $result < /dev/null \
 	|| { echo "$locale $string $result  FAILED"; exit 1; }
     fi
 done <<EOF

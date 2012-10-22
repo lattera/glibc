@@ -61,7 +61,7 @@ while read from to subset targets; do
     for t in $targets; do
       if test -f testdata/$from; then
 	echo $ac_n "   test data: $from -> $t $ac_c"
-	$PROG -f $from -t $t testdata/$from > $temp1 ||
+	$PROG -f $from -t $t testdata/$from < /dev/null > $temp1 ||
 	  { if test $? -gt 128; then exit 1; fi
 	    echo "FAILED"; failed=1; continue; }
 	echo $ac_n "OK$ac_c"
@@ -71,7 +71,7 @@ while read from to subset targets; do
 	  echo $ac_n "/OK$ac_c"
 	fi
 	echo $ac_n " -> $from $ac_c"
-	$PROG -f $t -t $to -o $temp2 $temp1 ||
+	$PROG -f $t -t $to -o $temp2 $temp1 < /dev/null ||
 	  { if test $? -gt 128; then exit 1; fi
 	    echo "FAILED"; failed=1; continue; }
 	echo $ac_n "OK$ac_c"
@@ -87,7 +87,7 @@ while read from to subset targets; do
       # set.  Otherwise we convert to all the TARGETS.
       if test $subset = Y; then
 	echo $ac_n "      suntzu: $from -> $t -> $to $ac_c"
-	$PROG -f $from -t $t testdata/suntzus |
+	$PROG -f $from -t $t testdata/suntzus < /dev/null |
 	$PROG -f $t -t $to > $temp1 ||
 	  { if test $? -gt 128; then exit 1; fi
 	    echo "FAILED"; failed=1; continue; }
@@ -106,7 +106,7 @@ while read from to subset targets; do
 	 ! grep '<U....><U....>' ../localedata/charmaps/$from > /dev/null; then
 	echo $ac_n "test charmap: $from -> $t $ac_c"
 	$PROG -f ../localedata/charmaps/$from -t ../localedata/charmaps/$tc \
-	      testdata/$from > $temp1 ||
+	      testdata/$from < /dev/null > $temp1 ||
 	  { if test $? -gt 128; then exit 1; fi
 	    echo "FAILED"; failed=1; continue; }
 	echo $ac_n "OK$ac_c"
@@ -117,7 +117,7 @@ while read from to subset targets; do
 	fi
 	echo $ac_n " -> $from $ac_c"
 	$PROG -t ../localedata/charmaps/$from -f ../localedata/charmaps/$tc \
-	      -o $temp2 $temp1 ||
+	      -o $temp2 $temp1 < /dev/null ||
 	  { if test $? -gt 128; then exit 1; fi
 	    echo "FAILED"; failed=1; continue; }
 	echo $ac_n "OK$ac_c"
@@ -132,7 +132,7 @@ while read from to subset targets; do
 
   if test "$subset" = N; then
     echo $ac_n "      suntzu: ASCII -> $to -> ASCII $ac_c"
-    $PROG -f ASCII -t $to testdata/suntzus |
+    $PROG -f ASCII -t $to testdata/suntzus < /dev/null |
     $PROG -f $to -t ASCII > $temp1 ||
       { if test $? -gt 128; then exit 1; fi
 	echo "FAILED"; failed=1; continue; }

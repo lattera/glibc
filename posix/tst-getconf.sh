@@ -34,7 +34,7 @@ rm -f $logfile
 result=0
 while read name; do
   echo -n "getconf $name: " >> $logfile
-  ${run_getconf} "$name" 2>> $logfile >> $logfile
+  ${run_getconf} "$name" < /dev/null 2>> $logfile >> $logfile
   if test $? -ne 0; then
     echo "*** $name FAILED" >> $logfile
     result=1
@@ -212,7 +212,7 @@ EOF
 
 while read name; do
   echo -n "getconf $name /: " >> $logfile
-  ${run_getconf} "$name" / 2>> $logfile >> $logfile
+  ${run_getconf} "$name" / < /dev/null 2>> $logfile >> $logfile
   if test $? -ne 0; then
     echo "*** $name FAILED" >> $logfile
     result=1
