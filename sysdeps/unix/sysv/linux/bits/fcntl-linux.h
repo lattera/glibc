@@ -98,9 +98,15 @@
 #endif
 
 #ifndef F_GETLK
-# define F_GETLK	5	/* Get record locking info.  */
-# define F_SETLK	6	/* Set record locking info (non-blocking).  */
-# define F_SETLKW	7	/* Set record locking info (blocking).	*/
+# ifndef __USE_FILE_OFFSET64
+#  define F_GETLK	5	/* Get record locking info.  */
+#  define F_SETLK	6	/* Set record locking info (non-blocking).  */
+#  define F_SETLKW	7	/* Set record locking info (blocking).	*/
+# else
+#  define F_GETLK	F_GETLK64  /* Get record locking info.	*/
+#  define F_SETLK	F_SETLK64  /* Set record locking info (non-blocking).*/
+#  define F_SETLKW	F_SETLKW64 /* Set record locking info (blocking).  */
+# endif
 #endif
 #ifndef F_GETLK64
 # define F_GETLK64	12	/* Get record locking info.  */

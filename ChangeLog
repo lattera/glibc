@@ -1,5 +1,8 @@
 2012-10-22  Andreas Jaeger  <aj@suse.de>
 
+	* sysdeps/unix/sysv/linux/bits/fcntl-linux.h (F_GETLK, F_SETLK)
+	(F_SETLKW) [!F_GETLK]: Define values for [!__USE_FILE_OFFSET64].
+
 	* sysdeps/unix/sysv/linux/s390/bits/fcntl.h (O_LARGEFILE): Rename
 	to __O_LARGEFILE.
 	* sysdeps/unix/sysv/linux/sparc/bits/fcntl.h (O_LARGEFILE): Rename
