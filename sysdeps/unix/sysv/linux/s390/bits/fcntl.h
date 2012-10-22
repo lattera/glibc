@@ -25,9 +25,9 @@
 #ifdef __USE_LARGEFILE64
 # if __WORDSIZE == 64
 /* Not necessary, files are always with 64bit off_t.  */
-#  define O_LARGEFILE	0
+#  define __O_LARGEFILE	0
 # else
-#  define O_LARGEFILE	0100000
+#  define __O_LARGEFILE	0100000
 # endif
 #endif
 

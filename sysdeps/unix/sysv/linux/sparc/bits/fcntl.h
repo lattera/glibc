@@ -43,9 +43,9 @@
 
 #ifdef __USE_LARGEFILE64
 # if __WORDSIZE == 64
-#  define O_LARGEFILE	0
+#  define __O_LARGEFILE	0
 # else
-#  define O_LARGEFILE	0x40000
+#  define __O_LARGEFILE	0x40000
 # endif
 #endif
 

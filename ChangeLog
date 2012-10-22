@@ -1,3 +1,10 @@
+2012-10-22  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/s390/bits/fcntl.h (O_LARGEFILE): Rename
+	to __O_LARGEFILE.
+	* sysdeps/unix/sysv/linux/sparc/bits/fcntl.h (O_LARGEFILE): Rename
+	to __O_LARGEFILE.
+
 2012-10-21  Jim Blandy  <jimb@codesourcery.com>
 	    Joseph Myers  <joseph@codesourcery.com>
 
