@@ -1,4 +1,7 @@
-2012-10-21  Andreas Jaeger  <aj@suse.de>
+2012-10-22  Andreas Jaeger  <aj@suse.de>
+
+	* ports/sysdeps/unix/sysv/linux/arm/bits/fcntl.h (__O_LARGEFILE):
+	Define always.
 
 	* sysdeps/unix/sysv/linux/arm/bits/fcntl.h: Remove all
 	definitions and declarations that are provided by

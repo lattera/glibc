@@ -23,10 +23,7 @@
 #define __O_DIRECTORY	 040000	/* Must be a directory.	 */
 #define __O_NOFOLLOW	0100000	/* Do not follow links.	 */
 #define __O_DIRECT	0200000	/* Direct disk access.	*/
-
-#ifdef __USE_LARGEFILE64
-# define __O_LARGEFILE	0400000
-#endif
+#define __O_LARGEFILE	0400000
 
 struct flock
   {
