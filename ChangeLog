@@ -206,13 +206,6 @@
 	(runit): Remove function.
 	(run_getconf): New variable,  Use it for running getconf binary.
 
-2012-10-19  Jim Blandy  <jimb@codesourcery.com>
-	    Joseph Myers  <joseph@codesourcery.com>
-
-	* localedata/tst-wctype.sh (run_program_prefix): Remove variable.
-	(tst_wctype): New variable.  Use it directly to run test program
-	instead of passing test program name as argument.
-
 2012-10-18  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #14716]
