@@ -23,6 +23,7 @@ AC_SUBST(cross_compiling)
 AC_PROG_CPP
 # We need the C++ compiler only for testing.
 AC_PROG_CXX
+AC_CHECK_TOOL(READELF, readelf, false)
 
 if test "`cd $srcdir; /bin/pwd`" = "`/bin/pwd`"; then
   AC_MSG_ERROR([you must configure in a separate build directory])
@@ -566,17 +567,28 @@ if test "$base_machine" = "i386"; then
   AC_DEFINE(USE_REGPARMS)
 fi
 
-# For the multi-arch option we need support in the assembler.
-AC_CACHE_CHECK([for assembler gnu_indirect_function symbol type support],
-	       libc_cv_asm_gnu_indirect_function, [dnl
+# For the multi-arch option we need support in the assembler & linker.
+AC_CACHE_CHECK([for assembler and linker STT_GNU_IFUNC support],
+	       libc_cv_ld_gnu_indirect_function, [dnl
 cat > conftest.s <<EOF
 .type foo,%gnu_indirect_function
+foo:
+.globl _start
+_start:
+.globl __start
+__start:
+.data
+.long foo
 EOF
-if ${CC-cc} -c $ASFLAGS conftest.s 1>&AS_MESSAGE_LOG_FD 2>&AS_MESSAGE_LOG_FD;
-then
-  libc_cv_asm_gnu_indirect_function=yes
-else
-  libc_cv_asm_gnu_indirect_function=no
+libc_cv_ld_gnu_indirect_function=no
+if ${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS \
+	    -nostartfiles -nostdlib \
+	    -o conftest conftest.s 1>&AS_MESSAGE_LOG_FD 2>&AS_MESSAGE_LOG_FD; then
+  # Do a link to see if the backend supports IFUNC relocs.
+  $READELF -r conftest 1>&AS_MESSAGE_LOG_FD
+  LC_ALL=C $READELF -r conftest | grep 'no relocations' >/dev/null || {
+    libc_cv_ld_gnu_indirect_function=yes
+  }
 fi
 rm -f conftest*])
 
@@ -596,7 +608,7 @@ else
   AC_MSG_RESULT(yes)
 fi
 
-if test x"$libc_cv_asm_gnu_indirect_function" != xyes; then
+if test x"$libc_cv_ld_gnu_indirect_function" != xyes; then
   if test x"$multi_arch" = xyes; then
     AC_MSG_ERROR([--enable-multi-arch support requires assembler and linker support])
   else
@@ -930,7 +942,6 @@ AC_CHECK_PROG_VER(AWK, gawk, --version,
   [GNU Awk[^0-9]*\([0-9][0-9.]*\)],
   [[3-9].*], critic_missing="$critic_missing gawk")
 
-AC_CHECK_TOOL(READELF, readelf, false)
 AC_CHECK_TOOL(NM, nm, false)
 
 AC_CHECK_PROGS(AUTOCONF, autoconf, no)

@@ -1,5 +1,12 @@
 2012-10-24  Mike Frysinger  <vapier@gentoo.org>
 
+	* configure.in: Move READELF check to start of file.
+	(libc_cv_ld_gnu_indirect_function): Change to a link test. Rename from
+	libc_cv_asm_gnu_indirect_function in the process.
+	* configure: Regenerated.
+
+2012-10-24  Mike Frysinger  <vapier@gentoo.org>
+
 	* configure.in (libc_cv_gcc_static_libgcc): Drop -q flag to grep and
 	send the output to /dev/null.
 	(libc_cv_cc_with_libunwind): Likewise.
