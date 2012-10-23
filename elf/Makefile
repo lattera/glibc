@@ -1046,7 +1046,7 @@ order2mod2.so-no-z-defs = yes
 LDFLAGS-order2mod1.so = $(no-as-needed)
 LDFLAGS-order2mod2.so = $(no-as-needed)
 
-tst-stackguard1-ARGS = --command "$(built-program-cmd) --child"
+tst-stackguard1-ARGS = --command "$(host-built-program-cmd) --child"
 tst-stackguard1-static-ARGS = --command "$(objpfx)tst-stackguard1-static --child"
 
 $(objpfx)tst-leaks1: $(libdl)

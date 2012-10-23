@@ -597,6 +597,11 @@ run-program-prefix = $(run-via-rtld-prefix)
 # second dependency of the makefile target in which
 # $(built-program-cmd) is used.
 built-program-cmd = $(run-via-rtld-prefix) $(built-program-file)
+# $(host-built-program-cmd) is a command that, executed on the host
+# for which the library is built, runs the newly built program that is
+# the second dependency of the makefile target in which
+# $(host-built-program-cmd) is used.
+host-built-program-cmd = $(run-via-rtld-prefix) $(built-program-file)
 
 ifndef LD
 LD := ld -X

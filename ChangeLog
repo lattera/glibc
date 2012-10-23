@@ -1,3 +1,13 @@
+2012-10-23  Jim Blandy  <jimb@codesourcery.com>
+	    Joseph Myers  <joseph@codesourcery.com>
+
+	* Makeconfig (host-built-program-cmd): New variable.
+	* elf/Makefile (tst-stackguard1-ARGS): Use
+	$(host-built-program-cmd).
+	* posix/Makefile (tst-exec-ARGS): Use $(host-built-program-cmd).
+	(tst-spawn-ARGS): Likewise.
+	* rt/Makefile (tst-mqueue7-ARGS): Use $(host-built-program-cmd).
+
 2012-10-23  Joseph Myers  <joseph@codesourcery.com>
 	    Jim Blandy  <jimb@codesourcery.com>
 

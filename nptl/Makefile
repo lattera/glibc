@@ -439,7 +439,7 @@ CFLAGS-tst-initializers1-c99.c = $(CFLAGS-tst-initializers1-<)
 CFLAGS-tst-initializers1-gnu89.c = $(CFLAGS-tst-initializers1-<)
 CFLAGS-tst-initializers1-gnu99.c = $(CFLAGS-tst-initializers1-<)
 
-tst-cancel7-ARGS = --command "$(built-program-cmd)"
+tst-cancel7-ARGS = --command "$(host-built-program-cmd)"
 tst-cancelx7-ARGS = $(tst-cancel7-ARGS)
 tst-umask1-ARGS = $(objpfx)tst-umask1.temp
 
@@ -595,7 +595,7 @@ $(objpfx)tst-cancel-wrappers.out: tst-cancel-wrappers.sh
 endif
 endif
 
-tst-exec4-ARGS = $(built-program-cmd)
+tst-exec4-ARGS = $(host-built-program-cmd)
 
 $(objpfx)tst-execstack: $(libdl)
 $(objpfx)tst-execstack.out: $(objpfx)tst-execstack-mod.so
@@ -603,7 +603,7 @@ LDFLAGS-tst-execstack = -Wl,-z,noexecstack
 
 $(objpfx)tst-fini1mod.so: $(shared-thread-library)
 
-tst-stackguard1-ARGS = --command "$(built-program-cmd) --child"
+tst-stackguard1-ARGS = --command "$(host-built-program-cmd) --child"
 tst-stackguard1-static-ARGS = --command "$(objpfx)tst-stackguard1-static --child"
 
 # The tests here better do not run in parallel

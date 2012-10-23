@@ -170,8 +170,8 @@ CFLAGS-execlp.os = -fomit-frame-pointer
 tstgetopt-ARGS = -a -b -cfoobar --required foobar --optional=bazbug \
 		--none random --col --color --colour
 
-tst-exec-ARGS = -- $(built-program-cmd)
-tst-spawn-ARGS = -- $(built-program-cmd)
+tst-exec-ARGS = -- $(host-built-program-cmd)
+tst-spawn-ARGS = -- $(host-built-program-cmd)
 tst-dir-ARGS = `pwd` `cd $(common-objdir)/$(subdir); pwd` `cd $(common-objdir); pwd` $(objpfx)tst-dir
 tst-chmod-ARGS = $(objdir)
 tst-vfork3-ARGS = --test-dir=$(objpfx)
