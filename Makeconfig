@@ -573,17 +573,30 @@ sysdep-library-path = \
 $(subst $(empty) ,:,$(strip $(patsubst -Wl$(comma)-rpath-link=%, %,\
 				       $(filter -Wl$(comma)-rpath-link=%,\
 						$(sysdep-LDFLAGS)))))
-run-program-prefix = $(if $(filter $(notdir $(built-program-file)),\
-				   $(tests-static) $(xtests-static)),, \
-			  $(elf-objpfx)$(rtld-installed-name) \
-			  --library-path $(rpath-link)$(patsubst %,:%,$(sysdep-library-path)))
+# $(run-via-rtld-prefix) is a command that, when prepended to the name
+# of a program built with the newly built library, produces a command
+# that, executed on the host for which the library is built, runs that
+# program.  For the statically-linked %-bp test programs, and for
+# tests listed in tests-static or xtests-static, it is empty.
+run-via-rtld-prefix =							      \
+  $(if $(strip $(filter $(notdir $(built-program-file)),		      \
+			$(tests-static) $(xtests-static))		      \
+	       $(filter %-bp,$(built-program-file))),,			      \
+       $(elf-objpfx)$(rtld-installed-name)				      \
+	 --library-path $(rpath-link)$(patsubst %,:%,$(sysdep-library-path)))
 else
-run-program-prefix =
+run-via-rtld-prefix =
 endif
-# Never use $(run-program-prefix) for the statically-linked %-bp test programs
-built-program-cmd = $(patsubst %,$(run-program-prefix),\
-			$(filter-out %-bp,$(built-program-file))) \
-		    $(built-program-file)
+# $(run-via-rtld-prefix) is a command that, when prepended to the name
+# of a program built with the newly built library, produces a command
+# that, executed on the build system on which "make" is run, runs that
+# program.
+run-program-prefix = $(run-via-rtld-prefix)
+# $(built-program-cmd) is a command that, executed on the build system
+# on which "make" is run, runs the newly built program that is the
+# second dependency of the makefile target in which
+# $(built-program-cmd) is used.
+built-program-cmd = $(run-via-rtld-prefix) $(built-program-file)
 
 ifndef LD
 LD := ld -X

@@ -1,3 +1,10 @@
+2012-10-23  Joseph Myers  <joseph@codesourcery.com>
+	    Jim Blandy  <jimb@codesourcery.com>
+
+	* Makeconfig (run-via-rtld-prefix): New variable.
+	(run-program-prefix): Define in terms of $(run-via-rtld-prefix).
+	(built-program-cmd): Likewise.
+
 2012-10-22  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/bits/fcntl-linux.h (O_RSYNC): Define to
