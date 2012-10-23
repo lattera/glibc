@@ -117,8 +117,7 @@ ifeq (no,$(cross-compiling))
 ifeq (yes,$(build-shared))
 tests: $(objpfx)globtest.out $(objpfx)wordexp-tst.out
 $(objpfx)globtest.out: globtest.sh $(objpfx)globtest
-	$(SHELL) $< $(common-objpfx) $(elf-objpfx) \
-		 $(rtld-installed-name)
+	$(SHELL) $< $(common-objpfx) '$(run-program-prefix)'
 $(objpfx)wordexp-tst.out: wordexp-tst.sh $(objpfx)wordexp-test
 	$(SHELL) $< $(common-objpfx) '$(run-program-prefix)'
 endif
