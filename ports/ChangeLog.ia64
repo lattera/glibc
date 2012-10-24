@@ -1,3 +1,11 @@
+2012-10-19  Roland McGrath  <roland@hack.frob.com>
+
+	* sysdeps/unix/sysv/linux/ia64/nptl/libc.abilist
+	(GLIBC_2.17): Add clock_* symbols.
+
+	* sysdeps/unix/sysv/linux/ia64/get_clockfreq.c (__get_clockfreq):
+	Use __open, __read, __close rather than their public counterparts.
+
 2012-10-09  Roland McGrath  <roland@hack.frob.com>
 
 	* sysdeps/ia64/configure: Regenerated.

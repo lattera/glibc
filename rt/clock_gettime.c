@@ -1,4 +1,5 @@
-/* Copyright (C) 1999, 2005 Free Software Foundation, Inc.
+/* Get the current value of a clock.  Stub version.
+   Copyright (C) 1999-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -25,6 +26,6 @@ clock_gettime (clockid_t clock_id, struct timespec *tp)
   __set_errno (ENOSYS);
   return -1;
 }
-librt_hidden_def (clock_gettime)
+strong_alias (clock_gettime, __clock_gettime)
 stub_warning (clock_gettime)
 #include <stub-tag.h>

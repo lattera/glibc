@@ -19,6 +19,6 @@ endif
 
 ifeq ($(subdir),misc)
 sysdep_headers += bits/ppc.h
-sysdep_routines += get_clockfreq get_timebase_freq
+sysdep_routines += get_timebase_freq
 tests += test-gettimebasefreq
 endif

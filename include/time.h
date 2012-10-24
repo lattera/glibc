@@ -19,7 +19,11 @@ libc_hidden_proto (localtime)
 libc_hidden_proto (strftime)
 libc_hidden_proto (strptime)
 
-librt_hidden_proto (clock_gettime)
+extern __typeof (clock_getres) __clock_getres;
+extern __typeof (clock_gettime) __clock_gettime;
+extern __typeof (clock_settime) __clock_settime;
+extern __typeof (clock_nanosleep) __clock_nanosleep;
+extern __typeof (clock_getcpuclockid) __clock_getcpuclockid;
 
 /* Now define the internal interfaces.  */
 struct tm;

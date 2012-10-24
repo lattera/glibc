@@ -52,3 +52,4 @@ clock_nanosleep (clockid_t clock_id, int flags, const struct timespec *req,
   return (INTERNAL_SYSCALL_ERROR_P (r, err)
 	  ? INTERNAL_SYSCALL_ERRNO (r, err) : 0);
 }
+strong_alias (clock_nanosleep, __clock_nanosleep)

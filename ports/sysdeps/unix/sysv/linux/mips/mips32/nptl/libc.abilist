@@ -2244,4 +2244,9 @@ _gp_disp
  _gp_disp A
 GLIBC_2.17
  GLIBC_2.17 A
+ clock_getcpuclockid F
+ clock_getres F
+ clock_gettime F
+ clock_nanosleep F
+ clock_settime F
  secure_getenv F

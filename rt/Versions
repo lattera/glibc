@@ -1,3 +1,15 @@
+libc {
+  GLIBC_2.17 {
+    # c*
+    clock_getres; clock_gettime; clock_settime; clock_getcpuclockid;
+    clock_nanosleep;
+  }
+  GLIBC_PRIVATE {
+    __clock_getres; __clock_gettime; __clock_settime; __clock_getcpuclockid;
+    __clock_nanosleep;
+  }
+}
+
 librt {
   GLIBC_2.1 {
     # AIO functions.
@@ -6,7 +18,7 @@ librt {
     aio_suspend64; aio_write; aio_write64; lio_listio; lio_listio64;
   }
   GLIBC_2.2 {
-    # c*
+    # These have moved to libc and are still here only for compatibility.
     clock_getres; clock_gettime; clock_settime; clock_getcpuclockid;
     clock_nanosleep;
 

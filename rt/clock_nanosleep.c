@@ -33,5 +33,6 @@ clock_nanosleep (clockid_t clock_id, int flags, const struct timespec *req,
   /* Not implemented.  */
   return ENOSYS;
 }
+strong_alias (clock_nanosleep, __clock_nanosleep)
 stub_warning (clock_nanosleep)
 #include <stub-tag.h>

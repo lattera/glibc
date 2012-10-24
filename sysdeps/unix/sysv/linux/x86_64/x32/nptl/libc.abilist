@@ -2080,4 +2080,9 @@ GLIBC_2.16
  xprt_unregister F
 GLIBC_2.17
  GLIBC_2.17 A
+ clock_getcpuclockid F
+ clock_getres F
+ clock_gettime F
+ clock_nanosleep F
+ clock_settime F
  secure_getenv F

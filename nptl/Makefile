@@ -484,31 +484,18 @@ $(objpfx)tst-dlsym1: $(libdl) $(shared-thread-library)
 $(objpfx)tst-fini1: $(shared-thread-library) $(objpfx)tst-fini1mod.so
 
 ifeq (yes,$(build-shared))
-$(objpfx)tst-cond11: $(common-objpfx)rt/librt.so
-$(objpfx)tst-cond19: $(common-objpfx)rt/librt.so
-$(objpfx)tst-sem5: $(common-objpfx)rt/librt.so
-$(objpfx)tst-cancel17: $(common-objpfx)rt/librt.so
-$(objpfx)tst-cancelx17: $(common-objpfx)rt/librt.so
-$(objpfx)tst-cancel18: $(common-objpfx)rt/librt.so
-$(objpfx)tst-cancelx18: $(common-objpfx)rt/librt.so
-$(objpfx)tst-clock2: $(common-objpfx)rt/librt.so
-$(objpfx)tst-rwlock14: $(common-objpfx)rt/librt.so
+librt = $(common-objpfx)rt/librt.so
+else
+librt = $(common-objpfx)rt/librt.a
+endif
+
+$(objpfx)tst-cancel17: $(librt)
+$(objpfx)tst-cancelx17: $(librt)
 $(objpfx)tst-_res1mod2.so: $(objpfx)tst-_res1mod1.so
 LDFLAGS-tst-_res1mod1.so = -Wl,-soname,tst-_res1mod1.so
 LDFLAGS-tst-_res1mod2.so = -Wl,-soname,tst-_res1mod2.so
 $(objpfx)tst-_res1: $(objpfx)tst-_res1mod1.so $(objpfx)tst-_res1mod2.so \
 		    $(shared-thread-library)
-else
-$(objpfx)tst-cond11: $(common-objpfx)rt/librt.a
-$(objpfx)tst-cond19: $(common-objpfx)rt/librt.a
-$(objpfx)tst-sem5: $(common-objpfx)rt/librt.a
-$(objpfx)tst-cancel17: $(common-objpfx)rt/librt.a
-$(objpfx)tst-cancelx17: $(common-objpfx)rt/librt.a
-$(objpfx)tst-cancel18: $(common-objpfx)rt/librt.a
-$(objpfx)tst-cancelx18: $(common-objpfx)rt/librt.a
-$(objpfx)tst-clock2: $(common-objpfx)rt/librt.a
-$(objpfx)tst-rwlock14: $(common-objpfx)rt/librt.a
-endif
 
 LDLIBS-tst-cancel24 = $(no-as-needed) -lstdc++
 LDLIBS-tst-cancel24-static = $(LDLIBS-tst-cancel24)

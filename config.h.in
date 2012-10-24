@@ -180,6 +180,9 @@
 /* Define if the dynamic linker should consult an ld.so.cache file.  */
 #undef USE_LDCONFIG
 
+/* Define if STT_GNU_IFUNC support actually works.  */
+#undef HAVE_IFUNC
+
 /*
  */
 

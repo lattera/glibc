@@ -1,3 +1,10 @@
+2012-10-24  Roland McGrath  <roland@hack.frob.com>
+
+	* Makefile ($(objpfx)tst-cond11, $(objpfx)tst-cond19): Targets removed.
+	($(objpfx)tst-sem5, $(objpfx)tst-cancel18): Likewise.
+	((objpfx)tst-cancelx18, $(objpfx)tst-clock2): Likewise.
+	($(objpfx)tst-rwlock14): Likewise.
+
 2012-10-24  Joseph Myers  <joseph@codesourcery.com>
 
 	* Makefile (tests): Remove tst-oddstacklimit.

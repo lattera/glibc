@@ -1,4 +1,5 @@
-/* Copyright (C) 2000, 2001 Free Software Foundation, Inc.
+/* Get a clockid_t for the process CPU clock of a given process.  Generic.
+   Copyright (C) 2000-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -36,3 +37,4 @@ clock_getcpuclockid (pid_t pid, clockid_t *clock_id)
   return ENOENT;
 #endif
 }
+strong_alias (clock_getcpuclockid, __clock_getcpuclockid)

@@ -34,13 +34,13 @@ __get_clockfreq_via_cpuinfo (void)
 
   result = 0;
 
-  fd = open ("/proc/cpuinfo", O_RDONLY);
+  fd = __open ("/proc/cpuinfo", O_RDONLY);
   if (fd != -1)
     {
       char buf[8192];
       ssize_t n;
 
-      n = read (fd, buf, sizeof buf);
+      n = __read (fd, buf, sizeof buf);
       if (n > 0)
 	{
 	  char *mhz = memmem (buf, n, "Cpu0ClkTck", 7);
@@ -72,7 +72,7 @@ __get_clockfreq_via_cpuinfo (void)
 	    }
 	}
 
-      close (fd);
+      __close (fd);
     }
 
   return result;
@@ -86,7 +86,7 @@ __get_clockfreq_via_proc_openprom (void)
 
   result = 0;
 
-  obp_fd = open ("/proc/openprom", O_RDONLY);
+  obp_fd = __open ("/proc/openprom", O_RDONLY);
   if (obp_fd != -1)
     {
       unsigned long int buf[4096 / sizeof (unsigned long int)];
@@ -94,8 +94,8 @@ __get_clockfreq_via_proc_openprom (void)
       off_t dbase = (off_t) 0;
       ssize_t len;
 
-      while ((len = getdirentries (obp_fd, (char *) dirp,
-				   sizeof (buf), &dbase)) > 0)
+      while ((len = __getdirentries (obp_fd, (char *) dirp,
+                                     sizeof (buf), &dbase)) > 0)
 	{
 	  struct dirent *this_dirp = dirp;
 
@@ -113,13 +113,13 @@ __get_clockfreq_via_proc_openprom (void)
 	      __stpcpy (prop = __stpcpy (__stpcpy (node, "/proc/openprom/"),
 					 this_dirp->d_name),
 			"/device_type");
-	      fd = open (node, O_RDONLY);
+	      fd = __open (node, O_RDONLY);
 	      if (fd != -1)
 		{
 		  char type_string[128];
 		  int ret;
 
-		  ret = read (fd, type_string, sizeof (type_string));
+		  ret = __read (fd, type_string, sizeof (type_string));
 		  if (ret > 0 && strncmp (type_string, "'cpu'", 5) == 0)
 		    {
 		      int clkfreq_fd;
@@ -135,7 +135,7 @@ __get_clockfreq_via_proc_openprom (void)
 			  close (clkfreq_fd);
 			}
 		    }
-		  close (fd);
+		  __close (fd);
 		}
 
 	      if (result != 0)
@@ -148,7 +148,7 @@ __get_clockfreq_via_proc_openprom (void)
 	  if (result != 0)
 	    break;
 	}
-      close (obp_fd);
+      __close (obp_fd);
     }
 
   return result;
@@ -178,7 +178,7 @@ __get_clockfreq_via_dev_openprom (void)
 
   result = 0;
 
-  obp_dev_fd = open ("/dev/openprom", O_RDONLY);
+  obp_dev_fd = __open ("/dev/openprom", O_RDONLY);
   if (obp_dev_fd != -1)
     {
       char obp_buf[8192];
@@ -188,7 +188,7 @@ __get_clockfreq_via_dev_openprom (void)
       obp_cmd->oprom_size =
 	sizeof (obp_buf) - sizeof (unsigned int);
       set_obp_int (obp_cmd, 0);
-      ret = ioctl (obp_dev_fd, OPROMCHILD, (char *) obp_cmd);
+      ret = __ioctl (obp_dev_fd, OPROMCHILD, (char *) obp_cmd);
       if (ret == 0)
 	{
 	  int cur_node = get_obp_int (obp_cmd);
@@ -197,20 +197,20 @@ __get_clockfreq_via_dev_openprom (void)
 	    {
 	      obp_cmd->oprom_size = sizeof (obp_buf) - sizeof (unsigned int);
 	      strcpy (obp_cmd->oprom_array, "device_type");
-	      ret = ioctl (obp_dev_fd, OPROMGETPROP, (char *) obp_cmd);
+	      ret = __ioctl (obp_dev_fd, OPROMGETPROP, (char *) obp_cmd);
 	      if (ret == 0
 		  && strncmp (obp_cmd->oprom_array, "cpu", 3) == 0)
 		{
 		  obp_cmd->oprom_size = (sizeof (obp_buf)
 					 - sizeof (unsigned int));
 		  strcpy (obp_cmd->oprom_array, "clock-frequency");
-		  ret = ioctl (obp_dev_fd, OPROMGETPROP, (char *) obp_cmd);
+		  ret = __ioctl (obp_dev_fd, OPROMGETPROP, (char *) obp_cmd);
 		  if (ret == 0)
 		    result = (hp_timing_t) get_obp_int (obp_cmd);
 		}
 	      obp_cmd->oprom_size = sizeof (obp_buf) - sizeof (unsigned int);
 	      set_obp_int (obp_cmd, cur_node);
-	      ret = ioctl (obp_dev_fd, OPROMNEXT, (char *) obp_cmd);
+	      ret = __ioctl (obp_dev_fd, OPROMNEXT, (char *) obp_cmd);
 	      if (ret < 0)
 		break;
 	      cur_node = get_obp_int (obp_cmd);

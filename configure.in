@@ -2123,6 +2123,12 @@ if test x$libc_cv_gcc_unwind_find_fde = xyes; then
 fi
 AC_SUBST(libc_cv_gcc_unwind_find_fde)
 
+# A sysdeps configure fragment can reset this if IFUNC is not actually
+# usable even though the assembler knows how to generate the symbol type.
+if test x"$libc_cv_ld_gnu_indirect_function" = xyes; then
+  AC_DEFINE(HAVE_IFUNC)
+fi
+
 # This is far from the AC_ARG_ENABLE that sets it so that a sysdeps
 # configure fragment can override the value to prevent this AC_DEFINE.
 AC_SUBST(use_nscd)

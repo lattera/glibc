@@ -101,9 +101,7 @@ include $(patsubst %,$(..)cppflags-iterator.mk,$(cpp-srcs-left))
 $(objpfx)nscd: $(nscd-modules:%=$(objpfx)%.o)
 
 ifeq ($(build-shared),yes)
-$(objpfx)nscd: $(common-objpfx)rt/librt.so $(shared-thread-library) \
-	       $(common-objpfx)nis/libnsl.so
+$(objpfx)nscd: $(shared-thread-library) $(common-objpfx)nis/libnsl.so
 else
-$(objpfx)nscd: $(common-objpfx)rt/librt.a $(static-thread-library) \
-	       $(common-objpfx)nis/libnsl.a
+$(objpfx)nscd: $(static-thread-library) $(common-objpfx)nis/libnsl.a
 endif

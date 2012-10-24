@@ -80,6 +80,11 @@ GLIBC_2.16
  timespec_get F
 GLIBC_2.17
  GLIBC_2.17 A
+ clock_getcpuclockid F
+ clock_getres F
+ clock_gettime F
+ clock_nanosleep F
+ clock_settime F
  secure_getenv F
  __ppc_get_timebase_freq F
 GLIBC_2.3

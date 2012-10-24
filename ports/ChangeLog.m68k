@@ -1,3 +1,9 @@
+2012-10-19  Roland McGrath  <roland@hack.frob.com>
+
+	* sysdeps/unix/sysv/linux/m68k/coldfire/nptl/libc.abilist:
+	(GLIBC_2.17): Add clock_* symbols.
+	* sysdeps/unix/sysv/linux/m68k/m680x0/nptl/libc.abilist: Likewise.
+
 2012-10-02  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* sysdeps/unix/sysv/linux/m68k/nptl/lowlevellock.h: Fix clone

@@ -1,3 +1,8 @@
+2012-10-19  Roland McGrath  <roland@hack.frob.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/nofpu/nptl/libc.abilist
+	(GLIBC_2.17): Add clock_* symbols.
+
 2012-09-26  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/powerpc/powerpc32/nofpu/nptl/libc.abilist:
@@ -180,7 +185,7 @@
 	* sysdeps/powerpc/nofpu/Makefile
 	[subdirs-soft-fp] (sysdep_routines): Remove gcc-quad-routines.
 	[subdirs-math] (CPPFLAGS): Add -I../soft-fp.
-	[subdirs-math] (CFLAGS-e_powl.c): Add -fno-builtin-fabsl. 
+	[subdirs-math] (CFLAGS-e_powl.c): Add -fno-builtin-fabsl.
 	[subdirs-math] (CFLAGS-s_ccoshl.c): Likewise.
 	[subdirs-math] (CFLAGS-s_csinhl.c): Likewise.
 	[subdirs-math] (CFLAGS-s_clogl.c): Likewise.

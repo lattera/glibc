@@ -1,5 +1,5 @@
 /* Get frequency of the system processor.  IA-64/Linux version.
-   Copyright (C) 2001 Free Software Foundation, Inc.
+   Copyright (C) 2001-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -37,7 +37,7 @@ __get_clockfreq (void)
   if (result != 0)
     return result;
 
-  fd = open ("/proc/cpuinfo", O_RDONLY);
+  fd = __open ("/proc/cpuinfo", O_RDONLY);
   if (__builtin_expect (fd != -1, 1))
     {
       /* XXX AFAIK the /proc filesystem can generate "files" only up
@@ -45,7 +45,7 @@ __get_clockfreq (void)
       char buf[4096];
       ssize_t n;
 
-      n = read (fd, buf, sizeof buf);
+      n = __read (fd, buf, sizeof buf);
       if (__builtin_expect (n, 1) > 0)
 	{
 	  char *mhz = memmem (buf, n, "itc MHz", 7);
@@ -81,7 +81,7 @@ __get_clockfreq (void)
 	    }
 	}
 
-      close (fd);
+      __close (fd);
     }
 
   return result;

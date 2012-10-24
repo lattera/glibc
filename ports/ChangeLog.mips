@@ -1,3 +1,9 @@
+2012-10-19  Roland McGrath  <roland@hack.frob.com>
+
+	* sysdeps/unix/sysv/linux/mips/mips32/nptl/libc.abilist
+	(GLIBC_2.17): Add clock_* symbols.
+	* sysdeps/unix/sysv/linux/mips/mips64/n64/nptl/libc.abilist: Likewise.
+
 2012-10-24  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/mips/bits/fcntl.h: Remove all

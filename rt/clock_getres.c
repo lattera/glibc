@@ -1,4 +1,5 @@
-/* Copyright (C) 1999 Free Software Foundation, Inc.
+/* Get the resolution of a clock.  Stub version.
+   Copyright (C) 1999-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -25,5 +26,6 @@ clock_getres (clockid_t clock_id, struct timespec *res)
   __set_errno (ENOSYS);
   return -1;
 }
+strong_alias (clock_getres, __clock_getres)
 stub_warning (clock_getres)
 #include <stub-tag.h>

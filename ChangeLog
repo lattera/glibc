@@ -1,3 +1,61 @@
+2012-10-24  Roland McGrath  <roland@hack.frob.com>
+
+	* nscd/Makefile ($(objpfx)nscd): Remove librt dependency.
+	* posix/Makefile ($(objpfx)tst-regex, $(objpfx)tst-regex2):
+	Targets	removed.
+
+	[BZ #14743]
+	* include/time.h: Remove librt_hidden_proto (clock_gettime).
+	Declare __clock_getres, __clock_gettime, __clock_settime,
+	__clock_nanosleep, and __clock_getcpuclockid.
+	* rt/clock_gettime.c: Define __clock_gettime as an alias.
+	Remove librt_hidden_def (clock_gettime).
+	* sysdeps/unix/clock_gettime.c: Likewise.
+	* rt/clock_getcpuclockid.c: Define __clock_getcpuclockid as an alias.
+	* sysdeps/unix/sysv/linux/clock_getcpuclockid.c: Likewise.
+	* rt/clock_getres.c: Define __clock_getres as an alias.
+	* sysdeps/posix/clock_getres.c: Likewise.
+	* rt/clock_settime.c: Define __clock_settime as an alias.
+	* sysdeps/unix/clock_settime.c: Likewise.
+	* rt/clock_nanosleep.c: Define __clock_nanosleep as an alias.
+	* sysdeps/unix/clock_nanosleep.c: Likewise.
+	* sysdeps/unix/sysv/linux/clock_nanosleep.c: Likewise.
+	* rt/clock-compat.c: New file.
+	* rt/Makefile (librt-routines): Add clock-compat and move
+	$(clock-routines) to ...
+	(routines): ... here, new variable.
+	* sysdeps/unix/sysv/linux/powerpc/Makefile (sysdep_routines):
+	Don't add get_clockfreq here.
+	* rt/Versions (libc: GLIBC_2.17): New version set.
+	Add clock_* symbols here.
+	(libc: GLIBC_PRIVATE): New version set.  Add __clock_* symbols here.
+	* sysdeps/unix/sysv/linux/i386/nptl/libc.abilist
+	(GLIBC_2.17): Add clock_* symbols.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/nptl/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/nptl/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sh/nptl/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/nptl/libc.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/fpu/nptl/libc.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/64/nptl/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/x32/nptl/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/nptl/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/nptl/libc.abilist: Likewise.
+	* NEWS: Mention the move.
+
+	* sysdeps/unix/sysv/linux/i386/get_clockfreq.c (__get_clockfreq):
+	Use __open, __read, __close rather than their public counterparts.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/get_clockfreq.c
+	(__get_clockfreq_via_cpuinfo): Likewise.
+	(__get_clockfreq_via_proc_openprom): Likewise, and __getdirentries.
+	(__get_clockfreq_via_dev_openprom): Likewise, and __ioctl.
+
+	* config.h.in (HAVE_IFUNC): New #undef.
+	* configure.in: Define it if libc_cv_ld_gnu_indirect_function
+	was successful.
+	* configure: Regenerated.
+
 2012-10-24  Mike Frysinger  <vapier@gentoo.org>
 
 	* configure.in: Move READELF check to start of file.

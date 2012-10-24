@@ -16,7 +16,8 @@ Version 2.17
   14328, 14331, 14336, 14337, 14347, 14349, 14376, 14417, 14459, 14476,
   14477, 14505, 14510, 14516, 14518, 14519, 14530, 14532, 14538, 14543,
   14544, 14545, 14557, 14562, 14568, 14576, 14579, 14583, 14587, 14602,
-  14621, 14638, 14645, 14648, 14652, 14660, 14661, 14683, 14694, 14716.
+  14621, 14638, 14645, 14648, 14652, 14660, 14661, 14683, 14694, 14716,
+  14743.
 
 * Support for STT_GNU_IFUNC symbols added for s390 and s390x.
   Optimized versions of memcpy, memset, and memcmp added for System z10 and
@@ -54,6 +55,13 @@ Version 2.17
   enabled, and fail on encrypted strings using the MD5 or DES algorithm
   when the mode is enabled.
 
+* The `clock_*' suite of functions (declared in <time.h>) is now available
+  directly in the main C library.  Previously it was necessary to link with
+  -lrt to use these functions.  This change has the effect that a
+  single-threaded program that uses a function such as `clock_gettime' (and
+  is not linked with -lrt) will no longer implicitly load the pthreads
+  library at runtime and so will not suffer the overheads associated with
+  multi-thread support in other code such as the C++ runtime library.
 
 Version 2.16
 
@@ -81,7 +89,7 @@ Version 2.16
   14043, 14044, 14048, 14049, 14050, 14053, 14055, 14059, 14064, 14075,
   14080, 14083, 14103, 14104, 14109, 14112, 14117, 14122, 14123, 14134,
   14153, 14183, 14188, 14199, 14210, 14218, 14229, 14241, 14273, 14277,
-  14278,
+  14278.
 
 * Support for the x32 ABI on x86-64 added.  The x32 target is selected by
   configuring glibc with:

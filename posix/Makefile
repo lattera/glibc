@@ -277,14 +277,6 @@ $(objpfx)tst-boost-mem: $(objpfx)tst-boost.out
 $(objpfx)tst-getconf.out: tst-getconf.sh $(objpfx)getconf
 	$(SHELL) $< $(common-objpfx) '$(built-program-cmd)'
 
-ifeq (yes,$(build-shared))
-$(objpfx)tst-regex: $(common-objpfx)rt/librt.so
-$(objpfx)tst-regex2: $(common-objpfx)rt/librt.so
-else
-$(objpfx)tst-regex: $(common-objpfx)rt/librt.a
-$(objpfx)tst-regex2: $(common-objpfx)rt/librt.a
-endif
-
 $(objpfx)bug-ga2-mem: $(objpfx)bug-ga2.out
 	$(common-objpfx)malloc/mtrace $(objpfx)bug-ga2.mtrace > $@
 

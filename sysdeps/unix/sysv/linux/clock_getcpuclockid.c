@@ -50,3 +50,4 @@ clock_getcpuclockid (pid_t pid, clockid_t *clock_id)
   else
     return INTERNAL_SYSCALL_ERRNO (r, err);
 }
+strong_alias (clock_getcpuclockid, __clock_getcpuclockid)
