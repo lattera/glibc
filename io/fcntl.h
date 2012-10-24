@@ -34,28 +34,32 @@ __BEGIN_DECLS
    numbers and flag bits for `open', `fcntl', et al.  */
 #include <bits/fcntl.h>
 
-#if defined __USE_XOPEN || defined __USE_XOPEN2K
-/* The Single Unix specification says that some more types are
-   available here.  */
-# ifndef __mode_t_defined
+/* POSIX.1-2001 specifies that these types are defined by <fcntl.h>.
+   Earlier POSIX standards permitted any type ending in `_t' to be defined
+   by any POSIX header, so we don't conditionalize the definitions here.  */
+#ifndef __mode_t_defined
 typedef __mode_t mode_t;
-#  define __mode_t_defined
-# endif
+# define __mode_t_defined
+#endif
 
-# ifndef __off_t_defined
-#  ifndef __USE_FILE_OFFSET64
+#ifndef __off_t_defined
+# ifndef __USE_FILE_OFFSET64
 typedef __off_t off_t;
-#  else
+# else
 typedef __off64_t off_t;
-#  endif
-#  define __off_t_defined
 # endif
+# define __off_t_defined
+#endif
 
-# ifndef __pid_t_defined
+#if defined __USE_LARGEFILE64 && !defined __off64_t_defined
+typedef __off64_t off64_t;
+# define __off64_t_defined
+#endif
+
+#ifndef __pid_t_defined
 typedef __pid_t pid_t;
-#  define __pid_t_defined
-# endif
-#endif	/* X/Open */
+# define __pid_t_defined
+#endif
 
 /* For XPG all symbols from <sys/stat.h> should also be available.  */
 #if defined __USE_XOPEN || defined __USE_XOPEN2K8
@@ -202,17 +206,17 @@ extern int openat64 (int __fd, const char *__file, int __oflag, ...)
    This function is a cancellation point and therefore not marked with
    __THROW.  */
 #ifndef __USE_FILE_OFFSET64
-extern int creat (const char *__file, __mode_t __mode) __nonnull ((1));
+extern int creat (const char *__file, mode_t __mode) __nonnull ((1));
 #else
 # ifdef __REDIRECT
-extern int __REDIRECT (creat, (const char *__file, __mode_t __mode),
+extern int __REDIRECT (creat, (const char *__file, mode_t __mode),
 		       creat64) __nonnull ((1));
 # else
 #  define creat creat64
 # endif
 #endif
 #ifdef __USE_LARGEFILE64
-extern int creat64 (const char *__file, __mode_t __mode) __nonnull ((1));
+extern int creat64 (const char *__file, mode_t __mode) __nonnull ((1));
 #endif
 
 #if !defined F_LOCK && (defined __USE_MISC || (defined __USE_XOPEN_EXTENDED \
@@ -231,7 +235,7 @@ extern int creat64 (const char *__file, __mode_t __mode) __nonnull ((1));
 # define F_TEST  3	/* Test a region for other processes locks.  */
 
 # ifndef __USE_FILE_OFFSET64
-extern int lockf (int __fd, int __cmd, __off_t __len);
+extern int lockf (int __fd, int __cmd, off_t __len);
 # else
 #  ifdef __REDIRECT
 extern int __REDIRECT (lockf, (int __fd, int __cmd, __off64_t __len), lockf64);
@@ -240,7 +244,7 @@ extern int __REDIRECT (lockf, (int __fd, int __cmd, __off64_t __len), lockf64);
 #  endif
 # endif
 # ifdef __USE_LARGEFILE64
-extern int lockf64 (int __fd, int __cmd, __off64_t __len);
+extern int lockf64 (int __fd, int __cmd, off64_t __len);
 # endif
 #endif
 
@@ -248,7 +252,7 @@ extern int lockf64 (int __fd, int __cmd, __off64_t __len);
 /* Advice the system about the expected behaviour of the application with
    respect to the file associated with FD.  */
 # ifndef __USE_FILE_OFFSET64
-extern int posix_fadvise (int __fd, __off_t __offset, __off_t __len,
+extern int posix_fadvise (int __fd, off_t __offset, off_t __len,
 			  int __advise) __THROW;
 # else
  # ifdef __REDIRECT_NTH
@@ -260,7 +264,7 @@ extern int __REDIRECT_NTH (posix_fadvise, (int __fd, __off64_t __offset,
 #  endif
 # endif
 # ifdef __USE_LARGEFILE64
-extern int posix_fadvise64 (int __fd, __off64_t __offset, __off64_t __len,
+extern int posix_fadvise64 (int __fd, off64_t __offset, off64_t __len,
 			    int __advise) __THROW;
 # endif
 
@@ -270,7 +274,7 @@ extern int posix_fadvise64 (int __fd, __off64_t __offset, __off64_t __len,
    This function is a possible cancellation point and therefore not
    marked with __THROW.  */
 # ifndef __USE_FILE_OFFSET64
-extern int posix_fallocate (int __fd, __off_t __offset, __off_t __len);
+extern int posix_fallocate (int __fd, off_t __offset, off_t __len);
 # else
  # ifdef __REDIRECT
 extern int __REDIRECT (posix_fallocate, (int __fd, __off64_t __offset,
@@ -281,7 +285,7 @@ extern int __REDIRECT (posix_fallocate, (int __fd, __off64_t __offset,
 #  endif
 # endif
 # ifdef __USE_LARGEFILE64
-extern int posix_fallocate64 (int __fd, __off64_t __offset, __off64_t __len);
+extern int posix_fallocate64 (int __fd, off64_t __offset, off64_t __len);
 # endif
 #endif
 

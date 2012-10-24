@@ -1,5 +1,11 @@
 2012-10-24  Andreas Jaeger  <aj@suse.de>
 
+	* io/fcntl.h: Always define mode_t, off_t, pid_t and use these
+	types for creat, creat64, lockf, posix_fadvise, posix_fallocate.
+	[__USE_LARGEFILE64 && !__off64_t_defined]: Define off64_t.
+	[__USE_LARGEFILE64]: Use off64_t in declaration of lock64,
+	posix_fadvise64, posix_fallocate64.
+
 	* sysdeps/unix/sysv/linux/x86/bits/fcntl.h (F_GETLK, F_SETLK)
 	(F_SETLKW) [__x86_64]: Remove, provided by <bits/fcntl-linux.h>.
 	(F_GETLK, F_SETLK, F_SETLKW) [!__USE_FILE_OFFSET64 && !__x86_64__]:
