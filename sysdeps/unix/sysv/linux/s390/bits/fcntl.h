@@ -29,33 +29,11 @@
 # define __O_LARGEFILE	0100000
 #endif
 
-/* Values for the second argument to `fcntl'.  */
-#define F_DUPFD		0	/* Duplicate file descriptor.  */
-#define F_GETFD		1	/* Get file descriptor flags.  */
-#define F_SETFD		2	/* Set file descriptor flags.  */
-#define F_GETFL		3	/* Get file status flags.  */
-#define F_SETFL		4	/* Set file status flags.  */
 #if __WORDSIZE == 64
-# define F_GETLK	5	/* Get record locking info.  */
-# define F_SETLK	6	/* Set record locking info (non-blocking).  */
-# define F_SETLKW	7	/* Set record locking info (blocking).	*/
 /* Not necessary, we always have 64-bit offsets.  */
 # define F_GETLK64	5	/* Get record locking info.  */
 # define F_SETLK64	6	/* Set record locking info (non-blocking).  */
 # define F_SETLKW64	7	/* Set record locking info (blocking).	*/
-#else
-# ifndef __USE_FILE_OFFSET64
-#  define F_GETLK	5	/* Get record locking info.  */
-#  define F_SETLK	6	/* Set record locking info (non-blocking).  */
-#  define F_SETLKW	7	/* Set record locking info (blocking).	*/
-# else
-#  define F_GETLK	F_GETLK64  /* Get record locking info.	*/
-#  define F_SETLK	F_SETLK64  /* Set record locking info (non-blocking).*/
-#  define F_SETLKW	F_SETLKW64 /* Set record locking info (blocking).  */
-# endif
-# define F_GETLK64	12	/* Get record locking info.  */
-# define F_SETLK64	13	/* Set record locking info (non-blocking).  */
-# define F_SETLKW64	14	/* Set record locking info (blocking).	*/
 #endif
 
 struct flock

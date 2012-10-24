@@ -56,20 +56,12 @@
 # define F_GETLK	7	/* Get record locking info.  */
 # define F_SETLK	8	/* Set record locking info (non-blocking).  */
 # define F_SETLKW	9	/* Set record locking info (blocking).  */
-#else
-# define F_GETLK	F_GETLK64  /* Get record locking info.  */
-# define F_SETLK	F_SETLK64  /* Set record locking info (non-blocking).*/
-# define F_SETLKW	F_SETLKW64 /* Set record locking info (blocking).  */
 #endif
 
 #if __WORDSIZE == 64
 # define F_GETLK64	7	/* Get record locking info.  */
 # define F_SETLK64	8	/* Set record locking info (non-blocking).  */
 # define F_SETLKW64	9	/* Set record locking info (blocking).  */
-#else
-# define F_GETLK64	12	/* Get record locking info.  */
-# define F_SETLK64	13	/* Set record locking info (non-blocking).  */
-# define F_SETLKW64	14	/* Set record locking info (blocking).  */
 #endif
 
 /* For posix fcntl() and `l_type' field of a `struct flock' for lockf().  */

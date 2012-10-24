@@ -1,3 +1,24 @@
+2012-10-24  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/x86/bits/fcntl.h (F_GETLK, F_SETLK)
+	(F_SETLKW) [__x86_64]: Remove, provided by <bits/fcntl-linux.h>.
+	(F_GETLK, F_SETLK, F_SETLKW) [!__USE_FILE_OFFSET64 && !__x86_64__]:
+	Likewise.
+	(F_GETLK, F_SETLK, F_SETLKW) [__USE_FILE_OFFSET64 && ! __x86_64__]:
+	Likewise.
+	(F_GETLK64, F_SETLK64, F_SETLKW64) [!__x86_64__]: Likewise.
+
+	* sysdeps/unix/sysv/linux/sparc/bits/fcntl.h (F_GETLK, F_SETLK)
+	(F_SETLKW) [__USE_FILE_OFFSET64]: Remove, provided by
+	<bits/fcntl-linux.h>.
+	(F_GETLK64, F_SETLK64, F_SETLKW64) [__WORDSIZE == 64]: Likewise.
+
+	* sysdeps/unix/sysv/linux/s390/bits/fcntl.h (F_DUPFD, F_GETFD)
+	(F_SETFD, F_GETFL, F_SETFL): Remove, provided by <bits/fcntl-linux.h>.
+	(F_GETLK, F_SETLK, F_SETLKW) [__WORDSIZE == 64]: Likewise.
+	(F_GETLK, F_SETLK, F_SETLKW, F_GETLK64, F_SETLK64, F_SETLKW64)
+	[__WORDSIZE != 64]: Likewise.
+
 2012-10-23  Joseph Myers  <joseph@codesourcery.com>
 
 	* Makeconfig (run-built-tests): New variable.
