@@ -1,3 +1,11 @@
+2012-10-24  Mike Frysinger  <vapier@gentoo.org>
+
+	* configure.in (libc_cv_gcc_static_libgcc): Drop -q flag to grep and
+	send the output to /dev/null.
+	(libc_cv_cc_with_libunwind): Likewise.
+	(libc_cv_as_noexecstack): Likewise.
+	* configure: Regenerate.
+
 2012-10-24  Joseph Myers  <joseph@codesourcery.com>
 
 	* io/ftwtest-sh (tmp): Define to ${objpfx}io, not using `pwd`.

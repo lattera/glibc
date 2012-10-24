@@ -1011,7 +1011,7 @@ AC_MSG_ERROR([
 fi
 
 AC_CACHE_CHECK(whether GCC supports -static-libgcc, libc_cv_gcc_static_libgcc, [dnl
-if $CC -v -static-libgcc 2>&1 | grep -q 'unrecognized option.*static-libgcc'; then
+if $CC -v -static-libgcc 2>&1 | grep 'unrecognized option.*static-libgcc' >/dev/null; then
   libc_cv_gcc_static_libgcc=
 else
   libc_cv_gcc_static_libgcc=-static-libgcc
@@ -1376,7 +1376,7 @@ AC_CACHE_CHECK(for libunwind-support in compiler,
 int main (void) { return 0; }
 EOF
   if ${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS -static -o conftest \
-     conftest.c -v 2>&1 >/dev/null | grep -q " -lunwind "; then
+     conftest.c -v 2>&1 >/dev/null | grep ' -lunwind ' >/dev/null; then
     libc_cv_cc_with_libunwind=yes
   else
     libc_cv_cc_with_libunwind=no
@@ -1526,7 +1526,7 @@ void foo (void) { }
 EOF
 if AC_TRY_COMMAND([${CC-cc} $CFLAGS $CPPFLAGS
 		   -S -o conftest.s conftest.c 1>&AS_MESSAGE_LOG_FD]) \
-   && grep -q .note.GNU-stack conftest.s \
+   && grep .note.GNU-stack conftest.s >/dev/null \
    && AC_TRY_COMMAND([${CC-cc} $ASFLAGS -Wa,--noexecstack
 		      -c -o conftest.o conftest.s 1>&AS_MESSAGE_LOG_FD])
 then

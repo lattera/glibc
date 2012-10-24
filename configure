@@ -5384,7 +5384,7 @@ $as_echo_n "checking whether GCC supports -static-libgcc... " >&6; }
 if ${libc_cv_gcc_static_libgcc+:} false; then :
   $as_echo_n "(cached) " >&6
 else
-  if $CC -v -static-libgcc 2>&1 | grep -q 'unrecognized option.*static-libgcc'; then
+  if $CC -v -static-libgcc 2>&1 | grep 'unrecognized option.*static-libgcc' >/dev/null; then
   libc_cv_gcc_static_libgcc=
 else
   libc_cv_gcc_static_libgcc=-static-libgcc
@@ -6139,7 +6139,7 @@ else
 int main (void) { return 0; }
 EOF
   if ${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS -static -o conftest \
-     conftest.c -v 2>&1 >/dev/null | grep -q " -lunwind "; then
+     conftest.c -v 2>&1 >/dev/null | grep ' -lunwind ' >/dev/null; then
     libc_cv_cc_with_libunwind=yes
   else
     libc_cv_cc_with_libunwind=no
@@ -6370,7 +6370,7 @@ if { ac_try='${CC-cc} $CFLAGS $CPPFLAGS
   ac_status=$?
   $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
   test $ac_status = 0; }; } \
-   && grep -q .note.GNU-stack conftest.s \
+   && grep .note.GNU-stack conftest.s >/dev/null \
    && { ac_try='${CC-cc} $ASFLAGS -Wa,--noexecstack
 		      -c -o conftest.o conftest.s 1>&5'
   { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
