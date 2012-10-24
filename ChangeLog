@@ -1,5 +1,7 @@
 2012-10-24  Joseph Myers  <joseph@codesourcery.com>
 
+	* io/ftwtest-sh (tmp): Define to ${objpfx}io, not using `pwd`.
+
 	* posix/globtest.sh (TMPDIR): Do not set.
 	(testdir): Define using ${common_objpfx}posix not $TMPDIR.
 	(testout): Likewise.

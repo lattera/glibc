@@ -44,7 +44,7 @@ LANG=C
 export LANG
 
 # First create our scenario:
-tmp=`pwd | sed 's|\(.\)/*$|\1|'`
+tmp=${objpfx}io
 tmpdir=$tmp/ftwtest.d
 
 trap 'chmod -fR a+x $tmpdir; rm -fr $tmpdir $testout' 1 2 3 15
