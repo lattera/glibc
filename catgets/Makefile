@@ -50,7 +50,7 @@ generated-dirs = de
 
 tst-catgets-ENV = NLSPATH="$(objpfx)%l/%N.cat" LANG=de
 
-ifneq ($(cross-compiling),yes)
+ifeq ($(run-built-tests),yes)
 tests: $(objpfx)de/libc.cat $(objpfx)test1.cat $(objpfx)test2.cat \
        $(objpfx)test-gencat.out
 # This test just checks whether the program produces any error or not.

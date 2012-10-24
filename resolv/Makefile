@@ -108,7 +108,7 @@ $(objpfx)tst-leaks: $(objpfx)libresolv.so
 tst-leaks-ENV = MALLOC_TRACE=$(objpfx)tst-leaks.mtrace
 $(objpfx)mtrace-tst-leaks: $(objpfx)tst-leaks.out
 	$(common-objpfx)malloc/mtrace $(objpfx)tst-leaks.mtrace > $@
-ifeq (no,$(cross-compiling))
+ifeq ($(run-built-tests),yes)
 ifneq (no,$(PERL))
 tests: $(objpfx)mtrace-tst-leaks
 endif
@@ -117,7 +117,7 @@ endif
 tst-leaks2-ENV = MALLOC_TRACE=$(objpfx)tst-leaks2.mtrace
 $(objpfx)mtrace-tst-leaks2: $(objpfx)tst-leaks2.out
 	$(common-objpfx)malloc/mtrace $(objpfx)tst-leaks2.mtrace > $@
-ifeq (no,$(cross-compiling))
+ifeq ($(run-built-tests),yes)
 ifneq (no,$(PERL))
 xtests: $(objpfx)mtrace-tst-leaks2
 endif

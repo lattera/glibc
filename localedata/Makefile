@@ -59,7 +59,7 @@ generated-dirs := $(ld-test-names) tt_TT de_DE.437			\
 # Get $(inst_i18ndir) defined.
 include ../Makeconfig
 
-ifeq (no,$(cross-compiling))
+ifeq ($(run-built-tests),yes)
 locale_test_suite := tst_iswalnum tst_iswalpha tst_iswcntrl            \
 		     tst_iswctype tst_iswdigit tst_iswgraph            \
 		     tst_iswlower tst_iswprint tst_iswpunct            \
@@ -113,7 +113,7 @@ CFLAGS-tst-mbswcs5.c = -Wno-format
 CFLAGS-tst-trans.c = -Wno-format
 
 
-ifeq (no,$(cross-compiling))
+ifeq ($(run-built-tests),yes)
 # We have to generate locales
 LOCALES := de_DE.ISO-8859-1 de_DE.UTF-8 en_US.ANSI_X3.4-1968 \
 	   en_US.ISO-8859-1 ja_JP.EUC-JP da_DK.ISO-8859-1 \

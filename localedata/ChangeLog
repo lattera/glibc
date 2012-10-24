@@ -1,3 +1,8 @@
+2012-10-23  Joseph Myers  <joseph@codesourcery.com>
+
+	* Makefile [$(cross-compiling) = no]: Change condition to
+	[$(run-built-tests) = yes].
+
 2012-10-22  Jim Blandy  <jimb@codesourcery.com>
 	    Joseph Myers  <joseph@codesourcery.com>
 

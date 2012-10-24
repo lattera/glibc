@@ -69,7 +69,7 @@ $(inst_bindir)/iconv: $(objpfx)iconv_prog $(+force)
 $(objpfx)iconv_prog: $(iconv_prog-modules:%=$(objpfx)%.o)
 $(objpfx)iconvconfig: $(iconvconfig-modules:%=$(objpfx)%.o)
 
-ifneq ($(cross-compiling),yes)
+ifeq ($(run-built-tests),yes)
 xtests: test-iconvconfig
 endif
 

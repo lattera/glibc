@@ -175,7 +175,7 @@ shared-only-routines = oldiofopen oldiofdopen oldiofclose oldfileops	\
 
 include ../Rules
 
-ifeq (no,$(cross-compiling))
+ifeq ($(run-built-tests),yes)
 tests: $(objpfx)test-freopen.out
 ifeq (yes,$(build-shared))
 # Run tst-fopenloc.check only if shared library is enabled since it

@@ -63,7 +63,7 @@ test-srcs = tst-unbputc tst-printf
 
 include ../Rules
 
-ifeq ($(cross-compiling),no)
+ifeq ($(run-built-tests),yes)
 .PHONY: do-tst-unbputc do-tst-printf
 tests: do-tst-unbputc do-tst-printf
 

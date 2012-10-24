@@ -161,7 +161,7 @@ tests += tst-audit6 tst-audit7
 endif
 endif
 endif
-ifeq ($(cross-compiling),no)
+ifeq ($(run-built-tests),yes)
 tests: $(objpfx)tst-leaks1-mem $(objpfx)tst-leaks1-static-mem \
        $(objpfx)noload-mem
 endif
@@ -438,7 +438,7 @@ test-modules = $(addprefix $(objpfx),$(addsuffix .so,$(strip $(modules-names))))
 generated += $(addsuffix .so,$(strip $(modules-names)))
 
 ifeq (yes,$(build-shared))
-ifeq ($(cross-compiling),no)
+ifeq ($(run-built-tests),yes)
 tests: $(objpfx)tst-pathopt.out $(objpfx)tst-rtld-load-self.out
 endif
 endif
@@ -1174,7 +1174,7 @@ $(objpfx)tst-relsort1mod2.so: $(libm)
 $(objpfx)tst-relsort1.out: $(objpfx)tst-relsort1mod1.so \
 			   $(objpfx)tst-relsort1mod2.so
 
-ifeq ($(cross-compiling),no)
+ifeq ($(run-built-tests),yes)
 tests: $(objpfx)tst-unused-dep.out
 endif
 

@@ -267,7 +267,7 @@ endif # build-shared = yes
 
 include ../Rules
 
-ifeq (no,$(cross-compiling))
+ifeq ($(run-built-tests),yes)
 ifeq (yes,$(build-shared))
 tests: $(objpfx)iconv-test.out $(objpfx)tst-tables.out
 ifneq (no,$(PERL))

@@ -94,7 +94,7 @@ others: $(addprefix $(objpfx),$(others) $(sysdep-others) $(extra-objs))
 else
 others: $(addprefix $(objpfx),$(extra-objs))
 endif
-ifeq ($(cross-compiling),yes)
+ifeq ($(run-built-tests),no)
 tests: $(addprefix $(objpfx),$(tests) $(test-srcs))
 xtests: tests
 else

@@ -564,6 +564,15 @@ endif
 csu-objpfx = $(common-objpfx)csu/
 elf-objpfx = $(common-objpfx)elf/
 
+# Whether to run test programs built for the library's host system.
+ifndef run-built-tests
+ifeq (yes,$(cross-compiling))
+run-built-tests = no
+else
+run-built-tests = yes
+endif
+endif
+
 # How to run a program we just linked with our library.
 # The program binary is assumed to be $(word 2,$^).
 built-program-file = $(dir $(word 2,$^))$(notdir $(word 2,$^))

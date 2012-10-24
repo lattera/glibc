@@ -122,7 +122,7 @@ bug-fmtmsg1-ENV = SEV_LEVEL=foo,11,newsev
 # Run a test on the header files we use.
 tests: $(objpfx)isomac.out
 
-ifeq (no,$(cross-compiling))
+ifeq ($(run-built-tests),yes)
 tests: $(objpfx)tst-fmtmsg.out
 endif
 

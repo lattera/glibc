@@ -98,7 +98,7 @@ test-stat2-ARGS = Makefile . $(objpfx)test-stat2
 
 tst-statvfs-ARGS = $(objpfx)tst-statvfs tst-statvfs.c /tmp
 
-ifeq ($(cross-compiling),no)
+ifeq ($(run-built-tests),yes)
 tests: $(objpfx)ftwtest.out
 
 $(objpfx)ftwtest.out: ftwtest-sh $(objpfx)ftwtest

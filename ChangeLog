@@ -1,5 +1,25 @@
 2012-10-23  Joseph Myers  <joseph@codesourcery.com>
 
+	* Makeconfig (run-built-tests): New variable.
+	* Rules [$(cross-compiling) = yes]: Change condition to
+	[$(run-built-tests) = no].
+	* catgets/Makefile [$(cross-compiling) != yes]: Change condition
+	to [$(run-built-tests) = yes].
+	* elf/Makefile [$(cross-compiling) = no]: Likewise
+	* grp/Makefile [$(cross-compiling) = no]: Likewise.
+	* iconv/Makefile [$(cross-compiling) != yes]: Likewise.
+	* iconvdata/Makefile [$(cross-compiling) = no]: Likewise.
+	* intl/Makefile [$(cross-compiling) = no]: Likewise.
+	* io/Makefile [$(cross-compiling) = no]: Likewise.
+	* libio/Makefile [$(cross-compiling) = no]: Likewise.
+	* malloc/Makefile [$(cross-compiling) = no]: Likewise.
+	* misc/Makefile [$(cross-compiling) = no]: Likewise.
+	* posix/Makefile [$(cross-compiling) = no]: Likewise.
+	* resolv/Makefile [$(cross-compiling) = no]: Likewise.
+	* stdio-common/Makefile [$(cross-compiling) = no]: Likewise.
+	* stdlib/Makefile [$(cross-compiling) = no]: Likewise.
+	* string/Makefile [$(cross-compiling) = no]: Likewise.
+
 	* posix/Makefile ($(objpfx)globtest.out): Pass
 	$(run-program-prefix) to globtest.sh, not $(elf-objpfx) and
 	$(rtld-installed-name).
