@@ -564,9 +564,21 @@ endif
 csu-objpfx = $(common-objpfx)csu/
 elf-objpfx = $(common-objpfx)elf/
 
+# A command that, prepended to the name and arguments of a program,
+# and run on the build system, causes that program with those
+# arguments to be run on the host for which the library is built.
+ifndef test-wrapper
+test-wrapper =
+endif
+# Likewise, but the name of the program is preceded by
+# <variable>=<value> assignments for environment variables.
+ifndef test-wrapper-env
+test-wrapper-env = $(test-wrapper) env
+endif
+
 # Whether to run test programs built for the library's host system.
 ifndef run-built-tests
-ifeq (yes,$(cross-compiling))
+ifeq (yes|,$(cross-compiling)|$(test-wrapper))
 run-built-tests = no
 else
 run-built-tests = yes
@@ -600,12 +612,13 @@ endif
 # of a program built with the newly built library, produces a command
 # that, executed on the build system on which "make" is run, runs that
 # program.
-run-program-prefix = $(run-via-rtld-prefix)
+run-program-prefix = $(test-wrapper) $(run-via-rtld-prefix)
 # $(built-program-cmd) is a command that, executed on the build system
 # on which "make" is run, runs the newly built program that is the
 # second dependency of the makefile target in which
 # $(built-program-cmd) is used.
-built-program-cmd = $(run-via-rtld-prefix) $(built-program-file)
+built-program-cmd = $(test-wrapper) \
+		    $(run-via-rtld-prefix) $(built-program-file)
 # $(host-built-program-cmd) is a command that, executed on the host
 # for which the library is built, runs the newly built program that is
 # the second dependency of the makefile target in which

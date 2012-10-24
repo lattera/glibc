@@ -1,3 +1,11 @@
+2012-10-24  Joseph Myers  <joseph@codesourcery.com>
+	    Jim Blandy  <jimb@codesourcery.com>
+
+	* Makefile ($(objpfx)tst-tls6.out): Pass $(test-wrapper-env) to
+	tst-tls6.sh.
+	* tst-tls6.sh (test_wrapper_env): New variable.  Use it to run
+	programs with LD_PRELOAD set.
+
 2012-10-24  Roland McGrath  <roland@hack.frob.com>
 
 	* Makefile ($(objpfx)tst-cond11, $(objpfx)tst-cond19): Targets removed.

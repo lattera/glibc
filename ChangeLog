@@ -1,3 +1,42 @@
+2012-10-24  Joseph Myers  <joseph@codesourcery.com>
+	    Jim Blandy  <jimb@codesourcery.com>
+
+	* Makeconfig (test-wrapper): New variable,
+	(test-wrapper-env): Likewise.
+	[$(cross-compiling) = yes && $(test-wrapper) != ""]
+	(run-built-tests): Define to yes.
+	(run-program-prefix): Use $(test-wrapper).
+	(built-program-cmd): Likewise.
+	* Rules (make-test-out): Use $(test-wrapper-env) and
+	$(host-built-program-cmd).
+	* elf/Makefile ($(objpfx)order.out): Use $(test-wrapper).
+	($(objpfx)tst-pathopt.out): Pass $(test-wrapper-env) to
+	tst-pathopt.sh.
+	($(objpfx)tst-rtld-load-self.out): Pass $(test-wrapper) and
+	$(test-wrapper-env) to tst-rtld-load-self.sh.
+	($(objpfx)order2.out): Use $(test-wrapper).
+	($(objpfx)tst-initorder.out): Likewise.
+	($(objpfx)tst-initorder2.out): Likewise.
+	($(objpfx)tst-unused-dep.out): Use $(test-wrapper-env).
+	* elf/tst-pathopt.sh (run_program_prefix): Remove unused variable.
+	(test_wrapper_env): New variable.  Use it to run ld.so.
+	* elf/tst-rtld-load-self.sh (test_wrapper): New variable.
+	Use it to run ld.so.
+	(test_wrapper_env): Likewise.
+	* iconvdata/Makefile ($(objpfx)iconv-test.out): Pass
+	$(test-wrapper) to run-iconv-test.sh.
+	* iconvdata/run-iconv-test.sh (test_wrapper): New variable.
+	(ICONV): Use $test_wrapper.
+	* posix/Makefile ($(objpfx)globtest.out): Pass
+	$(run-via-rtld-prefix), $(test-wrapper) and $(test-wrapper-env) to
+	globtest.sh, not $(run-program-prefix).
+	* posix/globtest.sh (run_via_rtld_prefix): New variable.
+	(test_wrapper): Likewise.
+	(test_wrapper_env): Likewise.  Use it to run globtest with HOME
+	set together with run_via_rtld_prefix.
+	(run_program_prefix): Define in terms of test_wrapper and
+	run_via_rtld_prefix.
+
 2012-10-24  Roland McGrath  <roland@hack.frob.com>
 
 	* nscd/Makefile ($(objpfx)nscd): Remove librt dependency.

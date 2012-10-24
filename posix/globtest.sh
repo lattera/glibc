@@ -20,7 +20,10 @@
 set -e
 
 common_objpfx=$1; shift
-run_program_prefix=$1; shift
+run_via_rtld_prefix=$1; shift
+test_wrapper=$1; shift
+test_wrapper_env=$1; shift
+run_program_prefix="${test_wrapper} ${run_via_rtld_prefix}"
 logfile=$common_objpfx/posix/globtest.out
 
 #CMP=cmp
@@ -758,8 +761,9 @@ cat <<"EOF" | $CMP - $testout >> $logfile || failed=1
 `dir6/file1[ab]'
 `nondir\/'
 EOF
+${test_wrapper_env} \
 HOME="$testdir" \
-${run_program_prefix} \
+${run_via_rtld_prefix} \
 ${common_objpfx}posix/globtest -ct "$testdir" \
 '~/dir1/file1_1' '~/dir1/file1_9' '~/dir3\*/file1' '~/dir3\*/file2' \
 '~\/dir1/file1_2' |

@@ -21,6 +21,7 @@
 set -e
 
 codir=$1
+test_wrapper="$2"
 
 # We use always the same temporary file.
 temp1=$codir/iconvdata/iconv-test.xxx
@@ -39,6 +40,7 @@ LIBPATH=$codir:$codir/iconvdata
 # How the start the iconv(1) program.
 ICONV='$codir/elf/ld.so --library-path $LIBPATH --inhibit-rpath ${from}.so \
        $codir/iconv/iconv_prog'
+ICONV="$test_wrapper $ICONV"
 
 # Which echo?
 if (echo "testing\c"; echo 1,2,3) | grep c >/dev/null; then

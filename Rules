@@ -180,8 +180,9 @@ ifneq "$(strip $(tests) $(xtests) $(test-srcs))" ""
 # These are the implicit rules for making test outputs
 # from the test programs and whatever input files are present.
 
-make-test-out = GCONV_PATH=$(common-objpfx)iconvdata LC_ALL=C \
-		$($*-ENV) $(built-program-cmd) $($*-ARGS)
+make-test-out = $(test-wrapper-env) \
+		GCONV_PATH=$(common-objpfx)iconvdata LC_ALL=C \
+		$($*-ENV) $(host-built-program-cmd) $($*-ARGS)
 $(objpfx)%-bp.out: %.input $(objpfx)%-bp
 	$(make-test-out) > $@ < $(word 1,$^)
 $(objpfx)%.out: %.input $(objpfx)%
