@@ -1,3 +1,15 @@
+2012-10-24  Joseph Myers  <joseph@codesourcery.com>
+
+	* Makefile (tests): Remove tst-oddstacklimit.
+	(test-srcs): New variable.
+	(tst-oddstacklimit-ENV): Remove.
+	[$(run-built-tests) = yes] (tests): Depend on
+	$(objpfx)tst-oddstacklimit.out.
+	[$(run-built-tests) = yes] ($(objpfx)tst-oddstacklimit.out): New
+	target.
+	* tst-oddstacklimit.c: Do not include "tst-basic1.c".  Use
+	setrlimit before executing tst-basic1 test passed to --command.
+
 2012-10-23  Joseph Myers  <joseph@codesourcery.com>
 
 	* Makefile [$(cross-compiling) = no]: Change condition to

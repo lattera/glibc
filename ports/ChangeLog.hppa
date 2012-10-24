@@ -1,3 +1,8 @@
+2012-10-24  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/hppa/nptl/Makefile (tst-oddstacklimit-ENV): Remove.
+	* sysdeps/hppa/nptl/tst-oddstacklimit.c: New file.
+
 2012-10-10  Carlos O'Donell  <carlos@systemhalted.org>
 
 	* sysdeps/unix/sysv/linux/hppa/nptl/pthread.h: Update.

@@ -257,19 +257,15 @@ tests = tst-typesizes \
 	tst-context1 \
 	tst-sched1 \
 	tst-backtrace1 \
-	tst-oddstacklimit \
 	tst-abstime \
 	tst-vfork1 tst-vfork2 tst-vfork1x tst-vfork2x \
 	tst-getpid1 tst-getpid2 tst-getpid3 \
 	tst-initializers1 $(patsubst %,tst-initializers1-%,c89 gnu89 c99 gnu99)
 xtests = tst-setuid1 tst-setuid1-static tst-mutexpp1 tst-mutexpp6 tst-mutexpp10
+test-srcs = tst-oddstacklimit
 
 # Files which must not be linked with libpthread.
 tests-nolibpthread = tst-unload
-
-# This sets the stack resource limit to 1023kb, which is not a multiple
-# of the page size since every architecture's page size is > 1k.
-tst-oddstacklimit-ENV = ; ulimit -s 1023;
 
 gen-as-const-headers = pthread-errnos.sym
 
@@ -605,6 +601,13 @@ $(objpfx)tst-fini1mod.so: $(shared-thread-library)
 
 tst-stackguard1-ARGS = --command "$(host-built-program-cmd) --child"
 tst-stackguard1-static-ARGS = --command "$(objpfx)tst-stackguard1-static --child"
+
+ifeq ($(run-built-tests),yes)
+tests: $(objpfx)tst-oddstacklimit.out
+
+$(objpfx)tst-oddstacklimit.out: $(objpfx)tst-oddstacklimit $(objpfx)tst-basic1
+	$(run-program-prefix) $< --command '$(host-built-program-cmd)' > $@
+endif
 
 # The tests here better do not run in parallel
 ifneq ($(filter %tests,$(MAKECMDGOALS)),)

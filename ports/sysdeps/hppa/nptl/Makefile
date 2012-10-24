@@ -1,4 +1,4 @@
-# Copyright (C) 2005 Free Software Foundation, Inc.
+# Copyright (C) 2005-2012 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 #
 # The GNU C Library is free software; you can redistribute it and/or
@@ -18,9 +18,3 @@
 ifeq ($(subdir),csu)
 gen-as-const-headers += tcb-offsets.sym
 endif
-
-# This sets the stack resource limit to 8193kb, which is not a multiple
-# of the page size, and therefore an odd sized stack limit. We override
-# this because the default is too small to run with. 
-tst-oddstacklimit-ENV = ; ulimit -s 8193;
-
