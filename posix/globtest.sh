@@ -42,9 +42,10 @@ LANG=C
 export LANG
 
 # Create the arena
-: ${TMPDIR=/tmp}
-testdir=$(mktemp -d $TMPDIR/globtest-dir.XXXXXX)
-testout=$(mktemp $TMPDIR/globtest-out.XXXXXX)
+testdir=${common_objpfx}posix/globtest-dir
+testout=${common_objpfx}posix/globtest-out
+rm -rf $testdir $testout
+mkdir $testdir
 
 trap 'chmod 777 $testdir/noread; rm -fr $testdir $testout' 1 2 3 15
 

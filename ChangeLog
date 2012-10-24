@@ -1,3 +1,9 @@
+2012-10-24  Joseph Myers  <joseph@codesourcery.com>
+
+	* posix/globtest.sh (TMPDIR): Do not set.
+	(testdir): Define using ${common_objpfx}posix not $TMPDIR.
+	(testout): Likewise.
+
 2012-10-24  Andreas Jaeger  <aj@suse.de>
 
 	* io/fcntl.h: Always define mode_t, off_t, pid_t and use these
