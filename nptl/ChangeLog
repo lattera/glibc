@@ -1,3 +1,14 @@
+2012-10-25  Roland McGrath  <roland@hack.frob.com>
+
+	* tst-basic2.c (do_test): Return RESULT, not always zero.
+
+	* tst-cond25.c: Include <stdint.h>
+	(waiter): Add casts to uintptr_t between casting integer<->pointer.
+	(timed_waiter): Likewise.
+	(do_test_wait): Likewise.
+	* tst-cond-except.c (thr): Likewise.
+	(do_test): Use prototype definition.
+
 2012-10-24  Joseph Myers  <joseph@codesourcery.com>
 	    Jim Blandy  <jimb@codesourcery.com>
 

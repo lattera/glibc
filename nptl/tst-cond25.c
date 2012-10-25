@@ -20,6 +20,7 @@
 #include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdint.h>
 #include <string.h>
 #include <errno.h>
 #include <sys/types.h>
@@ -87,13 +88,13 @@ waiter (void *u)
 {
   int i, ret = 0;
   void *tret = NULL;
-  int seq = (int)u;
+  int seq = (uintptr_t) u;
 
   for (i = 0; i < ITERS / NUM; i++)
     {
       if ((ret = pthread_mutex_lock (&mutex)) != 0)
         {
-	  tret = (void *)1;
+	  tret = (void *) (uintptr_t) 1;
 	  printf ("waiter[%u]:mutex_lock failed: %s\n", seq, strerror (ret));
 	  goto out;
 	}
@@ -101,14 +102,14 @@ waiter (void *u)
 
       if ((ret = pthread_cond_wait (&cond, &mutex)) != 0)
         {
-	  tret = (void *)1;
+	  tret = (void *) (uintptr_t) 1;
 	  printf ("waiter[%u]:wait failed: %s\n", seq, strerror (ret));
 	  goto unlock_out;
 	}
 
       if ((ret = pthread_mutex_unlock (&mutex)) != 0)
         {
-	  tret = (void *)1;
+	  tret = (void *) (uintptr_t) 1;
 	  printf ("waiter[%u]:mutex_unlock failed: %s\n", seq, strerror (ret));
 	  goto out;
 	}
@@ -130,7 +131,7 @@ timed_waiter (void *u)
 {
   int i, ret;
   void *tret = NULL;
-  int seq = (int)u;
+  int seq = (uintptr_t) u;
 
   for (i = 0; i < ITERS / NUM; i++)
     {
@@ -138,7 +139,7 @@ timed_waiter (void *u)
 
       if ((ret = clock_gettime(CLOCK_REALTIME, &ts)) != 0)
         {
-	  tret = (void *)1;
+	  tret = (void *) (uintptr_t) 1;
 	  printf ("%u:clock_gettime failed: %s\n", seq, strerror (errno));
 	  goto out;
 	}
@@ -146,7 +147,7 @@ timed_waiter (void *u)
 
       if ((ret = pthread_mutex_lock (&mutex)) != 0)
         {
-	  tret = (void *)1;
+	  tret = (void *) (uintptr_t) 1;
 	  printf ("waiter[%u]:mutex_lock failed: %s\n", seq, strerror (ret));
 	  goto out;
 	}
@@ -155,13 +156,13 @@ timed_waiter (void *u)
       /* We should not time out either.  */
       if ((ret = pthread_cond_timedwait (&cond, &mutex, &ts)) != 0)
         {
-	  tret = (void *)1;
+	  tret = (void *) (uintptr_t) 1;
 	  printf ("waiter[%u]:timedwait failed: %s\n", seq, strerror (ret));
 	  goto unlock_out;
 	}
       if ((ret = pthread_mutex_unlock (&mutex)) != 0)
         {
-	  tret = (void *)1;
+	  tret = (void *) (uintptr_t) 1;
 	  printf ("waiter[%u]:mutex_unlock failed: %s\n", seq, strerror (ret));
 	  goto out;
 	}
@@ -195,7 +196,8 @@ do_test_wait (thr_func f)
 	  goto out;
 	}
 
-      if ((ret = pthread_mutexattr_setprotocol (&attr, PTHREAD_PRIO_INHERIT)) != 0)
+      if ((ret = pthread_mutexattr_setprotocol (&attr,
+                                                PTHREAD_PRIO_INHERIT)) != 0)
         {
 	  printf ("mutexattr_setprotocol failed: %s\n", strerror (ret));
 	  goto out;
@@ -214,7 +216,8 @@ do_test_wait (thr_func f)
 	}
 
       for (j = 0; j < NUM; j++)
-        if ((ret = pthread_create (&w[j], NULL, f, (void *)j)) != 0)
+        if ((ret = pthread_create (&w[j], NULL,
+                                   f, (void *) (uintptr_t) j)) != 0)
 	  {
 	    printf ("waiter[%d]: create failed: %s\n", j, strerror (ret));
 	    goto out;
