@@ -1,3 +1,9 @@
+2012-10-25  David S. Miller  <davem@davemloft.net>
+
+	* sysdeps/unix/sysv/linux/sparc/sparc64/get_clockfreq.c
+	(__get_clockfreq_via_proc_openprom): Use strtoumax instead
+	of strtoull.
+
 2012-10-25  Roland McGrath  <roland@hack.frob.com>
 
 	* sysdeps/unix/sysv/linux/sparc/sparc64/get_clockfreq.c

@@ -129,7 +129,7 @@ __get_clockfreq_via_proc_openprom (void)
 			  if (read (clkfreq_fd, type_string,
 				    sizeof (type_string)) > 0)
 			    result = (hp_timing_t)
-			      strtoull (type_string, NULL, 16);
+			      strtoumax (type_string, NULL, 16);
 			  close (clkfreq_fd);
 			}
 		    }
