@@ -1,4 +1,5 @@
 /* Multiple versions of memset and bzero
+   All versions must be listed in ifunc-impl-list.c.
    Copyright (C) 2010, 2011, 2012 Free Software Foundation, Inc.
    Contributed by David S. Miller (davem@davemloft.net)
    This file is part of the GNU C Library.

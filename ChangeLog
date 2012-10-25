@@ -4,6 +4,13 @@
 	(__get_clockfreq_via_proc_openprom): Use strtoumax instead
 	of strtoull.
 
+	* sysdeps/sparc/sparc64/multiarch/memcpy.S: Add comments for
+	ifunc-impl-list.c
+	* sysdeps/sparc/sparc64/multiarch/memset.S: Likewise.
+	* sysdeps/sparc/sparc64/multiarch/ifunc-impl-list.c: New file.
+	* sysdeps/sparc/sparc32/sparcv9/multiarch/ifunc-impl-list.c: New
+	file.
+
 2012-10-25  Roland McGrath  <roland@hack.frob.com>
 
 	* sysdeps/unix/sysv/linux/sparc/sparc64/get_clockfreq.c
