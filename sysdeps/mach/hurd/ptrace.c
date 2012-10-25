@@ -160,7 +160,7 @@ ptrace (enum __ptrace_request request, ... )
     case PTRACE_SINGLESTEP:
       /* This is a machine-dependent kernel RPC on
 	 machines that support it.  Punt.  */
-      return EOPNOTSUPP;
+      return __hurd_fail (EOPNOTSUPP);
 
     case PTRACE_ATTACH:
     case PTRACE_DETACH:
@@ -227,7 +227,7 @@ ptrace (enum __ptrace_request request, ... )
     case PTRACE_PEEKUSER:
     case PTRACE_POKEUSER:
       /* U area, what's that?  */
-      return EOPNOTSUPP;
+      return __hurd_fail (EOPNOTSUPP);
 
     case PTRACE_GETREGS:
     case PTRACE_SETREGS:
@@ -248,7 +248,7 @@ ptrace (enum __ptrace_request request, ... )
       return get_regs (MACHINE_THREAD_FLOAT_STATE_FLAVOR,
 		       MACHINE_THREAD_FLOAT_STATE_COUNT);
 #else
-      return EOPNOTSUPP;
+      return __hurd_fail (EOPNOTSUPP);
 #endif
 
     case PTRACE_GETFPAREGS:
@@ -261,7 +261,7 @@ ptrace (enum __ptrace_request request, ... )
       return get_regs (MACHINE_THREAD_FPA_STATE_FLAVOR,
 		       MACHINE_THREAD_FPA_STATE_COUNT);
 #else
-      return EOPNOTSUPP;
+      return __hurd_fail (EOPNOTSUPP);
 #endif
 
     case PTRACE_POKETEXT:

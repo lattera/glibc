@@ -1,3 +1,8 @@
+2012-10-25  Pino Toscano  <toscano.pino@tiscali.it>
+
+	* sysdeps/mach/hurd/ptrace.c (ptrace): Use __hurd_fail to return
+	EOPNOTSUPP.
+
 2012-10-25  Joseph Myers  <joseph@codesourcery.com>
 
 	* Makeconfig (run-program-prefix): Fix comment.
