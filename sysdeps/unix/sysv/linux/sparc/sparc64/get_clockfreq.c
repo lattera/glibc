@@ -91,11 +91,9 @@ __get_clockfreq_via_proc_openprom (void)
     {
       unsigned long int buf[4096 / sizeof (unsigned long int)];
       struct dirent *dirp = (struct dirent *) buf;
-      off_t dbase = (off_t) 0;
       ssize_t len;
 
-      while ((len = __getdirentries (obp_fd, (char *) dirp,
-                                     sizeof (buf), &dbase)) > 0)
+      while ((len = __getdents (obp_fd, (char *) dirp, sizeof (buf))) > 0)
 	{
 	  struct dirent *this_dirp = dirp;
 

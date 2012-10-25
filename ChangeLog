@@ -1,3 +1,9 @@
+2012-10-25  Roland McGrath  <roland@hack.frob.com>
+
+	* sysdeps/unix/sysv/linux/sparc/sparc64/get_clockfreq.c
+	(__get_clockfreq_via_proc_openprom): Use __getdents instead of
+	__getdirentries.
+
 2012-10-25  Joseph Myers  <joseph@codesourcery.com>
 	    Jim Blandy  <jimb@codesourcery.com>
 
@@ -981,7 +987,7 @@
 	(__SWBLK_T_TYPE): Likewise.
 
 2012-10-01  Patsy Franklin <pfrankli@redhat.com>
-            Honza Horak <hhorak@redhat.com>
+	    Honza Horak <hhorak@redhat.com>
 
 	* nis/yp_xdr.c (xdr_domainname): Use YPMAXDOMAIN as maxsize.
 	(xdr_mapname): Use YPMAXMAP as maxsize.
@@ -1498,7 +1504,7 @@
 
 2012-12-09  Allan McRae  <allan@archlinux.org>
 
-        * sysdeps/i386/fpu/libm-test-ulps: Update
+	* sysdeps/i386/fpu/libm-test-ulps: Update
 
 2012-09-11  Joseph Myers  <joseph@codesourcery.com>
 
