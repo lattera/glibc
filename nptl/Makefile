@@ -475,7 +475,7 @@ $(objpfx)tst-tls6.out: tst-tls6.sh $(objpfx)tst-tls5 \
 		       $(objpfx)tst-tls5moda.so $(objpfx)tst-tls5modb.so \
 		       $(objpfx)tst-tls5modc.so $(objpfx)tst-tls5modd.so \
 		       $(objpfx)tst-tls5mode.so $(objpfx)tst-tls5modf.so
-	$(SHELL) $< $(common-objpfx) $(elf-objpfx) \
+	$(BASH) $< $(common-objpfx) $(elf-objpfx) \
 		    $(rtld-installed-name) '$(test-wrapper-env)'
 endif
 

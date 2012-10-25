@@ -1,3 +1,9 @@
+2012-10-25  Joseph Myers  <joseph@codesourcery.com>
+
+	* Makefile ($(objpfx)tst-tls6.out): Use $(BASH) not $(SHELL) to
+	run tst-tls6.sh.
+	* tst-tls6.sh: Use /bin/bash not /bin/sh.
+
 2012-10-25  Roland McGrath  <roland@hack.frob.com>
 
 	* tst-basic2.c (do_test): Return RESULT, not always zero.
