@@ -1,3 +1,7 @@
+2012-10-25  Joseph Myers  <joseph@codesourcery.com>
+
+	* Makeconfig (run-program-prefix): Fix comment.
+
 2012-10-24  Joseph Myers  <joseph@codesourcery.com>
 	    Jim Blandy  <jimb@codesourcery.com>
 

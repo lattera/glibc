@@ -608,7 +608,7 @@ run-via-rtld-prefix =							      \
 else
 run-via-rtld-prefix =
 endif
-# $(run-via-rtld-prefix) is a command that, when prepended to the name
+# $(run-program-prefix) is a command that, when prepended to the name
 # of a program built with the newly built library, produces a command
 # that, executed on the build system on which "make" is run, runs that
 # program.
