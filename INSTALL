@@ -196,7 +196,13 @@ this: `CC=TARGET-gcc configure TARGET'.  Set `BUILD_CC' to the compiler
 to use for programs run on the build system as part of compiling the
 library.  You may need to set `AR' to cross-compiling versions of `ar'
 if the native tools are not configured to work with object files for
-the target you configured for.
+the target you configured for.  When cross-compiling the GNU C Library,
+it may be tested using `make check
+test-wrapper="SRCDIR/scripts/cross-test-ssh.sh HOSTNAME"', where SRCDIR
+is the absolute directory name for the main source directory and
+HOSTNAME is the host name of a system that can run the newly built
+binaries of the GNU C Library.  The source and build directories must
+be visible at the same locations on both the build system and HOSTNAME.
 
 Installing the C Library
 ========================

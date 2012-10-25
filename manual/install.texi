@@ -224,7 +224,14 @@ important to use this same @code{CC} value when running
 run on the build system as part of compiling the library.  You may need to
 set @code{AR} to cross-compiling versions of @code{ar}
 if the native tools are not configured to work with
-object files for the target you configured for.
+object files for the target you configured for.  When cross-compiling
+@theglibc{}, it may be tested using @samp{make check
+test-wrapper="@var{srcdir}/scripts/cross-test-ssh.sh @var{hostname}"},
+where @var{srcdir} is the absolute directory name for the main source
+directory and @var{hostname} is the host name of a system that can run
+the newly built binaries of @theglibc{}.  The source and build
+directories must be visible at the same locations on both the build
+system and @var{hostname}.
 
 
 @node Running make install

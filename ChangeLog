@@ -1,3 +1,11 @@
+2012-10-25  Joseph Myers  <joseph@codesourcery.com>
+	    Jim Blandy  <jimb@codesourcery.com>
+
+	* scripts/cross-test-ssh.sh: New file.
+	* manual/install.texi (Configuring and compiling): Document use of
+	cross-test-ssh.sh.
+	* INSTALL: Regenerated.
+
 2012-10-25  Pino Toscano  <toscano.pino@tiscali.it>
 
 	* sysdeps/mach/hurd/ptrace.c (ptrace): Use __hurd_fail to return
