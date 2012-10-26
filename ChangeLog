@@ -1,3 +1,8 @@
+2012-10-26  H.J. Lu  <hongjiu.lu@intel.com>
+
+	*  iconvdata/tst-table.sh: Remove ${SHELL}.
+	*  iconvdata/tst-tables.sh: Likewise.
+
 2012-10-25  David S. Miller  <davem@davemloft.net>
 
 	* sysdeps/unix/sysv/linux/sparc/sparc64/get_clockfreq.c
