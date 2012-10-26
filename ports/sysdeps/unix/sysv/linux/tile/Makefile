@@ -13,3 +13,7 @@ sysdep_headers += sys/dataplane.h
 sysdep_routines += set_dataplane
 
 endif
+
+ifeq ($(subdir),elf)
+sysdep_routines += dl-vdso
+endif
