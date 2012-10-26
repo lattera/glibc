@@ -1,3 +1,10 @@
+2012-10-26  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/hppa/bits/fcntl.h: Remove all
+	definitions and declarations that are provided by
+	<bits/fcntl-linux.h> and include <bits/fcntl-linux.h>.
+	(__O_PATH): Define.
+
 2012-10-24  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/hppa/nptl/Makefile (tst-oddstacklimit-ENV): Remove.
