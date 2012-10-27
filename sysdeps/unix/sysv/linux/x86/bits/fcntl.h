@@ -22,8 +22,6 @@
 
 #ifdef __x86_64__
 # define __O_LARGEFILE	0
-#else
-# define __O_LARGEFILE	0100000
 #endif
 
 #ifdef __x86_64__

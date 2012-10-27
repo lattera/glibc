@@ -25,8 +25,6 @@
 
 #if __WORDSIZE == 64
 # define __O_LARGEFILE	0
-#else
-# define __O_LARGEFILE	0100000
 #endif
 
 struct flock

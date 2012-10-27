@@ -1,3 +1,10 @@
+2012-10-27  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/x86/bits/fcntl.h (__O_LARGEFILE)
+	[!__x86_64]: Do not define, take value from <bits/fcntl-linux.h>.
+	* sysdeps/unix/sysv/linux/s390/bits/fcntl.h (__O_LARGEFILE):
+	[__WORDSIZE != 64]: Likewise.
+
 2012-10-26  H.J. Lu  <hongjiu.lu@intel.com>
 
 	*  iconvdata/tst-table.sh: Remove ${SHELL}.

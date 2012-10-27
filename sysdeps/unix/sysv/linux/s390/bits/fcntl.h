@@ -25,8 +25,6 @@
 #if __WORDSIZE == 64
 /* Not necessary, files are always with 64bit off_t.  */
 # define __O_LARGEFILE	0
-#else
-# define __O_LARGEFILE	0100000
 #endif
 
 #if __WORDSIZE == 64

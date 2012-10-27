@@ -1,3 +1,9 @@
+2012-10-27  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/generic/bits/fcntl.h: (__O_LARGEFILE)
+	[__WORDSIZE != 64]: Do not define, take value from
+	<bits/fcntl-linux.h>.
+
 2012-10-23  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/generic/bits/fcntl.h: Remove all
