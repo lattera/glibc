@@ -55,7 +55,7 @@ to provide a definitive survey of the laws affecting cryptography.
 Instead, this section warns you of some of the known trouble spots; this
 may help you when you try to find out what the laws of your country are.
 
-Some countries require that you have a licence to use, possess, or import
+Some countries require that you have a license to use, possess, or import
 cryptography.  These countries are believed to include Byelorussia,
 Burma, India, Indonesia, Israel, Kazakhstan, Pakistan, Russia, and Saudi
 Arabia.

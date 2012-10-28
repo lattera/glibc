@@ -613,7 +613,7 @@ as far as the system follows the Unix standards.
 
 Together with the @code{setlocale} function the @w{ISO C} people
 invented the @code{localeconv} function.  It is a masterpiece of poor
-design.  It is expensive to use, not extendable, and not generally
+design.  It is expensive to use, not extensible, and not generally
 usable as it provides access to only @code{LC_MONETARY} and
 @code{LC_NUMERIC} related information.  Nevertheless, if it is
 applicable to a given situation it should be used since it is very

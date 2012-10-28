@@ -58,7 +58,7 @@ Thomas Bushnell for his contributions to Hurd.
 Wilco Dijkstra for various fixes.
 
 @item
-Liubov Dmitrieva for optimzed string and math functions on x86-64 and
+Liubov Dmitrieva for optimized string and math functions on x86-64 and
 x86.
 
 @item

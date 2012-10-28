@@ -1,3 +1,13 @@
+2016-06-16  Mike Frysinger  <vapier@gentoo.org>
+
+	* manual/contrib.texi: Fix spelling typos.
+	* manual/crypt.texi: Likewise.
+	* manual/filesys.texi: Likewise.
+	* manual/locale.texi: Likewise.
+	* manual/message.texi: Likewise.
+	* manual/nss.texi: Likewise.
+	* manual/string.texi: Likewise.
+
 2016-06-16  Rical Jasan  <ricaljasan@pacific.net>
 
 	* manual/locale.texi: Fix typos & grammar errors.

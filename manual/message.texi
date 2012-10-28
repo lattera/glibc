@@ -25,7 +25,7 @@ industry decisions and therefore not necessarily based on reasonable
 decisions.
 
 As mentioned above the message catalog handling provides easy
-extendibility by using external data files which contain the message
+extendability by using external data files which contain the message
 translations.  I.e., these files contain for each of the messages used
 in the program a translation for the appropriate language.  So the tasks
 of the message handling functions are
@@ -1639,12 +1639,12 @@ family.  But in two places the string passed into the function would be
 @code{Open}.  The translations might not be the same and therefore we
 are in the dilemma described above.
 
-One solution to this problem is to artificially enlengthen the strings
+One solution to this problem is to artificially extend the strings
 to make them unambiguous.  But what would the program do if no
-translation is available?  The enlengthened string is not what should be
+translation is available?  The extended string is not what should be
 printed.  So we should use a little bit modified version of the functions.
 
-To enlengthen the strings a uniform method should be used.  E.g., in the
+To extend the strings a uniform method should be used.  E.g., in the
 example above the strings could be chosen as
 
 @smallexample
@@ -1681,7 +1681,7 @@ for the Menu entries and therefore contains a @code{|} character.  We
 simply search for the last occurrence of this character and return a
 pointer to the character following it.  That's it!
 
-If one now consistently uses the enlengthened string form and replaces
+If one now consistently uses the extended string form and replaces
 the @code{gettext} calls with calls to @code{sgettext} (this is normally
 limited to very few places in the GUI implementation) then it is
 possible to produce a program which can be internationalized.
@@ -1716,7 +1716,7 @@ with the second part which is:
 @item
 There is no way the C library can contain a version which can work
 everywhere.  The problem is the selection of the character to separate
-the prefix from the actual string in the enlenghtened string.  The
+the prefix from the actual string in the extended string.  The
 examples above used @code{|} which is a quite good choice because it
 resembles a notation frequently used in this context and it also is a
 character not often used in message strings.
@@ -1728,7 +1728,7 @@ why the @file{iso646.h} file exists in @w{ISO C} programming environments).
 @end itemize
 
 There is only one more comment to make left.  The wrapper function above
-require that the translations strings are not enlengthened themselves.
+require that the translations strings are not extended themselves.
 This is only logical.  There is no need to disambiguate the strings
 (since they are never used as keys for a search) and one also saves
 quite some memory and disk space by doing this.

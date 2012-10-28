@@ -885,7 +885,7 @@ of the following categories.  This could be special files, sockets etc.
 The item is a directory.
 @item FTW_NS
 The @code{stat} call failed and so the information pointed to by the
-second paramater is invalid.
+second parameter is invalid.
 @item FTW_DNR
 The item is a directory which cannot be read.
 @item FTW_SL

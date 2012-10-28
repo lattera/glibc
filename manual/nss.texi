@@ -566,7 +566,7 @@ here only important to remember that adding another database is
 independent from adding another service because a service need not
 support all databases or lookup functions.
 
-A designer/implementor of a new service is therefore free to choose the
+A designer/implementer of a new service is therefore free to choose the
 databases s/he is interested in and leave the rest for later (or
 completely aside).
 
