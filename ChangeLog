@@ -1,5 +1,9 @@
 2012-10-29  Pino Toscano  <toscano.pino@tiscali.it>
 
+	* sysdeps/mach/hurd/fdatasync.c: Turn ERR into EINVAL if it is
+	EOPNOTSUPP.
+	* sysdeps/mach/hurd/fsync.c: Likewise.
+
 	* sysdeps/pthread/aio_notify.c (__aio_notify_only)
 	[_POSIX_REALTIME_SIGNALS]: Change condition to
 	[_POSIX_REALTIME_SIGNALS > 0].
