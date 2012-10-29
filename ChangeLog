@@ -1,3 +1,9 @@
+2012-10-29  Pino Toscano  <toscano.pino@tiscali.it>
+
+	* sysdeps/pthread/aio_notify.c (__aio_notify_only)
+	[_POSIX_REALTIME_SIGNALS]: Change condition to
+	[_POSIX_REALTIME_SIGNALS > 0].
+
 2012-10-27  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/x86/bits/fcntl.h (__O_LARGEFILE)
