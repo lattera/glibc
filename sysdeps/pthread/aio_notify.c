@@ -95,7 +95,7 @@ __aio_notify_only (struct sigevent *sigev)
   else if (sigev->sigev_notify == SIGEV_SIGNAL)
     {
       /* We have to send a signal.  */
-#if _POSIX_REALTIME_SIGNALS
+#if _POSIX_REALTIME_SIGNALS > 0
       /* Note that the standard gives us the option of using a plain
 	 non-queuing signal here when SA_SIGINFO is not set for the signal.  */
 # ifdef BROKEN_THREAD_SIGNALS

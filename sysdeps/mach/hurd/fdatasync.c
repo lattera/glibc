@@ -26,6 +26,12 @@ fdatasync (int fd)
 {
   error_t err = HURD_DPORT_USE (fd, __file_sync (port, 1, 1));
   if (err)
-    return __hurd_dfail (fd, err);
+    {
+      if (err == EOPNOTSUPP)
+	/* If the file descriptor does not support sync, return EINVAL
+	   as POSIX specifies.  */
+	err = EINVAL;
+      return __hurd_dfail (fd, err);
+    }
   return 0;
 }
