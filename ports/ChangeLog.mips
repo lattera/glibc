@@ -1,3 +1,31 @@
+2012-10-29  Steve Ellcey  <sellcey@mips.com>
+
+	* sysdeps/unix/sysv/linux/mips/mips32/Makefile: Remove.
+	* sysdeps/unix/sysv/linux/mips/mips64/n32/Makefile: Remove.
+	* sysdeps/unix/sysv/linux/mips/mips64/n64/Makefile: Remove.
+	* sysdeps/unix/sysv/linux/mips/configure.in: Create default_abi.make.
+	* sysdeps/unix/sysv/linux/mips/configure: Regenerate.
+	* sysdeps/unix/sysv/linux/mips/Makefile: Include default_abi.make.
+	(abi-variants): Add hard and soft float versions.
+	(abi-o32-options): Remove.
+	(abi-o32-condition): Remove.
+	(abi-n32-options): Remove.
+	(abi-n32-condition): Remove.
+	(abi-n64-options): Remove.
+	(abi-n64-condition): Remove.
+	(abi-o32_soft-options): New.
+	(abi-o32_soft-condition): New.
+	(abi-o32_hard-options): New.
+	(abi-o32_hard-condition): New.
+	(abi-n32_soft-options): New.
+	(abi-n32_soft-condition): New.
+	(abi-n32_hard-options): New.
+	(abi-n32_hard-condition): New.
+	(abi-n64_soft-options): New.
+	(abi-n64_soft-condition): New.
+	(abi-n64_hard-options): New.
+	(abi-n64_hard-condition): New.
+
 2012-10-19  Roland McGrath  <roland@hack.frob.com>
 
 	* sysdeps/unix/sysv/linux/mips/mips32/nptl/libc.abilist

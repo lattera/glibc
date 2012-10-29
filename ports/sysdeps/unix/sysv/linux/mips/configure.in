@@ -2,6 +2,50 @@ sinclude(./aclocal.m4)dnl Autoconf lossage
 GLIBC_PROVIDES dnl See aclocal.m4 in the top level source directory.
 # Local configure fragment for sysdeps/unix/sysv/linux/mips.
 
+AC_COMPILE_IFELSE(
+  [AC_LANG_PROGRAM([
+    #if (_MIPS_SIM != _ABIO32)
+    #error Not O32 ABI
+    #endif])],
+  [libc_mips_abi=o32],
+  [AC_COMPILE_IFELSE(
+    [AC_LANG_PROGRAM([
+      #if (_MIPS_SIM != _ABIN32)
+      #error Not N32 ABI
+      #endif])],
+    [libc_mips_abi=n32],
+    [AC_COMPILE_IFELSE(
+      [AC_LANG_PROGRAM([
+        #if (_MIPS_SIM != _ABI64)
+        #error Not 64 ABI
+        #endif])],
+      [libc_mips_abi=n64],
+      [])])])
+
+if test -z "$libc_mips_abi"; then
+  AC_MSG_ERROR([could not determine what ABI the compiler is using])
+fi
+
+AC_COMPILE_IFELSE(
+  [AC_LANG_PROGRAM([
+    #if !defined(__mips_soft_float)
+    #error Not soft ABI
+    #endif])],
+  [libc_mips_float=soft],
+  [AC_COMPILE_IFELSE(
+    [AC_LANG_PROGRAM([
+      #if !defined(__mips_hard_float)
+      #error Not hard ABI
+      #endif])],
+    [libc_mips_float=hard],
+    [])])
+
+if test -z "$libc_mips_float"; then
+  AC_MSG_ERROR([could not determine if compiler is using hard or soft floating point ABI])
+fi
+
+echo "default-abi := ${libc_mips_abi}_${libc_mips_float}" > default-abi.make
+
 case "$prefix" in
 /usr | /usr/)
   # 64-bit libraries on bi-arch platforms go in /lib64 instead of /lib.
