@@ -50,6 +50,11 @@
 #define LLL_PRIVATE	0
 #define LLL_SHARED	FUTEX_PRIVATE_FLAG
 
+#ifndef __sparc32_atomic_do_lock
+/* Delay in spinlock loop.  */
+extern void __cpu_relax(void);
+#define BUSY_WAIT_NOP	__cpu_relax()
+#endif
 
 #if !defined NOT_IN_libc || defined IS_IN_rtld
 /* In libc.so or ld.so all futexes are private.  */
