@@ -1,3 +1,7 @@
+2012-10-29  Mike Frysinger  <vapier@gentoo.org>
+
+	* manual/message.texi: Delete @cartouche tags.
+
 2012-10-29  Pino Toscano  <toscano.pino@tiscali.it>
 
 	* sysdeps/mach/hurd/fdatasync.c: Turn ERR into EINVAL if it is

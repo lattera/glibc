@@ -699,7 +699,6 @@ Now we can start building the program (assume the message catalog source
 file is named @file{hello.msg} and the program source file @file{hello.c}):
 
 @smallexample
-@cartouche
 % gencat -H msgnrs.h -o hello.cat hello.msg
 % cat msgnrs.h
 #define MainSet 0x1     /* hello.msg:4 */
@@ -711,7 +710,6 @@ de
 % ./hello
 Hallo, Welt!
 %
-@end cartouche
 @end smallexample
 
 The call of the @code{gencat} program creates the missing header file
