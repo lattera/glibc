@@ -27,11 +27,12 @@ shopt -s nullglob
 
 # Search all dependency files for file names in the include directory.
 # There are a few system headers we are known to use.
+# These include Linux kernel headers (asm*, arch, and linux).
 exec ${AWK} -v includedir="$includedir" '
 BEGIN {
   status = 0
   exclude = "^" includedir \
-    "/(.*-.*-.*/|)(asm[-/]|linux/|selinux/|gd|nss3/|sys/(capability|sdt(|-config))\\.h|libaudit\\.h)"
+    "/(.*-.*-.*/|)(asm[-/]|arch|linux/|selinux/|gd|nss3/|sys/(capability|sdt(|-config))\\.h|libaudit\\.h)"
 }
 /^[^ ]/ && $1 ~ /.*:/ { obj = $1 }
 {
