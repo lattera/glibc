@@ -1,3 +1,8 @@
+2012-10-30  Aurelien Jarno  <aurelien@aurel32.net>
+	    Joseph Myers  <joseph@codesourcery.com>
+
+	* Makefile (tst-cancel7-ARGS): Use exec in --command argument.
+
 2012-10-28  David S. Miller  <davem@davemloft.net>
 
 	* sysdeps/unix/sysv/linux/sparc/lowlevellock.h (BUSY_WAIT_NOP):
