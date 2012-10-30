@@ -1,3 +1,7 @@
+2012-10-30  Chris Metcalf  <cmetcalf@tilera.com>
+
+	* sysdeps/tile/libm-test-ulps: Account for new tests.
+
 2012-10-26  Chris Metcalf  <cmetcalf@tilera.com>
 
 	* sysdeps/unix/sysv/linux/tile/Makefile (sysdep_routines):
