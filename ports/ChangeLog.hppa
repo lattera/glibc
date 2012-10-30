@@ -1,5 +1,11 @@
 2012-10-29  Carlos O'Donell  <carlos@systemhalted.org>
 
+	* sysdeps/unix/sysv/linux/hppa/sysdep.h (ENTRY): Add cfi_startproc.
+	Use .cfi_offset for rp store.
+	(ENTRY_LEAF): Likewise.
+	(END) Add cfi_Endproc.
+	(DO_CALL): Add cfi directives.
+
 	* sysdeps/unix/sysv/linux/hppa/sysdep.h: Document register clobbering.
 	[PIC](TREG, SAVE_PIC, LOAD_PIC, TREG_ASM, SAVE_ASM_PIC, LOAD_ASM_PIC
 	CLOB_TREG, PIC_REG_DEF, PIC_REG_USE): Move...

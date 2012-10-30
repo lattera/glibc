@@ -120,12 +120,14 @@
 	.align ALIGNARG(4)				ASM_LINE_SEP	\
 	.export C_SYMBOL_NAME(name)			ASM_LINE_SEP	\
 	.type	C_SYMBOL_NAME(name),@function		ASM_LINE_SEP	\
+	cfi_startproc					ASM_LINE_SEP	\
 	C_LABEL(name)					ASM_LINE_SEP	\
 	.PROC						ASM_LINE_SEP	\
 	.CALLINFO FRAME=64,CALLS,SAVE_RP,ENTRY_GR=3	ASM_LINE_SEP	\
 	.ENTRY						ASM_LINE_SEP	\
 	/* SAVE_RP says we do */			ASM_LINE_SEP	\
 	stw %rp, -20(%sr0,%sp)				ASM_LINE_SEP	\
+	.cfi_offset 2, -20				ASM_LINE_SEP	\
 	/*FIXME: Call mcount? (carefull with stack!) */
 
 /* Some syscall wrappers do not call other functions, and
@@ -135,18 +137,21 @@
 	.align ALIGNARG(4)				ASM_LINE_SEP	\
 	.export C_SYMBOL_NAME(name)			ASM_LINE_SEP	\
 	.type	C_SYMBOL_NAME(name),@function		ASM_LINE_SEP	\
+	cfi_startproc					ASM_LINE_SEP	\
 	C_LABEL(name)					ASM_LINE_SEP	\
 	.PROC						ASM_LINE_SEP	\
 	.CALLINFO FRAME=64,NO_CALLS,SAVE_RP,ENTRY_GR=3	ASM_LINE_SEP	\
 	.ENTRY						ASM_LINE_SEP	\
 	/* SAVE_RP says we do */			ASM_LINE_SEP	\
 	stw %rp, -20(%sr0,%sp)				ASM_LINE_SEP	\
+	.cfi_offset 2, -20				ASM_LINE_SEP	\
 	/*FIXME: Call mcount? (carefull with stack!) */
 
 #undef	END
 #define END(name)							\
   	.EXIT						ASM_LINE_SEP	\
 	.PROCEND					ASM_LINE_SEP	\
+	cfi_endproc					ASM_LINE_SEP	\
 .size	C_SYMBOL_NAME(name), .-C_SYMBOL_NAME(name)	ASM_LINE_SEP
 
 /* If compiled for profiling, call `mcount' at the start
@@ -278,8 +283,12 @@
 #define DO_CALL(syscall_name, args)				\
 	/* Create a frame */			ASM_LINE_SEP	\
 	stwm TREG, 64(%sp)			ASM_LINE_SEP	\
+	.cfi_offset TREG, 0			ASM_LINE_SEP	\
+	.cfi_adjust_cfa_offset 64		ASM_LINE_SEP	\
 	stw %sp, -4(%sp)			ASM_LINE_SEP	\
+	.cfi_offset 30, -4			ASM_LINE_SEP	\
 	stw %r19, -32(%sp)			ASM_LINE_SEP	\
+	.cfi_offset 19, -32			ASM_LINE_SEP	\
 	/* Save r19 */				ASM_LINE_SEP	\
 	SAVE_PIC(TREG)				ASM_LINE_SEP	\
 	/* Do syscall, delay loads # */		ASM_LINE_SEP	\
@@ -302,8 +311,10 @@
 L(pre_end):					ASM_LINE_SEP	\
 	/* Restore our frame, restoring TREG */	ASM_LINE_SEP	\
 	ldwm -64(%sp), TREG			ASM_LINE_SEP	\
+	.cfi_adjust_cfa_offset -64		ASM_LINE_SEP	\
 	/* Restore return pointer */		ASM_LINE_SEP	\
-	ldw -20(%sp),%rp			ASM_LINE_SEP
+	ldw -20(%sp),%rp			ASM_LINE_SEP	\
+	.cfi_restore 2				ASM_LINE_SEP
 
 /* We do nothing with the return, except hand it back to someone else */
 #undef  DO_CALL_NOERRNO
