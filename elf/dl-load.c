@@ -1580,6 +1580,10 @@ cannot enable executable stack as shared object requires");
     add_name_to_object (l, ((const char *) D_PTR (l, l_info[DT_STRTAB])
 			    + l->l_info[DT_SONAME]->d_un.d_val));
 
+#ifdef DL_AFTER_LOAD
+  DL_AFTER_LOAD (l);
+#endif
+
   /* Now that the object is fully initialized add it to the object list.  */
   _dl_add_to_namespace_list (l, nsid);
 

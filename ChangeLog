@@ -1,5 +1,8 @@
 2012-10-30  Chris Metcalf  <cmetcalf@tilera.com>
 
+	* elf/dl-load.c (_dl_map_object_from_fd): Call DL_AFTER_LOAD
+	if defined.
+
 	* nss/nsswitch.h (nss_interface_function): Provide new
 	macro for use with NSS functions.
 	* grp/initgroups.c: Use new macro.

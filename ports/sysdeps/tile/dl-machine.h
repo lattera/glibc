@@ -253,8 +253,8 @@ elf_machine_plt_value (struct link_map *map, const ElfW(Rela) *reloc,
 }
 
 /* Support notifying the simulator about new objects. */
-void internal_function _dl_arch_map_object (struct link_map *l);
-#define _dl_arch_map_object _dl_arch_map_object
+void internal_function _dl_after_load (struct link_map *l);
+#define DL_AFTER_LOAD _dl_after_load
 
 /* Names of the architecture-specific auditing callback functions.  */
 #define ARCH_LA_PLTENTER tile_gnu_pltenter

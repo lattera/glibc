@@ -30,7 +30,7 @@
 
 /* Support notifying the simulator about new objects. */
 void internal_function
-_dl_arch_map_object (struct link_map *l)
+_dl_after_load (struct link_map *l)
 {
   int shift;
 
@@ -75,5 +75,3 @@ _dl_unmap (struct link_map *l)
 
   __munmap ((void *) l->l_map_start, l->l_map_end - l->l_map_start);
 }
-
-#define DL_UNMAP(map) _dl_unmap (map)

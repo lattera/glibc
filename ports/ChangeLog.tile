@@ -1,5 +1,10 @@
 2012-10-30  Chris Metcalf  <cmetcalf@tilera.com>
 
+	* sysdeps/tile/dl-machine.h: Use new DL_AFTER_LOAD macro
+	and rename _dl_arch_map_object to _dl_after_load.
+	* sysdeps/tile/dl-runtime.c: Rename _dl_arch_map_object
+	to _dl_after_load and remove spurious DL_UNMAP definition.
+
 	* sysdeps/unix/sysv/linux/tile/init-first.c: Use better #include.
 	* sysdeps/unix/sysv/linux/tile/gettimeofday.c: Use gettimeofday
 	aliases that match existing tile ABI.
