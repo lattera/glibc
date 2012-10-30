@@ -34,7 +34,7 @@ init_2 (void)
   write (STDOUT_FILENO, "DSO init array 2\n", 17);
 }
 
-void (*const init_array []) (void)
+void (*init_array []) (void)
      __attribute__ ((section (".init_array"), aligned (sizeof (void *)))) =
 {
   &init_0,
@@ -60,7 +60,7 @@ fini_2 (void)
   write (STDOUT_FILENO, "DSO fini array 2\n", 17);
 }
 
-void (*const fini_array []) (void)
+void (*fini_array []) (void)
      __attribute__ ((section (".fini_array"), aligned (sizeof (void *)))) =
 {
   &fini_0,

@@ -1,3 +1,11 @@
+2012-10-29  Andreas Jaeger  <aj@suse.de>
+
+	* elf/tst-array1.c (fini_array): Make writeable so that it can be
+	merged with constructor/destructor.
+	(init_array): Likewise.
+	* elf/tst-array2dep.c (fini_array): Likewise.
+	(init_array): Likewise.
+
 2012-10-29  Mike Frysinger  <vapier@gentoo.org>
 
 	* manual/message.texi: Delete @cartouche tags.
