@@ -1,5 +1,9 @@
 2012-10-30  Chris Metcalf  <cmetcalf@tilera.com>
 
+	* sysdeps/unix/sysv/linux/tile/init-first.c: Use better #include.
+	* sysdeps/unix/sysv/linux/tile/gettimeofday.c: Use gettimeofday
+	aliases that match existing tile ABI.
+
 	* sysdeps/tile/libm-test-ulps: Account for new tests.
 
 2012-10-26  Chris Metcalf  <cmetcalf@tilera.com>

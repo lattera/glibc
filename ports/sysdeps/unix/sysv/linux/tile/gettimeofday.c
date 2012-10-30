@@ -19,8 +19,6 @@
 #include <stddef.h>
 #include <sys/time.h>
 #include <time.h>
-
-#undef __gettimeofday
 #include <bits/libc-vdso.h>
 
 int
@@ -34,5 +32,6 @@ __gettimeofday (struct timeval *tv, struct timezone *tz)
   return INLINE_SYSCALL (gettimeofday, 2, tv, tz);
 }
 
-strong_alias (__gettimeofday, __gettimeofday_internal)
+libc_hidden_def (__gettimeofday)
 weak_alias (__gettimeofday, gettimeofday)
+libc_hidden_weak (gettimeofday)
