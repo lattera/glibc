@@ -1,3 +1,12 @@
+2012-09-25  Jason Gunthorpe  <jgunthorpe@obsidianresearch.com>
+	    Ryan S. Arnold  <rsa@linux.vnet.ibm.com>
+
+	[BZ #14595]
+	* sysdeps/powerpc/powerpc32/476/memset.S: New file copied from
+	405/memset.S to preserve 128-byte cacheline size.
+	* sysdeps/powerpc/powerpc32/405/memset.S (memset): Fix cacheline size
+	to 32-bytes for 405, 440, and 464 processors.
+
 2012-10-19  Roland McGrath  <roland@hack.frob.com>
 
 	* sysdeps/unix/sysv/linux/powerpc/powerpc32/nofpu/nptl/libc.abilist

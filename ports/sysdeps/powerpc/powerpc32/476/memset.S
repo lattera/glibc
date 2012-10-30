@@ -1,5 +1,5 @@
-/* Optimized memset for PowerPC405,440,464 (32-byte cacheline).
-   Copyright (C) 2012 Free Software Foundation, Inc.
+/* Optimized memset for PowerPC476 (128-byte cacheline).
+   Copyright (C) 2010 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -104,7 +104,7 @@ L(use_dcbz):
        add     r3,r3,r7
 
 L(skip_string_loop):
-       clrlwi  r8,r6,27
+       clrlwi  r8,r6,25
        srwi.   r8,r8,4
        beq     L(dcbz_pre_loop)
        mtctr   r8
@@ -119,14 +119,14 @@ L(word_loop):
        bdnz    L(word_loop)
 
 L(dcbz_pre_loop):
-       srwi    r6,r5,5
+       srwi    r6,r5,7
        mtctr   r6
        addi    r7,0,0
 
 L(dcbz_loop):
        dcbz    r3,r7
-       addi    r3,r3,0x20
-       subi    r5,r5,0x20
+       addi    r3,r3,0x80
+       subi    r5,r5,0x80
        bdnz    L(dcbz_loop)
        srwi.   r6,r5,4
        beq     L(postword2_count_loop)
