@@ -7,12 +7,13 @@
 # Oleg Tihonov <ost@tatnipi.ru>, 2005, 2007.
 # Dimitriy Ryazantcev <DJm00n@mail.ru>, 2009.
 # Pavel Maryanov <acid_jack@ukr.net>, 2009.
+# Dmitry V. Levin <ldv@altlinux.org>, 2012.
 # Yuri Kozlov <yuray@komyakino.ru>, 2009, 2011, 2012.
 msgid ""
 msgstr ""
 "Project-Id-Version: libc 2.16-pre1\n"
 "POT-Creation-Date: 2012-06-21 07:51-0700\n"
-"PO-Revision-Date: 2012-07-15 11:30+0400\n"
+"PO-Revision-Date: 2012-10-15 18:38+0400\n"
 "Last-Translator: Yuri Kozlov <yuray@komyakino.ru>\n"
 "Language-Team: Russian <gnu@mx.ru>\n"
 "Language: ru\n"
@@ -220,7 +221,7 @@ msgstr "неверный экранирующий знак"
 #: catgets/gencat.c:573
 #, c-format
 msgid "unknown directive `%s': line ignored"
-msgstr "неизвестная директива «%s»: строка игнорирована"
+msgstr "неизвестная директива «%s»: строка проигнорирована"
 
 #: catgets/gencat.c:618
 msgid "duplicated message number"
@@ -232,7 +233,7 @@ msgstr "повторный идентификатор сообщения"
 
 #: catgets/gencat.c:726
 msgid "invalid character: message ignored"
-msgstr "недопустимый знак: сообщение игнорировано"
+msgstr "недопустимый знак: сообщение проигнорировано"
 
 #: catgets/gencat.c:769
 msgid "invalid line"
@@ -240,7 +241,7 @@ msgstr "неверная строка"
 
 #: catgets/gencat.c:823
 msgid "malformed line ignored"
-msgstr "неправильная строка игнорирована"
+msgstr "неправильная строка проигнорирована"
 
 #: catgets/gencat.c:987 catgets/gencat.c:1028
 #, c-format
@@ -697,7 +698,7 @@ msgstr "RTLD_NEXT использовано в не динамически заг
 
 #: elf/dl-sysdep.c:488 elf/dl-sysdep.c:500
 msgid "cannot create capability list"
-msgstr "невозможно создать список возможностей"
+msgstr "невозможно создать capability list"
 
 #: elf/dl-tls.c:872
 msgid "cannot create TLS data structures"
@@ -831,7 +832,7 @@ msgstr "Невозможно выполнить lstat %s"
 #: elf/ldconfig.c:601
 #, c-format
 msgid "Ignored file %s since it is not a regular file."
-msgstr "Файл %s игнорирован, поскольку это не обычный файл"
+msgstr "Файл %s проигнорирован, поскольку не является обычным файлом"
 
 #: elf/ldconfig.c:610
 #, c-format
@@ -2867,17 +2868,17 @@ msgstr "Добавление %s\n"
 #: locale/programs/locarchive.c:1281
 #, c-format
 msgid "stat of \"%s\" failed: %s: ignored"
-msgstr "операция stat для «%s» завершилась неудачно: %s: игнорировано"
+msgstr "операция stat для «%s» завершилась неудачно: %s: проигнорировано"
 
 #: locale/programs/locarchive.c:1287
 #, c-format
 msgid "\"%s\" is no directory; ignored"
-msgstr "«%s» не является каталогом; игнорировано"
+msgstr "«%s» не является каталогом; проигнорировано"
 
 #: locale/programs/locarchive.c:1294
 #, c-format
 msgid "cannot open directory \"%s\": %s: ignored"
-msgstr "невозможно открыть каталог «%s»: %s: игнорировано"
+msgstr "невозможно открыть каталог «%s»: %s: проигнорировано"
 
 #: locale/programs/locarchive.c:1366
 #, c-format
@@ -2887,7 +2888,7 @@ msgstr "неполный набор файлов локали в «%s»"
 #: locale/programs/locarchive.c:1430
 #, c-format
 msgid "cannot read all files in \"%s\": ignored"
-msgstr "невозможно прочитать все файлы в «%s»: игнорировано"
+msgstr "невозможно прочитать все файлы в «%s»: проигнорировано"
 
 #: locale/programs/locarchive.c:1500
 #, c-format
@@ -4358,7 +4359,7 @@ msgstr "Не удалось открыть соединение с подсис�
 
 #: nscd/selinux.c:181
 msgid "Failed to set keep-capabilities"
-msgstr "Не удалось установить возможности хранения"
+msgstr "Не удалось установить keep-capabilities"
 
 #: nscd/selinux.c:182 nscd/selinux.c:245
 #, c-format
@@ -4367,7 +4368,7 @@ msgstr "prctl(KEEPCAPS) завершился неудачно"
 
 #: nscd/selinux.c:196
 msgid "Failed to initialize drop of capabilities"
-msgstr "Не удалось инициализировать возможности сброса"
+msgstr "Не удалось инициализировать сброс capabilities"
 
 #: nscd/selinux.c:197
 #, c-format
@@ -4376,7 +4377,7 @@ msgstr "cap_init завершился неудачно"
 
 #: nscd/selinux.c:218 nscd/selinux.c:235
 msgid "Failed to drop capabilities"
-msgstr "Не удалось сбросить возможности"
+msgstr "Не удалось сбросить capabilities"
 
 #: nscd/selinux.c:219 nscd/selinux.c:236
 #, c-format
@@ -4385,7 +4386,7 @@ msgstr "cap_set_proc завершился неудачно"
 
 #: nscd/selinux.c:244
 msgid "Failed to unset keep-capabilities"
-msgstr "Не удалось снять возможности хранения"
+msgstr "Не удалось снять keep-capabilities"
 
 #: nscd/selinux.c:260
 msgid "Failed to determine if kernel supports SELinux"
@@ -4828,7 +4829,7 @@ msgstr "%s: строка %d: неправильная команда «%s»\n"
 #: resolv/res_hconf.c:280
 #, c-format
 msgid "%s: line %d: ignoring trailing garbage `%s'\n"
-msgstr "%s: строка %d: игнорирован мусор в конце «%s»\n"
+msgstr "%s: строка %d: проигнорирован мусор в конце «%s»\n"
 
 #: stdio-common/psiginfo-data.h:2
 msgid "Illegal opcode"
@@ -5776,7 +5777,7 @@ msgstr "Потеря ресурса"
 #. TRANS or processes with special privileges can perform the operation.
 #: sysdeps/gnu/errlist.c:25
 msgid "Operation not permitted"
-msgstr "Операция не позволяется"
+msgstr "Операция не позволена"
 
 #. TRANS No process matches the specified process ID.
 #: sysdeps/gnu/errlist.c:45
@@ -5948,7 +5949,7 @@ msgstr "Файл слишком велик"
 #. TRANS disk is full.
 #: sysdeps/gnu/errlist.c:317
 msgid "No space left on device"
-msgstr "На устройстве кончилось место"
+msgstr "На устройстве не осталось свободного места"
 
 #. TRANS Invalid seek operation (such as on a pipe).
 #: sysdeps/gnu/errlist.c:326
@@ -6053,7 +6054,7 @@ msgstr "Сообщение слишком длинное"
 #. TRANS The socket type does not support the requested communications protocol.
 #: sysdeps/gnu/errlist.c:483
 msgid "Protocol wrong type for socket"
-msgstr "Неподдерживаемый для сокета тип протокола"
+msgstr "Неподдерживаемый тип протокола для сокета"
 
 #. TRANS You specified a socket option that doesn't make sense for the
 #. TRANS particular protocol being used by the socket.  @xref{Socket Options}.
@@ -6120,19 +6121,19 @@ msgstr "Сеть недоступна"
 #. TRANS A network connection was reset because the remote host crashed.
 #: sysdeps/gnu/errlist.c:594
 msgid "Network dropped connection on reset"
-msgstr "Сетевое соединение было сброшено"
+msgstr "Сетевое соединение было разорвано"
 
 #. TRANS A network connection was aborted locally.
 #: sysdeps/gnu/errlist.c:603
 msgid "Software caused connection abort"
-msgstr "Программа вызвала сброс соединения"
+msgstr "Программа вызвала разрыв соединения"
 
 #. TRANS A network connection was closed for reasons outside the control of the
 #. TRANS local host, such as by the remote machine rebooting or an unrecoverable
 #. TRANS protocol violation.
 #: sysdeps/gnu/errlist.c:614
 msgid "Connection reset by peer"
-msgstr "Соединение сброшено другой стороной"
+msgstr "Соединение разорвано другой стороной"
 
 #. TRANS The kernel's buffers for I/O operations are all in use.  In GNU, this
 #. TRANS error is always synonymous with @code{ENOMEM}; you may get one or the
@@ -6165,7 +6166,7 @@ msgstr "Требуется указать адрес назначения"
 #. TRANS The socket has already been shut down.
 #: sysdeps/gnu/errlist.c:667
 msgid "Cannot send after transport endpoint shutdown"
-msgstr "Невозможно послать данные после выключения конечной точки передачи"
+msgstr "Невозможно отправить данные после выключения конечной точки передачи"
 
 #. TRANS ???
 #: sysdeps/gnu/errlist.c:676
@@ -6250,7 +6251,7 @@ msgstr "Это удаленный объект"
 #. TRANS ???
 #: sysdeps/gnu/errlist.c:808
 msgid "RPC struct is bad"
-msgstr " RPC неправильная структура"
+msgstr "RPC неправильная структура"
 
 #. TRANS ???
 #: sysdeps/gnu/errlist.c:817
@@ -6328,7 +6329,7 @@ msgstr "Не поддерживается"
 #. TRANS or an incomplete sequence of bytes or the given wide character is invalid.
 #: sysdeps/gnu/errlist.c:930
 msgid "Invalid or incomplete multibyte or wide character"
-msgstr "Неверный или неполный мультибайтный или широкий знак"
+msgstr "Неверный или неполный мультибайтный или широкий символ"
 
 #. TRANS On @gnuhurdsystems{}, servers supporting the @code{term} protocol return
 #. TRANS this error for certain operations when the caller is not in the
@@ -6362,7 +6363,7 @@ msgstr "На этот раз вы всех опрокинули"
 #. TRANS Go home and have a glass of warm, dairy-fresh milk.
 #: sysdeps/gnu/errlist.c:984
 msgid "Computer bought the farm"
-msgstr "Компьютер купил ферму"
+msgstr "Компьютер отбросил копыта"
 
 #. TRANS This error code has no purpose.
 #: sysdeps/gnu/errlist.c:993
@@ -6555,7 +6556,7 @@ msgstr "Структуру необходимо почистить"
 
 #: sysdeps/gnu/errlist.c:1365
 msgid "Not a XENIX named type file"
-msgstr "Тип файла не назван XENIX"
+msgstr "Не является файлом именованного типа XENIX"
 
 #: sysdeps/gnu/errlist.c:1373
 msgid "No XENIX semaphores available"
@@ -6563,7 +6564,7 @@ msgstr "Семафоры XENIX недоступны"
 
 #: sysdeps/gnu/errlist.c:1381
 msgid "Is a named type file"
-msgstr "Является файлом имен типов"
+msgstr "Является файлом именованного типа"
 
 #: sysdeps/gnu/errlist.c:1389
 msgid "Remote I/O error"
