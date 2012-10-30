@@ -20,7 +20,6 @@
 
 #include <asm/unistd.h>
 #include <sysdeps/generic/sysdep.h>
-#include <sys/syscall.h>
 
 /* In order to get __set_errno() definition in INLINE_SYSCALL.  */
 #ifndef __ASSEMBLER__
@@ -168,9 +167,7 @@
    which means
 	ENTRY(name)
 	DO_CALL(...)
-	nop
-	bv 0(2)
-	nop
+	bv,n 0(2)
 */
 
 #define	PSEUDO(name, syscall_name, args)			\
@@ -178,8 +175,7 @@
   /* If necc. load args from stack */		ASM_LINE_SEP	\
   DOARGS_##args					ASM_LINE_SEP	\
   DO_CALL (syscall_name, args)			ASM_LINE_SEP	\
-  UNDOARGS_##args				ASM_LINE_SEP	\
-  nop						ASM_LINE_SEP
+  UNDOARGS_##args				ASM_LINE_SEP
 
 #define ret \
   /* Return value set by ERRNO code */		ASM_LINE_SEP	\
@@ -194,8 +190,7 @@
   ENTRY_LEAF (name)				ASM_LINE_SEP	\
   DOARGS_##args					ASM_LINE_SEP	\
   DO_CALL_NOERRNO (syscall_name, args)		ASM_LINE_SEP	\
-  UNDOARGS_##args				ASM_LINE_SEP	\
-  nop						ASM_LINE_SEP
+  UNDOARGS_##args				ASM_LINE_SEP
 
 #define ret_NOERRNO ret
 
@@ -209,8 +204,7 @@
   ENTRY_LEAF (name)				ASM_LINE_SEP	\
   DOARGS_##args					ASM_LINE_SEP	\
   DO_CALL_ERRVAL (syscall_name, args)		ASM_LINE_SEP	\
-  UNDOARGS_##args				ASM_LINE_SEP	\
-  nop						ASM_LINE_SEP
+  UNDOARGS_##args				ASM_LINE_SEP
 
 #define ret_ERRVAL ret
 

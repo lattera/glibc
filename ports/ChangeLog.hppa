@@ -1,5 +1,11 @@
 2012-10-29  Carlos O'Donell  <carlos@systemhalted.org>
 
+	* sysdeps/unix/sysv/linux/hppa/sysdep.h: Don't include sys/syscall.h.
+	Document nop removal.
+	(PSEUDO): Remove nop.
+	(PSEUDO_NOERRNO): Likeise.
+	(PSEUDO_ERRVAL): Likewise.
+
 	* sysdeps/unix/sysv/linux/hppa/sysdep.h: Remove trailing whitespace.
 
 2012-10-26  Andreas Jaeger  <aj@suse.de>
