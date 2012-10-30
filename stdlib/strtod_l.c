@@ -62,6 +62,7 @@ extern unsigned long long int ____strtoull_l_internal (const char *, char **,
 #include <string.h>
 #include <stdint.h>
 #include <rounding-mode.h>
+#include <tininess.h>
 
 /* The gmp headers need some configuration frobs.  */
 #define HAVE_ALLOCA 1
@@ -209,12 +210,15 @@ static FLOAT
 round_and_return (mp_limb_t *retval, intmax_t exponent, int negative,
 		  mp_limb_t round_limb, mp_size_t round_bit, int more_bits)
 {
+  int mode = get_rounding_mode ();
+
   if (exponent < MIN_EXP - 1)
     {
       if (exponent < MIN_EXP - 1 - MANT_DIG)
 	return underflow_value (negative);
 
       mp_size_t shift = MIN_EXP - 1 - exponent;
+      bool is_tiny = true;
 
       more_bits |= (round_limb & ((((mp_limb_t) 1) << round_bit) - 1)) != 0;
       if (shift == MANT_DIG)
@@ -248,6 +252,33 @@ round_and_return (mp_limb_t *retval, intmax_t exponent, int negative,
 	}
       else if (shift > 0)
 	{
+	  if (TININESS_AFTER_ROUNDING && shift == 1)
+	    {
+	      /* Whether the result counts as tiny depends on whether,
+		 after rounding to the normal precision, it still has
+		 a subnormal exponent.  */
+	      mp_limb_t retval_normal[RETURN_LIMB_SIZE];
+	      if (round_away (negative,
+			      (retval[0] & 1) != 0,
+			      (round_limb
+			       & (((mp_limb_t) 1) << round_bit)) != 0,
+			      (more_bits
+			       || ((round_limb
+				    & ((((mp_limb_t) 1) << round_bit) - 1))
+				   != 0)),
+			      mode))
+		{
+		  mp_limb_t cy = __mpn_add_1 (retval_normal, retval,
+					      RETURN_LIMB_SIZE, 1);
+
+		  if (((MANT_DIG % BITS_PER_MP_LIMB) == 0 && cy) ||
+		      ((MANT_DIG % BITS_PER_MP_LIMB) != 0 &&
+		       ((retval_normal[RETURN_LIMB_SIZE - 1]
+			& (((mp_limb_t) 1) << (MANT_DIG % BITS_PER_MP_LIMB)))
+			!= 0)))
+		    is_tiny = false;
+		}
+	    }
 	  round_limb = retval[0];
 	  round_bit = shift - 1;
 	  (void) __mpn_rshift (retval, retval, RETURN_LIMB_SIZE, shift);
@@ -259,13 +290,19 @@ round_and_return (mp_limb_t *retval, intmax_t exponent, int negative,
 # define DENORM_EXP (MIN_EXP - 2)
 #endif
       exponent = DENORM_EXP;
-      __set_errno (ERANGE);
+      if (is_tiny
+	  && ((round_limb & (((mp_limb_t) 1) << round_bit)) != 0
+	      || more_bits
+	      || (round_limb & ((((mp_limb_t) 1) << round_bit) - 1)) != 0))
+	{
+	  __set_errno (ERANGE);
+	  volatile FLOAT force_underflow_exception = MIN_VALUE * MIN_VALUE;
+	  (void) force_underflow_exception;
+	}
     }
 
   if (exponent > MAX_EXP)
     goto overflow;
-
-  int mode = get_rounding_mode ();
 
   if (round_away (negative,
 		  (retval[0] & 1) != 0,

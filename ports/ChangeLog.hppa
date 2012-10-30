@@ -1,3 +1,8 @@
+2012-10-30  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #14047]
+	* sysdeps/hppa/tininess.h: New file.
+
 2012-10-29  Carlos O'Donell  <carlos@systemhalted.org>
 
 	* sysdeps/unix/sysv/linux/hppa/sysdep.h (ENTRY): Add cfi_startproc.

@@ -1,3 +1,8 @@
+2012-10-30  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #14047]
+	* sysdeps/alpha/tininess.h: New file.
+
 2012-10-19  Roland McGrath  <roland@hack.frob.com>
 
 	* sysdeps/unix/sysv/linux/alpha/nptl/libc.abilist

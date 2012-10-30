@@ -1,3 +1,24 @@
+2012-10-30  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #14047]
+	* sysdeps/generic/tininess.h: New file.
+	* sysdeps/i386/tininess.h: Likewise.
+	* sysdeps/sh/tininess.h: Likewise.
+	* sysdeps/x86_64/tininess.h: Likewise.
+	* stdlib/tst-strtod-underflow.c: Likewise.
+	* stdlib/tst-tininess.c: Likewise.
+	* stdlib/strtod_l.c: Include <tininess.h>.
+	(round_and_return): Do not set errno for exact underflow cases.
+	Force an underflow exception when setting errno for underflow.
+	Determine underflow based on rounding to normal precision if
+	TININESS_AFTER_ROUNDING.
+	* stdlib/tst-strtod.c (tests): Do not expect errno to be set to
+	ERANGE for exact underflow cases.
+	* stdlib/Makefile (tests): Add tst-tininess and
+	tst-strtod-underflow.
+	($(objpfx)tst-tininess): Use $(link-libm).
+	($(objpfx)tst-strtod-underflow): Likewise.
+
 2012-10-30  Andreas Jaeger  <aj@suse.de>
 
 	[BZ#14767]

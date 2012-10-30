@@ -69,7 +69,8 @@ tests		:= tst-strtol tst-strtod testmb testrand testsort testdiv   \
 		   tst-makecontext tst-strtod4 tst-strtod5 tst-qsort2	    \
 		   tst-makecontext2 tst-strtod6 tst-unsetenv1		    \
 		   tst-makecontext3 bug-getcontext bug-fmtmsg1		    \
-		   tst-secure-getenv tst-strtod-overflow tst-strtod-round
+		   tst-secure-getenv tst-strtod-overflow tst-strtod-round   \
+		   tst-tininess tst-strtod-underflow
 tests-static	:= tst-secure-getenv
 
 include ../Makeconfig
@@ -151,3 +152,5 @@ link-libm = $(common-objpfx)math/libm.a
 endif
 $(objpfx)bug-getcontext: $(link-libm)
 $(objpfx)tst-strtod-round: $(link-libm)
+$(objpfx)tst-tininess: $(link-libm)
+$(objpfx)tst-strtod-underflow: $(link-libm)

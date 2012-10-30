@@ -1,3 +1,8 @@
+2012-10-30  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #14047]
+	* sysdeps/mips/tininess.h: New file.
+
 2012-10-29  Steve Ellcey  <sellcey@mips.com>
 
 	* sysdeps/unix/sysv/linux/mips/mips32/Makefile: Remove.
