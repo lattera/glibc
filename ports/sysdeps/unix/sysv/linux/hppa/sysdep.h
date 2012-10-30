@@ -1,6 +1,5 @@
 /* Assembler macros for PA-RISC.
-   Copyright (C) 1999, 2001, 2002, 2003, 2007 
-   Free Software Foundation, Inc.
+   Copyright (C) 1999-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper, <drepper@cygnus.com>, August 1999.
    Linux/PA-RISC changes by Philipp Rumpf, <prumpf@tux.org>, March 2000.
@@ -29,13 +28,13 @@
 #endif
 
 #undef ASM_LINE_SEP
-#define ASM_LINE_SEP ! 
+#define ASM_LINE_SEP !
 
 #undef SYS_ify
 #define SYS_ify(syscall_name)	(__NR_##syscall_name)
 
-/* WARNING: TREG must be a callee saves register so 
-   that it doesn't have to be restored after a call 
+/* WARNING: TREG must be a callee saves register so
+   that it doesn't have to be restored after a call
    to another function */
 #ifdef PIC
 # define TREG %r3
@@ -53,7 +52,7 @@
 # define SAVE_PIC(SREG) nop ASM_LINE_SEP
 # define LOAD_PIC(LREG) nop ASM_LINE_SEP
 /* Inline assembly defines */
-# define TREG_ASM 
+# define TREG_ASM
 # define SAVE_ASM_PIC	"nop \n"
 # define LOAD_ASM_PIC	"nop \n"
 # define CLOB_TREG
@@ -155,8 +154,8 @@
 	.PROCEND					ASM_LINE_SEP	\
 .size	C_SYMBOL_NAME(name), .-C_SYMBOL_NAME(name)	ASM_LINE_SEP
 
-/* If compiled for profiling, call `mcount' at the start 
-   of each function. No, don't bother.  gcc will put the 
+/* If compiled for profiling, call `mcount' at the start
+   of each function. No, don't bother.  gcc will put the
    call in for us.  */
 #define CALL_MCOUNT		/* Do nothing.  */
 
@@ -386,13 +385,13 @@ L(pre_end):					ASM_LINE_SEP	\
 /* INTERNAL_SYSCALL_DECL - Allows us to setup some function static
    value to use within the context of the syscall
    INTERNAL_SYSCALL_ERROR_P - Returns 0 if it wasn't an error, 1 otherwise
-   You are allowed to use the syscall result (val) and the DECL error 
+   You are allowed to use the syscall result (val) and the DECL error
    variable to determine what went wrong.
    INTERLAL_SYSCALL_ERRNO - Munges the val/err pair into the error number.
    In our case we just flip the sign. */
 
 #undef INTERNAL_SYSCALL_DECL
-#define INTERNAL_SYSCALL_DECL(err) 
+#define INTERNAL_SYSCALL_DECL(err)
 
 #undef INTERNAL_SYSCALL_ERROR_P
 #define INTERNAL_SYSCALL_ERROR_P(val, err) \
