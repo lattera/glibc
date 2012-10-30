@@ -1,4 +1,6 @@
-2012-10-29  Andreas Jaeger  <aj@suse.de>
+2012-10-30  Andreas Jaeger  <aj@suse.de>
+
+	* po/eo.po: Add Esperanto translation from translation project.
 
 	* elf/tst-array1.c (fini_array): Make writeable so that it can be
 	merged with constructor/destructor.
