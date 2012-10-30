@@ -115,19 +115,14 @@ $(inst_auditdir)/sotruss-lib.so: $(objpfx)sotruss-lib.so $(+force)
 	$(do-install-program)
 endif
 
-tests = tst-tls1 tst-tls2 tst-tls9 tst-leaks1
-ifeq (yes,$(have-initfini-array))
-tests += tst-array1 tst-array2 tst-array3 tst-array4 tst-array5
-endif
+tests = tst-tls1 tst-tls2 tst-tls9 tst-leaks1 \
+	tst-array1 tst-array2 tst-array3 tst-array4 tst-array5
 tests-static = tst-tls1-static tst-tls2-static tst-stackguard1-static \
-	       tst-leaks1-static
+	       tst-leaks1-static tst-array1-static tst-array5-static
 ifeq (yes,$(build-shared))
 tests-static += tst-tls9-static
 tst-tls9-static-ENV = \
        LD_LIBRARY_PATH=$(objpfx):$(common-objpfx):$(common-objpfx)dlfcn
-endif
-ifeq (yes,$(have-initfini-array))
-tests-static += tst-array1-static tst-array5-static
 endif
 tests += $(tests-static)
 ifeq (yes,$(build-shared))
@@ -215,10 +210,8 @@ modules-names = testobj1 testobj2 testobj3 testobj4 testobj5 testobj6 \
 		tst-initordera3 tst-initordera4 \
 		tst-initorder2a tst-initorder2b tst-initorder2c \
 		tst-initorder2d \
-		tst-relsort1mod1 tst-relsort1mod2
-ifeq (yes,$(have-initfini-array))
-modules-names += tst-array2dep tst-array5dep
-endif
+		tst-relsort1mod1 tst-relsort1mod2 tst-array2dep \
+		tst-array5dep
 ifeq (yesyes,$(have-fpie)$(build-shared))
 modules-names += tst-piemod1
 tests += tst-pie1

@@ -1,5 +1,12 @@
 2012-10-30  Andreas Jaeger  <aj@suse.de>
 
+	[BZ#14767]
+	* elf/Makefile (tests): Remove conditional for have-initfini-array
+	since this is now always required and the variable does not exist
+	anymore.
+	(tests-static): Likewise.
+	(modules-names): Likewise.
+
 	* po/eo.po: Add Esperanto translation from translation project.
 
 	* elf/tst-array1.c (fini_array): Make writeable so that it can be
