@@ -210,20 +210,14 @@ __fma (double x, double y, double z)
 	{
 	  /* v.ieee.mantissa1 & 2 is LSB bit of the result before rounding,
 	     v.ieee.mantissa1 & 1 is the round bit and j is our sticky
-	     bit.  In round-to-nearest 001 rounds down like 00,
-	     011 rounds up, even though 01 rounds down (thus we need
-	     to adjust), 101 rounds down like 10 and 111 rounds up
-	     like 11.  */
-	  if ((v.ieee.mantissa1 & 3) == 1)
-	    {
-	      v.d *= 0x1p-106;
-	      if (v.ieee.negative)
-		return v.d - 0x1p-1074 /* __DBL_DENORM_MIN__ */;
-	      else
-		return v.d + 0x1p-1074 /* __DBL_DENORM_MIN__ */;
-	    }
-	  else
-	    return v.d * 0x1p-106;
+	     bit.  */
+	  w.d = 0.0;
+	  w.ieee.mantissa1 = ((v.ieee.mantissa1 & 3) << 1) | j;
+	  w.ieee.negative = v.ieee.negative;
+	  v.ieee.mantissa1 &= ~3U;
+	  v.d *= 0x1p-106;
+	  w.d *= 0x1p-2;
+	  return v.d + w.d;
 	}
       v.ieee.mantissa1 |= j;
       return v.d * 0x1p-106;

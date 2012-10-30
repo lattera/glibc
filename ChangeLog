@@ -1,5 +1,18 @@
 2012-10-30  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #14152]
+	[BZ #14783]
+	* sysdeps/ieee754/dbl-64/s_fma.c (__fma): Extract low bits of
+	result and shift together with sticky bit instead of replicating
+	round-to-nearest rounding.
+	* sysdeps/ieee754/ldbl-128/s_fmal.c (__fmal): Likewise.
+	* sysdeps/ieee754/ldbl-96/s_fmal.c (__fmal): Likewise.
+	* math/libm-test.inc (fma_test): Add more tests.  Do not permit
+	missing underflow exceptions.
+	(fma_test_towardzero): Add more tests.
+	(fma_test_downward): Likewise.
+	(fma_test_upward): Likewise.
+
 	[BZ #14047]
 	* sysdeps/generic/tininess.h: New file.
 	* sysdeps/i386/tininess.h: Likewise.
