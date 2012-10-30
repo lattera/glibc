@@ -4217,7 +4217,7 @@ $as_echo_n "checking for assembler and linker STT_GNU_IFUNC support... " >&6; }
 if ${libc_cv_ld_gnu_indirect_function+:} false; then :
   $as_echo_n "(cached) " >&6
 else
-  cat > conftest.s <<EOF
+  cat > conftest.S <<EOF
 .type foo,%gnu_indirect_function
 foo:
 .globl _start
@@ -4225,12 +4225,16 @@ _start:
 .globl __start
 __start:
 .data
+#ifdef _LP64
+.quad foo
+#else
 .long foo
+#endif
 EOF
 libc_cv_ld_gnu_indirect_function=no
 if ${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS \
 	    -nostartfiles -nostdlib \
-	    -o conftest conftest.s 1>&5 2>&5; then
+	    -o conftest conftest.S 1>&5 2>&5; then
   # Do a link to see if the backend supports IFUNC relocs.
   $READELF -r conftest 1>&5
   LC_ALL=C $READELF -r conftest | grep 'no relocations' >/dev/null || {

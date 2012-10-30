@@ -1,3 +1,9 @@
+2012-11-18  Andreas Schwab  <schwab@linux-m68k.org>
+
+	* configure.in (libc_cv_ld_gnu_indirect_function): Use .quad on
+	64-bit targets.
+	* configure: Regenerated.
+
 2012-11-17  David S. Miller  <davem@davemloft.net>
 
 	[BZ #14811]
