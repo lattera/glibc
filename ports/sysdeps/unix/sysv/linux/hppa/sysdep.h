@@ -32,32 +32,28 @@
 #undef SYS_ify
 #define SYS_ify(syscall_name)	(__NR_##syscall_name)
 
+/* The vfork, fork, and clone syscalls clobber r19
+ * and r21. We list r21 as either clobbered or as an
+ * input to a 6-argument syscall. We must save and
+ * restore r19 in both PIC and non-PIC cases.
+ */
 /* WARNING: TREG must be a callee saves register so
    that it doesn't have to be restored after a call
    to another function */
-#ifdef PIC
-# define TREG %r3
-# define SAVE_PIC(SREG) copy %r19, SREG ASM_LINE_SEP
-# define LOAD_PIC(LREG) copy LREG, %r19 ASM_LINE_SEP
+#define TREG 4
+#define SAVE_PIC(SREG) \
+	copy %r19, SREG ASM_LINE_SEP	\
+	.cfi_register 19, SREG
+#define LOAD_PIC(LREG) \
+	copy LREG , %r19 ASM_LINE_SEP	\
+	.cfi_restore 19
 /* Inline assembly defines */
-# define TREG_ASM "%r4" /* Cant clobber r3, it holds framemarker */
-# define SAVE_ASM_PIC	"       copy %%r19, %" TREG_ASM "\n"
-# define LOAD_ASM_PIC	"       copy %" TREG_ASM ", %%r19\n"
-# define CLOB_TREG	TREG_ASM ,
-# define PIC_REG_DEF	register unsigned long __r19 asm("r19");
-# define PIC_REG_USE	, "r" (__r19)
-#else
-# define TREG %r3
-# define SAVE_PIC(SREG) nop ASM_LINE_SEP
-# define LOAD_PIC(LREG) nop ASM_LINE_SEP
-/* Inline assembly defines */
-# define TREG_ASM
-# define SAVE_ASM_PIC	"nop \n"
-# define LOAD_ASM_PIC	"nop \n"
-# define CLOB_TREG
-# define PIC_REG_DEF
-# define PIC_REG_USE
-#endif
+#define TREG_ASM "%r4" /* Cant clobber r3, it holds framemarker */
+#define SAVE_ASM_PIC	"       copy %%r19, %" TREG_ASM "\n"
+#define LOAD_ASM_PIC	"       copy %" TREG_ASM ", %%r19\n"
+#define CLOB_TREG	TREG_ASM ,
+#define PIC_REG_DEF	register unsigned long __r19 asm("r19");
+#define PIC_REG_USE	, "r" (__r19)
 
 #ifdef __ASSEMBLER__
 

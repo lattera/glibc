@@ -1,5 +1,14 @@
 2012-10-29  Carlos O'Donell  <carlos@systemhalted.org>
 
+	* sysdeps/unix/sysv/linux/hppa/sysdep.h: Document register clobbering.
+	[PIC](TREG, SAVE_PIC, LOAD_PIC, TREG_ASM, SAVE_ASM_PIC, LOAD_ASM_PIC
+	CLOB_TREG, PIC_REG_DEF, PIC_REG_USE): Move...
+	(TREG, SAVE_PIC, LOAD_PIC, TREG_ASM, SAVE_ASM_PIC, LOAD_ASM_PIC
+	CLOB_TREG, PIC_REG_DEF, PIC_REG_USE): ... to here.
+	[!PIC](TREG, SAVE_PIC, LOAD_PIC, TREG_ASM, SAVE_ASM_PIC, LOAD_ASM_PIC
+	CLOB_TREG, PIC_REG_DEF, PIC_REG_USE): Remove.
+	(TREG): Use r4.
+
 	* sysdeps/unix/sysv/linux/hppa/sysdep.h: Don't include sys/syscall.h.
 	Document nop removal.
 	(PSEUDO): Remove nop.
