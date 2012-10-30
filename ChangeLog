@@ -1,3 +1,14 @@
+2012-10-30  Chris Metcalf  <cmetcalf@tilera.com>
+
+	* nss/nsswitch.h (nss_interface_function): Provide new
+	macro for use with NSS functions.
+	* grp/initgroups.c: Use new macro.
+	* nss/getXXbyYY.c: Likewise.
+	* nss/getXXbyYY_r.c: Likewise.
+	* nss/getXXent.c: Likewise.
+	* nss/getXXent_r.c: Likewise.
+	* sysdeps/posix/getaddrinfo.c: Likewise.
+
 2012-10-30  Andreas Jaeger  <aj@suse.de>
 
 	* po/ru.po: Update Russion translation from translation project.

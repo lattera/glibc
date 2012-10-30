@@ -91,4 +91,4 @@ GETFUNC_NAME (void)
   return result;
 }
 
-static_link_warning (GETFUNC_NAME)
+nss_interface_function (GETFUNC_NAME)

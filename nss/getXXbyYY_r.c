@@ -349,4 +349,4 @@ do_default_symbol_version (NEW (REENTRANT_NAME),
 			   REENTRANT_NAME, GLIBC_2_1_2);
 #endif
 
-static_link_warning (REENTRANT_NAME)
+nss_interface_function (REENTRANT_NAME)

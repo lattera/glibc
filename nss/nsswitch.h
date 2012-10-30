@@ -107,6 +107,14 @@ enum
 /* Flags whether custom rules for database is set.  */
 extern bool __nss_database_custom[NSS_DBSIDX_max];
 
+/* Warning for NSS functions, which don't require dlopen if glibc
+   was built with --enable-static-nss.  */
+#ifdef DO_STATIC_NSS
+# define nss_interface_function(name)
+#else
+# define nss_interface_function(name) static_link_warning (name)
+#endif
+
 
 /* Interface functions for NSS.  */
 

@@ -151,4 +151,4 @@ done:
   return result;
 }
 
-static_link_warning (FUNCTION_NAME)
+nss_interface_function (FUNCTION_NAME)

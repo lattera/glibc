@@ -207,6 +207,6 @@ do_default_symbol_version (NEW (REENTRANT_GETNAME),
 			   REENTRANT_GETNAME, GLIBC_2_1_2);
 #endif
 
-static_link_warning (SETFUNC_NAME)
-static_link_warning (ENDFUNC_NAME)
-static_link_warning (REENTRANT_GETNAME)
+nss_interface_function (SETFUNC_NAME)
+nss_interface_function (ENDFUNC_NAME)
+nss_interface_function (REENTRANT_GETNAME)

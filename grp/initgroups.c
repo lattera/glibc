@@ -180,7 +180,7 @@ getgrouplist (const char *user, gid_t group, gid_t *groups, int *ngroups)
   return retval;
 }
 
-static_link_warning (getgrouplist)
+nss_interface_function (getgrouplist)
 
 /* Initialize the group set for the current user
    by reading the group database and using all groups
@@ -230,4 +230,4 @@ initgroups (const char *user, gid_t group)
 #endif
 }
 
-static_link_warning (initgroups)
+nss_interface_function (initgroups)
