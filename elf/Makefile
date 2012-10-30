@@ -846,45 +846,37 @@ LDFLAGS-tst-execstack-needed = -Wl,-z,noexecstack
 LDFLAGS-tst-execstack-prog = -Wl,-z,execstack
 endif
 
-$(objpfx)tst-array1.out: $(objpfx)tst-array1
-	$(elf-objpfx)$(rtld-installed-name) \
-	  --library-path $(rpath-link)$(patsubst %,:%,$(sysdep-library-path)) \
-	  $(objpfx)tst-array1 > $@
+$(objpfx)tst-array1.out: tst-array1.exp $(objpfx)tst-array1
+	$(built-program-cmd) > $@
 	cmp $@ tst-array1.exp > /dev/null
 
-$(objpfx)tst-array1-static.out: $(objpfx)tst-array1-static
-	$(objpfx)tst-array1-static > $@
+$(objpfx)tst-array1-static.out: tst-array1.exp $(objpfx)tst-array1-static
+	$(built-program-cmd) > $@
 	cmp $@ tst-array1.exp > /dev/null
 
 $(objpfx)tst-array2: $(objpfx)tst-array2dep.so
-$(objpfx)tst-array2.out: $(objpfx)tst-array2
-	$(elf-objpfx)$(rtld-installed-name) \
-	  --library-path $(rpath-link)$(patsubst %,:%,$(sysdep-library-path)) \
-	  $(objpfx)tst-array2 > $@
+$(objpfx)tst-array2.out: tst-array2.exp $(objpfx)tst-array2
+	$(built-program-cmd) > $@
 	cmp $@ tst-array2.exp > /dev/null
 
-$(objpfx)tst-array3.out: $(objpfx)tst-array3
-	$(elf-objpfx)$(rtld-installed-name) \
-	  --library-path $(rpath-link)$(patsubst %,:%,$(sysdep-library-path)) \
-	  $(objpfx)tst-array3 > $@
+$(objpfx)tst-array3.out: tst-array1.exp $(objpfx)tst-array3
+	$(built-program-cmd) > $@
 	cmp $@ tst-array1.exp > /dev/null
 
 $(objpfx)tst-array4: $(libdl)
-$(objpfx)tst-array4.out: $(objpfx)tst-array4 $(objpfx)tst-array2dep.so
-	$(elf-objpfx)$(rtld-installed-name) \
-	  --library-path $(rpath-link)$(patsubst %,:%,$(sysdep-library-path)) \
-	  $< > $@
+$(objpfx)tst-array4.out: tst-array4.exp $(objpfx)tst-array4 \
+			 $(objpfx)tst-array2dep.so
+	$(built-program-cmd) > $@
 	cmp $@ tst-array4.exp > /dev/null
 
 $(objpfx)tst-array5: $(objpfx)tst-array5dep.so
-$(objpfx)tst-array5.out: $(objpfx)tst-array5
-	$(elf-objpfx)$(rtld-installed-name) \
-	  --library-path $(rpath-link)$(patsubst %,:%,$(sysdep-library-path)) \
-	  $(objpfx)tst-array5 > $@
+$(objpfx)tst-array5.out: tst-array5.exp $(objpfx)tst-array5
+	$(built-program-cmd) > $@
 	cmp $@ tst-array5.exp > /dev/null
 
-$(objpfx)tst-array5-static.out: $(objpfx)tst-array5-static
-	$(objpfx)tst-array5-static > $@
+$(objpfx)tst-array5-static.out: tst-array5-static.exp \
+				$(objpfx)tst-array5-static
+	$(built-program-cmd) > $@
 	cmp $@ tst-array5-static.exp > /dev/null
 
 CFLAGS-tst-pie1.c += $(pie-ccflag)

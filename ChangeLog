@@ -1,3 +1,14 @@
+2012-10-30  Joseph Myers  <joseph@codesourcery.com>
+
+	* elf/Makefile ($(objpfx)tst-array1.out): Depend on comparison
+	input.  Use $(build-program-cmd).
+	($(objpfx)tst-array1-static.out): Likewise.
+	($(objpfx)tst-array2.out): Likewise.
+	($(objpfx)tst-array3.out): Likewise.
+	($(objpfx)tst-array4.out): Likewise.
+	($(objpfx)tst-array5.out): Likewise.
+	($(objpfx)tst-array5-static.out): Likewise.
+
 2012-10-30  Chris Metcalf  <cmetcalf@tilera.com>
 
 	* elf/dl-load.c (_dl_map_object_from_fd): Call DL_AFTER_LOAD
