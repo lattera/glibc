@@ -85,8 +85,8 @@ GLIBC_2.17
  clock_gettime F
  clock_nanosleep F
  clock_settime F
- secure_getenv F
  __ppc_get_timebase_freq F
+ secure_getenv F
 GLIBC_2.3
  GLIBC_2.3 A
  _Exit F
