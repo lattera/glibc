@@ -1,3 +1,9 @@
+2012-10-30  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/i386/tininess.h: Renamed to ...
+	* sysdeps/x86/tininess.h: This.
+	* sysdeps/x86_64/tininess.h: Removed.
+
 2012-10-30  Joseph Myers  <joseph@codesourcery.com>
 
 	* elf/Makefile ($(objpfx)tst-array1.out): Depend on comparison
