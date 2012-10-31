@@ -233,6 +233,17 @@ the newly built binaries of @theglibc{}.  The source and build
 directories must be visible at the same locations on both the build
 system and @var{hostname}.
 
+In general, when testing @theglibc{}, @samp{test-wrapper} may be set
+to the name and arguments of any program to run newly built binaries.
+This program must preserve the arguments to the binary being run, its
+working directory, all environment variables set as part of testing
+and the standard input, output and error file descriptors.  If
+@samp{@var{test-wrapper} env} will not work to run a program with
+environment variables set, then @samp{test-wrapper-env} must be set to
+a program that runs a newly built program with environment variable
+assignments in effect, those assignments being specified as
+@samp{@var{var}=@var{value}} before the name of the program to be run.
+
 
 @node Running make install
 @appendixsec Installing the C Library

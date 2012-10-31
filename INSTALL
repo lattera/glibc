@@ -204,6 +204,17 @@ HOSTNAME is the host name of a system that can run the newly built
 binaries of the GNU C Library.  The source and build directories must
 be visible at the same locations on both the build system and HOSTNAME.
 
+   In general, when testing the GNU C Library, `test-wrapper' may be set
+to the name and arguments of any program to run newly built binaries.
+This program must preserve the arguments to the binary being run, its
+working directory, all environment variables set as part of testing and
+the standard input, output and error file descriptors.  If
+`TEST-WRAPPER env' will not work to run a program with environment
+variables set, then `test-wrapper-env' must be set to a program that
+runs a newly built program with environment variable assignments in
+effect, those assignments being specified as `VAR=VALUE' before the
+name of the program to be run.
+
 Installing the C Library
 ========================
 

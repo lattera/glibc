@@ -1,5 +1,9 @@
 2012-10-31  Joseph Myers  <joseph@codesourcery.com>
 
+	* manual/install.texi (Configuring and compiling): Document
+	general use of test-wrapper and test-wrapper-env.
+	* INSTALL: Regenerated.
+
 	* sysdeps/ieee754/dbl-64/s_fma.c: Include <tininess.h>.
 	(__fma): Do not extract and scale down low bits on after-rounding
 	systems when result rounded to normal precision would have normal
