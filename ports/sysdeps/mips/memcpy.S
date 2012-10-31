@@ -1,8 +1,8 @@
 /* Copyright (C) 2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-  
+
    Contributed by MIPS Technologies, Inc.
-  
+
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
    License as published by the Free Software Foundation; either
@@ -109,7 +109,7 @@
  *
  * There are ifdef'ed sections of this memcpy to make sure that it does not
  * do prefetches on cache lines that are not going to be completely written.
- * This code is only needed and only used when PREFETCH_STORE_HINT is set to 
+ * This code is only needed and only used when PREFETCH_STORE_HINT is set to
  * PREFETCH_HINT_PREPAREFORSTORE.  This code assumes that cache lines are
  * 32 bytes and if the cache line is larger it will not work correctly.
  */
@@ -137,7 +137,7 @@
 
 /*
  * We double everything when USE_DOUBLE is true so we do 2 prefetches to
- * get 64 bytes in that case.  The assumption is that each individual 
+ * get 64 bytes in that case.  The assumption is that each individual
  * prefetch brings in 32 bytes.
  */
 #ifdef USE_DOUBLE
@@ -284,7 +284,7 @@ L(memcpy):
 /*
  * Now dst/src are both aligned to (word or double word) aligned addresses
  * Set a2 to count how many bytes we have to copy after all the 64/128 byte
- * chunks are copied and a3 to the dst pointer after all the 64/128 byte 
+ * chunks are copied and a3 to the dst pointer after all the 64/128 byte
  * chunks have been copied.  We will loop, incrementing a0 and a1 until a0
  * equals a3.
  */
