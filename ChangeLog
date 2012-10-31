@@ -1,5 +1,10 @@
 2012-10-31  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #14610]
+	* sysdeps/ieee754/ldbl-128ibm/e_atan2l.c (__ieee754_atan2l): Check
+	for low part of x being zero before using __atanl (y).
+	* math/libm-test.inc (atan2_test): Add another test.
+
 	* manual/install.texi (Configuring and compiling): Document
 	general use of test-wrapper and test-wrapper-env.
 	* INSTALL: Regenerated.

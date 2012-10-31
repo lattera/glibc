@@ -65,7 +65,8 @@ __ieee754_atan2l(long double y, long double x)
 	if(((ix)>0x7ff0000000000000LL)||
 	   ((iy)>0x7ff0000000000000LL))	/* x or y is NaN */
 	   return x+y;
-	if(((hx-0x3ff0000000000000LL))==0) return __atanl(y);   /* x=1.0L */
+	if(((hx-0x3ff0000000000000LL))==0
+	   && (lx&0x7fffffffffffffff)==0) return __atanl(y);   /* x=1.0L */
 	m = ((hy>>63)&1)|((hx>>62)&2);	/* 2*sign(x)+sign(y) */
 
     /* when y = 0 */
