@@ -22,6 +22,7 @@
 #include <fenv.h>
 #include <ieee754.h>
 #include <math_private.h>
+#include <tininess.h>
 
 /* This implementation uses rounding to odd to avoid problems with
    double rounding.  See a paper by Boldo and Melquiond:
@@ -209,6 +210,17 @@ __fmal (long double x, long double y, long double z)
 	 for proper rounding.  */
       if (v.ieee.exponent == 226)
 	{
+	  /* If the exponent would be in the normal range when
+	     rounding to normal precision with unbounded exponent
+	     range, the exact result is known and spurious underflows
+	     must be avoided on systems detecting tininess after
+	     rounding.  */
+	  if (TININESS_AFTER_ROUNDING)
+	    {
+	      w.d = a1 + u.d;
+	      if (w.ieee.exponent == 227)
+		return w.d * 0x1p-226L;
+	    }
 	  /* v.ieee.mantissa3 & 2 is LSB bit of the result before rounding,
 	     v.ieee.mantissa3 & 1 is the round bit and j is our sticky
 	     bit.  */

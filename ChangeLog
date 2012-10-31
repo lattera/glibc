@@ -1,3 +1,24 @@
+2012-10-31  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/ieee754/dbl-64/s_fma.c: Include <tininess.h>.
+	(__fma): Do not extract and scale down low bits on after-rounding
+	systems when result rounded to normal precision would have normal
+	exponent.
+	* sysdeps/ieee754/ldbl-128/s_fmal.c: Include <tininess.h>.
+	(__fmal): Do not extract and scale down low bits on after-rounding
+	systems when result rounded to normal precision would have normal
+	exponent.
+	* sysdeps/ieee754/ldbl-96/s_fmal.c: Include <tininess.h>.
+	(__fmal): Do not extract and scale down low bits on after-rounding
+	systems when result rounded to normal precision would have normal
+	exponent.
+	* math/libm-test.inc (UNDERFLOW_EXCEPTION_BEFORE_ROUNDING): New
+	macro.
+	(fma_test): Add more tests.
+	(fma_test_towardzero): Likewise.
+	(fma_test_downward): Likewise.
+	(fma_test_upward): Likewise.
+
 2012-10-30  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/i386/tininess.h: Renamed to ...
