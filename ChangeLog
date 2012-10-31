@@ -1,3 +1,7 @@
+2012-10-31  Thomas Schwinge  <thomas@codesourcery.com>
+
+	* rt/tst-shm.c (worker): Correct checking for mmap failure.
+
 2012-10-31  Andreas Schwab  <schwab@linux-m68k.org>
 
 	* sysdeps/unix/sysv/linux/powerpc/powerpc32/fpu/nptl/libc.abilist:

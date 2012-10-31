@@ -73,7 +73,7 @@ worker (int write_now)
     error (EXIT_FAILURE, 0, "size incorrect");
 
   mem = mmap (NULL, 4000, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
-  if (mem == NULL)
+  if (mem == MAP_FAILED)
     error (EXIT_FAILURE, 0, "mmap failed");
 
   ts.tv_sec = 0;
