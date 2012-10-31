@@ -1,3 +1,9 @@
+2012-10-31  Steve Ellcey  <sellcey@mips.com>
+
+	* sysdeps/mips/memcpy.S: Add prefetching and more unrolling, make
+	it work in 32 or 64 bit modes.
+	* sysdeps/mips/mips64/memcpy.S: Remove.
+
 2012-10-30  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #14047]
