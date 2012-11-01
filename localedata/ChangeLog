@@ -1,3 +1,7 @@
+2012-10-31  Joseph Myers  <joseph@codesourcery.com>
+
+	* Makefile [$(run-built-tests) = yes] (LOCALES): Add en_US.UTF-8.
+
 2012-10-23  Joseph Myers  <joseph@codesourcery.com>
 
 	* Makefile [$(cross-compiling) = no]: Change condition to
