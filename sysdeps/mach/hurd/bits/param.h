@@ -83,5 +83,3 @@
 
 #define	FSHIFT	11		/* Bits to right of fixed binary point.  */
 #define FSCALE	(1<<FSHIFT)
-
-#endif	 /* sys/param.h */

@@ -1,3 +1,7 @@
+2012-11-01  Thomas Schwinge  <thomas@codesourcery.com>
+
+	* sysdeps/mach/hurd/bits/param.h: Remove stray #endif.
+
 2012-10-31  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/sh/Makefile [$(subdir) = debug] (CFLAGS-backtrace.c):
@@ -2518,7 +2522,7 @@
 	* sysdeps/unix/sysv/linux/bits/param.h: New file.
 	* sysdeps/unix/sysv/linux/sys/param.h: File removed.
 	* sysdeps/mach/hurd/bits/param.h: New file.
-	* sysdeps/mach/hurd/sys/param.h: New file.
+	* sysdeps/mach/hurd/sys/param.h: File removed.
 
 	* elf/dl-close.c (_dl_close_worker): Add a cast and a comment to the
 	last change.
