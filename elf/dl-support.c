@@ -165,8 +165,8 @@ const ElfW(Ehdr) *_dl_sysinfo_dso;
 struct link_map *_dl_sysinfo_map;
 
 # include "get-dynamic-info.h"
-# include "setup-vdso.h"
 #endif
+#include "setup-vdso.h"
 
 /* During the program run we must not modify the global data of
    loaded shared object simultanously in two threads.  Therefore we

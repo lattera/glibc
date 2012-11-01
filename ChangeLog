@@ -1,5 +1,7 @@
 2012-11-01  Thomas Schwinge  <thomas@codesourcery.com>
 
+	* elf/dl-support.c: Unconditionally include "setup-vdso.h".
+
 	* sysdeps/mach/hurd/powerpc: Remove directory.
 	* sysdeps/mach/powerpc: Likewise.
 
