@@ -1,3 +1,8 @@
+2012-10-31  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/sh/Makefile [$(subdir) = debug] (CFLAGS-backtrace.c):
+	New variable.
+
 2012-10-31  Thomas Schwinge  <thomas@codesourcery.com>
 
 	* rt/tst-shm.c (worker): Correct checking for mmap failure.
