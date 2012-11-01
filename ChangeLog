@@ -1,3 +1,10 @@
+2012-11-01  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* catgets/test-gencat.sh (run_program_prefix): Renamed to ...
+	(run_program_cmd): This.
+	* localedata/tst-langinfo.sh (run_program_prefix): Removed.
+	(tst_langinfo): New variable.  Use it.
+
 2012-11-01  Sebastan Andrzej Siewior  <bigeasy@linutronix.de>
 
 	* sysdeps/powerpc/powerpc32/dl-trampoline.S: Put __NO_FPRS__ around
