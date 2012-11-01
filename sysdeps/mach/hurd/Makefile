@@ -167,11 +167,15 @@ $(objpfx)librtld.map: $(rpcuserlibs:.so=_pic.a)
 CFLAGS-dl-load.c = -DEXTERNAL_MAP_FROM_FD
 endif
 
-# We need these libs to link static programs in the libc source tree, too.
-link-libc-static := -Wl,-\( \
+# Override the generic Makeconfig values so we link against the RPC libs.
+link-libc-static := -Wl,--start-group \
 		    $(patsubst %,$(common-objpfx)%.a,\
 			       libc mach/libmachuser hurd/libhurduser) \
-		    $(static-gnulib) -Wl,-\)
+		    $(static-gnulib) -Wl,--end-group
+link-libc-static-tests := -Wl,--start-group \
+		    $(patsubst %,$(common-objpfx)%.a,\
+			       libc mach/libmachuser hurd/libhurduser) \
+		    $(static-gnulib-tests) -Wl,--end-group
 
 ifeq ($(subdir),csu)
 

@@ -1,5 +1,8 @@
 2012-11-01  Thomas Schwinge  <thomas@codesourcery.com>
 
+	* sysdeps/mach/hurd/Makefile (link-libc-static-tests): New
+	variable.
+
 	* elf/dl-support.c: Unconditionally include "setup-vdso.h".
 
 	* sysdeps/mach/hurd/powerpc: Remove directory.
