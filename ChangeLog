@@ -1,3 +1,8 @@
+2012-11-01  Thomas Schwinge  <thomas@codesourcery.com>
+
+	* libio/genops.c (_IO_flush_all_lockp): Use NULL rather than 0 for
+	__libc_cleanup_region_start argument.
+
 2012-11-01  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #14784]

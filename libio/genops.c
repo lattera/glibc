@@ -822,7 +822,7 @@ _IO_flush_all_lockp (int do_lock)
   int last_stamp;
 
 #ifdef _IO_MTSAFE_IO
-  __libc_cleanup_region_start (do_lock, flush_cleanup, 0);
+  __libc_cleanup_region_start (do_lock, flush_cleanup, NULL);
   if (do_lock)
     _IO_lock_lock (list_all_lock);
 #endif
