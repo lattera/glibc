@@ -56,16 +56,44 @@ __fma (double x, double y, double z)
       if (z == 0 && x != 0 && y != 0)
 	return x * y;
       /* If x or y or z is Inf/NaN, or if fma will certainly overflow,
-	 or if x * y is less than half of DBL_DENORM_MIN,
-	 compute as x * y + z.  */
+	 or if x * y is zero, compute as x * y + z.  */
       if (u.ieee.exponent == 0x7ff
 	  || v.ieee.exponent == 0x7ff
 	  || w.ieee.exponent == 0x7ff
 	  || u.ieee.exponent + v.ieee.exponent
 	     > 0x7ff + IEEE754_DOUBLE_BIAS
-	  || u.ieee.exponent + v.ieee.exponent
-	     < IEEE754_DOUBLE_BIAS - DBL_MANT_DIG - 2)
+	  || x == 0
+	  || y == 0)
 	return x * y + z;
+      /* If x * y is less than 1/4 of DBL_DENORM_MIN, neither the
+	 result nor whether there is underflow depends on its exact
+	 value, only on its sign.  */
+      if (u.ieee.exponent + v.ieee.exponent
+	  < IEEE754_DOUBLE_BIAS - DBL_MANT_DIG - 2)
+	{
+	  int neg = u.ieee.negative ^ v.ieee.negative;
+	  double tiny = neg ? -0x1p-1074 : 0x1p-1074;
+	  if (w.ieee.exponent >= 3)
+	    return tiny + z;
+	  /* Scaling up, adding TINY and scaling down produces the
+	     correct result, because in round-to-nearest mode adding
+	     TINY has no effect and in other modes double rounding is
+	     harmless.  But it may not produce required underflow
+	     exceptions.  */
+	  v.d = z * 0x1p54 + tiny;
+	  if (TININESS_AFTER_ROUNDING
+	      ? v.ieee.exponent < 55
+	      : (w.ieee.exponent == 0
+		 || (w.ieee.exponent == 1
+		     && w.ieee.negative != neg
+		     && w.ieee.mantissa1 == 0
+		     && w.ieee.mantissa0 == 0)))
+	    {
+	      volatile double force_underflow = x * y;
+	      (void) force_underflow;
+	    }
+	  return v.d * 0x1p-54;
+	}
       if (u.ieee.exponent + v.ieee.exponent
 	  >= 0x7ff + IEEE754_DOUBLE_BIAS - DBL_MANT_DIG)
 	{

@@ -1,3 +1,16 @@
+2012-11-01  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #14784]
+	[BZ #14785]
+	* sysdeps/ieee754/dbl-64/s_fma.c (__fma): Handle cases with small
+	x * y using scaling, not as x * y + z.
+	* sysdeps/ieee754/ldbl-128/s_fmal.c (__fmal): Likewise.
+	* sysdeps/ieee754/ldbl-96/s_fmal.c (__fmal): Likewise.
+	* math/libm-test.inc (fma_test): Add more tests.
+	(fma_test_towardzero): Likewise.
+	(fma_test_downward): Likewise.
+	(fma_test_upward): Likewise.
+
 2012-11-01  Thomas Schwinge  <thomas@codesourcery.com>
 
 	* sysdeps/mach/hurd/bits/param.h: Remove stray #endif.
