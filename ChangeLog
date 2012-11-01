@@ -1,3 +1,7 @@
+2012-11-01  Tulio Magno Quites Machado Filho  <tuliom@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/Makefile (cflags): Remove -mnew-mnemonics.
+
 2012-11-01  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* catgets/test-gencat.sh (run_program_prefix): Renamed to ...

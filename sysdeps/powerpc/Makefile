@@ -1,7 +1,3 @@
-# We always want to use the new mnemonic syntax even if we are on a RS6000
-# machine.
-+cflags += -mnew-mnemonics
-
 ifeq ($(subdir),string)
 CFLAGS-memcmp.c += -Wno-uninitialized
 endif
