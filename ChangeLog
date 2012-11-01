@@ -1,3 +1,7 @@
+2012-11-01  Andreas Schwab  <schwab@linux-m68k.org>
+
+	* scripts/check-local-headers.sh: Ignore c++ headers.
+
 2012-11-01  Thomas Schwinge  <thomas@codesourcery.com>
 
 	* libio/genops.c (_IO_flush_all_lockp): Use NULL rather than 0 for

@@ -32,7 +32,7 @@ exec ${AWK} -v includedir="$includedir" '
 BEGIN {
   status = 0
   exclude = "^" includedir \
-    "/(.*-.*-.*/|)(asm[-/]|arch|linux/|selinux/|gd|nss3/|sys/(capability|sdt(|-config))\\.h|libaudit\\.h)"
+    "/(.*-.*-.*/|)(asm[-/]|arch|linux/|selinux/|gd|nss3/|c\\+\\+/|sys/(capability|sdt(|-config))\\.h|libaudit\\.h)"
 }
 /^[^ ]/ && $1 ~ /.*:/ { obj = $1 }
 {
