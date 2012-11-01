@@ -60,7 +60,7 @@ fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
 
 if test -z "$libc_mips_abi"; then
-  as_fn_error "could not determine what ABI the compiler is using" "$LINENO" 5
+  as_fn_error $? "could not determine what ABI the compiler is using" "$LINENO" 5
 fi
 
 cat confdefs.h - <<_ACEOF >conftest.$ac_ext
@@ -102,7 +102,7 @@ fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
 
 if test -z "$libc_mips_float"; then
-  as_fn_error "could not determine if compiler is using hard or soft floating point ABI" "$LINENO" 5
+  as_fn_error $? "could not determine if compiler is using hard or soft floating point ABI" "$LINENO" 5
 fi
 
 echo "default-abi := ${libc_mips_abi}_${libc_mips_float}" > default-abi.make

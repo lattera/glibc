@@ -1,5 +1,7 @@
 2012-11-01  Thomas Schwinge  <thomas@codesourcery.com>
 
+	* sysdeps/unix/sysv/linux/mips/configure: Regenerate.
+
 	* sysdeps/unix/sysv/linux/mips/mips64/n32/nptl/libc.abilist
 	(GLIBC_2.17): Add clock_* symbols.
 
