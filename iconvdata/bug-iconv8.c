@@ -24,7 +24,7 @@ do_test (void)
    ret = iconv(cd, &inbuf, &inbytesleft, &outbuf, &outbytesleft);
    iconv_close(cd);
 
-   printf("result: %ld %d %ld %d\n", ret, errno, inbytesleft, inbuf[0]);
+   printf("result: %zd %d %zd %d\n", ret, errno, inbytesleft, inbuf[0]);
 
    /*
     * result: -1 84 0 0        (84=EILSEQ)

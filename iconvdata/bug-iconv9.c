@@ -37,7 +37,7 @@ do_test (void)
     }
   if (in != inbuf + sizeof (inbuf) - 1)
     {
-      printf ("in advanced by %jd, expected %zu\n",
+      printf ("in advanced by %td, expected %zu\n",
 	      in - inbuf, sizeof (inbuf) - 1);
       res = 1;
     }

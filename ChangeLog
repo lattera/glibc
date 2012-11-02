@@ -1,3 +1,9 @@
+2012-11-02  Andreas Schwab  <schwab@linux-m68k.org>
+
+	* iconvdata/bug-iconv8.c (do_test): Use %z for size_t arguments.
+	* iconvdata/bug-iconv9.c (do_test): Use %t for ptrdiff_t
+	arguments.
+
 2012-11-02  Roland McGrath  <roland@hack.frob.com>
 
 	* aclocal.m4 (GLIBC_AUTOCONF_VERSION): New macro.
