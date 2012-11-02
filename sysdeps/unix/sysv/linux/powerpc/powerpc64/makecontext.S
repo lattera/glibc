@@ -134,26 +134,26 @@ L(noparms):
 	   'makecontext' call.  If the pointer is NULL the process must
 	   terminate.  */
 L(exitcode):
-   /* Recover the ucontext and TOC from the dummy frame.  */
-  ld    r1,FRAME_BACKCHAIN(r1)  /* Unstack the parameter save area frame.  */
-  ld    r3,FRAME_PARM1_SAVE(r1)
-  ld    r2,FRAME_TOC_SAVE(r1)
-  ld    r3,UCONTEXT_LINK(r3)  /* Load the resume context.  */
-  cmpdi r3,0
-  beq   L(BADSTATUS)
+	/* Recover the ucontext and TOC from the dummy frame.  */
+	ld    r1,FRAME_BACKCHAIN(r1)  /* Unstack the parameter save area frame.  */
+	ld    r3,FRAME_PARM1_SAVE(r1)
+	ld    r2,FRAME_TOC_SAVE(r1)
+	ld    r3,UCONTEXT_LINK(r3)  /* Load the resume context.  */
+	cmpdi r3,0
+	beq   L(do_exit)
 	bl    JUMPTARGET(__setcontext)
 	nop
-
-L(BADSTATUS):
-/* If setcontext returns (which can happen if the syscall fails) we will
-   exit the program with error status (-1).  */
-  li    r3,-1
+	/* If setcontext returns (which can happen if the syscall fails) we will
+	   exit the program with error status (-1).  */
+	li    r3,-1
+L(do_exit):
 #ifdef SHARED
-  b     JUMPTARGET(__GI_exit);
+	b     JUMPTARGET(__GI_exit);
 #else
-  b     JUMPTARGET(exit);
-  nop
+	b     JUMPTARGET(exit);
+	nop
 #endif
+	b    L(do_exit)
 
   /* The address of the exit code is in the link register.  Store the lr
      in the ucontext as LNK so the target function will return to our

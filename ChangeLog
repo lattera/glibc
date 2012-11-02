@@ -1,3 +1,8 @@
+2012-11-01  Andreas Schwab  <schwab@linux-m68k.org>
+
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/makecontext.S: If the
+	function returns with a NULL context exit with zero.
+
 2012-11-01  Tulio Magno Quites Machado Filho  <tuliom@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/Makefile (cflags): Remove -mnew-mnemonics.
