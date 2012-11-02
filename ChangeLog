@@ -1,3 +1,10 @@
+2012-11-02  Roland McGrath  <roland@hack.frob.com>
+
+	* aclocal.m4 (GLIBC_AUTOCONF_VERSION): New macro.
+	Check that AC_AUTOCONF_VERSION matches it and m4_fatal at
+	autoconf-time if not.
+	* configure.in: Remove AC_PREREQ.
+
 2012-11-02  Tulio Magno Quites Machado Filho  <tuliom@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/sys/platform/ppc.h (__ppc_get_timebase): Use

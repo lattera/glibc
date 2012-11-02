@@ -1,3 +1,13 @@
+dnl We require that everyone use exactly the same Autoconf version so that
+dnl the internal functions defined and used by the main configure script
+dnl match those expected by the fragments.
+m4_define([GLIBC_AUTOCONF_VERSION], [2.68])
+m4_if(m4_defn([AC_AUTOCONF_VERSION]), GLIBC_AUTOCONF_VERSION, [],
+      [m4_fatal(m4_flatten(
+Exactly version GLIBC_AUTOCONF_VERSION of Autoconf is required but you have
+m4_defn([AC_AUTOCONF_VERSION])
+), [63])])dnl
+dnl
 dnl We define the macro GLIBC_PROVIDES to do an AC_PROVIDE for each macro
 dnl which appears in configure.in before the sysdep configure scripts are run.
 dnl Each sysdep configure.in does GLIBC_PROVIDES first, to avoid any
