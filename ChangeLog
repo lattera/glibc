@@ -1,3 +1,13 @@
+2012-11-02  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #3439]
+	* math/math.h (FP_NAN): Define macro to integer constant usable in
+	#if and use that to give value to enum constant.
+	(FP_INFINITE): Likewise.
+	(FP_ZERO): Likewise.
+	(FP_SUBNORMAL): Likewise.
+	(FP_NORMAL): Likewise.
+
 2012-11-02  Andreas Schwab  <schwab@linux-m68k.org>
 
 	* iconvdata/bug-iconv8.c (do_test): Use %z for size_t arguments.
