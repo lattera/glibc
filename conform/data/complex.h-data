@@ -1,4 +1,4 @@
-#if defined ISO99 || defined ISO11 || defined XOPEN2K || defined POSIX2008
+#if !defined ISO && !defined POSIX && !defined XPG3 && !defined XPG4 && !defined UNIX98
 macro complex
 macro _Complex_I
 optional-macro imaginary

@@ -1,5 +1,11 @@
 2012-11-02  Joseph Myers  <joseph@codesourcery.com>
 
+	* conform/data/complex.h-data [ISO99 || ISO11 || XOPEN2K ||
+	POSIX2008]: Change condition to [!ISO && !POSIX && !XPG3 && !XPG4
+	&& !UNIX98].  Enables tests for XOPEN2K8.
+	* conform/data/inttypes.h-data [ISO99 || ISO11 || XOPEN2K ||
+	POSIX2008]: Likewise.
+
 	* conform/data/sys/wait.h-data [XPG3 || XOPEN2K8 || POSIX2008]
 	(struct rusage): Do not expect type or its members.
 
