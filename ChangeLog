@@ -1,5 +1,8 @@
 2012-11-02  Joseph Myers  <joseph@codesourcery.com>
 
+	* conform/data/sys/wait.h-data [XPG3 || XOPEN2K8 || POSIX2008]
+	(struct rusage): Do not expect type or its members.
+
 	[BZ #3439]
 	* math/math.h (FP_NAN): Define macro to integer constant usable in
 	#if and use that to give value to enum constant.
