@@ -19,10 +19,8 @@
 #include <string.h>
 #include <stdint.h>
 #include <stdlib.h>
+#include <memcopy.h>
 #include <arch/chip.h>
-
-/* Must be 8 bytes in size. */
-#define word_t uint64_t
 
 /* How many cache lines ahead should we prefetch? */
 #define PREFETCH_LINES_AHEAD 3
@@ -34,8 +32,8 @@ __memcpy (void *__restrict dstv, const void *__restrict srcv, size_t n)
   const char *__restrict src1 = (const char *) srcv;
   const char *__restrict src1_end;
   const char *__restrict prefetch;
-  word_t *__restrict dst8; /* 8-byte pointer to destination memory. */
-  word_t final; /* Final bytes to write to trailing word, if any */
+  op_t *__restrict dst8; /* 8-byte pointer to destination memory. */
+  op_t final; /* Final bytes to write to trailing word, if any */
   long i;
 
   if (n < 16)
@@ -55,101 +53,169 @@ __memcpy (void *__restrict dstv, const void *__restrict srcv, size_t n)
     {
       __insn_prefetch (prefetch);
       prefetch += CHIP_L2_LINE_SIZE ();
-      prefetch = (prefetch > src1_end) ? prefetch : src1;
+      prefetch = (prefetch < src1_end) ? prefetch : src1;
     }
 
   /* Copy bytes until dst is word-aligned. */
-  for (; (uintptr_t) dst1 & (sizeof (word_t) - 1); n--)
+  for (; (uintptr_t) dst1 & (sizeof (op_t) - 1); n--)
     *dst1++ = *src1++;
 
   /* 8-byte pointer to destination memory. */
-  dst8 = (word_t *) dst1;
+  dst8 = (op_t *) dst1;
 
-  if (__builtin_expect ((uintptr_t) src1 & (sizeof (word_t) - 1), 0))
+  if (__builtin_expect ((uintptr_t) src1 & (sizeof (op_t) - 1), 0))
     {
-      /* Misaligned copy.  Copy 8 bytes at a time, but don't bother
-         with other fanciness.
-         TODO: Consider prefetching and using wh64 as well.  */
+      /* Misaligned copy.  Use glibc's _wordcopy_fwd_dest_aligned, but
+         inline it to avoid prologue/epilogue.  TODO: Consider
+         prefetching and using wh64 as well.  */
+      void * srci;
+      op_t a0, a1, a2, a3;
+      long int dstp = (long int) dst1;
+      long int srcp = (long int) src1;
+      long int len = n / OPSIZ;
 
-      /* Create an aligned src8. */
-      const word_t *__restrict src8 =
-        (const word_t *) ((uintptr_t) src1 & -sizeof (word_t));
-      word_t b;
+      /* Save the initial source pointer so we know the number of
+         bytes to shift for merging two unaligned results.  */
+      srci = (void *) srcp;
 
-      word_t a = *src8++;
-      for (; n >= sizeof (word_t); n -= sizeof (word_t))
-        {
-          b = *src8++;
-          a = __insn_dblalign (a, b, src1);
-          *dst8++ = a;
-          a = b;
-        }
+      /* Make SRCP aligned by rounding it down to the beginning of the
+         `op_t' it points in the middle of.  */
+      srcp &= -OPSIZ;
 
+      switch (len % 4)
+	{
+	case 2:
+	  a1 = ((op_t *) srcp)[0];
+	  a2 = ((op_t *) srcp)[1];
+	  len += 2;
+	  srcp += 2 * OPSIZ;
+	  goto do1;
+	case 3:
+	  a0 = ((op_t *) srcp)[0];
+	  a1 = ((op_t *) srcp)[1];
+	  len += 1;
+	  srcp += 2 * OPSIZ;
+	  goto do2;
+	case 0:
+	  if (OP_T_THRES <= 3 * OPSIZ && len == 0)
+	    return dstv;
+	  a3 = ((op_t *) srcp)[0];
+	  a0 = ((op_t *) srcp)[1];
+	  len += 0;
+	  srcp += 2 * OPSIZ;
+	  goto do3;
+	case 1:
+	  a2 = ((op_t *) srcp)[0];
+	  a3 = ((op_t *) srcp)[1];
+	  srcp += 2 * OPSIZ;
+	  len -= 1;
+	  if (OP_T_THRES <= 3 * OPSIZ && len == 0)
+	    goto do0;
+	  goto do4;			/* No-op.  */
+	}
+
+      do
+	{
+	do4:
+	  a0 = ((op_t *) srcp)[0];
+	  a2 = __insn_dblalign (a2, a3, srci);
+	  ((op_t *) dstp)[0] = a2;
+	  srcp += OPSIZ;
+	  dstp += OPSIZ;
+	do3:
+	  a1 = ((op_t *) srcp)[0];
+	  a3 = __insn_dblalign (a3, a0, srci);
+	  ((op_t *) dstp)[0] = a3;
+	  srcp += OPSIZ;
+	  dstp += OPSIZ;
+	do2:
+	  a2 = ((op_t *) srcp)[0];
+	  a0 = __insn_dblalign (a0, a1, srci);
+	  ((op_t *) dstp)[0] = a0;
+	  srcp += OPSIZ;
+	  dstp += OPSIZ;
+	do1:
+	  a3 = ((op_t *) srcp)[0];
+	  a1 = __insn_dblalign (a1, a2, srci);
+	  ((op_t *) dstp)[0] = a1;
+	  srcp += OPSIZ;
+	  dstp += OPSIZ;
+	  len -= 4;
+	}
+      while (len != 0);
+
+      /* This is the right position for do0.  Please don't move
+         it into the loop.  */
+    do0:
+      ((op_t *) dstp)[0] = __insn_dblalign (a2, a3, srci);
+
+      n = n % OPSIZ;
       if (n == 0)
-        return dstv;
+	return dstv;
 
-      b = ((const char *) src8 <= src1_end) ? *src8 : 0;
+      a0 = ((const char *) srcp <= src1_end) ? ((op_t *) srcp)[0] : 0;
 
-      /* Final source bytes to write to trailing partial word, if any. */
-      final = __insn_dblalign (a, b, src1);
+      final = __insn_dblalign (a3, a0, srci);
+      dst8 = (op_t *)(dstp + OPSIZ);
     }
   else
     {
       /* Aligned copy. */
 
-      const word_t *__restrict src8 = (const word_t *) src1;
+      const op_t *__restrict src8 = (const op_t *) src1;
 
       /* src8 and dst8 are both word-aligned. */
       if (n >= CHIP_L2_LINE_SIZE ())
         {
           /* Copy until 'dst' is cache-line-aligned. */
           for (; (uintptr_t) dst8 & (CHIP_L2_LINE_SIZE () - 1);
-               n -= sizeof (word_t))
+               n -= sizeof (op_t))
             *dst8++ = *src8++;
 
-          /* If copying to self, return.  The test is cheap enough
-             that we do it despite the fact that the memcpy() contract
-             doesn't require us to support overlapping dst and src.
-             This is the most common case of overlap, and any close
-             overlap will cause corruption due to the wh64 below.
-             This case is particularly important since the compiler
-             will emit memcpy() calls for aggregate copies even if it
-             can't prove that src != dst.  */
-          if (__builtin_expect (dst8 == src8, 0))
-            return dstv;
-
           for (; n >= CHIP_L2_LINE_SIZE ();)
-            {
-              __insn_wh64 (dst8);
+	    {
+	      op_t tmp0, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7;
 
-              /* Prefetch and advance to next line to prefetch, but
-                 don't go past the end.  */
-              __insn_prefetch (prefetch);
-              prefetch += CHIP_L2_LINE_SIZE ();
-              prefetch = (prefetch > src1_end) ? prefetch :
-                (const char *) src8;
+	      /* Prefetch and advance to next line to prefetch, but
+		 don't go past the end.  */
+	      __insn_prefetch (prefetch);
+	      prefetch += CHIP_L2_LINE_SIZE ();
+	      prefetch = (prefetch < src1_end) ? prefetch :
+		(const char *) src8;
 
-              /* Copy an entire cache line.  Manually unrolled to
-                 avoid idiosyncracies of compiler unrolling.  */
-#define COPY_WORD(offset) ({ dst8[offset] = src8[offset]; n -= 8; })
-              COPY_WORD (0);
-              COPY_WORD (1);
-              COPY_WORD (2);
-              COPY_WORD (3);
-              COPY_WORD (4);
-              COPY_WORD (5);
-              COPY_WORD (6);
-              COPY_WORD (7);
+	      /* Do all the loads before wh64.  This is necessary if
+		 [src8, src8+7] and [dst8, dst8+7] share the same
+		 cache line and dst8 <= src8, as can be the case when
+		 called from memmove, or with code tested on x86 whose
+		 memcpy always works with forward copies.  */
+	      tmp0 = *src8++;
+	      tmp1 = *src8++;
+	      tmp2 = *src8++;
+	      tmp3 = *src8++;
+	      tmp4 = *src8++;
+	      tmp5 = *src8++;
+	      tmp6 = *src8++;
+	      tmp7 = *src8++;
+
+	      __insn_wh64 (dst8);
+
+	      *dst8++ = tmp0;
+	      *dst8++ = tmp1;
+	      *dst8++ = tmp2;
+	      *dst8++ = tmp3;
+	      *dst8++ = tmp4;
+	      *dst8++ = tmp5;
+	      *dst8++ = tmp6;
+	      *dst8++ = tmp7;
+
+	      n -= 64;
+	    }
 #if CHIP_L2_LINE_SIZE() != 64
 # error "Fix code that assumes particular L2 cache line size."
 #endif
-
-              dst8 += CHIP_L2_LINE_SIZE () / sizeof (word_t);
-              src8 += CHIP_L2_LINE_SIZE () / sizeof (word_t);
-            }
         }
 
-      for (; n >= sizeof (word_t); n -= sizeof (word_t))
+      for (; n >= sizeof (op_t); n -= sizeof (op_t))
         *dst8++ = *src8++;
 
       if (__builtin_expect (n == 0, 1))

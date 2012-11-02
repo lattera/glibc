@@ -1,3 +1,9 @@
+2012-11-02  Chris Metcalf  <cmetcalf@tilera.com>
+
+	* sysdeps/tile/tilegx/memcpy.c (__memcpy): Optimize.
+	* sysdeps/tile/memcopy.h: New file.
+	* sysdeps/tile/wordcopy.c: New file.
+
 2012-11-03  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #3439]
