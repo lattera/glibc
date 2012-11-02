@@ -1,4 +1,4 @@
-escape_char	/
+escape_char     /
 comment_char    %
 
 % Finnish language locale for Finland with Euro
@@ -33,10 +33,10 @@ category  "fi_FI@euro:2000";LC_NUMERIC
 category  "fi_FI@euro:2000";LC_MONETARY
 category  "fi_FI@euro:2000";LC_MESSAGES
 category  "fi_FI@euro:2000";LC_PAPER
+category  "fi_FI@euro:2000";LC_MEASUREMENT
 category  "fi_FI@euro:2000";LC_NAME
 category  "fi_FI@euro:2000";LC_ADDRESS
-category  "fi_FI:2000";LC_TELEPHONE
-
+category  "fi_FI@euro:2000";LC_TELEPHONE
 END LC_IDENTIFICATION
 
 LC_COLLATE

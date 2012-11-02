@@ -1,3 +1,9 @@
+2012-11-02  Marko Myllynen  <myllynen@redhat.com>
+
+	[BZ #14669]
+	* locales/fi_FI@euro (LC_IDENTIFICATION): Add missing
+	LC_MEASUREMENT, fix LC_TELEPHONE category.
+
 2012-10-31  Joseph Myers  <joseph@codesourcery.com>
 
 	* Makefile [$(run-built-tests) = yes] (LOCALES): Add en_US.UTF-8.
