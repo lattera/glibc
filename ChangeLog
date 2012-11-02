@@ -1,3 +1,10 @@
+2012-11-07  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/x86_64/Makefile ($(objpfx)tst-xmmymm.out): Moved to ...
+	* sysdeps/x86/Makefile: Here.
+	* sysdeps/x86_64/tst-xmmymm.sh: Renamed to ...
+	* sysdeps/x86/tst-xmmymm.sh: This.
+
 2012-11-07  Joseph Myers  <joseph@codesourcery.com>
 
 	* conform/data/pthread.h-data [XPG3 || XPG4]: Disable all
