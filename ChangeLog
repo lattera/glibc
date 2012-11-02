@@ -1,3 +1,9 @@
+2012-11-02  Tulio Magno Quites Machado Filho  <tuliom@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/sys/platform/ppc.h (__ppc_get_timebase): Use
+	__builtin_ppc_get_timebase when building with GCC >= 4.8 instead
+	of the internal implementation.
+
 2012-11-02  Joseph Myers  <joseph@codesourcery.com>
 
 	* include/sys/syslog.h [_ISOMAC]: Disable all contents of file
