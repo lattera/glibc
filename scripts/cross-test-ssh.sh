@@ -108,37 +108,25 @@ bourne_quote ()
   done
 }
 
-# Remove unnecessary newlines from a Bourne shell command sequence.
-remove_newlines ()
-{
-  sed -n \
-    -e '1h' \
-    -e '2,$H' \
-    -e '${g
-          s/\([^\]\)\n/\1; /g
-          p
-         }'
-}
-
 # Unset all variables from the blacklist.  Then echo all exported
-# variables.  The 'export -p' command adds backslashes for environment
-# variables which contain newlines.
+# variables.
 blacklist_exports ()
 {
-  (unset ${env_blacklist}; export -p) | remove_newlines
+  (unset ${env_blacklist}; export -p) | sed 's/^declare -x/export/'
 }
 
-# Produce properly quoted Bourne shell arguments for 'env' to carry
-# over the current environment, less blacklisted variables.
+# Produce commands to carry over the current environment, less blacklisted
+# variables.
 exports="$(blacklist_exports)"
-exports="${exports:+${exports}; }"
 
 # Transform the current argument list into a properly quoted Bourne shell
 # command string.
 command="$(bourne_quote "$@")"
 
 # Add commands to set environment variables and the current directory.
-command="${exports}cd $PWD; ${command}"
+command="${exports}
+cd $(bourne_quote "$PWD")
+${command}"
 
 # HOST's sshd simply concatenates its arguments with spaces and
 # passes them to some shell.  We want to force the use of /bin/sh,

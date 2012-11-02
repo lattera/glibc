@@ -1,3 +1,11 @@
+2012-11-03  Andreas Schwab  <schwab@linux-m68k.org>
+
+	* scripts/cross-test-ssh.sh (command): Use newlines to separate
+	commands.  Quote $PWD.
+	(blacklist_exports): Don't use remove_newlines.  Replace "declare
+	-x" by "export".
+	(remove_newlines): Remove.
+
 2012-11-02  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* stdlib/Makefile (headers): Add bits/stdlib-float.h.
