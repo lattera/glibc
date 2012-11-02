@@ -1,5 +1,8 @@
 2012-11-02  Chris Metcalf  <cmetcalf@tilera.com>
 
+	* sysdeps/tile/dl-runtime.c (_dl_after_load): Handle simulator
+	notification better for dlopen() of relative paths.
+
 	* sysdeps/tile/tilegx/memcpy.c (__memcpy): Optimize.
 	* sysdeps/tile/memcopy.h: New file.
 	* sysdeps/tile/wordcopy.c: New file.

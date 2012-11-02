@@ -1,4 +1,4 @@
-/* Copyright (C) 2011 Free Software Foundation, Inc.
+/* Copyright (C) 2011-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Chris Metcalf <cmetcalf@tilera.com>, 2011.
 
@@ -28,44 +28,119 @@
 #include <sys/mman.h>
 #include <arch/sim.h>
 
-/* Support notifying the simulator about new objects. */
+/* Like realpath(), but simplified: no dynamic memory use, no lstat(),
+   no set_errno(), no valid "rpath" on error, etc.  This handles some
+   simple cases where the simulator might not have a valid entry for
+   a loaded Elf object, in particular dlopen() with a relative path.
+   For this relatively rare case, one could also imagine using
+   link_map.l_origin to avoid the getcwd() here, but the simpler code
+   here seems like a better solution.  */
+static char *
+dl_realpath (const char *name, char *rpath)
+{
+  char *dest;
+  const char *start, *end;
+
+  if (name[0] != '/')
+    {
+      if (!__getcwd (rpath, PATH_MAX))
+        return NULL;
+      dest = __rawmemchr (rpath, '\0');
+    }
+  else
+    {
+      rpath[0] = '/';
+      dest = rpath + 1;
+    }
+
+  for (start = end = name; *start; start = end)
+    {
+      /* Skip sequence of multiple path-separators.  */
+      while (*start == '/')
+	++start;
+
+      /* Find end of path component.  */
+      for (end = start; *end && *end != '/'; ++end)
+	/* Nothing.  */;
+
+      if (end - start == 0)
+	break;
+      else if (end - start == 1 && start[0] == '.')
+	/* nothing */;
+      else if (end - start == 2 && start[0] == '.' && start[1] == '.')
+	{
+	  /* Back up to previous component, ignore if at root already.  */
+	  if (dest > rpath + 1)
+	    while ((--dest)[-1] != '/');
+	}
+      else
+	{
+	  if (dest[-1] != '/')
+	    *dest++ = '/';
+
+	  if (dest + (end - start) >= rpath + PATH_MAX)
+            return NULL;
+
+	  dest = __mempcpy (dest, start, end - start);
+	  *dest = '\0';
+	}
+    }
+  if (dest > rpath + 1 && dest[-1] == '/')
+    --dest;
+  *dest = '\0';
+
+  return rpath;
+}
+
+/* Support notifying the simulator about new objects.  */
 void internal_function
 _dl_after_load (struct link_map *l)
 {
   int shift;
+  char pathbuf[PATH_MAX];
+  char *path;
 
-#define DLPUTC(c) __insn_mtspr(SPR_SIM_CONTROL,                         \
-                               (SIM_CONTROL_DLOPEN                      \
-                                | ((c) << _SIM_CONTROL_OPERATOR_BITS)))
+  /* Don't bother if not in the simulator. */
+  if (__insn_mfspr (SPR_SIM_CONTROL) == 0)
+    return;
 
-  /* Write the library address in hex. */
+#define DLPUTC(c) __insn_mtspr (SPR_SIM_CONTROL,                         \
+                                (SIM_CONTROL_DLOPEN                      \
+                                 | ((c) << _SIM_CONTROL_OPERATOR_BITS)))
+
+  /* Write the library address in hex.  */
   DLPUTC ('0');
   DLPUTC ('x');
   for (shift = (int) sizeof (unsigned long) * 8 - 4; shift >= 0; shift -= 4)
     DLPUTC ("0123456789abcdef"[(l->l_map_start >> shift) & 0xF]);
   DLPUTC (':');
 
-  /* Write the library path, including the terminating '\0'. */
+  /* Write the library path, including the terminating '\0'.  */
+  path = dl_realpath (l->l_name, pathbuf) ?: l->l_name;
   for (size_t i = 0;; i++)
     {
-      DLPUTC (l->l_name[i]);
-      if (l->l_name[i] == '\0')
+      DLPUTC (path[i]);
+      if (path[i] == '\0')
         break;
     }
 #undef DLPUTC
 }
 
-/* Support notifying the simulator about removed objects prior to munmap(). */
+/* Support notifying the simulator about removed objects prior to munmap().  */
 void internal_function
 _dl_unmap (struct link_map *l)
 {
   int shift;
 
-#define DLPUTC(c) __insn_mtspr(SPR_SIM_CONTROL,                         \
-                               (SIM_CONTROL_DLCLOSE                     \
-                                | ((c) << _SIM_CONTROL_OPERATOR_BITS)))
+  /* Don't bother if not in the simulator.  */
+  if (__insn_mfspr (SPR_SIM_CONTROL) == 0)
+    return;
 
-  /* Write the library address in hex. */
+#define DLPUTC(c) __insn_mtspr (SPR_SIM_CONTROL,                         \
+                                (SIM_CONTROL_DLCLOSE                     \
+                                 | ((c) << _SIM_CONTROL_OPERATOR_BITS)))
+
+  /* Write the library address in hex.  */
   DLPUTC ('0');
   DLPUTC ('x');
   for (shift = (int) sizeof (unsigned long) * 8 - 4; shift >= 0; shift -= 4)
