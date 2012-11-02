@@ -1,6 +1,7 @@
 #ifndef _FENV_H
 #include <math/fenv.h>
 
+#ifndef _ISOMAC
 /* Now define the internal interfaces.  */
 
 extern int __feclearexcept (int __excepts);
@@ -19,5 +20,6 @@ libm_hidden_proto (fesetround)
 libm_hidden_proto (feholdexcept)
 libm_hidden_proto (feupdateenv)
 libm_hidden_proto (fetestexcept)
+#endif
 
 #endif

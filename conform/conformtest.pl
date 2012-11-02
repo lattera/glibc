@@ -27,7 +27,7 @@ if (@headers == ()) {
 	      "netdb.h", "ndbm.h", "mqueue.h", "monetary.h", "math.h",
 	      "locale.h", "libgen.h", "limits.h", "langinfo.h", "iso646.h",
 	      "inttypes.h", "iconv.h", "grp.h", "glob.h", "ftw.h", "fnmatch.h",
-	      "fmtmsg.h", "float.h", "fcntl.h", "errno.h", "dlfcn.h",
+	      "fmtmsg.h", "float.h", "fenv.h", "fcntl.h", "errno.h", "dlfcn.h",
 	      "dirent.h", "ctype.h", "cpio.h", "complex.h", "assert.h",
 	      "arpa/inet.h", "aio.h");
 }

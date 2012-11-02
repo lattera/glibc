@@ -1,5 +1,10 @@
 2012-11-02  Joseph Myers  <joseph@codesourcery.com>
 
+	* conform/conformtest.pl (@headers): Add fenv.h.
+	* conform/data/fenv.h-data: New file.
+	* include/fenv.h [_ISOMAC]: Disable all contents of file except
+	include of <math/fenv.h>.
+
 	* conform/data/complex.h-data [ISO99 || ISO11 || XOPEN2K ||
 	POSIX2008]: Change condition to [!ISO && !POSIX && !XPG3 && !XPG4
 	&& !UNIX98].  Enables tests for XOPEN2K8.
