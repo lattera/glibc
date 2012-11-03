@@ -2,13 +2,14 @@
 #include <sys/syscall.h>
 #if !defined __NR_sendmmsg && defined __NR_socketcall
 # define socket	sendmmsg
-# ifdef __ASSUME_SENDMMSG
-#  define __socket sendmmsg
-# else
+# ifndef __ASSUME_SENDMMSG
 #  define __socket __internal_sendmmsg
+#  define NO_WEAK_ALIAS
 # endif
 # define NARGS 4
 # define NEED_CANCELLATION
-# define NO_WEAK_ALIAS
 # include <socket.S>
+# ifdef __ASSUME_SENDMMSG
+libc_hidden_def (__sendmmsg)
+# endif
 #endif

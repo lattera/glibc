@@ -91,6 +91,10 @@ extern ssize_t __libc_sendmsg (int __fd, const struct msghdr *__message,
 extern ssize_t __sendmsg (int __fd, const struct msghdr *__message,
 			  int __flags) attribute_hidden;
 
+extern int __sendmmsg (int __fd, struct mmsghdr *__vmessages,
+                       unsigned int __vlen, int __flags);
+libc_hidden_proto (__sendmmsg)
+
 /* Receive a message as described by MESSAGE from socket FD.
    Returns the number of bytes read or -1 for errors.  */
 extern ssize_t __libc_recvmsg (int __fd, struct msghdr *__message,

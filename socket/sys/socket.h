@@ -97,6 +97,16 @@ typedef union { __SOCKADDR_ALLTYPES
 # undef __SOCKADDR_ONETYPE
 #endif
 
+#ifdef __USE_GNU
+/* For `recvmmsg' and `sendmmsg'.  */
+struct mmsghdr
+  {
+    struct msghdr msg_hdr;	/* Actual message header.  */
+    unsigned int msg_len;	/* Number of received or sent bytes for the
+				   entry.  */
+  };
+#endif
+
 
 /* Create a new socket of type TYPE in domain DOMAIN, using
    protocol PROTOCOL.  If PROTOCOL is zero, one is chosen automatically.
@@ -175,12 +185,33 @@ extern ssize_t recvfrom (int __fd, void *__restrict __buf, size_t __n,
 extern ssize_t sendmsg (int __fd, const struct msghdr *__message,
 			int __flags);
 
+#ifdef __USE_GNU
+/* Send a VLEN messages as described by VMESSAGES to socket FD.
+   Returns the number of datagrams successfully written or -1 for errors.
+
+   This function is a cancellation point and therefore not marked with
+   __THROW.  */
+extern int sendmmsg (int __fd, struct mmsghdr *__vmessages,
+		     unsigned int __vlen, int __flags);
+#endif
+
 /* Receive a message as described by MESSAGE from socket FD.
    Returns the number of bytes read or -1 for errors.
 
    This function is a cancellation point and therefore not marked with
    __THROW.  */
 extern ssize_t recvmsg (int __fd, struct msghdr *__message, int __flags);
+
+#ifdef __USE_GNU
+/* Receive up to VLEN messages as described by VMESSAGES from socket FD.
+   Returns the number of bytes read or -1 for errors.
+
+   This function is a cancellation point and therefore not marked with
+   __THROW.  */
+extern int recvmmsg (int __fd, struct mmsghdr *__vmessages,
+		     unsigned int __vlen, int __flags,
+		     const struct timespec *__tmo);
+#endif
 
 
 /* Put the current value for socket FD's option OPTNAME at protocol level LEVEL

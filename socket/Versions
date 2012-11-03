@@ -34,4 +34,10 @@ libc {
   GLIBC_2.10 {
     accept4;
   }
+  GLIBC_2.17 {
+    recvmmsg; sendmmsg;
+  }
+  GLIBC_PRIVATE {
+    __sendmmsg;
+  }
 }

@@ -1,3 +1,28 @@
+2012-11-20  Thomas Schwinge  <thomas@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/bits/socket.h (struct mmsghdr, recvmmsg)
+	(sendmmsg): Move declarations...
+	* socket/sys/socket.h: ... here.
+	* sysdeps/unix/sysv/linux/recvmmsg.c [!defined __NR_recvmmsg &&
+	!defined __NR_socketcall] (recvmmsg): Move ENOSYS stub into and
+	include it from...
+	* socket/recvmmsg.c: ... this new file.
+	* sysdeps/unix/sysv/linux/internal_sendmmsg.S [__ASSUME_SENDMMSG]
+	(sendmmsg): Rename to __sendmmsg, create weak alias and make
+	definition of __sendmmsg hidden.
+	* sysdeps/unix/sysv/linux/sendmmsg.c (sendmmsg): Likewise.
+	[!defined __NR_sendmmsg && !defined __NR_socketcall] (sendmmsg):
+	Move ENOSYS stub into and include it from...
+	* socket/sendmmsg.c: ... this new file.
+	* sysdeps/unix/sysv/linux/Makefile [subdir=socket]
+	(sysdep_routines): Move recvmmsg and sendmmsg...
+	* socket/Makefile (routines): ... here.
+	* socket/Versions (GLIBC_2.17): Add recvmmsg and sendmmsg.
+	(GLIBC_PRIVATE): Add __sendmmsg.
+	* include/sys/socket.h (__sendmmsg): Add declarations.
+	* resolv/res_send.c (send_dg): Invoke __sendmmsg instead of
+	sendmmsg.
+
 2012-11-20  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/ieee754/ldbl-128/s_nearbyintl.c (__nearbyintl): Mark

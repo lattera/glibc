@@ -1129,7 +1129,7 @@ send_dg(res_state statp,
 		    reqs[1].msg_hdr.msg_control = NULL;
 		    reqs[1].msg_hdr.msg_controllen = 0;
 
-		    int ndg = sendmmsg (pfd[0].fd, reqs, 2, MSG_NOSIGNAL);
+		    int ndg = __sendmmsg (pfd[0].fd, reqs, 2, MSG_NOSIGNAL);
 		    if (__builtin_expect (ndg == 2, 1))
 		      {
 			if (reqs[0].msg_len != buflen
