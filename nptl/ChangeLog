@@ -1,3 +1,9 @@
+2012-11-03  David S. Miller  <davem@davemloft.net>
+
+	* sysdeps/unix/sysv/linux/sparc/lowlevellock.h (BUSY_WAIT_NOP):
+	Add missing spaces.
+	(__cpu_relax): Likewise.
+
 2012-11-02  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/x86_64/tls.h: Don't include <xmmintrin.h>.

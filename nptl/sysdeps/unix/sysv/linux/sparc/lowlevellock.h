@@ -52,8 +52,8 @@
 
 #ifndef __sparc32_atomic_do_lock
 /* Delay in spinlock loop.  */
-extern void __cpu_relax(void);
-#define BUSY_WAIT_NOP	__cpu_relax()
+extern void __cpu_relax (void);
+#define BUSY_WAIT_NOP	__cpu_relax ()
 #endif
 
 #if !defined NOT_IN_libc || defined IS_IN_rtld
