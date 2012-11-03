@@ -24,16 +24,21 @@
    the appropriate bits in the FPSR Accrued Exception Byte.  */
 enum
   {
-    FE_INEXACT = 1 << 3,
-#define FE_INEXACT	FE_INEXACT
-    FE_DIVBYZERO = 1 << 4,
-#define FE_DIVBYZERO	FE_DIVBYZERO
-    FE_UNDERFLOW = 1 << 5,
-#define FE_UNDERFLOW	FE_UNDERFLOW
-    FE_OVERFLOW = 1 << 6,
-#define FE_OVERFLOW	FE_OVERFLOW
-    FE_INVALID = 1 << 7
-#define FE_INVALID	FE_INVALID
+    FE_INEXACT =
+#define FE_INEXACT	(1 << 3)
+      FE_INEXACT,
+    FE_DIVBYZERO =
+#define FE_DIVBYZERO	(1 << 4)
+      FE_DIVBYZERO,
+    FE_UNDERFLOW =
+#define FE_UNDERFLOW	(1 << 5)
+      FE_UNDERFLOW,
+    FE_OVERFLOW =
+#define FE_OVERFLOW	(1 << 6)
+      FE_OVERFLOW,
+    FE_INVALID =
+#define FE_INVALID	(1 << 7)
+      FE_INVALID
   };
 
 #define FE_ALL_EXCEPT \
@@ -44,14 +49,18 @@ enum
    appropriate macros.  */
 enum
   {
-    FE_TONEAREST = 0,
-#define FE_TONEAREST	FE_TONEAREST
-    FE_TOWARDZERO = 1 << 4,
-#define FE_TOWARDZERO	FE_TOWARDZERO
-    FE_DOWNWARD = 2 << 4,
-#define FE_DOWNWARD	FE_DOWNWARD
-    FE_UPWARD = 3 << 4
-#define FE_UPWARD	FE_UPWARD
+    FE_TONEAREST =
+#define FE_TONEAREST	0
+      FE_TONEAREST,
+    FE_TOWARDZERO =
+#define FE_TOWARDZERO	(1 << 4)
+      FE_TOWARDZERO,
+    FE_DOWNWARD =
+#define FE_DOWNWARD	(2 << 4)
+      FE_DOWNWARD,
+    FE_UPWARD =
+#define FE_UPWARD	(3 << 4)
+      FE_UPWARD
   };
 
 

@@ -22,16 +22,21 @@
 /* Define bits representing exceptions in the FPU status word.  */
 enum
   {
-    FE_INVALID = 1,
-#define FE_INVALID FE_INVALID
-    FE_DIVBYZERO = 2,
-#define FE_DIVBYZERO FE_DIVBYZERO
-    FE_OVERFLOW = 4,
-#define FE_OVERFLOW FE_OVERFLOW
-    FE_UNDERFLOW = 8,
-#define FE_UNDERFLOW FE_UNDERFLOW
-    FE_INEXACT = 16,
-#define FE_INEXACT FE_INEXACT
+    FE_INVALID =
+#define FE_INVALID	1
+      FE_INVALID,
+    FE_DIVBYZERO =
+#define FE_DIVBYZERO	2
+      FE_DIVBYZERO,
+    FE_OVERFLOW =
+#define FE_OVERFLOW	4
+      FE_OVERFLOW,
+    FE_UNDERFLOW =
+#define FE_UNDERFLOW	8
+      FE_UNDERFLOW,
+    FE_INEXACT =
+#define FE_INEXACT	16
+      FE_INEXACT,
   };
 
 /* Amount to shift by to convert an exception to a mask bit.  */
@@ -44,14 +49,18 @@ enum
 /* VFP supports all of the four defined rounding modes.  */
 enum
   {
-    FE_TONEAREST = 0,
-#define FE_TONEAREST FE_TONEAREST
-    FE_UPWARD = 0x400000,
-#define FE_UPWARD FE_UPWARD
-    FE_DOWNWARD = 0x800000,
-#define FE_DOWNWARD FE_DOWNWARD
-    FE_TOWARDZERO = 0xc00000
-#define FE_TOWARDZERO FE_TOWARDZERO
+    FE_TONEAREST =
+#define FE_TONEAREST	0
+      FE_TONEAREST,
+    FE_UPWARD =
+#define FE_UPWARD	0x400000
+      FE_UPWARD,
+    FE_DOWNWARD =
+#define FE_DOWNWARD	0x800000
+      FE_DOWNWARD,
+    FE_TOWARDZERO =
+#define FE_TOWARDZERO	0xc00000
+      FE_TOWARDZERO
   };
 
 /* Type representing exception flags. */

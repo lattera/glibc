@@ -24,16 +24,21 @@
    of the appropriate bits in the FPU control word.  */
 enum
   {
-    FE_INEXACT = 0x04,
-#define FE_INEXACT	FE_INEXACT
-    FE_UNDERFLOW = 0x08,
-#define FE_UNDERFLOW	FE_UNDERFLOW
-    FE_OVERFLOW = 0x10,
-#define FE_OVERFLOW	FE_OVERFLOW
-    FE_DIVBYZERO = 0x20,
-#define FE_DIVBYZERO	FE_DIVBYZERO
-    FE_INVALID = 0x40,
-#define FE_INVALID	FE_INVALID
+    FE_INEXACT =
+#define FE_INEXACT	0x04
+      FE_INEXACT,
+    FE_UNDERFLOW =
+#define FE_UNDERFLOW	0x08
+      FE_UNDERFLOW,
+    FE_OVERFLOW =
+#define FE_OVERFLOW	0x10
+      FE_OVERFLOW,
+    FE_DIVBYZERO =
+#define FE_DIVBYZERO	0x20
+      FE_DIVBYZERO,
+    FE_INVALID =
+#define FE_INVALID	0x40
+      FE_INVALID,
   };
 
 #define FE_ALL_EXCEPT \
@@ -44,14 +49,18 @@ enum
    for the appropriate macros.  */
 enum
   {
-    FE_TONEAREST = 0x0,
-#define FE_TONEAREST	FE_TONEAREST
-    FE_TOWARDZERO = 0x1,
-#define FE_TOWARDZERO	FE_TOWARDZERO
-    FE_UPWARD = 0x2,
-#define FE_UPWARD	FE_UPWARD
-    FE_DOWNWARD = 0x3
-#define FE_DOWNWARD	FE_DOWNWARD
+    FE_TONEAREST =
+#define FE_TONEAREST	0x0
+      FE_TONEAREST,
+    FE_TOWARDZERO =
+#define FE_TOWARDZERO	0x1
+      FE_TOWARDZERO,
+    FE_UPWARD =
+#define FE_UPWARD	0x2
+      FE_UPWARD,
+    FE_DOWNWARD =
+#define FE_DOWNWARD	0x3
+      FE_DOWNWARD
   };
 
 

@@ -36,27 +36,34 @@
 enum
   {
 #ifdef __USE_GNU
-    FE_DENORMAL =	1UL << 22,
-#define FE_DENORMAL	FE_DENORMAL
+    FE_DENORMAL =
+#define FE_DENORMAL	(1 << 22)
+      FE_DENORMAL,
 #endif
 
-    FE_INEXACT =	1UL << 21,
-#define FE_INEXACT	FE_INEXACT
+    FE_INEXACT =
+#define FE_INEXACT	(1 << 21)
+      FE_INEXACT,
 
-    FE_UNDERFLOW =	1UL << 20,
-#define FE_UNDERFLOW	FE_UNDERFLOW
+    FE_UNDERFLOW =
+#define FE_UNDERFLOW	(1 << 20)
+      FE_UNDERFLOW,
 
-    FE_OVERFLOW =	1UL << 19,
-#define FE_OVERFLOW	FE_OVERFLOW
+    FE_OVERFLOW =
+#define FE_OVERFLOW	(1 << 19)
+      FE_OVERFLOW,
 
-    FE_DIVBYZERO =	1UL << 18,
-#define FE_DIVBYZERO	FE_DIVBYZERO
+    FE_DIVBYZERO =
+#define FE_DIVBYZERO	(1 << 18)
+      FE_DIVBYZERO,
 
-    FE_INVALID =	1UL << 17,
-#define FE_INVALID	FE_INVALID
+    FE_INVALID =
+#define FE_INVALID	(1 << 17)
+      FE_INVALID,
 
-    FE_ALL_EXCEPT =	0x3f << 17
-#define FE_ALL_EXCEPT	FE_ALL_EXCEPT
+    FE_ALL_EXCEPT =
+#define FE_ALL_EXCEPT	(0x3f << 17)
+      FE_ALL_EXCEPT
   };
 
 /* Alpha chips support all four defined rouding modes.
@@ -70,17 +77,21 @@ enum
 
 enum
   {
-    FE_TOWARDZERO =	0,
-#define FE_TOWARDZERO	FE_TOWARDZERO
+    FE_TOWARDZERO =
+#define FE_TOWARDZERO	0
+      FE_TOWARDZERO,
 
-    FE_DOWNWARD = 	1,
-#define FE_DOWNWARD	FE_DOWNWARD
+    FE_DOWNWARD =
+#define FE_DOWNWARD	1
+      FE_DOWNWARD,
 
-    FE_TONEAREST =	2,
-#define FE_TONEAREST	FE_TONEAREST
+    FE_TONEAREST =
+#define FE_TONEAREST	2
+      FE_TONEAREST,
 
-    FE_UPWARD =		3,
-#define FE_UPWARD	FE_UPWARD
+    FE_UPWARD =
+#define FE_UPWARD	3
+      FE_UPWARD,
   };
 
 #ifdef __USE_GNU

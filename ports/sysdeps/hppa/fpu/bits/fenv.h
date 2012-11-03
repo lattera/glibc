@@ -1,4 +1,4 @@
-/* Copyright (C) 2000 Free Software Foundation, Inc.
+/* Copyright (C) 2000-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by David Huggins-Daines <dhd@debian.org>
 
@@ -26,16 +26,21 @@
    27 bits).  */
 enum
 {
-  FE_INVALID   = 1<<4, /* V */
-#define FE_INVALID	FE_INVALID
-  FE_DIVBYZERO = 1<<3, /* Z */
-#define FE_DIVBYZERO	FE_DIVBYZERO
-  FE_OVERFLOW  = 1<<2, /* O */
-#define FE_OVERFLOW	FE_OVERFLOW
-  FE_UNDERFLOW = 1<<1, /* U */
-#define FE_UNDERFLOW	FE_UNDERFLOW
-  FE_INEXACT   = 1<<0, /* I */
-#define FE_INEXACT	FE_INEXACT
+  FE_INVALID =
+#define FE_INVALID	(1<<4) /* V */
+    FE_INVALID,
+  FE_DIVBYZERO =
+#define FE_DIVBYZERO	(1<<3) /* Z */
+    FE_DIVBYZERO,
+  FE_OVERFLOW =
+#define FE_OVERFLOW	(1<<2) /* O */
+    FE_OVERFLOW,
+  FE_UNDERFLOW =
+#define FE_UNDERFLOW	(1<<1) /* U */
+    FE_UNDERFLOW,
+  FE_INEXACT =
+#define FE_INEXACT	(1<<0) /* I */
+    FE_INEXACT,
 };
 
 #define FE_ALL_EXCEPT \
@@ -46,14 +51,18 @@ enum
    register for the appropriate macros.  */
 enum
   {
-    FE_TONEAREST  = 0 << 9,
-#define FE_TONEAREST	FE_TONEAREST
-    FE_TOWARDZERO = 1 << 9,
-#define FE_TOWARDZERO	FE_TOWARDZERO
-    FE_UPWARD     = 2 << 9,
-#define FE_UPWARD	FE_UPWARD
-    FE_DOWNWARD   = 3 << 9,
-#define FE_DOWNWARD	FE_DOWNWARD
+    FE_TONEAREST =
+#define FE_TONEAREST	(0 << 9)
+      FE_TONEAREST,
+    FE_TOWARDZERO =
+#define FE_TOWARDZERO	(1 << 9)
+      FE_TOWARDZERO,
+    FE_UPWARD =
+#define FE_UPWARD	(2 << 9)
+      FE_UPWARD,
+    FE_DOWNWARD =
+#define FE_DOWNWARD	(3 << 9)
+      FE_DOWNWARD,
   };
 
 /* Type representing exception flags. */

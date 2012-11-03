@@ -1,4 +1,4 @@
-/* Copyright (C) 2011 Free Software Foundation, Inc.
+/* Copyright (C) 2011-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Chris Metcalf <cmetcalf@tilera.com>, 2011.
 
@@ -30,8 +30,9 @@ enum
   {
     __FE_UNDEFINED = 0,
 
-    FE_TONEAREST = 1,
-#define FE_TONEAREST	FE_TONEAREST
+    FE_TONEAREST =
+#define FE_TONEAREST	1
+      FE_TONEAREST,
   };
 
 /* Type representing exception flags (if there were any).  */

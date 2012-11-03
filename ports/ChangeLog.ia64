@@ -1,3 +1,20 @@
+2012-11-03  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #3439]
+	* sysdeps/ia64/bits/fenv.h (FE_INEXACT): Define macro to integer
+	constant usable in #if and use that to give value to enum
+	constant.
+	(FE_UNDERFLOW): Likewise.
+	(FE_OVERFLOW): Likewise.
+	(FE_DIVBYZERO): Likewise.
+	(FE_UNNORMAL): Likewise.
+	(FE_INVALID): Likewise.
+	(FE_ALL_EXCEPT): Likewise.
+	(FE_TOWARDZERO): Likewise.
+	(FE_UPWARD): Likewise.
+	(FE_DOWNWARD): Likewise.
+	(FE_TONEAREST): Likewise.
+
 2012-10-30  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #14047]

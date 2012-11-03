@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 1999, 2000, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 1998-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Alexandre Oliva <aoliva@redhat.com>
    based on the corresponding file in the mips port.
@@ -26,16 +26,21 @@
    positions of the appropriate bits in the FPCR register.  */
 enum
   {
-    FE_INEXACT = 0x01,
-#define FE_INEXACT	FE_INEXACT
-    FE_UNDERFLOW = 0x02,
-#define FE_UNDERFLOW	FE_UNDERFLOW
-    FE_OVERFLOW = 0x04,
-#define FE_OVERFLOW	FE_OVERFLOW
-    FE_DIVBYZERO = 0x08,
-#define FE_DIVBYZERO	FE_DIVBYZERO
-    FE_INVALID = 0x10,
-#define FE_INVALID	FE_INVALID
+    FE_INEXACT =
+#define FE_INEXACT	0x01
+      FE_INEXACT,
+    FE_UNDERFLOW =
+#define FE_UNDERFLOW	0x02
+      FE_UNDERFLOW,
+    FE_OVERFLOW =
+#define FE_OVERFLOW	0x04
+      FE_OVERFLOW,
+    FE_DIVBYZERO =
+#define FE_DIVBYZERO	0x08
+      FE_DIVBYZERO,
+    FE_INVALID =
+#define FE_INVALID	0x10
+      FE_INVALID,
   };
 
 #define FE_ALL_EXCEPT \
@@ -45,8 +50,9 @@ enum
    reserved to represent other rounding modes.  */
 enum
   {
-    FE_TONEAREST = 0x00000,
-#define FE_TONEAREST	FE_TONEAREST
+    FE_TONEAREST =
+#define FE_TONEAREST	0x00000
+      FE_TONEAREST,
   };
 
 
