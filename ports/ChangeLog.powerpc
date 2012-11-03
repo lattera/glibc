@@ -1,3 +1,8 @@
+2012-11-03  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/powerpc/nofpu/fclrexcpt.c (feclearexcept): Add
+	libm_hidden_ver.
+
 2012-10-31  Andreas Schwab  <schwab@linux-m68k.org>
 
 	* sysdeps/unix/sysv/linux/powerpc/powerpc32/nofpu/nptl/libc.abilist:

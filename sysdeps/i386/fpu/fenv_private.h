@@ -77,6 +77,24 @@ libc_feholdexcept_387 (fenv_t *e)
 }
 
 static __always_inline void
+libc_fesetround_sse (int r)
+{
+  unsigned int mxcsr;
+  asm (STMXCSR " %0" : "=m" (*&mxcsr));
+  mxcsr = (mxcsr & ~0x6000) | (r << 3);
+  asm volatile (LDMXCSR " %0" : : "m" (*&mxcsr));
+}
+
+static __always_inline void
+libc_fesetround_387 (int r)
+{
+  fpu_control_t cw;
+  _FPU_GETCW (cw);
+  cw = (cw & ~0xc00) | r;
+  _FPU_SETCW (cw);
+}
+
+static __always_inline void
 libc_feholdexcept_setround_sse (fenv_t *e, int r)
 {
   unsigned int mxcsr;
@@ -247,6 +265,7 @@ libc_feresetround_387 (fenv_t *e)
 
 #ifdef __SSE_MATH__
 # define libc_feholdexceptf		libc_feholdexcept_sse
+# define libc_fesetroundf		libc_fesetround_sse
 # define libc_feholdexcept_setroundf	libc_feholdexcept_setround_sse
 # define libc_fetestexceptf		libc_fetestexcept_sse
 # define libc_fesetenvf			libc_fesetenv_sse
@@ -256,6 +275,7 @@ libc_feresetround_387 (fenv_t *e)
 # define libc_feresetroundf		libc_feresetround_sse
 #else
 # define libc_feholdexceptf		libc_feholdexcept_387
+# define libc_fesetroundf		libc_fesetround_387
 # define libc_feholdexcept_setroundf	libc_feholdexcept_setround_387
 # define libc_fetestexceptf		libc_fetestexcept_387
 # define libc_fesetenvf			libc_fesetenv_387
@@ -267,6 +287,7 @@ libc_feresetround_387 (fenv_t *e)
 
 #ifdef __SSE2_MATH__
 # define libc_feholdexcept		libc_feholdexcept_sse
+# define libc_fesetround		libc_fesetround_sse
 # define libc_feholdexcept_setround	libc_feholdexcept_setround_sse
 # define libc_fetestexcept		libc_fetestexcept_sse
 # define libc_fesetenv			libc_fesetenv_sse
@@ -276,6 +297,7 @@ libc_feresetround_387 (fenv_t *e)
 # define libc_feresetround		libc_feresetround_sse
 #else
 # define libc_feholdexcept		libc_feholdexcept_387
+# define libc_fesetround		libc_fesetround_387
 # define libc_feholdexcept_setround	libc_feholdexcept_setround_387
 # define libc_fetestexcept		libc_fetestexcept_387
 # define libc_fesetenv			libc_fesetenv_387
@@ -286,6 +308,7 @@ libc_feresetround_387 (fenv_t *e)
 #endif /* __SSE2_MATH__ */
 
 #define libc_feholdexceptl		libc_feholdexcept_387
+#define libc_fesetroundl		libc_fesetround_387
 #define libc_feholdexcept_setroundl	libc_feholdexcept_setround_387
 #define libc_fetestexceptl		libc_fetestexcept_387
 #define libc_fesetenvl			libc_fesetenv_387

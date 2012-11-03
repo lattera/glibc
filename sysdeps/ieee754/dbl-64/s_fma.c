@@ -167,6 +167,9 @@ __fma (double x, double y, double z)
   if (__builtin_expect ((x == 0 || y == 0) && z == 0, 0))
     return x * y + z;
 
+  fenv_t env;
+  libc_feholdexcept_setround (&env, FE_TONEAREST);
+
   /* Multiplication m1 + m2 = x * y using Dekker's algorithm.  */
 #define C ((1 << (DBL_MANT_DIG + 1) / 2) + 1)
   double x1 = x * C;
@@ -185,9 +188,20 @@ __fma (double x, double y, double z)
   t1 = m1 - t1;
   t2 = z - t2;
   double a2 = t1 + t2;
+  feclearexcept (FE_INEXACT);
 
-  fenv_t env;
-  libc_feholdexcept_setround (&env, FE_TOWARDZERO);
+  /* If the result is an exact zero, ensure it has the correct
+     sign.  */
+  if (a1 == 0 && m2 == 0)
+    {
+      libc_feupdateenv (&env);
+      /* Ensure that round-to-nearest value of z + m1 is not
+	 reused.  */
+      asm volatile ("" : "=m" (z) : "m" (z));
+      return z + m1;
+    }
+
+  libc_fesetround (FE_TOWARDZERO);
 
   /* Perform m2 + a2 addition with round to odd.  */
   u.d = a2 + m2;

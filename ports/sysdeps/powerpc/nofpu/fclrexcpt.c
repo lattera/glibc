@@ -1,5 +1,5 @@
 /* Clear floating-point exceptions (soft-float edition).
-   Copyright (C) 2002 Free Software Foundation, Inc.
+   Copyright (C) 2002-2012 Free Software Foundation, Inc.
    Contributed by Aldy Hernandez <aldyh@redhat.com>, 2002.
    This file is part of the GNU C Library.
 
@@ -33,4 +33,5 @@ strong_alias (__feclearexcept, __old_feclearexcept)
 compat_symbol (libm, __old_feclearexcept, feclearexcept, GLIBC_2_1);
 #endif
 
+libm_hidden_ver (__feclearexcept, feclearexcept)
 versioned_symbol (libm, __feclearexcept, feclearexcept, GLIBC_2_2);

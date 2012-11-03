@@ -14,6 +14,15 @@ libc_feholdexcept (fenv_t *e)
 }
 
 static __always_inline void
+libc_fesetround (int r)
+{
+  fenv_t etmp;
+  __fenv_stfsr(etmp);
+  etmp = (etmp & ~__FE_ROUND_MASK) | (r);
+  __fenv_ldfsr(etmp);
+}
+
+static __always_inline void
 libc_feholdexcept_setround (fenv_t *e, int r)
 {
   fenv_t etmp;
@@ -79,6 +88,7 @@ libc_feresetround (fenv_t *e)
 }
 
 #define libc_feholdexceptf		libc_feholdexcept
+#define libc_fesetroundf		libc_fesetround
 #define libc_feholdexcept_setroundf	libc_feholdexcept_setround
 #define libc_fetestexceptf		libc_fetestexcept
 #define libc_fesetenvf			libc_fesetenv
@@ -87,6 +97,7 @@ libc_feresetround (fenv_t *e)
 #define libc_feholdsetroundf		libc_feholdsetround
 #define libc_feresetroundf		libc_feresetround
 #define libc_feholdexcept		libc_feholdexcept
+#define libc_fesetround			libc_fesetround
 #define libc_feholdexcept_setround	libc_feholdexcept_setround
 #define libc_fetestexcept		libc_fetestexcept
 #define libc_fesetenv			libc_fesetenv
@@ -95,6 +106,7 @@ libc_feresetround (fenv_t *e)
 #define libc_feholdsetround		libc_feholdsetround
 #define libc_feresetround		libc_feresetround
 #define libc_feholdexceptl		libc_feholdexcept
+#define libc_fesetroundl		libc_fesetround
 #define libc_feholdexcept_setroundl	libc_feholdexcept_setround
 #define libc_fetestexceptl		libc_fetestexcept
 #define libc_fesetenvl			libc_fesetenv

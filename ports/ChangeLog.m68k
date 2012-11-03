@@ -1,5 +1,8 @@
 2012-11-03  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/m68k/fpu/fclrexcpt.c (feclearexcept): Add
+	libm_hidden_ver.
+
 	[BZ #3439]
 	* sysdeps/m68k/fpu/bits/fenv.h (FE_INEXACT): Define macro to
 	integer constant usable in #if and use that to give value to enum

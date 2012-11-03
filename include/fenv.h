@@ -20,6 +20,7 @@ libm_hidden_proto (fesetround)
 libm_hidden_proto (feholdexcept)
 libm_hidden_proto (feupdateenv)
 libm_hidden_proto (fetestexcept)
+libm_hidden_proto (feclearexcept)
 #endif
 
 #endif

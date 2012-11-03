@@ -402,6 +402,22 @@ default_libc_feholdexcept (fenv_t *e)
 #endif
 
 static __always_inline void
+default_libc_fesetround (int r)
+{
+  (void) fesetround (r);
+}
+
+#ifndef libc_fesetround
+# define libc_fesetround  default_libc_fesetround
+#endif
+#ifndef libc_fesetroundf
+# define libc_fesetroundf default_libc_fesetround
+#endif
+#ifndef libc_fesetroundl
+# define libc_fesetroundl default_libc_fesetround
+#endif
+
+static __always_inline void
 default_libc_feholdexcept_setround (fenv_t *e, int r)
 {
   feholdexcept (e);
