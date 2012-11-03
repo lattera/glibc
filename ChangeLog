@@ -1,3 +1,7 @@
+2012-11-02  Chris Metcalf  <cmetcalf@tilera.com>
+
+	* elf/elf.h (R_TILEGX_IMM16_X[01]_HW[012]_(|LAST_)PLT_PCREL): Add.
+
 2012-11-03  Andreas Schwab  <schwab@linux-m68k.org>
 
 	* scripts/cross-test-ssh.sh (command): Use newlines to separate
