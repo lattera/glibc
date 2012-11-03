@@ -1,3 +1,15 @@
+2012-11-02  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* stdlib/Makefile (headers): Add bits/stdlib-float.h.
+	* stdlib/stdlib.h (atof): Moved to ...
+	* include/bits/stdlib-float.h: Here.  New file.
+	* stdlib/stdlib.h: Include <bits/stdlib-float.h>.
+	* stdlib/bits/stdlib-float.h: New file.
+	* sysdeps/x86/Makefile (CFLAGS-.os): Compile rtld routines with
+	-mno-sse -mno-mmx.
+	* sysdeps/x86_64/multiarch/strcasestr-nonascii.c: Include
+	<xmmintrin.h>.
+
 2012-11-02  Joseph Myers  <joseph@codesourcery.com>
 
 	* conform/conformtest.pl (@headers): Add fenv.h.

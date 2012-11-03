@@ -27,7 +27,14 @@
 # include <stdlib.h>
 # include <sysdep.h>
 # include <kernel-features.h>
-# include <xmmintrin.h>
+
+/* Replacement type for __m128 since this file is included by ld.so,
+   which is compiled with -mno-sse.  It must not change the alignment
+   of rtld_savespace_sse.  */
+typedef struct
+{
+  int i[4];
+} __128bits;
 
 
 /* Type for the dtv.  */
@@ -64,7 +71,7 @@ typedef struct
   void *__private_tm[5];
   long int __unused2;
   /* Have space for the post-AVX register size.  */
-  __m128 rtld_savespace_sse[8][4] __attribute__ ((aligned (32)));
+  __128bits rtld_savespace_sse[8][4] __attribute__ ((aligned (32)));
 
   void *__padding[8];
 } tcbhead_t;

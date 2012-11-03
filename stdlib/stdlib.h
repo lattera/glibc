@@ -274,11 +274,6 @@ extern long double strtold_l (const char *__restrict __nptr,
 
 #ifdef __USE_EXTERN_INLINES
 __BEGIN_NAMESPACE_STD
-__extern_inline double
-__NTH (atof (const char *__nptr))
-{
-  return strtod (__nptr, (char **) NULL);
-}
 __extern_inline int
 __NTH (atoi (const char *__nptr))
 {
@@ -953,6 +948,7 @@ extern int getloadavg (double __loadavg[], int __nelem)
      __THROW __nonnull ((1));
 #endif
 
+#include <bits/stdlib-float.h>
 
 /* Define some macros helping to catch buffer overflows.  */
 #if __USE_FORTIFY_LEVEL > 0 && defined __fortify_function

@@ -1,5 +1,5 @@
-/* strstr with SSE4.2 intrinsics
-   Copyright (C) 2010 Free Software Foundation, Inc.
+/* Floating-point inline functions for stdlib.h.
+   Copyright (C) 2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,35 +16,16 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <ctype.h>
-#include <xmmintrin.h>
+#ifndef _STDLIB_H
+# error "Never use <bits/stdlib-float.h> directly; include <stdlib.h> instead."
+#endif
 
-
-/* Similar to __m128i_strloadu.  Convert to lower case for none-POSIX/C
-   locale.  */
-static inline __m128i
-__m128i_strloadu_tolower (const unsigned char *p)
+#ifdef __USE_EXTERN_INLINES
+__BEGIN_NAMESPACE_STD
+__extern_inline double
+__NTH (atof (const char *__nptr))
 {
-  union
-    {
-      char b[16];
-      __m128i x;
-    } u;
-
-  for (int i = 0; i < 16; ++i)
-    if (p[i] == 0)
-      {
-	u.b[i] = 0;
-	break;
-      }
-    else
-      u.b[i] = tolower (p[i]);
-
-  return u.x;
+  return strtod (__nptr, (char **) NULL);
 }
-
-
-#define STRCASESTR_NONASCII
-#define USE_AS_STRCASESTR
-#define STRSTR_SSE42 __strcasestr_sse42_nonascii
-#include "strstr.c"
+__END_NAMESPACE_STD
+#endif /* Optimizing and Inlining.  */
