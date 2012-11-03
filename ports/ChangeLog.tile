@@ -1,3 +1,7 @@
+2012-11-03  Chris Metcalf  <cmetcalf@tilera.com>
+
+	* sysdeps/tile/libm-test-ulps: Account for new tests.
+
 2012-10-30  Chris Metcalf  <cmetcalf@tilera.com>
 
 	* sysdeps/tile/dl-machine.h: Use new DL_AFTER_LOAD macro
