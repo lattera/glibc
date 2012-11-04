@@ -29,4 +29,3 @@ __getppid ()
 stub_warning (getppid)
 
 weak_alias (__getppid, getppid)
-#include <stub-tag.h>

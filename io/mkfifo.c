@@ -39,4 +39,3 @@ mkfifo (path, mode)
 
 
 stub_warning (mkfifo)
-#include <stub-tag.h>

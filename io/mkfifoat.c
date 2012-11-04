@@ -56,4 +56,3 @@ mkfifoat (fd, path, mode)
 
 
 stub_warning (mkfifoat)
-#include <stub-tag.h>

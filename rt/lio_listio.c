@@ -38,4 +38,3 @@ lio_listio (int mode,
 }
 
 stub_warning (lio_listio)
-#include <stub-tag.h>

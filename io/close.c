@@ -36,4 +36,3 @@ libc_hidden_def (__close)
 stub_warning (close)
 
 weak_alias (__close, close)
-#include <stub-tag.h>

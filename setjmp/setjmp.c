@@ -33,4 +33,3 @@ __libc_sigsetjmp (jmp_buf env, int savemask)
 
 weak_alias (__libc_sigsetjmp, __sigsetjmp)
 stub_warning (__sigsetjmp)
-#include <stub-tag.h>

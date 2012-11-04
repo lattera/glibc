@@ -38,4 +38,3 @@ msgrcv (msqid, msgp, msgsz, msgtyp, msgflg)
 }
 
 stub_warning (msgrcv)
-#include <stub-tag.h>

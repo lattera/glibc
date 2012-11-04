@@ -39,4 +39,3 @@ libc_hidden_def (__select)
 stub_warning (select)
 
 weak_alias (__select, select)
-#include <stub-tag.h>

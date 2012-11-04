@@ -42,4 +42,3 @@ __tcgetattr (fd, termios_p)
 stub_warning (tcgetattr)
 
 weak_alias (__tcgetattr, tcgetattr)
-#include <stub-tag.h>

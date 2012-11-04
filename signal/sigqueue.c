@@ -29,4 +29,3 @@ __sigqueue (pid_t pid, int sig, const union sigval val)
 weak_alias (__sigqueue, sigqueue)
 
 stub_warning (sigqueue)
-#include <stub-tag.h>

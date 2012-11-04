@@ -46,4 +46,3 @@ stub_warning (write)
 weak_alias (__libc_write, __write)
 libc_hidden_weak (__write)
 weak_alias (__libc_write, write)
-#include <stub-tag.h>

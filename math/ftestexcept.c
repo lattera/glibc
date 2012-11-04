@@ -26,4 +26,3 @@ fetestexcept (int excepts)
 }
 libm_hidden_def (fetestexcept)
 stub_warning (fetestexcept)
-#include <stub-tag.h>

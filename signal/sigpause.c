@@ -40,7 +40,6 @@ __default_sigpause (int mask)
 }
 weak_alias (__default_sigpause, sigpause)
 stub_warning (sigpause)
-#include <stub-tag.h>
 
 
 int

@@ -38,4 +38,3 @@ weak_alias (__libc_accept4, accept4)
 
 
 stub_warning (accept4)
-#include <stub-tag.h>

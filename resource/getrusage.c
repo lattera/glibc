@@ -31,4 +31,3 @@ __getrusage (who, usage)
 stub_warning (getrusage)
 
 weak_alias (__getrusage, getrusage)
-#include <stub-tag.h>

@@ -33,4 +33,3 @@ __getdirentries (fd, buf, nbytes, basep)
 weak_alias (__getdirentries, getdirentries)
 
 stub_warning (getdirentries)
-#include <stub-tag.h>

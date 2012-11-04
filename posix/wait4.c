@@ -29,4 +29,3 @@ __wait4 (__pid_t pid, __WAIT_STATUS stat_loc, int options,
 stub_warning (wait4)
 
 weak_alias (__wait4, wait4)
-#include <stub-tag.h>

@@ -32,4 +32,3 @@ __gethostname (name, len)
 stub_warning (gethostname)
 
 weak_alias (__gethostname, gethostname)
-#include <stub-tag.h>

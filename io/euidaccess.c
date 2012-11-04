@@ -38,4 +38,3 @@ weak_alias (__euidaccess, euidaccess)
 weak_alias (__euidaccess, eaccess)
 stub_warning (euidaccess)
 stub_warning (eaccess)
-#include <stub-tag.h>

@@ -32,4 +32,3 @@ getpeername (fd, addr, len)
 
 
 stub_warning (getpeername)
-#include <stub-tag.h>

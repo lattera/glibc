@@ -37,4 +37,3 @@ rename (old, new)
 
 
 stub_warning (rename)
-#include <stub-tag.h>

@@ -33,4 +33,3 @@ __listen (fd, n)
 weak_alias (__listen, listen)
 
 stub_warning (listen)
-#include <stub-tag.h>

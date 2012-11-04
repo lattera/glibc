@@ -26,4 +26,3 @@ fesetround (int round)
 }
 libm_hidden_def (fesetround)
 stub_warning (fesetround)
-#include <stub-tag.h>

@@ -28,4 +28,3 @@ setcontext (ucp)
 
 
 stub_warning (setcontext)
-#include <stub-tag.h>

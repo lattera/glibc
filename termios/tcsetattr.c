@@ -104,4 +104,3 @@ bad_speed (speed_t speed)
 
 
 stub_warning (tcsetattr)
-#include <stub-tag.h>

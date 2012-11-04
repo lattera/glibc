@@ -12,4 +12,3 @@ __kernel_tanl (long double x, long double y, int iy)
 }
 
 stub_warning (__kernel_tanl)
-#include <stub-tag.h>

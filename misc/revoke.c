@@ -27,4 +27,3 @@ revoke (file)
   return -1;
 }
 stub_warning (revoke)
-#include <stub-tag.h>

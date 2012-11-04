@@ -32,4 +32,3 @@ stub_warning (nanosleep)
 weak_alias (__libc_nanosleep, __nanosleep)
 libc_hidden_def (__nanosleep)
 weak_alias (__libc_nanosleep, nanosleep)
-#include <stub-tag.h>

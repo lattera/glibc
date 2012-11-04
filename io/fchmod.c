@@ -38,4 +38,3 @@ __fchmod (fd, mode)
 stub_warning (fchmod)
 
 weak_alias (__fchmod, fchmod)
-#include <stub-tag.h>

@@ -30,4 +30,3 @@ libc_hidden_def (__sigtimedwait)
 weak_alias (__sigtimedwait, sigtimedwait)
 
 stub_warning (sigtimedwait)
-#include <stub-tag.h>

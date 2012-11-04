@@ -36,4 +36,3 @@ stime (when)
 }
 
 stub_warning (stime)
-#include <stub-tag.h>

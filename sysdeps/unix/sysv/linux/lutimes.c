@@ -54,5 +54,4 @@ lutimes (const char *file, const struct timeval tvp[2])
 
 #ifndef __NR_utimensat
 stub_warning (lutimes)
-# include <stub-tag.h>
 #endif

@@ -1,3 +1,9 @@
+2012-11-04  Thomas Schwinge  <thomas@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/generic/sysctl.c: Don't include
+	<stub-tag.h>.
+	* sysdeps/unix/sysv/linux/generic/ustat.c: Likewise.
+
 2012-10-27  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/generic/bits/fcntl.h: (__O_LARGEFILE)

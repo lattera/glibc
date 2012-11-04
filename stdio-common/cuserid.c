@@ -31,4 +31,3 @@ cuserid (s)
 
 
 stub_warning (cuserid)
-#include <stub-tag.h>

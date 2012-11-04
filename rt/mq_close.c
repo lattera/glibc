@@ -27,4 +27,3 @@ mq_close (mqd_t mqdes)
   return -1;
 }
 stub_warning (mq_close)
-#include <stub-tag.h>

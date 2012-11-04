@@ -26,4 +26,3 @@ fegetexcept (void)
   return -1;
 }
 stub_warning (fegetexcept)
-#include <stub-tag.h>

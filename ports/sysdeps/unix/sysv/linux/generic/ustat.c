@@ -30,4 +30,3 @@ ustat (dev_t dev, struct ustat *ubuf)
   return -1;
 }
 stub_warning (ustat)
-#include <stub-tag.h>

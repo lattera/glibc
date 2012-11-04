@@ -30,4 +30,3 @@ setdomainname (name, len)
 }
 
 stub_warning (setdomainname)
-#include <stub-tag.h>

@@ -26,4 +26,3 @@ fedisableexcept (int excepts)
   return -1;
 }
 stub_warning (fedisableexcept)
-#include <stub-tag.h>

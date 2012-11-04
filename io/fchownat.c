@@ -46,5 +46,3 @@ fchownat (fd, file, owner, group, flag)
   return -1;
 }
 stub_warning (fchownat)
-
-#include <stub-tag.h>

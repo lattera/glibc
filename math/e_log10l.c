@@ -12,4 +12,3 @@ __ieee754_log10l (long double x)
 strong_alias (__ieee754_log10l, __log10l_finite)
 
 stub_warning (log10l)
-#include <stub-tag.h>

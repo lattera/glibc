@@ -31,4 +31,3 @@ __closedir (DIR *dirp)
 weak_alias (__closedir, closedir)
 
 stub_warning (closedir)
-#include <stub-tag.h>

@@ -29,4 +29,3 @@ dirfd (dirp)
 }
 
 stub_warning (dirfd)
-#include <stub-tag.h>

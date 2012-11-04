@@ -44,4 +44,3 @@ __mq_open_2 (const char *name, int oflag)
   return __mq_open (name, oflag);
 }
 stub_warning (__mq_open_2)
-#include <stub-tag.h>

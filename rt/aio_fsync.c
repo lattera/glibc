@@ -47,4 +47,3 @@ weak_alias (aio_fsync, aio_fsync64)
 
 stub_warning (aio_fsync)
 stub_warning (aio_fsync64)
-#include <stub-tag.h>

@@ -34,4 +34,3 @@ __socket (domain, type, protocol)
 
 weak_alias (__socket, socket)
 stub_warning (socket)
-#include <stub-tag.h>

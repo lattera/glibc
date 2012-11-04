@@ -28,4 +28,3 @@ fdetach (path)
 
 
 stub_warning (fdetach)
-#include <stub-tag.h>

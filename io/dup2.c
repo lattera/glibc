@@ -44,4 +44,3 @@ libc_hidden_def (__dup2)
 stub_warning (dup2)
 
 weak_alias (__dup2, dup2)
-#include <stub-tag.h>

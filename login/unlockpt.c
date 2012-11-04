@@ -31,4 +31,3 @@ unlockpt (fd)
 }
 
 stub_warning (unlockpt)
-#include <stub-tag.h>

@@ -27,4 +27,3 @@ swapoff (const char *path)
 }
 
 stub_warning (swapoff)
-#include <stub-tag.h>

@@ -30,4 +30,3 @@ swapon (path)
 }
 
 stub_warning (swapon)
-#include <stub-tag.h>

@@ -30,4 +30,3 @@ stub_warning (sched_yield)
 libc_hidden_def (__sched_yield)
 
 weak_alias (__sched_yield, sched_yield)
-#include <stub-tag.h>

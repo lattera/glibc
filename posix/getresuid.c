@@ -31,4 +31,3 @@ libc_hidden_def (__getresuid)
 stub_warning (getresuid)
 
 weak_alias (__getresuid, getresuid)
-#include <stub-tag.h>

@@ -37,4 +37,3 @@ __sleep (seconds)
 weak_alias (__sleep, sleep)
 
 stub_warning (sleep)
-#include <stub-tag.h>

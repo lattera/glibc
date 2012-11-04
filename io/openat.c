@@ -88,5 +88,3 @@ __openat_2 (fd, file, oflag)
   return __openat (fd, file, oflag);
 }
 stub_warning (__openat_2)
-
-#include <stub-tag.h>

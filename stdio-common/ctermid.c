@@ -32,4 +32,3 @@ ctermid (s)
 
 
 stub_warning (ctermid)
-#include <stub-tag.h>

@@ -28,4 +28,3 @@ clock_gettime (clockid_t clock_id, struct timespec *tp)
 }
 strong_alias (clock_gettime, __clock_gettime)
 stub_warning (clock_gettime)
-#include <stub-tag.h>

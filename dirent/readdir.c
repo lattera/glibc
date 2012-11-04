@@ -29,4 +29,3 @@ __readdir (DIR *dirp)
 weak_alias (__readdir, readdir)
 
 stub_warning (readdir)
-#include <stub-tag.h>

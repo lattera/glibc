@@ -28,5 +28,3 @@ sendfile (int out_fd, int in_fd, off_t *offset, size_t count)
   return -1;
 }
 stub_warning (sendfile)
-
-#include <stub-tag.h>

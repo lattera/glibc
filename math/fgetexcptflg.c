@@ -33,4 +33,3 @@ compat_symbol (libm, __old_fegetexceptflag, fegetexceptflag, GLIBC_2_1);
 versioned_symbol (libm, __fegetexceptflag, fegetexceptflag, GLIBC_2_2);
 
 stub_warning (fegetexceptflag)
-#include <stub-tag.h>

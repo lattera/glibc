@@ -12,4 +12,3 @@ __ieee754_rem_pio2l (long double x, long double *y)
 }
 
 stub_warning (__ieee754_rem_pio2l)
-#include <stub-tag.h>

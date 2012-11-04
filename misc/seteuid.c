@@ -28,4 +28,3 @@ seteuid (uid)
 }
 libc_hidden_def (seteuid)
 stub_warning (seteuid)
-#include <stub-tag.h>

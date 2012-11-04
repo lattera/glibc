@@ -30,4 +30,3 @@ reboot (howto)
 
 
 stub_warning (reboot)
-#include <stub-tag.h>

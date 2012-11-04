@@ -32,4 +32,3 @@ __flock (fd, operation)
 weak_alias (__flock, flock)
 
 stub_warning (flock)
-#include <stub-tag.h>

@@ -33,4 +33,3 @@ __adjtime (delta, olddelta)
 stub_warning (adjtime)
 
 weak_alias (__adjtime, adjtime)
-#include <stub-tag.h>

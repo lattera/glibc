@@ -36,4 +36,3 @@ libc_hidden_def (accept)
 
 
 stub_warning (accept)
-#include <stub-tag.h>

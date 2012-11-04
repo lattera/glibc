@@ -28,4 +28,3 @@ usleep (useconds)
 }
 
 stub_warning (usleep)
-#include <stub-tag.h>

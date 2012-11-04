@@ -30,4 +30,3 @@ sigset (sig, disp)
 }
 
 stub_warning (sigset)
-#include <stub-tag.h>

@@ -38,4 +38,3 @@ __profil (u_short *sample_buffer, size_t size, size_t offset, u_int scale)
 }
 weak_alias (__profil, profil)
 stub_warning (profil)
-#include <stub-tag.h>

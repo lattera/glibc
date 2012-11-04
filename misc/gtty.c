@@ -36,4 +36,3 @@ gtty (fd, params)
 }
 
 stub_warning (gtty)
-#include <stub-tag.h>

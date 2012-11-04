@@ -34,4 +34,3 @@ __xstat64 (int vers, const char *file, struct stat64 *buf)
 }
 hidden_def (__xstat64)
 stub_warning (stat64)
-#include <stub-tag.h>

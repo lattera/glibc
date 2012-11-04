@@ -33,4 +33,3 @@ libc_hidden_def (__madvise)
 weak_alias (__madvise, madvise)
 
 stub_warning (madvise)
-#include <stub-tag.h>

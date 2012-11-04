@@ -31,4 +31,3 @@ grantpt (fd)
 }
 
 stub_warning (grantpt)
-#include <stub-tag.h>

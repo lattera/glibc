@@ -35,4 +35,3 @@ __xstat (int vers, const char *file, struct stat *buf)
 hidden_def (__xstat)
 stub_warning (stat)
 weak_alias (__xstat, _xstat)
-#include <stub-tag.h>

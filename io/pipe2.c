@@ -39,5 +39,3 @@ __pipe2 (pipedes, flags)
 }
 weak_alias (__pipe2, pipe2)
 stub_warning (pipe2)
-
-#include <stub-tag.h>

@@ -28,4 +28,3 @@ __sigwait (const sigset_t *set, int *sig)
 weak_alias (__sigwait, sigwait)
 
 stub_warning (sigwait)
-#include <stub-tag.h>

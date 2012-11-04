@@ -30,4 +30,3 @@ mq_timedreceive (mqd_t mqdes, char *__restrict msg_ptr, size_t msg_len,
 }
 hidden_def (mq_timedreceive)
 stub_warning (mq_timedreceive)
-#include <stub-tag.h>

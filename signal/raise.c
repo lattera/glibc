@@ -30,4 +30,3 @@ weak_alias (raise, gsignal)
 
 stub_warning (raise)
 stub_warning (gsignal)
-#include <stub-tag.h>

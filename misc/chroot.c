@@ -30,4 +30,3 @@ chroot (path)
 
 
 stub_warning (chroot)
-#include <stub-tag.h>

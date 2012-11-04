@@ -33,4 +33,3 @@ __recv (fd, buf, n, flags)
 weak_alias (__recv, recv)
 
 stub_warning (recv)
-#include <stub-tag.h>

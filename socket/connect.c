@@ -35,4 +35,3 @@ weak_alias (__connect, connect)
 libc_hidden_def (__connect)
 
 stub_warning (connect)
-#include <stub-tag.h>

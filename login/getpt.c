@@ -41,4 +41,3 @@ weak_alias (__posix_openpt, posix_openpt)
 
 stub_warning (getpt)
 stub_warning (posix_openpt)
-#include <stub-tag.h>

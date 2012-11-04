@@ -32,4 +32,3 @@ __ftruncate (fd, length)
 weak_alias (__ftruncate, ftruncate)
      
 stub_warning (ftruncate)
-#include <stub-tag.h>

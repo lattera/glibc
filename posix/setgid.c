@@ -33,4 +33,3 @@ __setgid (gid)
 stub_warning (setgid)
 
 weak_alias (__setgid, setgid)
-#include <stub-tag.h>

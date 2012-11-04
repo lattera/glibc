@@ -32,4 +32,3 @@ __mprotect (__ptr_t addr, size_t len, int prot)
 weak_alias (__mprotect, mprotect)
 
 stub_warning (mprotect)
-#include <stub-tag.h>

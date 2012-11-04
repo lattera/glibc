@@ -35,4 +35,3 @@ libm_hidden_ver (__fegetenv, fegetenv)
 versioned_symbol (libm, BP_SYM (__fegetenv), BP_SYM (fegetenv), GLIBC_2_2);
 
 stub_warning (fegetenv)
-#include <stub-tag.h>

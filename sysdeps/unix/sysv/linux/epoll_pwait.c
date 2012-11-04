@@ -64,7 +64,6 @@ int epoll_pwait (int epfd, struct epoll_event *events,
 }
 stub_warning (epoll_pwait)
 
-# include <stub-tag.h>
 #endif
 
 libc_hidden_def (epoll_pwait)

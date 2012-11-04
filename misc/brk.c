@@ -33,4 +33,3 @@ __brk (addr)
 stub_warning (brk)
 
 weak_alias (__brk, brk)
-#include <stub-tag.h>

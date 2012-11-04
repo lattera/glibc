@@ -45,5 +45,4 @@ futimens (int fd, const struct timespec tsp[2])
 }
 #ifndef __NR_utimensat
 stub_warning (futimens)
-# include <stub-tag.h>
 #endif

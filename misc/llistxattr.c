@@ -26,4 +26,3 @@ llistxattr (const char *__path, char *__list, size_t __size)
 }
 
 stub_warning (llistxattr)
-#include <stub-tag.h>

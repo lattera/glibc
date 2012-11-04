@@ -32,4 +32,3 @@ __bind (fd, addr, len)
 weak_alias (__bind, bind)
 
 stub_warning (bind)
-#include <stub-tag.h>

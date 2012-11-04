@@ -47,5 +47,3 @@ linkat (fromfd, from, tofd, to, flags)
   return -1;
 }
 stub_warning (linkat)
-
-#include <stub-tag.h>

@@ -35,4 +35,3 @@ shutdown (fd, how)
 
 
 stub_warning (shutdown)
-#include <stub-tag.h>

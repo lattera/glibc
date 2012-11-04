@@ -12,4 +12,3 @@ __asinhl(long double x)
 
 weak_alias (__asinhl, asinhl)
 stub_warning (asinhl)
-#include <stub-tag.h>

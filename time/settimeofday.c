@@ -31,4 +31,3 @@ __settimeofday (tv, tz)
 stub_warning (settimeofday)
 
 weak_alias (__settimeofday, settimeofday)
-#include <stub-tag.h>

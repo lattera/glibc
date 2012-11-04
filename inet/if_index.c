@@ -50,7 +50,6 @@ if_nameindex (void)
   return NULL;
 }
 stub_warning (if_nameindex)
-#include <stub-tag.h>
 
 #if 0
 void

@@ -32,4 +32,3 @@ getdirentries64 (fd, buf, nbytes, basep)
 }
 
 stub_warning (getdirentries64)
-#include <stub-tag.h>

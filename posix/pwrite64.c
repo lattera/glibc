@@ -43,4 +43,3 @@ strong_alias (__libc_pwrite64, __pwrite64)
 libc_hidden_def (__pwrite64)
 weak_alias (__libc_pwrite64, pwrite64)
 stub_warning (pwrite64)
-#include <stub-tag.h>

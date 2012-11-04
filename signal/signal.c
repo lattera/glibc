@@ -34,4 +34,3 @@ weak_alias (signal, ssignal)
 
 stub_warning (signal)
 stub_warning (ssignal)
-#include <stub-tag.h>

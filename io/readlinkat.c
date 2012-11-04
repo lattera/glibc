@@ -46,5 +46,3 @@ readlinkat (fd, path, buf, len)
 }
 stub_warning (readlinkat)
 libc_hidden_def (readlinkat)
-
-#include <stub-tag.h>

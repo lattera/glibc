@@ -12,4 +12,3 @@ __ieee754_sinhl (long double x)
 strong_alias (__ieee754_sinhl, __sinhl_finite)
 
 stub_warning (__ieee754_sinhl)
-#include <stub-tag.h>

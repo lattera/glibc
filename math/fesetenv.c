@@ -34,4 +34,3 @@ libm_hidden_ver (__fesetenv, fesetenv)
 versioned_symbol (libm, __fesetenv, fesetenv, GLIBC_2_2);
 
 stub_warning (fesetenv)
-#include <stub-tag.h>

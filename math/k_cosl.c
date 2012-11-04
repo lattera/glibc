@@ -12,4 +12,3 @@ __kernel_cosl (long double x, long double y)
 }
 
 stub_warning (__kernel_cosl)
-#include <stub-tag.h>

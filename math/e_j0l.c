@@ -24,4 +24,3 @@ __ieee754_y0l (long double x)
 strong_alias (__ieee754_y0l, __y0l_finite)
 
 stub_warning (y0l)
-#include <stub-tag.h>

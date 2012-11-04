@@ -26,4 +26,3 @@ timer_gettime (timer_t timerid, struct itimerspec *value)
   return -1;
 }
 stub_warning (timer_gettime)
-#include <stub-tag.h>

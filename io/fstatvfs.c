@@ -29,4 +29,3 @@ __fstatvfs (int fd, struct statvfs *buf)
 stub_warning (fstatvfs)
 weak_alias (__fstatvfs, fstatvfs)
 libc_hidden_weak (fstatvfs)
-#include <stub-tag.h>

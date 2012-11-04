@@ -31,4 +31,3 @@ getmsg (fildes, ctlptr, dataptr, flagsp)
 
 
 stub_warning (getmsg)
-#include <stub-tag.h>

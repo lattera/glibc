@@ -37,4 +37,3 @@ strong_alias (__libc_readv, __readv)
 weak_alias (__libc_readv, readv)
 
 stub_warning (readv)
-#include <stub-tag.h>

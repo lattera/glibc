@@ -30,4 +30,3 @@ __sched_rr_get_interval (pid_t pid, struct timespec *t)
 stub_warning (sched_rr_get_interval)
 
 weak_alias (__sched_rr_get_interval, sched_rr_get_interval)
-#include <stub-tag.h>

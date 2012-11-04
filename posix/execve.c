@@ -40,4 +40,3 @@ __execve (path, argv, envp)
 stub_warning (execve)
 
 weak_alias (__execve, execve)
-#include <stub-tag.h>

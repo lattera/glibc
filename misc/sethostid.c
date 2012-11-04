@@ -30,4 +30,3 @@ sethostid (id)
 
 
 stub_warning (sethostid)
-#include <stub-tag.h>

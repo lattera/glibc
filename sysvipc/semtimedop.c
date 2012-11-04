@@ -33,4 +33,3 @@ semtimedop (semid, sops, nsops, timeout)
 }
 
 stub_warning (semtimedop)
-#include <stub-tag.h>

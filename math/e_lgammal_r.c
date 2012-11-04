@@ -15,4 +15,3 @@ strong_alias (__ieee754_lgammal_r, __lgammal_r_finite)
 
 stub_warning (lgammal)
 stub_warning (lgammal_r)
-#include <stub-tag.h>

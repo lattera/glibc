@@ -26,4 +26,3 @@ removexattr (const char *__path, const char *__name)
 }
 
 stub_warning (removexattr)
-#include <stub-tag.h>

@@ -46,4 +46,3 @@ __fxstatat (int vers, int fd, const char *filename, struct stat *buf, int flag)
 }
 libc_hidden_def (__fxstatat)
 stub_warning (fstatat)
-#include <stub-tag.h>

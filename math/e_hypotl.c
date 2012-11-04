@@ -12,4 +12,3 @@ __ieee754_hypotl (long double x, long double y)
 strong_alias (__ieee754_hypotl, __hypotl_finite)
 
 stub_warning (__ieee754_hypotl)
-#include <stub-tag.h>

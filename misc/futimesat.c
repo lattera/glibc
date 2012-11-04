@@ -42,4 +42,3 @@ futimesat (fd, file, tvp)
 }
 
 stub_warning (futimesat)
-#include <stub-tag.h>

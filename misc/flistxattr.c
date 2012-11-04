@@ -26,4 +26,3 @@ flistxattr (int __fd, char *__list, size_t __size)
 }
 
 stub_warning (flistxattr)
-#include <stub-tag.h>

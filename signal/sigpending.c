@@ -36,4 +36,3 @@ sigpending (set)
 }
 
 stub_warning (sigpending)
-#include <stub-tag.h>

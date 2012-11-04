@@ -36,4 +36,3 @@ __setsockopt (fd, level, optname, optval, optlen)
 weak_alias (__setsockopt, setsockopt)
 
 stub_warning (setsockopt)
-#include <stub-tag.h>

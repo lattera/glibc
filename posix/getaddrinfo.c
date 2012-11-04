@@ -36,5 +36,3 @@ freeaddrinfo (struct addrinfo *ai)
 }
 stub_warning (freeaddrinfo)
 libc_hidden_def (freeaddrinfo)
-
-#include <stub-tag.h>

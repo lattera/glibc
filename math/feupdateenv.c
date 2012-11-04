@@ -34,4 +34,3 @@ libm_hidden_ver (__feupdateenv, feupdateenv)
 versioned_symbol (libm, __feupdateenv, feupdateenv, GLIBC_2_2);
 
 stub_warning (feupdateenv)
-#include <stub-tag.h>

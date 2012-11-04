@@ -38,4 +38,3 @@ __opendir (const char *name)
 weak_alias (__opendir, opendir)
 
 stub_warning (opendir)
-#include <stub-tag.h>

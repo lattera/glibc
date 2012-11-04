@@ -32,4 +32,3 @@ time (timer)
 libc_hidden_def (time)
 
 stub_warning (time)
-#include <stub-tag.h>

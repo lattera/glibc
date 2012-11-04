@@ -33,4 +33,3 @@ msgctl (msqid, cmd, buf)
 }
 
 stub_warning (msgctl)
-#include <stub-tag.h>

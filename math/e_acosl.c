@@ -12,4 +12,3 @@ __ieee754_acosl (long double x)
 strong_alias (__ieee754_acosl, __acosl_finite)
 
 stub_warning (acosl)
-#include <stub-tag.h>

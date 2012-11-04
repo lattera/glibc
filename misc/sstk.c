@@ -31,4 +31,3 @@ sstk (increment)
 }
 
 stub_warning (sstk)
-#include <stub-tag.h>

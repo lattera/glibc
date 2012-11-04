@@ -29,4 +29,3 @@ swapcontext (oucp, ucp)
 
 
 stub_warning (swapcontext)
-#include <stub-tag.h>

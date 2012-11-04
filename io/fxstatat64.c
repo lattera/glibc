@@ -47,4 +47,3 @@ __fxstatat64 (int vers, int fd, const char *filename, struct stat64 *buf,
 }
 libc_hidden_def (__fxstatat64)
 stub_warning (fstatat64)
-#include <stub-tag.h>

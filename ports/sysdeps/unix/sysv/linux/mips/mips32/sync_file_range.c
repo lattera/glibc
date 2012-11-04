@@ -54,6 +54,4 @@ sync_file_range (int fd, __off64_t from, __off64_t to, unsigned int flags)
   return -1;
 }
 stub_warning (sync_file_range)
-
-# include <stub-tag.h>
 #endif

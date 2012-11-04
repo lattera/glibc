@@ -33,4 +33,3 @@ shmget (key, size, shmflg)
 }
 
 stub_warning (shmget)
-#include <stub-tag.h>

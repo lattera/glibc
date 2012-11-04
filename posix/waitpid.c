@@ -49,4 +49,3 @@ libc_hidden_weak (__waitpid)
 weak_alias (__libc_waitpid, waitpid)
 
 stub_warning (waitpid)
-#include <stub-tag.h>

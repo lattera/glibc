@@ -38,4 +38,3 @@ __getitimer (which, value)
 stub_warning (getitimer)
 
 weak_alias (__getitimer, getitimer)
-#include <stub-tag.h>

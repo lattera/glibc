@@ -30,4 +30,3 @@ __fstatfs (int fd, struct statfs *buf)
 stub_warning (fstatfs)
 
 weak_alias (__fstatfs, fstatfs)
-#include <stub-tag.h>

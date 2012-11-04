@@ -46,5 +46,3 @@ fchmodat (fd, file, mode, flag)
   return -1;
 }
 stub_warning (fchmodat)
-
-#include <stub-tag.h>

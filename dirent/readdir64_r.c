@@ -29,4 +29,3 @@ readdir64_r (DIR *dirp, struct dirent64 *entry, struct dirent64 **result)
   return -1;
 }
 stub_warning (readdir64_r)
-#include <stub-tag.h>

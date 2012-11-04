@@ -34,4 +34,3 @@ ttyname (fd)
 
 
 stub_warning (ttyname)
-#include <stub-tag.h>

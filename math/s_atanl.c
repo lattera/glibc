@@ -12,4 +12,3 @@ __atanl (long double x)
 weak_alias (__atanl, atanl)
 
 stub_warning (atanl)
-#include <stub-tag.h>

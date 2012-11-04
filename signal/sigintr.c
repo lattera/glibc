@@ -31,4 +31,3 @@ siginterrupt (sig, interrupt)
 }
 
 stub_warning (siginterrupt)
-#include <stub-tag.h>

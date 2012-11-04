@@ -39,4 +39,3 @@ utime (file, times)
 libc_hidden_def (utime)
 
 stub_warning (utime)
-#include <stub-tag.h>

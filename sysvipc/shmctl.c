@@ -32,4 +32,3 @@ shmctl (shmid, cmd, buf)
 }
 
 stub_warning (shmctl)
-#include <stub-tag.h>

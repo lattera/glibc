@@ -29,4 +29,3 @@ fsync (fd)
 
 
 stub_warning (fsync)
-#include <stub-tag.h>

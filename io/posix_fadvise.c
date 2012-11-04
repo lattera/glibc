@@ -27,4 +27,3 @@ posix_fadvise (int fd, __off_t offset, __off_t len, int advise)
   return ENOSYS;
 }
 stub_warning (posix_fadvise)
-#include <stub-tag.h>

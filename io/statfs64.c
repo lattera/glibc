@@ -28,4 +28,3 @@ __statfs64 (const char *file, struct statfs64 *buf)
 weak_alias (__statfs64, statfs64)
 
 stub_warning (statfs64)
-#include <stub-tag.h>

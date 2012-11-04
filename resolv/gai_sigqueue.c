@@ -32,4 +32,3 @@ __gai_sigqueue (sig, val, caller_pid)
 }
 
 stub_warning (__gai_sigqueue)
-#include <stub-tag.h>

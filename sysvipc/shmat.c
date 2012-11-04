@@ -34,4 +34,3 @@ shmat (shmid, shmaddr, shmflg)
 }
 
 stub_warning (shmat)
-#include <stub-tag.h>

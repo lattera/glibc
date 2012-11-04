@@ -29,4 +29,3 @@ getlogin (void)
 }
 
 stub_warning (getlogin)
-#include <stub-tag.h>

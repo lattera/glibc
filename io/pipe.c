@@ -40,4 +40,3 @@ libc_hidden_def (__pipe)
 stub_warning (pipe)
 
 weak_alias (__pipe, pipe)
-#include <stub-tag.h>

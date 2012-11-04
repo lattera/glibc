@@ -29,4 +29,3 @@ syncfs (int fd)
 
 
 stub_warning (syncfs)
-#include <stub-tag.h>

@@ -39,4 +39,3 @@ __fchown (fd, owner, group)
 stub_warning (fchown)
 
 weak_alias (__fchown, fchown)
-#include <stub-tag.h>

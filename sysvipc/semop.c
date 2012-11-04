@@ -32,4 +32,3 @@ semop (semid, sops, nsops)
 }
 
 stub_warning (semop)
-#include <stub-tag.h>

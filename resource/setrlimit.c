@@ -33,4 +33,3 @@ setrlimit (resource, rlimits)
 
 
 stub_warning (setrlimit)
-#include <stub-tag.h>

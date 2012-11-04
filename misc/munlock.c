@@ -30,4 +30,3 @@ munlock (const void *addr, size_t len)
 }
 
 stub_warning (munlock)
-#include <stub-tag.h>

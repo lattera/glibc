@@ -35,4 +35,3 @@ tcgetpgrp (fd)
 }
 libc_hidden_def (tcgetpgrp)
 stub_warning (tcgetpgrp)
-#include <stub-tag.h>

@@ -31,4 +31,3 @@ msync (__ptr_t addr, size_t len, int flags)
 }
 
 stub_warning (msync)
-#include <stub-tag.h>

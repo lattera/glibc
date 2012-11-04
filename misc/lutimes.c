@@ -31,4 +31,3 @@ __lutimes (const char *file, const struct timeval tvp[2])
 weak_alias (__lutimes, lutimes)
 
 stub_warning (lutimes)
-#include <stub-tag.h>

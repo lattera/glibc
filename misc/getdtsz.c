@@ -29,4 +29,3 @@ __getdtablesize ()
 stub_warning (getdtablesize)
 
 weak_alias (__getdtablesize, getdtablesize)
-#include <stub-tag.h>

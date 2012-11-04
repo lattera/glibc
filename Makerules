@@ -1310,9 +1310,7 @@ common-clean: common-mostlyclean
 	-rm -f $(gen-as-const-headers:%.sym=$(common-objpfx)%.h)
 
 # Produce a file `stubs' which contains `#define __stub_FUNCTION'
-# for each function which is a stub.  We grovel over all the .d files
-# looking for references to <stub-tag.h>.  Then we grovel over each
-# referenced source file to see what stub function it defines.
+# for each function which is a stub.
 
 ifdef objpfx
 .PHONY: stubs # The parent Makefile calls this target.

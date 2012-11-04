@@ -26,4 +26,3 @@ mincore (void *__start, size_t __len, unsigned char *__vec)
 }
 
 stub_warning (mincore)
-#include <stub-tag.h>

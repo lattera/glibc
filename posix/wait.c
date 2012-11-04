@@ -29,4 +29,3 @@ __wait (__WAIT_STATUS_DEFN stat_loc)
 stub_warning (wait)
 
 weak_alias (__wait, wait)
-#include <stub-tag.h>

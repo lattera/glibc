@@ -32,4 +32,3 @@ futimens (int fd, const struct timespec tsp[2])
   return -1;
 }
 stub_warning (futimens)
-#include <stub-tag.h>

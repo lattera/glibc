@@ -37,4 +37,3 @@ __pathconf (path, name)
 weak_alias (__pathconf, pathconf)
 
 stub_warning (pathconf)
-#include <stub-tag.h>

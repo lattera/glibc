@@ -46,4 +46,3 @@ __fxstat (int vers, int fd, struct stat *buf)
 stub_warning (fstat)
 hidden_def (__fxstat)
 weak_alias (__fxstat, _fxstat)
-#include <stub-tag.h>

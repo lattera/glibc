@@ -27,4 +27,3 @@ fsetxattr (int __fd, const char *__name, const void *__value,
 }
 
 stub_warning (fsetxattr)
-#include <stub-tag.h>

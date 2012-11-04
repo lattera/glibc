@@ -26,4 +26,3 @@ timer_delete (timer_t timerid)
   return -1;
 }
 stub_warning (timer_delete)
-#include <stub-tag.h>

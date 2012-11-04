@@ -37,4 +37,3 @@ __recvfrom (fd, buf, n, flags, addr, addr_len)
 weak_alias (__recvfrom, recvfrom)
 
 stub_warning (recvfrom)
-#include <stub-tag.h>

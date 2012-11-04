@@ -29,4 +29,3 @@ __geteuid ()
 stub_warning (geteuid)
 
 weak_alias (__geteuid, geteuid)
-#include <stub-tag.h>

@@ -32,4 +32,3 @@ msgget (key, msgflg)
 }
 
 stub_warning (msgget)
-#include <stub-tag.h>

@@ -29,4 +29,3 @@ libc_hidden_def (__getpgid)
 weak_alias (__getpgid, getpgid)
 
 stub_warning (getpgid)
-#include <stub-tag.h>

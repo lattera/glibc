@@ -37,4 +37,3 @@ msgsnd (msqid, msgp, msgsz, msgflg)
 }
 
 stub_warning (msgsnd)
-#include <stub-tag.h>

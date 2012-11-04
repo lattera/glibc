@@ -33,4 +33,3 @@ __ttyname_r (fd, buf, buflen)
 weak_alias (__ttyname_r, ttyname_r)
 
 stub_warning (ttyname_r)
-#include <stub-tag.h>

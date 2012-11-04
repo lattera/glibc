@@ -32,4 +32,3 @@ libc_hidden_def (rewinddir)
 
 
 stub_warning (rewinddir)
-#include <stub-tag.h>

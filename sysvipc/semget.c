@@ -33,4 +33,3 @@ semget (key, nsems, semflg)
 }
 
 stub_warning (semget)
-#include <stub-tag.h>

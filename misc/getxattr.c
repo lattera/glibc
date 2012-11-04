@@ -27,4 +27,3 @@ getxattr (const char *__path, const char *__name,
 }
 
 stub_warning (getxattr)
-#include <stub-tag.h>

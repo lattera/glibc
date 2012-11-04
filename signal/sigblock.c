@@ -29,4 +29,3 @@ __sigblock (mask)
 stub_warning (sigblock)
 
 weak_alias (__sigblock, sigblock)
-#include <stub-tag.h>

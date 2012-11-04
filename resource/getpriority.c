@@ -33,4 +33,3 @@ getpriority (which, who)
 libc_hidden_def (getpriority)
 
 stub_warning (getpriority)
-#include <stub-tag.h>

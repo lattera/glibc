@@ -33,4 +33,3 @@ __setuid (uid)
 stub_warning (setuid)
 
 weak_alias (__setuid, setuid)
-#include <stub-tag.h>

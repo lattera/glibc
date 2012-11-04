@@ -37,4 +37,3 @@ pwritev (fd, vector, count, offset)
 }
 
 stub_warning (pwritev)
-#include <stub-tag.h>

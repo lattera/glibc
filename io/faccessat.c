@@ -46,5 +46,3 @@ faccessat (fd, file, type, flag)
   return -1;
 }
 stub_warning (faccessat)
-
-#include <stub-tag.h>

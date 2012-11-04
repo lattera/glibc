@@ -29,4 +29,3 @@ vhangup ()
 }
 
 stub_warning (vhangup)
-#include <stub-tag.h>

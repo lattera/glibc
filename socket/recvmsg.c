@@ -33,4 +33,3 @@ __recvmsg (fd, message, flags)
 weak_alias (__recvmsg, recvmsg)
 
 stub_warning (recvmsg)
-#include <stub-tag.h>

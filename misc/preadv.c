@@ -37,4 +37,3 @@ preadv (fd, vector, count, offset)
 }
 
 stub_warning (preadv)
-#include <stub-tag.h>

@@ -28,4 +28,3 @@ gethostid ()
 
 
 stub_warning (gethostid)
-#include <stub-tag.h>

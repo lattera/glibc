@@ -40,4 +40,3 @@ weak_alias (aio_cancel, aio_cancel64)
 
 stub_warning (aio_cancel)
 stub_warning (aio_cancel64)
-#include <stub-tag.h>

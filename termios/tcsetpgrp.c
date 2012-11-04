@@ -37,4 +37,3 @@ tcsetpgrp (fd, pgrp_id)
 
 
 stub_warning (tcsetpgrp)
-#include <stub-tag.h>

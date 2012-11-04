@@ -24,4 +24,3 @@ __ieee754_ynl (int n, long double x)
 strong_alias (__ieee754_ynl, __ynl_finite)
 
 stub_warning (ynl)
-#include <stub-tag.h>

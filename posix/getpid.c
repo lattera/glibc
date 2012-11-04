@@ -30,4 +30,3 @@ stub_warning (getpid)
 
 weak_alias (__getpid, getpid)
 libc_hidden_weak (getpid)
-#include <stub-tag.h>

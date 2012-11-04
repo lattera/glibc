@@ -33,4 +33,3 @@ ualarm (value, interval)
 }
 
 stub_warning (ualarm)
-#include <stub-tag.h>

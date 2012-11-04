@@ -42,4 +42,3 @@ __spawni (pid_t *pid, const char *file,
 }
 
 stub_warning (__spawni)
-#include <stub-tag.h>

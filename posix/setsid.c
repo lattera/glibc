@@ -31,4 +31,3 @@ __setsid ()
 stub_warning (setsid)
 
 weak_alias (__setsid, setsid)
-#include <stub-tag.h>

@@ -28,4 +28,3 @@ __getegid ()
 stub_warning (getegid)
 
 weak_alias (__getegid, getegid)
-#include <stub-tag.h>

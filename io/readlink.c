@@ -33,4 +33,3 @@ __readlink (path, buf, len)
 stub_warning (readlink)
 
 weak_alias (__readlink, readlink)
-#include <stub-tag.h>

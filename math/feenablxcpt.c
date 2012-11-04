@@ -26,4 +26,3 @@ feenableexcept (int excepts)
   return -1;
 }
 stub_warning (feenableexcept)
-#include <stub-tag.h>

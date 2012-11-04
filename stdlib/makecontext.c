@@ -26,4 +26,3 @@ makecontext (ucontext_t *ucp, void (*func) (void), int argc, ...)
 
 
 stub_warning (makecontext)
-#include <stub-tag.h>

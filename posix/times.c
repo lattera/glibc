@@ -39,4 +39,3 @@ __times (buffer)
 stub_warning (times)
 
 weak_alias (__times, times)
-#include <stub-tag.h>

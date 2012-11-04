@@ -36,4 +36,3 @@ tcsendbreak (fd, duration)
 
 
 stub_warning (tcsendbreak)
-#include <stub-tag.h>

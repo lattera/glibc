@@ -31,4 +31,3 @@ setgroups (n, groups)
 libc_hidden_def (setgroups)
 
 stub_warning (setgroups)
-#include <stub-tag.h>

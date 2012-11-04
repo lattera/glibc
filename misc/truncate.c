@@ -30,4 +30,3 @@ __truncate (path, length)
 weak_alias (__truncate, truncate)
 
 stub_warning (truncate)
-#include <stub-tag.h>

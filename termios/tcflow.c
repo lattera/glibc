@@ -49,4 +49,3 @@ tcflow (fd, action)
 
 
 stub_warning (tcflow)
-#include <stub-tag.h>

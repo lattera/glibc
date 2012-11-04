@@ -35,4 +35,3 @@ socketpair (domain, type, protocol, fds)
 
 
 stub_warning (socketpair)
-#include <stub-tag.h>

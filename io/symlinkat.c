@@ -44,5 +44,3 @@ symlinkat (from, fd, to)
   return -1;
 }
 stub_warning (symlinkat)
-
-#include <stub-tag.h>

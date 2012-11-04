@@ -32,4 +32,3 @@ killpg (pgrp, sig)
 }
 
 stub_warning (killpg)
-#include <stub-tag.h>

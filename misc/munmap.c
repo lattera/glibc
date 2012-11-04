@@ -30,5 +30,4 @@ __munmap (__ptr_t addr, size_t len)
 }
 
 stub_warning (munmap)
-#include <stub-tag.h>
 weak_alias (__munmap, munmap)

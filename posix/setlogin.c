@@ -28,4 +28,3 @@ setlogin (name)
 }
 
 stub_warning (setlogin)
-#include <stub-tag.h>

@@ -41,4 +41,3 @@ libc_hidden_def (__chown)
 stub_warning (chown)
 
 weak_alias (__chown, chown)
-#include <stub-tag.h>

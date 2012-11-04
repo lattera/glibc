@@ -29,4 +29,3 @@ lchmod (const char *file, mode_t mode)
 }
 
 stub_warning (lchmod)
-#include <stub-tag.h>

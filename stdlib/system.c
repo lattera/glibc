@@ -34,4 +34,3 @@ weak_alias (__libc_system, system)
 
 
 stub_warning (system)
-#include <stub-tag.h>

@@ -40,4 +40,3 @@ __setitimer (which, new, old)
 stub_warning (setitimer)
 
 weak_alias (__setitimer, setitimer)
-#include <stub-tag.h>

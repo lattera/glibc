@@ -36,4 +36,3 @@ stty (fd, params)
 }
 
 stub_warning (stty)
-#include <stub-tag.h>

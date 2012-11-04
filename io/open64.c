@@ -66,5 +66,3 @@ __open64_2 (file, oflag)
   return __open64 (file, oflag);
 }
 stub_warning (__open64_2)
-
-#include <stub-tag.h>

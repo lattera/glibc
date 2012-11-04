@@ -28,4 +28,3 @@ __fstatfs64 (int fd, struct statfs64 *buf)
 weak_alias (__fstatfs64, fstatfs64)
 
 stub_warning (fstatfs64)
-#include <stub-tag.h>

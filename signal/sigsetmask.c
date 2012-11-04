@@ -28,4 +28,3 @@ __sigsetmask (mask)
 stub_warning (sigsetmask)
 
 weak_alias (__sigsetmask, sigsetmask)
-#include <stub-tag.h>

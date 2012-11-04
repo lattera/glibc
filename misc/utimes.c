@@ -39,4 +39,3 @@ __utimes (file, tvp)
 weak_alias (__utimes, utimes)
 
 stub_warning (utimes)
-#include <stub-tag.h>

@@ -45,5 +45,3 @@ __dup3 (fd, fd2, flags)
 libc_hidden_def (__dup3)
 weak_alias (__dup3, dup3)
 stub_warning (dup3)
-
-#include <stub-tag.h>

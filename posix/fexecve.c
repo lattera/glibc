@@ -39,4 +39,3 @@ fexecve (fd, argv, envp)
 }
 
 stub_warning (fexecve)
-#include <stub-tag.h>

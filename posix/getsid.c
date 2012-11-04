@@ -28,4 +28,3 @@ getsid (pid_t pid)
 }
 libc_hidden_def (getsid)
 stub_warning (getsid)
-#include <stub-tag.h>

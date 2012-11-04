@@ -27,4 +27,3 @@ mq_notify (mqd_t mqdes, const struct sigevent *notification)
   return -1;
 }
 stub_warning (mq_notify)
-#include <stub-tag.h>

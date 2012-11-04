@@ -26,4 +26,3 @@ timer_create (clockid_t clock_id, struct sigevent *evp, timer_t *timerid)
   return -1;
 }
 stub_warning (timer_create)
-#include <stub-tag.h>

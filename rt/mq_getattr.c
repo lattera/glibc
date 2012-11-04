@@ -26,4 +26,3 @@ mq_getattr (mqd_t mqdes, struct mq_attr *mqstat)
   return -1;
 }
 stub_warning (mq_getattr)
-#include <stub-tag.h>

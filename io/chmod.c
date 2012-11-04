@@ -38,4 +38,3 @@ __chmod (file, mode)
 stub_warning (chmod)
 
 weak_alias (__chmod, chmod)
-#include <stub-tag.h>

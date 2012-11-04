@@ -28,4 +28,3 @@ setegid (gid)
 }
 libc_hidden_def (setegid)
 stub_warning (setegid)
-#include <stub-tag.h>

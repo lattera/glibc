@@ -32,4 +32,3 @@ __getsockname (fd, addr, len)
 weak_alias (__getsockname, getsockname)
 
 stub_warning (getsockname)
-#include <stub-tag.h>

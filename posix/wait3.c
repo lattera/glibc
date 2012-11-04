@@ -39,4 +39,3 @@ __wait3 (__WAIT_STATUS_DEFN stat_loc, int options, struct rusage *usage)
 stub_warning (wait3)
 
 weak_alias (__wait3, wait3)
-#include <stub-tag.h>

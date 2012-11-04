@@ -38,4 +38,3 @@ stub_warning (__xmknod)
 
 weak_alias (__xmknod, _xmknod)
 libc_hidden_def (__xmknod)
-#include <stub-tag.h>

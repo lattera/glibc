@@ -58,4 +58,3 @@ __fpathconf (fd, name)
 weak_alias (__fpathconf, fpathconf)
 
 stub_warning (fpathconf)
-#include <stub-tag.h>

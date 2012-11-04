@@ -45,4 +45,3 @@ stub_warning (read)
 weak_alias (__libc_read, __read)
 libc_hidden_weak (__read)
 weak_alias (__libc_read, read)
-#include <stub-tag.h>

@@ -39,4 +39,3 @@ __mkdir (path, mode)
 stub_warning (mkdir)
 
 weak_alias (__mkdir, mkdir)
-#include <stub-tag.h>

@@ -69,5 +69,3 @@ __open_2 (file, oflag)
   return __open (file, oflag);
 }
 stub_warning (__open_2)
-
-#include <stub-tag.h>

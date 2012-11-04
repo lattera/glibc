@@ -30,4 +30,3 @@ acct (name)
 }
 
 stub_warning (acct)
-#include <stub-tag.h>

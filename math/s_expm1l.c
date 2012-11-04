@@ -13,4 +13,3 @@ libm_hidden_def (__expm1l)
 weak_alias (__expm1l, expm1l)
 
 stub_warning (expm1l)
-#include <stub-tag.h>

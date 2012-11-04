@@ -26,4 +26,3 @@ fremovexattr (int __fd, const char *__name)
 }
 
 stub_warning (fremovexattr)
-#include <stub-tag.h>

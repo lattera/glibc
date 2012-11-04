@@ -32,4 +32,3 @@ __aio_sigqueue (sig, val, caller_pid)
 }
 
 stub_warning (__aio_sigqueue)
-#include <stub-tag.h>

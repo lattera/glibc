@@ -29,4 +29,3 @@ fchdir (fd)
 }
 
 stub_warning (fchdir)
-#include <stub-tag.h>

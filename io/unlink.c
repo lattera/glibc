@@ -37,4 +37,3 @@ __unlink (name)
 stub_warning (unlink)
 
 weak_alias (__unlink, unlink)
-#include <stub-tag.h>

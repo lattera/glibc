@@ -30,4 +30,3 @@ utimensat (int fd, const char *file, const struct timespec tsp[2],
   return -1;
 }
 stub_warning (utimensat)
-#include <stub-tag.h>

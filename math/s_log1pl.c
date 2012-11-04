@@ -12,4 +12,3 @@ __log1pl (long double x)
 weak_alias (__log1pl, log1pl)
 
 stub_warning (log1pl)
-#include <stub-tag.h>

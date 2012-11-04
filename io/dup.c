@@ -30,4 +30,3 @@ __dup (fd)
 stub_warning (dup)
 
 weak_alias (__dup, dup)
-#include <stub-tag.h>

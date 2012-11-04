@@ -37,4 +37,3 @@ __access (file, type)
 stub_warning (access)
 
 weak_alias (__access, access)
-#include <stub-tag.h>

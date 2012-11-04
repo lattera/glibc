@@ -30,4 +30,3 @@ __getrlimit (enum __rlimit_resource resource, struct rlimit *rlimits)
 weak_alias (__getrlimit, getrlimit)
 
 stub_warning (getrlimit)
-#include <stub-tag.h>

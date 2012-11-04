@@ -26,4 +26,3 @@ timer_getoverrun (timer_t timerid)
   return -1;
 }
 stub_warning (timer_getoverrun)
-#include <stub-tag.h>

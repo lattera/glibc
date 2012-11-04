@@ -28,5 +28,3 @@ sendfile64 (int out_fd, int in_fd, off64_t *offset, size_t count)
   return -1;
 }
 stub_warning (sendfile64)
-
-#include <stub-tag.h>

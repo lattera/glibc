@@ -29,4 +29,3 @@ nice (incr)
 }
 
 stub_warning (nice)
-#include <stub-tag.h>

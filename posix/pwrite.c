@@ -42,4 +42,3 @@ __libc_pwrite (int fd, const void *buf, size_t nbytes, off_t offset)
 strong_alias (__libc_pwrite, __pwrite)
 weak_alias (__libc_pwrite, pwrite)
 stub_warning (pwrite)
-#include <stub-tag.h>

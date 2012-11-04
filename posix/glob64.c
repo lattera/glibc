@@ -50,4 +50,3 @@ globfree64 (glob64_t *pglob)
 libc_hidden_def (globfree64)
 
 stub_warning (glob64)
-#include <stub-tag.h>

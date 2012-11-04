@@ -12,4 +12,3 @@ __ieee754_sqrtl (long double x)
 strong_alias (__ieee754_sqrtl, __sqrtl_finite)
 
 stub_warning (sqrtl)
-#include <stub-tag.h>

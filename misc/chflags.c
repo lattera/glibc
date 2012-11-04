@@ -39,4 +39,3 @@ chflags (file, flags)
 }
 
 stub_warning (chflags)
-#include <stub-tag.h>

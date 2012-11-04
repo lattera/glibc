@@ -27,4 +27,3 @@ posix_fallocate (int fd, __off_t offset, __off_t len)
   return -1;
 }
 stub_warning (posix_fallocate)
-#include <stub-tag.h>

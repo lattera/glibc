@@ -26,4 +26,3 @@ feholdexcept (fenv_t *envp)
 }
 libm_hidden_def (feholdexcept)
 stub_warning (feholdexcept)
-#include <stub-tag.h>

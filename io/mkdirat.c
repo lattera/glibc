@@ -53,5 +53,3 @@ mkdirat (fd, path, mode)
   return -1;
 }
 stub_warning (mkdirat)
-
-#include <stub-tag.h>

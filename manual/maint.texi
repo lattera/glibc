@@ -247,8 +247,7 @@ particular machine or operating system.  Stub functions always return an
 error, and set @code{errno} to @code{ENOSYS} (Function not implemented).
 @xref{Error Reporting}.  If you define a stub function, you must place
 the statement @code{stub_warning(@var{function})}, where @var{function}
-is the name of your function, after its definition; also, you must
-include the file @code{<stub-tag.h>} into your file.  This causes the
+is the name of your function, after its definition.  This causes the
 function to be listed in the installed @code{<gnu/stubs.h>}, and
 makes GNU ld warn when the function is used.
 

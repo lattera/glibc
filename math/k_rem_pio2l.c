@@ -13,4 +13,3 @@ __kernel_rem_pio2l (long double *x, long double *y, int e0, int nx, int prec,
 }
 
 stub_warning (__kernel_rem_pio2l)
-#include <stub-tag.h>

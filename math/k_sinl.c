@@ -12,4 +12,3 @@ __kernel_sinl (long double x, long double y, int iy)
 }
 
 stub_warning (__kernel_sinl)
-#include <stub-tag.h>

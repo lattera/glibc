@@ -30,4 +30,3 @@ __umask (mask)
 stub_warning (umask)
 
 weak_alias (__umask, umask)
-#include <stub-tag.h>

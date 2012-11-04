@@ -30,4 +30,3 @@ __isatty (fd)
 weak_alias (__isatty, isatty)
 
 stub_warning (isatty)
-#include <stub-tag.h>

@@ -31,4 +31,3 @@ __fdopendir (int fd)
 weak_alias (__fdopendir, fdopendir)
 
 stub_warning (fdopendir)
-#include <stub-tag.h>

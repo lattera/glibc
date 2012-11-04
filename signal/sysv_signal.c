@@ -39,4 +39,3 @@ __sysv_signal (sig, handler)
 weak_alias (__sysv_signal, sysv_signal)
 
 stub_warning (sysv_signal)
-#include <stub-tag.h>

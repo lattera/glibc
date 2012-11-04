@@ -30,4 +30,3 @@ __sched_getscheduler (pid_t pid)
 stub_warning (sched_getscheduler)
 
 weak_alias (__sched_getscheduler, sched_getscheduler)
-#include <stub-tag.h>

@@ -31,4 +31,3 @@ shmdt (shmaddr)
 }
 
 stub_warning (shmdt)
-#include <stub-tag.h>

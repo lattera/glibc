@@ -35,4 +35,3 @@ __sigvec (sig, vec, ovec)
 stub_warning (sigvec)
 
 weak_alias (__sigvec, sigvec)
-#include <stub-tag.h>

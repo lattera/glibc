@@ -12,4 +12,3 @@ __ieee754_asinl (long double x)
 strong_alias (__ieee754_asinl, __asinl_finite)
 
 stub_warning (asinl)
-#include <stub-tag.h>

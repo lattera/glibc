@@ -31,4 +31,3 @@ syscall (callno)
 }
 
 stub_warning (syscall)
-#include <stub-tag.h>

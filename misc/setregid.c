@@ -32,4 +32,3 @@ __setregid (effective_gid, real_gid)
 stub_warning (setregid)
 
 weak_alias (__setregid, setregid)
-#include <stub-tag.h>

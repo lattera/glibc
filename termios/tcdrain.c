@@ -35,4 +35,3 @@ weak_alias (__libc_tcdrain, tcdrain)
 
 
 stub_warning (tcdrain)
-#include <stub-tag.h>

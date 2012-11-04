@@ -28,4 +28,3 @@ clock ()
 }
 
 stub_warning (clock)
-#include <stub-tag.h>

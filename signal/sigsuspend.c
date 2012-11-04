@@ -33,4 +33,3 @@ weak_alias (__sigsuspend, sigsuspend)
 
 stub_warning (sigsuspend)
 stub_warning (__sigsuspend)
-#include <stub-tag.h>

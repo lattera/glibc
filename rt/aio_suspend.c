@@ -42,4 +42,3 @@ weak_alias (aio_suspend, aio_suspend64)
 
 stub_warning (aio_suspend)
 stub_warning (aio_suspend64)
-#include <stub-tag.h>

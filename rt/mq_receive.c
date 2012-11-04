@@ -28,4 +28,3 @@ mq_receive (mqd_t mqdes, char *msg_ptr, size_t msg_len,
   return -1;
 }
 stub_warning (mq_receive)
-#include <stub-tag.h>

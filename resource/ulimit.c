@@ -35,4 +35,3 @@ __ulimit (int cmd, ...)
 weak_alias (__ulimit, ulimit)
 
 stub_warning (ulimit)
-#include <stub-tag.h>

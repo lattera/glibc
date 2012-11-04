@@ -64,7 +64,6 @@ $(objpfx)stub-syscalls.c: $(common-objpfx)sysd-syscalls \
 	      echo "stub_warning ($$call)"; \
 	      echo "weak_alias (_no_syscall, __GI_$$call)" ;; \
 	   esac; \
-	 echo '#include <stub-tag.h>'; \
 	 done) > $@T
 	mv -f $@T $@
 generated += stub-syscalls.c

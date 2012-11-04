@@ -30,4 +30,3 @@ munlockall (void)
 }
 
 stub_warning (munlockall)
-#include <stub-tag.h>

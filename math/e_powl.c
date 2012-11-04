@@ -12,4 +12,3 @@ __ieee754_powl (long double x, long double y)
 strong_alias (__ieee754_powl, __powl_finite)
 
 stub_warning (powl)
-#include <stub-tag.h>

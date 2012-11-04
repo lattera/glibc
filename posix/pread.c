@@ -42,4 +42,3 @@ __libc_pread (int fd, void *buf, size_t nbytes, off_t offset)
 strong_alias (__libc_pread, __pread)
 weak_alias (__libc_pread, pread)
 stub_warning (pread)
-#include <stub-tag.h>

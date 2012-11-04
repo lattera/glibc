@@ -30,4 +30,3 @@ __statvfs (const char *file, struct statvfs *buf)
 weak_alias (__statvfs, statvfs)
 libc_hidden_weak (statvfs)
 stub_warning (statvfs)
-#include <stub-tag.h>

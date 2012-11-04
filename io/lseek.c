@@ -49,4 +49,3 @@ stub_warning (lseek)
 libc_hidden_def (__lseek)
 
 weak_alias (__lseek, lseek)
-#include <stub-tag.h>

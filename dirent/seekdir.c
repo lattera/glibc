@@ -37,4 +37,3 @@ seekdir (dirp, pos)
 
 
 stub_warning (seekdir)
-#include <stub-tag.h>

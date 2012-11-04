@@ -31,4 +31,3 @@ libc_hidden_def (__setresgid)
 stub_warning (setresgid)
 
 weak_alias (__setresgid, setresgid)
-#include <stub-tag.h>

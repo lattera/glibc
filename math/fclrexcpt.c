@@ -34,4 +34,3 @@ libm_hidden_ver (__feclearexcept, feclearexcept)
 versioned_symbol (libm, __feclearexcept, feclearexcept, GLIBC_2_2);
 
 stub_warning (feclearexcept)
-#include <stub-tag.h>

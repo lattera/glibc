@@ -30,4 +30,3 @@ sysctl (int *name, int nlen, void *oldval, size_t *oldlenp,
   return -1;
 }
 stub_warning (sysctl)
-#include <stub-tag.h>

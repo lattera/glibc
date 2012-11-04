@@ -23,4 +23,3 @@ __erfcl (long double x)
 weak_alias (__erfcl, erfcl)
 
 stub_warning (erfcl)
-#include <stub-tag.h>

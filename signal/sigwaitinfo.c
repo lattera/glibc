@@ -29,4 +29,3 @@ libc_hidden_def (__sigwaitinfo)
 weak_alias (__sigwaitinfo, sigwaitinfo)
 
 stub_warning (sigwaitinfo)
-#include <stub-tag.h>

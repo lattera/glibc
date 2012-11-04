@@ -28,4 +28,3 @@ __statvfs64 (const char *file, struct statvfs64 *buf)
 weak_alias (__statvfs64, statvfs64)
 
 stub_warning (statvfs64)
-#include <stub-tag.h>

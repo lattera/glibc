@@ -32,4 +32,3 @@ libc_hidden_def (__fork)
 stub_warning (fork)
 
 weak_alias (__fork, fork)
-#include <stub-tag.h>

@@ -13,4 +13,3 @@ __ieee754_gammal_r (long double x, int *signgamp)
 strong_alias (__ieee754_gammal_r, __gammal_r_finite)
 
 stub_warning (__ieee754_gammal_r)
-#include <stub-tag.h>

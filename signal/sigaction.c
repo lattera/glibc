@@ -40,4 +40,3 @@ libc_hidden_def (__sigaction)
 stub_warning (sigaction)
 
 weak_alias (__sigaction, sigaction)
-#include <stub-tag.h>

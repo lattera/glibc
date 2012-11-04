@@ -12,4 +12,3 @@ __tanhl(long double x)
 
 weak_alias (__tanhl, tanhl)
 stub_warning (tanhl)
-#include <stub-tag.h>

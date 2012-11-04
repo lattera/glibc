@@ -25,4 +25,3 @@ fegetround (void)
   return 0;
 }
 stub_warning (fegetround)
-#include <stub-tag.h>

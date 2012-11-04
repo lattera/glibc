@@ -12,4 +12,3 @@ __ieee754_fmodl (long double x, long double y)
 strong_alias (__ieee754_fmodl, __fmodl_finite)
 
 stub_warning (fmodl)
-#include <stub-tag.h>

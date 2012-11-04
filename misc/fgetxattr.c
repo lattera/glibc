@@ -27,4 +27,3 @@ fgetxattr (int __fd, const char *__name,
 }
 
 stub_warning (fgetxattr)
-#include <stub-tag.h>

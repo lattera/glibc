@@ -33,4 +33,3 @@ libc_hidden_def (__setpgid)
 stub_warning (setpgid)
 
 weak_alias (__setpgid, setpgid)
-#include <stub-tag.h>

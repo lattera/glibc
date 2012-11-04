@@ -29,4 +29,3 @@ __sched_get_priority_max (int algorithm)
 stub_warning (sched_get_priority_max)
 
 weak_alias (__sched_get_priority_max, sched_get_priority_max)
-#include <stub-tag.h>

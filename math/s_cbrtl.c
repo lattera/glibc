@@ -12,4 +12,3 @@ __cbrtl(long double x)
 
 weak_alias (__cbrtl, cbrtl)
 stub_warning (cbrtl)
-#include <stub-tag.h>

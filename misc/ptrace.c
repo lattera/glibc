@@ -99,4 +99,3 @@ ptrace (request)
 
 
 stub_warning (ptrace)
-#include <stub-tag.h>

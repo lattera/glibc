@@ -28,4 +28,3 @@ __sigreturn (context)
 stub_warning (sigreturn)
 
 weak_alias (__sigreturn, sigreturn)
-#include <stub-tag.h>

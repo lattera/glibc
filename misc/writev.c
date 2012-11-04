@@ -37,4 +37,3 @@ strong_alias (__libc_writev, __writev)
 weak_alias (__libc_writev, writev)
 
 stub_warning (writev)
-#include <stub-tag.h>

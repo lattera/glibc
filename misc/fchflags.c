@@ -39,4 +39,3 @@ fchflags (fd, flags)
 }
 
 stub_warning (fchflags)
-#include <stub-tag.h>

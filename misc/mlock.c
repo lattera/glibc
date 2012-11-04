@@ -31,4 +31,3 @@ mlock (const void *addr, size_t len)
 }
 
 stub_warning (mlock)
-#include <stub-tag.h>

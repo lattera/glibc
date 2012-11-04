@@ -31,4 +31,3 @@ sched_setaffinity (pid, cpusetsize, cpuset)
   return -1;
 }
 stub_warning (sched_setaffinity)
-#include <stub-tag.h>

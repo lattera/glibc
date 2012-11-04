@@ -30,4 +30,3 @@ __sched_getparam (pid_t pid, struct sched_param *param)
 stub_warning (sched_getparam)
 
 weak_alias (__sched_getparam, sched_getparam)
-#include <stub-tag.h>

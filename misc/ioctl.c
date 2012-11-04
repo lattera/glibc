@@ -31,4 +31,3 @@ __ioctl (fd, request)
 stub_warning (ioctl)
 
 weak_alias (__ioctl, ioctl)
-#include <stub-tag.h>

@@ -31,4 +31,3 @@ libc_hidden_def (__statfs)
 weak_alias (__statfs, statfs)
 
 stub_warning (statfs)
-#include <stub-tag.h>

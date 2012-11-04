@@ -44,4 +44,3 @@ stub_warning (getgroups);
 #endif
 
 weak_alias (__getgroups, getgroups)
-#include <stub-tag.h>

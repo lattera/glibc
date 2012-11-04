@@ -32,4 +32,3 @@ getpmsg (fildes, ctlptr, dataptr, bandp, flagsp)
 
 
 stub_warning (getpmsg)
-#include <stub-tag.h>

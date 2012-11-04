@@ -26,4 +26,3 @@ listxattr (const char *__path, char *__list, size_t __size)
 }
 
 stub_warning (listxattr)
-#include <stub-tag.h>

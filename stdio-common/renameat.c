@@ -46,4 +46,3 @@ renameat (oldfd, old, newfd, new)
 
 
 stub_warning (renameat)
-#include <stub-tag.h>

@@ -30,4 +30,3 @@ pause ()
 }
 
 stub_warning (pause)
-#include <stub-tag.h>

@@ -31,4 +31,3 @@ putmsg (fildes, ctlptr, dataptr, flags)
 
 
 stub_warning (putmsg)
-#include <stub-tag.h>

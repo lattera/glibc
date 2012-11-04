@@ -32,4 +32,3 @@ aio_write (struct aiocb *aiocbp)
 }
 
 stub_warning (aio_write)
-#include <stub-tag.h>

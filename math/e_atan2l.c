@@ -12,4 +12,3 @@ __ieee754_atan2l (long double x, long double y)
 strong_alias (__ieee754_atan2l, __atan2l_finite)
 
 stub_warning (atan2l)
-#include <stub-tag.h>

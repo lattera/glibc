@@ -36,4 +36,3 @@ weak_alias (__getcwd, getcwd)
 
 stub_warning (__getcwd)
 stub_warning (getcwd)
-#include <stub-tag.h>

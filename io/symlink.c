@@ -38,4 +38,3 @@ __symlink (from, to)
 stub_warning (symlink)
 
 weak_alias (__symlink, symlink)
-#include <stub-tag.h>

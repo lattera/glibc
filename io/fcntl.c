@@ -37,4 +37,3 @@ libc_hidden_def (__fcntl)
 stub_warning (fcntl)
 
 weak_alias (__fcntl, fcntl)
-#include <stub-tag.h>

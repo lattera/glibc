@@ -34,4 +34,3 @@ getsockopt (fd, level, optname, optval, optlen)
 }
 
 stub_warning (getsockopt)
-#include <stub-tag.h>

@@ -42,4 +42,3 @@ tcflush (fd, queue_selector)
 
 
 stub_warning(tcflush);
-#include <stub-tag.h>

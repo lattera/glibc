@@ -27,4 +27,3 @@ mq_send (mqd_t mqdes, const char *msg_ptr, size_t msg_len,
   return -1;
 }
 stub_warning (mq_send)
-#include <stub-tag.h>

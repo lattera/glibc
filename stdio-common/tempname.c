@@ -57,4 +57,3 @@ __gen_tempname (tmpl, suffixlen, flags, kind)
 }
 
 stub_warning (__gen_tempname)
-#include <stub-tag.h>

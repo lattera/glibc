@@ -29,4 +29,3 @@ remove (file)
 libc_hidden_def (remove)
 
 stub_warning (remove)
-#include <stub-tag.h>

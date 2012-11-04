@@ -33,4 +33,3 @@ getlogin_r (name, name_len)
 libc_hidden_def (getlogin_r)
 
 stub_warning (getlogin_r)
-#include <stub-tag.h>

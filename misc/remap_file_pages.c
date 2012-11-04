@@ -30,5 +30,4 @@ __remap_file_pages (void *start, size_t size, int prot, size_t pgoff,
 }
 
 stub_warning (remap_file_pages)
-#include <stub-tag.h>
 weak_alias (__remap_file_pages, remap_file_pages)

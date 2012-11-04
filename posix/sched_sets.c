@@ -31,4 +31,3 @@ libc_hidden_def (__sched_setscheduler)
 stub_warning (sched_setscheduler)
 
 weak_alias (__sched_setscheduler, sched_setscheduler)
-#include <stub-tag.h>

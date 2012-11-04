@@ -29,4 +29,3 @@ mq_timedsend (mqd_t mqdes, const char *msg_ptr, size_t msg_len,
 }
 hidden_def (mq_timedsend)
 stub_warning (mq_timedsend)
-#include <stub-tag.h>

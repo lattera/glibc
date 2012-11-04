@@ -29,4 +29,3 @@ ustat (dev, ust)
   return -1;
 }
 stub_warning (ustat)
-#include <stub-tag.h>

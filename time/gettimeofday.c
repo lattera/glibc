@@ -34,4 +34,3 @@ weak_alias (__gettimeofday, gettimeofday)
 libc_hidden_weak (gettimeofday)
 
 stub_warning (gettimeofday)
-#include <stub-tag.h>

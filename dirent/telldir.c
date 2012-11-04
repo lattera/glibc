@@ -37,4 +37,3 @@ telldir (dirp)
 
 
 stub_warning (telldir)
-#include <stub-tag.h>

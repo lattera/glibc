@@ -30,4 +30,3 @@ __futimes (int fd, const struct timeval tvp[2])
 weak_alias (__futimes, futimes)
 
 stub_warning (futimes)
-#include <stub-tag.h>

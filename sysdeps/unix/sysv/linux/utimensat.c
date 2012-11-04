@@ -45,5 +45,4 @@ utimensat (int fd, const char *file, const struct timespec tsp[2],
 }
 #ifndef __NR_utimensat
 stub_warning (utimensat)
-# include <stub-tag.h>
 #endif

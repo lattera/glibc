@@ -32,4 +32,3 @@ __longjmp (__jmp_buf env, int val)
 }
 
 stub_warning (longjmp)
-#include <stub-tag.h>

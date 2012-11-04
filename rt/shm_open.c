@@ -26,5 +26,3 @@ shm_open (const char *name, int oflag, mode_t mode)
   return -1;
 }
 stub_warning (shm_open)
-
-#include <stub-tag.h>

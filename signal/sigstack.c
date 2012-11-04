@@ -30,4 +30,3 @@ sigstack (ss, oss)
 }
 
 stub_warning (sigstack)
-#include <stub-tag.h>

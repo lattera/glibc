@@ -29,4 +29,3 @@ libc_hidden_def (__getpagesize)
 stub_warning (getpagesize)
 
 weak_alias (__getpagesize, getpagesize)
-#include <stub-tag.h>

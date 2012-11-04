@@ -33,4 +33,3 @@ __sendmsg (fd, message, flags)
 weak_alias (__sendmsg, sendmsg)
 
 stub_warning (sendmsg)
-#include <stub-tag.h>

@@ -30,4 +30,3 @@ semctl (int semid, int semnum, int cmd, ...)
 }
 
 stub_warning (semctl)
-#include <stub-tag.h>

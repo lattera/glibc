@@ -27,4 +27,3 @@ setxattr (const char *__path, const char *__name,
 }
 
 stub_warning (setxattr)
-#include <stub-tag.h>

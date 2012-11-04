@@ -32,4 +32,3 @@ __setreuid (effective_uid, real_uid)
 stub_warning (setreuid)
 
 weak_alias (__setreuid, setreuid)
-#include <stub-tag.h>

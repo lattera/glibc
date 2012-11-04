@@ -31,4 +31,3 @@ __readdir_r (DIR *dirp, struct dirent *entry, struct dirent **result)
 weak_alias (__readdir_r, readdir_r)
 
 stub_warning (readdir_r)
-#include <stub-tag.h>

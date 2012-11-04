@@ -31,4 +31,3 @@ libc_hidden_def (__getresgid)
 stub_warning (getresgid)
 
 weak_alias (__getresgid, getresgid)
-#include <stub-tag.h>

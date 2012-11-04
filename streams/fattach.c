@@ -29,4 +29,3 @@ fattach (fildes, path)
 
 
 stub_warning (fattach)
-#include <stub-tag.h>

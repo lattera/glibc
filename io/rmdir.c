@@ -37,4 +37,3 @@ __rmdir (path)
 stub_warning (rmdir)
 
 weak_alias (__rmdir, rmdir)
-#include <stub-tag.h>

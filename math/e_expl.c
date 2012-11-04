@@ -12,4 +12,3 @@ __ieee754_expl (long double x)
 strong_alias (__ieee754_expl, __expl_finite)
 
 stub_warning (expl)
-#include <stub-tag.h>

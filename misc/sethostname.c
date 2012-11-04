@@ -31,4 +31,3 @@ sethostname (name, len)
 
 
 stub_warning (sethostname)
-#include <stub-tag.h>

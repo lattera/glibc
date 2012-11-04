@@ -34,4 +34,3 @@ libm_hidden_ver (__feraiseexcept, feraiseexcept)
 versioned_symbol (libm, __feraiseexcept, feraiseexcept, GLIBC_2_2);
 
 stub_warning (feraiseexcept)
-#include <stub-tag.h>

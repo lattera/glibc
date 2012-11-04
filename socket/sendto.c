@@ -36,4 +36,3 @@ __sendto (fd, buf, n, flags, addr, addr_len)
 weak_alias (__sendto, sendto)
 
 stub_warning (sendto)
-#include <stub-tag.h>

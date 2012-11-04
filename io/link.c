@@ -38,4 +38,3 @@ __link (from, to)
 stub_warning (link)
 
 weak_alias (__link, link)
-#include <stub-tag.h>

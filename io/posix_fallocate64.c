@@ -27,4 +27,3 @@ posix_fallocate64 (int fd, __off64_t offset, __off64_t len)
   return -1;
 }
 stub_warning (posix_fallocate64)
-#include <stub-tag.h>

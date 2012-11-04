@@ -39,4 +39,3 @@ __lchown (file, owner, group)
 stub_warning (lchown)
 
 weak_alias (__lchown, lchown)
-#include <stub-tag.h>

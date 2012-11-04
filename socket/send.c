@@ -33,4 +33,3 @@ libc_hidden_def (__send)
 weak_alias (__send, send)
 
 stub_warning (send)
-#include <stub-tag.h>

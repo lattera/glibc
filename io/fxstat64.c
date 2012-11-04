@@ -45,4 +45,3 @@ __fxstat64 (int vers, int fd, struct stat64 *buf)
 }
 hidden_def (__fxstat64)
 stub_warning (fstat64)
-#include <stub-tag.h>

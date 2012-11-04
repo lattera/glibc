@@ -29,4 +29,3 @@ sockatmark (fd)
 
 
 stub_warning (sockatmark)
-#include <stub-tag.h>

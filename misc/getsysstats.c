@@ -65,4 +65,3 @@ __get_avphys_pages ()
 weak_alias (__get_avphys_pages, get_avphys_pages)
 
 stub_warning (get_avphys_pages)
-#include <stub-tag.h>

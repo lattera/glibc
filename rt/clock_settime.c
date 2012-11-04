@@ -28,4 +28,3 @@ clock_settime (clockid_t clock_id, const struct timespec *tp)
 }
 strong_alias (clock_settime, __clock_settime)
 stub_warning (clock_settime)
-#include <stub-tag.h>

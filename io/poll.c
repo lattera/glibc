@@ -35,4 +35,3 @@ poll (fds, nfds, timeout)
 }
 
 stub_warning (poll)
-#include <stub-tag.h>

@@ -32,4 +32,3 @@ setpriority (which, who, prio)
 libc_hidden_def (setpriority)
 
 stub_warning (setpriority)
-#include <stub-tag.h>

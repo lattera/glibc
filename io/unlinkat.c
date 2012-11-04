@@ -44,5 +44,3 @@ unlinkat (fd, name, flag)
   return -1;
 }
 stub_warning (unlinkat)
-
-#include <stub-tag.h>

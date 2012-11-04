@@ -32,4 +32,3 @@ mlockall (int flags)
 }
 
 stub_warning (mlockall)
-#include <stub-tag.h>

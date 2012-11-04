@@ -29,4 +29,3 @@ __sched_get_priority_min (int algorithm)
 stub_warning (sched_get_priority_min)
 
 weak_alias (__sched_get_priority_min, sched_get_priority_min)
-#include <stub-tag.h>

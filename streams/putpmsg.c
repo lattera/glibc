@@ -32,4 +32,3 @@ putpmsg (fildes, ctlptr, dataptr, band, flags)
 
 
 stub_warning (putpmsg)
-#include <stub-tag.h>

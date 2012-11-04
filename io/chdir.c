@@ -36,4 +36,3 @@ __chdir (path)
 stub_warning (chdir)
 
 weak_alias (__chdir, chdir)
-#include <stub-tag.h>

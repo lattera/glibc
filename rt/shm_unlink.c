@@ -26,5 +26,3 @@ shm_unlink (const char *name)
   return -1;
 }
 stub_warning (shm_unlink)
-
-#include <stub-tag.h>

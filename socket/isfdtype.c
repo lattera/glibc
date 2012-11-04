@@ -27,4 +27,3 @@ isfdtype (int fildes, int fdtype)
   return -1;
 }
 stub_warning (isfdtype)
-#include <stub-tag.h>

@@ -12,4 +12,3 @@ __ieee754_coshl (long double x)
 strong_alias (__ieee754_coshl, __coshl_finite)
 
 stub_warning (__ieee754_coshl)
-#include <stub-tag.h>

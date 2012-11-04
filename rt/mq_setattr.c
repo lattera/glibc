@@ -29,4 +29,3 @@ mq_setattr (mqd_t mqdes, const struct mq_attr *__restrict mqstat,
 }
 hidden_def (mq_setattr)
 stub_warning (mq_setattr)
-#include <stub-tag.h>

@@ -29,4 +29,3 @@ sigignore (sig)
 }
 
 stub_warning (sigignore)
-#include <stub-tag.h>

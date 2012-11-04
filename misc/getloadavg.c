@@ -33,4 +33,3 @@ getloadavg (double loadavg[], int nelem)
   return -1;
 }
 stub_warning (getloadavg)
-#include <stub-tag.h>

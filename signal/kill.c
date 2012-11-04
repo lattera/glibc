@@ -33,4 +33,3 @@ __kill (pid, sig)
 stub_warning (kill)
 
 weak_alias (__kill, kill)
-#include <stub-tag.h>

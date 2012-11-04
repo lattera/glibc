@@ -27,4 +27,3 @@ timer_settime (timer_t timerid, int flags, const struct itimerspec *value,
   return -1;
 }
 stub_warning (timer_settime)
-#include <stub-tag.h>

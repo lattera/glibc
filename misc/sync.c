@@ -27,4 +27,3 @@ sync ()
 
 
 stub_warning (sync)
-#include <stub-tag.h>
