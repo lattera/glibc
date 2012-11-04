@@ -55,16 +55,17 @@ __fma (double x, double y, double z)
 	 underflows to 0.  */
       if (z == 0 && x != 0 && y != 0)
 	return x * y;
-      /* If x or y or z is Inf/NaN, or if fma will certainly overflow,
-	 or if x * y is zero, compute as x * y + z.  */
+      /* If x or y or z is Inf/NaN, or if x * y is zero, compute as
+	 x * y + z.  */
       if (u.ieee.exponent == 0x7ff
 	  || v.ieee.exponent == 0x7ff
 	  || w.ieee.exponent == 0x7ff
-	  || u.ieee.exponent + v.ieee.exponent
-	     > 0x7ff + IEEE754_DOUBLE_BIAS
 	  || x == 0
 	  || y == 0)
 	return x * y + z;
+      /* If fma will certainly overflow, compute as x * y.  */
+      if (u.ieee.exponent + v.ieee.exponent > 0x7ff + IEEE754_DOUBLE_BIAS)
+	return x * y;
       /* If x * y is less than 1/4 of DBL_DENORM_MIN, neither the
 	 result nor whether there is underflow depends on its exact
 	 value, only on its sign.  */

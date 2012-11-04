@@ -4617,6 +4617,15 @@ fma_test (void)
   TEST_fff_f (fma, -min_value, -min_value, plus_zero, plus_zero, UNDERFLOW_EXCEPTION);
   TEST_fff_f (fma, -min_value, -min_value, minus_zero, plus_zero, UNDERFLOW_EXCEPTION);
 
+  TEST_fff_f (fma, max_value, max_value, min_value, plus_infty, OVERFLOW_EXCEPTION);
+  TEST_fff_f (fma, max_value, max_value, -min_value, plus_infty, OVERFLOW_EXCEPTION);
+  TEST_fff_f (fma, max_value, -max_value, min_value, minus_infty, OVERFLOW_EXCEPTION);
+  TEST_fff_f (fma, max_value, -max_value, -min_value, minus_infty, OVERFLOW_EXCEPTION);
+  TEST_fff_f (fma, -max_value, max_value, min_value, minus_infty, OVERFLOW_EXCEPTION);
+  TEST_fff_f (fma, -max_value, max_value, -min_value, minus_infty, OVERFLOW_EXCEPTION);
+  TEST_fff_f (fma, -max_value, -max_value, min_value, plus_infty, OVERFLOW_EXCEPTION);
+  TEST_fff_f (fma, -max_value, -max_value, -min_value, plus_infty, OVERFLOW_EXCEPTION);
+
 #if defined (TEST_FLOAT) && FLT_MANT_DIG == 24
   TEST_fff_f (fma, 0x1.7ff8p+13, 0x1.000002p+0, 0x1.ffffp-24, 0x1.7ff802p+13);
   TEST_fff_f (fma, 0x1.fffp+0, 0x1.00001p+0, -0x1.fffp+0, 0x1.fffp-20);
@@ -4837,6 +4846,15 @@ fma_test_towardzero (void)
       TEST_fff_f (fma, -min_value, -min_value, plus_zero, plus_zero, UNDERFLOW_EXCEPTION);
       TEST_fff_f (fma, -min_value, -min_value, minus_zero, plus_zero, UNDERFLOW_EXCEPTION);
 
+      TEST_fff_f (fma, max_value, max_value, min_value, max_value, OVERFLOW_EXCEPTION);
+      TEST_fff_f (fma, max_value, max_value, -min_value, max_value, OVERFLOW_EXCEPTION);
+      TEST_fff_f (fma, max_value, -max_value, min_value, -max_value, OVERFLOW_EXCEPTION);
+      TEST_fff_f (fma, max_value, -max_value, -min_value, -max_value, OVERFLOW_EXCEPTION);
+      TEST_fff_f (fma, -max_value, max_value, min_value, -max_value, OVERFLOW_EXCEPTION);
+      TEST_fff_f (fma, -max_value, max_value, -min_value, -max_value, OVERFLOW_EXCEPTION);
+      TEST_fff_f (fma, -max_value, -max_value, min_value, max_value, OVERFLOW_EXCEPTION);
+      TEST_fff_f (fma, -max_value, -max_value, -min_value, max_value, OVERFLOW_EXCEPTION);
+
 #if defined (TEST_FLOAT) && FLT_MANT_DIG == 24
       TEST_fff_f (fma, 0x1.4p-126, 0x1.000004p-1, 0x1p-128, 0x1.c00004p-127, UNDERFLOW_EXCEPTION);
       TEST_fff_f (fma, -0x1.4p-126, 0x1.000004p-1, -0x1p-128, -0x1.c00004p-127, UNDERFLOW_EXCEPTION);
@@ -5014,6 +5032,15 @@ fma_test_downward (void)
       TEST_fff_f (fma, -min_value, -min_value, plus_zero, plus_zero, UNDERFLOW_EXCEPTION);
       TEST_fff_f (fma, -min_value, -min_value, minus_zero, plus_zero, UNDERFLOW_EXCEPTION);
 
+      TEST_fff_f (fma, max_value, max_value, min_value, max_value, OVERFLOW_EXCEPTION);
+      TEST_fff_f (fma, max_value, max_value, -min_value, max_value, OVERFLOW_EXCEPTION);
+      TEST_fff_f (fma, max_value, -max_value, min_value, minus_infty, OVERFLOW_EXCEPTION);
+      TEST_fff_f (fma, max_value, -max_value, -min_value, minus_infty, OVERFLOW_EXCEPTION);
+      TEST_fff_f (fma, -max_value, max_value, min_value, minus_infty, OVERFLOW_EXCEPTION);
+      TEST_fff_f (fma, -max_value, max_value, -min_value, minus_infty, OVERFLOW_EXCEPTION);
+      TEST_fff_f (fma, -max_value, -max_value, min_value, max_value, OVERFLOW_EXCEPTION);
+      TEST_fff_f (fma, -max_value, -max_value, -min_value, max_value, OVERFLOW_EXCEPTION);
+
 #if defined (TEST_FLOAT) && FLT_MANT_DIG == 24
       TEST_fff_f (fma, 0x1.4p-126, 0x1.000004p-1, 0x1p-128, 0x1.c00004p-127, UNDERFLOW_EXCEPTION);
       TEST_fff_f (fma, -0x1.4p-126, 0x1.000004p-1, -0x1p-128, -0x1.c00008p-127, UNDERFLOW_EXCEPTION);
@@ -5190,6 +5217,15 @@ fma_test_upward (void)
       TEST_fff_f (fma, -min_value, min_value, minus_zero, minus_zero, UNDERFLOW_EXCEPTION);
       TEST_fff_f (fma, -min_value, -min_value, plus_zero, min_subnorm_value, UNDERFLOW_EXCEPTION);
       TEST_fff_f (fma, -min_value, -min_value, minus_zero, min_subnorm_value, UNDERFLOW_EXCEPTION);
+
+      TEST_fff_f (fma, max_value, max_value, min_value, plus_infty, OVERFLOW_EXCEPTION);
+      TEST_fff_f (fma, max_value, max_value, -min_value, plus_infty, OVERFLOW_EXCEPTION);
+      TEST_fff_f (fma, max_value, -max_value, min_value, -max_value, OVERFLOW_EXCEPTION);
+      TEST_fff_f (fma, max_value, -max_value, -min_value, -max_value, OVERFLOW_EXCEPTION);
+      TEST_fff_f (fma, -max_value, max_value, min_value, -max_value, OVERFLOW_EXCEPTION);
+      TEST_fff_f (fma, -max_value, max_value, -min_value, -max_value, OVERFLOW_EXCEPTION);
+      TEST_fff_f (fma, -max_value, -max_value, min_value, plus_infty, OVERFLOW_EXCEPTION);
+      TEST_fff_f (fma, -max_value, -max_value, -min_value, plus_infty, OVERFLOW_EXCEPTION);
 
 #if defined (TEST_FLOAT) && FLT_MANT_DIG == 24
       TEST_fff_f (fma, 0x1.4p-126, 0x1.000004p-1, 0x1p-128, 0x1.c00008p-127, UNDERFLOW_EXCEPTION);

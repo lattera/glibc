@@ -56,16 +56,18 @@ __fmal (long double x, long double y, long double z)
 	 underflows to 0.  */
       if (z == 0 && x != 0 && y != 0)
 	return x * y;
-      /* If x or y or z is Inf/NaN, or if fma will certainly overflow,
-	 or if x * y is zero, compute as x * y + z.  */
+      /* If x or y or z is Inf/NaN, or if x * y is zero, compute as
+	 x * y + z.  */
       if (u.ieee.exponent == 0x7fff
 	  || v.ieee.exponent == 0x7fff
 	  || w.ieee.exponent == 0x7fff
-	  || u.ieee.exponent + v.ieee.exponent
-	     > 0x7fff + IEEE854_LONG_DOUBLE_BIAS
 	  || x == 0
 	  || y == 0)
 	return x * y + z;
+      /* If fma will certainly overflow, compute as x * y.  */
+      if (u.ieee.exponent + v.ieee.exponent
+	  > 0x7fff + IEEE854_LONG_DOUBLE_BIAS)
+	return x * y;
       /* If x * y is less than 1/4 of LDBL_DENORM_MIN, neither the
 	 result nor whether there is underflow depends on its exact
 	 value, only on its sign.  */
