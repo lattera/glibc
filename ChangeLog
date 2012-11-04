@@ -1,5 +1,8 @@
 012-11-04  Pino Toscano  <toscano.pino@tiscali.it>
 
+	* sysdeps/generic/paths.h (_PATH_STDPATH): Remove /usr/contrib/bin and
+	/usr/old/bin.
+
 	* sysdeps/generic/paths.h (_PATH_MNTTAB, _PATH_MOUNTED): Use tabs
 	instead of spaces.
 	* sysdeps/unix/sysv/linux/paths.h (_PATH_UTMP, _PATH_WTMP): Likewise.

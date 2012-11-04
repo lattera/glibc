@@ -36,7 +36,7 @@
 #define	_PATH_DEFPATH	"/usr/bin:/bin"
 /* All standard utilities path. */
 #define	_PATH_STDPATH \
-	"/usr/bin:/bin:/usr/sbin:/sbin:/usr/contrib/bin:/usr/old/bin"
+	"/usr/bin:/bin:/usr/sbin:/sbin"
 
 #define	_PATH_BSHELL	"/bin/sh"
 #define	_PATH_CONSOLE	"/dev/console"
