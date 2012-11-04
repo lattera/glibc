@@ -1,3 +1,9 @@
+012-11-04  Pino Toscano  <toscano.pino@tiscali.it>
+
+	* sysdeps/generic/paths.h (_PATH_MNTTAB, _PATH_MOUNTED): Use tabs
+	instead of spaces.
+	* sysdeps/unix/sysv/linux/paths.h (_PATH_UTMP, _PATH_WTMP): Likewise.
+
 2012-11-03  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #14796]
