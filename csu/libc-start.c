@@ -272,7 +272,9 @@ LIBC_START_MAIN (int (*main) (int, char **, char ** MAIN_AUXVEC_DECL),
       result = 0;
 # ifdef SHARED
       unsigned int *ptr = __libc_pthread_functions.ptr_nthreads;
+#  ifdef PTR_DEMANGLE
       PTR_DEMANGLE (ptr);
+#  endif
 # else
       extern unsigned int __nptl_nthreads __attribute ((weak));
       unsigned int *const ptr = &__nptl_nthreads;

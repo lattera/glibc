@@ -52,8 +52,10 @@ ENTRY (____longjmp_chk)
 	/* Get the stack pointer.  */
 	movl	(JB_SP*4)(%ecx), %edi
 	cfi_undefined(%edi)
+#ifdef PTR_DEMANGLE
 	PTR_DEMANGLE (%edx)
 	PTR_DEMANGLE (%edi)
+#endif
 
 	cmpl	%edi, %esp
 	/* Jumping to a higher-address frame is always allowed.  */
