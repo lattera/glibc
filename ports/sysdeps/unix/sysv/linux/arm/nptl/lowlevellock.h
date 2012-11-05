@@ -1,4 +1,4 @@
-/* Copyright (C) 2005, 2006, 2007, 2008, 2009 Free Software Foundation, Inc.
+/* Copyright (C) 2005-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -84,6 +84,18 @@
 			      __lll_private_flag (FUTEX_WAIT, private),	      \
 			      (val), (timespec));			      \
     __ret;								      \
+  })
+
+#define lll_futex_timed_wait_bitset(futexp, val, timespec, clockbit, private) \
+  ({									\
+    INTERNAL_SYSCALL_DECL (__err);					\
+    long int __ret;							\
+    int __op = FUTEX_WAIT_BITSET | clockbit;				\
+    __ret = INTERNAL_SYSCALL (futex, __err, 6, (futexp),		\
+			      __lll_private_flag (__op, private),	\
+			      (val), (timespec), NULL /* Unused.  */,	\
+			      FUTEX_BITSET_MATCH_ANY);			\
+    __ret;								\
   })
 
 #define lll_futex_wake(futexp, nr, private) \

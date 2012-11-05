@@ -1,5 +1,8 @@
 2012-11-05  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/unix/sysv/linux/arm/nptl/lowlevellock.h
+	(lll_futex_timed_wait_bitset): New macro.
+
 	[BZ #14805]
 	* sysdeps/arm/bits/fenv.h (FE_DFL_ENV): Use cast to const fenv_t *.
 
