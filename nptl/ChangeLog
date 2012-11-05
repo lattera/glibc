@@ -1,3 +1,20 @@
+2012-11-05  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* pthread_cond_timedwait.c (__pthread_cond_timedwait): Time out
+	if absolute timeout is negative.
+	[__ASSUME_FUTEX_CLOCK_REALTIME &&
+	lll_futex_timed_wait_bitset]: Use lll_futex_timed_wait_bitset.
+	* pthread_rwlock_timedrdlock.c (pthread_rwlock_timedrdlock):
+	Likewise.
+	* pthread_rwlock_timedwrlock.c (pthread_rwlock_timedwrlock):
+	Likewise.
+	* sysdeps/unix/sysv/linux/lowlevelrobustlock.c
+	(__lll_robust_timedlock_wait): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/lowlevellock.h
+	(lll_futex_timed_wait_bitset): New macro.
+	* sysdeps/unix/sysv/linux/s390/lowlevellock.h
+	(lll_futex_timed_wait_bitset): Likewise.
+
 2012-11-03  David S. Miller  <davem@davemloft.net>
 
 	* sysdeps/unix/sysv/linux/sparc/lowlevellock.h (BUSY_WAIT_NOP):

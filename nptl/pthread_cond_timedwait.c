@@ -80,6 +80,11 @@ __pthread_cond_timedwait (cond, mutex, abstime)
   ++cond->__data.__futex;
   cond->__data.__nwaiters += 1 << COND_NWAITERS_SHIFT;
 
+  /* Work around the fact that the kernel rejects negative timeout values
+     despite them being valid.  */
+  if (__builtin_expect (abstime->tv_sec < 0, 0))
+    goto timeout;
+
   /* Remember the mutex we are using here.  If there is already a
      different address store this is a bad user bug.  Do not store
      anything for pshared condvars.  */
@@ -104,9 +109,11 @@ __pthread_cond_timedwait (cond, mutex, abstime)
 
   while (1)
     {
+#if (!defined __ASSUME_FUTEX_CLOCK_REALTIME \
+     || !defined lll_futex_timed_wait_bitset)
       struct timespec rt;
       {
-#ifdef __NR_clock_gettime
+# ifdef __NR_clock_gettime
 	INTERNAL_SYSCALL_DECL (err);
 	int ret;
 	ret = INTERNAL_VSYSCALL (clock_gettime, err, 2,
@@ -116,7 +123,7 @@ __pthread_cond_timedwait (cond, mutex, abstime)
 	/* Convert the absolute timeout value to a relative timeout.  */
 	rt.tv_sec = abstime->tv_sec - rt.tv_sec;
 	rt.tv_nsec = abstime->tv_nsec - rt.tv_nsec;
-#else
+# else
 	/* Get the current time.  So far we support only one clock.  */
 	struct timeval tv;
 	(void) gettimeofday (&tv, NULL);
@@ -124,7 +131,7 @@ __pthread_cond_timedwait (cond, mutex, abstime)
 	/* Convert the absolute timeout value to a relative timeout.  */
 	rt.tv_sec = abstime->tv_sec - tv.tv_sec;
 	rt.tv_nsec = abstime->tv_nsec - tv.tv_usec * 1000;
-#endif
+# endif
       }
       if (rt.tv_nsec < 0)
 	{
@@ -139,6 +146,7 @@ __pthread_cond_timedwait (cond, mutex, abstime)
 
 	  goto timeout;
 	}
+#endif
 
       unsigned int futex_val = cond->__data.__futex;
 
@@ -148,9 +156,17 @@ __pthread_cond_timedwait (cond, mutex, abstime)
       /* Enable asynchronous cancellation.  Required by the standard.  */
       cbuffer.oldtype = __pthread_enable_asynccancel ();
 
+#if (!defined __ASSUME_FUTEX_CLOCK_REALTIME \
+     || !defined lll_futex_timed_wait_bitset)
       /* Wait until woken by signal or broadcast.  */
       err = lll_futex_timed_wait (&cond->__data.__futex,
 				  futex_val, &rt, pshared);
+#else
+      unsigned int clockbit = (cond->__data.__nwaiters & 1
+			       ? 0 : FUTEX_CLOCK_REALTIME);
+      err = lll_futex_timed_wait_bitset (&cond->__data.__futex, futex_val,
+					 abstime, clockbit, pshared);
+#endif
 
       /* Disable asynchronous cancellation.  */
       __pthread_disable_asynccancel (cbuffer.oldtype);

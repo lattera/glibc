@@ -1,4 +1,4 @@
-/* Copyright (C) 2003,2004,2007,2011 Free Software Foundation, Inc.
+/* Copyright (C) 2003-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Martin Schwidefsky <schwidefsky@de.ibm.com>, 2003.
 
@@ -76,6 +76,16 @@ pthread_rwlock_timedrdlock (rwlock, abstime)
 	  break;
 	}
 
+      /* Work around the fact that the kernel rejects negative timeout values
+	 despite them being valid.  */
+      if (__builtin_expect (abstime->tv_sec < 0, 0))
+	{
+	  result = ETIMEDOUT;
+	  break;
+	}
+
+#if (!defined __ASSUME_FUTEX_CLOCK_REALTIME \
+     || !defined lll_futex_timed_wait_bitset)
       /* Get the current time.  So far we support only one clock.  */
       struct timeval tv;
       (void) gettimeofday (&tv, NULL);
@@ -96,6 +106,7 @@ pthread_rwlock_timedrdlock (rwlock, abstime)
 	  result = ETIMEDOUT;
 	  break;
 	}
+#endif
 
       /* Remember that we are a reader.  */
       if (++rwlock->__data.__nr_readers_queued == 0)
@@ -112,8 +123,16 @@ pthread_rwlock_timedrdlock (rwlock, abstime)
       lll_unlock (rwlock->__data.__lock, rwlock->__data.__shared);
 
       /* Wait for the writer to finish.  */
+#if (!defined __ASSUME_FUTEX_CLOCK_REALTIME \
+     || !defined lll_futex_timed_wait_bitset)
       err = lll_futex_timed_wait (&rwlock->__data.__readers_wakeup,
 				  waitval, &rt, rwlock->__data.__shared);
+#else
+      err = lll_futex_timed_wait_bitset (&rwlock->__data.__readers_wakeup,
+					 waitval, abstime,
+					 FUTEX_CLOCK_REALTIME,
+					 rwlock->__data.__shared);
+#endif
 
       /* Get the lock.  */
       lll_lock (rwlock->__data.__lock, rwlock->__data.__shared);

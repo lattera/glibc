@@ -93,6 +93,26 @@
     __result;								      \
   })
 
+#define lll_futex_timed_wait_bitset(futexp, val, timespec, clockbit, private) \
+  ({									      \
+    register unsigned long int __r2 asm ("2") = (unsigned long int) (futexp); \
+    register unsigned long int __r3 asm ("3")				      \
+      = __lll_private_flag ((FUTEX_WAIT_BITSET | clockbit), private);	      \
+    register unsigned long int __r4 asm ("4") = (long int) (val);	      \
+    register unsigned long int __r5 asm ("5") = (long int) (timespec);	      \
+    register unsigned long int __r6 asm ("6") = (unsigned long int) (NULL);   \
+    register unsigned long int __r7 asm ("7")				      \
+      = (unsigned int) (FUTEX_BITSET_MATCH_ANY);			      \
+    register unsigned long __result asm ("2");				      \
+									      \
+    __asm __volatile ("svc %b1"						      \
+		      : "=d" (__result)					      \
+		      : "i" (SYS_futex), "0" (__r2), "d" (__r3),	      \
+			"d" (__r4), "d" (__r5), "d" (__r6), "d" (__r7)	      \
+		      : "cc", "memory" );				      \
+    __result;								      \
+  })
+
 
 #define lll_futex_wake(futex, nr, private) \
   ({									      \
