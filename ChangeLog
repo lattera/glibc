@@ -1,5 +1,9 @@
 2012-11-05  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #14805]
+	* sysdeps/sh/sh4/fpu/bits/fenv.h (FE_DFL_ENV): Use cast to const
+	fenv_t *.
+
 	[BZ #14801]
 	* sysdeps/s390/fpu/bits/fenv.h (fenv_t): Use implementation
 	namespace for names of struct fields.

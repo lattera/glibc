@@ -1,3 +1,10 @@
+2012-11-05  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #14805]
+	* sysdeps/hppa/fpu/bits/fenv.h (FE_DFL_ENV): Use cast to const
+	fenv_t *.
+	(FE_NOMASK_ENV): Likewise.
+
 2012-11-03  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/hppa/fpu/fclrexcpt.c (feclearexcept): Add

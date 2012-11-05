@@ -83,9 +83,9 @@ typedef struct
 } fenv_t;
 
 /* If the default argument is used we use this value.  */
-#define FE_DFL_ENV ((fenv_t *) -1)
+#define FE_DFL_ENV ((const fenv_t *) -1)
 
 #ifdef __USE_GNU
 /* Floating-point environment where none of the exceptions are masked.  */
-# define FE_NOMASK_ENV	((fenv_t *) -2)
+# define FE_NOMASK_ENV	((const fenv_t *) -2)
 #endif

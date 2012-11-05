@@ -1,3 +1,8 @@
+2012-11-05  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #14805]
+	* sysdeps/arm/bits/fenv.h (FE_DFL_ENV): Use cast to const fenv_t *.
+
 2012-11-03  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/arm/fclrexcpt.c (feclearexcept): Add libm_hidden_ver.
