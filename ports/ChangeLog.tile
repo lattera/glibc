@@ -1,5 +1,8 @@
 2012-11-05  Chris Metcalf  <cmetcalf@tilera.com>
 
+	* sysdeps/tile/math_private.h: Provide additional no-op defines
+	for exception and rounding macros.
+
 	* sysdeps/tile/tilegx/Makefile: Generate Makefile fragment to determine
 	whether to build elf-init.c and gmon-start.c with -mcmodel=large.
 	* sysdeps/tile/crti.S: Support large memory model.
