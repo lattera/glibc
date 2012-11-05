@@ -1,3 +1,10 @@
+2012-11-05  Chris Metcalf  <cmetcalf@tilera.com>
+
+	* sysdeps/tile/tilegx/Makefile: Generate Makefile fragment to determine
+	whether to build elf-init.c and gmon-start.c with -mcmodel=large.
+	* sysdeps/tile/crti.S: Support large memory model.
+	* sysdeps/tile/start.S: Likewise.
+
 2012-11-02  Chris Metcalf  <cmetcalf@tilera.com>
 
 	* sysdeps/tile/dl-runtime.c (_dl_after_load): Handle simulator

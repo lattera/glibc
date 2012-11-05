@@ -126,27 +126,37 @@ _start:
 	 moveli r0, hw2_last(main - .Lmy_pc)
 	}
 	{
-	 moveli r3, hw2_last(__libc_csu_init - .Lmy_pc)
 	 shl16insli r0, r0, hw1(main - .Lmy_pc)
+	 moveli r3, hw2_last(__libc_csu_init - .Lmy_pc)
 	}
 	{
-	 shl16insli r3, r3, hw1(__libc_csu_init - .Lmy_pc)
 	 shl16insli r0, r0, hw0(main - .Lmy_pc)
-	}
-	{
-	 shl16insli r3, r3, hw0(__libc_csu_init - .Lmy_pc)
-	 moveli r4, hw2_last(__libc_csu_fini - .Lmy_pc)
+	 shl16insli r3, r3, hw1(__libc_csu_init - .Lmy_pc)
 	}
 	{
 	 ADD_PTR r0, r0, r13
+	 shl16insli r3, r3, hw0(__libc_csu_init - .Lmy_pc)
+	}
+	{
+	 moveli r12, hw2_last_plt(__libc_start_main - .Lmy_pc)
+	 ADD_PTR r3, r3, r13
+	}
+	{
+	 shl16insli r12, r12, hw1_plt(__libc_start_main - .Lmy_pc)
+	 moveli r4, hw2_last(__libc_csu_fini - .Lmy_pc)
+	}
+	{
+	 shl16insli r12, r12, hw0_plt(__libc_start_main - .Lmy_pc)
 	 shl16insli r4, r4, hw1(__libc_csu_fini - .Lmy_pc)
 	}
 	{
-	 ADD_PTR r3, r3, r13
+	 ADD_PTR r12, r12, r13
 	 shl16insli r4, r4, hw0(__libc_csu_fini - .Lmy_pc)
 	}
 	{
 	 ADD_PTR r4, r4, r13
+	 jalr r12
+	}
 #else
 	 addli r0, r13, lo16(main - .Lmy_pc)
 	}
@@ -160,13 +170,12 @@ _start:
 	}
 	{
 	 auli r4, r4, ha16(__libc_csu_fini - .Lmy_pc)
-
-#endif
-
 	 /* Call the user's main function, and exit with its value.
 	    But let the libc call main. */
 	 j plt(__libc_start_main)
 	}
+#endif
+
 	{
 	 /* Tell backtracer to give up (_start has no caller). */
 	 info INFO_OP_CANNOT_BACKTRACE

@@ -70,16 +70,17 @@ _init:
 #if PREINIT_FUNCTION_WEAK
 	lnk r2
 0:
-#ifdef __tilegx__
+# ifdef __tilegx__
+	moveli r1, hw2_last(_GLOBAL_OFFSET_TABLE_ - 0b)
 	{
-	 moveli r1, hw1_last(_GLOBAL_OFFSET_TABLE_ - 0b)
+	 shl16insli r1, r1, hw1(_GLOBAL_OFFSET_TABLE_ - 0b)
 	 moveli r0, hw1_last_got(PREINIT_FUNCTION)
 	}
 	{
 	 shl16insli r1, r1, hw0(_GLOBAL_OFFSET_TABLE_ - 0b)
 	 shl16insli r0, r0, hw0_got(PREINIT_FUNCTION)
 	}
-#else
+# else
 	{
 	 moveli r1, lo16(_GLOBAL_OFFSET_TABLE_ - 0b)
 	 moveli r0, got_lo16(PREINIT_FUNCTION)
@@ -88,13 +89,25 @@ _init:
 	 auli r1, r1, ha16(_GLOBAL_OFFSET_TABLE_ - 0b)
 	 auli r0, r0, got_ha16(PREINIT_FUNCTION)
 	}
-#endif
+# endif
 	ADD_PTR r0, r0, r1
 	ADD_PTR r0, r0, r2
 	LD_PTR r0, r0
 	BEQZ r0, .Lno_weak_fn
-#endif
+	jalr r0
+#elif defined(__tilegx__)
+	/* Since we are calling from the start of the object to the PLT,
+	   call by loading the full address into a register.  */
+	lnk r2
+0:
+	moveli r0, hw2_last_plt(PREINIT_FUNCTION - 0b)
+	shl16insli r0, r0, hw1_plt(PREINIT_FUNCTION - 0b)
+	shl16insli r0, r0, hw0_plt(PREINIT_FUNCTION - 0b)
+	add r0, r0, r2
+	jalr r0
+#else
 	jal plt(PREINIT_FUNCTION)
+#endif
 .Lno_weak_fn:
 
 	.section .fini,"ax",@progbits
