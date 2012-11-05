@@ -1,5 +1,5 @@
 /* Install given floating-point environment.
-   Copyright (C) 2000, 2008 Free Software Foundation, Inc.
+   Copyright (C) 2000-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Denis Joseph Barrow (djbarrow@de.ibm.com).
 
@@ -31,18 +31,18 @@ fesetenv (const fenv_t *envp)
 
   if (envp == FE_DFL_ENV)
     {
-      env.fpc = _FPU_DEFAULT;
-      env.ieee_instruction_pointer = 0;
+      env.__fpc = _FPU_DEFAULT;
+      env.__ieee_instruction_pointer = 0;
     }
   else if (envp == FE_NOMASK_ENV)
     {
-      env.fpc = FPC_EXCEPTION_MASK;
-      env.ieee_instruction_pointer = 0;
+      env.__fpc = FPC_EXCEPTION_MASK;
+      env.__ieee_instruction_pointer = 0;
     }
   else
     env = (*envp);
 
-  _FPU_SETCW (env.fpc);
+  _FPU_SETCW (env.__fpc);
 
   /* Success.  */
   return 0;

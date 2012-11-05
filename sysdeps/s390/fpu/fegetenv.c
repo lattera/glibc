@@ -1,5 +1,5 @@
 /* Store current floating-point environment.
-   Copyright (C) 2000, 2008 Free Software Foundation, Inc.
+   Copyright (C) 2000-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Denis Joseph Barrow (djbarrow@de.ibm.com).
 
@@ -23,7 +23,7 @@
 int
 fegetenv (fenv_t *envp)
 {
-  _FPU_GETCW (envp->fpc);
+  _FPU_GETCW (envp->__fpc);
 
   /* Success.  */
   return 0;

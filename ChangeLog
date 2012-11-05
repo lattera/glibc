@@ -1,3 +1,13 @@
+2012-11-05  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #14801]
+	* sysdeps/s390/fpu/bits/fenv.h (fenv_t): Use implementation
+	namespace for names of struct fields.
+	* sysdeps/s390/fpu/fegetenv.c (fegetenv): Update references to
+	fenv_t fields.
+	* sysdeps/s390/fpu/feholdexcpt.c (feholdexcept): Likewise.
+	* sysdeps/s390/fpu/fesetenv.c (fesetenv): Likewise.
+
 2012-11-04  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
 	[BZ #3665]
