@@ -4662,6 +4662,14 @@ fma_test (void)
   TEST_fff_f (fma, 0x0.fffp0, -0x0.fffp0, 0x0.ffep0, -0x1p-24);
   TEST_fff_f (fma, -0x0.fffp0, 0x0.fffp0, 0x0.ffep0, -0x1p-24);
   TEST_fff_f (fma, -0x0.fffp0, -0x0.fffp0, -0x0.ffep0, 0x1p-24);
+  TEST_fff_f (fma, 0x1.000002p-126, 0x1.000002p-26, 0x1p127, 0x1p127);
+  TEST_fff_f (fma, 0x1.000002p-126, -0x1.000002p-26, 0x1p127, 0x1p127);
+  TEST_fff_f (fma, 0x1.000002p-126, 0x1.000002p-26, -0x1p127, -0x1p127);
+  TEST_fff_f (fma, 0x1.000002p-126, -0x1.000002p-26, -0x1p127, -0x1p127);
+  TEST_fff_f (fma, 0x1.000002p-126, 0x1.000002p-26, 0x1p103, 0x1p103);
+  TEST_fff_f (fma, 0x1.000002p-126, -0x1.000002p-26, 0x1p103, 0x1p103);
+  TEST_fff_f (fma, 0x1.000002p-126, 0x1.000002p-26, -0x1p103, -0x1p103);
+  TEST_fff_f (fma, 0x1.000002p-126, -0x1.000002p-26, -0x1p103, -0x1p103);
 #endif
 #if defined (TEST_DOUBLE) && DBL_MANT_DIG == 53
   TEST_fff_f (fma, 0x1.7fp+13, 0x1.0000000000001p+0, 0x1.ffep-48, 0x1.7f00000000001p+13);
@@ -4712,6 +4720,14 @@ fma_test (void)
   TEST_fff_f (fma, 0x0.fffffffffffff8p0, -0x0.fffffffffffff8p0, 0x0.fffffffffffffp0, -0x1p-106);
   TEST_fff_f (fma, -0x0.fffffffffffff8p0, 0x0.fffffffffffff8p0, 0x0.fffffffffffffp0, -0x1p-106);
   TEST_fff_f (fma, -0x0.fffffffffffff8p0, -0x0.fffffffffffff8p0, -0x0.fffffffffffffp0, 0x1p-106);
+  TEST_fff_f (fma, 0x1.0000000000001p-1022, 0x1.0000000000001p-55, 0x1p1023, 0x1p1023);
+  TEST_fff_f (fma, 0x1.0000000000001p-1022, -0x1.0000000000001p-55, 0x1p1023, 0x1p1023);
+  TEST_fff_f (fma, 0x1.0000000000001p-1022, 0x1.0000000000001p-55, -0x1p1023, -0x1p1023);
+  TEST_fff_f (fma, 0x1.0000000000001p-1022, -0x1.0000000000001p-55, -0x1p1023, -0x1p1023);
+  TEST_fff_f (fma, 0x1.0000000000001p-1022, 0x1.0000000000001p-55, 0x1p970, 0x1p970);
+  TEST_fff_f (fma, 0x1.0000000000001p-1022, -0x1.0000000000001p-55, 0x1p970, 0x1p970);
+  TEST_fff_f (fma, 0x1.0000000000001p-1022, 0x1.0000000000001p-55, -0x1p970, -0x1p970);
+  TEST_fff_f (fma, 0x1.0000000000001p-1022, -0x1.0000000000001p-55, -0x1p970, -0x1p970);
 #endif
 #if defined (TEST_LDOUBLE) && LDBL_MANT_DIG == 64
   TEST_fff_f (fma, -0x8.03fcp+3696L, 0xf.fffffffffffffffp-6140L, 0x8.3ffffffffffffffp-2450L, -0x8.01ecp-2440L);
@@ -4748,6 +4764,14 @@ fma_test (void)
   TEST_fff_f (fma, 0x0.ffffffffffffffffp0L, -0x0.ffffffffffffffffp0L, 0x0.fffffffffffffffep0L, -0x1p-128L);
   TEST_fff_f (fma, -0x0.ffffffffffffffffp0L, 0x0.ffffffffffffffffp0L, 0x0.fffffffffffffffep0L, -0x1p-128L);
   TEST_fff_f (fma, -0x0.ffffffffffffffffp0L, -0x0.ffffffffffffffffp0L, -0x0.fffffffffffffffep0L, 0x1p-128L);
+  TEST_fff_f (fma, 0x1.0000000000000002p-16382L, 0x1.0000000000000002p-66L, 0x1p16383L, 0x1p16383L);
+  TEST_fff_f (fma, 0x1.0000000000000002p-16382L, -0x1.0000000000000002p-66L, 0x1p16383L, 0x1p16383L);
+  TEST_fff_f (fma, 0x1.0000000000000002p-16382L, 0x1.0000000000000002p-66L, -0x1p16383L, -0x1p16383L);
+  TEST_fff_f (fma, 0x1.0000000000000002p-16382L, -0x1.0000000000000002p-66L, -0x1p16383L, -0x1p16383L);
+  TEST_fff_f (fma, 0x1.0000000000000002p-16382L, 0x1.0000000000000002p-66L, 0x1p16319L, 0x1p16319L);
+  TEST_fff_f (fma, 0x1.0000000000000002p-16382L, -0x1.0000000000000002p-66L, 0x1p16319L, 0x1p16319L);
+  TEST_fff_f (fma, 0x1.0000000000000002p-16382L, 0x1.0000000000000002p-66L, -0x1p16319L, -0x1p16319L);
+  TEST_fff_f (fma, 0x1.0000000000000002p-16382L, -0x1.0000000000000002p-66L, -0x1p16319L, -0x1p16319L);
 #endif
 #if defined (TEST_LDOUBLE) && LDBL_MANT_DIG == 113
   TEST_fff_f (fma, 0x1.bb2de33e02ccbbfa6e245a7c1f71p-2584L, -0x1.6b500daf0580d987f1bc0cadfcddp-13777L, 0x1.613cd91d9fed34b33820e5ab9d8dp-16378L, -0x1.3a79fb50eb9ce887cffa0f09bd9fp-16360L);
@@ -4791,6 +4815,14 @@ fma_test (void)
   TEST_fff_f (fma, 0x0.ffffffffffffffffffffffffffff8p0L, -0x0.ffffffffffffffffffffffffffff8p0L, 0x0.ffffffffffffffffffffffffffffp0L, -0x1p-226L);
   TEST_fff_f (fma, -0x0.ffffffffffffffffffffffffffff8p0L, 0x0.ffffffffffffffffffffffffffff8p0L, 0x0.ffffffffffffffffffffffffffffp0L, -0x1p-226L);
   TEST_fff_f (fma, -0x0.ffffffffffffffffffffffffffff8p0L, -0x0.ffffffffffffffffffffffffffff8p0L, -0x0.ffffffffffffffffffffffffffffp0L, 0x1p-226L);
+  TEST_fff_f (fma, 0x1.0000000000000000000000000001p-16382L, 0x1.0000000000000000000000000001p-66L, 0x1p16383L, 0x1p16383L);
+  TEST_fff_f (fma, 0x1.0000000000000000000000000001p-16382L, -0x1.0000000000000000000000000001p-66L, 0x1p16383L, 0x1p16383L);
+  TEST_fff_f (fma, 0x1.0000000000000000000000000001p-16382L, 0x1.0000000000000000000000000001p-66L, -0x1p16383L, -0x1p16383L);
+  TEST_fff_f (fma, 0x1.0000000000000000000000000001p-16382L, -0x1.0000000000000000000000000001p-66L, -0x1p16383L, -0x1p16383L);
+  TEST_fff_f (fma, 0x1.0000000000000000000000000001p-16382L, 0x1.0000000000000000000000000001p-66L, 0x1p16319L, 0x1p16319L);
+  TEST_fff_f (fma, 0x1.0000000000000000000000000001p-16382L, -0x1.0000000000000000000000000001p-66L, 0x1p16319L, 0x1p16319L);
+  TEST_fff_f (fma, 0x1.0000000000000000000000000001p-16382L, 0x1.0000000000000000000000000001p-66L, -0x1p16319L, -0x1p16319L);
+  TEST_fff_f (fma, 0x1.0000000000000000000000000001p-16382L, -0x1.0000000000000000000000000001p-66L, -0x1p16319L, -0x1p16319L);
 #endif
 
   END (fma);
@@ -4884,6 +4916,14 @@ fma_test_towardzero (void)
       TEST_fff_f (fma, 0x0.fffp0, -0x0.fffp0, 0x0.ffep0, -0x1p-24);
       TEST_fff_f (fma, -0x0.fffp0, 0x0.fffp0, 0x0.ffep0, -0x1p-24);
       TEST_fff_f (fma, -0x0.fffp0, -0x0.fffp0, -0x0.ffep0, 0x1p-24);
+      TEST_fff_f (fma, 0x1.000002p-126, 0x1.000002p-26, 0x1p127, 0x1p127);
+      TEST_fff_f (fma, 0x1.000002p-126, -0x1.000002p-26, 0x1p127, 0x0.ffffffp127);
+      TEST_fff_f (fma, 0x1.000002p-126, 0x1.000002p-26, -0x1p127, -0x0.ffffffp127);
+      TEST_fff_f (fma, 0x1.000002p-126, -0x1.000002p-26, -0x1p127, -0x1p127);
+      TEST_fff_f (fma, 0x1.000002p-126, 0x1.000002p-26, 0x1p103, 0x1p103);
+      TEST_fff_f (fma, 0x1.000002p-126, -0x1.000002p-26, 0x1p103, 0x0.ffffffp103);
+      TEST_fff_f (fma, 0x1.000002p-126, 0x1.000002p-26, -0x1p103, -0x0.ffffffp103);
+      TEST_fff_f (fma, 0x1.000002p-126, -0x1.000002p-26, -0x1p103, -0x1p103);
 #endif
 #if defined (TEST_DOUBLE) && DBL_MANT_DIG == 53
       TEST_fff_f (fma, 0x1.4p-1022, 0x1.0000000000002p-1, 0x1p-1024, 0x1.c000000000002p-1023, UNDERFLOW_EXCEPTION);
@@ -4914,6 +4954,14 @@ fma_test_towardzero (void)
       TEST_fff_f (fma, 0x0.fffffffffffff8p0, -0x0.fffffffffffff8p0, 0x0.fffffffffffffp0, -0x1p-106);
       TEST_fff_f (fma, -0x0.fffffffffffff8p0, 0x0.fffffffffffff8p0, 0x0.fffffffffffffp0, -0x1p-106);
       TEST_fff_f (fma, -0x0.fffffffffffff8p0, -0x0.fffffffffffff8p0, -0x0.fffffffffffffp0, 0x1p-106);
+      TEST_fff_f (fma, 0x1.0000000000001p-1022, 0x1.0000000000001p-55, 0x1p1023, 0x1p1023);
+      TEST_fff_f (fma, 0x1.0000000000001p-1022, -0x1.0000000000001p-55, 0x1p1023, 0x0.fffffffffffff8p1023);
+      TEST_fff_f (fma, 0x1.0000000000001p-1022, 0x1.0000000000001p-55, -0x1p1023, -0x0.fffffffffffff8p1023);
+      TEST_fff_f (fma, 0x1.0000000000001p-1022, -0x1.0000000000001p-55, -0x1p1023, -0x1p1023);
+      TEST_fff_f (fma, 0x1.0000000000001p-1022, 0x1.0000000000001p-55, 0x1p970, 0x1p970);
+      TEST_fff_f (fma, 0x1.0000000000001p-1022, -0x1.0000000000001p-55, 0x1p970, 0x0.fffffffffffff8p970);
+      TEST_fff_f (fma, 0x1.0000000000001p-1022, 0x1.0000000000001p-55, -0x1p970, -0x0.fffffffffffff8p970);
+      TEST_fff_f (fma, 0x1.0000000000001p-1022, -0x1.0000000000001p-55, -0x1p970, -0x1p970);
 #endif
 #if defined (TEST_LDOUBLE) && LDBL_MANT_DIG == 64
       TEST_fff_f (fma, 0x1.4p-16382L, 0x1.0000000000000004p-1L, 0x1p-16384L, 0x1.c000000000000004p-16383L, UNDERFLOW_EXCEPTION);
@@ -4944,6 +4992,14 @@ fma_test_towardzero (void)
       TEST_fff_f (fma, 0x0.ffffffffffffffffp0L, -0x0.ffffffffffffffffp0L, 0x0.fffffffffffffffep0L, -0x1p-128L);
       TEST_fff_f (fma, -0x0.ffffffffffffffffp0L, 0x0.ffffffffffffffffp0L, 0x0.fffffffffffffffep0L, -0x1p-128L);
       TEST_fff_f (fma, -0x0.ffffffffffffffffp0L, -0x0.ffffffffffffffffp0L, -0x0.fffffffffffffffep0L, 0x1p-128L);
+      TEST_fff_f (fma, 0x1.0000000000000002p-16382L, 0x1.0000000000000002p-66L, 0x1p16383L, 0x1p16383L);
+      TEST_fff_f (fma, 0x1.0000000000000002p-16382L, -0x1.0000000000000002p-66L, 0x1p16383L, 0x0.ffffffffffffffffp16383L);
+      TEST_fff_f (fma, 0x1.0000000000000002p-16382L, 0x1.0000000000000002p-66L, -0x1p16383L, -0x0.ffffffffffffffffp16383L);
+      TEST_fff_f (fma, 0x1.0000000000000002p-16382L, -0x1.0000000000000002p-66L, -0x1p16383L, -0x1p16383L);
+      TEST_fff_f (fma, 0x1.0000000000000002p-16382L, 0x1.0000000000000002p-66L, 0x1p16319L, 0x1p16319L);
+      TEST_fff_f (fma, 0x1.0000000000000002p-16382L, -0x1.0000000000000002p-66L, 0x1p16319L, 0x0.ffffffffffffffffp16319L);
+      TEST_fff_f (fma, 0x1.0000000000000002p-16382L, 0x1.0000000000000002p-66L, -0x1p16319L, -0x0.ffffffffffffffffp16319L);
+      TEST_fff_f (fma, 0x1.0000000000000002p-16382L, -0x1.0000000000000002p-66L, -0x1p16319L, -0x1p16319L);
 #endif
 #if defined (TEST_LDOUBLE) && LDBL_MANT_DIG == 113
       TEST_fff_f (fma, 0x1.4p-16382L, 0x1.0000000000000000000000000002p-1L, 0x1p-16384L, 0x1.c000000000000000000000000002p-16383L, UNDERFLOW_EXCEPTION);
@@ -4974,6 +5030,14 @@ fma_test_towardzero (void)
       TEST_fff_f (fma, 0x0.ffffffffffffffffffffffffffff8p0L, -0x0.ffffffffffffffffffffffffffff8p0L, 0x0.ffffffffffffffffffffffffffffp0L, -0x1p-226L);
       TEST_fff_f (fma, -0x0.ffffffffffffffffffffffffffff8p0L, 0x0.ffffffffffffffffffffffffffff8p0L, 0x0.ffffffffffffffffffffffffffffp0L, -0x1p-226L);
       TEST_fff_f (fma, -0x0.ffffffffffffffffffffffffffff8p0L, -0x0.ffffffffffffffffffffffffffff8p0L, -0x0.ffffffffffffffffffffffffffffp0L, 0x1p-226L);
+      TEST_fff_f (fma, 0x1.0000000000000000000000000001p-16382L, 0x1.0000000000000000000000000001p-66L, 0x1p16383L, 0x1p16383L);
+      TEST_fff_f (fma, 0x1.0000000000000000000000000001p-16382L, -0x1.0000000000000000000000000001p-66L, 0x1p16383L, 0x0.ffffffffffffffffffffffffffff8p16383L);
+      TEST_fff_f (fma, 0x1.0000000000000000000000000001p-16382L, 0x1.0000000000000000000000000001p-66L, -0x1p16383L, -0x0.ffffffffffffffffffffffffffff8p16383L);
+      TEST_fff_f (fma, 0x1.0000000000000000000000000001p-16382L, -0x1.0000000000000000000000000001p-66L, -0x1p16383L, -0x1p16383L);
+      TEST_fff_f (fma, 0x1.0000000000000000000000000001p-16382L, 0x1.0000000000000000000000000001p-66L, 0x1p16319L, 0x1p16319L);
+      TEST_fff_f (fma, 0x1.0000000000000000000000000001p-16382L, -0x1.0000000000000000000000000001p-66L, 0x1p16319L, 0x0.ffffffffffffffffffffffffffff8p16319L);
+      TEST_fff_f (fma, 0x1.0000000000000000000000000001p-16382L, 0x1.0000000000000000000000000001p-66L, -0x1p16319L, -0x0.ffffffffffffffffffffffffffff8p16319L);
+      TEST_fff_f (fma, 0x1.0000000000000000000000000001p-16382L, -0x1.0000000000000000000000000001p-66L, -0x1p16319L, -0x1p16319L);
 #endif
     }
 
@@ -5070,6 +5134,14 @@ fma_test_downward (void)
       TEST_fff_f (fma, 0x0.fffp0, -0x0.fffp0, 0x0.ffep0, -0x1p-24);
       TEST_fff_f (fma, -0x0.fffp0, 0x0.fffp0, 0x0.ffep0, -0x1p-24);
       TEST_fff_f (fma, -0x0.fffp0, -0x0.fffp0, -0x0.ffep0, 0x1p-24);
+      TEST_fff_f (fma, 0x1.000002p-126, 0x1.000002p-26, 0x1p127, 0x1p127);
+      TEST_fff_f (fma, 0x1.000002p-126, -0x1.000002p-26, 0x1p127, 0x0.ffffffp127);
+      TEST_fff_f (fma, 0x1.000002p-126, 0x1.000002p-26, -0x1p127, -0x1p127);
+      TEST_fff_f (fma, 0x1.000002p-126, -0x1.000002p-26, -0x1p127, -0x1.000002p127);
+      TEST_fff_f (fma, 0x1.000002p-126, 0x1.000002p-26, 0x1p103, 0x1p103);
+      TEST_fff_f (fma, 0x1.000002p-126, -0x1.000002p-26, 0x1p103, 0x0.ffffffp103);
+      TEST_fff_f (fma, 0x1.000002p-126, 0x1.000002p-26, -0x1p103, -0x1p103);
+      TEST_fff_f (fma, 0x1.000002p-126, -0x1.000002p-26, -0x1p103, -0x1.000002p103);
 #endif
 #if defined (TEST_DOUBLE) && DBL_MANT_DIG == 53
       TEST_fff_f (fma, 0x1.4p-1022, 0x1.0000000000002p-1, 0x1p-1024, 0x1.c000000000002p-1023, UNDERFLOW_EXCEPTION);
@@ -5100,6 +5172,14 @@ fma_test_downward (void)
       TEST_fff_f (fma, 0x0.fffffffffffff8p0, -0x0.fffffffffffff8p0, 0x0.fffffffffffffp0, -0x1p-106);
       TEST_fff_f (fma, -0x0.fffffffffffff8p0, 0x0.fffffffffffff8p0, 0x0.fffffffffffffp0, -0x1p-106);
       TEST_fff_f (fma, -0x0.fffffffffffff8p0, -0x0.fffffffffffff8p0, -0x0.fffffffffffffp0, 0x1p-106);
+      TEST_fff_f (fma, 0x1.0000000000001p-1022, 0x1.0000000000001p-55, 0x1p1023, 0x1p1023);
+      TEST_fff_f (fma, 0x1.0000000000001p-1022, -0x1.0000000000001p-55, 0x1p1023, 0x0.fffffffffffff8p1023);
+      TEST_fff_f (fma, 0x1.0000000000001p-1022, 0x1.0000000000001p-55, -0x1p1023, -0x1p1023);
+      TEST_fff_f (fma, 0x1.0000000000001p-1022, -0x1.0000000000001p-55, -0x1p1023, -0x1.0000000000001p1023);
+      TEST_fff_f (fma, 0x1.0000000000001p-1022, 0x1.0000000000001p-55, 0x1p970, 0x1p970);
+      TEST_fff_f (fma, 0x1.0000000000001p-1022, -0x1.0000000000001p-55, 0x1p970, 0x0.fffffffffffff8p970);
+      TEST_fff_f (fma, 0x1.0000000000001p-1022, 0x1.0000000000001p-55, -0x1p970, -0x1p970);
+      TEST_fff_f (fma, 0x1.0000000000001p-1022, -0x1.0000000000001p-55, -0x1p970, -0x1.0000000000001p970);
 #endif
 #if defined (TEST_LDOUBLE) && LDBL_MANT_DIG == 64
       TEST_fff_f (fma, 0x1.4p-16382L, 0x1.0000000000000004p-1L, 0x1p-16384L, 0x1.c000000000000004p-16383L, UNDERFLOW_EXCEPTION);
@@ -5130,6 +5210,14 @@ fma_test_downward (void)
       TEST_fff_f (fma, 0x0.ffffffffffffffffp0L, -0x0.ffffffffffffffffp0L, 0x0.fffffffffffffffep0L, -0x1p-128L);
       TEST_fff_f (fma, -0x0.ffffffffffffffffp0L, 0x0.ffffffffffffffffp0L, 0x0.fffffffffffffffep0L, -0x1p-128L);
       TEST_fff_f (fma, -0x0.ffffffffffffffffp0L, -0x0.ffffffffffffffffp0L, -0x0.fffffffffffffffep0L, 0x1p-128L);
+      TEST_fff_f (fma, 0x1.0000000000000002p-16382L, 0x1.0000000000000002p-66L, 0x1p16383L, 0x1p16383L);
+      TEST_fff_f (fma, 0x1.0000000000000002p-16382L, -0x1.0000000000000002p-66L, 0x1p16383L, 0x0.ffffffffffffffffp16383L);
+      TEST_fff_f (fma, 0x1.0000000000000002p-16382L, 0x1.0000000000000002p-66L, -0x1p16383L, -0x1p16383L);
+      TEST_fff_f (fma, 0x1.0000000000000002p-16382L, -0x1.0000000000000002p-66L, -0x1p16383L, -0x1.0000000000000002p16383L);
+      TEST_fff_f (fma, 0x1.0000000000000002p-16382L, 0x1.0000000000000002p-66L, 0x1p16319L, 0x1p16319L);
+      TEST_fff_f (fma, 0x1.0000000000000002p-16382L, -0x1.0000000000000002p-66L, 0x1p16319L, 0x0.ffffffffffffffffp16319L);
+      TEST_fff_f (fma, 0x1.0000000000000002p-16382L, 0x1.0000000000000002p-66L, -0x1p16319L, -0x1p16319L);
+      TEST_fff_f (fma, 0x1.0000000000000002p-16382L, -0x1.0000000000000002p-66L, -0x1p16319L, -0x1.0000000000000002p16319L);
 #endif
 #if defined (TEST_LDOUBLE) && LDBL_MANT_DIG == 113
       TEST_fff_f (fma, 0x1.4p-16382L, 0x1.0000000000000000000000000002p-1L, 0x1p-16384L, 0x1.c000000000000000000000000002p-16383L, UNDERFLOW_EXCEPTION);
@@ -5160,6 +5248,14 @@ fma_test_downward (void)
       TEST_fff_f (fma, 0x0.ffffffffffffffffffffffffffff8p0L, -0x0.ffffffffffffffffffffffffffff8p0L, 0x0.ffffffffffffffffffffffffffffp0L, -0x1p-226L);
       TEST_fff_f (fma, -0x0.ffffffffffffffffffffffffffff8p0L, 0x0.ffffffffffffffffffffffffffff8p0L, 0x0.ffffffffffffffffffffffffffffp0L, -0x1p-226L);
       TEST_fff_f (fma, -0x0.ffffffffffffffffffffffffffff8p0L, -0x0.ffffffffffffffffffffffffffff8p0L, -0x0.ffffffffffffffffffffffffffffp0L, 0x1p-226L);
+      TEST_fff_f (fma, 0x1.0000000000000000000000000001p-16382L, 0x1.0000000000000000000000000001p-66L, 0x1p16383L, 0x1p16383L);
+      TEST_fff_f (fma, 0x1.0000000000000000000000000001p-16382L, -0x1.0000000000000000000000000001p-66L, 0x1p16383L, 0x0.ffffffffffffffffffffffffffff8p16383L);
+      TEST_fff_f (fma, 0x1.0000000000000000000000000001p-16382L, 0x1.0000000000000000000000000001p-66L, -0x1p16383L, -0x1p16383L);
+      TEST_fff_f (fma, 0x1.0000000000000000000000000001p-16382L, -0x1.0000000000000000000000000001p-66L, -0x1p16383L, -0x1.0000000000000000000000000001p16383L);
+      TEST_fff_f (fma, 0x1.0000000000000000000000000001p-16382L, 0x1.0000000000000000000000000001p-66L, 0x1p16319L, 0x1p16319L);
+      TEST_fff_f (fma, 0x1.0000000000000000000000000001p-16382L, -0x1.0000000000000000000000000001p-66L, 0x1p16319L, 0x0.ffffffffffffffffffffffffffff8p16319L);
+      TEST_fff_f (fma, 0x1.0000000000000000000000000001p-16382L, 0x1.0000000000000000000000000001p-66L, -0x1p16319L, -0x1p16319L);
+      TEST_fff_f (fma, 0x1.0000000000000000000000000001p-16382L, -0x1.0000000000000000000000000001p-66L, -0x1p16319L, -0x1.0000000000000000000000000001p16319L);
 #endif
     }
 
@@ -5256,6 +5352,14 @@ fma_test_upward (void)
       TEST_fff_f (fma, 0x0.fffp0, -0x0.fffp0, 0x0.ffep0, -0x1p-24);
       TEST_fff_f (fma, -0x0.fffp0, 0x0.fffp0, 0x0.ffep0, -0x1p-24);
       TEST_fff_f (fma, -0x0.fffp0, -0x0.fffp0, -0x0.ffep0, 0x1p-24);
+      TEST_fff_f (fma, 0x1.000002p-126, 0x1.000002p-26, 0x1p127, 0x1.000002p127);
+      TEST_fff_f (fma, 0x1.000002p-126, -0x1.000002p-26, 0x1p127, 0x1p127);
+      TEST_fff_f (fma, 0x1.000002p-126, 0x1.000002p-26, -0x1p127, -0x0.ffffffp127);
+      TEST_fff_f (fma, 0x1.000002p-126, -0x1.000002p-26, -0x1p127, -0x1p127);
+      TEST_fff_f (fma, 0x1.000002p-126, 0x1.000002p-26, 0x1p103, 0x1.000002p103);
+      TEST_fff_f (fma, 0x1.000002p-126, -0x1.000002p-26, 0x1p103, 0x1p103);
+      TEST_fff_f (fma, 0x1.000002p-126, 0x1.000002p-26, -0x1p103, -0x0.ffffffp103);
+      TEST_fff_f (fma, 0x1.000002p-126, -0x1.000002p-26, -0x1p103, -0x1p103);
 #endif
 #if defined (TEST_DOUBLE) && DBL_MANT_DIG == 53
       TEST_fff_f (fma, 0x1.4p-1022, 0x1.0000000000002p-1, 0x1p-1024, 0x1.c000000000004p-1023, UNDERFLOW_EXCEPTION);
@@ -5286,6 +5390,14 @@ fma_test_upward (void)
       TEST_fff_f (fma, 0x0.fffffffffffff8p0, -0x0.fffffffffffff8p0, 0x0.fffffffffffffp0, -0x1p-106);
       TEST_fff_f (fma, -0x0.fffffffffffff8p0, 0x0.fffffffffffff8p0, 0x0.fffffffffffffp0, -0x1p-106);
       TEST_fff_f (fma, -0x0.fffffffffffff8p0, -0x0.fffffffffffff8p0, -0x0.fffffffffffffp0, 0x1p-106);
+      TEST_fff_f (fma, 0x1.0000000000001p-1022, 0x1.0000000000001p-55, 0x1p1023, 0x1.0000000000001p1023);
+      TEST_fff_f (fma, 0x1.0000000000001p-1022, -0x1.0000000000001p-55, 0x1p1023, 0x1p1023);
+      TEST_fff_f (fma, 0x1.0000000000001p-1022, 0x1.0000000000001p-55, -0x1p1023, -0x0.fffffffffffff8p1023);
+      TEST_fff_f (fma, 0x1.0000000000001p-1022, -0x1.0000000000001p-55, -0x1p1023, -0x1p1023);
+      TEST_fff_f (fma, 0x1.0000000000001p-1022, 0x1.0000000000001p-55, 0x1p970, 0x1.0000000000001p970);
+      TEST_fff_f (fma, 0x1.0000000000001p-1022, -0x1.0000000000001p-55, 0x1p970, 0x1p970);
+      TEST_fff_f (fma, 0x1.0000000000001p-1022, 0x1.0000000000001p-55, -0x1p970, -0x0.fffffffffffff8p970);
+      TEST_fff_f (fma, 0x1.0000000000001p-1022, -0x1.0000000000001p-55, -0x1p970, -0x1p970);
 #endif
 #if defined (TEST_LDOUBLE) && LDBL_MANT_DIG == 64
       TEST_fff_f (fma, 0x1.4p-16382L, 0x1.0000000000000004p-1L, 0x1p-16384L, 0x1.c000000000000008p-16383L, UNDERFLOW_EXCEPTION);
@@ -5316,6 +5428,14 @@ fma_test_upward (void)
       TEST_fff_f (fma, 0x0.ffffffffffffffffp0L, -0x0.ffffffffffffffffp0L, 0x0.fffffffffffffffep0L, -0x1p-128L);
       TEST_fff_f (fma, -0x0.ffffffffffffffffp0L, 0x0.ffffffffffffffffp0L, 0x0.fffffffffffffffep0L, -0x1p-128L);
       TEST_fff_f (fma, -0x0.ffffffffffffffffp0L, -0x0.ffffffffffffffffp0L, -0x0.fffffffffffffffep0L, 0x1p-128L);
+      TEST_fff_f (fma, 0x1.0000000000000002p-16382L, 0x1.0000000000000002p-66L, 0x1p16383L, 0x1.0000000000000002p16383L);
+      TEST_fff_f (fma, 0x1.0000000000000002p-16382L, -0x1.0000000000000002p-66L, 0x1p16383L, 0x1p16383L);
+      TEST_fff_f (fma, 0x1.0000000000000002p-16382L, 0x1.0000000000000002p-66L, -0x1p16383L, -0x0.ffffffffffffffffp16383L);
+      TEST_fff_f (fma, 0x1.0000000000000002p-16382L, -0x1.0000000000000002p-66L, -0x1p16383L, -0x1p16383L);
+      TEST_fff_f (fma, 0x1.0000000000000002p-16382L, 0x1.0000000000000002p-66L, 0x1p16319L, 0x1.0000000000000002p16319L);
+      TEST_fff_f (fma, 0x1.0000000000000002p-16382L, -0x1.0000000000000002p-66L, 0x1p16319L, 0x1p16319L);
+      TEST_fff_f (fma, 0x1.0000000000000002p-16382L, 0x1.0000000000000002p-66L, -0x1p16319L, -0x0.ffffffffffffffffp16319L);
+      TEST_fff_f (fma, 0x1.0000000000000002p-16382L, -0x1.0000000000000002p-66L, -0x1p16319L, -0x1p16319L);
 #endif
 #if defined (TEST_LDOUBLE) && LDBL_MANT_DIG == 113
       TEST_fff_f (fma, 0x1.4p-16382L, 0x1.0000000000000000000000000002p-1L, 0x1p-16384L, 0x1.c000000000000000000000000004p-16383L, UNDERFLOW_EXCEPTION);
@@ -5346,6 +5466,14 @@ fma_test_upward (void)
       TEST_fff_f (fma, 0x0.ffffffffffffffffffffffffffff8p0L, -0x0.ffffffffffffffffffffffffffff8p0L, 0x0.ffffffffffffffffffffffffffffp0L, -0x1p-226L);
       TEST_fff_f (fma, -0x0.ffffffffffffffffffffffffffff8p0L, 0x0.ffffffffffffffffffffffffffff8p0L, 0x0.ffffffffffffffffffffffffffffp0L, -0x1p-226L);
       TEST_fff_f (fma, -0x0.ffffffffffffffffffffffffffff8p0L, -0x0.ffffffffffffffffffffffffffff8p0L, -0x0.ffffffffffffffffffffffffffffp0L, 0x1p-226L);
+      TEST_fff_f (fma, 0x1.0000000000000000000000000001p-16382L, 0x1.0000000000000000000000000001p-66L, 0x1p16383L, 0x1.0000000000000000000000000001p16383L);
+      TEST_fff_f (fma, 0x1.0000000000000000000000000001p-16382L, -0x1.0000000000000000000000000001p-66L, 0x1p16383L, 0x1p16383L);
+      TEST_fff_f (fma, 0x1.0000000000000000000000000001p-16382L, 0x1.0000000000000000000000000001p-66L, -0x1p16383L, -0x0.ffffffffffffffffffffffffffff8p16383L);
+      TEST_fff_f (fma, 0x1.0000000000000000000000000001p-16382L, -0x1.0000000000000000000000000001p-66L, -0x1p16383L, -0x1p16383L);
+      TEST_fff_f (fma, 0x1.0000000000000000000000000001p-16382L, 0x1.0000000000000000000000000001p-66L, 0x1p16319L, 0x1.0000000000000000000000000001p16319L);
+      TEST_fff_f (fma, 0x1.0000000000000000000000000001p-16382L, -0x1.0000000000000000000000000001p-66L, 0x1p16319L, 0x1p16319L);
+      TEST_fff_f (fma, 0x1.0000000000000000000000000001p-16382L, 0x1.0000000000000000000000000001p-66L, -0x1p16319L, -0x0.ffffffffffffffffffffffffffff8p16319L);
+      TEST_fff_f (fma, 0x1.0000000000000000000000000001p-16382L, -0x1.0000000000000000000000000001p-66L, -0x1p16319L, -0x1p16319L);
 #endif
     }
 

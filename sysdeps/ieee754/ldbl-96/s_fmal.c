@@ -116,8 +116,17 @@ __fmal (long double x, long double y, long double z)
 	{
 	  /* Similarly.
 	     If z exponent is very large and x and y exponents are
-	     very small, it doesn't matter if we don't adjust it.  */
-	  if (u.ieee.exponent > v.ieee.exponent)
+	     very small, adjust them up to avoid spurious underflows,
+	     rather than down.  */
+	  if (u.ieee.exponent + v.ieee.exponent
+	      <= IEEE854_LONG_DOUBLE_BIAS + LDBL_MANT_DIG)
+	    {
+	      if (u.ieee.exponent > v.ieee.exponent)
+		u.ieee.exponent += 2 * LDBL_MANT_DIG + 2;
+	      else
+		v.ieee.exponent += 2 * LDBL_MANT_DIG + 2;
+	    }
+	  else if (u.ieee.exponent > v.ieee.exponent)
 	    {
 	      if (u.ieee.exponent > LDBL_MANT_DIG)
 		u.ieee.exponent -= LDBL_MANT_DIG;
@@ -147,15 +156,15 @@ __fmal (long double x, long double y, long double z)
 		  <= IEEE854_LONG_DOUBLE_BIAS + LDBL_MANT_DIG) */
 	{
 	  if (u.ieee.exponent > v.ieee.exponent)
-	    u.ieee.exponent += 2 * LDBL_MANT_DIG;
+	    u.ieee.exponent += 2 * LDBL_MANT_DIG + 2;
 	  else
-	    v.ieee.exponent += 2 * LDBL_MANT_DIG;
-	  if (w.ieee.exponent <= 4 * LDBL_MANT_DIG + 4)
+	    v.ieee.exponent += 2 * LDBL_MANT_DIG + 2;
+	  if (w.ieee.exponent <= 4 * LDBL_MANT_DIG + 6)
 	    {
 	      if (w.ieee.exponent)
-		w.ieee.exponent += 2 * LDBL_MANT_DIG;
+		w.ieee.exponent += 2 * LDBL_MANT_DIG + 2;
 	      else
-		w.d *= 0x1p128L;
+		w.d *= 0x1p130L;
 	      adjust = -1;
 	    }
 	  /* Otherwise x * y should just affect inexact
@@ -240,19 +249,19 @@ __fmal (long double x, long double y, long double z)
       /* If a1 + u.d is exact, the only rounding happens during
 	 scaling down.  */
       if (j == 0)
-	return v.d * 0x1p-128L;
+	return v.d * 0x1p-130L;
       /* If result rounded to zero is not subnormal, no double
 	 rounding will occur.  */
-      if (v.ieee.exponent > 128)
-	return (a1 + u.d) * 0x1p-128L;
-      /* If v.d * 0x1p-128L with round to zero is a subnormal above
-	 or equal to LDBL_MIN / 2, then v.d * 0x1p-128L shifts mantissa
+      if (v.ieee.exponent > 130)
+	return (a1 + u.d) * 0x1p-130L;
+      /* If v.d * 0x1p-130L with round to zero is a subnormal above
+	 or equal to LDBL_MIN / 2, then v.d * 0x1p-130L shifts mantissa
 	 down just by 1 bit, which means v.ieee.mantissa1 |= j would
 	 change the round bit, not sticky or guard bit.
-	 v.d * 0x1p-128L never normalizes by shifting up,
+	 v.d * 0x1p-130L never normalizes by shifting up,
 	 so round bit plus sticky bit should be already enough
 	 for proper rounding.  */
-      if (v.ieee.exponent == 128)
+      if (v.ieee.exponent == 130)
 	{
 	  /* If the exponent would be in the normal range when
 	     rounding to normal precision with unbounded exponent
@@ -262,8 +271,8 @@ __fmal (long double x, long double y, long double z)
 	  if (TININESS_AFTER_ROUNDING)
 	    {
 	      w.d = a1 + u.d;
-	      if (w.ieee.exponent == 129)
-		return w.d * 0x1p-128L;
+	      if (w.ieee.exponent == 131)
+		return w.d * 0x1p-130L;
 	    }
 	  /* v.ieee.mantissa1 & 2 is LSB bit of the result before rounding,
 	     v.ieee.mantissa1 & 1 is the round bit and j is our sticky
@@ -272,12 +281,12 @@ __fmal (long double x, long double y, long double z)
 	  w.ieee.mantissa1 = ((v.ieee.mantissa1 & 3) << 1) | j;
 	  w.ieee.negative = v.ieee.negative;
 	  v.ieee.mantissa1 &= ~3U;
-	  v.d *= 0x1p-128L;
+	  v.d *= 0x1p-130L;
 	  w.d *= 0x1p-2L;
 	  return v.d + w.d;
 	}
       v.ieee.mantissa1 |= j;
-      return v.d * 0x1p-128L;
+      return v.d * 0x1p-130L;
     }
 }
 weak_alias (__fmal, fmal)

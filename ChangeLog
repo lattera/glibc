@@ -1,3 +1,16 @@
+2012-11-06  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #14793]
+	* sysdeps/ieee754/dbl-64/s_fma.c (__fma): In case of large z
+	exponent and small x and y exponents, scale x or y up.  Increase
+	by 2 the exponent used in scaling up.
+	* sysdeps/ieee754/ldbl-128/s_fmal.c (__fmal): Likewise.
+	* sysdeps/ieee754/ldbl-96/s_fmal.c (__fmal): Likewise.
+	* math/libm-test.inc (fma_test): Add more tests.
+	(fma_test_towardzero): Likewise.
+	(fma_test_downward): Likewise.
+	(fma_test_upward): Likewise.
+
 2012-11-05  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #14805]
