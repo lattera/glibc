@@ -1,3 +1,8 @@
+2012-11-06  Chris Metcalf  <cmetcalf@tilera.com>
+
+	* tst-sem14.c (TIMEOUT): Set timeout to 10 seconds.
+	* tst-cond24.c (TIMEOUT): Increase from 10 to 20 seconds.
+
 2012-11-05  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* pthread_cond_timedwait.c (__pthread_cond_timedwait): Time out
