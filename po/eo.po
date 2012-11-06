@@ -4,7 +4,7 @@
 #
 # "Under the spreading chestnut tree..."
 #
-# Do: iconv/iconv_prog.c, nis/nis_error.h,
+# Do: nis/nis_error.h,
 # stdio-common/psig*, sysdeps/gnu/errlist.c,
 #
 # Benno Schulenberg <benno@vertaalt.nl>, 2012.
@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: libc 2.16-pre1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-06-21 07:51-0700\n"
-"PO-Revision-Date: 2012-09-14 21:31+0200\n"
+"PO-Revision-Date: 2012-11-05 22:16+0100\n"
 "Last-Translator: Benno Schulenberg <benno@vertaalt.nl>\n"
 "Language-Team: Esperanto <translation-team-eo@lists.sourceforge.net>\n"
 "Language: eo\n"
@@ -154,6 +154,8 @@ msgid ""
 "For bug reporting instructions, please see:\n"
 "<http://www.gnu.org/software/libc/bugs.html>.\n"
 msgstr ""
+"Por raporti programmisojn, bonvolu legi (angle):\n"
+"<http://www.gnu.org/software/libc/bugs.html>.\n"
 
 #: catgets/gencat.c:248 debug/pcprofiledump.c:221 debug/xtrace.sh:65
 #: elf/ldconfig.c:315 elf/ldd.bash.in:38 elf/pldd.c:220 elf/sotruss.ksh:76
@@ -168,6 +170,9 @@ msgid ""
 "This is free software; see the source for copying conditions.  There is NO\n"
 "warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n"
 msgstr ""
+"Copyright (C) %s Free Software Foundation, Inc.\n"
+"Ĉi tio estas libera programo; vidu la fontdosierojn por la kopikondiĉoj.\n"
+"Doniĝas NENIA GARANTIO; eĉ ne por KOMERCKVALITO aŭ ADEKVATECO POR IU CELO.\n"
 
 #: catgets/gencat.c:253 debug/pcprofiledump.c:226 debug/xtrace.sh:69
 #: elf/ldconfig.c:320 elf/pldd.c:225 elf/sprof.c:391 iconv/iconv_prog.c:427
@@ -213,15 +218,15 @@ msgstr "nevalida cita signo"
 #: catgets/gencat.c:573
 #, c-format
 msgid "unknown directive `%s': line ignored"
-msgstr ""
+msgstr "nekonata komando '%s': linio ignoriĝas"
 
 #: catgets/gencat.c:618
 msgid "duplicated message number"
-msgstr ""
+msgstr "duobla mesaĝnumero"
 
 #: catgets/gencat.c:669
 msgid "duplicated message identifier"
-msgstr ""
+msgstr "duobla mesaĝnomo"
 
 #: catgets/gencat.c:726
 msgid "invalid character: message ignored"
@@ -242,7 +247,7 @@ msgstr "ne eblas malfermi eligan dosieron «%s»"
 
 #: catgets/gencat.c:1190 locale/programs/linereader.c:559
 msgid "invalid escape sequence"
-msgstr ""
+msgstr "nevalida stirkodo"
 
 # SIGTERM     15       Term    Termination signal
 #: catgets/gencat.c:1212
@@ -250,19 +255,19 @@ msgid "unterminated message"
 msgstr "nefinita mesaĝo"
 
 #: catgets/gencat.c:1236
-#, c-format
+#, fuzzy, c-format
 msgid "while opening old catalog file"
-msgstr ""
+msgstr "dum malfermo de malnova katalogdosiero"
 
 #: catgets/gencat.c:1327
 #, c-format
 msgid "conversion modules not available"
-msgstr ""
+msgstr "konvertmoduloj ne disponeblas"
 
 #: catgets/gencat.c:1353
-#, c-format
+#, fuzzy, c-format
 msgid "cannot determine escape character"
-msgstr ""
+msgstr "ne eblas eltrovi ..."
 
 #: debug/pcprofiledump.c:52
 msgid "Don't buffer output"
@@ -1347,11 +1352,11 @@ msgstr "Indiko de eniga/eliga aranĝo:"
 
 #: iconv/iconv_prog.c:60
 msgid "encoding of original text"
-msgstr "enkodigo de originala teksto"
+msgstr "enkodigo de eniga teksto"
 
 #: iconv/iconv_prog.c:61
 msgid "encoding for output"
-msgstr "enkodigo de eligo"
+msgstr "enkodigo por la eligo"
 
 # SIGINFO      29,-,-             A synonym for SIGPWR
 #: iconv/iconv_prog.c:62
@@ -1360,7 +1365,7 @@ msgstr "Informo:"
 
 #: iconv/iconv_prog.c:63
 msgid "list all known coded character sets"
-msgstr "listigi ĉiujn konatajn signarojn"
+msgstr "listigi ĉiujn konatajn signarnomojn"
 
 #: iconv/iconv_prog.c:64 locale/programs/localedef.c:126
 msgid "Output control:"
@@ -1372,7 +1377,7 @@ msgstr "forlasi nevalidajn signojn de eligo"
 
 #: iconv/iconv_prog.c:66
 msgid "output file"
-msgstr "la eliga dosiero"
+msgstr "skribi la eligon al ĉi tiu dosiero"
 
 #: iconv/iconv_prog.c:67
 msgid "suppress warnings"
@@ -1384,7 +1389,9 @@ msgstr "montri informon pri progreso"
 
 #: iconv/iconv_prog.c:73
 msgid "Convert encoding of given files from one encoding to another."
-msgstr "Konvertas la enkodigon de indikataj dosieroj de iu al alia."
+msgstr ""
+"  \n"
+"Konvertas la enkodigon de indikataj dosieroj de iu al alia."
 
 #: iconv/iconv_prog.c:77
 msgid "[FILE...]"
@@ -1449,6 +1456,11 @@ msgid ""
 "\n"
 "  "
 msgstr ""
+"La sekva listo enhavas ĉiujn konatajn signarenkodigojn.  Tiu ne signifas\n"
+"ke ĉiuj kombinoj de ĉi tiuj nomoj uzeblas kiel ekdea kaj cela enkodigo.\n"
+"Signaroj povas esti listigitaj sub diversaj nomoj.\n"
+"\n"
+"  "
 
 #: iconv/iconvconfig.c:109
 msgid "Create fastloading iconv module configuration file."
@@ -2397,7 +2409,7 @@ msgstr ""
 #: locale/programs/ld-telephone.c:148
 #, c-format
 msgid "%s: invalid escape sequence in field `%s'"
-msgstr ""
+msgstr "%s: nevalida stirkodo en kampo '%s'"
 
 #: locale/programs/ld-time.c:246
 #, c-format
@@ -2497,7 +2509,7 @@ msgstr "nefinita simbola nomo"
 
 #: locale/programs/linereader.c:622
 msgid "illegal escape sequence at end of string"
-msgstr ""
+msgstr "nevalida stirkodo je fino de signoĉeno"
 
 # SIGTERM     15       Term    Termination signal
 #: locale/programs/linereader.c:626 locale/programs/linereader.c:854
@@ -3066,12 +3078,10 @@ msgid "Unknown object"
 msgstr "Nekonata objekto"
 
 #: nis/nis_error.h:8
-#, fuzzy
 msgid "Server busy, try again"
-msgstr "Servilo okupiĝas; reprovu poste"
+msgstr "Servilo okupiĝas; reprovu"
 
 #: nis/nis_error.h:9
-#, fuzzy
 msgid "Generic system error"
 msgstr "Ĝenerala sistemeraro"
 
@@ -3089,7 +3099,6 @@ msgid "Not owner"
 msgstr "Ne estas posedanto"
 
 #: nis/nis_error.h:13
-#, fuzzy
 msgid "Name not served by this server"
 msgstr "Nomo ne doniĝas per ĉi tiu servilo"
 
@@ -3116,21 +3125,20 @@ msgstr "Malformita nomo aŭ nevalida nomo"
 #: nis/nis_error.h:19
 #, fuzzy
 msgid "Unable to create callback"
-msgstr "Malsukcesis krei realvokon"
+msgstr "Malsukcesis krei re-alvokon"
 
 #: nis/nis_error.h:20
 #, fuzzy
 msgid "Results sent to callback proc"
-msgstr "Rezultoj sendiĝis al realvokan procezon"
+msgstr "Rezultoj sendiĝis al re-alvokan procezon"
 
 #: nis/nis_error.h:21
 msgid "Not found, no such name"
 msgstr "Ne troviĝas; tiu nomo ne ekzistas"
 
 #: nis/nis_error.h:22
-#, fuzzy
 msgid "Name/entry isn't unique"
-msgstr "Nomo/... ne estas unika"
+msgstr "Nomo/elemento ne estas unika"
 
 #: nis/nis_error.h:23
 msgid "Modification failed"
@@ -3138,11 +3146,11 @@ msgstr "Malsukcesis modifo"
 
 #: nis/nis_error.h:24
 msgid "Database for table does not exist"
-msgstr ""
+msgstr "Datumbazo por tabelo ne ekzistas"
 
 #: nis/nis_error.h:25
 msgid "Entry/table type mismatch"
-msgstr ""
+msgstr "Ne kongruas tipoj de elemento kaj tabelo"
 
 #: nis/nis_error.h:26
 msgid "Link points to illegal name"
@@ -3158,20 +3166,20 @@ msgstr "Tro multaj atributoj"
 
 #: nis/nis_error.h:29
 msgid "Error in RPC subsystem"
-msgstr ""
+msgstr "Eraro en RPC-a subsistemo"
 
 #: nis/nis_error.h:30
 msgid "Missing or malformed attribute"
-msgstr ""
+msgstr "Mankas aŭ misformatas atributo"
 
 #: nis/nis_error.h:31
 msgid "Named object is not searchable"
-msgstr ""
+msgstr "Nomata objekto ne traserĉeblas"
 
 #: nis/nis_error.h:32
 #, fuzzy
 msgid "Error while talking to callback proc"
-msgstr "Eraro dum komunikado kun realvoka procezo"
+msgstr "Eraro dum komunikado kun re-alvoka procezo"
 
 #: nis/nis_error.h:33
 msgid "Non NIS+ namespace encountered"
@@ -3183,7 +3191,7 @@ msgstr "Nevalida objekttipo por operacio"
 
 #: nis/nis_error.h:35
 msgid "Passed object is not the same object on server"
-msgstr ""
+msgstr "Donata objekto ne estas la sama objekto je servilo"
 
 #: nis/nis_error.h:36
 msgid "Modify operation failed"
@@ -3195,7 +3203,7 @@ msgstr ""
 
 #: nis/nis_error.h:38
 msgid "Attempt to remove a non-empty table"
-msgstr ""
+msgstr "Proviĝis forigi nevakan tabelon"
 
 #: nis/nis_error.h:39
 msgid "Error in accessing NIS+ cold start file.  Is NIS+ installed?"
@@ -3203,7 +3211,7 @@ msgstr ""
 
 #: nis/nis_error.h:40
 msgid "Full resync required for directory"
-msgstr ""
+msgstr "Necesas kompleta resinkronigo por dosierujo"
 
 #: nis/nis_error.h:41
 msgid "NIS+ operation failed"
@@ -3335,7 +3343,7 @@ msgstr "Nekonata (tipo = %d, bitoj = %d)\n"
 #: nis/nis_print.c:205
 #, c-format
 msgid "\tUniversal addresses (%u)\n"
-msgstr ""
+msgstr "\tUniversalaj adresoj (%u)\n"
 
 #: nis/nis_print.c:227
 msgid "Time to live : "
@@ -3343,7 +3351,7 @@ msgstr ""
 
 #: nis/nis_print.c:229
 msgid "Default Access rights :\n"
-msgstr ""
+msgstr "Defaŭltaj atingpermesoj:\n"
 
 #: nis/nis_print.c:238
 #, c-format
@@ -3352,7 +3360,7 @@ msgstr ""
 
 #: nis/nis_print.c:239
 msgid "\tAccess rights: "
-msgstr ""
+msgstr "\tAtingpermesoj: "
 
 #: nis/nis_print.c:253
 msgid "Group Flags :"
@@ -3395,11 +3403,11 @@ msgstr ""
 
 #: nis/nis_print.c:277
 msgid "\t\tAttributes    : "
-msgstr ""
+msgstr "\t\tAtributoj     : "
 
 #: nis/nis_print.c:279
 msgid "\t\tAccess Rights : "
-msgstr ""
+msgstr "\t\tAtingpermesoj : "
 
 #: nis/nis_print.c:289
 msgid "Linked Object Type : "
@@ -3408,7 +3416,7 @@ msgstr ""
 #: nis/nis_print.c:291
 #, c-format
 msgid "Linked to : %s\n"
-msgstr ""
+msgstr "Ligita al : %s\n"
 
 #: nis/nis_print.c:301
 #, c-format
@@ -3431,26 +3439,26 @@ msgstr ""
 #: nis/nis_print.c:325
 #, c-format
 msgid "Object Name   : %s\n"
-msgstr ""
+msgstr "Objektnomo    : %s\n"
 
 #: nis/nis_print.c:326
 #, c-format
 msgid "Directory     : %s\n"
-msgstr ""
+msgstr "Dosierujo     : %s\n"
 
 #: nis/nis_print.c:327
 #, c-format
 msgid "Owner         : %s\n"
-msgstr ""
+msgstr "Posedanto     : %s\n"
 
 #: nis/nis_print.c:328
 #, c-format
 msgid "Group         : %s\n"
-msgstr ""
+msgstr "Grupo         : %s\n"
 
 #: nis/nis_print.c:329
 msgid "Access Rights : "
-msgstr ""
+msgstr "Atingpermesoj : "
 
 #: nis/nis_print.c:331
 #, c-format
@@ -4358,16 +4366,16 @@ msgstr ""
 #: nss/getent.c:913
 #, c-format
 msgid "Unknown database name"
-msgstr ""
+msgstr "Nekonata datumbaznomo"
 
 #: nss/getent.c:943
 msgid "Supported databases:\n"
-msgstr ""
+msgstr "Subtenataj datumbazoj:\n"
 
 #: nss/getent.c:1009
 #, c-format
 msgid "Unknown database: %s\n"
-msgstr ""
+msgstr "Nekonata datumbazo: %s\n"
 
 #: nss/makedb.c:117
 msgid "Convert key to lower case"
@@ -5085,21 +5093,21 @@ msgstr ""
 #: sunrpc/rpc_main.c:334
 #, c-format
 msgid "cannot find C preprocessor: %s \n"
-msgstr ""
+msgstr "malsukcesis trovi C-antaŭprocesoron: %s \n"
 
 #: sunrpc/rpc_main.c:342
 msgid "cannot find any C preprocessor (cpp)\n"
-msgstr ""
+msgstr "malsukcesis trovi iun ajn C-antaŭprocesoron ('cpp'): %s\n"
 
 #: sunrpc/rpc_main.c:411
 #, c-format
 msgid "%s: C preprocessor failed with signal %d\n"
-msgstr ""
+msgstr "%s: C-antaŭprocesoro fiaskis kun signalo %d\n"
 
 #: sunrpc/rpc_main.c:414
 #, c-format
 msgid "%s: C preprocessor failed with exit code %d\n"
-msgstr ""
+msgstr "%s: C-antaŭprocesoro fiaskis kun elirstato %d\n"
 
 #: sunrpc/rpc_main.c:454
 #, c-format
@@ -5121,12 +5129,12 @@ msgstr ""
 #: sunrpc/rpc_main.c:1134
 #, c-format
 msgid "file `%s' already exists and may be overwritten\n"
-msgstr ""
+msgstr "dosiero '%s' jam ekzistas kaj eble anstataŭiĝos\n"
 
 #: sunrpc/rpc_main.c:1179
 #, c-format
 msgid "Cannot specify more than one input file!\n"
-msgstr ""
+msgstr "Ne eblas indiki pli ol unu enigan dosieron!\n"
 
 #: sunrpc/rpc_main.c:1349
 #, c-format
@@ -5317,28 +5325,28 @@ msgstr "nefinita signoĉena konstanto"
 
 #: sunrpc/rpc_scan.c:379
 msgid "empty char string"
-msgstr ""
+msgstr "vaka signoĉeno"
 
 #: sunrpc/rpc_scan.c:521 sunrpc/rpc_scan.c:531
 msgid "preprocessor error"
-msgstr ""
+msgstr "antaŭprocesora eraro"
 
 #: sunrpc/rpcinfo.c:246 sunrpc/rpcinfo.c:392
 #, c-format
 msgid "program %lu is not available\n"
-msgstr ""
+msgstr "programo %lu ne disponeblas\n"
 
 #: sunrpc/rpcinfo.c:273 sunrpc/rpcinfo.c:319 sunrpc/rpcinfo.c:342
 #: sunrpc/rpcinfo.c:416 sunrpc/rpcinfo.c:462 sunrpc/rpcinfo.c:485
 #: sunrpc/rpcinfo.c:519
 #, c-format
 msgid "program %lu version %lu is not available\n"
-msgstr ""
+msgstr "programo %lu versio %lu ne disponeblas\n"
 
 #: sunrpc/rpcinfo.c:524
 #, c-format
 msgid "program %lu version %lu ready and waiting\n"
-msgstr ""
+msgstr "programo %lu versio %lu pretas kaj atendas\n"
 
 #: sunrpc/rpcinfo.c:565 sunrpc/rpcinfo.c:572
 msgid "rpcinfo: can't contact portmapper"
