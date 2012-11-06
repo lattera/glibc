@@ -1,5 +1,7 @@
 2012-11-06  Andreas Schwab  <schwab@linux-m68k.org>
 
+	* sysdeps/m68k/m680x0/fpu/libm-test-ulps: Update.
+
 	* sysdeps/unix/sysv/linux/m68k/nptl/lowlevellock.h
 	(lll_futex_timed_wait_bitset): Define.
 
