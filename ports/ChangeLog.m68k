@@ -1,3 +1,8 @@
+2012-11-06  Andreas Schwab  <schwab@linux-m68k.org>
+
+	* sysdeps/unix/sysv/linux/m68k/nptl/lowlevellock.h
+	(lll_futex_timed_wait_bitset): Define.
+
 2012-11-03  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/m68k/fpu/fclrexcpt.c (feclearexcept): Add
