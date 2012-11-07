@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1999, 2002, 2003, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 1996-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -39,6 +39,14 @@
 # define __user
 # define __undef__LINUX_COMPILER_H
 #endif
+#ifndef  _UAPI_LINUX_KERNEL_H
+# define _UAPI_LINUX_KERNEL_H
+# define __undef_UAPI_LINUX_KERNEL_H
+#endif
+#ifndef _UAPI_LINUX_TYPES_H
+# define _UAPI_LINUX_TYPES_H
+# define __undef_UAPI_LINUX_TYPES_H
+#endif
 
 #include <linux/sysctl.h>
 
@@ -58,6 +66,14 @@
 # undef __LINUX_COMPILER_H
 # undef __user
 # undef __undef__LINUX_COMPILER_H
+#endif
+#ifdef  __undef_UAPI_LINUX_KERNEL_H
+# undef _UAPI_LINUX_KERNEL_H
+# undef __undef_UAPI_LINUX_KERNEL_H
+#endif
+#ifdef __undef_UAPI_LINUX_TYPES_H
+# undef _UAPI_LINUX_TYPES_H
+# undef __undef_UAPI_LINUX_TYPES_H
 #endif
 
 #include <bits/sysctl.h>
