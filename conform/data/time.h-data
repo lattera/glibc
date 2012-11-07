@@ -42,7 +42,7 @@ function int timespec_get (struct timespec *, int)
 #endif
 
 #if !defined ISO && !defined ISO99 && !defined ISO11
-# if !defined XOPEN21K && !defined XOPEN2K8 && !defined POSIX2008
+# if !defined XOPEN2K && !defined XOPEN2K8 && !defined POSIX2008
 symbol CLK_TCK
 # endif
 constant CLOCK_PROCESS_CPUTIME_ID

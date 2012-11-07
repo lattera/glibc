@@ -1,3 +1,8 @@
+2012-11-07  Joseph Myers  <joseph@codesourcery.com>
+
+	* conform/data/time.h-data [!XOPEN21K && !XOPEN2K8 && !POSIX2008]:
+	Change XOPEN21K to XOPEN2K.
+
 2012-11-06  Maxim Kuvyrkov  <maxim@codesourcery.com>
 
 	* string/memmove.c: Use memcpy when possible.
