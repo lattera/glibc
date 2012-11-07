@@ -1,4 +1,5 @@
 #if !defined ISO && !defined POSIX && !defined XPG3 && !defined XPG4 && !defined UNIX98
+// The requirements for some types and corresponding macros are from POSIX.
 type int8_t
 type int16_t
 type int32_t
@@ -32,71 +33,71 @@ type uintptr_t
 type intmax_t
 type uintmax_t
 
-constant INT8_MIN == -128
-constant INT8_MAX == 127
-constant INT16_MIN == -32768
-constant INT16_MAX == 32767
-constant INT32_MIN == -2147483647-1
-constant INT32_MAX == 2147483647
-constant INT64_MIN == -9223372036854775807LL-1
-constant INT64_MAX == 9223372036854775807LL
+macro-int-constant INT8_MIN {promoted:int8_t} == -128
+macro-int-constant INT8_MAX {promoted:int8_t} == 127
+macro-int-constant INT16_MIN {promoted:int16_t} == -32768
+macro-int-constant INT16_MAX {promoted:int16_t} == 32767
+macro-int-constant INT32_MIN {promoted:int32_t} == -2147483647-1
+macro-int-constant INT32_MAX {promoted:int32_t} == 2147483647
+macro-int-constant INT64_MIN {promoted:int64_t} == -9223372036854775807LL-1
+macro-int-constant INT64_MAX {promoted:int64_t} == 9223372036854775807LL
 
-constant UINT8_MAX == 255
-constant UINT16_MAX == 65535
-constant UINT32_MAX == 4294967295U
-constant UINT64_MAX == 18446744073709551615ULL
+macro-int-constant UINT8_MAX {promoted:uint8_t} == 255
+macro-int-constant UINT16_MAX {promoted:uint16_t} == 65535
+macro-int-constant UINT32_MAX {promoted:uint32_t} == 4294967295U
+macro-int-constant UINT64_MAX {promoted:uint64_t} == 18446744073709551615ULL
 
-constant INT_LEAST8_MIN <= -128
-constant INT_LEAST8_MAX >= 127
-constant INT_LEAST16_MIN <= -32768
-constant INT_LEAST16_MAX >= 32767
-constant INT_LEAST32_MIN <= -2147483647-1
-constant INT_LEAST32_MAX >= 2147483647
-constant INT_LEAST64_MIN <= -9223372036854775807LL-1
-constant INT_LEAST64_MAX >= 9223372036854775807LL
+macro-int-constant INT_LEAST8_MIN {promoted:int_least8_t} <= -128
+macro-int-constant INT_LEAST8_MAX {promoted:int_least8_t} >= 127
+macro-int-constant INT_LEAST16_MIN {promoted:int_least16_t} <= -32768
+macro-int-constant INT_LEAST16_MAX {promoted:int_least16_t} >= 32767
+macro-int-constant INT_LEAST32_MIN {promoted:int_least32_t} <= -2147483647-1
+macro-int-constant INT_LEAST32_MAX {promoted:int_least32_t} >= 2147483647
+macro-int-constant INT_LEAST64_MIN {promoted:int_least64_t} <= -9223372036854775807LL-1
+macro-int-constant INT_LEAST64_MAX {promoted:int_least64_t} >= 9223372036854775807LL
 
-constant UINT_LEAST8_MAX >= 255
-constant UINT_LEAST16_MAX >= 65535
-constant UINT_LEAST32_MAX >= 4294967295U
-constant UINT_LEAST64_MAX >= 18446744073709551615ULL
+macro-int-constant UINT_LEAST8_MAX {promoted:uint_least8_t} >= 255
+macro-int-constant UINT_LEAST16_MAX {promoted:uint_least16_t} >= 65535
+macro-int-constant UINT_LEAST32_MAX {promoted:uint_least32_t} >= 4294967295U
+macro-int-constant UINT_LEAST64_MAX {promoted:uint_least64_t} >= 18446744073709551615ULL
 
-constant INT_FAST8_MIN <= -128
-constant INT_FAST8_MAX >= 127
-constant INT_FAST16_MIN <= -32768
-constant INT_FAST16_MAX >= 32767
-constant INT_FAST32_MIN <= -2147483647-1
-constant INT_FAST32_MAX >= 2147483647
-constant INT_FAST64_MIN <= -9223372036854775807LL-1
-constant INT_FAST64_MAX >= 9223372036854775807LL
+macro-int-constant INT_FAST8_MIN {promoted:int_fast8_t} <= -128
+macro-int-constant INT_FAST8_MAX {promoted:int_fast8_t} >= 127
+macro-int-constant INT_FAST16_MIN {promoted:int_fast16_t} <= -32768
+macro-int-constant INT_FAST16_MAX {promoted:int_fast16_t} >= 32767
+macro-int-constant INT_FAST32_MIN {promoted:int_fast32_t} <= -2147483647-1
+macro-int-constant INT_FAST32_MAX {promoted:int_fast32_t} >= 2147483647
+macro-int-constant INT_FAST64_MIN {promoted:int_fast64_t} <= -9223372036854775807LL-1
+macro-int-constant INT_FAST64_MAX {promoted:int_fast64_t} >= 9223372036854775807LL
 
-constant UINT_FAST8_MAX >= 255
-constant UINT_FAST16_MAX >= 65535
-constant UINT_FAST32_MAX >= 4294967295U
-constant UINT_FAST64_MAX >= 18446744073709551615ULL
+macro-int-constant UINT_FAST8_MAX {promoted:uint_fast8_t} >= 255
+macro-int-constant UINT_FAST16_MAX {promoted:uint_fast16_t} >= 65535
+macro-int-constant UINT_FAST32_MAX {promoted:uint_fast32_t} >= 4294967295U
+macro-int-constant UINT_FAST64_MAX {promoted:uint_fast64_t} >= 18446744073709551615ULL
 
-constant INTPTR_MIN <= -32768
-constant INTPTR_MAX >= 32767
+macro-int-constant INTPTR_MIN {promoted:intptr_t} <= -32768
+macro-int-constant INTPTR_MAX {promoted:intptr_t} >= 32767
 
-constant UINTPTR_MAX >= 65535
+macro-int-constant UINTPTR_MAX {promoted:uintptr_t} >= 65535
 
-constant INTMAX_MIN <= -9223372036854775807LL-1
-constant INTMAX_MAX >= 9223372036854775807LL
+macro-int-constant INTMAX_MIN {promoted:intmax_t} <= -9223372036854775807LL-1
+macro-int-constant INTMAX_MAX {promoted:intmax_t} >= 9223372036854775807LL
 
-constant UINTMAX_MAX >= 18446744073709551615ULL
+macro-int-constant UINTMAX_MAX {promoted:uintmax_t} >= 18446744073709551615ULL
 
-constant PTRDIFF_MIN <= -65535
-constant PTRDIFF_MAX >= 65535
+macro-int-constant PTRDIFF_MIN {promoted:__PTRDIFF_TYPE__} <= -65535
+macro-int-constant PTRDIFF_MAX {promoted:__PTRDIFF_TYPE__} >= 65535
 
-constant SIG_ATOMIC_MIN <= -127
-constant SIG_ATOMIC_MAX >= 127
+macro-int-constant SIG_ATOMIC_MIN {promoted:__SIG_ATOMIC_TYPE__}
+macro-int-constant SIG_ATOMIC_MAX {promoted:__SIG_ATOMIC_TYPE__} >= 127
 
-constant SIZE_MAX >= 65535
+macro-int-constant SIZE_MAX {promoted:__SIZE_TYPE__} >= 65535
 
-constant WCHAR_MIN <= -127
-constant WCHAR_MAX >= 127
+macro-int-constant WCHAR_MIN {promoted:__WCHAR_TYPE__}
+macro-int-constant WCHAR_MAX {promoted:__WCHAR_TYPE__} >= 127
 
-constant WINT_MIN <= -127
-constant WINT_MAX >= 127
+macro-int-constant WINT_MIN {promoted:__WINT_TYPE__}
+macro-int-constant WINT_MAX {promoted:__WINT_TYPE__} >= 127
 
 macro INT8_C
 macro INT16_C
@@ -110,7 +111,9 @@ macro INTMAX_C
 macro UINTMAX_C
 
 // The following expressions are not entirely correct but the current
-// fnamtch implementation doesn't grok the right form.
+// poorfnmatch implementation doesn't grok the right forms (INT*_MAX,
+// INT*_MIN, INT*_C, UINT*_MAX, UINT*_MIN, UINT*_C, int*_t, uint*_t).
 allow INT*
 allow UINT*
+allow *_t
 #endif

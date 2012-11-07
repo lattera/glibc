@@ -14,6 +14,7 @@ type size_t
 # if defined XOPEN2K8 || defined POSIX2008
 type locale_t
 # endif
+tag {struct tm}
 
 function wint_t btowc (int)
 function int fwprintf (FILE*, const wchar_t*, ...)
@@ -104,9 +105,19 @@ function size_t wcsrtombs (char*, const wchar_t**, size_t, mbstate_t*)
 function size_t wcsspn (const wchar_t*, const wchar_t*)
 function {wchar_t*} wcsstr (const wchar_t*, const wchar_t*)
 function double wcstod (const wchar_t*, wchar_t**)
+# ifndef UNIX98
+function float wcstof (const wchar_t*, wchar_t**)
+function {long double} wcstold (const wchar_t*, wchar_t**)
+# endif
 function {wchar_t*} wcstok (wchar_t*, const wchar_t*, wchar_t**)
 function {long int} wcstol (const wchar_t*, wchar_t**, int)
+# ifndef UNIX98
+function {long long int} wcstoll (const wchar_t*, wchar_t**, int)
+# endif
 function {unsigned long int} wcstoul (const wchar_t*, wchar_t**, int)
+# ifndef UNIX98
+function {unsigned long long int} wcstoull (const wchar_t*, wchar_t**, int)
+# endif
 # if defined UNIX98 || defined XOPEN2K
 function {wchar_t*} wcswcs (const wchar_t*, const wchar_t*)
 # endif
@@ -130,11 +141,12 @@ function {wchar_t*} wmemset (wchar_t*, wchar_t, size_t)
 function int wprintf (const wchar_t*, ...)
 function int wscanf (const wchar_t*, ...)
 
-macro WCHAR_MAX
-macro WCHAR_MIN
-macro WEOF
-macro NULL
+macro-int-constant WCHAR_MIN {promoted:wchar_t}
+macro-int-constant WCHAR_MAX {promoted:wchar_t} >= 127
+macro-constant WEOF {wint_t}
+macro-constant NULL == 0
 
+#if !defined ISO && !defined ISO99 && !defined ISO11
 allow-header ctype.h
 allow-header stdio.h
 allow-header stdarg.h
@@ -142,7 +154,10 @@ allow-header stdlib.h
 allow-header string.h
 allow-header stddef.h
 allow-header time.h
+#endif
 
-allow wcs*
+allow wcs[abcdefghijklmnopqrstuvwxyz]*
+#if !defined ISO && !defined ISO99 && !defined ISO11
 allow *_t
+#endif
 #endif

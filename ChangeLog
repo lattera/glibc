@@ -1,3 +1,291 @@
+2012-11-07  Joseph Myers  <joseph@codesourcery.com>
+
+	* conform/conformtest.pl: Preprocess allow-header data with -x c
+	instead of from stdin.
+	(@headers): Add stdalign.h, stdbool.h and stdnoreturn.h.
+	* conform/data/complex.h-data [C99-based standards] (cerf): Allow.
+	[C99-based standards] (cerfc): Likewise.
+	[C99-based standards] (cexp2): Likewise.
+	[C99-based standards] (cexpm1): Likewise.
+	[C99-based standards] (clog10): Likewise.
+	[C99-based standards] (clog1p): Likewise.
+	[C99-based standards] (clog2): Likewise.
+	[C99-based standards] (clgamma): Likewise.
+	[C99-based standards] (ctgamma): Likewise.
+	[C99-based standards] (cerff): Likewise.
+	[C99-based standards] (cerfcf): Likewise.
+	[C99-based standards] (cexp2f): Likewise.
+	[C99-based standards] (cexpm1f): Likewise.
+	[C99-based standards] (clog10f): Likewise.
+	[C99-based standards] (clog1pf): Likewise.
+	[C99-based standards] (clog2f): Likewise.
+	[C99-based standards] (clgammaf): Likewise.
+	[C99-based standards] (ctgammaf): Likewise.
+	[C99-based standards] (cerfl): Likewise.
+	[C99-based standards] (cerfcl): Likewise.
+	[C99-based standards] (cexp2l): Likewise.
+	[C99-based standards] (cexpm1l): Likewise.
+	[C99-based standards] (clog10l): Likewise.
+	[C99-based standards] (clog1pl): Likewise.
+	[C99-based standards] (clog2l): Likewise.
+	[C99-based standards] (clgammal): Likewise.
+	[C99-based standards] (ctgammal): Likewise.
+	* conform/data/inttypes.h-data [C99-based standards]: Include
+	stdint.h-data.  Remove all expectations for stdint.h contents.
+	[C99-based standards] (PRI*): Do not allow.
+	[C99-based standards] (SCN*): Likewise.
+	[C99-based standards] (*_t): Likewise.
+	[C99-based-standards] (PRId8): Expect macro.
+	[C99-based-standards] (PRIi8): Likewise.
+	[C99-based-standards] (PRIo8): Likewise.
+	[C99-based-standards] (PRIu8): Likewise.
+	[C99-based-standards] (PRIx8): Likewise.
+	[C99-based-standards] (PRIX8): Likewise.
+	[C99-based-standards] (SCNd8): Likewise.
+	[C99-based-standards] (SCNi8): Likewise.
+	[C99-based-standards] (SCNo8): Likewise.
+	[C99-based-standards] (SCNu8): Likewise.
+	[C99-based-standards] (SCNx8): Likewise.
+	[C99-based-standards] (PRIdLEAST8): Likewise.
+	[C99-based-standards] (PRIiLEAST8): Likewise.
+	[C99-based-standards] (PRIoLEAST8): Likewise.
+	[C99-based-standards] (PRIuLEAST8): Likewise.
+	[C99-based-standards] (PRIxLEAST8): Likewise.
+	[C99-based-standards] (PRIXLEAST8): Likewise.
+	[C99-based-standards] (SCNdLEAST8): Likewise.
+	[C99-based-standards] (SCNiLEAST8): Likewise.
+	[C99-based-standards] (SCNoLEAST8): Likewise.
+	[C99-based-standards] (SCNuLEAST8): Likewise.
+	[C99-based-standards] (SCNxLEAST8): Likewise.
+	[C99-based-standards] (PRIdFAST8): Likewise.
+	[C99-based-standards] (PRIiFAST8): Likewise.
+	[C99-based-standards] (PRIoFAST8): Likewise.
+	[C99-based-standards] (PRIuFAST8): Likewise.
+	[C99-based-standards] (PRIxFAST8): Likewise.
+	[C99-based-standards] (PRIXFAST8): Likewise.
+	[C99-based-standards] (SCNdFAST8): Likewise.
+	[C99-based-standards] (SCNiFAST8): Likewise.
+	[C99-based-standards] (SCNoFAST8): Likewise.
+	[C99-based-standards] (SCNuFAST8): Likewise.
+	[C99-based-standards] (SCNxFAST8): Likewise.
+	[C99-based-standards] (PRId16): Likewise.
+	[C99-based-standards] (PRIi16): Likewise.
+	[C99-based-standards] (PRIo16): Likewise.
+	[C99-based-standards] (PRIu16): Likewise.
+	[C99-based-standards] (PRIx16): Likewise.
+	[C99-based-standards] (PRIX16): Likewise.
+	[C99-based-standards] (SCNd16): Likewise.
+	[C99-based-standards] (SCNi16): Likewise.
+	[C99-based-standards] (SCNo16): Likewise.
+	[C99-based-standards] (SCNu16): Likewise.
+	[C99-based-standards] (SCNx16): Likewise.
+	[C99-based-standards] (PRIdLEAST16): Likewise.
+	[C99-based-standards] (PRIiLEAST16): Likewise.
+	[C99-based-standards] (PRIoLEAST16): Likewise.
+	[C99-based-standards] (PRIuLEAST16): Likewise.
+	[C99-based-standards] (PRIxLEAST16): Likewise.
+	[C99-based-standards] (PRIXLEAST16): Likewise.
+	[C99-based-standards] (SCNdLEAST16): Likewise.
+	[C99-based-standards] (SCNiLEAST16): Likewise.
+	[C99-based-standards] (SCNoLEAST16): Likewise.
+	[C99-based-standards] (SCNuLEAST16): Likewise.
+	[C99-based-standards] (SCNxLEAST16): Likewise.
+	[C99-based-standards] (PRIdFAST16): Likewise.
+	[C99-based-standards] (PRIiFAST16): Likewise.
+	[C99-based-standards] (PRIoFAST16): Likewise.
+	[C99-based-standards] (PRIuFAST16): Likewise.
+	[C99-based-standards] (PRIxFAST16): Likewise.
+	[C99-based-standards] (PRIXFAST16): Likewise.
+	[C99-based-standards] (SCNdFAST16): Likewise.
+	[C99-based-standards] (SCNiFAST16): Likewise.
+	[C99-based-standards] (SCNoFAST16): Likewise.
+	[C99-based-standards] (SCNuFAST16): Likewise.
+	[C99-based-standards] (SCNxFAST16): Likewise.
+	[C99-based-standards] (PRId32): Likewise.
+	[C99-based-standards] (PRIi32): Likewise.
+	[C99-based-standards] (PRIo32): Likewise.
+	[C99-based-standards] (PRIu32): Likewise.
+	[C99-based-standards] (PRIx32): Likewise.
+	[C99-based-standards] (PRIX32): Likewise.
+	[C99-based-standards] (SCNd32): Likewise.
+	[C99-based-standards] (SCNi32): Likewise.
+	[C99-based-standards] (SCNo32): Likewise.
+	[C99-based-standards] (SCNu32): Likewise.
+	[C99-based-standards] (SCNx32): Likewise.
+	[C99-based-standards] (PRIdLEAST32): Likewise.
+	[C99-based-standards] (PRIiLEAST32): Likewise.
+	[C99-based-standards] (PRIoLEAST32): Likewise.
+	[C99-based-standards] (PRIuLEAST32): Likewise.
+	[C99-based-standards] (PRIxLEAST32): Likewise.
+	[C99-based-standards] (PRIXLEAST32): Likewise.
+	[C99-based-standards] (SCNdLEAST32): Likewise.
+	[C99-based-standards] (SCNiLEAST32): Likewise.
+	[C99-based-standards] (SCNoLEAST32): Likewise.
+	[C99-based-standards] (SCNuLEAST32): Likewise.
+	[C99-based-standards] (SCNxLEAST32): Likewise.
+	[C99-based-standards] (PRIdFAST32): Likewise.
+	[C99-based-standards] (PRIiFAST32): Likewise.
+	[C99-based-standards] (PRIoFAST32): Likewise.
+	[C99-based-standards] (PRIuFAST32): Likewise.
+	[C99-based-standards] (PRIxFAST32): Likewise.
+	[C99-based-standards] (PRIXFAST32): Likewise.
+	[C99-based-standards] (SCNdFAST32): Likewise.
+	[C99-based-standards] (SCNiFAST32): Likewise.
+	[C99-based-standards] (SCNoFAST32): Likewise.
+	[C99-based-standards] (SCNuFAST32): Likewise.
+	[C99-based-standards] (SCNxFAST32): Likewise.
+	[C99-based-standards] (PRId64): Likewise.
+	[C99-based-standards] (PRIi64): Likewise.
+	[C99-based-standards] (PRIo64): Likewise.
+	[C99-based-standards] (PRIu64): Likewise.
+	[C99-based-standards] (PRIx64): Likewise.
+	[C99-based-standards] (PRIX64): Likewise.
+	[C99-based-standards] (SCNd64): Likewise.
+	[C99-based-standards] (SCNi64): Likewise.
+	[C99-based-standards] (SCNo64): Likewise.
+	[C99-based-standards] (SCNu64): Likewise.
+	[C99-based-standards] (SCNx64): Likewise.
+	[C99-based-standards] (PRIdLEAST64): Likewise.
+	[C99-based-standards] (PRIiLEAST64): Likewise.
+	[C99-based-standards] (PRIoLEAST64): Likewise.
+	[C99-based-standards] (PRIuLEAST64): Likewise.
+	[C99-based-standards] (PRIxLEAST64): Likewise.
+	[C99-based-standards] (PRIXLEAST64): Likewise.
+	[C99-based-standards] (SCNdLEAST64): Likewise.
+	[C99-based-standards] (SCNiLEAST64): Likewise.
+	[C99-based-standards] (SCNoLEAST64): Likewise.
+	[C99-based-standards] (SCNuLEAST64): Likewise.
+	[C99-based-standards] (SCNxLEAST64): Likewise.
+	[C99-based-standards] (PRIdFAST64): Likewise.
+	[C99-based-standards] (PRIiFAST64): Likewise.
+	[C99-based-standards] (PRIoFAST64): Likewise.
+	[C99-based-standards] (PRIuFAST64): Likewise.
+	[C99-based-standards] (PRIxFAST64): Likewise.
+	[C99-based-standards] (PRIXFAST64): Likewise.
+	[C99-based-standards] (SCNdFAST64): Likewise.
+	[C99-based-standards] (SCNiFAST64): Likewise.
+	[C99-based-standards] (SCNoFAST64): Likewise.
+	[C99-based-standards] (SCNuFAST64): Likewise.
+	[C99-based-standards] (SCNxFAST64): Likewise.
+	[C99-based-standards] (PRIdMAX): Likewise.
+	[C99-based-standards] (PRIiMAX): Likewise.
+	[C99-based-standards] (PRIoMAX): Likewise.
+	[C99-based-standards] (PRIuMAX): Likewise.
+	[C99-based-standards] (PRIxMAX): Likewise.
+	[C99-based-standards] (PRIXMAX): Likewise.
+	[C99-based-standards] (SCNdMAX): Likewise.
+	[C99-based-standards] (SCNiMAX): Likewise.
+	[C99-based-standards] (SCNoMAX): Likewise.
+	[C99-based-standards] (SCNuMAX): Likewise.
+	[C99-based-standards] (SCNxMAX): Likewise.
+	[C99-based-standards] (PRIdPTR): Likewise.
+	[C99-based-standards] (PRIiPTR): Likewise.
+	[C99-based-standards] (PRIoPTR): Likewise.
+	[C99-based-standards] (PRIuPTR): Likewise.
+	[C99-based-standards] (PRIxPTR): Likewise.
+	[C99-based-standards] (PRIXPTR): Likewise.
+	[C99-based-standards] (SCNdPTR): Likewise.
+	[C99-based-standards] (SCNiPTR): Likewise.
+	[C99-based-standards] (SCNoPTR): Likewise.
+	[C99-based-standards] (SCNuPTR): Likewise.
+	[C99-based-standards] (SCNxPTR): Likewise.
+	* conform/data/iso646.h-data [ISO C standards] (*_t): Do not
+	allow.
+	* conform/data/stdint.h-data: Update comments to clarify
+	requirements.
+	[C99-based standards] (INT8_MIN): Use macro-int-constant.  Specify
+	type.
+	[C99-based standards] (INT8_MAX): Likewise.
+	[C99-based standards] (INT16_MIN): Likewise.
+	[C99-based standards] (INT16_MAX): Likewise.
+	[C99-based standards] (INT32_MIN): Likewise.
+	[C99-based standards] (INT32_MAX): Likewise.
+	[C99-based standards] (INT64_MIN): Likewise.
+	[C99-based standards] (INT64_MAX): Likewise.
+	[C99-based standards] (UINT8_MAX): Likewise.
+	[C99-based standards] (UINT16_MAX): Likewise.
+	[C99-based standards] (UINT32_MAX): Likewise.
+	[C99-based standards] (UINT64_MAX): Likewise.
+	[C99-based standards] (INT_LEAST8_MIN): Likewise.
+	[C99-based standards] (INT_LEAST8_MAX): Likewise.
+	[C99-based standards] (INT_LEAST16_MIN): Likewise.
+	[C99-based standards] (INT_LEAST16_MAX): Likewise.
+	[C99-based standards] (INT_LEAST32_MIN): Likewise.
+	[C99-based standards] (INT_LEAST32_MAX): Likewise.
+	[C99-based standards] (INT_LEAST64_MIN): Likewise.
+	[C99-based standards] (INT_LEAST64_MAX): Likewise.
+	[C99-based standards] (UINT_LEAST8_MAX): Likewise.
+	[C99-based standards] (UINT_LEAST16_MAX): Likewise.
+	[C99-based standards] (UINT_LEAST32_MAX): Likewise.
+	[C99-based standards] (UINT_LEAST64_MAX): Likewise.
+	[C99-based standards] (INT_FAST8_MIN): Likewise.
+	[C99-based standards] (INT_FAST8_MAX): Likewise.
+	[C99-based standards] (INT_FAST16_MIN): Likewise.
+	[C99-based standards] (INT_FAST16_MAX): Likewise.
+	[C99-based standards] (INT_FAST32_MIN): Likewise.
+	[C99-based standards] (INT_FAST32_MAX): Likewise.
+	[C99-based standards] (INT_FAST64_MIN): Likewise.
+	[C99-based standards] (INT_FAST64_MAX): Likewise.
+	[C99-based standards] (UINT_FAST8_MAX): Likewise.
+	[C99-based standards] (UINT_FAST16_MAX): Likewise.
+	[C99-based standards] (UINT_FAST32_MAX): Likewise.
+	[C99-based standards] (UINT_FAST64_MAX): Likewise.
+	[C99-based standards] (INTPTR_MIN): Likewise.
+	[C99-based standards] (INTPTR_MAX): Likewise.
+	[C99-based standards] (UINTPTR_MAX): Likewise.
+	[C99-based standards] (INTMAX_MIN): Likewise.
+	[C99-based standards] (INTMAX_MAX): Likewise.
+	[C99-based standards] (UINTMAX_MAX): Likewise.
+	[C99-based standards] (PTRDIFF_MIN): Likewise.
+	[C99-based standards] (PTRDIFF_MAX): Likewise.
+	[C99-based standards] (SIG_ATOMIC_MAX): Likewise.
+	[C99-based standards] (SIZE_MAX): Likewise.
+	[C99-based standards] (WCHAR_MAX): Likewise.
+	[C99-based standards] (WINT_MAX): Likewise.
+	[C99-based standards] (SIG_ATOMIC_MIN): Likewise.  Do not specify
+	constraint on value.
+	[C99-based standards] (WCHAR_MIN): Likewise.
+	[C99-based standards] (WINT_MIN): Likewise.
+	[C99-based standards] (*_t): Allow.
+	* conform/data/tgmath.h-data [XOPEN2K || POSIX2008]: Change
+	condition to [!ISO && !POSIX && !XPG3 && !XPG4 && !UNIX98].
+	Include math.h-data and complex.h-data.  Remove all expectations
+	of math.h and complex.h contents.
+	* conform/data/uchar.h-data [ISO11] (c16rtomb): Remove stray "16"
+	at end of line.
+	* conform/data/wchar.h-data [!ISO && !POSIX && !XPG3 && !XPG4]
+	(struct tm): Expect tag.
+	[C99-based-standards] (wcstof): Expect function.
+	[C99-based-standards] (wcstold): Likewise.
+	[C99-based-standards] (wcstoll): Likewise.
+	[C99-based-standards] (wcstoull): Likewise.
+	[!ISO && !POSIX && !XPG3 && !XPG4] (WCHAR_MIN): Use
+	macro-int-constant.  Specify type.
+	[!ISO && !POSIX && !XPG3 && !XPG4] (WCHAR_MAX): Likewise.  Specify
+	constraint on value.
+	[!ISO && !POSIX && !XPG3 && !XPG4] (WEOF): Use macro-constant.
+	Specify type.
+	[!ISO && !POSIX && !XPG3 && !XPG4] (NULL): Use macro-constant.
+	Specify value.
+	[ISO C standards]: Do not allow headers.
+	[!ISO && !POSIX && !XPG3 && !XPG4] (wcs*): Change to
+	wcs[abcdefghijklmnopqrstuvwxyz]*.
+	[ISO C standards] (*_t): Do not allow.
+	* conform/data/wctype.h-data [C99-based standards] (iswblank):
+	Expect function.
+	[XOPEN2K8 || POSIX2008] (iswblank_l): Likewise.
+	[!ISO && !POSIX && !XPG3 && !XPG4] (WEOF): Use macro-constant.
+	Specify type.
+	[ISO C standards]: Do not allow headers.
+	[!ISO && !POSIX && !XPG3 && !XPG4] (is*): Change to
+	is[abcdefghijklmnopqrstuvwxyz]*.
+	[!ISO && !POSIX && !XPG3 && !XPG4] (to*): Change to
+	to[abcdefghijklmnopqrstuvwxyz]*.
+	[ISO C standards] (*_t): Do not allow.
+	* conform/data/stdalign.h-data: New file.
+	* conform/data/stdbool.h-data: Likewise.
+	* conform/data/stdnoreturn.h-data: Likewise.
+
 2012-11-07  Andreas Jaeger  <aj@suse.de>
 
 	[BZ #14809]

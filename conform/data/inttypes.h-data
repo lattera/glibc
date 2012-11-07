@@ -1,14 +1,5 @@
 #if !defined ISO && !defined POSIX && !defined XPG3 && !defined XPG4 && !defined UNIX98
-type int8_t
-type int16_t
-type int32_t
-type int64_t
-type uint8_t
-type uint16_t
-type uint32_t
-type uint64_t
-type intptr_t
-type uintptr_t
+#include "stdint.h-data"
 
 type imaxdiv_t
 element imaxdiv_t intmax_t rem
@@ -21,125 +12,166 @@ function uintmax_t strtoumax (const char*, char**, int)
 function intmax_t wcstoimax (const __gwchar_t*, __gwchar_t**, int)
 function uintmax_t wcstoumax (const __gwchar_t*, __gwchar_t**, int)
 
-allow PRI*
-allow SCN*
-allow *_t
+macro PRId8
+macro PRIi8
+macro PRIo8
+macro PRIu8
+macro PRIx8
+macro PRIX8
+macro SCNd8
+macro SCNi8
+macro SCNo8
+macro SCNu8
+macro SCNx8
+macro PRIdLEAST8
+macro PRIiLEAST8
+macro PRIoLEAST8
+macro PRIuLEAST8
+macro PRIxLEAST8
+macro PRIXLEAST8
+macro SCNdLEAST8
+macro SCNiLEAST8
+macro SCNoLEAST8
+macro SCNuLEAST8
+macro SCNxLEAST8
+macro PRIdFAST8
+macro PRIiFAST8
+macro PRIoFAST8
+macro PRIuFAST8
+macro PRIxFAST8
+macro PRIXFAST8
+macro SCNdFAST8
+macro SCNiFAST8
+macro SCNoFAST8
+macro SCNuFAST8
+macro SCNxFAST8
 
-// Now the content of <stdint.h>.  Update this whenever <stdint.h> changed.
-type int8_t
-type int16_t
-type int32_t
-type int64_t
-type uint8_t
-type uint16_t
-type uint32_t
-type uint64_t
+macro PRId16
+macro PRIi16
+macro PRIo16
+macro PRIu16
+macro PRIx16
+macro PRIX16
+macro SCNd16
+macro SCNi16
+macro SCNo16
+macro SCNu16
+macro SCNx16
+macro PRIdLEAST16
+macro PRIiLEAST16
+macro PRIoLEAST16
+macro PRIuLEAST16
+macro PRIxLEAST16
+macro PRIXLEAST16
+macro SCNdLEAST16
+macro SCNiLEAST16
+macro SCNoLEAST16
+macro SCNuLEAST16
+macro SCNxLEAST16
+macro PRIdFAST16
+macro PRIiFAST16
+macro PRIoFAST16
+macro PRIuFAST16
+macro PRIxFAST16
+macro PRIXFAST16
+macro SCNdFAST16
+macro SCNiFAST16
+macro SCNoFAST16
+macro SCNuFAST16
+macro SCNxFAST16
 
-type int_least8_t
-type int_least16_t
-type int_least32_t
-type int_least64_t
-type uint_least8_t
-type uint_least16_t
-type uint_least32_t
-type uint_least64_t
+macro PRId32
+macro PRIi32
+macro PRIo32
+macro PRIu32
+macro PRIx32
+macro PRIX32
+macro SCNd32
+macro SCNi32
+macro SCNo32
+macro SCNu32
+macro SCNx32
+macro PRIdLEAST32
+macro PRIiLEAST32
+macro PRIoLEAST32
+macro PRIuLEAST32
+macro PRIxLEAST32
+macro PRIXLEAST32
+macro SCNdLEAST32
+macro SCNiLEAST32
+macro SCNoLEAST32
+macro SCNuLEAST32
+macro SCNxLEAST32
+macro PRIdFAST32
+macro PRIiFAST32
+macro PRIoFAST32
+macro PRIuFAST32
+macro PRIxFAST32
+macro PRIXFAST32
+macro SCNdFAST32
+macro SCNiFAST32
+macro SCNoFAST32
+macro SCNuFAST32
+macro SCNxFAST32
 
-type int_fast8_t
-type int_fast16_t
-type int_fast32_t
-type int_fast64_t
-type uint_fast8_t
-type uint_fast16_t
-type uint_fast32_t
-type uint_fast64_t
+macro PRId64
+macro PRIi64
+macro PRIo64
+macro PRIu64
+macro PRIx64
+macro PRIX64
+macro SCNd64
+macro SCNi64
+macro SCNo64
+macro SCNu64
+macro SCNx64
+macro PRIdLEAST64
+macro PRIiLEAST64
+macro PRIoLEAST64
+macro PRIuLEAST64
+macro PRIxLEAST64
+macro PRIXLEAST64
+macro SCNdLEAST64
+macro SCNiLEAST64
+macro SCNoLEAST64
+macro SCNuLEAST64
+macro SCNxLEAST64
+macro PRIdFAST64
+macro PRIiFAST64
+macro PRIoFAST64
+macro PRIuFAST64
+macro PRIxFAST64
+macro PRIXFAST64
+macro SCNdFAST64
+macro SCNiFAST64
+macro SCNoFAST64
+macro SCNuFAST64
+macro SCNxFAST64
 
-type intptr_t
-type uintptr_t
+macro PRIdMAX
+macro PRIiMAX
+macro PRIoMAX
+macro PRIuMAX
+macro PRIxMAX
+macro PRIXMAX
+macro SCNdMAX
+macro SCNiMAX
+macro SCNoMAX
+macro SCNuMAX
+macro SCNxMAX
 
-type intmax_t
-type uintmax_t
+macro PRIdPTR
+macro PRIiPTR
+macro PRIoPTR
+macro PRIuPTR
+macro PRIxPTR
+macro PRIXPTR
+macro SCNdPTR
+macro SCNiPTR
+macro SCNoPTR
+macro SCNuPTR
+macro SCNxPTR
 
-constant INT8_MIN == -128
-constant INT8_MAX == 127
-constant INT16_MIN == -32768
-constant INT16_MAX == 32767
-constant INT32_MIN == -2147483647-1
-constant INT32_MAX == 2147483647
-constant INT64_MIN == -9223372036854775807LL-1
-constant INT64_MAX == 9223372036854775807LL
-
-constant UINT8_MAX == 255
-constant UINT16_MAX == 65535
-constant UINT32_MAX == 4294967295U
-constant UINT64_MAX == 18446744073709551615ULL
-
-constant INT_LEAST8_MIN <= -128
-constant INT_LEAST8_MAX >= 127
-constant INT_LEAST16_MIN <= -32768
-constant INT_LEAST16_MAX >= 32767
-constant INT_LEAST32_MIN <= -2147483647-1
-constant INT_LEAST32_MAX >= 2147483647
-constant INT_LEAST64_MIN <= -9223372036854775807LL-1
-constant INT_LEAST64_MAX >= 9223372036854775807LL
-
-constant UINT_LEAST8_MAX >= 255
-constant UINT_LEAST16_MAX >= 65535
-constant UINT_LEAST32_MAX >= 4294967295U
-constant UINT_LEAST64_MAX >= 18446744073709551615ULL
-
-constant INT_FAST8_MIN <= -128
-constant INT_FAST8_MAX >= 127
-constant INT_FAST16_MIN <= -32768
-constant INT_FAST16_MAX >= 32767
-constant INT_FAST32_MIN <= -2147483647-1
-constant INT_FAST32_MAX >= 2147483647
-constant INT_FAST64_MIN <= -9223372036854775807LL-1
-constant INT_FAST64_MAX >= 9223372036854775807LL
-
-constant UINT_FAST8_MAX >= 255
-constant UINT_FAST16_MAX >= 65535
-constant UINT_FAST32_MAX >= 4294967295U
-constant UINT_FAST64_MAX >= 18446744073709551615ULL
-
-constant INTPTR_MIN <= -32768
-constant INTPTR_MAX >= 32767
-
-constant UINTPTR_MAX >= 65535
-
-constant INTMAX_MIN <= -9223372036854775807LL-1
-constant INTMAX_MAX >= 9223372036854775807LL
-
-constant UINTMAX_MAX >= 18446744073709551615ULL
-
-constant PTRDIFF_MIN <= -65535
-constant PTRDIFF_MAX >= 65535
-
-constant SIG_ATOMIC_MIN <= -127
-constant SIG_ATOMIC_MAX >= 127
-
-constant SIZE_MAX >= 65535
-
-constant WCHAR_MIN <= -127
-constant WCHAR_MAX >= 127
-
-constant WINT_MIN <= -127
-constant WINT_MAX >= 127
-
-macro INT8_C
-macro INT16_C
-macro INT32_C
-macro INT64_C
-macro UINT8_C
-macro UINT16_C
-macro UINT32_C
-macro UINT64_C
-macro INTMAX_C
-macro UINTMAX_C
-
-// The following expressions are not entirely correct but the current
-// poorfnmatch implementation doesn't grok the right form.
-allow INT*
-allow UINT*
 allow PRI[Xa-z]*
 allow SCN[Xa-z]*
 #endif
