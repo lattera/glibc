@@ -1,5 +1,8 @@
 2012-11-07  Joseph Myers  <joseph@codesourcery.com>
 
+	* conform/data/math.h-data [XPG3 || XPG4 || UNIX98] (isnan):
+	Change function return type to int.
+
 	* conform/data/sys/mman.h-data [!POSIX] (POSIX_MADV_NORMAL):
 	Change condition to [!POSIX && !XPG3 && !XPG4 && !UNIX98].
 	[!POSIX] (POSIX_MADV_SEQUENTIAL): Likewise.

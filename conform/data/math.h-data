@@ -18,7 +18,7 @@ type float_t
 type double_t
 # endif
 # if defined XPG3 || defined XPG4 || defined UNIX98
-function double isnan (double)
+function int isnan (double)
 # endif
 
 # if !defined ISO99 && !defined ISO11 && !defined POSIX2008
