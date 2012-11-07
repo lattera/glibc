@@ -1,3 +1,9 @@
+2012-11-07  Roland McGrath  <roland@hack.frob.com>
+
+	[BZ #14815]
+	* manual/filesys.texi (Directory Entries): Typo fix.
+	Reported by <h-iwamoto@kit.hi-ho.ne.jp>.
+
 2012-11-07  Marcus Shawcroft  <marcus.shawcroft@linaro.org>
 
 	* elf/elf.h (EM_AARCH64): New macro.

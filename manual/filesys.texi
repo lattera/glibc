@@ -287,7 +287,7 @@ A symbolic link.
 This member is a BSD extension.  The symbol @code{_DIRENT_HAVE_D_TYPE}
 is defined if this member is available.  On systems where it is used, it
 corresponds to the file type bits in the @code{st_mode} member of
-@code{struct statbuf}.  If the value cannot be determine the member
+@code{struct stat}.  If the value cannot be determine the member
 value is DT_UNKNOWN.  These two macros convert between @code{d_type}
 values and @code{st_mode} values:
 
