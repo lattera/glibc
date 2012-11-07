@@ -22,8 +22,9 @@ type mode_t
 type nlink_t
 type off_t
 type pid_t
+#if !defined XPG3 && !defined XPG4
 type pthread_attr_t
-#if !defined POSIX
+#if !defined POSIX && !defined UNIX98
 type pthread_barrier_t
 type pthread_barrierattr_t
 #endif
@@ -36,9 +37,12 @@ type pthread_once_t
 #if !defined POSIX
 type pthread_rwlock_t
 type pthread_rwlockattr_t
+#endif
+#if !defined POSIX && !defined UNIX98
 type pthread_spinlock_t
 #endif
 type pthread_t
+#endif
 type size_t
 type ssize_t
 # if !defined POSIX && !defined POSIX2008

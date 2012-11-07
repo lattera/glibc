@@ -1,5 +1,42 @@
 2012-11-07  Joseph Myers  <joseph@codesourcery.com>
 
+	* conform/data/pthread.h-data [XPG3 || XPG4]: Disable all
+	expectations.
+	[UNIX98] (pthread_barrier_t): Do not expect.
+	[UNIX98] (pthread_barrierattr_t): Likewise.
+	[UNIX98] (pthread_spinlock_t): Likewise.
+	[UNIX98] (pthread_barrier_destroy): Likewise.
+	[UNIX98] (pthread_barrier_init): Likewise.
+	[UNIX98] (pthread_barrier_wait): Likewise.
+	[UNIX98] (pthread_barrierattr_destroy): Likewise.
+	[UNIX98] (pthread_barrierattr_getpshared): Likewise.
+	[UNIX98] (pthread_barrierattr_init): Likewise.
+	[UNIX98] (pthread_barrierattr_setpshared): Likewise.
+	[UNIX98] (pthread_getcpuclockid): Likewise.
+	[UNIX98] (pthread_mutex_timedlock): Likewise.
+	[UNIX98] (pthread_rwlock_timedrdlock): Likewise.
+	[UNIX98] (pthread_rwlock_timedwrlock): Likewise.
+	[UNIX98] (pthread_sigmask): Likewise.
+	[UNIX98] (pthread_spin_destroy): Likewise.
+	[UNIX98] (pthread_spin_init): Likewise.
+	[UNIX98] (pthread_spin_lock): Likewise.
+	[UNIX98] (pthread_spin_trylock): Likewise.
+	[UNIX98] (pthread_spin_unlock): Likewise.
+	* conform/data/sys/types.h-data [XPG3 || XPG4] (pthread_attr_t):
+	Do not expect.
+	[XPG3 || XPG4 || UNIX98] (pthread_barrier_t): Likewise.
+	[XPG3 || XPG4 || UNIX98] (pthread_barrierattr_t): Likewise.
+	[XPG3 || XPG4] (pthread_cond_t): Likewise.
+	[XPG3 || XPG4] (pthread_condattr_t): Likewise.
+	[XPG3 || XPG4] (pthread_key_t): Likewise.
+	[XPG3 || XPG4] (pthread_mutex_t): Likewise.
+	[XPG3 || XPG4] (pthread_mutexattr_t): Likewise.
+	[XPG3 || XPG4] (pthread_once_t): Likewise.
+	[XPG3 || XPG4] (pthread_rwlock_t): Likewise.
+	[XPG3 || XPG4] (pthread_rwlockattr_t): Likewise.
+	[XPG3 || XPG4 || UNIX98] (pthread_spinlock_t): Likewise.
+	[XPG3 || XPG4] (pthread_t): Likewise.
+
 	* conform/data/stdlib.h-data [XPG3 || XPG4 || UNIX98] (setenv): Do
 	not expect.
 	[XPG3 || XPG4 || UNIX98] (unsetenv): Likewise.
