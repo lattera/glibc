@@ -1,3 +1,15 @@
+2012-11-07  Marcus Shawcroft  <marcus.shawcroft@linaro.org>
+
+	* elf/elf.h (EM_AARCH64): New macro.
+	(R_AARCH64_NONE, R_AARCH64_ABS64, R_AARCH64_ABS32): Likewise.
+	(R_AARCH64_COPY, R_AARCH64_GLOB_DAT, R_AARCH64_JUMP_SLOT): Likewise.
+	(R_AARCH64_RELATIVE, R_AARCH64_TLS_DTPMOD64): Likewise.
+	(R_AARCH64_TLS_DTPREL64, R_AARCH64_TLS_TPREL64): Likewise.
+	(R_AARCH64_TLSDESC): Likewise.
+	(NT_ARM_TLS): Likewise.
+	(NT_ARM_HW_BREAK): Likewise.
+	(NT_ARM_HW_WATCH): Likewise.
+
 2012-11-07  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #14811]
