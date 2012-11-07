@@ -122,6 +122,8 @@ function int mkfifoat (int, const char*, mode_t)
 # endif
 # if !defined POSIX && !defined POSIX2008
 function int mknod (const char*, mode_t, dev_t)
+# endif
+# ifdef XOPEN2K8
 function int mknodat (int, const char*, mode_t, dev_t)
 # endif
 function int stat (const char*, struct stat*)

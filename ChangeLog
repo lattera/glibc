@@ -1,5 +1,8 @@
 2012-11-07  Joseph Myers  <joseph@codesourcery.com>
 
+	* conform/data/sys/stat.h-data [!POSIX && !POSIX2008] (mknodat):
+	Change condition to [XOPEN2K8].
+
 	* conform/conformtest.pl: Preprocess allow-header data with -x c
 	instead of from stdin.
 	(@headers): Add stdalign.h, stdbool.h and stdnoreturn.h.
