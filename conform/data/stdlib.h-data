@@ -138,7 +138,7 @@ function {void*} realloc (void*, size_t)
 function {char*} realpath (const char*, char*)
 function {unsigned short int*} seed48 (unsigned short int[3])
 #endif
-#if !defined ISO && !defined ISO99 && !defined ISO11 && !defined POSIX
+#if !defined ISO && !defined ISO99 && !defined ISO11 && !defined POSIX && !defined XPG3 && !defined XPG4 && !defined UNIX98
 function int setenv (const char*, const char*, int)
 #endif
 #if !defined ISO && !defined ISO99 && !defined ISO11 && !defined POSIX && !defined POSIX2008
@@ -168,7 +168,7 @@ function int ttyslot (void)
 #if !defined ISO && !defined ISO99 && !defined ISO11 && !defined POSIX && !defined POSIX2008
 function int unlockpt (int)
 #endif
-#if !defined ISO && !defined ISO99 && !defined ISO11 && !defined POSIX
+#if !defined ISO && !defined ISO99 && !defined ISO11 && !defined POSIX && !defined XPG3 && !defined XPG4 && !defined UNIX98
 function int unsetenv (const char*)
 #endif
 #if defined XPG3 || defined XPG4 || defined UNIX98

@@ -1,5 +1,9 @@
 2012-11-07  Joseph Myers  <joseph@codesourcery.com>
 
+	* conform/data/stdlib.h-data [XPG3 || XPG4 || UNIX98] (setenv): Do
+	not expect.
+	[XPG3 || XPG4 || UNIX98] (unsetenv): Likewise.
+
 	* conform/data/math.h-data [XPG3 || XPG4 || UNIX98] (isnan):
 	Change function return type to int.
 
