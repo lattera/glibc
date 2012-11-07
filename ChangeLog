@@ -1,5 +1,21 @@
 2012-11-07  Joseph Myers  <joseph@codesourcery.com>
 
+	* conform/data/sys/mman.h-data [!POSIX] (POSIX_MADV_NORMAL):
+	Change condition to [!POSIX && !XPG3 && !XPG4 && !UNIX98].
+	[!POSIX] (POSIX_MADV_SEQUENTIAL): Likewise.
+	[!POSIX] (POSIX_MADV_RANDOM): Likewise.
+	[!POSIX] (POSIX_MADV_WILLNEED): Likewise.
+	[!POSIX] (POSIX_MADV_DONTNEED): Likewise.
+	[!POSIX] (posix_madvise): Likewise.
+	(POSIX_TYPED_MEM_ALLOCATE): Condition on [!POSIX && !XPG3 && !XPG4
+	&& !UNIX98].
+	(POSIX_TYPED_MEM_ALLOCATE_CONTIG): Likewise.
+	(POSIX_TYPED_MEM_MAP_ALLOCATABLE): Likewise.
+	(mode_t): Likewise.
+	(posix_mem_offset): Likewise.
+	(posix_typed_mem_get_info): Likewise.
+	(posix_typed_mem_open): Likewise.
+
 	* conform/data/sys/stat.h-data [!POSIX && !POSIX2008] (mknodat):
 	Change condition to [XOPEN2K8].
 
