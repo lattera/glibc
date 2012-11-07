@@ -90,6 +90,10 @@ __ieee754_pow(double x, double y) {
 
     SET_RESTORE_ROUND (FE_TONEAREST);
 
+    /* Avoid internal underflow for tiny y.  The exact value of y does
+       not matter if |y| <= 2**-64.  */
+    if (ABS (y) < 0x1p-64)
+      y = y < 0 ? -0x1p-64 : 0x1p-64;
     z = log1(x,&aa,&error);                                 /* x^y  =e^(y log (X)) */
     t = y*134217729.0;
     y1 = t - (t-y);

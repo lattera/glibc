@@ -7743,10 +7743,12 @@ pow_test (void)
   TEST_ff_f (pow, plus_infty, 1e-7L, plus_infty);
   TEST_ff_f (pow, plus_infty, 1, plus_infty);
   TEST_ff_f (pow, plus_infty, 1e7L, plus_infty);
+  TEST_ff_f (pow, plus_infty, min_subnorm_value, plus_infty);
 
   TEST_ff_f (pow, plus_infty, -1e-7L, 0);
   TEST_ff_f (pow, plus_infty, -1, 0);
   TEST_ff_f (pow, plus_infty, -1e7L, 0);
+  TEST_ff_f (pow, plus_infty, -min_subnorm_value, 0);
 
   TEST_ff_f (pow, minus_infty, 1, minus_infty);
   TEST_ff_f (pow, minus_infty, 11, minus_infty);
@@ -7759,6 +7761,7 @@ pow_test (void)
   TEST_ff_f (pow, minus_infty, 1.1L, plus_infty);
   TEST_ff_f (pow, minus_infty, 11.1L, plus_infty);
   TEST_ff_f (pow, minus_infty, 1001.1L, plus_infty);
+  TEST_ff_f (pow, minus_infty, min_subnorm_value, plus_infty);
 
   TEST_ff_f (pow, minus_infty, -1, minus_zero);
   TEST_ff_f (pow, minus_infty, -11, minus_zero);
@@ -7771,6 +7774,7 @@ pow_test (void)
   TEST_ff_f (pow, minus_infty, -1.1L, 0);
   TEST_ff_f (pow, minus_infty, -11.1L, 0);
   TEST_ff_f (pow, minus_infty, -1001.1L, 0);
+  TEST_ff_f (pow, minus_infty, -min_subnorm_value, 0);
 #endif
 
   TEST_ff_f (pow, nan_value, nan_value, nan_value);
@@ -7793,6 +7797,8 @@ pow_test (void)
   TEST_ff_f (pow, nan_value, minus_infty, nan_value);
   TEST_ff_f (pow, nan_value, 2.5, nan_value);
   TEST_ff_f (pow, nan_value, -2.5, nan_value);
+  TEST_ff_f (pow, nan_value, min_subnorm_value, nan_value);
+  TEST_ff_f (pow, nan_value, -min_subnorm_value, nan_value);
 
   TEST_ff_f (pow, 1, plus_infty, 1);
   TEST_ff_f (pow, -1, plus_infty, 1);
@@ -7806,6 +7812,8 @@ pow_test (void)
   TEST_ff_f (pow, 1, 0x1p63L, 1);
   TEST_ff_f (pow, 1, 0x1p64L, 1);
   TEST_ff_f (pow, 1, 0x1p72L, 1);
+  TEST_ff_f (pow, 1, min_subnorm_value, 1);
+  TEST_ff_f (pow, 1, -min_subnorm_value, 1);
 
   /* pow (x, +-0) == 1.  */
   TEST_ff_f (pow, plus_infty, 0, 1);
@@ -7825,6 +7833,10 @@ pow_test (void)
   TEST_ff_f (pow, -0.1L, -1.1L, nan_value, INVALID_EXCEPTION);
   TEST_ff_f (pow, -10.1L, 1.1L, nan_value, INVALID_EXCEPTION);
   TEST_ff_f (pow, -10.1L, -1.1L, nan_value, INVALID_EXCEPTION);
+  TEST_ff_f (pow, -1.01L, min_subnorm_value, nan_value, INVALID_EXCEPTION);
+  TEST_ff_f (pow, -1.01L, -min_subnorm_value, nan_value, INVALID_EXCEPTION);
+  TEST_ff_f (pow, -1.0L, min_subnorm_value, nan_value, INVALID_EXCEPTION);
+  TEST_ff_f (pow, -1.0L, -min_subnorm_value, nan_value, INVALID_EXCEPTION);
 
   errno = 0;
   TEST_ff_f (pow, 0, -1, plus_infty, DIVIDE_BY_ZERO_EXCEPTION);
@@ -7910,6 +7922,9 @@ pow_test (void)
   TEST_ff_f (pow, 0, -11.1L, plus_infty, DIVIDE_BY_ZERO_EXCEPTION);
   check_int ("errno for pow(0,-num) == ERANGE", errno, ERANGE, 0, 0, 0);
   errno = 0;
+  TEST_ff_f (pow, 0, -min_subnorm_value, plus_infty, DIVIDE_BY_ZERO_EXCEPTION);
+  check_int ("errno for pow(0,-num) == ERANGE", errno, ERANGE, 0, 0, 0);
+  errno = 0;
   TEST_ff_f (pow, 0, -0x1p24, plus_infty, DIVIDE_BY_ZERO_EXCEPTION);
   check_int ("errno for pow(0,-num) == ERANGE", errno, ERANGE, 0, 0, 0);
   errno = 0;
@@ -7923,6 +7938,9 @@ pow_test (void)
   check_int ("errno for pow(-0,-even) == ERANGE", errno, ERANGE, 0, 0, 0);
   errno = 0;
   TEST_ff_f (pow, minus_zero, -11.1L, plus_infty, DIVIDE_BY_ZERO_EXCEPTION);
+  check_int ("errno for pow(-0,-num) == ERANGE", errno, ERANGE, 0, 0, 0);
+  errno = 0;
+  TEST_ff_f (pow, minus_zero, -min_subnorm_value, plus_infty, DIVIDE_BY_ZERO_EXCEPTION);
   check_int ("errno for pow(-0,-num) == ERANGE", errno, ERANGE, 0, 0, 0);
   errno = 0;
   TEST_ff_f (pow, minus_zero, -0x1p24, plus_infty, DIVIDE_BY_ZERO_EXCEPTION);
@@ -8114,12 +8132,14 @@ pow_test (void)
   TEST_ff_f (pow, 0.0, 0x1p24, 0.0);
   TEST_ff_f (pow, 0.0, 0x1p127, 0.0);
   TEST_ff_f (pow, 0.0, max_value, 0.0);
+  TEST_ff_f (pow, 0.0, min_subnorm_value, 0.0);
 
   /* pow (-0, y) == +0 for y > 0 and not an odd integer.  */
   TEST_ff_f (pow, minus_zero, 4, 0.0);
   TEST_ff_f (pow, minus_zero, 0x1p24, 0.0);
   TEST_ff_f (pow, minus_zero, 0x1p127, 0.0);
   TEST_ff_f (pow, minus_zero, max_value, 0.0);
+  TEST_ff_f (pow, minus_zero, min_subnorm_value, 0.0);
 
   TEST_ff_f (pow, 16, 0.25L, 2);
   TEST_ff_f (pow, 0x1p64L, 0.125L, 256);
@@ -8406,6 +8426,15 @@ pow_test (void)
   TEST_ff_f (pow, 0x1.0000000000001p0L, 0x1.23456789abcdfp61L, 9.8826311568044974397135026217687399395481e+252L);
   TEST_ff_f (pow, 0x1.0000000000001p0L, -0x1.23456789abcdfp61L, 1.0118762747828234466621210689458255908670e-253L);
 #endif
+
+  TEST_ff_f (pow, min_subnorm_value, min_subnorm_value, 1.0L);
+  TEST_ff_f (pow, min_subnorm_value, -min_subnorm_value, 1.0L);
+  TEST_ff_f (pow, max_value, min_subnorm_value, 1.0L);
+  TEST_ff_f (pow, max_value, -min_subnorm_value, 1.0L);
+  TEST_ff_f (pow, 0.99L, min_subnorm_value, 1.0L);
+  TEST_ff_f (pow, 0.99L, -min_subnorm_value, 1.0L);
+  TEST_ff_f (pow, 1.01L, min_subnorm_value, 1.0L);
+  TEST_ff_f (pow, 1.01L, -min_subnorm_value, 1.0L);
 
   TEST_ff_f (pow, 2.0L, -100000.0L, plus_zero, UNDERFLOW_EXCEPTION);
 

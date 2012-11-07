@@ -38,6 +38,9 @@ p64:	.byte 0, 0, 0, 0, 0, 0, 0xf0, 0x43
 	.type p78,@object
 p78:	.byte 0, 0, 0, 0, 0, 0, 0xd0, 0x44
 	ASM_SIZE_DIRECTIVE(p78)
+	.type pm79,@object
+pm79:	.byte 0, 0, 0, 0, 0, 0, 0, 0x3b
+	ASM_SIZE_DIRECTIVE(pm79)
 
 	.section .rodata.cst16,"aM",@progbits,16
 
@@ -120,9 +123,25 @@ ENTRY(__ieee754_powl)
 	fucomp	%st(1)		// y : x
 	fnstsw
 	sahf
-	jne	3f
+	je	9f
 
-	/* OK, we have an integer value for y.  */
+	// If y has absolute value at most 0x1p-79, then any finite
+	// nonzero x will result in 1.  Saturate y to those bounds to
+	// avoid underflow in the calculation of y*log2(x).
+	fld	%st		// y : y : x
+	fabs			// |y| : y : x
+	fcompl	MO(pm79)	// y : x
+	fnstsw
+	sahf
+	jnc	3f
+	fstp	%st(0)		// pop y
+	fldl	MO(pm79)	// 0x1p-79 : x
+	testb	$2, %dl
+	jnz	3f		// y > 0
+	fchs			// -0x1p-79 : x
+	jmp	3f
+
+9:	/* OK, we have an integer value for y.  */
 	popl	%eax
 	cfi_adjust_cfa_offset (-4)
 	popl	%edx

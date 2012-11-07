@@ -141,6 +141,10 @@ __ieee754_powf(float x, float y)
 	    t2 = v-(t1-u);
 	} else {
 	    float s2,s_h,s_l,t_h,t_l;
+	    /* Avoid internal underflow for tiny y.  The exact value
+	       of y does not matter if |y| <= 2**-32.  */
+	    if (iy < 0x2f800000)
+	      SET_FLOAT_WORD (y, (hy & 0x80000000) | 0x2f800000);
 	    n = 0;
 	/* take care subnormal number */
 	    if(ix<0x00800000)
