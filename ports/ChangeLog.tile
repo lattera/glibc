@@ -1,5 +1,7 @@
 2012-11-06  Chris Metcalf  <cmetcalf@tilera.com>
 
+	* sysdeps/tile/tilegx/memmove.c: New file.
+
 	* sysdeps/tile/nptl/pthread_spin_unlock.c: New file.
 
 2012-11-05  Chris Metcalf  <cmetcalf@tilera.com>
