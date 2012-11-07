@@ -1,3 +1,7 @@
+2012-11-06  Maxim Kuvyrkov  <maxim@codesourcery.com>
+
+	* string/memmove.c: Use memcpy when possible.
+
 2012-11-06  Andreas Jaeger  <aj@suse.de>
 
 	* po/eo.po: Update from translation team.

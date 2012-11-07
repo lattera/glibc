@@ -1,6 +1,6 @@
 /* Copy memory to memory until the specified number of bytes
    has been copied.  Overlap is handled correctly.
-   Copyright (C) 1991, 1995, 1996, 1997, 2003 Free Software Foundation, Inc.
+   Copyright (C) 1991-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Torbjorn Granlund (tege@sics.se).
 
@@ -55,6 +55,9 @@ MEMMOVE (a1, a2, len)
     {
       /* Copy from the beginning to the end.  */
 
+#if MEMCPY_OK_FOR_FWD_MEMMOVE
+      dest = memcpy (dest, src, len);
+#else
       /* If there not too few bytes to copy, use word copy.  */
       if (len >= OP_T_THRES)
 	{
@@ -79,6 +82,7 @@ MEMMOVE (a1, a2, len)
 
       /* There are just a few bytes to copy.  Use byte memory operations.  */
       BYTE_COPY_FWD (dstp, srcp, len);
+#endif /* MEMCPY_OK_FOR_FWD_MEMMOVE */
     }
   else
     {

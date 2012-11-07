@@ -1,3 +1,7 @@
+2012-11-06  Maxim Kuvyrkov  <maxim@codesourcery.com>
+
+        * sysdeps/mips/memmove.c: New file.  Use memcpy for forward memmove.
+
 2012-11-05  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/mips/nptl/lowlevellock.h
