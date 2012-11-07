@@ -19,7 +19,7 @@ Version 2.17
   14562, 14568, 14576, 14579, 14583, 14587, 14595, 14602, 14610, 14621,
   14638, 14645, 14648, 14652, 14660, 14661, 14669, 14683, 14694, 14716,
   14743, 14767, 14783, 14784, 14785, 14793, 14796, 14797, 14801, 14805,
-  14807, 14811.
+  14807, 14811, 14815.
 
 * Support for STT_GNU_IFUNC symbols added for s390 and s390x.
   Optimized versions of memcpy, memset, and memcmp added for System z10 and
