@@ -1,3 +1,9 @@
+2012-11-07  Andreas Krebbel  <Andreas.Krebbel@de.ibm.com>
+
+	* sysdeps/s390/dl-procinfo.c (_dl_s390_cap_flags): Sync
+	_dl_s390_cap_flags with kernel. Increase string length.
+	(_dl_s390_platforms): Add z196 and zEC12.
+
 2012-11-07  Joseph Myers  <joseph@codesourcery.com>
 
 	* conform/data/time.h-data [!XOPEN21K && !XOPEN2K8 && !POSIX2008]:

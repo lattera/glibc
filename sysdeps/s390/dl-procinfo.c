@@ -46,11 +46,11 @@
 #if !defined PROCINFO_DECL && defined SHARED
   ._dl_s390_cap_flags
 #else
-PROCINFO_CLASS const char _dl_s390_cap_flags[10][8]
+PROCINFO_CLASS const char _dl_s390_cap_flags[10][9]
 #endif
 #ifndef PROCINFO_DECL
 = {
-     "esan3", "zarch", "stfle", "msa", "ldisp", "eimm", "dfp", "hpage", "etf3enh", "highgprs"
+     "esan3", "zarch", "stfle", "msa", "ldisp", "eimm", "dfp", "edat", "etf3eh", "highgprs"
   }
 #endif
 #if !defined SHARED || defined PROCINFO_DECL
@@ -62,11 +62,11 @@ PROCINFO_CLASS const char _dl_s390_cap_flags[10][8]
 #if !defined PROCINFO_DECL && defined SHARED
   ._dl_s390_platforms
 #else
-PROCINFO_CLASS const char _dl_s390_platforms[5][7]
+PROCINFO_CLASS const char _dl_s390_platforms[7][7]
 #endif
 #ifndef PROCINFO_DECL
 = {
-    "g5", "z900", "z990", "z9-109", "z10"
+    "g5", "z900", "z990", "z9-109", "z10", "z196", "zEC12"
   }
 #endif
 #if !defined SHARED || defined PROCINFO_DECL
