@@ -21,6 +21,8 @@
 #include <stdlib.h>
 #include <ucontext.h>
 
+extern void __start_context (struct ucontext *ucp);
+
 void
 __makecontext (ucontext_t *ucp, void (*func) (void), int argc, ...)
 {
@@ -37,7 +39,7 @@ __makecontext (ucontext_t *ucp, void (*func) (void), int argc, ...)
   ucp->uc_mcontext.mc_gregs[MC_PC] = (long) func;
   ucp->uc_mcontext.mc_gregs[MC_NPC] = ((long) func) + 4;
   ucp->uc_mcontext.mc_gregs[MC_O6] = ((long) sp) - 0x7ff;
-  ucp->uc_mcontext.mc_gregs[MC_O7] = ((long) __makecontext_ret) - 8;
+  ucp->uc_mcontext.mc_gregs[MC_O7] = ((long) __start_context) - 8;
   ucp->uc_mcontext.mc_fp = ((long) topsp) - 0x7ff;
   ucp->uc_mcontext.mc_i7 = 0;
   topsp[14] = 0;
@@ -51,16 +53,5 @@ __makecontext (ucontext_t *ucp, void (*func) (void), int argc, ...)
       sp[16 + i] = va_arg (ap, long);
   va_end (ap);
 }
-
-asm ("							\n\
-	.text						\n\
-	.type	__makecontext_ret, #function		\n\
-__makecontext_ret:					\n\
-	mov	1, %o1					\n\
-	call	__setcontext				\n\
-	 mov	%i0, %o0				\n\
-	unimp	0					\n\
-	.size	__makecontext_ret, .-__makecontext_ret	\n\
-     ");
 
 weak_alias (__makecontext, makecontext)

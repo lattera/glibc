@@ -1,3 +1,14 @@
+2012-11-07  David S. Miller  <davem@davemloft.net>
+
+	* sysdeps/unix/sysv/linux/sparc/sparc64/__start_context.S: New file.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/makecontext.c
+	(__start_context): Declare.
+	(__makecontext_ret): Delete.
+	(__makecontext): Hook up __start_context instead of
+	__makecontext_ret.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/Makefile
+	(sysdep_routines): Add __start_context when in stdlib.
+
 2012-11-07  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/x86/Makefile ($(objpfx)tst-xmmymm.out): Pass $(NM),
