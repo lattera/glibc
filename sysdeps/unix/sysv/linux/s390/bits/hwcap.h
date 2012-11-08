@@ -34,3 +34,4 @@
 #define HWCAP_S390_HPAGE        128
 #define HWCAP_S390_ETF3EH       256
 #define HWCAP_S390_HIGH_GPRS    512
+#define HWCAP_S390_TE           1024

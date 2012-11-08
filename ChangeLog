@@ -1,3 +1,10 @@
+2012-11-08  Andreas Krebbel  <Andreas.Krebbel@de.ibm.com>
+
+        * sysdeps/s390/dl-procinfo.c (_dl_s390_cap_flags): Add "te".
+	* sysdeps/s390/dl-procinfo.h (HWCAP_S390_TE): Add enum value.
+	* sysdeps/unix/sysv/linux/s390/hwcap.h (HWCAP_S390_TE): Add macro
+	definition.
+
 2012-11-08  Marcus Shawcroft  <marcus.shawcroft@linaro.org>
 
 	* elf/elf.h: Update comment before AArch64 relocations.
