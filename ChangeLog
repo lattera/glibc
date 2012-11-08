@@ -1,3 +1,7 @@
+2012-11-08  Marcus Shawcroft  <marcus.shawcroft@linaro.org>
+
+	* elf/elf.h: Update comment before AArch64 relocations.
+
 2012-11-07  David S. Miller  <davem@davemloft.net>
 
 	* sysdeps/unix/sysv/linux/sparc/sparc64/__start_context.S: New file.

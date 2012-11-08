@@ -2310,7 +2310,7 @@ typedef Elf32_Addr Elf32_Conflict;
 #define SHT_ARM_ATTRIBUTES	(SHT_LOPROC + 3) /* ARM attributes section.  */
 
 
-/* AArch64 specific declarations.  */
+/* AArch64 relocs.  */
 
 #define R_AARCH64_NONE            0	/* No relocation.  */
 #define R_AARCH64_ABS64         257	/* Direct 64 bit. */
