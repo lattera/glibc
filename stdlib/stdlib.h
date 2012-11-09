@@ -596,7 +596,7 @@ extern int clearenv (void) __THROW;
 
 
 #if defined __USE_MISC \
-    || (defined __USE_XOPEN_EXTENDED && !defined __USE_XOPEN2K)
+    || (defined __USE_XOPEN_EXTENDED && !defined __USE_XOPEN2K8)
 /* Generate a unique temporary file name from TEMPLATE.
    The last six characters of TEMPLATE must be "XXXXXX";
    they are replaced with a string that makes the file name unique.
@@ -796,7 +796,7 @@ __END_NAMESPACE_C99
 #endif
 
 
-#if (defined __USE_XOPEN_EXTENDED && !defined __USE_XOPEN2K) \
+#if (defined __USE_XOPEN_EXTENDED && !defined __USE_XOPEN2K8) \
     || defined __USE_SVID
 /* Convert floating point numbers to strings.  The returned values are
    valid only until another call to the same function.  */

@@ -1,5 +1,24 @@
 2012-11-09  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #14824]
+	* stdlib/stdlib.h [__USE_XOPEN_EXTENDED && __USE_XOPEN2K]
+	(mktemp): Enable declaration.
+	[__USE_XOPEN_EXTENDED && __USE_XOPEN2K] (ecvt): Likewise.
+	[__USE_XOPEN_EXTENDED && __USE_XOPEN2K] (fcvt): Likewise.
+	[__USE_XOPEN_EXTENDED && __USE_XOPEN2K] (gcvt): Likewise.
+	[__USE_XOPEN_EXTENDED && __USE_XOPEN2K && __USE_MISC] (qecvt):
+	Likewise.
+	[__USE_XOPEN_EXTENDED && __USE_XOPEN2K && __USE_MISC] (qfcvt):
+	Likewise.
+	[__USE_XOPEN_EXTENDED && __USE_XOPEN2K && __USE_MISC] (qgcvt):
+	Likewise.
+	[__USE_XOPEN_EXTENDED && __USE_XOPEN2K && __USE_MISC] (ecvt_r):
+	Likewise.
+	[__USE_XOPEN_EXTENDED && __USE_XOPEN2K && __USE_MISC] (fcvt_r):
+	Likewise.
+	[__USE_XOPEN_EXTENDED && __USE_XOPEN2K && __USE_MISC] (gcvt_r):
+	Likewise.
+
 	[BZ #14821]
 	* sunrpc/clnt_tcp.c (clnttcp_control): Access values at fixed
 	offset in buffer as u_int32_t not u_long.  Consistently use memcpy
