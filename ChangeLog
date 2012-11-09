@@ -1,5 +1,9 @@
 2012-11-09  Joseph Myers  <joseph@codesourcery.com>
 
+	* Makefile (format-me): Remove.
+	(INSTALL): Adjust indentation.  Use commands directly instead of
+	using $(format-me).
+
 	* aclocal.m4 (ACX_PKGVERSION): New macro.
 	(ACX_BUGURL): Likewise.
 	* configure.in: Use ACX_PKGVERSION and ACX_BUGURL.

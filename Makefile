@@ -397,15 +397,11 @@ dist: dist-prepare
 	fi
 endif
 
-define format-me
-@rm -f $@
-makeinfo --no-validate --plaintext --no-number-sections \
-	-I$(common-objpfx)manual $< -o $@
--chmod a-w $@
-endef
 INSTALL: manual/install.texi manual/macros.texi \
-	$(common-objpfx)manual/pkgvers.texi
-	$(format-me)
+	 $(common-objpfx)manual/pkgvers.texi
+	makeinfo --no-validate --plaintext --no-number-sections \
+		 -I$(common-objpfx)manual $< -o $@
+	-chmod a-w $@
 $(common-objpfx)manual/%: FORCE
 	$(MAKE) $(PARALLELMFLAGS) -C manual $@
 FORCE:
