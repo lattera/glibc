@@ -1,5 +1,17 @@
 2012-11-09  Joseph Myers  <joseph@codesourcery.com>
 
+	* timezone/checktab.awk: Update from tzcode 2012i.
+	* timezone/ialloc.c: Likewise.
+	* timezone/private.h: Likewise.
+	* timezone/scheck.c: Likewise.
+	* timezone/tzfile.h: Likewise.
+	* timezone/tzselect.ksh: Merge in changes from tzcode 2012i.
+	(TZVERSION): Hardcode tzcode version number.
+	* timezone/zdump.c: Update from tzcode 2012i.
+	* timezone/zic.c: Likewise.
+	* timezone/version.h: New file.
+	* timezone/README: Describe version.h.  Update upstream location.
+
 	[BZ #14824]
 	* stdlib/stdlib.h [__USE_XOPEN_EXTENDED && __USE_XOPEN2K]
 	(mktemp): Enable declaration.

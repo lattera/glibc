@@ -3,20 +3,12 @@
 ** 2006-07-17 by Arthur David Olson.
 */
 
-#ifndef lint
-#ifndef NOID
-static char	elsieid[] = "@(#)scheck.c	8.19";
-#endif /* !defined lint */
-#endif /* !defined NOID */
-
 /*LINTLIBRARY*/
 
 #include "private.h"
 
 const char *
-scheck(string, format)
-const char * const	string;
-const char * const	format;
+scheck(const char *const string, const char *const format)
 {
 	register char *		fbuf;
 	register const char *	fp;
@@ -28,7 +20,7 @@ const char * const	format;
 	result = "";
 	if (string == NULL || format == NULL)
 		return result;
-	fbuf = imalloc((int) (2 * strlen(format) + 4));
+	fbuf = malloc(2 * strlen(format) + 4);
 	if (fbuf == NULL)
 		return result;
 	fp = format;
@@ -57,7 +49,7 @@ const char * const	format;
 	*tp++ = 'c';
 	*tp = '\0';
 	if (sscanf(string, fbuf, &dummy) != 1)
-		result = (char *) format;
-	ifree(fbuf);
+		result = format;
+	free(fbuf);
 	return result;
 }

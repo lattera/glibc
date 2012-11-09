@@ -1,6 +1,6 @@
 #! @KSH@
 
-VERSION='@(#)tzselect.ksh	8.2'
+TZVERSION=tz2012i
 
 # Ask the user about the time zone, and output the resulting TZ value to stdout.
 # Interact with the user via stderr and stdin.
@@ -9,29 +9,22 @@ VERSION='@(#)tzselect.ksh	8.2'
 
 # Porting notes:
 #
-# This script requires several features of the Korn shell.
-# If your host lacks the Korn shell,
-# you can use either of the following free programs instead:
+# This script requires a Posix-like shell with the extension of a
+# 'select' statement.  The 'select' statement was introduced in the
+# Korn shell and is available in Bash and other shell implementations.
+# If your host lacks both Bash and the Korn shell, you can get their
+# source from one of these locations:
 #
-#	<a href=ftp://ftp.gnu.org/pub/gnu/>
-#	Bourne-Again shell (bash)
-#	</a>
-#
-#	<a href=ftp://ftp.cs.mun.ca/pub/pdksh/pdksh.tar.gz>
-#	Public domain ksh
-#	</a>
+#	Bash <http://www.gnu.org/software/bash/bash.html>
+#	Korn Shell <http://www.kornshell.com/>
+#	Public Domain Korn Shell <http://www.cs.mun.ca/~michael/pdksh/>
 #
 # This script also uses several features of modern awk programs.
-# If your host lacks awk, or has an old awk that does not conform to Posix.2,
+# If your host lacks awk, or has an old awk that does not conform to Posix,
 # you can use either of the following free programs instead:
 #
-#	<a href=ftp://ftp.gnu.org/pub/gnu/>
-#	GNU awk (gawk)
-#	</a>
-#
-#	<a href=ftp://ftp.whidbey.net/pub/brennan/>
-#	mawk
-#	</a>
+#	Gawk (GNU awk) <http://www.gnu.org/software/gawk/>
+#	mawk <http://invisible-island.net/mawk/>
 
 
 # Specify default values for environment variables if they are unset.
@@ -55,7 +48,7 @@ EOF
     exit 0
 elif [ "$1" = "--version" ]; then
     cat <<EOF
-tzselect $VERSION
+tzselect $TZVERSION
 EOF
     exit 0
 fi

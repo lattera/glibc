@@ -15,16 +15,6 @@
 ** Thank you!
 */
 
-/*
-** ID
-*/
-
-#ifndef lint
-#ifndef NOID
-static char	privatehid[] = "@(#)private.h	8.6";
-#endif /* !defined NOID */
-#endif /* !defined lint */
-
 #define GRANDPARENTED	"Local time zone must be set--see zic manual page"
 
 /*
@@ -154,6 +144,12 @@ typedef long		int_fast64_t;
 #define INT32_MIN (-1 - INT32_MAX)
 #endif /* !defined INT32_MIN */
 
+#if 2 < __GNUC__ || (__GNUC__ == 2 && 96 <= __GNUC_MINOR__)
+# define ATTRIBUTE_PURE __attribute__ ((__pure__))
+#else
+# define ATTRIBUTE_PURE /* empty */
+#endif
+
 /*
 ** Workarounds for compilers/systems.
 */
@@ -172,13 +168,8 @@ extern char *	asctime_r(struct tm const *, char *);
 ** Private function declarations.
 */
 
-char *		icalloc(int nelem, int elsize);
 char *		icatalloc(char * old, const char * new);
 char *		icpyalloc(const char * string);
-char *		imalloc(int n);
-void *		irealloc(void * pointer, int size);
-void		icfree(char * pointer);
-void		ifree(char * pointer);
 const char *	scheck(const char * string, const char * format);
 
 /*

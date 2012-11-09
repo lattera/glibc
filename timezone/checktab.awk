@@ -1,7 +1,5 @@
 # Check tz tables for consistency.
 
-# @(#)checktab.awk	8.1
-
 # Contributed by Paul Eggert.
 
 BEGIN {
