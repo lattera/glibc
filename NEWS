@@ -21,6 +21,8 @@ Version 2.17
   14743, 14767, 14783, 14784, 14785, 14793, 14796, 14797, 14801, 14805,
   14807, 14809, 14811, 14815, 14821, 14824.
 
+* Port to ARM AArch64 contributed by Linaro.
+
 * Support for STT_GNU_IFUNC symbols added for s390 and s390x.
   Optimized versions of memcpy, memset, and memcmp added for System z10 and
   zEnterprise z196.
