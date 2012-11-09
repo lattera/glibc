@@ -1,3 +1,9 @@
+2012-11-09  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/powerpc/bits/fcntl.h: Remove all
+	definitions and declarations that are provided by
+	<bits/fcntl-linux.h> and include <bits/fcntl-linux.h>.
+
 2012-11-08  Andreas Krebbel  <Andreas.Krebbel@de.ibm.com>
 
         * sysdeps/s390/dl-procinfo.c (_dl_s390_cap_flags): Add "te".
