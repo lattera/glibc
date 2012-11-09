@@ -1,5 +1,12 @@
 2012-11-09  Joseph Myers  <joseph@codesourcery.com>
 
+	* timezone/tzselect.ksh: Change to verbatim copy from tzcode
+	2012i.
+	* timezone/README: Don't mention modification to tzselect.ksh.
+	* timezone/Makefile ($(objpfx)tzselect): Update substitutions to
+	work on unmodified tzselect.ksh.  Substitute version numbers in
+	tzselect.ksh.
+
 	* Makefile (format-me): Remove.
 	(INSTALL): Adjust indentation.  Use commands directly instead of
 	using $(format-me).

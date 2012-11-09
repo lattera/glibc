@@ -1,6 +1,6 @@
-#! @KSH@
+#!/bin/bash
 
-TZVERSION=tz2012i
+TZVERSION=see_Makefile
 
 # Ask the user about the time zone, and output the resulting TZ value to stdout.
 # Interact with the user via stderr and stdin.
@@ -29,7 +29,7 @@ TZVERSION=tz2012i
 
 # Specify default values for environment variables if they are unset.
 : ${AWK=awk}
-: ${TZDIR=@TZDIR@}
+: ${TZDIR=$(pwd)}
 
 # Check for awk Posix compliance.
 ($AWK -v x=y 'BEGIN { exit 123 }') </dev/null >/dev/null 2>&1
