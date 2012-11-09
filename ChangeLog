@@ -1,3 +1,12 @@
+2012-11-09  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #14821]
+	* sunrpc/clnt_tcp.c (clnttcp_control): Access values at fixed
+	offset in buffer as u_int32_t not u_long.  Consistently use memcpy
+	for copies of such integer values.
+	* sunrpc/clnt_udp.c (clntudp_control): Likewise.
+	* sunrpc/clnt_unix.c (clntunix_control): Likewise.
+
 2012-11-09  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/powerpc/bits/fcntl.h: Remove all

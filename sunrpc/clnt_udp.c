@@ -547,6 +547,8 @@ static bool_t
 clntudp_control (CLIENT *cl, int request, char *info)
 {
   struct cu_data *cu = (struct cu_data *) cl->cl_private;
+  u_long ul;
+  u_int32_t ui32;
 
   switch (request)
     {
@@ -580,11 +582,15 @@ clntudp_control (CLIENT *cl, int request, char *info)
        * first element in the call structure *.
        * This will get the xid of the PREVIOUS call
        */
-      *(u_long *)info = ntohl(*(u_long *)cu->cu_outbuf);
+      memcpy (&ui32, cu->cu_outbuf, sizeof (ui32));
+      ul = ntohl (ui32);
+      memcpy (info, &ul, sizeof (ul));
       break;
     case CLSET_XID:
       /* This will set the xid of the NEXT call */
-      *(u_long *)cu->cu_outbuf =  htonl(*(u_long *)info - 1);
+      memcpy (&ul, info, sizeof (ul));
+      ui32 = htonl (ul - 1);
+      memcpy (cu->cu_outbuf, &ui32, sizeof (ui32));
       /* decrement by 1 as clntudp_call() increments once */
       break;
     case CLGET_VERS:
@@ -594,12 +600,14 @@ clntudp_control (CLIENT *cl, int request, char *info)
        * begining of the RPC header. MUST be changed if the
        * call_struct is changed
        */
-      *(u_long *)info = ntohl(*(u_long *)(cu->cu_outbuf +
-					  4 * BYTES_PER_XDR_UNIT));
+      memcpy (&ui32, cu->cu_outbuf + 4 * BYTES_PER_XDR_UNIT, sizeof (ui32));
+      ul = ntohl (ui32);
+      memcpy (info, &ul, sizeof (ul));
       break;
     case CLSET_VERS:
-      *(u_long *)(cu->cu_outbuf + 4 * BYTES_PER_XDR_UNIT)
-	= htonl(*(u_long *)info);
+      memcpy (&ul, info, sizeof (ul));
+      ui32 = htonl (ul);
+      memcpy (cu->cu_outbuf + 4 * BYTES_PER_XDR_UNIT, &ui32, sizeof (ui32));
       break;
     case CLGET_PROG:
       /*
@@ -608,12 +616,14 @@ clntudp_control (CLIENT *cl, int request, char *info)
        * begining of the RPC header. MUST be changed if the
        * call_struct is changed
        */
-      *(u_long *)info = ntohl(*(u_long *)(cu->cu_outbuf +
-					  3 * BYTES_PER_XDR_UNIT));
+      memcpy (&ui32, cu->cu_outbuf + 3 * BYTES_PER_XDR_UNIT, sizeof (ui32));
+      ul = ntohl (ui32);
+      memcpy (info, &ul, sizeof (ul));
       break;
     case CLSET_PROG:
-      *(u_long *)(cu->cu_outbuf + 3 * BYTES_PER_XDR_UNIT)
-	= htonl(*(u_long *)info);
+      memcpy (&ul, info, sizeof (ul));
+      ui32 = htonl (ul);
+      memcpy (cu->cu_outbuf + 3 * BYTES_PER_XDR_UNIT, &ui32, sizeof (ui32));
       break;
     /* The following are only possible with TI-RPC */
     case CLGET_SVC_ADDR:
