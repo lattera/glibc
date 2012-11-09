@@ -58,7 +58,7 @@ main (int argc, char **argv)
     {
     case 2:
       if (strcmp (argv[1], "--version") == 0) {
-	printf ("sln (GNU libc) %s\n", VERSION);
+	printf ("sln %s%s\n", PKGVERSION, VERSION);
 	return 0;
       } else if (strcmp (argv[1], "--help") == 0) {
 	usage ();
@@ -82,8 +82,8 @@ static void
 usage (void)
 {
   printf (_("Usage: sln src dest|file\n\n"));
-  fputs (_("For bug reporting instructions, please see:\n\
-<http://www.gnu.org/software/libc/bugs.html>.\n"), stdout);
+  printf (_("For bug reporting instructions, please see:\n\
+%s.\n"), REPORT_BUGS_TO);
 }
 
 static int

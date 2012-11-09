@@ -148,6 +148,19 @@ will be used, and CFLAGS sets optimization options for the compiler.
 
      If you specify just `--build', `configure' will get confused.
 
+`--with-pkgversion=VERSION'
+     Specify a description, possibly including a build number or build
+     date, of the binaries being built, to be included in `--version'
+     output from programs installed with the GNU C Library.  For
+     example, `--with-pkgversion='FooBar GNU/Linux glibc build 123''.
+     The default value is `GNU libc'.
+
+`--with-bugurl=URL'
+     Specify the URL that users should visit if they wish to report a
+     bug, to be included in `--help' output from programs installed with
+     the GNU C Library.  The default value refers to the main
+     bug-reporting information for the GNU C Library.
+
    To build the library and related programs, type `make'.  This will
 produce a lot of output, some of which may look like errors from `make'
 but isn't.  Look for error messages from `make' containing `***'.
@@ -404,10 +417,10 @@ remain unfixed for all eternity, if not longer.
 
    It is a good idea to verify that the problem has not already been
 reported.  Bugs are documented in two places: The file `BUGS' describes
-a number of well known bugs and the bug tracking system has a WWW
-interface at `http://sourceware.org/bugzilla/'.  The WWW interface
-gives you access to open and closed reports.  A closed report normally
-includes a patch or a hint on solving the problem.
+a number of well known bugs and the central GNU C Library bug tracking
+system has a WWW interface at `http://sourceware.org/bugzilla/'.  The
+WWW interface gives you access to open and closed reports.  A closed
+report normally includes a patch or a hint on solving the problem.
 
    To report a bug, first you must find it.  With any luck, this will
 be the hard part.  Once you've found a bug, make sure it's really a
@@ -428,7 +441,7 @@ library, you really only need to narrow it down to one library function
 call, if possible.  This should not be too difficult.
 
    The final step when you have a simple test case is to report the bug.
-Do this using the WWW interface to the bug database.
+Do this at `http://www.gnu.org/software/libc/bugs.html'.
 
    If you are not sure how a function should behave, and this manual
 doesn't tell you, that's a bug in the manual.  Report that too!  If the

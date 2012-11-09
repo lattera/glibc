@@ -5,6 +5,13 @@ AC_CONFIG_SRCDIR([include/features.h])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_AUX_DIR([scripts])
 
+ACX_PKGVERSION([GNU libc])
+ACX_BUGURL([http://www.gnu.org/software/libc/bugs.html])
+AC_DEFINE_UNQUOTED([PKGVERSION], ["$PKGVERSION"],
+		   [Package description])
+AC_DEFINE_UNQUOTED([REPORT_BUGS_TO], ["$REPORT_BUGS_TO"],
+		   [Bug reporting address])
+
 # Glibc should not depend on any header files
 AC_DEFUN([_AC_INCLUDES_DEFAULT_REQUIREMENTS],
   [m4_divert_text([DEFAULTS],

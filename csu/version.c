@@ -24,7 +24,7 @@ static const char __libc_release[] = RELEASE;
 static const char __libc_version[] = VERSION;
 
 static const char banner[] =
-"GNU C Library "RELEASE" release version "VERSION", by Roland McGrath et al.\n\
+"GNU C Library "PKGVERSION RELEASE" release version "VERSION", by Roland McGrath et al.\n\
 Copyright (C) 2012 Free Software Foundation, Inc.\n\
 This is free software; see the source for copying conditions.\n\
 There is NO warranty; not even for MERCHANTABILITY or FITNESS FOR A\n\
@@ -38,7 +38,7 @@ LIBC_ABIS_STRING
 "The oldest ABI supported: " GLIBC_OLDEST_ABI ".\n"
 #endif
 "For bug reporting instructions, please see:\n\
-<http://www.gnu.org/software/libc/bugs.html>.\n";
+"REPORT_BUGS_TO".\n";
 
 #include <unistd.h>
 

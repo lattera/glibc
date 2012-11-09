@@ -139,4 +139,10 @@ PERL = @PERL@
 # Additional libraries.
 LIBGD = @LIBGD@
 
+# Package versions and bug reporting configuration.
+PKGVERSION = @PKGVERSION@
+PKGVERSION_TEXI = @PKGVERSION_TEXI@
+REPORT_BUGS_TO = @REPORT_BUGS_TO@
+REPORT_BUGS_TEXI = @REPORT_BUGS_TEXI@
+
 # More variables may be inserted below by configure.

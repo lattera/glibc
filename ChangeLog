@@ -1,5 +1,99 @@
 2012-11-09  Joseph Myers  <joseph@codesourcery.com>
 
+	* aclocal.m4 (ACX_PKGVERSION): New macro.
+	(ACX_BUGURL): Likewise.
+	* configure.in: Use ACX_PKGVERSION and ACX_BUGURL.
+	(PKGVERSION): New AC_DEFINE_UNQUOTED.
+	(REPORT_BUGS_TO): Likewise.
+	* configure: Regenerated.
+	* config.h.in (PKGVERSION): New macro.
+	(REPORT_BUGS_TO): Likewise.
+	* config.make.in (PKGVERSION): New variable.
+	(PKGVERSION_TEXI): Likewise.
+	(REPORT_BUGS_TO): Likewise.
+	(REPORT_BUGS_TEXI): Likewise.
+	* Makefile (format-me): Use -I$(common-objpfx)manual.
+	(INSTALL): Depend on $(common-objpfx)manual/pkgvers.texi.
+	($(common-objpfx)manual/%): New target.
+	(manual/%): Remove target.
+	* catgets/gencat.c (more_help): Use REPORT_BUGS_TO.
+	(print_version): Use PKGVERSION.
+	* csu/version.c (banner): Use PKGVERSION and REPORT_BUGS_TO.
+	* debug/Makefile ($(objpfx)catchsegv): Also substitute PKGVERSION
+	and REPORT_BUGS_TO.
+	($(objpfx)xtrace): Likewise.
+	* debug/catchsegv.sh: Use PKGVERSION and REPORT_BUGS_TO.
+	* debug/pcprofiledump.c (more_help): Use REPORT_BUGS_TO.
+	(print_version): Use PKGVERSION.
+	* debug/xtrace.sh (do_help): Use REPORT_BUGS_TO.
+	(do_version): Use PKGVERSION.
+	* elf/Makefile ($(objpfx)sotruss): Also substitute PKGVERSION and
+	REPORT_BUGS_TO.
+	(common-ldd-rewrite): Likewise.
+	* elf/dl-close.c (_dl_close_worker): Use REPORT_BUGS_TO.
+	* elf/ldconfig.c (more_help): Use REPORT_BUGS_TO.
+	(print_version): Use PKGVERSION.
+	* elf/ldd.bash.in: Use PKGVERSION and REPORT_BUGS_TO.
+	* elf/pldd.c (argp_program_bug_address): Remove variable.
+	(more_help): New function.
+	(argp): Use more_help.
+	(print_version): Use PKGVERSION.
+	* elf/sln.c (main): Use PKGVERSION.
+	(usage): Use REPORT_BUGS_TO.
+	* elf/sotruss.ksh (do_help): Use REPORT_BUGS_TO.
+	(top level): Use PKGVERSION.
+	* elf/sprof.c (more_help): Use REPORT_BUGS_TO.
+	(print_version): Use PKGVERSION.
+	* iconv/iconv_prog.c (more_help): Use REPORT_BUGS_TO.
+	(print_version): Use PKGVERSION.
+	* iconv/iconvconfig.c (more_help): Use REPORT_BUGS_TO.
+	(print_version): Use PKGVERSION.
+	* locale/programs/locale.c (more_help): Use REPORT_BUGS_TO.
+	(print_version): Use PKGVERSION.
+	* locale/programs/localedef.c (more_help): Use REPORT_BUGS_TO.
+	(print_version): Use PKGVERSION.
+	* login/programs/pt_chown.c (more_help): Use REPORT_BUGS_TO.
+	(print_version): Use PKGVERSION.
+	* malloc/Makefile ($(objpfx)mtrace): Also substitute PKGVERSION
+	and BUGURL.
+	($(objpfx)memusage): Likewise.
+	* malloc/memusage.sh (do_help): Use REPORT_BUGS_TO.
+	(do_version): Use PKGVERSION.
+	* malloc/memusagestat.c (more_help): Use REPORT_BUGS_TO.
+	(print_version): Use PKGVERSION.
+	* malloc/mtrace.pl ($PACKAGE): Remove variable.
+	($PKGVERSION): New variable.
+	($REPORT_BUGS_TO): Likewise.
+	(usage): Use $REPORT_BUGS_TO.
+	(top level): Use $PKGVERSION.
+	* manual/Makefile (libc-texi-generated): Add pkgvers.texi.
+	($(objpfx)pkgvers.texi): New rule.
+	($(objpfx)stamp-pkgvers): Likewise.
+	* manual/install.texi: Include pkgvers.texi.
+	(--with-pkgversion): Document new configure option.
+	(--with-bugurl): Likewise.
+	(Reporting Bugs): Describe Bugzilla as upstream tracker rather
+	than necessarily for this particular distribution.  Use
+	REPORT_BUGS_TO for where to report bugs.
+	* INSTALL: Regenerated.
+	* manual/libc.texinfo: Include pkgvers.texi.
+	[!PKGVERSION_DEFAULT]: Include PKGVERSION in version information.
+	* nscd/nscd.c (more_help): Use REPORT_BUGS_TO.
+	(print_version): Use PKGVERSION.
+	* nss/getent.c (more_help): Use REPORT_BUGS_TO.
+	(print_version): Use PKGVERSION.
+	* nss/makedb.c (more_help): Use REPORT_BUGS_TO.
+	(print_version): Use PKGVERSION.
+	* posix/getconf.c (main): Use PKGVERSION and REPORT_BUGS_TO.
+	* sunrpc/proto.h [IS_IN_build] (_libc_intl_domainname): Remove
+	macro.
+	* sunrpc/rpc_main.c (options_usage): Use REPORT_BUGS_TO.
+	(print_version): Use PKGVERSION.
+	* sunrpc/rpcinfo.c (usage): Use REPORT_BUGS_TO.
+	(print_version): Use PKGVERSION.
+	* sysdeps/unix/sysv/linux/lddlibc4.c (main): Use REPORT_BUGS_TO
+	and PKGVERSION.
+
 	* timezone/checktab.awk: Update from tzcode 2012i.
 	* timezone/ialloc.c: Likewise.
 	* timezone/private.h: Likewise.

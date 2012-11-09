@@ -58,13 +58,13 @@ main (int argc, char *argv[])
   if (strcmp (argv[1], "--help") == 0)
     {
       printf (gettext ("Usage: lddlibc4 FILE\n\n"));
-      fputs (gettext ("For bug reporting instructions, please see:\n\
-<http://www.gnu.org/software/libc/bugs.html>.\n"), stdout);
+      printf (gettext ("For bug reporting instructions, please see:\n\
+%s.\n"), REPORT_BUGS_TO);
       return 0;
     }
   else if (strcmp (argv[1], "--version") == 0)
     {
-      printf ("lddlibc4 (GNU %s) %s\n", PACKAGE, VERSION);
+      printf ("lddlibc4 %s%s\n", PKGVERSION, VERSION);
       printf (gettext ("\
 Copyright (C) %s Free Software Foundation, Inc.\n\
 This is free software; see the source for copying conditions.  There is NO\n\

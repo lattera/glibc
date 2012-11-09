@@ -34,7 +34,7 @@ verbose=
 while test $# -gt 0; do
   case "$1" in
   --vers | --versi | --versio | --version)
-    echo 'ldd (GNU libc) @VERSION@'
+    echo 'ldd @PKGVERSION@@VERSION@'
     printf $"Copyright (C) %s Free Software Foundation, Inc.
 This is free software; see the source for copying conditions.  There is NO
 warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
@@ -52,9 +52,8 @@ warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
   -u, --unused            print unused direct dependencies
   -v, --verbose           print all information
 "
-    echo $"For bug reporting instructions, please see:
-<http://www.gnu.org/software/libc/bugs.html>.
-"
+    printf $"For bug reporting instructions, please see:\\n%s.\\n" \
+      "@REPORT_BUGS_TO@"
     exit 0
     ;;
   -d | --d | --da | --dat | --data | --data- | --data-r | --data-re | \

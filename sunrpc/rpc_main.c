@@ -1439,15 +1439,15 @@ options_usage (FILE *stream, int status)
   f_print (stream, _("-T\t\tgenerate code to support RPC dispatch tables\n"));
   f_print (stream, _("-Y path\t\tdirectory name to find C preprocessor (cpp)\n"));
 
-  f_print (stream, "\n%s", _("\
+  f_print (stream, _("\n\
 For bug reporting instructions, please see:\n\
-<http://www.gnu.org/software/libc/bugs.html>.\n"));
+%s.\n"), REPORT_BUGS_TO);
   exit (status);
 }
 
 static void
 print_version (void)
 {
-  printf ("rpcgen (GNU %s) %s\n", PACKAGE, VERSION);
+  printf ("rpcgen %s%s\n", PKGVERSION, VERSION);
   exit (0);
 }

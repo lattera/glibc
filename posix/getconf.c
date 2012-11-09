@@ -1099,7 +1099,7 @@ main (int argc, char *argv[])
 
   if (argc > 1 && strcmp (argv[1], "--version") == 0)
     {
-      printf ("getconf (GNU %s) %s\n", PACKAGE, VERSION);
+      printf ("getconf %s%s\n", PKGVERSION, VERSION);
       printf (gettext ("\
 Copyright (C) %s Free Software Foundation, Inc.\n\
 This is free software; see the source for copying conditions.  There is NO\n\
@@ -1118,8 +1118,8 @@ Usage: getconf [-v SPEC] VAR\n\
 Get the configuration value for variable VAR, or for variable PATH_VAR\n\
 for path PATH.  If SPEC is given, give values for compilation\n\
 environment SPEC.\n\n"));
-      fputs (gettext ("For bug reporting instructions, please see:\n\
-<http://www.gnu.org/software/libc/bugs.html>.\n"), stdout);
+      printf (gettext ("For bug reporting instructions, please see:\n\
+%s.\n"), REPORT_BUGS_TO);
       return 0;
     }
 

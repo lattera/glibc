@@ -58,7 +58,7 @@ static struct argp argp =
 static void
 print_version (FILE *stream, struct argp_state *state)
 {
-  fprintf (stream, "pt_chown (GNU %s) %s\n", PACKAGE, VERSION);
+  fprintf (stream, "pt_chown %s%s\n", PKGVERSION, VERSION);
   fprintf (stream, gettext ("\
 Copyright (C) %s Free Software Foundation, Inc.\n\
 This is free software; see the source for copying conditions.  There is NO\n\
@@ -70,6 +70,7 @@ static char *
 more_help (int key, const char *text, void *input)
 {
   char *cp;
+  char *tp;
 
   switch (key)
     {
@@ -84,13 +85,19 @@ Set the owner, group and access permission of the slave pseudo\
       return cp;
     case ARGP_KEY_HELP_EXTRA:
       /* We print some extra information.  */
-      asprintf (&cp, gettext ("\
+      if (asprintf (&tp, gettext ("\
+For bug reporting instructions, please see:\n\
+%s.\n"), REPORT_BUGS_TO) < 0)
+	return NULL;
+      if (asprintf (&cp, gettext ("\
 The owner is set to the current user, the group is set to `%s',\
  and the access permission is set to `%o'.\n\n\
 %s"),
-		TTY_GROUP, S_IRUSR|S_IWUSR|S_IWGRP, gettext ("\
-For bug reporting instructions, please see:\n\
-<http://www.gnu.org/software/libc/bugs.html>.\n"));
+		    TTY_GROUP, S_IRUSR|S_IWUSR|S_IWGRP, tp) < 0)
+	{
+	  free (tp);
+	  return NULL;
+	}
       return cp;
     default:
       break;

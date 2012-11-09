@@ -528,20 +528,17 @@ parse_opt (int key, char *arg, struct argp_state *state)
 static char *
 more_help (int key, const char *text, void *input)
 {
-  char *orig;
-  char *cp;
+  char *tp;
 
   switch (key)
     {
     case ARGP_KEY_HELP_EXTRA:
       /* We print some extra information.  */
-      orig = gettext ("\
+      if (asprintf (&tp, gettext ("\
 For bug reporting instructions, please see:\n\
-<http://www.gnu.org/software/libc/bugs.html>.\n");
-      cp = strdup (orig);
-      if (cp == NULL)
-	cp = orig;
-      return cp;
+%s.\n"), REPORT_BUGS_TO) < 0)
+	return NULL;
+      return tp;
     default:
       break;
     }
@@ -552,7 +549,7 @@ For bug reporting instructions, please see:\n\
 static void
 print_version (FILE *stream, struct argp_state *state)
 {
-  fprintf (stream, "memusagestat (GNU %s) %s\n", PACKAGE, VERSION);
+  fprintf (stream, "memusagestat %s%s\n", PKGVERSION, VERSION);
   fprintf (stream, gettext ("\
 Copyright (C) %s Free Software Foundation, Inc.\n\
 This is free software; see the source for copying conditions.  There is NO\n\

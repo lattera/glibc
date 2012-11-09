@@ -688,15 +688,15 @@ usage (FILE *stream)
   fputs (_("       rpcinfo -b prognum versnum\n"), stream);
   fputs (_("       rpcinfo -d prognum versnum\n"), stream);
   fputc ('\n', stream);
-  fputs (_("\
+  fprintf (stream, _("\
 For bug reporting instructions, please see:\n\
-<http://www.gnu.org/software/libc/bugs.html>.\n"), stream);
+%s.\n"), REPORT_BUGS_TO);
 }
 
 static void
 print_version (void)
 {
-  printf ("rpcinfo (GNU %s) %s\n", PACKAGE, VERSION);
+  printf ("rpcinfo %s%s\n", PKGVERSION, VERSION);
 }
 
 static u_long

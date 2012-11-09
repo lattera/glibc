@@ -52,10 +52,8 @@ extern void *xrealloc (void *o, size_t n)
 static void print_version (FILE *stream, struct argp_state *state);
 void (*argp_program_version_hook) (FILE *, struct argp_state *) = print_version;
 
-/* Bug report address.  */
-const char *argp_program_bug_address = N_("\
-For bug reporting instructions, please see:\n\
-<http://www.gnu.org/software/libc/bugs.html>.\n");
+/* Function to print some extra text in the help message.  */
+static char *more_help (int key, const char *text, void *input);
 
 /* Definitions of arguments for argp functions.  */
 static const struct argp_option options[] =
@@ -76,7 +74,7 @@ static error_t parse_opt (int key, char *arg, struct argp_state *state);
 /* Data structure to communicate with argp functions.  */
 static struct argp argp =
 {
-  options, parse_opt, args_doc, doc, NULL, NULL, NULL
+  options, parse_opt, args_doc, doc, NULL, more_help, NULL
 };
 
 // File descriptor of /proc/*/mem file.
@@ -212,11 +210,31 @@ parse_opt (int key, char *arg, struct argp_state *state)
 }
 
 
+/* Print bug-reporting information in the help message.  */
+static char *
+more_help (int key, const char *text, void *input)
+{
+  char *tp = NULL;
+  switch (key)
+    {
+    case ARGP_KEY_HELP_EXTRA:
+      /* We print some extra information.  */
+      if (asprintf (&tp, gettext ("\
+For bug reporting instructions, please see:\n\
+%s.\n"), REPORT_BUGS_TO) < 0)
+	return NULL;
+      return tp;
+    default:
+      break;
+    }
+  return (char *) text;
+}
+
 /* Print the version information.  */
 static void
 print_version (FILE *stream, struct argp_state *state)
 {
-  fprintf (stream, "pldd (GNU %s) %s\n", PACKAGE, VERSION);
+  fprintf (stream, "pldd %s%s\n", PKGVERSION, VERSION);
   fprintf (stream, gettext ("\
 Copyright (C) %s Free Software Foundation, Inc.\n\
 This is free software; see the source for copying conditions.  There is NO\n\

@@ -33,12 +33,14 @@ if test $# -eq 0; then
       echo 'Usage: catchsegv PROGRAM ARGS...'
       echo '  --help      print this help, then exit'
       echo '  --version   print version number, then exit'
-      echo "For bug reporting instructions, please see:"
-      echo "<http://www.gnu.org/software/libc/bugs.html>."
+      echo 'For bug reporting instructions, please see:'
+      cat <<\EOF
+@REPORT_BUGS_TO@.
+EOF
       exit 0
       ;;
     --v | --ve | --ver | --vers | --versi | --versio | --version)
-      echo 'catchsegv (GNU libc) @VERSION@'
+      echo 'catchsegv @PKGVERSION@@VERSION@'
       echo 'Copyright (C) 2012 Free Software Foundation, Inc.
 This is free software; see the source for copying conditions.  There is NO
 warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.

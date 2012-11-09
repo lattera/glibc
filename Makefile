@@ -399,15 +399,18 @@ endif
 
 define format-me
 @rm -f $@
-makeinfo --no-validate --plaintext --no-number-sections $< -o $@
+makeinfo --no-validate --plaintext --no-number-sections \
+	-I$(common-objpfx)manual $< -o $@
 -chmod a-w $@
 endef
-INSTALL: manual/install.texi manual/macros.texi; $(format-me)
-manual/dir-add.texi manual/dir-add.info: FORCE
-	$(MAKE) $(PARALLELMFLAGS) -C $(@D) $(@F)
+INSTALL: manual/install.texi manual/macros.texi \
+	$(common-objpfx)manual/pkgvers.texi
+	$(format-me)
+$(common-objpfx)manual/%: FORCE
+	$(MAKE) $(PARALLELMFLAGS) -C manual $@
 FORCE:
 
-iconvdata/% localedata/% po/% manual/%: FORCE
+iconvdata/% localedata/% po/%: FORCE
 	$(MAKE) $(PARALLELMFLAGS) -C $(@D) $(@F)
 
 # glibc 2.0 contains some header files which aren't used with glibc 2.1

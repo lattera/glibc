@@ -702,7 +702,7 @@ _dl_close_worker (struct link_map *map)
   if (any_tls)
     {
       if (__builtin_expect (++GL(dl_tls_generation) == 0, 0))
-	_dl_fatal_printf ("TLS generation counter wrapped!  Please report as described in <http://www.gnu.org/software/libc/bugs.html>.\n");
+	_dl_fatal_printf ("TLS generation counter wrapped!  Please report as described in "REPORT_BUGS_TO".\n");
 
       if (tls_free_end == GL(dl_tls_static_used))
 	GL(dl_tls_static_used) = tls_free_start;

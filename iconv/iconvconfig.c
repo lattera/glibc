@@ -375,13 +375,16 @@ parse_opt (int key, char *arg, struct argp_state *state)
 static char *
 more_help (int key, const char *text, void *input)
 {
+  char *tp = NULL;
   switch (key)
     {
     case ARGP_KEY_HELP_EXTRA:
       /* We print some extra information.  */
-      return strdup (gettext ("\
+      if (asprintf (&tp, gettext ("\
 For bug reporting instructions, please see:\n\
-<http://www.gnu.org/software/libc/bugs.html>.\n"));
+%s.\n"), REPORT_BUGS_TO) < 0)
+	return NULL;
+      return tp;
     default:
       break;
     }
@@ -393,7 +396,7 @@ For bug reporting instructions, please see:\n\
 static void
 print_version (FILE *stream, struct argp_state *state)
 {
-  fprintf (stream, "iconvconfig (GNU %s) %s\n", PACKAGE, VERSION);
+  fprintf (stream, "iconvconfig %s%s\n", PKGVERSION, VERSION);
   fprintf (stream, gettext ("\
 Copyright (C) %s Free Software Foundation, Inc.\n\
 This is free software; see the source for copying conditions.  There is NO\n\
