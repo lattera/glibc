@@ -1,5 +1,12 @@
 2012-11-09  Joseph Myers  <joseph@codesourcery.com>
 
+	* timezone/version.h: Remove file.
+	* timezone/README: Do not refer to version.h.
+	* timezone/Makefile ($(objpfx)zic.o): New dependency on
+	$(objpfx)version.h.
+	($(objpfx)zdump.o): Likewise.
+	($(objpfx)/version.h): New target.
+
 	* timezone/tzselect.ksh: Change to verbatim copy from tzcode
 	2012i.
 	* timezone/README: Don't mention modification to tzselect.ksh.

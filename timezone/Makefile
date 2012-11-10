@@ -54,6 +54,13 @@ include ../Rules
 
 $(objpfx)zic: $(objpfx)scheck.o $(objpfx)ialloc.o
 
+$(objpfx)zic.o $(objpfx)zdump.o: $(objpfx)version.h
+
+$(objpfx)version.h: $(common-objpfx)config.make
+	echo 'static char const TZVERSION[]="$(PKGVERSION)$(version)";' \
+	    > $@.new
+	mv -f $@.new $@
+
 tz-cflags = -DTZDIR='"$(zonedir)"' \
 	    -DTZDEFAULT='"$(localtime-file)"' \
 	    -DTZDEFRULES='"$(posixrules-file)"' \
