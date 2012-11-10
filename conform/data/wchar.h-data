@@ -60,11 +60,17 @@ function wint_t towupper (wint_t)
 # endif
 function wint_t ungetwc (wint_t, FILE*)
 function int vfwprintf (FILE*, const wchar_t*, __gnuc_va_list)
+# ifndef UNIX98
 function int vfwscanf (FILE*, const wchar_t*, __gnuc_va_list)
+# endif
 function int vwprintf (const wchar_t*, __gnuc_va_list)
+# ifndef UNIX98
 function int vwscanf (const wchar_t*, __gnuc_va_list)
+# endif
 function int vswprintf (wchar_t*, size_t, const wchar_t*, __gnuc_va_list)
+# ifndef UNIX98
 function int vswscanf (const wchar_t*, const wchar_t*, __gnuc_va_list)
+# endif
 # if defined XOPEN2K8 || defined POSIX2008
 function {wchar_t*} wcpcpy (wchar_t*, const wchar_t*)
 function {wchar_t*} wcpncpy (wchar_t*, const wchar_t*, size_t)

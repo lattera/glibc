@@ -472,7 +472,7 @@ function int rmdir (const char*)
 #if !defined XOPEN2K && !defined XOPEN2K8 && !defined POSIX && !defined POSIX2008
 function {void*} sbrk (intptr_t)
 #endif
-#ifndef POSIX
+#if !defined POSIX && !defined XPG3 && !defined XPG4 && !defined UNIX98
 function int setegid (gid_t)
 function int seteuid (uid_t)
 #endif

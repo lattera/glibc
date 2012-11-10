@@ -1,3 +1,20 @@
+2012-11-10  Joseph Myers  <joseph@codesourcery.com>
+
+	* conform/data/semaphore.h-data [XPG3 || XPG4]: Disable whole
+	file.
+	[UNIX98] (sem_timedwait): Do not expect.
+	* conform/data/sys/socket.h-data [XPG3]: Disable whole file.
+	[XPG4 || UNIX98] (sockatmark): Do not expect.
+	* conform/data/time.h-data [XPG3 || XPG4 || UNIX98]
+	(clock_getcpuclockid): Do not expect.
+	[XPG3 || XPG4 || UNIX98] (clock_nanosleep): Do not expect.
+	* conform/data/unistd.h-data [XPG3 || XPG4 || UNIX98] (setegid):
+	Do not expect.
+	[XPG3 || XPG4 || UNIX98] (seteuid): Likewise.
+	* conform/data/wchar.h-data [UNIX98] (vfwscanf): Do not expect.
+	[UNIX98] (vwscanf): Likewise.
+	[UNIX98] (vswscanf): Likewise.
+
 2012-11-09  Joseph Myers  <joseph@codesourcery.com>
 
 	* timezone/version.h: Remove file.

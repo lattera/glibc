@@ -71,12 +71,12 @@ variable int getdate_err
 # endif
 
 function {char*} asctime_r (const struct tm*, char*)
-#if !defined POSIX
+#if !defined POSIX && !defined XPG3 && !defined XPG4 && !defined UNIX98
 function int clock_getcpuclockid (pid_t, clockid_t*)
 #endif
 function int clock_getres (clockid_t, struct timespec*)
 function int clock_gettime (clockid_t, struct timespec*)
-#if !defined POSIX
+#if !defined POSIX && !defined XPG3 && !defined XPG4 && !defined UNIX98
 function int clock_nanosleep (clockid_t, int, const struct timespec*, struct timespec*)
 #endif
 function int clock_settime (clockid_t, const struct timespec*)

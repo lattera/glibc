@@ -1,4 +1,4 @@
-#if !defined ISO && !defined ISO99 && !defined ISO11 && !defined POSIX
+#if !defined ISO && !defined ISO99 && !defined ISO11 && !defined POSIX && !defined XPG3
 type socklen_t
 
 type sa_family_t
@@ -111,7 +111,9 @@ function int setsockopt (int, int, int, const void*, socklen_t)
 function int shutdown (int, int)
 function int socket (int, int, int)
 function int socketpair (int, int, int, int[2])
+#if !defined XPG4 && !defined UNIX98
 function int sockatmark (int)
+#endif
 
 allow-header sys/uio.h
 
