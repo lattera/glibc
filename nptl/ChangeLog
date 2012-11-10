@@ -1,3 +1,24 @@
+2013-07-02  Andi Kleen  <ak@linux.intel.com>
+	    Hongjiu Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/unix/sysv/linux/i386/lowlevellock.h (__lll_timedwait_tid,
+	  lll_timedlock_elision, __lll_lock_elision, __lll_unlock_elision,
+	  __lll_trylock_elision, lll_lock_elision, lll_unlock_elision,
+	  lll_trylock_elision): Add.
+	* sysdeps/unix/sysv/linux/x86/Makefile: Imply x86.
+	* sysdeps/unix/sysv/linux/x86/elision-conf.c: New file.
+	* sysdeps/unix/sysv/linux/x86/elision-conf.h: New file.
+	* sysdeps/unix/sysv/linux/x86/elision-lock.c: New file.
+	* sysdeps/unix/sysv/linux/x86/elision-timed.c: New file.
+	* sysdeps/unix/sysv/linux/x86/elision-trylock.c: New file.
+	* sysdeps/unix/sysv/linux/x86/elision-unlock.c: New file.
+	* sysdeps/unix/sysv/linux/x86_64/lowlevellock.h (__lll_timedwait_tid,
+	  lll_timedlock_elision, __lll_lock_elision, __lll_unlock_elision,
+	  __lll_trylock_elision, lll_lock_elision, lll_unlock_elision,
+	  lll_trylock_elision): Add.
+	* nptl/sysdeps/unix/sysv/linux/x86/hle.h: New file.
+	* elision-conf.h: New file.
+
 2013-06-24  Vladimir Nikulichev  <v.nikulichev@gmail.com>
 
 	[BZ #12310]
