@@ -5,7 +5,7 @@
 	* timezone/Makefile ($(objpfx)zic.o): New dependency on
 	$(objpfx)version.h.
 	($(objpfx)zdump.o): Likewise.
-	($(objpfx)/version.h): New target.
+	($(objpfx)version.h): New target.
 
 	* timezone/tzselect.ksh: Change to verbatim copy from tzcode
 	2012i.
