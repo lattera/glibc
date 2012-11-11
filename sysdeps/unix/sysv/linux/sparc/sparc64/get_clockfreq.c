@@ -22,6 +22,7 @@
 #include <unistd.h>
 #include <dirent.h>
 #include <stdlib.h>
+#include <inttypes.h>
 #include <sys/ioctl.h>
 #include <libc-internal.h>
 #include <asm/openpromio.h>
@@ -123,14 +124,14 @@ __get_clockfreq_via_proc_openprom (void)
 		      int clkfreq_fd;
 
 		      __stpcpy (prop, "/clock-frequency");
-		      clkfreq_fd = open (node, O_RDONLY);
+		      clkfreq_fd = __open (node, O_RDONLY);
 		      if (clkfreq_fd != -1)
 			{
-			  if (read (clkfreq_fd, type_string,
-				    sizeof (type_string)) > 0)
+			  if (__read (clkfreq_fd, type_string,
+				      sizeof (type_string)) > 0)
 			    result = (hp_timing_t)
 			      strtoumax (type_string, NULL, 16);
-			  close (clkfreq_fd);
+			  __close (clkfreq_fd);
 			}
 		    }
 		  __close (fd);
