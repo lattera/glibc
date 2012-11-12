@@ -49,14 +49,20 @@ tests += md5test sha256test sha512test
 # The test md5test-giant uses up to 400 MB of RSS and runs on a fast
 # machine over a minute.
 xtests = md5test-giant
-
-$(objpfx)md5test: $(objpfx)md5.o
-$(objpfx)md5test-giant: $(objpfx)md5.o
-$(objpfx)sha256test: $(objpfx)sha256.o
-$(objpfx)sha512test: $(objpfx)sha512.o
 endif
 
 include ../Rules
+
+ifneq ($(nss-crypt),yes)
+md5-routines := md5 $(filter md5%,$(libcrypt-sysdep_routines))
+sha256-routines := sha256 $(filter sha256%,$(libcrypt-sysdep_routines))
+sha512-routines := sha512 $(filter sha512%,$(libcrypt-sysdep_routines))
+
+$(objpfx)md5test: $(patsubst %, $(objpfx)%.o,$(md5-routines))
+$(objpfx)md5test-giant: $(patsubst %, $(objpfx)%.o,$(md5-routines))
+$(objpfx)sha256test: $(patsubst %, $(objpfx)%.o,$(sha256-routines))
+$(objpfx)sha512test: $(patsubst %, $(objpfx)%.o,$(sha512-routines))
+endif
 
 ifeq (yes,$(build-shared))
 $(addprefix $(objpfx),$(tests)): $(objpfx)libcrypt.so

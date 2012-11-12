@@ -59,6 +59,8 @@ GPERFFLAGS = -acCgopt -k1,2,5,9,$$ -L ANSI-C
 
 include ../Rules
 
+CFLAGS-md5.c = -I../crypt
+
 programs/%-kw.h: programs/%-kw.gperf
 	cd programs \
 	&& $(GPERF) $(GPERFFLAGS) -N $(@F:-kw.h=_hash) $(<F) > $(@F).new

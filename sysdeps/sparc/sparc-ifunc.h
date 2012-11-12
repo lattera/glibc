@@ -109,4 +109,6 @@ END (__##name)
   }									\
   __asm__ (".type " #name ", %gnu_indirect_function");
 
+# define sparc_libc_ifunc(name, expr) sparc_libm_ifunc (name, expr)
+
 #endif	/* __ASSEMBLER__ */

@@ -1,3 +1,42 @@
+2012-11-13  David S. Miller  <davem@davemloft.net>
+
+	* crypt/Makefile: Move test targets after toplevel Rules
+	inclusion.  Grab any necessary sysdep routines when linking.
+	* crypt/md5.c (md5_process_block): Remove define, we will always
+	name it __md5_process_block.
+	(md5_finish_ctx): Update md5_process_block call.
+	(md5_stream): Likewise.
+	(md5_process_bytes): Likewise.
+	(md5_process_block): Rename to __md5_process_block and move to ...
+	* crypt/md5-block.c: ... here.
+	* crypt/sha256.c (sha256_process_block): Move to ...
+	* crypt/sha256-block.c: ... here.
+	* crypt/sha512.c (sha512_process_block): Move to ...
+	* crypt/sha512-block.c: ... here.
+	* locale/Makefile (CFLAGS-md5.c): Define to add crypt/ to include
+	path.
+	* sysdeps/sparc/sparc-ifunc.c (sparc_libc_ifunc): Define.
+	* sysdeps/sparc/sparc64/multiarch/Makefile
+	(libcrypt-sysdep_routines): Add crypto assembler sysdeps when in
+	crypt subdir.
+	(localedef-aux): Add md5 crypto assembler when in locale subdir.
+	* sysdeps/sparc/sparc32/sparcv9/multiarch/Makefile: Mirror sparc64
+	multiarch changes.
+	* sysdeps/sparc/sparc64/multiarch/md5-block.c: New file.
+	* sysdeps/sparc/sparc64/multiarch/md5-crop.S: New file.
+	* sysdeps/sparc/sparc64/multiarch/sha256-block.c: New file.
+	* sysdeps/sparc/sparc64/multiarch/sha256-crop.S: New file.
+	* sysdeps/sparc/sparc64/multiarch/sha512-block.c: New file.
+	* sysdeps/sparc/sparc64/multiarch/sha512-crop.S: New file.
+	* sysdeps/sparc/sparc32/sparcv9/multiarch/md5-block.c: New file.
+	* sysdeps/sparc/sparc32/sparcv9/multiarch/md5-crop.S: New file.
+	* sysdeps/sparc/sparc32/sparcv9/multiarch/sha256-block.c: New
+	file.
+	* sysdeps/sparc/sparc32/sparcv9/multiarch/sha256-crop.S: New file.
+	* sysdeps/sparc/sparc32/sparcv9/multiarch/sha512-block.c: New
+	file.
+	* sysdeps/sparc/sparc32/sparcv9/multiarch/sha512-crop.S: New file.
+
 2012-11-13  Joseph Myers  <joseph@codesourcery.com>
 
 	* timezone/tzselect.ksh: Update from tzcode git revision
