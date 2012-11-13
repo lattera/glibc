@@ -76,7 +76,7 @@ extern int *__h_errno_location (void) __THROW __attribute__ ((__const__));
 # define NO_ADDRESS	NO_DATA	/* No address, look for MX record.  */
 #endif
 
-#ifdef __USE_XOPEN2K
+#if defined __USE_XOPEN2K || defined __USE_XOPEN_EXTENDED
 /* Highest reserved Internet port number.  */
 # define IPPORT_RESERVED	1024
 #endif

@@ -1,3 +1,9 @@
+2012-11-13  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #14838]
+	* resolv/netdb.h [__USE_XOPEN_EXTENDED] (IPPORT_RESERVED): Define
+	macro.
+
 2012-11-13  Marcus Shawcroft  <marcus.shawcroft@linaro.org>
 
 	* soft-fp/op-common.h (_FP_PACK_SEMIRAW): Move underflow
