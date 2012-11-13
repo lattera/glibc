@@ -158,22 +158,24 @@ do {							\
 #define _FP_ROUND(wc, X)			\
 do {						\
 	if (_FP_FRAC_LOW_##wc(X) & 7)		\
-	  FP_SET_EXCEPTION(FP_EX_INEXACT);	\
-	switch (FP_ROUNDMODE)			\
-	{					\
-	  case FP_RND_NEAREST:			\
-	    _FP_ROUND_NEAREST(wc,X);		\
-	    break;				\
-	  case FP_RND_ZERO:			\
-	    _FP_ROUND_ZERO(wc,X);		\
-	    break;				\
-	  case FP_RND_PINF:			\
-	    _FP_ROUND_PINF(wc,X);		\
-	    break;				\
-	  case FP_RND_MINF:			\
-	    _FP_ROUND_MINF(wc,X);		\
-	    break;				\
-	}					\
+	  {					\
+	    FP_SET_EXCEPTION(FP_EX_INEXACT);	\
+	    switch (FP_ROUNDMODE)		\
+	      {					\
+	      case FP_RND_NEAREST:		\
+		_FP_ROUND_NEAREST(wc,X);	\
+		break;				\
+	      case FP_RND_ZERO:			\
+		_FP_ROUND_ZERO(wc,X);		\
+		break;				\
+	      case FP_RND_PINF:			\
+		_FP_ROUND_PINF(wc,X);		\
+		break;				\
+	      case FP_RND_MINF:			\
+		_FP_ROUND_MINF(wc,X);		\
+		break;				\
+	      }					\
+	  }					\
 } while (0)
 
 #define FP_CLS_NORMAL		0

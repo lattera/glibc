@@ -1,3 +1,10 @@
+2012-11-13  Marcus Shawcroft  <marcus.shawcroft@linaro.org>
+
+	* soft-fp/op-common.h (_FP_PACK_SEMIRAW): Move underflow
+	detection to immediately after _FP_ROUND().
+	* soft-fp/soft-fp.h (_FP_ROUND): Don't round if working
+	bits are 0.
+
 2012-11-11  David S. Miller  <davem@davemloft.net>
 
 	* sysdeps/unix/sysv/linux/sparc/sparc64/get_clockfreq.c: Include
