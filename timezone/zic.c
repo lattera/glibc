@@ -426,8 +426,8 @@ usage(FILE *stream, int status)
 [ --version ] [ --help ] [ -v ] [ -l localtime ] [ -p posixrules ] \\\n\
 \t[ -d directory ] [ -L leapseconds ] [ -y yearistype ] [ filename ... ]\n\
 \n\
-Report bugs to tz@elsie.nci.nih.gov.\n"),
-		       progname, progname);
+Report bugs to %s.\n"),
+		       progname, progname, REPORT_BUGS_TO);
 	exit(status);
 }
 
@@ -462,7 +462,7 @@ main(int argc, char **argv)
 	}
 	for (i = 1; i < argc; ++i)
 		if (strcmp(argv[i], "--version") == 0) {
-			(void) printf("%s\n", TZVERSION);
+			(void) printf("zic %s%s\n", PKGVERSION, TZVERSION);
 			exit(EXIT_SUCCESS);
 		} else if (strcmp(argv[i], "--help") == 0) {
 			usage(stdout, EXIT_SUCCESS);
@@ -2534,8 +2534,8 @@ newabbr(const char *const string)
 				++cp;
 		if (cp - string == 0)
 mp = _("time zone abbreviation lacks alphabetic at start");
-		if (noise && cp - string > 3)
-mp = _("time zone abbreviation has more than 3 alphabetics");
+		if (noise && cp - string < 3)
+mp = _("time zone abbreviation has fewer than 3 alphabetics");
 		if (cp - string > ZIC_MAX_ABBR_LEN_WO_WARN)
 mp = _("time zone abbreviation has too many alphabetics");
 		if (mp == NULL && (*cp == '+' || *cp == '-')) {

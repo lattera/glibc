@@ -1,5 +1,14 @@
 2012-11-13  Joseph Myers  <joseph@codesourcery.com>
 
+	* timezone/tzselect.ksh: Update from tzcode git revision
+	a435f9f0ecafa56d9e0263835836bd0c64cd7307.
+	* timezone/zdump.c: Likewise.
+	* timezone/zic.c: Likewise.
+	* timezone/Makefile ($(objpfx)version.h): Only include $(version)
+	in TZVERSION setting, not $(PKGVERSION).
+	($(objpfx)tzselect): Likewise.  Also substitute PKGVERSION and
+	REPORT_BUGS_TO settings.
+
 	[BZ #14838]
 	* resolv/netdb.h [__USE_XOPEN_EXTENDED] (IPPORT_RESERVED): Define
 	macro.

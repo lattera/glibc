@@ -57,7 +57,7 @@ $(objpfx)zic: $(objpfx)scheck.o $(objpfx)ialloc.o
 $(objpfx)zic.o $(objpfx)zdump.o: $(objpfx)version.h
 
 $(objpfx)version.h: $(common-objpfx)config.make
-	echo 'static char const TZVERSION[]="$(PKGVERSION)$(version)";' \
+	echo 'static char const TZVERSION[]="$(version)";' \
 	    > $@.new
 	mv -f $@.new $@
 
@@ -115,7 +115,9 @@ $(testdata)/Asia/Tokyo: asia $(zic-deps)
 $(objpfx)tzselect: tzselect.ksh $(common-objpfx)config.make
 	sed -e 's|/bin/bash|$(KSH)|g' \
 	    -e '/TZDIR=/s|\$$(pwd)|$(zonedir)|' \
-	    -e '/TZVERSION=/s|see_Makefile|"$(PKGVERSION)$(version)"|' \
+	    -e '/TZVERSION=/s|see_Makefile|"$(version)"|' \
+	    -e '/PKGVERSION=/s|=.*|="$(PKGVERSION)"|' \
+	    -e '/REPORT_BUGS_TO=/s|=.*|="$(REPORT_BUGS_TO)"|' \
 	    < $< > $@.new
 	chmod 555 $@.new
 	mv -f $@.new $@

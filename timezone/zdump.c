@@ -272,8 +272,8 @@ usage(FILE * const stream, const int status)
 	(void) fprintf(stream,
 _("%s: usage is %s [ --version ] [ --help ] [ -v ] [ -c [loyear,]hiyear ] zonename ...\n\
 \n\
-Report bugs to tz@elsie.nci.nih.gov.\n"),
-		       progname, progname);
+Report bugs to %s.\n"),
+		       progname, progname, REPORT_BUGS_TO);
 	exit(status);
 }
 
@@ -309,7 +309,7 @@ main(int argc, char *argv[])
 	progname = argv[0];
 	for (i = 1; i < argc; ++i)
 		if (strcmp(argv[i], "--version") == 0) {
-			(void) printf("%s\n", TZVERSION);
+			(void) printf("zdump %s%s\n", PKGVERSION, TZVERSION);
 			exit(EXIT_SUCCESS);
 		} else if (strcmp(argv[i], "--help") == 0) {
 			usage(stdout, EXIT_SUCCESS);
