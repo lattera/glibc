@@ -1,3 +1,9 @@
+2012-11-14  Marcus Shawcroft  <marcus.shawcroft@linaro.org>
+
+	* io/Makefile (CFLAGS-open.c, CFLAGS-open64.c): Define.
+	* misc/Makefile (CFLAGS-select.c): Define.
+	* posix/Makefile (CFLAGS-pause.c): Define.
+
 2012-11-13  David S. Miller  <davem@davemloft.net>
 
 	* crypt/Makefile: Move test targets after toplevel Rules

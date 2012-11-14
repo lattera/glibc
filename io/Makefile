@@ -73,6 +73,8 @@ tests		:= test-utime test-stat test-stat2 test-lfs tst-getcwd \
 
 include ../Rules
 
+CFLAGS-open.c = -fexceptions -fasynchronous-unwind-tables
+CFLAGS-open64.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-fcntl.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-poll.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-ppoll.c = -fexceptions -fasynchronous-unwind-tables

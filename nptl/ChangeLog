@@ -1,3 +1,8 @@
+2012-11-14  Marcus Shawcroft  <marcus.shawcroft@linaro.org>
+
+	* Makefile (CFLAGS-open.c, CFLAGS-open64.c, CFLAGS-pause.c)
+	  (CFLAGS-recv.c, CFLAGS-send.c): Define.
+
 2012-11-06  Chris Metcalf  <cmetcalf@tilera.com>
 
 	* tst-sem14.c (TIMEOUT): Set timeout to 10 seconds.

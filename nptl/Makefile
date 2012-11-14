@@ -191,6 +191,11 @@ CFLAGS-sigwait.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-msgrcv.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-msgsnd.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-tcdrain.c = -fexceptions -fasynchronous-unwind-tables
+CFLAGS-open.c = -fexceptions -fasynchronous-unwind-tables
+CFLAGS-open64.c = -fexceptions -fasynchronous-unwind-tables
+CFLAGS-pause.c = -fexceptions -fasynchronous-unwind-tables
+CFLAGS-recv.c = -fexceptions -fasynchronous-unwind-tables
+CFLAGS-send.c = -fexceptions -fasynchronous-unwind-tables
 
 CFLAGS-pt-system.c = -fexceptions
 
