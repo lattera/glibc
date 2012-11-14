@@ -1,3 +1,8 @@
+2012-11-14  Marcus Shawcroft  <marcus.shawcroft@linaro.org>
+
+	* sysdeps/unix/sysv/linux/arm/Makefile (libcrypt-sysdep_routines): Add
+	libc-do-syscall.
+
 2012-11-05  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/arm/nptl/lowlevellock.h

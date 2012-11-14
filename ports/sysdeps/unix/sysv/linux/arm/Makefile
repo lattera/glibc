@@ -32,6 +32,10 @@ endif
 
 # Add a syscall function to each library that needs one.
 
+ifeq ($(subdir),crypt)
+libcrypt-sysdep_routines += libc-do-syscall
+endif
+
 ifeq ($(subdir),rt)
 librt-sysdep_routines += libc-do-syscall
 librt-shared-only-routines += libc-do-syscall
