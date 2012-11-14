@@ -1,5 +1,5 @@
 /* On-demand PLT fixup for shared objects.
-   Copyright (C) 1995-2009, 2010, 2011 Free Software Foundation, Inc.
+   Copyright (C) 1995-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -163,6 +163,26 @@ _dl_profile_fixup (
 		   ElfW(Addr) retaddr, void *regs, long int *framesizep)
 {
   void (*mcount_fct) (ElfW(Addr), ElfW(Addr)) = INTUSE(_dl_mcount);
+
+  if (l->l_reloc_result == NULL)
+    {
+      /* BZ #14843: ELF_DYNAMIC_RELOCATE is called before l_reloc_result
+	 is allocated.  We will get here if ELF_DYNAMIC_RELOCATE calls a
+	 resolver function to resolve an IRELATIVE relocation and that
+	 resolver calls a function that is not yet resolved (lazy).  For
+	 example, the resolver in x86-64 libm.so calls __get_cpu_features
+	 defined in libc.so.  Skip audit and resolve the external function
+	 in this case.  */
+      *framesizep = -1;
+      return _dl_fixup (
+# ifdef ELF_MACHINE_RUNTIME_FIXUP_ARGS
+#  ifndef ELF_MACHINE_RUNTIME_FIXUP_PARAMS
+#   error Please define ELF_MACHINE_RUNTIME_FIXUP_PARAMS.
+#  endif
+			ELF_MACHINE_RUNTIME_FIXUP_PARAMS,
+# endif
+			l, reloc_arg);
+    }
 
   /* This is the address in the array where we store the result of previous
      relocations.  */

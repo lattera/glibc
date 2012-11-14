@@ -1,3 +1,16 @@
+2012-11-14  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #14831]
+	* elf/Makefile (tests): Add tst-audit8.
+	($(objpfx)tst-audit8): Also depend on $(common-objpfx)math/libm.so.
+	($(objpfx)tst-audit8.out): New target.
+	(tst-audit8-ENV): New variable.
+	* elf/dl-runtime.c (_dl_profile_fixup): Call _dl_fixup to skip
+	audit if l_reloc_result is NULL.
+	(ELF_MACHINE_RUNTIME_FIXUP_PARAMS): Issue an error if it isn't
+	defined and ELF_MACHINE_RUNTIME_FIXUP_ARGS is defined.
+	* elf/tst-audit8.c: New file.
+
 2012-11-14  Marcus Shawcroft  <marcus.shawcroft@linaro.org>
 
 	* io/Makefile (CFLAGS-open.c, CFLAGS-open64.c): Define.
