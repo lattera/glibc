@@ -1,6 +1,5 @@
 /* Machine-dependent ELF dynamic relocation inline functions.  m68k version.
-   Copyright (C) 1996-2001, 2002, 2003, 2004, 2005, 2010, 2011
-   Free Software Foundation, Inc.
+   Copyright (C) 1996-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -107,6 +106,7 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 }
 
 #define ELF_MACHINE_RUNTIME_FIXUP_ARGS long int save_a0, long int save_a1
+#define ELF_MACHINE_RUNTIME_FIXUP_PARAMS save_a0, save_a1
 
 
 /* Mask identifying addresses reserved for the user program,

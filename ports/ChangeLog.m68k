@@ -1,3 +1,8 @@
+2012-11-15  Andreas Schwab  <schwab@linux-m68k.org>
+
+	* sysdeps/m68k/dl-machine.h (ELF_MACHINE_RUNTIME_FIXUP_PARAMS):
+	Define.
+
 2012-11-06  Andreas Schwab  <schwab@linux-m68k.org>
 
 	* sysdeps/m68k/m680x0/fpu/libm-test-ulps: Update.
