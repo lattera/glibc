@@ -1,3 +1,10 @@
+2012-11-15  Chris Leonard  <cjlhomeaddress@gmail.com>
+
+	[BZ #13950]
+	* locales/bo_CN (LC_NAME, LC_ADDRESS): Remove some FIXMEs with
+	proper content, disable others.
+	* locales/bo_IN (LC_NAME, LC_ADDRESS): Likewise.
+
 2012-11-07  Dmitry V. Levin  <ldv@altlinux.org>
 
 	[BZ#14807]

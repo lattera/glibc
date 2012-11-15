@@ -70,23 +70,23 @@ END LC_MEASUREMENT
 
 LC_NAME
 % FIXME
-name_fmt	"FIXME"
-name_gen	"FIXME"
-name_miss	"FIXME"
-name_mr		"FIXME"
-name_mrs	"FIXME"
-name_ms		"FIXME"
+name_fmt	""
+% name_gen	"FIXME"
+% name_miss	"FIXME"
+% name_mr	"FIXME"
+% name_mrs	"FIXME"
+% name_ms	"FIXME"
 END LC_NAME
 
 LC_ADDRESS
 % FIXME
-postal_fmt	"FIXME"
-country_name	"FIXME"
 
+% %z%c%T%s%b%e%r
+postal_fmt "<U0025><U007A><U0025><U0063><U0025><U0054><U0025><U0073><U0025><U0062><U0025><U0065><U0025><U0072>"
+country_name "<U0F62><U0F92><U0FB1><U0F0B><U0F42><U0F62>"
 country_ab2 "<U0049><U004E>"
 country_ab3 "<U0049><U004E><U0044>"
 country_num 356
-
 lang_name     "<U0F54><U0F7C><U0F51><U0F0B><U0F66><U0F90><U0F51><U0F0B>"
 lang_ab       "<U0062><U006F>"
 lang_term     "<U0062><U006F><U0064>"
