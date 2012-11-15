@@ -627,9 +627,11 @@ check_complex (const char *test_name, __complex__ FLOAT computed,
 {
   FLOAT part_comp, part_exp, part_max_ulp;
   int part_xfail;
-  char str[200];
+  char *str;
 
-  sprintf (str, "Real part of: %s", test_name);
+  if (asprintf (&str, "Real part of: %s", test_name) == -1)
+    abort ();
+
   part_comp = __real__ computed;
   part_exp = __real__ expected;
   part_max_ulp = __real__ max_ulp;
@@ -637,8 +639,11 @@ check_complex (const char *test_name, __complex__ FLOAT computed,
 
   check_float_internal (str, part_comp, part_exp, part_max_ulp, part_xfail,
 			exception, &real_max_error);
+  free (str);
 
-  sprintf (str, "Imaginary part of: %s", test_name);
+  if (asprintf (&str, "Imaginary part of: %s", test_name) == -1)
+    abort ();
+
   part_comp = __imag__ computed;
   part_exp = __imag__ expected;
   part_max_ulp = __imag__ max_ulp;
@@ -649,6 +654,7 @@ check_complex (const char *test_name, __complex__ FLOAT computed,
   check_float_internal (str, part_comp, part_exp, part_max_ulp, part_xfail,
 			exception & IGNORE_ZERO_INF_SIGN,
 			&imag_max_error);
+  free (str);
 }
 
 

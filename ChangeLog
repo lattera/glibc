@@ -1,3 +1,7 @@
+2012-11-15  Marcus Shawcroft  <marcus.shawcroft@linaro.org>
+
+	* math/libm-test.inc (check_complex): Use asprintf.
+
 2012-11-14  Joseph Myers  <joseph@codesourcery.com>
 
 	* debug/pcprofiledump.c (print_version): Update copyright year.
