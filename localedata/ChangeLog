@@ -1,4 +1,9 @@
-2012-11-14  Andreas Jaeger  <aj@suse.de>
+2012-11-15  Chris Leonard  <cjlhomeaddress@gmail.com>
+
+	[BZ #13952]
+	* locales/km_KH: Correct country-name and lang-name.
+
+2012-11-15  Andreas Jaeger  <aj@suse.de>
 
 	[BZ #13603]
 	[BZ #13604]

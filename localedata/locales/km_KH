@@ -1888,7 +1888,8 @@ postal_fmt    "<U0025><U0066><U0025><U004E><U0025><U0061><U0025><U004E>/
 <U0025><U0074><U0025><U0062><U0025><U004E><U0025><U0068><U0025><U0074>/
 <U0025><U0073><U0025><U004E><U0025><U0054><U0025><U004E><U0025><U0053>/
 <U0025><U004E><U0025><U007A><U0025><U0063><U0025><U004E>"
-country_name  "<U0EA5><U0EB2><U0EA7>"
+% កម្ពុជា (Kampuchea)
+country_name "<U1780><U1798><U17D2><U1796><U17BB><U1787><U17B6>"
 %FIXME
 %country_post  ""
 country_ab2   "<U004C><U0041>"
@@ -1897,7 +1898,8 @@ country_num   418
 country_car   "<U004C><U0041><U004F>"
 %FIXME
 %country_isbn  ""
-lang_name     "<U0EA5><U0EB2><U0EA7>"
+% ភាសាខ្មែរ (Khmer)
+lang_name     "<U1797><U17B6><U179F><U17B6><U1781><U17D2><U1798><U17C2><U179A>"
 lang_ab       "<U006C><U006F>"
 lang_term     "<U006c><U0061><U006F>"
 lang_lib      "<U006C><U0061><U006F>"
