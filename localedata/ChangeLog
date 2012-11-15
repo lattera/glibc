@@ -1,3 +1,16 @@
+2012-11-14  Andreas Jaeger  <aj@suse.de>
+
+	[BZ #13603]
+	[BZ #13604]
+	[BZ #13698]
+	* locales/doi_IN: New file, contributed by Pravin Satpute
+	<psatpute@redhat.com> and Sushil Badyal <badyalsk@gmail.com>.
+	* locales/mni_IN: New file, contributed by Pravin Satpute
+	<psatpute@redhat.com> and Rebika Devi <rebika_srd@rediffmail.com>.
+	* locales/sat_IN: New file, contributed by Pravin Satpute
+	<psatpute@redhat.com> and Thakur Prasad Murmu <tp_murmu@yahoo.com>.
+	* SUPPORTED (SUPPORTED-LOCALES): Add doi_IN, mni_IN, sat_IN.
+
 2012-11-15  Chris Leonard  <cjlhomeaddress@gmail.com>
 
 	[BZ #13950]
