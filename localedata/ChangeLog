@@ -1,3 +1,10 @@
+2012-11-16  Andreas Jaeger  <aj@suse.de>
+
+	[BZ # 14501]
+	* locales/nhn_MX: Add Central Nahuatl locale for Mexico,
+	contributed by Jorge Becerril <jrbecster@gmail.com>.
+	* SUPPORTED (SUPPORTED-LOCALES): Add nhn_MX.
+
 2012-11-15  Chris Leonard  <cjlhomeaddress@gmail.com>
 
 	[BZ #13952]
