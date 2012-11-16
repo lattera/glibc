@@ -138,6 +138,12 @@ __log1pl (long double xm1)
       && (u.parts32.w1 | u.parts32.w2 | u.parts32.w3) == 0)
     return xm1;
 
+  if ((hx & 0x7fffffff) < 0x3f8e0000)
+    {
+      if ((int) xm1 == 0)
+	return xm1;
+    }
+
   x = xm1 + 1.0L;
 
   /* log1p(-1) = -inf */

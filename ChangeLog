@@ -1,3 +1,8 @@
+2012-11-16  David S. Miller  <davem@davemloft.net>
+
+	* sysdeps/ieee754/ldbl-128/s_log1pl.c (__log1pl): If xm1 is
+	smaller than LDBL_EPSILON/2.0L, just return xm1.
+
 2012-11-16  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* elf/tst-array1.c (init): Set constructor priority to 1000.
