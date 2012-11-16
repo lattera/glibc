@@ -1,5 +1,10 @@
 2012-11-16  Andreas Jaeger  <aj@suse.de>
 
+	[BZ #14368]
+	* locales/szl_PL: New Silesian Language Locale for Poland.
+	Contributed by Przemyslaw Buczkowski <przemub@yahoo.pl>.
+	* localedata/SUPPORTED (SUPPORTED-LOCALES): Add szl_PL.
+
 	[BZ # 14828]
 	* locales/ayc_PE: Add Aymara locale for Peru
 	contributed by Chris Leonard <cjl@sugarlabs.org> and
