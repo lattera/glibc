@@ -25,6 +25,14 @@
    This exception applies to code released by its copyright holders
    in files containing the exception.  */
 
+/* NOTE: libio is now exclusively used only by glibc since libstdc++ has its
+   own implementation.  As a result, functions that were implemented for C++
+   (like *sputn) may no longer have C++ semantics.  This is of course only
+   relevant for internal callers of these functions since these functions are
+   not intended for external use otherwise.
+
+   FIXME: All of the C++ cruft eventually needs to go away.  */
+
 #include <errno.h>
 #ifndef __set_errno
 # define __set_errno(Val) errno = (Val)
