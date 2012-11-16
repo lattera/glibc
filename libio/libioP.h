@@ -1,5 +1,4 @@
-/* Copyright (C) 1993, 1997-2003,2004,2005,2006,2007,2012
-	Free Software Foundation, Inc.
+/* Copyright (C) 1993-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -167,7 +166,7 @@ typedef int (*_IO_pbackfail_t) (_IO_FILE *, int);
 #define _IO_WPBACKFAIL(FP, CH) WJUMP1 (__pbackfail, FP, CH)
 
 /* The 'xsputn' hook writes upto N characters from buffer DATA.
-   Returns the number of character actually written.
+   Returns EOF or the number of character actually written.
    It matches the streambuf::xsputn virtual function. */
 typedef _IO_size_t (*_IO_xsputn_t) (_IO_FILE *FP, const void *DATA,
 				    _IO_size_t N);

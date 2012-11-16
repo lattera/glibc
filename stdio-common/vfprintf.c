@@ -87,8 +87,18 @@
 
 # define PUT(F, S, N)	_IO_sputn ((F), (S), (N))
 # define PAD(Padchar) \
-  if (width > 0)							      \
-    done_add (_IO_padn (s, (Padchar), width))
+  do {									      \
+    if (width > 0)							      \
+      {									      \
+	unsigned int d = _IO_padn (s, (Padchar), width);		      \
+	if (__builtin_expect (d == EOF, 0))				      \
+	  {								      \
+	    done = -1;							      \
+	    goto all_done;						      \
+	  }								      \
+	done_add (d);							      \
+      }									      \
+  } while (0)
 # define PUTC(C, F)	_IO_putc_unlocked (C, F)
 # define ORIENT		if (_IO_vtable_offset (s) == 0 && _IO_fwide (s, -1) != -1)\
 			  return -1
@@ -106,8 +116,18 @@
 
 # define PUT(F, S, N)	_IO_sputn ((F), (S), (N))
 # define PAD(Padchar) \
-  if (width > 0)							      \
-    done_add (_IO_wpadn (s, (Padchar), width))
+  do {									      \
+    if (width > 0)							      \
+      {									      \
+	unsigned int d = _IO_wpadn (s, (Padchar), width);		      \
+	if (__builtin_expect (d == EOF, 0))				      \
+	  {								      \
+	    done = -1;							      \
+	    goto all_done;						      \
+	  }								      \
+	done_add (d);							      \
+      }									      \
+  } while (0)
 # define PUTC(C, F)	_IO_putwc_unlocked (C, F)
 # define ORIENT		if (_IO_fwide (s, 1) != 1) return -1
 

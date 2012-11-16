@@ -1253,12 +1253,13 @@ _IO_new_file_write (f, data, n)
      _IO_ssize_t n;
 {
   _IO_ssize_t to_do = n;
+  _IO_ssize_t count = 0;
   while (to_do > 0)
     {
-      _IO_ssize_t count = (__builtin_expect (f->_flags2
-					     & _IO_FLAGS2_NOTCANCEL, 0)
-			   ? write_not_cancel (f->_fileno, data, to_do)
-			   : write (f->_fileno, data, to_do));
+      count = (__builtin_expect (f->_flags2
+				 & _IO_FLAGS2_NOTCANCEL, 0)
+	       ? write_not_cancel (f->_fileno, data, to_do)
+	       : write (f->_fileno, data, to_do));
       if (count < 0)
 	{
 	  f->_flags |= _IO_ERR_SEEN;
@@ -1270,7 +1271,7 @@ _IO_new_file_write (f, data, n)
   n -= to_do;
   if (f->_offset >= 0)
     f->_offset += n;
-  return n;
+  return count < 0 ? count : n;
 }
 
 _IO_size_t
@@ -1330,9 +1331,10 @@ _IO_new_file_xsputn (f, data, n)
       _IO_size_t block_size, do_write;
       /* Next flush the (full) buffer. */
       if (_IO_OVERFLOW (f, EOF) == EOF)
-	/* If nothing else has to be written we must not signal the
-	   caller that everything has been written.  */
-	return to_do == 0 ? EOF : n - to_do;
+	/* If nothing else has to be written or nothing has been written, we
+	   must not signal the caller that the call was even partially
+	   successful.  */
+	return (to_do == 0 || to_do == n) ? EOF : n - to_do;
 
       /* Try to maintain alignment: write a whole number of blocks.
 	 dont_write is what gets left over. */

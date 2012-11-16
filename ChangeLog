@@ -1,5 +1,21 @@
 2012-11-16  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
+	[BZ #11741]
+	* libio/fileops.c (_IO_new_file_write): Correctly return error.
+	(_IO_new_file_xsputn): Also return EOF if none of the input
+	data was written when overflow failed.
+	* libio/iopadn.c (_IO_padn): Likewise.
+	* libio/iowpadn.c (_IO_wpadn): Likewise.
+	* stdio-common/tst-put-error.c: Add copyright notice.
+	(do_test): Add case for printing padded string.
+	* stdio-common/vfprintf [!COMPILE_WPRINTF] (PAD): Flag error if
+	_IO_padn returned error.
+	[COMPILE_WPRINTF] (PAD): Flag error if _IO_wpadn returned error.
+	* libio/libioP.h (_IO_xsputn_t): Note in comment that xsputn can
+	return EOF.
+
+2012-11-16  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
 	* libio/libioP.h: Add comment note that the references to C++
 	bits are now obsolete.
 
