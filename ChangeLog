@@ -1,3 +1,8 @@
+2012-11-16  Andrej Lajovic  <natrij@gmail.com>
+
+	[BZ #14672]
+	* iconv/iconv_prog.c (main): Fix -c handling of '/'.
+
 2012-11-16  David S. Miller  <davem@davemloft.net>
 
 	* sysdeps/ieee754/ldbl-128/s_log1pl.c (__log1pl): If xm1 is

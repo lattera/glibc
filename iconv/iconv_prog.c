@@ -1,5 +1,5 @@
 /* Convert text in given files from the specified from-set to the to-set.
-   Copyright (C) 1998-2011, 2012 Free Software Foundation, Inc.
+   Copyright (C) 1998-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -155,7 +155,7 @@ main (int argc, char *argv[])
       if (*errhand == '/')
 	{
 	  --nslash;
-	  errhand = strchrnul (errhand, '/');
+	  errhand = strchrnul (errhand + 1, '/');
 
 	  if (*errhand == '/')
 	    {
