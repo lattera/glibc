@@ -1,6 +1,7 @@
 #include <unistd.h>
 
-static void init (void) __attribute__ ((constructor));
+/* Give init non-default priority so that it runs before init_array.  */
+static void init (void) __attribute__ ((constructor (1000)));
 
 static void
 init (void)
@@ -8,7 +9,8 @@ init (void)
   write (STDOUT_FILENO, "init\n", 5);
 }
 
-static void fini (void) __attribute__ ((destructor));
+/* Give fini the same priority as init.  */
+static void fini (void) __attribute__ ((destructor (1000)));
 
 static void
 fini (void)

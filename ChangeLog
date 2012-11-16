@@ -1,3 +1,9 @@
+2012-11-16  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* elf/tst-array1.c (init): Set constructor priority to 1000.
+	(fini): Set destructor priority to 1000.
+	* elf/tst-array2dep.c: Likewise.
+
 2012-11-16  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	[BZ #11741]
