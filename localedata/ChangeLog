@@ -1,5 +1,11 @@
 2012-11-16  Andreas Jaeger  <aj@suse.de>
 
+	[BZ # 14828]
+	* locales/ayc_PE: Add Aymara locale for Peru
+	contributed by Chris Leonard <cjl@sugarlabs.org> and
+	Amos Batto <amosbatto@yahoo.com>.
+	* SUPPORTED (SUPPORTED-LOCALES): Add ayc_PE.
+
 	[BZ # 14501]
 	* locales/nhn_MX: Add Central Nahuatl locale for Mexico,
 	contributed by Jorge Becerril <jrbecster@gmail.com>.
