@@ -1,5 +1,7 @@
 2012-11-17  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/unix/sysv/linux/fxstatat.c: Include <string.h>.
+
 	* elf/dl-runtime.c [!ELF_MACHINE_NO_PLT]: Make code unconditional.
 
 	* posix/getconf-speclist.c: New file.
