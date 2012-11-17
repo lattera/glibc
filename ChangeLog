@@ -1,5 +1,7 @@
 2012-11-17  Joseph Myers  <joseph@codesourcery.com>
 
+	* elf/dl-runtime.c [!ELF_MACHINE_NO_PLT]: Make code unconditional.
+
 	* posix/getconf-speclist.c: New file.
 	* posix/posix-envs.def: Likewise.
 	* posix/confstr.c (START_ENV_GROUP): New macro.

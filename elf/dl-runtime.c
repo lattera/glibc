@@ -56,7 +56,6 @@
    to that address.  Future calls will bounce directly from the PLT to the
    function.  */
 
-#ifndef ELF_MACHINE_NO_PLT
 DL_FIXUP_VALUE_TYPE
 __attribute ((noinline)) ARCH_FIXUP_ATTRIBUTE
 _dl_fixup (
@@ -150,9 +149,8 @@ _dl_fixup (
 
   return elf_machine_fixup_plt (l, result, reloc, rel_addr, value);
 }
-#endif
 
-#if !defined PROF && !defined ELF_MACHINE_NO_PLT && !__BOUNDED_POINTERS__
+#if !defined PROF && !__BOUNDED_POINTERS__
 DL_FIXUP_VALUE_TYPE
 __attribute ((noinline)) ARCH_FIXUP_ATTRIBUTE
 _dl_profile_fixup (
@@ -437,7 +435,7 @@ _dl_profile_fixup (
   return value;
 }
 
-#endif /* PROF && ELF_MACHINE_NO_PLT */
+#endif /* PROF */
 
 
 #include <stdio.h>
