@@ -1,3 +1,12 @@
+2012-11-17  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/mips/bits/atomic.h
+	(__arch_compare_and_exchange_bool_8_int): Mark __PREV variable
+	with __attribute__ ((unused)).
+	(__arch_compare_and_exchange_bool_16_int): Likewise.
+	(__arch_compare_and_exchange_bool_32_int): Likewise.
+	(__arch_compare_and_exchange_bool_64_int): Likewise.
+
 2012-11-06  Maxim Kuvyrkov  <maxim@codesourcery.com>
 
         * sysdeps/mips/memmove.c: New file.  Use memcpy for forward memmove.
