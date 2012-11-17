@@ -1,3 +1,10 @@
+2012-11-17  David S. Miller  <davem@davemloft.net>
+
+	[BZ #14811]
+	* sysdeps/ieee754/ldbl-128/e_powl.c (__ieee754_powl): Saturate
+	nonzero exponents with absolute value below 0x1p-128 to +/-
+	0x1p-128.
+
 2012-11-17  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/fxstatat.c: Include <string.h>.
