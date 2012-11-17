@@ -1,3 +1,27 @@
+2012-11-17  Joseph Myers  <joseph@codesourcery.com>
+
+	* posix/getconf-speclist.c: New file.
+	* posix/posix-envs.def: Likewise.
+	* posix/confstr.c (START_ENV_GROUP): New macro.
+	(END_ENV_GROUP): Likewise.
+	(KNOWN_ABSENT_ENVIRONMENT): Likewise.
+	(KNOWN_PRESENT_ENV_STRING): Likewise.
+	(KNOWN_PRESENT_ENVIRONMENT): Likewise.
+	(UNKNOWN_ENVIRONMENT): Likewise.
+	(confstr): Include posix-envs.def instead of handling
+	_CS_V7_WIDTH_RESTRICTED_ENVS, _CS_V6_WIDTH_RESTRICTED_ENVS and
+	_CS_V5_WIDTH_RESTRICTED_ENVS directly here.
+	* sysdeps/posix/sysconf.c (START_ENV_GROUP): New macro.
+	(END_ENV_GROUP): Likewise.
+	(KNOWN_ABSENT_ENVIRONMENT): Likewise.
+	(KNOWN_PRESENT_ENVIRONMENT): Likewise.
+	(UNKNOWN_ENVIRONMENT): Likewise.
+	(__sysconf): Include posix-envs.def instead of handling associated
+	cases directly here.
+	* posix/Makefile ($(objpfx)getconf.speclist): Generate by
+	preprocessing getconf-speclist.c rather than running getconf or
+	generating empty file.
+
 2012-11-16  Pino Toscano  <toscano.pino@tiscali.it>
 
 	* scripts/check-local-headers.sh: Ignore 'mach' headers.

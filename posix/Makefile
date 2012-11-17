@@ -298,15 +298,7 @@ $(inst_libexecdir)/getconf: $(inst_bindir)/getconf \
 	  mv -f $@/$$spec.new $@/$$spec; \
 	done < $(objpfx)getconf.speclist
 
-$(objpfx)getconf.speclist: $(objpfx)getconf
-ifeq (no,$(cross-compiling))
-	LC_ALL=C GETCONF_DIR=/dev/null \
-	$(run-program-prefix) $< _POSIX_V7_WIDTH_RESTRICTED_ENVS > $@.new
-	LC_ALL=C GETCONF_DIR=/dev/null \
-	$(run-program-prefix) $< _POSIX_V6_WIDTH_RESTRICTED_ENVS >> $@.new
-	LC_ALL=C GETCONF_DIR=/dev/null \
-	$(run-program-prefix) $< _XBS5_WIDTH_RESTRICTED_ENVS >> $@.new
-else
-	> $@.new
-endif
+$(objpfx)getconf.speclist: getconf-speclist.c posix-envs.def
+	$(compile.c) -E -o - \
+	    | sed -n -e '/@@@PRESENT_/s/@@@PRESENT_//p' > $@.new
 	mv -f $@.new $@

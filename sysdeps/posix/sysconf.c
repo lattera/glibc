@@ -790,80 +790,31 @@ __sysconf (name)
       return -1;
 #endif
 
-    case _SC_XBS5_ILP32_OFF32:
-#ifdef _XBS5_ILP32_OFF32
-      return _XBS5_ILP32_OFF32;
-#else
-      return __sysconf_check_spec ("ILP32_OFF32");
-#endif
-    case _SC_XBS5_ILP32_OFFBIG:
-#ifdef _XBS5_ILP32_OFFBIG
-      return _XBS5_ILP32_OFFBIG;
-#else
-      return __sysconf_check_spec ("ILP32_OFFBIG");
-#endif
-    case _SC_XBS5_LP64_OFF64:
-#ifdef _XBS5_LP64_OFF64
-      return _XBS5_LP64_OFF64;
-#else
-      return __sysconf_check_spec ("LP64_OFF64");
-#endif
-    case _SC_XBS5_LPBIG_OFFBIG:
-#ifdef _XBS5_LPBIG_OFFBIG
-      return _XBS5_LPBIG_OFFBIG;
-#else
-      return __sysconf_check_spec ("LPBIG_OFFBIG");
-#endif
+#define START_ENV_GROUP(VERSION)		\
+      /* Empty.  */
 
-    case _SC_V6_ILP32_OFF32:
-#ifdef _POSIX_V6_ILP32_OFF32
-      return _POSIX_V6_ILP32_OFF32;
-#else
-      return __sysconf_check_spec ("ILP32_OFF32");
-#endif
-    case _SC_V6_ILP32_OFFBIG:
-#ifdef _POSIX_V6_ILP32_OFFBIG
-      return _POSIX_V6_ILP32_OFFBIG;
-#else
-      return __sysconf_check_spec ("ILP32_OFFBIG");
-#endif
-    case _SC_V6_LP64_OFF64:
-#ifdef _POSIX_V6_LP64_OFF64
-      return _POSIX_V6_LP64_OFF64;
-#else
-      return __sysconf_check_spec ("LP64_OFF64");
-#endif
-    case _SC_V6_LPBIG_OFFBIG:
-#ifdef _POSIX_V6_LPBIG_OFFBIG
-      return _POSIX_V6_LPBIG_OFFBIG;
-#else
-      return __sysconf_check_spec ("LPBIG_OFFBIG");
-#endif
+#define END_ENV_GROUP(VERSION)			\
+      /* Empty.  */
 
-    case _SC_V7_ILP32_OFF32:
-#ifdef _POSIX_V7_ILP32_OFF32
-      return _POSIX_V7_ILP32_OFF32;
-#else
-      return __sysconf_check_spec ("ILP32_OFF32");
-#endif
-    case _SC_V7_ILP32_OFFBIG:
-#ifdef _POSIX_V7_ILP32_OFFBIG
-      return _POSIX_V7_ILP32_OFFBIG;
-#else
-      return __sysconf_check_spec ("ILP32_OFFBIG");
-#endif
-    case _SC_V7_LP64_OFF64:
-#ifdef _POSIX_V7_LP64_OFF64
-      return _POSIX_V7_LP64_OFF64;
-#else
-      return __sysconf_check_spec ("LP64_OFF64");
-#endif
-    case _SC_V7_LPBIG_OFFBIG:
-#ifdef _POSIX_V7_LPBIG_OFFBIG
-      return _POSIX_V7_LPBIG_OFFBIG;
-#else
-      return __sysconf_check_spec ("LPBIG_OFFBIG");
-#endif
+#define KNOWN_ABSENT_ENVIRONMENT(SC_PREFIX, ENV_PREFIX, SUFFIX)	\
+    case _SC_##SC_PREFIX##_##SUFFIX:				\
+      return _##ENV_PREFIX##_##SUFFIX;
+
+#define KNOWN_PRESENT_ENVIRONMENT(SC_PREFIX, ENV_PREFIX, SUFFIX)	\
+    case _SC_##SC_PREFIX##_##SUFFIX:					\
+      return _##ENV_PREFIX##_##SUFFIX;
+
+#define UNKNOWN_ENVIRONMENT(SC_PREFIX, ENV_PREFIX, SUFFIX)	\
+    case _SC_##SC_PREFIX##_##SUFFIX:				\
+      return __sysconf_check_spec (#SUFFIX);
+
+#include <posix/posix-envs.def>
+
+#undef START_ENV_GROUP
+#undef END_ENV_GROUP
+#undef KNOWN_ABSENT_ENVIRONMENT
+#undef KNOWN_PRESENT_ENVIRONMENT
+#undef UNKNOWN_ENVIRONMENT
 
     case _SC_XOPEN_LEGACY:
       return _XOPEN_LEGACY;
