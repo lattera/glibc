@@ -69,8 +69,6 @@
 # define _DOCARGS_2(n)	DOCARGS_0 move.l n+4(%sp), %d2; _DOCARGS_1 (n)
 # define UNDOCARGS_2	UNDOCARGS_0
 
-/* TODO: We can optimize DOCARGS_{3, 4} by saving registers to a0 and a1
-   instead of pushing them on stack.  */
 # define DOCARGS_3	_DOCARGS_3 (12)
 # define _DOCARGS_3(n)	move.l %d3, -(%sp);				\
   cfi_adjust_cfa_offset (4); cfi_rel_offset (%d3, 0);			\
@@ -86,9 +84,11 @@
   cfi_adjust_cfa_offset (-4); cfi_restore (%d4);
 
 # define DOCARGS_5	_DOCARGS_5 (20)
-# define _DOCARGS_5(n)	move.l %d5, %a1; cfi_register (%d5, a1); \
-  move.l n(%sp), %d5; _DOCARGS_4 (n-4)
-# define UNDOCARGS_5	UNDOCARGS_4 move.l %a1, %d5; cfi_restore (%d5);
+# define _DOCARGS_5(n)	move.l %d5, -(%sp);			\
+  cfi_adjust_cfa_offset (4); cfi_rel_offset (%d5, 0);		\
+  move.l n+4(%sp), %d5; _DOCARGS_4 (n)
+# define UNDOCARGS_5	UNDOCARGS_4 move.l (%sp)+, %d5; \
+  cfi_adjust_cfa_offset (-4); cfi_restore (%d5);
 
 # define DOCARGS_6	_DOCARGS_6 (24)
 # define _DOCARGS_6(n)	move.l n(%sp), %a0; _DOCARGS_5 (n-4)
