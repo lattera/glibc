@@ -809,6 +809,7 @@ static long double Y0_2D[NY0_2D + 1] = {
  /* 1.000000000000000000000000000000000000000E0 */
 };
 
+static const long double U0 = -7.3804295108687225274343927948483016310862e-02L;
 
 /* Bessel function of the second kind, order zero.  */
 
@@ -831,6 +832,8 @@ long double
       return -HUGE_VALL + x;
     }
   xx = fabsl (x);
+  if (xx <= 0x1p-57)
+    return U0 + TWOOPI * __ieee754_logl (x);
   if (xx <= 2.0L)
     {
       /* 0 <= x <= 2 */

@@ -838,6 +838,8 @@ __ieee754_y1l (long double x)
       return -HUGE_VALL + x;
     }
   xx = fabsl (x);
+  if (xx <= 0x1p-114)
+    return -TWOOPI / x;
   if (xx <= 2.0L)
     {
       /* 0 <= x <= 2 */

@@ -138,7 +138,7 @@ __ieee754_y0f(float x)
 		}
 		return z;
 	}
-	if(ix<=0x32000000) {	/* x < 2**-27 */
+	if(ix<=0x39800000) {	/* x < 2**-13 */
 	    return(u00 + tpi*__ieee754_logf(x));
 	}
 	z = x*x;

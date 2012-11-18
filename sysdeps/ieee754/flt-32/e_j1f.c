@@ -133,7 +133,7 @@ __ieee754_y1f(float x)
 		}
 		return z;
 	}
-	if(__builtin_expect(ix<=0x24800000, 0)) {    /* x < 2**-54 */
+	if(__builtin_expect(ix<=0x33000000, 0)) {    /* x < 2**-25 */
 	    return(-tpi/x);
 	}
 	z = x*x;

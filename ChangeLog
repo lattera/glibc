@@ -1,3 +1,20 @@
+2012-11-18  David S. Miller  <davem@davemloft.net>
+
+	With help from Joseph Myers.
+	* sysdeps/ieee754/flt-32/e_j0f.c (__ieee754_y0f): Adjust tinyness
+	cutoff to 2**-13.
+	* sysdeps/ieee754/flt-32/e_j1f.c (__ieee754_y1f): Adjust tinyness
+	cutoff to 2**-25.
+	* sysdeps/ieee754/ldbl-128/e_j0l.c (U0): New constant.
+	( __ieee754_y0l): Avoid arithmetic underflow when 'x' is very
+	small.
+	* sysdeps/ieee754/ldbl-128/e_j1l.c (__ieee754_y1l): Likewise.
+	* math/libm-test.inc (y0_test): New tests.
+	(y1_test): New tests.
+	* sysdeps/i386/fpu/libm-test-ulps: Update.
+	* sysdeps/x86_64/fpu/libm-test-ulps: Update.
+	* sysdeps/sparc/fpu/libm-test-ulps: Update.
+
 2012-11-18  Andreas Schwab  <schwab@linux-m68k.org>
 
 	* configure.in (libc_cv_ld_gnu_indirect_function): Use .quad on
