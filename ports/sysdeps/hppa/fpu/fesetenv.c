@@ -40,7 +40,7 @@ fesetenv (const fenv_t *envp)
 			    | (FE_ALL_EXCEPT << 27)
 			    | FE_DOWNWARD);
   if (envp == FE_DFL_ENV)
-    ;
+    temp.env.__status_word = 0;
   else if (envp == FE_NOMASK_ENV)
     temp.env.__status_word |= FE_ALL_EXCEPT;
   else

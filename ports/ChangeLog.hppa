@@ -1,5 +1,8 @@
 2012-11-18  Carlos O'Donell  <carlos@systemhalted.org>
 
+	* sysdeps/hppa/get-rounding-mode.h: New file.
+	* sysdeps/hppa/fpu/fegetround.c: Use get_rounding_mode.
+
 	* ports/sysdeps/hppa/fpu/fpu_control.h: New file.
 
 	* ports/sysdeps/hppa/__longjmp.S: Removed.
