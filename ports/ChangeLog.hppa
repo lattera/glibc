@@ -1,3 +1,11 @@
+2012-11-18  Carlos O'Donell  <carlos@systemhalted.org>
+
+	* ports/sysdeps/hppa/__longjmp.S: Removed.
+	* ports/sysdeps/hppa/__longjmp.c: New file.
+	* ports/sysdeps/unix/sysv/linux/hppa/____longjmp_chk.c: New file.
+	* ports/sysdeps/hppa/bits/setjmp.h: Use union for __jmp_buf.
+	* ports/sysdeps/hppa/setjmp.S: Comment byte offsets and padding.
+
 2012-11-05  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #14805]

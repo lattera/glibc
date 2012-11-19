@@ -1,4 +1,4 @@
-/* Copyright (C) 2000, 2005, 2006 Free Software Foundation, Inc.
+/* Copyright (C) 2000-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -23,13 +23,38 @@
 # error "Never include <bits/setjmp.h> directly; use <setjmp.h> instead."
 #endif
 
-/* The previous bits/setjmp.h had __jmp_buf defined as a structure.
-   We use an array of 'double' instead, to make writing the assembler
-   easier, and to ensure proper alignment. Naturally, user code should
-   not depend on either representation. */
-
 #ifndef	_ASM
-typedef double __jmp_buf[21];
+/* The entire jump buffer must be 168 bytes long and laid
+   out in exactly as follows for ABI consistency.
+   * 20 x 32-bit gprs, with 8-bytes of padding, arranged so:
+     - r3 (callee saves)
+     - 4 bytes of padding.
+     - r4-r18 (callee saves)
+     - r19 (PIC register)
+     - r27 (static link register)
+     - r30 (stcack pointer)
+     - r2 (return pointer)
+     - 4 bytes of padding.
+   * 10 x 64-bit fprs in this order:
+     - fr12-fr21 (callee saves)
+   Note: We have 8 bytes of free space for future uses.  */
+typedef union
+  {
+    struct __jmp_buf_internal_tag
+      {
+	int __r3;
+	int __pad0;
+	int __r4_r18[15];
+	int __r19;
+	int __r27;
+	int __sp;
+	int __rp;
+	int __pad1;
+	double __fr12_fr21[10];
+      } __jmp_buf;
+    /* Legacy definition. Ensures double alignment for fpsrs.  */
+    double __align[21];
+  } __jmp_buf[1];
 #endif
 
 #endif	/* bits/setjmp.h */
