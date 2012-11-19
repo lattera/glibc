@@ -97,6 +97,9 @@ print_entry (const char *lib, int flag, unsigned int osversion,
     case FLAG_ARM_LIBHF:
       fputs (",hard-float", stdout);
       break;
+    case FLAG_AARCH64_LIB64:
+      fputs (",AArch64", stdout);
+      break;
     case 0:
       break;
     default:
