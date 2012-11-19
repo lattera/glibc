@@ -73,7 +73,9 @@ typedef __uid_t uid_t;
 /* We need `struct timespec' later on.  */
 # define __need_timespec
 # include <time.h>
+#endif
 
+#if defined __USE_POSIX199309 || defined __USE_XOPEN_EXTENDED
 /* Get the `siginfo_t' type plus the needed symbols.  */
 # include <bits/siginfo.h>
 #endif
