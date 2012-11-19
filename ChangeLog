@@ -1,5 +1,9 @@
 2012-11-19  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #14856]
+	* posix/bits/posix1_lim.h [!__USE_XOPEN2K] (_POSIX_TZNAME_MAX):
+	Define to 3.
+
 	* conform/data/errno.h-data [POSIX] (EADDRINUSE): Do not expect.
 	[POSIX] (EADDRNOTAVAIL): Likewise.
 	[POSIX] (EAFNOSUPPORT): Likewise.

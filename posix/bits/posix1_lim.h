@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-1993,96,98,2000-2003,2004 Free Software Foundation, Inc.
+/* Copyright (C) 1991-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -134,7 +134,11 @@
 #define	_POSIX_TTY_NAME_MAX	9
 
 /* Maximum length of a timezone name (element of `tzname').  */
-#define	_POSIX_TZNAME_MAX	6
+#ifdef __USE_XOPEN2K
+# define _POSIX_TZNAME_MAX	6
+#else
+# define _POSIX_TZNAME_MAX	3
+#endif
 
 #if !defined __USE_XOPEN2K || defined __USE_GNU
 /* Maximum number of connections that can be queued on a socket.  */
