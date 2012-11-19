@@ -31,7 +31,7 @@ macro-constant NULL == 0
 macro-int-constant LC_ALL
 macro-int-constant LC_COLLATE
 macro-int-constant LC_CTYPE
-#if !defined ISO && !defined ISO99 && !defined ISO11
+#if !defined ISO && !defined ISO99 && !defined ISO11 && !defined POSIX
 macro-int-constant LC_MESSAGES
 #endif
 macro-int-constant LC_MONETARY

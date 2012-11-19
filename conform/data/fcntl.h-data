@@ -18,7 +18,11 @@ constant F_RDLCK
 constant F_UNLCK
 constant F_WRLCK
 
-#if !defined POSIX
+#if defined POSIX
+allow SEEK_SET
+allow SEEK_CUR
+allow SEEK_END
+#else
 constant SEEK_SET
 constant SEEK_CUR
 constant SEEK_END
@@ -89,9 +93,13 @@ element {struct flock} off_t l_start
 element {struct flock} off_t l_len
 element {struct flock} pid_t l_pid
 
+#if !defined POSIX
+# if !defined UNIX98
 type mode_t
+# endif
 type off_t
 type pid_t
+#endif
 
 function int creat (const char*, mode_t)
 function int fcntl (int, int, ...)
@@ -121,16 +129,14 @@ constant AT_REMOVEDIR
 function int openat(int, const char*, int, ...)
 #endif
 
+#if !defined POSIX
 allow-header sys/stat.h
 allow-header unistd.h
+#endif
 
 allow l_*
 allow F_*
 allow O_*
 allow S_*
 allow *_t
-
-allow timespec
-allow tv_nsec
-allow tv_sec
 #endif

@@ -1,5 +1,60 @@
 2012-11-19  Joseph Myers  <joseph@codesourcery.com>
 
+	* conform/data/errno.h-data [POSIX] (EADDRINUSE): Do not expect.
+	[POSIX] (EADDRNOTAVAIL): Likewise.
+	[POSIX] (EAFNOSUPPORT): Likewise.
+	[POSIX] (EALREADY): Likewise.
+	[POSIX] (ECONNABORTED): Likewise.
+	[POSIX] (ECONNREFUSED): Likewise.
+	[POSIX] (ECONNRESET): Likewise.
+	[POSIX] (EDESTADDRREQ): Likewise.
+	[POSIX] (EDQUOT): Likewise.
+	[POSIX] (EHOSTUNREACH): Likewise.
+	[POSIX] (EIDRM): Likewise.
+	[POSIX] (EISCONN): Likewise.
+	[POSIX] (ELOOP): Likewise.
+	[POSIX] (EMULTIHOP): Likewise.
+	[POSIX] (ENETDOWN): Likewise.
+	[POSIX] (ENETUNREACH): Likewise.
+	[POSIX] (ENOBUFS): Likewise.
+	[POSIX] (ENODATA): Likewise.
+	[POSIX] (ENOLINK): Likewise.
+	[POSIX] (ENOMSG): Likewise.
+	[POSIX] (ENOPROTOOPT): Likewise.
+	[POSIX] (ENOSR): Likewise.
+	[POSIX] (ENOSTR): Likewise.
+	[POSIX] (ENOTCONN): Likewise.
+	[POSIX] (ENOTSOCK): Likewise.
+	[POSIX] (EOPNOTSUPP): Likewise.
+	[POSIX] (EOVERFLOW): Likewise.
+	[POSIX] (EPROTO): Likewise.
+	[POSIX] (EPROTONOSUPPORT): Likewise.
+	[POSIX] (EPROTOTYPE): Likewise.
+	[POSIX] (ESTALE): Likewise.
+	[POSIX] (ETIME): Likewise.
+	[POSIX] (ETXTBSY): Likewise.
+	[POSIX] (EWOULDBLOCK): Likewise.
+	[!ISO && !ISO99 && !ISO11] (E*): Do not allow.
+	* conform/data/fcntl.h-data [POSIX] (SEEK_SET): Allow.
+	[POSIX] (SEEK_CUR): Likewise.
+	[POSIX] (SEEK_END): Likewise.
+	[POSIX || UNIX98] (mode_t): Do not require.
+	[POSIX] (off_t): Likewise.
+	[POSIX] (pid_t): Likewise.
+	[POSIX] (sys/stat.h): Do not allow header.
+	[POSIX] (unistd.h): Likewise.
+	[!ISO && !ISO99 && !ISO11] (timespec): Do not allow.
+	[!ISO && !ISO99 && !ISO11] (tv_nsec): Likewise.
+	[!ISO && !ISO99 && !ISO11] (tv_sec): Likewise.
+	* conform/data/locale.h-data [POSIX] (LC_MESSAGES): Do not
+	require.
+	* conform/data/mqueue.h-data [!ISO && !ISO99 && !ISO11] (struct
+	sigevent): Specify elements.
+	[XOPEN2K8 || POSIX2008] (struct sigevent): Remove duplicate type
+	entry.
+	[!ISO && !ISO99 && !ISO11] (mq_*): Allow.
+	[!ISO && !ISO99 && !ISO11] (MQ_*): Likewise.
+
 	* conform/data/cpio.h-data [POSIX]: Disable whole file.
 	* conform/data/glob.h-data [POSIX] (GLOB_NOSYS): Do not expect.
 	* conform/data/limits.h-data [!ISO && !ISO99 && !ISO11]
