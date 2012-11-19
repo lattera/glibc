@@ -364,11 +364,16 @@ muntrace ()
   if (mallstream == NULL)
     return;
 
-  fprintf (mallstream, "= End\n");
-  fclose (mallstream);
+  /* Do the reverse of what done in mtrace: first reset the hooks and
+     MALLSTREAM, and only after that write the trailer and close the
+     file.  */
+  FILE *f = mallstream;
   mallstream = NULL;
   __free_hook = tr_old_free_hook;
   __malloc_hook = tr_old_malloc_hook;
   __realloc_hook = tr_old_realloc_hook;
   __memalign_hook = tr_old_memalign_hook;
+
+  fprintf (f, "= End\n");
+  fclose (f);
 }

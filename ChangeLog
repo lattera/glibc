@@ -1,5 +1,8 @@
 2012-11-19  Pino Toscano  <toscano.pino@tiscali.it>
 
+	* malloc/mtrace.c (muntrace): Reset MALLSTREAM and the hooks before
+	finalizing MALLSTREAM.
+
 	* sysdeps/mach/hurd/syncfs.c: New file.
 
 2012-11-19  Siddhesh Poyarekar  <siddhesh@redhat.com>
