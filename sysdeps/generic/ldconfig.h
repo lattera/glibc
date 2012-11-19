@@ -1,4 +1,4 @@
-/* Copyright (C) 1999,2000,2002,2003,2007,2012 Free Software Foundation, Inc.
+/* Copyright (C) 1999-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Andreas Jaeger <aj@suse.de>, 1999.
 
@@ -34,6 +34,7 @@
 #define FLAG_MIPS64_LIBN32	0x0600
 #define FLAG_MIPS64_LIBN64	0x0700
 #define FLAG_X8664_LIBX32	0x0800
+#define FLAG_ARM_LIBHF		0x0900
 
 /* Name of auxiliary cache.  */
 #define _PATH_LDCONFIG_AUX_CACHE "/var/cache/ldconfig/aux-cache"

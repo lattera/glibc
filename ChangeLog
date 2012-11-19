@@ -1,3 +1,9 @@
+2012-11-19  Steve McIntyre  <steve.mcintyre@linaro.org>
+
+	* sysdeps/generic/ldconfig.h (FLAG_ARM_LIBHF): New macro.
+	* elf/cache.c (print_entry): Print ",hard-float" for
+	FLAG_ARM_LIBHF.
+
 2012-11-18  David S. Miller  <davem@davemloft.net>
 
 	With help from Joseph Myers.
