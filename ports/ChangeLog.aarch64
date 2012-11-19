@@ -1,3 +1,34 @@
+2012-11-19  Marcus Shawcroft  <marcus.shawcroft@linaro.org>
+
+	* sysdeps/aarch64/fpu/s_ceil.c: New file.
+	* sysdeps/aarch64/fpu/s_ceilf.c: New file.
+	* sysdeps/aarch64/fpu/s_floor.c: New file.
+	* sysdeps/aarch64/fpu/s_floorf.c: New file.
+	* sysdeps/aarch64/fpu/s_fma.c: Replace file.
+	* sysdeps/aarch64/fpu/s_fmaf.c: New file.
+	* sysdeps/aarch64/fpu/s_fmax.c: New file.
+	* sysdeps/aarch64/fpu/s_fmaxf.c: New file.
+	* sysdeps/aarch64/fpu/s_fmin.c: New file.
+	* sysdeps/aarch64/fpu/s_fminf.c: New file.
+	* sysdeps/aarch64/fpu/s_frint.x: New file.
+	* sysdeps/aarch64/fpu/s_frintf.x: New file.
+	* sysdeps/aarch64/fpu/s_llrint.c: New file.
+	* sysdeps/aarch64/fpu/s_llrintf.c: New file.
+	* sysdeps/aarch64/fpu/s_llround.c: New file.
+	* sysdeps/aarch64/fpu/s_llroundf.c: New file.
+	* sysdeps/aarch64/fpu/s_lrint.c: New file.
+	* sysdeps/aarch64/fpu/s_lrintf.c: New file.
+	* sysdeps/aarch64/fpu/s_lround.c: New file.
+	* sysdeps/aarch64/fpu/s_lroundf.c: New file.
+	* sysdeps/aarch64/fpu/s_nearbyint.c: New file.
+	* sysdeps/aarch64/fpu/s_nearbyintf.c: New file.
+	* sysdeps/aarch64/fpu/s_rint.c: New file.
+	* sysdeps/aarch64/fpu/s_rintf.c: New file.
+	* sysdeps/aarch64/fpu/s_round.c: New file.
+	* sysdeps/aarch64/fpu/s_roundf.c: New file.
+	* sysdeps/aarch64/fpu/s_trunc.c: New file.
+	* sysdeps/aarch64/fpu/s_truncf.c: New file.
+
 2012-11-09  Marcus Shawcroft  <marcus.shawcroft@linaro.org>
 
 	* sysdeps/aarch64/Implies: New file.

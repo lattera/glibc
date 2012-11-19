@@ -1,4 +1,4 @@
-/* Copyright (C) 1996-2012 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 2011, 2012 Free Software Foundation, Inc.
 
    This file is part of the GNU C Library.
 
@@ -19,29 +19,35 @@
 #include <math.h>
 
 #ifndef FUNC
-#define FUNC fma
+#define FUNC lrint
 #endif
 
-#ifndef TYPE
-#define TYPE double
-#define REGS "d"
+#ifndef ITYPE
+#define ITYPE double
+#define IREGS "d"
 #else
-#ifndef REGS
-#error REGS not defined
+#ifndef IREGS
+#error IREGS not defined
 #endif
 #endif
+
+#ifndef OTYPE
+#define OTYPE long int
+#endif
+
+#define OREGS "x"
 
 #define __CONCATX(a,b) __CONCAT(a,b)
 
-TYPE
-__CONCATX(__,FUNC) (x, y, z)
-     TYPE x;
-     TYPE y;
-     TYPE z;
+OTYPE
+__CONCATX(__,FUNC) (x)
+     ITYPE x;
 {
-  TYPE result;
-  asm ( "fmadd" "\t%" REGS "0, %" REGS "1, %" REGS "2, %" REGS "3"
-        : "=w" (result) : "w" (x), "w" (y), "w" (z) );
+  OTYPE result;
+  ITYPE temp;
+  asm ( "frintx" "\t%" IREGS "1, %" IREGS "2\n\t"
+        "fcvtzs" "\t%" OREGS "0, %" IREGS "1"
+        : "=r" (result), "=w" (temp) : "w" (x) );
   return result;
 }
 

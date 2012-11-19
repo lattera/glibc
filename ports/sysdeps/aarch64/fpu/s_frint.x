@@ -1,4 +1,4 @@
-/* Copyright (C) 1996-2012 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 2011, 2012 Free Software Foundation, Inc.
 
    This file is part of the GNU C Library.
 
@@ -19,7 +19,7 @@
 #include <math.h>
 
 #ifndef FUNC
-#define FUNC fma
+#error FUNC not defined
 #endif
 
 #ifndef TYPE
@@ -31,17 +31,19 @@
 #endif
 #endif
 
+#ifndef INSN
+#error INSN not defined
+#endif
+
 #define __CONCATX(a,b) __CONCAT(a,b)
 
 TYPE
-__CONCATX(__,FUNC) (x, y, z)
+__CONCATX(__,FUNC) (x)
      TYPE x;
-     TYPE y;
-     TYPE z;
 {
   TYPE result;
-  asm ( "fmadd" "\t%" REGS "0, %" REGS "1, %" REGS "2, %" REGS "3"
-        : "=w" (result) : "w" (x), "w" (y), "w" (z) );
+  asm ( INSN "\t%" REGS "0, %" REGS "1" :
+	"=w" (result) : "w" (x) );
   return result;
 }
 
