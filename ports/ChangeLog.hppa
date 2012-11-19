@@ -1,5 +1,7 @@
 2012-11-18  Carlos O'Donell  <carlos@systemhalted.org>
 
+	* sysdeps/hppa/fpu/fesetenv.c: Reset FPU to default for FE_DFL_ENV.
+
 	* sysdeps/hppa/get-rounding-mode.h: New file.
 	* sysdeps/hppa/fpu/fegetround.c: Use get_rounding_mode.
 
