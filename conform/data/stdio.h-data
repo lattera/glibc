@@ -144,7 +144,7 @@ function void rewind (FILE*)
 function int scanf (const char*, ...)
 function void setbuf (FILE*, char*)
 function int setvbuf (FILE*, char*, int, size_t)
-#if !defined ISO && !defined POSIX
+#if !defined ISO && !defined POSIX && !defined XPG3 && !defined XPG4
 function int snprintf (char*, size_t, const char*, ...)
 #endif
 function int sprintf (char *, const char *, ...)
@@ -166,7 +166,7 @@ function int vprintf (const char*, va_list)
 #if !defined ISO && !defined POSIX && !defined XPG3 && !defined XPG4 && !defined UNIX98
 function int vscanf (const char*, va_list)
 #endif
-#if !defined ISO && !defined POSIX
+#if !defined ISO && !defined POSIX && !defined XPG3 && !defined XPG4
 function int vsnprintf (char*, size_t, const char*, va_list)
 #endif
 function int vsprintf (char*, const char*, va_list)

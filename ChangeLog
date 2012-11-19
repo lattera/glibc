@@ -1,5 +1,44 @@
 2012-11-19  Joseph Myers  <joseph@codesourcery.com>
 
+	* conform/data/fcntl.h-data [XPG3 || XPG4] (O_DSYNC): Do not
+	expect.
+	[XPG3 || XPG4] (O_RSYNC): Likewise.
+	* conform/data/signal.h-data [XPG3 || XPG4] (pthread_kill):
+	Likewise.
+	[XPG3 || XPG4] (pthread_sigmask): Likewise.
+	[XPG3 || XPG4] (sigqueue): Likewise.
+	[XPG3 || XPG4] (sigtimedwait): Likewise.
+	[XPG3 || XPG4] (sigwaitinfo): Likewise.
+	* conform/data/stdio.h-data [XPG3 || XPG4] (snprintf): Likewise.
+	[XPG3 || XPG4] (vsnprintf): Likewise.
+	* conform/data/sys/stat.h-data [XPG3 || XPG4] (blkcnt_t):
+	Likewise.
+	[XPG3 || XPG4] (blksize_t): Likewise.
+	* conform/data/time.h-data [XPG3 || XPG4] (struct timespec):
+	Likewise.
+	[XPG3 || XPG4] (CLOCK_PROCESS_CPUTIME_ID): Likewise.
+	[XPG3 || XPG4] (CLOCK_THREAD_CPUTIME_ID): Likewise.
+	[XPG3 || XPG4] (struct itimerspec): Likewise.
+	[XPG3 || XPG4] (CLOCK_REALTIME): Likewise.
+	[XPG3 || XPG4] (TIMER_ABSTIME): Likewise.
+	[XPG3 || XPG4] (CLOCK_MONOTONIC): Likewise.
+	[XPG3 || XPG4] (clockid_t): Likewise.
+	[XPG3 || XPG4] (timer_t): Likewise.
+	[XPG3 || XPG4] (clock_getres): Likewise.
+	[XPG3 || XPG4] (clock_gettime): Likewise.
+	[XPG3 || XPG4] (clock_settime): Likewise.
+	[XPG3 || XPG4] (nanosleep): Likewise.
+	[XPG3 || XPG4] (timer_create): Likewise.
+	[XPG3 || XPG4] (timer_delete): Likewise.
+	[XPG3 || XPG4] (timer_gettime): Likewise.
+	[XPG3 || XPG4] (timer_getoverrun): Likewise.
+	[XPG3 || XPG4] (timer_settime): Likewise.
+	* conform/data/unistd.h-data [XPG3 || XPG4] (fdatasync): Likewise.
+	[XPG3 || XPG4] (getlogin_r): Likewise.
+	[XPG3 || XPG4] (pread): Likewise.
+	[XPG3 || XPG4] (pthread_atfork): Likewise.
+	[XPG3 || XPG4] (pwrite): Likewise.
+
 	[BZ #14835]
 	* signal/signal.h [__USE_XOPEN_EXTENDED]: Include
 	<bits/siginfo.h>.

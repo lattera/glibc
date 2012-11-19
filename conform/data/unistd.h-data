@@ -392,7 +392,9 @@ function int fchownat (int, const char*, uid_t, gid_t, int)
 #ifndef POSIX
 function int fchdir (int)
 #endif
+#if !defined XPG3 && !defined XPG4
 function int fdatasync (int)
+#endif
 # if defined XOPEN2K8 || defined POSIX2008
 function int fexecve (int, char *const[], char *const[])
 # endif
@@ -415,7 +417,9 @@ function long gethostid (void)
 function int gethostname (char*, size_t)
 #endif
 function {char*} getlogin (void)
+#if !defined XPG3 && !defined XPG4
 function int getlogin_r (char*, size_t)
+#endif
 function int getopt (int, char*const[], const char*)
 #if defined XPG3 || defined XPG4 || defined UNIX98
 function int getpagesize (void)
@@ -452,13 +456,13 @@ function int nice (int)
 function {long int} pathconf (const char*, int)
 function int pause (void)
 function int pipe (int[2])
-#ifndef POSIX
+#if !defined POSIX && !defined XPG3 && !defined XPG4
 function ssize_t pread (int, void*, size_t, off_t)
 #endif
-#if !defined POSIX && !defined XOPEN2K && !defined XOPEN2K8 && !defined POSIX2008
+#if !defined POSIX && !defined XOPEN2K && !defined XOPEN2K8 && !defined POSIX2008 && !defined XPG3 && !defined XPG4
 function int pthread_atfork (void(*)(void), void(*)(void), void(*)(void))
 #endif
-#ifndef POSIX
+#if !defined POSIX && !defined XPG3 && !defined XPG4
 function ssize_t pwrite (int, const void*, size_t, off_t)
 #endif
 function ssize_t read (int, void*, size_t)

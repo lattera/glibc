@@ -203,8 +203,10 @@ function int kill (pid_t, int)
 # if !defined POSIX && !defined POSIX2008
 function int killpg (pid_t, int)
 # endif
+# if !defined XPG3 && !defined XPG4
 function int pthread_kill (pthread_t, int)
 function int pthread_sigmask (int, const sigset_t*, sigset_t*)
+# endif
 function int sigaction (int, const struct sigaction*, struct sigaction*)
 function int sigaddset (sigset_t*, int)
 # if !defined POSIX && !defined POSIX2008
@@ -224,7 +226,9 @@ function int sigpause (int)
 # endif
 function int sigpending (sigset_t*)
 function int sigprocmask (int, const sigset_t*, sigset_t*)
+# if !defined XPG3 && !defined XPG4
 function int sigqueue (pid_t, int, const union sigval)
+# endif
 # if !defined POSIX && !defined POSIX2008
 function int sigrelse (int)
 function void (*sigset (int, void(*)(int)))(int)
@@ -233,9 +237,13 @@ function void (*sigset (int, void(*)(int)))(int)
 function int sigstack (struct sigstack*, struct sigstack*)
 # endif
 function int sigsuspend (const sigset_t*)
+# if !defined XPG3 && !defined XPG4
 function int sigtimedwait (const sigset_t*, siginfo_t*, const struct timespec*)
+# endif
 function int sigwait (const sigset_t*, int*)
+# if !defined XPG3 && !defined XPG4
 function int sigwaitinfo (const sigset_t*, siginfo_t*)
+# endif
 # if defined XOPEN2K8 || defined POSIX2008
 function void psiginfo (const siginfo_t*, const char*)
 function void psignal (int, const char*)

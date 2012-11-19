@@ -5,7 +5,7 @@ macro CLOCKS_PER_SEC {clock_t}
 macro-int-constant TIME_UTC > 0
 #endif
 
-#if !defined ISO && !defined ISO99
+#if !defined ISO && !defined ISO99 && !defined XPG3 && !defined XPG4
 type {struct timespec}
 
 element {struct timespec} time_t tv_sec
@@ -45,6 +45,7 @@ function int timespec_get (struct timespec *, int)
 # if !defined XOPEN2K && !defined XOPEN2K8 && !defined POSIX2008
 symbol CLK_TCK
 # endif
+# if !defined XPG3 && !defined XPG4
 constant CLOCK_PROCESS_CPUTIME_ID
 constant CLOCK_THREAD_CPUTIME_ID
 
@@ -59,6 +60,7 @@ constant CLOCK_MONOTONIC
 
 type clockid_t
 type timer_t
+# endif
 
 # if defined XOPEN2K8 || defined POSIX2008
 type pid_t
@@ -74,30 +76,38 @@ function {char*} asctime_r (const struct tm*, char*)
 #if !defined POSIX && !defined XPG3 && !defined XPG4 && !defined UNIX98
 function int clock_getcpuclockid (pid_t, clockid_t*)
 #endif
+#if !defined XPG3 && !defined XPG4
 function int clock_getres (clockid_t, struct timespec*)
 function int clock_gettime (clockid_t, struct timespec*)
+#endif
 #if !defined POSIX && !defined XPG3 && !defined XPG4 && !defined UNIX98
 function int clock_nanosleep (clockid_t, int, const struct timespec*, struct timespec*)
 #endif
+#if !defined XPG3 && !defined XPG4
 function int clock_settime (clockid_t, const struct timespec*)
+#endif
 function {char*} ctime_r (const time_t*, char*)
 # if !defined POSIX && !defined POSIX2008
 function {struct tm*} getdate (const char*)
 # endif
 function {struct tm*} gmtime_r (const time_t*, struct tm*)
 function {struct tm*} localtime_r (const time_t*, struct tm*)
+# if !defined XPG3 && !defined XPG4
 function int nanosleep (const struct timespec*, struct timespec*)
+# endif
 # if defined XOPEN2K8 || defined POSIX2008
 function size_t strftime_l (char*, size_t, const char*, const struct tm*, locale_t)
 # endif
 # if !defined POSIX && !defined POSIX2008
 function {char*} strptime (const char*, const char*, struct tm*)
 # endif
+# if !defined XPG3 && !defined XPG4
 function int timer_create (clockid_t, struct sigevent*, timer_t*)
 function int timer_delete (timer_t)
 function int timer_gettime (timer_t, struct itimerspec*)
 function int timer_getoverrun (timer_t)
 function int timer_settime (timer_t, int, const struct itimerspec*, struct itimerspec*)
+# endif
 function void tzset (void)
 
 # if !defined POSIX && !defined POSIX2008

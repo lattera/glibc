@@ -30,10 +30,12 @@ constant O_NOCTTY
 constant O_TRUNC
 
 constant O_APPEND
-constant O_DSYNC
 constant O_NONBLOCK
-constant O_RSYNC
 constant O_SYNC
+#if !defined XPG3 && !defined XPG4
+constant O_DSYNC
+constant O_RSYNC
+#endif
 
 constant O_ACCMODE
 
