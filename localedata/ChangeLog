@@ -1,3 +1,8 @@
+2012-11-19  Eagle Burkut  <eagle.burkut@gmail.com>
+
+	[BZ #13759]
+	* locales/ug_CN (LC_COLLATE, LC_TIME, LC_MESSAGES): Fix entries.
+
 2012-11-16  Andreas Jaeger  <aj@suse.de>
 
 	[BZ #14368]
