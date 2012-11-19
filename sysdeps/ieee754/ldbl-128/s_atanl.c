@@ -167,6 +167,7 @@ static const long double
   q4 = 2.173623741810414221251136181221172551416E1L;
   /* q5 = 1.000000000000000000000000000000000000000E0 */
 
+static const long double huge = 1.0e4930L;
 
 long double
 __atanl (long double x)
@@ -191,6 +192,22 @@ __atanl (long double x)
 	return (x + x);
 
       /* Infinity. */
+      if (sign)
+	return -atantbl[83];
+      else
+	return atantbl[83];
+    }
+
+  if (k <= 0x3fc50000) /* |x| < 2**-58 */
+    {
+      /* Raise inexact. */
+      if (huge + x > 0.0)
+	return x;
+    }
+
+  if (k >= 0x40720000) /* |x| > 2**115 */
+    {
+      /* Saturate result to {-,+}pi/2 */
       if (sign)
 	return -atantbl[83];
       else

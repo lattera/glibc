@@ -102,6 +102,9 @@ float: 1
 ifloat: 1
 ildouble: 1
 ldouble: 1
+Test "atan2 (-max_value, -min_value) == -pi/2":
+float: 1
+ifloat: 1
 Test "atan2 (0.75, -1.0) == 2.49809154479650885165983415456218025":
 float: 1
 ifloat: 1

@@ -1187,6 +1187,8 @@ atan_test (void)
   TEST_f_f (atan, plus_infty, M_PI_2l);
   TEST_f_f (atan, minus_infty, -M_PI_2l);
   TEST_f_f (atan, nan_value, nan_value);
+  TEST_f_f (atan, max_value, M_PI_2l);
+  TEST_f_f (atan, -max_value, -M_PI_2l);
 
   TEST_f_f (atan, 1, M_PI_4l);
   TEST_f_f (atan, -1, -M_PI_4l);
@@ -1294,6 +1296,9 @@ atan2_test (void)
   TEST_ff_f (atan2, nan_value, nan_value, nan_value);
 
   TEST_ff_f (atan2, max_value, max_value, M_PI_4l);
+
+  TEST_ff_f (atan2, max_value, min_value, M_PI_2l);
+  TEST_ff_f (atan2, -max_value, -min_value, -M_PI_2l);
 
   TEST_ff_f (atan2, 0.75L, 1, 0.643501108793284386802809228717322638L);
   TEST_ff_f (atan2, -0.75L, 1.0L, -0.643501108793284386802809228717322638L);
