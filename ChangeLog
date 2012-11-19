@@ -1,3 +1,11 @@
+2012-11-19  Pino Toscano  <toscano.pino@tiscali.it>
+
+	* sysdeps/mach/hurd/ptsname.c (ptsname): Change the type of PEERNAME to
+	string_t.  Do not manually set errno.
+	(__ptsname_r): Change the type of PEERNAME to string_t, and check its
+	length with __strnlen.  Make sure to both set errno and return it on
+	failure.
+
 2012-11-19  David S. Miller  <davem@davemloft.net>
 
 	With help from Joseph Myers.
