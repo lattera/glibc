@@ -1,5 +1,7 @@
 2012-11-18  Carlos O'Donell  <carlos@systemhalted.org>
 
+	* ports/sysdeps/hppa/fpu/fpu_control.h: New file.
+
 	* ports/sysdeps/hppa/__longjmp.S: Removed.
 	* ports/sysdeps/hppa/__longjmp.c: New file.
 	* ports/sysdeps/unix/sysv/linux/hppa/____longjmp_chk.c: New file.
