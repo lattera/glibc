@@ -9,7 +9,11 @@ macro-int-constant _IONBF
 #if !defined ISO && !defined ISO99 && !defined ISO11
 constant L_ctermid
 # if !defined XOPEN2K && !defined XOPEN2K8 && !defined POSIX2008
+#  ifdef POSIX
+optional-constant L_cuserid
+#  else
 constant L_cuserid
+#  endif
 # endif
 #endif
 macro-int-constant L_tmpnam
@@ -99,7 +103,7 @@ function int getc (FILE*)
 function int getchar (void)
 #if defined POSIX || defined XOPEN2K || defined XOPEN2K8 || defined POSIX2008
 function int getc_unlocked (FILE*)
-function int getchar_unlocked ()
+function int getchar_unlocked (void)
 #endif
 #if defined XOPEN2K8 || defined POSIX2008
 function ssize_t getdelim (char**, size_t*, int, FILE*)
@@ -174,15 +178,17 @@ function int vsprintf (char*, const char*, va_list)
 function int vsscanf (const char*, const char*, va_list)
 #endif
 
-#if !defined ISO && !defined ISO99 && !defined ISO11 && !defined POSIX
-#if !defined XOPEN2K && !defined XOPEN2K8 && !defined POSIX2008
+#if !defined ISO && !defined ISO99 && !defined ISO11
+#if !defined POSIX && !defined XOPEN2K && !defined XOPEN2K8 && !defined POSIX2008
 variable {char*} optarg
 variable int opterr
 variable int optind
 variable int optopt
 #endif
 
+#if !defined POSIX
 allow-header stddef.h
+#endif
 
 allow *_t
 #endif

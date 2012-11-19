@@ -26,6 +26,7 @@ constant REG_EBRACK
 constant REG_EPAREN
 constant REG_EBRACE
 constant REG_BADBR
+constant REG_ERANGE
 constant REG_ESPACE
 constant REG_BADRPT
 # if !defined POSIX && !defined XOPEN2K8 && !defined POSIX2008

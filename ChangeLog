@@ -1,5 +1,109 @@
 2012-11-19  Joseph Myers  <joseph@codesourcery.com>
 
+	* conform/data/cpio.h-data [POSIX]: Disable whole file.
+	* conform/data/glob.h-data [POSIX] (GLOB_NOSYS): Do not expect.
+	* conform/data/limits.h-data [!ISO && !ISO99 && !ISO11]
+	(AIO_LIST_MAX): Change to AIO_LISTIO_MAX.
+	[!ISO && !ISO99 && !ISO11] (ATEXT_MAX): Remove.
+	[!ISO && !ISO99 && !ISO11 && !POSIX && !XPG3] (ATEXIT_MAX): Allow.
+	[POSIX || POSIX2008 || XPG3] (IOV_MAX): Do not allow.
+	[POSIX || POSIX2008 || XPG3] (_XOPEN_IOV_MAX): Likewise.
+	[!ISO && !ISO99 && !ISO11] (MQ_PRIO_MAX): Allow.
+	[!ISO && !ISO99 && !ISO11] (RE_DUP_MAX): Remove duplicate entry.
+	[POSIX || XPG3 || XPG4 || UNIX98] (SS_REPL_MAX): Do not allow.
+	[POSIX || XPG3 || XPG4 || UNIX98] (SYMLOOP_MAX): Likewise.
+	[POSIX || XPG3 || XPG4] (FILESIZEBITS): Likewise.
+	[POSIX || XPG3 || XPG4 || UNIX98] (POSIX_ALLOC_SIZE_MIN):
+	Likewise.
+	[POSIX || XPG3 || XPG4 || UNIX98] (POSIX_REC_INCR_XFER_SIZE):
+	Likewise.
+	[POSIX || XPG3 || XPG4 || UNIX98] (POSIX_REC_MAX_XFER_SIZE):
+	Likewise.
+	[POSIX || XPG3 || XPG4 || UNIX98] (POSIX_REC_XFER_ALIGN):
+	Likewise.
+	[POSIX || XPG3 || XPG4 || UNIX98] (SYMLINK_MAX): Likewise.
+	[POSIX || XPG3 || XPG4 || UNIX98] (_POSIX_SS_REPL_MAX): Likewise.
+	[POSIX || XPG3 || XPG4 || UNIX98] (_POSIX_SYMLINK_MAX): Likewise.
+	[POSIX || XPG3 || XPG4 || UNIX98] (_POSIX_SYMLOOP_MAX): Likewise.
+	[!ISO && !ISO99 && !ISO11] (BC_BASE_MAX): Use macro-constant.
+	Specify lower bound on value.
+	[!ISO && !ISO99 && !ISO11] (BC_DIM_MAX): Likewise.
+	[!ISO && !ISO99 && !ISO11] (BC_SCALE_MAX): Likewise.
+	[!ISO && !ISO99 && !ISO11] (BC_STRING_MAX): Likewise.
+	[!ISO && !ISO99 && !ISO11] (COLL_WEIGHTS_MAX): Likewise.
+	[!ISO && !ISO99 && !ISO11] (EXPR_NEST_MAX): Likewise.
+	[!ISO && !ISO99 && !ISO11] (RE_DUP_MAX): Likewise
+	[POSIX || XPG3 || XPG4] (CHARCLASS_NAME_MAX): Do not allow.
+	[!ISO && !ISO99 && !ISO11] (_POSIX_CLOCKRES_MIN): Specify exact
+	value.
+	[!ISO && !ISO99 && !ISO11] (_POSIX_AIO_LISTIO_MAX): Do not specify
+	as optional.
+	[!ISO && !ISO99 && !ISO11] (_POSIX_AIO_MAX): Likewise.
+	[!ISO && !ISO99 && !ISO11] (_POSIX_ARG_MAX): Likewise.
+	[!ISO && !ISO99 && !ISO11] (_POSIX_CHILD_MAX): Likewise.
+	[!ISO && !ISO99 && !ISO11] (_POSIX_DELAYTIMER_MAX): Likewise.
+	[!ISO && !ISO99 && !ISO11] (_POSIX_LINK_MAX): Likewise.
+	[!ISO && !ISO99 && !ISO11] (_POSIX_LOGIN_NAME_MAX): Likewise.
+	[!ISO && !ISO99 && !ISO11] (_POSIX_MAX_CANON): Likewise.
+	[!ISO && !ISO99 && !ISO11] (_POSIX_MAX_INPUT): Likewise.
+	[!ISO && !ISO99 && !ISO11] (_POSIX_MQ_OPEN_MAX): Likewise.
+	[!ISO && !ISO99 && !ISO11] (_POSIX_MQ_PRIO_MAX): Likewise.
+	[!ISO && !ISO99 && !ISO11] (_POSIX_NAME_MAX): Likewise.
+	[!ISO && !ISO99 && !ISO11] (_POSIX_NGROUPS_MAX): Likewise.
+	[!ISO && !ISO99 && !ISO11] (_POSIX_OPEN_MAX): Likewise.
+	[!ISO && !ISO99 && !ISO11] (_POSIX_PATH_MAX): Likewise.
+	[!ISO && !ISO99 && !ISO11] (_POSIX_PIPE_BUF): Likewise.
+	[!ISO && !ISO99 && !ISO11] (_POSIX2_RE_DUP_MAX): Remove duplicate
+	entry.
+	[!ISO && !ISO99 && !ISO11] (_POSIX_RTSIG_MAX): Do not specify as
+	optional.
+	[!ISO && !ISO99 && !ISO11] (_POSIX_SEM_NSEMS_MAX): Likewise.
+	[!ISO && !ISO99 && !ISO11] (_POSIX_SEM_VALUE_MAX): Likewise.
+	[!ISO && !ISO99 && !ISO11] (_POSIX_SIGQUEUE_MAX): Likewise.
+	[!ISO && !ISO99 && !ISO11] (_POSIX_SSIZE_MAX): Likewise.
+	[!ISO && !ISO99 && !ISO11] (_POSIX_STREAM_MAX): Likewise.
+	[!ISO && !ISO99 && !ISO11] (_POSIX_THREAD_DESTRUCTOR_ITERATIONS):
+	Likewise.
+	[!ISO && !ISO99 && !ISO11] (_POSIX_THREAD_KEYS_MAX): Likewise.
+	[!ISO && !ISO99 && !ISO11] (_POSIX_THREAD_THREADS_MAX): Likewise.
+	[!ISO && !ISO99 && !ISO11] (_POSIX_TIMER_MAX): Likewise.
+	[!ISO && !ISO99 && !ISO11] (_POSIX_TTY_NAME_MAX): Likewise.
+	[!ISO && !ISO99 && !ISO11] (_POSIX_TZNAME_MAX): Likewise.  Give
+	value as 3 for [POSIX || XPG3 || XPG4 || UNIX98].
+	[!ISO && !ISO99 && !ISO11] (_POSIX2_BC_BASE_MAX): Do not specify
+	as optional.
+	[!ISO && !ISO99 && !ISO11] (_POSIX2_BC_DIM_MAX): Likewise.
+	[!ISO && !ISO99 && !ISO11] (_POSIX2_BC_SCALE_MAX): Likewise.
+	[!ISO && !ISO99 && !ISO11] (_POSIX2_BC_STRING_MAX): Likewise.
+	[!ISO && !ISO99 && !ISO11] (_POSIX2_CHARCLASS_NAME_MAX):
+	Likewise.  Do not allow for [POSIX || XPG3 || XPG4 || UNIX98].
+	[!ISO && !ISO99 && !ISO11] (_POSIX2_COLL_WEIGHTS_MAX): Do not
+	specify as optional.
+	[!ISO && !ISO99 && !ISO11] (_POSIX2_EXPR_NEST_MAX): Likewise.
+	[!ISO && !ISO99 && !ISO11] (_POSIX2_LINE_MAX): Likewise.
+	[!ISO && !ISO99 && !ISO11] (_POSIX2_RE_DUP_MAX): Likewise.
+	[POSIX || POSIX2008 || XPG3] (_XOPEN_IOV_MAX): Do not allow.
+	[POSIX || XPG3] (NL_ARGMAX): Do not allow.
+	[XPG3] (NL_LANGMAX): Likewise.
+	[POSIX || XPG3] (NL_MSGMAX): Likewise.
+	[POSIX || XPG3] (NL_NMAX): Likewise.
+	[POSIX || XPG3] (NL_SETMAX): Likewise.
+	[POSIX || XPG3] (NL_TEXTMAX): Likewise.
+	[XPG3] (NZERO): Likewise.
+	[XPG4 || UNIX98] (TMP_MAX): Only enable for these conditions.
+	[POSIX || XPG3 || XPG4 || UNIX98] (*_MIN): Do not allow.
+	[!ISO && !ISO99 && !ISO11] (*_t): Allow.
+	* conform/data/regex.h-data [!ISO && !ISO99 && !ISO11]
+	(REG_ERANGE): Expect.
+	* conform/data/stdio.h-data [POSIX] (L_cuserid): Use
+	optional-constant.
+	[POSIX || XOPEN2K || XOPEN2K8 || POSIX2008] (getchar_unlocked):
+	Use (void) in prototype.
+	[POSIX] (*_t): Allow.
+	* conform/data/sys/times.h-data [POSIX]: Enable whole file.
+	* conform/data/wordexp.h-data [!ISO && !ISO99 && !ISO11]
+	(WRDE_BADVAL): Expect.
+
 	* conform/data/fcntl.h-data [XPG3 || XPG4] (O_DSYNC): Do not
 	expect.
 	[XPG3 || XPG4] (O_RSYNC): Likewise.

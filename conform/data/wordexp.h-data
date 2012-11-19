@@ -13,6 +13,7 @@ constant WRDE_SHOWERR
 constant WRDE_UNDEF
 
 constant WRDE_BADCHAR
+constant WRDE_BADVAL
 constant WRDE_CMDSUB
 constant WRDE_NOSPACE
 # if !defined POSIX && !defined XOPEN2K8 && !defined POSIX2008
