@@ -1,3 +1,14 @@
+2012-11-19  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	[BZ #14719]
+	* nss/getXXbyYY_r.c (INTERNAL (REENTRANT_NAME)): Set h_errno to
+	NETDB_INTERNAL when NSS_STATUS_UNAVAIL.
+	* resolv/nss_dns/dns-host.c (_nss_dns_gethostbyname3_r): Set
+	h_errno to NETDB_INTERNAL when errno is EMFILE or ENFILE.
+	(_nss_dns_gethostbyname4_r): Likewise.
+	* sysdeps/posix/getaddrinfo.c (gaih_inet): Set result to
+	EAI_SYSTEM if NSS_STATUS_UNAVAIL.
+
 2012-11-19  Peng Haitao  <penght@cn.fujitsu.com>
 
 	[BZ #13763]

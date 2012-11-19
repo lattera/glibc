@@ -1049,6 +1049,12 @@ gaih_inet (const char *name, const struct gaih_service *service,
 
 	  _res.options |= old_res_options & RES_USE_INET6;
 
+	  if (status == NSS_STATUS_UNAVAIL)
+	    {
+	      result = GAIH_OKIFUNSPEC | -EAI_SYSTEM;
+	      goto free_and_return;
+	    }
+
 	  if (no_data != 0 && no_inet6_data != 0)
 	    {
 	      /* If both requests timed out report this.  */

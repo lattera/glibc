@@ -199,6 +199,11 @@ _nss_dns_gethostbyname3_r (const char *name, int af, struct hostent *result,
 	  status = NSS_STATUS_TRYAGAIN;
 	  h_errno = TRY_AGAIN;
 	  break;
+	/* System has run out of file descriptors.  */
+	case EMFILE:
+	case ENFILE:
+	  h_errno = NETDB_INTERNAL;
+	  /* Fall through.  */
 	case ECONNREFUSED:
 	case ETIMEDOUT:
 	  status = NSS_STATUS_UNAVAIL;
@@ -311,14 +316,26 @@ _nss_dns_gethostbyname4_r (const char *name, struct gaih_addrtuple **pat,
 			      &ans2p, &nans2p, &resplen2);
   if (n < 0)
     {
-      if (errno == ESRCH)
+      switch (errno)
 	{
+	case ESRCH:
 	  status = NSS_STATUS_TRYAGAIN;
 	  h_errno = TRY_AGAIN;
+	  break;
+	/* System has run out of file descriptors.  */
+	case EMFILE:
+	case ENFILE:
+	  h_errno = NETDB_INTERNAL;
+	  /* Fall through.  */
+	case ECONNREFUSED:
+	case ETIMEDOUT:
+	  status = NSS_STATUS_UNAVAIL;
+	  break;
+	default:
+	  status = NSS_STATUS_NOTFOUND;
+	  break;
 	}
-      else
-	status = (errno == ECONNREFUSED
-		  ? NSS_STATUS_UNAVAIL : NSS_STATUS_NOTFOUND);
+
       *herrnop = h_errno;
       if (h_errno == TRY_AGAIN)
 	*errnop = EAGAIN;
