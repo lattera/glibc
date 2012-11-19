@@ -64,13 +64,13 @@
      result_var; })
 
 #undef INTERNAL_SYSCALL_DECL
-#define INTERNAL_SYSCALL_DECL(err) long err
+#define INTERNAL_SYSCALL_DECL(err) long err __attribute__ ((unused))
 
 #undef INTERNAL_SYSCALL_ERROR_P
-#define INTERNAL_SYSCALL_ERROR_P(val, err)   ((long) (err))
+#define INTERNAL_SYSCALL_ERROR_P(val, err)   ((void) (val), (long) (err))
 
 #undef INTERNAL_SYSCALL_ERRNO
-#define INTERNAL_SYSCALL_ERRNO(val, err)     (val)
+#define INTERNAL_SYSCALL_ERRNO(val, err)     ((void) (err), val)
 
 #undef INTERNAL_SYSCALL
 #define INTERNAL_SYSCALL(name, err, nr, args...) \
