@@ -35,6 +35,12 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
+#include <bits/libc-lock.h>
+
+/*
+ * Locks the static variables in this file.
+ */
+__libc_lock_define_initialized (static, lock);
 
 /*
  * Bind a socket to a privileged IP port
@@ -74,6 +80,9 @@ bindresvport (int sd, struct sockaddr_in *sin)
 
   int nports = ENDPORT - startport + 1;
   int endport = ENDPORT;
+
+  __libc_lock_lock (lock);
+
  again:
   for (i = 0; i < nports; ++i)
     {
@@ -93,6 +102,8 @@ bindresvport (int sd, struct sockaddr_in *sin)
       port = LOWPORT + port % (STARTPORT - LOWPORT);
       goto again;
     }
+
+  __libc_lock_unlock (lock);
 
   return res;
 }
