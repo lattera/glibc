@@ -1,5 +1,5 @@
 /* Compute remainder and a congruent to the quotient.  m68k fpu version
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Andreas Schwab <schwab@issan.informatik.uni-dortmund.de>
 
@@ -43,5 +43,4 @@ s(__remquo) (float_type x, float_type y, int *quo)
   *quo = cquo;
   return result;
 }
-#define weak_aliasx(a,b) weak_alias(a,b)
-weak_aliasx (s(__remquo), s(remquo))
+weak_alias (s(__remquo), s(remquo))

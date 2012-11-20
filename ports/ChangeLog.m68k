@@ -1,3 +1,22 @@
+2012-11-20  Andreas Schwab  <schwab@linux-m68k.org>
+
+	* sysdeps/m68k/m680x0/fpu/s_atan.c (weak_aliasx): Remove
+	macro and use weak_alias directly.
+	* sysdeps/m68k/m680x0/fpu/s_ccosh.c (weak_aliasx): Likewise.
+	* sysdeps/m68k/m680x0/fpu/s_cexp.c (weak_aliasx): Likewise.
+	* sysdeps/m68k/m680x0/fpu/s_csin.c (weak_aliasx): Likewise.
+	* sysdeps/m68k/m680x0/fpu/s_csinh.c (weak_aliasx): Likewise.
+	* sysdeps/m68k/m680x0/fpu/s_expm1.c (weak_aliasx): Likewise.
+	* sysdeps/m68k/m680x0/fpu/s_frexp.c (weak_aliasx): Likewise.
+	* sysdeps/m68k/m680x0/fpu/s_lrint.c (weak_aliasx): Likewise.
+	* sysdeps/m68k/m680x0/fpu/s_modf.c (weak_aliasx): Likewise.
+	* sysdeps/m68k/m680x0/fpu/s_isinf.c (weak_aliasx): Likewise.
+	* sysdeps/m68k/m680x0/fpu/s_remquo.c (weak_aliasx): Likewise.
+	* sysdeps/m68k/m680x0/fpu/s_scalbn.c (strong_aliasx, weak_aliasx):
+	Likewise.
+	* sysdeps/m68k/m680x0/fpu/s_sin.c (weak_aliasx): Likewise.
+	* sysdeps/m68k/m680x0/fpu/s_sincos.c (weak_aliasx): Likewise.
+
 2012-11-18  Andreas Schwab  <schwab@linux-m68k.org>
 
 	* sysdeps/unix/sysv/linux/m68k/nptl/sysdep-cancel.h (_DOCARGS_5)

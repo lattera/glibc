@@ -1,6 +1,6 @@
 /* Round argument to nearest integral value according to current rounding
    direction.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Andreas Schwab <schwab@issan.informatik.uni-dortmund.de>
 
@@ -34,6 +34,4 @@ CONCATX(__lrint,suffix) (float_type x)
 {
   return __m81_u(CONCATX(__lrint,suffix)) (x);
 }
-
-#define weak_aliasx(a,b) weak_alias(a,b)
-weak_aliasx (CONCATX(__lrint,suffix), CONCATX(lrint,suffix))
+weak_alias (CONCATX(__lrint,suffix), CONCATX(lrint,suffix))

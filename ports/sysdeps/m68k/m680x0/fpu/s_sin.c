@@ -35,6 +35,4 @@ CONCATX(__,FUNC) (float_type x)
     __set_errno (EDOM);
   return __m81_u(CONCATX(__, FUNC)) (x);
 }
-
-#define weak_aliasx(a, b) weak_alias(a, b)
-weak_aliasx (CONCATX(__, FUNC), FUNC)
+weak_alias (CONCATX(__, FUNC), FUNC)
