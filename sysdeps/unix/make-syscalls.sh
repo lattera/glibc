@@ -4,8 +4,19 @@
 # Expects $sysdirs in environment.
 
 ##############################################################################
-
-# Syscall Signature Key Letters for BP Thunks:
+#
+# This script is used to process the syscall data encoded in the various
+# syscalls.list files to produce thin assembly syscall wrappers around the
+# appropriate OS syscall. See syscall-template.s for more details on the
+# actual wrapper.
+#
+# Syscall Signature Prefixes:
+#
+# C: cancellable (i.e., this syscall is a cancellation point)
+# E: errno and return value are not set by the call
+# V: errno is not set, but errno or zero (success) is returned from the call
+#
+# Syscall Signature Key Letters:
 #
 # a: unchecked address (e.g., 1st arg to mmap)
 # b: non-NULL buffer (e.g., 2nd arg to read; return value from mmap)
@@ -23,6 +34,7 @@
 # v: vararg scalar (e.g., optional 3rd arg to open)
 # V: byte-per-page vector (3rd arg to mincore)
 # W: wait status, optionally-NULL pointer to int (e.g., 2nd arg of wait4)
+#
 
 ptr='[abBfFINpPsSWV]'	# all pointer keyletters
 int='[inv]'		# all scalar keyletters
