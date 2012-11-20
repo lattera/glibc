@@ -1,3 +1,11 @@
+2012-11-20  Marcus Shawcroft  <marcus.shawcroft@linaro.org>
+
+	* sysdeps/aarch64/fpu/s_fma.c (__CONCATX): Don't use K&R.
+	* sysdeps/aarch64/fpu/s_fmin.c (__CONCATX): Likewise.
+	* sysdeps/aarch64/fpu/s_lrint.c (__CONCATX): Likewise.
+	* sysdeps/aarch64/fpu/s_lround.c (__CONCATX): Likewise.
+	* sysdeps/aarch64/fpu/s_frint.x (__CONCATX): Likewise.
+
 2012-11-19  Marcus Shawcroft  <marcus.shawcroft@linaro.org>
 
 	* sysdeps/aarch64/fpu/s_ceil.c: New file.

@@ -34,10 +34,7 @@
 #define __CONCATX(a,b) __CONCAT(a,b)
 
 TYPE
-__CONCATX(__,FUNC) (x, y, z)
-     TYPE x;
-     TYPE y;
-     TYPE z;
+__CONCATX(__,FUNC) (TYPE x, TYPE y, TYPE z)
 {
   TYPE result;
   asm ( "fmadd" "\t%" REGS "0, %" REGS "1, %" REGS "2, %" REGS "3"

@@ -38,9 +38,7 @@
 #define __CONCATX(a,b) __CONCAT(a,b)
 
 TYPE
-__CONCATX(__,FUNC) (x, y)
-     TYPE x;
-     TYPE y;
+__CONCATX(__,FUNC) (TYPE x, TYPE y)
 {
   TYPE result;
   asm ( INSN "\t%" REGS "0, %" REGS "1, %" REGS "2"

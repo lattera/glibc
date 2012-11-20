@@ -40,8 +40,7 @@
 #define __CONCATX(a,b) __CONCAT(a,b)
 
 OTYPE
-__CONCATX(__,FUNC) (x)
-     ITYPE x;
+__CONCATX(__,FUNC) (ITYPE x)
 {
   OTYPE result;
   ITYPE temp;
