@@ -1,5 +1,21 @@
 2012-11-20  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/unix/sysv/linux/mips/mips32/sysdep.h
+	(internal_syscall1): Use parentheses around macro arguments.
+	(internal_syscall2): Likewise.
+	(internal_syscall3): Likewise.
+	(internal_syscall4): Likewise.
+	(internal_syscall5): Likewise.
+	(internal_syscall6): Likewise.
+	(internal_syscall7): Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n64/sysdep.h
+	(internal_syscall1): Likewise.
+	(internal_syscall2): Likewise.
+	(internal_syscall3): Likewise.
+	(internal_syscall4): Likewise.
+	(internal_syscall5): Likewise.
+	(internal_syscall6): Likewise.
+
 	* sysdeps/mips/jmpbuf-unwind.h (_JMPBUF_CFA_UNWINDS_ADJ): Cast
 	_Unwind_GetCFA return to _Unwind_Ptr before casting to a pointer
 	type.
