@@ -18,4 +18,4 @@
 
 #define FUNC rintf
 #define INSN "frintx"
-#include <s_frintf.x>
+#include <s_frintf.c>

@@ -18,4 +18,4 @@
 
 #define	FUNC ceil
 #define INSN "frintp"
-#include <s_frint.x>
+#include <s_frint.c>

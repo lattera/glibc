@@ -18,4 +18,4 @@
 
 #define FUNC roundf
 #define INSN "frinta"
-#include <s_frintf.x>
+#include <s_frintf.c>

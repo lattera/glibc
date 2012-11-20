@@ -18,4 +18,4 @@
 
 #define FUNC trunc
 #define INSN "frintz"
-#include <s_frint.x>
+#include <s_frint.c>

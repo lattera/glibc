@@ -18,4 +18,4 @@
 
 #define	FUNC nearbyint
 #define INSN "frinti"
-#include <s_frint.x>
+#include <s_frint.c>

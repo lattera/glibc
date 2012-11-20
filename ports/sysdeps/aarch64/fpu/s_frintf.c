@@ -21,4 +21,4 @@
 #endif
 #define TYPE float
 #define REGS "s"
-#include <s_frint.x>
+#include <s_frint.c>

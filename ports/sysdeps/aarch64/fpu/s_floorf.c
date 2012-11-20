@@ -18,4 +18,4 @@
 
 #define FUNC floorf
 #define INSN "frintm"
-#include <s_frintf.x>
+#include <s_frintf.c>

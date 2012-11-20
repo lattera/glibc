@@ -18,4 +18,4 @@
 
 #define	FUNC ceilf
 #define INSN "frintp"
-#include <s_frintf.x>
+#include <s_frintf.c>
