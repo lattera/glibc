@@ -37,7 +37,7 @@ long double __nearbyintl(long double x)
 {
 	fenv_t env;
 	int64_t i0,j0,sx;
-	u_int64_t i1;
+	u_int64_t i1 __attribute__ ((unused));
 	long double w,t;
 	GET_LDOUBLE_WORDS64(i0,i1,x);
 	sx = (((u_int64_t)i0)>>63);
