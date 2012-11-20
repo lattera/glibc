@@ -637,7 +637,7 @@ elf_machine_got_rel (struct link_map *map, int lazy)
 #define RESOLVE_GOTSYM(sym,vernum,sym_index,reloc)			  \
     ({									  \
       const ElfW(Sym) *ref = sym;					  \
-      const struct r_found_version *version				  \
+      const struct r_found_version *version __attribute__ ((unused))	  \
 	= vernum ? &map->l_versions[vernum[sym_index] & 0x7fff] : NULL;	  \
       struct link_map *sym_map;						  \
       sym_map = RESOLVE_MAP (&ref, version, reloc);			  \

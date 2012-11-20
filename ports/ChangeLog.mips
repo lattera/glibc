@@ -1,5 +1,8 @@
 2012-11-19  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/mips/dl-machine.h (RESOLVE_GOTSYM): Declare VERSION
+	variable with __attribute__ ((unused)).
+
 	* sysdeps/unix/sysv/linux/mips/mips32/sysdep.h
 	(INTERNAL_SYSCALL_DECL): Use __attribute__ ((unused)).
 	(INTERNAL_SYSCALL_ERROR_P): Cast val to void.
