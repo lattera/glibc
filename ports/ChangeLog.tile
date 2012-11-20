@@ -1,5 +1,7 @@
 2012-11-20  Chris Metcalf  <cmetcalf@tilera.com>
 
+	* sysdeps/tile/libm-test-ulps: Account for new tests.
+
 	* sysdeps/tile/bits/byteswap.h: Include <bits/types.h>.
 	(__bswap_64): Use __uint64_t instead of unsigned long long int.
 
