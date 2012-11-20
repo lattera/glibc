@@ -1,3 +1,8 @@
+2012-11-20  Chris Metcalf  <cmetcalf@tilera.com>
+
+	* sysdeps/tile/s_fma.c: Remove redundant #defines now provided
+	in sysdeps/tile/math_private.h.
+
 2012-11-06  Chris Metcalf  <cmetcalf@tilera.com>
 
 	* sysdeps/tile/tilegx/memmove.c: New file.
