@@ -1,5 +1,8 @@
 2012-11-20  Thomas Schwinge  <thomas@codesourcery.com>
 
+	* sysdeps/sh/dl-machine.h (ELF_MACHINE_RUNTIME_FIXUP_PARAMS): New
+	macro.
+
 	* sysdeps/unix/sysv/linux/bits/socket.h (struct mmsghdr, recvmmsg)
 	(sendmmsg): Move declarations...
 	* socket/sys/socket.h: ... here.
