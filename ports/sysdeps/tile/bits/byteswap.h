@@ -23,10 +23,12 @@
 #ifndef _BITS_BYTESWAP_H
 #define _BITS_BYTESWAP_H 1
 
+#include <bits/types.h>
+
 /* gcc __builtin_bswap64() can constant-fold, etc, so always use it. */
 #define __bswap_16(x) ((unsigned short)(__builtin_bswap32(x) >> 16))
 #define __bswap_32(x) ((unsigned int)__builtin_bswap32(x))
-#define __bswap_64(x) ((unsigned long long)__builtin_bswap64(x))
+#define __bswap_64(x) ((__uint64_t)__builtin_bswap64(x))
 
 #define __bswap_constant_16(x) __bswap_16(x)
 #define __bswap_constant_32(x) __bswap_32(x)

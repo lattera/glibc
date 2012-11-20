@@ -1,5 +1,8 @@
 2012-11-20  Chris Metcalf  <cmetcalf@tilera.com>
 
+	* sysdeps/tile/bits/byteswap.h: Include <bits/types.h>.
+	(__bswap_64): Use __uint64_t instead of unsigned long long int.
+
 	* sysdeps/tile/s_fma.c: Remove redundant #defines now provided
 	in sysdeps/tile/math_private.h.
 
