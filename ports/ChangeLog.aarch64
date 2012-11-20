@@ -1,5 +1,14 @@
 2012-11-20  Marcus Shawcroft  <marcus.shawcroft@linaro.org>
 
+	* sysdeps/aarch64/fpu/s_fma.c: Indent preprocessor directives.
+	* sysdeps/aarch64/fpu/s_fmin.c: Likewise.
+	* sysdeps/aarch64/fpu/s_frint.c: Likewise.
+	* sysdeps/aarch64/fpu/s_frintf.c: Likewise.
+	* sysdeps/aarch64/fpu/s_lrint.c: Likewise.
+	* sysdeps/aarch64/fpu/s_lround.c: Likewise.
+
+2012-11-20  Marcus Shawcroft  <marcus.shawcroft@linaro.org>
+
 	* sysdeps/aarch64/dl-tlsdesc.S: Use range for copyright years.
 	* sysdeps/aarch64/dl-tlsdesc.h: Likewise.
 	* sysdeps/aarch64/tlsdesc.c: Likewise.

@@ -19,20 +19,20 @@
 #include <math.h>
 
 #ifndef FUNC
-#define FUNC lround
+# define FUNC lround
 #endif
 
 #ifndef ITYPE
-#define ITYPE double
-#define IREGS "d"
+# define ITYPE double
+# define IREGS "d"
 #else
-#ifndef IREGS
-#error IREGS not defined
-#endif
+# ifndef IREGS
+#  error IREGS not defined
+# endif
 #endif
 
 #ifndef OTYPE
-#define OTYPE long int
+# define OTYPE long int
 #endif
 
 #define OREGS "x"

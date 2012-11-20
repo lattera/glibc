@@ -19,20 +19,20 @@
 #include <math.h>
 
 #ifndef FUNC
-#define FUNC fmin
+# define FUNC fmin
 #endif
 
 #ifndef INSN
-#define INSN "fminnm"
+# define INSN "fminnm"
 #endif
 
 #ifndef TYPE
-#define TYPE double
-#define REGS "d"
+# define TYPE double
+# define REGS "d"
 #else
-#ifndef REGS
-#error REGS not defined
-#endif
+# ifndef REGS
+#  error REGS not defined
+# endif
 #endif
 
 #define __CONCATX(a,b) __CONCAT(a,b)

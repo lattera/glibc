@@ -17,7 +17,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #ifndef FUNC
-#error FUNC not defined
+# error FUNC not defined
 #endif
 #define TYPE float
 #define REGS "s"
