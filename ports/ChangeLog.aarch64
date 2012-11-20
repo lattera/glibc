@@ -1,5 +1,38 @@
 2012-11-20  Marcus Shawcroft  <marcus.shawcroft@linaro.org>
 
+	* sysdeps/aarch64/dl-tlsdesc.S: Use range for copyright years.
+	* sysdeps/aarch64/dl-tlsdesc.h: Likewise.
+	* sysdeps/aarch64/tlsdesc.c: Likewise.
+	* sysdeps/aarch64/fpu/s_ceil.c: Likewise.
+	* sysdeps/aarch64/fpu/s_ceilf.c: Likewise.
+	* sysdeps/aarch64/fpu/s_floor.c: Likewise.
+	* sysdeps/aarch64/fpu/s_floorf.c: Likewise.
+	* sysdeps/aarch64/fpu/s_fmaf.c: Likewise.
+	* sysdeps/aarch64/fpu/s_fmax.c: Likewise.
+	* sysdeps/aarch64/fpu/s_fmaxf.c: Likewise.
+	* sysdeps/aarch64/fpu/s_fmin.c: Likewise.
+	* sysdeps/aarch64/fpu/s_fminf.c: Likewise.
+	* sysdeps/aarch64/fpu/s_frint.c: Likewise.
+	* sysdeps/aarch64/fpu/s_frintf.c: Likewise.
+	* sysdeps/aarch64/fpu/s_llrint.c: Likewise.
+	* sysdeps/aarch64/fpu/s_llrintf.c: Likewise.
+	* sysdeps/aarch64/fpu/s_llround.c: Likewise.
+	* sysdeps/aarch64/fpu/s_llroundf.c: Likewise.
+	* sysdeps/aarch64/fpu/s_lrint.c: Likewise.
+	* sysdeps/aarch64/fpu/s_lrintf.c: Likewise.
+	* sysdeps/aarch64/fpu/s_lround.c: Likewise.
+	* sysdeps/aarch64/fpu/s_lroundf.c: Likewise.
+	* sysdeps/aarch64/fpu/s_nearbyint.c: Likewise.
+	* sysdeps/aarch64/fpu/s_nearbyintf.c: Likewise.
+	* sysdeps/aarch64/fpu/s_rint.c: Likewise.
+	* sysdeps/aarch64/fpu/s_rintf.c: Likewise.
+	* sysdeps/aarch64/fpu/s_round.c: Likewise.
+	* sysdeps/aarch64/fpu/s_roundf.c: Likewise.
+	* sysdeps/aarch64/fpu/s_trunc.c: Likewise.
+	* sysdeps/aarch64/fpu/s_truncf.c: Likewise.
+
+2012-11-20  Marcus Shawcroft  <marcus.shawcroft@linaro.org>
+
 	* sysdeps/aarch64/fpu/s_frint.x: Renamed to...
 	* sysdeps/aarch64/fpu/s_frint.c: ... this new file.
 	* sysdeps/aarch64/fpu/s_frintf.x: Renamed to...
