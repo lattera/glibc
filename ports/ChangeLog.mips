@@ -1,5 +1,19 @@
 2012-11-20  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/mips/jmpbuf-unwind.h (_JMPBUF_CFA_UNWINDS_ADJ): Cast
+	_Unwind_GetCFA return to _Unwind_Ptr before casting to a pointer
+	type.
+	* sysdeps/unix/sysv/linux/mips/____longjmp_chk.c (CHECK_SP): Cast
+	ss_sp to long before casting to sp_type.
+	* sysdeps/unix/sysv/linux/mips/sigcontextinfo.h [_MIPS_SIM ==
+	_ABIO32] (GET_PC): Cast to unsigned long before casting to a
+	pointer type.
+	[_MIPS_SIM == _ABIO32] (GET_FRAME): Likewise.
+	[_MIPS_SIM == _ABIO32] (GET_STACK): Likewise.
+	[_MIPS_SIM != _ABIO32] (GET_PC): Likewise.
+	[_MIPS_SIM != _ABIO32] (GET_FRAME): Likewise.
+	[_MIPS_SIM != _ABIO32] (GET_STACK): Likewise.
+
 	* sysdeps/mips/bits/atomic.h [!__GNUC_PREREQ (4, 8)]
 	(__arch_compare_and_exchange_xxx_8_int): Separate assignments to
 	__prev and __cmp.  Cast __cmp to void.
