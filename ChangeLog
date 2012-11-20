@@ -1,5 +1,8 @@
 2012-11-19  Joseph Myers  <joseph@codesourcery.com>
 
+	* stdio-common/_itowa.c (_itowa) [BITS_PER_MP_LIMB == 64]: Declare
+	DUMMY variables with __attribute__ ((unused)).
+
 	* bits/byteswap.h: Include <bits/types.h>.
 	(__bswap_64): Use __uint64_t instead of unsigned long long int.
 
