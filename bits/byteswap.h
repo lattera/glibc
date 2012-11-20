@@ -24,6 +24,7 @@
 #define _BITS_BYTESWAP_H 1
 
 #include <features.h>
+#include <bits/types.h>
 
 /* Swap bytes in 16 bit value.  */
 #define __bswap_constant_16(x) \
@@ -70,15 +71,15 @@ __bswap_32 (unsigned int __bsx)
 		     | (((x) & 0x00000000000000ffull) << 56)))
 
 # if __GNUC_PREREQ (4, 2)
-static __inline unsigned long long int
-__bswap_64 (unsigned long long int __bsx)
+static __inline __uint64_t
+__bswap_64 (__uint64_t __bsx)
 {
   return __builtin_bswap64 (__bsx);
 }
 # else
 #  define __bswap_64(x) \
      (__extension__							      \
-      ({ union { __extension__ unsigned long long int __ll;		      \
+      ({ union { __extension__ __uint64_t __ll;				      \
 		 unsigned int __l[2]; } __w, __r;			      \
 	 if (__builtin_constant_p (x))					      \
 	   __r.__ll = __bswap_constant_64 (x);				      \
@@ -101,8 +102,8 @@ __bswap_64 (unsigned long long int __bsx)
       | (((x) & 0x000000000000ff00ull) << 40)				      \
       | (((x) & 0x00000000000000ffull) << 56))
 
-static __inline unsigned long long int
-__bswap_64 (unsigned long long int __bsx)
+static __inline __uint64_t
+__bswap_64 (__uint64_t __bsx)
 {
   return __bswap_constant_64 (__bsx);
 }
