@@ -1,3 +1,13 @@
+2012-11-20  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/mips/bits/atomic.h [!__GNUC_PREREQ (4, 8)]
+	(__arch_compare_and_exchange_xxx_8_int): Separate assignments to
+	__prev and __cmp.  Cast __cmp to void.
+	[!__GNUC_PREREQ (4, 8)] (__arch_compare_and_exchange_xxx_16_int):
+	Likewise.
+	[!__GNUC_PREREQ (4, 8) && _MIPS_SIM == _ABIO32]
+	(__arch_compare_and_exchange_xxx_64_int): Likewise.
+
 2012-11-19  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/mips/dl-machine.h (RESOLVE_GOTSYM): Declare VERSION

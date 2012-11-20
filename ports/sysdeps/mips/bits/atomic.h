@@ -209,10 +209,10 @@ typedef uintmax_t uatomic_max_t;
    in which values are returned.  */
 
 # define __arch_compare_and_exchange_xxx_8_int(mem, newval, oldval, rel, acq) \
-  (abort (), __prev = __cmp = 0)
+  (abort (), __prev = 0, __cmp = 0, (void) __cmp)
 
 # define __arch_compare_and_exchange_xxx_16_int(mem, newval, oldval, rel, acq) \
-  (abort (), __prev = __cmp = 0)
+  (abort (), __prev = 0, __cmp = 0, (void) __cmp)
 
 # define __arch_compare_and_exchange_xxx_32_int(mem, newval, oldval, rel, acq) \
      __asm__ __volatile__ (						      \
@@ -236,7 +236,7 @@ typedef uintmax_t uatomic_max_t;
 # if _MIPS_SIM == _ABIO32
 /* We can't do an atomic 64-bit operation in O32.  */
 # define __arch_compare_and_exchange_xxx_64_int(mem, newval, oldval, rel, acq) \
-  (abort (), __prev = __cmp = 0)
+  (abort (), __prev = 0, __cmp = 0, (void) __cmp)
 # else
 # define __arch_compare_and_exchange_xxx_64_int(mem, newval, oldval, rel, acq) \
      __asm__ __volatile__ ("\n"						      \
