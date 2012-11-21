@@ -21,7 +21,7 @@ Version 2.17
   14638, 14645, 14648, 14652, 14660, 14661, 14669, 14672, 14683, 14694,
   14716, 14719, 14743, 14767, 14783, 14784, 14785, 14793, 14796, 14797,
   14801, 14805, 14807, 14809, 14811, 14815, 14821, 14824, 14828, 14831,
-  14835, 14838, 14856, 14865, 14866.
+  14835, 14838, 14856, 14863, 14865, 14866.
 
 * Port to ARM AArch64 contributed by Linaro.
 
@@ -68,6 +68,9 @@ Version 2.17
   is not linked with -lrt) will no longer implicitly load the pthreads
   library at runtime and so will not suffer the overheads associated with
   multi-thread support in other code such as the C++ runtime library.
+
+* New locales: ayc_PE, doi_IN, mni_IN, nhn_MX, niu_NU, niu_NZ, sat_IN, and
+  szl_PL.
 
 Version 2.16
 

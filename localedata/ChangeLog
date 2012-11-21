@@ -1,3 +1,14 @@
+2012-11-21  Chris Leonard  <cjl@sugarlabs.org>
+
+	[BZ #14863]
+	* SUPPORTED: Add niu_NU and niu_NZ.
+	* locales/niu_NU: Add Niuean (Vagahau Niue) locale for Niue,
+	contributed by Chris Leonard <cjl@sugarlabs.org> and Emani
+	Fakaotimanava-Lui <emani@niue.nu>.
+	* locales/niu_NZ: Add Niuean (Vagahau Niue) locale for New
+	Zealand, contributed by Chris Leonard <cjl@sugarlabs.org> and Emani
+	Fakaotimanava-Lui <emani@niue.nu>.
+
 2012-11-19  Eagle Burkut  <eagle.burkut@gmail.com>
 
 	[BZ #13759]
