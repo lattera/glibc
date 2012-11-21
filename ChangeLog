@@ -1,3 +1,18 @@
+2012-11-21  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* elf/elf.h (DF_1_NODIRECT): New macro.
+	(DF_1_IGNMULDEF): Likewise.
+	(DF_1_NOKSYMS): Likewise.
+	(DF_1_NOHDR): Likewise.
+	(DF_1_EDITED): Likewise.
+	(DF_1_NORELOC): Likewise.
+	(DF_1_SYMINTPOSE): Likewise.
+	(DF_1_GLOBAUDIT): Likewise.
+	(DF_1_SINGLETON): Likewise.
+	* elf/get-dynamic-info.h (elf_get_dynamic_info): Assert
+	DT_1_SUPPORTED_MASK bits.
+	* include/elf.h (DT_1_SUPPORTED_MASK): New macro.
+
 2012-11-20  Carlos O'Donell  <carlos_odonell@mentor.com>
 
 	* sysdeps/unix/make-syscalls.sh: Document prefixes.

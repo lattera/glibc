@@ -798,6 +798,15 @@ typedef struct
 #define DF_1_ENDFILTEE	0x00004000	/* Filtee terminates filters search. */
 #define	DF_1_DISPRELDNE	0x00008000	/* Disp reloc applied at build time. */
 #define	DF_1_DISPRELPND	0x00010000	/* Disp reloc applied at run-time.  */
+#define	DF_1_NODIRECT	0x00020000	/* Object has no-direct binding. */
+#define	DF_1_IGNMULDEF	0x00040000
+#define	DF_1_NOKSYMS	0x00080000
+#define	DF_1_NOHDR	0x00100000
+#define	DF_1_EDITED	0x00200000	/* Object is modified after built.  */
+#define	DF_1_NORELOC	0x00400000
+#define	DF_1_SYMINTPOSE	0x00800000	/* Object has individual interposers.  */
+#define	DF_1_GLOBAUDIT	0x01000000	/* Global auditin required.  */
+#define	DF_1_SINGLETON	0x02000000	/* Singleton symbols are used.  */
 
 /* Flags for the feature selection in DT_FEATURE_1.  */
 #define DTF_1_PARINIT	0x00000001

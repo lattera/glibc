@@ -151,6 +151,9 @@ elf_get_dynamic_info (struct link_map *l, ElfW(Dyn) *temp)
     {
       l->l_flags_1 = info[VERSYMIDX (DT_FLAGS_1)]->d_un.d_val;
 
+      /* Only DT_1_SUPPORTED_MASK bits are allowed.  */
+      assert ((l->l_flags_1 & ~DT_1_SUPPORTED_MASK) == 0);
+
       if (l->l_flags_1 & DF_1_NOW)
 	info[DT_BIND_NOW] = info[VERSYMIDX (DT_FLAGS_1)];
     }
