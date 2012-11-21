@@ -1,5 +1,7 @@
 2012-11-21  Andreas Jaeger  <aj@suse.de>
 
+	* locales/szl_PL (LC_COLLATE): Fix syntax error.
+
 	* SUPPORTED (SUPPORTED-LOCALES): Fix typo for ayc_PE entry.
 
 2012-11-21  Chris Leonard  <cjl@sugarlabs.org>
