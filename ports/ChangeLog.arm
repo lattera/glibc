@@ -1,5 +1,12 @@
 2012-11-21  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/arm/configure.in: Generate default-abi.make with
+	definition of default-abi.
+	* sysdeps/arm/configure: Regenerated.
+	* sysdeps/unix/sysv/linux/arm/Makefile (default-abi-prog): Remove.
+	(default-abi): Likewise.
+	($(common-objpfx)default-abi.make): Include.
+
 	[BZ #14866]
 	* sysdeps/arm/fesetenv.c (__fesetenv): Test whether bits for
 	trapping exceptions were successfully set for FE_NOMASK_ENV.

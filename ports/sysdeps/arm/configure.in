@@ -40,4 +40,7 @@ AC_CACHE_CHECK([whether the compiler is using the ARM hard-float ABI],
   ], libc_cv_arm_pcs_vfp=yes, libc_cv_arm_pcs_vfp=no)])
 if test $libc_cv_arm_pcs_vfp = yes; then
   AC_DEFINE(HAVE_ARM_PCS_VFP)
+  echo "default-abi := hard" > default-abi.make
+else
+  echo "default-abi := soft" > default-abi.make
 fi
