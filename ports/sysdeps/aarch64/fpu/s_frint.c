@@ -48,8 +48,3 @@ __CONCATX(__,FUNC) (TYPE x)
 
 #define weak_aliasx(a,b) weak_alias(a,b)
 weak_aliasx (__CONCATX(__,FUNC), FUNC)
-#define strong_aliasx(a,b) strong_alias(a,b)
-#ifdef NO_LONG_DOUBLE
-strong_aliasx (__CONCATX(__,FUNC),  __CONCATX(__,__CONCATX(FUNC,l)))
-weak_aliasx (__CONCATX(__,FUNC), __CONCATX(FUNC,l))
-#endif
