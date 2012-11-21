@@ -115,11 +115,10 @@ __pthread_cond_timedwait (cond, mutex, abstime)
       {
 # ifdef __NR_clock_gettime
 	INTERNAL_SYSCALL_DECL (err);
-	int ret;
-	ret = INTERNAL_VSYSCALL (clock_gettime, err, 2,
-				(cond->__data.__nwaiters
-				 & ((1 << COND_NWAITERS_SHIFT) - 1)),
-				&rt);
+	(void) INTERNAL_VSYSCALL (clock_gettime, err, 2,
+				  (cond->__data.__nwaiters
+				   & ((1 << COND_NWAITERS_SHIFT) - 1)),
+				  &rt);
 	/* Convert the absolute timeout value to a relative timeout.  */
 	rt.tv_sec = abstime->tv_sec - rt.tv_sec;
 	rt.tv_nsec = abstime->tv_nsec - rt.tv_nsec;

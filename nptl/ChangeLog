@@ -1,3 +1,9 @@
+2012-11-21  Joseph Myers  <joseph@codesourcery.com>
+
+	* pthread_cond_timedwait.c (__pthread_cond_timedwait)
+	[__NR_clock_gettime]: Cast result of INTERNAL_VSYSCALL to void
+	instead of storing in otherwise-unused variable.
+
 2012-11-14  Marcus Shawcroft  <marcus.shawcroft@linaro.org>
 
 	* Makefile (CFLAGS-open.c, CFLAGS-open64.c, CFLAGS-pause.c)
