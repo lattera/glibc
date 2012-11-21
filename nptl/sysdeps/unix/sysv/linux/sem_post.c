@@ -65,7 +65,7 @@ __old_sem_post (sem_t *sem)
 {
   int *futex = (int *) sem;
 
-  int nr = atomic_increment_val (futex);
+  (void) atomic_increment_val (futex);
   /* We always have to assume it is a shared semaphore.  */
   int err = lll_futex_wake (futex, 1, LLL_SHARED);
   if (__builtin_expect (err, 0) < 0)

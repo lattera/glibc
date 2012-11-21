@@ -1,5 +1,9 @@
 2012-11-21  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/unix/sysv/linux/sem_post.c (__old_sem_post): Cast result
+	of atomic_increment_val to (void) instead of storing in
+	otherwise-unused variable.
+
 	* pthread_cond_timedwait.c (__pthread_cond_timedwait)
 	[__NR_clock_gettime]: Cast result of INTERNAL_VSYSCALL to void
 	instead of storing in otherwise-unused variable.
