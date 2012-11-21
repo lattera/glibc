@@ -1,5 +1,11 @@
 2012-11-21  H.J. Lu  <hongjiu.lu@intel.com>
 
+	[BZ #14865]
+	* aclocal.m4 (LIBC_LINKER_FEATURE): New macro.
+	* configure.in: Use LIBC_LINKER_FEATURE to check -z nodelete,
+	-z nodlopen, -z initfirst and -z execstack support.
+	* configure: Regenerated.
+
 	* elf/elf.h (DF_1_NODIRECT): New macro.
 	(DF_1_IGNMULDEF): Likewise.
 	(DF_1_NOKSYMS): Likewise.

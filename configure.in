@@ -1409,53 +1409,17 @@ if test $libc_cv_cc_with_libunwind = yes; then
   AC_DEFINE(HAVE_CC_WITH_LIBUNWIND)
 fi
 
-AC_CACHE_CHECK(for -z nodelete option,
-	       libc_cv_z_nodelete, [dnl
-cat > conftest.c <<EOF
-int _start (void) { return 42; }
-EOF
-if AC_TRY_COMMAND([${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS
-		   -fPIC -shared -o conftest.so conftest.c
-		   -nostartfiles -nostdlib
-		   -Wl,--enable-new-dtags,-z,nodelete 1>&AS_MESSAGE_LOG_FD])
-then
-  libc_cv_z_nodelete=yes
-else
-  AC_MSG_ERROR(linker with -z nodelete support required)
-fi
-rm -f conftest*])
+LIBC_LINKER_FEATURE([-z nodelete], [-Wl,--enable-new-dtags,-z,nodelete],
+		    [libc_cv_z_nodelete=yes],
+		    [AC_MSG_ERROR(linker with -z nodelete support required)])
 
-AC_CACHE_CHECK(for -z nodlopen option,
-	       libc_cv_z_nodlopen, [dnl
-cat > conftest.c <<EOF
-int _start (void) { return 42; }
-EOF
-if AC_TRY_COMMAND([${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS
-			-fPIC -shared -o conftest.so conftest.c
-			-nostartfiles -nostdlib
-			-Wl,--enable-new-dtags,-z,nodlopen 1>&AS_MESSAGE_LOG_FD])
-then
-  libc_cv_z_nodlopen=yes
-else
-  AC_MSG_ERROR(linker with -z nodlopen support required)
-fi
-rm -f conftest*])
+LIBC_LINKER_FEATURE([-z nodlopen], [-Wl,--enable-new-dtags,-z,nodlopen],
+		    [libc_cv_z_nodlopen=yes],
+		    [AC_MSG_ERROR(linker with -z nodlopen support required)])
 
-AC_CACHE_CHECK(for -z initfirst option,
-	       libc_cv_z_initfirst, [dnl
-cat > conftest.c <<EOF
-int _start (void) { return 42; }
-EOF
-if AC_TRY_COMMAND([${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS
-			-fPIC -shared -o conftest.so conftest.c
-			-nostartfiles -nostdlib
-			-Wl,--enable-new-dtags,-z,initfirst 1>&AS_MESSAGE_LOG_FD])
-then
-  libc_cv_z_initfirst=yes
-else
-  AC_MSG_ERROR(linker with -z initfirst support required)
-fi
-rm -f conftest*])
+LIBC_LINKER_FEATURE([-z initfirst], [-Wl,--enable-new-dtags,-z,initfirst],
+		    [libc_cv_z_initfirst=yes],
+		    [AC_MSG_ERROR(linker with -z initfirst support required)])
 
 # Add-on fragments can set these for other machines.
 libc_commonpagesize=${libc_commonpagesize:-no}
@@ -1593,21 +1557,8 @@ if test "$libc_cv_z_combreloc" = yes; then
 fi
 AC_SUBST(libc_cv_z_combreloc)
 
-AC_CACHE_CHECK(for -z execstack,
-	       libc_cv_z_execstack, [dnl
-cat > conftest.c <<EOF
-int _start (void) { return 42; }
-EOF
-if AC_TRY_COMMAND([${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS
-			    -fPIC -shared -o conftest.so conftest.c
-			    -Wl,-z,execstack -nostdlib
-			    1>&AS_MESSAGE_LOG_FD])
-then
-  libc_cv_z_execstack=yes
-else
-  libc_cv_z_execstack=no
-fi
-rm -f conftest*])
+LIBC_LINKER_FEATURE([-z execstack], [-Wl,-z,execstack],
+		    [libc_cv_z_execstack=yes], [libc_cv_z_execstack=no])
 AC_SUBST(libc_cv_z_execstack)
 
 AC_CACHE_CHECK(for -fpie, libc_cv_fpie, [dnl
