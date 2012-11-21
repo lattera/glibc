@@ -1,3 +1,8 @@
+2012-11-21  Marcus Shawcroft  <marcus.shawcroft@linaro.org>
+
+	* sysdeps/unix/sysv/linux/aarch64/nptl/lowlevellock.h
+	(lll_futex_timed_wait_bitset): Remove INTERNAL_SYSCALL_ERROR_P.
+
 2012-11-20  Marcus Shawcroft  <marcus.shawcroft@linaro.org>
 
 	* sysdeps/aarch64/fpu/s_fma.c (weak_alias_x):
