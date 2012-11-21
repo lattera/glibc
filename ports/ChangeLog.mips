@@ -1,5 +1,8 @@
 2012-11-21  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/mips/jmpbuf-unwind.h (_jmpbuf_sp): Cast regs[0].__sp to
+	uintptr_t.
+
 	* sysdeps/mips/sotruss-lib.c: New file.
 
 2012-11-20  Joseph Myers  <joseph@codesourcery.com>
