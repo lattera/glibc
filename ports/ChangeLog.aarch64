@@ -1,5 +1,14 @@
 2012-11-20  Marcus Shawcroft  <marcus.shawcroft@linaro.org>
 
+	* sysdeps/aarch64/fpu/s_fma.c (weak_alias_x):
+	Remove and switch to weak_alias.
+	* sysdeps/aarch64/fpu/s_fmin.c (weak_alias_x): Likewise.
+	* sysdeps/aarch64/fpu/s_frint.c (weak_alias_x): Likewise.
+	* sysdeps/aarch64/fpu/s_lrint.c (weak_alias_x): Likewise.
+	* sysdeps/aarch64/fpu/s_lround.c (weak_alias_x): Likewise.
+
+2012-11-20  Marcus Shawcroft  <marcus.shawcroft@linaro.org>
+
 	* sysdeps/aarch64/fpu/s_fma.c (strong_aliasx, NO_LONG_DOUBLE): Remove.
 	* sysdeps/aarch64/fpu/s_fmin.c (strong_aliasx, NO_LONG_DOUBLE): Likewise.
 	* sysdeps/aarch64/fpu/s_frint.c (strong_aliasx, NO_LONG_DOUBLE): Likewise.

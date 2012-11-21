@@ -50,5 +50,4 @@ __CONCATX(__,FUNC) (ITYPE x)
   return result;
 }
 
-#define weak_aliasx(a,b) weak_alias(a,b)
-weak_aliasx (__CONCATX(__,FUNC), FUNC)
+weak_alias (__CONCATX(__,FUNC), FUNC)

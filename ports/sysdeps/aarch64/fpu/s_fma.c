@@ -42,5 +42,4 @@ __CONCATX(__,FUNC) (TYPE x, TYPE y, TYPE z)
   return result;
 }
 
-#define weak_aliasx(a,b) weak_alias(a,b)
-weak_aliasx (__CONCATX(__,FUNC), FUNC)
+weak_alias (__CONCATX(__,FUNC), FUNC)
