@@ -83,7 +83,7 @@ __ieee754_hypotl(long double x, long double y)
 	   k += 600;
 	   kld = two600;
 	}
-	if(hb < 0x20b0000000000000LL) {	/* b < 2**-500 */
+	if(hb < 0x23d0000000000000LL) {	/* b < 2**-450 */
 	    if(hb <= 0x000fffffffffffffLL) {	/* subnormal b or 0 */
 		u_int64_t low;
 		GET_LDOUBLE_LSW64(low,b);

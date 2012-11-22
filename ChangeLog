@@ -1,5 +1,10 @@
 2012-11-22  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #14869]
+	* sysdeps/ieee754/ldbl-128ibm/e_hypotl.c (__ieee754_hypotl): Scale
+	up arguments below 2**-450, not just those below 2**-500.
+	* math/libm-test.inc (hypot_test): Add another test.
+
 	[BZ #14868]
 	* sysdeps/ieee754/ldbl-128ibm/e_hypotl.c (__ieee754_hypotl):
 	Return a+b for ratio over 2**120, not 2**60.
