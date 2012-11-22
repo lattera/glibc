@@ -1,3 +1,7 @@
+2012-11-22  Marcus Shawcroft  <marcus.shawcroft@linaro.org>
+
+	* sysdeps/aarch64/libm-test-ulps: Regenerate.
+
 2012-11-21  Marcus Shawcroft  <marcus.shawcroft@linaro.org>
 
 	* sysdeps/unix/sysv/linux/aarch64/nptl/lowlevellock.h
