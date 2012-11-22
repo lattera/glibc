@@ -1339,6 +1339,9 @@ idouble: 1
 ifloat: 1
 
 # cos
+Test "cos (0x1p+50) == 8.68095904660550604334592502063501320395739e-01":
+float: 1
+ifloat: 1
 Test "cos (M_PI_6l * 2.0) == 0.5":
 double: 1
 float: 1
@@ -1817,10 +1820,10 @@ ldouble: 1
 
 # ctan
 Test "Real part of: ctan (-2 - 3 i) == 0.376402564150424829275122113032269084e-2 - 1.00323862735360980144635859782192726 i":
-float: 1
-ifloat: 1
 double: 1
+float: 1
 idouble: 1
+ifloat: 1
 ildouble: 1
 ldouble: 1
 Test "Imaginary part of: ctan (-2 - 3 i) == 0.376402564150424829275122113032269084e-2 - 1.00323862735360980144635859782192726 i":
@@ -2683,6 +2686,9 @@ Test "sincos (0x1.fffff8p+127, &sin_res, &cos_res) puts 4.8578606313048733970111
 float: 1
 Test "sincos (0x1p+127, &sin_res, &cos_res) puts 6.23385512955870240370428801097126489001833e-01 in sin_res":
 float: 1
+Test "sincos (0x1p+50, &sin_res, &cos_res) puts 8.68095904660550604334592502063501320395739e-01 in cos_res":
+float: 1
+ifloat: 1
 Test "sincos (0x1p65, &sin_res, &cos_res) puts -0.047183876212354673805106149805700013943218 in sin_res":
 float: 1
 ifloat: 1
@@ -3587,10 +3593,10 @@ ildouble: 1
 ldouble: 1
 
 Function: Real part of "ctan_towardzero":
-float: 1
-ifloat: 1
 double: 1
+float: 1
 idouble: 1
+ifloat: 1
 ildouble: 1
 ldouble: 1
 
@@ -3661,10 +3667,10 @@ ildouble: 4
 ldouble: 4
 
 Function: Imaginary part of "ctanh_towardzero":
-float: 1
-ifloat: 1
 double: 1
+float: 1
 idouble: 1
+ifloat: 1
 ildouble: 1
 ldouble: 1
 
