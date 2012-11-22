@@ -1,3 +1,7 @@
+2012-11-23  Mike Frysinger  <vapier@gentoo.org>
+
+	* Makefile ($(objpfx)db-symbols.out): Change readelf to $(READELF).
+
 2012-10-08  Jonathan Nieder  <jrnieder@gmail.com>
 
 	[BZ #14661]
