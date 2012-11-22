@@ -1,3 +1,11 @@
+2012-11-22  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #14822]
+	* sysdeps/unix/sysv/linux/mips/mips64/n64/syscalls.list
+	(sendfile): New syscall entry.
+	* sysdeps/unix/sysv/linux/mips/mips64/n64/sendfile64.c: New file.
+	Copy of ../sysdeps/unix/sysv/linux/wordsize-64/sendfile64.c.
+
 2012-11-21  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/mips/jmpbuf-unwind.h (_jmpbuf_sp): Cast regs[0].__sp to

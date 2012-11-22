@@ -8,3 +8,5 @@ fanotify_mark	EXTRA	fanotify_mark	i:iiiis	fanotify_mark
 
 fstatfs		-	fstatfs		i:ip	__fstatfs	fstatfs fstatfs64 __fstatfs64
 statfs		-	statfs		i:sp	__statfs	statfs statfs64 __statfs64
+
+sendfile	-	sendfile	i:iipi	sendfile	sendfile64
