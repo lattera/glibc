@@ -1,5 +1,9 @@
 2012-11-22  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/generic/unwind-dw2-fde-glibc.c
+	(_Unwind_IteratePhdrCallback): Declare P_DYNAMIC with
+	__attribute__ ((unused)).
+
 	[BZ #14645]
 	* sysdeps/ieee754/ldbl-128ibm/s_fmal.c (__fmal): Compute result as
 	x * y if x and y are nonzero and z is zero.

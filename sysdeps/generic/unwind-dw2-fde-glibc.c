@@ -1,4 +1,4 @@
-/* Copyright (C) 2001, 2002, 2007 Free Software Foundation, Inc.
+/* Copyright (C) 2001-2012 Free Software Foundation, Inc.
    Contributed by Jakub Jelinek <jakub@redhat.com>.
 
    This file is part of the GNU C Library.
@@ -85,7 +85,8 @@ static int
 _Unwind_IteratePhdrCallback (struct dl_phdr_info *info, size_t size, void *ptr)
 {
   struct unw_eh_callback_data *data = (struct unw_eh_callback_data *) ptr;
-  const ElfW(Phdr) *phdr, *p_eh_frame_hdr, *p_dynamic;
+  const ElfW(Phdr) *phdr, *p_eh_frame_hdr;
+  const ElfW(Phdr) *p_dynamic __attribute__ ((unused));
   long n, match;
   _Unwind_Ptr load_base;
   const unsigned char *p;
