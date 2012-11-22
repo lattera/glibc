@@ -36,7 +36,7 @@ get_cpuinfo (void)
   f = fopen ("/proc/cpuinfo", "r");
   if (f == NULL)
     {
-      printf ("cannot open /proc/cpuinfo");
+      printf ("cannot open /proc/cpuinfo\n");
       exit (1);
     }
 
