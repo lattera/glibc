@@ -14,7 +14,7 @@ territory    "Niue"
 revision     "1.0"
 date         "2012-07-18"
 %
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%localedef  -i locales/niu_NU -c -f charmaps/UTF-8 ./NIU_NU.UTF-8
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
 % Niuean, Vagahau Niue language locale for Niue
 %

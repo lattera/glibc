@@ -1,3 +1,7 @@
+2012-11-22  Andreas Jaeger  <aj@suse.de>
+
+	* locales/niu_NU: Fix comment.
+
 2012-11-21  Andreas Jaeger  <aj@suse.de>
 
 	* locales/szl_PL (LC_COLLATE): Fix syntax error.
