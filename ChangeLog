@@ -1,5 +1,10 @@
 2012-11-22  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #14871]
+	* sysdeps/ieee754/ldbl-128ibm/s_atanl.c (__atanl): Return the
+	input for small inputs.  Return +/- pi/2 for large inputs.
+	* math/libm-test.inc (atan_test): Add more tests.
+
 	* sysdeps/generic/unwind-dw2-fde-glibc.c
 	(_Unwind_IteratePhdrCallback): Declare P_DYNAMIC with
 	__attribute__ ((unused)).

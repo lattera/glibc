@@ -199,6 +199,22 @@ __atanl (long double x)
 	return atantbl[83];
     }
 
+  if (k <= 0x3c800000) /* |x| <= 2**-55.  */
+    {
+      /* Raise inexact.  */
+      if (1e300L + x > 0.0)
+	return x;
+    }
+
+  if (k >= 0x46c00000) /* |x| >= 2**109.  */
+    {
+      /* Saturate result to {-,+}pi/2.  */
+      if (sign)
+	return -atantbl[83];
+      else
+	return atantbl[83];
+    }
+
   if (sign)
       x = -x;
 

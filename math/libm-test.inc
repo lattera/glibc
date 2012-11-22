@@ -1195,6 +1195,14 @@ atan_test (void)
 
   TEST_f_f (atan, 0.75L, 0.643501108793284386802809228717322638L);
 
+  TEST_f_f (atan, 0x1p-100L, 0x1p-100L);
+#ifndef TEST_FLOAT
+  TEST_f_f (atan, 0x1p-600L, 0x1p-600L);
+#endif
+#if defined TEST_LDOUBLE && LDBL_MIN_EXP <= -16381
+  TEST_f_f (atan, 0x1p-10000L, 0x1p-10000L);
+#endif
+
   END (atan);
 }
 
