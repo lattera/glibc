@@ -1,5 +1,9 @@
 2012-11-22  Joseph Myers  <joseph@codesourcery.com>
 
+	* math/libm-test.inc (clog_test): Use
+	UNDERFLOW_EXCEPTION_LDOUBLE_IBM on two tests.
+	(clog10_test): Likewise.
+
 	[BZ #6778]
 	* sysdeps/ieee754/ldbl-128ibm/s_expm1l.c (big): Change to 1e290L.
 
