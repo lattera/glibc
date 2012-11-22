@@ -1,5 +1,10 @@
 2012-11-22  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #14811]
+	* sysdeps/ieee754/ldbl-128ibm/e_powl.c (__ieee754_powl): Saturate
+	nonzero exponents with absolute value below 0x1p-117 to +/-
+	0x1p-117.
+
 	[BZ #14869]
 	* sysdeps/ieee754/ldbl-128ibm/e_hypotl.c (__ieee754_hypotl): Scale
 	up arguments below 2**-450, not just those below 2**-500.
