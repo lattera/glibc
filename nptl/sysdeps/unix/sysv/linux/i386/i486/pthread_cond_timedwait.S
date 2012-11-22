@@ -66,6 +66,34 @@ __pthread_cond_timedwait:
 	movl	$EINVAL, %eax
 	jae	18f
 
+	/* Stack frame:
+
+	   esp + 32
+		    +--------------------------+
+	   esp + 24 | timeout value            |
+		    +--------------------------+
+	   esp + 20 | futex pointer            |
+		    +--------------------------+
+	   esp + 16 | pi-requeued flag         |
+		    +--------------------------+
+	   esp + 12 | old broadcast_seq value  |
+		    +--------------------------+
+	   esp +  4 | old wake_seq value       |
+		    +--------------------------+
+	   esp +  0 | old cancellation mode    |
+		    +--------------------------+
+	*/
+
+#ifndef __ASSUME_FUTEX_CLOCK_REALTIME
+# ifdef PIC
+	LOAD_PIC_REG (cx)
+	cmpl	$0, __have_futex_clock_realtime@GOTOFF(%ecx)
+# else
+	cmpl	$0, __have_futex_clock_realtime
+# endif
+	je	.Lreltmo
+#endif
+
 	/* Get internal lock.  */
 	movl	$1, %edx
 	xorl	%eax, %eax
@@ -96,7 +124,11 @@ __pthread_cond_timedwait:
 	addl	$1, cond_futex(%ebx)
 	addl	$(1 << nwaiters_shift), cond_nwaiters(%ebx)
 
-#define FRAME_SIZE 32
+#ifdef __ASSUME_FUTEX_CLOCK_REALTIME
+# define FRAME_SIZE 24
+#else
+# define FRAME_SIZE 32
+#endif
 	subl	$FRAME_SIZE, %esp
 	cfi_adjust_cfa_offset(FRAME_SIZE)
 	cfi_remember_state
@@ -105,60 +137,19 @@ __pthread_cond_timedwait:
 	movl	wakeup_seq(%ebx), %edi
 	movl	wakeup_seq+4(%ebx), %edx
 	movl	broadcast_seq(%ebx), %eax
-	movl	%edi, 12(%esp)
-	movl	%edx, 16(%esp)
-	movl	%eax, 20(%esp)
+	movl	%edi, 4(%esp)
+	movl	%edx, 8(%esp)
+	movl	%eax, 12(%esp)
 
 	/* Reset the pi-requeued flag.  */
-8:	movl	$0, 24(%esp)
-	/* Get the current time.  */
-	movl	%ebx, %edx
-#ifdef __NR_clock_gettime
-	/* Get the clock number.  */
-	movl	cond_nwaiters(%ebx), %ebx
-	andl	$((1 << nwaiters_shift) - 1), %ebx
-	/* Only clocks 0 and 1 are allowed so far.  Both are handled in the
-	   kernel.  */
-	leal	4(%esp), %ecx
-	movl	$__NR_clock_gettime, %eax
-	ENTER_KERNEL
-	movl	%edx, %ebx
+	movl	$0, 16(%esp)
 
-	/* Compute relative timeout.  */
-	movl	(%ebp), %ecx
-	movl	4(%ebp), %edx
-	subl	4(%esp), %ecx
-	subl	8(%esp), %edx
-#else
-	/* Get the current time.  */
-	leal	4(%esp), %ebx
-	xorl	%ecx, %ecx
-	movl	$__NR_gettimeofday, %eax
-	ENTER_KERNEL
-	movl	%edx, %ebx
-
-	/* Compute relative timeout.  */
-	movl	8(%esp), %eax
-	movl	$1000, %edx
-	mul	%edx		/* Milli seconds to nano seconds.  */
-	movl	(%ebp), %ecx
-	movl	4(%ebp), %edx
-	subl	4(%esp), %ecx
-	subl	%eax, %edx
-#endif
-	jns	12f
-	addl	$1000000000, %edx
-	subl	$1, %ecx
-12:	testl	%ecx, %ecx
+	cmpl	$0, (%ebp)
 	movl	$-ETIMEDOUT, %esi
 	js	6f
 
-	/* Store relative timeout.  */
-21:	movl	%ecx, 4(%esp)
-	movl	%edx, 8(%esp)
-
-	movl	cond_futex(%ebx), %edi
-	movl	%edi, 28(%esp)
+8:	movl	cond_futex(%ebx), %edi
+	movl	%edi, 20(%esp)
 
 	/* Unlock.  */
 	LOCK
@@ -173,6 +164,7 @@ __pthread_cond_timedwait:
 4:	call	__pthread_enable_asynccancel
 	movl	%eax, (%esp)
 
+	leal	(%ebp), %esi
 #if FUTEX_PRIVATE_FLAG > 255
 	xorl	%ecx, %ecx
 #endif
@@ -196,9 +188,7 @@ __pthread_cond_timedwait:
 	jne	42f
 	orl	$FUTEX_CLOCK_REALTIME, %ecx
 
-	/* Requeue-PI uses absolute timeout */
-42:	leal	(%ebp), %esi
-	movl	28(%esp), %edx
+42:	movl	20(%esp), %edx
 	addl	$cond_futex, %ebx
 .Ladd_cond_futex_pi:
 	movl	$SYS_futex, %eax
@@ -209,12 +199,12 @@ __pthread_cond_timedwait:
 	/* Set the pi-requeued flag only if the kernel has returned 0. The
 	   kernel does not hold the mutex on ETIMEDOUT or any other error.  */
 	cmpl	$0, %eax
-	sete	24(%esp)
+	sete	16(%esp)
 	je	41f
 
 	/* When a futex syscall with FUTEX_WAIT_REQUEUE_PI returns
 	   successfully, it has already locked the mutex for us and the
-	   pi_flag (24(%esp)) is set to denote that fact.  However, if another
+	   pi_flag (16(%esp)) is set to denote that fact.  However, if another
 	   thread changed the futex value before we entered the wait, the
 	   syscall may return an EAGAIN and the mutex is not locked.  We go
 	   ahead with a success anyway since later we look at the pi_flag to
@@ -234,22 +224,28 @@ __pthread_cond_timedwait:
 	xorl	%ecx, %ecx
 
 40:	subl	$1, %ecx
+	movl	$0, 16(%esp)
 #ifdef __ASSUME_PRIVATE_FUTEX
 	andl	$FUTEX_PRIVATE_FLAG, %ecx
 #else
 	andl	%gs:PRIVATE_FUTEX, %ecx
 #endif
-#if FUTEX_WAIT != 0
-	addl	$FUTEX_WAIT, %ecx
-#endif
-	leal	4(%esp), %esi
-	movl	28(%esp), %edx
+	addl	$FUTEX_WAIT_BITSET, %ecx
+	/* The following only works like this because we only support
+	   two clocks, represented using a single bit.  */
+	testl	$1, cond_nwaiters(%ebx)
+	jne	30f
+	orl	$FUTEX_CLOCK_REALTIME, %ecx
+30:
+	movl	20(%esp), %edx
+	movl	$0xffffffff, %ebp
 	addl	$cond_futex, %ebx
 .Ladd_cond_futex:
 	movl	$SYS_futex, %eax
 	ENTER_KERNEL
 	subl	$cond_futex, %ebx
 .Lsub_cond_futex:
+	movl	28+FRAME_SIZE(%esp), %ebp
 	movl	%eax, %esi
 
 41:	movl	(%esp), %eax
@@ -268,7 +264,7 @@ __pthread_cond_timedwait:
 	jnz	5f
 
 6:	movl	broadcast_seq(%ebx), %eax
-	cmpl	20(%esp), %eax
+	cmpl	12(%esp), %eax
 	jne	23f
 
 	movl	woken_seq(%ebx), %eax
@@ -277,9 +273,9 @@ __pthread_cond_timedwait:
 	movl	wakeup_seq(%ebx), %edi
 	movl	wakeup_seq+4(%ebx), %edx
 
-	cmpl	16(%esp), %edx
+	cmpl	8(%esp), %edx
 	jne	7f
-	cmpl	12(%esp), %edi
+	cmpl	4(%esp), %edi
 	je	15f
 
 7:	cmpl	%ecx, %edx
@@ -292,7 +288,7 @@ __pthread_cond_timedwait:
 
 	/* We need to go back to futex_wait.  If we're using requeue_pi, then
 	   release the mutex we had acquired and go back.  */
-	movl	24(%esp), %edx
+	movl	16(%esp), %edx
 	test	%edx, %edx
 	jz	8b
 
@@ -357,13 +353,13 @@ __pthread_cond_timedwait:
 
 11:	movl	24+FRAME_SIZE(%esp), %eax
 	/* With requeue_pi, the mutex lock is held in the kernel.  */
-	movl	24(%esp), %ecx
+	movl	16(%esp), %ecx
 	testl	%ecx, %ecx
 	jnz	27f
 
 	call	__pthread_mutex_cond_lock
 26:	addl	$FRAME_SIZE, %esp
-	cfi_adjust_cfa_offset(-FRAME_SIZE);
+	cfi_adjust_cfa_offset(-FRAME_SIZE)
 
 	/* We return the result of the mutex_lock operation if it failed.  */
 	testl	%eax, %eax
@@ -509,6 +505,245 @@ __pthread_cond_timedwait:
 #endif
 	call	__lll_unlock_wake
 	jmp	11b
+	cfi_adjust_cfa_offset(-FRAME_SIZE)
+
+#ifndef __ASSUME_FUTEX_CLOCK_REALTIME
+.Lreltmo:
+	/* Get internal lock.  */
+	movl	$1, %edx
+	xorl	%eax, %eax
+	LOCK
+# if cond_lock == 0
+	cmpxchgl %edx, (%ebx)
+# else
+	cmpxchgl %edx, cond_lock(%ebx)
+# endif
+	jnz	101f
+
+	/* Store the reference to the mutex.  If there is already a
+	   different value in there this is a bad user bug.  */
+102:	cmpl	$-1, dep_mutex(%ebx)
+	movl	24(%esp), %eax
+	je	117f
+	movl	%eax, dep_mutex(%ebx)
+
+	/* Unlock the mutex.  */
+117:	xorl	%edx, %edx
+	call	__pthread_mutex_unlock_usercnt
+
+	testl	%eax, %eax
+	jne	16b
+
+	addl	$1, total_seq(%ebx)
+	adcl	$0, total_seq+4(%ebx)
+	addl	$1, cond_futex(%ebx)
+	addl	$(1 << nwaiters_shift), cond_nwaiters(%ebx)
+
+	subl	$FRAME_SIZE, %esp
+	cfi_adjust_cfa_offset(FRAME_SIZE)
+
+	/* Get and store current wakeup_seq value.  */
+	movl	wakeup_seq(%ebx), %edi
+	movl	wakeup_seq+4(%ebx), %edx
+	movl	broadcast_seq(%ebx), %eax
+	movl	%edi, 4(%esp)
+	movl	%edx, 8(%esp)
+	movl	%eax, 12(%esp)
+
+	/* Reset the pi-requeued flag.  */
+	movl	$0, 16(%esp)
+
+	/* Get the current time.  */
+108:	movl	%ebx, %edx
+# ifdef __NR_clock_gettime
+	/* Get the clock number.  */
+	movl	cond_nwaiters(%ebx), %ebx
+	andl	$((1 << nwaiters_shift) - 1), %ebx
+	/* Only clocks 0 and 1 are allowed so far.  Both are handled in the
+	   kernel.  */
+	leal	24(%esp), %ecx
+	movl	$__NR_clock_gettime, %eax
+	ENTER_KERNEL
+	movl	%edx, %ebx
+
+	/* Compute relative timeout.  */
+	movl	(%ebp), %ecx
+	movl	4(%ebp), %edx
+	subl	24(%esp), %ecx
+	subl	28(%esp), %edx
+# else
+	/* Get the current time.  */
+	leal	24(%esp), %ebx
+	xorl	%ecx, %ecx
+	movl	$__NR_gettimeofday, %eax
+	ENTER_KERNEL
+	movl	%edx, %ebx
+
+	/* Compute relative timeout.  */
+	movl	28(%esp), %eax
+	movl	$1000, %edx
+	mul	%edx		/* Milli seconds to nano seconds.  */
+	movl	(%ebp), %ecx
+	movl	4(%ebp), %edx
+	subl	24(%esp), %ecx
+	subl	%eax, %edx
+# endif
+	jns	112f
+	addl	$1000000000, %edx
+	subl	$1, %ecx
+112:	testl	%ecx, %ecx
+	movl	$-ETIMEDOUT, %esi
+	js	106f
+
+	/* Store relative timeout.  */
+121:	movl	%ecx, 24(%esp)
+	movl	%edx, 28(%esp)
+
+	movl	cond_futex(%ebx), %edi
+	movl	%edi, 20(%esp)
+
+	/* Unlock.  */
+	LOCK
+# if cond_lock == 0
+	subl	$1, (%ebx)
+# else
+	subl	$1, cond_lock(%ebx)
+# endif
+	jne	103f
+
+.LcleanupSTART2:
+104:	call	__pthread_enable_asynccancel
+	movl	%eax, (%esp)
+
+	leal	24(%esp), %esi
+# if FUTEX_PRIVATE_FLAG > 255
+	xorl	%ecx, %ecx
+# endif
+	cmpl	$-1, dep_mutex(%ebx)
+	sete	%cl
+	subl	$1, %ecx
+# ifdef __ASSUME_PRIVATE_FUTEX
+	andl	$FUTEX_PRIVATE_FLAG, %ecx
+# else
+	andl	%gs:PRIVATE_FUTEX, %ecx
+# endif
+# if FUTEX_WAIT != 0
+	addl	$FUTEX_WAIT, %ecx
+# endif
+	movl	20(%esp), %edx
+	addl	$cond_futex, %ebx
+.Ladd_cond_futex2:
+	movl	$SYS_futex, %eax
+	ENTER_KERNEL
+	subl	$cond_futex, %ebx
+.Lsub_cond_futex2:
+	movl	%eax, %esi
+
+141:	movl	(%esp), %eax
+	call	__pthread_disable_asynccancel
+.LcleanupEND2:
+
+
+	/* Lock.  */
+	movl	$1, %edx
+	xorl	%eax, %eax
+	LOCK
+# if cond_lock == 0
+	cmpxchgl %edx, (%ebx)
+# else
+	cmpxchgl %edx, cond_lock(%ebx)
+# endif
+	jnz	105f
+
+106:	movl	broadcast_seq(%ebx), %eax
+	cmpl	12(%esp), %eax
+	jne	23b
+
+	movl	woken_seq(%ebx), %eax
+	movl	woken_seq+4(%ebx), %ecx
+
+	movl	wakeup_seq(%ebx), %edi
+	movl	wakeup_seq+4(%ebx), %edx
+
+	cmpl	8(%esp), %edx
+	jne	107f
+	cmpl	4(%esp), %edi
+	je	115f
+
+107:	cmpl	%ecx, %edx
+	jne	9b
+	cmp	%eax, %edi
+	jne	9b
+
+115:	cmpl	$-ETIMEDOUT, %esi
+	je	28b
+
+	jmp	8b
+
+	cfi_adjust_cfa_offset(-FRAME_SIZE)
+	/* Initial locking failed.  */
+101:
+# if cond_lock == 0
+	movl	%ebx, %edx
+# else
+	leal	cond_lock(%ebx), %edx
+# endif
+# if (LLL_SHARED-LLL_PRIVATE) > 255
+	xorl	%ecx, %ecx
+# endif
+	cmpl	$-1, dep_mutex(%ebx)
+	setne	%cl
+	subl	$1, %ecx
+	andl	$(LLL_SHARED-LLL_PRIVATE), %ecx
+# if LLL_PRIVATE != 0
+	addl	$LLL_PRIVATE, %ecx
+# endif
+	call	__lll_lock_wait
+	jmp	102b
+
+	cfi_adjust_cfa_offset(FRAME_SIZE)
+
+	/* Unlock in loop requires wakeup.  */
+103:
+# if cond_lock == 0
+	movl	%ebx, %eax
+# else
+	leal	cond_lock(%ebx), %eax
+# endif
+# if (LLL_SHARED-LLL_PRIVATE) > 255
+	xorl	%ecx, %ecx
+# endif
+	cmpl	$-1, dep_mutex(%ebx)
+	setne	%cl
+	subl	$1, %ecx
+	andl	$(LLL_SHARED-LLL_PRIVATE), %ecx
+# if LLL_PRIVATE != 0
+	addl	$LLL_PRIVATE, %ecx
+# endif
+	call	__lll_unlock_wake
+	jmp	104b
+
+	/* Locking in loop failed.  */
+105:
+# if cond_lock == 0
+	movl	%ebx, %edx
+# else
+	leal	cond_lock(%ebx), %edx
+# endif
+# if (LLL_SHARED-LLL_PRIVATE) > 255
+	xorl	%ecx, %ecx
+# endif
+	cmpl	$-1, dep_mutex(%ebx)
+	setne	%cl
+	subl	$1, %ecx
+	andl	$(LLL_SHARED-LLL_PRIVATE), %ecx
+# if LLL_PRIVATE != 0
+	addl	$LLL_PRIVATE, %ecx
+# endif
+	call	__lll_lock_wait
+	jmp	106b
+	cfi_adjust_cfa_offset(-FRAME_SIZE)
+#endif
 
 	.size	__pthread_cond_timedwait, .-__pthread_cond_timedwait
 versioned_symbol (libpthread, __pthread_cond_timedwait, pthread_cond_timedwait,
@@ -552,7 +787,7 @@ __condvar_tw_cleanup:
 	call	__lll_lock_wait
 
 1:	movl	broadcast_seq(%ebx), %eax
-	cmpl	20(%esp), %eax
+	cmpl	12(%esp), %eax
 	jne	3f
 
 	/* We increment the wakeup_seq counter only if it is lower than
@@ -706,6 +941,20 @@ __condvar_tw_cleanup:
 	.long	.LcleanupEND-.Lsub_cond_futex
 	.long	__condvar_tw_cleanup-.LSTARTCODE
 	.uleb128  0
+#ifndef __ASSUME_FUTEX_CLOCK_REALTIME
+	.long	.LcleanupSTART2-.LSTARTCODE
+	.long	.Ladd_cond_futex2-.LcleanupSTART2
+	.long	__condvar_tw_cleanup-.LSTARTCODE
+	.uleb128  0
+	.long	.Ladd_cond_futex2-.LSTARTCODE
+	.long	.Lsub_cond_futex2-.Ladd_cond_futex2
+	.long	__condvar_tw_cleanup2-.LSTARTCODE
+	.uleb128  0
+	.long	.Lsub_cond_futex2-.LSTARTCODE
+	.long	.LcleanupEND2-.Lsub_cond_futex2
+	.long	__condvar_tw_cleanup-.LSTARTCODE
+	.uleb128  0
+#endif
 	.long	.LcallUR-.LSTARTCODE
 	.long	.LENDCODE-.LcallUR
 	.long	0
