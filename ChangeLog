@@ -1,5 +1,10 @@
 2012-11-22  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #14868]
+	* sysdeps/ieee754/ldbl-128ibm/e_hypotl.c (__ieee754_hypotl):
+	Return a+b for ratio over 2**120, not 2**60.
+	* math/libm-test.inc (hypot_test): Add another test.
+
 	* math/libm-test.inc (clog_test): Use
 	UNDERFLOW_EXCEPTION_LDOUBLE_IBM on two tests.
 	(clog10_test): Likewise.

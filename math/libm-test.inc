@@ -5730,6 +5730,8 @@ hypot_test (void)
 
   TEST_ff_f (hypot, 0.75L, 1.25L, 1.45773797371132511771853821938639577L);
 
+  TEST_ff_f (hypot, 1.0L, 0x1p-61L, 1.0L);
+
 #if !(defined TEST_FLOAT && defined TEST_INLINE)
   TEST_ff_f (hypot, 0x3p125L, 0x4p125L, 0x5p125L);
   TEST_ff_f (hypot, 0x1.234566p-126L, 0x1.234566p-126L, 1.891441686191081936598531534017449451173e-38L);
