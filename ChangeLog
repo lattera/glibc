@@ -1,5 +1,12 @@
 2012-11-22  Joseph Myers  <joseph@codesourcery.com>
 
+	* math/libm-test.inc (fma_test_towardzero) [TEST_LDOUBLE &&
+	LDBL_MANT_DIG == 106]: Disable some tests.
+	(fma_test_downward) [TEST_LDOUBLE && LDBL_MANT_DIG == 106]:
+	Likewise.
+	(fma_test_upward) [TEST_LDOUBLE && LDBL_MANT_DIG == 106]:
+	Likewise.
+
 	[BZ #14871]
 	* sysdeps/ieee754/ldbl-128ibm/s_atanl.c (__atanl): Return the
 	input for small inputs.  Return +/- pi/2 for large inputs.
