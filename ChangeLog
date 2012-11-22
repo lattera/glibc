@@ -1,5 +1,9 @@
 2012-11-22  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #14645]
+	* sysdeps/ieee754/ldbl-128ibm/s_fmal.c (__fmal): Compute result as
+	x * y if x and y are nonzero and z is zero.
+
 	[BZ #14811]
 	* sysdeps/ieee754/ldbl-128ibm/e_powl.c (__ieee754_powl): Saturate
 	nonzero exponents with absolute value below 0x1p-117 to +/-
