@@ -130,7 +130,7 @@ _dl_runtime_profile:
 #ifdef __mcoldfire__
 	tst.l %d1
 	beq 2f
-1:	move.l (%a0)+, (%a1)+
+1:	move.l (%a1)+, (%a0)+
 	subq.l #4,%d1
 	bne 1b
 2:
