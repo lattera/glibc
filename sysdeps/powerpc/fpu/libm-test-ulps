@@ -136,6 +136,9 @@ ldouble: 1
 Test "atan2 (-0.75, -1.0) == -2.49809154479650885165983415456218025":
 float: 1
 ifloat: 1
+Test "atan2 (-max_value, -min_value) == -pi/2":
+float: 1
+ifloat: 1
 Test "atan2 (0.75, -1.0) == 2.49809154479650885165983415456218025":
 float: 1
 ifloat: 1
@@ -2725,6 +2728,38 @@ double: 1
 idouble: 1
 ildouble: 1
 ldouble: 1
+Test "y0 (0x1p-100) == -4.420092432563900590456563035154802121284e+1":
+ildouble: 1
+ldouble: 1
+Test "y0 (0x1p-110) == -4.861363632869203777249475899390797503250e+1":
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
+Test "y0 (0x1p-20) == -8.8992283012125827603076426611387876938160":
+double: 1
+idouble: 1
+Test "y0 (0x1p-30) == -1.3311940304267782826037118027401817264906e+1":
+float: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "y0 (0x1p-40) == -1.7724652307320814696990854700366226762563e+1":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+Test "y0 (0x1p-60) == -2.6550076313426878432849115782108205929120e+1":
+float: 1
+ifloat: 1
+Test "y0 (0x1p-70) == -3.0962788316479910300778244424468159753887e+1":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+Test "y0 (0x1p-80) == -3.5375500319532942168707373066828113573541e+1":
+double: 1
+idouble: 1
 Test "y0 (1.0) == 0.0882569642156769579829267660235151628":
 double: 2
 float: 1
@@ -2767,6 +2802,12 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
+ildouble: 1
+ldouble: 1
+Test "y1 (0x1p-10) == -6.5190099301063115047395187618929589514382e+02":
+double: 1
+idouble: 1
+Test "y1 (0x1p-20) == -6.6754421443450423911167962313100637952285e+05":
 ildouble: 1
 ldouble: 1
 Test "y1 (1.5) == -0.412308626973911295952829820633445323":
