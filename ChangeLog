@@ -1,3 +1,8 @@
+2012-11-24  Adam Conrad  <adconrad@0c3.net>
+
+	* configure.in: Autodetect C++ header directories.
+	* configure: Regenerated.
+
 2012-11-23  Mike Frysinger  <vapier@gentoo.org>
 
 	* elf/Makefile ($(objpfx)ld.so): Change readelf to $(READELF).
