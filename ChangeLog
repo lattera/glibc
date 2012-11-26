@@ -1,3 +1,7 @@
+2012-11-26  Andreas Schwab  <schwab@linux-m68k.org>
+
+	* elf/sotruss.ksh: Correctly locate argument of -F and -T options.
+
 2012-11-24  Adam Conrad  <adconrad@0c3.net>
 
 	* configure.in: Autodetect C++ header directories.

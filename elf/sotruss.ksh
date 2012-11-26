@@ -94,14 +94,14 @@ warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
       do_missing_arg "$1"
     fi
     shift
-    SOTRUSS_FROMLIST="$2"
+    SOTRUSS_FROMLIST="$1"
     ;;
   -T | --t | --to)
     if test $# -eq 1; then
       do_missing_arg "$1"
     fi
     shift
-    SOTRUSS_TOLIST="$2"
+    SOTRUSS_TOLIST="$1"
     ;;
   -o | --o | --ou | --out | --outp | --outpu | --output)
     if test $# -eq 1; then
