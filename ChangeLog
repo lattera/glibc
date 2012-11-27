@@ -1211,14 +1211,6 @@
 	* conform/data/stdbool.h-data: Likewise.
 	* conform/data/stdnoreturn.h-data: Likewise.
 
-2012-11-07  Andreas Jaeger  <aj@suse.de>
-
-	[BZ #14809]
-	* sysdeps/unix/sysv/linux/sys/sysctl.h (_UAPI_LINUX_KERNEL_H)
-	(_UAPI_LINUX_TYPES_H): Starting with Linux 3.7, the include header
-	guards are changed.  Only define if not yet defined, #undef back
-	after including linux/sysctl.h if defined here.
-
 2012-11-07  Roland McGrath  <roland@hack.frob.com>
 
 	[BZ #14815]
