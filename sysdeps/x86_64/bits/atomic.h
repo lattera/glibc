@@ -18,6 +18,7 @@
 
 #include <stdint.h>
 #include <tls.h>	/* For tcbhead_t.  */
+#include <libc-internal.h>
 
 
 typedef int8_t atomic8_t;
@@ -101,8 +102,9 @@ typedef uintmax_t uatomic_max_t;
 		       "lock\n"						      \
 		       "0:\tcmpxchgq %q2, %1"				      \
 		       : "=a" (ret), "=m" (*mem)			      \
-		       : "q" ((atomic64_t) (newval)), "m" (*mem),	      \
-			 "0" ((atomic64_t) (oldval)),		      \
+		       : "q" ((atomic64_t) cast_to_integer (newval)),	      \
+			 "m" (*mem),					      \
+			 "0" ((atomic64_t) cast_to_integer (oldval)),	      \
 			 "i" (offsetof (tcbhead_t, multiple_threads)));	      \
      ret; })
 
@@ -125,7 +127,8 @@ typedef uintmax_t uatomic_max_t;
      else								      \
        __asm __volatile ("xchgq %q0, %1"				      \
 			 : "=r" (result), "=m" (*mem)			      \
-			 : "0" ((atomic64_t) (newvalue)), "m" (*mem));	      \
+			 : "0" ((atomic64_t) cast_to_integer (newvalue)),     \
+			   "m" (*mem));					      \
      result; })
 
 
@@ -149,7 +152,8 @@ typedef uintmax_t uatomic_max_t;
      else								      \
        __asm __volatile (lock "xaddq %q0, %1"				      \
 			 : "=r" (result), "=m" (*mem)			      \
-			 : "0" ((atomic64_t) (value)), "m" (*mem),	      \
+			 : "0" ((atomic64_t) cast_to_integer (value)),	      \
+			   "m" (*mem),					      \
 			   "i" (offsetof (tcbhead_t, multiple_threads)));     \
      result; })
 
@@ -187,7 +191,8 @@ typedef uintmax_t uatomic_max_t;
     else								      \
       __asm __volatile (lock "addq %q1, %0"				      \
 			: "=m" (*mem)					      \
-			: "ir" ((atomic64_t) (value)), "m" (*mem),	      \
+			: "ir" ((atomic64_t) cast_to_integer (value)),	      \
+			  "m" (*mem),					      \
 			  "i" (offsetof (tcbhead_t, multiple_threads)));      \
   } while (0)
 
@@ -218,7 +223,8 @@ typedef uintmax_t uatomic_max_t;
      else								      \
        __asm __volatile (LOCK_PREFIX "addq %q2, %0; sets %1"		      \
 			 : "=m" (*mem), "=qm" (__result)		      \
-			 : "ir" ((atomic64_t) (value)), "m" (*mem));	      \
+			 : "ir" ((atomic64_t) cast_to_integer (value)),	      \
+			   "m" (*mem));					      \
      __result; })
 
 
@@ -239,7 +245,8 @@ typedef uintmax_t uatomic_max_t;
      else								      \
        __asm __volatile (LOCK_PREFIX "addq %q2, %0; setz %1"		      \
 			 : "=m" (*mem), "=qm" (__result)		      \
-			 : "ir" ((atomic64_t) (value)), "m" (*mem));	      \
+			 : "ir" ((atomic64_t) cast_to_integer (value)),	      \
+			   "m" (*mem));					      \
      __result; })
 
 

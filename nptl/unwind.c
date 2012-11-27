@@ -124,7 +124,7 @@ __pthread_unwind (__pthread_unwind_buf_t *buf)
   /* This is not a catchable exception, so don't provide any details about
      the exception type.  We do need to initialize the field though.  */
   THREAD_SETMEM (self, exc.exception_class, 0);
-  THREAD_SETMEM (self, exc.exception_cleanup, unwind_cleanup);
+  THREAD_SETMEM (self, exc.exception_cleanup, &unwind_cleanup);
 
   _Unwind_ForcedUnwind (&self->exc, unwind_stop, ibuf);
 #else

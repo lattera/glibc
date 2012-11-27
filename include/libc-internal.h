@@ -34,4 +34,20 @@ extern void __libc_thread_freeres (void);
 /* Define and initialize `__progname' et. al.  */
 extern void __init_misc (int, char **, char **);
 
+/* 1 if 'type' is a pointer type, 0 otherwise.  */
+# define __pointer_type(type) (__builtin_classify_type ((type) 0) == 5)
+
+/* __intptr_t if P is true, or T if P is false.  */
+# define __integer_if_pointer_type_sub(T, P) \
+  __typeof__ (*(0 ? (__typeof__ (0 ? (T *) 0 : (void *) (P))) 0 \
+		  : (__typeof__ (0 ? (__intptr_t *) 0 : (void *) (!(P)))) 0))
+
+/* __intptr_t if EXPR has a pointer type, or the type of EXPR otherwise.  */
+# define __integer_if_pointer_type(expr) \
+  __integer_if_pointer_type_sub(__typeof__ ((__typeof__ (expr)) 0), \
+				__pointer_type (__typeof__ (expr)))
+
+/* Cast an integer or a pointer VAL to integer with proper type.  */
+# define cast_to_integer(val) ((__integer_if_pointer_type (val)) (val))
+
 #endif /* _LIBC_INTERNAL  */

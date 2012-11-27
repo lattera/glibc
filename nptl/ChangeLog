@@ -1,3 +1,14 @@
+2012-11-26  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* unwind.c (__pthread_unwind): Pass address of unwind_cleanup
+	to THREAD_SETMEM.
+	* sysdeps/i386/tls.h: Include <libc-internal.h>.
+	(THREAD_SETMEM): Use cast_to_integer before casting to uint64_t.
+	(THREAD_SETMEM_NC): Likewise.
+	* sysdeps/x86_64/tls.h: Include <libc-internal.h>.
+	(THREAD_SETMEM): Use cast_to_integer before casting to uint64_t.
+	(THREAD_SETMEM_NC): Likewise.
+
 2012-11-21  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/sem_post.c (__old_sem_post): Cast result

@@ -1,3 +1,20 @@
+2012-11-26  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* elf/dl-load.c (_dl_map_object_from_fd): Cast to uintptr_t
+	before casting to void *.
+	* include/libc-internal.h (__pointer_type): New macro.
+	(__integer_if_pointer_type_sub): Likewise.
+	(__integer_if_pointer_type): Likewise.
+	(cast_to_integer): Likewise.
+	* sysdeps/x86_64/bits/atomic.h: Include <libc-internal.h>.
+	(__arch_c_compare_and_exchange_val_64_acq): Use cast_to_integer
+	before casting to atomic64_t.
+	(atomic_exchange_acq): Likewise.
+	(__arch_exchange_and_add_body): Likewise.
+	(__arch_add_body): Likewise.
+	(atomic_add_negative): Likewise.
+	(atomic_add_zero): Likewise.
+
 2012-11-26  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/generic/unwind-dw2-fde.c (get_pc_begin): New function.

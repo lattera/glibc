@@ -1351,7 +1351,8 @@ cannot allocate TLS data structures for initial thread");
 	    && ((size_t) (c->mapend - c->mapstart + c->mapoff)
 		>= header->e_phoff + header->e_phnum * sizeof (ElfW(Phdr))))
 	  /* Found the program header in this segment.  */
-	  l->l_phdr = (void *) (c->mapstart + header->e_phoff - c->mapoff);
+	  l->l_phdr = (void *) (uintptr_t) (c->mapstart + header->e_phoff
+					    - c->mapoff);
 
 	if (c->allocend > c->dataend)
 	  {
