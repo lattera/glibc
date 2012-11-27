@@ -1,3 +1,11 @@
+2012-11-26  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/generic/unwind-dw2-fde.c (get_pc_begin): New function.
+	(fde_unencoded_compare): Use get_pc_begin instead of type-punning.
+	(add_fdes): Likewise.
+	(linear_search_fdes): Likewise.
+	(binary_search_unencoded_fdes): Likewise.
+
 2012-11-26  Andreas Schwab  <schwab@linux-m68k.org>
 
 	* elf/sotruss.ksh: Correctly locate argument of -F and -T options.

@@ -1,6 +1,5 @@
 /* Subroutines needed for unwinding stack frames for exception handling.  */
-/* Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2006, 2007
-   Free Software Foundation, Inc.
+/* Copyright (C) 1997-2012 Free Software Foundation, Inc.
    Contributed by Jason Merrill <jason@cygnus.com>.
 
    This file is part of the GNU C Library.
@@ -342,14 +341,24 @@ get_fde_encoding (struct dwarf_fde *f)
    (Ideally we would have the linker sort the FDEs so we don't have to do
    it at run time. But the linkers are not yet prepared for this.)  */
 
+/* Return the Nth pc_begin value from FDE x.  */
+
+static inline _Unwind_Ptr
+get_pc_begin (fde *x, size_t n)
+{
+  _Unwind_Ptr p;
+  memcpy (&p, x->pc_begin + n * sizeof (_Unwind_Ptr), sizeof (_Unwind_Ptr));
+  return p;
+}
+
 /* Comparison routines.  Three variants of increasing complexity.  */
 
 static int
 fde_unencoded_compare (struct object *ob __attribute__((unused)),
 		       fde *x, fde *y)
 {
-  _Unwind_Ptr x_ptr = *(_Unwind_Ptr *) x->pc_begin;
-  _Unwind_Ptr y_ptr = *(_Unwind_Ptr *) y->pc_begin;
+  _Unwind_Ptr x_ptr = get_pc_begin (x, 0);
+  _Unwind_Ptr y_ptr = get_pc_begin (y, 0);
 
   if (x_ptr > y_ptr)
     return 1;
@@ -712,7 +721,7 @@ add_fdes (struct object *ob, struct fde_accumulator *accu, fde *this_fde)
 
       if (encoding == DW_EH_PE_absptr)
 	{
-	  if (*(_Unwind_Ptr *) this_fde->pc_begin == 0)
+	  if (get_pc_begin (this_fde, 0) == 0)
 	    continue;
 	}
       else
@@ -830,8 +839,8 @@ linear_search_fdes (struct object *ob, fde *this_fde, void *pc)
 
       if (encoding == DW_EH_PE_absptr)
 	{
-	  pc_begin = ((_Unwind_Ptr *) this_fde->pc_begin)[0];
-	  pc_range = ((_Unwind_Ptr *) this_fde->pc_begin)[1];
+	  pc_begin = get_pc_begin (this_fde, 0);
+	  pc_range = get_pc_begin (this_fde, 1);
 	  if (pc_begin == 0)
 	    continue;
 	}
@@ -881,8 +890,8 @@ binary_search_unencoded_fdes (struct object *ob, void *pc)
       void *pc_begin;
       uaddr pc_range;
 
-      pc_begin = ((void **) f->pc_begin)[0];
-      pc_range = ((uaddr *) f->pc_begin)[1];
+      pc_begin = (void *) get_pc_begin (f, 0);
+      pc_range = (uaddr) get_pc_begin (f, 1);
 
       if (pc < pc_begin)
 	hi = i;
