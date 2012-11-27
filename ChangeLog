@@ -1,3 +1,11 @@
+2012-11-27  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	[BZ #11741]
+	* libio/Makefile (tests): Add test case tst-fwrite-error.
+	* libio/iofwrite.c (_IO_fwrite): Return 0 on EOF.
+	* libio/iofwrite_u.c (fwrite_unlocked): Likewise.
+	* libio/tst-fwrite-error.c: New test case.
+
 2012-11-26  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* elf/dl-load.c (_dl_map_object_from_fd): Cast to uintptr_t
