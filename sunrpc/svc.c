@@ -4,6 +4,23 @@
  * There are two sets of procedures here.  The xprt routines are
  * for handling transport handles.  The svc routines handle the
  * list of service routines.
+ *  Copyright (C) 2002-2012 Free Software Foundation, Inc.
+ *  This file is part of the GNU C Library.
+ *  Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
+ *
+ *  The GNU C Library is free software; you can redistribute it and/or
+ *  modify it under the terms of the GNU Lesser General Public
+ *  License as published by the Free Software Foundation; either
+ *  version 2.1 of the License, or (at your option) any later version.
+ *
+ *  The GNU C Library is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *  Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public
+ *  License along with the GNU C Library; if not, see
+ *  <http://www.gnu.org/licenses/>.
  *
  * Copyright (c) 2010, Oracle America, Inc.
  *
@@ -41,6 +58,7 @@
 #include <rpc/svc.h>
 #include <rpc/pmap_clnt.h>
 #include <sys/poll.h>
+#include <time.h>
 
 #ifdef _RPC_THREAD_SAFE_
 #define xports RPC_THREAD_VARIABLE(svc_xports_s)
@@ -543,6 +561,21 @@ svc_getreq_common (const int fd)
   while (stat == XPRT_MOREREQS);
 }
 libc_hidden_nolink_sunrpc (svc_getreq_common, GLIBC_2_2)
+
+/* If there are no file descriptors available, then accept will fail.
+   We want to delay here so the connection request can be dequeued;
+   otherwise we can bounce between polling and accepting, never giving the
+   request a chance to dequeue and eating an enormous amount of cpu time
+   in svc_run if we're polling on many file descriptors.  */
+void
+__svc_accept_failed (void)
+{
+  if (errno == EMFILE)
+    {
+      struct timespec ts = { .tv_sec = 0, .tv_nsec = 50000000 };
+      __nanosleep (&ts, NULL);
+    }
+}
 
 #ifdef _RPC_THREAD_SAFE_
 

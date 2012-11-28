@@ -1,3 +1,15 @@
+2012-11-28  Jeff Law <law@redhat.com>
+	    Martin Osvald <mosvald@redhat.com>
+
+	[BZ #14889]
+	* sunrpc/rpc/svc.h (__svc_accept_failed): New prototype.
+	* sunrpc/svc.c: Include time.h.
+	(__svc_accept_failed): New function.
+	* sunrpc/svc_tcp.c (rendezvous_request): If the accept fails for
+	any reason other than EINTR, call __svc_accept_failed.
+	* sunrpc/svc_udp.c (svcudp_recv): Similarly.
+	* sunrpc/svc_unix.c (rendezvous_request): Similarly.
+
 2012-11-28  Andreas Schwab  <schwab@suse.de>
 
 	* scripts/abilist.awk: Also handle indirect functions in .opd

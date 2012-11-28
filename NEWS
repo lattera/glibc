@@ -21,7 +21,11 @@ Version 2.17
   14621, 14638, 14645, 14648, 14652, 14660, 14661, 14669, 14672, 14683,
   14694, 14716, 14719, 14743, 14767, 14783, 14784, 14785, 14793, 14796,
   14797, 14801, 14805, 14807, 14811, 14815, 14821, 14822, 14824, 14828,
-  14831, 14835, 14838, 14856, 14863, 14865, 14866, 14868, 14869, 14871.
+  14831, 14835, 14838, 14856, 14863, 14865, 14866, 14868, 14869, 14871,
+  14889.
+
+* CVE-2011-4609 svc_run() produces high cpu usage when accept fails with
+  EMFILE has been fixed (Bugzilla #14889).
 
 * The add-on ports collection is now distributed in the "ports" subdirectory
   of the main GNU C Library distribution, rather than separately.
