@@ -64,9 +64,12 @@
 static const long double
   one = 1.0L,
   huge = 1.0e+4932L,
- pio2_hi = 1.5707963267948966192021943710788178805159986950457096099853515625L,
-  pio2_lo = 2.9127320560933561582586004641843300502121E-20L,
-  pio4_hi = 7.8539816339744830960109718553940894025800E-1L,
+  pio2_hi = 0x1.921fb54442d1846ap+0L, /* pi/2 rounded to nearest to 64
+					 bits.  */
+  pio2_lo = -0x7.6733ae8fe47c65d8p-68L, /* pi/2 - pio2_hi rounded to
+					   nearest to 64 bits.  */
+  pio4_hi = 0xc.90fdaa22168c235p-4L, /* pi/4 rounded to nearest to 64
+					bits.  */
 
 	/* coefficient for R(x^2) */
 

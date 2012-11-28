@@ -1,3 +1,13 @@
+2012-11-28  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #14803]
+	* sysdeps/ieee754/ldbl-96/e_asinl.c (pio2_hi): Use hex float value
+	of pi/2 rounded to nearest to 64 bits.
+	(pio2_lo): Use hex float value of pi/2 - pio2_hi rounded to
+	nearest to 64 bits.
+	(pio4_hi): Use hex float value of pi/4 rounded to nearest to 64
+	bits.
+
 2012-11-28  Jeff Law <law@redhat.com>
 	    Martin Osvald <mosvald@redhat.com>
 
