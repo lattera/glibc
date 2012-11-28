@@ -81,7 +81,7 @@ $2 == "g" || $2 == "w" && (NF == 7 || NF == 8) {
     type = "F";
     size = "";
   }
-  else if (type == "iD" && $4 == ".text") {
+  else if (type == "iD" && ($4 == ".text" || $4 == ".opd")) {
     # Indirect functions.
     type = "F";
     size = "";

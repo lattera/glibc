@@ -1,3 +1,8 @@
+2012-11-28  Andreas Schwab  <schwab@suse.de>
+
+	* scripts/abilist.awk: Also handle indirect functions in .opd
+	section.
+
 2012-11-28  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #13881]
