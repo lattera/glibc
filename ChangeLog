@@ -1,3 +1,21 @@
+2012-11-28  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #13881]
+	* sysdeps/x86/fpu/powl_helper.c: New file.
+	* sysdeps/x86/fpu/Makefile: Likewise.
+	* sysdeps/i386/fpu/e_powl.S (limit): Remove object.
+	(p3): New object.
+	(__ieee754_powl): Use __powl_helper for finite arguments except
+	integer exponents below 8.
+	* sysdeps/x86_64/fpu/e_powl.S (limit): Remove object.
+	(p3): New object.
+	(__ieee754_powl): Use __powl_helper for finite arguments except
+	integer exponents below 8.
+	* math/libm-test.inc (pow_test): Add more tests and enable some
+	previously disabled tests.
+	* sysdeps/i386/fpu/libm-test-ulps: Update.
+	* sysdeps/x86_64/fpu/libm-test-ulps: Likewise.
+
 2012-11-28  Siddhesh Poyarekar  <siddhesh@redhat.com>
 	    Carlos O'Donell  <carlos_odonell@mentor.com>
 

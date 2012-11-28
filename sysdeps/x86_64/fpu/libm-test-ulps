@@ -2398,6 +2398,8 @@ ifloat: 1
 Test "pow (0x0.ffffffp0, -0x1p24) == 2.7182819094701610539628664526874952929416":
 float: 1
 ifloat: 1
+ildouble: 1
+ldouble: 1
 Test "pow (0x0.ffffffp0, 0x1p24) == 0.3678794302077803437135155590023422899744":
 float: 1
 ifloat: 1
@@ -3575,6 +3577,8 @@ ifloat: 1
 Function: "pow":
 float: 1
 ifloat: 1
+ildouble: 1
+ldouble: 1
 
 Function: "pow_downward":
 float: 1

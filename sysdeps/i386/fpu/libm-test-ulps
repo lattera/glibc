@@ -2480,6 +2480,11 @@ ifloat: 1
 ildouble: 1
 ldouble: 1
 
+# pow
+Test "pow (0x0.ffffffp0, -0x1p24) == 2.7182819094701610539628664526874952929416":
+ildouble: 1
+ldouble: 1
+
 # pow_downward
 Test "pow_downward (1.0625, 1.125) == 1.070582293028761362162622578677070098674":
 double: 1
@@ -3779,6 +3784,10 @@ ifloat: 1
 Function: "log10":
 float: 1
 ifloat: 1
+ildouble: 1
+ldouble: 1
+
+Function: "pow":
 ildouble: 1
 ldouble: 1
 
