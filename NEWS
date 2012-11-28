@@ -23,6 +23,9 @@ Version 2.17
   14797, 14801, 14805, 14807, 14811, 14815, 14821, 14822, 14824, 14828,
   14831, 14835, 14838, 14856, 14863, 14865, 14866, 14868, 14869, 14871.
 
+* The add-on ports collection is now distributed in the "ports" subdirectory
+  of the main GNU C Library distribution, rather than separately.
+
 * Port to ARM AArch64 contributed by Linaro.
 
 * Support for STT_GNU_IFUNC symbols added for s390 and s390x.
@@ -50,6 +53,13 @@ Version 2.17
   never attempts to contact the Name Service Caching Daemon (nscd).
   New configure option --disable-build-nscd avoids building nscd itself;
   this is the default if --disable-nscd is used.
+
+* Improved support for cross-compilation, including cross-testing and
+  bootstrap builds without a previously built glibc.
+
+* New configure options --with-bugurl and --with-pkgversion, for
+  distributors to use to embed their bug-reporting and package version
+  information in --help and --version output.
 
 * The ttyname and ttyname_r functions on Linux now fall back to searching for
   the tty file descriptor in /dev/pts or /dev if /proc is not available.  This
