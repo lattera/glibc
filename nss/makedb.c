@@ -591,12 +591,15 @@ copy_valstr (const void *nodep, const VISIT which, const int depth)
 }
 
 
+/* Determine if the candidate is prime by using a modified trial division
+   algorithm. The candidate must be both odd and greater than 4.  */
 static int
 is_prime (size_t candidate)
 {
-  /* No even number and none less than 10 will be passed here.  */
   size_t divn = 3;
   size_t sq = divn * divn;
+
+  assert (candidate > 4 && candidate % 2 != 0);
 
   while (sq < candidate && candidate % divn != 0)
     {
@@ -612,8 +615,8 @@ is_prime (size_t candidate)
 static size_t
 next_prime (size_t seed)
 {
-  /* Make it definitely odd.  */
-  seed |= 1;
+  /* Make sure that we're always greater than 4.  */
+  seed = (seed + 4) | 1;
 
   while (!is_prime (seed))
     seed += 2;

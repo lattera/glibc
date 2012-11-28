@@ -1,3 +1,10 @@
+2012-11-28  Siddhesh Poyarekar  <siddhesh@redhat.com>
+	    Carlos O'Donell  <carlos_odonell@mentor.com>
+
+	* nss/makedb.c (is_prime): Assert that input is odd and greater
+	than 4.  Note that fact in a comment too.
+	(next_prime): Add 4 to input.
+
 2012-11-27  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	[BZ #11741]
