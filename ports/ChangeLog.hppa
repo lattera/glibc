@@ -1,5 +1,8 @@
 2012-11-29  Carlos O'Donell  <carlos@systemhalted.org>
 
+	* sysdeps/unix/sysv/linux/hppa/bits/socket.h: Delete file.
+	* ports/sysdeps/unix/sysv/linux/hppa/bits/socket_type.h: New file.
+
 	* sysdeps/hppa/fpu/feholdexcpt.c: Cast return to unsigned long long *.
 	* sysdeps/unix/sysv/linux/hppa/mmap.c: Cast return to __ptr_t.
 
