@@ -1,3 +1,20 @@
+2012-11-29  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #14893]
+	* sysdeps/mips/mips64/n32/_itoa.h: New file.
+	* sysdeps/unix/sysv/linux/mips/register-dump.h: Include
+	<sgidefs.h>.
+	(CTX_TYPE): New macro.
+	(CTX_REG): Likewise.
+	(CTX_PC): Likewise.
+	(CTX_MDHI): Likewise.
+	(CTX_MDLO): Likewise.
+	(REG_HEX_SIZE): Likewise.
+	(hexvalue): Take _ITOA_WORD_TYPE argument.
+	(register_dump): Use these macros instead of hardcoding struct
+	sigcontext * type and accesses and 8-byte textual output for
+	registers.
+
 2012-11-22  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #14822]

@@ -17,8 +17,25 @@
    License along with the GNU C Library.  If not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include <sgidefs.h>
 #include <sys/uio.h>
 #include <_itoa.h>
+
+#if _MIPS_SIM == _ABIO32
+# define CTX_TYPE	struct sigcontext *
+# define CTX_REG(ctx, i)	((ctx)->sc_regs[(i)])
+# define CTX_PC(ctx)	((ctx)->sc_pc)
+# define CTX_MDHI(ctx)	((ctx)->sc_mdhi)
+# define CTX_MDLO(ctx)	((ctx)->sc_mdlo)
+# define REG_HEX_SIZE	8
+#else
+# define CTX_TYPE	ucontext_t *
+# define CTX_REG(ctx, i)	((ctx)->uc_mcontext.gregs[(i)])
+# define CTX_PC(ctx)	((ctx)->uc_mcontext.pc)
+# define CTX_MDHI(ctx)	((ctx)->uc_mcontext.mdhi)
+# define CTX_MDLO(ctx)	((ctx)->uc_mcontext.mdhi)
+# define REG_HEX_SIZE	16
+#endif
 
 /* We will print the register dump in this format:
 
@@ -32,7 +49,7 @@
 */
 
 static void
-hexvalue (unsigned long int value, char *buf, size_t len)
+hexvalue (_ITOA_WORD_TYPE value, char *buf, size_t len)
 {
   char *cp = _itoa_word (value, buf + len, 16, 0);
   while (cp > buf)
@@ -40,9 +57,9 @@ hexvalue (unsigned long int value, char *buf, size_t len)
 }
 
 static void
-register_dump (int fd, struct sigcontext *ctx)
+register_dump (int fd, CTX_TYPE ctx)
 {
-  char regs[38][8];
+  char regs[38][REG_HEX_SIZE];
   struct iovec iov[38 * 2 + 10];
   size_t nr = 0;
   int i;
@@ -58,40 +75,40 @@ register_dump (int fd, struct sigcontext *ctx)
 
   /* Generate strings of register contents.  */
   for (i = 0; i < 32; i++)
-    hexvalue (ctx->sc_regs[i], regs[i], 8);
-  hexvalue (ctx->sc_pc, regs[32], 8);
-  hexvalue (ctx->sc_mdhi, regs[33], 8);
-  hexvalue (ctx->sc_mdlo, regs[34], 8);
+    hexvalue (CTX_REG (ctx, i), regs[i], REG_HEX_SIZE);
+  hexvalue (CTX_PC (ctx), regs[32], REG_HEX_SIZE);
+  hexvalue (CTX_MDHI (ctx), regs[33], REG_HEX_SIZE);
+  hexvalue (CTX_MDLO (ctx), regs[34], REG_HEX_SIZE);
 
   /* Generate the output.  */
   ADD_STRING ("Register dump:\n\n R0   ");
   for (i = 0; i < 8; i++)
     {
-      ADD_MEM (regs[i], 8);
+      ADD_MEM (regs[i], REG_HEX_SIZE);
       ADD_STRING (" ");
     }
   ADD_STRING ("\n R8   ");
   for (i = 8; i < 16; i++)
     {
-      ADD_MEM (regs[i], 8);
+      ADD_MEM (regs[i], REG_HEX_SIZE);
       ADD_STRING (" ");
     }
   ADD_STRING ("\n R16  ");
   for (i = 16; i < 24; i++)
     {
-      ADD_MEM (regs[i], 8);
+      ADD_MEM (regs[i], REG_HEX_SIZE);
       ADD_STRING (" ");
     }
   ADD_STRING ("\n R24  ");
   for (i = 24; i < 32; i++)
     {
-      ADD_MEM (regs[i], 8);
+      ADD_MEM (regs[i], REG_HEX_SIZE);
       ADD_STRING (" ");
     }
   ADD_STRING ("\n            pc       lo       hi\n      ");
   for (i = 32; i < 35; i++)
     {
-      ADD_MEM (regs[i], 8);
+      ADD_MEM (regs[i], REG_HEX_SIZE);
       ADD_STRING (" ");
     }
   ADD_STRING ("\n");
