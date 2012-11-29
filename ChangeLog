@@ -1,3 +1,10 @@
+2012-11-28  Jeff Law  <law@redhat.com>
+
+	[BZ #13761]
+	* nscd/grpcache.c (cache_addgr): Rename alloca_used to
+	dataset_temporary.  Track alloca usage into alloca_used.
+	If dataset is large allocate and release it via malloc/free.
+
 2012-06-04  Florian Weimer  <fweimer@redhat.com>
 
 	* debug/test-strcpy_chk.c: Mention __chk_fail ABI test.

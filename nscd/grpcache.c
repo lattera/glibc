@@ -177,7 +177,8 @@ cache_addgr (struct database_dyn *db, int fd, request_header *req,
       char *cp;
       const size_t key_len = strlen (key);
       const size_t buf_len = 3 * sizeof (grp->gr_gid) + key_len + 1;
-      char *buf = alloca (buf_len);
+      size_t alloca_used = 0;
+      char *buf = alloca_account (buf_len, alloca_used);
       ssize_t n;
       size_t cnt;
 
@@ -189,7 +190,7 @@ cache_addgr (struct database_dyn *db, int fd, request_header *req,
       /* Determine the length of all members.  */
       while (grp->gr_mem[gr_mem_cnt])
 	++gr_mem_cnt;
-      gr_mem_len = (uint32_t *) alloca (gr_mem_cnt * sizeof (uint32_t));
+      gr_mem_len = alloca_account (gr_mem_cnt * sizeof (uint32_t), alloca_used);
       for (gr_mem_cnt = 0; grp->gr_mem[gr_mem_cnt]; ++gr_mem_cnt)
 	{
 	  gr_mem_len[gr_mem_cnt] = strlen (grp->gr_mem[gr_mem_cnt]) + 1;
@@ -204,7 +205,8 @@ cache_addgr (struct database_dyn *db, int fd, request_header *req,
 	 change.  Allocate memory on the cache since it is likely
 	 discarded anyway.  If it turns out to be necessary to have a
 	 new record we can still allocate real memory.  */
-      bool alloca_used = false;
+      bool dataset_temporary = false;
+      bool dataset_malloced = false;
       dataset = NULL;
 
       if (he == NULL)
@@ -215,10 +217,20 @@ cache_addgr (struct database_dyn *db, int fd, request_header *req,
 	  /* We cannot permanently add the result in the moment.  But
 	     we can provide the result as is.  Store the data in some
 	     temporary memory.  */
-	  dataset = (struct dataset *) alloca (total + n);
+	  if (! __libc_use_alloca (alloca_used + total + n))
+	    {
+	      dataset = malloc (total + n);
+	      /* Perhaps we should log a message that we were unable
+		 to allocate memory for a large request.  */
+	      if (dataset == NULL)
+		goto out;
+	      dataset_malloced = true;
+	    }
+	  else
+	    dataset = alloca_account (total + n, alloca_used);
 
 	  /* We cannot add this record to the permanent database.  */
-	  alloca_used = true;
+	  dataset_temporary = true;
 	}
 
       dataset->head.allocsize = total + n;
@@ -272,6 +284,11 @@ cache_addgr (struct database_dyn *db, int fd, request_header *req,
 		 allocated on the stack and need not be freed.  */
 	      dh->timeout = dataset->head.timeout;
 	      ++dh->nreloads;
+
+	      /* If the new record was allocated via malloc, then we must free
+		 it here.  */
+	      if (dataset_malloced)
+		free (dataset);
 	    }
 	  else
 	    {
@@ -287,7 +304,7 @@ cache_addgr (struct database_dyn *db, int fd, request_header *req,
 		  key_copy = (char *) newp + (key_copy - (char *) dataset);
 
 		  dataset = memcpy (newp, dataset, total + n);
-		  alloca_used = false;
+		  dataset_temporary = false;
 		}
 
 	      /* Mark the old record as obsolete.  */
@@ -302,7 +319,7 @@ cache_addgr (struct database_dyn *db, int fd, request_header *req,
 	  assert (fd != -1);
 
 #ifdef HAVE_SENDFILE
-	  if (__builtin_expect (db->mmap_used, 1) && !alloca_used)
+	  if (__builtin_expect (db->mmap_used, 1) && ! dataset_temporary)
 	    {
 	      assert (db->wr_fd != -1);
 	      assert ((char *) &dataset->resp > (char *) db->data);
@@ -329,7 +346,7 @@ cache_addgr (struct database_dyn *db, int fd, request_header *req,
 
       /* Add the record to the database.  But only if it has not been
 	 stored on the stack.  */
-      if (! alloca_used)
+      if (! dataset_temporary)
 	{
 	  /* If necessary, we also propagate the data to disk.  */
 	  if (db->persistent)
