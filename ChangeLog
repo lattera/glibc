@@ -11,6 +11,7 @@
 
 2012-06-04  Florian Weimer  <fweimer@redhat.com>
 
+	[BZ #14197]
 	* debug/test-strcpy_chk.c: Mention __chk_fail ABI test.
 
 2012-11-28  David S. Miller  <davem@davemloft.net>
