@@ -22,10 +22,6 @@
 #include <kernel-features.h>
 #include "kernel-posix-cpu-timers.h"
 
-#ifndef HAS_CPUCLOCK
-# define HAS_CPUCLOCK 1
-#endif
-
 int
 clock_getcpuclockid (pid_t pid, clockid_t *clock_id)
 {

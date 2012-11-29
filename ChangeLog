@@ -1,3 +1,7 @@
+2012-11-29  Mike Frysinger  <vapier@gentoo.org>
+
+	* sysdeps/unix/sysv/linux/clock_getcpuclockid.c (HAS_CPUCLOCK): Delete.
+
 2012-11-29  Roland McGrath  <roland@hack.frob.com>
 
 	* inet/tst-inet6_rth.c (do_test): Use a union rather than type punning.
