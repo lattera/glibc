@@ -50,6 +50,7 @@
 
 2012-10-29  Carlos O'Donell  <carlos@systemhalted.org>
 
+	[BZ #14447]
 	* sysdeps/unix/sysv/linux/hppa/sysdep.h (ENTRY): Add cfi_startproc.
 	Use .cfi_offset for rp store.
 	(ENTRY_LEAF): Likewise.
