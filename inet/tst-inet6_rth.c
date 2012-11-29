@@ -66,20 +66,24 @@ inet6_rth_segments returned wrong value after loop with third inet6_rth_add");
 	      goto out;
 	    }
 
-	  char buf2[1000];
-	  if (inet6_rth_reverse (p, buf2) != 0)
+          union
+          {
+            char buffer[1000];
+            struct ip6_rthdr0 rthdr0;
+          } buf2;
+	  if (inet6_rth_reverse (p, buf2.buffer) != 0)
 	    {
 	      puts ("first inet6_rth_reverse call failed");
 	      res = 1;
 	      goto out;
 	    }
-	  if (((struct ip6_rthdr0 *) buf2)->ip6r0_segleft != nseg)
+	  if (buf2.rthdr0.ip6r0_segleft != nseg)
 	    {
 	      puts ("segleft after first inet6_rth_reverse wrong");
 	      res = 1;
 	    }
 
-	  if (inet6_rth_segments (p) != inet6_rth_segments (buf2))
+	  if (inet6_rth_segments (p) != inet6_rth_segments (buf2.buffer))
 	    {
 	      puts ("number of seconds after first inet6_rth_reverse differs");
 	      res = 1;
@@ -88,7 +92,7 @@ inet6_rth_segments returned wrong value after loop with third inet6_rth_add");
 
 	  for (int i = 0; i < nseg; ++i)
 	    {
-	      struct in6_addr *addr = inet6_rth_getaddr (buf2, i);
+	      struct in6_addr *addr = inet6_rth_getaddr (buf2.buffer, i);
 	      if (addr == NULL)
 		{
 		  printf ("call %d of first inet6_rth_getaddr failed\n",
