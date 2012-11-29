@@ -1,3 +1,8 @@
+2012-11-29  Carlos O'Donell  <carlos@systemhalted.org>
+
+	* sysdeps/hppa/fpu/feholdexcpt.c: Cast return to unsigned long long *.
+	* sysdeps/unix/sysv/linux/hppa/mmap.c: Cast return to __ptr_t.
+
 2012-11-19  Mike Frysinger  <vapier@gentoo.org>
 
 	* sysdeps/unix/sysv/linux/hppa/nptl/pthread_once.c: Replace _internal

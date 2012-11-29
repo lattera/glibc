@@ -1,4 +1,4 @@
-/* Copyright (C) 1994, 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1994-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -36,7 +36,7 @@ __mmap (__ptr_t addr, size_t len, int prot, int flags, int fd, off_t offset)
 	
 	__ptr_t ret;
 
-	ret = INLINE_SYSCALL(mmap, 6, addr, len, prot, flags, fd, offset);
+	ret = (__ptr_t) INLINE_SYSCALL (mmap, 6, addr, len, prot, flags, fd, offset);
 
 	/* check if it's really a negative number */
 	if(((unsigned long)ret & 0xfffff000) == 0xfffff000)
