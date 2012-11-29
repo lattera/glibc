@@ -23,6 +23,9 @@
 # define TEST_NAME "strcpy_chk"
 # include "../string/test-string.h"
 
+/* This test case implicitly tests the availability of the __chk_fail
+   symbol, which is part of the public ABI and may be used
+   externally. */
 extern void __attribute__ ((noreturn)) __chk_fail (void);
 char *simple_strcpy_chk (char *, const char *, size_t);
 extern char *normal_strcpy (char *, const char *, size_t)
