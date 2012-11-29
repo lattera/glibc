@@ -22,7 +22,7 @@ Version 2.17
   14694, 14716, 14719, 14743, 14767, 14783, 14784, 14785, 14793, 14796,
   14797, 14801, 14803, 14805, 14807, 14811, 14815, 14821, 14822, 14824,
   14828, 14831, 14835, 14838, 14856, 14863, 14865, 14866, 14868, 14869,
-  14871, 14889.
+  14871, 14879, 14889.
 
 * CVE-2011-4609 svc_run() produces high cpu usage when accept fails with
   EMFILE has been fixed (Bugzilla #14889).
@@ -83,8 +83,8 @@ Version 2.17
   library at runtime and so will not suffer the overheads associated with
   multi-thread support in other code such as the C++ runtime library.
 
-* New locales: ayc_PE, doi_IN, mni_IN, nhn_MX, niu_NU, niu_NZ, sat_IN, and
-  szl_PL.
+* New locales: ayc_PE, doi_IN, ia_FR, mni_IN, nhn_MX, niu_NU, niu_NZ,
+  sat_IN, and szl_PL.
 
 Version 2.16
 
