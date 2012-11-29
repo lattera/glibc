@@ -39,7 +39,7 @@
       (((x) & 0x0000ff00u) <<  8) | (((x) & 0x000000ffu) << 24))
 
 #ifdef __GNUC__
-# if __GNUC_PREREQ (4, 2)
+# if __GNUC_PREREQ (4, 3)
 static __inline unsigned int
 __bswap_32 (unsigned int __bsx)
 {
@@ -70,7 +70,7 @@ __bswap_32 (unsigned int __bsx)
 		     | (((x) & 0x000000000000ff00ull) << 40)		      \
 		     | (((x) & 0x00000000000000ffull) << 56)))
 
-# if __GNUC_PREREQ (4, 2)
+# if __GNUC_PREREQ (4, 3)
 static __inline __uint64_t
 __bswap_64 (__uint64_t __bsx)
 {

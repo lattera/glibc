@@ -1,3 +1,8 @@
+2012-12-03  Mike Frysinger  <vapier@gentoo.org>
+
+	* bits/byteswap.h [__GNUC__]: Change __GNUC_PREREQ from 4.2 to 4.3.
+	* sysdeps/x86/bits/byteswap.h [__GNUC__]: Likewise.
+
 2012-12-03  Jeff Law  <law@redhat.com>
 
 	* time/sys/time.h (settimeofday): Do not mark TV argument
