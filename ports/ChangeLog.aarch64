@@ -1,3 +1,7 @@
+2012-11-29  Steve McIntyre <steve.mcintyre@linaro.org>
+
+	* sysdeps/unix/sysv/linux/aarch64/dl-cache.h: New file.
+
 2012-11-22  Marcus Shawcroft  <marcus.shawcroft@linaro.org>
 
 	* sysdeps/aarch64/libm-test-ulps: Regenerate.
