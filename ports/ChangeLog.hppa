@@ -1,7 +1,7 @@
 2012-11-29  Carlos O'Donell  <carlos@systemhalted.org>
 
 	* sysdeps/unix/sysv/linux/hppa/bits/socket.h: Delete file.
-	* ports/sysdeps/unix/sysv/linux/hppa/bits/socket_type.h: New file.
+	* sysdeps/unix/sysv/linux/hppa/bits/socket_type.h: New file.
 
 	* sysdeps/hppa/fpu/feholdexcpt.c: Cast return to unsigned long long *.
 	* sysdeps/unix/sysv/linux/hppa/mmap.c: Cast return to __ptr_t.
@@ -226,7 +226,7 @@
 
 2012-03-03  Carlos O'Donell  <carlos@systemhalted.org>
 
-	* sysdeps/unix/sysv/linux/hppa/nptl/bits/pthreadtypes.h: Name 
+	* sysdeps/unix/sysv/linux/hppa/nptl/bits/pthreadtypes.h: Name
 	pthread_attr_t union.
 	* sysdeps/unix/sysv/linux/hppa/nptl/pthread.h: Sync from libc copy.
 	* sysdeps/unix/sysv/linux/hppa/bits/socket.h: Likewise.
@@ -248,12 +248,12 @@
 2011-10-21  Carlos O'Donell  <carlos@systemhalted.org>
 
 	* sysdeps/unix/sysv/linux/hppa/sys/procfs.h: Update copyright year.
-	Do not include signal.h and sys/ucontext.h. 
+	Do not include signal.h and sys/ucontext.h.
 
 2011-10-20  Carlos O'Donell  <carlos@systemhalted.org>
 
-	* sysdeps/unix/sysv/linux/hppa/nptl/sysdep-cancel.h: Update copyright 
-	year. 
+	* sysdeps/unix/sysv/linux/hppa/nptl/sysdep-cancel.h: Update copyright
+	year.
 	(PSEUDO): Define __*_nocancel version. Add CFI directives to __*_nocancel
 	and normal version.
 	(PUSHARGS_1): Add CFI directive.
