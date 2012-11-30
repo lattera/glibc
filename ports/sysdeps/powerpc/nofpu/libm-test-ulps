@@ -1727,34 +1727,6 @@ Test "expm1 (500.0) == 1.4035922178528374107397703328409120821806e+217":
 double: 1
 idouble: 1
 
-# fma_downward
-Test "fma_downward (-min_value, min_value, +0) == -min_subnorm_value":
-ildouble: 1
-ldouble: 1
-Test "fma_downward (-min_value, min_value, -0) == -min_subnorm_value":
-ildouble: 1
-ldouble: 1
-Test "fma_downward (min_value, -min_value, +0) == -min_subnorm_value":
-ildouble: 1
-ldouble: 1
-Test "fma_downward (min_value, -min_value, -0) == -min_subnorm_value":
-ildouble: 1
-ldouble: 1
-
-# fma_upward
-Test "fma_upward (-min_value, -min_value, +0) == min_subnorm_value":
-ildouble: 1
-ldouble: 1
-Test "fma_upward (-min_value, -min_value, -0) == min_subnorm_value":
-ildouble: 1
-ldouble: 1
-Test "fma_upward (min_value, min_value, +0) == min_subnorm_value":
-ildouble: 1
-ldouble: 1
-Test "fma_upward (min_value, min_value, -0) == min_subnorm_value":
-ildouble: 1
-ldouble: 1
-
 # hypot
 Test "hypot (-0.7, -12.4) == 12.419742348374220601176836866763271":
 float: 1
@@ -3138,14 +3110,6 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
-ildouble: 1
-ldouble: 1
-
-Function: "fma_downward":
-ildouble: 1
-ldouble: 1
-
-Function: "fma_upward":
 ildouble: 1
 ldouble: 1
 
