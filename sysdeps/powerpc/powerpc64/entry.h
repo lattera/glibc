@@ -1,5 +1,5 @@
 /* Finding the entry point and start of text.  PowerPC64 version.
-   Copyright (C) 2002 Free Software Foundation, Inc.
+   Copyright (C) 2002-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -30,4 +30,6 @@ extern void _start (void);
    to keep profiling records.  We can't copy the ia64 scheme as our
    entry poiny address is really the address of the function
    descriptor, not the actual function entry.  */
-#define TEXT_START (((long int *) ENTRY_POINT)[0])
+#define TEXT_START \
+  ({ extern unsigned long int _start_as_data[] asm ("_start");  \
+     _start_as_data[0]; })

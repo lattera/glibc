@@ -1,3 +1,8 @@
+2012-11-30  Roland McGrath  <roland@hack.frob.com>
+
+	* sysdeps/powerpc/powerpc64/entry.h (TEXT_START): Define using a
+	second, differently-typed declaration, rather than a cast.
+
 2012-11-30  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* sunrpc/rpc/svc.h (__svc_accept_failed): Move declaration...
