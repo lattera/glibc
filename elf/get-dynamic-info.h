@@ -151,8 +151,16 @@ elf_get_dynamic_info (struct link_map *l, ElfW(Dyn) *temp)
     {
       l->l_flags_1 = info[VERSYMIDX (DT_FLAGS_1)]->d_un.d_val;
 
-      /* Only DT_1_SUPPORTED_MASK bits are allowed.  */
-      assert ((l->l_flags_1 & ~DT_1_SUPPORTED_MASK) == 0);
+      /* Only DT_1_SUPPORTED_MASK bits are supported, and we would like
+	 to assert this, but we can't. Users have been setting
+	 unsupported DF_1_* flags for a long time and glibc has ignored
+	 them. Therefore to avoid breaking existing applications the
+	 best we can do is add a warning during debugging with the
+	 intent of notifying the user of the problem.  */
+      if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_FILES, 0)
+	  && l->l_flags_1 & ~DT_1_SUPPORTED_MASK)
+	_dl_debug_printf ("\nWARNING: Unsupported flag value(s) of 0x%x in DT_FLAGS_1.\n",
+			  l->l_flags_1 & ~DT_1_SUPPORTED_MASK);
 
       if (l->l_flags_1 & DF_1_NOW)
 	info[DT_BIND_NOW] = info[VERSYMIDX (DT_FLAGS_1)];

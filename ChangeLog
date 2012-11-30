@@ -1,3 +1,8 @@
+2012-11-29  Carlos O'Donell  <carlos@systemhalted.org>
+
+	* elf/get-dynamic-info.h (elf_get_dynamic_info): Warn
+	for unsupported DF_1_* bits when DL_DEBUG_FILES is set.
+
 2012-11-29  Mike Frysinger  <vapier@gentoo.org>
 
 	* sysdeps/unix/sysv/linux/clock_getcpuclockid.c (HAS_CPUCLOCK): Delete.
