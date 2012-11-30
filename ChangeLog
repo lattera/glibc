@@ -1,3 +1,10 @@
+2011-11-30  Aurelien Jarno  <aurel32@debian.org>
+
+	[BZ #13013]
+	* resolv/res_query.c(__libc_res_nquery): Assign hp and hp2
+	depending n and resplen2 to catch cases where answer
+	equals answerp2.
+
 2012-11-29  Carlos O'Donell  <carlos@systemhalted.org>
 
 	* elf/get-dynamic-info.h (elf_get_dynamic_info): Warn
