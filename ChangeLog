@@ -1,4 +1,4 @@
-2011-11-30  Aurelien Jarno  <aurel32@debian.org>
+2012-11-30  Aurelien Jarno  <aurel32@debian.org>
 
 	[BZ #13013]
 	* resolv/res_query.c(__libc_res_nquery): Assign hp and hp2
