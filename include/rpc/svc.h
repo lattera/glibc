@@ -35,4 +35,6 @@ libc_hidden_proto (svcunixfd_create)
 libc_hidden_proto (svc_getreq_common)
 libc_hidden_proto (svc_getreq_poll)
 
+extern void __svc_accept_failed (void) attribute_hidden;
+
 #endif

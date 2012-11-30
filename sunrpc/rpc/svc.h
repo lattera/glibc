@@ -333,5 +333,4 @@ extern SVCXPRT *svcunix_create (int __sock, u_int __sendsize, u_int __recvsize,
 
 __END_DECLS
 
-extern void __svc_accept_failed (void) attribute_hidden;
 #endif /* rpc/svc.h */
