@@ -1,3 +1,7 @@
+2012-11-30  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/arm/libm-test-ulps: Update.
+
 2012-11-21  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/arm/configure.in: Generate default-abi.make with
