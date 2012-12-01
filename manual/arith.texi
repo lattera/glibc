@@ -1064,7 +1064,7 @@ occur, you can use the following two functions.
 @comment GNU
 @deftypefun int feenableexcept (int @var{excepts})
 This functions enables traps for each of the exceptions as indicated by
-the parameter @var{except}.  The individual excepetions are described in
+the parameter @var{except}.  The individual exceptions are described in
 @ref{Status bit operations}.  Only the specified exceptions are
 enabled, the status of the other exceptions is not changed.
 
@@ -1076,7 +1076,7 @@ operation was successful, @code{-1} otherwise.
 @comment GNU
 @deftypefun int fedisableexcept (int @var{excepts})
 This functions disables traps for each of the exceptions as indicated by
-the parameter @var{except}.  The individual excepetions are described in
+the parameter @var{except}.  The individual exceptions are described in
 @ref{Status bit operations}.  Only the specified exceptions are
 disabled, the status of the other exceptions is not changed.
 
