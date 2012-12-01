@@ -155,21 +155,13 @@ int
 _IO_new_file_close_it (fp)
      _IO_FILE *fp;
 {
+  int write_status;
   if (!_IO_file_is_open (fp))
     return EOF;
 
-  int write_status;
-  if (_IO_in_put_mode (fp))
+  if ((fp->_flags & _IO_NO_WRITES) == 0
+      && (fp->_flags & _IO_CURRENTLY_PUTTING) != 0)
     write_status = _IO_do_flush (fp);
-  else if (fp->_offset != _IO_pos_BAD && fp->_IO_read_base != NULL
-	   && !_IO_in_backup (fp))
-    {
-      off64_t o = _IO_SEEKOFF (fp, 0, _IO_seek_cur, 0);
-      if (o == WEOF)
-	write_status = EOF;
-      else
-	write_status = _IO_SYSSEEK (fp, o, SEEK_SET) < 0 ? EOF : 0;
-    }
   else
     write_status = 0;
 
