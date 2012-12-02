@@ -128,7 +128,7 @@ static const struct argp_option options[] =
     N_("Create output even if warning messages were issued") },
   { "old-style", OPT_OLDSTYLE, NULL, 0, N_("Create old-style tables") },
   { "prefix", OPT_PREFIX, "PATH", 0, N_("Optional output file prefix") },
-  { "posix", OPT_POSIX, NULL, 0, N_("Be strictly POSIX conform") },
+  { "posix", OPT_POSIX, NULL, 0, N_("Strictly conform to POSIX") },
   { "quiet", OPT_QUIET, NULL, 0,
     N_("Suppress warnings and information messages") },
   { "verbose", 'v', NULL, 0, N_("Print more messages") },

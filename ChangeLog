@@ -1,3 +1,7 @@
+2012-01-03	Allan McRae	<allan@archlinux.org>
+
+	* locale/programs/localedef.c: Fix description of '--posix' flag.
+
 2013-01-02  Joseph Myers  <joseph@codesourcery.com>
 
 	* NEWS: Update dates in second copyright notice.
