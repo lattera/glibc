@@ -1,3 +1,7 @@
+2012-12-03  Allan McRae  <allan@archlinux.org>
+
+	* Makefile (LDFLAGS-tst-cond24, LDFLAGS-tst-cond25): Remove.
+
 2012-11-26  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* unwind.c (__pthread_unwind): Pass address of unwind_cleanup

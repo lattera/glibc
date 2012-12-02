@@ -276,9 +276,6 @@ gen-as-const-headers = pthread-errnos.sym
 
 LDFLAGS-pthread.so = -Wl,--enable-new-dtags,-z,nodelete,-z,initfirst
 
-LDFLAGS-tst-cond24 = -lrt
-LDFLAGS-tst-cond25 = -lrt
-
 include ../Makeconfig
 
 ifeq ($(have-forced-unwind),yes)
