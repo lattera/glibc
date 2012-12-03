@@ -700,7 +700,7 @@ LC_MONETARY
 % 200 hrv. - 200 hryven (money)
 
 % the local currency symbol
-currency_symbol           "<U0433><U0440>" % hr (hryvnya)
+currency_symbol           "<U0433><U0440><U043D><U002E>" % hr (hryvnya)
 
 % This must be a 4-character string containing the international currency
 % symbol as defined by the ISO 4217 standard (three characters) followed
