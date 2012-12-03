@@ -77,7 +77,7 @@ extern int gettimeofday (struct timeval *__restrict __tv,
    This call is restricted to the super-user.  */
 extern int settimeofday (const struct timeval *__tv,
 			 const struct timezone *__tz)
-     __THROW __nonnull ((1));
+     __THROW;
 
 /* Adjust the current time of day by the amount in DELTA.
    If OLDDELTA is not NULL, it is filled in with the amount
