@@ -1,6 +1,5 @@
 /* FPU control word bits.  Mips version.
-   Copyright (C) 1996, 1997, 1998, 1999, 2000, 2006, 2008
-   Free Software Foundation, Inc.
+   Copyright (C) 1996-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Olaf Flebbe and Ralf Baechle.
 
@@ -63,8 +62,8 @@
 #define _FPU_RESERVED 0xffffffff
 #define _FPU_DEFAULT  0x00000000
 typedef unsigned int fpu_control_t;
-#define _FPU_GETCW(cw) 0
-#define _FPU_SETCW(cw) do { } while (0)
+#define _FPU_GETCW(cw) (cw) = 0
+#define _FPU_SETCW(cw) (void) (cw)
 extern fpu_control_t __fpu_control;
 
 #else /* __mips_soft_float */
