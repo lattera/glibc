@@ -1,7 +1,7 @@
 2012-12-04  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/mips/fpu_control.h [__mips_soft_float] (_FPU_GETCW):
-	Define to set cw to 0, now just to plain "0" as a statement.
+	Define to set cw to 0, not just to plain "0" as a statement.
 	[__mips_soft_float] (_FPU_SETCW): Define to (void) (cw), rather
 	than doing nothing with cw.
 
