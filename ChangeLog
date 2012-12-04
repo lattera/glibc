@@ -1,5 +1,8 @@
 2012-12-04  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/sysdep.h
+	(INTERNAL_SYSCALL_DECL): Use __attribute__ ((unused)).
+
 	[BZ #14914]
 	* sysdeps/ieee754/ldbl-128ibm/e_powl.c (__ieee754_powl): Clear
 	whole low double instead of just low 47 bits when splitting values

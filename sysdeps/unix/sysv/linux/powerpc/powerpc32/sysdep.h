@@ -175,7 +175,7 @@
    an error return status).  */
 
 # undef INTERNAL_SYSCALL_DECL
-# define INTERNAL_SYSCALL_DECL(err) long int err
+# define INTERNAL_SYSCALL_DECL(err) long int err __attribute__ ((unused))
 
 # undef INTERNAL_SYSCALL
 # define INTERNAL_SYSCALL_NCS(name, err, nr, args...)			\
