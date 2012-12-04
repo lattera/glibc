@@ -1,5 +1,7 @@
 2012-12-04  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/powerpc/sysdep.h (_SYS_AUXV_H): Define to 1 not empty.
+
 	* sysdeps/ieee754/ldbl-128ibm/e_atanhl.c (__ieee754_atanhl): Mark
 	variable LX with __attribute__ ((unused)).
 	* sysdeps/ieee754/ldbl-128ibm/e_rem_pio2l.c (__ieee754_rem_pio2l):
