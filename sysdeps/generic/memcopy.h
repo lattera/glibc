@@ -1,5 +1,5 @@
 /* memcopy.h -- definitions for memory copy functions.  Generic C version.
-   Copyright (C) 1991, 1992, 1993, 1997, 2004 Free Software Foundation, Inc.
+   Copyright (C) 1991, 1992, 1993, 1997, 2004, 2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Torbjorn Granlund (tege@sics.se).
 
@@ -16,6 +16,9 @@
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
+
+#ifndef _MEMCOPY_H
+#define _MEMCOPY_H	1
 
 /* The strategy of the memory functions is:
 
@@ -144,3 +147,5 @@ extern void _wordcopy_bwd_dest_aligned (long int, long int, size_t) __THROW;
 
 /* Threshold value for when to enter the unrolled loops.  */
 #define	OP_T_THRES	16
+
+#endif /* memcopy.h */
