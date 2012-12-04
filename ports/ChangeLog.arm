@@ -1,5 +1,9 @@
 2012-12-04  Steve McIntyre  <steve.mcintyre@linaro.org>
 
+	* sysdeps/unix/sysv/linux/arm/dl-cache.h: New file.
+
+2012-12-04  Steve McIntyre  <steve.mcintyre@linaro.org>
+
 	* sysdeps/unix/sysv/linux/arm/ldconfig.h: New file.
 
 2012-12-04  Steve McIntyre  <steve.mcintyre@linaro.org>
