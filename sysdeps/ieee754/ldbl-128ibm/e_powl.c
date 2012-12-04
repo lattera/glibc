@@ -324,13 +324,13 @@ __ieee754_powl (long double x, long double y)
 
   o.value = s_h;
   o.parts32.w3 = 0;
-  o.parts32.w2 &= 0xffff8000;
+  o.parts32.w2 = 0;
   s_h = o.value;
   /* t_h=ax+bp[k] High */
   t_h = ax + bp[k];
   o.value = t_h;
   o.parts32.w3 = 0;
-  o.parts32.w2 &= 0xffff8000;
+  o.parts32.w2 = 0;
   t_h = o.value;
   t_l = ax - (t_h - bp[k]);
   s_l = v * ((u - s_h * t_h) - s_h * t_l);
@@ -344,7 +344,7 @@ __ieee754_powl (long double x, long double y)
   t_h = 3.0 + s2 + r;
   o.value = t_h;
   o.parts32.w3 = 0;
-  o.parts32.w2 &= 0xffff8000;
+  o.parts32.w2 = 0;
   t_h = o.value;
   t_l = r - ((t_h - 3.0) - s2);
   /* u+v = s*(1+...) */
@@ -354,7 +354,7 @@ __ieee754_powl (long double x, long double y)
   p_h = u + v;
   o.value = p_h;
   o.parts32.w3 = 0;
-  o.parts32.w2 &= 0xffff8000;
+  o.parts32.w2 = 0;
   p_h = o.value;
   p_l = v - (p_h - u);
   z_h = cp_h * p_h;		/* cp_h+cp_l = 2/(3*log2) */
@@ -364,7 +364,7 @@ __ieee754_powl (long double x, long double y)
   t1 = (((z_h + z_l) + dp_h[k]) + t);
   o.value = t1;
   o.parts32.w3 = 0;
-  o.parts32.w2 &= 0xffff8000;
+  o.parts32.w2 = 0;
   t1 = o.value;
   t2 = z_l - (((t1 - t) - dp_h[k]) - z_h);
 
@@ -377,7 +377,7 @@ __ieee754_powl (long double x, long double y)
   y1 = y;
   o.value = y1;
   o.parts32.w3 = 0;
-  o.parts32.w2 &= 0xffff8000;
+  o.parts32.w2 = 0;
   y1 = o.value;
   p_l = (y - y1) * t1 + y * t2;
   p_h = y1 * t1;
@@ -421,7 +421,7 @@ __ieee754_powl (long double x, long double y)
   t = p_l + p_h;
   o.value = t;
   o.parts32.w3 = 0;
-  o.parts32.w2 &= 0xffff8000;
+  o.parts32.w2 = 0;
   t = o.value;
   u = t * lg2_h;
   v = (p_l - (t - p_h)) * lg2 + t * lg2_l;

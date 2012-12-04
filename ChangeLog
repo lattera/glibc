@@ -1,3 +1,10 @@
+2012-12-04  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #14914]
+	* sysdeps/ieee754/ldbl-128ibm/e_powl.c (__ieee754_powl): Clear
+	whole low double instead of just low 47 bits when splitting values
+	into two parts.
+
 2012-12-03  Allan McRae  <allan@archlinux.org>
 
 	* manual/stdio.texi (Predefined Printf Handlers): Remove
