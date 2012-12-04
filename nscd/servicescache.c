@@ -65,8 +65,8 @@ cache_addserv (struct database_dyn *db, int fd, request_header *req,
 	       const void *key, struct servent *serv, uid_t owner,
 	       struct hashentry *const he, struct datahead *dh, int errval)
 {
+  bool all_written = true;
   ssize_t total;
-  ssize_t written;
   time_t t = time (NULL);
 
   /* We allocate all data in one memory block: the iov vector,
@@ -95,17 +95,18 @@ cache_addserv (struct database_dyn *db, int fd, request_header *req,
 	  /* Reload with the same time-to-live value.  */
 	  timeout = dh->timeout = t + db->postimeout;
 
-	  written = total = 0;
+	  total = 0;
 	}
       else
 	{
 	  /* We have no data.  This means we send the standard reply for this
 	     case.  */
-	  written = total = sizeof (notfound);
+	  total = sizeof (notfound);
 
-	  if (fd != -1)
-	    written = TEMP_FAILURE_RETRY (send (fd, &notfound, total,
-						MSG_NOSIGNAL));
+	  if (fd != -1
+	      && TEMP_FAILURE_RETRY (send (fd, &notfound, total,
+					   MSG_NOSIGNAL)) != total)
+	    all_written = false;
 
 	  /* If we have a transient error or cannot permanently store
 	     the result, so be it.  */
@@ -182,7 +183,6 @@ cache_addserv (struct database_dyn *db, int fd, request_header *req,
 		+ s_name_len
 		+ s_proto_len
 		+ s_aliases_cnt * sizeof (uint32_t));
-      written = total;
 
       /* If we refill the cache, first assume the reconrd did not
 	 change.  Allocate memory on the cache since it is likely
@@ -290,25 +290,32 @@ cache_addserv (struct database_dyn *db, int fd, request_header *req,
 	    {
 	      assert (db->wr_fd != -1);
 	      assert ((char *) &dataset->resp > (char *) db->data);
-	      assert ((char *) &dataset->resp - (char *) db->head
+	      assert ((char *) dataset - (char *) db->head
 		      + total
 		      <= (sizeof (struct database_pers_head)
 			  + db->head->module * sizeof (ref_t)
 			  + db->head->data_size));
-	      written = sendfileall (fd, db->wr_fd,
-				     (char *) &dataset->resp
-				     - (char *) db->head, total);
+	      ssize_t written = sendfileall (fd, db->wr_fd,
+					     (char *) &dataset->resp
+					     - (char *) db->head,
+					     dataset->head.recsize);
+	      if (written != dataset->head.recsize)
+		{
 # ifndef __ASSUME_SENDFILE
-	      if (written == -1 && errno == ENOSYS)
-		goto use_write;
+		  if (written == -1 && errno == ENOSYS)
+		    goto use_write;
 # endif
+		  all_written = false;
+		}
 	    }
 	  else
 # ifndef __ASSUME_SENDFILE
 	  use_write:
 # endif
 #endif
-	    written = writeall (fd, &dataset->resp, total);
+	    if (writeall (fd, &dataset->resp, dataset->head.recsize)
+		!= dataset->head.recsize)
+	      all_written = false;
 	}
 
       /* Add the record to the database.  But only if it has not been
@@ -332,7 +339,7 @@ cache_addserv (struct database_dyn *db, int fd, request_header *req,
 	}
     }
 
-  if (__builtin_expect (written != total, 0) && debug_level > 0)
+  if (__builtin_expect (!all_written, 0) && debug_level > 0)
     {
       char buf[256];
       dbg_log (_("short write in %s: %s"),  __FUNCTION__,

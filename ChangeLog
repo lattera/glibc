@@ -1,3 +1,11 @@
+2013-04-15  Andreas Schwab  <schwab@suse.de>
+
+	* nscd/grpcache.c (cache_addgr): Properly check for short write.
+	* nscd/initgrcache.c (addinitgroupsX): Likewise.
+	* nscd/pwdcache.c (cache_addpw): Likewise.
+	* nscd/servicescache.c (cache_addserv): Likewise.  Don't write
+	more than recsize.
+
 2013-04-15  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* benchtests/Makefile (bench): Write all output to
