@@ -200,7 +200,8 @@ int32_t __ieee754_rem_pio2l(long double x, long double *y)
   double tx[8];
   int exp;
   int64_t n, ix, hx, ixd;
-  u_int64_t lx, lxd;
+  u_int64_t lx __attribute__ ((unused));
+  u_int64_t lxd;
 
   GET_LDOUBLE_WORDS64 (hx, lx, x);
   ix = hx & 0x7fffffffffffffffLL;

@@ -40,7 +40,7 @@ __ieee754_atanhl(long double x)
 {
 	long double t;
 	int64_t hx,ix;
-	u_int64_t lx;
+	u_int64_t lx __attribute__ ((unused));
 	GET_LDOUBLE_WORDS64(hx,lx,x);
 	ix = hx&0x7fffffffffffffffLL;
 	if (ix >= 0x3ff0000000000000LL) { /* |x|>=1 */

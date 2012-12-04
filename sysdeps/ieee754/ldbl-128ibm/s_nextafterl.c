@@ -31,7 +31,8 @@ static char rcsid[] = "$NetBSD: $";
 long double __nextafterl(long double x, long double y)
 {
 	int64_t hx,hy,ihx,ihy,ilx;
-	u_int64_t lx,ly;
+	u_int64_t lx;
+	u_int64_t ly __attribute__ ((unused));
 
 	GET_LDOUBLE_WORDS64(hx,lx,x);
 	GET_LDOUBLE_WORDS64(hy,ly,y);

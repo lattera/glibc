@@ -26,7 +26,8 @@
 long double
 __logbl (long double x)
 {
-  int64_t lx, hx, rhx;
+  int64_t hx, rhx;
+  int64_t lx __attribute__ ((unused));
 
   GET_LDOUBLE_WORDS64 (hx, lx, x);
   hx &= 0x7fffffffffffffffLL;	/* high |x| */

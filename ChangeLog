@@ -1,3 +1,14 @@
+2012-12-04  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/ieee754/ldbl-128ibm/e_atanhl.c (__ieee754_atanhl): Mark
+	variable LX with __attribute__ ((unused)).
+	* sysdeps/ieee754/ldbl-128ibm/e_rem_pio2l.c (__ieee754_rem_pio2l):
+	Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_isnanl.c (___isnanl): Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_logbl.c (__logbl): Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_nextafterl.c: Mark variable LY
+	with __attribute__ ((unused)).
+
 2012-12-04  David S. Miller  <davem@abraco.davemloft.net>
 
 	* sysdeps/generic/memcopy.h: Add multiple inclusion protection.
