@@ -47,7 +47,7 @@ do_test (void)
     error (EXIT_FAILURE, 0, "second fprintf succeeded");
 
   /* Padded printing takes a different code path.  */
-  n = fprintf (fp, "%10000s", "foo");
+  n = fprintf (fp, "%10000000s", "foo");
   printf ("fprintf = %d\n", n);
   if (n >= 0)
     error (EXIT_FAILURE, 0, "padded fprintf succeeded");

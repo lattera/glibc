@@ -1,3 +1,8 @@
+2012-12-05  Joseph Myers  <joseph@codesourcery.com>
+
+	* stdio-common/tst-put-error.c (do_test): Use 10000000 instead of
+	10000 as width of padded output.
+
 2012-12-04  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/powerpc/sysdep.h (_SYS_AUXV_H): Define to 1 not empty.
