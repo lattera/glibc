@@ -35,11 +35,10 @@ The GNU C Library supports these configurations for using Linux kernels:
 	sparc64*-*-linux-gnu
 
 The code for other CPU configurations supported by volunteers outside of
-the core glibc maintenance effort is contained in the separate `ports'
-add-on.  You can find glibc-ports-VERSION distributed separately in the
-same place where you got the main glibc distribution files.
-Currently these configurations have code in the `ports' add-on:
+the core glibc maintenance effort is contained in the `ports' add-on,
+located in the `ports' subdirectory of the source tree.
 
+	aarch64*-*-linux-gnu
 	alpha*-*-linux-gnu
 	am33*-*-linux-gnu	Not currently functional
 	arm-*-linux-gnueabi

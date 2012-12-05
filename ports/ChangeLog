@@ -1,5 +1,8 @@
 2012-07-03  Joseph Myers  <joseph@codesourcery.com>
 
+	* README: Don't refer to ports as a separate repository.  Don't
+	refer to scripts/data/.
+
 	* .gitignore: Remove file.
 	* Banner: Likewise.
 	* Makefile: Likewise.

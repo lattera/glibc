@@ -1,5 +1,8 @@
 2012-12-05  Joseph Myers  <joseph@codesourcery.com>
 
+	* README: Don't refer to ports add-on as distributed separately.
+	Mention AArch64 in list of systems supported in the ports add-on.
+
 	* LICENSES: Add more non-FSF copyright and license notices.
 
 	* soft-fp/op-common.h (_FP_DECL): Declare X##_s with __attribute__
