@@ -1,5 +1,7 @@
 2012-12-05  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/ieee754/ldbl-128ibm/x2y2m1l.c: Include <stdlib.h>.
+
 	* stdio-common/tst-put-error.c (do_test): Use 10000000 instead of
 	10000 as width of padded output.
 
