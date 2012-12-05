@@ -1,5 +1,5 @@
 /* Store current representation for exceptions (soft-float edition).
-   Copyright (C) 2002 Free Software Foundation, Inc.
+   Copyright (C) 2002-2012 Free Software Foundation, Inc.
    Contributed by Aldy Hernandez <aldyh@redhat.com>, 2002.
    This file is part of the GNU C Library.
 
@@ -21,6 +21,7 @@
 #include "soft-supp.h"
 #include <bp-sym.h>
 
+int
 __fegetexceptflag (fexcept_t *flagp, int excepts)
 {
   *flagp = (fexcept_t) __sim_exceptions  & excepts & FE_ALL_EXCEPT;
