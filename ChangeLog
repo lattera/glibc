@@ -1,5 +1,8 @@
 2012-12-05  Joseph Myers  <joseph@codesourcery.com>
 
+	* soft-fp/op-common.h (_FP_DECL): Declare X##_s with __attribute__
+	((unused)).
+
 	* sysdeps/ieee754/ldbl-128ibm/x2y2m1l.c: Include <stdlib.h>.
 
 	* stdio-common/tst-put-error.c (do_test): Use 10000000 instead of
