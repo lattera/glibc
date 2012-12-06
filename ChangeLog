@@ -3,6 +3,9 @@
 	* stdio-common/tst-put-error.c (do_test): Add newline to the
 	padded test to ensure flush.
 
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/sysdep.h
+	(INTERNAL_SYSCALL_DECL): Use __attribute__ ((unused)).
+
 2012-12-05  Jeff Law  <law@redhat.com>
 
 	* sunrpc/etc.rpc (fedfs_admin): Add entry.

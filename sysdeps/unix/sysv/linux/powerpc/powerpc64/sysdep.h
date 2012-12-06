@@ -1,5 +1,4 @@
-/* Copyright (C) 1992,1997,1998,1999,2000,2001,2002,2003,2004,2005,2006,2012
-	Free Software Foundation, Inc.
+/* Copyright (C) 1992-2012, Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -218,7 +217,7 @@
   INTERNAL_SYSCALL_NCS (__NR_##name, err, nr, args)
 
 #undef INTERNAL_SYSCALL_DECL
-#define INTERNAL_SYSCALL_DECL(err) long int err
+#define INTERNAL_SYSCALL_DECL(err) long int err __attribute__ ((unused))
 
 #undef INTERNAL_SYSCALL_ERROR_P
 #define INTERNAL_SYSCALL_ERROR_P(val, err) \
