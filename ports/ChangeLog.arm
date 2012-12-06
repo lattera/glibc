@@ -8,7 +8,7 @@
 
 2012-12-04  Steve McIntyre  <steve.mcintyre@linaro.org>
 
-        * sysdeps/unix/sysv/linux/arm/readelflib.c: New file.
+	* sysdeps/unix/sysv/linux/arm/readelflib.c: New file.
 
 2012-11-30  Joseph Myers  <joseph@codesourcery.com>
 
