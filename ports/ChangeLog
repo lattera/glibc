@@ -1,7 +1,13 @@
-2012-07-03  Joseph Myers  <joseph@codesourcery.com>
+2012-12-06  Joseph Myers  <joseph@codesourcery.com>
+
+	* README: Use sourceware.org in Bugzilla URL.
+
+2012-12-05  Joseph Myers  <joseph@codesourcery.com>
 
 	* README: Don't refer to ports as a separate repository.  Don't
 	refer to scripts/data/.
+
+2012-07-03  Joseph Myers  <joseph@codesourcery.com>
 
 	* .gitignore: Remove file.
 	* Banner: Likewise.

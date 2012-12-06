@@ -2,7 +2,7 @@ GNU C Library NEWS -- history of user-visible changes.
 Copyright (C) 1992-2012 Free Software Foundation, Inc.
 See the end for copying conditions.
 
-Please send GNU C library bug reports via <http://sources.redhat.com/bugzilla/>
+Please send GNU C library bug reports via <http://sourceware.org/bugzilla/>
 using `glibc' in the "product" field.
 
 Version 2.17

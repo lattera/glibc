@@ -1,3 +1,8 @@
+2012-12-06  Joseph Myers  <joseph@codesourcery.com>
+
+	* README: Use sourceware.org in Bugzilla URL.
+	* locales/si_LK (email): Use sourceware.org in email address.
+
 2012-12-03  Ashish Shah  <ashishks@redhat.com>
 
 	* locales/uk_UA (currency_symbol): Fix.

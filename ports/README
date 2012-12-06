@@ -13,8 +13,8 @@ The ports add-on is cooperatively maintained by volunteers on the
 subdirectory of the glibc git repository.  See
 http://www.gnu.org/software/libc/download.html for details on using
 git.  To report a bug in code housed in the ports add-on, please go to
-http://sources.redhat.com/bugzilla/ and file a bug report under the
-glibc "ports" component.
+http://sourceware.org/bugzilla/ and file a bug report under the glibc
+"ports" component.
 
 An add-on for an individual port can be made from just the sysdeps/
 subdirectories containing the port's code.  You may want to include a
