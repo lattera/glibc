@@ -1,3 +1,10 @@
+2012-12-06  Chris Metcalf  <cmetcalf@tilera.com>
+
+	* sysdeps/generic/fpu_control.h (_FPU_GETCW): Define to set cw to
+	0, not just to plain "0" as a statement.
+	(_FPU_SETCW): Define to (void) (cw), rather than doing nothing
+	with cw.
+
 2012-12-06  Joseph Myers  <joseph@codesourcery.com>
 
 	* NEWS: Use sourceware.org in Bugzilla URL.
