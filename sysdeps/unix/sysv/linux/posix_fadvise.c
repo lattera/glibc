@@ -1,4 +1,4 @@
-/* Copyright (C) 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2003-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -25,11 +25,20 @@
 int
 posix_fadvise (int fd, off_t offset, off_t len, int advise)
 {
-#ifdef __NR_fadvise64
+#if defined(__NR_fadvise64) || defined(__NR_fadvise64_64)
   INTERNAL_SYSCALL_DECL (err);
+# ifdef __NR_fadvise64
   int ret = INTERNAL_SYSCALL (fadvise64, err, 5, fd,
 			      __LONG_LONG_PAIR (offset >> 31, offset), len,
 			      advise);
+# else
+  int ret = INTERNAL_SYSCALL (fadvise64_64, err, 6, fd,
+			      __LONG_LONG_PAIR ((long) (offset >> 31),
+						(long) offset),
+			      __LONG_LONG_PAIR ((long) (len >> 31),
+						(long) len),
+			      advise);
+# endif
   if (INTERNAL_SYSCALL_ERROR_P (ret, err))
     return INTERNAL_SYSCALL_ERRNO (ret, err);
   return 0;
