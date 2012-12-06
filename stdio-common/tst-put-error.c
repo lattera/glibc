@@ -34,20 +34,30 @@ do_test (void)
   FILE *fp = fdopen (fd, "w");
   if (fp == NULL)
     error (EXIT_FAILURE, errno, "fdopen");
+
+  /* All of the tests below verify that flushing buffers result in failure of
+     the fprintf calls.  We ensure that the buffer is flushed at the end of
+     each fprintf call by doing two things - setting the file pointer to
+     line-buffered so that it is flushed whenever it encounters a newline and
+     then ensuring that there is a newline in each of the format strings we
+     pass to fprintf.  */
+
   setlinebuf (fp);
   close (fd);
   unlink (tmpl);
+
   int n = fprintf (fp, "hello world\n");
   printf ("fprintf = %d\n", n);
   if (n >= 0)
     error (EXIT_FAILURE, 0, "first fprintf succeeded");
+
   n = fprintf (fp, "hello world\n");
   printf ("fprintf = %d\n", n);
   if (n >= 0)
     error (EXIT_FAILURE, 0, "second fprintf succeeded");
 
   /* Padded printing takes a different code path.  */
-  n = fprintf (fp, "%10000000s", "foo");
+  n = fprintf (fp, "%100s\n", "foo");
   printf ("fprintf = %d\n", n);
   if (n >= 0)
     error (EXIT_FAILURE, 0, "padded fprintf succeeded");

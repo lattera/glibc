@@ -1,3 +1,8 @@
+2012-12-06  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* stdio-common/tst-put-error.c (do_test): Add newline to the
+	padded test to ensure flush.
+
 2012-12-05  Jeff Law  <law@redhat.com>
 
 	* sunrpc/etc.rpc (fedfs_admin): Add entry.
