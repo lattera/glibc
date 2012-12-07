@@ -208,12 +208,10 @@ __local_syscall_error:						\
     __label__ out;							      \
     __label__ iserr;							      \
     long sc_ret;							      \
-    long sc_err;							      \
     INTERNAL_SYSCALL_DECL (sc_err);					      \
 									      \
     if (__vdso_##name != NULL)						      \
       {									      \
-	register long _x0 asm ("x0");					      \
 	sc_ret = INTERNAL_VSYSCALL_NCS (__vdso_##name, sc_err, nr, ##args);   \
 	if (!INTERNAL_SYSCALL_ERROR_P (sc_ret, sc_err))			      \
 	  goto out;							      \
