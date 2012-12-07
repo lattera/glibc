@@ -43,6 +43,8 @@ CFLAGS-s_fma.c = -mieee-with-inexact
 CFLAGS-s_fmaf.c = -mieee-with-inexact
 # This test tries to check for inexact being raised by arithmetic.
 CFLAGS-test-misc.c += -mieee-with-inexact
+# Avoid "conflicting types for built-in function" warnings
+CFLAGS-s_isnan.c += -fno-builtin-isnanf
 endif
 
 # Build everything with full IEEE math support, and with dynamic rounding;
