@@ -12,9 +12,6 @@
 #ifndef __isnanf
 # define __isnanf __isnanf
 #endif
-#ifndef __isnanl
-# define __isnanl __isnanl
-#endif
 
 #include_next <math_private.h>
 
