@@ -320,18 +320,12 @@ elf_machine_rela (struct link_map *map, const ElfW(Rela) *reloc,
 
 	case R_AARCH64_TLS_DTPREL64:
 	  if (sym)
-	    {
-	      const char *strtab;
-	      strtab = (const void *) D_PTR (map, l_info[DT_STRTAB]);
-	      *reloc_addr = sym->st_value + reloc->r_addend;
-	    }
+	    *reloc_addr = sym->st_value + reloc->r_addend;
 	  break;
 
 	case R_AARCH64_TLS_TPREL64:
 	  if (sym)
 	    {
-	      const char *strtab;
-	      strtab = (const void *) D_PTR (map, l_info[DT_STRTAB]);
 	      CHECK_STATIC_TLS (map, sym_map);
 	      *reloc_addr =
 		sym->st_value + reloc->r_addend + sym_map->l_tls_offset;
