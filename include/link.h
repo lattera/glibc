@@ -289,7 +289,7 @@ struct link_map
 #endif
 #ifndef FORCED_DYNAMIC_TLS_OFFSET
 # if NO_TLS_OFFSET == 0
-#  define FORCED_DYNAMIC_TLS_OFFSET 1
+#  define FORCED_DYNAMIC_TLS_OFFSET -1
 # elif NO_TLS_OFFSET == -1
 #  define FORCED_DYNAMIC_TLS_OFFSET -2
 # else

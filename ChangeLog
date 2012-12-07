@@ -1,3 +1,9 @@
+2012-12-07  Andreas Schwab  <schwab@linux-m68k.org>
+
+	[BZ #14898]
+	* include/link.h (FORCED_DYNAMIC_TLS_OFFSET) [NO_TLS_OFFSET == 0]:
+	Change to -1.
+
 2012-12-07  David S. Miller  <davem@davemloft.net>
 
 	* po/libc.pot: Update.
