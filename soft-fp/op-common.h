@@ -748,11 +748,11 @@ do {									 \
 #define _FP_MUL(fs, wc, R, X, Y)			\
 do {							\
   R##_s = X##_s ^ Y##_s;				\
+  R##_e = X##_e + Y##_e + 1;				\
   switch (_FP_CLS_COMBINE(X##_c, Y##_c))		\
   {							\
   case _FP_CLS_COMBINE(FP_CLS_NORMAL,FP_CLS_NORMAL):	\
     R##_c = FP_CLS_NORMAL;				\
-    R##_e = X##_e + Y##_e + 1;				\
 							\
     _FP_MUL_MEAT_##fs(R,X,Y);				\
 							\
@@ -811,11 +811,11 @@ do {							\
 #define _FP_DIV(fs, wc, R, X, Y)			\
 do {							\
   R##_s = X##_s ^ Y##_s;				\
+  R##_e = X##_e - Y##_e;				\
   switch (_FP_CLS_COMBINE(X##_c, Y##_c))		\
   {							\
   case _FP_CLS_COMBINE(FP_CLS_NORMAL,FP_CLS_NORMAL):	\
     R##_c = FP_CLS_NORMAL;				\
-    R##_e = X##_e - Y##_e;				\
 							\
     _FP_DIV_MEAT_##fs(R,X,Y);				\
     break;						\
