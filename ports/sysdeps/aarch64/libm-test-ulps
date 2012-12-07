@@ -2492,9 +2492,33 @@ ildouble: 1
 ldouble: 1
 
 # pow
+Test "pow (0x0.fffffffffffff8p0, -0x1.23456789abcdfp62) == 9.8826311568054561811190162420900667121992e+252":
+ildouble: 1
+ldouble: 1
+Test "pow (0x0.ffffffp0, -0x1p24) == 2.7182819094701610539628664526874952929416":
+ildouble: 1
+ldouble: 1
 Test "pow (0x0.ffffffp0, 0x1p24) == 0.3678794302077803437135155590023422899744":
 float: 1
 ifloat: 1
+Test "pow (10.0, -4930.0) == 1e-4930":
+ildouble: 1
+ldouble: 1
+Test "pow (10.0, 4929.0) == 1e4929":
+ildouble: 1
+ldouble: 1
+Test "pow (10.0, 4930.0) == 1e4930":
+ildouble: 1
+ldouble: 1
+Test "pow (10.0, 4931.0) == 1e4931":
+ildouble: 1
+ldouble: 1
+Test "pow (10.0, 4932.0) == 1e4932":
+ildouble: 1
+ldouble: 1
+Test "pow (1e4932, 0.75) == 1e3699":
+ildouble: 1
+ldouble: 1
 
 # pow_downward
 Test "pow_downward (1.5, 1.03125) == 1.519127098714743184071644334163037684948":
@@ -3583,6 +3607,8 @@ ldouble: 1
 Function: "pow":
 float: 1
 ifloat: 1
+ildouble: 1
+ldouble: 1
 
 Function: "pow_downward":
 float: 1
