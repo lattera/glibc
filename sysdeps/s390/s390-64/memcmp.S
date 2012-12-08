@@ -17,7 +17,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 
-#include "sysdep.h"
+#include <sysdep.h>
 #include "asm-syntax.h"
 
 /* INPUT PARAMETERS

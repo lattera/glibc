@@ -1,4 +1,4 @@
-/* Copyright (C) 2003, 2004, 2005, 2006 Free Software Foundation, Inc.
+/* Copyright (C) 2003-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jakub@redhat.com>, 2003.
 
@@ -40,11 +40,11 @@
 static inline uintptr_t __attribute__ ((unused))
 _jmpbuf_sp (__jmp_buf regs)
 {
-  uintptr_t sp = regs[0].__gregs[__JB_GPR15];
+  void *sp = (void *) (uintptr_t) regs[0].__gregs[__JB_GPR15];
 #ifdef PTR_DEMANGLE
   PTR_DEMANGLE (sp);
 #endif
-  return sp;
+  return (uintptr_t) sp;
 }
 
 #define _JMPBUF_UNWINDS_ADJ(_jmpbuf, _address, _adj) \

@@ -1,3 +1,8 @@
+2012-12-08  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* sysdeps/unix/sysv/linux/s390/jmp-unwind.c (_longjmp_unwind):
+	Declare LOCAL_VAR as char.
+
 2012-12-04  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/powerpc/sem_post.c (__old_sem_post):
