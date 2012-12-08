@@ -8,12 +8,12 @@ whatever language the user prefers.
 
 Printing messages in different languages can be implemented in different
 ways.  One could add all the different languages in the source code and
-add among the variants every time a message has to be printed.  This is
-certainly no good solution since extending the set of languages is
-difficult (the code must be changed) and the code itself can become
+choose among the variants every time a message has to be printed.  This is
+certainly not a good solution since extending the set of languages is
+cumbersome (the code must be changed) and the code itself can become
 really big with dozens of message sets.
 
-A better solution is to keep the message sets for each language are kept
+A better solution is to keep the message sets for each language
 in separate files which are loaded at runtime depending on the language
 selection of the user.
 
@@ -32,7 +32,7 @@ of the message handling functions are
 
 @itemize @bullet
 @item
-locate the external data file with the appropriate translations.
+locate the external data file with the appropriate translations
 @item
 load the data and make it possible to address the messages
 @item
@@ -1799,16 +1799,16 @@ available.
 
 The @code{xgettext} program can be used to automatically extract the
 translatable messages from a source file.  I.e., the programmer need not
-take care for the translations and the list of messages which have to be
+take care of the translations and the list of messages which have to be
 translated.  S/He will simply wrap the translatable string in calls to
 @code{gettext} et.al and the rest will be done by @code{xgettext}.  This
-program has a lot of option which help to customize the output or do
+program has a lot of options which help to customize the output or
 help to understand the input better.
 
-Other programs help to manage development cycle when new messages appear
-in the source files or when a new translation of the messages appear.
+Other programs help to manage the development cycle when new messages appear
+in the source files or when a new translation of the messages appears.
 Here it should only be noted that using all the tools in GNU gettext it
 is possible to @emph{completely} automate the handling of message
-catalog.  Beside marking the translatable string in the source code and
+catalogs.  Beside marking the translatable strings in the source code and
 generating the translations the developers do not have anything to do
 themselves.
