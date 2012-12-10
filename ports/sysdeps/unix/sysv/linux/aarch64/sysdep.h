@@ -242,7 +242,6 @@ __local_syscall_error:						\
 									      \
     if (__vdso_##name != NULL)						      \
       {									      \
-	register long _x0 asm ("x0");					      \
 	v_ret = INTERNAL_VSYSCALL_NCS (__vdso_##name, err, nr, ##args);	      \
 	if (!INTERNAL_SYSCALL_ERROR_P (v_ret, err)			      \
 	    || INTERNAL_SYSCALL_ERRNO (v_ret, err) != ENOSYS)		      \
