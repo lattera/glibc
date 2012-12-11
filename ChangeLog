@@ -1,3 +1,9 @@
+2012-12-11  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	[BZ #14872]
+	* manual/conf.texi (Limits on File System Capacity): Mention if
+	terminating null is included in the max size.
+
 2012-12-10  Andreas Jaeger  <aj@suse.de>
 
 	* po/cs.po: Update from translation team.

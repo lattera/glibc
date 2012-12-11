@@ -1147,14 +1147,16 @@ typed ahead as input.  @xref{I/O Queues}.
 @comment limits.h
 @comment POSIX.1
 @deftypevr Macro int NAME_MAX
-The uniform system limit (if any) for the length of a file name component.
+The uniform system limit (if any) for the length of a file name component, not
+including the terminating null character.
 @end deftypevr
 
 @comment limits.h
 @comment POSIX.1
 @deftypevr Macro int PATH_MAX
 The uniform system limit (if any) for the length of an entire file name (that
-is, the argument given to system calls such as @code{open}).
+is, the argument given to system calls such as @code{open}), including the
+terminating null character.
 @end deftypevr
 
 @cindex limits, pipe buffer size
