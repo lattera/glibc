@@ -2,18 +2,15 @@
 # Copyright (C) 2012 Free Software Foundation, Inc.
 # This file is distributed under the same license as the glibc package.
 #
-# "Under the spreading chestnut tree..."
-#
-# Do: nis/nis_error.h,
-# stdio-common/psig*, sysdeps/gnu/errlist.c,
+# "Jan Klaassen was trompetter in het leger van de prins."
 #
 # Benno Schulenberg <benno@vertaalt.nl>, 2012.
 msgid ""
 msgstr ""
-"Project-Id-Version: libc 2.16-pre1\n"
+"Project-Id-Version: libc 2.17-pre1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-06-21 07:51-0700\n"
-"PO-Revision-Date: 2012-11-05 22:16+0100\n"
+"POT-Creation-Date: 2012-12-07 15:10-0500\n"
+"PO-Revision-Date: 2012-12-11 16:11+0100\n"
 "Last-Translator: Benno Schulenberg <benno@vertaalt.nl>\n"
 "Language-Team: Esperanto <translation-team-eo@lists.sourceforge.net>\n"
 "Language: eo\n"
@@ -23,45 +20,45 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Lokalize 1.0\n"
 
-#: argp/argp-help.c:226
+#: argp/argp-help.c:227
 #, c-format
 msgid "%.*s: ARGP_HELP_FMT parameter requires a value"
 msgstr ""
 
-#: argp/argp-help.c:236
+#: argp/argp-help.c:237
 #, c-format
 msgid "%.*s: Unknown ARGP_HELP_FMT parameter"
 msgstr ""
 
-#: argp/argp-help.c:249
+#: argp/argp-help.c:250
 #, c-format
 msgid "Garbage in ARGP_HELP_FMT: %s"
 msgstr ""
 
-#: argp/argp-help.c:1213
+#: argp/argp-help.c:1214
 msgid "Mandatory or optional arguments to long options are also mandatory or optional for any corresponding short options."
 msgstr ""
 "(Endaj aŭ eblaj argumentoj por longaj opcioj ankaŭ endas aŭ eblas por\n"
 "iuj korespondaj mallongaj opcioj.)"
 
-#: argp/argp-help.c:1599
+#: argp/argp-help.c:1600
 msgid "Usage:"
 msgstr "Uzmaniero: "
 
-#: argp/argp-help.c:1603
+#: argp/argp-help.c:1604
 msgid "  or: "
 msgstr "       aŭ: "
 
-#: argp/argp-help.c:1615
+#: argp/argp-help.c:1616
 msgid " [OPTION...]"
 msgstr " [OPCIO...]"
 
-#: argp/argp-help.c:1642
+#: argp/argp-help.c:1643
 #, c-format
 msgid "Try `%s --help' or `%s --usage' for more information.\n"
 msgstr "Tajpu «%s --help» aŭ «%s --usage» por pli da informoj.\n"
 
-#: argp/argp-help.c:1670
+#: argp/argp-help.c:1671
 #, c-format
 msgid "Report bugs to %s.\n"
 msgstr "Raportu programmisojn al <%s>.\n"
@@ -88,7 +85,7 @@ msgstr "montri programversion"
 
 #: argp/argp-parse.c:182
 msgid "(PROGRAM ERROR) No version known!?"
-msgstr "(**Programmison**) Ne konas sian version!?"
+msgstr "(**Programmiso**) Ne konas sian version!?"
 
 #: argp/argp-parse.c:622
 #, c-format
@@ -97,7 +94,7 @@ msgstr "%s: tro da argumentoj\n"
 
 #: argp/argp-parse.c:765
 msgid "(PROGRAM ERROR) Option should have been recognized!?"
-msgstr "(**Programmison**) Opcio devus esti rekonata!?"
+msgstr "(**Programmiso**) Opcio devus esti rekonata!?"
 
 #: assert/assert-perr.c:36
 #, c-format
@@ -113,19 +110,19 @@ msgstr ""
 "%s%s%s:%u: %s%sKontrolo '%s' malsukcesis.\n"
 "%n"
 
-#: catgets/gencat.c:109 catgets/gencat.c:113 nscd/nscd.c:115 nss/makedb.c:118
+#: catgets/gencat.c:109 catgets/gencat.c:113 nscd/nscd.c:115 nss/makedb.c:119
 msgid "NAME"
 msgstr "NOMO"
 
 #: catgets/gencat.c:110
 msgid "Create C header file NAME containing symbol definitions"
-msgstr ""
+msgstr "krei C-ĉapdosieron kiu enhavas simboldifinojn"
 
 #: catgets/gencat.c:112
 msgid "Do not use existing catalog, force new output file"
-msgstr ""
+msgstr "ne aldoni al eligdosiero; anstataŭigi ĝin"
 
-#: catgets/gencat.c:113 nss/makedb.c:118
+#: catgets/gencat.c:113 nss/makedb.c:119
 msgid "Write output to file NAME"
 msgstr "skribi eligon al dosiero NOMO"
 
@@ -134,35 +131,38 @@ msgid ""
 "Generate message catalog.\vIf INPUT-FILE is -, input is read from standard input.  If OUTPUT-FILE\n"
 "is -, output is written to standard output.\n"
 msgstr ""
+"  \n"
+"Generas mesaĝan katalogon.\vSe ENIGDOSIERO estas «-», ĉefenigujo legiĝas.  Se ELIGDOSIERO estas «-», la eligo skribiĝas al ĉefeligujo.\n"
 
 #: catgets/gencat.c:123
 msgid ""
 "-o OUTPUT-FILE [INPUT-FILE]...\n"
 "[OUTPUT-FILE [INPUT-FILE]...]"
 msgstr ""
+"-o ELIGDOSIERO [ENIGDOSIERO...]\n"
+"[ELIGDOSIERO [ENIGDOSIERO...]]"
 
-#: catgets/gencat.c:234 debug/pcprofiledump.c:207 debug/xtrace.sh:57
-#: elf/ldconfig.c:301 elf/ldd.bash.in:55 elf/pldd.c:56 elf/sln.c:85
-#: elf/sotruss.ksh:49 elf/sprof.c:370 iconv/iconv_prog.c:407
-#: iconv/iconvconfig.c:382 locale/programs/locale.c:278
-#: locale/programs/localedef.c:367 login/programs/pt_chown.c:91
-#: malloc/memusage.sh:64 malloc/memusagestat.c:538 nscd/nscd.c:456
-#: nss/getent.c:965 nss/makedb.c:369 posix/getconf.c:1121
-#: sunrpc/rpc_main.c:1446 sunrpc/rpcinfo.c:691
+#: catgets/gencat.c:235 debug/pcprofiledump.c:208 elf/ldconfig.c:302
+#: elf/pldd.c:222 elf/sln.c:85 elf/sprof.c:371 iconv/iconv_prog.c:408
+#: iconv/iconvconfig.c:383 locale/programs/locale.c:279
+#: locale/programs/localedef.c:363 login/programs/pt_chown.c:88
+#: malloc/memusagestat.c:536 nscd/nscd.c:459 nss/getent.c:965 nss/makedb.c:371
+#: posix/getconf.c:1121 sunrpc/rpcinfo.c:691
 #: sysdeps/unix/sysv/linux/lddlibc4.c:61
+#, c-format
 msgid ""
 "For bug reporting instructions, please see:\n"
-"<http://www.gnu.org/software/libc/bugs.html>.\n"
+"%s.\n"
 msgstr ""
 "Por raporti programmisojn, bonvolu legi (angle):\n"
-"<http://www.gnu.org/software/libc/bugs.html>.\n"
+"  %s.\n"
 
-#: catgets/gencat.c:248 debug/pcprofiledump.c:221 debug/xtrace.sh:65
-#: elf/ldconfig.c:315 elf/ldd.bash.in:38 elf/pldd.c:220 elf/sotruss.ksh:76
-#: elf/sprof.c:385 iconv/iconv_prog.c:422 iconv/iconvconfig.c:397
-#: locale/programs/locale.c:293 locale/programs/localedef.c:383
-#: login/programs/pt_chown.c:62 malloc/memusage.sh:72
-#: malloc/memusagestat.c:556 nscd/nscd.c:470 nss/getent.c:86 nss/makedb.c:383
+#: catgets/gencat.c:251 debug/pcprofiledump.c:224 debug/xtrace.sh:64
+#: elf/ldconfig.c:318 elf/ldd.bash.in:38 elf/pldd.c:238 elf/sotruss.ksh:75
+#: elf/sprof.c:388 iconv/iconv_prog.c:425 iconv/iconvconfig.c:400
+#: locale/programs/locale.c:296 locale/programs/localedef.c:389
+#: login/programs/pt_chown.c:62 malloc/memusage.sh:71
+#: malloc/memusagestat.c:552 nscd/nscd.c:475 nss/getent.c:86 nss/makedb.c:387
 #: posix/getconf.c:1103 sysdeps/unix/sysv/linux/lddlibc4.c:68
 #, c-format
 msgid ""
@@ -174,108 +174,108 @@ msgstr ""
 "Ĉi tio estas libera programo; vidu la fontdosierojn por la kopikondiĉoj.\n"
 "Doniĝas NENIA GARANTIO; eĉ ne por KOMERCKVALITO aŭ ADEKVATECO POR IU CELO.\n"
 
-#: catgets/gencat.c:253 debug/pcprofiledump.c:226 debug/xtrace.sh:69
-#: elf/ldconfig.c:320 elf/pldd.c:225 elf/sprof.c:391 iconv/iconv_prog.c:427
-#: iconv/iconvconfig.c:402 locale/programs/locale.c:298
-#: locale/programs/localedef.c:388 malloc/memusage.sh:76
-#: malloc/memusagestat.c:561 nscd/nscd.c:475 nss/getent.c:91 nss/makedb.c:388
+#: catgets/gencat.c:256 debug/pcprofiledump.c:229 debug/xtrace.sh:68
+#: elf/ldconfig.c:323 elf/pldd.c:243 elf/sprof.c:394 iconv/iconv_prog.c:430
+#: iconv/iconvconfig.c:405 locale/programs/locale.c:301
+#: locale/programs/localedef.c:394 malloc/memusage.sh:75
+#: malloc/memusagestat.c:557 nscd/nscd.c:480 nss/getent.c:91 nss/makedb.c:392
 #: posix/getconf.c:1108
 #, c-format
 msgid "Written by %s.\n"
 msgstr "Verkita de %s.\n"
 
-#: catgets/gencat.c:284
+#: catgets/gencat.c:287
 msgid "*standard input*"
 msgstr "*ĉefenigujo*"
 
-#: catgets/gencat.c:290 iconv/iconv_charmap.c:171 iconv/iconv_prog.c:293
-#: nss/makedb.c:247
+#: catgets/gencat.c:293 iconv/iconv_charmap.c:169 iconv/iconv_prog.c:293
+#: nss/makedb.c:248
 #, c-format
 msgid "cannot open input file `%s'"
 msgstr "ne eblas malfermi enigan dosieron «%s»"
 
-#: catgets/gencat.c:419 catgets/gencat.c:494
+#: catgets/gencat.c:422 catgets/gencat.c:497
 msgid "illegal set number"
 msgstr "nevalida numero de aro"
 
-#: catgets/gencat.c:446
+#: catgets/gencat.c:449
 msgid "duplicate set definition"
 msgstr "duobla difino de aro"
 
-#: catgets/gencat.c:448 catgets/gencat.c:620 catgets/gencat.c:672
+#: catgets/gencat.c:451 catgets/gencat.c:623 catgets/gencat.c:675
 msgid "this is the first definition"
 msgstr "ĉi tiu estas la unua difino"
 
-#: catgets/gencat.c:519
+#: catgets/gencat.c:522
 #, c-format
 msgid "unknown set `%s'"
 msgstr "nekonata aro «%s»"
 
-#: catgets/gencat.c:560
+#: catgets/gencat.c:563
 msgid "invalid quote character"
 msgstr "nevalida cita signo"
 
-#: catgets/gencat.c:573
+#: catgets/gencat.c:576
 #, c-format
 msgid "unknown directive `%s': line ignored"
 msgstr "nekonata komando '%s': linio ignoriĝas"
 
-#: catgets/gencat.c:618
+#: catgets/gencat.c:621
 msgid "duplicated message number"
 msgstr "duobla mesaĝnumero"
 
-#: catgets/gencat.c:669
+#: catgets/gencat.c:672
 msgid "duplicated message identifier"
 msgstr "duobla mesaĝnomo"
 
-#: catgets/gencat.c:726
+#: catgets/gencat.c:729
 msgid "invalid character: message ignored"
 msgstr "nevalida signo: mesaĝo ignoriĝas"
 
-#: catgets/gencat.c:769
+#: catgets/gencat.c:772
 msgid "invalid line"
 msgstr "nevalida linio"
 
-#: catgets/gencat.c:823
+#: catgets/gencat.c:826
 msgid "malformed line ignored"
 msgstr "misformita linio ignoriĝas"
 
-#: catgets/gencat.c:987 catgets/gencat.c:1028
+#: catgets/gencat.c:990 catgets/gencat.c:1031
 #, c-format
 msgid "cannot open output file `%s'"
 msgstr "ne eblas malfermi eligan dosieron «%s»"
 
-#: catgets/gencat.c:1190 locale/programs/linereader.c:559
+#: catgets/gencat.c:1193 locale/programs/linereader.c:559
 msgid "invalid escape sequence"
 msgstr "nevalida stirkodo"
 
 # SIGTERM     15       Term    Termination signal
-#: catgets/gencat.c:1212
+#: catgets/gencat.c:1215
 msgid "unterminated message"
 msgstr "nefinita mesaĝo"
 
-#: catgets/gencat.c:1236
-#, fuzzy, c-format
+#: catgets/gencat.c:1239
+#, c-format
 msgid "while opening old catalog file"
 msgstr "dum malfermo de malnova katalogdosiero"
 
-#: catgets/gencat.c:1327
+#: catgets/gencat.c:1330
 #, c-format
 msgid "conversion modules not available"
 msgstr "konvertmoduloj ne disponeblas"
 
-#: catgets/gencat.c:1353
-#, fuzzy, c-format
+#: catgets/gencat.c:1356
+#, c-format
 msgid "cannot determine escape character"
-msgstr "ne eblas eltrovi ..."
+msgstr "ne eblas eltrovi kodŝanĝan signon"
 
 #: debug/pcprofiledump.c:52
 msgid "Don't buffer output"
-msgstr "Ne bufri eligon"
+msgstr "ne bufri eligon"
 
 #: debug/pcprofiledump.c:57
 msgid "Dump information generated by PC profiling."
-msgstr ""
+msgstr "Eligas informojn kiuj generiĝis por profililo."
 
 #: debug/pcprofiledump.c:60
 msgid "[FILE]"
@@ -294,14 +294,14 @@ msgstr "ne eblas legi ĉapon"
 #: debug/pcprofiledump.c:178
 #, c-format
 msgid "invalid pointer size"
-msgstr ""
+msgstr "nevalida grando de referenco"
 
 #: debug/xtrace.sh:26 debug/xtrace.sh:44
 msgid "Usage: xtrace [OPTION]... PROGRAM [PROGRAMOPTION]...\\n"
 msgstr ""
 
-#: debug/xtrace.sh:32 elf/sotruss.ksh:57 elf/sotruss.ksh:68
-#: elf/sotruss.ksh:136 malloc/memusage.sh:26
+#: debug/xtrace.sh:32 elf/sotruss.ksh:56 elf/sotruss.ksh:67
+#: elf/sotruss.ksh:135 malloc/memusage.sh:26
 msgid "Try \\`%s --help' or \\`%s --usage' for more information.\\n"
 msgstr "Tajpu «%s --help» aŭ «%s --usage» por pli da informoj.\\n"
 
@@ -324,20 +324,25 @@ msgid ""
 "\n"
 msgstr ""
 
-#: debug/xtrace.sh:126
+#: debug/xtrace.sh:57 elf/ldd.bash.in:55 elf/sotruss.ksh:49
+#: malloc/memusage.sh:64
+msgid "For bug reporting instructions, please see:\\\\n%s.\\\\n"
+msgstr "Por raporti programmisojn, bonvolu legi (angle):\\\\n  %s.\\\\n"
+
+#: debug/xtrace.sh:125
 msgid "xtrace: unrecognized option \\`$1'\\n"
 msgstr "xtrace: nekonata opcio «$1»\\n"
 
-#: debug/xtrace.sh:139
+#: debug/xtrace.sh:138
 msgid "No program name given\\n"
 msgstr "Ne indikatas programnomo\\n"
 
-#: debug/xtrace.sh:147
+#: debug/xtrace.sh:146
 #, sh-format
 msgid "executable \\`$program' not found\\n"
 msgstr "rulebla «$program» ne troviĝas\\n"
 
-#: debug/xtrace.sh:151
+#: debug/xtrace.sh:150
 #, sh-format
 msgid "\\`$program' is no executable\\n"
 msgstr "«$program» ne ruleblas\\n"
@@ -353,7 +358,7 @@ msgstr ""
 
 #: dlfcn/dlmopen.c:63
 msgid "invalid namespace"
-msgstr ""
+msgstr "nevalida nomspaco"
 
 #: dlfcn/dlmopen.c:68
 msgid "invalid mode"
@@ -367,85 +372,85 @@ msgstr "nevalida modusa argumento"
 msgid "unknown"
 msgstr "nekonata"
 
-#: elf/cache.c:115
+#: elf/cache.c:121
 msgid "Unknown OS"
 msgstr "Nekonata mastrumsistemo"
 
-#: elf/cache.c:120
+#: elf/cache.c:126
 #, c-format
 msgid ", OS ABI: %s %d.%d.%d"
 msgstr ", mastruma ABI-o: %s %d.%d.%d"
 
-#: elf/cache.c:137 elf/ldconfig.c:1306
+#: elf/cache.c:143 elf/ldconfig.c:1309
 #, c-format
 msgid "Can't open cache file %s\n"
 msgstr "Ne eblas malfermi kaŝmemoran dosieron %s\n"
 
-#: elf/cache.c:151
+#: elf/cache.c:157
 #, c-format
 msgid "mmap of cache file failed.\n"
 msgstr "Malsukcesis enmemorigo de kaŝmemora dosiero.\n"
 
-#: elf/cache.c:155 elf/cache.c:169
+#: elf/cache.c:161 elf/cache.c:175
 #, c-format
 msgid "File is not a cache file.\n"
 msgstr "Dosiero ne estas kaŝmemora dosiero.\n"
 
-#: elf/cache.c:202 elf/cache.c:212
+#: elf/cache.c:208 elf/cache.c:218
 #, c-format
 msgid "%d libs found in cache `%s'\n"
-msgstr ""
+msgstr "%d bibliotekoj troviĝis en kaŝmemoro '%s'\n"
 
-#: elf/cache.c:406
+#: elf/cache.c:412
 #, c-format
 msgid "Can't create temporary cache file %s"
 msgstr "Ne eblas krei provizoran kaŝmemoran dosieron %s"
 
-#: elf/cache.c:414 elf/cache.c:424 elf/cache.c:428 elf/cache.c:433
+#: elf/cache.c:420 elf/cache.c:430 elf/cache.c:434 elf/cache.c:439
 #, c-format
 msgid "Writing of cache data failed"
 msgstr "Malsukcesis skribado de kaŝmemoraj datumoj"
 
-#: elf/cache.c:438
+#: elf/cache.c:444
 #, c-format
 msgid "Changing access rights of %s to %#o failed"
-msgstr ""
+msgstr "Malsukcesis ŝanĝi la atingpermesojn por %s al %#o"
 
-#: elf/cache.c:443
+#: elf/cache.c:449
 #, c-format
 msgid "Renaming of %s to %s failed"
-msgstr "Malsukcesis alinomo de %s al %s"
+msgstr "Malsukcesis alinomi %s al %s"
 
-#: elf/dl-close.c:386 elf/dl-open.c:460
+#: elf/dl-close.c:378 elf/dl-open.c:474
 msgid "cannot create scope list"
-msgstr ""
+msgstr "ne eblas krei ampleksliston"
 
-#: elf/dl-close.c:773
+#: elf/dl-close.c:771
 msgid "shared object not open"
 msgstr "komuna objekto ne estas malferma"
 
-#: elf/dl-deps.c:114
+#: elf/dl-deps.c:112
 msgid "DST not allowed in SUID/SGID programs"
 msgstr ""
 
-#: elf/dl-deps.c:127
+#: elf/dl-deps.c:125
 msgid "empty dynamic string token substitution"
 msgstr ""
 
-#: elf/dl-deps.c:133
+#: elf/dl-deps.c:131
 #, c-format
 msgid "cannot load auxiliary `%s' because of empty dynamic string token substitution\n"
 msgstr ""
 
-#: elf/dl-deps.c:486
+#: elf/dl-deps.c:483
 msgid "cannot allocate dependency list"
 msgstr ""
 
-#: elf/dl-deps.c:522 elf/dl-deps.c:582
+#: elf/dl-deps.c:520 elf/dl-deps.c:580
 msgid "cannot allocate symbol search list"
 msgstr ""
 
-#: elf/dl-deps.c:562
+#: elf/dl-deps.c:560
 msgid "Filters not supported with LD_TRACE_PRELINKING"
 msgstr ""
 
@@ -469,187 +474,191 @@ msgstr ""
 msgid "internal error: symidx out of range of fptr table"
 msgstr ""
 
-#: elf/dl-load.c:470
+#: elf/dl-hwcaps.c:173 elf/dl-hwcaps.c:185
+msgid "cannot create capability list"
+msgstr ""
+
+#: elf/dl-load.c:471
 msgid "cannot allocate name record"
 msgstr ""
 
-#: elf/dl-load.c:547 elf/dl-load.c:663 elf/dl-load.c:748 elf/dl-load.c:861
+#: elf/dl-load.c:548 elf/dl-load.c:664 elf/dl-load.c:749 elf/dl-load.c:862
 msgid "cannot create cache for search path"
 msgstr ""
 
-#: elf/dl-load.c:638
+#: elf/dl-load.c:639
 msgid "cannot create RUNPATH/RPATH copy"
 msgstr ""
 
-#: elf/dl-load.c:734
+#: elf/dl-load.c:735
 msgid "cannot create search path array"
 msgstr ""
 
-#: elf/dl-load.c:932
+#: elf/dl-load.c:934
 msgid "cannot stat shared object"
 msgstr ""
 
-#: elf/dl-load.c:1010
+#: elf/dl-load.c:1012
 msgid "cannot open zero fill device"
 msgstr ""
 
-#: elf/dl-load.c:1056 elf/dl-load.c:2317
+#: elf/dl-load.c:1059 elf/dl-load.c:2339
 msgid "cannot create shared object descriptor"
 msgstr ""
 
-#: elf/dl-load.c:1075 elf/dl-load.c:1731 elf/dl-load.c:1834
+#: elf/dl-load.c:1078 elf/dl-load.c:1751 elf/dl-load.c:1854
 msgid "cannot read file data"
 msgstr "ne eblas legi dosierdatumojn"
 
-#: elf/dl-load.c:1121
+#: elf/dl-load.c:1124
 msgid "ELF load command alignment not page-aligned"
 msgstr ""
 
-#: elf/dl-load.c:1128
+#: elf/dl-load.c:1131
 msgid "ELF load command address/offset not properly aligned"
 msgstr ""
 
-#: elf/dl-load.c:1211
+#: elf/dl-load.c:1216
 msgid "cannot allocate TLS data structures for initial thread"
 msgstr ""
 
-#: elf/dl-load.c:1234
+#: elf/dl-load.c:1239
 msgid "cannot handle TLS data"
 msgstr ""
 
-#: elf/dl-load.c:1253
+#: elf/dl-load.c:1258
 msgid "object file has no loadable segments"
 msgstr ""
 
-#: elf/dl-load.c:1289
+#: elf/dl-load.c:1294
 msgid "failed to map segment from shared object"
 msgstr ""
 
-#: elf/dl-load.c:1315
+#: elf/dl-load.c:1320
 msgid "cannot dynamically load executable"
 msgstr ""
 
-#: elf/dl-load.c:1377
+#: elf/dl-load.c:1383
 msgid "cannot change memory protections"
 msgstr ""
 
-#: elf/dl-load.c:1396
+#: elf/dl-load.c:1402
 msgid "cannot map zero-fill pages"
 msgstr ""
 
-#: elf/dl-load.c:1410
+#: elf/dl-load.c:1416
 msgid "object file has no dynamic section"
 msgstr ""
 
-#: elf/dl-load.c:1433
+#: elf/dl-load.c:1439
 msgid "shared object cannot be dlopen()ed"
 msgstr ""
 
-#: elf/dl-load.c:1446
+#: elf/dl-load.c:1452
 msgid "cannot allocate memory for program header"
 msgstr ""
 
-#: elf/dl-load.c:1463 elf/dl-open.c:178
+#: elf/dl-load.c:1469 elf/dl-open.c:180
 msgid "invalid caller"
 msgstr "nevalida vokanto"
 
-#: elf/dl-load.c:1502
+#: elf/dl-load.c:1508
 msgid "cannot enable executable stack as shared object requires"
 msgstr ""
 
-#: elf/dl-load.c:1515
+#: elf/dl-load.c:1521
 msgid "cannot close file descriptor"
-msgstr ""
+msgstr "ne eblas fermi dosierpriaĵon"
 
-#: elf/dl-load.c:1731
+#: elf/dl-load.c:1751
 msgid "file too short"
 msgstr "dosiero tro mallongas"
 
-#: elf/dl-load.c:1767
+#: elf/dl-load.c:1787
 msgid "invalid ELF header"
 msgstr "nevalida ELF-ĉapo"
 
-#: elf/dl-load.c:1779
+#: elf/dl-load.c:1799
 msgid "ELF file data encoding not big-endian"
 msgstr ""
 
-#: elf/dl-load.c:1781
+#: elf/dl-load.c:1801
 msgid "ELF file data encoding not little-endian"
 msgstr ""
 
-#: elf/dl-load.c:1785
+#: elf/dl-load.c:1805
 msgid "ELF file version ident does not match current one"
 msgstr ""
 
-#: elf/dl-load.c:1789
+#: elf/dl-load.c:1809
 msgid "ELF file OS ABI invalid"
 msgstr ""
 
-#: elf/dl-load.c:1792
+#: elf/dl-load.c:1812
 msgid "ELF file ABI version invalid"
 msgstr ""
 
-#: elf/dl-load.c:1795
+#: elf/dl-load.c:1815
 msgid "nonzero padding in e_ident"
 msgstr ""
 
-#: elf/dl-load.c:1798
+#: elf/dl-load.c:1818
 msgid "internal error"
 msgstr "**interna eraro**"
 
-#: elf/dl-load.c:1805
+#: elf/dl-load.c:1825
 msgid "ELF file version does not match current one"
 msgstr ""
 
-#: elf/dl-load.c:1813
+#: elf/dl-load.c:1833
 msgid "only ET_DYN and ET_EXEC can be loaded"
 msgstr ""
 
-#: elf/dl-load.c:1819
+#: elf/dl-load.c:1839
 msgid "ELF file's phentsize not the expected size"
 msgstr ""
 
-#: elf/dl-load.c:2336
+#: elf/dl-load.c:2358
 msgid "wrong ELF class: ELFCLASS64"
 msgstr "malĝusta ELF-klaso: ELFCLASS64"
 
-#: elf/dl-load.c:2337
+#: elf/dl-load.c:2359
 msgid "wrong ELF class: ELFCLASS32"
 msgstr "malĝusta ELF-klaso: ELFCLASS32"
 
-#: elf/dl-load.c:2340
+#: elf/dl-load.c:2362
 msgid "cannot open shared object file"
 msgstr "ne eblas malfermi komunan objektdosieron"
 
-#: elf/dl-lookup.c:756 ports/sysdeps/mips/dl-lookup.c:773
+#: elf/dl-lookup.c:757 ports/sysdeps/mips/dl-lookup.c:774
 msgid "relocation error"
 msgstr ""
 
-#: elf/dl-lookup.c:785 ports/sysdeps/mips/dl-lookup.c:802
+#: elf/dl-lookup.c:786 ports/sysdeps/mips/dl-lookup.c:803
 msgid "symbol lookup error"
 msgstr ""
 
-#: elf/dl-open.c:108
+#: elf/dl-open.c:110
 msgid "cannot extend global scope"
 msgstr ""
 
-#: elf/dl-open.c:510
+#: elf/dl-open.c:524
 msgid "TLS generation counter wrapped!  Please report this."
 msgstr ""
 
-#: elf/dl-open.c:532
+#: elf/dl-open.c:546
 msgid "cannot load any more object with static TLS"
 msgstr ""
 
-#: elf/dl-open.c:581
+#: elf/dl-open.c:599
 msgid "invalid mode for dlopen()"
 msgstr "nevalida moduso por 'dlopen()'"
 
-#: elf/dl-open.c:598
+#: elf/dl-open.c:616
 msgid "no more namespaces available for dlmopen()"
 msgstr ""
 
-#: elf/dl-open.c:616
+#: elf/dl-open.c:634
 msgid "invalid target namespace in dlmopen()"
 msgstr ""
 
@@ -679,244 +688,242 @@ msgstr ""
 msgid "cannot apply additional memory protection after relocation"
 msgstr ""
 
-#: elf/dl-sym.c:162
+#: elf/dl-sym.c:163
 msgid "RTLD_NEXT used in code not dynamically loaded"
 msgstr ""
 
-#: elf/dl-sysdep.c:488 elf/dl-sysdep.c:500
-msgid "cannot create capability list"
-msgstr ""
-
-#: elf/dl-tls.c:872
+#: elf/dl-tls.c:875
 msgid "cannot create TLS data structures"
 msgstr ""
 
-#: elf/dl-version.c:171
+#: elf/dl-version.c:166
 msgid "version lookup error"
 msgstr ""
 
-#: elf/dl-version.c:302
+#: elf/dl-version.c:297
 msgid "cannot allocate version reference table"
 msgstr ""
 
 #: elf/ldconfig.c:140
 msgid "Print cache"
-msgstr ""
+msgstr "eligi kaŝmemoron"
 
 #: elf/ldconfig.c:141
 msgid "Generate verbose messages"
-msgstr ""
+msgstr "eligi detalajn mesaĝojn"
 
 #: elf/ldconfig.c:142
 msgid "Don't build cache"
-msgstr ""
+msgstr "ne krei kaŝmemoron"
 
 #: elf/ldconfig.c:143
 msgid "Don't generate links"
-msgstr ""
+msgstr "ne generi ligojn"
 
 #: elf/ldconfig.c:144
 msgid "Change to and use ROOT as root directory"
-msgstr ""
+msgstr "ŝanĝi al RADIKO kaj uzi ĝin kiel radikan dosierujon"
 
 #: elf/ldconfig.c:144
 msgid "ROOT"
-msgstr ""
+msgstr "RADIKO"
 
 #: elf/ldconfig.c:145
 msgid "CACHE"
-msgstr ""
+msgstr "KAŜMEMORO"
 
 #: elf/ldconfig.c:145
 msgid "Use CACHE as cache file"
-msgstr ""
+msgstr "uzi KAŜMEMOROn kiel kaŝmemoran dosieron"
 
 #: elf/ldconfig.c:146
 msgid "CONF"
-msgstr ""
+msgstr "AGORDDOSIERO"
 
 #: elf/ldconfig.c:146
 msgid "Use CONF as configuration file"
-msgstr ""
+msgstr "uzi AGORDDOSIEROn kiel agordan dosieron"
 
 #: elf/ldconfig.c:147
 msgid "Only process directories specified on the command line.  Don't build cache."
-msgstr ""
+msgstr "nur trakti dosierujojn kiuj indikatas en komandlinio; ne krei kaŝmemoron"
 
 #: elf/ldconfig.c:148
 msgid "Manually link individual libraries."
-msgstr ""
+msgstr "mane ligi individuajn bibliotekojn"
 
 #: elf/ldconfig.c:149
 msgid "FORMAT"
-msgstr ""
+msgstr "ARANĜO"
 
 #: elf/ldconfig.c:149
 msgid "Format to use: new, old or compat (default)"
-msgstr ""
+msgstr "uzenda aranĝo: 'new' (nova), 'old' (malnova), aŭ 'compat' (kongrua, defaŭlte)"
 
 #: elf/ldconfig.c:150
 msgid "Ignore auxiliary cache file"
-msgstr ""
+msgstr "ignori neĉefan kaŝmemoran dosieron"
 
 #: elf/ldconfig.c:158
 msgid "Configure Dynamic Linker Run Time Bindings."
 msgstr ""
+"  \n"
+"Agordas la dinamika bindilo."
 
-#: elf/ldconfig.c:338
+#: elf/ldconfig.c:341
 #, c-format
 msgid "Path `%s' given more than once"
-msgstr ""
+msgstr "Vojo '%s' indikatas plurfoje"
 
-#: elf/ldconfig.c:378
+#: elf/ldconfig.c:381
 #, c-format
 msgid "%s is not a known library type"
-msgstr ""
+msgstr "%s ne estas konata bibliotektipo"
 
-#: elf/ldconfig.c:406
+#: elf/ldconfig.c:409
 #, c-format
 msgid "Can't stat %s"
-msgstr ""
+msgstr "Malsukcesis eltrovi statinformon pri %s"
 
-#: elf/ldconfig.c:480
+#: elf/ldconfig.c:483
 #, c-format
 msgid "Can't stat %s\n"
-msgstr ""
+msgstr "Malsukcesis eltrovi statinformon pri %s\n"
 
-#: elf/ldconfig.c:490
+#: elf/ldconfig.c:493
 #, c-format
 msgid "%s is not a symbolic link\n"
 msgstr "%s ne estas simbola ligo\n"
 
-#: elf/ldconfig.c:509
+#: elf/ldconfig.c:512
 #, c-format
 msgid "Can't unlink %s"
-msgstr ""
+msgstr "Ne eblas malligi %s"
 
-#: elf/ldconfig.c:515
+#: elf/ldconfig.c:518
 #, c-format
 msgid "Can't link %s to %s"
-msgstr ""
+msgstr "Ne eblas ligi %s al %s"
 
 # SIGWINCH    28,28,20    Ign     Window resize signal (4.3 BSD, Sun)
-#: elf/ldconfig.c:521
+#: elf/ldconfig.c:524
 msgid " (changed)\n"
 msgstr " (ŝanĝiĝis)\n"
 
-#: elf/ldconfig.c:523
+#: elf/ldconfig.c:526
 msgid " (SKIPPED)\n"
-msgstr ""
+msgstr " (TRANSSALTITA)\n"
 
-#: elf/ldconfig.c:578
+#: elf/ldconfig.c:581
 #, c-format
 msgid "Can't find %s"
 msgstr "Malsukcesis trovi %s"
 
-#: elf/ldconfig.c:594 elf/ldconfig.c:767 elf/ldconfig.c:826 elf/ldconfig.c:860
+#: elf/ldconfig.c:597 elf/ldconfig.c:770 elf/ldconfig.c:829 elf/ldconfig.c:863
 #, c-format
 msgid "Cannot lstat %s"
-msgstr ""
+msgstr "Malsukcesis eltrovi statinformon pri %s"
 
-#: elf/ldconfig.c:601
+#: elf/ldconfig.c:604
 #, c-format
 msgid "Ignored file %s since it is not a regular file."
-msgstr ""
+msgstr "Dosiero %s ignoriĝis ĉar ĝi ne estas normala dosiero."
 
-#: elf/ldconfig.c:610
+#: elf/ldconfig.c:613
 #, c-format
 msgid "No link created since soname could not be found for %s"
 msgstr ""
 
-#: elf/ldconfig.c:693
+#: elf/ldconfig.c:696
 #, c-format
 msgid "Can't open directory %s"
 msgstr "Ne eblas malfermi dosierujon %s"
 
-#: elf/ldconfig.c:785 elf/ldconfig.c:847 elf/readlib.c:90
+#: elf/ldconfig.c:788 elf/ldconfig.c:850 elf/readlib.c:90
 #, c-format
 msgid "Input file %s not found.\n"
 msgstr "Eniga dosiero %s ne troviĝas.\n"
 
-#: elf/ldconfig.c:792
+#: elf/ldconfig.c:795
 #, c-format
 msgid "Cannot stat %s"
 msgstr "Malsukcesis eltrovi statinformon pri %s"
 
-#: elf/ldconfig.c:921
-#, c-format
-msgid "libc5 library %s in wrong directory"
-msgstr ""
-
 #: elf/ldconfig.c:924
 #, c-format
-msgid "libc6 library %s in wrong directory"
-msgstr ""
+msgid "libc5 library %s in wrong directory"
+msgstr "libc5-biblioteko %s estas en malĝusta dosierujo"
 
 #: elf/ldconfig.c:927
 #, c-format
-msgid "libc4 library %s in wrong directory"
-msgstr ""
+msgid "libc6 library %s in wrong directory"
+msgstr "libc6-biblioteko %s estas en malĝusta dosierujo"
 
-#: elf/ldconfig.c:955
+#: elf/ldconfig.c:930
+#, c-format
+msgid "libc4 library %s in wrong directory"
+msgstr "libc4-biblioteko %s estas en malĝusta dosierujo"
+
+#: elf/ldconfig.c:958
 #, c-format
 msgid "libraries %s and %s in directory %s have same soname but different type."
 msgstr ""
 
-#: elf/ldconfig.c:1064
+#: elf/ldconfig.c:1067
 #, c-format
 msgid "Warning: ignoring configuration file that cannot be opened: %s"
-msgstr ""
+msgstr "Averto: ignoriĝas agorda dosiero kiu ne malfermeblas: %s"
 
-#: elf/ldconfig.c:1130
+#: elf/ldconfig.c:1133
 #, c-format
 msgid "%s:%u: bad syntax in hwcap line"
 msgstr ""
 
-#: elf/ldconfig.c:1136
+#: elf/ldconfig.c:1139
 #, c-format
 msgid "%s:%u: hwcap index %lu above maximum %u"
 msgstr ""
 
-#: elf/ldconfig.c:1143 elf/ldconfig.c:1151
+#: elf/ldconfig.c:1146 elf/ldconfig.c:1154
 #, c-format
 msgid "%s:%u: hwcap index %lu already defined as %s"
 msgstr ""
 
-#: elf/ldconfig.c:1154
+#: elf/ldconfig.c:1157
 #, c-format
 msgid "%s:%u: duplicate hwcap %lu %s"
 msgstr ""
 
-#: elf/ldconfig.c:1176
+#: elf/ldconfig.c:1179
 #, c-format
 msgid "need absolute file name for configuration file when using -r"
 msgstr ""
 
-#: elf/ldconfig.c:1183 locale/programs/xmalloc.c:65 malloc/obstack.c:433
+#: elf/ldconfig.c:1186 locale/programs/xmalloc.c:65 malloc/obstack.c:433
 #: malloc/obstack.c:435 posix/getconf.c:1076 posix/getconf.c:1296
 #, c-format
 msgid "memory exhausted"
 msgstr "mankas sufiĉa memoro"
 
-#: elf/ldconfig.c:1215
+#: elf/ldconfig.c:1218
 #, c-format
 msgid "%s:%u: cannot read directory %s"
 msgstr "%s:%u: ne eblas legi dosierujon %s"
 
-#: elf/ldconfig.c:1259
+#: elf/ldconfig.c:1262
 #, c-format
 msgid "relative path `%s' used to build cache"
-msgstr ""
+msgstr "uziĝas relativa vojo '%s' por krei kaŝmemoron"
 
-#: elf/ldconfig.c:1285
+#: elf/ldconfig.c:1288
 #, c-format
 msgid "Can't chdir to /"
 msgstr "Malsukcesis ŝanĝi aktualan dosierujon al «/»"
 
-#: elf/ldconfig.c:1326
+#: elf/ldconfig.c:1329
 #, c-format
 msgid "Can't open cache file directory %s\n"
-msgstr ""
+msgstr "Malsukcesis malfermi kaŝmemoran dosierujon %s\n"
 
 #: elf/ldd.bash.in:42
 msgid "Written by %s and %s.\n"
@@ -933,46 +940,46 @@ msgid ""
 "  -v, --verbose           print all information\n"
 msgstr ""
 
-#: elf/ldd.bash.in:81
+#: elf/ldd.bash.in:80
 msgid "ldd: option \\`$1' is ambiguous"
 msgstr "ldd: opcio «-$1» estas plursenca"
 
-#: elf/ldd.bash.in:88
+#: elf/ldd.bash.in:87
 msgid "unrecognized option"
 msgstr "nekonata opcio"
 
-#: elf/ldd.bash.in:89 elf/ldd.bash.in:127
+#: elf/ldd.bash.in:88 elf/ldd.bash.in:126
 msgid "Try \\`ldd --help' for more information."
 msgstr "Tajpu «ldd --help» por pli da informoj."
 
-#: elf/ldd.bash.in:126
+#: elf/ldd.bash.in:125
 msgid "missing file arguments"
 msgstr "mankas dosieraj argumentoj"
 
 #. TRANS No such file or directory.  This is a ``file doesn't exist'' error
 #. TRANS for ordinary files that are referenced in contexts where they are
 #. TRANS expected to already exist.
-#: elf/ldd.bash.in:149 sysdeps/gnu/errlist.c:36
+#: elf/ldd.bash.in:148 sysdeps/gnu/errlist.c:36
 msgid "No such file or directory"
 msgstr "Dosiero aü dosierujo ne ekzistas"
 
-#: elf/ldd.bash.in:152 inet/rcmd.c:488
+#: elf/ldd.bash.in:151 inet/rcmd.c:488
 msgid "not regular file"
 msgstr "ne estas normala dosiero"
 
-#: elf/ldd.bash.in:155
+#: elf/ldd.bash.in:154
 msgid "warning: you do not have execution permission for"
 msgstr "averto: vi ne havas permeson ruli"
 
-#: elf/ldd.bash.in:184
+#: elf/ldd.bash.in:183
 msgid "\tnot a dynamic executable"
-msgstr ""
+msgstr "    ne estas dinamika rulebla dosiero"
 
-#: elf/ldd.bash.in:192
+#: elf/ldd.bash.in:191
 msgid "exited with unknown exit code"
 msgstr "finis kun nekonata elirstato"
 
-#: elf/ldd.bash.in:197
+#: elf/ldd.bash.in:196
 msgid "error: you do not have read permission for"
 msgstr "eraro: vi ne havas permeson legi"
 
@@ -1011,55 +1018,55 @@ msgstr "ne eblas legi ligojmapon"
 msgid "cannot read object name"
 msgstr "ne eblas legi objektnomon"
 
-#: elf/pldd.c:67
+#: elf/pldd.c:65
 msgid "List dynamic shared objects loaded into process."
 msgstr ""
 
-#: elf/pldd.c:71
+#: elf/pldd.c:69
 msgid "PID"
 msgstr ""
 
-#: elf/pldd.c:102
+#: elf/pldd.c:100
 #, c-format
 msgid "Exactly one parameter with process ID required.\n"
 msgstr ""
 
-#: elf/pldd.c:114
+#: elf/pldd.c:112
 #, c-format
 msgid "invalid process ID '%s'"
 msgstr ""
 
-#: elf/pldd.c:122
+#: elf/pldd.c:120
 #, c-format
 msgid "cannot open %s"
 msgstr "ne eblas malfermi %s"
 
-#: elf/pldd.c:147
+#: elf/pldd.c:145
 #, c-format
 msgid "cannot open %s/task"
 msgstr "ne eblas malfermi %s/task"
 
-#: elf/pldd.c:150
+#: elf/pldd.c:148
 #, c-format
 msgid "cannot prepare reading %s/task"
 msgstr ""
 
-#: elf/pldd.c:163
+#: elf/pldd.c:161
 #, c-format
 msgid "invalid thread ID '%s'"
 msgstr ""
 
-#: elf/pldd.c:174
+#: elf/pldd.c:172
 #, c-format
 msgid "cannot attach to process %lu"
 msgstr ""
 
-#: elf/pldd.c:246
+#: elf/pldd.c:264
 #, c-format
 msgid "cannot get information about process %lu"
 msgstr ""
 
-#: elf/pldd.c:259
+#: elf/pldd.c:277
 #, c-format
 msgid "process %lu is no ELF program"
 msgstr ""
@@ -1177,19 +1184,19 @@ msgstr ""
 msgid "Mandatory arguments to long options are also mandatory for any corresponding\\nshort options.\\n"
 msgstr ""
 
-#: elf/sotruss.ksh:56
+#: elf/sotruss.ksh:55
 msgid "%s: option requires an argument -- '%s'\\n"
 msgstr "%s: opcio bezonas argumenton -- «%s»\\n"
 
-#: elf/sotruss.ksh:62
+#: elf/sotruss.ksh:61
 msgid "%s: option is ambiguous; possibilities:"
 msgstr "%s: opcio estas plursenca; eblaĵoj estas:"
 
-#: elf/sotruss.ksh:80
+#: elf/sotruss.ksh:79
 msgid "Written by %s.\\n"
 msgstr "Verkita de %s.\\n"
 
-#: elf/sotruss.ksh:87
+#: elf/sotruss.ksh:86
 msgid ""
 "Usage: %s [-ef] [-F FROMLIST] [-o FILENAME] [-T TOLIST] [--exit]\n"
 "\t    [--follow] [--from FROMLIST] [--output FILENAME] [--to TOLIST]\n"
@@ -1197,7 +1204,7 @@ msgid ""
 "\t    EXECUTABLE [EXECUTABLE-OPTION...]\\n"
 msgstr ""
 
-#: elf/sotruss.ksh:135
+#: elf/sotruss.ksh:134
 msgid "%s: unrecognized option '%c%s'\\n"
 msgstr "%s: nekonata opcio «%c%s»\\n"
 
@@ -1225,97 +1232,97 @@ msgstr ""
 msgid "SHOBJ [PROFDATA]"
 msgstr ""
 
-#: elf/sprof.c:429
+#: elf/sprof.c:432
 #, c-format
 msgid "failed to load shared object `%s'"
 msgstr ""
 
-#: elf/sprof.c:438
+#: elf/sprof.c:441
 #, c-format
 msgid "cannot create internal descriptors"
 msgstr ""
 
-#: elf/sprof.c:550
+#: elf/sprof.c:553
 #, c-format
 msgid "Reopening shared object `%s' failed"
 msgstr ""
 
-#: elf/sprof.c:557 elf/sprof.c:652
+#: elf/sprof.c:560 elf/sprof.c:655
 #, c-format
 msgid "reading of section headers failed"
 msgstr ""
 
-#: elf/sprof.c:565 elf/sprof.c:660
+#: elf/sprof.c:568 elf/sprof.c:663
 #, c-format
 msgid "reading of section header string table failed"
 msgstr ""
 
-#: elf/sprof.c:591
+#: elf/sprof.c:594
 #, c-format
 msgid "*** Cannot read debuginfo file name: %m\n"
 msgstr ""
 
-#: elf/sprof.c:612
+#: elf/sprof.c:615
 #, c-format
 msgid "cannot determine file name"
 msgstr ""
 
-#: elf/sprof.c:645
+#: elf/sprof.c:648
 #, c-format
 msgid "reading of ELF header failed"
 msgstr ""
 
-#: elf/sprof.c:681
+#: elf/sprof.c:684
 #, c-format
 msgid "*** The file `%s' is stripped: no detailed analysis possible\n"
 msgstr ""
 
-#: elf/sprof.c:711
+#: elf/sprof.c:714
 #, c-format
 msgid "failed to load symbol data"
 msgstr ""
 
-#: elf/sprof.c:776
+#: elf/sprof.c:779
 #, c-format
 msgid "cannot load profiling data"
 msgstr ""
 
-#: elf/sprof.c:785
+#: elf/sprof.c:788
 #, c-format
 msgid "while stat'ing profiling data file"
 msgstr ""
 
-#: elf/sprof.c:793
+#: elf/sprof.c:796
 #, c-format
 msgid "profiling data file `%s' does not match shared object `%s'"
 msgstr ""
 
-#: elf/sprof.c:804
+#: elf/sprof.c:807
 #, c-format
 msgid "failed to mmap the profiling data file"
 msgstr ""
 
-#: elf/sprof.c:812
+#: elf/sprof.c:815
 #, c-format
 msgid "error while closing the profiling data file"
 msgstr ""
 
-#: elf/sprof.c:821 elf/sprof.c:919
+#: elf/sprof.c:824 elf/sprof.c:922
 #, c-format
 msgid "cannot create internal descriptor"
 msgstr ""
 
-#: elf/sprof.c:895
+#: elf/sprof.c:898
 #, c-format
 msgid "`%s' is no correct profile data file for `%s'"
 msgstr ""
 
-#: elf/sprof.c:1076 elf/sprof.c:1134
+#: elf/sprof.c:1079 elf/sprof.c:1137
 #, c-format
 msgid "cannot allocate symbol data"
 msgstr ""
 
-#: iconv/iconv_charmap.c:143 iconv/iconv_prog.c:445
+#: iconv/iconv_charmap.c:143 iconv/iconv_prog.c:448
 #, c-format
 msgid "cannot open output file"
 msgstr "ne eblas malfermi eligan dosieron"
@@ -1330,25 +1337,25 @@ msgstr "eraro dum fermado de enigo «%s»"
 msgid "illegal input sequence at position %Zd"
 msgstr "nevalida eniga sekvenco je pozicio %Zd"
 
-#: iconv/iconv_charmap.c:482 iconv/iconv_prog.c:536
+#: iconv/iconv_charmap.c:482 iconv/iconv_prog.c:539
 #, c-format
 msgid "incomplete character or shift sequence at end of buffer"
 msgstr "nekompleta signo aŭ sekvenco je fino de bufro"
 
-#: iconv/iconv_charmap.c:527 iconv/iconv_charmap.c:563 iconv/iconv_prog.c:579
-#: iconv/iconv_prog.c:615
+#: iconv/iconv_charmap.c:527 iconv/iconv_charmap.c:563 iconv/iconv_prog.c:582
+#: iconv/iconv_prog.c:618
 #, c-format
 msgid "error while reading the input"
 msgstr "eraro dum legado de enigo"
 
-#: iconv/iconv_charmap.c:545 iconv/iconv_prog.c:597
+#: iconv/iconv_charmap.c:545 iconv/iconv_prog.c:600
 #, c-format
 msgid "unable to allocate buffer for input"
 msgstr "mankas sufiĉa memoro por eniga bufro"
 
 #: iconv/iconv_prog.c:59
 msgid "Input/Output format specification:"
-msgstr "Indiko de eniga/eliga aranĝo:"
+msgstr "Indiko de en-eliga aranĝo:"
 
 #: iconv/iconv_prog.c:60
 msgid "encoding of original text"
@@ -1427,27 +1434,27 @@ msgstr "malsukcesis startigi konvertan procezadon"
 msgid "error while closing output file"
 msgstr "eraro dum fermado de eliga dosiero"
 
-#: iconv/iconv_prog.c:455
+#: iconv/iconv_prog.c:458
 #, c-format
 msgid "conversion stopped due to problem in writing the output"
 msgstr "konverto haltis kaŭze de problemo je skribado de eligo"
 
-#: iconv/iconv_prog.c:532
+#: iconv/iconv_prog.c:535
 #, c-format
 msgid "illegal input sequence at position %ld"
 msgstr "nevalida eniga sekvenco je pozicio %ld"
 
-#: iconv/iconv_prog.c:540
+#: iconv/iconv_prog.c:543
 #, c-format
 msgid "internal error (illegal descriptor)"
 msgstr "**interna programmiso** (nevalida dosiernumero)"
 
-#: iconv/iconv_prog.c:543
+#: iconv/iconv_prog.c:546
 #, c-format
 msgid "unknown iconv() error %d"
 msgstr "nekonata eraro %d de 'iconv()'"
 
-#: iconv/iconv_prog.c:788
+#: iconv/iconv_prog.c:791
 msgid ""
 "The following list contain all the coded character sets known.  This does\n"
 "not necessarily mean that all combinations of these names can be used for\n"
@@ -1468,11 +1475,11 @@ msgstr ""
 
 #: iconv/iconvconfig.c:113
 msgid "[DIR...]"
-msgstr ""
+msgstr "[DOSIERUJO...]"
 
 #: iconv/iconvconfig.c:126
 msgid "Prefix used for all file accesses"
-msgstr ""
+msgstr "vojprefikso por ĉiuj dosieratingoj"
 
 #: iconv/iconvconfig.c:127
 msgid "Put output in FILE instead of installed location (--prefix does not apply to FILE)"
@@ -1492,15 +1499,15 @@ msgstr ""
 msgid "no output file produced because warnings were issued"
 msgstr ""
 
-#: iconv/iconvconfig.c:431
+#: iconv/iconvconfig.c:434
 #, c-format
 msgid "while inserting in search tree"
 msgstr ""
 
-#: iconv/iconvconfig.c:1240
+#: iconv/iconvconfig.c:1243
 #, c-format
 msgid "cannot generate output file"
-msgstr "ne eblas produkti eligan dosieron"
+msgstr "ne eblas generi eligan dosieron"
 
 #: inet/rcmd.c:163
 msgid "rcmd: Cannot allocate memory\n"
@@ -2593,7 +2600,7 @@ msgstr ""
 msgid "Cannot set LC_ALL to default locale"
 msgstr ""
 
-#: locale/programs/locale.c:518
+#: locale/programs/locale.c:521
 #, c-format
 msgid "while preparing output"
 msgstr ""
@@ -2688,7 +2695,7 @@ msgid "FATAL: system does not define `_POSIX2_LOCALEDEF'"
 msgstr ""
 
 #: locale/programs/localedef.c:253 locale/programs/localedef.c:269
-#: locale/programs/localedef.c:595 locale/programs/localedef.c:615
+#: locale/programs/localedef.c:601 locale/programs/localedef.c:621
 #, c-format
 msgid "cannot open locale definition file `%s'"
 msgstr ""
@@ -2698,7 +2705,7 @@ msgstr ""
 msgid "cannot write output files to `%s'"
 msgstr "ne eblas skribi eligajn dosierojn al '%s'"
 
-#: locale/programs/localedef.c:362
+#: locale/programs/localedef.c:367
 #, c-format
 msgid ""
 "System's directory for character maps : %s\n"
@@ -2707,18 +2714,18 @@ msgid ""
 "%s"
 msgstr ""
 
-#: locale/programs/localedef.c:563
+#: locale/programs/localedef.c:569
 #, c-format
 msgid "circular dependencies between locale definitions"
 msgstr ""
 
-#: locale/programs/localedef.c:569
+#: locale/programs/localedef.c:575
 #, c-format
 msgid "cannot add already read locale `%s' a second time"
 msgstr ""
 
 #: locale/programs/locarchive.c:113 locale/programs/locarchive.c:347
-#: nss/makedb.c:289
+#: nss/makedb.c:290
 #, c-format
 msgid "cannot create temporary file"
 msgstr ""
@@ -2912,12 +2919,12 @@ msgstr ""
 msgid "repertoire map file `%s' not found"
 msgstr ""
 
-#: login/programs/pt_chown.c:77
+#: login/programs/pt_chown.c:78
 #, c-format
 msgid "Set the owner, group and access permission of the slave pseudo terminal corresponding to the master pseudo terminal passed on file descriptor `%d'.  This is the helper program for the `grantpt' function.  It is not intended to be run directly from the command line.\n"
 msgstr ""
 
-#: login/programs/pt_chown.c:87
+#: login/programs/pt_chown.c:92
 #, c-format
 msgid ""
 "The owner is set to the current user, the group is set to `%s', and the access permission is set to `%o'.\n"
@@ -2925,33 +2932,33 @@ msgid ""
 "%s"
 msgstr ""
 
-#: login/programs/pt_chown.c:191
+#: login/programs/pt_chown.c:198
 #, c-format
 msgid "too many arguments"
 msgstr "tro multaj argumentoj"
 
-#: login/programs/pt_chown.c:199
+#: login/programs/pt_chown.c:206
 #, c-format
 msgid "needs to be installed setuid `root'"
 msgstr ""
 
-#: malloc/mcheck.c:349
+#: malloc/mcheck.c:348
 msgid "memory is consistent, library is buggy\n"
 msgstr ""
 
-#: malloc/mcheck.c:352
+#: malloc/mcheck.c:351
 msgid "memory clobbered before allocated block\n"
 msgstr ""
 
-#: malloc/mcheck.c:355
+#: malloc/mcheck.c:354
 msgid "memory clobbered past end of allocated block\n"
 msgstr ""
 
-#: malloc/mcheck.c:358
+#: malloc/mcheck.c:357
 msgid "block freed twice\n"
 msgstr ""
 
-#: malloc/mcheck.c:361
+#: malloc/mcheck.c:360
 msgid "bogus mcheck_status, library is buggy\n"
 msgstr ""
 
@@ -2988,7 +2995,7 @@ msgid ""
 "\n"
 msgstr ""
 
-#: malloc/memusage.sh:100
+#: malloc/memusage.sh:99
 msgid ""
 "Syntax: memusage [--data=FILE] [--progname=NAME] [--png=FILE] [--unbuffered]\n"
 "\t    [--buffer=SIZE] [--no-timer] [--time-based] [--total]\n"
@@ -2996,47 +3003,47 @@ msgid ""
 "\t    PROGRAM [PROGRAMOPTION]..."
 msgstr ""
 
-#: malloc/memusage.sh:192
+#: malloc/memusage.sh:191
 msgid "memusage: option \\`${1##*=}' is ambiguous"
 msgstr "memusage: opcio «${1##*=}» estas plursenca"
 
-#: malloc/memusage.sh:201
+#: malloc/memusage.sh:200
 msgid "memusage: unrecognized option \\`$1'"
 msgstr "memusage: nekonata opcio «$1»"
 
-#: malloc/memusage.sh:214
+#: malloc/memusage.sh:213
 msgid "No program name given"
 msgstr "programnomo ne indikatas"
 
-#: malloc/memusagestat.c:56
+#: malloc/memusagestat.c:55
 msgid "Name output file"
 msgstr ""
 
-#: malloc/memusagestat.c:57
+#: malloc/memusagestat.c:56
 msgid "Title string used in output graphic"
 msgstr ""
 
-#: malloc/memusagestat.c:58
+#: malloc/memusagestat.c:57
 msgid "Generate output linear to time (default is linear to number of function calls)"
 msgstr ""
 
-#: malloc/memusagestat.c:60
+#: malloc/memusagestat.c:59
 msgid "Also draw graph for total memory consumption"
 msgstr ""
 
-#: malloc/memusagestat.c:61
+#: malloc/memusagestat.c:60
 msgid "Make output graphic VALUE pixels wide"
 msgstr ""
 
-#: malloc/memusagestat.c:62
+#: malloc/memusagestat.c:61
 msgid "Make output graphic VALUE pixels high"
 msgstr ""
 
-#: malloc/memusagestat.c:67
+#: malloc/memusagestat.c:66
 msgid "Generate graphic from memory profiling data"
 msgstr ""
 
-#: malloc/memusagestat.c:70
+#: malloc/memusagestat.c:69
 msgid "DATAFILE [OUTFILE]"
 msgstr ""
 
@@ -3123,12 +3130,10 @@ msgid "Malformed name, or illegal name"
 msgstr "Malformita nomo aŭ nevalida nomo"
 
 #: nis/nis_error.h:19
-#, fuzzy
 msgid "Unable to create callback"
 msgstr "Malsukcesis krei re-alvokon"
 
 #: nis/nis_error.h:20
-#, fuzzy
 msgid "Results sent to callback proc"
 msgstr "Rezultoj sendiĝis al re-alvokan procezon"
 
@@ -3177,13 +3182,12 @@ msgid "Named object is not searchable"
 msgstr "Nomata objekto ne traserĉeblas"
 
 #: nis/nis_error.h:32
-#, fuzzy
 msgid "Error while talking to callback proc"
 msgstr "Eraro dum komunikado kun re-alvoka procezo"
 
 #: nis/nis_error.h:33
 msgid "Non NIS+ namespace encountered"
-msgstr ""
+msgstr "Ne-NIS+-a nomspaco renkontiĝis"
 
 #: nis/nis_error.h:34
 msgid "Illegal object type for operation"
@@ -3199,7 +3203,7 @@ msgstr "Malsukcesis modifa operacio"
 
 #: nis/nis_error.h:37
 msgid "Query illegal for named table"
-msgstr ""
+msgstr "Informpeto nevalidas por nomata tabelo"
 
 #: nis/nis_error.h:38
 msgid "Attempt to remove a non-empty table"
@@ -3207,7 +3211,7 @@ msgstr "Proviĝis forigi nevakan tabelon"
 
 #: nis/nis_error.h:39
 msgid "Error in accessing NIS+ cold start file.  Is NIS+ installed?"
-msgstr ""
+msgstr "Eraro dum atingo de NIS+-unuastarta dosiero.  Ĉu NIS+ estas instalata?"
 
 #: nis/nis_error.h:40
 msgid "Full resync required for directory"
@@ -3219,7 +3223,7 @@ msgstr "Malsukcesis NIS+-operacio"
 
 #: nis/nis_error.h:42
 msgid "NIS+ service is unavailable or not installed"
-msgstr ""
+msgstr "NIS+-servo ne disponeblas aŭ ne estas instalata"
 
 #: nis/nis_error.h:43
 msgid "Yes, 42 is the meaning of life"
@@ -3227,11 +3231,11 @@ msgstr "Jes, 42 estas la senco de la vivo"
 
 #: nis/nis_error.h:44
 msgid "Unable to authenticate NIS+ server"
-msgstr ""
+msgstr "Malsukcesis aŭtentokontrolo de NIS+-servilo"
 
 #: nis/nis_error.h:45
 msgid "Unable to authenticate NIS+ client"
-msgstr ""
+msgstr "Malsukcesis aŭtentokontrolo de NIS+-kliento"
 
 #: nis/nis_error.h:46
 msgid "No file space on server"
@@ -3243,7 +3247,7 @@ msgstr "Malsukcesis krei procezon je servilo"
 
 #: nis/nis_error.h:48
 msgid "Master server busy, full dump rescheduled."
-msgstr ""
+msgstr "Mastra servilo okupiĝas; kompleta ŝuto replaniĝis."
 
 #: nis/nis_local_names.c:121
 #, c-format
@@ -3311,7 +3315,7 @@ msgstr ""
 #: nis/nis_print.c:175
 #, c-format
 msgid "\tName       : %s\n"
-msgstr ""
+msgstr "\tNomo       : %s\n"
 
 #: nis/nis_print.c:176
 msgid "\tPublic Key : "
@@ -3347,7 +3351,7 @@ msgstr "\tUniversalaj adresoj (%u)\n"
 
 #: nis/nis_print.c:227
 msgid "Time to live : "
-msgstr ""
+msgstr "Vivdaŭro : "
 
 #: nis/nis_print.c:229
 msgid "Default Access rights :\n"
@@ -3356,7 +3360,7 @@ msgstr "Defaŭltaj atingpermesoj:\n"
 #: nis/nis_print.c:238
 #, c-format
 msgid "\tType         : %s\n"
-msgstr ""
+msgstr "\tTipo         : %s\n"
 
 #: nis/nis_print.c:239
 msgid "\tAccess rights: "
@@ -3364,42 +3368,44 @@ msgstr "\tAtingpermesoj: "
 
 #: nis/nis_print.c:253
 msgid "Group Flags :"
-msgstr ""
+msgstr "Grupaj flagoj :"
 
 #: nis/nis_print.c:256
 msgid ""
 "\n"
 "Group Members :\n"
 msgstr ""
+"\n"
+"Grupaj anoj :\n"
 
 #: nis/nis_print.c:268
 #, c-format
 msgid "Table Type          : %s\n"
-msgstr ""
+msgstr "Tabeltipo           : %s\n"
 
 #: nis/nis_print.c:269
 #, c-format
 msgid "Number of Columns   : %d\n"
-msgstr ""
+msgstr "Nombro da kolumnoj  : %d\n"
 
 #: nis/nis_print.c:270
 #, c-format
 msgid "Character Separator : %c\n"
-msgstr ""
+msgstr "Disigilo de signoj  : %c\n"
 
 #: nis/nis_print.c:271
 #, c-format
 msgid "Search Path         : %s\n"
-msgstr ""
+msgstr "Serĉpado            : %s\n"
 
 #: nis/nis_print.c:272
 msgid "Columns             :\n"
-msgstr ""
+msgstr "Kolumnoj            :\n"
 
 #: nis/nis_print.c:275
 #, c-format
 msgid "\t[%d]\tName          : %s\n"
-msgstr ""
+msgstr "\t[%d]\tNomo          : %s\n"
 
 #: nis/nis_print.c:277
 msgid "\t\tAttributes    : "
@@ -3411,7 +3417,7 @@ msgstr "\t\tAtingpermesoj : "
 
 #: nis/nis_print.c:289
 msgid "Linked Object Type : "
-msgstr ""
+msgstr "Tipo de ligita objekto : "
 
 #: nis/nis_print.c:291
 #, c-format
@@ -3421,20 +3427,20 @@ msgstr "Ligita al : %s\n"
 #: nis/nis_print.c:301
 #, c-format
 msgid "\tEntry data of type %s\n"
-msgstr ""
+msgstr "\tEraj datumoj de tipo %s\n"
 
 #: nis/nis_print.c:304
 #, c-format
 msgid "\t[%u] - [%u bytes] "
-msgstr ""
+msgstr "\t[%u] - [%u bajtoj] "
 
 #: nis/nis_print.c:307
 msgid "Encrypted data\n"
-msgstr ""
+msgstr "ĉifritaj datumoj\n"
 
 #: nis/nis_print.c:309
 msgid "Binary data\n"
-msgstr ""
+msgstr "duumaj datumoj\n"
 
 #: nis/nis_print.c:325
 #, c-format
@@ -3466,25 +3472,27 @@ msgid ""
 "\n"
 "Time to Live  : "
 msgstr ""
+"\n"
+"Vivdaŭro : "
 
 #: nis/nis_print.c:334
 #, c-format
 msgid "Creation Time : %s"
-msgstr ""
+msgstr "Krea tempo    : %s"
 
 #: nis/nis_print.c:336
 #, c-format
 msgid "Mod. Time     : %s"
-msgstr ""
+msgstr "Ŝanĝa tempo   : %s"
 
 #: nis/nis_print.c:337
 msgid "Object Type   : "
-msgstr ""
+msgstr "Objekta tipo  : "
 
 #: nis/nis_print.c:357
 #, c-format
 msgid "    Data Length = %u\n"
-msgstr ""
+msgstr "    Datuma longo = %u\n"
 
 #: nis/nis_print.c:371
 #, c-format
@@ -3494,17 +3502,17 @@ msgstr ""
 #: nis/nis_print.c:372
 #, c-format
 msgid "Number of objects : %u\n"
-msgstr ""
+msgstr "Nombro de objektoj : %u\n"
 
 #: nis/nis_print.c:376
 #, c-format
 msgid "Object #%d:\n"
-msgstr ""
+msgstr "Objekto #%d:\n"
 
 #: nis/nis_print_group_entry.c:117
 #, c-format
 msgid "Group entry for \"%s.%s\" group:\n"
-msgstr ""
+msgstr "Grupa ero por grupo \"%s.%s\":\n"
 
 #: nis/nis_print_group_entry.c:125
 msgid "    Explicit members:\n"
@@ -3748,7 +3756,7 @@ msgstr ""
 #: nscd/connections.c:651
 #, c-format
 msgid "cannot access '%s'"
-msgstr ""
+msgstr "ne eblas atingi '%s'"
 
 #: nscd/connections.c:699
 #, c-format
@@ -3827,7 +3835,7 @@ msgstr ""
 #: nscd/connections.c:1198 nscd/connections.c:1251
 #, c-format
 msgid "cannot write result: %s"
-msgstr ""
+msgstr "ne eblas skribi rezulton: %s"
 
 #: nscd/connections.c:1342
 #, c-format
@@ -3933,23 +3941,23 @@ msgstr ""
 msgid "setgroups failed"
 msgstr ""
 
-#: nscd/grpcache.c:390 nscd/hstcache.c:440 nscd/initgrcache.c:411
+#: nscd/grpcache.c:407 nscd/hstcache.c:440 nscd/initgrcache.c:411
 #: nscd/pwdcache.c:383 nscd/servicescache.c:338
 #, c-format
 msgid "short write in %s: %s"
 msgstr ""
 
-#: nscd/grpcache.c:435 nscd/initgrcache.c:77
+#: nscd/grpcache.c:452 nscd/initgrcache.c:77
 #, c-format
 msgid "Haven't found \"%s\" in group cache!"
 msgstr ""
 
-#: nscd/grpcache.c:437 nscd/initgrcache.c:79
+#: nscd/grpcache.c:454 nscd/initgrcache.c:79
 #, c-format
 msgid "Reloading \"%s\" in group cache!"
 msgstr ""
 
-#: nscd/grpcache.c:516
+#: nscd/grpcache.c:533
 #, c-format
 msgid "Invalid numeric gid \"%s\"!"
 msgstr ""
@@ -3986,39 +3994,43 @@ msgstr ""
 
 #: nscd/nscd.c:116
 msgid "Read configuration data from NAME"
-msgstr ""
+msgstr "legi agordajn datumojn el tiu ĉi dosiero"
 
 #: nscd/nscd.c:118
 msgid "Do not fork and display messages on the current tty"
-msgstr ""
+msgstr "ne krei novan procezon; eligi mesaĝojn al nuna terminalo"
 
 #: nscd/nscd.c:120
+#, fuzzy
 msgid "Do not fork, but otherwise behave like a daemon"
-msgstr ""
+msgstr "ne krei novan procezon, sed cetere agi kiel servo"
 
 #: nscd/nscd.c:121
+#, fuzzy
 msgid "NUMBER"
-msgstr ""
+msgstr "NOMBRO"
 
 #: nscd/nscd.c:121
+#, fuzzy
 msgid "Start NUMBER threads"
-msgstr ""
+msgstr "startigi tiun nombron de fadenoj"
 
 #: nscd/nscd.c:122
 msgid "Shut the server down"
-msgstr ""
+msgstr "malŝalti la servilon"
 
 #: nscd/nscd.c:123
+#, fuzzy
 msgid "Print current configuration statistics"
-msgstr ""
+msgstr "eligi nunajn agordajn statistikojn"
 
 #: nscd/nscd.c:124
 msgid "TABLE"
-msgstr ""
+msgstr "TABELO"
 
 #: nscd/nscd.c:125
 msgid "Invalidate the specified cache"
-msgstr ""
+msgstr "malvalidigi la indikatan kaŝmemoron"
 
 #: nscd/nscd.c:126
 msgid "TABLE,yes"
@@ -4026,16 +4038,16 @@ msgstr ""
 
 #: nscd/nscd.c:127
 msgid "Use separate cache for each user"
-msgstr ""
+msgstr "uzi apartan kaŝmemoron por ĉiu uzanto"
 
 #: nscd/nscd.c:132
 msgid "Name Service Cache Daemon."
 msgstr ""
 
-#: nscd/nscd.c:164 nss/getent.c:999 nss/makedb.c:207
+#: nscd/nscd.c:164 nss/getent.c:999 nss/makedb.c:208
 #, c-format
 msgid "wrong number of arguments"
-msgstr ""
+msgstr "malĝusta nombro de argumentoj"
 
 #: nscd/nscd.c:174
 #, c-format
@@ -4045,7 +4057,7 @@ msgstr ""
 #: nscd/nscd.c:183
 #, c-format
 msgid "already running"
-msgstr ""
+msgstr "jam rulas"
 
 #: nscd/nscd.c:201 nscd/nscd.c:259
 #, c-format
@@ -4059,34 +4071,34 @@ msgstr ""
 
 #: nscd/nscd.c:276
 msgid "Could not create log file"
-msgstr ""
+msgstr "ne eblas krei protokolan dosieron"
 
-#: nscd/nscd.c:346 nscd/nscd.c:371 nscd/nscd_stat.c:173
+#: nscd/nscd.c:348 nscd/nscd.c:373 nscd/nscd_stat.c:173
 #, c-format
 msgid "Only root is allowed to use this option!"
 msgstr ""
 
-#: nscd/nscd.c:386
+#: nscd/nscd.c:388
 #, c-format
 msgid "'%s' is not a known database"
-msgstr ""
+msgstr "'%s' ne estas konata datumbazo"
 
-#: nscd/nscd.c:411 nscd/nscd_stat.c:192
+#: nscd/nscd.c:413 nscd/nscd_stat.c:192
 #, c-format
 msgid "write incomplete"
-msgstr ""
+msgstr "skribo ne kompletiĝis"
 
-#: nscd/nscd.c:422
+#: nscd/nscd.c:424
 #, c-format
 msgid "cannot read invalidate ACK"
 msgstr ""
 
-#: nscd/nscd.c:428
+#: nscd/nscd.c:430
 #, c-format
 msgid "invalidation failed"
 msgstr "malsukcesis malvalidigo"
 
-#: nscd/nscd.c:438
+#: nscd/nscd.c:440
 #, c-format
 msgid "secure services not implemented anymore"
 msgstr ""
@@ -4094,7 +4106,7 @@ msgstr ""
 #: nscd/nscd_conf.c:57
 #, c-format
 msgid "database %s is not supported"
-msgstr ""
+msgstr "datumbazo %s ne subteniĝas"
 
 #: nscd/nscd_conf.c:108
 #, c-format
@@ -4119,7 +4131,7 @@ msgstr ""
 #: nscd/nscd_conf.c:272
 #, c-format
 msgid "Unknown option: %s %s %s"
-msgstr ""
+msgstr "Nekonata opcio: %s %s %s"
 
 #: nscd/nscd_conf.c:285
 #, c-format
@@ -4129,12 +4141,12 @@ msgstr ""
 #: nscd/nscd_conf.c:305
 #, c-format
 msgid "maximum file size for %s database too small"
-msgstr ""
+msgstr "tro malgrandas maksimuma dosiergrando por %s-datumbazo"
 
 #: nscd/nscd_stat.c:142
-#, c-format
+#, fuzzy, c-format
 msgid "cannot write statistics: %s"
-msgstr ""
+msgstr "ne eblas skribi statistikojn: %s"
 
 #: nscd/nscd_stat.c:157
 msgid "yes"
@@ -4152,12 +4164,12 @@ msgstr ""
 #: nscd/nscd_stat.c:180
 #, c-format
 msgid "nscd not running!\n"
-msgstr ""
+msgstr "'nscd' ne rulas!\n"
 
 #: nscd/nscd_stat.c:204
-#, c-format
+#, fuzzy, c-format
 msgid "cannot read statistics data"
-msgstr ""
+msgstr "ne eblas legi statistikajn datumojn"
 
 #: nscd/nscd_stat.c:207
 #, c-format
@@ -4377,97 +4389,98 @@ msgstr "Subtenataj datumbazoj:\n"
 msgid "Unknown database: %s\n"
 msgstr "Nekonata datumbazo: %s\n"
 
-#: nss/makedb.c:117
+#: nss/makedb.c:118
 msgid "Convert key to lower case"
 msgstr ""
 
-#: nss/makedb.c:120
+#: nss/makedb.c:121
 msgid "Do not print messages while building database"
 msgstr ""
 
-#: nss/makedb.c:122
+#: nss/makedb.c:123
 msgid "Print content of database file, one entry a line"
 msgstr ""
 
-#: nss/makedb.c:123
-msgid "CHAR"
-msgstr ""
-
 #: nss/makedb.c:124
+#, fuzzy
+msgid "CHAR"
+msgstr "SIGNO"
+
+#: nss/makedb.c:125
 msgid "Generated line not part of iteration"
 msgstr ""
 
-#: nss/makedb.c:129
+#: nss/makedb.c:130
 msgid "Create simple database from textual input."
-msgstr ""
+msgstr "Kreas simplan datumbazon el teksta enigo."
 
-#: nss/makedb.c:132
+#: nss/makedb.c:133
 msgid ""
 "INPUT-FILE OUTPUT-FILE\n"
 "-o OUTPUT-FILE INPUT-FILE\n"
 "-u INPUT-FILE"
 msgstr ""
 
-#: nss/makedb.c:228
+#: nss/makedb.c:229
 #, c-format
 msgid "cannot open database file `%s'"
-msgstr ""
+msgstr "ne eblas malfermi datumbazdosieron '%s'"
 
-#: nss/makedb.c:273
+#: nss/makedb.c:274
 #, c-format
 msgid "no entries to be processed"
 msgstr ""
 
-#: nss/makedb.c:283
+#: nss/makedb.c:284
 #, c-format
 msgid "cannot create temporary file name"
 msgstr ""
 
-#: nss/makedb.c:305
+#: nss/makedb.c:306
 #, c-format
 msgid "cannot stat newly created file"
 msgstr ""
 
-#: nss/makedb.c:316
+#: nss/makedb.c:317
 #, c-format
 msgid "cannot rename temporary file"
 msgstr ""
 
-#: nss/makedb.c:529 nss/makedb.c:552
+#: nss/makedb.c:533 nss/makedb.c:556
 #, c-format
 msgid "cannot create search tree"
 msgstr ""
 
-#: nss/makedb.c:558
+#: nss/makedb.c:562
 msgid "duplicate key"
 msgstr ""
 
-#: nss/makedb.c:570
+#: nss/makedb.c:574
 #, c-format
 msgid "problems while reading `%s'"
 msgstr ""
 
-#: nss/makedb.c:794
+#: nss/makedb.c:801
 #, c-format
 msgid "failed to write new database file"
 msgstr ""
 
-#: nss/makedb.c:807
+#: nss/makedb.c:814
 #, c-format
 msgid "cannot stat database file"
 msgstr ""
 
-#: nss/makedb.c:812
+#: nss/makedb.c:819
 #, c-format
 msgid "cannot map database file"
 msgstr ""
 
-#: nss/makedb.c:815
+#: nss/makedb.c:822
 #, c-format
 msgid "file not a database file"
 msgstr ""
 
-#: nss/makedb.c:866
+#: nss/makedb.c:873
 #, c-format
 msgid "cannot set file creation context for `%s'"
 msgstr ""
@@ -4507,16 +4520,16 @@ msgstr ""
 #: posix/getconf.c:1224
 #, c-format
 msgid "Couldn't execute %s"
-msgstr ""
+msgstr "Ne eblas ruli %s"
 
 #: posix/getconf.c:1268 posix/getconf.c:1284
 msgid "undefined"
-msgstr ""
+msgstr "nedifinita"
 
 #: posix/getconf.c:1306
 #, c-format
 msgid "Unrecognized variable `%s'"
-msgstr ""
+msgstr "Nerekonata variablo '%s'"
 
 #: posix/getopt.c:593 posix/getopt.c:622
 #, c-format
@@ -4642,7 +4655,7 @@ msgstr "Senpara ) aŭ \\)"
 msgid "No previous regular expression"
 msgstr "Mankas antaŭa regulesprimo"
 
-#: posix/wordexp.c:1829
+#: posix/wordexp.c:1830
 msgid "parameter null or not set"
 msgstr ""
 
@@ -4772,9 +4785,8 @@ msgid "Invalid permissions for mapped object"
 msgstr "Nevalida permesoj por ligata objekto"
 
 #: stdio-common/psiginfo-data.h:26
-#, fuzzy
 msgid "Invalid address alignment"
-msgstr "Nevalida ... de adreso"
+msgstr "Nevalida alliniigo de adreso"
 
 #: stdio-common/psiginfo-data.h:27
 msgid "Nonexisting physical address"
@@ -4830,7 +4842,7 @@ msgstr "Disponeblas eniga mesaĝo"
 
 #: stdio-common/psiginfo-data.h:46
 msgid "I/O error"
-msgstr "Eniga/eliga eraro"
+msgstr "En-eliga eraro"
 
 #: stdio-common/psiginfo-data.h:47
 msgid "High priority input available"
@@ -4850,15 +4862,15 @@ msgstr "Signalo sendita per 'sigqueue()'"
 
 #: stdio-common/psiginfo.c:145
 msgid "Signal generated by the expiration of a timer"
-msgstr ""
+msgstr "Signalo generita por fortempiĝo de horloĝo"
 
 #: stdio-common/psiginfo.c:148
 msgid "Signal generated by the completion of an asynchronous I/O request"
-msgstr ""
+msgstr "Signalo generita por kompletiĝo de nesinkrona en-eliga peto"
 
 #: stdio-common/psiginfo.c:152
 msgid "Signal generated by the arrival of a message on an empty message queue"
-msgstr ""
+msgstr "Signalo generita por alveno de mesaĝo en vaka mesaĝvico"
 
 #: stdio-common/psiginfo.c:157
 msgid "Signal sent by tkill()"
@@ -4866,11 +4878,11 @@ msgstr "Signalo sendita per 'tkill()'"
 
 #: stdio-common/psiginfo.c:162
 msgid "Signal generated by the completion of an asynchronous name lookup request"
-msgstr ""
+msgstr "Signalo generita por kompletiĝo de nesinkrona nom-eltrova peto"
 
 #: stdio-common/psiginfo.c:168
 msgid "Signal generated by the completion of an I/O request"
-msgstr ""
+msgstr "Signalo generita por kompletiĝo de en-eliga peto"
 
 #: stdio-common/psiginfo.c:174
 msgid "Signal sent by the kernel"
@@ -4909,8 +4921,8 @@ msgid "Unknown signal %d"
 msgstr "Nekonata signalo %d"
 
 #: sunrpc/auth_unix.c:111 sunrpc/clnt_tcp.c:123 sunrpc/clnt_udp.c:134
-#: sunrpc/clnt_unix.c:124 sunrpc/svc_tcp.c:171 sunrpc/svc_tcp.c:216
-#: sunrpc/svc_udp.c:145 sunrpc/svc_unix.c:171 sunrpc/svc_unix.c:212
+#: sunrpc/clnt_unix.c:124 sunrpc/svc_tcp.c:188 sunrpc/svc_tcp.c:233
+#: sunrpc/svc_udp.c:162 sunrpc/svc_unix.c:188 sunrpc/svc_unix.c:229
 #: sunrpc/xdr.c:630 sunrpc/xdr.c:790 sunrpc/xdr_array.c:97
 #: sunrpc/xdr_rec.c:151 sunrpc/xdr_ref.c:76
 msgid "out of memory\n"
@@ -4923,41 +4935,41 @@ msgstr ""
 #: sunrpc/clnt_perr.c:95 sunrpc/clnt_perr.c:111
 #, c-format
 msgid "%s: %s; low version = %lu, high version = %lu"
-msgstr ""
+msgstr "%s: %s; malalta versio = %lu, alta versio = %lu"
 
 #: sunrpc/clnt_perr.c:102
 #, c-format
 msgid "%s: %s; why = %s\n"
-msgstr ""
+msgstr "%s: %s; kialo = %s\n"
 
 #: sunrpc/clnt_perr.c:104
 #, c-format
 msgid "%s: %s; why = (unknown authentication error - %d)\n"
-msgstr ""
+msgstr "%s: %s; kialo = (nekonata eraro en aŭtentokontrolo - %d)\n"
 
 #: sunrpc/clnt_perr.c:153
 msgid "RPC: Success"
-msgstr ""
+msgstr "RPC: Sukceso"
 
 #: sunrpc/clnt_perr.c:156
 msgid "RPC: Can't encode arguments"
-msgstr ""
+msgstr "RPC: Ne eblas kodi argumentojn"
 
 #: sunrpc/clnt_perr.c:160
 msgid "RPC: Can't decode result"
-msgstr ""
+msgstr "RPC: Ne eblas malkodi rezulton"
 
 #: sunrpc/clnt_perr.c:164
 msgid "RPC: Unable to send"
-msgstr ""
+msgstr "RPC: Maleblas sendi"
 
 #: sunrpc/clnt_perr.c:168
 msgid "RPC: Unable to receive"
-msgstr ""
+msgstr "RPC: Maleblas ricevi"
 
 #: sunrpc/clnt_perr.c:172
 msgid "RPC: Timed out"
-msgstr ""
+msgstr "RPC: Daŭris tro longe"
 
 #: sunrpc/clnt_perr.c:176
 msgid "RPC: Incompatible versions of RPC"
@@ -4965,11 +4977,11 @@ msgstr ""
 
 #: sunrpc/clnt_perr.c:180
 msgid "RPC: Authentication error"
-msgstr ""
+msgstr "RPC: Eraro en aŭtentokontrolo"
 
 #: sunrpc/clnt_perr.c:184
 msgid "RPC: Program unavailable"
-msgstr ""
+msgstr "RPC: Programo ne disponeblas"
 
 #: sunrpc/clnt_perr.c:188
 msgid "RPC: Program/version mismatch"
@@ -4981,15 +4993,15 @@ msgstr ""
 
 #: sunrpc/clnt_perr.c:196
 msgid "RPC: Server can't decode arguments"
-msgstr ""
+msgstr "RPC: Servilo ne eblas malkodi argumentojn"
 
 #: sunrpc/clnt_perr.c:200
 msgid "RPC: Remote system error"
-msgstr ""
+msgstr "RPC: Eraro en fora sistemo"
 
 #: sunrpc/clnt_perr.c:204
 msgid "RPC: Unknown host"
-msgstr ""
+msgstr "RPC: Nekonata gastiga komputilo"
 
 #: sunrpc/clnt_perr.c:208
 msgid "RPC: Unknown protocol"
@@ -5001,11 +5013,11 @@ msgstr ""
 
 #: sunrpc/clnt_perr.c:216
 msgid "RPC: Program not registered"
-msgstr ""
+msgstr "RPC: Programo ne registriĝis"
 
 #: sunrpc/clnt_perr.c:220
 msgid "RPC: Failed (unspecified error)"
-msgstr ""
+msgstr "RPC: Malsukcesis (neindikata eraro)"
 
 #: sunrpc/clnt_perr.c:261
 msgid "RPC: (unknown error code)"
@@ -5041,7 +5053,7 @@ msgstr ""
 
 #: sunrpc/clnt_perr.c:360
 msgid "Failed (unspecified error)"
-msgstr ""
+msgstr "Malsukcesis (neindikata eraro)"
 
 #: sunrpc/clnt_raw.c:115
 msgid "clnt_raw.c: fatal header serialization error"
@@ -5075,241 +5087,248 @@ msgstr ""
 msgid "Cannot receive reply to broadcast"
 msgstr ""
 
-#: sunrpc/rpc_main.c:280
+#: sunrpc/rpc_main.c:277
 #, c-format
 msgid "%s: output would overwrite %s\n"
 msgstr ""
 
-#: sunrpc/rpc_main.c:287
+#: sunrpc/rpc_main.c:284
 #, c-format
 msgid "%s: unable to open %s: %m\n"
 msgstr ""
 
-#: sunrpc/rpc_main.c:299
+#: sunrpc/rpc_main.c:296
 #, c-format
 msgid "%s: while writing output %s: %m"
 msgstr ""
 
-#: sunrpc/rpc_main.c:334
+#: sunrpc/rpc_main.c:332 sunrpc/rpc_main.c:371
 #, c-format
-msgid "cannot find C preprocessor: %s \n"
-msgstr "malsukcesis trovi C-antaŭprocesoron: %s \n"
+msgid "cannot find C preprocessor: %s\n"
+msgstr "malsukcesis trovi C-antaŭprocesoron: %s\n"
 
-#: sunrpc/rpc_main.c:342
-msgid "cannot find any C preprocessor (cpp)\n"
-msgstr "malsukcesis trovi iun ajn C-antaŭprocesoron ('cpp'): %s\n"
-
-#: sunrpc/rpc_main.c:411
+#: sunrpc/rpc_main.c:407
 #, c-format
 msgid "%s: C preprocessor failed with signal %d\n"
 msgstr "%s: C-antaŭprocesoro fiaskis kun signalo %d\n"
 
-#: sunrpc/rpc_main.c:414
+#: sunrpc/rpc_main.c:410
 #, c-format
 msgid "%s: C preprocessor failed with exit code %d\n"
 msgstr "%s: C-antaŭprocesoro fiaskis kun elirstato %d\n"
 
-#: sunrpc/rpc_main.c:454
+#: sunrpc/rpc_main.c:450
 #, c-format
 msgid "illegal nettype: `%s'\n"
 msgstr ""
 
-#: sunrpc/rpc_main.c:1089
+#: sunrpc/rpc_main.c:1085
 #, c-format
 msgid "rpcgen: too many defines\n"
 msgstr ""
 
-#: sunrpc/rpc_main.c:1101
+#: sunrpc/rpc_main.c:1097
 #, c-format
 msgid "rpcgen: arglist coding error\n"
 msgstr ""
 
 #. TRANS: the file will not be removed; this is an
 #. TRANS: informative message.
-#: sunrpc/rpc_main.c:1134
+#: sunrpc/rpc_main.c:1130
 #, c-format
 msgid "file `%s' already exists and may be overwritten\n"
 msgstr "dosiero '%s' jam ekzistas kaj eble anstataŭiĝos\n"
 
-#: sunrpc/rpc_main.c:1179
+#: sunrpc/rpc_main.c:1175
 #, c-format
 msgid "Cannot specify more than one input file!\n"
 msgstr "Ne eblas indiki pli ol unu enigan dosieron!\n"
 
-#: sunrpc/rpc_main.c:1349
+#: sunrpc/rpc_main.c:1345
 #, c-format
 msgid "This implementation doesn't support newstyle or MT-safe code!\n"
 msgstr ""
 
-#: sunrpc/rpc_main.c:1358
+#: sunrpc/rpc_main.c:1354
 #, c-format
 msgid "Cannot use netid flag with inetd flag!\n"
 msgstr ""
 
-#: sunrpc/rpc_main.c:1367
+#: sunrpc/rpc_main.c:1363
 #, c-format
 msgid "Cannot use netid flag without TIRPC!\n"
 msgstr ""
 
-#: sunrpc/rpc_main.c:1374
+#: sunrpc/rpc_main.c:1370
 #, c-format
 msgid "Cannot use table flags with newstyle!\n"
 msgstr ""
 
-#: sunrpc/rpc_main.c:1393
+#: sunrpc/rpc_main.c:1389
 #, c-format
 msgid "\"infile\" is required for template generation flags.\n"
 msgstr ""
 
-#: sunrpc/rpc_main.c:1398
+#: sunrpc/rpc_main.c:1394
 #, c-format
 msgid "Cannot have more than one file generation flag!\n"
 msgstr ""
 
-#: sunrpc/rpc_main.c:1407
+#: sunrpc/rpc_main.c:1403
 #, c-format
 msgid "usage: %s infile\n"
 msgstr ""
 
-#: sunrpc/rpc_main.c:1408
+#: sunrpc/rpc_main.c:1404
 #, c-format
 msgid "\t%s [-abkCLNTM][-Dname[=value]] [-i size] [-I [-K seconds]] [-Y path] infile\n"
 msgstr ""
 
-#: sunrpc/rpc_main.c:1410
+#: sunrpc/rpc_main.c:1406
 #, c-format
 msgid "\t%s [-c | -h | -l | -m | -t | -Sc | -Ss | -Sm] [-o outfile] [infile]\n"
 msgstr ""
 
-#: sunrpc/rpc_main.c:1412
+#: sunrpc/rpc_main.c:1408
 #, c-format
 msgid "\t%s [-s nettype]* [-o outfile] [infile]\n"
 msgstr ""
 
-#: sunrpc/rpc_main.c:1413
+#: sunrpc/rpc_main.c:1409
 #, c-format
 msgid "\t%s [-n netid]* [-o outfile] [infile]\n"
 msgstr ""
 
-#: sunrpc/rpc_main.c:1421
+#: sunrpc/rpc_main.c:1417
 #, c-format
 msgid "options:\n"
 msgstr ""
 
-#: sunrpc/rpc_main.c:1422
+#: sunrpc/rpc_main.c:1418
 #, c-format
 msgid "-a\t\tgenerate all files, including samples\n"
 msgstr ""
 
-#: sunrpc/rpc_main.c:1423
+#: sunrpc/rpc_main.c:1419
 #, c-format
 msgid "-b\t\tbackward compatibility mode (generates code for SunOS 4.1)\n"
 msgstr ""
 
-#: sunrpc/rpc_main.c:1424
+#: sunrpc/rpc_main.c:1420
 #, c-format
 msgid "-c\t\tgenerate XDR routines\n"
 msgstr ""
 
-#: sunrpc/rpc_main.c:1425
+#: sunrpc/rpc_main.c:1421
 #, c-format
 msgid "-C\t\tANSI C mode\n"
 msgstr ""
 
-#: sunrpc/rpc_main.c:1426
+#: sunrpc/rpc_main.c:1422
 #, c-format
 msgid "-Dname[=value]\tdefine a symbol (same as #define)\n"
 msgstr ""
 
-#: sunrpc/rpc_main.c:1427
+#: sunrpc/rpc_main.c:1423
 #, c-format
 msgid "-h\t\tgenerate header file\n"
 msgstr ""
 
-#: sunrpc/rpc_main.c:1428
+#: sunrpc/rpc_main.c:1424
 #, c-format
 msgid "-i size\t\tsize at which to start generating inline code\n"
 msgstr ""
 
-#: sunrpc/rpc_main.c:1429
+#: sunrpc/rpc_main.c:1425
 #, c-format
 msgid "-I\t\tgenerate code for inetd support in server (for SunOS 4.1)\n"
 msgstr ""
 
-#: sunrpc/rpc_main.c:1430
+#: sunrpc/rpc_main.c:1426
 #, c-format
 msgid "-K seconds\tserver exits after K seconds of inactivity\n"
 msgstr ""
 
-#: sunrpc/rpc_main.c:1431
+#: sunrpc/rpc_main.c:1427
 #, c-format
 msgid "-l\t\tgenerate client side stubs\n"
 msgstr ""
 
-#: sunrpc/rpc_main.c:1432
+#: sunrpc/rpc_main.c:1428
 #, c-format
 msgid "-L\t\tserver errors will be printed to syslog\n"
 msgstr ""
 
-#: sunrpc/rpc_main.c:1433
+#: sunrpc/rpc_main.c:1429
 #, c-format
 msgid "-m\t\tgenerate server side stubs\n"
 msgstr ""
 
-#: sunrpc/rpc_main.c:1434
+#: sunrpc/rpc_main.c:1430
 #, c-format
 msgid "-M\t\tgenerate MT-safe code\n"
 msgstr ""
 
-#: sunrpc/rpc_main.c:1435
+#: sunrpc/rpc_main.c:1431
 #, c-format
 msgid "-n netid\tgenerate server code that supports named netid\n"
 msgstr ""
 
-#: sunrpc/rpc_main.c:1436
+#: sunrpc/rpc_main.c:1432
 #, c-format
 msgid "-N\t\tsupports multiple arguments and call-by-value\n"
 msgstr ""
 
-#: sunrpc/rpc_main.c:1437
+#: sunrpc/rpc_main.c:1433
 #, c-format
 msgid "-o outfile\tname of the output file\n"
 msgstr ""
 
-#: sunrpc/rpc_main.c:1438
+#: sunrpc/rpc_main.c:1434
 #, c-format
 msgid "-s nettype\tgenerate server code that supports named nettype\n"
 msgstr ""
 
-#: sunrpc/rpc_main.c:1439
+#: sunrpc/rpc_main.c:1435
 #, c-format
 msgid "-Sc\t\tgenerate sample client code that uses remote procedures\n"
 msgstr ""
 
-#: sunrpc/rpc_main.c:1440
+#: sunrpc/rpc_main.c:1436
 #, c-format
 msgid "-Ss\t\tgenerate sample server code that defines remote procedures\n"
 msgstr ""
 
-#: sunrpc/rpc_main.c:1441
+#: sunrpc/rpc_main.c:1437
 #, c-format
 msgid "-Sm \t\tgenerate makefile template \n"
 msgstr ""
 
-#: sunrpc/rpc_main.c:1442
+#: sunrpc/rpc_main.c:1438
 #, c-format
 msgid "-t\t\tgenerate RPC dispatch table\n"
 msgstr ""
 
-#: sunrpc/rpc_main.c:1443
+#: sunrpc/rpc_main.c:1439
 #, c-format
 msgid "-T\t\tgenerate code to support RPC dispatch tables\n"
 msgstr ""
 
-#: sunrpc/rpc_main.c:1444
+#: sunrpc/rpc_main.c:1440
 #, c-format
 msgid "-Y path\t\tdirectory name to find C preprocessor (cpp)\n"
 msgstr ""
+
+#: sunrpc/rpc_main.c:1442
+#, c-format
+msgid ""
+"\n"
+"For bug reporting instructions, please see:\n"
+"%s.\n"
+msgstr ""
+"\n"
+"Por raporti programmisojn, bonvolu legi (angle):\n"
+"  %s.\n"
 
 #: sunrpc/rpc_scan.c:112
 msgid "constant or identifier expected"
@@ -5362,7 +5381,7 @@ msgstr ""
 
 #: sunrpc/rpcinfo.c:622
 msgid "(unknown)"
-msgstr ""
+msgstr "(nekonata)"
 
 #: sunrpc/rpcinfo.c:646
 #, c-format
@@ -5444,59 +5463,59 @@ msgstr ""
 msgid "never registered prog %d\n"
 msgstr ""
 
-#: sunrpc/svc_tcp.c:147
+#: sunrpc/svc_tcp.c:164
 msgid "svc_tcp.c - tcp socket creation problem"
 msgstr ""
 
-#: sunrpc/svc_tcp.c:162
+#: sunrpc/svc_tcp.c:179
 msgid "svc_tcp.c - cannot getsockname or listen"
 msgstr ""
 
-#: sunrpc/svc_udp.c:120
+#: sunrpc/svc_udp.c:137
 msgid "svcudp_create: socket creation problem"
 msgstr ""
 
-#: sunrpc/svc_udp.c:134
+#: sunrpc/svc_udp.c:151
 msgid "svcudp_create - cannot getsockname"
 msgstr ""
 
-#: sunrpc/svc_udp.c:166
+#: sunrpc/svc_udp.c:183
 msgid "svcudp_create: xp_pad is too small for IP_PKTINFO\n"
 msgstr ""
 
-#: sunrpc/svc_udp.c:474
+#: sunrpc/svc_udp.c:495
 msgid "enablecache: cache already enabled"
 msgstr ""
 
-#: sunrpc/svc_udp.c:480
+#: sunrpc/svc_udp.c:501
 msgid "enablecache: could not allocate cache"
 msgstr ""
 
-#: sunrpc/svc_udp.c:489
+#: sunrpc/svc_udp.c:510
 msgid "enablecache: could not allocate cache data"
 msgstr ""
 
-#: sunrpc/svc_udp.c:497
+#: sunrpc/svc_udp.c:518
 msgid "enablecache: could not allocate cache fifo"
 msgstr ""
 
-#: sunrpc/svc_udp.c:533
+#: sunrpc/svc_udp.c:554
 msgid "cache_set: victim not found"
 msgstr ""
 
-#: sunrpc/svc_udp.c:544
+#: sunrpc/svc_udp.c:565
 msgid "cache_set: victim alloc failed"
 msgstr ""
 
-#: sunrpc/svc_udp.c:551
+#: sunrpc/svc_udp.c:572
 msgid "cache_set: could not allocate new rpc_buffer"
 msgstr ""
 
-#: sunrpc/svc_unix.c:145
+#: sunrpc/svc_unix.c:162
 msgid "svc_unix.c - AF_UNIX socket creation problem"
 msgstr ""
 
-#: sunrpc/svc_unix.c:161
+#: sunrpc/svc_unix.c:178
 msgid "svc_unix.c - cannot getsockname or listen"
 msgstr ""
 
@@ -5568,7 +5587,7 @@ msgstr "Ĉesigita"
 
 #: sysdeps/generic/siglist.h:41
 msgid "Urgent I/O condition"
-msgstr "Urĝa enig-/elig-stato"
+msgstr "Urĝa en-eliga stato"
 
 # SIGSTOP   17,19,23    Stop    Stop process
 # Nek kaptebla nek ignorebla (samkiel SIGKILL)
@@ -5601,7 +5620,7 @@ msgstr "Paŭzigita (pro terminaleligo)"
 
 #: sysdeps/generic/siglist.h:48
 msgid "I/O possible"
-msgstr "Enigo/eligo eblas"
+msgstr "En-eligo eblas"
 
 #: sysdeps/generic/siglist.h:49
 msgid "CPU time limit exceeded"
@@ -5619,44 +5638,44 @@ msgstr "Virtuala horloĝo transpasis limtempon"
 msgid "Profiling timer expired"
 msgstr "Profilanta horloĝo transpasis limtempon"
 
-# SIGWINCH    28,28,20    Ign     Window resize signal (4.3 BSD, Sun)
 #: sysdeps/generic/siglist.h:53
-msgid "Window changed"
-msgstr "Fenestro ŝanĝiĝis"
-
-#: sysdeps/generic/siglist.h:54
 msgid "User defined signal 1"
 msgstr "Uzula signalo 1"
 
-#: sysdeps/generic/siglist.h:55
+#: sysdeps/generic/siglist.h:54
 msgid "User defined signal 2"
 msgstr "Uzula signalo 2"
 
-#: sysdeps/generic/siglist.h:59
+#: sysdeps/generic/siglist.h:58
 msgid "EMT trap"
 msgstr "EMT-komando"
 
 # SIGSYS      12,-,12     Core    Bad argument to routine (SVID)
-#: sysdeps/generic/siglist.h:62
+#: sysdeps/generic/siglist.h:61
 msgid "Bad system call"
 msgstr "Misa sistemvoko"
 
-#: sysdeps/generic/siglist.h:65
+#: sysdeps/generic/siglist.h:64
 msgid "Stack fault"
 msgstr "Stak-eraro"
 
 # SIGINFO      29,-,-             A synonym for SIGPWR
-#: sysdeps/generic/siglist.h:68
+#: sysdeps/generic/siglist.h:67
 msgid "Information request"
-msgstr "Informmendo"
+msgstr "Informpeto"
 
-#: sysdeps/generic/siglist.h:70
+#: sysdeps/generic/siglist.h:69
 msgid "Power failure"
 msgstr "Elektra provizo perdiĝis"
 
-#: sysdeps/generic/siglist.h:73
+#: sysdeps/generic/siglist.h:72
 msgid "Resource lost"
 msgstr "Risurco perdiĝis"
+
+# SIGWINCH    28,28,20    Ign     Window resize signal (4.3 BSD, Sun)
+#: sysdeps/generic/siglist.h:75
+msgid "Window changed"
+msgstr "Fenestro ŝanĝiĝis"
 
 #. TRANS Operation not permitted; only the owner of the file (or other resource)
 #. TRANS or processes with special privileges can perform the operation.
@@ -5683,7 +5702,7 @@ msgstr "Interrompita sistemvoko"
 #. TRANS Input/output error; usually used for physical read or write errors.
 #: sysdeps/gnu/errlist.c:69
 msgid "Input/output error"
-msgstr "Eraro de enigo/eligo"
+msgstr "Eraro de en-eligo"
 
 #. TRANS No such device or address.  The system tried to use the device
 #. TRANS represented by a file you specified, and it couldn't find the device.
@@ -5713,7 +5732,7 @@ msgstr "Nevalida aranĝo de rulenda dosiero"
 #. TRANS versa).
 #: sysdeps/gnu/errlist.c:115
 msgid "Bad file descriptor"
-msgstr "Nevalida dosiernumero"
+msgstr "Nevalida dosierpriaĵo"
 
 #. TRANS There are no child processes.  This error happens on operations that are
 #. TRANS supposed to manipulate child processes, when there aren't any processes
@@ -5833,7 +5852,6 @@ msgstr "Dosiero tro grandas"
 #. TRANS No space left on device; write operation on a file failed because the
 #. TRANS disk is full.
 #: sysdeps/gnu/errlist.c:317
-#, fuzzy
 msgid "No space left on device"
 msgstr "Ne haviĝas plu da spaco sur aparato"
 
@@ -6006,13 +6024,11 @@ msgstr "La reto ne atingeblas"
 
 #. TRANS A network connection was reset because the remote host crashed.
 #: sysdeps/gnu/errlist.c:594
-#, fuzzy
 msgid "Network dropped connection on reset"
 msgstr "La retkonekto malekis ĉar gastiganto malfunkciis"
 
 #. TRANS A network connection was aborted locally.
 #: sysdeps/gnu/errlist.c:603
-#, fuzzy
 msgid "Software caused connection abort"
 msgstr "La retkonekto malekis ĉar loka komputilo malfunkciis"
 
@@ -6020,9 +6036,8 @@ msgstr "La retkonekto malekis ĉar loka komputilo malfunkciis"
 #. TRANS local host, such as by the remote machine rebooting or an unrecoverable
 #. TRANS protocol violation.
 #: sysdeps/gnu/errlist.c:614
-#, fuzzy
 msgid "Connection reset by peer"
-msgstr "Konekto malekis"
+msgstr "Konekto simple malekis"
 
 #. TRANS The kernel's buffers for I/O operations are all in use.  In GNU, this
 #. TRANS error is always synonymous with @code{ENOMEM}; you may get one or the
@@ -6127,7 +6142,7 @@ msgstr "Diska kvoto transpasiĝis"
 #. TRANS the NFS file system on the local host.
 #: sysdeps/gnu/errlist.c:787
 msgid "Stale NFS file handle"
-msgstr ""
+msgstr "Malfreŝa NFS-dosierpriaĵo"
 
 #. TRANS An attempt was made to NFS-mount a remote file system with a file name that
 #. TRANS already specifies an NFS-mounted file.
@@ -6140,27 +6155,27 @@ msgstr "Objekto estas fora"
 #. TRANS ???
 #: sysdeps/gnu/errlist.c:808
 msgid "RPC struct is bad"
-msgstr ""
+msgstr "RPC-strukturo malbonas"
 
 #. TRANS ???
 #: sysdeps/gnu/errlist.c:817
 msgid "RPC version wrong"
-msgstr ""
+msgstr "RPC-versio malbonas"
 
 #. TRANS ???
 #: sysdeps/gnu/errlist.c:826
 msgid "RPC program not available"
-msgstr ""
+msgstr "RPC-programo ne disponeblas"
 
 #. TRANS ???
 #: sysdeps/gnu/errlist.c:835
 msgid "RPC program version wrong"
-msgstr ""
+msgstr "RPC-programversio malbonas"
 
 #. TRANS ???
 #: sysdeps/gnu/errlist.c:844
 msgid "RPC bad procedure for program"
-msgstr ""
+msgstr "Malbona RPC-proceduro por programo"
 
 #. TRANS No locks available.  This is used by the file locking facilities; see
 #. TRANS @ref{File Locks}.  This error is never generated by @gnuhurdsystems{}, but
@@ -6182,12 +6197,12 @@ msgstr "Maladekvata dosiera tipo aŭ aranĝo"
 #. TRANS ???
 #: sysdeps/gnu/errlist.c:878
 msgid "Authentication error"
-msgstr ""
+msgstr "Eraro en aŭtentokontrolo"
 
 #. TRANS ???
 #: sysdeps/gnu/errlist.c:887
 msgid "Need authenticator"
-msgstr ""
+msgstr "Bezoniĝas aŭtentoktrololilo"
 
 #. TRANS Function not implemented.  This indicates that the function called is
 #. TRANS not implemented at all, either in the C library itself or in the
@@ -6293,7 +6308,7 @@ msgstr "Aparato ne estas fluo"
 
 #: sysdeps/gnu/errlist.c:1065
 msgid "Value too large for defined data type"
-msgstr ""
+msgstr "Valoro tro grandas por difinita datumtipo"
 
 #: sysdeps/gnu/errlist.c:1073
 msgid "Protocol error"
@@ -6320,7 +6335,6 @@ msgid "Channel number out of range"
 msgstr "Kanalnumero estas ekster gamo"
 
 #: sysdeps/gnu/errlist.c:1117
-#, fuzzy
 msgid "Level 2 not synchronized"
 msgstr "Nivelo 2 ne sinkroniĝis"
 
@@ -6342,7 +6356,7 @@ msgstr "Protokolpelilo ne kunligatas"
 
 #: sysdeps/gnu/errlist.c:1157
 msgid "No CSI structure available"
-msgstr ""
+msgstr "Neniu CSI-strukturo disponeblas"
 
 #: sysdeps/gnu/errlist.c:1165
 msgid "Level 2 halted"
@@ -6353,9 +6367,8 @@ msgid "Invalid exchange"
 msgstr "Nevalida interŝanĝo"
 
 #: sysdeps/gnu/errlist.c:1181
-#, fuzzy
 msgid "Invalid request descriptor"
-msgstr "Nevalida mend..."
+msgstr "Nevalida petpriaĵo"
 
 #: sysdeps/gnu/errlist.c:1189
 msgid "Exchange full"
@@ -6363,11 +6376,11 @@ msgstr "Interŝanĝo plenas"
 
 #: sysdeps/gnu/errlist.c:1197
 msgid "No anode"
-msgstr ""
+msgstr "Neniu anodo"
 
 #: sysdeps/gnu/errlist.c:1205
 msgid "Invalid request code"
-msgstr "Nevalida mendkodo"
+msgstr "Nevalida petkodo"
 
 #: sysdeps/gnu/errlist.c:1213
 msgid "Invalid slot"
@@ -6411,7 +6424,7 @@ msgstr "Nomo ne unikas en reto"
 
 #: sysdeps/gnu/errlist.c:1293
 msgid "File descriptor in bad state"
-msgstr ""
+msgstr "Dosierpriaĵo estas en malbona stato"
 
 #: sysdeps/gnu/errlist.c:1301
 msgid "Remote address changed"
@@ -6447,19 +6460,20 @@ msgstr "Strukturo bezonas purigon"
 
 #: sysdeps/gnu/errlist.c:1365
 msgid "Not a XENIX named type file"
-msgstr ""
+msgstr "Ne estas XENIX-dosiero kun nomo"
 
 #: sysdeps/gnu/errlist.c:1373
 msgid "No XENIX semaphores available"
-msgstr ""
+msgstr "Neniu XENIX-semaforo disponeblas"
 
 #: sysdeps/gnu/errlist.c:1381
+#, fuzzy
 msgid "Is a named type file"
-msgstr ""
+msgstr "Estas dosiero kun nomo"
 
 #: sysdeps/gnu/errlist.c:1389
 msgid "Remote I/O error"
-msgstr "Fora eniga/eliga eraro"
+msgstr "Fora en-eliga eraro"
 
 #: sysdeps/gnu/errlist.c:1397
 msgid "No medium found"
@@ -6479,7 +6493,7 @@ msgstr "Ŝlosilo kadukiĝis"
 
 #: sysdeps/gnu/errlist.c:1429
 msgid "Key has been revoked"
-msgstr ""
+msgstr "Sloŝilo senvalidiĝis"
 
 #: sysdeps/gnu/errlist.c:1437
 msgid "Key was rejected by service"
@@ -6495,7 +6509,7 @@ msgstr "Stato ne ripareblas"
 
 #: sysdeps/gnu/errlist.c:1461
 msgid "Operation not possible due to RF-kill"
-msgstr ""
+msgstr "Operacio ne eblas pro 'RF-kill'"
 
 #: sysdeps/gnu/errlist.c:1469
 msgid "Memory page has hardware error"
@@ -6584,6 +6598,8 @@ msgid ""
 "Usage: lddlibc4 FILE\n"
 "\n"
 msgstr ""
+"Uzmaniero:  lddlibc4 DOSIERO\n"
+"\n"
 
 #: sysdeps/unix/sysv/linux/lddlibc4.c:81
 #, c-format
@@ -6595,406 +6611,409 @@ msgstr "ne eblas malfermi «%s»"
 msgid "cannot read header from `%s'"
 msgstr "ne eblas legi ĉapon el «%s»"
 
-#: timezone/zdump.c:215
+#: timezone/zdump.c:246
 msgid "lacks alphabetic at start"
-msgstr "ne havas komencan literon"
+msgstr "ne komencas per litero"
 
-#: timezone/zdump.c:217
+#: timezone/zdump.c:248
 msgid "has fewer than 3 alphabetics"
 msgstr "havas malpli ol tri literojn"
 
-#: timezone/zdump.c:219
+#: timezone/zdump.c:250
 msgid "has more than 6 alphabetics"
 msgstr "havas pli ol ses literojn"
 
-#: timezone/zdump.c:227
+#: timezone/zdump.c:258
 msgid "differs from POSIX standard"
-msgstr ""
+msgstr "diferencas de POSIX-normo"
 
-#: timezone/zdump.c:233
+#: timezone/zdump.c:264
 #, c-format
 msgid "%s: warning: zone \"%s\" abbreviation \"%s\" %s\n"
-msgstr ""
+msgstr "%s: averto: zono \"%s\" mallongigo \"%s\" %s\n"
 
-#: timezone/zdump.c:244
+#: timezone/zdump.c:273
 #, c-format
 msgid ""
 "%s: usage is %s [ --version ] [ --help ] [ -v ] [ -c [loyear,]hiyear ] zonename ...\n"
 "\n"
-"Report bugs to tz@elsie.nci.nih.gov.\n"
+"Report bugs to %s.\n"
 msgstr ""
 
-#: timezone/zdump.c:313
+#: timezone/zdump.c:340
 #, c-format
 msgid "%s: wild -c argument %s\n"
 msgstr ""
 
-#: timezone/zdump.c:400
+#: timezone/zdump.c:426
 msgid "Error writing to standard output"
 msgstr "Eraro dum skribado al ĉefeligujo"
 
-#: timezone/zdump.c:423
+#: timezone/zdump.c:439
 #, c-format
 msgid "%s: use of -v on system with floating time_t other than float or double\n"
 msgstr ""
 
-#: timezone/zic.c:388
+#: timezone/zic.c:361
 #, c-format
 msgid "%s: Memory exhausted: %s\n"
 msgstr "%s: Mankas sufiĉa memoro: %s\n"
 
-#: timezone/zic.c:434
+#: timezone/zic.c:401
 #, c-format
 msgid "\"%s\", line %d: %s"
 msgstr "«%s», linio %d: %s"
 
-#: timezone/zic.c:437
+#: timezone/zic.c:404
 #, c-format
 msgid " (rule from \"%s\", line %d)"
 msgstr " (regulo el «%s», linio %d)"
 
-#: timezone/zic.c:449
+#: timezone/zic.c:415
 msgid "warning: "
 msgstr "averto: "
 
-#: timezone/zic.c:459
+#: timezone/zic.c:425
 #, c-format
 msgid ""
 "%s: usage is %s [ --version ] [ --help ] [ -v ] [ -l localtime ] [ -p posixrules ] \\\n"
 "\t[ -d directory ] [ -L leapseconds ] [ -y yearistype ] [ filename ... ]\n"
 "\n"
-"Report bugs to tz@elsie.nci.nih.gov.\n"
+"Report bugs to %s.\n"
 msgstr ""
 
-#: timezone/zic.c:496
+#: timezone/zic.c:460
 msgid "wild compilation-time specification of zic_t"
 msgstr ""
 
-#: timezone/zic.c:515
+#: timezone/zic.c:479
 #, c-format
 msgid "%s: More than one -d option specified\n"
 msgstr "%s: Indikatas pluraj opcioj «-d»\n"
 
-#: timezone/zic.c:525
+#: timezone/zic.c:489
 #, c-format
 msgid "%s: More than one -l option specified\n"
 msgstr "%s: Indikatas pluraj opcioj «-l»\n"
 
-#: timezone/zic.c:535
+#: timezone/zic.c:499
 #, c-format
 msgid "%s: More than one -p option specified\n"
 msgstr "%s: Indikatas pluraj opcioj «-p»\n"
 
-#: timezone/zic.c:545
+#: timezone/zic.c:509
 #, c-format
 msgid "%s: More than one -y option specified\n"
 msgstr "%s: Indikatas pluraj opcioj «-y»\n"
 
-#: timezone/zic.c:555
+#: timezone/zic.c:519
 #, c-format
 msgid "%s: More than one -L option specified\n"
 msgstr "%s: Indikatas pluraj opcioj «-L»\n"
 
-#: timezone/zic.c:604
+#: timezone/zic.c:566
 msgid "link to link"
 msgstr "ligo al ligo"
 
-#: timezone/zic.c:669
+#: timezone/zic.c:629
 msgid "hard link failed, symbolic link used"
 msgstr "senpera ligo malsukcesis; simbola ligo uziĝis"
 
-#: timezone/zic.c:677
+#: timezone/zic.c:637
 #, c-format
 msgid "%s: Can't link from %s to %s: %s\n"
 msgstr "%s: Ne eblas ligi de %s al %s: %s\n"
 
-#: timezone/zic.c:749 timezone/zic.c:751
+#: timezone/zic.c:697 timezone/zic.c:699
 msgid "same rule name in multiple files"
 msgstr "sama regulnomo en pluraj dosieroj"
 
-#: timezone/zic.c:792
+#: timezone/zic.c:740
 msgid "unruly zone"
 msgstr "senbrida zono"
 
-#: timezone/zic.c:799
+#: timezone/zic.c:747
 #, c-format
 msgid "%s in ruleless zone"
 msgstr "%s en senregula zono"
 
-#: timezone/zic.c:820
+#: timezone/zic.c:767
 msgid "standard input"
 msgstr "ĉefenigujo"
 
-#: timezone/zic.c:825
+#: timezone/zic.c:772
 #, c-format
 msgid "%s: Can't open %s: %s\n"
 msgstr "%s: Ne eblas malfermi %s: %s\n"
 
-#: timezone/zic.c:836
+#: timezone/zic.c:783
 msgid "line too long"
 msgstr "linio tro longas"
 
-#: timezone/zic.c:856
+#: timezone/zic.c:803
 msgid "input line of unknown type"
 msgstr "eniga linio estas de nekonata tipo"
 
-#: timezone/zic.c:872
+#: timezone/zic.c:819
 #, c-format
 msgid "%s: Leap line in non leap seconds file %s\n"
 msgstr ""
 
-#: timezone/zic.c:879 timezone/zic.c:1316 timezone/zic.c:1338
+#: timezone/zic.c:826 timezone/zic.c:1243 timezone/zic.c:1265
 #, c-format
 msgid "%s: panic: Invalid l_value %d\n"
 msgstr ""
 
-#: timezone/zic.c:887
+#: timezone/zic.c:834
 #, c-format
 msgid "%s: Error reading %s\n"
 msgstr "%s: Eraro dum legado de %s\n"
 
-#: timezone/zic.c:894
+#: timezone/zic.c:841
 #, c-format
 msgid "%s: Error closing %s: %s\n"
 msgstr "%s: Eraro dum fermado de %s: %s\n"
 
-#: timezone/zic.c:899
+#: timezone/zic.c:846
 msgid "expected continuation line not found"
 msgstr ""
 
-#: timezone/zic.c:943 timezone/zic.c:2541 timezone/zic.c:2560
+#: timezone/zic.c:887 timezone/zic.c:2411 timezone/zic.c:2425
 msgid "time overflow"
 msgstr "temptroo"
 
-#: timezone/zic.c:947
+#: timezone/zic.c:891
 msgid "24:00 not handled by pre-1998 versions of zic"
 msgstr ""
 
-#: timezone/zic.c:950
+#: timezone/zic.c:894
 msgid "values over 24 hours not handled by pre-2007 versions of zic"
 msgstr ""
 
-#: timezone/zic.c:963
+#: timezone/zic.c:905
 msgid "wrong number of fields on Rule line"
 msgstr ""
 
-#: timezone/zic.c:967
+#: timezone/zic.c:909
 msgid "nameless rule"
 msgstr "sennoma regulo"
 
-#: timezone/zic.c:972
+#: timezone/zic.c:914
 msgid "invalid saved time"
 msgstr "nevalida konservita tempo"
 
-#: timezone/zic.c:993
+#: timezone/zic.c:932
 msgid "wrong number of fields on Zone line"
 msgstr ""
 
-#: timezone/zic.c:999
+#: timezone/zic.c:938
 #, c-format
 msgid "\"Zone %s\" line and -l option are mutually exclusive"
 msgstr ""
 
-#: timezone/zic.c:1007
+#: timezone/zic.c:946
 #, c-format
 msgid "\"Zone %s\" line and -p option are mutually exclusive"
 msgstr ""
 
-#: timezone/zic.c:1019
+#: timezone/zic.c:958
 #, c-format
 msgid "duplicate zone name %s (file \"%s\", line %d)"
 msgstr ""
 
-#: timezone/zic.c:1035
+#: timezone/zic.c:972
 msgid "wrong number of fields on Zone continuation line"
 msgstr ""
 
-#: timezone/zic.c:1075
+#: timezone/zic.c:1009
 msgid "invalid UTC offset"
 msgstr "nevalida UTC-deŝovo"
 
-#: timezone/zic.c:1078
+#: timezone/zic.c:1012
 msgid "invalid abbreviation format"
 msgstr "nevalida aranĝo de mallongigo"
 
-#: timezone/zic.c:1107
+#: timezone/zic.c:1041
 msgid "Zone continuation line end time is not after end time of previous line"
 msgstr ""
 
-#: timezone/zic.c:1135
+#: timezone/zic.c:1066
 msgid "wrong number of fields on Leap line"
 msgstr ""
 
-#: timezone/zic.c:1144
+#: timezone/zic.c:1075
 msgid "invalid leaping year"
 msgstr ""
 
-#: timezone/zic.c:1164 timezone/zic.c:1270
+#: timezone/zic.c:1095 timezone/zic.c:1197
 msgid "invalid month name"
 msgstr "nevalida monatnomo"
 
-#: timezone/zic.c:1177 timezone/zic.c:1383 timezone/zic.c:1397
+#: timezone/zic.c:1108 timezone/zic.c:1310 timezone/zic.c:1324
 msgid "invalid day of month"
 msgstr "nevalida tago de monato"
 
-#: timezone/zic.c:1182
+#: timezone/zic.c:1113
 msgid "time before zero"
 msgstr "tempo antaŭ nulo"
 
-#: timezone/zic.c:1186
+#: timezone/zic.c:1117
 msgid "time too small"
 msgstr "tempo tro etas"
 
-#: timezone/zic.c:1190
+#: timezone/zic.c:1121
 msgid "time too large"
 msgstr "tempo tro grandas"
 
-#: timezone/zic.c:1194 timezone/zic.c:1299
+#: timezone/zic.c:1125 timezone/zic.c:1226
 msgid "invalid time of day"
 msgstr "nevalida tempo de tago"
 
-#: timezone/zic.c:1213
+#: timezone/zic.c:1144
 msgid "illegal CORRECTION field on Leap line"
 msgstr ""
 
-#: timezone/zic.c:1218
+#: timezone/zic.c:1149
 msgid "illegal Rolling/Stationary field on Leap line"
 msgstr ""
 
-#: timezone/zic.c:1234
+#: timezone/zic.c:1163
 msgid "wrong number of fields on Link line"
 msgstr ""
 
-#: timezone/zic.c:1238
+#: timezone/zic.c:1167
 msgid "blank FROM field on Link line"
 msgstr ""
 
-#: timezone/zic.c:1242
+#: timezone/zic.c:1171
 msgid "blank TO field on Link line"
 msgstr ""
 
-#: timezone/zic.c:1320
+#: timezone/zic.c:1247
 msgid "invalid starting year"
 msgstr "nevalida komencjaro"
 
-#: timezone/zic.c:1342
+#: timezone/zic.c:1269
 msgid "invalid ending year"
 msgstr "nevalida finjaro"
 
-#: timezone/zic.c:1346
+#: timezone/zic.c:1273
 msgid "starting year greater than ending year"
 msgstr "komencjaro pli grandas ol finjaro"
 
-#: timezone/zic.c:1353
+#: timezone/zic.c:1280
 msgid "typed single year"
 msgstr ""
 
-#: timezone/zic.c:1388
+#: timezone/zic.c:1315
 msgid "invalid weekday name"
 msgstr "nevalida nomo de semajntago"
 
-#: timezone/zic.c:1566
+#: timezone/zic.c:1481
 #, c-format
 msgid "%s: Can't remove %s: %s\n"
 msgstr "%s: Ne eblas forigi %s: %s\n"
 
-#: timezone/zic.c:1576
+#: timezone/zic.c:1491
 #, c-format
 msgid "%s: Can't create %s: %s\n"
 msgstr "%s: Ne eblas krei %s: %s\n"
 
-#: timezone/zic.c:1773
+#: timezone/zic.c:1683
 #, c-format
 msgid "%s: Error writing %s\n"
 msgstr "%s: Eraro dum skribado de %s\n"
 
-#: timezone/zic.c:2070
+#: timezone/zic.c:1964
 msgid "no POSIX environment variable for zone"
 msgstr ""
 
-#: timezone/zic.c:2237
+#: timezone/zic.c:2131
 msgid "can't determine time zone abbreviation to use just after until time"
 msgstr ""
 
-#: timezone/zic.c:2283
+#: timezone/zic.c:2175
 msgid "too many transitions?!"
 msgstr ""
 
-#: timezone/zic.c:2302
+#: timezone/zic.c:2190
 msgid "internal error - addtype called with bad isdst"
 msgstr ""
 
-#: timezone/zic.c:2306
+#: timezone/zic.c:2194
 msgid "internal error - addtype called with bad ttisstd"
 msgstr ""
 
-#: timezone/zic.c:2310
+#: timezone/zic.c:2198
 msgid "internal error - addtype called with bad ttisgmt"
 msgstr ""
 
-#: timezone/zic.c:2329
+#: timezone/zic.c:2217
 msgid "too many local time types"
 msgstr ""
 
-#: timezone/zic.c:2333
+#: timezone/zic.c:2221
 msgid "UTC offset out of range"
 msgstr ""
 
-#: timezone/zic.c:2361
+#: timezone/zic.c:2245
 msgid "too many leap seconds"
 msgstr ""
 
-#: timezone/zic.c:2367
+#: timezone/zic.c:2251
 msgid "repeated leap second moment"
 msgstr ""
 
-#: timezone/zic.c:2419
+#: timezone/zic.c:2301
 msgid "Wild result from command execution"
 msgstr "Bizara rezulto el komandrulo"
 
-#: timezone/zic.c:2420
+#: timezone/zic.c:2302
 #, c-format
 msgid "%s: command was '%s', result was %d\n"
 msgstr "%s: komando estis '%s', rezulto estis %d\n"
 
-#: timezone/zic.c:2518
+#: timezone/zic.c:2393
 msgid "Odd number of quotation marks"
 msgstr "Nepara nombro de citiloj"
 
-#: timezone/zic.c:2607
+#: timezone/zic.c:2470
 msgid "use of 2/29 in non leap-year"
 msgstr ""
 
-#: timezone/zic.c:2642
+#: timezone/zic.c:2505
 msgid "rule goes past start/end of month--will not work with pre-2004 versions of zic"
 msgstr ""
 
-#: timezone/zic.c:2674
+#: timezone/zic.c:2536
 msgid "time zone abbreviation lacks alphabetic at start"
-msgstr ""
+msgstr "horzona mallongigo ne komencas per litero"
 
-#: timezone/zic.c:2676
-msgid "time zone abbreviation has more than 3 alphabetics"
-msgstr ""
+#: timezone/zic.c:2538
+msgid "time zone abbreviation has fewer than 3 alphabetics"
+msgstr "horzona mallongigo havas malpli ol tri literojn"
 
-#: timezone/zic.c:2678
+#: timezone/zic.c:2540
 msgid "time zone abbreviation has too many alphabetics"
-msgstr ""
+msgstr "horzona mallongigo havas tro da literoj"
 
-#: timezone/zic.c:2688
+#: timezone/zic.c:2550
 msgid "time zone abbreviation differs from POSIX standard"
-msgstr ""
+msgstr "horzona mallongigo diferencas de POSIX-normo"
 
-#: timezone/zic.c:2700
+#: timezone/zic.c:2562
 msgid "too many, or too long, time zone abbreviations"
-msgstr ""
+msgstr "tro multaj aŭ tro longaj horzonaj mallongigoj"
 
-#: timezone/zic.c:2741
+#: timezone/zic.c:2602
 #, c-format
 msgid "%s: Can't create directory %s: %s\n"
 msgstr "%s: Ne eblas krei dosierujon %s: %s\n"
 
-#: timezone/zic.c:2763
+#: timezone/zic.c:2623
 #, c-format
 msgid "%s: %d did not sign extend correctly\n"
 msgstr ""
+
+#~ msgid "cannot find any C preprocessor (cpp)\n"
+#~ msgstr "malsukcesis trovi iun ajn C-antaŭprocesoron ('cpp'): %s\n"
