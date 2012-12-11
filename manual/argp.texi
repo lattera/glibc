@@ -561,85 +561,6 @@ function returned an error value, each parser is called with
 @code{ARGP_KEY_ERROR}.  No further calls are made, except the final call
 with @code{ARGP_KEY_FINI}.
 
-@node Argp Helper Functions, , Argp Parsing State, Argp Parser Functions
-@subsubsection Functions For Use in Argp Parsers
-
-Argp provides a number of functions available to the user of argp
-(@pxref{Argp Parser Functions}), mostly for producing error messages.
-These take as their first argument the @var{state} argument to the
-parser function.  @xref{Argp Parsing State}.
-
-
-@cindex usage messages, in argp
-@comment argp.h
-@comment GNU
-@deftypefun void argp_usage (const struct argp_state *@var{state})
-Outputs the standard usage message for the argp parser referred to by
-@var{state} to @code{@var{state}->err_stream} and terminate the program
-with @code{exit (argp_err_exit_status)}.  @xref{Argp Global Variables}.
-@end deftypefun
-
-@cindex syntax error messages, in argp
-@comment argp.h
-@comment GNU
-@deftypefun void argp_error (const struct argp_state *@var{state}, const char *@var{fmt}, @dots{})
-Prints the printf format string @var{fmt} and following args, preceded
-by the program name and @samp{:}, and followed by a @w{@samp{Try @dots{}
---help}} message, and terminates the program with an exit status of
-@code{argp_err_exit_status}.  @xref{Argp Global Variables}.
-@end deftypefun
-
-@cindex error messages, in argp
-@comment argp.h
-@comment GNU
-@deftypefun void argp_failure (const struct argp_state *@var{state}, int @var{status}, int @var{errnum}, const char *@var{fmt}, @dots{})
-Similar to the standard gnu error-reporting function @code{error}, this
-prints the program name and @samp{:}, the printf format string
-@var{fmt}, and the appropriate following args.  If it is non-zero, the
-standard unix error text for @var{errnum} is printed.  If @var{status} is
-non-zero, it terminates the program with that value as its exit status.
-
-The difference between @code{argp_failure} and @code{argp_error} is that
-@code{argp_error} is for @emph{parsing errors}, whereas
-@code{argp_failure} is for other problems that occur during parsing but
-don't reflect a syntactic problem with the input, such as illegal values
-for options, bad phase of the moon, etc.
-@end deftypefun
-
-@comment argp.h
-@comment GNU
-@deftypefun void argp_state_help (const struct argp_state *@var{state}, FILE *@var{stream}, unsigned @var{flags})
-Outputs a help message for the argp parser referred to by @var{state},
-to @var{stream}.  The @var{flags} argument determines what sort of help
-message is produced.  @xref{Argp Help Flags}.
-@end deftypefun
-
-Error output is sent to @code{@var{state}->err_stream}, and the program
-name printed is @code{@var{state}->name}.
-
-The output or program termination behavior of these functions may be
-suppressed if the @code{ARGP_NO_EXIT} or @code{ARGP_NO_ERRS} flags are
-passed to @code{argp_parse}.  @xref{Argp Flags}.
-
-This behavior is useful if an argp parser is exported for use by other
-programs (e.g., by a library), and may be used in a context where it is
-not desirable to terminate the program in response to parsing errors.  In
-argp parsers intended for such general use, and for the case where the
-program @emph{doesn't} terminate, calls to any of these functions should
-be followed by code that returns the appropriate error code:
-
-@smallexample
-if (@var{bad argument syntax})
-  @{
-     argp_usage (@var{state});
-     return EINVAL;
-  @}
-@end smallexample
-
-@noindent
-If a parser function will @emph{only} be used when @code{ARGP_NO_EXIT}
-is not set, the return may be omitted.
-
 @node Argp Parsing State, Argp Helper Functions, Argp Special Keys, Argp Parser Functions
 @subsubsection Argp Parsing State
 
@@ -725,6 +646,85 @@ The stdio streams used when argp prints.  Error messages are printed to
 Private, for use by the argp implementation.
 @end table
 @end deftp
+
+@node Argp Helper Functions, , Argp Parsing State, Argp Parser Functions
+@subsubsection Functions For Use in Argp Parsers
+
+Argp provides a number of functions available to the user of argp
+(@pxref{Argp Parser Functions}), mostly for producing error messages.
+These take as their first argument the @var{state} argument to the
+parser function.  @xref{Argp Parsing State}.
+
+
+@cindex usage messages, in argp
+@comment argp.h
+@comment GNU
+@deftypefun void argp_usage (const struct argp_state *@var{state})
+Outputs the standard usage message for the argp parser referred to by
+@var{state} to @code{@var{state}->err_stream} and terminate the program
+with @code{exit (argp_err_exit_status)}.  @xref{Argp Global Variables}.
+@end deftypefun
+
+@cindex syntax error messages, in argp
+@comment argp.h
+@comment GNU
+@deftypefun void argp_error (const struct argp_state *@var{state}, const char *@var{fmt}, @dots{})
+Prints the printf format string @var{fmt} and following args, preceded
+by the program name and @samp{:}, and followed by a @w{@samp{Try @dots{}
+--help}} message, and terminates the program with an exit status of
+@code{argp_err_exit_status}.  @xref{Argp Global Variables}.
+@end deftypefun
+
+@cindex error messages, in argp
+@comment argp.h
+@comment GNU
+@deftypefun void argp_failure (const struct argp_state *@var{state}, int @var{status}, int @var{errnum}, const char *@var{fmt}, @dots{})
+Similar to the standard gnu error-reporting function @code{error}, this
+prints the program name and @samp{:}, the printf format string
+@var{fmt}, and the appropriate following args.  If it is non-zero, the
+standard unix error text for @var{errnum} is printed.  If @var{status} is
+non-zero, it terminates the program with that value as its exit status.
+
+The difference between @code{argp_failure} and @code{argp_error} is that
+@code{argp_error} is for @emph{parsing errors}, whereas
+@code{argp_failure} is for other problems that occur during parsing but
+don't reflect a syntactic problem with the input, such as illegal values
+for options, bad phase of the moon, etc.
+@end deftypefun
+
+@comment argp.h
+@comment GNU
+@deftypefun void argp_state_help (const struct argp_state *@var{state}, FILE *@var{stream}, unsigned @var{flags})
+Outputs a help message for the argp parser referred to by @var{state},
+to @var{stream}.  The @var{flags} argument determines what sort of help
+message is produced.  @xref{Argp Help Flags}.
+@end deftypefun
+
+Error output is sent to @code{@var{state}->err_stream}, and the program
+name printed is @code{@var{state}->name}.
+
+The output or program termination behavior of these functions may be
+suppressed if the @code{ARGP_NO_EXIT} or @code{ARGP_NO_ERRS} flags are
+passed to @code{argp_parse}.  @xref{Argp Flags}.
+
+This behavior is useful if an argp parser is exported for use by other
+programs (e.g., by a library), and may be used in a context where it is
+not desirable to terminate the program in response to parsing errors.  In
+argp parsers intended for such general use, and for the case where the
+program @emph{doesn't} terminate, calls to any of these functions should
+be followed by code that returns the appropriate error code:
+
+@smallexample
+if (@var{bad argument syntax})
+  @{
+     argp_usage (@var{state});
+     return EINVAL;
+  @}
+@end smallexample
+
+@noindent
+If a parser function will @emph{only} be used when @code{ARGP_NO_EXIT}
+is not set, the return may be omitted.
 
 @node Argp Children, Argp Help Filtering, Argp Parser Functions, Argp Parsers
 @subsection Combining Multiple Argp Parsers
