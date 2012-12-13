@@ -168,7 +168,8 @@ code.
 @item
 Hongjiu Lu for providing the support for a Linux 32-bit runtime
 environment under x86-64 (x32), for porting to Linux on IA64, for
-improved string functions and many bug fixes.
+improved string functions, a framework for testing IFUNC
+implementations, and many bug fixes.
 
 @item
 Luis Machado for optimized functions on PowerPC.
@@ -215,8 +216,11 @@ Stephen Munroe for his port to Linux on PowerPC64
 implementations for PowerPC.
 
 @item
-Joseph S. Myers for numerous bug fixes for the libm functions and for
-his maintainership of the ARM and MIPS architectures.
+Joseph S. Myers for numerous bug fixes for the libm functions, for
+his maintainership of the ARM and MIPS architectures, improving
+cross-compilation and cross-testing of @theglibc{}, expanded
+coverage of conformtest, and merging the ports/ subdirectory
+into the @glibcadj{} main repository.
 
 @item
 Carlos O'Donell for his maintainership of the HPPA architecture and
@@ -266,6 +270,9 @@ Thomas Schwinge for his contribution to Hurd and the SH architecture.
 
 @item
 Carlos Eduardo Seo for optimized functions on PowerPC.
+
+@item
+Marcus Shawcroft for contributing the AArch4 port.
 
 @item
 Franz Sirl for various fixes.
