@@ -63,7 +63,7 @@ Version 2.17
   bootstrap builds without a previously built glibc.
 
 * Several testsuite tests are now able to test multiple IFUNC variants of an
-  interface, rather than just testing the one that would be choosen by
+  interface, rather than just testing the one that would be chooen by
   default.
 
 * New configure options --with-bugurl and --with-pkgversion, for
