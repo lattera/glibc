@@ -1,5 +1,7 @@
 2012-12-13  David S. Miller  <davem@davemloft.net>
 
+	* NEWS: Mention IFUNC testsuite enhancements.
+
 	* po/pl.po: Update from translation team.
 	* po/bg.po: Likewise.
 
