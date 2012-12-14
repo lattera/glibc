@@ -1,3 +1,7 @@
+2012-12-14  Chris Metcalf  <cmetcalf@tilera.com>
+
+	* sysdeps/unix/sysv/linux/tile/nptl/clone.S: Fix DWARF info.
+
 2012-11-29  Chris Metcalf  <cmetcalf@tilera.com>
 
 	* sysdeps/tile/s_fmaf.c: Remove redundant #defines now provided

@@ -160,6 +160,8 @@ ENTRY (__clone)
    r32: the user function pointer  */
 
 .Lthread_start:
+	cfi_def_cfa_offset (FRAME_SIZE)
+	cfi_undefined (lr)
 	/* Check and see if we need to reset the PID, which we do if
 	   CLONE_THREAD isn't set, i.e. we're not staying in the thread group.
 	   If CLONE_VM is set, we're doing some kind of thread-like clone,
@@ -167,7 +169,6 @@ ENTRY (__clone)
 	   in getpid().  Otherwise (if CLONE_VM isn't set), it's a
 	   fork-like clone, and we go ahead and write the cached values
 	   from the true system pid (retrieved via __NR_getpid syscall).  */
-	cfi_def_cfa_offset (FRAME_SIZE)
 #ifdef __tilegx__
 	{
 	 moveli r0, hw1_last(CLONE_VM)
