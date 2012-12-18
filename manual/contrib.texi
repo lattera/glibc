@@ -272,7 +272,7 @@ Thomas Schwinge for his contribution to Hurd and the SH architecture.
 Carlos Eduardo Seo for optimized functions on PowerPC.
 
 @item
-Marcus Shawcroft for contributing the AArch4 port.
+Marcus Shawcroft for contributing the AArch64 port.
 
 @item
 Franz Sirl for various fixes.
