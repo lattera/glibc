@@ -25,6 +25,8 @@ Version 2.17
   14838, 14856, 14863, 14865, 14866, 14868, 14869, 14871, 14872, 14879,
   14889, 14893, 14898, 14914.
 
+* Optimization of memcpy for MIPS.
+
 * CVE-2011-4609 svc_run() produces high cpu usage when accept fails with
   EMFILE has been fixed (Bugzilla #14889).
 
