@@ -495,13 +495,6 @@ matches.)
 
 @comment glob.h
 @comment POSIX.2
-@item GLOB_NOSORT
-Don't sort the file names; return them in no particular order.
-(In practice, the order will depend on the order of the entries in
-the directory.)  The only reason @emph{not} to sort is to save time.
-
-@comment glob.h
-@comment POSIX.2
 @item GLOB_NOESCAPE
 Don't treat the @samp{\} character specially in patterns.  Normally,
 @samp{\} quotes the following character, turning off its special meaning
@@ -514,6 +507,13 @@ If you use @code{GLOB_NOESCAPE}, then @samp{\} is an ordinary character.
 @code{glob} does its work by calling the function @code{fnmatch}
 repeatedly.  It handles the flag @code{GLOB_NOESCAPE} by turning on the
 @code{FNM_NOESCAPE} flag in calls to @code{fnmatch}.
+
+@comment glob.h
+@comment POSIX.2
+@item GLOB_NOSORT
+Don't sort the file names; return them in no particular order.
+(In practice, the order will depend on the order of the entries in
+the directory.)  The only reason @emph{not} to sort is to save time.
 @end vtable
 
 @node More Flags for Globbing

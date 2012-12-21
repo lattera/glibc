@@ -1,5 +1,10 @@
 2013-01-13  Mike Frysinger  <vapier@gentoo.org>
 
+	* manual/pattern.texi (Flags for Globbing): Move GLOB_NOSORT after
+	GLOB_NOESCAPE.
+
+2013-01-13  Mike Frysinger  <vapier@gentoo.org>
+
 	* manual/pattern.texi (Flags for Globbing): Highlight GNU extensions.
 
 2013-01-13  Mike Frysinger  <vapier@gentoo.org>
