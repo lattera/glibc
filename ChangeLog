@@ -1,3 +1,7 @@
+2012-12-21  David S. Miller  <davem@davemloft.net>
+
+	* po/hr.po: Update from translation team.
+
 2012-12-21  Andreas Krebbel  <Andreas.Krebbel@de.ibm.com>
 
 	* sysdeps/s390/fpu/libm-test-ulps: Refreshed.
