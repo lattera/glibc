@@ -234,6 +234,12 @@ is set in the flag parameter.  The type of this field is @code{@w{int
 (*) (const char *,} @w{struct stat *)}}.
 
 This is a GNU extension.
+
+@item gl_flags
+The flags used when @code{glob} was called.  In addition, @code{GLOB_MAGCHAR}
+might be set.  See @ref{Flags for Globbing} for more details.
+
+This is a GNU extension.
 @end table
 @end deftp
 
@@ -310,6 +316,12 @@ function to get information about an object in the filesystems, not
 following symbolic links.  It is used if the @code{GLOB_ALTDIRFUNC} bit
 is set in the flag parameter.  The type of this field is @code{@w{int
 (*) (const char *,} @w{struct stat64 *)}}.
+
+This is a GNU extension.
+
+@item gl_flags
+The flags used when @code{glob} was called.  In addition, @code{GLOB_MAGCHAR}
+might be set.  See @ref{Flags for Globbing} for more details.
 
 This is a GNU extension.
 @end table
