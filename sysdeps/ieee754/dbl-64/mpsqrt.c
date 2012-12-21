@@ -52,18 +52,10 @@ SECTION
 __mpsqrt(mp_no *x, mp_no *y, int p) {
   int i,m,ey;
   double dx,dy;
-  mp_no
-    mphalf   = {0,{0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,
-		   0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,
-		   0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0}},
-    mp3halfs = {0,{0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,
-		   0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,
-		   0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0}};
+  static const mp_no
+    mphalf   = {0,{1.0,8388608.0 /* 2^23 */}},
+    mp3halfs = {1,{1.0,1.0,8388608.0 /* 2^23 */}};
   mp_no mpxn,mpz,mpu,mpt1,mpt2;
-
-  /* Prepare multi-precision 1/2 and 3/2 */
-  mphalf.e  =0;  mphalf.d[0]  =ONE;  mphalf.d[1]  =HALFRAD;
-  mp3halfs.e=1;  mp3halfs.d[0]=ONE;  mp3halfs.d[1]=ONE;  mp3halfs.d[2]=HALFRAD;
 
   ey=EX/2;     __cpy(x,&mpxn,p);    mpxn.e -= (ey+ey);
   __mp_dbl(&mpxn,&dx,p);   dy=fastiroot(dx);    __dbl_mp(dy,&mpu,p);

@@ -1,3 +1,15 @@
+2013-01-02  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* sysdeps/ieee754/dbl-64/mpa.c [! NO__CONST]: New constant
+	MPTWO.
+	(__inv): Remove local variable MPTWO to use the global
+	constant.
+	* sysdeps/ieee754/dbl-64/mpa.h: Declare MPTWO.
+	* sysdeps/ieee754/dbl-64/mpatan.c (__mpatan): Remove local
+	variable MPTWO.
+	* sysdeps/ieee754/dbl-64/mpsqrt.c (__mpsqrt): Make MPHALF and
+	MP3HALFS static const.
+
 2013-01-01  David S. Miller  <davem@davemloft.net>
 
 	* po/ca.po: Update from translation team.

@@ -48,16 +48,13 @@ __mpatan(mp_no *x, mp_no *y, int p) {
   int i,m,n;
   double dx;
   mp_no
-    mptwo    = {0,{0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,
-		0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,
-		0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0}},
     mptwoim1 = {0,{0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,
 		0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,
 		0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0}};
 
   mp_no mps,mpsm,mpt,mpt1,mpt2,mpt3;
 
-		      /* Choose m and initiate mptwo & mptwoim1 */
+		      /* Choose m and initiate mptwoim1 */
     if      (EX>0) m=7;
     else if (EX<0) m=0;
     else {
@@ -65,9 +62,8 @@ __mpatan(mp_no *x, mp_no *y, int p) {
       for (m=6; m>0; m--)
 	{if (dx>__atan_xm[m].d) break;}
     }
-    mptwo.e    = mptwoim1.e = 1;
-    mptwo.d[0] = mptwoim1.d[0] = ONE;
-    mptwo.d[1] = TWO;
+    mptwoim1.e = 1;
+    mptwoim1.d[0] = ONE;
 
 				 /* Reduce x m times */
     __mul(x,x,&mpsm,p);
