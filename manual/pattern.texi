@@ -420,9 +420,11 @@ This function is a GNU extension.
 @node Flags for Globbing
 @subsection Flags for Globbing
 
-This section describes the flags that you can specify in the
+This section describes the standard flags that you can specify in the
 @var{flags} argument to @code{glob}.  Choose the flags you want,
 and combine them with the C bitwise OR operator @code{|}.
+
+Note that there are @ref{More Flags for Globbing} available as GNU extensions.
 
 @vtable @code
 @comment glob.h

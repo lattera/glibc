@@ -1,5 +1,9 @@
 2013-01-13  Mike Frysinger  <vapier@gentoo.org>
 
+	* manual/pattern.texi (Flags for Globbing): Highlight GNU extensions.
+
+2013-01-13  Mike Frysinger  <vapier@gentoo.org>
+
 	* manual/pattern.texi (glob_t): Document gl_flags.
 	(glob64_t): Likewise.
 
