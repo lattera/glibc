@@ -110,8 +110,10 @@ enum
 
 #define PTHREAD_MUTEX_TYPE(m) \
   ((m)->__data.__kind & 127)
+/* Don't include NO_ELISION, as that type is always the same
+   as the underlying lock type.  */
 #define PTHREAD_MUTEX_TYPE_ELISION(m) \
-  ((m)->__data.__kind & (127|PTHREAD_MUTEX_ELISION_FLAGS_NP))
+  ((m)->__data.__kind & (127|PTHREAD_MUTEX_ELISION_NP))
 
 #if LLL_PRIVATE == 0 && LLL_SHARED == 128
 # define PTHREAD_MUTEX_PSHARED(m) \

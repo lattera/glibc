@@ -1,4 +1,22 @@
 2013-07-02  Andi Kleen  <ak@linux.intel.com>
+	    Hongjiu Lu  <hongjiu.lu@intel.com>
+
+	* pthread_mutex_lock.c
+	(__pthread_mutex_lock): Add lock elision support.
+	* pthread_mutex_timedlock.c (pthread_mutex_timedlock): Likewise.
+	* pthread_mutex_trylock.c (__pthread_mutex_trylock): Likewise.
+	* pthread_mutex_unlock.c (__pthread_mutex_unlock_usercnt): Likewise.
+	* sysdeps/unix/sysv/linux/pthread_mutex_cond_lock.c: Likewise.
+	* sysdeps/unix/sysv/linux/x86/bits/pthreadtypes.h: Likewise.
+	* sysdeps/unix/sysv/linux/x86/Makefile: New file.
+	* sysdeps/unix/sysv/linux/x86/force-elision.h: New file
+	* sysdeps/unix/sysv/linux/x86/pthread_mutex_cond_lock.c: Likewise.
+	* sysdeps/unix/sysv/linux/x86/pthread_mutex_lock.c: Likewise.
+	* sysdeps/unix/sysv/linux/x86/pthread_mutex_timedlock.c: Likewise.
+	* sysdeps/unix/sysv/linux/x86/pthread_mutex_trylock.c: Likewise.
+	* sysdeps/unix/sysv/linux/x86/pthread_mutex_unlock.c: Likewise.
+
+2013-07-02  Andi Kleen  <ak@linux.intel.com>
 
 	* tst-mutex5.c: Include config.h.
 	  (do_test): Add checks for ENABLE_LOCK_ELISION.

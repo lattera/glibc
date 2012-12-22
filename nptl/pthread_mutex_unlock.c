@@ -23,6 +23,10 @@
 #include <lowlevellock.h>
 #include <stap-probe.h>
 
+#ifndef lll_unlock_elision
+#define lll_unlock_elision(a,b) ({ lll_unlock (a,b); 0; })
+#endif
+
 static int
 internal_function
 __pthread_mutex_unlock_full (pthread_mutex_t *mutex, int decr)
@@ -34,8 +38,9 @@ __pthread_mutex_unlock_usercnt (mutex, decr)
      pthread_mutex_t *mutex;
      int decr;
 {
-  int type = PTHREAD_MUTEX_TYPE (mutex);
-  if (__builtin_expect (type & ~PTHREAD_MUTEX_KIND_MASK_NP, 0))
+  int type = PTHREAD_MUTEX_TYPE_ELISION (mutex);
+  if (__builtin_expect (type &
+		~(PTHREAD_MUTEX_KIND_MASK_NP|PTHREAD_MUTEX_ELISION_FLAGS_NP), 0))
     return __pthread_mutex_unlock_full (mutex, decr);
 
   if (__builtin_expect (type, PTHREAD_MUTEX_TIMED_NP)
@@ -55,7 +60,14 @@ __pthread_mutex_unlock_usercnt (mutex, decr)
 
       return 0;
     }
-  else if (__builtin_expect (type == PTHREAD_MUTEX_RECURSIVE_NP, 1))
+  else if (__builtin_expect (type == PTHREAD_MUTEX_TIMED_ELISION_NP, 1))
+    {
+      /* Don't reset the owner/users fields for elision.  */
+      return lll_unlock_elision (mutex->__data.__lock,
+				      PTHREAD_MUTEX_PSHARED (mutex));
+    }
+  else if (__builtin_expect (PTHREAD_MUTEX_TYPE (mutex)
+			      == PTHREAD_MUTEX_RECURSIVE_NP, 1))
     {
       /* Recursive mutex.  */
       if (mutex->__data.__owner != THREAD_GETMEM (THREAD_SELF, tid))
@@ -66,7 +78,8 @@ __pthread_mutex_unlock_usercnt (mutex, decr)
 	return 0;
       goto normal;
     }
-  else if (__builtin_expect (type == PTHREAD_MUTEX_ADAPTIVE_NP, 1))
+  else if (__builtin_expect (PTHREAD_MUTEX_TYPE (mutex)
+			      == PTHREAD_MUTEX_ADAPTIVE_NP, 1))
     goto normal;
   else
     {

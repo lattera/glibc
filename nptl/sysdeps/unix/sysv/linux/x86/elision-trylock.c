@@ -24,9 +24,8 @@
 
 #define aconf __elision_aconf
 
-/* Try to elide a futex trylock. FUTEX is the futex variable. TRY_LOCK is the
-   adaptation counter in the mutex. UPGRADED is != 0 when this is for an
-   automatically upgraded lock.  */
+/* Try to elide a futex trylock. FUTEX is the futex variable. ADAPT_COUNT is the
+   adaptation counter in the mutex.  */
 
 int
 __lll_trylock_elision (int *futex, short *adapt_count)
