@@ -219,8 +219,13 @@ tr_reallochook (ptr, size, caller)
 
   tr_where (caller, info);
   if (hdr == NULL)
-    /* Failed realloc.  */
-    fprintf (mallstream, "! %p %#lx\n", ptr, (unsigned long int) size);
+    {
+      if (size != 0)
+	/* Failed realloc.  */
+	fprintf (mallstream, "! %p %#lx\n", ptr, (unsigned long int) size);
+      else
+	fprintf (mallstream, "- %p\n", ptr);
+    }
   else if (ptr == NULL)
     fprintf (mallstream, "+ %p %#lx\n", hdr, (unsigned long int) size);
   else
