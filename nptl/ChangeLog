@@ -1,4 +1,13 @@
 2013-07-02  Andi Kleen  <ak@linux.intel.com>
+
+	* pthreadP.h: Add elision types.
+	  (PTHREAD_MUTEX_TYPE_ELISION): Add.
+	* sysdeps/pthread/pthread.h: Add elision initializers.
+	  (PTHREAD_MUTEX_ELISION_NP, PTHREAD_MUTEX_NO_ELISION_NP,
+	   PTHREAD_MUTEX_PSHARED_NP): Add new flags.
+	  (__PTHREAD_SPINS): Add.
+
+2013-07-02  Andi Kleen  <ak@linux.intel.com>
 	    Hongjiu Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/unix/sysv/linux/i386/lowlevellock.h (__lll_timedwait_tid,
