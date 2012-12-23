@@ -252,15 +252,6 @@ main (int argc, char **argv)
 	for (i = min_close_fd; i < getdtablesize (); i++)
 	  close (i);
 
-      if (run_mode == RUN_DAEMONIZE)
-	{
-	  pid = fork ();
-	  if (pid == -1)
-	    error (EXIT_FAILURE, errno, _("cannot fork"));
-	  if (pid != 0)
-	    exit (0);
-	}
-
       setsid ();
 
       if (chdir ("/") != 0)
