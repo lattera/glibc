@@ -1,3 +1,7 @@
+2013-04-15  Andreas Schwab  <schwab@suse.de>
+
+	* nscd/nscd.c (main): Don't fork again after closing files.
+
 2013-04-15  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* libio/tst-fwrite-error.c (do_test): Fix BUF array definition.
