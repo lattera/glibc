@@ -1,3 +1,9 @@
+2012-12-25  David S. Miller  <davem@davemloft.net>
+
+	* version.h (RELEASE): Set to "development".
+	(VERSION): Set to "2.17.90".
+	* NEWS: Add 2.18 section.
+
 2012-12-21  David S. Miller  <davem@davemloft.net>
 
 	* po/hr.po: Update from translation team.
