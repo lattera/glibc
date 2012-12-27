@@ -40,21 +40,13 @@
 void __mpexp(mp_no *, mp_no *, int);
 
 void __mplog(mp_no *x, mp_no *y, int p) {
-#include "mplog.h"
   int i,m;
-#if 0
-  int j,k,m1,m2,n;
-  double a,b;
-#endif
   static const int mp[33] = {0,0,0,0,0,1,1,2,2,2,2,3,3,3,3,3,3,3,3,
                              4,4,4,4,4,4,4,4,4,4,4,4,4,4};
-  mp_no mpone = {0,{0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,
-                    0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,
-                    0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0}};
   mp_no mpt1,mpt2;
 
-  /* Choose m and initiate mpone */
-  m = mp[p];  mpone.e = 1;  mpone.d[0]=mpone.d[1]=ONE;
+  /* Choose m */
+  m = mp[p];
 
   /* Perform m newton iterations to solve for y: exp(y)-x=0.     */
   /* The iterations formula is:  y(n+1)=y(n)+(x*exp(-y(n))-1).   */

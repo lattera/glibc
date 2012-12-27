@@ -1,3 +1,18 @@
+2012-12-27  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* sysdeps/ieee754/dbl-64/mpa.c [! NO__CONST]: New constant
+	MPONE.
+	* sysdeps/ieee754/dbl-64/mpa.h: Declare MPONE.
+	* sysdeps/ieee754/dbl-64/mpatan.c (__mpatan): Remove local
+	variable MPONE.
+	* sysdeps/ieee754/dbl-64/mpatan2.c (__mpatan2): Likewise.
+	* sysdeps/ieee754/dbl-64/mpexp.c (__mpexp): Likewise.
+	* sysdeps/ieee754/dbl-64/mplog.c (__mplog): Remove mplog.h
+	include directive.  Remove local variable MPONE.
+	* sysdeps/ieee754/dbl-64/mplog.h: Remove.
+	* sysdeps/x86_64/fpu/multiarch/mpa-avx.c: Define NO__CONST.
+	* sysdeps/x86_64/fpu/multiarch/mpa-fma4.c: Likewise.
+
 2012-12-25  David S. Miller  <davem@davemloft.net>
 
 	* version.h (RELEASE): Set to "development".

@@ -51,6 +51,10 @@
 # define SECTION
 #endif
 
+#ifndef NO__CONST
+const mp_no mpone = {1, {1.0, 1.0}};
+#endif
+
 #ifndef NO___ACR
 /* mcr() compares the sizes of the mantissas of two multiple precision  */
 /* numbers. Mantissas are compared regardless of the signs of the       */

@@ -51,14 +51,10 @@ __mpatan2(mp_no *y, mp_no *x, mp_no *z, int p) {
 
   static const double ZERO = 0.0, ONE = 1.0;
 
-  mp_no mpone = {0,{0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,
-		    0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,
-		    0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0}};
   mp_no mpt1,mpt2,mpt3;
 
 
   if (X[0] <= ZERO) {
-    mpone.e = 1;                 mpone.d[0] = mpone.d[1] = ONE;
     __dvd(x,y,&mpt1,p);          __mul(&mpt1,&mpt1,&mpt2,p);
     if (mpt1.d[0] != ZERO)       mpt1.d[0] = ONE;
     __add(&mpt2,&mpone,&mpt3,p); __mpsqrt(&mpt3,&mpt2,p);

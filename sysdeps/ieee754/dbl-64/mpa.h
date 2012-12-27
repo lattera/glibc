@@ -54,6 +54,8 @@ typedef struct {/* This structure holds the details of a multi-precision     */
 
 typedef union { int i[2]; double d; } number;
 
+extern const mp_no mpone;
+
 #define  X   x->d
 #define  Y   y->d
 #define  Z   z->d
