@@ -1,3 +1,9 @@
+2012-12-27  Bruno Haible  <bruno@clisp.org>
+
+	[BZ #14317]
+	* string/xpg-strerror.c (__xpg_strerror_r): Optimize, call strlen
+	only if needed.
+
 2012-12-27  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* sysdeps/ieee754/dbl-64/mpexp.c (__mpexp): Eliminate __mpexp_nn

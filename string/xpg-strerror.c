@@ -1,5 +1,4 @@
-/* Copyright (C) 1991, 1993, 1995-1998, 2000, 2002, 2004, 2010, 2011
-   Free Software Foundation, Inc.
+/* Copyright (C) 1991-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -28,20 +27,27 @@ int
 __xpg_strerror_r (int errnum, char *buf, size_t buflen)
 {
   const char *estr = __strerror_r (errnum, buf, buflen);
-  size_t estrlen = strlen (estr);
 
+  /* We know that __strerror_r returns buf (with a dynamically computed
+     string) if errnum is invalid, otherwise it returns a string whose
+     storage has indefinite extent.  */
   if (estr == buf)
     {
       assert (errnum < 0 || errnum >= _sys_nerr_internal
 	      || _sys_errlist_internal[errnum] == NULL);
       return EINVAL;
     }
-  assert (errnum >= 0 && errnum < _sys_nerr_internal
-	  && _sys_errlist_internal[errnum] != NULL);
+  else
+    {
+      assert (errnum >= 0 && errnum < _sys_nerr_internal
+	      && _sys_errlist_internal[errnum] != NULL);
 
-  /* Terminate the string in any case.  */
-  if (buflen > 0)
-    *((char *) __mempcpy (buf, estr, MIN (buflen - 1, estrlen))) = '\0';
+      size_t estrlen = strlen (estr);
 
-  return buflen <= estrlen ? ERANGE : 0;
+      /* Terminate the string in any case.  */
+      if (buflen > 0)
+	*((char *) __mempcpy (buf, estr, MIN (buflen - 1, estrlen))) = '\0';
+
+      return buflen <= estrlen ? ERANGE : 0;
+    }
 }
