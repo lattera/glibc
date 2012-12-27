@@ -81,12 +81,12 @@ __mpexp(mp_no *x, mp_no *y, int p) {
   __mul(x,&mpt1,&mps,p);
 
   /* Evaluate the polynomial. Put result in mpt2 */
-  mpk.e = 1;   mpk.d[0] = ONE;   mpk.d[1]=__mpexp_nn[n].d;
+  mpk.e = 1;   mpk.d[0] = ONE;   mpk.d[1]=n;
   __dvd(&mps,&mpk,&mpt1,p);
   __add(&mpone,&mpt1,&mpak,p);
   for (k=n-1; k>1; k--) {
     __mul(&mps,&mpak,&mpt1,p);
-    mpk.d[1]=__mpexp_nn[k].d;
+    mpk.d[1] = k;
     __dvd(&mpt1,&mpk,&mpt2,p);
     __add(&mpone,&mpt2,&mpak,p);
   }

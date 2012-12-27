@@ -28,7 +28,6 @@
 #define MPEXP_H
 
 extern const number __mpexp_twomm1[33] attribute_hidden;
-extern const number __mpexp_nn[9] attribute_hidden;
 extern const number __mpexp_radix attribute_hidden;
 extern const number __mpexp_radixi attribute_hidden;
 extern const number __mpexp_zero attribute_hidden;
@@ -74,18 +73,6 @@ extern const number __mpexp_half attribute_hidden;
 /**/                  {{0x3b300000, 0x00000000} }, /* 2**-76 */
 /**/                  {{0x3b100000, 0x00000000} }, /* 2**-78 */
 /**/                  {{0x3ae00000, 0x00000000} }, /* 2**-81 */
-  };
-  const number
-	       __mpexp_nn[9]={                     /* n      */
-/**/                  {{0x00000000, 0x00000000} }, /* 0      */
-/**/                  {{0x3ff00000, 0x00000000} }, /* 1      */
-/**/                  {{0x40000000, 0x00000000} }, /* 2      */
-/**/                  {{0x40080000, 0x00000000} }, /* 3      */
-/**/                  {{0x40100000, 0x00000000} }, /* 4      */
-/**/                  {{0x40140000, 0x00000000} }, /* 5      */
-/**/                  {{0x40180000, 0x00000000} }, /* 6      */
-/**/                  {{0x401c0000, 0x00000000} }, /* 7      */
-/**/                  {{0x40200000, 0x00000000} }, /* 8      */
   };
 
   const number
@@ -134,19 +121,6 @@ extern const number __mpexp_half attribute_hidden;
 /**/                  {{0x00000000, 0x3b100000} }, /* 2**-78 */
 /**/                  {{0x00000000, 0x3ae00000} }, /* 2**-81 */
   };
-  const number
-	       __mpexp_nn[9]={                     /* n      */
-/**/                  {{0x00000000, 0x00000000} }, /* 0      */
-/**/                  {{0x00000000, 0x3ff00000} }, /* 1      */
-/**/                  {{0x00000000, 0x40000000} }, /* 2      */
-/**/                  {{0x00000000, 0x40080000} }, /* 3      */
-/**/                  {{0x00000000, 0x40100000} }, /* 4      */
-/**/                  {{0x00000000, 0x40140000} }, /* 5      */
-/**/                  {{0x00000000, 0x40180000} }, /* 6      */
-/**/                  {{0x00000000, 0x401c0000} }, /* 7      */
-/**/                  {{0x00000000, 0x40200000} }, /* 8      */
-  };
-
   const number
 /**/ __mpexp_radix    = {{0x00000000, 0x41700000} }, /* 2**24  */
 /**/ __mpexp_radixi   = {{0x00000000, 0x3e700000} }, /* 2**-24 */
