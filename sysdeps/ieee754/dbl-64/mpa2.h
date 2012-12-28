@@ -30,65 +30,21 @@
 #ifndef MPA2_H
 #define MPA2_H
 
-
-#ifdef BIG_ENDI
-static const number
-/**/ radix          = {{0x41700000, 0x00000000} }, /* 2**24  */
-/**/ radixi         = {{0x3e700000, 0x00000000} }, /* 2**-24 */
-/**/ cutter         = {{0x44b00000, 0x00000000} }, /* 2**76  */
-/**/ zero           = {{0x00000000, 0x00000000} }, /*  0     */
-/**/ one            = {{0x3ff00000, 0x00000000} }, /*  1     */
-/**/ mone           = {{0xbff00000, 0x00000000} }, /* -1     */
-/**/ two            = {{0x40000000, 0x00000000} }, /*  2     */
-/**/ two5           = {{0x40400000, 0x00000000} }, /* 2**5   */
-/**/ two10          = {{0x40900000, 0x00000000} }, /* 2**10  */
-/**/ two18          = {{0x41100000, 0x00000000} }, /* 2**18  */
-/**/ two19          = {{0x41200000, 0x00000000} }, /* 2**19  */
-/**/ two23          = {{0x41600000, 0x00000000} }, /* 2**23  */
-/**/ two52          = {{0x43300000, 0x00000000} }, /* 2**52  */
-/**/ two57          = {{0x43800000, 0x00000000} }, /* 2**57  */
-/**/ two71          = {{0x44600000, 0x00000000} }, /* 2**71  */
-/**/ twom1032       = {{0x00000400, 0x00000000} }; /* 2**-1032 */
-
-#else
-#ifdef LITTLE_ENDI
-static const number
-/**/ radix          = {{0x00000000, 0x41700000} }, /* 2**24  */
-/**/ radixi         = {{0x00000000, 0x3e700000} }, /* 2**-24 */
-/**/ cutter         = {{0x00000000, 0x44b00000} }, /* 2**76  */
-/**/ zero           = {{0x00000000, 0x00000000} }, /*  0     */
-/**/ one            = {{0x00000000, 0x3ff00000} }, /*  1     */
-/**/ mone           = {{0x00000000, 0xbff00000} }, /* -1     */
-/**/ two            = {{0x00000000, 0x40000000} }, /*  2     */
-/**/ two5           = {{0x00000000, 0x40400000} }, /* 2**5   */
-/**/ two10          = {{0x00000000, 0x40900000} }, /* 2**10  */
-/**/ two18          = {{0x00000000, 0x41100000} }, /* 2**18  */
-/**/ two19          = {{0x00000000, 0x41200000} }, /* 2**19  */
-/**/ two23          = {{0x00000000, 0x41600000} }, /* 2**23  */
-/**/ two52          = {{0x00000000, 0x43300000} }, /* 2**52  */
-/**/ two57          = {{0x00000000, 0x43800000} }, /* 2**57  */
-/**/ two71          = {{0x00000000, 0x44600000} }, /* 2**71  */
-/**/ twom1032       = {{0x00000000, 0x00000400} }; /* 2**-1032 */
-
-#endif
-#endif
-
-#define  RADIX     radix.d
-#define  RADIXI    radixi.d
-#define  CUTTER    cutter.d
-#define  ZERO      zero.d
-#define  ONE       one.d
-#define  MONE      mone.d
-#define  TWO       two.d
-#define  TWO5      two5.d
-#define  TWO10     two10.d
-#define  TWO18     two18.d
-#define  TWO19     two19.d
-#define  TWO23     two23.d
-#define  TWO52     two52.d
-#define  TWO57     two57.d
-#define  TWO71     two71.d
-#define  TWOM1032  twom1032.d
-
+#define  RADIX     0x1.0p24		/* 2^24    */
+#define  RADIXI    0x1.0p-24		/* 2^-24   */
+#define  CUTTER    0x1.0p76		/* 2^76    */
+#define  ZERO      0.0			/* 0       */
+#define  ONE       1.0			/* 1       */
+#define  MONE      -1.0			/* -1      */
+#define  TWO       -2.0			/* -2      */
+#define  TWO5      0x1.0p5		/* 2^5     */
+#define  TWO10     0x1.0p10		/* 2^10    */
+#define  TWO18     0x1.0p18		/* 2^18    */
+#define  TWO19     0x1.0p19		/* 2^19    */
+#define  TWO23     0x1.0p23		/* 2^23    */
+#define  TWO52     0x1.0p52		/* 2^52    */
+#define  TWO57     0x1.0p57		/* 2^57    */
+#define  TWO71     0x1.0p71		/* 2^71    */
+#define  TWOM1032  0x1.0p-1032		/* 2^-1032 */
 
 #endif

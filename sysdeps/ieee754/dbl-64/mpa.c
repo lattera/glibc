@@ -139,7 +139,7 @@ static void __cpymn(const mp_no *x, int m, mp_no *y, int n) {
 /* number *y, normalized case  (|x| >= 2**(-1022))) */
 static void norm(const mp_no *x, double *y, int p)
 {
-  #define R  radixi.d
+  #define R  RADIXI
   int i;
 #if 0
   int k;
@@ -199,7 +199,7 @@ static void denorm(const mp_no *x, double *y, int p)
   double a,v;
 #endif
 
-#define R  radixi.d
+#define R  RADIXI
   if (EX<-44 || (EX==-44 && X[1]<TWO5))
      { *y=ZERO; return; }
 

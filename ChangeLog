@@ -1,3 +1,13 @@
+2012-12-28  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* sysdeps/ieee754/dbl-64/mpa.c (norm): Define R as RADIXI.
+	(norm): Likewise.
+	* sysdeps/ieee754/dbl-64/mpa2.h: Remove all static const
+	variables with preprocessor constants.
+	* sysdeps/ieee754/dbl-64/mpatan.h: Likewise.
+	* sysdeps/ieee754/dbl-64/mpexp.h: Likewise.
+	* sysdeps/ieee754/dbl-64/mpsqrt.h: Likewise.
+
 2012-12-27  Bruno Haible  <bruno@clisp.org>
 
 	[BZ #14317]

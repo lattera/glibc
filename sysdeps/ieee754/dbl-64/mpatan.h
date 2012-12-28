@@ -30,8 +30,6 @@
 extern const number __atan_xm[8] attribute_hidden;
 extern const number __atan_twonm1[33] attribute_hidden;
 extern const number __atan_twom[8] attribute_hidden;
-extern const number __atan_one attribute_hidden;
-extern const number __atan_two attribute_hidden;
 extern const int __atan_np[33] attribute_hidden;
 
 
@@ -97,10 +95,6 @@ extern const int __atan_np[33] attribute_hidden;
 /**/                  {{0x40600000, 0x00000000} }, /* 128.0  */
 		    };
 
-  const number
-/**/ __atan_one     = {{0x3ff00000, 0x00000000} }, /* 1      */
-/**/ __atan_two     = {{0x40000000, 0x00000000} }; /* 2      */
-
 #else
 #ifdef LITTLE_ENDI
 
@@ -164,10 +158,6 @@ __atan_twonm1[33] = {                             /* 2n-1   */
 /**/                  {{0x00000000, 0x40600000} }, /* 128.0  */
 		    };
 
-  const number
-/**/ __atan_one    = {{0x00000000, 0x3ff00000} }, /* 1      */
-/**/ __atan_two    = {{0x00000000, 0x40000000} }; /* 2      */
-
 #endif
 #endif
 
@@ -178,5 +168,5 @@ __atan_twonm1[33] = {                             /* 2n-1   */
 #endif
 #endif
 
-#define  ONE       __atan_one.d
-#define  TWO       __atan_two.d
+#define  ONE       1.0
+#define  TWO       2.0
