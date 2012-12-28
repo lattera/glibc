@@ -1,5 +1,8 @@
 2012-12-28  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
+	* misc/sys/cdefs.h(__glibc_likely): Wrap __builtin_expect for
+	TRUE case.
+
 	* sysdeps/ieee754/dbl-64/mpa.c (norm): Define R as RADIXI.
 	(norm): Likewise.
 	* sysdeps/ieee754/dbl-64/mpa2.h: Remove all static const
