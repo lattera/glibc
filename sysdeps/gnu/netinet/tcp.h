@@ -173,7 +173,9 @@ enum
 # define TCPI_OPT_TIMESTAMPS	1
 # define TCPI_OPT_SACK		2
 # define TCPI_OPT_WSCALE	4
-# define TCPI_OPT_ECN		8
+# define TCPI_OPT_ECN		8  /* ECN was negociated at TCP session init */
+# define TCPI_OPT_ECN_SEEN	16 /* we received at least one packet with ECT */
+# define TCPI_OPT_SYN_DATA	32 /* SYN-ACK acked data in SYN sent or rcvd */
 
 /* Values for tcpi_state.  */
 enum tcp_ca_state
