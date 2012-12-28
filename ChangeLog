@@ -1,5 +1,9 @@
 2012-12-28  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
+	* sysdeps/ieee754/dbl-64/mpatan.c (__mpatan): Remove
+	__ATAN_TWOM.
+	* sysdeps/ieee754/dbl-64/mpatan.h: Likewise.
+
 	* sysdeps/ieee754/dbl-64/atnat.h: Replaced constants with
 	their values.
 	* sysdeps/ieee754/dbl-64/atnat2.h: Likewise.

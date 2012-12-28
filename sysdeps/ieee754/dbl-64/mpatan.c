@@ -1,7 +1,7 @@
 /*
  * IBM Accurate Mathematical Library
  * written by International Business Machines Corp.
- * Copyright (C) 2001, 2011 Free Software Foundation
+ * Copyright (C) 2001-2012 Free Software Foundation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -98,7 +98,7 @@ __mpatan(mp_no *x, mp_no *y, int p) {
     __sub(&mps,&mpt1,&mpt,p);
 
 			  /* Compute Atan(x) */
-    mptwoim1.d[1] = __atan_twom[m].d;
+    mptwoim1.d[1] = 1 << m;
     __mul(&mptwoim1,&mpt,y,p);
 
   return;
