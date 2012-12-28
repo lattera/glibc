@@ -1,7 +1,7 @@
 /*
  * IBM Accurate Mathematical Library
  * Written by International Business Machines Corp.
- * Copyright (C) 2001 Free Software Foundation, Inc.
+ * Copyright (C) 2001-2012 Free Software Foundation, Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -80,10 +80,6 @@
 /**/ d19            = {{0x3faaf286, 0xbca1af28} }, /*  1/19     */
 /**/ d20            = {{0xbfa99999, 0x9999999a} }, /* -1/20     */
   /* constants    */
-/**/ zero           = {{0x00000000, 0x00000000} }, /* 0         */
-/**/ one            = {{0x3ff00000, 0x00000000} }, /* 1         */
-/**/ half           = {{0x3fe00000, 0x00000000} }, /* 1/2       */
-/**/ mhalf          = {{0xbfe00000, 0x00000000} }, /* -1/2      */
 /**/ sqrt_2         = {{0x3ff6a09e, 0x667f3bcc} }, /* sqrt(2)   */
 /**/ h1             = {{0x3fd2e000, 0x00000000} }, /* 151/2**9  */
 /**/ h2             = {{0x3f669000, 0x00000000} }, /* 361/2**17 */
@@ -156,10 +152,6 @@
 /**/ d19            = {{0xbca1af28, 0x3faaf286} }, /*  1/19     */
 /**/ d20            = {{0x9999999a, 0xbfa99999} }, /* -1/20     */
   /* constants    */
-/**/ zero           = {{0x00000000, 0x00000000} }, /* 0         */
-/**/ one            = {{0x00000000, 0x3ff00000} }, /* 1         */
-/**/ half           = {{0x00000000, 0x3fe00000} }, /* 1/2       */
-/**/ mhalf          = {{0x00000000, 0xbfe00000} }, /* -1/2      */
 /**/ sqrt_2         = {{0x667f3bcc, 0x3ff6a09e} }, /* sqrt(2)   */
 /**/ h1             = {{0x00000000, 0x3fd2e000} }, /* 151/2**9  */
 /**/ h2             = {{0x00000000, 0x3f669000} }, /* 361/2**17 */
@@ -181,10 +173,10 @@
 #endif
 #endif
 
-#define  ZERO      zero.d
-#define  ONE       one.d
-#define  HALF      half.d
-#define  MHALF     mhalf.d
+#define  ZERO      0.0		/* 0 */
+#define  ONE       1.0		/* 1 */
+#define  HALF      0x1.0p-1	/* 1/2 */
+#define  MHALF     -0x1.0p-1	/* -1/2 */
 #define  SQRT_2    sqrt_2.d
 #define  DEL_U     delu.d
 #define  DEL_V     delv.d

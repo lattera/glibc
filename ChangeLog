@@ -1,3 +1,12 @@
+2012-12-28  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* sysdeps/ieee754/dbl-64/atnat.h: Replaced constants with
+	their values.
+	* sysdeps/ieee754/dbl-64/atnat2.h: Likewise.
+	* sysdeps/ieee754/dbl-64/s_tan.c (tan): Likewise.
+	* sysdeps/ieee754/dbl-64/ulog.h: Likewise.
+	* sysdeps/ieee754/dbl-64/utan.h: Likewise.
+
 2012-12-28  Andreas Jaeger  <aj@suse.de>
 
 	* elf/elf.h (NT_S390_TDB, NT_FILE, NT_SIGINFO): Define.  New

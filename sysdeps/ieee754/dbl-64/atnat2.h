@@ -2,7 +2,7 @@
 /*
  * IBM Accurate Mathematical Library
  * Written by International Business Machines Corp.
- * Copyright (C) 2001 Free Software Foundation, Inc.
+ * Copyright (C) 2001-2012 Free Software Foundation, Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -57,9 +57,6 @@
 /**/ f17            = {{0x3fae1e1e, 0x1e1e1e1e} }, /*  1/17     */
 /**/ f19            = {{0xbfaaf286, 0xbca1af28} }, /* -1/19     */
   /* constants    */
-/**/ zero           = {{0x00000000, 0x00000000} }, /*  0            */
-/**/ mzero          = {{0x80000000, 0x00000000} }, /* -0            */
-/**/ one            = {{0x3ff00000, 0x00000000} }, /*  1            */
 /**/ inv16          = {{0x3fb00000, 0x00000000} }, /*  1/16         */
 /**/ opi            = {{0x400921fb, 0x54442d18} }, /*  pi           */
 /**/ opi1           = {{0x3ca1a626, 0x33145c07} }, /*  pi-opi       */
@@ -95,11 +92,8 @@
 /**/                  {{0x23c6eee8, 0x00000000} }, /*  2.465e-136   */
 /**/                  {{0x11c6ed16, 0x00000000} }},/*  4.955e-223   */
 /**/ ue             = {{0x38900e9d, 0x00000000} }, /*  3.02e-36     */
-/**/ two8           = {{0x40700000, 0x00000000} }, /*  2**8=256     */
-/**/ two52          = {{0x43300000, 0x00000000} }, /*  2**52        */
 /**/ two500         = {{0x5f300000, 0x00000000} }, /*  2**500       */
-/**/ twom500        = {{0x20b00000, 0x00000000} }, /*  2**(-500)    */
-/**/ twom1022       = {{0x00100000, 0x00000000} }; /*  2**(-1022)   */
+/**/ twom500        = {{0x20b00000, 0x00000000} }; /*  2**(-500)    */
 
 #else
 #ifdef LITTLE_ENDI
@@ -127,9 +121,6 @@
 /**/ f17            = {{0x1e1e1e1e, 0x3fae1e1e} }, /*  1/17     */
 /**/ f19            = {{0xbca1af28, 0xbfaaf286} }, /* -1/19     */
   /* constants    */
-/**/ zero           = {{0x00000000, 0x00000000} }, /*  0            */
-/**/ mzero          = {{0x00000000, 0x80000000} }, /* -0            */
-/**/ one            = {{0x00000000, 0x3ff00000} }, /*  1            */
 /**/ inv16          = {{0x00000000, 0x3fb00000} }, /*  1/16         */
 /**/ opi            = {{0x54442d18, 0x400921fb} }, /*  pi           */
 /**/ opi1           = {{0x33145c07, 0x3ca1a626} }, /*  pi-opi       */
@@ -165,20 +156,17 @@
 /**/                  {{0x00000000, 0x23c6eee8} }, /*  2.465e-136   */
 /**/                  {{0x00000000, 0x11c6ed16} }},/*  4.955e-223   */
 /**/ ue             = {{0x00000000, 0x38900e9d} }, /*  3.02e-36     */
-/**/ two8           = {{0x00000000, 0x40700000} }, /*  2**8=256     */
-/**/ two52          = {{0x00000000, 0x43300000} }, /*  2**52        */
 /**/ two500         = {{0x00000000, 0x5f300000} }, /*  2**500       */
-/**/ twom500        = {{0x00000000, 0x20b00000} }, /*  2**(-500)    */
-/**/ twom1022       = {{0x00000000, 0x00100000} }; /*  2**(-1022)   */
+/**/ twom500        = {{0x00000000, 0x20b00000} }; /*  2**(-500)    */
 
 #endif
 #endif
 
-#define  ZERO      zero.d
-#define  MZERO     mzero.d
-#define  ONE       one.d
-#define  TWO8      two8.d
-#define  TWO52     two52.d
-#define  TWOM1022  twom1022.d
+#define  ZERO      0.0		/* 0 */
+#define  MZERO     -0.0		/* 0 with the sign bit set */
+#define  ONE       1.0		/* 1 */
+#define  TWO8      0x1.0p8	/* 2^8 */
+#define  TWO52     0x1.0p52	/* 2^52 */
+#define  TWOM1022  0x1.0p-1022	/* 2^-1022 */
 
 #endif

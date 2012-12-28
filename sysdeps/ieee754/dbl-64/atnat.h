@@ -1,7 +1,7 @@
 /*
  * IBM Accurate Mathematical Library
  * Written by International Business Machines Corp.
- * Copyright (C) 2001 Free Software Foundation, Inc.
+ * Copyright (C) 2001-2012 Free Software Foundation, Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -52,8 +52,6 @@
 /**/ f17            = {{0x3fae1e1e, 0x1e1e1e1e} }, /*  1/17     */
 /**/ f19            = {{0xbfaaf286, 0xbca1af28} }, /* -1/19     */
   /* constants    */
-/**/ zero           = {{0x00000000, 0x00000000} }, /*  0            */
-/**/ one            = {{0x3ff00000, 0x00000000} }, /*  1            */
 /**/ a              = {{0x3e4bb67a, 0x00000000} }, /*  1.290e-8     */
 /**/ b              = {{0x3fb00000, 0x00000000} }, /*  1/16         */
 /**/ c              = {{0x3ff00000, 0x00000000} }, /*  1            */
@@ -77,9 +75,7 @@
 /**/ u9[M]          ={{{0x38c1aa5b, 0x00000000} }, /* 2.658e-35     */
 /**/                  {{0x35c1aa4d, 0x00000000} }, /* 9.443e-50     */
 /**/                  {{0x32c1aa88, 0x00000000} }, /* 3.355e-64     */
-/**/                  {{0x11c1aa56, 0x00000000} }},/* 3.818e-223    */
-/**/ two8           = {{0x40700000, 0x00000000} }, /*  2**8=256     */
-/**/ two52          = {{0x43300000, 0x00000000} }; /*  2**52        */
+/**/                  {{0x11c1aa56, 0x00000000} }};/* 3.818e-223    */
 
 #else
 #ifdef LITTLE_ENDI
@@ -106,8 +102,6 @@
 /**/ f17            = {{0x1e1e1e1e, 0x3fae1e1e} }, /*  1/17     */
 /**/ f19            = {{0xbca1af28, 0xbfaaf286} }, /* -1/19     */
   /* constants    */
-/**/ zero           = {{0x00000000, 0x00000000} }, /*  0            */
-/**/ one            = {{0x00000000, 0x3ff00000} }, /*  1            */
 /**/ a              = {{0x00000000, 0x3e4bb67a} }, /*  1.290e-8     */
 /**/ b              = {{0x00000000, 0x3fb00000} }, /*  1/16         */
 /**/ c              = {{0x00000000, 0x3ff00000} }, /*  1            */
@@ -131,15 +125,13 @@
 /**/ u9[M]          ={{{0x00000000, 0x38c1aa5b} }, /* 2.658e-35     */
 /**/                  {{0x00000000, 0x35c1aa4d} }, /* 9.443e-50     */
 /**/                  {{0x00000000, 0x32c1aa88} }, /* 3.355e-64     */
-/**/                  {{0x00000000, 0x11c1aa56} }},/* 3.818e-223    */
-/**/ two8           = {{0x00000000, 0x40700000} }, /*  2**8=256     */
-/**/ two52          = {{0x00000000, 0x43300000} }; /*  2**52        */
+/**/                  {{0x00000000, 0x11c1aa56} }};/* 3.818e-223    */
 
 #endif
 #endif
 
-#define  ZERO      zero.d
-#define  ONE       one.d
+#define  ZERO      0.0
+#define  ONE       1.0
 #define  A         a.d
 #define  B         b.d
 #define  C         c.d
@@ -160,7 +152,7 @@
 #define  U6        u6.d
 #define  U7        u7.d
 #define  U8        u8.d
-#define  TWO8      two8.d
-#define  TWO52     two52.d
+#define  TWO8      0x1.0p8	/* 2^8 */
+#define  TWO52     0x1.0p52	/* 2^52 */
 
 #endif

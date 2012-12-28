@@ -1,7 +1,7 @@
 /*
  * IBM Accurate Mathematical Library
  * Written by International Business Machines Corp.
- * Copyright (C) 2001 Free Software Foundation, Inc.
+ * Copyright (C) 2001-2012 Free Software Foundation, Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -81,11 +81,7 @@
 /**/ e1             = {{0x3FC11112, 0xE0A6B45F} }, /*    .      */
 
   /* constants    */
-/**/ zero           = {{0x00000000, 0x00000000} }, /* 0         */
-/**/ one            = {{0x3ff00000, 0x00000000} }, /* 1         */
-/**/ mone           = {{0xbff00000, 0x00000000} }, /*-1         */
 /**/ mfftnhf        = {{0xc02f0000, 0x00000000} }, /*-15.5      */
-/**/ two8           = {{0x40700000, 0x00000000} }, /* 256       */
 
 /**/ g1             = {{0x3e4b096c, 0x00000000} }, /* 1.259e-8  */
 /**/ g2             = {{0x3faf212d, 0x00000000} }, /* 0.0608    */
@@ -202,11 +198,7 @@
 /**/ e1             = {{0xE0A6B45F, 0x3FC11112} }, /*    .      */
 
   /* constants    */
-/**/ zero           = {{0x00000000, 0x00000000} }, /* 0         */
-/**/ one            = {{0x00000000, 0x3ff00000} }, /* 1         */
-/**/ mone           = {{0x00000000, 0xbff00000} }, /*-1         */
 /**/ mfftnhf        = {{0x00000000, 0xc02f0000} }, /*-15.5      */
-/**/ two8           = {{0x00000000, 0x40700000} }, /* 256       */
 
 /**/ g1             = {{0x00000000, 0x3e4b096c} }, /* 1.259e-8  */
 /**/ g2             = {{0x00000000, 0x3faf212d} }, /* 0.0608    */
@@ -271,9 +263,9 @@
 #endif
 
 
-#define  ZERO      zero.d
-#define  ONE       one.d
-#define  MONE      mone.d
-#define  TWO8      two8.d
+#define  ZERO      0.0
+#define  ONE       1.0
+#define  MONE      -1.0
+#define  TWO8      0x1.0p8	/* 2^8 */
 
 #endif

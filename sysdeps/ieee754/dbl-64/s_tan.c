@@ -1,7 +1,7 @@
 /*
  * IBM Accurate Mathematical Library
  * written by International Business Machines Corp.
- * Copyright (C) 2001, 2009, 2011 Free Software Foundation
+ * Copyright (C) 2001-2012 Free Software Foundation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -84,7 +84,7 @@ tan(double x) {
     goto ret;
   }
 
-  w=(x<ZERO) ? -x : x;
+  w=(x<0.0) ? -x : x;
 
   /* (I) The case abs(x) <= 1.259e-8 */
   if (w<=g1.d) { retval = x; goto ret; }
@@ -101,7 +101,7 @@ tan(double x) {
     c1 = x2*(a15.d+x2*(a17.d+x2*(a19.d+x2*(a21.d+x2*(a23.d+x2*(a25.d+
 	 x2*a27.d))))));
     EMULV(x,x,x2,xx2,t1,t2,t3,t4,t5)
-    ADD2(a13.d,aa13.d,c1,zero.d,c2,cc2,t1,t2)
+    ADD2(a13.d,aa13.d,c1,0.0,c2,cc2,t1,t2)
     MUL2(x2,xx2,c2,cc2,c1,cc1,t1,t2,t3,t4,t5,t6,t7,t8)
     ADD2(a11.d,aa11.d,c1,cc1,c2,cc2,t1,t2)
     MUL2(x2,xx2,c2,cc2,c1,cc1,t1,t2,t3,t4,t5,t6,t7,t8)
@@ -113,8 +113,8 @@ tan(double x) {
     MUL2(x2,xx2,c2,cc2,c1,cc1,t1,t2,t3,t4,t5,t6,t7,t8)
     ADD2(a3.d ,aa3.d ,c1,cc1,c2,cc2,t1,t2)
     MUL2(x2,xx2,c2,cc2,c1,cc1,t1,t2,t3,t4,t5,t6,t7,t8)
-    MUL2(x ,zero.d,c1,cc1,c2,cc2,t1,t2,t3,t4,t5,t6,t7,t8)
-    ADD2(x    ,zero.d,c2,cc2,c1,cc1,t1,t2)
+    MUL2(x ,0.0,c1,cc1,c2,cc2,t1,t2,t3,t4,t5,t6,t7,t8)
+    ADD2(x    ,0.0,c2,cc2,c1,cc1,t1,t2)
     if ((y=c1+(cc1-u2.d*c1)) == c1+(cc1+u2.d*c1)) { retval = y; goto ret; }
     retval = tanMp(x);
     goto ret;
@@ -125,11 +125,11 @@ tan(double x) {
 
     /* First stage */
     i = ((int) (mfftnhf.d+TWO8*w));
-    z = w-xfg[i][0].d;  z2 = z*z;   s = (x<ZERO) ? MONE : ONE;
+    z = w-xfg[i][0].d;  z2 = z*z;   s = (x<0.0) ? MONE : ONE;
     pz = z+z*z2*(e0.d+z2*e1.d);
     fi = xfg[i][1].d;   gi = xfg[i][2].d;   t2 = pz*(gi+fi)/(gi-pz);
     if ((y=fi+(t2-fi*u3.d))==fi+(t2+fi*u3.d)) { retval = (s*y); goto ret; }
-    t3 = (t2<ZERO) ? -t2 : t2;
+    t3 = (t2<0.0) ? -t2 : t2;
     t4 = fi*ua3.d+t3*ub3.d;
     if ((y=fi+(t2-t4))==fi+(t2+t4)) { retval = (s*y); goto ret; }
 
@@ -137,16 +137,16 @@ tan(double x) {
     ffi = xfg[i][3].d;
     c1 = z2*(a7.d+z2*(a9.d+z2*a11.d));
     EMULV(z,z,z2,zz2,t1,t2,t3,t4,t5)
-    ADD2(a5.d,aa5.d,c1,zero.d,c2,cc2,t1,t2)
+    ADD2(a5.d,aa5.d,c1,0.0,c2,cc2,t1,t2)
     MUL2(z2,zz2,c2,cc2,c1,cc1,t1,t2,t3,t4,t5,t6,t7,t8)
     ADD2(a3.d,aa3.d,c1,cc1,c2,cc2,t1,t2)
     MUL2(z2,zz2,c2,cc2,c1,cc1,t1,t2,t3,t4,t5,t6,t7,t8)
-    MUL2(z ,zero.d,c1,cc1,c2,cc2,t1,t2,t3,t4,t5,t6,t7,t8)
-    ADD2(z ,zero.d,c2,cc2,c1,cc1,t1,t2)
+    MUL2(z ,0.0,c1,cc1,c2,cc2,t1,t2,t3,t4,t5,t6,t7,t8)
+    ADD2(z ,0.0,c2,cc2,c1,cc1,t1,t2)
 
     ADD2(fi ,ffi,c1,cc1,c2,cc2,t1,t2)
     MUL2(fi ,ffi,c1,cc1,c3,cc3,t1,t2,t3,t4,t5,t6,t7,t8)
-    SUB2(one.d,zero.d,c3,cc3,c1,cc1,t1,t2)
+    SUB2(1.0,0.0,c3,cc3,c1,cc1,t1,t2)
     DIV2(c2,cc2,c1,cc1,c3,cc3,t1,t2,t3,t4,t5,t6,t7,t8,t9,t10)
 
       if ((y=c3+(cc3-u4.d*c3))==c3+(cc3+u4.d*c3)) { retval = (s*y); goto ret; }
@@ -165,7 +165,7 @@ tan(double x) {
     da = xn*mp3.d;
     a=t1-da;
     da = (t1-a)-da;
-    if (a<ZERO)  {ya=-a;  yya=-da;  sy=MONE;}
+    if (a<0.0)  {ya=-a;  yya=-da;  sy=MONE;}
     else         {ya= a;  yya= da;  sy= ONE;}
 
     /* (IV),(V) The case 0.787 < abs(x) <= 25,    abs(y) <= 1e-7 */
@@ -178,7 +178,7 @@ tan(double x) {
       if (n) {
 	/* First stage -cot */
 	EADD(a,t2,b,db)
-	DIV2(one.d,zero.d,b,db,c,dc,t1,t2,t3,t4,t5,t6,t7,t8,t9,t10)
+	DIV2(1.0,0.0,b,db,c,dc,t1,t2,t3,t4,t5,t6,t7,t8,t9,t10)
 	if ((y=c+(dc-u6.d*c))==c+(dc+u6.d*c)) { retval = (-y); goto ret; } }
       else {
 	/* First stage tan */
@@ -202,7 +202,7 @@ tan(double x) {
       MUL2(a,da,a,da,x2,xx2,t1,t2,t3,t4,t5,t6,t7,t8)
       c1 = x2*(a15.d+x2*(a17.d+x2*(a19.d+x2*(a21.d+x2*(a23.d+x2*(a25.d+
 	   x2*a27.d))))));
-      ADD2(a13.d,aa13.d,c1,zero.d,c2,cc2,t1,t2)
+      ADD2(a13.d,aa13.d,c1,0.0,c2,cc2,t1,t2)
       MUL2(x2,xx2,c2,cc2,c1,cc1,t1,t2,t3,t4,t5,t6,t7,t8)
       ADD2(a11.d,aa11.d,c1,cc1,c2,cc2,t1,t2)
       MUL2(x2,xx2,c2,cc2,c1,cc1,t1,t2,t3,t4,t5,t6,t7,t8)
@@ -219,7 +219,7 @@ tan(double x) {
 
       if (n) {
 	/* Second stage -cot */
-	DIV2(one.d,zero.d,c1,cc1,c2,cc2,t1,t2,t3,t4,t5,t6,t7,t8,t9,t10)
+	DIV2(1.0,0.0,c1,cc1,c2,cc2,t1,t2,t3,t4,t5,t6,t7,t8,t9,t10)
 	if ((y=c2+(cc2-u8.d*c2)) == c2+(cc2+u8.d*c2)) { retval = (-y); goto ret; } }
       else {
 	/* Second stage tan */
@@ -240,14 +240,14 @@ tan(double x) {
       /* -cot */
       t2 = pz*(fi+gi)/(fi+pz);
       if ((y=gi-(t2-gi*u10.d))==gi-(t2+gi*u10.d)) { retval = (-sy*y); goto ret; }
-      t3 = (t2<ZERO) ? -t2 : t2;
+      t3 = (t2<0.0) ? -t2 : t2;
       t4 = gi*ua10.d+t3*ub10.d;
       if ((y=gi-(t2-t4))==gi-(t2+t4)) { retval = (-sy*y); goto ret; } }
     else   {
       /* tan */
       t2 = pz*(gi+fi)/(gi-pz);
       if ((y=fi+(t2-fi*u9.d))==fi+(t2+fi*u9.d)) { retval = (sy*y); goto ret; }
-      t3 = (t2<ZERO) ? -t2 : t2;
+      t3 = (t2<0.0) ? -t2 : t2;
       t4 = fi*ua9.d+t3*ub9.d;
       if ((y=fi+(t2-t4))==fi+(t2+t4)) { retval = (sy*y); goto ret; } }
 
@@ -256,7 +256,7 @@ tan(double x) {
     EADD(z0,yya,z,zz)
     MUL2(z,zz,z,zz,z2,zz2,t1,t2,t3,t4,t5,t6,t7,t8)
     c1 = z2*(a7.d+z2*(a9.d+z2*a11.d));
-    ADD2(a5.d,aa5.d,c1,zero.d,c2,cc2,t1,t2)
+    ADD2(a5.d,aa5.d,c1,0.0,c2,cc2,t1,t2)
     MUL2(z2,zz2,c2,cc2,c1,cc1,t1,t2,t3,t4,t5,t6,t7,t8)
     ADD2(a3.d,aa3.d,c1,cc1,c2,cc2,t1,t2)
     MUL2(z2,zz2,c2,cc2,c1,cc1,t1,t2,t3,t4,t5,t6,t7,t8)
@@ -265,7 +265,7 @@ tan(double x) {
 
     ADD2(fi ,ffi,c1,cc1,c2,cc2,t1,t2)
     MUL2(fi ,ffi,c1,cc1,c3,cc3,t1,t2,t3,t4,t5,t6,t7,t8)
-    SUB2(one.d,zero.d,c3,cc3,c1,cc1,t1,t2)
+    SUB2(1.0,0.0,c3,cc3,c1,cc1,t1,t2)
 
     if (n) {
       /* -cot */
@@ -295,7 +295,7 @@ tan(double x) {
     a = t - t1;
     da = ((t-a)-t1)+da;
     EADD(a,da,t1,t2)   a=t1;  da=t2;
-    if (a<ZERO)  {ya=-a;  yya=-da;  sy=MONE;}
+    if (a<0.0)  {ya=-a;  yya=-da;  sy=MONE;}
     else         {ya= a;  yya= da;  sy= ONE;}
 
     /* (+++) The case 25 < abs(x) <= 1e8,    abs(y) <= 1e-7 */
@@ -308,7 +308,7 @@ tan(double x) {
       if (n) {
 	/* First stage -cot */
 	EADD(a,t2,b,db)
-	DIV2(one.d,zero.d,b,db,c,dc,t1,t2,t3,t4,t5,t6,t7,t8,t9,t10)
+	DIV2(1.0,0.0,b,db,c,dc,t1,t2,t3,t4,t5,t6,t7,t8,t9,t10)
 	if ((y=c+(dc-u14.d*c))==c+(dc+u14.d*c)) { retval = (-y); goto ret; } }
       else {
 	/* First stage tan */
@@ -318,7 +318,7 @@ tan(double x) {
       MUL2(a,da,a,da,x2,xx2,t1,t2,t3,t4,t5,t6,t7,t8)
       c1 = x2*(a15.d+x2*(a17.d+x2*(a19.d+x2*(a21.d+x2*(a23.d+x2*(a25.d+
 	   x2*a27.d))))));
-      ADD2(a13.d,aa13.d,c1,zero.d,c2,cc2,t1,t2)
+      ADD2(a13.d,aa13.d,c1,0.0,c2,cc2,t1,t2)
       MUL2(x2,xx2,c2,cc2,c1,cc1,t1,t2,t3,t4,t5,t6,t7,t8)
       ADD2(a11.d,aa11.d,c1,cc1,c2,cc2,t1,t2)
       MUL2(x2,xx2,c2,cc2,c1,cc1,t1,t2,t3,t4,t5,t6,t7,t8)
@@ -335,7 +335,7 @@ tan(double x) {
 
       if (n) {
 	/* Second stage -cot */
-	DIV2(one.d,zero.d,c1,cc1,c2,cc2,t1,t2,t3,t4,t5,t6,t7,t8,t9,t10)
+	DIV2(1.0,0.0,c1,cc1,c2,cc2,t1,t2,t3,t4,t5,t6,t7,t8,t9,t10)
 	if ((y=c2+(cc2-u16.d*c2)) == c2+(cc2+u16.d*c2)) { retval = (-y); goto ret; } }
       else {
 	/* Second stage tan */
@@ -355,14 +355,14 @@ tan(double x) {
       /* -cot */
       t2 = pz*(fi+gi)/(fi+pz);
       if ((y=gi-(t2-gi*u18.d))==gi-(t2+gi*u18.d)) { retval = (-sy*y); goto ret; }
-      t3 = (t2<ZERO) ? -t2 : t2;
+      t3 = (t2<0.0) ? -t2 : t2;
       t4 = gi*ua18.d+t3*ub18.d;
       if ((y=gi-(t2-t4))==gi-(t2+t4)) { retval = (-sy*y); goto ret; } }
     else   {
       /* tan */
       t2 = pz*(gi+fi)/(gi-pz);
       if ((y=fi+(t2-fi*u17.d))==fi+(t2+fi*u17.d)) { retval = (sy*y); goto ret; }
-      t3 = (t2<ZERO) ? -t2 : t2;
+      t3 = (t2<0.0) ? -t2 : t2;
       t4 = fi*ua17.d+t3*ub17.d;
       if ((y=fi+(t2-t4))==fi+(t2+t4)) { retval = (sy*y); goto ret; } }
 
@@ -371,7 +371,7 @@ tan(double x) {
     EADD(z0,yya,z,zz)
     MUL2(z,zz,z,zz,z2,zz2,t1,t2,t3,t4,t5,t6,t7,t8)
     c1 = z2*(a7.d+z2*(a9.d+z2*a11.d));
-    ADD2(a5.d,aa5.d,c1,zero.d,c2,cc2,t1,t2)
+    ADD2(a5.d,aa5.d,c1,0.0,c2,cc2,t1,t2)
     MUL2(z2,zz2,c2,cc2,c1,cc1,t1,t2,t3,t4,t5,t6,t7,t8)
     ADD2(a3.d,aa3.d,c1,cc1,c2,cc2,t1,t2)
     MUL2(z2,zz2,c2,cc2,c1,cc1,t1,t2,t3,t4,t5,t6,t7,t8)
@@ -380,7 +380,7 @@ tan(double x) {
 
     ADD2(fi ,ffi,c1,cc1,c2,cc2,t1,t2)
     MUL2(fi ,ffi,c1,cc1,c3,cc3,t1,t2,t3,t4,t5,t6,t7,t8)
-    SUB2(one.d,zero.d,c3,cc3,c1,cc1,t1,t2)
+    SUB2(1.0,0.0,c3,cc3,c1,cc1,t1,t2)
 
     if (n) {
       /* -cot */
@@ -398,7 +398,7 @@ tan(double x) {
   /* Range reduction by algorithm iii */
   n = (__branred(x,&a,&da)) & 0x00000001;
   EADD(a,da,t1,t2)   a=t1;  da=t2;
-  if (a<ZERO)  {ya=-a;  yya=-da;  sy=MONE;}
+  if (a<0.0)  {ya=-a;  yya=-da;  sy=MONE;}
   else         {ya= a;  yya= da;  sy= ONE;}
 
   /* (+++) The case 1e8 < abs(x) < 2**1024,    abs(y) <= 1e-7 */
@@ -411,7 +411,7 @@ tan(double x) {
     if (n) {
       /* First stage -cot */
       EADD(a,t2,b,db)
-      DIV2(one.d,zero.d,b,db,c,dc,t1,t2,t3,t4,t5,t6,t7,t8,t9,t10)
+      DIV2(1.0,0.0,b,db,c,dc,t1,t2,t3,t4,t5,t6,t7,t8,t9,t10)
       if ((y=c+(dc-u22.d*c))==c+(dc+u22.d*c)) { retval = (-y); goto ret; } }
     else {
       /* First stage tan */
@@ -426,7 +426,7 @@ tan(double x) {
     MUL2(a,da,a,da,x2,xx2,t1,t2,t3,t4,t5,t6,t7,t8)
     c1 = x2*(a15.d+x2*(a17.d+x2*(a19.d+x2*(a21.d+x2*(a23.d+x2*(a25.d+
 	 x2*a27.d))))));
-    ADD2(a13.d,aa13.d,c1,zero.d,c2,cc2,t1,t2)
+    ADD2(a13.d,aa13.d,c1,0.0,c2,cc2,t1,t2)
     MUL2(x2,xx2,c2,cc2,c1,cc1,t1,t2,t3,t4,t5,t6,t7,t8)
     ADD2(a11.d,aa11.d,c1,cc1,c2,cc2,t1,t2)
     MUL2(x2,xx2,c2,cc2,c1,cc1,t1,t2,t3,t4,t5,t6,t7,t8)
@@ -443,7 +443,7 @@ tan(double x) {
 
     if (n) {
       /* Second stage -cot */
-      DIV2(one.d,zero.d,c1,cc1,c2,cc2,t1,t2,t3,t4,t5,t6,t7,t8,t9,t10)
+      DIV2(1.0,0.0,c1,cc1,c2,cc2,t1,t2,t3,t4,t5,t6,t7,t8,t9,t10)
       if ((y=c2+(cc2-u24.d*c2)) == c2+(cc2+u24.d*c2)) { retval = (-y); goto ret; } }
     else {
       /* Second stage tan */
@@ -463,14 +463,14 @@ tan(double x) {
     /* -cot */
     t2 = pz*(fi+gi)/(fi+pz);
     if ((y=gi-(t2-gi*u26.d))==gi-(t2+gi*u26.d)) { retval = (-sy*y); goto ret; }
-    t3 = (t2<ZERO) ? -t2 : t2;
+    t3 = (t2<0.0) ? -t2 : t2;
     t4 = gi*ua26.d+t3*ub26.d;
     if ((y=gi-(t2-t4))==gi-(t2+t4)) { retval = (-sy*y); goto ret; } }
   else   {
     /* tan */
     t2 = pz*(gi+fi)/(gi-pz);
     if ((y=fi+(t2-fi*u25.d))==fi+(t2+fi*u25.d)) { retval = (sy*y); goto ret; }
-    t3 = (t2<ZERO) ? -t2 : t2;
+    t3 = (t2<0.0) ? -t2 : t2;
     t4 = fi*ua25.d+t3*ub25.d;
     if ((y=fi+(t2-t4))==fi+(t2+t4)) { retval = (sy*y); goto ret; } }
 
@@ -479,7 +479,7 @@ tan(double x) {
   EADD(z0,yya,z,zz)
   MUL2(z,zz,z,zz,z2,zz2,t1,t2,t3,t4,t5,t6,t7,t8)
   c1 = z2*(a7.d+z2*(a9.d+z2*a11.d));
-  ADD2(a5.d,aa5.d,c1,zero.d,c2,cc2,t1,t2)
+  ADD2(a5.d,aa5.d,c1,0.0,c2,cc2,t1,t2)
   MUL2(z2,zz2,c2,cc2,c1,cc1,t1,t2,t3,t4,t5,t6,t7,t8)
   ADD2(a3.d,aa3.d,c1,cc1,c2,cc2,t1,t2)
   MUL2(z2,zz2,c2,cc2,c1,cc1,t1,t2,t3,t4,t5,t6,t7,t8)
@@ -488,7 +488,7 @@ tan(double x) {
 
   ADD2(fi ,ffi,c1,cc1,c2,cc2,t1,t2)
   MUL2(fi ,ffi,c1,cc1,c3,cc3,t1,t2,t3,t4,t5,t6,t7,t8)
-  SUB2(one.d,zero.d,c3,cc3,c1,cc1,t1,t2)
+  SUB2(1.0,0.0,c3,cc3,c1,cc1,t1,t2)
 
   if (n) {
     /* -cot */
