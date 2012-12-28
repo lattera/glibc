@@ -616,6 +616,10 @@ typedef struct
 #define NT_LWPSTATUS	16		/* Contains copy of lwpstatus struct */
 #define NT_LWPSINFO	17		/* Contains copy of lwpinfo struct */
 #define NT_PRFPXREG	20		/* Contains copy of fprxregset struct */
+#define NT_SIGINFO	0x53494749	/* Contains copy of siginfo_t,
+					   size might increase */
+#define NT_FILE		0x46494c45	/* Contains information about mapped
+					   files */
 #define NT_PRXFPREG	0x46e62b7f	/* Contains copy of user_fxsr_struct */
 #define NT_PPC_VMX	0x100		/* PowerPC Altivec/VMX registers */
 #define NT_PPC_SPE	0x101		/* PowerPC SPE/EVR registers */
@@ -631,6 +635,7 @@ typedef struct
 #define NT_S390_PREFIX	0x305		/* s390 prefix register */
 #define NT_S390_LAST_BREAK	0x306	/* s390 breaking event address */
 #define NT_S390_SYSTEM_CALL	0x307	/* s390 system call restart data */
+#define NT_S390_TDB	0x308		/* s390 transaction diagnostic block */
 #define NT_ARM_VFP	0x400		/* ARM VFP/NEON registers */
 #define NT_ARM_TLS	0x401		/* ARM TLS register */
 #define NT_ARM_HW_BREAK	0x402		/* ARM hardware breakpoint registers */

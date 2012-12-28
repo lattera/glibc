@@ -1,5 +1,8 @@
 2012-12-28  Andreas Jaeger  <aj@suse.de>
 
+	* elf/elf.h (NT_S390_TDB, NT_FILE, NT_SIGINFO): Define.  New
+	values are from Linux 3.7.
+
 	* sysdeps/gnu/netinet/tcp.h (TCPI_OPT_SYN_DATA)
 	(TCPI_OPT_ECN_SEEN): Define.  Sync with Linux 3.7.
 
