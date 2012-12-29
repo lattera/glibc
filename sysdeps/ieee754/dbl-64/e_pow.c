@@ -95,10 +95,10 @@ __ieee754_pow(double x, double y) {
     if (ABS (y) < 0x1p-64)
       y = y < 0 ? -0x1p-64 : 0x1p-64;
     z = log1(x,&aa,&error);                                 /* x^y  =e^(y log (X)) */
-    t = y*134217729.0;
+    t = y*CN;
     y1 = t - (t-y);
     y2 = y - y1;
-    t = z*134217729.0;
+    t = z*CN;
     a1 = t - (t-z);
     a2 = (z - a1)+aa;
     a = y1*a1;
@@ -182,10 +182,10 @@ SECTION
 power1(double x, double y) {
   double z,a,aa,error, t,a1,a2,y1,y2;
   z = my_log2(x,&aa,&error);
-  t = y*134217729.0;
+  t = y*CN;
   y1 = t - (t-y);
   y2 = y - y1;
-  t = z*134217729.0;
+  t = z*CN;
   a1 = t - (t-z);
   a2 = z - a1;
   a = y*z;
