@@ -1,5 +1,10 @@
 2013-02-18  Mike Frysinger  <vapier@gentoo.org>
 
+	* stdlib/stdlib.h (aligned_alloc): Use __attribute_malloc__
+	and __attribute_alloc_size__.
+
+2013-02-18  Mike Frysinger  <vapier@gentoo.org>
+
 	* include/programs/xmalloc.h: Change __attribute_alloc_size to
 	__attribute_alloc_size__.
 	* include/sys/cdefs.h (__attribute_alloc_size): Macro removed.
