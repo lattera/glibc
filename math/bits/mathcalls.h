@@ -112,8 +112,7 @@ __MATHCALL (log,, (_Mdouble_ __x));
 __MATHCALL (log10,, (_Mdouble_ __x));
 
 /* Break VALUE into integral and fractional parts.  */
-__MATHCALL (modf,, (_Mdouble_ __x, _Mdouble_ *__iptr))
-     __attribute__ ((__nonnull__ (2)));
+__MATHCALL (modf,, (_Mdouble_ __x, _Mdouble_ *__iptr)) __nonnull ((2));
 _Mdouble_END_NAMESPACE
 
 #ifdef __USE_GNU
