@@ -1,3 +1,19 @@
+2013-02-18  Mike Frysinger  <vapier@gentoo.org>
+
+	* include/programs/xmalloc.h: New file.
+	* catgets/gencat.c: Include it.
+	(xmalloc, xcalloc, xrealloc, xstrdup): Don't declare them.
+	* elf/pldd.c: Likewise.
+	* iconv/iconv_charmap.c: Likewise.
+	* iconv/iconvconfig.c: Likewise.
+	* iconv/strtab.c: Likewise.
+	* locale/programs/locale.c: Likewise.
+	* locale/programs/localedef.h: Likewise.
+	* locale/programs/simple-hash.c: Likewise.
+	* nscd/nscd.h: Likewise.
+	* nss/makedb.c: Likewise.
+	* sysdeps/generic/ldconfig.h: Likewise.
+
 2013-02-18  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* Versions.def: Add GLIBC_2.18.

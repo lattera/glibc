@@ -120,13 +120,7 @@ extern const char *alias_file;
 
 
 /* Prototypes for a few program-wide used functions.  */
-extern void *xmalloc (size_t n)
-  __attribute_malloc__ __attribute_alloc_size (1);
-extern void *xcalloc (size_t n, size_t s)
-  __attribute_malloc__ __attribute_alloc_size (1, 2);
-extern void *xrealloc (void *o, size_t n)
-  __attribute_malloc__ __attribute_alloc_size (2);
-extern char *xstrdup (const char *) __attribute_malloc__;
+#include <programs/xmalloc.h>
 
 
 /* Wrapper to switch LC_CTYPE back to the locale specified in the

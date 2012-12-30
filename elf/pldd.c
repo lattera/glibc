@@ -43,10 +43,7 @@ extern char *program_invocation_short_name;
 #define PACKAGE _libc_intl_domainname
 
 /* External functions.  */
-extern void *xmalloc (size_t n)
-  __attribute_malloc__ __attribute_alloc_size (1);
-extern void *xrealloc (void *o, size_t n)
-  __attribute_malloc__ __attribute_alloc_size (2);
+#include <programs/xmalloc.h>
 
 /* Name and version of program.  */
 static void print_version (FILE *stream, struct argp_state *state);

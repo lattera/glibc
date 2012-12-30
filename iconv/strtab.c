@@ -65,8 +65,7 @@ struct Strtab
 static size_t ps;
 
 
-extern void *xmalloc (size_t n)
-  __attribute_malloc__ __attribute_alloc_size (1);
+#include <programs/xmalloc.h>
 
 /* Prototypes for our functions that are used from iconvconfig.c.  If
    you change these, change also iconvconfig.c.  */

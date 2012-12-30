@@ -52,10 +52,7 @@
 #define hashval_t uint32_t
 #include "hashval.h"
 
-extern void *xmalloc (size_t n)
-  __attribute_malloc__ __attribute_alloc_size (1);
-extern void *xcalloc (size_t n, size_t s)
-  __attribute_malloc__ __attribute_alloc_size (1, 2);
+#include <programs/xmalloc.h>
 
 typedef struct hash_entry
 {

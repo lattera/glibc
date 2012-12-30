@@ -247,12 +247,7 @@ static struct
 static const char gconv_module_ext[] = MODULE_EXT;
 
 
-extern void *xmalloc (size_t n)
-  __attribute_malloc__ __attribute_alloc_size (1);
-extern void *xcalloc (size_t n, size_t s)
-  __attribute_malloc__ __attribute_alloc_size (1, 2);
-extern void *xrealloc (void *o, size_t n)
-  __attribute_malloc__ __attribute_alloc_size (2);
+#include <programs/xmalloc.h>
 
 
 /* C string table handling.  */
