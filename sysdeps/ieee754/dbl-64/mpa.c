@@ -1,7 +1,7 @@
 /*
  * IBM Accurate Mathematical Library
  * written by International Business Machines Corp.
- * Copyright (C) 2001, 2011 Free Software Foundation
+ * Copyright (C) 2001-2012 Free Software Foundation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -247,9 +247,10 @@ void __mp_dbl(const mp_no *x, double *y, int p) {
 
   if (X[0] == ZERO)  {*y = ZERO;  return; }
 
-  if      (EX> -42)                 norm(x,y,p);
-  else if (EX==-42 && X[1]>=TWO10)  norm(x,y,p);
-  else                              denorm(x,y,p);
+  if (__glibc_likely (EX > -42 || (EX == -42 && X[1] >= TWO10)))
+    norm(x,y,p);
+  else
+    denorm(x,y,p);
 }
 #endif
 
