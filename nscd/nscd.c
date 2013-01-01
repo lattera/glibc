@@ -1,4 +1,4 @@
-/* Copyright (c) 1998-2012 Free Software Foundation, Inc.
+/* Copyright (c) 1998-2013 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@suse.de>, 1998.
 
@@ -476,7 +476,7 @@ print_version (FILE *stream, struct argp_state *state)
 Copyright (C) %s Free Software Foundation, Inc.\n\
 This is free software; see the source for copying conditions.  There is NO\n\
 warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\
-"), "2012");
+"), "2013");
   fprintf (stream, gettext ("Written by %s.\n"),
 	   "Thorsten Kukuk and Ulrich Drepper");
 }

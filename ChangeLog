@@ -1,3 +1,28 @@
+2013-01-01  David S. Miller  <davem@davemloft.net>
+
+	* catgets/gencat.c: Update copyright year.
+	* csu/version.c: Likewise.
+	* debug/catchsegv.sh: Likewise.
+	* debug/pcprofiledump.c: Likewise.
+	* debug/xtrace.sh: Likewise.
+	* elf/ldconfig.c: Likewise.
+	* elf/ldd.bash.in: Likewise.
+	* elf/pldd.c: Likewise.
+	* elf/sotruss.ksh: Likewise.
+	* elf/sprof.c: Likewise.
+	* iconv/iconv_prog.c: Likewise.
+	* iconv/iconvconfig.c: Likewise.
+	* locale/programs/locale.c: Likewise.
+	* locale/programs/localedef.c: Likewise.
+	* login/programs/pt_chown.c: Likewise.
+	* malloc/memusage.sh: Likewise.
+	* malloc/memusagestat.c: Likewise.
+	* malloc/mtrace.pl: Likewise.
+	* nscd/nscd.c: Likewise.
+	* nss/getent.c: Likewise.
+	* nss/makedb.c: Likewise.
+	* posix/getconf.c: Likewise.
+
 2012-12-31  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* sysdeps/ieee754/dbl-64/mpa.c (__mp_dbl): Favour normal
