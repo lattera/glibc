@@ -1,6 +1,5 @@
 /* longjmp for PowerPC.
-   Copyright (C) 1995-1997, 1999-2001, 2003, 2004, 2005, 2006, 2009
-	Free Software Foundation, Inc.
+   Copyright (C) 1995-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or

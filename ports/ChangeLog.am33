@@ -1,3 +1,9 @@
+2013-01-01  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/am33/bits/fcntl.h: Reformat copyright
+	notice.
+	* sysdeps/unix/sysv/linux/am33/sysdep.S: Likewise.
+
 2012-11-03  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/am33/fpu/fclrexcpt.c (feclearexcept): Add

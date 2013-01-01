@@ -1,6 +1,5 @@
 /* User interface for extracting locale-dependent parameters.
-   Copyright (C) 1995,96,97,99,2000,2001,2002,2005
-	Free Software Foundation, Inc.
+   Copyright (C) 1995-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or

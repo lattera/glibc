@@ -1,6 +1,5 @@
 /* Assembly macros for 32-bit PowerPC.
-   Copyright (C) 1999, 2001-2003, 2006, 2011-2012
-	Free Software Foundation, Inc.
+   Copyright (C) 1999-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or

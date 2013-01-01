@@ -1,5 +1,4 @@
-/* Copyright (C) 1995, 1996, 1997, 1998, 2001, 2004
-	Free Software Foundation, Inc.
+/* Copyright (C) 1995-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Alexandre Oliva <aoliva@redhat.com>.
    Based on ../i386/sysdep.S.

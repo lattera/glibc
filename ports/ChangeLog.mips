@@ -1,3 +1,18 @@
+2013-01-01  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/mips/bits/dlfcn.h: Reformat copyright notice.
+	* sysdeps/mips/bits/mathdef.h: Likewise.
+	* sysdeps/mips/bits/setjmp.h: Likewise.
+	* sysdeps/mips/ieee754/ieee754.h: Likewise.
+	* sysdeps/mips/machine-gmon.h: Likewise.
+	* sysdeps/mips/mips64/bsd-_setjmp.S: Likewise.
+	* sysdeps/mips/mips64/setjmp.S: Likewise.
+	* sysdeps/mips/start.S: Likewise.
+	* sysdeps/unix/mips/mips64/n32/sysdep.h: Likewise.
+	* sysdeps/unix/mips/mips64/n64/sysdep.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/bits/sigaction.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/sys/procfs.h: Likewise.
+
 2012-12-04  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/mips/fpu_control.h [__mips_soft_float] (_FPU_GETCW):

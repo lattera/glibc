@@ -1,3 +1,8 @@
+2013-01-01  Joseph Myers  <joseph@codesourcery.com>
+
+	* td_ta_thr_iter.c: Reformat copyright notice.
+	* td_thr_validate.c: Likewise.
+
 2012-11-23  Mike Frysinger  <vapier@gentoo.org>
 
 	* Makefile ($(objpfx)db-symbols.out): Change readelf to $(READELF).

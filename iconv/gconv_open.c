@@ -1,6 +1,5 @@
 /* Find matching transformation algorithms and initialize steps.
-   Copyright (C) 1997,1998,1999,2000,2001,2004,2005,2007
-	Free Software Foundation, Inc.
+   Copyright (C) 1997-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 

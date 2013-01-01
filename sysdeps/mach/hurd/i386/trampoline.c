@@ -1,6 +1,5 @@
 /* Set thread_state for sighandler, and sigcontext to recover.  i386 version.
-   Copyright (C) 1994,1995,1996,1997,1998,1999,2005,2008
-	Free Software Foundation, Inc.
+   Copyright (C) 1994-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or

@@ -1,7 +1,7 @@
 #! /usr/bin/awk -f
 # Generate sorted list of directories.  The sorting is stable but with
 # dependencies between directories resolved by moving dependees in front.
-# (C) Copyright 1998 Free Software Foundation, Inc.
+# Copyright (C) 1998-2012 Free Software Foundation, Inc.
 # Written by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
 BEGIN {
