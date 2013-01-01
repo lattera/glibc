@@ -1,5 +1,7 @@
 2013-01-01  David S. Miller  <davem@davemloft.net>
 
+	* po/fr.po: Update from translation team.
+
 	* catgets/gencat.c: Update copyright year.
 	* csu/version.c: Likewise.
 	* debug/catchsegv.sh: Likewise.
