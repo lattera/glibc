@@ -1,5 +1,8 @@
 2013-01-02  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/m68k/m680x0/fpu/mathimpl.h: Fix copyright notice
+	formatting.
+
 	* All files with FSF copyright notices: Update copyright dates
 	using scripts/update-copyrights.
 

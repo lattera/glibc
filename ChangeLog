@@ -1,5 +1,22 @@
 2013-01-02  Joseph Myers  <joseph@codesourcery.com>
 
+	* hurd/ctty-input.c: Fix copyright notice formatting.
+	* hurd/ctty-output.c: Likewise.
+	* hurd/dtable.c: Likewise.
+	* hurd/hurd-raise.c: Likewise.
+	* hurd/hurdprio.c: Likewise.
+	* hurd/msgportdemux.c: Likewise.
+	* misc/sys/file.h: Likewise.
+	* misc/sys/ioctl.h: Likewise.
+	* sysdeps/gnu/netinet/ip_icmp.h: Likewise.
+	* sysdeps/mach/hurd/chdir.c: Likewise.
+	* sysdeps/mach/hurd/fchdir.c: Likewise.
+	* sysdeps/mach/hurd/rename.c: Likewise.
+	* sysdeps/mach/hurd/rmdir.c: Likewise.
+	* sysdeps/mach/hurd/seekdir.c: Likewise.
+	* sysdeps/mach/hurd/setsid.c: Likewise.
+	* sysdeps/posix/wait3.c: Likewise.
+
 	* All files with FSF copyright notices: Update copyright dates
 	using scripts/update-copyrights.
 	* intl/plural.c: Regenerated.
