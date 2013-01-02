@@ -1,3 +1,7 @@
+2013-01-02  Joseph Myers  <joseph@codesourcery.com>
+
+	* README: Update copyright dates in example.
+
 2012-12-06  Joseph Myers  <joseph@codesourcery.com>
 
 	* README: Use sourceware.org in Bugzilla URL.

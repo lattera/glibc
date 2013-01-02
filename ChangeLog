@@ -1,5 +1,11 @@
 2013-01-02  Joseph Myers  <joseph@codesourcery.com>
 
+	* NEWS: Update dates in second copyright notice.
+	* README: Update copyright dates in example.
+	* manual/libc.texinfo: Update copyright dates.
+	* scripts/test-installation.pl: Update copyright date in --version
+	output.
+
 	* hurd/ctty-input.c: Fix copyright notice formatting.
 	* hurd/ctty-output.c: Likewise.
 	* hurd/dtable.c: Likewise.
