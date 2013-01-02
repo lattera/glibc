@@ -1,7 +1,7 @@
 /* mc68020 __mpn_addmul_1 -- Multiply a limb vector with a limb and add
    the result to a second limb vector.
 
-Copyright (C) 1992, 1994, 1996, 1998, 2012 Free Software Foundation, Inc.
+Copyright (C) 1992-2013 Free Software Foundation, Inc.
 
 This file is part of the GNU MP Library.
 

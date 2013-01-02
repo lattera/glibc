@@ -1,8 +1,7 @@
 /*
  * UFC-crypt: ultra fast crypt(3) implementation
  *
- * Copyright (C) 1991-1993,1996-1998,2000,2010,2011,2012
- * Free Software Foundation, Inc.
+ * Copyright (C) 1991-2013 Free Software Foundation, Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public

@@ -1,5 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998, 2000, 2003, 2004, 2006, 2010, 2012
-   Free Software Foundation, Inc.
+/* Copyright (C) 1996-2013 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Andreas Schwab, <schwab@issan.informatik.uni-dortmund.de>,
    December 1995.

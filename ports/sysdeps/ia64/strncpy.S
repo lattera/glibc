@@ -1,6 +1,6 @@
 /* Optimized version of the standard strncpy() function.
    This file is part of the GNU C Library.
-   Copyright (C) 2000, 2001, 2002, 2003 Free Software Foundation, Inc.
+   Copyright (C) 2000-2013 Free Software Foundation, Inc.
    Contributed by Dan Pop <Dan.Pop@cern.ch>
 	      and Jakub Jelinek <jakub@redhat.com>.
 

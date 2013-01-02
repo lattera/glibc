@@ -1,5 +1,5 @@
 /* Return backtrace of current program state.
-   Copyright (C) 2008, 2009 Free Software Foundation, Inc.
+   Copyright (C) 2008-2013 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Kazu Hirata <kazu@codesourcery.com>, 2008.
 

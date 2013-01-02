@@ -1,6 +1,5 @@
 /* Minimum guaranteed maximum values for system limits.  MIPS Linux version.
-   Copyright (C) 1993-1998,2000,2002,2003,2004,2007,2008
-   Free Software Foundation, Inc.
+   Copyright (C) 1993-2013 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or

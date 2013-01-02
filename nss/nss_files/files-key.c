@@ -1,5 +1,5 @@
 /* Public key file parser in nss_files module.
-   Copyright (C) 1996, 1997, 1998, 2006, 2011 Free Software Foundation, Inc.
+   Copyright (C) 1996-2013 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or

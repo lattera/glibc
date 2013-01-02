@@ -1,5 +1,5 @@
 /* Startup code compliant to the ELF MN10300 ABI.
-   Copyright (C) 1995,1996,1997,1998,2000,2001 Free Software Foundation, Inc.
+   Copyright (C) 1995-2013 Free Software Foundation, Inc.
    Contributed by Alexandre Oliva  <aoliva@redhat.com>
    Based on ../../i386/elf/start.S.
    This file is part of the GNU C Library.

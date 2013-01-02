@@ -1,6 +1,5 @@
 /* Startup code for elf64-sparc
-   Copyright (C) 1997, 1998, 2002, 2004, 2007, 2009
-   Free Software Foundation, Inc.
+   Copyright (C) 1997-2013 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Richard Henderson <richard@gnu.ai.mit.edu>, 1997.
 

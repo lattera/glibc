@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996, 1998, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 1995-2013 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Alexandre Oliva <aoliva@redhat.com>.
    Based on ../i386/syscall.S.

@@ -1,6 +1,6 @@
 /* Compare at most N characters of two strings without taking care for
    the case.
-   Copyright (C) 1992, 1996, 1997, 2001, 2004 Free Software Foundation, Inc.
+   Copyright (C) 1992-2013 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or

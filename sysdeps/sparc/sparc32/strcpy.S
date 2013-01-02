@@ -1,6 +1,6 @@
 /* Copy SRC to DEST returning DEST.
    For SPARC v7.
-   Copyright (C) 1996, 1999, 2003 Free Software Foundation, Inc.
+   Copyright (C) 1996-2013 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jj@ultra.linux.cz>.
 

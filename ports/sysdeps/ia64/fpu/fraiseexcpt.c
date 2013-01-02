@@ -1,6 +1,5 @@
 /* Raise given exceptions.
-   Copyright (C) 1997, 1998, 2000, 2001, 2002, 2007
-   Free Software Foundation, Inc.
+   Copyright (C) 1997-2013 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jes Sorensen <Jes.Sorensen@cern.ch>, 2000.
 

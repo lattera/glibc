@@ -1,7 +1,7 @@
 /* ffs -- find first set bit in a word, counted from least significant end.
    For Intel 80x86, x>=6.
    This file is part of the GNU C Library.
-   Copyright (C) 1991, 92, 93, 94, 97, 98, 2004, 2005 Free Software Foundation, Inc.
+   Copyright (C) 1991-2013 Free Software Foundation, Inc.
    Contributed by Ulrich Drepper <drepper@cygnus.com>.
 
    The GNU C Library is free software; you can redistribute it and/or

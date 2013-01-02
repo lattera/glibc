@@ -1,5 +1,5 @@
 /* Return backtrace of current program state.  Generic version.
-   Copyright (C) 1998, 2000, 2002, 2004, 2005 Free Software Foundation, Inc.
+   Copyright (C) 1998-2013 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 

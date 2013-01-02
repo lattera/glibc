@@ -1,6 +1,5 @@
 /* Convert string representation of a number into an integer value.
-   Copyright (C) 1991,92,94,95,96,97,98,99,2000,2001,2002,2003,2004,2007
-   	Free Software Foundation, Inc.
+   Copyright (C) 1991-2013 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or

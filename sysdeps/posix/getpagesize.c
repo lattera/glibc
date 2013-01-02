@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1995, 1996, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1993-2013 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Brendan Kehoe (brendan@cygnus.com).
 

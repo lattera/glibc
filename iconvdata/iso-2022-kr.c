@@ -1,6 +1,5 @@
 /* Conversion module for ISO-2022-KR.
-   Copyright (C) 1998, 1999, 2000-2002, 2007, 2008
-   Free Software Foundation, Inc.
+   Copyright (C) 1998-2013 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 

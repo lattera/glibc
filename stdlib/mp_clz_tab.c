@@ -1,5 +1,5 @@
 /* __clz_tab -- support for longlong.h
-   Copyright (C) 1991, 1993, 1994, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1991-2013 Free Software Foundation, Inc.
    This file is part of the GNU C Library.  Its master source is NOT part of
    the C library, however.  The master source lives in the GNU MP Library.
 

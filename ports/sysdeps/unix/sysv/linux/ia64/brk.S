@@ -1,5 +1,5 @@
 /* brk system call for Linux/ia64
-   Copyright (C) 1999,2000,2001,2003 Free Software Foundation, Inc.
+   Copyright (C) 1999-2013 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Stephane Eranian <eranian@hpl.hp.com> and
 	      Jes Sorensen, <Jes.Sorensen@cern.ch>, April 1999.

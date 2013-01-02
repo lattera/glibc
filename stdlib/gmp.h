@@ -1,6 +1,6 @@
 /* gmp.h -- Definitions for GNU multiple precision functions.
 
-Copyright (C) 1991, 1993, 1994, 1995, 1996, 2007 Free Software Foundation, Inc.
+Copyright (C) 1991-2013 Free Software Foundation, Inc.
 
 This file is part of the GNU MP Library.
 

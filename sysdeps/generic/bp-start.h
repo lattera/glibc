@@ -1,5 +1,5 @@
 /* Bounded-pointer checking macros for C.
-   Copyright (C) 2000 Free Software Foundation, Inc.
+   Copyright (C) 2000-2013 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Greg McGary <greg@mcgary.org>
 

@@ -1,5 +1,5 @@
 /* Macros for managing ABI-compatibility definitions using ELF symbol versions.
-   Copyright (C) 2000, 2002, 2006, 2012 Free Software Foundation, Inc.
+   Copyright (C) 2000-2013 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or

@@ -30,7 +30,7 @@
 
 #line 1 "charmap-kw.gperf"
 
-/* Copyright (C) 1995,1996,1997,1998,1999,2005 Free Software Foundation, Inc.
+/* Copyright (C) 1995-2013 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper, <drepper@gnu.org>.
 

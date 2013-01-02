@@ -1,7 +1,6 @@
 /* Machine-dependent pthreads configuration and inline functions.
    am33 version.
-   Copyright (C) 1996,1997,1998,1999,2000,2001, 2004
-   Free Software Foundation, Inc.
+   Copyright (C) 1996-2013 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Alexandre Oliva <aoliva@redhat.com>
    Based on ../i386/pt-machine.h.

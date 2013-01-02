@@ -1,5 +1,5 @@
 /* String replacement in an argz vector
-   Copyright (C) 1997, 1998, 2006 Free Software Foundation, Inc.
+   Copyright (C) 1997-2013 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Miles Bader <miles@gnu.ai.mit.edu>
 

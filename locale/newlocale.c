@@ -1,6 +1,5 @@
 /* Return a reference to locale information record.
-   Copyright (C) 1996, 1997, 1999, 2000-2002, 2004, 2005, 2006, 2008
-   Free Software Foundation, Inc.
+   Copyright (C) 1996-2013 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 

@@ -1,5 +1,5 @@
 /* Tests for pread64 and pwrite64.
-   Copyright (C) 2000 Free Software Foundation, Inc.
+   Copyright (C) 2000-2013 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 

@@ -1,5 +1,5 @@
 /* libc-internal interface for thread-specific data.  Hurd version.
-   Copyright (C) 1998,2002,2008 Free Software Foundation, Inc.
+   Copyright (C) 1998-2013 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or

@@ -1,6 +1,5 @@
 /* Locate the shared object symbol nearest a given address.
-   Copyright (C) 1996, 1997, 1998, 1999, 2003, 2004
-   Free Software Foundation, Inc.
+   Copyright (C) 1996-2013 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or

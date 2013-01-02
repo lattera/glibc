@@ -1,6 +1,6 @@
 /* Definitions for testing PLT entry/exit auditing.  S/390 32-bit version.
 
-   Copyright (C) 2012 Free Software Foundation, Inc.
+   Copyright (C) 2012-2013 Free Software Foundation, Inc.
 
    This file is part of the GNU C Library.
 

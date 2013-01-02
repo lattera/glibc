@@ -1,5 +1,5 @@
 /* Support for chains recording users of a resource; `struct hurd_userlink'.
-   Copyright (C) 1994, 1995, 1997, 1999, 2007 Free Software Foundation, Inc.
+   Copyright (C) 1994-2013 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or

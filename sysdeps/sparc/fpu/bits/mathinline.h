@@ -1,6 +1,5 @@
 /* Inline math functions for SPARC.
-   Copyright (C) 1999, 2000, 2001, 2002, 2004, 2006, 2007, 2012
-   Free Software Foundation, Inc.
+   Copyright (C) 1999-2013 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jakub@redhat.com>.
 

@@ -1,7 +1,7 @@
 #! @PERL@
 eval "exec @PERL@ -S $0 $@"
     if 0;
-# Copyright (C) 1997-2012, 2013 Free Software Foundation, Inc.
+# Copyright (C) 1997-2013 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 # Contributed by Ulrich Drepper <drepper@gnu.org>, 1997.
 # Based on the mtrace.awk script.

@@ -1,5 +1,5 @@
 /* PLT fixups.  Sparc 64-bit version.
-   Copyright (C) 1997-2006, 2010 Free Software Foundation, Inc.
+   Copyright (C) 1997-2013 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or

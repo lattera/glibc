@@ -1,5 +1,4 @@
-/* Copyright (C) 1991,1993,1995,1997,1998,2003,2004,2012
-   Free Software Foundation, Inc.
+/* Copyright (C) 1991-2013 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Torbjorn Granlund (tege@sics.se).
 

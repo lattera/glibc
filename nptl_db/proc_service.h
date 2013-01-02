@@ -1,5 +1,5 @@
 /* Callback interface for libthread_db, functions users must define.
-   Copyright (C) 1999,2002,2003 Free Software Foundation, Inc.
+   Copyright (C) 1999-2013 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or

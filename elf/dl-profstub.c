@@ -1,5 +1,5 @@
 /* Helper definitions for profiling of shared libraries.
-   Copyright (C) 1998, 2000, 2002, 2004 Free Software Foundation, Inc.
+   Copyright (C) 1998-2013 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 

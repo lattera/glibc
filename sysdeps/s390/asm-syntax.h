@@ -1,5 +1,5 @@
 /* Definitions for S/390 syntax variations.
-   Copyright (C) 1992, 1994, 1995, 1997, 2000, 2012 Free Software Foundation, Inc.
+   Copyright (C) 1992-2013 Free Software Foundation, Inc.
    This file is part of the GNU C Library.  Its master source is NOT part of
    the C library, however.  The master source lives in the GNU MP Library.
 

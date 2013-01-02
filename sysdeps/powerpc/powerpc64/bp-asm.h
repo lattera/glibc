@@ -1,5 +1,5 @@
 /* Bounded-pointer definitions for PowerPC64 assembler.
-   Copyright (C) 2000, 2002 Free Software Foundation, Inc.
+   Copyright (C) 2000-2013 Free Software Foundation, Inc.
    Contributed by Greg McGary <greg@mcgary.org>
 
    This file is part of the GNU C Library.  Its master source is NOT part of

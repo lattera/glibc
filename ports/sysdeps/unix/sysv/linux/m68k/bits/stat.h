@@ -1,5 +1,4 @@
-/* Copyright (C) 1992,95,96,97,98,99,2000,2001,2002,2008,2009,2010
-     Free Software Foundation, Inc.
+/* Copyright (C) 1992-2013 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or

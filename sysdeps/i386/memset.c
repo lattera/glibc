@@ -1,6 +1,6 @@
 /* Set a block of memory to some byte value.
    For Intel 80x86, x>=3.
-   Copyright (C) 1991,1992,1993,1997,1998,2003, 2005 Free Software Foundation, Inc.
+   Copyright (C) 1991-2013 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Torbjorn Granlund (tege@sics.se).
 

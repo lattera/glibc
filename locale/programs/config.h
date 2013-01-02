@@ -1,5 +1,5 @@
 /* Configuration for localedef program.
-   Copyright (C) 1995-1998,2000,2005,2012 Free Software Foundation, Inc.
+   Copyright (C) 1995-2013 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1995.
 

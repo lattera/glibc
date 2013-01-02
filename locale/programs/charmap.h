@@ -1,4 +1,4 @@
-/* Copyright (C) 1996-1999,2001,2003,2005,2006 Free Software Foundation, Inc.
+/* Copyright (C) 1996-2013 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.org>, 1996.
 

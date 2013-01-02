@@ -1,6 +1,5 @@
 /* Fmemopen implementation.
-   Copyright (C) 2000, 2002, 2005, 2006, 2008, 2009, 2011
-   Free Software Foundation, Inc.
+   Copyright (C) 2000-2013 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Hanno Mueller, kontakt@hanno.de, 2000.
 

@@ -1,5 +1,5 @@
 /* _hurd_ctty_input -- Do an input RPC and generate SIGTTIN if necessary.
-   Copyright (C) 1995,97,99 Free Software Foundation, Inc.
+   Copyright (C) 11999, 20135, 1997-1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or

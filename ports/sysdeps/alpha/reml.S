@@ -1,4 +1,4 @@
-/* Copyright (C) 2004 Free Software Foundation, Inc.
+/* Copyright (C) 2004-2013 Free Software Foundation, Inc.
    Contributed by Richard Henderson  <rth@twiddle.net>
    This file is part of the GNU C Library.
 
