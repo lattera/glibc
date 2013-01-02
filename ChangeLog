@@ -11728,7 +11728,7 @@
 	(ETAGS): Remove, it's in Makeconfig.
 	(move-if-change): Remove, it's in Makeconfig.
 
-2013-04-23  Paul Eggert  <eggert@cs.ucla.edu>
+2012-04-23  Paul Eggert  <eggert@cs.ucla.edu>
 
 	[BZ #13970]
 	* stdlib/stdlib.h: Remove warn_unused_result attribute from strtol etc.
