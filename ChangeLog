@@ -1,5 +1,8 @@
 2013-01-02  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
+	* sysdeps/ieee754/dbl-64/mpexp.h (__mpexp_twomm1): Fix first
+	four values.
+
 	* sysdeps/ieee754/dbl-64/mpa.c (__mul): Split mantissa
 	calculation loop and add branch prediction.
 
