@@ -78,6 +78,19 @@
 #define lll_futex_wait(futexp, val, private) \
   lll_futex_timed_wait (futexp, val, NULL, private)
 
+#define lll_futex_timed_wait_bitset(futexp, val, timespec, clockbit, private) \
+  ({									      \
+    INTERNAL_SYSCALL_DECL (__err);					      \
+    long int __ret;							      \
+    int __op = FUTEX_WAIT_BITSET | clockbit;				      \
+									      \
+    __ret = INTERNAL_SYSCALL (futex, __err, 6, (futexp),		      \
+			      __lll_private_flag (__op, private),	      \
+			      (val), (timespec), NULL /* Unused.  */, 	      \
+			      FUTEX_BITSET_MATCH_ANY);			      \
+    __ret;		      						      \
+  })
+
 #define lll_futex_timed_wait(futexp, val, timespec, private) \
   ({									      \
     INTERNAL_SYSCALL_DECL (__err);					      \

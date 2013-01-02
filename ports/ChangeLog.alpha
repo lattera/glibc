@@ -1,3 +1,8 @@
+2013-01-02  Richard Henderson  <rth@redhat.com>
+
+	* sysdeps/unix/sysv/linux/alpha/nptl/lowlevellock.h
+	(lll_futex_timed_wait_bitset): New.
+
 2013-01-01  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/alpha/bits/termios.h: Reformat copyright
