@@ -447,33 +447,52 @@ void
 SECTION
 __mul(const mp_no *x, const mp_no *y, mp_no *z, int p) {
 
-  int i, i1, i2, j, k, k2;
+  int i, j, k, k2;
   double u;
 
-		      /* Is z=0? */
-  if (X[0]*Y[0]==ZERO)
-     { Z[0]=ZERO;  return; }
+  /* Is z=0?  */
+  if (__glibc_unlikely (X[0] * Y[0] == ZERO))
+    {
+      Z[0]=ZERO;
+      return;
+    }
 
-		       /* Multiply, add and carry */
-  k2 = (p<3) ? p+p : p+3;
-  Z[k2]=ZERO;
-  for (k=k2; k>1; ) {
-    if (k > p)  {i1=k-p; i2=p+1; }
-    else        {i1=1;   i2=k;   }
-    for (i=i1,j=i2-1; i<i2; i++,j--)  Z[k] += X[i]*Y[j];
+  /* Multiply, add and carry */
+  k2 = (__glibc_unlikely (p < 3)) ? p + p : p + 3;
+  Z[k2] = ZERO;
 
-    u = (Z[k] + CUTTER)-CUTTER;
-    if  (u > Z[k])  u -= RADIX;
-    Z[k]  -= u;
-    Z[--k] = u*RADIXI;
-  }
+  for (k = k2; k > p; )
+    {
+      for (i = k - p, j = p; i < p + 1; i++, j--)
+	Z[k] += X[i] * Y[j];
 
-		 /* Is there a carry beyond the most significant digit? */
-  if (Z[1] == ZERO) {
-    for (i=1; i<=p; i++)  Z[i]=Z[i+1];
-    EZ = EX + EY - 1; }
-  else
-    EZ = EX + EY;
+      u = (Z[k] + CUTTER) - CUTTER;
+      if (u > Z[k])
+	u -= RADIX;
+      Z[k] -= u;
+      Z[--k] = u * RADIXI;
+    }
+
+  while (k > 1)
+    {
+      for (i = 1,j = k - 1; i < k; i++, j--)
+	Z[k] += X[i] * Y[j];
+
+      u = (Z[k] + CUTTER) - CUTTER;
+      if (u > Z[k])
+	u -= RADIX;
+      Z[k] -= u;
+      Z[--k] = u * RADIXI;
+    }
+
+  EZ = EX + EY;
+  /* Is there a carry beyond the most significant digit? */
+  if (__glibc_unlikely (Z[1] == ZERO))
+    {
+      for (i = 1; i <= p; i++)
+	Z[i] = Z[i+1];
+      EZ--;
+    }
 
   Z[0] = X[0] * Y[0];
 }
