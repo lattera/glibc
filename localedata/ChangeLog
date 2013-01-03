@@ -1,3 +1,9 @@
+2013-01-03  Chris Leonard  <cjl@sugarlabs.org>
+
+	[BZ #13951]
+	* locales/dz_BT: Correct LC_ADDRESS countryname for Bhutan in
+	Dzongkha.
+
 2013-01-02  Joseph Myers  <joseph@codesourcery.com>
 
 	* All files with FSF copyright notices: Update copyright dates
