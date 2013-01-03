@@ -1,3 +1,7 @@
+2013-01-03  Andreas Jaeger  <aj@suse.de>
+
+	* po/ia.po: Add new Interlingua translation.
+
 2012-01-03  Allan McRae  <allan@archlinux.org>
 
 	* locale/programs/localedef.c: Fix description of '--posix' flag.
