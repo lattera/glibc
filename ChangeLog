@@ -1,4 +1,4 @@
-2012-01-03	Allan McRae	<allan@archlinux.org>
+2012-01-03  Allan McRae  <allan@archlinux.org>
 
 	* locale/programs/localedef.c: Fix description of '--posix' flag.
 
