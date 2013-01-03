@@ -1,5 +1,8 @@
 2013-01-03  Chris Leonard  <cjl@sugarlabs.org>
 
+	[BZ #14982]
+	* locales/dz_BT: Add new contact information for dz-BT maintainer.
+
 	[BZ #13951]
 	* locales/dz_BT: Correct LC_ADDRESS countryname for Bhutan in
 	Dzongkha.

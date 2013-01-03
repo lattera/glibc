@@ -5,8 +5,10 @@ escape_char  /
 %
 % Name:      dz_BT
 % Author:    Pema Geyleg
-% Contact:   Sherubtse College, Kanglung Bhutan; Pablo Saratxaga
-% E-mail:    pema_geyleg@druknet.bt; pablo@mandrakesoft.com
+% Maintainer: Christopher Fynn, Rinzin Peldron
+% Contact:   IT Dept., Dzongkha Development Commission
+% E-mail:    ddc@dzongkha.gov.bt
+% Date:      2012-12-23
 % Language:  Dzongkha(dz)
 % Territory: Bhutan(BT)
 % Charset:   UTF-8
