@@ -26,6 +26,8 @@
 #define bit_FMA4_Usable			(1 << 8)
 
 /* CPUID Feature flags.  */
+
+/* COMMON_CPUID_INDEX_1.  */
 #define bit_SSE2	(1 << 26)
 #define bit_SSSE3	(1 << 9)
 #define bit_SSE4_1	(1 << 19)
@@ -35,6 +37,9 @@
 #define bit_POPCOUNT	(1 << 23)
 #define bit_FMA		(1 << 12)
 #define bit_FMA4	(1 << 16)
+
+/* COMMON_CPUID_INDEX_7.  */
+#define bit_RTM		(1 << 11)
 
 /* XCR0 Feature flags.  */
 #define bit_XMM_state  (1 << 1)
@@ -67,6 +72,7 @@
 enum
   {
     COMMON_CPUID_INDEX_1 = 0,
+    COMMON_CPUID_INDEX_7,
     COMMON_CPUID_INDEX_80000001,	/* for AMD */
     /* Keep the following line at the end.  */
     COMMON_CPUID_INDEX_MAX
@@ -137,6 +143,8 @@ extern const struct cpu_features *__get_cpu_features (void)
   HAS_CPUID_FLAG (COMMON_CPUID_INDEX_1, ecx, bit_FMA)
 # define CPUID_FMA4 \
   HAS_CPUID_FLAG (COMMON_CPUID_INDEX_80000001, ecx, bit_FMA4)
+# define CPUID_RTM \
+  HAS_CPUID_FLAG (COMMON_CPUID_INDEX_7, ebx, bit_RTM)
 
 /* HAS_* evaluates to true if we may use the feature at runtime.  */
 # define HAS_SSE2	HAS_CPU_FEATURE (COMMON_CPUID_INDEX_1, edx, bit_SSE2)
@@ -144,6 +152,7 @@ extern const struct cpu_features *__get_cpu_features (void)
 # define HAS_SSSE3	HAS_CPU_FEATURE (COMMON_CPUID_INDEX_1, ecx, bit_SSSE3)
 # define HAS_SSE4_1	HAS_CPU_FEATURE (COMMON_CPUID_INDEX_1, ecx, bit_SSE4_1)
 # define HAS_SSE4_2	HAS_CPU_FEATURE (COMMON_CPUID_INDEX_1, ecx, bit_SSE4_2)
+# define HAS_RTM	HAS_CPU_FEATURE (COMMON_CPUID_INDEX_7, ebx, bit_RTM)
 
 # define index_Fast_Rep_String		FEATURE_INDEX_1
 # define index_Fast_Copy_Backward	FEATURE_INDEX_1

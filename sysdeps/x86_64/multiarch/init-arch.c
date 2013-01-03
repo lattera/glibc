@@ -143,6 +143,13 @@ __init_cpu_features (void)
   else
     kind = arch_kind_other;
 
+  if (__cpu_features.max_cpuid >= 7)
+    __cpuid_count (7, 0,
+		   __cpu_features.cpuid[COMMON_CPUID_INDEX_7].eax,
+		   __cpu_features.cpuid[COMMON_CPUID_INDEX_7].ebx,
+		   __cpu_features.cpuid[COMMON_CPUID_INDEX_7].ecx,
+		   __cpu_features.cpuid[COMMON_CPUID_INDEX_7].edx);
+
   /* Can we call xgetbv?  */
   if (CPUID_OSXSAVE)
     {
