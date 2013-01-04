@@ -47,6 +47,10 @@
 #include "mpa.h"
 #include "mpa2.h"
 #include <sys/param.h>	/* For MIN() */
+
+const mp_no mpone = {1, {1.0, 1.0}};
+const mp_no mptwo = {1, {1.0, 2.0}};
+
 /* mcr() compares the sizes of the mantissas of two multiple precision  */
 /* numbers. Mantissas are compared regardless of the signs of the       */
 /* numbers, even if x->d[0] or y->d[0] are zero. Exponents are also     */
@@ -129,7 +133,7 @@ void __cpymn(const mp_no *x, int m, mp_no *y, int n) {
 /* number *y, normalized case  (|x| >= 2**(-1022))) */
 static void norm(const mp_no *x, double *y, int p)
 {
-  #define R  radixi.d
+  #define R  RADIXI
   long i;
 #if 0
   int k;
@@ -191,7 +195,7 @@ static void denorm(const mp_no *x, double *y, int p)
   double a,v;
 #endif
 
-#define R  radixi.d
+#define R RADIXI
   if (EX<-44 || (EX==-44 && X[1]<TWO5))
      { *y=ZERO; return; }
 
@@ -461,7 +465,7 @@ void __mul(const mp_no *x, const mp_no *y, mp_no *z, int p) {
 		zk2 = x->d[i2-1]*y->d[i1];
 	}
 	else
-		zk2 = zero.d;
+		zk2 = 0.0;
 	/* Do two multiply/adds per loop iteration, using independent
            accumulators; zk and zk2.  */
 	for (i=i1,j=i2-1; i<i2-1; i+=2,j-=2) 

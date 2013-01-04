@@ -1,3 +1,16 @@
+2013-01-04  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* sysdeps/powerpc/powerpc32/power4/fpu/mpa.c (mpone): Define
+	mp_no value for 1.0 and 2.0.
+	(norm): Use RADIXI instead of radixi.d.
+	(denorm): Likewise.
+	(__mul): Use 0.0 instead of zero.d.
+	* sysdeps/powerpc/powerpc64/power4/fpu/mpa.c (mpone): Define
+	mp_no value for 1.0 and 2.0.
+	(norm): Use RADIXI instead of radixi.d.
+	(denorm): Likewise.
+	(__mul): Use 0.0 instead of zero.d.
+
 2013-01-04  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #14994]
