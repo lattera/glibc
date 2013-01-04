@@ -1,5 +1,19 @@
 2013-01-04  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
+	* sysdeps/ieee754/dbl-64/mpa.c: Remove commented code.
+	* sysdeps/powerpc/powerpc32/power4/fpu/mpa.c (__cr): Remove.
+	(__cpymn): Likewise.
+	(norm): Remove commented code.
+	(denorm): Likewise.
+	(__mp_dbl): Likewise.
+	(__inv): Likewise.
+	* sysdeps/powerpc/powerpc64/power4/fpu/mpa.c (__cr): Remove.
+	(__cpymn): Likewise.
+	(norm): Remove commented code.
+	(denorm): Likewise.
+	(__mp_dbl): Likewise.
+	(__inv): Likewise.
+
 	* sysdeps/powerpc/powerpc32/power4/fpu/mpa.c (mpone): Define
 	mp_no value for 1.0 and 2.0.
 	(norm): Use RADIXI instead of radixi.d.
