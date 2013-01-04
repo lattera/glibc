@@ -215,6 +215,9 @@ double: 1
 idouble: 1
 ildouble: 1
 ldouble: 1
+Test "Real part of: cacos (0.75 + 1.25 i) == 1.11752014915610270578240049553777969 - 1.13239363160530819522266333696834467 i":
+float: 1
+ifloat: 1
 Test "Imaginary part of: cacos (0.75 + 1.25 i) == 1.11752014915610270578240049553777969 - 1.13239363160530819522266333696834467 i":
 ildouble: 1
 ldouble: 1
@@ -3149,7 +3152,9 @@ ifloat: 1
 
 Function: Real part of "cacos":
 double: 1
+float: 1
 idouble: 1
+ifloat: 1
 ildouble: 1
 ldouble: 1
 
