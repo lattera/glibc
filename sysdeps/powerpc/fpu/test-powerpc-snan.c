@@ -17,8 +17,7 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#define _GNU_SOURCE
-#define __USE_GNU
+#define _GNU_SOURCE 1
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/time.h>
@@ -42,7 +41,7 @@ long double SNANl;
 static sigjmp_buf sigfpe_buf;
 
 void
-init_signaling_nan()
+init_signaling_nan (void)
 {
     union {
 	double _ld16;
