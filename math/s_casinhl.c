@@ -62,20 +62,24 @@ __casinhl (__complex__ long double x)
     }
   else
     {
+      long double rx, ix;
       __complex__ long double y;
 
-      __real__ y = (__real__ x - __imag__ x) * (__real__ x + __imag__ x) + 1.0;
-      __imag__ y = 2.0 * __real__ x * __imag__ x;
+      /* Avoid cancellation by reducing to the first quadrant.  */
+      rx = fabsl (__real__ x);
+      ix = fabsl (__imag__ x);
+
+      __real__ y = (rx - ix) * (rx + ix) + 1.0;
+      __imag__ y = 2.0 * rx * ix;
 
       y = __csqrtl (y);
 
-      __real__ y += __real__ x;
-      __imag__ y += __imag__ x;
+      __real__ y += rx;
+      __imag__ y += ix;
 
       res = __clogl (y);
 
-      /* Ensure zeros have correct sign and results are correct if
-	 very close to branch cuts.  */
+      /* Give results the correct sign for the original argument.  */
       __real__ res = __copysignl (__real__ res, __real__ x);
       __imag__ res = __copysignl (__imag__ res, __imag__ x);
     }

@@ -62,20 +62,24 @@ __casinhf (__complex__ float x)
     }
   else
     {
+      float rx, ix;
       __complex__ float y;
 
-      __real__ y = (__real__ x - __imag__ x) * (__real__ x + __imag__ x) + 1.0;
-      __imag__ y = 2.0 * __real__ x * __imag__ x;
+      /* Avoid cancellation by reducing to the first quadrant.  */
+      rx = fabsf (__real__ x);
+      ix = fabsf (__imag__ x);
+
+      __real__ y = (rx - ix) * (rx + ix) + 1.0;
+      __imag__ y = 2.0 * rx * ix;
 
       y = __csqrtf (y);
 
-      __real__ y += __real__ x;
-      __imag__ y += __imag__ x;
+      __real__ y += rx;
+      __imag__ y += ix;
 
       res = __clogf (y);
 
-      /* Ensure zeros have correct sign and results are correct if
-	 very close to branch cuts.  */
+      /* Give results the correct sign for the original argument.  */
       __real__ res = __copysignf (__real__ res, __real__ x);
       __imag__ res = __copysignf (__imag__ res, __imag__ x);
     }

@@ -1,3 +1,15 @@
+2013-01-04  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #14994]
+	* math/s_casinh.c (__casinh): Reduce finite argument to first
+	quadrant then set signs of results at the end.
+	* math/s_casinhf.c (__casinhf): Likewise.
+	* math/s_casinhl.c (__casinhl): Likewise.
+	* math/libm-test.inc (casin_test): Add more tests.
+	(casinh_test): Likewise.
+	* sysdeps/i386/fpu/libm-test-ulps: Update.
+	* sysdeps/x86_64/fpu/libm-test-ulps: Likewise.
+
 2013-01-04  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* sysdeps/ieee754/dbl-64/mpa.h: Fix code formatting.

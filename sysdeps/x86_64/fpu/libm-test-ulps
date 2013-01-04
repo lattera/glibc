@@ -185,6 +185,8 @@ double: 2
 float: 1
 idouble: 2
 ifloat: 1
+ildouble: 1
+ldouble: 1
 Test "Imaginary part of: cacos (+0 + 1.0 i) == pi/2 - 0.8813735870195430252326093249797923090282 i":
 double: 2
 float: 1
@@ -215,6 +217,8 @@ double: 2
 float: 1
 idouble: 2
 ifloat: 1
+ildouble: 1
+ldouble: 1
 Test "Imaginary part of: cacos (-0 + 1.0 i) == pi/2 - 0.8813735870195430252326093249797923090282 i":
 double: 2
 float: 1
@@ -245,6 +249,8 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
+ildouble: 1
+ldouble: 1
 Test "Imaginary part of: cacos (-1.5 - 0 i) == pi + 0.9624236501192068949955178268487368462704 i":
 ildouble: 1
 ldouble: 1
@@ -258,6 +264,9 @@ double: 1
 idouble: 1
 ildouble: 1
 ldouble: 1
+Test "Real part of: cacos (0.75 + 1.25 i) == 1.11752014915610270578240049553777969 - 1.13239363160530819522266333696834467 i":
+float: 1
+ifloat: 1
 Test "Imaginary part of: cacos (0.75 + 1.25 i) == 1.11752014915610270578240049553777969 - 1.13239363160530819522266333696834467 i":
 float: 1
 ifloat: 1
@@ -268,6 +277,8 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
+ildouble: 1
+ldouble: 1
 Test "Imaginary part of: cacos (1.5 - 0 i) == +0 + 0.9624236501192068949955178268487368462704 i":
 ildouble: 1
 ldouble: 1
@@ -375,6 +386,8 @@ double: 2
 float: 1
 idouble: 2
 ifloat: 1
+ildouble: 1
+ldouble: 1
 Test "Imaginary part of: casin (+0 + 1.0 i) == +0 + 0.8813735870195430252326093249797923090282 i":
 double: 2
 float: 1
@@ -405,6 +418,8 @@ double: 2
 float: 1
 idouble: 2
 ifloat: 1
+ildouble: 1
+ldouble: 1
 Test "Imaginary part of: casin (-0 + 1.0 i) == -0 + 0.8813735870195430252326093249797923090282 i":
 double: 2
 float: 1
@@ -435,6 +450,8 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
+ildouble: 1
+ldouble: 1
 Test "Imaginary part of: casin (-1.5 - 0 i) == -pi/2 - 0.9624236501192068949955178268487368462704 i":
 ildouble: 1
 ldouble: 1
@@ -455,6 +472,8 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
+ildouble: 1
+ldouble: 1
 Test "Imaginary part of: casin (1.5 - 0 i) == pi/2 - 0.9624236501192068949955178268487368462704 i":
 ildouble: 1
 ldouble: 1
@@ -471,21 +490,29 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
+ildouble: 1
+ldouble: 1
 Test "Real part of: casinh (-0 - 1.5 i) == -0.9624236501192068949955178268487368462704 - pi/2 i":
 double: 1
 float: 1
 idouble: 1
 ifloat: 1
+ildouble: 1
+ldouble: 1
 Test "Real part of: casinh (-0.5 + +0 i) == -0.4812118250596034474977589134243684231352 + +0 i":
 double: 2
 float: 1
 idouble: 2
 ifloat: 1
+ildouble: 1
+ldouble: 1
 Test "Real part of: casinh (-0.5 - 0 i) == -0.4812118250596034474977589134243684231352 - 0 i":
 double: 2
 float: 1
 idouble: 2
 ifloat: 1
+ildouble: 1
+ldouble: 1
 Test "Real part of: casinh (-1.0 + +0 i) == -0.8813735870195430252326093249797923090282 + +0 i":
 double: 2
 float: 1
@@ -3066,7 +3093,9 @@ ldouble: 1
 
 Function: Real part of "cacos":
 double: 1
+float: 1
 idouble: 1
+ifloat: 1
 ildouble: 1
 ldouble: 1
 
