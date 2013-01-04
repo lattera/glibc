@@ -1,3 +1,7 @@
+2013-01-04  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/m68k/m680x0/fpu/libm-test-ulps: Update.
+
 2013-01-02  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/m68k/m680x0/fpu/mathimpl.h: Fix copyright notice
