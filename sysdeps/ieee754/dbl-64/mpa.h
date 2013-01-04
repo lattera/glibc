@@ -23,15 +23,12 @@
 /*  FUNCTIONS:                                                          */
 /*               mcr                                                    */
 /*               acr                                                    */
-/*               cr                                                     */
 /*               cpy                                                    */
-/*               cpymn                                                  */
 /*               mp_dbl                                                 */
 /*               dbl_mp                                                 */
 /*               add                                                    */
 /*               sub                                                    */
 /*               mul                                                    */
-/*               inv                                                    */
 /*               dvd                                                    */
 /*                                                                      */
 /* Arithmetic functions for multiple precision numbers.                 */
@@ -67,15 +64,12 @@ extern const mp_no mptwo;
 #define ABS(x)   ((x) <  0  ? -(x) : (x))
 
 int __acr(const mp_no *, const mp_no *, int);
-// int  __cr(const mp_no *, const mp_no *, int);
 void __cpy(const mp_no *, mp_no *, int);
-// void __cpymn(const mp_no *, int, mp_no *, int);
 void __mp_dbl(const mp_no *, double *, int);
 void __dbl_mp(double, mp_no *, int);
 void __add(const mp_no *, const mp_no *, mp_no *, int);
 void __sub(const mp_no *, const mp_no *, mp_no *, int);
 void __mul(const mp_no *, const mp_no *, mp_no *, int);
-// void __inv(const mp_no *, mp_no *, int);
 void __dvd(const mp_no *, const mp_no *, mp_no *, int);
 
 extern void __mpatan (mp_no *, mp_no *, int);

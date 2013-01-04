@@ -1,5 +1,8 @@
 2013-01-04  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
+	* sysdeps/ieee754/dbl-64/mpa.h: Remove commented declarations
+	and adjust the header comment.
+
 	* sysdeps/ieee754/dbl-64/mpa.h (__mpexp): Remove unnecessary
 	variable name from declaration.
 
