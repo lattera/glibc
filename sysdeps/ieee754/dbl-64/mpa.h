@@ -81,6 +81,6 @@ void __dvd(const mp_no *, const mp_no *, mp_no *, int);
 extern void __mpatan (mp_no *, mp_no *, int);
 extern void __mpatan2 (mp_no *, mp_no *, mp_no *, int);
 extern void __mpsqrt (mp_no *, mp_no *, int);
-extern void __mpexp (mp_no *, mp_no *__y, int);
+extern void __mpexp (mp_no *, mp_no *, int);
 extern void __c32 (mp_no *, mp_no *, mp_no *, int);
 extern int __mpranred (double, mp_no *, int);
