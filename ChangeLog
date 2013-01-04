@@ -1,5 +1,7 @@
 2013-01-04  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
+	* sysdeps/ieee754/dbl-64/mpa.h: Clean up comment for MP_NO.
+
 	* sysdeps/ieee754/dbl-64/mpa.c(norm): Remove commented
 	declarations.
 	(denorm): Likewise.

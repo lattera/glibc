@@ -36,18 +36,32 @@
 /************************************************************************/
 
 
-typedef struct {/* This structure holds the details of a multi-precision     */
-  int e;        /* floating point number, x: d[0] holds its sign (-1,0 or 1) */
-  double d[40]; /* e holds its exponent (...,-2,-1,0,1,2,...) and            */
-} mp_no;        /* d[1]...d[p] hold its mantissa digits. The value of x is,  */
-		/* x = d[1]*r**(e-1) + d[2]*r**(e-2) + ... + d[p]*r**(e-p).  */
-		/* Here   r = 2**24,   0 <= d[i] < r  and  1 <= p <= 32.     */
-		/* p is a global variable. A multi-precision number is       */
-		/* always normalized. Namely, d[1] > 0. An exception is      */
-		/* a zero which is characterized by d[0] = 0. The terms      */
-		/* d[p+1], d[p+2], ... of a none zero number have no         */
-		/* significance and so are the terms e, d[1],d[2],...        */
-		/* of a zero.                                                */
+/* The mp_no structure holds the details of a multi-precision floating point
+   number.
+
+   - The radix of the number (R) is 2 ^ 24.
+
+   - E: The exponent of the number.
+
+   - D[0]: The sign (-1, 1) or 0 if the value is 0.  In the latter case, the
+     values of the remaining members of the structure are ignored.
+
+   - D[1] - D[p]: The mantissa of the number where:
+
+	0 <= D[i] < R and
+	P is the precision of the number and 1 <= p <= 32
+
+     D[p+1] ... D[39] have no significance.
+
+   - The value of the number is:
+
+	D[1] * R ^ (E - 1) + D[2] * R ^ (E - 2) ... D[p] * R ^ (E - p)
+
+   */
+typedef struct {
+  int e;
+  double d[40];
+} mp_no;
 
 typedef union { int i[2]; double d; } number;
 
