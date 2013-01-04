@@ -58,12 +58,17 @@
 	D[1] * R ^ (E - 1) + D[2] * R ^ (E - 2) ... D[p] * R ^ (E - p)
 
    */
-typedef struct {
+typedef struct
+{
   int e;
   double d[40];
 } mp_no;
 
-typedef union { int i[2]; double d; } number;
+typedef union
+{
+  int i[2];
+  double d;
+} number;
 
 extern const mp_no mpone;
 extern const mp_no mptwo;
@@ -77,14 +82,14 @@ extern const mp_no mptwo;
 
 #define ABS(x)   ((x) <  0  ? -(x) : (x))
 
-int __acr(const mp_no *, const mp_no *, int);
-void __cpy(const mp_no *, mp_no *, int);
-void __mp_dbl(const mp_no *, double *, int);
-void __dbl_mp(double, mp_no *, int);
-void __add(const mp_no *, const mp_no *, mp_no *, int);
-void __sub(const mp_no *, const mp_no *, mp_no *, int);
-void __mul(const mp_no *, const mp_no *, mp_no *, int);
-void __dvd(const mp_no *, const mp_no *, mp_no *, int);
+int __acr (const mp_no *, const mp_no *, int);
+void __cpy (const mp_no *, mp_no *, int);
+void __mp_dbl (const mp_no *, double *, int);
+void __dbl_mp (double, mp_no *, int);
+void __add (const mp_no *, const mp_no *, mp_no *, int);
+void __sub (const mp_no *, const mp_no *, mp_no *, int);
+void __mul (const mp_no *, const mp_no *, mp_no *, int);
+void __dvd (const mp_no *, const mp_no *, mp_no *, int);
 
 extern void __mpatan (mp_no *, mp_no *, int);
 extern void __mpatan2 (mp_no *, mp_no *, mp_no *, int);
