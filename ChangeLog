@@ -1,5 +1,11 @@
 2013-01-04  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
+	* sysdeps/ieee754/dbl-64/mpa.c(norm): Remove commented
+	declarations.
+	(denorm): Likewise.
+	(__mp_dbl): Likewise.
+	(__inv): Likewise.
+
 	* sysdeps/ieee754/dbl-64/mpa.h: Remove commented declarations
 	and adjust the header comment.
 

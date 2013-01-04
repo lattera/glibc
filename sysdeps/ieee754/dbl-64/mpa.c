@@ -142,9 +142,6 @@ static void norm(const mp_no *x, double *y, int p)
 {
   #define R  RADIXI
   int i;
-#if 0
-  int k;
-#endif
   double a,c,u,v,z[5];
   if (p<5) {
     if      (p==1) c = X[1];
@@ -196,9 +193,6 @@ static void denorm(const mp_no *x, double *y, int p)
 {
   int i,k;
   double c,u,z[5];
-#if 0
-  double a,v;
-#endif
 
 #define R  RADIXI
   if (EX<-44 || (EX==-44 && X[1]<TWO5))
@@ -241,10 +235,6 @@ static void denorm(const mp_no *x, double *y, int p)
 /* The result is correctly rounded to the nearest/even. *x is left unchanged */
 
 void __mp_dbl(const mp_no *x, double *y, int p) {
-#if 0
-  int i,k;
-  double a,c,u,v,z[5];
-#endif
 
   if (X[0] == ZERO)  {*y = ZERO;  return; }
 
@@ -507,9 +497,6 @@ static
 SECTION
 void __inv(const mp_no *x, mp_no *y, int p) {
   int i;
-#if 0
-  int l;
-#endif
   double t;
   mp_no z,w;
   static const int np1[] = {0,0,0,0,1,2,2,2,2,3,3,3,3,3,3,3,3,3,
