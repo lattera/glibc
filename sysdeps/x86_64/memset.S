@@ -862,7 +862,7 @@ L(SSE15Q0): mov    %rdx,-0xf(%rdi)
 	.balign     16
 L(byte32sse2_pre):
 
-	mov    __x86_64_shared_cache_size(%rip),%r9d  # The largest cache size
+	mov    __x86_shared_cache_size(%rip),%r9d  # The largest cache size
 	cmp    %r9,%r8
 	ja     L(sse2_nt_move_pre)
 	#jmp    L(byte32sse2)
@@ -1205,7 +1205,7 @@ L(SSExDx):
 #ifndef USE_MULTIARCH
 L(aligned_now):
 
-	 cmpl   $0x1,__x86_64_preferred_memory_instruction(%rip)
+	 cmpl   $0x1,__x86_preferred_memory_instruction(%rip)
 	 jg     L(SSE_pre)
 #endif /* USE_MULTIARCH */
 
@@ -1262,7 +1262,7 @@ L(8byte_move_skip):
 
 	.balign     16
 L(8byte_stos_try):
-	mov    __x86_64_shared_cache_size(%rip),%r9d // ck largest cache size
+	mov    __x86_shared_cache_size(%rip),%r9d // ck largest cache size
 	cmpq	%r8,%r9		// calculate the lesser of remaining
 	cmovaq	%r8,%r9		// bytes and largest cache size
 	jbe	L(8byte_stos)

@@ -99,7 +99,7 @@ L(80bytesormore):
 #ifdef SHARED_CACHE_SIZE_HALF
 	mov	$SHARED_CACHE_SIZE_HALF, %RCX_LP
 #else
-	mov	__x86_64_shared_cache_size_half(%rip), %RCX_LP
+	mov	__x86_shared_cache_size_half(%rip), %RCX_LP
 #endif
 	cmp	%rcx, %rdx
 	mov	%rsi, %r9
@@ -109,7 +109,7 @@ L(80bytesormore):
 #ifdef DATA_CACHE_SIZE_HALF
 	mov	$DATA_CACHE_SIZE_HALF, %RCX_LP
 #else
-	mov	__x86_64_data_cache_size_half(%rip), %RCX_LP
+	mov	__x86_data_cache_size_half(%rip), %RCX_LP
 #endif
 	BRANCH_TO_JMPTBL_ENTRY (L(shl_table), %r9, 4)
 
@@ -129,7 +129,7 @@ L(copy_backward):
 #ifdef SHARED_CACHE_SIZE_HALF
 	mov	$SHARED_CACHE_SIZE_HALF, %RCX_LP
 #else
-	mov	__x86_64_shared_cache_size_half(%rip), %RCX_LP
+	mov	__x86_shared_cache_size_half(%rip), %RCX_LP
 #endif
 
 	cmp	%rcx, %rdx
@@ -140,7 +140,7 @@ L(copy_backward):
 #ifdef DATA_CACHE_SIZE_HALF
 	mov	$DATA_CACHE_SIZE_HALF, %RCX_LP
 #else
-	mov	__x86_64_data_cache_size_half(%rip), %RCX_LP
+	mov	__x86_data_cache_size_half(%rip), %RCX_LP
 #endif
 	BRANCH_TO_JMPTBL_ENTRY (L(shl_table_bwd), %r9, 4)
 
@@ -177,7 +177,7 @@ L(shl_0_gobble):
 #ifdef DATA_CACHE_SIZE_HALF
 	cmp	$DATA_CACHE_SIZE_HALF, %RDX_LP
 #else
-	cmp	__x86_64_data_cache_size_half(%rip), %RDX_LP
+	cmp	__x86_data_cache_size_half(%rip), %RDX_LP
 #endif
 	lea	-128(%rdx), %rdx
 	jae	L(shl_0_gobble_mem_loop)
@@ -318,7 +318,7 @@ L(shl_0_gobble_bwd):
 #ifdef DATA_CACHE_SIZE_HALF
 	cmp	$DATA_CACHE_SIZE_HALF, %RDX_LP
 #else
-	cmp	__x86_64_data_cache_size_half(%rip), %RDX_LP
+	cmp	__x86_data_cache_size_half(%rip), %RDX_LP
 #endif
 	lea	-128(%rdx), %rdx
 	jae	L(shl_0_gobble_mem_bwd_loop)

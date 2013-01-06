@@ -321,7 +321,7 @@ L(512bytesormore):
 # ifdef DATA_CACHE_SIZE_HALF
 	mov	$DATA_CACHE_SIZE_HALF, %R8_LP
 # else
-	mov	__x86_64_data_cache_size_half(%rip), %R8_LP
+	mov	__x86_data_cache_size_half(%rip), %R8_LP
 # endif
 	mov	%r8, %r9
 	shr	$1, %r8
@@ -637,7 +637,7 @@ L(512bytesormorein2aligned):
 # ifdef DATA_CACHE_SIZE_HALF
 	mov	$DATA_CACHE_SIZE_HALF, %R8_LP
 # else
-	mov	__x86_64_data_cache_size_half(%rip), %R8_LP
+	mov	__x86_data_cache_size_half(%rip), %R8_LP
 # endif
 	mov	%r8, %r9
 	shr	$1, %r8

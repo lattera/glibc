@@ -505,24 +505,24 @@ __cache_sysconf (int name)
 
 /* Data cache size for use in memory and string routines, typically
    L1 size, rounded to multiple of 256 bytes.  */
-long int __x86_64_data_cache_size_half attribute_hidden = 32 * 1024 / 2;
-long int __x86_64_data_cache_size attribute_hidden = 32 * 1024;
-/* Similar to __x86_64_data_cache_size_half, but not rounded.  */
-long int __x86_64_raw_data_cache_size_half attribute_hidden = 32 * 1024 / 2;
-/* Similar to __x86_64_data_cache_size, but not rounded.  */
-long int __x86_64_raw_data_cache_size attribute_hidden = 32 * 1024;
+long int __x86_data_cache_size_half attribute_hidden = 32 * 1024 / 2;
+long int __x86_data_cache_size attribute_hidden = 32 * 1024;
+/* Similar to __x86_data_cache_size_half, but not rounded.  */
+long int __x86_raw_data_cache_size_half attribute_hidden = 32 * 1024 / 2;
+/* Similar to __x86_data_cache_size, but not rounded.  */
+long int __x86_raw_data_cache_size attribute_hidden = 32 * 1024;
 /* Shared cache size for use in memory and string routines, typically
    L2 or L3 size, rounded to multiple of 256 bytes.  */
-long int __x86_64_shared_cache_size_half attribute_hidden = 1024 * 1024 / 2;
-long int __x86_64_shared_cache_size attribute_hidden = 1024 * 1024;
-/* Similar to __x86_64_shared_cache_size_half, but not rounded.  */
-long int __x86_64_raw_shared_cache_size_half attribute_hidden = 1024 * 1024 / 2;
-/* Similar to __x86_64_shared_cache_size, but not rounded.  */
-long int __x86_64_raw_shared_cache_size attribute_hidden = 1024 * 1024;
+long int __x86_shared_cache_size_half attribute_hidden = 1024 * 1024 / 2;
+long int __x86_shared_cache_size attribute_hidden = 1024 * 1024;
+/* Similar to __x86_shared_cache_size_half, but not rounded.  */
+long int __x86_raw_shared_cache_size_half attribute_hidden = 1024 * 1024 / 2;
+/* Similar to __x86_shared_cache_size, but not rounded.  */
+long int __x86_raw_shared_cache_size attribute_hidden = 1024 * 1024;
 
 #ifndef DISABLE_PREFETCHW
 /* PREFETCHW support flag for use in memory and string routines.  */
-int __x86_64_prefetchw attribute_hidden;
+int __x86_prefetchw attribute_hidden;
 #endif
 
 #ifndef DISABLE_PREFERRED_MEMORY_INSTRUCTION
@@ -534,7 +534,7 @@ int __x86_64_prefetchw attribute_hidden;
   3: SSSE3 instructions
 
   */
-int __x86_64_preferred_memory_instruction attribute_hidden;
+int __x86_preferred_memory_instruction attribute_hidden;
 #endif
 
 
@@ -591,9 +591,9 @@ init_cacheinfo (void)
       /* Intel prefers SSSE3 instructions for memory/string routines
 	 if they are available.  */
       if ((ecx & 0x200))
-	__x86_64_preferred_memory_instruction = 3;
+	__x86_preferred_memory_instruction = 3;
       else
-	__x86_64_preferred_memory_instruction = 2;
+	__x86_preferred_memory_instruction = 2;
 #endif
 
       /* Figure out the number of logical threads that share the
@@ -684,9 +684,9 @@ init_cacheinfo (void)
 	 if they are avaiable, otherwise it prefers integer
 	 instructions.  */
       if ((ecx & 0x200))
-	__x86_64_preferred_memory_instruction = 3;
+	__x86_preferred_memory_instruction = 3;
       else
-	__x86_64_preferred_memory_instruction = 0;
+	__x86_preferred_memory_instruction = 0;
 #endif
 
       /* Get maximum extended function. */
@@ -730,28 +730,28 @@ init_cacheinfo (void)
 	  __cpuid (0x80000001, eax, ebx, ecx, edx);
 	  /*  PREFETCHW     || 3DNow!  */
 	  if ((ecx & 0x100) || (edx & 0x80000000))
-	    __x86_64_prefetchw = -1;
+	    __x86_prefetchw = -1;
 	}
 #endif
     }
 
   if (data > 0)
     {
-      __x86_64_raw_data_cache_size_half = data / 2;
-      __x86_64_raw_data_cache_size = data;
+      __x86_raw_data_cache_size_half = data / 2;
+      __x86_raw_data_cache_size = data;
       /* Round data cache size to multiple of 256 bytes.  */
       data = data & ~255L;
-      __x86_64_data_cache_size_half = data / 2;
-      __x86_64_data_cache_size = data;
+      __x86_data_cache_size_half = data / 2;
+      __x86_data_cache_size = data;
     }
 
   if (shared > 0)
     {
-      __x86_64_raw_shared_cache_size_half = shared / 2;
-      __x86_64_raw_shared_cache_size = shared;
+      __x86_raw_shared_cache_size_half = shared / 2;
+      __x86_raw_shared_cache_size = shared;
       /* Round shared cache size to multiple of 256 bytes.  */
       shared = shared & ~255L;
-      __x86_64_shared_cache_size_half = shared / 2;
-      __x86_64_shared_cache_size = shared;
+      __x86_shared_cache_size_half = shared / 2;
+      __x86_shared_cache_size = shared;
     }
 }

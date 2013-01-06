@@ -1,3 +1,36 @@
+2013-01-04  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/i386/i686/cacheinfo.c (__x86_64_data_cache_size): Removed.
+	(__x86_64_raw_data_cache_size): Likewise.
+	(__x86_64_data_cache_size_half): Likewise.
+	(__x86_64_raw_data_cache_size_half): Likewise.
+	(__x86_64_shared_cache_size): Likewise.
+	(__x86_64_raw_shared_cache_size): Likewise.
+	(__x86_64_shared_cache_size_half): Likewise.
+	(__x86_64_raw_shared_cache_size_half): Likewise.
+	* sysdeps/x86_64/cacheinfo.c (__x86_64_data_cache_size): Renamed
+	to ...
+	(__x86_data_cache_size): This.
+	(__x86_64_raw_data_cache_size): Renamed to ...
+	(__x86_raw_data_cache_size): This.
+	(__x86_64_data_cache_size_half): Renamed to ...
+	(__x86_data_cache_size_half): This.
+	(__x86_64_raw_data_cache_size_half): Renamed to ...
+	(__x86_raw_data_cache_size_half): This.
+	(__x86_64_shared_cache_size): Renamed to ...
+	(__x86_shared_cache_size): This.
+	(__x86_64_raw_shared_cache_size): Renamed to ...
+	(__x86_raw_shared_cache_size): This.
+	(__x86_64_shared_cache_size_half): Renamed to ...
+	(__x86_shared_cache_size_half): This.
+	(__x86_64_raw_shared_cache_size_half): Renamed to ...
+	(__x86_raw_shared_cache_size_half): This.
+	* sysdeps/x86_64/memcpy.S: Updated.
+	* sysdeps/x86_64/memset.S: Likewise.
+	* sysdeps/x86_64/multiarch/memcmp-sse4.S: Likewise.
+	* sysdeps/x86_64/multiarch/memcpy-ssse3-back.S: Likewise.
+	* sysdeps/x86_64/multiarch/memcpy-ssse3.S: Likewise.
+
 2013-01-04  David S. Miller  <davem@davemloft.net>
 
 	* sysdeps/sparc/fpu/libm-test-ulps: Update.
