@@ -20,7 +20,14 @@
 #include <complex.h>
 #include <math.h>
 #include <math_private.h>
+#include <float.h>
 
+/* To avoid spurious overflows, use this definition to treat IBM long
+   double as approximating an IEEE-style format.  */
+#if LDBL_MANT_DIG == 106
+# undef LDBL_EPSILON
+# define LDBL_EPSILON 0x1p-106L
+#endif
 
 __complex__ long double
 __casinhl (__complex__ long double x)
@@ -69,15 +76,29 @@ __casinhl (__complex__ long double x)
       rx = fabsl (__real__ x);
       ix = fabsl (__imag__ x);
 
-      __real__ y = (rx - ix) * (rx + ix) + 1.0;
-      __imag__ y = 2.0 * rx * ix;
+      if (rx >= 1.0L / LDBL_EPSILON || ix >= 1.0L / LDBL_EPSILON)
+	{
+	  /* For large x in the first quadrant, x + csqrt (1 + x * x)
+	     is sufficiently close to 2 * x to make no significant
+	     difference to the result; avoid possible overflow from
+	     the squaring and addition.  */
+	  __real__ y = rx;
+	  __imag__ y = ix;
+	  res = __clogl (y);
+	  __real__ res += M_LN2l;
+	}
+      else
+	{
+	  __real__ y = (rx - ix) * (rx + ix) + 1.0;
+	  __imag__ y = 2.0 * rx * ix;
 
-      y = __csqrtl (y);
+	  y = __csqrtl (y);
 
-      __real__ y += rx;
-      __imag__ y += ix;
+	  __real__ y += rx;
+	  __imag__ y += ix;
 
-      res = __clogl (y);
+	  res = __clogl (y);
+	}
 
       /* Give results the correct sign for the original argument.  */
       __real__ res = __copysignl (__real__ res, __real__ x);

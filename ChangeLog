@@ -1,3 +1,21 @@
+2013-01-07  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #14996]
+	* math/s_casinh.c: Include <float.h>.
+	(__casinh): Do not do computation with squaring and square root
+	for large arguments.
+	* math/s_casinhf.c: Include <float.h>.
+	(__casinhf): Do not do computation with squaring and square root
+	for large arguments.
+	* math/s_casinhl.c: Include <float.h>.
+	[LDBL_MANT_DIG == 106] (LDBL_EPSILON): Undefine and redefine.
+	(__casinhl): Do not do computation with squaring and square root
+	for large arguments.
+	* math/libm-test.inc (casin_test): Add more tests.
+	(casinh_test): Likewise.
+	* sysdeps/i386/fpu/libm-test-ulps: Update.
+	* sysdeps/x86_64/fpu/libm-test-ulps: Likewise.
+
 2013-01-04  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/i386/i686/cacheinfo.c (__x86_64_data_cache_size): Removed.

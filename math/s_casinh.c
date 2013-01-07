@@ -20,7 +20,7 @@
 #include <complex.h>
 #include <math.h>
 #include <math_private.h>
-
+#include <float.h>
 
 __complex__ double
 __casinh (__complex__ double x)
@@ -69,15 +69,29 @@ __casinh (__complex__ double x)
       rx = fabs (__real__ x);
       ix = fabs (__imag__ x);
 
-      __real__ y = (rx - ix) * (rx + ix) + 1.0;
-      __imag__ y = 2.0 * rx * ix;
+      if (rx >= 1.0 / DBL_EPSILON || ix >= 1.0 / DBL_EPSILON)
+	{
+	  /* For large x in the first quadrant, x + csqrt (1 + x * x)
+	     is sufficiently close to 2 * x to make no significant
+	     difference to the result; avoid possible overflow from
+	     the squaring and addition.  */
+	  __real__ y = rx;
+	  __imag__ y = ix;
+	  res = __clog (y);
+	  __real__ res += M_LN2;
+	}
+      else
+	{
+	  __real__ y = (rx - ix) * (rx + ix) + 1.0;
+	  __imag__ y = 2.0 * rx * ix;
 
-      y = __csqrt (y);
+	  y = __csqrt (y);
 
-      __real__ y += rx;
-      __imag__ y += ix;
+	  __real__ y += rx;
+	  __imag__ y += ix;
 
-      res = __clog (y);
+	  res = __clog (y);
+	}
 
       /* Give results the correct sign for the original argument.  */
       __real__ res = __copysign (__real__ res, __real__ x);
