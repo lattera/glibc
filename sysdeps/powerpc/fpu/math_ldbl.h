@@ -27,7 +27,7 @@ ldbl_extract_mantissa (int64_t *hi64, u_int64_t *lo64, int *exp, long double x)
       lo |= (1ULL << 52);
       lo = lo << 7; /* pre-shift lo to match ieee854.  */
       /* The lower double is normalized separately from the upper.  We
-	 may need to adjust the lower manitissa to reflect this.  */
+	 may need to adjust the lower mantissa to reflect this.  */
       ediff = eldbl.ieee.exponent - eldbl.ieee.exponent2;
       if (ediff > 53)
 	lo = lo >> (ediff-53);

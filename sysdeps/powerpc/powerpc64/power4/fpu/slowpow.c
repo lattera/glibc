@@ -59,7 +59,7 @@ __slowpow (double x, double y, double z)
   res1 = (double) (ldpp - ldeps);
 
   if (res != res1)		/* if result still not accurate enough */
-    {				/* use mpa for higher persision.  */
+    {				/* use mpa for higher precision.  */
       mp_no mpx, mpy, mpz, mpw, mpp, mpr, mpr1;
       static const mp_no eps = { -3, {1.0, 4.0} };
       int p;

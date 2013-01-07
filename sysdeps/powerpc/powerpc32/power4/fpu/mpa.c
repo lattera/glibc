@@ -409,9 +409,9 @@ void __mul(const mp_no *x, const mp_no *y, mp_no *z, int p) {
     if (k > p2)  {i1=k-p2; i2=p2+1; }
     else        {i1=1;   i2=k;   }
 #if 1
-    /* rearange this inner loop to allow the fmadd instructions to be
+    /* rearrange this inner loop to allow the fmadd instructions to be
        independent and execute in parallel on processors that have
-       dual symetrical FP pipelines.  */
+       dual symmetrical FP pipelines.  */
     if (i1 < (i2-1))
     {
 	/* make sure we have at least 2 iterations */
@@ -437,7 +437,7 @@ void __mul(const mp_no *x, const mp_no *y, mp_no *z, int p) {
 	zk += x->d[i1]*y->d[i1];
     }
 #else
-    /* The orginal code.  */
+    /* The original code.  */
     for (i=i1,j=i2-1; i<i2; i++,j--)  zk += X[i]*Y[j];
 #endif
 

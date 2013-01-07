@@ -55,7 +55,7 @@ EALIGN (BP_SYM(memcmp),4,0)
 	beq-	cr6,L(zeroLength)
 	dcbt	0,rSTR1
 	dcbt	0,rSTR2
-/* If less than 8 bytes or not aligned, use the unalligned
+/* If less than 8 bytes or not aligned, use the unaligned
    byte loop.  */
 	blt	cr1,L(bytealigned)
 	std	rWORD8,-8(r1)
@@ -64,7 +64,7 @@ EALIGN (BP_SYM(memcmp),4,0)
 	cfi_offset(rWORD7,-16)
 	bne	L(unaligned)
 /* At this point we know both strings have the same alignment and the
-   compare length is at least 8 bytes.  rBITDIF containes the low order
+   compare length is at least 8 bytes.  rBITDIF contains the low order
    3 bits of rSTR1 and cr5 contains the result of the logical compare
    of rBITDIF to 0.  If rBITDIF == 0 then we are already double word
    aligned and can perform the DWaligned loop.
@@ -72,7 +72,7 @@ EALIGN (BP_SYM(memcmp),4,0)
    Otherwise we know the two strings have the same alignment (but not
    yet DW).  So we can force the string addresses to the next lower DW
    boundary and special case this first DW word using shift left to
-   ellimiate bits preceeding the first byte.  Since we want to join the
+   eliminate bits preceding the first byte.  Since we want to join the
    normal (DWaligned) compare loop, starting at the second double word,
    we need to adjust the length (rN) and special case the loop
    versioning for the first DW. This insures that the loop count is
@@ -154,8 +154,8 @@ L(DWaligned):
 L(dP1):
 	mtctr	rTMP
 /* Normally we'd use rWORD7/rWORD8 here, but since we might exit early
-   (8-15 byte compare), we want to use only volitile registers.  This
-   means we can avoid restoring non-volitile registers since we did not
+   (8-15 byte compare), we want to use only volatile registers.  This
+   means we can avoid restoring non-volatile registers since we did not
    change any on the early exit path.  The key here is the non-early
    exit path only cares about the condition code (cr5), not about which
    register pair was used.  */
@@ -217,7 +217,7 @@ L(dP2e):
 	bne	cr5,L(dLcr5)
 	b	L(dLoop2)
 /* Again we are on a early exit path (16-23 byte compare), we want to
-   only use volitile registers and avoid restoring non-volitile
+   only use volatile registers and avoid restoring non-volatile
    registers.  */
 	.align	4
 L(dP2x):
@@ -258,7 +258,7 @@ L(dP3e):
 	bne	cr6,L(dLcr6)
 	b	L(dLoop1)
 /* Again we are on a early exit path (24-31 byte compare), we want to
-   only use volitile registers and avoid restoring non-volitile
+   only use volatile registers and avoid restoring non-volatile
    registers.  */
 	.align	4
 L(dP3x):
@@ -342,7 +342,7 @@ L(d04):
 	beq	L(zeroLength)
 /* At this point we have a remainder of 1 to 7 bytes to compare.  Since
    we are aligned it is safe to load the whole double word, and use
-   shift right double to elliminate bits beyond the compare length.  */
+   shift right double to eliminate bits beyond the compare length.  */
 L(d00):
 	ld	rWORD1,8(rSTR1)
 	ld	rWORD2,8(rSTR2)
@@ -498,15 +498,15 @@ L(zeroLength):
 
 	.align	4
 /* At this point we know the strings have different alignment and the
-   compare length is at least 8 bytes.  rBITDIF containes the low order
+   compare length is at least 8 bytes.  rBITDIF contains the low order
    3 bits of rSTR1 and cr5 contains the result of the logical compare
    of rBITDIF to 0.  If rBITDIF == 0 then rStr1 is double word
    aligned and can perform the DWunaligned loop.
 
-   Otherwise we know that rSTR1 is not aready DW aligned yet.
+   Otherwise we know that rSTR1 is not already DW aligned yet.
    So we can force the string addresses to the next lower DW
    boundary and special case this first DW word using shift left to
-   ellimiate bits preceeding the first byte.  Since we want to join the
+   eliminate bits preceding the first byte.  Since we want to join the
    normal (DWaligned) compare loop, starting at the second double word,
    we need to adjust the length (rN) and special case the loop
    versioning for the first DW. This insures that the loop count is
@@ -539,7 +539,7 @@ L(unaligned):
 	clrrdi	rSTR2,rSTR2,3
 	std	r26,-48(r1)
 	cfi_offset(r26,-48)
-/* Compute the leaft/right shift counts for the unalign rSTR2,
+/* Compute the left/right shift counts for the unaligned rSTR2,
    compensating for the logical (DW aligned) start of rSTR1.  */
 	clrldi	rSHL,r27,61
 	clrrdi	rSTR1,rSTR1,3
@@ -878,7 +878,7 @@ L(du14):
 	sldi.	rN,rN,3
 	bne	cr5,L(duLcr5)
 /* At this point we have a remainder of 1 to 7 bytes to compare.  We use
-   shift right double to elliminate bits beyond the compare length.
+   shift right double to eliminate bits beyond the compare length.
    This allows the use of double word subtract to compute the final
    result.
 

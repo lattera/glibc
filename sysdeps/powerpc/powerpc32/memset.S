@@ -275,7 +275,7 @@ L(checklinesize):
 	beq	cr1,L(nondcbz)
 
 /* If the cache line size is 32 bytes then goto to L(zloopstart),
-   which is coded specificly for 32-byte lines (and 601).  */
+   which is coded specifically for 32-byte lines (and 601).  */
 	cmplwi	cr1,rCLS,32
 	beq	cr1,L(zloopstart)
 

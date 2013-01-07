@@ -44,7 +44,7 @@ L(proceed):
 	rlwinm	r6,r3,3,27,28 /* Calculate padding.  */
 	cmpli	cr6,r6,0      /* cr6 == Do we have padding?  */
 	lwz	r12,0(r8)     /* Load word from memory.  */
-	cmpb	r10,r12,r4    /* Check for BYTE's in WORD1.  */
+	cmpb	r10,r12,r4    /* Check for BYTEs in WORD1.  */
 	beq	cr6,L(proceed_no_padding)
 	slw	r10,r10,r6
 	srw	r10,r10,r6

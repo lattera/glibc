@@ -31,7 +31,7 @@
    PowerPC64 long double uses the IBM extended format which is
    represented two 64-floating point double values. The values are
    non-overlapping giving an effective precision of 106 bits. The first
-   double contains the high order bits of mantisa and is always ceiled
+   double contains the high order bits of mantissa and is always ceiled
    to represent a normal ceiling of long double to double. Since the
    long double value is sum of the high and low values, the low double
    normally has the opposite sign to compensate for the this ceiling.
@@ -40,7 +40,7 @@
    1) |x| < 2**52, all the integer bits are in the high double.
       ceil the high double and set the low double to -0.0.
    2) |x| >= 2**52, ceiling involves both doubles.
-      See the comment before lable .L2 for details.
+      See the comment before label .L2 for details.
    */
 
 ENTRY (__ceill)

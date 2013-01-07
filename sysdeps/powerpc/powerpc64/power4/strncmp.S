@@ -52,7 +52,7 @@ EALIGN (BP_SYM(strncmp), 4, 0)
 	cmpldi	cr1, rN, 0
 	lis	rFEFE, -0x101
 	bne	L(unaligned)
-/* We are doubleword alligned so set up for two loops.  first a double word
+/* We are doubleword aligned so set up for two loops.  first a double word
    loop, then fall into the byte loop if any residual.  */
 	srdi.	rTMP, rN, 3
 	clrldi	rN, rN, 61

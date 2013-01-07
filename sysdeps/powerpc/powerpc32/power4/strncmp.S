@@ -51,7 +51,7 @@ EALIGN (BP_SYM(strncmp), 4, 0)
 	cmplwi	cr1, rN, 0
 	lis	rFEFE, -0x101
 	bne	L(unaligned)
-/* We are word alligned so set up for two loops.  first a word
+/* We are word aligned so set up for two loops.  first a word
    loop, then fall into the byte loop if any residual.  */
 	srwi.	rTMP, rN, 2
 	clrlwi	rN, rN, 30

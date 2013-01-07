@@ -34,7 +34,7 @@
  * latency to memory is >400 clocks
  * To improve copy performance we need to prefetch source data
  * far ahead to hide this latency
- * For best performance instructionforms ending in "." like "andi."
+ * For best performance instruction forms ending in "." like "andi."
  * should be avoided as the are implemented in microcode on CELL.
  * The below code is loop unrolled for the CELL cache line of 128 bytes
  */
@@ -146,7 +146,7 @@ EALIGN (BP_SYM (memcpy), 5, 0)
 	lfd	fp9, 0x08(r4)
 	dcbz	r11,r6
 	lfd	fp10, 0x10(r4)	/* 4 register stride copy is optimal  */
-	lfd	fp11, 0x18(r4)	/* to hide 1st level cache lantency.  */
+	lfd	fp11, 0x18(r4)	/* to hide 1st level cache latency.  */
 	lfd	fp12, 0x20(r4)
 	stfd	fp9, 0x08(r6)
 	stfd	fp10, 0x10(r6)

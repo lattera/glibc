@@ -411,31 +411,31 @@ L(wdu):
      not.  For power4, power5 and power6 machines there is penalty for
      unaligned loads (src) that cross 32-byte, cacheline, or page
      boundaries. So we want to use simple (unaligned) loads where
-     posible but avoid them where we know the load would span a 32-byte
+     possible but avoid them where we know the load would span a 32-byte
      boundary.
 
      At this point we know we have at least 29 (32-3) bytes to copy
      the src is unaligned. and we may cross at least one 32-byte
-     boundary. Also we have the following regester values:
+     boundary. Also we have the following register values:
      r3 == adjusted dst, word aligned
      r4 == unadjusted src
      r5 == unadjusted len
      r9 == adjusted Word length
      r10 == src alignment (1-3)
-     r12 == adjuested src, not aligned
+     r12 == adjusted src, not aligned
      r31 == adjusted len
 
-     First we need to copy word upto but not crossing the next 32-byte
+     First we need to copy word up to but not crossing the next 32-byte
      boundary. Then perform aligned loads just before and just after
-     the boundary and use shifts and or to gernerate the next aligned
+     the boundary and use shifts and or to generate the next aligned
      word for dst. If more then 32 bytes remain we copy (unaligned src)
      the next 7 words and repeat the loop until less then 32-bytes
-     remaim.
+     remain.
 
      Then if more then 4 bytes remain we again use aligned loads,
      shifts and or to generate the next dst word. We then process the
      remaining words using unaligned loads as needed. Finally we check
-     if there more then 0 bytes (1-3) bytes remainting and use
+     if there more then 0 bytes (1-3) bytes remaining and use
      halfword and or byte load/stores to complete the copy.
 */
     mr      4,12      /* restore unaligned adjusted src ptr */
@@ -512,7 +512,7 @@ L(wdu_h32_4):
     addi  3,3,4
     .align  4
 L(wdu_h32_0):
-/*  set up for 32-byte boundry crossing word move and possibly 32-byte
+/*  set up for 32-byte boundary crossing word move and possibly 32-byte
     move loop.  */
     clrrwi  12,4,2
     cmplwi  cr5,31,32

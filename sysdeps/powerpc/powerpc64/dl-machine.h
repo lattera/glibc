@@ -202,7 +202,7 @@ BODY_PREFIX "_dl_start_user:\n"						\
 "	sldi	5,3,3\n"						\
 "	add	6,4,5\n"						\
 "	addi	5,6,8\n"						\
-/* Pass the auxilary vector in r6. This is passed to us just after	\
+/* Pass the auxiliary vector in r6. This is passed to us just after	\
    _envp.  */								\
 "2:	ldu	0,8(6)\n"						\
 "	cmpdi	0,0\n"							\
@@ -322,13 +322,13 @@ elf_machine_runtime_setup (struct link_map *map, int lazy, int profile)
       /* Relocate the DT_PPC64_GLINK entry in the _DYNAMIC section.
 	 elf_get_dynamic_info takes care of the standard entries but
 	 doesn't know exactly what to do with processor specific
-	 entires.  */
+	 entries.  */
       if (info[DT_PPC64(GLINK)] != NULL)
 	info[DT_PPC64(GLINK)]->d_un.d_ptr += l_addr;
 
       if (lazy)
 	{
-	  /* The function descriptor of the appropriate trampline
+	  /* The function descriptor of the appropriate trampoline
 	     routine is used to set the 1st and 2nd doubleword of the
 	     plt_reserve.  */
 	  Elf64_FuncDesc *resolve_fd;

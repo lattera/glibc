@@ -51,7 +51,7 @@ L(proceed):
 	cmpb	r10,r12,r4    /* Check for BYTE in WORD1.  */
 	slw	r10,r10,r0
 	srw	r10,r10,r0
-	cmplwi	cr7,r10,0     /* If r10 == 0, no BYTE's have been found.  */
+	cmplwi	cr7,r10,0     /* If r10 == 0, no BYTEs have been found.  */
 	bne	cr7,L(done)
 
 	/* Are we done already?  */

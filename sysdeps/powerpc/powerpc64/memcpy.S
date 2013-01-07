@@ -28,11 +28,11 @@
    with the appropriate combination of byte and halfword load/stores.
    There is minimal effort to optimize the alignment of short moves.
    The 64-bit implementations of POWER3 and POWER4 do a reasonable job
-   of handling unligned load/stores that do not cross 32-byte boundries.
+   of handling unaligned load/stores that do not cross 32-byte boundaries.
 
    Longer moves (>= 32-bytes) justify the effort to get at least the
    destination doubleword (8-byte) aligned.  Further optimization is
-   posible when both source and destination are doubleword aligned.
+   possible when both source and destination are doubleword aligned.
    Each case has a optimized unrolled loop.   */
 
 EALIGN (BP_SYM (memcpy), 5, 0)
@@ -43,9 +43,9 @@ EALIGN (BP_SYM (memcpy), 5, 0)
     std   3,-16(1)
     std   31,-8(1)
     cfi_offset(31,-8)
-    andi. 11,3,7	/* check alignement of dst.  */
+    andi. 11,3,7	/* check alignment of dst.  */
     clrldi 0,0,61	/* Number of bytes until the 1st doubleword of dst.  */
-    clrldi 10,4,61	/* check alignement of src.  */
+    clrldi 10,4,61	/* check alignment of src.  */
     cmpldi cr6,5,8
     ble-  cr1,.L2	/* If move < 32 bytes use short move code.  */
     cmpld cr6,10,11
@@ -56,7 +56,7 @@ EALIGN (BP_SYM (memcpy), 5, 0)
     beq   .L0
 
     subf  31,0,5
-  /* Move 0-7 bytes as needed to get the destination doubleword alligned.  */
+  /* Move 0-7 bytes as needed to get the destination doubleword aligned.  */
 1:  bf    31,2f
     lbz   6,0(12)
     addi  12,12,1
@@ -73,10 +73,10 @@ EALIGN (BP_SYM (memcpy), 5, 0)
     stw   6,0(3)
     addi  3,3,4
 0:
-    clrldi 10,12,61	/* check alignement of src again.  */
+    clrldi 10,12,61	/* check alignment of src again.  */
     srdi  9,31,3	/* Number of full double words remaining.  */
 
-  /* Copy doublewords from source to destination, assumpting the
+  /* Copy doublewords from source to destination, assuming the
      destination is aligned on a doubleword boundary.
 
      At this point we know there are at least 25 bytes left (32-7) to copy.
@@ -152,7 +152,7 @@ EALIGN (BP_SYM (memcpy), 5, 0)
     add   12,12,0
 
 /*  At this point we have a tail of 0-7 bytes and we know that the
-    destiniation is double word aligned.  */
+    destination is double word aligned.  */
 4:  bf    29,2f
     lwz   6,0(12)
     addi  12,12,4
@@ -282,7 +282,7 @@ EALIGN (BP_SYM (memcpy), 5, 0)
     bne   cr6,4f
 /* Would have liked to use use ld/std here but the 630 processors are
    slow for load/store doubles that are not at least word aligned.
-   Unaligned Load/Store word execute with only a 1 cycle penaltity.  */
+   Unaligned Load/Store word execute with only a 1 cycle penalty.  */
     lwz   6,0(4)
     lwz   7,4(4)
     stw   6,0(3)

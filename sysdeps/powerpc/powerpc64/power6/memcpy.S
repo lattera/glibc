@@ -28,16 +28,16 @@
    with the appropriate combination of byte and halfword load/stores. 
    There is minimal effort to optimize the alignment of short moves.  
    The 64-bit implementations of POWER3 and POWER4 do a reasonable job
-   of handling unligned load/stores that do not cross 32-byte boundries.
+   of handling unaligned load/stores that do not cross 32-byte boundaries.
 
    Longer moves (>= 32-bytes) justify the effort to get at least the
    destination doubleword (8-byte) aligned.  Further optimization is
-   posible when both source and destination are doubleword aligned.
+   possible when both source and destination are doubleword aligned.
    Each case has a optimized unrolled loop.  
      
-   For POWER6 unaligned loads will take a 20+ cycle hicup for any
+   For POWER6 unaligned loads will take a 20+ cycle hiccup for any
    L1 cache miss that crosses a 32- or 128-byte boundary.  Store
-   is more forgiving and does not take a hicup until page or 
+   is more forgiving and does not take a hiccup until page or
    segment boundaries.  So we require doubleword alignment for 
    the source but may take a risk and only require word alignment
    for the destination.  */
@@ -50,9 +50,9 @@ EALIGN (BP_SYM (memcpy), 7, 0)
     neg   0,3
     std   3,-16(1)
     std   31,-8(1)
-    andi. 11,3,7	/* check alignement of dst.  */
+    andi. 11,3,7	/* check alignment of dst.  */
     clrldi 0,0,61	/* Number of bytes until the 1st doubleword of dst.  */
-    clrldi 10,4,61	/* check alignement of src.  */
+    clrldi 10,4,61	/* check alignment of src.  */
     cmpldi cr6,5,8
     ble-  cr1,.L2	/* If move < 32 bytes use short move code.  */
     mtcrf 0x01,0
@@ -61,8 +61,8 @@ EALIGN (BP_SYM (memcpy), 7, 0)
     beq   .L0
   
     subf  5,0,5
-  /* Move 0-7 bytes as needed to get the destination doubleword alligned.
-     Duplicate some code to maximize fall-throught and minimize agen delays.  */
+  /* Move 0-7 bytes as needed to get the destination doubleword aligned.
+     Duplicate some code to maximize fall-through and minimize agen delays.  */
 1:  bf    31,2f
     lbz   6,0(4)
     stb   6,0(3)
@@ -95,10 +95,10 @@ EALIGN (BP_SYM (memcpy), 7, 0)
     add   4,4,0
     add   3,3,0
     
-    clrldi 10,4,61	/* check alignement of src again.  */     
+    clrldi 10,4,61	/* check alignment of src again.  */
     srdi  9,5,3	/* Number of full double words remaining.  */
     
-  /* Copy doublewords from source to destination, assumpting the
+  /* Copy doublewords from source to destination, assuming the
      destination is aligned on a doubleword boundary.
 
      At this point we know there are at least 25 bytes left (32-7) to copy.
@@ -130,7 +130,7 @@ EALIGN (BP_SYM (memcpy), 7, 0)
      load, load, store, store every 2 cycles.  
      
      The following code is sensitive to cache line alignment.  Do not
-     make any change with out first making sure thay don't result in
+     make any change with out first making sure they don't result in
      splitting ld/std pairs across a cache line.  */
 
     mtcrf 0x02,5
@@ -329,7 +329,7 @@ L(das_tail):
     
 L(das_tail2):
 /*  At this point we have a tail of 0-7 bytes and we know that the
-    destiniation is double word aligned.  */
+    destination is double word aligned.  */
 4:  bf    29,2f
     lwz   6,0(4)
     stw   6,0(3)
@@ -537,7 +537,7 @@ L(dus_tailX):
 .LE8:
     mr    12,4
     bne   cr6,L(dus_4)
-/* Exactly 8 bytes.  We may cross a 32-/128-byte boundry and take a ~20
+/* Exactly 8 bytes.  We may cross a 32-/128-byte boundary and take a ~20
    cycle delay.  This case should be rare and any attempt to avoid this
    would take most of 20 cycles any way.  */
     ld   6,0(4)
@@ -1146,7 +1146,7 @@ L(du_done):
     add   3,3,0
     add   12,12,0    
 /*  At this point we have a tail of 0-7 bytes and we know that the
-    destiniation is double word aligned.  */
+    destination is double word aligned.  */
 4:  bf    29,2f
     lwz   6,0(12)
     addi  12,12,4

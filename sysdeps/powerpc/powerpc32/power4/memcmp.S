@@ -69,7 +69,7 @@ EALIGN (BP_SYM(memcmp), 4, 0)
    Otherwise we know the two strings have the same alignment (but not
    yet word aligned).  So we force the string addresses to the next lower
    word boundary and special case this first word using shift left to
-   eliminate bits preceeding the first byte.  Since we want to join the
+   eliminate bits preceding the first byte.  Since we want to join the
    normal (word aligned) compare loop, starting at the second word,
    we need to adjust the length (rN) and special case the loop
    versioning for the first word. This insures that the loop count is
@@ -517,7 +517,7 @@ L(zeroLength):
    Otherwise we know that rSTR1 is not aready word aligned yet.
    So we can force the string addresses to the next lower word
    boundary and special case this first word using shift left to
-   eliminate bits preceeding the first byte.  Since we want to join the
+   eliminate bits preceding the first byte.  Since we want to join the
    normal (Wualigned) compare loop, starting at the second word,
    we need to adjust the length (rN) and special case the loop
    versioning for the first W. This insures that the loop count is

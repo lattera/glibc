@@ -39,8 +39,8 @@ ENTRY (BP_SYM (__STRCMP))
 #define rSTR1	r5	/* 1st string */
 #define rSTR2	r4	/* 2nd string */
 #define rLOCARG	r5	/* 3rd argument: locale_t */
-#define rCHAR1	r6	/* Byte readed from 1st string */
-#define rCHAR2	r7	/* Byte readed from 2nd string */
+#define rCHAR1	r6	/* Byte read from 1st string */
+#define rCHAR2	r7	/* Byte read from 2nd string */
 #define rADDR1	r8	/* Address of tolower(rCHAR1) */
 #define rADDR2	r12	/* Address of tolower(rCHAR2) */
 #define rLWR1	r8	/* Byte tolower(rCHAR1) */

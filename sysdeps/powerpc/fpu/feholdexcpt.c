@@ -33,7 +33,7 @@ feholdexcept (fenv_t *envp)
   new.l[1] = old.l[1] & 7;
   new.l[0] = old.l[0];
   
-  /* If the old env had any eabled exceptions, then mask SIGFPE in the
+  /* If the old env had any enabled exceptions, then mask SIGFPE in the
      MSR FE0/FE1 bits.  This may allow the FPU to run faster because it
      always takes the default action and can not generate SIGFPE. */
   if ((old.l[1] & _FPU_MASK_ALL) != 0)

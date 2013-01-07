@@ -82,7 +82,7 @@ typedef unsigned long long int hp_timing_t;
 /* That's quite simple.  Use the `mftb' instruction.  Note that the value
    might not be 100% accurate since there might be some more instructions
    running in this moment.  This could be changed by using a barrier like
-   'lwsync' right before the `mftb' instruciton.  But we are not interested
+   'lwsync' right before the `mftb' instruction.  But we are not interested
    in accurate clock cycles here so we don't do this.  */
 #ifdef _ARCH_PWR4
 #define HP_TIMING_NOW(Var)	__asm__ __volatile__ ("mfspr %0,268" : "=r" (Var))

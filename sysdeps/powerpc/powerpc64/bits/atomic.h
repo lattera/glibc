@@ -21,7 +21,7 @@
     This is a hint to the hardware to expect additional updates adjacent
     to the lock word or not.  If we are acquiring a Mutex, the hint
     should be true. Otherwise we releasing a Mutex or doing a simple
-    atomic operation.  In that case we don't expect addtional updates
+    atomic operation.  In that case we don't expect additional updates
     adjacent to the lock word after the Store Conditional and the hint
     should be false.  */
 
@@ -34,7 +34,7 @@
 #endif
 
 /* The 32-bit exchange_bool is different on powerpc64 because the subf
-   does signed 64-bit arthmatic while the lwarx is 32-bit unsigned
+   does signed 64-bit arithmetic while the lwarx is 32-bit unsigned
    (a load word and zero (high 32) form) load.
    In powerpc64 register values are 64-bit by default,  including oldval.
    The value in old val unknown sign extension, lwarx loads the 32-bit
