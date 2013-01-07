@@ -1844,12 +1844,12 @@ static void     malloc_consolidate(mstate);
 #endif
 
 /* Forward declarations.  */
-static void* malloc_hook_ini __MALLOC_P ((size_t sz,
-					    const __malloc_ptr_t caller));
-static void* realloc_hook_ini __MALLOC_P ((void* ptr, size_t sz,
-					     const __malloc_ptr_t caller));
-static void* memalign_hook_ini __MALLOC_P ((size_t alignment, size_t sz,
-					      const __malloc_ptr_t caller));
+static void* malloc_hook_ini (size_t sz,
+			      const __malloc_ptr_t caller) __THROW;
+static void* realloc_hook_ini (void* ptr, size_t sz,
+			       const __malloc_ptr_t caller) __THROW;
+static void* memalign_hook_ini (size_t alignment, size_t sz,
+				const __malloc_ptr_t caller) __THROW;
 
 void weak_variable (*__malloc_initialize_hook) (void) = NULL;
 void weak_variable (*__free_hook) (__malloc_ptr_t __ptr,
@@ -3008,8 +3008,7 @@ __libc_memalign(size_t alignment, size_t bytes)
   mstate ar_ptr;
   void *p;
 
-  __malloc_ptr_t (*hook) __MALLOC_PMT ((size_t, size_t,
-					const __malloc_ptr_t)) =
+  __malloc_ptr_t (*hook) (size_t, size_t, const __malloc_ptr_t) =
     force_reg (__memalign_hook);
   if (__builtin_expect (hook != NULL, 0))
     return (*hook)(alignment, bytes, RETURN_ADDRESS (0));
@@ -3051,8 +3050,7 @@ __libc_valloc(size_t bytes)
 
   size_t pagesz = GLRO(dl_pagesize);
 
-  __malloc_ptr_t (*hook) __MALLOC_PMT ((size_t, size_t,
-					const __malloc_ptr_t)) =
+  __malloc_ptr_t (*hook) (size_t, size_t, const __malloc_ptr_t) =
     force_reg (__memalign_hook);
   if (__builtin_expect (hook != NULL, 0))
     return (*hook)(pagesz, bytes, RETURN_ADDRESS (0));
@@ -3088,8 +3086,7 @@ __libc_pvalloc(size_t bytes)
   size_t page_mask = GLRO(dl_pagesize) - 1;
   size_t rounded_bytes = (bytes + page_mask) & ~(page_mask);
 
-  __malloc_ptr_t (*hook) __MALLOC_PMT ((size_t, size_t,
-					const __malloc_ptr_t)) =
+  __malloc_ptr_t (*hook) (size_t, size_t, const __malloc_ptr_t) =
     force_reg (__memalign_hook);
   if (__builtin_expect (hook != NULL, 0))
     return (*hook)(pagesz, rounded_bytes, RETURN_ADDRESS (0));
@@ -3132,7 +3129,7 @@ __libc_calloc(size_t n, size_t elem_size)
     }
   }
 
-  __malloc_ptr_t (*hook) __MALLOC_PMT ((size_t, const __malloc_ptr_t)) =
+  __malloc_ptr_t (*hook) (size_t, const __malloc_ptr_t) =
     force_reg (__malloc_hook);
   if (__builtin_expect (hook != NULL, 0)) {
     sz = bytes;
@@ -4923,8 +4920,7 @@ __posix_memalign (void **memptr, size_t alignment, size_t size)
 
   /* Call the hook here, so that caller is posix_memalign's caller
      and not posix_memalign itself.  */
-  __malloc_ptr_t (*hook) __MALLOC_PMT ((size_t, size_t,
-					const __malloc_ptr_t)) =
+  __malloc_ptr_t (*hook) (size_t, size_t, const __malloc_ptr_t) =
     force_reg (__memalign_hook);
   if (__builtin_expect (hook != NULL, 0))
     mem = (*hook)(alignment, size, RETURN_ADDRESS (0));

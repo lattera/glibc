@@ -1,5 +1,23 @@
 2013-01-07  Joseph Myers  <joseph@codesourcery.com>
 
+	* malloc/malloc.h (__MALLOC_P): Remove all definitions.
+	(__MALLOC_PMT): Likewise.
+	[__GNUC__] (__MALLOC_HOOK_VOLATILE): Make not conditional on
+	[__GNUC__], only on [_LIBC].
+	[__GNUC__] (__MALLOC_DEPRECATED): Likewise.
+	[!__GNUC__] (__MALLOC_HOOK_VOLATILE): Remove definition.
+	[!__GNUC__] (__MALLOC_DEPRECATED): Likewise.
+	* malloc/malloc.c (malloc_hook_ini): Do not use __MALLOC_P in
+	forward declaration.
+	(realloc_hook_ini): Likewise.
+	(memalign_hook_ini): Likewise.
+	(__libc_memalign): Do not use __MALLOC_PMT in variable
+	declaration.
+	(__libc_valloc): Likewise.
+	(__libc_pvalloc): Likewise.
+	(__libc_calloc): Likewise.
+	(__posix_memalign): Likewise.
+
 	[BZ #14996]
 	* math/s_casinh.c: Include <float.h>.
 	(__casinh): Do not do computation with squaring and square root
