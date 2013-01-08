@@ -1,3 +1,8 @@
+2013-01-08  Steve Ellcey  <sellcey@mips.com>
+
+	* sysdeps/mips/memcpy.S: Change prefetch hint, reorder partial
+	loads and stores, set and use MAX_PREFETCH_SIZE.
+
 2013-01-08  Andreas Jaeger  <aj@suse.de>
 
 	[BZ# 14985]

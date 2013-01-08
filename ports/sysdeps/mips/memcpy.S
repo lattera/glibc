@@ -26,12 +26,12 @@
 #include <regdef.h>
 #include <sys/asm.h>
 #define PREFETCH_LOAD_HINT PREFETCH_HINT_LOAD_STREAMED
-#define PREFETCH_STORE_HINT PREFETCH_HINT_STORE_STREAMED
+#define PREFETCH_STORE_HINT PREFETCH_HINT_PREPAREFORSTORE
 #elif _COMPILING_NEWLIB
 #include "machine/asm.h"
 #include "machine/regdef.h"
 #define PREFETCH_LOAD_HINT PREFETCH_HINT_LOAD_STREAMED
-#define PREFETCH_STORE_HINT PREFETCH_HINT_STORE_STREAMED
+#define PREFETCH_STORE_HINT PREFETCH_HINT_PREPAREFORSTORE
 #else
 #include <regdef.h>
 #include <sys/asm.h>
@@ -44,7 +44,7 @@
 #endif
 #endif
 
-#if (_MIPS_SIM == _ABI64) || (_MIPS_SIM == _ABIN32)
+#if defined(_MIPS_SIM) && ((_MIPS_SIM == _ABI64) || (_MIPS_SIM == _ABIN32))
 #ifndef DISABLE_DOUBLE
 #define USE_DOUBLE
 #endif
@@ -138,14 +138,15 @@
  * get 64 bytes in that case.  The assumption is that each individual
  * prefetch brings in 32 bytes.
  */
+
 #ifdef USE_DOUBLE
 # define PREFETCH_CHUNK 64
 # define PREFETCH_FOR_LOAD(chunk, reg) \
- pref PREFETCH_LOAD_HINT, (chunk)*32(reg); \
- pref PREFETCH_LOAD_HINT, ((chunk)+1)*32(reg)
+ pref PREFETCH_LOAD_HINT, (chunk)*64(reg); \
+ pref PREFETCH_LOAD_HINT, ((chunk)*64)+32(reg)
 # define PREFETCH_FOR_STORE(chunk, reg) \
- pref PREFETCH_STORE_HINT, (chunk)*32(reg); \
- pref PREFETCH_STORE_HINT, ((chunk)+1)*32(reg)
+ pref PREFETCH_STORE_HINT, (chunk)*64(reg); \
+ pref PREFETCH_STORE_HINT, ((chunk)*64)+32(reg)
 #else
 # define PREFETCH_CHUNK 32
 # define PREFETCH_FOR_LOAD(chunk, reg) \
@@ -153,7 +154,28 @@
 # define PREFETCH_FOR_STORE(chunk, reg) \
  pref PREFETCH_STORE_HINT, (chunk)*32(reg)
 #endif
-# define PREFETCH_LIMIT (5 * PREFETCH_CHUNK)
+/* MAX_PREFETCH_SIZE is the maximum size of a prefetch, it must not be less
+ * then PREFETCH_CHUNK, the assumed size of each prefetch.  If the real size
+ * of a prefetch is greater then MAX_PREFETCH_SIZE and the PREPAREFORSTORE
+ * hint is used, the code will not work corrrectly.  If PREPAREFORSTORE is not
+ * used then MAX_PREFETCH_SIZE does not matter.  */
+#define MAX_PREFETCH_SIZE 128
+/* PREFETCH_LIMIT is set based on the fact that we neve use an offset greater
+ * then 5 on a STORE prefetch and that a single prefetch can never be larger
+ * then MAX_PREFETCH_SIZE.  We add the extra 32 when USE_DOUBLE is set because
+ * we actually do two prefetches in that case, one 32 bytes after the other.  */
+#ifdef USE_DOUBLE
+# define PREFETCH_LIMIT (5 * PREFETCH_CHUNK) + 32 + MAX_PREFETCH_SIZE
+#else
+# define PREFETCH_LIMIT (5 * PREFETCH_CHUNK) + MAX_PREFETCH_SIZE
+#endif
+#if (PREFETCH_STORE_HINT == PREFETCH_HINT_PREPAREFORSTORE) \
+    && ((PREFETCH_CHUNK * 4) < MAX_PREFETCH_SIZE)
+/* We cannot handle this because the initial prefetches may fetch bytes that
+ * are before the buffer being copied.  We start copies with an offset 
+ * of 4 so avoid this situation when using PREPAREFORSTORE.  */
+#error "PREFETCH_CHUNK is too large and/or MAX_PREFETCH_SIZE is too small."
+#endif
 #else /* USE_PREFETCH not defined */
 # define PREFETCH_FOR_LOAD(offset, reg)
 # define PREFETCH_FOR_STORE(offset, reg)
@@ -169,7 +191,7 @@
 #define REG1 t1
 #define REG2 t2
 #define REG3 t3
-#if _MIPS_SIM == _ABIO32
+#if defined(_MIPS_SIM) && ((_MIPS_SIM == _ABIO32) || (_MIPS_SIM == _ABIO64))
 #  define REG4 t4
 #  define REG5 t5
 #  define REG6 t6
@@ -258,7 +280,11 @@ L(memcpy):
  */
 	slti	t2,a2,(2 * NSIZE)
 	bne	t2,zero,L(lastb)
+#if defined(RETURN_FIRST_PREFETCH) || defined(RETURN_LAST_PREFETCH)
+	move	v0,zero
+#else
 	move	v0,a0
+#endif
 /*
  * If src and dst have different alignments, go to L(unaligned), if they
  * have the same alignment (but are not actually aligned) do a partial
@@ -306,22 +332,46 @@ L(aligned):
 	PREFETCH_FOR_LOAD  (0, a1)
 	PREFETCH_FOR_LOAD  (1, a1)
 	PREFETCH_FOR_LOAD  (2, a1)
-	PREFETCH_FOR_STORE (1, a0)
-#if defined(USE_PREFETCH) && (PREFETCH_STORE_HINT == PREFETCH_HINT_PREPAREFORSTORE)
-	sltu	v1,t9,a0		/* If a0 > t9 don't use next prefetch */
-	bgtz	v1,L(loop16w)
-	nop
-#endif
-	PREFETCH_FOR_STORE (2, a0)
-L(loop16w):
 	PREFETCH_FOR_LOAD  (3, a1)
+#if defined(USE_PREFETCH) && (PREFETCH_STORE_HINT != PREFETCH_HINT_PREPAREFORSTORE)
+	PREFETCH_FOR_STORE (1, a0)
+	PREFETCH_FOR_STORE (2, a0)
+	PREFETCH_FOR_STORE (3, a0)
+#endif
+#if defined(RETURN_FIRST_PREFETCH) && defined(USE_PREFETCH)
+#if PREFETCH_STORE_HINT == PREFETCH_HINT_PREPAREFORSTORE
+	sltu    v1,t9,a0
+	bgtz    v1,L(skip_set)
+	nop
+	PTR_ADDIU v0,a0,(PREFETCH_CHUNK*4)
+L(skip_set):
+#else
+	PTR_ADDIU v0,a0,(PREFETCH_CHUNK*1)
+#endif
+#endif
+#if defined(RETURN_LAST_PREFETCH) && defined(USE_PREFETCH) \
+    && (PREFETCH_STORE_HINT != PREFETCH_HINT_PREPAREFORSTORE)
+	PTR_ADDIU v0,a0,(PREFETCH_CHUNK*3)
+#ifdef USE_DOUBLE
+	PTR_ADDIU v0,v0,32
+#endif
+#endif
+L(loop16w):
 	C_LD	t0,UNIT(0)(a1)
 #if defined(USE_PREFETCH) && (PREFETCH_STORE_HINT == PREFETCH_HINT_PREPAREFORSTORE)
-	bgtz	v1,L(skip_pref30_96)
+	sltu	v1,t9,a0		/* If a0 > t9 don't use next prefetch */
+	bgtz	v1,L(skip_pref)
 #endif
 	C_LD	t1,UNIT(1)(a1)
-	PREFETCH_FOR_STORE (3, a0)
-L(skip_pref30_96):
+	PREFETCH_FOR_STORE (4, a0)
+	PREFETCH_FOR_STORE (5, a0)
+#if defined(RETURN_LAST_PREFETCH) && defined(USE_PREFETCH)
+	PTR_ADDIU v0,a0,(PREFETCH_CHUNK*5)
+#ifdef USE_DOUBLE
+	PTR_ADDIU v0,v0,32
+#endif
+#endif
+L(skip_pref):
 	C_LD	REG2,UNIT(2)(a1)
 	C_LD	REG3,UNIT(3)(a1)
 	C_LD	REG4,UNIT(4)(a1)
@@ -340,12 +390,7 @@ L(skip_pref30_96):
 	C_ST	REG7,UNIT(7)(a0)
 
 	C_LD	t0,UNIT(8)(a1)
-#if defined(USE_PREFETCH) && (PREFETCH_STORE_HINT == PREFETCH_HINT_PREPAREFORSTORE)
-	bgtz	v1,L(skip_pref30_128)
-#endif
 	C_LD	t1,UNIT(9)(a1)
-	PREFETCH_FOR_STORE (4, a0)
-L(skip_pref30_128):
 	C_LD	REG2,UNIT(10)(a1)
 	C_LD	REG3,UNIT(11)(a1)
 	C_LD	REG4,UNIT(12)(a1)
@@ -362,9 +407,6 @@ L(skip_pref30_128):
 	C_ST	REG6,UNIT(14)(a0)
 	C_ST	REG7,UNIT(15)(a0)
 	PTR_ADDIU a0,a0,UNIT(16)	/* adding 64/128 to dest */
-#if defined(USE_PREFETCH) && (PREFETCH_STORE_HINT == PREFETCH_HINT_PREPAREFORSTORE)
-	sltu	v1,t9,a0
-#endif
 	bne	a0,a3,L(loop16w)
 	PTR_ADDIU a1,a1,UNIT(16)	/* adding 64/128 to src */
 	move	a2,t8
@@ -416,8 +458,8 @@ L(chk1w):
 /* copying in words (4-byte or 8-byte chunks) */
 L(wordCopy_loop):
 	C_LD	REG3,UNIT(0)(a1)
-	PTR_ADDIU a1,a1,UNIT(1)
 	PTR_ADDIU a0,a0,UNIT(1)
+	PTR_ADDIU a1,a1,UNIT(1)
 	bne	a0,a3,L(wordCopy_loop)
 	C_ST	REG3,UNIT(-1)(a0)
 
@@ -427,8 +469,8 @@ L(lastb):
 	PTR_ADDU a3,a0,a2	/* a3 is the last dst address */
 L(lastbloop):
 	lb	v1,0(a1)
-	PTR_ADDIU a1,a1,1
 	PTR_ADDIU a0,a0,1
+	PTR_ADDIU a1,a1,1
 	bne	a0,a3,L(lastbloop)
 	sb	v1,-1(a0)
 L(leave):
@@ -475,35 +517,46 @@ L(ua_chk16w):
 	PREFETCH_FOR_LOAD  (0, a1)
 	PREFETCH_FOR_LOAD  (1, a1)
 	PREFETCH_FOR_LOAD  (2, a1)
+#if defined(USE_PREFETCH) && (PREFETCH_STORE_HINT != PREFETCH_HINT_PREPAREFORSTORE)
 	PREFETCH_FOR_STORE (1, a0)
-#if defined(USE_PREFETCH) && (PREFETCH_STORE_HINT == PREFETCH_HINT_PREPAREFORSTORE)
-	sltu	v1,t9,a0
-	bgtz	v1,L(ua_loop16w)  /* skip prefetch for too short arrays */
-	nop
-#endif
 	PREFETCH_FOR_STORE (2, a0)
+	PREFETCH_FOR_STORE (3, a0)
+#endif
+#if defined(RETURN_FIRST_PREFETCH) && defined(USE_PREFETCH)
+#if (PREFETCH_STORE_HINT == PREFETCH_HINT_PREPAREFORSTORE)
+	sltu    v1,t9,a0
+	bgtz    v1,L(ua_skip_set)
+	nop
+	PTR_ADDIU v0,a0,(PREFETCH_CHUNK*4)
+L(ua_skip_set):
+#else
+	PTR_ADDIU v0,a0,(PREFETCH_CHUNK*1)
+#endif
+#endif
 L(ua_loop16w):
 	PREFETCH_FOR_LOAD  (3, a1)
 	C_LDHI	t0,UNIT(0)(a1)
-	C_LDLO	t0,UNITM1(1)(a1)
 	C_LDHI	t1,UNIT(1)(a1)
-#if defined(USE_PREFETCH) && (PREFETCH_STORE_HINT == PREFETCH_HINT_PREPAREFORSTORE)
-	bgtz	v1,L(ua_skip_pref30_96)
-#endif
-	C_LDLO	t1,UNITM1(2)(a1)
-	PREFETCH_FOR_STORE (3, a0)
-L(ua_skip_pref30_96):
 	C_LDHI	REG2,UNIT(2)(a1)
-	C_LDLO	REG2,UNITM1(3)(a1)
+#if defined(USE_PREFETCH) && (PREFETCH_STORE_HINT == PREFETCH_HINT_PREPAREFORSTORE)
+	sltu	v1,t9,a0
+	bgtz	v1,L(ua_skip_pref)
+#endif
 	C_LDHI	REG3,UNIT(3)(a1)
-	C_LDLO	REG3,UNITM1(4)(a1)
+	PREFETCH_FOR_STORE (4, a0)
+	PREFETCH_FOR_STORE (5, a0)
+L(ua_skip_pref):
 	C_LDHI	REG4,UNIT(4)(a1)
-	C_LDLO	REG4,UNITM1(5)(a1)
 	C_LDHI	REG5,UNIT(5)(a1)
-	C_LDLO	REG5,UNITM1(6)(a1)
 	C_LDHI	REG6,UNIT(6)(a1)
-	C_LDLO	REG6,UNITM1(7)(a1)
 	C_LDHI	REG7,UNIT(7)(a1)
+	C_LDLO	t0,UNITM1(1)(a1)
+	C_LDLO	t1,UNITM1(2)(a1)
+	C_LDLO	REG2,UNITM1(3)(a1)
+	C_LDLO	REG3,UNITM1(4)(a1)
+	C_LDLO	REG4,UNITM1(5)(a1)
+	C_LDLO	REG5,UNITM1(6)(a1)
+	C_LDLO	REG6,UNITM1(7)(a1)
 	C_LDLO	REG7,UNITM1(8)(a1)
         PREFETCH_FOR_LOAD (4, a1)
 	C_ST	t0,UNIT(0)(a0)
@@ -515,25 +568,20 @@ L(ua_skip_pref30_96):
 	C_ST	REG6,UNIT(6)(a0)
 	C_ST	REG7,UNIT(7)(a0)
 	C_LDHI	t0,UNIT(8)(a1)
-	C_LDLO	t0,UNITM1(9)(a1)
 	C_LDHI	t1,UNIT(9)(a1)
-#if defined(USE_PREFETCH) && (PREFETCH_STORE_HINT == PREFETCH_HINT_PREPAREFORSTORE)
-	bgtz	v1,L(ua_skip_pref30_128)
-#endif
-	C_LDLO	t1,UNITM1(10)(a1)
-	PREFETCH_FOR_STORE (4, a0)
-L(ua_skip_pref30_128):
 	C_LDHI	REG2,UNIT(10)(a1)
-	C_LDLO	REG2,UNITM1(11)(a1)
 	C_LDHI	REG3,UNIT(11)(a1)
-	C_LDLO	REG3,UNITM1(12)(a1)
 	C_LDHI	REG4,UNIT(12)(a1)
-	C_LDLO	REG4,UNITM1(13)(a1)
 	C_LDHI	REG5,UNIT(13)(a1)
-	C_LDLO	REG5,UNITM1(14)(a1)
 	C_LDHI	REG6,UNIT(14)(a1)
-	C_LDLO	REG6,UNITM1(15)(a1)
 	C_LDHI	REG7,UNIT(15)(a1)
+	C_LDLO	t0,UNITM1(9)(a1)
+	C_LDLO	t1,UNITM1(10)(a1)
+	C_LDLO	REG2,UNITM1(11)(a1)
+	C_LDLO	REG3,UNITM1(12)(a1)
+	C_LDLO	REG4,UNITM1(13)(a1)
+	C_LDLO	REG5,UNITM1(14)(a1)
+	C_LDLO	REG6,UNITM1(15)(a1)
 	C_LDLO	REG7,UNITM1(16)(a1)
         PREFETCH_FOR_LOAD (5, a1)
 	C_ST	t0,UNIT(8)(a0)
@@ -545,9 +593,6 @@ L(ua_skip_pref30_128):
 	C_ST	REG6,UNIT(14)(a0)
 	C_ST	REG7,UNIT(15)(a0)
 	PTR_ADDIU a0,a0,UNIT(16)	/* adding 64/128 to dest */
-#if defined(USE_PREFETCH) && (PREFETCH_STORE_HINT == PREFETCH_HINT_PREPAREFORSTORE)
-	sltu	v1,t9,a0
-#endif
 	bne	a0,a3,L(ua_loop16w)
 	PTR_ADDIU a1,a1,UNIT(16)	/* adding 64/128 to src */
 	move	a2,t8
@@ -564,20 +609,20 @@ L(ua_chkw):
 	beq	a2,t8,L(ua_chk1w) /* When a2=t8, no 32-byte chunk */
 	nop
 	C_LDHI	t0,UNIT(0)(a1)
-	C_LDLO	t0,UNITM1(1)(a1)
 	C_LDHI	t1,UNIT(1)(a1)
-	C_LDLO	t1,UNITM1(2)(a1)
 	C_LDHI	REG2,UNIT(2)(a1)
-	C_LDLO	REG2,UNITM1(3)(a1)
 	C_LDHI	REG3,UNIT(3)(a1)
-	C_LDLO	REG3,UNITM1(4)(a1)
 	C_LDHI	REG4,UNIT(4)(a1)
-	C_LDLO	REG4,UNITM1(5)(a1)
 	C_LDHI	REG5,UNIT(5)(a1)
-	C_LDLO	REG5,UNITM1(6)(a1)
 	C_LDHI	REG6,UNIT(6)(a1)
-	C_LDLO	REG6,UNITM1(7)(a1)
 	C_LDHI	REG7,UNIT(7)(a1)
+	C_LDLO	t0,UNITM1(1)(a1)
+	C_LDLO	t1,UNITM1(2)(a1)
+	C_LDLO	REG2,UNITM1(3)(a1)
+	C_LDLO	REG3,UNITM1(4)(a1)
+	C_LDLO	REG4,UNITM1(5)(a1)
+	C_LDLO	REG5,UNITM1(6)(a1)
+	C_LDLO	REG6,UNITM1(7)(a1)
 	C_LDLO	REG7,UNITM1(8)(a1)
 	PTR_ADDIU a1,a1,UNIT(8)
 	C_ST	t0,UNIT(0)(a0)
@@ -603,8 +648,8 @@ L(ua_chk1w):
 L(ua_wordCopy_loop):
 	C_LDHI	v1,UNIT(0)(a1)
 	C_LDLO	v1,UNITM1(1)(a1)
-	PTR_ADDIU a1,a1,UNIT(1)
 	PTR_ADDIU a0,a0,UNIT(1)
+	PTR_ADDIU a1,a1,UNIT(1)
 	bne	a0,a3,L(ua_wordCopy_loop)
 	C_ST	v1,UNIT(-1)(a0)
 
@@ -614,8 +659,8 @@ L(ua_smallCopy):
 	PTR_ADDU a3,a0,a2	/* a3 is the last dst address */
 L(ua_smallCopy_loop):
 	lb	v1,0(a1)
-	PTR_ADDIU a1,a1,1
 	PTR_ADDIU a0,a0,1
+	PTR_ADDIU a1,a1,1
 	bne	a0,a3,L(ua_smallCopy_loop)
 	sb	v1,-1(a0)
 
@@ -625,6 +670,8 @@ L(ua_smallCopy_loop):
 	.set	at
 	.set	reorder
 END(MEMCPY_NAME)
+#ifndef ANDROID_CHANGES
 #ifdef _LIBC
 libc_hidden_builtin_def (MEMCPY_NAME)
+#endif
 #endif
