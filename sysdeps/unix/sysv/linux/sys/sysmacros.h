@@ -38,7 +38,7 @@ extern unsigned long long int gnu_dev_makedev (unsigned int __major,
 					       unsigned int __minor)
      __THROW __attribute_const__;
 
-# if defined __GNUC__ && __GNUC__ >= 2 && defined __USE_EXTERN_INLINES
+# ifdef __USE_EXTERN_INLINES
 __extension__ __extern_inline __attribute_const__ unsigned int
 __NTH (gnu_dev_major (unsigned long long int __dev))
 {

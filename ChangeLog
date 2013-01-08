@@ -1,3 +1,10 @@
+2013-01-08  Joseph Myers  <joseph@codesourcery.com>
+
+	* io/sys/stat.h [__GNUC__ && __GNUC__ >= 2 &&
+	__USE_EXTERN_INLINES]: Change condition to [__USE_EXTERN_INLINES].
+	* sysdeps/unix/sysv/linux/sys/sysmacros.h [__GNUC__ && __GNUC__ >=
+	2 && __USE_EXTERN_INLINES]: Likewise.
+
 2013-01-08  Andreas Jaeger  <aj@suse.de>
 
 	[BZ# 14985]
