@@ -172,7 +172,7 @@
 #if (PREFETCH_STORE_HINT == PREFETCH_HINT_PREPAREFORSTORE) \
     && ((PREFETCH_CHUNK * 4) < MAX_PREFETCH_SIZE)
 /* We cannot handle this because the initial prefetches may fetch bytes that
- * are before the buffer being copied.  We start copies with an offset 
+ * are before the buffer being copied.  We start copies with an offset
  * of 4 so avoid this situation when using PREPAREFORSTORE.  */
 #error "PREFETCH_CHUNK is too large and/or MAX_PREFETCH_SIZE is too small."
 #endif
