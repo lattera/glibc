@@ -22,8 +22,6 @@
 /* Flags to be passed to epoll_create1.  */
 enum
   {
-    EPOLL_CLOEXEC = 0x400000,
+    EPOLL_CLOEXEC = 0x400000
 #define EPOLL_CLOEXEC EPOLL_CLOEXEC
-    EPOLL_NONBLOCK = 0x004000
-#define EPOLL_NONBLOCK EPOLL_NONBLOCK
   };
