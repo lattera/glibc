@@ -44,15 +44,13 @@
 #include "endian.h"
 #include "mpa.h"
 #include "mpa2.h"
-#include <sys/param.h>	/* For MIN() */
+#include <sys/param.h>
 
 const mp_no mpone = {1, {1.0, 1.0}};
 const mp_no mptwo = {1, {1.0, 2.0}};
 
-/* mcr() compares the sizes of the mantissas of two multiple precision  */
-/* numbers. Mantissas are compared regardless of the signs of the       */
-/* numbers, even if x->d[0] or y->d[0] are zero. Exponents are also     */
-/* disregarded.                                                         */
+/* Compare mantissa of two multiple precision numbers regardless of the sign
+   and exponent of the numbers.  */
 static int mcr(const mp_no *x, const mp_no *y, int p) {
   long i;
   long p2 = p;
@@ -63,9 +61,7 @@ static int mcr(const mp_no *x, const mp_no *y, int p) {
   return 0;
 }
 
-
-
-/* acr() compares the absolute values of two multiple precision numbers */
+/* Compare the absolute values of two multiple precision numbers.  */
 int __acr(const mp_no *x, const mp_no *y, int p) {
   long i;
 
@@ -83,8 +79,8 @@ int __acr(const mp_no *x, const mp_no *y, int p) {
   return i;
 }
 
-
-/* Copy a multiple precision number. Set *y=*x. x=y is permissible.      */
+/* Copy multiple precision number X into Y.  They could be the same
+   number.  */
 void __cpy(const mp_no *x, mp_no *y, int p) {
   long i;
 
@@ -94,9 +90,8 @@ void __cpy(const mp_no *x, mp_no *y, int p) {
   return;
 }
 
-
-/* Convert a multiple precision number *x into a double precision */
-/* number *y, normalized case  (|x| >= 2**(-1022))) */
+/* Convert a multiple precision number *X into a double precision
+   number *Y, normalized case  (|x| >= 2**(-1022))).  */
 static void norm(const mp_no *x, double *y, int p)
 {
   #define R  RADIXI
@@ -147,8 +142,8 @@ static void norm(const mp_no *x, double *y, int p)
 #undef R
 }
 
-/* Convert a multiple precision number *x into a double precision */
-/* number *y, denormalized case  (|x| < 2**(-1022))) */
+/* Convert a multiple precision number *X into a double precision
+   number *Y, Denormal case  (|x| < 2**(-1022))).  */
 static void denorm(const mp_no *x, double *y, int p)
 {
   long i,k;
@@ -194,9 +189,8 @@ static void denorm(const mp_no *x, double *y, int p)
 #undef R
 }
 
-/* Convert a multiple precision number *x into a double precision number *y. */
-/* The result is correctly rounded to the nearest/even. *x is left unchanged */
-
+/* Convert multiple precision number *X into double precision number *Y.  The
+   result is correctly rounded to the nearest/even.  */
 void __mp_dbl(const mp_no *x, double *y, int p) {
 
   if (X[0] == ZERO)  {*y = ZERO;  return; }
@@ -206,27 +200,24 @@ void __mp_dbl(const mp_no *x, double *y, int p) {
   else                              denorm(x,y,p);
 }
 
-
-/* dbl_mp() converts a double precision number x into a multiple precision  */
-/* number *y. If the precision p is too small the result is truncated. x is */
-/* left unchanged.                                                          */
-
+/* Get the multiple precision equivalent of X into *Y.  If the precision is too
+   small, the result is truncated.  */
 void __dbl_mp(double x, mp_no *y, int p) {
 
   long i,n;
   long p2 = p;
   double u;
 
-  /* Sign */
+  /* Sign.  */
   if      (x == ZERO)  {Y[0] = ZERO;  return; }
   else if (x >  ZERO)   Y[0] = ONE;
   else                 {Y[0] = MONE;  x=-x;   }
 
-  /* Exponent */
+  /* Exponent.  */
   for (EY=ONE; x >= RADIX; EY += ONE)   x *= RADIXI;
   for (      ; x <  ONE;   EY -= ONE)   x *= RADIX;
 
-  /* Digits */
+  /* Digits.  */
   n=MIN(p2,4);
   for (i=1; i<=n; i++) {
     u = (x + TWO52) - TWO52;
@@ -236,13 +227,10 @@ void __dbl_mp(double x, mp_no *y, int p) {
   return;
 }
 
-
-/*  add_magnitudes() adds the magnitudes of *x & *y assuming that           */
-/*  abs(*x) >= abs(*y) > 0.                                                 */
-/* The sign of the sum *z is undefined. x&y may overlap but not x&z or y&z. */
-/* No guard digit is used. The result equals the exact sum, truncated.      */
-/* *x & *y are left unchanged.                                              */
-
+/* Add magnitudes of *X and *Y assuming that abs (*X) >= abs (*Y) > 0.  The
+   sign of the sum *Z is not changed.  X and Y may overlap but not X and Z or
+   Y and Z.  No guard digit is used.  The result equals the exact sum,
+   truncated.  */
 static void add_magnitudes(const mp_no *x, const mp_no *y, mp_no *z, int p) {
 
   long i,j,k;
@@ -279,13 +267,10 @@ static void add_magnitudes(const mp_no *x, const mp_no *y, mp_no *z, int p) {
   else   EZ += ONE;
 }
 
-
-/*  sub_magnitudes() subtracts the magnitudes of *x & *y assuming that      */
-/*  abs(*x) > abs(*y) > 0.                                                  */
-/* The sign of the difference *z is undefined. x&y may overlap but not x&z  */
-/* or y&z. One guard digit is used. The error is less than one ulp.         */
-/* *x & *y are left unchanged.                                              */
-
+/* Subtract the magnitudes of *X and *Y assuming that abs (*x) > abs (*y) > 0.
+   The sign of the difference *Z is not changed.  X and Y may overlap but not X
+   and Z or Y and Z.  One guard digit is used.  The error is less than one
+   ULP.  */
 static void sub_magnitudes(const mp_no *x, const mp_no *y, mp_no *z, int p) {
 
   long i,j,k;
@@ -338,11 +323,9 @@ static void sub_magnitudes(const mp_no *x, const mp_no *y, mp_no *z, int p) {
   return;
 }
 
-
-/* Add two multiple precision numbers. Set *z = *x + *y. x&y may overlap  */
-/* but not x&z or y&z. One guard digit is used. The error is less than    */
-/* one ulp. *x & *y are left unchanged.                                   */
-
+/* Add *X and *Y and store the result in *Z.  X and Y may overlap, but not X
+   and Z or Y and Z.  One guard digit is used.  The error is less than one
+   ULP.  */
 void __add(const mp_no *x, const mp_no *y, mp_no *z, int p) {
 
   int n;
@@ -362,11 +345,9 @@ void __add(const mp_no *x, const mp_no *y, mp_no *z, int p) {
   return;
 }
 
-
-/* Subtract two multiple precision numbers. *z is set to *x - *y. x&y may */
-/* overlap but not x&z or y&z. One guard digit is used. The error is      */
-/* less than one ulp. *x & *y are left unchanged.                         */
-
+/* Subtract *Y from *X and return the result in *Z.  X and Y may overlap but
+   not X and Z or Y and Z.  One guard digit is used.  The error is less than
+   one ULP.  */
 void __sub(const mp_no *x, const mp_no *y, mp_no *z, int p) {
 
   int n;
@@ -386,12 +367,9 @@ void __sub(const mp_no *x, const mp_no *y, mp_no *z, int p) {
   return;
 }
 
-
-/* Multiply two multiple precision numbers. *z is set to *x * *y. x&y      */
-/* may overlap but not x&z or y&z. In case p=1,2,3 the exact result is     */
-/* truncated to p digits. In case p>3 the error is bounded by 1.001 ulp.   */
-/* *x & *y are left unchanged.                                             */
-
+/* Multiply *X and *Y and store result in *Z.  X and Y may overlap but not X
+   and Z or Y and Z.  For P in [1, 2, 3], the exact result is truncated to P
+   digits.  In case P > 3 the error is bounded by 1.001 ULP.  */
 void __mul(const mp_no *x, const mp_no *y, mp_no *z, int p) {
 
   long i, i1, i2, j, k, k2;
@@ -409,12 +387,12 @@ void __mul(const mp_no *x, const mp_no *y, mp_no *z, int p) {
     if (k > p2)  {i1=k-p2; i2=p2+1; }
     else        {i1=1;   i2=k;   }
 #if 1
-    /* rearrange this inner loop to allow the fmadd instructions to be
+    /* Rearrange this inner loop to allow the fmadd instructions to be
        independent and execute in parallel on processors that have
        dual symmetrical FP pipelines.  */
     if (i1 < (i2-1))
     {
-	/* make sure we have at least 2 iterations */
+	/* Make sure we have at least 2 iterations.  */
 	if (((i2 - i1) & 1L) == 1L)
 	{
                 /* Handle the odd iterations case.  */
@@ -429,7 +407,7 @@ void __mul(const mp_no *x, const mp_no *y, mp_no *z, int p) {
 		zk += x->d[i]*y->d[j];
 		zk2 += x->d[i+1]*y->d[j-1];
 	}
-	zk += zk2; /* final sum.  */
+	zk += zk2; /* Final sum.  */
     }
     else
     {
@@ -449,7 +427,7 @@ void __mul(const mp_no *x, const mp_no *y, mp_no *z, int p) {
   }
   Z[k] = zk;
 
-                 /* Is there a carry beyond the most significant digit? */
+  /* Is there a carry beyond the most significant digit?  */
   if (Z[1] == ZERO) {
     for (i=1; i<=p2; i++)  Z[i]=Z[i+1];
     EZ = EX + EY - 1; }
@@ -460,12 +438,12 @@ void __mul(const mp_no *x, const mp_no *y, mp_no *z, int p) {
   return;
 }
 
+/* Invert *X and store in *Y.  Relative error bound:
+   - For P = 2: 1.001 * R ^ (1 - P)
+   - For P = 3: 1.063 * R ^ (1 - P)
+   - For P > 3: 2.001 * R ^ (1 - P)
 
-/* Invert a multiple precision number. Set *y = 1 / *x.                     */
-/* Relative error bound = 1.001*r**(1-p) for p=2, 1.063*r**(1-p) for p=3,   */
-/* 2.001*r**(1-p) for p>3.                                                  */
-/* *x=0 is not permissible. *x is left unchanged.                           */
-
+   *X = 0 is not permissible.  */
 void __inv(const mp_no *x, mp_no *y, int p) {
   long i;
   double t;
@@ -489,12 +467,13 @@ void __inv(const mp_no *x, mp_no *y, int p) {
   return;
 }
 
+/* Divide *X by *Y and store result in *Z.  X and Y may overlap but not X and Z
+   or Y and Z.  Relative error bound:
+   - For P = 2: 2.001 * R ^ (1 - P)
+   - For P = 3: 2.063 * R ^ (1 - P)
+   - For P > 3: 3.001 * R ^ (1 - P)
 
-/* Divide one multiple precision number by another.Set *z = *x / *y. *x & *y */
-/* are left unchanged. x&y may overlap but not x&z or y&z.                   */
-/* Relative error bound = 2.001*r**(1-p) for p=2, 2.063*r**(1-p) for p=3     */
-/* and 3.001*r**(1-p) for p>3. *y=0 is not permissible.                      */
-
+   *X = 0 is not permissible.  */
 void __dvd(const mp_no *x, const mp_no *y, mp_no *z, int p) {
 
   mp_no w;

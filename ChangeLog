@@ -1,3 +1,48 @@
+2013-01-09  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* sysdeps/ieee754/dbl-64/mpa.c (mcr): Reword comment.
+	(__acr): Likewise.
+	(__cpy): Likewise.
+	(norm): Likewise.
+	(denorm): Likewise.
+	(__mp_dbl): Likewise.
+	(__dbl_mp): Likewise.
+	(add_magnitudes): Likewise.
+	(sub_magnitudes): Likewise.
+	(__add): Likewise.
+	(__sub): Likewise.
+	(__mul): Likewise.
+	(__inv): Likewise.
+	(__dvd): Likewise.
+	* sysdeps/powerpc/powerpc32/power4/fpu/mpa.c (mcr): Likewise.
+	(__acr): Likewise.
+	(__cpy): Likewise.
+	(norm): Likewise.
+	(denorm): Likewise.
+	(__mp_dbl): Likewise.
+	(__dbl_mp): Likewise.
+	(add_magnitudes): Likewise.
+	(sub_magnitudes): Likewise.
+	(__add): Likewise.
+	(__sub): Likewise.
+	(__mul): Likewise.
+	(__inv): Likewise.
+	(__dvd): Likewise.
+	* sysdeps/powerpc/powerpc64/power4/fpu/mpa.c (mcr): Likewise.
+	(__acr): Likewise.
+	(__cpy): Likewise.
+	(norm): Likewise.
+	(denorm): Likewise.
+	(__mp_dbl): Likewise.
+	(__dbl_mp): Likewise.
+	(add_magnitudes): Likewise.
+	(sub_magnitudes): Likewise.
+	(__add): Likewise.
+	(__sub): Likewise.
+	(__mul): Likewise.
+	(__inv): Likewise.
+	(__dvd): Likewise.
+
 2013-01-08  Joseph Myers  <joseph@codesourcery.com>
 
 	* io/sys/stat.h [__GNUC__ && __GNUC__ >= 2 &&
