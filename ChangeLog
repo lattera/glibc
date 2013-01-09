@@ -1681,7 +1681,7 @@
 
 2012-11-08  Andreas Krebbel  <Andreas.Krebbel@de.ibm.com>
 
-        * sysdeps/s390/dl-procinfo.c (_dl_s390_cap_flags): Add "te".
+	* sysdeps/s390/dl-procinfo.c (_dl_s390_cap_flags): Add "te".
 	* sysdeps/s390/dl-procinfo.h (HWCAP_S390_TE): Add enum value.
 	* sysdeps/unix/sysv/linux/s390/hwcap.h (HWCAP_S390_TE): Add macro
 	definition.
@@ -19485,7 +19485,7 @@
 	* sysdeps/unix/bsd/bsd4.4/bits/socket.h (__cmsg_nxthdr): Use NULL
 	instead of 0.
 	* sysdeps/unix/sysv/linux/bits/socket.h (__cmsg_nxthdr): Use (void*)0
-	instead of 0.                              .
+	instead of 0.
 	* sysdeps/unix/sysv/linux/sparc/bits/socket.h: Likewise.
 	Patch in part by Pavel Roskin <proski@gnu.org>.
 
