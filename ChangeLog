@@ -1,5 +1,7 @@
 2013-01-09  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
+	* sysdeps/s390/fpu/libm-test-ulps: Update.
+
 	* sysdeps/powerpc/fpu/libm-test-ulps: Update.
 
 	* sysdeps/ieee754/dbl-64/mpa.c (mcr): Reword comment.
