@@ -1,3 +1,7 @@
+2013-01-09  Roland McGrath  <roland@hack.frob.com>
+
+	* misc/error.c (error_tail: ALLOCA_LIMIT): Remove unused macro.
+
 2013-01-09  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* sysdeps/s390/fpu/libm-test-ulps: Update.
