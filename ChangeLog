@@ -1,3 +1,9 @@
+2013-01-10  Andreas Schwab  <schwab@suse.de>
+
+	[BZ #14964]
+	* sysdeps/unix/sysv/linux/bits/fcntl-linux.h (FALLOC_FL_KEEP_SIZE)
+	(FALLOC_FL_PUNCH_HOLE) [__USE_GNU]: New macros.
+
 2013-01-09  David S. Miller  <davem@davemloft.net>
 
 	[BZ# 15003]

@@ -296,6 +296,13 @@ struct f_owner_ex
 # define SPLICE_F_GIFT		8	/* Pages passed in are a gift.  */
 
 
+/* Flags for fallocate.  */
+# define FALLOC_FL_KEEP_SIZE		1 /* Don't extend size of file
+					     even if offset + len is
+					     greater than file size.  */
+# define FALLOC_FL_PUNCH_HOLE		2 /* Create a hole in the file.  */
+
+
 /* File handle structure.  */
 struct file_handle
 {
