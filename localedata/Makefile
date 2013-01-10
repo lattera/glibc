@@ -78,6 +78,8 @@ locale_test_suite := tst_iswalnum tst_iswalpha tst_iswcntrl            \
 tests = $(locale_test_suite) tst-digits tst-setlocale bug-iconv-trans \
 	tst-leaks tst-mbswcs6 tst-xlocale1 tst-xlocale2 bug-usesetlocale \
 	tst-strfmon1 tst-sscanf bug-setlocale1 tst-setlocale2
+tests-static = bug-setlocale1-static
+tests += $(tests-static)
 ifeq (yes,$(build-shared))
 ifneq (no,$(PERL))
 tests: $(objpfx)mtrace-tst-leaks
@@ -285,7 +287,9 @@ $(objpfx)mtrace-tst-leaks: $(objpfx)tst-leaks.out
 	$(common-objpfx)malloc/mtrace $(objpfx)tst-leaks.mtrace > $@
 
 bug-setlocale1-ENV = LOCPATH=$(common-objpfx)localedata
-bug-setlocale1-ARGS = $(common-objpfx)
+bug-setlocale1-ARGS = -- $(built-program-cmd)
+bug-setlocale1-static-ENV = $(bug-setlocale1-ENV)
+bug-setlocale1-static-ARGS = $(bug-setlocale1-ARGS)
 tst-setlocale2-ENV = LOCPATH=$(common-objpfx)localedata
 
 $(objdir)/iconvdata/gconv-modules:
