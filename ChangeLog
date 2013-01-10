@@ -1,5 +1,7 @@
 2013-01-10  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
+	* sysdeps/ieee754/dbl-64/mpexp.c: Fix formatting.
+
 	* sysdeps/ieee754/dbl-64/mpexp.c (__mpexp): New array of
 	doubles __mpexp_twomm1.  Adjust usage.
 	* sysdeps/ieee754/dbl-64/mpexp.h (__mpexp_twomm1):
