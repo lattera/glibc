@@ -1,3 +1,9 @@
+2013-01-10  Roland McGrath  <roland@hack.frob.com>
+
+	* configure.in (sysnames): Drop use of $m0sub and $msub, which are
+	never set.
+	* configure: Regenerated.
+
 2013-01-10  David S. Miller  <davem@davemloft.net>
 
 	* sysdeps/sparc/sparc32/sparcv9/mul_1.S: Properly optimize for 32-bit

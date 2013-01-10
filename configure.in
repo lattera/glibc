@@ -702,12 +702,13 @@ for b in $base ''; do
 	for m in $multi_arch_d $mach ''; do
 	  for d in $add_ons_pfx ''; do
 	    for a in $add_ons_sfx ''; do
-	      if test -n "$m0$m0sub$b$v$o$m$msub"; then
+	      try_suffix="$m0$b$v$o$m"
+	      if test -n "$try_suffix"; then
 		try_srcdir="${srcdir}/"
 		case "$d" in
 		/*) try_srcdir= ;;
 		esac
-		try="${d}sysdeps$m0$m0sub$b$v$o$m$msub$a"
+		try="${d}sysdeps$try_suffix$a"
 		test -n "$enable_debug_configure" &&
 		echo "$0 [DEBUG]: try $try" >&2
 		if test -d "$try_srcdir$try"; then
