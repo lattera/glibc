@@ -1,3 +1,14 @@
+2013-01-10  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #14200]
+	* sysdeps/unix/sysv/linux/x86/bits/environments.h
+	(_POSIX_V7_ILP32_OFF32): Defined as 1 only if __x86_64__ isn't
+	defined.
+	(_POSIX_V6_ILP32_OFF32): Likewise.
+	(_XBS5_ILP32_OFF32): Likewise.
+	(__ILP32_OFFBIG_CFLAGS): Defined as "-mx32" for x32.
+	(__ILP32_OFFBIG_LDFLAGS): Likewise.
+
 2013-01-10  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* sysdeps/ieee754/dbl-64/mpexp.c: Fix formatting.

@@ -64,14 +64,18 @@
 
 #else /* __WORDSIZE == 32 */
 
-/* By default we have 32-bit wide `int', `long int', pointers and `off_t'
-   and all platforms support LFS.  */
-# define _POSIX_V7_ILP32_OFF32	1
+/* We have 32-bit wide `int', `long int' and pointers and all platforms
+   support LFS.  -mx32 has 64-bit wide `off_t'.  */
 # define _POSIX_V7_ILP32_OFFBIG	1
-# define _POSIX_V6_ILP32_OFF32	1
-# define _POSIX_V6_ILP32_OFFBIG	1
-# define _XBS5_ILP32_OFF32	1
+# define _POSIX_V6_ILP32_OFFBIG 1
 # define _XBS5_ILP32_OFFBIG	1
+
+# ifndef __x86_64__
+/* -m32 has 32-bit wide `off_t'.  */
+#  define _POSIX_V7_ILP32_OFF32	1
+#  define _POSIX_V6_ILP32_OFF32	1
+#  define _XBS5_ILP32_OFF32	1
+# endif
 
 /* We optionally provide an environment with the above size but an 64-bit
    side `off_t'.  Therefore we don't define _POSIX_V7_ILP32_OFFBIG.  */
@@ -89,8 +93,13 @@
 #endif /* __WORDSIZE == 32 */
 
 #define __ILP32_OFF32_CFLAGS	"-m32"
-#define __ILP32_OFFBIG_CFLAGS	"-m32 -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64"
 #define __ILP32_OFF32_LDFLAGS	"-m32"
-#define __ILP32_OFFBIG_LDFLAGS	"-m32"
+#if defined __x86_64__ && defined __ILP32__
+# define __ILP32_OFFBIG_CFLAGS	"-mx32"
+# define __ILP32_OFFBIG_LDFLAGS	"-mx32"
+#else
+# define __ILP32_OFFBIG_CFLAGS	"-m32 -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64"
+# define __ILP32_OFFBIG_LDFLAGS	"-m32"
+#endif
 #define __LP64_OFF64_CFLAGS	"-m64"
 #define __LP64_OFF64_LDFLAGS	"-m64"
