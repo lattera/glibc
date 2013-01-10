@@ -1,3 +1,9 @@
+2013-01-10  Chris Metcalf  <cmetcalf@tilera.com>
+
+	* sysdeps/unix/sysv/linux/tile/tilegx/ldd-rewrite.sed: New file.
+	* sysdeps/unix/sysv/linux/tile/tilegx/configure.in: New file.
+	* sysdeps/unix/sysv/linux/tile/tilegx/configure: New file.
+
 2013-01-02  Joseph Myers  <joseph@codesourcery.com>
 
 	* All files with FSF copyright notices: Update copyright dates
