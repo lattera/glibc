@@ -37,20 +37,29 @@
 /*
  * User-settable options (used with setsockopt).
  */
-#define	TCP_NODELAY	 1	/* Don't delay send to coalesce packets  */
-#define	TCP_MAXSEG	 2	/* Set maximum segment size  */
-#define TCP_CORK	 3	/* Control sending of partial frames  */
-#define TCP_KEEPIDLE	 4	/* Start keeplives after this period */
-#define TCP_KEEPINTVL	 5	/* Interval between keepalives */
-#define TCP_KEEPCNT	 6	/* Number of keepalives before death */
-#define TCP_SYNCNT	 7	/* Number of SYN retransmits */
-#define TCP_LINGER2	 8	/* Life time of orphaned FIN-WAIT-2 state */
-#define TCP_DEFER_ACCEPT 9	/* Wake up listener only when data arrive */
-#define TCP_WINDOW_CLAMP 10	/* Bound advertised window */
-#define TCP_INFO	 11	/* Information about this connection. */
-#define	TCP_QUICKACK	 12	/* Bock/reenable quick ACKs.  */
-#define TCP_CONGESTION	 13	/* Congestion control algorithm.  */
-#define TCP_MD5SIG	 14	/* TCP MD5 Signature (RFC2385) */
+#define	TCP_NODELAY		 1  /* Don't delay send to coalesce packets  */
+#define	TCP_MAXSEG		 2  /* Set maximum segment size  */
+#define TCP_CORK		 3  /* Control sending of partial frames  */
+#define TCP_KEEPIDLE		 4  /* Start keeplives after this period */
+#define TCP_KEEPINTVL		 5  /* Interval between keepalives */
+#define TCP_KEEPCNT		 6  /* Number of keepalives before death */
+#define TCP_SYNCNT		 7  /* Number of SYN retransmits */
+#define TCP_LINGER2		 8  /* Life time of orphaned FIN-WAIT-2 state */
+#define TCP_DEFER_ACCEPT	 9  /* Wake up listener only when data arrive */
+#define TCP_WINDOW_CLAMP	 10 /* Bound advertised window */
+#define TCP_INFO		 11 /* Information about this connection. */
+#define	TCP_QUICKACK		 12 /* Bock/reenable quick ACKs.  */
+#define TCP_CONGESTION		 13 /* Congestion control algorithm.  */
+#define TCP_MD5SIG		 14 /* TCP MD5 Signature (RFC2385) */
+#define TCP_COOKIE_TRANSACTIONS	 15 /* TCP Cookie Transactions */
+#define TCP_THIN_LINEAR_TIMEOUTS 16 /* Use linear timeouts for thin streams*/
+#define TCP_THIN_DUPACK		 17 /* Fast retrans. after 1 dupack */
+#define TCP_USER_TIMEOUT	 18 /* How long for loss retry before timeout */
+#define TCP_REPAIR		 19 /* TCP sock is under repair right now */
+#define TCP_REPAIR_QUEUE	 20 /* Set TCP queue to repair */
+#define TCP_QUEUE_SEQ		 21 /* Set sequence number of repaired queue. */
+#define TCP_REPAIR_OPTIONS	 22 /* Repair TCP connection options */
+#define TCP_FASTOPEN		 23 /* Enable FastOpen on listeners */
 
 #ifdef __USE_MISC
 # include <sys/types.h>
@@ -241,6 +250,49 @@ struct tcp_md5sig
   u_int16_t	tcpm_keylen;			/* Key length.  */
   u_int32_t	__tcpm_pad2;			/* Zero.  */
   u_int8_t	tcpm_key[TCP_MD5SIG_MAXKEYLEN];	/* Key (binary).  */
+};
+
+/* For socket repair options.  */
+struct tcp_repair_opt
+{
+  u_int32_t	opt_code;
+  u_int32_t	opt_val;
+};
+
+/* Queue to repair, for TCP_REPAIR_QUEUE.  */
+enum
+{
+  TCP_NO_QUEUE,
+  TCP_RECV_QUEUE,
+  TCP_SEND_QUEUE,
+  TCP_QUEUES_NR,
+};
+
+/* For cookie transactions socket options.  */
+#define TCP_COOKIE_MIN		8		/*  64-bits */
+#define TCP_COOKIE_MAX		16		/* 128-bits */
+#define TCP_COOKIE_PAIR_SIZE	(2*TCP_COOKIE_MAX)
+
+/* Flags for both getsockopt and setsockopt */
+#define TCP_COOKIE_IN_ALWAYS	(1 << 0)	/* Discard SYN without cookie */
+#define TCP_COOKIE_OUT_NEVER	(1 << 1)	/* Prohibit outgoing cookies,
+						 * supercedes everything. */
+
+/* Flags for getsockopt */
+#define TCP_S_DATA_IN		(1 << 2)	/* Was data received? */
+#define TCP_S_DATA_OUT		(1 << 3)	/* Was data sent? */
+
+#define TCP_MSS_DEFAULT		 536U	/* IPv4 (RFC1122, RFC2581) */
+#define TCP_MSS_DESIRED		1220U	/* IPv6 (tunneled), EDNS0 (RFC3226) */
+
+struct tcp_cookie_transactions
+{
+  u_int16_t	tcpct_flags;
+  u_int8_t	__tcpct_pad1;
+  u_int8_t	tcpct_cookie_desired;
+  u_int16_t	tcpct_s_data_desired;
+  u_int16_t	tcpct_used;
+  u_int8_t	tcpct_value[TCP_MSS_DEFAULT];
 };
 
 #endif /* Misc.  */

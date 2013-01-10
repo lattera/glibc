@@ -1,3 +1,18 @@
+2013-01-09  David S. Miller  <davem@davemloft.net>
+
+	[BZ# 15003]
+	* sysdeps/gnu/netinet/tcp.h (TCP_COOKIE_TRANSACTIONS,
+	TCP_THIN_LINEAR_TIMEOUTS, TCP_THIN_DUPACK, TCP_USER_TIMEOUT,
+	TCP_REPAIR, TCP_REPAIR_QUEUE, TCP_QUEUE_SEQ, TCP_REPAIR_OPTIONS,
+	TCP_FASTOPEN): Define.
+	(tcp_repair_opt): New structure.
+	(TCP_NO_QUEUE, TCP_RECV_QUEUE, TCP_SEND_QUEUE, TCP_QUEUES_NR): New
+	enum values.
+	(TCP_COOKIE_MIN, TCP_COOKIE_MAX, TCP_COOKIE_PAIR_SIZE,
+	TCP_COOKIE_IN_ALWAYS, TCP_COOKIE_OUT_NEVER, TCP_S_DATA_IN,
+	TCP_S_DATA_OUT, TCP_MSS_DEFAULT, TCP_MSS_DESIRED): Define.
+	(tcp_cookie_transactions): New structure.
+
 2013-01-09  Anton Blanchard  <anton@samba.org>
 
 	* sysdeps/unix/sysv/linux/powerpc/sched_getcpu.c: New file.
