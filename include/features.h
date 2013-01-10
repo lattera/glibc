@@ -129,9 +129,6 @@
 # define __KERNEL_STRICT_NAMES
 #endif
 
-/* Always use ISO C things.  */
-#define	__USE_ANSI	1
-
 /* Convenience macros to test the versions of glibc and gcc.
    Use them like this:
    #if __GNUC_PREREQ (2,8)
