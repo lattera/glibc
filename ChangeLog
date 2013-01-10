@@ -1,3 +1,24 @@
+2013-06-11  Andreas Schwab  <schwab@suse.de>
+
+	[BZ #14991]
+	* iconvdata/big5hkscs.c (big5hkscs_to_ucs, from_ucs4)
+	(from_ucs4_idx): Regenerate.
+	(MIN_NEEDED_FROM, MAX_NEEDED_FROM, MIN_NEEDED_TO): Remove macros.
+	(FROM_LOOP_MIN_NEEDED_FROM, FROM_LOOP_MAX_NEEDED_FROM)
+	(FROM_LOOP_MIN_NEEDED_TO, FROM_LOOP_MAX_NEEDED_TO)
+	(TO_LOOP_MIN_NEEDED_FROM, TO_LOOP_MAX_NEEDED_FROM)
+	(TO_LOOP_MIN_NEEDED_TO, TO_LOOP_MAX_NEEDED_TO, PREPARE_LOOP)
+	(EXTRA_LOOP_ARGS, SAVE_RESET_STATE, EMIT_SHIFT_TO_INIT)
+	(EXTRA_LOOP_DECLS, MAX_NEEDED_OUTPUT): New macros.
+	(MIN_NEEDED_INPUT, MAX_NEEDED_INPUT, MIN_NEEDED_OUTPUT): Define
+	from FROM_LOOP and TO_LOOP specific macros.
+	(BODY): Handle combining characters.
+	* iconvdata/BIG5HKSCS.irreversible: Update.
+	* iconvdata/BIG5HKSCS.precomposed: New file.
+	* iconvdata/testdata/BIG5HKSCS: Regenerate to cover all assigned
+	characters.
+	* iconvdata/testdata/BIG5HKSCS..UTF8: Update.
+
 2013-06-11  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* include/sys/time.h: Fix indentation and add copyright header.
