@@ -302,3 +302,8 @@ $(objpfx)getconf.speclist: getconf-speclist.c posix-envs.def
 	$(compile.c) -E -o - \
 	    | sed -n -e '/@@@PRESENT_/s/@@@PRESENT_//p' > $@.new
 	mv -f $@.new $@
+
+# This file is only actually needed at install time.  But forcing it to
+# be built both makes it available for eyeball inspection and avoids the
+# surprise of things that look like compilation being done by 'make install'.
+others: $(objpfx)getconf.speclist

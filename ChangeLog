@@ -1,5 +1,7 @@
 2013-01-09  Roland McGrath  <roland@hack.frob.com>
 
+	* posix/Makefile (others): Depend on $(objpfx)getconf.speclist.
+
 	* misc/error.c (error_tail: ALLOCA_LIMIT): Remove unused macro.
 
 2013-01-09  Siddhesh Poyarekar  <siddhesh@redhat.com>
