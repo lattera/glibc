@@ -47,8 +47,31 @@ __mpexp(mp_no *x, mp_no *y, int p) {
   double a,b;
   static const int np[33] = {0,0,0,0,3,3,4,4,5,4,4,5,5,5,6,6,6,6,6,6,
 			     6,6,6,6,7,7,7,7,8,8,8,8,8};
-  static const int m1p[33]= {0,0,0,0,17,23,23,28,27,38,42,39,43,47,43,47,50,54,
-			       57,60,64,67,71,74,68,71,74,77,70,73,76,78,81};
+  static const int m1p[33]=
+    {
+      0, 0, 0, 0,
+      17, 23, 23, 28,
+      27, 38, 42, 39,
+      43, 47, 43, 47,
+      50, 54, 57, 60,
+      64, 67, 71, 74,
+      68, 71, 74, 77,
+      70, 73, 76, 78,
+      81
+    };
+  /* Stored values for 2^-m, where values of m are defined in M1P above.   */
+  static const double __mpexp_twomm1[33] =
+    {
+      0x1.0p0, 0x1.0p0, 0x1.0p0, 0x1.0p0,
+      0x1.0p-17, 0x1.0p-23, 0x1.0p-23, 0x1.0p-28,
+      0x1.0p-27, 0x1.0p-38, 0x1.0p-42, 0x1.0p-39,
+      0x1.0p-43, 0x1.0p-47, 0x1.0p-43, 0x1.0p-47,
+      0x1.0p-50, 0x1.0p-54, 0x1.0p-57, 0x1.0p-60,
+      0x1.0p-64, 0x1.0p-67, 0x1.0p-71, 0x1.0p-74,
+      0x1.0p-68, 0x1.0p-71, 0x1.0p-74, 0x1.0p-77,
+      0x1.0p-70, 0x1.0p-73, 0x1.0p-76, 0x1.0p-78,
+      0x1.0p-81
+    };
   static const int m1np[7][18] = {
 		 { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
 		 { 0, 0, 0, 0,36,48,60,72, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
@@ -63,7 +86,7 @@ __mpexp(mp_no *x, mp_no *y, int p) {
   mp_no mps,mpak,mpt1,mpt2;
 
   /* Choose m,n and compute a=2**(-m) */
-  n = np[p];    m1 = m1p[p];    a = __mpexp_twomm1[p].d;
+  n = np[p];    m1 = m1p[p];    a = __mpexp_twomm1[p];
   for (i=0; i<EX; i++)  a *= RADIXI;
   for (   ; i>EX; i--)  a *= RADIX;
   b = X[1]*RADIXI;   m2 = 24*EX;
