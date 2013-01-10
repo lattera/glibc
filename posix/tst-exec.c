@@ -126,10 +126,10 @@ do_test (int argc, char *argv[])
   int status;
 
   /* We must have
-     - four parameters left of called initially
-       + path for ld.so
-       + "--library-path"
-       + the library path
+     - one or four parameters left if called initially
+       + path for ld.so		optional
+       + "--library-path"	optional
+       + the library path	optional
        + the application name
      - three parameters left if called through re-execution
        + file descriptor number which is supposed to be closed
@@ -145,7 +145,7 @@ do_test (int argc, char *argv[])
       return handle_restart (argv[1], argv[2], argv[3]);
     }
 
-  if (argc != 5)
+  if (argc != 2 && argc != 5)
     error (EXIT_FAILURE, 0, "wrong number of arguments (%d)", argc);
 
   /* Prepare the test.  We are creating two files: one which file descriptor
@@ -185,8 +185,12 @@ do_test (int argc, char *argv[])
       snprintf (fd2name, sizeof fd2name, "%d", fd2);
 
       /* This is the child.  Construct the command line.  */
-      execl (argv[1], argv[1], argv[2], argv[3], argv[4], "--direct",
-	     "--restart", fd1name, fd2name, name1, NULL);
+      if (argc == 5)
+	execl (argv[1], argv[1], argv[2], argv[3], argv[4], "--direct",
+	       "--restart", fd1name, fd2name, name1, NULL);
+      else
+	execl (argv[1], argv[1], "--direct",
+	       "--restart", fd1name, fd2name, name1, NULL);
 
       error (EXIT_FAILURE, errno, "cannot exec");
     }

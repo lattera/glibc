@@ -1,3 +1,14 @@
+2013-01-10  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* posix/Makefile (tests-static): New variable.
+	(tests): Add $(tests-static).
+	(tst-exec-static-ARGS): New variable.
+	(tst-spawn-static-ARGS): Likewise.
+	* posix/tst-exec-static.c: New file.
+	* posix/tst-spawn-static.c: Likewise.
+	* posix/tst-exec.c: Support run directly.
+	* posix/tst-spawn.c: Likewise.
+
 2013-01-10  Joseph Myers  <joseph@codesourcery.com>
 
 	* elf/link.h (struct dl_phdr_info): Use __extension__ with long
