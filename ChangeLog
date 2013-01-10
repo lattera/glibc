@@ -1,3 +1,10 @@
+2013-01-09  Anton Blanchard  <anton@samba.org>
+
+	* sysdeps/unix/sysv/linux/powerpc/sched_getcpu.c: New file.
+	* sysdeps/unix/sysv/linux/powerpc/Versions: Add __vdso_getcpu.
+	* sysdeps/unix/sysv/linux/powerpc/bits/libc-vdso.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/init-first.c: Likewise.
+
 2013-01-09  Joseph Myers  <joseph@codesourcery.com>
 
 	* include/features.h (__USE_ANSI): Remove.

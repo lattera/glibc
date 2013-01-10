@@ -1,5 +1,4 @@
-/* Resolve function pointers to VDSO functions.
-   Copyright (C) 2005-2013 Free Software Foundation, Inc.
+/* Copyright (C) 2013 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,22 +15,16 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include <sched.h>
+#include <sysdep.h>
+#include <bits/libc-vdso.h>
 
-#ifndef _LIBC_VDSO_H
-#define _LIBC_VDSO_H
 
-#ifdef SHARED
+int
+sched_getcpu (void)
+{
+  unsigned int cpu;
+  int r = INLINE_VSYSCALL (getcpu, 3, &cpu, NULL, NULL);
 
-extern void *__vdso_gettimeofday attribute_hidden;
-
-extern void *__vdso_clock_gettime;
-
-extern void *__vdso_clock_getres;
-
-extern void *__vdso_get_tbfreq;
-
-extern void *__vdso_getcpu;
-
-#endif
-
-#endif /* _LIBC_VDSO_H */
+  return r == -1 ? r : cpu;
+}
