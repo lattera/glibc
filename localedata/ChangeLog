@@ -1,3 +1,14 @@
+2013-01-10  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* Makefile (tests-static): New variable.
+	(tests): Add $(tests-static).
+	(bug-setlocale1-ARGS): Set to -- $(built-program-cmd).
+	(bug-setlocale1-static-ENV): New variable.
+	(bug-setlocale1-static-ARGS): Likewise.
+	* bug-setlocale1.c (do_test): Support run directly.  Check env[1]
+	instead of newargv[0].
+	* bug-setlocale1-static.c: New file.
+
 2013-01-03  Chris Leonard  <cjl@sugarlabs.org>
 
 	[BZ #14982]
