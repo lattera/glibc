@@ -81,7 +81,6 @@ cache_addpw (struct database_dyn *db, int fd, request_header *req,
 	     const void *key, struct passwd *pwd, uid_t owner,
 	     struct hashentry *const he, struct datahead *dh, int errval)
 {
-  bool all_written = true;
   ssize_t total;
   ssize_t written;
   time_t t = time (NULL);
@@ -307,7 +306,7 @@ cache_addpw (struct database_dyn *db, int fd, request_header *req,
 			  + db->head->data_size));
 	      written = sendfileall (fd, db->wr_fd,
 				     (char *) &dataset->resp
-				     - (char *) db->head, dataset->head.recsize);
+				     - (char *) db->head, dataset->head.recsize );
 # ifndef __ASSUME_SENDFILE
 	      if (written == -1 && errno == ENOSYS)
 		goto use_write;
@@ -319,9 +318,6 @@ cache_addpw (struct database_dyn *db, int fd, request_header *req,
 # endif
 #endif
 	    written = writeall (fd, &dataset->resp, dataset->head.recsize);
-
-	  if (written != dataset->head.recsize)
-	    all_written = false;
 	}
 
 
@@ -381,7 +377,7 @@ cache_addpw (struct database_dyn *db, int fd, request_header *req,
 	}
     }
 
-  if (__builtin_expect (!all_written, 0) && debug_level > 0)
+  if (__builtin_expect (written != total, 0) && debug_level > 0)
     {
       char buf[256];
       dbg_log (_("short write in %s: %s"),  __FUNCTION__,

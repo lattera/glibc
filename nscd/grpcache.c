@@ -75,7 +75,6 @@ cache_addgr (struct database_dyn *db, int fd, request_header *req,
 	     const void *key, struct group *grp, uid_t owner,
 	     struct hashentry *const he, struct datahead *dh, int errval)
 {
-  bool all_written = true;
   ssize_t total;
   ssize_t written;
   time_t t = time (NULL);
@@ -343,9 +342,6 @@ cache_addgr (struct database_dyn *db, int fd, request_header *req,
 # endif
 #endif
 	    written = writeall (fd, &dataset->resp, dataset->head.recsize);
-
-	  if (written != dataset->head.recsize)
-	    all_written = false;
 	}
 
       /* Add the record to the database.  But only if it has not been
@@ -405,7 +401,7 @@ cache_addgr (struct database_dyn *db, int fd, request_header *req,
 	}
     }
 
-  if (__builtin_expect (!all_written, 0) && debug_level > 0)
+  if (__builtin_expect (written != total, 0) && debug_level > 0)
     {
       char buf[256];
       dbg_log (_("short write in %s: %s"),  __FUNCTION__,

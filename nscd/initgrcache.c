@@ -171,12 +171,10 @@ addinitgroupsX (struct database_dyn *db, int fd, request_header *req,
 	nip = nip->next;
     }
 
-  bool all_written;
   ssize_t total;
   ssize_t written;
   time_t timeout;
  out:
-  all_written = true;
   timeout = MAX_TIMEOUT_VALUE;
   if (!any_success)
     {
@@ -381,9 +379,6 @@ addinitgroupsX (struct database_dyn *db, int fd, request_header *req,
 # endif
 #endif
 	    written = writeall (fd, &dataset->resp, dataset->head.recsize);
-
-	  if (written != dataset->head.recsize)
-	    all_written = false;
 	}
 
 
@@ -410,7 +405,7 @@ addinitgroupsX (struct database_dyn *db, int fd, request_header *req,
 
   free (groups);
 
-  if (__builtin_expect (!all_written, 0) && debug_level > 0)
+  if (__builtin_expect (written != total, 0) && debug_level > 0)
     {
       char buf[256];
       dbg_log (_("short write in %s: %s"), __FUNCTION__,
