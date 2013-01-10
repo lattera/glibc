@@ -323,11 +323,13 @@ __MATHCALL (remquo,, (_Mdouble_ __x, _Mdouble_ __y, int *__quo));
 /* Round X to nearest integral value according to current rounding
    direction.  */
 __MATHDECL (long int,lrint,, (_Mdouble_ __x));
+__extension__
 __MATHDECL (long long int,llrint,, (_Mdouble_ __x));
 
 /* Round X to nearest integral value, rounding halfway cases away from
    zero.  */
 __MATHDECL (long int,lround,, (_Mdouble_ __x));
+__extension__
 __MATHDECL (long long int,llround,, (_Mdouble_ __x));
 
 

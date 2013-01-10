@@ -27,7 +27,7 @@
 /* Jump buffer contains:
    x19-x28, x29(fp), x30(lr), (x31)sp, d8-d15.  Other registers are not
    saved.  */
-typedef unsigned long long __jmp_buf [22];
+__extension__ typedef unsigned long long __jmp_buf [22];
 
 #endif
 #endif

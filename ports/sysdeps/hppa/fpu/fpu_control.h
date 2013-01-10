@@ -44,7 +44,7 @@ typedef unsigned int fpu_control_t;
 /* Macros for accessing the hardware control word.  */
 #define _FPU_GETCW(cw) \
 ({										\
-  union { unsigned long long __fpreg; unsigned int __halfreg[2]; } __fullfp;	\
+  union { __extension__ unsigned long long __fpreg; unsigned int __halfreg[2]; } __fullfp; \
   /* Get the current status word. */						\
   __asm__ ("fstd %%fr0,0(%1)\n\t"						\
            "fldd 0(%1),%%fr0\n\t"						\
@@ -54,7 +54,7 @@ typedef unsigned int fpu_control_t;
 
 #define _FPU_SETCW(cw) \
 ({										\
-  union { unsigned long long __fpreg; unsigned int __halfreg[2]; } __fullfp;	\
+  union { __extension__ unsigned long long __fpreg; unsigned int __halfreg[2]; } __fullfp;	\
   __fullfp.__halfreg[0] = cw;							\
   __asm__ ("fldd 0(%1),%%fr0\n\t"						\
 	   : : "m" (__fullfp.__fpreg), "r" (__fullfp.__fpreg) : "%r0" );	\

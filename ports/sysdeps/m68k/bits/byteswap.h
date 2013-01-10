@@ -74,6 +74,7 @@ __bswap_32 (unsigned int __bsx)
    | (((x) & 0x00000000000000ffull) << 56))
 
 /* Swap bytes in 64 bit value.  */
+__extension__
 static __inline unsigned long long
 __bswap_64 (unsigned long long __bsx)
 {

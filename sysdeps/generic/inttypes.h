@@ -286,8 +286,8 @@ typedef struct
 /* We have to define the `uintmax_t' type using `lldiv_t'.  */
 typedef struct
   {
-    long long int quot;		/* Quotient.  */
-    long long int rem;		/* Remainder.  */
+    __extension__ long long int quot;	/* Quotient.  */
+    __extension__ long long int rem;	/* Remainder.  */
   } imaxdiv_t;
 
 #endif

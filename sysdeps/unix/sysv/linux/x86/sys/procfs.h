@@ -36,7 +36,7 @@ __BEGIN_DECLS
 
 /* Type for a general-purpose register.  */
 #ifdef __x86_64__
-typedef unsigned long long elf_greg_t;
+__extension__ typedef unsigned long long elf_greg_t;
 #else
 typedef unsigned long elf_greg_t;
 #endif

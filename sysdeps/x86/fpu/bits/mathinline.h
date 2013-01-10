@@ -198,6 +198,7 @@ __NTH (lrint (double __x))
 }
 #   endif
 #   ifdef __x86_64__
+__extension__
 __MATH_INLINE long long int
 __NTH (llrintf (float __x))
 {
@@ -209,6 +210,7 @@ __NTH (llrintf (float __x))
   __asm __volatile__ ("cvtss2si %1, %0" : "=r" (__res) : "xm" (__x));
   return __res;
 }
+__extension__
 __MATH_INLINE long long int
 __NTH (llrint (double __x))
 {
@@ -896,16 +898,19 @@ __NTH (lrintl (long double __x))
     ("fistpll %0"							      \
      : "=m" (__llrintres) : "t" (__x) : "st");				      \
   return __llrintres
+__extension__
 __MATH_INLINE long long int
 __NTH (llrintf (float __x))
 {
   __llrint_code;
 }
+__extension__
 __MATH_INLINE long long int
 __NTH (llrint (double __x))
 {
   __llrint_code;
 }
+__extension__
 __MATH_INLINE long long int
 __NTH (llrintl (long double __x))
 {

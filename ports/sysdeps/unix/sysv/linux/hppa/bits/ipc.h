@@ -57,6 +57,6 @@ struct ipc_perm
 #endif
     unsigned short int __seq;		/* Sequence number.  */
     unsigned int __pad3;
-    unsigned long long int __unused1;
-    unsigned long long int __unused2;
+    __extension__ unsigned long long int __unused1;
+    __extension__ unsigned long long int __unused2;
   };

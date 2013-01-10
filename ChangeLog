@@ -1,5 +1,25 @@
 2013-01-10  Joseph Myers  <joseph@codesourcery.com>
 
+	* elf/link.h (struct dl_phdr_info): Use __extension__ with long
+	long.
+	* math/bits/mathcalls.h (llrint): Likewise.
+	(llround): Likewise.
+	* stdlib/stdlib.h (struct drand48_data): Likewise.
+	* sysdeps/generic/inttypes.h (imaxdiv_t): Likewise.
+	* sysdeps/s390/bits/byteswap.h (__bswap_64): Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/ipc.h (struct ipc_perm):
+	Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sys/ucontext.h (struct fpu):
+	Likewise.
+	* sysdeps/unix/sysv/linux/x86/sys/procfs.h [__x86_64__]
+	(elf_greg_t): Likewise.
+	* sysdeps/x86/bits/setjmp.h [__x86_64__ && __WORDSIZE != 64]
+	(__jmp_buf): Likewise.
+	* sysdeps/x86/fpu/bits/mathinline.h (llrintf): Likewise, for all
+	definitions.
+	(llrint): Likewise, for all definitions.
+	(llrintl): Likewise.
+
 	* string/string.h [__USE_BSD && __USE_GNU && __GNUC__] (ffsll):
 	Remove [__GNUC__] condition.
 	* wcsmbs/wchar.h [__USE_ISOC99 || (__GNUC__ && __USE_GNU)]: Change

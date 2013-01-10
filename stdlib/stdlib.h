@@ -415,7 +415,8 @@ struct drand48_data
     unsigned short int __old_x[3]; /* Old state.  */
     unsigned short int __c;	/* Additive const. in congruential formula.  */
     unsigned short int __init;	/* Flag for initializing.  */
-    unsigned long long int __a;	/* Factor in congruential formula.  */
+    __extension__ unsigned long long int __a;	/* Factor in congruential
+						   formula.  */
   };
 
 /* Return non-negative, double-precision floating-point value in [0.0,1.0).  */

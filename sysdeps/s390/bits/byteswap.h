@@ -123,6 +123,7 @@ __bswap_32 (unsigned int __bsx)
       | (((x) & 0x000000000000ff00ull) << 40)				      \
       | (((x) & 0x00000000000000ffull) << 56))
 
+__extension__
 static __inline unsigned long long int
 __bswap_64 (unsigned long long int __bsx)
 {
