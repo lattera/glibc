@@ -1,3 +1,7 @@
+2013-01-10  David S. Miller  <davem@davemloft.net>
+
+	* sysdeps/sparc/fpu/libm-test-ulps: Update.
+
 2013-01-10  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* Makefile (tests-static): New variable.
