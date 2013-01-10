@@ -522,10 +522,8 @@ extern int ffs (int __i) __THROW __attribute__ ((__const__));
    platforms.  */
 # ifdef	__USE_GNU
 extern int ffsl (long int __l) __THROW __attribute__ ((__const__));
-#  ifdef __GNUC__
 __extension__ extern int ffsll (long long int __ll)
      __THROW __attribute__ ((__const__));
-#  endif
 # endif
 
 /* Compare S1 and S2, ignoring case.  */

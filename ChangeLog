@@ -1,3 +1,11 @@
+2013-01-10  Joseph Myers  <joseph@codesourcery.com>
+
+	* string/string.h [__USE_BSD && __USE_GNU && __GNUC__] (ffsll):
+	Remove [__GNUC__] condition.
+	* wcsmbs/wchar.h [__USE_ISOC99 || (__GNUC__ && __USE_GNU)]: Change
+	condition to just [__USE_ISOC99].
+	[__GNUC__ && __USE_GNU]: Change condition to just [__USE_GNU].
+
 2013-01-10  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #14200]

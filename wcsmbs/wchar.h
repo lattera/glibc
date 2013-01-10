@@ -475,7 +475,7 @@ extern unsigned long int wcstoul (const wchar_t *__restrict __nptr,
      __THROW;
 __END_NAMESPACE_STD
 
-#if defined __USE_ISOC99 || (defined __GNUC__ && defined __USE_GNU)
+#ifdef __USE_ISOC99
 __BEGIN_NAMESPACE_C99
 /* Convert initial portion of wide string NPTR to `long long int'
    representation.  */
@@ -491,9 +491,9 @@ extern unsigned long long int wcstoull (const wchar_t *__restrict __nptr,
 					wchar_t **__restrict __endptr,
 					int __base) __THROW;
 __END_NAMESPACE_C99
-#endif /* ISO C99 or GCC and GNU.  */
+#endif /* ISO C99.  */
 
-#if defined __GNUC__ && defined __USE_GNU
+#ifdef __USE_GNU
 /* Convert initial portion of wide string NPTR to `long long int'
    representation.  */
 __extension__
@@ -507,7 +507,7 @@ __extension__
 extern unsigned long long int wcstouq (const wchar_t *__restrict __nptr,
 				       wchar_t **__restrict __endptr,
 				       int __base) __THROW;
-#endif /* GCC and use GNU.  */
+#endif /* Use GNU.  */
 
 #ifdef __USE_GNU
 /* The concept of one static locale per category is not very well
