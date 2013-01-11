@@ -1,3 +1,10 @@
+2013-01-11  Steve Ellcey  <sellcey@mips.com>
+
+	* elf/elf.h (EF_MIPS_ARCH_32): Fix value.
+	(EF_MIPS_ARCH_64): Fix value.
+	(EF_MIPS_ARCH_32R2): New.
+	(EF_MIPS_ARCH_64R2): New.
+
 2013-01-11  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* Makeconfig (+link-pie-before-libc): New.

@@ -1388,8 +1388,10 @@ typedef struct
 #define EF_MIPS_ARCH_3		0x20000000 /* -mips3 code.  */
 #define EF_MIPS_ARCH_4		0x30000000 /* -mips4 code.  */
 #define EF_MIPS_ARCH_5		0x40000000 /* -mips5 code.  */
-#define EF_MIPS_ARCH_32		0x60000000 /* MIPS32 code.  */
-#define EF_MIPS_ARCH_64		0x70000000 /* MIPS64 code.  */
+#define EF_MIPS_ARCH_32		0x50000000 /* MIPS32 code.  */
+#define EF_MIPS_ARCH_64		0x60000000 /* MIPS64 code.  */
+#define EF_MIPS_ARCH_32R2	0x70000000 /* MIPS32r2 code.  */
+#define EF_MIPS_ARCH_64R2	0x80000000 /* MIPS64r2 code.  */
 
 /* The following are unofficial names and should not be used.  */
 
