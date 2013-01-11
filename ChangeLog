@@ -1,3 +1,10 @@
+2013-01-10  David S. Miller  <davem@davemloft.net>
+
+	* sysdeps/sparc/sparc32/sparcv9/mul_1.S: Properly optimize for 32-bit
+	sparc V9 rather than using V8 code.
+	* sysdeps/sparc/sparc32/sparcv9/addmul_1.S: Likewise.
+	* sysdeps/sparc/sparc32/sparcv9/submul_1.S: Likewise.
+
 2013-01-10  Roland McGrath  <roland@hack.frob.com>
 
 	* elf/elf.h (DT_SPARC_REGISTER, DT_SPARC_NUM): Fix whitespace.
