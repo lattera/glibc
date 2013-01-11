@@ -1,3 +1,9 @@
+2013-01-11  Andreas Jaeger  <aj@suse.de>
+
+	[BZ #15003]
+	* sysdeps/unix/sysv/linux/bits/socket.h (MSG_FASTOPEN): New
+	value. Sync with Linux 3.7.
+
 2013-01-10  David S. Miller  <davem@davemloft.net>
 
 	* sysdeps/sparc/sparc32/sparcv9/mul_1.S: Revert previous changes.
