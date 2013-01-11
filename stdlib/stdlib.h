@@ -151,7 +151,7 @@ extern long int atol (const char *__nptr)
      __THROW __attribute_pure__ __nonnull ((1)) __wur;
 __END_NAMESPACE_STD
 
-#if defined __USE_ISOC99 || (defined __GLIBC_HAVE_LONG_LONG && defined __USE_MISC)
+#if defined __USE_ISOC99 || defined __USE_MISC
 __BEGIN_NAMESPACE_C99
 /* Convert a string to a long long integer.  */
 __extension__ extern long long int atoll (const char *__nptr)
@@ -189,7 +189,7 @@ extern unsigned long int strtoul (const char *__restrict __nptr,
      __THROW __nonnull ((1));
 __END_NAMESPACE_STD
 
-#if defined __GLIBC_HAVE_LONG_LONG && defined __USE_BSD
+#ifdef __USE_BSD
 /* Convert a string to a quadword integer.  */
 __extension__
 extern long long int strtoq (const char *__restrict __nptr,
@@ -200,9 +200,9 @@ __extension__
 extern unsigned long long int strtouq (const char *__restrict __nptr,
 				       char **__restrict __endptr, int __base)
      __THROW __nonnull ((1));
-#endif /* GCC and use BSD.  */
+#endif /* Use BSD.  */
 
-#if defined __USE_ISOC99 || (defined __GLIBC_HAVE_LONG_LONG && defined __USE_MISC)
+#if defined __USE_ISOC99 || defined __USE_MISC
 __BEGIN_NAMESPACE_C99
 /* Convert a string to a quadword integer.  */
 __extension__
@@ -215,7 +215,7 @@ extern unsigned long long int strtoull (const char *__restrict __nptr,
 					char **__restrict __endptr, int __base)
      __THROW __nonnull ((1));
 __END_NAMESPACE_C99
-#endif /* ISO C99 or GCC and use MISC.  */
+#endif /* ISO C99 or use MISC.  */
 
 
 #ifdef __USE_GNU

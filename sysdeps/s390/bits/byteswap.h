@@ -112,7 +112,7 @@ __bswap_32 (unsigned int __bsx)
 	  __r.__l[1] = __bswap_32 (__w.__l[0]);		\
 	  __r.__ll; })
 # endif
-#elif __GLIBC_HAVE_LONG_LONG
+#else
 # define __bswap_constant_64(x) \
      ((((x) & 0xff00000000000000ull) >> 56)				      \
       | (((x) & 0x00ff000000000000ull) >> 40)				      \

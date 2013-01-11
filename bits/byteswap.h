@@ -91,7 +91,7 @@ __bswap_64 (__uint64_t __bsx)
 	   }								      \
 	 __r.__ll; }))
 # endif
-#elif __GLIBC_HAVE_LONG_LONG
+#else
 # define __bswap_constant_64(x) \
      ((((x) & 0xff00000000000000ull) >> 56)				      \
       | (((x) & 0x00ff000000000000ull) >> 40)				      \

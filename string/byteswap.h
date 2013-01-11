@@ -33,9 +33,7 @@
 /* Return a value with all bytes in the 32 bit argument swapped.  */
 #define bswap_32(x) __bswap_32 (x)
 
-#if __GLIBC_HAVE_LONG_LONG
 /* Return a value with all bytes in the 64 bit argument swapped.  */
-# define bswap_64(x) __bswap_64 (x)
-#endif
+#define bswap_64(x) __bswap_64 (x)
 
 #endif /* byteswap.h */

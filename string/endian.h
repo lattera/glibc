@@ -70,12 +70,10 @@
 #  define be32toh(x) __bswap_32 (x)
 #  define le32toh(x) (x)
 
-#  if __GLIBC_HAVE_LONG_LONG
-#   define htobe64(x) __bswap_64 (x)
-#   define htole64(x) (x)
-#   define be64toh(x) __bswap_64 (x)
-#   define le64toh(x) (x)
-#  endif
+#  define htobe64(x) __bswap_64 (x)
+#  define htole64(x) (x)
+#  define be64toh(x) __bswap_64 (x)
+#  define le64toh(x) (x)
 
 # else
 #  define htobe16(x) (x)
@@ -88,12 +86,10 @@
 #  define be32toh(x) (x)
 #  define le32toh(x) __bswap_32 (x)
 
-#  if __GLIBC_HAVE_LONG_LONG
-#   define htobe64(x) (x)
-#   define htole64(x) __bswap_64 (x)
-#   define be64toh(x) (x)
-#   define le64toh(x) __bswap_64 (x)
-#  endif
+#  define htobe64(x) (x)
+#  define htole64(x) __bswap_64 (x)
+#  define be64toh(x) (x)
+#  define le64toh(x) __bswap_64 (x)
 # endif
 #endif
 

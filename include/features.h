@@ -358,14 +358,6 @@
 #define __GLIBC_PREREQ(maj, min) \
 	((__GLIBC__ << 16) + __GLIBC_MINOR__ >= ((maj) << 16) + (min))
 
-/* Decide whether a compiler supports the long long datatypes.  */
-#if defined __GNUC__ \
-    || (defined __PGI && defined __i386__ ) \
-    || (defined __INTEL_COMPILER && (defined __i386__ || defined __ia64__)) \
-    || (defined __STDC_VERSION__ && __STDC_VERSION__ >= 199901L)
-# define __GLIBC_HAVE_LONG_LONG	1
-#endif
-
 /* This is here only because every header file already includes this one.  */
 #ifndef __ASSEMBLER__
 # ifndef _SYS_CDEFS_H

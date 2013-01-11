@@ -42,7 +42,7 @@ typedef unsigned int __uint32_t;
 #if __WORDSIZE == 64
 typedef signed long int __int64_t;
 typedef unsigned long int __uint64_t;
-#elif defined __GLIBC_HAVE_LONG_LONG
+#else
 __extension__ typedef signed long long int __int64_t;
 __extension__ typedef unsigned long long int __uint64_t;
 #endif
@@ -51,18 +51,9 @@ __extension__ typedef unsigned long long int __uint64_t;
 #if __WORDSIZE == 64
 typedef long int __quad_t;
 typedef unsigned long int __u_quad_t;
-#elif defined __GLIBC_HAVE_LONG_LONG
+#else
 __extension__ typedef long long int __quad_t;
 __extension__ typedef unsigned long long int __u_quad_t;
-#else
-typedef struct
-{
-  long __val[2];
-} __quad_t;
-typedef struct
-{
-  __u_long __val[2];
-} __u_quad_t;
 #endif
 
 
