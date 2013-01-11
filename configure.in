@@ -633,6 +633,7 @@ if test x"$libc_cv_ld_gnu_indirect_function" != xyes; then
     multi_arch=no
   fi
 fi
+multi_arch_d=
 if test x"$multi_arch" != xno; then
   multi_arch_d=/multiarch
 fi
@@ -686,11 +687,16 @@ while m=`echo $tail | sed 's@^\(.*\)/\([^/]*\)$@& \1@'`; test -n "$m"; do
   set $m
   # Prepend the machine's FPU directory unless --without-fp.
   if test "$with_fp" = yes; then
-    mach="$mach /$1/fpu"
+    maybe_fpu=/fpu
   else
-    mach="$mach /$1/nofpu"
+    maybe_fpu=/nofpu
   fi
-  mach="$mach /$1"
+  # For each machine term, try it with and then without /multiarch.
+  for try_fpu in $maybe_fpu ''; do
+    for try_multi in $multi_arch_d ''; do
+      mach="$mach /$1$try_fpu$try_multi"
+    done
+  done
   tail="$2"
 done
 
@@ -706,7 +712,7 @@ for b in $base ''; do
       test "$v" = / && continue
       for o in /$ostry ''; do
 	test "$o" = / && continue
-	for m in $multi_arch_d $mach ''; do
+	for m in $mach ''; do
 	  for d in $add_ons_pfx ''; do
 	    for a in $add_ons_sfx ''; do
 	      try_suffix="$m0$b$v$o$m"
