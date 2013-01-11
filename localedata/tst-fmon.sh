@@ -22,7 +22,8 @@ set -e
 
 common_objpfx=$1
 run_program_prefix=$2
-datafile=$3
+test_program_prefix=$3
+datafile=$4
 
 here=`pwd`
 
@@ -47,7 +48,7 @@ while IFS="	" read locale format value expect; do
 	expect=`echo "$expect" | sed 's/^\"\(.*\)\"$/\1/'`
 	LOCPATH=${common_objpfx}localedata \
 	GCONV_PATH=${common_objpfx}/iconvdata \
-	${run_program_prefix} ${common_objpfx}localedata/tst-fmon \
+	${test_program_prefix} ${common_objpfx}localedata/tst-fmon \
 	"$locale" "$format" "$value" "$expect" < /dev/null ||
 	errcode=$?
     fi

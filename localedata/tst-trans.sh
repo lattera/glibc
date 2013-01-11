@@ -21,6 +21,7 @@ set -e
 
 common_objpfx=$1
 run_program_prefix=$2
+test_program_prefix=$3
 
 # Generate the necessary locale data.
 I18NPATH=. GCONV_PATH=${common_objpfx}/iconvdata \
@@ -32,7 +33,7 @@ exit 1
 
 # Run the test program.
 LOCPATH=${common_objpfx}localedata GCONV_PATH=${common_objpfx}iconvdata \
-LC_ALL=tt_TT ${run_program_prefix} \
+LC_ALL=tt_TT ${test_program_prefix} \
 ${common_objpfx}localedata/tst-trans > ${common_objpfx}localedata/tst-trans.out
 
 exit $?

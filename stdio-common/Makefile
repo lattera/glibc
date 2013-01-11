@@ -69,11 +69,11 @@ tests: do-tst-unbputc do-tst-printf
 
 do-tst-unbputc: $(objpfx)tst-unbputc.out
 $(objpfx)tst-unbputc.out: tst-unbputc.sh $(objpfx)tst-unbputc
-	$(SHELL) $< $(common-objpfx) '$(run-program-prefix)'
+	$(SHELL) $< $(common-objpfx) '$(test-program-prefix)'
 
 do-tst-printf: $(objpfx)tst-printf.out
 $(objpfx)tst-printf.out: tst-printf.sh $(objpfx)tst-printf
-	$(SHELL) $< $(common-objpfx) '$(run-program-prefix)'
+	$(SHELL) $< $(common-objpfx) '$(test-program-prefix)'
 endif
 
 CFLAGS-vfprintf.c = -Wno-uninitialized
@@ -127,7 +127,7 @@ tst-grouping-ENV = LOCPATH=$(common-objpfx)localedata
 CPPFLAGS += $(libio-mtsafe)
 
 $(objpfx)tst-setvbuf1.out: tst-setvbuf1.expect $(objpfx)tst-setvbuf1
-	$(built-program-cmd) > $@ 2>&1
+	$(test-program-cmd) > $@ 2>&1
 	cmp tst-setvbuf1.expect $@
 
 ifeq ($(build-shared),yes)

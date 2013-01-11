@@ -20,12 +20,12 @@
 set -e
 
 common_objpfx=$1
-run_program_cmd=$2
+test_program_cmd=$2
 
 # Run the test program.
 LOCPATH=${common_objpfx}localedata GCONV_PATH=${common_objpfx}iconvdata \
 NLSPATH=${common_objpfx}catgets/%N.%c.cat LC_ALL=ja_JP.SJIS \
-  ${run_program_cmd} \
+  ${test_program_cmd} \
     > ${common_objpfx}catgets/test-gencat.out
 
 # Compare with the expected result.

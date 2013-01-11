@@ -119,10 +119,10 @@ ifeq ($(run-built-tests),yes)
 ifeq (yes,$(build-shared))
 tests: $(objpfx)globtest.out $(objpfx)wordexp-tst.out
 $(objpfx)globtest.out: globtest.sh $(objpfx)globtest
-	$(SHELL) $< $(common-objpfx) '$(run-via-rtld-prefix)' \
-		'$(test-wrapper)' '$(test-wrapper-env)'
+	$(SHELL) $< $(common-objpfx) '$(test-via-rtld-prefix)' \
+		'$(test-program-prefix)' '$(test-wrapper-env)'
 $(objpfx)wordexp-tst.out: wordexp-tst.sh $(objpfx)wordexp-test
-	$(SHELL) $< $(common-objpfx) '$(run-program-prefix)'
+	$(SHELL) $< $(common-objpfx) '$(test-program-prefix)'
 endif
 endif
 
@@ -173,9 +173,9 @@ CFLAGS-execlp.os = -fomit-frame-pointer
 tstgetopt-ARGS = -a -b -cfoobar --required foobar --optional=bazbug \
 		--none random --col --color --colour
 
-tst-exec-ARGS = -- $(host-built-program-cmd)
+tst-exec-ARGS = -- $(host-test-program-cmd)
 tst-exec-static-ARGS = $(tst-exec-ARGS)
-tst-spawn-ARGS = -- $(host-built-program-cmd)
+tst-spawn-ARGS = -- $(host-test-program-cmd)
 tst-spawn-static-ARGS = $(tst-spawn-ARGS)
 tst-dir-ARGS = `pwd` `cd $(common-objdir)/$(subdir); pwd` `cd $(common-objdir); pwd` $(objpfx)tst-dir
 tst-chmod-ARGS = $(objdir)
@@ -268,7 +268,7 @@ $(objpfx)tst-vfork3-mem: $(objpfx)tst-vfork3.out
 # time to process.
 $(objpfx)tst-rxspencer-mem: $(objpfx)tst-rxspencer.out
 	MALLOC_TRACE=$(objpfx)tst-rxspencer.mtrace $(tst-rxspencer-ENV) \
-	  $(run-program-prefix) $(objpfx)tst-rxspencer rxspencer/tests \
+	  $(test-program-prefix) $(objpfx)tst-rxspencer rxspencer/tests \
 	  > /dev/null
 	$(common-objpfx)malloc/mtrace $(objpfx)tst-rxspencer.mtrace > $@
 

@@ -82,6 +82,6 @@ ifeq ($(run-built-tests),yes)
 tests: $(objpfx)tst-svc.out
 $(objpfx)tst-svc.out: tst-svc.input $(objpfx)tst-svc
 	GCONV_PATH=$(common-objpfx)iconvdata LC_ALL=C \
-	  $(built-program-cmd) < $(word 1,$^) > $@
+	  $(test-program-cmd) < $(word 1,$^) > $@
 	@cmp tst-svc.expect $(objpfx)tst-svc.out
 endif

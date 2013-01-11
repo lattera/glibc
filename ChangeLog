@@ -1,3 +1,129 @@
+2013-01-11  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* Makeconfig (+link-pie-before-libc): New.
+	(+link-pie-after-libc): Likewise.
+	(+link-pie-tests): Likewise.
+	(+link-pie): Rewritten.
+	(link-before-libc): Remove $(config-LDFLAGS).
+	(+link): Add $(rtld-LDFLAGS) after $(+link-before-libc).
+	(+link-tests): Add $(rtld-tests-LDFLAGS) after $(+link-before-libc).
+	(config-LDFLAGS): Renamed to ...
+	(rtld-LDFLAGS): This.
+	(rtld-tests-LDFLAGS): New macro.
+	(link-libc-rpath-link): Likewise.
+	(link-libc-tests-rpath-link): Likewise.
+	(link-libc-before-gnulib): Remove -Wl,-rpath-link=$(rpath-link).
+	(link-libc): Prepand $(link-libc-rpath-link).
+	(link-libc-tests): Prepand $(link-libc-tests-rpath-link).
+	(test-program-prefix): New macro.
+	(test-via-rtld-prefix): Likewise.
+	(test-program-cmd): Likewise.
+	(host-test-program-cmd): Likewise.
+	* Makefile ($(common-objpfx)testrun.sh): Replace
+	$(run-program-prefix) with $(test-program-prefix).
+	* Makerules ($(LINK.o)): Replace $(config-LDFLAGS) with
+	$(rtld-LDFLAGS).
+	($(common-objpfx)shlib.lds): Likewise.
+	(build-module-helper): Likewise.
+	($(common-objpfx)format.lds): Likewise.
+	* Rules (binaries-pie-tests): New.
+	(binaries-pie-notests): Likewise.
+	(binaries-pie): Rewritten.
+	($(addprefix $(objpfx),$(binaries-pie))): Renamed to ...
+	($(addprefix $(objpfx),$(binaries-pie-notests))): This.
+	($(addprefix $(objpfx),$(binaries-pie-tests))): New.
+	(make-test-out): Replace $(host-built-program-cmd) with
+	$(host-test-program-cmd).
+	* config.make.in (build-hardcoded-path-in-tests): New variable.
+	* configure.in (--enable-hardcoded-path-in-tests): New configure
+	option.
+	(hardcoded_path_in_tests): New AC_SUBST.
+	* configure: Regenerated.
+	* catgets/Makefile ($(objpfx)test-gencat.out): Replace
+	$(built-program-cmd) with $(test-program-cmd).
+	* catgets/test-gencat.sh (run_program_cmd): Renamed to ...
+	(test_program_cmd): This.
+	* elf/Makefile ($(objpfx)order.out): Run test with
+	$(test-program-prefix).
+	($(objpfx)order2.out): Likewise.
+	($(objpfx)tst-initorder.out): Likewise.
+	($(objpfx)tst-initorder2.out): Likewise.
+	($(objpfx)tst-array1.out): Replace $(built-program-cmd) with
+	$(test-program-cmd).
+	($(objpfx)tst-array1-static.out): Likewise.
+	($(objpfx)tst-array2.out): Likewise.
+	($(objpfx)tst-array3.out): Likewise.
+	($(objpfx)tst-array4.out): Likewise.
+	($(objpfx)tst-array5.out): Likewise.
+	($(objpfx)tst-array5-static.out): Likewise.
+	(tst-stackguard1-ARGS): Replace $(built-program-cmd) with
+	$(test-program-cmd).
+	* grp/Makefile ($(objpfx)tst_fgetgrent.out): Replace
+	$(run-program-prefix) with $(test-program-prefix).
+	* grp/tst_fgetgrent.sh (run_program_prefix): Renamed to ...
+	(test_program_prefix): This.
+	* iconvdata/Makefile ($(objpfx)tst-tables.out): Replace
+	$(run-program-prefix) with $(test-program-prefix).
+	* iconvdata/tst-table.sh (run_program_prefix): Renamed to ...
+	(test_program_prefix): This.
+	* iconvdata/tst-tables.sh: Likewise.
+	* intl/Makefile ($(objpfx)tst-gettext.out): Replace
+	$(run-program-prefix) with $(test-program-prefix).
+	($(objpfx)tst-translit.out): Likewise.
+	($(objpfx)tst-gettext2.out): Likewise.
+	($(objpfx)tst-gettext4.out): Likewise.
+	($(objpfx)tst-gettext6.out): Likewise.
+	* intl/tst-gettext.sh (run_program_prefix): Renamed to ...
+	(test_program_prefix): This.
+	* intl/tst-gettext2.sh: Likewise.
+	* intl/tst-gettext4.sh  Likewise.
+	* intl/tst-gettext6.sh: Likewise.
+	* intl/tst-translit.sh: Likewise.
+	* io/Makefile ($(objpfx)ftwtest.out): Replace $(run-program-cmd)
+	with $(test-program-cmd).
+	* libio/Makefile ($(objpfx)test-freopen.out): Replace
+	$(run-program-prefix) with $(test-program-prefix).
+	* libio/test-freopen.sh (run_program_prefix): Renamed to ...
+	(test_program_prefix): This.
+	* malloc/Makefile ($(objpfx)tst-mtrace.out): Replace
+	$(run-program-prefix) with $(test-program-prefix).
+	* malloc/tst-mtrace.sh (run_program_prefix): Renamed to ...
+	(test_program_prefix): This.
+	* manual/install.texi: Document --enable-hardcoded-path-in-tests.
+	* posix/Makefile ($(objpfx)globtest.out): Replace
+	$(run-via-rtld-prefix) and $(test-wrapper) with
+	$(test-program-prefix) and $(test-via-rtld-prefix).
+	($(objpfx)wordexp-tst.out): Replace $(run-program-prefix) with
+	$(test-program-prefix).
+	(tst-exec-ARGS): Replace $(host-built-program-cmd) with
+	$(host-test-program-cmd).
+	(tst-spawn-ARGS): Likewise.
+	($(objpfx)tst-rxspencer-mem): Replace $(run-program-prefix) with
+	$(test-program-prefix).
+	* posix/globtest.sh (un_via_rtld_prefix): Renamed to ...
+	(test_via_rtld_prefix): This.
+	(test_wrapper): Renamed to ...
+	(test_program_prefix): This.
+	(run_program_prefix): Replaced by test_program_prefix.
+	* posix/wordexp-tst.sh (run_program_prefix): Renamed to ...
+	(test_program_prefix): This.
+	* rt/Makefile (tst-mqueue7-ARGS): Replace $(host-built-program-cmd)
+	with $(host-test-program-cmd).
+	* stdio-common/Makefile ($(objpfx)tst-unbputc.out): Replace
+	$(run-program-prefix) with $(test-program-prefix).
+	($(objpfx)tst-printf.out): Likewise.
+	($(objpfx)tst-setvbuf1.out): Replace $(built-program-cmd) with
+	$(test-program-cmd).
+	* stdio-common/tst-printf.sh (run_program_prefix): Renamed to ...
+	(test_program_prefix): This.
+	* stdio-common/tst-unbputc.sh: Likewise.
+	* stdlib/Makefile ($(objpfx)tst-fmtmsg.out): Replace
+	$(run-program-prefix) with $(test-program-prefix).
+	* stdlib/tst-fmtmsg.sh (run_program_prefix): Renamed to ...
+	(test_program_prefix): This.
+	* string/Makefile ($(objpfx)tst-svc.out):  Replace
+	$(built-program-cmd) with $(test-program-cmd).
+
 2013-01-11  Andreas Jaeger  <aj@suse.de>
 
 	[BZ #15003]

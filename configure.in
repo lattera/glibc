@@ -146,6 +146,13 @@ else
 fi
 AC_SUBST(oldest_abi)
 
+AC_ARG_ENABLE([hardcoded-path-in-tests],
+	      AC_HELP_STRING([--enable-hardcoded-path-in-tests],
+			     [hardcode newly built glibc path in tests @<:@default=no@:>@]),
+	      [hardcoded_path_in_tests=$enableval],
+	      [hardcoded_path_in_tests=no])
+AC_SUBST(hardcoded_path_in_tests)
+
 AC_ARG_ENABLE([stackguard-randomization],
 	      AC_HELP_STRING([--enable-stackguard-randomization],
 			     [initialize __stack_chk_guard canary with a random number at program start]),

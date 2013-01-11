@@ -379,8 +379,8 @@ endif
 
 # Command for linking PIE programs with the C library.
 ifndef +link-pie
-+link-pie = $(CC) -pie -Wl,-O1 -nostdlib -nostartfiles -o $@ \
-	     $(sysdep-LDFLAGS) $(config-LDFLAGS) $(LDFLAGS) $(LDFLAGS-$(@F)) \
++link-pie-before-libc = $(CC) -pie -Wl,-O1 -nostdlib -nostartfiles -o $@ \
+	     $(sysdep-LDFLAGS) $(LDFLAGS) $(LDFLAGS-$(@F)) \
 	     $(combreloc-LDFLAGS) $(relro-LDFLAGS) $(hashstyle-LDFLAGS) \
 	     $(addprefix $(csu-objpfx),S$(start-installed-name)) \
 	     $(+preinit) $(+prectorS) \
@@ -388,7 +388,12 @@ ifndef +link-pie
 						    S$(start-installed-name))\
 			  $(+preinit) $(link-extra-libs) \
 			  $(common-objpfx)libc% $(+postinit),$^) \
-	     $(link-extra-libs) $(link-libc) $(+postctorS) $(+postinit)
+	     $(link-extra-libs)
++link-pie-after-libc = $(+postctorS) $(+postinit)
++link-pie = $(+link-pie-before-libc) $(rtld-LDFLAGS) $(link-libc) \
+	    $(+link-pie-after-libc)
++link-pie-tests = $(+link-pie-before-libc) $(rtld-tests-LDFLAGS) \
+		  $(link-libc-tests) $(+link-pie-after-libc)
 endif
 # Command for statically linking programs with the C library.
 ifndef +link-static
@@ -411,7 +416,7 @@ endif
 ifndef +link
 ifeq (yes,$(build-shared))
 +link-before-libc = $(CC) -nostdlib -nostartfiles -o $@ \
-	      $(sysdep-LDFLAGS) $(config-LDFLAGS) $(LDFLAGS) $(LDFLAGS-$(@F)) \
+	      $(sysdep-LDFLAGS) $(LDFLAGS) $(LDFLAGS-$(@F)) \
 	      $(combreloc-LDFLAGS) $(relro-LDFLAGS) $(hashstyle-LDFLAGS) \
 	      $(addprefix $(csu-objpfx),$(start-installed-name)) \
 	      $(+preinit) $(+prector) \
@@ -421,8 +426,10 @@ ifeq (yes,$(build-shared))
 			   $(common-objpfx)libc% $(+postinit),$^) \
 	      $(link-extra-libs)
 +link-after-libc = $(+postctor) $(+postinit)
-+link = $(+link-before-libc) $(link-libc) $(+link-after-libc)
-+link-tests = $(+link-before-libc) $(link-libc-tests) $(+link-after-libc)
++link = $(+link-before-libc) $(rtld-LDFLAGS) $(link-libc) \
+	$(+link-after-libc)
++link-tests = $(+link-before-libc) $(rtld-tests-LDFLAGS) \
+	      $(link-libc-tests) $(+link-after-libc)
 else
 +link = $(+link-static)
 +link-tests = $(+link-static-tests)
@@ -440,9 +447,16 @@ ifndef +link-bounded
 			   $(common-objpfx)libc% $(+postinit),$^) \
 	      $(link-extra-libs-bounded) $(link-libc-bounded) $(+postctorT) $(+postinit)
 endif
-ifndef config-LDFLAGS
 ifeq (yes,$(build-shared))
-config-LDFLAGS = -Wl,-dynamic-linker=$(slibdir)/$(rtld-installed-name)
+ifndef rtld-LDFLAGS
+rtld-LDFLAGS = -Wl,-dynamic-linker=$(slibdir)/$(rtld-installed-name)
+endif
+ifndef rtld-tests-LDFLAGS
+ifeq (yes,$(build-hardcoded-path-in-tests))
+rtld-tests-LDFLAGS = -Wl,-dynamic-linker=$(common-objpfx)elf/ld.so
+else
+rtld-tests-LDFLAGS = $(rtld-LDFLAGS)
+endif
 endif
 endif
 ifndef link-libc
@@ -450,12 +464,19 @@ ifeq (yes,$(build-shared))
 # We need the versioned name of libc.so in the deps of $(others) et al
 # so that the symlink to libc.so is created before anything tries to
 # run the linked programs.
-link-libc-before-gnulib = -Wl,-rpath-link=$(rpath-link) \
-	    $(common-objpfx)libc.so$(libc.so-version) \
-	    $(common-objpfx)$(patsubst %,$(libtype.oS),c) \
-	    $(as-needed) $(common-objpfx)elf/ld.so $(no-as-needed)
-link-libc = $(link-libc-before-gnulib) $(gnulib)
-link-libc-tests = $(link-libc-before-gnulib) $(gnulib-tests)
+link-libc-rpath-link = -Wl,-rpath-link=$(rpath-link)
+ifeq (yes,$(build-hardcoded-path-in-tests))
+link-libc-tests-rpath-link = -Wl,-rpath=$(rpath-link)
+else
+link-libc-tests-rpath-link = $(link-libc-rpath-link)
+endif
+link-libc-before-gnulib = $(common-objpfx)libc.so$(libc.so-version) \
+			  $(common-objpfx)$(patsubst %,$(libtype.oS),c) \
+			  $(as-needed) $(common-objpfx)elf/ld.so \
+			  $(no-as-needed)
+link-libc = $(link-libc-rpath-link) $(link-libc-before-gnulib) $(gnulib)
+link-libc-tests = $(link-libc-tests-rpath-link) \
+		  $(link-libc-before-gnulib) $(gnulib-tests)
 # This is how to find at build-time things that will be installed there.
 rpath-dirs = math elf dlfcn nss nis rt resolv crypt
 rpath-link = \
@@ -626,6 +647,40 @@ host-built-program-cmd = $(run-via-rtld-prefix) $(built-program-file)
 
 ifndef LD
 LD := ld -X
+endif
+
+# $(test-via-rtld-prefix) is a command that, when prepended to the name
+# of a test program built with the newly built library, produces a command
+# that, executed on the host for which the library is built, runs that
+# program.  For the statically-linked %-bp test programs, and for
+# tests listed in tests-static or xtests-static as well as when test
+# programs are hardcoded to the newly built libraries, it is empty.
+
+# $(test-program-prefix) is a command that, when prepended to the name
+# of a test program built with the newly built library, produces a command
+# that, executed on the build system on which "make" is run, runs that
+# test program.
+
+# $(test-program-cmd) is a command that, executed on the build system
+# on which "make" is run, runs the newly built test program that is the
+# second dependency of the makefile target in which
+# $(test-program-cmd) is used.
+
+# $(host-test-program-cmd) is a command that, executed on the host
+# for which the library is built, runs the newly built test program that
+# is the second dependency of the makefile target in which
+# $(host-test-program-cmd) is used.
+
+ifeq (yes,$(build-hardcoded-path-in-tests))
+test-via-rtld-prefix =
+test-program-prefix = $(test-wrapper)
+test-program-cmd = $(test-wrapper) $(built-program-file)
+host-test-program-cmd = $(built-program-file)
+else
+test-via-rtld-prefix = $(run-via-rtld-prefix)
+test-program-prefix = $(run-program-prefix)
+test-program-cmd = $(built-program-cmd)
+host-test-program-cmd = $(host-built-program-cmd)
 endif
 
 # Extra flags to pass to GCC.

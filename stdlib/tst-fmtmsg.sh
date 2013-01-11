@@ -20,10 +20,10 @@
 set -e
 
 common_objpfx=$1
-run_program_prefix=$2
+test_program_prefix=$2
 objpfx=$3
 
-test="${run_program_prefix} ${objpfx}tst-fmtmsg"
+test="${test_program_prefix} ${objpfx}tst-fmtmsg"
 out=${objpfx}tst-fmtmsg.out
 
 LC_ALL=C

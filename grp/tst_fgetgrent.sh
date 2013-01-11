@@ -20,22 +20,22 @@
 set -e
 
 common_objpfx=$1; shift
-run_program_prefix=$1; shift
+test_program_prefix=$1; shift
 
 testout=${common_objpfx}/grp/tst_fgetgrent.out
 
 result=0
 
-${run_program_prefix} \
+${test_program_prefix} \
 ${common_objpfx}grp/tst_fgetgrent 0 > ${testout} || result=1
 
-${run_program_prefix} \
+${test_program_prefix} \
 ${common_objpfx}grp/tst_fgetgrent 1 >> ${testout} || result=1
 
-${run_program_prefix} \
+${test_program_prefix} \
 ${common_objpfx}grp/tst_fgetgrent 2 >> ${testout} || result=1
 
-${run_program_prefix} \
+${test_program_prefix} \
 ${common_objpfx}grp/tst_fgetgrent 3 >> ${testout} || result=1
 
 exit $result

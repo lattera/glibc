@@ -1,3 +1,30 @@
+2013-01-11  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* Makefile ($(objpfx)sort-test.out): Replace
+	$(run-program-prefix) with $(test-program-prefix).
+	($(objpfx)tst-numeric.out): Likewise.
+	($(objpfx)tst-mbswcs.out): Likewise.
+	($(objpfx)tst-fmon.out): Add $(test-program-prefix).
+	($(objpfx)tst-trans.out): Likewise.
+	($(objpfx)tst-rpmatch.out): Replace $(built-program-cmd) with
+	$(test-program-cmd).
+	($(objpfx)tst-ctype.out): Likewise.
+	($(objpfx)tst-wctype.out): Likewise.
+	($(objpfx)tst-langinfo.out): Likewise.
+	(bug-setlocale1-ARGS): Replace $(built-program-cmd) with
+	$(test-program-cmd).
+	* sort-test.sh (run_program_prefix): Renamed to ...
+	(test_program_prefix): This.
+	* tst-mbswcs.sh: Likewise.
+	* tst-numeric.sh: Likewise.
+	* tst-wctype.sh: Likewise.
+	* tst-fmon.sh (test_program_prefix): New. Replace
+	${run_program_prefix} with ${test_program_prefix} when running.
+	tst-fmon.
+	* tst-trans.sh: (test_program_prefix): New.  Replace
+	${run_program_prefix} with ${test_program_prefix} when running
+	tst-trans.
+
 2013-01-10  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* Makefile (tests-static): New variable.

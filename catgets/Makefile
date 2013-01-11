@@ -75,7 +75,7 @@ $(objpfx)de.msg: xopen-msg.awk $(..)po/de.po
 
 $(objpfx)test-gencat.out: test-gencat.sh $(objpfx)test-gencat \
 			  $(objpfx)sample.SJIS.cat
-	$(SHELL) $< $(common-objpfx) '$(built-program-cmd)'
+	$(SHELL) $< $(common-objpfx) '$(test-program-cmd)'
 
 $(objpfx)sample.SJIS.cat: sample.SJIS $(objpfx)gencat
 	GCONV_PATH=$(common-objpfx)iconvdata LC_ALL=C \

@@ -20,7 +20,7 @@
 set -e
 
 common_objpfx=$1
-run_program_prefix=$2
+test_program_prefix=$2
 objpfx=$3
 
 LC_ALL=C
@@ -67,7 +67,7 @@ LOCPATH=${objpfx}domaindir
 export LOCPATH
 
 # Now run the test.
-${run_program_prefix} \
+${test_program_prefix} \
 ${objpfx}tst-gettext2 > ${objpfx}tst-gettext2.out ${objpfx}domaindir &&
 cmp ${objpfx}tst-gettext2.out - <<EOF
 String1 - Lang1: 1st string

@@ -659,6 +659,7 @@ libc_cv_nss_crypt
 all_warnings
 force_install
 bindnow
+hardcoded_path_in_tests
 oldest_abi
 use_default_link
 sysheaders
@@ -745,6 +746,7 @@ enable_shared
 enable_profile
 enable_versioning
 enable_oldest_abi
+enable_hardcoded_path_in_tests
 enable_stackguard_randomization
 enable_add_ons
 enable_hidden_plt
@@ -1397,6 +1399,9 @@ Optional Features:
                           objects [default=yes if supported]
   --enable-oldest-abi=ABI configure the oldest ABI supported [e.g. 2.2]
                           [default=glibc default]
+  --enable-hardcoded-path-in-tests
+                          hardcode newly built glibc path in tests
+                          [default=no]
   --enable-stackguard-randomization
                           initialize __stack_chk_guard canary with a random
                           number at program start
@@ -3696,6 +3701,15 @@ else
 _ACEOF
 
 fi
+
+
+# Check whether --enable-hardcoded-path-in-tests was given.
+if test "${enable_hardcoded_path_in_tests+set}" = set; then :
+  enableval=$enable_hardcoded_path_in_tests; hardcoded_path_in_tests=$enableval
+else
+  hardcoded_path_in_tests=no
+fi
+
 
 
 # Check whether --enable-stackguard-randomization was given.

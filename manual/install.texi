@@ -155,6 +155,11 @@ if the used tools support it.  By using @samp{--without-tls} this can be
 prevented though there generally is no reason since it creates
 compatibility problems.
 
+@item --enable-hardcoded-path-in-tests
+By default, dynamic tests are linked to run with the installed C library.
+This option hardcodes the newly built C library path in dynamic tests
+so that they can be invoked directly.
+
 @item --build=@var{build-system}
 @itemx --host=@var{host-system}
 These options are for cross-compiling.  If you specify both options and

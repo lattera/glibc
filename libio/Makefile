@@ -186,7 +186,7 @@ endif
 endif
 
 $(objpfx)test-freopen.out: test-freopen.sh $(objpfx)test-freopen
-	$(SHELL) $< $(common-objpfx) '$(run-program-prefix)'	\
+	$(SHELL) $< $(common-objpfx) '$(test-program-prefix)'	\
 	$(common-objpfx)libio/
 
 $(objpfx)tst-fopenloc.check: $(objpfx)tst-fopenloc.out

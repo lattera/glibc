@@ -101,6 +101,7 @@ force-install = @force_install@
 link-obsolete-rpc = @link_obsolete_rpc@
 build-nscd = @build_nscd@
 use-nscd = @use_nscd@
+build-hardcoded-path-in-tests= @hardcoded_path_in_tests@
 
 # Build tools.
 CC = @CC@

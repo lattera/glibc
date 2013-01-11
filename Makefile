@@ -155,7 +155,7 @@ $(common-objpfx)testrun.sh: $(common-objpfx)config.make \
 	 echo 'builddir=`dirname "$$0"`'; \
 	 echo 'GCONV_PATH="$${builddir}/iconvdata" \'; \
 	 echo 'exec $(subst $(common-objdir),"$${builddir}",\
-			    $(run-program-prefix)) $${1+"$$@"}'; \
+			    $(test-program-prefix)) $${1+"$$@"}'; \
 	) > $@T
 	chmod a+x $@T
 	mv -f $@T $@

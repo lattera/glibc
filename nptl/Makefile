@@ -437,7 +437,7 @@ CFLAGS-tst-initializers1-c99.c = $(CFLAGS-tst-initializers1-<)
 CFLAGS-tst-initializers1-gnu89.c = $(CFLAGS-tst-initializers1-<)
 CFLAGS-tst-initializers1-gnu99.c = $(CFLAGS-tst-initializers1-<)
 
-tst-cancel7-ARGS = --command "exec $(host-built-program-cmd)"
+tst-cancel7-ARGS = --command "exec $(host-test-program-cmd)"
 tst-cancelx7-ARGS = $(tst-cancel7-ARGS)
 tst-umask1-ARGS = $(objpfx)tst-umask1.temp
 
@@ -477,8 +477,8 @@ $(objpfx)tst-tls6.out: tst-tls6.sh $(objpfx)tst-tls5 \
 		       $(objpfx)tst-tls5moda.so $(objpfx)tst-tls5modb.so \
 		       $(objpfx)tst-tls5modc.so $(objpfx)tst-tls5modd.so \
 		       $(objpfx)tst-tls5mode.so $(objpfx)tst-tls5modf.so
-	$(BASH) $< $(common-objpfx) $(elf-objpfx) \
-		    $(rtld-installed-name) '$(test-wrapper-env)'
+	$(BASH) $< $(common-objpfx) '$(test-via-rtld-prefix)' \
+	  '$(test-wrapper-env)'
 endif
 
 $(objpfx)tst-dlsym1: $(libdl) $(shared-thread-library)
@@ -580,7 +580,7 @@ $(objpfx)tst-cancel-wrappers.out: tst-cancel-wrappers.sh
 endif
 endif
 
-tst-exec4-ARGS = $(host-built-program-cmd)
+tst-exec4-ARGS = $(host-test-program-cmd)
 
 $(objpfx)tst-execstack: $(libdl)
 $(objpfx)tst-execstack.out: $(objpfx)tst-execstack-mod.so
@@ -588,14 +588,14 @@ LDFLAGS-tst-execstack = -Wl,-z,noexecstack
 
 $(objpfx)tst-fini1mod.so: $(shared-thread-library)
 
-tst-stackguard1-ARGS = --command "$(host-built-program-cmd) --child"
+tst-stackguard1-ARGS = --command "$(host-test-program-cmd) --child"
 tst-stackguard1-static-ARGS = --command "$(objpfx)tst-stackguard1-static --child"
 
 ifeq ($(run-built-tests),yes)
 tests: $(objpfx)tst-oddstacklimit.out
 
 $(objpfx)tst-oddstacklimit.out: $(objpfx)tst-oddstacklimit $(objpfx)tst-basic1
-	$(run-program-prefix) $< --command '$(host-built-program-cmd)' > $@
+	$(test-program-prefix) $< --command '$(host-test-program-cmd)' > $@
 endif
 
 # The tests here better do not run in parallel

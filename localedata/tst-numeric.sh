@@ -21,7 +21,7 @@
 set -e
 
 common_objpfx=$1
-run_program_prefix=$2
+test_program_prefix=$2
 datafile=$3
 
 # Run the tests.
@@ -32,7 +32,7 @@ while IFS="	" read locale format value expect; do
     if [ -n "$format" ]; then
 	if LOCPATH=${common_objpfx}localedata \
 	    GCONV_PATH=${common_objpfx}/iconvdata \
-	    ${run_program_prefix} ${common_objpfx}localedata/tst-numeric \
+	    ${test_program_prefix} ${common_objpfx}localedata/tst-numeric \
 	    "$locale" "$format" "$value" "$expect" < /dev/null
 	then
 	    echo "Locale: \"${locale}\" Format: \"${format}\"" \

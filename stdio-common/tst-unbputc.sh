@@ -20,11 +20,11 @@
 set -e
 
 common_objpfx=$1; shift
-run_program_prefix=$1; shift
+test_program_prefix=$1; shift
 
 status=0
 
-${run_program_prefix} \
+${test_program_prefix} \
   ${common_objpfx}stdio-common/tst-unbputc \
     2> ${common_objpfx}stdio-common/tst-unbputc.out || status=1
 

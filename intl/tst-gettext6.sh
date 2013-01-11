@@ -20,7 +20,7 @@
 set -e
 
 common_objpfx=$1
-run_program_prefix=$2
+test_program_prefix=$2
 objpfx=$3
 
 LC_ALL=C
@@ -36,6 +36,6 @@ export GCONV_PATH
 LOCPATH=${common_objpfx}localedata
 export LOCPATH
 
-${run_program_prefix} ${objpfx}tst-gettext6 > ${objpfx}tst-gettext6.out
+${test_program_prefix} ${objpfx}tst-gettext6 > ${objpfx}tst-gettext6.out
 
 exit $?

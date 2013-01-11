@@ -1,3 +1,16 @@
+2013-01-11  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* Makefile (tst-cancel7-ARGS: Replace $(host-built-program-cmd)
+	with $(host-test-program-cmd).
+	(tst-exec4-ARGS): Likewise.
+	(tst-stackguard1-ARGS): Likewise.
+	($(objpfx)tst-tls6.out): Don't pass $(elf-objpfx) to tst-tls6.sh.
+	Replace $(rtld-installed-name) with $(test-via-rtld-prefix).
+	* tst-tls6.sh (elf_objpfx): Removed.
+	(rtld_installed_name): Renamed to ...
+	(test_via_rtld_prefix): This.
+	(tst_tls5): Prepend ${test_via_rtld_prefix}.
+
 2013-01-02  Joseph Myers  <joseph@codesourcery.com>
 
 	* All files with FSF copyright notices: Update copyright dates
@@ -10,9 +23,9 @@
 
 2012-12-28  Andi Kleen  <ak@linux.intel.com>
 
-        * pthread_rwlock_tryrdlock.c (__pthread_rwlock_tryrdlock): Convert
+	* pthread_rwlock_tryrdlock.c (__pthread_rwlock_tryrdlock): Convert
 	to prototype.
-        * pthread_rwlock_trywrlock.c (__pthread_rwlock_trywrlock):
+	* pthread_rwlock_trywrlock.c (__pthread_rwlock_trywrlock):
 	Likewise.
 
 2012-12-27  David S. Miller  <davem@davemloft.net>

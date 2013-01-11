@@ -447,7 +447,7 @@ lib%.so: lib%_pic.a $(+preinit) $(+postinit) $(+interp)
 
 define build-shlib-helper
 $(LINK.o) -shared $(static-libgcc) -Wl,-O1 $(sysdep-LDFLAGS) \
-	  $(if $($(@F)-no-z-defs)$(no-z-defs),,-Wl,-z,defs) $(config-LDFLAGS) \
+	  $(if $($(@F)-no-z-defs)$(no-z-defs),,-Wl,-z,defs) $(rtld-LDFLAGS) \
 	  $(extra-B-$(@F:lib%.so=%).so) -B$(csu-objpfx) \
 	  $(extra-B-$(@F:lib%.so=%).so) $(load-map-file) \
 	  -Wl,-soname=lib$(libprefix)$(@F:lib%.so=%).so$($(@F)-version) \
@@ -465,7 +465,7 @@ else
 $(common-objpfx)shlib.lds: $(common-objpfx)config.make $(..)Makerules
 	$(LINK.o) -shared -Wl,-O1 \
 		  -nostdlib -nostartfiles \
-		  $(sysdep-LDFLAGS) $(config-LDFLAGS) $(LDFLAGS.so) \
+		  $(sysdep-LDFLAGS) $(rtld-LDFLAGS) $(LDFLAGS.so) \
 		  -Wl,--verbose 2>&1 | \
 	  sed > $@T \
 	      -e '/^=========/,/^=========/!d;/^=========/d' \
@@ -505,7 +505,7 @@ $(build-shlib-helper) -o $@ $(shlib-lds-flags) \
 endef
 
 define build-module-helper
-$(LINK.o) -shared $(static-libgcc) $(sysdep-LDFLAGS) $(config-LDFLAGS) \
+$(LINK.o) -shared $(static-libgcc) $(sysdep-LDFLAGS) $(rtld-LDFLAGS) \
 	  $(if $($(@F)-no-z-defs)$(no-z-defs),,-Wl,-z,defs) \
 	  -B$(csu-objpfx) $(load-map-file) \
 	  $(LDFLAGS.so) $(LDFLAGS-$(@F:%.so=%).so) \
@@ -909,7 +909,7 @@ $(common-objpfx)format.lds: $(..)scripts/output-format.sed \
 ifneq (unknown,$(output-format))
 	echo > $@.new 'OUTPUT_FORMAT($(output-format))'
 else
-	$(LINK.o) -shared $(sysdep-LDFLAGS) $(config-LDFLAGS) $(LDFLAGS.so) \
+	$(LINK.o) -shared $(sysdep-LDFLAGS) $(rtld-LDFLAGS) $(LDFLAGS.so) \
 		  -x c /dev/null -o $@.so -Wl,--verbose -v 2>&1 \
 	| sed -n -f $< > $@.new
 	test -s $@.new

@@ -20,15 +20,13 @@
 set -e
 
 common_objpfx=$1; shift
-elf_objpfx=$1; shift
-rtld_installed_name=$1; shift
+test_via_rtld_prefix=$1; shift
 test_wrapper_env=$1; shift
 logfile=$common_objpfx/nptl/tst-tls6.out
 
 # We have to find libc and nptl
 library_path=${common_objpfx}:${common_objpfx}nptl
-tst_tls5="${elf_objpfx}${rtld_installed_name} --library-path ${library_path} \
-	  ${common_objpfx}/nptl/tst-tls5"
+tst_tls5="${test_via_rtld_prefix} ${common_objpfx}/nptl/tst-tls5"
 
 LC_ALL=C
 export LC_ALL

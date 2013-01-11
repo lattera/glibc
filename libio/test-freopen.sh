@@ -20,10 +20,10 @@
 set -e
 
 common_objpfx=$1
-run_program_prefix=$2
+test_program_prefix=$2
 objpfx=$3
 
-${run_program_prefix} ${objpfx}test-freopen ${objpfx}test-freopen.out &&
+${test_program_prefix} ${objpfx}test-freopen ${objpfx}test-freopen.out &&
 cmp ${objpfx}test-freopen.out - <<"EOF"
 Hello world (mb)
 Hello world (wc)

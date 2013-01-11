@@ -114,9 +114,11 @@ binaries-static-notests = $(others-static)
 binaries-static-tests = $(tests-static) $(xtests-static)
 binaries-static = $(binaries-static-notests) $(binaries-static-tests)
 ifeq (yesyes,$(have-fpie)$(build-shared))
-binaries-pie = $(others-pie) $(tests-pie) $(xtests-pie)
+binaries-pie-tests = $(tests-pie) $(xtests-pie)
+binaries-pie-notests = $(others-pie)
 else
-binaries-pie =
+binaries-pie-tests =
+binaries-pie-notests =
 endif
 else
 binaries-all-notests =
@@ -125,9 +127,11 @@ binaries-all = $(binaries-all-tests)
 binaries-static-notests =
 binaries-static-tests =
 binaries-static =
-binaries-pie =
+binaries-pie-tests =
+binaries-pie-notests =
 endif
 
+binaries-pie = $(binaries-pie-tests) $(binaries-pie-notests)
 binaries-shared-tests = $(filter-out $(binaries-pie) $(binaries-static), \
 				     $(binaries-all-tests))
 binaries-shared-notests = $(filter-out $(binaries-pie) $(binaries-static), \
@@ -147,8 +151,15 @@ $(addprefix $(objpfx),$(binaries-shared-tests)): %: %.o \
 	$(+link-tests)
 endif
 
-ifneq "$(strip $(binaries-pie))" ""
-$(addprefix $(objpfx),$(binaries-pie)): %: %.o \
+ifneq "$(strip $(binaries-pie-tests))" ""
+$(addprefix $(objpfx),$(binaries-pie-tests)): %: %.o \
+  $(sort $(filter $(common-objpfx)lib%,$(link-libc))) \
+  $(addprefix $(csu-objpfx),start.o) $(+preinit) $(+postinit)
+	$(+link-pie-tests)
+endif
+
+ifneq "$(strip $(binaries-pie-notests))" ""
+$(addprefix $(objpfx),$(binaries-pie-notests)): %: %.o \
   $(sort $(filter $(common-objpfx)lib%,$(link-libc))) \
   $(addprefix $(csu-objpfx),start.o) $(+preinit) $(+postinit)
 	$(+link-pie)
@@ -182,7 +193,7 @@ ifneq "$(strip $(tests) $(xtests) $(test-srcs))" ""
 
 make-test-out = $(test-wrapper-env) \
 		GCONV_PATH=$(common-objpfx)iconvdata LC_ALL=C \
-		$($*-ENV) $(host-built-program-cmd) $($*-ARGS)
+		$($*-ENV) $(host-test-program-cmd) $($*-ARGS)
 $(objpfx)%-bp.out: %.input $(objpfx)%-bp
 	$(make-test-out) > $@ < $(word 1,$^)
 $(objpfx)%.out: %.input $(objpfx)%
