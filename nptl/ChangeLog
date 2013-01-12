@@ -1,3 +1,8 @@
+2013-01-11  Carlos O'Donell  <codonell@redhat.com>
+
+	* allocatestack.c (allocate_stack): Add comment. Remove assert
+	on attr.
+
 2013-01-11  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* Makefile (tst-cancel7-ARGS: Replace $(host-built-program-cmd)

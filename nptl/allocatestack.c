@@ -340,6 +340,10 @@ change_stack_perm (struct pthread *pd
 }
 
 
+/* Returns a usable stack for a new thread either by allocating a
+   new stack or reusing a cached stack of sufficient size.
+   ATTR must be non-NULL and point to a valid pthread_attr.
+   PDP must be non-NULL.  */
 static int
 allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
 		ALLOCATE_STACK_PARMS)
@@ -349,7 +353,6 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
   size_t pagesize_m1 = __getpagesize () - 1;
   void *stacktop;
 
-  assert (attr != NULL);
   assert (powerof2 (pagesize_m1 + 1));
   assert (TCB_ALIGNMENT >= STACK_ALIGN);
 
