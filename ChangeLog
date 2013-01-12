@@ -1,5 +1,19 @@
 2013-01-11  David S. Miller  <davem@davemloft.net>
 
+	* math/Makefile: Recognize gmp-sysdep_routines.
+	* sysdeps/sparc/sparc64/multiarch/Makefile: Add VIS3 optimized GMP routines
+	to sysdeps.
+	* sysdeps/sparc/sparc64/multiarch/add_n-vis3.S: New file.
+	* sysdeps/sparc/sparc64/multiarch/add_n.S: New file.
+	* sysdeps/sparc/sparc64/multiarch/addmul_1-vis3.S: New file.
+	* sysdeps/sparc/sparc64/multiarch/addmul_1.S: New file.
+	* sysdeps/sparc/sparc64/multiarch/mul_1-vis3.S: New file.
+	* sysdeps/sparc/sparc64/multiarch/mul_1.S: New file.
+	* sysdeps/sparc/sparc64/multiarch/sub_n-vis3.S: New file.
+	* sysdeps/sparc/sparc64/multiarch/sub_n.S: New file.
+	* sysdeps/sparc/sparc64/multiarch/submul_1-vis3.S: New file.
+	* sysdeps/sparc/sparc64/multiarch/submul_1.S: New file.
+
 	* sysdeps/sparc/sparc32/sparcv9/mul_1.S: Properly optimize for 32-bit
 	sparc V9 rather than using V8 code.
 	* sysdeps/sparc/sparc32/sparcv9/addmul_1.S: Likewise.

@@ -10,3 +10,11 @@ ifeq ($(subdir),string)
 sysdep_routines += memcpy-ultra3 memcpy-niagara1 memcpy-niagara2 \
 		   memset-niagara1 memcpy-niagara4 memset-niagara4
 endif
+
+ifeq ($(subdir),stdlib)
+sysdep_routines += mul_1-vis3 addmul_1-vis3 submul_1-vis3 add_n-vis3 sub_n-vis3
+endif
+
+ifeq ($(subdir),math)
+gmp-sysdep_routines = mul_1-vis3 addmul_1-vis3 submul_1-vis3 add_n-vis3 sub_n-vis3
+endif
