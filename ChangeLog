@@ -1,5 +1,10 @@
 2013-01-11  David S. Miller  <davem@davemloft.net>
 
+	* sysdeps/sparc/sparc32/sparcv9/mul_1.S: Properly optimize for 32-bit
+	sparc V9 rather than using V8 code.
+	* sysdeps/sparc/sparc32/sparcv9/addmul_1.S: Likewise.
+	* sysdeps/sparc/sparc32/sparcv9/submul_1.S: Likewise.
+
 	* sysdeps/sparc/sparc32/sparcv9/fpu/unix/sysv/linux/multiarch/Implies:
 	Move to...
 	* sysdeps/unix/sysv/linux/sparc/sparc32/sparcv9/fpu/multiarch/Implies:
