@@ -26,6 +26,8 @@
 #define _SCSI_SG_H	1
 
 #include <features.h>
+#define __need_size_t
+#include <stddef.h>
 
 
 /* New interface introduced in the 3.x SG drivers follows */
