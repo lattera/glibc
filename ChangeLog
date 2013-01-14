@@ -1,5 +1,11 @@
 2013-04-11  Andreas Schwab  <schwab@suse.de>
 
+	[BZ #13988]
+	* stdio-common/vfscanf.c (_IO_vfwscanf): When parsing a float
+	accept exponent character only when digits were seen.
+	* stdio-common/Makefile (tests): Add bug26.
+	* stdio-common/bug26.c: New file.
+
 	[BZ #14293]
 	* elf/dl-load.c (_dl_init_paths): Mark decomposed RUNPATH as
 	non-freeable.

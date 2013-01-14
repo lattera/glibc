@@ -222,7 +222,7 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
   /* Errno of last failed inchar call.  */
   int inchar_errno = 0;
   /* Status for reading F-P nums.  */
-  char got_dot, got_e, negative;
+  char got_digit, got_dot, got_e, negative;
   /* If a [...] is a [^...].  */
   CHAR_T not_in;
 #define exp_char not_in
@@ -1845,7 +1845,7 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 	  if (__builtin_expect (c == EOF, 0))
 	    input_error ();
 
-	  got_dot = got_e = 0;
+	  got_digit = got_dot = got_e = 0;
 
 	  /* Check for a sign.  */
 	  if (c == L_('-') || c == L_('+'))
@@ -1971,13 +1971,19 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 	  while (1)
 	    {
 	      if (ISDIGIT (c))
-		ADDW (c);
+		{
+		  ADDW (c);
+		  got_digit = 1;
+		}
 	      else if (!got_e && (flags & HEXA_FLOAT) && ISXDIGIT (c))
-		ADDW (c);
+		{
+		  ADDW (c);
+		  got_digit = 1;
+		}
 	      else if (got_e && wp[wpsize - 1] == exp_char
 		       && (c == L_('-') || c == L_('+')))
 		ADDW (c);
-	      else if (wpsize > 0 && !got_e
+	      else if (got_digit && !got_e
 		       && (CHAR_T) TOLOWER (c) == exp_char)
 		{
 		  ADDW (exp_char);
