@@ -16,5 +16,6 @@ sysdep_routines += mul_1-vis3 addmul_1-vis3 submul_1-vis3 add_n-vis3 sub_n-vis3
 endif
 
 ifeq ($(subdir),math)
-gmp-sysdep_routines = mul_1-vis3 addmul_1-vis3 submul_1-vis3 add_n-vis3 sub_n-vis3
+gmp-sysdep_routines = mul_1-vis3 addmul_1-vis3 submul_1-vis3 add_n-vis3 \
+		      sub_n-vis3
 endif
