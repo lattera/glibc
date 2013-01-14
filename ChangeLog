@@ -1,5 +1,9 @@
 2013-01-14  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
+	* sysdeps/ieee754/dbl-64/mpa.c: Fix formatting.
+	* sysdeps/powerpc/powerpc32/power4/fpu/mpa.c: Likewise.
+	* sysdeps/powerpc/powerpc64/power4/fpu/mpa.c: Likewise.
+
 	* sysdeps/powerpc/powerpc32/power4/fpu/mpa.c (__inv): Remove
 	local variable MPTWO.
 	* sysdeps/powerpc/powerpc64/power4/fpu/mpa.c (__inv):
