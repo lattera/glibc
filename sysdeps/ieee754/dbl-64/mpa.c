@@ -606,7 +606,7 @@ SECTION
 __mul (const mp_no *x, const mp_no *y, mp_no *z, int p)
 {
   int i, j, k, k2;
-  double u;
+  double u, zk;
 
   /* Is z=0?  */
   if (__glibc_unlikely (X[0] * Y[0] == ZERO))
@@ -617,31 +617,33 @@ __mul (const mp_no *x, const mp_no *y, mp_no *z, int p)
 
   /* Multiply, add and carry.  */
   k2 = (__glibc_unlikely (p < 3)) ? p + p : p + 3;
-  Z[k2] = ZERO;
+  zk = Z[k2] = ZERO;
 
-  for (k = k2; k > p;)
+  for (k = k2; k > p; k--)
     {
       for (i = k - p, j = p; i < p + 1; i++, j--)
-	Z[k] += X[i] * Y[j];
+	zk += X[i] * Y[j];
 
-      u = (Z[k] + CUTTER) - CUTTER;
-      if (u > Z[k])
+      u = (zk + CUTTER) - CUTTER;
+      if (u > zk)
 	u -= RADIX;
-      Z[k] -= u;
-      Z[--k] = u * RADIXI;
+      Z[k] = zk - u;
+      zk = u * RADIXI;
     }
 
   while (k > 1)
     {
       for (i = 1, j = k - 1; i < k; i++, j--)
-	Z[k] += X[i] * Y[j];
+	zk += X[i] * Y[j];
 
-      u = (Z[k] + CUTTER) - CUTTER;
-      if (u > Z[k])
+      u = (zk + CUTTER) - CUTTER;
+      if (u > zk)
 	u -= RADIX;
-      Z[k] -= u;
-      Z[--k] = u * RADIXI;
+      Z[k] = zk - u;
+      zk = u * RADIXI;
+      k--;
     }
+  Z[k] = zk;
 
   EZ = EX + EY;
   /* Is there a carry beyond the most significant digit?  */
