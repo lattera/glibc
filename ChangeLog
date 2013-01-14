@@ -1,3 +1,10 @@
+2013-01-14  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* sysdeps/powerpc/powerpc32/power4/fpu/mpa.c (__inv): Remove
+	local variable MPTWO.
+	* sysdeps/powerpc/powerpc64/power4/fpu/mpa.c (__inv):
+	Likewise.
+
 2013-01-13  Mike Frysinger  <vapier@gentoo.org>
 
 	* manual/pattern.texi (Flags for Globbing): Move GLOB_NOSORT after
