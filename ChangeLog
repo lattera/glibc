@@ -1,3 +1,9 @@
+2013-04-11  Andreas Schwab  <schwab@suse.de>
+
+	[BZ #14293]
+	* elf/dl-load.c (_dl_init_paths): Mark decomposed RUNPATH as
+	non-freeable.
+
 2013-04-11  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* Makeconfig (rtld-prefix): Define built linker prefix.

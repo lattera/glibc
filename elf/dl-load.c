@@ -797,6 +797,9 @@ _dl_init_paths (const char *llp)
 			   (const void *) (D_PTR (l, l_info[DT_STRTAB])
 					   + l->l_info[DT_RUNPATH]->d_un.d_val),
 			   l, "RUNPATH");
+	  /* During rtld init the memory is allocated by the stub malloc,
+	     prevent any attempt to free it by the normal malloc.  */
+	  l->l_runpath_dirs.malloced = 0;
 
 	  /* The RPATH is ignored.  */
 	  l->l_rpath_dirs.dirs = (void *) -1;
@@ -813,6 +816,9 @@ _dl_init_paths (const char *llp)
 			       (const void *) (D_PTR (l, l_info[DT_STRTAB])
 					       + l->l_info[DT_RPATH]->d_un.d_val),
 			       l, "RPATH");
+	      /* During rtld init the memory is allocated by the stub
+		 malloc, prevent any attempt to free it by the normal
+		 malloc.  */
 	      l->l_rpath_dirs.malloced = 0;
 	    }
 	  else
