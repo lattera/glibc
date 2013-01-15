@@ -329,7 +329,7 @@ sem_open (const char *name, int oflag, ...)
 	     since the file must be opened with a specific mode.  The
 	     mode cannot later be set since then we cannot apply the
 	     file create mask.  */
-	  if (mktemp (tmpfname) == NULL)
+	  if (__mktemp (tmpfname) == NULL)
 	    return SEM_FAILED;
 
 	  /* Open the file.  Make sure we do not overwrite anything.  */

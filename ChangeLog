@@ -1,3 +1,10 @@
+2013-01-16  Andreas Schwab  <schwab@suse.de>
+
+	[BZ #14327]
+	* include/stdlib.h (__mktemp): Add declaration.
+	* misc/mktemp.c (__mktemp): Renamed from mktemp, add weak alias.
+	* misc/Versions (GLIBC_PRIVATE): Add __mktemp.
+
 2013-01-16  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
         * sysdeps/ieee754/dbl-64/atnat.h: Remove constant value

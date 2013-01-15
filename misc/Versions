@@ -151,6 +151,7 @@ libc {
   }
   GLIBC_PRIVATE {
     __madvise;
+    __mktemp;
     __libc_ifunc_impl_list;
   }
 }

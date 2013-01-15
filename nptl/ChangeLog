@@ -1,3 +1,8 @@
+2013-01-16  Andreas Schwab  <schwab@suse.de>
+
+	[BZ #14327]
+	* sem_open.c (sem_open): Use __mktemp instead of mktemp.
+
 2013-01-11  Carlos O'Donell  <codonell@redhat.com>
 
 	* allocatestack.c (allocate_stack): Add comment. Remove assert
