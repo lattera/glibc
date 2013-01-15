@@ -1,4 +1,6 @@
 ifeq ($(subdir),math)
+libm-sysdep_routines += s_ceil-vis2 s_ceilf-vis2 \
+			s_floor-vis2 s_floorf-vis2
 ifeq ($(have-as-vis3),yes)
 libm-sysdep_routines += m_signbitf-vis3 m_signbit-vis3 s_ceilf-vis3 \
 			s_ceil-vis3 m_finitef-vis3 m_finite-vis3 \

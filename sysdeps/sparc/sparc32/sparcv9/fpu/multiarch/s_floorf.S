@@ -1,6 +1,6 @@
 #include <sparc-ifunc.h>
 
-SPARC_ASM_VIS3_IFUNC(floorf)
+SPARC_ASM_VIS3_VIS2_IFUNC(floorf)
 
 weak_alias (__floorf, floorf)
 

@@ -51,6 +51,33 @@ ENTRY (__##name)					\
 	 mov	%o1, %o0;				\
 END (__##name)
 
+#  define SPARC_ASM_IFUNC2(name, m1, f1, m2, f2, dflt)	\
+ENTRY (__##name)					\
+	.type	__##name, @gnu_indirect_function;	\
+	SETUP_PIC_REG_LEAF(o3, o5);			\
+	set	m1, %o1;				\
+	andcc	%o0, %o1, %g0;				\
+	be	8f;					\
+	 nop;						\
+	sethi	%gdop_hix22(f1), %o1;			\
+	xor	%o1, %gdop_lox10(f1), %o1;		\
+	ba	10f;					\
+	 nop;						\
+8:	set	m2, %o1;				\
+	andcc	%o0, %o1, %g0;				\
+	be	9f;					\
+	 nop;						\
+	sethi	%gdop_hix22(f2), %o1;			\
+	xor	%o1, %gdop_lox10(f2), %o1;		\
+	ba	10f;					\
+	 nop;						\
+9:	sethi	%gdop_hix22(dflt), %o1;			\
+	xor	%o1, %gdop_lox10(dflt), %o1;		\
+10:	add	%o3, %o1, %o1;				\
+	retl;						\
+	 mov	%o1, %o0;				\
+END (__##name)
+
 # else /* SHARED */
 
 # ifdef __arch64__
@@ -82,7 +109,33 @@ ENTRY (__##name)					\
 	 mov	%o1, %o0;				\
 END (__##name)
 
+#  define SPARC_ASM_IFUNC2(name, m1, f1, m2, f2, dflt)	\
+ENTRY (__##name)					\
+	.type	__##name, @gnu_indirect_function;	\
+	set	m1, %o1;				\
+	andcc	%o0, %o1, %g0;				\
+	be	8f;					\
+	 nop;						\
+	SET(f1, %g1, %o1);				\
+	ba	10f;					\
+	 nop;						\
+8:	set	m2, %o1;				\
+	andcc	%o0, %o1, %g0;				\
+	be	9f;					\
+	 nop;						\
+	SET(f2, %g1, %o1);				\
+	ba	10f;					\
+	 nop;						\
+9:	SET(dflt, %g1, %o1);				\
+10:	retl;						\
+	 mov	%o1, %o0;				\
+END (__##name)
+
 # endif /* SHARED */
+
+#define SPARC_ASM_VIS2_IFUNC(name)			\
+	SPARC_ASM_IFUNC1(name, HWCAP_SPARC_VIS2,	\
+			 __##name##_vis2, __##name##_generic)
 
 # ifdef HAVE_AS_VIS3_SUPPORT
 
@@ -90,10 +143,19 @@ END (__##name)
 	SPARC_ASM_IFUNC1(name, HWCAP_SPARC_VIS3,	\
 			 __##name##_vis3, __##name##_generic)
 
+#define SPARC_ASM_VIS3_VIS2_IFUNC(name)			\
+	SPARC_ASM_IFUNC2(name, HWCAP_SPARC_VIS3,	\
+			 __##name##_vis3,		\
+			 HWCAP_SPARC_VIS2,		\
+			 __##name##_vis2, __##name##_generic)
+
 # else /* HAVE_AS_VIS3_SUPPORT */
 
 #define SPARC_ASM_VIS3_IFUNC(name)			\
 	SPARC_ASM_IFUNC_DFLT(name, __##name##_generic)
+
+#define SPARC_ASM_VIS3_VIS2_IFUNC(name)			\
+	SPARC_ASM_VIS2_IFUNC(name)
 
 # endif /* HAVE_AS_VIS3_SUPPORT */
 

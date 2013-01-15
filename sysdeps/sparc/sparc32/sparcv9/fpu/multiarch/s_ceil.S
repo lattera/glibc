@@ -1,7 +1,7 @@
 #include <sparc-ifunc.h>
 #include <math_ldbl_opt.h>
 
-SPARC_ASM_VIS3_IFUNC(ceil)
+SPARC_ASM_VIS3_VIS2_IFUNC(ceil)
 
 weak_alias (__ceil, ceil)
 

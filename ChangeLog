@@ -1,5 +1,46 @@
 2013-01-14  David S. Miller  <davem@davemloft.net>
 
+	* sysdeps/sparc/sparc-ifunc.h (SPARC_ASM_IFUNC2): New macro.
+	(SPARC_ASM_VIS2_IFUNC): Likewise.
+	(SPARC_ASM_VIS3_VIS2_IFUNC): Likewise.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_ceil-vis3.S: Make
+	use of 'siam' instruction.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_ceilf-vis3.S:
+	Likewise.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_floor-vis3.S:
+	Likewise.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_floorf-vis3.S:
+	Likewise.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_ceil-vis3.S: Likewise.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_ceilf-vis3.S: Likewise.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_floor-vis3.S: Likewise.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_floorf-vis3.S: Likewise.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_ceil-vis2.S: New
+	file.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_ceilf-vis2.S: New
+	file.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_floor-vis2.S: New
+	file.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_floorf-vis2.S: New
+	file.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_ceil-vis2.S: New file.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_ceilf-vis2.S: New file.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_floor-vis2.S: New file.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_floorf-vis2.S: New file.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_ceil.S: Hook in
+	new VIS2 routines.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_ceilf.S: Likewise.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_floor.S: Likewise.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_floorf.S:
+	Likewise.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_ceil.S: Likewise.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_ceilf.S: Likewise.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_floor.S: Likewise.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_floorf.S: Likewise.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/Makefile: Add new VIS2
+	routines to libm-sysdep_routines.
+	* sysdeps/sparc/sparc64/fpu/multiarch/Makefile: Likewise.
+
 	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/Makefile: Add vis3
 	fdim/fdimf to libm-sysdep_routines.
 	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_fdim-vis3.S: New

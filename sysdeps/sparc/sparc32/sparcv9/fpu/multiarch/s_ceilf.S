@@ -1,6 +1,6 @@
 #include <sparc-ifunc.h>
 
-SPARC_ASM_VIS3_IFUNC(ceilf)
+SPARC_ASM_VIS3_VIS2_IFUNC(ceilf)
 
 weak_alias (__ceilf, ceilf)
 

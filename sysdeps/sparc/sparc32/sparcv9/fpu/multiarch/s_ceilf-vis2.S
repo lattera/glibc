@@ -1,7 +1,7 @@
-/* Float ceil function, sparc32 v9 vis3 version.
-   Copyright (C) 2012-2013 Free Software Foundation, Inc.
+/* Float ceil function, sparc32 v9 vis2 version.
+   Copyright (C) 2013 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by David S. Miller <davem@davemloft.net>, 2012.
+   Contributed by David S. Miller <davem@davemloft.net>, 2013.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -28,23 +28,22 @@
 
 	   This will clear out the fractional portion of the value and,
 	   with suitable 'siam' initiated rouding mode settings, round
-	   the final result in the proper direction.
-
-	   We also use VIS3 moves to avoid using the stack to transfer
-	   values between float and integer registers.  */
+	   the final result in the proper direction.  */
 
 #define TWO_TWENTYTHREE	0x4b000000		/* 2**23 */
 
 #define ZERO		%f10			/* 0.0 */
 #define SIGN_BIT	%f12			/* -0.0 */
 
-ENTRY (__ceilf_vis3)
-	movwtos	%o0, %f0
+ENTRY (__ceilf_vis2)
+	st	%o0, [%sp + 68]
 	sethi	%hi(TWO_TWENTYTHREE), %o2
 	fzeros	ZERO
+	ld	[%sp + 68], %f0
 	fnegs	ZERO, SIGN_BIT
-	movwtos	%o2, %f16
+	st	%o2, [%sp + 68]
 	fabss	%f0, %f14
+	ld	[%sp + 68], %f16
 	fcmps	%fcc3, %f14, %f16
 	fmovsuge %fcc3, ZERO, %f16
 	fands	%f0, SIGN_BIT, SIGN_BIT
@@ -56,4 +55,4 @@ ENTRY (__ceilf_vis3)
 	siam	(0 << 2)
 	retl
 	 fors	%f1, SIGN_BIT, %f0
-END (__ceilf_vis3)
+END (__ceilf_vis2)

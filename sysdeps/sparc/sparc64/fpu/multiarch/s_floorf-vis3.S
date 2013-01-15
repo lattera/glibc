@@ -19,55 +19,40 @@
 
 #include <sysdep.h>
 
-	/* Since changing the rounding mode is extremely expensive, we
-	   try to round up using a method that is rounding mode
-	   agnostic.
+	/* 'siam' (Set Interval Arithmetic Mode) is used to quickly override
+	   the rounding mode during this routine.
 
 	   We add then subtract (or subtract than add if the initial
 	   value was negative) 2**23 to the value, then subtract it
 	   back out.
 
-	   This will clear out the fractional portion of the value.
-	   One of two things will happen for non-whole initial values.
-	   Either the rounding mode will round it up, or it will be
-	   rounded down.  If the value started out whole, it will be
-	   equal after the addition and subtraction.  This means we
-	   can accurately detect with one test whether we need to add
-	   another 1.0 to round it up properly.
+	   This will clear out the fractional portion of the value and,
+	   with suitable 'siam' initiated rouding mode settings, round
+	   the final result in the proper direction.
 
-	   VIS instructions are used to facilitate the formation of
-	   easier constants, and the propagation of the sign bit.  */
+	   We also use VIS3 moves to avoid using the stack to transfer
+	   values between float and integer registers.  */
 
 #define TWO_TWENTYTHREE	0x4b000000		/* 2**23 */
-#define ONE_DOT_ZERO	0x3f800000		/* 1.0 */
 
 #define ZERO		%f10			/* 0.0 */
 #define SIGN_BIT	%f12			/* -0.0 */
 
 ENTRY (__floorf_vis3)
 	sethi	%hi(TWO_TWENTYTHREE), %o2
-	sethi	%hi(ONE_DOT_ZERO), %o3
 	fzeros	ZERO
-
 	fnegs	ZERO, SIGN_BIT
-
-	movwtos %o2, %f16
+	movwtos	%o2, %f16
 	fabss	%f1, %f14
-
 	fcmps	%fcc3, %f14, %f16
-
 	fmovsuge %fcc3, ZERO, %f16
 	fands	%f1, SIGN_BIT, SIGN_BIT
-
 	fors	%f16, SIGN_BIT, %f16
+	siam	(1 << 2) | 3
 	fadds	%f1, %f16, %f5
+	siam	(1 << 2) | 0
 	fsubs	%f5, %f16, %f5
-	fcmps	%fcc2, %f5, %f1
-	movwtos	%o3, %f9
-
-	fmovsule %fcc2, ZERO, %f9
-	fsubs	%f5, %f9, %f0
-	fabss	%f0, %f0
+	siam	(0 << 2)
 	retl
-	 fors	%f0, SIGN_BIT, %f0
+	 fors	%f5, SIGN_BIT, %f0
 END (__floorf_vis3)

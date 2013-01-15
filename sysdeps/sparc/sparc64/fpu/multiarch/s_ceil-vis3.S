@@ -19,57 +19,41 @@
 
 #include <sysdep.h>
 
-	/* Since changing the rounding mode is extremely expensive, we
-	   try to round up using a method that is rounding mode
-	   agnostic.
+	/* 'siam' (Set Interval Arithmetic Mode) is used to quickly override
+	   the rounding mode during this routine.
 
 	   We add then subtract (or subtract than add if the initial
 	   value was negative) 2**23 to the value, then subtract it
 	   back out.
 
-	   This will clear out the fractional portion of the value.
-	   One of two things will happen for non-whole initial values.
-	   Either the rounding mode will round it up, or it will be
-	   rounded down.  If the value started out whole, it will be
-	   equal after the addition and subtraction.  This means we
-	   can accurately detect with one test whether we need to add
-	   another 1.0 to round it up properly.
+	   This will clear out the fractional portion of the value and,
+	   with suitable 'siam' initiated rouding mode settings, round
+	   the final result in the proper direction.
 
-	   VIS instructions are used to facilitate the formation of
-	   easier constants, and the propagation of the sign bit.  */
+	   We also use VIS3 moves to avoid using the stack to transfer
+	   values between float and integer registers.  */
 
 #define TWO_FIFTYTWO	0x43300000		/* 2**52 */
-#define ONE_DOT_ZERO	0x3ff00000		/* 1.0 */
 
 #define ZERO		%f10			/* 0.0 */
 #define SIGN_BIT	%f12			/* -0.0 */
 
 ENTRY (__ceil_vis3)
 	sethi	%hi(TWO_FIFTYTWO), %o2
-	sethi	%hi(ONE_DOT_ZERO), %o3
 	fzero	ZERO
-
 	sllx	%o2, 32, %o2
 	fnegd	ZERO, SIGN_BIT
-
-	sllx	%o3, 32, %o3
 	movxtod	%o2, %f16
 	fabsd	%f0, %f14
-
 	fcmpd	%fcc3, %f14, %f16
-
 	fmovduge %fcc3, ZERO, %f16
 	fand	%f0, SIGN_BIT, SIGN_BIT
-
 	for	%f16, SIGN_BIT, %f16
+	siam	(1 << 2) | 2
 	faddd	%f0, %f16, %f18
+	siam	(1 << 2) | 0
 	fsubd	%f18, %f16, %f18
-	fcmpd	%fcc2, %f18, %f0
-	movxtod	%o3, %f20
-
-	fmovduge %fcc2, ZERO, %f20
-	faddd	%f18, %f20, %f0
-	fabsd	%f0, %f0
+	siam	(0 << 2)
 	retl
-	 for	%f0, SIGN_BIT, %f0
+	 for	%f18, SIGN_BIT, %f0
 END (__ceil_vis3)
