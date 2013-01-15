@@ -41,7 +41,8 @@ __get_clockfreq (void)
   /* If we can use the vDSO to obtain the timebase even better.  */
 #ifdef SHARED
   INTERNAL_SYSCALL_DECL (err);
-  timebase_freq = INTERNAL_VSYSCALL_NO_SYSCALL_FALLBACK (get_tbfreq, err, 0);
+  timebase_freq =
+    INTERNAL_VSYSCALL_NO_SYSCALL_FALLBACK (get_tbfreq, err, hp_timing_t, 0);
   if (INTERNAL_SYSCALL_ERROR_P (timebase_freq, err)
       && INTERNAL_SYSCALL_ERRNO (timebase_freq, err) == ENOSYS)
 #endif

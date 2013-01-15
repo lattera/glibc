@@ -41,7 +41,7 @@ _libc_vdso_platform_setup (void)
 
   __vdso_clock_getres = _dl_vdso_vsym ("__kernel_clock_getres", &linux2615);
 
-  __vdso_get_tbfreq = _dl_vdso_vsym ("__kernel_vdso_get_tbfreq", &linux2615);
+  __vdso_get_tbfreq = _dl_vdso_vsym ("__kernel_get_tbfreq", &linux2615);
 
   __vdso_getcpu = _dl_vdso_vsym ("__kernel_getcpu", &linux2615);
 }

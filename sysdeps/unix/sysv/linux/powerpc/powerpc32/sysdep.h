@@ -60,7 +60,8 @@
 									      \
     if (__vdso_##name != NULL)						      \
       {									      \
-	sc_ret = INTERNAL_VSYSCALL_NCS (__vdso_##name, sc_err, nr, ##args);   \
+	sc_ret =							      \
+	  INTERNAL_VSYSCALL_NCS (__vdso_##name, sc_err, long int, nr, ##args);\
 	if (!INTERNAL_SYSCALL_ERROR_P (sc_ret, sc_err))			      \
 	  goto out;							      \
 	if (INTERNAL_SYSCALL_ERRNO (sc_ret, sc_err) != ENOSYS)		      \
@@ -90,7 +91,8 @@
 									      \
     if (__vdso_##name != NULL)						      \
       {									      \
-	v_ret = INTERNAL_VSYSCALL_NCS (__vdso_##name, err, nr, ##args);	      \
+	v_ret =								      \
+	  INTERNAL_VSYSCALL_NCS (__vdso_##name, err, long int, nr, ##args);   \
 	if (!INTERNAL_SYSCALL_ERROR_P (v_ret, err)			      \
 	    || INTERNAL_SYSCALL_ERRNO (v_ret, err) != ENOSYS)		      \
 	  goto out;							      \
@@ -104,12 +106,12 @@
   INTERNAL_SYSCALL (name, err, nr, ##args)
 # endif
 
-# define INTERNAL_VSYSCALL_NO_SYSCALL_FALLBACK(name, err, nr, args...)	      \
+# define INTERNAL_VSYSCALL_NO_SYSCALL_FALLBACK(name, err, type, nr, args...)  \
   ({									      \
-    long int sc_ret = ENOSYS;						      \
+    type sc_ret = ENOSYS;						      \
 									      \
     if (__vdso_##name != NULL)						      \
-      sc_ret = INTERNAL_VSYSCALL_NCS (__vdso_##name, err, nr, ##args);	      \
+      sc_ret = INTERNAL_VSYSCALL_NCS (__vdso_##name, err, type, nr, ##args);  \
     else								      \
       err = 1 << 28;							      \
     sc_ret;								      \
@@ -126,7 +128,7 @@
    function call, with the exception of LR (which is needed for the
    "sc; bnslr+" sequence) and CR (where only CR0.SO is clobbered to signal
    an error return status).  */
-# define INTERNAL_VSYSCALL_NCS(funcptr, err, nr, args...) \
+# define INTERNAL_VSYSCALL_NCS(funcptr, err, type, nr, args...) \
   ({									      \
     register void *r0  __asm__ ("r0");					      \
     register long int r3  __asm__ ("r3");				      \
@@ -139,18 +141,18 @@
     register long int r10 __asm__ ("r10");				      \
     register long int r11 __asm__ ("r11");				      \
     register long int r12 __asm__ ("r12");				      \
+    register type rval  __asm__ ("r3");					      \
     LOADARGS_##nr (funcptr, args);					      \
     __asm__ __volatile__						      \
       ("mtctr %0\n\t"							      \
        "bctrl\n\t"							      \
        "mfcr %0"							      \
-       : "=&r" (r0),							      \
-	 "=&r" (r3), "=&r" (r4), "=&r" (r5),  "=&r" (r6),  "=&r" (r7),	      \
-	 "=&r" (r8), "=&r" (r9), "=&r" (r10), "=&r" (r11), "=&r" (r12)	      \
-       : ASM_INPUT_##nr							      \
-       : "cr0", "ctr", "lr", "memory");					      \
+       : "+r" (r0), "+r" (r3), "+r" (r4), "+r" (r5),  "+r" (r6),  "+r" (r7),  \
+	 "+r" (r8), "+r" (r9), "+r" (r10), "+r" (r11), "+r" (r12)	      \
+       : : "cr0", "ctr", "lr", "memory");				      \
     err = (long int) r0;						      \
-    (int) r3;								      \
+    __asm__ __volatile__ ("" : "=r" (rval) : "r" (r3), "r" (r4));	      \
+    rval;								      \
   })
 
 # undef INLINE_SYSCALL
@@ -191,7 +193,7 @@
     register long int r10 __asm__ ("r10");				\
     register long int r11 __asm__ ("r11");				\
     register long int r12 __asm__ ("r12");				\
-    LOADARGS_##nr(name, args);					\
+    LOADARGS_##nr(name, args);						\
     __asm__ __volatile__						\
       ("sc   \n\t"							\
        "mfcr %0"							\

@@ -1,3 +1,25 @@
+2013-01-15  Anton Blanchard  <anton@samba.org>
+	    Ryan S. Arnold  <rsa@linux.vnet.ibm.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/init-first.c: Rename
+	__kernel_vdso_get_tbfreq to __kernel_get_tbfreq.
+	* sysdeps/unix/sysv/linux/powerpc/get_clockfreq.c: Add parameter to
+	INTERNAL_VSYSCALL_NO_SYSCALL_FALLBACK to specify return type.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/sysdep.h
+	(INTERNAL_VSYSCALL_NCS): Change "=&r" in inline asm output regs list to
+	"+r" and remove output regs list as redundant.  Add explicit inline
+	asm to specify register of return val to work around compiler codegen
+	bug.  Remove (int) cast on return value.  Add return type parameter to
+	use in macro so that this macro does not truncate return value for
+	64-bit values.
+	(INTERNAL_VSYSCALL_NO_SYSCALL_FALLBACK): Add return type parameter and
+	pass to INTERNAL_VSYSCALL_NCS.
+	(INLINE_VSYSCALL): Add 'long int' as return type to
+	INTERNAL_VSYSCALL_NCS macro invocation.
+	(INTERNAL_VSYSCALL): Add 'long int' as return type to
+	INTERNAL_VSYSCALL_NCS macro invocation.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/sysdep.h: Likewise.
+
 2013-01-18  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	[BZ #14496]
