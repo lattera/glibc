@@ -1,3 +1,20 @@
+2013-01-14  David S. Miller  <davem@davemloft.net>
+
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/Makefile: Add vis3
+	fdim/fdimf to libm-sysdep_routines.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_fdim-vis3.S: New
+	file.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_fdim.S: New file.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_fdimf-vis3.S: New
+	file.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_fdimf.S: New file.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/s_fdim.S: New file.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/s_fdimf.S: New file.
+	* sysdeps/sparc/sparc32/fpu/s_fdim.S: New file.
+	* sysdeps/sparc/sparc32/fpu/s_fdimf.S: New file.
+	* sysdeps/sparc/sparc64/fpu/s_fdim.S: New file.
+	* sysdeps/sparc/sparc64/fpu/s_fdimf.S: New file.
+
 2013-01-14  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* sysdeps/ieee754/dbl-64/mpa.c (__mul): Add a local variable
