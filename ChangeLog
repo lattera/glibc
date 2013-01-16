@@ -1,3 +1,8 @@
+2013-01-15  David S. Miller  <davem@davemloft.net>
+
+	* sysdeps/ieee754/dbl-64/s_nearbyint.c (__nearbyint): Use
+	libc_feholdexcept and libc_fesetenv.
+
 2013-01-15  Mike Frysinger  <vapier@gentoo.org>
 
 	* sysdeps/unix/sysv/linux/scsi/sg.h: Include stddef.h.
