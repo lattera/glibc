@@ -1,6 +1,25 @@
 2013-01-15  David S. Miller  <davem@davemloft.net>
 
 	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/Makefile: Add vis3
+	trunc{,f} to libm-sysdep_routes.
+	* sysdeps/sparc/sparc64/fpu/multiarch/Makefile: Likewise.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_trunc-vis3.S: New
+	file.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_trunc.S: New file.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_truncf-vis3.S: New
+	file.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_truncf.S: New
+	file.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/s_trunc.S: New file.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/s_truncf.S: New file.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_trunc-vis3.S: New file.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_trunc.S: New file.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_truncf-vis3.S: New file.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_truncf.S: New file.
+	* sysdeps/sparc/sparc64/fpu/s_trunc.S: New file.
+	* sysdeps/sparc/sparc64/fpu/s_truncf.S: New file.
+
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/Makefile: Add vis3
 	nearbyint{,f} to libm-sysdep_routes.
 	* sysdeps/sparc/sparc64/fpu/multiarch/Makefile: Likewise.
 	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_nearbyint-vis3.S:
