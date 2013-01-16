@@ -1,3 +1,7 @@
+2013-01-16  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* sysdeps/ieee754/dbl-64/mpa2.h: Fix the value of TWO.
+
 2013-01-15  David S. Miller  <davem@davemloft.net>
 
 	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/Makefile: Add vis3

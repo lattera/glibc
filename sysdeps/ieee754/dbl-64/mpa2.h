@@ -36,7 +36,7 @@
 #define  ZERO      0.0			/* 0       */
 #define  ONE       1.0			/* 1       */
 #define  MONE      -1.0			/* -1      */
-#define  TWO       -2.0			/* -2      */
+#define  TWO       2.0			/*  2      */
 #define  TWO5      0x1.0p5		/* 2^5     */
 #define  TWO10     0x1.0p10		/* 2^10    */
 #define  TWO18     0x1.0p18		/* 2^18    */
