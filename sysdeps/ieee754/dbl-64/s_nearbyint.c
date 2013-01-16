@@ -44,10 +44,10 @@ double __nearbyint(double x)
 	j0 = ((i0>>20)&0x7ff)-0x3ff;
 	if(j0<52) {
 	    if(j0<0) {
-		feholdexcept (&env);
+		libc_feholdexcept (&env);
 	        w = TWO52[sx]+x;
 	        t =  w-TWO52[sx];
-		fesetenv (&env);
+		libc_fesetenv (&env);
 		GET_HIGH_WORD(i0,t);
 		SET_HIGH_WORD(t,(i0&0x7fffffff)|(sx<<31));
 	        return t;
@@ -56,10 +56,10 @@ double __nearbyint(double x)
 	    if(j0==0x400) return x+x;	/* inf or NaN */
 	    else return x;		/* x is integral */
 	}
-	feholdexcept (&env);
+	libc_feholdexcept (&env);
 	w = TWO52[sx]+x;
 	t = w-TWO52[sx];
-	fesetenv (&env);
+	libc_fesetenv (&env);
 	return t;
 }
 weak_alias (__nearbyint, nearbyint)
