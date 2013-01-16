@@ -33,6 +33,15 @@
   cfi_startproc;						\
   CALL_MCOUNT
 
+/* Define an entry point visible from C.  */
+#define ENTRY_ALIGN(name, align)				\
+  .globl C_SYMBOL_NAME(name);					\
+  .type C_SYMBOL_NAME(name),%function;				\
+  .p2align align;						\
+  C_LABEL(name)							\
+  cfi_startproc;						\
+  CALL_MCOUNT
+
 #undef	END
 #define END(name)						\
   cfi_endproc;							\
