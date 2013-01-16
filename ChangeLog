@@ -1,5 +1,27 @@
 2013-01-15  David S. Miller  <davem@davemloft.net>
 
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/Makefile: Add vis3
+	nearbyint{,f} to libm-sysdep_routes.
+	* sysdeps/sparc/sparc64/fpu/multiarch/Makefile: Likewise.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_nearbyint-vis3.S:
+	New file.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_nearbyint.S: New
+	file.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_nearbyintf-vis3.S:
+	New file.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_nearbyintf.S: New
+	file.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/s_nearbyint.S: New file.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/s_nearbyintf.S: New file.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_nearbyint-vis3.S: New
+	file.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_nearbyint.S: New file.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_nearbyintf-vis3.S: New
+	file.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_nearbyintf.S: New file.
+	* sysdeps/sparc/sparc64/fpu/s_nearbyint.S: New file.
+	* sysdeps/sparc/sparc64/fpu/s_nearbyintf.S: New file.
+
 	* sysdeps/ieee754/dbl-64/s_nearbyint.c (__nearbyint): Use
 	libc_feholdexcept and libc_fesetenv.
 
