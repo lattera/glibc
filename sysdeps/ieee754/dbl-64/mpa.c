@@ -44,7 +44,6 @@
 
 #include "endian.h"
 #include "mpa.h"
-#include "mpa2.h"
 #include <sys/param.h>
 
 #ifndef SECTION

@@ -35,7 +35,4 @@ extern const int __mpsqrt_mp[33] attribute_hidden;
 			     4,4,4,4,4,4,4,4,4};
 #endif
 
-#define  ONE       1.0		/* 1 */
-#define  HALFRAD   0x1.0p23	/* 2^23 */
-
 #endif

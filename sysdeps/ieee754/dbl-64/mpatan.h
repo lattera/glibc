@@ -143,6 +143,3 @@ __atan_twonm1[33] = {                             /* 2n-1   */
 
 #endif
 #endif
-
-#define  ONE       1.0
-#define  TWO       2.0

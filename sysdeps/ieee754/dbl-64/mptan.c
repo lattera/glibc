@@ -47,8 +47,6 @@ void
 SECTION
 __mptan(double x, mp_no *mpy, int p) {
 
-  static const double MONE = -1.0;
-
   int n;
   mp_no mpw, mpc, mps;
 

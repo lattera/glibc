@@ -162,11 +162,4 @@
 #endif
 #endif
 
-#define  ZERO      0.0		/* 0 */
-#define  MZERO     -0.0		/* 0 with the sign bit set */
-#define  ONE       1.0		/* 1 */
-#define  TWO8      0x1.0p8	/* 2^8 */
-#define  TWO52     0x1.0p52	/* 2^52 */
-#define  TWOM1022  0x1.0p-1022	/* 2^-1022 */
-
 #endif

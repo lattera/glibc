@@ -262,10 +262,4 @@
 #endif
 #endif
 
-
-#define  ZERO      0.0
-#define  ONE       1.0
-#define  MONE      -1.0
-#define  TWO8      0x1.0p8	/* 2^8 */
-
 #endif

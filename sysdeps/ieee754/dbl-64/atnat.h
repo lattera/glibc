@@ -130,8 +130,6 @@
 #endif
 #endif
 
-#define  ZERO      0.0
-#define  ONE       1.0
 #define  A         a.d
 #define  B         b.d
 #define  C         c.d
@@ -152,7 +150,5 @@
 #define  U6        u6.d
 #define  U7        u7.d
 #define  U8        u8.d
-#define  TWO8      0x1.0p8	/* 2^8 */
-#define  TWO52     0x1.0p52	/* 2^52 */
 
 #endif

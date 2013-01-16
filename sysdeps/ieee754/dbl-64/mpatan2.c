@@ -49,8 +49,6 @@ void
 SECTION
 __mpatan2(mp_no *y, mp_no *x, mp_no *z, int p) {
 
-  static const double ZERO = 0.0, ONE = 1.0;
-
   mp_no mpt1,mpt2,mpt3;
 
 

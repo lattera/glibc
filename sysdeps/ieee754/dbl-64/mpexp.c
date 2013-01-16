@@ -30,7 +30,6 @@
 
 #include "endian.h"
 #include "mpa.h"
-#include "mpexp.h"
 #include <assert.h>
 
 #ifndef SECTION

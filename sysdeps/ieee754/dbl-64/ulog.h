@@ -173,10 +173,6 @@
 #endif
 #endif
 
-#define  ZERO      0.0		/* 0 */
-#define  ONE       1.0		/* 1 */
-#define  HALF      0x1.0p-1	/* 1/2 */
-#define  MHALF     -0x1.0p-1	/* -1/2 */
 #define  SQRT_2    sqrt_2.d
 #define  DEL_U     delu.d
 #define  DEL_V     delv.d
