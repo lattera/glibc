@@ -22,9 +22,7 @@
 /*  FUNCTIONS:                                                          */
 /*               mcr                                                    */
 /*               acr                                                    */
-/*               cr                                                     */
 /*               cpy                                                    */
-/*               cpymn                                                  */
 /*               norm                                                   */
 /*               denorm                                                 */
 /*               mp_dbl                                                 */
