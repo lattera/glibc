@@ -20,7 +20,6 @@
 #include <complex.h>
 #include <math.h>
 #include <math_private.h>
-#include <float.h>
 
 __complex__ float
 __casinhf (__complex__ float x)
@@ -62,40 +61,7 @@ __casinhf (__complex__ float x)
     }
   else
     {
-      float rx, ix;
-      __complex__ float y;
-
-      /* Avoid cancellation by reducing to the first quadrant.  */
-      rx = fabsf (__real__ x);
-      ix = fabsf (__imag__ x);
-
-      if (rx >= 1.0f / FLT_EPSILON || ix >= 1.0f / FLT_EPSILON)
-	{
-	  /* For large x in the first quadrant, x + csqrt (1 + x * x)
-	     is sufficiently close to 2 * x to make no significant
-	     difference to the result; avoid possible overflow from
-	     the squaring and addition.  */
-	  __real__ y = rx;
-	  __imag__ y = ix;
-	  res = __clogf (y);
-	  __real__ res += (float) M_LN2;
-	}
-      else
-	{
-	  __real__ y = (rx - ix) * (rx + ix) + 1.0;
-	  __imag__ y = 2.0 * rx * ix;
-
-	  y = __csqrtf (y);
-
-	  __real__ y += rx;
-	  __imag__ y += ix;
-
-	  res = __clogf (y);
-	}
-
-      /* Give results the correct sign for the original argument.  */
-      __real__ res = __copysignf (__real__ res, __real__ x);
-      __imag__ res = __copysignf (__imag__ res, __imag__ x);
+      res = __kernel_casinhf (x, 0);
     }
 
   return res;

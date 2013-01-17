@@ -25,11 +25,27 @@ __cacos (__complex__ double x)
 {
   __complex__ double y;
   __complex__ double res;
+  int rcls = fpclassify (__real__ x);
+  int icls = fpclassify (__imag__ x);
 
-  y = __casin (x);
+  if (rcls <= FP_INFINITE || icls <= FP_INFINITE
+      || (rcls == FP_ZERO && icls == FP_ZERO))
+    {
+      y = __casin (x);
 
-  __real__ res = (double) M_PI_2 - __real__ y;
-  __imag__ res = -__imag__ y;
+      __real__ res = (double) M_PI_2 - __real__ y;
+      __imag__ res = -__imag__ y;
+    }
+  else
+    {
+      __real__ y = -__imag__ x;
+      __imag__ y = __real__ x;
+
+      y = __kernel_casinh (y, 1);
+
+      __real__ res = __imag__ y;
+      __imag__ res = __real__ y;
+    }
 
   return res;
 }
