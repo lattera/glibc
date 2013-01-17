@@ -37,8 +37,10 @@ typedef double double_t;
 # define FP_ILOGB0	(-2147483647)
 # define FP_ILOGBNAN	(2147483647)
 
+# if !defined _SOFT_FLOAT && !defined __NO_FPRS__
 /* The powerpc has a combined multiply/add instruction.  */
-# define FP_FAST_FMA 1
-# define FP_FAST_FMAF 1
+#  define FP_FAST_FMA 1
+#  define FP_FAST_FMAF 1
+# endif
 
 #endif	/* ISO C99 */

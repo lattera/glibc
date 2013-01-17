@@ -16,7 +16,8 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#if defined __GNUC__ && !defined _SOFT_FLOAT && !defined __NO_MATH_INLINES
+#if (defined __GNUC__ && !defined _SOFT_FLOAT && !defined __NO_FPRS__	\
+     && !defined __NO_MATH_INLINES)
 
 /* Inline definition for fegetround.  */
 # define fegetround() \
@@ -56,4 +57,4 @@
       : 0)								      \
    : (feclearexcept) (__excepts))
 
-#endif /* __GNUC__ && !_SOFT_FLOAT */
+#endif /* __GNUC__ && !_SOFT_FLOAT && !__NO_FPRS__ */

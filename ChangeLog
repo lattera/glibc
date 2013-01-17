@@ -1,3 +1,23 @@
+2013-01-17  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/powerpc/bits/mathdef.h [_SOFT_FLOAT || __NO_FPRS__]
+	(FP_FAST_FMA): Do not define.
+	[_SOFT_FLOAT || __NO_FPRS__] (FP_FAST_FMAF): Likewise.
+	* sysdeps/powerpc/fpu/bits/fenvinline.h [__GNUC__ && !_SOFT_FLOAT
+	&& !__NO_MATH_INLINES]: Add [!__NO_FPRS__] condition.
+	* sysdeps/powerpc/fpu/bits/mathinline.h [__GNUC__ &&
+	!_SOFT_FLOAT]: Likewise.
+	* sysdeps/powerpc/fpu/fpu_control.h [_SOFT_FLOAT || __NO_FPRS__]
+	[_SOFT_FLOAT || __NO_FPRS__] (_FPU_RESERVED): Define with generic
+	value.
+	[_SOFT_FLOAT || __NO_FPRS__] (_FPU_DEFAULT): Likewise.
+	[_SOFT_FLOAT || __NO_FPRS__] (fpu_control_t): Likewise.
+	[_SOFT_FLOAT || __NO_FPRS__] (_FPU_GETCW): Likewise.
+	[_SOFT_FLOAT || __NO_FPRS__] (_FPU_SETCW): Likewise.
+	[_SOFT_FLOAT || __NO_FPRS__] (__fpu_control): Likewise.
+	[!_SOFT_FLOAT && !__NO_FPRS__]: Condition previous contents of
+	file.
+
 2013-01-16  Andreas Schwab  <schwab@suse.de>
 
 	[BZ #14327]
