@@ -2,7 +2,7 @@
 
 	* sysdeps/ieee754/dbl-64/mpa.c: Fix header comment.
 
-2013-01-16  H.J. Lu  <hongjiu.lu@intel.com>
+2013-01-17  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* elf/elf.h (R_386_SIZE32): New relocation.
 	* sysdeps/i386/dl-machine.h (elf_machine_rel): Handle
@@ -40,25 +40,25 @@
 
 2013-01-16  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
-        * sysdeps/ieee754/dbl-64/atnat.h: Remove constant value
-        definitions.
-        * sysdeps/ieee754/dbl-64/atnat2.h: Likewise.
-        * sysdeps/ieee754/dbl-64/mpa.c: Do not include mpa2.h.
-        * sysdeps/ieee754/dbl-64/mpa.h: Move all constant value
-        definitions here.
-        * sysdeps/ieee754/dbl-64/mpa2.h: Remove.
-        * sysdeps/ieee754/dbl-64/mpatan.h: Remove constant value
-        definitions.
-        * sysdeps/ieee754/dbl-64/mpatan2.c (__mpatan2): Remove ZERO
-        and ONE.
-        * sysdeps/ieee754/dbl-64/mpexp.c: Do not include mpexp.h.
-        * sysdeps/ieee754/dbl-64/mpexp.h: Remove.
-        * sysdeps/ieee754/dbl-64/mpsqrt.h: Remove constant value
-        definitions.
-        * sysdeps/ieee754/dbl-64/mptan.c (__mptan): Remove MONE.
-        * sysdeps/ieee754/dbl-64/ulog.h: Remove constant value
-        definitions.
-        * sysdeps/ieee754/dbl-64/utan.h: Likewise.
+	* sysdeps/ieee754/dbl-64/atnat.h: Remove constant value
+	definitions.
+	* sysdeps/ieee754/dbl-64/atnat2.h: Likewise.
+	* sysdeps/ieee754/dbl-64/mpa.c: Do not include mpa2.h.
+	* sysdeps/ieee754/dbl-64/mpa.h: Move all constant value
+	definitions here.
+	* sysdeps/ieee754/dbl-64/mpa2.h: Remove.
+	* sysdeps/ieee754/dbl-64/mpatan.h: Remove constant value
+	definitions.
+	* sysdeps/ieee754/dbl-64/mpatan2.c (__mpatan2): Remove ZERO
+	and ONE.
+	* sysdeps/ieee754/dbl-64/mpexp.c: Do not include mpexp.h.
+	* sysdeps/ieee754/dbl-64/mpexp.h: Remove.
+	* sysdeps/ieee754/dbl-64/mpsqrt.h: Remove constant value
+	definitions.
+	* sysdeps/ieee754/dbl-64/mptan.c (__mptan): Remove MONE.
+	* sysdeps/ieee754/dbl-64/ulog.h: Remove constant value
+	definitions.
+	* sysdeps/ieee754/dbl-64/utan.h: Likewise.
 
 	* sysdeps/ieee754/dbl-64/mpa2.h: Fix the value of TWO.
 
