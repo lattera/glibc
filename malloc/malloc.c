@@ -168,7 +168,7 @@
 
     Compilation Environment options:
 
-    HAVE_MREMAP                0 unless linux defined
+    HAVE_MREMAP                0
 
     Changing default word sizes:
 
@@ -214,8 +214,10 @@
 
 #include <stddef.h>   /* for size_t */
 #include <stdlib.h>   /* for getenv(), abort() */
+#include <unistd.h>   /* for __libc_enable_secure */
 
 #include <malloc-machine.h>
+#include <malloc-sysdep.h>
 
 #include <atomic.h>
 #include <_itoa.h>
@@ -490,18 +492,12 @@ void *(*__morecore)(ptrdiff_t) = __default_morecore;
 
 /*
   Define HAVE_MREMAP to make realloc() use mremap() to re-allocate
-  large blocks.  This is currently only possible on Linux with
-  kernel versions newer than 1.3.77.
+  large blocks.
 */
 
 #ifndef HAVE_MREMAP
-#ifdef linux
-#define HAVE_MREMAP 1
-#else
 #define HAVE_MREMAP 0
 #endif
-
-#endif /* HAVE_MREMAP */
 
 
 /*

@@ -19,9 +19,6 @@
 
 #include <stdbool.h>
 
-/* Get the implementation for check_may_shrink_heap.  */
-#include <malloc-sysdep.h>
-
 /* Compile-time constants.  */
 
 #define HEAP_MIN_SIZE (32*1024)
