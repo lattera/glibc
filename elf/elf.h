@@ -1229,7 +1229,7 @@ typedef struct
 #define R_386_TLS_DTPMOD32 35		/* ID of module containing symbol */
 #define R_386_TLS_DTPOFF32 36		/* Offset in TLS block */
 #define R_386_TLS_TPOFF32  37		/* Negated offset in static TLS block */
-/* 38? */
+#define R_386_SIZE32	   38 		/* 32-bit symbol size */
 #define R_386_TLS_GOTDESC  39		/* GOT offset for TLS descriptor.  */
 #define R_386_TLS_DESC_CALL 40		/* Marker of call through TLS
 					   descriptor for

@@ -348,6 +348,12 @@ elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
 
       switch (r_type)
 	{
+# ifndef RTLD_BOOTSTRAP
+	case R_386_SIZE32:
+	  /* Set to symbol size plus addend.  */
+	  *reloc_addr += sym->st_size;
+	  break;
+# endif
 	case R_386_GLOB_DAT:
 	case R_386_JMP_SLOT:
 	  *reloc_addr = value;
@@ -507,6 +513,9 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 
       switch (ELF32_R_TYPE (reloc->r_info))
 	{
+	case R_386_SIZE32:
+	  /* Set to symbol size plus addend.  */
+	  value = sym->st_size;
 	case R_386_GLOB_DAT:
 	case R_386_JMP_SLOT:
 	case R_386_32:
