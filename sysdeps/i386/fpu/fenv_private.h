@@ -176,7 +176,7 @@ libc_feupdateenv_test_sse (fenv_t *e, int ex)
 
   /* Raise SIGFPE for any new exceptions since the hold.  Expect that
      the normal environment has all exceptions masked.  */
-  if (__builtin_expect ((old_mxcsr >> 7) & cur_ex, 0))
+  if (__glibc_unlikely (~(old_mxcsr >> 7) & cur_ex))
     __feraiseexcept (cur_ex);
 
   /* Test for exceptions raised since the hold.  */

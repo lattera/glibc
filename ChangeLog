@@ -1,5 +1,9 @@
 2013-01-18  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
+	[BZ #14496]
+	* sysdeps/i386/fpu/fenv_private.h (libc_feupdateenv_test_sse):
+	Fix application of SIMD FP exception mask.
+
 	* sysdeps/ieee754/dbl-64/mpa.h (__pow_mp): New function to get an
 	mp_no from a power of two.
 	* sysdeps/ieee754/dbl-64/mpexp.c (__mpexp): Remove
