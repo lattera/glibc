@@ -103,14 +103,14 @@ __mpexp (mp_no *x, mp_no *y, int p)
     a *= RADIXI;
   for (; i > EX; i--)
     a *= RADIX;
-  b = X[1] * RADIXI;
+  b = X[1];
   m2 = 24 * EX;
-  for (; b < HALF; m2--)
+  for (; b < HALFRAD; m2--)
     {
       a *= TWO;
       b *= TWO;
     }
-  if (b == HALF)
+  if (b == HALFRAD)
     {
       for (i = 2; i <= p; i++)
 	{
