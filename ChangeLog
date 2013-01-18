@@ -1,3 +1,23 @@
+2013-01-18  Joseph Myers  <joseph@codesourcery.com>
+	    Mark Mitchell  <mark@codesourcery.com>
+	    Tom de Vries  <tom@codesourcery.com>
+	    Paul Pluzhnikov  <ppluzhnikov@google.com>
+
+	* debug/tst-backtrace2.c: New file.
+	* debug/tst-backtrace3.c: Likewise.
+	* debug/tst-backtrace4.c: Likewise.
+	* debug/tst-backtrace5.c: Likewise.
+	* debug/Makefile (CFLAGS-tst-backtrace2.c): New variable.
+	(CFLAGS-tst-backtrace3.c): Likewise.
+	(CFLAGS-tst-backtrace4.c): Likewise.
+	(CFLAGS-tst-backtrace5.c): Likewise.
+	(LDFLAGS-tst-backtrace2): Likewise.
+	(LDFLAGS-tst-backtrace3): Likewise.
+	(LDFLAGS-tst-backtrace4): Likewise.
+	(LDFLAGS-tst-backtrace5): Likewise.
+	(tests): Add new tests tst-backtrace2, tst-backtrace3,
+	tst-backtrace4 and tst-backtrace5.
+
 2013-01-18  Anton Blanchard  <anton@samba.org>
 	    Ryan S. Arnold  <rsa@linux.vnet.ibm.com>
 
