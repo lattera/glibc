@@ -123,3 +123,33 @@ extern void __mpsqrt (mp_no *, mp_no *, int);
 extern void __mpexp (mp_no *, mp_no *, int);
 extern void __c32 (mp_no *, mp_no *, mp_no *, int);
 extern int __mpranred (double, mp_no *, int);
+
+/* Given a power POW, build a multiprecision number 2^POW.  */
+static inline void
+__pow_mp (int pow, mp_no *y, int p)
+{
+  int i, rem;
+
+  /* The exponent is E such that E is a factor of 2^24.  The remainder (of the
+     form 2^x) goes entirely into the first digit of the mantissa as it is
+     always less than 2^24.  */
+  EY = pow / 24;
+  rem = pow - EY * 24;
+  EY++;
+
+  /* If the remainder is negative, it means that POW was negative since
+     |EY * 24| <= |pow|.  Adjust so that REM is positive and still less than
+     24 because of which, the mantissa digit is less than 2^24.  */
+  if (rem < 0)
+    {
+      EY--;
+      rem += 24;
+    }
+  /* The sign of any 2^x is always positive.  */
+  Y[0] = ONE;
+  Y[1] = 1 << rem;
+
+  /* Everything else is ZERO.  */
+  for (i = 2; i <= p; i++)
+    Y[i] = ZERO;
+}

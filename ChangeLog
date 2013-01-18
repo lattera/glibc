@@ -1,5 +1,10 @@
 2013-01-18  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
+	* sysdeps/ieee754/dbl-64/mpa.h (__pow_mp): New function to get an
+	mp_no from a power of two.
+	* sysdeps/ieee754/dbl-64/mpexp.c (__mpexp): Remove
+	__mpexp_twomm1.  Use __pow_mp.
+
 	* sysdeps/ieee754/dbl-64/mpexp.c (__mpexp): Remove unnecessary
 	multiplication.
 

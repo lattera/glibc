@@ -43,7 +43,7 @@ SECTION
 __mpexp (mp_no *x, mp_no *y, int p)
 {
   int i, j, k, m, m1, m2, n;
-  double a, b;
+  double b;
   static const int np[33] =
     {
       0, 0, 0, 0, 3, 3, 4, 4, 5, 4, 4, 5, 5, 5, 6, 6, 6, 6, 6, 6,
@@ -60,19 +60,6 @@ __mpexp (mp_no *x, mp_no *y, int p)
       68, 71, 74, 77,
       70, 73, 76, 78,
       81
-    };
-  /* Stored values for 2^-m, where values of m are defined in M1P above.   */
-  static const double __mpexp_twomm1[33] =
-    {
-      0x1.0p0, 0x1.0p0, 0x1.0p0, 0x1.0p0,
-      0x1.0p-17, 0x1.0p-23, 0x1.0p-23, 0x1.0p-28,
-      0x1.0p-27, 0x1.0p-38, 0x1.0p-42, 0x1.0p-39,
-      0x1.0p-43, 0x1.0p-47, 0x1.0p-43, 0x1.0p-47,
-      0x1.0p-50, 0x1.0p-54, 0x1.0p-57, 0x1.0p-60,
-      0x1.0p-64, 0x1.0p-67, 0x1.0p-71, 0x1.0p-74,
-      0x1.0p-68, 0x1.0p-71, 0x1.0p-74, 0x1.0p-77,
-      0x1.0p-70, 0x1.0p-73, 0x1.0p-76, 0x1.0p-78,
-      0x1.0p-81
     };
   static const int m1np[7][18] =
     {
@@ -98,18 +85,10 @@ __mpexp (mp_no *x, mp_no *y, int p)
   /* Choose m,n and compute a=2**(-m).  */
   n = np[p];
   m1 = m1p[p];
-  a = __mpexp_twomm1[p];
-  for (i = 0; i < EX; i++)
-    a *= RADIXI;
-  for (; i > EX; i--)
-    a *= RADIX;
   b = X[1];
   m2 = 24 * EX;
   for (; b < HALFRAD; m2--)
-    {
-      a *= TWO;
-      b *= TWO;
-    }
+    b *= TWO;
   if (b == HALFRAD)
     {
       for (i = 2; i <= p; i++)
@@ -118,10 +97,7 @@ __mpexp (mp_no *x, mp_no *y, int p)
 	    break;
 	}
       if (i == p + 1)
-	{
-	  m2--;
-	  a *= TWO;
-	}
+	m2--;
     }
 
   m = m1 + m2;
@@ -134,14 +110,13 @@ __mpexp (mp_no *x, mp_no *y, int p)
 	 than 2^-55.  */
       assert (p < 18);
       m = 0;
-      a = ONE;
       for (i = n - 1; i > 0; i--, n--)
 	if (m1np[i][p] + m2 > 0)
 	  break;
     }
 
   /* Compute s=x*2**(-m). Put result in mps.  */
-  __dbl_mp (a, &mpt1, p);
+  __pow_mp (-m, &mpt1, p);
   __mul (x, &mpt1, &mps, p);
 
   /* Evaluate the polynomial. Put result in mpt2.  */
