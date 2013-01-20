@@ -26,8 +26,14 @@ asm-CPPFLAGS += $(m68k-syntax-flag)
 
 pic-ccflag = -fpic
 
+ifeq ($(subdir),setjmp)
 # Make sure setjmp.c is compiled with a frame pointer
 CFLAGS-setjmp.c := -fno-omit-frame-pointer
+endif
+
+ifeq ($(subdir),debug)
+CFLAGS-backtrace.c += -funwind-tables
+endif
 
 ifeq ($(subdir),elf)
 CFLAGS-rtld.c += -Wno-uninitialized -Wno-unused
