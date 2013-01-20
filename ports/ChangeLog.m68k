@@ -1,5 +1,7 @@
 2013-01-20  Andreas Schwab  <schwab@linux-m68k.org>
 
+	* sysdeps/m68k/m680x0/fpu/libm-test-ulps: Update.
+
 	* sysdeps/m68k/Makefile (CFLAGS-backtrace.c): Add -funwind-tables.
 
 2013-01-19  Andreas Schwab  <schwab@linux-m68k.org>
