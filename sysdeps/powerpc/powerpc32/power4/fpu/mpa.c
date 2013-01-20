@@ -43,7 +43,6 @@
 
 #include "endian.h"
 #include "mpa.h"
-#include "mpa2.h"
 #include <sys/param.h>
 
 const mp_no mpone = {1, {1.0, 1.0}};

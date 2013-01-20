@@ -1,3 +1,9 @@
+2013-01-20  Andreas Schwab  <schwab@linux-m68k.org>
+
+	* sysdeps/powerpc/powerpc32/power4/fpu/mpa.c: Don't include
+	"mpa2.h".
+	* sysdeps/powerpc/powerpc64/power4/fpu/mpa.c: Likewise.
+
 2013-01-18  Joseph Myers  <joseph@codesourcery.com>
 	    Mark Mitchell  <mark@codesourcery.com>
 	    Tom de Vries  <tom@codesourcery.com>
