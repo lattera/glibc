@@ -3,6 +3,10 @@ long-double-fcts = yes
 
 pie-ccflag = -fPIE
 
+ifeq ($(subdir),debug)
+CFLAGS-backtrace.c += -funwind-tables
+endif
+
 ifeq ($(subdir),gmon)
 sysdep_routines += sparc-mcount
 endif

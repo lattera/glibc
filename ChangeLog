@@ -1,3 +1,13 @@
+2013-01-21  David S. Miller  <davem@davemloft.net>
+
+	* sysdeps/sparc/backtrace.c: New file.
+	* sysdeps/sparc/sparc32/backtrace.h: New file.
+	* sysdeps/sparc/sparc32/sparcv9/backtrace.h: New file.
+	* sysdeps/sparc/sparc64/backtrace.h: New file.
+	* sysdeps/sparc/sparc64/backtrace.c: Delete.
+	* sysdeps/sparc/Makefile (CFLAGS-backtrace.c): Add
+	-funwind-tables.
+
 2013-01-21  Andreas Schwab  <schwab@suse.de>
 
 	[BZ #15020]
