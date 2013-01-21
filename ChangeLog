@@ -1,3 +1,17 @@
+2013-05-21  Andreas Schwab  <schwab@suse.de>
+
+	[BZ #15014]
+	* nss/getXXbyYY_r.c (INTERNAL (REENTRANT_NAME))
+	[HANDLE_DIGITS_DOTS]: Set any_service when digits-dots parsing was
+	successful.
+	* nss/digits_dots.c (__nss_hostname_digits_dots): Remove
+	redundant variable declarations and reallocation of buffer when
+	parsing as IPv6 address.  Always set NSS status when called from
+	reentrant functions.  Use NETDB_INTERNAL instead of TRY_AGAIN when
+	buffer too small.  Correct computation of needed size.
+	* nss/Makefile (tests): Add test-digits-dots.
+	* nss/test-digits-dots.c: New test.
+
 2013-05-21  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* benchtests/Makefile: Remove instructions for adding
