@@ -42,6 +42,22 @@
   cfi_startproc;						\
   CALL_MCOUNT
 
+/* Define an entry point visible from C with a specified alignment and
+   pre-padding with NOPs.  This can be used to ensure that a critical
+   loop within a function is cache line aligned.  Note this version
+   does not adjust the padding if CALL_MCOUNT is defined. */
+
+#define ENTRY_ALIGN_AND_PAD(name, align, padding)		\
+  .globl C_SYMBOL_NAME(name);					\
+  .type C_SYMBOL_NAME(name),%function;				\
+  .p2align align;						\
+  .rep padding;							\
+  nop;								\
+  .endr;							\
+  C_LABEL(name)							\
+  cfi_startproc;						\
+  CALL_MCOUNT
+
 #undef	END
 #define END(name)						\
   cfi_endproc;							\
