@@ -2,6 +2,7 @@
 
 	* sysdeps/unix/sysv/linux/ulimit.c: Moved to ...
 	* sysdeps/posix/ulimit.c: ... this.
+	Include <limits.h>.
 
 2013-01-23  Adam Conrad  <adconrad@0c3.net>
 

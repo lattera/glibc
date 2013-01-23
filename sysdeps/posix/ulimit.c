@@ -20,6 +20,7 @@
 #include <sysdep.h>
 #include <ulimit.h>
 #include <unistd.h>
+#include <limits.h>
 #include <sys/resource.h>
 
 /* Function depends on CMD:
