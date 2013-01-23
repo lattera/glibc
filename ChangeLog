@@ -1,3 +1,12 @@
+2013-01-23  David S. Miller  <davem@davemloft.net>
+
+	* sysdeps/sparc/sparc32/sparcv9/bits/atomic.h
+	(__arch_compare_and_exchange_val_32_acq): Use %g0 as second
+	argument of CAS if possible.
+	* sysdeps/sparc/sparc64/bits/atomic.h
+	(__arch_compare_and_exchange_val_32_acq): Likewise.
+	(__arch_compare_and_exchange_val_64_acq): Likewise.
+
 2013-01-23  Pino Toscano  <toscano.pino@tiscali.it>
 
 	* sysdeps/unix/sysv/linux/ulimit.c: Moved to ...
