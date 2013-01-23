@@ -849,6 +849,9 @@ LDFLAGS-tst-execstack-needed = -Wl,-z,noexecstack
 LDFLAGS-tst-execstack-prog = -Wl,-z,execstack
 endif
 
+LDFLAGS-tst-array2 = $(no-as-needed)
+LDFLAGS-tst-array5 = $(no-as-needed)
+
 $(objpfx)tst-array1.out: tst-array1.exp $(objpfx)tst-array1
 	$(test-program-cmd) > $@
 	cmp $@ tst-array1.exp > /dev/null
