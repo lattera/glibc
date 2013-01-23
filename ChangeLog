@@ -3,6 +3,7 @@
 	* sysdeps/unix/sysv/linux/ulimit.c: Moved to ...
 	* sysdeps/posix/ulimit.c: ... this.
 	Include <limits.h>.
+	* sysdeps/unix/bsd/ulimit.c: Remove file.
 
 2013-01-23  Adam Conrad  <adconrad@0c3.net>
 
