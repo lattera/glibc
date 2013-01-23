@@ -1,5 +1,9 @@
 2013-01-23  Marcus Shawcroft  <marcus.shawcroft@linaro.org>
 
+        * sysdeps/aarch64/strncmp.S: New file.
+
+2013-01-23  Marcus Shawcroft  <marcus.shawcroft@linaro.org>
+
 	* sysdeps/aarch64/sysdep.h (ENTRY_ALIGN_AND_PAD): New.
 	* sysdeps/aarch64/strnlen.S: New file.
 
