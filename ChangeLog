@@ -1,3 +1,11 @@
+2013-01-23  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #15036]
+	* bits/wchar.h (__WCHAR_MAX): Define based on __WCHAR_MAX__, or
+	based on [L'\0' - 1 > 0] if [!__WCHAR_MAX__].
+	(__WCHAR_MIN): Likewise, using __WCHAR_MIN__.
+	* sysdeps/unix/sysv/linux/x86/bits/wchar.h: Remove.
+
 2013-01-21  David S. Miller  <davem@davemloft.net>
 
 	* sysdeps/sparc/backtrace.c: New file.
