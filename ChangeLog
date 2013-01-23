@@ -1,3 +1,8 @@
+2013-01-23  Pino Toscano  <toscano.pino@tiscali.it>
+
+	* sysdeps/unix/sysv/linux/ulimit.c: Moved to ...
+	* sysdeps/posix/ulimit.c: ... this.
+
 2013-01-23  Adam Conrad  <adconrad@0c3.net>
 
 	* elf/Makefile (LDFLAGS-tst-array2): Add $(no-as-needed).
