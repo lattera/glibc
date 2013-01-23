@@ -376,11 +376,11 @@
 #endif
 
 #if __GNUC__ >= 3
-# define __glibc_unlikely(cond) __builtin_expect((cond), 0)
-# define __glibc_likely(cond) __builtin_expect((cond), 1)
+# define __glibc_unlikely(cond)	__builtin_expect ((cond), 0)
+# define __glibc_likely(cond)	__builtin_expect ((cond), 1)
 #else
-# define __glibc_unlikely(cond) (cond)
-# define __glibc_likely(cond) (cond)
+# define __glibc_unlikely(cond)	(cond)
+# define __glibc_likely(cond)	(cond)
 #endif
 
 #include <bits/wordsize.h>

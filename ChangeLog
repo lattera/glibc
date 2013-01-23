@@ -1,3 +1,7 @@
+2013-01-23  Roland McGrath  <roland@hack.frob.com>
+
+	* misc/sys/cdefs.h (__glibc_unlikely, __glibc_likely): Fix whitespace.
+
 2013-01-23  David S. Miller  <davem@davemloft.net>
 
 	* sysdeps/sparc/sparc32/sparcv9/bits/atomic.h
