@@ -34,7 +34,7 @@ typedef struct __s390_jmp_buf
   long int __gregs[10];
 
 # if __WORDSIZE == 64
-  /* We save fpu registers 1, 3, 5 and 7.  */
+  /* We save fpu registers f8 - f15.  */
   long __fpregs[8];
 # else
   /* We save fpu registers 4 and 6.  */

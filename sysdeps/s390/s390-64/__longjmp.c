@@ -42,10 +42,14 @@ __longjmp (__jmp_buf env, int val)
   register void *r1 __asm ("%r1") = (void *) env;
 #endif
   /* Restore registers and jump back.  */
-  asm volatile ("ld   %%f7,104(%1)\n\t"
-		"ld   %%f5,96(%1)\n\t"
-		"ld   %%f3,88(%1)\n\t"
-		"ld   %%f1,80(%1)\n\t"
+  asm volatile ("ld    %%f8,80(%1)\n\t"
+		"ld    %%f9,88(%1)\n\t"
+		"ld    %%f10,96(%1)\n\t"
+		"ld    %%f11,104(%1)\n\t"
+		"ld    %%f12,112(%1)\n\t"
+		"ld    %%f13,120(%1)\n\t"
+		"ld    %%f14,128(%1)\n\t"
+		"ld    %%f15,136(%1)\n\t"
 #ifdef PTR_DEMANGLE
 		"lmg  %%r6,%%r13,0(%1)\n\t"
 		"lmg  %%r4,%%r5,64(%1)\n\t"

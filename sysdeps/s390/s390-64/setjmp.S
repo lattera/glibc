@@ -55,10 +55,14 @@ ENTRY(__sigsetjmp)
 #else
         stmg   %r6,%r15,0(%r2)      /* Store registers in jmp_buf.  */
 #endif
-	std    %f1,80(%r2)
-	std    %f3,88(%r2)
-	std    %f5,96(%r2)
-	std    %f7,104(%r2)
+	std    %f8,80(%r2)
+	std    %f9,88(%r2)
+	std    %f10,96(%r2)
+	std    %f11,104(%r2)
+	std    %f12,112(%r2)
+	std    %f13,120(%r2)
+	std    %f14,128(%r2)
+	std    %f15,136(%r2)
 #if defined NOT_IN_libc && defined IS_IN_rtld
 	/* In ld.so we never save the signal mask.  */
 	lghi   %r2,0
