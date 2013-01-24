@@ -80,17 +80,16 @@ addinitgroupsX (struct database_dyn *db, int fd, request_header *req,
     }
 
   static service_user *group_database;
-  service_user *nip = NULL;
+  service_user *nip;
   int no_more;
 
-  if (group_database != NULL)
-    {
-      nip = group_database;
-      no_more = 0;
-    }
-  else
+  if (group_database == NULL)
     no_more = __nss_database_lookup ("group", NULL,
-				     "compat [NOTFOUND=return] files", &nip);
+				     "compat [NOTFOUND=return] files",
+				     &group_database);
+  else
+    no_more = 0;
+  nip = group_database;
 
  /* We always use sysconf even if NGROUPS_MAX is defined.  That way, the
      limit can be raised in the kernel configuration without having to

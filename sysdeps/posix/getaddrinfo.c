@@ -558,7 +558,7 @@ gaih_inet (const char *name, const struct gaih_service *service,
 	  struct gaih_addrtuple **pat = &at;
 	  int no_data = 0;
 	  int no_inet6_data = 0;
-	  service_user *nip = NULL;
+	  service_user *nip;
 	  enum nss_status inet6_status = NSS_STATUS_UNAVAIL;
 	  enum nss_status status = NSS_STATUS_UNAVAIL;
 	  int no_more;
@@ -791,15 +791,13 @@ gaih_inet (const char *name, const struct gaih_service *service,
 	    }
 #endif
 
-	  if (__nss_hosts_database != NULL)
-	    {
-	      no_more = 0;
-	      nip = __nss_hosts_database;
-	    }
-	  else
+	  if (__nss_hosts_database == NULL)
 	    no_more = __nss_database_lookup ("hosts", NULL,
 					     "dns [!UNAVAIL=return] files",
-					     &nip);
+					     &__nss_hosts_database);
+	  else
+	    no_more = 0;
+	  nip = __nss_hosts_database;
 
 	  /* Initialize configurations.  */
 	  if (__glibc_unlikely (!_res_hconf.initialized))

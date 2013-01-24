@@ -86,20 +86,19 @@ addhstaiX (struct database_dyn *db, int fd, request_header *req,
     }
 
   static service_user *hosts_database;
-  service_user *nip = NULL;
+  service_user *nip;
   int no_more;
   int rc6 = 0;
   int rc4 = 0;
   int herrno = 0;
 
-  if (hosts_database != NULL)
-    {
-      nip = hosts_database;
-      no_more = 0;
-    }
-  else
+  if (hosts_database == NULL)
     no_more = __nss_database_lookup ("hosts", NULL,
-				     "dns [!UNAVAIL=return] files", &nip);
+				     "dns [!UNAVAIL=return] files",
+				     &hosts_database);
+  else
+    no_more = 0;
+  nip = hosts_database;
 
   /* Initialize configurations.  */
   if (__glibc_unlikely (!_res_hconf.initialized))

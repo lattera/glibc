@@ -1,3 +1,11 @@
+2013-09-30  Andreas Schwab  <schwab@suse.de>
+
+	[BZ #15048]
+	* nscd/aicache.c (addhstaiX): Properly use the cache variable for
+	the nss database lookup.
+	* nscd/initgrcache.c (addinitgroupsX): Likewise.
+	* sysdeps/posix/getaddrinfo.c (gaih_inet): Likewise.
+
 2013-09-28  Mike Frysinger  <vapier@gentoo.org>
 
 	* sysdeps/unix/sysv/linux/tst-fanotify.c (do_test): Fix style.
