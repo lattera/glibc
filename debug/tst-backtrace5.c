@@ -26,27 +26,15 @@
 #include <signal.h>
 #include <unistd.h>
 
+#include "tst-backtrace.h"
+
 static int do_test (void);
 #define TEST_FUNCTION do_test ()
 #include "../test-skeleton.c"
 
-/* Set to a non-zero value if the test fails.  */
-volatile int ret;
-
-/* Accesses to X are used to prevent optimization.  */
-volatile int x;
-
-/* Called if the test fails.  */
-#define FAIL() \
-  do { printf ("Failure on line %d\n", __LINE__); ret = 1; } while (0)
-
 /* The backtrace should include at least handle_signal, a signal
    trampoline, read, 3 * fn, and do_test.  */
 #define NUM_FUNCTIONS 7
-
-/* Use this attribute to prevent inlining, so that all expected frames
-   are present.  */
-#define NO_INLINE __attribute__ ((noinline))
 
 void
 handle_signal (int signum)
@@ -76,24 +64,24 @@ handle_signal (int signum)
   for (i = 0; i < n; ++i)
     printf ("Function %d: %s\n", i, symbols[i]);
   /* Check that the function names obtained are accurate.  */
-  if (strstr (symbols[0], "handle_signal") == NULL)
+  if (!match (symbols[0], "handle_signal"))
     {
       FAIL ();
       return;
     }
   /* Do not check name for signal trampoline.  */
   i = 2;
-  if (strstr (symbols[i++], "read") == NULL)
+  if (!match (symbols[i++], "read"))
     {
       /* Perhaps symbols[2] is __kernel_vsyscall?  */
-      if (strstr (symbols[i++], "read") == NULL)
+      if (!match (symbols[i++], "read"))
 	{
 	  FAIL ();
 	  return;
 	}
     }
   for (; i < n - 1; i++)
-    if (strstr (symbols[i], "fn") == NULL)
+    if (!match (symbols[i], "fn"))
       {
 	FAIL ();
 	return;

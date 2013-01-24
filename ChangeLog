@@ -1,3 +1,31 @@
+2013-01-23  Joseph Myers  <joseph@codesourcery.com>
+
+	* debug/tst-backtrace.h: New file.
+	* debug/tst-backtrace2.c: Include tst-backtrace.h.
+	(ret): Remove variable.
+	(x): Likewise.
+	(FAIL): Remove macro.
+	(NO_INLINE): Likewise.
+	(fn1): Use match function instead of strstr.
+	* debug/tst-backtrace3.c: Include tst-backtrace.h.
+	(ret): Remove variable.
+	(x): Likewise.
+	(FAIL): Remove macro.
+	(NO_INLINE): Likewise.
+	(fn): Use match function instead of strstr.
+	* debug/tst-backtrace4.c: Include tst-backtrace.h.
+	(ret): Remove variable.
+	(x): Likewise.
+	(FAIL): Remove macro.
+	(NO_INLINE): Likewise.
+	(handle_signal): Use match function instead of strstr.
+	* debug/tst-backtrace5.c: Include tst-backtrace.h.
+	(ret): Remove variable.
+	(x): Likewise.
+	(FAIL): Remove macro.
+	(NO_INLINE): Likewise.
+	(handle_signal): Use match function instead of strstr.
+
 2013-01-23  Roland McGrath  <roland@hack.frob.com>
 
 	* misc/sys/cdefs.h (__glibc_unlikely, __glibc_likely): Fix whitespace.

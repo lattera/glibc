@@ -22,26 +22,14 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "tst-backtrace.h"
+
 static int do_test (void);
 #define TEST_FUNCTION do_test ()
 #include "../test-skeleton.c"
 
-/* Set to a non-zero value if the test fails.  */
-int ret;
-
-/* Accesses to X are used to prevent optimization.  */
-volatile int x;
-
-/* Called if the test fails.  */
-#define FAIL() \
-  do { printf ("Failure on line %d\n", __LINE__); ret = 1; } while (0)
-
 /* The backtrace should include at least f1, f2, f3, and do_test.  */
 #define NUM_FUNCTIONS 4
-
-/* Use this attribute to prevent inlining, so that all expected frames
-   are present.  */
-#define NO_INLINE __attribute__ ((noinline))
 
 NO_INLINE void
 fn1 (void)
@@ -71,14 +59,14 @@ fn1 (void)
   for (i = 0; i < n; ++i)
     printf ("Function %d: %s\n", i, symbols[i]);
   /* Check that the function names obtained are accurate.  */
-  if (strstr (symbols[0], "fn1") == NULL)
+  if (!match (symbols[0], "fn1"))
     {
       FAIL ();
       return;
     }
   /* Symbol names are not available for static functions, so we do not
      check f2.  */
-  if (strstr (symbols[2], "fn3") == NULL)
+  if (!match (symbols[2], "fn3"))
     {
       FAIL ();
       return;
