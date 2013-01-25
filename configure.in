@@ -17,6 +17,23 @@ AC_DEFUN([_AC_INCLUDES_DEFAULT_REQUIREMENTS],
   [m4_divert_text([DEFAULTS],
     [ac_includes_default='/* none */'])])
 
+# We require GCC, and by default use its preprocessor.  Override AC_PROG_CPP
+# here to work around the Autoconf issue discussed in
+# <http://sourceware.org/ml/libc-alpha/2013-01/msg00721.html>.
+AC_DEFUN([AC_PROG_CPP],
+[AC_REQUIRE([AC_PROG_CC])dnl
+AC_ARG_VAR([CPP],      [C preprocessor])dnl
+_AC_ARG_VAR_CPPFLAGS()dnl
+# On Suns, sometimes $CPP names a directory.
+if test -n "$CPP" && test -d "$CPP"; then
+  CPP=
+fi
+if test -z "$CPP"; then
+  CPP="$CC -E"
+fi
+AC_SUBST(CPP)dnl
+])# AC_PROG_CPP
+
 dnl This is here so we can set $subdirs directly based on configure fragments.
 AC_CONFIG_SUBDIRS()
 
