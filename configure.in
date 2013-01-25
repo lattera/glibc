@@ -34,6 +34,11 @@ fi
 AC_SUBST(CPP)dnl
 ])# AC_PROG_CPP
 
+# We require GCC.  Override _AC_PROG_CC_C89 here to work around the Autoconf
+# issue discussed in
+# <http://sourceware.org/ml/libc-alpha/2013-01/msg00757.html>.
+AC_DEFUN([_AC_PROG_CC_C89], [[$1]])
+
 dnl This is here so we can set $subdirs directly based on configure fragments.
 AC_CONFIG_SUBDIRS()
 

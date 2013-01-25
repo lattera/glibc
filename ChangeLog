@@ -1,5 +1,8 @@
 2013-01-25  Thomas Schwinge  <thomas@codesourcery.com>
 
+	* configure.in (_AC_PROG_CC_C89): New definition.
+	* configure: Regenerate.
+
 	* configure.in (AC_PROG_CPP): New definition.
 	* configure: Regenerate.
 
