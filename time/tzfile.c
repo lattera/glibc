@@ -24,6 +24,7 @@
 #include <time.h>
 #include <unistd.h>
 #include <sys/stat.h>
+#include <stdint.h>
 
 #define	NOID
 #include <timezone/tzfile.h>
