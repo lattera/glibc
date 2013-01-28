@@ -1,3 +1,11 @@
+2013-02-04  Andreas Schwab  <schwab@suse.de>
+
+	[BZ #14142]
+	* tst-cancel14.c: Include <sys/time.h>.
+	* tst-cancel15.c: Likewise.
+	* tst-mutex9.c: Include <stdint.h>, <stdlib.h> and <sys/time.h>.
+	* tst-stackguard1.c: Include <tls.h>
+
 2013-01-16  Andreas Schwab  <schwab@suse.de>
 
 	[BZ #14327]

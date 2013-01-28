@@ -1,3 +1,10 @@
+2013-02-04  Andreas Schwab  <schwab@suse.de>
+
+	[BZ #14142]
+	* include/errno.h: Redefine errno only if !NOT_IN_libc || IN_LIB.
+	* include/netdb.h: Likewise for h_errno.
+	* elf/tst-stackguard1.c: Include <tls.h>.
+
 2013-02-02  Jan Kratochvil  <jan.kratochvil@redhat.com>
 
 	* elf/link.h (struct link_map): Extend the l_addr comment.

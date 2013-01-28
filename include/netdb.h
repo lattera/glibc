@@ -3,18 +3,20 @@
 
 #ifndef _ISOMAC
 /* Macros for accessing h_errno from inside libc.  */
-# undef  h_errno
-# ifdef _LIBC_REENTRANT
-#  include <tls.h>
-#  ifndef NOT_IN_libc
-#   define h_errno __libc_h_errno
-#  else
-#   define h_errno h_errno	/* For #ifndef h_errno tests.  */
-#  endif
+# if !defined NOT_IN_libc || defined IN_LIB
+#  undef  h_errno
+#  ifdef _LIBC_REENTRANT
+#   include <tls.h>
+#   ifndef NOT_IN_libc
+#    define h_errno __libc_h_errno
+#   else
+#    define h_errno h_errno	/* For #ifndef h_errno tests.  */
+#   endif
 extern __thread int h_errno attribute_tls_model_ie;
-# else
+#  else
 extern int h_errno;
-# endif	/* _LIBC_REENTRANT */
+#  endif	/* _LIBC_REENTRANT */
+# endif /* !NOT_IN_libc || IN_LIB */
 # define __set_h_errno(x) (h_errno = (x))
 
 libc_hidden_proto (hstrerror)

@@ -24,6 +24,7 @@
 #include <string.h>
 #include <sys/wait.h>
 #include <stackguard-macros.h>
+#include <tls.h>
 #include <unistd.h>
 
 static const char *command;
