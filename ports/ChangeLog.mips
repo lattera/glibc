@@ -1,3 +1,9 @@
+2013-01-29  Maciej W. Rozycki  <macro@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/mips/mips64/n32/sysdep.h: Correct
+	whitespace damage throughout.
+	* sysdeps/unix/sysv/linux/mips/mips64/n64/sysdep.h: Likewise.
+
 2013-01-25  Steve Ellcey  <sellcey@mips.com>
 
 	* sysdeps/mips/memmove.c: Remove.
