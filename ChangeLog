@@ -1,5 +1,14 @@
 2013-02-12  Andreas Schwab  <schwab@suse.de>
 
+	[BZ #15078]
+	* posix/regexec.c (extend_buffers): Add parameter min_len.
+	(check_matching): Pass minimum needed length.
+	(clean_state_log_if_needed): Likewise.
+	(get_subexp): Likewise.
+	* posix/Makefile (tests): Add bug-regex34.
+	(bug-regex34-ENV): Define.
+	* posix/bug-regex34.c: New file.
+
 	[BZ #11561]
 	* posix/regcomp.c (parse_bracket_exp): When looking up collating
 	elements compare against the byte sequence of it, not its name.
