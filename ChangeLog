@@ -1,3 +1,17 @@
+2013-01-31  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #15062]
+	* math/k_casinh.c (__kernel_casinh): Compute real and imaginary
+	parts of result separately when argument is not close to line from
+	-i to i and one part of argument is small.
+	* math/k_casinhf.c (__kernel_casinhf): Likewise.
+	* math/k_casinhl.c (__kernel_casinhl): Likewise.
+	* math/libm-test.inc (cacos_test): Add more tests.
+	(casin_test): Likewise.
+	(casinh_test): Likewise.
+	* sysdeps/i386/fpu/libm-test-ulps: Update.
+	* sysdeps/x86_64/fpu/libm-test-ulps: Likewise.
+
 2013-01-31  David S. Miller  <davem@davemloft.net>
 
 	* po/de.po: Update from translation team.

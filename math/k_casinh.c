@@ -57,6 +57,26 @@ __kernel_casinh (__complex__ double x, int adj)
       res = __clog (y);
       __real__ res += M_LN2;
     }
+  else if (rx >= 0.5 && ix < DBL_EPSILON / 8.0)
+    {
+      double s = __ieee754_hypot (1.0, rx);
+
+      __real__ res = __ieee754_log (rx + s);
+      if (adj)
+	__imag__ res = __ieee754_atan2 (s, __imag__ x);
+      else
+	__imag__ res = __ieee754_atan2 (ix, s);
+    }
+  else if (rx < DBL_EPSILON / 8.0 && ix >= 1.5)
+    {
+      double s = __ieee754_sqrt ((ix + 1.0) * (ix - 1.0));
+
+      __real__ res = __ieee754_log (ix + s);
+      if (adj)
+	__imag__ res = __ieee754_atan2 (rx, __copysign (s, __imag__ x));
+      else
+	__imag__ res = __ieee754_atan2 (s, rx);
+    }
   else
     {
       __real__ y = (rx - ix) * (rx + ix) + 1.0;

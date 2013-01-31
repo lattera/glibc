@@ -57,6 +57,26 @@ __kernel_casinhf (__complex__ float x, int adj)
       res = __clogf (y);
       __real__ res += (float) M_LN2;
     }
+  else if (rx >= 0.5f && ix < FLT_EPSILON / 8.0f)
+    {
+      float s = __ieee754_hypotf (1.0f, rx);
+
+      __real__ res = __ieee754_logf (rx + s);
+      if (adj)
+	__imag__ res = __ieee754_atan2f (s, __imag__ x);
+      else
+	__imag__ res = __ieee754_atan2f (ix, s);
+    }
+  else if (rx < FLT_EPSILON / 8.0f && ix >= 1.5f)
+    {
+      float s = __ieee754_sqrtf ((ix + 1.0f) * (ix - 1.0f));
+
+      __real__ res = __ieee754_logf (ix + s);
+      if (adj)
+	__imag__ res = __ieee754_atan2f (rx, __copysignf (s, __imag__ x));
+      else
+	__imag__ res = __ieee754_atan2f (s, rx);
+    }
   else
     {
       __real__ y = (rx - ix) * (rx + ix) + 1.0;
