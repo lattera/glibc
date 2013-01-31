@@ -1,6 +1,12 @@
 2013-01-31  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #13550]
+	* sysdeps/generic/bp-checks.h (CHECK_IOCTL): Remove both
+	definitions.
+	(CHECK_FCNTL): Likewise.
+	(CHECK_N_PAGES): Likewise.
+
+	[BZ #13550]
 	* sysdeps/generic/bp-checks.h (CHECK_SIGSET): Remove both
 	definitions.
 	(CHECK_SIGSET_NULL_OK): Likewise.

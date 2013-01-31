@@ -66,30 +66,6 @@ extern void *__unbounded __ubp_memchr (const void *__unbounded, int, unsigned);
 /* Same as CHECK_STRING, but tolerate ARG == NULL.  */
 # define CHECK_STRING_NULL_OK(ARG) _CHECK_STRING ((ARG), __ptrvalue (ARG))
 
-# if defined (_IOC_SIZESHIFT) && defined (_IOC_SIZEBITS)
-/* Extract the size of the ioctl data and check its bounds.  */
-#  define CHECK_IOCTL(ARG, CMD)						\
-  CHECK_N ((const char *) (ARG),					\
-	   (((CMD) >> _IOC_SIZESHIFT) & ((1 << _IOC_SIZEBITS) - 1)))
-# else
-/* We don't know the size of the ioctl data, so the best we can do
-   is check that the first byte is within bounds.  */
-#  define CHECK_IOCTL(ARG, CMD) CHECK_1 ((const char *) ARG)
-# endif
-
-/* Check bounds of `struct flock *' for the locking fcntl commands.  */
-# define CHECK_FCNTL(ARG, CMD)					\
-  (((CMD) == F_GETLK || (CMD) == F_SETLK || (CMD) == F_SETLKW)	\
-   ? CHECK_1 ((struct flock *) ARG) : (unsigned long) (ARG))
-
-/* Check bounds of an array of mincore residency-status flags that
-   cover a region of NBYTES.  Such a vector occupies one byte per page
-   of memory.  */
-# define CHECK_N_PAGES(ARG, NBYTES)				\
-  ({ int _page_size_ = sysconf (_SC_PAGE_SIZE);			\
-     CHECK_N ((const char *) (ARG),				\
-	      ((NBYTES) + _page_size_ - 1) / _page_size_); })
-
 /* Return a bounded pointer with value PTR that satisfies CHECK_N (PTR, N).  */
 # define BOUNDED_N(PTR, N) 				\
   ({ __typeof (PTR) __bounded _p_;			\
@@ -109,9 +85,6 @@ extern void *__unbounded __ubp_memchr (const void *__unbounded, int, unsigned);
 # define CHECK_N(ARG, N) (ARG)
 # define CHECK_N_NULL_OK(ARG, N) (ARG)
 # define CHECK_STRING(ARG) (ARG)
-# define CHECK_IOCTL(ARG, CMD) (ARG)
-# define CHECK_FCNTL(ARG, CMD) (ARG)
-# define CHECK_N_PAGES(ARG, NBYTES) (ARG)
 # define BOUNDED_N(PTR, N) (PTR)
 
 #endif /* !__BOUNDED_POINTERS__ */
