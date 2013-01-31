@@ -1,3 +1,10 @@
+2013-01-31  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #13550]
+	* sysdeps/unix/sysv/linux/mips/mips64/semctl.c: Don't include
+	<bp-checks.h> and <bp-semctl.h>.
+	(__semctl): Don't use CHECK_SEMCTL.
+
 2013-01-29  Maciej W. Rozycki  <macro@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/mips/mips64/n32/sysdep.h: Correct

@@ -33,9 +33,6 @@ union semun
   struct seminfo *__buf;	/* buffer for IPC_INFO */
 };
 
-#include <bp-checks.h>
-#include <bp-semctl.h>		/* definition of CHECK_SEMCTL needs union semum */
-
 /* Return identifier for array of NSEMS semaphores associated with
    KEY.  */
 
@@ -53,5 +50,5 @@ semctl (int semid, int semnum, int cmd, ...)
   va_end (ap);
 
   return INLINE_SYSCALL (ipc, 5, IPCOP_semctl, semid, semnum, cmd,
-			 CHECK_SEMCTL (&arg, semid, cmd)->array);
+			 arg.array);
 }

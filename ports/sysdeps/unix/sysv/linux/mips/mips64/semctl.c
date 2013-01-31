@@ -30,9 +30,6 @@ union semun
   struct seminfo *__buf;	/* buffer for IPC_INFO */
 };
 
-#include <bp-checks.h>
-#include <bp-semctl.h>		/* definition of CHECK_SEMCTL needs union semum */
-
 int __semctl (int semid, int semnum, int cmd, ...);
 
 int
@@ -49,7 +46,7 @@ __semctl (int semid, int semnum, int cmd, ...)
   va_end (ap);
 
   return INLINE_SYSCALL (semctl, 4, semid, semnum, cmd | __IPC_64,
-			 CHECK_SEMCTL (&arg, semid, cmd | __IPC_64)->array);
+			 arg.array);
 }
 
 #include <shlib-compat.h>

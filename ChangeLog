@@ -1,6 +1,24 @@
 2013-01-31  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #13550]
+	* sysdeps/generic/bp-semctl.h: Remove file.
+	* sysdeps/unix/sysv/linux/i386/semctl.c: Don't include
+	<bp-checks.h> and <bp-semctl.h>.
+	(__old_semctl): Don't use CHECK_SEMCTL.
+	(__new_semctl): Likewise.
+	* sysdeps/unix/sysv/linux/semctl.c: Don't include <bp-checks.h>
+	and <bp-semctl.h>.
+	(__old_semctl): Don't use CHECK_SEMCTL.
+	(__new_semctl): Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/semctl.c: Don't include
+	<bp-checks.h> and <bp-semctl.h>.
+	(__old_semctl): Don't use CHECK_SEMCTL.
+	(__new_semctl): Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/semctl.c: Don't include
+	<bp-checks.h> and <bp-semctl.h>.
+	(semctl): Don't use CHECK_SEMCTL.
+
+	[BZ #13550]
 	* Makerules (elide-bp-thunks): Remove variable.
 	(elide-routines.oS): Don't use $(elide-bp-thunks).
 	(elide-routines.os): Likewise.
