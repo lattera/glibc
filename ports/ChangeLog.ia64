@@ -1,3 +1,13 @@
+2013-01-31  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #13550]
+	* sysdeps/unix/sysv/linux/ia64/sigpending.c: Don't include
+	<bp-checks.h>.
+	(sigpending): Don't use CHECK_SIGSET.
+	* sysdeps/unix/sysv/linux/ia64/sigprocmask.c: Don't include
+	<bp-checks.h>.
+	(__sigprocmask): Don't use CHECK_SIGSET and CHECK_SIGSET_NULL_OK.
+
 2013-01-02  Joseph Myers  <joseph@codesourcery.com>
 
 	* All files with FSF copyright notices: Update copyright dates

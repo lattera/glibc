@@ -22,7 +22,6 @@
 
 #include <sysdep.h>
 #include <sys/syscall.h>
-#include <bp-checks.h>
 
 #include <kernel-features.h>
 
@@ -55,7 +54,6 @@ __sigprocmask (how, set, oset)
     }
 #endif
 
-  return INLINE_SYSCALL (rt_sigprocmask, 4, how, CHECK_SIGSET_NULL_OK (set),
-			 CHECK_SIGSET_NULL_OK (oset), _NSIG / 8);
+  return INLINE_SYSCALL (rt_sigprocmask, 4, how, set, oset, _NSIG / 8);
 }
 weak_alias (__sigprocmask, sigprocmask)

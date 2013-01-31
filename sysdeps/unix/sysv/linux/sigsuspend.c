@@ -21,7 +21,6 @@
 
 #include <sysdep-cancel.h>
 #include <sys/syscall.h>
-#include <bp-checks.h>
 
 #include <kernel-features.h>
 
@@ -29,7 +28,7 @@
 static inline int __attribute__ ((always_inline))
 do_sigsuspend (const sigset_t *set)
 {
-  return INLINE_SYSCALL (rt_sigsuspend, 2, CHECK_SIGSET (set), _NSIG / 8);
+  return INLINE_SYSCALL (rt_sigsuspend, 2, set, _NSIG / 8);
 }
 
 /* Change the set of blocked signals to SET,

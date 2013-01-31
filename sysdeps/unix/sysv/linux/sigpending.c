@@ -21,7 +21,6 @@
 
 #include <sysdep.h>
 #include <sys/syscall.h>
-#include <bp-checks.h>
 
 #include <kernel-features.h>
 
@@ -32,5 +31,5 @@ int
 sigpending (set)
      sigset_t *set;
 {
-  return INLINE_SYSCALL (rt_sigpending, 2, CHECK_SIGSET (set), _NSIG / 8);
+  return INLINE_SYSCALL (rt_sigpending, 2, set, _NSIG / 8);
 }

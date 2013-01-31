@@ -51,7 +51,7 @@ do_sigtimedwait (const sigset_t *set, siginfo_t *info,
 
     /* XXX The size argument hopefully will have to be changed to the
        real size of the user-level sigset_t.  */
-  int result = INLINE_SYSCALL (rt_sigtimedwait, 4, CHECK_SIGSET (set),
+  int result = INLINE_SYSCALL (rt_sigtimedwait, 4, set,
 			       CHECK_1 (info), timeout, _NSIG / 8);
 
   /* The kernel generates a SI_TKILL code in si_code in case tkill is

@@ -1,6 +1,38 @@
 2013-01-31  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #13550]
+	* sysdeps/generic/bp-checks.h (CHECK_SIGSET): Remove both
+	definitions.
+	(CHECK_SIGSET_NULL_OK): Likewise.
+	* sysdeps/unix/sysv/linux/sigpending.c: Don't include
+	<bp-checks.h>.
+	(sigpending): Don't use CHECK_SIGSET.
+	* sysdeps/unix/sysv/linux/sigprocmask.c: Don't include
+	<bp-checks.h>.
+	(__sigprocmask): Don't use CHECK_SIGSET and CHECK_SIGSET_NULL_OK.
+	* sysdeps/unix/sysv/linux/sigsuspend.c: Don't include
+	<bp-checks.h>.
+	(do_sigsuspend): Don't use CHECK_SIGSET.
+	* sysdeps/unix/sysv/linux/sigtimedwait.c (do_sigtimedwait): Don't
+	use CHECK_SIGSET.
+	* sysdeps/unix/sysv/linux/sigwait.c: Don't include <bp-checks.h>.
+	(do_sigwait): Don't use CHECK_SIGSET.
+	* sysdeps/unix/sysv/linux/sigwaitinfo.c (do_sigwaitinfo): Don't
+	use CHECK_SIGSET.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/sigpending.c: Don't
+	include <bp-checks.h>.
+	(sigpending): Don't use CHECK_SIGSET.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/sigprocmask.c: Don't
+	include <bp-checks.h>.
+	(__sigprocmask): Don't use CHECK_SIGSET and CHECK_SIGSET_NULL_OK.
+	* sysdeps/unix/sysv/linux/x86_64/sigpending.c: Don't include
+	<bp-checks.h>.
+	(sigpending): Don't use CHECK_SIGSET.
+	* sysdeps/unix/sysv/linux/x86_64/sigprocmask.c: Don't include
+	<bp-checks.h>.
+	(__sigprocmask): Don't use CHECK_SIGSET and CHECK_SIGSET_NULL_OK.
+
+	[BZ #13550]
 	* sysdeps/generic/bp-semctl.h: Remove file.
 	* sysdeps/unix/sysv/linux/i386/semctl.c: Don't include
 	<bp-checks.h> and <bp-semctl.h>.

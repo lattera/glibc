@@ -23,7 +23,6 @@
 
 #include <sysdep-cancel.h>
 #include <sys/syscall.h>
-#include <bp-checks.h>
 
 #ifdef __NR_rt_sigtimedwait
 
@@ -58,7 +57,7 @@ do_sigwait (const sigset_t *set, int *sig)
 #ifdef INTERNAL_SYSCALL
   INTERNAL_SYSCALL_DECL (err);
   do
-    ret = INTERNAL_SYSCALL (rt_sigtimedwait, err, 4, CHECK_SIGSET (set),
+    ret = INTERNAL_SYSCALL (rt_sigtimedwait, err, 4, set,
 			    NULL, NULL, _NSIG / 8);
   while (INTERNAL_SYSCALL_ERROR_P (ret, err)
 	 && INTERNAL_SYSCALL_ERRNO (ret, err) == EINTR);
@@ -71,8 +70,7 @@ do_sigwait (const sigset_t *set, int *sig)
     ret = INTERNAL_SYSCALL_ERRNO (ret, err);
 #else
   do
-    ret = INLINE_SYSCALL (rt_sigtimedwait, 4, CHECK_SIGSET (set),
-			  NULL, NULL, _NSIG / 8);
+    ret = INLINE_SYSCALL (rt_sigtimedwait, 4, set, NULL, NULL, _NSIG / 8);
   while (ret == -1 && errno == EINTR);
   if (ret != -1)
     {

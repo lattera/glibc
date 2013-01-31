@@ -66,11 +66,6 @@ extern void *__unbounded __ubp_memchr (const void *__unbounded, int, unsigned);
 /* Same as CHECK_STRING, but tolerate ARG == NULL.  */
 # define CHECK_STRING_NULL_OK(ARG) _CHECK_STRING ((ARG), __ptrvalue (ARG))
 
-/* Check bounds of signal syscall args with type sigset_t.  */
-# define CHECK_SIGSET(SET) CHECK_N ((SET), _NSIG / (8 * sizeof *(SET)))
-/* Same as CHECK_SIGSET, but tolerate SET == NULL.  */
-# define CHECK_SIGSET_NULL_OK(SET) CHECK_N_NULL_OK ((SET), _NSIG / (8 * sizeof *(SET)))
-
 # if defined (_IOC_SIZESHIFT) && defined (_IOC_SIZEBITS)
 /* Extract the size of the ioctl data and check its bounds.  */
 #  define CHECK_IOCTL(ARG, CMD)						\
@@ -114,8 +109,6 @@ extern void *__unbounded __ubp_memchr (const void *__unbounded, int, unsigned);
 # define CHECK_N(ARG, N) (ARG)
 # define CHECK_N_NULL_OK(ARG, N) (ARG)
 # define CHECK_STRING(ARG) (ARG)
-# define CHECK_SIGSET(SET) (SET)
-# define CHECK_SIGSET_NULL_OK(SET) (SET)
 # define CHECK_IOCTL(ARG, CMD) (ARG)
 # define CHECK_FCNTL(ARG, CMD) (ARG)
 # define CHECK_N_PAGES(ARG, NBYTES) (ARG)
