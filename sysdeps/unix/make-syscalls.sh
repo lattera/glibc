@@ -36,10 +36,6 @@
 # W: wait status, optionally-NULL pointer to int (e.g., 2nd arg of wait4)
 #
 
-ptr='[abBfFINpPsSWV]'	# all pointer keyletters
-int='[inv]'		# all scalar keyletters
-typ='[ifnNpP]'		# typed-arg keyletters: we capture type for use in thunk
-
 ##############################################################################
 
 thisdir=$1; shift
@@ -312,115 +308,5 @@ while read file srcfile caller syscall args strong weak; do
   echo endif
  ;;
  esac
-
-  case x"$callnum",$srcfile,$args in
-  x[_-],-,* | x*,*.[sS],*V*) ;;
-  x*,-,*$ptr* | x*,*.[sS],*$ptr*)
-
-    nv_weak=`for name in $weak; do
-		case $name in
-		*@*) ;;
-		*) echo $name;;
-	        esac; done`
-
-    # choose the name with the fewest leading underscores, preferably none
-    set `echo $strong $nv_weak |tr '@ \t' ' \n\n' |sort -r`
-    callname=$1
-
-    # convert signature string to individual numbered arg names
-    # e.g., i:ipbN -> i0 i1 p2 b3 N4
-    set `echo $args |
-	sed -e 's/^\(.\):\(.*\)/\2 <\10>/' \
-	    -e 's/^\([^ ]\)\(.*\)/\2 <\11>/' \
-	    -e 's/^\([^ ]\)\(.*\)/\2 <\12>/' \
-	    -e 's/^\([^ ]\)\(.*\)/\2 <\13>/' \
-	    -e 's/^\([^ ]\)\(.*\)/\2 <\14>/' \
-	    -e 's/^\([^ ]\)\(.*\)/\2 <\15>/' \
-	    -e 's/^\([^ ]\)\(.*\)/\2 <\16>/' \
-	    -e 's/^\([^ ]\)\(.*\)/\2 <\17>/' \
-	    -e 's/^\([^ ]\)\(.*\)/\2 <\18>/' \
-	    -e 's/^\([^ ]\)\(.*\)/\2 <\19>/'`
-    rtn=$1; shift
-    args=$*
-    arglist=`echo $* |sed 's/ /, /g'`
-
-    # The best way to understand what's going on here is to examine
-    # the output in BUILDDIR/sysd-syscalls.
-
-    # generate makefile envelope & rule head
-    echo "ifeq (,\$(filter $file,\$(bp-thunks)))"
-    echo "bp-thunks += $file"
-    echo "\$(objpfx)\$(bppfx)$file.ob: \$(common-objpfx)s-proto-bp.d"
-
-    # generate macro head
-    echo "	(echo '#define $callname(`echo $arglist | \
-	    sed -e 's/[<>]//g'`) `echo $rtn | \
-	    sed -e 's/<\('$typ'0\)>/\1v;/g' \
-		-e 's/<\(b0\)>/x0; extern char \1v;/g'` \\'; \\"
-
-    # generate extern decls of dummy variables for each arg
-    echo "	 echo '`echo $args | \
-	    sed -e 's/<\('$typ'[1-9]\)>/extern \1, \1v;/g' \
-		-e 's/<\([abBFIsSV][1-9]\)>/extern char \1v;/g' \
-		-e 's/<\([Wv][1-9]\)>/extern int \1v;/g'` \\'; \\"
-
-    # generate bounded-pointer thunk declarator
-    echo "	 echo '`echo $rtn | \
-	    sed -e 's/<\('$ptr'0\)>/__typeof (\1v) *__bounded/g' \
-		-e 's/<\('$int'0\)>/__typeof (\1v)/g'` BP_SYM ($strong) (`echo $arglist | \
-	    sed -e 's/<\('$ptr'[1-9]\)>/__typeof (\1v) *__bounded \1a/g' \
-		-e 's/<\('$int'[1-9]\)>/__typeof (\1v) \1a/g'`) { \\'; \\"
-
-    # generate extern primitive syscall declaration
-    echo "	 echo '  extern `echo $rtn | \
-	    sed -e 's/<\('$ptr'0\)>/__typeof (\1v) *__unbounded/g' \
-		-e 's/<\('$int'0\)>/__typeof (\1v)/g'` ($callname) (`echo $arglist | \
-	    sed -e 's/<\('$ptr'[1-9]\)>/__typeof (\1v) *__unbounded/g' \
-		-e 's/<\('$int'[1-9]\)>/__typeof (\1v)/g'`); \\'; \\"
-
-    # generate call the primtive system call, optionally wrapping bounds
-    # around the result if the signature's return keyletter is `b'.
-    echo "	 echo '  return `echo $rtn |
-	    sed -e 's/<b0>/BOUNDED_N (/' \
-		-e 's/<.0>//'`($callname) (`echo $arglist | \
-	    sed -e 's/<\(a[1-9]\)>/__ptrvalue (\1a)/g' \
-		-e 's/<\(n[1-9]\)>, <\(V[1-9]\)>/\1a, CHECK_N_PAGES (\2a, \1a)/g' \
-		-e 's/<\(b[1-9]\)>, <\(n[1-9]\)>/CHECK_N (\1a, \2a), \2a/g' \
-		-e 's/<\(b[1-9]\)>, <\(N[1-9]\)>/CHECK_N (\1a, *CHECK_1 (\2a)), __ptrvalue (\2a)/g' \
-		-e 's/<\(B[1-9]\)>, <\(n[1-9]\)>/CHECK_N_NULL_OK (\1a, \2a), \2a/g' \
-		-e 's/<\(B[1-9]\)>, <\(N[1-9]\)>/CHECK_N_NULL_OK (\1a, *CHECK_1 (\2a)), __ptrvalue (\2a)/g' \
-		-e 's/<\(f[1-9]\)>/CHECK_N (\1a, 2)/g' \
-		-e 's/<\(i[1-9]\)>, <\(F[1-9]\)>/\1a, CHECK_FCNTL (\2a, \1a)/g' \
-		-e 's/<\(i[1-9]\)>, <\(I[1-9]\)>/\1a, CHECK_IOCTL (\2a, \1a)/g' \
-		-e 's/<\(p[1-9]\)>/CHECK_1 (\1a)/g' \
-		-e 's/<\([PW][1-9]\)>/CHECK_1_NULL_OK (\1a)/g' \
-		-e 's/<\(s[1-9]\)>/CHECK_STRING (\1a)/g' \
-		-e 's/<\(S[1-9]\)>/CHECK_STRING_NULL_OK (\1a)/g' \
-		-e 's/<\([ivn][1-9]\)>/\1a/g'`)`echo $rtn $args |
-	    sed -e 's/<b0>.*<\(n[1-9]\)>.*/, \1a)/' \
-		-e 's/<.0>.*//'`; \\'; \\"
-
-    echo "	 echo '} \\'; \\"
-
-    echo "	 echo 'libc_hidden_def (BP_SYM ($strong)) \\'; \\"
-
-    # generate thunk aliases
-    for name in $nv_weak; do
-      echo "	 echo 'weak_alias (BP_SYM ($strong), BP_SYM ($name)) \\'; \\"
-      echo "	 echo 'libc_hidden_weak (BP_SYM ($name)) \\'; \\"
-    done
-
-    # wrap up
-    echo "\
-	 echo ''; \\
-	 echo '#include <bp-thunks.h>'; \\
-	) | \$(COMPILE.c) -x c -o \$@ -"
-### Use this for debugging intermediate output:
-### 	) >\$(@:.ob=.c)
-### 	\$(subst -c,-E,\$(COMPILE.c)) -o \$(@:.ob=.ib) \$(@:.ob=.c)
-### 	\$(COMPILE.c) -x cpp-output -o \$@ \$(@:.ob=.ib)"
-    echo endif
-    ;;
-  esac
 
 done

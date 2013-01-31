@@ -88,21 +88,10 @@ $(common-objpfx)sysd-syscalls: $(..)sysdeps/unix/make-syscalls.sh \
 	mv -f $@T $@
 endif
 
-# The $(bppfx)syscall.ob objects depend on s-proto-bp.d, which are
-# generated to specify dependencies generated BP stubs have on headers.
-# These deps use file names relative to a subdir, so don't
-# include them in the parent directory.
-ifneq (,$(filter $(unix-syscalls),$(routines) $(sysdep_routines) $(aux)))
-ifndef no_deps
--include $(common-objpfx)s-proto-bp.d
-endif
-endif
-
 $(common-objpfx)s-%.d: $(..)sysdeps/unix/s-%.S \
 		       $(wildcard $(+sysdep_dirs:%=%/syscalls.list))
 	$(+make-deps)
 
-common-generated += s-proto-bp.d
 postclean-generated += sysd-syscalls
 
 endif

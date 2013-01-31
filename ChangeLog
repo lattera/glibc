@@ -1,5 +1,24 @@
 2013-01-31  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #13550]
+	* Makerules (elide-bp-thunks): Remove variable.
+	(elide-routines.oS): Don't use $(elide-bp-thunks).
+	(elide-routines.os): Likewise.
+	(elide-routines.o): Likewise.
+	(elide-routines.op): Likewise.
+	(elide-routines.og): Likewise.
+	(objects): Don't use $(bp-thunks).
+	* sysdeps/unix/Makefile ($(common-objpfx)s-proto-bp.d): Do not
+	include.
+	(common-generated): Do not add s-proto-bp.d.
+	* sysdeps/unix/make-syscalls.sh (ptr): Remove variable.
+	(int): Likewise.
+	(typ): Likewise.
+	Do not generate makefile rules for bounded-pointer thunks.
+	* sysdeps/generic/bp-thunks.h: Remove file.
+	* sysdeps/unix/sysv/linux/i386/bp-thunks.h: Likewise.
+	* sysdeps/unix/s-proto-bp.S: Likewise.
+
 	[BZ #15062]
 	* math/k_casinh.c (__kernel_casinh): Compute real and imaginary
 	parts of result separately when argument is not close to line from
