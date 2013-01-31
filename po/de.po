@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GNU libc 2.17-pre1\n"
 "POT-Creation-Date: 2012-12-07 15:10-0500\n"
-"PO-Revision-Date: 2012-12-08 15:07+0100\n"
+"PO-Revision-Date: 2013-01-31 07:16+0100\n"
 "Last-Translator: Jochen Hein <jochen@jochen.org>\n"
 "Language-Team: German <translation-team-de@lists.sourceforge.net>\n"
 "Language: de\n"
@@ -791,7 +791,7 @@ msgstr "%s ist ein unbekannter Bibliothekstyp"
 #: elf/ldconfig.c:409
 #, c-format
 msgid "Can't stat %s"
-msgstr "Kann »stat()« für »%s« nicht aufrufenen"
+msgstr "Kann »stat()« für »%s« nicht aufrufen"
 
 #: elf/ldconfig.c:483
 #, c-format
