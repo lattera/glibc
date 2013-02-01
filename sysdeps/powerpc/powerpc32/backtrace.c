@@ -18,7 +18,6 @@
 
 #include <execinfo.h>
 #include <stddef.h>
-#include <bp-checks.h>
 
 /* This is the stack layout we see with every stack frame.
    Note that every routine is required by the ABI to lay out the stack
@@ -47,11 +46,10 @@ __backtrace (void **array, int size)
 
   /* Get the address on top-of-stack.  */
   asm volatile ("lwz %0,0(1)" : "=r"(current));
-  current = BOUNDED_1 (current);
 
   for (				count = 0;
        current != NULL && 	count < size;
-       current = BOUNDED_1 (current->next), count++)
+       current = current->next, count++)
     array[count] = current->return_address;
 
   /* It's possible the second-last stack frame can't return

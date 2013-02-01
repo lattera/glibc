@@ -19,7 +19,6 @@
 
 #include <execinfo.h>
 #include <stddef.h>
-#include <bp-checks.h>
 #include <sysdep.h>
 #include <sys/trap.h>
 #include <dlfcn.h>
@@ -129,7 +128,6 @@ __backtrace (void **array, int size)
       asm volatile ("mov %%fp, %0" : "=r"(fp));
       asm volatile ("mov %%i7, %0" : "=r"(i7));
       current = (struct layout *__unbounded) (fp + BACKTRACE_STACK_BIAS);
-      current = BOUNDED_1 (current);
 
       array[0] = (void *__unbounded) i7;
 
@@ -144,7 +142,6 @@ __backtrace (void **array, int size)
 	    break;
 	  current = (struct layout *__unbounded) (current->next
 						  + BACKTRACE_STACK_BIAS);
-	  current = BOUNDED_1 (current);
 	}
     }
   else

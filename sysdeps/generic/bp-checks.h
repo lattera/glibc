@@ -66,13 +66,6 @@ extern void *__unbounded __ubp_memchr (const void *__unbounded, int, unsigned);
 /* Same as CHECK_STRING, but tolerate ARG == NULL.  */
 # define CHECK_STRING_NULL_OK(ARG) _CHECK_STRING ((ARG), __ptrvalue (ARG))
 
-/* Return a bounded pointer with value PTR that satisfies CHECK_N (PTR, N).  */
-# define BOUNDED_N(PTR, N) 				\
-  ({ __typeof (PTR) __bounded _p_;			\
-     __ptrvalue _p_ = __ptrlow _p_ = __ptrvalue (PTR);	\
-     __ptrhigh _p_ = __ptrvalue _p_ + (N);		\
-     _p_; })
-
 #else /* !__BOUNDED_POINTERS__ */
 
 /* Do nothing if not compiling with -fbounded-pointers.  */
@@ -85,10 +78,7 @@ extern void *__unbounded __ubp_memchr (const void *__unbounded, int, unsigned);
 # define CHECK_N(ARG, N) (ARG)
 # define CHECK_N_NULL_OK(ARG, N) (ARG)
 # define CHECK_STRING(ARG) (ARG)
-# define BOUNDED_N(PTR, N) (PTR)
 
 #endif /* !__BOUNDED_POINTERS__ */
-
-#define BOUNDED_1(PTR) BOUNDED_N (PTR, 1)
 
 #endif /* _bp_checks_h_ */

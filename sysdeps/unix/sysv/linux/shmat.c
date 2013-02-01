@@ -23,7 +23,6 @@
 #include <sysdep.h>
 #include <unistd.h>
 #include <sys/syscall.h>
-#include <bp-checks.h>
 
 /* Attach the shared memory segment associated with SHMID to the data
    segment of the calling process.  SHMADDR and SHMFLG determine how
@@ -58,5 +57,5 @@ shmat (shmid, shmaddr, shmflg)
       return (void *) -1l;
     }
 
-  return BOUNDED_N (raddr, length);
+  return raddr;
 }

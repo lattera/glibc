@@ -1,3 +1,22 @@
+2013-02-01  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #13550]
+	* sysdeps/generic/bp-checks.h (BOUNDED_N): Remove all definitions.
+	(BOUNDED_1): Remove macro.
+	* debug/backtrace.c: Don't include <bp-checks.h>.
+	(ADVANCE_STACK_FRAME): Don't use BOUNDED_1.
+	(__backtrace): Likewise.
+	* sysdeps/powerpc/powerpc32/backtrace.c: Don't include
+	<bp-checks.h>.
+	(__backtrace): Don't use BOUNDED_1.
+	* sysdeps/powerpc/powerpc64/backtrace.c: Don't include
+	<bp-checks.h>.
+	(__backtrace): Don't use BOUNDED_1.
+	* sysdeps/sparc/backtrace.c: Don't include <bp-checks.h>.
+	(__backtrace): Don't use BOUNDED_1.
+	* sysdeps/unix/sysv/linux/shmat.c: Don't include <bp-checks.h>.
+	(shmat): Don't use BOUNDED_N.
+
 2013-01-31  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #13550]

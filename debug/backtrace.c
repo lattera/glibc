@@ -21,7 +21,6 @@
 #include <signal.h>
 #include <frame.h>
 #include <sigcontextinfo.h>
-#include <bp-checks.h>
 #include <ldsodefs.h>
 
 /* This implementation assumes a stack layout that matches the defaults
@@ -50,7 +49,7 @@
 /* By default assume the `next' pointer in struct layout points to the
    next struct layout.  */
 #ifndef ADVANCE_STACK_FRAME
-# define ADVANCE_STACK_FRAME(next) BOUNDED_1 ((struct layout *) (next))
+# define ADVANCE_STACK_FRAME(next) ((struct layout *) (next))
 #endif
 
 /* By default, the frame pointer is just what we get from gcc.  */
@@ -72,7 +71,7 @@ __backtrace (array, size)
   top_stack = CURRENT_STACK_FRAME;
 
   /* We skip the call to this function, it makes no sense to record it.  */
-  current = BOUNDED_1 ((struct layout *) top_frame);
+  current = ((struct layout *) top_frame);
   while (cnt < size)
     {
       if ((void *) current INNER_THAN top_stack
