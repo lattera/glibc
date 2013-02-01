@@ -1,6 +1,14 @@
 2013-01-31  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #13550]
+	* sysdeps/generic/bp-start.h: Remove file.
+	* csu/libc-start.c: Don't include <bp-start.h>.
+	(LIBC_START_MAIN): Set up __environ directly instead of using
+	INIT_ARGV_and_ENVIRON.
+	* sysdeps/unix/sysv/linux/powerpc/libc-start.c: Don't include
+	<bp-start.h>.
+
+	[BZ #13550]
 	* sysdeps/generic/bp-checks.h (CHECK_IOCTL): Remove both
 	definitions.
 	(CHECK_FCNTL): Likewise.

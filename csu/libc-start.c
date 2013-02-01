@@ -19,7 +19,6 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <ldsodefs.h>
-#include <bp-start.h>
 #include <bp-sym.h>
 
 extern void __libc_init_first (int argc, char **argv, char **envp);
@@ -140,7 +139,7 @@ LIBC_START_MAIN (int (*main) (int, char **, char ** MAIN_AUXVEC_DECL),
 #ifndef SHARED
   char *__unbounded *__unbounded ubp_ev = &ubp_av[argc + 1];
 
-  INIT_ARGV_and_ENVIRON;
+  __environ = ubp_ev;
 
   /* Store the lowest stack address.  This is done in ld.so if this is
      the code for the DSO.  */
