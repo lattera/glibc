@@ -1,3 +1,7 @@
+2013-02-01  Andreas Jaeger  <aj@suse.de>
+
+	* CHECKSUMS: Remove file.
+
 2013-01-14  Joseph Myers  <joseph@codesourcery.com>
 
 	* Makefile (bug-setlocale1-ARGS): Use $(host-test-program-cmd),
