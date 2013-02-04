@@ -86,7 +86,7 @@ tests		:= tstgetopt testfnm runtests runptests	     \
 		   tst-rfc3484-3 \
 		   tst-getaddrinfo3 tst-fnmatch2 tst-cpucount tst-cpuset \
 		   bug-getopt1 bug-getopt2 bug-getopt3 bug-getopt4 \
-		   bug-getopt5 tst-getopt_long1
+		   bug-getopt5 tst-getopt_long1 bug-regex35
 xtests		:= bug-ga2
 ifeq (yes,$(build-shared))
 test-srcs	:= globtest
@@ -199,6 +199,7 @@ bug-regex26-ENV = LOCPATH=$(common-objpfx)localedata
 bug-regex30-ENV = LOCPATH=$(common-objpfx)localedata
 bug-regex32-ENV = LOCPATH=$(common-objpfx)localedata
 bug-regex33-ENV = LOCPATH=$(common-objpfx)localedata
+bug-regex35-ENV = LOCPATH=$(common-objpfx)localedata
 tst-rxspencer-ARGS = --utf8 rxspencer/tests
 tst-rxspencer-ENV = LOCPATH=$(common-objpfx)localedata
 tst-pcre-ARGS = PCRE.tests

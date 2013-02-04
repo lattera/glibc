@@ -1,3 +1,12 @@
+2013-02-12  Andreas Schwab  <schwab@suse.de>
+
+	[BZ #11561]
+	* posix/regcomp.c (parse_bracket_exp): When looking up collating
+	elements compare against the byte sequence of it, not its name.
+	* posix/Makefile (tests): Add bug-regex35.
+	(bug-regex35-ENV): Define.
+	* posix/bug-regex35.c: New file.
+
 2013-02-11  Tom de Vries  <tom@codesourcery.com>
 
 	* string/str-two-way.h:  Fix typo RESULT_TYPE -> RETURN_TYPE in
