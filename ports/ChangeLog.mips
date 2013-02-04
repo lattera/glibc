@@ -1,3 +1,19 @@
+2013-02-04  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #13550]
+	* sysdeps/unix/sysv/linux/mips/mips32/truncate64.c: Do not include
+	<bp-checks.h>.
+	(truncate64): Do not use CHECK_STRING.
+	* sysdeps/unix/sysv/linux/mips/mips64/fxstatat64.c: Do not include
+	<bp-checks.h>.
+	(__fxstatat64): Do not use CHECK_STRING.
+	* sysdeps/unix/sysv/linux/mips/mips64/lxstat64.c: Do not include
+	<bp-checks.h>.
+	(__lxstat64): Do not use CHECK_STRING.
+	* sysdeps/unix/sysv/linux/mips/mips64/xstat64.c: Do not include
+	<bp-checks.h>.
+	(__xstat64): Do not use CHECK_STRING.
+
 2013-01-31  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #13550]

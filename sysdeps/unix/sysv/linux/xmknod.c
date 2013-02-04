@@ -23,7 +23,6 @@
 
 #include <sysdep.h>
 #include <sys/syscall.h>
-#include <bp-checks.h>
 
 /* Create a device file named PATH, with permission and special bits MODE
    and device number DEV (which can be constructed from major and minor
@@ -47,8 +46,7 @@ __xmknod (int vers, const char *path, mode_t mode, dev_t *dev)
       return -1;
     }
 
-  return INLINE_SYSCALL (mknod, 3, CHECK_STRING (path), mode,
-			 (unsigned int) k_dev);
+  return INLINE_SYSCALL (mknod, 3, path, mode, (unsigned int) k_dev);
 }
 
 weak_alias (__xmknod, _xmknod)

@@ -41,16 +41,6 @@
     && BOUNDS_VIOLATED),				\
    __ptrvalue (ARG))
 
-extern void *__unbounded __ubp_memchr (const void *__unbounded, int, unsigned);
-
-# define _CHECK_STRING(ARG, COND)				\
-  (((COND)							\
-    && (__ptrvalue (ARG) < __ptrlow (ARG)			\
-	|| !__ubp_memchr (__ptrvalue (ARG), '\0',			\
-		      (__ptrhigh (ARG) - __ptrvalue (ARG))))	\
-    && BOUNDS_VIOLATED),					\
-   __ptrvalue (ARG))
-
 /* Check bounds of a pointer seated to an array of N objects.  */
 # define CHECK_N(ARG, N) _CHECK_N ((ARG), (N), 1)
 /* Same as CHECK_N, but tolerate ARG == NULL.  */
@@ -60,11 +50,6 @@ extern void *__unbounded __ubp_memchr (const void *__unbounded, int, unsigned);
 # define CHECK_1(ARG) CHECK_N ((ARG), 1)
 /* Same as CHECK_1, but tolerate ARG == NULL.  */
 # define CHECK_1_NULL_OK(ARG) CHECK_N_NULL_OK ((ARG), 1)
-
-/* Check for NUL-terminator within string's bounds.  */
-# define CHECK_STRING(ARG) _CHECK_STRING ((ARG), 1)
-/* Same as CHECK_STRING, but tolerate ARG == NULL.  */
-# define CHECK_STRING_NULL_OK(ARG) _CHECK_STRING ((ARG), __ptrvalue (ARG))
 
 #else /* !__BOUNDED_POINTERS__ */
 
@@ -77,7 +62,6 @@ extern void *__unbounded __ubp_memchr (const void *__unbounded, int, unsigned);
 # define CHECK_1_NULL_OK(ARG) (ARG)
 # define CHECK_N(ARG, N) (ARG)
 # define CHECK_N_NULL_OK(ARG, N) (ARG)
-# define CHECK_STRING(ARG) (ARG)
 
 #endif /* !__BOUNDED_POINTERS__ */
 

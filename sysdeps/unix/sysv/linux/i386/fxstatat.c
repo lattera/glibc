@@ -102,20 +102,18 @@ __fxstatat (int vers, int fd, const char *file, struct stat *st, int flag)
   if (vers == _STAT_VER_KERNEL)
     {
       if (flag & AT_SYMLINK_NOFOLLOW)
-	result = INTERNAL_SYSCALL (lstat, err, 2, CHECK_STRING (file),
+	result = INTERNAL_SYSCALL (lstat, err, 2, file,
 				   CHECK_1 ((struct kernel_stat *) st));
       else
-	result = INTERNAL_SYSCALL (stat, err, 2, CHECK_STRING (file),
+	result = INTERNAL_SYSCALL (stat, err, 2, file,
 				   CHECK_1 ((struct kernel_stat *) st));
       goto out;
     }
 
   if (flag & AT_SYMLINK_NOFOLLOW)
-    result = INTERNAL_SYSCALL (lstat64, err, 2, CHECK_STRING (file),
-			       __ptrvalue (&st64));
+    result = INTERNAL_SYSCALL (lstat64, err, 2, file, __ptrvalue (&st64));
   else
-    result = INTERNAL_SYSCALL (stat64, err, 2, CHECK_STRING (file),
-			       __ptrvalue (&st64));
+    result = INTERNAL_SYSCALL (stat64, err, 2, file, __ptrvalue (&st64));
   if (__builtin_expect (!INTERNAL_SYSCALL_ERROR_P (result, err), 1))
     return __xstat32_conv (vers, &st64, st);
 

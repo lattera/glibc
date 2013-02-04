@@ -99,11 +99,9 @@ __fxstatat64 (int vers, int fd, const char *file, struct stat64 *st, int flag)
     }
 
   if (flag & AT_SYMLINK_NOFOLLOW)
-    result = INTERNAL_SYSCALL (lstat64, err, 2, CHECK_STRING (file),
-			       CHECK_1 (st));
+    result = INTERNAL_SYSCALL (lstat64, err, 2, file, CHECK_1 (st));
   else
-    result = INTERNAL_SYSCALL (stat64, err, 2, CHECK_STRING (file),
-			       CHECK_1 (st));
+    result = INTERNAL_SYSCALL (stat64, err, 2, file, CHECK_1 (st));
   if (__builtin_expect (!INTERNAL_SYSCALL_ERROR_P (result, err), 1))
     {
 # if defined _HAVE_STAT64___ST_INO && __ASSUME_ST_INO_64_BIT == 0

@@ -41,12 +41,12 @@ __lxstat (int vers, const char *name, struct stat *buf)
   int result;
 
   if (vers == _STAT_VER_KERNEL)
-    return INLINE_SYSCALL (lstat, 2, CHECK_STRING (name), CHECK_1 ((struct kernel_stat *) buf));
+    return INLINE_SYSCALL (lstat, 2, name, CHECK_1 ((struct kernel_stat *) buf));
 
   {
     struct stat64 buf64;
 
-    result = INLINE_SYSCALL (lstat64, 2, CHECK_STRING (name), __ptrvalue (&buf64));
+    result = INLINE_SYSCALL (lstat64, 2, name, __ptrvalue (&buf64));
     if (result == 0)
       result = __xstat32_conv (vers, &buf64, buf);
     return result;

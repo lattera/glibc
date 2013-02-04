@@ -1,3 +1,66 @@
+2013-02-04  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #13550]
+	* sysdeps/generic/bp-checks.h [__BOUNDED_POINTERS__]
+	(__ubp_memchr): Remove prototype.
+	[__BOUNDED_POINTERS__] (_CHECK_STRING): Remove macro.
+	[__BOUNDED_POINTERS__] (CHECK_STRING): Likewise.
+	[__BOUNDED_POINTERS__] (CHECK_STRING_NULL_OK): Likewise.
+	[!__BOUNDED_POINTERS__] (CHECK_STRING): Likewise.
+	* sysdeps/i386/memchr.S [!__BOUNDED_POINTERS__] (__ubp_memchr):
+	Remove alias.
+	* sysdeps/sparc/sparc32/memchr.S [!__BOUNDED_POINTERS__]
+	(__ubp_memchr): Likewise.
+	* sysdeps/sparc/sparc64/memchr.S [!__BOUNDED_POINTERS__]
+	(__ubp_memchr): Likewise.
+	* sysdeps/unix/sysv/linux/execve.c: Do not include <bp-checks.h>.
+	(__execve) [__BOUNDED_POINTERS__]: Remove conditional code.
+	(__execve) [!__BOUNDED_POINTERS__]: Make code unconditional.
+	* sysdeps/unix/sysv/linux/fxstatat.c (__fxstatat): Do not use
+	CHECK_STRING.
+	* sysdeps/unix/sysv/linux/fxstatat64.c (__fxstatat64): Likewise.
+	* sysdeps/unix/sysv/linux/getcwd.c: Do not include <bp-checks.h>.
+	(__getcwd): Do not use CHECK_STRING.
+	* sysdeps/unix/sysv/linux/i386/chown.c: Do not include
+	<bp-checks.h>.
+	(__real_chown): Do not use CHECK_STRING.
+	* sysdeps/unix/sysv/linux/i386/fchownat.c: Do not include
+	<bp-checks.h>.
+	(fchownat): Do not use CHECK_STRING.
+	* sysdeps/unix/sysv/linux/i386/fxstatat.c (__fxstatat): Do not use
+	CHECK_STRING.
+	* sysdeps/unix/sysv/linux/i386/lchown.c: Do not include
+	<bp-checks.h>.
+	(__lchown): Do not use CHECK_STRING.
+	* sysdeps/unix/sysv/linux/i386/lxstat.c (__lxstat): Likewise.
+	* sysdeps/unix/sysv/linux/i386/xstat.c (__xstat): Likewise.
+	* sysdeps/unix/sysv/linux/lxstat.c (__lxstat): Likewise.
+	* sysdeps/unix/sysv/linux/lxstat64.c (___lxstat64): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/truncate64.c: Do not
+	include <bp-checks.h>.
+	(truncate64): Do not use CHECK_STRING.
+	* sysdeps/unix/sysv/linux/s390/s390-32/chown.c: Do not include
+	<bp-checks.h>.
+	(__real_chown): Do not use CHECK_STRING.
+	* sysdeps/unix/sysv/linux/s390/s390-32/lchown.c: Do not include
+	<bp-checks.h>.
+	(__lchown): Do not use CHECK_STRING.
+	* sysdeps/unix/sysv/linux/sh/chown.c: Do not include
+	<bp-checks.h>.
+	(__chown): Do not use CHECK_STRING.
+	* sysdeps/unix/sysv/linux/truncate64.c: Do not include
+	<bp-checks.h>.
+	(truncate64): Do not use CHECK_STRING.
+	* sysdeps/unix/sysv/linux/wordsize-64/lxstat.c (__lxstat):
+	Likewise.
+	* sysdeps/unix/sysv/linux/xmknod.c: Do not include <bp-checks.h>.
+	(__xmknod): Do not use CHECK_STRING.
+	* sysdeps/unix/sysv/linux/xmknodat.c: Do not include
+	<bp-checks.h>.
+	(__xmknodat): Do not use CHECK_STRING.
+	* sysdeps/unix/sysv/linux/xstat.c (__xstat): Likewise.
+	* sysdeps/unix/sysv/linux/xstat64.c (___xstat64): Likewise.
+
 2013-02-04  Andreas Schwab  <schwab@suse.de>
 
 	[BZ #14142]

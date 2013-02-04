@@ -20,7 +20,6 @@
 
 #include <sysdep.h>
 #include <sys/syscall.h>
-#include <bp-checks.h>
 
 #include <linux/posix_types.h>
 
@@ -29,7 +28,7 @@
 int
 __chown (const char *file, uid_t owner, gid_t group)
 {
-  return INLINE_SYSCALL (chown32, 3, CHECK_STRING (file), owner, group);
+  return INLINE_SYSCALL (chown32, 3, file, owner, group);
 }
 libc_hidden_def (__chown)
 weak_alias (__chown, chown)

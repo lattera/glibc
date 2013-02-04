@@ -1,3 +1,12 @@
+2013-02-04  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #13550]
+	* sysdeps/ia64/memchr.S [!__BOUNDED_POINTERS__] (__ubp_memchr):
+	Remove alias.
+	* sysdeps/unix/sysv/linux/ia64/umount.c: Do not include
+	<bp-checks.h>.
+	(umount): Do not use CHECK_STRING.
+
 2013-01-31  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #13550]

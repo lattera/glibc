@@ -304,7 +304,4 @@ L(L9:)
 END(__memchr)
 
 weak_alias (__memchr, memchr)
-#if !__BOUNDED_POINTERS__
-weak_alias (__memchr, __ubp_memchr)
-#endif
 libc_hidden_builtin_def (memchr)

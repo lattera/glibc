@@ -21,7 +21,6 @@
 #include <sysdep.h>
 #include <sys/syscall.h>
 #include <shlib-compat.h>
-#include <bp-checks.h>
 
 #include <linux/posix_types.h>
 
@@ -45,7 +44,7 @@ extern int __real_chown (const char *__file, uid_t __owner, gid_t __group);
 int
 __real_chown (const char *file, uid_t owner, gid_t group)
 {
-  return INLINE_SYSCALL (chown32, 3, CHECK_STRING (file), owner, group);
+  return INLINE_SYSCALL (chown32, 3, file, owner, group);
 }
 
 

@@ -36,7 +36,7 @@ int
 __xstat (int vers, const char *name, struct stat *buf)
 {
   if (vers == _STAT_VER_KERNEL)
-    return INLINE_SYSCALL (stat, 2, CHECK_STRING (name),
+    return INLINE_SYSCALL (stat, 2, name,
 			   CHECK_1 ((struct kernel_stat *) buf));
 
 #ifdef STAT_IS_KERNEL_STAT
@@ -46,8 +46,7 @@ __xstat (int vers, const char *name, struct stat *buf)
   struct kernel_stat kbuf;
   int result;
 
-  result = INLINE_SYSCALL (stat, 2, CHECK_STRING (name),
-			   __ptrvalue (&kbuf));
+  result = INLINE_SYSCALL (stat, 2, name, __ptrvalue (&kbuf));
   if (result == 0)
     result = __xstat_conv (vers, &kbuf, buf);
 

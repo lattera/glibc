@@ -26,7 +26,6 @@
 #include <sysdep.h>
 #include <kernel-features.h>
 #include <sys/syscall.h>
-#include <bp-checks.h>
 
 
 /* Create a device file named PATH relative to FD, with permission and
@@ -92,8 +91,7 @@ __xmknodat (int vers, int fd, const char *file, mode_t mode, dev_t *dev)
       file = buf;
     }
 
-  return INLINE_SYSCALL (mknod, 3, CHECK_STRING (file), mode,
-			 (unsigned int) k_dev);
+  return INLINE_SYSCALL (mknod, 3, file, mode, (unsigned int) k_dev);
 #endif
 }
 

@@ -33,7 +33,7 @@ int
 __lxstat (int vers, const char *name, struct stat *buf)
 {
   if (vers == _STAT_VER_KERNEL || vers == _STAT_VER_LINUX)
-    return INLINE_SYSCALL (lstat, 2, CHECK_STRING (name), CHECK_1 (buf));
+    return INLINE_SYSCALL (lstat, 2, name, CHECK_1 (buf));
 
   __set_errno (EINVAL);
   return -1;

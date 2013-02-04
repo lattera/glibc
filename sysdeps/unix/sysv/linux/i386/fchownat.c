@@ -24,7 +24,6 @@
 #include <sysdep.h>
 #include <sys/syscall.h>
 #include <shlib-compat.h>
-#include <bp-checks.h>
 
 #include <linux/posix_types.h>
 #include <kernel-features.h>
@@ -86,11 +85,9 @@ fchownat (int fd, const char *file, uid_t owner, gid_t group, int flag)
   INTERNAL_SYSCALL_DECL (err);
 
   if (flag & AT_SYMLINK_NOFOLLOW)
-    result = INTERNAL_SYSCALL (lchown32, err, 3, CHECK_STRING (file), owner,
-			       group);
+    result = INTERNAL_SYSCALL (lchown32, err, 3, file, owner, group);
   else
-    result = INTERNAL_SYSCALL (chown32, err, 3, CHECK_STRING (file), owner,
-			       group);
+    result = INTERNAL_SYSCALL (chown32, err, 3, file, owner, group);
 
   if (__builtin_expect (INTERNAL_SYSCALL_ERROR_P (result, err), 0))
     {

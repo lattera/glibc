@@ -26,7 +26,6 @@
 
 #include <sysdep.h>
 #include <sys/syscall.h>
-#include <bp-checks.h>
 
 #include <kernel-features.h>
 
@@ -78,7 +77,7 @@ __getcwd (char *buf, size_t size)
 
   int retval;
 
-  retval = INLINE_SYSCALL (getcwd, 2, CHECK_STRING (path), alloc_size);
+  retval = INLINE_SYSCALL (getcwd, 2, path, alloc_size);
   if (retval >= 0)
     {
 #ifndef NO_ALLOCATION

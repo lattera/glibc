@@ -21,7 +21,6 @@
 
 #include <sysdep.h>
 #include <sys/syscall.h>
-#include <bp-checks.h>
 
 /* Truncate the file referenced by FD to LENGTH bytes.  */
 int
@@ -30,7 +29,7 @@ truncate64 (path, length)
      off64_t length;
 {
   /* On PPC32 64bit values are aligned in odd/even register pairs.  */
-  int result = INLINE_SYSCALL (truncate64, 4, CHECK_STRING (path), 0,
+  int result = INLINE_SYSCALL (truncate64, 4, path, 0,
 			       (long) (length >> 32),
 			       (long) length);
   return result;

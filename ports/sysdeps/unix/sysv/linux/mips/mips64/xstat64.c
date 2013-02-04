@@ -23,7 +23,6 @@
 
 #include <sysdep.h>
 #include <sys/syscall.h>
-#include <bp-checks.h>
 
 #include <xstatconv.h>
 
@@ -35,7 +34,7 @@ __xstat64 (int vers, const char *name, struct stat64 *buf)
   int result;
   struct kernel_stat kbuf;
 
-  result = INLINE_SYSCALL (stat, 2, CHECK_STRING (name), __ptrvalue (&kbuf));
+  result = INLINE_SYSCALL (stat, 2, name, __ptrvalue (&kbuf));
   if (result == 0)
     result = __xstat64_conv (vers, &kbuf, buf);
 

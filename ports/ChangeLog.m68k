@@ -1,3 +1,9 @@
+2013-02-04  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #13550]
+	* sysdeps/m68k/memchr.S [!__BOUNDED_POINTERS__] (__ubp_memchr):
+	Remove alias.
+
 2013-01-20  Andreas Schwab  <schwab@linux-m68k.org>
 
 	* sysdeps/m68k/m680x0/fpu/libm-test-ulps: Update.

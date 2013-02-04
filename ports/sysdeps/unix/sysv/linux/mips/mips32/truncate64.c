@@ -22,7 +22,6 @@
 
 #include <sysdep.h>
 #include <sys/syscall.h>
-#include <bp-checks.h>
 
 /* Truncate the file FD refers to to LENGTH bytes.  */
 int
@@ -30,7 +29,7 @@ truncate64 (const char *path, off64_t length)
 {
   unsigned int low = length & 0xffffffff;
   unsigned int high = length >> 32;
-  int result = INLINE_SYSCALL (truncate64, 4, CHECK_STRING (path), 0,
+  int result = INLINE_SYSCALL (truncate64, 4, path, 0,
 			       __LONG_LONG_PAIR (high, low));
   return result;
 }

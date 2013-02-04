@@ -333,7 +333,4 @@ L(pop):	popl %edi		/* pop saved registers */
 END (BP_SYM (__memchr))
 
 weak_alias (BP_SYM (__memchr), BP_SYM (memchr))
-#if !__BOUNDED_POINTERS__
-weak_alias (__memchr, __ubp_memchr)
-#endif
 libc_hidden_builtin_def (memchr)
