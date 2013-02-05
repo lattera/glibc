@@ -1,3 +1,10 @@
+2013-06-05  Andreas Schwab  <schwab@suse.de>
+
+	[BZ #15100]
+	* time/strptime_l.c (__strptime_internal): Count Sunday in a %W
+	week as 6 instead of -1.
+	* time/tst-strptime.c (day_tests): Add test case.
+
 2013-06-05  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* sysdeps/generic/math_private.h

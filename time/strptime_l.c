@@ -1180,8 +1180,8 @@ __strptime_internal (rp, fmt, tmp, statep LOCALE_PARAM)
 
       if (!s.have_yday)
 	tm->tm_yday = ((7 - (tm->tm_wday - w_offset)) % 7
-		       + (s.week_no - 1) *7
-		       + save_wday - w_offset);
+		       + (s.week_no - 1) * 7
+		       + (save_wday - w_offset + 7) % 7);
 
       if (!s.have_mday || !s.have_mon)
 	{
