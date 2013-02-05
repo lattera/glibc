@@ -1,3 +1,8 @@
+2013-02-04  Carlos O'Donell  <carlos@redhat.com>
+
+	* stdlib/getenv.c (getenv): Assume __BIG_ENDIAN in the
+	else clause and remove check for non-standard endianness.
+
 2013-02-04  David S. Miller  <davem@davemloft.net>
 
 	* sysdeps/sparc/fpu/libm-test-ulps: Update.

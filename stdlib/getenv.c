@@ -48,11 +48,7 @@ getenv (name)
 #if __BYTE_ORDER == __LITTLE_ENDIAN || !_STRING_ARCH_unaligned
       name_start = ('=' << 8) | *(const unsigned char *) name;
 #else
-# if __BYTE_ORDER == __BIG_ENDIAN
       name_start = '=' | ((*(const unsigned char *) name) << 8);
-# else
- #error "Funny byte order."
-# endif
 #endif
       for (ep = __environ; *ep != NULL; ++ep)
 	{
