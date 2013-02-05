@@ -1,5 +1,8 @@
 2013-02-05  Roland McGrath  <roland@hack.frob.com>
 
+	* io/lseek.c (__lseek): Rename to __libc_lseek.
+	Define __lseek as an alias.
+
 	* sysdeps/generic/malloc-sysdep.h: Include <stdbool.h> and <unistd.h>.
 
 2013-02-04  Carlos O'Donell  <carlos@redhat.com>

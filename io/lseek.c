@@ -21,7 +21,7 @@
 
 /* Seek to OFFSET on FD, starting from WHENCE.  */
 off_t
-__lseek (fd, offset, whence)
+__libc_lseek (fd, offset, whence)
      int fd;
      off_t offset;
      int whence;
@@ -45,7 +45,8 @@ __lseek (fd, offset, whence)
   __set_errno (ENOSYS);
   return -1;
 }
+weak_alias (__libc_lseek, __lseek)
+weak_alias (__libc_lseek, lseek)
 stub_warning (lseek)
-libc_hidden_def (__lseek)
 
-weak_alias (__lseek, lseek)
+libc_hidden_def (__lseek)
