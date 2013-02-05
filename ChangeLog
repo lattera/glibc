@@ -1,5 +1,11 @@
 2013-02-05  Roland McGrath  <roland@hack.frob.com>
 
+	* Makeconfig (all-Depend-files): Add existing
+	$(sorted-subdirs:=/Depend) files.
+	(all-subdirs): Remove nss.
+	* sysdeps/unix/inet/Subdirs: Add it here instead.
+	* hesiod/Depend: New file.
+
 	* elf/dl-hwcaps.c (_dl_important_hwcaps): Use a variable-length array
 	instead of calling alloca.
 

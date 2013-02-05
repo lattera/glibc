@@ -1041,13 +1041,19 @@ all-subdirs = csu assert ctype locale intl catgets math setjmp signal	    \
 	      stdlib stdio-common libio malloc string wcsmbs time dirent    \
 	      grp pwd posix io termios resource misc socket sysvipc gmon    \
 	      gnulib iconv iconvdata wctype manual shadow gshadow po argp   \
-	      crypt nss localedata timezone rt conform debug		    \
+	      crypt localedata timezone rt conform debug		    \
 	      $(add-on-subdirs) dlfcn elf
 
 ifndef avoid-generated
-all-Depend-files := $(wildcard $(foreach dir,$(all-subdirs),\
-					 $(firstword $($(dir)-srcdir) \
-						     $(..)$(dir))/Depend))
+# sysd-sorted itself will contain rules making the sysd-sorted target
+# depend on Depend files.  But if you just added a Depend file to an
+# existing directory not in all-subdirs, then sysd-sorted needs to
+# be regenerated, so it depends on existing $(sorted-subdirs:=/Depend) files.
+all-Depend-files := $(wildcard $(sort \
+		        $(foreach dir,$(all-subdirs),\
+				  $(firstword $($(dir)-srcdir) \
+				  $(..)$(dir))/Depend) \
+			$(sorted-subdirs:=/Depend)))
 $(common-objpfx)sysd-sorted: $(..)scripts/gen-sorted.awk \
 			     $(common-objpfx)config.make $(..)Makeconfig \
 			     $(wildcard $(sysdirs:=/Subdirs)) \
