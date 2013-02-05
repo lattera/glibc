@@ -1,5 +1,10 @@
 2013-02-05  Maciej W. Rozycki  <macro@codesourcery.com>
 
+	* sysdeps/unix/sysv/linux/mips/mips32/sysdep.h: Add a missing
+	space in asm register specifiers throughout.
+	* sysdeps/unix/sysv/linux/mips/mips64/n32/sysdep.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n64/sysdep.h: Likewise.
+
 	[BZ #15054]
 	* sysdeps/unix/sysv/linux/mips/mips32/sysdep.h (MOVE32):
 	New macro.

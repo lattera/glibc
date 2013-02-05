@@ -115,10 +115,10 @@
 	long _sys_result;						\
 									\
 	{								\
-	register long long __s0 asm("$16") __attribute__ ((unused))	\
+	register long long __s0 asm ("$16") __attribute__ ((unused))	\
 	  = (number);							\
-	register long long __v0 asm("$2");				\
-	register long long __a3 asm("$7");				\
+	register long long __v0 asm ("$2");				\
+	register long long __a3 asm ("$7");				\
 	__asm__ volatile (						\
 	".set\tnoreorder\n\t"						\
 	v0_init								\
@@ -138,11 +138,11 @@
 	long _sys_result;						\
 									\
 	{								\
-	register long long __s0 asm("$16") __attribute__ ((unused))	\
+	register long long __s0 asm ("$16") __attribute__ ((unused))	\
 	  = (number);							\
-	register long long __v0 asm("$2");				\
-	register long long __a0 asm("$4") = ARGIFY (arg1);		\
-	register long long __a3 asm("$7");				\
+	register long long __v0 asm ("$2");				\
+	register long long __a0 asm ("$4") = ARGIFY (arg1);		\
+	register long long __a3 asm ("$7");				\
 	__asm__ volatile (						\
 	".set\tnoreorder\n\t"						\
 	v0_init								\
@@ -162,12 +162,12 @@
 	long _sys_result;						\
 									\
 	{								\
-	register long long __s0 asm("$16") __attribute__ ((unused))	\
+	register long long __s0 asm ("$16") __attribute__ ((unused))	\
 	  = (number);							\
-	register long long __v0 asm("$2");				\
-	register long long __a0 asm("$4") = ARGIFY (arg1);		\
-	register long long __a1 asm("$5") = ARGIFY (arg2);		\
-	register long long __a3 asm("$7");				\
+	register long long __v0 asm ("$2");				\
+	register long long __a0 asm ("$4") = ARGIFY (arg1);		\
+	register long long __a1 asm ("$5") = ARGIFY (arg2);		\
+	register long long __a3 asm ("$7");				\
 	__asm__ volatile (						\
 	".set\tnoreorder\n\t"						\
 	v0_init								\
@@ -188,13 +188,13 @@
 	long _sys_result;						\
 									\
 	{								\
-	register long long __s0 asm("$16") __attribute__ ((unused))	\
+	register long long __s0 asm ("$16") __attribute__ ((unused))	\
 	  = (number);							\
-	register long long __v0 asm("$2");				\
-	register long long __a0 asm("$4") = ARGIFY (arg1);		\
-	register long long __a1 asm("$5") = ARGIFY (arg2);		\
-	register long long __a2 asm("$6") = ARGIFY (arg3);		\
-	register long long __a3 asm("$7");				\
+	register long long __v0 asm ("$2");				\
+	register long long __a0 asm ("$4") = ARGIFY (arg1);		\
+	register long long __a1 asm ("$5") = ARGIFY (arg2);		\
+	register long long __a2 asm ("$6") = ARGIFY (arg3);		\
+	register long long __a3 asm ("$7");				\
 	__asm__ volatile (						\
 	".set\tnoreorder\n\t"						\
 	v0_init								\
@@ -215,13 +215,13 @@
 	long _sys_result;						\
 									\
 	{								\
-	register long long __s0 asm("$16") __attribute__ ((unused))	\
+	register long long __s0 asm ("$16") __attribute__ ((unused))	\
 	  = (number);							\
-	register long long __v0 asm("$2");				\
-	register long long __a0 asm("$4") = ARGIFY (arg1);		\
-	register long long __a1 asm("$5") = ARGIFY (arg2);		\
-	register long long __a2 asm("$6") = ARGIFY (arg3);		\
-	register long long __a3 asm("$7") = ARGIFY (arg4);		\
+	register long long __v0 asm ("$2");				\
+	register long long __a0 asm ("$4") = ARGIFY (arg1);		\
+	register long long __a1 asm ("$5") = ARGIFY (arg2);		\
+	register long long __a2 asm ("$6") = ARGIFY (arg3);		\
+	register long long __a3 asm ("$7") = ARGIFY (arg4);		\
 	__asm__ volatile (						\
 	".set\tnoreorder\n\t"						\
 	v0_init								\
@@ -242,14 +242,14 @@
 	long _sys_result;						\
 									\
 	{								\
-	register long long __s0 asm("$16") __attribute__ ((unused))	\
+	register long long __s0 asm ("$16") __attribute__ ((unused))	\
 	  = (number);							\
-	register long long __v0 asm("$2");				\
-	register long long __a0 asm("$4") = ARGIFY (arg1);		\
-	register long long __a1 asm("$5") = ARGIFY (arg2);		\
-	register long long __a2 asm("$6") = ARGIFY (arg3);		\
-	register long long __a3 asm("$7") = ARGIFY (arg4);		\
-	register long long __a4 asm("$8") = ARGIFY (arg5);		\
+	register long long __v0 asm ("$2");				\
+	register long long __a0 asm ("$4") = ARGIFY (arg1);		\
+	register long long __a1 asm ("$5") = ARGIFY (arg2);		\
+	register long long __a2 asm ("$6") = ARGIFY (arg3);		\
+	register long long __a3 asm ("$7") = ARGIFY (arg4);		\
+	register long long __a4 asm ("$8") = ARGIFY (arg5);		\
 	__asm__ volatile (						\
 	".set\tnoreorder\n\t"						\
 	v0_init								\
@@ -270,15 +270,15 @@
 	long _sys_result;						\
 									\
 	{								\
-	register long long __s0 asm("$16") __attribute__ ((unused))	\
+	register long long __s0 asm ("$16") __attribute__ ((unused))	\
 	  = (number);							\
-	register long long __v0 asm("$2");				\
-	register long long __a0 asm("$4") = ARGIFY (arg1);		\
-	register long long __a1 asm("$5") = ARGIFY (arg2);		\
-	register long long __a2 asm("$6") = ARGIFY (arg3);		\
-	register long long __a3 asm("$7") = ARGIFY (arg4);		\
-	register long long __a4 asm("$8") = ARGIFY (arg5);		\
-	register long long __a5 asm("$9") = ARGIFY (arg6);		\
+	register long long __v0 asm ("$2");				\
+	register long long __a0 asm ("$4") = ARGIFY (arg1);		\
+	register long long __a1 asm ("$5") = ARGIFY (arg2);		\
+	register long long __a2 asm ("$6") = ARGIFY (arg3);		\
+	register long long __a3 asm ("$7") = ARGIFY (arg4);		\
+	register long long __a4 asm ("$8") = ARGIFY (arg5);		\
+	register long long __a5 asm ("$9") = ARGIFY (arg6);		\
 	__asm__ volatile (						\
 	".set\tnoreorder\n\t"						\
 	v0_init								\
