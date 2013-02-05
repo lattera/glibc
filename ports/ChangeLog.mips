@@ -1,3 +1,37 @@
+2013-02-05  Maciej W. Rozycki  <macro@codesourcery.com>
+
+	[BZ #15054]
+	* sysdeps/unix/sysv/linux/mips/mips32/sysdep.h (MOVE32):
+	New macro.
+	(INTERNAL_SYSCALL_NCS): Use it.  Rewrite to respect the syscall
+	restart convention.
+	(INTERNAL_SYSCALL): Rewrite to respect the syscall restart
+	convention.
+	(internal_syscall0, internal_syscall1): Likewise.
+	(internal_syscall2, internal_syscall3): Likewise.
+	(internal_syscall4, internal_syscall5): Likewise.
+	(internal_syscall6, internal_syscall7): Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n32/sysdep.h (MOVE32):
+	New macro.
+	(INTERNAL_SYSCALL_NCS): Use it.  Rewrite to respect the syscall
+	restart convention.
+	(INTERNAL_SYSCALL): Rewrite to respect the syscall restart
+	convention.
+	(internal_syscall0, internal_syscall1): Likewise.
+	(internal_syscall2, internal_syscall3): Likewise.
+	(internal_syscall4, internal_syscall5): Likewise.
+	(internal_syscall6): Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n64/sysdep.h (MOVE32):
+	New macro.
+	(INTERNAL_SYSCALL_NCS): Use it.  Rewrite to respect the syscall
+	restart convention.
+	(INTERNAL_SYSCALL): Rewrite to respect the syscall restart
+	convention.
+	(internal_syscall0, internal_syscall1): Likewise.
+	(internal_syscall2, internal_syscall3): Likewise.
+	(internal_syscall4, internal_syscall5): Likewise.
+	(internal_syscall6): Likewise.
+
 2013-02-04  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #13550]
