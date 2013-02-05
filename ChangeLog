@@ -1,5 +1,8 @@
 2013-02-05  Roland McGrath  <roland@hack.frob.com>
 
+	* elf/dl-hwcaps.c (_dl_important_hwcaps): Use a variable-length array
+	instead of calling alloca.
+
 	* io/lseek.c (__lseek): Rename to __libc_lseek.
 	Define __lseek as an alias.
 

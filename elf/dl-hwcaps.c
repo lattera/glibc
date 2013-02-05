@@ -42,7 +42,6 @@ _dl_important_hwcaps (const char *platform, size_t platform_len, size_t *sz,
   size_t cnt = platform != NULL;
   size_t n, m;
   size_t total;
-  struct r_strlenpair *temp;
   struct r_strlenpair *result;
   struct r_strlenpair *rp;
   char *cp;
@@ -103,7 +102,7 @@ _dl_important_hwcaps (const char *platform, size_t platform_len, size_t *sz,
   ++cnt;
 
   /* Create temporary data structure to generate result table.  */
-  temp = (struct r_strlenpair *) alloca (cnt * sizeof (*temp));
+  struct r_strlenpair temp[cnt];
   m = 0;
 #if defined NEED_DL_SYSINFO || defined NEED_DL_SYSINFO_DSO
   if (dsocaps != NULL)
@@ -199,7 +198,7 @@ _dl_important_hwcaps (const char *platform, size_t platform_len, size_t *sz,
     }
 
   /* Fill in the information.  This follows the following scheme
-     (indeces from TEMP for four strings):
+     (indices from TEMP for four strings):
 	entry #0: 0, 1, 2, 3	binary: 1111
 	      #1: 0, 1, 3		1101
 	      #2: 0, 2, 3		1011
