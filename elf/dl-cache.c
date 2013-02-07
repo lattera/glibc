@@ -172,8 +172,9 @@ _dl_cache_libcmp (const char *p1, const char *p2)
 }
 
 
-/* Look up NAME in ld.so.cache and return the file name stored there,
-   or null if none is found.  */
+/* Look up NAME in ld.so.cache and return the file name stored there, or null
+   if none is found.  The cache is loaded if it was not already.  If loading
+   the cache previously failed there will be no more attempts to load it.  */
 
 const char *
 internal_function

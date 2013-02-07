@@ -1,5 +1,10 @@
 2013-02-08  Carlos O'Donell  <carlos@redhat.com>
 
+	* elf/dl-cache.c (_dl_load_cache_lookup): Comment that cache is
+	loaded if not already and that a failure is permanent.
+
+2013-02-08  Carlos O'Donell  <carlos@redhat.com>
+
 	[BZ #15006]
 	* sysdeps/generic/ldconfig.h: Define FLAG_ARM_LIBSF.
 	* elf/cache.c (print_entry): Add FLAG_ARM_LIBSF support.
