@@ -39,7 +39,7 @@
    MORE_BITS is true if the number is not exactly equal to the
    truncated value or the half-way value, false otherwise.  */
 
-static inline bool
+static bool
 round_away (bool negative, bool last_digit_odd, bool half_bit, bool more_bits,
 	    int mode)
 {

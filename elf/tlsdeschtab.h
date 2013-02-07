@@ -129,7 +129,7 @@ _dl_make_tlsdesc_dynamic (struct link_map *map, size_t ti_offset)
    or a futex wake to wake up any waiting threads, but let's try to
    avoid introducing such dependencies.  */
 
-inline static int
+static int
 _dl_tlsdesc_resolve_early_return_p (struct tlsdesc volatile *td, void *caller)
 {
   if (caller != td->entry)
@@ -147,7 +147,7 @@ _dl_tlsdesc_resolve_early_return_p (struct tlsdesc volatile *td, void *caller)
   return 0;
 }
 
-inline static void
+static void
 _dl_tlsdesc_wake_up_held_fixups (void)
 {
   __rtld_lock_unlock_recursive (GL(dl_load_lock));

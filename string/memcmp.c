@@ -88,9 +88,6 @@ typedef unsigned char byte;
 
 static int memcmp_bytes (op_t, op_t) __THROW;
 
-# ifdef  __GNUC__
-__inline
-# endif
 static int
 memcmp_bytes (a, b)
      op_t a, b;

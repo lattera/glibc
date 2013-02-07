@@ -204,7 +204,7 @@ setname (int category, const char *name)
 }
 
 /* Put DATA in *_nl_current[CATEGORY].  */
-static inline void
+static void
 setdata (int category, struct __locale_data *data)
 {
   if (CATEGORY_USED (category))

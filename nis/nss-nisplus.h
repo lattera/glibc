@@ -28,7 +28,8 @@
 extern const enum nss_status __niserr2nss_tab[] attribute_hidden;
 extern const unsigned int __niserr2nss_count attribute_hidden;
 
-static inline enum nss_status
+static enum nss_status
+__attribute__ ((unused))
 niserr2nss (int errval)
 {
   if ((unsigned int) errval >= __niserr2nss_count)

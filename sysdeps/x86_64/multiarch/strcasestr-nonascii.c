@@ -22,7 +22,7 @@
 
 /* Similar to __m128i_strloadu.  Convert to lower case for none-POSIX/C
    locale.  */
-static inline __m128i
+static __m128i
 __m128i_strloadu_tolower (const unsigned char *p)
 {
   union

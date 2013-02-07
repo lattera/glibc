@@ -75,7 +75,7 @@ size_t _dl_tls_generation;
 TLS_INIT_HELPER
 #endif
 
-static inline void
+static void
 init_slotinfo (void)
 {
   /* Create the slotinfo list.  */
@@ -90,7 +90,7 @@ init_slotinfo (void)
   GL(dl_tls_dtv_slotinfo_list) = &static_slotinfo.si;
 }
 
-static inline void
+static void
 init_static_tls (size_t memsz, size_t align)
 {
   /* That is the size of the TLS memory for this object.  The initialized

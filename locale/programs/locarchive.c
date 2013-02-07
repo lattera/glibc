@@ -45,7 +45,7 @@
 
 /* Define the hash function.  We define the function as static inline.
    We must change the name so as not to conflict with simple-hash.h.  */
-#define compute_hashval static inline archive_hashval
+#define compute_hashval static archive_hashval
 #define hashval_t uint32_t
 #include "hashval.h"
 #undef compute_hashval

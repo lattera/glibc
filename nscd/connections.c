@@ -1859,7 +1859,7 @@ fd_ready (int fd)
 
 
 /* Check whether restarting should happen.  */
-static inline int
+static bool
 restart_p (time_t now)
 {
   return (paranoia && readylist == NULL && nready == nthreads

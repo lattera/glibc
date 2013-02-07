@@ -1,3 +1,42 @@
+2013-02-07  Roland McGrath  <roland@hack.frob.com>
+
+	* nscd/nscd-client.h (__nscd_drop_map_ref):
+	Add __attribute__ ((unused)).
+	* nis/nss-nisplus.h (niserr2nss): Likewise.
+
+	* sysdeps/x86_64/multiarch/strstr.c (__m128i_strloadu): Define it only
+	under [!(USE_AS_STRCASESTR && STRCASESTR_NONASCII)].
+
+	* csu/libc-tls.c (init_static_tls, init_slotinfo):
+	Remove inline keyword.
+	* include/rounding-mode.h (round_away): Likewise.
+	* libio/wfileops.c (adjust_wide_data): Likewise.
+	* sysdeps/x86_64/multiarch/strstr.c (__m128i_strloadu): Likewise.
+	(__m128i_strloadu_tolower): Likewise.
+	* sysdeps/x86_64/multiarch/strcasestr-nonascii.c
+	(__m128i_strloadu_tolower): Likewise.
+	* time/mktime.c (ydhms_diff): Likewise.
+	* locale/elem-hash.h (elem_hash): Likewise.
+	* locale/setlocale.c (setdata): Likewise.
+	* posix/regex_internal.h (re_string_char_size_at): Likewise.
+	(re_string_wchar_at): Likewise.
+	(bitset_not, bitset_merge, bitset_mask): Likewise.
+	[!(__GNUC__ > 3)] (inline): Remove macro.
+	* nscd/nscd-client.h (__nscd_drop_map_ref): Remove inline keyword.
+	* elf/dl-deps.c (_dl_map_object_deps: preload): Likewise.
+	* elf/tlsdeschtab.h (_dl_tlsdesc_resolve_early_return_p): Likewise.
+	(_dl_tlsdesc_wake_up_held_fixups): Likewise.
+	* string/memcmp.c (memcmp_bytes): Likewise.
+	* locale/programs/locarchive.c (compute_hashval): Likewise.
+	* sysdeps/ieee754/dbl-64/x2y2m1.c (mul_split): Likewise.
+	* sysdeps/unix/sysv/linux/fips-private.h (fips_enabled_p): Likewise.
+	* resolv/res_send.c (evNowTime, evCmpTime): Likewise.
+	* nss/getent.c (print_rpc, print_protocols): Likewise.
+	(print_passwd, print_group, print_aliases): Likewise.
+	* nis/nss-nisplus.h (niserr2nss): Likewise.
+	* nscd/connections.c (restart_p): Likewise.
+	Change return type to bool.
+
 2013-02-05  Roland McGrath  <roland@hack.frob.com>
 
 	* Makeconfig (all-Depend-files): Add existing

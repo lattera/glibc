@@ -29,7 +29,7 @@
 /* Return true if FIPS mode is enabled.  See
    sysdeps/generic/fips-private.h for more information.  */
 
-static inline bool
+static bool
 fips_enabled_p (void)
 {
   static enum

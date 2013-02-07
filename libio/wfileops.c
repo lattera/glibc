@@ -551,7 +551,7 @@ libc_hidden_def (_IO_wfile_sync)
    fp->_wide_data->_IO_read_base and fp->_wide_data->_IO_read_end.
 
    Returns 0 on success and -1 on error with the _IO_ERR_SEEN flag set.  */
-static inline int
+static int
 adjust_wide_data (_IO_FILE *fp, bool do_convert)
 {
   struct _IO_codecvt *cv = fp->_codecvt;

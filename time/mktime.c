@@ -196,7 +196,7 @@ isdst_differ (int a, int b)
    The result may overflow.  It is the caller's responsibility to
    detect overflow.  */
 
-static inline time_t
+static time_t
 ydhms_diff (long_int year1, long_int yday1, int hour1, int min1, int sec1,
 	    int year0, int yday0, int hour0, int min0, int sec0)
 {

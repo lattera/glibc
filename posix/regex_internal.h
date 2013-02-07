@@ -98,7 +98,6 @@
 # define BE(expr, val) __builtin_expect (expr, val)
 #else
 # define BE(expr, val) (expr)
-# define inline
 #endif
 
 /* Number of single byte character.  */
@@ -687,7 +686,7 @@ typedef struct
 
 
 /* Inline functions for bitset operation.  */
-static inline void
+static void
 bitset_not (bitset_t set)
 {
   int bitset_i;
@@ -695,7 +694,7 @@ bitset_not (bitset_t set)
     set[bitset_i] = ~set[bitset_i];
 }
 
-static inline void
+static void
 bitset_merge (bitset_t dest, const bitset_t src)
 {
   int bitset_i;
@@ -703,7 +702,7 @@ bitset_merge (bitset_t dest, const bitset_t src)
     dest[bitset_i] |= src[bitset_i];
 }
 
-static inline void
+static void
 bitset_mask (bitset_t dest, const bitset_t src)
 {
   int bitset_i;
@@ -713,7 +712,7 @@ bitset_mask (bitset_t dest, const bitset_t src)
 
 #ifdef RE_ENABLE_I18N
 /* Inline functions for re_string.  */
-static inline int
+static int
 internal_function __attribute ((pure))
 re_string_char_size_at (const re_string_t *pstr, int idx)
 {
@@ -726,7 +725,7 @@ re_string_char_size_at (const re_string_t *pstr, int idx)
   return byte_idx;
 }
 
-static inline wint_t
+static wint_t
 internal_function __attribute ((pure))
 re_string_wchar_at (const re_string_t *pstr, int idx)
 {

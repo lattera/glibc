@@ -155,9 +155,7 @@ _dl_map_object_deps (struct link_map *map,
   const char *errstring;
   const char *objname;
 
-  auto inline void preload (struct link_map *map);
-
-  inline void preload (struct link_map *map)
+  void preload (struct link_map *map)
     {
       known[nlist].done = 0;
       known[nlist].map = map;

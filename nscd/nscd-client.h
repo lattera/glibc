@@ -362,8 +362,9 @@ extern struct mapped_database *__nscd_get_map_ref (request_type type,
 extern void __nscd_unmap (struct mapped_database *mapped);
 
 /* Drop reference of mapping.  */
-static inline int __nscd_drop_map_ref (struct mapped_database *map,
-				       int *gc_cycle)
+static int
+__attribute__ ((unused))
+__nscd_drop_map_ref (struct mapped_database *map, int *gc_cycle)
 {
   if (map != NO_MAPPING)
     {

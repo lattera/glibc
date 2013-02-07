@@ -18,7 +18,7 @@
 
 
 /* The hashing function used for the table with collation symbols.  */
-static inline int32_t
+static int32_t
 elem_hash (const char *str, int_fast32_t n)
 {
   int32_t result = n;

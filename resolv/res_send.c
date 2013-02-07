@@ -155,7 +155,7 @@ evSubTime(struct timespec *res, const struct timespec *minuend,
 	}
 }
 
-static inline int
+static int
 evCmpTime(struct timespec a, struct timespec b) {
 	long x = a.tv_sec - b.tv_sec;
 
@@ -164,7 +164,7 @@ evCmpTime(struct timespec a, struct timespec b) {
 	return (x < 0L ? (-1) : x > 0L ? (1) : (0));
 }
 
-static inline void
+static void
 evNowTime(struct timespec *res) {
 	struct timeval now;
 

@@ -37,7 +37,7 @@ add_split (double *hi, double *lo, double x, double y)
    given that the values are small enough that no overflow occurs and
    large enough (or zero) that no underflow occurs.  */
 
-static inline void
+static void
 mul_split (double *hi, double *lo, double x, double y)
 {
 #ifdef __FP_FAST_FMA
