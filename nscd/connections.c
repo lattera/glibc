@@ -976,9 +976,25 @@ cannot change socket to nonblocking mode: %s"),
 }
 
 
+/* Register the file in FINFO as a traced file for the database DBS[DBIX].
+
+   We support registering multiple files per database. Each call to
+   register_traced_file adds to the list of registered files.
+
+   When we prune the database, either through timeout or a request to
+   invalidate, we will check to see if any of the registered files has changed.
+   When we accept new connections to handle a cache request we will also
+   check to see if any of the registered files has changed.
+
+   If we have inotify support then we install an inotify fd to notify us of
+   file deletion or modification, both of which will require we invalidate
+   the cache for the database.  Without inotify support we stat the file and
+   store st_mtime to determine if the file has been modified.  */
 void
 register_traced_file (size_t dbidx, struct traced_file *finfo)
 {
+  /* If the database is disabled or file checking is disabled
+     then ignore the registration.  */
   if (! dbs[dbidx].enabled || ! dbs[dbidx].check_file)
     return;
 
@@ -1870,6 +1886,63 @@ restart_p (time_t now)
 /* Array for times a connection was accepted.  */
 static time_t *starttime;
 
+#ifdef HAVE_INOTIFY
+/* Inotify event for changed file.  */
+union __inev
+{
+  struct inotify_event i;
+# ifndef PATH_MAX
+#  define PATH_MAX 1024
+# endif
+  char buf[sizeof (struct inotify_event) + PATH_MAX];
+};
+
+/* Process the inotify event in INEV. If the event matches any of the files
+   registered with a database then mark that database as requiring its cache
+   to be cleared. We indicate the cache needs clearing by setting
+   TO_CLEAR[DBCNT] to true for the matching database.  */
+static inline void
+inotify_check_files (bool *to_clear, union __inev *inev)
+{
+  /* Check which of the files changed.  */
+  for (size_t dbcnt = 0; dbcnt < lastdb; ++dbcnt)
+    {
+      struct traced_file *finfo = dbs[dbcnt].traced_files;
+
+      while (finfo != NULL)
+	{
+	  /* Inotify event watch descriptor matches.  */
+	  if (finfo->inotify_descr == inev->i.wd)
+	    {
+	      /* Mark cache as needing to be cleared and reinitialize.  */
+	      to_clear[dbcnt] = true;
+	      if (finfo->call_res_init)
+	        res_init ();
+	      return;
+	    }
+
+	  finfo = finfo->next;
+        }
+    }
+}
+
+/* If an entry in the array of booleans TO_CLEAR is TRUE then clear the cache
+   for the associated database, otherwise do nothing. The TO_CLEAR array must
+   have LASTDB entries.  */
+static inline void
+clear_db_cache (bool *to_clear)
+{
+  for (size_t dbcnt = 0; dbcnt < lastdb; ++dbcnt)
+    if (to_clear[dbcnt])
+      {
+	pthread_mutex_lock (&dbs[dbcnt].prune_lock);
+	dbs[dbcnt].clear_cache = 1;
+	pthread_mutex_unlock (&dbs[dbcnt].prune_lock);
+	pthread_cond_signal (&dbs[dbcnt].prune_cond);
+      }
+}
+
+#endif
 
 static void
 __attribute__ ((__noreturn__))
@@ -1976,15 +2049,10 @@ main_loop_poll (void)
 	      if (conns[1].revents != 0)
 		{
 		  bool to_clear[lastdb] = { false, };
-		  union
-		  {
-# ifndef PATH_MAX
-#  define PATH_MAX 1024
-# endif
-		    struct inotify_event i;
-		    char buf[sizeof (struct inotify_event) + PATH_MAX];
-		  } inev;
+		  union __inev inev;
 
+		  /* Read all inotify events for files registered via
+		     register_traced_file().  */
 		  while (1)
 		    {
 		      ssize_t nb = TEMP_FAILURE_RETRY (read (inotify_fd, &inev,
@@ -2010,35 +2078,11 @@ disabled inotify after read error %d"),
 			}
 
 		      /* Check which of the files changed.  */
-		      for (size_t dbcnt = 0; dbcnt < lastdb; ++dbcnt)
-			{
-			  struct traced_file *finfo = dbs[dbcnt].traced_files;
-
-			  while (finfo != NULL)
-			    {
-			      if (finfo->inotify_descr == inev.i.wd)
-				{
-				  to_clear[dbcnt] = true;
-				  if (finfo->call_res_init)
-				    res_init ();
-				  goto next;
-				}
-
-			      finfo = finfo->next;
-			    }
-			}
-		    next:;
+		      inotify_check_files (to_clear, &inev);
 		    }
 
 		  /* Actually perform the cache clearing.  */
-		  for (size_t dbcnt = 0; dbcnt < lastdb; ++dbcnt)
-		    if (to_clear[dbcnt])
-		      {
-			pthread_mutex_lock (&dbs[dbcnt].prune_lock);
-			dbs[dbcnt].clear_cache = 1;
-			pthread_mutex_unlock (&dbs[dbcnt].prune_lock);
-			pthread_cond_signal (&dbs[dbcnt].prune_cond);
-		      }
+		  clear_db_cache (to_clear);
 
 		  --n;
 		}
@@ -2208,12 +2252,10 @@ main_loop_epoll (int efd)
 	else if (revs[cnt].data.fd == inotify_fd)
 	  {
 	    bool to_clear[lastdb] = { false, };
-	    union
-	    {
-	      struct inotify_event i;
-	      char buf[sizeof (struct inotify_event) + PATH_MAX];
-	    } inev;
+	    union __inev inev;
 
+	    /* Read all inotify events for files registered via
+	       register_traced_file().  */
 	    while (1)
 	      {
 		ssize_t nb = TEMP_FAILURE_RETRY (read (inotify_fd, &inev,
@@ -2235,35 +2277,11 @@ main_loop_epoll (int efd)
 		  }
 
 		/* Check which of the files changed.  */
-		for (size_t dbcnt = 0; dbcnt < lastdb; ++dbcnt)
-		  {
-		    struct traced_file *finfo = dbs[dbcnt].traced_files;
-
-		    while (finfo != NULL)
-		      {
-			if (finfo->inotify_descr == inev.i.wd)
-			  {
-			    to_clear[dbcnt] = true;
-			    if (finfo->call_res_init)
-			      res_init ();
-			    goto next;
-			  }
-
-			finfo = finfo->next;
-		      }
-		  }
-	      next:;
+		inotify_check_files(to_clear, &inev);
 	      }
 
 	    /* Actually perform the cache clearing.  */
-	    for (size_t dbcnt = 0; dbcnt < lastdb; ++dbcnt)
-	      if (to_clear[dbcnt])
-		{
-		  pthread_mutex_lock (&dbs[dbcnt].prune_lock);
-		  dbs[dbcnt].clear_cache = 1;
-		  pthread_mutex_unlock (&dbs[dbcnt].prune_lock);
-		  pthread_cond_signal (&dbs[dbcnt].prune_cond);
-		}
+	    clear_db_cache (to_clear);
 	  }
 # endif
 # ifdef HAVE_NETLINK

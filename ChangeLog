@@ -1,5 +1,15 @@
 2013-02-08  Carlos O'Donell  <carlos@redhat.com>
 
+	* nscd/connection.c (register_traced_file): Comment function.
+	[HAVE_INOTIFY] (union __inev): Define.
+	[HAVE_INOTIFY] (inotify_check_files): New function.
+	[HAVE_INOTIFY] (clear_db_cache): Likewise.
+	[HAVE_INOTIFY] (main_loop_poll): Call inotify_check_files and
+	clear_db_cache.
+	[HAVE_INOTIFY] (main_loop_epoll): Likewise.
+
+2013-02-08  Carlos O'Donell  <carlos@redhat.com>
+
 	* elf/dl-cache.c (_dl_load_cache_lookup): Comment that cache is
 	loaded if not already and that a failure is permanent.
 
