@@ -765,11 +765,18 @@ endif	# $(+cflags) == ""
 # Don't duplicate options if we inherited variables from the parent.
 +cflags	:= $(sort $(+cflags))
 
+# Each sysdeps directory can contain header files that both will be
+# used to compile and will be installed.  Each can also contain an
+# include/ subdirectory, whose header files will be used to compile
+# but will not be installed, and will take precedence over the
+# installed files.  This mirrors the top-level include/ subdirectory.
++sysdep-includes := $(foreach dir,$(+sysdep_dirs),\
+			      $(addprefix -I,$(wildcard $(dir)/include) $(dir)))
+
 # These are flags given to the C compiler to tell it to look for
 # include files (including ones given in angle brackets) in the parent
 # library source directory, in the include directory, and in the
 # current directory.
-+sysdep-includes = $(addprefix -I,$(+sysdep_dirs))
 +includes = -I$(..)include $(if $(subdir),$(objpfx:%/=-I%)) \
 	    $(+sysdep-includes) $(includes) \
 	    $(patsubst %/,-I%,$(..)) $(libio-include) -I. $(sysincludes)

@@ -1,3 +1,8 @@
+2013-02-08  Roland McGrath  <roland@hack.frob.com>
+
+	* Makeconfig (+sysdep-includes): Define with := rather than =.
+	Use an existing include/ subdir of each sysdeps dir before it.
+
 2013-02-08  Carlos O'Donell  <carlos@redhat.com>
 
 	* nscd/connection.c (register_traced_file): Comment function.
