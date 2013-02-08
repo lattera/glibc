@@ -24,16 +24,6 @@
 
 # define BOUNDS_VIOLATED (__builtin_trap (), 0)
 
-/* Verify that pointer's value >= low.  Return pointer value.  */
-# define CHECK_BOUNDS_LOW(ARG)					\
-  (((__ptrvalue (ARG) < __ptrlow (ARG)) && BOUNDS_VIOLATED),	\
-   __ptrvalue (ARG))
-
-/* Verify that pointer's value < high.  Return pointer value.  */
-# define CHECK_BOUNDS_HIGH(ARG)				\
-  (((__ptrvalue (ARG) > __ptrhigh (ARG)) && BOUNDS_VIOLATED),	\
-   __ptrvalue (ARG))
-
 # define _CHECK_N(ARG, N, COND)				\
   (((COND)						\
     && (__ptrvalue (ARG) < __ptrlow (ARG)		\
@@ -56,8 +46,6 @@
 /* Do nothing if not compiling with -fbounded-pointers.  */
 
 # define BOUNDS_VIOLATED
-# define CHECK_BOUNDS_LOW(ARG) (ARG)
-# define CHECK_BOUNDS_HIGH(ARG) (ARG)
 # define CHECK_1(ARG) (ARG)
 # define CHECK_1_NULL_OK(ARG) (ARG)
 # define CHECK_N(ARG, N) (ARG)

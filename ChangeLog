@@ -1,3 +1,12 @@
+2013-02-08  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #13550]
+	* sysdeps/generic/bp-checks.h (CHECK_BOUNDS_LOW): Remove all
+	definitions.
+	(CHECK_BOUNDS_HIGH): Likewise.
+	* string/strcpy.c: Do not include <bp-checks.h>.
+	(strcpy): Do not use CHECK_BOUNDS_LOW and CHECK_BOUNDS_HIGH.
+
 2013-02-07  Roland McGrath  <roland@hack.frob.com>
 
 	* nscd/nscd-client.h (__nscd_drop_map_ref):

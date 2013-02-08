@@ -18,7 +18,6 @@
 #include <stddef.h>
 #include <string.h>
 #include <memcopy.h>
-#include <bp-checks.h>
 
 #undef strcpy
 
@@ -29,8 +28,8 @@ strcpy (dest, src)
      const char *src;
 {
   char c;
-  char *__unbounded s = (char *__unbounded) CHECK_BOUNDS_LOW (src);
-  const ptrdiff_t off = CHECK_BOUNDS_LOW (dest) - s - 1;
+  char *__unbounded s = (char *__unbounded) src;
+  const ptrdiff_t off = dest - s - 1;
   size_t n;
 
   do
@@ -41,8 +40,6 @@ strcpy (dest, src)
   while (c != '\0');
 
   n = s - src;
-  (void) CHECK_BOUNDS_HIGH (src + n);
-  (void) CHECK_BOUNDS_HIGH (dest + n);
 
   return dest;
 }
