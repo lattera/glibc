@@ -25,7 +25,6 @@
 #include <sys/syscall.h>
 #include <bits/wordsize.h>
 #include <shlib-compat.h>
-#include <bp-checks.h>
 
 #include <kernel-features.h>
 
@@ -64,8 +63,7 @@ int
 attribute_compat_text_section
 __old_shmctl (int shmid, int cmd, struct __old_shmid_ds *buf)
 {
-  return INLINE_SYSCALL (ipc, 5, IPCOP_shmctl, shmid,
-			 cmd, 0, CHECK_1_NULL_OK (buf));
+  return INLINE_SYSCALL (ipc, 5, IPCOP_shmctl, shmid, cmd, 0, buf);
 }
 compat_symbol (libc, __old_shmctl, shmctl, GLIBC_2_0);
 #endif
@@ -75,7 +73,7 @@ __new_shmctl (int shmid, int cmd, struct shmid_ds *buf)
 {
 #if __ASSUME_IPC64 > 0
   return INLINE_SYSCALL (ipc, 5, IPCOP_shmctl, shmid, cmd | __IPC_64, 0,
-			 CHECK_1 (buf));
+			 buf);
 #else
   switch (cmd) {
     case SHM_STAT:
@@ -86,8 +84,7 @@ __new_shmctl (int shmid, int cmd, struct shmid_ds *buf)
 #endif
       break;
     default:
-      return INLINE_SYSCALL (ipc, 5, IPCOP_shmctl, shmid, cmd, 0,
-			     CHECK_1 (buf));
+      return INLINE_SYSCALL (ipc, 5, IPCOP_shmctl, shmid, cmd, 0, buf);
   }
 
   {
@@ -101,7 +98,7 @@ __new_shmctl (int shmid, int cmd, struct shmid_ds *buf)
     /* Unfortunately there is no way how to find out for sure whether
        we should use old or new shmctl.  */
     result = INLINE_SYSCALL (ipc, 5, IPCOP_shmctl, shmid, cmd | __IPC_64, 0,
-			     CHECK_1 (buf));
+			     buf);
     if (result != -1 || errno != EINVAL)
       return result;
 

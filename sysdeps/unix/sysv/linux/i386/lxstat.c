@@ -27,7 +27,6 @@
 
 #include <sysdep.h>
 #include <sys/syscall.h>
-#include <bp-checks.h>
 
 #include <kernel-features.h>
 
@@ -41,7 +40,7 @@ __lxstat (int vers, const char *name, struct stat *buf)
   int result;
 
   if (vers == _STAT_VER_KERNEL)
-    return INLINE_SYSCALL (lstat, 2, name, CHECK_1 ((struct kernel_stat *) buf));
+    return INLINE_SYSCALL (lstat, 2, name, (struct kernel_stat *) buf);
 
   {
     struct stat64 buf64;

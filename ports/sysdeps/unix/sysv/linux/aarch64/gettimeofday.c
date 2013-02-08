@@ -22,7 +22,6 @@
 #undef __gettimeofday
 
 #include <bits/libc-vdso.h>
-#include <bp-checks.h>
 
 /* Get the current time of day and timezone information,
    putting it into *tv and *tz.  If tz is null, *tz is not filled.
@@ -32,7 +31,7 @@ __gettimeofday (tv, tz)
      struct timeval *tv;
      struct timezone *tz;
 {
-  return INLINE_VSYSCALL (gettimeofday, 2, CHECK_1 (tv), CHECK_1 (tz));
+  return INLINE_VSYSCALL (gettimeofday, 2, tv, tz);
 }
 libc_hidden_def (__gettimeofday)
 weak_alias (__gettimeofday, gettimeofday)

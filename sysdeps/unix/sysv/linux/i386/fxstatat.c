@@ -29,7 +29,6 @@
 
 #include <sysdep.h>
 #include <sys/syscall.h>
-#include <bp-checks.h>
 
 #include <kernel-features.h>
 
@@ -103,10 +102,10 @@ __fxstatat (int vers, int fd, const char *file, struct stat *st, int flag)
     {
       if (flag & AT_SYMLINK_NOFOLLOW)
 	result = INTERNAL_SYSCALL (lstat, err, 2, file,
-				   CHECK_1 ((struct kernel_stat *) st));
+				   (struct kernel_stat *) st);
       else
 	result = INTERNAL_SYSCALL (stat, err, 2, file,
-				   CHECK_1 ((struct kernel_stat *) st));
+				   (struct kernel_stat *) st);
       goto out;
     }
 

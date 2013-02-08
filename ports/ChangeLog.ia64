@@ -1,3 +1,10 @@
+2013-02-08  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #13550]
+	* sysdeps/unix/sysv/linux/ia64/sigaction.c: Do not include
+	<bp-checks.h>.
+	(__libc_sigaction): Do not use CHECK_1_NULL_OK.
+
 2013-02-04  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #13550]

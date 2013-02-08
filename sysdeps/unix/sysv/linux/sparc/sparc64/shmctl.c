@@ -22,7 +22,6 @@
 
 #include <sysdep.h>
 #include <sys/syscall.h>
-#include <bp-checks.h>
 
 /* Provide operations to control over shared memory segments.  */
 
@@ -32,5 +31,5 @@ shmctl (shmid, cmd, buf)
      int cmd;
      struct shmid_ds *buf;
 {
-  return INLINE_SYSCALL (ipc, 5, IPCOP_shmctl, shmid, cmd, 0, CHECK_1 (buf));
+  return INLINE_SYSCALL (ipc, 5, IPCOP_shmctl, shmid, cmd, 0, buf);
 }

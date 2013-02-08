@@ -26,14 +26,13 @@
 
 #include <sysdep.h>
 #include <sys/syscall.h>
-#include <bp-checks.h>
 
 /* Get information about the file FD in BUF.  */
 int
 __fxstat (int vers, int fd, struct stat *buf)
 {
   if (vers == _STAT_VER_KERNEL || vers == _STAT_VER_LINUX)
-    return INLINE_SYSCALL (fstat, 2, fd, CHECK_1 (buf));
+    return INLINE_SYSCALL (fstat, 2, fd, buf);
 
   __set_errno (EINVAL);
   return -1;

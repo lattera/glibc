@@ -29,7 +29,6 @@
 #include <sysdep.h>
 #include <kernel-features.h>
 #include <sys/syscall.h>
-#include <bp-checks.h>
 
 
 /* Get information about the file NAME relative to FD in ST.  */
@@ -95,9 +94,9 @@ __fxstatat (int vers, int fd, const char *file, struct stat *st, int flag)
   INTERNAL_SYSCALL_DECL (err);
 
   if (flag & AT_SYMLINK_NOFOLLOW)
-    res = INTERNAL_SYSCALL (lstat, err, 2, file, CHECK_1 (st));
+    res = INTERNAL_SYSCALL (lstat, err, 2, file, st);
   else
-    res = INTERNAL_SYSCALL (stat, err, 2, file, CHECK_1 (st));
+    res = INTERNAL_SYSCALL (stat, err, 2, file, st);
 
   if (__builtin_expect (INTERNAL_SYSCALL_ERROR_P (res, err), 0))
     {

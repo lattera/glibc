@@ -1,3 +1,16 @@
+2013-02-08  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #13550]
+	* sysdeps/unix/sysv/linux/mips/mips64/msgctl.c: Do not include
+	<bp-checks.h>.
+	(__msgctl): Do not use CHECK_1.
+	* sysdeps/unix/sysv/linux/mips/mips64/shmctl.c: Do not include
+	<bp-checks.h>.
+	(__shmctl): Do not use CHECK_1.
+	* sysdeps/unix/sysv/linux/mips/ustat.c: Do not include
+	<bp-checks.h>.
+	(ustat): Do not use CHECK_1.
+
 2013-02-05  Maciej W. Rozycki  <macro@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/mips/mips32/sysdep.h: Add a missing

@@ -27,7 +27,6 @@
 
 #include <sysdep.h>
 #include <sys/syscall.h>
-#include <bp-checks.h>
 
 #include <xstatconv.h>
 
@@ -36,8 +35,7 @@ int
 __xstat (int vers, const char *name, struct stat *buf)
 {
   if (vers == _STAT_VER_KERNEL)
-    return INLINE_SYSCALL (stat, 2, name,
-			   CHECK_1 ((struct kernel_stat *) buf));
+    return INLINE_SYSCALL (stat, 2, name, (struct kernel_stat *) buf);
 
 #ifdef STAT_IS_KERNEL_STAT
   errno = EINVAL;

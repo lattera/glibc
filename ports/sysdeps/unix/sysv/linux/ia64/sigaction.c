@@ -26,7 +26,6 @@
 
 #include <sysdep.h>
 #include <sys/syscall.h>
-#include <bp-checks.h>
 
 /* The variable is shared between all wrappers around signal handling
    functions which have RT equivalents.  This is the definition.  */
@@ -42,8 +41,7 @@ __libc_sigaction (sig, act, oact)
 {
   /* XXX The size argument hopefully will have to be changed to the
      real size of the user-level sigset_t.  */
-  return INLINE_SYSCALL (rt_sigaction, 4, sig,
-			 CHECK_1_NULL_OK (act), CHECK_1_NULL_OK (oact), _NSIG / 8);
+  return INLINE_SYSCALL (rt_sigaction, 4, sig, act, oact, _NSIG / 8);
 }
 libc_hidden_def (__libc_sigaction)
 

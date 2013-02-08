@@ -23,15 +23,13 @@
 
 #include <sysdep.h>
 #include <sys/syscall.h>
-#include <bp-checks.h>
 
 /* Consider moving to syscalls.list.  */
 
 int
 __getresgid (gid_t *rgid, gid_t *egid, gid_t *sgid)
 {
-  return INLINE_SYSCALL (getresgid32, 3, CHECK_1 (rgid),
-			 CHECK_1 (egid), CHECK_1 (sgid));
+  return INLINE_SYSCALL (getresgid32, 3, rgid, egid, sgid);
 }
 libc_hidden_def (__getresgid)
 weak_alias (__getresgid, getresgid)

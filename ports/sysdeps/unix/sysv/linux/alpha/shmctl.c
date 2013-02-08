@@ -22,13 +22,12 @@
 #include <sysdep.h>
 #include <sys/syscall.h>
 #include <bits/wordsize.h>
-#include <bp-checks.h>
 
 
 int
 __new_shmctl (int shmid, int cmd, struct shmid_ds *buf)
 {
-  return INLINE_SYSCALL (shmctl, 3, shmid, cmd | __IPC_64, CHECK_1 (buf));
+  return INLINE_SYSCALL (shmctl, 3, shmid, cmd | __IPC_64, buf);
 }
 
 #include <shlib-compat.h>

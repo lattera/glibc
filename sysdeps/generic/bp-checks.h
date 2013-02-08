@@ -36,18 +36,11 @@
 /* Same as CHECK_N, but tolerate ARG == NULL.  */
 # define CHECK_N_NULL_OK(ARG, N) _CHECK_N ((ARG), (N), __ptrvalue (ARG))
 
-/* Check bounds of a pointer seated to a single object.  */
-# define CHECK_1(ARG) CHECK_N ((ARG), 1)
-/* Same as CHECK_1, but tolerate ARG == NULL.  */
-# define CHECK_1_NULL_OK(ARG) CHECK_N_NULL_OK ((ARG), 1)
-
 #else /* !__BOUNDED_POINTERS__ */
 
 /* Do nothing if not compiling with -fbounded-pointers.  */
 
 # define BOUNDS_VIOLATED
-# define CHECK_1(ARG) (ARG)
-# define CHECK_1_NULL_OK(ARG) (ARG)
 # define CHECK_N(ARG, N) (ARG)
 # define CHECK_N_NULL_OK(ARG, N) (ARG)
 

@@ -22,7 +22,6 @@
 
 #include <sysdep.h>
 #include <sys/syscall.h>
-#include <bp-checks.h>
 
 int
 ustat (dev_t dev, struct ustat *ubuf)
@@ -37,5 +36,5 @@ ustat (dev_t dev, struct ustat *ubuf)
       return -1;
     }
 
-  return INLINE_SYSCALL (ustat, 2, (unsigned int) k_dev, CHECK_1 (ubuf));
+  return INLINE_SYSCALL (ustat, 2, (unsigned int) k_dev, ubuf);
 }
