@@ -1,5 +1,6 @@
 2013-02-08  Carlos O'Donell  <carlos@redhat.com>
 
+	[BZ #15006]
 	* sysdeps/generic/ldconfig.h: Define FLAG_ARM_LIBSF.
 	* elf/cache.c (print_entry): Add FLAG_ARM_LIBSF support.
 
