@@ -33,11 +33,7 @@
 #ifdef __PIC__
 	.option pic2
 #endif
-	.text
-	.align	2
-	.globl	__mpn_add_n
-	.ent	__mpn_add_n
-__mpn_add_n:
+ENTRY (__mpn_add_n)
 #ifdef __PIC__
 	SETUP_GP /* ??? unused */
 #endif
@@ -126,4 +122,4 @@ L(Lend):	daddu	$11,$11,$2
 	j	$31
 	or	$2,$2,$8
 
-	.end	__mpn_add_n
+END (__mpn_add_n)

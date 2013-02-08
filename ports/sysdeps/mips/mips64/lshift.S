@@ -32,11 +32,7 @@
 #ifdef __PIC__
 	.option pic2
 #endif
-	.text
-	.align	2
-	.globl	__mpn_lshift
-	.ent	__mpn_lshift
-__mpn_lshift:
+ENTRY (__mpn_lshift)
 #ifdef __PIC__
 	SETUP_GP /* ??? unused */
 #endif
@@ -101,4 +97,4 @@ L(Loop):	ld	$3,-16($5)
 L(Lend):	dsll	$8,$10,$7
 	j	$31
 	sd	$8,-8($4)
-	.end	__mpn_lshift
+END (__mpn_lshift)

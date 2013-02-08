@@ -1,5 +1,20 @@
 2013-02-08  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/mips/add_n.S (__mpn_add_n): Use END.
+	* sysdeps/mips/bsd-_setjmp.S (_setjmp): Likewise.
+	* sysdeps/mips/bsd-setjmp.S (setjmp): Likewise.
+	* sysdeps/mips/mips64/add_n.S (__mpn_add_n): Use ENTRY and END.
+	* sysdeps/mips/mips64/addmul_1.S (__mpn_addmul_1): Likewise.
+	* sysdeps/mips/mips64/bsd-_setjmp.S (_setjmp): Use END.
+	* sysdeps/mips/mips64/bsd-setjmp.S (setjmp): Likewise.
+	* sysdeps/mips/mips64/lshift.S (__mpn_lshift): Use ENTRY and END.
+	* sysdeps/mips/mips64/mul_1.S (__mpn_mul_1): Likewise.
+	* sysdeps/mips/mips64/rshift.S (__mpn_rshift): Likewise.
+	* sysdeps/mips/mips64/setjmp.S (__sigsetjmp): Use END.
+	* sysdeps/mips/mips64/sub_n.S (__mpn_sub_n): Use ENTRY and END.
+	* sysdeps/mips/mips64/submul_1.S (__mpn_submul_1): Likewise.
+	* sysdeps/mips/setjmp.S (__sigsetjmp): Use END.
+
 	[BZ #13550]
 	* sysdeps/unix/sysv/linux/mips/mips64/msgctl.c: Do not include
 	<bp-checks.h>.

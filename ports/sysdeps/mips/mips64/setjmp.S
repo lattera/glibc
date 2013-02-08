@@ -41,4 +41,4 @@ ENTRY (__sigsetjmp)
 	move a4, gp
 #endif
 	jr t9
-	.end __sigsetjmp
+END (__sigsetjmp)
