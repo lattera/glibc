@@ -1,3 +1,12 @@
+2013-02-08  Andreas Schwab  <schwab@linux-m68k.org>
+
+	* sysdeps/unix/sysv/linux/m68k/kernel-features.h
+	(__ASSUME_O_CLOEXEC): Define for 2.6.23 or later.
+	(__ASSUME_SOCK_CLOEXEC, __ASSUME_IN_NONBLOCK, __ASSUME_PIPE2)
+	(__ASSUME_EVENTFD2, __ASSUME_SIGNALFD4, __ASSUME_DUP3): Define for
+	2.6.27 or later.
+	(__ASSUME_ACCEPT4): Define for 2.6.28 or later.
+
 2013-02-04  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #13550]
