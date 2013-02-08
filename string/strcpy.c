@@ -30,7 +30,6 @@ strcpy (dest, src)
   char c;
   char *__unbounded s = (char *__unbounded) src;
   const ptrdiff_t off = dest - s - 1;
-  size_t n;
 
   do
     {
@@ -38,8 +37,6 @@ strcpy (dest, src)
       s[off] = c;
     }
   while (c != '\0');
-
-  n = s - src;
 
   return dest;
 }

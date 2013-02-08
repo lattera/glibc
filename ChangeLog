@@ -1,5 +1,7 @@
 2013-02-08  Roland McGrath  <roland@hack.frob.com>
 
+	* string/strcpy.c: Removed unused variable.
+
 	* Makeconfig (+sysdep-includes): Define with := rather than =.
 	Use an existing include/ subdir of each sysdeps dir before it.
 
