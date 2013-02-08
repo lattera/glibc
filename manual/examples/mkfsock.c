@@ -45,13 +45,12 @@ make_named_socket (const char *filename)
 
   /* The size of the address is
      the offset of the start of the filename,
-     plus its length,
-     plus one for the terminating null byte.
+     plus its length (not including the terminating null byte).
      Alternatively you can just do:
      size = SUN_LEN (&name);
   */
   size = (offsetof (struct sockaddr_un, sun_path)
-	  + strlen (name.sun_path) + 1);
+	  + strlen (name.sun_path));
 
   if (bind (sock, (struct sockaddr *) &name, size) < 0)
     {
