@@ -1,6 +1,12 @@
 2013-02-08  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #13550]
+	* sysdeps/unix/sysv/linux/alpha/fdatasync.c: Don't include
+	<bp-checks.h>.
+	* sysdeps/unix/sysv/linux/alpha/gethostname.c: Likewise.
+	(__gethostname): Don't use CHECK_N.
+
+	[BZ #13550]
 	* sysdeps/unix/sysv/linux/alpha/msgctl.c: Do not include
 	<bp-checks.h>.
 	(__new_msgctl): Do not use CHECK_1.

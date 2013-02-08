@@ -23,8 +23,6 @@
 #include <sysdep-cancel.h>
 #include <sys/syscall.h>
 
-#include <bp-checks.h>
-
 /* Kludge to work around Linux' restriction of only up to five
    arguments to a system call.  */
 struct ipc_kludge
@@ -46,7 +44,7 @@ __libc_msgrcv (msqid, msgp, msgsz, msgtyp, msgflg)
      fives parameters to a system call.  */
   struct ipc_kludge tmp;
 
-  tmp.msgp = CHECK_N (msgp, msgsz);
+  tmp.msgp = msgp;
   tmp.msgtyp = msgtyp;
 
   if (SINGLE_THREAD_P)

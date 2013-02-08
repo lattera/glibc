@@ -21,7 +21,6 @@
 
 #include <sysdep-cancel.h>
 #include <sys/syscall.h>
-#include <bp-checks.h>
 
 #include <kernel-features.h>
 
@@ -38,7 +37,7 @@ __libc_pwrite64 (fd, buf, count, offset)
   if (SINGLE_THREAD_P)
     {
   /* On PPC32 64bit values are aligned in odd/even register pairs.  */
-      result = INLINE_SYSCALL (pwrite, 6, fd, CHECK_N (buf, count), count,
+      result = INLINE_SYSCALL (pwrite, 6, fd, buf, count,
 			       0, (long) (offset >> 32),
 			       (long) offset);
 
@@ -48,7 +47,7 @@ __libc_pwrite64 (fd, buf, count, offset)
   int oldtype = LIBC_CANCEL_ASYNC ();
 
   /* On PPC32 64bit values are aligned in odd/even register pairs.  */
-  result = INLINE_SYSCALL (pwrite, 6, fd, CHECK_N (buf, count), count,
+  result = INLINE_SYSCALL (pwrite, 6, fd, buf, count,
 			   0, (long) (offset >> 32),
 			   (long) offset);
 

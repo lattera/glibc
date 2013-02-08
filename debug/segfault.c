@@ -31,8 +31,6 @@
 #include <_itoa.h>
 #include <ldsodefs.h>
 
-#include <bp-checks.h>
-
 /* This file defines macros to access the content of the sigcontext element
    passed up by the signal handler.  */
 #include <sigcontextinfo.h>

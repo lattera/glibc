@@ -20,8 +20,6 @@
 #include <unistd.h>
 #include <sysdep.h>
 
-#include <bp-checks.h>
-
 /* This must be initialized data because commons can't have aliases.  */
 void *__curbrk = 0;
 

@@ -26,7 +26,6 @@
 
 #include <sysdep-cancel.h>
 #include <sys/syscall.h>
-#include <bp-checks.h>
 
 #include <kernel-features.h>
 
@@ -54,10 +53,9 @@ __libc_pwrite (fd, buf, count, offset)
   if (SINGLE_THREAD_P)
     {
 #if _MIPS_SIM == _ABIN32 || _MIPS_SIM == _ABI64
-      result = INLINE_SYSCALL (pwrite, 4, fd, CHECK_N (buf, count), count,
-			       offset);
+      result = INLINE_SYSCALL (pwrite, 4, fd, buf, count, offset);
 #else
-      result = INLINE_SYSCALL (pwrite, 6, fd, CHECK_N (buf, count), count, 0,
+      result = INLINE_SYSCALL (pwrite, 6, fd, buf, count, 0,
 			       __LONG_LONG_PAIR (offset >> 31, offset));
 #endif
       return result;
@@ -66,9 +64,9 @@ __libc_pwrite (fd, buf, count, offset)
   int oldtype = LIBC_CANCEL_ASYNC ();
 
 #if _MIPS_SIM == _ABIN32 || _MIPS_SIM == _ABI64
-  result = INLINE_SYSCALL (pwrite, 4, fd, CHECK_N (buf, count), count, offset);
+  result = INLINE_SYSCALL (pwrite, 4, fd, buf, count, offset);
 #else
-  result = INLINE_SYSCALL (pwrite, 6, fd, CHECK_N (buf, count), count, 0,
+  result = INLINE_SYSCALL (pwrite, 6, fd, buf, count, 0,
 			   __LONG_LONG_PAIR (offset >> 31, offset));
 #endif
 

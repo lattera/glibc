@@ -28,7 +28,6 @@
 
 #include <sysdep.h>
 #include <sys/syscall.h>
-#include <bp-checks.h>
 
 #include <linux/posix_types.h>
 
@@ -109,7 +108,7 @@ __GETDENTS (int fd, char *buf, size_t nbytes)
       && (offsetof (struct kernel_dirent, d_reclen)
 	  == offsetof (struct dirent, d_reclen)))
     {
-      retval = INLINE_SYSCALL (getdents, 3, fd, CHECK_N(buf, nbytes), nbytes);
+      retval = INLINE_SYSCALL (getdents, 3, fd, buf, nbytes);
 
       /* The kernel added the d_type value after the name.  Change
 	 this now.  */
@@ -158,8 +157,7 @@ __GETDENTS (int fd, char *buf, size_t nbytes)
 		   - offsetof (DIRENT_TYPE, d_name);
 	  kbuf = __alloca(kbytes);
 	}
-      retval = INLINE_SYSCALL (getdents64, 3, fd, CHECK_N(kbuf, kbytes),
-			       kbytes);
+      retval = INLINE_SYSCALL (getdents64, 3, fd, kbuf, kbytes);
 # ifndef __ASSUME_GETDENTS64_SYSCALL
       if (retval != -1 || (errno != EINVAL && errno != ENOSYS))
 # endif
@@ -255,8 +253,7 @@ __GETDENTS (int fd, char *buf, size_t nbytes)
 
     skdp = kdp = __alloca (red_nbytes);
 
-    retval = INLINE_SYSCALL (getdents, 3, fd,
-			     CHECK_N ((char *) kdp, red_nbytes), red_nbytes);
+    retval = INLINE_SYSCALL (getdents, 3, fd, (char *) kdp, red_nbytes);
 
     if (retval == -1)
       return -1;

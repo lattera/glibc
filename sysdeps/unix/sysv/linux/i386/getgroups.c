@@ -22,7 +22,6 @@
 
 #include <sysdep.h>
 #include <sys/syscall.h>
-#include <bp-checks.h>
 
 #include <linux/posix_types.h>
 
@@ -34,7 +33,7 @@
 int
 __getgroups (int n, gid_t *groups)
 {
-  return INLINE_SYSCALL (getgroups32, 2, n, CHECK_N (groups, n));
+  return INLINE_SYSCALL (getgroups32, 2, n, groups);
 }
 
 weak_alias (__getgroups, getgroups)

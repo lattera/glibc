@@ -22,7 +22,6 @@
 
 #include <sysdep-cancel.h>
 #include <sys/syscall.h>
-#include <bp-checks.h>
 
 #include <kernel-features.h>
 
@@ -40,16 +39,14 @@ __libc_pread (fd, buf, count, offset)
 
   if (SINGLE_THREAD_P)
     {
-      result = INLINE_SYSCALL (pread, 4, fd, CHECK_N (buf, count), count,
-                                offset);
+      result = INLINE_SYSCALL (pread, 4, fd, buf, count, offset);
 
       return result;
     }
 
   int oldtype = LIBC_CANCEL_ASYNC ();
 
-  result = INLINE_SYSCALL (pread, 4, fd, CHECK_N (buf, count), count,
-                            offset);
+  result = INLINE_SYSCALL (pread, 4, fd, buf, count, offset);
 
   LIBC_CANCEL_RESET (oldtype);
 

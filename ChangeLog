@@ -1,3 +1,78 @@
+2013-02-08  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #13550]
+	* debug/segfault.c: Don't include <bp-checks.h>.
+	* sysdeps/generic/bp-checks.h: Remove file.
+	* sysdeps/unix/sysv/linux/getdents.c: Don't include <bp-checks.h>.
+	(__GETDENTS): Don't use CHECK_N.
+	* sysdeps/unix/sysv/linux/i386/brk.c: Don't include <bp-checks.h>.
+	* sysdeps/unix/sysv/linux/i386/getgroups.c: Likewise.
+	(__getgroups): Don't use CHECK_N.
+	* sysdeps/unix/sysv/linux/i386/setgroups.c: Likewise.
+	(setgroups): Don't use CHECK_N.
+	* sysdeps/unix/sysv/linux/mmap64.c: Don't include <bp-checks.h>.
+	* sysdeps/unix/sysv/linux/msgrcv.c: Likewise.
+	(__libc_msgrcv): Don't use CHECK_N.
+	* sysdeps/unix/sysv/linux/msgsnd.c: Don't include <bp-checks.h>.
+	(__libc_msgsnd): Don't use CHECK_N.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/pread.c: Don't include
+	<bp-checks.h>.
+	(__libc_pread): Don't use CHECK_N.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/pread64.c: Don't
+	include <bp-checks.h>.
+	(__libc_pread64): Don't use CHECK_N.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/pwrite.c: Don't
+	include <bp-checks.h>.
+	(__libc_pwrite): Don't use CHECK_N.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/pwrite64.c: Don't
+	include <bp-checks.h>.
+	(__libc_pwrite64): Don't use CHECK_N.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/pread.c: Don't include
+	<bp-checks.h>.
+	(__libc_pread): Don't use CHECK_N.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/pread64.c: Don't
+	include <bp-checks.h>.
+	(__libc_pread64): Don't use CHECK_N.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/pwrite.c: Don't
+	include <bp-checks.h>.
+	(__libc_pwrite): Don't use CHECK_N.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/pwrite64.c: Don't
+	include <bp-checks.h>.
+	(__libc_pwrite64): Don't use CHECK_N.
+	* sysdeps/unix/sysv/linux/pread.c: Don't include <bp-checks.h>.
+	(do_pread): Don't use CHECK_N.
+	* sysdeps/unix/sysv/linux/pread64.c: Don't include <bp-checks.h>.
+	(do_pread64): Don't use CHECK_N.
+	* sysdeps/unix/sysv/linux/pwrite.c: Don't include <bp-checks.h>.
+	(do_pwrite): Don't use CHECK_N.
+	* sysdeps/unix/sysv/linux/pwrite64.c: Don't include <bp-checks.h>.
+	(do_pwrite64): Don't use CHECK_N.
+	* sysdeps/unix/sysv/linux/readv.c: Don't include <bp-checks.h>.
+	(__libc_readv): Don't use CHECK_N.
+	* sysdeps/unix/sysv/linux/semop.c: Don't include <bp-checks.h>.
+	(semop): Don't use CHECK_N.
+	* sysdeps/unix/sysv/linux/semtimedop.c: Don't include
+	<bp-checks.h>.
+	(semtimedop): Don't use CHECK_N.
+	* sysdeps/unix/sysv/linux/sh/pread.c: Don't include <bp-checks.h>.
+	(__libc_pread): Don't use CHECK_N.
+	* sysdeps/unix/sysv/linux/sh/pread64.c: Don't include
+	<bp-checks.h>.
+	(__libc_pread64): Don't use CHECK_N.
+	* sysdeps/unix/sysv/linux/sh/pwrite.c: Don't include
+	<bp-checks.h>.
+	(__libc_pwrite): Don't use CHECK_N.
+	* sysdeps/unix/sysv/linux/sh/pwrite64.c: Don't include
+	<bp-checks.h>.
+	(__libc_pwrite64): Don't use CHECK_N.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/msgrcv.c: Don't include
+	<bp-checks.h>.
+	(__libc_msgrcv): Don't use CHECK_N.
+	* sysdeps/unix/sysv/linux/sysctl.c: Don't include <bp-checks.h>.
+	(__sysctl): Don't use CHECK_N.  Remove GKM FIXME comment.
+	* sysdeps/unix/sysv/linux/writev.c: Don't include <bp-checks.h>.
+	(__libc_writev): Don't use CHECK_N.
+
 2013-02-08  Roland McGrath  <roland@hack.frob.com>
 
 	* string/strcpy.c: Removed unused variable.

@@ -23,7 +23,6 @@
 
 #include <sysdep.h>
 #include <sys/syscall.h>
-#include <bp-checks.h>
 
 #include <xstatconv.h>
 

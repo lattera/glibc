@@ -22,7 +22,6 @@
 
 #include <sysdep.h>
 #include <sys/syscall.h>
-#include <bp-checks.h>
 
 #include <setxid.h>
 #include <linux/posix_types.h>
@@ -33,6 +32,6 @@
 int
 setgroups (size_t n, const gid_t *groups)
 {
-  return INLINE_SETXID_SYSCALL (setgroups32, 2, n, CHECK_N (groups, n));
+  return INLINE_SETXID_SYSCALL (setgroups32, 2, n, groups);
 }
 libc_hidden_def (setgroups)

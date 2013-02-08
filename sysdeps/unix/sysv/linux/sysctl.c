@@ -22,13 +22,11 @@
 
 #include <sysdep.h>
 #include <sys/syscall.h>
-#include <bp-checks.h>
 
 int
 __sysctl (int *name, int nlen, void *oldval, size_t *oldlenp,
 	  void *newval, size_t newlen)
 {
-  /* GKM FIXME: force __sysctl_args decl to have unbounded pointers.  */
   struct __sysctl_args args =
   {
     .name = name,
@@ -38,9 +36,6 @@ __sysctl (int *name, int nlen, void *oldval, size_t *oldlenp,
     .newval = newval,
     .newlen = newlen
   };
-  (void) CHECK_N (name, nlen);
-  (void) CHECK_N (oldval, *oldlenp);
-  (void) CHECK_N (newval, newlen);
 
   return INLINE_SYSCALL (_sysctl, 1, __ptrvalue (&args));
 }

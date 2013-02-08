@@ -23,7 +23,6 @@
 
 #include <sysdep-cancel.h>
 #include <sys/syscall.h>
-#include <bp-checks.h>
 
 #include <kernel-features.h>
 
@@ -44,7 +43,7 @@ do_pread (int fd, void *buf, size_t count, off_t offset)
   ssize_t result;
 
   assert (sizeof (offset) == 4);
-  result = INLINE_SYSCALL (pread, 5, fd, CHECK_N (buf, count), count,
+  result = INLINE_SYSCALL (pread, 5, fd, buf, count,
 			   __LONG_LONG_PAIR (offset >> 31, offset));
 
   return result;
