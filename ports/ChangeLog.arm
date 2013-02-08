@@ -1,3 +1,11 @@
+2013-02-08  Carlos O'Donell  <carlos@redhat.com>
+
+	* sysdeps/unix/sysv/linux/arm/dl-cache.h
+	[__ARM_PCS_VFP] (_dl_cache_check_flags): Allow plain FLAG_ELF_LIBC6.
+	[!__ARM_PCS_VFP] (_dl_cache_check_flags): Likewise.
+	* sysdeps/unix/sysv/linux/arm/readelflib.c (process_elf_file):
+	Set FLAG_ARM_LIBSF for soft-float ABI otherwise just FLAG_ELF_LIBC6.
+
 2013-02-04  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #13550]

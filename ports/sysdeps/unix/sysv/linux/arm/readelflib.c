@@ -46,6 +46,12 @@ process_elf_file (const char *file_name, const char *lib, int *flag,
 	  if (elf32_header->e_flags & EF_ARM_ABI_FLOAT_HARD)
 	    *flag = FLAG_ARM_LIBHF|FLAG_ELF_LIBC6;
 	  else if (elf32_header->e_flags & EF_ARM_ABI_FLOAT_SOFT)
+	    *flag = FLAG_ARM_LIBSF|FLAG_ELF_LIBC6;
+	  else
+	    /* We must assume the unmarked objects are compatible
+	       with all ABI variants. Such objects may have been
+	       generated in a transitional period when the ABI
+	       tags were not added to all objects.  */
 	    *flag = FLAG_ELF_LIBC6;
 	}
     }

@@ -36,6 +36,7 @@
 #define FLAG_X8664_LIBX32	0x0800
 #define FLAG_ARM_LIBHF		0x0900
 #define FLAG_AARCH64_LIB64	0x0a00
+#define FLAG_ARM_LIBSF		0x0b00
 
 /* Name of auxiliary cache.  */
 #define _PATH_LDCONFIG_AUX_CACHE "/var/cache/ldconfig/aux-cache"
