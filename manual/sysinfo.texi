@@ -691,7 +691,7 @@ used in situations where multiple threads access the file.
 
 @comment mntent.h
 @comment BSD
-@deftypefun {struct mntent *} getmntent_r (FILE *@var{stream}, struct mentent *@var{result}, char *@var{buffer}, int @var{bufsize})
+@deftypefun {struct mntent *} getmntent_r (FILE *@var{stream}, struct mntent *@var{result}, char *@var{buffer}, int @var{bufsize})
 The @code{getmntent_r} function is the reentrant variant of
 @code{getmntent}.  It also returns the next entry from the file and
 returns a pointer.  The actual variable the values are stored in is not
@@ -1062,9 +1062,9 @@ when @code{umount2} is also available.
 This section describes the @code{sysctl} function, which gets and sets
 a variety of system parameters.
 
-The symbols used in this section are declared in the file @file{sysctl.h}.
+The symbols used in this section are declared in the file @file{sys/sysctl.h}.
 
-@comment sysctl.h
+@comment sys/sysctl.h
 @comment BSD
 @deftypefun int sysctl (int *@var{names}, int @var{nlen}, void *@var{oldval}, size_t *@var{oldlenp}, void *@var{newval}, size_t @var{newlen})
 
@@ -1090,7 +1090,7 @@ in a hierarchical structure like a hierarchical filesystem.  To identify
 a particular parameter, you specify a path through the structure in a
 way analogous to specifying the pathname of a file.  Each component of
 the path is specified by an integer and each of these integers has a
-macro defined for it by @file{sysctl.h}.  @var{names} is the path, in
+macro defined for it by @file{sys/sysctl.h}.  @var{names} is the path, in
 the form of an array of integers.  Each component of the path is one
 element of the array, in order.  @var{nlen} is the number of components
 in the path.

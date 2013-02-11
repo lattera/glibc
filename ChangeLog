@@ -1,3 +1,81 @@
+2013-02-11  Roland McGrath  <roland@hack.frob.com>
+
+	* manual/conf.texi (General Limits): Fix SSIZE_MAX type to ssize_t.
+	* manual/errno.texi (Error Messages): Fix typo in error_print_progname
+	declaration.
+	* manual/search.texi (Array Search Function): Add missing const in
+	lfind prototype.
+	* manual/resource.texi (Limits on Resources): Fix RLIM_INFINITY
+	declaration to use rlim_t.
+	(Basic Scheduling Functions): Remove erroneous const from
+	sched_getparam prototype.  Remove erroneous * from
+	sched_get_priority_max and sched_get_priority_min prototypes.
+	(Resource Usage): Fix summary @comment on vtimes to refer to
+	sys/vtimes.h rather than vtimes.h.
+	Add missing *s in vtimes prototype.
+	(Limits on Resources): Fix ulimit prototype to return long int.
+	* manual/math.texi (SVID Random): Fix lrand48_r and mrand48_r
+	prototypes to use long int rather than double.
+	(BSD Random): Fix initstate and setstate to use char *, not void *.
+	* manual/llio.texi (Asynchronous Reads/Writes): Fix lio_listio64
+	prototype to make second argument 'struct aiocb64 *const[]'.
+	Fix aio_read64 and aio_write64 prototypes to use struct aiocb64.
+	(Status of AIO Operations): Remove erroneous const in aio_return and
+	aio_return64 prototypes.
+	(Synchronizing I/O): Fix sync prototype to return void.
+	* manual/startup.texi (Suboptions): Remove an erroneous const in
+	getsubopt prototype.
+	* manual/getopt.texi (Using Getopt): Add a const in getopt prototype.
+	* manual/users.texi (Lookup Netgroup): Fix getnetgrent_r prototype to
+	use size_t rather than int.
+	(Scanning All Users): Likewise for getpwent_r.
+	(Setting Groups): Add missing const to setgroups prototype.
+	* manual/sysinfo.texi (mtab): Fix typo in getmntent_r prototype.
+	* manual/socket.texi (Host Names): Fix gethostbyaddr and
+	gethostbyaddr_r prototypes to use socklen_t rather than size_t and
+	'const void *' rather than 'const char *'.
+	(Host Address Functions): Likewise for inet_ntop.
+	(Networks Database): Fix getnetbyaddr prototype to use uint32_t.
+	(Receiving Data): Fix recv, recvfrom, recvmsg prototypes to use
+	ssize_t for return value.
+	(Sending Data): Likewise for send, sendto, sendmsg.
+	(Socket Option Functions): Add a missing const in setsockopt prototype.
+	* manual/stdio.texi (Simple Output): Fix fputwc_unlocked prototype to
+	use wchar_t for the argument.
+	(Formatted Input Functions): Fix swscanf prototype to use wchar_t *.
+	* manual/arith.texi (Control Functions): Fix fegetexcept prototype to
+	take no arguments.
+	(Normalization Functions): Fix scalb, scalbf, scalbl prototypes to use
+	double/float/long double for second argument.
+	Fix return types of significand, significandf, significandl.
+	* manual/filesys.texi (Setting Permissions): Use mode_t for second
+	argument in fchmod prototype.
+	(File Owner): Use uid_t and gid_t in fchown prototype.
+	(File Times): Add const to utimes, futimes, and lutimes prototypes.
+	(Making Special Files): Use mode_t and dev_t in mknod prototype.
+	(Scanning Directory Content): Fix scandir and scandir64 prototypes to
+	use 'const struct dirent **' as argument types to CMP function pointer
+	argument.
+	(Symbolic Links): Fix readlink prototype with ssize_t as return value.
+	(File Times): Fix summary magic @comment for struct utimbuf and utime
+	to refer to utime.h, not time.h.
+	* manual/string.texi (Argz Functions): Add missing const in
+	argz_extract and argz_next prototypes.
+	(Finding Tokens in a String): Likewise for basename.
+	(String/Array Comparison): Fix typo in wcscasecmp prototype.
+	(Copying and Concatenation): Fix typo in wmemmove prototype.
+	* manual/signal.texi (Using Pause): Use (void) in pause prototype.
+	(Signal Stack): Remove erroneous const in sigstack prototype.
+	* manual/time.texi (Setting an Alarm): Add missing const in setitimer
+	prototype.
+	(Simple Calendar Time): Likewise for stime.
+	* manual/terminal.texi (BSD Terminal Modes): Add missing const in stty
+	prototype.
+	* manual/sysinfo.texi (System Parameters): Fix mentions of sysctl.h to
+	say sys/sysctl.h instead.
+	* manual/syslog.texi (syslog; vsyslog): Add missing const in syslog
+	and vsyslog prototypes.
+
 2013-02-11  Tom de Vries  <tom@codesourcery.com>
 
 	* string/Makefile (CFLAGS-bug-strstr1.c, CFLAGS-bug-strcasestr1.c):

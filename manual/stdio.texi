@@ -834,7 +834,7 @@ function except that it does not implicitly lock the stream.
 
 @comment wchar.h
 @comment POSIX
-@deftypefun wint_t fputwc_unlocked (wint_t @var{wc}, FILE *@var{stream})
+@deftypefun wint_t fputwc_unlocked (wchar_t @var{wc}, FILE *@var{stream})
 The @code{fputwc_unlocked} function is equivalent to the @code{fputwc}
 function except that it does not implicitly lock the stream.
 
@@ -3853,7 +3853,7 @@ as an argument to receive a string read under control of the @samp{%s},
 
 @comment wchar.h
 @comment ISO
-@deftypefun int swscanf (const wchar_t *@var{ws}, const char *@var{template}, @dots{})
+@deftypefun int swscanf (const wchar_t *@var{ws}, const wchar_t *@var{template}, @dots{})
 This is like @code{wscanf}, except that the characters are taken from the
 null-terminated string @var{ws} instead of from a stream.  Reaching the
 end of the string is treated as an end-of-file condition.

@@ -1086,7 +1086,7 @@ operation was successful, @code{-1} otherwise.
 
 @comment fenv.h
 @comment GNU
-@deftypefun int fegetexcept (int @var{excepts})
+@deftypefun int fegetexcept (void)
 The function returns a bitmask of all currently enabled exceptions.  It
 returns @code{-1} in case of failure.
 @end deftypefun
@@ -1248,13 +1248,13 @@ equivalent to those of @code{ldexp} and @code{frexp}.  See also the
 
 @comment math.h
 @comment BSD
-@deftypefun double scalb (double @var{value}, int @var{exponent})
+@deftypefun double scalb (double @var{value}, double @var{exponent})
 @comment math.h
 @comment BSD
-@deftypefunx float scalbf (float @var{value}, int @var{exponent})
+@deftypefunx float scalbf (float @var{value}, float @var{exponent})
 @comment math.h
 @comment BSD
-@deftypefunx {long double} scalbl (long double @var{value}, int @var{exponent})
+@deftypefunx {long double} scalbl (long double @var{value}, long double @var{exponent})
 The @code{scalb} function is the BSD name for @code{ldexp}.
 @end deftypefun
 
@@ -1286,13 +1286,13 @@ The @code{scalb} function is the BSD name for @code{ldexp}.
 
 @comment math.h
 @comment BSD
-@deftypefun {long long int} significand (double @var{x})
+@deftypefun double significand (double @var{x})
 @comment math.h
 @comment BSD
-@deftypefunx {long long int} significandf (float @var{x})
+@deftypefunx float significandf (float @var{x})
 @comment math.h
 @comment BSD
-@deftypefunx {long long int} significandl (long double @var{x})
+@deftypefunx {long double} significandl (long double @var{x})
 @code{significand} returns the mantissa of @var{x} scaled to the range
 @math{[1, 2)}.
 It is equivalent to @w{@code{scalb (@var{x}, (double) -ilogb (@var{x}))}}.

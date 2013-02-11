@@ -420,7 +420,7 @@ current calendar time is not available, the value
 @c Linux.
 @comment time.h
 @comment SVID, XPG
-@deftypefun int stime (time_t *@var{newtime})
+@deftypefun int stime (const time_t *@var{newtime})
 @code{stime} sets the system clock, i.e., it tells the system that the
 current calendar time is @var{newtime}, where @code{newtime} is
 interpreted as described in the above definition of @code{time_t}.
@@ -2314,7 +2314,7 @@ The @code{struct timeval} data type is described in @ref{Elapsed Time}.
 
 @comment sys/time.h
 @comment BSD
-@deftypefun int setitimer (int @var{which}, struct itimerval *@var{new}, struct itimerval *@var{old})
+@deftypefun int setitimer (int @var{which}, const struct itimerval *@var{new}, struct itimerval *@var{old})
 The @code{setitimer} function sets the timer specified by @var{which}
 according to @var{new}.  The @var{which} argument can have a value of
 @code{ITIMER_REAL}, @code{ITIMER_VIRTUAL}, or @code{ITIMER_PROF}.

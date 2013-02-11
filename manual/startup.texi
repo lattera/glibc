@@ -220,7 +220,7 @@ programming of code like this the function @code{getsubopt} is
 available.
 
 @comment stdlib.h
-@deftypefun int getsubopt (char **@var{optionp}, const char* const *@var{tokens}, char **@var{valuep})
+@deftypefun int getsubopt (char **@var{optionp}, char *const *@var{tokens}, char **@var{valuep})
 
 The @var{optionp} parameter must be a pointer to a variable containing
 the address of the string to process.  When the function returns the

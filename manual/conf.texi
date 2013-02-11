@@ -114,7 +114,7 @@ more (@pxref{Sysconf}).
 
 @comment limits.h
 @comment POSIX.1
-@deftypevr Macro int SSIZE_MAX
+@deftypevr Macro ssize_t SSIZE_MAX
 The largest value that can fit in an object of type @code{ssize_t}.
 Effectively, this is the limit on the number of bytes that can be read
 or written in a single operation.
@@ -1121,7 +1121,7 @@ Each parameter also has another macro, with a name starting with
 have on @emph{any} POSIX system.  @xref{File Minimums}.
 
 @cindex limits, link count of files
-@comment limits.h
+@comment limits.h (optional)
 @comment POSIX.1
 @deftypevr Macro int LINK_MAX
 The uniform system limit (if any) for the number of names for a given

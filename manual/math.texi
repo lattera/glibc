@@ -1387,7 +1387,7 @@ program runs, do @code{srandom (time (0))}.
 
 @comment stdlib.h
 @comment BSD
-@deftypefun {void *} initstate (unsigned int @var{seed}, void *@var{state}, size_t @var{size})
+@deftypefun {char *} initstate (unsigned int @var{seed}, char *@var{state}, size_t @var{size})
 The @code{initstate} function is used to initialize the random number
 generator state.  The argument @var{state} is an array of @var{size}
 bytes, used to hold the state information.  It is initialized based on
@@ -1401,7 +1401,7 @@ restore that state.
 
 @comment stdlib.h
 @comment BSD
-@deftypefun {void *} setstate (void *@var{state})
+@deftypefun {char *} setstate (char *@var{state})
 The @code{setstate} function restores the random number state
 information @var{state}.  The argument must have been the result of
 a previous call to @var{initstate} or @var{setstate}.
@@ -1692,7 +1692,7 @@ programs.
 
 @comment stdlib.h
 @comment GNU
-@deftypefun int lrand48_r (struct drand48_data *@var{buffer}, double *@var{result})
+@deftypefun int lrand48_r (struct drand48_data *@var{buffer}, long int *@var{result})
 This function is similar to @code{lrand48}, but in addition it takes a
 pointer to a buffer describing the state of the random number generator
 just like @code{drand48}.
@@ -1722,7 +1722,7 @@ programs.
 
 @comment stdlib.h
 @comment GNU
-@deftypefun int mrand48_r (struct drand48_data *@var{buffer}, double *@var{result})
+@deftypefun int mrand48_r (struct drand48_data *@var{buffer}, long int *@var{result})
 This function is similar to @code{mrand48} but like the other reentrant
 functions it uses the random number generator described by the value in
 the buffer pointed to by @var{buffer}.

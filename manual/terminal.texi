@@ -621,7 +621,7 @@ If this bit is set, convert the newline character on output into a pair
 of characters, carriage return followed by linefeed.
 @end deftypevr
 
-@comment termios.h
+@comment termios.h (optional)
 @comment BSD
 @deftypevr Macro tcflag_t OXTABS
 If this bit is set, convert tab characters on output into the appropriate
@@ -630,7 +630,7 @@ exists only on BSD systems and @gnuhurdsystems{}; on
 @gnulinuxsystems{} it is available as @code{XTABS}.
 @end deftypevr
 
-@comment termios.h
+@comment termios.h (optional)
 @comment BSD
 @deftypevr Macro tcflag_t ONOEOT
 If this bit is set, discard @kbd{C-d} characters (code @code{004}) on
@@ -962,7 +962,7 @@ This is the bit that toggles when the user types the DISCARD character.
 While this bit is set, all output is discarded.  @xref{Other Special}.
 @end deftypevr
 
-@comment termios.h
+@comment termios.h (optional)
 @comment BSD
 @deftypevr Macro tcflag_t NOKERNINFO
 Setting this bit disables handling of the STATUS character.
@@ -1686,7 +1686,7 @@ of the terminal which is open with file descriptor @var{filedes}.
 
 @comment sgtty.h
 @comment BSD
-@deftypefun int stty (int @var{filedes}, struct sgttyb *@var{attributes})
+@deftypefun int stty (int @var{filedes}, const struct sgttyb *@var{attributes})
 
 This function sets the attributes of a terminal.
 

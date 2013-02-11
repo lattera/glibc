@@ -437,7 +437,7 @@ should include the header file @file{grp.h}.
 
 @comment grp.h
 @comment BSD
-@deftypefun int setgroups (size_t @var{count}, gid_t *@var{groups})
+@deftypefun int setgroups (size_t @var{count}, const gid_t *@var{groups})
 This function sets the process's supplementary group IDs.  It can only
 be called from privileged processes.  The @var{count} argument specifies
 the number of group IDs in the array @var{groups}.
@@ -1655,7 +1655,7 @@ A null pointer is returned when no more entries are available.
 
 @comment pwd.h
 @comment GNU
-@deftypefun int getpwent_r (struct passwd *@var{result_buf}, char *@var{buffer}, int @var{buflen}, struct passwd **@var{result})
+@deftypefun int getpwent_r (struct passwd *@var{result_buf}, char *@var{buffer}, size_t @var{buflen}, struct passwd **@var{result})
 This function is similar to @code{getpwent} in that it returns the next
 entry from the stream initialized by @code{setpwent}.  Like
 @code{fgetpwent_r}, it uses the user-supplied buffers in
@@ -2005,7 +2005,7 @@ value of @code{0} means no further entries exist or internal errors occurred.
 
 @comment netdb.h
 @comment GNU
-@deftypefun int getnetgrent_r (char **@var{hostp}, char **@var{userp}, char **@var{domainp}, char *@var{buffer}, int @var{buflen})
+@deftypefun int getnetgrent_r (char **@var{hostp}, char **@var{userp}, char **@var{domainp}, char *@var{buffer}, size_t @var{buflen})
 This function is similar to @code{getnetgrent} with only one exception:
 the strings the three string pointers @var{hostp}, @var{userp}, and
 @var{domainp} point to, are placed in the buffer of @var{buflen} bytes

@@ -59,7 +59,7 @@ option argument, for those options that accept arguments.
 
 @comment unistd.h
 @comment POSIX.2
-@deftypefun int getopt (int @var{argc}, char **@var{argv}, const char *@var{options})
+@deftypefun int getopt (int @var{argc}, char *const *@var{argv}, const char *@var{options})
 The @code{getopt} function gets the next option argument from the
 argument list specified by the @var{argv} and @var{argc} arguments.
 Normally these values come directly from the arguments received by

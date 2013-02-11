@@ -2921,7 +2921,7 @@ you use it.
 
 @comment unistd.h
 @comment POSIX.1
-@deftypefun int pause ()
+@deftypefun int pause (void)
 The @code{pause} function suspends program execution until a signal
 arrives whose action is either to execute a handler function, or to
 terminate the process.
@@ -3195,7 +3195,7 @@ This field is true if the process is currently using this stack.
 
 @comment signal.h
 @comment BSD
-@deftypefun int sigstack (const struct sigstack *@var{stack}, struct sigstack *@var{oldstack})
+@deftypefun int sigstack (struct sigstack *@var{stack}, struct sigstack *@var{oldstack})
 The @code{sigstack} function specifies an alternate stack for use during
 signal handling.  When a signal is received by the process and its
 action indicates that the signal stack is used, the system arranges a

@@ -71,7 +71,7 @@ two functions can be found in @file{search.h}.
 
 @comment search.h
 @comment SVID
-@deftypefun {void *} lfind (const void *@var{key}, void *@var{base}, size_t *@var{nmemb}, size_t @var{size}, comparison_fn_t @var{compar})
+@deftypefun {void *} lfind (const void *@var{key}, const void *@var{base}, size_t *@var{nmemb}, size_t @var{size}, comparison_fn_t @var{compar})
 The @code{lfind} function searches in the array with @code{*@var{nmemb}}
 elements of @var{size} bytes pointed to by @var{base} for an element
 which matches the one pointed to by @var{key}.  The function pointed to

@@ -1507,7 +1507,7 @@ can be customized by defining a variable named
 
 @comment error.h
 @comment GNU
-@deftypevar {void (*) error_print_progname } (void)
+@deftypevar {void (*error_print_progname)} (void)
 If the @code{error_print_progname} variable is defined to a non-zero
 value the function pointed to is called by @code{error} or
 @code{error_at_line}.  It is expected to print the program name or do

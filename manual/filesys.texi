@@ -615,7 +615,7 @@ the result.
 
 @comment dirent.h
 @comment BSD/SVID
-@deftypefun int scandir (const char *@var{dir}, struct dirent ***@var{namelist}, int (*@var{selector}) (const struct dirent *), int (*@var{cmp}) (const void *, const void *))
+@deftypefun int scandir (const char *@var{dir}, struct dirent ***@var{namelist}, int (*@var{selector}) (const struct dirent *), int (*@var{cmp}) (const struct dirent **, const struct dirent **))
 
 The @code{scandir} function scans the contents of the directory selected
 by @var{dir}.  The result in *@var{namelist} is an array of pointers to
@@ -669,7 +669,7 @@ dirent64}}.  To use this we need a new function.
 
 @comment dirent.h
 @comment GNU
-@deftypefun int scandir64 (const char *@var{dir}, struct dirent64 ***@var{namelist}, int (*@var{selector}) (const struct dirent64 *), int (*@var{cmp}) (const void *, const void *))
+@deftypefun int scandir64 (const char *@var{dir}, struct dirent64 ***@var{namelist}, int (*@var{selector}) (const struct dirent64 *), int (*@var{cmp}) (const struct dirent64 **, const struct dirent64 **))
 The @code{scandir64} function works like the @code{scandir} function
 except that the directory entries it returns are described by elements
 of type @w{@code{struct dirent64}}.  The function pointed to by
@@ -1189,7 +1189,7 @@ exceeded.
 
 @comment unistd.h
 @comment BSD
-@deftypefun int readlink (const char *@var{filename}, char *@var{buffer}, size_t @var{size})
+@deftypefun ssize_t readlink (const char *@var{filename}, char *@var{buffer}, size_t @var{size})
 The @code{readlink} function gets the value of the symbolic link
 @var{filename}.  The file name that the link points to is copied into
 @var{buffer}.  This file name string is @emph{not} null-terminated;
@@ -2189,7 +2189,7 @@ The file is on a read-only file system.
 
 @comment unistd.h
 @comment BSD
-@deftypefun int fchown (int @var{filedes}, int @var{owner}, int @var{group})
+@deftypefun int fchown (int @var{filedes}, uid_t @var{owner}, gid_t @var{group})
 This is like @code{chown}, except that it changes the owner of the open
 file with descriptor @var{filedes}.
 
@@ -2541,7 +2541,7 @@ for full details on the sticky bit.
 
 @comment sys/stat.h
 @comment BSD
-@deftypefun int fchmod (int @var{filedes}, int @var{mode})
+@deftypefun int fchmod (int @var{filedes}, mode_t @var{mode})
 This is like @code{chmod}, except that it changes the permissions of the
 currently open file given by @var{filedes}.
 
@@ -2713,7 +2713,7 @@ the @code{utime} function---all except the attribute change time.  You
 need to include the header file @file{utime.h} to use this facility.
 @pindex utime.h
 
-@comment time.h
+@comment utime.h
 @comment POSIX.1
 @deftp {Data Type} {struct utimbuf}
 The @code{utimbuf} structure is used with the @code{utime} function to
@@ -2729,7 +2729,7 @@ This is the modification time for the file.
 @end table
 @end deftp
 
-@comment time.h
+@comment utime.h
 @comment POSIX.1
 @deftypefun int utime (const char *@var{filename}, const struct utimbuf *@var{times})
 This function is used to modify the file times associated with the file
@@ -2782,7 +2782,7 @@ in the header file @file{sys/time.h}.
 
 @comment sys/time.h
 @comment BSD
-@deftypefun int utimes (const char *@var{filename}, struct timeval @var{tvp}@t{[2]})
+@deftypefun int utimes (const char *@var{filename}, const struct timeval @var{tvp}@t{[2]})
 This function sets the file access and modification times of the file
 @var{filename}.  The new file access time is specified by
 @code{@var{tvp}[0]}, and the new modification time by
@@ -2796,7 +2796,7 @@ function.
 
 @comment sys/time.h
 @comment BSD
-@deftypefun int lutimes (const char *@var{filename}, struct timeval @var{tvp}@t{[2]})
+@deftypefun int lutimes (const char *@var{filename}, const struct timeval @var{tvp}@t{[2]})
 This function is like @code{utimes}, except that it does not follow
 symbolic links.  If @var{filename} is the name of a symbolic link,
 @code{lutimes} sets the file access and modification times of the
@@ -2812,7 +2812,7 @@ function.
 
 @comment sys/time.h
 @comment BSD
-@deftypefun int futimes (int @var{fd}, struct timeval @var{tvp}@t{[2]})
+@deftypefun int futimes (int @var{fd}, const struct timeval @var{tvp}@t{[2]})
 This function is like @code{utimes}, except that it takes an open file
 descriptor as an argument instead of a file name.  @xref{Low-Level
 I/O}.  This function comes from FreeBSD, and is not available on all
@@ -3049,7 +3049,7 @@ The prototype for @code{mknod} is declared in @file{sys/stat.h}.
 
 @comment sys/stat.h
 @comment BSD
-@deftypefun int mknod (const char *@var{filename}, int @var{mode}, int @var{dev})
+@deftypefun int mknod (const char *@var{filename}, mode_t @var{mode}, dev_t @var{dev})
 The @code{mknod} function makes a special file with name @var{filename}.
 The @var{mode} specifies the mode of the file, and may include the various
 special file bits, such as @code{S_IFCHR} (for a character special file)

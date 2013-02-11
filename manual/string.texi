@@ -479,7 +479,7 @@ The value returned by @code{memmove} is the value of @var{to}.
 
 @comment wchar.h
 @comment ISO
-@deftypefun {wchar_t *} wmemmove (wchar *@var{wto}, const wchar_t *@var{wfrom}, size_t @var{size})
+@deftypefun {wchar_t *} wmemmove (wchar_t *@var{wto}, const wchar_t *@var{wfrom}, size_t @var{size})
 @code{wmemmove} copies the @var{size} wide characters at @var{wfrom}
 into the @var{size} wide characters at @var{wto}, even if those two
 blocks of space overlap.  In the case of overlap, @code{memmove} is
@@ -1065,7 +1065,7 @@ If the contents of the two blocks are equal, @code{memcmp} returns
 @code{0}.
 @end deftypefun
 
-@comment wcjar.h
+@comment wchar.h
 @comment ISO
 @deftypefun int wmemcmp (const wchar_t *@var{a1}, const wchar_t *@var{a2}, size_t @var{size})
 The function @code{wmemcmp} compares the @var{size} wide characters
@@ -1171,7 +1171,7 @@ regards these characters as parts of the alphabet they do match.
 
 @comment wchar.h
 @comment GNU
-@deftypefun int wcscasecmp (const wchar_t *@var{ws1}, const wchar_T *@var{ws2})
+@deftypefun int wcscasecmp (const wchar_t *@var{ws1}, const wchar_t *@var{ws2})
 This function is like @code{wcscmp}, except that differences in case are
 ignored.  How uppercase and lowercase characters are related is
 determined by the currently selected locale.  In the standard @code{"C"}
@@ -1978,7 +1978,7 @@ separately.  The function is not locale-dependent.
 
 @comment wchar.h
 @comment ISO
-@deftypefun {wchar_t *} wcstok (wchar_t *@var{newstring}, const char *@var{delimiters})
+@deftypefun {wchar_t *} wcstok (wchar_t *@var{newstring}, const wchar_t *@var{delimiters})
 A string can be split into tokens by making a series of calls to the
 function @code{wcstok}.
 
@@ -2175,7 +2175,7 @@ on different systems.
 
 @comment libgen.h
 @comment XPG
-@deftypefun {char *} basename (char *@var{path})
+@deftypefun {char *} basename (const char *@var{path})
 This is the standard XPG defined @code{basename}. It is similar in
 spirit to the GNU version, but may modify the @var{path} by removing
 trailing '/' characters.  If the @var{path} is made up entirely of '/'
@@ -2483,7 +2483,7 @@ Returns the number of elements in the argz vector @var{argz} and
 
 @comment argz.h
 @comment GNU
-@deftypefun {void} argz_extract (char *@var{argz}, size_t @var{argz_len}, char **@var{argv})
+@deftypefun {void} argz_extract (const char *@var{argz}, size_t @var{argz_len}, char **@var{argv})
 The @code{argz_extract} function converts the argz vector @var{argz} and
 @var{argz_len} into a Unix-style argument vector stored in @var{argv},
 by putting pointers to every element in @var{argz} into successive
@@ -2561,7 +2561,7 @@ is @code{0}, @var{entry} is added to the end instead (as if by
 
 @comment argz.h
 @comment GNU
-@deftypefun {char *} argz_next (char *@var{argz}, size_t @var{argz_len}, const char *@var{entry})
+@deftypefun {char *} argz_next (const char *@var{argz}, size_t @var{argz_len}, const char *@var{entry})
 The @code{argz_next} function provides a convenient way of iterating
 over the elements in the argz vector @var{argz}.  It returns a pointer
 to the next element in @var{argz} after the element @var{entry}, or

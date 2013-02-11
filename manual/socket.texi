@@ -1127,7 +1127,7 @@ responsibility to make sure the buffer is large enough.
 
 @comment arpa/inet.h
 @comment IPv6 basic API
-@deftypefun {const char *} inet_ntop (int @var{af}, const void *@var{cp}, char *@var{buf}, size_t @var{len})
+@deftypefun {const char *} inet_ntop (int @var{af}, const void *@var{cp}, char *@var{buf}, socklen_t @var{len})
 This function converts an Internet address (either IPv4 or IPv6) from
 network (binary) to presentation (textual) form.  @var{af} should be
 either @code{AF_INET} or @code{AF_INET6}, as appropriate.  @var{cp} is a
@@ -1225,7 +1225,7 @@ allows the caller to specify the desired address family (e.g.@:
 
 @comment netdb.h
 @comment BSD
-@deftypefun {struct hostent *} gethostbyaddr (const char *@var{addr}, size_t @var{length}, int @var{format})
+@deftypefun {struct hostent *} gethostbyaddr (const void *@var{addr}, socklen_t @var{length}, int @var{format})
 The @code{gethostbyaddr} function returns information about the host
 with Internet address @var{addr}.  The parameter @var{addr} is not
 really a pointer to char - it can be a pointer to an IPv4 or an IPv6
@@ -1339,7 +1339,7 @@ allows the caller to specify the desired address family (e.g.@:
 
 @comment netdb.h
 @comment GNU
-@deftypefun int gethostbyaddr_r (const char *@var{addr}, size_t @var{length}, int @var{format}, struct hostent *restrict @var{result_buf}, char *restrict @var{buf}, size_t @var{buflen}, struct hostent **restrict @var{result}, int *restrict @var{h_errnop})
+@deftypefun int gethostbyaddr_r (const void *@var{addr}, socklen_t @var{length}, int @var{format}, struct hostent *restrict @var{result_buf}, char *restrict @var{buf}, size_t @var{buflen}, struct hostent **restrict @var{result}, int *restrict @var{h_errnop})
 The @code{gethostbyaddr_r} function returns information about the host
 with Internet address @var{addr}.  The parameter @var{addr} is not
 really a pointer to char - it can be a pointer to an IPv4 or an IPv6
@@ -2248,7 +2248,7 @@ you get a @code{SIGPIPE} signal for any use of @code{send} or
 
 @comment sys/socket.h
 @comment BSD
-@deftypefun int send (int @var{socket}, void *@var{buffer}, size_t @var{size}, int @var{flags})
+@deftypefun ssize_t send (int @var{socket}, const void *@var{buffer}, size_t @var{size}, int @var{flags})
 The @code{send} function is like @code{write}, but with the additional
 flags @var{flags}.  The possible values of @var{flags} are described
 in @ref{Socket Data Options}.
@@ -2315,7 +2315,7 @@ Primitives}.
 
 @comment sys/socket.h
 @comment BSD
-@deftypefun int recv (int @var{socket}, void *@var{buffer}, size_t @var{size}, int @var{flags})
+@deftypefun ssize_t recv (int @var{socket}, void *@var{buffer}, size_t @var{size}, int @var{flags})
 The @code{recv} function is like @code{read}, but with the additional
 flags @var{flags}.  The possible values of @var{flags} are described
 in @ref{Socket Data Options}.
@@ -2643,7 +2643,7 @@ more information about the @code{connect} function.
 
 @comment sys/socket.h
 @comment BSD
-@deftypefun int sendto (int @var{socket}, void *@var{buffer}, size_t @var{size}, int @var{flags}, struct sockaddr *@var{addr}, socklen_t @var{length})
+@deftypefun ssize_t sendto (int @var{socket}, const void *@var{buffer}, size_t @var{size}, int @var{flags}, struct sockaddr *@var{addr}, socklen_t @var{length})
 The @code{sendto} function transmits the data in the @var{buffer}
 through the socket @var{socket} to the destination address specified
 by the @var{addr} and @var{length} arguments.  The @var{size} argument
@@ -2678,7 +2678,7 @@ also tells you where it was sent from.  This function is declared in
 
 @comment sys/socket.h
 @comment BSD
-@deftypefun int recvfrom (int @var{socket}, void *@var{buffer}, size_t @var{size}, int @var{flags}, struct sockaddr *@var{addr}, socklen_t *@var{length-ptr})
+@deftypefun ssize_t recvfrom (int @var{socket}, void *@var{buffer}, size_t @var{size}, int @var{flags}, struct sockaddr *@var{addr}, socklen_t *@var{length-ptr})
 The @code{recvfrom} function reads one packet from the socket
 @var{socket} into the buffer @var{buffer}.  The @var{size} argument
 specifies the maximum number of bytes to be read.
@@ -2725,7 +2725,7 @@ you don't want to specify @var{flags} (@pxref{I/O Primitives}).
 
 @comment sys/socket.h
 @comment BSD
-@deftypefun int sendmsg (int @var{socket}, const struct msghdr *@var{message}, int @var{flags})
+@deftypefun ssize_t sendmsg (int @var{socket}, const struct msghdr *@var{message}, int @var{flags})
 
 This function is defined as a cancellation point in multi-threaded
 programs, so one has to be prepared for this and make sure that
@@ -2736,7 +2736,7 @@ whatever) are freed even if the thread is cancel.
 
 @comment sys/socket.h
 @comment BSD
-@deftypefun int recvmsg (int @var{socket}, struct msghdr *@var{message}, int @var{flags})
+@deftypefun ssize_t recvmsg (int @var{socket}, struct msghdr *@var{message}, int @var{flags})
 
 This function is defined as a cancellation point in multi-threaded
 programs, so one has to be prepared for this and make sure that
@@ -2953,7 +2953,7 @@ The @var{optname} doesn't make sense for the given @var{level}.
 
 @comment sys/socket.h
 @comment BSD
-@deftypefun int setsockopt (int @var{socket}, int @var{level}, int @var{optname}, void *@var{optval}, socklen_t @var{optlen})
+@deftypefun int setsockopt (int @var{socket}, int @var{level}, int @var{optname}, const void *@var{optval}, socklen_t @var{optlen})
 This function is used to set the socket option @var{optname} at level
 @var{level} for socket @var{socket}.  The value of the option is passed
 in the buffer @var{optval} of size @var{optlen}.
@@ -3157,7 +3157,7 @@ network.
 
 @comment netdb.h
 @comment BSD
-@deftypefun {struct netent *} getnetbyaddr (unsigned long int @var{net}, int @var{type})
+@deftypefun {struct netent *} getnetbyaddr (uint32_t @var{net}, int @var{type})
 The @code{getnetbyaddr} function returns information about the network
 of type @var{type} with number @var{net}.  You should specify a value of
 @code{AF_INET} for the @var{type} argument for Internet networks.

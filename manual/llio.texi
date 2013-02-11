@@ -1669,15 +1669,13 @@ they return.
 
 @comment unistd.h
 @comment X/Open
-@deftypefun int sync (void)
+@deftypefun void sync (void)
 A call to this function will not return as long as there is data which
 has not been written to the device.  All dirty buffers in the kernel will
 be written and so an overall consistent system can be achieved (if no
 other process in parallel writes data).
 
 A prototype for @code{sync} can be found in @file{unistd.h}.
-
-The return value is zero to indicate no error.
 @end deftypefun
 
 Programs more often want to ensure that data written to a given file is
@@ -1989,7 +1987,7 @@ replaces the normal implementation.
 
 @comment aio.h
 @comment Unix98
-@deftypefun int aio_read64 (struct aiocb *@var{aiocbp})
+@deftypefun int aio_read64 (struct aiocb64 *@var{aiocbp})
 This function is similar to the @code{aio_read} function.  The only
 difference is that on @w{32 bit} machines, the file descriptor should
 be opened in the large file mode.  Internally, @code{aio_read64} uses
@@ -2073,7 +2071,7 @@ replaces the normal implementation.
 
 @comment aio.h
 @comment Unix98
-@deftypefun int aio_write64 (struct aiocb *@var{aiocbp})
+@deftypefun int aio_write64 (struct aiocb64 *@var{aiocbp})
 This function is similar to the @code{aio_write} function.  The only
 difference is that on @w{32 bit} machines the file descriptor should
 be opened in the large file mode.  Internally @code{aio_write64} uses
@@ -2177,7 +2175,7 @@ transparently replaces the normal implementation.
 
 @comment aio.h
 @comment Unix98
-@deftypefun int lio_listio64 (int @var{mode}, struct aiocb *const @var{list}, int @var{nent}, struct sigevent *@var{sig})
+@deftypefun int lio_listio64 (int @var{mode}, struct aiocb64 *const @var{list}[], int @var{nent}, struct sigevent *@var{sig})
 This function is similar to the @code{lio_listio} function.  The only
 difference is that on @w{32 bit} machines, the file descriptor should
 be opened in the large file mode.  Internally, @code{lio_listio64} uses
@@ -2239,7 +2237,7 @@ machines.
 
 @comment aio.h
 @comment POSIX.1b
-@deftypefun ssize_t aio_return (const struct aiocb *@var{aiocbp})
+@deftypefun ssize_t aio_return (struct aiocb *@var{aiocbp})
 This function can be used to retrieve the return status of the operation
 carried out by the request described in the variable pointed to by
 @var{aiocbp}.  As long as the error status of this request as returned
@@ -2262,7 +2260,7 @@ transparently replaces the normal implementation.
 
 @comment aio.h
 @comment Unix98
-@deftypefun int aio_return64 (const struct aiocb64 *@var{aiocbp})
+@deftypefun ssize_t aio_return64 (struct aiocb64 *@var{aiocbp})
 This function is similar to @code{aio_return} with the only difference
 that the argument is a reference to a variable of type @code{struct
 aiocb64}.
@@ -2929,19 +2927,19 @@ access modes.  These names are preferred when writing GNU-specific code.
 But most programs will want to be portable to other POSIX.1 systems and
 should use the POSIX.1 names above instead.
 
-@comment fcntl.h
+@comment fcntl.h (optional)
 @comment GNU
 @deftypevr Macro int O_READ
 Open the file for reading.  Same as @code{O_RDONLY}; only defined on GNU.
 @end deftypevr
 
-@comment fcntl.h
+@comment fcntl.h (optional)
 @comment GNU
 @deftypevr Macro int O_WRITE
 Open the file for writing.  Same as @code{O_WRONLY}; only defined on GNU.
 @end deftypevr
 
-@comment fcntl.h
+@comment fcntl.h (optional)
 @comment GNU
 @deftypevr Macro int O_EXEC
 Open the file for executing.  Only defined on GNU.
@@ -3045,7 +3043,7 @@ to be portable, use @code{O_NOCTTY} when it is important to avoid this.
 The following three file name translation flags exist only on
 @gnuhurdsystems{}.
 
-@comment fcntl.h
+@comment fcntl.h (optional)
 @comment GNU
 @deftypevr Macro int O_IGNORE_CTTY
 Do not recognize the named file as the controlling terminal, even if it
@@ -3054,7 +3052,7 @@ on the new file descriptor will never induce job control signals.
 @xref{Job Control}.
 @end deftypevr
 
-@comment fcntl.h
+@comment fcntl.h (optional)
 @comment GNU
 @deftypevr Macro int O_NOLINK
 If the named file is a symbolic link, open the link itself instead of
@@ -3063,7 +3061,7 @@ return the information returned by @code{lstat} on the link's name.)
 @cindex symbolic link, opening
 @end deftypevr
 
-@comment fcntl.h
+@comment fcntl.h (optional)
 @comment GNU
 @deftypevr Macro int O_NOTRANS
 If the named file is specially translated, do not invoke the translator.
@@ -3095,7 +3093,7 @@ compatibility.
 The remaining operating modes are BSD extensions.  They exist only
 on some systems.  On other systems, these macros are not defined.
 
-@comment fcntl.h
+@comment fcntl.h (optional)
 @comment BSD
 @deftypevr Macro int O_SHLOCK
 Acquire a shared lock on the file, as with @code{flock}.
@@ -3106,7 +3104,7 @@ creating the file.  You are guaranteed that no other process will get
 the lock on the new file first.
 @end deftypevr
 
-@comment fcntl.h
+@comment fcntl.h (optional)
 @comment BSD
 @deftypevr Macro int O_EXLOCK
 Acquire an exclusive lock on the file, as with @code{flock}.

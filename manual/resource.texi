@@ -129,9 +129,9 @@ scheduled).
 @code{vtimes} and its @code{vtimes} data structure are declared in
 @file{sys/vtimes.h}.
 @pindex sys/vtimes.h
-@comment vtimes.h
 
-@deftypefun int vtimes (struct vtimes @var{current}, struct vtimes @var{child})
+@comment sys/vtimes.h
+@deftypefun int vtimes (struct vtimes *@var{current}, struct vtimes *@var{child})
 
 @code{vtimes} reports resource usage totals for a process.
 
@@ -419,7 +419,7 @@ operand must be less than @code{RLIM_NLIMITS}.
 
 @comment sys/resource.h
 @comment BSD
-@deftypevr Constant int RLIM_INFINITY
+@deftypevr Constant rlim_t RLIM_INFINITY
 This constant stands for a value of ``infinity'' when supplied as
 the limit value in @code{setrlimit}.
 @end deftypevr
@@ -433,7 +433,7 @@ above do.  The functions above are better choices.
 
 @comment ulimit.h
 @comment BSD
-@deftypefun int ulimit (int @var{cmd}, @dots{})
+@deftypefun {long int} ulimit (int @var{cmd}, @dots{})
 
 @code{ulimit} gets the current limit or sets the current and maximum
 limit for a particular resource for the calling process according to the
@@ -893,7 +893,7 @@ It is functionally identical to @code{sched_setscheduler} with
 
 @comment sched.h
 @comment POSIX
-@deftypefun int sched_getparam (pid_t @var{pid}, const struct sched_param *@var{param})
+@deftypefun int sched_getparam (pid_t @var{pid}, struct sched_param *@var{param})
 
 This function returns a process' absolute priority.
 
@@ -922,7 +922,7 @@ There is no process with pid @var{pid} and it is not zero.
 
 @comment sched.h
 @comment POSIX
-@deftypefun int sched_get_priority_min (int *@var{policy})
+@deftypefun int sched_get_priority_min (int @var{policy})
 
 This function returns the lowest absolute priority value that is
 allowable for a process with scheduling policy @var{policy}.
@@ -942,7 +942,7 @@ to this function are:
 
 @comment sched.h
 @comment POSIX
-@deftypefun int sched_get_priority_max (int *@var{policy})
+@deftypefun int sched_get_priority_max (int @var{policy})
 
 This function returns the highest absolute priority value that is
 allowable for a process that with scheduling policy @var{policy}.
