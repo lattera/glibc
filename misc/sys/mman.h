@@ -128,7 +128,7 @@ extern int mincore (void *__start, size_t __len, unsigned char *__vec)
 /* Remap pages mapped by the range [ADDR,ADDR+OLD_LEN) to new length
    NEW_LEN.  If MREMAP_MAYMOVE is set in FLAGS the returned address
    may differ from ADDR.  If MREMAP_FIXED is set in FLAGS the function
-   takes another paramter which is a fixed address at which the block
+   takes another parameter which is a fixed address at which the block
    resides after a successful call.  */
 extern void *mremap (void *__addr, size_t __old_len, size_t __new_len,
 		     int __flags, ...) __THROW;
