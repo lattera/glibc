@@ -5116,7 +5116,7 @@
 	(do_one_test): Call check_result.
 	(test_main): Call check1.
 	* string/bug-strstr1.c (main): Moved to ...
-	* string/test-strchr.c (check1): Here.  New function.
+	* string/test-strstr.c (check1): Here.  New function.
 	(do_one_test): Break out result checking code into ...
 	(check_result): This.  New function.
 	(do_one_test): Call check_result.
