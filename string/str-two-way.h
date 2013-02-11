@@ -19,7 +19,7 @@
 
 /* Before including this file, you need to include <string.h> (and
    <config.h> before that, if not part of libc), and define:
-     RESULT_TYPE             A macro that expands to the return type.
+     RETURN_TYPE             A macro that expands to the return type.
      AVAILABLE(h, h_l, j, n_l)
 			     A macro that returns nonzero if there are
 			     at least N_L bytes left starting at H[J].
@@ -37,7 +37,11 @@
 			     The argument is an 'unsigned char'; the result
 			     must be an 'unsigned char' as well.
 
-  This file undefines the macros documented above, and defines
+  Other macros you may optionally define:
+     RET0_IF_0(a)            Documented below at default definition.
+     CHECK_EOL               Same.
+
+  This file undefines the macros listed above, and defines
   LONG_NEEDLE_THRESHOLD.
 */
 
@@ -516,10 +520,8 @@ two_way_long_needle (const unsigned char *haystack, size_t haystack_len,
 }
 
 #undef AVAILABLE
-#undef AVAILABLE1
-#undef AVAILABLE2
-#undef AVAILABLE1_USES_J
 #undef CANON_ELEMENT
 #undef CMP_FUNC
 #undef RET0_IF_0
 #undef RETURN_TYPE
+#undef CHECK_EOL

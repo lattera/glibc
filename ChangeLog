@@ -1,3 +1,11 @@
+2013-02-11  Tom de Vries  <tom@codesourcery.com>
+
+	* string/str-two-way.h:  Fix typo RESULT_TYPE -> RETURN_TYPE in
+	comment.
+	Add RET0_IF_0 and CHECK_EOL to macro list in comment.
+	(AVAILABLE1, AVAILABLE2, AVAILABLE1_USES_J): Remove superfluous undef.
+	(CHECK_EOL): Add undef.
+
 2013-02-11   Ondřej Bílka  <neleai@seznam.cz>
 
 	* bits/stdlib-bsearch.h: New file.
