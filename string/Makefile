@@ -75,8 +75,6 @@ CFLAGS-tst-strlen.c = -fno-builtin
 CFLAGS-stratcliff.c = -fno-builtin
 CFLAGS-test-ffs.c = -fno-builtin
 CFLAGS-tst-inlcall.c = -fno-builtin
-CFLAGS-bug-strstr1.c = -fno-builtin
-CFLAGS-bug-strcasestr1.c = -fno-builtin
 
 ifeq ($(run-built-tests),yes)
 tests: $(objpfx)tst-svc.out

@@ -1,3 +1,8 @@
+2013-02-11  Tom de Vries  <tom@codesourcery.com>
+
+	* string/Makefile (CFLAGS-bug-strstr1.c, CFLAGS-bug-strcasestr1.c):
+	Remove.
+
 2013-02-11  Roland McGrath  <roland@hack.frob.com>
 
 	* misc/sys/mman.h: Fix typo in mremap comment.
