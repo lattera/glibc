@@ -1,8 +1,8 @@
-2013-02-09   Ondřej Bílka  <neleai@seznam.cz>
+2013-02-11   Ondřej Bílka  <neleai@seznam.cz>
 
 	* bits/stdlib-bsearch.h: New file.
 	* stdlib/bsearch.c: Include bits/stdlib-bsearch.h.
-	* stdlib/stdlib.h (bsearch): Add inline bsearch.
+	* stdlib/stdlib.h: Likewise.
 
 2013-02-11  Roland McGrath  <roland@hack.frob.com>
 
