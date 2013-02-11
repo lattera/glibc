@@ -29,14 +29,14 @@ ENTRY (__sigsetjmp)
 #ifdef __PIC__
 	SETUP_GP
 #endif
-	SETUP_GP64 (v0, C_SYMBOL_NAME (__sigsetjmp))
+	SETUP_GP64_REG (v0, C_SYMBOL_NAME (__sigsetjmp))
 	move a2, sp
 	move a3, fp
 	PTR_LA t9, __sigsetjmp_aux
 #if _MIPS_SIM == _ABIO32
 	nop
 #endif	
-	RESTORE_GP64
+	RESTORE_GP64_REG
 #if _MIPS_SIM != _ABIO32
 	move a4, gp
 #endif

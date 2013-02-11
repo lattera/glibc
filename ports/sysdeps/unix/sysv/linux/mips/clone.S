@@ -47,7 +47,8 @@ NESTED(__clone,4*SZREG,sp)
 	SETUP_GP
 #endif
 	PTR_SUBU sp, FRAMESZ
-	SETUP_GP64 (GPOFF, __clone)
+	cfi_adjust_cfa_offset (FRAMESZ)
+	SETUP_GP64_STACK (GPOFF, __clone)
 #ifdef __PIC__
 	SAVE_GP (GPOFF)
 #endif
@@ -88,26 +89,35 @@ NESTED(__clone,4*SZREG,sp)
 
 	/* Do the system call */
 	li		v0,__NR_clone
+	cfi_endproc
 	syscall
 
 	bnez		a3,L(error)
 	beqz		v0,L(thread_start)
 
 	/* Successful return from the parent */
-	RESTORE_GP64
+	cfi_startproc
+	cfi_adjust_cfa_offset (FRAMESZ)
+	SETUP_GP64_STACK_CFI (GPOFF)
+	cfi_remember_state
+	RESTORE_GP64_STACK
 	PTR_ADDU	sp, FRAMESZ
+	cfi_adjust_cfa_offset (-FRAMESZ)
 	ret
 
 	/* Something bad happened -- no child created */
 L(error):
+	cfi_restore_state
 #ifdef __PIC__
 	PTR_LA		t9,__syscall_error
-	RESTORE_GP64
+	RESTORE_GP64_STACK
 	PTR_ADDU	sp, FRAMESZ
+	cfi_adjust_cfa_offset (-FRAMESZ)
 	jr		t9
 #else
-	RESTORE_GP64
+	RESTORE_GP64_STACK
 	PTR_ADDU	sp, FRAMESZ
+	cfi_adjust_cfa_offset (-FRAMESZ)
 	j		__syscall_error
 #endif
 	END(__clone)
@@ -118,6 +128,7 @@ L(error):
 
 ENTRY(__thread_start)
 L(thread_start):
+	cfi_undefined ($31)
 	/* cp is already loaded.  */
 	SAVE_GP (GPOFF)
 	/* The stackframe has been created on entry of clone().  */

@@ -42,7 +42,8 @@ NESTED(__vfork,FRAMESZ,sp)
 	SETUP_GP
 #endif
 	PTR_SUBU sp, FRAMESZ
-	SETUP_GP64 (a5, __vfork)
+	cfi_adjust_cfa_offset (FRAMESZ)
+	SETUP_GP64_REG (a5, __vfork)
 #ifdef __PIC__
 	SAVE_GP (GPOFF)
 #endif
@@ -63,6 +64,7 @@ NESTED(__vfork,FRAMESZ,sp)
 #endif
 
 	PTR_ADDU	sp, FRAMESZ
+	cfi_adjust_cfa_offset (-FRAMESZ)
 
 	SAVE_PID
 
@@ -75,20 +77,22 @@ NESTED(__vfork,FRAMESZ,sp)
 
 	RESTORE_PID
 
+	cfi_remember_state
 	bnez		a3,L(error)
 
 	/* Successful return from the parent or child.  */
-	RESTORE_GP64
+	RESTORE_GP64_REG
 	ret
 
 	/* Something bad happened -- no child created.  */
 L(error):
+	cfi_restore_state
 #ifdef __PIC__
 	PTR_LA		t9, __syscall_error
-	RESTORE_GP64
+	RESTORE_GP64_REG
 	jr		t9
 #else
-	RESTORE_GP64
+	RESTORE_GP64_REG
 	j		__syscall_error
 #endif
 	END(__vfork)

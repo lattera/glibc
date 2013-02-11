@@ -26,13 +26,17 @@
 #ifdef __PIC__
 #define PSEUDO(name, syscall_name, args) \
   .align 2;								      \
+  cfi_startproc;							      \
   99:;									      \
   .set noat;								      \
   .cpsetup t9, $1, name;						      \
+  cfi_register (gp, $1);						      \
   .set at;								      \
   la t9,__syscall_error;						      \
   .cpreturn;								      \
+  cfi_restore (gp);							      \
   jr t9;								      \
+  cfi_endproc;								      \
   ENTRY(name)								      \
   li v0, SYS_ify(syscall_name);						      \
   syscall;								      \
@@ -42,8 +46,10 @@ L(syse1):
 #define PSEUDO(name, syscall_name, args) \
   .set noreorder;							      \
   .align 2;								      \
+  cfi_startproc;							      \
   99: j __syscall_error;						      \
   nop;                                                                        \
+  cfi_endproc;								      \
   ENTRY(name)								      \
   .set noreorder;							      \
   li v0, SYS_ify(syscall_name);						      \

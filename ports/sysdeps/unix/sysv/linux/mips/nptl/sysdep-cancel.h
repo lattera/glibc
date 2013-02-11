@@ -52,6 +52,7 @@
     .set reorder;							      \
     bne a3, zero, 99b;					       		      \
     ret;								      \
+    cfi_endproc;							      \
   .size __##syscall_name##_nocancel,.-__##syscall_name##_nocancel;	      \
   ENTRY (name)								      \
     .set noreorder;							      \

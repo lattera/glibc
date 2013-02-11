@@ -1,3 +1,48 @@
+2013-02-11  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/mips/include/sys/asm.h: New file.
+	* sysdeps/mips/mips64/bsd-_setjmp.S (_setjmp): Use SETUP_GP64_REG
+	and RESTORE_GP64_REG.
+	* sysdeps/mips/mips64/bsd-setjmp.S (setjmp): Likewise.
+	* sysdeps/mips/mips64/setjmp.S (__sigsetjmp): Likewise.
+	* sysdeps/mips/sys/asm.h (__mips_cfi_startproc): Define to empty.
+	(__mips_cfi_endproc): Likewise.
+	(LEAF): Use __mips_cfi_startproc.
+	(NESTED): Likewise.
+	(END): Use __mips_cfi_endproc.
+	(EXPORT): Use __mips_cfi_startproc.
+	* sysdeps/unix/mips/mips32/sysdep.h (PSEUDO): Add CFI information
+	for error-handling code in both definitions.
+	* sysdeps/unix/mips/mips64/n32/sysdep.h (PSEUDO): Likewise.
+	* sysdeps/unix/mips/mips64/n64/sysdep.h (PSEUDO): Likewise.
+	* sysdeps/unix/mips/sysdep.h (ENTRY): Use cfi_startproc.
+	(END): Use cfi_endproc.
+	(PSEUDO_END): Likewise.
+	(PSEUDO_END_NOERRNO): Likewise.
+	(PSEUDO_END_ERRVAL): Likewise.
+	* sysdeps/unix/sysv/linux/mips/clone.S (__clone): Add CFI
+	information.  Use SETUP_GP64_STACK and RESTORE_GP64_STACK.
+	* sysdeps/unix/sysv/linux/mips/getcontext.S (__getcontext):
+	Likewise.
+	* sysdeps/unix/sysv/linux/mips/makecontext.S (__makecontext):
+	Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n64/ioctl.S (__ioctl): Use
+	SETUP_GP64_REG and RESTORE_GP64_REG.
+	* sysdeps/unix/sysv/linux/mips/mips64/nptl/sysdep-cancel.h
+	[(!NOT_IN_libc || IS_IN_libpthread || IS_IN_librt) && __PIC__]
+	(PSEUDO): Use cfi_endproc before ENTRY.
+	* sysdeps/unix/sysv/linux/mips/mips64/syscall.S (syscall): Add CFI
+	information.  Use SETUP_GP64_REG and RESTORE_GP64_REG.
+	* sysdeps/unix/sysv/linux/mips/nptl/sysdep-cancel.h [(!NOT_IN_libc
+	|| IS_IN_libpthread || IS_IN_librt) && __PIC__] (PSEUDO): Use
+	cfi_endproc before ENTRY.
+	* sysdeps/unix/sysv/linux/mips/setcontext.S (__setcontext): Add
+	CFI information.  Use SETUP_GP64_STACK and RESTORE_GP64_STACK.
+	* sysdeps/unix/sysv/linux/mips/swapcontext.S (__swapcontext):
+	Likewise.
+	* sysdeps/unix/sysv/linux/mips/vfork.S (__vfork): Add CFI
+	information.  Use SETUP_GP64_REG and RESTORE_GP64_REG.
+
 2013-02-08  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #13550]

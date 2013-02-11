@@ -63,9 +63,10 @@ NESTED (__makecontext, FRAMESZ, ra)
 #endif
 
 	PTR_ADDIU sp, -FRAMESZ
+	cfi_adjust_cfa_offset (FRAMESZ)
 
 #ifdef __PIC__
-	SETUP_GP64 (GPOFF, __makecontext)
+	SETUP_GP64_STACK (GPOFF, __makecontext)
 	SAVE_GP (GPOFF)
 #endif
 
@@ -145,8 +146,9 @@ NESTED (__makecontext, FRAMESZ, ra)
 	REG_S	a1, MCONTEXT_PC(a0)
 
 #ifdef __PIC__
-	RESTORE_GP64
+	RESTORE_GP64_STACK
 	PTR_ADDIU sp, FRAMESZ
+	cfi_adjust_cfa_offset (-FRAMESZ)
 #endif
 	jr	ra
 

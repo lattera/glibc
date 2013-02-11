@@ -63,7 +63,8 @@ NESTED (__swapcontext, FRAMESZ, ra)
 # endif
 
 	PTR_ADDIU sp, -FRAMESZ
-	SETUP_GP64 (GPOFF, __swapcontext)
+	cfi_adjust_cfa_offset (FRAMESZ)
+	SETUP_GP64_STACK (GPOFF, __swapcontext)
 	SAVE_GP (GPOFF)
 
 #else  /* ! __PIC__ */
@@ -198,8 +199,9 @@ NESTED (__swapcontext, FRAMESZ, ra)
 99:
 #ifdef __PIC__
 	PTR_LA	t9, JUMPTARGET (__syscall_error)
-	RESTORE_GP64
+	RESTORE_GP64_STACK
 	PTR_ADDIU sp, FRAMESZ
+	cfi_adjust_cfa_offset (-FRAMESZ)
 	jr	t9
 
 #else  /* ! __PIC__ */

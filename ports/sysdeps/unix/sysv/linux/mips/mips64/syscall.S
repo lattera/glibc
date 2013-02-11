@@ -30,7 +30,9 @@ NESTED (syscall, SZREG, ra)
 	.mask 0x00010000, -SZREG
 	.fmask 0x00000000, 0
 	PTR_ADDIU sp, -SZREG
+	cfi_adjust_cfa_offset (SZREG)
 	REG_S s0, (sp)
+	cfi_rel_offset (s0, 0)
 
 	move s0, a0
 	move a0, a1		/* shift arg1 - arg7.  */
@@ -45,15 +47,17 @@ NESTED (syscall, SZREG, ra)
 	syscall			/* Do the system call.  */
 
 	REG_L s0, (sp)
+	cfi_restore (s0)
 	PTR_ADDIU sp, SZREG
+	cfi_adjust_cfa_offset (-SZREG)
 	bne a3, zero, L(error)
 
 	ret
 
 L(error):
-	SETUP_GP64 (a0, syscall)
+	SETUP_GP64_REG (a0, syscall)
 	PTR_LA t9, __syscall_error
-	RESTORE_GP64
+	RESTORE_GP64_REG
 	jr t9
 
 END (syscall)

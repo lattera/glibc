@@ -27,17 +27,19 @@
   .globl name;								      \
   .align 2;								      \
   .ent name,0;								      \
-  name##:
+  name##:								      \
+  cfi_startproc;
 
 #undef END
 #define	END(function)                                   \
+		cfi_endproc;				\
 		.end	function;		        \
 		.size	function,.-function
 
 #define ret	j ra ; nop
 
 #undef PSEUDO_END
-#define PSEUDO_END(sym) .end sym; .size sym,.-sym
+#define PSEUDO_END(sym) cfi_endproc; .end sym; .size sym,.-sym
 
 #define PSEUDO_NOERRNO(name, syscall_name, args)	\
   .align 2;						\
@@ -47,7 +49,7 @@
   syscall
 
 #undef PSEUDO_END_NOERRNO
-#define PSEUDO_END_NOERRNO(sym) .end sym; .size sym,.-sym
+#define PSEUDO_END_NOERRNO(sym) cfi_endproc; .end sym; .size sym,.-sym
 
 #define ret_NOERRNO ret
 
@@ -59,7 +61,7 @@
   syscall
 
 #undef PSEUDO_END_ERRVAL
-#define PSEUDO_END_ERRVAL(sym) .end sym; .size sym,.-sym
+#define PSEUDO_END_ERRVAL(sym) cfi_endproc; .end sym; .size sym,.-sym
 
 #define ret_ERRVAL ret
 

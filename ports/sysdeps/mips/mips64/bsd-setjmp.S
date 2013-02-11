@@ -31,12 +31,12 @@ ENTRY (setjmp)
 #ifdef __PIC__
 	SETUP_GP
 #endif
-	SETUP_GP64 (v0, C_SYMBOL_NAME (setjmp))
+	SETUP_GP64_REG (v0, C_SYMBOL_NAME (setjmp))
 	PTR_LA t9, C_SYMBOL_NAME (__sigsetjmp)
 #if _MIPS_SIM == _ABIO32
 	nop
 #endif	
-	RESTORE_GP64
+	RESTORE_GP64_REG
 	dli a1, 1		/* Pass a second argument of one.  */
 #ifdef __PIC__
 	jr	t9

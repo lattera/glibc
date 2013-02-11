@@ -56,9 +56,10 @@ NESTED (__setcontext, FRAMESZ, ra)
 #endif
 
 	PTR_ADDIU sp, -FRAMESZ
+	cfi_adjust_cfa_offset (FRAMESZ)
 
 #ifdef __PIC__
-	SETUP_GP64 (GPOFF, __setcontext)
+	SETUP_GP64_STACK (GPOFF, __setcontext)
 	SAVE_GP (GPOFF)
 #endif
 
@@ -152,6 +153,7 @@ NESTED (__setcontext, FRAMESZ, ra)
 	   and call the signal return syscall as if a signal
 	   handler exited normally.  */
 	PTR_ADDIU sp, -((RT_SIGFRAME_SIZE + ALSZ) & ALMASK)
+	cfi_adjust_cfa_offset ((RT_SIGFRAME_SIZE + ALSZ) & ALMASK)
 
 	/* Only ucontext is referred to from rt_sigreturn,
 	   copy it.  */
@@ -175,11 +177,13 @@ NESTED (__setcontext, FRAMESZ, ra)
 	   path.  Successful rt_sigreturn never returns to
 	   its calling place.  */
 	PTR_ADDIU sp, ((RT_SIGFRAME_SIZE + ALSZ) & ALMASK)
+	cfi_adjust_cfa_offset (-((RT_SIGFRAME_SIZE + ALSZ) & ALMASK))
 99:
 #ifdef __PIC__
 	PTR_LA	t9, JUMPTARGET (__syscall_error)
-	RESTORE_GP64
+	RESTORE_GP64_STACK
 	PTR_ADDIU sp, FRAMESZ
+	cfi_adjust_cfa_offset (-FRAMESZ)
 	jr	t9
 
 #else  /* ! __PIC__ */

@@ -57,6 +57,7 @@
     cfi_same_value (gp);						      \
     RESTORESTK;								      \
     ret;								      \
+    cfi_endproc;							      \
   .size __##syscall_name##_nocancel,.-__##syscall_name##_nocancel;	      \
   ENTRY (name)								      \
     SAVESTK;								      \

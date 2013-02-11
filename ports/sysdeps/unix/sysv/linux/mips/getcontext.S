@@ -54,7 +54,8 @@ NESTED (__getcontext, FRAMESZ, ra)
 # endif
 
 	PTR_ADDIU sp, -FRAMESZ
-	SETUP_GP64 (GPOFF, __getcontext)
+	cfi_adjust_cfa_offset (FRAMESZ)
+	SETUP_GP64_STACK (GPOFF, __getcontext)
 	SAVE_GP (GPOFF)
 
 #else  /* ! __PIC__ */
@@ -124,19 +125,23 @@ NESTED (__getcontext, FRAMESZ, ra)
 	li	v0, SYS_ify (rt_sigprocmask)
 	syscall
 	bnez	a3, 99f
+	cfi_remember_state
 
 #ifdef __PIC__
-	RESTORE_GP64
+	RESTORE_GP64_STACK
 	PTR_ADDIU sp, FRAMESZ
+	cfi_adjust_cfa_offset (-FRAMESZ)
 #endif
 	move	v0, zero
 	jr	ra
 
 99:
+	cfi_restore_state
 #ifdef __PIC__
 	PTR_LA	t9, JUMPTARGET (__syscall_error)
-	RESTORE_GP64
+	RESTORE_GP64_STACK
 	PTR_ADDIU sp, FRAMESZ
+	cfi_adjust_cfa_offset (-FRAMESZ)
 	jr	t9
 
 #else  /* ! __PIC__ */
