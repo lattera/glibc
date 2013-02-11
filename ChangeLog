@@ -1,3 +1,9 @@
+2013-02-09   Ondřej Bílka  <neleai@seznam.cz>
+
+	* bits/stdlib-bsearch.h: New file.
+	* stdlib/bsearch.c: Include bits/stdlib-bsearch.h.
+	* stdlib/stdlib.h (bsearch): Add inline bsearch.
+
 2013-02-11  Roland McGrath  <roland@hack.frob.com>
 
 	* manual/conf.texi (General Limits): Fix SSIZE_MAX type to ssize_t.

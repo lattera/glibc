@@ -1,4 +1,5 @@
-/* Copyright (C) 1991-2013 Free Software Foundation, Inc.
+/* Perform binary search - inline version.
+   Copyright (C) 1991-2013 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -15,9 +16,28 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <stdlib.h>
+__extern_inline void *
+bsearch (const void *__key, const void *__base, size_t __nmemb, size_t __size,
+	 __compar_fn_t __compar)
+{
+  size_t __l, __u, __idx;
+  const void *__p;
+  int __comparison;
 
-#undef  __extern_inline
-#define __extern_inline /* Empty, so we get a normal definition.  */
-#include <bits/stdlib-bsearch.h>
-libc_hidden_def (bsearch)
+  __l = 0;
+  __u = __nmemb;
+  while (__l < __u)
+    {
+      __idx = (__l + __u) / 2;
+      __p = (void *) (((const char *) __base) + (__idx * __size));
+      __comparison = (*__compar) (__key, __p);
+      if (__comparison < 0)
+	__u = __idx;
+      else if (__comparison > 0)
+	__l = __idx + 1;
+      else
+	return (void *) __p;
+    }
+
+  return NULL;
+}

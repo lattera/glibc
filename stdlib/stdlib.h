@@ -756,6 +756,10 @@ extern void *bsearch (const void *__key, const void *__base,
 		      size_t __nmemb, size_t __size, __compar_fn_t __compar)
      __nonnull ((1, 2, 5)) __wur;
 
+#ifdef __USE_EXTERN_INLINES
+# include <bits/stdlib-bsearch.h>
+#endif
+
 /* Sort NMEMB elements of BASE, of SIZE bytes each,
    using COMPAR to perform the comparisons.  */
 extern void qsort (void *__base, size_t __nmemb, size_t __size,
