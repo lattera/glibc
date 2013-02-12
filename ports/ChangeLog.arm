@@ -4,6 +4,9 @@
 
 	* sysdeps/arm/preconfigure: Handle __ARM_ARCH_6*__.
 
+	* sysdeps/unix/sysv/linux/arm/Makefile [elf] (sysdep-rtld-routines):
+	Include libc-do-syscall.
+
 2013-02-27  Roland McGrath  <roland@hack.frob.com>
 
 	* sysdeps/arm/sysdep.h (CFI_SECTIONS): New macro.

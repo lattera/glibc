@@ -10,7 +10,7 @@ shared-only-routines += libc-aeabi_read_tp
 endif
 
 ifeq ($(subdir),elf)
-sysdep-rtld-routines += aeabi_read_tp
+sysdep-rtld-routines += aeabi_read_tp libc-do-syscall
 endif
 
 ifeq ($(subdir),misc)
