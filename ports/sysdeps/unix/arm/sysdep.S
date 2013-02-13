@@ -50,14 +50,14 @@ __syscall_error:
 	mvn r0, #0
 	RETINSTR (, ip)
 
-1:	.word errno(gottpoff) + (. - 2b - 8)
+1:	.word errno(gottpoff) + (. - 2b - PC_OFS)
 #elif RTLD_PRIVATE_ERRNO
 	ldr r1, 1f
 0:	str r0, [pc, r1]
 	mvn r0, $0
 	DO_RET(r14)
 
-1:	.word C_SYMBOL_NAME(rtld_errno) - 0b - 8
+1:	.word C_SYMBOL_NAME(rtld_errno) - 0b - PC_OFS
 #else
 #error "Unsupported non-TLS case"
 #endif

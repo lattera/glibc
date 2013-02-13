@@ -47,6 +47,9 @@ init (void)
    ARM unwinder relies on register state at entrance.  So we write this in
    assembly.  */
 
+#define STR1(S) #S
+#define STR(S)  STR1(S)
+
 asm (
 "	.globl	_Unwind_Resume\n"
 "	.type	_Unwind_Resume, %function\n"
@@ -81,11 +84,7 @@ asm (
 "	b	5b\n"
 "	" CFI_ENDPROC "\n"
 "	.align 2\n"
-#ifdef __thumb2__
-"1:	.word	_GLOBAL_OFFSET_TABLE_ - 3b - 4\n"
-#else
-"1:	.word	_GLOBAL_OFFSET_TABLE_ - 3b - 8\n"
-#endif
+"1:	.word	_GLOBAL_OFFSET_TABLE_ - 3b - " STR (PC_OFS) "\n"
 "2:	.word	libgcc_s_resume(GOTOFF)\n"
 "	.size	_Unwind_Resume, .-_Unwind_Resume\n"
 );

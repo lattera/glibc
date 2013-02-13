@@ -114,7 +114,7 @@ __local_syscall_error:						\
 0:     str     r0, [pc, r1];					\
        mvn     r0, #0;						\
        DO_RET(lr);						\
-1:     .word C_SYMBOL_NAME(rtld_errno) - 0b - 8;
+1:     .word C_SYMBOL_NAME(rtld_errno) - 0b - PC_OFS;
 # else
 #  if defined(__ARM_ARCH_4T__) && defined(__THUMB_INTERWORK__)
 #   define POP_PC \

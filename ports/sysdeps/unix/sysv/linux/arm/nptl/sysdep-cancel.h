@@ -208,7 +208,7 @@ extern int __local_multiple_threads attribute_hidden;
 	ldr ip, [pc, ip];						\
 	teq ip, #0;
 #   define PSEUDO_PROLOGUE						\
-  1:	.word	__local_multiple_threads - 2f - 8;
+  1:	.word	__local_multiple_threads - 2f - PC_OFS;
 #  endif
 # else
 /*  There is no __local_multiple_threads for librt, so use the TCB.  */

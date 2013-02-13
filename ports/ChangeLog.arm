@@ -11,6 +11,21 @@
 	* ports/sysdeps/unix/sysv/linux/arm/nptl/sysdep-cancel.h: Likewise.
 	* sysdeps/unix/sysv/linux/arm/sysdep.h: Likewise.
 
+	* sysdeps/arm/sysdep.h (PC_OFS): New macros.
+	* sysdeps/arm/__longjmp.S (__longjmp): Use PC_OFS.
+	* sysdeps/arm/setjmp.S (__sigsetjmp): Likewise.
+	* sysdeps/unix/arm/sysdep.S (__syscall_error): Likewise.
+	* sysdeps/unix/sysv/linux/arm/getcontext.S (__getcontext): Likewise.
+	* sysdeps/unix/sysv/linux/arm/setcontext.S (__startcontext): Likewise.
+	* sysdeps/unix/sysv/linux/arm/nptl/sysdep-cancel.h
+	(SINGLE_THREAD_P): Likewise.
+	* sysdeps/unix/sysv/linux/arm/sysdep.h
+	(SYSCALL_ERROR_HANDLER): Likewise.
+	* sysdeps/unix/sysv/linux/arm/nptl/unwind-forcedunwind.c
+	(_Unwind_Resume): Use stringified PC_OFS.
+	* sysdeps/unix/sysv/linux/arm/nptl/unwind-resume.c
+	(_Unwind_Resume): Likewise.
+
 2013-02-27  Roland McGrath  <roland@hack.frob.com>
 
 	* sysdeps/arm/sysdep.h (CFI_SECTIONS): New macro.

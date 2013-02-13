@@ -118,3 +118,11 @@
 	.eabi_attribute 24, 1
 
 #endif	/* __ASSEMBLER__ */
+
+/* This number is the offset from the pc at the current location.  */
+/* ??? At the moment we're not turning on thumb mode in assembly.  */
+#if defined(__thumb__) && !defined(__ASSEMBLER__)
+# define PC_OFS  4
+#else
+# define PC_OFS  8
+#endif
