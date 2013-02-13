@@ -1,5 +1,9 @@
 2013-02-13   Ondřej Bílka  <neleai@seznam.cz>
 
+	* stdlib/Makefile: Install stdlib-bsearch.h header.
+
+2013-02-13   Ondřej Bílka  <neleai@seznam.cz>
+
 	* string/mempcpy.c: Implement by calling memcpy.
 
 2013-02-13  Siddhesh Poyarekar  <siddhesh@redhat.com>
