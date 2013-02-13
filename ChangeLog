@@ -1,3 +1,9 @@
+2013-02-13  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* sysdeps/ieee754/dbl-64/mpa.c (add_magnitudes): Use ZK to
+	minimize writes to Z.
+	(sub_magnitudes): Simplify code a bit.
+
 2013-02-12  Roland McGrath  <roland@hack.frob.com>
 
 	* include/libc-symbols.h (stub_warning): Remove "warning: " prefix
