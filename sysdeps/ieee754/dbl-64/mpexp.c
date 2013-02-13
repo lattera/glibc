@@ -50,14 +50,6 @@ __mpexp (mp_no *x, mp_no *y, int p)
       6, 6, 6, 6, 7, 7, 7, 7, 8, 8, 8, 8, 8
     };
 
-  /* Factorials for the values of np above.  */
-  static const double nfa[33] =
-    {
-      1.0, 1.0, 1.0, 1.0, 6.0, 6.0, 24.0, 24.0, 120.0, 24.0, 24.0,
-      120.0, 120.0, 120.0, 720.0, 720.0, 720.0, 720.0, 720.0, 720.0,
-      720.0, 720.0, 720.0, 720.0, 5040.0, 5040.0, 5040.0, 5040.0,
-      40320.0, 40320.0, 40320.0, 40320.0, 40320.0
-    };
   static const int m1p[33] =
     {
       0, 0, 0, 0,
@@ -130,7 +122,8 @@ __mpexp (mp_no *x, mp_no *y, int p)
          e^x = 1 + (x * n!/1! + x^2 * n!/2! + x^3 * n!/3!) / n!
              = 1 + (x * (n!/1! + x * (n!/2! + x * (n!/3! + x ...)))) / n!
 
-     n! is pre-computed and saved while k! is computed on the fly.  */
+     k! is computed on the fly as KF and at the end of the polynomial loop, KF
+     is n!, which can be used directly.  */
   __cpy (&mps, &mpt2, p);
 
   double kf = 1.0;
@@ -145,7 +138,7 @@ __mpexp (mp_no *x, mp_no *y, int p)
       __add (&mpt2, &mpk, &mpt1, p);
       __mul (&mps, &mpt1, &mpt2, p);
     }
-  __dbl_mp (nfa[p], &mpk, p);
+  __dbl_mp (kf, &mpk, p);
   __dvd (&mpt2, &mpk, &mpt1, p);
   __add (&mpone, &mpt1, &mpt2, p);
 
