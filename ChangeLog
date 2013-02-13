@@ -1,3 +1,8 @@
+2013-02-12  Roland McGrath  <roland@hack.frob.com>
+
+	* include/libc-symbols.h (stub_warning): Remove "warning: " prefix
+	from the message.  The linker prefixes all warnings with that already.
+
 2013-02-12  Andreas Schwab  <schwab@suse.de>
 
 	[BZ #15078]

@@ -228,8 +228,7 @@
 /* A canned warning for sysdeps/stub functions.  */
 #define	stub_warning(name) \
   __make_section_unallocated (".gnu.glibc-stub." #name) \
-  link_warning (name, \
-		"warning: " #name " is not implemented and will always fail")
+  link_warning (name, #name " is not implemented and will always fail")
 
 /* Warning for linking functions calling dlopen into static binaries.  */
 #ifdef SHARED
