@@ -1,5 +1,8 @@
 2013-02-13  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
+	* sysdeps/ieee754/dbl-64/mpexp.c (__mpexp): Faster polynomial
+	evaluation.
+
 	* sysdeps/ieee754/dbl-64/mpa.c (__mul): Don't bother with zero
 	values in the mantissa.
 
