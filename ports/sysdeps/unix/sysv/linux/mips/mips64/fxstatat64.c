@@ -95,9 +95,9 @@ __fxstatat64 (int vers, int fd, const char *file, struct stat64 *st, int flag)
     }
 
   if (flag & AT_SYMLINK_NOFOLLOW)
-    result = INTERNAL_SYSCALL (lstat, err, 2, file, __ptrvalue (&kst));
+    result = INTERNAL_SYSCALL (lstat, err, 2, file, &kst);
   else
-    result = INTERNAL_SYSCALL (stat, err, 2, file, __ptrvalue (&kst));
+    result = INTERNAL_SYSCALL (stat, err, 2, file, &kst);
 
   if (__builtin_expect (!INTERNAL_SYSCALL_ERROR_P (result, err), 1))
     return __xstat64_conv (vers, &kst, st);

@@ -1,3 +1,9 @@
+2013-02-13  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #13550]
+	* sysdeps/unix/sysv/linux/aarch64/sigaction.c (__libc_sigaction):
+	Do not use __ptrvalue.
+
 2013-02-08  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #13550]

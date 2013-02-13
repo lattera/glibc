@@ -18,6 +18,6 @@
 
 struct layout
 {
-  void *__unbounded next;
-  void *__unbounded return_address;
+  void *next;
+  void *return_address;
 };

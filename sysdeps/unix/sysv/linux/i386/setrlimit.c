@@ -24,7 +24,7 @@
 #include <shlib-compat.h>
 
 extern int __new_setrlimit (enum __rlimit_resource resource,
-			    const struct rlimit *__unboundedrlimits);
+			    const struct rlimit *rlimits);
 
 /* Consider moving to syscalls.list.  */
 

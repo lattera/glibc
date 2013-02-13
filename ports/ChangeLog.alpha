@@ -1,3 +1,9 @@
+2013-02-13  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #13550]
+	* sysdeps/unix/sysv/linux/alpha/sigaction.c
+	(__syscall_rt_sigaction): Do not use __unbounded in prototype.
+
 2013-02-08  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #13550]

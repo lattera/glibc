@@ -53,14 +53,10 @@ __mmap64 (void *addr, size_t len, int prot, int flags, int fd, off64_t offset)
       return MAP_FAILED;
     }
   void *result;
-  __ptrvalue (result) = (void *__unbounded)
-    INLINE_SYSCALL (mmap2, 6, __ptrvalue (addr),
+  result = (void *)
+    INLINE_SYSCALL (mmap2, 6, addr,
 		    len, prot, flags, fd,
 		    (off_t) (offset >> MMAP2_PAGE_SHIFT));
-#if __BOUNDED_POINTERS__
-  __ptrlow (result) = __ptrvalue (result);
-  __ptrhigh (result) = __ptrvalue (result) + len;
-#endif
   return result;
 }
 weak_alias (__mmap64, mmap64)

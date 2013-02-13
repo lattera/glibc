@@ -31,11 +31,10 @@ weak_alias (__curbrk, ___brk_addr)
 int
 __brk (void *addr)
 {
-  void *__unbounded newbrk;
+  void *newbrk;
 
   INTERNAL_SYSCALL_DECL (err);
-  newbrk = (void *__unbounded) INTERNAL_SYSCALL (brk, err, 1,
-						 __ptrvalue (addr));
+  newbrk = (void *) INTERNAL_SYSCALL (brk, err, 1, addr);
 
   __curbrk = newbrk;
 

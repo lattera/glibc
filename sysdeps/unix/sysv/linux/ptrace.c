@@ -42,8 +42,7 @@ ptrace (enum __ptrace_request request, ...)
   if (request > 0 && request < 4)
     data = &ret;
 
-  res = INLINE_SYSCALL (ptrace, 4, request, pid,
-			__ptrvalue (addr), __ptrvalue (data));
+  res = INLINE_SYSCALL (ptrace, 4, request, pid, addr, data);
   if (res >= 0 && request > 0 && request < 4)
     {
       __set_errno (0);

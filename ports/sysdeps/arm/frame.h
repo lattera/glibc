@@ -19,9 +19,9 @@
 /* This is the APCS stack backtrace structure.  */
 struct layout
 {
-  struct layout *__unbounded next;
-  void *__unbounded sp;
-  void *__unbounded return_address;
+  struct layout *next;
+  void *sp;
+  void *return_address;
 };
 
 #define FIRST_FRAME_POINTER ADVANCE_STACK_FRAME (__builtin_frame_address (0))

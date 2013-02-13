@@ -128,14 +128,6 @@
 #endif
 
 
-/* Support for bounded pointers.  */
-#ifndef __BOUNDED_POINTERS__
-# define __bounded	/* nothing */
-# define __unbounded	/* nothing */
-# define __ptrvalue	/* nothing */
-#endif
-
-
 /* Fortify support.  */
 #define __bos(ptr) __builtin_object_size (ptr, __USE_FORTIFY_LEVEL > 1)
 #define __bos0(ptr) __builtin_object_size (ptr, 0)

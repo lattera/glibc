@@ -1,3 +1,17 @@
+2013-02-13  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #13550]
+	* sysdeps/unix/sysv/linux/mips/mips64/fxstat64.c (__fxstat64): Do
+	not use __ptrvalue.
+	* sysdeps/unix/sysv/linux/mips/mips64/fxstatat64.c (__fxstatat64):
+	Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/lxstat64.c (__lxstat64):
+	Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/xstat64.c (__xstat64):
+	Likewise.
+	* sysdeps/unix/sysv/linux/mips/sigaction.c (__libc_sigaction):
+	Likewise.
+
 2013-02-11  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/mips/include/sys/asm.h: New file.

@@ -34,7 +34,7 @@ __fxstat64 (int vers, int fd, struct stat64 *buf)
   int result;
   struct kernel_stat kbuf;
 
-  result = INLINE_SYSCALL (fstat, 2, fd, __ptrvalue (&kbuf));
+  result = INLINE_SYSCALL (fstat, 2, fd, &kbuf);
   if (result == 0)
     result = __xstat64_conv (vers, &kbuf, buf);
 

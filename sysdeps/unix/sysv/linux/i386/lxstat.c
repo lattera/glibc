@@ -45,7 +45,7 @@ __lxstat (int vers, const char *name, struct stat *buf)
   {
     struct stat64 buf64;
 
-    result = INLINE_SYSCALL (lstat64, 2, name, __ptrvalue (&buf64));
+    result = INLINE_SYSCALL (lstat64, 2, name, &buf64);
     if (result == 0)
       result = __xstat32_conv (vers, &buf64, buf);
     return result;

@@ -62,9 +62,7 @@ _dl_fixup (
 # ifdef ELF_MACHINE_RUNTIME_FIXUP_ARGS
 	   ELF_MACHINE_RUNTIME_FIXUP_ARGS,
 # endif
-	   /* GKM FIXME: Fix trampoline to pass bounds so we can do
-	      without the `__unbounded' qualifier.  */
-	   struct link_map *__unbounded l, ElfW(Word) reloc_arg)
+	   struct link_map *l, ElfW(Word) reloc_arg)
 {
   const ElfW(Sym) *const symtab
     = (const void *) D_PTR (l, l_info[DT_SYMTAB]);

@@ -33,10 +33,10 @@ struct __old_semid_ds
   struct __old_ipc_perm sem_perm;	/* operation permission struct */
   __time_t sem_otime;			/* last semop() time */
   __time_t sem_ctime;			/* last time changed by semctl() */
-  struct sem *__unbounded __sembase;	/* ptr to first semaphore in array */
-  struct sem_queue *__unbounded __sem_pending; /* pending operations */
-  struct sem_queue *__unbounded __sem_pending_last; /* last pending operation */
-  struct sem_undo *__unbounded __undo;	/* ondo requests on this array */
+  struct sem *__sembase;		/* ptr to first semaphore in array */
+  struct sem_queue *__sem_pending;	/* pending operations */
+  struct sem_queue *__sem_pending_last; /* last pending operation */
+  struct sem_undo *__undo;		/* ondo requests on this array */
   unsigned short int sem_nsems;		/* number of semaphores in set */
 };
 

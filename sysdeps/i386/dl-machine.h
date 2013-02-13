@@ -151,11 +151,9 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 
    We cannot use this scheme for profiling because the _mcount call
    destroys the passed register information.  */
-/* GKM FIXME: Fix trampoline to pass bounds so we can do
-   without the `__unbounded' qualifier.  */
 #define ARCH_FIXUP_ATTRIBUTE __attribute__ ((regparm (3), stdcall, unused))
 
-extern ElfW(Addr) _dl_fixup (struct link_map *__unbounded l,
+extern ElfW(Addr) _dl_fixup (struct link_map *l,
 			     ElfW(Word) reloc_offset)
      ARCH_FIXUP_ATTRIBUTE;
 extern ElfW(Addr) _dl_profile_fixup (struct link_map *l,

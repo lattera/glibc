@@ -31,8 +31,8 @@
 */
 struct layout
 {
-  struct layout *__unbounded next;
-  void *__unbounded return_address;
+  struct layout *next;
+  void *return_address;
 };
 
 int

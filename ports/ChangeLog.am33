@@ -1,3 +1,10 @@
+2013-02-13  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #13550]
+	* sysdeps/am33/dl-machine.h (fixup): Do not use __unbounded.
+	* sysdeps/unix/sysv/linux/am33/brk.c (__brk): Do not use
+	__ptrvalue.
+
 2013-01-02  Joseph Myers  <joseph@codesourcery.com>
 
 	* All files with FSF copyright notices: Update copyright dates

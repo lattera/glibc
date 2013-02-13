@@ -29,13 +29,13 @@
 struct __old_msqid_ds
 {
   struct __old_ipc_perm msg_perm;	/* structure describing operation permission */
-  struct msg *__unbounded __msg_first;	/* pointer to first message on queue */
-  struct msg *__unbounded __msg_last;	/* pointer to last message on queue */
+  struct msg *__msg_first;		/* pointer to first message on queue */
+  struct msg *__msg_last;		/* pointer to last message on queue */
   __time_t msg_stime;			/* time of last msgsnd command */
   __time_t msg_rtime;			/* time of last msgrcv command */
   __time_t msg_ctime;			/* time of last change */
-  struct wait_queue *__unbounded __wwait; /* ??? */
-  struct wait_queue *__unbounded __rwait; /* ??? */
+  struct wait_queue *__wwait;		/* ??? */
+  struct wait_queue *__rwait;		/* ??? */
   unsigned short int __msg_cbytes;	/* current number of bytes on queue */
   unsigned short int msg_qnum;		/* number of messages currently on queue */
   unsigned short int msg_qbytes;	/* max number of bytes allowed on queue */

@@ -39,8 +39,8 @@ struct __old_shmid_ds
   __ipc_pid_t shm_lpid;			/* pid of last shmop */
   unsigned short int shm_nattch;	/* number of current attaches */
   unsigned short int __shm_npages;	/* size of segment (pages) */
-  unsigned long int *__unbounded __shm_pages; /* array of ptrs to frames -> SHMMAX */
-  struct vm_area_struct *__unbounded __attaches; /* descriptors for attaches */
+  unsigned long int *__shm_pages;	/* array of ptrs to frames -> SHMMAX */
+  struct vm_area_struct *__attaches;	/* descriptors for attaches */
 };
 
 struct __old_shminfo
@@ -115,8 +115,7 @@ __new_shmctl (int shmid, int cmd, struct shmid_ds *buf)
 	    return -1;
 	  }
       }
-    result = INLINE_SYSCALL (ipc, 5, IPCOP_shmctl, shmid, cmd, 0,
-			     __ptrvalue (&old.ds));
+    result = INLINE_SYSCALL (ipc, 5, IPCOP_shmctl, shmid, cmd, 0, &old.ds);
     if (result != -1 && (cmd == SHM_STAT || cmd == IPC_STAT))
       {
 	memset(buf, 0, sizeof(*buf));

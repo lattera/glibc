@@ -30,7 +30,7 @@ __brk (void *addr)
 {
   void *newbrk;
 
-  newbrk = INLINE_SYSCALL (brk, 1, __ptrvalue (addr));
+  newbrk = INLINE_SYSCALL (brk, 1, addr);
 
   __curbrk = newbrk;
 

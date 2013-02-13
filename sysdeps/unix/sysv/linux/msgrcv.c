@@ -27,7 +27,7 @@
    arguments to a system call.  */
 struct ipc_kludge
   {
-    void *__unbounded msgp;
+    void *msgp;
     long int msgtyp;
   };
 
@@ -48,13 +48,12 @@ __libc_msgrcv (msqid, msgp, msgsz, msgtyp, msgflg)
   tmp.msgtyp = msgtyp;
 
   if (SINGLE_THREAD_P)
-    return INLINE_SYSCALL (ipc, 5, IPCOP_msgrcv, msqid, msgsz, msgflg,
-			   __ptrvalue (&tmp));
+    return INLINE_SYSCALL (ipc, 5, IPCOP_msgrcv, msqid, msgsz, msgflg, &tmp);
 
   int oldtype = LIBC_CANCEL_ASYNC ();
 
   ssize_t result = INLINE_SYSCALL (ipc, 5, IPCOP_msgrcv, msqid, msgsz, msgflg,
-				   __ptrvalue (&tmp));
+				   &tmp);
 
    LIBC_CANCEL_RESET (oldtype);
 

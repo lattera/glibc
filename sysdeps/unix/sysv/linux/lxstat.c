@@ -44,7 +44,7 @@ __lxstat (int vers, const char *name, struct stat *buf)
   struct kernel_stat kbuf;
   int result;
 
-  result = INLINE_SYSCALL (lstat, 2, name, __ptrvalue (&kbuf));
+  result = INLINE_SYSCALL (lstat, 2, name, &kbuf);
   if (result == 0)
     result = __xstat_conv (vers, &kbuf, buf);
 

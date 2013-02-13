@@ -36,7 +36,7 @@ shmat (shmid, shmaddr, shmflg)
 {
   INTERNAL_SYSCALL_DECL(err);
   unsigned long resultvar;
-  void *__unbounded raddr;
+  void *raddr;
 
 #if __BOUNDED_POINTERS__
   size_t length = ~0;
@@ -49,8 +49,8 @@ shmat (shmid, shmaddr, shmflg)
 
   resultvar = INTERNAL_SYSCALL (ipc, err, 5, IPCOP_shmat,
 				shmid, shmflg,
-				(long int) __ptrvalue (&raddr),
-				__ptrvalue ((void *) shmaddr));
+				(long int) &raddr,
+				(void *) shmaddr);
   if (INTERNAL_SYSCALL_ERROR_P (resultvar, err))
     {
       __set_errno (INTERNAL_SYSCALL_ERRNO (resultvar, err));

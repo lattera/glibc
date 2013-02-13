@@ -47,8 +47,7 @@ __aio_sigqueue (sig, val, caller_pid)
   info.si_uid = getuid ();
   info.si_value = val;
 
-  return INLINE_SYSCALL (rt_sigqueueinfo, 3, info.si_pid,
-			 sig, __ptrvalue (&info));
+  return INLINE_SYSCALL (rt_sigqueueinfo, 3, info.si_pid, sig, &info);
 }
 #else
 # include <rt/aio_sigqueue.c>

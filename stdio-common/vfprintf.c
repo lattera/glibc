@@ -302,7 +302,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
       do								      \
 	{								      \
 	  int offset;							      \
-	  void *__unbounded ptr;					      \
+	  void *ptr;							      \
 	  spec = (ChExpr);						      \
 	  offset = NOT_IN_JUMP_RANGE (spec) ? REF (form_unknown)	      \
 	    : table[CHAR_CLASS (spec)];					      \
@@ -315,7 +315,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 # define JUMP(ChExpr, table)						      \
       do								      \
 	{								      \
-	  const void *__unbounded ptr;					      \
+	  const void *ptr;						      \
 	  spec = (ChExpr);						      \
 	  ptr = NOT_IN_JUMP_RANGE (spec) ? REF (form_unknown)		      \
 	    : table[CHAR_CLASS (spec)];					      \

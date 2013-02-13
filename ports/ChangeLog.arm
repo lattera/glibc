@@ -1,3 +1,10 @@
+2013-02-13  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #13550]
+	* sysdeps/arm/frame.h (struct layout): Do not use __unbounded.
+	* sysdeps/unix/sysv/linux/arm/sigaction.c (__libc_sigaction): Do
+	not use __ptrvalue.
+
 2013-02-08  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #13550]

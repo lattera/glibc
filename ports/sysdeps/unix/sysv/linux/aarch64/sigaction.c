@@ -51,8 +51,8 @@ __libc_sigaction (int sig, const struct sigaction *act, struct sigaction *oact)
     }
 
   result = INLINE_SYSCALL (rt_sigaction, 4, sig,
-			   act ? __ptrvalue (&kact) : NULL,
-			   oact ? __ptrvalue (&koact) : NULL, _NSIG / 8);
+			   act ? &kact : NULL,
+			   oact ? &koact : NULL, _NSIG / 8);
   if (result >= 0 || errno != ENOSYS)
     {
       if (oact && result >= 0)

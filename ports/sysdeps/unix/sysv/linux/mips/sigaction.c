@@ -71,8 +71,8 @@ __libc_sigaction (sig, act, oact)
   /* XXX The size argument hopefully will have to be changed to the
      real size of the user-level sigset_t.	*/
   result = INLINE_SYSCALL (rt_sigaction, 4, sig,
-			   act ? __ptrvalue (&kact) : NULL,
-			   oact ? __ptrvalue (&koact) : NULL,
+			   act ? &kact : NULL,
+			   oact ? &koact : NULL,
 			   sizeof (kernel_sigset_t));
 
   if (oact && result >= 0)

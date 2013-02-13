@@ -37,7 +37,7 @@ __sysctl (int *name, int nlen, void *oldval, size_t *oldlenp,
     .newlen = newlen
   };
 
-  return INLINE_SYSCALL (_sysctl, 1, __ptrvalue (&args));
+  return INLINE_SYSCALL (_sysctl, 1, &args);
 }
 libc_hidden_def (__sysctl)
 weak_alias (__sysctl, sysctl)

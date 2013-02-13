@@ -30,7 +30,7 @@ struct layout
   unsigned long locals[8];
   unsigned long ins[6];
   unsigned long next;
-  void *__unbounded return_address;
+  void *return_address;
 };
 
 struct trace_arg
@@ -127,9 +127,9 @@ __backtrace (void **array, int size)
 
       asm volatile ("mov %%fp, %0" : "=r"(fp));
       asm volatile ("mov %%i7, %0" : "=r"(i7));
-      current = (struct layout *__unbounded) (fp + BACKTRACE_STACK_BIAS);
+      current = (struct layout *) (fp + BACKTRACE_STACK_BIAS);
 
-      array[0] = (void *__unbounded) i7;
+      array[0] = (void *) i7;
 
       if (size == 1)
 	return 1;
@@ -140,8 +140,7 @@ __backtrace (void **array, int size)
 	  array[count] = current->return_address;
 	  if (!current->next)
 	    break;
-	  current = (struct layout *__unbounded) (current->next
-						  + BACKTRACE_STACK_BIAS);
+	  current = (struct layout *) (current->next + BACKTRACE_STACK_BIAS);
 	}
     }
   else

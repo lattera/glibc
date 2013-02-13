@@ -28,7 +28,7 @@ strcpy (dest, src)
      const char *src;
 {
   char c;
-  char *__unbounded s = (char *__unbounded) src;
+  char *s = (char *) src;
   const ptrdiff_t off = dest - s - 1;
 
   do

@@ -33,7 +33,7 @@ int __cache_line_size attribute_hidden;
 
 struct startup_info
   {
-    void *__unbounded sda_base;
+    void *sda_base;
     int (*main) (int, char **, char **, void *);
     int (*init) (int, char **, char **, void *);
     void (*fini) (void);
@@ -42,34 +42,28 @@ struct startup_info
 int
 /* GKM FIXME: GCC: this should get __BP_ prefix by virtue of the
    BPs in the arglist of startup_info.main and startup_info.init. */
-  BP_SYM (__libc_start_main) (int argc, char *__unbounded *__unbounded ubp_av,
-			      char *__unbounded *__unbounded ubp_ev,
-			      ElfW (auxv_t) * __unbounded auxvec,
+  BP_SYM (__libc_start_main) (int argc, char **argv,
+			      char **ev,
+			      ElfW (auxv_t) * auxvec,
 			      void (*rtld_fini) (void),
-			      struct startup_info *__unbounded stinfo,
-			      char *__unbounded *__unbounded stack_on_entry)
+			      struct startup_info *stinfo,
+			      char **stack_on_entry)
 {
-#if __BOUNDED_POINTERS__
-  char **argv;
-#else
-# define argv ubp_av
-#endif
-
   /* the PPC SVR4 ABI says that the top thing on the stack will
      be a NULL pointer, so if not we assume that we're being called
      as a statically-linked program by Linux...  */
   if (*stack_on_entry != NULL)
     {
-      char *__unbounded * __unbounded temp;
+      char **temp;
       /* ...in which case, we have argc as the top thing on the
          stack, followed by argv (NULL-terminated), envp (likewise),
          and the auxilary vector.  */
       /* 32/64-bit agnostic load from stack */
-      argc = *(long int *__unbounded) stack_on_entry;
-      ubp_av = stack_on_entry + 1;
-      ubp_ev = ubp_av + argc + 1;
+      argc = *(long int *) stack_on_entry;
+      argv = stack_on_entry + 1;
+      ev = argv + argc + 1;
 #ifdef HAVE_AUX_VECTOR
-      temp = ubp_ev;
+      temp = ev;
       while (*temp != NULL)
 	++temp;
       auxvec = (ElfW (auxv_t) *)++ temp;
@@ -86,7 +80,7 @@ int
 	break;
       }
 
-  return generic_start_main (stinfo->main, argc, ubp_av, auxvec,
+  return generic_start_main (stinfo->main, argc, argv, auxvec,
 			     stinfo->init, stinfo->fini, rtld_fini,
 			     stack_on_entry);
 }

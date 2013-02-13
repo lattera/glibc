@@ -44,7 +44,7 @@ __fxstat (int vers, int fd, struct stat *buf)
   {
     struct stat64 buf64;
 
-    result = INLINE_SYSCALL (fstat64, 2, fd, __ptrvalue (&buf64));
+    result = INLINE_SYSCALL (fstat64, 2, fd, &buf64);
     if (result == 0)
       result = __xstat32_conv (vers, &buf64, buf);
     return result;

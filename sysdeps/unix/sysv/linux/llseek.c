@@ -32,7 +32,7 @@ __llseek (int fd, loff_t offset, int whence)
 
   return (loff_t) (INLINE_SYSCALL (_llseek, 5, fd, (off_t) (offset >> 32),
 				   (off_t) (offset & 0xffffffff),
-				   __ptrvalue (&retval), whence) ?: retval);
+				   &retval, whence) ?: retval);
 }
 weak_alias (__llseek, llseek)
 strong_alias (__llseek, __libc_lseek64)

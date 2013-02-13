@@ -41,7 +41,7 @@
 
 # define RUN_HOOK(NAME, ARGS)						      \
 do {									      \
-  void *const *__unbounded ptr;						      \
+  void *const *ptr;						      \
   for (ptr = (void *const *) symbol_set_first_element (NAME);		      \
        ! symbol_set_end_p (NAME, ptr); ++ptr)				      \
     (*(__##NAME##_hook_function_t *) *ptr) ARGS;			      \

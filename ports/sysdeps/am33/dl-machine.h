@@ -62,9 +62,7 @@ elf_machine_load_address (void)
 
    We cannot use this scheme for profiling because the _mcount call
    destroys the passed register information.  */
-/* GKM FIXME: Fix trampoline to pass bounds so we can do
-   without the `__unbounded' qualifier.  */
-static ElfW(Addr) fixup (struct link_map *__unbounded l, ElfW(Word) reloc_offset)
+static ElfW(Addr) fixup (struct link_map *l, ElfW(Word) reloc_offset)
      __attribute__ ((unused));
 static ElfW(Addr) profile_fixup (struct link_map *l, ElfW(Word) reloc_offset,
 				 ElfW(Addr) retaddr)

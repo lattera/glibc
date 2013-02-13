@@ -1,3 +1,80 @@
+2013-02-13  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #13550]
+	* misc/sys/cdefs.h [!__BOUNDED_POINTERS__]: Remove conditional
+	code.
+	* csu/libc-start.c (LIBC_START_MAIN): Do not use __unbounded in
+	prototype or function definition.  Rename ubp_* variables and
+	parameters.  Remove argv definitions conditional on
+	[__BOUNDED_POINTERS__].
+	* debug/backtrace.c (__backtrace): Do not use __unbounded.
+	* elf/dl-runtime.c (_dl_fixup): Likewise.
+	* include/set-hooks.h (RUN_HOOK): Likewise.
+	* stdio-common/vfprintf.c (JUMP): Do not use __unbounded in either
+	definition.
+	* string/strcpy.c (strcpy): Do not use __unbounded.
+	* sysdeps/generic/frame.h (struct layout): Likewise.
+	* sysdeps/gnu/bits/msq.h (struct msqid_ds): Likewise.
+	* sysdeps/i386/dl-machine.h (_dl_fixup): Likewise.
+	* sysdeps/powerpc/powerpc32/backtrace.c (struct layout): Likewise.
+	* sysdeps/powerpc/powerpc64/backtrace.c (struct layout): Likewise.
+	* sysdeps/sparc/backtrace.c (struct layout): Likewise.
+	(__backtrace): Likewise.
+	* sysdeps/unix/sysv/linux/aio_sigqueue.c (__aio_sigqueue): Do not
+	use __ptrvalue.
+	* sysdeps/unix/sysv/linux/fxstat.c (__fxstat): Likewise.
+	* sysdeps/unix/sysv/linux/fxstatat.c (__fxstatat): Likewise.
+	* sysdeps/unix/sysv/linux/gai_sigqueue.c (__gai_sigqueue):
+	Likewise.
+	* sysdeps/unix/sysv/linux/i386/brk.c (__brk): Likewise.
+	* sysdeps/unix/sysv/linux/i386/fxstat.c (__fxstat): Likewise.
+	* sysdeps/unix/sysv/linux/i386/fxstatat.c (__fxstatat): Likewise.
+	* sysdeps/unix/sysv/linux/i386/lxstat.c (__lxstat): Likewise.
+	* sysdeps/unix/sysv/linux/i386/msgctl.c (struct __old_msqid_ds):
+	Do not use __unbounded.
+	* sysdeps/unix/sysv/linux/i386/setrlimit.c (__new_setrlimit):
+	Rename __unboundedrlimits parameter to rlimits in prototype.
+	* sysdeps/unix/sysv/linux/i386/shmctl.c (struct __old_shmid_ds):
+	Do not use __unbounded.
+	* sysdeps/unix/sysv/linux/i386/sigaction.c (__libc_sigaction): Do
+	not use __ptrvalue.
+	* sysdeps/unix/sysv/linux/i386/xstat.c (__xstat): Likewise.
+	* sysdeps/unix/sysv/linux/llseek.c (__llseek): Likewise.
+	* sysdeps/unix/sysv/linux/lxstat.c (__lxstat): Likewise.
+	* sysdeps/unix/sysv/linux/mmap64.c (__mmap64): Do not use
+	__ptrvalue or __unbounded.
+	(__mmap64) [__BOUNDED_POINTERS__]: Remove conditional code.
+	* sysdeps/unix/sysv/linux/msgctl.c (struct __old_msqid_ds): Do not
+	use __unbounded.
+	(__new_msgctl): Do not use __ptrvalue.
+	* sysdeps/unix/sysv/linux/msgrcv.c (struct ipc_kludge): Do not use
+	__unbounded.
+	(__libc_msgrcv): Do not use __ptrvalue.
+	* sysdeps/unix/sysv/linux/powerpc/libc-start.c (struct
+	startup_info): Do not use __unbounded.
+	(__libc_start_main): Likewise.  Rename ubp_* variables and
+	parameters.  Remove argv definitions conditional on
+	[__BOUNDED_POINTERS__].
+	* sysdeps/unix/sysv/linux/ptrace.c (ptrace): Do not use
+	__ptrvalue.
+	* sysdeps/unix/sysv/linux/semctl.c (struct __old_semid_ds): Do not
+	use __unbounded.
+	* sysdeps/unix/sysv/linux/shmat.c (shmat): Do not use __unbounded
+	or __ptrvalue.
+	* sysdeps/unix/sysv/linux/shmctl.c (struct __old_shmid_ds): Do not
+	use __unbounded.
+	(__new_shmctl): Do not use __ptrvalue.
+	* sysdeps/unix/sysv/linux/shmdt.c (shmdt): Likewise.
+	* sysdeps/unix/sysv/linux/sigaction.c (__libc_sigaction):
+	Likewise.
+	* sysdeps/unix/sysv/linux/sigqueue.c (__sigqueue): Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/sigaction.c
+	(__libc_sigaction): Likewise.
+	* sysdeps/unix/sysv/linux/sysctl.c (__sysctl): Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/sigaction.c (__libc_sigaction):
+	Likewise.
+	* sysdeps/unix/sysv/linux/xstat.c (__xstat): Likewise.
+
 2013-02-13   Ondřej Bílka  <neleai@seznam.cz>
 
 	* stdlib/Makefile (headers): Add bits/stdlib-bsearch.h.

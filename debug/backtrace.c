@@ -63,8 +63,8 @@ __backtrace (array, size)
      int size;
 {
   struct layout *current;
-  void *__unbounded top_frame;
-  void *__unbounded top_stack;
+  void *top_frame;
+  void *top_stack;
   int cnt = 0;
 
   top_frame = FIRST_FRAME_POINTER;

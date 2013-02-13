@@ -33,9 +33,9 @@
 */
 struct layout
 {
-  struct layout *__unbounded next;
+  struct layout *next;
   long condition_register;
-  void *__unbounded return_address;
+  void *return_address;
 };
 
 int
