@@ -63,7 +63,7 @@ __mpsqrt(mp_no *x, mp_no *y, int p) {
 
   m=__mpsqrt_mp[p];
   for (i=0; i<m; i++) {
-    __mul(&mpu,&mpu,&mpt1,p);
+    __sqr(&mpu,&mpt1,p);
     __mul(&mpt1,&mpz,&mpt2,p);
     __sub(&mp3halfs,&mpt2,&mpt1,p);
     __mul(&mpu,&mpt1,&mpt2,p);

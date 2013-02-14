@@ -66,7 +66,7 @@ __mpatan(mp_no *x, mp_no *y, int p) {
     mptwoim1.d[0] = ONE;
 
 				 /* Reduce x m times */
-    __mul(x,x,&mpsm,p);
+    __sqr(x,&mpsm,p);
     if (m==0) __cpy(x,&mps,p);
     else {
       for (i=0; i<m; i++) {

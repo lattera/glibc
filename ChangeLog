@@ -1,5 +1,11 @@
 2013-02-14  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
+	* sysdeps/ieee754/dbl-64/mpatan.c (__mpatan): Use __sqr
+	instead of __mul.
+	* sysdeps/ieee754/dbl-64/mpsqrt.c (__mpsqrt): Likewise.
+	* sysdeps/ieee754/dbl-64/sincos32.c (ss32): Likewise.
+	(cc32): Likewise.
+
 	* sysdeps/ieee754/dbl-64/mpa.c (__sqr): New function.
 	* sysdeps/ieee754/dbl-64/mpa.h (__sqr): Declare.
 	* sysdeps/ieee754/dbl-64/mpexp.c (__mpexp): use __sqr instead

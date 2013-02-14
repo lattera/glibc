@@ -67,7 +67,7 @@ ss32(mp_no *x, mp_no *y, int p) {
 #endif
   for (i=1;i<=p;i++) mpk.d[i]=0;
 
-  __mul(x,x,&x2,p);
+  __sqr(x,&x2,p);
   __cpy(&oofac27,&gor,p);
   __cpy(&gor,&sum,p);
   for (a=27.0;a>1.0;a-=2.0) {
@@ -99,7 +99,7 @@ cc32(mp_no *x, mp_no *y, int p) {
 #endif
   for (i=1;i<=p;i++) mpk.d[i]=0;
 
-  __mul(x,x,&x2,p);
+  __sqr(x,&x2,p);
   mpk.d[1]=27.0;
   __mul(&oofac27,&mpk,&gor,p);
   __cpy(&gor,&sum,p);
