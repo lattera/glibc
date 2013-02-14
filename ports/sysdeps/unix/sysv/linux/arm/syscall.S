@@ -42,6 +42,7 @@ ENTRY (syscall)
 	cfi_restore (r6)
 	cfi_restore (r7)
 	cmn	r0, #4096
+	it	cc
 	RETINSTR(cc, lr)
 	b	PLTJMP(syscall_error)
 PSEUDO_END (syscall)

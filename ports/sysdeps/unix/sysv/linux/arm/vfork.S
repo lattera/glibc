@@ -51,6 +51,7 @@ ENTRY (__vfork)
 	RESTORE_PID
 #endif
 	cmn	a1, #4096
+	it	cc
 	RETINSTR(cc, lr)
 
 	b	PLTJMP(SYSCALL_ERROR)

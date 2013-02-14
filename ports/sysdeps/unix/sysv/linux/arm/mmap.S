@@ -51,6 +51,7 @@ ENTRY (__mmap)
 	cfi_restore (r5)
 
 	cmn	r0, $4096
+	it	cc
 	RETINSTR(cc, lr)
 	b	PLTJMP(syscall_error)
 

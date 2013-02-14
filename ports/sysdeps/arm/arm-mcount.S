@@ -24,8 +24,8 @@
 
 #ifdef __thumb2__
 	.thumb
-	.syntax unified
 #endif
+	.syntax unified
 
 
 /* Use an assembly stub with a special ABI.  The calling lr has been
@@ -77,15 +77,10 @@ ENTRY(_mcount)
 	cfi_rel_offset (r3, 12)
 	cfi_rel_offset (fp, 16)
 	cfi_rel_offset (lr, 20)
-#ifdef __thumb2__
 	movs r0, fp
 	ittt ne
 	ldrne r0, [r0, #-4]
-#else
-	movs fp, fp
-	ldrne r0, [fp, #-4]
-#endif
-	movnes r1, lr
+	movsne r1, lr
 	blne __mcount_internal
 #ifdef __thumb2__
 	ldmia sp!, {r0, r1, r2, r3, fp, pc}

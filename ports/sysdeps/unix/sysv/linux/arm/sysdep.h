@@ -64,6 +64,7 @@
 	cmn	r0, $4096;
 
 #define PSEUDO_RET					\
+	it	cc;					\
 	RETINSTR(cc, lr);				\
 	b	PLTJMP(SYSCALL_ERROR)
 #undef ret

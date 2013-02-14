@@ -26,6 +26,17 @@
 	* sysdeps/unix/sysv/linux/arm/nptl/unwind-resume.c
 	(_Unwind_Resume): Likewise.
 
+	* ports/sysdeps/arm/arm-mcount.S: Always use unified syntax and
+	always add IT markup.
+	* sysdeps/unix/sysv/linux/arm/mmap64.S (__mmap64): Likewise.
+	* sysdeps/arm/dl-tlsdesc.S (_dl_tlsdesc_dynamic): Add IT markup.
+	* sysdeps/unix/arm/sysdep.S (__syscall_error): Likewise.
+	* sysdeps/unix/sysv/linux/arm/clone.S (__clone): Likewise.
+	* sysdeps/unix/sysv/linux/arm/mmap.S (__mmap): Likewise.
+	* sysdeps/unix/sysv/linux/arm/syscall.S (syscall): Likewise.
+	* sysdeps/unix/sysv/linux/arm/sysdep.h (PSEUDO_RET): Likewise.
+	* sysdeps/unix/sysv/linux/arm/vfork.S (__vfork): Likewise.
+
 2013-02-27  Roland McGrath  <roland@hack.frob.com>
 
 	* sysdeps/arm/sysdep.h (CFI_SECTIONS): New macro.

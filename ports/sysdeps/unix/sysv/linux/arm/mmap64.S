@@ -17,6 +17,8 @@
 
 #include <sysdep.h>
 
+	.syntax unified
+
 #define	EINVAL		22
 
 #ifdef __ARMEB__
@@ -42,7 +44,8 @@ ENTRY (__mmap64)
 	cfi_remember_state
 	movs	r4, ip, lsl $20		@ check that offset is page-aligned
 	mov	ip, ip, lsr $12
-	moveqs	r4, r5, lsr $12		@ check for overflow
+	it	eq
+	movseq	r4, r5, lsr $12		@ check for overflow
 	bne	.Linval
 	ldr	r4, [sp, $8]		@ load fd
 	orr	r5, ip, r5, lsl $20	@ compose page offset
@@ -52,6 +55,7 @@ ENTRY (__mmap64)
 	cfi_adjust_cfa_offset (-8)
 	cfi_restore (r4)
 	cfi_restore (r5)
+	it	cc
 	RETINSTR(cc, lr)
 	b	PLTJMP(syscall_error)
 

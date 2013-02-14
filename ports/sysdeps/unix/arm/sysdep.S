@@ -31,8 +31,9 @@ __syscall_error:
 	/* We translate the system's EWOULDBLOCK error into EAGAIN.
 	   The GNU C library always defines EWOULDBLOCK==EAGAIN.
 	   EWOULDBLOCK_sys is the original number.  */
-	cmp r0, $EWOULDBLOCK_sys /* Is it the old EWOULDBLOCK?  */
-	moveq r0, $EAGAIN	/* Yes; translate it to EAGAIN.  */
+	cmp	r0, $EWOULDBLOCK_sys /* Is it the old EWOULDBLOCK?  */
+	it	eq
+	moveq	r0, $EAGAIN	/* Yes; translate it to EAGAIN.  */
 #endif
 
 #ifndef IS_IN_rtld

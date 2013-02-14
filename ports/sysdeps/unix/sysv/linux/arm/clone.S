@@ -33,6 +33,7 @@
 ENTRY(__clone)
 	@ sanity check args
 	cmp	r0, #0
+	ite	ne
 	cmpne	r1, #0
 	moveq	r0, #-EINVAL
 	beq	PLTJMP(syscall_error)
@@ -78,8 +79,9 @@ PSEUDO_END (__clone)
 	sub	pc, r0, #31
 	mov	r1, r0
 	tst	ip, #CLONE_VM
-	movne	r0, #-1
 	ldr	r7, =SYS_ify(getpid)
+	ite	ne
+	movne	r0, #-1
 	swieq	0x0
 	str	r0, [r1, #PID_OFFSET]
 	str	r0, [r1, #TID_OFFSET]
