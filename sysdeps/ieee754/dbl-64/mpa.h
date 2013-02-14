@@ -115,6 +115,7 @@ void __dbl_mp (double, mp_no *, int);
 void __add (const mp_no *, const mp_no *, mp_no *, int);
 void __sub (const mp_no *, const mp_no *, mp_no *, int);
 void __mul (const mp_no *, const mp_no *, mp_no *, int);
+void __sqr (const mp_no *, mp_no *, int);
 void __dvd (const mp_no *, const mp_no *, mp_no *, int);
 
 extern void __mpatan (mp_no *, mp_no *, int);

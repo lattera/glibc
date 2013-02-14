@@ -1,5 +1,6 @@
 #define __add __add_avx
 #define __mul __mul_avx
+#define __sqr __sqr_avx
 #define __sub __sub_avx
 #define __dbl_mp __dbl_mp_avx
 #define __dvd __dvd_avx

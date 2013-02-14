@@ -1,3 +1,16 @@
+2013-02-14  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* sysdeps/ieee754/dbl-64/mpa.c (__sqr): New function.
+	* sysdeps/ieee754/dbl-64/mpa.h (__sqr): Declare.
+	* sysdeps/ieee754/dbl-64/mpexp.c (__mpexp): use __sqr instead
+	of __mul for squares.
+	* sysdeps/powerpc/powerpc32/power4/fpu/mpa.c (__sqr): New
+	function
+	* sysdeps/powerpc/powerpc64/power4/fpu/mpa.c (__sqr):
+	Likewise.
+	* sysdeps/x86_64/fpu/multiarch/mpa-avx.c: Define __sqr.
+	* sysdeps/x86_64/fpu/multiarch/mpa-fma4.c: Likewise.
+
 2013-02-13  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #13550]

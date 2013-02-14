@@ -702,6 +702,97 @@ __mul (const mp_no *x, const mp_no *y, mp_no *z, int p)
   Z[0] = X[0] * Y[0];
 }
 
+/* Square *X and store result in *Y.  X and Y may not overlap.  For P in
+   [1, 2, 3], the exact result is truncated to P digits.  In case P > 3 the
+   error is bounded by 1.001 ULP.  This is a faster special case of
+   multiplication.  */
+void
+SECTION
+__sqr (const mp_no *x, mp_no *y, int p)
+{
+  long i, j, k, ip;
+  double u, yk;
+
+  /* Is z=0?  */
+  if (__glibc_unlikely (X[0] == ZERO))
+    {
+      Y[0] = ZERO;
+      return;
+    }
+
+  /* We need not iterate through all X's since it's pointless to
+     multiply zeroes.  */
+  for (ip = p; ip > 0; ip--)
+    if (X[ip] != ZERO)
+      break;
+
+  k = (__glibc_unlikely (p < 3)) ? p + p : p + 3;
+
+  while (k > 2 * ip + 1)
+    Y[k--] = ZERO;
+
+  yk = ZERO;
+
+  while (k > p)
+    {
+      double yk2 = 0.0;
+      long lim = k / 2;
+
+      if (k % 2 == 0)
+        {
+	  yk += X[lim] * X[lim];
+	  lim--;
+	}
+
+      for (i = k - p, j = p; i <= lim; i++, j--)
+	yk2 += X[i] * X[j];
+
+      yk += 2.0 * yk2;
+
+      u = (yk + CUTTER) - CUTTER;
+      if (u > yk)
+	u -= RADIX;
+      Y[k--] = yk - u;
+      yk = u * RADIXI;
+    }
+
+  while (k > 1)
+    {
+      double yk2 = 0.0;
+      long lim = k / 2;
+
+      if (k % 2 == 0)
+        {
+	  yk += X[lim] * X[lim];
+	  lim--;
+	}
+
+      for (i = 1, j = k - 1; i <= lim; i++, j--)
+	yk2 += X[i] * X[j];
+
+      yk += 2.0 * yk2;
+
+      u = (yk + CUTTER) - CUTTER;
+      if (u > yk)
+	u -= RADIX;
+      Y[k--] = yk - u;
+      yk = u * RADIXI;
+    }
+  Y[k] = yk;
+
+  /* Squares are always positive.  */
+  Y[0] = 1.0;
+
+  EY = 2 * EX;
+  /* Is there a carry beyond the most significant digit?  */
+  if (__glibc_unlikely (Y[1] == ZERO))
+    {
+      for (i = 1; i <= p; i++)
+	Y[i] = Y[i + 1];
+      EY--;
+    }
+}
+
 /* Invert *X and store in *Y.  Relative error bound:
    - For P = 2: 1.001 * R ^ (1 - P)
    - For P = 3: 1.063 * R ^ (1 - P)

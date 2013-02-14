@@ -145,14 +145,14 @@ __mpexp (mp_no *x, mp_no *y, int p)
   /* Raise polynomial value to the power of 2**m. Put result in y.  */
   for (k = 0, j = 0; k < m;)
     {
-      __mul (&mpt2, &mpt2, &mpt1, p);
+      __sqr (&mpt2, &mpt1, p);
       k++;
       if (k == m)
 	{
 	  j = 1;
 	  break;
 	}
-      __mul (&mpt1, &mpt1, &mpt2, p);
+      __sqr (&mpt1, &mpt2, p);
       k++;
     }
   if (j)
