@@ -105,8 +105,6 @@ __cpy (const mp_no *x, mp_no *y, int p)
   EY = EX;
   for (i = 0; i <= p; i++)
     Y[i] = X[i];
-
-  return;
 }
 
 /* Convert a multiple precision number *X into a double precision
@@ -181,7 +179,6 @@ norm (const mp_no *x, double *y, int p)
     c *= RADIXI;
 
   *y = c;
-  return;
 #undef R
 }
 
@@ -293,8 +290,6 @@ denorm (const mp_no *x, double *y, int p)
   c = X[0] * ((z[1] + R * (z[2] + R * z[3])) - TWO10);
 
   *y = c * TWOM1032;
-  return;
-
 #undef R
 }
 
@@ -359,7 +354,6 @@ __dbl_mp (double x, mp_no *y, int p)
     }
   for (; i <= p2; i++)
     Y[i] = ZERO;
-  return;
 }
 
 /* Add magnitudes of *X and *Y assuming that abs (*X) >= abs (*Y) > 0.  The
@@ -493,8 +487,6 @@ sub_magnitudes (const mp_no *x, const mp_no *y, mp_no *z, int p)
     Z[k++] = Z[i++];
   for (; k <= p2;)
     Z[k++] = ZERO;
-
-  return;
 }
 
 /* Add *X and *Y and store the result in *Z.  X and Y may overlap, but not X
@@ -544,7 +536,6 @@ __add (const mp_no *x, const mp_no *y, mp_no *z, int p)
       else
 	Z[0] = ZERO;
     }
-  return;
 }
 
 /* Subtract *Y from *X and return the result in *Z.  X and Y may overlap but
@@ -595,7 +586,6 @@ __sub (const mp_no *x, const mp_no *y, mp_no *z, int p)
       else
 	Z[0] = ZERO;
     }
-  return;
 }
 
 /* Multiply *X and *Y and store result in *Z.  X and Y may overlap but not X
@@ -684,7 +674,6 @@ __mul (const mp_no *x, const mp_no *y, mp_no *z, int p)
     EZ = EX + EY;
 
   Z[0] = X[0] * Y[0];
-  return;
 }
 
 /* Square *X and store result in *Y.  X and Y may not overlap.  For P in
@@ -818,7 +807,6 @@ __inv (const mp_no *x, mp_no *y, int p)
       __sub (&mptwo, y, &z, p);
       __mul (&w, &z, y, p);
     }
-  return;
 }
 
 /* Divide *X by *Y and store result in *Z.  X and Y may overlap but not X and Z
@@ -840,5 +828,4 @@ __dvd (const mp_no *x, const mp_no *y, mp_no *z, int p)
       __inv (y, &w, p);
       __mul (x, &w, z, p);
     }
-  return;
 }
