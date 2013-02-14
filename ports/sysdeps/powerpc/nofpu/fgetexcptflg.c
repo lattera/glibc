@@ -19,7 +19,6 @@
 
 #include "soft-fp.h"
 #include "soft-supp.h"
-#include <bp-sym.h>
 
 int
 __fegetexceptflag (fexcept_t *flagp, int excepts)
@@ -32,7 +31,7 @@ __fegetexceptflag (fexcept_t *flagp, int excepts)
 #include <shlib-compat.h>
 #if SHLIB_COMPAT (libm, GLIBC_2_1, GLIBC_2_2)
 strong_alias (__fegetexceptflag, __old_fegetexceptflag)
-compat_symbol (libm, BP_SYM (__old_fegetexceptflag), BP_SYM (fegetexceptflag), GLIBC_2_1);
+compat_symbol (libm, __old_fegetexceptflag, fegetexceptflag, GLIBC_2_1);
 #endif
 
-versioned_symbol (libm, BP_SYM (__fegetexceptflag), BP_SYM (fegetexceptflag), GLIBC_2_2);
+versioned_symbol (libm, __fegetexceptflag, fegetexceptflag, GLIBC_2_2);

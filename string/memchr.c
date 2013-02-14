@@ -47,11 +47,6 @@
 #endif
 
 #include <sys/types.h>
-#if HAVE_BP_SYM_H || defined _LIBC
-#include <bp-sym.h>
-#else
-# define BP_SYM(sym) sym
-#endif
 
 #undef memchr
 #undef __memchr
@@ -203,6 +198,6 @@ __memchr (s, c_in, n)
   return 0;
 }
 #ifdef weak_alias
-weak_alias (__memchr, BP_SYM (memchr))
+weak_alias (__memchr, memchr)
 #endif
 libc_hidden_builtin_def (memchr)

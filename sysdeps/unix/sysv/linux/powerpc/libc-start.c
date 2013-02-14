@@ -19,7 +19,6 @@
 #include <unistd.h>
 #include <ldsodefs.h>
 #include <sysdep.h>
-#include <bp-sym.h>
 
 
 int __cache_line_size attribute_hidden;
@@ -40,14 +39,12 @@ struct startup_info
   };
 
 int
-/* GKM FIXME: GCC: this should get __BP_ prefix by virtue of the
-   BPs in the arglist of startup_info.main and startup_info.init. */
-  BP_SYM (__libc_start_main) (int argc, char **argv,
-			      char **ev,
-			      ElfW (auxv_t) * auxvec,
-			      void (*rtld_fini) (void),
-			      struct startup_info *stinfo,
-			      char **stack_on_entry)
+__libc_start_main (int argc, char **argv,
+		   char **ev,
+		   ElfW (auxv_t) * auxvec,
+		   void (*rtld_fini) (void),
+		   struct startup_info *stinfo,
+		   char **stack_on_entry)
 {
   /* the PPC SVR4 ABI says that the top thing on the stack will
      be a NULL pointer, so if not we assume that we're being called

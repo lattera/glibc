@@ -16,7 +16,6 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <string.h>
-#include <bp-sym.h>
 
 typedef unsigned long word;
 
@@ -170,6 +169,6 @@ __memchr (const void *s, int xc, size_t n)
 }
 
 #ifdef weak_alias
-weak_alias (__memchr, BP_SYM (memchr))
+weak_alias (__memchr, memchr)
 #endif
 libc_hidden_builtin_def (memchr)

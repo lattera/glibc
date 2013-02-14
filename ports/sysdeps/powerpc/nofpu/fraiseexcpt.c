@@ -20,7 +20,6 @@
 #include "soft-fp.h"
 #include "soft-supp.h"
 #include <signal.h>
-#include <bp-sym.h>
 
 #undef feraiseexcept
 int
@@ -35,8 +34,8 @@ __feraiseexcept (int x)
 #include <shlib-compat.h>
 #if SHLIB_COMPAT (libm, GLIBC_2_1, GLIBC_2_2)
 strong_alias (__feraiseexcept, __old_feraiseexcept)
-compat_symbol (libm, BP_SYM (__old_feraiseexcept), BP_SYM (feraiseexcept), GLIBC_2_1);
+compat_symbol (libm, __old_feraiseexcept, feraiseexcept, GLIBC_2_1);
 #endif
 
 libm_hidden_ver (__feraiseexcept, feraiseexcept)
-versioned_symbol (libm, BP_SYM (__feraiseexcept), BP_SYM (feraiseexcept), GLIBC_2_2);
+versioned_symbol (libm, __feraiseexcept, feraiseexcept, GLIBC_2_2);

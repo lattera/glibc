@@ -17,7 +17,6 @@
 
 #include <fcntl.h>
 #include <stdarg.h>
-#include <bp-sym.h>
 #include <sysdep-cancel.h>
 
 /* Open FILE with access OFLAG.  If OFLAG includes O_CREAT,
@@ -46,6 +45,6 @@ __libc_open64 (const char *file, int oflag, ...)
 
   return result;
 }
-weak_alias (__libc_open64, BP_SYM (__open64))
-libc_hidden_weak (BP_SYM (__open64))
-weak_alias (__libc_open64, BP_SYM (open64))
+weak_alias (__libc_open64, __open64)
+libc_hidden_weak (__open64)
+weak_alias (__libc_open64, open64)

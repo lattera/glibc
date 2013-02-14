@@ -1,3 +1,19 @@
+2013-02-14  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #13550]
+	* sysdeps/powerpc/nofpu/fegetenv.c: Do not include <bp-sym.h>.
+	(fegetenv): Do not use BP_SYM in versioned symbols.
+	* sysdeps/powerpc/nofpu/fesetenv.c: Do not include <bp-sym.h>.
+	(fesetenv): Do not use BP_SYM in versioned symbols.
+	* sysdeps/powerpc/nofpu/feupdateenv.c: Do not include <bp-sym.h>.
+	(feupdateenv): Do not use BP_SYM in versioned symbols.
+	* sysdeps/powerpc/nofpu/fgetexcptflg.c: Do not include <bp-sym.h>.
+	(fegetexceptflag): Do not use BP_SYM in versioned symbols.
+	* sysdeps/powerpc/nofpu/fraiseexcpt.c: Do not include <bp-sym.h>.
+	(feraiseexcept): Do not use BP_SYM in versioned symbols.
+	* sysdeps/powerpc/nofpu/fsetexcptflg.c: Do not include <bp-sym.h>.
+	(fesetexceptflag): Do not use BP_SYM in versioned symbols.
+
 2013-01-02  Joseph Myers  <joseph@codesourcery.com>
 
 	* All files with FSF copyright notices: Update copyright dates

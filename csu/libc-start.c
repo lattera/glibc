@@ -19,7 +19,6 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <ldsodefs.h>
-#include <bp-sym.h>
 
 extern void __libc_init_first (int argc, char **argv, char **envp);
 #ifndef SHARED
@@ -86,7 +85,7 @@ apply_irel (void)
 # endif
 #else
 # define STATIC
-# define LIBC_START_MAIN BP_SYM (__libc_start_main)
+# define LIBC_START_MAIN __libc_start_main
 #endif
 
 #ifdef MAIN_AUXVEC_ARG

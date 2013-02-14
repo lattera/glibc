@@ -1,3 +1,9 @@
+2013-02-14  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #13550]
+	* sysdeps/alpha/memchr.c: Do not include <bp-sym.h>.
+	(memchr): Do not use BP_SYM in weak_alias.
+
 2013-02-13  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #13550]

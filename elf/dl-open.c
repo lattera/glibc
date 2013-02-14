@@ -28,7 +28,6 @@
 #include <sys/param.h>
 #include <bits/libc-lock.h>
 #include <ldsodefs.h>
-#include <bp-sym.h>
 #include <caller.h>
 #include <sysdep-cancel.h>
 #include <tls.h>
@@ -43,7 +42,7 @@ extern ElfW(Addr) _dl_sysdep_start (void **start_argptr,
 						     ElfW(Word) phnum,
 						     ElfW(Addr) *user_entry,
 						     ElfW(auxv_t) *auxv));
-weak_extern (BP_SYM (_dl_sysdep_start))
+weak_extern (_dl_sysdep_start)
 
 extern int __libc_multiple_libcs;	/* Defined in init-first.c.  */
 

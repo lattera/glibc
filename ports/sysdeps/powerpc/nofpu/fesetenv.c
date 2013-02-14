@@ -19,7 +19,6 @@
 
 #include "soft-fp.h"
 #include "soft-supp.h"
-#include <bp-sym.h>
 
 int
 __fesetenv (const fenv_t *envp)
@@ -36,8 +35,8 @@ __fesetenv (const fenv_t *envp)
 #include <shlib-compat.h>
 #if SHLIB_COMPAT (libm, GLIBC_2_1, GLIBC_2_2)
 strong_alias (__fesetenv, __old_fesetenv)
-compat_symbol (libm, BP_SYM (__old_fesetenv), BP_SYM (fesetenv), GLIBC_2_1);
+compat_symbol (libm, __old_fesetenv, fesetenv, GLIBC_2_1);
 #endif
 
 libm_hidden_ver (__fesetenv, fesetenv)
-versioned_symbol (libm, BP_SYM (__fesetenv), BP_SYM (fesetenv), GLIBC_2_2);
+versioned_symbol (libm, __fesetenv, fesetenv, GLIBC_2_2);

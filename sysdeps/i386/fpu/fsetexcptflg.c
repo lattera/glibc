@@ -19,7 +19,6 @@
 
 #include <fenv.h>
 #include <math.h>
-#include <bp-sym.h>
 #include <unistd.h>
 #include <ldsodefs.h>
 #include <dl-procinfo.h>
@@ -64,7 +63,7 @@ __fesetexceptflag (const fexcept_t *flagp, int excepts)
 #include <shlib-compat.h>
 #if SHLIB_COMPAT (libm, GLIBC_2_1, GLIBC_2_2)
 strong_alias (__fesetexceptflag, __old_fesetexceptflag)
-compat_symbol (libm, BP_SYM (__old_fesetexceptflag), BP_SYM (fesetexceptflag), GLIBC_2_1);
+compat_symbol (libm, __old_fesetexceptflag, fesetexceptflag, GLIBC_2_1);
 #endif
 
-versioned_symbol (libm, BP_SYM (__fesetexceptflag), BP_SYM (fesetexceptflag), GLIBC_2_2);
+versioned_symbol (libm, __fesetexceptflag, fesetexceptflag, GLIBC_2_2);

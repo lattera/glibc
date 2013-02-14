@@ -1,3 +1,90 @@
+2013-02-14  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #13550]
+	* csu/libc-start.c: Do not include <bp-sym.h>.
+	[!LIBC_START_MAIN] (LIBC_START_MAIN): Do not use BP_SYM.
+	* elf/dl-open.c: Do not include <bp-sym.h>.
+	(_dl_sysdep_start): Do not use BP_SYM in weak_extern.
+	* math/fegetenv.c: Do not include <bp-sym.h>.
+	(fegetenv): Do not use BP_SYM in versioned symbols.
+	* nptl/sysdeps/pthread/bits/libc-lockP.h
+	[!__NO_WEAK_PTHREAD_ALIASES && weak_extern]: Do not include
+	<bp-sym.h>.
+	[!__NO_WEAK_PTHREAD_ALIASES && weak_extern]
+	(__pthread_mutex_init): Do not use BP_SYM in weak_extern.
+	[!__NO_WEAK_PTHREAD_ALIASES && weak_extern]
+	(__pthread_mutex_destroy): Likewise.
+	[!__NO_WEAK_PTHREAD_ALIASES && weak_extern]
+	(__pthread_mutex_lock): Likewise.
+	[!__NO_WEAK_PTHREAD_ALIASES && weak_extern]
+	(__pthread_mutex_trylock): Likewise.
+	[!__NO_WEAK_PTHREAD_ALIASES && weak_extern]
+	(__pthread_mutex_unlock): Likewise.
+	[!__NO_WEAK_PTHREAD_ALIASES && weak_extern]
+	(__pthread_mutexattr_init): Likewise.
+	[!__NO_WEAK_PTHREAD_ALIASES && weak_extern]
+	(__pthread_mutexattr_destroy): Likewise.
+	[!__NO_WEAK_PTHREAD_ALIASES && weak_extern]
+	(__pthread_mutexattr_settype): Likewise.
+	[!__NO_WEAK_PTHREAD_ALIASES && weak_extern]
+	(__pthread_rwlock_init): Likewise.
+	[!__NO_WEAK_PTHREAD_ALIASES && weak_extern]
+	(__pthread_rwlock_destroy): Likewise.
+	[!__NO_WEAK_PTHREAD_ALIASES && weak_extern]
+	(__pthread_rwlock_rdlock): Likewise.
+	[!__NO_WEAK_PTHREAD_ALIASES && weak_extern]
+	(__pthread_rwlock_tryrdlock): Likewise.
+	[!__NO_WEAK_PTHREAD_ALIASES && weak_extern]
+	(__pthread_rwlock_wrlock): Likewise.
+	[!__NO_WEAK_PTHREAD_ALIASES && weak_extern]
+	(__pthread_rwlock_trywrlock): Likewise.
+	[!__NO_WEAK_PTHREAD_ALIASES && weak_extern]
+	(__pthread_rwlock_unlock): Likewise.
+	[!__NO_WEAK_PTHREAD_ALIASES && weak_extern]
+	(__pthread_key_create): Likewise.
+	[!__NO_WEAK_PTHREAD_ALIASES && weak_extern]
+	(__pthread_setspecific): Likewise.
+	[!__NO_WEAK_PTHREAD_ALIASES && weak_extern]
+	(__pthread_getspecific): Likewise.
+	[!__NO_WEAK_PTHREAD_ALIASES && weak_extern] (__pthread_once):
+	Likewise.
+	[!__NO_WEAK_PTHREAD_ALIASES && weak_extern]
+	(_pthread_cleanup_push_defer): Likewise.
+	[!__NO_WEAK_PTHREAD_ALIASES && weak_extern]
+	(_pthread_cleanup_pop_restore): Likewise.
+	[!__NO_WEAK_PTHREAD_ALIASES && weak_extern]
+	(pthread_setcancelstate): Likewise.
+	* string/memchr.c [HAVE_BP_SYM_H || _LIBC]: Do not include
+	<bp-sym.h>.
+	[!(HAVE_BP_SYM_H || _LIBC)] (BP_SYM): Remove macro definition.
+	(memchr): Do not use BP_SYM in weak_alias.
+	* sysdeps/i386/fpu/fegetenv.c: Do not include <bp-sym.h>.
+	(fegetenv): Do not use BP_SYM in versioned symbols.
+	* sysdeps/i386/fpu/fesetenv.c: Do not include <bp-sym.h>.
+	(fesetenv): Do not use BP_SYM in versioned symbols.
+	* sysdeps/i386/fpu/feupdateenv.c: Do not include <bp-sym.h>.
+	(feupdateenv): Do not use BP_SYM in versioned symbols.
+	* sysdeps/i386/fpu/fsetexcptflg.c: Do not include <bp-sym.h>.
+	(fesetexceptflag): Do not use BP_SYM in versioned symbols.
+	* sysdeps/posix/open64.c: Do not include <bp-sym.h>.
+	(__open64): Do not use BP_SYM in weak_alias and libc_hidden_weak.
+	(open64): Do not use BP_SYM in weak_alias.
+	* sysdeps/powerpc/fpu/fegetenv.c: Do not include <bp-sym.h>.
+	(fegetenv): Do not use BP_SYM in versioned symbols.
+	* sysdeps/powerpc/fpu/fesetenv.c: Do not include <bp-sym.h>.
+	(fesetenv): Do not use BP_SYM in versioned symbols.
+	* sysdeps/powerpc/fpu/feupdateenv.c: Do not include <bp-sym.h>.
+	(feupdateenv): Do not use BP_SYM in versioned symbols.
+	* sysdeps/powerpc/fpu/fgetexcptflg.c: Do not include <bp-sym.h>.
+	(fegetexceptflag): Do not use BP_SYM in versioned symbols.
+	* sysdeps/powerpc/fpu/fraiseexcpt.c: Do not include <bp-sym.h>.
+	(feraiseexcept): Do not use BP_SYM in versioned symbols.
+	* sysdeps/powerpc/fpu/fsetexcptflg.c: Do not include <bp-sym.h>.
+	(fesetexceptflag): Do not use BP_SYM in versioned symbols.
+	* sysdeps/unix/sysv/linux/powerpc/libc-start.c: Do not include
+	<bp-sym.h>.
+	(__libc_start_main): Do not use BP_SYM.
+
 2013-02-14  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* sysdeps/powerpc/powerpc32/power4/fpu/mpa.c (__cpy): Remove

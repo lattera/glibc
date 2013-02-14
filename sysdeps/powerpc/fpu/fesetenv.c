@@ -18,7 +18,6 @@
 
 #include <fenv_libc.h>
 #include <fpu_control.h>
-#include <bp-sym.h>
 
 #define _FPU_MASK_ALL (_FPU_MASK_ZM | _FPU_MASK_OM | _FPU_MASK_UM | _FPU_MASK_XM | _FPU_MASK_IM)
 
@@ -54,8 +53,8 @@ __fesetenv (const fenv_t *envp)
 #include <shlib-compat.h>
 #if SHLIB_COMPAT (libm, GLIBC_2_1, GLIBC_2_2)
 strong_alias (__fesetenv, __old_fesetenv)
-compat_symbol (libm, BP_SYM (__old_fesetenv), BP_SYM (fesetenv), GLIBC_2_1);
+compat_symbol (libm, __old_fesetenv, fesetenv, GLIBC_2_1);
 #endif
 
 libm_hidden_ver (__fesetenv, fesetenv)
-versioned_symbol (libm, BP_SYM (__fesetenv), BP_SYM (fesetenv), GLIBC_2_2);
+versioned_symbol (libm, __fesetenv, fesetenv, GLIBC_2_2);
