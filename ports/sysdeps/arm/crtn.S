@@ -33,6 +33,8 @@
    License along with the GNU C Library.  If not, see
    <http://www.gnu.org/licenses/>.  */
 
+/* Always build .init and .fini sections in ARM mode.  */
+#define NO_THUMB
 #include <sysdep.h>
 
 /* crtn.S puts function epilogues in the .init and .fini sections

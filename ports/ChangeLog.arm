@@ -37,6 +37,17 @@
 	* sysdeps/unix/sysv/linux/arm/sysdep.h (PSEUDO_RET): Likewise.
 	* sysdeps/unix/sysv/linux/arm/vfork.S (__vfork): Likewise.
 
+	* ports/sysdeps/arm/__longjmp.S: Define NO_THUMB before <sysdep.h>
+	* sysdeps/arm/crti.S, sysdeps/arm/crtn.S: Likewise.
+	* sysdeps/arm/dl-trampoline.S: Likewise.
+	* sysdeps/arm/memcpy.S: Likewise.
+	* sysdeps/arm/memmove.S: Likewise.
+	* sysdeps/arm/memset.S: Likewise.
+	* sysdeps/arm/setjmp.S: Likewise.
+	* sysdeps/arm/strlen.S: Likewise.
+	* sysdeps/unix/sysv/linux/arm/____longjmp_chk.S: Likewise.
+	* sysdeps/unix/sysv/linux/arm/setcontext.S: Likewise.
+
 2013-02-27  Roland McGrath  <roland@hack.frob.com>
 
 	* sysdeps/arm/sysdep.h (CFI_SECTIONS): New macro.

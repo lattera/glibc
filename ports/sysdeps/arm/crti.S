@@ -38,6 +38,8 @@
    they can be called as functions.  The symbols _init and _fini are
    magic and cause the linker to emit DT_INIT and DT_FINI.  */
 
+/* Always build .init and .fini sections in ARM mode.  */
+#define NO_THUMB
 #include <libc-symbols.h>
 #include <sysdep.h>
 

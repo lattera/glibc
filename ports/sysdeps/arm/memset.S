@@ -16,6 +16,8 @@
    License along with the GNU C Library.  If not, see
    <http://www.gnu.org/licenses/>.  */
 
+/* Thumb requires excessive IT insns here.  */
+#define NO_THUMB
 #include <sysdep.h>
 
 /* void *memset (dstpp, c, len) */

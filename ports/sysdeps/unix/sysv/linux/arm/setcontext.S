@@ -15,6 +15,8 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+/* ??? Needs more rearrangement for the LDM to handle thumb mode.  */
+#define NO_THUMB
 #include <sysdep.h>
 #include <rtld-global-offsets.h>
 

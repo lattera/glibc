@@ -15,6 +15,8 @@
    License along with the GNU C Library.  If not, see
    <http://www.gnu.org/licenses/>.  */
 
+/* ??? Needs more rearrangement for the LDM to handle thumb mode.  */
+#define NO_THUMB
 #include <sysdep.h>
 
 	.section .rodata.str1.1,"aMS",%progbits,1
