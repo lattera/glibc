@@ -1,3 +1,15 @@
+2013-03-06  Richard Henderson <rth@redhat.com>
+
+	* sysdeps/arm/sysdep.h (LDST_PCREL): New macro.
+	* sysdeps/unix/arm/sysdep.S (__syscall_error): Use LDST_PCREL.
+	Fix up gottpoff load of errno for thumb2.
+	* sysdeps/unix/sysv/linux/arm/nptl/sysdep-cancel.h
+	(SINGLE_THREAD_P): Use LDST_PCREL.
+	(PSEUDO_PROLOGUE): Remove.
+	(PSEUDO): Don't use it.
+	* sysdeps/unix/sysv/linux/arm/sysdep.h (SYSCALL_ERROR_HANDLER):
+	Use LDST_PCREL.
+
 2013-03-06  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/arm/bits/mman.h: Remove all defines

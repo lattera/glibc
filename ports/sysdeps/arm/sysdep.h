@@ -117,6 +117,23 @@
    the caller.  */
 	.eabi_attribute 24, 1
 
+/* Load or store to/from a pc-relative EXPR into/from R, using T.  */
+# ifdef __thumb2__
+#  define LDST_PCREL(OP, R, T, EXPR) \
+	ldr	T, 98f;					\
+	.subsection 2;					\
+98:	.word	EXPR - 99f - PC_OFS;			\
+	.previous;					\
+99:	add	T, T, pc;				\
+	OP	R, [T]
+# else
+#  define LDST_PCREL(OP, R, T, EXPR) \
+	ldr	T, 98f;					\
+	.subsection 2;					\
+98:	.word	EXPR - 99f - PC_OFS;			\
+	.previous;					\
+99:	OP	R, [pc, T]
+# endif
 #endif	/* __ASSEMBLER__ */
 
 /* This number is the offset from the pc at the current location.  */

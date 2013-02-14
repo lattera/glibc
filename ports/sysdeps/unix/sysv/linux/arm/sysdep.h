@@ -110,12 +110,10 @@
 # if RTLD_PRIVATE_ERRNO
 #  define SYSCALL_ERROR_HANDLER					\
 __local_syscall_error:						\
-       ldr     r1, 1f;						\
-       rsb     r0, r0, #0;					\
-0:     str     r0, [pc, r1];					\
-       mvn     r0, #0;						\
-       DO_RET(lr);						\
-1:     .word C_SYMBOL_NAME(rtld_errno) - 0b - PC_OFS;
+	rsb	r0, r0, #0;					\
+	LDST_PCREL(str, r0, r1, C_SYMBOL_NAME(rtld_errno));	\
+	mvn	r0, #0;						\
+	DO_RET(lr)
 # else
 #  if defined(__ARM_ARCH_4T__) && defined(__THUMB_INTERWORK__)
 #   define POP_PC \

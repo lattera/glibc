@@ -31,7 +31,6 @@
 # undef PSEUDO
 # define PSEUDO(name, syscall_name, args)				\
 	.text;								\
-	PSEUDO_PROLOGUE;						\
   ENTRY (__##syscall_name##_nocancel);					\
 	CFI_SECTIONS;							\
 	DO_CALL (syscall_name, args);					\
@@ -203,12 +202,8 @@ extern int __local_multiple_threads attribute_hidden;
 #   define SINGLE_THREAD_P __builtin_expect (__local_multiple_threads == 0, 1)
 #  else
 #   define SINGLE_THREAD_P						\
-	ldr	ip, 1b;							\
-  2:									\
-	ldr ip, [pc, ip];						\
-	teq ip, #0;
-#   define PSEUDO_PROLOGUE						\
-  1:	.word	__local_multiple_threads - 2f - PC_OFS;
+	LDST_PCREL(ldr, ip, ip, __local_multiple_threads);		\
+	teq ip, #0
 #  endif
 # else
 /*  There is no __local_multiple_threads for librt, so use the TCB.  */
@@ -217,7 +212,6 @@ extern int __local_multiple_threads attribute_hidden;
   __builtin_expect (THREAD_GETMEM (THREAD_SELF,				\
 				   header.multiple_threads) == 0, 1)
 #  else
-#   define PSEUDO_PROLOGUE
 #   define SINGLE_THREAD_P						\
 	stmfd	sp!, {r0, lr};						\
 	cfi_adjust_cfa_offset (8);					\
