@@ -19,15 +19,7 @@
 
 /* Save the PID value.  */
 #define SAVE_PID \
-	str	lr, [sp, #-4]!;		/* Save LR.  */			\
-	cfi_adjust_cfa_offset (4);					\
-	cfi_rel_offset (lr, 0);						\
-	mov	r0, #0xffff0fff;	/* Point to the high page.  */	\
-	mov	lr, pc;			/* Save our return address.  */	\
-	sub	pc, r0, #31;		/* Jump to the TLS entry.  */	\
-	ldr	lr, [sp], #4;		/* Restore LR.  */		\
-	cfi_adjust_cfa_offset (-4);					\
-	cfi_restore (lr);						\
+	GET_TLS (r2);							\
 	NEGOFF_ADJ_BASE2 (r2, r0, PID_OFFSET); /* Save the TLS addr in r2.  */ \
 	ldr	r3, NEGOFF_OFF1 (r2, PID_OFFSET); /* Load the saved PID.  */   \
 	rsbs	r0, r3, #0;		/* Negate it.  */		      \

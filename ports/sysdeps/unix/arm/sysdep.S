@@ -37,14 +37,8 @@ __syscall_error:
 #endif
 
 #ifndef IS_IN_rtld
-	mov ip, lr
-	cfi_register (lr, ip)
-	mov r1, r0
-
-	mov r0, #0xffff0fff
-	mov lr, pc
-	sub pc, r0, #31
-
+	mov	r1, r0
+	GET_TLS (r2)
 	ldr	r2, 1f
 #ifdef __thumb__
 2:	add	r2, r2, pc
@@ -54,7 +48,7 @@ __syscall_error:
 #endif
 	str	r1, [r0, r2]
 	mvn	r0, #0
-	DO_RET(ip)
+	DO_RET(lr)
 
 1:	.word errno(gottpoff) + (. - 2b - PC_OFS)
 #elif RTLD_PRIVATE_ERRNO

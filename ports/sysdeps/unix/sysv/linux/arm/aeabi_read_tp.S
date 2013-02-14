@@ -41,6 +41,12 @@
 
 	.hidden __aeabi_read_tp
 ENTRY (__aeabi_read_tp)
+#ifdef __thumb2__
+	movw	r0, #0x0fe0
+	movt	r0, #0xffff
+	bx	r0
+#else
 	mov	r0, #0xffff0fff
 	sub	pc, r0, #31
+#endif
 END (__aeabi_read_tp)

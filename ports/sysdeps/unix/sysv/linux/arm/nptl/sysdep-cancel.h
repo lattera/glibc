@@ -216,7 +216,7 @@ extern int __local_multiple_threads attribute_hidden;
 	stmfd	sp!, {r0, lr};						\
 	cfi_adjust_cfa_offset (8);					\
 	cfi_rel_offset (lr, 4);						\
-	bl	__aeabi_read_tp;					\
+	GET_TLS (lr);							\
 	NEGOFF_ADJ_BASE (r0, MULTIPLE_THREADS_OFFSET);			\
 	ldr	ip, NEGOFF_OFF1 (r0, MULTIPLE_THREADS_OFFSET);		\
 	ldmfd	sp!, {r0, lr};						\

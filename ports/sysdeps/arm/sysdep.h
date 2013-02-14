@@ -150,6 +150,25 @@
 #  define NEGOFF_OFF1(R, OFF)		[R, $OFF]
 #  define NEGOFF_OFF2(R, OFFA, OFFB)	[R, $OFFA]
 # endif
+
+/* Helper to get the TLS base pointer.  The interface is that TMP is a
+   register that may be used to hold the LR, if necessary.  TMP may be
+   LR itself to indicate that LR need not be saved.  The base pointer
+   is returned in R0.  Only R0 and TMP are modified.
+
+   At this generic level we have no tricks to pull.  Call the ABI routine.  */
+# define GET_TLS(TMP)					\
+	push	{ r1, r2, r3, lr };			\
+	cfi_remember_state;				\
+	cfi_adjust_cfa_offset (16);			\
+	cfi_rel_offset (r1, 0);				\
+	cfi_rel_offset (r2, 4);				\
+	cfi_rel_offset (r3, 8);				\
+	cfi_rel_offset (lr, 12);			\
+	bl	__aeabi_read_tp;			\
+	pop	{ r1, r2, r3, lr };			\
+	cfi_restore_state
+
 #endif	/* __ASSEMBLER__ */
 
 /* This number is the offset from the pc at the current location.  */

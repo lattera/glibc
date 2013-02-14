@@ -50,18 +50,9 @@ _dl_tlsdesc_return:
 	.fnstart
 	.align 2
 _dl_tlsdesc_undefweak:
-	@ Are we allowed a misaligned stack pointer calling read_tp?
-	.save	{lr}
-	stmdb 	sp!, {lr}
-	cfi_adjust_cfa_offset (4)
-	cfi_rel_offset (lr,0)
-	bl 	__aeabi_read_tp
+	GET_TLS (r1)
 	rsb 	r0, r0, #0
-	ldmia 	sp!, {lr}
-	cfi_adjust_cfa_offset (-4)
-	cfi_restore (lr)
 	BX	(lr)
-
 	cfi_endproc
 	.fnend
 	.size	_dl_tlsdesc_undefweak, .-_dl_tlsdesc_undefweak
@@ -106,7 +97,7 @@ _dl_tlsdesc_dynamic:
 	cfi_rel_offset (r4,8)
 	cfi_rel_offset (lr,12)
 	ldr	r1, [r0] /* td */
-	bl	__aeabi_read_tp
+	GET_TLS (lr)
 	mov	r4, r0 /* r4 = tp */
 	ldr	r0, [r0]
 	ldr	r2, [r1, #8] /* gen_count */

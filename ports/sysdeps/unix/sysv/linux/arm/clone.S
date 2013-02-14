@@ -74,9 +74,7 @@ PSEUDO_END (__clone)
 #ifdef RESET_PID
 	tst	ip, #CLONE_THREAD
 	bne	3f
-	mov	r0, #0xffff0fff
-	mov	lr, pc
-	sub	pc, r0, #31
+	GET_TLS (lr)
 	mov	r1, r0
 	tst	ip, #CLONE_VM
 	ldr	r7, =SYS_ify(getpid)

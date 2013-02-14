@@ -45,6 +45,36 @@
 
 #ifdef __ASSEMBLER__
 
+/* Internal macro calling the linux kernel kuser_get_tls helper.
+   Note that in thumb mode, a constant pool break is often out of range, so
+   we always expand the constant inline.  */
+#ifdef __thumb2__
+# define GET_TLS_BODY			\
+	movw	r0, #0x0fe0;		\
+	movt	r0, #0xffff;		\
+	blx	r0
+#else
+# define GET_TLS_BODY \
+	mov	r0, #0xffff0fff;	/* Point to the high page.  */	\
+	mov	lr, pc;			/* Save our return address.  */	\
+	sub	pc, r0, #31		/* Jump to the TLS entry.  */
+#endif
+
+/* Helper to get the TLS base pointer.  Save LR in TMP, return in R0,
+   and no other registers clobbered.  TMP may be LR itself to indicate
+   that no save is necessary.  */
+#undef GET_TLS
+#define GET_TLS(TMP)			\
+  .ifnc TMP, lr;			\
+	mov	TMP, lr;		\
+	cfi_register (lr, TMP);		\
+	GET_TLS_BODY;			\
+	mov	lr, TMP;		\
+	cfi_restore (lr);		\
+  .else;				\
+	GET_TLS_BODY;			\
+  .endif
+
 /* Linux uses a negative return value to indicate syscall errors,
    unlike most Unices, which use the condition codes' carry flag.
 

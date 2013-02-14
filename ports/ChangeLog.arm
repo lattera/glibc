@@ -1,5 +1,18 @@
 2013-03-06  Richard Henderson <rth@redhat.com>
 
+	* sysdeps/arm/sysdep.h (GET_TLS): New macro.
+	* sysdeps/arm/dl-tlsdesc.S (_dl_tlsdesc_undefweak): Use it.
+	(_dl_tlsdesc_dynamic): Likewise.
+	* sysdeps/unix/arm/sysdep.S (__syscall_error): Likewise.
+	* sysdeps/unix/sysv/linux/arm/sysdep.h (GET_TLS): New macro.
+	* sysdeps/unix/sysv/linux/arm/clone.S (__clone): Likewise.
+	* sysdeps/unix/sysv/linux/arm/nptl/pt-vfork.S (SAVE_PID): Likewise.
+	* sysdeps/unix/sysv/linux/arm/nptl/vfork.S (SAVE_PID): Likewise.
+	* sysdeps/unix/sysv/linux/arm/nptl/sysdep-cancel.h (SINGLE_THREAD_P):
+	Likewise.
+	* sysdeps/unix/sysv/linux/arm/aeabi_read_tp.S (__aeabi_read_tp):
+	Add thumb2 alternative.
+
 	* sysdeps/arm/sysdep.h (NEGOFF_ADJ_BASE): New macro.
 	(NEGOFF_ADJ_BASE2, NEGOFF_OFF1, NEGOFF_OFF2): New macros.
 	* sysdeps/unix/sysv/linux/arm/clone.S (__clone): Use them.
