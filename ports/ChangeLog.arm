@@ -1,5 +1,8 @@
 2013-03-06  Richard Henderson <rth@redhat.com>
 
+	* sysdeps/arm/sysdep.h [__ASSEMBLER__]: Enable thumb2 if __thumb2__.
+	(PC_OFS): Respect __thumb__ if __ASSEMBLER__.
+
 	* sysdeps/arm/sysdep.h (GET_TLS): New macro.
 	* sysdeps/arm/dl-tlsdesc.S (_dl_tlsdesc_undefweak): Use it.
 	(_dl_tlsdesc_dynamic): Likewise.

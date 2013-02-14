@@ -117,6 +117,16 @@
    the caller.  */
 	.eabi_attribute 24, 1
 
+/* The thumb2 encoding is reasonably complete.  Unless suppressed, use it.  */
+	.syntax unified
+# if defined(__thumb2__) && !defined(NO_THUMB)
+	.thumb
+#else
+#  undef __thumb__
+#  undef __thumb2__
+	.arm
+# endif
+
 /* Load or store to/from a pc-relative EXPR into/from R, using T.  */
 # ifdef __thumb2__
 #  define LDST_PCREL(OP, R, T, EXPR) \
@@ -172,8 +182,7 @@
 #endif	/* __ASSEMBLER__ */
 
 /* This number is the offset from the pc at the current location.  */
-/* ??? At the moment we're not turning on thumb mode in assembly.  */
-#if defined(__thumb__) && !defined(__ASSEMBLER__)
+#ifdef __thumb__
 # define PC_OFS  4
 #else
 # define PC_OFS  8
