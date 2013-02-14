@@ -317,8 +317,6 @@ __lll_robust_timedlock (int *futex, const struct timespec *abstime,
 #define THREAD_INIT_LOCK(PD, LOCK) \
   (PD)->LOCK = LLL_LOCK_INITIALIZER
 
-extern int lll_unlock_wake_cb (lll_lock_t *__futex) attribute_hidden;
-
 /* The kernel notifies a process which uses CLONE_CHILD_CLEARTID via futex
    wakeup when the clone terminates.  The memory location contains the
    thread ID while the clone is running and is reset to zero

@@ -1,3 +1,10 @@
+2013-02-14  Carlos O'Donell  <carlos@redhat.com>
+
+	* sysdeps/unix/sysv/linux/hppa/nptl/lowlevellock.c
+	(lll_unlock_wake_cb): Remove.
+	* ports/sysdeps/unix/sysv/linux/hppa/nptl/lowlevellock.h:
+	Remove prototype for lll_unlock_wake_cb.
+
 2013-01-10  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/hppa/fpu/fpu_control.h (_FPU_GETCW): Use __extension__
