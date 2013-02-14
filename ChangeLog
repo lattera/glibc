@@ -1,3 +1,8 @@
+2013-02-27  Richard Henderson  <rth@redhat.com>
+
+	* scripts/config.guess: Update from config.git.
+	* scripts/config.sub: Likewise.
+
 2013-02-27  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* sysdeps/ieee754/dbl-64/mpsqrt.c: Reformat.
