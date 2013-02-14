@@ -134,6 +134,22 @@
 	.previous;					\
 99:	OP	R, [pc, T]
 # endif
+
+/* Cope with negative memory offsets, which thumb can't encode.
+   Use NEGOFF_ADJ_BASE to (conditionally) alter the base register,
+   and then NEGOFF_OFF1 to use 0 for thumb and the offset for arm,
+   or NEGOFF_OFF2 to use A-B for thumb and A for arm.  */
+# ifdef __thumb2__
+#  define NEGOFF_ADJ_BASE(R, OFF)	add R, R, $OFF
+#  define NEGOFF_ADJ_BASE2(D, S, OFF)	add D, S, $OFF
+#  define NEGOFF_OFF1(R, OFF)		[R]
+#  define NEGOFF_OFF2(R, OFFA, OFFB)	[R, $((OFFA) - (OFFB))]
+# else
+#  define NEGOFF_ADJ_BASE(R, OFF)
+#  define NEGOFF_ADJ_BASE2(D, S, OFF)	mov D, S
+#  define NEGOFF_OFF1(R, OFF)		[R, $OFF]
+#  define NEGOFF_OFF2(R, OFFA, OFFB)	[R, $OFFA]
+# endif
 #endif	/* __ASSEMBLER__ */
 
 /* This number is the offset from the pc at the current location.  */

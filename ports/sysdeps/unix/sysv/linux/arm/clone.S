@@ -83,8 +83,9 @@ PSEUDO_END (__clone)
 	ite	ne
 	movne	r0, #-1
 	swieq	0x0
-	str	r0, [r1, #PID_OFFSET]
-	str	r0, [r1, #TID_OFFSET]
+	NEGOFF_ADJ_BASE (r1, TID_OFFSET)
+	str	r0, NEGOFF_OFF1 (r1, TID_OFFSET)
+	str	r0, NEGOFF_OFF2 (r1, PID_OFFSET, TID_OFFSET)
 3:
 #endif
 	@ pick the function arg and call address off the stack and execute

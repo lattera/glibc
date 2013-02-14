@@ -28,14 +28,15 @@
 	ldr	lr, [sp], #4;		/* Restore LR.  */		\
 	cfi_adjust_cfa_offset (-4);					\
 	cfi_restore (lr);						\
-	mov	r2, r0;			/* Save the TLS addr in r2.  */	\
-	ldr	r3, [r2, #PID_OFFSET];	/* Load the saved PID.  */	\
-	rsb	r0, r3, #0;		/* Negate it.  */		\
-	str	r0, [r2, #PID_OFFSET]	/* Store the temporary PID.  */
+	NEGOFF_ADJ_BASE2 (r2, r0, PID_OFFSET); /* Save the TLS addr in r2. */ \
+	ldr	r3, NEGOFF_OFF1 (r2, PID_OFFSET); /* Load the saved PID.  */  \
+	rsb	r0, r3, #0;		/* Negate it.  */		     \
+	str	r0, NEGOFF_OFF1 (r2, PID_OFFSET); /* Store the temp PID.  */
 
 /* Restore the old PID value in the parent.  */
 #define RESTORE_PID \
 	cmp	r0, #0;			/* If we are the parent... */	\
-	strne	r3, [r2, #PID_OFFSET]	/* ... restore the saved PID.  */
+	it	ne;							\
+	strne	r3, NEGOFF_OFF1 (r2, PID_OFFSET); /* restore the saved PID.  */
 
 #include "../vfork.S"
