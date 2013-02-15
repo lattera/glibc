@@ -1,5 +1,8 @@
 2013-03-06  Richard Henderson <rth@redhat.com>
 
+	* sysdeps/arm/__longjmp.S (__longjmp): Use ldmia insn directly.
+	* sysdeps/arm/sysdep.h (LOADREGS): Remove.
+
 	* sysdeps/arm/arm-mcount.S (_mcount): Use push/pop mnemonics.
 	* sysdeps/arm/crti.S, sysdeps/arm/crtn.S: Likewise.
 	* sysdeps/arm/dl-tlsdesc.S: Likewise.

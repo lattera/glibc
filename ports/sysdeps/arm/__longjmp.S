@@ -37,7 +37,7 @@ ENTRY (__longjmp)
 	cfi_undefined (r4)
 	CHECK_SP (r4)
 #endif
-	LOADREGS(ia, ip!, {v1-v6, sl, fp, sp, lr})
+	ldmia	ip!, {v1-v6, sl, fp, sp, lr}
 	cfi_restore (v1)
 	cfi_restore (v2)
 	cfi_restore (v3)

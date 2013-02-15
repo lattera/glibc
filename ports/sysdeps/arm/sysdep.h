@@ -35,8 +35,6 @@
 
 /* APCS-32 doesn't preserve the condition codes across function call. */
 #ifdef __APCS_32__
-#define LOADREGS(cond, base, reglist...)\
-	ldm##cond	base,reglist
 #ifdef __USE_BX__
 #define RETINSTR(cond, reg)	\
 	bx##cond	reg
@@ -49,8 +47,6 @@
 	mov pc, _reg
 #endif
 #else  /* APCS-26 */
-#define LOADREGS(cond, base, reglist...)\
-	ldm##cond	base,reglist^
 #define RETINSTR(cond, reg)	\
 	mov##cond##s	pc, reg
 #define DO_RET(_reg)		\
