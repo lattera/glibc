@@ -147,23 +147,22 @@ __local_syscall_error:						\
 # else
 #  if defined(__ARM_ARCH_4T__) && defined(__THUMB_INTERWORK__)
 #   define POP_PC \
-  ldr lr, [sp], #4; \
+  pop { lr }; \
   cfi_adjust_cfa_offset (-4); \
   cfi_restore (lr); \
   bx lr
 #  else
-#   define POP_PC  \
-  ldr pc, [sp], #4
+#   define POP_PC  pop { pc }
 #  endif
 #  define SYSCALL_ERROR_HANDLER					\
 __local_syscall_error:						\
-	str	lr, [sp, #-4]!;					\
+	push	{ lr };						\
 	cfi_adjust_cfa_offset (4);				\
 	cfi_rel_offset (lr, 0);					\
-	str	r0, [sp, #-4]!;					\
+	push	{ r0 };	    					\
 	cfi_adjust_cfa_offset (4);				\
 	bl	PLTJMP(C_SYMBOL_NAME(__errno_location)); 	\
-	ldr	r1, [sp], #4;					\
+	pop	{ r1 };						\
 	cfi_adjust_cfa_offset (-4);				\
 	rsb	r1, r1, #0;					\
 	str	r1, [r0];					\
@@ -230,7 +229,7 @@ __local_syscall_error:						\
 #undef  DOARGS_0
 #define DOARGS_0					\
 	.fnstart;					\
-	str r7, [sp, #-4]!;				\
+	push	{ r7 };					\
 	cfi_adjust_cfa_offset (4);			\
 	cfi_rel_offset (r7, 0);				\
 	.save	{ r7 }
@@ -245,7 +244,7 @@ __local_syscall_error:						\
 #undef  DOARGS_5
 #define DOARGS_5					\
 	.fnstart;					\
-	stmfd	sp!, {r4, r7};				\
+	push	{r4, r7};				\
 	cfi_adjust_cfa_offset (8);			\
 	cfi_rel_offset (r4, 0);				\
 	cfi_rel_offset (r7, 4);				\
@@ -255,7 +254,7 @@ __local_syscall_error:						\
 #define DOARGS_6					\
 	.fnstart;					\
 	mov	ip, sp;					\
-	stmfd	sp!, {r4, r5, r7};			\
+	push	{r4, r5, r7};				\
 	cfi_adjust_cfa_offset (12);			\
 	cfi_rel_offset (r4, 0);				\
 	cfi_rel_offset (r5, 4);				\
@@ -266,7 +265,7 @@ __local_syscall_error:						\
 #define DOARGS_7					\
 	.fnstart;					\
 	mov	ip, sp;					\
-	stmfd	sp!, {r4, r5, r6, r7};			\
+	push	{r4, r5, r6, r7};			\
 	cfi_adjust_cfa_offset (16);			\
 	cfi_rel_offset (r4, 0);				\
 	cfi_rel_offset (r5, 4);				\
@@ -277,7 +276,7 @@ __local_syscall_error:						\
 
 #undef  UNDOARGS_0
 #define UNDOARGS_0					\
-	ldr	r7, [sp], #4;				\
+	pop	{r7};					\
 	cfi_adjust_cfa_offset (-4);			\
 	cfi_restore (r7);				\
 	.fnend
@@ -291,14 +290,14 @@ __local_syscall_error:						\
 #define UNDOARGS_4 UNDOARGS_0
 #undef  UNDOARGS_5
 #define UNDOARGS_5					\
-	ldmfd	sp!, {r4, r7};				\
+	pop	{r4, r7};				\
 	cfi_adjust_cfa_offset (-8);			\
 	cfi_restore (r4);				\
 	cfi_restore (r7);				\
 	.fnend
 #undef  UNDOARGS_6
 #define UNDOARGS_6					\
-	ldmfd	sp!, {r4, r5, r7};			\
+	pop	{r4, r5, r7};				\
 	cfi_adjust_cfa_offset (-12);			\
 	cfi_restore (r4);				\
 	cfi_restore (r5);				\
@@ -306,7 +305,7 @@ __local_syscall_error:						\
 	.fnend
 #undef  UNDOARGS_7
 #define UNDOARGS_7					\
-	ldmfd	sp!, {r4, r5, r6, r7};			\
+	pop	{r4, r5, r6, r7};			\
 	cfi_adjust_cfa_offset (-16);			\
 	cfi_restore (r4);				\
 	cfi_restore (r5);				\

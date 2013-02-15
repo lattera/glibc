@@ -90,7 +90,7 @@ _dl_tlsdesc_dynamic:
 	/* Our calling convention is to clobber r0, r1 and the processor
 	   flags.  All others that are modified must be saved */
 	.save	{r2,r3,r4,lr}
-	stmdb   sp!, {r2,r3,r4,lr}
+	push	{r2,r3,r4,lr}
 	cfi_adjust_cfa_offset (16)
 	cfi_rel_offset (r2,0)
 	cfi_rel_offset (r3,4)
@@ -115,7 +115,7 @@ _dl_tlsdesc_dynamic:
 1:	mov	r0, r1
 	bl	__tls_get_addr
 	rsb	r0, r4, r0
-2:	ldmia	sp!, {r2,r3,r4, lr}
+2:	pop	{r2,r3,r4, lr}
 	cfi_adjust_cfa_offset (-16)
 	cfi_restore (lr)
 	cfi_restore (r4)
@@ -146,7 +146,7 @@ _dl_tlsdesc_lazy_resolver:
 	cfi_adjust_cfa_offset (4)
 	cfi_rel_offset (r2, 0)
 	.save	{r0,r1,r3,ip,lr}
-	stmdb	sp!, {r0, r1, r3, ip, lr}
+	push	{r0, r1, r3, ip, lr}
 	cfi_adjust_cfa_offset (20)
 	cfi_rel_offset (r0, 0)
 	cfi_rel_offset (r1, 4)
@@ -154,14 +154,14 @@ _dl_tlsdesc_lazy_resolver:
 	cfi_rel_offset (ip, 12)
 	cfi_rel_offset (lr, 16)
 	bl	_dl_tlsdesc_lazy_resolver_fixup
-	ldmia	sp!, {r0, r1, r3, ip, lr}
+	pop	{r0, r1, r3, ip, lr}
 	cfi_adjust_cfa_offset (-20)
 	cfi_restore (lr)
 	cfi_restore (ip)
 	cfi_restore (r3)
 	cfi_restore (r1)
 	cfi_restore (r0)
-	ldmia	sp!, {r2}
+	pop	{r2}
 	cfi_adjust_cfa_offset (-4)
 	cfi_restore (r2)
 	ldr	r1, [r0, #4]
@@ -184,7 +184,7 @@ _dl_tlsdesc_resolve_hold:
 	cfi_adjust_cfa_offset (4)
 	cfi_rel_offset (r2, 0)
 	.save	{r0,r1,r3,ip,lr}
-	stmdb   sp!, {r0, r1, r3, ip, lr}
+	push	{r0, r1, r3, ip, lr}
 	cfi_adjust_cfa_offset (20)
 	cfi_rel_offset (r0, 0)
 	cfi_rel_offset (r1, 4)
@@ -193,14 +193,14 @@ _dl_tlsdesc_resolve_hold:
 	cfi_rel_offset (lr, 16)
 	adr	r2, _dl_tlsdesc_resolve_hold
 	bl	_dl_tlsdesc_resolve_hold_fixup
-	ldmia   sp!, {r0, r1, r3, ip, lr}
+	pop	{r0, r1, r3, ip, lr}
 	cfi_adjust_cfa_offset (-20)
 	cfi_restore (lr)
 	cfi_restore (ip)
 	cfi_restore (r3)
 	cfi_restore (r1)
 	cfi_restore (r0)
-	ldmia   sp!, {r2}
+	pop	{r2}
 	cfi_adjust_cfa_offset (-4)
 	cfi_restore (r2)
 	ldr     r1, [r0, #4]

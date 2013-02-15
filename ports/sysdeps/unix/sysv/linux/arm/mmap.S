@@ -23,11 +23,11 @@
 
 ENTRY (__mmap)
 	/* shuffle args */
-	str	r5, [sp, #-4]!
+	push	{ r5 }
 	cfi_adjust_cfa_offset (4)
 	cfi_rel_offset (r5, 0)
 	ldr	r5, [sp, #8]
-	str	r4, [sp, #-4]!
+	push	{ r4 }
 	cfi_adjust_cfa_offset (4)
 	cfi_rel_offset (r4, 0)
 	cfi_remember_state
@@ -43,10 +43,10 @@ ENTRY (__mmap)
 
 	/* restore registers */
 2:
-	ldr	r4, [sp], #4
+	pop	{ r4 }
 	cfi_adjust_cfa_offset (-4)
 	cfi_restore (r4)
-	ldr	r5, [sp], #4
+	pop	{ r5 }
 	cfi_adjust_cfa_offset (-4)
 	cfi_restore (r5)
 

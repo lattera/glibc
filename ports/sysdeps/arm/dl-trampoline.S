@@ -43,7 +43,7 @@ _dl_runtime_resolve:
 	@	lr points to &GOT[2]
 
 	@ Save arguments.  We save r4 to realign the stack.
-	stmdb	sp!,{r0-r4}
+	push	{r0-r4}
 	cfi_adjust_cfa_offset (20)
 	cfi_rel_offset (r0, 0)
 	cfi_rel_offset (r1, 4)
@@ -67,7 +67,7 @@ _dl_runtime_resolve:
 
 	@ get arguments and return address back.  We restore r4
 	@ only to realign the stack.
-	ldmia	sp!, {r0-r4,lr}
+	pop	{r0-r4,lr}
 	cfi_adjust_cfa_offset (-24)
 
 	@ jump to the newly found address

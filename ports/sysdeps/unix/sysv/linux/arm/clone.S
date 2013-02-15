@@ -49,7 +49,7 @@ ENTRY(__clone)
 	mov	ip, r2
 #endif
 	@ new sp is already in r1
-	stmfd	sp!, {r4, r7}
+	push	{r4, r7}
 	cfi_adjust_cfa_offset (8)
 	cfi_rel_offset (r4, 0)
 	cfi_rel_offset (r7, 4)
@@ -61,7 +61,7 @@ ENTRY(__clone)
 	cfi_endproc
 	cmp	r0, #0
 	beq	1f
-	ldmfd	sp!, {r4, r7}
+	pop	{r4, r7}
 	blt	PLTJMP(C_SYMBOL_NAME(__syscall_error))
 	RETINSTR(, lr)
 

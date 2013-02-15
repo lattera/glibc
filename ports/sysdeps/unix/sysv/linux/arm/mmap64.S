@@ -34,11 +34,11 @@
 	.text
 ENTRY (__mmap64)
 	ldr	ip, [sp, $LOW_OFFSET]
-	str	r5, [sp, #-4]!
+	push	{ r5 }
 	cfi_adjust_cfa_offset (4)
 	cfi_rel_offset (r5, 0)
 	ldr	r5, [sp, $HIGH_OFFSET]
-	str	r4, [sp, #-4]!
+	push	{ r4 }
 	cfi_adjust_cfa_offset (4)
 	cfi_rel_offset (r4, 0)
 	cfi_remember_state
@@ -51,7 +51,7 @@ ENTRY (__mmap64)
 	orr	r5, ip, r5, lsl $20	@ compose page offset
 	DO_CALL (mmap2, 0)
 	cmn	r0, $4096
-	ldmfd	sp!, {r4, r5}
+	pop	{r4, r5}
 	cfi_adjust_cfa_offset (-8)
 	cfi_restore (r4)
 	cfi_restore (r5)
@@ -62,7 +62,7 @@ ENTRY (__mmap64)
 	cfi_restore_state
 .Linval:
 	mov	r0, $-EINVAL
-	ldmfd	sp!, {r4, r5}
+	pop	{r4, r5}
 	cfi_adjust_cfa_offset (-8)
 	cfi_restore (r4)
 	cfi_restore (r5)

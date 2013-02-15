@@ -1,5 +1,26 @@
 2013-03-06  Richard Henderson <rth@redhat.com>
 
+	* sysdeps/arm/arm-mcount.S (_mcount): Use push/pop mnemonics.
+	* sysdeps/arm/crti.S, sysdeps/arm/crtn.S: Likewise.
+	* sysdeps/arm/dl-tlsdesc.S: Likewise.
+	* sysdeps/arm/dl-trampoline.S: Likewise.
+	* sysdeps/arm/start.S: Likewise.
+	* sysdeps/arm/memcpy.S (PULL): Rename macro from pull.
+	(PUSH): Rename macro from push.
+	(memcpy): Use push/pop mnemonics.
+	* sysdeps/arm/memmove.S: Similarly.
+	* sysdeps/arm/sysdep.h (CALL_MCOUNT): Use push/pop mnemonics.
+	* sysdeps/unix/sysv/linux/arm/____longjmp_chk.S: Likewise.
+	* sysdeps/unix/sysv/linux/arm/clone.S: Likewise.
+	* sysdeps/unix/sysv/linux/arm/mmap.S: Likewise.
+	* sysdeps/unix/sysv/linux/arm/mmap64.S: Likewise.
+	* sysdeps/unix/sysv/linux/arm/nptl/sysdep-cancel.h: Likewise.
+	* sysdeps/unix/sysv/linux/arm/nptl/unwind-forcedunwind.c: Likewise.
+	* sysdeps/unix/sysv/linux/arm/nptl/unwind-resume.c: Likewise.
+	* sysdeps/unix/sysv/linux/arm/syscall.S: Likewise.
+	* sysdeps/unix/sysv/linux/arm/sysdep.h: Likewise.
+	* sysdeps/unix/sysv/linux/arm/vfork.S: Likewise.
+
 	* sysdeps/arm/sysdep.h [__ASSEMBLER__]: Enable thumb2 if __thumb2__.
 	(PC_OFS): Respect __thumb__ if __ASSEMBLER__.
 

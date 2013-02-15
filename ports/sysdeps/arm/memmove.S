@@ -45,11 +45,11 @@
  * Endian independent macros for shifting bytes within registers.
  */
 #ifndef __ARMEB__
-#define pull            lsr
-#define push            lsl
+#define PULL            lsr
+#define PUSH            lsl
 #else
-#define pull            lsl
-#define push            lsr
+#define PULL            lsl
+#define PUSH            lsr
 #endif
 
 		.text
@@ -73,7 +73,7 @@ ENTRY(memmove)
 		bls	HIDDEN_JUMPTARGET(memcpy)
 #endif
 
-		stmfd	sp!, {r0, r4, lr}
+		push	{r0, r4, lr}
 		cfi_adjust_cfa_offset (12)
 		cfi_rel_offset (r4, 4)
 		cfi_rel_offset (lr, 8)
@@ -91,7 +91,7 @@ ENTRY(memmove)
 		bne	10f
 
 1:		subs	r2, r2, #(28)
-		stmfd	sp!, {r5 - r8}
+		push	{r5 - r8}
 		cfi_adjust_cfa_offset (16)
 		cfi_rel_offset (r5, 0)
 		cfi_rel_offset (r6, 4)
@@ -147,7 +147,7 @@ ENTRY(memmove)
 
 	CALGN(	bcs	2b			)
 
-7:		ldmfd	sp!, {r5 - r8}
+7:		pop	{r5 - r8}
 		cfi_adjust_cfa_offset (-16)
 		cfi_restore (r5)
 		cfi_restore (r6)
@@ -163,13 +163,13 @@ ENTRY(memmove)
 		strcsb	ip, [r0, #-1]
 
 #if defined (__ARM_ARCH_4T__) && defined (__THUMB_INTERWORK__)
-		ldmfd	sp!, {r0, r4, lr}
+		pop	{r0, r4, lr}
 		cfi_adjust_cfa_offset (-12)
 		cfi_restore (r4)
 		cfi_restore (lr)
 		bx      lr
 #else
-		ldmfd	sp!, {r0, r4, pc}
+		pop	{r0, r4, pc}
 #endif
 
 		cfi_restore_state
@@ -204,7 +204,7 @@ ENTRY(memmove)
 	CALGN(	subcc	r2, r2, ip		)
 	CALGN(	bcc	15f			)
 
-11:		stmfd	sp!, {r5 - r9}
+11:		push	{r5 - r9}
 		cfi_adjust_cfa_offset (20)
 		cfi_rel_offset (r5, 0)
 		cfi_rel_offset (r6, 4)
@@ -221,30 +221,30 @@ ENTRY(memmove)
 
 12:	PLD(	pld	[r1, #-128]		)
 13:		ldmdb   r1!, {r7, r8, r9, ip}
-		mov     lr, r3, push #\push
+		mov     lr, r3, PUSH #\push
 		subs    r2, r2, #32
 		ldmdb   r1!, {r3, r4, r5, r6}
-		orr     lr, lr, ip, pull #\pull
-		mov     ip, ip, push #\push
-		orr     ip, ip, r9, pull #\pull
-		mov     r9, r9, push #\push
-		orr     r9, r9, r8, pull #\pull
-		mov     r8, r8, push #\push
-		orr     r8, r8, r7, pull #\pull
-		mov     r7, r7, push #\push
-		orr     r7, r7, r6, pull #\pull
-		mov     r6, r6, push #\push
-		orr     r6, r6, r5, pull #\pull
-		mov     r5, r5, push #\push
-		orr     r5, r5, r4, pull #\pull
-		mov     r4, r4, push #\push
-		orr     r4, r4, r3, pull #\pull
+		orr     lr, lr, ip, PULL #\pull
+		mov     ip, ip, PUSH #\push
+		orr     ip, ip, r9, PULL #\pull
+		mov     r9, r9, PUSH #\push
+		orr     r9, r9, r8, PULL #\pull
+		mov     r8, r8, PUSH #\push
+		orr     r8, r8, r7, PULL #\pull
+		mov     r7, r7, PUSH #\push
+		orr     r7, r7, r6, PULL #\pull
+		mov     r6, r6, PUSH #\push
+		orr     r6, r6, r5, PULL #\pull
+		mov     r5, r5, PUSH #\push
+		orr     r5, r5, r4, PULL #\pull
+		mov     r4, r4, PUSH #\push
+		orr     r4, r4, r3, PULL #\pull
 		stmdb   r0!, {r4 - r9, ip, lr}
 		bge	12b
 	PLD(	cmn	r2, #96			)
 	PLD(	bge	13b			)
 
-		ldmfd	sp!, {r5 - r9}
+		pop	{r5 - r9}
 		cfi_adjust_cfa_offset (-20)
 		cfi_restore (r5)
 		cfi_restore (r6)
@@ -255,10 +255,10 @@ ENTRY(memmove)
 14:		ands	ip, r2, #28
 		beq	16f
 
-15:		mov     lr, r3, push #\push
+15:		mov     lr, r3, PUSH #\push
 		ldr	r3, [r1, #-4]!
 		subs	ip, ip, #4
-		orr	lr, lr, r3, pull #\pull
+		orr	lr, lr, r3, PULL #\pull
 		str	lr, [r0, #-4]!
 		bgt	15b
 	CALGN(	cmp	r2, #0			)

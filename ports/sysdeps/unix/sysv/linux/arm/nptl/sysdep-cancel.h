@@ -76,19 +76,19 @@
 
 # define DOCARGS_0				\
 	.save {r7};				\
-	str	lr, [sp, #-4]!;			\
+	push	{lr};				\
 	cfi_adjust_cfa_offset (4);		\
 	cfi_rel_offset (lr, 0);			\
 	.save	{lr}
 # define UNDOCARGS_0
 # define RESTORE_LR_0				\
-	ldr	lr, [sp], #4;			\
+	pop	{lr};				\
 	cfi_adjust_cfa_offset (-4);		\
 	cfi_restore (lr)
 
 # define DOCARGS_1				\
 	.save	{r7};				\
-	stmfd	sp!, {r0, r1, lr};		\
+	push	{r0, r1, lr};			\
 	cfi_adjust_cfa_offset (12);		\
 	cfi_rel_offset (lr, 8);			\
 	.save	{lr};				\
@@ -102,13 +102,13 @@
 
 # define DOCARGS_2				\
 	.save	{r7};				\
-	stmfd	sp!, {r0, r1, lr};		\
+	push	{r0, r1, lr};			\
 	cfi_adjust_cfa_offset (12);		\
 	cfi_rel_offset (lr, 8);			\
 	.save	{lr};				\
 	.pad	#8
 # define UNDOCARGS_2				\
-	ldmfd	sp!, {r0, r1};			\
+	pop	{r0, r1};			\
 	cfi_adjust_cfa_offset (-8);		\
 	RESTART_UNWIND
 # define RESTORE_LR_2				\
@@ -116,13 +116,13 @@
 
 # define DOCARGS_3				\
 	.save	{r7};				\
-	stmfd	sp!, {r0, r1, r2, r3, lr};	\
+	push	{r0, r1, r2, r3, lr};		\
 	cfi_adjust_cfa_offset (20);		\
 	cfi_rel_offset (lr, 16);		\
 	.save	{lr};				\
 	.pad	#16
 # define UNDOCARGS_3				\
-	ldmfd	sp!, {r0, r1, r2, r3};		\
+	pop	{r0, r1, r2, r3};		\
 	cfi_adjust_cfa_offset (-16);		\
 	RESTART_UNWIND
 # define RESTORE_LR_3				\
@@ -130,13 +130,13 @@
 
 # define DOCARGS_4				\
 	.save	{r7};				\
-	stmfd	sp!, {r0, r1, r2, r3, lr};	\
+	push	{r0, r1, r2, r3, lr};		\
 	cfi_adjust_cfa_offset (20);		\
 	cfi_rel_offset (lr, 16);		\
 	.save	{lr};				\
 	.pad	#16
 # define UNDOCARGS_4				\
-	ldmfd	sp!, {r0, r1, r2, r3};		\
+	pop	{r0, r1, r2, r3};		\
 	cfi_adjust_cfa_offset (-16);		\
 	RESTART_UNWIND
 # define RESTORE_LR_4				\
@@ -145,13 +145,13 @@
 /* r4 is only stmfd'ed for correct stack alignment.  */
 # define DOCARGS_5				\
 	.save	{r4, r7};			\
-	stmfd	sp!, {r0, r1, r2, r3, r4, lr};	\
+	push	{r0, r1, r2, r3, r4, lr};	\
 	cfi_adjust_cfa_offset (24);		\
 	cfi_rel_offset (lr, 20);		\
 	.save	{lr};				\
 	.pad	#20
 # define UNDOCARGS_5				\
-	ldmfd	sp!, {r0, r1, r2, r3};		\
+	pop	{r0, r1, r2, r3};		\
 	cfi_adjust_cfa_offset (-16);		\
 	.fnend;					\
 	.fnstart;				\
@@ -159,20 +159,20 @@
 	.save	{lr};				\
 	.pad	#4
 # define RESTORE_LR_5				\
-	ldmfd sp!, {r4, lr};			\
+	pop	{r4, lr};			\
 	cfi_adjust_cfa_offset (-8);		\
 	/* r4 will be marked as restored later.  */ \
 	cfi_restore (lr)
 
 # define DOCARGS_6				\
 	.save	{r4, r5, r7};			\
-	stmfd	sp!, {r0, r1, r2, r3, lr};	\
+	push	{r0, r1, r2, r3, lr};		\
 	cfi_adjust_cfa_offset (20);		\
 	cfi_rel_offset (lr, 16);		\
 	.save	{lr};				\
 	.pad	#16
 # define UNDOCARGS_6				\
-	ldmfd	sp!, {r0, r1, r2, r3};		\
+	pop	{r0, r1, r2, r3};		\
 	cfi_adjust_cfa_offset (-16);		\
 	.fnend;					\
 	.fnstart;				\
@@ -213,13 +213,13 @@ extern int __local_multiple_threads attribute_hidden;
 				   header.multiple_threads) == 0, 1)
 #  else
 #   define SINGLE_THREAD_P						\
-	stmfd	sp!, {r0, lr};						\
+	push	{r0, lr};						\
 	cfi_adjust_cfa_offset (8);					\
 	cfi_rel_offset (lr, 4);						\
 	GET_TLS (lr);							\
 	NEGOFF_ADJ_BASE (r0, MULTIPLE_THREADS_OFFSET);			\
 	ldr	ip, NEGOFF_OFF1 (r0, MULTIPLE_THREADS_OFFSET);		\
-	ldmfd	sp!, {r0, lr};						\
+	pop	{r0, lr};						\
 	cfi_adjust_cfa_offset (-8);					\
 	cfi_restore (lr);						\
 	teq	ip, #0

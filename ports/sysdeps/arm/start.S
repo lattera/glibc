@@ -80,14 +80,14 @@ _start:
 	mov lr, #0
 
 	/* Pop argc off the stack and save a pointer to argv */
-	ldr a2, [sp], #4
+	pop { a2 }
 	mov a3, sp
 
 	/* Push stack limit */
-	str a3, [sp, #-4]!
+	push { a3 }
 
 	/* Push rtld_fini */
-	str a1, [sp, #-4]!
+	push { a1 }
 
 #ifdef SHARED
 	ldr sl, .L_GOT
@@ -97,7 +97,7 @@ _start:
 	ldr ip, .L_GOT+4	/* __libc_csu_fini */
 	ldr ip, [sl, ip]
 
-	str ip, [sp, #-4]!	/* Push __libc_csu_fini */
+	push { ip }		/* Push __libc_csu_fini */
 
 	ldr a4, .L_GOT+8	/* __libc_csu_init */
 	ldr a4, [sl, a4]
@@ -113,7 +113,7 @@ _start:
 	ldr ip, =__libc_csu_fini
 
 	/* Push __libc_csu_fini */
-	str ip, [sp, #-4]!
+	push { ip }
 
 	/* Set up the other arguments in registers */
 	ldr a1, =main

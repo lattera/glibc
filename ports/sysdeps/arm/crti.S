@@ -80,7 +80,7 @@ call_weak_fn:
 	.globl _init
 	.type _init, %function
 _init:
-	stmfd sp!, {r3, lr}
+	push	{r3, lr}
 #if PREINIT_FUNCTION_WEAK
 	bl call_weak_fn
 #else
@@ -92,4 +92,4 @@ _init:
 	.globl _fini
 	.type _fini, %function
 _fini:
-	stmfd sp!, {r3, lr}
+	push	{r3, lr}

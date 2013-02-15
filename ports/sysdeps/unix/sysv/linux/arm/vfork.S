@@ -37,7 +37,7 @@ ENTRY (__vfork)
 	mov	ip, r7
 	cfi_register (r7, ip)
 	.fnstart
-	str r7, [sp, #-4]!
+	push	{ r7 }
 	cfi_adjust_cfa_offset (4)
 	.save { r7 }
 	ldr	r7, =SYS_ify (vfork)

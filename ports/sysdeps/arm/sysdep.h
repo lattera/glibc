@@ -80,7 +80,7 @@
 /* Call __gnu_mcount_nc if GCC >= 4.4.  */
 #if __GNUC_PREREQ(4,4)
 #define CALL_MCOUNT					\
-	str	lr,[sp, #-4]!;				\
+	push	{lr};					\
 	cfi_adjust_cfa_offset (4);			\
 	cfi_rel_offset (lr, 0);				\
 	bl	PLTJMP(mcount);				\
@@ -88,11 +88,11 @@
 	cfi_restore (lr)
 #else /* else call _mcount */
 #define CALL_MCOUNT					\
-	str	lr,[sp, #-4]!;				\
+	push	{lr};					\
 	cfi_adjust_cfa_offset (4);			\
 	cfi_rel_offset (lr, 0);				\
 	bl	PLTJMP(mcount);				\
-	ldr	lr, [sp], #4;				\
+	pops	{lr};					\
 	cfi_adjust_cfa_offset (-4);			\
 	cfi_restore (lr)
 #endif

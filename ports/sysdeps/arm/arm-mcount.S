@@ -69,7 +69,7 @@ END(__gnu_mcount_nc)
    code be compiled with APCS frame pointers.  */
 
 ENTRY(_mcount)
-	stmdb sp!, {r0, r1, r2, r3, fp, lr}
+	push	{r0, r1, r2, r3, fp, lr}
 	cfi_adjust_cfa_offset (24)
 	cfi_rel_offset (r0, 0)
 	cfi_rel_offset (r1, 4)
@@ -83,9 +83,9 @@ ENTRY(_mcount)
 	movsne r1, lr
 	blne __mcount_internal
 #ifdef __thumb2__
-	ldmia sp!, {r0, r1, r2, r3, fp, pc}
+	pop	{r0, r1, r2, r3, fp, pc}
 #else
-	ldmia sp!, {r0, r1, r2, r3, fp, lr}
+	pop	{r0, r1, r2, r3, fp, lr}
 	cfi_adjust_cfa_offset (-24)
 	cfi_restore (r0)
 	cfi_restore (r1)
