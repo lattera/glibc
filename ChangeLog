@@ -1,3 +1,8 @@
+2013-02-15  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* sysdeps/ieee754/dbl-64/mpa.c (__mul): Fix determination of
+	the lower precision input.
+
 2013-02-15  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #13550]

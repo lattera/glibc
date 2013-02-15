@@ -612,6 +612,7 @@ __mul (const mp_no *x, const mp_no *y, mp_no *z, int p)
 {
   int i, j, k, ip, ip2;
   double u, zk;
+  const mp_no *a;
 
   /* Is z=0?  */
   if (__glibc_unlikely (X[0] * Y[0] == ZERO))
@@ -626,9 +627,11 @@ __mul (const mp_no *x, const mp_no *y, mp_no *z, int p)
     if (X[ip2] != ZERO || Y[ip2] != ZERO)
       break;
 
+  a = X[ip2] != ZERO ? y : x;
+
   /* ... and here, at least one of them is still zero.  */
   for (ip = ip2; ip > 0; ip--)
-    if (X[ip] * Y[ip] != ZERO)
+    if (a->d[ip] != ZERO)
       break;
 
   /* The product looks like this for p = 3 (as an example):
