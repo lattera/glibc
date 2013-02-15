@@ -10,7 +10,7 @@ arm*)
 		# an appropriate directory exists in sysdeps/arm
 		archcppflag=`echo "" |
 		$CC $CFLAGS $CPPFLAGS -E -dM - |
-		  grep __ARM_ARCH |
+		  grep '__ARM_ARCH_[0-9].*__' |
 		  sed -e 's/^#define //' -e 's/ .*//'`
 
 		case x$archcppflag in

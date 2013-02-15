@@ -1,3 +1,7 @@
+2013-02-28  Richard Henderson <rth@redhat.com>
+
+	* sysdeps/arm/preconfigure: Adjust scan for __ARM_ARCH_* defines.
+
 2013-02-27  Roland McGrath  <roland@hack.frob.com>
 
 	* sysdeps/arm/sysdep.h (CFI_SECTIONS): New macro.
