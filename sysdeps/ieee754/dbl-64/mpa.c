@@ -747,12 +747,9 @@ __sqr (const mp_no *x, mp_no *y, int p)
       long lim = k / 2;
 
       if (k % 2 == 0)
-        {
-	  yk += X[lim] * X[lim];
-	  lim--;
-	}
+	yk += X[lim] * X[lim];
 
-      for (i = k - p, j = p; i <= lim; i++, j--)
+      for (i = k - p, j = p; i < j; i++, j--)
 	yk2 += X[i] * X[j];
 
       yk += 2.0 * yk2;
@@ -770,12 +767,9 @@ __sqr (const mp_no *x, mp_no *y, int p)
       long lim = k / 2;
 
       if (k % 2 == 0)
-        {
-	  yk += X[lim] * X[lim];
-	  lim--;
-	}
+	yk += X[lim] * X[lim];
 
-      for (i = 1, j = k - 1; i <= lim; i++, j--)
+      for (i = 1, j = k - 1; i < j; i++, j--)
 	yk2 += X[i] * X[j];
 
       yk += 2.0 * yk2;
