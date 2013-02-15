@@ -2,6 +2,8 @@
 
 	* sysdeps/arm/preconfigure: Adjust scan for __ARM_ARCH_* defines.
 
+	* sysdeps/arm/preconfigure: Handle __ARM_ARCH_6*__.
+
 2013-02-27  Roland McGrath  <roland@hack.frob.com>
 
 	* sysdeps/arm/sysdep.h (CFI_SECTIONS): New macro.

@@ -28,7 +28,10 @@ arm*)
 		  machine=armv6t2
 		  echo "Found compiler is configured for $machine"
 		  ;;
-
+		x__ARM_ARCH_6*__)
+		  machine=armv6
+		  echo "Found compiler is configured for $machine"
+		  ;;
 		*)
 		  machine=arm
 		  echo 2>&1 "arm/preconfigure: Did not find ARM architecture type; using default"
