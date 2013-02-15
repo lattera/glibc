@@ -109,13 +109,18 @@ _dl_tlsdesc_dynamic:
 1:	mov	r0, r1
 	bl	__tls_get_addr
 	rsb	r0, r4, r0
-2:	pop	{r2,r3,r4, lr}
+2:
+#if defined (__ARM_ARCH_4T__) && defined (__THUMB_INTERWORK__)
+	pop	{r2,r3,r4, lr}
 	cfi_adjust_cfa_offset (-16)
 	cfi_restore (lr)
 	cfi_restore (r4)
 	cfi_restore (r3)
 	cfi_restore (r2)
-	BX      (lr)
+	bx	lr
+#else
+	pop	{r2,r3,r4, pc}
+#endif
 	.fnend
 	cfi_endproc
 	.size	_dl_tlsdesc_dynamic, .-_dl_tlsdesc_dynamic

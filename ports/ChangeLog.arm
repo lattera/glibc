@@ -1,5 +1,9 @@
 2013-03-06  Richard Henderson <rth@redhat.com>
 
+	* sysdeps/arm/arm-mcount.S (_mcount): Use pop into pc unless
+	__ARM_ARCH_4T__ and __THUMB_INTERWORK__.
+	* sysdeps/arm/dl-tlsdesc.S (_dl_tlsdesc_dynamic): Likewise.
+
 	* sysdeps/arm/sysdep.h (BX, BXC, BLX): New macros.
 	(DO_RET): Use BX.
 	(RETINSTR): Use BXC.
