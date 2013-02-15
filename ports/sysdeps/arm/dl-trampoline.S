@@ -21,12 +21,6 @@
 #include <sysdep.h>
 #include <libc-symbols.h>
 
-#if defined(__USE_BX__)
-#define BX(x) bx	x
-#else
-#define BX(x) mov	pc, x
-#endif
-
 	.text
 	.globl _dl_runtime_resolve
 	.type _dl_runtime_resolve, #function
@@ -192,8 +186,7 @@ _dl_runtime_profile:
 	add	ip, r7, #72
 	ldmia	ip, {r0-r3}
 	ldr	ip, [r7, #264]
-	mov	lr, pc
-	BX(ip)
+	BLX(ip)
 	stmia	r7, {r0-r3}
 
 	@ Call pltexit.

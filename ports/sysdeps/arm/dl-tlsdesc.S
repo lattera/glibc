@@ -20,12 +20,6 @@
 #include <tls.h>
 #include "tlsdesc.h"
 
-#ifdef __USE_BX__
-  #define BX(x)	bx x
-#else
-  #define BX(x)	mov pc, x
-#endif
-
 	.text
 	@ emit debug information with cfi
 	@ use arm-specific pseudos for unwinding itself

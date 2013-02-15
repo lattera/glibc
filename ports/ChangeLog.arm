@@ -1,5 +1,12 @@
 2013-03-06  Richard Henderson <rth@redhat.com>
 
+	* sysdeps/arm/sysdep.h (BX, BXC, BLX): New macros.
+	(DO_RET): Use BX.
+	(RETINSTR): Use BXC.
+	* sysdeps/arm/dl-tlsdesc.S (BX): Remove.
+	* sysdeps/arm/dl-trampoline.S (BX): Remove.
+	(_dl_runtime_profile): Use BLX.
+
 	* sysdeps/arm/__longjmp.S (__longjmp): Use ldmia insn directly.
 	* sysdeps/arm/sysdep.h (LOADREGS): Remove.
 

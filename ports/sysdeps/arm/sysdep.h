@@ -33,25 +33,22 @@
 
 #define PLTJMP(_x)	_x##(PLT)
 
-/* APCS-32 doesn't preserve the condition codes across function call. */
-#ifdef __APCS_32__
 #ifdef __USE_BX__
-#define RETINSTR(cond, reg)	\
-	bx##cond	reg
-#define DO_RET(_reg)		\
-	bx _reg
+# define BX(R)		bx	R
+# define BXC(C, R)	bx##C	R
+# ifdef __ARM_ARCH_4T__
+#  define BLX(R)	mov	lr, pc; bx R
+# else
+#  define BLX(R)	blx	R
+# endif
 #else
-#define RETINSTR(cond, reg)	\
-	mov##cond	pc, reg
-#define DO_RET(_reg)		\
-	mov pc, _reg
+# define BX(R)		mov	pc, R
+# define BXC(C, R)	mov##C	pc, R
+# define BLX(R)		mov	lr, pc; mov pc, R
 #endif
-#else  /* APCS-26 */
-#define RETINSTR(cond, reg)	\
-	mov##cond##s	pc, reg
-#define DO_RET(_reg)		\
-	movs pc, _reg
-#endif
+
+#define DO_RET(R)	BX(R)
+#define RETINSTR(C, R)	BXC(C, R)
 
 /* Define an entry point visible from C.  */
 #define	ENTRY(name)					\
