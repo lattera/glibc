@@ -144,7 +144,7 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 
 #ifdef IN_DL_RUNTIME
 
-# if !defined PROF && !__BOUNDED_POINTERS__
+# ifndef PROF
 /* We add a declaration of this function here so that in dl-runtime.c
    the ELF_MACHINE_RUNTIME_TRAMPOLINE macro really can pass the parameters
    in registers.

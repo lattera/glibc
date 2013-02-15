@@ -55,7 +55,7 @@ elf_machine_load_address (void)
   return off + gotaddr - gotval;
 }
 
-#if !defined PROF && !__BOUNDED_POINTERS__
+#ifndef PROF
 /* We add a declaration of this function here so that in dl-runtime.c
    the ELF_MACHINE_RUNTIME_TRAMPOLINE macro really can pass the parameters
    in registers.
@@ -114,7 +114,7 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 
 /* This code is used in dl-runtime.c to call the `fixup' function
    and then redirect to the address it returns.  */
-#if !defined PROF && !__BOUNDED_POINTERS__
+#ifndef PROF
 # define ELF_MACHINE_RUNTIME_TRAMPOLINE asm ("\
 	.text\n\
 	.globl _dl_runtime_resolve\n\

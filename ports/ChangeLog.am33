@@ -1,3 +1,9 @@
+2013-02-14  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #13550]
+	* sysdeps/am33/dl-machine.h [!PROF && !__BOUNDED_POINTERS__]:
+	Remove __BOUNDED_POINTERS__ from condition.
+
 2013-02-13  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #13550]

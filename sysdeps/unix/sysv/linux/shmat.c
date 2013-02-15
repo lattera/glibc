@@ -38,15 +38,6 @@ shmat (shmid, shmaddr, shmflg)
   unsigned long resultvar;
   void *raddr;
 
-#if __BOUNDED_POINTERS__
-  size_t length = ~0;
-  struct shmid_ds shmds;
-  /* It's unfortunate that we need to make another system call to get
-     the shared memory segment length...  */
-  if (shmctl (shmid, IPC_STAT, &shmds) == 0)
-    length = shmds.shm_segsz;
-#endif
-
   resultvar = INTERNAL_SYSCALL (ipc, err, 5, IPCOP_shmat,
 				shmid, shmflg,
 				(long int) &raddr,

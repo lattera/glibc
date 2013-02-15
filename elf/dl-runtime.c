@@ -148,7 +148,7 @@ _dl_fixup (
   return elf_machine_fixup_plt (l, result, reloc, rel_addr, value);
 }
 
-#if !defined PROF && !__BOUNDED_POINTERS__
+#ifndef PROF
 DL_FIXUP_VALUE_TYPE
 __attribute ((noinline)) ARCH_FIXUP_ATTRIBUTE
 _dl_profile_fixup (

@@ -36,7 +36,7 @@
 /* We only provide optimizations if the user selects them and if
    GNU CC is used.  */
 # if !defined __NO_STRING_INLINES && defined __USE_STRING_INLINES \
-    && defined __GNUC__ && __GNUC__ >= 2 && !__BOUNDED_POINTERS__
+    && defined __GNUC__ && __GNUC__ >= 2
 
 # ifndef __STRING_INLINE
 #  ifndef __extern_inline

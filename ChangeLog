@@ -1,6 +1,21 @@
 2013-02-14  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #13550]
+	* config.h.in [USE_REGPARMS && !PROF && !__BOUNDED_POINTERS__]:
+	Remove __BOUNDED_POINTERS__ from condition.
+	* elf/dl-runtime.c [!PROF && !__BOUNDED_POINTERS__]: Likewise.
+	* string/bits/string2.h [!__NO_STRING_INLINES &&
+	!__BOUNDED_POINTERS__]: Likewise.
+	* sysdeps/i386/dl-machine.h [!PROF && !__BOUNDED_POINTERS__]:
+	Likewise.
+	* sysdeps/unix/sysv/linux/shmat.c (shmat) [__BOUNDED_POINTERS__]:
+	Remove conditional code.
+	* sysdeps/x86/bits/string.h [!__NO_STRING_INLINES &&
+	__USE_STRING_INLINES && __GNUC__ && __GNUC__ >= 2 &&
+	!__BOUNDED_POINTERS__]: Remove __BOUNDED_POINTERS__ from
+	condition.
+
+	[BZ #13550]
 	* csu/libc-start.c: Do not include <bp-sym.h>.
 	[!LIBC_START_MAIN] (LIBC_START_MAIN): Do not use BP_SYM.
 	* elf/dl-open.c: Do not include <bp-sym.h>.

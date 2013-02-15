@@ -115,7 +115,7 @@
 
 /* Defined to some form of __attribute__ ((...)) if the compiler supports
    a different, more efficient calling convention.  */
-#if defined USE_REGPARMS && !defined PROF && !defined __BOUNDED_POINTERS__
+#if defined USE_REGPARMS && !defined PROF
 # define internal_function __attribute__ ((regparm (3), stdcall))
 #endif
 
