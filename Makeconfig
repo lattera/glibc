@@ -435,18 +435,6 @@ else
 +link-tests = $(+link-static-tests)
 endif
 endif
-# Command for statically linking bounded-pointer programs with the C library.
-ifndef +link-bounded
-+link-bounded = $(CC) -nostdlib -nostartfiles -static -fbounded-pointers -o $@ \
-	      $(sysdep-LDFLAGS) $(LDFLAGS)  \
-	      $(addprefix $(csu-objpfx),b$(static-start-installed-name)) \
-	      $(+preinit) $(+prectorT) \
-	      $(filter-out $(addprefix $(csu-objpfx),start.ob \
-						     $(start-installed-name))\
-			   $(+preinit) $(link-extra-libs-bounded) \
-			   $(common-objpfx)libc% $(+postinit),$^) \
-	      $(link-extra-libs-bounded) $(link-libc-bounded) $(+postctorT) $(+postinit)
-endif
 ifeq (yes,$(build-shared))
 ifndef rtld-LDFLAGS
 rtld-LDFLAGS = -Wl,-dynamic-linker=$(slibdir)/$(rtld-installed-name)
@@ -506,13 +494,11 @@ endif
 ifndef link-extra-libs
 link-extra-libs = $(LDLIBS-$(@F))
 link-extra-libs-static = $(link-extra-libs)
-link-extra-libs-bounded = $(link-extra-libs)
 endif
 
 # The static libraries.
 link-libc-static = -Wl,--start-group $(common-objpfx)libc.a $(static-gnulib) -Wl,--end-group
 link-libc-static-tests = -Wl,--start-group $(common-objpfx)libc.a $(static-gnulib-tests) -Wl,--end-group
-link-libc-bounded = $(common-objpfx)libc_b.a $(gnulib) $(common-objpfx)libc_b.a
 
 # How to link against libgcc.  Some libgcc functions, such as those
 # for "long long" arithmetic or software floating point, can always be
@@ -617,12 +603,11 @@ $(subst $(empty) ,:,$(strip $(patsubst -Wl$(comma)-rpath-link=%, %,\
 # $(run-via-rtld-prefix) is a command that, when prepended to the name
 # of a program built with the newly built library, produces a command
 # that, executed on the host for which the library is built, runs that
-# program.  For the statically-linked %-bp test programs, and for
-# tests listed in tests-static or xtests-static, it is empty.
+# program.  For tests listed in tests-static or xtests-static, it is
+# empty.
 run-via-rtld-prefix =							      \
   $(if $(strip $(filter $(notdir $(built-program-file)),		      \
-			$(tests-static) $(xtests-static))		      \
-	       $(filter %-bp,$(built-program-file))),,			      \
+			$(tests-static) $(xtests-static))),,		      \
        $(elf-objpfx)$(rtld-installed-name)				      \
 	 --library-path $(rpath-link)$(patsubst %,:%,$(sysdep-library-path)))
 else
@@ -652,9 +637,9 @@ endif
 # $(test-via-rtld-prefix) is a command that, when prepended to the name
 # of a test program built with the newly built library, produces a command
 # that, executed on the host for which the library is built, runs that
-# program.  For the statically-linked %-bp test programs, and for
-# tests listed in tests-static or xtests-static as well as when test
-# programs are hardcoded to the newly built libraries, it is empty.
+# program.  For tests listed in tests-static or xtests-static as well
+# as when test programs are hardcoded to the newly built libraries, it
+# is empty.
 
 # $(test-program-prefix) is a command that, when prepended to the name
 # of a test program built with the newly built library, produces a command
@@ -817,7 +802,7 @@ endif
 # The compilation rules use $(CPPFLAGS-${SUFFIX}) and $(CFLAGS-${SUFFIX})
 # to pass different flags for each flavor.
 libtypes = $(foreach o,$(object-suffixes-for-libc),$(libtype$o))
-all-object-suffixes := .o .os .op .og .ob .oS
+all-object-suffixes := .o .os .op .og .oS
 object-suffixes :=
 CPPFLAGS-.o = $(pic-default)
 CFLAGS-.o = $(filter %frame-pointer,$(+cflags))
@@ -851,18 +836,6 @@ endif
 # Convenience variable for when we want to treat shared-library cases
 # differently from the rest.
 object-suffixes-noshared := $(filter-out .os,$(object-suffixes))
-
-bppfx = BP-
-ifeq (yes,$(build-bounded))
-# Under --enable-bounded, we build the library with `-fbounded-pointers -g'
-# to runtime bounds checking.  The bounded-pointer objects are named foo.ob.
-# We disable sibling-call optimizations so that stack traces will be complete
-# and thus aid debugging, since after all, BPs are a debugging tool.
-object-suffixes += .ob
-CPPFLAGS-.ob = -fbounded-pointers $(pic-default)
-CFLAGS-.ob = -g -O2 -fno-optimize-sibling-calls -fno-strict-aliasing
-libtype.ob = lib%_b.a
-endif
 
 object-suffixes-for-libc := $(object-suffixes)
 

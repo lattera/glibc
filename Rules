@@ -98,12 +98,8 @@ ifeq ($(run-built-tests),no)
 tests: $(addprefix $(objpfx),$(tests) $(test-srcs))
 xtests: tests
 else
-ifeq ($(build-bounded),yes)
-tests-bp.out = $(tests:%=$(objpfx)%-bp.out)
-xtests-bp.out = $(xtests:%=$(objpfx)%-bp.out)
-endif
-tests: $(tests:%=$(objpfx)%.out) $(tests-bp.out)
-xtests: tests $(xtests:%=$(objpfx)%.out) $(xtests-bp.out)
+tests: $(tests:%=$(objpfx)%.out)
+xtests: tests $(xtests:%=$(objpfx)%.out)
 endif
 
 ifeq ($(build-programs),yes)
@@ -179,14 +175,6 @@ $(addprefix $(objpfx),$(binaries-static-tests)): %: %.o \
 	$(+link-static-tests)
 endif
 
-ifeq ($(build-bounded),yes)
-binaries-bounded = $(addsuffix -bp,$(tests) $(xtests) $(test-srcs))
-$(addprefix $(objpfx),$(binaries-bounded)): %-bp: %.ob \
-  $(sort $(filter $(common-objpfx)lib%,$(link-libc-bounded))) \
-  $(addprefix $(csu-objpfx),start.ob) $(+preinit) $(+postinit)
-	$(+link-bounded)
-endif
-
 ifneq "$(strip $(tests) $(xtests) $(test-srcs))" ""
 # These are the implicit rules for making test outputs
 # from the test programs and whatever input files are present.
@@ -194,8 +182,6 @@ ifneq "$(strip $(tests) $(xtests) $(test-srcs))" ""
 make-test-out = $(test-wrapper-env) \
 		GCONV_PATH=$(common-objpfx)iconvdata LC_ALL=C \
 		$($*-ENV) $(host-test-program-cmd) $($*-ARGS)
-$(objpfx)%-bp.out: %.input $(objpfx)%-bp
-	$(make-test-out) > $@ < $(word 1,$^)
 $(objpfx)%.out: %.input $(objpfx)%
 	$(make-test-out) > $@ < $(word 1,$^)
 $(objpfx)%.out: /dev/null $(objpfx)%	# Make it 2nd arg for canned sequence.

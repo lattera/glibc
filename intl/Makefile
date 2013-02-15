@@ -117,9 +117,6 @@ $(addprefix $(objpfx),$(multithread-test-srcs)): $(shared-thread-library)
 else
 $(addprefix $(objpfx),$(multithread-test-srcs)): $(static-thread-library)
 endif
-ifeq (yes,$(build-bounded))
-$(multithread-test-srcs:%=$(objpfx)%-bp): $(bounded-thread-library)
-endif
 endif
 
 $(objpfx)tst-translit.out: $(objpfx)tst-gettext.out

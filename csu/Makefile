@@ -53,12 +53,6 @@ install-lib += S$(start-installed-name)
 generated += start.os
 endif
 
-ifeq (yes,$(build-bounded))
-extra-objs += b$(start-installed-name)
-install-lib += b$(start-installed-name)
-generated += start.ob
-endif
-
 ifneq ($(start-installed-name),$(static-start-installed-name))
 extra-objs += $(static-start-installed-name) g$(static-start-installed-name)
 omit-deps += $(patsubst %.o,%,$(static-start-installed-name) \
@@ -97,9 +91,6 @@ $(objpfx)$(start-installed-name): $(objpfx)start.o $(objpfx)abi-note.o \
 	$(link-relocatable)
 $(objpfx)S$(start-installed-name): $(objpfx)start.os $(objpfx)abi-note.o \
 				  $(objpfx)init.o
-	$(link-relocatable)
-$(objpfx)b$(start-installed-name): $(objpfx)start.ob $(objpfx)abi-note.ob \
-				  $(objpfx)init.ob
 	$(link-relocatable)
 endif
 

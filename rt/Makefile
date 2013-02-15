@@ -76,8 +76,5 @@ $(addprefix $(objpfx),$(tests)): $(objpfx)librt.so $(shared-thread-library)
 else
 $(addprefix $(objpfx),$(tests)): $(objpfx)librt.a $(static-thread-library)
 endif
-ifeq (yes,$(build-bounded))
-$(tests:%=$(objpfx)%-bp): $(objpfx)librt_b.a $(bounded-thread-library)
-endif
 
 tst-mqueue7-ARGS = -- $(host-test-program-cmd)

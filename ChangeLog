@@ -1,3 +1,54 @@
+2013-02-15  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #13550]
+	* Makeconfig [!+link-bounded] (+link-bounded): Remove variable.
+	[!link-extra-libs] (link-extra-libs-bounded): Likewise.
+	(run-via-rtld-prefix): Do not handle %-bp tests.
+	(test-via-rtld-prefix): Do not mention %-bp tests in comment.
+	(all-object-suffixes): Remove .ob.
+	(bppfx): Remove variable.
+	[$(build-bounded) = yes] (object-suffixes): Do not add .ob.
+	[$(build-bounded) = yes] (CPPFLAGS-.ob): Remove variable.
+	[$(build-bounded) = yes] (CFLAGS-.ob): Likewise.
+	[$(build-bounded) = yes] (libtype.ob): Likewise.
+	* Makerules (elide-routines.ob): Remove variable.
+	(do-tests-clean): Do not handle *-bp.out.
+	(common-mostlyclean): Do not handle *-bp and *-bp.out.
+	* Rules [$(build-bounded) = yes] (tests-bp.out): Remove variable.
+	[$(build-bounded) = yes] (xtests-bp.out): Likewise.
+	(tests): Do not include $(tests-bp.out).
+	(xtests): Do not include $(xtests-bp.out).
+	[$(build-bounded) = yes] (binaries-bounded): Remove variable.
+	[$(build-bounded) = yes] ($(addprefix
+	$(objpfx),$(binaries-bounded))): Remove rule.
+	($(objpfx)%-bp.out): Remove rule.
+	* config.make.in (build-bounded): Remove variable.
+	* crypt/Makefile [$(build-bounded) = yes]
+	($(tests:%=$(objpfx)%-bp)): Remove dependency.
+	* csu/Makefile [$(build-bounded) = yes] (extra-objs): Do not
+	append to variable.
+	[$(build-bounded) = yes] (install-lib): Likewise.
+	[$(build-bounded) = yes] (generated): Likewise.
+	[!start-installed-name-rule] ($(objpfx)b$(start-installed-name)):
+	Remove rule.
+	* intl/Makefile [$(build-bounded) = yes]
+	($(multithread-test-srcs:%=$(objpfx)%-bp)): Remove dependency.
+	* math/Makefile [$(build-bounded) = yes]
+	($(tests:%=$(objpfx)%-bp): Likewise.
+	* misc/Makefile [$(build-bounded) = yes]
+	($(objpfx)tst-tsearch-bp): Likewise.
+	* nptl/Makeconfig (bounded-thread-library): Remove variable.
+	* rt/Makefile [$(build-bounded) = yes] ($(tests:%=$(objpfx)%-bp)):
+	Remove dependency.
+	* string/Makefile (o-objects.ob): Remove variable.
+	* sysdeps/i386/i686/Makefile [$(config-asflags-i686) = yes]
+	(CFLAGS-.ob): Remove variable.
+	[$(config-asflags-i686) = yes] (ASFLAGS-.ob): Likewise.
+	* sysdeps/sparc/sparc32/sparcv9/Makefile (ASFLAGS-.ob): Remove
+	both definitions of variable.
+	* sysdeps/sparc/sparc64/Makefile [$(have-as-vis3) = yes]
+	(ASFLAGS-.ob): Remove variable.
+
 2013-02-14  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #13550]

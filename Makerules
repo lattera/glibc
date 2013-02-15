@@ -418,7 +418,6 @@ elide-routines.os += $(static-only-routines)
 elide-routines.o  += $(shared-only-routines)
 elide-routines.op += $(shared-only-routines)
 elide-routines.og += $(shared-only-routines)
-elide-routines.ob += $(shared-only-routines)
 
 # Shared library building.
 
@@ -1265,9 +1264,7 @@ mostlyclean: common-mostlyclean
 
 do-tests-clean:
 	-rm -f $(addprefix $(objpfx),$(addsuffix .out,$(tests) $(xtests) \
-						      $(test-srcs)) \
-				     $(addsuffix -bp.out,$(tests) $(xtests) \
-							 $(test-srcs)))
+						      $(test-srcs)))
 
 # Remove the object files.
 common-mostlyclean:
@@ -1276,12 +1273,8 @@ common-mostlyclean:
 				     $(addsuffix .o,$(tests) $(xtests) \
 						    $(test-srcs) $(others) \
 						    $(sysdep-others)) \
-				     $(addsuffix -bp,$(tests) $(xtests) \
-						     $(test-srcs)) \
 				     $(addsuffix .out,$(tests) $(xtests) \
-						      $(test-srcs)) \
-				     $(addsuffix -bp.out,$(tests) $(xtests) \
-							 $(test-srcs)))
+						      $(test-srcs)))
 	-rm -f $(addprefix $(objpfx),$(extra-objs) $(extra-test-objs) \
 				     $(install-lib) $(install-lib.so) \
 				     $(install-lib.so:%.so=%_pic.a))

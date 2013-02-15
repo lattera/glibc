@@ -91,7 +91,6 @@ nss-crypt = @libc_cv_nss_crypt@
 build-shared = @shared@
 build-pic-default= @libc_cv_pic_default@
 build-profile = @profile@
-build-bounded = no
 build-static-nss = @static_nss@
 add-ons = @add_ons@
 add-on-subdirs = @add_on_subdirs@

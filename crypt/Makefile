@@ -69,9 +69,6 @@ $(addprefix $(objpfx),$(tests)): $(objpfx)libcrypt.so
 else
 $(addprefix $(objpfx),$(tests)): $(objpfx)libcrypt.a
 endif
-ifeq (yes,$(build-bounded))
-$(tests:%=$(objpfx)%-bp): $(objpfx)libcrypt_b.a
-endif
 
 # Depend on libc.so so a DT_NEEDED is generated in the shared objects.
 # This ensures they will load libc.so for needed symbols if loaded by
