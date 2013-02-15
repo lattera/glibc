@@ -1,4 +1,4 @@
-2013-02-16  Siddhesh Poyarekar  <siddhesh@redhat.com>
+2013-02-15  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* sysdeps/ieee754/dbl-64/mpa.c (__sqr): Avoid using LIM in
 	loop termination condition.
