@@ -19,12 +19,10 @@
 
 #include <sysdep.h>
 #include "asm-syntax.h"
-#include "bp-sym.h"
-#include "bp-asm.h"
 
 
 	.text
-ENTRY (BP_SYM (strchr))
+ENTRY (strchr)
 
 	/* Before we start with the main loop we process single bytes
 	   until the source pointer is aligned.  This has two reasons:
@@ -284,7 +282,7 @@ ENTRY (BP_SYM (strchr))
 6:
 	nop
 	retq
-END (BP_SYM (strchr))
+END (strchr)
 
-weak_alias (BP_SYM (strchr), BP_SYM (index))
+weak_alias (strchr, index)
 libc_hidden_builtin_def (strchr)

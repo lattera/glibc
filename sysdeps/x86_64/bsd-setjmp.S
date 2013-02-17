@@ -24,15 +24,13 @@
 #define _ASM
 #define _SETJMP_H
 #include <bits/setjmp.h>
-#include "bp-sym.h"
-#include "bp-asm.h"
 
-ENTRY (BP_SYM (setjmp))
+ENTRY (setjmp)
 	/* Set up arguments, we only need to set the 2nd arg.  */
 	movl $1, %esi
 #ifdef	PIC
 	jmp HIDDEN_JUMPTARGET (__sigsetjmp)
 #else
-	jmp BP_SYM (__sigsetjmp)
+	jmp __sigsetjmp
 #endif
-END (BP_SYM (setjmp))
+END (setjmp)

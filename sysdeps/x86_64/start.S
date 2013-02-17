@@ -54,7 +54,6 @@
 */
 
 #include <sysdep.h>
-#include "bp-sym.h"
 
 	.text
 	.globl _start
@@ -106,21 +105,21 @@ _start:
 	mov __libc_csu_fini@GOTPCREL(%rip), %R8_LP
 	mov __libc_csu_init@GOTPCREL(%rip), %RCX_LP
 
-	mov BP_SYM (main)@GOTPCREL(%rip), %RDI_LP
+	mov main@GOTPCREL(%rip), %RDI_LP
 
 	/* Call the user's main function, and exit with its value.
 	   But let the libc call main.	  */
-	call BP_SYM (__libc_start_main)@PLT
+	call __libc_start_main@PLT
 #else
 	/* Pass address of our own entry points to .fini and .init.  */
 	mov $__libc_csu_fini, %R8_LP
 	mov $__libc_csu_init, %RCX_LP
 
-	mov $BP_SYM (main), %RDI_LP
+	mov $main, %RDI_LP
 
 	/* Call the user's main function, and exit with its value.
 	   But let the libc call main.	  */
-	call BP_SYM (__libc_start_main)
+	call __libc_start_main
 #endif
 
 	hlt			/* Crash if somehow `exit' does return.	 */

@@ -18,8 +18,6 @@
 #include <sysdep.h>
 #define _ERRNO_H
 #include <bits/errno.h>
-#include <bp-asm.h>
-#include <bp-sym.h>
 #include <tls.h>
 
 #ifdef IS_IN_rtld

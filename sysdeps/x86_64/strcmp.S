@@ -21,8 +21,6 @@
 
 #include <sysdep.h>
 #include "asm-syntax.h"
-#include "bp-sym.h"
-#include "bp-asm.h"
 
 #undef UPDATE_STRNCMP_COUNTER
 
@@ -127,7 +125,7 @@ libc_hidden_def (__strncasecmp)
 	/* FALLTHROUGH to strncasecmp_l.  */
 #endif
 
-ENTRY (BP_SYM (STRCMP))
+ENTRY (STRCMP)
 #ifdef NOT_IN_libc
 /* Simple version since we can't use SSE registers in ld.so.  */
 L(oop):	movb	(%rdi), %al
@@ -145,7 +143,7 @@ L(neq):	movl	$1, %eax
 	movl	$-1, %ecx
 	cmovbl	%ecx, %eax
 	ret
-END (BP_SYM (STRCMP))
+END (STRCMP)
 #else	/* NOT_IN_libc */
 # ifdef USE_AS_STRCASECMP_L
 	/* We have to fall back on the C implementation for locales
@@ -2281,7 +2279,7 @@ LABEL(Byte0):
 
 	sub	%ecx, %eax
 	ret
-END (BP_SYM (STRCMP))
+END (STRCMP)
 
 	.section .rodata,"a",@progbits
 	.p2align 3

@@ -20,8 +20,6 @@
 
 /* There is some commonality.  */
 #include <sysdeps/unix/x86_64/sysdep.h>
-#include <bp-sym.h>
-#include <bp-asm.h>
 #include <tls.h>
 
 #ifdef IS_IN_rtld

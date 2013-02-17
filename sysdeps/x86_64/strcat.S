@@ -20,12 +20,10 @@
 
 #include <sysdep.h>
 #include "asm-syntax.h"
-#include "bp-sym.h"
-#include "bp-asm.h"
 
 
 	.text
-ENTRY (BP_SYM (strcat))
+ENTRY (strcat)
 	movq %rdi, %rcx		/* Dest. register. */
 	andl $7, %ecx		/* mask alignment bits */
 	movq %rdi, %rax		/* Duplicate destination pointer.  */
@@ -255,5 +253,5 @@ ENTRY (BP_SYM (strcat))
 24:
 	movq	%rdi, %rax	/* Source is return value.  */
 	retq
-END (BP_SYM (strcat))
+END (strcat)
 libc_hidden_builtin_def (strcat)

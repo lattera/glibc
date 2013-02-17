@@ -1,3 +1,48 @@
+2013-02-17  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #13550]
+	* sysdeps/x86_64/bp-asm.h: Remove file.
+	* sysdeps/unix/sysv/linux/x86_64/clone.S: Do not include
+	<bp-sym.h> and <bp-asm.h>.
+	(__clone): Do not use BP_SYM.
+	* sysdeps/unix/sysv/linux/x86_64/sysdep.h: Do not include
+	<bp-sym.h> and <bp-asm.h>.
+	* sysdeps/unix/x86_64/sysdep.S: Likewise.
+	* sysdeps/x86_64/bsd-_setjmp.S: Do not include "bp-sym.h" and
+	"bp-asm.h".
+	(_setjmp): Do not use BP_SYM.
+	* sysdeps/x86_64/bsd-setjmp.S: Do not include "bp-sym.h" and
+	"bp-asm.h".
+	(setjmp): Do not use BP_SYM.
+	* sysdeps/x86_64/mempcpy.S (__mempcpy): Do not use BP_SYM in
+	libc_hidden_def.
+	(mempcpy): Do not use BP_SYM in weak_alias.
+	* sysdeps/x86_64/rtld-strchr.S: Do not include "bp-sym.h" and
+	"bp-asm.h".
+	(strchr): Do not use BP_SYM.
+	* sysdeps/x86_64/rtld-strlen.S: Do not include "bp-sym.h" and
+	"bp-asm.h".
+	* sysdeps/x86_64/setjmp.S (__sigsetjmp): Do not use BP_SYM.
+	* sysdeps/x86_64/start.S: Do not include "bp-sym.h".
+	(_start): Do not use BP_SYM.
+	* sysdeps/x86_64/strcat.S: Do not include "bp-sym.h" and
+	"bp-asm.h".
+	(strcat): Do not use BP_SYM.
+	* sysdeps/x86_64/strcmp.S: Do not include "bp-sym.h" and
+	"bp-asm.h".
+	(STRCMP): Do not use BP_SYM.
+	* sysdeps/x86_64/strcpy.S: Do not include "bp-sym.h" and
+	"bp-asm.h".
+	(STRCPY): Do not use BP_SYM.
+	* sysdeps/x86_64/strcpy_chk.S: Do not include "bp-sym.h" and
+	"bp-asm.h".
+	* sysdeps/x86_64/strtok.S: Do not include "bp-sym.h" and
+	"bp-asm.h".
+	(FUNCTION): Do not use BP_SYM.
+	* sysdeps/x86_64/strtok_r.S (strtok_r): Do not use BP_SYM in
+	weak_alias.
+	(__GI___strtok_r): Do not use BP_SYM in strong_alias.
+
 2013-02-17  Andreas Jaeger  <aj@suse.de>
 
 	* time/Versions: Sort entries.

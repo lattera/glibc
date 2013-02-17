@@ -21,8 +21,6 @@
 
 #include <sysdep.h>
 #include "asm-syntax.h"
-#include "bp-sym.h"
-#include "bp-asm.h"
 
 /* This file can be used for the strtok and strtok_r functions:
 
@@ -59,7 +57,7 @@ save_ptr:
 #endif
 
 	.text
-ENTRY (BP_SYM (FUNCTION))
+ENTRY (FUNCTION)
 	/* First we create a table with flags for all possible characters.
 	   For the ASCII (7bit/8bit) or ISO-8859-X character sets which are
 	   supported by the C string functions we have 256 characters.
@@ -207,4 +205,4 @@ L(returnNULL):
 	mov %RDX_LP, SAVE_PTR
 	jmp L(epilogue)
 
-END (BP_SYM (FUNCTION))
+END (FUNCTION)
