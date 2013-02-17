@@ -97,6 +97,6 @@ libnss_dns {
 
 libanl {
   GLIBC_2.2.3 {
-    getaddrinfo_a; gai_cancel; gai_error; gai_suspend;
+    gai_cancel; gai_error; gai_suspend; getaddrinfo_a;
   }
 }

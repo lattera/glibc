@@ -1,7 +1,7 @@
 libc {
   GLIBC_2.0 {
 %ifdef EXPORT_UNWIND_FIND_FDE
-    __register_frame_info; __deregister_frame_info;
+    __deregister_frame_info; __register_frame_info;
 %endif
   }
   GLIBC_2.1 {
@@ -13,23 +13,23 @@ libc {
   }
 %ifdef EXPORT_UNWIND_FIND_FDE
   GCC_3.0 {
-    __register_frame_info_bases; __deregister_frame_info_bases;
+    __deregister_frame_info_bases; __register_frame_info_bases;
     __register_frame_info_table_bases; _Unwind_Find_FDE;
   }
 %endif
   GLIBC_PRIVATE {
     # functions used in other libraries
     _dl_addr;
-    _dl_sym; _dl_vsym;
     _dl_open_hook;
-    __libc_dlopen_mode; __libc_dlsym; __libc_dlclose;
+    _dl_sym; _dl_vsym;
+    __libc_dlclose; __libc_dlopen_mode; __libc_dlsym;
   }
 }
 
 ld {
   GLIBC_2.0 {
     # Function from libc.so which must be shared with libc.
-    calloc; free; malloc; realloc; __libc_memalign;
+    __libc_memalign; calloc; free; malloc; realloc;
 
     _r_debug;
   }
@@ -50,16 +50,15 @@ ld {
   GLIBC_PRIVATE {
     # Those are in the dynamic linker, but used by libc.so.
     __libc_enable_secure;
-    _dl_argv;
-    _dl_out_of_memory;
-    _dl_starting_up;
+    _dl_allocate_tls; _dl_allocate_tls_init;
+    _dl_argv; _dl_get_tls_static_info; _dl_deallocate_tls;
+    _dl_make_stack_executable; _dl_out_of_memory;
+    _dl_rtld_di_serinfo; _dl_starting_up; _dl_tls_setup;
     _rtld_global; _rtld_global_ro;
-    _dl_allocate_tls; _dl_deallocate_tls;
-    _dl_get_tls_static_info; _dl_allocate_tls_init;
-    _dl_tls_setup; _dl_rtld_di_serinfo;
-    _dl_make_stack_executable;
+
     # Only here for gdb while a better method is developed.
     _dl_debug_state;
+
     # Pointer protection.
     __pointer_chk_guard;
   }

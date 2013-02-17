@@ -1,7 +1,7 @@
 libc {
   GLIBC_2.0 {
     # global variables
-    __timezone; __daylight; __tzname;
+    __daylight; __timezone; __tzname;
 
     # functions with special/multiple interfaces
     __adjtimex;
@@ -51,13 +51,13 @@ libc {
     wcsftime;
   }
   GLIBC_2.3 {
+    # these internal names are used by libstdc++
+    __strftime_l; __wcsftime_l;
+
     # s*
     strftime_l;
     # w*
     wcsftime_l;
-
-    # these internal names are used by libstdc++
-    __strftime_l; __wcsftime_l;
   }
   GLIBC_2.3.2 {
     strptime_l;

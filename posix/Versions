@@ -1,7 +1,7 @@
 libc {
   GLIBC_2.0 {
     # functions with special/multiple interfaces
-    __bsd_getpgrp; __setpgid; __getpgid;
+    __bsd_getpgrp; __getpgid; __setpgid;
 
     # functions with required interface outside normal name space
     _exit;
@@ -114,7 +114,7 @@ libc {
     # under GLIBC_2.0; the first instance in the script is taken as the
     # default, so linux configurations put them in GLIBC_2.0 while other
     # configuration put them in GLIBC_2.3.2.
-    getresuid; getresgid; setresuid; setresgid;
+    getresgid; getresuid; setresgid; setresuid;
   }
   GLIBC_2.3.3 {
     sched_getaffinity; sched_setaffinity;

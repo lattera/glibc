@@ -7,8 +7,8 @@ libc {
     __bzero; __strtok_r;
 
     # functions used in other libraries
-    __stpncpy; __stpcpy; __strdup; __mempcpy; __strcasecmp; __strerror_r;
-    __ffs;
+    __ffs; __mempcpy; __stpncpy; __stpcpy; __strcasecmp; __strdup;
+    __strerror_r;
 
     # a*
     argz_add; argz_add_sep; argz_append; argz_count; argz_create;

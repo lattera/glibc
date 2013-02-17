@@ -1,3 +1,13 @@
+2013-02-17  Andreas Jaeger  <aj@suse.de>
+
+	* time/Versions: Sort entries.
+	* string/Versions: Likewise.
+	* resolv/Versions: Likewise.
+	* posix/Versions: Likewise.
+	* iconv/Versions: Likewise.
+	* elf/Versions: Likewise.
+	* wcsmbs/Versions: Likewise.
+
 2013-02-15  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* sysdeps/ieee754/dbl-64/mpa.c (__sqr): Avoid using LIM in
