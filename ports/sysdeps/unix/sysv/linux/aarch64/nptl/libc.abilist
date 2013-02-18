@@ -2077,3 +2077,6 @@ GLIBC_2.17
  xencrypt F
  xprt_register F
  xprt_unregister F
+GLIBC_2.18
+ GLIBC_2.18 A
+ __cxa_thread_atexit_impl F
