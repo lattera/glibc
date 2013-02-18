@@ -1,3 +1,9 @@
+2013-02-18  Andreas Krebbel  <Andreas.Krebbel@de.ibm.com>
+
+	* sysdeps/s390/s390-64/dl-trampoline.S (_dl_runtime_resolve):
+	Syntactic changes only.
+	(_dl_runtime_profile): Do a tail-call to the resolved function.
+
 2013-02-17  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #13550]

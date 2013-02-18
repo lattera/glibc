@@ -1,4 +1,4 @@
-/* PLT trampolines.  s390 version.
+/* PLT trampolines.  s390x version.
    Copyright (C) 2005-2013 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -20,8 +20,8 @@
  * with the following linkage:
  *   r2 - r6 : parameter registers
  *   f0, f2, f4, f6 : floating point parameter registers
- *   24(r15), 28(r15) : PLT arguments PLT1, PLT2
- *   96(r15) : additional stack parameters
+ *   48(r15), 56(r15) : PLT arguments PLT1, PLT2
+ *   160(r15) : additional stack parameters
  * The normal clobber rules for function calls apply:
  *   r0 - r5 : call clobbered
  *   r6 - r13 :	 call saved
@@ -39,21 +39,21 @@
 	cfi_startproc
 	.align 16
 _dl_runtime_resolve:
-	stmg   2,5,64(15)	# save registers
-	stg    14,96(15)
+	stmg   %r2,%r5,64(15)	# save call-clobbered argument registers
+	stg    %r14,96(15)
 	cfi_offset (r14, -64)
-	lgr    0,15		# create stack frame
-	aghi   15,-160
+	lgr    %r0,%r15
+	aghi   %r15,-160	# create stack frame
 	cfi_adjust_cfa_offset (160)
-	stg    0,0(15)
-	lmg    2,3,208(15)	# load args saved by PLT
-	brasl  14,_dl_fixup	# call fixup
-	lgr    1,2		# function addr returned in r2
-	aghi   15,160		# remove stack frame
+	stg    %r0,0(%r15)      # write backchain
+	lmg    %r2,%r3,208(%r15)# load args saved by PLT
+	brasl  %r14,_dl_fixup	# call fixup
+	lgr    %r1,%r2		# function addr returned in r2
+	aghi   %r15,160		# remove stack frame
 	cfi_adjust_cfa_offset (-160)
-	lg     14,96(15)	# restore registers
-	lmg    2,5,64(15)
-	br     1
+	lg     %r14,96(15)	# restore registers
+	lmg    %r2,%r5,64(15)
+	br     %r1
 	cfi_endproc
 	.size _dl_runtime_resolve, .-_dl_runtime_resolve
 
@@ -64,13 +64,12 @@ _dl_runtime_resolve:
 	cfi_startproc
 	.align 16
 _dl_runtime_profile:
-	stmg   %r2,%r6,64(%r15)		# save registers
-	std    %f0,104(%r15)
-	std    %f2,112(%r15)
+	stmg   %r2,%r6,64(%r15)		# save call-clobbered arg regs
+	std    %f0,104(%r15)		# + r6 needed as arg for
+	std    %f2,112(%r15)		#  _dl_profile_fixup
 	std    %f4,120(%r15)
 	std    %f6,128(%r15)
-	stg    %r6,16(%r15)
-	stg    %r12,24(%r15)
+	stg    %r12,24(%r15)		# r12 is used as backup of r15
 	stg    %r14,32(%r15)
 	cfi_offset (r6, -96)
 	cfi_offset (f0, -56)
@@ -79,10 +78,10 @@ _dl_runtime_profile:
 	cfi_offset (f6, -32)
 	cfi_offset (r12, -136)
 	cfi_offset (r14, -128)
-	lgr    %r12,%r15		# create stack frame
+	lgr    %r12,%r15		# backup stack pointer
 	cfi_def_cfa_register (12)
-	aghi   %r15,-160
-	stg    %r12,0(%r15)
+	aghi   %r15,-160		# create stack frame
+	stg    %r12,0(%r15)		# save backchain
 	lmg    %r2,%r3,48(%r12)		# load arguments saved by PLT
 	lgr    %r4,%r14			# return address as third parameter
 	la     %r5,64(%r12)		# pointer to struct La_s390_32_regs
@@ -92,18 +91,19 @@ _dl_runtime_profile:
 	lg     %r0,40(%r12)		# load framesize
 	ltgr   %r0,%r0
 	jnm    1f
-	lmg    %r2,%r6,64(%r12)
-	ld     %f0,104(%r12)
-	ld     %f2,112(%r12)
+
+	lmg    %r2,%r6,64(%r12)		# framesize < 0 means no pltexit call
+	ld     %f0,104(%r12)		# so we can do a tail call without
+	ld     %f2,112(%r12)		# copying the arg overflow area
 	ld     %f4,120(%r12)
 	ld     %f6,128(%r12)
-	basr   %r14,%r1			# call resolved function
-0:	lgr    %r15,%r12		# remove stack frame
+
+	lgr    %r15,%r12		# remove stack frame
 	cfi_def_cfa_register (15)
 	lg     %r14,32(%r15)		# restore registers
 	lg     %r12,24(%r15)
-	lg     %r6,16(%r15)
-	br     %r14
+	br     %r1			# tail-call to resolved function
+
 	cfi_def_cfa_register (12)
 1:	jz     4f			# framesize == 0 ?
 	aghi   %r0,7			# align framesize to 8
@@ -118,7 +118,7 @@ _dl_runtime_profile:
 	la     %r3,8(%r3)
 	brctg  %r0,3b
 4:	lmg    %r2,%r6,64(%r12)		# load register parameters
-	ld     %f0,104(%r12)
+	ld     %f0,104(%r12)            # restore call-clobbered arg regs
 	ld     %f2,112(%r12)
 	ld     %f4,120(%r12)
 	ld     %f6,128(%r12)
@@ -129,7 +129,13 @@ _dl_runtime_profile:
 	la     %r4,32(%r12)		# pointer to struct La_s390_32_regs
 	la     %r5,72(%r12)		# pointer to struct La_s390_32_retval
 	brasl  %r14,_dl_call_pltexit
-	j      0b
+
+	lgr    %r15,%r12		# remove stack frame
+	cfi_def_cfa_register (15)
+	lg     %r14,32(%r15)		# restore registers
+	lg     %r12,24(%r15)
+	br     %r14
+
 	cfi_endproc
 	.size _dl_runtime_profile, .-_dl_runtime_profile
 #endif
