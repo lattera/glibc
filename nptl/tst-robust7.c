@@ -20,6 +20,7 @@
 #include <pthread.h>
 #include <stdbool.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 
 static pthread_barrier_t b;

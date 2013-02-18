@@ -4,6 +4,7 @@
 #include <unistd.h>
 #include <sys/select.h>
 #include <sys/wait.h>
+#include <stdlib.h>
 
 
 static volatile int handler_called;

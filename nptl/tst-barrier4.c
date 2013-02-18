@@ -20,6 +20,7 @@
 #include <errno.h>
 #include <pthread.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 
 static pthread_barrier_t b1;
