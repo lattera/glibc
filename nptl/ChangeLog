@@ -1,3 +1,33 @@
+2013-02-18  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	[BZ #14920]
+	* pthreadP.h (USE_REQUEUE_PI): New macro to check if mutex is
+	PI-aware.
+	* pthread_cond_broadcast.c (__pthread_cond_broadcast): Use
+	PI-aware futex operations if available and mutex is PI-aware.
+	* pthread_cond_signal.c (__pthread_cond_signal): Likewise.
+	* nptl/pthread_cond_timedwait.c (__pthread_cond_timedwait):
+	Likewise.
+	* pthread_cond_wait.c (__condvar_cleanup): Adjust lock if
+	cancellation occurred just after futex returned successfully
+	from a PI operation with the mutex held.
+	(__pthread_cond_wait): Use PI-aware futex operations if
+	available and mutex is PI-aware.
+	* sysdeps/unix/sysv/linux/powerpc/lowlevellock.h
+	(FUTEX_WAIT_REQUEUE_PI): Define.
+	(FUTEX_CMP_REQUEUE_PI): Likewise.
+	(lll_futex_wait_requeue_pi): Likewise.
+	(lll_futex_timed_wait_requeue_pi): Likewise.
+	(lll_futex_cmp_requeue_pi): Likewise.
+	* nptl/sysdeps/unix/sysv/linux/s390/lowlevellock.h
+	(FUTEX_WAIT_REQUEUE_PI): Define.
+	(FUTEX_CMP_REQUEUE_PI): Likewise.
+	(lll_futex_wait_requeue_pi): Likewise.
+	(lll_futex_timed_wait_requeue_pi): Likewise.
+	(lll_futex_cmp_requeue_pi): Likewise.
+	* sysdeps/unix/sysv/linux/kernel-features.h: Define
+	__ASSUME_REQUEUE_PI for Linux version higher than 2.6.31.
+
 2013-02-04  Andreas Schwab  <schwab@suse.de>
 
 	[BZ #14142]

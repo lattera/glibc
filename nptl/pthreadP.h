@@ -577,4 +577,16 @@ extern void __wait_lookup_done (void) attribute_hidden;
 # define PTHREAD_STATIC_FN_REQUIRE(name) __asm (".globl " #name);
 #endif
 
+/* Test if the mutex is suitable for the FUTEX_WAIT_REQUEUE_PI operation.  */
+#if (defined lll_futex_wait_requeue_pi \
+     && defined __ASSUME_REQUEUE_PI)
+# define USE_REQUEUE_PI(mut) \
+   ((mut) && (mut) != (void *) ~0l \
+    && (((mut)->__data.__kind \
+	 & (PTHREAD_MUTEX_PRIO_INHERIT_NP | PTHREAD_MUTEX_ROBUST_NORMAL_NP)) \
+	== PTHREAD_MUTEX_PRIO_INHERIT_NP))
+#else
+# define USE_REQUEUE_PI(mut) 0
+#endif
+
 #endif	/* pthreadP.h */

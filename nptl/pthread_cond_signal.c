@@ -47,12 +47,35 @@ __pthread_cond_signal (cond)
       ++cond->__data.__wakeup_seq;
       ++cond->__data.__futex;
 
-      /* Wake one.  */
-      if (! __builtin_expect (lll_futex_wake_unlock (&cond->__data.__futex, 1,
-						     1, &cond->__data.__lock,
-						     pshared), 0))
-	return 0;
+#if (defined lll_futex_cmp_requeue_pi \
+     && defined __ASSUME_REQUEUE_PI)
+      int pi_flag = PTHREAD_MUTEX_PRIO_INHERIT_NP | PTHREAD_MUTEX_ROBUST_NP;
+      pthread_mutex_t *mut = cond->__data.__mutex;
 
+      /* Do not use requeue for pshared condvars.  */
+      if (mut != (void *) ~0l)
+	pi_flag &= mut->__data.__kind;
+
+      if (__builtin_expect (pi_flag == PTHREAD_MUTEX_PRIO_INHERIT_NP, 0)
+	/* This can only really fail with a ENOSYS, since nobody can modify
+	   futex while we have the cond_lock.  */
+	  && lll_futex_cmp_requeue_pi (&cond->__data.__futex, 1, 0,
+				       &mut->__data.__lock,
+				       cond->__data.__futex, pshared) == 0)
+	{
+	  lll_unlock (cond->__data.__lock, pshared);
+	  return 0;
+	}
+      else
+#endif
+	/* Wake one.  */
+	if (! __builtin_expect (lll_futex_wake_unlock (&cond->__data.__futex,
+						       1, 1,
+						       &cond->__data.__lock,
+						       pshared), 0))
+	  return 0;
+
+      /* Fallback if neither of them work.  */
       lll_futex_wake (&cond->__data.__futex, 1, pshared);
     }
 

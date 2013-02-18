@@ -64,6 +64,11 @@ __pthread_cond_timedwait (cond, mutex, abstime)
   int pshared = (cond->__data.__mutex == (void *) ~0l)
 		? LLL_SHARED : LLL_PRIVATE;
 
+#if (defined lll_futex_timed_wait_requeue_pi \
+     && defined __ASSUME_REQUEUE_PI)
+  int pi_flag = 0;
+#endif
+
   /* Make sure we are alone.  */
   lll_lock (cond->__data.__lock, pshared);
 
@@ -155,17 +160,46 @@ __pthread_cond_timedwait (cond, mutex, abstime)
       /* Enable asynchronous cancellation.  Required by the standard.  */
       cbuffer.oldtype = __pthread_enable_asynccancel ();
 
+/* REQUEUE_PI was implemented after FUTEX_CLOCK_REALTIME, so it is sufficient
+   to check just the former.  */
+#if (defined lll_futex_timed_wait_requeue_pi \
+     && defined __ASSUME_REQUEUE_PI)
+      /* If pi_flag remained 1 then it means that we had the lock and the mutex
+	 but a spurious waker raced ahead of us.  Give back the mutex before
+	 going into wait again.  */
+      if (pi_flag)
+	{
+	  __pthread_mutex_cond_lock_adjust (mutex);
+	  __pthread_mutex_unlock_usercnt (mutex, 0);
+	}
+      pi_flag = USE_REQUEUE_PI (mutex);
+
+      if (pi_flag)
+	{
+	  unsigned int clockbit = (cond->__data.__nwaiters & 1
+				   ? 0 : FUTEX_CLOCK_REALTIME);
+	  err = lll_futex_timed_wait_requeue_pi (&cond->__data.__futex,
+						 futex_val, abstime, clockbit,
+						 &mutex->__data.__lock,
+						 pshared);
+	  pi_flag = (err == 0);
+	}
+      else
+#endif
+
+	{
 #if (!defined __ASSUME_FUTEX_CLOCK_REALTIME \
      || !defined lll_futex_timed_wait_bitset)
-      /* Wait until woken by signal or broadcast.  */
-      err = lll_futex_timed_wait (&cond->__data.__futex,
-				  futex_val, &rt, pshared);
+	  /* Wait until woken by signal or broadcast.  */
+	  err = lll_futex_timed_wait (&cond->__data.__futex,
+				      futex_val, &rt, pshared);
 #else
-      unsigned int clockbit = (cond->__data.__nwaiters & 1
-			       ? 0 : FUTEX_CLOCK_REALTIME);
-      err = lll_futex_timed_wait_bitset (&cond->__data.__futex, futex_val,
-					 abstime, clockbit, pshared);
+	  unsigned int clockbit = (cond->__data.__nwaiters & 1
+				   ? 0 : FUTEX_CLOCK_REALTIME);
+	  err = lll_futex_timed_wait_bitset (&cond->__data.__futex, futex_val,
+					     abstime, clockbit, pshared);
 #endif
+	}
 
       /* Disable asynchronous cancellation.  */
       __pthread_disable_asynccancel (cbuffer.oldtype);
@@ -217,7 +251,16 @@ __pthread_cond_timedwait (cond, mutex, abstime)
   __pthread_cleanup_pop (&buffer, 0);
 
   /* Get the mutex before returning.  */
-  err = __pthread_mutex_cond_lock (mutex);
+#if (defined lll_futex_timed_wait_requeue_pi \
+     && defined __ASSUME_REQUEUE_PI)
+  if (pi_flag)
+    {
+      __pthread_mutex_cond_lock_adjust (mutex);
+      err = 0;
+    }
+  else
+#endif
+    err = __pthread_mutex_cond_lock (mutex);
 
   return err ?: result;
 }
