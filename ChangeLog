@@ -1,3 +1,12 @@
+2013-02-18  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* elf/Versions (ld): Add _dl_find_dso_for_object.
+	* elf/dl-addr.c (_dl_addr): Use _dl_find_dso_for_object.
+	* elf/dl-open.c (_dl_find_dso_for_object): New function.
+	(dl_open_worker): Use _dl_find_dso_for_object.
+	* elf/dl-sym.c (do_sym): Likewise.
+	* sysdeps/generic/ldsodefs.h: Declare _dl_find_dso_for_object.
+
 2013-02-18  Andreas Krebbel  <Andreas.Krebbel@de.ibm.com>
 
 	* sysdeps/s390/s390-64/dl-trampoline.S (_dl_runtime_resolve):

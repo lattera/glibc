@@ -165,6 +165,29 @@ add_to_global (struct link_map *new)
   return 0;
 }
 
+/* Search link maps in all namespaces for the DSO that containes the object at
+   address ADDR.  Returns the pointer to the link map of the matching DSO, or
+   NULL if a match is not found.  */
+struct link_map *
+internal_function
+_dl_find_dso_for_object (const ElfW(Addr) addr)
+{
+  struct link_map *l;
+
+  /* Find the highest-addressed object that ADDR is not below.  */
+  for (Lmid_t ns = 0; ns < GL(dl_nns); ++ns)
+    for (l = GL(dl_ns)[ns]._ns_loaded; l != NULL; l = l->l_next)
+      if (addr >= l->l_map_start && addr < l->l_map_end
+	  && (l->l_contiguous
+	      || _dl_addr_inside_object (l, (ElfW(Addr)) addr)))
+	{
+	  assert (ns == l->l_ns);
+	  return l;
+	}
+  return NULL;
+}
+rtld_hidden_def (_dl_find_dso_for_object);
+
 static void
 dl_open_worker (void *a)
 {
@@ -194,20 +217,11 @@ dl_open_worker (void *a)
       call_map = GL(dl_ns)[LM_ID_BASE]._ns_loaded;
 #endif
 
-      struct link_map *l;
-      for (Lmid_t ns = 0; ns < GL(dl_nns); ++ns)
-	for (l = GL(dl_ns)[ns]._ns_loaded; l != NULL; l = l->l_next)
-	  if (caller_dlopen >= (const void *) l->l_map_start
-	      && caller_dlopen < (const void *) l->l_map_end
-	      && (l->l_contiguous
-		  || _dl_addr_inside_object (l, (ElfW(Addr)) caller_dlopen)))
-	    {
-	      assert (ns == l->l_ns);
-	      call_map = l;
-	      goto found_caller;
-	    }
+      struct link_map *l = _dl_find_dso_for_object ((ElfW(Addr)) caller_dlopen);
 
-    found_caller:
+      if (l)
+        call_map = l;
+
       if (args->nsid == __LM_ID_CALLER)
 	{
 #ifndef SHARED

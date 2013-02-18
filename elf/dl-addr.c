@@ -130,18 +130,14 @@ _dl_addr (const void *address, Dl_info *info,
   /* Protect against concurrent loads and unloads.  */
   __rtld_lock_lock_recursive (GL(dl_load_lock));
 
-  /* Find the highest-addressed object that ADDRESS is not below.  */
-  for (Lmid_t ns = 0; ns < GL(dl_nns); ++ns)
-    for (struct link_map *l = GL(dl_ns)[ns]._ns_loaded; l; l = l->l_next)
-      if (addr >= l->l_map_start && addr < l->l_map_end
-	  && (l->l_contiguous || _dl_addr_inside_object (l, addr)))
-	{
-	  determine_info (addr, l, info, mapp, symbolp);
-	  result = 1;
-	  goto out;
-	}
+  struct link_map *l = _dl_find_dso_for_object (addr);
 
- out:
+  if (l)
+    {
+      determine_info (addr, l, info, mapp, symbolp);
+      result = 1;
+    }
+
   __rtld_lock_unlock_recursive (GL(dl_load_lock));
 
   return result;

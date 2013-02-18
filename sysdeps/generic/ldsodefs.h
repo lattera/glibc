@@ -1006,6 +1006,10 @@ extern int _dl_addr_inside_object (struct link_map *l, const ElfW(Addr) addr)
 /* Show show of an object.  */
 extern void _dl_show_scope (struct link_map *new, int from);
 
+extern struct link_map *_dl_find_dso_for_object (const ElfW(Addr) addr)
+     internal_function;
+rtld_hidden_proto (_dl_find_dso_for_object)
+
 __END_DECLS
 
 #endif /* ldsodefs.h */
