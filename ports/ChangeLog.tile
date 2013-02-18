@@ -1,3 +1,10 @@
+2013-02-18  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx64/nptl/libc.abilist:
+	Add __cxa_thread_atexit_impl.
+	* sysdeps/unix/sysv/linux/tile/tilepro/nptl/libc.abilist:
+	Likewise.
+
 2013-01-10  Chris Metcalf  <cmetcalf@tilera.com>
 
 	* sysdeps/unix/sysv/linux/tile/tilegx/ldd-rewrite.sed: New file.

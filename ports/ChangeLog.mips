@@ -1,3 +1,12 @@
+2013-02-18  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* sysdeps/unix/sysv/linux/mips/mips32/nptl/libc.abilist: Add
+	__cxa_thread_atexit_impl.
+	* sysdeps/unix/sysv/linux/mips/mips64/n32/nptl/libc.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n64/nptl/libc.abilist:
+	Likewise.
+
 2013-02-13  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #13550]

@@ -100,6 +100,11 @@ extern int __cxa_atexit (void (*func) (void *), void *arg, void *d);
 extern int __cxa_atexit_internal (void (*func) (void *), void *arg, void *d)
      attribute_hidden;
 
+extern int __cxa_thread_atexit_impl (void (*func) (void *), void *arg,
+				     void *d);
+extern void __call_tls_dtors (void);
+libc_hidden_proto (__call_tls_dtors);
+
 extern void __cxa_finalize (void *d);
 
 extern int __posix_memalign (void **memptr, size_t alignment, size_t size);

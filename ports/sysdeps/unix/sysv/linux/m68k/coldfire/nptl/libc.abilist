@@ -87,6 +87,9 @@ GLIBC_2.17
  clock_nanosleep F
  clock_settime F
  secure_getenv F
+GLIBC_2.18
+ GLIBC_2.18 A
+ __cxa_thread_atexit_impl F
 GLIBC_2.4
  GLIBC_2.4 A
  _Exit F

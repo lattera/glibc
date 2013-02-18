@@ -302,6 +302,9 @@ struct link_map
     /* Index of the module in the dtv array.  */
     size_t l_tls_modid;
 
+    /* Number of thread_local objects constructed by this DSO.  */
+    size_t l_tls_dtor_count;
+
     /* Information used to change permission after the relocations are
        done.  */
     ElfW(Addr) l_relro_addr;

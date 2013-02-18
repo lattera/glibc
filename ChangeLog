@@ -1,5 +1,38 @@
 2013-02-18  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
+	* Versions.def: Add GLIBC_2.18.
+	* include/link.h (struct link_map): New member l_tls_dtor_count.
+	* include/stdlib.h (__cxa_thread_atexit_impl): Declare.
+	(__call_tls_dtors): Likewise.
+	* sysdeps/unix/sysv/linux/i386/nptl/libc.abilist: Add
+	__cxa_thread_atexit_impl.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/fpu/nptl/libc.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/nptl/libc.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/nptl/libc.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/nptl/libc.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/sh/nptl/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/nptl/libc.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/nptl/libc.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/64/nptl/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/x32/nptl/libc.abilist:
+	Likewise.
+	* stdlib/Makefile (routines): Add __cxa_thread_atexit_impl.
+	(tests): Add test case tst-tls-atexit.
+	(modules-names): Add shared library for tst-tls-atexit.
+	* stdlib/Versions (GLIBC_2.17): Add __cxa_thread_atexit_impl.
+	(GLIBC_PRIVATE): Add __call_tls_dtors.
+	* stdlib/cxa_thread_atexit_impl.c: New file with helper function
+	for libstdc++.
+	* stdlib/exit.c (__run_exit_handlers): Call __call_tls_dtors.
+	* stdlib/tst-tls-atexit.c: New test case.
+	* stdlib/tst-tls-atexit-lib.c: New test case.
+
 	* misc/tst-pselect.c: Include stdlib.h for declaration of exit.
 	* nptl/sysdeps/pthread/tst-timer.c: Likewise.
 	* nptl/tst-barrier4.c: Likewise.

@@ -106,6 +106,9 @@ libc {
   GLIBC_2.17 {
     secure_getenv;
   }
+  GLIBC_2.18 {
+    __cxa_thread_atexit_impl;
+  }
   GLIBC_PRIVATE {
     # functions which have an additional interface since they are
     # are cancelable.
@@ -114,5 +117,6 @@ libc {
     __abort_msg;
     # Used from other libraries
     __libc_secure_getenv;
+    __call_tls_dtors;
   }
 }

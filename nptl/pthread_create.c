@@ -311,6 +311,9 @@ start_thread (void *arg)
 #endif
     }
 
+  /* Call destructors for the thread_local TLS variables.  */
+  __call_tls_dtors ();
+
   /* Run the destructor for the thread-local data.  */
   __nptl_deallocate_tsd ();
 

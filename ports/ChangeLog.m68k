@@ -1,3 +1,10 @@
+2013-02-18  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* sysdeps/unix/sysv/linux/m68k/coldfire/nptl/libc.abilist: Add
+	__cxa_thread_atexit_impl.
+	* sysdeps/unix/sysv/linux/m68k/m680x0/nptl/libc.abilist:
+	Likewise.
+
 2013-02-08  Andreas Schwab  <schwab@linux-m68k.org>
 
 	* sysdeps/unix/sysv/linux/m68k/kernel-features.h
