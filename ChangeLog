@@ -34,9 +34,6 @@
 	* stdlib/tst-tls-atexit-lib.c: New test case.
 
 	* misc/tst-pselect.c: Include stdlib.h for declaration of exit.
-	* nptl/sysdeps/pthread/tst-timer.c: Likewise.
-	* nptl/tst-barrier4.c: Likewise.
-	* nptl/tst-robust7.c: Likewise.
 
 	* elf/Versions (ld): Add _dl_find_dso_for_object.
 	* elf/dl-addr.c (_dl_addr): Use _dl_find_dso_for_object.

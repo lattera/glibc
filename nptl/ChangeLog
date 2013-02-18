@@ -1,5 +1,10 @@
 2013-02-18  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
+	* sysdeps/pthread/tst-timer.c: Include stdlib.h for declaration
+	of exit.
+	* tst-barrier4.c: Likewise.
+	* tst-robust7.c: Likewise.
+
 	[BZ #14920]
 	* pthreadP.h (USE_REQUEUE_PI): New macro to check if mutex is
 	PI-aware.
