@@ -1,5 +1,9 @@
 2013-02-19  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
+	* math/atest-exp.c (exp_mpn): Remove ROUND.
+	* math/atest-exp2.c (exp_mpn): Likewise.
+	* math/atest-sincos.c (sincosx_mpn): Remove ROUND and CHK.
+
 	* stdlib/cxa_thread_atexit_impl.c: Fix Copyright year.
 	* stdlib/tst-tls-atexit-lib.c: Likewise.
 	* stdlib/tst-tls-atexit.c: Likewise.

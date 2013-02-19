@@ -102,7 +102,7 @@ exp_mpn (mp1 ex, mp1 x)
    unsigned int n;
    mp1 xp;
    mp2 tmp;
-   mp_limb_t chk, round;
+   mp_limb_t chk;
    mp1 tol;
 
    memset (xp, 0, sizeof (mp1));
@@ -120,7 +120,7 @@ exp_mpn (mp1 ex, mp1 x)
        mpn_mul_n (tmp, xp, x, SZ);
        assert(tmp[SZ * 2 - 1] == 0);
        if (n > 0)
-	 round = mpn_divmod_1 (xp, tmp + FRAC / mpbpl, SZ, n);
+	 mpn_divmod_1 (xp, tmp + FRAC / mpbpl, SZ, n);
        chk = mpn_add_n (ex, ex, xp, SZ);
        assert (chk == 0);
        ++n;
