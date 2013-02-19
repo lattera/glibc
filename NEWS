@@ -13,6 +13,10 @@ Version 2.18
   14982, 14985, 14994, 14996, 15003, 15006, 15020, 15023, 15036, 15054,
   15062, 15078.
 
+* Add support for calling C++11 thread_local object destructors on thread
+  and program exit.  This needs compiler support for offloading C++11
+  destructor calls to glibc.
+
 
 Version 2.17
 
