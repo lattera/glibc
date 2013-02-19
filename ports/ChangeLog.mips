@@ -1,3 +1,13 @@
+2013-02-19  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #14920]
+	* sysdeps/unix/sysv/linux/mips/nptl/lowlevellock.h
+	(FUTEX_WAIT_REQUEUE_PI): Define.
+	(FUTEX_CMP_REQUEUE_PI): Likewise.
+	(lll_futex_wait_requeue_pi): Likewise.
+	(lll_futex_timed_wait_requeue_pi): Likewise.
+	(lll_futex_cmp_requeue_pi): Likewise.
+
 2013-02-18  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* sysdeps/unix/sysv/linux/mips/mips32/nptl/libc.abilist: Add
