@@ -1,3 +1,8 @@
+2013-02-20  Thomas Schwinge  <thomas@codesourcery.com>
+
+	* sysdeps/ieee754/bits/nan.h [!__GNUC__] (__nan_union): Change
+	__attribute_used__ to __attribute__ ((unused)).
+
 2013-02-20  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* sysdeps/ieee754/dbl-64/mpa.c (__sqr): Copy over comment from

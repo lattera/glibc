@@ -1,5 +1,8 @@
 2013-02-20  Thomas Schwinge  <thomas@codesourcery.com>
 
+	* sysdeps/mips/bits/nan.h [!__GNUC__] (__nan_union): Change
+	__attribute_used__ to __attribute__ ((unused)).
+
 	* sysdeps/mips/bits/nan.h [!__GNUC__] (__nan_union): Add
 	__attribute_used__.
 

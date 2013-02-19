@@ -46,7 +46,7 @@
 # endif
 
 static union { unsigned char __c[4]; float __d; } __nan_union
-    __attribute_used__ = { __nan_bytes };
+  __attribute__ ((unused)) = { __nan_bytes };
 # define NAN	(__nan_union.__d)
 
 #endif	/* GCC.  */
