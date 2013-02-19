@@ -1,3 +1,8 @@
+2013-02-19  Jakub Jelinek  <jakub@redhat.com>
+
+	* stdlib/strtod_l.c (__mpn_lshift_1): Rewritten as function-like
+	macro.
+
 2013-02-19  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* stdlib/cxa_thread_atexit_impl.c: Fix Copyright year.
