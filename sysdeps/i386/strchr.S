@@ -31,14 +31,12 @@
 
 	.text
 ENTRY (BP_SYM (strchr))
-	ENTER
 
 	pushl %edi		/* Save callee-safe registers used here.  */
 	cfi_adjust_cfa_offset (4)
 	cfi_rel_offset (edi, 0)
 	movl STR(%esp), %eax
 	movl CHR(%esp), %edx
-	CHECK_BOUNDS_LOW (%eax, STR(%esp))
 
 	/* At the moment %edx contains C.  What we need for the
 	   algorithm is C in all bytes of the dword.  Avoid
@@ -243,12 +241,10 @@ L(11):	movl (%eax), %ecx	/* get word (= 4 bytes) in question */
 
 L(2):	/* Return NULL.  */
 	xorl %eax, %eax
-	RETURN_NULL_BOUNDED_POINTER
 	popl %edi		/* restore saved register content */
 	cfi_adjust_cfa_offset (-4)
 	cfi_restore (edi)
 
-	LEAVE
 	RET_PTR
 
 	cfi_adjust_cfa_offset (4)
@@ -285,13 +281,10 @@ L(7):	testb %cl, %cl		/* is first byte C? */
 	incl %eax
 
 L(6):
-	CHECK_BOUNDS_HIGH (%eax, STR(%esp), jb)
-	RETURN_BOUNDED_POINTER (STR(%esp))
 	popl %edi		/* restore saved register content */
 	cfi_adjust_cfa_offset (-4)
 	cfi_restore (edi)
 
-	LEAVE
 	RET_PTR
 END (BP_SYM (strchr))
 

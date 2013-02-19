@@ -42,7 +42,6 @@ ENTRY (__memcpy_chk)
 END (__memcpy_chk)
 #endif
 ENTRY (BP_SYM (memcpy))
-	ENTER
 
 	pushl	%edi
 	cfi_adjust_cfa_offset (4)
@@ -54,8 +53,6 @@ ENTRY (BP_SYM (memcpy))
 	movl	SRC(%esp), %esi
 	cfi_rel_offset (esi, 0)
 	movl	LEN(%esp), %ecx
-	CHECK_BOUNDS_BOTH_WIDE (%edi, DEST(%esp), %ecx)
-	CHECK_BOUNDS_BOTH_WIDE (%esi, SRC(%esp), %ecx)
 	movl	%edi, %eax
 
 	/* We need this in any case.  */
@@ -127,7 +124,6 @@ L(1):	rep; movsb
 	cfi_adjust_cfa_offset (-4)
 	cfi_restore (edi)
 
-	LEAVE
 	RET_PTR
 END (BP_SYM (memcpy))
 #if !MEMPCPY_P

@@ -28,12 +28,9 @@
 
         .text
 ENTRY (BP_SYM (strcmp))
-	ENTER
 
 	movl	STR1(%esp), %ecx
 	movl	STR2(%esp), %edx
-	CHECK_BOUNDS_LOW (%ecx, STR1(%esp))
-	CHECK_BOUNDS_LOW (%edx, STR2(%esp))
 
 L(oop):	movb	(%ecx), %al
 	cmpb	(%edx), %al
@@ -46,26 +43,12 @@ L(oop):	movb	(%ecx), %al
 	xorl	%eax, %eax
 	/* when strings are equal, pointers rest one beyond
 	   the end of the NUL terminators.  */
-	CHECK_BOUNDS_HIGH (%ecx, STR1(%esp), jbe)
-	CHECK_BOUNDS_HIGH (%edx, STR2(%esp), jbe)
-	LEAVE
 	ret
 
-#ifndef __BOUNDED_POINTERS__
 L(neq):	movl	$1, %eax
 	movl	$-1, %ecx
 	cmovbl	%ecx, %eax
-#else
-L(neq):	movl	$1, %eax
-	ja	L(chk)
-	negl	%eax
-	/* When strings differ, pointers rest on
-	   the unequal characters.  */
-L(chk):	CHECK_BOUNDS_HIGH (%ecx, STR1(%esp), jb)
-	CHECK_BOUNDS_HIGH (%edx, STR2(%esp), jb)
-#endif
 
-	LEAVE
 	ret
 END (BP_SYM (strcmp))
 libc_hidden_builtin_def (strcmp)

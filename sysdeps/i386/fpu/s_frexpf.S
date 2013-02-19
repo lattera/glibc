@@ -40,7 +40,6 @@ two25:	.byte 0, 0, 0, 0x4c
 
 	.text
 ENTRY (BP_SYM (__frexpf))
-	ENTER
 
 	movl	VAL(%esp), %eax
 	xorl	%ecx, %ecx
@@ -75,11 +74,9 @@ ENTRY (BP_SYM (__frexpf))
 	/* Store %ecx in the variable pointed to by the second argument,
 	   get the factor from the stack and return.  */
 1:	movl	EXPP(%esp), %eax
-	CHECK_BOUNDS_BOTH_WIDE (%eax, EXPP(%esp), $4)
 	flds	VAL(%esp)
 	movl	%ecx, (%eax)
 
-	LEAVE
 	ret
 END (BP_SYM (__frexpf))
 weak_alias (BP_SYM (__frexpf), BP_SYM (frexpf))

@@ -35,7 +35,6 @@
 
 	.text
 ENTRY (BP_SYM (STRCPY))
-	ENTER
 
 	pushl	%edi
 	cfi_adjust_cfa_offset (4)
@@ -48,8 +47,6 @@ ENTRY (BP_SYM (STRCPY))
 	cfi_rel_offset (edi, 8)
 	movl	SRC(%esp), %esi
 	cfi_rel_offset (esi, 4)
-	CHECK_BOUNDS_LOW (%edi, DEST(%esp))
-	CHECK_BOUNDS_LOW (%esi, SRC(%esp))
 
 	xorl	%eax, %eax
 	leal	-1(%esi), %ecx
@@ -158,7 +155,6 @@ L(end2):
 #else
 	movl	DEST(%esp), %eax
 #endif
-	RETURN_BOUNDED_POINTER (DEST(%esp))
 	popl	%ebx
 	cfi_adjust_cfa_offset (-4)
 	cfi_restore (ebx)
@@ -169,7 +165,6 @@ L(end2):
 	cfi_adjust_cfa_offset (-4)
 	cfi_restore (edi)
 
-	LEAVE
 	RET_PTR
 END (BP_SYM (STRCPY))
 #ifndef USE_AS_STPCPY

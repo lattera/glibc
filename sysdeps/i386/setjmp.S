@@ -28,10 +28,8 @@
 #define SIGMSK	JMPBUF+PTR_SIZE
 
 ENTRY (BP_SYM (__sigsetjmp))
-	ENTER
 
 	movl JMPBUF(%esp), %eax
-	CHECK_BOUNDS_BOTH_WIDE (%eax, JMPBUF(%esp), $JB_SIZE)
 
      	/* Save registers.  */
 	movl %ebx, (JB_BX*4)(%eax)
@@ -48,7 +46,6 @@ ENTRY (BP_SYM (__sigsetjmp))
 	PTR_MANGLE (%ecx)
 #endif
      	movl %ecx, (JB_PC*4)(%eax)
-	LEAVE /* pop frame pointer to prepare for tail-call.  */
 	movl %ebp, (JB_BP*4)(%eax) /* Save caller's frame pointer.  */
 
 #if defined NOT_IN_libc && defined IS_IN_rtld

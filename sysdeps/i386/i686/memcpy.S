@@ -38,7 +38,6 @@ ENTRY_CHK (__memcpy_chk)
 END_CHK (__memcpy_chk)
 #endif
 ENTRY (BP_SYM (memcpy))
-	ENTER
 
 	movl	%edi, %eax
 	movl	DEST(%esp), %edi
@@ -81,9 +80,7 @@ ENTRY (BP_SYM (memcpy))
 .Lend:	movl	%eax, %edi
 	movl	%edx, %esi
 	movl	DEST(%esp), %eax
-	RETURN_BOUNDED_POINTER (DEST(%esp))
 
-	LEAVE
 	RET_PTR
 
 	/* When we come here the pointers do not have the same

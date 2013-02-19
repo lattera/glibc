@@ -46,14 +46,12 @@ ENTRY_CHK (__memset_chk)
 END_CHK (__memset_chk)
 #endif
 ENTRY (BP_SYM (memset))
-	ENTER
 
 	cld
 	pushl	%edi
 	cfi_adjust_cfa_offset (4)
 	movl	DEST(%esp), %edx
 	movl	LEN(%esp), %ecx
-	CHECK_BOUNDS_BOTH_WIDE (%edx, DEST(%esp), %ecx)
 #if BZERO_P
 	xorl	%eax, %eax	/* fill with 0 */
 #else
@@ -90,13 +88,11 @@ ENTRY (BP_SYM (memset))
 1:
 #if !BZERO_P
 	movl DEST(%esp), %eax	/* start address of destination is result */
-	RETURN_BOUNDED_POINTER (DEST(%esp))
 #endif
 	popl	%edi
 	cfi_adjust_cfa_offset (-4)
 	cfi_restore (edi)
 
-	LEAVE
 #if BZERO_P
 	ret
 #else

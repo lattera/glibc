@@ -36,7 +36,6 @@
 
 	.text
 ENTRY (BP_SYM (__stpncpy))
-	ENTER
 
 	pushl %esi
 	cfi_adjust_cfa_offset (4)
@@ -45,8 +44,6 @@ ENTRY (BP_SYM (__stpncpy))
 	movl SRC(%esp), %esi
 	cfi_rel_offset (esi, 0)
 	movl LEN(%esp), %ecx
-	CHECK_BOUNDS_LOW (%eax, DEST(%esp))
-	CHECK_BOUNDS_LOW (%esi, SRC(%esp))
 
 	subl %eax, %esi		/* magic: reduce number of loop variants
 				   to one using addressing mode */
@@ -141,18 +138,10 @@ L(8):
 L(3):	decl %ecx		/* all bytes written? */
 	jnz L(8)		/* no, then again */
 
-L(9):
-#if __BOUNDED_POINTERS__
-	addl %eax, %esi		/* undo magic: %esi now points beyond end of SRC */
-	CHECK_BOUNDS_HIGH (%esi, SRC(%esp), jbe)
-	CHECK_BOUNDS_HIGH (%eax, DEST(%esp), jbe)
-	RETURN_BOUNDED_POINTER (DEST(%esp))
-#endif
-	popl %esi		/* restore saved register content */
+L(9):	popl %esi		/* restore saved register content */
 	cfi_adjust_cfa_offset (-4)
 	cfi_restore (esi)
 
-	LEAVE
 	RET_PTR
 END (BP_SYM (__stpncpy))
 

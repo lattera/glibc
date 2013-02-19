@@ -29,7 +29,6 @@
 
 	.text
 ENTRY (BP_SYM (__mpn_lshift))
-	ENTER
 
 	pushl	%edi
 	cfi_adjust_cfa_offset (4)
@@ -44,12 +43,6 @@ ENTRY (BP_SYM (__mpn_lshift))
 	cfi_rel_offset (esi, 4)
 	movl	SIZE(%esp),%edx
 	movl	CNT(%esp),%ecx
-#if __BOUNDED_POINTERS__
-	shll	$2, %edx		/* convert limbs to bytes */
-	CHECK_BOUNDS_BOTH_WIDE (%edi, RES(%esp), %edx)
-	CHECK_BOUNDS_BOTH_WIDE (%esi, S(%esp), %edx)
-	shrl	$2, %edx
-#endif
 	subl	$4,%esi			/* adjust s_ptr */
 
 	movl	(%esi,%edx,4),%ebx	/* read most significant limb */
@@ -92,7 +85,6 @@ L(1):	movl	(%esi,%edx,4),%eax
 	cfi_adjust_cfa_offset (-4)
 	cfi_restore (edi)
 
-	LEAVE
 	ret
 
 	cfi_restore_state
@@ -109,6 +101,5 @@ L(end):	shll	%cl,%ebx		/* compute least significant limb */
 	cfi_adjust_cfa_offset (-4)
 	cfi_restore (edi)
 
-	LEAVE
 	ret
 END (BP_SYM (__mpn_lshift))

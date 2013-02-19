@@ -41,10 +41,8 @@
 
 	.text
 ENTRY (BP_SYM (strlen))
-	ENTER
 
 	movl STR(%esp), %eax
-	CHECK_BOUNDS_LOW (%eax, STR(%esp))
 	movl $3, %edx		/* load mask (= 3) */
 
 	andl %eax, %edx		/* separate last two bits of address */
@@ -178,11 +176,9 @@ L(3):	subl $4, %eax		/* correct too early pointer increment */
 
 	incl %eax		/* increment pointer */
 
-L(2):	CHECK_BOUNDS_HIGH (%eax, STR(%esp), jb)
-	subl STR(%esp), %eax	/* now compute the length as difference
+L(2):	subl STR(%esp), %eax	/* now compute the length as difference
 				   between start and terminating NUL
 				   character */
-	LEAVE
 	ret
 END (BP_SYM (strlen))
 libc_hidden_builtin_def (strlen)

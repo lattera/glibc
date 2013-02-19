@@ -42,7 +42,6 @@ two64:	.byte 0, 0, 0, 0, 0, 0, 0xf0, 0x43
 
 	.text
 ENTRY (BP_SYM (__frexpl))
-	ENTER
 
 	movl	VAL0(%esp), %ecx
 	movl	VAL2(%esp), %eax
@@ -80,11 +79,9 @@ ENTRY (BP_SYM (__frexpl))
 	/* Store %ecx in the variable pointed to by the second argument,
 	   get the factor from the stack and return.  */
 1:	movl	EXPP(%esp), %eax
-	CHECK_BOUNDS_BOTH_WIDE (%eax, EXPP(%esp), $4)
 	fldt	VAL0(%esp)
 	movl	%ecx, (%eax)
 
-	LEAVE
 	ret
 END (BP_SYM (__frexpl))
 weak_alias (BP_SYM (__frexpl), BP_SYM (frexpl))

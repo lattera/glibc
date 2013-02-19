@@ -45,7 +45,6 @@ ENTRY (__memset_chk)
 END (__memset_chk)
 #endif
 ENTRY (BP_SYM (memset))
-	ENTER
 
 	pushl	%edi
 	cfi_adjust_cfa_offset (4)
@@ -53,7 +52,6 @@ ENTRY (BP_SYM (memset))
 	movl	DEST(%esp), %edi
 	cfi_rel_offset (edi, 0)
 	movl	LEN(%esp), %edx
-	CHECK_BOUNDS_BOTH_WIDE (%edi, DEST(%esp), %edx)
 #if BZERO_P
 	xorl	%eax, %eax	/* we fill with 0 */
 #else
@@ -111,13 +109,11 @@ L(2):	shrl	$2, %ecx	/* convert byte count to longword count */
 #if !BZERO_P
 	/* Load result (only if used as memset).  */
 	movl DEST(%esp), %eax	/* start address of destination is result */
-	RETURN_BOUNDED_POINTER (DEST(%esp))
 #endif
 	popl	%edi
 	cfi_adjust_cfa_offset (-4)
 	cfi_restore (edi)
 
-	LEAVE
 #if BZERO_P
 	ret
 #else

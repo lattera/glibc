@@ -26,9 +26,9 @@
 #define BLK2		BLK1+PTR_SIZE
 #define LEN		BLK2+PTR_SIZE
 #define ENTRANCE	pushl %ebx; cfi_adjust_cfa_offset (4); \
-			cfi_rel_offset (ebx, 0); ENTER
+			cfi_rel_offset (ebx, 0)
 #define RETURN		popl %ebx; cfi_adjust_cfa_offset (-4); \
-			cfi_restore (ebx); LEAVE; ret
+			cfi_restore (ebx); ret
 
 /* Load an entry in a jump table into EBX.  TABLE is a jump table
    with relative offsets.  INDEX is a register contains the index

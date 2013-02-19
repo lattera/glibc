@@ -28,7 +28,6 @@
 
 	.text
 ENTRY (BP_SYM (memcmp))
-	ENTER
 
 	pushl %esi		/* Save callee-safe registers.  */
 	cfi_adjust_cfa_offset (4)
@@ -40,8 +39,6 @@ ENTRY (BP_SYM (memcmp))
 	cfi_rel_offset (esi, 0)
 	movl BLK2(%esp), %edi
 	movl LEN(%esp), %ecx
-	CHECK_BOUNDS_LOW (%esi, BLK1(%esp))
-	CHECK_BOUNDS_LOW (%edi, BLK2(%esp))
 
 	cld			/* Set direction of comparison.  */
 
@@ -64,15 +61,12 @@ ENTRY (BP_SYM (memcmp))
 	   Note that the following operation does not change 0xffffffff.  */
 	orb $1, %al		/* Change 0 to 1.  */
 
-L(1):	CHECK_BOUNDS_HIGH (%esi, BLK1(%esp), jbe)
-	CHECK_BOUNDS_HIGH (%edi, BLK2(%esp), jbe)
-	popl %esi		/* Restore registers.  */
+L(1):	popl %esi		/* Restore registers.  */
 	cfi_adjust_cfa_offset (-4)
 	cfi_restore (esi)
 	movl %edx, %edi
 	cfi_restore (edi)
 
-	LEAVE
 	ret
 END (BP_SYM (memcmp))
 

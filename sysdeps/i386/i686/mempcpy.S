@@ -38,17 +38,14 @@ ENTRY_CHK (__mempcpy_chk)
 END_CHK (__mempcpy_chk)
 #endif
 ENTRY (BP_SYM (__mempcpy))
-	ENTER
 
 	movl	LEN(%esp), %ecx
 	movl	%edi, %eax
 	cfi_register (edi, eax)
 	movl	DEST(%esp), %edi
-	CHECK_BOUNDS_BOTH_WIDE (%edi, DEST(%esp), %ecx)
 	movl	%esi, %edx
 	cfi_register (esi, edx)
 	movl	SRC(%esp), %esi
-	CHECK_BOUNDS_BOTH_WIDE (%esi, SRC(%esp), %ecx)
 	cld
 	shrl	$1, %ecx
 	jnc	1f
@@ -62,9 +59,7 @@ ENTRY (BP_SYM (__mempcpy))
 	cfi_restore (edi)
 	movl	%edx, %esi
 	cfi_restore (esi)
-	RETURN_BOUNDED_POINTER (DEST(%esp))
 
-	LEAVE
 	RET_PTR
 END (BP_SYM (__mempcpy))
 libc_hidden_def (BP_SYM (__mempcpy))

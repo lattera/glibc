@@ -47,7 +47,6 @@ END_CHK (__memmove_chk)
 #endif
 
 ENTRY (BP_SYM (memmove))
-	ENTER
 
 	pushl	%edi
 	cfi_adjust_cfa_offset (4)
@@ -58,8 +57,6 @@ ENTRY (BP_SYM (memmove))
 	movl	%esi, %edx
 	movl	SRC(%esp), %esi
 	cfi_register (esi, edx)
-	CHECK_BOUNDS_BOTH_WIDE (%edi, DEST(%esp), %ecx)
-	CHECK_BOUNDS_BOTH_WIDE (%esi, SRC(%esp), %ecx)
 
 	movl	%edi, %eax
 	subl	%esi, %eax
@@ -79,14 +76,12 @@ ENTRY (BP_SYM (memmove))
 	cfi_restore (esi)
 #ifndef USE_AS_BCOPY
 	movl	DEST(%esp), %eax
-	RETURN_BOUNDED_POINTER (DEST(%esp))
 #endif
 
 	popl	%edi
 	cfi_adjust_cfa_offset (-4)
 	cfi_restore (edi)
 
-	LEAVE
 	RET_PTR
 
 	cfi_adjust_cfa_offset (4)
@@ -113,7 +108,6 @@ ENTRY (BP_SYM (memmove))
 	cfi_restore (esi)
 #ifndef USE_AS_BCOPY
 	movl	DEST(%esp), %eax
-	RETURN_BOUNDED_POINTER (DEST(%esp))
 #endif
 
 	cld
@@ -121,7 +115,6 @@ ENTRY (BP_SYM (memmove))
 	cfi_adjust_cfa_offset (-4)
 	cfi_restore (edi)
 
-	LEAVE
 	RET_PTR
 END (BP_SYM (memmove))
 #ifndef USE_AS_BCOPY

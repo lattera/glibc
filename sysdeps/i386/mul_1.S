@@ -35,7 +35,6 @@
 
 	.text
 ENTRY (BP_SYM (__mpn_mul_1))
-	ENTER
 
 	pushl	%res_ptr
 	cfi_adjust_cfa_offset (4)
@@ -53,12 +52,6 @@ ENTRY (BP_SYM (__mpn_mul_1))
 	movl	SIZE(%esp), %size
 	movl	S2LIMB(%esp), %s2_limb
 	cfi_rel_offset (s2_limb, 0)
-#if __BOUNDED_POINTERS__
-	shll	$2, %size	/* convert limbs to bytes */
-	CHECK_BOUNDS_BOTH_WIDE (%res_ptr, RES(%esp), %size)
-	CHECK_BOUNDS_BOTH_WIDE (%s1_ptr, S1(%esp), %size)
-	shrl	$2, %size
-#endif
 	leal	(%res_ptr,%size,4), %res_ptr
 	leal	(%s1_ptr,%size,4), %s1_ptr
 	negl	%size
@@ -90,7 +83,6 @@ L(oop):
 	cfi_adjust_cfa_offset (-4)
 	cfi_restore (res_ptr)
 
-	LEAVE
 	ret
 #undef size
 END (BP_SYM (__mpn_mul_1))

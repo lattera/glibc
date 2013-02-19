@@ -31,11 +31,9 @@
 #define SIGMSK	JMPBUF+PTR_SIZE
 
 ENTRY (BP_SYM (_setjmp))
-	ENTER
 
 	xorl %eax, %eax
 	movl JMPBUF(%esp), %edx
-	CHECK_BOUNDS_BOTH_WIDE (%edx, JMPBUF(%esp), $(JB_SIZE+4))
 
      	/* Save registers.  */
 	movl %ebx, (JB_BX*4)(%edx)
@@ -52,7 +50,6 @@ ENTRY (BP_SYM (_setjmp))
 	PTR_MANGLE (%ecx)
 #endif
      	movl %ecx, (JB_PC*4)(%edx)
-	LEAVE
 	movl %ebp, (JB_BP*4)(%edx) /* Save caller's frame pointer.  */
 
 	movl %eax, JB_SIZE(%edx) /* No signal mask set.  */

@@ -15,7 +15,6 @@
 
 	.text
 ENTRY (BP_SYM (__remquo))
-	ENTER
 
 	fldl	DVSOR(%esp)
 	fldl	DVDND(%esp)
@@ -36,7 +35,6 @@ ENTRY (BP_SYM (__remquo))
 	shrl	%cl, %eax
 	andl	$7, %eax
 	movl	QUOP(%esp), %ecx
-	CHECK_BOUNDS_BOTH_WIDE (%ecx, QUOP(%esp), $4)
 	movl	DVDND+4(%esp), %edx
 	xorl	DVSOR+4(%esp), %edx
 	testl	$0x80000000, %edx
@@ -44,7 +42,6 @@ ENTRY (BP_SYM (__remquo))
 	negl	%eax
 1:	movl	%eax, (%ecx)
 
-	LEAVE
 	ret
 END (BP_SYM (__remquo))
 weak_alias (BP_SYM (__remquo), BP_SYM (remquo))

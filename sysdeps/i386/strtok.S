@@ -46,11 +46,7 @@
 	.type save_ptr, @object
 	.size save_ptr, 4
 save_ptr:
-# if __BOUNDED_POINTERS__
-	.space 12
-# else
 	.space 4
-# endif
 
 # ifdef PIC
 #  define SAVE_PTR save_ptr@GOTOFF(%ebx)
@@ -69,11 +65,9 @@ save_ptr:
 
 	.text
 ENTRY (BP_SYM (FUNCTION))
-	ENTER
 
 	movl STR(%esp), %edx
 	movl DELIM(%esp), %eax
-	CHECK_BOUNDS_LOW (%eax, DELIM(%esp))
 
 #if !defined USE_AS_STRTOK_R && defined PIC
 	pushl %ebx			/* Save PIC register.  */
@@ -90,22 +84,7 @@ L(here):
 	/* If the pointer is NULL we have to use the stored value of
 	   the last run.  */
 	cmpl $0, %edx
-#if __BOUNDED_POINTERS__
-	movl SAVE(%esp), %ecx
-	je L(0)
-	/* Save bounds of incoming non-NULL STR into save area.  */
-	movl 4+STR(%esp), %eax
-	movl %eax, 4+SAVE_PTR
-	movl 8+STR(%esp), %eax
-	movl %eax, 8+SAVE_PTR
-	CHECK_BOUNDS_LOW (%edx, SAVE_PTR)
-	jmp L(1)
-L(0):	movl SAVE_PTR, %edx
-	CHECK_BOUNDS_LOW (%edx, SAVE_PTR)
-	jmp L(1)
-#else
 	jne L(1)
-#endif
 
 #ifdef USE_AS_STRTOK_R
 	/* The value is stored in the third argument.  */
@@ -267,12 +246,12 @@ L(2):	movb (%eax), %cl	/* get byte from stopset */
 
 	movb 1(%eax), %cl	/* get byte from stopset */
 	testb $0xff, %cl	/* is NUL char? */
-	jz L(1_2)		/* yes => start compare loop */
+	jz L(1_1)		/* yes => start compare loop */
 	movb %cl, (%esp,%ecx)	/* set corresponding byte in stopset table */
 
 	movb 2(%eax), %cl	/* get byte from stopset */
 	testb $0xff, %cl	/* is NUL char? */
-	jz L(1_3)		/* yes => start compare loop */
+	jz L(1_1)		/* yes => start compare loop */
 	movb %cl, (%esp,%ecx)	/* set corresponding byte in stopset table */
 
 	movb 3(%eax), %cl	/* get byte from stopset */
@@ -281,16 +260,7 @@ L(2):	movb (%eax), %cl	/* get byte from stopset */
 	testb $0xff, %cl	/* is NUL char? */
 	jnz L(2)		/* no => process next dword from stopset */
 
-#if __BOUNDED_POINTERS__
-	jmp L(1_0)		/* pointer is correct for bounds check */
-L(1_3):	incl %eax		/* adjust pointer for bounds check */
-L(1_2):	incl %eax		/* ditto */
-L(1_1):	incl %eax		/* ditto */
-L(1_0):	CHECK_BOUNDS_HIGH (%eax, DELIM(%esp), jbe)
-#else
-L(1_3):; L(1_2):; L(1_1):	/* fall through */
-#endif
-	leal -4(%edx), %eax	/* prepare loop */
+L(1_1):	leal -4(%edx), %eax	/* prepare loop */
 
 	/* We use a neat trick for the following loop.  Normally we would
 	   have to test for two termination conditions
@@ -370,8 +340,6 @@ L(11):
 	movl SAVE(%esp), %ecx
 #endif
 	movl %edx, SAVE_PTR
-	CHECK_BOUNDS_HIGH (%edx, SAVE_PTR, jb)
-	RETURN_BOUNDED_POINTER (SAVE_PTR)
 
 L(epilogue):
 #if !defined USE_AS_STRTOK_R && defined PIC
@@ -379,7 +347,6 @@ L(epilogue):
 	cfi_adjust_cfa_offset (-4)
 	cfi_restore (ebx)
 #endif
-	LEAVE
 	RET_PTR
 
 L(returnNULL):
@@ -388,7 +355,6 @@ L(returnNULL):
 	movl SAVE(%esp), %ecx
 #endif
 	movl %edx, SAVE_PTR
-	RETURN_NULL_BOUNDED_POINTER
 	jmp L(epilogue)
 
 END (BP_SYM (FUNCTION))

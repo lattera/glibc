@@ -1,3 +1,109 @@
+2013-02-19  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #13550]
+	* sysdeps/i386/bp-asm.h [__BOUNDED_POINTERS__] (BOUNDS_VIOLATED):
+	Remove macro.
+	(ENTER): Remove both macro definitions.
+	(LEAVE): Likewise.
+	(CHECK_BOUNDS_LOW): Likewise.
+	(CHECK_BOUNDS_HIGH): Likewise.
+	(CHECK_BOUNDS_BOTH): Likewise.
+	(CHECK_BOUNDS_BOTH_WIDE): Likewise.
+	(RETURN_BOUNDED_POINTER): Likewise.
+	(RETURN_NULL_BOUNDED_POINTER): Likewise.
+	(PUSH_ERRNO_LOCATION_RETURN): Likewise.
+	(POP_ERRNO_LOCATION_RETURN): Likewise.
+	* sysdeps/i386/add_n.S (__mpn_add_n): Do not use removed macros.
+	(__mpn_add_n) [__BOUNDED_POINTERS__]: Remove conditional code.
+	* sysdeps/i386/addmul_1.S (__mpn_addmul_1): Do not use removed
+	macros.
+	(__mpn_addmul_1) [__BOUNDED_POINTERS__]: Remove conditional code.
+	* sysdeps/i386/bsd-_setjmp.S (_setjmp): Do not use removed macros.
+	* sysdeps/i386/bsd-setjmp.S (setjmp): Likewise.
+	* sysdeps/i386/fpu/s_frexp.S (__frexp): Likewise.
+	* sysdeps/i386/fpu/s_frexpf.S (__frexpf): Likewise.
+	* sysdeps/i386/fpu/s_frexpl.S (__frexpl): Likewise.
+	* sysdeps/i386/fpu/s_remquo.S (__remquo): Likewise.
+	* sysdeps/i386/fpu/s_remquof.S (__remquof): Likewise.
+	* sysdeps/i386/fpu/s_remquol.S (__remquol): Likewise.
+	* sysdeps/i386/i486/strcat.S (strcat): Likewise.
+	* sysdeps/i386/i486/strlen.S (strlen): Likewise.
+	* sysdeps/i386/i586/add_n.S (__mpn_add_n): Likewise.
+	(__mpn_add_n) [__BOUNDED_POINTERS__]: Remove conditional code.
+	* sysdeps/i386/i586/addmul_1.S (__mpn_addmul_1): Do not use
+	removed macros.
+	(__mpn_addmul_1) [__BOUNDED_POINTERS__]: Remove conditional code.
+	* sysdeps/i386/i586/lshift.S (__mpn_lshift): Do not use removed
+	macros.
+	(__mpn_lshift) [__BOUNDED_POINTERS__]: Remove conditional code.
+	* sysdeps/i386/i586/memcpy.S (memcpy): Do not use removed macros.
+	* sysdeps/i386/i586/memset.S (memset): Likewise.
+	* sysdeps/i386/i586/mul_1.S (__mpn_mul_1): Likewise.
+	(__mpn_mul_1) [__BOUNDED_POINTERS__]: Remove conditional code.
+	* sysdeps/i386/i586/rshift.S (__mpn_rshift): Do not use removed
+	macros.
+	(__mpn_rshift) [__BOUNDED_POINTERS__]: Remove conditional code.
+	* sysdeps/i386/i586/strchr.S (strchr): Do not use removed macros.
+	Change uses of L(2) to L(out).
+	* sysdeps/i386/i586/strcpy.S (STRCPY): Do not use removed macros.
+	* sysdeps/i386/i586/strlen.S (strlen): Likewise.
+	* sysdeps/i386/i586/sub_n.S (__mpn_sub_n): Likewise.
+	(__mpn_sub_n) [__BOUNDED_POINTERS__]: Remove conditional code.
+	* sysdeps/i386/i586/submul_1.S (__mpn_submul_1): Do not use
+	removed macros.
+	(__mpn_submul_1) [__BOUNDED_POINTERS__]: Remove conditional code.
+	* sysdeps/i386/i686/add_n.S (__mpn_add_n): Do not use removed
+	macros.
+	(__mpn_add_n) [__BOUNDED_POINTERS__]: Remove conditional code.
+	* sysdeps/i386/i686/memcmp.S (ENTRANCE): Do not use macro ENTER.
+	(RETURN): Do not use macro LEAVE.
+	* sysdeps/i386/i686/memcpy.S (memcpy): Do not use removed macros.
+	* sysdeps/i386/i686/memmove.S (memmove): Likewise.
+	* sysdeps/i386/i686/mempcpy.S (mempcpy): Likewise.
+	* sysdeps/i386/i686/memset.S (memset): Likewise.
+	* sysdeps/i386/i686/strcmp.S (strcmp): Likewise.
+	(strcmp) [!__BOUNDED_POINTERS__]: Make code unconditional.
+	(strcmp) [__BOUNDED_POINTERS__]: Remove conditional code.
+	* sysdeps/i386/i686/strtok.S (save_ptr) [__BOUNDED_POINTERS__]:
+	Likewise.
+	(save_ptr) [!__BOUNDED_POINTERS__]: Make code unconditional.
+	(FUNCTION): Do not use removed macros.  Combine labels L(1_1),
+	L(1_2) and L(1_3) into L(1).
+	(FUNCTION) [__BOUNDED_POINTERS__]: Remove conditional code.
+	* sysdeps/i386/lshift.S (__mpn_lshift): Do not use removed macros.
+	(__mpn_lshift) [__BOUNDED_POINTERS__]: Remove conditional code.
+	* sysdeps/i386/memchr.S (__memchr): Do not use removed macros.
+	(__memchr) [__BOUNDED_POINTERS__]: Remove conditional code.
+	* sysdeps/i386/memcmp.S (memcmp): Do not use removed macros.
+	* sysdeps/i386/mul_1.S (__mpn_mul_1): Likewise.
+	(__mpn_mul_1) [__BOUNDED_POINTERS__]: Remove conditional code.
+	* sysdeps/i386/rawmemchr.S (__rawmemchr): Do not use removed
+	macros.
+	* sysdeps/i386/rshift.S (__mpn_rshift): Likewise.
+	(__mpn_rshift) [__BOUNDED_POINTERS__]: Remove conditional code.
+	* sysdeps/i386/setjmp.S (__sigsetjmp): Do not use removed macros.
+	* sysdeps/i386/stpcpy.S (__stpcpy): Likewise.
+	* sysdeps/i386/stpncpy.S (__stpncpy): Likewise.
+	(__stpncpy) [__BOUNDED_POINTERS__]: Remove conditional code.
+	* sysdeps/i386/strchr.S (strchr): Do not use removed macros.
+	* sysdeps/i386/strchrnul.S (__strchrnul): Likewise.
+	* sysdeps/i386/strcspn.S (strcspn): Likewise.
+	* sysdeps/i386/strpbrk.S (strpbrk): Likewise.
+	* sysdeps/i386/strrchr.S (strrchr): Likewise.
+	* sysdeps/i386/strspn.S (strspn): Likewise.
+	* sysdeps/i386/strtok.S (save_ptr) [__BOUNDED_POINTERS__]: Remove
+	conditional code.
+	(save_ptr) [!__BOUNDED_POINTERS__]: Make code unconditional.
+	(FUNCTION) [!__BOUNDED_POINTERS__]: Likewise.
+	(FUNCTION) [__BOUNDED_POINTERS__]: Remove conditional code.
+	(FUNCTION): Do not use removed macros.  Combine labels L(1_2) and
+	L(1_3) into L(1_1).
+	* sysdeps/i386/sub_n.S (__mpn_sub_n): Do not use removed macros.
+	(__mpn_sub_n) [__BOUNDED_POINTERS__]: Remove conditional code.
+	* sysdeps/i386/submul_1.S (__mpn_submul_1): Do not use removed
+	macros.
+	(__mpn_submul_1) [__BOUNDED_POINTERS__]: Remove conditional code.
+
 2013-02-19  Jakub Jelinek  <jakub@redhat.com>
 
 	* stdlib/strtod_l.c (__mpn_lshift_1): Rewritten as function-like

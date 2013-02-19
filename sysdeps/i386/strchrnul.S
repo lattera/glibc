@@ -32,7 +32,6 @@
 
 	.text
 ENTRY (BP_SYM (__strchrnul))
-	ENTER
 
 	pushl %edi		/* Save callee-safe registers used here.  */
 	cfi_adjust_cfa_offset (4)
@@ -40,7 +39,6 @@ ENTRY (BP_SYM (__strchrnul))
 
 	movl STR(%esp), %eax
 	movl CHR(%esp), %edx
-	CHECK_BOUNDS_LOW (%eax, STR(%esp))
 
 	/* At the moment %edx contains CHR.  What we need for the
 	   algorithm is CHR in all bytes of the dword.  Avoid
@@ -272,13 +270,10 @@ L(7):	testb %cl, %cl		/* is first byte CHR? */
 	/* It must be in the fourth byte and it cannot be NUL.  */
 	incl %eax
 
-L(6):	CHECK_BOUNDS_HIGH (%eax, STR(%esp), jb)
-	RETURN_BOUNDED_POINTER (STR(%esp))
-	popl %edi		/* restore saved register content */
+L(6):	popl %edi		/* restore saved register content */
 	cfi_adjust_cfa_offset (-4)
 	cfi_restore (edi)
 
-	LEAVE
 	RET_PTR
 END (BP_SYM (__strchrnul))
 

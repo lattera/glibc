@@ -34,10 +34,8 @@ ENTRY (BP_SYM (setjmp))
 	/* Note that we have to use a non-exported symbol in the next
 	   jump since otherwise gas will emit it as a jump through the
 	   PLT which is what we cannot use here.  */
-	ENTER
 
 	movl JMPBUF(%esp), %eax
-	CHECK_BOUNDS_BOTH_WIDE (%eax, JMPBUF(%esp), $JB_SIZE)
 
      	/* Save registers.  */
 	movl %ebx, (JB_BX*4)(%eax)
@@ -54,7 +52,6 @@ ENTRY (BP_SYM (setjmp))
 	PTR_MANGLE (%ecx)
 #endif
      	movl %ecx, (JB_PC*4)(%eax)
-	LEAVE /* pop frame pointer to prepare for tail-call.  */
 	movl %ebp, (JB_BP*4)(%eax) /* Save caller's frame pointer.  */
 
 	/* Call __sigjmp_save.  */
