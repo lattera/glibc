@@ -1,3 +1,9 @@
+2013-02-19  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* stdlib/cxa_thread_atexit_impl.c: Fix Copyright year.
+	* stdlib/tst-tls-atexit-lib.c: Likewise.
+	* stdlib/tst-tls-atexit.c: Likewise.
+
 2013-02-18  Mike Frysinger  <vapier@gentoo.org>
 
 	* stdlib/stdlib.h (aligned_alloc): Use __attribute_malloc__
