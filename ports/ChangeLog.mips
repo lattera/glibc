@@ -1,5 +1,8 @@
 2013-02-20  Thomas Schwinge  <thomas@codesourcery.com>
 
+	* sysdeps/mips/bits/nan.h [!__GNUC__] (__nan_union): Add
+	__attribute_used__.
+
 	* sysdeps/mips/bits/nan.h: Align to generic IEEE 754 file.
 
 2013-02-19  Joseph Myers  <joseph@codesourcery.com>
