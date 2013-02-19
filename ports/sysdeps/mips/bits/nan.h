@@ -1,4 +1,4 @@
-/* `NAN' constant for IEEE 754 machines.
+/* `NAN' constant for IEEE 754 machines.  MIPS version.
    Copyright (C) 1992-2013 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -13,7 +13,7 @@
    Lesser General Public License for more details.
 
    You should have received a copy of the GNU Lesser General Public
-   License along with the GNU C Library.  If not, see
+   License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
 #ifndef _MATH_H
@@ -21,20 +21,21 @@
 #endif
 
 
-/* IEEE Not A Number (QNaN). Note that MIPS has the QNaN and SNaN patterns
-   reversed compared to most other architectures. The IEEE spec left
-   the definition of this open to implementations, and for MIPS the top
-   bit of the mantissa must be SET to indicate a SNaN.  */
+/* IEEE Not A Number.  */
+/* Note that MIPS has the QNaN and SNaN patterns reversed compared to most
+   other architectures.  The IEEE spec left the definition of this open to
+   implementations, and for MIPS the top bit of the mantissa must be SET to
+   indicate a SNaN.  */
 
 #if __GNUC_PREREQ(3,3)
 
-# define NAN	(__builtin_nanf(""))
+# define NAN	(__builtin_nanf (""))
 
 #elif defined __GNUC__
 
 # define NAN \
-  (__extension__                                                            \
-   ((union { unsigned __l __attribute__((__mode__(__SI__))); float __d; })  \
+  (__extension__							      \
+   ((union { unsigned __l __attribute__ ((__mode__ (__SI__))); float __d; })  \
     { __l: 0x7fbfffffUL }).__d)
 
 #else
