@@ -1,3 +1,8 @@
+2013-02-20  Carlos O'Donell  <carlos@redhat.com>
+
+	* manual/nss.texi (System Databases and Name Service Switch):
+	Remove frobnicate @pxref.
+
 2013-02-20  Thomas Schwinge  <thomas@codesourcery.com>
 
 	* sysdeps/ieee754/bits/nan.h [!__GNUC__] (__nan_union): Change

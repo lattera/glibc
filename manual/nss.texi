@@ -10,7 +10,7 @@ correctly in the local environment.  Traditionally, this was done by
 using files (e.g., @file{/etc/passwd}), but other nameservices (like the
 Network Information Service (NIS) and the Domain Name Service (DNS))
 became popular, and were hacked into the C library, usually with a fixed
-search order (@pxref{frobnicate, , ,jargon, The Jargon File}).
+search order.
 
 @Theglibc{} contains a cleaner solution of this problem.  It is
 designed after a method used by Sun Microsystems in the C library of
