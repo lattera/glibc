@@ -1,5 +1,8 @@
 2013-02-20  Thomas Schwinge  <thomas@codesourcery.com>
 
+	* sysdeps/mips/bits/nan.h [!__GNUC__] (__nan_union): Change
+	__attribute__ ((unused)) to __attribute__ ((__unused__)).
+
 	* sysdeps/unix/sysv/linux/mips/mips32/nptl/libc.abilist: Sort
 	properly.
 

@@ -1,3 +1,8 @@
+2013-02-20  Thomas Schwinge  <thomas@codesourcery.com>
+
+	* sysdeps/ieee754/bits/nan.h [!__GNUC__] (__nan_union): Change
+	__attribute__ ((unused)) to __attribute__ ((__unused__)).
+
 2013-02-20  Petr Machata  <pmachata@redhat.com>
 
 	* elf/elf.h (R_ARM_TARGET1): New macro.
