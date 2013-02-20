@@ -598,7 +598,7 @@ __mul (const mp_no *x, const mp_no *y, mp_no *z, int p)
   long p2 = p;
   double u, zk, zk2;
 
-  /* Is z=0? */
+  /* Is z=0?  */
   if (X[0] * Y[0] == ZERO)
     {
       Z[0] = ZERO;

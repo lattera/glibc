@@ -749,6 +749,15 @@ __sqr (const mp_no *x, mp_no *y, int p)
       if (k % 2 == 0)
 	yk += X[lim] * X[lim];
 
+      /* In __mul, this loop (and the one within the next while loop) run
+         between a range to calculate the mantissa as follows:
+
+         Z[k] = X[k] * Y[n] + X[k+1] * Y[n-1] ... + X[n-1] * Y[k+1]
+		+ X[n] * Y[k]
+
+         For X == Y, we can get away with summing halfway and doubling the
+	 result.  For cases where the range size is even, the mid-point needs
+	 to be added separately (above).  */
       for (i = k - p, j = p; i < j; i++, j--)
 	yk2 += X[i] * X[j];
 
@@ -769,6 +778,7 @@ __sqr (const mp_no *x, mp_no *y, int p)
       if (k % 2 == 0)
 	yk += X[lim] * X[lim];
 
+      /* Likewise for this loop.  */
       for (i = 1, j = k - 1; i < j; i++, j--)
 	yk2 += X[i] * X[j];
 

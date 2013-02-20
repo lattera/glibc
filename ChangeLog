@@ -1,3 +1,11 @@
+2013-02-20  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* sysdeps/ieee754/dbl-64/mpa.c (__sqr): Copy over comment from
+	powerpc mpa.c.
+	* sysdeps/powerpc/powerpc32/power4/fpu/mpa.c (__mul): Fix
+	comment formatting.
+	* sysdeps/powerpc/powerpc64/power4/fpu/mpa.c (__mul): Likewise.
+
 2013-02-19  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #13550]
