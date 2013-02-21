@@ -18,17 +18,15 @@
 
 #include "sysdep.h"
 #include "asm-syntax.h"
-#include "bp-sym.h"
-#include "bp-asm.h"
 
-#define PARMS	LINKAGE+16		/* space for 4 saved regs */
+#define PARMS	4+16		/* space for 4 saved regs */
 #define RES	PARMS
-#define S	RES+PTR_SIZE
-#define SIZE	S+PTR_SIZE
+#define S	RES+4
+#define SIZE	S+4
 #define CNT	SIZE+4
 
 	.text
-ENTRY (BP_SYM (__mpn_lshift))
+ENTRY (__mpn_lshift)
 
 	pushl	%edi
 	cfi_adjust_cfa_offset (4)
@@ -254,4 +252,4 @@ L(L1):	movl	%edx,(%edi)		/* store last limb */
 	cfi_restore (edi)
 
 	ret
-END (BP_SYM (__mpn_lshift))
+END (__mpn_lshift)

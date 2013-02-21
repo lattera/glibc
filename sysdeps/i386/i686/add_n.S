@@ -19,21 +19,19 @@
 
 #include "sysdep.h"
 #include "asm-syntax.h"
-#include "bp-sym.h"
-#include "bp-asm.h"
 
-#define PARMS	LINKAGE+8		/* space for 2 saved regs */
+#define PARMS	4+8		/* space for 2 saved regs */
 #define RES	PARMS
-#define S1	RES+PTR_SIZE
-#define S2	S1+PTR_SIZE
-#define SIZE	S2+PTR_SIZE
+#define S1	RES+4
+#define S2	S1+4
+#define SIZE	S2+4
 
 	.text
 #ifdef PIC
 L(1):	addl    (%esp), %eax
 	ret
 #endif
-ENTRY (BP_SYM (__mpn_add_n))
+ENTRY (__mpn_add_n)
 
 	pushl %edi
 	cfi_adjust_cfa_offset (4)
@@ -109,4 +107,4 @@ L(oop):	movl	(%esi),%eax
 	cfi_restore (edi)
 
 	ret
-END (BP_SYM (__mpn_add_n))
+END (__mpn_add_n)

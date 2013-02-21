@@ -19,15 +19,13 @@
 #include <sysdep.h>
 #include <jmpbuf-offsets.h>
 #include <asm-syntax.h>
-#include "bp-sym.h"
-#include "bp-asm.h"
 #include <stap-probe.h>
 
-#define PARMS	LINKAGE		/* no space for saved regs */
+#define PARMS	4		/* no space for saved regs */
 #define JMPBUF	PARMS
-#define SIGMSK	JMPBUF+PTR_SIZE
+#define SIGMSK	JMPBUF+4
 
-ENTRY (BP_SYM (__sigsetjmp))
+ENTRY (__sigsetjmp)
 
 	movl JMPBUF(%esp), %eax
 
@@ -40,7 +38,7 @@ ENTRY (BP_SYM (__sigsetjmp))
 	PTR_MANGLE (%ecx)
 #endif
      	movl %ecx, (JB_SP*4)(%eax)
-	movl PCOFF(%esp), %ecx	/* Save PC we are returning to now.  */
+	movl 0(%esp), %ecx	/* Save PC we are returning to now.  */
 	LIBC_PROBE (setjmp, 3, 4@%eax, -4@SIGMSK(%esp), 4@%ecx)
 #ifdef PTR_MANGLE
 	PTR_MANGLE (%ecx)
@@ -56,4 +54,4 @@ ENTRY (BP_SYM (__sigsetjmp))
 	/* Make a tail call to __sigjmp_save; it takes the same args.  */
 	jmp __sigjmp_save
 #endif
-END (BP_SYM (__sigsetjmp))
+END (__sigsetjmp)

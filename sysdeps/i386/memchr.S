@@ -28,17 +28,15 @@
 
 #include <sysdep.h>
 #include "asm-syntax.h"
-#include "bp-sym.h"
-#include "bp-asm.h"
 
-#define PARMS	LINKAGE+8		/* space for 2 saved regs */
+#define PARMS	4+8		/* space for 2 saved regs */
 #define RTN	PARMS
-#define STR	RTN+RTN_SIZE
-#define CHR	STR+PTR_SIZE
+#define STR	RTN
+#define CHR	STR+4
 #define LEN	CHR+4
 
 	.text
-ENTRY (BP_SYM (__memchr))
+ENTRY (__memchr)
 
 	/* Save callee-safe registers used in this function.  */
 	pushl %esi
@@ -317,8 +315,8 @@ L(9):	popl %edi		/* pop saved registers */
 	cfi_adjust_cfa_offset (-4)
 	cfi_restore (esi)
 
-	RET_PTR
-END (BP_SYM (__memchr))
+	ret
+END (__memchr)
 
-weak_alias (BP_SYM (__memchr), BP_SYM (memchr))
+weak_alias (__memchr, memchr)
 libc_hidden_builtin_def (memchr)

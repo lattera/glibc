@@ -19,15 +19,13 @@
 
 #include <sysdep.h>
 #include "asm-syntax.h"
-#include "bp-sym.h"
-#include "bp-asm.h"
 
-#define PARMS	LINKAGE		/* no space for saved regs */
+#define PARMS	4		/* no space for saved regs */
 #define STR1	PARMS
-#define STR2	STR1+PTR_SIZE
+#define STR2	STR1+4
 
         .text
-ENTRY (BP_SYM (strcmp))
+ENTRY (strcmp)
 
 	movl	STR1(%esp), %ecx
 	movl	STR2(%esp), %edx
@@ -50,5 +48,5 @@ L(neq):	movl	$1, %eax
 	cmovbl	%ecx, %eax
 
 	ret
-END (BP_SYM (strcmp))
+END (strcmp)
 libc_hidden_builtin_def (strcmp)

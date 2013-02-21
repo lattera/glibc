@@ -22,15 +22,13 @@
 
 #include <sysdep.h>
 #include <jmpbuf-offsets.h>
-#include "bp-sym.h"
-#include "bp-asm.h"
 #include <stap-probe.h>
 
-#define PARMS	LINKAGE		/* no space for saved regs */
+#define PARMS	4		/* no space for saved regs */
 #define JMPBUF	PARMS
-#define SIGMSK	JMPBUF+PTR_SIZE
+#define SIGMSK	JMPBUF+4
 
-ENTRY (BP_SYM (_setjmp))
+ENTRY (_setjmp)
 
 	xorl %eax, %eax
 	movl JMPBUF(%esp), %edx
@@ -44,7 +42,7 @@ ENTRY (BP_SYM (_setjmp))
 	PTR_MANGLE (%ecx)
 #endif
      	movl %ecx, (JB_SP*4)(%edx)
-	movl PCOFF(%esp), %ecx	/* Save PC we are returning to now.  */
+	movl 0(%esp), %ecx	/* Save PC we are returning to now.  */
 	LIBC_PROBE (setjmp, 3, 4@%edx, -4@$0, 4@%ecx)
 #ifdef PTR_MANGLE
 	PTR_MANGLE (%ecx)
@@ -54,5 +52,5 @@ ENTRY (BP_SYM (_setjmp))
 
 	movl %eax, JB_SIZE(%edx) /* No signal mask set.  */
 	ret
-END (BP_SYM (_setjmp))
+END (_setjmp)
 libc_hidden_def (_setjmp)

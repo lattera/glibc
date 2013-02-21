@@ -20,8 +20,6 @@
 
 #include <sysdep.h>
 #include "asm-syntax.h"
-#include "bp-sym.h"
-#include "bp-asm.h"
 
 /* This version is especially optimized for the i586 (and following?)
    processors.  This is mainly done by using the two pipelines.  The
@@ -36,13 +34,13 @@
 /* The magic value which is used throughout in the whole code.  */
 #define magic 0xfefefeff
 
-#define PARMS	LINKAGE+16	/* space for 4 saved regs */
+#define PARMS	4+16	/* space for 4 saved regs */
 #define RTN	PARMS
-#define STR	RTN+RTN_SIZE
-#define CHR	STR+PTR_SIZE
+#define STR	RTN
+#define CHR	STR+4
 
 	.text
-ENTRY (BP_SYM (strchr))
+ENTRY (strchr)
 
 	pushl %edi		/* Save callee-safe registers.  */
 	cfi_adjust_cfa_offset (-4)
@@ -301,7 +299,7 @@ L(out):	popl %ebp		/* restore saved registers */
 	cfi_adjust_cfa_offset (-4)
 	cfi_restore (edi)
 
-	RET_PTR
+	ret
 
 	cfi_adjust_cfa_offset (16)
 	cfi_rel_offset (edi, 12)
@@ -343,8 +341,8 @@ L(4):	subl $4, %eax		/* adjust pointer */
 
 L(3):	xorl %eax, %eax
 	jmp L(out)
-END (BP_SYM (strchr))
+END (strchr)
 
 #undef index
-weak_alias (BP_SYM (strchr), BP_SYM (index))
+weak_alias (strchr, index)
 libc_hidden_builtin_def (strchr)

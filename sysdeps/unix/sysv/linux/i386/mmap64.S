@@ -16,8 +16,6 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <sysdep.h>
-#include <bp-sym.h>
-#include <bp-asm.h>
 
 #include <kernel-features.h>
 
@@ -25,9 +23,9 @@
 #define ENOSYS	38
 
 #define SVRSP	16		/* saved register space */
-#define PARMS	LINKAGE+SVRSP	/* space for 4 saved regs */
+#define PARMS	4+SVRSP	/* space for 4 saved regs */
 #define ADDR	PARMS
-#define LEN	ADDR+PTR_SIZE
+#define LEN	ADDR+4
 #define PROT	LEN+4
 #define FLAGS	PROT+4
 #define FD	FLAGS+4
@@ -35,7 +33,7 @@
 #define OFFHI	OFFLO+4
 
 	.text
-ENTRY (BP_SYM (__mmap64))
+ENTRY (__mmap64)
 
 	/* Save registers.  */
 	pushl %ebp
@@ -115,6 +113,6 @@ L(einval):
 	movl $-EINVAL, %eax
 	jmp SYSCALL_ERROR_LABEL
 
-PSEUDO_END (BP_SYM (__mmap64))
+PSEUDO_END (__mmap64)
 
-weak_alias (BP_SYM (__mmap64), BP_SYM (mmap64))
+weak_alias (__mmap64, mmap64)

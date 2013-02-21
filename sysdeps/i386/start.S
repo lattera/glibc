@@ -52,8 +52,6 @@
 					NULL
 */
 
-#include "bp-sym.h"
-
 	.text
 	.globl _start
 	.type _start,@function
@@ -97,11 +95,11 @@ _start:
 	pushl %ecx		/* Push second argument: argv.  */
 	pushl %esi		/* Push first argument: argc.  */
 
-	pushl BP_SYM (main)@GOT(%ebx)
+	pushl main@GOT(%ebx)
 
 	/* Call the user's main function, and exit with its value.
 	   But let the libc call main.    */
-	call BP_SYM (__libc_start_main)@PLT
+	call __libc_start_main@PLT
 #else
 	/* Push address of our own entry points to .fini and .init.  */
 	pushl $__libc_csu_fini
@@ -110,11 +108,11 @@ _start:
 	pushl %ecx		/* Push second argument: argv.  */
 	pushl %esi		/* Push first argument: argc.  */
 
-	pushl $BP_SYM (main)
+	pushl $main
 
 	/* Call the user's main function, and exit with its value.
 	   But let the libc call main.    */
-	call BP_SYM (__libc_start_main)
+	call __libc_start_main
 #endif
 
 	hlt			/* Crash if somehow `exit' does return.  */

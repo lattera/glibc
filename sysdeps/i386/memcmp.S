@@ -18,16 +18,14 @@
 
 #include <sysdep.h>
 #include "asm-syntax.h"
-#include "bp-sym.h"
-#include "bp-asm.h"
 
-#define PARMS	LINKAGE+4	/* space for 1 saved reg */
+#define PARMS	4+4	/* space for 1 saved reg */
 #define BLK1	PARMS
-#define BLK2	BLK1+PTR_SIZE
-#define LEN	BLK2+PTR_SIZE
+#define BLK2	BLK1+4
+#define LEN	BLK2+4
 
 	.text
-ENTRY (BP_SYM (memcmp))
+ENTRY (memcmp)
 
 	pushl %esi		/* Save callee-safe registers.  */
 	cfi_adjust_cfa_offset (4)
@@ -68,8 +66,8 @@ L(1):	popl %esi		/* Restore registers.  */
 	cfi_restore (edi)
 
 	ret
-END (BP_SYM (memcmp))
+END (memcmp)
 
 #undef bcmp
-weak_alias (BP_SYM (memcmp), BP_SYM (bcmp))
-libc_hidden_builtin_def (BP_SYM (memcmp))
+weak_alias (memcmp, bcmp)
+libc_hidden_builtin_def (memcmp)

@@ -21,8 +21,6 @@
 
 /* There is some commonality.  */
 #include <sysdeps/unix/i386/sysdep.h>
-#include <bp-sym.h>
-#include <bp-asm.h>
 /* Defines RTLD_PRIVATE_ERRNO and USE_DL_SYSINFO.  */
 #include <dl-sysdep.h>
 #include <tls.h>

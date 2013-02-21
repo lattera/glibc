@@ -22,16 +22,14 @@
 
 #include <sysdep.h>
 #include "asm-syntax.h"
-#include "bp-sym.h"
-#include "bp-asm.h"
 
-#define PARMS	LINKAGE		/* no space for saved regs */
+#define PARMS	4		/* no space for saved regs */
 #define RTN	PARMS
-#define STR	RTN+RTN_SIZE
-#define STOP	STR+PTR_SIZE
+#define STR	RTN
+#define STOP	STR+4
 
 	.text
-ENTRY (BP_SYM (strpbrk))
+ENTRY (strpbrk)
 
 	movl STR(%esp), %edx
 	movl STOP(%esp), %eax
@@ -240,6 +238,6 @@ L(4):	addl $256, %esp		/* remove stopset */
 	jnz L(7)		/* no => return pointer */
 	xorl %eax, %eax
 
-L(7):	RET_PTR
-END (BP_SYM (strpbrk))
+L(7):	ret
+END (strpbrk)
 libc_hidden_builtin_def (strpbrk)

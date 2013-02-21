@@ -19,13 +19,11 @@
 
 #include <sysdep.h>
 #include "asm-syntax.h"
-#include "bp-sym.h"
-#include "bp-asm.h"
 
-#define PARMS	LINKAGE+12	/* space for 3 saved regs */
+#define PARMS	4+12	/* space for 3 saved regs */
 #define RTN	PARMS
-#define DEST	RTN+RTN_SIZE
-#define SRC	DEST+PTR_SIZE
+#define DEST	RTN
+#define SRC	DEST+4
 
 #ifndef USE_AS_STPCPY
 # define STRCPY strcpy
@@ -34,7 +32,7 @@
 #define magic 0xfefefeff
 
 	.text
-ENTRY (BP_SYM (STRCPY))
+ENTRY (STRCPY)
 
 	pushl	%edi
 	cfi_adjust_cfa_offset (4)
@@ -149,7 +147,6 @@ L(4):	movb	%dl, (%edi)
 L(end):	movb	%ah, (%edi)
 
 L(end2):
-	/* GKM FIXME: check high bounds  */
 #ifdef USE_AS_STPCPY
 	movl	%edi, %eax
 #else
@@ -165,8 +162,8 @@ L(end2):
 	cfi_adjust_cfa_offset (-4)
 	cfi_restore (edi)
 
-	RET_PTR
-END (BP_SYM (STRCPY))
+	ret
+END (STRCPY)
 #ifndef USE_AS_STPCPY
 libc_hidden_builtin_def (strcpy)
 #endif

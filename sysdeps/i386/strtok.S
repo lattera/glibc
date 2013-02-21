@@ -20,8 +20,6 @@
 
 #include <sysdep.h>
 #include "asm-syntax.h"
-#include "bp-sym.h"
-#include "bp-asm.h"
 
 /* This file can be used for three variants of the strtok function:
 
@@ -57,14 +55,14 @@ save_ptr:
 # define FUNCTION strtok
 #endif
 
-#define PARMS	LINKAGE		/* no space for saved regs */
+#define PARMS	4		/* no space for saved regs */
 #define RTN	PARMS
-#define STR	RTN+RTN_SIZE
-#define DELIM	STR+PTR_SIZE
-#define SAVE	DELIM+PTR_SIZE
+#define STR	RTN
+#define DELIM	STR+4
+#define SAVE	DELIM+4
 
 	.text
-ENTRY (BP_SYM (FUNCTION))
+ENTRY (FUNCTION)
 
 	movl STR(%esp), %edx
 	movl DELIM(%esp), %eax
@@ -347,7 +345,7 @@ L(epilogue):
 	cfi_adjust_cfa_offset (-4)
 	cfi_restore (ebx)
 #endif
-	RET_PTR
+	ret
 
 L(returnNULL):
 	xorl %eax, %eax
@@ -357,4 +355,4 @@ L(returnNULL):
 	movl %edx, SAVE_PTR
 	jmp L(epilogue)
 
-END (BP_SYM (FUNCTION))
+END (FUNCTION)

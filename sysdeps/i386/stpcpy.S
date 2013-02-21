@@ -23,16 +23,14 @@
 
 #include <sysdep.h>
 #include "asm-syntax.h"
-#include "bp-sym.h"
-#include "bp-asm.h"
 
-#define PARMS	LINKAGE		/* no space for saved regs */
+#define PARMS	4		/* no space for saved regs */
 #define RTN	PARMS
-#define DEST	RTN+RTN_SIZE
-#define SRC	DEST+PTR_SIZE
+#define DEST	RTN
+#define SRC	DEST+4
 
 	.text
-ENTRY (BP_SYM (__stpcpy))
+ENTRY (__stpcpy)
 
 	movl DEST(%esp), %eax
 	movl SRC(%esp), %ecx
@@ -82,9 +80,9 @@ L(4):	incl %eax
 L(3):	incl %eax
 L(2):
 
-	RET_PTR
-END (BP_SYM (__stpcpy))
+	ret
+END (__stpcpy)
 
-weak_alias (BP_SYM (__stpcpy), BP_SYM (stpcpy))
+weak_alias (__stpcpy, stpcpy)
 libc_hidden_def (__stpcpy)
 libc_hidden_builtin_def (stpcpy)

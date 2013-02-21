@@ -19,19 +19,17 @@
 
 #include <sysdep.h>
 #include "asm-syntax.h"
-#include "bp-sym.h"
-#include "bp-asm.h"
 
 /* BEWARE: `#ifdef memcpy' means that memcpy is redefined as `mempcpy',
    and the return value is the byte after the last one copied in
    the destination. */
 #define MEMPCPY_P (defined memcpy)
 
-#define PARMS	LINKAGE+8	/* space for 2 saved regs */
+#define PARMS	4+8	/* space for 2 saved regs */
 #define RTN	PARMS
-#define DEST	RTN+RTN_SIZE
-#define SRC	DEST+PTR_SIZE
-#define LEN	SRC+PTR_SIZE
+#define DEST	RTN
+#define SRC	DEST+4
+#define LEN	SRC+4
 
         .text
 #if defined PIC && !defined NOT_IN_libc
@@ -41,7 +39,7 @@ ENTRY (__memcpy_chk)
 	jb	HIDDEN_JUMPTARGET (__chk_fail)
 END (__memcpy_chk)
 #endif
-ENTRY (BP_SYM (memcpy))
+ENTRY (memcpy)
 
 	pushl	%edi
 	cfi_adjust_cfa_offset (4)
@@ -124,8 +122,8 @@ L(1):	rep; movsb
 	cfi_adjust_cfa_offset (-4)
 	cfi_restore (edi)
 
-	RET_PTR
-END (BP_SYM (memcpy))
+	ret
+END (memcpy)
 #if !MEMPCPY_P
 libc_hidden_builtin_def (memcpy)
 #endif

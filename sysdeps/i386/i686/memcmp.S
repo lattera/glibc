@@ -18,13 +18,11 @@
 
 #include <sysdep.h>
 #include "asm-syntax.h"
-#include "bp-sym.h"
-#include "bp-asm.h"
 
-#define PARMS		LINKAGE+4	/* Preserve EBX.  */
+#define PARMS		4+4	/* Preserve EBX.  */
 #define BLK1		PARMS
-#define BLK2		BLK1+PTR_SIZE
-#define LEN		BLK2+PTR_SIZE
+#define BLK2		BLK1+4
+#define LEN		BLK2+4
 #define ENTRANCE	pushl %ebx; cfi_adjust_cfa_offset (4); \
 			cfi_rel_offset (ebx, 0)
 #define RETURN		popl %ebx; cfi_adjust_cfa_offset (-4); \
@@ -44,7 +42,7 @@
 
         .text
 	ALIGN (4)
-ENTRY (BP_SYM (memcmp))
+ENTRY (memcmp)
 	ENTRANCE
 
 	movl	BLK1(%esp), %eax
@@ -366,7 +364,7 @@ L(set):
 	cfi_adjust_cfa_offset (-4)
 	cfi_restore (esi)
 	RETURN
-END (BP_SYM (memcmp))
+END (memcmp)
 
 	.section	.rodata
 	ALIGN (2)
@@ -406,5 +404,5 @@ L(table_32bytes) :
 
 
 #undef bcmp
-weak_alias (BP_SYM (memcmp), BP_SYM (bcmp))
-libc_hidden_builtin_def (BP_SYM (memcmp))
+weak_alias (memcmp, bcmp)
+libc_hidden_builtin_def (memcmp)

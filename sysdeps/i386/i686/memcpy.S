@@ -20,14 +20,12 @@
 
 #include <sysdep.h>
 #include "asm-syntax.h"
-#include "bp-sym.h"
-#include "bp-asm.h"
 
-#define PARMS	LINKAGE		/* no space for saved regs */
+#define PARMS	4		/* no space for saved regs */
 #define RTN	PARMS
-#define DEST	RTN+RTN_SIZE
-#define SRC	DEST+PTR_SIZE
-#define LEN	SRC+PTR_SIZE
+#define DEST	RTN
+#define SRC	DEST+4
+#define LEN	SRC+4
 
 	.text
 #if defined PIC && !defined NOT_IN_libc
@@ -37,7 +35,7 @@ ENTRY_CHK (__memcpy_chk)
 	jb	HIDDEN_JUMPTARGET (__chk_fail)
 END_CHK (__memcpy_chk)
 #endif
-ENTRY (BP_SYM (memcpy))
+ENTRY (memcpy)
 
 	movl	%edi, %eax
 	movl	DEST(%esp), %edi
@@ -81,7 +79,7 @@ ENTRY (BP_SYM (memcpy))
 	movl	%edx, %esi
 	movl	DEST(%esp), %eax
 
-	RET_PTR
+	ret
 
 	/* When we come here the pointers do not have the same
 	   alignment or the length is too short.  No need to optimize for
@@ -96,5 +94,5 @@ ENTRY (BP_SYM (memcpy))
 2:	rep
 	movsl
 	jmp	.Lend
-END (BP_SYM (memcpy))
+END (memcpy)
 libc_hidden_builtin_def (memcpy)

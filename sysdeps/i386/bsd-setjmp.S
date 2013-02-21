@@ -22,15 +22,13 @@
 
 #include <sysdep.h>
 #include <jmpbuf-offsets.h>
-#include "bp-sym.h"
-#include "bp-asm.h"
 #include <stap-probe.h>
 
-#define PARMS  LINKAGE		/* no space for saved regs */
+#define PARMS  4		/* no space for saved regs */
 #define JMPBUF PARMS
-#define SIGMSK JMPBUF+PTR_SIZE
+#define SIGMSK JMPBUF+4
 
-ENTRY (BP_SYM (setjmp))
+ENTRY (setjmp)
 	/* Note that we have to use a non-exported symbol in the next
 	   jump since otherwise gas will emit it as a jump through the
 	   PLT which is what we cannot use here.  */
@@ -46,7 +44,7 @@ ENTRY (BP_SYM (setjmp))
 	PTR_MANGLE (%ecx)
 #endif
      	movl %ecx, (JB_SP*4)(%eax)
-	movl PCOFF(%esp), %ecx	/* Save PC we are returning to now.  */
+	movl 0(%esp), %ecx	/* Save PC we are returning to now.  */
 	LIBC_PROBE (setjmp, 3, 4@%eax, -4@$1, 4@%ecx)
 #ifdef PTR_MANGLE
 	PTR_MANGLE (%ecx)
@@ -59,10 +57,10 @@ ENTRY (BP_SYM (setjmp))
 	cfi_adjust_cfa_offset (4)
 	pushl 8(%esp)
 	cfi_adjust_cfa_offset (4)
-	call BP_SYM (__sigjmp_save)
+	call __sigjmp_save
 	popl %ecx
 	cfi_adjust_cfa_offset (-4)
 	popl %edx
 	cfi_adjust_cfa_offset (-4)
 	ret
-END (BP_SYM (setjmp))
+END (setjmp)

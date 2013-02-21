@@ -22,15 +22,13 @@
 
 #include <sysdep.h>
 #include "asm-syntax.h"
-#include "bp-sym.h"
-#include "bp-asm.h"
 
-#define PARMS	LINKAGE		/* no space for saved regs */
+#define PARMS	4		/* no space for saved regs */
 #define STR	PARMS
-#define STOP	STR+PTR_SIZE
+#define STOP	STR+4
 
 	.text
-ENTRY (BP_SYM (strcspn))
+ENTRY (strcspn)
 
 	movl STR(%esp), %edx
 	movl STOP(%esp), %eax
@@ -238,5 +236,5 @@ L(4):	addl $256, %esp		/* remove stopset */
 				   characters, so compute distance to first
 				   non-valid character */
 	ret
-END (BP_SYM (strcspn))
+END (strcspn)
 libc_hidden_builtin_def (strcspn)

@@ -25,17 +25,15 @@
 
 #include <sysdep.h>
 #include "asm-syntax.h"
-#include "bp-sym.h"
-#include "bp-asm.h"
 
-#define PARMS	LINKAGE+4	/* space for 1 saved reg */
+#define PARMS	4+4	/* space for 1 saved reg */
 #define RTN	PARMS
-#define DEST	RTN+RTN_SIZE
-#define SRC	DEST+PTR_SIZE
-#define LEN	SRC+PTR_SIZE
+#define DEST	RTN
+#define SRC	DEST+4
+#define LEN	SRC+4
 
 	.text
-ENTRY (BP_SYM (__stpncpy))
+ENTRY (__stpncpy)
 
 	pushl %esi
 	cfi_adjust_cfa_offset (4)
@@ -142,8 +140,8 @@ L(9):	popl %esi		/* restore saved register content */
 	cfi_adjust_cfa_offset (-4)
 	cfi_restore (esi)
 
-	RET_PTR
-END (BP_SYM (__stpncpy))
+	ret
+END (__stpncpy)
 
-libc_hidden_def (BP_SYM (__stpncpy))
-weak_alias (BP_SYM (__stpncpy), BP_SYM (stpncpy))
+libc_hidden_def (__stpncpy)
+weak_alias (__stpncpy, stpncpy)

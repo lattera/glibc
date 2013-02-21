@@ -18,8 +18,6 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <machine/asm.h>
-#include "bp-sym.h"
-#include "bp-asm.h"
 
 	.section .rodata
 
@@ -34,13 +32,13 @@ two54:	.byte 0, 0, 0, 0, 0, 0, 0x50, 0x43
 #define MO(op) op
 #endif
 
-#define PARMS	LINKAGE		/* no space for saved regs */
+#define PARMS	4		/* no space for saved regs */
 #define VAL0	PARMS
 #define VAL1	VAL0+4
 #define EXPP	VAL1+4
 
 	.text
-ENTRY (BP_SYM (__frexp))
+ENTRY (__frexp)
 
 	movl	VAL0(%esp), %ecx
 	movl	VAL1(%esp), %eax
@@ -81,5 +79,5 @@ ENTRY (BP_SYM (__frexp))
 	movl	%ecx, (%eax)
 
 	ret
-END (BP_SYM (__frexp))
-weak_alias (BP_SYM (__frexp), BP_SYM (frexp))
+END (__frexp)
+weak_alias (__frexp, frexp)

@@ -21,14 +21,14 @@
 #define SYSOP_semtimedop 4
 
 #define SVRSP	12		/* saved register space */
-#define PARMS	LINKAGE+SVRSP	/* space for 3 saved regs */
+#define PARMS	4+SVRSP	/* space for 3 saved regs */
 #define SEMID	PARMS
 #define SOPS	SEMID+4
-#define NSOPS	SOPS+PTR_SIZE
+#define NSOPS	SOPS+4
 #define TIMEOUT	NSOPS+4
 
 	.text
-ENTRY (BP_SYM (semtimedop))
+ENTRY (semtimedop)
 
 	pushl	%ebp
 	cfi_adjust_cfa_offset (4)
@@ -70,4 +70,4 @@ ENTRY (BP_SYM (semtimedop))
 #ifdef PIC
 	.align	4
 #endif
-PSEUDO_END (BP_SYM (semtimedop))
+PSEUDO_END (semtimedop)

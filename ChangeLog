@@ -1,3 +1,349 @@
+2013-02-21  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #13550]
+	* sysdeps/i386/bp-asm.h: Remove file.
+	* sysdeps/i386/add_n.S: Do not include "bp-sym.h" and "bp-asm.h".
+	(PARMS): Do not use macros from bp-asm.h.
+	(S1): Likewise.
+	(S2): Likewise.
+	(SIZE): Likewise.
+	(__mpn_add_n): Do not use BP_SYM
+	* sysdeps/i386/addmul_1.S: Do not include "bp-sym.h" and
+	"bp-asm.h".
+	(PARMS): Do not use macros from bp-asm.h.
+	(S1): Likewise.
+	(SIZE): Likewise.
+	(__mpn_addmul_1): Do not use BP_SYM
+	* sysdeps/i386/bsd-_setjmp.S: Do not include "bp-sym.h" and
+	"bp-asm.h".
+	(PARMS): Do not use macros from bp-asm.h.
+	(SIGMSK): Likewise.
+	(_setjmp): Likewise.  Do not use BP_SYM.
+	* sysdeps/i386/bsd-setjmp.S: Do not include "bp-sym.h" and
+	"bp-asm.h".
+	(PARMS): Do not use macros from bp-asm.h.
+	(SIGMSK): Likewise.
+	(setjmp): Likewise.  Do not use BP_SYM.
+	* sysdeps/i386/fpu/s_frexp.S: Do not include "bp-sym.h" and
+	"bp-asm.h".
+	(PARMS): Do not use macros from bp-asm.h.
+	(__frexp): Do not use BP_SYM.
+	(frexp): Likewise.
+	* sysdeps/i386/fpu/s_frexpf.S: Do not include "bp-sym.h" and
+	"bp-asm.h".
+	(PARMS): Do not use macros from bp-asm.h.
+	(__frexpf): Do not use BP_SYM.
+	(frexpf): Likewise.
+	* sysdeps/i386/fpu/s_frexpl.S: Do not include "bp-sym.h" and
+	"bp-asm.h".
+	(PARMS): Do not use macros from bp-asm.h.
+	(__frexpl): Do not use BP_SYM.
+	(frexpl): Likewise.
+	* sysdeps/i386/fpu/s_remquo.S: Do not include "bp-sym.h" and
+	"bp-asm.h".
+	(PARMS): Do not use macros from bp-asm.h.
+	(__remquo): Do not use BP_SYM.
+	(remquo): Likewise.
+	* sysdeps/i386/fpu/s_remquof.S: Do not include "bp-sym.h" and
+	"bp-asm.h".
+	(PARMS): Do not use macros from bp-asm.h.
+	(__remquof): Do not use BP_SYM.
+	(remquof): Likewise.
+	* sysdeps/i386/fpu/s_remquol.S: Do not include "bp-sym.h" and
+	"bp-asm.h".
+	(PARMS): Do not use macros from bp-asm.h.
+	(__remquol): Do not use BP_SYM.
+	(remquol): Likewise.
+	* sysdeps/i386/i486/strcat.S: Do not include "bp-sym.h" and
+	"bp-asm.h".
+	(PARMS): Do not use macros from bp-asm.h.
+	(DEST): Likewise.
+	(SRC): Likewise.
+	(strcat): Remove GKM FIXME comment.  Do not use BP_SYM.
+	* sysdeps/i386/i486/strlen.S: Do not include "bp-sym.h" and
+	"bp-asm.h".
+	(PARMS): Do not use macros from bp-asm.h.
+	(strlen): Do not use BP_SYM.
+	* sysdeps/i386/i586/add_n.S: Do not include "bp-sym.h" and
+	"bp-asm.h".
+	(PARMS): Do not use macros from bp-asm.h.
+	(S1): Likewise.
+	(S2): Likewise.
+	(SIZE): Likewise.
+	(__mpn_add_n): Do not use BP_SYM.
+	* sysdeps/i386/i586/addmul_1.S: Do not include "bp-sym.h" and
+	"bp-asm.h".
+	(PARMS): Do not use macros from bp-asm.h.
+	(S1): Likewise.
+	(SIZE): Likewise.
+	(__mpn_addmul_1): Do not use BP_SYM.
+	* sysdeps/i386/i586/bzero.S (__bzero): Do not use BP_SYM in
+	weak_alias.
+	(bzero): Likewise.
+	* sysdeps/i386/i586/lshift.S: Do not include "bp-sym.h" and
+	"bp-asm.h".
+	(PARMS): Do not use macros from bp-asm.h.
+	(S): Likewise.
+	(SIZE): Likewise.
+	(__mpn_lshift): Do not use BP_SYM.
+	* sysdeps/i386/i586/memcpy.S: Do not include "bp-sym.h" and
+	"bp-asm.h".
+	(PARMS): Do not use macros from bp-asm.h.
+	(DEST): Likewise.
+	(SRC): Likewise.
+	(LEN): Likewise.
+	(memcpy): Likewise.  Do not use BP_SYM.
+	* sysdeps/i386/i586/mempcpy.S (__mempcpy): Do not use BP_SYM in
+	libc_hidden_def and weak_alias.
+	(mempcpy): Do not use BP_SYM in weak_alias.
+	* sysdeps/i386/i586/memset.S: Do not include "bp-sym.h" and
+	"bp-asm.h".
+	(PARMS): Do not use macros from bp-asm.h.
+	(DEST): Likewise.
+	(LEN): Likewise.
+	[!BZERO_P] (CHR): Likewise.
+	(memset): Likewise.  Do not use BP_SYM.
+	* sysdeps/i386/i586/mul_1.S: Do not include "bp-sym.h" and
+	"bp-asm.h".
+	(PARMS): Do not use macros from bp-asm.h.
+	(S1): Likewise.
+	(SIZE): Likewise.
+	(__mpn_mul_1): Do not use BP_SYM.
+	* sysdeps/i386/i586/rshift.S: Do not include "bp-sym.h" and
+	"bp-asm.h".
+	(PARMS): Do not use macros from bp-asm.h.
+	(S): Likewise.
+	(SIZE): Likewise.
+	(__mpn_rshift): Do not use BP_SYM.
+	* sysdeps/i386/i586/strchr.S: Do not include "bp-sym.h" and
+	"bp-asm.h".
+	(PARMS): Do not use macros from bp-asm.h.
+	(STR): Likewise.
+	(CHR): Likewise.
+	(strchr): Likewise.  Do not use BP_SYM.
+	(index): Do not use BP_SYM in weak_alias.
+	* sysdeps/i386/i586/strcpy.S: Do not include "bp-sym.h" and
+	"bp-asm.h".
+	(PARMS): Do not use macros from bp-asm.h.
+	(DEST): Likewise.
+	(SRC): Likewise.
+	(STRCPY): Likewise.  Remove GKM FIXME comment.  Do not use BP_SYM.
+	* sysdeps/i386/i586/strlen.S: Do not include "bp-sym.h" and
+	"bp-asm.h".
+	(PARMS): Do not use macros from bp-asm.h.
+	(strlen): Do not use BP_SYM.
+	* sysdeps/i386/i586/sub_n.S: Do not include "bp-sym.h" and
+	"bp-asm.h".
+	(PARMS): Do not use macros from bp-asm.h.
+	(S1): Likewise.
+	(S2): Likewise.
+	(SIZE): Likewise.
+	(__mpn_sub_n): Do not use BP_SYM.
+	* sysdeps/i386/i586/submul_1.S: Do not include "bp-sym.h" and
+	"bp-asm.h".
+	(PARMS): Do not use macros from bp-asm.h.
+	(S1): Likewise.
+	(SIZE): Likewise.
+	(__mpn_submul_1): Do not use BP_SYM.
+	* sysdeps/i386/i686/add_n.S: Do not include "bp-sym.h" and
+	"bp-asm.h".
+	(PARMS): Do not use macros from bp-asm.h.
+	(S1): Likewise.
+	(S2): Likewise.
+	(SIZE): Likewise.
+	(__mpn_add_n): Do not use BP_SYM.
+	* sysdeps/i386/i686/bzero.S (__bzero): Do not use BP_SYM in
+	weak_alias.
+	(bzero): Likewise.
+	* sysdeps/i386/i686/memcmp.S: Do not include "bp-sym.h" and
+	"bp-asm.h".
+	(PARMS): Do not use macros from bp-asm.h.
+	(BLK2): Likewise.
+	(LEN): Likewise.
+	(memcmp): Do not use BP_SYM.
+	(bcmp): Do not use BP_SYM in weak_alias.
+	* sysdeps/i386/i686/memcpy.S: Do not include "bp-sym.h" and
+	"bp-asm.h".
+	(PARMS): Do not use macros from bp-asm.h.
+	(DEST): Likewise.
+	(SRC): Likewise.
+	(LEN): Likewise.
+	(memcpy): Likewise.  Do not use BP_SYM.
+	* sysdeps/i386/i686/memmove.S: Do not include "bp-sym.h" and
+	"bp-asm.h".
+	(PARMS): Do not use macros from bp-asm.h.
+	(DEST): Likewise.
+	(SRC): Likewise.
+	(LEN): Likewise.
+	(memmove): Likewise.  Do not use BP_SYM.
+	* sysdeps/i386/i686/mempcpy.S: Do not include "bp-sym.h" and
+	"bp-asm.h".
+	(PARMS): Do not use macros from bp-asm.h.
+	(DEST): Likewise.
+	(SRC): Likewise.
+	(LEN): Likewise.
+	(__mempcpy): Likewise.  Do not use BP_SYM.
+	(mempcpy): Do not use BP_SYM in weak_alias.
+	* sysdeps/i386/i686/memset.S: Do not include "bp-sym.h" and
+	"bp-asm.h".
+	(PARMS): Do not use macros from bp-asm.h.
+	(DEST): Likewise.
+	(LEN): Likewise.
+	[!BZERO_P] (CHR): Likewise.
+	(memset): Likewise.  Do not use BP_SYM.
+	* sysdeps/i386/i686/strcmp.S: Do not include "bp-sym.h" and
+	"bp-asm.h".
+	(PARMS): Do not use macros from bp-asm.h.
+	(STR2): Likewise.
+	(strcmp): Do not use BP_SYM.
+	* sysdeps/i386/i686/strtok.S: Do not include "bp-sym.h" and
+	"bp-asm.h".
+	(PARMS): Do not use macros from bp-asm.h.
+	(STR): Likewise.
+	(DELIM): Likewise.
+	[USE_AS_STRTOK_R] (SAVE): Likewise.
+	(FUNCTION): Likewise.  Do not use BP_SYM.
+	* sysdeps/i386/i686/strtok_r.S (__strtok_r): Do not use BP_SYM in
+	aliases.
+	(strtok_r): Likewise.
+	(__GI___strtok_r): Likewise.
+	* sysdeps/i386/lshift.S: Do not include "bp-sym.h" and "bp-asm.h".
+	(PARMS): Do not use macros from bp-asm.h.
+	(S): Likewise.
+	(SIZE): Likewise.
+	(__mpn_lshift): Do not use BP_SYM.
+	* sysdeps/i386/memchr.S: Do not include "bp-sym.h" and "bp-asm.h".
+	(PARMS): Do not use macros from bp-asm.h.
+	(STR): Likewise.
+	(CHR): Likewise.
+	(__memchr): Do not use BP_SYM.
+	(memchr): Do not use BP_SYM in weak_alias.
+	* sysdeps/i386/memcmp.S: Do not include "bp-sym.h" and "bp-asm.h".
+	(PARMS): Do not use macros from bp-asm.h.
+	(BLK2): Likewise.
+	(LEN): Likewise.
+	(memcmp): Do not use BP_SYM.
+	(bcmp): Do not use BP_SYM in weak_alias.
+	* sysdeps/i386/mul_1.S: Do not include "bp-sym.h" and "bp-asm.h".
+	(PARMS): Do not use macros from bp-asm.h.
+	(S1): Likewise.
+	(SIZE): Likewise.
+	(__mpn_mul_1): Do not use BP_SYM.
+	* sysdeps/i386/rawmemchr.S: Do not include "bp-sym.h" and
+	"bp-asm.h".
+	(PARMS): Do not use macros from bp-asm.h.
+	(STR): Likewise.
+	(CHR): Likewise.
+	(__rawmemchr): Do not use BP_SYM.
+	(rawmemchr): Do not use BP_SYM in weak_alias.
+	* sysdeps/i386/rshift.S: Do not include "bp-sym.h" and "bp-asm.h".
+	(PARMS): Do not use macros from bp-asm.h.
+	(S): Likewise.
+	(SIZE): Likewise.
+	(__mpn_rshift): Do not use BP_SYM.
+	* sysdeps/i386/setjmp.S: Do not include "bp-sym.h" and "bp-asm.h".
+	(PARMS): Do not use macros from bp-asm.h.
+	(SIGMSK): Likewise.
+	(__sigsetjmp): Likewise.  Do not use BP_SYM.
+	* sysdeps/i386/start.S: Do not include "bp-sym.h".
+	(_start): Do not use BP_SYM.
+	* sysdeps/i386/stpcpy.S: Do not include "bp-sym.h" and "bp-asm.h".
+	(PARMS): Do not use macros from bp-asm.h.
+	(DEST): Likewise.
+	(SRC): Likewise.
+	(__stpcpy): Likewise.  Do not use BP_SYM.
+	(stpcpy): Do not use BP_SYM in weak_alias.
+	* sysdeps/i386/stpncpy.S: Do not include "bp-sym.h" and
+	"bp-asm.h".
+	(PARMS): Do not use macros from bp-asm.h.
+	(DEST): Likewise.
+	(SRC): Likewise.
+	(LEN): Likewise.
+	(__stpncpy): Likewise.  Do not use BP_SYM.
+	(stpncpy): Do not use BP_SYM in weak_alias.
+	* sysdeps/i386/strchr.S: Do not include "bp-sym.h" and "bp-asm.h".
+	(PARMS): Do not use macros from bp-asm.h.
+	(STR): Likewise.
+	(CHR): Likewise.
+	(strchr): Likewise.  Do not use BP_SYM.
+	* sysdeps/i386/strchrnul.S: Do not include "bp-sym.h" and
+	"bp-asm.h".
+	(PARMS): Do not use macros from bp-asm.h.
+	(STR): Likewise.
+	(CHR): Likewise.
+	(__strchrnul): Likewise.  Do not use BP_SYM.
+	(strchrnul): Do not use BP_SYM in weak_alias.
+	* sysdeps/i386/strcspn.S: Do not include "bp-sym.h" and
+	"bp-asm.h".
+	(PARMS): Do not use macros from bp-asm.h.
+	(STOP): Likewise.
+	(strcspn): Do not use BP_SYM.
+	* sysdeps/i386/strpbrk.S: Do not include "bp-sym.h" and
+	"bp-asm.h".
+	(PARMS): Do not use macros from bp-asm.h.
+	(STR): Likewise.
+	(STOP): Likewise.
+	(strpbrk): Likewise.  Do not use BP_SYM.
+	* sysdeps/i386/strrchr.S: Do not include "bp-sym.h" and
+	"bp-asm.h".
+	(PARMS): Do not use macros from bp-asm.h.
+	(STR): Likewise.
+	(CHR): Likewise.
+	(strrchr): Likewise.  Do not use BP_SYM.
+	* sysdeps/i386/strspn.S: Do not include "bp-sym.h" and "bp-asm.h".
+	(PARMS): Do not use macros from bp-asm.h.
+	(SKIP): Likewise.
+	(strspn): Do not use BP_SYM.
+	* sysdeps/i386/strtok.S: Do not include "bp-sym.h" and "bp-asm.h".
+	(PARMS): Do not use macros from bp-asm.h.
+	(STR): Likewise.
+	(DELIM): Likewise.
+	(SAVE): Likewise.
+	(FUNCTION): Likewise.  Do not use BP_SYM.
+	* sysdeps/i386/strtok_r.S (__strtok_r): Do not use BP_SYM in
+	aliases.
+	(strtok_r): Likewise.
+	(__GI___strtok_r): Likewise.
+	* sysdeps/i386/sub_n.S: Do not include "bp-sym.h" and "bp-asm.h".
+	(PARMS): Do not use macros from bp-asm.h.
+	(S1): Likewise.
+	(S2): Likewise.
+	(SIZE): Likewise.
+	(__mpn_sub_n): Do not use BP_SYM.
+	* sysdeps/i386/submul_1.S: Do not include "bp-sym.h" and
+	"bp-asm.h".
+	(PARMS): Do not use macros from bp-asm.h.
+	(S1): Likewise.
+	(SIZE): Likewise.
+	(__mpn_submul_1): Do not use BP_SYM.
+	* sysdeps/unix/i386/sysdep.S: Do not include <bp-asm.h> and
+	<bp-sym.h>.
+	* sysdeps/unix/sysv/linux/i386/clone.S: Do not include <bp-sym.h>
+	and <bp-asm.h>.
+	(PARMS): Do not use macros from bp-asm.h.
+	(FLAGS): Likewise.
+	(PTID): Likewise.
+	(TLS): Likewise.
+	(CTID): Likewise.
+	(__clone): Do not use BP_SYM.
+	(clone): Do not use BP_SYM in weak_alias.
+	* sysdeps/unix/sysv/linux/i386/mmap64.S: Do not include <bp-sym.h>
+	and <bp-asm.h>.
+	(PARMS): Do not use macros from bp-asm.h.
+	(LEN): Likewise.
+	(__mmap64): Do not use BP_SYM.
+	(mmap64): Do not use BP_SYM in weak_alias.
+	* sysdeps/unix/sysv/linux/i386/posix_fadvise64.S: Do not include
+	<bp-sym.h> and <bp-asm.h>.
+	(PARMS): Do not use macros from bp-asm.h.
+	(__posix_fadvise64_l64): Do not use BP_SYM.
+	* sysdeps/unix/sysv/linux/i386/semtimedop.S
+	(PARMS): Do not use macros from bp-asm.h.
+	(NSOPS): Likewise.
+	(semtimedop): Do not use BP_SYM.
+	* sysdeps/unix/sysv/linux/i386/sysdep.h: Do not include <bp-sym.h>
+	and <bp-asm.h>.
+
 2013-02-21  Allan McRae  <allan@archlinux.org>
 
 	* manual/message.texi (Charset conversion in gettext):

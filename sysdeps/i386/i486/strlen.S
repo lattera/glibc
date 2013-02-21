@@ -20,14 +20,12 @@
 
 #include <sysdep.h>
 #include "asm-syntax.h"
-#include "bp-sym.h"
-#include "bp-asm.h"
 
-#define PARMS	LINKAGE		/* no space for saved regs */
+#define PARMS	4		/* no space for saved regs */
 #define STR	PARMS
 
 	.text
-ENTRY (BP_SYM (strlen))
+ENTRY (strlen)
 
 	movl STR(%esp), %ecx
 	movl %ecx, %eax		/* duplicate it */
@@ -130,5 +128,5 @@ L(3):	testb %cl, %cl		/* is first byte NUL? */
 L(2):	subl STR(%esp), %eax	/* compute difference to string start */
 
 	ret
-END (BP_SYM (strlen))
+END (strlen)
 libc_hidden_builtin_def (strlen)

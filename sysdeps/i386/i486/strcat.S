@@ -21,16 +21,14 @@
 
 #include <sysdep.h>
 #include "asm-syntax.h"
-#include "bp-sym.h"
-#include "bp-asm.h"
 
-#define PARMS	LINKAGE+4	/* space for 1 saved reg */
+#define PARMS	4+4	/* space for 1 saved reg */
 #define RTN	PARMS
-#define DEST	RTN+RTN_SIZE
-#define SRC	DEST+PTR_SIZE
+#define DEST	RTN
+#define SRC	DEST+4
 
 	.text
-ENTRY (BP_SYM (strcat))
+ENTRY (strcat)
 
 	pushl %edi		/* Save callee-safe register.  */
 	cfi_adjust_cfa_offset (4)
@@ -257,12 +255,11 @@ L(9):	movb %al, (%ecx,%edx)	/* store first byte of last word */
 
 	movb %ah, 3(%ecx,%edx)	/* store fourth byte of last word */
 
-L(8):	/* GKM FIXME: check high bounds */
-	movl DEST(%esp), %eax	/* start address of destination is result */
+L(8):	movl DEST(%esp), %eax	/* start address of destination is result */
 	popl %edi		/* restore saved register */
 	cfi_adjust_cfa_offset (-4)
 	cfi_restore (edi)
 
-	RET_PTR
-END (BP_SYM (strcat))
+	ret
+END (strcat)
 libc_hidden_builtin_def (strcat)
