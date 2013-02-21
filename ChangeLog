@@ -1,3 +1,8 @@
+2013-03-15  Thomas Schwinge  <thomas@codesourcery.com>
+
+	* stdio-common/printf_fp.c (__isinfl_internal, __isnanl_internal):
+	Remove declarations.
+
 2013-03-15  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* sysdeps/ieee754/dbl-64/mpa-arch.h: Remove.
