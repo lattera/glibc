@@ -1,3 +1,8 @@
+2013-02-21  Allan McRae  <allan@archlinux.org>
+
+	* manual/message.texi (Charset conversion in gettext):
+	Move @end statement to beginning of line.
+
 2013-02-21  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* sysdeps/powerpc/powerpc32/power4/fpu/mpa.c (__inv): Mark as

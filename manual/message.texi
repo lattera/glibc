@@ -1441,7 +1441,8 @@ string containing the name of the selected codeset.  The string is
 allocated internally in the function and must not be changed by the
 user.  If the system went out of core during the execution of
 @code{bind_textdomain_codeset}, the return value is @code{NULL} and the
-global variable @var{errno} is set accordingly.  @end deftypefun
+global variable @var{errno} is set accordingly.
+@end deftypefun
 
 
 @node GUI program problems
