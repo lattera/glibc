@@ -161,6 +161,9 @@ __LABEL(name)						\
 
 #else /* !ASSEMBLER */
 
+/* In order to get __set_errno() definition in INLINE_SYSCALL.  */
+#include <errno.h>
+
 /* ??? Linux needs to be able to override INLINE_SYSCALL for one
    particular special case.  Make this easy.  */
 
