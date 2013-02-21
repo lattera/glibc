@@ -95,16 +95,16 @@ _dl_runtime_profile:
 	lr     %r1,%r2			# function addr returned in r2
 	icm    %r0,15,20(%r12)		# load & test framesize
 	jnm    2f
+
 	lm     %r2,%r6,32(%r12)
 	ld     %f0,56(%r12)
 	ld     %f2,64(%r12)
-	basr   %r14,%r1			# call resolved function
-1:	lr     %r15,%r12		# remove stack frame
+	lr     %r15,%r12		# remove stack frame
 	cfi_def_cfa_register (15)
 	l      %r14,16(%r15)		# restore registers
 	l      %r12,12(%r15)
-	l      %r6,8(%r15)
-	br     %r14
+	br     %r1			# tail-call to the resolved function
+
 	cfi_def_cfa_register (12)
 2:	jz     4f			# framesize == 0 ?
 	ahi    %r0,7			# align framesize to 8
@@ -131,7 +131,13 @@ _dl_runtime_profile:
 	la     %r4,32(%r12)		# pointer to struct La_s390_32_regs
 	la     %r5,72(%r12)		# pointer to struct La_s390_32_retval
 	basr   %r14,%r1			# call _dl_call_pltexit
-	j      1b
+
+	lr     %r15,%r12		# remove stack frame
+	cfi_def_cfa_register (15)
+	l      %r14,16(%r15)		# restore registers
+	l      %r12,12(%r15)
+	br     %r14
+
 6:	.long  _dl_profile_fixup - 0b
 7:	.long  _dl_call_pltexit - 5b
 	cfi_endproc

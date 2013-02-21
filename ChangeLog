@@ -1,3 +1,8 @@
+2013-02-21  Andreas Krebbel  <Andreas.Krebbel@de.ibm.com>
+
+	* sysdeps/s390/s390-32/dl-trampoline.S (_dl_runtime_profile): Do a
+	tail-call to the resolved function if pltexit isn't needed.
+
 2013-02-21  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* sysdeps/powerpc/powerpc32/power4/fpu/mpa.c (__mul): Mark X
