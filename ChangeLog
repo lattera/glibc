@@ -1,5 +1,9 @@
 2013-03-15  Thomas Schwinge  <thomas@codesourcery.com>
 
+	* math/libm-test.inc (fpstack_test) [__x86_64__]: Enable test.
+	* math/test-misc.c (main) [__x86_64__]: Enable test for long
+	doubles.
+
 	* math/test-misc.c (main): Fix copy'n'pastos.
 	* misc/tst-efgcvt.c (special): Likewise.
 

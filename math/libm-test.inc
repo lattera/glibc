@@ -361,7 +361,7 @@ print_complex_function_ulps (const char *function_name, FLOAT real_ulp,
 static void
 fpstack_test (const char *test_name)
 {
-#ifdef i386
+#if defined (__i386__) || defined (__x86_64__)
   static int old_stack;
   int sw;
 

@@ -1056,7 +1056,7 @@ main (void)
     }
 #endif
 
-#ifdef __i386__
+#if defined (__i386__) || defined (__x86_64__)
   /* This is a test for the strange long doubles in x86 FPUs.  */
   {
     union
