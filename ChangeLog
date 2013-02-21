@@ -1,3 +1,10 @@
+2013-02-21  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* sysdeps/powerpc/powerpc32/power4/fpu/mpa.c (__mul): Mark X
+	or Y being zero as being unlikely.
+	* sysdeps/powerpc/powerpc64/power4/fpu/mpa.c (__mul):
+	Likewise.
+
 2013-02-20  Carlos O'Donell  <carlos@redhat.com>
 
 	* manual/nss.texi (System Databases and Name Service Switch):
