@@ -782,7 +782,7 @@ __sqr (const mp_no *x, mp_no *y, int p)
    - For P > 3: 2.001 * R ^ (1 - P)
 
    *X = 0 is not permissible.  */
-void
+static void
 __inv (const mp_no *x, mp_no *y, int p)
 {
   long i;
