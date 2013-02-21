@@ -1,3 +1,12 @@
+2013-02-21  David S. Miller  <davem@davemloft.net>
+
+	* sysdeps/unix/sysv/linux/sparc/lowlevellock.h
+	(FUTEX_WAIT_REQUEUE_PI): Define.
+	(FUTEX_CMP_REQUEUE_PI): Likewise.
+	(lll_futex_wait_requeue_pi): Likewise.
+	(lll_futex_timed_wait_requeue_pi): Likewise.
+	(lll_futex_cmp_requeue_pi): Likewise.
+
 2013-02-21  Carlos O'Donell  <carlos@redhat.com>
 
 	* sysdeps/unix/sysv/linux/fork.c: Fix comment typo.
