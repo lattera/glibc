@@ -119,7 +119,7 @@ __cpy (const mp_no *x, mp_no *y, int p)
 static void
 norm (const mp_no *x, double *y, int p)
 {
-#define R  RADIXI
+#define R RADIXI
   int i;
   double a, c, u, v, z[5];
   if (p < 5)
@@ -197,7 +197,7 @@ denorm (const mp_no *x, double *y, int p)
   int i, k;
   double c, u, z[5];
 
-#define R  RADIXI
+#define R RADIXI
   if (EX < -44 || (EX == -44 && X[1] < TWO5))
     {
       *y = ZERO;

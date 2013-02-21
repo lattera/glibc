@@ -112,7 +112,7 @@ __cpy (const mp_no *x, mp_no *y, int p)
 static void
 norm (const mp_no *x, double *y, int p)
 {
-#define R  RADIXI
+#define R RADIXI
   long i;
   double a, c, u, v, z[5];
   if (p < 5)
