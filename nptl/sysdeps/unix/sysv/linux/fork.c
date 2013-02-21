@@ -35,7 +35,7 @@ unsigned long int *__fork_generation_pointer;
 
 
 
-/* The single linked list of all currently registered for handlers.  */
+/* The single linked list of all currently registered fork handlers.  */
 struct fork_handler *__fork_handlers;
 
 
