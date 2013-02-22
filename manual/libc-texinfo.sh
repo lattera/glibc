@@ -91,9 +91,11 @@ Indices
 * Variable Index::               Index of variables and variable-like macros.
 * File Index::                   Index of programs and files.
 
+ @detailmenu
  --- The Detailed Node Listing ---
 EOF
  cat ${OUTDIR}lmenu.$$
+ echo '@end detailmenu'
  echo '@end menu'; } >${OUTDIR}top-menu.texi.$$
 mv -f ${OUTDIR}top-menu.texi.$$ ${OUTDIR}top-menu.texi
 

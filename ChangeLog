@@ -1,3 +1,8 @@
+2013-02-24  Allan McRae  <allan@archlinux.org>
+
+	* manual/libc-texinfo.sh: Use @detailmenu around the detailed
+	node listing of the info page menu.
+
 2013-02-21  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #13550]
