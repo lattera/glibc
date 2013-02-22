@@ -1,5 +1,8 @@
 2013-02-24  Allan McRae  <allan@archlinux.org>
 
+	* manual/socket.texi (The Internet Namespace): Order menu items
+	to match that in the file.
+
 	* manual/libc-texinfo.sh: Use @detailmenu around the detailed
 	node listing of the info page menu.
 

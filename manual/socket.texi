@@ -726,12 +726,12 @@ for information about this.
 * Internet Address Formats::    How socket addresses are specified in the
                                  Internet namespace.
 * Host Addresses::	        All about host addresses of Internet host.
-* Protocols Database::		Referring to protocols by name.
 * Ports::			Internet port numbers.
 * Services Database::           Ports may have symbolic names.
 * Byte Order::		        Different hosts may use different byte
                                  ordering conventions; you need to
                                  canonicalize host address and port number.
+* Protocols Database::		Referring to protocols by name.
 * Inet Example::	        Putting it all together.
 @end menu
 
