@@ -304,9 +304,7 @@ __mp_dbl (const mp_no *x, double *y, int p)
       return;
     }
 
-  if (EX > -42)
-    norm (x, y, p);
-  else if (EX == -42 && X[1] >= TWO10)
+  if (__glibc_likely (EX > -42 || (EX == -42 && X[1] >= TWO10)))
     norm (x, y, p);
   else
     denorm (x, y, p);
