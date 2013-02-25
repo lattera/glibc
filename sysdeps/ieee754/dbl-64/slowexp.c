@@ -41,13 +41,7 @@ double
 SECTION
 __slowexp(double x) {
   double w,z,res,eps=3.0e-26;
-#if 0
-  double y;
-#endif
   int p;
-#if 0
-  int orig,i;
-#endif
   mp_no mpx, mpy, mpz,mpw,mpeps,mpcor;
 
   p=6;
