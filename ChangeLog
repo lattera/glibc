@@ -1,5 +1,8 @@
 2013-02-25  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
+	* sysdeps/ieee754/dbl-64/slowpow.c: Reformat in GNU coding
+	style.
+
 	* sysdeps/ieee754/dbl-64/slowexp.c (__slowexp): Remove commented
 	code.
 

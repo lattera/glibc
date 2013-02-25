@@ -38,42 +38,59 @@
 # define SECTION
 #endif
 
-void __mpexp(mp_no *x, mp_no *y, int p);
-void __mplog(mp_no *x, mp_no *y, int p);
-double ulog(double);
-double __halfulp(double x,double y);
+void __mpexp (mp_no *x, mp_no *y, int p);
+void __mplog (mp_no *x, mp_no *y, int p);
+double ulog (double);
+double __halfulp (double x, double y);
 
 double
 SECTION
-__slowpow(double x, double y, double z) {
-  double res,res1;
-  mp_no mpx, mpy, mpz,mpw,mpp,mpr,mpr1;
-  static const mp_no eps = {-3,{1.0,4.0}};
+__slowpow (double x, double y, double z)
+{
+  double res, res1;
+  mp_no mpx, mpy, mpz, mpw, mpp, mpr, mpr1;
+  static const mp_no eps = {-3, {1.0, 4.0}};
   int p;
 
-  res = __halfulp(x,y);        /* halfulp() returns -10 or x^y             */
-  if (res >= 0) return res;  /* if result was really computed by halfulp */
-		  /*  else, if result was not really computed by halfulp */
-  p = 10;         /*  p=precision   */
-  __dbl_mp(x,&mpx,p);
-  __dbl_mp(y,&mpy,p);
-  __dbl_mp(z,&mpz,p);
-  __mplog(&mpx, &mpz, p);     /* log(x) = z   */
-  __mul(&mpy,&mpz,&mpw,p);    /*  y * z =w    */
-  __mpexp(&mpw, &mpp, p);     /*  e^w =pp     */
-  __add(&mpp,&eps,&mpr,p);    /*  pp+eps =r   */
-  __mp_dbl(&mpr, &res, p);
-  __sub(&mpp,&eps,&mpr1,p);   /*  pp -eps =r1 */
-  __mp_dbl(&mpr1, &res1, p);  /*  converting into double precision */
-  if (res == res1) return res;
+  /* __HALFULP returns -10 or X^Y.  */
+  res = __halfulp (x, y);
 
-  p = 32;     /* if we get here result wasn't calculated exactly, continue */
-  __dbl_mp(x,&mpx,p);                          /* for more exact calculation */
-  __dbl_mp(y,&mpy,p);
-  __dbl_mp(z,&mpz,p);
-  __mplog(&mpx, &mpz, p);   /* log(c)=z  */
-  __mul(&mpy,&mpz,&mpw,p);  /* y*z =w    */
-  __mpexp(&mpw, &mpp, p);   /* e^w=pp    */
-  __mp_dbl(&mpp, &res, p);  /* converting into double precision */
+  /* Return if the result was computed by __HALFULP.  */
+  if (res >= 0)
+    return res;
+
+  /* Or else, calculate using multiple precision.  P = 10 implies accuracy of
+     240 bits accuracy, since MP_NO has a radix of 2^24.  */
+  p = 10;
+  __dbl_mp (x, &mpx, p);
+  __dbl_mp (y, &mpy, p);
+  __dbl_mp (z, &mpz, p);
+
+  /* z = x ^ y
+     log (z) = y * log (x)
+     z = exp (y * log (x))  */
+  __mplog (&mpx, &mpz, p);
+  __mul (&mpy, &mpz, &mpw, p);
+  __mpexp (&mpw, &mpp, p);
+
+  /* Add and subtract EPS to ensure that the result remains unchanged, i.e. we
+     have last bit accuracy.  */
+  __add (&mpp, &eps, &mpr, p);
+  __mp_dbl (&mpr, &res, p);
+  __sub (&mpp, &eps, &mpr1, p);
+  __mp_dbl (&mpr1, &res1, p);
+  if (res == res1)
+    return res;
+
+  /* If we don't, then we repeat using a higher precision.  768 bits of
+     precision ought to be enough for anybody.  */
+  p = 32;
+  __dbl_mp (x, &mpx, p);
+  __dbl_mp (y, &mpy, p);
+  __dbl_mp (z, &mpz, p);
+  __mplog (&mpx, &mpz, p);
+  __mul (&mpy, &mpz, &mpw, p);
+  __mpexp (&mpw, &mpp, p);
+  __mp_dbl (&mpp, &res, p);
   return res;
 }
