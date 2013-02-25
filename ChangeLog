@@ -1,5 +1,16 @@
 2013-02-25  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
+	* sysdeps/ieee754/dbl-64/mpa.c (mcr): Use long instead of int.
+	(__acr): Likewise.
+	(__cpy): Likewise.
+	(norm): Likewise.
+	(denorm): Likewise.
+	(__dbl_mp): Likewise.
+	(add_magnitudes): Likewise.
+	(sub_magnitudes): Likewise.
+	(__mul): Likewise.
+	(__inv): Likewise.
+
 	* sysdeps/ieee754/dbl-64/slowexp.c: Reformat in GNU coding
 	style.
 

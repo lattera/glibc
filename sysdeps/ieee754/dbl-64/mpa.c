@@ -59,8 +59,9 @@ const mp_no mptwo = {1, {1.0, 2.0}};
 static int
 mcr (const mp_no *x, const mp_no *y, int p)
 {
-  int i;
-  for (i = 1; i <= p; i++)
+  long i;
+  long p2 = p;
+  for (i = 1; i <= p2; i++)
     {
       if (X[i] == Y[i])
 	continue;
@@ -76,7 +77,7 @@ mcr (const mp_no *x, const mp_no *y, int p)
 int
 __acr (const mp_no *x, const mp_no *y, int p)
 {
-  int i;
+  long i;
 
   if (X[0] == ZERO)
     {
@@ -107,8 +108,10 @@ __acr (const mp_no *x, const mp_no *y, int p)
 void
 __cpy (const mp_no *x, mp_no *y, int p)
 {
+  long i;
+
   EY = EX;
-  for (int i = 0; i <= p; i++)
+  for (i = 0; i <= p; i++)
     Y[i] = X[i];
 }
 #endif
@@ -120,7 +123,7 @@ static void
 norm (const mp_no *x, double *y, int p)
 {
 #define R RADIXI
-  int i;
+  long i;
   double a, c, u, v, z[5];
   if (p < 5)
     {
@@ -194,7 +197,8 @@ norm (const mp_no *x, double *y, int p)
 static void
 denorm (const mp_no *x, double *y, int p)
 {
-  int i, k;
+  long i, k;
+  long p2 = p;
   double c, u, z[5];
 
 #define R RADIXI
@@ -204,7 +208,7 @@ denorm (const mp_no *x, double *y, int p)
       return;
     }
 
-  if (p == 1)
+  if (p2 == 1)
     {
       if (EX == -42)
 	{
@@ -228,7 +232,7 @@ denorm (const mp_no *x, double *y, int p)
 	  k = 1;
 	}
     }
-  else if (p == 2)
+  else if (p2 == 2)
     {
       if (EX == -42)
 	{
@@ -281,7 +285,7 @@ denorm (const mp_no *x, double *y, int p)
 
   if (u == z[3])
     {
-      for (i = k + 1; i <= p; i++)
+      for (i = k + 1; i <= p2; i++)
 	{
 	  if (X[i] == ZERO)
 	    continue;
@@ -323,7 +327,8 @@ void
 SECTION
 __dbl_mp (double x, mp_no *y, int p)
 {
-  int i, n;
+  long i, n;
+  long p2 = p;
   double u;
 
   /* Sign.  */
@@ -347,7 +352,7 @@ __dbl_mp (double x, mp_no *y, int p)
     x *= RADIX;
 
   /* Digits.  */
-  n = MIN (p, 4);
+  n = MIN (p2, 4);
   for (i = 1; i <= n; i++)
     {
       u = (x + TWO52) - TWO52;
@@ -357,7 +362,7 @@ __dbl_mp (double x, mp_no *y, int p)
       x -= u;
       x *= RADIX;
     }
-  for (; i <= p; i++)
+  for (; i <= p2; i++)
     Y[i] = ZERO;
 }
 
@@ -369,14 +374,15 @@ static void
 SECTION
 add_magnitudes (const mp_no *x, const mp_no *y, mp_no *z, int p)
 {
-  int i, j, k;
+  long i, j, k;
+  long p2 = p;
   double zk;
 
   EZ = EX;
 
-  i = p;
-  j = p + EY - EX;
-  k = p + 1;
+  i = p2;
+  j = p2 + EY - EX;
+  k = p2 + 1;
 
   if (__glibc_unlikely (j < 1))
     {
@@ -418,7 +424,7 @@ add_magnitudes (const mp_no *x, const mp_no *y, mp_no *z, int p)
 
   if (zk == ZERO)
     {
-      for (i = 1; i <= p; i++)
+      for (i = 1; i <= p2; i++)
 	Z[i] = Z[i + 1];
     }
   else
@@ -436,13 +442,14 @@ static void
 SECTION
 sub_magnitudes (const mp_no *x, const mp_no *y, mp_no *z, int p)
 {
-  int i, j, k;
+  long i, j, k;
+  long p2 = p;
   double zk;
 
   EZ = EX;
-  i = p;
-  j = p + EY - EX;
-  k = p;
+  i = p2;
+  j = p2 + EY - EX;
+  k = p2;
 
   /* Y is too small compared to X, copy X over to the result.  */
   if (__glibc_unlikely (j < 1))
@@ -453,7 +460,7 @@ sub_magnitudes (const mp_no *x, const mp_no *y, mp_no *z, int p)
 
   /* The relevant least significant digit in Y is non-zero, so we factor it in
      to enhance accuracy.  */
-  if (j < p && Y[j + 1] > ZERO)
+  if (j < p2 && Y[j + 1] > ZERO)
     {
       Z[k + 1] = RADIX - Y[j + 1];
       zk = MONE;
@@ -496,9 +503,9 @@ sub_magnitudes (const mp_no *x, const mp_no *y, mp_no *z, int p)
   /* Normalize.  */
   for (i = 1; Z[i] == ZERO; i++);
   EZ = EZ - i + 1;
-  for (k = 1; i <= p + 1;)
+  for (k = 1; i <= p2 + 1;)
     Z[k++] = Z[i++];
-  for (; k <= p;)
+  for (; k <= p2;)
     Z[k++] = ZERO;
 }
 
@@ -610,7 +617,8 @@ void
 SECTION
 __mul (const mp_no *x, const mp_no *y, mp_no *z, int p)
 {
-  int i, j, k, ip, ip2;
+  long i, j, k, ip, ip2;
+  long p2 = p;
   double u, zk;
   const mp_no *a;
 
@@ -623,7 +631,7 @@ __mul (const mp_no *x, const mp_no *y, mp_no *z, int p)
 
   /* We need not iterate through all X's and Y's since it's pointless to
      multiply zeroes.  Here, both are zero...  */
-  for (ip2 = p; ip2 > 0; ip2--)
+  for (ip2 = p2; ip2 > 0; ip2--)
     if (X[ip2] != ZERO || Y[ip2] != ZERO)
       break;
 
@@ -660,16 +668,16 @@ __mul (const mp_no *x, const mp_no *y, mp_no *z, int p)
      'internal precision' of the input numbers, i.e. digits after ip and ip2
      are all ZERO.  */
 
-  k = (__glibc_unlikely (p < 3)) ? p + p : p + 3;
+  k = (__glibc_unlikely (p2 < 3)) ? p2 + p2 : p2 + 3;
 
   while (k > ip + ip2 + 1)
     Z[k--] = ZERO;
 
   zk = Z[k] = ZERO;
 
-  while (k > p)
+  while (k > p2)
     {
-      for (i = k - p, j = p; i < p + 1; i++, j--)
+      for (i = k - p2, j = p2; i < p2 + 1; i++, j--)
 	zk += X[i] * Y[j];
 
       u = (zk + CUTTER) - CUTTER;
@@ -701,7 +709,7 @@ __mul (const mp_no *x, const mp_no *y, mp_no *z, int p)
   /* Is there a carry beyond the most significant digit?  */
   if (__glibc_unlikely (Z[1] == ZERO))
     {
-      for (i = 1; i <= p; i++)
+      for (i = 1; i <= p2; i++)
 	Z[i] = Z[i + 1];
       e--;
     }
@@ -821,7 +829,7 @@ static void
 SECTION
 __inv (const mp_no *x, mp_no *y, int p)
 {
-  int i;
+  long i;
   double t;
   mp_no z, w;
   static const int np1[] =
