@@ -1,5 +1,9 @@
 2013-02-25  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
+	* sysdeps/ieee754/dbl-64/sincos32.c (ss32): Remove commented
+	code.
+	(cc32): Likewise.
+
 	* sysdeps/ieee754/dbl-64/mpa.c (mcr): Use long instead of int.
 	(__acr): Likewise.
 	(__cpy): Likewise.

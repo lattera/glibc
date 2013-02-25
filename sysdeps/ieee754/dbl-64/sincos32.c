@@ -57,14 +57,7 @@ SECTION
 ss32(mp_no *x, mp_no *y, int p) {
   int i;
   double a;
-#if 0
-  double b;
-  static const mp_no mpone = {1,{1.0,1.0}};
-#endif
   mp_no mpt1,x2,gor,sum ,mpk={1,{1.0}};
-#if 0
-  mp_no mpt2;
-#endif
   for (i=1;i<=p;i++) mpk.d[i]=0;
 
   __sqr(x,&x2,p);
@@ -89,14 +82,7 @@ SECTION
 cc32(mp_no *x, mp_no *y, int p) {
   int i;
   double a;
-#if 0
-  double b;
-  static const mp_no mpone = {1,{1.0,1.0}};
-#endif
   mp_no mpt1,x2,gor,sum ,mpk={1,{1.0}};
-#if 0
-  mp_no mpt2;
-#endif
   for (i=1;i<=p;i++) mpk.d[i]=0;
 
   __sqr(x,&x2,p);
