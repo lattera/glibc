@@ -34,32 +34,36 @@
 # define SECTION
 #endif
 
-void __mpexp(mp_no *x, mp_no *y, int p);
+void __mpexp (mp_no *x, mp_no *y, int p);
 
 /*Converting from double precision to Multi-precision and calculating  e^x */
 double
 SECTION
-__slowexp(double x) {
-  double w,z,res,eps=3.0e-26;
+__slowexp (double x)
+{
+  double w, z, res, eps = 3.0e-26;
   int p;
-  mp_no mpx, mpy, mpz,mpw,mpeps,mpcor;
+  mp_no mpx, mpy, mpz, mpw, mpeps, mpcor;
 
-  p=6;
-  __dbl_mp(x,&mpx,p); /* Convert a double precision number  x               */
-		    /* into a multiple precision number mpx with prec. p. */
-  __mpexp(&mpx, &mpy, p); /* Multi-Precision exponential function */
-  __dbl_mp(eps,&mpeps,p);
-  __mul(&mpeps,&mpy,&mpcor,p);
-  __add(&mpy,&mpcor,&mpw,p);
-  __sub(&mpy,&mpcor,&mpz,p);
-  __mp_dbl(&mpw, &w, p);
-  __mp_dbl(&mpz, &z, p);
-  if (w == z) return w;
-  else  {                   /* if calculating is not exactly   */
-    p = 32;
-    __dbl_mp(x,&mpx,p);
-    __mpexp(&mpx, &mpy, p);
-    __mp_dbl(&mpy, &res, p);
-    return res;
-  }
+  /* Use the multiple precision __MPEXP function to compute the exponential
+     First at 144 bits and if it is not accurate enough, at 768 bits.  */
+  p = 6;
+  __dbl_mp (x, &mpx, p);
+  __mpexp (&mpx, &mpy, p);
+  __dbl_mp (eps, &mpeps, p);
+  __mul (&mpeps, &mpy, &mpcor, p);
+  __add (&mpy, &mpcor, &mpw, p);
+  __sub (&mpy, &mpcor, &mpz, p);
+  __mp_dbl (&mpw, &w, p);
+  __mp_dbl (&mpz, &z, p);
+  if (w == z)
+    return w;
+  else
+    {
+      p = 32;
+      __dbl_mp (x, &mpx, p);
+      __mpexp (&mpx, &mpy, p);
+      __mp_dbl (&mpy, &res, p);
+      return res;
+    }
 }
