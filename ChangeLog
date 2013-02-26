@@ -1,5 +1,8 @@
 2013-02-26  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
+	* sysdeps/ieee754/dbl-64/mpa.c: Include alloca.h.
+	(__mul): Reduce iterations for calculating mantissa.
+
 	* sysdeps/ieee754/dbl-64/sincos32.c (__c32): Use MPONE and
 	MPTWO.
 	(__mpranred): Likewise.
