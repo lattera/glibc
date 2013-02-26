@@ -1,5 +1,6 @@
 2013-03-06  Richard Henderson <rth@redhat.com>
 
+	* sysdeps/arm/addmul_1.S: New file.
 	* sysdeps/arm/armv6t2/ffs.S: New file.
 	* sysdeps/arm/armv6t2/ffsll.S: New file.
 
