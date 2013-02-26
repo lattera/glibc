@@ -1,3 +1,9 @@
+2013-02-26  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	[BZ #15160]
+	* malloc/memusagestat.c (main): Draw graphs for heap and stack
+	only if MAXSIZE_HEAP and MAXSIZE_STACK are non-zero.
+
 2013-02-26  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* posix/regex_internal.h [__GNUC__ < 3 + (__GNUC_MINOR__ < 1]:
