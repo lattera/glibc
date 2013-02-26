@@ -1,5 +1,9 @@
 2013-02-26  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
+	* sysdeps/ieee754/dbl-64/sincos32.c (__c32): Use MPONE and
+	MPTWO.
+	(__mpranred): Likewise.
+
 	[BZ #15160]
 	* malloc/memusagestat.c (main): Draw graphs for heap and stack
 	only if MAXSIZE_HEAP and MAXSIZE_STACK are non-zero.
