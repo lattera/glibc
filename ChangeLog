@@ -1,3 +1,18 @@
+2013-02-26  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* locale/elem-hash.h (elem_hash): Mark as pure and possibly
+	unused.
+	* posix/regex_internal.h (__attribute): Remove.
+	[!_LIBC && __i386__]: Use __attribute__ instead of __attribute.
+	(re_string_context_at): Likewise.
+	(bitset_not): Use __attribute__ and mark function as possibly
+	unused.
+	(bitset_merge): Likewise.
+	(bitset_mask): Likewise.
+	(re_string_char_size_at): Likewise.
+	(re_string_wchar_at): Likewise.
+	(re_string_elem_size_at): Likewise.
+
 2013-02-25  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* sysdeps/ieee754/dbl-64/sincos32.c (ss32): Remove commented
