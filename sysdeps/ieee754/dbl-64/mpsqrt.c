@@ -45,33 +45,37 @@
 /* p as integer. Routine computes sqrt(*x) and stores result in *y          */
 /****************************************************************************/
 
-static double fastiroot(double);
+static double fastiroot (double);
 
 void
 SECTION
-__mpsqrt(mp_no *x, mp_no *y, int p) {
-  int i,m,ey;
-  double dx,dy;
-  static const mp_no
-    mphalf   = {0,{1.0,8388608.0 /* 2^23 */}},
-    mp3halfs = {1,{1.0,1.0,8388608.0 /* 2^23 */}};
-  mp_no mpxn,mpz,mpu,mpt1,mpt2;
+__mpsqrt (mp_no *x, mp_no *y, int p)
+{
+  int i, m, ey;
+  double dx, dy;
+  static const mp_no mphalf = {0, {1.0, 8388608.0 /* 2^23 */}};
+  static const mp_no mp3halfs = {1, {1.0, 1.0, 8388608.0 /* 2^23 */}};
+  mp_no mpxn, mpz, mpu, mpt1, mpt2;
 
-  ey=EX/2;     __cpy(x,&mpxn,p);    mpxn.e -= (ey+ey);
-  __mp_dbl(&mpxn,&dx,p);   dy=fastiroot(dx);    __dbl_mp(dy,&mpu,p);
-  __mul(&mpxn,&mphalf,&mpz,p);
+  ey = EX / 2;
+  __cpy (x, &mpxn, p);
+  mpxn.e -= (ey + ey);
+  __mp_dbl (&mpxn, &dx, p);
+  dy = fastiroot (dx);
+  __dbl_mp (dy, &mpu, p);
+  __mul (&mpxn, &mphalf, &mpz, p);
 
-  m=__mpsqrt_mp[p];
-  for (i=0; i<m; i++) {
-    __sqr(&mpu,&mpt1,p);
-    __mul(&mpt1,&mpz,&mpt2,p);
-    __sub(&mp3halfs,&mpt2,&mpt1,p);
-    __mul(&mpu,&mpt1,&mpt2,p);
-    __cpy(&mpt2,&mpu,p);
-  }
-  __mul(&mpxn,&mpu,y,p);  EY += ey;
-
-  return;
+  m = __mpsqrt_mp[p];
+  for (i = 0; i < m; i++)
+    {
+      __sqr (&mpu, &mpt1, p);
+      __mul (&mpt1, &mpz, &mpt2, p);
+      __sub (&mp3halfs, &mpt2, &mpt1, p);
+      __mul (&mpu, &mpt1, &mpt2, p);
+      __cpy (&mpt2, &mpu, p);
+    }
+  __mul (&mpxn, &mpu, y, p);
+  EY += ey;
 }
 
 /***********************************************************/
@@ -80,22 +84,28 @@ __mpsqrt(mp_no *x, mp_no *y, int p) {
 /***********************************************************/
 static double
 SECTION
-fastiroot(double x) {
-  union {int i[2]; double d;} p,q;
-  double y,z, t;
+fastiroot (double x)
+{
+  union
+  {
+    int i[2];
+    double d;
+  } p, q;
+  double y, z, t;
   int n;
-  static const double c0 = 0.99674, c1 = -0.53380, c2 = 0.45472, c3 = -0.21553;
+  static const double c0 = 0.99674, c1 = -0.53380;
+  static const double c2 = 0.45472, c3 = -0.21553;
 
   p.d = x;
-  p.i[HIGH_HALF] = (p.i[HIGH_HALF] & 0x3FFFFFFF ) | 0x3FE00000 ;
+  p.i[HIGH_HALF] = (p.i[HIGH_HALF] & 0x3FFFFFFF) | 0x3FE00000;
   q.d = x;
   y = p.d;
-  z = y -1.0;
-  n = (q.i[HIGH_HALF] - p.i[HIGH_HALF])>>1;
-  z = ((c3*z + c2)*z + c1)*z + c0;            /* 2**-7         */
-  z = z*(1.5 - 0.5*y*z*z);                    /* 2**-14        */
-  p.d = z*(1.5 - 0.5*y*z*z);                  /* 2**-28        */
+  z = y - 1.0;
+  n = (q.i[HIGH_HALF] - p.i[HIGH_HALF]) >> 1;
+  z = ((c3 * z + c2) * z + c1) * z + c0;	/* 2**-7         */
+  z = z * (1.5 - 0.5 * y * z * z);		/* 2**-14        */
+  p.d = z * (1.5 - 0.5 * y * z * z);		/* 2**-28        */
   p.i[HIGH_HALF] -= n;
-  t = x*p.d;
-  return p.d*(1.5 - 0.5*p.d*t);
+  t = x * p.d;
+  return p.d * (1.5 - 0.5 * p.d * t);
 }

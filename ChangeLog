@@ -1,5 +1,7 @@
 2013-02-27  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
+	* sysdeps/ieee754/dbl-64/mpsqrt.c: Reformat.
+
 	* sysdeps/ieee754/dbl-64/mpatan2.c: Reformat.
 
 	* sysdeps/ieee754/dbl-64/mpatan.c: Reformat.
