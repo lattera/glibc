@@ -1,5 +1,12 @@
 2013-03-06  Richard Henderson <rth@redhat.com>
 
+	* sysdeps/arm/sysdep.h (__ARM_ARCH): New macro.
+	(ARCH_HAS_BX, ARCH_HAS_BLX, ARCH_HAS_T2): New macros.
+	(BX): Select on ARCH_HAS_BX instead of __USE_BX__.
+	(BLX): Select on ARCH_HAS_BLX instead of __ARM_ARCH_4T__.
+	* ports/sysdeps/arm/dl-machine.h (BX): Select on ARCH_HAS_BX
+	instead of __USE_BX__.
+
 	* sysdeps/arm/arm-mcount.S (_mcount): Use pop into pc unless
 	__ARM_ARCH_4T__ and __THUMB_INTERWORK__.
 	* sysdeps/arm/dl-tlsdesc.S (_dl_tlsdesc_dynamic): Likewise.

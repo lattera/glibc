@@ -136,7 +136,7 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
   return lazy;
 }
 
-#if defined(__USE_BX__)
+#if defined(ARCH_HAS_BX)
 #define BX(x) "bx\t" #x
 #else
 #define BX(x) "mov\tpc, " #x

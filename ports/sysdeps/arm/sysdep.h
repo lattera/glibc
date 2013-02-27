@@ -19,9 +19,39 @@
 #include <sysdeps/generic/sysdep.h>
 #include <features.h>
 
-#if (!defined (__ARM_ARCH_2__) && !defined (__ARM_ARCH_3__) \
-     && !defined (__ARM_ARCH_3M__) && !defined (__ARM_ARCH_4__))
-# define __USE_BX__
+/* The __ARM_ARCH define is provided by gcc 4.8.  Construct it otherwise.  */
+#ifndef __ARM_ARCH
+# ifdef __ARM_ARCH_2__
+#  define __ARM_ARCH 2
+# elif defined (__ARM_ARCH_3__) || defined (__ARM_ARCH_3M__)
+#  define __ARM_ARCH 3
+# elif defined (__ARM_ARCH_4__) || defined (__ARM_ARCH_4T__)
+#  define __ARM_ARCH 4
+# elif defined (__ARM_ARCH_5__) || defined (__ARM_ARCH_5E__) \
+       || defined(__ARM_ARCH_5T__) || defined(__ARM_ARCH_5TE__) \
+       || defined(__ARM_ARCH_5TEJ__)
+#  define __ARM_ARCH 5
+# elif defined (__ARM_ARCH_6__) || defined(__ARM_ARCH_6J__) \
+       || defined (__ARM_ARCH_6Z__) || defined(__ARM_ARCH_6ZK__) \
+       || defined (__ARM_ARCH_6K__) || defined(__ARM_ARCH_6T2__)
+#  define __ARM_ARCH 6
+# elif defined (__ARM_ARCH_7__) || defined(__ARM_ARCH_7A__) \
+       || defined(__ARM_ARCH_7R__) || defined(__ARM_ARCH_7M__) \
+       || defined(__ARM_ARCH_7EM__)
+#  define __ARM_ARCH 7
+# else
+#  error unknown arm architecture
+# endif
+#endif
+
+#if __ARM_ARCH > 4 || defined (__ARM_ARCH_4T__)
+# define ARCH_HAS_BX
+#endif
+#if __ARM_ARCH > 4
+# define ARCH_HAS_BLX
+#endif
+#if __ARM_ARCH > 6 || defined (__ARM_ARCH_6T2__)
+# define ARCH_HAS_T2
 #endif
 
 #ifdef	__ASSEMBLER__
@@ -33,13 +63,13 @@
 
 #define PLTJMP(_x)	_x##(PLT)
 
-#ifdef __USE_BX__
+#ifdef ARCH_HAS_BX
 # define BX(R)		bx	R
 # define BXC(C, R)	bx##C	R
-# ifdef __ARM_ARCH_4T__
-#  define BLX(R)	mov	lr, pc; bx R
-# else
+# ifdef ARCH_HAS_BLX
 #  define BLX(R)	blx	R
+# else
+#  define BLX(R)	mov	lr, pc; bx R
 # endif
 #else
 # define BX(R)		mov	pc, R
