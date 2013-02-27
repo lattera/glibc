@@ -1,3 +1,7 @@
+2013-02-27  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* sysdeps/ieee754/dbl-64/mplog.c: Reformat.
+
 2013-02-26  Roland McGrath  <roland@hack.frob.com>
 
 	* Makeconfig (%.v.i, %.v): Move these pattern rules outside of
