@@ -1,3 +1,7 @@
+2013-02-27  Roland McGrath  <roland@hack.frob.com>
+
+	* csu/gmon-start.c: Add special exception to license text.
+
 2013-02-27  Richard Henderson  <rth@redhat.com>
 
 	* scripts/config.guess: Update from config.git.
