@@ -32,37 +32,36 @@
 /*                                                                */
 /******************************************************************/
 
-
-
 #include "mpa.h"
 
 #ifndef SECTION
 # define SECTION
 #endif
 
-void __mpsqrt(mp_no *, mp_no *, int);
-void __mpatan(mp_no *, mp_no *, int);
-
-/* Multi-Precision Atan2(y,x) function subroutine, for p >= 4.    */
-/* y=0 is not permitted if x<=0. No error messages are given.     */
+/* Multi-Precision Atan2 (y, x) function subroutine, for p >= 4.
+   y = 0 is not permitted if x <= 0. No error messages are given.  */
 void
 SECTION
-__mpatan2(mp_no *y, mp_no *x, mp_no *z, int p) {
+__mpatan2 (mp_no *y, mp_no *x, mp_no *z, int p)
+{
+  mp_no mpt1, mpt2, mpt3;
 
-  mp_no mpt1,mpt2,mpt3;
-
-
-  if (X[0] <= ZERO) {
-    __dvd(x,y,&mpt1,p);          __mul(&mpt1,&mpt1,&mpt2,p);
-    if (mpt1.d[0] != ZERO)       mpt1.d[0] = ONE;
-    __add(&mpt2,&mpone,&mpt3,p); __mpsqrt(&mpt3,&mpt2,p);
-    __add(&mpt1,&mpt2,&mpt3,p);  mpt3.d[0]=Y[0];
-    __mpatan(&mpt3,&mpt1,p);     __add(&mpt1,&mpt1,z,p);
-  }
+  if (X[0] <= ZERO)
+    {
+      __dvd (x, y, &mpt1, p);
+      __mul (&mpt1, &mpt1, &mpt2, p);
+      if (mpt1.d[0] != ZERO)
+	mpt1.d[0] = ONE;
+      __add (&mpt2, &mpone, &mpt3, p);
+      __mpsqrt (&mpt3, &mpt2, p);
+      __add (&mpt1, &mpt2, &mpt3, p);
+      mpt3.d[0] = Y[0];
+      __mpatan (&mpt3, &mpt1, p);
+      __add (&mpt1, &mpt1, z, p);
+    }
   else
-  { __dvd(y,x,&mpt1,p);
-    __mpatan(&mpt1,z,p);
-  }
-
-  return;
+    {
+      __dvd (y, x, &mpt1, p);
+      __mpatan (&mpt1, z, p);
+    }
 }
