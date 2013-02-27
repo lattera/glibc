@@ -39,6 +39,7 @@
 # undef PSEUDO
 # define PSEUDO(name, syscall_name, args)				      \
       .align 2;								      \
+      .set nomips16;							      \
   L(pseudo_start):							      \
       cfi_startproc;							      \
   99: PSEUDO_ERRJMP							      \

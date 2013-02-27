@@ -22,7 +22,7 @@
 
 #if (_MIPS_ISA >= _MIPS_ISA_MIPS2)
 
-double
+double __attribute__ ((nomips16))
 __ieee754_sqrt (double x)
 {
   double z;

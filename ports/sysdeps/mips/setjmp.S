@@ -17,6 +17,8 @@
 
 #include <sysdep.h>
 
+	.set	nomips16
+
 /* The function __sigsetjmp_aux saves all the registers, but it can't
    reliably access the stack or frame pointers, so we pass them in as
    extra arguments.  */

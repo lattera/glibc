@@ -36,6 +36,8 @@
 /* crtn.S puts function epilogues in the .init and .fini sections
    corresponding to the prologues in crti.S. */
 
+	.set nomips16
+
 	.section .init,"ax",@progbits
 	ld $31,8($sp)
 	ld $28,0($sp)

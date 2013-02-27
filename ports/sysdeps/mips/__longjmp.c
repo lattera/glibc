@@ -23,8 +23,8 @@
   #error This file uses GNU C extensions; you must compile with GCC.
 #endif
 
-void
-__longjmp (env_arg, val_arg)
+static void __attribute__ ((nomips16))
+____longjmp (env_arg, val_arg)
      __jmp_buf env_arg;
      int val_arg;
 {
@@ -86,3 +86,5 @@ __longjmp (env_arg, val_arg)
   /* Avoid `volatile function does return' warnings.  */
   for (;;);
 }
+
+strong_alias (____longjmp, __longjmp);

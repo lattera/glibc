@@ -34,6 +34,7 @@
 /* int vfork() */
 
 	.text
+	.set		nomips16
 LOCALSZ= 1
 FRAMESZ= (((NARGSAVE+LOCALSZ)*SZREG)+ALSZ)&ALMASK
 GPOFF= FRAMESZ-(1*SZREG)

@@ -26,6 +26,7 @@
 #ifdef __PIC__
 #define PSEUDO(name, syscall_name, args) \
   .align 2;								      \
+  .set nomips16;							      \
   cfi_startproc;							      \
   99:;									      \
   .set noat;								      \
@@ -46,6 +47,7 @@ L(syse1):
 #define PSEUDO(name, syscall_name, args) \
   .set noreorder;							      \
   .align 2;								      \
+  .set nomips16;							      \
   cfi_startproc;							      \
   99: j __syscall_error;						      \
   nop;                                                                        \

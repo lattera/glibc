@@ -44,6 +44,7 @@
 #define PSEUDO_NOERRNO(name, syscall_name, args)	\
   .align 2;						\
   ENTRY(name)						\
+  .set nomips16;					\
   .set noreorder;					\
   li v0, SYS_ify(syscall_name);				\
   syscall
@@ -56,6 +57,7 @@
 #define PSEUDO_ERRVAL(name, syscall_name, args)	\
   .align 2;						\
   ENTRY(name)						\
+  .set nomips16;					\
   .set noreorder;					\
   li v0, SYS_ify(syscall_name);				\
   syscall

@@ -1,3 +1,109 @@
+2013-02-27  Chung-Lin Tang  <cltang@codesourcery.com>
+            Maciej W. Rozycki  <macro@codesourcery.com>
+            Maxim Kuvyrkov  <maxim@codesourcery.com>
+
+	* sysdeps/mips/abort-instr.h (ABORT_INSTRUCTION) [__mips16]:
+	New macro.
+	* sysdeps/mips/dl-machine.h (elf_machine_load_address): Add
+	MIPS16 version of assembly code.
+	(RTLD_START) [__mips16]: New macro.
+	* sysdeps/mips/fpu_control.h (__mips_fpu_getcw): New prototype.
+	(__mips_fpu_setcw): Likewise.
+	(_FPU_GETCW) [__mips16]: New macro.
+	(_FPU_SETCW) [__mips16]: Likewise.
+	* sysdeps/mips/machine-gmon.h (MCOUNT): Add `.set nomips16'.
+	* sysdeps/mips/tls-macros.h (LOAD_GP) [__mips16]: New macro.
+	(TLS_GD, TLS_LD, TLS_IE, TLS_LE) [__mips16]: Likewise.
+	* sysdeps/mips/bits/atomic.h: Also use __atomic_* builtins with
+	GCC 4.7 in MIPS16 code.
+	(atomic_compare_and_exchange_val_acq) [__mips16]: New macro.
+	(atomic_compare_and_exchange_bool_acq) [__mips16]: Likewise.
+	(atomic_exchange_acq) [__mips16]: Likewise.
+	(atomic_exchange_and_add) [__mips16]: Likewise.
+	(atomic_bit_test_set) [__mips16]: Likewise.
+	(atomic_and, atomic_and_val) [__mips16]: Likewise.
+	(atomic_or, atomic_or_val) [__mips16]: Likewise.
+	(atomic_full_barrier) [__mips16]: Likewise.
+	* sysdeps/mips/nptl/tls.h (READ_THREAD_POINTER) [__mips16]:
+	Likewise.
+	* sysdeps/mips/sys/tas.h (_test_and_set): Add `__nomips16__'
+	attribute.
+	* sysdeps/unix/mips/sysdep.h (PSEUDO_NOERRNO): Add
+	`.set nomips16'.
+	(PSEUDO_ERRVAL): Likewise.
+	* sysdeps/unix/mips/mips32/sysdep.h (PSEUDO): Likewise.
+	* sysdeps/unix/mips/mips64/n32/sysdep.h (PSEUDO): Likewise.
+	* sysdeps/unix/mips/mips64/n64/sysdep.h (PSEUDO): Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/sysdep.h
+	(INTERNAL_SYSCALL, INTERNAL_SYSCALL_NCS) [__mips16]: New macros.
+	(INTERNAL_SYSCALL_MIPS16) [__mips16]: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/mips16/mips16-syscall.h:
+	New file.
+	* sysdeps/unix/sysv/linux/mips/nptl/sysdep-cancel.h (PSEUDO):
+	Add `.set nomips16'.
+	* sysdeps/mips/bsd-_setjmp.S (_setjmp): Likewise.
+	* sysdeps/mips/bsd-setjmp.S (setjmp): Likewise.
+	* sysdeps/mips/memset.S (memset): Likewise.
+	* sysdeps/mips/setjmp.S (__sigsetjmp): Likewise.
+	* sysdeps/mips/start.S (ENTRY_POINT) [__mips16]: New function.
+	* sysdeps/mips/mips32/crti.S: Add `.set nomips16'.
+	* sysdeps/mips/mips32/crtn.S: Likewise.
+	* sysdeps/mips/mips64/n32/crti.S: Likewise.
+	* sysdeps/mips/mips64/n32/crtn.S: Likewise.
+	* sysdeps/mips/mips64/n64/crti.S: Likewise.
+	* sysdeps/mips/mips64/n64/crtn.S: Likewise.
+	* sysdeps/unix/mips/sysdep.S: Likewise.
+	* sysdeps/unix/sysv/linux/mips/clone.S: Likewise.
+	* sysdeps/unix/sysv/linux/mips/getcontext.S: Likewise.
+	* sysdeps/unix/sysv/linux/mips/makecontext.S: Likewise.
+	* sysdeps/unix/sysv/linux/mips/setcontext.S: Likewise.
+	* sysdeps/unix/sysv/linux/mips/swapcontext.S: Likewise.
+	* sysdeps/unix/sysv/linux/mips/vfork.S: Likewise.
+	* sysdeps/mips/__longjmp.c (__longjmp): Rename function to...
+	(____longjmp): ... this.  Make static and add `nomips16'
+	attribute.
+	(__longjmp): New alias.
+	* sysdeps/mips/dl-trampoline.c (_dl_runtime_resolve) [__mips16]:
+	New function.
+	(_dl_runtime_pltresolve): Likewise.
+	* sysdeps/mips/setjmp_aux.c (__sigsetjmp_aux): Add `nomips16'
+	attribute.
+	* sysdeps/mips/fpu/e_sqrt.c (__ieee754_sqrt): Likewise.
+	* sysdeps/mips/fpu/e_sqrtf.c (__ieee754_sqrtf): Likewise.
+	* sysdeps/unix/sysv/linux/mips/brk.c (__brk): Rewrite in terms
+	of INTERNAL_SYSCALL.
+	* sysdeps/mips/mips32/fpu/fpu_control.c: New file.
+	* sysdeps/mips/mips32/mips16/add_n.c: New file.
+	* sysdeps/mips/mips32/mips16/addmul_1.c: New file.
+	* sysdeps/mips/mips32/mips16/lshift.c: New file.
+	* sysdeps/mips/mips32/mips16/mul_1.c: New file.
+	* sysdeps/mips/mips32/mips16/rshift.c: New file.
+	* sysdeps/mips/mips32/mips16/sub_n.c: New file.
+	* sysdeps/mips/mips32/mips16/submul_1.c: New file.
+	* sysdeps/unix/sysv/linux/mips/mips32/mips16/mips16-syscall0.c:
+	New file.
+	* sysdeps/unix/sysv/linux/mips/mips32/mips16/mips16-syscall1.c:
+	New file.
+	* sysdeps/unix/sysv/linux/mips/mips32/mips16/mips16-syscall2.c:
+	New file.
+	* sysdeps/unix/sysv/linux/mips/mips32/mips16/mips16-syscall3.c:
+	New file.
+	* sysdeps/unix/sysv/linux/mips/mips32/mips16/mips16-syscall4.c:
+	New file.
+	* sysdeps/unix/sysv/linux/mips/mips32/mips16/mips16-syscall5.c:
+	New file.
+	* sysdeps/unix/sysv/linux/mips/mips32/mips16/mips16-syscall6.c:
+	New file.
+	* sysdeps/unix/sysv/linux/mips/mips32/mips16/mips16-syscall7.c:
+	New file.
+	* sysdeps/mips/mips32/fpu/Versions: New file.
+	* sysdeps/unix/sysv/linux/mips/mips32/mips16/Versions: New file.
+	* sysdeps/unix/sysv/linux/mips/mips32/nptl/libc.abilist: New
+	file.
+	* sysdeps/mips/mips32/mips16/fpu/Makefile: New file.
+	* sysdeps/unix/sysv/linux/mips/mips32/mips16/Makefile: New file.
+	* sysdeps/mips/preconfigure: Handle o32 MIPS16 compilation.
+
 2013-02-20  Thomas Schwinge  <thomas@codesourcery.com>
 
 	* sysdeps/mips/bits/nan.h [!__GNUC__] (__nan_union): Change

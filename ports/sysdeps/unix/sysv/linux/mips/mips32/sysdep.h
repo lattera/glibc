@@ -95,16 +95,45 @@
 #endif
 
 #undef INTERNAL_SYSCALL
-#define INTERNAL_SYSCALL(name, err, nr, args...)			\
+#undef INTERNAL_SYSCALL_NCS
+
+#ifdef __mips16
+/* There's no MIPS16 syscall instruction, so we go through out-of-line
+   standard MIPS wrappers.  These do use inline snippets below though,
+   through INTERNAL_SYSCALL_MIPS16.  Spilling the syscall number to
+   memory gives the best code in that case, avoiding the need to save
+   and restore a static register.  */
+
+# include <mips16-syscall.h>
+
+# define INTERNAL_SYSCALL(name, err, nr, args...)			\
+	INTERNAL_SYSCALL_NCS (SYS_ify (name), err, nr, args)
+
+# define INTERNAL_SYSCALL_NCS(number, err, nr, args...)			\
+({									\
+	union __mips16_syscall_return ret;				\
+	ret.val = __mips16_syscall##nr (args, number);			\
+	err = ret.reg.v1;						\
+	ret.reg.v0;							\
+})
+
+# define INTERNAL_SYSCALL_MIPS16(number, err, nr, args...)		\
+	internal_syscall##nr ("lw\t%0, %2\n\t",				\
+			      "R" (number),				\
+			      0, err, args)
+
+#else /* !__mips16 */
+# define INTERNAL_SYSCALL(name, err, nr, args...)			\
 	internal_syscall##nr ("li\t%0, %2\t\t\t# " #name "\n\t",	\
 			      "IK" (SYS_ify (name)),			\
 			      0, err, args)
 
-#undef INTERNAL_SYSCALL_NCS
-#define INTERNAL_SYSCALL_NCS(number, err, nr, args...)			\
+# define INTERNAL_SYSCALL_NCS(number, err, nr, args...)			\
 	internal_syscall##nr (MOVE32 "\t%0, %2\n\t",			\
 			      "r" (__s0),				\
 			      number, err, args)
+
+#endif /* !__mips16 */
 
 #define internal_syscall0(v0_init, input, number, err, dummy...)	\
 ({									\

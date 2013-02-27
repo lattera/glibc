@@ -27,6 +27,7 @@
 /* int getcontext (ucontext_t *ucp) */
 
 	.text
+	.set	nomips16
 LOCALSZ = 0
 MASK = 0x00000000
 #ifdef __PIC__

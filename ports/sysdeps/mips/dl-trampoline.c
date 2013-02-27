@@ -292,9 +292,11 @@ __dl_runtime_resolve (ElfW(Word) sym_index,
 
 #endif
 
+#ifndef __mips16
 asm ("\n\
 	.text\n\
 	.align	2\n\
+	.set	nomips16\n\
 	.globl	_dl_runtime_resolve\n\
 	.type	_dl_runtime_resolve,@function\n\
 	.ent	_dl_runtime_resolve\n\
@@ -351,6 +353,7 @@ _dl_runtime_resolve:\n\
 asm ("\n\
 	.text\n\
 	.align	2\n\
+	.set	nomips16\n\
 	.globl	_dl_runtime_pltresolve\n\
 	.type	_dl_runtime_pltresolve,@function\n\
 	.ent	_dl_runtime_pltresolve\n\
@@ -381,3 +384,130 @@ _dl_runtime_pltresolve:\n\
 	.previous\n\
 ");
 
+#elif _MIPS_SIM == _ABIO32 /* __mips16 */
+/* MIPS16 version, O32 only.  */
+asm ("\n\
+	.text\n\
+	.align	2\n\
+	.set	mips16\n\
+	.globl	_dl_runtime_resolve\n\
+	.type	_dl_runtime_resolve,@function\n\
+	.ent	_dl_runtime_resolve\n\
+_dl_runtime_resolve:\n\
+	.frame	$29, " STRINGXP (ELF_DL_FRAME_SIZE) ", $31\n\
+	# Save arguments and sp value in stack.\n\t"
+# if _MIPS_ISA >= _MIPS_ISA_MIPS32
+	"save	" STRINGXP (ELF_DL_FRAME_SIZE) ", $4-$7, $ra\n\t"
+# else
+	"addiu	$sp, -" STRINGXP (ELF_DL_FRAME_SIZE) "\n\
+	sw	$7, 32($sp)\n\
+	sw	$6, 28($sp)\n\
+	sw	$5, 24($sp)\n\
+	sw	$4, 20($sp)\n\t"
+# endif
+	"# Preserve caller's $ra, for RESTORE instruction below.\n\
+	move	$5, $15\n\
+	sw	$5, 36($sp)\n\
+	# Compute GP into $2.\n\
+	li	$2, %hi(_gp_disp)\n\
+	addiu	$3, $pc, %lo(_gp_disp)\n\
+	sll	$2, 16\n\
+	addu	$2, $3\n\
+	lw	$3, %got(__dl_runtime_resolve)($2)\n\
+	move	$4, $24\n\
+	addiu	$3, %lo(__dl_runtime_resolve)\n\
+	move	$7, $ra\n\
+	move	$6, $28\n\
+	move	$25, $3\n\
+	jalr	$3\n\t"
+# if _MIPS_ISA >= _MIPS_ISA_MIPS32
+	"restore " STRINGXP(ELF_DL_FRAME_SIZE) ", $4-$7, $ra\n\t"
+# else
+	"# Restore $ra, move placed further down to hide latency.\n\
+	lw	$4, 36($sp)\n\
+	lw	$5, 24($sp)\n\
+	lw	$6, 28($sp)\n\
+	lw	$7, 32($sp)\n\
+	move	$ra, $4\n\
+	lw	$4, 20($sp)\n\
+	addiu	$sp, " STRINGXP(ELF_DL_FRAME_SIZE) "\n\t"
+# endif
+	"move	$25, $2\n\
+	jr	$2\n\
+	.end	_dl_runtime_resolve\n\
+	.previous\n\
+");
+
+asm ("\n\
+	.text\n\
+	.align	2\n\
+	.set	mips16\n\
+	.globl	_dl_runtime_pltresolve\n\
+	.type	_dl_runtime_pltresolve,@function\n\
+	.ent	_dl_runtime_pltresolve\n\
+_dl_runtime_pltresolve:\n\
+	.frame	$29, " STRINGXP(ELF_DL_PLT_FRAME_SIZE) ", $31\n\
+	# Save arguments and sp value in stack.\n\t"
+# if _MIPS_ISA >= _MIPS_ISA_MIPS32
+	"save	" STRINGXP(ELF_DL_PLT_FRAME_SIZE) ", $4-$7, $ra\n\t"
+# else
+	"addiu	$sp, -" STRINGXP(ELF_DL_PLT_FRAME_SIZE) "\n\
+	sw	$7, 40($sp)\n\
+	sw	$6, 36($sp)\n\
+	sw	$5, 32($sp)\n\
+	sw	$4, 28($sp)\n\t"
+# endif
+	"# Preserve MIPS16 stub function arguments.\n\
+	sw	$3, 20($sp)\n\
+	sw	$2, 16($sp)\n\
+	# Preserve caller's $ra, for RESTORE instruction below.\n\
+	move	$3, $15\n\
+	sw	$3, 44($sp)\n\
+	# Compute GP into $2.\n\
+	li	$2, %hi(_gp_disp)\n\
+	addiu	$3, $pc, %lo(_gp_disp)\n\
+	sll	$2, 16\n\
+	addu	$2, $3\n\
+	# Save GP value in slot.\n\
+	sw	$2, 24($sp)\n\
+	# Load _dl_fixup address.\n\
+	lw	$6, %call16(_dl_fixup)($2)\n\
+	# Load link map address.\n\
+	move	$3, $28\n\
+	lw	$4, " STRINGXP (PTRSIZE) "($3)\n\
+	move	$5, $24\n\
+	sll	$5, " STRINGXP (PTRLOG) " + 1\n\
+	# Call _dl_fixup.\n\
+	move	$25, $6\n\
+	jalr	$6\n\
+	move	$25, $2\n\
+	# Reload GP value into $28.\n\
+	lw	$3, 24($sp)\n\
+	move	$28, $3\n\
+	lw	$3, 16($sp)\n\
+	move	$15, $3\n\
+	lw	$3, 20($sp)\n\t"
+# if _MIPS_ISA >= _MIPS_ISA_MIPS32
+	"restore " STRINGXP (ELF_DL_PLT_FRAME_SIZE) ", $4-$7, $ra\n\t"
+# else
+	"# Restore $ra, move placed further down to hide latency.\n\
+	lw	$4, 44($sp)\n\
+	lw	$5, 32($sp)\n\
+	lw	$6, 36($sp)\n\
+	lw	$7, 40($sp)\n\
+	move	$ra, $4\n\
+	lw	$4, 28($sp)\n\
+	addiu	$sp, " STRINGXP (ELF_DL_PLT_FRAME_SIZE) "\n\t"
+# endif
+	".set	noreorder\n\
+	jr	$2\n\
+	 move	$2, $15\n\
+	.set	reorder\n\
+	.end	_dl_runtime_pltresolve\n\
+	.previous\n\
+");
+
+#else /* __mips16 && _MIPS_SIM != _ABIO32 */
+# error "MIPS16 support for N32/N64 not implemented"
+
+#endif /* __mips16 */

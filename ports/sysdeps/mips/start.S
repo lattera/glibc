@@ -74,14 +74,15 @@
 	.text
 	.globl ENTRY_POINT
 	.type ENTRY_POINT,@function
+#ifndef __mips16
 ENTRY_POINT:
-#ifdef __PIC__
+# ifdef __PIC__
 	SETUP_GPX($0)
 	SETUP_GPX64($25,$0)
-#else
+# else
 	PTR_LA $28, _gp		/* Setup GP correctly if we're non-PIC.  */
 	move $31, $0
-#endif
+# endif
 
 	PTR_LA $4, main		/* main */
 	PTR_L $5, 0($29)		/* argc */
@@ -92,21 +93,84 @@ ENTRY_POINT:
 	   on o32 and quad words (16 bytes) on n32 and n64.  */
 	
 	and $29, -2 * SZREG
-#if _MIPS_SIM == _ABIO32
+# if _MIPS_SIM == _ABIO32
 	PTR_SUBIU $29, 32
-#endif
+# endif
 	PTR_LA $7, __libc_csu_init		/* init */
 	PTR_LA $8, __libc_csu_fini
-#if _MIPS_SIM == _ABIO32
+# if _MIPS_SIM == _ABIO32
 	PTR_S $8, 16($29)		/* fini */
 	PTR_S $2, 20($29)		/* rtld_fini */
 	PTR_S $29, 24($29)		/* stack_end */
-#else
+# else
 	move $9, $2		/* rtld_fini */
 	move $10, $29		/* stack_end */
-#endif
+# endif
 	jal __libc_start_main
 hlt:	b hlt			/* Crash if somehow it does return.  */
+
+#elif _MIPS_SIM == _ABIO32 /* __mips16 */
+	/* MIPS16 entry point.  */
+	.set	mips16
+ENTRY_POINT:
+# ifdef __PIC__
+	li	$3, %hi(_gp_disp)
+	addiu	$4, $pc, %lo(_gp_disp)
+	sll	$3, 16
+	addu	$3, $4
+	move	$gp, $3
+# else
+	li	$3, %hi(_gp)
+	sll	$3, 16
+	addiu	$3, %lo(_gp)
+	move	$gp, $3
+# endif
+	/* Tie end of stack frames.  */
+	li	$4, 0
+	move	$31, $4
+	/* Create new SP value in $7, including alignment.  */
+	li	$4, 2 * SZREG
+	neg	$4, $4
+	move	$7, $sp
+	and	$7, $4
+	addiu	$7, -32
+	/* Load arguments with original SP.  */
+	lw	$5, 0($sp)
+	addiu	$6, $sp, PTRSIZE
+	/* Update SP.  */
+	move	$sp, $7
+	/* Lay out last arguments, and call __libc_start_main().  */
+# ifdef __PIC__
+	sw	$7, 24($sp)			/* stack_end */
+	lw	$4, %got(__libc_csu_fini)($3)
+	lw	$7, %got(__libc_csu_init)($3)	/* init */
+	sw	$4, 16($sp)			/* fini */
+	lw	$4, %got(main)($3)		/* main */
+	lw	$3, %call16(__libc_start_main)($3)
+	sw	$2, 20($sp)			/* rtld_fini */
+	move	$25, $3
+	jalr	$3
+# else
+	lw	$4, 1f
+	sw	$7, 24($sp)			/* stack_end */
+	lw	$7, 2f				/* init */
+	sw	$4, 16($sp)			/* fini */
+	lw	$4, 3f				/* main */
+	sw	$2, 20($sp)			/* rtld_fini */
+	jal	__libc_start_main
+# endif
+hlt:	b	hlt		/* Crash if somehow it does return.  */
+# ifndef __PIC__
+	.align	2
+1:	.word	__libc_csu_fini
+2:	.word	__libc_csu_init
+3:	.word	main
+# endif
+
+#else /* __mips16 && _MIPS_SIM != _ABIO32 */
+# error "MIPS16 support for N32/N64 not implemented"
+
+#endif /* __mips16 */
 
 /* Define a symbol for the first piece of initialized data.  */
 	.data

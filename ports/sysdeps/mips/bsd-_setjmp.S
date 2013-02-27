@@ -22,6 +22,8 @@
 
 #include <sysdep.h>
 
+	.set	nomips16
+
 #ifdef __PIC__
 	.option pic2
 #endif

@@ -54,6 +54,8 @@
 	.hidden PREINIT_FUNCTION
 #endif
 
+	.set nomips16
+
 	.section .init,"ax",@progbits
 	.p2align 2
 	.globl _init

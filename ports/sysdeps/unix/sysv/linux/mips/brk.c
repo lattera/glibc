@@ -30,19 +30,10 @@ weak_alias (__curbrk, ___brk_addr)
 int
 __brk (void *addr)
 {
+  INTERNAL_SYSCALL_DECL (err);
   void *newbrk;
 
-  {
-    register long int res __asm__ ("$2");
-
-    asm ("move\t$4,%2\n\t"
-	 "li\t%0,%1\n\t"
-	 "syscall"		/* Perform the system call.  */
-	 : "=r" (res)
-	 : "I" (SYS_ify (brk)), "r" (addr)
-	 : "$4", "$7", __SYSCALL_CLOBBERS);
-    newbrk = (void *) res;
-  }
+  newbrk = (void *) INTERNAL_SYSCALL (brk, err, 1, addr);
   __curbrk = newbrk;
 
   if (newbrk < addr)

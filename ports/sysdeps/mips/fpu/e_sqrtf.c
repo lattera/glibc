@@ -22,7 +22,7 @@
 
 #if (_MIPS_ISA >= _MIPS_ISA_MIPS2)
 
-float
+float __attribute__ ((nomips16))
 __ieee754_sqrtf (float x)
 {
   float z;

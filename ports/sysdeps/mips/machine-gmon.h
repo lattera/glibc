@@ -37,6 +37,8 @@ static void __attribute_used__ __mcount (u_long frompc, u_long selfpc)
 #define MCOUNT asm(\
 	".globl _mcount;\n\t" \
 	".align 2;\n\t" \
+	".set push;\n\t" \
+	".set nomips16;\n\t" \
 	".type _mcount,@function;\n\t" \
 	".ent _mcount\n\t" \
         "_mcount:\n\t" \
@@ -67,9 +69,8 @@ static void __attribute_used__ __mcount (u_long frompc, u_long selfpc)
         "addu $29,$29,56;\n\t" \
         "j $31;\n\t" \
         "move $31,$1;\n\t" \
-        ".set reorder;\n\t" \
-        ".set at\n\t" \
-        ".end _mcount");
+	".end _mcount;\n\t" \
+	".set pop");
 
 #else
 
@@ -94,6 +95,8 @@ static void __attribute_used__ __mcount (u_long frompc, u_long selfpc)
 #define MCOUNT asm(\
 	".globl _mcount;\n\t" \
 	".align 3;\n\t" \
+	".set push;\n\t" \
+	".set nomips16;\n\t" \
 	".type _mcount,@function;\n\t" \
 	".ent _mcount\n\t" \
         "_mcount:\n\t" \
@@ -132,8 +135,7 @@ static void __attribute_used__ __mcount (u_long frompc, u_long selfpc)
         PTR_ADDU_STRING " $29,$29,96;\n\t" \
         "j $31;\n\t" \
         "move $31,$1;\n\t" \
-        ".set reorder;\n\t" \
-        ".set at\n\t" \
-        ".end _mcount");
+	".end _mcount;\n\t" \
+	".set pop");
 
 #endif

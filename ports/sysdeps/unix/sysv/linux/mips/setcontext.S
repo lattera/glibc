@@ -27,6 +27,7 @@
 /* int setcontext (const ucontext_t *ucp) */
 
 	.text
+	.set	nomips16
 LOCALSZ = 0
 ARGSZ = 0
 MASK = 0x00000000

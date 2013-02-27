@@ -24,7 +24,8 @@
 
 __BEGIN_DECLS
 
-extern int _test_and_set (int *__p, int __v) __THROW;
+extern int _test_and_set (int *__p, int __v)
+     __THROW __attribute__ ((__nomips16__));
 
 #ifdef __USE_EXTERN_INLINES
 
@@ -32,7 +33,7 @@ extern int _test_and_set (int *__p, int __v) __THROW;
 #  define _EXTERN_INLINE __extern_inline
 # endif
 
-_EXTERN_INLINE int
+_EXTERN_INLINE int __attribute__ ((__nomips16__))
 __NTH (_test_and_set (int *__p, int __v))
 {
   int __r, __t;

@@ -21,6 +21,8 @@
 #include <bits/errno.h>
 #include <sys/asm.h>
 
+	.set	nomips16
+
 #ifdef _LIBC_REENTRANT
 
 LOCALSZ= 3

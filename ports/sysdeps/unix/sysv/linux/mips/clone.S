@@ -34,6 +34,7 @@
 	     void *parent_tidptr, void *tls, void *child_tidptr) */
 
 	.text
+	.set		nomips16
 #if _MIPS_SIM == _ABIO32
 # define EXTRA_LOCALS 1
 #else

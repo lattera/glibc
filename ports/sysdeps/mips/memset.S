@@ -18,6 +18,7 @@
 
 #include <sysdep.h>
 
+	.set	nomips16
 
 /* void *memset(void *s, int c, size_t n).  */
 

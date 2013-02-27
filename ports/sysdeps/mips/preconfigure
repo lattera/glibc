@@ -25,5 +25,10 @@ mips64*)	base_machine=mips64
 		  CPPFLAGS="$CPPFLAGS -mabi=$mips_config_abi"
 		fi
 		;;
-mips*)		base_machine=mips machine=mips/mips32/$machine ;;
+mips*)		base_machine=mips
+		case "$CC $CFLAGS $CPPFLAGS " in
+		*" -mips16 "*) machine=mips/mips32/mips16/$machine ;;
+		*) machine=mips/mips32/$machine ;;
+		esac
+		;;
 esac

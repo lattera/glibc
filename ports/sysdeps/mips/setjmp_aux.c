@@ -23,7 +23,7 @@
    pointer.  We do things this way because it's difficult to reliably
    access them in C.  */
 
-int
+int __attribute__ ((nomips16))
 __sigsetjmp_aux (jmp_buf env, int savemask, int sp, int fp)
 {
 #ifdef __mips_hard_float

@@ -78,9 +78,12 @@ typedef uintmax_t uatomic_max_t;
 #define MIPS_SYNC_STR_1(X) MIPS_SYNC_STR_2(X)
 #define MIPS_SYNC_STR MIPS_SYNC_STR_1(MIPS_SYNC)
 
-#if __GNUC_PREREQ (4, 8)
+#if __GNUC_PREREQ (4, 8) || (defined __mips16 && __GNUC_PREREQ (4, 7))
 /* The __atomic_* builtins are available in GCC 4.7 and later, but MIPS
-   support for their efficient implementation was added only in GCC 4.8.  */
+   support for their efficient implementation was added only in GCC 4.8.
+   We still want to use them even with GCC 4.7 for MIPS16 code where we
+   have no assembly alternative available and want to avoid the __sync_*
+   if at all possible.  */
 
 /* Compare and exchange.
    For all "bool" routines, we return FALSE if exchange succesful.  */
@@ -200,7 +203,33 @@ typedef uintmax_t uatomic_max_t;
 # define atomic_exchange_and_add_rel(mem, value)			\
   __atomic_val_bysize (__arch_exchange_and_add, int, mem, value,	\
 		       __ATOMIC_RELEASE)
-#else /* !__GNUC_PREREQ (4, 8) */
+
+#elif defined __mips16 /* !__GNUC_PREREQ (4, 7) */
+/* This implementation using __sync* builtins will be removed once glibc
+   requires GCC 4.7 or later to build.  */
+
+# define atomic_compare_and_exchange_val_acq(mem, newval, oldval)	\
+  __sync_val_compare_and_swap ((mem), (oldval), (newval))
+# define atomic_compare_and_exchange_bool_acq(mem, newval, oldval)	\
+  (!__sync_bool_compare_and_swap ((mem), (oldval), (newval)))
+
+# define atomic_exchange_acq(mem, newval)				\
+  __sync_lock_test_and_set ((mem), (newval))
+
+# define atomic_exchange_and_add(mem, val)				\
+  __sync_fetch_and_add ((mem), (val))
+
+# define atomic_bit_test_set(mem, bit)					\
+  ({ __typeof (bit) __bit = (bit);					\
+     (__sync_fetch_and_or ((mem), 1 << (__bit)) & (1 << (__bit))); })
+
+# define atomic_and(mem, mask) (void) __sync_fetch_and_and ((mem), (mask))
+# define atomic_and_val(mem, mask) __sync_fetch_and_and ((mem), (mask))
+
+# define atomic_or(mem, mask) (void) __sync_fetch_and_or ((mem), (mask))
+# define atomic_or_val(mem, mask) __sync_fetch_and_or ((mem), (mask))
+
+#else /* !__mips16 && !__GNUC_PREREQ (4, 8) */
 /* This implementation using inline assembly will be removed once glibc
    requires GCC 4.8 or later to build.  */
 
@@ -443,15 +472,21 @@ typedef uintmax_t uatomic_max_t;
 # define atomic_exchange_and_add_rel(mem, value)			\
   __atomic_val_bysize (__arch_exchange_and_add, int, mem, value,	\
 		       MIPS_SYNC_STR, "")
-#endif /* __GNUC_PREREQ (4, 8) */
+
+#endif /* !__mips16 && !__GNUC_PREREQ (4, 8) */
 
 /* TODO: More atomic operations could be implemented efficiently; only the
    basic requirements are done.  */
 
-#define atomic_full_barrier() \
+#ifdef __mips16
+# define atomic_full_barrier() __sync_synchronize ()
+
+#else /* !__mips16 */
+# define atomic_full_barrier() \
   __asm__ __volatile__ (".set push\n\t"					      \
 			MIPS_PUSH_MIPS2					      \
 			MIPS_SYNC_STR "\n\t"				      \
 			".set pop" : : : "memory")
+#endif /* !__mips16 */
 
 #endif /* bits/atomic.h */
