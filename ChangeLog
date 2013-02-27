@@ -2,7 +2,6 @@
 
 	* Makeconfig (%.v.i, %.v): Move these pattern rules outside of
 	[$(build-shared = yes].
-	(%.v.i): Filter out %.def prerequisites too.
 
 2013-02-26  Siddhesh Poyarekar  <siddhesh@redhat.com>
 

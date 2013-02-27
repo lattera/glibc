@@ -878,7 +878,7 @@ subdir-srcdirs = $(foreach dir,$(subdirs),\
 # (but no commands).
 %.v.i: $(common-objpfx)config.h $(..)Makeconfig
 	sed '/^[ 	]*%/!s/#.*$$//;/^[ 	]*$$/d;s/^[ 	]*%/#/' \
-	    $(filter-out FORCE %.h %.def $(..)Makeconfig,$^) \
+	    $(filter-out FORCE %.h $(..)Makeconfig,$^) \
 	| $(CC) -E -undef $(CPPFLAGS) -x assembler-with-cpp - \
 		   > $@T
 	mv -f $@T $@
