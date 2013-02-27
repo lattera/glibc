@@ -1,3 +1,9 @@
+2013-02-26  Roland McGrath  <roland@hack.frob.com>
+
+	* Makeconfig (%.v.i, %.v): Move these pattern rules outside of
+	[$(build-shared = yes].
+	(%.v.i): Filter out %.def prerequisites too.
+
 2013-02-26  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* sysdeps/ieee754/dbl-64/mpa.c: Include alloca.h.
