@@ -17,8 +17,6 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <sysdep.h>
-#include <bp-sym.h>
-#include <bp-asm.h>
 
 /* strlen
 
@@ -31,7 +29,7 @@
        the count and return the count value. We need to subtract one because
        we don't count the null character as a byte. */
 
-EALIGN (BP_SYM (strlen),5,0)
+EALIGN (strlen,5,0)
        neg     r7,r3
        clrlwi. r8,r7,29
        addi    r4,0,0
@@ -73,5 +71,5 @@ L(byte_count_loop):
 L(end_strlen):
        addi    r3,r4,-1
        blr
-END (BP_SYM (strlen))
+END (strlen)
 libc_hidden_builtin_def (strlen)

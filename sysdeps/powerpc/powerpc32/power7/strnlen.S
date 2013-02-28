@@ -18,12 +18,10 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <sysdep.h>
-#include <bp-sym.h>
-#include <bp-asm.h>
 
 /* int [r3] strnlen (char *s [r3], int size [r4])  */
 	.machine  power7
-ENTRY (BP_SYM (__strnlen))
+ENTRY (__strnlen)
 	CALL_MCOUNT
 	dcbt	0,r3
 	clrrwi	r8,r3,2	      /* Align the address to word boundary.  */
@@ -166,6 +164,6 @@ L(loop_small):
 	cmplw	r9,r7
 	bge	L(end_max)
 	b	L(loop_small)
-END (BP_SYM (__strnlen))
-weak_alias (BP_SYM (__strnlen), BP_SYM(strnlen))
+END (__strnlen)
+weak_alias (__strnlen, strnlen)
 libc_hidden_builtin_def (strnlen)

@@ -23,12 +23,9 @@
 #else
 # include <jmpbuf-offsets.h>
 #endif
-#include <bp-sym.h>
-#include <bp-asm.h>
 
 	.machine	"altivec"
-ENTRY (BP_SYM (__sigsetjmp))
-	CHECK_BOUNDS_BOTH_WIDE_LIT (r3, r8, r9, JB_SIZE)
+ENTRY (__sigsetjmp)
 
 #ifdef PTR_MANGLE
 	mr   r5,r1
@@ -179,5 +176,5 @@ L(aligned_save_vmx):
 	stvx	31,0,r6
 L(no_vmx):
 #endif
-	b BP_SYM (__sigjmp_save@local)
-END (BP_SYM (__sigsetjmp))
+	b __sigjmp_save@local
+END (__sigsetjmp)

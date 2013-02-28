@@ -17,8 +17,6 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <sysdep.h>
-#include <bp-sym.h>
-#include <bp-asm.h>
 
 /* See strlen.s for comments on how the end-of-string testing works.  */
 
@@ -26,7 +24,7 @@
 		     const char *s2 [r4],
 		     size_t size [r5])  */
 
-EALIGN (BP_SYM(strncmp),5,0)
+EALIGN (strncmp,5,0)
 
 #define rTMP	r0
 #define rRTN	r3
@@ -175,5 +173,5 @@ L(u4):	sub	rRTN,rWORD1,rWORD2
 L(ux):
 	li	rRTN,0
 	blr
-END (BP_SYM (strncmp))
+END (strncmp)
 libc_hidden_builtin_def (strncmp)

@@ -18,14 +18,12 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <sysdep.h>
-#include <bp-sym.h>
-#include <bp-asm.h>
 
 /* __ptr_t [r3] memset (__ptr_t s [r3], int c [r4], size_t n [r5]));
    Returns 's'.  */
 
 	.machine  power7
-EALIGN (BP_SYM (memset), 5, 0)
+EALIGN (memset, 5, 0)
 	CALL_MCOUNT
 
 	.align	4
@@ -429,5 +427,5 @@ L(small):
 	stw	4,4(10)
 	blr
 
-END (BP_SYM (memset))
+END (memset)
 libc_hidden_builtin_def (memset)

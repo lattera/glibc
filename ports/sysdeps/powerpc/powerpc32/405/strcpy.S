@@ -17,8 +17,6 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <sysdep.h>
-#include <bp-sym.h>
-#include <bp-asm.h>
 
 /* strcpy
 
@@ -33,7 +31,7 @@
        where in the last 8 bytes it is. Copy the appropriate bytes of the last
        8 according to the null position. */
 
-EALIGN (BP_SYM (strcpy), 5, 0)
+EALIGN (strcpy, 5, 0)
        neg     r7,r4
        subi    r4,r4,1
        clrlwi. r8,r7,29
@@ -105,5 +103,5 @@ L(last_bytes_copy_loop2):
 
 L(end_strcpy):
        blr
-END (BP_SYM (strcpy))
+END (strcpy)
 libc_hidden_builtin_def (strcpy)

@@ -20,8 +20,6 @@
 #define _ERRNO_H	1
 #include <bits/errno.h>
 #include <kernel-features.h>
-#include <bp-sym.h>
-#include <bp-asm.h>
 
 #define CLONE_VM	0x00000100
 #define CLONE_THREAD	0x00010000
@@ -35,10 +33,7 @@
    		  int flags [r5], void *arg [r6], void *parent_tid [r7],
 		  void *tls [r8], void *child_tid [r9]); */
 
-ENTRY (BP_SYM (__clone))
-	/* GKM FIXME: add bounds checks, where sensible.  */
-	DISCARD_BOUNDS (r4)
-	DISCARD_BOUNDS (r6)
+ENTRY (__clone)
 
 	/* Check for child_stack == NULL || fn == NULL.  */
 	cmpwi	cr0,r4,0
@@ -124,6 +119,6 @@ L(badargs):
 	b	__syscall_error@local
 
 	cfi_startproc
-END (BP_SYM (__clone))
+END (__clone)
 
-weak_alias (BP_SYM (__clone), BP_SYM (clone))
+weak_alias (__clone, clone)

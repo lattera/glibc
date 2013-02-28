@@ -34,7 +34,6 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <sysdep.h>
-#include "bp-sym.h"
 
  /* These are the various addresses we require.  */
 #ifdef PIC
@@ -45,7 +44,7 @@
 	.align	2
 L(start_addresses):
 	.long	_SDA_BASE_
-	.long	BP_SYM (main)
+	.long	main
 	.long 	__libc_csu_init
 	.long 	__libc_csu_fini
 	ASM_SIZE_DIRECTIVE(L(start_addresses))
@@ -78,7 +77,7 @@ ENTRY(_start)
 	lwzu	r13,L(start_addresses)@l(r8)
 #endif
  /* and continue in libc-start, in glibc.  */
-	b	JUMPTARGET(BP_SYM (__libc_start_main))
+	b	JUMPTARGET(__libc_start_main)
 END(_start)
 
 /* Define a symbol for the first piece of initialized data.  */

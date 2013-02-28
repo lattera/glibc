@@ -17,8 +17,6 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <sysdep.h>
-#include <bp-sym.h>
-#include <bp-asm.h>
 
 /* memcpy
 
@@ -33,7 +31,7 @@
        If 32 or more bytes to copy we use 32 byte copy loop.
        Finaly we copy 0-31 extra bytes. */
 
-EALIGN (BP_SYM (memcpy), 5, 0)
+EALIGN (memcpy, 5, 0)
 /* Check if bytes to copy are greater than 256 and if
        source and destination are unaligned */
        cmpwi   r5,0x0100
@@ -128,5 +126,5 @@ L(word4_count_loop_no_dcbt): /* Copy 32 bytes at a time */
 L(end_memcpy):
        mr       r3,r0
        blr
-END (BP_SYM (memcpy))
+END (memcpy)
 libc_hidden_builtin_def (memcpy)

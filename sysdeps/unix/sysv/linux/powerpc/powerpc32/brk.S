@@ -19,13 +19,10 @@
 #include <sysdep.h>
 #define _ERRNO_H	1
 #include <bits/errno.h>
-#include <bp-sym.h>
-#include <bp-asm.h>
 
 	.comm	__curbrk,4,4
 	.section ".text"
-ENTRY (BP_SYM (__brk))
-	DISCARD_BOUNDS (r3)	/* the bounds are meaningless, so toss 'em */
+ENTRY (__brk)
 	mflr	r0
 	stwu    r1,-16(r1)
 	cfi_adjust_cfa_offset (16)
@@ -50,6 +47,6 @@ ENTRY (BP_SYM (__brk))
 	blelr+
 	li      r3,ENOMEM
 	b	__syscall_error@local
-END (BP_SYM (__brk))
+END (__brk)
 
-weak_alias (BP_SYM (__brk), BP_SYM (brk))
+weak_alias (__brk, brk)

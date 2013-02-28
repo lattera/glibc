@@ -17,8 +17,6 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <sysdep.h>
-#include <bp-sym.h>
-#include <bp-asm.h>
 #include <locale-defines.h>
 
 /* int [r3] strcasecmp (const char *s1 [r3], const char *s2 [r4] )
@@ -33,7 +31,7 @@
 # define STRCMP   strcasecmp
 #endif
 
-ENTRY (BP_SYM (__STRCMP))
+ENTRY (__STRCMP)
 
 #define rRTN	r3	/* Return value */
 #define rSTR1	r5	/* 1st string */
@@ -125,7 +123,7 @@ L(loop):
 	bnelr
 	bne	cr7,L(loop)
 	blr
-END (BP_SYM (__STRCMP))
+END (__STRCMP)
 
-weak_alias (BP_SYM (__STRCMP), BP_SYM (STRCMP))
+weak_alias (__STRCMP, STRCMP)
 libc_hidden_builtin_def (__STRCMP)

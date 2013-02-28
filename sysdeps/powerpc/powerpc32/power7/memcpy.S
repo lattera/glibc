@@ -18,14 +18,12 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <sysdep.h>
-#include <bp-sym.h>
-#include <bp-asm.h>
 
 /* __ptr_t [r3] memcpy (__ptr_t dst [r3], __ptr_t src [r4], size_t len [r5]);
    Returns 'dst'.  */
 
 	.machine  power7
-EALIGN (BP_SYM (memcpy), 5, 0)
+EALIGN (memcpy, 5, 0)
 	CALL_MCOUNT
 
 	stwu    1,-32(1)
@@ -522,5 +520,5 @@ L(end_unaligned_loop):
 	addi    1,1,32
 	blr
 
-END (BP_SYM (memcpy))
+END (memcpy)
 libc_hidden_builtin_def (memcpy)

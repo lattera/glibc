@@ -17,8 +17,6 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <sysdep.h>
-#include <bp-sym.h>
-#include <bp-asm.h>
 
 /* memcmp
 
@@ -32,7 +30,7 @@
        return src1 > src2, src1 < src2 or src1 = src2.
        If src1 = src2 and no null, repeat. */
 
-EALIGN (BP_SYM (memcmp), 5, 0)
+EALIGN (memcmp, 5, 0)
        srwi.   r6,r5,5
        beq     L(preword2_count_loop)
        mtctr   r6
@@ -125,6 +123,6 @@ L(st2):
        blt     cr5,L(l_r)
        addi    r3,r0,-1
        blr
-END (BP_SYM (memcmp))
+END (memcmp)
 libc_hidden_builtin_def (memcmp)
 weak_alias (memcmp,bcmp)

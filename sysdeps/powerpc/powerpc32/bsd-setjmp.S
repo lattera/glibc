@@ -18,7 +18,6 @@
 #include <shlib-compat.h>
 #include <libc-symbols.h>
 #include <sysdep.h>
-#include <bp-sym.h>
 
 #if defined SHARED && SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_3_4)
 

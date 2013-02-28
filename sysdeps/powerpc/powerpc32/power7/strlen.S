@@ -18,12 +18,10 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <sysdep.h>
-#include <bp-sym.h>
-#include <bp-asm.h>
 
 /* int [r3] strlen (char *s [r3])  */
 	.machine  power7
-ENTRY (BP_SYM (strlen))
+ENTRY (strlen)
 	CALL_MCOUNT
 	dcbt	0,r3
 	clrrwi	r4,r3,2	      /* Align the address to word boundary.  */
@@ -93,5 +91,5 @@ L(done):
 	srwi	r0,r0,3	      /* Convert leading zeroes to bytes.  */
 	add	r3,r5,r0      /* Compute final length.  */
 	blr
-END (BP_SYM (strlen))
+END (strlen)
 libc_hidden_builtin_def (strlen)

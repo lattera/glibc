@@ -17,8 +17,6 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <sysdep.h>
-#include <bp-sym.h>
-#include <bp-asm.h>
 
 /* memset
 
@@ -37,7 +35,7 @@
        If 16 or more words to set we use 16 word copy loop.
        Finaly we set 0-15 extra bytes with string store. */
 
-EALIGN (BP_SYM (memset), 5, 0)
+EALIGN (memset, 5, 0)
        rlwinm  r11,r4,0,24,31
        rlwimi  r11,r4,8,16,23
        rlwimi  r11,r11,16,0,15
@@ -150,5 +148,5 @@ L(postword2_count_loop):
        mtxer   r7
        stswx   r8,0,r3
        b       L(end_memset)
-END (BP_SYM (memset))
+END (memset)
 libc_hidden_builtin_def (memset)

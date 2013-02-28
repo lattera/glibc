@@ -23,12 +23,9 @@
 #else
 # include <jmpbuf-offsets.h>
 #endif
-#include <bp-sym.h>
-#include <bp-asm.h>
 
 	.machine	"altivec"
-ENTRY (BP_SYM (__longjmp))
-	CHECK_BOUNDS_BOTH_WIDE_LIT (r3, r8, r9, JB_SIZE)
+ENTRY (__longjmp)
 #ifndef __NO_VMX__
 # ifdef PIC
 	mflr    r6
@@ -173,4 +170,4 @@ L(no_vmx):
 	lfd fp31,((JB_FPRS+17*2)*4)(r3)
 	mr r3,r4
 	blr
-END (BP_SYM (__longjmp))
+END (__longjmp)

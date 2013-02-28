@@ -18,14 +18,13 @@
 #include <shlib-compat.h>
 #include <libc-symbols.h>
 #include <sysdep.h>
-#include <bp-sym.h>
 
 #if defined NOT_IN_libc
 /* Build a non-versioned object for rtld-*.  */
-ENTRY (BP_SYM (_setjmp))
+ENTRY (_setjmp)
 	li r4,0			/* Set second argument to 0.  */
-	b BP_SYM (__sigsetjmp@local)
-END (BP_SYM (_setjmp))
+	b __sigsetjmp@local
+END (_setjmp)
 libc_hidden_def (_setjmp)
 #else
 /* Build a versioned object for libc.  */
@@ -33,10 +32,10 @@ libc_hidden_def (_setjmp)
 # if defined SHARED && SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_3_4)
 symbol_version (__novmx_setjmp,_setjmp,GLIBC_2.0);
 
-ENTRY (BP_SYM (__novmx_setjmp))
+ENTRY (__novmx_setjmp)
 	li r4,0			/* Set second argument to 0.  */
-	b BP_SYM (__novmx__sigsetjmp@local)
-END (BP_SYM (__novmx_setjmp))
+	b __novmx__sigsetjmp@local
+END (__novmx_setjmp)
 libc_hidden_def (__novmx_setjmp)
 # endif /* defined SHARED  && SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_3_4) */
 
@@ -44,14 +43,14 @@ default_symbol_version (__vmx_setjmp,_setjmp,GLIBC_2.3.4)
 /* __GI__setjmp prototype is needed for ntpl i.e. _setjmp is defined
    as a libc_hidden_proto & is used in sysdeps/generic/libc-start.c
    if HAVE_CLEANUP_JMP_BUF is defined */
-ENTRY (BP_SYM (__GI__setjmp))
+ENTRY (__GI__setjmp)
 	li r4,0			/* Set second argument to 0.  */
-	b BP_SYM (__vmx__sigsetjmp@local)
-END (BP_SYM (__GI__setjmp))
+	b __vmx__sigsetjmp@local
+END (__GI__setjmp)
 
-ENTRY (BP_SYM (__vmx_setjmp))
+ENTRY (__vmx_setjmp)
 	li r4,0			/* Set second argument to 0.  */
-	b BP_SYM (__vmx__sigsetjmp@local)
-END (BP_SYM (__vmx_setjmp))
+	b __vmx__sigsetjmp@local
+END (__vmx_setjmp)
 libc_hidden_def (__vmx_setjmp)
 #endif /* !NOT_IN_libc */

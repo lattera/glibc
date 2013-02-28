@@ -17,8 +17,6 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <sysdep.h>
-#include <bp-sym.h>
-#include <bp-asm.h>
 
 /* strcmp
 
@@ -34,7 +32,7 @@
        return src1 > src2, src1 < src2 or src1 = src2.
        If src1 = src2 and no null, repeat. */
 
-EALIGN (BP_SYM(strcmp),5,0)
+EALIGN (strcmp,5,0)
        neg     r7,r3
        clrlwi  r7,r7,20
        neg     r8,r4
@@ -132,5 +130,5 @@ L(byte_loop):
        cmpwi   r5,0
        beq     L(end_strcmp)
        b       L(byte_loop)
-END (BP_SYM (strcmp))
+END (strcmp)
 libc_hidden_builtin_def (strcmp)

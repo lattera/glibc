@@ -18,12 +18,10 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <sysdep.h>
-#include <bp-sym.h>
-#include <bp-asm.h>
 
 /* int [r3] rawmemchr (void *s [r3], int c [r4])  */
 	.machine  power7
-ENTRY (BP_SYM(__rawmemchr))
+ENTRY (__rawmemchr)
 	CALL_MCOUNT
 	dcbt	0,r3
 	clrrwi	r8,r3,2	      /* Align the address to word boundary.  */
@@ -96,6 +94,6 @@ L(done):
 	srwi	r0,r0,3	      /* Convert leading zeroes to bytes.  */
 	add	r3,r8,r0      /* Return address of the matching char.  */
 	blr
-END (BP_SYM (__rawmemchr))
+END (__rawmemchr)
 weak_alias (__rawmemchr,rawmemchr)
 libc_hidden_builtin_def (__rawmemchr)

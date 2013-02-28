@@ -17,8 +17,6 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <sysdep.h>
-#include <bp-sym.h>
-#include <bp-asm.h>
 
 /* __ptr_t [r3] memset (__ptr_t s [r3], int c [r4], size_t n [r5]));
    Returns 's'.
@@ -29,21 +27,14 @@
    takes advantage of the dcbz instruction.  */
 
 	.section	".text"
-EALIGN (BP_SYM (memset), 5, 1)
+EALIGN (memset, 5, 1)
 
 #define rTMP	r0
 #define rRTN	r3	/* initial value of 1st argument */
-#if __BOUNDED_POINTERS__
-# define rMEMP0	r4	/* original value of 1st arg */
-# define rCHR	r5	/* char to set in each byte */
-# define rLEN	r6	/* length of region to set */
-# define rMEMP	r10	/* address at which we are storing */
-#else
-# define rMEMP0	r3	/* original value of 1st arg */
-# define rCHR	r4	/* char to set in each byte */
-# define rLEN	r5	/* length of region to set */
-# define rMEMP	r6	/* address at which we are storing */
-#endif
+#define rMEMP0	r3	/* original value of 1st arg */
+#define rCHR	r4	/* char to set in each byte */
+#define rLEN	r5	/* length of region to set */
+#define rMEMP	r6	/* address at which we are storing */
 #define rALIGN	r7	/* number of bytes we are setting now (when aligning) */
 #define rMEMP2	r8
 
@@ -54,15 +45,6 @@ EALIGN (BP_SYM (memset), 5, 1)
 #define rGOT	r9	/* Address of the Global Offset Table.  */
 #define rCLS	r8	/* Cache line size obtained from static.  */
 #define rCLM	r9	/* Cache line size mask to check for cache alignment.  */
-
-#if __BOUNDED_POINTERS__
-	cmplwi	cr1, rRTN, 0
-	CHECK_BOUNDS_BOTH_WIDE (rMEMP0, rTMP, rTMP2, rLEN)
-	beq	cr1, L(b0)
-	STORE_RETURN_VALUE (rMEMP0)
-	STORE_RETURN_BOUNDS (rTMP, rTMP2)
-L(b0):
-#endif
 
 /* take care of case for size <= 4  */
 	cmplwi	cr1, rLEN, 4
@@ -321,5 +303,5 @@ L(handletail32):
 	clrrwi.	rALIGN, rLEN, 5
 	b	L(nondcbz)
 
-END (BP_SYM (memset))
+END (memset)
 libc_hidden_builtin_def (memset)
