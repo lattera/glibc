@@ -1,5 +1,13 @@
 2013-03-15  Thomas Schwinge  <thomas@codesourcery.com>
 
+	* sysdeps/powerpc/fpu/test-powerpc-snan.c: Rename to
+	math/test-snan.c.
+	* math/test-snan.c: Renamed from
+	sysdeps/powerpc/fpu/test-powerpc-snan.c.
+	* math/Makefile (tests): Add test-snan.
+	* sysdeps/powerpc/fpu/Makefile (libm-tests): Don't add
+	test-powerpc-snan.
+
 	* math/basic-test.c (TEST_FUNC): Replace NANFUNC argument with
 	SUFFIX.  Initialize qNaN_var with __builtin_nan family of
 	functions.
