@@ -28,7 +28,7 @@
 	.text
 	.globl _dl_runtime_resolve
 	.type _dl_runtime_resolve, #function
-	.cfi_sections .debug_frame
+	CFI_SECTIONS
 	cfi_startproc
 	.align 2
 _dl_runtime_resolve:
@@ -77,7 +77,7 @@ _dl_runtime_resolve:
 #ifndef PROF
 	.globl _dl_runtime_profile
 	.type _dl_runtime_profile, #function
-	.cfi_sections .debug_frame
+	CFI_SECTIONS
 	cfi_startproc
 	.align 2
 _dl_runtime_profile:

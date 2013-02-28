@@ -35,7 +35,7 @@
   .type __##syscall_name##_nocancel,%function;				\
   .globl __##syscall_name##_nocancel;					\
   __##syscall_name##_nocancel:						\
-    .cfi_sections .debug_frame;						\
+    CFI_SECTIONS;							\
     cfi_startproc;							\
     DO_CALL (syscall_name, args);					\
     cmn r0, $4096;							\

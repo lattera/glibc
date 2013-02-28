@@ -29,7 +29,7 @@
 	.text
 	@ emit debug information with cfi
 	@ use arm-specific pseudos for unwinding itself
-	.cfi_sections .debug_frame
+	CFI_SECTIONS
 	.hidden _dl_tlsdesc_return
 	.global	_dl_tlsdesc_return
 	.type	_dl_tlsdesc_return,#function

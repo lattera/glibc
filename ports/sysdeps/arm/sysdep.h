@@ -63,9 +63,12 @@
   .type C_SYMBOL_NAME(name),%function;					      \
   .align ALIGNARG(4);							      \
   C_LABEL(name)								      \
-  .cfi_sections .debug_frame;						      \
+  CFI_SECTIONS;								      \
   cfi_startproc;							      \
   CALL_MCOUNT
+
+#define CFI_SECTIONS							      \
+  .cfi_sections .debug_frame
 
 #undef	END
 #define END(name)							      \
