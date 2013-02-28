@@ -1,3 +1,10 @@
+2013-02-28  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/am33/elf/start.S: Don't include "bp-sym.h".
+	(_start): Don't use BP_SYM.
+	* sysdeps/unix/sysv/linux/am33/clone.S: Don't include <bp-sym.h>.
+	(__clone): Don't use BP_SYM.
+
 2013-02-14  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #13550]

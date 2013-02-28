@@ -37,8 +37,6 @@
 					NULL
 */
 
-#include "bp-sym.h"
-
 	.text
 	.globl _start
 	.type _start,@function
@@ -63,13 +61,13 @@ _start:
 	mov 0,a3
 
 	mov (32,sp), d1		/* argc.  */
-	mov BP_SYM (main), d0	/* main.  */
+	mov main, d0		/* main.  */
 
 	/* Call the user's main function, and exit with its value.
 	   But let the libc call main.    */
-	call BP_SYM (__libc_start_main),[],0
+	call __libc_start_main,[],0
 
-	call BP_SYM (abort),[],0 /* Crash if somehow `exit' does return.  */
+	call abort,[],0 /* Crash if somehow `exit' does return.  */
 
 /* Define a symbol for the first piece of initialized data.  */
 	.data

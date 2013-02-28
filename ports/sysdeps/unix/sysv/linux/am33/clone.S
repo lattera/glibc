@@ -24,12 +24,11 @@
 #define _ERRNO_H	1
 #include <bits/errno.h>
 #include <asm-syntax.h>
-#include <bp-sym.h>
 
 /* int clone(int (*fn)(void *arg), void *child_stack, int flags, void *arg); */
 
         .text
-ENTRY (BP_SYM (__clone))
+ENTRY (__clone)
 	/* Sanity check arguments.  */
 	cmp	0,d0	/* no NULL function pointers */
 	beq	L(error_inval)
@@ -75,6 +74,6 @@ L(here):
 #endif
 	call	JUMPTARGET (_exit),[],0
 
-PSEUDO_END (BP_SYM (__clone))
+PSEUDO_END (__clone)
 
-weak_alias (BP_SYM (__clone), BP_SYM (clone))
+weak_alias (__clone, clone)
