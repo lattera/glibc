@@ -1,5 +1,8 @@
 2013-03-15  Thomas Schwinge  <thomas@codesourcery.com>
 
+	* math/test-misc.c (main): Fix copy'n'pastos.
+	* misc/tst-efgcvt.c (special): Likewise.
+
 	* stdio-common/printf_fp.c (__isinfl_internal, __isnanl_internal):
 	Remove declarations.
 

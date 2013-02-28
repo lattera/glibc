@@ -1116,7 +1116,7 @@ main (void)
       }
     else if (fetestexcept (FE_UNDERFLOW))
       {
-	puts ("scalbl(NaN, 0) raises underflow exception");
+	puts ("scalbl (LDBL_MIN, 2147483647) raises underflow exception");
 	result = 1;
       }
 
@@ -1134,7 +1134,7 @@ main (void)
       }
     else if (fetestexcept (FE_OVERFLOW))
       {
-	puts ("scalbl(NaN, 0) raises overflow exception");
+	puts ("scalbl (LDBL_MAX, -2147483647) raises overflow exception");
 	result = 1;
       }
   }

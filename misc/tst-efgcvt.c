@@ -177,7 +177,7 @@ special (void)
 
   p = ecvt (INFINITY, 10, &decpt, &sign);
   if (sign != 0 || strcmp (p, "inf") != 0)
-    output_error ("ecvt", NAN, 10, "inf", 0, 0, p, decpt, sign);
+    output_error ("ecvt", INFINITY, 10, "inf", 0, 0, p, decpt, sign);
 
   /* Simply make sure these calls with large NDIGITs don't crash.  */
   (void) ecvt (123.456, 10000, &decpt, &sign);
