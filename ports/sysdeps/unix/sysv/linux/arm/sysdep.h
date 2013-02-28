@@ -57,49 +57,49 @@
    test with -4095.  */
 
 #undef	PSEUDO
-#define	PSEUDO(name, syscall_name, args)				      \
-  .text;								      \
-  ENTRY (name);								      \
-    DO_CALL (syscall_name, args);					      \
-    cmn r0, $4096;
+#define	PSEUDO(name, syscall_name, args)		\
+	.text;						\
+  ENTRY (name);						\
+	DO_CALL (syscall_name, args);			\
+	cmn	r0, $4096;
 
-#define PSEUDO_RET							      \
-    RETINSTR(cc, lr);							      \
-    b PLTJMP(SYSCALL_ERROR)
+#define PSEUDO_RET					\
+	RETINSTR(cc, lr);				\
+	b	PLTJMP(SYSCALL_ERROR)
 #undef ret
 #define ret PSEUDO_RET
 
 #undef	PSEUDO_END
-#define	PSEUDO_END(name)						      \
-  SYSCALL_ERROR_HANDLER;						      \
+#define	PSEUDO_END(name)				\
+	SYSCALL_ERROR_HANDLER;				\
   END (name)
 
 #undef	PSEUDO_NOERRNO
-#define	PSEUDO_NOERRNO(name, syscall_name, args)			      \
-  .text;								      \
-  ENTRY (name);								      \
-    DO_CALL (syscall_name, args);
+#define	PSEUDO_NOERRNO(name, syscall_name, args)	\
+	.text;						\
+  ENTRY (name);						\
+	DO_CALL (syscall_name, args);
 
-#define PSEUDO_RET_NOERRNO						      \
-    DO_RET (lr);
+#define PSEUDO_RET_NOERRNO				\
+	DO_RET (lr);
 
 #undef ret_NOERRNO
 #define ret_NOERRNO PSEUDO_RET_NOERRNO
 
 #undef	PSEUDO_END_NOERRNO
-#define	PSEUDO_END_NOERRNO(name)					      \
+#define	PSEUDO_END_NOERRNO(name)			\
   END (name)
 
 /* The function has to return the error code.  */
 #undef	PSEUDO_ERRVAL
-#define	PSEUDO_ERRVAL(name, syscall_name, args) \
-  .text;								      \
-  ENTRY (name)								      \
-    DO_CALL (syscall_name, args);					      \
-    rsb r0, r0, #0
+#define	PSEUDO_ERRVAL(name, syscall_name, args)		\
+	.text;						\
+  ENTRY (name)						\
+	DO_CALL (syscall_name, args);			\
+	rsb	r0, r0, #0
 
 #undef	PSEUDO_END_ERRVAL
-#define	PSEUDO_END_ERRVAL(name) \
+#define	PSEUDO_END_ERRVAL(name)				\
   END (name)
 
 #define ret_ERRVAL PSEUDO_RET_NOERRNO
@@ -192,19 +192,19 @@ __local_syscall_error:						\
    syscalls.  */
 
 #undef	DO_CALL
-#define DO_CALL(syscall_name, args)		\
-    DOARGS_##args;				\
-    ldr r7, =SYS_ify (syscall_name);		\
-    swi 0x0;					\
-    UNDOARGS_##args
+#define DO_CALL(syscall_name, args)			\
+	DOARGS_##args;					\
+	ldr	r7, =SYS_ify (syscall_name);		\
+	swi	0x0;					\
+	UNDOARGS_##args
 
 #undef  DOARGS_0
-#define DOARGS_0 \
-  .fnstart; \
-  str r7, [sp, #-4]!; \
-  cfi_adjust_cfa_offset (4); \
-  cfi_rel_offset (r7, 0); \
-  .save { r7 }
+#define DOARGS_0					\
+	.fnstart;					\
+	str r7, [sp, #-4]!;				\
+	cfi_adjust_cfa_offset (4);			\
+	cfi_rel_offset (r7, 0);				\
+	.save	{ r7 }
 #undef  DOARGS_1
 #define DOARGS_1 DOARGS_0
 #undef  DOARGS_2
@@ -214,44 +214,44 @@ __local_syscall_error:						\
 #undef  DOARGS_4
 #define DOARGS_4 DOARGS_0
 #undef  DOARGS_5
-#define DOARGS_5 \
-  .fnstart; \
-  stmfd sp!, {r4, r7}; \
-  cfi_adjust_cfa_offset (8); \
-  cfi_rel_offset (r4, 0); \
-  cfi_rel_offset (r7, 4); \
-  .save { r4, r7 }; \
-  ldr r4, [sp, #8]
+#define DOARGS_5					\
+	.fnstart;					\
+	stmfd	sp!, {r4, r7};				\
+	cfi_adjust_cfa_offset (8);			\
+	cfi_rel_offset (r4, 0);				\
+	cfi_rel_offset (r7, 4);				\
+	.save	{ r4, r7 };				\
+	ldr	r4, [sp, #8]
 #undef  DOARGS_6
-#define DOARGS_6 \
-  .fnstart; \
-  mov ip, sp; \
-  stmfd sp!, {r4, r5, r7}; \
-  cfi_adjust_cfa_offset (12); \
-  cfi_rel_offset (r4, 0); \
-  cfi_rel_offset (r5, 4); \
-  cfi_rel_offset (r7, 8); \
-  .save { r4, r5, r7 }; \
-  ldmia ip, {r4, r5}
+#define DOARGS_6					\
+	.fnstart;					\
+	mov	ip, sp;					\
+	stmfd	sp!, {r4, r5, r7};			\
+	cfi_adjust_cfa_offset (12);			\
+	cfi_rel_offset (r4, 0);				\
+	cfi_rel_offset (r5, 4);				\
+	cfi_rel_offset (r7, 8);				\
+	.save	{ r4, r5, r7 };				\
+	ldmia	ip, {r4, r5}
 #undef  DOARGS_7
-#define DOARGS_7 \
-  .fnstart; \
-  mov ip, sp; \
-  stmfd sp!, {r4, r5, r6, r7}; \
-  cfi_adjust_cfa_offset (16); \
-  cfi_rel_offset (r4, 0); \
-  cfi_rel_offset (r5, 4); \
-  cfi_rel_offset (r6, 8); \
-  cfi_rel_offset (r7, 12); \
-  .save { r4, r5, r6, r7 }; \
-  ldmia ip, {r4, r5, r6}
+#define DOARGS_7					\
+	.fnstart;					\
+	mov	ip, sp;					\
+	stmfd	sp!, {r4, r5, r6, r7};			\
+	cfi_adjust_cfa_offset (16);			\
+	cfi_rel_offset (r4, 0);				\
+	cfi_rel_offset (r5, 4);				\
+	cfi_rel_offset (r6, 8);				\
+	cfi_rel_offset (r7, 12);			\
+	.save	{ r4, r5, r6, r7 };			\
+	ldmia	ip, {r4, r5, r6}
 
 #undef  UNDOARGS_0
-#define UNDOARGS_0 \
-  ldr r7, [sp], #4; \
-  cfi_adjust_cfa_offset (-4); \
-  cfi_restore (r7); \
-  .fnend
+#define UNDOARGS_0					\
+	ldr	r7, [sp], #4;				\
+	cfi_adjust_cfa_offset (-4);			\
+	cfi_restore (r7);				\
+	.fnend
 #undef  UNDOARGS_1
 #define UNDOARGS_1 UNDOARGS_0
 #undef  UNDOARGS_2
@@ -261,29 +261,29 @@ __local_syscall_error:						\
 #undef  UNDOARGS_4
 #define UNDOARGS_4 UNDOARGS_0
 #undef  UNDOARGS_5
-#define UNDOARGS_5 \
-  ldmfd sp!, {r4, r7}; \
-  cfi_adjust_cfa_offset (-8); \
-  cfi_restore (r4); \
-  cfi_restore (r7); \
-  .fnend
+#define UNDOARGS_5					\
+	ldmfd	sp!, {r4, r7};				\
+	cfi_adjust_cfa_offset (-8);			\
+	cfi_restore (r4);				\
+	cfi_restore (r7);				\
+	.fnend
 #undef  UNDOARGS_6
-#define UNDOARGS_6 \
-  ldmfd sp!, {r4, r5, r7}; \
-  cfi_adjust_cfa_offset (-12); \
-  cfi_restore (r4); \
-  cfi_restore (r5); \
-  cfi_restore (r7); \
-  .fnend
+#define UNDOARGS_6					\
+	ldmfd	sp!, {r4, r5, r7};			\
+	cfi_adjust_cfa_offset (-12);			\
+	cfi_restore (r4);				\
+	cfi_restore (r5);				\
+	cfi_restore (r7);				\
+	.fnend
 #undef  UNDOARGS_7
-#define UNDOARGS_7 \
-  ldmfd sp!, {r4, r5, r6, r7}; \
-  cfi_adjust_cfa_offset (-16); \
-  cfi_restore (r4); \
-  cfi_restore (r5); \
-  cfi_restore (r6); \
-  cfi_restore (r7); \
-  .fnend
+#define UNDOARGS_7					\
+	ldmfd	sp!, {r4, r5, r6, r7};			\
+	cfi_adjust_cfa_offset (-16);			\
+	cfi_restore (r4);				\
+	cfi_restore (r5);				\
+	cfi_restore (r6);				\
+	cfi_restore (r7);				\
+	.fnend
 
 #else /* not __ASSEMBLER__ */
 

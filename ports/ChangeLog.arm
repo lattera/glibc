@@ -7,6 +7,10 @@
 	* sysdeps/unix/sysv/linux/arm/Makefile [elf] (sysdep-rtld-routines):
 	Include libc-do-syscall.
 
+	* sysdeps/arm/sysdep.h: Fix assembly whitespace.
+	* ports/sysdeps/unix/sysv/linux/arm/nptl/sysdep-cancel.h: Likewise.
+	* sysdeps/unix/sysv/linux/arm/sysdep.h: Likewise.
+
 2013-02-27  Roland McGrath  <roland@hack.frob.com>
 
 	* sysdeps/arm/sysdep.h (CFI_SECTIONS): New macro.
