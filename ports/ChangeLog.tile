@@ -1,3 +1,12 @@
+2013-02-28  Chris Metcalf  <cmetcalf@tilera.com>
+
+	* sysdeps/unix/sysv/linux/tile/nptl/lowlevellock.h
+	(FUTEX_WAIT_REQUEUE_PI): Define.
+	(FUTEX_CMP_REQUEUE_PI): Likewise.
+	(lll_futex_wait_requeue_pi): Likewise.
+	(lll_futex_timed_wait_requeue_pi): Likewise.
+	(lll_futex_cmp_requeue_pi): Likewise.
+
 2013-02-18  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx64/nptl/libc.abilist:
