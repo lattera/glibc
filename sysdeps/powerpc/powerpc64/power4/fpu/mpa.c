@@ -363,6 +363,7 @@ add_magnitudes (const mp_no *x, const mp_no *y, mp_no *z, int p)
 {
   long i, j, k;
   long p2 = p;
+  double zk;
 
   EZ = EX;
 
@@ -370,45 +371,54 @@ add_magnitudes (const mp_no *x, const mp_no *y, mp_no *z, int p)
   j = p2 + EY - EX;
   k = p2 + 1;
 
-  if (j < 1)
+  if (__glibc_unlikely (j < 1))
     {
       __cpy (x, z, p);
       return;
     }
-  else
-    Z[k] = ZERO;
+
+  zk = ZERO;
 
   for (; j > 0; i--, j--)
     {
-      Z[k] += X[i] + Y[j];
-      if (Z[k] >= RADIX)
+      zk += X[i] + Y[j];
+      if (zk >= RADIX)
 	{
-	  Z[k] -= RADIX;
-	  Z[--k] = ONE;
+	  Z[k--] = zk - RADIX;
+	  zk = ONE;
 	}
       else
-	Z[--k] = ZERO;
+        {
+	  Z[k--] = zk;
+	  zk = ZERO;
+	}
     }
 
   for (; i > 0; i--)
     {
-      Z[k] += X[i];
-      if (Z[k] >= RADIX)
+      zk += X[i];
+      if (zk >= RADIX)
 	{
-	  Z[k] -= RADIX;
-	  Z[--k] = ONE;
+	  Z[k--] = zk - RADIX;
+	  zk = ONE;
 	}
       else
-	Z[--k] = ZERO;
+        {
+	  Z[k--] = zk;
+	  zk = ZERO;
+	}
     }
 
-  if (Z[1] == ZERO)
+  if (zk == ZERO)
     {
       for (i = 1; i <= p2; i++)
 	Z[i] = Z[i + 1];
     }
   else
-    EZ += ONE;
+    {
+      Z[1] = zk;
+      EZ += ONE;
+    }
 }
 
 /* Subtract the magnitudes of *X and *Y assuming that abs (*x) > abs (*y) > 0.
@@ -420,65 +430,63 @@ sub_magnitudes (const mp_no *x, const mp_no *y, mp_no *z, int p)
 {
   long i, j, k;
   long p2 = p;
+  double zk;
 
   EZ = EX;
+  i = p2;
+  j = p2 + EY - EX;
+  k = p2;
 
-  if (EX == EY)
+  /* Y is too small compared to X, copy X over to the result.  */
+  if (__glibc_unlikely (j < 1))
     {
-      i = j = k = p2;
-      Z[k] = Z[k + 1] = ZERO;
+      __cpy (x, z, p);
+      return;
+    }
+
+  /* The relevant least significant digit in Y is non-zero, so we factor it in
+     to enhance accuracy.  */
+  if (j < p2 && Y[j + 1] > ZERO)
+    {
+      Z[k + 1] = RADIX - Y[j + 1];
+      zk = MONE;
     }
   else
-    {
-      j = EX - EY;
-      if (j > p2)
-	{
-	  __cpy (x, z, p);
-	  return;
-	}
-      else
-	{
-	  i = p2;
-	  j = p2 + 1 - j;
-	  k = p2;
-	  if (Y[j] > ZERO)
-	    {
-	      Z[k + 1] = RADIX - Y[j--];
-	      Z[k] = MONE;
-	    }
-	  else
-	    {
-	      Z[k + 1] = ZERO;
-	      Z[k] = ZERO;
-	      j--;
-	    }
-	}
-    }
+    zk = Z[k + 1] = ZERO;
 
+  /* Subtract and borrow.  */
   for (; j > 0; i--, j--)
     {
-      Z[k] += (X[i] - Y[j]);
-      if (Z[k] < ZERO)
+      zk += (X[i] - Y[j]);
+      if (zk < ZERO)
 	{
-	  Z[k] += RADIX;
-	  Z[--k] = MONE;
+	  Z[k--] = zk + RADIX;
+	  zk = MONE;
 	}
       else
-	Z[--k] = ZERO;
+        {
+	  Z[k--] = zk;
+	  zk = ZERO;
+	}
     }
 
+  /* We're done with digits from Y, so it's just digits in X.  */
   for (; i > 0; i--)
     {
-      Z[k] += X[i];
-      if (Z[k] < ZERO)
+      zk += X[i];
+      if (zk < ZERO)
 	{
-	  Z[k] += RADIX;
-	  Z[--k] = MONE;
+	  Z[k--] = zk + RADIX;
+	  zk = MONE;
 	}
       else
-	Z[--k] = ZERO;
+        {
+	  Z[k--] = zk;
+	  zk = ZERO;
+	}
     }
 
+  /* Normalize.  */
   for (i = 1; Z[i] == ZERO; i++);
   EZ = EZ - i + 1;
   for (k = 1; i <= p2 + 1;)
