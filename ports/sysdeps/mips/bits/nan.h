@@ -22,10 +22,10 @@
 
 
 /* IEEE Not A Number.  */
-/* Note that MIPS has the QNaN and SNaN patterns reversed compared to most
-   other architectures.  The IEEE spec left the definition of this open to
+/* Note that MIPS has the qNaN and sNaN patterns reversed compared to most
+   other architectures.  IEEE 754-1985 left the definition of this open to
    implementations, and for MIPS the top bit of the mantissa must be SET to
-   indicate a SNaN.  */
+   indicate a sNaN.  */
 
 #if __GNUC_PREREQ(3,3)
 
@@ -43,14 +43,14 @@
 # include <endian.h>
 
 # if __BYTE_ORDER == __BIG_ENDIAN
-#  define __nan_bytes		{ 0x7f, 0xbf, 0xff, 0xff }
+#  define __qnan_bytes		{ 0x7f, 0xbf, 0xff, 0xff }
 # endif
 # if __BYTE_ORDER == __LITTLE_ENDIAN
-#  define __nan_bytes		{ 0xff, 0xff, 0xbf, 0x7f }
+#  define __qnan_bytes		{ 0xff, 0xff, 0xbf, 0x7f }
 # endif
 
-static union { unsigned char __c[4]; float __d; } __nan_union
-  __attribute__ ((__unused__)) = { __nan_bytes };
-# define NAN	(__nan_union.__d)
+static union { unsigned char __c[4]; float __d; } __qnan_union
+  __attribute__ ((__unused__)) = { __qnan_bytes };
+# define NAN	(__qnan_union.__d)
 
 #endif	/* GCC.  */

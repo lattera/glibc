@@ -1,5 +1,22 @@
 2013-03-15  Thomas Schwinge  <thomas@codesourcery.com>
 
+	* math/basic-test.c (TEST_FUNC, TEST_TRUNC): Rename NaN_var to
+	qNaN_var.  Fix a few strings, too.
+	* math/libm-test.inc (nan_value): Rename to qnan_value.
+	* math/gen-libm-test.pl (%beautify): Adjust to that.
+	* math/bits/mathcalls.h (nan): Refer to qNaN instead of NaN.
+	* math/test-misc.c (main): Likewise.
+	* sysdeps/ieee754/bits/nan.h (__nan_bytes, __nan_union): Rename
+	to __qnan_bytes, and __qnan_union, respectively.
+	* ports/sysdeps/mips/bits/nan.h (__nan_bytes, __nan_union):
+	Likewise.
+	* stdio-common/tstdiomisc.c (nanval, lnanval): Rename to qnanval,
+	and lqnanval, respectively.
+	* sysdeps/powerpc/bits/fenv.h: Fix usage of NaN/qNaN/sNaN.
+	* sysdeps/powerpc/fpu/fenv_libc.h: Likewise.
+	* sysdeps/powerpc/fpu/test-powerpc-snan.c (TEST_FUNC): Likewise,
+	and rename NaN_var to qNaN_var, and SNaN_var to sNaN_var.
+
 	* math/libm-test.inc (fpstack_test) [__x86_64__]: Enable test.
 	* math/test-misc.c (main) [__x86_64__]: Enable test for long
 	doubles.

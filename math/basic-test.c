@@ -32,40 +32,40 @@ check (const char *testname, int result)
   }
 }
 
-#define TEST_FUNC(NAME, FLOAT, NANFUNC, EPSILON, HUGEVAL) \
+#define TEST_FUNC(NAME, FLOAT, NANFUNC, EPSILON, HUGEVAL)		      \
 static void								      \
 NAME (void)								      \
 {									      \
   /* Variables are declared volatile to forbid some compiler		      \
      optimizations.  */							      \
-  volatile FLOAT Inf_var, NaN_var, zero_var, one_var;			      \
+  volatile FLOAT Inf_var, qNaN_var, zero_var, one_var;			      \
   FLOAT x1, x2;								      \
 									      \
   zero_var = 0.0;							      \
   one_var = 1.0;							      \
-  NaN_var = zero_var / zero_var;					      \
+  qNaN_var = zero_var / zero_var;					      \
   Inf_var = one_var / zero_var;						      \
 									      \
   (void) &zero_var;							      \
   (void) &one_var;							      \
-  (void) &NaN_var;							      \
+  (void) &qNaN_var;							      \
   (void) &Inf_var;							      \
 									      \
 									      \
   check (#FLOAT " isinf (inf) == 1", isinf (Inf_var) == 1);		      \
   check (#FLOAT " isinf (-inf) == -1", isinf (-Inf_var) == -1);		      \
   check (#FLOAT " !isinf (1)", !(isinf (one_var)));			      \
-  check (#FLOAT " !isinf (NaN)", !(isinf (NaN_var)));			      \
+  check (#FLOAT " !isinf (qNaN)", !(isinf (qNaN_var)));			      \
 									      \
-  check (#FLOAT " isnan (NaN)", isnan (NaN_var));			      \
-  check (#FLOAT " isnan (-NaN)", isnan (-NaN_var));			      \
+  check (#FLOAT " isnan (qNaN)", isnan (qNaN_var));			      \
+  check (#FLOAT " isnan (-qNaN)", isnan (-qNaN_var));			      \
   check (#FLOAT " !isnan (1)", !(isnan (one_var)));			      \
   check (#FLOAT " !isnan (inf)", !(isnan (Inf_var)));			      \
 									      \
   check (#FLOAT " inf == inf", Inf_var == Inf_var);			      \
   check (#FLOAT " -inf == -inf", -Inf_var == -Inf_var);			      \
   check (#FLOAT " inf != -inf", Inf_var != -Inf_var);			      \
-  check (#FLOAT " NaN != NaN", NaN_var != NaN_var);			      \
+  check (#FLOAT " qNaN != qNaN", qNaN_var != qNaN_var);			      \
 									      \
   /*									      \
      the same tests but this time with NAN from <bits/nan.h>		      \
@@ -80,11 +80,11 @@ NAME (void)								      \
   /*									      \
      And again with the value returned by the `nan' function.		      \
    */									      \
-  check (#FLOAT " isnan (NAN)", isnan (NANFUNC ("")));			      \
-  check (#FLOAT " isnan (-NAN)", isnan (-NANFUNC ("")));		      \
-  check (#FLOAT " !isinf (NAN)", !(isinf (NANFUNC (""))));		      \
-  check (#FLOAT " !isinf (-NAN)", !(isinf (-NANFUNC (""))));		      \
-  check (#FLOAT " NAN != NAN", NANFUNC ("") != NANFUNC (""));		      \
+  check (#FLOAT " isnan (nan (\"\"))", isnan (NANFUNC ("")));		      \
+  check (#FLOAT " isnan (-nan (\"\"))", isnan (-NANFUNC ("")));		      \
+  check (#FLOAT " !isinf (nan (\"\"))", !(isinf (NANFUNC (""))));	      \
+  check (#FLOAT " !isinf (-nan (\"\"))", !(isinf (-NANFUNC (""))));	      \
+  check (#FLOAT " nan (\"\") != nan (\"\")", NANFUNC ("") != NANFUNC (""));   \
 									      \
   /* test if EPSILON is ok */						      \
   x1 = 1.0;								      \
@@ -106,19 +106,19 @@ NAME (void)								      \
 void									      \
 NAME (void)								      \
 {									      \
-  volatile DOUBLE Inf_var, NaN_var, zero_var, one_var;			      \
+  volatile DOUBLE Inf_var, qNaN_var, zero_var, one_var;			      \
   FLOAT x1, x2;								      \
 									      \
   zero_var = 0.0;							      \
   one_var = 1.0;							      \
-  NaN_var = zero_var / zero_var;					      \
+  qNaN_var = zero_var / zero_var;					      \
   Inf_var = one_var / zero_var;						      \
 									      \
-  (void) &NaN_var;							      \
+  (void) &qNaN_var;							      \
   (void) &Inf_var;							      \
 									      \
-  x1 = (FLOAT) NaN_var;							      \
-  check (" "#FLOAT" x = ("#FLOAT") ("#DOUBLE") NaN", isnan (x1) != 0);	      \
+  x1 = (FLOAT) qNaN_var;						      \
+  check (" "#FLOAT" x = ("#FLOAT") ("#DOUBLE") qNaN", isnan (x1) != 0);	      \
   x2 = (FLOAT) Inf_var;							      \
   check (" "#FLOAT" x = ("#FLOAT") ("#DOUBLE") Inf", isinf (x2) != 0);	      \
 }

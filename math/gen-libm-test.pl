@@ -58,7 +58,7 @@ use vars qw ($output_dir $ulps_file);
     "plus_zero" => "+0",
     "minus_infty" => "-inf",
     "plus_infty" => "inf",
-    "nan_value" => "NaN",
+    "qnan_value" => "qNaN",
     "M_El" => "e",
     "M_E2l" => "e^2",
     "M_E3l" => "e^3",

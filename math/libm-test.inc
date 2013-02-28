@@ -224,7 +224,7 @@ static int output_points;	/* Should the single function results printed?  */
 static int ignore_max_ulp;	/* Should we ignore max_ulp?  */
 
 static FLOAT minus_zero, plus_zero;
-static FLOAT plus_infty, minus_infty, nan_value, max_value, min_value;
+static FLOAT plus_infty, minus_infty, qnan_value, max_value, min_value;
 static FLOAT min_subnorm_value;
 
 static FLOAT max_error, real_max_error, imag_max_error;
@@ -805,15 +805,15 @@ acos_test (void)
 
   START (acos);
 
-  TEST_f_f (acos, plus_infty, nan_value, INVALID_EXCEPTION);
-  TEST_f_f (acos, minus_infty, nan_value, INVALID_EXCEPTION);
-  TEST_f_f (acos, nan_value, nan_value);
+  TEST_f_f (acos, plus_infty, qnan_value, INVALID_EXCEPTION);
+  TEST_f_f (acos, minus_infty, qnan_value, INVALID_EXCEPTION);
+  TEST_f_f (acos, qnan_value, qnan_value);
 
   /* |x| > 1: */
-  TEST_f_f (acos, 1.125L, nan_value, INVALID_EXCEPTION);
-  TEST_f_f (acos, -1.125L, nan_value, INVALID_EXCEPTION);
-  TEST_f_f (acos, max_value, nan_value, INVALID_EXCEPTION);
-  TEST_f_f (acos, -max_value, nan_value, INVALID_EXCEPTION);
+  TEST_f_f (acos, 1.125L, qnan_value, INVALID_EXCEPTION);
+  TEST_f_f (acos, -1.125L, qnan_value, INVALID_EXCEPTION);
+  TEST_f_f (acos, max_value, qnan_value, INVALID_EXCEPTION);
+  TEST_f_f (acos, -max_value, qnan_value, INVALID_EXCEPTION);
 
   TEST_f_f (acos, 0, M_PI_2l);
   TEST_f_f (acos, minus_zero, M_PI_2l);
@@ -971,11 +971,11 @@ acosh_test (void)
   START (acosh);
 
   TEST_f_f (acosh, plus_infty, plus_infty);
-  TEST_f_f (acosh, minus_infty, nan_value, INVALID_EXCEPTION);
+  TEST_f_f (acosh, minus_infty, qnan_value, INVALID_EXCEPTION);
 
   /* x < 1:  */
-  TEST_f_f (acosh, -1.125L, nan_value, INVALID_EXCEPTION);
-  TEST_f_f (acosh, -max_value, nan_value, INVALID_EXCEPTION);
+  TEST_f_f (acosh, -1.125L, qnan_value, INVALID_EXCEPTION);
+  TEST_f_f (acosh, -max_value, qnan_value, INVALID_EXCEPTION);
 
   TEST_f_f (acosh, 1, 0);
   TEST_f_f (acosh, 7, 2.63391579384963341725009269461593689L);
@@ -994,15 +994,15 @@ asin_test (void)
 
   START (asin);
 
-  TEST_f_f (asin, plus_infty, nan_value, INVALID_EXCEPTION);
-  TEST_f_f (asin, minus_infty, nan_value, INVALID_EXCEPTION);
-  TEST_f_f (asin, nan_value, nan_value);
+  TEST_f_f (asin, plus_infty, qnan_value, INVALID_EXCEPTION);
+  TEST_f_f (asin, minus_infty, qnan_value, INVALID_EXCEPTION);
+  TEST_f_f (asin, qnan_value, qnan_value);
 
-  /* asin x == NaN plus invalid exception for |x| > 1.  */
-  TEST_f_f (asin, 1.125L, nan_value, INVALID_EXCEPTION);
-  TEST_f_f (asin, -1.125L, nan_value, INVALID_EXCEPTION);
-  TEST_f_f (asin, max_value, nan_value, INVALID_EXCEPTION);
-  TEST_f_f (asin, -max_value, nan_value, INVALID_EXCEPTION);
+  /* asin x == qNaN plus invalid exception for |x| > 1.  */
+  TEST_f_f (asin, 1.125L, qnan_value, INVALID_EXCEPTION);
+  TEST_f_f (asin, -1.125L, qnan_value, INVALID_EXCEPTION);
+  TEST_f_f (asin, max_value, qnan_value, INVALID_EXCEPTION);
+  TEST_f_f (asin, -max_value, qnan_value, INVALID_EXCEPTION);
 
   TEST_f_f (asin, 0, 0);
   TEST_f_f (asin, minus_zero, minus_zero);
@@ -1164,7 +1164,7 @@ asinh_test (void)
   TEST_f_f (asinh, plus_infty, plus_infty);
   TEST_f_f (asinh, minus_infty, minus_infty);
 #endif
-  TEST_f_f (asinh, nan_value, nan_value);
+  TEST_f_f (asinh, qnan_value, qnan_value);
   TEST_f_f (asinh, 0.75L, 0.693147180559945309417232121458176568L);
 
   END (asinh);
@@ -1186,7 +1186,7 @@ atan_test (void)
 
   TEST_f_f (atan, plus_infty, M_PI_2l);
   TEST_f_f (atan, minus_infty, -M_PI_2l);
-  TEST_f_f (atan, nan_value, nan_value);
+  TEST_f_f (atan, qnan_value, qnan_value);
   TEST_f_f (atan, max_value, M_PI_2l);
   TEST_f_f (atan, -max_value, -M_PI_2l);
 
@@ -1225,13 +1225,13 @@ atanh_test (void)
 
   TEST_f_f (atanh, 1, plus_infty, DIVIDE_BY_ZERO_EXCEPTION);
   TEST_f_f (atanh, -1, minus_infty, DIVIDE_BY_ZERO_EXCEPTION);
-  TEST_f_f (atanh, nan_value, nan_value);
+  TEST_f_f (atanh, qnan_value, qnan_value);
 
-  /* atanh (x) == NaN plus invalid exception if |x| > 1.  */
-  TEST_f_f (atanh, 1.125L, nan_value, INVALID_EXCEPTION);
-  TEST_f_f (atanh, -1.125L, nan_value, INVALID_EXCEPTION);
-  TEST_f_f (atanh, max_value, nan_value, INVALID_EXCEPTION);
-  TEST_f_f (atanh, -max_value, nan_value, INVALID_EXCEPTION);
+  /* atanh (x) == qNaN plus invalid exception if |x| > 1.  */
+  TEST_f_f (atanh, 1.125L, qnan_value, INVALID_EXCEPTION);
+  TEST_f_f (atanh, -1.125L, qnan_value, INVALID_EXCEPTION);
+  TEST_f_f (atanh, max_value, qnan_value, INVALID_EXCEPTION);
+  TEST_f_f (atanh, -max_value, qnan_value, INVALID_EXCEPTION);
 
   TEST_f_f (atanh, 0.75L, 0.972955074527656652552676371721589865L);
 
@@ -1301,7 +1301,7 @@ atan2_test (void)
   TEST_ff_f (atan2, minus_infty, plus_infty, -M_PI_4l);
   TEST_ff_f (atan2, plus_infty, minus_infty, M_PI_34l);
   TEST_ff_f (atan2, minus_infty, minus_infty, -M_PI_34l);
-  TEST_ff_f (atan2, nan_value, nan_value, nan_value);
+  TEST_ff_f (atan2, qnan_value, qnan_value, qnan_value);
 
   TEST_ff_f (atan2, max_value, max_value, M_PI_4l);
 
@@ -1341,10 +1341,10 @@ cabs_test (void)
   /* cabs (-inf + i x) == +inf.  */
   TEST_c_f (cabs, minus_infty, 1.0, plus_infty);
 
-  TEST_c_f (cabs, minus_infty, nan_value, plus_infty);
-  TEST_c_f (cabs, minus_infty, nan_value, plus_infty);
+  TEST_c_f (cabs, minus_infty, qnan_value, plus_infty);
+  TEST_c_f (cabs, minus_infty, qnan_value, plus_infty);
 
-  TEST_c_f (cabs, nan_value, nan_value, nan_value);
+  TEST_c_f (cabs, qnan_value, qnan_value, qnan_value);
 
   /* cabs (x,y) == cabs (y,x).  */
   TEST_c_f (cabs, 0.75L, 12.390625L, 12.4133028598606664302388810868156657L);
@@ -1410,22 +1410,22 @@ cacos_test (void)
   TEST_c_c (cacos, plus_infty, 0.5, 0.0, minus_infty);
   TEST_c_c (cacos, plus_infty, -0.5, 0.0, plus_infty);
 
-  TEST_c_c (cacos, plus_infty, nan_value, nan_value, plus_infty, IGNORE_ZERO_INF_SIGN);
-  TEST_c_c (cacos, minus_infty, nan_value, nan_value, plus_infty, IGNORE_ZERO_INF_SIGN);
+  TEST_c_c (cacos, plus_infty, qnan_value, qnan_value, plus_infty, IGNORE_ZERO_INF_SIGN);
+  TEST_c_c (cacos, minus_infty, qnan_value, qnan_value, plus_infty, IGNORE_ZERO_INF_SIGN);
 
-  TEST_c_c (cacos, 0, nan_value, M_PI_2l, nan_value);
-  TEST_c_c (cacos, minus_zero, nan_value, M_PI_2l, nan_value);
+  TEST_c_c (cacos, 0, qnan_value, M_PI_2l, qnan_value);
+  TEST_c_c (cacos, minus_zero, qnan_value, M_PI_2l, qnan_value);
 
-  TEST_c_c (cacos, nan_value, plus_infty, nan_value, minus_infty);
-  TEST_c_c (cacos, nan_value, minus_infty, nan_value, plus_infty);
+  TEST_c_c (cacos, qnan_value, plus_infty, qnan_value, minus_infty);
+  TEST_c_c (cacos, qnan_value, minus_infty, qnan_value, plus_infty);
 
-  TEST_c_c (cacos, 10.5, nan_value, nan_value, nan_value, INVALID_EXCEPTION_OK);
-  TEST_c_c (cacos, -10.5, nan_value, nan_value, nan_value, INVALID_EXCEPTION_OK);
+  TEST_c_c (cacos, 10.5, qnan_value, qnan_value, qnan_value, INVALID_EXCEPTION_OK);
+  TEST_c_c (cacos, -10.5, qnan_value, qnan_value, qnan_value, INVALID_EXCEPTION_OK);
 
-  TEST_c_c (cacos, nan_value, 0.75, nan_value, nan_value, INVALID_EXCEPTION_OK);
-  TEST_c_c (cacos, nan_value, -0.75, nan_value, nan_value, INVALID_EXCEPTION_OK);
+  TEST_c_c (cacos, qnan_value, 0.75, qnan_value, qnan_value, INVALID_EXCEPTION_OK);
+  TEST_c_c (cacos, qnan_value, -0.75, qnan_value, qnan_value, INVALID_EXCEPTION_OK);
 
-  TEST_c_c (cacos, nan_value, nan_value, nan_value, nan_value);
+  TEST_c_c (cacos, qnan_value, qnan_value, qnan_value, qnan_value);
 
   TEST_c_c (cacos, plus_zero, -1.5L, M_PI_2l, 1.194763217287109304111930828519090523536L);
   TEST_c_c (cacos, minus_zero, -1.5L, M_PI_2l, 1.194763217287109304111930828519090523536L);
@@ -1564,22 +1564,22 @@ cacosh_test (void)
   TEST_c_c (cacosh, plus_infty, 0.5, plus_infty, 0.0);
   TEST_c_c (cacosh, plus_infty, -0.5, plus_infty, minus_zero);
 
-  TEST_c_c (cacosh, plus_infty, nan_value, plus_infty, nan_value);
-  TEST_c_c (cacosh, minus_infty, nan_value, plus_infty, nan_value);
+  TEST_c_c (cacosh, plus_infty, qnan_value, plus_infty, qnan_value);
+  TEST_c_c (cacosh, minus_infty, qnan_value, plus_infty, qnan_value);
 
-  TEST_c_c (cacosh, 0, nan_value, nan_value, nan_value);
-  TEST_c_c (cacosh, minus_zero, nan_value, nan_value, nan_value);
+  TEST_c_c (cacosh, 0, qnan_value, qnan_value, qnan_value);
+  TEST_c_c (cacosh, minus_zero, qnan_value, qnan_value, qnan_value);
 
-  TEST_c_c (cacosh, nan_value, plus_infty, plus_infty, nan_value);
-  TEST_c_c (cacosh, nan_value, minus_infty, plus_infty, nan_value);
+  TEST_c_c (cacosh, qnan_value, plus_infty, plus_infty, qnan_value);
+  TEST_c_c (cacosh, qnan_value, minus_infty, plus_infty, qnan_value);
 
-  TEST_c_c (cacosh, 10.5, nan_value, nan_value, nan_value, INVALID_EXCEPTION_OK);
-  TEST_c_c (cacosh, -10.5, nan_value, nan_value, nan_value, INVALID_EXCEPTION_OK);
+  TEST_c_c (cacosh, 10.5, qnan_value, qnan_value, qnan_value, INVALID_EXCEPTION_OK);
+  TEST_c_c (cacosh, -10.5, qnan_value, qnan_value, qnan_value, INVALID_EXCEPTION_OK);
 
-  TEST_c_c (cacosh, nan_value, 0.75, nan_value, nan_value, INVALID_EXCEPTION_OK);
-  TEST_c_c (cacosh, nan_value, -0.75, nan_value, nan_value, INVALID_EXCEPTION_OK);
+  TEST_c_c (cacosh, qnan_value, 0.75, qnan_value, qnan_value, INVALID_EXCEPTION_OK);
+  TEST_c_c (cacosh, qnan_value, -0.75, qnan_value, qnan_value, INVALID_EXCEPTION_OK);
 
-  TEST_c_c (cacosh, nan_value, nan_value, nan_value, nan_value);
+  TEST_c_c (cacosh, qnan_value, qnan_value, qnan_value, qnan_value);
 
   TEST_c_c (cacosh, plus_zero, -1.5L, 1.194763217287109304111930828519090523536L, -M_PI_2l);
   TEST_c_c (cacosh, minus_zero, -1.5L, 1.194763217287109304111930828519090523536L, -M_PI_2l);
@@ -1676,7 +1676,7 @@ carg_test (void)
 
   TEST_c_f (carg, minus_infty, minus_infty, -3 * M_PI_4l);
 
-  TEST_c_f (carg, nan_value, nan_value, nan_value);
+  TEST_c_f (carg, qnan_value, qnan_value, qnan_value);
 
   END (carg);
 }
@@ -1721,22 +1721,22 @@ casin_test (void)
   TEST_c_c (casin, plus_infty, 0.5, M_PI_2l, plus_infty);
   TEST_c_c (casin, plus_infty, -0.5, M_PI_2l, minus_infty);
 
-  TEST_c_c (casin, nan_value, plus_infty, nan_value, plus_infty);
-  TEST_c_c (casin, nan_value, minus_infty, nan_value, minus_infty);
+  TEST_c_c (casin, qnan_value, plus_infty, qnan_value, plus_infty);
+  TEST_c_c (casin, qnan_value, minus_infty, qnan_value, minus_infty);
 
-  TEST_c_c (casin, 0.0, nan_value, 0.0, nan_value);
-  TEST_c_c (casin, minus_zero, nan_value, minus_zero, nan_value);
+  TEST_c_c (casin, 0.0, qnan_value, 0.0, qnan_value);
+  TEST_c_c (casin, minus_zero, qnan_value, minus_zero, qnan_value);
 
-  TEST_c_c (casin, plus_infty, nan_value, nan_value, plus_infty, IGNORE_ZERO_INF_SIGN);
-  TEST_c_c (casin, minus_infty, nan_value, nan_value, plus_infty, IGNORE_ZERO_INF_SIGN);
+  TEST_c_c (casin, plus_infty, qnan_value, qnan_value, plus_infty, IGNORE_ZERO_INF_SIGN);
+  TEST_c_c (casin, minus_infty, qnan_value, qnan_value, plus_infty, IGNORE_ZERO_INF_SIGN);
 
-  TEST_c_c (casin, nan_value, 10.5, nan_value, nan_value, INVALID_EXCEPTION_OK);
-  TEST_c_c (casin, nan_value, -10.5, nan_value, nan_value, INVALID_EXCEPTION_OK);
+  TEST_c_c (casin, qnan_value, 10.5, qnan_value, qnan_value, INVALID_EXCEPTION_OK);
+  TEST_c_c (casin, qnan_value, -10.5, qnan_value, qnan_value, INVALID_EXCEPTION_OK);
 
-  TEST_c_c (casin, 0.75, nan_value, nan_value, nan_value, INVALID_EXCEPTION_OK);
-  TEST_c_c (casin, -0.75, nan_value, nan_value, nan_value, INVALID_EXCEPTION_OK);
+  TEST_c_c (casin, 0.75, qnan_value, qnan_value, qnan_value, INVALID_EXCEPTION_OK);
+  TEST_c_c (casin, -0.75, qnan_value, qnan_value, qnan_value, INVALID_EXCEPTION_OK);
 
-  TEST_c_c (casin, nan_value, nan_value, nan_value, nan_value);
+  TEST_c_c (casin, qnan_value, qnan_value, qnan_value, qnan_value);
 
   TEST_c_c (casin, plus_zero, -1.5L, plus_zero, -1.194763217287109304111930828519090523536L);
   TEST_c_c (casin, minus_zero, -1.5L, minus_zero, -1.194763217287109304111930828519090523536L);
@@ -1877,22 +1877,22 @@ casinh_test (void)
   TEST_c_c (casinh, plus_infty, 0.5, plus_infty, 0.0);
   TEST_c_c (casinh, plus_infty, -0.5, plus_infty, minus_zero);
 
-  TEST_c_c (casinh, plus_infty, nan_value, plus_infty, nan_value);
-  TEST_c_c (casinh, minus_infty, nan_value, minus_infty, nan_value);
+  TEST_c_c (casinh, plus_infty, qnan_value, plus_infty, qnan_value);
+  TEST_c_c (casinh, minus_infty, qnan_value, minus_infty, qnan_value);
 
-  TEST_c_c (casinh, nan_value, 0, nan_value, 0.0);
-  TEST_c_c (casinh, nan_value, minus_zero, nan_value, minus_zero);
+  TEST_c_c (casinh, qnan_value, 0, qnan_value, 0.0);
+  TEST_c_c (casinh, qnan_value, minus_zero, qnan_value, minus_zero);
 
-  TEST_c_c (casinh, nan_value, plus_infty, plus_infty, nan_value, IGNORE_ZERO_INF_SIGN);
-  TEST_c_c (casinh, nan_value, minus_infty, plus_infty, nan_value, IGNORE_ZERO_INF_SIGN);
+  TEST_c_c (casinh, qnan_value, plus_infty, plus_infty, qnan_value, IGNORE_ZERO_INF_SIGN);
+  TEST_c_c (casinh, qnan_value, minus_infty, plus_infty, qnan_value, IGNORE_ZERO_INF_SIGN);
 
-  TEST_c_c (casinh, 10.5, nan_value, nan_value, nan_value, INVALID_EXCEPTION_OK);
-  TEST_c_c (casinh, -10.5, nan_value, nan_value, nan_value, INVALID_EXCEPTION_OK);
+  TEST_c_c (casinh, 10.5, qnan_value, qnan_value, qnan_value, INVALID_EXCEPTION_OK);
+  TEST_c_c (casinh, -10.5, qnan_value, qnan_value, qnan_value, INVALID_EXCEPTION_OK);
 
-  TEST_c_c (casinh, nan_value, 0.75, nan_value, nan_value, INVALID_EXCEPTION_OK);
-  TEST_c_c (casinh, -0.75, nan_value, nan_value, nan_value, INVALID_EXCEPTION_OK);
+  TEST_c_c (casinh, qnan_value, 0.75, qnan_value, qnan_value, INVALID_EXCEPTION_OK);
+  TEST_c_c (casinh, -0.75, qnan_value, qnan_value, qnan_value, INVALID_EXCEPTION_OK);
 
-  TEST_c_c (casinh, nan_value, nan_value, nan_value, nan_value);
+  TEST_c_c (casinh, qnan_value, qnan_value, qnan_value, qnan_value);
 
   TEST_c_c (casinh, plus_zero, -1.5L, 0.9624236501192068949955178268487368462704L, -M_PI_2l);
   TEST_c_c (casinh, minus_zero, -1.5L, -0.9624236501192068949955178268487368462704L, -M_PI_2l);
@@ -2034,25 +2034,25 @@ catan_test (void)
   TEST_c_c (catan, 0.5, plus_infty, M_PI_2l, 0);
   TEST_c_c (catan, -0.5, plus_infty, -M_PI_2l, 0);
 
-  TEST_c_c (catan, nan_value, 0.0, nan_value, 0);
-  TEST_c_c (catan, nan_value, minus_zero, nan_value, minus_zero);
+  TEST_c_c (catan, qnan_value, 0.0, qnan_value, 0);
+  TEST_c_c (catan, qnan_value, minus_zero, qnan_value, minus_zero);
 
-  TEST_c_c (catan, nan_value, plus_infty, nan_value, 0);
-  TEST_c_c (catan, nan_value, minus_infty, nan_value, minus_zero);
+  TEST_c_c (catan, qnan_value, plus_infty, qnan_value, 0);
+  TEST_c_c (catan, qnan_value, minus_infty, qnan_value, minus_zero);
 
-  TEST_c_c (catan, 0.0, nan_value, nan_value, nan_value);
-  TEST_c_c (catan, minus_zero, nan_value, nan_value, nan_value);
+  TEST_c_c (catan, 0.0, qnan_value, qnan_value, qnan_value);
+  TEST_c_c (catan, minus_zero, qnan_value, qnan_value, qnan_value);
 
-  TEST_c_c (catan, plus_infty, nan_value, M_PI_2l, 0, IGNORE_ZERO_INF_SIGN);
-  TEST_c_c (catan, minus_infty, nan_value, -M_PI_2l, 0, IGNORE_ZERO_INF_SIGN);
+  TEST_c_c (catan, plus_infty, qnan_value, M_PI_2l, 0, IGNORE_ZERO_INF_SIGN);
+  TEST_c_c (catan, minus_infty, qnan_value, -M_PI_2l, 0, IGNORE_ZERO_INF_SIGN);
 
-  TEST_c_c (catan, nan_value, 10.5, nan_value, nan_value, INVALID_EXCEPTION_OK);
-  TEST_c_c (catan, nan_value, -10.5, nan_value, nan_value, INVALID_EXCEPTION_OK);
+  TEST_c_c (catan, qnan_value, 10.5, qnan_value, qnan_value, INVALID_EXCEPTION_OK);
+  TEST_c_c (catan, qnan_value, -10.5, qnan_value, qnan_value, INVALID_EXCEPTION_OK);
 
-  TEST_c_c (catan, 0.75, nan_value, nan_value, nan_value, INVALID_EXCEPTION_OK);
-  TEST_c_c (catan, -0.75, nan_value, nan_value, nan_value, INVALID_EXCEPTION_OK);
+  TEST_c_c (catan, 0.75, qnan_value, qnan_value, qnan_value, INVALID_EXCEPTION_OK);
+  TEST_c_c (catan, -0.75, qnan_value, qnan_value, qnan_value, INVALID_EXCEPTION_OK);
 
-  TEST_c_c (catan, nan_value, nan_value, nan_value, nan_value);
+  TEST_c_c (catan, qnan_value, qnan_value, qnan_value, qnan_value);
 
   TEST_c_c (catan, 0.75L, 1.25L, 1.10714871779409050301706546017853704L, 0.549306144334054845697622618461262852L);
   TEST_c_c (catan, -2, -3, -1.4099210495965755225306193844604208L, -0.22907268296853876629588180294200276L);
@@ -2100,25 +2100,25 @@ catanh_test (void)
   TEST_c_c (catanh, plus_infty, 0.5, 0.0, M_PI_2l);
   TEST_c_c (catanh, plus_infty, -0.5, 0.0, -M_PI_2l);
 
-  TEST_c_c (catanh, 0, nan_value, 0.0, nan_value);
-  TEST_c_c (catanh, minus_zero, nan_value, minus_zero, nan_value);
+  TEST_c_c (catanh, 0, qnan_value, 0.0, qnan_value);
+  TEST_c_c (catanh, minus_zero, qnan_value, minus_zero, qnan_value);
 
-  TEST_c_c (catanh, plus_infty, nan_value, 0.0, nan_value);
-  TEST_c_c (catanh, minus_infty, nan_value, minus_zero, nan_value);
+  TEST_c_c (catanh, plus_infty, qnan_value, 0.0, qnan_value);
+  TEST_c_c (catanh, minus_infty, qnan_value, minus_zero, qnan_value);
 
-  TEST_c_c (catanh, nan_value, 0, nan_value, nan_value);
-  TEST_c_c (catanh, nan_value, minus_zero, nan_value, nan_value);
+  TEST_c_c (catanh, qnan_value, 0, qnan_value, qnan_value);
+  TEST_c_c (catanh, qnan_value, minus_zero, qnan_value, qnan_value);
 
-  TEST_c_c (catanh, nan_value, plus_infty, 0.0, M_PI_2l, IGNORE_ZERO_INF_SIGN);
-  TEST_c_c (catanh, nan_value, minus_infty, 0.0, -M_PI_2l, IGNORE_ZERO_INF_SIGN);
+  TEST_c_c (catanh, qnan_value, plus_infty, 0.0, M_PI_2l, IGNORE_ZERO_INF_SIGN);
+  TEST_c_c (catanh, qnan_value, minus_infty, 0.0, -M_PI_2l, IGNORE_ZERO_INF_SIGN);
 
-  TEST_c_c (catanh, 10.5, nan_value, nan_value, nan_value, INVALID_EXCEPTION_OK);
-  TEST_c_c (catanh, -10.5, nan_value, nan_value, nan_value, INVALID_EXCEPTION_OK);
+  TEST_c_c (catanh, 10.5, qnan_value, qnan_value, qnan_value, INVALID_EXCEPTION_OK);
+  TEST_c_c (catanh, -10.5, qnan_value, qnan_value, qnan_value, INVALID_EXCEPTION_OK);
 
-  TEST_c_c (catanh, nan_value, 0.75, nan_value, nan_value, INVALID_EXCEPTION_OK);
-  TEST_c_c (catanh, nan_value, -0.75, nan_value, nan_value, INVALID_EXCEPTION_OK);
+  TEST_c_c (catanh, qnan_value, 0.75, qnan_value, qnan_value, INVALID_EXCEPTION_OK);
+  TEST_c_c (catanh, qnan_value, -0.75, qnan_value, qnan_value, INVALID_EXCEPTION_OK);
 
-  TEST_c_c (catanh, nan_value, nan_value, nan_value, nan_value);
+  TEST_c_c (catanh, qnan_value, qnan_value, qnan_value, qnan_value);
 
   TEST_c_c (catanh, 0.75L, 1.25L, 0.261492138795671927078652057366532140L, 0.996825126463918666098902241310446708L);
   TEST_c_c (catanh, -2, -3, -0.14694666622552975204743278515471595L, -1.3389725222944935611241935759091443L);
@@ -2142,7 +2142,7 @@ cbrt_test (void)
 
   TEST_f_f (cbrt, plus_infty, plus_infty);
   TEST_f_f (cbrt, minus_infty, minus_infty);
-  TEST_f_f (cbrt, nan_value, nan_value);
+  TEST_f_f (cbrt, qnan_value, qnan_value);
 
   TEST_f_f (cbrt, -0.001L, -0.1L);
   TEST_f_f (cbrt, 8, 2);
@@ -2170,50 +2170,50 @@ ccos_test (void)
   TEST_c_c (ccos, 0.0, minus_zero, 1.0, 0.0);
   TEST_c_c (ccos, minus_zero, minus_zero, 1.0, minus_zero);
 
-  TEST_c_c (ccos, plus_infty, 0.0, nan_value, 0.0, INVALID_EXCEPTION|IGNORE_ZERO_INF_SIGN);
-  TEST_c_c (ccos, plus_infty, minus_zero, nan_value, 0.0, INVALID_EXCEPTION|IGNORE_ZERO_INF_SIGN);
-  TEST_c_c (ccos, minus_infty, 0.0, nan_value, 0.0, INVALID_EXCEPTION|IGNORE_ZERO_INF_SIGN);
-  TEST_c_c (ccos, minus_infty, minus_zero, nan_value, 0.0, INVALID_EXCEPTION|IGNORE_ZERO_INF_SIGN);
+  TEST_c_c (ccos, plus_infty, 0.0, qnan_value, 0.0, INVALID_EXCEPTION|IGNORE_ZERO_INF_SIGN);
+  TEST_c_c (ccos, plus_infty, minus_zero, qnan_value, 0.0, INVALID_EXCEPTION|IGNORE_ZERO_INF_SIGN);
+  TEST_c_c (ccos, minus_infty, 0.0, qnan_value, 0.0, INVALID_EXCEPTION|IGNORE_ZERO_INF_SIGN);
+  TEST_c_c (ccos, minus_infty, minus_zero, qnan_value, 0.0, INVALID_EXCEPTION|IGNORE_ZERO_INF_SIGN);
 
   TEST_c_c (ccos, 0.0, plus_infty, plus_infty, minus_zero);
   TEST_c_c (ccos, 0.0, minus_infty, plus_infty, 0.0);
   TEST_c_c (ccos, minus_zero, plus_infty, plus_infty, 0.0);
   TEST_c_c (ccos, minus_zero, minus_infty, plus_infty, minus_zero);
 
-  TEST_c_c (ccos, plus_infty, plus_infty, plus_infty, nan_value, INVALID_EXCEPTION);
-  TEST_c_c (ccos, minus_infty, plus_infty, plus_infty, nan_value, INVALID_EXCEPTION);
-  TEST_c_c (ccos, plus_infty, minus_infty, plus_infty, nan_value, INVALID_EXCEPTION);
-  TEST_c_c (ccos, minus_infty, minus_infty, plus_infty, nan_value, INVALID_EXCEPTION);
+  TEST_c_c (ccos, plus_infty, plus_infty, plus_infty, qnan_value, INVALID_EXCEPTION);
+  TEST_c_c (ccos, minus_infty, plus_infty, plus_infty, qnan_value, INVALID_EXCEPTION);
+  TEST_c_c (ccos, plus_infty, minus_infty, plus_infty, qnan_value, INVALID_EXCEPTION);
+  TEST_c_c (ccos, minus_infty, minus_infty, plus_infty, qnan_value, INVALID_EXCEPTION);
 
   TEST_c_c (ccos, 4.625, plus_infty, minus_infty, plus_infty);
   TEST_c_c (ccos, 4.625, minus_infty, minus_infty, minus_infty);
   TEST_c_c (ccos, -4.625, plus_infty, minus_infty, minus_infty);
   TEST_c_c (ccos, -4.625, minus_infty, minus_infty, plus_infty);
 
-  TEST_c_c (ccos, plus_infty, 6.75, nan_value, nan_value, INVALID_EXCEPTION);
-  TEST_c_c (ccos, plus_infty, -6.75, nan_value, nan_value, INVALID_EXCEPTION);
-  TEST_c_c (ccos, minus_infty, 6.75, nan_value, nan_value, INVALID_EXCEPTION);
-  TEST_c_c (ccos, minus_infty, -6.75, nan_value, nan_value, INVALID_EXCEPTION);
+  TEST_c_c (ccos, plus_infty, 6.75, qnan_value, qnan_value, INVALID_EXCEPTION);
+  TEST_c_c (ccos, plus_infty, -6.75, qnan_value, qnan_value, INVALID_EXCEPTION);
+  TEST_c_c (ccos, minus_infty, 6.75, qnan_value, qnan_value, INVALID_EXCEPTION);
+  TEST_c_c (ccos, minus_infty, -6.75, qnan_value, qnan_value, INVALID_EXCEPTION);
 
-  TEST_c_c (ccos, nan_value, 0.0, nan_value, 0.0, IGNORE_ZERO_INF_SIGN);
-  TEST_c_c (ccos, nan_value, minus_zero, nan_value, 0.0, IGNORE_ZERO_INF_SIGN);
+  TEST_c_c (ccos, qnan_value, 0.0, qnan_value, 0.0, IGNORE_ZERO_INF_SIGN);
+  TEST_c_c (ccos, qnan_value, minus_zero, qnan_value, 0.0, IGNORE_ZERO_INF_SIGN);
 
-  TEST_c_c (ccos, nan_value, plus_infty, plus_infty, nan_value);
-  TEST_c_c (ccos, nan_value, minus_infty, plus_infty, nan_value);
+  TEST_c_c (ccos, qnan_value, plus_infty, plus_infty, qnan_value);
+  TEST_c_c (ccos, qnan_value, minus_infty, plus_infty, qnan_value);
 
-  TEST_c_c (ccos, nan_value, 9.0, nan_value, nan_value, INVALID_EXCEPTION_OK);
-  TEST_c_c (ccos, nan_value, -9.0, nan_value, nan_value, INVALID_EXCEPTION_OK);
+  TEST_c_c (ccos, qnan_value, 9.0, qnan_value, qnan_value, INVALID_EXCEPTION_OK);
+  TEST_c_c (ccos, qnan_value, -9.0, qnan_value, qnan_value, INVALID_EXCEPTION_OK);
 
-  TEST_c_c (ccos, 0.0, nan_value, nan_value, 0.0, IGNORE_ZERO_INF_SIGN);
-  TEST_c_c (ccos, minus_zero, nan_value, nan_value, 0.0, IGNORE_ZERO_INF_SIGN);
+  TEST_c_c (ccos, 0.0, qnan_value, qnan_value, 0.0, IGNORE_ZERO_INF_SIGN);
+  TEST_c_c (ccos, minus_zero, qnan_value, qnan_value, 0.0, IGNORE_ZERO_INF_SIGN);
 
-  TEST_c_c (ccos, 10.0, nan_value, nan_value, nan_value, INVALID_EXCEPTION_OK);
-  TEST_c_c (ccos, -10.0, nan_value, nan_value, nan_value, INVALID_EXCEPTION_OK);
+  TEST_c_c (ccos, 10.0, qnan_value, qnan_value, qnan_value, INVALID_EXCEPTION_OK);
+  TEST_c_c (ccos, -10.0, qnan_value, qnan_value, qnan_value, INVALID_EXCEPTION_OK);
 
-  TEST_c_c (ccos, plus_infty, nan_value, nan_value, nan_value, INVALID_EXCEPTION_OK);
-  TEST_c_c (ccos, minus_infty, nan_value, nan_value, nan_value, INVALID_EXCEPTION_OK);
+  TEST_c_c (ccos, plus_infty, qnan_value, qnan_value, qnan_value, INVALID_EXCEPTION_OK);
+  TEST_c_c (ccos, minus_infty, qnan_value, qnan_value, qnan_value, INVALID_EXCEPTION_OK);
 
-  TEST_c_c (ccos, nan_value, nan_value, nan_value, nan_value);
+  TEST_c_c (ccos, qnan_value, qnan_value, qnan_value, qnan_value);
 
   TEST_c_c (ccos, 0.75L, 1.25L, 1.38173873063425888530729933139078645L, -1.09193013555397466170919531722024128L);
   TEST_c_c (ccos, -2, -3, -4.18962569096880723013255501961597373L, -9.10922789375533659797919726277886212L);
@@ -2269,50 +2269,50 @@ ccosh_test (void)
   TEST_c_c (ccosh, 0.0, minus_zero, 1.0, minus_zero);
   TEST_c_c (ccosh, minus_zero, minus_zero, 1.0, 0.0);
 
-  TEST_c_c (ccosh, 0.0, plus_infty, nan_value, 0.0, INVALID_EXCEPTION|IGNORE_ZERO_INF_SIGN);
-  TEST_c_c (ccosh, minus_zero, plus_infty, nan_value, 0.0, INVALID_EXCEPTION|IGNORE_ZERO_INF_SIGN);
-  TEST_c_c (ccosh, 0.0, minus_infty, nan_value, 0.0, INVALID_EXCEPTION|IGNORE_ZERO_INF_SIGN);
-  TEST_c_c (ccosh, minus_zero, minus_infty, nan_value, 0.0, INVALID_EXCEPTION|IGNORE_ZERO_INF_SIGN);
+  TEST_c_c (ccosh, 0.0, plus_infty, qnan_value, 0.0, INVALID_EXCEPTION|IGNORE_ZERO_INF_SIGN);
+  TEST_c_c (ccosh, minus_zero, plus_infty, qnan_value, 0.0, INVALID_EXCEPTION|IGNORE_ZERO_INF_SIGN);
+  TEST_c_c (ccosh, 0.0, minus_infty, qnan_value, 0.0, INVALID_EXCEPTION|IGNORE_ZERO_INF_SIGN);
+  TEST_c_c (ccosh, minus_zero, minus_infty, qnan_value, 0.0, INVALID_EXCEPTION|IGNORE_ZERO_INF_SIGN);
 
   TEST_c_c (ccosh, plus_infty, 0.0, plus_infty, 0.0);
   TEST_c_c (ccosh, minus_infty, 0.0, plus_infty, minus_zero);
   TEST_c_c (ccosh, plus_infty, minus_zero, plus_infty, minus_zero);
   TEST_c_c (ccosh, minus_infty, minus_zero, plus_infty, 0.0);
 
-  TEST_c_c (ccosh, plus_infty, plus_infty, plus_infty, nan_value, INVALID_EXCEPTION);
-  TEST_c_c (ccosh, minus_infty, plus_infty, plus_infty, nan_value, INVALID_EXCEPTION);
-  TEST_c_c (ccosh, plus_infty, minus_infty, plus_infty, nan_value, INVALID_EXCEPTION);
-  TEST_c_c (ccosh, minus_infty, minus_infty, plus_infty, nan_value, INVALID_EXCEPTION);
+  TEST_c_c (ccosh, plus_infty, plus_infty, plus_infty, qnan_value, INVALID_EXCEPTION);
+  TEST_c_c (ccosh, minus_infty, plus_infty, plus_infty, qnan_value, INVALID_EXCEPTION);
+  TEST_c_c (ccosh, plus_infty, minus_infty, plus_infty, qnan_value, INVALID_EXCEPTION);
+  TEST_c_c (ccosh, minus_infty, minus_infty, plus_infty, qnan_value, INVALID_EXCEPTION);
 
   TEST_c_c (ccosh, plus_infty, 4.625, minus_infty, minus_infty);
   TEST_c_c (ccosh, minus_infty, 4.625, minus_infty, plus_infty);
   TEST_c_c (ccosh, plus_infty, -4.625, minus_infty, plus_infty);
   TEST_c_c (ccosh, minus_infty, -4.625, minus_infty, minus_infty);
 
-  TEST_c_c (ccosh, 6.75, plus_infty, nan_value, nan_value, INVALID_EXCEPTION);
-  TEST_c_c (ccosh, -6.75, plus_infty, nan_value, nan_value, INVALID_EXCEPTION);
-  TEST_c_c (ccosh, 6.75, minus_infty, nan_value, nan_value, INVALID_EXCEPTION);
-  TEST_c_c (ccosh, -6.75, minus_infty, nan_value, nan_value, INVALID_EXCEPTION);
+  TEST_c_c (ccosh, 6.75, plus_infty, qnan_value, qnan_value, INVALID_EXCEPTION);
+  TEST_c_c (ccosh, -6.75, plus_infty, qnan_value, qnan_value, INVALID_EXCEPTION);
+  TEST_c_c (ccosh, 6.75, minus_infty, qnan_value, qnan_value, INVALID_EXCEPTION);
+  TEST_c_c (ccosh, -6.75, minus_infty, qnan_value, qnan_value, INVALID_EXCEPTION);
 
-  TEST_c_c (ccosh, 0.0, nan_value, nan_value, 0.0, IGNORE_ZERO_INF_SIGN);
-  TEST_c_c (ccosh, minus_zero, nan_value, nan_value, 0.0, IGNORE_ZERO_INF_SIGN);
+  TEST_c_c (ccosh, 0.0, qnan_value, qnan_value, 0.0, IGNORE_ZERO_INF_SIGN);
+  TEST_c_c (ccosh, minus_zero, qnan_value, qnan_value, 0.0, IGNORE_ZERO_INF_SIGN);
 
-  TEST_c_c (ccosh, plus_infty, nan_value, plus_infty, nan_value);
-  TEST_c_c (ccosh, minus_infty, nan_value, plus_infty, nan_value);
+  TEST_c_c (ccosh, plus_infty, qnan_value, plus_infty, qnan_value);
+  TEST_c_c (ccosh, minus_infty, qnan_value, plus_infty, qnan_value);
 
-  TEST_c_c (ccosh, 9.0, nan_value, nan_value, nan_value, INVALID_EXCEPTION_OK);
-  TEST_c_c (ccosh, -9.0, nan_value, nan_value, nan_value, INVALID_EXCEPTION_OK);
+  TEST_c_c (ccosh, 9.0, qnan_value, qnan_value, qnan_value, INVALID_EXCEPTION_OK);
+  TEST_c_c (ccosh, -9.0, qnan_value, qnan_value, qnan_value, INVALID_EXCEPTION_OK);
 
-  TEST_c_c (ccosh, nan_value, 0.0, nan_value, 0.0, IGNORE_ZERO_INF_SIGN);
-  TEST_c_c (ccosh, nan_value, minus_zero, nan_value, 0.0, IGNORE_ZERO_INF_SIGN);
+  TEST_c_c (ccosh, qnan_value, 0.0, qnan_value, 0.0, IGNORE_ZERO_INF_SIGN);
+  TEST_c_c (ccosh, qnan_value, minus_zero, qnan_value, 0.0, IGNORE_ZERO_INF_SIGN);
 
-  TEST_c_c (ccosh, nan_value, 10.0, nan_value, nan_value, INVALID_EXCEPTION_OK);
-  TEST_c_c (ccosh, nan_value, -10.0, nan_value, nan_value, INVALID_EXCEPTION_OK);
+  TEST_c_c (ccosh, qnan_value, 10.0, qnan_value, qnan_value, INVALID_EXCEPTION_OK);
+  TEST_c_c (ccosh, qnan_value, -10.0, qnan_value, qnan_value, INVALID_EXCEPTION_OK);
 
-  TEST_c_c (ccosh, nan_value, plus_infty, nan_value, nan_value, INVALID_EXCEPTION_OK);
-  TEST_c_c (ccosh, nan_value, minus_infty, nan_value, nan_value, INVALID_EXCEPTION_OK);
+  TEST_c_c (ccosh, qnan_value, plus_infty, qnan_value, qnan_value, INVALID_EXCEPTION_OK);
+  TEST_c_c (ccosh, qnan_value, minus_infty, qnan_value, qnan_value, INVALID_EXCEPTION_OK);
 
-  TEST_c_c (ccosh, nan_value, nan_value, nan_value, nan_value);
+  TEST_c_c (ccosh, qnan_value, qnan_value, qnan_value, qnan_value);
 
   TEST_c_c (ccosh, 0.75L, 1.25L, 0.408242591877968807788852146397499084L, 0.780365930845853240391326216300863152L);
 
@@ -2362,7 +2362,7 @@ ceil_test (void)
   TEST_f_f (ceil, minus_zero, minus_zero);
   TEST_f_f (ceil, plus_infty, plus_infty);
   TEST_f_f (ceil, minus_infty, minus_infty);
-  TEST_f_f (ceil, nan_value, nan_value);
+  TEST_f_f (ceil, qnan_value, qnan_value);
 
   TEST_f_f (ceil, M_PIl, 4.0);
   TEST_f_f (ceil, -M_PIl, -3.0);
@@ -2469,40 +2469,40 @@ cexp_test (void)
   TEST_c_c (cexp, minus_infty, plus_zero, 0.0, 0.0);
   TEST_c_c (cexp, minus_infty, minus_zero, 0.0, minus_zero);
 
-  TEST_c_c (cexp, 0.0, plus_infty, nan_value, nan_value, INVALID_EXCEPTION);
-  TEST_c_c (cexp, minus_zero, plus_infty, nan_value, nan_value, INVALID_EXCEPTION);
+  TEST_c_c (cexp, 0.0, plus_infty, qnan_value, qnan_value, INVALID_EXCEPTION);
+  TEST_c_c (cexp, minus_zero, plus_infty, qnan_value, qnan_value, INVALID_EXCEPTION);
 
-  TEST_c_c (cexp, 0.0, minus_infty, nan_value, nan_value, INVALID_EXCEPTION);
-  TEST_c_c (cexp, minus_zero, minus_infty, nan_value, nan_value, INVALID_EXCEPTION);
+  TEST_c_c (cexp, 0.0, minus_infty, qnan_value, qnan_value, INVALID_EXCEPTION);
+  TEST_c_c (cexp, minus_zero, minus_infty, qnan_value, qnan_value, INVALID_EXCEPTION);
 
-  TEST_c_c (cexp, 100.0, plus_infty, nan_value, nan_value, INVALID_EXCEPTION);
-  TEST_c_c (cexp, -100.0, plus_infty, nan_value, nan_value, INVALID_EXCEPTION);
+  TEST_c_c (cexp, 100.0, plus_infty, qnan_value, qnan_value, INVALID_EXCEPTION);
+  TEST_c_c (cexp, -100.0, plus_infty, qnan_value, qnan_value, INVALID_EXCEPTION);
 
-  TEST_c_c (cexp, 100.0, minus_infty, nan_value, nan_value, INVALID_EXCEPTION);
-  TEST_c_c (cexp, -100.0, minus_infty, nan_value, nan_value, INVALID_EXCEPTION);
+  TEST_c_c (cexp, 100.0, minus_infty, qnan_value, qnan_value, INVALID_EXCEPTION);
+  TEST_c_c (cexp, -100.0, minus_infty, qnan_value, qnan_value, INVALID_EXCEPTION);
 
   TEST_c_c (cexp, minus_infty, 2.0, minus_zero, 0.0);
   TEST_c_c (cexp, minus_infty, 4.0, minus_zero, minus_zero);
   TEST_c_c (cexp, plus_infty, 2.0, minus_infty, plus_infty);
   TEST_c_c (cexp, plus_infty, 4.0, minus_infty, minus_infty);
 
-  TEST_c_c (cexp, plus_infty, plus_infty, plus_infty, nan_value, INVALID_EXCEPTION|IGNORE_ZERO_INF_SIGN);
-  TEST_c_c (cexp, plus_infty, minus_infty, plus_infty, nan_value, INVALID_EXCEPTION|IGNORE_ZERO_INF_SIGN);
+  TEST_c_c (cexp, plus_infty, plus_infty, plus_infty, qnan_value, INVALID_EXCEPTION|IGNORE_ZERO_INF_SIGN);
+  TEST_c_c (cexp, plus_infty, minus_infty, plus_infty, qnan_value, INVALID_EXCEPTION|IGNORE_ZERO_INF_SIGN);
 
   TEST_c_c (cexp, minus_infty, plus_infty, 0.0, 0.0, IGNORE_ZERO_INF_SIGN);
   TEST_c_c (cexp, minus_infty, minus_infty, 0.0, minus_zero, IGNORE_ZERO_INF_SIGN);
 
-  TEST_c_c (cexp, minus_infty, nan_value, 0, 0, IGNORE_ZERO_INF_SIGN);
+  TEST_c_c (cexp, minus_infty, qnan_value, 0, 0, IGNORE_ZERO_INF_SIGN);
 
-  TEST_c_c (cexp, plus_infty, nan_value, plus_infty, nan_value);
+  TEST_c_c (cexp, plus_infty, qnan_value, plus_infty, qnan_value);
 
-  TEST_c_c (cexp, nan_value, 0.0, nan_value, nan_value, INVALID_EXCEPTION_OK);
-  TEST_c_c (cexp, nan_value, 1.0, nan_value, nan_value, INVALID_EXCEPTION_OK);
+  TEST_c_c (cexp, qnan_value, 0.0, qnan_value, qnan_value, INVALID_EXCEPTION_OK);
+  TEST_c_c (cexp, qnan_value, 1.0, qnan_value, qnan_value, INVALID_EXCEPTION_OK);
 
-  TEST_c_c (cexp, nan_value, plus_infty, nan_value, nan_value, INVALID_EXCEPTION_OK);
-  TEST_c_c (cexp, 0, nan_value, nan_value, nan_value, INVALID_EXCEPTION_OK);
-  TEST_c_c (cexp, 1, nan_value, nan_value, nan_value, INVALID_EXCEPTION_OK);
-  TEST_c_c (cexp, nan_value, nan_value, nan_value, nan_value);
+  TEST_c_c (cexp, qnan_value, plus_infty, qnan_value, qnan_value, INVALID_EXCEPTION_OK);
+  TEST_c_c (cexp, 0, qnan_value, qnan_value, qnan_value, INVALID_EXCEPTION_OK);
+  TEST_c_c (cexp, 1, qnan_value, qnan_value, qnan_value, INVALID_EXCEPTION_OK);
+  TEST_c_c (cexp, qnan_value, qnan_value, qnan_value, qnan_value);
 
   TEST_c_c (cexp, 0.75L, 1.25L, 0.667537446429131586942201977015932112L, 2.00900045494094876258347228145863909L);
   TEST_c_c (cexp, -2.0, -3.0, -0.13398091492954261346140525546115575L, -0.019098516261135196432576240858800925L);
@@ -2561,8 +2561,8 @@ cimag_test (void)
   START (cimag);
   TEST_c_f (cimag, 1.0, 0.0, 0.0);
   TEST_c_f (cimag, 1.0, minus_zero, minus_zero);
-  TEST_c_f (cimag, 1.0, nan_value, nan_value);
-  TEST_c_f (cimag, nan_value, nan_value, nan_value);
+  TEST_c_f (cimag, 1.0, qnan_value, qnan_value);
+  TEST_c_f (cimag, qnan_value, qnan_value, qnan_value);
   TEST_c_f (cimag, 1.0, plus_infty, plus_infty);
   TEST_c_f (cimag, 1.0, minus_infty, minus_infty);
   TEST_c_f (cimag, 2.0, 3.0, 3.0);
@@ -2612,23 +2612,23 @@ clog_test (void)
   TEST_c_c (clog, plus_infty, minus_zero, plus_infty, minus_zero);
   TEST_c_c (clog, plus_infty, -1, plus_infty, minus_zero);
 
-  TEST_c_c (clog, plus_infty, nan_value, plus_infty, nan_value);
-  TEST_c_c (clog, minus_infty, nan_value, plus_infty, nan_value);
+  TEST_c_c (clog, plus_infty, qnan_value, plus_infty, qnan_value);
+  TEST_c_c (clog, minus_infty, qnan_value, plus_infty, qnan_value);
 
-  TEST_c_c (clog, nan_value, plus_infty, plus_infty, nan_value);
-  TEST_c_c (clog, nan_value, minus_infty, plus_infty, nan_value);
+  TEST_c_c (clog, qnan_value, plus_infty, plus_infty, qnan_value);
+  TEST_c_c (clog, qnan_value, minus_infty, plus_infty, qnan_value);
 
-  TEST_c_c (clog, 0, nan_value, nan_value, nan_value, INVALID_EXCEPTION_OK);
-  TEST_c_c (clog, 3, nan_value, nan_value, nan_value, INVALID_EXCEPTION_OK);
-  TEST_c_c (clog, minus_zero, nan_value, nan_value, nan_value, INVALID_EXCEPTION_OK);
-  TEST_c_c (clog, -3, nan_value, nan_value, nan_value, INVALID_EXCEPTION_OK);
+  TEST_c_c (clog, 0, qnan_value, qnan_value, qnan_value, INVALID_EXCEPTION_OK);
+  TEST_c_c (clog, 3, qnan_value, qnan_value, qnan_value, INVALID_EXCEPTION_OK);
+  TEST_c_c (clog, minus_zero, qnan_value, qnan_value, qnan_value, INVALID_EXCEPTION_OK);
+  TEST_c_c (clog, -3, qnan_value, qnan_value, qnan_value, INVALID_EXCEPTION_OK);
 
-  TEST_c_c (clog, nan_value, 0, nan_value, nan_value, INVALID_EXCEPTION_OK);
-  TEST_c_c (clog, nan_value, 5, nan_value, nan_value, INVALID_EXCEPTION_OK);
-  TEST_c_c (clog, nan_value, minus_zero, nan_value, nan_value, INVALID_EXCEPTION_OK);
-  TEST_c_c (clog, nan_value, -5, nan_value, nan_value, INVALID_EXCEPTION_OK);
+  TEST_c_c (clog, qnan_value, 0, qnan_value, qnan_value, INVALID_EXCEPTION_OK);
+  TEST_c_c (clog, qnan_value, 5, qnan_value, qnan_value, INVALID_EXCEPTION_OK);
+  TEST_c_c (clog, qnan_value, minus_zero, qnan_value, qnan_value, INVALID_EXCEPTION_OK);
+  TEST_c_c (clog, qnan_value, -5, qnan_value, qnan_value, INVALID_EXCEPTION_OK);
 
-  TEST_c_c (clog, nan_value, nan_value, nan_value, nan_value);
+  TEST_c_c (clog, qnan_value, qnan_value, qnan_value, qnan_value);
 
   TEST_c_c (clog, 0.75L, 1.25L, 0.376885901188190075998919126749298416L, 1.03037682652431246378774332703115153L);
   TEST_c_c (clog, -2, -3, 1.2824746787307683680267437207826593L, -2.1587989303424641704769327722648368L);
@@ -2832,23 +2832,23 @@ clog10_test (void)
   TEST_c_c (clog10, plus_infty, minus_zero, plus_infty, minus_zero);
   TEST_c_c (clog10, plus_infty, -1, plus_infty, minus_zero);
 
-  TEST_c_c (clog10, plus_infty, nan_value, plus_infty, nan_value);
-  TEST_c_c (clog10, minus_infty, nan_value, plus_infty, nan_value);
+  TEST_c_c (clog10, plus_infty, qnan_value, plus_infty, qnan_value);
+  TEST_c_c (clog10, minus_infty, qnan_value, plus_infty, qnan_value);
 
-  TEST_c_c (clog10, nan_value, plus_infty, plus_infty, nan_value);
-  TEST_c_c (clog10, nan_value, minus_infty, plus_infty, nan_value);
+  TEST_c_c (clog10, qnan_value, plus_infty, plus_infty, qnan_value);
+  TEST_c_c (clog10, qnan_value, minus_infty, plus_infty, qnan_value);
 
-  TEST_c_c (clog10, 0, nan_value, nan_value, nan_value, INVALID_EXCEPTION_OK);
-  TEST_c_c (clog10, 3, nan_value, nan_value, nan_value, INVALID_EXCEPTION_OK);
-  TEST_c_c (clog10, minus_zero, nan_value, nan_value, nan_value, INVALID_EXCEPTION_OK);
-  TEST_c_c (clog10, -3, nan_value, nan_value, nan_value, INVALID_EXCEPTION_OK);
+  TEST_c_c (clog10, 0, qnan_value, qnan_value, qnan_value, INVALID_EXCEPTION_OK);
+  TEST_c_c (clog10, 3, qnan_value, qnan_value, qnan_value, INVALID_EXCEPTION_OK);
+  TEST_c_c (clog10, minus_zero, qnan_value, qnan_value, qnan_value, INVALID_EXCEPTION_OK);
+  TEST_c_c (clog10, -3, qnan_value, qnan_value, qnan_value, INVALID_EXCEPTION_OK);
 
-  TEST_c_c (clog10, nan_value, 0, nan_value, nan_value, INVALID_EXCEPTION_OK);
-  TEST_c_c (clog10, nan_value, 5, nan_value, nan_value, INVALID_EXCEPTION_OK);
-  TEST_c_c (clog10, nan_value, minus_zero, nan_value, nan_value, INVALID_EXCEPTION_OK);
-  TEST_c_c (clog10, nan_value, -5, nan_value, nan_value, INVALID_EXCEPTION_OK);
+  TEST_c_c (clog10, qnan_value, 0, qnan_value, qnan_value, INVALID_EXCEPTION_OK);
+  TEST_c_c (clog10, qnan_value, 5, qnan_value, qnan_value, INVALID_EXCEPTION_OK);
+  TEST_c_c (clog10, qnan_value, minus_zero, qnan_value, qnan_value, INVALID_EXCEPTION_OK);
+  TEST_c_c (clog10, qnan_value, -5, qnan_value, qnan_value, INVALID_EXCEPTION_OK);
 
-  TEST_c_c (clog10, nan_value, nan_value, nan_value, nan_value);
+  TEST_c_c (clog10, qnan_value, qnan_value, qnan_value, qnan_value);
 
   TEST_c_c (clog10, 0.75L, 1.25L, 0.163679467193165171449476605077428975L, 0.447486970040493067069984724340855636L);
   TEST_c_c (clog10, -2, -3, 0.556971676153418384603252578971164214L, -0.937554462986374708541507952140189646L);
@@ -3017,7 +3017,7 @@ conj_test (void)
   START (conj);
   TEST_c_c (conj, 0.0, 0.0, 0.0, minus_zero);
   TEST_c_c (conj, 0.0, minus_zero, 0.0, 0.0);
-  TEST_c_c (conj, nan_value, nan_value, nan_value, nan_value);
+  TEST_c_c (conj, qnan_value, qnan_value, qnan_value, qnan_value);
   TEST_c_c (conj, plus_infty, minus_infty, plus_infty, plus_infty);
   TEST_c_c (conj, plus_infty, plus_infty, plus_infty, minus_infty);
   TEST_c_c (conj, 1.0, 2.0, 1.0, -2.0);
@@ -3048,10 +3048,10 @@ copysign_test (void)
   TEST_ff_f (copysign, minus_zero, minus_zero, minus_zero);
 
   /* XXX More correctly we would have to check the sign of the NaN.  */
-  TEST_ff_f (copysign, nan_value, 0, nan_value);
-  TEST_ff_f (copysign, nan_value, minus_zero, nan_value);
-  TEST_ff_f (copysign, -nan_value, 0, nan_value);
-  TEST_ff_f (copysign, -nan_value, minus_zero, nan_value);
+  TEST_ff_f (copysign, qnan_value, 0, qnan_value);
+  TEST_ff_f (copysign, qnan_value, minus_zero, qnan_value);
+  TEST_ff_f (copysign, -qnan_value, 0, qnan_value);
+  TEST_ff_f (copysign, -qnan_value, minus_zero, qnan_value);
 
   END (copysign);
 }
@@ -3071,14 +3071,14 @@ cos_test (void)
   TEST_f_f (cos, 0, 1);
   TEST_f_f (cos, minus_zero, 1);
   errno = 0;
-  TEST_f_f (cos, plus_infty, nan_value, INVALID_EXCEPTION);
+  TEST_f_f (cos, plus_infty, qnan_value, INVALID_EXCEPTION);
   check_int ("errno for cos(+inf) == EDOM", errno, EDOM, 0, 0, 0);
   errno = 0;
-  TEST_f_f (cos, minus_infty, nan_value, INVALID_EXCEPTION);
+  TEST_f_f (cos, minus_infty, qnan_value, INVALID_EXCEPTION);
   check_int ("errno for cos(-inf) == EDOM", errno, EDOM, 0, 0, 0);
   errno = 0;
-  TEST_f_f (cos, nan_value, nan_value);
-  check_int ("errno for cos(NaN) unchanged", errno, 0, 0, 0, 0);
+  TEST_f_f (cos, qnan_value, qnan_value);
+  check_int ("errno for cos(qNaN) unchanged", errno, 0, 0, 0, 0);
 
   TEST_f_f (cos, M_PI_6l * 2.0, 0.5);
   TEST_f_f (cos, M_PI_6l * 4.0, -0.5);
@@ -3268,7 +3268,7 @@ cosh_test (void)
   TEST_f_f (cosh, plus_infty, plus_infty);
   TEST_f_f (cosh, minus_infty, plus_infty);
 #endif
-  TEST_f_f (cosh, nan_value, nan_value);
+  TEST_f_f (cosh, qnan_value, qnan_value);
 
   TEST_f_f (cosh, 0.75L, 1.29468328467684468784170818539018176L);
 
@@ -3406,7 +3406,7 @@ cpow_test (void)
   TEST_cc_c (cpow, M_El, 0, 0, 2 * M_PIl, 1.0, 0.0);
   TEST_cc_c (cpow, 2, 3, 4, 0, -119.0, -120.0);
 
-  TEST_cc_c (cpow, nan_value, nan_value, nan_value, nan_value, nan_value, nan_value);
+  TEST_cc_c (cpow, qnan_value, qnan_value, qnan_value, qnan_value, qnan_value, qnan_value);
 
   TEST_cc_c (cpow, 0.75L, 1.25L, 0.75L, 1.25L, 0.117506293914473555420279832210420483L, 0.346552747708338676483025352060418001L);
   TEST_cc_c (cpow, 0.75L, 1.25L, 1.0L, 1.0L, 0.0846958290317209430433805274189191353L, 0.513285749182902449043287190519090481L);
@@ -3426,7 +3426,7 @@ cproj_test (void)
   TEST_c_c (cproj, 0.0, minus_zero, 0.0, minus_zero);
   TEST_c_c (cproj, minus_zero, 0.0, minus_zero, 0.0);
 
-  TEST_c_c (cproj, nan_value, nan_value, nan_value, nan_value);
+  TEST_c_c (cproj, qnan_value, qnan_value, qnan_value, qnan_value);
 
   TEST_c_c (cproj, plus_infty, plus_infty, plus_infty, 0.0);
   TEST_c_c (cproj, plus_infty, minus_infty, plus_infty, minus_zero);
@@ -3446,8 +3446,8 @@ creal_test (void)
   START (creal);
   TEST_c_f (creal, 0.0, 1.0, 0.0);
   TEST_c_f (creal, minus_zero, 1.0, minus_zero);
-  TEST_c_f (creal, nan_value, 1.0, nan_value);
-  TEST_c_f (creal, nan_value, nan_value, nan_value);
+  TEST_c_f (creal, qnan_value, 1.0, qnan_value);
+  TEST_c_f (creal, qnan_value, qnan_value, qnan_value);
   TEST_c_f (creal, plus_infty, 1.0, plus_infty);
   TEST_c_f (creal, minus_infty, 1.0, minus_infty);
   TEST_c_f (creal, 2.0, 3.0, 2.0);
@@ -3476,45 +3476,45 @@ csin_test (void)
   TEST_c_c (csin, 0.0, minus_infty, 0.0, minus_infty);
   TEST_c_c (csin, minus_zero, minus_infty, minus_zero, minus_infty);
 
-  TEST_c_c (csin, plus_infty, 0.0, nan_value, 0.0, INVALID_EXCEPTION|IGNORE_ZERO_INF_SIGN);
-  TEST_c_c (csin, minus_infty, 0.0, nan_value, 0.0, INVALID_EXCEPTION|IGNORE_ZERO_INF_SIGN);
-  TEST_c_c (csin, plus_infty, minus_zero, nan_value, 0.0, INVALID_EXCEPTION|IGNORE_ZERO_INF_SIGN);
-  TEST_c_c (csin, minus_infty, minus_zero, nan_value, 0.0, INVALID_EXCEPTION|IGNORE_ZERO_INF_SIGN);
+  TEST_c_c (csin, plus_infty, 0.0, qnan_value, 0.0, INVALID_EXCEPTION|IGNORE_ZERO_INF_SIGN);
+  TEST_c_c (csin, minus_infty, 0.0, qnan_value, 0.0, INVALID_EXCEPTION|IGNORE_ZERO_INF_SIGN);
+  TEST_c_c (csin, plus_infty, minus_zero, qnan_value, 0.0, INVALID_EXCEPTION|IGNORE_ZERO_INF_SIGN);
+  TEST_c_c (csin, minus_infty, minus_zero, qnan_value, 0.0, INVALID_EXCEPTION|IGNORE_ZERO_INF_SIGN);
 
-  TEST_c_c (csin, plus_infty, plus_infty, nan_value, plus_infty, INVALID_EXCEPTION|IGNORE_ZERO_INF_SIGN);
-  TEST_c_c (csin, minus_infty, plus_infty, nan_value, plus_infty, INVALID_EXCEPTION|IGNORE_ZERO_INF_SIGN);
-  TEST_c_c (csin, plus_infty, minus_infty, nan_value, plus_infty, INVALID_EXCEPTION|IGNORE_ZERO_INF_SIGN);
-  TEST_c_c (csin, minus_infty, minus_infty, nan_value, plus_infty, INVALID_EXCEPTION|IGNORE_ZERO_INF_SIGN);
+  TEST_c_c (csin, plus_infty, plus_infty, qnan_value, plus_infty, INVALID_EXCEPTION|IGNORE_ZERO_INF_SIGN);
+  TEST_c_c (csin, minus_infty, plus_infty, qnan_value, plus_infty, INVALID_EXCEPTION|IGNORE_ZERO_INF_SIGN);
+  TEST_c_c (csin, plus_infty, minus_infty, qnan_value, plus_infty, INVALID_EXCEPTION|IGNORE_ZERO_INF_SIGN);
+  TEST_c_c (csin, minus_infty, minus_infty, qnan_value, plus_infty, INVALID_EXCEPTION|IGNORE_ZERO_INF_SIGN);
 
-  TEST_c_c (csin, plus_infty, 6.75, nan_value, nan_value, INVALID_EXCEPTION);
-  TEST_c_c (csin, plus_infty, -6.75, nan_value, nan_value, INVALID_EXCEPTION);
-  TEST_c_c (csin, minus_infty, 6.75, nan_value, nan_value, INVALID_EXCEPTION);
-  TEST_c_c (csin, minus_infty, -6.75,  nan_value, nan_value, INVALID_EXCEPTION);
+  TEST_c_c (csin, plus_infty, 6.75, qnan_value, qnan_value, INVALID_EXCEPTION);
+  TEST_c_c (csin, plus_infty, -6.75, qnan_value, qnan_value, INVALID_EXCEPTION);
+  TEST_c_c (csin, minus_infty, 6.75, qnan_value, qnan_value, INVALID_EXCEPTION);
+  TEST_c_c (csin, minus_infty, -6.75,  qnan_value, qnan_value, INVALID_EXCEPTION);
 
   TEST_c_c (csin, 4.625, plus_infty, minus_infty, minus_infty);
   TEST_c_c (csin, 4.625, minus_infty, minus_infty, plus_infty);
   TEST_c_c (csin, -4.625, plus_infty, plus_infty, minus_infty);
   TEST_c_c (csin, -4.625, minus_infty, plus_infty, plus_infty);
 
-  TEST_c_c (csin, nan_value, 0.0, nan_value, 0.0, IGNORE_ZERO_INF_SIGN);
-  TEST_c_c (csin, nan_value, minus_zero, nan_value, 0.0, IGNORE_ZERO_INF_SIGN);
+  TEST_c_c (csin, qnan_value, 0.0, qnan_value, 0.0, IGNORE_ZERO_INF_SIGN);
+  TEST_c_c (csin, qnan_value, minus_zero, qnan_value, 0.0, IGNORE_ZERO_INF_SIGN);
 
-  TEST_c_c (csin, nan_value, plus_infty, nan_value, plus_infty, IGNORE_ZERO_INF_SIGN);
-  TEST_c_c (csin, nan_value, minus_infty, nan_value, plus_infty, IGNORE_ZERO_INF_SIGN);
+  TEST_c_c (csin, qnan_value, plus_infty, qnan_value, plus_infty, IGNORE_ZERO_INF_SIGN);
+  TEST_c_c (csin, qnan_value, minus_infty, qnan_value, plus_infty, IGNORE_ZERO_INF_SIGN);
 
-  TEST_c_c (csin, nan_value, 9.0, nan_value, nan_value, INVALID_EXCEPTION_OK);
-  TEST_c_c (csin, nan_value, -9.0, nan_value, nan_value, INVALID_EXCEPTION_OK);
+  TEST_c_c (csin, qnan_value, 9.0, qnan_value, qnan_value, INVALID_EXCEPTION_OK);
+  TEST_c_c (csin, qnan_value, -9.0, qnan_value, qnan_value, INVALID_EXCEPTION_OK);
 
-  TEST_c_c (csin, 0.0, nan_value, 0.0, nan_value);
-  TEST_c_c (csin, minus_zero, nan_value, minus_zero, nan_value);
+  TEST_c_c (csin, 0.0, qnan_value, 0.0, qnan_value);
+  TEST_c_c (csin, minus_zero, qnan_value, minus_zero, qnan_value);
 
-  TEST_c_c (csin, 10.0, nan_value, nan_value, nan_value, INVALID_EXCEPTION_OK);
-  TEST_c_c (csin, nan_value, -10.0, nan_value, nan_value, INVALID_EXCEPTION_OK);
+  TEST_c_c (csin, 10.0, qnan_value, qnan_value, qnan_value, INVALID_EXCEPTION_OK);
+  TEST_c_c (csin, qnan_value, -10.0, qnan_value, qnan_value, INVALID_EXCEPTION_OK);
 
-  TEST_c_c (csin, plus_infty, nan_value, nan_value, nan_value, INVALID_EXCEPTION_OK);
-  TEST_c_c (csin, minus_infty, nan_value, nan_value, nan_value, INVALID_EXCEPTION_OK);
+  TEST_c_c (csin, plus_infty, qnan_value, qnan_value, qnan_value, INVALID_EXCEPTION_OK);
+  TEST_c_c (csin, minus_infty, qnan_value, qnan_value, qnan_value, INVALID_EXCEPTION_OK);
 
-  TEST_c_c (csin, nan_value, nan_value, nan_value, nan_value);
+  TEST_c_c (csin, qnan_value, qnan_value, qnan_value, qnan_value);
 
   TEST_c_c (csin, 0.75L, 1.25L, 1.28722291002649188575873510790565441L, 1.17210635989270256101081285116138863L);
   TEST_c_c (csin, -2, -3, -9.15449914691142957346729954460983256L, 4.16890695996656435075481305885375484L);
@@ -3570,50 +3570,50 @@ csinh_test (void)
   TEST_c_c (csinh, 0.0, minus_zero, 0.0, minus_zero);
   TEST_c_c (csinh, minus_zero, minus_zero, minus_zero, minus_zero);
 
-  TEST_c_c (csinh, 0.0, plus_infty, 0.0, nan_value, INVALID_EXCEPTION|IGNORE_ZERO_INF_SIGN);
-  TEST_c_c (csinh, minus_zero, plus_infty, 0.0, nan_value, INVALID_EXCEPTION|IGNORE_ZERO_INF_SIGN);
-  TEST_c_c (csinh, 0.0, minus_infty, 0.0, nan_value, INVALID_EXCEPTION|IGNORE_ZERO_INF_SIGN);
-  TEST_c_c (csinh, minus_zero, minus_infty, 0.0, nan_value, INVALID_EXCEPTION|IGNORE_ZERO_INF_SIGN);
+  TEST_c_c (csinh, 0.0, plus_infty, 0.0, qnan_value, INVALID_EXCEPTION|IGNORE_ZERO_INF_SIGN);
+  TEST_c_c (csinh, minus_zero, plus_infty, 0.0, qnan_value, INVALID_EXCEPTION|IGNORE_ZERO_INF_SIGN);
+  TEST_c_c (csinh, 0.0, minus_infty, 0.0, qnan_value, INVALID_EXCEPTION|IGNORE_ZERO_INF_SIGN);
+  TEST_c_c (csinh, minus_zero, minus_infty, 0.0, qnan_value, INVALID_EXCEPTION|IGNORE_ZERO_INF_SIGN);
 
   TEST_c_c (csinh, plus_infty, 0.0, plus_infty, 0.0);
   TEST_c_c (csinh, minus_infty, 0.0, minus_infty, 0.0);
   TEST_c_c (csinh, plus_infty, minus_zero, plus_infty, minus_zero);
   TEST_c_c (csinh, minus_infty, minus_zero, minus_infty, minus_zero);
 
-  TEST_c_c (csinh, plus_infty, plus_infty, plus_infty, nan_value, INVALID_EXCEPTION|IGNORE_ZERO_INF_SIGN);
-  TEST_c_c (csinh, minus_infty, plus_infty, plus_infty, nan_value, INVALID_EXCEPTION|IGNORE_ZERO_INF_SIGN);
-  TEST_c_c (csinh, plus_infty, minus_infty, plus_infty, nan_value, INVALID_EXCEPTION|IGNORE_ZERO_INF_SIGN);
-  TEST_c_c (csinh, minus_infty, minus_infty, plus_infty, nan_value, INVALID_EXCEPTION|IGNORE_ZERO_INF_SIGN);
+  TEST_c_c (csinh, plus_infty, plus_infty, plus_infty, qnan_value, INVALID_EXCEPTION|IGNORE_ZERO_INF_SIGN);
+  TEST_c_c (csinh, minus_infty, plus_infty, plus_infty, qnan_value, INVALID_EXCEPTION|IGNORE_ZERO_INF_SIGN);
+  TEST_c_c (csinh, plus_infty, minus_infty, plus_infty, qnan_value, INVALID_EXCEPTION|IGNORE_ZERO_INF_SIGN);
+  TEST_c_c (csinh, minus_infty, minus_infty, plus_infty, qnan_value, INVALID_EXCEPTION|IGNORE_ZERO_INF_SIGN);
 
   TEST_c_c (csinh, plus_infty, 4.625, minus_infty, minus_infty);
   TEST_c_c (csinh, minus_infty, 4.625, plus_infty, minus_infty);
   TEST_c_c (csinh, plus_infty, -4.625, minus_infty, plus_infty);
   TEST_c_c (csinh, minus_infty, -4.625, plus_infty, plus_infty);
 
-  TEST_c_c (csinh, 6.75, plus_infty, nan_value, nan_value, INVALID_EXCEPTION);
-  TEST_c_c (csinh, -6.75, plus_infty, nan_value, nan_value, INVALID_EXCEPTION);
-  TEST_c_c (csinh, 6.75, minus_infty, nan_value, nan_value, INVALID_EXCEPTION);
-  TEST_c_c (csinh, -6.75, minus_infty, nan_value, nan_value, INVALID_EXCEPTION);
+  TEST_c_c (csinh, 6.75, plus_infty, qnan_value, qnan_value, INVALID_EXCEPTION);
+  TEST_c_c (csinh, -6.75, plus_infty, qnan_value, qnan_value, INVALID_EXCEPTION);
+  TEST_c_c (csinh, 6.75, minus_infty, qnan_value, qnan_value, INVALID_EXCEPTION);
+  TEST_c_c (csinh, -6.75, minus_infty, qnan_value, qnan_value, INVALID_EXCEPTION);
 
-  TEST_c_c (csinh, 0.0, nan_value, 0.0, nan_value, IGNORE_ZERO_INF_SIGN);
-  TEST_c_c (csinh, minus_zero, nan_value, 0.0, nan_value, IGNORE_ZERO_INF_SIGN);
+  TEST_c_c (csinh, 0.0, qnan_value, 0.0, qnan_value, IGNORE_ZERO_INF_SIGN);
+  TEST_c_c (csinh, minus_zero, qnan_value, 0.0, qnan_value, IGNORE_ZERO_INF_SIGN);
 
-  TEST_c_c (csinh, plus_infty, nan_value, plus_infty, nan_value, IGNORE_ZERO_INF_SIGN);
-  TEST_c_c (csinh, minus_infty, nan_value, plus_infty, nan_value, IGNORE_ZERO_INF_SIGN);
+  TEST_c_c (csinh, plus_infty, qnan_value, plus_infty, qnan_value, IGNORE_ZERO_INF_SIGN);
+  TEST_c_c (csinh, minus_infty, qnan_value, plus_infty, qnan_value, IGNORE_ZERO_INF_SIGN);
 
-  TEST_c_c (csinh, 9.0, nan_value, nan_value, nan_value, INVALID_EXCEPTION_OK);
-  TEST_c_c (csinh, -9.0, nan_value, nan_value, nan_value, INVALID_EXCEPTION_OK);
+  TEST_c_c (csinh, 9.0, qnan_value, qnan_value, qnan_value, INVALID_EXCEPTION_OK);
+  TEST_c_c (csinh, -9.0, qnan_value, qnan_value, qnan_value, INVALID_EXCEPTION_OK);
 
-  TEST_c_c (csinh, nan_value, 0.0, nan_value, 0.0);
-  TEST_c_c (csinh, nan_value, minus_zero, nan_value, minus_zero);
+  TEST_c_c (csinh, qnan_value, 0.0, qnan_value, 0.0);
+  TEST_c_c (csinh, qnan_value, minus_zero, qnan_value, minus_zero);
 
-  TEST_c_c (csinh, nan_value, 10.0, nan_value, nan_value, INVALID_EXCEPTION_OK);
-  TEST_c_c (csinh, nan_value, -10.0, nan_value, nan_value, INVALID_EXCEPTION_OK);
+  TEST_c_c (csinh, qnan_value, 10.0, qnan_value, qnan_value, INVALID_EXCEPTION_OK);
+  TEST_c_c (csinh, qnan_value, -10.0, qnan_value, qnan_value, INVALID_EXCEPTION_OK);
 
-  TEST_c_c (csinh, nan_value, plus_infty, nan_value, nan_value, INVALID_EXCEPTION_OK);
-  TEST_c_c (csinh, nan_value, minus_infty, nan_value, nan_value, INVALID_EXCEPTION_OK);
+  TEST_c_c (csinh, qnan_value, plus_infty, qnan_value, qnan_value, INVALID_EXCEPTION_OK);
+  TEST_c_c (csinh, qnan_value, minus_infty, qnan_value, qnan_value, INVALID_EXCEPTION_OK);
 
-  TEST_c_c (csinh, nan_value, nan_value, nan_value, nan_value);
+  TEST_c_c (csinh, qnan_value, qnan_value, qnan_value, qnan_value);
 
   TEST_c_c (csinh, 0.75L, 1.25L, 0.259294854551162779153349830618433028L, 1.22863452409509552219214606515777594L);
   TEST_c_c (csinh, -2, -3, 3.59056458998577995201256544779481679L, -0.530921086248519805267040090660676560L);
@@ -3692,21 +3692,21 @@ csqrt_test (void)
   TEST_c_c (csqrt, -4, minus_infty, plus_infty, minus_infty);
   TEST_c_c (csqrt, minus_infty, minus_infty, plus_infty, minus_infty);
 
-  TEST_c_c (csqrt, minus_infty, nan_value, nan_value, plus_infty, IGNORE_ZERO_INF_SIGN);
+  TEST_c_c (csqrt, minus_infty, qnan_value, qnan_value, plus_infty, IGNORE_ZERO_INF_SIGN);
 
-  TEST_c_c (csqrt, plus_infty, nan_value, plus_infty, nan_value);
+  TEST_c_c (csqrt, plus_infty, qnan_value, plus_infty, qnan_value);
 
-  TEST_c_c (csqrt, 0, nan_value, nan_value, nan_value, INVALID_EXCEPTION_OK);
-  TEST_c_c (csqrt, 1, nan_value, nan_value, nan_value, INVALID_EXCEPTION_OK);
-  TEST_c_c (csqrt, minus_zero, nan_value, nan_value, nan_value, INVALID_EXCEPTION_OK);
-  TEST_c_c (csqrt, -1, nan_value, nan_value, nan_value, INVALID_EXCEPTION_OK);
+  TEST_c_c (csqrt, 0, qnan_value, qnan_value, qnan_value, INVALID_EXCEPTION_OK);
+  TEST_c_c (csqrt, 1, qnan_value, qnan_value, qnan_value, INVALID_EXCEPTION_OK);
+  TEST_c_c (csqrt, minus_zero, qnan_value, qnan_value, qnan_value, INVALID_EXCEPTION_OK);
+  TEST_c_c (csqrt, -1, qnan_value, qnan_value, qnan_value, INVALID_EXCEPTION_OK);
 
-  TEST_c_c (csqrt, nan_value, 0, nan_value, nan_value, INVALID_EXCEPTION_OK);
-  TEST_c_c (csqrt, nan_value, 8, nan_value, nan_value, INVALID_EXCEPTION_OK);
-  TEST_c_c (csqrt, nan_value, minus_zero, nan_value, nan_value, INVALID_EXCEPTION_OK);
-  TEST_c_c (csqrt, nan_value, -8, nan_value, nan_value, INVALID_EXCEPTION_OK);
+  TEST_c_c (csqrt, qnan_value, 0, qnan_value, qnan_value, INVALID_EXCEPTION_OK);
+  TEST_c_c (csqrt, qnan_value, 8, qnan_value, qnan_value, INVALID_EXCEPTION_OK);
+  TEST_c_c (csqrt, qnan_value, minus_zero, qnan_value, qnan_value, INVALID_EXCEPTION_OK);
+  TEST_c_c (csqrt, qnan_value, -8, qnan_value, qnan_value, INVALID_EXCEPTION_OK);
 
-  TEST_c_c (csqrt, nan_value, nan_value, nan_value, nan_value);
+  TEST_c_c (csqrt, qnan_value, qnan_value, qnan_value, qnan_value);
 
   TEST_c_c (csqrt, 16.0, -30.0, 5.0, -3.0);
   TEST_c_c (csqrt, -1, 0, 0.0, 1.0);
@@ -3800,30 +3800,30 @@ ctan_test (void)
   TEST_c_c (ctan, minus_zero, minus_infty, minus_zero, -1.0);
   TEST_c_c (ctan, -1, minus_infty, minus_zero, -1.0);
 
-  TEST_c_c (ctan, plus_infty, 0, nan_value, nan_value, INVALID_EXCEPTION);
-  TEST_c_c (ctan, plus_infty, 2, nan_value, nan_value, INVALID_EXCEPTION);
-  TEST_c_c (ctan, minus_infty, 0, nan_value, nan_value, INVALID_EXCEPTION);
-  TEST_c_c (ctan, minus_infty, 2, nan_value, nan_value, INVALID_EXCEPTION);
-  TEST_c_c (ctan, plus_infty, minus_zero, nan_value, nan_value, INVALID_EXCEPTION);
-  TEST_c_c (ctan, plus_infty, -2, nan_value, nan_value, INVALID_EXCEPTION);
-  TEST_c_c (ctan, minus_infty, minus_zero, nan_value, nan_value, INVALID_EXCEPTION);
-  TEST_c_c (ctan, minus_infty, -2, nan_value, nan_value, INVALID_EXCEPTION);
+  TEST_c_c (ctan, plus_infty, 0, qnan_value, qnan_value, INVALID_EXCEPTION);
+  TEST_c_c (ctan, plus_infty, 2, qnan_value, qnan_value, INVALID_EXCEPTION);
+  TEST_c_c (ctan, minus_infty, 0, qnan_value, qnan_value, INVALID_EXCEPTION);
+  TEST_c_c (ctan, minus_infty, 2, qnan_value, qnan_value, INVALID_EXCEPTION);
+  TEST_c_c (ctan, plus_infty, minus_zero, qnan_value, qnan_value, INVALID_EXCEPTION);
+  TEST_c_c (ctan, plus_infty, -2, qnan_value, qnan_value, INVALID_EXCEPTION);
+  TEST_c_c (ctan, minus_infty, minus_zero, qnan_value, qnan_value, INVALID_EXCEPTION);
+  TEST_c_c (ctan, minus_infty, -2, qnan_value, qnan_value, INVALID_EXCEPTION);
 
-  TEST_c_c (ctan, nan_value, plus_infty, 0.0, 1.0, IGNORE_ZERO_INF_SIGN);
-  TEST_c_c (ctan, nan_value, minus_infty, 0.0, -1.0, IGNORE_ZERO_INF_SIGN);
+  TEST_c_c (ctan, qnan_value, plus_infty, 0.0, 1.0, IGNORE_ZERO_INF_SIGN);
+  TEST_c_c (ctan, qnan_value, minus_infty, 0.0, -1.0, IGNORE_ZERO_INF_SIGN);
 
-  TEST_c_c (ctan, 0, nan_value, 0.0, nan_value);
-  TEST_c_c (ctan, minus_zero, nan_value, minus_zero, nan_value);
+  TEST_c_c (ctan, 0, qnan_value, 0.0, qnan_value);
+  TEST_c_c (ctan, minus_zero, qnan_value, minus_zero, qnan_value);
 
-  TEST_c_c (ctan, 0.5, nan_value, nan_value, nan_value, INVALID_EXCEPTION_OK);
-  TEST_c_c (ctan, -4.5, nan_value, nan_value, nan_value, INVALID_EXCEPTION_OK);
+  TEST_c_c (ctan, 0.5, qnan_value, qnan_value, qnan_value, INVALID_EXCEPTION_OK);
+  TEST_c_c (ctan, -4.5, qnan_value, qnan_value, qnan_value, INVALID_EXCEPTION_OK);
 
-  TEST_c_c (ctan, nan_value, 0, nan_value, nan_value, INVALID_EXCEPTION_OK);
-  TEST_c_c (ctan, nan_value, 5, nan_value, nan_value, INVALID_EXCEPTION_OK);
-  TEST_c_c (ctan, nan_value, minus_zero, nan_value, nan_value, INVALID_EXCEPTION_OK);
-  TEST_c_c (ctan, nan_value, -0.25, nan_value, nan_value, INVALID_EXCEPTION_OK);
+  TEST_c_c (ctan, qnan_value, 0, qnan_value, qnan_value, INVALID_EXCEPTION_OK);
+  TEST_c_c (ctan, qnan_value, 5, qnan_value, qnan_value, INVALID_EXCEPTION_OK);
+  TEST_c_c (ctan, qnan_value, minus_zero, qnan_value, qnan_value, INVALID_EXCEPTION_OK);
+  TEST_c_c (ctan, qnan_value, -0.25, qnan_value, qnan_value, INVALID_EXCEPTION_OK);
 
-  TEST_c_c (ctan, nan_value, nan_value, nan_value, nan_value);
+  TEST_c_c (ctan, qnan_value, qnan_value, qnan_value, qnan_value);
 
   TEST_c_c (ctan, 0.75L, 1.25L, 0.160807785916206426725166058173438663L, 0.975363285031235646193581759755216379L);
   TEST_c_c (ctan, -2, -3, 0.376402564150424829275122113032269084e-2L, -1.00323862735360980144635859782192726L);
@@ -4019,30 +4019,30 @@ ctanh_test (void)
   TEST_c_c (ctanh, minus_infty, minus_zero, -1.0, minus_zero);
   TEST_c_c (ctanh, minus_infty, -1, -1.0, minus_zero);
 
-  TEST_c_c (ctanh, 0, plus_infty, nan_value, nan_value, INVALID_EXCEPTION);
-  TEST_c_c (ctanh, 2, plus_infty, nan_value, nan_value, INVALID_EXCEPTION);
-  TEST_c_c (ctanh, 0, minus_infty, nan_value, nan_value, INVALID_EXCEPTION);
-  TEST_c_c (ctanh, 2, minus_infty, nan_value, nan_value, INVALID_EXCEPTION);
-  TEST_c_c (ctanh, minus_zero, plus_infty, nan_value, nan_value, INVALID_EXCEPTION);
-  TEST_c_c (ctanh, -2, plus_infty, nan_value, nan_value, INVALID_EXCEPTION);
-  TEST_c_c (ctanh, minus_zero, minus_infty, nan_value, nan_value, INVALID_EXCEPTION);
-  TEST_c_c (ctanh, -2, minus_infty, nan_value, nan_value, INVALID_EXCEPTION);
+  TEST_c_c (ctanh, 0, plus_infty, qnan_value, qnan_value, INVALID_EXCEPTION);
+  TEST_c_c (ctanh, 2, plus_infty, qnan_value, qnan_value, INVALID_EXCEPTION);
+  TEST_c_c (ctanh, 0, minus_infty, qnan_value, qnan_value, INVALID_EXCEPTION);
+  TEST_c_c (ctanh, 2, minus_infty, qnan_value, qnan_value, INVALID_EXCEPTION);
+  TEST_c_c (ctanh, minus_zero, plus_infty, qnan_value, qnan_value, INVALID_EXCEPTION);
+  TEST_c_c (ctanh, -2, plus_infty, qnan_value, qnan_value, INVALID_EXCEPTION);
+  TEST_c_c (ctanh, minus_zero, minus_infty, qnan_value, qnan_value, INVALID_EXCEPTION);
+  TEST_c_c (ctanh, -2, minus_infty, qnan_value, qnan_value, INVALID_EXCEPTION);
 
-  TEST_c_c (ctanh, plus_infty, nan_value, 1.0, 0.0, IGNORE_ZERO_INF_SIGN);
-  TEST_c_c (ctanh, minus_infty, nan_value, -1.0, 0.0, IGNORE_ZERO_INF_SIGN);
+  TEST_c_c (ctanh, plus_infty, qnan_value, 1.0, 0.0, IGNORE_ZERO_INF_SIGN);
+  TEST_c_c (ctanh, minus_infty, qnan_value, -1.0, 0.0, IGNORE_ZERO_INF_SIGN);
 
-  TEST_c_c (ctanh, nan_value, 0, nan_value, 0.0);
-  TEST_c_c (ctanh, nan_value, minus_zero, nan_value, minus_zero);
+  TEST_c_c (ctanh, qnan_value, 0, qnan_value, 0.0);
+  TEST_c_c (ctanh, qnan_value, minus_zero, qnan_value, minus_zero);
 
-  TEST_c_c (ctanh, nan_value, 0.5, nan_value, nan_value, INVALID_EXCEPTION_OK);
-  TEST_c_c (ctanh, nan_value, -4.5, nan_value, nan_value, INVALID_EXCEPTION_OK);
+  TEST_c_c (ctanh, qnan_value, 0.5, qnan_value, qnan_value, INVALID_EXCEPTION_OK);
+  TEST_c_c (ctanh, qnan_value, -4.5, qnan_value, qnan_value, INVALID_EXCEPTION_OK);
 
-  TEST_c_c (ctanh, 0, nan_value, nan_value, nan_value, INVALID_EXCEPTION_OK);
-  TEST_c_c (ctanh, 5, nan_value, nan_value, nan_value, INVALID_EXCEPTION_OK);
-  TEST_c_c (ctanh, minus_zero, nan_value, nan_value, nan_value, INVALID_EXCEPTION_OK);
-  TEST_c_c (ctanh, -0.25, nan_value, nan_value, nan_value, INVALID_EXCEPTION_OK);
+  TEST_c_c (ctanh, 0, qnan_value, qnan_value, qnan_value, INVALID_EXCEPTION_OK);
+  TEST_c_c (ctanh, 5, qnan_value, qnan_value, qnan_value, INVALID_EXCEPTION_OK);
+  TEST_c_c (ctanh, minus_zero, qnan_value, qnan_value, qnan_value, INVALID_EXCEPTION_OK);
+  TEST_c_c (ctanh, -0.25, qnan_value, qnan_value, qnan_value, INVALID_EXCEPTION_OK);
 
-  TEST_c_c (ctanh, nan_value, nan_value, nan_value, nan_value);
+  TEST_c_c (ctanh, qnan_value, qnan_value, qnan_value, qnan_value);
 
   TEST_c_c (ctanh, 0, M_PI_4l, 0.0, 1.0);
 
@@ -4230,7 +4230,7 @@ erf_test (void)
   TEST_f_f (erf, minus_zero, minus_zero);
   TEST_f_f (erf, plus_infty, 1);
   TEST_f_f (erf, minus_infty, -1);
-  TEST_f_f (erf, nan_value, nan_value);
+  TEST_f_f (erf, qnan_value, qnan_value);
 
   TEST_f_f (erf, 0.125L, 0.140316204801333817393029446521623398L);
   TEST_f_f (erf, 0.75L, 0.711155633653515131598937834591410777L);
@@ -4258,7 +4258,7 @@ erfc_test (void)
   TEST_f_f (erfc, minus_infty, 2.0);
   TEST_f_f (erfc, 0.0, 1.0);
   TEST_f_f (erfc, minus_zero, 1.0);
-  TEST_f_f (erfc, nan_value, nan_value);
+  TEST_f_f (erfc, qnan_value, qnan_value);
 
   TEST_f_f (erfc, 0.125L, 0.859683795198666182606970553478376602L);
   TEST_f_f (erfc, 0.75L, 0.288844366346484868401062165408589223L);
@@ -4300,7 +4300,7 @@ exp_test (void)
   TEST_f_f (exp, plus_infty, plus_infty);
   TEST_f_f (exp, minus_infty, 0);
 #endif
-  TEST_f_f (exp, nan_value, nan_value);
+  TEST_f_f (exp, qnan_value, qnan_value);
   TEST_f_f (exp, 1, M_El);
 
   TEST_f_f (exp, 2, M_E2l);
@@ -4449,7 +4449,7 @@ exp10_test (void)
 
   TEST_f_f (exp10, plus_infty, plus_infty);
   TEST_f_f (exp10, minus_infty, 0);
-  TEST_f_f (exp10, nan_value, nan_value);
+  TEST_f_f (exp10, qnan_value, qnan_value);
   TEST_f_f (exp10, 3, 1000);
   TEST_f_f (exp10, -1, 0.1L);
   TEST_f_f (exp10, 36, 1.0e36L);
@@ -4487,7 +4487,7 @@ exp2_test (void)
   TEST_f_f (exp2, minus_zero, 1);
   TEST_f_f (exp2, plus_infty, plus_infty);
   TEST_f_f (exp2, minus_infty, 0);
-  TEST_f_f (exp2, nan_value, nan_value);
+  TEST_f_f (exp2, qnan_value, qnan_value);
 
   TEST_f_f (exp2, 10, 1024);
   TEST_f_f (exp2, -1, 0.5);
@@ -4534,7 +4534,7 @@ expm1_test (void)
   TEST_f_f (expm1, plus_infty, plus_infty);
   TEST_f_f (expm1, minus_infty, -1);
 #endif
-  TEST_f_f (expm1, nan_value, nan_value);
+  TEST_f_f (expm1, qnan_value, qnan_value);
 
   TEST_f_f (expm1, 1, M_El - 1.0);
   TEST_f_f (expm1, 0.75L, 1.11700001661267466854536981983709561L);
@@ -4591,7 +4591,7 @@ fabs_test (void)
 
   TEST_f_f (fabs, plus_infty, plus_infty);
   TEST_f_f (fabs, minus_infty, plus_infty);
-  TEST_f_f (fabs, nan_value, nan_value);
+  TEST_f_f (fabs, qnan_value, qnan_value);
 
   TEST_f_f (fabs, 38.0, 38.0);
   TEST_f_f (fabs, -M_El, M_El);
@@ -4620,16 +4620,16 @@ fdim_test (void)
   TEST_ff_f (fdim, 9, plus_infty, 0);
   TEST_ff_f (fdim, -9, plus_infty, 0);
 
-  TEST_ff_f (fdim, 0, nan_value, nan_value);
-  TEST_ff_f (fdim, 9, nan_value, nan_value);
-  TEST_ff_f (fdim, -9, nan_value, nan_value);
-  TEST_ff_f (fdim, nan_value, 9, nan_value);
-  TEST_ff_f (fdim, nan_value, -9, nan_value);
-  TEST_ff_f (fdim, plus_infty, nan_value, nan_value);
-  TEST_ff_f (fdim, minus_infty, nan_value, nan_value);
-  TEST_ff_f (fdim, nan_value, plus_infty, nan_value);
-  TEST_ff_f (fdim, nan_value, minus_infty, nan_value);
-  TEST_ff_f (fdim, nan_value, nan_value, nan_value);
+  TEST_ff_f (fdim, 0, qnan_value, qnan_value);
+  TEST_ff_f (fdim, 9, qnan_value, qnan_value);
+  TEST_ff_f (fdim, -9, qnan_value, qnan_value);
+  TEST_ff_f (fdim, qnan_value, 9, qnan_value);
+  TEST_ff_f (fdim, qnan_value, -9, qnan_value);
+  TEST_ff_f (fdim, plus_infty, qnan_value, qnan_value);
+  TEST_ff_f (fdim, minus_infty, qnan_value, qnan_value);
+  TEST_ff_f (fdim, qnan_value, plus_infty, qnan_value);
+  TEST_ff_f (fdim, qnan_value, minus_infty, qnan_value);
+  TEST_ff_f (fdim, qnan_value, qnan_value, qnan_value);
 
   TEST_ff_f (fdim, plus_infty, plus_infty, 0);
 
@@ -4648,7 +4648,7 @@ finite_test (void)
   TEST_f_b (finite, min_subnorm_value, 1);
   TEST_f_b (finite, plus_infty, 0);
   TEST_f_b (finite, minus_infty, 0);
-  TEST_f_b (finite, nan_value, 0);
+  TEST_f_b (finite, qnan_value, 0);
 
   END (finite);
 }
@@ -4663,7 +4663,7 @@ floor_test (void)
   TEST_f_f (floor, minus_zero, minus_zero);
   TEST_f_f (floor, plus_infty, plus_infty);
   TEST_f_f (floor, minus_infty, minus_infty);
-  TEST_f_f (floor, nan_value, nan_value);
+  TEST_f_f (floor, qnan_value, qnan_value);
 
   TEST_f_f (floor, M_PIl, 3.0);
   TEST_f_f (floor, -M_PIl, -4.0);
@@ -4761,26 +4761,26 @@ fma_test (void)
   START (fma);
 
   TEST_fff_f (fma, 1.0, 2.0, 3.0, 5.0);
-  TEST_fff_f (fma, nan_value, 2.0, 3.0, nan_value);
-  TEST_fff_f (fma, 1.0, nan_value, 3.0, nan_value);
-  TEST_fff_f (fma, 1.0, 2.0, nan_value, nan_value, INVALID_EXCEPTION_OK);
-  TEST_fff_f (fma, plus_infty, 0.0, nan_value, nan_value, INVALID_EXCEPTION_OK);
-  TEST_fff_f (fma, minus_infty, 0.0, nan_value, nan_value, INVALID_EXCEPTION_OK);
-  TEST_fff_f (fma, 0.0, plus_infty, nan_value, nan_value, INVALID_EXCEPTION_OK);
-  TEST_fff_f (fma, 0.0, minus_infty, nan_value, nan_value, INVALID_EXCEPTION_OK);
-  TEST_fff_f (fma, plus_infty, 0.0, 1.0, nan_value, INVALID_EXCEPTION);
-  TEST_fff_f (fma, minus_infty, 0.0, 1.0, nan_value, INVALID_EXCEPTION);
-  TEST_fff_f (fma, 0.0, plus_infty, 1.0, nan_value, INVALID_EXCEPTION);
-  TEST_fff_f (fma, 0.0, minus_infty, 1.0, nan_value, INVALID_EXCEPTION);
+  TEST_fff_f (fma, qnan_value, 2.0, 3.0, qnan_value);
+  TEST_fff_f (fma, 1.0, qnan_value, 3.0, qnan_value);
+  TEST_fff_f (fma, 1.0, 2.0, qnan_value, qnan_value, INVALID_EXCEPTION_OK);
+  TEST_fff_f (fma, plus_infty, 0.0, qnan_value, qnan_value, INVALID_EXCEPTION_OK);
+  TEST_fff_f (fma, minus_infty, 0.0, qnan_value, qnan_value, INVALID_EXCEPTION_OK);
+  TEST_fff_f (fma, 0.0, plus_infty, qnan_value, qnan_value, INVALID_EXCEPTION_OK);
+  TEST_fff_f (fma, 0.0, minus_infty, qnan_value, qnan_value, INVALID_EXCEPTION_OK);
+  TEST_fff_f (fma, plus_infty, 0.0, 1.0, qnan_value, INVALID_EXCEPTION);
+  TEST_fff_f (fma, minus_infty, 0.0, 1.0, qnan_value, INVALID_EXCEPTION);
+  TEST_fff_f (fma, 0.0, plus_infty, 1.0, qnan_value, INVALID_EXCEPTION);
+  TEST_fff_f (fma, 0.0, minus_infty, 1.0, qnan_value, INVALID_EXCEPTION);
 
-  TEST_fff_f (fma, plus_infty, plus_infty, minus_infty, nan_value, INVALID_EXCEPTION);
-  TEST_fff_f (fma, minus_infty, plus_infty, plus_infty, nan_value, INVALID_EXCEPTION);
-  TEST_fff_f (fma, plus_infty, minus_infty, plus_infty, nan_value, INVALID_EXCEPTION);
-  TEST_fff_f (fma, minus_infty, minus_infty, minus_infty, nan_value, INVALID_EXCEPTION);
-  TEST_fff_f (fma, plus_infty, 3.5L, minus_infty, nan_value, INVALID_EXCEPTION);
-  TEST_fff_f (fma, minus_infty, -7.5L, minus_infty, nan_value, INVALID_EXCEPTION);
-  TEST_fff_f (fma, -13.5L, plus_infty, plus_infty, nan_value, INVALID_EXCEPTION);
-  TEST_fff_f (fma, minus_infty, 7.5L, plus_infty, nan_value, INVALID_EXCEPTION);
+  TEST_fff_f (fma, plus_infty, plus_infty, minus_infty, qnan_value, INVALID_EXCEPTION);
+  TEST_fff_f (fma, minus_infty, plus_infty, plus_infty, qnan_value, INVALID_EXCEPTION);
+  TEST_fff_f (fma, plus_infty, minus_infty, plus_infty, qnan_value, INVALID_EXCEPTION);
+  TEST_fff_f (fma, minus_infty, minus_infty, minus_infty, qnan_value, INVALID_EXCEPTION);
+  TEST_fff_f (fma, plus_infty, 3.5L, minus_infty, qnan_value, INVALID_EXCEPTION);
+  TEST_fff_f (fma, minus_infty, -7.5L, minus_infty, qnan_value, INVALID_EXCEPTION);
+  TEST_fff_f (fma, -13.5L, plus_infty, plus_infty, qnan_value, INVALID_EXCEPTION);
+  TEST_fff_f (fma, minus_infty, 7.5L, plus_infty, qnan_value, INVALID_EXCEPTION);
 
   TEST_fff_f (fma, 1.25L, 0.75L, 0.0625L, 1.0L);
 
@@ -5728,17 +5728,17 @@ fmax_test (void)
   TEST_ff_f (fmax, 9, minus_infty, 9);
   TEST_ff_f (fmax, -9, minus_infty, -9);
 
-  TEST_ff_f (fmax, 0, nan_value, 0);
-  TEST_ff_f (fmax, 9, nan_value, 9);
-  TEST_ff_f (fmax, -9, nan_value, -9);
-  TEST_ff_f (fmax, nan_value, 0, 0);
-  TEST_ff_f (fmax, nan_value, 9, 9);
-  TEST_ff_f (fmax, nan_value, -9, -9);
-  TEST_ff_f (fmax, plus_infty, nan_value, plus_infty);
-  TEST_ff_f (fmax, minus_infty, nan_value, minus_infty);
-  TEST_ff_f (fmax, nan_value, plus_infty, plus_infty);
-  TEST_ff_f (fmax, nan_value, minus_infty, minus_infty);
-  TEST_ff_f (fmax, nan_value, nan_value, nan_value);
+  TEST_ff_f (fmax, 0, qnan_value, 0);
+  TEST_ff_f (fmax, 9, qnan_value, 9);
+  TEST_ff_f (fmax, -9, qnan_value, -9);
+  TEST_ff_f (fmax, qnan_value, 0, 0);
+  TEST_ff_f (fmax, qnan_value, 9, 9);
+  TEST_ff_f (fmax, qnan_value, -9, -9);
+  TEST_ff_f (fmax, plus_infty, qnan_value, plus_infty);
+  TEST_ff_f (fmax, minus_infty, qnan_value, minus_infty);
+  TEST_ff_f (fmax, qnan_value, plus_infty, plus_infty);
+  TEST_ff_f (fmax, qnan_value, minus_infty, minus_infty);
+  TEST_ff_f (fmax, qnan_value, qnan_value, qnan_value);
 
   END (fmax);
 }
@@ -5765,17 +5765,17 @@ fmin_test (void)
   TEST_ff_f (fmin, 9, minus_infty, minus_infty);
   TEST_ff_f (fmin, -9, minus_infty, minus_infty);
 
-  TEST_ff_f (fmin, 0, nan_value, 0);
-  TEST_ff_f (fmin, 9, nan_value, 9);
-  TEST_ff_f (fmin, -9, nan_value, -9);
-  TEST_ff_f (fmin, nan_value, 0, 0);
-  TEST_ff_f (fmin, nan_value, 9, 9);
-  TEST_ff_f (fmin, nan_value, -9, -9);
-  TEST_ff_f (fmin, plus_infty, nan_value, plus_infty);
-  TEST_ff_f (fmin, minus_infty, nan_value, minus_infty);
-  TEST_ff_f (fmin, nan_value, plus_infty, plus_infty);
-  TEST_ff_f (fmin, nan_value, minus_infty, minus_infty);
-  TEST_ff_f (fmin, nan_value, nan_value, nan_value);
+  TEST_ff_f (fmin, 0, qnan_value, 0);
+  TEST_ff_f (fmin, 9, qnan_value, 9);
+  TEST_ff_f (fmin, -9, qnan_value, -9);
+  TEST_ff_f (fmin, qnan_value, 0, 0);
+  TEST_ff_f (fmin, qnan_value, 9, 9);
+  TEST_ff_f (fmin, qnan_value, -9, -9);
+  TEST_ff_f (fmin, plus_infty, qnan_value, plus_infty);
+  TEST_ff_f (fmin, minus_infty, qnan_value, minus_infty);
+  TEST_ff_f (fmin, qnan_value, plus_infty, plus_infty);
+  TEST_ff_f (fmin, qnan_value, minus_infty, minus_infty);
+  TEST_ff_f (fmin, qnan_value, qnan_value, qnan_value);
 
   END (fmin);
 }
@@ -5798,27 +5798,27 @@ fmod_test (void)
   /* fmod (-0, y) == -0 for y != 0.  */
   TEST_ff_f (fmod, minus_zero, 3, minus_zero);
 
-  /* fmod (+inf, y) == NaN plus invalid exception.  */
+  /* fmod (+inf, y) == qNaN plus invalid exception.  */
   errno = 0;
-  TEST_ff_f (fmod, plus_infty, 3, nan_value, INVALID_EXCEPTION);
+  TEST_ff_f (fmod, plus_infty, 3, qnan_value, INVALID_EXCEPTION);
   check_int ("errno for fmod(Inf,3) unchanged", errno, EDOM, 0, 0, 0);
-  /* fmod (-inf, y) == NaN plus invalid exception.  */
+  /* fmod (-inf, y) == qNaN plus invalid exception.  */
   errno = 0;
-  TEST_ff_f (fmod, minus_infty, 3, nan_value, INVALID_EXCEPTION);
+  TEST_ff_f (fmod, minus_infty, 3, qnan_value, INVALID_EXCEPTION);
   check_int ("errno for fmod(-Inf,3) unchanged", errno, EDOM, 0, 0, 0);
-  /* fmod (x, +0) == NaN plus invalid exception.  */
+  /* fmod (x, +0) == qNaN plus invalid exception.  */
   errno = 0;
-  TEST_ff_f (fmod, 3, 0, nan_value, INVALID_EXCEPTION);
+  TEST_ff_f (fmod, 3, 0, qnan_value, INVALID_EXCEPTION);
   check_int ("errno for fmod(3,0) unchanged", errno, EDOM, 0, 0, 0);
-  /* fmod (x, -0) == NaN plus invalid exception.  */
-  TEST_ff_f (fmod, 3, minus_zero, nan_value, INVALID_EXCEPTION);
+  /* fmod (x, -0) == qNaN plus invalid exception.  */
+  TEST_ff_f (fmod, 3, minus_zero, qnan_value, INVALID_EXCEPTION);
 
   /* fmod (x, +inf) == x for x not infinite.  */
   TEST_ff_f (fmod, 3.0, plus_infty, 3.0);
   /* fmod (x, -inf) == x for x not infinite.  */
   TEST_ff_f (fmod, 3.0, minus_infty, 3.0);
 
-  TEST_ff_f (fmod, nan_value, nan_value, nan_value);
+  TEST_ff_f (fmod, qnan_value, qnan_value, qnan_value);
 
   TEST_ff_f (fmod, 6.5, 2.25L, 2.0L);
   TEST_ff_f (fmod, -6.5, 2.25L, -2.0L);
@@ -5842,7 +5842,7 @@ fpclassify_test (void)
 {
   START (fpclassify);
 
-  TEST_f_i (fpclassify, nan_value, FP_NAN);
+  TEST_f_i (fpclassify, qnan_value, FP_NAN);
   TEST_f_i (fpclassify, plus_infty, FP_INFINITE);
   TEST_f_i (fpclassify, minus_infty, FP_INFINITE);
   TEST_f_i (fpclassify, plus_zero, FP_ZERO);
@@ -5863,7 +5863,7 @@ frexp_test (void)
 
   TEST_fI_f1 (frexp, plus_infty, plus_infty, IGNORE);
   TEST_fI_f1 (frexp, minus_infty, minus_infty, IGNORE);
-  TEST_fI_f1 (frexp, nan_value, nan_value, IGNORE);
+  TEST_fI_f1 (frexp, qnan_value, qnan_value, IGNORE);
 
   TEST_fI_f1 (frexp, 0.0, 0.0, 0.0);
   TEST_fI_f1 (frexp, minus_zero, minus_zero, 0.0);
@@ -5891,7 +5891,7 @@ gamma_test (void)
   TEST_f_f (gamma, 0, plus_infty, DIVIDE_BY_ZERO_EXCEPTION);
   TEST_f_f (gamma, -3, plus_infty, DIVIDE_BY_ZERO_EXCEPTION);
   TEST_f_f (gamma, minus_infty, plus_infty);
-  TEST_f_f (gamma, nan_value, nan_value);
+  TEST_f_f (gamma, qnan_value, qnan_value);
 
   TEST_f_f1 (gamma, 1, 0, 1);
   TEST_f_f1 (gamma, 3, M_LN2l, 1);
@@ -5917,13 +5917,13 @@ hypot_test (void)
   TEST_ff_f (hypot, minus_infty, 1, plus_infty, IGNORE_ZERO_INF_SIGN);
 
 #ifndef TEST_INLINE
-  TEST_ff_f (hypot, plus_infty, nan_value, plus_infty);
-  TEST_ff_f (hypot, minus_infty, nan_value, plus_infty);
-  TEST_ff_f (hypot, nan_value, plus_infty, plus_infty);
-  TEST_ff_f (hypot, nan_value, minus_infty, plus_infty);
+  TEST_ff_f (hypot, plus_infty, qnan_value, plus_infty);
+  TEST_ff_f (hypot, minus_infty, qnan_value, plus_infty);
+  TEST_ff_f (hypot, qnan_value, plus_infty, plus_infty);
+  TEST_ff_f (hypot, qnan_value, minus_infty, plus_infty);
 #endif
 
-  TEST_ff_f (hypot, nan_value, nan_value, nan_value);
+  TEST_ff_f (hypot, qnan_value, qnan_value, qnan_value);
 
   /* hypot (x,y) == hypot (+-x, +-y)  */
   TEST_ff_f (hypot, 0.7L, 12.4L, 12.419742348374220601176836866763271L);
@@ -5978,10 +5978,10 @@ ilogb_test (void)
   errno = 0;
   TEST_f_i (ilogb, 0.0, FP_ILOGB0, INVALID_EXCEPTION);
   check_int ("errno for ilogb(0.0) unchanged", errno, EDOM, 0, 0, 0);
-  /* ilogb (NaN) == FP_ILOGBNAN plus invalid exception  */
+  /* ilogb (qNaN) == FP_ILOGBNAN plus invalid exception  */
   errno = 0;
-  TEST_f_i (ilogb, nan_value, FP_ILOGBNAN, INVALID_EXCEPTION);
-  check_int ("errno for ilogb(NaN) unchanged", errno, EDOM, 0, 0, 0);
+  TEST_f_i (ilogb, qnan_value, FP_ILOGBNAN, INVALID_EXCEPTION);
+  check_int ("errno for ilogb(qNaN) unchanged", errno, EDOM, 0, 0, 0);
   /* ilogb (inf) == INT_MAX plus invalid exception  */
   errno = 0;
   TEST_f_i (ilogb, plus_infty, INT_MAX, INVALID_EXCEPTION);
@@ -6005,7 +6005,7 @@ isfinite_test (void)
   TEST_f_b (isfinite, min_subnorm_value, 1);
   TEST_f_b (isfinite, plus_infty, 0);
   TEST_f_b (isfinite, minus_infty, 0);
-  TEST_f_b (isfinite, nan_value, 0);
+  TEST_f_b (isfinite, qnan_value, 0);
 
   END (isfinite);
 }
@@ -6018,19 +6018,19 @@ isgreater_test (void)
   TEST_ff_i (isgreater, minus_zero, minus_zero, 0);
   TEST_ff_i (isgreater, minus_zero, plus_zero, 0);
   TEST_ff_i (isgreater, minus_zero, (FLOAT) 1, 0);
-  TEST_ff_i (isgreater, minus_zero, nan_value, 0);
+  TEST_ff_i (isgreater, minus_zero, qnan_value, 0);
   TEST_ff_i (isgreater, plus_zero, minus_zero, 0);
   TEST_ff_i (isgreater, plus_zero, plus_zero, 0);
   TEST_ff_i (isgreater, plus_zero, (FLOAT) 1, 0);
-  TEST_ff_i (isgreater, plus_zero, nan_value, 0);
+  TEST_ff_i (isgreater, plus_zero, qnan_value, 0);
   TEST_ff_i (isgreater, (FLOAT) 1, minus_zero, 1);
   TEST_ff_i (isgreater, (FLOAT) 1, plus_zero, 1);
   TEST_ff_i (isgreater, (FLOAT) 1, (FLOAT) 1, 0);
-  TEST_ff_i (isgreater, (FLOAT) 1, nan_value, 0);
-  TEST_ff_i (isgreater, nan_value, minus_zero, 0);
-  TEST_ff_i (isgreater, nan_value, plus_zero, 0);
-  TEST_ff_i (isgreater, nan_value, (FLOAT) 1, 0);
-  TEST_ff_i (isgreater, nan_value, nan_value, 0);
+  TEST_ff_i (isgreater, (FLOAT) 1, qnan_value, 0);
+  TEST_ff_i (isgreater, qnan_value, minus_zero, 0);
+  TEST_ff_i (isgreater, qnan_value, plus_zero, 0);
+  TEST_ff_i (isgreater, qnan_value, (FLOAT) 1, 0);
+  TEST_ff_i (isgreater, qnan_value, qnan_value, 0);
 
   END (isgreater);
 }
@@ -6043,19 +6043,19 @@ isgreaterequal_test (void)
   TEST_ff_i (isgreaterequal, minus_zero, minus_zero, 1);
   TEST_ff_i (isgreaterequal, minus_zero, plus_zero, 1);
   TEST_ff_i (isgreaterequal, minus_zero, (FLOAT) 1, 0);
-  TEST_ff_i (isgreaterequal, minus_zero, nan_value, 0);
+  TEST_ff_i (isgreaterequal, minus_zero, qnan_value, 0);
   TEST_ff_i (isgreaterequal, plus_zero, minus_zero, 1);
   TEST_ff_i (isgreaterequal, plus_zero, plus_zero, 1);
   TEST_ff_i (isgreaterequal, plus_zero, (FLOAT) 1, 0);
-  TEST_ff_i (isgreaterequal, plus_zero, nan_value, 0);
+  TEST_ff_i (isgreaterequal, plus_zero, qnan_value, 0);
   TEST_ff_i (isgreaterequal, (FLOAT) 1, minus_zero, 1);
   TEST_ff_i (isgreaterequal, (FLOAT) 1, plus_zero, 1);
   TEST_ff_i (isgreaterequal, (FLOAT) 1, (FLOAT) 1, 1);
-  TEST_ff_i (isgreaterequal, (FLOAT) 1, nan_value, 0);
-  TEST_ff_i (isgreaterequal, nan_value, minus_zero, 0);
-  TEST_ff_i (isgreaterequal, nan_value, plus_zero, 0);
-  TEST_ff_i (isgreaterequal, nan_value, (FLOAT) 1, 0);
-  TEST_ff_i (isgreaterequal, nan_value, nan_value, 0);
+  TEST_ff_i (isgreaterequal, (FLOAT) 1, qnan_value, 0);
+  TEST_ff_i (isgreaterequal, qnan_value, minus_zero, 0);
+  TEST_ff_i (isgreaterequal, qnan_value, plus_zero, 0);
+  TEST_ff_i (isgreaterequal, qnan_value, (FLOAT) 1, 0);
+  TEST_ff_i (isgreaterequal, qnan_value, qnan_value, 0);
 
   END (isgreaterequal);
 }
@@ -6071,7 +6071,7 @@ isinf_test (void)
   TEST_f_b (isinf, min_subnorm_value, 0);
   TEST_f_b (isinf, plus_infty, 1);
   TEST_f_b (isinf, minus_infty, 1);
-  TEST_f_b (isinf, nan_value, 0);
+  TEST_f_b (isinf, qnan_value, 0);
 
   END (isinf);
 }
@@ -6084,19 +6084,19 @@ isless_test (void)
   TEST_ff_i (isless, minus_zero, minus_zero, 0);
   TEST_ff_i (isless, minus_zero, plus_zero, 0);
   TEST_ff_i (isless, minus_zero, (FLOAT) 1, 1);
-  TEST_ff_i (isless, minus_zero, nan_value, 0);
+  TEST_ff_i (isless, minus_zero, qnan_value, 0);
   TEST_ff_i (isless, plus_zero, minus_zero, 0);
   TEST_ff_i (isless, plus_zero, plus_zero, 0);
   TEST_ff_i (isless, plus_zero, (FLOAT) 1, 1);
-  TEST_ff_i (isless, plus_zero, nan_value, 0);
+  TEST_ff_i (isless, plus_zero, qnan_value, 0);
   TEST_ff_i (isless, (FLOAT) 1, minus_zero, 0);
   TEST_ff_i (isless, (FLOAT) 1, plus_zero, 0);
   TEST_ff_i (isless, (FLOAT) 1, (FLOAT) 1, 0);
-  TEST_ff_i (isless, (FLOAT) 1, nan_value, 0);
-  TEST_ff_i (isless, nan_value, minus_zero, 0);
-  TEST_ff_i (isless, nan_value, plus_zero, 0);
-  TEST_ff_i (isless, nan_value, (FLOAT) 1, 0);
-  TEST_ff_i (isless, nan_value, nan_value, 0);
+  TEST_ff_i (isless, (FLOAT) 1, qnan_value, 0);
+  TEST_ff_i (isless, qnan_value, minus_zero, 0);
+  TEST_ff_i (isless, qnan_value, plus_zero, 0);
+  TEST_ff_i (isless, qnan_value, (FLOAT) 1, 0);
+  TEST_ff_i (isless, qnan_value, qnan_value, 0);
 
   END (isless);
 }
@@ -6109,19 +6109,19 @@ islessequal_test (void)
   TEST_ff_i (islessequal, minus_zero, minus_zero, 1);
   TEST_ff_i (islessequal, minus_zero, plus_zero, 1);
   TEST_ff_i (islessequal, minus_zero, (FLOAT) 1, 1);
-  TEST_ff_i (islessequal, minus_zero, nan_value, 0);
+  TEST_ff_i (islessequal, minus_zero, qnan_value, 0);
   TEST_ff_i (islessequal, plus_zero, minus_zero, 1);
   TEST_ff_i (islessequal, plus_zero, plus_zero, 1);
   TEST_ff_i (islessequal, plus_zero, (FLOAT) 1, 1);
-  TEST_ff_i (islessequal, plus_zero, nan_value, 0);
+  TEST_ff_i (islessequal, plus_zero, qnan_value, 0);
   TEST_ff_i (islessequal, (FLOAT) 1, minus_zero, 0);
   TEST_ff_i (islessequal, (FLOAT) 1, plus_zero, 0);
   TEST_ff_i (islessequal, (FLOAT) 1, (FLOAT) 1, 1);
-  TEST_ff_i (islessequal, (FLOAT) 1, nan_value, 0);
-  TEST_ff_i (islessequal, nan_value, minus_zero, 0);
-  TEST_ff_i (islessequal, nan_value, plus_zero, 0);
-  TEST_ff_i (islessequal, nan_value, (FLOAT) 1, 0);
-  TEST_ff_i (islessequal, nan_value, nan_value, 0);
+  TEST_ff_i (islessequal, (FLOAT) 1, qnan_value, 0);
+  TEST_ff_i (islessequal, qnan_value, minus_zero, 0);
+  TEST_ff_i (islessequal, qnan_value, plus_zero, 0);
+  TEST_ff_i (islessequal, qnan_value, (FLOAT) 1, 0);
+  TEST_ff_i (islessequal, qnan_value, qnan_value, 0);
 
   END (islessequal);
 }
@@ -6134,19 +6134,19 @@ islessgreater_test (void)
   TEST_ff_i (islessgreater, minus_zero, minus_zero, 0);
   TEST_ff_i (islessgreater, minus_zero, plus_zero, 0);
   TEST_ff_i (islessgreater, minus_zero, (FLOAT) 1, 1);
-  TEST_ff_i (islessgreater, minus_zero, nan_value, 0);
+  TEST_ff_i (islessgreater, minus_zero, qnan_value, 0);
   TEST_ff_i (islessgreater, plus_zero, minus_zero, 0);
   TEST_ff_i (islessgreater, plus_zero, plus_zero, 0);
   TEST_ff_i (islessgreater, plus_zero, (FLOAT) 1, 1);
-  TEST_ff_i (islessgreater, plus_zero, nan_value, 0);
+  TEST_ff_i (islessgreater, plus_zero, qnan_value, 0);
   TEST_ff_i (islessgreater, (FLOAT) 1, minus_zero, 1);
   TEST_ff_i (islessgreater, (FLOAT) 1, plus_zero, 1);
   TEST_ff_i (islessgreater, (FLOAT) 1, (FLOAT) 1, 0);
-  TEST_ff_i (islessgreater, (FLOAT) 1, nan_value, 0);
-  TEST_ff_i (islessgreater, nan_value, minus_zero, 0);
-  TEST_ff_i (islessgreater, nan_value, plus_zero, 0);
-  TEST_ff_i (islessgreater, nan_value, (FLOAT) 1, 0);
-  TEST_ff_i (islessgreater, nan_value, nan_value, 0);
+  TEST_ff_i (islessgreater, (FLOAT) 1, qnan_value, 0);
+  TEST_ff_i (islessgreater, qnan_value, minus_zero, 0);
+  TEST_ff_i (islessgreater, qnan_value, plus_zero, 0);
+  TEST_ff_i (islessgreater, qnan_value, (FLOAT) 1, 0);
+  TEST_ff_i (islessgreater, qnan_value, qnan_value, 0);
 
   END (islessgreater);
 }
@@ -6162,7 +6162,7 @@ isnan_test (void)
   TEST_f_b (isnan, min_subnorm_value, 0);
   TEST_f_b (isnan, plus_infty, 0);
   TEST_f_b (isnan, minus_infty, 0);
-  TEST_f_b (isnan, nan_value, 1);
+  TEST_f_b (isnan, qnan_value, 1);
 
   END (isnan);
 }
@@ -6178,7 +6178,7 @@ isnormal_test (void)
   TEST_f_b (isnormal, min_subnorm_value, 0);
   TEST_f_b (isnormal, plus_infty, 0);
   TEST_f_b (isnormal, minus_infty, 0);
-  TEST_f_b (isnormal, nan_value, 0);
+  TEST_f_b (isnormal, qnan_value, 0);
 
   END (isnormal);
 }
@@ -6191,19 +6191,19 @@ isunordered_test (void)
   TEST_ff_i (isunordered, minus_zero, minus_zero, 0);
   TEST_ff_i (isunordered, minus_zero, plus_zero, 0);
   TEST_ff_i (isunordered, minus_zero, (FLOAT) 1, 0);
-  TEST_ff_i (isunordered, minus_zero, nan_value, 1);
+  TEST_ff_i (isunordered, minus_zero, qnan_value, 1);
   TEST_ff_i (isunordered, plus_zero, minus_zero, 0);
   TEST_ff_i (isunordered, plus_zero, plus_zero, 0);
   TEST_ff_i (isunordered, plus_zero, (FLOAT) 1, 0);
-  TEST_ff_i (isunordered, plus_zero, nan_value, 1);
+  TEST_ff_i (isunordered, plus_zero, qnan_value, 1);
   TEST_ff_i (isunordered, (FLOAT) 1, minus_zero, 0);
   TEST_ff_i (isunordered, (FLOAT) 1, plus_zero, 0);
   TEST_ff_i (isunordered, (FLOAT) 1, (FLOAT) 1, 0);
-  TEST_ff_i (isunordered, (FLOAT) 1, nan_value, 1);
-  TEST_ff_i (isunordered, nan_value, minus_zero, 1);
-  TEST_ff_i (isunordered, nan_value, plus_zero, 1);
-  TEST_ff_i (isunordered, nan_value, (FLOAT) 1, 1);
-  TEST_ff_i (isunordered, nan_value, nan_value, 1);
+  TEST_ff_i (isunordered, (FLOAT) 1, qnan_value, 1);
+  TEST_ff_i (isunordered, qnan_value, minus_zero, 1);
+  TEST_ff_i (isunordered, qnan_value, plus_zero, 1);
+  TEST_ff_i (isunordered, qnan_value, (FLOAT) 1, 1);
+  TEST_ff_i (isunordered, qnan_value, qnan_value, 1);
 
   END (isunordered);
 }
@@ -6225,7 +6225,7 @@ j0_test (void)
   START (j0);
 
   /* j0 is the Bessel function of the first kind of order 0 */
-  TEST_f_f (j0, nan_value, nan_value);
+  TEST_f_f (j0, qnan_value, qnan_value);
   TEST_f_f (j0, plus_infty, 0);
   TEST_f_f (j0, -1.0, 0.765197686557966551449717526102663221L);
   TEST_f_f (j0, 0.0, 1.0);
@@ -6268,7 +6268,7 @@ j1_test (void)
 
   START (j1);
 
-  TEST_f_f (j1, nan_value, nan_value);
+  TEST_f_f (j1, qnan_value, qnan_value);
   TEST_f_f (j1, plus_infty, 0);
 
   TEST_f_f (j1, -1.0, -0.440050585744933515959682203718914913L);
@@ -6309,7 +6309,7 @@ jn_test (void)
   START (jn);
 
   /* jn (0, x) == j0 (x)  */
-  TEST_ff_f (jn, 0, nan_value, nan_value);
+  TEST_ff_f (jn, 0, qnan_value, qnan_value);
   TEST_ff_f (jn, 0, plus_infty, 0);
   TEST_ff_f (jn, 0, -1.0, 0.765197686557966551449717526102663221L);
   TEST_ff_f (jn, 0, 0.0, 1.0);
@@ -6324,7 +6324,7 @@ jn_test (void)
   TEST_ff_f (jn, 0, -4.0, -3.9714980986384737228659076845169804197562E-1L);
 
   /* jn (1, x) == j1 (x)  */
-  TEST_ff_f (jn, 1, nan_value, nan_value);
+  TEST_ff_f (jn, 1, qnan_value, qnan_value);
   TEST_ff_f (jn, 1, plus_infty, 0);
   TEST_ff_f (jn, 1, -1.0, -0.440050585744933515959682203718914913L);
   TEST_ff_f (jn, 1, 0.0, 0.0);
@@ -6337,7 +6337,7 @@ jn_test (void)
   TEST_ff_f (jn, 1, 10.0, 0.0434727461688614366697487680258592883L);
 
   /* jn (3, x)  */
-  TEST_ff_f (jn, 3, nan_value, nan_value);
+  TEST_ff_f (jn, 3, qnan_value, qnan_value);
   TEST_ff_f (jn, 3, plus_infty, 0);
 
   TEST_ff_f (jn, 3, -1.0, -0.0195633539826684059189053216217515083L);
@@ -6349,7 +6349,7 @@ jn_test (void)
   TEST_ff_f (jn, 3, 10.0, 0.0583793793051868123429354784103409563L);
 
   /*  jn (10, x)  */
-  TEST_ff_f (jn, 10, nan_value, nan_value);
+  TEST_ff_f (jn, 10, qnan_value, qnan_value);
   TEST_ff_f (jn, 10, plus_infty, 0);
 
   TEST_ff_f (jn, 10, -1.0, 0.263061512368745320699785368779050294e-9L);
@@ -6385,7 +6385,7 @@ ldexp_test (void)
 
   TEST_ff_f (ldexp, plus_infty, 1, plus_infty);
   TEST_ff_f (ldexp, minus_infty, 1, minus_infty);
-  TEST_ff_f (ldexp, nan_value, 1, nan_value);
+  TEST_ff_f (ldexp, qnan_value, 1, qnan_value);
 
   TEST_ff_f (ldexp, 0.8L, 4, 12.8L);
   TEST_ff_f (ldexp, -0.854375L, 5, -27.34L);
@@ -6411,7 +6411,7 @@ lgamma_test (void)
   check_int ("signgam for lgamma(0) == 1", signgam, 1, 0, 0, 0);
   TEST_f_f (lgamma, minus_zero, plus_infty, DIVIDE_BY_ZERO_EXCEPTION);
   check_int ("signgam for lgamma(-0) == -1", signgam, -1, 0, 0, 0);
-  TEST_f_f (lgamma, nan_value, nan_value);
+  TEST_f_f (lgamma, qnan_value, qnan_value);
 
   /* lgamma (x) == +inf plus divide by zero exception for integer x <= 0.  */
   errno = 0;
@@ -7320,11 +7320,11 @@ log_test (void)
 
   TEST_f_f (log, 1, 0);
 
-  TEST_f_f (log, -1, nan_value, INVALID_EXCEPTION);
-  TEST_f_f (log, -max_value, nan_value, INVALID_EXCEPTION);
-  TEST_f_f (log, minus_infty, nan_value, INVALID_EXCEPTION);
+  TEST_f_f (log, -1, qnan_value, INVALID_EXCEPTION);
+  TEST_f_f (log, -max_value, qnan_value, INVALID_EXCEPTION);
+  TEST_f_f (log, minus_infty, qnan_value, INVALID_EXCEPTION);
   TEST_f_f (log, plus_infty, plus_infty);
-  TEST_f_f (log, nan_value, nan_value);
+  TEST_f_f (log, qnan_value, qnan_value);
 
   TEST_f_f (log, M_El, 1);
   TEST_f_f (log, 1.0 / M_El, -1);
@@ -7352,13 +7352,13 @@ log10_test (void)
 
   TEST_f_f (log10, 1, 0);
 
-  /* log10 (x) == NaN plus invalid exception if x < 0.  */
-  TEST_f_f (log10, -1, nan_value, INVALID_EXCEPTION);
-  TEST_f_f (log10, -max_value, nan_value, INVALID_EXCEPTION);
-  TEST_f_f (log10, minus_infty, nan_value, INVALID_EXCEPTION);
+  /* log10 (x) == qNaN plus invalid exception if x < 0.  */
+  TEST_f_f (log10, -1, qnan_value, INVALID_EXCEPTION);
+  TEST_f_f (log10, -max_value, qnan_value, INVALID_EXCEPTION);
+  TEST_f_f (log10, minus_infty, qnan_value, INVALID_EXCEPTION);
 
   TEST_f_f (log10, plus_infty, plus_infty);
-  TEST_f_f (log10, nan_value, nan_value);
+  TEST_f_f (log10, qnan_value, qnan_value);
 
   TEST_f_f (log10, 0.1L, -1);
   TEST_f_f (log10, 10.0, 1);
@@ -7386,12 +7386,12 @@ log1p_test (void)
   TEST_f_f (log1p, minus_zero, minus_zero);
 
   TEST_f_f (log1p, -1, minus_infty, DIVIDE_BY_ZERO_EXCEPTION);
-  TEST_f_f (log1p, -2, nan_value, INVALID_EXCEPTION);
-  TEST_f_f (log1p, -max_value, nan_value, INVALID_EXCEPTION);
-  TEST_f_f (log1p, minus_infty, nan_value, INVALID_EXCEPTION);
+  TEST_f_f (log1p, -2, qnan_value, INVALID_EXCEPTION);
+  TEST_f_f (log1p, -max_value, qnan_value, INVALID_EXCEPTION);
+  TEST_f_f (log1p, minus_infty, qnan_value, INVALID_EXCEPTION);
 
   TEST_f_f (log1p, plus_infty, plus_infty);
-  TEST_f_f (log1p, nan_value, nan_value);
+  TEST_f_f (log1p, qnan_value, qnan_value);
 
   TEST_f_f (log1p, M_El - 1.0, 1);
 
@@ -7418,12 +7418,12 @@ log2_test (void)
 
   TEST_f_f (log2, 1, 0);
 
-  TEST_f_f (log2, -1, nan_value, INVALID_EXCEPTION);
-  TEST_f_f (log2, -max_value, nan_value, INVALID_EXCEPTION);
-  TEST_f_f (log2, minus_infty, nan_value, INVALID_EXCEPTION);
+  TEST_f_f (log2, -1, qnan_value, INVALID_EXCEPTION);
+  TEST_f_f (log2, -max_value, qnan_value, INVALID_EXCEPTION);
+  TEST_f_f (log2, minus_infty, qnan_value, INVALID_EXCEPTION);
 
   TEST_f_f (log2, plus_infty, plus_infty);
-  TEST_f_f (log2, nan_value, nan_value);
+  TEST_f_f (log2, qnan_value, qnan_value);
 
   TEST_f_f (log2, M_El, M_LOG2El);
   TEST_f_f (log2, 2.0, 1);
@@ -7446,7 +7446,7 @@ logb_test (void)
   TEST_f_f (logb, 0, minus_infty, DIVIDE_BY_ZERO_EXCEPTION);
 
   TEST_f_f (logb, minus_zero, minus_infty, DIVIDE_BY_ZERO_EXCEPTION);
-  TEST_f_f (logb, nan_value, nan_value);
+  TEST_f_f (logb, qnan_value, qnan_value);
 
   TEST_f_f (logb, 1, 0);
   TEST_f_f (logb, M_El, 1);
@@ -7728,7 +7728,7 @@ modf_test (void)
 
   TEST_fF_f1 (modf, plus_infty, 0, plus_infty);
   TEST_fF_f1 (modf, minus_infty, minus_zero, minus_infty);
-  TEST_fF_f1 (modf, nan_value, nan_value, nan_value);
+  TEST_fF_f1 (modf, qnan_value, qnan_value, qnan_value);
   TEST_fF_f1 (modf, 0, 0, 0);
   TEST_fF_f1 (modf, 1.5, 0.5, 1);
   TEST_fF_f1 (modf, 2.5, 0.5, 2);
@@ -7750,7 +7750,7 @@ nearbyint_test (void)
   TEST_f_f (nearbyint, minus_zero, minus_zero);
   TEST_f_f (nearbyint, plus_infty, plus_infty);
   TEST_f_f (nearbyint, minus_infty, minus_infty);
-  TEST_f_f (nearbyint, nan_value, nan_value);
+  TEST_f_f (nearbyint, qnan_value, qnan_value);
 
   /* Subnormal values */
   TEST_f_f (nearbyint, -8.98847e+307, -8.98847e+307);
@@ -7809,9 +7809,9 @@ nextafter_test (void)
   TEST_ff_f (nextafter, plus_infty, plus_infty, plus_infty);
   TEST_ff_f (nextafter, minus_infty, minus_infty, minus_infty);
 
-  TEST_ff_f (nextafter, nan_value, 1.1L, nan_value);
-  TEST_ff_f (nextafter, 1.1L, nan_value, nan_value);
-  TEST_ff_f (nextafter, nan_value, nan_value, nan_value);
+  TEST_ff_f (nextafter, qnan_value, 1.1L, qnan_value);
+  TEST_ff_f (nextafter, 1.1L, qnan_value, qnan_value);
+  TEST_ff_f (nextafter, qnan_value, qnan_value, qnan_value);
 
   FLOAT fltmax = CHOOSE (LDBL_MAX, DBL_MAX, FLT_MAX,
 			 LDBL_MAX, DBL_MAX, FLT_MAX);
@@ -7844,9 +7844,9 @@ nexttoward_test (void)
   TEST_ff_f (nexttoward, plus_infty, plus_infty, plus_infty);
   TEST_ff_f (nexttoward, minus_infty, minus_infty, minus_infty);
 
-  TEST_ff_f (nexttoward, nan_value, 1.1L, nan_value);
-  TEST_ff_f (nexttoward, 1.1L, nan_value, nan_value);
-  TEST_ff_f (nexttoward, nan_value, nan_value, nan_value);
+  TEST_ff_f (nexttoward, qnan_value, 1.1L, qnan_value);
+  TEST_ff_f (nexttoward, 1.1L, qnan_value, qnan_value);
+  TEST_ff_f (nexttoward, qnan_value, qnan_value, qnan_value);
 
 #ifdef TEST_FLOAT
   TEST_ff_f (nexttoward, 1.0, 1.1L, 0x1.000002p0);
@@ -7942,8 +7942,8 @@ pow_test (void)
   TEST_ff_f (pow, -10, 0, 1);
   TEST_ff_f (pow, -10, minus_zero, 1);
 
-  TEST_ff_f (pow, nan_value, 0, 1);
-  TEST_ff_f (pow, nan_value, minus_zero, 1);
+  TEST_ff_f (pow, qnan_value, 0, 1);
+  TEST_ff_f (pow, qnan_value, minus_zero, 1);
 
 
 #ifndef TEST_INLINE
@@ -8004,28 +8004,28 @@ pow_test (void)
   TEST_ff_f (pow, minus_infty, -min_subnorm_value, 0);
 #endif
 
-  TEST_ff_f (pow, nan_value, nan_value, nan_value);
-  TEST_ff_f (pow, 0, nan_value, nan_value);
-  TEST_ff_f (pow, 1, nan_value, 1);
-  TEST_ff_f (pow, -1, nan_value, nan_value);
-  TEST_ff_f (pow, nan_value, 1, nan_value);
-  TEST_ff_f (pow, nan_value, -1, nan_value);
+  TEST_ff_f (pow, qnan_value, qnan_value, qnan_value);
+  TEST_ff_f (pow, 0, qnan_value, qnan_value);
+  TEST_ff_f (pow, 1, qnan_value, 1);
+  TEST_ff_f (pow, -1, qnan_value, qnan_value);
+  TEST_ff_f (pow, qnan_value, 1, qnan_value);
+  TEST_ff_f (pow, qnan_value, -1, qnan_value);
 
-  /* pow (x, NaN) == NaN.  */
-  TEST_ff_f (pow, 3.0, nan_value, nan_value);
-  TEST_ff_f (pow, minus_zero, nan_value, nan_value);
-  TEST_ff_f (pow, plus_infty, nan_value, nan_value);
-  TEST_ff_f (pow, -3.0, nan_value, nan_value);
-  TEST_ff_f (pow, minus_infty, nan_value, nan_value);
+  /* pow (x, qNaN) == qNaN.  */
+  TEST_ff_f (pow, 3.0, qnan_value, qnan_value);
+  TEST_ff_f (pow, minus_zero, qnan_value, qnan_value);
+  TEST_ff_f (pow, plus_infty, qnan_value, qnan_value);
+  TEST_ff_f (pow, -3.0, qnan_value, qnan_value);
+  TEST_ff_f (pow, minus_infty, qnan_value, qnan_value);
 
-  TEST_ff_f (pow, nan_value, 3.0, nan_value);
-  TEST_ff_f (pow, nan_value, -3.0, nan_value);
-  TEST_ff_f (pow, nan_value, plus_infty, nan_value);
-  TEST_ff_f (pow, nan_value, minus_infty, nan_value);
-  TEST_ff_f (pow, nan_value, 2.5, nan_value);
-  TEST_ff_f (pow, nan_value, -2.5, nan_value);
-  TEST_ff_f (pow, nan_value, min_subnorm_value, nan_value);
-  TEST_ff_f (pow, nan_value, -min_subnorm_value, nan_value);
+  TEST_ff_f (pow, qnan_value, 3.0, qnan_value);
+  TEST_ff_f (pow, qnan_value, -3.0, qnan_value);
+  TEST_ff_f (pow, qnan_value, plus_infty, qnan_value);
+  TEST_ff_f (pow, qnan_value, minus_infty, qnan_value);
+  TEST_ff_f (pow, qnan_value, 2.5, qnan_value);
+  TEST_ff_f (pow, qnan_value, -2.5, qnan_value);
+  TEST_ff_f (pow, qnan_value, min_subnorm_value, qnan_value);
+  TEST_ff_f (pow, qnan_value, -min_subnorm_value, qnan_value);
 
   TEST_ff_f (pow, 1, plus_infty, 1);
   TEST_ff_f (pow, -1, plus_infty, 1);
@@ -8056,14 +8056,14 @@ pow_test (void)
   TEST_ff_f (pow, 0x1p-72L, 0, 1);
   TEST_ff_f (pow, 0x1p-72L, minus_zero, 1);
 
-  TEST_ff_f (pow, -0.1L, 1.1L, nan_value, INVALID_EXCEPTION);
-  TEST_ff_f (pow, -0.1L, -1.1L, nan_value, INVALID_EXCEPTION);
-  TEST_ff_f (pow, -10.1L, 1.1L, nan_value, INVALID_EXCEPTION);
-  TEST_ff_f (pow, -10.1L, -1.1L, nan_value, INVALID_EXCEPTION);
-  TEST_ff_f (pow, -1.01L, min_subnorm_value, nan_value, INVALID_EXCEPTION);
-  TEST_ff_f (pow, -1.01L, -min_subnorm_value, nan_value, INVALID_EXCEPTION);
-  TEST_ff_f (pow, -1.0L, min_subnorm_value, nan_value, INVALID_EXCEPTION);
-  TEST_ff_f (pow, -1.0L, -min_subnorm_value, nan_value, INVALID_EXCEPTION);
+  TEST_ff_f (pow, -0.1L, 1.1L, qnan_value, INVALID_EXCEPTION);
+  TEST_ff_f (pow, -0.1L, -1.1L, qnan_value, INVALID_EXCEPTION);
+  TEST_ff_f (pow, -10.1L, 1.1L, qnan_value, INVALID_EXCEPTION);
+  TEST_ff_f (pow, -10.1L, -1.1L, qnan_value, INVALID_EXCEPTION);
+  TEST_ff_f (pow, -1.01L, min_subnorm_value, qnan_value, INVALID_EXCEPTION);
+  TEST_ff_f (pow, -1.01L, -min_subnorm_value, qnan_value, INVALID_EXCEPTION);
+  TEST_ff_f (pow, -1.0L, min_subnorm_value, qnan_value, INVALID_EXCEPTION);
+  TEST_ff_f (pow, -1.0L, -min_subnorm_value, qnan_value, INVALID_EXCEPTION);
 
   errno = 0;
   TEST_ff_f (pow, 0, -1, plus_infty, DIVIDE_BY_ZERO_EXCEPTION);
@@ -8473,9 +8473,9 @@ pow_test (void)
 #endif
   TEST_ff_f (pow, -2.0, max_value, plus_infty, OVERFLOW_EXCEPTION);
 
-  TEST_ff_f (pow, -max_value, 0.5, nan_value, INVALID_EXCEPTION);
-  TEST_ff_f (pow, -max_value, 1.5, nan_value, INVALID_EXCEPTION);
-  TEST_ff_f (pow, -max_value, 1000.5, nan_value, INVALID_EXCEPTION);
+  TEST_ff_f (pow, -max_value, 0.5, qnan_value, INVALID_EXCEPTION);
+  TEST_ff_f (pow, -max_value, 1.5, qnan_value, INVALID_EXCEPTION);
+  TEST_ff_f (pow, -max_value, 1000.5, qnan_value, INVALID_EXCEPTION);
   TEST_ff_f (pow, -max_value, -2, plus_zero, UNDERFLOW_EXCEPTION);
   TEST_ff_f (pow, -max_value, -3, minus_zero, UNDERFLOW_EXCEPTION);
   TEST_ff_f (pow, -max_value, 2, plus_infty, OVERFLOW_EXCEPTION);
@@ -8574,9 +8574,9 @@ pow_test (void)
 #endif
   TEST_ff_f (pow, -0.5, max_value, plus_zero, UNDERFLOW_EXCEPTION);
 
-  TEST_ff_f (pow, -min_value, 0.5, nan_value, INVALID_EXCEPTION);
-  TEST_ff_f (pow, -min_value, 1.5, nan_value, INVALID_EXCEPTION);
-  TEST_ff_f (pow, -min_value, 1000.5, nan_value, INVALID_EXCEPTION);
+  TEST_ff_f (pow, -min_value, 0.5, qnan_value, INVALID_EXCEPTION);
+  TEST_ff_f (pow, -min_value, 1.5, qnan_value, INVALID_EXCEPTION);
+  TEST_ff_f (pow, -min_value, 1000.5, qnan_value, INVALID_EXCEPTION);
   TEST_ff_f (pow, -min_value, -2, plus_infty, OVERFLOW_EXCEPTION);
   TEST_ff_f (pow, -min_value, -3, minus_infty, OVERFLOW_EXCEPTION);
   /* Allow inexact results to be considered to underflow.  */
@@ -8812,26 +8812,26 @@ remainder_test (void)
   START (remainder);
 
   errno = 0;
-  TEST_ff_f (remainder, 1, 0, nan_value, INVALID_EXCEPTION);
+  TEST_ff_f (remainder, 1, 0, qnan_value, INVALID_EXCEPTION);
   check_int ("errno for remainder(1, 0) = EDOM ", errno, EDOM, 0, 0, 0);
   errno = 0;
-  TEST_ff_f (remainder, 1, minus_zero, nan_value, INVALID_EXCEPTION);
+  TEST_ff_f (remainder, 1, minus_zero, qnan_value, INVALID_EXCEPTION);
   check_int ("errno for remainder(1, -0) = EDOM ", errno, EDOM, 0, 0, 0);
   errno = 0;
-  TEST_ff_f (remainder, plus_infty, 1, nan_value, INVALID_EXCEPTION);
+  TEST_ff_f (remainder, plus_infty, 1, qnan_value, INVALID_EXCEPTION);
   check_int ("errno for remainder(INF, 1) = EDOM ", errno, EDOM, 0, 0, 0);
   errno = 0;
-  TEST_ff_f (remainder, minus_infty, 1, nan_value, INVALID_EXCEPTION);
+  TEST_ff_f (remainder, minus_infty, 1, qnan_value, INVALID_EXCEPTION);
   check_int ("errno for remainder(-INF, 1) = EDOM ", errno, EDOM, 0, 0, 0);
   errno = 0;
-  TEST_ff_f (remainder, nan_value, nan_value, nan_value);
-  check_int ("errno for remainder(NAN, NAN) unchanged", errno, 0, 0, 0, 0);
+  TEST_ff_f (remainder, qnan_value, qnan_value, qnan_value);
+  check_int ("errno for remainder(qNAN, qNAN) unchanged", errno, 0, 0, 0, 0);
   errno = 0;
-  TEST_ff_f (remainder, 0, nan_value, nan_value);
-  check_int ("errno for remainder(0, NAN) unchanged", errno, 0, 0, 0, 0);
+  TEST_ff_f (remainder, 0, qnan_value, qnan_value);
+  check_int ("errno for remainder(0, qNAN) unchanged", errno, 0, 0, 0, 0);
   errno = 0;
-  TEST_ff_f (remainder, nan_value, 0, nan_value);
-  check_int ("errno for remainder(NaN, 0) unchanged", errno, 0, 0, 0, 0);
+  TEST_ff_f (remainder, qnan_value, 0, qnan_value);
+  check_int ("errno for remainder(qNaN, 0) unchanged", errno, 0, 0, 0, 0);
 
   TEST_ff_f (remainder, 1.625, 1.0, -0.375);
   TEST_ff_f (remainder, -1.625, 1.0, 0.375);
@@ -8857,11 +8857,11 @@ remquo_test (void)
 
   START (remquo);
 
-  TEST_ffI_f1 (remquo, 1, 0, nan_value, IGNORE, INVALID_EXCEPTION);
-  TEST_ffI_f1 (remquo, 1, minus_zero, nan_value, IGNORE, INVALID_EXCEPTION);
-  TEST_ffI_f1 (remquo, plus_infty, 1, nan_value, IGNORE, INVALID_EXCEPTION);
-  TEST_ffI_f1 (remquo, minus_infty, 1, nan_value, IGNORE, INVALID_EXCEPTION);
-  TEST_ffI_f1 (remquo, nan_value, nan_value, nan_value, IGNORE);
+  TEST_ffI_f1 (remquo, 1, 0, qnan_value, IGNORE, INVALID_EXCEPTION);
+  TEST_ffI_f1 (remquo, 1, minus_zero, qnan_value, IGNORE, INVALID_EXCEPTION);
+  TEST_ffI_f1 (remquo, plus_infty, 1, qnan_value, IGNORE, INVALID_EXCEPTION);
+  TEST_ffI_f1 (remquo, minus_infty, 1, qnan_value, IGNORE, INVALID_EXCEPTION);
+  TEST_ffI_f1 (remquo, qnan_value, qnan_value, qnan_value, IGNORE);
 
   TEST_ffI_f1 (remquo, 1.625, 1.0, -0.375, 2);
   TEST_ffI_f1 (remquo, -1.625, 1.0, 0.375, -2);
@@ -9444,17 +9444,17 @@ scalb_test (void)
 
   START (scalb);
 
-  TEST_ff_f (scalb, 2.0, 0.5, nan_value, INVALID_EXCEPTION);
-  TEST_ff_f (scalb, 3.0, -2.5, nan_value, INVALID_EXCEPTION);
+  TEST_ff_f (scalb, 2.0, 0.5, qnan_value, INVALID_EXCEPTION);
+  TEST_ff_f (scalb, 3.0, -2.5, qnan_value, INVALID_EXCEPTION);
 
-  TEST_ff_f (scalb, 0, nan_value, nan_value);
-  TEST_ff_f (scalb, 1, nan_value, nan_value);
+  TEST_ff_f (scalb, 0, qnan_value, qnan_value);
+  TEST_ff_f (scalb, 1, qnan_value, qnan_value);
 
   TEST_ff_f (scalb, 1, 0, 1);
   TEST_ff_f (scalb, -1, 0, -1);
 
-  TEST_ff_f (scalb, 0, plus_infty, nan_value, INVALID_EXCEPTION);
-  TEST_ff_f (scalb, minus_zero, plus_infty, nan_value, INVALID_EXCEPTION);
+  TEST_ff_f (scalb, 0, plus_infty, qnan_value, INVALID_EXCEPTION);
+  TEST_ff_f (scalb, minus_zero, plus_infty, qnan_value, INVALID_EXCEPTION);
 
   TEST_ff_f (scalb, 0, 2, 0);
   TEST_ff_f (scalb, minus_zero, -4, minus_zero);
@@ -9480,16 +9480,16 @@ scalb_test (void)
   TEST_ff_f (scalb, plus_infty, plus_infty, plus_infty);
   TEST_ff_f (scalb, minus_infty, plus_infty, minus_infty);
 
-  TEST_ff_f (scalb, plus_infty, minus_infty, nan_value, INVALID_EXCEPTION);
-  TEST_ff_f (scalb, minus_infty, minus_infty, nan_value, INVALID_EXCEPTION);
+  TEST_ff_f (scalb, plus_infty, minus_infty, qnan_value, INVALID_EXCEPTION);
+  TEST_ff_f (scalb, minus_infty, minus_infty, qnan_value, INVALID_EXCEPTION);
 
-  TEST_ff_f (scalb, nan_value, 1, nan_value);
-  TEST_ff_f (scalb, 1, nan_value, nan_value);
-  TEST_ff_f (scalb, nan_value, 0, nan_value);
-  TEST_ff_f (scalb, 0, nan_value, nan_value);
-  TEST_ff_f (scalb, nan_value, plus_infty, nan_value);
-  TEST_ff_f (scalb, plus_infty, nan_value, nan_value);
-  TEST_ff_f (scalb, nan_value, nan_value, nan_value);
+  TEST_ff_f (scalb, qnan_value, 1, qnan_value);
+  TEST_ff_f (scalb, 1, qnan_value, qnan_value);
+  TEST_ff_f (scalb, qnan_value, 0, qnan_value);
+  TEST_ff_f (scalb, 0, qnan_value, qnan_value);
+  TEST_ff_f (scalb, qnan_value, plus_infty, qnan_value);
+  TEST_ff_f (scalb, plus_infty, qnan_value, qnan_value);
+  TEST_ff_f (scalb, qnan_value, qnan_value, qnan_value);
 
   TEST_ff_f (scalb, 0.8L, 4, 12.8L);
   TEST_ff_f (scalb, -0.854375L, 5, -27.34L);
@@ -9509,7 +9509,7 @@ scalbn_test (void)
 
   TEST_fi_f (scalbn, plus_infty, 1, plus_infty);
   TEST_fi_f (scalbn, minus_infty, 1, minus_infty);
-  TEST_fi_f (scalbn, nan_value, 1, nan_value);
+  TEST_fi_f (scalbn, qnan_value, 1, qnan_value);
 
   TEST_fi_f (scalbn, 0.8L, 4, 12.8L);
   TEST_fi_f (scalbn, -0.854375L, 5, -27.34L);
@@ -9540,7 +9540,7 @@ scalbln_test (void)
 
   TEST_fl_f (scalbln, plus_infty, 1, plus_infty);
   TEST_fl_f (scalbln, minus_infty, 1, minus_infty);
-  TEST_fl_f (scalbln, nan_value, 1, nan_value);
+  TEST_fl_f (scalbln, qnan_value, 1, qnan_value);
 
   TEST_fl_f (scalbln, 0.8L, 4, 12.8L);
   TEST_fl_f (scalbln, -0.854375L, 5, -27.34L);
@@ -9614,14 +9614,14 @@ sin_test (void)
   TEST_f_f (sin, 0, 0);
   TEST_f_f (sin, minus_zero, minus_zero);
   errno = 0;
-  TEST_f_f (sin, plus_infty, nan_value, INVALID_EXCEPTION);
+  TEST_f_f (sin, plus_infty, qnan_value, INVALID_EXCEPTION);
   check_int ("errno for sin(+inf) == EDOM", errno, EDOM, 0, 0, 0);
   errno = 0;
-  TEST_f_f (sin, minus_infty, nan_value, INVALID_EXCEPTION);
+  TEST_f_f (sin, minus_infty, qnan_value, INVALID_EXCEPTION);
   check_int ("errno for sin(-inf) == EDOM", errno, EDOM, 0, 0, 0);
   errno = 0;
-  TEST_f_f (sin, nan_value, nan_value);
-  check_int ("errno for sin(NaN) unchanged", errno, 0, 0, 0, 0);
+  TEST_f_f (sin, qnan_value, qnan_value);
+  check_int ("errno for sin(qNaN) unchanged", errno, 0, 0, 0, 0);
 
   TEST_f_f (sin, M_PI_6l, 0.5);
   TEST_f_f (sin, -M_PI_6l, -0.5);
@@ -9813,9 +9813,9 @@ sincos_test (void)
   TEST_extra (sincos, 0, 0, 1);
 
   TEST_extra (sincos, minus_zero, minus_zero, 1);
-  TEST_extra (sincos, plus_infty, nan_value, nan_value, INVALID_EXCEPTION);
-  TEST_extra (sincos, minus_infty, nan_value, nan_value, INVALID_EXCEPTION);
-  TEST_extra (sincos, nan_value, nan_value, nan_value);
+  TEST_extra (sincos, plus_infty, qnan_value, qnan_value, INVALID_EXCEPTION);
+  TEST_extra (sincos, minus_infty, qnan_value, qnan_value, INVALID_EXCEPTION);
+  TEST_extra (sincos, qnan_value, qnan_value, qnan_value);
 
   TEST_extra (sincos, M_PI_2l, 1, 0);
   TEST_extra (sincos, M_PI_6l, 0.5, 0.86602540378443864676372317075293616L);
@@ -9865,7 +9865,7 @@ sinh_test (void)
   TEST_f_f (sinh, plus_infty, plus_infty);
   TEST_f_f (sinh, minus_infty, minus_infty);
 #endif
-  TEST_f_f (sinh, nan_value, nan_value);
+  TEST_f_f (sinh, qnan_value, qnan_value);
 
   TEST_f_f (sinh, 0.75L, 0.822316731935829980703661634446913849L);
   TEST_f_f (sinh, 0x8p-32L, 1.86264514923095703232705808926175479e-9L);
@@ -9994,16 +9994,16 @@ sqrt_test (void)
   START (sqrt);
 
   TEST_f_f (sqrt, 0, 0);
-  TEST_f_f (sqrt, nan_value, nan_value);
+  TEST_f_f (sqrt, qnan_value, qnan_value);
   TEST_f_f (sqrt, plus_infty, plus_infty);
 
   TEST_f_f (sqrt, minus_zero, minus_zero);
 
-  /* sqrt (x) == NaN plus invalid exception for x < 0.  */
-  TEST_f_f (sqrt, -1, nan_value, INVALID_EXCEPTION);
-  TEST_f_f (sqrt, -max_value, nan_value, INVALID_EXCEPTION);
-  TEST_f_f (sqrt, minus_infty, nan_value, INVALID_EXCEPTION);
-  TEST_f_f (sqrt, nan_value, nan_value);
+  /* sqrt (x) == qNaN plus invalid exception for x < 0.  */
+  TEST_f_f (sqrt, -1, qnan_value, INVALID_EXCEPTION);
+  TEST_f_f (sqrt, -max_value, qnan_value, INVALID_EXCEPTION);
+  TEST_f_f (sqrt, minus_infty, qnan_value, INVALID_EXCEPTION);
+  TEST_f_f (sqrt, qnan_value, qnan_value);
 
   TEST_f_f (sqrt, 2209, 47);
   TEST_f_f (sqrt, 4, 2);
@@ -10031,14 +10031,14 @@ tan_test (void)
   TEST_f_f (tan, 0, 0);
   TEST_f_f (tan, minus_zero, minus_zero);
   errno = 0;
-  TEST_f_f (tan, plus_infty, nan_value, INVALID_EXCEPTION);
+  TEST_f_f (tan, plus_infty, qnan_value, INVALID_EXCEPTION);
   check_int ("errno for tan(Inf) == EDOM", errno, EDOM, 0, 0, 0);
   errno = 0;
-  TEST_f_f (tan, minus_infty, nan_value, INVALID_EXCEPTION);
+  TEST_f_f (tan, minus_infty, qnan_value, INVALID_EXCEPTION);
   check_int ("errno for tan(-Inf) == EDOM", errno, EDOM, 0, 0, 0);
   errno = 0;
-  TEST_f_f (tan, nan_value, nan_value);
-  check_int ("errno for tan(NaN) == 0", errno, 0, 0, 0, 0);
+  TEST_f_f (tan, qnan_value, qnan_value);
+  check_int ("errno for tan(qNaN) == 0", errno, 0, 0, 0, 0);
 
   TEST_f_f (tan, M_PI_4l, 1);
   TEST_f_f (tan, 0.75L, 0.931596459944072461165202756573936428L);
@@ -10251,7 +10251,7 @@ tanh_test (void)
   TEST_f_f (tanh, plus_infty, 1);
   TEST_f_f (tanh, minus_infty, -1);
 #endif
-  TEST_f_f (tanh, nan_value, nan_value);
+  TEST_f_f (tanh, qnan_value, qnan_value);
 
   TEST_f_f (tanh, 0.75L, 0.635148952387287319214434357312496495L);
   TEST_f_f (tanh, -0.75L, -0.635148952387287319214434357312496495L);
@@ -10280,11 +10280,11 @@ tgamma_test (void)
   TEST_f_f (tgamma, max_value, plus_infty, OVERFLOW_EXCEPTION);
   TEST_f_f (tgamma, 0, plus_infty, DIVIDE_BY_ZERO_EXCEPTION);
   TEST_f_f (tgamma, minus_zero, minus_infty, DIVIDE_BY_ZERO_EXCEPTION);
-  /* tgamma (x) == NaN plus invalid exception for integer x <= 0.  */
-  TEST_f_f (tgamma, -2, nan_value, INVALID_EXCEPTION);
-  TEST_f_f (tgamma, -max_value, nan_value, INVALID_EXCEPTION);
-  TEST_f_f (tgamma, minus_infty, nan_value, INVALID_EXCEPTION);
-  TEST_f_f (tgamma, nan_value, nan_value);
+  /* tgamma (x) == qNaN plus invalid exception for integer x <= 0.  */
+  TEST_f_f (tgamma, -2, qnan_value, INVALID_EXCEPTION);
+  TEST_f_f (tgamma, -max_value, qnan_value, INVALID_EXCEPTION);
+  TEST_f_f (tgamma, minus_infty, qnan_value, INVALID_EXCEPTION);
+  TEST_f_f (tgamma, qnan_value, qnan_value);
 
   TEST_f_f (tgamma, 0.5, M_SQRT_PIl);
   TEST_f_f (tgamma, -0.5, -M_2_SQRT_PIl);
@@ -10306,7 +10306,7 @@ trunc_test (void)
 
   TEST_f_f (trunc, plus_infty, plus_infty);
   TEST_f_f (trunc, minus_infty, minus_infty);
-  TEST_f_f (trunc, nan_value, nan_value);
+  TEST_f_f (trunc, qnan_value, qnan_value);
 
   TEST_f_f (trunc, 0, 0);
   TEST_f_f (trunc, minus_zero, minus_zero);
@@ -10428,7 +10428,7 @@ y0_test (void)
   TEST_f_f (y0, -1.0, minus_infty, INVALID_EXCEPTION);
   TEST_f_f (y0, -max_value, minus_infty, INVALID_EXCEPTION);
   TEST_f_f (y0, 0.0, minus_infty);
-  TEST_f_f (y0, nan_value, nan_value);
+  TEST_f_f (y0, qnan_value, qnan_value);
   TEST_f_f (y0, plus_infty, 0);
 
   TEST_f_f (y0, 0.125L, -1.38968062514384052915582277745018693L);
@@ -10483,7 +10483,7 @@ y1_test (void)
   TEST_f_f (y1, -max_value, minus_infty, INVALID_EXCEPTION);
   TEST_f_f (y1, 0.0, minus_infty);
   TEST_f_f (y1, plus_infty, 0);
-  TEST_f_f (y1, nan_value, nan_value);
+  TEST_f_f (y1, qnan_value, qnan_value);
 
   TEST_f_f (y1, 0.125L, -5.19993611253477499595928744876579921L);
   TEST_f_f (y1, 0.75L, -1.03759455076928541973767132140642198L);
@@ -10537,7 +10537,7 @@ yn_test (void)
   TEST_ff_f (yn, 0, -1.0, minus_infty, INVALID_EXCEPTION);
   TEST_ff_f (yn, 0, -max_value, minus_infty, INVALID_EXCEPTION);
   TEST_ff_f (yn, 0, 0.0, minus_infty);
-  TEST_ff_f (yn, 0, nan_value, nan_value);
+  TEST_ff_f (yn, 0, qnan_value, qnan_value);
   TEST_ff_f (yn, 0, plus_infty, 0);
 
   TEST_ff_f (yn, 0, 0.125L, -1.38968062514384052915582277745018693L);
@@ -10552,7 +10552,7 @@ yn_test (void)
   TEST_ff_f (yn, 1, -1.0, minus_infty, INVALID_EXCEPTION);
   TEST_ff_f (yn, 1, 0.0, minus_infty);
   TEST_ff_f (yn, 1, plus_infty, 0);
-  TEST_ff_f (yn, 1, nan_value, nan_value);
+  TEST_ff_f (yn, 1, qnan_value, qnan_value);
 
   TEST_ff_f (yn, 1, 0.125L, -5.19993611253477499595928744876579921L);
   TEST_ff_f (yn, 1, 0.75L, -1.03759455076928541973767132140642198L);
@@ -10564,7 +10564,7 @@ yn_test (void)
 
   /* yn (3, x)  */
   TEST_ff_f (yn, 3, plus_infty, 0);
-  TEST_ff_f (yn, 3, nan_value, nan_value);
+  TEST_ff_f (yn, 3, qnan_value, qnan_value);
 
   TEST_ff_f (yn, 3, 0.125L, -2612.69757350066712600220955744091741L);
   TEST_ff_f (yn, 3, 0.75L, -12.9877176234475433186319774484809207L);
@@ -10574,7 +10574,7 @@ yn_test (void)
 
   /* yn (10, x)  */
   TEST_ff_f (yn, 10, plus_infty, 0);
-  TEST_ff_f (yn, 10, nan_value, nan_value);
+  TEST_ff_f (yn, 10, qnan_value, qnan_value);
 
   TEST_ff_f (yn, 10, 0.125L, -127057845771019398.252538486899753195L);
   TEST_ff_f (yn, 10, 0.75L, -2133501638.90573424452445412893839236L);
@@ -10613,7 +10613,7 @@ initialize (void)
 {
   fpstack_test ("start *init*");
   plus_zero = 0.0;
-  nan_value = plus_zero / plus_zero;	/* Suppress GCC warning */
+  qnan_value = plus_zero / plus_zero;	/* Suppress GCC warning */
 
   minus_zero = FUNC(copysign) (0.0, -1.0);
   plus_infty = CHOOSE (HUGE_VALL, HUGE_VAL, HUGE_VALF,
@@ -10632,7 +10632,7 @@ initialize (void)
 			      __FLT_DENORM_MIN__);
 
   (void) &plus_zero;
-  (void) &nan_value;
+  (void) &qnan_value;
   (void) &minus_zero;
   (void) &plus_infty;
   (void) &minus_infty;

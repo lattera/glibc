@@ -54,7 +54,7 @@ enum
        these bits is set.  Note, though, that you can't disable or
        enable these exceptions individually.  */
 
-    /* Operation with SNaN. */
+    /* Operation with a sNaN.  */
     FE_INVALID_SNAN =
 # define FE_INVALID_SNAN	(1 << (31 - 7))
       FE_INVALID_SNAN,
@@ -79,7 +79,7 @@ enum
 # define FE_INVALID_IMZ	(1 << (31 - 11))
       FE_INVALID_IMZ,
 
-    /* Comparison with NaN or SNaN.  */
+    /* Comparison with a NaN.  */
     FE_INVALID_COMPARE =
 # define FE_INVALID_COMPARE	(1 << (31 - 12))
       FE_INVALID_COMPARE,

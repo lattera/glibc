@@ -1074,7 +1074,7 @@ main (void)
       }
   }
 
-  /* Special NaNs in x86 long double.  Test for scalbl.  */
+  /* Special qNaNs in x86 long double.  Test for scalbl.  */
   {
     union
     {
@@ -1087,12 +1087,12 @@ main (void)
     r = scalbl (u.d, 0.0);
     if (!isnan (r))
       {
-	puts ("scalbl(NaN, 0) does not return NaN");
+	puts ("scalbl (qNaN, 0) does not return NaN");
 	result = 1;
       }
     else if (memcmp (&r, &u.d, sizeof (double)) != 0)
       {
-	puts ("scalbl(NaN, 0) does not return the same NaN");
+	puts ("scalbl (qNaN, 0) does not return the same NaN");
 	result = 1;
       }
   }

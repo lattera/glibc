@@ -116,7 +116,7 @@ enum {
   FPSCR_UX,        /* underflow */
   FPSCR_ZX,        /* zero divide */
   FPSCR_XX,        /* inexact */
-  FPSCR_VXSNAN,    /* invalid operation for SNaN */
+  FPSCR_VXSNAN,    /* invalid operation for sNaN */
   FPSCR_VXISI,     /* invalid operation for Inf-Inf */
   FPSCR_VXIDI,     /* invalid operation for Inf/Inf */
   FPSCR_VXZDZ,     /* invalid operation for 0/0 */
@@ -152,7 +152,7 @@ enum {
 #endif /* _ARCH_PWR6 */
 
 /* This operation (i) sets the appropriate FPSCR bits for its
-   parameter, (ii) converts SNaN to the corresponding NaN, and (iii)
+   parameter, (ii) converts sNaN to the corresponding qNaN, and (iii)
    otherwise passes its parameter through unchanged (in particular, -0
    and +0 stay as they were).  The `obvious' way to do this is optimised
    out by gcc.  */
