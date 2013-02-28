@@ -34,55 +34,9 @@ char *dest_address;
 double	value = 123.456;
 double	zero = 0.0;
 
-float SNANf;
-double SNAN;
-long double SNANl;
-
 static sigjmp_buf sigfpe_buf;
 
-void
-init_signaling_nan (void)
-{
-    union {
-	double _ld16;
-	double _d8;
-	unsigned int _ui4[4];
-	float _f4;
-    } nan_temp;
-    
-    nan_temp._ui4[0] = 0x7fa00000;
-    SNANf = nan_temp._f4;
-
-    nan_temp._ui4[0] = 0x7ff40000;
-    nan_temp._ui4[1] = 0x00000000;
-    SNAN = nan_temp._d8;
-
-    nan_temp._ui4[0] = 0x7ff40000;
-    nan_temp._ui4[1] = 0x00000000;
-    nan_temp._ui4[2] = 0x00000000;
-    nan_temp._ui4[3] = 0x00000000;
-    SNANl = nan_temp._ld16;
-}
-
-static float
-snan_float (void)
-{
-  return SNANf;
-}
-
-static double
-snan_double (void)
-{
-  return SNAN;
-}
-
 typedef long double ldouble;
-
-static ldouble
-snan_ldouble (void)
-{
-  return SNANl;
-}
 
 
 void
@@ -130,19 +84,21 @@ check (const char *testname, int result)
   }
 }
 
-#define TEST_FUNC(NAME, FLOAT) \
+#define TEST_FUNC(NAME, FLOAT, SUFFIX)					      \
 static void								      \
 NAME (void)								      \
 {									      \
   /* Variables are declared volatile to forbid some compiler		      \
      optimizations.  */							      \
-  volatile FLOAT Inf_var, qNaN_var, zero_var, one_var, sNaN_var;	      \
+  volatile FLOAT Inf_var, qNaN_var, zero_var, one_var;			      \
+  /* A sNaN is only guaranteed to be representable in variables with */	      \
+  /* static (or thread-local) storage duration.  */			      \
+  static volatile FLOAT sNaN_var = __builtin_nans ## SUFFIX ("");	      \
   fenv_t saved_fenv;							      \
 									      \
   zero_var = 0.0;							      \
   one_var = 1.0;							      \
-  qNaN_var = zero_var / zero_var;					      \
-  sNaN_var = snan_##FLOAT ();						      \
+  qNaN_var = __builtin_nan ## SUFFIX ("");				      \
   Inf_var = one_var / zero_var;						      \
 									      \
   (void) &zero_var;							      \
@@ -358,17 +314,15 @@ NAME (void)								      \
   remove_sigaction_FP();						      \
 }
 
-TEST_FUNC (float_test, float)
-TEST_FUNC (double_test, double)
+TEST_FUNC (float_test, float, f)
+TEST_FUNC (double_test, double, )
 #ifndef NO_LONG_DOUBLE
-TEST_FUNC (ldouble_test, ldouble)
+TEST_FUNC (ldouble_test, ldouble, l)
 #endif
 
 static int
 do_test (void)
 {
-  init_signaling_nan();
-
   float_test();
   double_test();
 #ifndef NO_LONG_DOUBLE

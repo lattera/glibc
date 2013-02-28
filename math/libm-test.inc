@@ -10626,10 +10626,10 @@ static void
 initialize (void)
 {
   fpstack_test ("start *init*");
-  plus_zero = 0.0;
-  qnan_value = plus_zero / plus_zero;	/* Suppress GCC warning */
 
-  minus_zero = FUNC(copysign) (0.0, -1.0);
+  plus_zero = 0.0;
+  qnan_value = FUNC (__builtin_nan) ("");
+  minus_zero = FUNC (copysign) (0.0, -1.0);
   plus_infty = CHOOSE (HUGE_VALL, HUGE_VAL, HUGE_VALF,
 		       HUGE_VALL, HUGE_VAL, HUGE_VALF);
   minus_infty = CHOOSE (-HUGE_VALL, -HUGE_VAL, -HUGE_VALF,

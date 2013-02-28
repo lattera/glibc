@@ -32,7 +32,7 @@ check (const char *testname, int result)
   }
 }
 
-#define TEST_FUNC(NAME, FLOAT, NANFUNC, EPSILON, HUGEVAL)		      \
+#define TEST_FUNC(NAME, FLOAT, SUFFIX, EPSILON, HUGEVAL)		      \
 static void								      \
 NAME (void)								      \
 {									      \
@@ -43,7 +43,7 @@ NAME (void)								      \
 									      \
   zero_var = 0.0;							      \
   one_var = 1.0;							      \
-  qNaN_var = zero_var / zero_var;					      \
+  qNaN_var = __builtin_nan ## SUFFIX ("");				      \
   Inf_var = one_var / zero_var;						      \
 									      \
   (void) &zero_var;							      \
@@ -80,11 +80,12 @@ NAME (void)								      \
   /*									      \
      And again with the value returned by the `nan' function.		      \
    */									      \
-  check (#FLOAT " isnan (nan (\"\"))", isnan (NANFUNC ("")));		      \
-  check (#FLOAT " isnan (-nan (\"\"))", isnan (-NANFUNC ("")));		      \
-  check (#FLOAT " !isinf (nan (\"\"))", !(isinf (NANFUNC (""))));	      \
-  check (#FLOAT " !isinf (-nan (\"\"))", !(isinf (-NANFUNC (""))));	      \
-  check (#FLOAT " nan (\"\") != nan (\"\")", NANFUNC ("") != NANFUNC (""));   \
+  check (#FLOAT " isnan (nan (\"\"))", isnan (nan ## SUFFIX ("")));	      \
+  check (#FLOAT " isnan (-nan (\"\"))", isnan (-nan ## SUFFIX ("")));	      \
+  check (#FLOAT " !isinf (nan (\"\"))", !(isinf (nan ## SUFFIX (""))));	      \
+  check (#FLOAT " !isinf (-nan (\"\"))", !(isinf (-nan ## SUFFIX (""))));     \
+  check (#FLOAT " nan (\"\") != nan (\"\")",				      \
+	 nan ## SUFFIX ("") != nan ## SUFFIX (""));			      \
 									      \
   /* test if EPSILON is ok */						      \
   x1 = 1.0;								      \
@@ -102,7 +103,7 @@ NAME (void)								      \
   check (#FLOAT " isinf (-HUGE_VALx) == -1", isinf (x1) == -1);		      \
 }
 
-#define TEST_TRUNC(NAME, FLOAT, DOUBLE) \
+#define TEST_TRUNC(NAME, FLOAT, DOUBLE, SUFFIX)				      \
 void									      \
 NAME (void)								      \
 {									      \
@@ -111,7 +112,7 @@ NAME (void)								      \
 									      \
   zero_var = 0.0;							      \
   one_var = 1.0;							      \
-  qNaN_var = zero_var / zero_var;					      \
+  qNaN_var = __builtin_nan ## SUFFIX ("");				      \
   Inf_var = one_var / zero_var;						      \
 									      \
   (void) &qNaN_var;							      \
@@ -123,13 +124,13 @@ NAME (void)								      \
   check (" "#FLOAT" x = ("#FLOAT") ("#DOUBLE") Inf", isinf (x2) != 0);	      \
 }
 
-TEST_FUNC (float_test, float, nanf, FLT_EPSILON, HUGE_VALF)
-TEST_FUNC (double_test, double, nan, DBL_EPSILON, HUGE_VAL)
-TEST_TRUNC (truncdfsf_test, float, double)
+TEST_FUNC (float_test, float, f, FLT_EPSILON, HUGE_VALF)
+TEST_FUNC (double_test, double, , DBL_EPSILON, HUGE_VAL)
+TEST_TRUNC (truncdfsf_test, float, double, )
 #ifndef NO_LONG_DOUBLE
-TEST_FUNC (ldouble_test, long double, nanl, LDBL_EPSILON, HUGE_VALL)
-TEST_TRUNC (trunctfsf_test, float, long double)
-TEST_TRUNC (trunctfdf_test, double, long double)
+TEST_FUNC (ldouble_test, long double, l, LDBL_EPSILON, HUGE_VALL)
+TEST_TRUNC (trunctfsf_test, float, long double, l)
+TEST_TRUNC (trunctfdf_test, double, long double, l)
 #endif
 
 int

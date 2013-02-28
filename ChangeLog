@@ -1,5 +1,21 @@
 2013-03-15  Thomas Schwinge  <thomas@codesourcery.com>
 
+	* math/basic-test.c (TEST_FUNC): Replace NANFUNC argument with
+	SUFFIX.  Initialize qNaN_var with __builtin_nan family of
+	functions.
+	(TEST_TRUNC): Add SUFFIX argument.  Initialize qNaN_var with
+	__builtin_nan family of functions.
+	* math/libm-test.inc (initialize): Initialize qnan_value with
+	__builtin_nan family of functions.
+	* sysdeps/powerpc/fpu/test-powerpc-snan.c (SNANf, SNAN, SNANl):
+	Remove variables.
+	(init_signaling_nan, snan_float, snan_double, snan_ldouble):
+	Remove functions.
+	(TEST_FUNC): Add SUFFIX argument.  Move sNaN_var into static
+	storage class.  Initialize qNaN_var and sNaN_var with
+	__builtin_nan and __builtin_nans families of functions,
+	respectively.
+
 	* math/libm-test.inc (acosh_test): Also test with qNaN input.
 	(sqrt_test): Remove duplicate test with qNaN input.
 	(lrint_test, llrint_test, lround_test, llround_test, rint_test)
