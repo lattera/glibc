@@ -21,6 +21,7 @@
 #include <string.h>
 #include <sys/resource.h>
 #include <sys/wait.h>
+#include <stdlib.h>
 
 /* This sets the stack resource limit to 1023kb, which is not a multiple
    of the page size since every architecture's page size is > 1k.  */

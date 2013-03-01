@@ -1,5 +1,7 @@
 2013-03-01  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
+	* tst-oddstacklimit.c: Include stdlib.h.
+
 	* Makefile (tests): Add tst-pthread-stack-env.
 	(tst-pthread-stack-env-ENV): Set environment for test.
 	* nptl-init.c (set_default_stacksize): New function.
