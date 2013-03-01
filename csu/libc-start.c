@@ -30,7 +30,7 @@ extern int __libc_multiple_libcs;
 #include <tls.h>
 #ifndef SHARED
 # include <dl-osinfo.h>
-extern void __pthread_initialize_minimal (int, char **, char **);
+extern void __pthread_initialize_minimal (void);
 # ifndef THREAD_SET_STACK_GUARD
 /* Only exported for architectures that don't store the stack guard canary
    in thread local area.  */
@@ -167,7 +167,7 @@ LIBC_START_MAIN (int (*main) (int, char **, char ** MAIN_AUXVEC_DECL),
   /* Initialize the thread library at least a bit since the libgcc
      functions are using thread functions if these are available and
      we need to setup errno.  */
-  __pthread_initialize_minimal (argc, argv, __environ);
+  __pthread_initialize_minimal ();
 
   /* Set up the stack checker's canary.  */
   uintptr_t stack_chk_guard = _dl_setup_stack_chk_guard (_dl_random);

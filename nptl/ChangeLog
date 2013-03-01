@@ -1,3 +1,11 @@
+2013-03-01  Carlos O'Donell  <carlos@redhat.com>
+
+	* Makefile (tests): Revert last change.
+	(tst-pthread-stack-env-ENV): Likewise.
+	* nptl-init.c (set_default_stacksize): Likewise.
+	(__pthread_initialize_minimal_internal): Likewise.
+	* tst-pthread-stack-env.c: Likewise.
+
 2013-03-01  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* tst-oddstacklimit.c: Include stdlib.h.

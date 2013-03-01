@@ -251,8 +251,7 @@ tests = tst-typesizes \
 	tst-exec1 tst-exec2 tst-exec3 tst-exec4 \
 	tst-exit1 tst-exit2 tst-exit3 \
 	tst-stdio1 tst-stdio2 \
-	tst-stack1 tst-stack2 tst-stack3 \
-	tst-pthread-getattr tst-pthread-stack-env \
+	tst-stack1 tst-stack2 tst-stack3 tst-pthread-getattr \
 	tst-unload \
 	tst-dlsym1 \
 	tst-sysconf \
@@ -441,8 +440,6 @@ CFLAGS-tst-initializers1-gnu99.c = $(CFLAGS-tst-initializers1-<)
 tst-cancel7-ARGS = --command "exec $(host-test-program-cmd)"
 tst-cancelx7-ARGS = $(tst-cancel7-ARGS)
 tst-umask1-ARGS = $(objpfx)tst-umask1.temp
-
-tst-pthread-stack-env-ENV = GLIBC_PTHREAD_DEFAULT_STACKSIZE=1048576
 
 $(objpfx)tst-atfork2: $(libdl) $(shared-thread-library)
 LDFLAGS-tst-atfork2 = -rdynamic

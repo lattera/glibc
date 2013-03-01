@@ -1,3 +1,8 @@
+2013-03-01  Carlos O'Donell  <carlos@redhat.com>
+
+	* csu/libc-start.c (__pthread_initialize_minimal): Revert last change.
+	* csu/libc-tls.c (__pthread_initialize_minimal): Likewise.
+
 2013-03-01  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* NEWS: Mention libm performance improvements and non-x86 PI
