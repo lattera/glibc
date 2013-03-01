@@ -51,7 +51,7 @@ _dl_important_hwcaps (const char *platform, size_t platform_len, size_t *sz,
     if ((masked & (1ULL << n)) != 0)
       ++cnt;
 
-#if defined NEED_DL_SYSINFO || defined NEED_DL_SYSINFO_DSO
+#ifdef NEED_DL_SYSINFO_DSO
   /* The system-supplied DSO can contain a note of type 2, vendor "GNU".
      This gives us a list of names to treat as fake hwcap bits.  */
 
@@ -104,7 +104,7 @@ _dl_important_hwcaps (const char *platform, size_t platform_len, size_t *sz,
   /* Create temporary data structure to generate result table.  */
   struct r_strlenpair temp[cnt];
   m = 0;
-#if defined NEED_DL_SYSINFO || defined NEED_DL_SYSINFO_DSO
+#ifdef NEED_DL_SYSINFO_DSO
   if (dsocaps != NULL)
     {
       const ElfW(Word) mask = ((const ElfW(Word) *) dsocaps)[-1];

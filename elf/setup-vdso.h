@@ -20,7 +20,7 @@ static inline void __attribute__ ((always_inline))
 setup_vdso (struct link_map *main_map __attribute__ ((unused)),
 	    struct link_map ***first_preload __attribute__ ((unused)))
 {
-#if defined NEED_DL_SYSINFO || defined NEED_DL_SYSINFO_DSO
+#ifdef NEED_DL_SYSINFO_DSO
   if (GLRO(dl_sysinfo_dso) == NULL)
     return;
 

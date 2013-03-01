@@ -1,3 +1,16 @@
+2013-03-01  Roland McGrath  <roland@hack.frob.com>
+
+	* elf/dl-hwcaps.c (_dl_important_hwcaps):
+	Change [NEED_DL_SYSINFO || NEED_DL_SYSINFO_DSO] conditionals
+	to just [NEED_DL_SYSINFO_DSO].
+	* elf/dl-support.c: Likewise.
+	* elf/dl-sysdep.c (_dl_sysdep_start): Likewise.
+	* elf/rtld.c (dl_main): Likewise.
+	* elf/setup-vdso.h (setup_vdso): Likewise.
+	* sysdeps/generic/ldsodefs.h (struct rtld_global_ro): Likewise.
+	* sysdeps/unix/sysv/linux/dl-sysdep.c
+	(_dl_discover_osversion): Likewise.
+
 2013-03-01  Carlos O'Donell  <carlos@redhat.com>
 
 	* csu/libc-start.c (__pthread_initialize_minimal): Revert last change.

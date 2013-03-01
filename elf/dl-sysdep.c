@@ -167,7 +167,7 @@ _dl_sysdep_start (void **start_argptr,
 	new_sysinfo = av->a_un.a_val;
 	break;
 #endif
-#if defined NEED_DL_SYSINFO || defined NEED_DL_SYSINFO_DSO
+#ifdef NEED_DL_SYSINFO_DSO
       case AT_SYSINFO_EHDR:
 	GLRO(dl_sysinfo_dso) = (void *) av->a_un.a_val;
 	break;

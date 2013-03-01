@@ -158,7 +158,7 @@ struct dl_scope_free_list *_dl_scope_free_list;
 /* Needed for improved syscall handling on at least x86/Linux.  */
 uintptr_t _dl_sysinfo = DL_SYSINFO_DEFAULT;
 #endif
-#if defined NEED_DL_SYSINFO || defined NEED_DL_SYSINFO_DSO
+#ifdef NEED_DL_SYSINFO_DSO
 /* Address of the ELF headers in the vsyscall page.  */
 const ElfW(Ehdr) *_dl_sysinfo_dso;
 
@@ -217,7 +217,7 @@ _dl_aux_init (ElfW(auxv_t) *av)
 	GL(dl_sysinfo) = av->a_un.a_val;
 	break;
 #endif
-#if defined NEED_DL_SYSINFO || defined NEED_DL_SYSINFO_DSO
+#ifdef NEED_DL_SYSINFO_DSO
       case AT_SYSINFO_EHDR:
 	GL(dl_sysinfo_dso) = (void *) av->a_un.a_val;
 	break;

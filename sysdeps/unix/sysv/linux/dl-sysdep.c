@@ -43,7 +43,7 @@ int
 attribute_hidden
 _dl_discover_osversion (void)
 {
-#if (defined NEED_DL_SYSINFO || defined NEED_DL_SYSINFO_DSO) && defined SHARED
+#if defined NEED_DL_SYSINFO_DSO && defined SHARED
   if (GLRO(dl_sysinfo_map) != NULL)
     {
       /* If the kernel-supplied DSO contains a note indicating the kernel's

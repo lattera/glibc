@@ -1768,7 +1768,7 @@ ERROR: ld.so: object '%s' cannot be loaded as audit interface: %s; ignored.\n",
 	  GL(dl_rtld_map).l_next = (i + 1 < main_map->l_searchlist.r_nlist
 				    ? main_map->l_searchlist.r_list[i + 1]
 				    : NULL);
-#if defined NEED_DL_SYSINFO || defined NEED_DL_SYSINFO_DSO
+#ifdef NEED_DL_SYSINFO_DSO
 	  if (GLRO(dl_sysinfo_map) != NULL
 	      && GL(dl_rtld_map).l_prev->l_next == GLRO(dl_sysinfo_map)
 	      && GL(dl_rtld_map).l_next != GLRO(dl_sysinfo_map))
@@ -1880,7 +1880,7 @@ ERROR: ld.so: object '%s' cannot be loaded as audit interface: %s; ignored.\n",
 	      if (dyn->d_tag == DT_NEEDED)
 		{
 		  l = l->l_next;
-#if defined NEED_DL_SYSINFO || defined NEED_DL_SYSINFO_DSO
+#ifdef NEED_DL_SYSINFO_DSO
 		  /* Skip the VDSO since it's not part of the list
 		     of objects we brought in via DT_NEEDED entries.  */
 		  if (l == GLRO(dl_sysinfo_map))
