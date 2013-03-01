@@ -1,5 +1,11 @@
 2013-03-15  Thomas Schwinge  <thomas@codesourcery.com>
 
+	* math/libm-test.inc (acosh_test): Also test with qNaN input.
+	(sqrt_test): Remove duplicate test with qNaN input.
+	(lrint_test, llrint_test, lround_test, llround_test, rint_test)
+	(round_test, signbit_test, significand_test): Note missing +/-Inf
+	as well as qNaN tests.
+
 	* math/basic-test.c (TEST_FUNC, TEST_TRUNC): Rename NaN_var to
 	qNaN_var.  Fix a few strings, too.
 	* math/libm-test.inc (nan_value): Rename to qnan_value.

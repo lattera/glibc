@@ -972,6 +972,7 @@ acosh_test (void)
 
   TEST_f_f (acosh, plus_infty, plus_infty);
   TEST_f_f (acosh, minus_infty, qnan_value, INVALID_EXCEPTION);
+  TEST_f_f (acosh, qnan_value, qnan_value);
 
   /* x < 1:  */
   TEST_f_f (acosh, -1.125L, qnan_value, INVALID_EXCEPTION);
@@ -6440,6 +6441,7 @@ lrint_test (void)
   /* XXX this test is incomplete.  We need to have a way to specifiy
      the rounding method and test the critical cases.  So far, only
      unproblematic numbers are tested.  */
+  /* TODO: missing +/-Inf as well as qNaN tests.  */
 
   START (lrint);
 
@@ -6632,6 +6634,7 @@ llrint_test (void)
   /* XXX this test is incomplete.  We need to have a way to specifiy
      the rounding method and test the critical cases.  So far, only
      unproblematic numbers are tested.  */
+  /* TODO: missing +/-Inf as well as qNaN tests.  */
 
   START (llrint);
 
@@ -7510,6 +7513,8 @@ logb_test_downward (void)
 static void
 lround_test (void)
 {
+  /* TODO: missing +/-Inf as well as qNaN tests.  */
+
   START (lround);
 
   TEST_f_l (lround, 0, 0);
@@ -7552,6 +7557,8 @@ lround_test (void)
 static void
 llround_test (void)
 {
+  /* TODO: missing +/-Inf as well as qNaN tests.  */
+
   START (llround);
 
   TEST_f_L (llround, 0, 0);
@@ -8877,6 +8884,8 @@ remquo_test (void)
 static void
 rint_test (void)
 {
+  /* TODO: missing qNaN tests.  */
+
   START (rint);
 
   TEST_f_f (rint, 0.0, 0.0);
@@ -9342,6 +9351,8 @@ rint_test_upward (void)
 static void
 round_test (void)
 {
+  /* TODO: missing +/-Inf as well as qNaN tests.  */
+
   START (round);
 
   TEST_f_f (round, 0, 0);
@@ -9583,6 +9594,7 @@ scalbln_test (void)
 static void
 signbit_test (void)
 {
+  /* TODO: missing qNaN tests.  */
 
   START (signbit);
 
@@ -10003,7 +10015,6 @@ sqrt_test (void)
   TEST_f_f (sqrt, -1, qnan_value, INVALID_EXCEPTION);
   TEST_f_f (sqrt, -max_value, qnan_value, INVALID_EXCEPTION);
   TEST_f_f (sqrt, minus_infty, qnan_value, INVALID_EXCEPTION);
-  TEST_f_f (sqrt, qnan_value, qnan_value);
 
   TEST_f_f (sqrt, 2209, 47);
   TEST_f_f (sqrt, 4, 2);
@@ -10598,6 +10609,9 @@ static void
 significand_test (void)
 {
   /* significand returns the mantissa of the exponential representation.  */
+
+  /* TODO: missing +/-Inf as well as qNaN tests.  */
+
   START (significand);
 
   TEST_f_f (significand, 4.0, 1.0);
