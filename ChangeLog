@@ -1,5 +1,8 @@
 2013-03-01  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
+	* NEWS: Mention libm performance improvements and non-x86 PI
+	futex support.
+
 	* csu/libc-start.c (__pthread_initialize_minimal): Change
 	function arguments.
 	* csu/libc-tls.c (__pthread_initialize_minimal): Likewise.
