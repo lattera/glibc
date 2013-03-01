@@ -1,3 +1,12 @@
+2013-03-01  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/powerpc/fpu/fpu_control.h: Move to ...
+	* sysdeps/powerpc/fpu_control.h: ... here.
+	* sysdeps/powerpc/fpu/bits/fenvinline.h: Move to ...
+	* sysdeps/powerpc/bits/fenvinline.h: ... here.
+	* sysdeps/powerpc/fpu/bits/mathinline.h: Move to ...
+	* sysdeps/powerpc/bits/mathinline.h: ... here.
+
 2013-03-01  Roland McGrath  <roland@hack.frob.com>
 
 	* elf/dl-hwcaps.c (_dl_important_hwcaps):
