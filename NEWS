@@ -17,6 +17,10 @@ Version 2.18
   and program exit.  This needs compiler support for offloading C++11
   destructor calls to glibc.
 
+* Add support for setting thread stack sizes from the program environment,
+  independently of the process stack size using the
+  GLIBC_PTHREAD_DEFAULT_STACKSIZE environment variable.
+
 
 Version 2.17
 

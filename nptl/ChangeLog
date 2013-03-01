@@ -1,3 +1,12 @@
+2013-03-01  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* Makefile (tests): Add tst-pthread-stack-env.
+	(tst-pthread-stack-env-ENV): Set environment for test.
+	* nptl-init.c (set_default_stacksize): New function.
+	(__pthread_initialize_minimal_internal): Accept ARGC, ARGV and
+	ENVP.  Initialize __ENVIRON and set __DEFAULT_STACKSIZE.
+	* tst-pthread-stack-env.c: New test case.
+
 2013-02-21  David S. Miller  <davem@davemloft.net>
 
 	* sysdeps/unix/sysv/linux/sparc/lowlevellock.h

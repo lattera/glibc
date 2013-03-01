@@ -1,3 +1,9 @@
+2013-03-01  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* csu/libc-start.c (__pthread_initialize_minimal): Change
+	function arguments.
+	* csu/libc-tls.c (__pthread_initialize_minimal): Likewise.
+
 2013-02-28  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #13550]

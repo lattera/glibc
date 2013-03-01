@@ -243,7 +243,7 @@ _dl_tls_setup (void)
    not used.  */
 void
 __attribute__ ((weak))
-__pthread_initialize_minimal (void)
+__pthread_initialize_minimal (int argc, char **argv, char **envp)
 {
   __libc_setup_tls (TLS_INIT_TCB_SIZE, TLS_INIT_TCB_ALIGN);
 }
