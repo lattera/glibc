@@ -50,6 +50,9 @@
 #if __ARM_ARCH > 4
 # define ARCH_HAS_BLX
 #endif
+#if __ARM_ARCH > 6 || defined (__ARM_ARCH_6K__) || defined (__ARM_ARCH_6ZK__)
+# define ARCH_HAS_HARD_TP
+#endif
 #if __ARM_ARCH > 6 || defined (__ARM_ARCH_6T2__)
 # define ARCH_HAS_T2
 #endif
@@ -187,10 +190,14 @@
 /* Helper to get the TLS base pointer.  The interface is that TMP is a
    register that may be used to hold the LR, if necessary.  TMP may be
    LR itself to indicate that LR need not be saved.  The base pointer
-   is returned in R0.  Only R0 and TMP are modified.
+   is returned in R0.  Only R0 and TMP are modified.  */
 
-   At this generic level we have no tricks to pull.  Call the ABI routine.  */
-# define GET_TLS(TMP)					\
+# ifdef ARCH_HAS_HARD_TP
+/* If the cpu has cp15 available, use it.  */
+#  define GET_TLS(TMP)		mrc p15, 0, r0, c13, c0, 3
+# else
+/* At this generic level we have no tricks to pull.  Call the ABI routine.  */
+#  define GET_TLS(TMP)					\
 	push	{ r1, r2, r3, lr };			\
 	cfi_remember_state;				\
 	cfi_adjust_cfa_offset (16);			\
@@ -201,6 +208,7 @@
 	bl	__aeabi_read_tp;			\
 	pop	{ r1, r2, r3, lr };			\
 	cfi_restore_state
+# endif /* ARCH_HAS_HARD_TP */
 
 #endif	/* __ASSEMBLER__ */
 
