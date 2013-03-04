@@ -1,3 +1,9 @@
+2013-02-28  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
+	[BZ #15055]
+	* sysdeps/ieee754/ldbl-128ibm/e_acoshl.c (__ieee754_acoshl): Use
+	__ieee754_sqrl instead of __sqrl.
+
 2013-03-01  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/powerpc/fpu/fpu_control.h: Move to ...
