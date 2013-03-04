@@ -1,3 +1,11 @@
+2013-03-04  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #13550]
+	* sysdeps/powerpc/powerpc32/power4/strncmp.S (strncmp): Remove
+	comment about bounded pointers.
+	* sysdeps/powerpc/powerpc32/power7/strncmp.S (strncmp): Likewise.
+	* sysdeps/powerpc/powerpc32/strncmp.S (strncmp): Likewise.
+
 2013-03-04  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/bits/mman-linux.h: New file, with Linux
