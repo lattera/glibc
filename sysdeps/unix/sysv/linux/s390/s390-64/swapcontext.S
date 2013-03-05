@@ -34,12 +34,13 @@
 
 ENTRY(__swapcontext)
 	lgr	%r1,%r2
-	lgr      %r5,%r3
+	lgr     %r0,%r3
 
 	/* sigprocmask (SIG_BLOCK, NULL, &sc->sc_mask).  */
 	la      %r2,SIG_BLOCK
 	slgr	%r3,%r3
 	la	%r4,SC_MASK(%r1)
+	lghi	%r5,_NSIG8
 	svc	SYS_ify(rt_sigprocmask)
 
 	/* Store fpu context.  */
@@ -72,11 +73,14 @@ ENTRY(__swapcontext)
 
 	/* sigprocmask (SIG_SETMASK, &sc->sc_mask, NULL).  */
 	la      %r2,SIG_BLOCK
+	lgr	%r5,%r0
 	la	%r3,SC_MASK(%r5)
+	lghi	%r5,_NSIG8
 	slgr	%r4,%r4
 	svc	SYS_ify(rt_sigprocmask)
 
 	/* Load fpu context.  */
+	lgr	%r5,%r0
 	lfpc	SC_FPC(%r5)
 	ld	%f0,SC_FPRS(%r5)
 	ld      %f1,SC_FPRS+8(%r5)

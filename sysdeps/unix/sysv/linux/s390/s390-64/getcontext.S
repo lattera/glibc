@@ -31,41 +31,42 @@
   other than the PRESERVED state.  */
 
 ENTRY(__getcontext)
-	lgr     %r5,%r2
+	lgr     %r1,%r2
 
 	/* sigprocmask (SIG_BLOCK, NULL, &sc->sc_mask).  */
 	la      %r2,SIG_BLOCK
 	slgr	%r3,%r3
-	la	%r4,SC_MASK(%r5)
+	la	%r4,SC_MASK(%r1)
+	lghi	%r5,_NSIG8
 	svc	SYS_ify(rt_sigprocmask)
 
 	/* Store fpu context.  */
-	stfpc   SC_FPC(%r5)
-	std     %f0,SC_FPRS(%r5)
-	std     %f1,SC_FPRS+8(%r5)
-	std     %f2,SC_FPRS+16(%r5)
-	std     %f3,SC_FPRS+24(%r5)
-	std     %f4,SC_FPRS+32(%r5)
-	std     %f5,SC_FPRS+40(%r5)
-	std     %f6,SC_FPRS+48(%r5)
-	std     %f7,SC_FPRS+56(%r5)
-	std     %f8,SC_FPRS+64(%r5)
-	std     %f9,SC_FPRS+72(%r5)
-	std     %f10,SC_FPRS+80(%r5)
-	std     %f11,SC_FPRS+88(%r5)
-	std     %f12,SC_FPRS+96(%r5)
-	std     %f13,SC_FPRS+104(%r5)
-	std     %f14,SC_FPRS+112(%r5)
-	std     %f15,SC_FPRS+120(%r5)
+	stfpc   SC_FPC(%r1)
+	std     %f0,SC_FPRS(%r1)
+	std     %f1,SC_FPRS+8(%r1)
+	std     %f2,SC_FPRS+16(%r1)
+	std     %f3,SC_FPRS+24(%r1)
+	std     %f4,SC_FPRS+32(%r1)
+	std     %f5,SC_FPRS+40(%r1)
+	std     %f6,SC_FPRS+48(%r1)
+	std     %f7,SC_FPRS+56(%r1)
+	std     %f8,SC_FPRS+64(%r1)
+	std     %f9,SC_FPRS+72(%r1)
+	std     %f10,SC_FPRS+80(%r1)
+	std     %f11,SC_FPRS+88(%r1)
+	std     %f12,SC_FPRS+96(%r1)
+	std     %f13,SC_FPRS+104(%r1)
+	std     %f14,SC_FPRS+112(%r1)
+	std     %f15,SC_FPRS+120(%r1)
 
 	/* Set __getcontext return value to 0.  */
 	slgr    %r2,%r2
 
 	/* Store access registers.  */
-	stam    %a0,%a15,SC_ACRS(%r5)
+	stam    %a0,%a15,SC_ACRS(%r1)
 
 	/* Store general purpose registers.  */
-	stmg    %r0,%r15,SC_GPRS(%r5)
+	stmg    %r0,%r15,SC_GPRS(%r1)
 
 	/* Return.  */
 	br	%r14

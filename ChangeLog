@@ -1,3 +1,14 @@
+2013-03-05  Andreas Krebbel  <Andreas.Krebbel@de.ibm.com>
+
+	* sysdeps/unix/sysv/linux/s390/s390-32/getcontext.S: Set the
+	fourth parameter needed for rt_sigprocmask syscall.
+	* sysdeps/unix/sysv/linux/s390/s390-32/setcontext.S:
+	* sysdeps/unix/sysv/linux/s390/s390-32/swapcontext.S: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/getcontext.S: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/setcontext.S: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/swapcontext.S: Likewise.
+	* sysdeps/unix/sysv/linux/s390/ucontext_i.sym: Define _NSIG8.
+
 2013-03-04  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #13550]

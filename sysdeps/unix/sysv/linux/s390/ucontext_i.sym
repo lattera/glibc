@@ -8,6 +8,8 @@ SIG_BLOCK
 SIG_UNBLOCK
 SIG_SETMASK
 
+_NSIG8          (_NSIG / 8)
+
 #define ucontext(member)	offsetof (ucontext_t, member)
 #define mcontext(member)	ucontext (uc_mcontext.member)
 
