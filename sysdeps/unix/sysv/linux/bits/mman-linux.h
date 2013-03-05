@@ -92,3 +92,10 @@
 # define POSIX_MADV_WILLNEED	3 /* Will need these pages.  */
 # define POSIX_MADV_DONTNEED	4 /* Don't need these pages.  */
 #endif
+
+/* Flags for `mlockall'.  */
+#ifndef MCL_CURRENT
+# define MCL_CURRENT	1		/* Lock all currently mapped pages.  */
+# define MCL_FUTURE	2		/* Lock all additions to address
+					   space.  */
+#endif

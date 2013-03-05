@@ -23,13 +23,6 @@
 /* The following definitions basically come from the kernel headers.
    But the kernel header is not namespace clean.  */
 
-/* Include generic Linux declarations.  */
-#include <bits/mman-linux.h>
-
-/* Other flags.  */
-#ifdef __USE_MISC
-# define MAP_RENAME	MAP_ANONYMOUS
-#endif
 
 /* These are Linux-specific.  */
 #ifdef __USE_MISC
@@ -49,3 +42,10 @@
 #define MCL_CURRENT	0x2000		/* Lock all currently mapped pages.  */
 #define MCL_FUTURE	0x4000		/* Lock all additions to address
 					   space.  */
+/* Include generic Linux declarations.  */
+#include <bits/mman-linux.h>
+
+/* Other flags.  */
+#ifdef __USE_MISC
+# define MAP_RENAME	MAP_ANONYMOUS
+#endif

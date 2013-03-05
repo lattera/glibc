@@ -23,9 +23,6 @@
 /* The following definitions basically come from the kernel headers.
    But the kernel header is not namespace clean.  */
 
-/* Include generic Linux declarations.  */
-#include <bits/mman-linux.h>
-
 /* Other flags.  */
 #ifdef __USE_MISC
 # define MAP_32BIT	0x40		/* Only give out 32-bit addresses.  */
@@ -44,7 +41,5 @@
 # define MAP_HUGETLB	0x40000		/* Create huge page mapping.  */
 #endif
 
-/* Flags for `mlockall'.  */
-#define MCL_CURRENT	1		/* Lock all currently mapped pages.  */
-#define MCL_FUTURE	2		/* Lock all additions to address
-					   space.  */
+/* Include generic Linux declarations.  */
+#include <bits/mman-linux.h>

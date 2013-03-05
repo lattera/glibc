@@ -22,10 +22,6 @@
 
 /* The following definitions basically come from the kernel headers.
    But the kernel header is not namespace clean.  */
-/* Include generic Linux declarations.  */
-
-#include <bits/mman-linux.h>
-
 
 #define PROT_SAO	0x10		/* Strong Access Ordering.  */
 
@@ -46,3 +42,6 @@
 #define MCL_CURRENT	0x2000		/* Lock all currently mapped pages.  */
 #define MCL_FUTURE	0x4000		/* Lock all additions to address
 					   space.  */
+
+/* Include generic Linux declarations.  */
+#include <bits/mman-linux.h>

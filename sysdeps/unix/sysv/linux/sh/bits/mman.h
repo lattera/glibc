@@ -23,9 +23,6 @@
 /* The following definitions basically come from the kernel headers.
    But the kernel header is not namespace clean.  */
 
-/* Include generic Linux declarations.  */
-#include <bits/mman-linux.h>
-
 /* These are Linux-specific.  */
 #ifdef __USE_MISC
 # define MAP_GROWSDOWN	0x0100		/* Stack-like segment.  */
@@ -39,7 +36,5 @@
 # define MAP_HUGETLB	0x40000		/* Create huge page mapping.  */
 #endif
 
-/* Flags for `mlockall'.  */
-#define MCL_CURRENT	1		/* Lock all currently mapped pages.  */
-#define MCL_FUTURE	2		/* Lock all additions to address
-					   space.  */
+/* Include generic Linux declarations.  */
+#include <bits/mman-linux.h>

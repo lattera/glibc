@@ -1,3 +1,23 @@
+2013-03-04  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/s390/bits/mman.h: Include
+	<bits/mman-linux.h>.
+	(MCL_CURRENT, MCL_FUTURE): Do not define here, the generic value
+	is fine.
+	* sysdeps/unix/sysv/linux/sh/bits/mman.h: Move include of
+	<bits/mman-linux.h> to end of file.
+	(MCL_CURRENT, MCL_FUTURE): Do not define here, the generic value
+	is fine.
+	* sysdeps/unix/sysv/linux/x86/bits/mman.h: Move include of
+	<bits/mman-linux.h> to end of file.
+	(MCL_CURRENT, MCL_FUTURE): Do not define here, the generic value
+	is fine.
+	* sysdeps/unix/sysv/linux/sparc/bits/mman.h: Move include of
+	<bits/mman-linux.h> to end of file.
+
+	* sysdeps/unix/sysv/linux/bits/mman-linux.h [!MCL_CURRENT]
+	(MCL_CURRENT, MCL_FUTURE): Define here.
+
 2013-03-05  Andreas Krebbel  <Andreas.Krebbel@de.ibm.com>
 
 	* sysdeps/s390/s390-32/multiarch/ifunc-resolve.c: Use
