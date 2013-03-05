@@ -1,3 +1,9 @@
+2013-03-11  Andreas Schwab  <schwab@suse.de>
+
+	[BZ #15234]
+	* sysdeps/unix/sysv/linux/arm/nptl/libpthread.abilist (GLIBC_2.4):
+	Remove pthread_atfork.
+
 2013-03-06  Richard Henderson <rth@redhat.com>
 
 	* sysdeps/arm/armv6/rawmemchr.S: New file.

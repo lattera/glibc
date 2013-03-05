@@ -73,7 +73,6 @@ GLIBC_2.17
  pause F
  pread F
  pread64 F
- pthread_atfork F
  pthread_attr_destroy F
  pthread_attr_getaffinity_np F
  pthread_attr_getdetachstate F

@@ -1,3 +1,9 @@
+2013-03-11  Andreas Schwab  <schwab@suse.de>
+
+	[BZ #15234]
+	* sysdeps/unix/sysv/linux/m68k/coldfire/nptl/libpthread.abilist
+	(GLIBC_2.4): Remove pthread_atfork.
+
 2013-03-06  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/m68k/bits/mman.h: Remove all defines

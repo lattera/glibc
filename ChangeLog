@@ -1,3 +1,11 @@
+2013-03-11  Andreas Schwab  <schwab@suse.de>
+
+	[BZ #15234]
+	* Versions.def (libpthread): Add GLIBC_2.3, so that it can be used
+	by SHLIB_COMPAT.
+	* sysdeps/unix/sysv/linux/x86_64/x32/nptl/libpthread.abilist
+	(GLIBC_2.16): Remove pthread_atfork.
+
 2013-03-08  Paul Pluzhnikov  <ppluzhnikov@google.com>
 
 	* posix/Makefile (testcases.h): Set LC_ALL=C before sed.

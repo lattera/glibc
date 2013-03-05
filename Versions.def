@@ -93,6 +93,7 @@ libpthread {
   GLIBC_2.2
   GLIBC_2.2.3
   GLIBC_2.2.6
+  GLIBC_2.3
   GLIBC_2.3.2
   GLIBC_2.3.3
   GLIBC_2.3.4
