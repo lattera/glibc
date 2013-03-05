@@ -34,9 +34,9 @@
 									\
   /* Make the declarations of the optimized functions hidden in order
      to prevent GOT slots being generated for them. */			\
-  extern __attribute__((visibility("hidden"))) void *FUNC##_z196;	\
-  extern __attribute__((visibility("hidden"))) void *FUNC##_z10;	\
-  extern __attribute__((visibility("hidden"))) void *FUNC##_g5;		\
+  extern void *FUNC##_z196 attribute_hidden;				\
+  extern void *FUNC##_z10 attribute_hidden;				\
+  extern void *FUNC##_g5 attribute_hidden;				\
 									\
   void *resolve_##FUNC (unsigned long int dl_hwcap)			\
   {									\

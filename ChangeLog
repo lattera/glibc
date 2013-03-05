@@ -1,5 +1,11 @@
 2013-03-05  Andreas Krebbel  <Andreas.Krebbel@de.ibm.com>
 
+	* sysdeps/s390/s390-32/multiarch/ifunc-resolve.c: Use
+	attribute_hidden.
+	* sysdeps/s390/s390-64/multiarch/ifunc-resolve.c: Likewise.
+
+2013-03-05  Andreas Krebbel  <Andreas.Krebbel@de.ibm.com>
+
 	* sysdeps/unix/sysv/linux/s390/s390-32/getcontext.S: Set the
 	fourth parameter needed for rt_sigprocmask syscall.
 	* sysdeps/unix/sysv/linux/s390/s390-32/setcontext.S:
