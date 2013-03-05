@@ -1,3 +1,7 @@
+2013-03-05  David S. Miller  <davem@davemloft.net>
+
+	* po/es.po: Update from translation team.
+
 2013-03-04  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/s390/bits/mman.h: Include
