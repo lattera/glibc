@@ -1,8 +1,13 @@
+2013-03-05  Paul Pluzhnikov  <ppluzhnikov@google.com>
+
+	* stdio-common/vfprintf.c (vfprintf): Check malloc return; don't
+	call free(NULL).
+
 2013-03-05  David S. Miller  <davem@davemloft.net>
 
 	* po/es.po: Update from translation team.
 
-2013-03-04  Andreas Jaeger  <aj@suse.de>
+2013-03-05  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/s390/bits/mman.h: Include
 	<bits/mman-linux.h>.

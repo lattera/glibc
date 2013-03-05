@@ -1691,7 +1691,8 @@ do_positional:
     /* Just a counter.  */
     size_t cnt;
 
-    free (workstart);
+    if (__builtin_expect (workstart != NULL, 0))
+      free (workstart);
     workstart = NULL;
 
     if (grouping == (const char *) -1)
@@ -1944,6 +1945,11 @@ do_positional:
 	      {
 		workstart = (CHAR_T *) malloc ((MAX (prec, width) + 32)
 					       * sizeof (CHAR_T));
+		if (workstart == NULL)
+		  {
+		    done = -1;
+		    goto all_done;
+		  }
 		workend = workstart + (MAX (prec, width) + 32);
 	      }
 	  }
@@ -2021,7 +2027,8 @@ do_positional:
 	    break;
 	  }
 
-	free (workstart);
+	if (__builtin_expect (workstart != NULL, 0))
+	  free (workstart);
 	workstart = NULL;
 
 	/* Write the following constant string.  */
@@ -2032,8 +2039,10 @@ do_positional:
   }
 
 all_done:
-  free (args_malloced);
-  free (workstart);
+  if (__builtin_expect (args_malloced != NULL, 0))
+    free (args_malloced);
+  if (__builtin_expect (workstart != NULL, 0))
+    free (workstart);
   /* Unlock the stream.  */
   _IO_funlockfile (s);
   _IO_cleanup_region_end (0);
