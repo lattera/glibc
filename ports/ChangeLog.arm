@@ -1,3 +1,8 @@
+2013-03-05  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/arm/bits/mman.h: Remove all defines
+	provided by bits/mman-linux.h and include <bits/mman-linux.h>.
+
 2013-02-28  Richard Henderson <rth@redhat.com>
 
 	* sysdeps/arm/preconfigure: Adjust scan for __ARM_ARCH_* defines.
