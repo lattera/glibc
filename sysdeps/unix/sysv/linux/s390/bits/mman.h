@@ -27,8 +27,6 @@
 /* These are Linux-specific.  */
 #ifdef __USE_MISC
 # define MAP_GROWSDOWN	0x00100		/* Stack-like segment.  */
-// XXX? Not defined in Linux kernel 3.8
-# define MAP_GROWSUP	0x00200		/* Register stack-like segment */
 # define MAP_DENYWRITE	0x00800		/* ETXTBSY */
 # define MAP_EXECUTABLE	0x01000		/* Mark it as an executable.  */
 # define MAP_LOCKED	0x02000		/* Lock the mapping.  */
