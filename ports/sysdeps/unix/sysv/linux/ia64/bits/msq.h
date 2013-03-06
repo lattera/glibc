@@ -24,8 +24,10 @@
 
 /* Define options for message queue functions.  */
 #define MSG_NOERROR	010000	/* no error if message is too big */
-#define MSG_EXCEPT	020000	/* recv any msg except of specified type */
-
+#ifdef __USE_GNU
+# define MSG_EXCEPT	020000	/* recv any msg except of specified type */
+# define MSG_COPY	040000	/* copy (not remove) all queue messages */
+#endif
 
 /* Structure of record for one message inside the kernel.
    The type `struct __msg' is opaque.  */

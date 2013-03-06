@@ -1,3 +1,7 @@
+2013-03-06  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/mips/bits/msq.h (MSG_COPY): Define.
+
 2013-02-27  Chung-Lin Tang  <cltang@codesourcery.com>
             Maciej W. Rozycki  <macro@codesourcery.com>
             Maxim Kuvyrkov  <maxim@codesourcery.com>

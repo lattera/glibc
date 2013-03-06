@@ -168,6 +168,9 @@ __statfs_link_max (int result, const struct statfs *fsbuf, const char *file,
 	 the hard way.  */
       return distinguish_extX (fsbuf, file, fd);
 
+    case F2FS_SUPER_MAGIC:
+      return F2FS_LINK_MAX;
+
     case MINIX_SUPER_MAGIC:
     case MINIX_SUPER_MAGIC2:
       return MINIX_LINK_MAX;
@@ -221,6 +224,9 @@ __statfs_filesize_max (int result, const struct statfs *fsbuf)
 
   switch (fsbuf->f_type)
     {
+    case F2FS_SUPER_MAGIC:
+      return 256;
+
     case BTRFS_SUPER_MAGIC:
       return 255;
 

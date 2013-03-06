@@ -1,3 +1,41 @@
+2013-03-06  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/bits/mman-linux.h (MAP_HUGE_SHIFT): Define.
+	(MAP_HUGE_MASK): Define.
+
+	* sysdeps/unix/sysv/linux/powerpc/sys/ptrace.h (PTRACE_O_EXIT_KILL):
+	Define.
+	(PTRACE_O_MASK): Adjust for PTRACE_O_EXITKILL.
+	* sysdeps/unix/sysv/linux/s390/sys/ptrace.h (PTRACE_O_EXIT_KILL):
+	Define.
+	(PTRACE_O_MASK): Adjust for PTRACE_O_EXITKILL.
+	* sysdeps/unix/sysv/linux/sys/ptrace.h (PTRACE_O_EXIT_KILL):
+	Define.
+	(PTRACE_O_MASK): Adjust for PTRACE_O_EXITKILL.
+	* sysdeps/unix/sysv/linux/sparc/sys/ptrace.h (PTRACE_O_EXITKILL):
+	Define.
+	(PTRACE_O_MASK): Adjust for PTRACE_O_EXITKILL.
+
+	* sysdeps/unix/sysv/linux/x86/bits/msq.h (MSG_COPY): Likewise.
+	* sysdeps/unix/sysv/linux/generic/bits/msq.h (MSG_COPY): Define.
+	* sysdeps/unix/sysv/linux/powerpc/bits/msq.h (MSG_COPY): Likewise.
+	* sysdeps/unix/sysv/linux/bits/msq.h (MSG_COPY): Likewise.
+	* sysdeps/unix/sysv/linux/s390/bits/msq.h (MSG_COPY): Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/msq.h (MSG_COPY): Define.
+
+	* sysdeps/unix/sysv/linux/pathconf.c (__statfs_filesize_max):
+	Handle f2fs.
+
+	* sysdeps/unix/sysv/linux/internal_statvfs.c (__statvfs_getflags):
+	Handle f2fs and efivarfs.
+
+	* sysdeps/unix/sysv/linux/pathconf.c (__statfs_link_max): Handle
+	f2fs.
+
+	* sysdeps/unix/sysv/linux/linux_fsinfo.h (F2FS_SUPER_MAGIC): Add.
+	(EFIVARFS_MAGIC): Add.
+	(F2FS_LINK_MAX): Add.
+
 2013-03-06  Paul Pluzhnikov  <ppluzhnikov@google.com>
 
 	* stdio-common/vfprintf.c: Replace __builtin_expect with

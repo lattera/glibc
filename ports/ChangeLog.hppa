@@ -1,3 +1,9 @@
+2013-03-06  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/hppa/bits/msq.h (MSG_COPY): Define.
+	* ports/sysdeps/unix/sysv/linux/hppa/bits/mman.h (MAP_HUGE_MASK)
+	(MAP_HUGE_SHIFT): Define.
+
 2013-02-14  Carlos O'Donell  <carlos@redhat.com>
 
 	* sysdeps/unix/sysv/linux/hppa/nptl/lowlevellock.c

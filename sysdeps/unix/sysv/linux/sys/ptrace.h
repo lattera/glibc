@@ -166,7 +166,8 @@ enum __ptrace_setoptions
   PTRACE_O_TRACEVFORKDONE = 0x00000020,
   PTRACE_O_TRACEEXIT	= 0x00000040,
   PTRACE_O_TRACESECCOMP = 0x00000080,
-  PTRACE_O_MASK		= 0x000000ff
+  PTRACE_O_EXITKILL	= 0x00100000,
+  PTRACE_O_MASK		= 0x001000ff
 };
 
 /* Wait extended result codes for the above trace options.  */

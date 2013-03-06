@@ -44,6 +44,9 @@
 # define MAP_ANONYMOUS	0x10		/* Don't use a file */
 # define MAP_ANON	MAP_ANONYMOUS
 # define MAP_VARIABLE	0
+/* When MAP_HUGETLB is set bits [26:31] encode the log2 of the huge page size.  */
+# define MAP_HUGE_SHIFT	26
+# define MAP_HUGE_MASK	0x3f
 #endif
 
 /* These are Linux-specific.  */

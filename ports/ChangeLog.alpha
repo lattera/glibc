@@ -1,3 +1,9 @@
+2013-03-06  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/alpha/bits/mman.h (MAP_HUGE_MASK)
+	(MAP_HUGE_SHIFT): Define.
+	* sysdeps/unix/sysv/linux/alpha/bits/msq.h (MSG_COPY): Define.
+
 2013-02-19  Richard Henderson  <rth@redhat.com>
 
 	[BZ #14920]

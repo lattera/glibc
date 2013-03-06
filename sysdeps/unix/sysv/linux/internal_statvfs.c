@@ -117,6 +117,12 @@ __statvfs_getflags (const char *name, int fstype, struct stat64 *st)
     case LUSTRE_SUPER_MAGIC:
       fsname = "lustre";
       break;
+    case F2FS_SUPER_MAGIC:
+      fsname = "f2fs";
+      break;
+    case EFIVARFS_MAGIC:
+      fsname = "efivarfs";
+      break;
     }
 
   FILE *mtab = __setmntent ("/proc/mounts", "r");
