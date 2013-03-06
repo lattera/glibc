@@ -129,6 +129,12 @@ typedef __pid_t pid_t;
 # define SEEK_END	2	/* Seek from end of file.  */
 #endif	/* XPG */
 
+/* The constants AT_REMOVEDIR and AT_EACCESS have the same value.  AT_EASSESS
+   is meaningful only to faccessat, while AT_REMOVEDIR is meaningful only to
+   unlinkat.  The two functions do completely different things and therefore,
+   the flags can be allowed to overlap.  For example, passing AT_REMOVEDIR to
+   faccessat would be undefined behavior and thus treating it equivalent to
+   AT_EACCESS is valid undefined behavior.  */
 #ifdef __USE_ATFILE
 # define AT_FDCWD		-100	/* Special value used to indicate
 					   the *at functions should use the

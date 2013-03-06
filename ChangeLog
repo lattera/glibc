@@ -1,3 +1,7 @@
+2013-03-06  Patsy Franklin  <pfrankli@redhat.com>
+
+	* io/fcntl.h: Added a comment about AT_EACCESS and AT_REMOVEDIR.
+
 2013-03-06  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/bits/mman-linux.h (MAP_ANONYMOUS): Allow
