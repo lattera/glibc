@@ -18,12 +18,10 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <sysdep.h>
-#include <bp-sym.h>
-#include <bp-asm.h>
 
 /* int [r3] memrchr (char *s [r3], int byte [r4], int size [r5])  */
 	.machine  power7
-ENTRY (BP_SYM (__memrchr))
+ENTRY (__memrchr)
 	CALL_MCOUNT
 	dcbt	0,r3
 	mr	r7,r3
@@ -174,6 +172,6 @@ L(loop_small):
 	ble	L(null)
 	b	L(loop_small)
 
-END (BP_SYM (__memrchr))
-weak_alias (BP_SYM (__memrchr), BP_SYM(memrchr))
+END (__memrchr)
+weak_alias (__memrchr, memrchr)
 libc_hidden_builtin_def (memrchr)

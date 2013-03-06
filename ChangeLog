@@ -1,3 +1,149 @@
+2013-03-06  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #13550]
+	* sysdeps/generic/bp-sym.h: Remove file.
+	* sysdeps/powerpc/powerpc64/bp-asm.h: Likewise.
+	* sysdeps/powerpc/powerpc64/__longjmp-common.S: Don't include
+	<bp-sym.h> and <bp-asm.h>.
+	(__longjmp): Don't use BP_SYM.
+	* sysdeps/powerpc/powerpc64/a2/memcpy.S: Don't include <bp-sym.h>
+	and <bp-asm.h>.
+	(memcpy): Don't use BP_SYM.
+	* sysdeps/powerpc/powerpc64/cell/memcpy.S: Don't include
+	<bp-sym.h> and <bp-asm.h>.
+	(memcpy): Don't use BP_SYM.
+	* sysdeps/powerpc/powerpc64/memcpy.S: Don't include <bp-sym.h> and
+	<bp-asm.h>.
+	(memcpy): Don't use BP_SYM.
+	* sysdeps/powerpc/powerpc64/memset.S: Don't include <bp-sym.h> and
+	<bp-asm.h>.
+	(memset): Don't use BP_SYM.
+	(memset) [__BOUNDED_POINTERS__]: Remove conditional code.
+	(memset) [!__BOUNDED_POINTERS__]: Make code unconditional.
+	(__bzero): Don't use BP_SYM.
+	(__bzero) [__BOUNDED_POINTERS__]: Remove conditional code.
+	(__bzero) [!__BOUNDED_POINTERS__]: Make code unconditional.
+	* sysdeps/powerpc/powerpc64/power4/memcmp.S: Don't include
+	<bp-sym.h> and <bp-asm.h>.
+	(memcmp): Don't use BP_SYM.  Remove comment about bounded
+	pointers.
+	* sysdeps/powerpc/powerpc64/power4/memcpy.S: Don't include
+	<bp-sym.h> and <bp-asm.h>.
+	(memcpy): Don't use BP_SYM.
+	* sysdeps/powerpc/powerpc64/power4/memset.S: Don't include
+	<bp-sym.h> and <bp-asm.h>.
+	(memset): Don't use BP_SYM.
+	(memset) [__BOUNDED_POINTERS__]: Remove conditional code.
+	(memset) [!__BOUNDED_POINTERS__]: Make code unconditional.
+	(__bzero): Don't use BP_SYM.
+	(__bzero) [__BOUNDED_POINTERS__]: Remove conditional code.
+	(__bzero) [!__BOUNDED_POINTERS__]: Make code unconditional.
+	* sysdeps/powerpc/powerpc64/power4/strncmp.S: Don't include
+	<bp-sym.h> and <bp-asm.h>.
+	(strncmp): Don't use BP_SYM.  Remove comment about bounded
+	pointers.
+	* sysdeps/powerpc/powerpc64/power6/memcpy.S: Don't include
+	<bp-sym.h> and <bp-asm.h>.
+	(memcpy): Don't use BP_SYM.
+	* sysdeps/powerpc/powerpc64/power6/memset.S: Don't include
+	<bp-sym.h> and <bp-asm.h>.
+	(memset): Don't use BP_SYM.
+	(memset) [__BOUNDED_POINTERS__]: Remove conditional code.
+	(memset) [!__BOUNDED_POINTERS__]: Make code unconditional.
+	(__bzero): Don't use BP_SYM.
+	(__bzero) [__BOUNDED_POINTERS__]: Remove conditional code.
+	(__bzero) [!__BOUNDED_POINTERS__]: Make code unconditional.
+	* sysdeps/powerpc/powerpc64/power7/memchr.S: Don't include
+	<bp-sym.h> and <bp-asm.h>.
+	(__memchr): Don't use BP_SYM.
+	* sysdeps/powerpc/powerpc64/power7/memcmp.S: Don't include
+	<bp-sym.h> and <bp-asm.h>.
+	(memcmp): Don't use BP_SYM.  Remove comment about bounded
+	pointers.
+	* sysdeps/powerpc/powerpc64/power7/memcpy.S: Don't include
+	<bp-sym.h> and <bp-asm.h>.
+	(memcpy): Don't use BP_SYM.
+	* sysdeps/powerpc/powerpc64/power7/mempcpy.S: Don't include
+	<bp-sym.h> and <bp-asm.h>.
+	(__mempcpy): Don't use BP_SYM.
+	* sysdeps/powerpc/powerpc64/power7/memrchr.S: Don't include
+	<bp-sym.h> and <bp-asm.h>.
+	(__memrchr): Don't use BP_SYM.
+	* sysdeps/powerpc/powerpc64/power7/memset.S: Don't include
+	<bp-sym.h> and <bp-asm.h>.
+	(memset): Don't use BP_SYM.
+	(__bzero): Likewise.
+	* sysdeps/powerpc/powerpc64/power7/rawmemchr.S: Don't include
+	<bp-sym.h> and <bp-asm.h>.
+	(__rawmemchr): Don't use BP_SYM.
+	* sysdeps/powerpc/powerpc64/power7/strcasecmp.S: Don't include
+	<bp-sym.h> and <bp-asm.h>.
+	(__STRCMP): Don't use BP_SYM.
+	* sysdeps/powerpc/powerpc64/power7/strchr.S: Don't include
+	<bp-sym.h> and <bp-asm.h>.
+	(strchr): Don't use BP_SYM.
+	* sysdeps/powerpc/powerpc64/power7/strchrnul.S: Don't include
+	<bp-sym.h> and <bp-asm.h>.
+	(__strchrnul): Don't use BP_SYM.
+	* sysdeps/powerpc/powerpc64/power7/strlen.S: Don't include
+	<bp-sym.h> and <bp-asm.h>.
+	(strlen): Don't use BP_SYM.
+	* sysdeps/powerpc/powerpc64/power7/strncmp.S: Don't include
+	<bp-sym.h> and <bp-asm.h>.
+	(strncmp): Don't use BP_SYM.  Remove comment about bounded
+	pointers.
+	* sysdeps/powerpc/powerpc64/power7/strnlen.S: Don't include
+	<bp-sym.h> and <bp-asm.h>.
+	(__strnlen): Don't use BP_SYM.
+	* sysdeps/powerpc/powerpc64/setjmp-common.S: Don't include
+	<bp-sym.h> and <bp-asm.h>.
+	(__GI__setjmp): Don't use BP_SYM.
+	(_setjmp): Likewise.
+	(__sigsetjmp): Likewise.
+	* sysdeps/powerpc/powerpc64/start.S: Don't include "bp-sym.h".
+	(L(start_addresses)): Don't use BP_SYM.
+	(_start): Likewise.
+	* sysdeps/powerpc/powerpc64/stpcpy.S: Don't include <bp-sym.h> and
+	<bp-asm.h>.
+	(__stpcpy): Don't use BP_SYM, CHECK_BOUNDS_LOW,
+	STORE_RETURN_BOUNDS, CHECK_BOUNDS_HIGH and STORE_RETURN_VALUE.
+	(__stpcpy) [__BOUNDED_POINTERS__]: Remove conditional code.
+	(__stpcpy) [!__BOUNDED_POINTERS__]: Make code unconditional.
+	* sysdeps/powerpc/powerpc64/strchr.S: Don't include <bp-sym.h> and
+	<bp-asm.h>.
+	(strchr): Don't use BP_SYM, CHECK_BOUNDS_LOW, STORE_RETURN_BOUNDS,
+	CHECK_BOUNDS_HIGH_RTN and STORE_RETURN_VALUE.  Remove comment
+	about bounded pointers.
+	(strchr) [__BOUNDED_POINTERS__]: Remove conditional code.
+	(strchr) [!__BOUNDED_POINTERS__]: Make code unconditional.
+	* sysdeps/powerpc/powerpc64/strcmp.S: Don't include <bp-sym.h> and
+	<bp-asm.h>.
+	(strcmp): Don't use BP_SYM and CHECK_BOUNDS_LOW.  Remove comment
+	about bounded pointers.  Remove GKM FIXME comments.
+	(strcmp) [__BOUNDED_POINTERS__]: Remove conditional code.
+	* sysdeps/powerpc/powerpc64/strcpy.S: Don't include <bp-sym.h> and
+	<bp-asm.h>.
+	(strcpy): Don't use BP_SYM, CHECK_BOUNDS_LOW and
+	STORE_RETURN_BOUNDS.  Remove comment about bounded pointers.
+	Remove GKM FIXME comments.
+	(strcpy) [__BOUNDED_POINTERS__]: Remove conditional code.
+	(strcpy) [!__BOUNDED_POINTERS__]: Make code unconditional.
+	* sysdeps/powerpc/powerpc64/strlen.S: Don't include <bp-sym.h> and
+	<bp-asm.h>.
+	(strlen): Don't use BP_SYM and CHECK_BOUNDS_LOW.  Remove comment
+	about bounded pointers.  Remove GKM FIXME comment.
+	* sysdeps/powerpc/powerpc64/strncmp.S: Don't include <bp-sym.h>
+	and <bp-asm.h>.
+	(strncmp): Don't use BP_SYM.  Remove comment about bounded
+	pointers.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/brk.S: Don't include
+	<bp-sym.h> and <bp-asm.h>.
+	(__brk): Don't use BP_SYM and DISCARD_BOUNDS.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/clone.S: Don't include
+	<bp-sym.h> and <bp-asm.h>.
+	(__clone): Don't use BP_SYM and DISCARD_BOUNDS.  Remove GKM FIXME
+	comment.
+
 2013-03-05  Paul Pluzhnikov  <ppluzhnikov@google.com>
 
 	* stdio-common/vfprintf.c (vfprintf): Check malloc return; don't

@@ -18,12 +18,10 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <sysdep.h>
-#include <bp-sym.h>
-#include <bp-asm.h>
 
 /* int [r3] strnlen (char *s [r3], int size [r4])  */
 	.machine  power7
-ENTRY (BP_SYM (__strnlen))
+ENTRY (__strnlen)
 	CALL_MCOUNT 2
 	dcbt	0,r3
 	clrrdi  r8,r3,3
@@ -167,6 +165,6 @@ L(loop_small):
 	cmpld	r9,r7
 	bge	L(end_max)
 	b	L(loop_small)
-END (BP_SYM (__strnlen))
-weak_alias (BP_SYM (__strnlen), BP_SYM(strnlen))
+END (__strnlen)
+weak_alias (__strnlen, strnlen)
 libc_hidden_builtin_def (strnlen)

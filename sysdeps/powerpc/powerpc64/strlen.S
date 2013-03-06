@@ -17,8 +17,6 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <sysdep.h>
-#include <bp-sym.h>
-#include <bp-asm.h>
 
 /* The algorithm here uses the following techniques:
 
@@ -77,7 +75,7 @@
 
 /* int [r3] strlen (char *s [r3])  */
 
-ENTRY (BP_SYM (strlen))
+ENTRY (strlen)
 	CALL_MCOUNT 1
 
 #define rTMP1	r0
@@ -93,13 +91,6 @@ ENTRY (BP_SYM (strlen))
 #define rTMP2	r10
 #define rTMP3	r11
 #define rTMP4	r12
-
-/* Note:  The Bounded pointer support in this code is broken.  This code
-   was inherited from PPC32 and that support was never completed.
-   Current PPC gcc does not support -fbounds-check or -fbounded-pointers.
-   These artifacts are left in the code as a reminder in case we need
-   bounded pointer support in the future.  */
-	CHECK_BOUNDS_LOW (rRTN, rTMP1, rTMP2)
 
 	dcbt	0,rRTN
 	clrrdi	rSTR, rRTN, 3
@@ -168,7 +159,6 @@ L(done0):
 	subf	rTMP1, rRTN, rSTR
 	srdi	rTMP3, rTMP3, 3
 	add	rRTN, rTMP1, rTMP3
-	/* GKM FIXME: check high bound.  */
 	blr
-END (BP_SYM (strlen))
+END (strlen)
 libc_hidden_builtin_def (strlen)

@@ -18,12 +18,10 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <sysdep.h>
-#include <bp-sym.h>
-#include <bp-asm.h>
 
 /* int [r3] strchr (char *s [r3], int c [r4])  */
 	.machine  power7
-ENTRY (BP_SYM(strchr))
+ENTRY (strchr)
 	CALL_MCOUNT 2
 	dcbt	0,r3
 	clrrdi	r8,r3,3	      /* Align the address to doubleword boundary.  */
@@ -198,6 +196,6 @@ L(done_null):
 	srdi	r0,r0,3	      /* Convert leading zeros to bytes.  */
 	add	r3,r8,r0      /* Return address of the matching null byte.  */
 	blr
-END (BP_SYM (strchr))
-weak_alias (BP_SYM (strchr), BP_SYM (index))
+END (strchr)
+weak_alias (strchr, index)
 libc_hidden_builtin_def (strchr)

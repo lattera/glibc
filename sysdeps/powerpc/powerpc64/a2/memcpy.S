@@ -18,8 +18,6 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <sysdep.h>
-#include <bp-sym.h>
-#include <bp-asm.h>
 
 #define PREFETCH_AHEAD 4        /* no cache lines SRC prefetching ahead  */
 #define ZERO_AHEAD 2            /* no cache lines DST zeroing ahead  */
@@ -32,7 +30,7 @@
 
 
 	.machine  a2
-EALIGN (BP_SYM (memcpy), 5, 0)
+EALIGN (memcpy, 5, 0)
 	CALL_MCOUNT 3
 
 	dcbt    0,r4            /* Prefetch ONE SRC cacheline  */
@@ -522,5 +520,5 @@ L(endloop2_128):
 	b       L(lessthancacheline)
 
 
-END_GEN_TB (BP_SYM (memcpy),TB_TOCLESS)
+END_GEN_TB (memcpy,TB_TOCLESS)
 libc_hidden_builtin_def (memcpy)

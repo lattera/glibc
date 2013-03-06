@@ -17,8 +17,6 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <sysdep.h>
-#include <bp-sym.h>
-#include <bp-asm.h>
 
 /* __ptr_t [r3] memcpy (__ptr_t dst [r3], __ptr_t src [r4], size_t len [r5]);
    Returns 'dst'.
@@ -35,7 +33,7 @@
    possible when both source and destination are doubleword aligned.
    Each case has a optimized unrolled loop.   */
 
-EALIGN (BP_SYM (memcpy), 5, 0)
+EALIGN (memcpy, 5, 0)
 	CALL_MCOUNT 3
 
     cmpldi cr1,5,31
@@ -364,5 +362,5 @@ EALIGN (BP_SYM (memcpy), 5, 0)
     ld 31,-8(1)
     ld 3,-16(1)
     blr
-END_GEN_TB (BP_SYM (memcpy),TB_TOCLESS)
+END_GEN_TB (memcpy,TB_TOCLESS)
 libc_hidden_builtin_def (memcpy)

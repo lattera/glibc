@@ -19,17 +19,14 @@
 #include <sysdep.h>
 #define _ERRNO_H	1
 #include <bits/errno.h>
-#include <bp-sym.h>
-#include <bp-asm.h>
 
 	.comm	__curbrk,8,8
 	.section	".toc","aw"
 .LC__curbrk:
 	.tc __curbrk[TC],__curbrk
 	.section ".text"
-ENTRY (BP_SYM (__brk))
+ENTRY (__brk)
 	CALL_MCOUNT 1
-	DISCARD_BOUNDS (r3)	/* the bounds are meaningless, so toss 'em.  */
 
 	std	r3,48(r1)
 	DO_CALL(SYS_ify(brk))
@@ -41,6 +38,6 @@ ENTRY (BP_SYM (__brk))
 	blelr+
 	li      r3,ENOMEM
 	TAIL_CALL_SYSCALL_ERROR
-END (BP_SYM (__brk))
+END (__brk)
 
-weak_alias (BP_SYM (__brk), BP_SYM (brk))
+weak_alias (__brk, brk)

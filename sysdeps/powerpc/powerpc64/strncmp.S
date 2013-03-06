@@ -17,14 +17,12 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <sysdep.h>
-#include <bp-sym.h>
-#include <bp-asm.h>
 
 /* See strlen.s for comments on how the end-of-string testing works.  */
 
 /* int [r3] strncmp (const char *s1 [r3], const char *s2 [r4], size_t size [r5])  */
 
-EALIGN (BP_SYM(strncmp), 4, 0)
+EALIGN (strncmp, 4, 0)
 	CALL_MCOUNT 3
 
 #define rTMP	r0
@@ -32,9 +30,6 @@ EALIGN (BP_SYM(strncmp), 4, 0)
 #define rSTR1	r3	/* first string arg */
 #define rSTR2	r4	/* second string arg */
 #define rN	r5	/* max string length */
-/* Note:  The Bounded pointer support in this code is broken.  This code
-   was inherited from PPC32 and that support was never completed.
-   Current PPC gcc does not support -fbounds-check or -fbounded-pointers.  */
 #define rWORD1	r6	/* current word in s1 */
 #define rWORD2	r7	/* current word in s2 */
 #define rFEFE	r8	/* constant 0xfefefefefefefeff (-0x0101010101010101) */
@@ -160,5 +155,5 @@ L(u1):
 L(u2):	lbzu	rWORD1, -1(rSTR1)	
 L(u3):	sub	rRTN, rWORD1, rWORD2
 	blr
-END (BP_SYM (strncmp))
+END (strncmp)
 libc_hidden_builtin_def (strncmp)

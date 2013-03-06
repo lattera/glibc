@@ -34,7 +34,6 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <sysdep.h>
-#include "bp-sym.h"
 
  /* These are the various addresses we require.  */
 #ifdef PIC
@@ -46,7 +45,7 @@
 L(start_addresses):
 	.quad	0 /* was _SDA_BASE_  but not in 64-bit ABI*/
 /*     function descriptors so don't need JUMPTARGET */
-	.quad	BP_SYM(main)
+	.quad	main
 	.quad 	__libc_csu_init
 	.quad 	__libc_csu_fini
 
@@ -71,7 +70,7 @@ ENTRY(_start)
 	ld	r8,.L01(r2)
 
  /* and continue in libc-start, in glibc.  */
-	b	JUMPTARGET(BP_SYM(__libc_start_main))
+	b	JUMPTARGET(__libc_start_main)
 /* The linker needs this nop to recognize that it's OK to call via a
    TOC adjusting stub.  */
 	nop

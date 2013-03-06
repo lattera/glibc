@@ -17,8 +17,6 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <sysdep.h>
-#include <bp-sym.h>
-#include <bp-asm.h>
 
 /* __ptr_t [r3] memset (__ptr_t s [r3], int c [r4], size_t n [r5]));
    Returns 's'.
@@ -28,22 +26,15 @@
    to 0, to take advantage of the dcbz instruction.  */
 
 	.machine power4
-EALIGN (BP_SYM (memset), 5, 0)
+EALIGN (memset, 5, 0)
 	CALL_MCOUNT 3
 
 #define rTMP	r0
 #define rRTN	r3	/* Initial value of 1st argument.  */
-#if __BOUNDED_POINTERS__
-# define rMEMP0	r4	/* Original value of 1st arg.  */
-# define rCHR	r5	/* Char to set in each byte.  */
-# define rLEN	r6	/* Length of region to set.  */
-# define rMEMP	r10	/* Address at which we are storing.  */
-#else
-# define rMEMP0	r3	/* Original value of 1st arg.  */
-# define rCHR	r4	/* Char to set in each byte.  */
-# define rLEN	r5	/* Length of region to set.  */
-# define rMEMP	r6	/* Address at which we are storing.  */
-#endif
+#define rMEMP0	r3	/* Original value of 1st arg.  */
+#define rCHR	r4	/* Char to set in each byte.  */
+#define rLEN	r5	/* Length of region to set.  */
+#define rMEMP	r6	/* Address at which we are storing.  */
 #define rALIGN	r7	/* Number of bytes we are setting now (when aligning). */
 #define rMEMP2	r8
 
@@ -51,14 +42,6 @@ EALIGN (BP_SYM (memset), 5, 0)
 #define rCLS	r8	/* Cache line size obtained from static.  */
 #define rCLM	r9	/* Cache line size mask to check for cache alignment.  */
 L(_memset):
-#if __BOUNDED_POINTERS__
-	cmpldi	cr1, rRTN, 0
-	CHECK_BOUNDS_BOTH_WIDE (rMEMP0, rTMP, rTMP2, rLEN)
-	beq	cr1, L(b0)
-	STORE_RETURN_VALUE (rMEMP0)
-	STORE_RETURN_BOUNDS (rTMP, rTMP2)
-L(b0):
-#endif
 /* Take care of case for size <= 4.  */
 	cmpldi	cr1, rLEN, 8
 	andi.	rALIGN, rMEMP0, 7
@@ -249,25 +232,16 @@ L(medium_27f):
 L(medium_28t):
 	std	rCHR, -8(rMEMP)
 	blr
-END_GEN_TB (BP_SYM (memset),TB_TOCLESS)
+END_GEN_TB (memset,TB_TOCLESS)
 libc_hidden_builtin_def (memset)
 
 /* Copied from bzero.S to prevent the linker from inserting a stub
    between bzero and memset.  */
-ENTRY (BP_SYM (__bzero))
+ENTRY (__bzero)
 	CALL_MCOUNT 3
-#if __BOUNDED_POINTERS__
-	mr	r6,r4
-	li	r5,0
-	mr	r4,r3
-	/* Tell memset that we don't want a return value.  */
-	li	r3,0
-	b	L(_memset)
-#else
 	mr	r5,r4
 	li	r4,0
 	b	L(_memset)
-#endif
-END_GEN_TB (BP_SYM (__bzero),TB_TOCLESS)
+END_GEN_TB (__bzero,TB_TOCLESS)
 
-weak_alias (BP_SYM (__bzero), BP_SYM (bzero))
+weak_alias (__bzero, bzero)

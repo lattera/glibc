@@ -24,8 +24,6 @@
 #else
 # include <jmpbuf-offsets.h>
 #endif
-#include <bp-sym.h>
-#include <bp-asm.h>
 
 #ifndef __NO_VMX__
 	.section	".toc","aw"
@@ -45,9 +43,8 @@
 #endif
 
 	.machine	"altivec"
-ENTRY (BP_SYM (__longjmp))
+ENTRY (__longjmp)
 	CALL_MCOUNT 2
-	CHECK_BOUNDS_BOTH_WIDE_LIT (r3, r8, r9, JB_SIZE)
 #ifndef __NO_VMX__
 	ld    r5,.LC__dl_hwcap@toc(r2)
 # ifdef SHARED
@@ -178,4 +175,4 @@ L(no_vmx):
 	lfd fp31,((JB_FPRS+17)*8)(r3)
 	mr r3,r4
 	blr
-END (BP_SYM (__longjmp))
+END (__longjmp)
