@@ -187,11 +187,6 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 			      __strncpy_sse2_unaligned)
 	      IFUNC_IMPL_ADD (array, i, strncpy, 1, __strncpy_sse2))
 
-  /* Support sysdeps/x86_64/multiarch/strnlen.S.  */
-  IFUNC_IMPL (i, name, strnlen,
-	      IFUNC_IMPL_ADD (array, i, strnlen, 1, __strnlen_sse2_no_bsf)
-	      IFUNC_IMPL_ADD (array, i, strnlen, 1, __strnlen_sse2))
-
   /* Support sysdeps/x86_64/multiarch/strpbrk.S.  */
   IFUNC_IMPL (i, name, strpbrk,
 	      IFUNC_IMPL_ADD (array, i, strpbrk, HAS_SSE4_2,
@@ -261,14 +256,6 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 	      IFUNC_IMPL_ADD (array, i, mempcpy, HAS_SSSE3,
 			      __mempcpy_ssse3)
 	      IFUNC_IMPL_ADD (array, i, mempcpy, 1, __mempcpy_sse2))
-
-  /* Support sysdeps/x86_64/multiarch/strlen.S.  */
-  IFUNC_IMPL (i, name, strlen,
-	      IFUNC_IMPL_ADD (array, i, strlen, HAS_SSE4_2, __strlen_sse42)
-	      IFUNC_IMPL_ADD (array, i, strlen, 1, __strlen_sse2_pminub)
-	      IFUNC_IMPL_ADD (array, i, strlen, 1, __strlen_sse2_no_bsf)
-	      IFUNC_IMPL_ADD (array, i, strlen, 1, __strlen_sse2)
-	      IFUNC_IMPL_ADD (array, i, strlen, 1, __strlen_sse2))
 
   /* Support sysdeps/x86_64/multiarch/strncmp.S.  */
   IFUNC_IMPL (i, name, strncmp,
