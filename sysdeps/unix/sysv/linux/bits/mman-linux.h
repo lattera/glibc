@@ -49,7 +49,11 @@
 #define MAP_FIXED	0x10		/* Interpret addr exactly.  */
 #ifdef __USE_MISC
 # define MAP_FILE	0
-# define MAP_ANONYMOUS	0x20		/* Don't use a file.  */
+# ifdef __MAP_ANONYMOUS
+#  define MAP_ANONYMOUS	__MAP_ANONYMOUS	/* Don't use a file.  */
+# else
+#  define MAP_ANONYMOUS	0x20		/* Don't use a file.  */
+# endif
 # define MAP_ANON	MAP_ANONYMOUS
 /* When MAP_HUGETLB is set bits [26:31] encode the log2 of the huge page size.  */
 # define MAP_HUGE_SHIFT	26

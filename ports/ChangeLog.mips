@@ -1,5 +1,9 @@
 2013-03-06  Andreas Jaeger  <aj@suse.de>
 
+	* sysdeps/unix/sysv/linux/mips/bits/mman.h: Remove all defines
+	provided by bits/mman-linux.h and include <bits/mman-linux.h>.
+	(__MAP_ANONYMOUS): Define.
+
 	* sysdeps/unix/sysv/linux/mips/bits/msq.h (MSG_COPY): Define.
 
 2013-02-27  Chung-Lin Tang  <cltang@codesourcery.com>

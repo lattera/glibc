@@ -1,5 +1,8 @@
 2013-03-06  Andreas Jaeger  <aj@suse.de>
 
+	* sysdeps/unix/sysv/linux/bits/mman-linux.h (MAP_ANONYMOUS): Allow
+	definition via __MAP_ANONYMOUS.
+
 	* sysdeps/unix/sysv/linux/s390/bits/mman.h (MAP_GROWSUP): Remove,
 	it's not part of Linux headers.
 
