@@ -180,6 +180,7 @@
 
 2013-03-05  Andreas Krebbel  <Andreas.Krebbel@de.ibm.com>
 
+	[BZ #15232]
 	* sysdeps/s390/s390-32/multiarch/ifunc-resolve.c: Use
 	attribute_hidden.
 	* sysdeps/s390/s390-64/multiarch/ifunc-resolve.c: Likewise.
