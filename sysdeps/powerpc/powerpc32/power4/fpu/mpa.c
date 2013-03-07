@@ -99,16 +99,16 @@ __mul (const mp_no *x, const mp_no *y, mp_no *z, int p)
     }
   Z[k] = zk;
 
+  int e = EX + EY;
   /* Is there a carry beyond the most significant digit?  */
   if (Z[1] == ZERO)
     {
       for (i = 1; i <= p2; i++)
 	Z[i] = Z[i + 1];
-      EZ = EX + EY - 1;
+      e--;
     }
-  else
-    EZ = EX + EY;
 
+  EZ = e;
   Z[0] = X[0] * Y[0];
 }
 
@@ -202,12 +202,13 @@ __sqr (const mp_no *x, mp_no *y, int p)
   /* Squares are always positive.  */
   Y[0] = 1.0;
 
-  EY = 2 * EX;
+  int e = EX * 2;
   /* Is there a carry beyond the most significant digit?  */
   if (__glibc_unlikely (Y[1] == ZERO))
     {
       for (i = 1; i <= p; i++)
 	Y[i] = Y[i + 1];
-      EY--;
+      e--;
     }
+  EY = e;
 }

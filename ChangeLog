@@ -1,5 +1,12 @@
 2013-03-07  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
+	* sysdeps/powerpc/powerpc32/power4/fpu/mpa.c (__mul): Use
+	intermediate variable to calculate exponent.
+	(__sqr): Likewise.
+	* sysdeps/powerpc/powerpc64/power4/fpu/mpa.c (__mul):
+	Likewise.
+	(__sqr): Likewise.
+
 	* sysdeps/ieee754/dbl-64/mpa.c [!NO__MUL]: Define __mul.
 	[!NO__SQR]: Define __sqr.
 	* sysdeps/powerpc/powerpc32/power4/fpu/mpa.c: define NO__MUL
