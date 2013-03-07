@@ -86,7 +86,8 @@ tests		:= tstgetopt testfnm runtests runptests	     \
 		   tst-rfc3484-3 \
 		   tst-getaddrinfo3 tst-fnmatch2 tst-cpucount tst-cpuset \
 		   bug-getopt1 bug-getopt2 bug-getopt3 bug-getopt4 \
-		   bug-getopt5 tst-getopt_long1 bug-regex34 bug-regex35
+		   bug-getopt5 tst-getopt_long1 bug-regex34 bug-regex35 \
+		   tst-pathconf
 xtests		:= bug-ga2
 ifeq (yes,$(build-shared))
 test-srcs	:= globtest
