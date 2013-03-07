@@ -1,5 +1,15 @@
 2013-03-07  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
+	* sysdeps/ieee754/dbl-64/slowpow.c [USE_LONG_DOUBLE_FOR_MP]
+	(__slowpow): Use long double EXPL and LOGL functions to
+	compute POW.
+	* sysdeps/powerpc/powerpc32/power4/fpu/Makefile
+	(CPPFLAGS-slowpow.c): Define USE_LONG_DOUBLE_FOR_MP.
+	* sysdeps/powerpc/powerpc32/power4/fpu/slowpow.c: Remove.
+	* sysdeps/powerpc/powerpc64/power4/fpu/Makefile
+	(CPPFLAGS-slowpow.c): Define USE_LONG_DOUBLE_FOR_MP.
+	* sysdeps/powerpc/powerpc64/power4/fpu/slowpow.c: Remove.
+
 	* sysdeps/powerpc/powerpc32/power4/fpu/mpa.c (__mul): Use
 	intermediate variable to calculate exponent.
 	(__sqr): Likewise.

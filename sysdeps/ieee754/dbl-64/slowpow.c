@@ -59,6 +59,23 @@ __slowpow (double x, double y, double z)
   if (res >= 0)
     return res;
 
+  /* Compute pow as long double.  This is currently only used by powerpc, where
+     one may get 106 bits of accuracy.  */
+#ifdef USE_LONG_DOUBLE_FOR_MP
+  long double ldw, ldz, ldpp;
+  static const long double ldeps = 0x4.0p-96;
+
+  ldz = __ieee754_logl ((long double) x);
+  ldw = (long double) y *ldz;
+  ldpp = __ieee754_expl (ldw);
+  res = (double) (ldpp + ldeps);
+  res1 = (double) (ldpp - ldeps);
+
+  /* Return the result if it is accurate enough.  */
+  if (res == res1)
+    return res;
+#endif
+
   /* Or else, calculate using multiple precision.  P = 10 implies accuracy of
      240 bits accuracy, since MP_NO has a radix of 2^24.  */
   p = 10;
