@@ -35,7 +35,8 @@ sysdep_headers += sys/mount.h sys/acct.h sys/sysctl.h \
 		  bits/a.out.h sys/inotify.h sys/signalfd.h sys/eventfd.h \
 		  sys/timerfd.h sys/fanotify.h bits/eventfd.h bits/inotify.h \
 		  bits/signalfd.h bits/timerfd.h bits/epoll.h \
-		  bits/socket_type.h bits/syscall.h bits/sysctl.h
+		  bits/socket_type.h bits/syscall.h bits/sysctl.h \
+		  bits/mman-linux.h
 
 tests += tst-clone
 
