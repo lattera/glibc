@@ -27,20 +27,23 @@
 /*Converting from double precision to Multi-precision and calculating     */
 /* e^x                                                                    */
 /**************************************************************************/
-#include "mpa.h"
 #include <math_private.h>
+
+#ifndef USE_LONG_DOUBLE_FOR_MP
+# include "mpa.h"
+void __mpexp (mp_no *x, mp_no *y, int p);
+#endif
 
 #ifndef SECTION
 # define SECTION
 #endif
-
-void __mpexp (mp_no *x, mp_no *y, int p);
 
 /*Converting from double precision to Multi-precision and calculating  e^x */
 double
 SECTION
 __slowexp (double x)
 {
+#ifndef USE_LONG_DOUBLE_FOR_MP
   double w, z, res, eps = 3.0e-26;
   int p;
   mp_no mpx, mpy, mpz, mpw, mpeps, mpcor;
@@ -66,4 +69,7 @@ __slowexp (double x)
       __mp_dbl (&mpy, &res, p);
       return res;
     }
+#else
+  return (double) __ieee754_expl((long double)x);
+#endif
 }

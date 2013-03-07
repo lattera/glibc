@@ -1,5 +1,15 @@
 2013-03-07  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
+	* sysdeps/ieee754/dbl-64/slowexp.c [!USE_LONG_DOUBLE_FOR_MP]:
+	Include mpa.h and declare __MPEXP.
+	[USE_LONG_DOUBLE_FOR_MP] (__slowexp): Call __IEEE754_EXPL.
+	* sysdeps/powerpc/powerpc32/power4/fpu/Makefile
+	(CPPFLAGS-slowexp.c): Define USE_LONG_DOUBLE_FOR_MP.
+	* sysdeps/powerpc/powerpc32/power4/fpu/slowexp.c: Remove.
+	* sysdeps/powerpc/powerpc64/power4/fpu/Makefile
+	(CPPFLAGS-slowexp.c): Define USE_LONG_DOUBLE_FOR_MP.
+	* sysdeps/powerpc/powerpc64/power4/fpu/slowexp.c: Remove.
+
 	* sysdeps/ieee754/dbl-64/slowpow.c [USE_LONG_DOUBLE_FOR_MP]
 	(__slowpow): Use long double EXPL and LOGL functions to
 	compute POW.
