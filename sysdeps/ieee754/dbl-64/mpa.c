@@ -611,6 +611,7 @@ __sub (const mp_no *x, const mp_no *y, mp_no *z, int p)
     }
 }
 
+#ifndef NO__MUL
 /* Multiply *X and *Y and store result in *Z.  X and Y may overlap but not X
    and Z or Y and Z.  For P in [1, 2, 3], the exact result is truncated to P
    digits.  In case P > 3 the error is bounded by 1.001 ULP.  */
@@ -761,7 +762,9 @@ __mul (const mp_no *x, const mp_no *y, mp_no *z, int p)
   EZ = e;
   Z[0] = X[0] * Y[0];
 }
+#endif
 
+#ifndef NO__SQR
 /* Square *X and store result in *Y.  X and Y may not overlap.  For P in
    [1, 2, 3], the exact result is truncated to P digits.  In case P > 3 the
    error is bounded by 1.001 ULP.  This is a faster special case of
@@ -862,6 +865,7 @@ __sqr (const mp_no *x, mp_no *y, int p)
 
   EY = e;
 }
+#endif
 
 /* Invert *X and store in *Y.  Relative error bound:
    - For P = 2: 1.001 * R ^ (1 - P)
