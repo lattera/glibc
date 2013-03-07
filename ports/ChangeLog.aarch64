@@ -1,3 +1,8 @@
+2013-03-07  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/aarch64/bits/mman.h: Remove all defines
+	provided by bits/mman-linux.h and include <bits/mman-linux.h>.
+
 2013-02-18  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* sysdeps/unix/sysv/linux/aarch64/nptl/libc.abilist: Add
