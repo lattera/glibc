@@ -1,3 +1,22 @@
+2013-03-08  Joseph Myers  <joseph@codesourcery.com>
+
+	* malloc/malloc.h (__malloc_size_t): Remove macro.
+	* malloc/mcheck.c (old_malloc_hook): Use size_t instead of
+	__malloc_size_t.
+	(old_memalign_hook): Likewise.
+	(old_realloc_hook): Likewise.
+	(struct hdr): Likewise.
+	(flood): Likewise.
+	(mallochook): Likewise.
+	(memalignhook): Likewise.
+	(reallochook): Likewise.
+	* malloc/mtrace.c (tr_old_malloc_hook): Likewise.
+	(tr_old_realloc_hook): Likewise.
+	(tr_old_memalign_hook): Likewise.
+	(tr_mallochook): Likewise.
+	(tr_reallochook): Likewise.
+	(tr_memalignhook): Likewise.
+
 2013-03-08  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	* sysdeps/ieee754/ldbl-128ibm/math_ldbl.h (ldbl_pack): Rename to

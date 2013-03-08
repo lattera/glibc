@@ -25,7 +25,6 @@
 # define __malloc_ptr_t  void *
 
 /* Used by GNU libc internals. */
-#define __malloc_size_t size_t
 #define __malloc_ptrdiff_t ptrdiff_t
 
 #ifdef _LIBC

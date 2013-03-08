@@ -29,11 +29,10 @@
 
 /* Old hook values.  */
 static void (*old_free_hook) (__ptr_t ptr, const __ptr_t);
-static __ptr_t (*old_malloc_hook) (__malloc_size_t size, const __ptr_t);
-static __ptr_t (*old_memalign_hook) (__malloc_size_t alignment,
-				     __malloc_size_t size,
+static __ptr_t (*old_malloc_hook) (size_t size, const __ptr_t);
+static __ptr_t (*old_memalign_hook) (size_t alignment, size_t size,
 				     const __ptr_t);
-static __ptr_t (*old_realloc_hook) (__ptr_t ptr, __malloc_size_t size,
+static __ptr_t (*old_realloc_hook) (__ptr_t ptr, size_t size,
 				    const __ptr_t);
 
 /* Function to call when something awful happens.  */
@@ -48,7 +47,7 @@ static void (*abortfunc) (enum mcheck_status);
 
 struct hdr
   {
-    __malloc_size_t size;	/* Exact size requested by user.  */
+    size_t size;		/* Exact size requested by user.  */
     unsigned long int magic;	/* Magic number to check header integrity.  */
     struct hdr *prev;
     struct hdr *next;
@@ -69,12 +68,12 @@ static int pedantic;
 # include <string.h>
 # define flood memset
 #else
-static void flood (__ptr_t, int, __malloc_size_t);
+static void flood (__ptr_t, int, size_t);
 static void
 flood (ptr, val, size)
      __ptr_t ptr;
      int val;
-     __malloc_size_t size;
+     size_t size;
 {
   char *cp = ptr;
   while (size--)
@@ -202,7 +201,7 @@ freehook (__ptr_t ptr, const __ptr_t caller)
 }
 
 static __ptr_t
-mallochook (__malloc_size_t size, const __ptr_t caller)
+mallochook (size_t size, const __ptr_t caller)
 {
   struct hdr *hdr;
 
@@ -235,11 +234,11 @@ mallochook (__malloc_size_t size, const __ptr_t caller)
 }
 
 static __ptr_t
-memalignhook (__malloc_size_t alignment, __malloc_size_t size,
+memalignhook (size_t alignment, size_t size,
 	      const __ptr_t caller)
 {
   struct hdr *hdr;
-  __malloc_size_t slop;
+  size_t slop;
   char *block;
 
   if (pedantic)
@@ -274,7 +273,7 @@ memalignhook (__malloc_size_t alignment, __malloc_size_t size,
 }
 
 static __ptr_t
-reallochook (__ptr_t ptr, __malloc_size_t size, const __ptr_t caller)
+reallochook (__ptr_t ptr, size_t size, const __ptr_t caller)
 {
   if (size == 0)
     {
@@ -283,7 +282,7 @@ reallochook (__ptr_t ptr, __malloc_size_t size, const __ptr_t caller)
     }
 
   struct hdr *hdr;
-  __malloc_size_t osize;
+  size_t osize;
 
   if (pedantic)
     mcheck_check_all ();
