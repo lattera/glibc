@@ -1,5 +1,9 @@
 2013-03-08  Joseph Myers  <joseph@codesourcery.com>
 
+	* malloc/malloc.h (__malloc_ptrdiff_t): Remove macro.
+	* malloc/morecore.c (__default_morecore): Use ptrdiff_t instead of
+	__malloc_ptrdiff_t.
+
 	* malloc/malloc.h (__malloc_size_t): Remove macro.
 	* malloc/mcheck.c (old_malloc_hook): Use size_t instead of
 	__malloc_size_t.

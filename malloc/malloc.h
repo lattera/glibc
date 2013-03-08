@@ -24,9 +24,6 @@
 #include <stdio.h>
 # define __malloc_ptr_t  void *
 
-/* Used by GNU libc internals. */
-#define __malloc_ptrdiff_t ptrdiff_t
-
 #ifdef _LIBC
 # define __MALLOC_HOOK_VOLATILE
 # define __MALLOC_DEPRECATED
