@@ -1,3 +1,14 @@
+2013-03-08  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* sysdeps/powerpc/powerpc32/power4/fpu/mpa.c: Move file...
+	* sysdeps/powerpc/power4/fpu/mpa.c: ... here.
+	* sysdeps/powerpc/powerpc32/power4/fpu/Makefile: Move file...
+	* sysdeps/powerpc/power4/fpu/Makefile: ... here.
+	* sysdeps/powerpc/powerpc64/power4/fpu/mpa.c: Remove file.
+	* sysdeps/powerpc/powerpc64/power4/fpu/Makefile: Remove file.
+	* sysdeps/powerpc/powerpc32/power4/Implies: New file.
+	* sysdeps/powerpc/powerpc64/power4/Implies: New file.
+
 2013-03-07  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/Makefile (sysdep_headers): Add
