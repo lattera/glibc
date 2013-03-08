@@ -90,10 +90,14 @@ $(common-objpfx)config.status: $(..)version.h $(..)configure \
 						    $(firstword $(wildcard \
  $(addprefix $(dir)/,configure configure.in))))) \
 			       $(patsubst %.in,%,\
+ $(wildcard $(..)sysdeps/*/preconfigure $(..)sysdeps/*/preconfigure.in)) \
+			       $(patsubst %.in,%,\
 					  $(foreach add-on,$(add-ons),\
 						    $(firstword $(wildcard \
  $(addprefix $(firstword $(filter /%,$(add-on)) $(..)$(add-on))/,\
-	     configure configure.in)))))
+	     configure configure.in))) \
+ $(wildcard $(addprefix $(firstword $(filter /%,$(add-on)) $(..)$(add-on))/,\
+			sysdeps/*/preconfigure sysdeps/*/preconfigure.in))))
 	@cd $(@D); if test -f $(@F); then exec $(SHELL) $(@F) --recheck; else \
 	 echo The GNU C library has not been configured. >&2; \
 	 echo Run \`configure\' to configure it before building. >&2; \

@@ -1,3 +1,8 @@
+2013-03-08  Roland McGrath  <roland@hack.frob.com>
+
+	* Makeconfig ($(common-objpfx)config.status): Depend on
+	sysdeps/*/preconfigure{,.in} too.
+
 2013-03-08  Joseph Myers  <joseph@codesourcery.com>
 
 	* malloc/malloc.h (__malloc_ptr_t): Remove macro.
