@@ -1,5 +1,7 @@
 2013-03-15  Thomas Schwinge  <thomas@codesourcery.com>
 
+	* math/libm-test.inc (ldexp_test): Add missing START/END markers.
+
 	* sysdeps/powerpc/fpu/test-powerpc-snan.c: Rename to
 	math/test-snan.c.
 	* math/test-snan.c: Renamed from

@@ -6381,6 +6381,8 @@ jn_test (void)
 static void
 ldexp_test (void)
 {
+  START (ldexp);
+
   TEST_ff_f (ldexp, 0, 0, 0);
   TEST_ff_f (ldexp, minus_zero, 0, minus_zero);
 
@@ -6393,6 +6395,8 @@ ldexp_test (void)
 
   /* ldexp (x, 0) == x.  */
   TEST_ff_f (ldexp, 1.0L, 0L, 1.0L);
+
+  END (ldexp);
 }
 
 
