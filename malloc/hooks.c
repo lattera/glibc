@@ -25,7 +25,7 @@
    initialization routine, then do the normal work. */
 
 static void*
-malloc_hook_ini(size_t sz, const __malloc_ptr_t caller)
+malloc_hook_ini(size_t sz, const void *caller)
 {
   __malloc_hook = NULL;
   ptmalloc_init();
@@ -33,7 +33,7 @@ malloc_hook_ini(size_t sz, const __malloc_ptr_t caller)
 }
 
 static void*
-realloc_hook_ini(void* ptr, size_t sz, const __malloc_ptr_t caller)
+realloc_hook_ini(void* ptr, size_t sz, const void *caller)
 {
   __malloc_hook = NULL;
   __realloc_hook = NULL;
@@ -42,7 +42,7 @@ realloc_hook_ini(void* ptr, size_t sz, const __malloc_ptr_t caller)
 }
 
 static void*
-memalign_hook_ini(size_t alignment, size_t sz, const __malloc_ptr_t caller)
+memalign_hook_ini(size_t alignment, size_t sz, const void *caller)
 {
   __memalign_hook = NULL;
   ptmalloc_init();

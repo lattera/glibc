@@ -144,11 +144,9 @@ int __malloc_initialized = -1;
 
 /* atfork support.  */
 
-static __malloc_ptr_t (*save_malloc_hook) (size_t __size,
-					   const __malloc_ptr_t);
-static void           (*save_free_hook) (__malloc_ptr_t __ptr,
-					 const __malloc_ptr_t);
-static void*        save_arena;
+static void *(*save_malloc_hook) (size_t __size, const void *);
+static void (*save_free_hook) (void *__ptr, const void *);
+static void *save_arena;
 
 #ifdef ATFORK_MEM
 ATFORK_MEM;

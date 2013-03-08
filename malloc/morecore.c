@@ -30,7 +30,7 @@
 
 #include <stddef.h>
 #include <stdlib.h>
-extern __malloc_ptr_t __sbrk (ptrdiff_t increment) __THROW;
+extern void *__sbrk (ptrdiff_t increment) __THROW;
 libc_hidden_proto (__sbrk)
 #endif
 
@@ -41,11 +41,11 @@ libc_hidden_proto (__sbrk)
 /* Allocate INCREMENT more bytes of data space,
    and return the start of data space, or NULL on errors.
    If INCREMENT is negative, shrink data space.  */
-__malloc_ptr_t
+void *
 __default_morecore (ptrdiff_t increment)
 {
-  __malloc_ptr_t result = (__malloc_ptr_t) __sbrk (increment);
-  if (result == (__malloc_ptr_t) -1)
+  void *result = (void *) __sbrk (increment);
+  if (result == (void *) -1)
     return NULL;
   return result;
 }

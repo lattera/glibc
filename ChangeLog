@@ -1,5 +1,34 @@
 2013-03-08  Joseph Myers  <joseph@codesourcery.com>
 
+	* malloc/malloc.h (__malloc_ptr_t): Remove macro.
+	(__free_hook): Use void * instead of __malloc_ptr_t.
+	(__malloc_hook): Likewise.
+	(__realloc_hook): Likewise.
+	(__memalign_hook): Likewise.
+	(__after_morecore_hook): Likewise.
+	* malloc/arena.c (save_malloc_hook): Likewise.
+	(save_free_hook): Likewise.
+	* malloc/hooks.c (malloc_hook_ini): Likewise.
+	(realloc_hook_ini): Likewise.
+	(memalign_hook_ini): Likewise.
+	* malloc/malloc.c (malloc_hook_ini): Likewise.
+	(realloc_hook_ini): Likewise.
+	(memalign_hook_ini): Likewise.
+	(__free_hook): Likewise.
+	(__malloc_hook): Likewise.
+	(__realloc_hook): Likewise.
+	(__memalign_hook): Likewise.
+	(__libc_malloc): Likewise.
+	(__libc_free): Likewise.
+	(__libc_realloc): Likewise.
+	(__libc_memalign): Likewise.
+	(__libc_valloc): Likewise.
+	(__libc_pvalloc): Likewise.
+	(__libc_calloc): Likewise.
+	(__posix_memalign): Likewise.
+	* malloc/morecore.c (__sbrk): Likewise.
+	(__default_morecore): Likewise.
+
 	* malloc/morecore.c (__default_morecore): Use ISO C prototype.
 
 	* malloc/malloc.h (__malloc_ptrdiff_t): Remove macro.
