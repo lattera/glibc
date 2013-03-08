@@ -42,8 +42,7 @@ libc_hidden_proto (__sbrk)
    and return the start of data space, or NULL on errors.
    If INCREMENT is negative, shrink data space.  */
 __malloc_ptr_t
-__default_morecore (increment)
-     ptrdiff_t increment;
+__default_morecore (ptrdiff_t increment)
 {
   __malloc_ptr_t result = (__malloc_ptr_t) __sbrk (increment);
   if (result == (__malloc_ptr_t) -1)

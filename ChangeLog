@@ -1,5 +1,7 @@
 2013-03-08  Joseph Myers  <joseph@codesourcery.com>
 
+	* malloc/morecore.c (__default_morecore): Use ISO C prototype.
+
 	* malloc/malloc.h (__malloc_ptrdiff_t): Remove macro.
 	* malloc/morecore.c (__default_morecore): Use ptrdiff_t instead of
 	__malloc_ptrdiff_t.
