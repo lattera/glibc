@@ -125,7 +125,7 @@ ldbl_insert_mantissa (int sign, int exp, int64_t hi64, u_int64_t lo64)
 /* Handy utility functions to pack/unpack/cononicalize and find the nearbyint
    of long double implemented as double double.  */
 static inline long double
-ldbl_pack (double a, double aa)
+default_ldbl_pack (double a, double aa)
 {
   union ibm_extended_long_double u;
   u.dd[0] = a;
@@ -134,7 +134,7 @@ ldbl_pack (double a, double aa)
 }
 
 static inline void
-ldbl_unpack (long double l, double *a, double *aa)
+default_ldbl_unpack (long double l, double *a, double *aa)
 {
   union ibm_extended_long_double u;
   u.d = l;
@@ -142,6 +142,12 @@ ldbl_unpack (long double l, double *a, double *aa)
   *aa = u.dd[1];
 }
 
+#ifndef ldbl_pack
+# define ldbl_pack   default_ldbl_pack
+#endif
+#ifndef ldbl_unpack
+# define ldbl_unpack default_ldbl_unpack
+#endif
 
 /* Convert a finite long double to canonical form.
    Does not handle +/-Inf properly.  */

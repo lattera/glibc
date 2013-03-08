@@ -1,3 +1,19 @@
+2013-03-08  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
+	* sysdeps/ieee754/ldbl-128ibm/math_ldbl.h (ldbl_pack): Rename to
+	default_ldbl_pack and using as default implementation.
+	(ldbl_unpack): Rename to default_ldbl_unpack and using as default
+	implementation.
+	* sysdeps/powerpc/fpu/math_ldbl.h (ldbl_extract_mantissa): Remove
+	redundant definition.
+	(ldbl_insert_mantissa): Likewise.
+	(ldbl_canonicalize): Likewise.
+	(ldbl_nearbyint): Likewise.
+	(ldbl_pack): Rename to ldbl_pack_ppc.
+	(ldbl_unpack): Rename to ldbl_unpack_ppc.
+	* sysdeps/unix/sysv/linux/powerpc/Implies: Remove file.
+	* sysdeps/powerpc/Implies: Add ieee754/ldbl-opt after ieee754/ldbl-128ibm.
+
 2013-03-08  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* sysdeps/powerpc/powerpc32/power4/fpu/mpa.c: Move file...
