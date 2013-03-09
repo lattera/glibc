@@ -210,11 +210,11 @@ bug-glob1-ARGS = "$(objpfx)"
 tst-execvp3-ARGS = --test-dir=$(objpfx)
 
 testcases.h: TESTS TESTS2C.sed
-	sed -f TESTS2C.sed < $< > $@T
+	LC_ALL=C sed -f TESTS2C.sed < $< > $@T
 	mv -f $@T $@
 
 ptestcases.h: PTESTS PTESTS2C.sed
-	sed -f PTESTS2C.sed < $< > $@T
+	LC_ALL=C sed -f PTESTS2C.sed < $< > $@T
 	mv -f $@T $@
 
 # Run a test on the header files we use.

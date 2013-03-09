@@ -1,3 +1,8 @@
+2013-03-08  Paul Pluzhnikov  <ppluzhnikov@google.com>
+
+	* posix/Makefile (testcases.h): Set LC_ALL=C before sed.
+	(ptestcases.h): Likewise.
+
 2013-03-08  Roland McGrath  <roland@hack.frob.com>
 
 	* Makeconfig ($(common-objpfx)config.status): Depend on
