@@ -1,5 +1,10 @@
 2013-03-10  Mike Frysinger  <vapier@gentoo.org>
 
+	* sysdeps/unix/sysv/linux/ia64/makecontext.c (__makecontext): Change
+	type of rbs to unsigned.  Change stack_start cast to unsigned.
+
+2013-03-10  Mike Frysinger  <vapier@gentoo.org>
+
 	* sysdeps/unix/sysv/linux/ia64/nptl/dl-sysdep.h:
 	Change multiple inclusion guard to _LINUX_IA64_DL_SYSDEP_H.
 	Use #include_next.

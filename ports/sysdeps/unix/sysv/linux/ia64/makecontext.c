@@ -48,7 +48,7 @@ __makecontext (ucontext_t *ucp, void (*func) (void), int argc, ...)
   extern void __start_context (ucontext_t *link, long gp, ...);
   unsigned long stack_start, stack_end;
   va_list ap;
-  long *rbs;
+  unsigned long *rbs;
   int i;
 
   stack_start = (long) sc->sc_stack.ss_sp;
@@ -72,7 +72,7 @@ makecontext: does not know how to handle more than 8 arguments\n"));
   /* set up the call frame: */
   sc->sc_ar_pfs = ((sc->sc_ar_pfs & ~0x3fffffffffUL)
 		   | (argc + 2) | ((argc + 2) << 7));
-  rbs = (long *) stack_start;
+  rbs = (unsigned long *) stack_start;
   PUSH((long) ucp->uc_link);
   PUSH(((struct fdesc *) &__start_context)->gp);
   va_start (ap, argc);
