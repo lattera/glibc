@@ -22,13 +22,9 @@
 #include <stdlib.h>
 #include <ucontext.h>
 #include <sys/rse.h>
+#include <link.h>
+#include <dl-fptr.h>
 
-
-struct fdesc
-  {
-    unsigned long ip;
-    unsigned long gp;
-  };
 
 #define PUSH(val)				\
 do {						\
@@ -65,16 +61,16 @@ makecontext: does not know how to handle more than 8 arguments\n"));
     }
 
   /* set the entry point and global pointer: */
-  sc->sc_br[0] = ((struct fdesc *) &__start_context)->ip;
-  sc->sc_br[1] = ((struct fdesc *) func)->ip;
-  sc->sc_gr[1] = ((struct fdesc *) func)->gp;
+  sc->sc_br[0] = ELF_PTR_TO_FDESC (&__start_context)->ip;
+  sc->sc_br[1] = ELF_PTR_TO_FDESC (func)->ip;
+  sc->sc_gr[1] = ELF_PTR_TO_FDESC (func)->gp;
 
   /* set up the call frame: */
   sc->sc_ar_pfs = ((sc->sc_ar_pfs & ~0x3fffffffffUL)
 		   | (argc + 2) | ((argc + 2) << 7));
   rbs = (unsigned long *) stack_start;
   PUSH((long) ucp->uc_link);
-  PUSH(((struct fdesc *) &__start_context)->gp);
+  PUSH(ELF_PTR_TO_FDESC (&__start_context)->gp);
   va_start (ap, argc);
   for (i = 0; i < argc; ++i)
     PUSH(va_arg (ap, long));

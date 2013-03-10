@@ -1,3 +1,15 @@
+2013-03-12  Mike Frysinger  <vapier@gentoo.org>
+
+	* sysdeps/ia64/dl-fptr.h (ELF_PTR_TO_FDESC): New definition.
+	* sysdeps/ia64/dl-machine.h (elf_machine_runtime_setup): Change
+	struct fdesc * casts to use new ELF_PTR_TO_FDESC helper.
+	* sysdeps/ia64/entry.h: Include link.h and dl-fptr.h.
+	(ENTRY_POINT): Change cast to use new ELF_PTR_TO_FDESC helper.
+	* sysdeps/unix/sysv/linux/ia64/makecontext.c: Include link.h and
+	dl-fptr.h.
+	(struct fdesc): Remove structure, now redundant.
+	(makecontext): Change casts to use new ELF_PTR_TO_FDESC helper.
+
 2013-03-11  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/ia64/bits/mman.h: Remove all defines

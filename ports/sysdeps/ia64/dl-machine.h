@@ -119,7 +119,7 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 
       /* This function will be called to perform the relocation.  */
       if (!profile)
-	doit = (Elf64_Addr) ((struct fdesc *) &_dl_runtime_resolve)->ip;
+	doit = (Elf64_Addr) ELF_PTR_TO_FDESC (&_dl_runtime_resolve)->ip;
       else
 	{
 	  if (GLRO(dl_profile) != NULL
@@ -129,7 +129,7 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 		 want profiling and the timers are started.  */
 	      GL(dl_profile_map) = l;
 	    }
-	  doit = (Elf64_Addr) ((struct fdesc *) &_dl_runtime_profile)->ip;
+	  doit = (Elf64_Addr) ELF_PTR_TO_FDESC (&_dl_runtime_profile)->ip;
 	}
 
       reserve[1] = doit;
