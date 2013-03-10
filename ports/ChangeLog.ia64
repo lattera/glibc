@@ -1,3 +1,12 @@
+2013-03-10  Mike Frysinger  <vapier@gentoo.org>
+
+	* sysdeps/unix/sysv/linux/ia64/nptl/dl-sysdep.h:
+	Change multiple inclusion guard to _LINUX_IA64_DL_SYSDEP_H.
+	Use #include_next.
+	(RTLD_PRIVATE_ERRNO): Remove definition, now redundant.
+	(NEED_DL_SYSINFO, _dl_discover_osversion,
+	HAVE_DL_DISCOVER_OSVERSION): Likewise.
+
 2013-03-06  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/ia64/bits/msq.h (MSG_COPY): Define.

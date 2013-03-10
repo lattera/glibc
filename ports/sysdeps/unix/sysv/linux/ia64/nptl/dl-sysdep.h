@@ -16,22 +16,10 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#ifndef _DL_SYSDEP_H
-#define _DL_SYSDEP_H	1
+#ifndef _LINUX_IA64_DL_SYSDEP_H
+#define _LINUX_IA64_DL_SYSDEP_H	1
 
-/* This macro must be defined to either 0 or 1.
-
-   If 1, then an errno global variable hidden in ld.so will work right with
-   all the errno-using libc code compiled for ld.so, and there is never a
-   need to share the errno location with libc.  This is appropriate only if
-   all the libc functions that ld.so uses are called without PLT and always
-   get the versions linked into ld.so rather than the libc ones.  */
-
-#ifdef IS_IN_rtld
-# define RTLD_PRIVATE_ERRNO 1
-#else
-# define RTLD_PRIVATE_ERRNO 0
-#endif
+#include_next <dl-sysdep.h>
 
 /* Traditionally system calls have been made using break 0x100000.  A
    second method was introduced which, if possible, will use the EPC
@@ -41,7 +29,7 @@
 #define NEED_DL_SYSINFO	1
 #define USE_DL_SYSINFO	1
 
-#if defined NEED_DL_SYSINFO && !defined __ASSEMBLER__
+#ifndef __ASSEMBLER__
 /* Don't declare this as a function---we want it's entry-point, not
    it's function descriptor... */
 extern int _dl_sysinfo_break attribute_hidden;
@@ -63,12 +51,5 @@ extern int _dl_sysinfo_break attribute_hidden;
 /* _dl_argv cannot be attribute_relro, because _dl_start_user
    might write into it after _dl_start returns.  */
 #define DL_ARGV_NOT_RELRO 1
-
-
-#ifndef __ASSEMBLER__
-/* Get version of the OS.  */
-extern int _dl_discover_osversion (void) attribute_hidden;
-# define HAVE_DL_DISCOVER_OSVERSION	1
-#endif
 
 #endif	/* dl-sysdep.h */
