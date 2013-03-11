@@ -1,3 +1,12 @@
+2013-03-11  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/arm/preconfigure.in: Add comment about
+	-fno-unwind-tables addition to CFLAGS.
+	* sysdeps/arm/preconfigure: Regenerated.
+	* sysdeps/unix/sysv/linux/arm/configure.in: Add comment about
+	-fno-unwind-tables removal from CFLAGS.
+	* sysdeps/unix/sysv/linux/arm/configure: Regenerated.
+
 2013-03-11  Roland McGrath  <roland@hack.frob.com>
 
 	* sysdeps/arm/bits/setjmp.h: Test [!__ASSEMBLER__] rather than [!_ASM].

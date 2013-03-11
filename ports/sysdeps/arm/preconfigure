@@ -5,6 +5,11 @@ case "$machine" in
 arm*)
   case $config_os in
   linux-gnueabi*)
+    # If the compiler enables unwind tables by default, this causes
+    # problems with undefined symbols in -nostdlib link tests.  To
+    # avoid this, add -fno-unwind-tables here and remove it in
+    # sysdeps/unix/sysv/linux/arm/configure.in after those tests have
+    # been run.
     if  "${CFLAGS+set}" != "set" ; then
       CFLAGS="-g -O2"
     fi
