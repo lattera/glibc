@@ -1,5 +1,8 @@
 2013-03-11  Roland McGrath  <roland@hack.frob.com>
 
+	* sysdeps/arm/memcpy.S: Use r10 instead of r9.
+	* sysdeps/arm/memmove.S: Likewise.
+
 	* sysdeps/arm/preconfigure.in: New file.
 	* sysdeps/arm/preconfigure: Replaced with generated file.
 

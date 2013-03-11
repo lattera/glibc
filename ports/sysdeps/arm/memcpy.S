@@ -189,13 +189,13 @@ ENTRY(memcpy)
 	CALGN(	subcc	r2, r2, ip		)
 	CALGN(	bcc	15f			)
 
-11:		push	{r5 - r9}
+11:		push	{r5 - r8, r10}
 		cfi_adjust_cfa_offset (20)
 		cfi_rel_offset (r5, 0)
 		cfi_rel_offset (r6, 4)
 		cfi_rel_offset (r7, 8)
 		cfi_rel_offset (r8, 12)
-		cfi_rel_offset (r9, 16)
+		cfi_rel_offset (r10, 16)
 
 	PLD(	pld	[r1, #0]		)
 	PLD(	subs	r2, r2, #96		)
@@ -208,7 +208,7 @@ ENTRY(memcpy)
 13:		ldmia	r1!, {r4, r5, r6, r7}
 		mov	r3, lr, PULL #\pull
 		subs	r2, r2, #32
-		ldmia	r1!, {r8, r9, ip, lr}
+		ldmia	r1!, {r8, r10, ip, lr}
 		orr	r3, r3, r4, PUSH #\push
 		mov	r4, r4, PULL #\pull
 		orr	r4, r4, r5, PUSH #\push
@@ -219,23 +219,23 @@ ENTRY(memcpy)
 		mov	r7, r7, PULL #\pull
 		orr	r7, r7, r8, PUSH #\push
 		mov	r8, r8, PULL #\pull
-		orr	r8, r8, r9, PUSH #\push
-		mov	r9, r9, PULL #\pull
-		orr	r9, r9, ip, PUSH #\push
+		orr	r8, r8, r10, PUSH #\push
+		mov	r10, r10, PULL #\pull
+		orr	r10, r10, ip, PUSH #\push
 		mov	ip, ip, PULL #\pull
 		orr	ip, ip, lr, PUSH #\push
-		stmia	r0!, {r3, r4, r5, r6, r7, r8, r9, ip}
+		stmia	r0!, {r3, r4, r5, r6, r7, r8, r10, ip}
 		bge	12b
 	PLD(	cmn	r2, #96			)
 	PLD(	bge	13b			)
 
-		pop	{r5 - r9}
+		pop	{r5 - r8, r10}
 		cfi_adjust_cfa_offset (-20)
 		cfi_restore (r5)
 		cfi_restore (r6)
 		cfi_restore (r7)
 		cfi_restore (r8)
-		cfi_restore (r9)
+		cfi_restore (r10)
 
 14:		ands	ip, r2, #28
 		beq	16f
