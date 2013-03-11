@@ -19,8 +19,6 @@
 /* ??? Needs more rearrangement for the STM to handle thumb mode.  */
 #define NO_THUMB
 #include <sysdep.h>
-#define _SETJMP_H
-#define _ASM
 #include <bits/setjmp.h>
 #include <rtld-global-offsets.h>
 #include <arm-features.h>
@@ -29,7 +27,7 @@ ENTRY (__sigsetjmp)
 	mov	ip, r0
 
 	/* Save registers */
-	stmia	ip!, {v1-v6, sl, fp, sp, lr}
+	stmia	ip!, JMP_BUF_REGLIST
 
 #if !defined ARM_ASSUME_NO_IWMMXT || defined __SOFTFP__
 # define NEED_HWCAP 1

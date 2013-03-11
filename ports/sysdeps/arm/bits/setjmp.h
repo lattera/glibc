@@ -24,7 +24,7 @@
 # error "Never include <bits/setjmp.h> directly; use <setjmp.h> instead."
 #endif
 
-#ifndef _ASM
+#ifndef __ASSEMBLER__
 /* The exact set of registers saved may depend on the particular core
    in use, as some coprocessor registers may need to be saved.  The C
    Library ABI requires that the buffer be 8-byte aligned, and

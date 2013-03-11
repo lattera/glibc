@@ -19,8 +19,6 @@
 /* ??? Needs more rearrangement for the LDM to handle thumb mode.  */
 #define NO_THUMB
 #include <sysdep.h>
-#define _SETJMP_H
-#define _ASM
 #include <bits/setjmp.h>
 #include <rtld-global-offsets.h>
 #include <arm-features.h>
@@ -37,7 +35,7 @@ ENTRY (__longjmp)
 	cfi_undefined (r4)
 	CHECK_SP (r4)
 #endif
-	ldmia	ip!, {v1-v6, sl, fp, sp, lr}
+	ldmia	ip!, JMP_BUF_REGLIST
 	cfi_restore (v1)
 	cfi_restore (v2)
 	cfi_restore (v3)

@@ -1,5 +1,13 @@
 2013-03-11  Roland McGrath  <roland@hack.frob.com>
 
+	* sysdeps/arm/bits/setjmp.h: Test [!__ASSEMBLER__] rather than [!_ASM].
+	* sysdeps/arm/jmpbuf-offsets.h: File removed.
+	* sysdeps/arm/jmpbuf-unwind.h: Don't #include it.
+	* sysdeps/arm/include/bits/setjmp.h: New file.
+	* sysdeps/arm/setjmp.S (_SETJMP_H, _ASM): Macros removed.
+	Use JMP_BUF_REGLIST macro.
+	* sysdeps/arm/__longjmp.S: Likewise.
+
 	* sysdeps/arm/memcpy.S: Convert to unified assembly syntax.
 	* sysdeps/arm/memmove.S: Likewise.
 	* sysdeps/arm/memset.S: Likewise.

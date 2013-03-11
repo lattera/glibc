@@ -16,7 +16,6 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <setjmp.h>
-#include <jmpbuf-offsets.h>
 #include <stdint.h>
 #include <unwind.h>
 
