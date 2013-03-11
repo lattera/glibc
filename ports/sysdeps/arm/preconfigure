@@ -1,53 +1,58 @@
+# This file is generated from configure.in by Autoconf.  DO NOT EDIT!
+ # Local preconfigure fragment for sysdeps/arm
+
 case "$machine" in
 arm*)
-	base_machine=arm
-	case $config_os in
-	linux-gnueabi*)
-		# Lets ask the compiler which ARM family we've got
-		# Unfortunately it doesn't define any flags for implementations
-		# that you might pass to -mcpu or -mtune
-		# Note if you add patterns here you must ensure that
-		# an appropriate directory exists in sysdeps/arm
-		archcppflag=`echo "" |
-		$CC $CFLAGS $CPPFLAGS -E -dM - |
-		  grep '__ARM_ARCH_[0-9].*__' |
-		  sed -e 's/^#define //' -e 's/ .*//'`
+  case $config_os in
+  linux-gnueabi*)
+    if  "${CFLAGS+set}" != "set" ; then
+      CFLAGS="-g -O2"
+    fi
+    CFLAGS="$CFLAGS -fno-unwind-tables"
+    ;;
+  linux*)
+    as_fn_error $? "Old ABI no longer supported" "$LINENO" 5
+    ;;
+  esac
 
-		case x$archcppflag in
-		x__ARM_ARCH_[89]*__)
-		  machine=armv7
-		  echo "Found compiler is configured for something newer than v7 - using v7"
-		  ;;
+  base_machine=arm
+  # Lets ask the compiler which ARM family we've got
+  # Unfortunately it doesn't define any flags for implementations
+  # that you might pass to -mcpu or -mtune
+  # Note if you add patterns here you must ensure that
+  # an appropriate directory exists in sysdeps/arm
+  archcppflag=`$CC $CFLAGS $CPPFLAGS -E -dM -xc /dev/null |
+    sed -n 's/^#define \(__ARM_ARCH_[0-9].*__\) .*$/\1/p'`
 
-		x__ARM_ARCH_7A__)
-		  machine=armv7
-		  echo "Found compiler is configured for $machine"
-		  ;;
+  case "x$archcppflag" in
+  x__ARM_ARCH_89*__)
+    machine=armv7
+    { $as_echo "$as_me:${as_lineno-$LINENO}: Found compiler is configured for something newer than v7 - using v7" >&5
+$as_echo "$as_me: Found compiler is configured for something newer than v7 - using v7" >&6;}
+    ;;
 
-		x__ARM_ARCH_6T2__)
-		  machine=armv6t2
-		  echo "Found compiler is configured for $machine"
-		  ;;
-		x__ARM_ARCH_6*__)
-		  machine=armv6
-		  echo "Found compiler is configured for $machine"
-		  ;;
-		*)
-		  machine=arm
-		  echo 2>&1 "arm/preconfigure: Did not find ARM architecture type; using default"
-		  ;;
-		esac
+  x__ARM_ARCH_7A__)
+    machine=armv7
+    { $as_echo "$as_me:${as_lineno-$LINENO}: Found compiler is configured for $machine" >&5
+$as_echo "$as_me: Found compiler is configured for $machine" >&6;}
+    ;;
 
-		machine=arm/$machine
-		if [ "${CFLAGS+set}" != "set" ]; then
-		  CFLAGS="-g -O2"
-		fi
-		CFLAGS="$CFLAGS -fno-unwind-tables"
-		;;
-	linux*)
-		echo "Old ABI no longer supported" 2>&1
-		exit 1
-		;;
-	esac
-	;;
+  x__ARM_ARCH_6T2__)
+    machine=armv6t2
+    { $as_echo "$as_me:${as_lineno-$LINENO}: Found compiler is configured for $machine" >&5
+$as_echo "$as_me: Found compiler is configured for $machine" >&6;}
+    ;;
+  x__ARM_ARCH_6*__)
+    machine=armv6
+    { $as_echo "$as_me:${as_lineno-$LINENO}: Found compiler is configured for $machine" >&5
+$as_echo "$as_me: Found compiler is configured for $machine" >&6;}
+    ;;
+  *)
+    machine=arm
+    { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: arm/preconfigure: Did not find ARM architecture type; using default" >&5
+$as_echo "$as_me: WARNING: arm/preconfigure: Did not find ARM architecture type; using default" >&2;}
+    ;;
+  esac
+
+  machine=arm/$machine
 esac

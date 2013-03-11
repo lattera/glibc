@@ -1,3 +1,8 @@
+2013-03-11  Roland McGrath  <roland@hack.frob.com>
+
+	* sysdeps/arm/preconfigure.in: New file.
+	* sysdeps/arm/preconfigure: Replaced with generated file.
+
 2013-03-11  Andreas Schwab  <schwab@suse.de>
 
 	[BZ #15234]
