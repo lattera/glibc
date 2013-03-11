@@ -53,6 +53,7 @@
 #endif
 
 		.text
+		.syntax unified
 
 /*
  * Prototype: void *memmove(void *dest, const void *src, size_t n);
@@ -100,7 +101,7 @@ ENTRY(memmove)
 		blt	5f
 
 	CALGN(	ands	ip, r1, #31		)
-	CALGN(	sbcnes	r4, ip, r2		)  @ C is always set here
+	CALGN(	sbcsne	r4, ip, r2		)  @ C is always set here
 	CALGN(	bcs	2f			)
 	CALGN(	adr	r4, 6f			)
 	CALGN(	subs	r2, r2, ip		)  @ C is set here
@@ -155,12 +156,12 @@ ENTRY(memmove)
 		cfi_restore (r8)
 
 8:		movs	r2, r2, lsl #31
-		ldrneb	r3, [r1, #-1]!
-		ldrcsb	r4, [r1, #-1]!
-		ldrcsb	ip, [r1, #-1]
-		strneb	r3, [r0, #-1]!
-		strcsb	r4, [r0, #-1]!
-		strcsb	ip, [r0, #-1]
+		ldrbne	r3, [r1, #-1]!
+		ldrbcs	r4, [r1, #-1]!
+		ldrbcs	ip, [r1, #-1]
+		strbne	r3, [r0, #-1]!
+		strbcs	r4, [r0, #-1]!
+		strbcs	ip, [r0, #-1]
 
 #if defined (__ARM_ARCH_4T__) && defined (__THUMB_INTERWORK__)
 		pop	{r0, r4, lr}
@@ -175,11 +176,11 @@ ENTRY(memmove)
 		cfi_restore_state
 
 9:		cmp	ip, #2
-		ldrgtb	r3, [r1, #-1]!
-		ldrgeb	r4, [r1, #-1]!
+		ldrbgt	r3, [r1, #-1]!
+		ldrbge	r4, [r1, #-1]!
 		ldrb	lr, [r1, #-1]!
-		strgtb	r3, [r0, #-1]!
-		strgeb	r4, [r0, #-1]!
+		strbgt	r3, [r0, #-1]!
+		strbge	r4, [r0, #-1]!
 		subs	r2, r2, ip
 		strb	lr, [r0, #-1]!
 		blt	8b
@@ -200,7 +201,7 @@ ENTRY(memmove)
 
 	CALGN(	ands	ip, r1, #31		)
 	CALGN(	rsb	ip, ip, #32		)
-	CALGN(	sbcnes	r4, ip, r2		)  @ C is always set here
+	CALGN(	sbcsne	r4, ip, r2		)  @ C is always set here
 	CALGN(	subcc	r2, r2, ip		)
 	CALGN(	bcc	15f			)
 

@@ -1,5 +1,10 @@
 2013-03-11  Roland McGrath  <roland@hack.frob.com>
 
+	* sysdeps/arm/memcpy.S: Convert to unified assembly syntax.
+	* sysdeps/arm/memmove.S: Likewise.
+	* sysdeps/arm/memset.S: Likewise.
+	* sysdeps/arm/strlen.S: Likewise.
+
 	* sysdeps/arm/memcpy.S: Use r10 instead of r9.
 	* sysdeps/arm/memmove.S: Likewise.
 
