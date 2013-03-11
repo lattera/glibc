@@ -162,80 +162,79 @@ struct exceptionl excl;
 # endif
 
 
-#define STATIC static
+#define _DECL_NUM(type, prefix, var, bytes...)	\
+  ALIGNIT static const union {			\
+    const char _bytes[sizeof (type)];		\
+    const type num;				\
+  } prefix ## var = {				\
+    ._bytes = bytes,				\
+  }
 
-ALIGNIT
-STATIC const char float_inf[4] = {0x00,0x00,0x80,0x7F};
-ALIGNIT
-STATIC const char float_huge[4] = {0xFF,0xFF,0x7F,0x7F};
-ALIGNIT
-STATIC const char float_zero[4] = {0x00,0x00,0x00,0x00};
-ALIGNIT
-STATIC const char float_neg_inf[4] = {0x00,0x00,0x80,0xFF};
-ALIGNIT
-STATIC const char float_neg_huge[4] = {0xFF,0xFF,0x7F,0xFF};
-ALIGNIT
-STATIC const char float_neg_zero[4] = {0x00,0x00,0x00,0x80};
-ALIGNIT
-STATIC const char double_inf[8] = {0x00,0x00,0x00,0x00,0x00,0x00,0xF0,0x7F};
+#define DECL_FLOAT(var, bytes...) \
+  _DECL_NUM (float, float_, var, ##bytes)
+
+DECL_FLOAT(inf,      {0x00,0x00,0x80,0x7F});
+DECL_FLOAT(huge,     {0xFF,0xFF,0x7F,0x7F});
+DECL_FLOAT(zero,     {0x00,0x00,0x00,0x00});
+DECL_FLOAT(neg_inf,  {0x00,0x00,0x80,0xFF});
+DECL_FLOAT(neg_huge, {0xFF,0xFF,0x7F,0xFF});
+DECL_FLOAT(neg_zero, {0x00,0x00,0x00,0x80});
+
+#define DECL_DOUBLE(var, bytes...) \
+  _DECL_NUM (double, double_, var, ##bytes)
+
+DECL_DOUBLE(inf,      {0x00,0x00,0x00,0x00,0x00,0x00,0xF0,0x7F});
 #ifndef _LIBC
-ALIGNIT
-STATIC const char double_huge[8] = {0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xEF,0x7F};
+DECL_DOUBLE(huge,     {0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xEF,0x7F});
 #endif
-ALIGNIT
-STATIC const char double_zero[8] = {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
-ALIGNIT
-STATIC const char double_neg_inf[8] = {0x00,0x00,0x00,0x00,0x00,0x00,0xF0,0xFF};
+DECL_DOUBLE(zero,     {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00});
+DECL_DOUBLE(neg_inf,  {0x00,0x00,0x00,0x00,0x00,0x00,0xF0,0xFF});
 #ifndef _LIBC
-ALIGNIT
-STATIC const char double_neg_huge[8] = {0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xEF,0xFF};
+DECL_DOUBLE(neg_huge, {0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xEF,0xFF});
 #endif
-ALIGNIT
-STATIC const char double_neg_zero[8] = {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x80};
-ALIGNIT
-STATIC const char long_double_inf[16] = {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x80,0xFF,0x7F,0x00,0x00,0x00,0x00,0x00,0x00};
-ALIGNIT
+DECL_DOUBLE(neg_zero, {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x80});
+
+#define DECL_LONG_DOUBLE(var, bytes...) \
+  _DECL_NUM (long double, long_double_, var, ##bytes)
+
+DECL_LONG_DOUBLE(inf,      {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x80,0xFF,0x7F,0x00,0x00,0x00,0x00,0x00,0x00});
 #ifndef _LIBC
-STATIC const char long_double_huge[16] = {0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFE,0x7F,0x00,0x00,0x00,0x00,0x00,0x00};
+DECL_LONG_DOUBLE(huge,     {0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFE,0x7F,0x00,0x00,0x00,0x00,0x00,0x00});
 #endif
-ALIGNIT
-STATIC const char long_double_zero[16] = {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
-ALIGNIT
-STATIC const char long_double_neg_inf[16] = {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x80,0xFF,0xFF,0x00,0x00,0x00,0x00,0x00,0x00};
-ALIGNIT
+DECL_LONG_DOUBLE(zero,     {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00});
+DECL_LONG_DOUBLE(neg_inf,  {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x80,0xFF,0xFF,0x00,0x00,0x00,0x00,0x00,0x00});
 #ifndef _LIBC
-STATIC const char long_double_neg_huge[16] = {0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFE,0xFF,0x00,0x00,0x00,0x00,0x00,0x00};
+DECL_LONG_DOUBLE(neg_huge, {0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFE,0xFF,0x00,0x00,0x00,0x00,0x00,0x00});
 #endif
-ALIGNIT
-STATIC const char long_double_neg_zero[16] = {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x80,0x00,0x00,0x00,0x00,0x00,0x00};
+DECL_LONG_DOUBLE(neg_zero, {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x80,0x00,0x00,0x00,0x00,0x00,0x00});
 
 
-#define RETVAL_HUGE_VALL *(long double *)retval =  *(long double *)long_double_inf
-#define RETVAL_NEG_HUGE_VALL *(long double *)retval = *(long double *)long_double_neg_inf
-#define RETVAL_HUGEL *(long double *)retval = (long double)*(float *)float_huge
-#define RETVAL_NEG_HUGEL *(long double *)retval =(long double)*(float*)float_neg_huge
+#define RETVAL_HUGE_VALL *(long double *)retval =  long_double_inf.num
+#define RETVAL_NEG_HUGE_VALL *(long double *)retval = long_double_neg_inf.num
+#define RETVAL_HUGEL *(long double *)retval = (long double)float_huge.num
+#define RETVAL_NEG_HUGEL *(long double *)retval = (long double)float_neg_huge.num
 
-#define RETVAL_HUGE_VALD *(double *)retval = *(double *) double_inf
-#define RETVAL_NEG_HUGE_VALD *(double *)retval = *(double *) double_neg_inf
-#define RETVAL_HUGED *(double *)retval = (double) *(float *)float_huge
-#define RETVAL_NEG_HUGED *(double *)retval = (double) *(float *) float_neg_huge
+#define RETVAL_HUGE_VALD *(double *)retval = double_inf.num
+#define RETVAL_NEG_HUGE_VALD *(double *)retval = double_neg_inf.num
+#define RETVAL_HUGED *(double *)retval = (double)float_huge.num
+#define RETVAL_NEG_HUGED *(double *)retval = (double)float_neg_huge.num
 
-#define RETVAL_HUGE_VALF *(float *)retval =  *(float *) float_inf
-#define RETVAL_NEG_HUGE_VALF *(float *)retval = *(float *) float_neg_inf
-#define RETVAL_HUGEF *(float *)retval = *(float *) float_huge
-#define RETVAL_NEG_HUGEF *(float *)retval = *(float *) float_neg_huge
+#define RETVAL_HUGE_VALF *(float *)retval =  float_inf.num
+#define RETVAL_NEG_HUGE_VALF *(float *)retval = float_neg_inf.num
+#define RETVAL_HUGEF *(float *)retval = float_huge.num
+#define RETVAL_NEG_HUGEF *(float *)retval = float_neg_huge.num
 
-#define ZEROL_VALUE *(long double *)long_double_zero
-#define ZEROD_VALUE *(double *)double_zero
-#define ZEROF_VALUE *(float *)float_zero
+#define ZEROL_VALUE long_double_zero.num
+#define ZEROD_VALUE double_zero.num
+#define ZEROF_VALUE float_zero.num
 
-#define RETVAL_ZEROL *(long double *)retval = *(long double *)long_double_zero
-#define RETVAL_ZEROD *(double *)retval = *(double *)double_zero
-#define RETVAL_ZEROF *(float *)retval = *(float *)float_zero
+#define RETVAL_ZEROL *(long double *)retval = long_double_zero.num
+#define RETVAL_ZEROD *(double *)retval = double_zero.num
+#define RETVAL_ZEROF *(float *)retval = float_zero.num
 
-#define RETVAL_NEG_ZEROL *(long double *)retval = *(long double *)long_double_neg_zero
-#define RETVAL_NEG_ZEROD *(double *)retval = *(double *)double_neg_zero
-#define RETVAL_NEG_ZEROF *(float *)retval = *(float *)float_neg_zero
+#define RETVAL_NEG_ZEROL *(long double *)retval = long_double_neg_zero.num
+#define RETVAL_NEG_ZEROD *(double *)retval = double_neg_zero.num
+#define RETVAL_NEG_ZEROF *(float *)retval = float_neg_zero.num
 
 #define RETVAL_ONEL *(long double *)retval = (long double) 1.0
 #define RETVAL_ONED *(double *)retval = 1.0
