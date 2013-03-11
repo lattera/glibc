@@ -1,5 +1,11 @@
 2013-03-12  Mike Frysinger  <vapier@gentoo.org>
 
+	* sysdeps/unix/sysv/linux/ia64/sysdep.h (INTERNAL_SYSCALL_DECL): Add
+	__attribute__ ((unused)) to err decl.
+	(INTERNAL_SYSCALL_ERROR_P): Add (void)val dummy reference.
+
+2013-03-12  Mike Frysinger  <vapier@gentoo.org>
+
 	* sysdeps/ia64/fpu/libm_error.c (STATIC): Delete redundant definition.
 	(_DECL_NUM, DECL_FLOAT, DECL_DOUBLE, DECL_LONG_DOUBLE): New defines.
 	(float_inf): Change definition to use DECL_FLOAT.
