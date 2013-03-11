@@ -1,3 +1,8 @@
+2013-03-13  Andreas Schwab  <schwab@suse.de>
+
+	* extra-lib.mk (extra-objs): Add static-only-routines as .oS
+	instead of .os.
+
 2013-03-13  Joseph Myers  <joseph@codesourcery.com>
 
 	* timezone/zic.c: Update from tzcode 2013b.
