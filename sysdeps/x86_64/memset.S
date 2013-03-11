@@ -23,7 +23,7 @@
 #define __STOS_UPPER_BOUNDARY	$65536
 
 	.text
-#if !defined NOT_IN_libc && !defined USE_MULTIARCH
+#if !defined NOT_IN_libc
 ENTRY(__bzero)
 	mov	%rsi,%rdx	/* Adjust parameter.  */
 	xorl	%esi,%esi	/* Fill with 0s.  */

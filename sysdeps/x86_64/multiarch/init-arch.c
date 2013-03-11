@@ -58,11 +58,6 @@ __init_cpu_features (void)
 
       get_common_indeces (&family, &model);
 
-      /* Intel processors prefer SSE instruction for memory/string
-	 routines if they are available.  */
-      __cpu_features.feature[index_Prefer_SSE_for_memop]
-	|= bit_Prefer_SSE_for_memop;
-
       unsigned int eax = __cpu_features.cpuid[COMMON_CPUID_INDEX_1].eax;
       unsigned int extended_family = (eax >> 20) & 0xff;
       unsigned int extended_model = (eax >> 12) & 0xf0;
@@ -124,12 +119,6 @@ __init_cpu_features (void)
       get_common_indeces (&family, &model);
 
       ecx = __cpu_features.cpuid[COMMON_CPUID_INDEX_1].ecx;
-
-      /* AMD processors prefer SSE instructions for memory/string routines
-	 if they are available, otherwise they prefer integer instructions.  */
-      if ((ecx & 0x200))
-	__cpu_features.feature[index_Prefer_SSE_for_memop]
-	  |= bit_Prefer_SSE_for_memop;
 
       unsigned int eax;
       __cpuid (0x80000000, eax, ebx, ecx, edx);

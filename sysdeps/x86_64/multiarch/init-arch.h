@@ -18,7 +18,6 @@
 #define bit_Fast_Rep_String		(1 << 0)
 #define bit_Fast_Copy_Backward		(1 << 1)
 #define bit_Slow_BSF			(1 << 2)
-#define bit_Prefer_SSE_for_memop	(1 << 3)
 #define bit_Fast_Unaligned_Load		(1 << 4)
 #define bit_Prefer_PMINUB_for_stringop	(1 << 5)
 #define bit_AVX_Usable			(1 << 6)
@@ -58,7 +57,6 @@
 # define index_Fast_Rep_String		FEATURE_INDEX_1*FEATURE_SIZE
 # define index_Fast_Copy_Backward	FEATURE_INDEX_1*FEATURE_SIZE
 # define index_Slow_BSF			FEATURE_INDEX_1*FEATURE_SIZE
-# define index_Prefer_SSE_for_memop	FEATURE_INDEX_1*FEATURE_SIZE
 # define index_Fast_Unaligned_Load	FEATURE_INDEX_1*FEATURE_SIZE
 # define index_Prefer_PMINUB_for_stringop FEATURE_INDEX_1*FEATURE_SIZE
 # define index_AVX_Usable		FEATURE_INDEX_1*FEATURE_SIZE
@@ -157,7 +155,6 @@ extern const struct cpu_features *__get_cpu_features (void)
 # define index_Fast_Rep_String		FEATURE_INDEX_1
 # define index_Fast_Copy_Backward	FEATURE_INDEX_1
 # define index_Slow_BSF			FEATURE_INDEX_1
-# define index_Prefer_SSE_for_memop	FEATURE_INDEX_1
 # define index_Fast_Unaligned_Load	FEATURE_INDEX_1
 # define index_AVX_Usable		FEATURE_INDEX_1
 # define index_FMA_Usable		FEATURE_INDEX_1
@@ -169,7 +166,6 @@ extern const struct cpu_features *__get_cpu_features (void)
 # define HAS_FAST_REP_STRING		HAS_ARCH_FEATURE (Fast_Rep_String)
 # define HAS_FAST_COPY_BACKWARD		HAS_ARCH_FEATURE (Fast_Copy_Backward)
 # define HAS_SLOW_BSF			HAS_ARCH_FEATURE (Slow_BSF)
-# define HAS_PREFER_SSE_FOR_MEMOP	HAS_ARCH_FEATURE (Prefer_SSE_for_memop)
 # define HAS_FAST_UNALIGNED_LOAD	HAS_ARCH_FEATURE (Fast_Unaligned_Load)
 # define HAS_AVX			HAS_ARCH_FEATURE (AVX_Usable)
 # define HAS_FMA			HAS_ARCH_FEATURE (FMA_Usable)

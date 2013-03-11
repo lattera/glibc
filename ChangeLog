@@ -1,3 +1,25 @@
+2013-03-13  Ondřej Bílka  <neleai@seznam.cz>
+
+	* sysdeps/x86_64/memset.S: Remove USE_MULTIARCH conditional for
+	definining bcopy.
+
+	* sysdeps/x86_64/multiarch/init-arch.c (__init_cpu_features):
+	Remove Prefer_SSE_for_memop.
+	* sysdeps/x86_64/multiarch/init-arch.h: Remove
+	bit_Prefer_SSE_for_memop, index_Prefer_SSE_for_memop,
+	HAS_PREFER_SSE_FOR_MEMOP.
+
+	* sysdeps/x86_64/multiarch/Makefile (sysdep_routines): Remove
+	memset-x86-64.
+
+	* sysdeps/x86_64/multiarch/ifunc-impl-list.c (__libc_ifunc_impl_list):
+	Remove zero, memset ifunc support.
+
+	* sysdeps/x86_64/multiarch/bzero.S: Remove file.
+	* sysdeps/x86_64/multiarch/memset-x86-64.S: Likewise.
+	* sysdeps/x86_64/multiarch/memset.S: Likewise.
+	* sysdeps/x86_64/multiarch/memset_chk.S: Likewise.
+
 2013-03-11  Andreas Schwab  <schwab@suse.de>
 
 	[BZ #15234]
