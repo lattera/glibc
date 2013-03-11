@@ -26,7 +26,6 @@
 /* These are Linux-specific.  */
 #ifdef __USE_MISC
 # define MAP_NORESERVE	0x0400		/* don't check for reservations */
-# define MAP_ANONYMOUS	0x0800		/* don't use a file */
 # define MAP_GROWSDOWN	0x1000		/* stack-like segment */
 # define MAP_DENYWRITE	0x2000		/* ETXTBSY */
 # define MAP_EXECUTABLE	0x4000		/* mark it as an executable */
