@@ -49,10 +49,13 @@ extern void (*__fini_array_start []) (void) attribute_hidden;
 extern void (*__fini_array_end []) (void) attribute_hidden;
 
 
+#ifndef NO_INITFINI
 /* These function symbols are provided for the .init/.fini section entry
    points automagically by the linker.  */
 extern void _init (void);
 extern void _fini (void);
+#endif
+
 
 /* These functions are passed to __libc_start_main by the startup code.
    These get statically linked into each program.  For dynamically linked
@@ -76,7 +79,9 @@ __libc_csu_init (int argc, char **argv, char **envp)
   }
 #endif
 
+#ifndef NO_INITFINI
   _init ();
+#endif
 
   const size_t size = __init_array_end - __init_array_start;
   for (size_t i = 0; i < size; i++)
@@ -94,6 +99,8 @@ __libc_csu_fini (void)
   while (i-- > 0)
     (*__fini_array_start [i]) ();
 
+# ifndef NO_INITFINI
   _fini ();
+# endif
 #endif
 }

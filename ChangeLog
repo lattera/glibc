@@ -1,3 +1,16 @@
+2013-03-12  Roland McGrath  <roland@hack.frob.com>
+
+	* sysdeps/init_array/elf-init.c: New file.
+	* csu/elf-init.c
+	(__libc_csu_init) [!NO_INITFINI]: Conditionalize _init call on this.
+	(__libc_csu_fini) [!NO_INITFINI]: Conditionalize _fini call on this.
+
+	* csu/gmon-start.c [GMON_START_ARRAY_SECTION]: Don't define
+	__gmon_start__ as global, but as static with a .preinit_array pointer.
+	* sysdeps/init_array/gmon-start.c: New file.  Use that.
+	* sysdeps/init_array/crti.S: New file, empty except for comments.
+	* sysdeps/init_array/crtn.S: Likewise.
+
 2013-03-11  Ondřej Bílka  <neleai@seznam.cz>
 
 	* sysdeps/x86_64/memset.S: Remove USE_MULTIARCH conditional for
