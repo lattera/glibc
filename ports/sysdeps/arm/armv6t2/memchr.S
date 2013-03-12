@@ -83,20 +83,20 @@ ENTRY(memchr)
 
 	orr	r1, r1, r1, lsl #8	@ expand the match word across to all bytes
 	orr	r1, r1, r1, lsl #16
-	bic	r4, r2, #7	@ Number of double words to work with * 8
+	bic	r6, r2, #7	@ Number of double words to work with * 8
 	mvns	r7, #0		@ all F's
 	movs	r3, #0
 
 15:
-	ldrd 	r5,r6, [r0],#8
-	subs	r4, r4, #8
-	eor	r5,r5, r1	@ Get it so that r5,r6 have 00's where the bytes match the target
-	eor	r6,r6, r1
+	ldrd 	r4,r5, [r0],#8
+	subs	r6, r6, #8
+	eor	r4,r4, r1	@ Get it so that r4,r5 have 00's where the bytes match the target
+	eor	r5,r5, r1
+	uadd8	r4, r4, r7	@ Parallel add 0xff - sets the GE bits for anything that wasn't 0
+	sel	r4, r3, r7	@ bytes are 00 for none-00 bytes, or ff for 00 bytes - NOTE INVERSION
 	uadd8	r5, r5, r7	@ Parallel add 0xff - sets the GE bits for anything that wasn't 0
-	sel	r5, r3, r7	@ bytes are 00 for none-00 bytes, or ff for 00 bytes - NOTE INVERSION
-	uadd8	r6, r6, r7	@ Parallel add 0xff - sets the GE bits for anything that wasn't 0
-	sel	r6, r5, r7	@ chained....bytes are 00 for none-00 bytes, or ff for 00 bytes - NOTE INVERSION
-	cbnz	r6, 60f
+	sel	r5, r4, r7	@ chained....bytes are 00 for none-00 bytes, or ff for 00 bytes - NOTE INVERSION
+	cbnz	r5, 60f
 	bne	15b		@ (Flags from the subs above) If not run out of bytes then go around again
 
 	pop	{r4,r5,r6,r7}
@@ -129,22 +129,22 @@ ENTRY(memchr)
 
 60:  @ We're here because the fast path found a hit - now we have to track down exactly which word it was
      @ r0 points to the start of the double word after the one that was tested
-     @ r5 has the 00/ff pattern for the first word, r6 has the chained value
+     @ r4 has the 00/ff pattern for the first word, r5 has the chained value
 	cfi_restore_state
-	cmp	r5, #0
+	cmp	r4, #0
 	itte	eq
-	moveq	r5, r6		@ the end is in the 2nd word
+	moveq	r4, r5		@ the end is in the 2nd word
 	subeq	r0,r0,#3	@ Points to 2nd byte of 2nd word
 	subne	r0,r0,#7	@ or 2nd byte of 1st word
 
 	@ r0 currently points to the 2nd byte of the word containing the hit
-	tst	r5, # CHARTSTMASK(0)	@ 1st character
+	tst	r4, # CHARTSTMASK(0)	@ 1st character
 	bne	61f
 	adds	r0,r0,#1
-	tst	r5, # CHARTSTMASK(1)	@ 2nd character
+	tst	r4, # CHARTSTMASK(1)	@ 2nd character
 	ittt	eq
 	addeq	r0,r0,#1
-	tsteq	r5, # (3<<15)		@ 2nd & 3rd character
+	tsteq	r4, # (3<<15)		@ 2nd & 3rd character
 	@ If not the 3rd must be the last one
 	addeq	r0,r0,#1
 
