@@ -1,3 +1,7 @@
+2013-03-13  Joseph Myers  <joseph@codesourcery.com>
+
+	* timezone/zic.c: Update from tzcode 2013b.
+
 2013-03-12  Carlos O'Donell  <carlos@redhat.com>
 
 	* manual/install.texi (Configuring and compiling):
