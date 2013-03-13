@@ -36,4 +36,8 @@
    at runtime (or that we never care about its state) and so need not
    be checked for.  */
 
+/* A more-specific arm-features.h file may define ARM_ALWAYS_BX to indicate
+   that instructions using pc as a destination register must never be used,
+   so a "bx" (or "blx") instruction is always required.  */
+
 #endif  /* arm-features.h */

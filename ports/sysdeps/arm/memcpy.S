@@ -20,6 +20,7 @@
 /* Thumb requires excessive IT insns here.  */
 #define NO_THUMB
 #include <sysdep.h>
+#include <arm-features.h>
 
 /*
  * Data preload for architectures that support it (ARM V5TE and above)
@@ -89,7 +90,12 @@ ENTRY(memcpy)
 	CALGN(	bcs	2f			)
 	CALGN(	adr	r4, 6f			)
 	CALGN(	subs	r2, r2, r3		)  @ C gets set
+#ifndef ARM_ALWAYS_BX
 	CALGN(	add	pc, r4, ip		)
+#else
+	CALGN(	add	r4, r4, ip		)
+	CALGN(	bx	r4			)
+#endif
 
 	PLD(	pld	[r1, #0]		)
 2:	PLD(	subs	r2, r2, #96		)
@@ -108,8 +114,17 @@ ENTRY(memcpy)
 
 5:		ands	ip, r2, #28
 		rsb	ip, ip, #32
+#ifndef ARM_ALWAYS_BX
 		addne	pc, pc, ip		@ C is always clear here
 		b	7f
+#else
+		beq	7f
+		push	{r10}
+		cfi_adjust_cfa_offset (4)
+		cfi_rel_offset (r10, 0)
+		add	r10, pc, ip
+		bx	r10
+#endif
 6:		nop
 		ldr	r3, [r1], #4
 		ldr	r4, [r1], #4
@@ -119,8 +134,13 @@ ENTRY(memcpy)
 		ldr	r8, [r1], #4
 		ldr	lr, [r1], #4
 
+#ifndef ARM_ALWAYS_BX
 		add	pc, pc, ip
 		nop
+#else
+		add	r10, pc, ip
+		bx	r10
+#endif
 		nop
 		str	r3, [r0], #4
 		str	r4, [r0], #4
@@ -129,6 +149,12 @@ ENTRY(memcpy)
 		str	r7, [r0], #4
 		str	r8, [r0], #4
 		str	lr, [r0], #4
+
+#ifdef ARM_ALWAYS_BX
+		pop	{r10}
+		cfi_adjust_cfa_offset (-4)
+		cfi_restore (r10)
+#endif
 
 	CALGN(	bcs	2b			)
 
@@ -147,7 +173,8 @@ ENTRY(memcpy)
 		strbcs	r4, [r0], #1
 		strbcs	ip, [r0]
 
-#if defined (__ARM_ARCH_4T__) && defined(__THUMB_INTERWORK__)
+#if ((defined (__ARM_ARCH_4T__) && defined(__THUMB_INTERWORK__)) \
+     || defined (ARM_ALWAYS_BX))
 		pop	{r0, r4, lr}
 		cfi_adjust_cfa_offset (-12)
 		cfi_restore (r4)
