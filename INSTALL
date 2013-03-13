@@ -128,6 +128,11 @@ will be used, and CFLAGS sets optimization options for the compiler.
      this can be prevented though there generally is no reason since it
      creates compatibility problems.
 
+`--enable-hardcoded-path-in-tests'
+     By default, dynamic tests are linked to run with the installed C
+     library.  This option hardcodes the newly built C library path in
+     dynamic tests so that they can be invoked directly.
+
 `--build=BUILD-SYSTEM'
 `--host=HOST-SYSTEM'
      These options are for cross-compiling.  If you specify both
@@ -141,9 +146,9 @@ will be used, and CFLAGS sets optimization options for the compiler.
      native compile but use what you specify instead of guessing what
      your system is. This is most useful to change the CPU submodel.
      For example, if `configure' guesses your machine as
-     `i586-pc-linux-gnu' but you want to compile a library for 386es,
-     give `--host=i386-pc-linux-gnu' or just `--host=i386-linux' and add
-     the appropriate compiler flags (`-mcpu=i386' will do the trick) to
+     `i686-pc-linux-gnu' but you want to compile a library for 586es,
+     give `--host=i586-pc-linux-gnu' or just `--host=i586-linux' and add
+     the appropriate compiler flags (`-mcpu=i586' will do the trick) to
      CFLAGS.
 
      If you specify just `--build', `configure' will get confused.

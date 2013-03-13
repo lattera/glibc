@@ -172,10 +172,10 @@ the compiler and/or binutils.
 If you only specify @samp{--host}, @code{configure} will prepare for a
 native compile but use what you specify instead of guessing what your
 system is. This is most useful to change the CPU submodel.  For example,
-if @code{configure} guesses your machine as @code{i586-pc-linux-gnu} but
-you want to compile a library for 386es, give
-@samp{--host=i386-pc-linux-gnu} or just @samp{--host=i386-linux} and add
-the appropriate compiler flags (@samp{-mcpu=i386} will do the trick) to
+if @code{configure} guesses your machine as @code{i686-pc-linux-gnu} but
+you want to compile a library for 586es, give
+@samp{--host=i586-pc-linux-gnu} or just @samp{--host=i586-linux} and add
+the appropriate compiler flags (@samp{-mcpu=i586} will do the trick) to
 @var{CFLAGS}.
 
 If you specify just @samp{--build}, @code{configure} will get confused.

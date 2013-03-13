@@ -1,3 +1,9 @@
+2013-03-12  Carlos O'Donell  <carlos@redhat.com>
+
+	* manual/install.texi (Configuring and compiling):
+	Mention i686 and i586.
+	* INSTALL: Regenerate.
+
 2013-03-12  Roland McGrath  <roland@hack.frob.com>
 
 	* sysdeps/init_array/elf-init.c: New file.
