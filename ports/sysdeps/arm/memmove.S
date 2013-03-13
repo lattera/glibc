@@ -107,9 +107,9 @@ ENTRY(memmove)
 	CALGN(	adr	r4, 6f			)
 	CALGN(	subs	r2, r2, ip		)  @ C is set here
 #ifndef ARM_ALWAYS_BX
-	CALGN(	add	pc, r4, ip		)
+	CALGN(	add	pc, r4, ip, lsl	#(ARM_BX_ALIGN_LOG2 - 2))
 #else
-	CALGN(	add	r4, r4, ip		)
+	CALGN(	add	r4, r4, ip, lsl	#(ARM_BX_ALIGN_LOG2 - 2))
 	CALGN(	bx	r4			)
 #endif
 
@@ -131,39 +131,56 @@ ENTRY(memmove)
 5:		ands	ip, r2, #28
 		rsb	ip, ip, #32
 #ifndef ARM_ALWAYS_BX
-		addne	pc, pc, ip		@ C is always clear here
+		/* C is always clear here.  */
+		addne	pc, pc, ip, lsl #(ARM_BX_ALIGN_LOG2 - 2)
 		b	7f
 #else
 		beq	7f
 		push	{r10}
 		cfi_adjust_cfa_offset (4)
 		cfi_rel_offset (r10, 0)
-		add	r10, pc, ip
+		add	r10, pc, ip, lsl #(ARM_BX_ALIGN_LOG2 - 2)
 		bx	r10
 #endif
+		.p2align ARM_BX_ALIGN_LOG2
 6:		nop
+		.p2align ARM_BX_ALIGN_LOG2
 		ldr	r3, [r1, #-4]!
+		.p2align ARM_BX_ALIGN_LOG2
 		ldr	r4, [r1, #-4]!
+		.p2align ARM_BX_ALIGN_LOG2
 		ldr	r5, [r1, #-4]!
+		.p2align ARM_BX_ALIGN_LOG2
 		ldr	r6, [r1, #-4]!
+		.p2align ARM_BX_ALIGN_LOG2
 		ldr	r7, [r1, #-4]!
+		.p2align ARM_BX_ALIGN_LOG2
 		ldr	r8, [r1, #-4]!
+		.p2align ARM_BX_ALIGN_LOG2
 		ldr	lr, [r1, #-4]!
 
 #ifndef ARM_ALWAYS_BX
-		add	pc, pc, ip
+		add	pc, pc, ip, lsl #(ARM_BX_ALIGN_LOG2 - 2)
 		nop
 #else
-		add	r10, pc, ip
+		add	r10, pc, ip, lsl #(ARM_BX_ALIGN_LOG2 - 2)
 		bx	r10
 #endif
+		.p2align ARM_BX_ALIGN_LOG2
 		nop
+		.p2align ARM_BX_ALIGN_LOG2
 		str	r3, [r0, #-4]!
+		.p2align ARM_BX_ALIGN_LOG2
 		str	r4, [r0, #-4]!
+		.p2align ARM_BX_ALIGN_LOG2
 		str	r5, [r0, #-4]!
+		.p2align ARM_BX_ALIGN_LOG2
 		str	r6, [r0, #-4]!
+		.p2align ARM_BX_ALIGN_LOG2
 		str	r7, [r0, #-4]!
+		.p2align ARM_BX_ALIGN_LOG2
 		str	r8, [r0, #-4]!
+		.p2align ARM_BX_ALIGN_LOG2
 		str	lr, [r0, #-4]!
 
 #ifdef ARM_ALWAYS_BX

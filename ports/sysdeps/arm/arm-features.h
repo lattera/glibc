@@ -40,4 +40,17 @@
    that instructions using pc as a destination register must never be used,
    so a "bx" (or "blx") instruction is always required.  */
 
+/* The log2 of the minimum alignment required for an address that
+   is the target of a computed branch (i.e. a "bx" instruction).
+   A more-specific arm-features.h file may define this to set a more
+   stringent requirement.
+
+   Using this only makes sense for code in ARM mode (where instructions
+   always have a fixed size of four bytes), or for Thumb-mode code that is
+   specifically aligning all the related branch targets to match (since
+   Thumb instructions might be either two or four bytes).  */
+#ifndef ARM_BX_ALIGN_LOG2
+# define ARM_BX_ALIGN_LOG2	2
+#endif
+
 #endif  /* arm-features.h */

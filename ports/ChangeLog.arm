@@ -1,5 +1,9 @@
 2013-03-13  Roland McGrath  <roland@hack.frob.com>
 
+	* sysdeps/arm/arm-features.h (ARM_BX_ALIGN_LOG2): New macro.
+	* sysdeps/arm/memcpy.S: Respect ARM_BX_ALIGN_LOG2.
+	* sysdeps/arm/memmove.S: Likewise.
+
 	* sysdeps/arm/add_n.S: Include <arm-features.h>.
 	[ARM_ALWAYS_BX]: Don't pop into pc.
 
