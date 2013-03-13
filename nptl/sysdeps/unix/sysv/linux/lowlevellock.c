@@ -21,7 +21,7 @@
 #include <sysdep.h>
 #include <lowlevellock.h>
 #include <sys/time.h>
-
+#include <atomic.h>
 
 void
 __lll_lock_wait_private (int *futex)

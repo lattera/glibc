@@ -1,3 +1,7 @@
+2013-03-12  Carlos O'Donell  <carlos@redhat.com>
+
+	* sysdeps/unix/sysv/linux/lowlevellock.c: Include <atomic.h>.
+
 2013-03-04  Roland McGrath  <roland@hack.frob.com>
 
 	* sysdeps/unix/sysv/linux/i386/i686/dl-sysdep.h:
