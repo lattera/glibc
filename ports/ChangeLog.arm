@@ -1,5 +1,8 @@
 2013-03-13  Roland McGrath  <roland@hack.frob.com>
 
+	* sysdeps/arm/add_n.S: Include <arm-features.h>.
+	[ARM_ALWAYS_BX]: Don't pop into pc.
+
 	* sysdeps/arm/arm-features.h: Add comment about ARM_ALWAYS_BX.
 	* sysdeps/arm/memcpy.S: Include <arm-features.h>.
 	[ARM_ALWAYS_BX]: Avoid pc as destination.

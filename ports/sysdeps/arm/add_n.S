@@ -17,6 +17,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <sysdep.h>
+#include <arm-features.h>
 
 	.syntax unified
 	.text
@@ -80,5 +81,10 @@ ENTRY (FUNC)
 
 9:
 	RETC				/* copy carry out */
+#ifndef ARM_ALWAYS_BX
 	pop	{ r4, r5, r6, r7, r8, r10, pc }
+#else
+	pop	{ r4, r5, r6, r7, r8, r10, lr }
+	bx	lr
+#endif
 END (FUNC)
