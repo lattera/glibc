@@ -1,3 +1,9 @@
+2013-03-14  Petr Baudis  <pasky@ucw.cz>
+
+	* sysdeps/unix/sysv/linux/times.c (__times): On EFAULT, test
+	for non-NULL pointer before the memory validity test. Pointed
+	out by Holger Brunck <holger.brunck@keymile.com>.
+
 2013-03-13  Andreas Schwab  <schwab@suse.de>
 
 	* extra-lib.mk (extra-objs): Add static-only-routines as .oS

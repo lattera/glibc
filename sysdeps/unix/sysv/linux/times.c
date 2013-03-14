@@ -26,13 +26,14 @@ __times (struct tms *buf)
   INTERNAL_SYSCALL_DECL (err);
   clock_t ret = INTERNAL_SYSCALL (times, err, 1, buf);
   if (INTERNAL_SYSCALL_ERROR_P (ret, err)
-      && __builtin_expect (INTERNAL_SYSCALL_ERRNO (ret, err) == EFAULT, 0))
+      && __builtin_expect (INTERNAL_SYSCALL_ERRNO (ret, err) == EFAULT, 0)
+      && buf)
     {
       /* This might be an error or not.  For architectures which have
 	 no separate return value and error indicators we cannot
 	 distinguish a return value of -1 from an error.  Do it the
-	 hard way.  We crash applications which pass in an invalid BUF
-	 pointer.  */
+	 hard way.  We crash applications which pass in an invalid
+	 non-NULL BUF pointer.  Linux allows BUF to be NULL. */
 #define touch(v) \
       do {								      \
 	clock_t temp = v;						      \
@@ -44,7 +45,8 @@ __times (struct tms *buf)
       touch (buf->tms_cutime);
       touch (buf->tms_cstime);
 
-      /* If we come here the memory is valid and the kernel did not
+      /* If we come here the memory is valid (or BUF is NULL, which is
+       * a valid condition for the kernel syscall) and the kernel did not
 	 return an EFAULT error.  Return the value given by the kernel.  */
     }
 
