@@ -46,7 +46,7 @@ __times (struct tms *buf)
       touch (buf->tms_cstime);
 
       /* If we come here the memory is valid (or BUF is NULL, which is
-       * a valid condition for the kernel syscall) and the kernel did not
+         a valid condition for the kernel syscall) and the kernel did not
 	 return an EFAULT error.  Return the value given by the kernel.  */
     }
 

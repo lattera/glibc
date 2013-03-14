@@ -1,3 +1,7 @@
+2013-03-14  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* sysdeps/unix/sysv/linux/times.c (__times): Fix formatting.
+
 2013-03-14  Petr Baudis  <pasky@ucw.cz>
 
 	* sysdeps/unix/sysv/linux/times.c (__times): On EFAULT, test
