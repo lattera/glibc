@@ -1,0 +1,44 @@
+@node POSIX Threads
+@c @node POSIX Threads, , Cryptographic Functions, Top
+@chapter POSIX Threads
+@c %MENU% POSIX Threads
+@cindex threads
+
+This chapter describes the @glibcadj{} POSIX Thread implementation.
+
+@menu
+* Thread-specific Data::          Support for creating and
+				  managing thread-specific data
+@end menu
+
+@node Thread-specific Data
+@section Thread-specific Data
+
+The @glibcadj{} implements functions to allow users to create and manage
+data specific to a thread.  Such data may be destroyed at thread exit,
+if a destructor is provided.  The following functions are defined:
+
+@table @code
+
+@item int pthread_key_create (pthread_key_t *@var{key}, void (*@var{destructor})(void*))
+Create a thread-specific data key for the calling thread, referenced by
+@var{key}.
+
+Objects declared with the C++11 @code{thread_local} keyword are destroyed
+before thread-specific data, so they should not be used in thread-specific
+data destructors or even as members of the thread-specific data, since the
+latter is passed as an argument to the destructor function.
+
+@item int pthread_key_delete (pthread_key_t @var{key})
+Destroy the thread-specific data @var{key} in the calling thread.  The
+destructor for the thread-specific data is not called during destruction, nor
+is it called during thread exit.
+
+@item void *pthread_getspecific (pthread_key_t @var{key})
+Return the thread-specific data associated with @var{key} in the calling
+thread.
+
+@item int pthread_setspecific (pthread_key_t @var{key}, const void *@var{value})
+Associate the thread-specific @var{value} with @var{key} in the calling thread.
+
+@end table

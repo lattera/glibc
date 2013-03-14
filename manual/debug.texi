@@ -1,5 +1,5 @@
 @node Debugging Support
-@c @node Debugging Support, , Cryptographic Functions, Top
+@c @node Debugging Support, POSIX Threads, Cryptographic Functions, Top
 @c %MENU% Functions to help debugging applications
 @chapter Debugging support
 

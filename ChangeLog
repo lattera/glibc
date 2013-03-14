@@ -1,5 +1,10 @@
 2013-03-14  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
+	* manual/Makefile (chapters): Add nptl.
+	* manual/debug.texi (Debugging Support): Add link to Threads
+	chapter.
+	* manual/nptl.texi: New file.
+
 	* sysdeps/unix/sysv/linux/times.c (__times): Fix formatting.
 
 2013-03-14  Petr Baudis  <pasky@ucw.cz>
