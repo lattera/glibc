@@ -23,6 +23,8 @@ Version 2.18
 * Support for priority inherited mutexes in pthread condition variables on
   non-x86 architectures.
 
+* Added a benchmark framework to track performance of functions in glibc.
+
 
 Version 2.17
 

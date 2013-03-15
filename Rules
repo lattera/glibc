@@ -83,7 +83,7 @@ common-generated += dummy.o dummy.c
 
 # This makes all the auxiliary and test programs.
 
-.PHONY: others tests
+.PHONY: others tests bench
 ifeq ($(multi-arch),no)
 tests := $(filter-out $(tests-ifunc), $(tests))
 xtests := $(filter-out $(xtests-ifunc), $(xtests))
@@ -188,6 +188,31 @@ $(objpfx)%.out: /dev/null $(objpfx)%	# Make it 2nd arg for canned sequence.
 	$(make-test-out) > $@
 
 endif	# tests
+
+# Build and run benchmark programs.
+binaries-bench := $(addprefix $(objpfx)bench-,$(bench))
+
+run-bench = $(test-wrapper-env) \
+	    GCONV_PATH=$(common-objpfx)iconvdata LC_ALL=C \
+	    $($*-ENV) $(run-via-rtld-prefix) $${run}
+
+bench: $(binaries-bench)
+	if [ -f $(objpfx)bench.out ]; then \
+	  mv -f $(objpfx)bench.out $(objpfx)bench.out.old; \
+	fi
+	for run in $^; do \
+	  eval $(run-bench) >>  $(objpfx)bench.out; \
+	done
+
+$(binaries-bench): %: %.o \
+  $(sort $(filter $(common-objpfx)lib%,$(link-libc))) \
+  $(addprefix $(csu-objpfx),start.o) $(+preinit) $(+postinit)
+	$(+link)
+
+$(objpfx)bench-%.c: %-inputs bench-skeleton.c
+	$(..)scripts/bench.pl $(patsubst %-inputs,%,$<) \
+	  $($*-ITER) $($*-ARGLIST) $($*-RET) > $@
+
 
 .PHONY: distclean realclean subdir_distclean subdir_realclean \
 	subdir_clean subdir_mostlyclean subdir_testclean

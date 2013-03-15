@@ -3,7 +3,7 @@ srcdir = @srcdir@
 # Uncomment the line below if you want to do parallel build.
 # PARALLELMFLAGS = -j 4
 
-.PHONY: all install
+.PHONY: all install bench
 
 all .DEFAULT:
 	$(MAKE) -r PARALLELMFLAGS="$(PARALLELMFLAGS)" -C $(srcdir) objdir=`pwd` $@
@@ -11,3 +11,6 @@ all .DEFAULT:
 install:
 	LANGUAGE=C LC_ALL=C; export LANGUAGE LC_ALL; \
 	$(MAKE) -r PARALLELMFLAGS="$(PARALLELMFLAGS)" -C $(srcdir) objdir=`pwd` $@
+
+bench:
+	$(MAKE) -C $(srcdir)/benchtests $(PARALLELMFLAGS) objdir=`pwd` $@

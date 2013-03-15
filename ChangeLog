@@ -1,4 +1,21 @@
 2013-03-15  Siddhesh Poyarekar  <siddhesh@redhat.com>
+	    Richard Henderson  <rth@redhat.com>
+	    Tulio Magno Quites Machado Filho  <tuliom@linux.vnet.ibm.com>
+
+	* Makefile.in (bench): New target.
+	* NEWS: Mention the benchmark framework.
+	* Rules (bench): Likewise.
+	(binaries-bench): Generate binaries for functions to
+	benchmark.
+	* benchtests/Makefile: New makefile for benchmark tests.
+	* benchtests/bench-skeleton.c: New skeleton file for benchmark
+	programs.
+	* benchtests/exp-inputs: New input file for EXP function.
+	* benchtests/pow-inputs: New input file for POW function.
+	* scripts/bench.pl: New script to generate source files for
+	benchmark programs.
+
+2013-03-15  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* sysdeps/ieee754/dbl-64/mpa-arch.h: New file.
 	* sysdeps/ieee754/dbl-64/mpa.c (norm): Use MANTISSA_T to store
