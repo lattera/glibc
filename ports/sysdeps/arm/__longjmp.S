@@ -31,11 +31,13 @@ ENTRY (__longjmp)
 	moveq	r0, #1		/* can't let setjmp() return zero! */
 
 #ifdef CHECK_SP
-	ldr	r4, [ip, #32]	/* jmpbuf's sp */
+	sfi_breg ip, \
+	ldr	r4, [\B, #32]	/* jmpbuf's sp */
 	cfi_undefined (r4)
 	CHECK_SP (r4)
 #endif
-	ldmia	ip!, JMP_BUF_REGLIST
+	sfi_breg ip, \
+	ldmia	\B!, JMP_BUF_REGLIST
 	cfi_restore (v1)
 	cfi_restore (v2)
 	cfi_restore (v3)
@@ -79,9 +81,11 @@ ENTRY (__longjmp)
 
 	/* Restore the VFP registers.  */
 	/* Following instruction is vldmia ip!, {d8-d15}.  */
-	ldc	p11, cr8, [r12], #64
+	sfi_breg r12, \
+	ldc	p11, cr8, [\B], #64
 	/* Restore the floating-point status register.  */
-	ldr     a3, [ip], #4
+	sfi_breg ip, \
+	ldr     a3, [\B], #4
 	/* Following instruction is fmxr fpscr, a3.  */
 	mcr	p10, 7, a3, cr1, cr0, 0
 .Lno_vfp:
@@ -92,12 +96,18 @@ ENTRY (__longjmp)
 
 	/* Restore the call-preserved iWMMXt registers.  */
 	/* Following instructions are wldrd wr10, [ip], #8 (etc.)  */
-	ldcl	p1, cr10, [r12], #8
-	ldcl	p1, cr11, [r12], #8
-	ldcl	p1, cr12, [r12], #8
-	ldcl	p1, cr13, [r12], #8
-	ldcl	p1, cr14, [r12], #8
-	ldcl	p1, cr15, [r12], #8
+	sfi_breg r12, \
+	ldcl	p1, cr10, [\B], #8
+	sfi_breg r12, \
+	ldcl	p1, cr11, [\B], #8
+	sfi_breg r12, \
+	ldcl	p1, cr12, [\B], #8
+	sfi_breg r12, \
+	ldcl	p1, cr13, [\B], #8
+	sfi_breg r12, \
+	ldcl	p1, cr14, [\B], #8
+	sfi_breg r12, \
+	ldcl	p1, cr15, [\B], #8
 .Lno_iwmmxt:
 #endif
 

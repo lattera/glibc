@@ -25,7 +25,8 @@ ENTRY (__rawmemchr)
 	@ r0 = start of string
 	@ r1 = character to match
 	@ returns a pointer to the match, which must be present.
-	ldrb	r2, [r0]		@ load first byte asap
+	sfi_breg r0, \
+	ldrb	r2, [\B]		@ load first byte asap
 
 	@ To cater to long strings, we want to search through a few
 	@ characters until we reach an aligned pointer.  To cater to
@@ -41,7 +42,8 @@ ENTRY (__rawmemchr)
 	bxeq	lr
 
 	@ Loop until we find ...
-1:	ldrb	r2, [r0, #1]!
+1:	sfi_breg r0, \
+	ldrb	r2, [\B, #1]!
 	subs	r3, r3, #1		@ ... the alignment point
 	it	ne
 	cmpne	r2, r1			@ ... or C
@@ -54,15 +56,16 @@ ENTRY (__rawmemchr)
 	add	r0, r0, #1
 
 	@ So now we're aligned.
-	ldrd	r2, r3, [r0], #8
+	sfi_breg r0, \
+	ldrd	r2, r3, [\B], #8
 	orr	r1, r1, r1, lsl #8	@ Replicate C to all bytes
 #ifdef ARCH_HAS_T2
 	movw	ip, #0x0101
-	pld	[r0, #64]
+	sfi_pld	r0, #64
 	movt	ip, #0x0101
 #else
 	ldr	ip, =0x01010101
-	pld	[r0, #64]
+	sfi_pld	r0, #64
 #endif
 	orr	r1, r1, r1, lsl #16
 
@@ -74,10 +77,11 @@ ENTRY (__rawmemchr)
 	eor	r3, r3, r1
 	uqsub8	r2, ip, r2		@ Find C
 	uqsub8	r3, ip, r3
-	pld	[r0, #128]
+	sfi_pld	r0, #128
 	orrs	r3, r3, r2		@ Test both words for found
 	it	eq
-	ldrdeq	r2, r3, [r0], #8
+	sfi_breg r0, \
+	ldrdeq	r2, r3, [\B], #8
 	beq	2b
 
 	@ Found something.  Disambiguate between first and second words.

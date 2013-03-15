@@ -37,19 +37,24 @@ ENTRY (__mpn_submul_1)
 	cfi_rel_offset (r6, 8)
 	cfi_rel_offset (r7, 12)
 
-	ldr	r6, [r1], #4
-	ldr	r7, [r0]
+	sfi_breg r1, \
+	ldr	r6, [\B], #4
+	sfi_breg r0, \
+	ldr	r7, [\B]
 	mov	r4, #0			/* init carry in */
 	b	1f
 0:
-	ldr	r6, [r1], #4		/* load next ul */
+	sfi_breg r1, \
+	ldr	r6, [\B], #4		/* load next ul */
 	adds	r5, r5, r4		/* (lpl, c) = lpl + cl */
 	adc	r4, ip, #0		/* cl = hpl + c */
 	subs	r5, r7, r5		/* (lpl, !c) = rl - lpl */
-	ldr	r7, [r0, #4]		/* load next rl */
+	sfi_breg r0, \
+	ldr	r7, [\B, #4]		/* load next rl */
 	it	cc
 	addcc	r4, r4, #1		/* cl += !c */
-	str	r5, [r0], #4
+	sfi_breg r0, \
+	str	r5, [\B], #4
 1:
 	umull	r5, ip, r6, r3		/* (hpl, lpl) = ul * vl */
 	subs	r2, r2, #1
@@ -58,7 +63,8 @@ ENTRY (__mpn_submul_1)
 	adds	r5, r5, r4		/* (lpl, c) = lpl + cl */
 	adc	r4, ip, #0		/* cl = hpl + c */
 	subs	r5, r7, r5		/* (lpl, !c) = rl - lpl */
-	str	r5, [r0], #4
+	sfi_breg r0, \
+	str	r5, [\B], #4
 	it	cc
 	addcc	r4, r4, #1		/* cl += !c */
 	mov	r0, r4			/* return carry */

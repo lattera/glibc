@@ -1,3 +1,26 @@
+2013-03-15  Roland McGrath  <roland@hack.frob.com>
+
+	* sysdeps/arm/sysdep.h [!ARM_SFI_MACROS]
+	(ARM_SFI_MACROS): Define it.
+	(sfi_breg, sfi_pld): New assembler macros.
+	* sysdeps/arm/__longjmp.S: Use them for all memory references not
+	through the pc or sp registers.
+	* sysdeps/arm/add_n.S: Likewise.
+	* sysdeps/arm/addmul_1.S: Likewise.
+	* sysdeps/arm/arm-mcount.S: Likewise.
+	* sysdeps/arm/armv6/rawmemchr.S: Likewise.
+	* sysdeps/arm/armv6/strchr.S: Likewise.
+	* sysdeps/arm/armv6/strcpy.S: Likewise.
+	* sysdeps/arm/armv6/strlen.S: Likewise.
+	* sysdeps/arm/armv6/strrchr.S: Likewise.
+	* sysdeps/arm/armv6t2/memchr.S: Likewise.
+	* sysdeps/arm/memcpy.S: Likewise.
+	* sysdeps/arm/memmove.S: Likewise.
+	* sysdeps/arm/memset.S: Likewise.
+	* sysdeps/arm/setjmp.S: Likewise.
+	* sysdeps/arm/strlen.S: Likewise.
+	* sysdeps/arm/submul_1.S: Likewise.
+
 2013-03-13  Roland McGrath  <roland@hack.frob.com>
 
 	* sysdeps/arm/arm-features.h (ARM_BX_ALIGN_LOG2): New macro.

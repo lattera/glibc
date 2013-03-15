@@ -79,7 +79,8 @@ ENTRY(_mcount)
 	cfi_rel_offset (lr, 20)
 	movs r0, fp
 	ittt ne
-	ldrne r0, [r0, #-4]
+	sfi_breg r0, \
+	ldrne r0, [\B, #-4]
 	movsne r1, lr
 	blne __mcount_internal
 #if defined (__ARM_ARCH_4T__) && defined (__THUMB_INTERWORK__)

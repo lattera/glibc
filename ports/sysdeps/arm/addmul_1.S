@@ -37,16 +37,21 @@ ENTRY (__mpn_addmul_1)
 	cfi_rel_offset (r6, 8)
 	cfi_rel_offset (r7, 12)
 
-	ldr	r6, [r1], #4
-	ldr	r5, [r0]
+	sfi_breg r1, \
+	ldr	r6, [\B], #4
+	sfi_breg r0, \
+	ldr	r5, [\B]
 	mov	r4, #0			/* init carry in */
 	b	1f
 0:
-	ldr	r6, [r1], #4		/* load next ul */
+	sfi_breg r1, \
+	ldr	r6, [\B], #4		/* load next ul */
 	adds	r7, r4, r5		/* (out, c) = cl + lpl */
-	ldr	r5, [r0, #4]		/* load next rl */
+	sfi_breg r0, \
+	ldr	r5, [\B, #4]		/* load next rl */
 	adc	r4, ip, #0		/* cl = hpl + c */
-	str	r7, [r0], #4
+	sfi_breg r0, \
+	str	r7, [\B], #4
 1:
 	mov	ip, #0			/* zero-extend rl */
 	umlal	r5, ip, r6, r3		/* (hpl, lpl) = ul * vl + rl */
@@ -54,7 +59,8 @@ ENTRY (__mpn_addmul_1)
 	bne	0b
 
 	adds	r4, r4, r5		/* (out, c) = cl + llpl */
-	str	r4, [r0]
+	sfi_breg r0, \
+	str	r4, [\B]
 	adc	r0, ip, #0		/* return hpl + c */
 
 	pop	{ r4, r5, r6, r7 }
