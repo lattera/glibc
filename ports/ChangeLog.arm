@@ -1,5 +1,8 @@
 2013-03-15  Roland McGrath  <roland@hack.frob.com>
 
+	* sysdeps/arm/sysdep.h [!ARM_SFI_MACROS] (sfi_sp): New macro.
+	* sysdeps/arm/__longjmp.S: Use it.
+
 	* sysdeps/arm/sysdep.h [!ARM_SFI_MACROS]
 	(ARM_SFI_MACROS): Define it.
 	(sfi_breg, sfi_pld): New assembler macros.

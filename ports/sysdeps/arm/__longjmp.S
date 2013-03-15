@@ -36,7 +36,7 @@ ENTRY (__longjmp)
 	cfi_undefined (r4)
 	CHECK_SP (r4)
 #endif
-	sfi_breg ip, \
+	sfi_sp sfi_breg ip, \
 	ldmia	\B!, JMP_BUF_REGLIST
 	cfi_restore (v1)
 	cfi_restore (v2)

@@ -250,6 +250,11 @@
 		pld [\basereg, \offset]
 	.endm
 
+/* This macro precedes any instruction that directly changes the SP.
+   It's not needed for push/pop or for any kind of load or store that
+   implicitly changes the SP via the ! syntax.  */
+# define sfi_sp	/* Nothing to do.  */
+
 # endif
 
 #endif	/* __ASSEMBLER__ */
