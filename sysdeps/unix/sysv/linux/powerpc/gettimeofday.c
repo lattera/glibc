@@ -15,25 +15,49 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <sysdep.h>
-#include <stddef.h>
+
 #include <sys/time.h>
-#include <time.h>
-#include <hp-timing.h>
 
-#include <bits/libc-vdso.h>
+#ifdef SHARED
 
-/* Get the current time of day and timezone information,
-   putting it into *TV and *TZ.  If TZ is NULL, *TZ is not filled.
-   Returns 0 on success, -1 on errors.  */
+# include <dl-vdso.h>
+# include <bits/libc-vdso.h>
+
+void *gettimeofday_ifunc (void) __asm__ ("__gettimeofday");
+
+static int
+__gettimeofday_syscall (struct timeval *tv, struct timezone *tz)
+{
+  return INLINE_SYSCALL (gettimeofday, 2, tv, tz);
+}
+
+void *
+gettimeofday_ifunc (void)
+{
+  /* If the vDSO is not available we fall back syscall.  */
+  return (__vdso_gettimeofday ? VDSO_IFUNC_RET (__vdso_gettimeofday)
+	  : __gettimeofday_syscall);
+}
+asm (".type __gettimeofday, %gnu_indirect_function");
+
+/* This is doing "libc_hidden_def (__gettimeofday)" but the compiler won't
+   let us do it in C because it doesn't know we're defining __gettimeofday
+   here in this file.  */
+asm (".globl __GI___gettimeofday\n"
+     "__GI___gettimeofday = __gettimeofday");
+
+#else
+
+# include <sysdep.h>
+# include <errno.h>
 
 int
-__gettimeofday (tv, tz)
-     struct timeval *tv;
-     struct timezone *tz;
+__gettimeofday (struct timeval *tv, struct timezone *tz)
 {
-  return INLINE_VSYSCALL (gettimeofday, 2, tv, tz);
+  return INLINE_SYSCALL (gettimeofday, 2, tv, tz);
 }
 libc_hidden_def (__gettimeofday)
+
+#endif
 weak_alias (__gettimeofday, gettimeofday)
 libc_hidden_weak (gettimeofday)

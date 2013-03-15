@@ -1,3 +1,10 @@
+2013-03-15  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/bits/libc-vdso.h (VDSO_IFUNC_RET): Add
+	macro to return vdso values correctly in IFUNC implementations.
+	* sysdeps/unix/sysv/linux/powerpc/gettimeofday.c (__gettimeofday):
+	Optimization by using IFUNC.
+
 2013-03-15  Siddhesh Poyarekar  <siddhesh@redhat.com>
 	    Richard Henderson  <rth@redhat.com>
 	    Tulio Magno Quites Machado Filho  <tuliom@linux.vnet.ibm.com>
