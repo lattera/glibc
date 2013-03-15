@@ -198,7 +198,8 @@ _dl_aux_init (ElfW(auxv_t) *av)
     switch (av->a_type)
       {
       case AT_PAGESZ:
-	GLRO(dl_pagesize) = av->a_un.a_val;
+	if (av->a_un.a_val != 0)
+	  GLRO(dl_pagesize) = av->a_un.a_val;
 	break;
       case AT_CLKTCK:
 	GLRO(dl_clktck) = av->a_un.a_val;
@@ -265,9 +266,6 @@ _dl_non_dynamic_init (void)
 {
   if (HP_TIMING_AVAIL)
     HP_TIMING_NOW (_dl_cpuclock_offset);
-
-  if (!_dl_pagesize)
-    _dl_pagesize = __getpagesize ();
 
   _dl_verbose = *(getenv ("LD_WARN") ?: "") == '\0' ? 0 : 1;
 

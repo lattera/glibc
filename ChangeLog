@@ -1,5 +1,9 @@
 2013-03-15  Roland McGrath  <roland@hack.frob.com>
 
+	* elf/dl-support.c (_dl_aux_init): Ignore zero value for AT_PAGESZ.
+	(_dl_non_dynamic_init): Don't set _dl_pagesize; it will never be
+	zero since it's initialized to EXEC_PAGESIZE.
+
 	* sysdeps/unix/sysv/linux/ldsodefs.h
 	(_dl_non_dynamic_init, _dl_aux_init): Move declarations to ...
 	* sysdeps/generic/ldsodefs.h: ... here.
