@@ -1,3 +1,9 @@
+2013-03-15  Roland McGrath  <roland@hack.frob.com>
+
+	* sysdeps/unix/sysv/linux/ldsodefs.h
+	(_dl_non_dynamic_init, _dl_aux_init): Move declarations to ...
+	* sysdeps/generic/ldsodefs.h: ... here.
+
 2013-03-15  Thomas Schwinge  <thomas@codesourcery.com>
 
 	* math/libm-test.inc (ldexp_test): Add missing START/END markers.

@@ -1010,6 +1010,13 @@ extern struct link_map *_dl_find_dso_for_object (const ElfW(Addr) addr)
      internal_function;
 rtld_hidden_proto (_dl_find_dso_for_object)
 
+/* Initialization which is normally done by the dynamic linker.  */
+extern void _dl_non_dynamic_init (void) internal_function;
+
+/* Used by static binaries to check the auxiliary vector.  */
+extern void _dl_aux_init (ElfW(auxv_t) *av) internal_function;
+
+
 __END_DECLS
 
 #endif /* ldsodefs.h */

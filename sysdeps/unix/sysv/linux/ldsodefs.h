@@ -29,12 +29,6 @@
 /* We have the auxiliary vector.  */
 #define HAVE_AUX_VECTOR
 
-/* Used by static binaries to check the auxiliary vector.  */
-extern void _dl_aux_init (ElfW(auxv_t) *av) internal_function;
-
-/* Initialization which is normally done by the dynamic linker.  */
-extern void _dl_non_dynamic_init (void) internal_function;
-
 /* We can assume that the kernel always provides the AT_UID, AT_EUID,
    AT_GID, and AT_EGID values in the auxiliary vector from 2.4.0 or so on.  */
 #define HAVE_AUX_XID
