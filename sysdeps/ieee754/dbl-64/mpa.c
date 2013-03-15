@@ -125,8 +125,7 @@ norm (const mp_no *x, double *y, int p)
 {
 #define R RADIXI
   long i;
-  double c;
-  mantissa_t a, u, v, z[5];
+  double a, c, u, v, z[5];
   if (p < 5)
     {
       if (p == 1)
@@ -148,14 +147,17 @@ norm (const mp_no *x, double *y, int p)
 
       for (i = 2; i < 5; i++)
 	{
-	  mantissa_t d, r;
-	  d = X[i] * a;
-	  DIV_RADIX (d, r);
-	  z[i] = r;
-	  z[i - 1] += d;
+	  z[i] = X[i] * a;
+	  u = (z[i] + CUTTER) - CUTTER;
+	  if (u > z[i])
+	    u -= RADIX;
+	  z[i] -= u;
+	  z[i - 1] += u * RADIXI;
 	}
 
-      u = ALIGN_DOWN_TO (z[3], TWO19);
+      u = (z[3] + TWO71) - TWO71;
+      if (u > z[3])
+	u -= TWO19;
       v = z[3] - u;
 
       if (v == TWO18)
@@ -198,8 +200,7 @@ denorm (const mp_no *x, double *y, int p)
 {
   long i, k;
   long p2 = p;
-  double c;
-  mantissa_t u, z[5];
+  double c, u, z[5];
 
 #define R RADIXI
   if (EX < -44 || (EX == -44 && X[1] < TWO5))
@@ -279,7 +280,9 @@ denorm (const mp_no *x, double *y, int p)
       z[3] = X[k];
     }
 
-  u = ALIGN_DOWN_TO (z[3], TWO5);
+  u = (z[3] + TWO57) - TWO57;
+  if (u > z[3])
+    u -= TWO5;
 
   if (u == z[3])
     {
@@ -327,6 +330,7 @@ __dbl_mp (double x, mp_no *y, int p)
 {
   long i, n;
   long p2 = p;
+  double u;
 
   /* Sign.  */
   if (x == ZERO)
@@ -352,7 +356,11 @@ __dbl_mp (double x, mp_no *y, int p)
   n = MIN (p2, 4);
   for (i = 1; i <= n; i++)
     {
-      INTEGER_OF (x, Y[i]);
+      u = (x + TWO52) - TWO52;
+      if (u > x)
+	u -= ONE;
+      Y[i] = u;
+      x -= u;
       x *= RADIX;
     }
   for (; i <= p2; i++)
@@ -369,7 +377,7 @@ add_magnitudes (const mp_no *x, const mp_no *y, mp_no *z, int p)
 {
   long i, j, k;
   long p2 = p;
-  mantissa_t zk;
+  double zk;
 
   EZ = EX;
 
@@ -437,7 +445,7 @@ sub_magnitudes (const mp_no *x, const mp_no *y, mp_no *z, int p)
 {
   long i, j, k;
   long p2 = p;
-  mantissa_t zk;
+  double zk;
 
   EZ = EX;
   i = p2;
@@ -613,9 +621,9 @@ __mul (const mp_no *x, const mp_no *y, mp_no *z, int p)
 {
   long i, j, k, ip, ip2;
   long p2 = p;
-  mantissa_store_t zk;
+  double u, zk;
   const mp_no *a;
-  mantissa_store_t *diag;
+  double *diag;
 
   /* Is z=0?  */
   if (__glibc_unlikely (X[0] * Y[0] == ZERO))
@@ -672,8 +680,8 @@ __mul (const mp_no *x, const mp_no *y, mp_no *z, int p)
 
   /* Precompute sums of diagonal elements so that we can directly use them
      later.  See the next comment to know we why need them.  */
-  diag = alloca (k * sizeof (mantissa_store_t));
-  mantissa_store_t d = ZERO;
+  diag = alloca (k * sizeof (double));
+  double d = ZERO;
   for (i = 1; i <= ip; i++)
     {
       d += X[i] * Y[i];
@@ -696,8 +704,11 @@ __mul (const mp_no *x, const mp_no *y, mp_no *z, int p)
 
       zk -= diag[k - 1];
 
-      DIV_RADIX (zk, Z[k]);
-      k--;
+      u = (zk + CUTTER) - CUTTER;
+      if (u > zk)
+	u -= RADIX;
+      Z[k--] = zk - u;
+      zk = u * RADIXI;
     }
 
   /* The real deal.  Mantissa digit Z[k] is the sum of all X[i] * Y[j] where i
@@ -727,8 +738,11 @@ __mul (const mp_no *x, const mp_no *y, mp_no *z, int p)
 
       zk -= diag[k - 1];
 
-      DIV_RADIX (zk, Z[k]);
-      k--;
+      u = (zk + CUTTER) - CUTTER;
+      if (u > zk)
+	u -= RADIX;
+      Z[k--] = zk - u;
+      zk = u * RADIXI;
     }
   Z[k] = zk;
 
@@ -760,7 +774,7 @@ SECTION
 __sqr (const mp_no *x, mp_no *y, int p)
 {
   long i, j, k, ip;
-  mantissa_store_t yk;
+  double u, yk;
 
   /* Is z=0?  */
   if (__glibc_unlikely (X[0] == ZERO))
@@ -784,7 +798,7 @@ __sqr (const mp_no *x, mp_no *y, int p)
 
   while (k > p)
     {
-      mantissa_store_t yk2 = 0;
+      double yk2 = 0.0;
       long lim = k / 2;
 
       if (k % 2 == 0)
@@ -804,13 +818,16 @@ __sqr (const mp_no *x, mp_no *y, int p)
 
       yk += 2.0 * yk2;
 
-      DIV_RADIX (yk, Y[k]);
-      k--;
+      u = (yk + CUTTER) - CUTTER;
+      if (u > yk)
+	u -= RADIX;
+      Y[k--] = yk - u;
+      yk = u * RADIXI;
     }
 
   while (k > 1)
     {
-      mantissa_store_t yk2 = 0;
+      double yk2 = 0.0;
       long lim = k / 2;
 
       if (k % 2 == 0)
@@ -822,8 +839,11 @@ __sqr (const mp_no *x, mp_no *y, int p)
 
       yk += 2.0 * yk2;
 
-      DIV_RADIX (yk, Y[k]);
-      k--;
+      u = (yk + CUTTER) - CUTTER;
+      if (u > yk)
+	u -= RADIX;
+      Y[k--] = yk - u;
+      yk = u * RADIXI;
     }
   Y[k] = yk;
 

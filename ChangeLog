@@ -1,3 +1,10 @@
+2013-03-15  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* sysdeps/ieee754/dbl-64/mpa-arch.h: Remove.
+	* sysdeps/ieee754/dbl-64/mpa.c: Revert last change.
+	* sysdeps/ieee754/dbl-64/mpa.h: Revert last change.
+	* sysdeps/powerpc/power4/fpu/mpa-arch.h: Remove.
+
 2013-03-15  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	* sysdeps/unix/sysv/linux/powerpc/bits/libc-vdso.h (VDSO_IFUNC_RET): Add
