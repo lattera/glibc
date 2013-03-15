@@ -1,3 +1,7 @@
+2013-03-15  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* manual/nptl.texi (cindex): Modify threads to pthreads.
+
 2013-03-15  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/x86_64/preconfigure: Regenerated.

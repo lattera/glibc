@@ -2,7 +2,7 @@
 @c @node POSIX Threads, , Cryptographic Functions, Top
 @chapter POSIX Threads
 @c %MENU% POSIX Threads
-@cindex threads
+@cindex pthreads
 
 This chapter describes the @glibcadj{} POSIX Thread implementation.
 
