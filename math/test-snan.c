@@ -94,6 +94,7 @@ NAME (void)								      \
   /* A sNaN is only guaranteed to be representable in variables with */	      \
   /* static (or thread-local) storage duration.  */			      \
   static volatile FLOAT sNaN_var = __builtin_nans ## SUFFIX ("");	      \
+  static volatile FLOAT minus_sNaN_var = -__builtin_nans ## SUFFIX ("");      \
   fenv_t saved_fenv;							      \
 									      \
   zero_var = 0.0;							      \
@@ -105,6 +106,7 @@ NAME (void)								      \
   (void) &one_var;							      \
   (void) &qNaN_var;							      \
   (void) &sNaN_var;							      \
+  (void) &minus_sNaN_var;						      \
   (void) &Inf_var;							      \
 									      \
   set_sigaction_FP ();							      \
@@ -147,7 +149,7 @@ NAME (void)								      \
       printf (#FLOAT " isnan (-sNaN) raised SIGFPE\n");			      \
       errors++;								      \
     } else {								      \
-      check (#FLOAT " isnan (-sNaN)", isnan (-sNaN_var));		      \
+      check (#FLOAT " isnan (-sNaN)", isnan (minus_sNaN_var));		      \
     }									      \
 									      \
   feclearexcept(FE_ALL_EXCEPT);						      \
@@ -187,7 +189,7 @@ NAME (void)								      \
       printf (#FLOAT " isinf (-sNaN) raised SIGFPE\n");			      \
       errors++;								      \
     } else {								      \
-      check (#FLOAT " isinf (-sNaN)", !isinf (-sNaN_var));		      \
+      check (#FLOAT " isinf (-sNaN)", !isinf (minus_sNaN_var));		      \
     }									      \
 									      \
   feclearexcept(FE_ALL_EXCEPT);						      \
@@ -227,7 +229,7 @@ NAME (void)								      \
       printf (#FLOAT " isfinite (-sNaN) raised SIGFPE\n");		      \
       errors++;								      \
     } else {								      \
-      check (#FLOAT " isfinite (-sNaN)", !isfinite (-sNaN_var));	      \
+      check (#FLOAT " isfinite (-sNaN)", !isfinite (minus_sNaN_var));	      \
     }									      \
 									      \
   feclearexcept(FE_ALL_EXCEPT);						      \
@@ -267,7 +269,7 @@ NAME (void)								      \
       printf (#FLOAT " isnormal (-sNaN) raised SIGFPE\n");		      \
       errors++;								      \
     } else {								      \
-      check (#FLOAT " isnormal (-sNaN)", !isnormal (-sNaN_var));	      \
+      check (#FLOAT " isnormal (-sNaN)", !isnormal (minus_sNaN_var));	      \
     }									      \
 									      \
   feclearexcept(FE_ALL_EXCEPT);						      \
@@ -297,7 +299,7 @@ NAME (void)								      \
       printf (#FLOAT " fpclassify (sNaN) isnormal SIGFPE\n");		      \
       errors++;								      \
     } else {								      \
-      check (#FLOAT " fpclassify (sNaN)", (fpclassify (sNaN_var)==FP_NAN));   \
+      check (#FLOAT " fpclassify (sNaN)", fpclassify (sNaN_var) == FP_NAN);   \
     }									      \
 									      \
   feclearexcept(FE_ALL_EXCEPT);						      \
@@ -307,7 +309,8 @@ NAME (void)								      \
       printf (#FLOAT " fpclassify (-sNaN) raised SIGFPE\n");		      \
       errors++;								      \
     } else {								      \
-      check (#FLOAT " fpclassify (-sNaN)", (fpclassify (-sNaN_var)==FP_NAN)); \
+      check (#FLOAT " fpclassify (-sNaN)",				      \
+	     fpclassify (minus_sNaN_var) == FP_NAN);			      \
     }									      \
 									      \
   fesetenv(&saved_fenv); /* restore saved fenv */			      \

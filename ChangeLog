@@ -1,3 +1,8 @@
+2013-03-16  Thomas Schwinge  <thomas@codesourcery.com>
+
+	* math/test-snan.c (TEST_FUNC): Add and use minus_sNaN_var
+	variable.
+
 2013-03-15  Roland McGrath  <roland@hack.frob.com>
 
 	* elf/dl-support.c (_dl_aux_init): Ignore zero value for AT_PAGESZ.
