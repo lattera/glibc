@@ -203,7 +203,7 @@ __ieee754_y1l (long double x)
       __sincosl (x, &s, &c);
       ss = -s - c;
       cc = s - c;
-      if (ix < 0x7fe00000)
+      if (ix < 0x7ffe)
 	{			/* make sure x+x not overflow */
 	  z = __cosl (x + x);
 	  if ((s * c) > zero)
