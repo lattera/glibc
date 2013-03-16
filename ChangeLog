@@ -1,3 +1,16 @@
+2013-03-16  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #14155]
+	* sysdeps/ieee754/ldbl-128/e_j0l.c (__ieee754_j0l): Do not compute
+	1 / x and functions P and Q for arguments above 0x1p256L.
+	(__ieee754_y0l): Likewise.
+	* sysdeps/ieee754/ldbl-128/e_j1l.c (__ieee754_j1l): Likewise.
+	(__ieee754_y1l): Likewise.
+	* math/libm-test.inc (j0_test): Do not allow spurious underflows.
+	(j1_test): Likewise.
+	(y0_test): Likewise.
+	(y1_test): Likewise.
+
 2013-03-16  Thomas Schwinge  <thomas@codesourcery.com>
 
 	* math/test-snan.c (TEST_FUNC): Add and use minus_sNaN_var

@@ -706,6 +706,29 @@ __ieee754_j1l (long double x)
       return p;
     }
 
+  /* X = x - 3 pi/4
+     cos(X) = cos(x) cos(3 pi/4) + sin(x) sin(3 pi/4)
+     = 1/sqrt(2) * (-cos(x) + sin(x))
+     sin(X) = sin(x) cos(3 pi/4) - cos(x) sin(3 pi/4)
+     = -1/sqrt(2) * (sin(x) + cos(x))
+     cf. Fdlibm.  */
+  __sincosl (xx, &s, &c);
+  ss = -s - c;
+  cc = s - c;
+  z = __cosl (xx + xx);
+  if ((s * c) > 0)
+    cc = z / ss;
+  else
+    ss = z / cc;
+
+  if (xx > 0x1p256L)
+    {
+      z = ONEOSQPI * cc / __ieee754_sqrtl (xx);
+      if (x < 0)
+	z = -z;
+      return z;
+    }
+
   xinv = 1.0L / xx;
   z = xinv * xinv;
   if (xinv <= 0.25)
@@ -767,20 +790,6 @@ __ieee754_j1l (long double x)
   p = 1.0L + z * p;
   q = z * q;
   q = q * xinv + 0.375L * xinv;
-  /* X = x - 3 pi/4
-     cos(X) = cos(x) cos(3 pi/4) + sin(x) sin(3 pi/4)
-     = 1/sqrt(2) * (-cos(x) + sin(x))
-     sin(X) = sin(x) cos(3 pi/4) - cos(x) sin(3 pi/4)
-     = -1/sqrt(2) * (sin(x) + cos(x))
-     cf. Fdlibm.  */
-  __sincosl (xx, &s, &c);
-  ss = -s - c;
-  cc = s - c;
-  z = __cosl (xx + xx);
-  if ((s * c) > 0)
-    cc = z / ss;
-  else
-    ss = z / cc;
   z = ONEOSQPI * (p * cc - q * ss) / __ieee754_sqrtl (xx);
   if (x < 0)
     z = -z;
@@ -850,6 +859,24 @@ __ieee754_y1l (long double x)
       return p;
     }
 
+  /* X = x - 3 pi/4
+     cos(X) = cos(x) cos(3 pi/4) + sin(x) sin(3 pi/4)
+     = 1/sqrt(2) * (-cos(x) + sin(x))
+     sin(X) = sin(x) cos(3 pi/4) - cos(x) sin(3 pi/4)
+     = -1/sqrt(2) * (sin(x) + cos(x))
+     cf. Fdlibm.  */
+  __sincosl (xx, &s, &c);
+  ss = -s - c;
+  cc = s - c;
+  z = __cosl (xx + xx);
+  if ((s * c) > 0)
+    cc = z / ss;
+  else
+    ss = z / cc;
+
+  if (xx > 0x1p256L)
+    return ONEOSQPI * ss / __ieee754_sqrtl (xx);
+
   xinv = 1.0L / xx;
   z = xinv * xinv;
   if (xinv <= 0.25)
@@ -911,20 +938,6 @@ __ieee754_y1l (long double x)
   p = 1.0L + z * p;
   q = z * q;
   q = q * xinv + 0.375L * xinv;
-  /* X = x - 3 pi/4
-     cos(X) = cos(x) cos(3 pi/4) + sin(x) sin(3 pi/4)
-     = 1/sqrt(2) * (-cos(x) + sin(x))
-     sin(X) = sin(x) cos(3 pi/4) - cos(x) sin(3 pi/4)
-     = -1/sqrt(2) * (sin(x) + cos(x))
-     cf. Fdlibm.  */
-  __sincosl (xx, &s, &c);
-  ss = -s - c;
-  cc = s - c;
-  z = __cosl (xx + xx);
-  if ((s * c) > 0)
-    cc = z / ss;
-  else
-    ss = z / cc;
   z = ONEOSQPI * (p * ss + q * cc) / __ieee754_sqrtl (xx);
   return z;
 }
