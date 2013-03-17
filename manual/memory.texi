@@ -683,25 +683,21 @@ parameter to be set, and @var{value} the new value to be set.  Possible
 choices for @var{param}, as defined in @file{malloc.h}, are:
 
 @table @code
-@item M_TRIM_THRESHOLD
-This is the minimum size (in bytes) of the top-most, releasable chunk
-that will cause @code{sbrk} to be called with a negative argument in
-order to return memory to the system.
-@item M_TOP_PAD
-This parameter determines the amount of extra memory to obtain from the
-system when a call to @code{sbrk} is required.  It also specifies the
-number of bytes to retain when shrinking the heap by calling @code{sbrk}
-with a negative argument.  This provides the necessary hysteresis in
-heap size such that excessive amounts of system calls can be avoided.
+@comment TODO: @item M_ARENA_MAX
+@comment       - Document ARENA_MAX env var.
+@comment TODO: @item M_ARENA_TEST
+@comment       - Document ARENA_TEST env var.
+@comment TODO: @item M_CHECK_ACTION
+@item M_MMAP_MAX
+The maximum number of chunks to allocate with @code{mmap}.  Setting this
+to zero disables all use of @code{mmap}.
 @item M_MMAP_THRESHOLD
 All chunks larger than this value are allocated outside the normal
 heap, using the @code{mmap} system call.  This way it is guaranteed
 that the memory for these chunks can be returned to the system on
 @code{free}.  Note that requests smaller than this threshold might still
 be allocated via @code{mmap}.
-@item M_MMAP_MAX
-The maximum number of chunks to allocate with @code{mmap}.  Setting this
-to zero disables all use of @code{mmap}.
+@comment TODO: @item M_MXFAST
 @item M_PERTURB
 If non-zero, memory blocks are filled with values depending on some
 low order bits of this parameter when they are allocated (except when
@@ -710,6 +706,16 @@ use of uninitialized or freed heap memory.  Note that this option does not
 guarantee that the freed block will have any specific values.  It only
 guarantees that the content the block had before it was freed will be
 overwritten.
+@item M_TOP_PAD
+This parameter determines the amount of extra memory to obtain from the
+system when a call to @code{sbrk} is required.  It also specifies the
+number of bytes to retain when shrinking the heap by calling @code{sbrk}
+with a negative argument.  This provides the necessary hysteresis in
+heap size such that excessive amounts of system calls can be avoided.
+@item M_TRIM_THRESHOLD
+This is the minimum size (in bytes) of the top-most, releasable chunk
+that will cause @code{sbrk} to be called with a negative argument in
+order to return memory to the system.
 @end table
 
 @end deftypefun
