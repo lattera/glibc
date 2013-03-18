@@ -53,4 +53,7 @@
 # define ARM_BX_ALIGN_LOG2	2
 #endif
 
+/* An OS-specific arm-features.h file may define ARM_NO_INDEX_REGISTER to
+   indicate that the two-register addressing modes must never be used.  */
+
 #endif  /* arm-features.h */

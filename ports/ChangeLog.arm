@@ -1,3 +1,13 @@
+2013-03-18  Roland McGrath  <roland@hack.frob.com>
+
+	* sysdeps/arm/dl-tlsdesc.S: Include <arm-features.h>.
+	Use sfi_breg macro throughout.
+	(_dl_tlsdesc_dynamic) [!ARM_NO_INDEX_REGISTER]: Avoid two-register
+	addressing mode.
+	(_dl_tlsdesc_dynamic) [ARM_ALWAYS_BX]: Don't pop into pc.
+
+	* sysdeps/arm/arm-features.h: Add comment for ARM_NO_INDEX_REGISTER.
+
 2013-03-15  Roland McGrath  <roland@hack.frob.com>
 
 	* sysdeps/arm/sysdep.h [!ARM_SFI_MACROS] (sfi_sp): New macro.

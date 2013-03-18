@@ -17,6 +17,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <sysdep.h>
+#include <arm-features.h>
 #include <tls.h>
 #include "tlsdesc.h"
 
@@ -31,7 +32,8 @@
 	.fnstart
 	.align 2
 _dl_tlsdesc_return:
-	ldr	r0, [r0]
+	sfi_breg r0, \
+	ldr	r0, [\B]
 	BX	(lr)
 	.fnend
 	cfi_endproc
@@ -90,16 +92,27 @@ _dl_tlsdesc_dynamic:
 	cfi_rel_offset (r3,4)
 	cfi_rel_offset (r4,8)
 	cfi_rel_offset (lr,12)
-	ldr	r1, [r0] /* td */
+	sfi_breg r0, \
+	ldr	r1, [\B] /* td */
 	GET_TLS (lr)
 	mov	r4, r0 /* r4 = tp */
-	ldr	r0, [r0]
-	ldr	r2, [r1, #8] /* gen_count */
-	ldr	r3, [r0]
+	sfi_breg r0, \
+	ldr	r0, [\B]
+	sfi_breg r1, \
+	ldr	r2, [\B, #8] /* gen_count */
+	sfi_breg r0, \
+	ldr	r3, [\B]
 	cmp	r2, r3
 	bhi	1f
-	ldr	r3, [r1]
+	sfi_breg r1, \
+	ldr	r3, [\B]
+#ifndef ARM_NO_INDEX_REGISTER
 	ldr	r2, [r0, r3, lsl #3]
+#else
+	add	lr, r0, r3, lsl #3
+	sfi_breg lr, \
+	ldr	r2, [\B]
+#endif
 	cmn	r2, #1
 	ittt	ne
 	ldrne	r3, [r1, #4]
@@ -110,7 +123,8 @@ _dl_tlsdesc_dynamic:
 	bl	__tls_get_addr
 	rsb	r0, r4, r0
 2:
-#if defined (__ARM_ARCH_4T__) && defined (__THUMB_INTERWORK__)
+#if ((defined (__ARM_ARCH_4T__) && defined (__THUMB_INTERWORK__)) \
+     || defined (ARM_ALWAYS_BX))
 	pop	{r2,r3,r4, lr}
 	cfi_adjust_cfa_offset (-16)
 	cfi_restore (lr)
@@ -163,7 +177,8 @@ _dl_tlsdesc_lazy_resolver:
 	pop	{r2}
 	cfi_adjust_cfa_offset (-4)
 	cfi_restore (r2)
-	ldr	r1, [r0, #4]
+	sfi_breg r0, \
+	ldr	r1, [\B, #4]
 	BX	(r1)
 	.fnend
 	cfi_endproc
@@ -202,7 +217,8 @@ _dl_tlsdesc_resolve_hold:
 	pop	{r2}
 	cfi_adjust_cfa_offset (-4)
 	cfi_restore (r2)
-	ldr     r1, [r0, #4]
+	sfi_breg r0, \
+	ldr     r1, [\B, #4]
 	BX      (r1)
 	.fnend
 	cfi_endproc
