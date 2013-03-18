@@ -1,3 +1,15 @@
+2013-03-18  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* pthread_barrier_init.c (default_attr): Rename to
+	default_barrierattr.
+	(pthread_barrier_init): Adjust for the rename.
+	* pthread_mutex_init.c (default_attr): Rename to
+	default_mutexattr.
+	(__pthread_mutex_init): Adjust for the rename.
+	* pthread_rwlock_init.c (default_attr): Rebane to
+	default_rwlockattr.
+	(__pthread_rwlock_init): Adjust for the rename.
+
 2013-03-12  Carlos O'Donell  <carlos@redhat.com>
 
 	* sysdeps/unix/sysv/linux/lowlevellock.c: Include <atomic.h>.

@@ -24,7 +24,7 @@
 
 #include <stap-probe.h>
 
-static const struct pthread_mutexattr default_attr =
+static const struct pthread_mutexattr default_mutexattr =
   {
     /* Default is a normal mutex, not shared between processes.  */
     .mutexkind = PTHREAD_MUTEX_NORMAL
@@ -45,7 +45,8 @@ __pthread_mutex_init (mutex, mutexattr)
 
   assert (sizeof (pthread_mutex_t) <= __SIZEOF_PTHREAD_MUTEX_T);
 
-  imutexattr = (const struct pthread_mutexattr *) mutexattr ?: &default_attr;
+  imutexattr = ((const struct pthread_mutexattr *) mutexattr
+		?: &default_mutexattr);
 
   /* Sanity checks.  */
   switch (__builtin_expect (imutexattr->mutexkind

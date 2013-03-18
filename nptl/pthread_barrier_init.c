@@ -22,7 +22,7 @@
 #include <kernel-features.h>
 
 
-static const struct pthread_barrierattr default_attr =
+static const struct pthread_barrierattr default_barrierattr =
   {
     .pshared = PTHREAD_PROCESS_PRIVATE
   };
@@ -42,7 +42,7 @@ pthread_barrier_init (barrier, attr, count)
   const struct pthread_barrierattr *iattr
     = (attr != NULL
        ? iattr = (struct pthread_barrierattr *) attr
-       : &default_attr);
+       : &default_barrierattr);
 
   if (iattr->pshared != PTHREAD_PROCESS_PRIVATE
       && __builtin_expect (iattr->pshared != PTHREAD_PROCESS_SHARED, 0))
