@@ -1,3 +1,26 @@
+2013-03-18  Ondrej Bilka  <neleai@seznam.cz>
+
+	* sysdeps/x86_64/strlen.S: Replace with new SSE2 based
+	implementation which is faster on all x86_64 architectures.
+	Tested on AMD, Intel Nehalem, SNB, IVB.
+	* sysdeps/x86_64/strnlen.S: Likewise.
+
+	* sysdeps/x86_64/multiarch/Makefile (sysdep_routines):
+	Remove all multiarch strlen and strnlen versions.
+	* sysdeps/x86_64/multiarch/ifunc-impl-list.c: Update.
+	Remove strlen and strnlen related parts.
+
+	* sysdeps/x86_64/multiarch/strcat-sse2-unaligned.S: Update.
+	Inline strlen part.
+	* sysdeps/x86_64/multiarch/strcat-ssse3.S: Likewise.
+
+	* sysdeps/x86_64/multiarch/strlen.S: Remove.
+	* sysdeps/x86_64/multiarch/strlen-sse2-no-bsf.S: Likewise.
+	* sysdeps/x86_64/multiarch/strlen-sse2-pminub.S: Likewise.
+	* sysdeps/x86_64/multiarch/strlen-sse4.S: Likewise.
+	* sysdeps/x86_64/multiarch/strnlen.S: Likewise.
+	* sysdeps/x86_64/multiarch/strnlen-sse2-no-bsf.S: Likewise.
+
 2013-03-17  Carlos O'Donell  <carlos@redhat.com>
 
 	* manual/memory.texi (Malloc Tunable Parameters):
