@@ -21,6 +21,7 @@
 #include <sysdep.h>
 #include "asm-syntax.h"
 
+/* Will be removed when new strcpy implementation gets merged.  */
 
 	.text
 ENTRY (strcat)
