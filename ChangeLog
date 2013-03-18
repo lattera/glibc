@@ -1,3 +1,14 @@
+2013-03-18  Roland McGrath  <roland@hack.frob.com>
+
+	[BZ #14812]
+	* argp/argp-parse.c (argp_default_options): Put N_ translation marker
+	on argument names, not just descriptions.
+	* iconv/iconv_prog.c (options): Likewise.
+	* iconv/iconvconfig.c (options): Likewise.
+	* malloc/memusagestat.c (options): Likewise.
+	* nss/getent.c (options): Likewise.
+	Reported by Benno Schulenberg <bensberg@justemail.net>.
+
 2013-03-18  Ondrej Bilka  <neleai@seznam.cz>
 
 	* sysdeps/x86_64/strlen.S: Replace with new SSE2 based

@@ -57,13 +57,13 @@ void (*argp_program_version_hook) (FILE *, struct argp_state *) = print_version;
 static const struct argp_option options[] =
 {
   { NULL, 0, NULL, 0, N_("Input/Output format specification:") },
-  { "from-code", 'f', "NAME", 0, N_("encoding of original text") },
-  { "to-code", 't', "NAME", 0, N_("encoding for output") },
+  { "from-code", 'f', N_("NAME"), 0, N_("encoding of original text") },
+  { "to-code", 't', N_("NAME"), 0, N_("encoding for output") },
   { NULL, 0, NULL, 0, N_("Information:") },
   { "list", 'l', NULL, 0, N_("list all known coded character sets") },
   { NULL, 0, NULL, 0, N_("Output control:") },
   { NULL, 'c', NULL, 0, N_("omit invalid characters from output") },
-  { "output", 'o', "FILE", 0, N_("output file") },
+  { "output", 'o', N_("FILE"), 0, N_("output file") },
   { "silent", 's', NULL, 0, N_("suppress warnings") },
   { "verbose", OPT_VERBOSE, NULL, 0, N_("print progress information") },
   { NULL, 0, NULL, 0, NULL }

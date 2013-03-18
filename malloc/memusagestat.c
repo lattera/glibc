@@ -52,12 +52,15 @@
 /* Definitions of arguments for argp functions.  */
 static const struct argp_option options[] =
 {
-  { "output", 'o', "FILE", 0, N_("Name output file") },
-  { "string", 's', "STRING", 0, N_("Title string used in output graphic") },
-  { "time", 't', NULL, 0, N_("Generate output linear to time (default is linear to number of function calls)") },
+  { "output", 'o', N_("FILE"), 0, N_("Name output file") },
+  { "string", 's', N_("STRING"), 0, N_("Title string used in output graphic") },
+  { "time", 't', NULL, 0, N_("\
+Generate output linear to time (default is linear to number of function calls)\
+") },
   { "total", 'T', NULL, 0,
     N_("Also draw graph for total memory consumption") },
-  { "x-size", 'x', "VALUE", 0, N_("Make output graphic VALUE pixels wide") },
+  { "x-size", 'x', N_("VALUE"), 0,
+    N_("Make output graphic VALUE pixels wide") },
   { "y-size", 'y', "VALUE", 0, N_("Make output graphic VALUE pixels high") },
   { NULL, 0, NULL, 0, NULL }
 };
