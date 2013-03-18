@@ -151,11 +151,17 @@ libdir = $(exec_prefix)/lib
 endif
 inst_libdir = $(install_root)$(libdir)
 
-# Where to install the shared library and dynamic linker.
+# Where to install the shared library.
 ifndef slibdir
 slibdir = $(exec_prefix)/lib
 endif
 inst_slibdir = $(install_root)$(slibdir)
+
+# Where to install the dynamic linker.
+ifndef rtlddir
+rtlddir = $(slibdir)
+endif
+inst_rtlddir = $(install_root)$(rtlddir)
 
 # Prefix to put on files installed in $(libdir).  For libraries `libNAME.a',
 # the prefix is spliced between `lib' and the name, so the linker switch
@@ -441,7 +447,7 @@ endif
 endif
 ifeq (yes,$(build-shared))
 ifndef rtld-LDFLAGS
-rtld-LDFLAGS = -Wl,-dynamic-linker=$(slibdir)/$(rtld-installed-name)
+rtld-LDFLAGS = -Wl,-dynamic-linker=$(rtlddir)/$(rtld-installed-name)
 endif
 ifndef rtld-tests-LDFLAGS
 ifeq (yes,$(build-hardcoded-path-in-tests))

@@ -66,7 +66,7 @@ endif
 ifeq (yes,$(build-shared))
 extra-objs	= $(all-rtld-routines:%=%.os) soinit.os sofini.os interp.os
 generated	+= librtld.os dl-allobjs.os ld.so ldd
-install-others	= $(inst_slibdir)/$(rtld-installed-name)
+install-others	= $(inst_rtlddir)/$(rtld-installed-name)
 install-bin-script = ldd
 endif
 
@@ -340,7 +340,7 @@ $(objpfx)ld.so: $(objpfx)librtld.os $(ld-map)
 	  | $(AWK) '($$7 ~ /^UND(|EF)$$/ && $$1 != "0:" && $$4 != "REGISTER") { print; p=1 } END { exit p != 0 }'
 
 # interp.c exists just to get this string into the libraries.
-CFLAGS-interp.c = -D'RUNTIME_LINKER="$(slibdir)/$(rtld-installed-name)"' \
+CFLAGS-interp.c = -D'RUNTIME_LINKER="$(rtlddir)/$(rtld-installed-name)"' \
 		  -DNOT_IN_libc=1
 $(objpfx)interp.os: $(common-objpfx)config.make
 
@@ -372,18 +372,19 @@ $(inst_slibdir)/$(rtld-version-installed-name): $(objpfx)ld.so $(+force)
 	$(make-target-directory)
 	$(do-install-program)
 
-$(inst_slibdir)/$(rtld-installed-name): \
+$(inst_rtlddir)/$(rtld-installed-name): \
   $(inst_slibdir)/$(rtld-version-installed-name) \
   $(inst_slibdir)/libc-$(version).so
+	$(make-target-directory)
 	$(make-shlib-link)
 
 # Special target called by parent to install just the dynamic linker.
 .PHONY: ldso_install
-ldso_install: $(inst_slibdir)/$(rtld-installed-name)
+ldso_install: $(inst_rtlddir)/$(rtld-installed-name)
 endif
 
 
-common-ldd-rewrite = -e 's%@RTLD@%$(slibdir)/$(rtld-installed-name)%g' \
+common-ldd-rewrite = -e 's%@RTLD@%$(rtlddir)/$(rtld-installed-name)%g' \
 		     -e 's%@VERSION@%$(version)%g' \
 		     -e 's|@PKGVERSION@|$(PKGVERSION)|g' \
 		     -e 's|@REPORT_BUGS_TO@|$(REPORT_BUGS_TO)|g'

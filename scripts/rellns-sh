@@ -16,8 +16,17 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, see <http://www.gnu.org/licenses/>.
 
+# With -p, instead of creating the link print the computed relative link
+# name.
+do_print=false
+case $1 in
+  -p)
+    do_print=true
+    shift
+    ;;
+esac
 if test $# -ne 2; then
-  echo "Usage: rellns SOURCE DEST" >&2
+  echo "Usage: rellns [-p] SOURCE DEST" >&2
   exit 1
 fi
 
@@ -70,4 +79,8 @@ while test -n "$from"; do
   from=`echo $from | sed 's%^[^/]*/*%%'`
 done
 
-ln -s $rfrom$to $2
+if $do_print; then
+  echo "$rfrom$to"
+else
+  ln -s $rfrom$to $2
+fi

@@ -1,3 +1,18 @@
+2013-03-19  Andreas Schwab  <schwab@suse.de>
+
+	* configure.in: Substitute libc_cv_rtlddir.
+	* configure: Regenerate.
+	* config.make.in (rtlddir): Set from libc_cv_rtlddir.
+	* Makeconfig (rtlddir, inst_rtlddir): New variables.
+	(rtld-LDFLAGS): Use them with $(rtld-installed-name).
+	* elf/Makefile (install-others, CFLAGS-interp.c)
+	(ldso_install, common-ldd-rewrite): Likewise.
+	($(inst_rtlddir)/$(rtld-installed-name)): Renamed from
+	$(inst_slibdir)/$(rtld-installed-name).
+	* scripts/rellns-sh: Add -p option.
+	* Makerules (make-shlib-link): Use rellns-sh to get relative name
+	for source.
+
 2013-03-19  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* manual/nptl.texi: Renamed to ...

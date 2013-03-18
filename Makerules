@@ -864,7 +864,7 @@ ifeq (no,$(cross-compiling))
 symbolic-link-prog := $(common-objpfx)elf/sln
 symbolic-link-list := $(common-objpfx)elf/symlink.list
 define make-shlib-link
-echo $(<F) $@ >> $(symbolic-link-list)
+echo `$(..)scripts/rellns-sh -p $< $@` $@ >> $(symbolic-link-list)
 endef
 else # cross-compiling
 # We need a definition that can be used by elf/Makefile's install rules.
@@ -874,7 +874,7 @@ endif
 ifndef make-shlib-link
 define make-shlib-link
 rm -f $@
-$(LN_S) $(<F) $@
+$(LN_S) `$(..)scripts/rellns-sh -p $< $@` $@
 endef
 endif
 
