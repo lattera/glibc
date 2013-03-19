@@ -32,7 +32,7 @@ __pthread_attr_getstacksize (attr, stacksize)
 
   /* If the user has not set a stack size we return what the system
      will use as the default.  */
-  *stacksize = iattr->stacksize ?: __default_stacksize;
+  *stacksize = iattr->stacksize ?: __default_pthread_attr.stacksize;
 
   return 0;
 }

@@ -358,7 +358,7 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
 
   /* Get the stack size from the attribute if it is set.  Otherwise we
      use the default we determined at start time.  */
-  size = attr->stacksize ?: __default_stacksize;
+  size = attr->stacksize ?: __default_pthread_attr.stacksize;
 
   /* Get memory for the stack.  */
   if (__builtin_expect (attr->flags & ATTR_FLAG_STACKADDR, 0))
