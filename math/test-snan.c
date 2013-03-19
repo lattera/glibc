@@ -29,6 +29,9 @@
 #include <setjmp.h>
 #include <errno.h>
 
+#include <math-tests.h>
+
+
 int dest_offset;
 char *dest_address;
 double	value = 123.456;
@@ -139,7 +142,8 @@ NAME (void)								      \
       printf (#FLOAT " isnan (sNaN) raised SIGFPE\n");			      \
       errors++;								      \
     } else {								      \
-      check (#FLOAT " isnan (sNaN)", isnan (sNaN_var));			      \
+      check (#FLOAT " isnan (sNaN)",					      \
+	     SNAN_TESTS (FLOAT) ? isnan (sNaN_var) : 1);		      \
     }									      \
 									      \
   feclearexcept(FE_ALL_EXCEPT);						      \
@@ -149,7 +153,8 @@ NAME (void)								      \
       printf (#FLOAT " isnan (-sNaN) raised SIGFPE\n");			      \
       errors++;								      \
     } else {								      \
-      check (#FLOAT " isnan (-sNaN)", isnan (minus_sNaN_var));		      \
+      check (#FLOAT " isnan (-sNaN)",					      \
+	     SNAN_TESTS (FLOAT) ? isnan (minus_sNaN_var) : 1);		      \
     }									      \
 									      \
   feclearexcept(FE_ALL_EXCEPT);						      \
@@ -179,7 +184,8 @@ NAME (void)								      \
       printf (#FLOAT " isinf (sNaN) raised SIGFPE\n");			      \
       errors++;								      \
     } else {								      \
-      check (#FLOAT " isinf (sNaN)", !isinf (sNaN_var));		      \
+      check (#FLOAT " isinf (sNaN)",					      \
+	     SNAN_TESTS (FLOAT) ? !isinf (sNaN_var) : 1);		      \
     }									      \
 									      \
   feclearexcept(FE_ALL_EXCEPT);						      \
@@ -189,7 +195,8 @@ NAME (void)								      \
       printf (#FLOAT " isinf (-sNaN) raised SIGFPE\n");			      \
       errors++;								      \
     } else {								      \
-      check (#FLOAT " isinf (-sNaN)", !isinf (minus_sNaN_var));		      \
+      check (#FLOAT " isinf (-sNaN)",					      \
+	     SNAN_TESTS (FLOAT) ? !isinf (minus_sNaN_var) : 1);		      \
     }									      \
 									      \
   feclearexcept(FE_ALL_EXCEPT);						      \
@@ -219,7 +226,8 @@ NAME (void)								      \
       printf (#FLOAT " isfinite (sNaN) raised SIGFPE\n");		      \
       errors++;								      \
     } else {								      \
-      check (#FLOAT " isfinite (sNaN)", !isfinite (sNaN_var));		      \
+      check (#FLOAT " isfinite (sNaN)",					      \
+	     SNAN_TESTS (FLOAT) ? !isfinite (sNaN_var) : 1);		      \
     }									      \
 									      \
   feclearexcept(FE_ALL_EXCEPT);						      \
@@ -229,7 +237,8 @@ NAME (void)								      \
       printf (#FLOAT " isfinite (-sNaN) raised SIGFPE\n");		      \
       errors++;								      \
     } else {								      \
-      check (#FLOAT " isfinite (-sNaN)", !isfinite (minus_sNaN_var));	      \
+      check (#FLOAT " isfinite (-sNaN)",				      \
+	     SNAN_TESTS (FLOAT) ? !isfinite (minus_sNaN_var) : 1);	      \
     }									      \
 									      \
   feclearexcept(FE_ALL_EXCEPT);						      \
@@ -259,7 +268,8 @@ NAME (void)								      \
       printf (#FLOAT " isnormal (sNaN) isnormal SIGFPE\n");		      \
       errors++;								      \
     } else {								      \
-      check (#FLOAT " isnormal (sNaN)", !isnormal (sNaN_var));		      \
+      check (#FLOAT " isnormal (sNaN)",					      \
+	     SNAN_TESTS (FLOAT) ? !isnormal (sNaN_var) : 1);		      \
     }									      \
 									      \
   feclearexcept(FE_ALL_EXCEPT);						      \
@@ -269,7 +279,8 @@ NAME (void)								      \
       printf (#FLOAT " isnormal (-sNaN) raised SIGFPE\n");		      \
       errors++;								      \
     } else {								      \
-      check (#FLOAT " isnormal (-sNaN)", !isnormal (minus_sNaN_var));	      \
+      check (#FLOAT " isnormal (-sNaN)",				      \
+	     SNAN_TESTS (FLOAT) ? !isnormal (minus_sNaN_var) : 1);	      \
     }									      \
 									      \
   feclearexcept(FE_ALL_EXCEPT);						      \
@@ -299,7 +310,8 @@ NAME (void)								      \
       printf (#FLOAT " fpclassify (sNaN) isnormal SIGFPE\n");		      \
       errors++;								      \
     } else {								      \
-      check (#FLOAT " fpclassify (sNaN)", fpclassify (sNaN_var) == FP_NAN);   \
+      check (#FLOAT " fpclassify (sNaN)",				      \
+	     SNAN_TESTS (FLOAT) ? fpclassify (sNaN_var) == FP_NAN : 1);	      \
     }									      \
 									      \
   feclearexcept(FE_ALL_EXCEPT);						      \
@@ -310,7 +322,7 @@ NAME (void)								      \
       errors++;								      \
     } else {								      \
       check (#FLOAT " fpclassify (-sNaN)",				      \
-	     fpclassify (minus_sNaN_var) == FP_NAN);			      \
+	     SNAN_TESTS (FLOAT) ? fpclassify (minus_sNaN_var) == FP_NAN : 1); \
     }									      \
 									      \
   fesetenv(&saved_fenv); /* restore saved fenv */			      \
