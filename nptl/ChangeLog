@@ -1,17 +1,17 @@
 2013-03-19  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
-	* allocatestack.c (allocate_stack): Use __default_attr instead
-	of __default_stacksize.
+	* allocatestack.c (allocate_stack): Use __default_pthread_attr
+	instead of __default_stacksize.
 	* nptl-init.c (__pthread_initialize_minimal_internal):
 	Likewise.  Initialize guardsize.
-	* pthreadP.h (__default_attr): Declare.
+	* pthreadP.h (__default_pthread_attr): Declare.
 	* pthread_attr_getstacksize.c (__pthread_attr_getstacksize):
-	Use __default_attr instead of __default_stacksize.
+	Use __default_pthread_attr instead of __default_stacksize.
 	* pthread_create.c (default_attr): Remove.
-	(__pthread_create_2_1): Use __default_attr instead of
+	(__pthread_create_2_1): Use __default_pthread_attr instead of
 	default_attr.
 	* vars.c (__default_stacksize): Remove.
-	(__default_attr): New static variable to store
+	(__default_pthread_attr): New static variable to store
 	default thread attributes.
 
 2013-03-18  Siddhesh Poyarekar  <siddhesh@redhat.com>
