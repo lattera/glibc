@@ -1,5 +1,8 @@
 2013-03-19  Andreas Schwab  <schwab@suse.de>
 
+	* sysdeps/gnu/configure.in: Set libc_cv_rtldir for s390x.
+	* sysdeps/gnu/configure: Regenerate.
+
 	* configure.in: Substitute libc_cv_rtlddir.
 	* configure: Regenerate.
 	* config.make.in (rtlddir): Set from libc_cv_rtlddir.
