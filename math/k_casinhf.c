@@ -79,8 +79,8 @@ __kernel_casinhf (__complex__ float x, int adj)
     }
   else
     {
-      __real__ y = (rx - ix) * (rx + ix) + 1.0;
-      __imag__ y = 2.0 * rx * ix;
+      __real__ y = (rx - ix) * (rx + ix) + 1.0f;
+      __imag__ y = 2.0f * rx * ix;
 
       y = __csqrtf (y);
 

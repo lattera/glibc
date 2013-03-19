@@ -1,3 +1,10 @@
+2013-03-19  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/k_casinhf.c (__kernel_casinhf): Consistently use float
+	constants.
+	* math/k_casinhl.c (__kernel_casinhl): Consistently use long
+	double constants.
+
 2013-03-19  Andreas Schwab  <schwab@suse.de>
 
 	* sysdeps/gnu/configure.in: Set libc_cv_rtldir for s390x.

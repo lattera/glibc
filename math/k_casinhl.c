@@ -86,8 +86,8 @@ __kernel_casinhl (__complex__ long double x, int adj)
     }
   else
     {
-      __real__ y = (rx - ix) * (rx + ix) + 1.0;
-      __imag__ y = 2.0 * rx * ix;
+      __real__ y = (rx - ix) * (rx + ix) + 1.0L;
+      __imag__ y = 2.0L * rx * ix;
 
       y = __csqrtl (y);
 
