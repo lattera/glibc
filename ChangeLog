@@ -1,3 +1,7 @@
+2013-03-20  Marcus Shawcroft  <marcus.shawcroft@linaro.org>
+
+	* Makerules ($(inst_libdir)/libc.so): Use $(rtlddir).
+
 2013-03-20  Ondřej Bílka  <neleai@seznam.cz>
 
 	[BZ 14176]
