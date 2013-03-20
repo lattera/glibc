@@ -1,3 +1,9 @@
+2013-03-20  Roland McGrath  <roland@hack.frob.com>
+
+	[BZ #14812]
+	* locale/programs/localedef.c (options): Put N_ translation marker
+	on argument names, not just descriptions.
+
 2013-03-20  Marcus Shawcroft  <marcus.shawcroft@linaro.org>
 
 	* Makerules ($(inst_libdir)/libc.so): Use $(rtlddir).

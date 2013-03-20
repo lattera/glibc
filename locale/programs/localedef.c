@@ -117,17 +117,18 @@ void (*argp_program_version_hook) (FILE *, struct argp_state *) = print_version;
 static const struct argp_option options[] =
 {
   { NULL, 0, NULL, 0, N_("Input Files:") },
-  { "charmap", 'f', "FILE", 0,
+  { "charmap", 'f', N_("FILE"), 0,
     N_("Symbolic character names defined in FILE") },
-  { "inputfile", 'i', "FILE", 0, N_("Source definitions are found in FILE") },
-  { "repertoire-map", 'u', "FILE", 0,
+  { "inputfile", 'i', N_("FILE"), 0,
+    N_("Source definitions are found in FILE") },
+  { "repertoire-map", 'u', N_("FILE"), 0,
     N_("FILE contains mapping from symbolic names to UCS4 values") },
 
   { NULL, 0, NULL, 0, N_("Output control:") },
   { "force", 'c', NULL, 0,
     N_("Create output even if warning messages were issued") },
   { "old-style", OPT_OLDSTYLE, NULL, 0, N_("Create old-style tables") },
-  { "prefix", OPT_PREFIX, "PATH", 0, N_("Optional output file prefix") },
+  { "prefix", OPT_PREFIX, N_("PATH"), 0, N_("Optional output file prefix") },
   { "posix", OPT_POSIX, NULL, 0, N_("Strictly conform to POSIX") },
   { "quiet", OPT_QUIET, NULL, 0,
     N_("Suppress warnings and information messages") },
@@ -141,7 +142,7 @@ static const struct argp_option options[] =
   { "delete-from-archive", OPT_DELETE_FROM_ARCHIVE, NULL, 0,
     N_("Remove locales named by parameters from archive") },
   { "list-archive", OPT_LIST_ARCHIVE, NULL, 0, N_("List content of archive") },
-  { "alias-file", 'A', "FILE", 0,
+  { "alias-file", 'A', N_("FILE"), 0,
     N_("locale.alias file to consult when making archive")},
   { NULL, 0, NULL, 0, NULL }
 };
