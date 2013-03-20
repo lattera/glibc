@@ -1,3 +1,8 @@
+2013-03-20  Ondřej Bílka  <neleai@seznam.cz>
+
+	[BZ 14176]
+	* stdlib/stdlib.h (mblen, mbtowc, wctomb): Remove __wur.
+
 2013-03-19  Roland McGrath  <roland@hack.frob.com>
 
 	* sysdeps/posix/libc_fatal.c: Include <sys/mman.h>.

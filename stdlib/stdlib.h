@@ -861,14 +861,14 @@ extern int qfcvt_r (long double __value, int __ndigit,
 __BEGIN_NAMESPACE_STD
 /* Return the length of the multibyte character
    in S, which is no longer than N.  */
-extern int mblen (const char *__s, size_t __n) __THROW __wur;
+extern int mblen (const char *__s, size_t __n) __THROW;
 /* Return the length of the given multibyte character,
    putting its `wchar_t' representation in *PWC.  */
 extern int mbtowc (wchar_t *__restrict __pwc,
-		   const char *__restrict __s, size_t __n) __THROW __wur;
+		   const char *__restrict __s, size_t __n) __THROW;
 /* Put the multibyte character represented
    by WCHAR in S, returning its length.  */
-extern int wctomb (char *__s, wchar_t __wchar) __THROW __wur;
+extern int wctomb (char *__s, wchar_t __wchar) __THROW;
 
 
 /* Convert a multibyte string to a wide char string.  */
