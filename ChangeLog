@@ -1,3 +1,19 @@
+2013-03-19  Roland McGrath  <roland@hack.frob.com>
+
+	* sysdeps/posix/libc_fatal.c: Include <sys/mman.h>.
+	[!WRITEV_FOR_FATAL] (writev_for_fatal): New function.
+	[!WRITEV_FOR_FATAL] (WRITEV_FOR_FATAL): New macro; call that.
+	[!BEFORE_ABORT] (before_abort): New function.
+	[!BEFORE_ABORT] (BEFORE_ABORT): New macro; call that.
+	* sysdeps/unix/sysv/linux/libc_fatal.c: Trim includes.
+	(writev_for_fatal): New function.
+	(WRITEV_FOR_FATAL): New macro; call that.
+	(backtrace_and_maps): New function.
+	(BEFORE_ABORT): New macro; call that.
+	(struct str_list): Type removed.
+	(__libc_message, __libc_fatal): Functions removed.
+	Include <sysdeps/posix/libc_fatal.c> instead.
+
 2013-03-19  Joseph Myers  <joseph@codesourcery.com>
 
 	* math/k_casinhf.c (__kernel_casinhf): Consistently use float
