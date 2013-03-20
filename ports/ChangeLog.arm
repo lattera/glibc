@@ -1,3 +1,11 @@
+2013-03-20  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/arm/configure.in (default-abi): Set using
+	LIBC_CONFIG_VAR.
+	* sysdeps/arm/configure: Regenerated.
+	* sysdeps/unix/sysv/linux/arm/Makefile: Do not include
+	default-abi.make.
+
 2013-03-18  Roland McGrath  <roland@hack.frob.com>
 
 	* sysdeps/arm/dl-tlsdesc.S: Include <arm-features.h>.

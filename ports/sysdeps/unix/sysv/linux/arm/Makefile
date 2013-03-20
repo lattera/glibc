@@ -70,9 +70,6 @@ LDFLAGS-tst-rfc3484-2 += $(common-objpfx)csu/libc-do-syscall.o
 LDFLAGS-tst-rfc3484-3 += $(common-objpfx)csu/libc-do-syscall.o
 endif
 
-# Get value of default-abi.
-include $(common-objpfx)default-abi.make
-
 abi-variants := soft hard
 
 ifeq (,$(filter $(default-abi),$(abi-variants)))

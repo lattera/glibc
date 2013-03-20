@@ -197,7 +197,9 @@ $as_echo "$libc_cv_arm_pcs_vfp" >&6; }
 if test $libc_cv_arm_pcs_vfp = yes; then
   $as_echo "#define HAVE_ARM_PCS_VFP 1" >>confdefs.h
 
-  echo "default-abi := hard" > default-abi.make
+  config_vars="$config_vars
+default-abi = hard"
 else
-  echo "default-abi := soft" > default-abi.make
+  config_vars="$config_vars
+default-abi = soft"
 fi
