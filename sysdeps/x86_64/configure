@@ -66,6 +66,8 @@ if test $libc_cv_cc_sse4 = yes; then
   $as_echo "#define HAVE_SSE4_SUPPORT 1" >>confdefs.h
 
 fi
+config_vars="$config_vars
+config-cflags-sse4 = $libc_cv_cc_sse4"
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for AVX support" >&5
 $as_echo_n "checking for AVX support... " >&6; }
@@ -90,6 +92,8 @@ if test $libc_cv_cc_avx = yes; then
   $as_echo "#define HAVE_AVX_SUPPORT 1" >>confdefs.h
 
 fi
+config_vars="$config_vars
+config-cflags-avx = $libc_cv_cc_avx"
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for AVX encoding of SSE instructions" >&5
 $as_echo_n "checking for AVX encoding of SSE instructions... " >&6; }
@@ -114,6 +118,8 @@ if test $libc_cv_cc_sse2avx = yes; then
   $as_echo "#define HAVE_SSE2AVX_SUPPORT 1" >>confdefs.h
 
 fi
+config_vars="$config_vars
+config-cflags-sse2avx = $libc_cv_cc_sse2avx"
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for FMA4 support" >&5
 $as_echo_n "checking for FMA4 support... " >&6; }
@@ -138,6 +144,8 @@ if test $libc_cv_cc_fma4 = yes; then
   $as_echo "#define HAVE_FMA4_SUPPORT 1" >>confdefs.h
 
 fi
+config_vars="$config_vars
+have-mfma4 = $libc_cv_cc_fma4"
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for -mno-vzeroupper support" >&5
 $as_echo_n "checking for -mno-vzeroupper support... " >&6; }
@@ -158,6 +166,8 @@ fi
 fi
 { $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_cc_novzeroupper" >&5
 $as_echo "$libc_cv_cc_novzeroupper" >&6; }
+config_vars="$config_vars
+config-cflags-novzeroupper = $libc_cv_cc_novzeroupper"
 
 $as_echo "#define PI_STATIC_AND_HIDDEN 1" >>confdefs.h
 

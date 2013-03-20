@@ -954,7 +954,6 @@ fi
 AC_PROG_LN_S
 
 LIBC_PROG_BINUTILS
-AC_SUBST(MIG)dnl Needed by sysdeps/mach/configure.in
 
 # Accept binutils 2.20 or newer.
 AC_CHECK_PROG_VER(AS, $AS, --version,
@@ -1948,6 +1947,7 @@ libc_cv_cc_nofma=
 for opt in -ffp-contract=off -mno-fused-madd; do
   LIBC_TRY_CC_OPTION([$opt], [libc_cv_cc_nofma=$opt; break])
 done])
+AC_SUBST(libc_cv_cc_nofma)
 
 if test -n "$submachine"; then
   AC_CACHE_CHECK([for compiler option for CPU variant],
@@ -2159,16 +2159,6 @@ AC_SUBST(libc_cv_sysconfdir)
 AC_SUBST(libc_cv_localstatedir)
 AC_SUBST(libc_cv_rootsbindir)
 AC_SUBST(libc_cv_forced_unwind)
-
-dnl sysdeps/CPU/configure.in checks set this via arch-specific asm tests
-AC_SUBST(libc_cv_cc_sse4)
-AC_SUBST(libc_cv_cc_avx)
-AC_SUBST(libc_cv_cc_sse2avx)
-AC_SUBST(libc_cv_cc_novzeroupper)
-AC_SUBST(libc_cv_cc_fma4)
-AC_SUBST(libc_cv_cc_nofma)
-AC_SUBST(libc_cv_as_i686)
-AC_SUBST(libc_cv_sparc_as_vis3)
 
 if test x$use_ldconfig = xyes; then
   AC_DEFINE(USE_LDCONFIG)

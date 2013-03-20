@@ -28,6 +28,7 @@ rm -f conftest*])
 if test $libc_cv_sparc_as_vis3 = yes; then
   AC_DEFINE(HAVE_AS_VIS3_SUPPORT)
 fi
+LIBC_CONFIG_VAR([have-as-vis3], [$libc_cv_sparc_as_vis3])
 
 # Check for a GCC emitting GOTDATA relocations.
 AC_CACHE_CHECK(for sparc gcc GOTDATA reloc support, libc_cv_sparc_gcc_gotdata, [dnl

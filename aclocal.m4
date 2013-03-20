@@ -241,3 +241,10 @@ else
   $4
 fi
 AC_MSG_RESULT($libc_linker_feature)])
+
+dnl Add a makefile variable, with value set from a shell string
+dnl (expanded by the shell inside double quotes), to config.make.
+dnl LIBC_CONFIG_VAR(make-variable, shell-value)
+AC_DEFUN([LIBC_CONFIG_VAR],
+[config_vars="$config_vars
+$1 = $2"])

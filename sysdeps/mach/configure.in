@@ -4,6 +4,7 @@ AC_CHECK_TOOL(MIG, mig, MISSING)
 if test "x$MIG" = xMISSING; then
   AC_MSG_ERROR([cannot find required build tool mig])
 fi
+LIBC_CONFIG_VAR([MIG], [$MIG])
 
 ### Sanity checks for Mach header installation
 AC_CHECK_HEADER(mach/mach_types.h,,

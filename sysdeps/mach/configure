@@ -162,6 +162,8 @@ fi
 if test "x$MIG" = xMISSING; then
   as_fn_error $? "cannot find required build tool mig" "$LINENO" 5
 fi
+config_vars="$config_vars
+MIG = $MIG"
 
 ### Sanity checks for Mach header installation
 

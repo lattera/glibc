@@ -1,3 +1,44 @@
+2013-03-20  Joseph Myers  <joseph@codesourcery.com>
+
+	* aclocal.m4 (LIBC_CONFIG_VAR): New autoconf macro.
+	* config.make.in (config-cflags-sse4): Remove variable.
+	(config-cflags-avx): Likewise.
+	(config-cflags-sse2avx): Likewise.
+	(config-cflags-novzeroupper): Likewise.
+	(config-asflags-i686): Likewise.
+	(have-mfma4): Likewise.
+	(have-as-vis3): Likewise.
+	(MIG): Likewise.
+	* configure.in (MIG): Do not AC_SUBST.
+	(libc_cv_cc_nofma): Move AC_SUBST next to configure test.
+	(libc_cv_cc_sse4): Do not AC_SUBST.
+	(libc_cv_cc_avx): Likewise.
+	(libc_cv_cc_sse2avx): Likewise.
+	(libc_cv_cc_novzeroupper): Likewise.
+	(libc_cv_cc_fma4): Likewise.
+	(libc_cv_as_i686): Likewise.
+	(libc_cv_sparc_as_vis3): Likewise.
+	* sysdeps/i386/configure.in (config-cflags-sse4): Set using
+	LIBC_CONFIG_VAR.
+	(config-asflags-i686): Likewise.
+	(config-cflags-avx): Likewise.
+	(config-cflags-sse2avx): Likewise.
+	(have-mfma4): Likewise.
+	(config-cflags-novzeroupper): Likewise.
+	* sysdeps/mach/configure.in (MIG): Likewise.
+	* sysdeps/sparc/configure.in (have-as-vis3): Likewise.
+	* sysdeps/x86_64/configure.in (config-cflags-sse4): Set using
+	LIBC_CONFIG_VAR.
+	(config-cflags-avx): Likewise.
+	(config-cflags-sse2avx): Likewise.
+	(have-mfma4): Likewise.
+	(config-cflags-novzeroupper): Likewise.
+	* configure: Regenerated.
+	* sysdeps/i386/configure: Likewise.
+	* sysdeps/mach/configure: Likewise.
+	* sysdeps/sparc/configure: Likewise.
+	* sysdeps/x86_64/configure: Likewise.
+
 2013-03-20  Roland McGrath  <roland@hack.frob.com>
 
 	[BZ #14812]

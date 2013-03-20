@@ -40,6 +40,8 @@ if test $libc_cv_sparc_as_vis3 = yes; then
   $as_echo "#define HAVE_AS_VIS3_SUPPORT 1" >>confdefs.h
 
 fi
+config_vars="$config_vars
+have-as-vis3 = $libc_cv_sparc_as_vis3"
 
 # Check for a GCC emitting GOTDATA relocations.
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for sparc gcc GOTDATA reloc support" >&5
