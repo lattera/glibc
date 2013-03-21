@@ -19,6 +19,7 @@
 #include <math.h>
 #include <math_private.h>
 #include <fenv_libc.h>
+#include <math_ldbl_opt.h>
 
 double
 __sqrt (double x)		/* wrapper sqrt */
@@ -41,4 +42,7 @@ __sqrt (double x)		/* wrapper sqrt */
 weak_alias (__sqrt, sqrt)
 #ifdef NO_LONG_DOUBLE
   strong_alias (__sqrt, __sqrtl) weak_alias (__sqrt, sqrtl)
+#endif
+#if LONG_DOUBLE_COMPAT(libm, GLIBC_2_0)
+compat_symbol (libm, __sqrt, sqrtl, GLIBC_2_0);
 #endif

@@ -1,3 +1,8 @@
+2013-03-21  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/fpu/w_sqrt.c (compat_symbol): Add sqrtl compat
+	symbol.
+
 2013-03-21  Thomas Schwinge  <thomas@codesourcery.com>
 
 	* math/gen-libm-test.pl (parse_args, special_functions): Properly
