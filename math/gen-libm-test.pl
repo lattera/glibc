@@ -203,22 +203,24 @@ sub special_functions {
   unless ($args[0] =~ /sincos/) {
     die ("Don't know how to handle $args[0] extra.");
   }
-  print $file "  FUNC (sincos) ($args[1], &sin_res, &cos_res);\n";
+  print $file "  {\n";
+  print $file "    FUNC (sincos) ($args[1], &sin_res, &cos_res);\n";
 
   $str = 'sincos (' . &beautify ($args[1]) . ', &sin_res, &cos_res)';
   # handle sin
   $test = $str . ' puts ' . &beautify ($args[2]) . ' in sin_res';
 
-  $cline = "  check_float (\"$test\", sin_res, $args[2]";
+  $cline = "    check_float (\"$test\", sin_res, $args[2]";
   $cline .= &new_test ($test, $args[4]);
   print $file $cline;
 
   # handle cos
   $test = $str . ' puts ' . &beautify ($args[3]) . ' in cos_res';
-  $cline = "  check_float (\"$test\", cos_res, $args[3]";
+  $cline = "    check_float (\"$test\", cos_res, $args[3]";
   # only tests once for exception
   $cline .= &new_test ($test, undef);
   print $file $cline;
+  print $file "  }\n";
 }
 
 # Parse the arguments to TEST_x_y
@@ -398,11 +400,15 @@ sub parse_args {
     }
   }
 
-  print $file $pre if (defined $pre);
-
-  print $file "  $cline";
-
-  print $file $post if (defined $post);
+  if (defined $pre or defined $post) {
+    print $file "  {\n";
+    print $file "  $pre" if (defined $pre);
+    print $file "    $cline";
+    print $file "  $post" if (defined $post);
+    print $file "  }\n";
+  } else {
+    print $file "  $cline";
+  }
 }
 
 # Generate libm-test.c

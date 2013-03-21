@@ -1,5 +1,8 @@
 2013-03-21  Thomas Schwinge  <thomas@codesourcery.com>
 
+	* math/gen-libm-test.pl (parse_args, special_functions): Properly
+	wrap blocks consisting of several statements.
+
 	* sysdeps/generic/math-tests.h: New file.
 	* sysdeps/i386/fpu/math-tests.h: Likewise.
 	* math/test-snan.c: Include it.
