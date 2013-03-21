@@ -1,3 +1,8 @@
+2013-03-21  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* sysdeps/ieee754/dbl-64/mpsqrt.c (__mpsqrt): Use HALFRAD.
+	* sysdeps/ieee754/dbl-64/sincos32.c (__mpranred): Likewise.
+
 2013-03-20  Joseph Myers  <joseph@codesourcery.com>
 
 	* aclocal.m4 (LIBC_CONFIG_VAR): New autoconf macro.

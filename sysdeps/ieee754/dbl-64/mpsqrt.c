@@ -53,8 +53,8 @@ __mpsqrt (mp_no *x, mp_no *y, int p)
 {
   int i, m, ey;
   double dx, dy;
-  static const mp_no mphalf = {0, {1.0, 8388608.0 /* 2^23 */}};
-  static const mp_no mp3halfs = {1, {1.0, 1.0, 8388608.0 /* 2^23 */}};
+  static const mp_no mphalf = {0, {1.0, HALFRAD}};
+  static const mp_no mp3halfs = {1, {1.0, 1.0, HALFRAD}};
   mp_no mpxn, mpz, mpu, mpt1, mpt2;
 
   ey = EX / 2;

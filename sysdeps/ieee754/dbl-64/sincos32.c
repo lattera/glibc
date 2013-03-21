@@ -262,7 +262,7 @@ __mpranred(double x, mp_no *y, int p)
     for (i=1;i<=p-c.e;i++) c.d[i]=c.d[i+c.e];
     for (i=p+1-c.e;i<=p;i++) c.d[i]=0;
     c.e=0;
-    if (c.d[1] >=  8388608.0)
+    if (c.d[1] >= HALFRAD)
     { t +=1.0;
       __sub(&c,&mpone,&b,p);
       __mul(&b,&hp,y,p);
