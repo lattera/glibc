@@ -93,6 +93,7 @@
 
 #include <math.h>
 #include <math_private.h>
+#include <float.h>
 
 /* 1 / sqrt(pi) */
 static const long double ONEOSQPI = 5.6418958354775628694807945156077258584405E-1L;
@@ -710,11 +711,14 @@ __ieee754_j0l (long double x)
   __sincosl (xx, &s, &c);
   ss = s - c;
   cc = s + c;
-  z = -__cosl (xx + xx);
-  if ((s * c) < 0)
-    cc = z / ss;
-  else
-    ss = z / cc;
+  if (xx <= LDBL_MAX / 2.0L)
+    {
+      z = -__cosl (xx + xx);
+      if ((s * c) < 0)
+	cc = z / ss;
+      else
+	ss = z / cc;
+    }
 
   if (xx > 0x1p256L)
     return ONEOSQPI * cc / __ieee754_sqrtl (xx);
@@ -857,11 +861,14 @@ long double
   __sincosl (x, &s, &c);
   ss = s - c;
   cc = s + c;
-  z = -__cosl (x + x);
-  if ((s * c) < 0)
-    cc = z / ss;
-  else
-    ss = z / cc;
+  if (xx <= LDBL_MAX / 2.0L)
+    {
+      z = -__cosl (x + x);
+      if ((s * c) < 0)
+	cc = z / ss;
+      else
+	ss = z / cc;
+    }
 
   if (xx > 0x1p256L)
     return ONEOSQPI * ss / __ieee754_sqrtl (x);

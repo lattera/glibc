@@ -1,3 +1,20 @@
+2013-03-21  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #15285]
+	* sysdeps/ieee754/ldbl-128/e_j0l.c: Include <float.h>.
+	(__ieee754_j0l): Do not improve calculations using cos of twice
+	input for inputs above LDBL_MAX / 2.0L.
+	(__ieee754_y0l): Likewise.
+	* sysdeps/ieee754/ldbl-128/e_j1l.c: Include <float.h>.
+	(__ieee754_j1l): Do not improve calculations using cos of twice
+	input for inputs above LDBL_MAX / 2.0L.
+	(__ieee754_y1l): Likewise.
+	* math/libm-test.inc (j0_test): Add another test.
+	(j1_test): Likewise.
+	(y0_test): Likewise.
+	(y1_test): Likewise.
+	* sysdeps/i386/fpu/libm-test-ulps: Update.
+
 2013-03-21  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* Rules ($(objpfx)bench-%.c): Include code from a C source
