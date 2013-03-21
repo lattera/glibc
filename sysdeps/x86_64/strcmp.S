@@ -32,7 +32,7 @@
 /* The simplified code below is not set up to handle strncmp() so far.
    Should this become necessary it has to be implemented.  For now
    just report the problem.  */
-# ifdef NOT_IN_lib
+# ifdef NOT_IN_libc
 #  error "strncmp not implemented so far"
 # endif
 
@@ -51,7 +51,7 @@
 # include "locale-defines.h"
 
 /* No support for strcasecmp outside libc so far since it is not needed.  */
-# ifdef NOT_IN_lib
+# ifdef NOT_IN_libc
 #  error "strcasecmp_l not implemented so far"
 # endif
 
@@ -60,7 +60,7 @@
 # include "locale-defines.h"
 
 /* No support for strncasecmp outside libc so far since it is not needed.  */
-# ifdef NOT_IN_lib
+# ifdef NOT_IN_libc
 #  error "strncasecmp_l not implemented so far"
 # endif
 

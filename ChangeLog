@@ -1,3 +1,9 @@
+2013-03-21  Dmitry V. Levin  <ldv@altlinux.org>
+
+	[BZ #11120]
+	* sysdeps/x86_64/strcmp.S: Replace all occurrences of NOT_IN_lib
+	with NOT_IN_libc.
+
 2013-03-21  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/fpu/w_sqrt.c (compat_symbol): Add sqrtl compat
