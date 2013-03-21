@@ -84,6 +84,32 @@ __kernel_casinhl (__complex__ long double x, int adj)
       else
 	__imag__ res = __ieee754_atan2l (s, rx);
     }
+  else if (ix == 1.0L && rx < 0.5L)
+    {
+      if (rx < LDBL_EPSILON / 8.0L)
+	{
+	  __real__ res = __log1pl (2.0L * (rx + __ieee754_sqrtl (rx))) / 2.0L;
+	  if (adj)
+	    __imag__ res = __ieee754_atan2l (__ieee754_sqrtl (rx),
+					     __copysignl (1.0L, __imag__ x));
+	  else
+	    __imag__ res = __ieee754_atan2l (1.0L, __ieee754_sqrtl (rx));
+	}
+      else
+	{
+	  long double d = rx * __ieee754_sqrtl (4.0L + rx * rx);
+	  long double s1 = __ieee754_sqrtl ((d + rx * rx) / 2.0L);
+	  long double s2 = __ieee754_sqrtl ((d - rx * rx) / 2.0L);
+
+	  __real__ res = __log1pl (rx * rx + d + 2.0L * (rx * s1 + s2)) / 2.0L;
+	  if (adj)
+	    __imag__ res = __ieee754_atan2l (rx + s1,
+					     __copysignl (1.0L + s2,
+							  __imag__ x));
+	  else
+	    __imag__ res = __ieee754_atan2l (1.0L + s2, rx + s1);
+	}
+    }
   else
     {
       __real__ y = (rx - ix) * (rx + ix) + 1.0L;
