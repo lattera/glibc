@@ -1,3 +1,8 @@
+2013-03-21  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* Rules ($(objpfx)bench-%.c): Include code from a C source
+	file.
+
 2013-03-21  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #15287]

@@ -210,8 +210,12 @@ $(binaries-bench): %: %.o \
 	$(+link)
 
 $(objpfx)bench-%.c: %-inputs bench-skeleton.c
+	{ if [ -n "$($*-INCLUDE)" ]; then \
+	  cat $($*-INCLUDE); \
+	fi; \
 	$(..)scripts/bench.pl $(patsubst %-inputs,%,$<) \
-	  $($*-ITER) $($*-ARGLIST) $($*-RET) > $@
+	  $($*-ITER) $($*-ARGLIST) $($*-RET); } > $@-tmp
+	mv -f $@-tmp $@
 
 
 .PHONY: distclean realclean subdir_distclean subdir_realclean \
