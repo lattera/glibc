@@ -105,7 +105,8 @@ if test -z "$libc_mips_float"; then
   as_fn_error $? "could not determine if compiler is using hard or soft floating point ABI" "$LINENO" 5
 fi
 
-echo "default-abi := ${libc_mips_abi}_${libc_mips_float}" > default-abi.make
+config_vars="$config_vars
+default-abi = ${libc_mips_abi}_${libc_mips_float}"
 
 case "$prefix" in
 /usr | /usr/)

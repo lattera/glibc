@@ -1,3 +1,11 @@
+2013-03-20  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/mips/configure.in (default-abi): Set
+	using LIBC_CONFIG_VAR.
+	* sysdeps/unix/sysv/linux/mips/configure: Regenerated.
+	* sysdeps/unix/sysv/linux/mips/Makefile: Do not include
+	default-abi.make.
+
 2013-03-15  Thomas Schwinge  <thomas@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/mips/bits/mman.h [__USE_MISC]

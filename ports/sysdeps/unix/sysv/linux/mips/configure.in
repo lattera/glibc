@@ -44,7 +44,7 @@ if test -z "$libc_mips_float"; then
   AC_MSG_ERROR([could not determine if compiler is using hard or soft floating point ABI])
 fi
 
-echo "default-abi := ${libc_mips_abi}_${libc_mips_float}" > default-abi.make
+LIBC_CONFIG_VAR([default-abi], [${libc_mips_abi}_${libc_mips_float}])
 
 case "$prefix" in
 /usr | /usr/)

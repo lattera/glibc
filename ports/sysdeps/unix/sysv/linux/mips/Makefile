@@ -8,9 +8,6 @@ sysdep_routines += cachectl cacheflush sysmips _test_and_set
 sysdep_headers += sys/cachectl.h sys/sysmips.h sys/tas.h
 endif
 
-# Get value of default-abi.
-include $(common-objpfx)default-abi.make
-
 abi-variants := o32_soft o32_hard n32_soft n32_hard n64_soft n64_hard
 
 ifeq (,$(filter $(default-abi),$(abi-variants)))
