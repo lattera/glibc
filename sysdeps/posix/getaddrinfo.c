@@ -2489,11 +2489,27 @@ getaddrinfo (const char *name, const char *service,
       __typeof (once) old_once = once;
       __libc_once (once, gaiconf_init);
       /* Sort results according to RFC 3484.  */
-      struct sort_result results[nresults];
-      size_t order[nresults];
+      struct sort_result *results;
+      size_t *order;
       struct addrinfo *q;
       struct addrinfo *last = NULL;
       char *canonname = NULL;
+      bool malloc_results;
+
+      malloc_results
+	= !__libc_use_alloca (nresults * (sizeof (*results) + sizeof (size_t)));
+      if (malloc_results)
+	{
+	  results = malloc (nresults * (sizeof (*results) + sizeof (size_t)));
+	  if (results == NULL)
+	    {
+	      __free_in6ai (in6ai);
+	      return EAI_MEMORY;
+	    }
+	}
+      else
+	results = alloca (nresults * (sizeof (*results) + sizeof (size_t)));
+      order = (size_t *) (results + nresults);
 
       /* Now we definitely need the interface information.  */
       if (! check_pf_called)
@@ -2664,6 +2680,9 @@ getaddrinfo (const char *name, const char *service,
 
       /* Fill in the canonical name into the new first entry.  */
       p->ai_canonname = canonname;
+
+      if (malloc_results)
+	free (results);
     }
 
   __free_in6ai (in6ai);
