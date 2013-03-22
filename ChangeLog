@@ -1,3 +1,12 @@
+2013-03-19  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
+	[BZ #13889]
+	* sysdeps/ieee754/ldbl-128ibm/e_expl.c (__ieee754_expl): Increase the
+	high value to check if expl overflow.
+	* sysdeps/ieee754/ldbl-128ibm/w_expl.c (__expl): Fix threshold constants
+	to check for underflow and overflow.
+	* math/libm-test.inc: Add exp test.
+
 2013-03-21  Dmitry V. Levin  <ldv@altlinux.org>
 
 	[BZ #11120]

@@ -70,11 +70,11 @@
 static const long double C[] = {
 /* Smallest integer x for which e^x overflows.  */
 #define himark C[0]
- 709.08956571282405153382846025171462914L,
+ 709.78271289338399678773454114191496482L,
 
 /* Largest integer x for which e^x underflows.  */
 #define lomark C[1]
--744.44007192138121808966388925909996033L,
+-744.44007192138126231410729844608163411L,
 
 /* 3x2^96 */
 #define THREEp96 C[2]
