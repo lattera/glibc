@@ -1,3 +1,8 @@
+2013-03-24  Mark H Weaver  <mhw@netris.org>
+
+	* manual/arith.texi (Normalization Functions): Fix prototypes for
+	scalbn, scalbnf, scalbnl, scalbln, scalblnf, and scalblnl.
+
 2013-03-19  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	[BZ #13889]
