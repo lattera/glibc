@@ -45,7 +45,7 @@
 #   See pow-inputs for an example.
 
 subdir := benchtests
-bench := exp pow rint sin cos tan atan \
+bench := exp pow rint sin cos tan atan modf \
 	 slowexp slowpow slowsin slowcos slowtan slowatan
 
 # exp function fast path
