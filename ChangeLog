@@ -1,3 +1,22 @@
+2013-03-26  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* sysdeps/ieee754/dbl-64/mpa-arch.h: New file.
+	* sysdeps/ieee754/dbl-64/mpa.c (norm): Use MANTISSA_T and
+	MANTISSA_STORE_T to store computations on mantissa.  Use
+	macros for rounding and division.
+	(denorm): Likewise.
+	(__dbl_mp): Likewise.
+	(add_magnitudes): Likewise.
+	(sub_magnitudes): Likewise.
+	(__mul): Likewise.
+	(__sqr): Likewise.
+	* sysdeps/ieee754/dbl-64/mpa.h: Include mpa-arch.h.  Define
+	powers of two in terms of TWOPOW macro.
+	(mp_no): Make type of mantissa as MANTISSA_T.
+	[!RADIXI]: Define RADIXI.
+	[!TWO52]: Define TWO52.
+	* sysdeps/powerpc/power4/fpu/mpa-arch.h: New file.
+
 2013-03-25  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/fpu/s_llround.c: Fix libm ABI issue with missing
