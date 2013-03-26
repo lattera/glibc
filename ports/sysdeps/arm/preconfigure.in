@@ -10,7 +10,7 @@ arm*)
     # avoid this, add -fno-unwind-tables here and remove it in
     # sysdeps/unix/sysv/linux/arm/configure.in after those tests have
     # been run.
-    if [ "${CFLAGS+set}" != "set" ]; then
+    if test "${CFLAGS+set}" != "set"; then
       CFLAGS="-g -O2"
     fi
     CFLAGS="$CFLAGS -fno-unwind-tables"

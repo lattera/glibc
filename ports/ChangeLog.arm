@@ -1,3 +1,8 @@
+2013-03-26  Mans Rullgard  <mans@mansr.com>
+
+	* sysdeps/arm/preconfigure.in: Use "test" instead of [ ].
+	* sysdeps/arm/preconfigure: Regenerated.
+
 2013-03-20  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/arm/configure.in (default-abi): Set using
