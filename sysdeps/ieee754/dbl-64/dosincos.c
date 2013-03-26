@@ -63,9 +63,6 @@ __dubsin(double x, double dx, double v[]) {
 #ifndef DLA_FMS
   double p,hx,tx,hy,ty,q;
 #endif
-#if 0
-  double xx,y,yy,z,zz;
-#endif
   mynumber u;
   int4 k;
 
@@ -118,9 +115,6 @@ __dubcos(double x, double dx, double v[]) {
     sn,ssn,cs,ccs,ds,dss,dc,dcc;
 #ifndef DLA_FMS
   double p,hx,tx,hy,ty,q;
-#endif
-#if 0
-  double xx,y,yy,z,zz;
 #endif
   mynumber u;
   int4 k;

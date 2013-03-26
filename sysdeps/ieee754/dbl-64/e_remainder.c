@@ -42,13 +42,7 @@
 double __ieee754_remainder(double x, double y)
 {
   double z,d,xx;
-#if 0
-  double yy;
-#endif
   int4 kx,ky,n,nn,n1,m1,l;
-#if 0
-  int4 m;
-#endif
   mynumber u,t,w={{0,0}},v={{0,0}},ww={{0,0}},r;
   u.x=x;
   t.x=y;

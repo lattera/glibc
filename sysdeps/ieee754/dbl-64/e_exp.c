@@ -55,9 +55,6 @@ SECTION
 __ieee754_exp(double x) {
   double bexp, t, eps, del, base, y, al, bet, res, rem, cor;
   mynumber junk1, junk2, binexp  = {{0,0}};
-#if 0
-  int4 k;
-#endif
   int4 i,j,m,n,ex;
   double retval;
 
@@ -174,9 +171,6 @@ SECTION
 __exp1(double x, double xx, double error) {
   double bexp, t, eps, del, base, y, al, bet, res, rem, cor;
   mynumber junk1, junk2, binexp  = {{0,0}};
-#if 0
-  int4 k;
-#endif
   int4 i,j,m,n,ex;
 
   junk1.x = x;

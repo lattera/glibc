@@ -64,9 +64,6 @@ tan(double x) {
   int p;
   number num,v;
   mp_no mpa,mpt1,mpt2;
-#if 0
-  mp_no mpy;
-#endif
 
   double retval;
 

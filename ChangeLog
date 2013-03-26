@@ -1,5 +1,26 @@
 2013-03-26  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
+	* sysdeps/ieee754/dbl-64/branred.c (__branred): Remove
+	commented code.
+	* sysdeps/ieee754/dbl-64/dosincos.c (__dubsin): Likewise.
+	(__dubcos): Likewise.
+	* sysdeps/ieee754/dbl-64/e_asin.c (__ieee754_asin): Likewise.
+	(__ieee754_acos): Likewise.
+	* sysdeps/ieee754/dbl-64/e_atan2.c (__ieee754_atan2): Likewise.
+	* sysdeps/ieee754/dbl-64/e_exp.c (__ieee754_exp): Likewise.
+	(__exp1): Likewise.
+	* sysdeps/ieee754/dbl-64/e_log.c (__ieee754_log): Likewise.
+	* sysdeps/ieee754/dbl-64/e_pow.c (__ieee754_pow): Likewise.
+	(log1): Likewise.
+	(my_log2): Likewise.
+	(checkint): Likewise.
+	* sysdeps/ieee754/dbl-64/e_remainder.c
+	(__ieee754_remainder): Likewise.
+	* sysdeps/ieee754/dbl-64/s_atan.c (atan): Likewise.
+	* sysdeps/ieee754/dbl-64/s_sin.c (__sin): Likewise.
+	(bsloww): Likewise.
+	* sysdeps/ieee754/dbl-64/s_tan.c (tan): Likewise.
+
 	* sysdeps/ieee754/dbl-64/mpa-arch.h: New file.
 	* sysdeps/ieee754/dbl-64/mpa.c (norm): Use MANTISSA_T and
 	MANTISSA_STORE_T to store computations on mantissa.  Use

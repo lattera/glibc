@@ -62,9 +62,6 @@ __ieee754_asin(double x){
   double x1,x2,xx,s1,s2,res1,p,t,res,r,cor,cc,y,c,z,w[2];
   mynumber u,v;
   int4 k,m,n;
-#if 0
-  int4 nn;
-#endif
 
   u.x = x;
   m = u.i[HIGH_HALF];
@@ -344,14 +341,8 @@ SECTION
 __ieee754_acos(double x)
 {
   double x1,x2,xx,s1,s2,res1,p,t,res,r,cor,cc,y,c,z,w[2],eps;
-#if 0
-  double fc;
-#endif
   mynumber u,v;
   int4 k,m,n;
-#if 0
-  int4 nn;
-#endif
   u.x = x;
   m = u.i[HIGH_HALF];
   k = 0x7fffffff&m;

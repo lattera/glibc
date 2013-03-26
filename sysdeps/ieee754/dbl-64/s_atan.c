@@ -62,18 +62,9 @@ double atan(double x) {
 #ifndef DLA_FMS
   double t4,t5,t6;
 #endif
-#if 0
-  double y1,y2;
-#endif
   int i,ux,dx;
-#if 0
-  int p;
-#endif
   static const int pr[M]={6,8,10,32};
   number num;
-#if 0
-  mp_no mpt1,mpx,mpy,mpy1,mpy2,mperr;
-#endif
 
   num.d = x;  ux = num.i[HIGH_HALF];  dx = num.i[LOW_HALF];
 

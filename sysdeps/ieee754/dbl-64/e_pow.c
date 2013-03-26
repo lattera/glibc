@@ -64,9 +64,6 @@ double
 SECTION
 __ieee754_pow(double x, double y) {
   double z,a,aa,error, t,a1,a2,y1,y2;
-#if 0
-  double gor=1.0;
-#endif
   mynumber u,v;
   int k;
   int4 qx,qy;
@@ -206,13 +203,7 @@ static double
 SECTION
 log1(double x, double *delta, double *error) {
   int i,j,m;
-#if 0
-  int n;
-#endif
   double uu,vv,eps,nx,e,e1,e2,t,t1,t2,res,add=0;
-#if 0
-  double cor;
-#endif
   mynumber u,v;
 #ifdef BIG_ENDI
   mynumber
@@ -300,13 +291,7 @@ static double
 SECTION
 my_log2(double x, double *delta, double *error) {
   int i,j,m;
-#if 0
-  int n;
-#endif
   double uu,vv,eps,nx,e,e1,e2,t,t1,t2,res,add=0;
-#if 0
-  double cor;
-#endif
   double ou1,ou2,lu1,lu2,ov,lv1,lv2,a,a1,a2;
   double y,yy,z,zz,j1,j2,j7,j8;
 #ifndef DLA_FMS
@@ -397,9 +382,6 @@ SECTION
 checkint(double x) {
   union {int4 i[2]; double x;} u;
   int k,m,n;
-#if 0
-  int l;
-#endif
   u.x = x;
   m = u.i[HIGH_HALF]&0x7fffffff;    /* no sign */
   if (m >= 0x7ff00000) return 0;    /*  x is +/-inf or NaN  */

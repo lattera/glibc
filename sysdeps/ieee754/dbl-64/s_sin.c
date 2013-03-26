@@ -100,14 +100,8 @@ double
 SECTION
 __sin(double x){
 	double xx,res,t,cor,y,s,c,sn,ssn,cs,ccs,xn,a,da,db,eps,xn1,xn2;
-#if 0
-	double w[2];
-#endif
 	mynumber u,v;
 	int4 k,m,n;
-#if 0
-	int4 nn;
-#endif
 	double retval = 0;
 
 	SET_RESTORE_ROUND_53BIT (FE_TONEAREST);
@@ -902,10 +896,6 @@ SECTION
 bsloww(double x,double dx, double orig,int n) {
   static const double th2_36 = 206158430208.0;   /*    1.5*2**37   */
   double y,x1,x2,xx,r,t,res,cor,w[2];
-#if 0
-  double a,da,xn;
-  union {int4 i[2]; double x;} v;
-#endif
   x1=(x+th2_36)-th2_36;
   y = aa.x*x1*x1*x1;
   r=x+y;
