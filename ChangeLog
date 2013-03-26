@@ -1,5 +1,19 @@
 2013-03-26  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
+	* sysdeps/ieee754/dbl-64/mpa.c (__acr): Use integral
+	constants.
+	(norm): Likewise.
+	(denorm): Likewise.
+	(__dbl_mp): Likewise.
+	(add_magnitudes): Likewise.
+	(sub_magnitudes): Likewise.
+	(__add): Likewise.
+	(__sub): Likewise.
+	(__mul): Likewise.
+	(__sqr): Likewise.
+	(__inv): Likewise.
+	(__dvd): Likewise.
+
 	* sysdeps/ieee754/dbl-64/branred.c (__branred): Remove
 	commented code.
 	* sysdeps/ieee754/dbl-64/dosincos.c (__dubsin): Likewise.

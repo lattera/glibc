@@ -80,14 +80,14 @@ __acr (const mp_no *x, const mp_no *y, int p)
 {
   long i;
 
-  if (X[0] == ZERO)
+  if (X[0] == 0)
     {
-      if (Y[0] == ZERO)
+      if (Y[0] == 0)
 	i = 0;
       else
 	i = -1;
     }
-  else if (Y[0] == ZERO)
+  else if (Y[0] == 0)
     i = 1;
   else
     {
@@ -140,10 +140,10 @@ norm (const mp_no *x, double *y, int p)
     }
   else
     {
-      for (a = ONE, z[1] = X[1]; z[1] < TWO23;)
+      for (a = 1, z[1] = X[1]; z[1] < TWO23;)
 	{
-	  a *= TWO;
-	  z[1] *= TWO;
+	  a *= 2;
+	  z[1] *= 2;
 	}
 
       for (i = 2; i < 5; i++)
@@ -160,21 +160,21 @@ norm (const mp_no *x, double *y, int p)
 
       if (v == TWO18)
 	{
-	  if (z[4] == ZERO)
+	  if (z[4] == 0)
 	    {
 	      for (i = 5; i <= p; i++)
 		{
-		  if (X[i] == ZERO)
+		  if (X[i] == 0)
 		    continue;
 		  else
 		    {
-		      z[3] += ONE;
+		      z[3] += 1;
 		      break;
 		    }
 		}
 	    }
 	  else
-	    z[3] += ONE;
+	    z[3] += 1;
 	}
 
       c = (z[1] + R * (z[2] + R * z[3])) / a;
@@ -204,7 +204,7 @@ denorm (const mp_no *x, double *y, int p)
 #define R RADIXI
   if (EX < -44 || (EX == -44 && X[1] < TWO5))
     {
-      *y = ZERO;
+      *y = 0;
       return;
     }
 
@@ -213,21 +213,21 @@ denorm (const mp_no *x, double *y, int p)
       if (EX == -42)
 	{
 	  z[1] = X[1] + TWO10;
-	  z[2] = ZERO;
-	  z[3] = ZERO;
+	  z[2] = 0;
+	  z[3] = 0;
 	  k = 3;
 	}
       else if (EX == -43)
 	{
 	  z[1] = TWO10;
 	  z[2] = X[1];
-	  z[3] = ZERO;
+	  z[3] = 0;
 	  k = 2;
 	}
       else
 	{
 	  z[1] = TWO10;
-	  z[2] = ZERO;
+	  z[2] = 0;
 	  z[3] = X[1];
 	  k = 1;
 	}
@@ -238,7 +238,7 @@ denorm (const mp_no *x, double *y, int p)
 	{
 	  z[1] = X[1] + TWO10;
 	  z[2] = X[2];
-	  z[3] = ZERO;
+	  z[3] = 0;
 	  k = 3;
 	}
       else if (EX == -43)
@@ -251,7 +251,7 @@ denorm (const mp_no *x, double *y, int p)
       else
 	{
 	  z[1] = TWO10;
-	  z[2] = ZERO;
+	  z[2] = 0;
 	  z[3] = X[1];
 	  k = 1;
 	}
@@ -273,7 +273,7 @@ denorm (const mp_no *x, double *y, int p)
       else
 	{
 	  z[1] = TWO10;
-	  z[2] = ZERO;
+	  z[2] = 0;
 	  k = 1;
 	}
       z[3] = X[k];
@@ -285,11 +285,11 @@ denorm (const mp_no *x, double *y, int p)
     {
       for (i = k + 1; i <= p2; i++)
 	{
-	  if (X[i] == ZERO)
+	  if (X[i] == 0)
 	    continue;
 	  else
 	    {
-	      z[3] += ONE;
+	      z[3] += 1;
 	      break;
 	    }
 	}
@@ -306,9 +306,9 @@ denorm (const mp_no *x, double *y, int p)
 void
 __mp_dbl (const mp_no *x, double *y, int p)
 {
-  if (X[0] == ZERO)
+  if (X[0] == 0)
     {
-      *y = ZERO;
+      *y = 0;
       return;
     }
 
@@ -329,23 +329,23 @@ __dbl_mp (double x, mp_no *y, int p)
   long p2 = p;
 
   /* Sign.  */
-  if (x == ZERO)
+  if (x == 0)
     {
-      Y[0] = ZERO;
+      Y[0] = 0;
       return;
     }
-  else if (x > ZERO)
-    Y[0] = ONE;
+  else if (x > 0)
+    Y[0] = 1;
   else
     {
-      Y[0] = MONE;
+      Y[0] = -1;
       x = -x;
     }
 
   /* Exponent.  */
-  for (EY = ONE; x >= RADIX; EY += ONE)
+  for (EY = 1; x >= RADIX; EY += 1)
     x *= RADIXI;
-  for (; x < ONE; EY -= ONE)
+  for (; x < 1; EY -= 1)
     x *= RADIX;
 
   /* Digits.  */
@@ -356,7 +356,7 @@ __dbl_mp (double x, mp_no *y, int p)
       x *= RADIX;
     }
   for (; i <= p2; i++)
-    Y[i] = ZERO;
+    Y[i] = 0;
 }
 
 /* Add magnitudes of *X and *Y assuming that abs (*X) >= abs (*Y) > 0.  The
@@ -383,7 +383,7 @@ add_magnitudes (const mp_no *x, const mp_no *y, mp_no *z, int p)
       return;
     }
 
-  zk = ZERO;
+  zk = 0;
 
   for (; j > 0; i--, j--)
     {
@@ -391,12 +391,12 @@ add_magnitudes (const mp_no *x, const mp_no *y, mp_no *z, int p)
       if (zk >= RADIX)
 	{
 	  Z[k--] = zk - RADIX;
-	  zk = ONE;
+	  zk = 1;
 	}
       else
         {
 	  Z[k--] = zk;
-	  zk = ZERO;
+	  zk = 0;
 	}
     }
 
@@ -406,16 +406,16 @@ add_magnitudes (const mp_no *x, const mp_no *y, mp_no *z, int p)
       if (zk >= RADIX)
 	{
 	  Z[k--] = zk - RADIX;
-	  zk = ONE;
+	  zk = 1;
 	}
       else
         {
 	  Z[k--] = zk;
-	  zk = ZERO;
+	  zk = 0;
 	}
     }
 
-  if (zk == ZERO)
+  if (zk == 0)
     {
       for (i = 1; i <= p2; i++)
 	Z[i] = Z[i + 1];
@@ -423,7 +423,7 @@ add_magnitudes (const mp_no *x, const mp_no *y, mp_no *z, int p)
   else
     {
       Z[1] = zk;
-      EZ += ONE;
+      EZ += 1;
     }
 }
 
@@ -453,27 +453,27 @@ sub_magnitudes (const mp_no *x, const mp_no *y, mp_no *z, int p)
 
   /* The relevant least significant digit in Y is non-zero, so we factor it in
      to enhance accuracy.  */
-  if (j < p2 && Y[j + 1] > ZERO)
+  if (j < p2 && Y[j + 1] > 0)
     {
       Z[k + 1] = RADIX - Y[j + 1];
-      zk = MONE;
+      zk = -1;
     }
   else
-    zk = Z[k + 1] = ZERO;
+    zk = Z[k + 1] = 0;
 
   /* Subtract and borrow.  */
   for (; j > 0; i--, j--)
     {
       zk += (X[i] - Y[j]);
-      if (zk < ZERO)
+      if (zk < 0)
 	{
 	  Z[k--] = zk + RADIX;
-	  zk = MONE;
+	  zk = -1;
 	}
       else
         {
 	  Z[k--] = zk;
-	  zk = ZERO;
+	  zk = 0;
 	}
     }
 
@@ -481,25 +481,25 @@ sub_magnitudes (const mp_no *x, const mp_no *y, mp_no *z, int p)
   for (; i > 0; i--)
     {
       zk += X[i];
-      if (zk < ZERO)
+      if (zk < 0)
 	{
 	  Z[k--] = zk + RADIX;
-	  zk = MONE;
+	  zk = -1;
 	}
       else
         {
 	  Z[k--] = zk;
-	  zk = ZERO;
+	  zk = 0;
 	}
     }
 
   /* Normalize.  */
-  for (i = 1; Z[i] == ZERO; i++);
+  for (i = 1; Z[i] == 0; i++);
   EZ = EZ - i + 1;
   for (k = 1; i <= p2 + 1;)
     Z[k++] = Z[i++];
   for (; k <= p2;)
-    Z[k++] = ZERO;
+    Z[k++] = 0;
 }
 
 /* Add *X and *Y and store the result in *Z.  X and Y may overlap, but not X
@@ -511,12 +511,12 @@ __add (const mp_no *x, const mp_no *y, mp_no *z, int p)
 {
   int n;
 
-  if (X[0] == ZERO)
+  if (X[0] == 0)
     {
       __cpy (y, z, p);
       return;
     }
-  else if (Y[0] == ZERO)
+  else if (Y[0] == 0)
     {
       __cpy (x, z, p);
       return;
@@ -548,7 +548,7 @@ __add (const mp_no *x, const mp_no *y, mp_no *z, int p)
 	  Z[0] = Y[0];
 	}
       else
-	Z[0] = ZERO;
+	Z[0] = 0;
     }
 }
 
@@ -561,13 +561,13 @@ __sub (const mp_no *x, const mp_no *y, mp_no *z, int p)
 {
   int n;
 
-  if (X[0] == ZERO)
+  if (X[0] == 0)
     {
       __cpy (y, z, p);
       Z[0] = -Z[0];
       return;
     }
-  else if (Y[0] == ZERO)
+  else if (Y[0] == 0)
     {
       __cpy (x, z, p);
       return;
@@ -599,7 +599,7 @@ __sub (const mp_no *x, const mp_no *y, mp_no *z, int p)
 	  Z[0] = -Y[0];
 	}
       else
-	Z[0] = ZERO;
+	Z[0] = 0;
     }
 }
 
@@ -618,23 +618,23 @@ __mul (const mp_no *x, const mp_no *y, mp_no *z, int p)
   mantissa_store_t *diag;
 
   /* Is z=0?  */
-  if (__glibc_unlikely (X[0] * Y[0] == ZERO))
+  if (__glibc_unlikely (X[0] * Y[0] == 0))
     {
-      Z[0] = ZERO;
+      Z[0] = 0;
       return;
     }
 
   /* We need not iterate through all X's and Y's since it's pointless to
      multiply zeroes.  Here, both are zero...  */
   for (ip2 = p2; ip2 > 0; ip2--)
-    if (X[ip2] != ZERO || Y[ip2] != ZERO)
+    if (X[ip2] != 0 || Y[ip2] != 0)
       break;
 
-  a = X[ip2] != ZERO ? y : x;
+  a = X[ip2] != 0 ? y : x;
 
   /* ... and here, at least one of them is still zero.  */
   for (ip = ip2; ip > 0; ip--)
-    if (a->d[ip] != ZERO)
+    if (a->d[ip] != 0)
       break;
 
   /* The product looks like this for p = 3 (as an example):
@@ -661,19 +661,19 @@ __mul (const mp_no *x, const mp_no *y, mp_no *z, int p)
      Another thing that becomes evident is that only the most significant
      ip+ip2 digits of the result are non-zero, where ip and ip2 are the
      'internal precision' of the input numbers, i.e. digits after ip and ip2
-     are all ZERO.  */
+     are all 0.  */
 
   k = (__glibc_unlikely (p2 < 3)) ? p2 + p2 : p2 + 3;
 
   while (k > ip + ip2 + 1)
-    Z[k--] = ZERO;
+    Z[k--] = 0;
 
-  zk = ZERO;
+  zk = 0;
 
   /* Precompute sums of diagonal elements so that we can directly use them
      later.  See the next comment to know we why need them.  */
   diag = alloca (k * sizeof (mantissa_store_t));
-  mantissa_store_t d = ZERO;
+  mantissa_store_t d = 0;
   for (i = 1; i <= ip; i++)
     {
       d += X[i] * (mantissa_store_t) Y[i];
@@ -738,7 +738,7 @@ __mul (const mp_no *x, const mp_no *y, mp_no *z, int p)
   int e = EX + EY;
 
   /* Is there a carry beyond the most significant digit?  */
-  if (__glibc_unlikely (Z[1] == ZERO))
+  if (__glibc_unlikely (Z[1] == 0))
     {
       for (i = 1; i <= p2; i++)
 	Z[i] = Z[i + 1];
@@ -763,24 +763,24 @@ __sqr (const mp_no *x, mp_no *y, int p)
   mantissa_store_t yk;
 
   /* Is z=0?  */
-  if (__glibc_unlikely (X[0] == ZERO))
+  if (__glibc_unlikely (X[0] == 0))
     {
-      Y[0] = ZERO;
+      Y[0] = 0;
       return;
     }
 
   /* We need not iterate through all X's since it's pointless to
      multiply zeroes.  */
   for (ip = p; ip > 0; ip--)
-    if (X[ip] != ZERO)
+    if (X[ip] != 0)
       break;
 
   k = (__glibc_unlikely (p < 3)) ? p + p : p + 3;
 
   while (k > 2 * ip + 1)
-    Y[k--] = ZERO;
+    Y[k--] = 0;
 
-  yk = ZERO;
+  yk = 0;
 
   while (k > p)
     {
@@ -802,7 +802,7 @@ __sqr (const mp_no *x, mp_no *y, int p)
       for (i = k - p, j = p; i < j; i++, j--)
 	yk2 += X[i] * (mantissa_store_t) X[j];
 
-      yk += 2.0 * yk2;
+      yk += 2 * yk2;
 
       DIV_RADIX (yk, Y[k]);
       k--;
@@ -820,7 +820,7 @@ __sqr (const mp_no *x, mp_no *y, int p)
       for (i = 1, j = k - 1; i < j; i++, j--)
 	yk2 += X[i] * (mantissa_store_t) X[j];
 
-      yk += 2.0 * yk2;
+      yk += 2 * yk2;
 
       DIV_RADIX (yk, Y[k]);
       k--;
@@ -828,7 +828,7 @@ __sqr (const mp_no *x, mp_no *y, int p)
   Y[k] = yk;
 
   /* Squares are always positive.  */
-  Y[0] = 1.0;
+  Y[0] = 1;
 
   /* Get the exponent sum into an intermediate variable.  This is a subtle
      optimization, where given enough registers, all operations on the exponent
@@ -836,7 +836,7 @@ __sqr (const mp_no *x, mp_no *y, int p)
   int e = EX * 2;
 
   /* Is there a carry beyond the most significant digit?  */
-  if (__glibc_unlikely (Y[1] == ZERO))
+  if (__glibc_unlikely (Y[1] == 0))
     {
       for (i = 1; i <= p; i++)
 	Y[i] = Y[i + 1];
@@ -868,7 +868,7 @@ __inv (const mp_no *x, mp_no *y, int p)
   __cpy (x, &z, p);
   z.e = 0;
   __mp_dbl (&z, &t, p);
-  t = ONE / t;
+  t = 1 / t;
   __dbl_mp (t, y, p);
   EY -= EX;
 
@@ -894,8 +894,8 @@ __dvd (const mp_no *x, const mp_no *y, mp_no *z, int p)
 {
   mp_no w;
 
-  if (X[0] == ZERO)
-    Z[0] = ZERO;
+  if (X[0] == 0)
+    Z[0] = 0;
   else
     {
       __inv (y, &w, p);
