@@ -1,3 +1,8 @@
+2013-03-25  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/fpu/s_llround.c: Fix libm ABI issue with missing
+	llroundl symbol when building for PPC32.
+
 2013-03-24  Mark H Weaver  <mhw@netris.org>
 
 	* manual/arith.texi (Normalization Functions): Fix prototypes for

@@ -17,6 +17,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <math.h>
+#include <math_ldbl_opt.h>
 
 /* I think that what this routine is supposed to do is round a value
    to the nearest integer, with values exactly on the boundary rounded
@@ -46,4 +47,7 @@ weak_alias (__llround, llround)
 #ifdef NO_LONG_DOUBLE
 strong_alias (__llround, __llroundl)
 weak_alias (__llround, llroundl)
+#endif
+#if LONG_DOUBLE_COMPAT (libm, GLIBC_2_1)
+compat_symbol (libm, __llround, llroundl, GLIBC_2_1);
 #endif
