@@ -1,3 +1,17 @@
+2013-03-27  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #15307]
+	* math/k_casinh.c (__kernel_casinh): Handle arguments with
+	imaginary part between 1.0 and 1.5 and real part less than 0.5
+	specially.
+	* math/k_casinhf.c (__kernel_casinhf): Likewise.
+	* math/k_casinhl.c (__kernel_casinhl): Likewise.
+	* math/libm-test.inc (cacos_test): Add more tests.
+	(casin_test): Likewise.
+	(casinh_test): Likewise.
+	* sysdeps/i386/fpu/libm-test-ulps: Update.
+	* sysdeps/x86_64/fpu/libm-test-ulps: Likewise.
+
 2013-03-26  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* sysdeps/ieee754/dbl-64/mpa.c (__acr): Use integral

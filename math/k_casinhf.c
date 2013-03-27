@@ -77,6 +77,39 @@ __kernel_casinhf (__complex__ float x, int adj)
       else
 	__imag__ res = __ieee754_atan2f (s, rx);
     }
+  else if (ix > 1.0f && ix < 1.5f && rx < 0.5f)
+    {
+      if (rx < FLT_EPSILON * FLT_EPSILON)
+	{
+	  float ix2m1 = (ix + 1.0f) * (ix - 1.0f);
+	  float s = __ieee754_sqrtf (ix2m1);
+
+	  __real__ res = __log1pf (2.0f * (ix2m1 + ix * s)) / 2.0f;
+	  if (adj)
+	    __imag__ res = __ieee754_atan2f (rx, __copysignf (s, __imag__ x));
+	  else
+	    __imag__ res = __ieee754_atan2f (s, rx);
+	}
+      else
+	{
+	  float ix2m1 = (ix + 1.0f) * (ix - 1.0f);
+	  float rx2 = rx * rx;
+	  float f = rx2 * (2.0f + rx2 + 2.0f * ix * ix);
+	  float d = __ieee754_sqrtf (ix2m1 * ix2m1 + f);
+	  float dp = d + ix2m1;
+	  float dm = f / dp;
+	  float r1 = __ieee754_sqrtf ((dm + rx2) / 2.0f);
+	  float r2 = rx * ix / r1;
+
+	  __real__ res
+	    = __log1pf (rx2 + dp + 2.0f * (rx * r1 + ix * r2)) / 2.0f;
+	  if (adj)
+	    __imag__ res = __ieee754_atan2f (rx + r1, __copysignf (ix + r2,
+								   __imag__ x));
+	  else
+	    __imag__ res = __ieee754_atan2f (ix + r2, rx + r1);
+	}
+    }
   else if (ix == 1.0f && rx < 0.5f)
     {
       if (rx < FLT_EPSILON / 8.0f)
