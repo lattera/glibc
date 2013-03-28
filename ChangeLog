@@ -1,5 +1,9 @@
 2013-03-28  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
+	[BZ #15304]
+	* hesiod/nss_hesiod/hesiod-grp.c (_nss_hesiod_initgroups_dyn):
+	Don't add gid passed as argument.
+
 	* sysdeps/ieee-754/dbl-64/e_atan2.c: Reformat.
 
 2013-03-27  Joseph Myers  <joseph@codesourcery.com>
