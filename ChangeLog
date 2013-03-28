@@ -1,3 +1,10 @@
+2013-03-28  Alan Modra  <amodra@gmail.com>
+
+	* sysdeps/powerpc/powerpc32/start.S (cfi_startproc, cfi_endproc):
+	Define as empty.
+	* sysdeps/powerpc/powerpc64/start.S (cfi_startproc, cfi_endproc):
+	Likewise.
+
 2013-03-28  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	[BZ #15214]

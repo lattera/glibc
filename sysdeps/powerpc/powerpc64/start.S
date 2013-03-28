@@ -35,6 +35,13 @@
 
 #include <sysdep.h>
 
+/* We do not want .eh_frame info for crt1.o since crt1.o is linked
+   before crtbegin.o, the file defining __EH_FRAME_BEGIN__.  */
+#undef cfi_startproc
+#define cfi_startproc
+#undef cfi_endproc
+#define cfi_endproc
+
  /* These are the various addresses we require.  */
 #ifdef PIC
 	.section ".data.rel.ro.local","aw"
