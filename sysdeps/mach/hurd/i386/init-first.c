@@ -117,14 +117,20 @@ init1 (int argc, char *arg0, ...)
   if ((void *) d == argv[0])
     {
 #ifndef SHARED
-      /* We may need to see our own phdrs, e.g. for TLS setup.
-	 Try the usual kludge to find the headers without help from
-	 the exec server.  */
-      extern const void _start;
-      const ElfW(Ehdr) *const ehdr = &_start;
-      _dl_phdr = (const void *) ehdr + ehdr->e_phoff;
-      _dl_phnum = ehdr->e_phnum;
-      assert (ehdr->e_phentsize == sizeof (ElfW(Phdr)));
+      /* With a new enough linker (binutils-2.23 or better),
+         the magic __ehdr_start symbol will be available and
+         __libc_start_main will have done this that way already.  */
+      if (_dl_phdr == NULL)
+        {
+          /* We may need to see our own phdrs, e.g. for TLS setup.
+             Try the usual kludge to find the headers without help from
+             the exec server.  */
+          extern const void _start;
+          const ElfW(Ehdr) *const ehdr = &_start;
+          _dl_phdr = (const void *) ehdr + ehdr->e_phoff;
+          _dl_phnum = ehdr->e_phnum;
+          assert (ehdr->e_phentsize == sizeof (ElfW(Phdr)));
+        }
 #endif
       return;
     }

@@ -1,5 +1,11 @@
 2013-03-28  Roland McGrath  <roland@hack.frob.com>
 
+	* csu/libc-start.c (__libc_start_main) [!SHARED]: If _dl_aux_init
+	didn't do it already, then set _dl_phdr and _dl_phnum based on the
+	magic __ehdr_start linker symbol if it's defined.
+	* sysdeps/mach/hurd/i386/init-first.c (init1) [!SHARED]: Don't set
+	them up here if it was already done.
+
 	* elf/dl-support.c (_dl_phdr): Make pointer to const.
 	(_dl_aux_init): Use const in cast when setting it.
 	* sysdeps/mach/hurd/i386/init-first.c (init1): Remove superfluous cast.
