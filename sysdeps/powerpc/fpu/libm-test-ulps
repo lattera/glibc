@@ -243,9 +243,11 @@ idouble: 1
 Test "Real part of: cacos (-0.5 + +0 i) == 2.094395102393195492308428922186335256131 - 0 i":
 double: 1
 idouble: 1
+ldouble: 1
 Test "Real part of: cacos (-0.5 - 0 i) == 2.094395102393195492308428922186335256131 + +0 i":
 double: 1
 idouble: 1
+ldouble: 1
 Test "Imaginary part of: cacos (-1.5 + +0 i) == pi - 0.9624236501192068949955178268487368462704 i":
 double: 1
 float: 1
@@ -265,6 +267,10 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
+Test "Imaginary part of: cacos (0x1.fp1023 + 0x1.fp1023 i) == 7.853981633974483096156608458198757210493e-1 - 7.107906849659093345062145442726115449315e2 i":
+ldouble: 1
+Test "Imaginary part of: cacos (0x1.fp127 + 0x1.fp127 i) == 7.853981633974483096156608458198757210493e-1 - 8.973081118419833726837456344608533993585e1 i":
+ldouble: 1
 
 # cacosh
 Test "Real part of: cacosh (+0 + 0.5 i) == 0.4812118250596034474977589134243684231352 + pi/2 i":

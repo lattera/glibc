@@ -182,6 +182,9 @@ static const long double
   ln2a = 6.93145751953125e-1L,
   ln2b = 1.4286068203094172321214581765680755001344E-6L;
 
+static const long double
+  ldbl_epsilon = 0x1p-106L;
+
 long double
 __ieee754_logl(long double x)
 {
@@ -258,7 +261,12 @@ __ieee754_logl(long double x)
     }
   /* Series expansion of log(1+z).  */
   w = z * z;
-  y = ((((((((((((l15 * z
+  /* Avoid spurious underflows.  */
+  if (__glibc_unlikely(w <= ldbl_epsilon))
+    y = 0.0L;
+  else
+    {
+      y = ((((((((((((l15 * z
 		  + l14) * z
 		 + l13) * z
 		+ l12) * z
@@ -271,7 +279,8 @@ __ieee754_logl(long double x)
 	 + l5) * z
 	+ l4) * z
        + l3) * z * w;
-  y -= 0.5 * w;
+      y -= 0.5 * w;
+    }
   y += e * ln2b;  /* Base 2 exponent offset times ln(2).  */
   y += z;
   y += logtbl[k-26]; /* log(t) - (t-1) */
