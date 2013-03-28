@@ -126,7 +126,7 @@ int _dl_debug_fd = STDERR_FILENO;
 int _dl_correct_cache_id = _DL_CACHE_DEFAULT_ID;
 
 ElfW(auxv_t) *_dl_auxv;
-ElfW(Phdr) *_dl_phdr;
+const ElfW(Phdr) *_dl_phdr;
 size_t _dl_phnum;
 uint64_t _dl_hwcap __attribute__ ((nocommon));
 
@@ -205,7 +205,7 @@ _dl_aux_init (ElfW(auxv_t) *av)
 	GLRO(dl_clktck) = av->a_un.a_val;
 	break;
       case AT_PHDR:
-	GL(dl_phdr) = (void *) av->a_un.a_val;
+	GL(dl_phdr) = (const void *) av->a_un.a_val;
 	break;
       case AT_PHNUM:
 	GL(dl_phnum) = av->a_un.a_val;

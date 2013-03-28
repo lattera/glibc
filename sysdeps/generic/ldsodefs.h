@@ -603,7 +603,7 @@ extern const struct rtld_global_ro _rtld_global_ro
 
 #ifndef SHARED
 /* dl-support.c defines these and initializes them early on.  */
-extern ElfW(Phdr) *_dl_phdr;
+extern const ElfW(Phdr) *_dl_phdr;
 extern size_t _dl_phnum;
 #endif
 

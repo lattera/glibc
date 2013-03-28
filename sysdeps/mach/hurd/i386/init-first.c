@@ -122,7 +122,7 @@ init1 (int argc, char *arg0, ...)
 	 the exec server.  */
       extern const void _start;
       const ElfW(Ehdr) *const ehdr = &_start;
-      _dl_phdr = (ElfW(Phdr) *) ((const void *) ehdr + ehdr->e_phoff);
+      _dl_phdr = (const void *) ehdr + ehdr->e_phoff;
       _dl_phnum = ehdr->e_phnum;
       assert (ehdr->e_phentsize == sizeof (ElfW(Phdr)));
 #endif

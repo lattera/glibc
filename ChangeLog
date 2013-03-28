@@ -1,5 +1,11 @@
 2013-03-28  Roland McGrath  <roland@hack.frob.com>
 
+	* elf/dl-support.c (_dl_phdr): Make pointer to const.
+	(_dl_aux_init): Use const in cast when setting it.
+	* sysdeps/mach/hurd/i386/init-first.c (init1): Remove superfluous cast.
+	* sysdeps/generic/ldsodefs.h [!SHARED] (_dl_phdr): Update decl.
+	* csu/libc-tls.c (__libc_setup_tls): Make PHDR pointer to const.
+
 	* sysdeps/generic/ldsodefs.h [!SHARED] (_dl_phdr, _dl_phnum):
 	Declare them here.
 	* elf/dl-iteratephdr.c [!SHARED] (_dl_phdr, _dl_phnum): Not here.
