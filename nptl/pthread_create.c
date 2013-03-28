@@ -312,7 +312,10 @@ start_thread (void *arg)
     }
 
   /* Call destructors for the thread_local TLS variables.  */
-  __call_tls_dtors ();
+#ifndef SHARED
+  if (&__call_tls_dtors != NULL)
+#endif
+    __call_tls_dtors ();
 
   /* Run the destructor for the thread-local data.  */
   __nptl_deallocate_tsd ();

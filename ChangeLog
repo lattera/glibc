@@ -1,5 +1,12 @@
 2013-03-28  Roland McGrath  <roland@hack.frob.com>
 
+	* include/stdlib.h [!SHARED] (__call_tls_dtors):
+	Declare with __attribute__ ((weak)).
+	* stdlib/exit.c (__libc_atexit) [!SHARED]:
+	Call __call_tls_dtors only if it's not NULL.
+
+2013-03-28  Roland McGrath  <roland@hack.frob.com>
+
 	* csu/libc-start.c (__libc_start_main) [!SHARED]: If _dl_aux_init
 	didn't do it already, then set _dl_phdr and _dl_phnum based on the
 	magic __ehdr_start linker symbol if it's defined.

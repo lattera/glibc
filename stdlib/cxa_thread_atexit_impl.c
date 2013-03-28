@@ -76,7 +76,7 @@ __cxa_thread_atexit_impl (dtor_func func, void *obj, void *dso_symbol)
 }
 
 /* Call the destructors.  This is called either when a thread returns from the
-   initial function or when the process exits via the exit(3) function.  */
+   initial function or when the process exits via the exit function.  */
 void
 __call_tls_dtors (void)
 {

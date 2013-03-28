@@ -1,3 +1,8 @@
+2013-03-28  Roland McGrath  <roland@hack.frob.com>
+
+	* pthread_create.c (start_thread) [!SHARED]:
+	Call __call_tls_dtors only if it's not NULL.
+
 2013-03-19  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* allocatestack.c (allocate_stack): Use __default_pthread_attr

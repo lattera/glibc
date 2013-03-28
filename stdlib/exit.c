@@ -34,7 +34,10 @@ __run_exit_handlers (int status, struct exit_function_list **listp,
 		     bool run_list_atexit)
 {
   /* First, call the TLS destructors.  */
-  __call_tls_dtors ();
+#ifndef SHARED
+  if (&__call_tls_dtors != NULL)
+#endif
+    __call_tls_dtors ();
 
   /* We do it this way to handle recursive calls to exit () made by
      the functions registered with `atexit' and `on_exit'. We call
