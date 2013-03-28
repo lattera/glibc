@@ -92,10 +92,6 @@ weak_alias (__dl_iterate_phdr, dl_iterate_phdr);
 
 #else
 
-/* dl-support.c defines these and initializes them early on.  */
-extern ElfW(Phdr) *_dl_phdr;
-extern size_t _dl_phnum;
-
 int
 dl_iterate_phdr (int (*callback) (struct dl_phdr_info *info,
 				  size_t size, void *data), void *data)

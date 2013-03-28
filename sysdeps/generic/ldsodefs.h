@@ -601,6 +601,12 @@ extern const struct rtld_global_ro _rtld_global_ro
 #endif
 #undef EXTERN
 
+#ifndef SHARED
+/* dl-support.c defines these and initializes them early on.  */
+extern ElfW(Phdr) *_dl_phdr;
+extern size_t _dl_phnum;
+#endif
+
 #ifdef IS_IN_rtld
 /* This is the initial value of GL(dl_error_catch_tsd).
    A non-TLS libpthread will change it.  */

@@ -1,5 +1,11 @@
 2013-03-28  Roland McGrath  <roland@hack.frob.com>
 
+	* sysdeps/generic/ldsodefs.h [!SHARED] (_dl_phdr, _dl_phnum):
+	Declare them here.
+	* elf/dl-iteratephdr.c [!SHARED] (_dl_phdr, _dl_phnum): Not here.
+	* csu/libc-tls.c: Nor here.
+	* sysdeps/mach/hurd/i386/init-first.c (init1): Nor here.
+
 	* sysdeps/posix/libc_fatal.c: Don't include <sys/syslog.h>.
 	(__libc_message): Never call vsyslog.
 

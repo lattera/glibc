@@ -28,10 +28,6 @@
  #error makefile bug, this file is for static only
 #endif
 
-extern ElfW(Phdr) *_dl_phdr;
-extern size_t _dl_phnum;
-
-
 dtv_t _dl_static_dtv[2 + TLS_SLOTINFO_SURPLUS];
 
 
