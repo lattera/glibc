@@ -1,3 +1,8 @@
+2013-03-28  Roland McGrath  <roland@hack.frob.com>
+
+	* sysdeps/posix/libc_fatal.c: Don't include <sys/syslog.h>.
+	(__libc_message): Never call vsyslog.
+
 2013-03-28  Alan Modra  <amodra@gmail.com>
 
 	* sysdeps/powerpc/powerpc32/start.S (cfi_startproc, cfi_endproc):

@@ -29,7 +29,6 @@
 #include <sysdep.h>
 #include <unistd.h>
 #include <sys/mman.h>
-#include <sys/syslog.h>
 #include <sys/uio.h>
 #include <not-cancel.h>
 
@@ -68,11 +67,9 @@ void
 __libc_message (int do_abort, const char *fmt, ...)
 {
   va_list ap;
-  va_list ap_copy;
   int fd = -1;
 
   va_start (ap, fmt);
-  va_copy (ap_copy, ap);
 
 #ifdef FATAL_PREPARE
   FATAL_PREPARE;
@@ -169,12 +166,6 @@ __libc_message (int do_abort, const char *fmt, ...)
     }
 
   va_end (ap);
-
-  /* If we  had no success writing the message, use syslog.  */
-  if (! written)
-    vsyslog (LOG_ERR, fmt, ap_copy);
-
-  va_end (ap_copy);
 
   if (do_abort)
     {
