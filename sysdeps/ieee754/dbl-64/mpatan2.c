@@ -46,11 +46,11 @@ __mpatan2 (mp_no *y, mp_no *x, mp_no *z, int p)
 {
   mp_no mpt1, mpt2, mpt3;
 
-  if (X[0] <= ZERO)
+  if (X[0] <= 0)
     {
       __dvd (x, y, &mpt1, p);
       __mul (&mpt1, &mpt1, &mpt2, p);
-      if (mpt1.d[0] != ZERO)
+      if (mpt1.d[0] != 0)
 	mpt1.d[0] = ONE;
       __add (&mpt2, &mpone, &mpt3, p);
       __mpsqrt (&mpt3, &mpt2, p);

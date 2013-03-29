@@ -85,7 +85,7 @@ __mpexp (mp_no *x, mp_no *y, int p)
     {
       for (i = 2; i <= p; i++)
 	{
-	  if (X[i] != ZERO)
+	  if (X[i] != 0)
 	    break;
 	}
       if (i == p + 1)

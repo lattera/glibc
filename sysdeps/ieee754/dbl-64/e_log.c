@@ -79,9 +79,9 @@ __ieee754_log (double x)
   if (__builtin_expect (ux < 0x00100000, 0))
     {
       if (__builtin_expect (((ux & 0x7fffffff) | dx) == 0, 0))
-	return MHALF / ZERO;	/* return -INF */
+	return MHALF / 0.0;	/* return -INF */
       if (__builtin_expect (ux < 0, 0))
-	return (x - x) / ZERO;	/* return NaN  */
+	return (x - x) / 0.0;	/* return NaN  */
       n -= 54;
       x *= two54.d;		/* scale x     */
       num.d = x;
@@ -130,25 +130,25 @@ __ieee754_log (double x)
 
   EMULV (w, a, s2, ss2, t1, t2, t3, t4, t5);
   ADD2 (d10.d, dd10.d, s2, ss2, s3, ss3, t1, t2);
-  MUL2 (w, ZERO, s3, ss3, s2, ss2, t1, t2, t3, t4, t5, t6, t7, t8);
+  MUL2 (w, 0, s3, ss3, s2, ss2, t1, t2, t3, t4, t5, t6, t7, t8);
   ADD2 (d9.d, dd9.d, s2, ss2, s3, ss3, t1, t2);
-  MUL2 (w, ZERO, s3, ss3, s2, ss2, t1, t2, t3, t4, t5, t6, t7, t8);
+  MUL2 (w, 0, s3, ss3, s2, ss2, t1, t2, t3, t4, t5, t6, t7, t8);
   ADD2 (d8.d, dd8.d, s2, ss2, s3, ss3, t1, t2);
-  MUL2 (w, ZERO, s3, ss3, s2, ss2, t1, t2, t3, t4, t5, t6, t7, t8);
+  MUL2 (w, 0, s3, ss3, s2, ss2, t1, t2, t3, t4, t5, t6, t7, t8);
   ADD2 (d7.d, dd7.d, s2, ss2, s3, ss3, t1, t2);
-  MUL2 (w, ZERO, s3, ss3, s2, ss2, t1, t2, t3, t4, t5, t6, t7, t8);
+  MUL2 (w, 0, s3, ss3, s2, ss2, t1, t2, t3, t4, t5, t6, t7, t8);
   ADD2 (d6.d, dd6.d, s2, ss2, s3, ss3, t1, t2);
-  MUL2 (w, ZERO, s3, ss3, s2, ss2, t1, t2, t3, t4, t5, t6, t7, t8);
+  MUL2 (w, 0, s3, ss3, s2, ss2, t1, t2, t3, t4, t5, t6, t7, t8);
   ADD2 (d5.d, dd5.d, s2, ss2, s3, ss3, t1, t2);
-  MUL2 (w, ZERO, s3, ss3, s2, ss2, t1, t2, t3, t4, t5, t6, t7, t8);
+  MUL2 (w, 0, s3, ss3, s2, ss2, t1, t2, t3, t4, t5, t6, t7, t8);
   ADD2 (d4.d, dd4.d, s2, ss2, s3, ss3, t1, t2);
-  MUL2 (w, ZERO, s3, ss3, s2, ss2, t1, t2, t3, t4, t5, t6, t7, t8);
+  MUL2 (w, 0, s3, ss3, s2, ss2, t1, t2, t3, t4, t5, t6, t7, t8);
   ADD2 (d3.d, dd3.d, s2, ss2, s3, ss3, t1, t2);
-  MUL2 (w, ZERO, s3, ss3, s2, ss2, t1, t2, t3, t4, t5, t6, t7, t8);
+  MUL2 (w, 0, s3, ss3, s2, ss2, t1, t2, t3, t4, t5, t6, t7, t8);
   ADD2 (d2.d, dd2.d, s2, ss2, s3, ss3, t1, t2);
-  MUL2 (w, ZERO, s3, ss3, s2, ss2, t1, t2, t3, t4, t5, t6, t7, t8);
-  MUL2 (w, ZERO, s2, ss2, s3, ss3, t1, t2, t3, t4, t5, t6, t7, t8);
-  ADD2 (w, ZERO, s3, ss3, b, bb, t1, t2);
+  MUL2 (w, 0, s3, ss3, s2, ss2, t1, t2, t3, t4, t5, t6, t7, t8);
+  MUL2 (w, 0, s2, ss2, s3, ss3, t1, t2, t3, t4, t5, t6, t7, t8);
+  ADD2 (w, 0, s3, ss3, b, bb, t1, t2);
 
   /* End stage II, case abs(x-1) < 0.03 */
   if ((y = b + (bb + b * E4)) == b + (bb - b * E4))
@@ -210,7 +210,7 @@ case_03:
   EADD (r0, t, ra, rb);
 
   /* Compute w */
-  MUL2 (q, ZERO, ra, rb, w, ww, t1, t2, t3, t4, t5, t6, t7, t8);
+  MUL2 (q, 0, ra, rb, w, ww, t1, t2, t3, t4, t5, t6, t7, t8);
 
   EADD (A, B0, a0, aa0);
 

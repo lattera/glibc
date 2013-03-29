@@ -35,15 +35,15 @@ __mul (const mp_no *x, const mp_no *y, mp_no *z, int p)
   double u, zk, zk2;
 
   /* Is z=0?  */
-  if (__glibc_unlikely (X[0] * Y[0] == ZERO))
+  if (__glibc_unlikely (X[0] * Y[0] == 0))
     {
-      Z[0] = ZERO;
+      Z[0] = 0;
       return;
     }
 
   /* Multiply, add and carry */
   k2 = (p2 < 3) ? p2 + p2 : p2 + 3;
-  zk = Z[k2] = ZERO;
+  zk = Z[k2] = 0;
   for (k = k2; k > 1;)
     {
       if (k > p2)
@@ -101,7 +101,7 @@ __mul (const mp_no *x, const mp_no *y, mp_no *z, int p)
 
   int e = EX + EY;
   /* Is there a carry beyond the most significant digit?  */
-  if (Z[1] == ZERO)
+  if (Z[1] == 0)
     {
       for (i = 1; i <= p2; i++)
 	Z[i] = Z[i + 1];
@@ -123,24 +123,24 @@ __sqr (const mp_no *x, mp_no *y, int p)
   double u, yk;
 
   /* Is z=0?  */
-  if (__glibc_unlikely (X[0] == ZERO))
+  if (__glibc_unlikely (X[0] == 0))
     {
-      Y[0] = ZERO;
+      Y[0] = 0;
       return;
     }
 
   /* We need not iterate through all X's since it's pointless to
      multiply zeroes.  */
   for (ip = p; ip > 0; ip--)
-    if (X[ip] != ZERO)
+    if (X[ip] != 0)
       break;
 
   k = (__glibc_unlikely (p < 3)) ? p + p : p + 3;
 
   while (k > 2 * ip + 1)
-    Y[k--] = ZERO;
+    Y[k--] = 0;
 
-  yk = ZERO;
+  yk = 0;
 
   while (k > p)
     {
@@ -204,7 +204,7 @@ __sqr (const mp_no *x, mp_no *y, int p)
 
   int e = EX * 2;
   /* Is there a carry beyond the most significant digit?  */
-  if (__glibc_unlikely (Y[1] == ZERO))
+  if (__glibc_unlikely (Y[1] == 0))
     {
       for (i = 1; i <= p; i++)
 	Y[i] = Y[i + 1];
