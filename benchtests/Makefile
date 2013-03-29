@@ -43,7 +43,7 @@
 #   See pow-inputs for an example.
 
 subdir := benchtests
-bench := exp pow
+bench := exp pow rint
 
 exp-ITER = 100000
 exp-ARGLIST = double
@@ -54,6 +54,11 @@ pow-ITER = 100000
 pow-ARGLIST = double:double
 pow-RET = double
 LDFLAGS-bench-pow = -lm
+
+rint-ITER = 250000000
+rint-ARGLIST = double
+rint-RET = double
+LDFLAGS-bench-rint = -lm
 
 include ../Makeconfig
 include ../Rules
