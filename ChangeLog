@@ -1,5 +1,7 @@
 2013-03-29  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
+	* sysdeps/ieee754/dbl-64/s_atan.c: Fix formatting.
+
 	* sysdeps/ieee754/dbl-64/e_log.c: Fix formatting.
 
 2013-03-28  Roland McGrath  <roland@hack.frob.com>
