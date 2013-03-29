@@ -154,7 +154,7 @@ tan (double x)
       i = ((int) (mfftnhf.d + TWO8 * w));
       z = w - xfg[i][0].d;
       z2 = z * z;
-      s = (x < 0.0) ? MONE : ONE;
+      s = (x < 0.0) ? -1 : 1;
       pz = z + z * z2 * (e0.d + z2 * e1.d);
       fi = xfg[i][1].d;
       gi = xfg[i][2].d;
@@ -214,13 +214,13 @@ tan (double x)
 	{
 	  ya = -a;
 	  yya = -da;
-	  sy = MONE;
+	  sy = -1;
 	}
       else
 	{
 	  ya = a;
 	  yya = da;
-	  sy = ONE;
+	  sy = 1;
 	}
 
       /* (IV),(V) The case 0.787 < abs(x) <= 25,    abs(y) <= 1e-7 */
@@ -438,13 +438,13 @@ tan (double x)
 	{
 	  ya = -a;
 	  yya = -da;
-	  sy = MONE;
+	  sy = -1;
 	}
       else
 	{
 	  ya = a;
 	  yya = da;
-	  sy = ONE;
+	  sy = 1;
 	}
 
       /* (+++) The case 25 < abs(x) <= 1e8,    abs(y) <= 1e-7 */
@@ -631,13 +631,13 @@ tan (double x)
     {
       ya = -a;
       yya = -da;
-      sy = MONE;
+      sy = -1;
     }
   else
     {
       ya = a;
       yya = da;
-      sy = ONE;
+      sy = 1;
     }
 
   /* (+++) The case 1e8 < abs(x) < 2**1024,    abs(y) <= 1e-7 */

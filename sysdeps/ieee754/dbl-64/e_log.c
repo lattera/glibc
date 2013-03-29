@@ -91,7 +91,7 @@ __ieee754_log (double x)
 
   /* Regular values of x */
 
-  w = x - ONE;
+  w = x - 1;
   if (__builtin_expect (ABS (w) > U03, 1))
     goto case_03;
 
@@ -178,7 +178,7 @@ case_03:
   j = (num.i[HIGH_HALF] & 0x000fffff) >> 4;
 
   /* Compute w=(u-ui*vj)/(ui*vj) */
-  p0 = (ONE + (i - 75) * DEL_U) * (ONE + (j - 180) * DEL_V);
+  p0 = (1 + (i - 75) * DEL_U) * (1 + (j - 180) * DEL_V);
   q = u - p0;
   r0 = Iu[i].d * Iv[j].d;
   w = q * r0;
@@ -206,7 +206,7 @@ case_03:
 
   /* Improve the accuracy of r0 */
   EMULV (p0, r0, sa, sb, t1, t2, t3, t4, t5);
-  t = r0 * ((ONE - sa) - sb);
+  t = r0 * ((1 - sa) - sb);
   EADD (r0, t, ra, rb);
 
   /* Compute w */

@@ -1,5 +1,14 @@
 2013-03-29  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
+	* sysdeps/ieee754/dbl-64/mpa.h (ONE, MONE): Remove defines.
+	(__pow_mp): Replace ONE and MONE with their values.
+	* sysdeps/ieee754/dbl-64/e_log.c (__ieee754_log): Likewise.
+	* sysdeps/ieee754/dbl-64/mpatan.c (__mpatan): Likewise.
+	* sysdeps/ieee754/dbl-64/mpatan2.c (__mpatan2): Likewise.
+	* sysdeps/ieee754/dbl-64/mptan.c (__mptan): Likewise.
+	* sysdeps/ieee754/dbl-64/s_atan.c (atan): Likewise.
+	* sysdeps/ieee754/dbl-64/s_tan.c (tan): Likewise.
+
 	* sysdeps/ieee754/dbl-64/s_tan.c: Fix formatting.
 
 	* sysdeps/ieee754/dbl-64/mpa.h (ZERO, MZERO): Remove defines.

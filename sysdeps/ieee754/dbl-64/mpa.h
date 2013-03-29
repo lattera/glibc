@@ -91,8 +91,6 @@ extern const mp_no mptwo;
 # define  TWO52     0x1.0p52		/* 2^52    */
 #endif
 
-#define  ONE       1.0			/* 1       */
-#define  MONE      -1.0			/* -1      */
 #define  TWO       2.0			/*  2      */
 
 #define  TWO5      TWOPOW (5)		/* 2^5     */
@@ -150,7 +148,7 @@ __pow_mp (int pow, mp_no *y, int p)
       rem += 24;
     }
   /* The sign of any 2^x is always positive.  */
-  Y[0] = ONE;
+  Y[0] = 1;
   Y[1] = 1 << rem;
 
   /* Everything else is 0.  */

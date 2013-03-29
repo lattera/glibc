@@ -74,7 +74,7 @@ __mpatan (mp_no *x, mp_no *y, int p)
 	}
     }
   mptwoim1.e = 1;
-  mptwoim1.d[0] = ONE;
+  mptwoim1.d[0] = 1;
 
   /* Reduce x m times.  */
   __sqr (x, &mpsm, p);

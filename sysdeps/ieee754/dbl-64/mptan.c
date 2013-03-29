@@ -56,7 +56,7 @@ __mptan (double x, mp_no *mpy, int p)
   if (n)
     {
       __dvd (&mpc, &mps, mpy, p);
-      mpy->d[0] *= MONE;
+      mpy->d[0] *= -1;
     }
   /* tan is negative in this area.  */
   else

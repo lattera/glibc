@@ -179,9 +179,9 @@ atan (double x)
     {
       if (u < D)
 	{			/* C <= u < D */
-	  w = ONE / u;
+	  w = 1 / u;
 	  EMULV (w, u, t1, t2, t3, t4, t5, t6, t7);
-	  ww = w * ((ONE - t1) - t2);
+	  ww = w * ((1 - t1) - t2);
 	  i = (TWO52 + TWO8 * w) - TWO52;
 	  i -= 16;
 	  z = (w - cij[i][0].d) + ww;
@@ -200,7 +200,7 @@ atan (double x)
 	  if ((y = t1 + (yy - u3)) == t1 + (yy + u3))
 	    return __signArctan (x, y);
 
-	  DIV2 (ONE, 0, u, 0, w, ww, t1, t2, t3, t4, t5, t6, t7, t8, t9,
+	  DIV2 (1 , 0, u, 0, w, ww, t1, t2, t3, t4, t5, t6, t7, t8, t9,
 		t10);
 	  t1 = w - hij[i][0].d;
 	  EADD (t1, ww, z, zz);
@@ -230,7 +230,7 @@ atan (double x)
 	{
 	  if (u < E)
 	    {			/* D <= u < E */
-	      w = ONE / u;
+	      w = 1 / u;
 	      v = w * w;
 	      EMULV (w, u, t1, t2, t3, t4, t5, t6, t7);
 
@@ -241,13 +241,13 @@ atan (double x)
 	      yy = d3.d + v * yy;
 	      yy *= w * v;
 
-	      ww = w * ((ONE - t1) - t2);
+	      ww = w * ((1 - t1) - t2);
 	      ESUB (HPI, w, t3, cor);
 	      yy = ((HPI1 + cor) - ww) - yy;
 	      if ((y = t3 + (yy - U4)) == t3 + (yy + U4))
 		return __signArctan (x, y);
 
-	      DIV2 (ONE, 0, u, 0, w, ww, t1, t2, t3, t4, t5, t6, t7, t8,
+	      DIV2 (1 , 0, u, 0, w, ww, t1, t2, t3, t4, t5, t6, t7, t8,
 		    t9, t10);
 	      MUL2 (w, ww, w, ww, v, vv, t1, t2, t3, t4, t5, t6, t7, t8);
 
