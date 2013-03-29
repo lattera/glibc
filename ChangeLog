@@ -1,5 +1,7 @@
 2013-03-29  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
+	* sysdeps/ieee754/dbl-64/s_tan.c: Fix formatting.
+
 	* sysdeps/ieee754/dbl-64/mpa.h (ZERO, MZERO): Remove defines.
 	(__pow_mp): Replace ZERO and MZERO with their values.
 	* sysdeps/ieee754/dbl-64/e_atan2.c (__ieee754_atan2): Likewise.
