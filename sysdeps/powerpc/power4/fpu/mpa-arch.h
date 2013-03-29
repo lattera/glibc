@@ -40,7 +40,7 @@ typedef double mantissa_store_t;
   ({									      \
     double u = ((x) + TWO52) - TWO52;					      \
     if (u > (x))							      \
-      u -= ONE;								      \
+      u -= 1;								      \
     (r) = u;								      \
     (x) -= u;								      \
   })

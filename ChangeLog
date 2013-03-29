@@ -1,5 +1,8 @@
 2013-03-29  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
+	* sysdeps/powerpc/power4/fpu/mpa-arch.h (INTEGER_OF): Replace
+	ONE with its value.
+
 	* sysdeps/ieee754/dbl-64/mpa.h (ONE, MONE): Remove defines.
 	(__pow_mp): Replace ONE and MONE with their values.
 	* sysdeps/ieee754/dbl-64/e_log.c (__ieee754_log): Likewise.
