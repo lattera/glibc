@@ -2,13 +2,13 @@
 # Copyright © 1996, 2002 Free Software Foundation, Inc.
 # This file is distributed under the same license as the glibc package.
 # Karl Eichwalder <ke@suse.de>, 2002.
-# Jochen Hein <jochen@jochen.org>, 1996-2012.
+# Jochen Hein <jochen@jochen.org>, 1996-2013.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: GNU libc 2.17-pre1\n"
 "POT-Creation-Date: 2012-12-07 15:10-0500\n"
-"PO-Revision-Date: 2013-01-31 07:16+0100\n"
+"PO-Revision-Date: 2013-03-30 16:56+0100\n"
 "Last-Translator: Jochen Hein <jochen@jochen.org>\n"
 "Language-Team: German <translation-team-de@lists.sourceforge.net>\n"
 "Language: de\n"
@@ -988,7 +988,7 @@ msgstr "Warnung: Sie haben kein Ausführungsrecht für"
 
 #: elf/ldd.bash.in:183
 msgid "\tnot a dynamic executable"
-msgstr "\\tdas Programm ist nicht dynamisch gelinkt"
+msgstr "\tdas Programm ist nicht dynamisch gelinkt"
 
 # XXX need to look at source
 #: elf/ldd.bash.in:191
