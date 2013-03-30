@@ -134,6 +134,58 @@ __kernel_casinh (__complex__ double x, int adj)
 	    __imag__ res = __ieee754_atan2 (1.0 + s2, rx + s1);
 	}
     }
+  else if (ix < 1.0 && rx < 0.5)
+    {
+      if (ix >= DBL_EPSILON)
+	{
+	  if (rx < DBL_EPSILON * DBL_EPSILON)
+	    {
+	      double onemix2 = (1.0 + ix) * (1.0 - ix);
+	      double s = __ieee754_sqrt (onemix2);
+
+	      __real__ res = __log1p (2.0 * rx / s) / 2.0;
+	      if (adj)
+		__imag__ res = __ieee754_atan2 (s, __imag__ x);
+	      else
+		__imag__ res = __ieee754_atan2 (ix, s);
+	    }
+	  else
+	    {
+	      double onemix2 = (1.0 + ix) * (1.0 - ix);
+	      double rx2 = rx * rx;
+	      double f = rx2 * (2.0 + rx2 + 2.0 * ix * ix);
+	      double d = __ieee754_sqrt (onemix2 * onemix2 + f);
+	      double dp = d + onemix2;
+	      double dm = f / dp;
+	      double r1 = __ieee754_sqrt ((dp + rx2) / 2.0);
+	      double r2 = rx * ix / r1;
+
+	      __real__ res
+		= __log1p (rx2 + dm + 2.0 * (rx * r1 + ix * r2)) / 2.0;
+	      if (adj)
+		__imag__ res = __ieee754_atan2 (rx + r1,
+						__copysign (ix + r2,
+							    __imag__ x));
+	      else
+		__imag__ res = __ieee754_atan2 (ix + r2, rx + r1);
+	    }
+	}
+      else
+	{
+	  double s = __ieee754_hypot (1.0, rx);
+
+	  __real__ res = __log1p (2.0 * rx * (rx + s)) / 2.0;
+	  if (adj)
+	    __imag__ res = __ieee754_atan2 (s, __imag__ x);
+	  else
+	    __imag__ res = __ieee754_atan2 (ix, s);
+	}
+      if (__real__ res < DBL_MIN)
+	{
+	  volatile double force_underflow = __real__ res * __real__ res;
+	  (void) force_underflow;
+	}
+    }
   else
     {
       __real__ y = (rx - ix) * (rx + ix) + 1.0;

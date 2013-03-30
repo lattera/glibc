@@ -1,3 +1,18 @@
+2013-03-30  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #10357]
+	* math/k_casinh.c (__kernel_casinh): Handle arguments with
+	imaginary part less than 1.0 and real part less than 0.5
+	specially.
+	* math/k_casinhf.c (__kernel_casinhf): Likewise.
+	* math/k_casinhl.c (__kernel_casinhl): Likewise.
+	* math/libm-test.inc (UNDERFLOW_EXCEPTION_OK_DOUBLE): New macro.
+	(cacos_test): Add more tests.
+	(casin_test): Likewise.
+	(casinh_test): Likewise.
+	* sysdeps/i386/fpu/libm-test-ulps: Update.
+	* sysdeps/x86_64/fpu/libm-test-ulps: Likewise.
+
 2013-03-29  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* sysdeps/powerpc/power4/fpu/mpa-arch.h (INTEGER_OF): Replace
