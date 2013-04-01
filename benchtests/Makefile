@@ -45,7 +45,7 @@
 #   See pow-inputs for an example.
 
 subdir := benchtests
-bench := exp pow rint slowexp slowpow
+bench := exp pow rint sin slowexp slowpow slowsin
 
 # exp function fast path
 exp-ITER = 5e8
@@ -71,12 +71,25 @@ slowexp-RET = double
 slowexp-INCLUDE = slowexp.c
 LDFLAGS-bench-slowexp = -lm
 
+# sin function fast path
+sin-ITER = 3e9
+sin-ARGLIST = double
+sin-RET = double
+LDFLAGS-bench-sin = -lm
+
 # pow function slowest path
 slowpow-ITER = 1e5
 slowpow-ARGLIST = double:double
 slowpow-RET = double
 slowpow-INCLUDE = slowpow.c
 LDFLAGS-bench-slowpow = -lm
+
+# sin function slowest path
+slowsin-ITER = 3e7
+slowsin-ARGLIST = double
+slowsin-RET = double
+slowsin-INCLUDE = slowsin.c
+LDFLAGS-bench-slowsin = -lm
 
 include ../Makeconfig
 include ../Rules

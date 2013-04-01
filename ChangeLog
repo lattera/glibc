@@ -1,5 +1,10 @@
 2013-04-02  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
+	* bench/Makefile (bench): Add sin and slowsin.
+	* benchtests/sin-inputs: New file.
+	* benchtests/slowsin-inputs: New file.
+	* benchtests/slowsin.c: New file.
+
 	* benchtests/Makefile: Add benchmarks for slowpow and slowexp.
 	(bench): Add slowexp and slowpow.
 	(exp-ITER): Increase iterations.
