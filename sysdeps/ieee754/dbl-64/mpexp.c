@@ -43,7 +43,7 @@ SECTION
 __mpexp (mp_no *x, mp_no *y, int p)
 {
   int i, j, k, m, m1, m2, n;
-  double b;
+  mantissa_t b;
   static const int np[33] =
     {
       0, 0, 0, 0, 3, 3, 4, 4, 5, 4, 4, 5, 5, 5, 6, 6, 6, 6, 6, 6,
@@ -80,7 +80,7 @@ __mpexp (mp_no *x, mp_no *y, int p)
   b = X[1];
   m2 = 24 * EX;
   for (; b < HALFRAD; m2--)
-    b *= TWO;
+    b *= 2;
   if (b == HALFRAD)
     {
       for (i = 2; i <= p; i++)

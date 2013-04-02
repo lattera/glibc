@@ -1,5 +1,8 @@
 2013-04-02  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
+	* sysdeps/ieee754/dbl-64/mpa.h (HALFRAD): Define as TWO23.
+	* sysdeps/ieee754/dbl-64/mpexp.c (__mpexp): Use mantissa_t.
+
 	* bench/Makefile (bench): Add sin and slowsin.
 	* benchtests/sin-inputs: New file.
 	* benchtests/slowsin-inputs: New file.

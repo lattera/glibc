@@ -100,6 +100,8 @@ extern const mp_no mptwo;
 #define  TWO19     TWOPOW (19)		/* 2^19    */
 #define  TWO23     TWOPOW (23)		/* 2^23    */
 
+#define  HALFRAD   TWO23
+
 #define  TWO57     0x1.0p57		/* 2^57    */
 #define  TWO71     0x1.0p71		/* 2^71    */
 #define  TWOM1032  0x1.0p-1032		/* 2^-1032 */
@@ -107,7 +109,6 @@ extern const mp_no mptwo;
 
 #define  HALF      0x1.0p-1		/* 1/2 */
 #define  MHALF     -0x1.0p-1		/* -1/2 */
-#define  HALFRAD   0x1.0p23		/* 2^23 */
 
 int __acr (const mp_no *, const mp_no *, int);
 void __cpy (const mp_no *, mp_no *, int);
