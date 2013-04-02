@@ -1,3 +1,16 @@
+2013-04-02  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* benchtests/Makefile: Add benchmarks for slowpow and slowexp.
+	(bench): Add slowexp and slowpow.
+	(exp-ITER): Increase iterations.
+	(pow-ITER): Likewise.
+	* benchtests/exp-inputs: Change input.
+	* benchtests/pow-inputs: Likewise.
+	* benchtests/slowexp-inputs: New file.
+	* benchtests/slowexp.c: New file.
+	* benchtests/slowpow-inputs: New file.
+	* benchtests/slowpow.c: New file.
+
 2013-04-02  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/powerpc32/fpu/s_rint.S: Remove branch prediction

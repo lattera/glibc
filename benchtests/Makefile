@@ -25,7 +25,9 @@
 
 # - Define foo-ITER with the number of iterations you want to run.  Keep it
 #   high enough that the overhead of clock_gettime is only a small fraction of
-#   the total run time of the test.
+#   the total run time of the test.  A good idea would be to keep the run time
+#   of each test at around 10 seconds for x86_64.  That is just a guideline,
+#   since some scenarios may require higher run times.
 
 # - Define foo-ARGLIST as a colon separated list of types of the input
 #   arguments.  Use `void` if function does not take any inputs.  Put in quotes
@@ -43,14 +45,16 @@
 #   See pow-inputs for an example.
 
 subdir := benchtests
-bench := exp pow rint
+bench := exp pow rint slowexp slowpow
 
-exp-ITER = 100000
+# exp function fast path
+exp-ITER = 5e8
 exp-ARGLIST = double
 exp-RET = double
 LDFLAGS-bench-exp = -lm
 
-pow-ITER = 100000
+# pow function fast path
+pow-ITER = 2e8
 pow-ARGLIST = double:double
 pow-RET = double
 LDFLAGS-bench-pow = -lm
@@ -59,6 +63,20 @@ rint-ITER = 250000000
 rint-ARGLIST = double
 rint-RET = double
 LDFLAGS-bench-rint = -lm
+
+# exp function slowest path
+slowexp-ITER = 3e5
+slowexp-ARGLIST = double
+slowexp-RET = double
+slowexp-INCLUDE = slowexp.c
+LDFLAGS-bench-slowexp = -lm
+
+# pow function slowest path
+slowpow-ITER = 1e5
+slowpow-ARGLIST = double:double
+slowpow-RET = double
+slowpow-INCLUDE = slowpow.c
+LDFLAGS-bench-slowpow = -lm
 
 include ../Makeconfig
 include ../Rules
