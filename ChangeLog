@@ -1,3 +1,13 @@
+2013-04-02  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/powerpc32/fpu/s_rint.S: Remove branch prediction
+	instructions.
+	* sysdeps/powerpc/powerpc32/fpu/s_rintf.S: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/s_rint.S: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/s_rintf.S: Likewise.
+	* benchtests/Makefile: Add rint benchtest.
+	* benchtests/rint-inputs: Input for rint benchtest.
+
 2013-04-02  Thomas Schwinge  <thomas@codesourcery.com>
 
 	* Versions.def (libm): Add GLIBC_2.18.
