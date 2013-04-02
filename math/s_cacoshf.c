@@ -64,32 +64,25 @@ __cacoshf (__complex__ float x)
       __real__ res = 0.0;
       __imag__ res = __copysignf (M_PI_2, __imag__ x);
     }
-  /* The factor 16 is just a guess.  */
-  else if (16.0 * fabsf (__imag__ x) < fabsf (__real__ x))
-    {
-      /* Kahan's formula which avoid cancellation through subtraction in
-	 some cases.  */
-      res = 2.0 * __clogf (__csqrtf ((x + 1.0) / 2.0)
-			   + __csqrtf ((x - 1.0) / 2.0));
-      if (signbit (__real__ res))
-	__real__ res = 0.0f;
-    }
   else
     {
       __complex__ float y;
 
-      __real__ y = (__real__ x - __imag__ x) * (__real__ x + __imag__ x) - 1.0;
-      __imag__ y = 2.0 * __real__ x * __imag__ x;
+      __real__ y = -__imag__ x;
+      __imag__ y = __real__ x;
 
-      y = __csqrtf (y);
+      y = __kernel_casinhf (y, 1);
 
-      if (signbit (__real__ x))
-	y = -y;
-
-      __real__ y += __real__ x;
-      __imag__ y += __imag__ x;
-
-      res = __clogf (y);
+      if (signbit (__imag__ x))
+	{
+	  __real__ res = __real__ y;
+	  __imag__ res = -__imag__ y;
+	}
+      else
+	{
+	  __real__ res = -__real__ y;
+	  __imag__ res = __imag__ y;
+	}
     }
 
   return res;

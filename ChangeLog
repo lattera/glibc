@@ -1,3 +1,16 @@
+2013-04-02  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #15327]
+	* math/s_cacosh.c (__cacosh): Implement for finite nonzero
+	arguments using __kernel_casinh.
+	* math/s_cacoshf.c (__cacoshf): Implement for finite nonzero
+	arguments using __kernel_casinhf.
+	* math/s_cacoshl.c (__cacoshl): Implement for finite nonzero
+	arguments using __kernel_casinhl.
+	* math/libm-test.inc (cacosh_test): Add more tests.
+	* sysdeps/i386/fpu/libm-test-ulps: Update.
+	* sysdeps/x86_64/fpu/libm-test-ulps: Likewise.
+
 2013-04-02  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* sysdeps/ieee754/dbl-64/mpa.h (HALFRAD): Define as TWO23.
