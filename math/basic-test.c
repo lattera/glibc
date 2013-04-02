@@ -20,6 +20,9 @@
 #include <float.h>
 #include <stdio.h>
 
+#include <math-tests.h>
+
+
 static int errors = 0;
 
 
@@ -39,6 +42,10 @@ NAME (void)								      \
   /* Variables are declared volatile to forbid some compiler		      \
      optimizations.  */							      \
   volatile FLOAT Inf_var, qNaN_var, zero_var, one_var;			      \
+  /* A sNaN is only guaranteed to be representable in variables with */	      \
+  /* static (or thread-local) storage duration.  */			      \
+  static volatile FLOAT sNaN_var = __builtin_nans ## SUFFIX ("");	      \
+  static volatile FLOAT minus_sNaN_var = -__builtin_nans ## SUFFIX ("");      \
   FLOAT x1, x2;								      \
 									      \
   zero_var = 0.0;							      \
@@ -49,6 +56,8 @@ NAME (void)								      \
   (void) &zero_var;							      \
   (void) &one_var;							      \
   (void) &qNaN_var;							      \
+  (void) &sNaN_var;							      \
+  (void) &minus_sNaN_var;						      \
   (void) &Inf_var;							      \
 									      \
 									      \
@@ -56,16 +65,41 @@ NAME (void)								      \
   check (#FLOAT " isinf (-inf) == -1", isinf (-Inf_var) == -1);		      \
   check (#FLOAT " !isinf (1)", !(isinf (one_var)));			      \
   check (#FLOAT " !isinf (qNaN)", !(isinf (qNaN_var)));			      \
+  if (SNAN_TESTS (FLOAT))						      \
+    check (#FLOAT " !isinf (sNaN)", !(isinf (sNaN_var)));		      \
 									      \
   check (#FLOAT " isnan (qNaN)", isnan (qNaN_var));			      \
+  if (SNAN_TESTS (FLOAT))						      \
+    check (#FLOAT " isnan (sNaN)", isnan (sNaN_var));			      \
   check (#FLOAT " isnan (-qNaN)", isnan (-qNaN_var));			      \
+  if (SNAN_TESTS (FLOAT))						      \
+    check (#FLOAT " isnan (-sNaN)", isnan (minus_sNaN_var));		      \
   check (#FLOAT " !isnan (1)", !(isnan (one_var)));			      \
   check (#FLOAT " !isnan (inf)", !(isnan (Inf_var)));			      \
+									      \
+  check (#FLOAT " !issignaling (qNaN)", !(issignaling (qNaN_var)));	      \
+  if (SNAN_TESTS (FLOAT))						      \
+    check (#FLOAT " issignaling (sNaN)", issignaling (sNaN_var));	      \
+  check (#FLOAT " !issignaling (-qNaN)", !(issignaling (-qNaN_var)));	      \
+  if (SNAN_TESTS (FLOAT))						      \
+    check (#FLOAT " issignaling (-sNaN)", issignaling (minus_sNaN_var));      \
+  check (#FLOAT " !issignaling (1)", !(issignaling (one_var)));		      \
+  check (#FLOAT " !issignaling (inf)", !(issignaling (Inf_var)));	      \
 									      \
   check (#FLOAT " inf == inf", Inf_var == Inf_var);			      \
   check (#FLOAT " -inf == -inf", -Inf_var == -Inf_var);			      \
   check (#FLOAT " inf != -inf", Inf_var != -Inf_var);			      \
   check (#FLOAT " qNaN != qNaN", qNaN_var != qNaN_var);			      \
+  if (SNAN_TESTS (FLOAT))						      \
+    check (#FLOAT " sNaN != sNaN", sNaN_var != sNaN_var);		      \
+  if (SNAN_TESTS (FLOAT))						      \
+    check (#FLOAT " qNaN != sNaN", qNaN_var != sNaN_var);		      \
+  if (SNAN_TESTS (FLOAT))						      \
+    check (#FLOAT " -sNaN != -sNaN", minus_sNaN_var != minus_sNaN_var);	      \
+  if (SNAN_TESTS (FLOAT))						      \
+    check (#FLOAT " sNaN != -sNaN", sNaN_var != minus_sNaN_var);	      \
+  if (SNAN_TESTS (FLOAT))						      \
+    check (#FLOAT " qNaN != -sNaN", qNaN_var != minus_sNaN_var);	      \
 									      \
   /*									      \
      the same tests but this time with NAN from <bits/nan.h>		      \
@@ -76,6 +110,11 @@ NAME (void)								      \
   check (#FLOAT " !isinf (NAN)", !(isinf (NAN)));			      \
   check (#FLOAT " !isinf (-NAN)", !(isinf (-NAN)));			      \
   check (#FLOAT " NAN != NAN", NAN != NAN);				      \
+  check (#FLOAT " NAN != qNaN", NAN != qNaN_var);			      \
+  if (SNAN_TESTS (FLOAT))						      \
+    check (#FLOAT " NAN != sNaN", NAN != sNaN_var);			      \
+  if (SNAN_TESTS (FLOAT))						      \
+    check (#FLOAT " NAN != -sNaN", NAN != minus_sNaN_var);		      \
 									      \
   /*									      \
      And again with the value returned by the `nan' function.		      \
@@ -86,6 +125,12 @@ NAME (void)								      \
   check (#FLOAT " !isinf (-nan (\"\"))", !(isinf (-nan ## SUFFIX (""))));     \
   check (#FLOAT " nan (\"\") != nan (\"\")",				      \
 	 nan ## SUFFIX ("") != nan ## SUFFIX (""));			      \
+  check (#FLOAT " nan (\"\") != qNaN", nan ## SUFFIX ("") != qNaN_var);	      \
+  if (SNAN_TESTS (FLOAT))						      \
+    check (#FLOAT " nan (\"\") != sNaN", nan ## SUFFIX ("") != sNaN_var);     \
+  if (SNAN_TESTS (FLOAT))						      \
+    check (#FLOAT " nan (\"\") != -sNaN",				      \
+	   nan ## SUFFIX ("") != minus_sNaN_var);			      \
 									      \
   /* test if EPSILON is ok */						      \
   x1 = 1.0;								      \
@@ -108,6 +153,9 @@ void									      \
 NAME (void)								      \
 {									      \
   volatile DOUBLE Inf_var, qNaN_var, zero_var, one_var;			      \
+  /* A sNaN is only guaranteed to be representable in variables with */	      \
+  /* static (or thread-local) storage duration.  */			      \
+  static volatile DOUBLE sNaN_var = __builtin_nans ## SUFFIX ("");	      \
   FLOAT x1, x2;								      \
 									      \
   zero_var = 0.0;							      \
@@ -116,10 +164,25 @@ NAME (void)								      \
   Inf_var = one_var / zero_var;						      \
 									      \
   (void) &qNaN_var;							      \
+  (void) &sNaN_var;							      \
   (void) &Inf_var;							      \
 									      \
   x1 = (FLOAT) qNaN_var;						      \
-  check (" "#FLOAT" x = ("#FLOAT") ("#DOUBLE") qNaN", isnan (x1) != 0);	      \
+  check (" "#FLOAT" x = ("#FLOAT") ("#DOUBLE") qNaN, isnan", isnan (x1));     \
+  check (" "#FLOAT" x = ("#FLOAT") ("#DOUBLE") qNaN, !issignaling",	      \
+	 !issignaling (x1));						      \
+  if (SNAN_TESTS (FLOAT))						      \
+    {									      \
+      x1 = (FLOAT) sNaN_var;						      \
+      check (" "#FLOAT" x = ("#FLOAT") ("#DOUBLE") sNaN, isnan", isnan (x1)); \
+      if (SNAN_TESTS_TYPE_CAST)						      \
+	{								      \
+	  /* Upon type conversion, a sNaN is converted into a qNaN plus an */ \
+	  /* INVALID exception (not checked here).  */			      \
+	  check (" "#FLOAT" x = ("#FLOAT") ("#DOUBLE") sNaN, !issignaling",   \
+		 !issignaling (x1));					      \
+	}								      \
+      }									      \
   x2 = (FLOAT) Inf_var;							      \
   check (" "#FLOAT" x = ("#FLOAT") ("#DOUBLE") Inf", isinf (x2) != 0);	      \
 }

@@ -282,6 +282,20 @@ enum
 
 #endif /* Use ISO C99.  */
 
+#ifdef __USE_GNU
+/* Return nonzero value if X is a signaling NaN.  */
+# ifdef __NO_LONG_DOUBLE_MATH
+#  define issignaling(x) \
+     (sizeof (x) == sizeof (float) ? __issignalingf (x) : __issignaling (x))
+# else
+#  define issignaling(x) \
+     (sizeof (x) == sizeof (float)					      \
+      ? __issignalingf (x)						      \
+      : sizeof (x) == sizeof (double)					      \
+      ? __issignaling (x) : __issignalingl (x))
+# endif
+#endif /* Use GNU.  */
+
 #ifdef	__USE_MISC
 /* Support for various different standard error handling behaviors.  */
 typedef enum

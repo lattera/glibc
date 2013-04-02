@@ -42,7 +42,7 @@
    cbrt, ceil, copysign, cos, cosh, erf, erfc, exp, exp10, exp2, expm1,
    fabs, fdim, finite, floor, fma, fmax, fmin, fmod, fpclassify,
    frexp, gamma, hypot,
-   ilogb, isfinite, isinf, isnan, isnormal,
+   ilogb, isfinite, isinf, isnan, isnormal, issignaling,
    isless, islessequal, isgreater, isgreaterequal, islessgreater, isunordered,
    j0, j1, jn,
    ldexp, lgamma, log, log10, log1p, log2, logb,
@@ -87,9 +87,8 @@
    aren't checked at the moment.
 
    NaN values: There exist signalling and quiet NaNs.  This implementation
-   only uses quiet NaN as parameter but does not differentiate
-   between the two kinds of NaNs as result.  Where the sign of a NaN is
-   significant, this is not tested.
+   only uses quiet NaN as parameter.  Where the sign of a NaN is
+   significant, this is not tested.  The payload of NaNs is not examined.
 
    Inline functions: Inlining functions should give an improvement in
    speed - but not in precission.  The inlined functions return
@@ -264,6 +263,19 @@ set_max_error (FLOAT current, FLOAT *curr_max_error)
     *curr_max_error = current;
 }
 
+
+/* Print a FLOAT.  */
+static void
+print_float (FLOAT f)
+{
+  /* As printf doesn't differ between a sNaN and a qNaN, do this manually.  */
+  if (issignaling (f))
+    printf ("sNaN\n");
+  else if (isnan (f))
+    printf ("qNaN\n");
+  else
+    printf ("% .20" PRINTF_EXPR "  % .20" PRINTF_XEXPR "\n", f, f);
+}
 
 /* Should the message print to screen?  This depends on the verbose flag,
    and the test status.  */
@@ -534,7 +546,11 @@ check_float_internal (const char *test_name, FLOAT computed, FLOAT expected,
   FLOAT ulp = 0;
 
   test_exceptions (test_name, exceptions);
-  if (isnan (computed) && isnan (expected))
+  if (issignaling (computed) && issignaling (expected))
+    ok = 1;
+  else if (issignaling (computed) || issignaling (expected))
+    ok = 0;
+  else if (isnan (computed) && isnan (expected))
     ok = 1;
   else if (isinf (computed) && isinf (expected))
     {
@@ -548,8 +564,9 @@ check_float_internal (const char *test_name, FLOAT computed, FLOAT expected,
       else
 	ok = 1;
     }
-  /* Don't calc ulp for NaNs or infinities.  */
-  else if (isinf (computed) || isnan (computed) || isinf (expected) || isnan (expected))
+  /* Don't calculate ULPs for infinities or any kind of NaNs.  */
+  else if (isinf (computed) || isnan (computed)
+	   || isinf (expected) || isnan (expected))
     ok = 0;
   else
     {
@@ -594,10 +611,10 @@ check_float_internal (const char *test_name, FLOAT computed, FLOAT expected,
 	printf ("Failure: ");
       printf ("Test: %s\n", test_name);
       printf ("Result:\n");
-      printf (" is:         % .20" PRINTF_EXPR "  % .20" PRINTF_XEXPR "\n",
-	      computed, computed);
-      printf (" should be:  % .20" PRINTF_EXPR "  % .20" PRINTF_XEXPR "\n",
-	      expected, expected);
+      printf (" is:         ");
+      print_float (computed);
+      printf (" should be:  ");
+      print_float (expected);
       if (print_diff)
 	{
 	  printf (" difference: % .20" PRINTF_EXPR "  % .20" PRINTF_XEXPR
@@ -7813,6 +7830,22 @@ isnormal_test (void)
 }
 
 static void
+issignaling_test (void)
+{
+  START (issignaling);
+
+  TEST_f_b (issignaling, 0, 0);
+  TEST_f_b (issignaling, minus_zero, 0);
+  TEST_f_b (issignaling, 10, 0);
+  TEST_f_b (issignaling, min_subnorm_value, 0);
+  TEST_f_b (issignaling, plus_infty, 0);
+  TEST_f_b (issignaling, minus_infty, 0);
+  TEST_f_b (issignaling, qnan_value, 0);
+
+  END (issignaling);
+}
+
+static void
 isunordered_test (void)
 {
   START (isunordered);
@@ -12448,6 +12481,7 @@ main (int argc, char **argv)
   isinf_test ();
   isnan_test ();
   isnormal_test ();
+  issignaling_test ();
   signbit_test ();
 
   /* Trigonometric functions:  */

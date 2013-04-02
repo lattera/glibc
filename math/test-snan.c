@@ -1,4 +1,4 @@
-/* Test signaling NaNs in isnan, isinf, and similar functions.
+/* Test signaling NaNs in issignaling, isnan, isinf, and similar functions.
    Copyright (C) 2008-2013 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Andreas Jaeger <aj@suse.de>, 2005.
@@ -114,6 +114,48 @@ NAME (void)								      \
 									      \
   set_sigaction_FP ();							      \
   fegetenv(&saved_fenv);						      \
+									      \
+  feclearexcept(FE_ALL_EXCEPT);						      \
+  feenableexcept (FE_ALL_EXCEPT);					      \
+  if (sigsetjmp(sigfpe_buf, 0))						      \
+    {									      \
+      printf (#FLOAT " issignaling (qNaN) raised SIGFPE\n");		      \
+      errors++;								      \
+    } else {								      \
+      check (#FLOAT " issignaling (qNaN)", !issignaling (qNaN_var));	      \
+    }									      \
+									      \
+  feclearexcept(FE_ALL_EXCEPT);						      \
+  feenableexcept (FE_ALL_EXCEPT);					      \
+  if (sigsetjmp(sigfpe_buf, 0))						      \
+    {									      \
+      printf (#FLOAT " issignaling (-qNaN) raised SIGFPE\n");		      \
+      errors++;								      \
+    } else {								      \
+      check (#FLOAT " issignaling (-qNaN)", !issignaling (-qNaN_var));	      \
+    }									      \
+									      \
+  feclearexcept(FE_ALL_EXCEPT);						      \
+  feenableexcept (FE_ALL_EXCEPT);					      \
+  if (sigsetjmp(sigfpe_buf, 0))						      \
+    {									      \
+      printf (#FLOAT " issignaling (sNaN) raised SIGFPE\n");		      \
+      errors++;								      \
+    } else {								      \
+      check (#FLOAT " issignaling (sNaN)",				      \
+	     SNAN_TESTS (FLOAT) ? issignaling (sNaN_var) : 1);		      \
+    }									      \
+									      \
+  feclearexcept(FE_ALL_EXCEPT);						      \
+  feenableexcept (FE_ALL_EXCEPT);					      \
+  if (sigsetjmp(sigfpe_buf, 0))						      \
+    {									      \
+      printf (#FLOAT " issignaling (-sNaN) raised SIGFPE\n");		      \
+      errors++;								      \
+    } else {								      \
+      check (#FLOAT " issignaling (-sNaN)",				      \
+	     SNAN_TESTS (FLOAT) ? issignaling (minus_sNaN_var) : 1);	      \
+    }									      \
 									      \
   feclearexcept(FE_ALL_EXCEPT);						      \
   feenableexcept (FE_ALL_EXCEPT);					      \

@@ -81,6 +81,11 @@ GLIBC_2.15
  __yn_finite F
  __ynf_finite F
  __ynl_finite F
+GLIBC_2.18
+ GLIBC_2.18 A
+ __issignaling F
+ __issignalingf F
+ __issignalingl F
 GLIBC_2.3
  GLIBC_2.3 A
  _LIB_VERSION D 0x4

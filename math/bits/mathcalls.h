@@ -360,6 +360,12 @@ __MATHCALL (fma,, (_Mdouble_ __x, _Mdouble_ __y, _Mdouble_ __z));
 __END_NAMESPACE_C99
 #endif
 
+#ifdef __USE_GNU
+/* Test for signaling NaN.  */
+__MATHDECL_1 (int, __issignaling,, (_Mdouble_ __value))
+     __attribute__ ((__const__));
+#endif
+
 #if defined __USE_MISC || defined __USE_XOPEN_EXTENDED
 /* Return X times (2 to the Nth power).  */
 __MATHCALL (scalb,, (_Mdouble_ __x, _Mdouble_ __n));

@@ -395,3 +395,8 @@ GLIBC_2.17
  yn F
  ynf F
  ynl F
+GLIBC_2.18
+ GLIBC_2.18 A
+ __issignaling F
+ __issignalingf F
+ __issignalingl F

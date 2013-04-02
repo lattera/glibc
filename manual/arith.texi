@@ -387,6 +387,14 @@ to
 @end smallexample
 @end deftypefn
 
+@comment math.h
+@comment GNU
+@deftypefn {Macro} int issignaling (@emph{float-type} @var{x})
+This macro returns a nonzero value if @var{x} is a signaling NaN
+(sNaN).  It is based on draft TS 18661 and currently enabled as a GNU
+extension.
+@end deftypefn
+
 Another set of floating-point classification functions was provided by
 BSD.  @Theglibc{} also supports these functions; however, we
 recommend that you use the ISO C99 macros in new code.  Those are standard

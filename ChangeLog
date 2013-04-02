@@ -1,3 +1,35 @@
+2013-04-02  Thomas Schwinge  <thomas@codesourcery.com>
+
+	* Versions.def (libm): Add GLIBC_2.18.
+	* include/math.h [!_ISOMAC] (__issignaling, __issignalingf): Add
+	hidden libm prototypes.
+	[!_ISOMAC && !__NO_LONG_DOUBLE_MATH] (__issignalingl): Likewise.
+	* math/Makefile (libm-calls): Add s_issignaling.
+	* math/Versions (libm: GLIBC_2.18): Add __issignaling,
+	__issignalingf, __issignalingl.  Adjust all libm.abilist files.
+	* math/bits/mathcalls.h [__USE_GNU] (__issignaling): New prototype
+	declaration.
+	* math/math.h [__USE_GNU] (issignaling): New macro.
+	* sysdeps/ieee754/flt-32/s_issignalingf.c: New file.
+	* sysdeps/ieee754/dbl-64/s_issignaling.c: Likewise.
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_issignaling.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/s_issignalingl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_issignalingl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_issignalingl.c: Likewise.
+	* manual/arith.texi (issignaling): New section.
+	* manual/libm-err-tab.pl (@all_functions): Update comment.
+	* math/gen-libm-test.pl (parse_args): Apply special handling for
+	issignaling.
+	* math/libm-test.inc (print_float, issignaling_test): New
+	functions.
+	(check_float_internal): Add issignaling checks.
+	* sysdeps/generic/math-tests.h (SNAN_TESTS_TYPE_CAST): Provide
+	default definition.
+	* sysdeps/powerpc/math-tests.h: New file.
+	* math/basic-test.c (TEST_FUNC, TEST_TRUNC): Add issignaling
+	tests.
+	* math/test-snan.c (TEST_FUNC): Likewise.
+
 2013-03-30  David S. Miller  <davem@davemloft.net>
 
 	* po/de.po: Update from translation team.

@@ -1,3 +1,7 @@
+2013-04-02  Thomas Schwinge  <thomas@codesourcery.com>
+
+	* sysdeps/mips/math_private.h: New file.
+
 2013-03-20  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/mips/configure.in (default-abi): Set

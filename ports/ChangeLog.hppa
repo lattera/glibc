@@ -1,3 +1,7 @@
+2013-04-02  Thomas Schwinge  <thomas@codesourcery.com>
+
+	* sysdeps/hppa/math_private.h: New file.
+
 2013-03-06  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/hppa/bits/msq.h (MSG_COPY): Define.

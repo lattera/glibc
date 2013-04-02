@@ -34,3 +34,9 @@
   (sizeof (x) == sizeof (float) ? SNAN_TESTS_float			\
    : sizeof (x) == sizeof (double) ? SNAN_TESTS_double			\
    : SNAN_TESTS_long_double)
+
+/* Indicate whether to run tests involving type casts of sNaN values.  These
+   are run unless overridden.  */
+#ifndef SNAN_TESTS_TYPE_CAST
+# define SNAN_TESTS_TYPE_CAST	1
+#endif

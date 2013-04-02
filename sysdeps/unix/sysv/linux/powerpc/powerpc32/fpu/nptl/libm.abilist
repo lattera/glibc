@@ -397,6 +397,11 @@ GLIBC_2.15
  __yn_finite F
  __ynf_finite F
  __ynl_finite F
+GLIBC_2.18
+ GLIBC_2.18 A
+ __issignaling F
+ __issignalingf F
+ __issignalingl F
 GLIBC_2.2
  GLIBC_2.2 A
  feclearexcept F

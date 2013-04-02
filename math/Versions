@@ -198,4 +198,7 @@ libm {
     __gamma_r_finite; __gammaf_r_finite; __gammal_r_finite;
     __exp_finite; __expf_finite; __expl_finite;
   }
+  GLIBC_2.18 {
+    __issignaling; __issignalingf; __issignalingl;
+  }
 }

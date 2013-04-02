@@ -77,7 +77,9 @@ use vars qw (%results @all_floats %suffices @all_functions);
     "remainder", "remquo", "rint", "round", "scalb", "scalbn", "scalbln",
     "sin", "sincos", "sinh", "sqrt", "tan", "tanh", "tgamma",
     "trunc", "y0", "y1", "yn" );
-# "fpclassify", "isfinite", "isnormal", "signbit" are not tabulated
+# fpclassify, isnormal, isfinite, isinf, isnan, issignaling, signbit,
+# isgreater, isgreaterequal, isless, islessequal, islessgreater, isunordered
+# are not tabulated.
 
 if ($#ARGV == 0) {
   $sources = $ARGV[0];
