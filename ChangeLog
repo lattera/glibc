@@ -1,3 +1,8 @@
+2013-04-05  Thomas Schwinge  <thomas@codesourcery.com>
+
+	* sysdeps/ieee754/dbl-64/usncs.h (NAN): Removed unused
+	definitions.
+
 2013-04-03  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #14478]
