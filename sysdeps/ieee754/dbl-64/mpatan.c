@@ -102,7 +102,7 @@ __mpatan (mp_no *x, mp_no *y, int p)
   __dvd (&mpsm, &mptwoim1, &mpt, p);
   for (i = n - 1; i > 1; i--)
     {
-      mptwoim1.d[1] -= TWO;
+      mptwoim1.d[1] -= 2;
       __dvd (&mpsm, &mptwoim1, &mpt1, p);
       __mul (&mpsm, &mpt, &mpt2, p);
       __sub (&mpt1, &mpt2, &mpt, p);

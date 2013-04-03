@@ -91,8 +91,6 @@ extern const mp_no mptwo;
 # define  TWO52     0x1.0p52		/* 2^52    */
 #endif
 
-#define  TWO       2.0			/*  2      */
-
 #define  TWO5      TWOPOW (5)		/* 2^5     */
 #define  TWO8      TWOPOW (8)		/* 2^52    */
 #define  TWO10     TWOPOW (10)		/* 2^10    */

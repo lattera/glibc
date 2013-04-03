@@ -1,5 +1,9 @@
 2013-04-03  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
+	* sysdeps/ieee754/dbl-64/mpa.h (TWO): Remove definition.
+	* sysdeps/ieee754/dbl-64/mpatan.c (__mpatan): Replace TWO with
+	its value.
+
 	[BZ #15305]
 	* sysdeps/unix/sysv/linux/kernel-features.h
 	[__LINUX_KERNEL_VERSION >= 0x02061d]: Define
