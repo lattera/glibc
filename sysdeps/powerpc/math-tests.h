@@ -20,7 +20,8 @@
    a IEEE 754-2008 general-computational convertFormat operation (IEEE
    754-2008, 5.4.2) -- does not turn a sNaN into a qNaN (whilst raising an
    INVALID exception), which is contrary to IEEE 754-2008 5.1 and 7.2.  This
-   renders certain tests infeasible in this scenario.  */
+   renders certain tests infeasible in this scenario.
+   <http://gcc.gnu.org/PR56828>.  */
 #define SNAN_TESTS_TYPE_CAST	0
 
 #include_next <math-tests.h>

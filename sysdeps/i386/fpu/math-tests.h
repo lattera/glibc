@@ -19,7 +19,8 @@
 /* On 32-bit x86, versions of GCC up to at least 4.8 are happy to use FPU load
    instructions for sNaN values, and loading a float or double sNaN value will
    already raise an INVALID exception as well as turn the sNaN into a qNaN,
-   rendering certain tests infeasible in this scenario.  */
+   rendering certain tests infeasible in this scenario.
+   <http://gcc.gnu.org/PR56831>.  */
 #define SNAN_TESTS_float	0
 #define SNAN_TESTS_double	0
 

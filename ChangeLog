@@ -1,3 +1,10 @@
+2013-04-03  Thomas Schwinge  <thomas@codesourcery.com>
+
+	* sysdeps/i386/fpu/math-tests.h (SNAN_TESTS_float)
+	(SNAN_TESTS_double): Refer to GCC PR56831.
+	* sysdeps/powerpc/math-tests.h (SNAN_TESTS_TYPE_CAST): Refer to
+	GCC PR56828.
+
 2013-04-03  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* Rules (bench): Move bench.out after the run is complete.
