@@ -15,6 +15,9 @@ Version 2.18
   15160, 15214, 15232, 15234, 15283, 15285, 15287, 15304, 15305, 15307,
   15327, 15330.
 
+* CVE-2013-0242 Buffer overrun in regexp matcher has been fixed (Bugzilla
+  #15078).
+
 * CVE-2013-1914 Stack overflow in getaddrinfo with many results has been
   fixed (Bugzilla #15330).
 
