@@ -1,5 +1,8 @@
 2013-04-05  Thomas Schwinge  <thomas@codesourcery.com>
 
+	* sysdeps/ieee754/dbl-64/e_pow.c (__ieee754_pow): Remove
+	unreachable code.
+
 	* sysdeps/ieee754/dbl-64/usncs.h (NAN): Removed unused
 	definitions.
 

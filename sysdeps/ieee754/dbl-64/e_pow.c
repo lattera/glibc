@@ -153,8 +153,7 @@ __ieee754_pow(double x, double y) {
   /* x>0 */
 
   if (qx == 0x7ff00000)                              /* x= 2^-0x3ff */
-    {if (y == 0) return NaNQ.x;
-    return (y>0)?x:0; }
+    return y > 0 ? x : 0;
 
   if (qy > 0x45f00000 && qy < 0x7ff00000) {
     if (x == 1.0) return 1.0;
