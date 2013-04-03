@@ -201,6 +201,7 @@ bench: $(binaries-bench)
 	  mv -f $(objpfx)bench.out $(objpfx)bench.out.old; \
 	fi
 	for run in $^; do \
+	  echo "Running $${run}"; \
 	  eval $(run-bench) >>  $(objpfx)bench.out; \
 	done
 

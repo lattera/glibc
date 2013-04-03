@@ -1,5 +1,7 @@
 2013-04-03  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
+	* Rules (bench): Echo currently running benchmark.
+
 	* benchtests/Makefile (bench): Add atan and slowatan.
 	* benchtests/atan-inputs: New file.
 	* benchtests/slowatan-inputs: New file.
