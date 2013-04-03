@@ -1,5 +1,10 @@
 2013-04-05  Thomas Schwinge  <thomas@codesourcery.com>
 
+	[BZ #15335, #15342]
+	* sysdeps/ieee754/dbl-64/upow.h (NaNQ): Remove definitions.
+	* sysdeps/ieee754/dbl-64/e_pow.c (__ieee754_pow): Instead, use
+	input NaN values or generate a qNaN by arithmetic operation.
+
 	* sysdeps/ieee754/dbl-64/e_pow.c (__ieee754_pow): Remove
 	unreachable code.
 

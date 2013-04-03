@@ -71,8 +71,9 @@ __ieee754_pow(double x, double y) {
   u.x=x;
   if (v.i[LOW_HALF] == 0) { /* of y */
     qx = u.i[HIGH_HALF]&0x7fffffff;
-    /* Checking  if x is not too small to compute */
-    if (((qx==0x7ff00000)&&(u.i[LOW_HALF]!=0))||(qx>0x7ff00000)) return NaNQ.x;
+    /* Is x a NaN?  */
+    if (((qx == 0x7ff00000) && (u.i[LOW_HALF] != 0)) || (qx > 0x7ff00000))
+      return x;
     if (y == 1.0) return x;
     if (y == 2.0) return x*x;
     if (y == -1.0) return 1.0/x;
@@ -111,7 +112,7 @@ __ieee754_pow(double x, double y) {
 
   if (x == 0) {
     if (((v.i[HIGH_HALF] & 0x7fffffff) == 0x7ff00000 && v.i[LOW_HALF] != 0)
-	|| (v.i[HIGH_HALF] & 0x7fffffff) > 0x7ff00000)
+	|| (v.i[HIGH_HALF] & 0x7fffffff) > 0x7ff00000) /* NaN */
       return y;
     if (ABS(y) > 1.0e20) return (y>0)?0:1.0/0.0;
     k = checkint(y);
@@ -124,9 +125,10 @@ __ieee754_pow(double x, double y) {
   qx = u.i[HIGH_HALF]&0x7fffffff;  /*   no sign   */
   qy = v.i[HIGH_HALF]&0x7fffffff;  /*   no sign   */
 
-  if (qx >= 0x7ff00000 && (qx > 0x7ff00000 || u.i[LOW_HALF] != 0)) return NaNQ.x;
-  if (qy >= 0x7ff00000 && (qy > 0x7ff00000 || v.i[LOW_HALF] != 0))
-    return x == 1.0 ? 1.0 : NaNQ.x;
+  if (qx >= 0x7ff00000 && (qx > 0x7ff00000 || u.i[LOW_HALF] != 0)) /* NaN */
+    return x;
+  if (qy >= 0x7ff00000 && (qy > 0x7ff00000 || v.i[LOW_HALF] != 0)) /* NaN */
+    return x == 1.0 ? 1.0 : y;
 
   /* if x<0 */
   if (u.i[HIGH_HALF] < 0) {
@@ -139,7 +141,7 @@ __ieee754_pow(double x, double y) {
       }
       else if (qx == 0x7ff00000)
 	return y < 0 ? 0.0 : INF.x;
-      return NaNQ.x;                              /* y not integer and x<0 */
+      return (x - x) / (x - x);                   /* y not integer and x<0 */
     }
     else if (qx == 0x7ff00000)
       {
