@@ -1,3 +1,12 @@
+2013-04-03  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #14478]
+	* math/s_cexp.c (__cexp): Ensure underflow exception occurs for
+	underflowed result.
+	* math/s_cexpf.c (__cexpf): Likewise.
+	* math/s_cexpl.c (__cexpl): Likewise.
+	* math/libm-test.inc (cexp_test): Add more tests.
+
 2013-04-03  Andreas Schwab  <schwab@suse.de>
 
 	[BZ #15330]

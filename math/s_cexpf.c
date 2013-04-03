@@ -74,6 +74,18 @@ __cexpf (__complex__ float x)
 	      __real__ retval = exp_val * cosix;
 	      __imag__ retval = exp_val * sinix;
 	    }
+	  if (fabsf (__real__ retval) < FLT_MIN)
+	    {
+	      volatile float force_underflow
+		= __real__ retval * __real__ retval;
+	      (void) force_underflow;
+	    }
+	  if (fabsf (__imag__ retval) < FLT_MIN)
+	    {
+	      volatile float force_underflow
+		= __imag__ retval * __imag__ retval;
+	      (void) force_underflow;
+	    }
 	}
       else
 	{

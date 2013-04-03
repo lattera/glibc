@@ -74,6 +74,18 @@ __cexp (__complex__ double x)
 	      __real__ retval = exp_val * cosix;
 	      __imag__ retval = exp_val * sinix;
 	    }
+	  if (fabs (__real__ retval) < DBL_MIN)
+	    {
+	      volatile double force_underflow
+		= __real__ retval * __real__ retval;
+	      (void) force_underflow;
+	    }
+	  if (fabs (__imag__ retval) < DBL_MIN)
+	    {
+	      volatile double force_underflow
+		= __imag__ retval * __imag__ retval;
+	      (void) force_underflow;
+	    }
 	}
       else
 	{

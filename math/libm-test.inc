@@ -4794,6 +4794,9 @@ cexp_test (void)
   TEST_c_c (cexp, 1e6, min_value, plus_infty, plus_infty, OVERFLOW_EXCEPTION);
   TEST_c_c (cexp, 1e6, -min_value, plus_infty, minus_infty, OVERFLOW_EXCEPTION);
 
+  TEST_c_c (cexp, min_value, min_subnorm_value, 1.0, min_subnorm_value, UNDERFLOW_EXCEPTION);
+  TEST_c_c (cexp, min_value, -min_subnorm_value, 1.0, -min_subnorm_value, UNDERFLOW_EXCEPTION);
+
   END (cexp, complex);
 }
 
