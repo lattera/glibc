@@ -197,13 +197,14 @@ run-bench = $(test-wrapper-env) \
 	    $($*-ENV) $(run-via-rtld-prefix) $${run}
 
 bench: $(binaries-bench)
-	if [ -f $(objpfx)bench.out ]; then \
-	  mv -f $(objpfx)bench.out $(objpfx)bench.out.old; \
-	fi
 	for run in $^; do \
 	  echo "Running $${run}"; \
-	  eval $(run-bench) >>  $(objpfx)bench.out; \
-	done
+	  eval $(run-bench) >>  $(objpfx)bench.out-tmp; \
+	done; \
+	if [ -f $(objpfx)bench.out ]; then \
+	  mv -f $(objpfx)bench.out $(objpfx)bench.out.old; \
+	fi; \
+	mv -f $(objpfx)bench.out-tmp $(objpfx)bench.out
 
 $(binaries-bench): %: %.o \
   $(sort $(filter $(common-objpfx)lib%,$(link-libc))) \

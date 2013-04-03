@@ -1,5 +1,7 @@
 2013-04-03  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
+	* Rules (bench): Move bench.out after the run is complete.
+
 	* Rules (bench): Echo currently running benchmark.
 
 	* benchtests/Makefile (bench): Add atan and slowatan.
