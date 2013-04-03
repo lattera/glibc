@@ -1,5 +1,10 @@
 2013-04-03  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
+	* benchtests/Makefile (bench): Add atan and slowatan.
+	* benchtests/atan-inputs: New file.
+	* benchtests/slowatan-inputs: New file.
+	* benchtests/slowatan.c: New file.
+
 	* sysdeps/ieee754/dbl-64/mpa.h (TWO): Remove definition.
 	* sysdeps/ieee754/dbl-64/mpatan.c (__mpatan): Replace TWO with
 	its value.
