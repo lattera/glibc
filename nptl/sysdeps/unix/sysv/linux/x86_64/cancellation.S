@@ -22,7 +22,7 @@
 #include "lowlevellock.h"
 
 #ifdef IS_IN_libpthread
-# ifdef SHARED
+# if defined SHARED && defined DO_VERSIONING && !defined NO_HIDDEN
 #  define __pthread_unwind __GI___pthread_unwind
 # endif
 #else

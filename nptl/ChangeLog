@@ -1,3 +1,11 @@
+2013-04-04  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	[BZ #15337]
+	* sysdeps/unix/sysv/linux/x86_64/cancellation.S
+	[IS_IN_libpthread]
+	[SHARED && defined DO_VERSIONING && !defined NO_HIDDEN]: Mark
+	__pthread_unwind hidden.
+
 2013-03-28  Roland McGrath  <roland@hack.frob.com>
 
 	* pthread_create.c (start_thread) [!SHARED]:
