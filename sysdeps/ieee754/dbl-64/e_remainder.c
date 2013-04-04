@@ -111,12 +111,14 @@ double __ieee754_remainder(double x, double y)
       else return (z>0)?z-y:z+y;
     }
     else { /* if x is too big */
-      if (kx == 0x7ff00000 && u.i[LOW_HALF] == 0 && y == 1.0)
-	return x / x;
-      if (kx>=0x7ff00000||(ky==0&&t.i[LOW_HALF]==0)||ky>0x7ff00000||
-	  (ky==0x7ff00000&&t.i[LOW_HALF]!=0))
-	return (u.i[HIGH_HALF]&0x80000000)?nNAN.x:NAN.x;
-      else return x;
+      if (ky==0 && t.i[LOW_HALF] == 0)		/* y = 0 */
+	return (x * y) / (x * y);
+      else if (kx >= 0x7ff00000			/* x not finite */
+	       || (ky>0x7ff00000		/* y is NaN */
+		   || (ky == 0x7ff00000 && t.i[LOW_HALF] != 0)))
+	return (x * y) / (x * y);
+      else
+	return x;
     }
    }
   }

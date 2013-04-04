@@ -11103,11 +11103,29 @@ remainder_test (void)
   TEST_ff_f (remainder, 1, minus_zero, qnan_value, INVALID_EXCEPTION);
   check_int ("errno for remainder(1, -0) = EDOM ", errno, EDOM, 0, 0, 0);
   errno = 0;
+  TEST_ff_f (remainder, plus_infty, minus_zero, qnan_value, INVALID_EXCEPTION);
+  check_int ("errno for remainder(INF, -0) = EDOM ", errno, EDOM, 0, 0, 0);
+  errno = 0;
+  TEST_ff_f (remainder, plus_infty, 0, qnan_value, INVALID_EXCEPTION);
+  check_int ("errno for remainder(INF, 0) = EDOM ", errno, EDOM, 0, 0, 0);
+  errno = 0;
   TEST_ff_f (remainder, plus_infty, 1, qnan_value, INVALID_EXCEPTION);
   check_int ("errno for remainder(INF, 1) = EDOM ", errno, EDOM, 0, 0, 0);
   errno = 0;
+  TEST_ff_f (remainder, plus_infty, 2, qnan_value, INVALID_EXCEPTION);
+  check_int ("errno for remainder(INF, 2) = EDOM ", errno, EDOM, 0, 0, 0);
+  errno = 0;
+  TEST_ff_f (remainder, minus_infty, minus_zero, qnan_value, INVALID_EXCEPTION);
+  check_int ("errno for remainder(-INF, -0) = EDOM ", errno, EDOM, 0, 0, 0);
+  errno = 0;
+  TEST_ff_f (remainder, minus_infty, 0, qnan_value, INVALID_EXCEPTION);
+  check_int ("errno for remainder(-INF, 0) = EDOM ", errno, EDOM, 0, 0, 0);
+  errno = 0;
   TEST_ff_f (remainder, minus_infty, 1, qnan_value, INVALID_EXCEPTION);
   check_int ("errno for remainder(-INF, 1) = EDOM ", errno, EDOM, 0, 0, 0);
+  errno = 0;
+  TEST_ff_f (remainder, minus_infty, 2, qnan_value, INVALID_EXCEPTION);
+  check_int ("errno for remainder(-INF, 2) = EDOM ", errno, EDOM, 0, 0, 0);
   errno = 0;
   TEST_ff_f (remainder, qnan_value, qnan_value, qnan_value);
   check_int ("errno for remainder(qNAN, qNAN) unchanged", errno, 0, 0, 0, 0);
@@ -11117,6 +11135,13 @@ remainder_test (void)
   errno = 0;
   TEST_ff_f (remainder, qnan_value, 0, qnan_value);
   check_int ("errno for remainder(qNaN, 0) unchanged", errno, 0, 0, 0, 0);
+
+  errno = 0;
+  TEST_ff_f (remainder, 7.0, plus_infty, 7.0);
+  check_int ("errno for remainder(7.0, INF) unchanged", errno, 0, 0, 0, 0);
+  errno = 0;
+  TEST_ff_f (remainder, 7.0, minus_infty, 7.0);
+  check_int ("errno for remainder(7.0, -INF) unchanged", errno, 0, 0, 0, 0);
 
   TEST_ff_f (remainder, 1.625, 1.0, -0.375);
   TEST_ff_f (remainder, -1.625, 1.0, 0.375);

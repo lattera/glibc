@@ -1,5 +1,12 @@
 2013-04-05  Thomas Schwinge  <thomas@codesourcery.com>
 
+	[BZ #14686, #15336]
+	* sysdeps/ieee754/dbl-64/urem.h (nNAN, NAN): Remove definitions.
+	* sysdeps/ieee754/dbl-64/e_remainder.c (__ieee754_remainder):
+	Instead, use input NaN values or generate a qNaN by arithmetic
+	operation.  Also fix bugs to comply with the standard.
+	* math/libm-test.inc (remainder_test): Add more tests.
+
 	[BZ #15335, #15342]
 	* sysdeps/ieee754/dbl-64/upow.h (NaNQ): Remove definitions.
 	* sysdeps/ieee754/dbl-64/e_pow.c (__ieee754_pow): Instead, use
