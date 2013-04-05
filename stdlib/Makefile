@@ -157,6 +157,7 @@ $(objpfx)bug-getcontext: $(link-libm)
 $(objpfx)tst-strtod-round: $(link-libm)
 $(objpfx)tst-tininess: $(link-libm)
 $(objpfx)tst-strtod-underflow: $(link-libm)
+$(objpfx)tst-strtod6: $(link-libm)
 
 tst-tls-atexit-lib.so-no-z-defs = yes
 

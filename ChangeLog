@@ -1,5 +1,11 @@
 2013-04-05  Thomas Schwinge  <thomas@codesourcery.com>
 
+	* stdio-common/tstdiomisc.c (snanval, msnanval, lsnanval)
+	(lmsnanval): New variables.
+	(F): Add conversion tests.
+	* stdlib/tst-strtod6.c (do_test): Add issignaling tests.
+	* stdlib/Makefile ($(objpfx)tst-strtod6): Depend on $(link-libm).
+
 	* stdio-common/tstdiomisc.c (F): Properly collect individual
 	tests' results.
 
