@@ -57,20 +57,20 @@ F (void)
 {
   char buf[80];
   wchar_t wbuf[40];
-  int result;
+  int result = 0;
 
   qnanval = NAN;
 
   snprintf (buf, sizeof buf, "%a %A %e %E %f %F %g %G",
 	    qnanval, qnanval, qnanval, qnanval,
 	    qnanval, qnanval, qnanval, qnanval);
-  result = strcmp (buf, "nan NAN nan NAN nan NAN nan NAN") != 0;
+  result |= strcmp (buf, "nan NAN nan NAN nan NAN nan NAN") != 0;
   printf ("expected \"nan NAN nan NAN nan NAN nan NAN\", got \"%s\"\n", buf);
 
   snprintf (buf, sizeof buf, "%a %A %e %E %f %F %g %G",
 	    -qnanval, -qnanval, -qnanval, -qnanval,
 	    -qnanval, -qnanval, -qnanval, -qnanval);
-  result = strcmp (buf, "-nan -NAN -nan -NAN -nan -NAN -nan -NAN") != 0;
+  result |= strcmp (buf, "-nan -NAN -nan -NAN -nan -NAN -nan -NAN") != 0;
   printf ("expected \"-nan -NAN -nan -NAN -nan -NAN -nan -NAN\", got \"%s\"\n",
 	  buf);
 
@@ -118,13 +118,13 @@ F (void)
   snprintf (buf, sizeof buf, "%La %LA %Le %LE %Lf %LF %Lg %LG",
 	    lqnanval, lqnanval, lqnanval, lqnanval,
 	    lqnanval, lqnanval, lqnanval, lqnanval);
-  result = strcmp (buf, "nan NAN nan NAN nan NAN nan NAN") != 0;
+  result |= strcmp (buf, "nan NAN nan NAN nan NAN nan NAN") != 0;
   printf ("expected \"nan NAN nan NAN nan NAN nan NAN\", got \"%s\"\n", buf);
 
   snprintf (buf, sizeof buf, "%La %LA %Le %LE %Lf %LF %Lg %LG",
 	    -lqnanval, -lqnanval, -lqnanval, -lqnanval,
 	    -lqnanval, -lqnanval, -lqnanval, -lqnanval);
-  result = strcmp (buf, "-nan -NAN -nan -NAN -nan -NAN -nan -NAN") != 0;
+  result |= strcmp (buf, "-nan -NAN -nan -NAN -nan -NAN -nan -NAN") != 0;
   printf ("expected \"-nan -NAN -nan -NAN -nan -NAN -nan -NAN\", got \"%s\"\n",
 	  buf);
 

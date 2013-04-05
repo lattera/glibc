@@ -1,5 +1,8 @@
 2013-04-05  Thomas Schwinge  <thomas@codesourcery.com>
 
+	* stdio-common/tstdiomisc.c (F): Properly collect individual
+	tests' results.
+
 	[BZ #14686, #15336]
 	* sysdeps/ieee754/dbl-64/urem.h (nNAN, NAN): Remove definitions.
 	* sysdeps/ieee754/dbl-64/e_remainder.c (__ieee754_remainder):
