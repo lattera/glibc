@@ -1,5 +1,8 @@
 2013-04-06  Carlos O'Donell  <carlos@redhat.com>
 
+	* math/README.libm-test (How can I generate "libm-test-ulps"?):
+	Use testrun.sh to run libm tests.
+
 	[BZ #15309]
 	* elf/dl-open.c (dl_open_worker): memset all of seen array.
 

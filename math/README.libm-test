@@ -48,8 +48,7 @@ the changes, post your patch, and check it in after review.
 
 To manually generate a new "libm-test-ulps" file, first remove "ULPs"
 file in the current directory, then you can execute for example:
-  /build/elf/ld.so --library--path /build/:/build/elf:/build/math \
-    test-double -u --ignore-max-ulp=yes
+    ./testrun.sh math/test-double -u --ignore-max-ulp=yes
 This generates a file "ULPs" with all double ULPs in it, ignoring any
 previously calculated ULPs, and running with the newly built dynamic
 loader and math library (assumes you didn't install your build).  Now
