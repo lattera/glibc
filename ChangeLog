@@ -1,3 +1,8 @@
+2013-04-06  Carlos O'Donell  <carlos@redhat.com>
+
+	* sysdeps/s390/s390-32/sysdep.h: Undefine PSEUDO before redefinition.
+	* sysdeps/s390/s390-64/sysdep.h: Likewise.
+
 2013-04-05  Thomas Schwinge  <thomas@codesourcery.com>
 
 	* stdio-common/tstdiomisc.c (snanval, msnanval, lsnanval)
