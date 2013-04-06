@@ -150,6 +150,33 @@ extra-objs += libieee.a ieee-math.o
 
 include ../Rules
 
+ifneq (no,$(PERL))
+# Run the math programs to automatically generate ULPs files.
+.PHONY: regen-ulps
+
+run-regen-ulps = $(test-wrapper-env) \
+	    GCONV_PATH=$(common-objpfx)iconvdata LC_ALL=C \
+	    $($*-ENV) $(run-via-rtld-prefix) $${run}
+
+regen-ulps: $(addprefix $(objpfx),$(libm-tests))
+	rm -f $(objpfx)ULPs; rm -f $(objpfx)NewUlps; \
+	cp $(ulps-file) $(objpfx)libm-test-ulps; \
+	for run in $^; do \
+	  echo "Regenerating ULPs for $${run}"; \
+	  $(run-regen-ulps) -u -o $(objpfx); \
+	  cat $(objpfx)ULPs >> $(objpfx)libm-test-ulps; \
+	  rm $(objpfx)ULPs; \
+	done; \
+	$(PERL) gen-libm-test.pl -o $(objpfx) -n -u $(objpfx)libm-test-ulps; \
+	echo "Automatic regeneration of ULPs complete."; \
+	echo "Difference between the current baseline and the new baseline is:";\
+	diff -urN $(ulps-file) $(objpfx)NewUlps; \
+	echo "Copy $(objpfx)NewUlps to $(ulps-file) (relative to source)."
+else
+regen-ulps:
+	@echo "Automatic regeneration of ULPs requires perl."; \
+	exit 1;
+endif
 
 # The generated sysd-rules file defines rules like this for sources
 # coming from sysdeps/ directories.  These rules find the generic sources.

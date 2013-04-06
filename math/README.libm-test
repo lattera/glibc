@@ -39,24 +39,33 @@ platform specific sysdep directory.
 How can I generate "libm-test-ulps"?
 ====================================
 
-The test drivers have an option "-u" to output an unsorted list of all
-epsilons that the functions have.  The output can be read in directly
-but it's better to pretty print it first.  "gen-libm-test.pl"  has an option
-to generate a pretty-printed and sorted new ULPs file from the output
-of the test drivers.
+To automatically generate a new "libm-test-ulps" run "make regen-ulps".
+This generates the file "math/NewUlps" in the build directory.  The file
+contains the sorted results of all the tests.  You can use the "NewUlps"
+file as the machine's updated "libm-test-ulps" file.  Copy "NewUlps" to
+"libm-test-ulps" in the appropriate machine sysdep directory.  Verify
+the changes, post your patch, and check it in after review.
 
-To generate a new "libm-test-ulps" file, first remove "ULPs" file in the
-current directory, then you can execute for example:
-test-double -u --ignore-max-ulp=yes
+To manually generate a new "libm-test-ulps" file, first remove "ULPs"
+file in the current directory, then you can execute for example:
+  /build/elf/ld.so --library--path /build/:/build/elf:/build/math \
+    test-double -u --ignore-max-ulp=yes
 This generates a file "ULPs" with all double ULPs in it, ignoring any
-previous calculated ULPs.
-Now generate the ULPs for all other formats, the tests will be appending
-the data to the "ULPs" file.  As final step run "gen-libm-test.pl" with the
-file as input and ask to generate a pretty printed output in the file "NewUlps":
+previously calculated ULPs, and running with the newly built dynamic
+loader and math library (assumes you didn't install your build).  Now
+generate the ULPs for all other formats, the tests will be appending the
+data to the "ULPs" file.  As final step run "gen-libm-test.pl" with the
+file as input and ask to generate a pretty printed output in the file
+"NewUlps":
   gen-libm-test.pl -u ULPs -n
+Copy "NewUlps" to "libm-test-ulps" in the appropriate machine sysdep
+directory.
 
-Now you can rename "NewUlps" to "libm-test-ulps" and move it into
-sysdeps.
+Note that the test drivers have an option "-u" to output an unsorted
+list of all epsilons that the functions have.  The output can be read
+in directly but it's better to pretty print it first.
+"gen-libm-test.pl" has an option to generate a pretty-printed and
+sorted new ULPs file from the output of the test drivers.
 
 Contents of libm-test-ulps
 ==========================

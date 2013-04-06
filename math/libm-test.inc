@@ -210,8 +210,10 @@
 #define M_PI_LOG10El		M_PIl * M_LOG10El
 #define M_SQRT_2_2		0.70710678118654752440084436210484903L /* sqrt (2) / 2 */
 
-static FILE *ulps_file;	/* File to document difference.  */
-static int output_ulps;	/* Should ulps printed?  */
+#define ulps_file_name "ULPs"	/* Name of the ULPs file.  */
+static FILE *ulps_file;		/* File to document difference.  */
+static int output_ulps;		/* Should ulps printed?  */
+static char *output_dir;	/* Directory where generated files will be written.  */
 
 static int noErrors;	/* number of errors */
 static int noTests;	/* number of tests (without testing exceptions) */
@@ -12985,6 +12987,8 @@ static const struct argp_option options[] =
     "Don't output results of functions invocations"},
   { "ignore-max-ulp", 'i', "yes/no", 0,
     "Ignore given maximal errors"},
+  { "output-dir", 'o', "DIR", 0,
+    "Directory where generated files will be placed"},
   { NULL, 0, NULL, 0, NULL }
 };
 
@@ -13015,6 +13019,13 @@ parse_opt (int key, char *arg, struct argp_state *state)
 	ignore_max_ulp = 1;
       else if (strcmp (arg, "no") == 0)
 	ignore_max_ulp = 0;
+      break;
+    case 'o':
+      output_dir = (char *) malloc (strlen (arg) + 1);
+      if (output_dir != NULL)
+	strcpy (output_dir, arg);
+      else
+        return errno;
       break;
     case 'p':
       output_points = 0;
@@ -13065,11 +13076,14 @@ main (int argc, char **argv)
 {
 
   int remaining;
+  char *ulps_file_path;
+  size_t dir_len = 0;
 
   verbose = 1;
   output_ulps = 0;
   output_max_error = 1;
   output_points = 1;
+  output_dir = NULL;
   /* XXX set to 0 for releases.  */
   ignore_max_ulp = 0;
 
@@ -13085,7 +13099,16 @@ main (int argc, char **argv)
 
   if (output_ulps)
     {
-      ulps_file = fopen ("ULPs", "a");
+      if (output_dir != NULL)
+	dir_len = strlen (output_dir);
+      ulps_file_path = (char *) malloc (dir_len + strlen (ulps_file_name) + 1);
+      if (ulps_file_path == NULL)
+        {
+	  perror ("can't allocate path for `ULPs' file: ");
+	  exit (1);
+        }
+      sprintf (ulps_file_path, "%s%s", output_dir == NULL ? "" : output_dir, ulps_file_name);
+      ulps_file = fopen (ulps_file_path, "a");
       if (ulps_file == NULL)
 	{
 	  perror ("can't open file `ULPs' for writing: ");

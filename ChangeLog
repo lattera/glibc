@@ -1,5 +1,20 @@
 2013-04-06  Carlos O'Donell  <carlos@redhat.com>
 
+	* Makefile.in (regen-ulps): New target.
+	* math/Makefile [ifneq (no,$(PERL)]: Declare regen-ulps with .PHONY.
+	[ifneq (no,$(PERL)] (run-regen-ulps): New variable.
+	[ifneq (no,$(PERL)] (regen-ulps): New target.
+	[ifeq (no,$(PERL)] (regen-ulps): New target.
+	* math/libm-test.inc (ulps_file_name): Define.
+	(output_dir): New variable.
+	(options): Add "output-dir" option.
+	(parse_opt): Handle 'o' case.
+	(main): If output_dir is non-NULL use it as a prefix
+	otherwise use "".
+	* math/README.libm-test: Update `How can I generate "libm-test-ulps"?'
+
+2013-04-06  Carlos O'Donell  <carlos@redhat.com>
+
 	[BZ #10060, #10062]
 	* aclocal.m4 (LIBC_COMPILER_BUILTIN_INLINED): New macro.
 	* sysdeps/i386/configure.in: Use LIBC_COMPILER_BUILTIN_INLINED and
