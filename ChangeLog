@@ -1,3 +1,8 @@
+2013-04-06  Marko Myllynen  <myllynen@redhat.com>
+
+	[BZ #15264]
+	* locales/fi_FI (LC_MESSAGES): Define yesstr and nostr.
+
 2013-04-06  Carlos O'Donell  <carlos@redhat.com>
 
 	* Makefile.in (regen-ulps): New target.
