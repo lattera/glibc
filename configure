@@ -3741,6 +3741,15 @@ case "$machine-$host_os" in
     ;;
 esac
 
+# Configure for i686 if the user asks for i386. We don't support
+# i386 any more but it continues to be common for users to configure
+# 32-bit x86 as i386. We build for i686 instead.
+if test "$machine" = i386; then
+  machine="i686"
+  echo "\
+*** WARNING: Support for i386 is deprecated. Building for i686 instead."
+fi
+
 submachine=
 
 # Check whether --with-cpu was given.

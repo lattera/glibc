@@ -248,3 +248,36 @@ dnl LIBC_CONFIG_VAR(make-variable, shell-value)
 AC_DEFUN([LIBC_CONFIG_VAR],
 [config_vars="$config_vars
 $1 = $2"])
+
+dnl Check that function FUNC was inlined as a builtin.  The code fragment
+dnl CODE is compiled with additional options CC_OPTION.  If FUNC is
+dnl not found in the assembly then it is assumed the compiler has support
+dnl for this builtin and has inlined the call.  If the compiler has the
+dnl feature then ACTION-IF-TRUE is called, otherwise ACTION-IF-FALSE.
+dnl It is up to the caller to provide a CC_OPTION that ensures the
+dnl builtin is inlined if present.
+dnl Warning: This may not work for some machines. For example on ARM the
+dnl ABI dictates that some functions should not be inlined and instead
+dnl should be provided by a compiler helper library e.g. __aeabi_memcpy.
+dnl This is done to reduce code size.
+dnl LIBC_COMPILER_BUILTIN([func], [code], [cc_option], [action-if-true], [action-if-false])
+AC_DEFUN([LIBC_COMPILER_BUILTIN_INLINED],
+[AC_MSG_CHECKING([for compiler support of inlined builtin function $1])
+libc_compiler_builtin_inlined=no
+cat > conftest.c <<EOF
+int _start (void) { $2 return 0; }
+EOF
+if ! AC_TRY_COMMAND([${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS
+		     $3 -nostdlib -nostartfiles
+		     -S conftest.c -o - | fgrep "$1"
+		     1>&AS_MESSAGE_LOG_FD])
+then
+  libc_compiler_builtin_inlined=yes
+fi
+rm -f conftest*
+if test $libc_compiler_builtin_inlined = yes; then
+  $4
+else
+  $5
+fi
+AC_MSG_RESULT($libc_compiler_builtin_inlined)])

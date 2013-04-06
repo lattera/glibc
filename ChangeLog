@@ -1,5 +1,16 @@
 2013-04-06  Carlos O'Donell  <carlos@redhat.com>
 
+	[BZ #10060, #10062]
+	* aclocal.m4 (LIBC_COMPILER_BUILTIN_INLINED): New macro.
+	* sysdeps/i386/configure.in: Use LIBC_COMPILER_BUILTIN_INLINED and
+	fail configure if __sync_val_compare_and_swap is not inlined.
+	* sysdeps/i386/configure: Regenerate.
+	* configure.in: Build for i686 when configured for i386.
+	* configure: Regenerate.
+	* README: Remove i386 reference.
+
+2013-04-06  Carlos O'Donell  <carlos@redhat.com>
+
 	* sysdeps/s390/s390-32/sysdep.h: Undefine PSEUDO before redefinition.
 	* sysdeps/s390/s390-64/sysdep.h: Likewise.
 
